@@ -1,59 +1,67 @@
-Return-Path: <sujith.h@gmail.com>
-Received: from mail-qg0-f41.google.com (mail-qg0-f41.google.com
-	[209.85.192.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 0A498731A7
+Return-Path: <mirela.rabulea@nxp.com>
+X-Greylist: delayed 934 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 21 Jan 2016 16:07:55 UTC
+Received: from emea01-db3-obe.outbound.protection.outlook.com
+	(mail-db3on0075.outbound.protection.outlook.com [157.55.234.75])
+	by mail.openembedded.org (Postfix) with ESMTP id 09C8D7318D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jan 2016 15:16:48 +0000 (UTC)
-Received: by mail-qg0-f41.google.com with SMTP id b35so33757204qge.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jan 2016 07:16:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:content-type; bh=9m6sKULLU0rZI9S7xMt8mlFNmmg60rDVyHKI1zPoOm0=;
-	b=e1t/gO9vDVCIGI69pHUMfoQtBFHbNm6nsVXm6zRCY7BIoin1Kf4CkBiua8csez2iZy
-	NNlNLS6+jrLzqrAda3tO+KBoHNi/OKo66D6VBrdC+LBR3hoiK2JEx9Fsu5uZFige6ciF
-	70uIEcHkB6wYDpQPIN1Ji5o++0mYcu8h3bqE1BQVPskC3MHsxrm6eEie7p56rfgEx4p2
-	J5SBxmQ0CUOf12TXGBkBYmbBLkpeow1L7k0GNHP+86025GwJlNXSGWOANIYWD6Yei5Fy
-	a24h33Oxz/vnbbOMbuHXkS2xevmmGyA6Ucst6oNFnTyT8uNek7S8WDbAGVbKTTjTWHIq
-	fx5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:content-type;
-	bh=9m6sKULLU0rZI9S7xMt8mlFNmmg60rDVyHKI1zPoOm0=;
-	b=Um2MRcfmXYAfkj2STvNzoC7YBRTAReljYg82y4nVJVSNRS8uMUbCxgzFJN1tDV/YnN
-	YGw9IspKAFe6av/0PetJzKZAtc30eTfaZO8vGA96A58mOK76GhQZS4q395T53MJ/2h92
-	y1KBxIHa1JgIlL3seBU6uXpYNeDCFtXhLICB2CUMmJVC0IRhFrSDvERYY1Mkg4LdiiXL
-	cIu4zUJkcwryy409Liv5uFz2UY2x/AnZqhgp/cb1spXc/akHuNegGD3CEoXJyuoPX0T7
-	AARBpbWmTGaqeDNx03ZdrUGjmng7w3ixYqMKVJlQ4etBTnjky4U/o6BTEZ2/ql1+YMC4
-	WIRA==
-X-Gm-Message-State: ALoCoQme1rBdeScHBNe69Gqr08UFNgv/hkeUC2XPCmqecVUDb9u3nr0PDh3wh4YdTQnKY8UMW+/M1DmBrtBIBx6G+BUVC+1kEg==
-X-Received: by 10.140.170.212 with SMTP id q203mr55848120qhq.32.1453389408599; 
-	Thu, 21 Jan 2016 07:16:48 -0800 (PST)
+	Thu, 21 Jan 2016 16:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com; 
+	s=selector1-nxp-com;
+	h=From:To:Date:Subject:Message-ID:Content-Type:MIME-Version;
+	bh=iKh29+ChEUqYBcaYYHiYS+n4+ov2ONyXFSZ7BqLZJMA=;
+	b=OexYueYW/XhOLhE7imO2lKbr6dQ2XQBqJLUqtGIOxQ2JUzZam1bEmKoRiIAuLQefnCaecbm4WXmbt8x4ZjVDRNlsw64/srQkxXwcko4hWhTPLJUsBuL7Y/VEjew+Zu4vBXggeut3VbzckYb8hn0TJtc4gYDvrcNXU3vHWm4tTyw=
+Received: from AM4PR0401MB1778.eurprd04.prod.outlook.com (10.165.244.148) by
+	AM4PR0401MB1779.eurprd04.prod.outlook.com (10.165.244.149) with
+	Microsoft
+	SMTP Server (TLS) id 15.1.365.19; Thu, 21 Jan 2016 15:52:20 +0000
+Received: from AM4PR0401MB1778.eurprd04.prod.outlook.com ([10.165.244.148]) by
+	AM4PR0401MB1778.eurprd04.prod.outlook.com ([10.165.244.148]) with
+	mapi id 15.01.0365.024; Thu, 21 Jan 2016 15:52:20 +0000
+From: Mirela Rabulea <mirela.rabulea@nxp.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [PATCH] Fix bug 8940 - Alow Hob to run images on a custom
+	simulator, other than qemu
+Thread-Index: AdFUYtl3YI4m24hVQ1y2SKaptI//vA==
+Date: Thu, 21 Jan 2016 15:52:20 +0000
+Message-ID: <AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30@AM4PR0401MB1778.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=mirela.rabulea@nxp.com; 
+x-originating-ip: [192.88.146.1]
+x-microsoft-exchange-diagnostics: 1; AM4PR0401MB1779;
+	5:9z31y72Kvhtf5MYYfLzbKrDNiexDvo0obr1S902bSoG6ltfFfp3eZ3n2SYfpKBNQTTj87uqQJbNNj7akyGXVlbbcLAjTeOk4LfNDUUGMIE7/oJohLs2Ud5/g9v3wQIDCcrV0G1Bk3quqAdbkqFPNSA==;
+	24:448AKax8mUc2SltL3AlCint/iq4BPpSTntSPqKadhx/WIEyi+vkIbq/2tvSVEqeHDwQLUnTRPfYJZCCs6NwXYcBQLELa3won7hcll6rrKcA=
+x-microsoft-antispam: UriScan:;BCL:0;PCL:0;RULEID:;SRVR:AM4PR0401MB1779;
+x-ms-office365-filtering-correlation-id: 7dc28b49-953b-4cb7-3ba7-08d3227ad878
+x-microsoft-antispam-prvs: <AM4PR0401MB17798310769BFBCFCFC88AC88FC30@AM4PR0401MB1779.eurprd04.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:(185117386973197);
+x-exchange-antispam-report-cfa-test: BCL:0; PCL:0;
+	RULEID:(102615245)(601004)(2401047)(520078)(5005006)(8121501046)(3002001)(10201501046);
+	SRVR:AM4PR0401MB1779; BCL:0; PCL:0; RULEID:;
+	SRVR:AM4PR0401MB1779; 
+x-forefront-prvs: 08286A0BE2
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(189002)(199003)(19617315012)(77096005)(189998001)(18206015028)(16236675004)(92566002)(40100003)(17760045003)(5004730100002)(76576001)(2351001)(110136002)(19625215002)(19580395003)(86362001)(586003)(10400500002)(5002640100001)(19627595001)(1096002)(122556002)(2906002)(2501003)(33656002)(101416001)(50986999)(106356001)(105586002)(11100500001)(99936001)(5003600100002)(229853001)(102836003)(3846002)(81156007)(19300405004)(87936001)(19580405001)(5008740100001)(74316001)(2900100001)(790700001)(97736004)(5001960100002)(66066001)(6116002)(15975445007)(54356999)(4326007)(1220700001)(7099028)(554374003);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:AM4PR0401MB1779;
+	H:AM4PR0401MB1778.eurprd04.prod.outlook.com; FPR:; SPF:None;
+	PTR:InfoNoRecords; MX:1; A:1; LANG:en; 
+received-spf: None (protection.outlook.com: nxp.com does not designate
+	permitted sender hosts)
+spamdiagnosticoutput: 1:23
+spamdiagnosticmetadata: NSPM
 MIME-Version: 1.0
-Received: by 10.55.154.139 with HTTP; Thu, 21 Jan 2016 07:16:29 -0800 (PST)
-In-Reply-To: <CADyYWL=c3QO5zkOOjUuaiswwO4FVTGEmqGnF3_TjXH4=TVDbNw@mail.gmail.com>
-References: <CADyYWLm+yYR7J6NMLKHR6Ss_i16Q5Tiz=x2DuJ7_mOViTEvcYg@mail.gmail.com>
-	<20151218134627.GA27311@linux.intel.com>
-	<CADyYWL=Vo_fcSzJU_QqRo=PpJHBQ03Ln0u+Fzma9xT=aFT4p5Q@mail.gmail.com>
-	<CADyYWLnwDRR9S_XcdNesP9p+H18xkdnFRdCUajqNuF+8OJq-aA@mail.gmail.com>
-	<CADyYWLnJJ0b0=kg7bMcLT+TUBa-HN6aPWbjDnrtr1Sz=bQS_MQ@mail.gmail.com>
-	<CADyYWL=z8O=atf9g7L5rg_D2h7xY-Ng7KzC0i8JdBzGnuoYgPw@mail.gmail.com>
-	<CADyYWLkn6=gE_GCefcYOJ82kn8hoGRyQY790F0_GWYkem-j5Sw@mail.gmail.com>
-	<D2B17827.6E2E9%belen.barros.pena@intel.com>
-	<CADyYWLmS5+BTJ35R2g0x_m3F2z45hGQM_bDcXFJSgKx7YvjWLw@mail.gmail.com>
-	<CADyYWLmwFrdV4=M+Z6v_f7txSCLVCg_n0uDu79uTrYqKy0wSjw@mail.gmail.com>
-	<CADyYWLnBt4cCOmJ0Ky2TcYdtDPrbvL4wXhtFcajbmqnw_xcmCw@mail.gmail.com>
-	<D2B940D1.6F2B2%belen.barros.pena@intel.com>
-	<D2B94862.6F2C3%belen.barros.pena@intel.com>
-	<CADyYWLmpJE3y63f_-7QJAWhwxjq0gRo7QnfzGxW1-Ou_ddoqNA@mail.gmail.com>
-	<D2C1AC14.703C1%belen.barros.pena@intel.com>
-	<CADyYWL=c3QO5zkOOjUuaiswwO4FVTGEmqGnF3_TjXH4=TVDbNw@mail.gmail.com>
-From: sujith h <sujith.h@gmail.com>
-Date: Thu, 21 Jan 2016 20:46:29 +0530
-Message-ID: <CADyYWLkv2Ot9BFZ1rEpPBg6HvvHLuAD50=s+jKuckMS7c622Xw@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [Toaster] Build cancellation from toaster
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2016 15:52:20.1547 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0401MB1779
+Cc: "Roman, Alexandru CostinX" <alexandru.costinx.roman@intel.com>, "Voiculescu,
+	BogdanX A" <bogdanx.a.voiculescu@intel.com>
+Subject: [PATCH] Fix bug 8940 - Alow Hob to run images on a custom simulator, other than qemu
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -66,489 +74,813 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jan 2016 15:16:49 -0000
-Content-Type: multipart/alternative; boundary=001a113aaa386b84490529d99703
+X-List-Received-Date: Thu, 21 Jan 2016 16:08:00 -0000
+X-Groupsio-MsgNum: 6908
+Content-Language: en-US
+Content-Type: multipart/mixed;
+	boundary="_007_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_"
 
---001a113aaa386b84490529d99703
-Content-Type: text/plain; charset=UTF-8
+--_007_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_
+Content-Type: multipart/related;
+	boundary="_006_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_";
+	type="multipart/alternative"
+
+--_006_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_
+Content-Type: multipart/alternative;
+	boundary="_000_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_"
+
+--_000_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
+I have been told that Hob is deprecated and to be replaced by Toaster, stil=
+l I have some changes already made on Hob, which I would like to push. Besi=
+des that, I understand that at this moment Toaster cannot run images at all=
+, via a button push.
+I would be happy if these changes make it into YP 2.1, M2 or at least M3.
 
-After discussion with toaster community, it was decided to ask it over
-bitbake-devel list. So I am sharing the issue, which I am blocked with.
+The current behavior of Hob is that there is a "Run Image" button which bec=
+omes visible only for qemu images.
 
-Let me share the issue which I am facing: build triggered from command line
-were not able to cancel from toaster, where as the build triggered from
-toaster were able to cancel from toaster successfully.
+My suggested change is:
+- if an image is selected and it is , let the "Run image" button be named "=
+Run qemu image"
+- if an image is selected and it is not qemu-compatible, let the same butto=
+n show up with the name "Run custom image", and besides that, an option sho=
+ws-up to allow the selection of the custom script (by default it points out=
+ to runqemu script) to be used for launching this custom image
 
-The logic that I am using to cancel build from toaster is to pass
-stateForceShutdown command ( as in
-http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/commit/?h=3Dsujith/t=
-oaster-build-cancel12&id=3D6601df1a06abc3ce3290656e1f2f91a511653c0d).
-This works like charm when the build is triggered from toaster. But when I
-use the same logic to cancel the build triggered from command line I can
-see error:
----------------------------
-ProtocolError: <ProtocolError for 0.0.0.0:42952/: 503 Service Unavailable>
+Associated bug:
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D8940
 
-Not able to understand why it is not able to connect to the port. Because
-as per my understanding when a build is triggered from toaster, we connect
-to the host:port and execute the commands. The runcommand is failing badly
-with the log:
-
-2016-01-18 16:06:05,608 ERROR Internal Server Error:
-/toastergui/project/1/builds/
-Traceback (most recent call last):
-  File
-"/home/sujith/build/poky-push/venv/lib/python2.7/site-packages/django/core/=
-handlers/base.py",
-line 132, in get_response
-    response =3D wrapped_callback(request, *callback_args, **callback_kwarg=
-s)
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py",
-line 171, in returned_wrapper
-    context =3D view(request, *args, **kwargs)
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py",
-line 2896, in projectbuilds
-    bbctrl.forceShutDown()
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.p=
-y",
-line 73, in forceShutDown
-    return self._runCommand(["stateForceShutdown"])
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.p=
-y",
-line 50, in _runCommand
-    result, error =3D self.connection.runCommand(command)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1240, in __call__
-    return self.__send(self.__name, args)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1599, in __request
-    verbose=3Dself.__verbose
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1280, in request
-    return self.single_request(host, handler, request_body, verbose)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1328, in single_request
-    response.msg,
-ProtocolError: <ProtocolError for 0.0.0.0:42952/: 503 Service Unavailable>
-Internal Server Error: /toastergui/project/1/builds/
-Traceback (most recent call last):
-  File
-"/home/sujith/build/poky-push/venv/lib/python2.7/site-packages/django/core/=
-handlers/base.py",
-line 132, in get_response
-    response =3D wrapped_callback(request, *callback_args, **callback_kwarg=
-s)
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py",
-line 171, in returned_wrapper
-    context =3D view(request, *args, **kwargs)
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py",
-line 2896, in projectbuilds
-    bbctrl.forceShutDown()
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.p=
-y",
-line 73, in forceShutDown
-    return self._runCommand(["stateForceShutdown"])
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.p=
-y",
-line 50, in _runCommand
-    result, error =3D self.connection.runCommand(command)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1240, in __call__
-    return self.__send(self.__name, args)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1599, in __request
-    verbose=3Dself.__verbose
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1280, in request
-    return self.single_request(host, handler, request_body, verbose)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1328, in single_request
-    response.msg,
-ProtocolError: <ProtocolError for 0.0.0.0:42952/: 503 Service Unavailable>
-[18/Jan/2016 16:06:05] "POST /toastergui/project/1/builds/ HTTP/1.1" 500
-13414
--------------------------
-
-As far as I understand the connection to bitbake server is failing.
-Any helping hand or pointers to tackle this issue would be helpful for me
-to move ahead with this task.
-
-Thanks,
-Sujith H
+Related bug (feaure request):
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D8959
 
 
----------- Forwarded message ----------
-From: sujith h <sujith.h@gmail.com>
-Date: Mon, Jan 18, 2016 at 9:42 PM
-Subject: Re: [Toaster] Build cancellation from toaster
-To: "Barros Pena, Belen" <belen.barros.pena@intel.com>
-Cc: "toaster@yoctoproject.org" <toaster@yoctoproject.org>
+Thanks Belen, Bogdan and Alexandru for helping me on this.
+
+
+Regards,
+
+Mirela Rabulea
+Simulation Software Engineer
+NXP Semiconductors
+Phone: +40-21-3052420
+Mobile: +40-723-362518
+Mirela.Rabulea@nxp.com<mailto:Mirela.Rabulea@nxp.com>
+
+[cid:image002.png@01D13266.68FC4030]
 
 
 
-
-On Mon, Jan 18, 2016 at 1:13 AM, Barros Pena, Belen <
-belen.barros.pena@intel.com> wrote:
-
->
->
-> On 13/01/2016 16:47, "sujith h" <sujith.h@gmail.com> wrote:
->
-> >
-> >I have updated another patch set with which I have verified with:
-> >
-> >a) cancellation of a normal build
-> >
-> >b) run again and cancel the build
-> >
-> >c) stop toaster + start toaster + run again   and cancel the build
-> >
-> >
-> http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=3Dsujith/to=
-ast
-> >er-build-cancel12
->
-> Sorry for the delay in looking into this. Cancellation seems to be workin=
-g
-> well for me for any builds I start from Toaster. However, it doesn't seem
-> to work for builds I start from the command line and I track through
-> Toaster. For those builds, a 'cancel' button appears, but when I click it=
-,
-> nothing happens: the build proceeds until it completes.
->
-> I am not even sure if the 'cancel' functionality can work for builds
-> started from the command line, although it would be great if it did. If i=
-t
-> is not possible to make it work, then the cancel button should not displa=
-y
-> for those builds. We can provide a message instead, as we do in the case
-> of the 'run again' button, explaining that builds started from the comman=
-d
-> line can only be cancelled from the command line.
->
-
-Somehow when i try to use the same logic to cancel the build triggered from
-command line ( with small modification in the code though), I am getting
-error in the toaster_web.log as:
-
-ProtocolError: <ProtocolError for 0.0.0.0:42952/: 503 Service Unavailable>
-
-Not able to understand why it is not able to connect to the port. Because
-as per my understanding when a build is triggered from toaster, we connect
-to the host:port and execute the commands. The runcommand is failing badly
-with the log:
-
-2016-01-18 16:06:05,608 ERROR Internal Server Error:
-/toastergui/project/1/builds/
-Traceback (most recent call last):
-  File
-"/home/sujith/build/poky-push/venv/lib/python2.7/site-packages/django/core/=
-handlers/base.py",
-line 132, in get_response
-    response =3D wrapped_callback(request, *callback_args, **callback_kwarg=
-s)
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py",
-line 171, in returned_wrapper
-    context =3D view(request, *args, **kwargs)
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py",
-line 2896, in projectbuilds
-    bbctrl.forceShutDown()
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.p=
-y",
-line 73, in forceShutDown
-    return self._runCommand(["stateForceShutdown"])
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.p=
-y",
-line 50, in _runCommand
-    result, error =3D self.connection.runCommand(command)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1240, in __call__
-    return self.__send(self.__name, args)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1599, in __request
-    verbose=3Dself.__verbose
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1280, in request
-    return self.single_request(host, handler, request_body, verbose)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1328, in single_request
-    response.msg,
-ProtocolError: <ProtocolError for 0.0.0.0:42952/: 503 Service Unavailable>
-Internal Server Error: /toastergui/project/1/builds/
-Traceback (most recent call last):
-  File
-"/home/sujith/build/poky-push/venv/lib/python2.7/site-packages/django/core/=
-handlers/base.py",
-line 132, in get_response
-    response =3D wrapped_callback(request, *callback_args, **callback_kwarg=
-s)
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py",
-line 171, in returned_wrapper
-    context =3D view(request, *args, **kwargs)
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py",
-line 2896, in projectbuilds
-    bbctrl.forceShutDown()
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.p=
-y",
-line 73, in forceShutDown
-    return self._runCommand(["stateForceShutdown"])
-  File
-"/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.p=
-y",
-line 50, in _runCommand
-    result, error =3D self.connection.runCommand(command)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1240, in __call__
-    return self.__send(self.__name, args)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1599, in __request
-    verbose=3Dself.__verbose
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1280, in request
-    return self.single_request(host, handler, request_body, verbose)
-  File "/usr/lib64/python2.7/xmlrpclib.py", line 1328, in single_request
-    response.msg,
-ProtocolError: <ProtocolError for 0.0.0.0:42952/: 503 Service Unavailable>
-[18/Jan/2016 16:06:05] "POST /toastergui/project/1/builds/ HTTP/1.1" 500
-13414
-
-
-Any helping hand would be appreciated. More over I would also like to know
-if we can pass commands to builds triggered from command line?
-
-Thanks,
-Sujith H
-
---=20
-=E0=B4=B8=E0=B5=81=E0=B4=9C=E0=B4=BF=E0=B4=A4=E0=B5=8D =E0=B4=B9=E0=B4=B0=
-=E0=B4=BF=E0=B4=A6=E0=B4=BE=E0=B4=B8=E0=B4=A8=E0=B5=8D
-Bangalore
-<Project>Contributor to KDE project
-http://fci.wikia.com/wiki/Anti-DRM-Campaign
-<Blog> http://sujithh.info
-
-
-
---=20
-=E0=B4=B8=E0=B5=81=E0=B4=9C=E0=B4=BF=E0=B4=A4=E0=B5=8D =E0=B4=B9=E0=B4=B0=
-=E0=B4=BF=E0=B4=A6=E0=B4=BE=E0=B4=B8=E0=B4=A8=E0=B5=8D
-Bangalore
-<Project>Contributor to KDE project
-http://fci.wikia.com/wiki/Anti-DRM-Campaign
-<Blog> http://sujithh.info
-
---001a113aaa386b84490529d99703
-Content-Type: text/html; charset=UTF-8
+--_000_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_
+Content-Type: text/html; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Hi,<br><div><br></div><div>After discussion with toaster c=
-ommunity, it was decided to ask it over bitbake-devel list. So I am sharing=
- the issue, which I am blocked with.<br></div><div><br>Let me share the iss=
-ue which I am facing: build triggered from command line were not able to ca=
-ncel from toaster, where as the build triggered from toaster were able to c=
-ancel from toaster successfully.<br><br></div><div>The logic that I am usin=
-g to cancel build from toaster is to pass stateForceShutdown command ( as i=
-n <a href=3D"http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/commit/=
-?h=3Dsujith/toaster-build-cancel12&amp;id=3D6601df1a06abc3ce3290656e1f2f91a=
-511653c0d">http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/commit/?h=
-=3Dsujith/toaster-build-cancel12&amp;id=3D6601df1a06abc3ce3290656e1f2f91a51=
-1653c0d</a>). This works like charm when the build is triggered from toaste=
-r. But when I use the same logic to cancel the build triggered from command=
- line I can see error:<br>---------------------------<br>ProtocolError: &lt=
-;ProtocolError for <a href=3D"http://0.0.0.0:42952/" target=3D"_blank">0.0.=
-0.0:42952/</a>: 503 Service Unavailable&gt;<br><br>Not
- able to understand why it is not able to connect to the port. Because=20
-as per my understanding when a build is triggered from toaster, we=20
-connect to the host:port and execute the commands. The runcommand is=20
-failing badly with the log:<br><br>2016-01-18 16:06:05,608 ERROR Internal S=
-erver Error: /toastergui/project/1/builds/<span class=3D""><br>Traceback (m=
-ost recent call last):<br></span>=C2=A0 File &quot;/home/sujith/build/poky-=
-push/venv/lib/python2.7/site-packages/django/core/handlers/base.py&quot;, l=
-ine 132, in get_response<br>=C2=A0=C2=A0=C2=A0 response =3D wrapped_callbac=
-k(request, *callback_args, **callback_kwargs)<br>=C2=A0 File &quot;/home/su=
-jith/build/poky-push/bitbake/lib/toaster/toastergui/views.py&quot;, line 17=
-1, in returned_wrapper<br>=C2=A0=C2=A0=C2=A0 context =3D view(request, *arg=
-s, **kwargs)<br>=C2=A0 File &quot;/home/sujith/build/poky-push/bitbake/lib/=
-toaster/toastergui/views.py&quot;, line 2896, in projectbuilds<br>=C2=A0=C2=
-=A0=C2=A0 bbctrl.forceShutDown()<br>=C2=A0 File &quot;/home/sujith/build/po=
-ky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.py&quot;, line 73, in f=
-orceShutDown<br>=C2=A0=C2=A0=C2=A0 return self._runCommand([&quot;stateForc=
-eShutdown&quot;])<br>=C2=A0 File &quot;/home/sujith/build/poky-push/bitbake=
-/lib/toaster/bldcontrol/bbcontroller.py&quot;, line 50, in _runCommand<br>=
-=C2=A0=C2=A0=C2=A0 result, error =3D self.connection.runCommand(command)<br=
->=C2=A0 File &quot;/usr/lib64/python2.7/xmlrpclib.py&quot;, line 1240, in _=
-_call__<br>=C2=A0=C2=A0=C2=A0 return self.__send(self.__name, args)<br>=C2=
-=A0 File &quot;/usr/lib64/python2.7/xmlrpclib.py&quot;, line 1599, in __req=
-uest<br>=C2=A0=C2=A0=C2=A0 verbose=3Dself.__verbose<br>=C2=A0 File &quot;/u=
-sr/lib64/python2.7/xmlrpclib.py&quot;, line 1280, in request<br>=C2=A0=C2=
-=A0=C2=A0 return self.single_request(host, handler, request_body, verbose)<=
-br>=C2=A0 File &quot;/usr/lib64/python2.7/xmlrpclib.py&quot;, line 1328, in=
- single_request<br>=C2=A0=C2=A0=C2=A0 response.msg,<br>ProtocolError: &lt;P=
-rotocolError for <a href=3D"http://0.0.0.0:42952/" target=3D"_blank">0.0.0.=
-0:42952/</a>: 503 Service Unavailable&gt;<br>Internal Server Error: /toaste=
-rgui/project/1/builds/<span class=3D""><br>Traceback (most recent call last=
-):<br></span>=C2=A0 File &quot;/home/sujith/build/poky-push/venv/lib/python=
-2.7/site-packages/django/core/handlers/base.py&quot;, line 132, in get_resp=
-onse<br>=C2=A0=C2=A0=C2=A0 response =3D wrapped_callback(request, *callback=
-_args, **callback_kwargs)<br>=C2=A0 File &quot;/home/sujith/build/poky-push=
-/bitbake/lib/toaster/toastergui/views.py&quot;, line 171, in returned_wrapp=
-er<br>=C2=A0=C2=A0=C2=A0 context =3D view(request, *args, **kwargs)<br>=C2=
-=A0 File &quot;/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/=
-views.py&quot;, line 2896, in projectbuilds<br>=C2=A0=C2=A0=C2=A0 bbctrl.fo=
-rceShutDown()<br>=C2=A0 File &quot;/home/sujith/build/poky-push/bitbake/lib=
-/toaster/bldcontrol/bbcontroller.py&quot;, line 73, in forceShutDown<br>=C2=
-=A0=C2=A0=C2=A0 return self._runCommand([&quot;stateForceShutdown&quot;])<b=
-r>=C2=A0 File &quot;/home/sujith/build/poky-push/bitbake/lib/toaster/bldcon=
-trol/bbcontroller.py&quot;, line 50, in _runCommand<br>=C2=A0=C2=A0=C2=A0 r=
-esult, error =3D self.connection.runCommand(command)<br>=C2=A0 File &quot;/=
-usr/lib64/python2.7/xmlrpclib.py&quot;, line 1240, in __call__<br>=C2=A0=C2=
-=A0=C2=A0 return self.__send(self.__name, args)<br>=C2=A0 File &quot;/usr/l=
-ib64/python2.7/xmlrpclib.py&quot;, line 1599, in __request<br>=C2=A0=C2=A0=
-=C2=A0 verbose=3Dself.__verbose<br>=C2=A0 File &quot;/usr/lib64/python2.7/x=
-mlrpclib.py&quot;, line 1280, in request<br>=C2=A0=C2=A0=C2=A0 return self.=
-single_request(host, handler, request_body, verbose)<br>=C2=A0 File &quot;/=
-usr/lib64/python2.7/xmlrpclib.py&quot;, line 1328, in single_request<br>=C2=
-=A0=C2=A0=C2=A0 response.msg,<br>ProtocolError: &lt;ProtocolError for <a hr=
-ef=3D"http://0.0.0.0:42952/" target=3D"_blank">0.0.0.0:42952/</a>: 503 Serv=
-ice Unavailable&gt;<br>[18/Jan/2016 16:06:05] &quot;POST /toastergui/projec=
-t/1/builds/ HTTP/1.1&quot; 500 13414<br>-------------------------<br></div>=
-<div><br>As far as I understand the connection to bitbake server is failing=
-.<br>Any helping hand or pointers to tackle this issue would be helpful for=
- me to move ahead with this task.<br></div><div><br></div><div>Thanks,<br><=
-/div><div>Sujith H<br></div><div><br><br><div><div class=3D"gmail_quote">--=
--------- Forwarded message ----------<br>From: <b class=3D"gmail_sendername=
-">sujith h</b> <span dir=3D"ltr">&lt;<a href=3D"mailto:sujith.h@gmail.com">=
-sujith.h@gmail.com</a>&gt;</span><br>Date: Mon, Jan 18, 2016 at 9:42 PM<br>=
-Subject: Re: [Toaster] Build cancellation from toaster<br>To: &quot;Barros =
-Pena, Belen&quot; &lt;<a href=3D"mailto:belen.barros.pena@intel.com">belen.=
-barros.pena@intel.com</a>&gt;<br>Cc: &quot;<a href=3D"mailto:toaster@yoctop=
-roject.org">toaster@yoctoproject.org</a>&quot; &lt;<a href=3D"mailto:toaste=
-r@yoctoproject.org">toaster@yoctoproject.org</a>&gt;<br><br><br><div dir=3D=
-"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quote"><span c=
-lass=3D"">On Mon, Jan 18, 2016 at 1:13 AM, Barros Pena, Belen <span dir=3D"=
-ltr">&lt;<a href=3D"mailto:belen.barros.pena@intel.com" target=3D"_blank">b=
-elen.barros.pena@intel.com</a>&gt;</span> wrote:<br><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
-204,204);padding-left:1ex"><span><br>
-<br>
-On 13/01/2016 16:47, &quot;sujith h&quot; &lt;<a href=3D"mailto:sujith.h@gm=
-ail.com" target=3D"_blank">sujith.h@gmail.com</a>&gt; wrote:<br>
-<br>
-&gt;<br>
-&gt;I have updated another patch set with which I have verified with:<br>
-&gt;<br>
-&gt;a) cancellation of a normal build<br>
-&gt;<br>
-&gt;b) run again and cancel the build<br>
-&gt;<br>
-&gt;c) stop toaster + start toaster + run again=C2=A0 =C2=A0and cancel the =
-build<br>
-&gt;<br>
-&gt;<a href=3D"http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?=
-h=3Dsujith/toast" rel=3D"noreferrer" target=3D"_blank">http://git.yoctoproj=
-ect.org/cgit/cgit.cgi/poky-contrib/log/?h=3Dsujith/toast</a><br>
-&gt;er-build-cancel12<br>
-<br>
-</span>Sorry for the delay in looking into this. Cancellation seems to be w=
-orking<br>
-well for me for any builds I start from Toaster. However, it doesn&#39;t se=
-em<br>
-to work for builds I start from the command line and I track through<br>
-Toaster. For those builds, a &#39;cancel&#39; button appears, but when I cl=
-ick it,<br>
-nothing happens: the build proceeds until it completes.<br>
-<br>
-I am not even sure if the &#39;cancel&#39; functionality can work for build=
-s<br>
-started from the command line, although it would be great if it did. If it<=
-br>
-is not possible to make it work, then the cancel button should not display<=
-br>
-for those builds. We can provide a message instead, as we do in the case<br=
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
 >
-of the &#39;run again&#39; button, explaining that builds started from the =
-command<br>
-line can only be cancelled from the command line.<br></blockquote><div><br>=
-</div></span><div>Somehow when i try to use the same logic to cancel the bu=
-ild triggered from command line ( with small modification in the code thoug=
-h), I am getting error in the toaster_web.log as:<br><br>ProtocolError: &lt=
-;ProtocolError for <a href=3D"http://0.0.0.0:42952/" target=3D"_blank">0.0.=
-0.0:42952/</a>: 503 Service Unavailable&gt;<br><br></div><div>Not able to u=
-nderstand why it is not able to connect to the port. Because as per my unde=
-rstanding when a build is triggered from toaster, we connect to the host:po=
-rt and execute the commands. The runcommand is failing badly with the log:<=
-br><br>2016-01-18 16:06:05,608 ERROR Internal Server Error: /toastergui/pro=
-ject/1/builds/<span class=3D""><br>Traceback (most recent call last):<br></=
-span>=C2=A0 File &quot;/home/sujith/build/poky-push/venv/lib/python2.7/site=
--packages/django/core/handlers/base.py&quot;, line 132, in get_response<br>=
-=C2=A0=C2=A0=C2=A0 response =3D wrapped_callback(request, *callback_args, *=
-*callback_kwargs)<br>=C2=A0 File &quot;/home/sujith/build/poky-push/bitbake=
-/lib/toaster/toastergui/views.py&quot;, line 171, in returned_wrapper<br>=
-=C2=A0=C2=A0=C2=A0 context =3D view(request, *args, **kwargs)<br>=C2=A0 Fil=
-e &quot;/home/sujith/build/poky-push/bitbake/lib/toaster/toastergui/views.p=
-y&quot;, line 2896, in projectbuilds<br>=C2=A0=C2=A0=C2=A0 bbctrl.forceShut=
-Down()<br>=C2=A0 File &quot;/home/sujith/build/poky-push/bitbake/lib/toaste=
-r/bldcontrol/bbcontroller.py&quot;, line 73, in forceShutDown<br>=C2=A0=C2=
-=A0=C2=A0 return self._runCommand([&quot;stateForceShutdown&quot;])<br>=C2=
-=A0 File &quot;/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/=
-bbcontroller.py&quot;, line 50, in _runCommand<br>=C2=A0=C2=A0=C2=A0 result=
-, error =3D self.connection.runCommand(command)<br>=C2=A0 File &quot;/usr/l=
-ib64/python2.7/xmlrpclib.py&quot;, line 1240, in __call__<br>=C2=A0=C2=A0=
-=C2=A0 return self.__send(self.__name, args)<br>=C2=A0 File &quot;/usr/lib6=
-4/python2.7/xmlrpclib.py&quot;, line 1599, in __request<br>=C2=A0=C2=A0=C2=
-=A0 verbose=3Dself.__verbose<br>=C2=A0 File &quot;/usr/lib64/python2.7/xmlr=
-pclib.py&quot;, line 1280, in request<br>=C2=A0=C2=A0=C2=A0 return self.sin=
-gle_request(host, handler, request_body, verbose)<br>=C2=A0 File &quot;/usr=
-/lib64/python2.7/xmlrpclib.py&quot;, line 1328, in single_request<br>=C2=A0=
-=C2=A0=C2=A0 response.msg,<br>ProtocolError: &lt;ProtocolError for <a href=
-=3D"http://0.0.0.0:42952/" target=3D"_blank">0.0.0.0:42952/</a>: 503 Servic=
-e Unavailable&gt;<br>Internal Server Error: /toastergui/project/1/builds/<s=
-pan class=3D""><br>Traceback (most recent call last):<br></span>=C2=A0 File=
- &quot;/home/sujith/build/poky-push/venv/lib/python2.7/site-packages/django=
-/core/handlers/base.py&quot;, line 132, in get_response<br>=C2=A0=C2=A0=C2=
-=A0 response =3D wrapped_callback(request, *callback_args, **callback_kwarg=
-s)<br>=C2=A0 File &quot;/home/sujith/build/poky-push/bitbake/lib/toaster/to=
-astergui/views.py&quot;, line 171, in returned_wrapper<br>=C2=A0=C2=A0=C2=
-=A0 context =3D view(request, *args, **kwargs)<br>=C2=A0 File &quot;/home/s=
-ujith/build/poky-push/bitbake/lib/toaster/toastergui/views.py&quot;, line 2=
-896, in projectbuilds<br>=C2=A0=C2=A0=C2=A0 bbctrl.forceShutDown()<br>=C2=
-=A0 File &quot;/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/=
-bbcontroller.py&quot;, line 73, in forceShutDown<br>=C2=A0=C2=A0=C2=A0 retu=
-rn self._runCommand([&quot;stateForceShutdown&quot;])<br>=C2=A0 File &quot;=
-/home/sujith/build/poky-push/bitbake/lib/toaster/bldcontrol/bbcontroller.py=
-&quot;, line 50, in _runCommand<br>=C2=A0=C2=A0=C2=A0 result, error =3D sel=
-f.connection.runCommand(command)<br>=C2=A0 File &quot;/usr/lib64/python2.7/=
-xmlrpclib.py&quot;, line 1240, in __call__<br>=C2=A0=C2=A0=C2=A0 return sel=
-f.__send(self.__name, args)<br>=C2=A0 File &quot;/usr/lib64/python2.7/xmlrp=
-clib.py&quot;, line 1599, in __request<br>=C2=A0=C2=A0=C2=A0 verbose=3Dself=
-.__verbose<br>=C2=A0 File &quot;/usr/lib64/python2.7/xmlrpclib.py&quot;, li=
-ne 1280, in request<br>=C2=A0=C2=A0=C2=A0 return self.single_request(host, =
-handler, request_body, verbose)<br>=C2=A0 File &quot;/usr/lib64/python2.7/x=
-mlrpclib.py&quot;, line 1328, in single_request<br>=C2=A0=C2=A0=C2=A0 respo=
-nse.msg,<br>ProtocolError: &lt;ProtocolError for <a href=3D"http://0.0.0.0:=
-42952/" target=3D"_blank">0.0.0.0:42952/</a>: 503 Service Unavailable&gt;<b=
-r>[18/Jan/2016 16:06:05] &quot;POST /toastergui/project/1/builds/ HTTP/1.1&=
-quot; 500 13414<br><br><br></div><div>Any helping hand would be appreciated=
-. More over I would also like to know if we can pass commands to builds tri=
-ggered from command line?<br><br></div><div>Thanks,<br></div><div>Sujith H<=
-br clear=3D"all"></div></div><span class=3D""><br>-- <br><div>=E0=B4=B8=E0=
-=B5=81=E0=B4=9C=E0=B4=BF=E0=B4=A4=E0=B5=8D =E0=B4=B9=E0=B4=B0=E0=B4=BF=E0=
-=B4=A6=E0=B4=BE=E0=B4=B8=E0=B4=A8=E0=B5=8D<br>Bangalore<br>&lt;Project&gt;C=
-ontributor to KDE project<br><a href=3D"http://fci.wikia.com/wiki/Anti-DRM-=
-Campaign" target=3D"_blank">http://fci.wikia.com/wiki/Anti-DRM-Campaign</a>=
-<br>&lt;Blog&gt; <a href=3D"http://sujithh.info" target=3D"_blank">http://s=
-ujithh.info</a><br></div>
-</span></div></div>
-</div><br><br clear=3D"all"><br>-- <br><div class=3D"gmail_signature">=E0=
-=B4=B8=E0=B5=81=E0=B4=9C=E0=B4=BF=E0=B4=A4=E0=B5=8D =E0=B4=B9=E0=B4=B0=E0=
-=B4=BF=E0=B4=A6=E0=B4=BE=E0=B4=B8=E0=B4=A8=E0=B5=8D<br>Bangalore<br>&lt;Pro=
-ject&gt;Contributor to KDE project<br><a href=3D"http://fci.wikia.com/wiki/=
-Anti-DRM-Campaign" target=3D"_blank">http://fci.wikia.com/wiki/Anti-DRM-Cam=
-paign</a><br>&lt;Blog&gt; <a href=3D"http://sujithh.info" target=3D"_blank"=
->http://sujithh.info</a><br></div>
-</div></div></div>
+<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
+<!--[if !mso]><style>v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style><![endif]--><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+pre
+	{mso-style-priority:99;
+	mso-style-link:"HTML Preformatted Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:13.5pt;
+	font-family:"Courier New";}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri",sans-serif;
+	color:windowtext;}
+span.HTMLPreformattedChar
+	{mso-style-name:"HTML Preformatted Char";
+	mso-style-priority:99;
+	mso-style-link:"HTML Preformatted";
+	font-family:"Courier New";}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-US" link=3D"#0563C1" vlink=3D"#954F72">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal">Hi,<o:p></o:p></p>
+<p class=3D"MsoNormal">I have been told that Hob is deprecated and to be re=
+placed by Toaster, still I have some changes already made on Hob, which I w=
+ould like to push. Besides that, I understand that at this moment Toaster c=
+annot run images at all, via a button
+ push.<o:p></o:p></p>
+<p class=3D"MsoNormal">I would be happy if these changes make it into YP 2.=
+1, M2 or at least M3.<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">The current behavior of Hob is that there is a &quot=
+;Run Image&quot; button which becomes visible only for qemu images.<o:p></o=
+:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">My suggested change is:<o:p></o:p></p>
+<p class=3D"MsoNormal">- if an image is selected and it is , let the &quot;=
+Run image&quot; button be named &quot;Run qemu image&quot;<o:p></o:p></p>
+<p class=3D"MsoNormal">- if an image is selected and it is not qemu-compati=
+ble, let the same button show up with the name &quot;Run custom image&quot;=
+, and besides that, an option shows-up to allow the selection of the custom=
+ script (by default it points out to runqemu
+ script) to be used for launching this custom image<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Associated bug:<o:p></o:p></p>
+<p class=3D"MsoNormal"><a href=3D"https://bugzilla.yoctoproject.org/show_bu=
+g.cgi?id=3D8940">https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D8940</=
+a><o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Related bug (feaure request):<o:p></o:p></p>
+<p class=3D"MsoNormal"><a href=3D"https://bugzilla.yoctoproject.org/show_bu=
+g.cgi?id=3D8959">https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D8959</=
+a><o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Thanks Belen, Bogdan and Alexandru for helping me on=
+ this.<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Regards,<o:p></o:p></p>
+<p class=3D"MsoNormal" style=3D"line-height:150%"><span style=3D"font-size:=
+12.0pt;line-height:150%;color:#1F497D"><img border=3D"0" width=3D"288" heig=
+ht=3D"2" id=3D"Picture_x0020_3" src=3D"cid:image001.png@01D15474.76B77890" =
+alt=3D"cid:image001.png@01D13266.68FC4030"><b><u><o:p></o:p></u></b></span>=
+</p>
+<p class=3D"MsoNormal">Mirela Rabulea<o:p></o:p></p>
+<p class=3D"MsoNormal">Simulation Software Engineer<o:p></o:p></p>
+<p class=3D"MsoNormal">NXP Semiconductors<o:p></o:p></p>
+<p class=3D"MsoNormal">Phone: &#43;40-21-3052420<o:p></o:p></p>
+<p class=3D"MsoNormal">Mobile: &#43;40-723-362518<o:p></o:p></p>
+<p class=3D"MsoNormal"><a href=3D"mailto:Mirela.Rabulea@nxp.com">Mirela.Rab=
+ulea@nxp.com</a><o:p></o:p></p>
+<p class=3D"MsoNormal"><span style=3D"font-family:&quot;Arial&quot;,sans-se=
+rif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D"><img =
+border=3D"0" width=3D"288" height=3D"49" id=3D"Picture_x0020_9" src=3D"cid:=
+image002.png@01D15474.76B77890" alt=3D"cid:image002.png@01D13266.68FC4030">=
+</span><o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+</div>
+</body>
+</html>
 
---001a113aaa386b84490529d99703--
+--_000_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_--
+
+--_006_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_
+Content-Type: image/png; name="image001.png"
+Content-Description: image001.png
+Content-Disposition: inline; filename="image001.png"; size=182;
+	creation-date="Thu, 21 Jan 2016 15:52:19 GMT";
+	modification-date="Thu, 21 Jan 2016 15:52:19 GMT"
+Content-ID: <image001.png@01D15474.76B77890>
+Content-Transfer-Encoding: base64
+
+iVBORw0KGgoAAAANSUhEUgAAASAAAAACCAYAAAD4kAEJAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA
+GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAENJREFUeNpi/LWF4T/DKKA6mH7O
+hibmvtFdMBq4IPBpyUOGr3vkB6PTuDl+PHQwOSM/GkmEAdNoEIyCUTAKBgoABBgAvmoNndLm3ncA
+AAAASUVORK5CYII=
+
+--_006_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_
+Content-Type: image/png; name="image002.png"
+Content-Description: image002.png
+Content-Disposition: inline; filename="image002.png"; size=22041;
+	creation-date="Thu, 21 Jan 2016 15:52:19 GMT";
+	modification-date="Thu, 21 Jan 2016 15:52:19 GMT"
+Content-ID: <image002.png@01D15474.76B77890>
+Content-Transfer-Encoding: base64
+
+iVBORw0KGgoAAAANSUhEUgAAASAAAAAxCAYAAAB6fnQKAAAACXBIWXMAAA7EAAAOxAGVKw4bAAA5
+5WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0w
+TXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRh
+LyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMwNjcgNzkuMTU3NzQ3LCAyMDE1LzAzLzMw
+LTIzOjQwOjQyICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMu
+b3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJk
+ZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFw
+LzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMv
+MS4xLyIKICAgICAgICAgICAgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bo
+b3Rvc2hvcC8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNv
+bS94YXAvMS4wL21tLyIKICAgICAgICAgICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5j
+b20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0i
+aHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0
+dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5B
+ZG9iZSBQaG90b3Nob3AgQ0MgMjAxNSAoTWFjaW50b3NoKTwveG1wOkNyZWF0b3JUb29sPgogICAg
+ICAgICA8eG1wOkNyZWF0ZURhdGU+MjAxNS0xMi0wMVQxMDo1OTo1MS0wNjowMDwveG1wOkNyZWF0
+ZURhdGU+CiAgICAgICAgIDx4bXA6TW9kaWZ5RGF0ZT4yMDE1LTEyLTAxVDExOjA1OjQwLTA2OjAw
+PC94bXA6TW9kaWZ5RGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxNS0xMi0wMVQx
+MTowNTo0MC0wNjowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPGRjOmZvcm1hdD5pbWFn
+ZS9wbmc8L2RjOmZvcm1hdD4KICAgICAgICAgPHBob3Rvc2hvcDpDb2xvck1vZGU+MzwvcGhvdG9z
+aG9wOkNvbG9yTW9kZT4KICAgICAgICAgPHhtcE1NOkluc3RhbmNlSUQ+eG1wLmlpZDozNDI2YWFl
+OC05MzAwLTRkNTYtODNkMS00YmVlZWY5OTNkY2Y8L3htcE1NOkluc3RhbmNlSUQ+CiAgICAgICAg
+IDx4bXBNTTpEb2N1bWVudElEPnhtcC5kaWQ6NmVhNzk0M2EtZThlYy00NTU0LTg4YjYtNzEyYWM0
+ODdhOWI3PC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVu
+dElEPnhtcC5kaWQ6NmVhNzk0M2EtZThlYy00NTU0LTg4YjYtNzEyYWM0ODdhOWI3PC94bXBNTTpP
+cmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8
+cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+
+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y3JlYXRlZDwvc3RFdnQ6YWN0aW9uPgog
+ICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjZlYTc5NDNhLWU4ZWMt
+NDU1NC04OGI2LTcxMmFjNDg3YTliNzwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAg
+ICAgPHN0RXZ0OndoZW4+MjAxNS0xMi0wMVQxMDo1OTo1MS0wNjowMDwvc3RFdnQ6d2hlbj4KICAg
+ICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIw
+MTUgKE1hY2ludG9zaCk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgIDwvcmRm
+OmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAg
+ICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAg
+ICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjM0MjZhYWU4LTkzMDAtNGQ1Ni04
+M2QxLTRiZWVlZjk5M2RjZjwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0
+RXZ0OndoZW4+MjAxNS0xMi0wMVQxMTowNTo0MC0wNjowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAg
+ICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1h
+Y2ludG9zaCk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpj
+aGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAg
+ICAgICA8L3JkZjpTZXE+CiAgICAgICAgIDwveG1wTU06SGlzdG9yeT4KICAgICAgICAgPHRpZmY6
+T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRp
+b24+OTYwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1
+dGlvbj45NjAwMDAvMTAwMDA8L3RpZmY6WVJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29s
+dXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDxleGlmOkNvbG9yU3Bh
+Y2U+NjU1MzU8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9u
+PjI4ODwvZXhpZjpQaXhlbFhEaW1lbnNpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWURpbWVuc2lv
+bj40OTwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8
+L3JkZjpSREY+CjwveDp4bXBtZXRhPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAK
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAK
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5k
+PSJ3Ij8+BBUoAwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAb
+rklEQVR42uydd5wV1dnHv3Pb3u0Lu/ReBERRUCzYQAUbWMJrN1HyWuOrqNGoiZpYYtQoUYyKPbbE
+RtTYYlcEFUWpFnrHLbTtu7fNvH+cZ7hnZ+fevQsrrjK/z2c+sztn5sw5Z875nef5nXINy7I2APl4
+2F4cB8xKd8OkSZN48sknvZLy4AGwLGvb34al/+dhezAOeC9V4Nq1a+nTp49XSh48uBCQD6jximSH
+EEsXeOWVV3ol5MFDCvi8IvjhsGbNGqZPn+4VhAcPHgHtfFx11VVeIXjw4BHQzsfy5cs968eDB4+A
+fhw89dRTqYLGAQ96JeRhF8T+wBMeAe0ExOPxVEF9gCO9EvKwC6ILcLRHQDsBWVlZqYJqge+9EvKw
+C6IBWO8RkAcPHtoFPALy4MGDR0AePHjY9RAASKx9ELN0JkbYwUcJE4xcAiMesG/NCCvnPcFXi+ZR
+XFSEibHtuj9WSWPunmzocAon7pFLp7z0ccZNi5cWxInVvo7R+C6Gv2RbmGFYVNeH6VlcyfB+ZURi
+YLa4qMTCMML4fR0IZw2hMO8Iwln9fkrf6z7gPCALWAz8A7gfqAN+iVqXtpt2vwFYwCnAau36n4Fz
+gJ5AAngDuBGYB+wB/EHu+c7x/quBAcCF8v8lwBigv3Rm1cCLwN+1Z34HjAJ6OTq+lZKudLhK3jVQ
+/v8QuEXOOq4ELtLumwPcAfzb5b59gbuAuY4wO9+3AV8DxwCTgE+Be13S9iSwSOICuEHi7pFBPn8P
+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
+
+--_006_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_--
+
+--_007_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_
+Content-Type: application/octet-stream; name="bug_8940.patch"
+Content-Description: bug_8940.patch
+Content-Disposition: attachment; filename="bug_8940.patch"; size=10937;
+	creation-date="Thu, 21 Jan 2016 15:46:09 GMT";
+	modification-date="Tue, 19 Jan 2016 14:35:44 GMT"
+Content-Transfer-Encoding: base64
+
+RnJvbSA0OTJmYmU4YjVkOTRmOTVjODliOTIyZjVhZTJmMGFmYmRhYzVhNWFhIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNaXJlbGEgUmFidWxlYSA8bWlyZWxhLnJhYnVsZWFAbnhwLmNv
+bT4KRGF0ZTogVHVlLCAxOSBKYW4gMjAxNiAxNjozMTozOCArMDIwMApTdWJqZWN0OiBbUEFUQ0hd
+IEZpeCBidWcgODk0MCAtIEFsb3cgSG9iIHRvIHJ1biBpbWFnZXMgb24gYSBjdXN0b20gc2ltdWxh
+dG9yLAogb3RoZXIgdGhhbiBxZW11CgpTaWduZWQtb2ZmLWJ5OiBNaXJlbGEgUmFidWxlYSA8bWly
+ZWxhLnJhYnVsZWFAbnhwLmNvbT4KLS0tCiBiaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvYnVpbGRl
+ci5weSAgICAgICAgICB8IDU5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysKIGJpdGJha2Uv
+bGliL2JiL3VpL2NydW1icy9pbWFnZWRldGFpbHNwYWdlLnB5IHwgNTggKysrKysrKysrKysrKysr
+KysrKysrLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDEwNSBpbnNlcnRpb25zKCspLCAxMiBkZWxl
+dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9iaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvYnVpbGRlci5w
+eSBiL2JpdGJha2UvbGliL2JiL3VpL2NydW1icy9idWlsZGVyLnB5CmluZGV4IGRjYzQxMDQuLjgw
+ZjMyOWEgMTAwNzU1Ci0tLSBhL2JpdGJha2UvbGliL2JiL3VpL2NydW1icy9idWlsZGVyLnB5Cisr
+KyBiL2JpdGJha2UvbGliL2JiL3VpL2NydW1icy9idWlsZGVyLnB5CkBAIC0xMzU5LDYgKzEzNTks
+MjUgQEAgY2xhc3MgQnVpbGRlcihndGsuV2luZG93KToKIAogICAgICAgICByZXR1cm4ga2VybmVs
+X3BhdGgKIAorICAgIGRlZiBzaG93X2xvYWRfcnVuX3NjcmlwdF9kaWFsb2coc2VsZik6CisgICAg
+ICAgIGRpYWxvZyA9IGd0ay5GaWxlQ2hvb3NlckRpYWxvZygiTG9hZCBSdW4gU2NyaXB0Iiwgc2Vs
+ZiwKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGd0ay5GSUxFX0NIT09T
+RVJfQUNUSU9OX1NBVkUpCisgICAgICAgIGJ1dHRvbiA9IGRpYWxvZy5hZGRfYnV0dG9uKCJDYW5j
+ZWwiLCBndGsuUkVTUE9OU0VfTk8pCisgICAgICAgIEhvYkFsdEJ1dHRvbi5zdHlsZV9idXR0b24o
+YnV0dG9uKQorICAgICAgICBidXR0b24gPSBkaWFsb2cuYWRkX2J1dHRvbigiT3BlbiIsIGd0ay5S
+RVNQT05TRV9ZRVMpCisgICAgICAgIEhvYkJ1dHRvbi5zdHlsZV9idXR0b24oYnV0dG9uKQorCisg
+ICAgICAgIGRpYWxvZy5zZXRfY3VycmVudF9mb2xkZXIoc2VsZi5wYXJhbWV0ZXJzLmltYWdlX2Fk
+ZHIpCisKKyAgICAgICAgcmVzcG9uc2UgPSBkaWFsb2cucnVuKCkKKyAgICAgICAgcnVuX3Njcmlw
+dF9wYXRoID0gIiIKKyAgICAgICAgaWYgcmVzcG9uc2UgPT0gZ3RrLlJFU1BPTlNFX1lFUzoKKyAg
+ICAgICAgICAgIHJ1bl9zY3JpcHRfcGF0aCA9IGRpYWxvZy5nZXRfZmlsZW5hbWUoKQorCisgICAg
+ICAgIGRpYWxvZy5kZXN0cm95KCkKKworICAgICAgICByZXR1cm4gcnVuX3NjcmlwdF9wYXRoCisK
+ICAgICBkZWYgcnVucWVtdV9pbWFnZShzZWxmLCBpbWFnZV9uYW1lLCBrZXJuZWxfbmFtZSk6CiAg
+ICAgICAgIGlmIG5vdCBpbWFnZV9uYW1lIG9yIG5vdCBrZXJuZWxfbmFtZToKICAgICAgICAgICAg
+IGxibCA9ICI8Yj5QbGVhc2Ugc2VsZWN0ICVzIHRvIGxhdW5jaCBpbiBRRU1VLjwvYj4iICUgKCJh
+IGtlcm5lbCIgaWYgaW1hZ2VfbmFtZSBlbHNlICJhbiBpbWFnZSIpCkBAIC0xMzk3LDYgKzE0MTYs
+NDYgQEAgY2xhc3MgQnVpbGRlcihndGsuV2luZG93KToKICAgICAgICAgICAgIGRpYWxvZy5ydW4o
+KQogICAgICAgICAgICAgZGlhbG9nLmRlc3Ryb3koKQogCisgICAgZGVmIHJ1bl9jdXN0b21faW1h
+Z2Uoc2VsZiwgaW1hZ2VfbmFtZSwgY3VzdG9tX3NpbV9wYXRoKToKKyAgICAgICAgaWYgbm90IGlt
+YWdlX25hbWUgb3Igbm90IGN1c3RvbV9zaW1fcGF0aDoKKyAgICAgICAgICAgIGlmIG5vdCBpbWFn
+ZV9uYW1lOgorICAgICAgICAgICAgICAgIGxibCA9ICI8Yj5QbGVhc2Ugc2VsZWN0IGFuIGltYWdl
+IHRvIGxhdW5jaCBpbiB0aGUgY3VzdG9tIHNpbXVsYXRvci48L2I+IgorICAgICAgICAgICAgZWxz
+ZToKKyAgICAgICAgICAgICAgICBsYmwgPSAiPGI+UGxlYXNlIHNlbGVjdCBhIGN1c3RvbSBzaW11
+bGF0b3IgZm9yIGxhdW5jaGluZyB0aGUgc2VsZWN0ZWQgaW1hZ2UuPC9iPiIKKyAgICAgICAgICAg
+IGRpYWxvZyA9IENydW1ic01lc3NhZ2VEaWFsb2coc2VsZiwgbGJsLCBndGsuTUVTU0FHRV9JTkZP
+KQorICAgICAgICAgICAgYnV0dG9uID0gZGlhbG9nLmFkZF9idXR0b24oIkNsb3NlIiwgZ3RrLlJF
+U1BPTlNFX09LKQorICAgICAgICAgICAgSG9iQnV0dG9uLnN0eWxlX2J1dHRvbihidXR0b24pCisg
+ICAgICAgICAgICBkaWFsb2cucnVuKCkKKyAgICAgICAgICAgIGRpYWxvZy5kZXN0cm95KCkKKyAg
+ICAgICAgICAgIHJldHVybgorCisgICAgICAgIGltYWdlX3BhdGggPSBvcy5wYXRoLmpvaW4oc2Vs
+Zi5wYXJhbWV0ZXJzLmltYWdlX2FkZHIsIGltYWdlX25hbWUpCisKKyAgICAgICAgc291cmNlX2Vu
+dl9wYXRoID0gb3MucGF0aC5qb2luKHNlbGYucGFyYW1ldGVycy5jb3JlX2Jhc2UsICJvZS1pbml0
+LWJ1aWxkLWVudiIpCisgICAgICAgIHRtcF9wYXRoID0gc2VsZi5wYXJhbWV0ZXJzLnRtcGRpcgor
+ICAgICAgICBjbWRsaW5lID0gYmIudWkuY3J1bWJzLnV0aWxzLndoaWNoX3Rlcm1pbmFsKCkKKyAg
+ICAgICAgaWYgb3MucGF0aC5leGlzdHMoaW1hZ2VfcGF0aCkgYW5kIG9zLnBhdGguZXhpc3RzKGN1
+c3RvbV9zaW1fcGF0aCkgXAorICAgICAgICAgICBhbmQgb3MucGF0aC5leGlzdHMoc291cmNlX2Vu
+dl9wYXRoKSBhbmQgb3MucGF0aC5leGlzdHModG1wX3BhdGgpIFwKKyAgICAgICAgICAgYW5kIGNt
+ZGxpbmU6CisgICAgICAgICAgICBjbWRsaW5lICs9ICJcJyBiYXNoIC1jIFwiZXhwb3J0IE9FX1RN
+UERJUj0iICsgdG1wX3BhdGggKyAiOyAiCisgICAgICAgICAgICBjbWRsaW5lICs9ICJzb3VyY2Ug
+IiArIHNvdXJjZV9lbnZfcGF0aCArICIgIiArIG9zLmdldGN3ZCgpICsgIjsgIgorICAgICAgICAg
+ICAgY21kbGluZSArPSBjdXN0b21fc2ltX3BhdGggKyAiICIgKyBpbWFnZV9wYXRoICsgIlwiXCci
+CisgICAgICAgICAgICBzdWJwcm9jZXNzLlBvcGVuKHNobGV4LnNwbGl0KGNtZGxpbmUpKQorICAg
+ICAgICBlbHNlOgorICAgICAgICAgICAgbGJsID0gIjxiPlBhdGggZXJyb3I8L2I+IgorICAgICAg
+ICAgICAgbXNnID0gIk9uZSBvZiB5b3VyIHBhdGhzIGlzIHdyb25nLCIKKyAgICAgICAgICAgIG1z
+ZyA9IG1zZyArICIgcGxlYXNlIG1ha2Ugc3VyZSB0aGUgZm9sbG93aW5nIHBhdGhzIGV4aXN0Olxu
+IgorICAgICAgICAgICAgbXNnID0gbXNnICsgImltYWdlIHBhdGg6IiArIGltYWdlX3BhdGggKyAi
+XG4iCisgICAgICAgICAgICBtc2cgPSBtc2cgKyAiY3VzdG9tIHNpbXVsYXRvciBwYXRoOiIgKyBj
+dXN0b21fc2ltX3BhdGggKyAiXG4iCisgICAgICAgICAgICBtc2cgPSBtc2cgKyAic291cmNlIGVu
+dmlyb25tZW50IHBhdGg6IiArIHNvdXJjZV9lbnZfcGF0aCArICJcbiIKKyAgICAgICAgICAgIG1z
+ZyA9IG1zZyArICJ0bXAgcGF0aDogIiArIHRtcF9wYXRoICsgIi4iCisgICAgICAgICAgICBtc2cg
+PSBtc2cgKyAiWW91IG1heSBiZSBtaXNzaW5nIGVpdGhlciB4dGVybSBvciB2dGUgZm9yIHRlcm1p
+bmFsIHNlcnZpY2VzLiIKKyAgICAgICAgICAgIGRpYWxvZyA9IENydW1ic01lc3NhZ2VEaWFsb2co
+c2VsZiwgbGJsLCBndGsuTUVTU0FHRV9FUlJPUiwgbXNnKQorICAgICAgICAgICAgYnV0dG9uID0g
+ZGlhbG9nLmFkZF9idXR0b24oIkNsb3NlIiwgZ3RrLlJFU1BPTlNFX09LKQorICAgICAgICAgICAg
+SG9iQnV0dG9uLnN0eWxlX2J1dHRvbihidXR0b24pCisgICAgICAgICAgICBkaWFsb2cucnVuKCkK
+KyAgICAgICAgICAgIGRpYWxvZy5kZXN0cm95KCkKKwogICAgIGRlZiBzaG93X3BhY2thZ2VzKHNl
+bGYpOgogICAgICAgICBzZWxmLnBhY2thZ2VfZGV0YWlsc19wYWdlLnJlZnJlc2hfdGFibGVzKCkK
+ICAgICAgICAgc2VsZi5zd2l0Y2hfcGFnZShzZWxmLlBBQ0tBR0VfU0VMRUNUSU9OKQpkaWZmIC0t
+Z2l0IGEvYml0YmFrZS9saWIvYmIvdWkvY3J1bWJzL2ltYWdlZGV0YWlsc3BhZ2UucHkgYi9iaXRi
+YWtlL2xpYi9iYi91aS9jcnVtYnMvaW1hZ2VkZXRhaWxzcGFnZS5weQppbmRleCAzNTJlOTQ4Li5l
+NzM4MjdkIDEwMDc1NQotLS0gYS9iaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvaW1hZ2VkZXRhaWxz
+cGFnZS5weQorKysgYi9iaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvaW1hZ2VkZXRhaWxzcGFnZS5w
+eQpAQCAtMjg0LDYgKzI4NCw4IEBAIGNsYXNzIEltYWdlRGV0YWlsc1BhZ2UgKEhvYlBhZ2UpOgog
+ICAgICAgICAgICAgaWYgbm90IHNlbGYudG9nZ2xlZF9pbWFnZToKICAgICAgICAgICAgICAgICBp
+ZiBpID09IChsZW4oaW1hZ2VfbmFtZXMpIC0gMSk6CiAgICAgICAgICAgICAgICAgICAgIGlzX3Rv
+Z2dsZWQgPSBUcnVlCisgICAgICAgICAgICAgICAgICAgICMgaWYgdGhlcmUgd2FzIG5vIHFlbXUg
+cnVuYWJsZSBpbWFnZSwgbGV0IG9uZSBpbWFnZSBiZSBjdXN0b20gcnVuCisgICAgICAgICAgICAg
+ICAgICAgIGltYWdlX2F0dHIgPSAicnVuX2N1c3RvbSIKICAgICAgICAgICAgICAgICBpZiBpc190
+b2dnbGVkOgogICAgICAgICAgICAgICAgICAgICBkZWZhdWx0X2ltYWdlX3NpemUgPSBpbWFnZV9z
+aXplCiAgICAgICAgICAgICAgICAgICAgIHNlbGYudG9nZ2xlZF9pbWFnZSA9IGltYWdlX25hbWUK
+QEAgLTMwMyw3ICszMDUsNyBAQCBjbGFzcyBJbWFnZURldGFpbHNQYWdlIChIb2JQYWdlKToKICAg
+ICAgICAgICAgIGkgPSBpICsgMQogICAgICAgICAgICAgc2VsZi5udW1fdG9nZ2xlZCArPSBpc190
+b2dnbGVkCiAKLSAgICAgICAgaXNfcnVubmFibGUgPSBzZWxmLmNyZWF0ZV9ib3R0b21fYnV0dG9u
+cyhzZWxmLmJ1dHRvbmxpc3QsIHNlbGYudG9nZ2xlZF9pbWFnZSkKKyAgICAgICAgc2VsZi5pc19y
+dW5uYWJsZSA9IHNlbGYuY3JlYXRlX2JvdHRvbV9idXR0b25zKHNlbGYuYnV0dG9ubGlzdCwgc2Vs
+Zi50b2dnbGVkX2ltYWdlKQogCiAgICAgICAgICMgR2VuZXJhdGVkIGltYWdlIGZpbGVzIGluZm8K
+ICAgICAgICAgdmFybGlzdCA9IFsiTmFtZTogIiwgIkZpbGVzIGNyZWF0ZWQ6ICIsICJEaXJlY3Rv
+cnk6ICJdCkBAIC0zMjQsMTAgKzMyNiwyMyBAQCBjbGFzcyBJbWFnZURldGFpbHNQYWdlIChIb2JQ
+YWdlKToKICAgICAgICAgc2VsZi5pbWFnZV9kZXRhaWwgPSBzZWxmLkRldGFpbEJveCh2YXJsaXN0
+PXZhcmxpc3QsIHZhbGxpc3Q9dmFsbGlzdCwgYnV0dG9uPXZpZXdfZmlsZXNfYnV0dG9uLCBidXR0
+b24yPW9wZW5fbG9nX2J1dHRvbikKICAgICAgICAgc2VsZi5ib3hfZ3JvdXBfYXJlYS5wYWNrX3N0
+YXJ0KHNlbGYuaW1hZ2VfZGV0YWlsLCBleHBhbmQ9RmFsc2UsIGZpbGw9VHJ1ZSkKIAorICAgICAg
+ICAjIFRoZSBkZWZhdWx0IHNjcmlwdCBwYXRoIHRvIHJ1biB0aGUgaW1hZ2UgKHJ1bnFlbXUpCisg
+ICAgICAgIHNlbGYucnVuX3NjcmlwdF9wYXRoID0gb3MucGF0aC5qb2luKHNlbGYuYnVpbGRlci5w
+YXJhbWV0ZXJzLmNvcmVfYmFzZSwgInNjcmlwdHMvcnVucWVtdSIpCisgICAgICAgIHNlbGYucnVu
+X3NjcmlwdF9kZXRhaWwgPSBOb25lCisgICAgICAgIHZhcmxpc3QgPSBbIlJ1biBzY3JpcHQ6ICJd
+CisgICAgICAgIHZhbGxpc3QgPSBbXQorICAgICAgICB2YWxsaXN0LmFwcGVuZChzZWxmLnJ1bl9z
+Y3JpcHRfcGF0aCkKKworICAgICAgICBjaGFuZ2VfcnVuX3NjcmlwdF9idXR0b24gPSBIb2JBbHRC
+dXR0b24oIkNoYW5nZSIpCisgICAgICAgIGNoYW5nZV9ydW5fc2NyaXB0X2J1dHRvbi5jb25uZWN0
+KCJjbGlja2VkIiwgc2VsZi5jaGFuZ2VfcnVuX3NjcmlwdF9jYikKKyAgICAgICAgY2hhbmdlX3J1
+bl9zY3JpcHRfYnV0dG9uLnNldF90b29sdGlwX3RleHQoIkNoYW5nZSBydW4gc2NyaXB0IikKKyAg
+ICAgICAgc2VsZi5ydW5fc2NyaXB0X2RldGFpbCA9IHNlbGYuRGV0YWlsQm94KHZhcmxpc3Q9dmFy
+bGlzdCwgdmFsbGlzdD12YWxsaXN0LCBidXR0b249Y2hhbmdlX3J1bl9zY3JpcHRfYnV0dG9uKQor
+ICAgICAgICBzZWxmLmJveF9ncm91cF9hcmVhLnBhY2tfc3RhcnQoc2VsZi5ydW5fc2NyaXB0X2Rl
+dGFpbCwgZXhwYW5kPVRydWUsIGZpbGw9VHJ1ZSkKKwogICAgICAgICAjIFRoZSBkZWZhdWx0IGtl
+cm5lbCBib3ggZm9yIHRoZSBxZW11IGltYWdlcwogICAgICAgICBzZWxmLnNlbF9rZXJuZWwgPSAi
+IgogICAgICAgICBzZWxmLmtlcm5lbF9kZXRhaWwgPSBOb25lCi0gICAgICAgIGlmICdxZW11JyBp
+biBpbWFnZV9uYW1lOgorICAgICAgICBpZiBzZWxmLnRlc3RfbWFjaF9ydW5uYWJsZShpbWFnZV9u
+YW1lKToKICAgICAgICAgICAgIHNlbGYuc2VsX2tlcm5lbCA9IHNlbGYuZ2V0X2tlcm5lbF9maWxl
+X25hbWUoKQogCiAgICAgICAgICMgICAgdmFybGlzdCA9IFsiS2VybmVsOiAiXQpAQCAtNDAxLDgg
+KzQxNiwxMCBAQCBjbGFzcyBJbWFnZURldGFpbHNQYWdlIChIb2JQYWdlKToKICAgICAgICAgICAg
+IHNlbGYuYm94X2dyb3VwX2FyZWEucGFja19zdGFydChzZWxmLmRldGFpbHNfYm90dG9tX2J1dHRv
+bnMsIGV4cGFuZD1GYWxzZSwgZmlsbD1GYWxzZSkKIAogICAgICAgICBzZWxmLnNob3dfYWxsKCkK
+LSAgICAgICAgaWYgc2VsZi5rZXJuZWxfZGV0YWlsIGFuZCAobm90IGlzX3J1bm5hYmxlKToKKyAg
+ICAgICAgaWYgc2VsZi5rZXJuZWxfZGV0YWlsIGFuZCAobm90IHNlbGYuaXNfcnVubmFibGUpOgog
+ICAgICAgICAgICAgc2VsZi5rZXJuZWxfZGV0YWlsLmhpZGUoKQorICAgICAgICBpZiBzZWxmLnJ1
+bl9zY3JpcHRfZGV0YWlsIGFuZCBzZWxmLmlzX3J1bm5hYmxlOgorICAgICAgICAgICAgc2VsZi5y
+dW5fc2NyaXB0X2RldGFpbC5oaWRlKCkKICAgICAgICAgc2VsZi5pbWFnZV9zYXZlZCA9IEZhbHNl
+CiAKICAgICBkZWYgdmlld19maWxlc19jbGlja2VkX2NiKHNlbGYsIGJ1dHRvbiwgaW1hZ2VfYWRk
+cik6CkBAIC01MjgsNiArNTQ1LDggQEAgY2xhc3MgSW1hZ2VEZXRhaWxzUGFnZSAoSG9iUGFnZSk6
+CiAgICAgICAgICAgICBpZiBmaWxlaXRlbVsnaXNfdG9nZ2xlZCddOgogICAgICAgICAgICAgICAg
+IGlmIGZpbGVpdGVtWydhY3Rpb25fYXR0ciddID09ICdydW4nOgogICAgICAgICAgICAgICAgICAg
+ICBzZWxmLmJ1aWxkZXIucnVucWVtdV9pbWFnZShmaWxlaXRlbVsnbmFtZSddLCBzZWxmLnNlbF9r
+ZXJuZWwpCisgICAgICAgICAgICAgICAgZWxpZiBmaWxlaXRlbVsnYWN0aW9uX2F0dHInXSA9PSAn
+cnVuX2N1c3RvbSc6CisgICAgICAgICAgICAgICAgICAgIHNlbGYuYnVpbGRlci5ydW5fY3VzdG9t
+X2ltYWdlKGZpbGVpdGVtWyduYW1lJ10sIHNlbGYucnVuX3NjcmlwdF9wYXRoKQogICAgICAgICAg
+ICAgICAgIGVsaWYgZmlsZWl0ZW1bJ2FjdGlvbl9hdHRyJ10gPT0gJ2RlcGxveSc6CiAgICAgICAg
+ICAgICAgICAgICAgIHNlbGYuYnVpbGRlci5kZXBsb3lfaW1hZ2UoZmlsZWl0ZW1bJ25hbWUnXSkK
+IApAQCAtNTQxLDkgKzU2MCwxNCBAQCBjbGFzcyBJbWFnZURldGFpbHNQYWdlIChIb2JQYWdlKToK
+ICAgICAgICAgaWYga2VybmVsX3BhdGggYW5kIHNlbGYua2VybmVsX2RldGFpbDoKICAgICAgICAg
+ICAgIGltcG9ydCBvcy5wYXRoCiAgICAgICAgICAgICBzZWxmLnNlbF9rZXJuZWwgPSBvcy5wYXRo
+LmJhc2VuYW1lKGtlcm5lbF9wYXRoKQotICAgICAgICAgICAgbWFya3VwID0gc2VsZi5rZXJuZWxf
+ZGV0YWlsLmZvcm1hdF9saW5lKCJLZXJuZWw6ICIsIHNlbGYuc2VsX2tlcm5lbCkKLSAgICAgICAg
+ICAgIGxhYmVsID0gKChzZWxmLmtlcm5lbF9kZXRhaWwuZ2V0X2NoaWxkcmVuKClbMF0pLmdldF9j
+aGlsZHJlbigpWzBdKS5nZXRfY2hpbGRyZW4oKVswXQotICAgICAgICAgICAgbGFiZWwuc2V0X21h
+cmt1cChtYXJrdXApCisgICAgICAgICAgICBzZWxmLmtlcm5lbF9kZXRhaWwudXBkYXRlX2xpbmVf
+d2lkZ2V0cygiS2VybmVsOiAiLCBzZWxmLnNlbF9rZXJuZWwpOworCisgICAgZGVmIGNoYW5nZV9y
+dW5fc2NyaXB0X2NiKHNlbGYsIHdpZGdldCk6CisgICAgICAgIHNlbGYucnVuX3NjcmlwdF9wYXRo
+ID0gc2VsZi5idWlsZGVyLnNob3dfbG9hZF9ydW5fc2NyaXB0X2RpYWxvZygpCisgICAgICAgIGlm
+IHNlbGYucnVuX3NjcmlwdF9wYXRoIGFuZCBzZWxmLnJ1bl9zY3JpcHRfZGV0YWlsOgorICAgICAg
+ICAgICAgaW1wb3J0IG9zLnBhdGgKKyAgICAgICAgICAgIHNlbGYuc2VsX3J1bl9zY3JpcHQgPSBv
+cy5wYXRoLmJhc2VuYW1lKHNlbGYucnVuX3NjcmlwdF9wYXRoKQorICAgICAgICAgICAgc2VsZi5y
+dW5fc2NyaXB0X2RldGFpbC51cGRhdGVfbGluZV93aWRnZXRzKCJSdW4gc2NyaXB0OiAiLCBzZWxm
+LnJ1bl9zY3JpcHRfcGF0aCkKIAogICAgIGRlZiBjcmVhdGVfYm90dG9tX2J1dHRvbnMoc2VsZiwg
+YnV0dG9ubGlzdCwgaW1hZ2VfbmFtZSk6CiAgICAgICAgICMgQ3JlYXRlIHRoZSBidXR0b25zIGF0
+IHRoZSBib3R0b20KQEAgLTU2NiwyNiArNTkwLDMzIEBAIGNsYXNzIEltYWdlRGV0YWlsc1BhZ2Ug
+KEhvYlBhZ2UpOgogICAgICAgICAgICAgcGFja2VkID0gVHJ1ZQogCiAgICAgICAgIG5hbWUgPSAi
+UnVuIGltYWdlIgotICAgICAgICBpZiBuYW1lIGluIGJ1dHRvbmxpc3QgYW5kIHNlbGYudGVzdF90
+eXBlX3J1bm5hYmxlKGltYWdlX25hbWUpIGFuZCBzZWxmLnRlc3RfbWFjaF9ydW5uYWJsZShpbWFn
+ZV9uYW1lKToKKyAgICAgICAgaWYgbmFtZSBpbiBidXR0b25saXN0OgorICAgICAgICAgICAgbmFt
+ZSA9ICJSdW4gcWVtdSBpbWFnZSIKKyAgICAgICAgICAgIGlzX3J1bm5hYmxlID0gVHJ1ZQorICAg
+ICAgICAgICAgaWYgbm90IChzZWxmLnRlc3RfdHlwZV9ydW5uYWJsZShpbWFnZV9uYW1lKSBhbmQg
+c2VsZi50ZXN0X21hY2hfcnVubmFibGUoaW1hZ2VfbmFtZSkpOgorICAgICAgICAgICAgICAgIG5h
+bWUgPSAiUnVuIGN1c3RvbSBpbWFnZSIKKyAgICAgICAgICAgICAgICBpc19ydW5uYWJsZSA9IEZh
+bHNlCiAgICAgICAgICAgICBpZiBjcmVhdGVkID09IFRydWU6CiAgICAgICAgICAgICAgICAgIyBz
+ZXBhcmF0b3IKICAgICAgICAgICAgICAgICAjbGFiZWwgPSBndGsuTGFiZWwoIiBvciAiKQogICAg
+ICAgICAgICAgICAgICNzZWxmLmRldGFpbHNfYm90dG9tX2J1dHRvbnMucGFja19lbmQobGFiZWws
+IGV4cGFuZD1GYWxzZSwgZmlsbD1GYWxzZSkKIAogICAgICAgICAgICAgICAgICMgY3JlYXRlIGJ1
+dHRvbiAiUnVuIGltYWdlIgotICAgICAgICAgICAgICAgIHJ1bl9idXR0b24gPSBIb2JBbHRCdXR0
+b24oIlJ1biBpbWFnZSIpCisgICAgICAgICAgICAgICAgcnVuX2J1dHRvbiA9IEhvYkFsdEJ1dHRv
+bihuYW1lKQogICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAjIGNyZWF0ZSBidXR0
+b24gIlJ1biBpbWFnZSIgYXMgdGhlIHByaW1hcnkgYnV0dG9uCi0gICAgICAgICAgICAgICAgcnVu
+X2J1dHRvbiA9IEhvYkJ1dHRvbigiUnVuIGltYWdlIikKKyAgICAgICAgICAgICAgICBydW5fYnV0
+dG9uID0gSG9iQnV0dG9uKG5hbWUpCiAgICAgICAgICAgICAgICAgI3J1bl9idXR0b24uc2V0X3Np
+emVfcmVxdWVzdCgyMDUsIDQ5KQogICAgICAgICAgICAgICAgIHJ1bl9idXR0b24uc2V0X2ZsYWdz
+KGd0ay5DQU5fREVGQVVMVCkKICAgICAgICAgICAgICAgICBwYWNrZWQgPSBUcnVlCi0gICAgICAg
+ICAgICBydW5fYnV0dG9uLnNldF90b29sdGlwX3RleHQoIlN0YXJ0IHVwIGFuIGltYWdlIHdpdGgg
+cWVtdSBlbXVsYXRvciIpCisgICAgICAgICAgICBpZiBpc19ydW5uYWJsZToKKyAgICAgICAgICAg
+ICAgICBydW5fYnV0dG9uLnNldF90b29sdGlwX3RleHQoIlN0YXJ0IHVwIGFuIGltYWdlIHdpdGgg
+cWVtdSBlbXVsYXRvciIpCisgICAgICAgICAgICBlbHNlOgorICAgICAgICAgICAgICAgIHJ1bl9i
+dXR0b24uc2V0X3Rvb2x0aXBfdGV4dCgiU3RhcnQgdXAgYW4gaW1hZ2Ugd2l0aCBjdXN0b20gc2lt
+dWxhdG9yIikKICAgICAgICAgICAgIGJ1dHRvbl9pZCA9IHJ1bl9idXR0b24uY29ubmVjdCgiY2xp
+Y2tlZCIsIHNlbGYucnVuX2J1dHRvbl9jbGlja2VkX2NiKQogICAgICAgICAgICAgc2VsZi5idXR0
+b25faWRzW2J1dHRvbl9pZF0gPSBydW5fYnV0dG9uCiAgICAgICAgICAgICBzZWxmLmRldGFpbHNf
+Ym90dG9tX2J1dHRvbnMucGFja19lbmQocnVuX2J1dHRvbiwgZXhwYW5kPUZhbHNlLCBmaWxsPUZh
+bHNlKQogICAgICAgICAgICAgY3JlYXRlZCA9IFRydWUKLSAgICAgICAgICAgIGlzX3J1bm5hYmxl
+ID0gVHJ1ZQogCiAgICAgICAgIG5hbWUgPSAiU2F2ZSBpbWFnZSByZWNpcGUiCiAgICAgICAgIGlm
+IG5hbWUgaW4gYnV0dG9ubGlzdCBhbmQgc2VsZi5idWlsZGVyLnJlY2lwZV9tb2RlbC5pc19jdXN0
+b21faW1hZ2UoKToKQEAgLTYyOCw3ICs2NTksMTAgQEAgY2xhc3MgSW1hZ2VEZXRhaWxzUGFnZSAo
+SG9iUGFnZSk6CiAgICAgICAgICAgICAgICAgc2VsZi5zaG93X2J1aWxkZWRfaW1hZ2VzX2RpYWxv
+ZyhOb25lLCAiUnVuIGltYWdlIikKICAgICAgICAgICAgICAgICBzZWxmLnNldF9zZW5zaXRpdmUo
+VHJ1ZSkKICAgICAgICAgICAgIGVsc2U6Ci0gICAgICAgICAgICAgICAgc2VsZi5idWlsZGVyLnJ1
+bnFlbXVfaW1hZ2Uoc2VsZi50b2dnbGVkX2ltYWdlLCBzZWxmLnNlbF9rZXJuZWwpCisgICAgICAg
+ICAgICAgICAgaWYgc2VsZi5pc19ydW5uYWJsZToKKyAgICAgICAgICAgICAgICAgICAgc2VsZi5i
+dWlsZGVyLnJ1bnFlbXVfaW1hZ2Uoc2VsZi50b2dnbGVkX2ltYWdlLCBzZWxmLnNlbF9rZXJuZWwp
+CisgICAgICAgICAgICAgICAgZWxzZToKKyAgICAgICAgICAgICAgICAgICAgc2VsZi5idWlsZGVy
+LnJ1bl9jdXN0b21faW1hZ2Uoc2VsZi50b2dnbGVkX2ltYWdlLCBzZWxmLnJ1bl9zY3JpcHRfcGF0
+aCkKIAogICAgIGRlZiBzYXZlX2J1dHRvbl9jbGlja2VkX2NiKHNlbGYsIGJ1dHRvbik6CiAgICAg
+ICAgIHRvcGRpciA9IHNlbGYuYnVpbGRlci5nZXRfdG9wZGlyKCkKLS0gCjEuOS4xCgo=
+
+--_007_AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30AM4PR0401MB1778_--
