@@ -1,47 +1,27 @@
-Return-Path: <martin.samuelsson@axis.com>
-Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
-	by mail.openembedded.org (Postfix) with ESMTP id D6D7677123
+Return-Path: <joshua.g.lock@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 0DD56770E3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 12:24:08 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bes.se.axis.com (Postfix) with ESMTP id E2B582E3B4
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id 7-hfx8jLqISy for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bes.se.axis.com (Postfix) with ESMTP id 26A052E3AE
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 0E244156E
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id 024D1D0F
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id 0025D34271
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 13:24:07 +0100 (CET)
-Received: from lnxmartinsa2.se.axis.com (10.92.55.2) by smtp-x.axis.com
-	(10.0.5.74) with Microsoft SMTP Server (TLS) id 8.3.342.0;
-	Wed, 27 Jan 2016 13:24:07 +0100
-Date: Wed, 27 Jan 2016 13:24:06 +0100
-From: Martin Samuelsson <martin.samuelsson@axis.com>
-To: bitbake development advancement <bitbake-devel@lists.openembedded.org>
-Message-ID: <20160127122406.GA20819@lnxmartinsa2.se.axis.com>
-References: <20151119125639.GC19141@lnxmartinsa2.se.axis.com>
-	<20160114135304.GA7849@lnxmartinsa2.se.axis.com>
-MIME-Version: 1.0
-In-Reply-To: <20160114135304.GA7849@lnxmartinsa2.se.axis.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-Subject: Re: [PATCH v2] user-manual-metadata: Clarify functionality of task flag 'dirs'.
+	Wed, 27 Jan 2016 14:04:01 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by orsmga102.jf.intel.com with ESMTP; 27 Jan 2016 06:03:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,354,1449561600"; d="scan'208";a="642199376"
+Received: from jlock-mobl1.gar.corp.intel.com ([10.252.15.3])
+	by FMSMGA003.fm.intel.com with ESMTP; 27 Jan 2016 06:03:12 -0800
+Message-ID: <1453903391.3557.42.camel@linux.intel.com>
+From: Joshua G Lock <joshua.g.lock@linux.intel.com>
+To: Mirela Rabulea <mirela.rabulea@nxp.com>, 
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Wed, 27 Jan 2016 14:03:11 +0000
+In-Reply-To: <AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30@AM4PR0401MB1778.eurprd04.prod.outlook.com>
+References: <AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30@AM4PR0401MB1778.eurprd04.prod.outlook.com>
+X-Mailer: Evolution 3.18.4 (3.18.4-1.fc23) 
+Mime-Version: 1.0
+Cc: "Roman, Alexandru CostinX" <alexandru.costinx.roman@intel.com>, "Voiculescu,
+	BogdanX A" <bogdanx.a.voiculescu@intel.com>
+Subject: Re: [PATCH] Fix bug 8940 - Alow Hob to run images on a custom simulator, other than qemu
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,54 +34,101 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Jan 2016 12:24:10 -0000
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Disposition: inline
+X-List-Received-Date: Wed, 27 Jan 2016 14:04:03 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Martin Samuelsson <martin.samuelsson@axis.com>
----
-I've seen no response to this. With this being my first attempt at making a 
-contribution to bitbake, I would appreciate any feedback. Is something e.g. 
-problematic with the patch?
+Hi Mirela,
 
-Please note that in the current state of documentation the two flags 'dirs' 
-and 'cleandirs' are very similar in their description. Yet the flags are not 
-all that similar. It is easy to get (and I got) the impression that they are 
-functionally interchangeable with exception from that 'cleandirs' creates 
-clean directories. The fact that 'dirs' points out the work dir to be used, 
-while 'cleandirs' does not, is quite unexpected and should be important 
-enough to be explicitly stated.
+On Thu, 2016-01-21 at 15:52 +0000, Mirela Rabulea wrote:
+> Hi,
+> I have been told that Hob is deprecated and to be replaced by
+> Toaster, still I have some changes already made on Hob, which I would
+> like to push. Besides that, I understand that at this moment Toaster
+> cannot run images at all, via a button push.
+> I would be happy if these changes make it into YP 2.1, M2 or at least
+> M3.
 
-Bonus in this patch version. Typo fix in description of cleandirs.
+Thanks for taking the time to develop and submit this change.
 
- doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Whilst Hob is not under active development I'm not aware of a timeline
+for removing it from the repository, thus I'd welcome improvements and
+bug fixes.
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-index 1b9d800..c242653 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-@@ -1214,7 +1214,7 @@
-             functionality of the task:
-             <itemizedlist>
-                 <listitem><para><emphasis>cleandirs:</emphasis>
--                    Empty directories that should created before the task runs.
-+                    Empty directories that should be created before the task runs.
-                     </para></listitem>
-                 <listitem><para><emphasis>depends:</emphasis>
-                     Controls inter-task dependencies.
-@@ -1233,7 +1233,9 @@
-                     section for more information.
-                     </para></listitem>
-                 <listitem><para><emphasis>dirs:</emphasis>
--                    Directories that should be created before the task runs.
-+                    Directories that should be created before the task runs. The
-+                    last directory listed will be used as the work directory for the
-+                    task.
-                     </para></listitem>
-                 <listitem><para><emphasis>lockfiles:</emphasis>
-                      Specifies one or more lockfiles to lock while the task
--- 
-2.1.4
+> The current behavior of Hob is that there is a "Run Image" button
+> which becomes visible only for qemu images.
+>  
+> My suggested change is:
+> - if an image is selected and it is , let the "Run image" button be
+> named "Run qemu image"
+
+I think you meant "and it is qemu-compatible,"?
+
+> - if an image is selected and it is not qemu-compatible, let the same
+> button show up with the name "Run custom image", and besides that, an
+> option shows-up to allow the selection of the custom script (by
+> default it points out to runqemu script) to be used for launching
+> this custom image
+>  
+> Associated bug:
+> https://bugzilla.yoctoproject.org/show_bug.cgi?id=8940
+>  
+> Related bug (feaure request):
+> https://bugzilla.yoctoproject.org/show_bug.cgi?id=8959
+>  
+>  
+> Thanks Belen, Bogdan and Alexandru for helping me on this.
+
+On an initial look this change looks good, I have a couple of minor
+comments on the UI:
+
+FILE_CHOOSER_ACTION_SAVE seems wrong, I think this should use
+FILE_CHOOSER_ACTION_OPEN as we only want to select existing files. 
+
+See:
+https://developer.gnome.org/pygtk/stable/gtk-constants.html#gtk-filecho
+oser-action-constants
+
+Also I think we'd probably want to use something other than "Open" to
+confirm selection of the emulator, but that's more of a question for
+Belen. Personally I think "Select" or "Choose" makes more sense.
+
+When I ran Hob with your change I noticed the "Run script:" detail is
+positioned vertically in the middle of its parent box, the other boxes
+in the "Image details" page have their content at the top of the parent
+box — could you change that?
+
+When you submit your v2 could you send the patch directly, rather than
+as an attachment. This allows us to perform any review in-line in an
+email reply.
+
+You can use either the scripts in the openembedded-core repository
+(scripts/[create|send]-pull-request) or git send-email directly.
+
+Furthermore as the patch, when ready, will be applied directly to the
+bitbake repository it would be useful to improve the commit message in
+line with the OpenEmbedded recommendations: 
+http://www.openembedded.org/wiki/Commit_Patch_Message_Guidelines
+
+Specifically could you:
+* include some detail in the commit message,
+perhaps use the reasoning above?
+* move the bug ID to the bottom of the
+commit message, above the signed-off-by. It should be formatted as:
+[YOCTO #8940]
+* Fix the typo in the one-line description "Alow" ->
+"Allow"
+
+Of course having written this I realise we don't have a good resource
+for BitBake contribution guidelines I've filed a bug in the Yocto
+Project bugzilla to ensure we develop some guidelines for contributing
+to the BitBake repository: 
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=9007
+
+Thanks again for submitting this patch, I look forward to seeing v2!
+
+Regards,
+
+Joshua
 
 
