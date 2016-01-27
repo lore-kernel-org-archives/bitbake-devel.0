@@ -1,45 +1,45 @@
 Return-Path: <peter.kjellerstedt@axis.com>
 Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 76760771A2
+	by mail.openembedded.org (Postfix) with ESMTP id 759207719D
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 27 Jan 2016 17:23:43 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id CBA6D1811C;
-	Wed, 27 Jan 2016 18:23:43 +0100 (CET)
+	by bastet.se.axis.com (Postfix) with ESMTP id 517E31811A;
+	Wed, 27 Jan 2016 18:23:44 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
 X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "References"
 Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
 	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
 	port 10024)
-	with LMTP id IuetG83miGpN; Wed, 27 Jan 2016 18:23:42 +0100 (CET)
+	with LMTP id ET8nGVzBot0Z; Wed, 27 Jan 2016 18:23:42 +0100 (CET)
 Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bastet.se.axis.com (Postfix) with ESMTP id 1BBDC1811A;
-	Wed, 27 Jan 2016 18:23:42 +0100 (CET)
+	by bastet.se.axis.com (Postfix) with ESMTP id EF9E618098;
+	Wed, 27 Jan 2016 18:23:41 +0100 (CET)
 Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 01D61158D;
-	Wed, 27 Jan 2016 18:23:42 +0100 (CET)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id E09C0158A;
+	by postfix.imss71 (Postfix) with ESMTP id D92621335;
+	Wed, 27 Jan 2016 18:23:41 +0100 (CET)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id CD442158E;
 	Wed, 27 Jan 2016 18:23:41 +0100 (CET)
 Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
-	by thoth.se.axis.com (Postfix) with ESMTP id DE6673414B;
+	by seth.se.axis.com (Postfix) with ESMTP id C76CA3E48C;
 	Wed, 27 Jan 2016 18:23:41 +0100 (CET)
 Received: from saur-2.se.axis.com (localhost [127.0.0.1])
-	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id u0RHNfoU001808;
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id u0RHNf6v001801;
 	Wed, 27 Jan 2016 18:23:41 +0100
 Received: (from pkj@localhost)
-	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id u0RHNfaK001807;
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id u0RHNfxA001800;
 	Wed, 27 Jan 2016 18:23:41 +0100
 From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 To: bitbake-devel@lists.openembedded.org, poky@yoctoproject.org
-Date: Wed, 27 Jan 2016 18:23:29 +0100
-Message-Id: <f54dd424a32a6ae63ad59355f061c3e6291267e6.1453915249.git.pkj@axis.com>
+Date: Wed, 27 Jan 2016 18:23:28 +0100
+Message-Id: <8c8081c64d996b42d062e648f866b191579dfbae.1453915249.git.pkj@axis.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <cover.1453915249.git.pkj@axis.com>
 References: <cover.1453915249.git.pkj@axis.com>
 In-Reply-To: <cover.1453915249.git.pkj@axis.com>
 References: <cover.1453915249.git.pkj@axis.com>
-Subject: [PATCH 3/5] ref-manual: Update the help for BBMASK
+Subject: [PATCH 2/5] bitbake-user-manual-ref-variables: Update the help for BBMASK
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,33 +60,14 @@ BBMASK to be a bit more diverse.
 
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- documentation/ref-manual/ref-variables.xml | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
+ .../bitbake-user-manual-ref-variables.xml            | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/documentation/ref-manual/ref-variables.xml b/documentation/ref-manual/ref-variables.xml
-index 673e431..49aea7a 100644
---- a/documentation/ref-manual/ref-variables.xml
-+++ b/documentation/ref-manual/ref-variables.xml
-@@ -1200,17 +1200,13 @@
- 
-         <glossentry id='var-BBMASK'><glossterm>BBMASK</glossterm>
-             <info>
--                BBMASK[doc] = "Prevents BitBake from processing specific recipes or recipe append files. Use the BBMASK variable from within conf/local.conf."
-+                BBMASK[doc] = "Prevents BitBake from processing specific recipes or recipe append files."
-             </info>
-             <glossdef>
-                 <para role="glossdeffirst">
- <!--                <para role="glossdeffirst"><imagedata fileref="figures/define-generic.png" /> -->
-                     Prevents BitBake from processing recipes and recipe
-                     append files.
--                    Use the <filename>BBMASK</filename> variable from within the
--                    <filename>conf/local.conf</filename> file found
--                    in the
--                    <ulink url='&YOCTO_DOCS_DEV_URL;#build-directory'>Build Directory</ulink>.
-                 </para>
- 
-                 <para>
-@@ -1218,14 +1214,14 @@
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+index e5aeffc..ae7e4ce 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+@@ -1142,14 +1142,14 @@
                      to "hide" these <filename>.bb</filename> and
                      <filename>.bbappend</filename> files.
                      BitBake ignores any recipe or recipe append files that
@@ -104,7 +85,7 @@ index 673e431..49aea7a 100644
                      the files.
                      For complete syntax information, see Python's
                      documentation at
-@@ -1241,18 +1237,16 @@
+@@ -1165,18 +1165,16 @@
       BBMASK = "meta-ti/recipes-misc/"
                      </literallayout>
                      If you want to mask out multiple directories or recipes,
