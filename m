@@ -1,26 +1,47 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 9F3F3731E1
+Return-Path: <martin.samuelsson@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id D6D7677123
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 03:00:58 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga101.fm.intel.com with ESMTP; 26 Jan 2016 19:00:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,353,1449561600"; d="scan'208";a="899027414"
-Received: from lsooi-mobl4.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.139.21])
-	by orsmga002.jf.intel.com with ESMTP; 26 Jan 2016 19:00:56 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 27 Jan 2016 16:00:53 +1300
-Message-ID: <2347316.L4IDf5da3k@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.10 (Linux/4.3.3-301.fc23.x86_64; KDE/4.14.16; x86_64; ;
-	)
-In-Reply-To: <1451998815-4536-1-git-send-email-sujith.h@gmail.com>
-References: <1451998815-4536-1-git-send-email-sujith.h@gmail.com>
+	Wed, 27 Jan 2016 12:24:08 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id E2B582E3B4
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id 7-hfx8jLqISy for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id 26A052E3AE
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 0E244156E
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id 024D1D0F
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Jan 2016 13:24:08 +0100 (CET)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by thoth.se.axis.com (Postfix) with ESMTP id 0025D34271
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Jan 2016 13:24:07 +0100 (CET)
+Received: from lnxmartinsa2.se.axis.com (10.92.55.2) by smtp-x.axis.com
+	(10.0.5.74) with Microsoft SMTP Server (TLS) id 8.3.342.0;
+	Wed, 27 Jan 2016 13:24:07 +0100
+Date: Wed, 27 Jan 2016 13:24:06 +0100
+From: Martin Samuelsson <martin.samuelsson@axis.com>
+To: bitbake development advancement <bitbake-devel@lists.openembedded.org>
+Message-ID: <20160127122406.GA20819@lnxmartinsa2.se.axis.com>
+References: <20151119125639.GC19141@lnxmartinsa2.se.axis.com>
+	<20160114135304.GA7849@lnxmartinsa2.se.axis.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] bitbake: BBUIHelper: Remove function findServerDetails
+In-Reply-To: <20160114135304.GA7849@lnxmartinsa2.se.axis.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+Subject: Re: [PATCH v2] user-manual-metadata: Clarify functionality of task flag 'dirs'.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,78 +54,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Jan 2016 03:01:00 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Wed, 27 Jan 2016 12:24:10 -0000
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
 
-On Tue, 05 Jan 2016 18:30:15 Sujith H wrote:
-> findServerDetails function can be removed safely
-> from the source tree. Couldn't find any files
-> calling this function.
-> 
-> Signed-off-by: Sujith H <sujith.h@gmail.com>
-> ---
->  lib/bb/ui/uihelper.py | 41 -----------------------------------------
->  1 file changed, 41 deletions(-)
-> 
-> diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
-> index a703387..db70b76 100644
-> --- a/lib/bb/ui/uihelper.py
-> +++ b/lib/bb/ui/uihelper.py
-> @@ -57,44 +57,3 @@ class BBUIHelper:
->          self.needUpdate = False
->          return (self.running_tasks, self.failed_tasks)
-> 
-> -    def findServerDetails(self):
-> -        import sys
-> -        import optparse
-> -        from bb.server.xmlrpc import BitbakeServerInfo,
-> BitBakeServerConnection -        host = ""
-> -        port = 0
-> -        bind = ""
-> -        parser = optparse.OptionParser(
-> -            usage = """%prog -H host -P port -B bindaddr""")
-> -
-> -        parser.add_option("-H", "--host", help = "Bitbake server's IP
-> address", -                   action = "store", dest = "host", default =
-> None) -
-> -        parser.add_option("-P", "--port", help = "Bitbake server's Port
-> number", -                   action = "store", dest = "port", default =
-> None) -
-> -        parser.add_option("-B", "--bind", help = "Hob2 local bind address",
-> -                   action = "store", dest = "bind", default = None) -
-> -        options, args = parser.parse_args(sys.argv)
-> -        for key, val in options.__dict__.items():
-> -            if key == 'host' and val:
-> -                host = val
-> -            elif key == 'port' and val:
-> -                port = int(val)
-> -            elif key == 'bind' and val:
-> -                bind = val
-> -
-> -        if not host or not port or not bind:
-> -            parser.print_usage()
-> -            sys.exit(1)
-> -
-> -        serverinfo = BitbakeServerInfo(host, port)
-> -        clientinfo = (bind, 0)
-> -        connection = BitBakeServerConnection(serverinfo, clientinfo)
-> -
-> -        server = connection.connection
-> -        eventHandler = connection.events
-> -
-> -        return server, eventHandler, host, bind
-> -
+Signed-off-by: Martin Samuelsson <martin.samuelsson@axis.com>
+---
+I've seen no response to this. With this being my first attempt at making a 
+contribution to bitbake, I would appreciate any feedback. Is something e.g. 
+problematic with the patch?
 
-Looks like this was left over from the early days of Hob.
+Please note that in the current state of documentation the two flags 'dirs' 
+and 'cleandirs' are very similar in their description. Yet the flags are not 
+all that similar. It is easy to get (and I got) the impression that they are 
+functionally interchangeable with exception from that 'cleandirs' creates 
+clean directories. The fact that 'dirs' points out the work dir to be used, 
+while 'cleandirs' does not, is quite unexpected and should be important 
+enough to be explicitly stated.
 
-Acked-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Bonus in this patch version. Typo fix in description of cleandirs.
 
-Cheers,
-Paul
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+index 1b9d800..c242653 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+@@ -1214,7 +1214,7 @@
+             functionality of the task:
+             <itemizedlist>
+                 <listitem><para><emphasis>cleandirs:</emphasis>
+-                    Empty directories that should created before the task runs.
++                    Empty directories that should be created before the task runs.
+                     </para></listitem>
+                 <listitem><para><emphasis>depends:</emphasis>
+                     Controls inter-task dependencies.
+@@ -1233,7 +1233,9 @@
+                     section for more information.
+                     </para></listitem>
+                 <listitem><para><emphasis>dirs:</emphasis>
+-                    Directories that should be created before the task runs.
++                    Directories that should be created before the task runs. The
++                    last directory listed will be used as the work directory for the
++                    task.
+                     </para></listitem>
+                 <listitem><para><emphasis>lockfiles:</emphasis>
+                      Specifies one or more lockfiles to lock while the task
 -- 
+2.1.4
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
