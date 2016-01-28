@@ -1,48 +1,45 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-ob0-f193.google.com (mail-ob0-f193.google.com
-	[209.85.214.193])
-	by mail.openembedded.org (Postfix) with ESMTP id 698A57706E
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 Jan 2016 00:43:43 +0000 (UTC)
-Received: by mail-ob0-f193.google.com with SMTP id x5so1450381obg.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jan 2016 16:43:44 -0800 (PST)
+Return-Path: <just4tech83@gmail.com>
+Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
+	[209.85.223.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 8D8D36057B;
+	Thu, 28 Jan 2016 17:56:05 +0000 (UTC)
+Received: by mail-io0-f172.google.com with SMTP id 1so62661901ion.1;
+	Thu, 28 Jan 2016 09:56:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=hwl7K7WgCVUdAPhdlxpSz9v6Hk+upfubqO7G9jPtSKk=;
-	b=X0e0p7U0Z9BsvcZ9ETylhBoLVwQdAKowYoTChr6fOsjVzOemFLApLB1sN6wi5Kbeyu
-	Btwa75sevenEA097BnnGIHVBePdJYCFF45O4FS1Yp4PLFBpsCTLsZv4dcFwWdwGr81pT
-	r/R9XkD9ZOkQ7Slzbrx0UVI0vMKFEpfuXCTtDN7HQQ1NOIq0+ZJYPYxgVpKk9C1yPdfG
-	DB1GXcgr9tfBIfsL7PEUqMVJgyYueH7vleuTiUGO/I8kJYAbglzSxAUylo2B9gbMkCfd
-	PZCdvyQP+oJKmCOf2+ZedVL0LYCGBZ097r99raI1qdisjVX/9oyFQndGvKjiG5wVSnQt
-	1zjQ==
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:content-type; bh=IcmsSd8d17sygP9KZR4gSkGTqx25dCe2dRCVzw5ZNr0=;
+	b=Nfl9vZh4rrwP3+dSMzvFSWj4Wg8lVdudOXtQVHH3ZmJ4i90kaI5bbRzQq0LSxl49fV
+	WJxzF+g5qq0ag8Ajt3Yh1BOidQCMY2VEAZaZ1uZYjo7kUYXjq//S+acfclLbRCgJRZjW
+	xEyTU29nDPOyRYYhEAVZ98BebWyUsi4WAu+5xf3OwUiTkiyf52eq8ClUf4AItOc6wYry
+	AxNGXeYkApPfIoNXYHCTsQ4gV0qu37bHbRVfkFswQKCawALJlhTpc9HjRgIrZVJLgxEJ
+	Ix4uVlyu2s9HwghBJZfBFoS+0GKudrIZuqu/Eb6Fp3v1Ds8tcsW0SaPNkksouA4jCoxA
+	ywAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=hwl7K7WgCVUdAPhdlxpSz9v6Hk+upfubqO7G9jPtSKk=;
-	b=NV6pgmoTDmhHLFMIut2/c/UMXRh7/hh6ODTGJ9vkzaqRFIcdz30SvxeLp825RbKdIV
-	d6B4TueCQUCxPsgEibiGGvRDAWIOvTGSzVgsn1I7T0KEkEcjJhIeqiSjyzT6F/S+XkRM
-	hEM5VljlXXYx1SPxlyO5jcKlFsZct85hDD1z/l1TspF9AdZjxoXQS1/zWw6raJQ3RGFl
-	W1IrC98FcAEE3n/bFV6CSuZgZugD+aCowqmUsYsVw1dKlEN0RxmH2cx7fXcpmBnjoV/Z
-	zF8fjSpyel1RK4rvoF6DuTj9JiBPS9yFXq8VQRzD6C7SJY/qy7MMnSFJ7qrQmo0NOcIg
-	2ofg==
-X-Gm-Message-State: AG10YOQfXgPvB95FAFufxIy29wF7w8OxjkAfUtioLpzKWVHR1R8WnKKiMbagx3Rwx452/w==
-X-Received: by 10.182.28.7 with SMTP id x7mr118057obg.13.1453941823957;
-	Wed, 27 Jan 2016 16:43:43 -0800 (PST)
-Received: from e6520.cablelabs.com
-	(50-204-102-64-static.hfc.comcastbusiness.net. [50.204.102.64])
-	by smtp.gmail.com with ESMTPSA id h1sm4274956oek.11.2016.01.27.16.43.42
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 27 Jan 2016 16:43:42 -0800 (PST)
-From: Andre McCurdy <armccurdy@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 27 Jan 2016 16:43:18 -0800
-Message-Id: <1453941798-11670-4-git-send-email-armccurdy@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1453941798-11670-1-git-send-email-armccurdy@gmail.com>
-References: <1453941798-11670-1-git-send-email-armccurdy@gmail.com>
-Subject: [PATCH 3/3] data.py: sort variables being output by emit_func()
+	h=x-gm-message-state:mime-version:in-reply-to:references:date
+	:message-id:subject:from:to:content-type;
+	bh=IcmsSd8d17sygP9KZR4gSkGTqx25dCe2dRCVzw5ZNr0=;
+	b=DqfOt2oYct64pBMJJ/WIy3p97LM43uYbv3mCpt68RIWUBjhzCmYMyvXPPB4tXXhdBD
+	/DMNzPRdwS07TUxV9LcYcWnsTaib/LCeOh+V0vZoSN+hgCv6pxkFhuyTiovli8YpekZW
+	ziy+DaF/bNg79ScbtsEzpUTelCbknLUjr0t+9OA9SP9SOeiSVcUyDQN4ERhwBKQWfPNl
+	4eraBGJ6Y38ovRowgDzc1+xpELpI7/Kh/PFZGIMk2aPfXRYd+qDaHKqa8/oHNPW4mVLy
+	SlNVZb1k6yMC8c+lZqah0VlNS0VGLanriK6FnTewGOuM2q0We1grERCh7JQ8sAylpc6j
+	LhAg==
+X-Gm-Message-State: AG10YOQWVmnGPR0GCcbZ/yUu/66Kzer6tVa4EUcpmzoW9Av92BcCWHFKIHxUSjf44bk874vDroxvK2tceEqOGQ==
+MIME-Version: 1.0
+X-Received: by 10.107.16.17 with SMTP id y17mr2085533ioi.119.1454003765976;
+	Thu, 28 Jan 2016 09:56:05 -0800 (PST)
+Received: by 10.36.196.133 with HTTP; Thu, 28 Jan 2016 09:56:05 -0800 (PST)
+Received: by 10.36.196.133 with HTTP; Thu, 28 Jan 2016 09:56:05 -0800 (PST)
+In-Reply-To: <CAD2C2VTQ9A3hDM7eXUbs4AWqSuGLkPD9=h3K6V+-Hhju2=1vHQ@mail.gmail.com>
+References: <CAD2C2VTQ9A3hDM7eXUbs4AWqSuGLkPD9=h3K6V+-Hhju2=1vHQ@mail.gmail.com>
+Date: Thu, 28 Jan 2016 23:26:05 +0530
+Message-ID: <CAD2C2VRFV7RDGLJZV0-WYHagM_MRfViG46HgGTAZ5N8ztNhP7A@mail.gmail.com>
+From: Bryan <just4tech83@gmail.com>
+To: openembedded-devel@lists.openembedded.org, linux-yocto@yoctoproject.org, 
+	bitbake-devel@lists.openembedded.org, poky@yoctoproject.org, 
+	openembedded-core@lists.openembedded.org
+Subject: dual monitor supprt
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,37 +52,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 Jan 2016 00:43:45 -0000
+X-List-Received-Date: Thu, 28 Jan 2016 17:56:05 -0000
+Content-Type: multipart/alternative; boundary=001a113ff328f9237f052a68a143
 
-Sorting variables and separating those being exported from those being
-unset greatly improves the readability of OE run.do_configure, etc,
-shell scripts.
+--001a113ff328f9237f052a68a143
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
----
- lib/bb/data.py | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Hi,
+i want pslash during boot with dual monitors. both monitors have different
+resolution. how can i display psplash properly on both monitors
+thanks in advance.
+Brian
+On Dec 18, 2015 1:10 PM, "Bryan" <just4tech83@gmail.com> wrote:
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 70ba56b..07f4bba 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -270,7 +270,13 @@ def exported_vars(d):
- def emit_func(func, o=sys.__stdout__, d = init()):
-     """Emits all items in the data store in a format such that it can be sourced by a shell."""
- 
--    keys = (key for key in d.keys() if not key.startswith("__") and not d.getVarFlag(key, "func"))
-+    o.write('\n')
-+    keys = sorted(key for key in d.keys() if not key.startswith("__") and not d.getVarFlag(key, "func") and not d.getVarFlag(key, 'unexport'))
-+    for key in keys:
-+        emit_var(key, o, d, False)
-+
-+    o.write('\n')
-+    keys = sorted(key for key in d.keys() if not key.startswith("__") and not d.getVarFlag(key, "func") and d.getVarFlag(key, 'unexport'))
-     for key in keys:
-         emit_var(key, o, d, False)
- 
--- 
-1.9.1
+---------- Forwarded message ----------
+From: "Bryan" <just4tech83@gmail.com>
+Date: Dec 18, 2015 1:03 PM
+Subject: korean/chinese keyboard layout support on yocto
+To: <openembedded-core@lists.openembedded.org>
+Cc:
 
+Hi,
+>     I am working on yocto poky-dizzy 1.7.1 and have developed some
+> application on top of customized os image. I have a reqirement to support
+> korean/chinese keyboard layout for application.
+> I have added cross complied libraries for  ibus-hangul pckages. Can
+> somebody suggest me how can i add support for keyboart layout and how to
+> enable automatically.
+>
+> Is there any bitbake recipe available to support these keyboard layout.
+>
+>
+> regards
+> Bryan
+>
 
+--001a113ff328f9237f052a68a143
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p dir=3D"ltr">Hi, <br>
+i want pslash during boot with dual monitors. both monitors have different =
+resolution. how can i display psplash properly on both monitors<br>
+thanks in advance.<br>
+Brian</p>
+<div class=3D"gmail_quote">On Dec 18, 2015 1:10 PM, &quot;Bryan&quot; &lt;<=
+a href=3D"mailto:just4tech83@gmail.com">just4tech83@gmail.com</a>&gt; wrote=
+:<br type=3D"attribution"><blockquote class=3D"quote" style=3D"margin:0 0 0=
+ .8ex;border-left:1px #ccc solid;padding-left:1ex"><div class=3D"elided-tex=
+t"><div class=3D"gmail_quote">---------- Forwarded message ----------<br>Fr=
+om: &quot;Bryan&quot; &lt;<a href=3D"mailto:just4tech83@gmail.com" target=
+=3D"_blank">just4tech83@gmail.com</a>&gt;<br>Date: Dec 18, 2015 1:03 PM<br>=
+Subject: korean/chinese keyboard layout support on yocto<br>To:  &lt;<a hre=
+f=3D"mailto:openembedded-core@lists.openembedded.org" target=3D"_blank">ope=
+nembedded-core@lists.openembedded.org</a>&gt;<br>Cc: <br><br type=3D"attrib=
+ution"><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-=
+left:1px #ccc solid;padding-left:1ex"><p dir=3D"ltr">Hi, <br>
+=C2=A0=C2=A0=C2=A0 I am working on yocto poky-dizzy 1.7.1 and have develope=
+d some application on top of customized os image. I have a reqirement to su=
+pport korean/chinese keyboard layout for application. <br>
+I have added cross complied libraries for=C2=A0 ibus-hangul pckages. Can so=
+mebody suggest me how can i add support for keyboart layout and how to enab=
+le automatically. </p>
+<p dir=3D"ltr">Is there any bitbake recipe available to support these keybo=
+ard layout. </p>
+<p dir=3D"ltr"> <br>
+regards<br>
+Bryan</p>
+</blockquote></div>
+</div></blockquote></div>
+
+--001a113ff328f9237f052a68a143--
