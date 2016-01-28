@@ -1,45 +1,44 @@
 Return-Path: <just4tech83@gmail.com>
-Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
-	[209.85.223.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 8D8D36057B;
-	Thu, 28 Jan 2016 17:56:05 +0000 (UTC)
-Received: by mail-io0-f172.google.com with SMTP id 1so62661901ion.1;
-	Thu, 28 Jan 2016 09:56:06 -0800 (PST)
+Received: from mail-ig0-f176.google.com (mail-ig0-f176.google.com
+	[209.85.213.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 63B5C771A9;
+	Thu, 28 Jan 2016 18:01:05 +0000 (UTC)
+Received: by mail-ig0-f176.google.com with SMTP id t15so18967621igr.0;
+	Thu, 28 Jan 2016 10:01:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:content-type; bh=IcmsSd8d17sygP9KZR4gSkGTqx25dCe2dRCVzw5ZNr0=;
-	b=Nfl9vZh4rrwP3+dSMzvFSWj4Wg8lVdudOXtQVHH3ZmJ4i90kaI5bbRzQq0LSxl49fV
-	WJxzF+g5qq0ag8Ajt3Yh1BOidQCMY2VEAZaZ1uZYjo7kUYXjq//S+acfclLbRCgJRZjW
-	xEyTU29nDPOyRYYhEAVZ98BebWyUsi4WAu+5xf3OwUiTkiyf52eq8ClUf4AItOc6wYry
-	AxNGXeYkApPfIoNXYHCTsQ4gV0qu37bHbRVfkFswQKCawALJlhTpc9HjRgIrZVJLgxEJ
-	Ix4uVlyu2s9HwghBJZfBFoS+0GKudrIZuqu/Eb6Fp3v1Ds8tcsW0SaPNkksouA4jCoxA
-	ywAw==
+	h=mime-version:date:message-id:subject:from:to:cc:content-type;
+	bh=kIdvWs93Rb8BsoLY2ujcUEED0jHGLpXp+eQGK/FYkcs=;
+	b=us2fn0b/lbMFNHWv22d20vm3o1TqdJ21zo9+vzeTWYuJkthOdGVe2VAd2+6XcetToW
+	W5YMzMq3g9WAWkRMlEa049q6pp5TNF1IzwmLcbRPNtcx8RbKNCggFiQwC8LB3LDQJIkS
+	/SnQaVL8O4ET8uf7Dn9kgMewkKCuxSY1ztzZq6urkP6F9qzPO+2WUGUJOsKRlmh9u874
+	NEHxah7jhn0OYwOxlOPB5GFbXE6XHDnr/O46cRGj2UQXi+Fd5ebEuZsKNMqy4XtMfOPH
+	obJ1jG9YGh66Jnbiz4pkfHKf+Cl9buRzu5i+Ssd7RJyJuVLUo1hKtZNEGJLEQR4u8dsv
+	UK/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:date
-	:message-id:subject:from:to:content-type;
-	bh=IcmsSd8d17sygP9KZR4gSkGTqx25dCe2dRCVzw5ZNr0=;
-	b=DqfOt2oYct64pBMJJ/WIy3p97LM43uYbv3mCpt68RIWUBjhzCmYMyvXPPB4tXXhdBD
-	/DMNzPRdwS07TUxV9LcYcWnsTaib/LCeOh+V0vZoSN+hgCv6pxkFhuyTiovli8YpekZW
-	ziy+DaF/bNg79ScbtsEzpUTelCbknLUjr0t+9OA9SP9SOeiSVcUyDQN4ERhwBKQWfPNl
-	4eraBGJ6Y38ovRowgDzc1+xpELpI7/Kh/PFZGIMk2aPfXRYd+qDaHKqa8/oHNPW4mVLy
-	SlNVZb1k6yMC8c+lZqah0VlNS0VGLanriK6FnTewGOuM2q0We1grERCh7JQ8sAylpc6j
-	LhAg==
-X-Gm-Message-State: AG10YOQWVmnGPR0GCcbZ/yUu/66Kzer6tVa4EUcpmzoW9Av92BcCWHFKIHxUSjf44bk874vDroxvK2tceEqOGQ==
+	h=x-gm-message-state:mime-version:date:message-id:subject:from:to:cc
+	:content-type;
+	bh=kIdvWs93Rb8BsoLY2ujcUEED0jHGLpXp+eQGK/FYkcs=;
+	b=mQWCNvKNAYZflfeYSTOjKMJ5MYs/4EMYg+ctAhEzrRuYBlLc4obR6QyQsa8A6r3Iis
+	WJ7j4V6U+mnYOKwbi6WanA08Qv0MANL+7wL6EfrEjb3TQwe1UU0qpFiQIu1qiTf+EQ2z
+	2TGSD7R2dVhKm/kFR7yE3u3Y7N94rswEU2LgnRdz7A7lo5xbFHyw74X80EpVMvJiE0d6
+	ENlKT/xZ16qGJdG7yBgjWRaDV+ANPcUU9Am1PptgCGOd8aFS+TShLT5prbMFUd3F3heU
+	qMazuYo9aMLdE+MX4mrbdN0NF/RA61qkSYi5P//+9HGLtgZXx2gZlAKjUjtQMIGN85Gz
+	JQjA==
+X-Gm-Message-State: AG10YOQ8Tw3cKr1qyjkQw/l7EDvR5J2BAbVy0FJeye6VfAMdrav3/cZAjegln66qFnfxHZCd0vfd8b9duwayuQ==
 MIME-Version: 1.0
-X-Received: by 10.107.16.17 with SMTP id y17mr2085533ioi.119.1454003765976;
-	Thu, 28 Jan 2016 09:56:05 -0800 (PST)
-Received: by 10.36.196.133 with HTTP; Thu, 28 Jan 2016 09:56:05 -0800 (PST)
-Received: by 10.36.196.133 with HTTP; Thu, 28 Jan 2016 09:56:05 -0800 (PST)
-In-Reply-To: <CAD2C2VTQ9A3hDM7eXUbs4AWqSuGLkPD9=h3K6V+-Hhju2=1vHQ@mail.gmail.com>
-References: <CAD2C2VTQ9A3hDM7eXUbs4AWqSuGLkPD9=h3K6V+-Hhju2=1vHQ@mail.gmail.com>
-Date: Thu, 28 Jan 2016 23:26:05 +0530
-Message-ID: <CAD2C2VRFV7RDGLJZV0-WYHagM_MRfViG46HgGTAZ5N8ztNhP7A@mail.gmail.com>
+X-Received: by 10.50.183.7 with SMTP id ei7mr4856772igc.17.1454004066323; Thu,
+	28 Jan 2016 10:01:06 -0800 (PST)
+Received: by 10.36.196.133 with HTTP; Thu, 28 Jan 2016 10:01:06 -0800 (PST)
+Received: by 10.36.196.133 with HTTP; Thu, 28 Jan 2016 10:01:06 -0800 (PST)
+Date: Thu, 28 Jan 2016 23:31:06 +0530
+Message-ID: <CAD2C2VRqrrOKLixFBBXq-Vxu-nb5DzSXqV8Xrr2yuwb6auds5w@mail.gmail.com>
 From: Bryan <just4tech83@gmail.com>
 To: openembedded-devel@lists.openembedded.org, linux-yocto@yoctoproject.org, 
-	bitbake-devel@lists.openembedded.org, poky@yoctoproject.org, 
-	openembedded-core@lists.openembedded.org
-Subject: dual monitor supprt
+	poky@yoctoproject.org, bitbake-devel@lists.openembedded.org, 
+	openembedded-core@lists.openembedded.org, Khem Raj <raj.khem@gmail.com>
+Cc: Chander.kashyap@gmail.com
+Subject: Plymouth support in yocto
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,74 +51,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 Jan 2016 17:56:05 -0000
-Content-Type: multipart/alternative; boundary=001a113ff328f9237f052a68a143
+X-List-Received-Date: Thu, 28 Jan 2016 18:01:11 -0000
+Content-Type: multipart/alternative; boundary=001a11c3ac26e0159e052a68b3e4
 
---001a113ff328f9237f052a68a143
+--001a11c3ac26e0159e052a68b3e4
 Content-Type: text/plain; charset=UTF-8
 
 Hi,
-i want pslash during boot with dual monitors. both monitors have different
-resolution. how can i display psplash properly on both monitors
-thanks in advance.
-Brian
-On Dec 18, 2015 1:10 PM, "Bryan" <just4tech83@gmail.com> wrote:
+   Can  we integrate plymouth package in yocto  so that we can properly
+display splash screen on different resolution monitors.
 
----------- Forwarded message ----------
-From: "Bryan" <just4tech83@gmail.com>
-Date: Dec 18, 2015 1:03 PM
-Subject: korean/chinese keyboard layout support on yocto
-To: <openembedded-core@lists.openembedded.org>
-Cc:
+Thanks in advance
+Bryan
 
-Hi,
->     I am working on yocto poky-dizzy 1.7.1 and have developed some
-> application on top of customized os image. I have a reqirement to support
-> korean/chinese keyboard layout for application.
-> I have added cross complied libraries for  ibus-hangul pckages. Can
-> somebody suggest me how can i add support for keyboart layout and how to
-> enable automatically.
->
-> Is there any bitbake recipe available to support these keyboard layout.
->
->
-> regards
-> Bryan
->
-
---001a113ff328f9237f052a68a143
+--001a11c3ac26e0159e052a68b3e4
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<p dir=3D"ltr">Hi, <br>
-i want pslash during boot with dual monitors. both monitors have different =
-resolution. how can i display psplash properly on both monitors<br>
-thanks in advance.<br>
-Brian</p>
-<div class=3D"gmail_quote">On Dec 18, 2015 1:10 PM, &quot;Bryan&quot; &lt;<=
-a href=3D"mailto:just4tech83@gmail.com">just4tech83@gmail.com</a>&gt; wrote=
-:<br type=3D"attribution"><blockquote class=3D"quote" style=3D"margin:0 0 0=
- .8ex;border-left:1px #ccc solid;padding-left:1ex"><div class=3D"elided-tex=
-t"><div class=3D"gmail_quote">---------- Forwarded message ----------<br>Fr=
-om: &quot;Bryan&quot; &lt;<a href=3D"mailto:just4tech83@gmail.com" target=
-=3D"_blank">just4tech83@gmail.com</a>&gt;<br>Date: Dec 18, 2015 1:03 PM<br>=
-Subject: korean/chinese keyboard layout support on yocto<br>To:  &lt;<a hre=
-f=3D"mailto:openembedded-core@lists.openembedded.org" target=3D"_blank">ope=
-nembedded-core@lists.openembedded.org</a>&gt;<br>Cc: <br><br type=3D"attrib=
-ution"><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-=
-left:1px #ccc solid;padding-left:1ex"><p dir=3D"ltr">Hi, <br>
-=C2=A0=C2=A0=C2=A0 I am working on yocto poky-dizzy 1.7.1 and have develope=
-d some application on top of customized os image. I have a reqirement to su=
-pport korean/chinese keyboard layout for application. <br>
-I have added cross complied libraries for=C2=A0 ibus-hangul pckages. Can so=
-mebody suggest me how can i add support for keyboart layout and how to enab=
-le automatically. </p>
-<p dir=3D"ltr">Is there any bitbake recipe available to support these keybo=
-ard layout. </p>
-<p dir=3D"ltr"> <br>
-regards<br>
+<p dir=3D"ltr">Hi,=C2=A0 <br>
+=C2=A0=C2=A0 Can=C2=A0 we integrate plymouth package in yocto=C2=A0 so that=
+ we can properly display splash screen on different resolution monitors. </=
+p>
+<p dir=3D"ltr">Thanks in advance <br>
 Bryan</p>
-</blockquote></div>
-</div></blockquote></div>
 
---001a113ff328f9237f052a68a143--
+--001a11c3ac26e0159e052a68b3e4--
