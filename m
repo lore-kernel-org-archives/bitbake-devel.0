@@ -1,53 +1,29 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-io0-f171.google.com (mail-io0-f171.google.com
-	[209.85.223.171])
-	by mail.openembedded.org (Postfix) with ESMTP id F235A77114
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 12F55731D5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 Jan 2016 21:43:53 +0000 (UTC)
-Received: by mail-io0-f171.google.com with SMTP id 1so69350870ion.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 Jan 2016 13:43:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type;
-	bh=QC41/1wdRKuRapE5IlvvLet1XNwDD+Oox5Ge+UvnVo0=;
-	b=r+e81dR8H6DBFoKkzIBktQfZYdueGUI2DzsDwVnu6it5uLZKLIIH+4/ODOg7J7mmKG
-	xFXf2BfKqKJbWSgZ3nqjI88lItndTexM9Q7MWJ3kW2J6XganISS+gKnfbPnINs/wPoLJ
-	mWCuaWVicr7Ez3vuQsa+h6CPSTtsPGURzZosJNvux77+uzVkNDt2T+TX6Ptt8FPblSvq
-	wn26U2WQ/HPxabUvFyRVlomqTeSi0Gb/m73FvQzkpd4DyHoE7ceuFer6OKnIbhhsLwC3
-	aRS0bLxXX0faRegOdQj0dakR3nQ0ghxP8k1hCLngqkypsI7Dy60wkj7eL546DJt9mzUX
-	Iugw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=QC41/1wdRKuRapE5IlvvLet1XNwDD+Oox5Ge+UvnVo0=;
-	b=E99zPYiIV8E8V0/s0RwcBx6GnEnDDeMAWEn3upNOZK2sCEQHXk0F8M4EksS1QOSonH
-	s/o8HvdRqJ1EVhnYhp2USMYmGCBr5B12t7K2EQwyrQ6tEprCuUp7jLQMb6Yi0/EGeqVz
-	4eaw9hzEBPXrl947lqGXYg/hRVcTdxfGwFd8h56CHas0ulQOZQR4suuBhyjZAQDEV5kn
-	KCtgIDiF9Kf1vZDciBrQ5YDhVsGcv2LwkaC0ohMhuUJHQfx/OnAL3dNeheQWFoQj1Hz/
-	Jq5XCal2pISe+ypJG/4vilCvvEK+9oblyCZol2AIXNA6zk44rLQ3cNpISafBfDSdBpvB
-	bWAw==
-X-Gm-Message-State: AG10YOTHbivLolPB6l1cC5mgFl1QHWUtRh7r5ztIi1JzRLuOjl5DS8F4M/KtbmLdaFvOQC7csZt+7EHHWe7JtimU
-X-Received: by 10.107.135.104 with SMTP id j101mr7174361iod.133.1454017434312; 
-	Thu, 28 Jan 2016 13:43:54 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.107.162.70 with HTTP; Thu, 28 Jan 2016 13:43:34 -0800 (PST)
-In-Reply-To: <CAD2C2VRqrrOKLixFBBXq-Vxu-nb5DzSXqV8Xrr2yuwb6auds5w@mail.gmail.com>
-References: <CAD2C2VRqrrOKLixFBBXq-Vxu-nb5DzSXqV8Xrr2yuwb6auds5w@mail.gmail.com>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Thu, 28 Jan 2016 21:43:34 +0000
-Message-ID: <CAJTo0LbUkpF3Oq5FDXgizhUW6ANbwcyiTrrzZATBsZ_7ABsHEg@mail.gmail.com>
-To: Bryan <just4tech83@gmail.com>
-Cc: "Development list for the linux-yocto*.git Linux kernel repositories"
-	<linux-yocto@yoctoproject.org>,
-	OE-core <openembedded-core@lists.openembedded.org>,
-	Chander.kashyap@gmail.com,
-	OpenEmbedded Devel List <openembedded-devel@lists.openembedded.org>,
-	Poky Project <poky@yoctoproject.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [linux-yocto] Plymouth support in yocto
+	Fri, 29 Jan 2016 00:01:08 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0T017RR018576; Fri, 29 Jan 2016 00:01:07 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id D6HhimcARIoY; Fri, 29 Jan 2016 00:01:06 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0T015bS018571
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 29 Jan 2016 00:01:06 GMT
+Message-ID: <1454025665.10340.56.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Andre McCurdy <armccurdy@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Fri, 29 Jan 2016 00:01:05 +0000
+In-Reply-To: <1453941798-11670-4-git-send-email-armccurdy@gmail.com>
+References: <1453941798-11670-1-git-send-email-armccurdy@gmail.com>
+	<1453941798-11670-4-git-send-email-armccurdy@gmail.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH 3/3] data.py: sort variables being output by emit_func()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,37 +36,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 Jan 2016 21:43:58 -0000
-Content-Type: multipart/alternative; boundary=001a113ebe92ab7b55052a6bd023
+X-List-Received-Date: Fri, 29 Jan 2016 00:01:11 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---001a113ebe92ab7b55052a6bd023
-Content-Type: text/plain; charset=UTF-8
+On Wed, 2016-01-27 at 16:43 -0800, Andre McCurdy wrote:
+> Sorting variables and separating those being exported from those
+> being
+> unset greatly improves the readability of OE run.do_configure, etc,
+> shell scripts.
+> 
+> Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
+> ---
+>  lib/bb/data.py | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/bb/data.py b/lib/bb/data.py
+> index 70ba56b..07f4bba 100644
+> --- a/lib/bb/data.py
+> +++ b/lib/bb/data.py
+> @@ -270,7 +270,13 @@ def exported_vars(d):
+>  def emit_func(func, o=sys.__stdout__, d = init()):
+>      """Emits all items in the data store in a format such that it
+> can be sourced by a shell."""
+>  
+> -    keys = (key for key in d.keys() if not key.startswith("__") and
+> not d.getVarFlag(key, "func"))
+> +    o.write('\n')
+> +    keys = sorted(key for key in d.keys() if not
+> key.startswith("__") and not d.getVarFlag(key, "func") and not
+> d.getVarFlag(key, 'unexport'))
+> +    for key in keys:
+> +        emit_var(key, o, d, False)
+> +
+> +    o.write('\n')
+> +    keys = sorted(key for key in d.keys() if not
+> key.startswith("__") and not d.getVarFlag(key, "func") and
+> d.getVarFlag(key, 'unexport'))
+>      for key in keys:
+>          emit_var(key, o, d, False)
 
-On 28 January 2016 at 18:01, Bryan <just4tech83@gmail.com> wrote:
+FWIW d.keys() is very slow and best avoided if we can.
 
->    Can  we integrate plymouth package in yocto  so that we can properly
-> display splash screen on different resolution monitors.
->
->
-http://layers.openembedded.org/layerindex/recipe/39966/
+Since this code only generally runs at execution time rather than
+parsing, its probably not a big deal but thought I'd mention it.
 
-Ross
+Cheers,
 
---001a113ebe92ab7b55052a6bd023
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Richard
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On 28 January 2016 at 18:01, Bryan <span dir=3D"ltr">&lt;<a href=3D"mailto:=
-just4tech83@gmail.com" target=3D"_blank">just4tech83@gmail.com</a>&gt;</spa=
-n> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px =
-0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);border-left-=
-style:solid;padding-left:1ex"><p dir=3D"ltr">=C2=A0=C2=A0 Can=C2=A0 we inte=
-grate plymouth package in yocto=C2=A0 so that we can properly display splas=
-h screen on different resolution monitors. </p>
-<p dir=3D"ltr"></p></blockquote></div><br><a href=3D"http://layers.openembe=
-dded.org/layerindex/recipe/39966/">http://layers.openembedded.org/layerinde=
-x/recipe/39966/</a><br></div><div class=3D"gmail_extra"><br></div><div clas=
-s=3D"gmail_extra">Ross</div></div>
-
---001a113ebe92ab7b55052a6bd023--
