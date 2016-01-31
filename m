@@ -1,29 +1,27 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id CCC9C77208
+	by mail.openembedded.org (Postfix) with ESMTP id 7755B62134
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Jan 2016 17:09:36 +0000 (UTC)
+	Sun, 31 Jan 2016 13:23:18 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u0TH9Ye5005003; Fri, 29 Jan 2016 17:09:34 GMT
+	u0VDNJtH015821; Sun, 31 Jan 2016 13:23:19 GMT
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id YFq-QGAZs-y5; Fri, 29 Jan 2016 17:09:34 +0000 (GMT)
+	with LMTP id OqtvEzXiZcoD; Sun, 31 Jan 2016 13:23:19 +0000 (GMT)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u0TH9VXu004999
+	u0VDNCBB015818
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 29 Jan 2016 17:09:33 GMT
-Message-ID: <1454087371.10340.73.camel@linuxfoundation.org>
+	Sun, 31 Jan 2016 13:23:13 GMT
+Message-ID: <1454246592.27087.14.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Markus Lehtonen <markus.lehtonen@linux.intel.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Fri, 29 Jan 2016 17:09:31 +0000
-In-Reply-To: <1453815272-8303-1-git-send-email-markus.lehtonen@linux.intel.com>
-References: <1453815272-8303-1-git-send-email-markus.lehtonen@linux.intel.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Sun, 31 Jan 2016 13:23:12 +0000
 X-Mailer: Evolution 3.16.5-1ubuntu3.1 
 Mime-Version: 1.0
-Subject: Re: [PATCH 0/6] Improve caching task file dependency checksum caching
+Cc: Otavio Salvador <otavio@ossystems.com.br>
+Subject: [PATCH] knotty: Don't show errors for universe provider issues
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,34 +34,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 Jan 2016 17:09:37 -0000
+X-List-Received-Date: Sun, 31 Jan 2016 13:23:20 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2016-01-26 at 15:34 +0200, Markus Lehtonen wrote:
-> This patchset improves the caching of task file dependency checksums in two
-> ways. First, the patchset enables writing of the cache onto disk so that the
-> checksums can be re-used on subsequent runs of bitbake. Previously the task
-> signature checksums were calculated and cached in memory but never really
-> saved.
-> 
-> Second, this patchset makes the task file dependency checksum cache file
-> configurable. This is intended to be used e.g. with a further patchset for
-> oe-core that will utilize task file dependencies heavily.
-> 
-> [YOCTO #8853]
+When running universe builds, we don't expect an error exit code for
+provider warnings. Change the error messages to warnings in this case.
 
-Before I'd take this, I'd like to understand what this code does with a
-large codebase, for example a kernel source tree.
+This deals with errors causing problems on our autobuilders amongst 
+other issues.
 
-I'd really like some performance measurements for the file counts
-involved and the time it takes to stat trees like that. What is the
-command overhead in that fairly pathological case?
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Would we be better off requiring memory resident bitbake and using
-inotify watches for example?
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 3f2b77b..9e71b1c 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -289,6 +289,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+     llevel, debug_domains = bb.msg.constructLogOptions()
+     server.runCommand(["setEventMask", server.getEventHandle(), llevel, debug_domains, _evt_list])
+ 
++    universe = False
+     if not params.observe_only:
+         params.updateFromServer(server)
+         params.updateToServer(server, os.environ.copy())
+@@ -299,6 +300,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+         if 'msg' in cmdline and cmdline['msg']:
+             logger.error(cmdline['msg'])
+             return 1
++        if cmdline['action'][0] == "buildTargets" and "universe" in cmdline['action'][1]:
++            universe = True
+ 
+         ret, error = server.runCommand(cmdline['action'])
+         if error:
+@@ -456,13 +459,18 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                     if event._close_matches:
+                         extra = ". Close matches:\n  %s" % '\n  '.join(event._close_matches)
+ 
++                # For universe builds, only show these as warnings, not errors
++                h = logger.error
++                if universe:
++                    h = logger.warning
++
+                 if event._dependees:
+-                    logger.error("Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)%s", r, event._item, ", ".join(event._dependees), r, extra)
++                    h("Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)%s", r, event._item, ", ".join(event._dependees), r, extra)
+                 else:
+-                    logger.error("Nothing %sPROVIDES '%s'%s", r, event._item, extra)
++                    h("Nothing %sPROVIDES '%s'%s", r, event._item, extra)
+                 if event._reasons:
+                     for reason in event._reasons:
+-                        logger.error("%s", reason)
++                        h("%s", reason)
+                 continue
+ 
+             if isinstance(event, bb.runqueue.sceneQueueTaskStarted):
 
-Cheers,
 
-Richard
 
