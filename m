@@ -1,29 +1,21 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8DF51771D8
+Return-Path: <pb@pbcl.net>
+Received: from hetzner.pbcl.net (mail.pbcl.net [88.198.119.4])
+	by mail.openembedded.org (Postfix) with ESMTP id BDFBE77228
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 31 Jan 2016 13:31:43 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u0VDVhtn016007 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 31 Jan 2016 13:31:43 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id KaeJHi27mzj9 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 31 Jan 2016 13:31:43 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u0VDVfLA016004
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 31 Jan 2016 13:31:42 GMT
-Message-ID: <1454247101.27087.19.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 31 Jan 2016 13:31:41 +0000
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+	Sun, 31 Jan 2016 13:51:51 +0000 (UTC)
+Received: from localhost ([127.0.0.1]
+	helo=[IPv6:2001:67c:1810:f051:fa2f:a8ff:feb0:ae33])
+	by hetzner.pbcl.net with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+	(Exim 4.80) (envelope-from <pb@pbcl.net>) id 1aPsPs-0000u4-Pm
+	for bitbake-devel@lists.openembedded.org;
+	Sun, 31 Jan 2016 14:51:51 +0100
+Message-ID: <1454248288.7421.17.camel@pbcl.net>
+From: Phil Blundell <pb@pbcl.net>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun, 31 Jan 2016 13:51:28 +0000
+X-Mailer: Evolution 3.12.9-1+b1 
 Mime-Version: 1.0
-Subject: [PATCH] cooker: Only start as many parse threads as we need
+Subject: [PATCH] cooker, bitbake-worker: Fix spelling of "received"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,38 +28,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 31 Jan 2016 13:31:44 -0000
+X-List-Received-Date: Sun, 31 Jan 2016 13:51:54 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-If we're only going to parse one recipe, no point in starting 
-a large number of threads.
+I before E, except after C...
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Phil Blundell <pb@pbcl.net>
+---
+ bin/bitbake-worker | 4 ++--
+ lib/bb/cooker.py   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index a1182ef..1f4174f 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1986,8 +1986,6 @@ class CookerParser(object):
-         self.total = len(filelist)
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index f053382..767a1c0 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -305,9 +305,9 @@ class BitbakeWorker(object):
  
-         self.current = 0
--        self.num_processes = int(self.cfgdata.getVar("BB_NUMBER_PARSE_THREADS", True) or
--                                 multiprocessing.cpu_count())
-         self.process_names = []
+     def sigterm_exception(self, signum, stackframe):
+         if signum == signal.SIGTERM:
+-            bb.warn("Worker recieved SIGTERM, shutting down...")
++            bb.warn("Worker received SIGTERM, shutting down...")
+         elif signum == signal.SIGHUP:
+-            bb.warn("Worker recieved SIGHUP, shutting down...")
++            bb.warn("Worker received SIGHUP, shutting down...")
+         self.handle_finishnow(None)
+         signal.signal(signal.SIGTERM, signal.SIG_DFL)
+         os.kill(os.getpid(), signal.SIGTERM)
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index a1182ef..93600f4 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -242,9 +242,9 @@ class BBCooker:
  
-         self.bb_cache = bb.cache.Cache(self.cfgdata, self.cfghash, cooker.caches_array)
-@@ -2002,6 +2000,9 @@ class CookerParser(object):
-         self.toparse = self.total - len(self.fromcache)
-         self.progress_chunk = max(self.toparse / 100, 1)
+     def sigterm_exception(self, signum, stackframe):
+         if signum == signal.SIGTERM:
+-            bb.warn("Cooker recieved SIGTERM, shutting down...")
++            bb.warn("Cooker received SIGTERM, shutting down...")
+         elif signum == signal.SIGHUP:
+-            bb.warn("Cooker recieved SIGHUP, shutting down...")
++            bb.warn("Cooker received SIGHUP, shutting down...")
+         self.state = state.forceshutdown
  
-+        self.num_processes = min(int(self.cfgdata.getVar("BB_NUMBER_PARSE_THREADS", True) or
-+                                 multiprocessing.cpu_count()), len(self.willparse))
-+
-         self.start()
-         self.haveshutdown = False
- 
+     def setFeatures(self, features):
+-- 
+2.1.4
+
 
 
 
