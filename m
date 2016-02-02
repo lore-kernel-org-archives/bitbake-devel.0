@@ -1,33 +1,32 @@
 Return-Path: <Diego.SantaCruz@spinetix.com>
-X-Greylist: delayed 401 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 02 Feb 2016 14:52:47 UTC
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-	(mail-db5eur01on0076.outbound.protection.outlook.com [104.47.2.76])
-	by mail.openembedded.org (Postfix) with ESMTP id 2F5E3771A9
+Received: from emea01-am1-obe.outbound.protection.outlook.com
+	(mail-am1on0079.outbound.protection.outlook.com [157.56.112.79])
+	by mail.openembedded.org (Postfix) with ESMTP id 08020771B2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  2 Feb 2016 14:52:47 +0000 (UTC)
+	Tue,  2 Feb 2016 15:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=SpinetiX.onmicrosoft.com; s=selector1-spinetix-com;
 	h=From:To:Date:Subject:Message-ID:Content-Type:MIME-Version;
-	bh=Zue6TDQDoLXgHGwxm7JN8IDYj78qnDHLaqEdRyltWyI=;
-	b=o1Bm9+BSleFMMJ992DFzqj+9FqmxJBhyrh5KspP4sge5jqIvXUdeNhlfUl7qtfE9bDgBVCB0UQ5BBe2/kYnrlkSmC5n9mE5/cSGAZJj3akI4zVZ1EV1m1ihH1MaUkVC+XF01irXB1K19tgEiJzLX+OcXiq6T5rRrGe4D+hHw7+w=
+	bh=xs4Qc84BZEAjqmCk/uzb4L2MYT5glTi/nCV4WkJX1xw=;
+	b=AFEDKI5KiRgw78OgwDWJx9cDTV0O2uQwNBLhdfE7xQKvAhR/WGUYi2NmMOO77zClN2bci5bRyLr7W5nCeYD+gjuKVSnyrerjw1objyZDyvHc4FrD8E/z5sYXsyPXM964OhHfxnu2s5QlM/0H3tAC3ejqlAOzIo24rt1UCtXe87E=
 Received: from AM3PR01MB1057.eurprd01.prod.exchangelabs.com
 	(2a01:111:e400:5874::11) by
-	AM3PR01MB1060.eurprd01.prod.exchangelabs.com
-	(2a01:111:e400:5875::11) with Microsoft SMTP Server (TLS) id
-	15.1.396.15; Tue, 2 Feb 2016 14:37:18 +0000
+	AM3PR01MB1057.eurprd01.prod.exchangelabs.com
+	(2a01:111:e400:5874::11) with Microsoft SMTP Server (TLS) id
+	15.1.396.15; Tue, 2 Feb 2016 14:30:09 +0000
 Received: from AM3PR01MB1057.eurprd01.prod.exchangelabs.com
 	([fe80::70ce:60:6ef3:7524]) by
 	AM3PR01MB1057.eurprd01.prod.exchangelabs.com
 	([fe80::70ce:60:6ef3:7524%15]) with mapi id 15.01.0396.020;
-	Tue, 2 Feb 2016 14:37:17 +0000
+	Tue, 2 Feb 2016 14:30:09 +0000
 From: Diego Santa Cruz <Diego.SantaCruz@spinetix.com>
 To: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: bitbake-prserv should not force umask in daemon mode
-Thread-Index: AdFdxq6y/cWq5LgMRJ6D7BI5OtrAVg==
-Date: Tue, 2 Feb 2016 14:37:17 +0000
-Message-ID: <AM3PR01MB10570F1A5431FFE827FAA6C588DF0@AM3PR01MB1057.eurprd01.prod.exchangelabs.com>
+Thread-Topic: The PR Service deletes the -wal and -shm sqlite files when
+	daemonizing
+Thread-Index: AdFdxiwh4M/kXFtPRDemt+gJoSZF8Q==
+Date: Tue, 2 Feb 2016 14:30:09 +0000
+Message-ID: <AM3PR01MB1057C9389B75469C4967537288DF0@AM3PR01MB1057.eurprd01.prod.exchangelabs.com>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: yes
 X-MS-TNEF-Correlator: 
@@ -35,31 +34,31 @@ authentication-results: lists.openembedded.org; dkim=none (message not signed)
 	header.d=none; lists.openembedded.org;
 	dmarc=none action=none header.from=spinetix.com;
 x-originating-ip: [212.147.27.179]
-x-microsoft-exchange-diagnostics: 1; AM3PR01MB1060;
-	5:n2LriKPgJhKulvRIIEfLt20om2ouBXtkr4Iib1xkSNgmNEnSbKAzHIWiZm/VKFNW8SrGHOvJIiV6/y6AB8/wnrtLffNfdKjR6sx/ml0Kh614P2vP9D9sFH5L4B5Wp0ZwhtocvhC9NTZQBvXYLDbXnw==;
-	24:O4inImOrRCE70NXdlfEQV8u7Gn19NqoAtuYCASpKESOcgNGvhiASZdS516/kSI9zrFL6JDdYmm3HuTRJw8umZIsIeAcHabjPofEBuHgFsXU=
-x-microsoft-antispam: UriScan:;BCL:0;PCL:0;RULEID:;SRVR:AM3PR01MB1060;
-x-ms-office365-filtering-correlation-id: d459d8cb-b4a6-4f2e-ed60-08d32bde59da
-x-microsoft-antispam-prvs: <AM3PR01MB1060D2233D4A48E842392A0688DF0@AM3PR01MB1060.eurprd01.prod.exchangelabs.com>
+x-microsoft-exchange-diagnostics: 1; AM3PR01MB1057;
+	5:R7HZ1ZuscPpZQ09+D3yKZka60Oa92PTRZwlxy5IzCh47eB+j18t1oT6kaUQN14sqhXaatcx7D3u1JZzwpNzVV5NQ9nRKTluZMLMpByiI9AEm3NcZvxyImcNeoU3FiQA+BJksnrUEMW8lNOc7zJCJFA==;
+	24:LiAPg5NMsk3EwzXLpJ/o5bpQEMEcSNeDwFID4Y6DJ4vJPfP3eBCZvgOJ4vsDC9m7nse9dCQMun5iiX0IG+Rww3Wkq978mqN0xFHat9VlM+E=
+x-microsoft-antispam: UriScan:;BCL:0;PCL:0;RULEID:;SRVR:AM3PR01MB1057;
+x-ms-office365-filtering-correlation-id: 7615d7cd-cded-498c-406a-08d32bdd5a88
+x-microsoft-antispam-prvs: <AM3PR01MB105755FD2C6C15B0BEAD1C1988DF0@AM3PR01MB1057.eurprd01.prod.exchangelabs.com>
 x-exchange-antispam-report-test: UriScan:;
 x-exchange-antispam-report-cfa-test: BCL:0; PCL:0;
-	RULEID:(102415267)(102615245)(601004)(2401047)(8121501046)(5005006)(10201501046)(3002001);
-	SRVR:AM3PR01MB1060; BCL:0; PCL:0; RULEID:; SRVR:AM3PR01MB1060; 
+	RULEID:(102415267)(102615245)(601004)(2401047)(5005006)(8121501046)(3002001)(10201501046);
+	SRVR:AM3PR01MB1057; BCL:0; PCL:0; RULEID:; SRVR:AM3PR01MB1057; 
 x-forefront-prvs: 084080FC15
 x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(6009001)(450100001)(16236675004)(6116002)(102836003)(74316001)(790700001)(1220700001)(229853001)(2501003)(2351001)(15975445007)(5250100002)(5890100001)(19300405004)(40100003)(19625215002)(5004730100002)(5008740100001)(5002640100001)(3660700001)(586003)(33656002)(2906002)(66066001)(5003600100002)(5001960100002)(110136002)(107886002)(92566002)(50986999)(54356999)(1096002)(2900100001)(189998001)(3280700002)(86362001)(19580405001)(19580395003)(87936001)(99936001);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:AM3PR01MB1060;
+	SFS:(10009020)(6009001)(33656002)(54356999)(16236675004)(50986999)(99936001)(5008740100001)(1220700001)(450100001)(5003600100002)(11100500001)(92566002)(19625215002)(40100003)(66066001)(2900100001)(15975445007)(19580395003)(19580405001)(229853001)(2351001)(5002640100001)(3280700002)(110136002)(87936001)(5250100002)(19300405004)(5890100001)(2501003)(102836003)(74316001)(1096002)(3660700001)(790700001)(586003)(86362001)(107886002)(5001960100002)(189998001)(5004730100002)(2906002)(6116002);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:AM3PR01MB1057;
 	H:AM3PR01MB1057.eurprd01.prod.exchangelabs.com; FPR:; SPF:None;
 	MLV:sfv; LANG:en; 
 spamdiagnosticoutput: 1:23
 spamdiagnosticmetadata: NSPM
 MIME-Version: 1.0
 X-OriginatorOrg: spinetix.com
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2016 14:37:17.8219 (UTC)
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2016 14:30:09.3048 (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 5f4034fa-ed2d-4840-a93f-acb1e9633b93
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM3PR01MB1060
-Subject: bitbake-prserv should not force umask in daemon mode
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM3PR01MB1057
+Subject: The PR Service deletes the -wal and -shm sqlite files when daemonizing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -72,51 +71,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Feb 2016 14:52:51 -0000
-X-Groupsio-MsgNum: 6966
+X-List-Received-Date: Tue, 02 Feb 2016 15:04:04 -0000
+X-Groupsio-MsgNum: 6967
 Content-Language: en-US
 Content-Type: multipart/mixed;
-	boundary="_004_AM3PR01MB10570F1A5431FFE827FAA6C588DF0AM3PR01MB1057eurp_"
+	boundary="_004_AM3PR01MB1057C9389B75469C4967537288DF0AM3PR01MB1057eurp_"
 
---_004_AM3PR01MB10570F1A5431FFE827FAA6C588DF0AM3PR01MB1057eurp_
+--_004_AM3PR01MB1057C9389B75469C4967537288DF0AM3PR01MB1057eurp_
 Content-Type: multipart/alternative;
-	boundary="_000_AM3PR01MB10570F1A5431FFE827FAA6C588DF0AM3PR01MB1057eurp_"
+	boundary="_000_AM3PR01MB1057C9389B75469C4967537288DF0AM3PR01MB1057eurp_"
 
---_000_AM3PR01MB10570F1A5431FFE827FAA6C588DF0AM3PR01MB1057eurp_
+--_000_AM3PR01MB1057C9389B75469C4967537288DF0AM3PR01MB1057eurp_
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
 Hi there,
 
-And yet one more fix for the PR Service, this is the last one I've found :)=
- For the record I stumbled across this series of issues (this and past e-ma=
-ils from today) while setting up a shared PR Service for our internal build=
-s.
+As reported in bug #9034 [1] there is an issue in the daeamon mode of the P=
+R Service where the -wal and -shm sqlite files are deleted as soon as it da=
+emonizes, leading to problems as described in the bug.
 
-As reported in bug #9036 [1] clearing the umask when daemonizing the PR Ser=
-vice is not a good idea. The attached patch removes this from the daemonize=
- code.
+The description I entered in the bug report is the following (with some typ=
+os removed...). The attached patch solves this problem for me.
 
-The description I entered in the bug report is the following.
+When daemonizing the PR service the -wal and -shm sqlite files are being de=
+leted, although they should never be (see https://www.sqlite.org/wal.html a=
+nd https://www.sqlite.org/tempfiles.html).
 
-The current bitbake-prserv forces the umask to 0 when daemonizing.
+While the daemonized process keeps the file descriptors open (seen from /pr=
+id<pid>/fd on linux) and thus a clean exit does not lose any data, a power =
+outage would lose all data in the WAL as the -wal file is unavailable when =
+sqlite does its recovery, so even committed transactions would be lost.
 
-I think his should not be done, as it will make all files be created with p=
-ermissions 0777 (world writable!) by default.
+Removing these files also breaks sqlite collaboration between processes and=
+ furthermore prevents taking proper backups without stopping the PR service=
+ (e.g., with sqlite3 shell's ".backup" command).
 
-For instance, the PID file (/tmp/PRServer_*.pid) is created with permission=
-s 0777 on my system (CentOS 7.2.1511).
+The reason the files are deleted is that the DB connection is opened in the=
+ initial process, before forking for daemonization. When the DB connection =
+is closed by the exiting parent processes it can delete the -wal and -shm f=
+iles if it considers itself to be the last connection to the DB. This is ea=
+sily fixed by opening the DB connection after all forking.
 
-It would be better to leave the umask unchanged, so whoever is starting bit=
-bake-preserv gets to choose the umask it wants to use.
-
-The attached patch does exactly this.
+The attached patch does this (on top of jethro branch). With this I have be=
+en able to start the PR Service in daemon mode and the -wal and -shm files =
+do exist and I can take proper backups.
 
 Best regards,
 
 Diego
 
-[1] https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D9036
+[1] https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D9034
+
 --
 Diego Santa Cruz, PhD
 Technology Architect
@@ -125,7 +131,7 @@ diego.santacruz@spinetix.com
 spinetix.com
 
 
---_000_AM3PR01MB10570F1A5431FFE827FAA6C588DF0AM3PR01MB1057eurp_
+--_000_AM3PR01MB1057C9389B75469C4967537288DF0AM3PR01MB1057eurp_
 Content-Type: text/html; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
@@ -139,9 +145,6 @@ xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
 <meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
 <style><!--
 /* Font Definitions */
-@font-face
-	{font-family:Wingdings;
-	panose-1:5 0 0 0 0 0 0 0 0 0;}
 @font-face
 	{font-family:"Cambria Math";
 	panose-1:2 4 5 3 5 4 6 3 2 4;}
@@ -184,42 +187,50 @@ div.WordSection1
 <div class=3D"WordSection1">
 <p class=3D"MsoNormal">Hi there,<o:p></o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">And yet one more fix for the PR Service, this is the=
- last one I&#8217;ve found
-<span style=3D"font-family:Wingdings">J</span> For the record I stumbled ac=
-ross this series of issues (this and past e-mails from today) while setting=
- up a shared PR Service for our internal builds.<o:p></o:p></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">As reported in bug #9036 [1] clearing the umask when=
- daemonizing the PR Service is not a good idea. The attached patch removes =
-this from the daemonize code.<o:p></o:p></p>
+<p class=3D"MsoNormal">As reported in bug #9034 [1] there is an issue in th=
+e daeamon mode of the PR Service where the -wal and -shm sqlite files are d=
+eleted as soon as it daemonizes, leading to problems as described in the bu=
+g.<o:p></o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
 <p class=3D"MsoNormal">The description I entered in the bug report is the f=
-ollowing.<o:p></o:p></p>
+ollowing (with some typos removed&#8230;). The attached patch solves this p=
+roblem for me.<o:p></o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">The current bitbake-prserv forces the umask to 0 whe=
-n daemonizing.<o:p></o:p></p>
+<p class=3D"MsoNormal">When daemonizing the PR service the -wal and -shm sq=
+lite files are being deleted, although they should never be (see https://ww=
+w.sqlite.org/wal.html and https://www.sqlite.org/tempfiles.html).<o:p></o:p=
+></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">I think his should not be done, as it will make all =
-files be created with permissions 0777 (world writable!) by default.<o:p></=
-o:p></p>
+<p class=3D"MsoNormal">While the daemonized process keeps the file descript=
+ors open (seen from /prid&lt;pid&gt;/fd on linux) and thus a clean exit doe=
+s not lose any data, a power outage would lose all data in the WAL as the -=
+wal file is unavailable when sqlite does
+ its recovery, so even committed transactions would be lost.<o:p></o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">For instance, the PID file (/tmp/PRServer_*.pid) is =
-created with permissions 0777 on my system (CentOS 7.2.1511).<o:p></o:p></p=
->
+<p class=3D"MsoNormal">Removing these files also breaks sqlite collaboratio=
+n between processes and furthermore prevents taking proper backups without =
+stopping the PR service (e.g., with sqlite3 shell's &quot;.backup&quot; com=
+mand).<o:p></o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">It would be better to leave the umask unchanged, so =
-whoever is starting bitbake-preserv gets to choose the umask it wants to us=
-e.<o:p></o:p></p>
+<p class=3D"MsoNormal">The reason the files are deleted is that the DB conn=
+ection is opened in the initial process, before forking for daemonization. =
+When the DB connection is closed by the exiting parent processes it can del=
+ete the -wal and -shm files if it
+ considers itself to be the last connection to the DB. This is easily fixed=
+ by opening the DB connection after all forking.<o:p></o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">The attached patch does exactly this.<o:p></o:p></p>
+<p class=3D"MsoNormal">The attached patch does this (on top of jethro branc=
+h). With this I have been able to start the PR Service in daemon mode and t=
+he -wal and -shm files do exist and I can take proper backups.<o:p></o:p></=
+p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
 <p class=3D"MsoNormal">Best regards,<o:p></o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
 <p class=3D"MsoNormal">Diego<o:p></o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
 <p class=3D"MsoNormal">[1] https://bugzilla.yoctoproject.org/show_bug.cgi?i=
-d=3D9036<o:p></o:p></p>
+d=3D9034<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
 <p class=3D"MsoNormal" style=3D"mso-margin-top-alt:auto;mso-margin-bottom-a=
 lt:auto"><span style=3D"font-size:9.0pt;font-family:&quot;Arial&quot;,sans-=
 serif">--<br>
@@ -236,37 +247,64 @@ imes New Roman&quot;,serif"><o:p></o:p></span></p>
 </body>
 </html>
 
---_000_AM3PR01MB10570F1A5431FFE827FAA6C588DF0AM3PR01MB1057eurp_--
+--_000_AM3PR01MB1057C9389B75469C4967537288DF0AM3PR01MB1057eurp_--
 
---_004_AM3PR01MB10570F1A5431FFE827FAA6C588DF0AM3PR01MB1057eurp_
+--_004_AM3PR01MB1057C9389B75469C4967537288DF0AM3PR01MB1057eurp_
 Content-Type: application/octet-stream;
-	name="0001-bitbake-prserv-do-not-clear-umask-when-daemonizing.patch"
-Content-Description: 0001-bitbake-prserv-do-not-clear-umask-when-daemonizing.patch
+	name="0001-bitbake-prserv-wal-and-shm-sqlite-lost-when-daemoniz.patch"
+Content-Description: 0001-bitbake-prserv-wal-and-shm-sqlite-lost-when-daemoniz.patch
 Content-Disposition: attachment;
-	filename="0001-bitbake-prserv-do-not-clear-umask-when-daemonizing.patch";
-	size=1115; creation-date="Tue, 02 Feb 2016 14:35:19 GMT";
-	modification-date="Tue, 02 Feb 2016 13:42:32 GMT"
+	filename="0001-bitbake-prserv-wal-and-shm-sqlite-lost-when-daemoniz.patch";
+	size=2650; creation-date="Tue, 02 Feb 2016 14:24:46 GMT";
+	modification-date="Tue, 02 Feb 2016 13:21:47 GMT"
 Content-Transfer-Encoding: base64
 
-RnJvbSAyNGY2NTEwOTVhZWIzMDA3OGVjZWRiNmI2MWViMTdiMDhkYjhhMzM4IE1vbiBTZXAgMTcg
+RnJvbSAyYTg2NmNmMDliZTdmNmNkMWU3ZDYxNzQxOGU4ODBlNDEwMDEzMjY3IE1vbiBTZXAgMTcg
 MDA6MDA6MDAgMjAwMQpGcm9tOiBEaWVnbyBTYW50YSBDcnV6IDxEaWVnby5TYW50YUNydXpAc3Bp
-bmV0aXguY29tPgpEYXRlOiBUdWUsIDIgRmViIDIwMTYgMTM6MDg6MDUgKzAxMDAKU3ViamVjdDog
-W1BBVENIXSBiaXRiYWtlOiBwcnNlcnY6IGRvIG5vdCBjbGVhciB1bWFzayB3aGVuIGRhZW1vbml6
-aW5nCgpDbGVhcmluZyB0aGUgdW1hc2sgd2hlbiBkYWVtb25pemluZyBpcyBub3QgdGhlIGNvcnJl
-Y3QgdGhpbmcKdG8gZG8sIGFzIGl0IHdpbGwgY3JlYXRlIGZpbGVzIHdyaXRhYmxlIGJ5IGFueW9u
-ZSBieSBkZWZhdWx0LgpGb3IgaW5zdGFuY2UgdGhlIHBpZCBmaWxlIHdhcyBiZWluZyBjcmVhdGVk
-IHdpdGggbW9kZSA3NzcuClRoaXMgY291bGQgYWxzbyBwb3RlbnRpYWxseSBhZmZlY3QgdGhlIHNx
-bGl0ZSBkYXRhYmFzZS4KQmV0dGVyIGxldCB0aGUgY2FsbGluZyBwcm9jZXNzIGRlY2lkZSBvbiB0
-aGUgdW1hc2suCgpTaWduZWQtb2ZmLWJ5OiBEaWVnbyBTYW50YSBDcnV6IDxEaWVnby5TYW50YUNy
-dXpAc3BpbmV0aXguY29tPgotLS0KIGJpdGJha2UvbGliL3Byc2Vydi9zZXJ2LnB5IHwgMSAtCiAx
-IGZpbGUgY2hhbmdlZCwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2JpdGJha2UvbGliL3By
-c2Vydi9zZXJ2LnB5IGIvYml0YmFrZS9saWIvcHJzZXJ2L3NlcnYucHkKaW5kZXggMWRlMzdjZi4u
-ZjZmNTBlZSAxMDA2NDQKLS0tIGEvYml0YmFrZS9saWIvcHJzZXJ2L3NlcnYucHkKKysrIGIvYml0
-YmFrZS9saWIvcHJzZXJ2L3NlcnYucHkKQEAgLTIxMiw3ICsyMTIsNiBAQCBjbGFzcyBQUlNlcnZl
-cihTaW1wbGVYTUxSUENTZXJ2ZXIpOgogICAgIGRlZiBjbGVhbnVwX2hhbmRsZXMoc2VsZik6CiAg
-ICAgICAgIHNpZ25hbC5zaWduYWwoc2lnbmFsLlNJR0lOVCwgc2VsZi5zaWdpbnRfaGFuZGxlcikK
-ICAgICAgICAgc2lnbmFsLnNpZ25hbChzaWduYWwuU0lHVEVSTSwgc2VsZi5zaWd0ZXJtX2hhbmRs
-ZXIpCi0gICAgICAgIG9zLnVtYXNrKDApCiAgICAgICAgIG9zLmNoZGlyKCIvIikKIAogICAgICAg
-ICBzeXMuc3Rkb3V0LmZsdXNoKCkKLS0gCjEuOS40Cgo=
+bmV0aXguY29tPgpEYXRlOiBUdWUsIDIgRmViIDIwMTYgMTM6MDQ6MjAgKzAxMDAKU3ViamVjdDog
+W1BBVENIXSBiaXRiYWtlOiBwcnNlcnY6IC13YWwgYW5kIC1zaG0gc3FsaXRlIGxvc3Qgd2hlbiBk
+YWVtb25pemluZwoKV2hlbiBkYWVtb25pemluZyB0aGUgUFIgc2VydmljZSB0aGUgLXdhbCBhbmQg
+LXNobSBzcWxpdGUgZmlsZXMgd2VyZQpiZWluZyBkZWxldGVkLCBhbHRob3VnaCB0aGV5IHNob3Vs
+ZCBuZXZlciBiZS4gV2hpbGUgdGhlIGRhZW1vbml6ZWQKcHJvY2VzcyBrZWVwcyB0aGUgZmlsZSBk
+ZXNjcmlwdG9ycyBvcGVuIGFuZCB0aHVzIGEgY2xlYW4gZXhpdCBkb2VzCm5vdCBsb29zZSBhbnkg
+ZGF0YSwgYSBwb3dlciBvdXRhZ2Ugd291bGQgbG9vc2UgYWxsIGRhdGEgaW4gdGhlIFdBTC4KUmVt
+b3ZpbmcgdGhlc2UgZmlsZXMgYWxzbyBicmVha3Mgc3FsaXRlIGNvbGxhYm9yYXRpb24gYmV0d2Vl
+bgpwcm9jZXNzZXMgYW5kIGZ1cnRoZXJtb3JlIHByZXZlbnRzIHRha2luZyBwcm9wZXIgYmFja3Vw
+cyB3aXRob3V0CnN0b3BwaW5nIHRoZSBQUiBzZXJ2aWNlLgoKVGhlIHJlYXNvbiB0aGlzIGhhcHBl
+bnMgaXMgdGhhdCB0aGUgREIgY29ubmVjdGlvbiBpcyBvcGVuZWQgaW4KdGhlIGluaXRpYWwgcHJv
+Y2VzcywgYmVmb3JlIGZvcmtpbmcgZm9yIGRhZW1vbml6YXRpb24uIFdoZW4gdGhlCkRCIGNvbm5l
+Y3Rpb24gaXMgY2xvc2VkIGJ5IHRoZSBleGl0aW5nIHBhcmVudCBwcm9jZXNzZXMgaXQgY2FuCmRl
+bGV0ZSB0aGUgLXdhbCBhbmQgLXNobSBmaWxlcyBpZiBpdCBjb25zaWRlcnMgaXRzZWxmIHRvIGJl
+IHRoZQpsYXN0IGNvbm5lY3Rpb24gdG8gdGhlIERCLiBUaGlzIGlzIGVhc2lseSBmaXhlZCBieSBv
+cGVuaW5nIHRoZQpEQiBjb25uZWN0aW9uIGFmdGVyIGFsbCBmb3JraW5nLgoKU2lnbmVkLW9mZi1i
+eTogRGllZ28gU2FudGEgQ3J1eiA8RGllZ28uU2FudGFDcnV6QHNwaW5ldGl4LmNvbT4KLS0tCiBi
+aXRiYWtlL2xpYi9wcnNlcnYvc2Vydi5weSB8IDEzICsrKysrKysrLS0tLS0KIDEgZmlsZSBjaGFu
+Z2VkLCA4IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYml0YmFr
+ZS9saWIvcHJzZXJ2L3NlcnYucHkgYi9iaXRiYWtlL2xpYi9wcnNlcnYvc2Vydi5weQppbmRleCBl
+YWZjM2FhLi5jNjVkZDNjIDEwMDY0NAotLS0gYS9iaXRiYWtlL2xpYi9wcnNlcnYvc2Vydi5weQor
+KysgYi9iaXRiYWtlL2xpYi9wcnNlcnYvc2Vydi5weQpAQCAtNjIsOSArNjIsNiBAQCBjbGFzcyBQ
+UlNlcnZlcihTaW1wbGVYTUxSUENTZXJ2ZXIpOgogICAgICAgICBzZWxmLnJlZ2lzdGVyX2Z1bmN0
+aW9uKHNlbGYuaW1wb3J0b25lLCAiaW1wb3J0b25lIikKICAgICAgICAgc2VsZi5yZWdpc3Rlcl9p
+bnRyb3NwZWN0aW9uX2Z1bmN0aW9ucygpCiAKLSAgICAgICAgc2VsZi5kYiA9IHByc2Vydi5kYi5Q
+UkRhdGEoc2VsZi5kYmZpbGUpCi0gICAgICAgIHNlbGYudGFibGUgPSBzZWxmLmRiWyJQUk1BSU4i
+XQotCiAgICAgICAgIHNlbGYucmVxdWVzdHF1ZXVlID0gUXVldWUuUXVldWUoKQogICAgICAgICBz
+ZWxmLmhhbmRsZXJ0aHJlYWQgPSB0aHJlYWRpbmcuVGhyZWFkKHRhcmdldCA9IHNlbGYucHJvY2Vz
+c19yZXF1ZXN0X3RocmVhZCkKICAgICAgICAgc2VsZi5oYW5kbGVydGhyZWFkLmRhZW1vbiA9IEZh
+bHNlCkBAIC05OCwxMCArOTUsMTIgQEAgY2xhc3MgUFJTZXJ2ZXIoU2ltcGxlWE1MUlBDU2VydmVy
+KToKICAgICAgICAgICAgIHNlbGYudGFibGUuc3luY19pZl9kaXJ0eSgpCiAKICAgICBkZWYgc2ln
+aW50X2hhbmRsZXIoc2VsZiwgc2lnbnVtLCBzdGFjayk6Ci0gICAgICAgIHNlbGYudGFibGUuc3lu
+YygpCisgICAgICAgIGlmIHNlbGYudGFibGU6CisgICAgICAgICAgICBzZWxmLnRhYmxlLnN5bmMo
+KQogCiAgICAgZGVmIHNpZ3Rlcm1faGFuZGxlcihzZWxmLCBzaWdudW0sIHN0YWNrKToKLSAgICAg
+ICAgc2VsZi50YWJsZS5zeW5jKCkKKyAgICAgICAgaWYgc2VsZi50YWJsZToKKyAgICAgICAgICAg
+IHNlbGYudGFibGUuc3luYygpCiAgICAgICAgIHJhaXNlIFN5c3RlbUV4aXQKIAogICAgIGRlZiBw
+cm9jZXNzX3JlcXVlc3Qoc2VsZiwgcmVxdWVzdCwgY2xpZW50X2FkZHJlc3MpOgpAQCAtMTQxLDYg
+KzE0MCwxMCBAQCBjbGFzcyBQUlNlcnZlcihTaW1wbGVYTUxSUENTZXJ2ZXIpOgogICAgICAgICBz
+ZWxmLnF1aXQgPSBGYWxzZQogICAgICAgICBzZWxmLnRpbWVvdXQgPSAwLjUKIAorICAgICAgICAj
+IERCIGNvbm5lY3Rpb24gbXVzdCBiZSBjcmVhdGVkIGFmdGVyIGFsbCBmb3JrcworICAgICAgICBz
+ZWxmLmRiID0gcHJzZXJ2LmRiLlBSRGF0YShzZWxmLmRiZmlsZSkKKyAgICAgICAgc2VsZi50YWJs
+ZSA9IHNlbGYuZGJbIlBSTUFJTiJdCisKICAgICAgICAgbG9nZ2VyLmluZm8oIlN0YXJ0ZWQgUFJT
+ZXJ2ZXIgd2l0aCBEQmZpbGU6ICVzLCBJUDogJXMsIFBPUlQ6ICVzLCBQSUQ6ICVzIiAlCiAgICAg
+ICAgICAgICAgICAgICAgICAoc2VsZi5kYmZpbGUsIHNlbGYuaG9zdCwgc2VsZi5wb3J0LCBzdHIo
+b3MuZ2V0cGlkKCkpKSkKIAotLSAKMS45LjQKCg==
 
---_004_AM3PR01MB10570F1A5431FFE827FAA6C588DF0AM3PR01MB1057eurp_--
+--_004_AM3PR01MB1057C9389B75469C4967537288DF0AM3PR01MB1057eurp_--
