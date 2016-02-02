@@ -1,27 +1,49 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 01F2177179;
-	Tue,  2 Feb 2016 14:08:02 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u12E82I2004430; Tue, 2 Feb 2016 14:08:02 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id u7ZSuU-Feiwy; Tue,  2 Feb 2016 14:08:02 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u12E7wKP004426
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 2 Feb 2016 14:07:59 GMT
-Message-ID: <1454422078.27087.76.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 02 Feb 2016 14:07:58 +0000
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
+Return-Path: <ross.burton@intel.com>
+Received: from mail-io0-f175.google.com (mail-io0-f175.google.com
+	[209.85.223.175])
+	by mail.openembedded.org (Postfix) with ESMTP id CA8E777190
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  2 Feb 2016 14:41:25 +0000 (UTC)
+Received: by mail-io0-f175.google.com with SMTP id d63so19152589ioj.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 02 Feb 2016 06:41:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc:content-type;
+	bh=8uF9T5caug0HQvdW4fd5Rp6wWu7IZdlY7jQjtZk8R2k=;
+	b=aQX3/d61MAsuLktuQ0gvFaLbnpFZ+CHzU6DnGuFVw4QVl2VRhfsu5FLgPfbOvpCjYu
+	PAm9D5lNdBDVhnqjdZ574cL/kZOLGq8MfVPJ9g/Djrr1UdAmyj8ZBM8wB5jqpuNIh9BJ
+	tmwyaysdhaJD94/5j3a/d51HXsEOOW4pzCHWtkm+YvJTFhLVObs1wLuAvnuNoW8FA0zA
+	6fz7sn5yvL7ppCyxjJ8YIdHBjGX/vt8IrxPLztbbJzBNZvq8JHkGNYw2cMCgKyXgncgY
+	PSk6m4+IiHw4XH8rIGPKvEBz/Z5o/sR3Y+0fyLZDlwFLIrFNqePWo8kVBx895vDReTu9
+	GO2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type;
+	bh=8uF9T5caug0HQvdW4fd5Rp6wWu7IZdlY7jQjtZk8R2k=;
+	b=Pr+cV99Y99lBvcQKZcSOTUAcX+2sl5fcONSWRmY1ipWhiFwDhR3FbYhzjLs+JJdUpH
+	tDkmarcxt4aRwtwiz/uRhDBvJu7in31zTI0I/cY8DmZ/xtFzm3KQzTMn6ru06N6k8lCa
+	aqqaClG95QcsTQPPuaB/jpTg4d3Ei+7GbUgBpYWdJVkAW/wMpVnTwkJM6fHIEDI5UCUt
+	UrOymVyYzNu4f0/LGENsMXiDHDajpSr8ahSjUbO1rffMH5ysmBKGoTp4CyqJ6Sil336k
+	fPBD+ev3Rvd6l3AHJBILOPROdoCipC8UBcOz5XD45CUBcAX5laiHcLdXcZU+M3u/1Uiz
+	vyxA==
+X-Gm-Message-State: AG10YOTJz5mjwxT6gVdnbP1oiQu9uz6yNEQGdnyM+bXNvqkdgGgByY+TaQQR4nmrgTxU6BKc9YtO0uYlZWIqQZUl
+X-Received: by 10.107.10.157 with SMTP id 29mr15703936iok.133.1454424086769;
+	Tue, 02 Feb 2016 06:41:26 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.107.162.70 with HTTP; Tue, 2 Feb 2016 06:41:07 -0800 (PST)
+In-Reply-To: <1454422078.27087.76.camel@linuxfoundation.org>
+References: <1454422078.27087.76.camel@linuxfoundation.org>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Tue, 2 Feb 2016 14:41:07 +0000
+Message-ID: <CAJTo0LanTJT6B4YJ6=xfetCSi882LOBAd5P0gNXeXyC=pqiJLQ@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>
-Subject: [PATCH] build/data: Don't expand python functions before execution [API change]
+	<openembedded-architecture@lists.openembedded.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [Openembedded-architecture] [PATCH] build/data: Don't expand python functions before execution [API change]
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,67 +56,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Feb 2016 14:08:03 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 02 Feb 2016 14:41:26 -0000
+Content-Type: multipart/alternative; boundary=001a113f8df80b870f052aca7f8f
 
-Right now, if you have some python code like:
+--001a113f8df80b870f052aca7f8f
+Content-Type: text/plain; charset=UTF-8
 
-X = "a"
+On 2 February 2016 at 14:07, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-def somefunction(d):
-    d.setVar("X", "b")
-    d.setVar("Y", "${X}")
+> I propose we default to not expanding python code and then deal with
+> any consequences from that if/as/where identified. This will improve
+> new user understanding and usability of the system, it also allows
+> several long standing weird expansion issues to be fixed.
+>
 
-then any sane person would expect that Y = "b" at the end of the
-function. This is not the case, Y = "a".
+As someone who has had to write classes that do "$" + "{FOO}", this gets a
+massive +1 from me.
 
-This is due to the python function being expanded before execution, the
-executed code would read d.setVar("Y", "a"). This understandably
-confuses people, it also makes it near impossible to write ${} in a
-python function without unintended things happening.
+Ross
 
-I think there is general agreement we should fix this and standardise
-on non-expansion of python functions. We already don't expand anonymous
-python (mostly).
+--001a113f8df80b870f052aca7f8f
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I've checked OE-Core with buildhistory before and after this change and
-there were a small number of issues this exposed which I've sent
-patches for.
+<div dir=3D"ltr"><div class=3D"gmail_extra">On 2 February 2016 at 14:07, Ri=
+chard Purdie <span dir=3D"ltr">&lt;<a href=3D"mailto:richard.purdie@linuxfo=
+undation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<=
+/span> wrote:<br><div class=3D"gmail_quote"><blockquote class=3D"gmail_quot=
+e" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">=
+<div id=3D":41t" class=3D"a3s" style=3D"overflow:hidden">I propose we defau=
+lt to not expanding python code and then deal with<br>
+any consequences from that if/as/where identified. This will improve<br>
+new user understanding and usability of the system, it also allows<br>
+several long standing weird expansion issues to be fixed.</div></blockquote=
+></div><br>As someone who has had to write classes that do &quot;$&quot; + =
+&quot;{FOO}&quot;, this gets a massive +1 from me.</div><div class=3D"gmail=
+_extra"><br></div><div class=3D"gmail_extra">Ross</div></div>
 
-I propose we default to not expanding python code and then deal with
-any consequences from that if/as/where identified. This will improve
-new user understanding and usability of the system, it also allows
-several long standing weird expansion issues to be fixed.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 52a4916..b7c49eb 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -239,7 +239,7 @@ def exec_func_python(func, d, runfile, cwd=None):
-     """Execute a python BB 'function'"""
- 
-     bbfile = d.getVar('FILE', True)
--    code = _functionfmt.format(function=func, body=d.getVar(func, True))
-+    code = _functionfmt.format(function=func, body=d.getVar(func, False))
-     bb.utils.mkdirhier(os.path.dirname(runfile))
-     with open(runfile, 'w') as script:
-         bb.data.emit_func_python(func, script, d)
-diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-index 1f1f0d2..86ad4ed 100644
---- a/bitbake/lib/bb/data.py
-+++ b/bitbake/lib/bb/data.py
-@@ -308,7 +308,7 @@ def emit_func_python(func, o=sys.__stdout__, d = init()):
- 
-     write_func(func, o, True)
-     pp = bb.codeparser.PythonParser(func, logger)
--    pp.parse_python(d.getVar(func, True))
-+    pp.parse_python(d.getVar(func, False))
-     newdeps = pp.execs
-     newdeps |= set((d.getVarFlag(func, "vardeps", True) or "").split())
-     seen = set()
-
-
-
+--001a113f8df80b870f052aca7f8f--
