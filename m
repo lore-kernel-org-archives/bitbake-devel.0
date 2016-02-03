@@ -1,55 +1,61 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-wm0-f43.google.com (mail-wm0-f43.google.com [74.125.82.43])
-	by mail.openembedded.org (Postfix) with ESMTP id AC81B77348;
-	Wed,  3 Feb 2016 15:03:27 +0000 (UTC)
-Received: by mail-wm0-f43.google.com with SMTP id p63so74555008wmp.1;
-	Wed, 03 Feb 2016 07:03:28 -0800 (PST)
+Return-Path: <kergoth@gmail.com>
+Received: from mail-ig0-f174.google.com (mail-ig0-f174.google.com
+	[209.85.213.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 4514A77184
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  3 Feb 2016 15:57:00 +0000 (UTC)
+Received: by mail-ig0-f174.google.com with SMTP id 5so39247384igt.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 03 Feb 2016 07:57:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:date:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=cwIU89taT8eUVTyQKwQghsyv4kYL0A0T6bpq8+3aNFo=;
-	b=JS4HYRZomP/qA0U3GQKxeGDEb3tWmZ1OQ1l2Tt5cbDwnqfc/nK0yoo62UYonQ22xNB
-	EFz+j3/2OOdf8QcBWSCdI4ZiUj1/6ATkwEoDOgZWX8h9d5pcMMOScbWGTxWowyxAPS5O
-	LQQdhv4uVVzrB0FFkkcruxJncTKpz1vJC/F020rAp5yJXYrDo9XG9YGoDgcxT2OvBzOm
-	XVID7SK1SQeCfJEGtR+UQoDXrPGQw+Ey6yuvisMo21+W0REhWXViLFBkw2ZdHsY+E+SZ
-	VpN4pWeLr/7+B1UHfMDfFsmVPBJAUEtsgAHwwahT1XT46bsHAPR1DFOkwkceuMdHnELz
-	M19g==
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=mXniMQGb23RVX7ooX+A+7RiiXbY/idqM/OcxrsrYlHo=;
+	b=uN1ZeTaTmzisJgmmcWJR8JulLPHPv0CejpHY6CF7XqlIqqh5zaNoHNp3z21wwX1XJR
+	YTjX8guUB6ixSige2uPaPsEKkEuLDymhA1GuzHOgjWUc5q62RJhsd1M7zMV/SYSUAj3m
+	LKQ4sKr2DlvbwPK2maSQ0p97+KZbtP1roz6t6lVqeaTV8yxJvfclGvJqAEqQ1jLtZg35
+	0bQXJ1Cy7x4RKD/FTX+DPSSmMqgrMwLdELz6ScZiqBsfjB+8lMqL5+WtQ6GikgE0EVtZ
+	r9yv1DueI2FTJY0NZcaGoBvGWREiuJvfMRv+vk6sCeqaYyPpit416KhNT02Meo7kKOsv
+	wDqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=kergoth-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=mXniMQGb23RVX7ooX+A+7RiiXbY/idqM/OcxrsrYlHo=;
+	b=m6mitKlsgXlqr1CTWnZNXW6SRc7f50ZX6CIXIphFdyz7lXLq1A9zHLs46HFpNz7wFj
+	f40aEQlOLWVhcdgfc2ziONZ82aPGGIc1G6nZz6/1O3BkDwPwjcoVybx96uSkh9TRckP0
+	8PEZmoq4jjlheeHqsAecaoo69yuuT2mF23XVlmBGWlmjZyJcPorZzCUmklaA5n2LZFDN
+	cYftohaIKV/ureiiRwuGamy7dzv02pI3FHDTDXWBjnFxrtckwfv6mE3wmPqdBFPEO1mm
+	rDX3CD58r1l4u+XkICx5LK+cWw9+PPW4JN6IftR4/DKcrJvMln+xSsQ+kpQ7PGNgRP1N
+	66ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-	:mime-version:content-type:content-disposition:in-reply-to
-	:user-agent;
-	bh=cwIU89taT8eUVTyQKwQghsyv4kYL0A0T6bpq8+3aNFo=;
-	b=GAz3F6wikk7pdYPl6umrJjc3WaMSdHrimlbFGe5HZyU+RpyNOPbAXlkrtL9lrTOZqE
-	hNgLWM+YDibI3RqhU7WbYk/fYZ7nSdKXJnCi+iZxbAsv0ZWspksGfatZO+kDarnnjZ2H
-	eCleVwTjzBve86/gL1HKEdDw38CvKZRE1w5WzZgpgFE4xocx+H6+CI6cFyBzPwi5PTGY
-	OjESr2ZLT03YcP+owiUSKS4wtNOkNuFpLLlm8FL83nbYbJ0k8V5kj2hidd5rB9a6AHXg
-	f8jYHm9nKNXSmewri0HXFbhdfpsnanQmhsE5khKQRwPCHu/laWvA/iEfytgR//nHff9H
-	/pyQ==
-X-Gm-Message-State: AG10YORtFHiwrnDaWQbn08odivP3E0Q6/LCAvQtQRP9Iga/bNtcjAgxrpreIqTfcGldkww==
-X-Received: by 10.194.112.41 with SMTP id in9mr2400670wjb.139.1454511808000;
-	Wed, 03 Feb 2016 07:03:28 -0800 (PST)
-Received: from localhost (ip-86-49-34-37.net.upcbroadband.cz. [86.49.34.37])
-	by smtp.gmail.com with ESMTPSA id
-	z127sm21907547wme.2.2016.02.03.07.03.26
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 03 Feb 2016 07:03:27 -0800 (PST)
-From: Martin Jansa <martin.jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Wed, 3 Feb 2016 16:06:38 +0100
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-ID: <20160203150638.GB2567@jama>
-References: <1454457340.27087.143.camel@linuxfoundation.org>
-	<CAP9ODKqGa0Lurxye_+TviFbxBT-d3sf2D3tD_WiR9er_RcFsKg@mail.gmail.com>
-	<1454498556.27087.180.camel@linuxfoundation.org>
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc:content-type;
+	bh=mXniMQGb23RVX7ooX+A+7RiiXbY/idqM/OcxrsrYlHo=;
+	b=IYid0hgE88ZYU5wfG4w8gkHqwKSfC2hyg111bDTTUo3xsPL0r0DX36vmRXW/A1aiu3
+	vpY98JSv+uF5bHynUgEej9X4XDHNHkpOmH4YHHcE71MFUs/DrtK1o2nE05INR6r6bKzX
+	yt+BVAJnLrDezBiABH7ouF8VCsE9hoc9+TPilJPlaEKSO3KpOqO6+IlmaBjgfGVXhf10
+	F7XNjeARJ6KZS7QpjZYUY3hitYn6Y0Ke7SmaINYWTKBnIVAwJIT2UR/2u1TmGF9av0sh
+	cALHWEgVE60SoQorj2Vp0d8K2yB/n/4a/X5bx5dRxx1eFrwrKiQ+nQUb/OBlu4zUTNht
+	v2Hg==
+X-Gm-Message-State: AG10YOTFTVZHN6bnTscxRzwOSUbUiJlOHEKjKuNk6LoahKTD5Pb6/wfd8WZ0gG8RHX6h3DULDxF1vzOye2Ewgg==
+X-Received: by 10.50.26.5 with SMTP id h5mr4160182igg.25.1454515021604; Wed,
+	03 Feb 2016 07:57:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1454498556.27087.180.camel@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-Cc: openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Otavio Salvador <otavio.salvador@ossystems.com.br>
-Subject: Re: [Openembedded-architecture] [PATCH] data_smart: Drop default expand=False to getVar [API change]
+Sender: kergoth@gmail.com
+Received: by 10.79.91.133 with HTTP; Wed, 3 Feb 2016 07:56:42 -0800 (PST)
+In-Reply-To: <1454495619-15453-2-git-send-email-markus.lehtonen@linux.intel.com>
+References: <1454495619-15453-1-git-send-email-markus.lehtonen@linux.intel.com>
+	<1454495619-15453-2-git-send-email-markus.lehtonen@linux.intel.com>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Wed, 3 Feb 2016 08:56:42 -0700
+X-Google-Sender-Auth: MnEfGh7U6jiQ6w81ttshrRa5DtA
+Message-ID: <CABcZANkJ4Ta=_YuU5yOk55XGH0mBpSD6VCcNiSX9aZY2ixLcpA@mail.gmail.com>
+To: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 1/2] data_smart: simple bracket matching inside python expressions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,65 +68,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Feb 2016 15:03:30 -0000
-X-Groupsio-MsgNum: 6984
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
-Content-Disposition: inline
+X-List-Received-Date: Wed, 03 Feb 2016 15:57:03 -0000
+Content-Type: multipart/alternative; boundary=047d7bd7598c2f1250052adfab67
 
---6sX45UoQRIJXqkqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--047d7bd7598c2f1250052adfab67
+Content-Type: text/plain; charset=UTF-8
+
+On Wed, Feb 3, 2016 at 3:33 AM, Markus Lehtonen <
+markus.lehtonen@linux.intel.com> wrote:
+
+> This expands the python expansion regex by matching curly brackets
+> inside python expressions. In its simplicity it is limited: e.g. it does
+> not correctly handle nested curly brackets or open curly brackets (i.e.
+> '{' without a matching '}') inside python expressions. Making python
+> parsing inside data_smart fully error-free would require significantly
+> more work, basically using/implementing python parser to correctly
+> handle python strings etc.
+>
+> [YOCTO #8849]
+>
+> Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+>
+
+Will this cause problems with regular variable expansion nested inside of
+inline python, which is allowed? I.e. ${@ ... '${FOO}'}
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
+
+--047d7bd7598c2f1250052adfab67
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 03, 2016 at 11:22:36AM +0000, Richard Purdie wrote:
-> On Wed, 2016-02-03 at 08:11 -0200, Otavio Salvador wrote:
-> > On Tue, Feb 2, 2016 at 9:55 PM, Richard Purdie
-> > <richard.purdie@linuxfoundation.org> wrote:
-> > > At some point in the future, getVar should expand by default. To
-> > > get
-> > > there from the current position, we need a period of time where the
-> > > expand parameter is mandatory.
-> > >=20
-> > > This patch starts that process. Clear errors will result from any
-> > > code
-> > > which doesn't provide this. Layers can be fixed with an expression
-> > > like:
-> > >=20
-> > > sed -e 's:\(\.getVar([^,()]*, [^,()]*\)):\1, False):g' -i `grep=20
-> > > -ril getVar *`
-> > >=20
-> > > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> >=20
-> > I am in favor of making it mandatory but I fail to see what we gain=20
-> > in making it expand by default in future.
->=20
-> Less ugly syntax, in 99.9% of usages, you would want expand=3DTrue and
-> getVar("X") is neater than getVar("X", True).
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Wed, Feb 3, 2016 at 3:33 AM, Markus Lehtonen <span dir=3D"ltr">&lt;<a hr=
+ef=3D"mailto:markus.lehtonen@linux.intel.com" target=3D"_blank">markus.leht=
+onen@linux.intel.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_qu=
+ote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex=
+"><div id=3D":175" class=3D"a3s" style=3D"overflow:hidden">This expands the=
+ python expansion regex by matching curly brackets<br>
+inside python expressions. In its simplicity it is limited: e.g. it does<br=
+>
+not correctly handle nested curly brackets or open curly brackets (i.e.<br>
+&#39;{&#39; without a matching &#39;}&#39;) inside python expressions. Maki=
+ng python<br>
+parsing inside data_smart fully error-free would require significantly<br>
+more work, basically using/implementing python parser to correctly<br>
+handle python strings etc.<br>
+<br>
+[YOCTO #8849]<br>
+<br>
+Signed-off-by: Markus Lehtonen &lt;<a href=3D"mailto:markus.lehtonen@linux.=
+intel.com">markus.lehtonen@linux.intel.com</a>&gt;</div></blockquote></div>=
+<br></div><div class=3D"gmail_extra">Will this cause problems with regular =
+variable expansion nested inside of inline python, which is allowed? I.e. $=
+{@ ... &#39;${FOO}&#39;}<br>-- <br><div class=3D"gmail_signature">Christoph=
+er Larson<br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded,=
+ OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graph=
+ics</div>
+</div></div>
 
-Consistent indentation is also neater than mixing tabs and spaces, but
-you were refusing to take such cosmetic change and now you're proposing
-neater getVar syntax which is (in some cases silently) breaking existing
-metadata and make backporting changes more difficult?
-
-I'm not opposing the change, just don't understand why the same
-arguments work here and not for indentation.
-
-Regards,
-
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
-
---6sX45UoQRIJXqkqR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlayF30ACgkQN1Ujt2V2gBxmygCguU40y1IX2LOwthREwoUZlt7E
-B/oAniGtAJK0dqXPRLo6PlFY/FjUzsHz
-=YJf4
------END PGP SIGNATURE-----
-
---6sX45UoQRIJXqkqR--
+--047d7bd7598c2f1250052adfab67--
