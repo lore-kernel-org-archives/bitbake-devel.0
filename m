@@ -1,62 +1,65 @@
-Return-Path: <otavio.salvador@ossystems.com.br>
-Received: from mail-pa0-f42.google.com (mail-pa0-f42.google.com
-	[209.85.220.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 6547C77155
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  3 Feb 2016 16:43:59 +0000 (UTC)
-Received: by mail-pa0-f42.google.com with SMTP id cy9so16177504pac.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 03 Feb 2016 08:44:00 -0800 (PST)
+Return-Path: <kergoth@gmail.com>
+Received: from mail-ig0-f170.google.com (mail-ig0-f170.google.com
+	[209.85.213.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 920E87731F;
+	Wed,  3 Feb 2016 16:52:23 +0000 (UTC)
+Received: by mail-ig0-f170.google.com with SMTP id rs20so6658814igc.0;
+	Wed, 03 Feb 2016 08:52:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=UNKJHDnAwTFUFaAwbXC8VJGJ9EsFWVMwPhZBTJCBRN0=;
+	b=MW5WWoUsmutuGibhzS7SpE51w/sNnt5wFAi52QftfEthqCXO3tcj4mpB3Ezkfb16GB
+	87PGmqOv2kvqOVAEUGYJhfeK3hH7D6Uxo+JVaXUt/DCq5wMDWRLr062StogfKjemxplh
+	lA0RQMBhdwM+/5TWLxLyuAvsOSJjPmoVOsUpcurG6grHaj9Oxn92olO3BJyuKxBPGv5j
+	0weiNRmRLkUjf/+onxdSrD5Bg45b+bzqLl6r2IFX25DMYusACsYCU979aWE8OCzERlvP
+	L3XaLWfe7f5N0iW3TsF0jJhRIVRdvjrjy8wD4NPsX1dSuVkxkmZrRW7lWzjiIcvubnMX
+	7WDA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ossystems-com-br.20150623.gappssmtp.com; s=20150623;
-	h=from:mime-version:in-reply-to:references:date:message-id:subject:to
-	:cc:content-type;
-	bh=QU8ojMJ4rsNJcxFlv8twyEPF6k1nG1OCMSW487jhOBQ=;
-	b=gKUrys0RzAKSEE9jEGiiBr4+5bf7Dwq2VQK/6QkiAyoxgfUCbZf0Qb9HpbEorKxAng
-	aQwP9gtuwkKsfMEmcggd9WouMKt6tyltC/V1NfSvoHLl+2Wz2As9gyv0lI1jO7wj5KoF
-	oAKSdHdL+ChMbzk8tdTrdps1Er9Zo4uwd3LjBNCDU6/uFbJ31y8DtKHaFCxL0yg/1pqs
-	poEo88+jKj2Dc7HPli/XH7WTXUdzSYHvSW4t3rF3GzqNOjN1b4tvGM3C+RKNx1tMHrV0
-	ZfGTCIM1+g027W/rTuWT/xcqTtJLGo6s4SBLyyiGRpYVToBb8pTIe4PYSKxPvcJ2yAwd
-	icwQ==
+	d=kergoth-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=UNKJHDnAwTFUFaAwbXC8VJGJ9EsFWVMwPhZBTJCBRN0=;
+	b=ae1e8w1L2i+XYIOwF8ZhP/BVB9JRdldi8NCkhLuxuhN6CUhyly/I3+FXtlRtY1tWnD
+	sv1bnxj3eY89FentjGPHL6Pai8Nsryw1abIGgo1wdOrkRsd1b12/0lmC7s3trkyFMxBp
+	8oFIRrX05gjLgjJi6x6nBTYVQwP/ftGpp5k3geD8rcTuA6c6MAukqY6ALQ+ReY6nZyjB
+	O/nbpENmXkei8y5Vjmy0NqPGY2lWr17Yv18G3Gm74h7Wf9YO6BhnwvddGuSZstEG/V1E
+	bSjsHAWs709jFy0REZ6pMPO7tBXIP6hUWZDT89ezN4SKtCaQ9OMf5Ze0V1LnnJwXPSB5
+	ZRUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:mime-version:in-reply-to:references:date
-	:message-id:subject:to:cc:content-type;
-	bh=QU8ojMJ4rsNJcxFlv8twyEPF6k1nG1OCMSW487jhOBQ=;
-	b=hSlA8NkmB+XmvxZk0w+geApC/RWyNgw5uIEb81RcQzT5d/qkR5ZlEYFx/t1tLcM2Td
-	Rpv7JRQH0DLpcCD5n+wX+krq8s55i4A6GeSjXB/6XqBNwASLj7VBM3VHAa8nBdjesaMW
-	Deg0JJEzon2vz/l4k6bwDsu3YI3JdLjc70AXTI/e5/gmgcDLg2CODnsYCFNvl1tlsZ6d
-	II+X4tRcxz1dCEfz7PMToMM1sf0qKy6AwXYws+XoX0jNcE4mpwOsAxIQhJcNweevwJxB
-	PuQXlkWFA+aojO3A59dF6gDM+fmjym1eMs7b0YhAV8JE/po1m4N6X8VGbYgelUEH+arT
-	XTUA==
-X-Gm-Message-State: AG10YORjlz1cSdDJJNlz1k9HFQUV0qfKPcyvsVDZ4qiFIaSO7E6dIWwR0GkOIwOTrJMb4g==
-X-Received: by 10.66.101.74 with SMTP id fe10mr3697880pab.66.1454517840406;
-	Wed, 03 Feb 2016 08:44:00 -0800 (PST)
-Received: from mail-pf0-f177.google.com (mail-pf0-f177.google.com.
-	[209.85.192.177]) by smtp.gmail.com with ESMTPSA id
-	dz8sm11048107pab.19.2016.02.03.08.43.58
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 03 Feb 2016 08:43:58 -0800 (PST)
-From: Otavio Salvador <otavio.salvador@ossystems.com.br>
-X-Google-Original-From: Otavio Salvador <otavio@ossystems.com.br>
-Received: by mail-pf0-f177.google.com with SMTP id o185so16504276pfb.1;
-	Wed, 03 Feb 2016 08:43:58 -0800 (PST)
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc:content-type;
+	bh=UNKJHDnAwTFUFaAwbXC8VJGJ9EsFWVMwPhZBTJCBRN0=;
+	b=F4kvqNAAMxDKh6AcXZiEWi6/p0WojgZFojGjNDIpdy7rX9erQS6qcShVS0IKPs2rjj
+	X4gY0XdUxYk/o1xrz0Z8T/QRWWX1DrW90yI2S8zcTSsaB2N2r8SrecSzz4wnTe4+drG0
+	i8Ij8Aet6PtHZ00h6Yu35dUXORN3I8xAw6SjrpDockceTG2SsWthNByansdesGjClqX1
+	n0z9AXmuhEIRwDNWZRqrwogeCSv9tFTkDUuT4o3zUhkQOHKD9i5vXrWRe+SvdvC6wS8v
+	QpzcWq0kH3P31tOKgW1DqhmYmIoAk0nWkxTerFhag/shIYPxGL2tFbcxjbMPDIvp4YkS
+	1G5w==
+X-Gm-Message-State: AG10YOQY3jebx12ta2ZLim2olyTPrs350d9M9KxNo7LdZ4fg+11GZx+pkD4DDPP8SYC6ceyRZzJDLo17tIfZoA==
+X-Received: by 10.50.132.40 with SMTP id or8mr4681732igb.47.1454518343057;
+	Wed, 03 Feb 2016 08:52:23 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 10.98.12.221 with SMTP id 90mr3653346pfm.95.1454517838386; Wed,
-	03 Feb 2016 08:43:58 -0800 (PST)
-Received: by 10.66.72.229 with HTTP; Wed, 3 Feb 2016 08:43:58 -0800 (PST)
-In-Reply-To: <20160203150638.GB2567@jama>
+Sender: kergoth@gmail.com
+Received: by 10.79.91.133 with HTTP; Wed, 3 Feb 2016 08:52:03 -0800 (PST)
+In-Reply-To: <1454517490.27087.199.camel@linuxfoundation.org>
 References: <1454457340.27087.143.camel@linuxfoundation.org>
 	<CAP9ODKqGa0Lurxye_+TviFbxBT-d3sf2D3tD_WiR9er_RcFsKg@mail.gmail.com>
 	<1454498556.27087.180.camel@linuxfoundation.org>
 	<20160203150638.GB2567@jama>
-Date: Wed, 3 Feb 2016 14:43:58 -0200
-X-Gmail-Original-Message-ID: <CAP9ODKopXQJn_cgCAAKsJBwjYUig5az1rKSzfGiTG13MHZCoKA@mail.gmail.com>
-Message-ID: <CAP9ODKopXQJn_cgCAAKsJBwjYUig5az1rKSzfGiTG13MHZCoKA@mail.gmail.com>
-To: Martin Jansa <martin.jansa@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>
+	<1454516552.27087.197.camel@linuxfoundation.org>
+	<CABcZANkuuQRW7ab_ai=KpoL2030H__kyFszZpkvgkxurmu63_w@mail.gmail.com>
+	<1454517490.27087.199.camel@linuxfoundation.org>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Wed, 3 Feb 2016 09:52:03 -0700
+X-Google-Sender-Auth: hiV3NTigRQ4hZBnqVbc4RKwIWPg
+Message-ID: <CABcZANm03MMuh4k1Lxi=PaXTC+j2uWMiruq=8fsnadKvQBsO0Q@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: openembedded-architecture
+	<openembedded-architecture@lists.openembedded.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Otavio Salvador <otavio.salvador@ossystems.com.br>
 Subject: Re: [Openembedded-architecture] [PATCH] data_smart: Drop default expand=False to getVar [API change]
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -70,50 +73,105 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Feb 2016 16:44:01 -0000
+X-List-Received-Date: Wed, 03 Feb 2016 16:52:23 -0000
+Content-Type: multipart/alternative; boundary=047d7b162bfd28522e052ae071b1
+
+--047d7b162bfd28522e052ae071b1
 Content-Type: text/plain; charset=UTF-8
 
-On Wed, Feb 3, 2016 at 1:06 PM, Martin Jansa <martin.jansa@gmail.com> wrote:
-> On Wed, Feb 03, 2016 at 11:22:36AM +0000, Richard Purdie wrote:
->> On Wed, 2016-02-03 at 08:11 -0200, Otavio Salvador wrote:
->> > On Tue, Feb 2, 2016 at 9:55 PM, Richard Purdie
->> > <richard.purdie@linuxfoundation.org> wrote:
->> > > At some point in the future, getVar should expand by default. To
->> > > get
->> > > there from the current position, we need a period of time where the
->> > > expand parameter is mandatory.
->> > >
->> > > This patch starts that process. Clear errors will result from any
->> > > code
->> > > which doesn't provide this. Layers can be fixed with an expression
->> > > like:
->> > >
->> > > sed -e 's:\(\.getVar([^,()]*, [^,()]*\)):\1, False):g' -i `grep
->> > > -ril getVar *`
->> > >
->> > > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->> >
->> > I am in favor of making it mandatory but I fail to see what we gain
->> > in making it expand by default in future.
->>
->> Less ugly syntax, in 99.9% of usages, you would want expand=True and
->> getVar("X") is neater than getVar("X", True).
->
-> Consistent indentation is also neater than mixing tabs and spaces, but
-> you were refusing to take such cosmetic change and now you're proposing
-> neater getVar syntax which is (in some cases silently) breaking existing
-> metadata and make backporting changes more difficult?
->
-> I'm not opposing the change, just don't understand why the same
-> arguments work here and not for indentation.
+On Wed, Feb 3, 2016 at 9:38 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-I second Martin's comments here. I would like to see more consistency
-applied to the metadata. I know that some people will have conflicts
-when rebasing out-of-tree code but this is the price of not
-upstreaming code.
+> On Wed, 2016-02-03 at 09:29 -0700, Christopher Larson wrote:
+> > >  The actual getVar syntax on the other handy is more than cosmetic,
+> > > people don't understand what this "True" they keep adding means, or
+> > > why
+> > > they need it. You tend to know when you don't want expansion on the
+> > > other hand. So a cleaner syntax which does what the user most
+> > > likely
+> > > needs is more than cosmetic.
+> > I'd agree with that, passing booleans as arguments sucks all around,
+> > since it loses context. *If* someone is going to do it, it's best to
+> > pass it with the argument name in keyword form in the caller, and
+> > obviously we don't want to do that here.
+> >
+> > That said, I'm rather inclined toward thinking about alternative
+> > DataSmart APIs in general, in the long term. For example, it's a
+> > MutableMapping, so it acts dict-like, so we should be able to use
+> > .get() and get an expanded value, and then the case would line up
+> > with PEP8 (CamelCase for functions is frowned upon). I.e. we could
+> > have get() and get_unexpanded().
+>
+> I'm just thinking out loud here, I think the above is worth seriously
+> considering. One big advantage "getVar" has is that its pretty unique
+> and the python parsing code therefore doesn't get a lot of false
+> positives with function names. "get" on the other hand, I can see being
+> a nightmare.
 
+
+That's a good point, I'll admit I didn't think about the codeparsing in
+that regard. I wonder how much work it'd be to track what variable(s) hold
+DataSmart instances.. we know 'd' starts that way, that's an assumption we
+can make, but it wouldn't traverse createCopy().. *Ponders*
 -- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--047d7b162bfd28522e052ae071b1
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Wed, Feb 3, 2016 at 9:38 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hre=
+f=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.p=
+urdie@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gma=
+il_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-lef=
+t:1ex"><span class=3D"">On Wed, 2016-02-03 at 09:29 -0700, Christopher Lars=
+on wrote:<br>
+&gt; &gt;=C2=A0 The actual getVar syntax on the other handy is more than co=
+smetic,<br>
+&gt; &gt; people don&#39;t understand what this &quot;True&quot; they keep =
+adding means, or<br>
+&gt; &gt; why<br>
+&gt; &gt; they need it. You tend to know when you don&#39;t want expansion =
+on the<br>
+&gt; &gt; other hand. So a cleaner syntax which does what the user most<br>
+&gt; &gt; likely<br>
+&gt; &gt; needs is more than cosmetic.<br>
+&gt; I&#39;d agree with that, passing booleans as arguments sucks all aroun=
+d,<br>
+&gt; since it loses context. *If* someone is going to do it, it&#39;s best =
+to<br>
+&gt; pass it with the argument name in keyword form in the caller, and<br>
+&gt; obviously we don&#39;t want to do that here.<br>
+&gt;<br>
+&gt; That said, I&#39;m rather inclined toward thinking about alternative<b=
+r>
+&gt; DataSmart APIs in general, in the long term. For example, it&#39;s a<b=
+r>
+&gt; MutableMapping, so it acts dict-like, so we should be able to use<br>
+&gt; .get() and get an expanded value, and then the case would line up<br>
+&gt; with PEP8 (CamelCase for functions is frowned upon). I.e. we could<br>
+&gt; have get() and get_unexpanded().<br>
+<br>
+</span>I&#39;m just thinking out loud here, I think the above is worth seri=
+ously<br>
+considering. One big advantage &quot;getVar&quot; has is that its pretty un=
+ique<br>
+and the python parsing code therefore doesn&#39;t get a lot of false<br>
+positives with function names. &quot;get&quot; on the other hand, I can see=
+ being<br>
+a nightmare.</blockquote></div><br></div><div class=3D"gmail_extra">That&#3=
+9;s a good point, I&#39;ll admit I didn&#39;t think about the codeparsing i=
+n that regard. I wonder how much work it&#39;d be to track what variable(s)=
+ hold DataSmart instances.. we know &#39;d&#39; starts that way, that&#39;s=
+ an assumption we can make, but it wouldn&#39;t traverse createCopy().. *Po=
+nders*<br>-- <br><div class=3D"gmail_signature">Christopher Larson<br>clars=
+on at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Mai=
+ntainer - Tslib<br>Senior Software Engineer, Mentor Graphics</div>
+</div></div>
+
+--047d7b162bfd28522e052ae071b1--
