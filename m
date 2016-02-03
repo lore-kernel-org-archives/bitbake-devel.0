@@ -1,34 +1,46 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id DF7C577043;
-	Wed,  3 Feb 2016 16:22:36 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u13GMZpF024543; Wed, 3 Feb 2016 16:22:35 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id WNitvrphG3kH; Wed,  3 Feb 2016 16:22:35 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u13GMWRb024539
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 3 Feb 2016 16:22:33 GMT
-Message-ID: <1454516552.27087.197.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Date: Wed, 03 Feb 2016 16:22:32 +0000
-In-Reply-To: <20160203150638.GB2567@jama>
-References: <1454457340.27087.143.camel@linuxfoundation.org>
-	<CAP9ODKqGa0Lurxye_+TviFbxBT-d3sf2D3tD_WiR9er_RcFsKg@mail.gmail.com>
-	<1454498556.27087.180.camel@linuxfoundation.org>
-	<20160203150638.GB2567@jama>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Cc: openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Otavio Salvador <otavio.salvador@ossystems.com.br>
-Subject: Re: [Openembedded-architecture] [PATCH] data_smart: Drop default expand=False to getVar [API change]
+Return-Path: <eu@felipetonello.com>
+Received: from mail-wm0-f42.google.com (mail-wm0-f42.google.com [74.125.82.42])
+	by mail.openembedded.org (Postfix) with ESMTP id E3DB27716F
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  3 Feb 2016 16:28:36 +0000 (UTC)
+Received: by mail-wm0-f42.google.com with SMTP id l66so171746993wml.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 03 Feb 2016 08:28:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=felipetonello-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=6ZZum9ClDAfGJgKXcRw9O8hsmtYXNVLYqi9yMIN14x0=;
+	b=byoAfa90akKybg0FZMsaK3hxzKgYk5JpoDFT96zWHmOl7GrW/R/iFwo+q9CZ4RQNmN
+	Q4dIwmiOT4wmg1UcA9tJptMFCjTbw81wLwAa+zdbBT/lAThP4UiR0MjZB5XwFl9OOjff
+	AcJcX34GDzGET1R7IAJEia33zm1rdS7urhrl7y0h5CoXtFi0rub6R6GT/cCDwpPGCnA7
+	xLjXtoBfuLhxXRsSf5Y4b6GK5TTtWl8UlnUy9KC+Yw58dMGKHXi4dm1XpAVAaOzao2OU
+	upytpM9eaCpzEIW1HrXWf2lB6nro5Tzo+aNs3eui4BFSE2Jo04N1ZylZdsoID2gz2prN
+	prAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=6ZZum9ClDAfGJgKXcRw9O8hsmtYXNVLYqi9yMIN14x0=;
+	b=GD4wQP38PAtG6YZdZf5wmxvr8CQEpkTpn9ENo9vJT6elIONwcS/IY9sp9qPkehJYeK
+	TtU0hNGzYlSS0n/JUL1/OOR25KpWhpUbJRM7KVfVC72CUmu9GN1xj8BU2Yi3OFeWR9Ty
+	cy22NTmGlaV1ehqmv1icUMocm1Fc1WRsgcQ+7uGDlaJX1ZqVP2D5MmM7sNuSOL1qZSQw
+	3eAYHTr157+Y4gkNPLAKJGm9GAsmFhL3/EVJ1ALUx0bapqSrFoKursZS9SE0XM6emEfN
+	pW6MhJd3lRhQ4re/msg7fgKyJnsg0t2ZpCu+C0e5Z1277tiJmVW4m3HhwUX6KjImKGSz
+	8ngw==
+X-Gm-Message-State: AG10YOTLJDNIxfbU3PlLwu3YtsVqailQUtM9LZbwlcuW7xFlqlegnDrPS5BAqKKJHgA59g==
+X-Received: by 10.28.97.11 with SMTP id v11mr5243979wmb.42.1454516916426;
+	Wed, 03 Feb 2016 08:28:36 -0800 (PST)
+Received: from felipe-arch.localdomain ([81.145.202.106])
+	by smtp.gmail.com with ESMTPSA id
+	jc7sm7269479wjb.33.2016.02.03.08.28.35
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 03 Feb 2016 08:28:35 -0800 (PST)
+From: "Felipe F. Tonello" <eu@felipetonello.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  3 Feb 2016 16:29:42 +0000
+Message-Id: <1454516982-3788-1-git-send-email-eu@felipetonello.com>
+X-Mailer: git-send-email 2.7.0
+Subject: [PATCH] fetch2/gitsm: Fix when repository change submodules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,60 +53,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Feb 2016 16:22:37 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 03 Feb 2016 16:28:41 -0000
 
-On Wed, 2016-02-03 at 16:06 +0100, Martin Jansa wrote:
-> On Wed, Feb 03, 2016 at 11:22:36AM +0000, Richard Purdie wrote:
-> > On Wed, 2016-02-03 at 08:11 -0200, Otavio Salvador wrote:
-> > > I am in favor of making it mandatory but I fail to see what we
-> > > gain 
-> > > in making it expand by default in future.
-> > 
-> > Less ugly syntax, in 99.9% of usages, you would want expand=True
-> > and
-> > getVar("X") is neater than getVar("X", True).
-> 
-> Consistent indentation is also neater than mixing tabs and spaces,
-> but
-> you were refusing to take such cosmetic change and now you're
-> proposing
-> neater getVar syntax which is (in some cases silently) breaking
-> existing
-> metadata and make backporting changes more difficult?
-> 
-> I'm not opposing the change, just don't understand why the same
-> arguments work here and not for indentation.
+This fix a problem when checking out a commit that changes the submodules
+previously checkout.
 
-If we go through the full transition, its possible something might
-silently break, if they skip the release where we require a value. We
-haven't reached that point yet and I'm honestly not sure how long we
-should wait, I'm open to suggestions. The aim is to minimise any silent
-failures though.
+Example:
+Recipe uses branch A and then it updates to use branch B, but branch B has
+different submodules dependencies then what branch A previously had.
 
-I'd also add that in many cases, it likely won't break at all, it might
-potentially fix something. If there are concerns about this, there are
-extra things we could consider such as requiring layers to mark they've
-been validated for the change. That adds extra complexity, I'm less
-sure about whether we need to do that.
+Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
+---
+ lib/bb/fetch2/gitsm.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As for your other point, whitespace in shell functions doesn't seem to
-cause real world usability issues in that most people can read a tab
-indented or space indented function equally well. OE-Core is pretty
-consistent about what it uses and always has been, you personally just
-don't like the particular choice made and meta-oe deciding to do
-something else, contra to the TSC doesn't exactly help consistency. You
-could argue meta-oe is more of the problem here.
-
-The actual getVar syntax on the other handy is more than cosmetic,
-people don't understand what this "True" they keep adding means, or why
-they need it. You tend to know when you don't want expansion on the
-other hand. So a cleaner syntax which does what the user most likely
-needs is more than cosmetic.
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index 0392e48d1aa0..2ecea7c7ed60 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -131,7 +131,7 @@ class GitSM(Git):
+         os.chdir(ud.destdir)
+         submodules = self.uses_submodules(ud, d)
+         if submodules:
+-            runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir + "/.git/", d)
++            runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d)
+             runfetchcmd(ud.basecmd + " submodule init", d)
+             runfetchcmd(ud.basecmd + " submodule update", d)
+ 
+-- 
+2.7.0
 
 
