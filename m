@@ -1,48 +1,55 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-io0-f174.google.com (mail-io0-f174.google.com
-	[209.85.223.174])
-	by mail.openembedded.org (Postfix) with ESMTP id A804D770C4;
-	Wed,  3 Feb 2016 14:42:58 +0000 (UTC)
-Received: by mail-io0-f174.google.com with SMTP id f81so57126839iof.0;
-	Wed, 03 Feb 2016 06:42:59 -0800 (PST)
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-wm0-f43.google.com (mail-wm0-f43.google.com [74.125.82.43])
+	by mail.openembedded.org (Postfix) with ESMTP id AC81B77348;
+	Wed,  3 Feb 2016 15:03:27 +0000 (UTC)
+Received: by mail-wm0-f43.google.com with SMTP id p63so74555008wmp.1;
+	Wed, 03 Feb 2016 07:03:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type;
-	bh=X1/x1j5uZeskGTMeuCVLcJOL04Xba2fjFovt39Pw/dM=;
-	b=MnANzKvI0BswF01LnG84jUshG1DdKpbL6lszEpaYpGIDDKZiitItq5vOsAmXY7cdZw
-	zeKHDD4XlyFbvWrDi/+frLJXqsVB6aPS72e5GeZOgriXuk6hXf1Cir6V+/SXCLODLot9
-	ewlmh0tzB6SkuAgnecVT+42i2hTDnvqwH1hk728xeHSXfJLip1QnrV85Yyb/+biUp/8x
-	lrE6Ugk+Sd/Cbi/O9T2CubhF3hNtTpfjHGbRX81hcflLV5hE0gTmNK/teDvhFMsRun//
-	DKpI0b0zRNOmXKwyTCeseuUi2jwnc+bx4NVb99SpyODA9oITjbRJs7/nenkjecanItkL
-	pTxg==
+	h=from:date:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=cwIU89taT8eUVTyQKwQghsyv4kYL0A0T6bpq8+3aNFo=;
+	b=JS4HYRZomP/qA0U3GQKxeGDEb3tWmZ1OQ1l2Tt5cbDwnqfc/nK0yoo62UYonQ22xNB
+	EFz+j3/2OOdf8QcBWSCdI4ZiUj1/6ATkwEoDOgZWX8h9d5pcMMOScbWGTxWowyxAPS5O
+	LQQdhv4uVVzrB0FFkkcruxJncTKpz1vJC/F020rAp5yJXYrDo9XG9YGoDgcxT2OvBzOm
+	XVID7SK1SQeCfJEGtR+UQoDXrPGQw+Ey6yuvisMo21+W0REhWXViLFBkw2ZdHsY+E+SZ
+	VpN4pWeLr/7+B1UHfMDfFsmVPBJAUEtsgAHwwahT1XT46bsHAPR1DFOkwkceuMdHnELz
+	M19g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=X1/x1j5uZeskGTMeuCVLcJOL04Xba2fjFovt39Pw/dM=;
-	b=dUshynfUVayoDCkdoVUVVzD6/2xdbZuQ/IgUDTDvrBzMmofbSJgXIPzhdV6RG9EcKI
-	5kxlK/FQ52D/RkIGIY49u3Ov3wDbd0ZLl01P8eINlXWk7bffBxt5IKoJb8yh1Itefvvw
-	mHVDbaXQO36Wyr57j7Yrt68f836lxckGY6CKkB9CvHLzFSvCqbzUEksH4vYPmlDSwebv
-	dg5jT07S8G1zC3U9/L3ZngkGwPsCfmxWqQNxjRSfFBSwtXAXdug+nVfIq5shg2zaglP2
-	6+vg1yy7k/tKqFJ+cIc5LW3b0mb79JRlq5xrNGc4fU20VEG7xASRU8e7qPbvdztSP4ip
-	IfXw==
-X-Gm-Message-State: AG10YOTsoUpjzHm+2xwBBS/c4uzpheNkzAzKnPwehC0ViHOV5wBr9wo6tmQJ+rCwBPlyiPg00hCoHwyXoojQng==
-X-Received: by 10.107.34.79 with SMTP id i76mr4315539ioi.195.1454510579607;
-	Wed, 03 Feb 2016 06:42:59 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.107.46.219 with HTTP; Wed, 3 Feb 2016 06:42:30 -0800 (PST)
-In-Reply-To: <1454486425.27087.149.camel@linuxfoundation.org>
-References: <1454457337.27087.142.camel@linuxfoundation.org>
-	<CAMKF1spSfcfM-AAC4fPNUiRykQaZ0_zUpzQNFfb8nOOeS7t8-g@mail.gmail.com>
-	<1454486425.27087.149.camel@linuxfoundation.org>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 3 Feb 2016 06:42:30 -0800
-Message-ID: <CAMKF1srdFP=Mhr=8r7qVWegSr_NF9uhaeBoe5Rd8RG5dJmSdLA@mail.gmail.com>
+	h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+	:mime-version:content-type:content-disposition:in-reply-to
+	:user-agent;
+	bh=cwIU89taT8eUVTyQKwQghsyv4kYL0A0T6bpq8+3aNFo=;
+	b=GAz3F6wikk7pdYPl6umrJjc3WaMSdHrimlbFGe5HZyU+RpyNOPbAXlkrtL9lrTOZqE
+	hNgLWM+YDibI3RqhU7WbYk/fYZ7nSdKXJnCi+iZxbAsv0ZWspksGfatZO+kDarnnjZ2H
+	eCleVwTjzBve86/gL1HKEdDw38CvKZRE1w5WzZgpgFE4xocx+H6+CI6cFyBzPwi5PTGY
+	OjESr2ZLT03YcP+owiUSKS4wtNOkNuFpLLlm8FL83nbYbJ0k8V5kj2hidd5rB9a6AHXg
+	f8jYHm9nKNXSmewri0HXFbhdfpsnanQmhsE5khKQRwPCHu/laWvA/iEfytgR//nHff9H
+	/pyQ==
+X-Gm-Message-State: AG10YORtFHiwrnDaWQbn08odivP3E0Q6/LCAvQtQRP9Iga/bNtcjAgxrpreIqTfcGldkww==
+X-Received: by 10.194.112.41 with SMTP id in9mr2400670wjb.139.1454511808000;
+	Wed, 03 Feb 2016 07:03:28 -0800 (PST)
+Received: from localhost (ip-86-49-34-37.net.upcbroadband.cz. [86.49.34.37])
+	by smtp.gmail.com with ESMTPSA id
+	z127sm21907547wme.2.2016.02.03.07.03.26
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 03 Feb 2016 07:03:27 -0800 (PST)
+From: Martin Jansa <martin.jansa@gmail.com>
+X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Wed, 3 Feb 2016 16:06:38 +0100
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20160203150638.GB2567@jama>
+References: <1454457340.27087.143.camel@linuxfoundation.org>
+	<CAP9ODKqGa0Lurxye_+TviFbxBT-d3sf2D3tD_WiR9er_RcFsKg@mail.gmail.com>
+	<1454498556.27087.180.camel@linuxfoundation.org>
+MIME-Version: 1.0
+In-Reply-To: <1454498556.27087.180.camel@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Cc: openembedded-architecture
 	<openembedded-architecture@lists.openembedded.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [Openembedded-architecture] [PATCH] data_smart: Drop default expand=False to getVarFlag [API change]
+	bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Otavio Salvador <otavio.salvador@ossystems.com.br>
+Subject: Re: [Openembedded-architecture] [PATCH] data_smart: Drop default expand=False to getVar [API change]
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,40 +62,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Feb 2016 14:43:01 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 03 Feb 2016 15:03:30 -0000
+X-Groupsio-MsgNum: 6984
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
+Content-Disposition: inline
 
-On Wed, Feb 3, 2016 at 12:00 AM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> On Tue, 2016-02-02 at 21:36 -0800, Khem Raj wrote:
->> On Tue, Feb 2, 2016 at 3:55 PM, Richard Purdie
->> <richard.purdie@linuxfoundation.org> wrote:
->> > At some point in the future, getVarFlag should expand by default.
->> > To
->> > get there from the current position, we need a period of time where
->> > the
->> > expand parameter is mandatory.
->> >
->>
->> what are advantages of this.
->
-> Most users expect the data to be expanded by default. Most call sites
-> also use getVar(xxx, True), its uncommon to see expand=False, outside
-> the core of bitbake.
->
-> So the ultimate advantage is a more sensible default which is what the
-> user expects and leads to neater/smaller code.
->
+--6sX45UoQRIJXqkqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That makes sense.
+On Wed, Feb 03, 2016 at 11:22:36AM +0000, Richard Purdie wrote:
+> On Wed, 2016-02-03 at 08:11 -0200, Otavio Salvador wrote:
+> > On Tue, Feb 2, 2016 at 9:55 PM, Richard Purdie
+> > <richard.purdie@linuxfoundation.org> wrote:
+> > > At some point in the future, getVar should expand by default. To
+> > > get
+> > > there from the current position, we need a period of time where the
+> > > expand parameter is mandatory.
+> > >=20
+> > > This patch starts that process. Clear errors will result from any
+> > > code
+> > > which doesn't provide this. Layers can be fixed with an expression
+> > > like:
+> > >=20
+> > > sed -e 's:\(\.getVar([^,()]*, [^,()]*\)):\1, False):g' -i `grep=20
+> > > -ril getVar *`
+> > >=20
+> > > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> >=20
+> > I am in favor of making it mandatory but I fail to see what we gain=20
+> > in making it expand by default in future.
+>=20
+> Less ugly syntax, in 99.9% of usages, you would want expand=3DTrue and
+> getVar("X") is neater than getVar("X", True).
 
-> We have had several bugs requesting this and it does confuse people.
->
-> I have heard regrets from some of the original developers that the
-> default wasn't True as well.
->
-> Cheers,
->
-> Richard
->
+Consistent indentation is also neater than mixing tabs and spaces, but
+you were refusing to take such cosmetic change and now you're proposing
+neater getVar syntax which is (in some cases silently) breaking existing
+metadata and make backporting changes more difficult?
 
+I'm not opposing the change, just don't understand why the same
+arguments work here and not for indentation.
+
+Regards,
+
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+
+--6sX45UoQRIJXqkqR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlayF30ACgkQN1Ujt2V2gBxmygCguU40y1IX2LOwthREwoUZlt7E
+B/oAniGtAJK0dqXPRLo6PlFY/FjUzsHz
+=YJf4
+-----END PGP SIGNATURE-----
+
+--6sX45UoQRIJXqkqR--
