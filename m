@@ -1,23 +1,28 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 18FA877174
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id C07B5606D1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Feb 2016 19:33:17 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga102.jf.intel.com with ESMTP; 04 Feb 2016 11:33:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,396,1449561600"; d="scan'208";a="908693203"
-Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga002.fm.intel.com with ESMTP; 04 Feb 2016 11:33:18 -0800
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 31F5A6A4002;
-	Thu,  4 Feb 2016 12:21:09 -0800 (PST)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  4 Feb 2016 19:23:39 +0200
-Message-Id: <1454606619-23406-1-git-send-email-ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] cooker: shutdown cooker parser on shutdown
+	Thu,  4 Feb 2016 23:28:57 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u14NRTL2003081
+	for <bitbake-devel@lists.openembedded.org>; Thu, 4 Feb 2016 23:28:57 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id afPWgFD0sf8M for <bitbake-devel@lists.openembedded.org>;
+	Thu,  4 Feb 2016 23:28:57 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u14NSrTX003126
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Thu, 4 Feb 2016 23:28:55 GMT
+Message-ID: <1454628533.27087.248.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 04 Feb 2016 23:28:53 +0000
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: [PATCH] fetch2/osc: Remove hardcoded url
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,40 +35,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Feb 2016 19:33:18 -0000
+X-List-Received-Date: Thu, 04 Feb 2016 23:28:58 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Currently any not catched exception in cooker causes bitbake
-to hang because of not terminated children of CookerParser.
+This shouldn't be in here, use a variable instead.
 
-Long term solution would be to reimplement Cooker as a context
-manager and terminate parser children in its __exit__ method.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Partial fix is to call CookerParser.shutdown in Cooker.shutdown in
-hope that all Cooker exceptions are caught and shutdown method is
-called.
+diff --git a/bitbake/lib/bb/fetch2/osc.py b/bitbake/lib/bb/fetch2/osc.py
+index 3d87796..3dfa2a7 100644
+--- a/bitbake/lib/bb/fetch2/osc.py
++++ b/bitbake/lib/bb/fetch2/osc.py
+@@ -124,7 +124,7 @@ class Osc(FetchMethod):
+         f.write("scheme = http\n")
+         f.write("su-wrapper = su -c\n")
+         f.write("build-root = %s\n" % data.expand('${WORKDIR}', d))
+-        f.write("urllist = http://moblin-obs.jf.intel.com:8888/build/%(project)s/%(repository)s/%(buildarch)s/:full/%(name)s.rpm\n")
++        f.write("urllist = %s\n" % d.getVar("OSCURLLIST", True))
+         f.write("extra-pkgs = gzip\n")
+         f.write("\n")
+         f.write("[%s]\n" % ud.host)
 
-[YOCTO #8900]
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- bitbake/lib/bb/cooker.py | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index edd682b..df730f6 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1635,6 +1635,9 @@ class BBCooker:
-         else:
-             self.state = state.shutdown
- 
-+        if self.parser:
-+            self.parser.shutdown(clean=not force, force=force)
-+
-     def finishcommand(self):
-         self.state = state.initial
- 
--- 
-2.1.4
 
 
