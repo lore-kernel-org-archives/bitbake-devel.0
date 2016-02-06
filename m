@@ -1,28 +1,27 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 96CDD606D1
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Feb 2016 23:29:54 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u14NTGOT003161
-	for <bitbake-devel@lists.openembedded.org>; Thu, 4 Feb 2016 23:29:54 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 6Z6WETnlDxbp for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Feb 2016 23:29:54 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u14NTpGa003219
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Thu, 4 Feb 2016 23:29:52 GMT
-Message-ID: <1454628591.27087.249.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 04 Feb 2016 23:29:51 +0000
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: [PATCH] fetch2/osc: Clean up old variable syntax
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 8E5F577258;
+	Sat,  6 Feb 2016 06:38:11 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by fmsmga101.fm.intel.com with ESMTP; 05 Feb 2016 22:38:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,404,1449561600"; d="scan'208";a="741523483"
+Received: from hloo1-mobl4.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.176.79])
+	by orsmga003.jf.intel.com with ESMTP; 05 Feb 2016 22:38:09 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Sat, 06 Feb 2016 19:38:07 +1300
+Message-ID: <2240342.nbMP20jZIu@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.10 (Linux/4.3.4-300.fc23.x86_64; KDE/4.14.16; x86_64; ;
+	)
+In-Reply-To: <1454457340.27087.143.camel@linuxfoundation.org>
+References: <1454457340.27087.143.camel@linuxfoundation.org>
+MIME-Version: 1.0
+Cc: openembedded-architecture@lists.openembedded.org,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [Openembedded-architecture] [PATCH] data_smart: Drop default expand=False to getVar [API change]
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,61 +34,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Feb 2016 23:29:56 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 06 Feb 2016 06:38:13 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Since people do copy and paste these things, clean up old syntax styles.
+On Tue, 02 Feb 2016 23:55:40 Richard Purdie wrote:
+> At some point in the future, getVar should expand by default. To get
+> there from the current position, we need a period of time where the
+> expand parameter is mandatory.
+> 
+> This patch starts that process. Clear errors will result from any code
+> which doesn't provide this. Layers can be fixed with an expression
+> like:
+> 
+> sed -e 's:\(\.getVar([^,()]*, [^,()]*\)):\1, False):g' -i `grep -ril getVar
+> *`
+> 
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> 
+> diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
+> index 8c3e9ef..79bec1b 100644
+> --- a/bitbake/lib/bb/data_smart.py
+> +++ b/bitbake/lib/bb/data_smart.py
+> @@ -566,7 +566,7 @@ class DataSmart(MutableMapping):
+>                  if len(shortvar) == 0:
+>                      override = None
+> 
+> -    def getVar(self, var, expand=False, noweakdefault=False,
+> parsing=False): +    def getVar(self, var, expand, noweakdefault=False,
+> parsing=False): return self.getVarFlag(var, "_content", expand,
+> noweakdefault, parsing)
+> 
+>      def renameVar(self, key, newkey, **loginfo):
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+This change is reasonable and we've been discussing it on and off for years 
+now, so I'm generally in favour.
 
-diff --git a/bitbake/lib/bb/fetch2/osc.py b/bitbake/lib/bb/fetch2/osc.py
-index 3dfa2a7..d051dfd 100644
---- a/bitbake/lib/bb/fetch2/osc.py
-+++ b/bitbake/lib/bb/fetch2/osc.py
-@@ -34,13 +34,13 @@ class Osc(FetchMethod):
- 
-         # Create paths to osc checkouts
-         relpath = self._strip_leading_slashes(ud.path)
--        ud.pkgdir = os.path.join(data.expand('${OSCDIR}', d), ud.host)
-+        ud.pkgdir = os.path.join(d.getVar('OSCDIR', True), ud.host)
-         ud.moddir = os.path.join(ud.pkgdir, relpath, ud.module)
- 
-         if 'rev' in ud.parm:
-             ud.revision = ud.parm['rev']
-         else:
--            pv = data.getVar("PV", d, 0)
-+            pv = d.getVar("PV", False)
-             rev = bb.fetch2.srcrev_internal_helper(ud, d)
-             if rev and rev != True:
-                 ud.revision = rev
-@@ -84,7 +84,7 @@ class Osc(FetchMethod):
- 
-         logger.debug(2, "Fetch: checking for module directory '" + ud.moddir + "'")
- 
--        if os.access(os.path.join(data.expand('${OSCDIR}', d), ud.path, ud.module), os.R_OK):
-+        if os.access(os.path.join(d.getVar('OSCDIR', True), ud.path, ud.module), os.R_OK):
-             oscupdatecmd = self._buildosccommand(ud, d, "update")
-             logger.info("Update "+ ud.url)
-             # update sources there
-@@ -114,7 +114,7 @@ class Osc(FetchMethod):
-         Generate a .oscrc to be used for this run.
-         """
- 
--        config_path = os.path.join(data.expand('${OSCDIR}', d), "oscrc")
-+        config_path = os.path.join(d.getVar('OSCDIR', True), "oscrc")
-         if (os.path.exists(config_path)):
-             os.remove(config_path)
- 
-@@ -123,7 +123,7 @@ class Osc(FetchMethod):
-         f.write("apisrv = %s\n" % ud.host)
-         f.write("scheme = http\n")
-         f.write("su-wrapper = su -c\n")
--        f.write("build-root = %s\n" % data.expand('${WORKDIR}', d))
-+        f.write("build-root = %s\n" % d.getVar('WORKDIR', True))
-         f.write("urllist = %s\n" % d.getVar("OSCURLLIST", True))
-         f.write("extra-pkgs = gzip\n")
-         f.write("\n")
+However, what I would really like to see us do is write a script that people 
+can use to upgrade their layers to accommodate this and any other breaking 
+changes so they don't have to go and figure out what to do themselves; the more 
+of these kinds of changes we make the more useful this script will be. I'll 
+file a bug.
 
+Cheers,
+Paul
 
+-- 
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
