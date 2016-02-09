@@ -1,28 +1,47 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id C23616FF76
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-io0-f176.google.com (mail-io0-f176.google.com
+	[209.85.223.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 97C906FF9F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  9 Feb 2016 15:10:58 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u19FAfUW022517
-	for <bitbake-devel@lists.openembedded.org>; Tue, 9 Feb 2016 15:10:59 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id x0bZwv1kqWKJ for <bitbake-devel@lists.openembedded.org>;
-	Tue,  9 Feb 2016 15:10:58 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u19FAudY022540
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 9 Feb 2016 15:10:57 GMT
-Message-ID: <1455030656.16142.80.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 09 Feb 2016 15:10:56 +0000
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: [PATCH] BBHandler/ast: Merge handMethod and handleMethodFlags
+	Tue,  9 Feb 2016 20:33:48 +0000 (UTC)
+Received: by mail-io0-f176.google.com with SMTP id l127so22077075iof.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 09 Feb 2016 12:33:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=8zb7245QVoSY4GqbjOcYSe3iuf3S+NV5FGvNdcZ3Th4=;
+	b=JwJTczn5AL2BZnjwJtJKPiU4o6SRTkyLI8Gj5EhQ2DyaKxJtBCFVcrQvXk4cYzXZUN
+	gShVIgs/InIPBdQuR5ja0xH/wmRAlPMUMfAdr8to9++ZvRceBGifyHeN2zn0J37BKfHC
+	IoHx4Pmvrmgv/dHOk7pbjfC3yusOioW2y1HiMr5HT5nW4/HaxI5qZYHL/u7uh7fQRAAm
+	O+vINwLM0buyiTACM00CsY0mgYMUWOg/bn+vEBTi1CbPIwz3u2hLgAXCPH3mY6ISjigg
+	LxewXYOW9KjM58z7uozHK9Q9lZE9J56E5L3DcFLVOaN5lrF9fFeFvCgcrlKpqgjuSslo
+	KqLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:date
+	:message-id:subject:from:to:cc:content-type;
+	bh=8zb7245QVoSY4GqbjOcYSe3iuf3S+NV5FGvNdcZ3Th4=;
+	b=fdtJ9pOzDvVqzLAAHC9LAuL7l3siRlYVE5cpXzJRjGrEbthFaT6QWFVau/6njsz+MW
+	YSYkp7MWaWn/DNX5IzziNelToZacBNWJ+tc6sXm1takli0XSFNdk1Djy7fMzBfcUQMiJ
+	eIQ40g8dPYWCjNqU0xK1qfMBQCHUz260RCdHGeMFLHaH39nj8YBEypYJQlSnnpYoetef
+	pUZizV13BF8wWxaex2LhC5hxB1P+0LzDMEDqk0fvULP1/5IQRyPo2LhHYplh4N2vD1yv
+	64jtre+2++T36EfRJ/EngQ415xm55jsFXlgHv76q/EaSnyHcutdMpL5iza3HvU+myshV
+	53Rw==
+X-Gm-Message-State: AG10YORTLEVv7Ru+UsmuTRv3hHNjvozxF7pCpyuHnWWUcJoTKPGyjJsLmta2Uc2W482UrOknVi0T0SQcqKMB/A==
+MIME-Version: 1.0
+X-Received: by 10.107.46.11 with SMTP id i11mr39139000ioo.67.1455050029868;
+	Tue, 09 Feb 2016 12:33:49 -0800 (PST)
+Received: by 10.107.164.73 with HTTP; Tue, 9 Feb 2016 12:33:49 -0800 (PST)
+In-Reply-To: <1449828119-23489-1-git-send-email-elliot.smith@intel.com>
+References: <1449828119-23489-1-git-send-email-elliot.smith@intel.com>
+Date: Tue, 9 Feb 2016 12:33:49 -0800
+Message-ID: <CAKV_0ei6-uSkVqLf3pc4T8f5y-cZLiBDD5jv61AUHc_Y5kveRA@mail.gmail.com>
+From: Brian Avery <avery.brian@gmail.com>
+To: Elliot Smith <elliot.smith@intel.com>
+Cc: Mihail Stanciu <stanciux.mihail@intel.com>,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] toaster: tests Remove symlinks from toasteruitest folder
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,125 +54,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 09 Feb 2016 15:11:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 09 Feb 2016 20:33:50 -0000
+Content-Type: text/plain; charset=UTF-8
 
-The functionality overlap between these two functions is significant and
-its clearer to handle both things together since they are intimately
-linked. There should be no behaviour change, just clearer code.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
-diff --git a/bitbake/lib/bb/parse/ast.py b/bitbake/lib/bb/parse/ast.py
-index c676fc6..5f55af5 100644
---- a/bitbake/lib/bb/parse/ast.py
-+++ b/bitbake/lib/bb/parse/ast.py
-@@ -141,22 +141,33 @@ class DataNode(AstNode):
- class MethodNode(AstNode):
-     tr_tbl = string.maketrans('/.+-@%&', '_______')
- 
--    def __init__(self, filename, lineno, func_name, body):
-+    def __init__(self, filename, lineno, func_name, body, python, fakeroot):
-         AstNode.__init__(self, filename, lineno)
-         self.func_name = func_name
-         self.body = body
-+        self.python = python
-+        self.fakeroot = fakeroot
- 
-     def eval(self, data):
-         text = '\n'.join(self.body)
-         funcname = self.func_name
-         if self.func_name == "__anonymous":
-             funcname = ("__anon_%s_%s" % (self.lineno, self.filename.translate(MethodNode.tr_tbl)))
-+            self.python = True
-             text = "def %s(d):\n" % (funcname) + text
-             bb.methodpool.insert_method(funcname, text, self.filename, self.lineno - len(self.body))
-             anonfuncs = data.getVar('__BBANONFUNCS', False) or []
-             anonfuncs.append(funcname)
-             data.setVar('__BBANONFUNCS', anonfuncs)
--            data.setVarFlag(funcname, "python", 1)
-+        if data.getVar(funcname, False):
-+            # clean up old version of this piece of metadata, as its
-+            # flags could cause problems
-+            data.delVarFlag(funcname, 'python')
-+            data.delVarFlag(funcname, 'fakeroot')
-+        if self.python:
-+            data.setVarFlag(funcname, "python", "1")
-+        if self.fakeroot:
-+            data.setVarFlag(funcname, "fakeroot", "1")
-         data.setVarFlag(funcname, "func", 1)
-         data.setVar(funcname, text, parsing=True)
-         data.setVarFlag(funcname, 'filename', self.filename)
-@@ -181,27 +192,6 @@ class PythonMethodNode(AstNode):
-         data.setVarFlag(self.function, 'filename', self.filename)
-         data.setVarFlag(self.function, 'lineno', str(self.lineno - len(self.body) - 1))
- 
--class MethodFlagsNode(AstNode):
--    def __init__(self, filename, lineno, key, m):
--        AstNode.__init__(self, filename, lineno)
--        self.key = key
--        self.m = m
--
--    def eval(self, data):
--        if data.getVar(self.key, False):
--            # clean up old version of this piece of metadata, as its
--            # flags could cause problems
--            data.setVarFlag(self.key, 'python', None)
--            data.setVarFlag(self.key, 'fakeroot', None)
--        if self.m.group("py") is not None:
--            data.setVarFlag(self.key, "python", "1")
--        else:
--            data.delVarFlag(self.key, "python")
--        if self.m.group("fr") is not None:
--            data.setVarFlag(self.key, "fakeroot", "1")
--        else:
--            data.delVarFlag(self.key, "fakeroot")
--
- class ExportFuncsNode(AstNode):
-     def __init__(self, filename, lineno, fns, classname):
-         AstNode.__init__(self, filename, lineno)
-@@ -284,15 +274,12 @@ def handleExport(statements, filename, lineno, m):
- def handleData(statements, filename, lineno, groupd):
-     statements.append(DataNode(filename, lineno, groupd))
- 
--def handleMethod(statements, filename, lineno, func_name, body):
--    statements.append(MethodNode(filename, lineno, func_name, body))
-+def handleMethod(statements, filename, lineno, func_name, body, python, fakeroot):
-+    statements.append(MethodNode(filename, lineno, func_name, body, python, fakeroot))
- 
- def handlePythonMethod(statements, filename, lineno, funcname, modulename, body):
-     statements.append(PythonMethodNode(filename, lineno, funcname, modulename, body))
- 
--def handleMethodFlags(statements, filename, lineno, key, m):
--    statements.append(MethodFlagsNode(filename, lineno, key, m))
--
- def handleExportFuncs(statements, filename, lineno, m, classname):
-     statements.append(ExportFuncsNode(filename, lineno, m.group(1), classname))
- 
-diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-index 97a9ee8..ef72c37 100644
---- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-@@ -166,7 +166,7 @@ def feeder(lineno, s, fn, root, statements, eof=False):
-     if __infunc__:
-         if s == '}':
-             __body__.append('')
--            ast.handleMethod(statements, fn, lineno, __infunc__[0], __body__)
-+            ast.handleMethod(statements, fn, lineno, __infunc__[0], __body__, __infunc__[3], __infunc__[4])
-             __infunc__ = []
-             __body__ = []
-         else:
-@@ -211,8 +211,7 @@ def feeder(lineno, s, fn, root, statements, eof=False):
- 
-     m = __func_start_regexp__.match(s)
-     if m:
--        __infunc__ = [m.group("func") or "__anonymous", fn, lineno]
--        ast.handleMethodFlags(statements, fn, lineno, __infunc__[0], m)
-+        __infunc__ = [m.group("func") or "__anonymous", fn, lineno, m.group("py") is not None, m.group("fr") is not None]
-         return
- 
-     m = __def_regexp__.match(s)
+bump.
+This seems to have neither made it in to master nor gotten any comments...
+-bavery
 
 
+On Fri, Dec 11, 2015 at 2:01 AM, Elliot Smith <elliot.smith@intel.com> wrote:
+> From: Mihail Stanciu <stanciux.mihail@intel.com>
+>
+> Remove symlinks in the UI tests folder as they are causing
+> problems for bitbake upstream.
+>
+> [YOCTO #8787]
+>
+> Signed-off-by: Mihail Stanciu <stanciux.mihail@intel.com>
+> Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+> ---
+>  bitbake/lib/toaster/contrib/tts/toasteruitest/toaster.sqlite   | 1 -
+>  bitbake/lib/toaster/contrib/tts/toasteruitest/toasterconf.json | 1 -
+>  2 files changed, 2 deletions(-)
+>  delete mode 120000 bitbake/lib/toaster/contrib/tts/toasteruitest/toaster.sqlite
+>  delete mode 120000 bitbake/lib/toaster/contrib/tts/toasteruitest/toasterconf.json
+>
+> diff --git a/bitbake/lib/toaster/contrib/tts/toasteruitest/toaster.sqlite b/bitbake/lib/toaster/contrib/tts/toasteruitest/toaster.sqlite
+> deleted file mode 120000
+> index 656b8e8..0000000
+> --- a/bitbake/lib/toaster/contrib/tts/toasteruitest/toaster.sqlite
+> +++ /dev/null
+> @@ -1 +0,0 @@
+> -../../../../../../toaster.sqlite
+> \ No newline at end of file
+> diff --git a/bitbake/lib/toaster/contrib/tts/toasteruitest/toasterconf.json b/bitbake/lib/toaster/contrib/tts/toasteruitest/toasterconf.json
+> deleted file mode 120000
+> index 9b33bcc..0000000
+> --- a/bitbake/lib/toaster/contrib/tts/toasteruitest/toasterconf.json
+> +++ /dev/null
+> @@ -1 +0,0 @@
+> -../../../../../../meta-yocto/conf/toasterconf.json
+> \ No newline at end of file
+> --
+> 1.9.3
+>
+> ---------------------------------------------------------------------
+> Intel Corporation (UK) Limited
+> Registered No. 1134945 (England)
+> Registered Office: Pipers Way, Swindon SN3 1RJ
+> VAT No: 860 2173 47
+>
+> This e-mail and any attachments may contain confidential material for
+> the sole use of the intended recipient(s). Any review or distribution
+> by others is strictly prohibited. If you are not the intended
+> recipient, please contact the sender and delete all copies.
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
