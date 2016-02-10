@@ -1,45 +1,31 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f41.google.com (mail-wm0-f41.google.com [74.125.82.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 4BA9F7316B
+Return-Path: <joshua.g.lock@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 05C47601D4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Feb 2016 18:34:14 +0000 (UTC)
-Received: by mail-wm0-f41.google.com with SMTP id g62so39083154wme.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Feb 2016 10:34:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=jXCZTGWXExrgRihyRKPoJq9roTZ9qJrn5L/g8l17274=;
-	b=M9dYvwJDgkScyO+n0Ni4TErYAFfv2xKAT0tXbyNLUSl2wkgDKuSLyIZ8SJTA1KMedz
-	uP6DvlA11vaifordbf4b8KhiRmd2DvSvRGlUDmvwQ/d3H8zaT93q6h+7Jt42ni1z6vrT
-	jzHlwl6Jr4VSZIdK3RHrYGfMnlZGWY580Kz12/8zMcjMNsUOSofEKDLBKRfv0K1d57t1
-	lteXpWakHMGBBXKWA8VnqPbaWhrT1r6UrJp0ritZRf8uDQKm7l8tDX0a1qYqiBzZulQJ
-	K5wekjQ/8OohVWxp0oCEo5Ho2/QBeIcSV8WhoJ1Sw8ZRln27yHZ4XHht3GwBv1TbCA7/
-	oChg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=jXCZTGWXExrgRihyRKPoJq9roTZ9qJrn5L/g8l17274=;
-	b=k3cf0cuB8eDf1t0YNE1lOvkssQ0dfZv93yqdG+khBHCKklXZcSsufJGLTv+moRpLVY
-	wwc6vpjWQGyYqAb3sF0l00g0f+GoP5bA7ZKT1Xd0kNw+e3n4ZGHmLFp5fpiGbyKIFI/+
-	9pG4HlsFo8J5Zz36UGB/qyMb0+dwQ3mscvXVia7L5sqXJoeCChW4VQEw3eC6oYILwKLy
-	j3FWXe2vI2XUO5CL4Alw1V+zhYUupBRZylskvkC17o1wMh4794JjlnaHgwaThHew6Hpp
-	nvftKizCzY+wsKOv/a8Yg+D07uyy22eVwyuho6rFXNL0OeexzF7GbZKA5uxdwpaAKpGg
-	fX+A==
-X-Gm-Message-State: AG10YOQUYSFMJruwkEgsclNqfXhMwKYLoAnJYC/W7HSz7vEOZPS31G2m86S/TeoYLcGyU8JD
-X-Received: by 10.28.182.139 with SMTP id g133mr12325195wmf.70.1455129255234; 
-	Wed, 10 Feb 2016 10:34:15 -0800 (PST)
-Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id
-	k4sm23492437wmc.12.2016.02.10.10.34.14
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 10 Feb 2016 10:34:14 -0800 (PST)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Feb 2016 18:34:10 +0000
-Message-Id: <1455129250-10998-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] buildinfohelper: unset brbe variable when build finishes
+	Wed, 10 Feb 2016 21:10:44 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by orsmga102.jf.intel.com with ESMTP; 10 Feb 2016 13:10:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,427,1449561600"; d="scan'208";a="650285527"
+Received: from jlock-mobl1.gar.corp.intel.com ([10.252.28.47])
+	by FMSMGA003.fm.intel.com with ESMTP; 10 Feb 2016 13:10:41 -0800
+Message-ID: <1455138641.3442.8.camel@linux.intel.com>
+From: Joshua G Lock <joshua.g.lock@linux.intel.com>
+To: Mirela Rabulea <mirela.rabulea@nxp.com>, 
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Wed, 10 Feb 2016 21:10:41 +0000
+In-Reply-To: <VI1PR0401MB1789EE35802D99452B8F12638FD10@VI1PR0401MB1789.eurprd04.prod.outlook.com>
+References: <AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30@AM4PR0401MB1778.eurprd04.prod.outlook.com>
+	<1453903391.3557.42.camel@linux.intel.com>
+	<VI1PR0401MB1789EE35802D99452B8F12638FD10@VI1PR0401MB1789.eurprd04.prod.outlook.com>
+X-Mailer: Evolution 3.18.4 (3.18.4-1.fc23) 
+Mime-Version: 1.0
+Cc: Nicolae Manescu <nicu.manescu@nxp.com>,
+	Alexandru Purice <alexandru.purice@nxp.com>, "Roman,
+	Alexandru CostinX" <alexandru.costinx.roman@intel.com>,
+	"Voiculescu, BogdanX A" <bogdanx.a.voiculescu@intel.com>
+Subject: Re: [PATCH] Fix bug 8940 - Alow Hob to run images on a custom simulator, other than qemu
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,121 +38,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Feb 2016 18:34:15 -0000
+X-List-Received-Date: Wed, 10 Feb 2016 21:10:45 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Elliot Smith <elliot.smith@intel.com>
+Hi Mirela,
 
-The brbe variable is set on the bitbake server when the Toaster
-UI starts. This enables Toaster to associate events with the
-correct build and build environment.
+On Thu, 2016-02-04 at 15:22 +0000, Mirela Rabulea wrote:
+> Hi Joshua,
+> Please see my comments below, prefixed with [M.R.].
+> Thanks a lot for the review, v2 of the patch is attached (squashed
+> version, sorry, but my git send-email is still not working).
+> 
+> Only the latest changes, for easier review:
 
-However, the brbe variable is also used when a build starts to
-identify whether a new build needs to be created, or an existing
-one looked up. This causes a bug for command-line builds which
-happen after a Toaster-triggered build: because the brbe variable
-is never unset on the server or the buildinfohelper, the new
-command-line build events are treated as originating from the
-previous build.
+These changes look good, thanks.
 
-Ensure the brbe variable is reset when the buildinfohelper "closes"
-a build, so that each build then either sets the brbe variable
-(Toaster-triggered builds) or leaves it blank (command-line builds).
+I've tested this patch a couple of ways. If I launch Hob and press
+"Images" to load an existing image from somewhere in my filesystem
+things seem to work as expected.
 
-Also modify the localhostbecontroller so that the brbe variable
-is not set on the server and not looked up from the server. This
-ensures that it is only set when the triggerBuild() method is
-called, and that it remains as None for command-line builds.
+However if I build an image (core-image-minimal) for a non-qemu machine
+(genericx86-64), once the build is done I can see 'Run custom image'
+button (between 'Build new image' and 'Deploy image').
 
-[YOCTO #9021]
+The 'Run script' box indicates that the script is pointing to 'runqemu'
+but when I click 'Run custom image' I get a dialogue asking to 'Select
+the image file you want to run:' with 'Cancel' and 'Run image' buttons
+but nothing listing selectable images (I even tried resizing the
+dialogue, to no avail). If I proceed to click 'Run image' button the
+'Usb image maker' dialogue is presented.
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/bb/ui/buildinfohelper.py                    | 19 ++++++++++++-------
- lib/toaster/bldcontrol/localhostbecontroller.py |  9 +++++++--
- 2 files changed, 19 insertions(+), 9 deletions(-)
+Regards,
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index c049b4a..81abede 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -832,8 +832,13 @@ class BuildInfoHelper(object):
-         self.orm_wrapper = ORMWrapper()
-         self.has_build_history = has_build_history
-         self.tmp_dir = self.server.runCommand(["getVariable", "TMPDIR"])[0]
--        self.brbe    = self.server.runCommand(["getVariable", "TOASTER_BRBE"])[0]
--        self.project = self.server.runCommand(["getVariable", "TOASTER_PROJECT"])[0]
-+
-+        # this is set for Toaster-triggered builds by localhostbecontroller
-+        # via toasterui
-+        self.brbe = None
-+
-+        self.project = None
-+
-         logger.debug(1, "buildinfohelper: Build info helper inited %s" % vars(self))
- 
- 
-@@ -843,8 +848,6 @@ class BuildInfoHelper(object):
- 
-     def _get_build_information(self, build_log_path):
-         build_info = {}
--        # Generate an identifier for each new build
--
-         build_info['machine'] = self.server.runCommand(["getVariable", "MACHINE"])[0]
-         build_info['distro'] = self.server.runCommand(["getVariable", "DISTRO"])[0]
-         build_info['distro_version'] = self.server.runCommand(["getVariable", "DISTRO_VERSION"])[0]
-@@ -853,9 +856,7 @@ class BuildInfoHelper(object):
-         build_info['cooker_log_path'] = build_log_path
-         build_info['build_name'] = self.server.runCommand(["getVariable", "BUILDNAME"])[0]
-         build_info['bitbake_version'] = self.server.runCommand(["getVariable", "BB_VERSION"])[0]
--        build_info['brbe'] = self.server.runCommand(["getVariable", "TOASTER_BRBE"])[0]
-         build_info['project'] = self.project = self.server.runCommand(["getVariable", "TOASTER_PROJECT"])[0]
--
-         return build_info
- 
-     def _get_task_information(self, event, recipe):
-@@ -967,7 +968,6 @@ class BuildInfoHelper(object):
-         build_information = self._get_build_information(build_log_path)
- 
-         # Update brbe and project as they can be changed for every build
--        self.brbe = build_information['brbe']
-         self.project = build_information['project']
- 
-         build_obj = self.orm_wrapper.create_build_object(build_information, self.brbe, self.project)
-@@ -1487,3 +1487,8 @@ class BuildInfoHelper(object):
- 
-         if not connection.features.autocommits_when_autocommit_is_off:
-             transaction.set_autocommit(True)
-+
-+        # unset the brbe; this is to prevent subsequent command-line builds
-+        # being incorrectly attached to the previous Toaster-triggered build;
-+        # see https://bugzilla.yoctoproject.org/show_bug.cgi?id=9021
-+        self.brbe = None
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index a7db1ef..efd82c3 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -308,12 +308,17 @@ class LocalhostBEController(BuildEnvironmentController):
-         # get the bb server running with the build req id and build env id
-         bbctrl = self.getBBController()
- 
--        # set variables
-+        # set variables; TOASTER_BRBE is not set on the server, as this
-+        # causes events from command-line builds to be attached to the last
-+        # Toaster-triggered build; instead, TOASTER_BRBE is fired as an event so
-+        # that toasterui can set it on the buildinfohelper;
-+        # see https://bugzilla.yoctoproject.org/show_bug.cgi?id=9021
-         for var in variables:
--            bbctrl.setVariable(var.name, var.value)
-             if var.name == 'TOASTER_BRBE':
-                 bbctrl.triggerEvent('bb.event.MetadataEvent("SetBRBE", "%s")' \
-                                      % var.value)
-+            else:
-+                bbctrl.setVariable(var.name, var.value)
- 
-         # Add 'toaster' and 'buildhistory' to INHERIT variable
-         inherit = {item.strip() for item in bbctrl.getVariable('INHERIT').split()}
--- 
-2.1.4
-
+Joshua
 
