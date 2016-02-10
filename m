@@ -1,21 +1,40 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id E71DE6018C
+Return-Path: <sliu@de.adit-jv.com>
+X-Greylist: delayed 597 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 10 Feb 2016 15:38:25 UTC
+Received: from smtp1.de.adit-jv.com (smtp1.de.adit-jv.com [62.225.105.245])
+	by mail.openembedded.org (Postfix) with ESMTP id A6A69731E6
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Feb 2016 11:51:57 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 10 Feb 2016 03:51:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,425,1449561600"; d="scan'208";a="912249674"
-Received: from granquex-mobl3.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.12.23])
-	by fmsmga002.fm.intel.com with ESMTP; 10 Feb 2016 03:51:57 -0800
-From: Elliot Smith <elliot.smith@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Feb 2016 11:51:44 +0000
-Message-Id: <1455105104-27188-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: models Remove manual transaction control from lsupdates
+	Wed, 10 Feb 2016 15:38:25 +0000 (UTC)
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+	by smtp1.de.adit-jv.com (Postfix) with ESMTP id BC6AE3C01DC;
+	Wed, 10 Feb 2016 16:28:27 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+	by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new,
+	port 10024)
+	with ESMTP id DebseuM5rlIZ; Wed, 10 Feb 2016 16:28:25 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp1.de.adit-jv.com (Postfix) with ESMTPS id F141A3C001D;
+	Wed, 10 Feb 2016 16:28:25 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com ([fe80::69bf:8148:2f13:f289]) by
+	HI2EXCH01.adit-jv.com ([fe80::69bf:8148:2f13:f289%12]) with mapi id
+	14.03.0266.001; Wed, 10 Feb 2016 16:28:25 +0100
+From: "Liu, Shuang (ADITG/SW2)" <sliu@de.adit-jv.com>
+To: Shuang Liu <shuangistan@gmail.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: Bitbake override style removal with variable expansion
+Thread-Index: AQHRZAek+/q+t0FsR0Ge82mkbx81x58lZs0g
+Date: Wed, 10 Feb 2016 15:28:25 +0000
+Message-ID: <9040470146CBEE468A322327A78EFE6DAB0C5B@HI2EXCH01.adit-jv.com>
+References: <CAAneanS4Ny=zQs=5jQYuS0GWf7mvFOR6tcS3rt9RUPUW3f2L-w@mail.gmail.com>
+In-Reply-To: <CAAneanS4Ny=zQs=5jQYuS0GWf7mvFOR6tcS3rt9RUPUW3f2L-w@mail.gmail.com>
+Accept-Language: de-DE, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.72.92.144]
+MIME-Version: 1.0
+Subject: Re: Bitbake override style removal with variable expansion
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,129 +47,141 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Feb 2016 11:51:58 -0000
+X-List-Received-Date: Wed, 10 Feb 2016 15:38:27 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_9040470146CBEE468A322327A78EFE6DAB0C5BHI2EXCH01aditjvco_"
 
-From: Michael Wood <michael.g.wood@intel.com>
+--_000_9040470146CBEE468A322327A78EFE6DAB0C5BHI2EXCH01aditjvco_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Revert "toaster: models.py do not use transactions".
-This reverts commit e248a503ba84658dea086e65e9cde8b845b9c0ed
-(Bitbake rev: 48d0d510816346073f135bb86fb7904fdb50bb27)
+SXQgc2VlbXMgdGhhdCBteSBvcmlnaW5hbCBtYWlsIGlzIG5vdCBhcnJpdmVkLg0KUGxlYXNlIGln
+bm9yZSB0aGlzIGVtYWlsIGlmIHlvdeKAmXZlIHJlY2VpdmVkIG15IHByZXZpb3VzIG9uZS4NCg0K
+Q2hlZXJzLA0KDQpTaHVhbmcNCg0KRnJvbTogU2h1YW5nIExpdSBbbWFpbHRvOnNodWFuZ2lzdGFu
+QGdtYWlsLmNvbV0NClNlbnQ6IE1pdHR3b2NoLCAxMC4gRmVicnVhciAyMDE2IDE0OjM0DQpUbzog
+Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQpDYzogTGl1LCBTaHVhbmcgKEFE
+SVRHL1NXMikNClN1YmplY3Q6IEJpdGJha2Ugb3ZlcnJpZGUgc3R5bGUgcmVtb3ZhbCB3aXRoIHZh
+cmlhYmxlIGV4cGFuc2lvbg0KDQpIaSwNCkkgZmFjZSBhIHByb2JsZW0gdGhhdCBJIHRyaWVkIHRv
+IHVzZSB0aGUgYml0YmFrZSBvdmVycmlkZSBzdHlsZSByZW1vdmFsIHdpdGggdmFyaWFibGUgZXhw
+YW5zaW9uLg0KSSBoYXZlIGEgZm9vLmJiIGFuZCBzZXQgRk9PX1BBQ0tBR0VTID0gIiR7UE59X2R1
+bW15Ig0KQW5kIEkgdXNlIGEgZm9vLmJiYXBwZW5kIHRvIHJlbW92ZSBpdCBieSBGT09fUEFDS0FH
+RVNfcmVtb3ZlID0gIiR7UE59X2R1bW15Ig0KVGhpcyBkb2Vzbid0IHdvcmsuDQpIb3dldmVyLCBG
+T09fUEFDS0FHRVNfcmVtb3ZlID0gImZvb19kdW1teSIgd29ya3MgZmluZS4NCkZ1cnRoZXJtb3Jl
+IEkgdHJpZWQgb3RoZXIgdmFyaWFibGUgbmFtZXMgYmVzaWRlcyBQTiwgZS5nLg0KRk9PX1BBQ0tB
+R0VTID0gImZvb19kdW1teSINCkZPT05BTUUgPSAiZm9vIg0KRk9PX1BBQ0tBR0VTX3JlbW92ZSA9
+ICIke0ZPT05BTUV9X2R1bW15Ig0KVGhpcyBkb2Vzbid0IHdvcmtzIGVpdGhlci4NClNvIG1heWJl
+IHRoZXJlIGlzIHNvbWUgaXNzdWUgd2l0aCB2YXJpYWJsZSBleHBhbnNpb24gaW4gdGhlIG92ZXJy
+aWRlIHN0eWxlIHJlbW92YWw/DQpJIHVzZSBiaXRiYWtlIDEuMjIgYW5kIGFtIHNvcnJ5IEkgY2Fu
+bm90IHRlc3QgdGhlIG1hc3RlciBicmFuY2ggb24gbXkgd29ya2luZyBlbnZpcm9ubWVudC4NCkJp
+dEJha2UgQnVpbGQgVG9vbCBDb3JlIHZlcnNpb24gMS4yMi4wLCBiaXRiYWtlIHZlcnNpb24gMS4y
+Mi4wDQoNCkRvZXMgc29tZWJvZHkgaGF2ZSBzb21lIGlkZWEgYWJvdXQgdGhpZSBiZWhhdmlvcj8N
+CkkgYW0gYSBiaXRiYWtlIHJvb2tpZSBhbmQgcGxlYXNlIGZvcmdpdmUgbWUgaWYgdGhlIHF1ZXN0
+aW9uIGlzIG5vdCByZWFzb25hYmxlLg0KVGhhbmsgeW91IHZlcnkgbXVjaA0KU2h1YW5nIDotDQo=
 
-Manually managing the database transactions caused more
-problems than it temporarily solved so we return control back to
-Django's orm.
+--_000_9040470146CBEE468A322327A78EFE6DAB0C5BHI2EXCH01aditjvco_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-[YOCTO #8796]
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+U2ltU3VuOw0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KQGZvbnQtZmFjZQ0KCXtm
+b250LWZhbWlseTpTaW1TdW47DQoJcGFub3NlLTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9DQpAZm9u
+dC1mYWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQg
+MyAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpUYWhvbWE7DQoJcGFub3NlLTE6MiAx
+MSA2IDQgMyA1IDQgNCAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseToiXEBTaW1TdW4i
+Ow0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMg
+Ki8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBj
+bTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJZm9udC1zaXplOjEyLjBwdDsNCglmb250LWZh
+bWlseToiVGltZXMgTmV3IFJvbWFuIiwic2VyaWYiO30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxp
+bmsNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOmJsdWU7DQoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9DQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQNCgl7
+bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOnB1cnBsZTsNCgl0ZXh0LWRlY29yYXRpb246
+dW5kZXJsaW5lO30NCnNwYW4uRW1haWxTdHlsZTE3DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFs
+LXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7DQoJY29sb3I6IzFG
+NDk3RDt9DQouTXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsNCglm
+b250LWZhbWlseToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0K
+CXtzaXplOjYxMi4wcHQgNzkyLjBwdDsNCgltYXJnaW46NzAuODVwdCA3MC44NXB0IDIuMGNtIDcw
+Ljg1cHQ7fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0
+eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRp
+dCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5
+XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVk
+aXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8L2hl
+YWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+DQo8ZGl2
+IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
+ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OywmcXVvdDtz
+YW5zLXNlcmlmJnF1b3Q7O2NvbG9yOiMxRjQ5N0QiPkl0IHNlZW1zIHRoYXQgbXkgb3JpZ2luYWwg
+bWFpbCBpcyBub3QgYXJyaXZlZC48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtD
+YWxpYnJpJnF1b3Q7LCZxdW90O3NhbnMtc2VyaWYmcXVvdDs7Y29sb3I6IzFGNDk3RCI+UGxlYXNl
+IGlnbm9yZSB0aGlzIGVtYWlsIGlmIHlvdeKAmXZlIHJlY2VpdmVkIG15IHByZXZpb3VzIG9uZS48
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
+Zm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LCZxdW90O3Nh
+bnMtc2VyaWYmcXVvdDs7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9w
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
+dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OywmcXVvdDtzYW5zLXNlcmlmJnF1b3Q7O2NvbG9y
+OiMxRjQ5N0QiPkNoZWVycyw8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxp
+YnJpJnF1b3Q7LCZxdW90O3NhbnMtc2VyaWYmcXVvdDs7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJz
+cDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
+bnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OywmcXVvdDtzYW5z
+LXNlcmlmJnF1b3Q7O2NvbG9yOiMxRjQ5N0QiPlNodWFuZzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQt
+ZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssJnF1b3Q7c2Fucy1zZXJpZiZxdW90Oztjb2xvcjoj
+MUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48Yj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtUYWhv
+bWEmcXVvdDssJnF1b3Q7c2Fucy1zZXJpZiZxdW90OyI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OywmcXVv
+dDtzYW5zLXNlcmlmJnF1b3Q7Ij4gU2h1YW5nIExpdSBbbWFpbHRvOnNodWFuZ2lzdGFuQGdtYWls
+LmNvbV0NCjxicj4NCjxiPlNlbnQ6PC9iPiBNaXR0d29jaCwgMTAuIEZlYnJ1YXIgMjAxNiAxNDoz
+NDxicj4NCjxiPlRvOjwvYj4gYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPGJy
+Pg0KPGI+Q2M6PC9iPiBMaXUsIFNodWFuZyAoQURJVEcvU1cyKTxicj4NCjxiPlN1YmplY3Q6PC9i
+PiBCaXRiYWtlIG92ZXJyaWRlIHN0eWxlIHJlbW92YWwgd2l0aCB2YXJpYWJsZSBleHBhbnNpb248
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwv
+bzpwPjwvcD4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+
+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4N
+CjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4t
+Ym90dG9tOjEyLjBwdCI+SGksPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+SSBmYWNlIGEgcHJvYmxlbSB0aGF0
+IEkgdHJpZWQgdG8gdXNlIHRoZSBiaXRiYWtlIG92ZXJyaWRlIHN0eWxlIHJlbW92YWwgd2l0aCB2
+YXJpYWJsZSBleHBhbnNpb24uPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPkkgaGF2ZSBhIGZvby5iYiBhbmQgc2V0IEZPT19QQUNLQUdFUyA9ICZxdW90OyR7UE59
+X2R1bW15JnF1b3Q7PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PkFuZCBJIHVzZSBhIGZvby5iYmFwcGVuZCB0byByZW1vdmUgaXQgYnkgRk9PX1BBQ0tBR0VTX3Jl
+bW92ZSA9ICZxdW90OyR7UE59X2R1bW15JnF1b3Q7PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+VGhpcyBkb2Vz
+bid0IHdvcmsuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0
+eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+SG93ZXZlciwgRk9PX1BBQ0tBR0VTX3JlbW92ZSA9
+ICZxdW90O2Zvb19kdW1teSZxdW90OyB3b3JrcyBmaW5lLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5GdXJ0aGVybW9yZSBJIHRyaWVkIG90aGVyIHZhcmlhYmxl
+IG5hbWVzIGJlc2lkZXMgUE4sIGUuZy48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+Rk9PX1BBQ0tBR0VTID0gJnF1b3Q7Zm9vX2R1bW15JnF1b3Q7PG86cD48L286
+cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkZPT05BTUUgPSAmcXVvdDtmb28m
+cXVvdDs8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Rk9PX1BB
+Q0tBR0VTX3JlbW92ZSA9ICZxdW90OyR7Rk9PTkFNRX1fZHVtbXkmcXVvdDs8bzpwPjwvbzpwPjwv
+cD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIu
+MHB0Ij5UaGlzIGRvZXNuJ3Qgd29ya3MgZWl0aGVyLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPlNvIG1heWJl
+IHRoZXJlIGlzIHNvbWUgaXNzdWUgd2l0aCB2YXJpYWJsZSBleHBhbnNpb24gaW4gdGhlIG92ZXJy
+aWRlIHN0eWxlIHJlbW92YWw/PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPkkgdXNlIGJpdGJha2UgMS4yMiBhbmQgYW0gc29ycnkgSSBjYW5ub3QgdGVzdCB0aGUg
+bWFzdGVyIGJyYW5jaCBvbiBteSB3b3JraW5nIGVudmlyb25tZW50Ljxicj4NCkJpdEJha2UgQnVp
+bGQgVG9vbCBDb3JlIHZlcnNpb24gMS4yMi4wLCBiaXRiYWtlIHZlcnNpb24gMS4yMi4wPG86cD48
+L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
+PC9wPg0KPC9kaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTox
+Mi4wcHQiPkRvZXMgc29tZWJvZHkgaGF2ZSBzb21lIGlkZWEgYWJvdXQgdGhpZSBiZWhhdmlvcj88
+bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdp
+bi1ib3R0b206MTIuMHB0Ij5JIGFtIGEgYml0YmFrZSByb29raWUgYW5kIHBsZWFzZSBmb3JnaXZl
+IG1lIGlmIHRoZSBxdWVzdGlvbiBpcyBub3QgcmVhc29uYWJsZS48bzpwPjwvbzpwPjwvcD4NCjwv
+ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij5U
+aGFuayB5b3UgdmVyeSBtdWNoPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPlNodWFuZyA6LTxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvYm9keT4N
+CjwvaHRtbD4NCg==
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/orm/models.py | 23 +----------------------
- 1 file changed, 1 insertion(+), 22 deletions(-)
-
-diff --git a/bitbake/lib/toaster/orm/models.py b/bitbake/lib/toaster/orm/models.py
-index ac2aa9e..01afeed 100644
---- a/bitbake/lib/toaster/orm/models.py
-+++ b/bitbake/lib/toaster/orm/models.py
-@@ -1032,8 +1032,7 @@ class LayerIndexLayerSource(LayerSource):
- 
-         # update layers
-         layers_info = _get_json_response(apilinks['layerItems'])
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(False)
-+
-         for li in layers_info:
-             # Special case for the openembedded-core layer
-             if li['name'] == oe_core_layer:
-@@ -1065,17 +1064,12 @@ class LayerIndexLayerSource(LayerSource):
-             l.description = li['description']
-             l.save()
- 
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(True)
--
-         # update layerbranches/layer_versions
-         logger.debug("Fetching layer information")
-         layerbranches_info = _get_json_response(apilinks['layerBranches']
-                 + "?filter=branch:%s" % "OR".join(map(lambda x: str(x.up_id), [i for i in Branch.objects.filter(layer_source = self) if i.up_id is not None] ))
-             )
- 
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(False)
-         for lbi in layerbranches_info:
-             lv, created = Layer_Version.objects.get_or_create(layer_source = self,
-                     up_id = lbi['id'],
-@@ -1088,14 +1082,10 @@ class LayerIndexLayerSource(LayerSource):
-             lv.commit = lbi['actual_branch']
-             lv.dirpath = lbi['vcs_subdir']
-             lv.save()
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(True)
- 
-         # update layer dependencies
-         layerdependencies_info = _get_json_response(apilinks['layerDependencies'])
-         dependlist = {}
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(False)
-         for ldi in layerdependencies_info:
-             try:
-                 lv = Layer_Version.objects.get(layer_source = self, up_id = ldi['layerbranch'])
-@@ -1113,8 +1103,6 @@ class LayerIndexLayerSource(LayerSource):
-             LayerVersionDependency.objects.filter(layer_version = lv).delete()
-             for lvd in dependlist[lv]:
-                 LayerVersionDependency.objects.get_or_create(layer_version = lv, depends_on = lvd)
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(True)
- 
- 
-         # update machines
-@@ -1123,8 +1111,6 @@ class LayerIndexLayerSource(LayerSource):
-                 + "?filter=layerbranch:%s" % "OR".join(map(lambda x: str(x.up_id), Layer_Version.objects.filter(layer_source = self)))
-             )
- 
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(False)
-         for mi in machines_info:
-             mo, created = Machine.objects.get_or_create(layer_source = self, up_id = mi['id'], layer_version = Layer_Version.objects.get(layer_source = self, up_id = mi['layerbranch']))
-             mo.up_date = mi['updated']
-@@ -1132,16 +1118,11 @@ class LayerIndexLayerSource(LayerSource):
-             mo.description = mi['description']
-             mo.save()
- 
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(True)
--
-         # update recipes; paginate by layer version / layer branch
-         logger.debug("Fetching target information")
-         recipes_info = _get_json_response(apilinks['recipes']
-                 + "?filter=layerbranch:%s" % "OR".join(map(lambda x: str(x.up_id), Layer_Version.objects.filter(layer_source = self)))
-             )
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(False)
-         for ri in recipes_info:
-             try:
-                 ro, created = Recipe.objects.get_or_create(layer_source = self, up_id = ri['id'], layer_version = Layer_Version.objects.get(layer_source = self, up_id = ri['layerbranch']))
-@@ -1163,8 +1144,6 @@ class LayerIndexLayerSource(LayerSource):
-             except IntegrityError as e:
-                 logger.debug("Failed saving recipe, ignoring: %s (%s:%s)" % (e, ro.layer_version, ri['filepath']+"/"+ri['filename']))
-                 ro.delete()
--        if not connection.features.autocommits_when_autocommit_is_off:
--            transaction.set_autocommit(True)
- 
- class BitbakeVersion(models.Model):
- 
--- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
-
-
+--_000_9040470146CBEE468A322327A78EFE6DAB0C5BHI2EXCH01aditjvco_--
