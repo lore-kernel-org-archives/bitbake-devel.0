@@ -1,31 +1,41 @@
-Return-Path: <joshua.g.lock@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 05C47601D4
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-wm0-f54.google.com (mail-wm0-f54.google.com [74.125.82.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 917C66FFA4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Feb 2016 21:10:44 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga102.jf.intel.com with ESMTP; 10 Feb 2016 13:10:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,427,1449561600"; d="scan'208";a="650285527"
-Received: from jlock-mobl1.gar.corp.intel.com ([10.252.28.47])
-	by FMSMGA003.fm.intel.com with ESMTP; 10 Feb 2016 13:10:41 -0800
-Message-ID: <1455138641.3442.8.camel@linux.intel.com>
-From: Joshua G Lock <joshua.g.lock@linux.intel.com>
-To: Mirela Rabulea <mirela.rabulea@nxp.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Date: Wed, 10 Feb 2016 21:10:41 +0000
-In-Reply-To: <VI1PR0401MB1789EE35802D99452B8F12638FD10@VI1PR0401MB1789.eurprd04.prod.outlook.com>
-References: <AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30@AM4PR0401MB1778.eurprd04.prod.outlook.com>
-	<1453903391.3557.42.camel@linux.intel.com>
-	<VI1PR0401MB1789EE35802D99452B8F12638FD10@VI1PR0401MB1789.eurprd04.prod.outlook.com>
-X-Mailer: Evolution 3.18.4 (3.18.4-1.fc23) 
-Mime-Version: 1.0
-Cc: Nicolae Manescu <nicu.manescu@nxp.com>,
-	Alexandru Purice <alexandru.purice@nxp.com>, "Roman,
-	Alexandru CostinX" <alexandru.costinx.roman@intel.com>,
-	"Voiculescu, BogdanX A" <bogdanx.a.voiculescu@intel.com>
-Subject: Re: [PATCH] Fix bug 8940 - Alow Hob to run images on a custom simulator, other than qemu
+	Wed, 10 Feb 2016 21:29:38 +0000 (UTC)
+Received: by mail-wm0-f54.google.com with SMTP id g62so44746649wme.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 10 Feb 2016 13:29:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=WAqmOiLRqGhosD8U9KWXE8L9OxaRI8R4Bz6Oo1BQy9o=;
+	b=Tfk5SBIsIuTi+yCIjii8PX8YXDYdPbv5UGgZX2XArsIcHA4yB0s92s6e+vrL9HoHEK
+	Ez6anHK4wV8LlXZMI27ZlZ2Ii1LMJmnvsDbi1fKtXBunZQLUqDoBYPJ3RqsBrkNytlhY
+	iohQM2lFLBVQPSmX+zkx0aOQRUdruI+bPW/PBXKyL5GckunS/86OfVPNhSwc0WfxPtuq
+	9NmVBo5E+fyq3ej7D1DnNwTzPqvTLhBBlrY4CuzLvL17lCGJagGcOyVnORdCDumNZCst
+	J38sD20/Hd6SleKvdvxcjpaJDMe0AUVUB54KNqob/xkHpE63yx8VgcGkqyOGi7/JIlYQ
+	9YUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+	:content-type;
+	bh=WAqmOiLRqGhosD8U9KWXE8L9OxaRI8R4Bz6Oo1BQy9o=;
+	b=gVrZn3FUkGOgJaEVWWnTnDn782eYABWDT6LfqYs2fLrGreOt6uIT8+X/L4oXK7BfS/
+	9XAdfG4GWpaSKSraqBZLSB3lych1WGuxURBx3XHiQ1//amA5OLIBCraLGSzrW4lQfutI
+	9Bn2C3yEpjnDSXioHzeE98976/NkQuyHep0b8P4N/UrAjbS9a1DnEexlVt/xwlmOwyfc
+	X2GSa8C3DJ4i8qbbP6RErmbrpJ/wVk4uV2i6PNFJPSLb4MYqZA80azYpXjGJ7S0RBvjZ
+	wlMYI/mzSQpSsJox6kQgFh7qVZxeSR6SyY462xSGGoZ8bA7opKsGxraitqaTnGp6HCuJ
+	AcwA==
+X-Gm-Message-State: AG10YOTqX0Cbzf0sutSWaNqbo2z5qnQG+BuwsZD1S5bHJbFS4JjJM0jgvufvIsoXEXDxNQSZdxsVi2AY+kRXPw==
+MIME-Version: 1.0
+X-Received: by 10.28.187.134 with SMTP id l128mr13062542wmf.61.1455139778254; 
+	Wed, 10 Feb 2016 13:29:38 -0800 (PST)
+Received: by 10.194.209.131 with HTTP; Wed, 10 Feb 2016 13:29:38 -0800 (PST)
+Date: Wed, 10 Feb 2016 13:29:38 -0800
+Message-ID: <CAJ86T=XzRYAohb5Zr-hqxgZX=diMZd3ixz5Pk9TCUVe1zuNztA@mail.gmail.com>
+From: Andre McCurdy <armccurdy@gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Unable to abort bitbake with ctrl-c
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,38 +48,11 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Feb 2016 21:10:45 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 10 Feb 2016 21:29:39 -0000
+Content-Type: text/plain; charset=UTF-8
 
-Hi Mirela,
+With today's master branch, attempting to abort bitbake while it's
+parsing recipes results in a hang and the following error message:
 
-On Thu, 2016-02-04 at 15:22 +0000, Mirela Rabulea wrote:
-> Hi Joshua,
-> Please see my comments below, prefixed with [M.R.].
-> Thanks a lot for the review, v2 of the patch is attached (squashed
-> version, sorry, but my git send-email is still not working).
-> 
-> Only the latest changes, for easier review:
-
-These changes look good, thanks.
-
-I've tested this patch a couple of ways. If I launch Hob and press
-"Images" to load an existing image from somewhere in my filesystem
-things seem to work as expected.
-
-However if I build an image (core-image-minimal) for a non-qemu machine
-(genericx86-64), once the build is done I can see 'Run custom image'
-button (between 'Build new image' and 'Deploy image').
-
-The 'Run script' box indicates that the script is pointing to 'runqemu'
-but when I click 'Run custom image' I get a dialogue asking to 'Select
-the image file you want to run:' with 'Cancel' and 'Run image' buttons
-but nothing listing selectable images (I even tried resizing the
-dialogue, to no avail). If I proceed to click 'Run image' button the
-'Usb image maker' dialogue is presented.
-
-Regards,
-
-Joshua
+  ERROR: Timeout while attempting to communicate with bitbake server
 
