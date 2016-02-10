@@ -1,41 +1,29 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-wm0-f54.google.com (mail-wm0-f54.google.com [74.125.82.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 917C66FFA4
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 5992D605FE
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Feb 2016 21:29:38 +0000 (UTC)
-Received: by mail-wm0-f54.google.com with SMTP id g62so44746649wme.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Feb 2016 13:29:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:date:message-id:subject:from:to:content-type;
-	bh=WAqmOiLRqGhosD8U9KWXE8L9OxaRI8R4Bz6Oo1BQy9o=;
-	b=Tfk5SBIsIuTi+yCIjii8PX8YXDYdPbv5UGgZX2XArsIcHA4yB0s92s6e+vrL9HoHEK
-	Ez6anHK4wV8LlXZMI27ZlZ2Ii1LMJmnvsDbi1fKtXBunZQLUqDoBYPJ3RqsBrkNytlhY
-	iohQM2lFLBVQPSmX+zkx0aOQRUdruI+bPW/PBXKyL5GckunS/86OfVPNhSwc0WfxPtuq
-	9NmVBo5E+fyq3ej7D1DnNwTzPqvTLhBBlrY4CuzLvL17lCGJagGcOyVnORdCDumNZCst
-	J38sD20/Hd6SleKvdvxcjpaJDMe0AUVUB54KNqob/xkHpE63yx8VgcGkqyOGi7/JIlYQ
-	9YUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-	:content-type;
-	bh=WAqmOiLRqGhosD8U9KWXE8L9OxaRI8R4Bz6Oo1BQy9o=;
-	b=gVrZn3FUkGOgJaEVWWnTnDn782eYABWDT6LfqYs2fLrGreOt6uIT8+X/L4oXK7BfS/
-	9XAdfG4GWpaSKSraqBZLSB3lych1WGuxURBx3XHiQ1//amA5OLIBCraLGSzrW4lQfutI
-	9Bn2C3yEpjnDSXioHzeE98976/NkQuyHep0b8P4N/UrAjbS9a1DnEexlVt/xwlmOwyfc
-	X2GSa8C3DJ4i8qbbP6RErmbrpJ/wVk4uV2i6PNFJPSLb4MYqZA80azYpXjGJ7S0RBvjZ
-	wlMYI/mzSQpSsJox6kQgFh7qVZxeSR6SyY462xSGGoZ8bA7opKsGxraitqaTnGp6HCuJ
-	AcwA==
-X-Gm-Message-State: AG10YOTqX0Cbzf0sutSWaNqbo2z5qnQG+BuwsZD1S5bHJbFS4JjJM0jgvufvIsoXEXDxNQSZdxsVi2AY+kRXPw==
-MIME-Version: 1.0
-X-Received: by 10.28.187.134 with SMTP id l128mr13062542wmf.61.1455139778254; 
-	Wed, 10 Feb 2016 13:29:38 -0800 (PST)
-Received: by 10.194.209.131 with HTTP; Wed, 10 Feb 2016 13:29:38 -0800 (PST)
-Date: Wed, 10 Feb 2016 13:29:38 -0800
-Message-ID: <CAJ86T=XzRYAohb5Zr-hqxgZX=diMZd3ixz5Pk9TCUVe1zuNztA@mail.gmail.com>
-From: Andre McCurdy <armccurdy@gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Unable to abort bitbake with ctrl-c
+	Wed, 10 Feb 2016 23:55:53 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u1ANtrPH003934; Wed, 10 Feb 2016 23:55:53 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id tmnXf-hBAHKU; Wed, 10 Feb 2016 23:55:53 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u1ANtn0h003931
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 10 Feb 2016 23:55:50 GMT
+Message-ID: <1455148549.16142.183.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Andre McCurdy <armccurdy@gmail.com>, bitbake-devel
+	<bitbake-devel@lists.openembedded.org>
+Date: Wed, 10 Feb 2016 23:55:49 +0000
+In-Reply-To: <CAJ86T=XzRYAohb5Zr-hqxgZX=diMZd3ixz5Pk9TCUVe1zuNztA@mail.gmail.com>
+References: <CAJ86T=XzRYAohb5Zr-hqxgZX=diMZd3ixz5Pk9TCUVe1zuNztA@mail.gmail.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: Unable to abort bitbake with ctrl-c
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,11 +36,20 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Feb 2016 21:29:39 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 10 Feb 2016 23:55:54 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-With today's master branch, attempting to abort bitbake while it's
-parsing recipes results in a hang and the following error message:
+On Wed, 2016-02-10 at 13:29 -0800, Andre McCurdy wrote:
+> With today's master branch, attempting to abort bitbake while it's
+> parsing recipes results in a hang and the following error message:
+> 
+>   ERROR: Timeout while attempting to communicate with bitbake server
 
-  ERROR: Timeout while attempting to communicate with bitbake server
+Related to http://git.yoctoproject.org/cgit.cgi/poky/commit/bitbake?id=
+916c73dfefe0c4f960299ead6b4b7b3dcb18fc89 ?
+
+Cheers,
+
+Richard
 
