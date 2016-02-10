@@ -1,40 +1,45 @@
-Return-Path: <sliu@de.adit-jv.com>
-X-Greylist: delayed 597 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 10 Feb 2016 15:38:25 UTC
-Received: from smtp1.de.adit-jv.com (smtp1.de.adit-jv.com [62.225.105.245])
-	by mail.openembedded.org (Postfix) with ESMTP id A6A69731E6
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wm0-f41.google.com (mail-wm0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 4BA9F7316B
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Feb 2016 15:38:25 +0000 (UTC)
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-	by smtp1.de.adit-jv.com (Postfix) with ESMTP id BC6AE3C01DC;
-	Wed, 10 Feb 2016 16:28:27 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-	by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new,
-	port 10024)
-	with ESMTP id DebseuM5rlIZ; Wed, 10 Feb 2016 16:28:25 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp1.de.adit-jv.com (Postfix) with ESMTPS id F141A3C001D;
-	Wed, 10 Feb 2016 16:28:25 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com ([fe80::69bf:8148:2f13:f289]) by
-	HI2EXCH01.adit-jv.com ([fe80::69bf:8148:2f13:f289%12]) with mapi id
-	14.03.0266.001; Wed, 10 Feb 2016 16:28:25 +0100
-From: "Liu, Shuang (ADITG/SW2)" <sliu@de.adit-jv.com>
-To: Shuang Liu <shuangistan@gmail.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: Bitbake override style removal with variable expansion
-Thread-Index: AQHRZAek+/q+t0FsR0Ge82mkbx81x58lZs0g
-Date: Wed, 10 Feb 2016 15:28:25 +0000
-Message-ID: <9040470146CBEE468A322327A78EFE6DAB0C5B@HI2EXCH01.adit-jv.com>
-References: <CAAneanS4Ny=zQs=5jQYuS0GWf7mvFOR6tcS3rt9RUPUW3f2L-w@mail.gmail.com>
-In-Reply-To: <CAAneanS4Ny=zQs=5jQYuS0GWf7mvFOR6tcS3rt9RUPUW3f2L-w@mail.gmail.com>
-Accept-Language: de-DE, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.72.92.144]
-MIME-Version: 1.0
-Subject: Re: Bitbake override style removal with variable expansion
+	Wed, 10 Feb 2016 18:34:14 +0000 (UTC)
+Received: by mail-wm0-f41.google.com with SMTP id g62so39083154wme.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 10 Feb 2016 10:34:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=jXCZTGWXExrgRihyRKPoJq9roTZ9qJrn5L/g8l17274=;
+	b=M9dYvwJDgkScyO+n0Ni4TErYAFfv2xKAT0tXbyNLUSl2wkgDKuSLyIZ8SJTA1KMedz
+	uP6DvlA11vaifordbf4b8KhiRmd2DvSvRGlUDmvwQ/d3H8zaT93q6h+7Jt42ni1z6vrT
+	jzHlwl6Jr4VSZIdK3RHrYGfMnlZGWY580Kz12/8zMcjMNsUOSofEKDLBKRfv0K1d57t1
+	lteXpWakHMGBBXKWA8VnqPbaWhrT1r6UrJp0ritZRf8uDQKm7l8tDX0a1qYqiBzZulQJ
+	K5wekjQ/8OohVWxp0oCEo5Ho2/QBeIcSV8WhoJ1Sw8ZRln27yHZ4XHht3GwBv1TbCA7/
+	oChg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=jXCZTGWXExrgRihyRKPoJq9roTZ9qJrn5L/g8l17274=;
+	b=k3cf0cuB8eDf1t0YNE1lOvkssQ0dfZv93yqdG+khBHCKklXZcSsufJGLTv+moRpLVY
+	wwc6vpjWQGyYqAb3sF0l00g0f+GoP5bA7ZKT1Xd0kNw+e3n4ZGHmLFp5fpiGbyKIFI/+
+	9pG4HlsFo8J5Zz36UGB/qyMb0+dwQ3mscvXVia7L5sqXJoeCChW4VQEw3eC6oYILwKLy
+	j3FWXe2vI2XUO5CL4Alw1V+zhYUupBRZylskvkC17o1wMh4794JjlnaHgwaThHew6Hpp
+	nvftKizCzY+wsKOv/a8Yg+D07uyy22eVwyuho6rFXNL0OeexzF7GbZKA5uxdwpaAKpGg
+	fX+A==
+X-Gm-Message-State: AG10YOQUYSFMJruwkEgsclNqfXhMwKYLoAnJYC/W7HSz7vEOZPS31G2m86S/TeoYLcGyU8JD
+X-Received: by 10.28.182.139 with SMTP id g133mr12325195wmf.70.1455129255234; 
+	Wed, 10 Feb 2016 10:34:15 -0800 (PST)
+Received: from draco.icx.intel.com ([83.217.123.106])
+	by smtp.gmail.com with ESMTPSA id
+	k4sm23492437wmc.12.2016.02.10.10.34.14
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 10 Feb 2016 10:34:14 -0800 (PST)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 10 Feb 2016 18:34:10 +0000
+Message-Id: <1455129250-10998-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] buildinfohelper: unset brbe variable when build finishes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,141 +52,121 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Feb 2016 15:38:27 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_9040470146CBEE468A322327A78EFE6DAB0C5BHI2EXCH01aditjvco_"
+X-List-Received-Date: Wed, 10 Feb 2016 18:34:15 -0000
 
---_000_9040470146CBEE468A322327A78EFE6DAB0C5BHI2EXCH01aditjvco_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Elliot Smith <elliot.smith@intel.com>
 
-SXQgc2VlbXMgdGhhdCBteSBvcmlnaW5hbCBtYWlsIGlzIG5vdCBhcnJpdmVkLg0KUGxlYXNlIGln
-bm9yZSB0aGlzIGVtYWlsIGlmIHlvdeKAmXZlIHJlY2VpdmVkIG15IHByZXZpb3VzIG9uZS4NCg0K
-Q2hlZXJzLA0KDQpTaHVhbmcNCg0KRnJvbTogU2h1YW5nIExpdSBbbWFpbHRvOnNodWFuZ2lzdGFu
-QGdtYWlsLmNvbV0NClNlbnQ6IE1pdHR3b2NoLCAxMC4gRmVicnVhciAyMDE2IDE0OjM0DQpUbzog
-Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQpDYzogTGl1LCBTaHVhbmcgKEFE
-SVRHL1NXMikNClN1YmplY3Q6IEJpdGJha2Ugb3ZlcnJpZGUgc3R5bGUgcmVtb3ZhbCB3aXRoIHZh
-cmlhYmxlIGV4cGFuc2lvbg0KDQpIaSwNCkkgZmFjZSBhIHByb2JsZW0gdGhhdCBJIHRyaWVkIHRv
-IHVzZSB0aGUgYml0YmFrZSBvdmVycmlkZSBzdHlsZSByZW1vdmFsIHdpdGggdmFyaWFibGUgZXhw
-YW5zaW9uLg0KSSBoYXZlIGEgZm9vLmJiIGFuZCBzZXQgRk9PX1BBQ0tBR0VTID0gIiR7UE59X2R1
-bW15Ig0KQW5kIEkgdXNlIGEgZm9vLmJiYXBwZW5kIHRvIHJlbW92ZSBpdCBieSBGT09fUEFDS0FH
-RVNfcmVtb3ZlID0gIiR7UE59X2R1bW15Ig0KVGhpcyBkb2Vzbid0IHdvcmsuDQpIb3dldmVyLCBG
-T09fUEFDS0FHRVNfcmVtb3ZlID0gImZvb19kdW1teSIgd29ya3MgZmluZS4NCkZ1cnRoZXJtb3Jl
-IEkgdHJpZWQgb3RoZXIgdmFyaWFibGUgbmFtZXMgYmVzaWRlcyBQTiwgZS5nLg0KRk9PX1BBQ0tB
-R0VTID0gImZvb19kdW1teSINCkZPT05BTUUgPSAiZm9vIg0KRk9PX1BBQ0tBR0VTX3JlbW92ZSA9
-ICIke0ZPT05BTUV9X2R1bW15Ig0KVGhpcyBkb2Vzbid0IHdvcmtzIGVpdGhlci4NClNvIG1heWJl
-IHRoZXJlIGlzIHNvbWUgaXNzdWUgd2l0aCB2YXJpYWJsZSBleHBhbnNpb24gaW4gdGhlIG92ZXJy
-aWRlIHN0eWxlIHJlbW92YWw/DQpJIHVzZSBiaXRiYWtlIDEuMjIgYW5kIGFtIHNvcnJ5IEkgY2Fu
-bm90IHRlc3QgdGhlIG1hc3RlciBicmFuY2ggb24gbXkgd29ya2luZyBlbnZpcm9ubWVudC4NCkJp
-dEJha2UgQnVpbGQgVG9vbCBDb3JlIHZlcnNpb24gMS4yMi4wLCBiaXRiYWtlIHZlcnNpb24gMS4y
-Mi4wDQoNCkRvZXMgc29tZWJvZHkgaGF2ZSBzb21lIGlkZWEgYWJvdXQgdGhpZSBiZWhhdmlvcj8N
-CkkgYW0gYSBiaXRiYWtlIHJvb2tpZSBhbmQgcGxlYXNlIGZvcmdpdmUgbWUgaWYgdGhlIHF1ZXN0
-aW9uIGlzIG5vdCByZWFzb25hYmxlLg0KVGhhbmsgeW91IHZlcnkgbXVjaA0KU2h1YW5nIDotDQo=
+The brbe variable is set on the bitbake server when the Toaster
+UI starts. This enables Toaster to associate events with the
+correct build and build environment.
 
---_000_9040470146CBEE468A322327A78EFE6DAB0C5BHI2EXCH01aditjvco_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+However, the brbe variable is also used when a build starts to
+identify whether a new build needs to be created, or an existing
+one looked up. This causes a bug for command-line builds which
+happen after a Toaster-triggered build: because the brbe variable
+is never unset on the server or the buildinfohelper, the new
+command-line build events are treated as originating from the
+previous build.
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-U2ltU3VuOw0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KQGZvbnQtZmFjZQ0KCXtm
-b250LWZhbWlseTpTaW1TdW47DQoJcGFub3NlLTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9DQpAZm9u
-dC1mYWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQg
-MyAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpUYWhvbWE7DQoJcGFub3NlLTE6MiAx
-MSA2IDQgMyA1IDQgNCAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseToiXEBTaW1TdW4i
-Ow0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMg
-Ki8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBj
-bTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJZm9udC1zaXplOjEyLjBwdDsNCglmb250LWZh
-bWlseToiVGltZXMgTmV3IFJvbWFuIiwic2VyaWYiO30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxp
-bmsNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOmJsdWU7DQoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9DQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQNCgl7
-bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOnB1cnBsZTsNCgl0ZXh0LWRlY29yYXRpb246
-dW5kZXJsaW5lO30NCnNwYW4uRW1haWxTdHlsZTE3DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFs
-LXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7DQoJY29sb3I6IzFG
-NDk3RDt9DQouTXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsNCglm
-b250LWZhbWlseToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0K
-CXtzaXplOjYxMi4wcHQgNzkyLjBwdDsNCgltYXJnaW46NzAuODVwdCA3MC44NXB0IDIuMGNtIDcw
-Ljg1cHQ7fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0
-eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRp
-dCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5
-XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVk
-aXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8L2hl
-YWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+DQo8ZGl2
-IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OywmcXVvdDtz
-YW5zLXNlcmlmJnF1b3Q7O2NvbG9yOiMxRjQ5N0QiPkl0IHNlZW1zIHRoYXQgbXkgb3JpZ2luYWwg
-bWFpbCBpcyBub3QgYXJyaXZlZC48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtD
-YWxpYnJpJnF1b3Q7LCZxdW90O3NhbnMtc2VyaWYmcXVvdDs7Y29sb3I6IzFGNDk3RCI+UGxlYXNl
-IGlnbm9yZSB0aGlzIGVtYWlsIGlmIHlvdeKAmXZlIHJlY2VpdmVkIG15IHByZXZpb3VzIG9uZS48
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
-Zm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LCZxdW90O3Nh
-bnMtc2VyaWYmcXVvdDs7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9w
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OywmcXVvdDtzYW5zLXNlcmlmJnF1b3Q7O2NvbG9y
-OiMxRjQ5N0QiPkNoZWVycyw8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxp
-YnJpJnF1b3Q7LCZxdW90O3NhbnMtc2VyaWYmcXVvdDs7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJz
-cDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
-bnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OywmcXVvdDtzYW5z
-LXNlcmlmJnF1b3Q7O2NvbG9yOiMxRjQ5N0QiPlNodWFuZzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQt
-ZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssJnF1b3Q7c2Fucy1zZXJpZiZxdW90Oztjb2xvcjoj
-MUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48Yj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtUYWhv
-bWEmcXVvdDssJnF1b3Q7c2Fucy1zZXJpZiZxdW90OyI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0
-eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OywmcXVv
-dDtzYW5zLXNlcmlmJnF1b3Q7Ij4gU2h1YW5nIExpdSBbbWFpbHRvOnNodWFuZ2lzdGFuQGdtYWls
-LmNvbV0NCjxicj4NCjxiPlNlbnQ6PC9iPiBNaXR0d29jaCwgMTAuIEZlYnJ1YXIgMjAxNiAxNDoz
-NDxicj4NCjxiPlRvOjwvYj4gYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPGJy
-Pg0KPGI+Q2M6PC9iPiBMaXUsIFNodWFuZyAoQURJVEcvU1cyKTxicj4NCjxiPlN1YmplY3Q6PC9i
-PiBCaXRiYWtlIG92ZXJyaWRlIHN0eWxlIHJlbW92YWwgd2l0aCB2YXJpYWJsZSBleHBhbnNpb248
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwv
-bzpwPjwvcD4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+
-DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4N
-CjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4t
-Ym90dG9tOjEyLjBwdCI+SGksPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+SSBmYWNlIGEgcHJvYmxlbSB0aGF0
-IEkgdHJpZWQgdG8gdXNlIHRoZSBiaXRiYWtlIG92ZXJyaWRlIHN0eWxlIHJlbW92YWwgd2l0aCB2
-YXJpYWJsZSBleHBhbnNpb24uPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPkkgaGF2ZSBhIGZvby5iYiBhbmQgc2V0IEZPT19QQUNLQUdFUyA9ICZxdW90OyR7UE59
-X2R1bW15JnF1b3Q7PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PkFuZCBJIHVzZSBhIGZvby5iYmFwcGVuZCB0byByZW1vdmUgaXQgYnkgRk9PX1BBQ0tBR0VTX3Jl
-bW92ZSA9ICZxdW90OyR7UE59X2R1bW15JnF1b3Q7PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+VGhpcyBkb2Vz
-bid0IHdvcmsuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0
-eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+SG93ZXZlciwgRk9PX1BBQ0tBR0VTX3JlbW92ZSA9
-ICZxdW90O2Zvb19kdW1teSZxdW90OyB3b3JrcyBmaW5lLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5GdXJ0aGVybW9yZSBJIHRyaWVkIG90aGVyIHZhcmlhYmxl
-IG5hbWVzIGJlc2lkZXMgUE4sIGUuZy48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+Rk9PX1BBQ0tBR0VTID0gJnF1b3Q7Zm9vX2R1bW15JnF1b3Q7PG86cD48L286
-cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkZPT05BTUUgPSAmcXVvdDtmb28m
-cXVvdDs8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Rk9PX1BB
-Q0tBR0VTX3JlbW92ZSA9ICZxdW90OyR7Rk9PTkFNRX1fZHVtbXkmcXVvdDs8bzpwPjwvbzpwPjwv
-cD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIu
-MHB0Ij5UaGlzIGRvZXNuJ3Qgd29ya3MgZWl0aGVyLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPlNvIG1heWJl
-IHRoZXJlIGlzIHNvbWUgaXNzdWUgd2l0aCB2YXJpYWJsZSBleHBhbnNpb24gaW4gdGhlIG92ZXJy
-aWRlIHN0eWxlIHJlbW92YWw/PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPkkgdXNlIGJpdGJha2UgMS4yMiBhbmQgYW0gc29ycnkgSSBjYW5ub3QgdGVzdCB0aGUg
-bWFzdGVyIGJyYW5jaCBvbiBteSB3b3JraW5nIGVudmlyb25tZW50Ljxicj4NCkJpdEJha2UgQnVp
-bGQgVG9vbCBDb3JlIHZlcnNpb24gMS4yMi4wLCBiaXRiYWtlIHZlcnNpb24gMS4yMi4wPG86cD48
-L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPg0KPC9kaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTox
-Mi4wcHQiPkRvZXMgc29tZWJvZHkgaGF2ZSBzb21lIGlkZWEgYWJvdXQgdGhpZSBiZWhhdmlvcj88
-bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdp
-bi1ib3R0b206MTIuMHB0Ij5JIGFtIGEgYml0YmFrZSByb29raWUgYW5kIHBsZWFzZSBmb3JnaXZl
-IG1lIGlmIHRoZSBxdWVzdGlvbiBpcyBub3QgcmVhc29uYWJsZS48bzpwPjwvbzpwPjwvcD4NCjwv
-ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij5U
-aGFuayB5b3UgdmVyeSBtdWNoPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPlNodWFuZyA6LTxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvYm9keT4N
-CjwvaHRtbD4NCg==
+Ensure the brbe variable is reset when the buildinfohelper "closes"
+a build, so that each build then either sets the brbe variable
+(Toaster-triggered builds) or leaves it blank (command-line builds).
 
---_000_9040470146CBEE468A322327A78EFE6DAB0C5BHI2EXCH01aditjvco_--
+Also modify the localhostbecontroller so that the brbe variable
+is not set on the server and not looked up from the server. This
+ensures that it is only set when the triggerBuild() method is
+called, and that it remains as None for command-line builds.
+
+[YOCTO #9021]
+
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/bb/ui/buildinfohelper.py                    | 19 ++++++++++++-------
+ lib/toaster/bldcontrol/localhostbecontroller.py |  9 +++++++--
+ 2 files changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index c049b4a..81abede 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -832,8 +832,13 @@ class BuildInfoHelper(object):
+         self.orm_wrapper = ORMWrapper()
+         self.has_build_history = has_build_history
+         self.tmp_dir = self.server.runCommand(["getVariable", "TMPDIR"])[0]
+-        self.brbe    = self.server.runCommand(["getVariable", "TOASTER_BRBE"])[0]
+-        self.project = self.server.runCommand(["getVariable", "TOASTER_PROJECT"])[0]
++
++        # this is set for Toaster-triggered builds by localhostbecontroller
++        # via toasterui
++        self.brbe = None
++
++        self.project = None
++
+         logger.debug(1, "buildinfohelper: Build info helper inited %s" % vars(self))
+ 
+ 
+@@ -843,8 +848,6 @@ class BuildInfoHelper(object):
+ 
+     def _get_build_information(self, build_log_path):
+         build_info = {}
+-        # Generate an identifier for each new build
+-
+         build_info['machine'] = self.server.runCommand(["getVariable", "MACHINE"])[0]
+         build_info['distro'] = self.server.runCommand(["getVariable", "DISTRO"])[0]
+         build_info['distro_version'] = self.server.runCommand(["getVariable", "DISTRO_VERSION"])[0]
+@@ -853,9 +856,7 @@ class BuildInfoHelper(object):
+         build_info['cooker_log_path'] = build_log_path
+         build_info['build_name'] = self.server.runCommand(["getVariable", "BUILDNAME"])[0]
+         build_info['bitbake_version'] = self.server.runCommand(["getVariable", "BB_VERSION"])[0]
+-        build_info['brbe'] = self.server.runCommand(["getVariable", "TOASTER_BRBE"])[0]
+         build_info['project'] = self.project = self.server.runCommand(["getVariable", "TOASTER_PROJECT"])[0]
+-
+         return build_info
+ 
+     def _get_task_information(self, event, recipe):
+@@ -967,7 +968,6 @@ class BuildInfoHelper(object):
+         build_information = self._get_build_information(build_log_path)
+ 
+         # Update brbe and project as they can be changed for every build
+-        self.brbe = build_information['brbe']
+         self.project = build_information['project']
+ 
+         build_obj = self.orm_wrapper.create_build_object(build_information, self.brbe, self.project)
+@@ -1487,3 +1487,8 @@ class BuildInfoHelper(object):
+ 
+         if not connection.features.autocommits_when_autocommit_is_off:
+             transaction.set_autocommit(True)
++
++        # unset the brbe; this is to prevent subsequent command-line builds
++        # being incorrectly attached to the previous Toaster-triggered build;
++        # see https://bugzilla.yoctoproject.org/show_bug.cgi?id=9021
++        self.brbe = None
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index a7db1ef..efd82c3 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -308,12 +308,17 @@ class LocalhostBEController(BuildEnvironmentController):
+         # get the bb server running with the build req id and build env id
+         bbctrl = self.getBBController()
+ 
+-        # set variables
++        # set variables; TOASTER_BRBE is not set on the server, as this
++        # causes events from command-line builds to be attached to the last
++        # Toaster-triggered build; instead, TOASTER_BRBE is fired as an event so
++        # that toasterui can set it on the buildinfohelper;
++        # see https://bugzilla.yoctoproject.org/show_bug.cgi?id=9021
+         for var in variables:
+-            bbctrl.setVariable(var.name, var.value)
+             if var.name == 'TOASTER_BRBE':
+                 bbctrl.triggerEvent('bb.event.MetadataEvent("SetBRBE", "%s")' \
+                                      % var.value)
++            else:
++                bbctrl.setVariable(var.name, var.value)
+ 
+         # Add 'toaster' and 'buildhistory' to INHERIT variable
+         inherit = {item.strip() for item in bbctrl.getVariable('INHERIT').split()}
+-- 
+2.1.4
+
+
