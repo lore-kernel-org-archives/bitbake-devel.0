@@ -1,26 +1,31 @@
-Return-Path: <joshua.g.lock@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id EECD1731F9
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id BFB9D60119
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Feb 2016 16:59:20 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by orsmga102.jf.intel.com with ESMTP; 11 Feb 2016 08:59:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,431,1449561600"; d="scan'208";a="46326223"
-Received: from jlock-mobl1.gar.corp.intel.com ([10.252.26.160])
-	by fmsmga004.fm.intel.com with ESMTP; 11 Feb 2016 08:59:20 -0800
-Message-ID: <1455209960.3456.27.camel@linux.intel.com>
-From: Joshua G Lock <joshua.g.lock@linux.intel.com>
-To: Martin Samuelsson <martin.samuelsson@axis.com>, bitbake development
-	advancement <bitbake-devel@lists.openembedded.org>
-Date: Thu, 11 Feb 2016 16:59:20 +0000
-In-Reply-To: <20160127122406.GA20819@lnxmartinsa2.se.axis.com>
-References: <20151119125639.GC19141@lnxmartinsa2.se.axis.com>
-	<20160114135304.GA7849@lnxmartinsa2.se.axis.com>
-	<20160127122406.GA20819@lnxmartinsa2.se.axis.com>
-X-Mailer: Evolution 3.18.4 (3.18.4-1.fc23) 
+	Thu, 11 Feb 2016 17:12:43 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u1BHCZqq011091; Thu, 11 Feb 2016 17:12:36 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id OU4sed0YODKr; Thu, 11 Feb 2016 17:12:35 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u1BHCUfW011088
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 11 Feb 2016 17:12:31 GMT
+Message-ID: <1455210750.16142.262.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Brian Avery <avery.brian@gmail.com>, Elliot Smith <elliot.smith@intel.com>
+Date: Thu, 11 Feb 2016 17:12:30 +0000
+In-Reply-To: <CAKV_0ei6-uSkVqLf3pc4T8f5y-cZLiBDD5jv61AUHc_Y5kveRA@mail.gmail.com>
+References: <1449828119-23489-1-git-send-email-elliot.smith@intel.com>
+	<CAKV_0ei6-uSkVqLf3pc4T8f5y-cZLiBDD5jv61AUHc_Y5kveRA@mail.gmail.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
 Mime-Version: 1.0
-Subject: Re: [PATCH v2] user-manual-metadata: Clarify functionality of task flag 'dirs'.
+Cc: Mihail Stanciu <stanciux.mihail@intel.com>,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] toaster: tests Remove symlinks from toasteruitest folder
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,31 +38,18 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 11 Feb 2016 16:59:22 -0000
+X-List-Received-Date: Thu, 11 Feb 2016 17:12:46 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Martin,
+On Tue, 2016-02-09 at 12:33 -0800, Brian Avery wrote:
+> bump.
+> This seems to have neither made it in to master nor gotten any
+> comments...
 
-On Wed, 2016-01-27 at 13:24 +0100, Martin Samuelsson wrote:
-> Signed-off-by: Martin Samuelsson <martin.samuelsson@axis.com>
-> ---
-> I've seen no response to this. With this being my first attempt at
-> making a 
-> contribution to bitbake, I would appreciate any feedback. Is
-> something e.g. 
-> problematic with the patch?
+It made it to bitbake master but got lost for poky. I've fixed that.
 
-v1 of this patch was merged: http://git.openembedded.org/bitbake/commit
-/?id=2fbd9e4e44f6b491cccca81fd34586fcfdeea3d3
+Cheers,
 
-Apologies for the lack of feedback. Unfortunately bitbake and its
-affiliated projects (notably OE-Core) receive a high volume of patches
-and it's not possible to reply to every one. It's usually safe to
-assume that a patch which doesn't get a response is likely to be merged
-at some point. 
-
-Thanks for your contribution.
-
-Joshua
+Richard
 
