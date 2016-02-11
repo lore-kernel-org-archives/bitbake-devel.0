@@ -1,23 +1,26 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 3689C7321C
+Return-Path: <joshua.g.lock@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id EECD1731F9
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Feb 2016 12:46:43 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga104.fm.intel.com with ESMTP; 11 Feb 2016 04:46:45 -0800
+	Thu, 11 Feb 2016 16:59:20 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by orsmga102.jf.intel.com with ESMTP; 11 Feb 2016 08:59:22 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,430,1449561600"; d="scan'208";a="882021198"
-Received: from linux.intel.com ([10.23.219.25])
-	by orsmga001.jf.intel.com with ESMTP; 11 Feb 2016 04:46:43 -0800
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 68FF46A4004;
-	Thu, 11 Feb 2016 05:34:34 -0800 (PST)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 11 Feb 2016 12:37:08 +0200
-Message-Id: <1455187028-27370-1-git-send-email-ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] cooker: gracefully shutdown parsers
+X-IronPort-AV: E=Sophos;i="5.22,431,1449561600"; d="scan'208";a="46326223"
+Received: from jlock-mobl1.gar.corp.intel.com ([10.252.26.160])
+	by fmsmga004.fm.intel.com with ESMTP; 11 Feb 2016 08:59:20 -0800
+Message-ID: <1455209960.3456.27.camel@linux.intel.com>
+From: Joshua G Lock <joshua.g.lock@linux.intel.com>
+To: Martin Samuelsson <martin.samuelsson@axis.com>, bitbake development
+	advancement <bitbake-devel@lists.openembedded.org>
+Date: Thu, 11 Feb 2016 16:59:20 +0000
+In-Reply-To: <20160127122406.GA20819@lnxmartinsa2.se.axis.com>
+References: <20151119125639.GC19141@lnxmartinsa2.se.axis.com>
+	<20160114135304.GA7849@lnxmartinsa2.se.axis.com>
+	<20160127122406.GA20819@lnxmartinsa2.se.axis.com>
+X-Mailer: Evolution 3.18.4 (3.18.4-1.fc23) 
+Mime-Version: 1.0
+Subject: Re: [PATCH v2] user-manual-metadata: Clarify functionality of task flag 'dirs'.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,31 +33,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 11 Feb 2016 12:46:44 -0000
+X-List-Received-Date: Thu, 11 Feb 2016 16:59:22 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-CookerParser.shutdown code doesn't do all required work to shutdown
-parser processes. As a result bitbake hangs if interrupted during
-parsing. Putting None into the parser_quit queue should fix this issue
-as it makes parsers to quit main loop.
+Hi Martin,
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- bitbake/lib/bb/cooker.py | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, 2016-01-27 at 13:24 +0100, Martin Samuelsson wrote:
+> Signed-off-by: Martin Samuelsson <martin.samuelsson@axis.com>
+> ---
+> I've seen no response to this. With this being my first attempt at
+> making a 
+> contribution to bitbake, I would appreciate any feedback. Is
+> something e.g. 
+> problematic with the patch?
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index af3d77b..43e9f18 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -2058,6 +2058,7 @@ class CookerParser(object):
-             self.feeder_quit.put(None)
-             for process in self.processes:
-                 self.jobs.put(None)
-+                self.parser_quit.put(None)
-         else:
-             self.feeder_quit.put('cancel')
- 
--- 
-2.1.4
+v1 of this patch was merged: http://git.openembedded.org/bitbake/commit
+/?id=2fbd9e4e44f6b491cccca81fd34586fcfdeea3d3
 
+Apologies for the lack of feedback. Unfortunately bitbake and its
+affiliated projects (notably OE-Core) receive a high volume of patches
+and it's not possible to reply to every one. It's usually safe to
+assume that a patch which doesn't get a response is likely to be merged
+at some point. 
+
+Thanks for your contribution.
+
+Joshua
 
