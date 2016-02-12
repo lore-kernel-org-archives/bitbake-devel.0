@@ -1,47 +1,44 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-wm0-f65.google.com (mail-wm0-f65.google.com [74.125.82.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 96477731E0
+Received: from mail-io0-f176.google.com (mail-io0-f176.google.com
+	[209.85.223.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 1F505602D9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Feb 2016 00:13:44 +0000 (UTC)
-Received: by mail-wm0-f65.google.com with SMTP id 128so13424050wmz.3
+	Fri, 12 Feb 2016 00:15:01 +0000 (UTC)
+Received: by mail-io0-f176.google.com with SMTP id z135so6417353iof.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Feb 2016 16:13:45 -0800 (PST)
+	Thu, 11 Feb 2016 16:15:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=lEt8pySoN4XIm4RNvq8GlSyjXEoqGlE5KnHzVpwHciM=;
-	b=UBT+1LVA0EPnC7aBb5K6/JadVguL/4l/dPNK1QMyiItJ3HCXiTxl+0DQY3g4l2viDb
-	Y03vGT1R1KclWY+ReTcaSOTzvtxQ5yS0us7S2ZpNAnVxXSUqlM92xInO+AZqGUkpVayp
-	tSgp40Emhbd9OVuXW+Vb7tnGv0IprqtCJ9+Dgbq2S5a9Nk9ofVGnQaNPRI0W0MW586Xf
-	dNPZlfTdqKr2f0lqHSSu9HbPj7KUSGlFP8JniV9IguD1d+T6R+5/IY0mSNmUxOqA0l5Z
-	IVcjSt34DHC8xq0H1R4hTCf111+3idBiwDglCnHf5D2wb5ov3iAbVLfVwoaqc71QZCB4
-	xUOQ==
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:content-type; bh=YNp+QkVqR5q8nm0m/KKINXLRPZ///jysV217RJitHLg=;
+	b=uXGCRjCB3+75rkSH0RFvQ1/VSBUzMUr0FKCU6Bzrom3AJuPXCITx60+L+IiFDobLMB
+	TtWItsFH6zO6uzWuqFs6HCraNwkjR8s93ZpXoGKx8i5KXeDVFvSGqtSStt3MvlpF0Pwz
+	IPLUqI+i8L780FU1oeZpe34GDqfdqkpsnfnGCL/REOMMKXjamwZASfcQZZFIFMJvnuo/
+	77mnQbf+mXwkOnhlAk1o0HYuHLIAnf8FvzkE7+MaxLve4rENVxP5FWhAkve+cE0HZEef
+	/opnxio6SuGxXDmwm6FrAsFqQscWUUuaXUJYk5z8MO3oZsldSkxs4Vq9OnZzZqv9lgNv
+	tbeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=lEt8pySoN4XIm4RNvq8GlSyjXEoqGlE5KnHzVpwHciM=;
-	b=CGh7dei18BMYf/RmsmywxqRRLBPq8Urh+EkdkssJrQG0n7oDAqHaXjlaXPvpLYaAOy
-	lSNhJ9m2RXIvj1Ac9gjNg/yBIlaLftAGbLUag28YRP2LdBgS+axIX+vtTUOmnqit2QWf
-	5OHBsFYA/LV371JyFoadBfZAGoVPH+0mAKNiSWBJDoitETPYfYhwjxCDjQtPQVflPZEj
-	YJvHsM/87Jcrthm5ndx8+aRrV61NEfEEvycXMVfx39HZBVf4rER/53q5TcBRrKuXE0tu
-	YOr5A8WBPDbQAK0/LDii7090tlv+ebx1+v5t7UZQSeXQEN0Ctaua2lfyVrSMN+8SQyPk
-	NILw==
-X-Gm-Message-State: AG10YOS+YRgwlaESeO/eOVp9h+sHK8DWevuRHx4wLOq6qYNmhgvddPNZGIPdB90qfAeTow==
-X-Received: by 10.194.242.67 with SMTP id wo3mr47808388wjc.180.1455236024878; 
-	Thu, 11 Feb 2016 16:13:44 -0800 (PST)
-Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
-	by smtp.gmail.com with ESMTPSA id s2sm9684576wjs.39.2016.02.11.16.13.40
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 11 Feb 2016 16:13:43 -0800 (PST)
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:content-type;
+	bh=YNp+QkVqR5q8nm0m/KKINXLRPZ///jysV217RJitHLg=;
+	b=JAHsoDoRsXzCmWDofahqqJNrRK9Pp3bboaWCwmj9DS5UqYiZMd/XrWTX91Bbr/65hd
+	WToQ6IoORkRWzeRSP+r8l+VidZv1t9RbOhhEct6V9IrqR7lwgBGnv8ejiuwg3dsn2pcU
+	ZENuIWYBZOzt9CA6OJ4oWjLTk0MqKeMPE3pDrZfjhPhNrZaOrN5MBGQelh/kRyXzY2DB
+	qAeucjI6jFg1RAtPnOCTMkLo4RCeYkBydkVD5fMrlVLH4ZbDugCpXzZduycz8Unje70F
+	yVH+SqHkSpclxhqL8zINWbXhL5x/gcIw9dIjzSZ9+OcR9OFccuhGo0mqfQ8VIn2ohuZs
+	iwyg==
+X-Gm-Message-State: AG10YOSuTThS3TH1ccEp+ad+T7UxiOgp/FsLBPxJx+lROvlDt1KM/6VJV52CetcJjUxARJG4BFuaYHb5yM9wLw==
+X-Received: by 10.107.34.133 with SMTP id i127mr50298103ioi.150.1455236102345; 
+	Thu, 11 Feb 2016 16:15:02 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1455235936.git.chris_larson@mentor.com>
+	<8a2dddd65c84e749e1af2e2d03175dd51b4f59b0.1455235936.git.chris_larson@mentor.com>
+In-Reply-To: <8a2dddd65c84e749e1af2e2d03175dd51b4f59b0.1455235936.git.chris_larson@mentor.com>
 From: Christopher Larson <kergoth@gmail.com>
+Date: Fri, 12 Feb 2016 00:14:53 +0000
+Message-ID: <CABcZAN=1ayiRwCR7v5g=DrF-UQdBK86vdd+16vYjDQ=Y=G0tmg@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 11 Feb 2016 17:13:36 -0700
-Message-Id: <bfefd7e111665ad68f9c30a115cf307921561f7d.1455235907.git.chris_larson@mentor.com>
-X-Mailer: git-send-email 2.2.1
-In-Reply-To: <cover.1455235907.git.chris_larson@mentor.com>
-References: <cover.1455235907.git.chris_larson@mentor.com>
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [RFC PATCH 1/1] bb.ui.knotty: prefix task messages with recipe/task
+Subject: Re: [RFC PATCH 1/1] Move bb.{debug, note, ..} into their own logging domain
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,47 +51,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Feb 2016 00:13:44 -0000
+X-List-Received-Date: Fri, 12 Feb 2016 00:15:02 -0000
+Content-Type: multipart/alternative; boundary=001a1140ef84f1f381052b878e20
 
-From: Christopher Larson <chris_larson@mentor.com>
+--001a1140ef84f1f381052b878e20
+Content-Type: text/plain; charset=UTF-8
 
-An example prefix: `perl-5.22.1-r0 do_compile:`
+On Thu, Feb 11, 2016 at 5:13 PM Christopher Larson <kergoth@gmail.com>
+wrote:
 
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>
----
- lib/bb/ui/knotty.py | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+> From: Christopher Larson <chris_larson@mentor.com>
+>
+> This lets us filter and use -l to show messages from that source
+> specifically.
+>
+> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+>
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index a8b968c..87e2a64 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -359,11 +359,19 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                     return_value = 1
-                 elif event.levelno == format.WARNING:
-                     warnings = warnings + 1
--                # For "normal" logging conditions, don't show note logs from tasks
--                # but do show them if the user has changed the default log level to
--                # include verbose/debug messages
--                if event.taskpid != 0 and event.levelno <= format.NOTE and (event.levelno < llevel or (event.levelno == format.NOTE and llevel != format.VERBOSE)):
--                    continue
-+
-+                if event.taskpid != 0:
-+                    # For "normal" logging conditions, don't show note logs from tasks
-+                    # but do show them if the user has changed the default log level to
-+                    # include verbose/debug messages
-+                    if event.levelno <= format.NOTE and (event.levelno < llevel or (event.levelno == format.NOTE and llevel != format.VERBOSE)):
-+                        continue
-+
-+                    # Prefix task messages with recipe/task
-+                    if event.taskpid in helper.running_tasks:
-+                        taskinfo = helper.running_tasks[event.taskpid]
-+                        event.msg = taskinfo['title'] + ': ' + event.msg
-+
-                 logger.handle(event)
-                 continue
- 
--- 
-2.2.1
+This should have no user-visible effects, as it's still under the BitBake
+main domain.
 
+--001a1140ef84f1f381052b878e20
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr">On Thu, Feb 11=
+, 2016 at 5:13 PM Christopher Larson &lt;<a href=3D"mailto:kergoth@gmail.co=
+m">kergoth@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quo=
+te" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"=
+>From: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor.com" ta=
+rget=3D"_blank">chris_larson@mentor.com</a>&gt;<br>
+<br>
+This lets us filter and use -l to show messages from that source specifical=
+ly.<br>
+<br>
+Signed-off-by: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor=
+.com" target=3D"_blank">chris_larson@mentor.com</a>&gt;<br></blockquote><di=
+v><br></div><div>This should have no user-visible effects, as it&#39;s stil=
+l under the BitBake main domain.=C2=A0</div></div></div>
+
+--001a1140ef84f1f381052b878e20--
