@@ -1,29 +1,35 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8D81A605BB
+Return-Path: <joshua.g.lock@linux.intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id C2F116FFCE
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 14 Feb 2016 23:09:51 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u1EN9qGo004598 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 14 Feb 2016 23:09:52 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id MSuM3InAw9qV for <bitbake-devel@lists.openembedded.org>;
-	Sun, 14 Feb 2016 23:09:52 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u1EN9nWH004593
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 14 Feb 2016 23:09:50 GMT
-Message-ID: <1455491389.16142.414.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 14 Feb 2016 23:09:49 +0000
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+	Mon, 15 Feb 2016 16:54:22 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga104.fm.intel.com with ESMTP; 15 Feb 2016 08:54:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,451,1449561600"; d="scan'208";a="652477893"
+Received: from jlock-mobl1.gar.corp.intel.com ([10.252.12.36])
+	by FMSMGA003.fm.intel.com with ESMTP; 15 Feb 2016 08:54:21 -0800
+Message-ID: <1455555256.4309.27.camel@linux.intel.com>
+From: Joshua G Lock <joshua.g.lock@linux.intel.com>
+To: Mirela Rabulea <mirela.rabulea@nxp.com>, 
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Mon, 15 Feb 2016 16:54:16 +0000
+In-Reply-To: <VI1PR0401MB1789BE8BA7AD90A09B2C23E18FAB0@VI1PR0401MB1789.eurprd04.prod.outlook.com>
+References: <AM4PR0401MB1778CA63CBE3FE654CB9EDC78FC30@AM4PR0401MB1778.eurprd04.prod.outlook.com>
+	<1453903391.3557.42.camel@linux.intel.com>
+	<VI1PR0401MB1789EE35802D99452B8F12638FD10@VI1PR0401MB1789.eurprd04.prod.outlook.com>
+	<1455138641.3442.8.camel@linux.intel.com>
+	<VI1PR0401MB178927E4A92EFB4DC3E706978FA80@VI1PR0401MB1789.eurprd04.prod.outlook.com>
+	<VI1PR0401MB17898F62326CD302A05CD3F38FA90@VI1PR0401MB1789.eurprd04.prod.outlook.com>
+	<VI1PR0401MB1789BE8BA7AD90A09B2C23E18FAB0@VI1PR0401MB1789.eurprd04.prod.outlook.com>
+X-Mailer: Evolution 3.18.4 (3.18.4-1.fc23) 
 Mime-Version: 1.0
-Subject: [PATCH] knotty: Set exit failure code on runQueueTaskFailed events
+Cc: Nicolae Manescu <nicu.manescu@nxp.com>,
+	Alexandru Purice <alexandru.purice@nxp.com>, "Roman,
+	Alexandru CostinX" <alexandru.costinx.roman@intel.com>,
+	"Voiculescu, BogdanX A" <bogdanx.a.voiculescu@intel.com>
+Subject: Re: [PATCH] Fix bug 8940 - Alow Hob to run images on a custom simulator, other than qemu
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,29 +42,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 14 Feb 2016 23:09:54 -0000
+X-List-Received-Date: Mon, 15 Feb 2016 16:54:23 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-If the worker segfaults, we may never see a TaskFailed event from it, only
-a runQueueTaskFailed event. In this case, return_value isn't getting set
-leading to an incorrect exit code from bitbake. Fix by setting return_value
-in both places.
+On Sun, 2016-02-14 at 22:09 +0000, Mirela Rabulea wrote:
+> Hi Joshua,
+> I found one more issue with a corner case when commuting from "Run
+> custom image" to "Deploy image". From the comments I found in the
+> code, the case when there are both "runnable" and "deployable"
+> present in the same build is not expected.
+> However, with the introduction of the "Run custom", I think this
+> requires a fix, so here is the v4 of the patch (squashed version
+> attached).
+> If you did not get to check the v3 patch, you may skip it and check
+> the v4.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+With this patch applied I'm still seeing the same behaviour — after
+building core-image-minimal for genericx86-64 runqemu is displayed as
+the run script but clicking on "Run custom image" launches the "Usb
+image maker".
 
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 87e2a64..dff92bc 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -498,6 +498,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 continue
- 
-             if isinstance(event, bb.runqueue.runQueueTaskFailed):
-+                return_value = 1
-                 taskfailures.append(event.taskstring)
-                 logger.error("Task %s (%s) failed with exit code '%s'",
-                              event.taskid, event.taskstring, event.exitcode)
+Regards,
 
+Joshua
 
+> Only the v4 fix:
+> From 4e6c941d74a7b1e11fbd26085a6908b746f61536 Mon Sep 17 00:00:00
+> 2001
+> From: Mirela Rabulea <mirela.rabulea@nxp.com>
+> Date: Sun, 14 Feb 2016 23:42:32 +0200
+> Subject: [PATCH] Allow Hob to run images on a custom simulator, other
+> than
+>  qemu Fixed bug when commuting from deploy image to run custom image.
+> 
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/imagedetailspage.py | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+> b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+> index b22cf80..32d4854 100755
+> --- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+> +++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+> @@ -516,8 +516,9 @@ class ImageDetailsPage (HobPage):
+>          for fileitem in action_images:
+>              sel_btn = gtk.RadioButton(sel_parent_btn,
+> fileitem['type'])
+>              sel_parent_btn = sel_btn if not sel_parent_btn else
+> sel_parent_btn
+> -            if fileitem['name'] == self.toggled_image:
+> +            if curr_row == 0:
+>                  sel_btn.set_active(True)
+> +                self.toggled_image = fileitem['name']
+>              sel_btn.connect('toggled', self.table_selected_cb,
+> fileitem)
+>              if curr_row < 10:
+>                  table.attach(sel_btn, 0, 4, curr_row, curr_row + 1,
+> xpadding=24)
 
