@@ -1,52 +1,22 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-pf0-f180.google.com (mail-pf0-f180.google.com
-	[209.85.192.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 4362A731DB
+Return-Path: <markus.lehtonen@linux.intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 9872F77205
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 19 Feb 2016 05:16:04 +0000 (UTC)
-Received: by mail-pf0-f180.google.com with SMTP id c10so45996369pfc.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Feb 2016 21:16:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:in-reply-to:references;
-	bh=JIUikse8RrK1vWiPAeM/vcq3z1aLWxquE920B+o/QSg=;
-	b=v92hkOm3WzRYPQfzCFfX7Iz/YtqCD7A+P7JbdHvPbP7pxKohq23CQo57USikMd3wQZ
-	niSzo5v2yQ8JSW950V4ckHnZnHJTCBR7+qZBz68BL1kl+H6ClCMzcUWfy9XgmUvwjROY
-	PQVKf5T48iPoKDG2Q4pfusqnTcRw4Jxpd9O0QdmRZAMehq++lmUEPBqFDOGPyNxL4gVw
-	sVykgOaarO4VLVFWOF0TiuyDJkmlvGBRWrnXT0jXhwjedmmwMGDQ6cU7/TbCEJKedW1y
-	dO0MLSt9vk/qoF4eiUxljuBCmCVcK8DVZgbGbqGnKSdlLExTuKiBnNZmkyL/480lNCiQ
-	c1gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=JIUikse8RrK1vWiPAeM/vcq3z1aLWxquE920B+o/QSg=;
-	b=XeWE331TutxxBOCOl7uCCiqIOSjPFLSAxwVT331DJeHYdS5zLAuI1PP36UML+AFE7X
-	1bZSfqy/bZw4VYlSN8Xtpngm4DWPgMu+CrxdStMiRKC055UQRzQ5DLF4zINZuBHTygTA
-	q0a0Kv57uimoYN38ti/5ewbb+0ES1+2czS/SVHExbOPARH+mKaBG2xhzN7500QaIbhTX
-	3DTolKOobgeJi1gwuyTyZdIjsxi1sJS2MOFttLOTsPn0c4lqd8lu/ssilnJEgOqHwsvK
-	7Yjae/mSsnE3DewB6XqZsWv5vG22wRgpVW9tbJDtgZBij+6SP1FC3o+7jhHpSpfGR6NY
-	Qoow==
-X-Gm-Message-State: AG10YOT/fftN6PQCqBW2GhyyK2fIQ/JXXkFgI8b0/O1wZOhL1eB2E1wfcF3gM1bLu6AK5A==
-X-Received: by 10.98.8.200 with SMTP id 69mr15752209pfi.39.1455858965387;
-	Thu, 18 Feb 2016 21:16:05 -0800 (PST)
-Received: from whisper.hsd1.or.comcast.net
-	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id
-	ml5sm13317073pab.2.2016.02.18.21.16.04
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 18 Feb 2016 21:16:04 -0800 (PST)
-From: brian avery <avery.brian@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 Feb 2016 21:21:52 -0800
-Message-Id: <c0fe43b9bb8a82ecfc2ed72ad9b39f435fe3b707.1455859137.git.avery.brian@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1074d09d9af22d962880d1ba7791b85eecfeac08.1455859137.git.avery.brian@gmail.com>
-References: <1074d09d9af22d962880d1ba7791b85eecfeac08.1455859137.git.avery.brian@gmail.com>
-In-Reply-To: <cover.1455859137.git.avery.brian@gmail.com>
-References: <cover.1455859137.git.avery.brian@gmail.com>
-Subject: [PATCH 5/5] toaster: toastergui Fix invalid char test and implementation
+	Fri, 19 Feb 2016 14:34:39 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 19 Feb 2016 06:34:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,470,1449561600"; d="scan'208";a="919362982"
+Received: from marquiz.fi.intel.com ([10.237.72.155])
+	by fmsmga002.fm.intel.com with ESMTP; 19 Feb 2016 06:34:37 -0800
+Message-ID: <1455892476.2298.11.camel@linux.intel.com>
+From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+To: Richard Purdie <richard.purdie@intel.com>
+Date: Fri, 19 Feb 2016 16:34:36 +0200
+X-Mailer: Evolution 3.16.5 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: [RFC] file checksum cache refactoring
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,54 +29,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 Feb 2016 05:16:05 -0000
+X-List-Received-Date: Fri, 19 Feb 2016 14:34:39 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Michael Wood <michael.g.wood@intel.com>
+Hi,
 
-This test was passing but because the assertion was the wrong way round
-and should have expected the first one to pass and second one to fail,
-in reality both were failing as the method for checking the invalid char
-was incorrect.
+I pushed a patchset for inspection here:
+http://git.openembedded.org/openembedded-core-contrib/log/?h=marquiz/bi
+tbake/checksum-refactor
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: brian avery <avery.brian@gmail.com>
----
- lib/toaster/toastergui/tests.py | 2 +-
- lib/toaster/toastergui/views.py | 7 +++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+The first three patches are refactoring that could be merged without
+breaking anything, the last patch extending the SignatureGenerator API.
 
-diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-index 1b6e78d..4e420ea 100644
---- a/lib/toaster/toastergui/tests.py
-+++ b/lib/toaster/toastergui/tests.py
-@@ -155,7 +155,7 @@ class ViewTests(TestCase):
-         response = self.client.post(reverse('xhr_importlayer'), args)
-         data = json.loads(response.content)
-         self.assertEqual(response.status_code, 200)
--        self.assertNotEqual(data["error"], "ok")
-+        self.assertEqual(data["error"], "ok")
- 
-         #Test to verify import of a layer successful
-         args['name'] = "meta-oe"
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index dfa256e..13489af 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -2185,8 +2185,11 @@ if True:
-         layers_added = [];
- 
-         # Rudimentary check for any possible html tags
--        if "<" in request.POST:
--          return HttpResponse(jsonfilter({"error": "Invalid character <"}), content_type = "application/json")
-+        for val in request.POST.values():
-+            if "<" in val:
-+                return HttpResponse(jsonfilter(
-+                    {"error": "Invalid character <"}),
-+                    content_type="application/json")
- 
-         prj = Project.objects.get(pk=request.POST['project_id'])
- 
--- 
-1.9.1
+The two last patches are something that could be merged at some later
+point as they make the new API mandatory.
 
+Any comments and suggestions are welcome.
+
+
+Cheers,
+  Markus
+
+----------------------------------------------------------------
+Markus Lehtonen (5):
+      bb/siggen: drop commented-out code
+      Move file checksum cache out of SignatureGenerator
+      SignatureGenerator: add checksum_cache argument to get_taskhash()
+      SignatureGenerator: make checksum_cache arg of get_taskhash()
+mandatory
+      bb/fetch2: drop checksum cache
+
+ lib/bb/cooker.py          |  2 --
+ lib/bb/fetch2/__init__.py | 18 ------------------
+ lib/bb/runqueue.py        | 13 +++++++++++--
+ lib/bb/siggen.py          | 29 +++--------------------------
+ 4 files changed, 14 insertions(+), 48 deletions(-)
 
