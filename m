@@ -1,24 +1,26 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id CD83E770D8
+	by mail.openembedded.org (Postfix) with ESMTP id 70EB1770D8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 22 Feb 2016 09:08:44 +0000 (UTC)
+	Mon, 22 Feb 2016 09:08:45 +0000 (UTC)
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga102.jf.intel.com with ESMTP; 22 Feb 2016 01:08:46 -0800
+	by orsmga102.jf.intel.com with ESMTP; 22 Feb 2016 01:08:47 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.22,483,1449561600"; 
-	d="scan'208,217";a="921077011"
+	d="scan'208,217";a="921077024"
 Received: from mmisiak-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.31.233])
-	by fmsmga002.fm.intel.com with ESMTP; 22 Feb 2016 01:08:44 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 22 Feb 2016 01:08:46 -0800
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 22 Feb 2016 09:08:32 +0000
-Message-Id: <6a8294aab59563cd1d747764d140787648218458.1456131920.git.elliot.smith@intel.com>
+Date: Mon, 22 Feb 2016 09:08:33 +0000
+Message-Id: <f3ab412d99f6ce12614175578851c41989fd7060.1456131920.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
+In-Reply-To: <6a8294aab59563cd1d747764d140787648218458.1456131920.git.elliot.smith@intel.com>
+References: <6a8294aab59563cd1d747764d140787648218458.1456131920.git.elliot.smith@intel.com>
 In-Reply-To: <cover.1456131920.git.elliot.smith@intel.com>
 References: <cover.1456131920.git.elliot.smith@intel.com>
-Subject: [PATCH 1/9] toaster: comment out project release change
+Subject: [PATCH 2/9] toaster: fix custom image name form
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,73 +37,45 @@ X-List-Received-Date: Mon, 22 Feb 2016 09:08:45 -0000
 
 From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-Although the support for building more than one release and how we
-handle the build directories is the subject of lively discussion, we all
-seem to agree on removing the ability to change the release of a
-project. The feature is currently not working but exposed to users,
-which is not a happy state of affairs.
+The placeholder text in the form where you name your new custom images
+didn't display fully. This patch fixes the styles so that the text shows
+properly. It also changes the text itself to make it a bit shorter.
 
-This patch comments out the controls that give access to the release
-changing functionality to hide them from users, but does not touch
-anything else. Once all moving pieces start to settle down, we can make
-a final decision regarding this feature, and clean up the code
-accordingly.
-
-[YOCTO #8917]
+[YOCTO #9122]
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- lib/toaster/toastergui/templates/project.html | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ lib/toaster/toastergui/static/css/default.css              | 2 +-
+ lib/toaster/toastergui/templates/newcustomimage_modal.html | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index cc4745b..1256768 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -24,7 +24,9 @@
-   });
- </script>
- 
--<div id="change-release-modal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="change-release-modal" aria-hidden="false">
-+<!-- Comment out the ability to change the project release, until we decide what to do this functionality -->
-+
-+<!--div id="change-release-modal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="change-release-modal" aria-hidden="false">
-   <div class="modal-header">
-     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-     <h3>Changing Yocto Project release to <span class="proposed-release-change-name"></span></h3>
-@@ -39,7 +41,7 @@
-     <button id="change-release-and-rm-layers" data-dismiss="modal" type="submit" class="btn btn-primary">Change release and delete layers</button>
-     <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-   </div>
--</div>
-+</div-->
- 
- 
- <div class="row-fluid" id="project-page" style="display:none">
-@@ -79,12 +81,19 @@
-     <div class="well well-transparent">
-       <h3>Project release</h3>
- 
--      <p class="lead"><span id="project-release-title"></span> <i title="" data-original-title="" id="release-change-toggle" class="icon-pencil"></i></p>
-+      <p class="lead"><span id="project-release-title"></span>
-+
-+      <!-- Comment out the ability to change the project release, until we decide what to do with this functionality -->
- 
--      <form class="form-inline" id="change-release-form" style="display:none;">
-+      <!--i title="" data-original-title="" id="release-change-toggle" class="icon-pencil"></i-->
-+      </p>
-+
-+      <!-- Comment out the ability to change the project release, until we decide what to do with this functionality -->
-+
-+      <!--form class="form-inline" id="change-release-form" style="display:none;">
-         <select></select>
-         <button class="btn" style="margin-left:5px;" id="change-release-btn">Change</button> <a href="#" id="cancel-release-change" class="btn btn-link">Cancel</a>
--      </form>
-+      </form-->
+diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
+index b674a9d..c5a580f 100644
+--- a/lib/toaster/toastergui/static/css/default.css
++++ b/lib/toaster/toastergui/static/css/default.css
+@@ -197,7 +197,7 @@ table p { margin-bottom: 0 }
+ .configuration-alert p { margin-bottom: 0px; }
+ .project-form { margin-top: 10px; }
+ .add-layers .btn-block + .btn-block, .build .btn-block + .btn-block { margin-top: 0px; }
+-input.huge { font-size: 17.5px; padding: 11px 19px; }
++input.huge { font-size: 17.5px; padding: 11px; min-width: 60%; }
+ .build-form { margin-bottom: 0px; }
+ .build-form .input-append { margin-bottom: 0px; }
+ .build-form .btn-large { padding: 11px 35px; }
+diff --git a/lib/toaster/toastergui/templates/newcustomimage_modal.html b/lib/toaster/toastergui/templates/newcustomimage_modal.html
+index fed489f..b1b5148 100644
+--- a/lib/toaster/toastergui/templates/newcustomimage_modal.html
++++ b/lib/toaster/toastergui/templates/newcustomimage_modal.html
+@@ -22,7 +22,7 @@
+       <span class="help-block span8">Image names must be unique. They should not contain spaces or capital letters, and the only allowed special character is dash (-).<p></p>
+       </span></div>
+     <div class="control-group controls">
+-      <input type="text" class="huge span5" placeholder="Type the name, something like 'core-image-myimage'" required>
++      <input type="text" class="huge" placeholder="Type the custom image name" required>
+         <span class="help-block error" id="invalid-name-help" style="display:none"></span>
+       </div>
      </div>
-   </div>
- 
 -- 
 1.9.3
 
