@@ -1,22 +1,24 @@
 Return-Path: <anibal.limon@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 7B365731F8
+	by mail.openembedded.org (Postfix) with ESMTP id 7D0577727C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Feb 2016 00:49:47 +0000 (UTC)
+	Tue, 23 Feb 2016 00:49:48 +0000 (UTC)
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga101.jf.intel.com with ESMTP; 22 Feb 2016 16:49:45 -0800
+	by orsmga101.jf.intel.com with ESMTP; 22 Feb 2016 16:49:48 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,487,1449561600"; d="scan'208";a="751272694"
+X-IronPort-AV: E=Sophos;i="5.22,487,1449561600"; d="scan'208";a="751272727"
 Received: from alimonb-mobl1.zpn.intel.com ([10.219.5.35])
-	by orsmga003.jf.intel.com with ESMTP; 22 Feb 2016 16:49:44 -0800
+	by orsmga003.jf.intel.com with ESMTP; 22 Feb 2016 16:49:47 -0800
 From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 22 Feb 2016 18:51:50 -0600
-Message-Id: <1456188718-13755-1-git-send-email-anibal.limon@linux.intel.com>
+Date: Mon, 22 Feb 2016 18:51:52 -0600
+Message-Id: <1456188718-13755-3-git-send-email-anibal.limon@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1456188718-13755-1-git-send-email-anibal.limon@linux.intel.com>
+References: <1456188718-13755-1-git-send-email-anibal.limon@linux.intel.com>
 MIME-Version: 1.0
 Cc: alexandru.c.georgescu@intel.com, stanciux.mihail@intel.com
-Subject: [[RFC][PATCH] 0/8] Toaster improve test suite
+Subject: [[RFC][PATCH] 2/8] toaster/tests: Add __init__.py and base.py.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,57 +35,39 @@ X-List-Received-Date: Tue, 23 Feb 2016 00:49:48 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This set of changes refactor/improve the current test suite now it can be
-parameterized from command line.
+Add empty __init__.py for set folder as module.
 
-The main goal for this set of patches are for integrate the toaster
-test suite into AB. The AB part is already on master. [1] If this patchset
-is merged the way for run Toaster test suite will change for use it read
-README in this patchset.
+Add base.py module that contains a base class for toaster test
+cases now have an object with options and a logger.
 
-Futher work are related to improve/fix the current test suite also i added
-a TODO list.
-
-[1] http://git.yoctoproject.org/cgit/cgit.cgi/yocto-autobuilder/commit/?id=4ad04739d7414046775be84eeb2553d12acf94ef
-
-Aníbal Limón (8):
-  toaster/tests: Reorder/move current test code.
-  toaster/tests: Add __init__.py and base.py.
-  toaster/tests: Improve ui.py module.
-  toaster/tests: Adds setup test case.
-  toaster/tests: Add helpers.py module.
-  toaster-test: Refactor and imporvements.
-  toaster/tests: Add README, TODO and requeriments.
-  toaster/tests: Adds Copyright information.
-
- bin/toaster-test                                   |  238 ++
- .../contrib/tts/toasteruitest/run_toastertests.py  |  155 --
- .../tts/toasteruitest/toaster_automation_test.py   | 2376 -------------------
- .../contrib/tts/toasteruitest/toaster_test.cfg     |   25 -
- lib/toaster/tests/README                           |   64 +
- lib/toaster/tests/TODO                             |   13 +
- lib/toaster/tests/__init__.py                      |    0
- lib/toaster/tests/base.py                          |   28 +
- lib/toaster/tests/helpers.py                       |  192 ++
- lib/toaster/tests/setup.py                         |   94 +
- lib/toaster/tests/toaster_test.cfg                 |   25 +
- lib/toaster/tests/ui.py                            | 2379 ++++++++++++++++++++
- toaster-tests-requirements.txt                     |    5 +
- 13 files changed, 3038 insertions(+), 2556 deletions(-)
- create mode 100755 bin/toaster-test
- delete mode 100755 lib/toaster/contrib/tts/toasteruitest/run_toastertests.py
- delete mode 100755 lib/toaster/contrib/tts/toasteruitest/toaster_automation_test.py
- delete mode 100644 lib/toaster/contrib/tts/toasteruitest/toaster_test.cfg
- create mode 100644 lib/toaster/tests/README
- create mode 100644 lib/toaster/tests/TODO
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
+---
+ lib/toaster/tests/__init__.py |  0
+ lib/toaster/tests/base.py     | 11 +++++++++++
+ 2 files changed, 11 insertions(+)
  create mode 100644 lib/toaster/tests/__init__.py
  create mode 100644 lib/toaster/tests/base.py
- create mode 100755 lib/toaster/tests/helpers.py
- create mode 100644 lib/toaster/tests/setup.py
- create mode 100644 lib/toaster/tests/toaster_test.cfg
- create mode 100644 lib/toaster/tests/ui.py
- create mode 100644 toaster-tests-requirements.txt
 
+diff --git a/lib/toaster/tests/__init__.py b/lib/toaster/tests/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/lib/toaster/tests/base.py b/lib/toaster/tests/base.py
+new file mode 100644
+index 0000000..8b303ac
+--- /dev/null
++++ b/lib/toaster/tests/base.py
+@@ -0,0 +1,11 @@
++import unittest
++
++class ToasterOptions(object): 
++    pass
++
++class ToasterTestCase(unittest.TestCase):
++    def __init__(self, testname, opts, logger):
++        super(ToasterTestCase, self).__init__(testname)
++
++        self.opts = opts
++        self.logger = logger
 -- 
 2.1.4
 
