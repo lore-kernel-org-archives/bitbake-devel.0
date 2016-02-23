@@ -1,29 +1,22 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8C8D975EE7
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 7B365731F8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 22 Feb 2016 20:51:20 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u1MKpLsf016951; Mon, 22 Feb 2016 20:51:21 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id MqoLvIbMNdp4; Mon, 22 Feb 2016 20:51:21 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u1MKpIsZ016948
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 22 Feb 2016 20:51:19 GMT
-Message-ID: <1456174278.28376.199.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Shashkevich <alex@stunpix.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 22 Feb 2016 20:51:18 +0000
-In-Reply-To: <1456166091-13075-1-git-send-email-alex@stunpix.com>
-References: <1456166091-13075-1-git-send-email-alex@stunpix.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: [PATCH] bb/fetch2: broken functionality for entries like file://dir; subdir=foo in SRC_URI
+	Tue, 23 Feb 2016 00:49:47 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga101.jf.intel.com with ESMTP; 22 Feb 2016 16:49:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,487,1449561600"; d="scan'208";a="751272694"
+Received: from alimonb-mobl1.zpn.intel.com ([10.219.5.35])
+	by orsmga003.jf.intel.com with ESMTP; 22 Feb 2016 16:49:44 -0800
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 22 Feb 2016 18:51:50 -0600
+Message-Id: <1456188718-13755-1-git-send-email-anibal.limon@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+MIME-Version: 1.0
+Cc: alexandru.c.georgescu@intel.com, stanciux.mihail@intel.com
+Subject: [[RFC][PATCH] 0/8] Toaster improve test suite
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,28 +29,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 22 Feb 2016 20:51:22 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 23 Feb 2016 00:49:48 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2016-02-22 at 20:34 +0200, Alexander Shashkevich wrote:
-> For SRC_URI entries like file://dir1;subdir=foo1 and
-> file://dir2/dir3;subdir=foo2/foo3
-> subdirectories ${WORKDIR}/foo1 and ${WORKDIR}/foo2/foo3 are created,
-> but dir1 and dir2/dir3 are
-> only copied to ${WORKDIR}/dir1 and ${WORKDIR}/dir2/dir. Correct way:
-> directories must be copied/unpacked
-> into '${WORKDIR}/foo1/dir1' and '${WORKDIR}/foo2/foo3/dir2/dir'
-> respectively.
+This set of changes refactor/improve the current test suite now it can be
+parameterized from command line.
 
-Where we have cases like this, I'd ask that you add a test case to
-lib/bb/tests/ which illustrates the problem and ensures we don't
-regress in future. We've had far too many problems with corner cases
-and the fetcher :(
+The main goal for this set of patches are for integrate the toaster
+test suite into AB. The AB part is already on master. [1] If this patchset
+is merged the way for run Toaster test suite will change for use it read
+README in this patchset.
 
-I need to properly review the patch but wanted to mention this now.
+Futher work are related to improve/fix the current test suite also i added
+a TODO list.
 
-Cheers,
+[1] http://git.yoctoproject.org/cgit/cgit.cgi/yocto-autobuilder/commit/?id=4ad04739d7414046775be84eeb2553d12acf94ef
 
-Richard
+Aníbal Limón (8):
+  toaster/tests: Reorder/move current test code.
+  toaster/tests: Add __init__.py and base.py.
+  toaster/tests: Improve ui.py module.
+  toaster/tests: Adds setup test case.
+  toaster/tests: Add helpers.py module.
+  toaster-test: Refactor and imporvements.
+  toaster/tests: Add README, TODO and requeriments.
+  toaster/tests: Adds Copyright information.
+
+ bin/toaster-test                                   |  238 ++
+ .../contrib/tts/toasteruitest/run_toastertests.py  |  155 --
+ .../tts/toasteruitest/toaster_automation_test.py   | 2376 -------------------
+ .../contrib/tts/toasteruitest/toaster_test.cfg     |   25 -
+ lib/toaster/tests/README                           |   64 +
+ lib/toaster/tests/TODO                             |   13 +
+ lib/toaster/tests/__init__.py                      |    0
+ lib/toaster/tests/base.py                          |   28 +
+ lib/toaster/tests/helpers.py                       |  192 ++
+ lib/toaster/tests/setup.py                         |   94 +
+ lib/toaster/tests/toaster_test.cfg                 |   25 +
+ lib/toaster/tests/ui.py                            | 2379 ++++++++++++++++++++
+ toaster-tests-requirements.txt                     |    5 +
+ 13 files changed, 3038 insertions(+), 2556 deletions(-)
+ create mode 100755 bin/toaster-test
+ delete mode 100755 lib/toaster/contrib/tts/toasteruitest/run_toastertests.py
+ delete mode 100755 lib/toaster/contrib/tts/toasteruitest/toaster_automation_test.py
+ delete mode 100644 lib/toaster/contrib/tts/toasteruitest/toaster_test.cfg
+ create mode 100644 lib/toaster/tests/README
+ create mode 100644 lib/toaster/tests/TODO
+ create mode 100644 lib/toaster/tests/__init__.py
+ create mode 100644 lib/toaster/tests/base.py
+ create mode 100755 lib/toaster/tests/helpers.py
+ create mode 100644 lib/toaster/tests/setup.py
+ create mode 100644 lib/toaster/tests/toaster_test.cfg
+ create mode 100644 lib/toaster/tests/ui.py
+ create mode 100644 toaster-tests-requirements.txt
+
+-- 
+2.1.4
+
 
