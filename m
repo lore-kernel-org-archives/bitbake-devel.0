@@ -1,33 +1,21 @@
-Return-Path: <haris.okanovic@ni.com>
-Received: from ni.com (skprod3.natinst.com [130.164.80.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 5A91F77371
+Return-Path: <elliot.smith@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 61CC177212
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Feb 2016 17:36:43 +0000 (UTC)
-Received: from us-aus-mgwout2.amer.corp.natinst.com (nb-snip2-1338.natinst.com
-	[130.164.19.135])
-	by us-aus-skprod3.natinst.com (8.15.0.59/8.15.0.59) with ESMTP id
-	u1NHaia9023030 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Feb 2016 11:36:44 -0600
-Received: from harisdt.amer.corp.natinst.com ([130.164.14.198])
-	by us-aus-mgwout2.amer.corp.natinst.com (Lotus Domino Release 8.5.3FP6
-	HF1218) with ESMTP id 2016022311364447-70390 ;
-	Tue, 23 Feb 2016 11:36:44 -0600 
-From: Haris Okanovic <haris.okanovic@ni.com>
+	Wed, 24 Feb 2016 13:50:05 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga103.jf.intel.com with ESMTP; 24 Feb 2016 05:50:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,494,1449561600"; 
+	d="scan'208,217";a="752399235"
+Received: from unknown (HELO lp.ger.corp.intel.com) ([10.252.1.217])
+	by orsmga003.jf.intel.com with ESMTP; 24 Feb 2016 05:50:02 -0800
+From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 23 Feb 2016 11:36:33 -0600
-Message-Id: <1456248993-17387-1-git-send-email-haris.okanovic@ni.com>
-X-Mailer: git-send-email 2.6.2
-X-MIMETrack: Itemize by SMTP Server on US-AUS-MGWOut2/AUS/H/NIC(Release
-	8.5.3FP6 HF1218|December 12, 2014) at 02/23/2016 11:36:44 AM,
-	Serialize by Router on US-AUS-MGWOut2/AUS/H/NIC(Release 8.5.3FP6
-	HF1218|December 12, 2014) at 02/23/2016 11:36:44 AM,
-	Serialize complete at 02/23/2016 11:36:44 AM
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10432:, ,
-	definitions=2016-02-23_10:, , signatures=0
-X-Mailman-Approved-At: Wed, 24 Feb 2016 09:51:21 +0000
-Cc: Haris Okanovic <haris.okanovic@ni.com>, ken.sharp@ni.com,
-	bill.pittman@ni.com
-Subject: [PATCH] prserv: Add dump_db()
+Date: Wed, 24 Feb 2016 13:49:38 +0000
+Message-Id: <1456321778-542-1-git-send-email-elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Subject: [PATCH] toaster: custom breadcrumb for the default project
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,118 +28,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 23 Feb 2016 17:36:45 -0000
+X-List-Received-Date: Wed, 24 Feb 2016 13:50:06 -0000
 
-Returns a script (string) that reconstructs the state of the
-entire database at the time this function is called. The script
-language is defined by the backing database engine, which is a
-function of server configuration.
-Returns None if the database engine does not support dumping to
-script or if some other error is encountered in processing.
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-The SQLite3 implementation in db.py calls iterdump() [1] to generate
-a script. iterdump() is the library equivalent of the `sqlite3 .dump`
-shell command, and the scripts are compatible. Execute the script in
-an empty SQLite3 database using the sqlite3 utility to restore a backup
-of prserv.
+The default "Command line builds" project does not have a Configuration
+page. It therefore needs a custom breadcrumb where the project name goes
+to the project builds page, instead of the project configuration page.
 
-Use case: Backup a live PR server database in a non-racy way, such
-that one could snapshot the entire database after a set of bitbake
-builds all using a shared server. I.e. All changes made prior to
-the start of a dump_db() operation should be committed and captured
-in the script. Subsequent changes made during the backup process are
-not guaranteed to be captured.
-
-Testing: ~7MB database backs up in ~1s while PR server is under load
-from 32 thread bitbake builds on two separate machines.
-
-[1] https://docs.python.org/2/library/sqlite3.html#sqlite3.Connection.iterdump
-
-Signed-off-by: Haris Okanovic <haris.okanovic@ni.com>
-Reviewed-by: Ken Sharp <ken.sharp@ni.com>
-Reviewed-by: Bill Pittman <bill.pittman@ni.com>
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- lib/prserv/db.py   |  8 ++++++++
- lib/prserv/serv.py | 25 +++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+ bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html | 7 +++++--
+ bitbake/lib/toaster/toastergui/templates/basebuildpage.html       | 7 +++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/lib/prserv/db.py b/lib/prserv/db.py
-index 36c9f7b..2a86184 100644
---- a/lib/prserv/db.py
-+++ b/lib/prserv/db.py
-@@ -231,6 +231,14 @@ class PRTable(object):
-                 datainfo.append(col)
-         return (metainfo, datainfo)
+diff --git a/bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html b/bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html
+index e350c1a..a62e0b1 100644
+--- a/bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html
++++ b/bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html
+@@ -1,4 +1,5 @@
+ {% extends "base.html" %}
++{% load project_url_tag %}
+ {% load humanize %}
+ {% block pagecontent %}
  
-+    def dump_db(self, fd):
-+        writeCount = 0
-+        for line in self.conn.iterdump():
-+            writeCount = writeCount + len(line) + 1
-+            fd.write(line)
-+            fd.write('\n')
-+        return writeCount
-+
- class PRData(object):
-     """Object representing the PR database"""
-     def __init__(self, filename, nohist=True):
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index f588f4d..affccd9 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -4,6 +4,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
- import threading
- import Queue
- import socket
-+import StringIO
+@@ -6,8 +7,10 @@
+ <!-- Breadcrumbs -->
+     <div class="section">
+         <ul class="breadcrumb" id="breadcrumb">
+-            <li><a href="{% url 'project' build.project.id %}">{{build.project.name}}</a></li>
+-            <li><a href="{% url 'projectbuilds' build.project.id %}">Builds</a></li>
++            <li><a href="{% project_url build.project %}">{{build.project.name}}</a></li>
++            {% if not build.project.is_default %}
++                <li><a href="{% url 'projectbuilds' build.project.id %}">Builds</a></li>
++            {% endif %}
+             <li><a href="{%url 'builddashboard' build.pk%}">{{build.get_sorted_target_list.0.target}} {%if build.target_set.all.count > 1%}(+{{build.target_set.all.count|add:"-1"}}){%endif%} {{build.machine}} ({{build.completed_on|date:"d/m/y H:i"}})</a></li>
+             {% block localbreadcrumb %}{% endblock %}
+         </ul>
+diff --git a/bitbake/lib/toaster/toastergui/templates/basebuildpage.html b/bitbake/lib/toaster/toastergui/templates/basebuildpage.html
+index 3571869..0dc71f5 100644
+--- a/bitbake/lib/toaster/toastergui/templates/basebuildpage.html
++++ b/bitbake/lib/toaster/toastergui/templates/basebuildpage.html
+@@ -1,5 +1,6 @@
+ {% extends "base.html" %}
+ {% load projecttags %}
++{% load project_url_tag %}
+ {% load humanize %}
+ {% block pagecontent %}
  
- try:
-     import sqlite3
-@@ -59,6 +60,7 @@ class PRServer(SimpleXMLRPCServer):
-         self.register_function(self.quit, "quit")
-         self.register_function(self.ping, "ping")
-         self.register_function(self.export, "export")
-+        self.register_function(self.dump_db, "dump_db")
-         self.register_function(self.importone, "importone")
-         self.register_introspection_functions()
- 
-@@ -115,6 +117,26 @@ class PRServer(SimpleXMLRPCServer):
-             logger.error(str(exc))
-             return None
- 
-+    def dump_db(self):
-+        """
-+        Returns a script (string) that reconstructs the state of the
-+        entire database at the time this function is called. The script
-+        language is defined by the backing database engine, which is a
-+        function of server configuration.
-+        Returns None if the database engine does not support dumping to
-+        script or if some other error is encountered in processing.
-+        """
-+        buff = StringIO.StringIO()
-+        try:
-+            self.table.sync()
-+            self.table.dump_db(buff)
-+            return buff.getvalue()
-+        except Exception as exc:
-+            logger.error(str(exc))
-+            return None
-+        finally:
-+            buff.close()
-+
-     def importone(self, version, pkgarch, checksum, value):
-         return self.table.importone(version, pkgarch, checksum, value)
- 
-@@ -288,6 +310,9 @@ class PRServerConnection(object):
-     def export(self,version=None, pkgarch=None, checksum=None, colinfo=True):
-         return self.connection.export(version, pkgarch, checksum, colinfo)
- 
-+    def dump_db(self):
-+        return self.connection.dump_db()
-+
-     def importone(self, version, pkgarch, checksum, value):
-         return self.connection.importone(version, pkgarch, checksum, value)
- 
+@@ -8,8 +9,10 @@
+ <!-- Breadcrumbs -->
+     <div class="section">
+         <ul class="breadcrumb" id="breadcrumb">
+-            <li><a href="{% url 'project' build.project.id %}">{{build.project.name}}</a></li>
+-            <li><a href="{% url 'projectbuilds' build.project.id %}">Builds</a></li>
++            <li><a href="{% project_url build.project %}">{{build.project.name}}</a></li>
++            {% if not build.project.is_default %}
++                <li><a href="{% url 'projectbuilds' build.project.id %}">Builds</a></li>
++            {% endif %}
+             <li>
+             {% block parentbreadcrumb %}
+             <a href="{%url 'builddashboard' build.pk%}">
 -- 
-2.6.2
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
 
 
