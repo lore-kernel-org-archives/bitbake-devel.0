@@ -1,21 +1,21 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 61CC177212
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 83F5077254
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 24 Feb 2016 13:50:05 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga103.jf.intel.com with ESMTP; 24 Feb 2016 05:50:03 -0800
+	Thu, 25 Feb 2016 14:25:02 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 25 Feb 2016 06:24:56 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,494,1449561600"; 
-	d="scan'208,217";a="752399235"
-Received: from unknown (HELO lp.ger.corp.intel.com) ([10.252.1.217])
-	by orsmga003.jf.intel.com with ESMTP; 24 Feb 2016 05:50:02 -0800
+X-IronPort-AV: E=Sophos;i="5.22,498,1449561600"; d="scan'208";a="894537150"
+Received: from unknown (HELO lp.ger.corp.intel.com) ([10.252.2.6])
+	by orsmga001.jf.intel.com with ESMTP; 25 Feb 2016 06:24:55 -0800
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 24 Feb 2016 13:49:38 +0000
-Message-Id: <1456321778-542-1-git-send-email-elliot.smith@intel.com>
+Date: Thu, 25 Feb 2016 14:24:49 +0000
+Message-Id: <1456410289-31796-1-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: custom breadcrumb for the default project
+Cc: Dave Lerner <dave.lerner@windriver.com>
+Subject: [PATCH] toaster: fix banner after customimage package add
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,68 +28,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 24 Feb 2016 13:50:06 -0000
+X-List-Received-Date: Thu, 25 Feb 2016 14:25:04 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: Dave Lerner <dave.lerner@windriver.com>
 
-The default "Command line builds" project does not have a Configuration
-page. It therefore needs a custom breadcrumb where the project name goes
-to the project builds page, instead of the project configuration page.
+Correct formatting of the banner message after adding a package to a
+custom image.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+[YOCTO #9101]
+
+Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html | 7 +++++--
- bitbake/lib/toaster/toastergui/templates/basebuildpage.html       | 7 +++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ bitbake/lib/toaster/toastergui/static/js/customrecipe.js | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html b/bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html
-index e350c1a..a62e0b1 100644
---- a/bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html
-+++ b/bitbake/lib/toaster/toastergui/templates/basebuilddetailpage.html
-@@ -1,4 +1,5 @@
- {% extends "base.html" %}
-+{% load project_url_tag %}
- {% load humanize %}
- {% block pagecontent %}
+diff --git a/bitbake/lib/toaster/toastergui/static/js/customrecipe.js b/bitbake/lib/toaster/toastergui/static/js/customrecipe.js
+index a1fe486..3c57899 100644
+--- a/bitbake/lib/toaster/toastergui/static/js/customrecipe.js
++++ b/bitbake/lib/toaster/toastergui/static/js/customrecipe.js
+@@ -127,7 +127,8 @@ function customRecipePageInit(ctx) {
+       if (targetPkg.hasOwnProperty('depsAdded') &&
+         targetPkg.depsAdded.length > 0) {
  
-@@ -6,8 +7,10 @@
- <!-- Breadcrumbs -->
-     <div class="section">
-         <ul class="breadcrumb" id="breadcrumb">
--            <li><a href="{% url 'project' build.project.id %}">{{build.project.name}}</a></li>
--            <li><a href="{% url 'projectbuilds' build.project.id %}">Builds</a></li>
-+            <li><a href="{% project_url build.project %}">{{build.project.name}}</a></li>
-+            {% if not build.project.is_default %}
-+                <li><a href="{% url 'projectbuilds' build.project.id %}">Builds</a></li>
-+            {% endif %}
-             <li><a href="{%url 'builddashboard' build.pk%}">{{build.get_sorted_target_list.0.target}} {%if build.target_set.all.count > 1%}(+{{build.target_set.all.count|add:"-1"}}){%endif%} {{build.machine}} ({{build.completed_on|date:"d/m/y H:i"}})</a></li>
-             {% block localbreadcrumb %}{% endblock %}
-         </ul>
-diff --git a/bitbake/lib/toaster/toastergui/templates/basebuildpage.html b/bitbake/lib/toaster/toastergui/templates/basebuildpage.html
-index 3571869..0dc71f5 100644
---- a/bitbake/lib/toaster/toastergui/templates/basebuildpage.html
-+++ b/bitbake/lib/toaster/toastergui/templates/basebuildpage.html
-@@ -1,5 +1,6 @@
- {% extends "base.html" %}
- {% load projecttags %}
-+{% load project_url_tag %}
- {% load humanize %}
- {% block pagecontent %}
+-        msg += "added " + (targetPkg.depsAdded.length + 1);
++        msg += "added ";
++        msg += "<strong>" + (targetPkg.depsAdded.length + 1) + "</strong>";
+         msg += " packages to " + ctx.recipe.name + ": ";
+         msg += "<strong>" + targetPkg.name + "</strong> and its dependencies";
  
-@@ -8,8 +9,10 @@
- <!-- Breadcrumbs -->
-     <div class="section">
-         <ul class="breadcrumb" id="breadcrumb">
--            <li><a href="{% url 'project' build.project.id %}">{{build.project.name}}</a></li>
--            <li><a href="{% url 'projectbuilds' build.project.id %}">Builds</a></li>
-+            <li><a href="{% project_url build.project %}">{{build.project.name}}</a></li>
-+            {% if not build.project.is_default %}
-+                <li><a href="{% url 'projectbuilds' build.project.id %}">Builds</a></li>
-+            {% endif %}
-             <li>
-             {% block parentbreadcrumb %}
-             <a href="{%url 'builddashboard' build.pk%}">
+@@ -150,7 +151,9 @@ function customRecipePageInit(ctx) {
+           (targetPkg.depsAdded.length + 1) + " packages added");
+ 
+       } else {
+-        msg += ' <strong>' + targetPkg.name + '<strong>';
++        msg += "added <strong>1</strong>";
++        msg += " package to " + ctx.recipe.name + ": ";
++        msg += "<strong>" + targetPkg.name + "</strong>";
+         inlineNotify.text("1 package added");
+       }
+ 
 -- 
 1.9.3
 
