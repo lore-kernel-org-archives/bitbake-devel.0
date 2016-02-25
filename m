@@ -1,20 +1,37 @@
-Return-Path: <brendan.le.foll@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 4DB397732F
+Return-Path: <alex@stunpix.com>
+Received: from forward10o.cmail.yandex.net (forward10o.cmail.yandex.net
+	[37.9.109.60])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CA737710D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Feb 2016 15:40:42 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 25 Feb 2016 07:40:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,498,1449561600"; d="scan'208";a="923800837"
-Received: from jupiter.iwi.intel.com ([172.28.33.51])
-	by fmsmga002.fm.intel.com with ESMTP; 25 Feb 2016 07:40:42 -0800
-From: brendan.le.foll@intel.com
+	Thu, 25 Feb 2016 16:32:50 +0000 (UTC)
+Received: from smtp1o.mail.yandex.net (smtp1o.mail.yandex.net
+	[IPv6:2a02:6b8:0:1a2d::25])
+	by forward10o.cmail.yandex.net (Yandex) with ESMTP id F19C321768
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 25 Feb 2016 19:32:48 +0300 (MSK)
+Received: from smtp1o.mail.yandex.net (localhost [127.0.0.1])
+	by smtp1o.mail.yandex.net (Yandex) with ESMTP id B8C7EDE129F
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 25 Feb 2016 19:32:48 +0300 (MSK)
+Received: by smtp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id
+	7Lu53dV1BH-Wm8qh22t; Thu, 25 Feb 2016 19:32:48 +0300
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+	(Client certificate not present)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stunpix.com; s=mail;
+	t=1456417968; bh=ERNE9g0IafGCHANdyDSXI7y3pm2aBAoYC6JPy6QlRLA=;
+	h=From:To:Subject:Date:Message-Id:X-Mailer;
+	b=QbSsisf9MpwqSnD2zvuSA3hAq9CmmfbywT/ZHZJdRqwycPpyVsWLV/cUj5r3AbnTJ
+	g6Z0Ed2nQXdJniL2xR5QIPjVpJ8KR9Ers2Dk8OS7ONSQlaj25WlUee46E/1E/pJcf7
+	ReR1Uj0BQYd4v3yyKopJKHbul3baZLQtfV+D8Xo4=
+Authentication-Results: smtp1o.mail.yandex.net; dkim=pass header.i=@stunpix.com
+X-Yandex-ForeignMX: US
+X-Yandex-Suid-Status: 1 0
+From: Alexander Shashkevich <alex@stunpix.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 25 Feb 2016 15:40:13 +0000
-Message-Id: <1456414813-22510-1-git-send-email-brendan.le.foll@intel.com>
-X-Mailer: git-send-email 2.7.1
-Subject: [PATCH v2] npm: Add npm fetcher
+Date: Thu, 25 Feb 2016 18:32:31 +0200
+Message-Id: <1456417951-11336-1-git-send-email-alex@stunpix.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] bb/fetch2: fixes copying of file://dir; subdir=foo, bug 6128 and bug 6129
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,259 +44,144 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 Feb 2016 15:40:44 -0000
+X-List-Received-Date: Thu, 25 Feb 2016 16:32:52 -0000
 
-From: Brendan Le Foll <brendan.le.foll@intel.com>
+When in SRC_URI appears file://dir;subdir=foo unpacker copies 'dir' to ${WORKDIR}, not
+${WORKDIR}/foo as it should be.
 
-npm fetcher with support for shrinkwrap files and lockdown files to easily
-download and install an npm package with strict dependency resolution.
+These changes are fixing following bugs as well:
+Bug 6128 - Incorrect wildcard unpack behaviour in fetcher
+Bug 6129 - Local directories unpack to a different location than local files
 
-The SRC_URI should be in the format of:
-SRC_URI = "npm://registry.npmjs.org/;name=${PN};version=${PV}"
-
-To add a shrinkwrap and lockdown file use:
-NPM_SHRINKWRAP := "${THISDIR}/${PN}/npm-shrinkwrap.json"
-NPM_LOCKDOWN := "${THISDIR}/${PN}/lockdown.json"
-
-Signed-off-by: Brendan Le Foll <brendan.le.foll@intel.com>
+Signed-off-by: Alexander Shashkevich <alex@stunpix.com>
 ---
- lib/bb/fetch2/npm.py | 226 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 226 insertions(+)
- create mode 100644 lib/bb/fetch2/npm.py
+ lib/bb/fetch2/__init__.py | 61 +++++++++++++++++++----------------------------
+ lib/bb/tests/fetch.py     | 12 ++++------
+ 2 files changed, 28 insertions(+), 45 deletions(-)
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-new file mode 100644
-index 0000000..54cf76d
---- /dev/null
-+++ b/lib/bb/fetch2/npm.py
-@@ -0,0 +1,226 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+"""
-+BitBake 'Fetch' NPM implementation
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index c3dcfd2..1d9a66f 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1343,6 +1343,11 @@ class FetchMethod(object):
+         iterate = False
+         file = urldata.localpath
+ 
++        # Localpath can't deal with 'dir/*' entries, so it converts them to '.',
++        # but it must be corrected back for local files copying
++        if urldata.basename == '*' and file.endswith('/.'):
++            file = '%s/%s' % (file.rstrip('/.'), urldata.path)
 +
-+The NPM fetcher is used to retrieve files from the npmjs repository
-+
-+Usage in the recipe:
-+
-+    SRC_URI = "npm://registry.npmjs.org/;name=${PN};version=${PV}"
-+    Suported SRC_URI options are:
-+
-+    - name
-+    - version
-+
-+    npm://registry.npmjs.org/${PN}/-/${PN}-${PV}.tgz  would become npm://registry.npmjs.org;name=${PN};ver=${PV}
-+    The fetcher all triggers off the existence of ud.localpath. If that exists and has the ".done" stamp, its assumed the fetch is good/done
-+
-+"""
-+
-+import os
-+import sys
-+import urllib
-+import json
-+import subprocess
-+import signal
-+import bb
-+from   bb import data
-+from   bb.fetch2 import FetchMethod
-+from   bb.fetch2 import FetchError
-+from   bb.fetch2 import ChecksumError
-+from   bb.fetch2 import runfetchcmd
-+from   bb.fetch2 import logger
-+from   bb.fetch2 import UnpackError
-+from   distutils import spawn
-+
-+def subprocess_setup():
-+    # Python installs a SIGPIPE handler by default. This is usually not what
-+    # non-Python subprocesses expect.
-+    # SIGPIPE errors are known issues with gzip/bash
-+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-+
-+class Npm(FetchMethod):
-+
-+    """Class to fetch urls via 'npm'"""
-+    def init(self, d):
-+        pass
-+
-+    def supports(self, ud, d):
-+        """
-+        Check to see if a given url can be fetched with npm
-+        """
-+        return ud.type in ['npm']
-+
-+    def debug(self, msg):
-+        logger.debug(1, "NpmFetch: %s", msg)
-+
-+    def clean(self, ud, d):
-+         logger.debug(2, "Calling cleanup %s" % ud.pkgname)
-+         bb.utils.remove(ud.localpath, False)
-+         bb.utils.remove(ud.pkgdatadir, True)
-+
-+    def urldata_init(self, ud, d):
-+        """
-+        init NPM specific variable within url data
-+        """
-+        if 'downloadfilename' in ud.parm:
-+            ud.basename = ud.parm['downloadfilename']
+         try:
+             unpack = bb.utils.to_boolean(urldata.parm.get('unpack'), True)
+         except ValueError as exc:
+@@ -1400,50 +1405,32 @@ class FetchMethod(object):
+             elif file.endswith('.7z'):
+                 cmd = '7za x -y %s 1>/dev/null' % file
+ 
++        # If 'subdir' param exists, create a dir and use it as destination for unpack cmd
++        if 'subdir' in urldata.parm:
++            unpackdir = '%s/%s' % (rootdir, urldata.parm.get('subdir'))
++            bb.utils.mkdirhier(unpackdir)
 +        else:
-+            ud.basename = os.path.basename(ud.path)
++            unpackdir = rootdir
 +
-+        # can't call it ud.name otherwise fetcher base class will start doing sha1stuff
-+        # TODO: find a way to get an sha1/sha256 manifest of pkg & all deps
-+        ud.pkgname = ud.parm.get("name", None)
-+        if not ud.pkgname:
-+            raise ParameterError("NPM fetcher requires a name parameter")
-+        ud.version = ud.parm.get("version", None)
-+        if not ud.version:
-+            raise ParameterError("NPM fetcher requires a version parameter")
-+        ud.bbnpmmanifest = "%s-%s.deps.json" % (ud.pkgname, ud.version)
-+        ud.registry = "http://%s" % ud.basename
-+        prefixdir = "npm/%s" % ud.pkgname
-+        ud.pkgdatadir = d.expand("${DL_DIR}/%s" % prefixdir)
-+        if not os.path.exists(ud.pkgdatadir):
-+            bb.utils.mkdirhiet(ud.pkgdatadir)
-+        ud.localpath = d.expand("${DL_DIR}/npm/%s" % ud.bbnpmmanifest)
-+
-+        self.basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -O -t 2 -T 30 -nv --passive-ftp --no-check-certificate "
-+        self.basecmd += " --directory-prefix=%s " % prefixdir
-+
-+    def need_update(self, ud, d):
-+        if os.path.exists(ud.localpath):
-+            return False
-+        return True
-+
-+    def _runwget(self, ud, d, command, quiet):
-+        logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
-+        bb.fetch2.check_network_access(d, command)
-+        runfetchcmd(command, d, quiet)
-+
-+    def _unpackdep(self, ud, pkg, data, destdir, dldir, d):
-+       file = data[pkg]['tgz']
-+       logger.debug(2, "file to extract is %s" % file)
-+       if file.endswith('.tgz') or file.endswith('.tar.gz') or file.endswith('.tar.Z'):
-+            cmd = 'tar xz --strip 1 --no-same-owner -f %s/%s' % (dldir, file)
-+       else:
-+            bb.fatal("NPM package %s downloaded not a tarball!" % file)
-+
-+       # Change to subdir before executing command
-+       save_cwd = os.getcwd()
-+       if not os.path.exists(destdir):
-+           os.makedirs(destdir)
-+       os.chdir(destdir)
-+       path = d.getVar('PATH', True)
-+       if path:
-+            cmd = "PATH=\"%s\" %s" % (path, cmd)
-+       bb.note("Unpacking %s to %s/" % (file, os.getcwd()))
-+       ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True)
-+       os.chdir(save_cwd)
-+
-+       if ret != 0:
-+            raise UnpackError("Unpack command %s failed with return value %s" % (cmd, ret), ud.url)
-+
-+       if 'deps' not in data[pkg]:
-+            return
-+       for dep in data[pkg]['deps']:
-+           self._unpackdep(ud, dep, data[pkg]['deps'], "%s/node_modules/%s" % (destdir, dep), dldir, d)
-+
-+
-+    def unpack(self, ud, destdir, d):
-+        dldir = d.getVar("DL_DIR", True)
-+        depdumpfile = "%s-%s.deps.json" % (ud.pkgname, ud.version)
-+        with open("%s/npm/%s" % (dldir, depdumpfile)) as datafile:
-+            workobj = json.load(datafile)
-+        dldir = "%s/%s" % (os.path.dirname(ud.localpath), ud.pkgname)
-+
-+        self._unpackdep(ud, ud.pkgname, workobj,  "%s/npmpkg" % destdir, dldir, d)
-+
-+    def _getdependencies(self, pkg, data, version, d, ud):
-+        pkgfullname = pkg
-+        if version:
-+            pkgfullname += "@%s" % version
-+        logger.debug(2, "Calling getdeps on %s" % pkg)
-+        fetchcmd = "npm view %s dist.tarball --registry %s" % (pkgfullname, ud.registry)
-+        output = runfetchcmd(fetchcmd, d, True)
-+        # npm may resolve multiple versions
-+        outputarray = output.strip().splitlines()
-+        # we just take the latest version npm resolved
-+        #logger.debug(2, "Output URL is %s - %s - %s" % (ud.basepath, ud.basename, ud.localfile))
-+        outputurl = outputarray[len(outputarray)-1].rstrip()
-+        if (len(outputarray) > 1):
-+            # remove the preceding version/name from npm output and then the
-+            # first and last quotes
-+            outputurl = outputurl.split(" ")[1][1:-1]
-+        data[pkg] = {}
-+        data[pkg]['tgz'] = os.path.basename(outputurl)
-+        self._runwget(ud, d, "%s %s" % (self.basecmd, outputurl), False)
-+        #fetchcmd = "npm view %s@%s dependencies --json" % (pkg, version)
-+        fetchcmd = "npm view %s dependencies --json --registry %s" % (pkgfullname, ud.registry)
-+        output = runfetchcmd(fetchcmd, d, True)
-+        try:
-+          depsfound = json.loads(output)
-+        except:
-+            # just assume there is no deps to be loaded here
-+            return
-+        data[pkg]['deps'] = {}
-+        for dep, version in depsfound.iteritems():
-+            self._getdependencies(dep, data[pkg]['deps'], version, d, ud)
-+
-+    def _getshrinkeddependencies(self, pkg, data, version, d, ud, lockdown, manifest):
-+        logger.debug(2, "NPM shrinkwrap file is %s" % data)
-+        outputurl = "invalid"
-+        if ('resolved' not in data):
-+            # will be the case for ${PN}
-+            fetchcmd = "npm view %s@%s dist.tarball --registry %s" % (pkg, version, ud.registry)
-+            logger.debug(2, "Found this matching URL: %s" % str(fetchcmd))
-+            outputurl = runfetchcmd(fetchcmd, d, True)
-+        else:
-+            outputurl = data['resolved']
-+        self._runwget(ud, d, "%s %s" % (self.basecmd, outputurl), False)
-+        manifest[pkg] = {}
-+        manifest[pkg]['tgz'] = os.path.basename(outputurl).rstrip()
-+        manifest[pkg]['deps'] = {}
-+
-+        if pkg in lockdown:
-+            sha1_expected = lockdown[pkg][version]
-+            sha1_data = bb.utils.sha1_file("npm/%s/%s" % (ud.pkgname, manifest[pkg]['tgz']))
-+            if sha1_expected != sha1_data:
-+                msg = "\nFile: '%s' has %s checksum %s when %s was expected" % (manifest[pkg]['tgz'], 'sha1', sha1_data, sha1_expected)
-+                raise ChecksumError('Checksum mismatch!%s' % msg)
-+        else:
-+            logger.debug(2, "No lockdown data for %s@%s" % (pkg, version))
-+
-+        if 'dependencies' in data:
-+            for obj in data['dependencies']:
-+                logger.debug(2, "Found dep is %s" % str(obj))
-+                self._getshrinkeddependencies(obj, data['dependencies'][obj], data['dependencies'][obj]['version'], d, ud, lockdown, manifest[pkg]['deps'])
-+
-+    def download(self, ud, d):
-+        """Fetch url"""
-+        jsondepobj = {}
-+        shrinkobj = {}
-+        lockdown = {}
-+
-+        shwrf = d.getVar('NPM_SHRINKWRAP', True)
-+        logger.debug(2, "NPM shrinkwrap file is %s" % shwrf)
-+        try:
-+            with open(shwrf) as datafile:
-+                shrinkobj = json.load(datafile)
-+        except:
-+            logger.warn('Missing shrinkwrap file in NPM_SHRINKWRAP for %s, this will lead to unreliable builds!' % ud.pkgname)
-+        lckdf = d.getVar('NPM_LOCKDOWN', True)
-+        logger.debug(2, "NPM lockdown file is %s" % lckdf)
-+        try:
-+            with open(lckdf) as datafile:
-+                lockdown = json.load(datafile)
-+        except:
-+            logger.warn('Missing lockdown file in NPM_LOCKDOWN for %s, this will lead to unreproducible builds!' % ud.pkgname)
-+
-+        if ('name' not in shrinkobj):
-+            self._getdependencies(ud.pkgname, jsondepobj, ud.version, d, ud)
-+        else:
-+            self._getshrinkeddependencies(ud.pkgname, shrinkobj, ud.version, d, ud, lockdown, jsondepobj)
-+
-+        with open(ud.localpath, 'w') as outfile:
-+            json.dump(jsondepobj, outfile)
+         if not unpack or not cmd:
+             # If file == dest, then avoid any copies, as we already put the file into dest!
+-            dest = os.path.join(rootdir, os.path.basename(file))
+-            if (file != dest) and not (os.path.exists(dest) and os.path.samefile(file, dest)):
+-                if os.path.isdir(file):
+-                    # If for example we're asked to copy file://foo/bar, we need to unpack the result into foo/bar
+-                    basepath = getattr(urldata, "basepath", None)
+-                    destdir = "."
+-                    if basepath and basepath.endswith("/"):
+-                        basepath = basepath.rstrip("/")
+-                    elif basepath:
+-                        basepath = os.path.dirname(basepath)
+-                    if basepath and basepath.find("/") != -1:
+-                        destdir = basepath[:basepath.rfind('/')]
+-                        destdir = destdir.strip('/')
+-                    if destdir != "." and not os.access("%s/%s" % (rootdir, destdir), os.F_OK):
+-                        os.makedirs("%s/%s" % (rootdir, destdir))
+-                    cmd = 'cp -fpPR %s %s/%s/' % (file, rootdir, destdir)
+-                    #cmd = 'tar -cf - -C "%d" -ps . | tar -xf - -C "%s/%s/"' % (file, rootdir, destdir)
+-                else:
+-                    # The "destdir" handling was specifically done for FILESPATH
+-                    # items.  So, only do so for file:// entries.
+-                    if urldata.type == "file" and urldata.path.find("/") != -1:
+-                       destdir = urldata.path.rsplit("/", 1)[0]
+-                       if urldata.parm.get('subdir') != None:
+-                          destdir = urldata.parm.get('subdir') + "/" + destdir
+-                    else:
+-                       if urldata.parm.get('subdir') != None:
+-                          destdir = urldata.parm.get('subdir')
+-                       else:
+-                          destdir = "."
+-                    bb.utils.mkdirhier("%s/%s" % (rootdir, destdir))
+-                    cmd = 'cp -f %s %s/%s/' % (file, rootdir, destdir)
++            dest = os.path.join(unpackdir, os.path.basename(file))
++            if file != dest and not (os.path.exists(dest) and os.path.samefile(file, dest)):
++                destdir = '.'
++                # For file:// entries all intermediate dirs in path must be created at destination
++                if urldata.type == "file":
++                    urlpath = urldata.path.rstrip('/') # Trailing '/' does a copying to wrong place
++                    if urlpath.find("/") != -1:
++                        destdir = urlpath.rsplit("/", 1)[0] + '/'
++                        bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
++                cmd = 'cp -fpPR %s %s' % (file, destdir)
+ 
+         if not cmd:
+             return
+ 
+-        # Change to subdir before executing command
++        # Change to unpackdir before executing command
+         save_cwd = os.getcwd();
+-        os.chdir(rootdir)
+-        if 'subdir' in urldata.parm:
+-            newdir = ("%s/%s" % (rootdir, urldata.parm.get('subdir')))
+-            bb.utils.mkdirhier(newdir)
+-            os.chdir(newdir)
++        os.chdir(unpackdir)
+ 
+         path = data.getVar('PATH', True)
+         if path:
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 81b22d0..850e2ba 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -451,9 +451,7 @@ class FetcherLocalTest(FetcherTest):
+ 
+     def test_local_wildcard(self):
+         tree = self.fetchUnpack(['file://a', 'file://dir/*'])
+-        # FIXME: this is broken - it should return ['a', 'dir/c', 'dir/d', 'dir/subdir/e']
+-        # see https://bugzilla.yoctoproject.org/show_bug.cgi?id=6128
+-        self.assertEqual(tree, ['a', 'b', 'dir/c', 'dir/d', 'dir/subdir/e'])
++        self.assertEqual(tree, ['a',  'dir/c', 'dir/d', 'dir/subdir/e'])
+ 
+     def test_local_dir(self):
+         tree = self.fetchUnpack(['file://a', 'file://dir'])
+@@ -461,17 +459,15 @@ class FetcherLocalTest(FetcherTest):
+ 
+     def test_local_subdir(self):
+         tree = self.fetchUnpack(['file://dir/subdir'])
+-        # FIXME: this is broken - it should return ['dir/subdir/e']
+-        # see https://bugzilla.yoctoproject.org/show_bug.cgi?id=6129
+-        self.assertEqual(tree, ['subdir/e'])
++        self.assertEqual(tree, ['dir/subdir/e'])
+ 
+     def test_local_subdir_file(self):
+         tree = self.fetchUnpack(['file://dir/subdir/e'])
+         self.assertEqual(tree, ['dir/subdir/e'])
+ 
+     def test_local_subdirparam(self):
+-        tree = self.fetchUnpack(['file://a;subdir=bar'])
+-        self.assertEqual(tree, ['bar/a'])
++        tree = self.fetchUnpack(['file://a;subdir=bar', 'file://dir;subdir=foo/moo'])
++        self.assertEqual(tree, ['bar/a', 'foo/moo/dir/c', 'foo/moo/dir/d', 'foo/moo/dir/subdir/e'])
+ 
+     def test_local_deepsubdirparam(self):
+         tree = self.fetchUnpack(['file://dir/subdir/e;subdir=bar'])
 -- 
-2.7.1
+2.1.4
 
 
