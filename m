@@ -1,31 +1,44 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 748967743E
+Return-Path: <alex@stunpix.com>
+X-Greylist: delayed 466 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 26 Feb 2016 17:26:35 UTC
+Received: from forward10j.cmail.yandex.net (forward10j.cmail.yandex.net
+	[5.255.227.111])
+	by mail.openembedded.org (Postfix) with ESMTP id CF94D7744C
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Feb 2016 17:11:27 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u1QHBRGw006138; Fri, 26 Feb 2016 17:11:27 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id BcM67v-mHhGp; Fri, 26 Feb 2016 17:11:27 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u1QHBOuE006134
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 26 Feb 2016 17:11:25 GMT
-Message-ID: <1456506683.11498.86.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Sasha Shashkevich <alex@stunpix.com>
-Date: Fri, 26 Feb 2016 17:11:23 +0000
+	Fri, 26 Feb 2016 17:26:35 +0000 (UTC)
+Received: from smtp11.mail.yandex.net (smtp11.mail.yandex.net
+	[IPv6:2a02:6b8:0:801:1::10])
+	by forward10j.cmail.yandex.net (Yandex) with ESMTP id C947121C91;
+	Fri, 26 Feb 2016 20:18:48 +0300 (MSK)
+Received: from smtp11.mail.yandex.net (localhost [127.0.0.1])
+	by smtp11.mail.yandex.net (Yandex) with ESMTP id 6A9F87E0FC9;
+	Fri, 26 Feb 2016 20:18:48 +0300 (MSK)
+Received: by smtp11.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id
+	zW3gAfeAJc-Il98tCR2; Fri, 26 Feb 2016 20:18:47 +0300
+	(using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
+	(Client certificate not present)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stunpix.com; s=mail;
+	t=1456507127; bh=oDtCGvpl3i/qbDxw5GxAGZyJo8b874iT1EtYPvxYIDg=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	Message-Id:References:To:X-Mailer;
+	b=K0+b0BkaZmDlrqhFsKmC+5TNPUZbkdIMP3D/8R4TZoaWGPfTBYx4DJ65/Nwa3FBlp
+	1c92UES/d9HIQBITj9xexlINPOQvrbqvis8d2hSxxkLdRiNXpFoskxGF1lnxc6sQ1p
+	gqsz9J6EDOO00LQP4ATophE/bQcb+tBxUmDmdjiE=
+Authentication-Results: smtp11.mail.yandex.net; dkim=pass header.i=@stunpix.com
+X-Yandex-ForeignMX: US
+X-Yandex-Suid-Status: 1 0,1 0
+Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
+From: Sasha Shashkevich <alex@stunpix.com>
 In-Reply-To: <1456505497.11498.81.camel@linuxfoundation.org>
+Date: Fri, 26 Feb 2016 19:18:46 +0200
+Message-Id: <0F5E2825-BB0A-4726-AA17-FD42D87826A0@stunpix.com>
 References: <1456417951-11336-1-git-send-email-alex@stunpix.com>
 	<1456483880.11498.68.camel@linuxfoundation.org>
 	<8F8D0DA4-2383-4900-A0C6-9AAEA334C568@stunpix.com>
 	<1456487187.11498.70.camel@linuxfoundation.org>
 	<1456505497.11498.81.camel@linuxfoundation.org>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3112)
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] bb/fetch2: fixes copying of file://dir; subdir=foo, bug 6128 and bug 6129
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -40,91 +53,182 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 26 Feb 2016 17:11:29 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 26 Feb 2016 17:26:36 -0000
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_A7B3C320-9E13-4E10-9337-F1A923E41251"
 
-On Fri, 2016-02-26 at 16:51 +0000, Richard Purdie wrote:
-> On Fri, 2016-02-26 at 11:46 +0000, Richard Purdie wrote:
-> > On Fri, 2016-02-26 at 13:30 +0200, Sasha Shashkevich wrote:
-> > > > On Feb 26, 2016, at 12:51, Richard Purdie <
-> > > > richard.purdie@linuxfoundation.org> wrote:
-> > > > 
-> > > > On Thu, 2016-02-25 at 18:32 +0200, Alexander Shashkevich wrote:
-> > > > > When in SRC_URI appears file://dir;subdir=foo unpacker copies
-> > > > > 'dir'
-> > > > > to ${WORKDIR}, not
-> > > > > ${WORKDIR}/foo as it should be.
-> > > > > 
-> > > > > These changes are fixing following bugs as well:
-> > > > > Bug 6128 - Incorrect wildcard unpack behaviour in fetcher
-> > > > > Bug 6129 - Local directories unpack to a different location
-> > > > > than
-> > > > > local files
-> > > > 
-> > > > Sadly, this change isn't without side effects. For example:
-> > > > 
-> > > > https://autobuilder.yoctoproject.org/main/builders/nightly-x86-
-> > > > 64
-> > > > /b
-> > > > uilds/680/steps/Building%20Toolchain%20Images/logs/stdio
-> > > > 
-> > > > > NOTE: Unpacking /home/pokybuild/yocto-autobuilder/yocto
-> > > > > -worker/nightly-x86-64/build/scripts/runqemu to
-> > > > > /home/pokybuild/yocto-autobuilder/yocto-worker/nightly-x86
-> > > > > -64/build/build/tmp/work/i686-nativesdk-pokysdk
-> > > > > -linux/nativesdk
-> > > > > -qemu-helper/1.0-r9/
-> > > > > cp: `/home/pokybuild/yocto-autobuilder/yocto-worker/nightly
-> > > > > -x86
-> > > > > -64/build/scripts/runqemu' and `/home/pokybuild/yocto
-> > > > > -autobuilder/yocto-worker/nightly-x86
-> > > > > -64/build/scripts/runqemu'
-> > > > > are the same file
-> > > > > DEBUG: Python function base_do_unpack finished
-> > > > > DEBUG: Python function do_unpack finished
-> > > 
-> > > 
-> > > Despite all tests were successfully passed, something remains
-> > > incorrect. Very sensitive feature. I'll check what is wrong and
-> > > supply additional test cases with updated patch. Seems I need to
-> > > build several configurations locally before submitting such
-> > > patches
-> > > –
-> > > just tests are not enough.
-> > 
-> > Yes, sadly our tests aren't entirely complete. I'd much appreciate
-> > added test cases if we can figure out what the issue is.
-> > 
-> > This change does introduce a change in behaviour, admittedly one
-> > where
-> > we think the current behaviour is incorrect. It is possible recipes
-> > are
-> > relying on that incorrect behaviour though and they may need
-> > adjusting.
-> 
+--Apple-Mail=_A7B3C320-9E13-4E10-9337-F1A923E41251
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+
+>>>>> NOTE: Unpacking /home/pokybuild/yocto-autobuilder/yocto
+>>>>> -worker/nightly-x86-64/build/scripts/runqemu to
+>>>>> /home/pokybuild/yocto-autobuilder/yocto-worker/nightly-x86
+>>>>> -64/build/build/tmp/work/i686-nativesdk-pokysdk-linux/nativesdk
+>>>>> -qemu-helper/1.0-r9/
+>>>>> cp: `/home/pokybuild/yocto-autobuilder/yocto-worker/nightly-x86
+>>>>> -64/build/scripts/runqemu' and `/home/pokybuild/yocto
+>>>>> -autobuilder/yocto-worker/nightly-x86-64/build/scripts/runqemu'
+>>>>> are the same file
+>>>>> DEBUG: Python function base_do_unpack finished
+>>>>> DEBUG: Python function do_unpack finished
+>>>=20
+>>>=20
+>>> Despite all tests were successfully passed, something remains
+>>> incorrect. Very sensitive feature. I'll check what is wrong and
+>>> supply additional test cases with updated patch. Seems I need to
+>>> build several configurations locally before submitting such patches
+>>> =E2=80=93
+>>> just tests are not enough.
+>>=20
+>> Yes, sadly our tests aren't entirely complete. I'd much appreciate
+>> added test cases if we can figure out what the issue is.
+>>=20
+>> This change does introduce a change in behaviour, admittedly one
+>> where
+>> we think the current behaviour is incorrect. It is possible recipes
+>> are
+>> relying on that incorrect behaviour though and they may need
+>> adjusting.
+>=20
 > FWIW, a:
-> 
-> -                if urldata.type == "file":
-> +                if urldata.type == "file" and not
-> urldata.path.startswith("/"):
-> 
-> did seem to fix the failing recipe which was doing something valid.
-> What 
+>=20
+> -                if urldata.type =3D=3D "file":
+> +                if urldata.type =3D=3D "file" and not =
+urldata.path.startswith("/"):
+>=20
+> did seem to fix the failing recipe which was doing something valid. =
+What=20
 > effect elsewhere this has I haven't checked.
+>=20
 
-I'm wrong, the correct fix appears to be:
+Yep, that's the reason: SRC_URI could contain absolute paths. Thank you =
+for finding that. I'll check the rest of build and send patch #3.
 
--                    urlpath = urldata.path.rstrip('/') # Trailing '/' does a copying to wrong place
-+                    # Trailing '/' does a copying to wrong place
-+                    urlpath = urldata.path.rstrip('/')
-+                    # Want files places relative to cwd so no leading '/'
-+                    urldata.path.lstrip('/')
+Regards,
+Alexander=
 
-and we're missing a test case with absolute file:// urls.
+--Apple-Mail=_A7B3C320-9E13-4E10-9337-F1A923E41251
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
 
-Cheers,
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html =
+charset=3Dutf-8"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
+class=3D""><br class=3D""><div><blockquote type=3D"cite" class=3D""><div =
+class=3D""><blockquote type=3D"cite" style=3D"font-family: Helvetica; =
+font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
+normal; letter-spacing: normal; orphans: auto; text-align: start; =
+text-indent: 0px; text-transform: none; white-space: normal; widows: =
+auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
+class=3D""><blockquote type=3D"cite" class=3D""><blockquote type=3D"cite" =
+class=3D""><blockquote type=3D"cite" class=3D"">NOTE: Unpacking =
+/home/pokybuild/yocto-autobuilder/yocto<br =
+class=3D"">-worker/nightly-x86-64/build/scripts/runqemu to<br =
+class=3D"">/home/pokybuild/yocto-autobuilder/yocto-worker/nightly-x86<br =
+class=3D"">-64/build/build/tmp/work/i686-nativesdk-pokysdk-linux/nativesdk=
+<br class=3D"">-qemu-helper/1.0-r9/<br class=3D"">cp: =
+`/home/pokybuild/yocto-autobuilder/yocto-worker/nightly-x86<br =
+class=3D"">-64/build/scripts/runqemu' and `/home/pokybuild/yocto<br =
+class=3D"">-autobuilder/yocto-worker/nightly-x86-64/build/scripts/runqemu'=
+<br class=3D"">are the same file<br class=3D"">DEBUG: Python function =
+base_do_unpack finished<br class=3D"">DEBUG: Python function do_unpack =
+finished<br class=3D""></blockquote></blockquote><br class=3D""><br =
+class=3D"">Despite all tests were successfully passed, something =
+remains<br class=3D"">incorrect. Very sensitive feature. I'll check what =
+is wrong and<br class=3D"">supply additional test cases with updated =
+patch. Seems I need to<br class=3D"">build several configurations =
+locally before submitting such patches<br class=3D"">=E2=80=93<br =
+class=3D"">just tests are not enough.<br class=3D""></blockquote><br =
+class=3D"">Yes, sadly our tests aren't entirely complete. I'd much =
+appreciate<br class=3D"">added test cases if we can figure out what the =
+issue is.<br class=3D""><br class=3D"">This change does introduce a =
+change in behaviour, admittedly one<br class=3D"">where<br class=3D"">we =
+think the current behaviour is incorrect. It is possible recipes<br =
+class=3D"">are<br class=3D"">relying on that incorrect behaviour though =
+and they may need<br class=3D"">adjusting.<br class=3D""></blockquote><br =
+style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
+font-variant: normal; font-weight: normal; letter-spacing: normal; =
+orphans: auto; text-align: start; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: auto; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
+Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
+font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
+start; text-indent: 0px; text-transform: none; white-space: normal; =
+widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
+none; display: inline !important;" class=3D"">FWIW, a:</span><br =
+style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
+font-variant: normal; font-weight: normal; letter-spacing: normal; =
+orphans: auto; text-align: start; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: auto; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px;" class=3D""><br style=3D"font-family: =
+Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
+font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
+start; text-indent: 0px; text-transform: none; white-space: normal; =
+widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
+class=3D""><span style=3D"font-family: Helvetica; font-size: 12px; =
+font-style: normal; font-variant: normal; font-weight: normal; =
+letter-spacing: normal; orphans: auto; text-align: start; text-indent: =
+0px; text-transform: none; white-space: normal; widows: auto; =
+word-spacing: 0px; -webkit-text-stroke-width: 0px; float: none; display: =
+inline !important;" class=3D"">- =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;if urldata.type =3D=3D "file":</span><br =
+style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
+font-variant: normal; font-weight: normal; letter-spacing: normal; =
+orphans: auto; text-align: start; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: auto; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
+Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
+font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
+start; text-indent: 0px; text-transform: none; white-space: normal; =
+widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
+none; display: inline !important;" class=3D"">+ =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;if urldata.type =3D=3D "file" and not =
+urldata.path.startswith("/"):</span><br style=3D"font-family: Helvetica; =
+font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
+normal; letter-spacing: normal; orphans: auto; text-align: start; =
+text-indent: 0px; text-transform: none; white-space: normal; widows: =
+auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" class=3D""><br =
+style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
+font-variant: normal; font-weight: normal; letter-spacing: normal; =
+orphans: auto; text-align: start; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: auto; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
+Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
+font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
+start; text-indent: 0px; text-transform: none; white-space: normal; =
+widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
+none; display: inline !important;" class=3D"">did seem to fix the =
+failing recipe which was doing something valid. What<span =
+class=3D"Apple-converted-space">&nbsp;</span></span><br =
+style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
+font-variant: normal; font-weight: normal; letter-spacing: normal; =
+orphans: auto; text-align: start; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: auto; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
+Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
+font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
+start; text-indent: 0px; text-transform: none; white-space: normal; =
+widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
+none; display: inline !important;" class=3D"">effect elsewhere this has =
+I haven't checked.</span><br style=3D"font-family: Helvetica; font-size: =
+12px; font-style: normal; font-variant: normal; font-weight: normal; =
+letter-spacing: normal; orphans: auto; text-align: start; text-indent: =
+0px; text-transform: none; white-space: normal; widows: auto; =
+word-spacing: 0px; -webkit-text-stroke-width: 0px;" class=3D""><br =
+style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
+font-variant: normal; font-weight: normal; letter-spacing: normal; =
+orphans: auto; text-align: start; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: auto; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px;" class=3D""></div></blockquote><div><br =
+class=3D""></div>Yep, that's the reason: SRC_URI could contain absolute =
+paths. Thank you for finding that. I'll check the rest of build and send =
+patch #3.</div><br class=3D""><div class=3D"">Regards,</div><div =
+class=3D"">Alexander</div></body></html>=
 
-Richard
-
-
+--Apple-Mail=_A7B3C320-9E13-4E10-9337-F1A923E41251--
