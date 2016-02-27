@@ -1,44 +1,47 @@
-Return-Path: <alex@stunpix.com>
-Received: from forward11j.cmail.yandex.net (forward11j.cmail.yandex.net
-	[5.255.227.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 3BA1D7391A
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pf0-f196.google.com (mail-pf0-f196.google.com
+	[209.85.192.196])
+	by mail.openembedded.org (Postfix) with ESMTP id 9B7746FFE2
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 27 Feb 2016 17:24:12 +0000 (UTC)
-Received: from smtp13.mail.yandex.net (smtp13.mail.yandex.net [95.108.130.68])
-	by forward11j.cmail.yandex.net (Yandex) with ESMTP id 42CC4214F5;
-	Sat, 27 Feb 2016 20:23:49 +0300 (MSK)
-Received: from smtp13.mail.yandex.net (localhost [127.0.0.1])
-	by smtp13.mail.yandex.net (Yandex) with ESMTP id D3030E4044C;
-	Sat, 27 Feb 2016 20:23:48 +0300 (MSK)
-Received: by smtp13.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id
-	hDR5lPaLz8-Nmo0BEEw; Sat, 27 Feb 2016 20:23:48 +0300
-	(using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-	(Client certificate not present)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stunpix.com; s=mail;
-	t=1456593828; bh=TP9hEe9ZYgfftcXYPJ9VwmMAe72rt0aoBLsAlUEaRms=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	Message-Id:References:To:X-Mailer;
-	b=Wn4a43+5eFc7hZNt+oqTTHIy6SRwxQRLyvxONt1flcTYlCJgdQZ7zJ0aPnpDbrP0Y
-	Em8JPyVhiTBUuenC5e9EJMGD3uHXVMyMXUIPoIQsReQCaLU2PsQGtbh2jWCWnRNY46
-	f3aeGSbEzLiD6pGqNZcR01bxKAaTyV9FGDlB8Pyc=
-Authentication-Results: smtp13.mail.yandex.net; dkim=pass header.i=@stunpix.com
-X-Yandex-ForeignMX: US
-X-Yandex-Suid-Status: 1 0,1 0
-Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
-From: Sasha Shashkevich <alex@stunpix.com>
-In-Reply-To: <0F5E2825-BB0A-4726-AA17-FD42D87826A0@stunpix.com>
-Date: Sat, 27 Feb 2016 19:22:43 +0200
-Message-Id: <01A7B622-DF74-45F2-B9AA-E64522ED3E31@stunpix.com>
-References: <1456417951-11336-1-git-send-email-alex@stunpix.com>
-	<1456483880.11498.68.camel@linuxfoundation.org>
-	<8F8D0DA4-2383-4900-A0C6-9AAEA334C568@stunpix.com>
-	<1456487187.11498.70.camel@linuxfoundation.org>
-	<1456505497.11498.81.camel@linuxfoundation.org>
-	<0F5E2825-BB0A-4726-AA17-FD42D87826A0@stunpix.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3112)
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bb/fetch2: fixes copying of file://dir; subdir=foo, bug 6128 and bug 6129
+	Sat, 27 Feb 2016 21:54:42 +0000 (UTC)
+Received: by mail-pf0-f196.google.com with SMTP id 184so898970pff.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 27 Feb 2016 13:54:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=tMSmnhmRCmpFHxCxIsxS0yHSrnunfGDyPkI0dxtW87w=;
+	b=P+ZFhSb3bJSRbVWTgFPzy8i0M26VxyGP3iPhdzjHeTb7FqKm9p9Gj0DgjtHMTO93Sr
+	uMoP67FyDZrahIHXhccSPwzkERdUlUYy7CAffgPhvQ8Hugz2psLBnUxEf7bspptJktA/
+	XAH6gYa8YOeoUHOkYtsKSaZJ+ffKMqoeTEzykVmBxChtx9WzAG7EcRp1K7icHDBtFHNs
+	IALuhV8p+ebJStClGfTSu13iINxfeI813p53mZFPAAevRAUilJ2r9zkYG0dnORXmiqko
+	5XesX325cqQV+fWpZIyRvzKVzfBqWwL765PzB6EtmM3EihohRM7X75ZyNa++RYTSLLkJ
+	9Edw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=tMSmnhmRCmpFHxCxIsxS0yHSrnunfGDyPkI0dxtW87w=;
+	b=J+PdLGSKegm3i2mdGaKByC9LI4hkEeAALLfWGP1tep8T0S1qcpQ77JT68p8jZJGGFp
+	m8RptbqAST/8J/lZxBYxfrf74cKmmRP4OJwb6WFgPratwcBuMg3CTYZdAsxSpEK7fzTt
+	oQeW7BJUaq5YVNs0RoFJVjHESVye/6e0VAPrk+H6rMLAi0MUAbax7OdXryuzb4LvchzB
+	6NmzKkrpLTLBsP4rSVjvKC5NEnF5HvWg4mYGp3dtVlmrRrPESxjw3IH9uY2XTNHprhLS
+	0bZHFRnVbmxrCIeGMzhvYrsGIRxujSVs9hodEaAFfz/QPJ82UhpK5vaZXrl8Wl9+CICy
+	yLAA==
+X-Gm-Message-State: AD7BkJIUnP+74XLzLc+GDWuYQOUrU6d+YPDdbnPu4o2h49ZA6nOi4py6G9lhhRCLyt1kIw==
+X-Received: by 10.98.74.144 with SMTP id c16mr11828735pfj.129.1456610083014;
+	Sat, 27 Feb 2016 13:54:43 -0800 (PST)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	i13sm28033083pfi.95.2016.02.27.13.54.42
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Sat, 27 Feb 2016 13:54:42 -0800 (PST)
+From: brian avery <avery.brian@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sat, 27 Feb 2016 14:00:44 -0800
+Message-Id: <cover.1456610242.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Cc: bavery <brian.avery@intel.com>
+Subject: [PATCH 0/1] bitbake: Remove Hob ui
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,169 +54,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 27 Feb 2016 17:24:15 -0000
-Content-Type: multipart/alternative;
-	boundary="Apple-Mail=_A4795846-2CAE-4BA3-B637-7B9034FBD737"
+X-List-Received-Date: Sat, 27 Feb 2016 21:54:45 -0000
 
---Apple-Mail=_A4795846-2CAE-4BA3-B637-7B9034FBD737
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+This patch removes the hob ui from bitbake as it's functionality is being replaced
+by Toaster in the upcoming release.  Note that there are still some files like
+lib/bb/ui/crumbs/hobcolor.py that remain since some of the other gtk based uis
+use these.
 
+-bavery
 
->>>> Despite all tests were successfully passed, something remains
->>>> incorrect. Very sensitive feature. I'll check what is wrong and
->>>> supply additional test cases with updated patch. Seems I need to
->>>> build several configurations locally before submitting such patches
->>>> =E2=80=93
->>>> just tests are not enough.
->>>=20
->>> Yes, sadly our tests aren't entirely complete. I'd much appreciate
->>> added test cases if we can figure out what the issue is.
->>>=20
->>> This change does introduce a change in behaviour, admittedly one
->>> where
->>> we think the current behaviour is incorrect. It is possible recipes
->>> are
->>> relying on that incorrect behaviour though and they may need
->>> adjusting.
->>=20
->> FWIW, a:
->>=20
->> -                if urldata.type =3D=3D "file":
->> +                if urldata.type =3D=3D "file" and not =
-urldata.path.startswith("/"):
->>=20
->> did seem to fix the failing recipe which was doing something valid. =
-What=20
->> effect elsewhere this has I haven't checked.
->>=20
->=20
-> Yep, that's the reason: SRC_URI could contain absolute paths. Thank =
-you for finding that. I'll check the rest of build and send patch #3.
+The following changes since commit e0fd96442a20e3fe7953bf38fc02520cd0dd4d6a:
 
-Some other recipes are still failing even with your suggestion. WIP. =
-This isn't my high prio task in project, so it takes some time to fix =
-all cases.
+  bitbake: toaster: change 'delete layer' to 'remove layer' (2016-02-26 17:20:38 +0000)
 
-Regards,
-Alexander
+are available in the git repository at:
 
+  git://git.yoctoproject.org/poky-contrib bavery/bitbake/removeHob
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/bitbake/removeHob
 
---Apple-Mail=_A4795846-2CAE-4BA3-B637-7B9034FBD737
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html;
-	charset=utf-8
+bavery (1):
+  hob: removal of hob ui and associated ui files
 
-<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html =
-charset=3Dutf-8"></head><body style=3D"word-wrap: break-word; =
--webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
-class=3D""><br class=3D""><div><blockquote type=3D"cite" class=3D""><div =
-class=3D""><div style=3D"word-wrap: break-word; -webkit-nbsp-mode: =
-space; -webkit-line-break: after-white-space;" class=3D""><div =
-class=3D""><blockquote type=3D"cite" class=3D""><div =
-class=3D""><blockquote type=3D"cite" style=3D"font-family: Helvetica; =
-font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
-normal; letter-spacing: normal; orphans: auto; text-align: start; =
-text-indent: 0px; text-transform: none; white-space: normal; widows: =
-auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><blockquote type=3D"cite" class=3D"">Despite all tests were =
-successfully passed, something remains<br class=3D"">incorrect. Very =
-sensitive feature. I'll check what is wrong and<br class=3D"">supply =
-additional test cases with updated patch. Seems I need to<br =
-class=3D"">build several configurations locally before submitting such =
-patches<br class=3D"">=E2=80=93<br class=3D"">just tests are not =
-enough.<br class=3D""></blockquote><br class=3D"">Yes, sadly our tests =
-aren't entirely complete. I'd much appreciate<br class=3D"">added test =
-cases if we can figure out what the issue is.<br class=3D""><br =
-class=3D"">This change does introduce a change in behaviour, admittedly =
-one<br class=3D"">where<br class=3D"">we think the current behaviour is =
-incorrect. It is possible recipes<br class=3D"">are<br class=3D"">relying =
-on that incorrect behaviour though and they may need<br =
-class=3D"">adjusting.<br class=3D""></blockquote><br style=3D"font-family:=
- Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><span style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; orphans: auto; text-align: start; text-indent: =
-0px; text-transform: none; white-space: normal; widows: auto; =
-word-spacing: 0px; -webkit-text-stroke-width: 0px; float: none; display: =
-inline !important;" class=3D"">FWIW, a:</span><br style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" =
-class=3D""><br style=3D"font-family: Helvetica; font-size: 12px; =
-font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; orphans: auto; text-align: start; text-indent: =
-0px; text-transform: none; white-space: normal; widows: auto; =
-word-spacing: 0px; -webkit-text-stroke-width: 0px;" class=3D""><span =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px; float: none; display: inline =
-!important;" class=3D"">- =
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;if urldata.type =3D=3D "file":</span><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
-none; display: inline !important;" class=3D"">+ =
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;if urldata.type =3D=3D "file" and not =
-urldata.path.startswith("/"):</span><br style=3D"font-family: Helvetica; =
-font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
-normal; letter-spacing: normal; orphans: auto; text-align: start; =
-text-indent: 0px; text-transform: none; white-space: normal; widows: =
-auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;" class=3D""><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
-none; display: inline !important;" class=3D"">did seem to fix the =
-failing recipe which was doing something valid. What<span =
-class=3D"Apple-converted-space">&nbsp;</span></span><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""><span style=3D"font-family: =
-Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; orphans: auto; text-align: =
-start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; float: =
-none; display: inline !important;" class=3D"">effect elsewhere this has =
-I haven't checked.</span><br style=3D"font-family: Helvetica; font-size: =
-12px; font-style: normal; font-variant: normal; font-weight: normal; =
-letter-spacing: normal; orphans: auto; text-align: start; text-indent: =
-0px; text-transform: none; white-space: normal; widows: auto; =
-word-spacing: 0px; -webkit-text-stroke-width: 0px;" class=3D""><br =
-style=3D"font-family: Helvetica; font-size: 12px; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-orphans: auto; text-align: start; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: auto; word-spacing: 0px; =
--webkit-text-stroke-width: 0px;" class=3D""></div></blockquote><div =
-class=3D""><br class=3D""></div>Yep, that's the reason: SRC_URI could =
-contain absolute paths. Thank you for finding that. I'll check the rest =
-of build and send patch #3.</div></div></div></blockquote><div><br =
-class=3D""></div>Some other recipes are still failing even with your =
-suggestion. WIP. This isn't my high prio task in project, so it takes =
-some time to fix all cases.</div><div><br =
-class=3D""></div><div>Regards,</div><div>Alexander</div><br =
-class=3D""></body></html>=
+ lib/bb/ui/crumbs/builddetailspage.py           |  437 -------
+ lib/bb/ui/crumbs/builder.py                    | 1534 ------------------------
+ lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |  341 ------
+ lib/bb/ui/crumbs/hig/deployimagedialog.py      |  219 ----
+ lib/bb/ui/crumbs/hig/imageselectiondialog.py   |  172 ---
+ lib/bb/ui/crumbs/hig/parsingwarningsdialog.py  |  163 ---
+ lib/bb/ui/crumbs/hig/proxydetailsdialog.py     |   90 --
+ lib/bb/ui/crumbs/hig/retrieveimagedialog.py    |   51 -
+ lib/bb/ui/crumbs/hig/saveimagedialog.py        |  159 ---
+ lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |  891 --------------
+ lib/bb/ui/crumbs/hobeventhandler.py            |  645 ----------
+ lib/bb/ui/crumbs/hoblistmodel.py               |  903 --------------
+ lib/bb/ui/crumbs/hobpages.py                   |  128 --
+ lib/bb/ui/crumbs/imageconfigurationpage.py     |  561 ---------
+ lib/bb/ui/crumbs/imagedetailspage.py           |  705 -----------
+ lib/bb/ui/crumbs/packageselectionpage.py       |  355 ------
+ lib/bb/ui/crumbs/recipeselectionpage.py        |  335 ------
+ lib/bb/ui/crumbs/sanitycheckpage.py            |   85 --
+ lib/bb/ui/crumbs/utils.py                      |   34 -
+ lib/bb/ui/hob.py                               |  109 --
+ 20 files changed, 7917 deletions(-)
+ delete mode 100755 bitbake/lib/bb/ui/crumbs/builddetailspage.py
+ delete mode 100755 bitbake/lib/bb/ui/crumbs/builder.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/deployimagedialog.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/imageselectiondialog.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/parsingwarningsdialog.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/proxydetailsdialog.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/retrieveimagedialog.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+ delete mode 100755 bitbake/lib/bb/ui/crumbs/hobpages.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+ delete mode 100755 bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+ delete mode 100755 bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+ delete mode 100755 bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/sanitycheckpage.py
+ delete mode 100644 bitbake/lib/bb/ui/crumbs/utils.py
+ delete mode 100755 bitbake/lib/bb/ui/hob.py
 
---Apple-Mail=_A4795846-2CAE-4BA3-B637-7B9034FBD737--
+--
+1.9.1
+
