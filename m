@@ -1,46 +1,49 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f46.google.com (mail-pa0-f46.google.com
-	[209.85.220.46])
-	by mail.openembedded.org (Postfix) with ESMTP id D33CF731F0
+Received: from mail-pa0-f51.google.com (mail-pa0-f51.google.com
+	[209.85.220.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 894C575E2D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Feb 2016 18:43:36 +0000 (UTC)
-Received: by mail-pa0-f46.google.com with SMTP id fl4so96363262pad.0
+	Mon, 29 Feb 2016 18:43:39 +0000 (UTC)
+Received: by mail-pa0-f51.google.com with SMTP id fl4so96363871pad.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Feb 2016 10:43:37 -0800 (PST)
+	Mon, 29 Feb 2016 10:43:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=qK/ua6ho0dsELGPV87Q1epMgpR1Y/8sUy/lKgx/JrSI=;
-	b=MZkCMgLf+d/C/YJFBI9Nx52Za/qe+qco9m47mZKoVw5a2eMcLoby7NnWZ7xoTCwWxO
-	Y01tn+YAF+uDm3X8ZC/IBYa/5ejEmS16eh/4pU3S45abZ24g5jUpawvhjcjBXoiOECIE
-	QS5i3m1cBOaRJTTGSdguSxZ7fLoHtzc9NgiFVD91aFnnlW1faoScpaC5AenhdhFOp31q
-	i3eEOTnUjpzwcyQtTptFKZFt4z3haYo3b+rojEcq2duL0StY/iRpKUqqHKm3z2KI2Mzk
-	2/NY3EuP9H0DKsMSZQLm4MUgdXeiACE7vG7EJrfhzGzy8PhBIO8phaKsdxUDyFIrsPeq
-	lCVA==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=yfWgijuw7hcVZ6Dd9dVGZo8qWkm0D02gpQITqLISVWQ=;
+	b=pbmdGPLgZTry5VF1AjCqzwoKnQE4wna+QyhjI4ebaXflW1LGnNrm8HVPlxTXdqNDzo
+	P50BIXyyAQPB0oFb9E7tt1hbtV4y7uqwgFeeGqrYNFzjSwMUADlR1qGwk6Ek/RVOOznv
+	kDQnzAb9ASRGazl9yVJz37bEHLkhnY+GNe3Le5B5poK09LYAbBSmYiHq6LFHEfPIm5dF
+	DLunh0yGz4a3up2JdR/Bgx/nfDBJR1wx7X2MZDDY9bmSNF5UKf4tGIeOkKviq0c642fX
+	CxRAwgzlukZJ2JrkZDIYkbX0dQb+d3dAyFJOvpXpsfNWd3sc2CaftVJ/aXz52H0RnvgG
+	Ao8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=qK/ua6ho0dsELGPV87Q1epMgpR1Y/8sUy/lKgx/JrSI=;
-	b=P+tdnZfHl7G1O82ITyRfbYkXQrPAk59aJ7fH6oIAKTJ6g5TjA90E6J1+4f83QZPbgN
-	EwCo0hEwLrrU9PNUYFN5LoYvRAsxNy2gv5CZ7kt5ROstSFCpyZoJ792yPSRFj/h81XDD
-	13yv7glGX3LVWxkjIu633qL03YBH5YPUbUMvxwdJj7KGHauM+Nq9iOhsjlcp8r6Lx3W4
-	3FhEY72S0IzCFLXvjkjM6kdqh696YvNcb0g6S4XEUhyTPEV+GKcmNdsnqSJrGhgDrl64
-	SCZw9R0mz5bVJmBXoefMk3g2sXZmprIrch3Wb4/2VE3fA6mldwDVt4xmohN79UxDa9yB
-	jYFQ==
-X-Gm-Message-State: AD7BkJL/8wuTpBcEvZk3hHks+ap8ZXSRx1+Fm0K7a0CRw24zXRoiKwccpAVToHT6ceZAFw==
-X-Received: by 10.66.155.232 with SMTP id vz8mr24275966pab.53.1456771417015;
-	Mon, 29 Feb 2016 10:43:37 -0800 (PST)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=yfWgijuw7hcVZ6Dd9dVGZo8qWkm0D02gpQITqLISVWQ=;
+	b=Z97WwhQMwPy9HbFUutF/GhVpBZUac+xiaMX5625T+ARsCUx85H+TpINnmqGwmiIyHb
+	hFUwmfNBj2Gcjkxl8JjzQXdy3vMaB5o/pHcXu5vmRK+tv8COxkGRirdqbS7NemGwJVno
+	qiCHJtiqSOPEY/KkDFZiwstWYJtWL1rqzjDdHXhxQIT5JfocVNhi30qxrefbJ7N99118
+	ms+SZeML5q4DnUo/h9ALNItXTp9adTFeRv62seyJVuHT37r+YnDlAy8SHXUm8MedDvjI
+	tqodZZZF0F2COisjsiNDTFRkus/FAevGqQKv74xNrXMniDlHd0ID2JK0jsqVPZ+p/o/y
+	aSRg==
+X-Gm-Message-State: AD7BkJKs1s8F58juhPKGXdHfKYK0sP+wD3PY6Gt3GV8cCosN0mkYVZ++q5X+Uh2cojH4qw==
+X-Received: by 10.66.147.74 with SMTP id ti10mr24396685pab.128.1456771420011; 
+	Mon, 29 Feb 2016 10:43:40 -0800 (PST)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	y68sm39806530pfi.6.2016.02.29.10.43.35
+	ta2sm39784677pab.42.2016.02.29.10.43.38
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 29 Feb 2016 10:43:36 -0800 (PST)
+	Mon, 29 Feb 2016 10:43:39 -0800 (PST)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 29 Feb 2016 10:49:46 -0800
-Message-Id: <cover.1456771684.git.avery.brian@gmail.com>
+Date: Mon, 29 Feb 2016 10:49:49 -0800
+Message-Id: <9006917a0c1fcbac1afc7928462b9ff98a2b7352.1456771684.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
-Subject: [PATCH 0/1] bitbake: Remove puccho ui
+In-Reply-To: <cover.1456771684.git.avery.brian@gmail.com>
+References: <cover.1456771684.git.avery.brian@gmail.com>
+Subject: [PATCH 1/1] ui: remove the puccho ui
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,34 +56,913 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Feb 2016 18:43:37 -0000
+X-List-Received-Date: Mon, 29 Feb 2016 18:43:39 -0000
 
-The puccho ui is currently broken and hasn't been touched in
-several years. Given it's lack of care and feeding it seems
-best to remove it.
+This ui does not work in master, nor has it been updated for several years.
 
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=9178
+[YOCTO #9178]
 
--bavery
-
-The following changes since commit 4006a7f2762ccd5dcbc6cdff49482d4387a73261:
-
-  sanity: Fix int verses string reference (2016-02-28 22:54:09 +0000)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib bavery/bitbake/removePuccho
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/bitbake/removePuccho
-
-brian avery (1):
-  ui: remove the puccho ui
-
+Signed-off-by: brian avery <avery.brian@gmail.com>
+---
  lib/bb/ui/crumbs/buildmanager.py | 455 ---------------------------------------
  lib/bb/ui/puccho.py              | 425 ------------------------------------
  2 files changed, 880 deletions(-)
  delete mode 100644 bitbake/lib/bb/ui/crumbs/buildmanager.py
  delete mode 100644 bitbake/lib/bb/ui/puccho.py
 
---
+diff --git a/lib/bb/ui/crumbs/buildmanager.py b/lib/bb/ui/crumbs/buildmanager.py
+deleted file mode 100644
+index e858d75..0000000
+--- a/lib/bb/ui/crumbs/buildmanager.py
++++ /dev/null
+@@ -1,455 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2008        Intel Corporation
+-#
+-# Authored by Rob Bradford <rob@linux.intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gtk
+-import gobject
+-import threading
+-import os
+-import datetime
+-import time
+-
+-class BuildConfiguration:
+-    """ Represents a potential *or* historic *or* concrete build. It
+-    encompasses all the things that we need to tell bitbake to do to make it
+-    build what we want it to build.
+-
+-    It also stored the metadata URL and the set of possible machines (and the
+-    distros / images / uris for these. Apart from the metdata URL these are
+-    not serialised to file (since they may be transient). In some ways this
+-    functionality might be shifted to the loader class."""
+-
+-    def __init__ (self):
+-        self.metadata_url = None
+-
+-        # Tuple of (distros, image, urls)
+-        self.machine_options = {}
+-
+-        self.machine = None
+-        self.distro = None
+-        self.image = None
+-        self.urls = []
+-        self.extra_urls = []
+-        self.extra_pkgs = []
+-
+-    def get_machines_model (self):
+-        model = gtk.ListStore (gobject.TYPE_STRING)
+-        for machine in self.machine_options.keys():
+-            model.append ([machine])
+-
+-        return model
+-
+-    def get_distro_and_images_models (self, machine):
+-        distro_model = gtk.ListStore (gobject.TYPE_STRING)
+-
+-        for distro in self.machine_options[machine][0]:
+-            distro_model.append ([distro])
+-
+-        image_model = gtk.ListStore (gobject.TYPE_STRING)
+-
+-        for image in self.machine_options[machine][1]:
+-            image_model.append ([image])
+-
+-        return (distro_model, image_model)
+-
+-    def get_repos (self):
+-        self.urls = self.machine_options[self.machine][2]
+-        return self.urls
+-
+-    # It might be a lot lot better if we stored these in like, bitbake conf
+-    # file format.
+-    @staticmethod
+-    def load_from_file (filename):
+-
+-        conf = BuildConfiguration()
+-        with open(filename, "r") as f:
+-            for line in f:
+-                data = line.split (";")[1]
+-                if (line.startswith ("metadata-url;")):
+-                    conf.metadata_url = data.strip()
+-                    continue
+-                if (line.startswith ("url;")):
+-                    conf.urls += [data.strip()]
+-                    continue
+-                if (line.startswith ("extra-url;")):
+-                    conf.extra_urls += [data.strip()]
+-                    continue
+-                if (line.startswith ("machine;")):
+-                    conf.machine = data.strip()
+-                    continue
+-                if (line.startswith ("distribution;")):
+-                    conf.distro = data.strip()
+-                    continue
+-                if (line.startswith ("image;")):
+-                    conf.image = data.strip()
+-                    continue
+-
+-        return conf
+-
+-    # Serialise to a file. This is part of the build process and we use this
+-    # to be able to repeat a given build (using the same set of parameters)
+-    # but also so that we can include the details of the image / machine /
+-    # distro in the build manager tree view.
+-    def write_to_file (self, filename):
+-        f = open (filename, "w")
+-
+-        lines = []
+-
+-        if (self.metadata_url):
+-            lines += ["metadata-url;%s\n" % (self.metadata_url)]
+-
+-        for url in self.urls:
+-            lines += ["url;%s\n" % (url)]
+-
+-        for url in self.extra_urls:
+-            lines += ["extra-url;%s\n" % (url)]
+-
+-        if (self.machine):
+-            lines += ["machine;%s\n" % (self.machine)]
+-
+-        if (self.distro):
+-            lines += ["distribution;%s\n" % (self.distro)]
+-
+-        if (self.image):
+-            lines += ["image;%s\n" % (self.image)]
+-
+-        f.writelines (lines)
+-        f.close ()
+-
+-class BuildResult(gobject.GObject):
+-    """ Represents an historic build. Perhaps not successful. But it includes
+-    things such as the files that are in the directory (the output from the
+-    build) as well as a deserialised BuildConfiguration file that is stored in
+-    ".conf" in the directory for the build.
+-
+-    This is GObject so that it can be included in the TreeStore."""
+-
+-    (STATE_COMPLETE, STATE_FAILED, STATE_ONGOING) = \
+-        (0, 1, 2)
+-
+-    def __init__ (self, parent, identifier):
+-        gobject.GObject.__init__ (self)
+-        self.date = None
+-
+-        self.files = []
+-        self.status = None
+-        self.identifier = identifier
+-        self.path = os.path.join (parent, identifier)
+-
+-        # Extract the date, since the directory name is of the
+-        # format build-<year><month><day>-<ordinal> we can easily
+-        # pull it out.
+-        # TODO: Better to stat a file?
+-        (_, date, revision) = identifier.split ("-")
+-        print(date)
+-
+-        year = int (date[0:4])
+-        month = int (date[4:6])
+-        day = int (date[6:8])
+-
+-        self.date = datetime.date (year, month, day)
+-
+-        self.conf = None
+-
+-        # By default builds are STATE_FAILED unless we find a "complete" file
+-        # in which case they are STATE_COMPLETE
+-        self.state = BuildResult.STATE_FAILED
+-        for file in os.listdir (self.path):
+-            if (file.startswith (".conf")):
+-                conffile = os.path.join (self.path, file)
+-                self.conf = BuildConfiguration.load_from_file (conffile)
+-            elif (file.startswith ("complete")):
+-                self.state = BuildResult.STATE_COMPLETE
+-            else:
+-                self.add_file (file)
+-
+-    def add_file (self, file):
+-        # Just add the file for now. Don't care about the type.
+-        self.files += [(file, None)]
+-
+-class BuildManagerModel (gtk.TreeStore):
+-    """ Model for the BuildManagerTreeView. This derives from gtk.TreeStore
+-    but it abstracts nicely what the columns mean and the setup of the columns
+-    in the model. """
+-
+-    (COL_IDENT, COL_DESC, COL_MACHINE, COL_DISTRO, COL_BUILD_RESULT, COL_DATE, COL_STATE) = \
+-        (0, 1, 2, 3, 4, 5, 6)
+-
+-    def __init__ (self):
+-        gtk.TreeStore.__init__ (self,
+-            gobject.TYPE_STRING,
+-            gobject.TYPE_STRING,
+-            gobject.TYPE_STRING,
+-            gobject.TYPE_STRING,
+-            gobject.TYPE_OBJECT,
+-            gobject.TYPE_INT64,
+-            gobject.TYPE_INT)
+-
+-class BuildManager (gobject.GObject):
+-    """ This class manages the historic builds that have been found in the
+-    "results" directory but is also used for starting a new build."""
+-
+-    __gsignals__ = {
+-        'population-finished' : (gobject.SIGNAL_RUN_LAST,
+-                                 gobject.TYPE_NONE,
+-                                 ()),
+-        'populate-error' : (gobject.SIGNAL_RUN_LAST,
+-                            gobject.TYPE_NONE,
+-                            ())
+-    }
+-
+-    def update_build_result (self, result, iter):
+-        # Convert the date into something we can sort by.
+-        date = long (time.mktime (result.date.timetuple()))
+-
+-        # Add a top level entry for the build
+-
+-        self.model.set (iter,
+-            BuildManagerModel.COL_IDENT, result.identifier,
+-            BuildManagerModel.COL_DESC, result.conf.image,
+-            BuildManagerModel.COL_MACHINE, result.conf.machine,
+-            BuildManagerModel.COL_DISTRO, result.conf.distro,
+-            BuildManagerModel.COL_BUILD_RESULT, result,
+-            BuildManagerModel.COL_DATE, date,
+-            BuildManagerModel.COL_STATE, result.state)
+-
+-        # And then we use the files in the directory as the children for the
+-        # top level iter.
+-        for file in result.files:
+-            self.model.append (iter, (None, file[0], None, None, None, date, -1))
+-
+-    # This function is called as an idle by the BuildManagerPopulaterThread
+-    def add_build_result (self, result):
+-        gtk.gdk.threads_enter()
+-        self.known_builds += [result]
+-
+-        self.update_build_result (result, self.model.append (None))
+-
+-        gtk.gdk.threads_leave()
+-
+-    def notify_build_finished (self):
+-        # This is a bit of a hack. If we have a running build running then we
+-        # will have a row in the model in STATE_ONGOING. Find it and make it
+-        # as if it was a proper historic build (well, it is completed now....)
+-
+-        # We need to use the iters here rather than the Python iterator
+-        # interface to the model since we need to pass it into
+-        # update_build_result
+-
+-        iter = self.model.get_iter_first()
+-
+-        while (iter):
+-            (ident, state) = self.model.get(iter,
+-                BuildManagerModel.COL_IDENT,
+-                BuildManagerModel.COL_STATE)
+-
+-            if state == BuildResult.STATE_ONGOING:
+-                result = BuildResult (self.results_directory, ident)
+-                self.update_build_result (result, iter)
+-            iter = self.model.iter_next(iter)
+-
+-    def notify_build_succeeded (self):
+-        # Write the "complete" file so that when we create the BuildResult
+-        # object we put into the model
+-
+-        complete_file_path = os.path.join (self.cur_build_directory, "complete")
+-        f = file (complete_file_path, "w")
+-        f.close()
+-        self.notify_build_finished()
+-
+-    def notify_build_failed (self):
+-        # Without a "complete" file then this will mark the build as failed:
+-        self.notify_build_finished()
+-
+-    # This function is called as an idle
+-    def emit_population_finished_signal (self):
+-        gtk.gdk.threads_enter()
+-        self.emit ("population-finished")
+-        gtk.gdk.threads_leave()
+-
+-    class BuildManagerPopulaterThread (threading.Thread):
+-        def __init__ (self, manager, directory):
+-            threading.Thread.__init__ (self)
+-            self.manager = manager
+-            self.directory = directory
+-
+-        def run (self):
+-            # For each of the "build-<...>" directories ..
+-
+-            if os.path.exists (self.directory):
+-                for directory in os.listdir (self.directory):
+-
+-                    if not directory.startswith ("build-"):
+-                        continue
+-
+-                    build_result = BuildResult (self.directory, directory)
+-                    self.manager.add_build_result (build_result)
+-
+-            gobject.idle_add (BuildManager.emit_population_finished_signal,
+-                self.manager)
+-
+-    def __init__ (self, server, results_directory):
+-        gobject.GObject.__init__ (self)
+-
+-        # The builds that we've found from walking the result directory
+-        self.known_builds = []
+-
+-        # Save out the bitbake server, we need this for issuing commands to
+-        # the cooker:
+-        self.server = server
+-
+-        # The TreeStore that we use
+-        self.model = BuildManagerModel ()
+-
+-        # The results directory is where we create (and look for) the
+-        # build-<xyz>-<n> directories. We need to populate ourselves from
+-        # directory
+-        self.results_directory = results_directory
+-        self.populate_from_directory (self.results_directory)
+-
+-    def populate_from_directory (self, directory):
+-        thread = BuildManager.BuildManagerPopulaterThread (self, directory)
+-        thread.start()
+-
+-    # Come up with the name for the next build ident by combining "build-"
+-    # with the date formatted as yyyymmdd and then an ordinal. We do this by
+-    # an optimistic algorithm incrementing the ordinal if we find that it
+-    # already exists.
+-    def get_next_build_ident (self):
+-        today = datetime.date.today ()
+-        datestr = str (today.year) + str (today.month) + str (today.day)
+-
+-        revision = 0
+-        test_name = "build-%s-%d" % (datestr, revision)
+-        test_path = os.path.join (self.results_directory, test_name)
+-
+-        while (os.path.exists (test_path)):
+-            revision += 1
+-            test_name = "build-%s-%d" % (datestr, revision)
+-            test_path = os.path.join (self.results_directory, test_name)
+-
+-        return test_name
+-
+-    # Take a BuildConfiguration and then try and build it based on the
+-    # parameters of that configuration. S
+-    def do_build (self, conf):
+-        server = self.server
+-
+-        # Work out the build directory. Note we actually create the
+-        # directories here since we need to write the ".conf" file. Otherwise
+-        # we could have relied on bitbake's builder thread to actually make
+-        # the directories as it proceeds with the build.
+-        ident = self.get_next_build_ident ()
+-        build_directory = os.path.join (self.results_directory,
+-            ident)
+-        self.cur_build_directory = build_directory
+-        os.makedirs (build_directory)
+-
+-        conffile = os.path.join (build_directory, ".conf")
+-        conf.write_to_file (conffile)
+-
+-        # Add a row to the model representing this ongoing build. It's kinda a
+-        # fake entry. If this build completes or fails then this gets updated
+-        # with the real stuff like the historic builds
+-        date = long (time.time())
+-        self.model.append (None, (ident, conf.image, conf.machine, conf.distro,
+-            None, date, BuildResult.STATE_ONGOING))
+-        try:
+-            server.runCommand(["setVariable", "BUILD_IMAGES_FROM_FEEDS", 1])
+-            server.runCommand(["setVariable", "MACHINE", conf.machine])
+-            server.runCommand(["setVariable", "DISTRO", conf.distro])
+-            server.runCommand(["setVariable", "PACKAGE_CLASSES", "package_ipk"])
+-            server.runCommand(["setVariable", "BBFILES", \
+-              """${OEROOT}/meta/packages/*/*.bb ${OEROOT}/meta-moblin/packages/*/*.bb"""])
+-            server.runCommand(["setVariable", "TMPDIR", "${OEROOT}/build/tmp"])
+-            server.runCommand(["setVariable", "IPK_FEED_URIS", \
+-                " ".join(conf.get_repos())])
+-            server.runCommand(["setVariable", "DEPLOY_DIR_IMAGE",
+-                build_directory])
+-            server.runCommand(["buildTargets", [conf.image], "rootfs"])
+-
+-        except Exception as e:
+-            print(e)
+-
+-class BuildManagerTreeView (gtk.TreeView):
+-    """ The tree view for the build manager. This shows the historic builds
+-    and so forth. """
+-
+-    # We use this function to control what goes in the cell since we store
+-    # the date in the model as seconds since the epoch (for sorting) and so we
+-    # need to make it human readable.
+-    def date_format_custom_cell_data_func (self, col, cell, model, iter):
+-        date = model.get (iter, BuildManagerModel.COL_DATE)[0]
+-        datestr = time.strftime("%A %d %B %Y", time.localtime(date))
+-        cell.set_property ("text", datestr)
+-
+-    # This format function controls what goes in the cell. We use this to map
+-    # the integer state to a string and also to colourise the text
+-    def state_format_custom_cell_data_fun (self, col, cell, model, iter):
+-        state = model.get (iter, BuildManagerModel.COL_STATE)[0]
+-
+-        if (state == BuildResult.STATE_ONGOING):
+-            cell.set_property ("text", "Active")
+-            cell.set_property ("foreground", "#000000")
+-        elif (state == BuildResult.STATE_FAILED):
+-            cell.set_property ("text", "Failed")
+-            cell.set_property ("foreground", "#ff0000")
+-        elif (state == BuildResult.STATE_COMPLETE):
+-            cell.set_property ("text", "Complete")
+-            cell.set_property ("foreground", "#00ff00")
+-        else:
+-            cell.set_property ("text", "")
+-
+-    def __init__ (self):
+-        gtk.TreeView.__init__(self)
+-
+-        # Misc descriptiony thing
+-        renderer = gtk.CellRendererText ()
+-        col = gtk.TreeViewColumn (None, renderer,
+-            text=BuildManagerModel.COL_DESC)
+-        self.append_column (col)
+-
+-        # Machine
+-        renderer = gtk.CellRendererText ()
+-        col = gtk.TreeViewColumn ("Machine", renderer,
+-            text=BuildManagerModel.COL_MACHINE)
+-        self.append_column (col)
+-
+-        # distro
+-        renderer = gtk.CellRendererText ()
+-        col = gtk.TreeViewColumn ("Distribution", renderer,
+-            text=BuildManagerModel.COL_DISTRO)
+-        self.append_column (col)
+-
+-        # date (using a custom function for formatting the cell contents it
+-        # takes epoch -> human readable string)
+-        renderer = gtk.CellRendererText ()
+-        col = gtk.TreeViewColumn ("Date", renderer,
+-            text=BuildManagerModel.COL_DATE)
+-        self.append_column (col)
+-        col.set_cell_data_func (renderer,
+-            self.date_format_custom_cell_data_func)
+-
+-        # For status.
+-        renderer = gtk.CellRendererText ()
+-        col = gtk.TreeViewColumn ("Status", renderer,
+-            text = BuildManagerModel.COL_STATE)
+-        self.append_column (col)
+-        col.set_cell_data_func (renderer,
+-            self.state_format_custom_cell_data_fun)
+diff --git a/lib/bb/ui/puccho.py b/lib/bb/ui/puccho.py
+deleted file mode 100644
+index 3ce4590..0000000
+--- a/lib/bb/ui/puccho.py
++++ /dev/null
+@@ -1,425 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2008        Intel Corporation
+-#
+-# Authored by Rob Bradford <rob@linux.intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gtk
+-import gobject
+-import gtk.glade
+-import threading
+-import urllib2
+-import os
+-import contextlib
+-
+-from bb.ui.crumbs.buildmanager import BuildManager, BuildConfiguration
+-from bb.ui.crumbs.buildmanager import BuildManagerTreeView
+-
+-from bb.ui.crumbs.runningbuild import RunningBuild, RunningBuildTreeView
+-
+-# The metadata loader is used by the BuildSetupDialog to download the
+-# available options to populate the dialog
+-class MetaDataLoader(gobject.GObject):
+-    """ This class provides the mechanism for loading the metadata (the
+-    fetching and parsing) from a given URL. The metadata encompasses details
+-    on what machines are available. The distribution and images available for
+-    the machine and the the uris to use for building the given machine."""
+-    __gsignals__ = {
+-        'success' : (gobject.SIGNAL_RUN_LAST,
+-                     gobject.TYPE_NONE,
+-                     ()),
+-        'error' : (gobject.SIGNAL_RUN_LAST,
+-                   gobject.TYPE_NONE,
+-                   (gobject.TYPE_STRING,))
+-        }
+-
+-    # We use these little helper functions to ensure that we take the gdk lock
+-    # when emitting the signal. These functions are called as idles (so that
+-    # they happen in the gtk / main thread's main loop.
+-    def emit_error_signal (self, remark):
+-        gtk.gdk.threads_enter()
+-        self.emit ("error", remark)
+-        gtk.gdk.threads_leave()
+-
+-    def emit_success_signal (self):
+-        gtk.gdk.threads_enter()
+-        self.emit ("success")
+-        gtk.gdk.threads_leave()
+-
+-    def __init__ (self):
+-        gobject.GObject.__init__ (self)
+-
+-    class LoaderThread(threading.Thread):
+-        """ This class provides an asynchronous loader for the metadata (by
+-        using threads and signals). This is useful since the metadata may be
+-        at a remote URL."""
+-        class LoaderImportException (Exception):
+-            pass
+-
+-        def __init__(self, loader, url):
+-            threading.Thread.__init__ (self)
+-            self.url = url
+-            self.loader = loader
+-
+-        def run (self):
+-            result = {}
+-            try:
+-                with contextlib.closing (urllib2.urlopen (self.url)) as f:
+-                    # Parse the metadata format. The format is....
+-                    # <machine>;<default distro>|<distro>...;<default image>|<image>...;<type##url>|...
+-                    for line in f:
+-                        components = line.split(";")
+-                        if (len (components) < 4):
+-                            raise MetaDataLoader.LoaderThread.LoaderImportException
+-                        machine = components[0]
+-                        distros = components[1].split("|")
+-                        images = components[2].split("|")
+-                        urls = components[3].split("|")
+-
+-                        result[machine] = (distros, images, urls)
+-
+-                # Create an object representing this *potential*
+-                # configuration. It can become concrete if the machine, distro
+-                # and image are all chosen in the UI
+-                configuration = BuildConfiguration()
+-                configuration.metadata_url = self.url
+-                configuration.machine_options = result
+-                self.loader.configuration = configuration
+-
+-                # Emit that we've actually got a configuration
+-                gobject.idle_add (MetaDataLoader.emit_success_signal,
+-                    self.loader)
+-
+-            except MetaDataLoader.LoaderThread.LoaderImportException as e:
+-                gobject.idle_add (MetaDataLoader.emit_error_signal, self.loader,
+-                    "Repository metadata corrupt")
+-            except Exception as e:
+-                gobject.idle_add (MetaDataLoader.emit_error_signal, self.loader,
+-                    "Unable to download repository metadata")
+-                print(e)
+-
+-    def try_fetch_from_url (self, url):
+-        # Try and download the metadata. Firing a signal if successful
+-        thread = MetaDataLoader.LoaderThread(self, url)
+-        thread.start()
+-
+-class BuildSetupDialog (gtk.Dialog):
+-    RESPONSE_BUILD = 1
+-
+-    # A little helper method that just sets the states on the widgets based on
+-    # whether we've got good metadata or not.
+-    def set_configurable (self, configurable):
+-        if (self.configurable == configurable):
+-            return
+-
+-        self.configurable = configurable
+-        for widget in self.conf_widgets:
+-            widget.set_sensitive (configurable)
+-
+-        if not configurable:
+-            self.machine_combo.set_active (-1)
+-            self.distribution_combo.set_active (-1)
+-            self.image_combo.set_active (-1)
+-
+-    # GTK widget callbacks
+-    def refresh_button_clicked (self, button):
+-        # Refresh button clicked.
+-
+-        url = self.location_entry.get_chars (0, -1)
+-        self.loader.try_fetch_from_url(url)
+-
+-    def repository_entry_editable_changed (self, entry):
+-        if (len (entry.get_chars (0, -1)) > 0):
+-            self.refresh_button.set_sensitive (True)
+-        else:
+-            self.refresh_button.set_sensitive (False)
+-            self.clear_status_message()
+-
+-        # If we were previously configurable we are no longer since the
+-        # location entry has been changed
+-        self.set_configurable (False)
+-
+-    def machine_combo_changed (self, combobox):
+-        active_iter = combobox.get_active_iter()
+-
+-        if not active_iter:
+-            return
+-
+-        model = combobox.get_model()
+-
+-        if model:
+-            chosen_machine = model.get (active_iter, 0)[0]
+-
+-        (distros_model, images_model) = \
+-            self.loader.configuration.get_distro_and_images_models (chosen_machine)
+-
+-        self.distribution_combo.set_model (distros_model)
+-        self.image_combo.set_model (images_model)
+-
+-    # Callbacks from the loader
+-    def loader_success_cb (self, loader):
+-        self.status_image.set_from_icon_name ("info",
+-            gtk.ICON_SIZE_BUTTON)
+-        self.status_image.show()
+-        self.status_label.set_label ("Repository metadata successfully downloaded")
+-
+-        # Set the models on the combo boxes based on the models generated from
+-        # the configuration that the loader has created
+-
+-        # We just need to set the machine here, that then determines the
+-        # distro and image options. Cunning huh? :-)
+-
+-        self.configuration = self.loader.configuration
+-        model = self.configuration.get_machines_model ()
+-        self.machine_combo.set_model (model)
+-
+-        self.set_configurable (True)
+-
+-    def loader_error_cb (self, loader, message):
+-        self.status_image.set_from_icon_name ("error",
+-            gtk.ICON_SIZE_BUTTON)
+-        self.status_image.show()
+-        self.status_label.set_text ("Error downloading repository metadata")
+-        for widget in self.conf_widgets:
+-            widget.set_sensitive (False)
+-
+-    def clear_status_message (self):
+-        self.status_image.hide()
+-        self.status_label.set_label (
+-            """<i>Enter the repository location and press _Refresh</i>""")
+-
+-    def __init__ (self):
+-        gtk.Dialog.__init__ (self)
+-
+-        # Cancel
+-        self.add_button (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+-
+-        # Build
+-        button = gtk.Button ("_Build", None, True)
+-        image = gtk.Image ()
+-        image.set_from_stock (gtk.STOCK_EXECUTE, gtk.ICON_SIZE_BUTTON)
+-        button.set_image (image)
+-        self.add_action_widget (button, BuildSetupDialog.RESPONSE_BUILD)
+-        button.show_all ()
+-
+-        # Pull in *just* the table from the Glade XML data.
+-        gxml = gtk.glade.XML (os.path.dirname(__file__) + "/crumbs/puccho.glade",
+-            root = "build_table")
+-        table = gxml.get_widget ("build_table")
+-        self.vbox.pack_start (table, True, False, 0)
+-
+-        # Grab all the widgets that we need to turn on/off when we refresh...
+-        self.conf_widgets = []
+-        self.conf_widgets += [gxml.get_widget ("machine_label")]
+-        self.conf_widgets += [gxml.get_widget ("distribution_label")]
+-        self.conf_widgets += [gxml.get_widget ("image_label")]
+-        self.conf_widgets += [gxml.get_widget ("machine_combo")]
+-        self.conf_widgets += [gxml.get_widget ("distribution_combo")]
+-        self.conf_widgets += [gxml.get_widget ("image_combo")]
+-
+-        # Grab the status widgets
+-        self.status_image = gxml.get_widget ("status_image")
+-        self.status_label = gxml.get_widget ("status_label")
+-
+-        # Grab the refresh button and connect to the clicked signal
+-        self.refresh_button = gxml.get_widget ("refresh_button")
+-        self.refresh_button.connect ("clicked", self.refresh_button_clicked)
+-
+-        # Grab the location entry and connect to editable::changed
+-        self.location_entry = gxml.get_widget ("location_entry")
+-        self.location_entry.connect ("changed",
+-            self.repository_entry_editable_changed)
+-
+-        # Grab the machine combo and hook onto the changed signal. This then
+-        # allows us to populate the distro and image combos
+-        self.machine_combo = gxml.get_widget ("machine_combo")
+-        self.machine_combo.connect ("changed", self.machine_combo_changed)
+-
+-        # Setup the combo
+-        cell = gtk.CellRendererText()
+-        self.machine_combo.pack_start(cell, True)
+-        self.machine_combo.add_attribute(cell, 'text', 0)
+-
+-        # Grab the distro and image combos. We need these to populate with
+-        # models once the machine is chosen
+-        self.distribution_combo = gxml.get_widget ("distribution_combo")
+-        cell = gtk.CellRendererText()
+-        self.distribution_combo.pack_start(cell, True)
+-        self.distribution_combo.add_attribute(cell, 'text', 0)
+-
+-        self.image_combo = gxml.get_widget ("image_combo")
+-        cell = gtk.CellRendererText()
+-        self.image_combo.pack_start(cell, True)
+-        self.image_combo.add_attribute(cell, 'text', 0)
+-
+-        # Put the default descriptive text in the status box
+-        self.clear_status_message()
+-
+-        # Mark as non-configurable, this is just greys out the widgets the
+-        # user can't yet use
+-        self.configurable = False
+-        self.set_configurable(False)
+-
+-        # Show the table
+-        table.show_all ()
+-
+-        # The loader and some signals connected to it to update the status
+-        # area
+-        self.loader = MetaDataLoader()
+-        self.loader.connect ("success", self.loader_success_cb)
+-        self.loader.connect ("error", self.loader_error_cb)
+-
+-    def update_configuration (self):
+-        """ A poorly named function but it updates the internal configuration
+-        from the widgets. This can make that configuration concrete and can
+-        thus be used for building """
+-        # Extract the chosen machine from the combo
+-        model = self.machine_combo.get_model()
+-        active_iter = self.machine_combo.get_active_iter()
+-        if (active_iter):
+-            self.configuration.machine = model.get(active_iter, 0)[0]
+-
+-        # Extract the chosen distro from the combo
+-        model = self.distribution_combo.get_model()
+-        active_iter = self.distribution_combo.get_active_iter()
+-        if (active_iter):
+-            self.configuration.distro = model.get(active_iter, 0)[0]
+-
+-        # Extract the chosen image from the combo
+-        model = self.image_combo.get_model()
+-        active_iter = self.image_combo.get_active_iter()
+-        if (active_iter):
+-            self.configuration.image = model.get(active_iter, 0)[0]
+-
+-# This function operates to pull events out from the event queue and then push
+-# them into the RunningBuild (which then drives the RunningBuild which then
+-# pushes through and updates the progress tree view.)
+-#
+-# TODO: Should be a method on the RunningBuild class
+-def event_handle_timeout (eventHandler, build):
+-    # Consume as many messages as we can ...
+-    event = eventHandler.getEvent()
+-    while event:
+-        build.handle_event (event)
+-        event = eventHandler.getEvent()
+-    return True
+-
+-class MainWindow (gtk.Window):
+-
+-    # Callback that gets fired when the user hits a button in the
+-    # BuildSetupDialog.
+-    def build_dialog_box_response_cb (self, dialog, response_id):
+-        conf = None
+-        if (response_id == BuildSetupDialog.RESPONSE_BUILD):
+-            dialog.update_configuration()
+-            print(dialog.configuration.machine, dialog.configuration.distro, \
+-                dialog.configuration.image)
+-            conf = dialog.configuration
+-
+-        dialog.destroy()
+-
+-        if conf:
+-            self.manager.do_build (conf)
+-
+-    def build_button_clicked_cb (self, button):
+-        dialog = BuildSetupDialog ()
+-
+-        # For some unknown reason Dialog.run causes nice little deadlocks ... :-(
+-        dialog.connect ("response", self.build_dialog_box_response_cb)
+-        dialog.show()
+-
+-    def __init__ (self):
+-        gtk.Window.__init__ (self)
+-
+-        # Pull in *just* the main vbox from the Glade XML data and then pack
+-        # that inside the window
+-        gxml = gtk.glade.XML (os.path.dirname(__file__) + "/crumbs/puccho.glade",
+-            root = "main_window_vbox")
+-        vbox = gxml.get_widget ("main_window_vbox")
+-        self.add (vbox)
+-
+-        # Create the tree views for the build manager view and the progress view
+-        self.build_manager_view = BuildManagerTreeView()
+-        self.running_build_view = RunningBuildTreeView()
+-
+-        # Grab the scrolled windows that we put the tree views into
+-        self.results_scrolledwindow = gxml.get_widget ("results_scrolledwindow")
+-        self.progress_scrolledwindow = gxml.get_widget ("progress_scrolledwindow")
+-
+-        # Put the tree views inside ...
+-        self.results_scrolledwindow.add (self.build_manager_view)
+-        self.progress_scrolledwindow.add (self.running_build_view)
+-
+-        # Hook up the build button...
+-        self.build_button = gxml.get_widget ("main_toolbutton_build")
+-        self.build_button.connect ("clicked", self.build_button_clicked_cb)
+-
+-# I'm not very happy about the current ownership of the RunningBuild. I have
+-# my suspicions that this object should be held by the BuildManager since we
+-# care about the signals in the manager
+-
+-def running_build_succeeded_cb (running_build, manager):
+-    # Notify the manager that a build has succeeded. This is necessary as part
+-    # of the 'hack' that we use for making the row in the model / view
+-    # representing the ongoing build change into a row representing the
+-    # completed build. Since we know only one build can be running a time then
+-    # we can handle this.
+-
+-    # FIXME: Refactor all this so that the RunningBuild is owned by the
+-    # BuildManager. It can then hook onto the signals directly and drive
+-    # interesting things it cares about.
+-    manager.notify_build_succeeded ()
+-    print("build succeeded")
+-
+-def running_build_failed_cb (running_build, manager):
+-    # As above
+-    print("build failed")
+-    manager.notify_build_failed ()
+-
+-def main (server, eventHandler):
+-    # Initialise threading...
+-    gobject.threads_init()
+-    gtk.gdk.threads_init()
+-
+-    main_window = MainWindow ()
+-    main_window.show_all ()
+-
+-    # Set up the build manager stuff in general
+-    builds_dir = os.path.join (os.getcwd(),  "results")
+-    manager = BuildManager (server, builds_dir)
+-    main_window.build_manager_view.set_model (manager.model)
+-
+-    # Do the running build setup
+-    running_build = RunningBuild ()
+-    main_window.running_build_view.set_model (running_build.model)
+-    running_build.connect ("build-succeeded", running_build_succeeded_cb,
+-        manager)
+-    running_build.connect ("build-failed", running_build_failed_cb, manager)
+-
+-    # We need to save the manager into the MainWindow so that the toolbar
+-    # button can use it.
+-    # FIXME: Refactor ?
+-    main_window.manager = manager
+-
+-    # Use a timeout function for probing the event queue to find out if we
+-    # have a message waiting for us.
+-    gobject.timeout_add (200,
+-                         event_handle_timeout,
+-                         eventHandler,
+-                         running_build)
+-
+-    gtk.main()
+-- 
 1.9.1
+
 
