@@ -1,28 +1,53 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 6FF9877219
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id BBAB97713B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Feb 2016 00:20:02 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga103.fm.intel.com with ESMTP; 28 Feb 2016 16:20:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,518,1449561600"; d="scan'208";a="754866257"
-Received: from gtan23-mobl3.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.165.53])
-	by orsmga003.jf.intel.com with ESMTP; 28 Feb 2016 16:20:01 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Brian Avery <brian.avery@intel.com>
-Date: Mon, 29 Feb 2016 13:19:59 +1300
-Message-ID: <1834496.nEVGTzEO0a@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.10 (Linux/4.3.5-300.fc23.x86_64; KDE/4.14.17; x86_64; ;
-	)
-In-Reply-To: <c8247b2bbb3e6db288f2c6be6c1c777d7ddd599f.1456610242.git.avery.brian@gmail.com>
-References: <cover.1456610242.git.avery.brian@gmail.com>
-	<c8247b2bbb3e6db288f2c6be6c1c777d7ddd599f.1456610242.git.avery.brian@gmail.com>
+	Mon, 29 Feb 2016 10:14:42 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id B59B42E19A;
+	Mon, 29 Feb 2016 11:14:42 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id MpwcYP3b4AJ6; Mon, 29 Feb 2016 11:14:42 +0100 (CET)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id BEFFD2E16E;
+	Mon, 29 Feb 2016 11:14:41 +0100 (CET)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 7B50012A3;
+	Mon, 29 Feb 2016 11:14:41 +0100 (CET)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id 6FBB24A7;
+	Mon, 29 Feb 2016 11:14:41 +0100 (CET)
+Received: from XBOX03.axis.com (xbox03.axis.com [10.0.5.17])
+	by seth.se.axis.com (Postfix) with ESMTP id 695A53E44E;
+	Mon, 29 Feb 2016 11:14:41 +0100 (CET)
+Received: from XBOX02.axis.com (10.0.5.16) by XBOX03.axis.com (10.0.5.17) with
+	Microsoft SMTP Server (TLS) id 15.0.1156.6;
+	Mon, 29 Feb 2016 11:14:41 +0100
+Received: from XBOX02.axis.com ([fe80::bcea:88d5:e1ff:8e04]) by
+	XBOX02.axis.com ([fe80::bcea:88d5:e1ff:8e04%12]) with mapi id
+	15.00.1156.000; Mon, 29 Feb 2016 11:14:41 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: "brendan.le.foll@intel.com" <brendan.le.foll@intel.com>, "Richard Purdie
+	(richard.purdie@linuxfoundation.org)" <richard.purdie@linuxfoundation.org>
+Thread-Topic: [bitbake-devel] [PATCH 1/3] utils.py: Add sha1_file call
+Thread-Index: AQHRb94340sDNkdwUkmI/JsyPbmrx59C0qMA
+Date: Mon, 29 Feb 2016 10:14:41 +0000
+Message-ID: <5892cfc210174afd8fb90a181459873b@XBOX02.axis.com>
+References: <1456412828-11343-1-git-send-email-brendan.le.foll@intel.com>
+	<1456412828-11343-2-git-send-email-brendan.le.foll@intel.com>
+In-Reply-To: <1456412828-11343-2-git-send-email-brendan.le.foll@intel.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.55]
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] hob: removal of hob ui and associated ui files
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 1/3] utils.py: Add sha1_file call
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,77 +60,70 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Feb 2016 00:20:04 -0000
-Content-Transfer-Encoding: 7Bit
+X-List-Received-Date: Mon, 29 Feb 2016 10:14:45 -0000
+Content-Language: en-US
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Brian,
-
-On Sat, 27 Feb 2016 14:00:52 brian avery wrote:
-> From: bavery <brian.avery@intel.com>
-> 
-> Signed-off-by: bavery <brian.avery@intel.com>
+> -----Original Message-----
+> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
+> devel-bounces@lists.openembedded.org] On Behalf Of
+> brendan.le.foll@intel.com
+> Sent: den 25 februari 2016 16:07
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH 1/3] utils.py: Add sha1_file call
+>=20
+> From: Brendan Le Foll <brendan.le.foll@intel.com>
+>=20
+> This is useful as npm-lockdown uses sha1 because npm releases the sha1 of
+> packages and whilst this is undocumented it seems no other algorithm is
+> supported
+>=20
+> Signed-off-by: Brendan Le Foll <brendan.le.foll@intel.com>
 > ---
->  lib/bb/ui/crumbs/builddetailspage.py           |  437 -------
->  lib/bb/ui/crumbs/builder.py                    | 1534
-> ------------------------ lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
-> |  341 ------
->  lib/bb/ui/crumbs/hig/deployimagedialog.py      |  219 ----
->  lib/bb/ui/crumbs/hig/imageselectiondialog.py   |  172 ---
->  lib/bb/ui/crumbs/hig/parsingwarningsdialog.py  |  163 ---
->  lib/bb/ui/crumbs/hig/proxydetailsdialog.py     |   90 --
->  lib/bb/ui/crumbs/hig/retrieveimagedialog.py    |   51 -
->  lib/bb/ui/crumbs/hig/saveimagedialog.py        |  159 ---
->  lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |  891 --------------
->  lib/bb/ui/crumbs/hobeventhandler.py            |  645 ----------
->  lib/bb/ui/crumbs/hoblistmodel.py               |  903 --------------
->  lib/bb/ui/crumbs/hobpages.py                   |  128 --
->  lib/bb/ui/crumbs/imageconfigurationpage.py     |  561 ---------
->  lib/bb/ui/crumbs/imagedetailspage.py           |  705 -----------
->  lib/bb/ui/crumbs/packageselectionpage.py       |  355 ------
->  lib/bb/ui/crumbs/recipeselectionpage.py        |  335 ------
->  lib/bb/ui/crumbs/sanitycheckpage.py            |   85 --
->  lib/bb/ui/crumbs/utils.py                      |   34 -
->  lib/bb/ui/hob.py                               |  109 --
->  20 files changed, 7917 deletions(-)
->  delete mode 100755 bitbake/lib/bb/ui/crumbs/builddetailspage.py
->  delete mode 100755 bitbake/lib/bb/ui/crumbs/builder.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/deployimagedialog.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/imageselectiondialog.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/parsingwarningsdialog.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/proxydetailsdialog.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/retrieveimagedialog.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hobeventhandler.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/hoblistmodel.py
->  delete mode 100755 bitbake/lib/bb/ui/crumbs/hobpages.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
->  delete mode 100755 bitbake/lib/bb/ui/crumbs/imagedetailspage.py
->  delete mode 100755 bitbake/lib/bb/ui/crumbs/packageselectionpage.py
->  delete mode 100755 bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/sanitycheckpage.py
->  delete mode 100644 bitbake/lib/bb/ui/crumbs/utils.py
->  delete mode 100755 bitbake/lib/bb/ui/hob.py
+>  lib/bb/utils.py | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>=20
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index 82579b8..7ab8927 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -534,6 +534,21 @@ def sha256_file(filename):
+>              s.update(line)
+>      return s.hexdigest()
+>=20
+> +def sha1_file(filename):
+> +    """
+> +    Return the hex string representation of the SHA1 checksum of the fil=
+ename
 
-A couple of things:
+I saw that this was already integrated, but I think the above=20
+description is very misleading. I read it as that the function=20
+returns the SHA-1 checksum of the file name, but by reading the=20
+code it is obvious that it returns the SHA-1 checksum of the=20
+file contents...
 
-1) Please add a commit message - feel free to cut and paste from my earlier 
-email to the list regarding removing Hob.
+I would change "the filename" to "a file".
 
-2) bin/image-writer isn't removed by this and uses some of the modules in 
-lib/bb/ui/crumbs/. I've sent a reply to the Hob removal thread with the 
-details because it probably merits a wider discussion.
+> +    """
+> +    try:
+> +        import hashlib
+> +    except ImportError:
+> +        return None
+> +
+> +    s =3D hashlib.sha1()
+> +    with open(filename, "rb") as f:
+> +        for line in f:
+> +            s.update(line)
+> +    return s.hexdigest()
+> +
+>  def preserved_envvars_exported():
+>      """Variables which are taken from the environment and placed in and =
+exported
+>      from the metadata"""
+> --
+> 2.7.1
 
-3) There are other bits we'd want to remove for a full cleanup (including some 
-code in cooker and command.py) but we can do that separately.
+//Peter
 
-Cheers,
-Paul
-
--- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
 
