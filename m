@@ -1,48 +1,58 @@
 Return-Path: <lucas.dutra.nunes@gmail.com>
-Received: from mail-qg0-f68.google.com (mail-qg0-f68.google.com
-	[209.85.192.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 25C137317E
+Received: from mail-yw0-f195.google.com (mail-yw0-f195.google.com
+	[209.85.161.195])
+	by mail.openembedded.org (Postfix) with ESMTP id CE34D7317E
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Mar 2016 13:13:46 +0000 (UTC)
-Received: by mail-qg0-f68.google.com with SMTP id 14so12558583qgg.3
+	Tue,  1 Mar 2016 13:17:11 +0000 (UTC)
+Received: by mail-yw0-f195.google.com with SMTP id h80so9299726ywc.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 01 Mar 2016 05:13:47 -0800 (PST)
+	Tue, 01 Mar 2016 05:17:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=sender:from:to:cc:subject:date:message-id;
-	bh=KhtCh/2meYFqglIu4j5CWQOspsOY1D/KcUAuMQ4yBNQ=;
-	b=UBJKX3hUJE77XNS89cDMkgZdD4A4NPVLbG+eLOZ+58ch4l9+6JBv+OI2VawTl2gQq5
-	Vh3yK6YjmIWpb7UwC4DGTCW4TldofvmDNKjKgT2PCf959rEzNLhjOJ4ji8XhB77V92rY
-	yXpVkDDti3Jk/21xrNeggNPJHJE3+OChLpRDhYEpFNfn0CT+tshADdYhxAbU7IezH+8M
-	qFp+zpP6DUEAYs/9m1qQRrNW4gt3cHc4uU7z6Bnk0JMkyGc8A3BOpb7IVUieSMWzzSMg
-	iBatRIPOfb9Hw1w4MJSrBclSU7gR8Euc2LHND2aYHgdeK5WJ2Rp3Hlqabga77/Etuote
-	1GXQ==
+	h=mime-version:sender:in-reply-to:references:date:message-id:subject
+	:from:to:cc; bh=Z5c6U5A0Va1T7TzOgqAEeOinBxcC83CnYh/PoYyXBYI=;
+	b=xD28lmj0z5upUK2WbvxWr1BjNARUo1EWcccJz6z2fnEuw1P/KEhzJVuSxGZ3VXpgRw
+	ELITfz9zBTtKFP+CdzX6B3VpmgmGWm9VSv4N5WlEMVk+00GTpJmVVFCM1Ac+khymgmhj
+	occS8JsXU5UVKyoQyTbYLQrZMq5PGtnhSrFEd3w9Iswo7cx0IrEaxLnQi5GLo1Fc4+Bp
+	YjBikcvBM0e1iOosG4OWTWGvydviifdGQVTYWrS6d9iX5/9WtYgl3FipWaOUNROt7esT
+	0pAWbPDvVdH/eU/WeNkCfyM6GbkW9auiUCfTRnhAhec6F2Xx8OJ9StANyLtGLSM+XJl9
+	fOHA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ossystems-com-br.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:sender:in-reply-to:references:date:message-id:subject
+	:from:to:cc; bh=Z5c6U5A0Va1T7TzOgqAEeOinBxcC83CnYh/PoYyXBYI=;
+	b=Z5b8+Hd5S4Co8H3qk+fd2NbTe0wPG0wOQ8gazxvpn2RiEIw1xvdSEXksy+4sVeoN3T
+	/hk9T31M+QqXNoJOUVqt181bM7RzBAVvpduoMh3uHspdbnUoEwGxSjoLwkhnDFthmklq
+	EL6u2+Ewavyji+VZkUtiVmpJWtVQwzbmZ+Xq6EkkNqGlmBuGWPG4cW/utx1+7IUC69AD
+	XhMpW8x4S9R5d/zBeVZgVH8iCRUMP/9pxLEX47GbMCTJnAYNZXq9fqXDZ0cx8L7fdvc4
+	Iu7Wc+YYY0/aE1qeLF1bPo5jGYalBJ6rymG012r6vW718s+dsMzz4yboiQH1yT8e4LI0
+	Etaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-	bh=KhtCh/2meYFqglIu4j5CWQOspsOY1D/KcUAuMQ4yBNQ=;
-	b=hJ/NLHNN2/3tPkXkdxNj/I3R+LFYJ91nJ1BHfn0bXzCDg58dNSRqTKR3WndLvIwO/1
-	0uZ4yG9gUdOejAsEd8uQmzx/Q9kPUMTLuI3XbBldUcotxr92j5/8nfj5BiMHeJ0apgJk
-	o0S/EyDI7CirGIqfHw8JamZZ82CcaAb9TRC8zfZS4Tw641glmN+DIYk3h7hhMGxbCF7a
-	y7f1DRoyr0hpheGbt+gUJJtV5NH4da0d/xi85IkFmqorwRYulf6+t4iKAoXQHVkhk9Sm
-	6DUkKuqGyqiJfxfKtiZTq2ZO4TdrDBSPaVS0WD50x7nja+EiepzZyWTkqYJpy6CvTfhi
-	V2nw==
-X-Gm-Message-State: AD7BkJK3j11XlawPJT2WraM0BYaShkmkQntqjmRgwEUyYVpE20NVfkLWGF9NXqUgkUIz/g==
-X-Received: by 10.140.160.130 with SMTP id g124mr27888248qhg.88.1456838026765; 
-	Tue, 01 Mar 2016 05:13:46 -0800 (PST)
-Received: from ldnunes.lab.ossystems.com.br ([179.105.251.106])
-	by smtp.gmail.com with ESMTPSA id
-	a66sm12963385qkb.20.2016.03.01.05.13.45
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 01 Mar 2016 05:13:46 -0800 (PST)
-Sender: Lucas Nunes <lucas.dutra.nunes@gmail.com>
-From: Lucas Dutra Nunes <ldnunes@ossystems.com.br>
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:date
+	:message-id:subject:from:to:cc;
+	bh=Z5c6U5A0Va1T7TzOgqAEeOinBxcC83CnYh/PoYyXBYI=;
+	b=DaxQHnWwEGBXWysaIZ3aXw8g4m/DfBV5WqlY5YoSpbTphhiR8dwpJlZ7HgvCPONs96
+	vPine4a0utbP4BdQsvtoVmZm9lFG9znDvz7DhcWIKAWEkHNWdc8U8dp21bjqRjnlExpG
+	shNBP5XgeXWHGL6+fWMro8z7i0NA6OpAE+IEhUPEhN7LEUN2sOSV87fdIfRxb504M6Gt
+	ubTArdOaASLzrV2BykLME6zvXuTt4EGQv393MHJ7eSF1EzmkTjbYpL90wBae45OdVuFg
+	gZ/2w1a48r7IfT8QdLnF6YVFwns3UILN38EeYZKvT4Pn02JqF0fBV1m1d/aN8CM/vWWS
+	vFEA==
+X-Gm-Message-State: AD7BkJL9oCVETSbdVo9zsOADZdlZ1LBGxsGZNiIOMtaNgLirCASuozaJ2JwD0rR8O4HpHihY2SgfmhylIrwyDA==
+MIME-Version: 1.0
+X-Received: by 10.129.91.6 with SMTP id p6mr11061074ywb.325.1456838232215;
+	Tue, 01 Mar 2016 05:17:12 -0800 (PST)
+Sender: lucas.dutra.nunes@gmail.com
+Received: by 10.129.147.65 with HTTP; Tue, 1 Mar 2016 05:17:12 -0800 (PST)
+In-Reply-To: <1456838014-9941-1-git-send-email-ldnunes@ossystems.com.br>
+References: <1456838014-9941-1-git-send-email-ldnunes@ossystems.com.br>
+Date: Tue, 1 Mar 2016 10:17:12 -0300
+X-Google-Sender-Auth: O2ZjqlAPyZUty6RJdM5HU7_4_IQ
+Message-ID: <CABLrhkj5vJj8O2LDmZE8k7n33g+Lj=3rfbEbrKiGTamEEZXbhQ@mail.gmail.com>
+From: Lucas Nunes <ldnunes@ossystems.com.br>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  1 Mar 2016 10:13:34 -0300
-Message-Id: <1456838014-9941-1-git-send-email-ldnunes@ossystems.com.br>
-X-Mailer: git-send-email 2.1.4
 X-Mailman-Approved-At: Mon, 07 Mar 2016 17:22:11 +0000
 Cc: Lucas Dutra Nunes <ldnunes@ossystems.com.br>
-Subject: [Documentation][PATCH v1] Server comm: try connecting 4 times before giving up
+Subject: Re: [Documentation][PATCH v1] Server comm: try connecting 4 times before giving up
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,38 +65,21 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 01 Mar 2016 13:13:48 -0000
+X-List-Received-Date: Tue, 01 Mar 2016 13:17:13 -0000
+Content-Type: multipart/alternative; boundary=001a114c888c539e31052cfc9568
 
-Instead of trying one time with a timeout of 20 seconds try 4 times with
-a timeout of 5 seconds, to account for a slow server start.
+--001a114c888c539e31052cfc9568
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Lucas Dutra Nunes <ldnunes@ossystems.com.br>
----
- lib/bb/server/process.py | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Please ignore the [Documentation] tag, I forgot to remove it.
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 1e2b824..e387b30 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -53,10 +53,12 @@ class ServerCommunicator():
-         while True:
-             # don't let the user ctrl-c while we're waiting for a response
-             try:
--                if self.connection.poll(20):
--                    return self.connection.recv()
--                else:
--                    bb.fatal("Timeout while attempting to communicate with bitbake server")
-+                for idx in range(0,4): # 0, 1, 2, 3
-+                    if self.connection.poll(5):
-+                        return self.connection.recv()
-+                    else:
-+                        bb.warn("Timeout while attempting to communicate with bitbake server")
-+                bb.fatal("Gave up; Too many tries: timeout while attempting to communicate with bitbake server")
-             except KeyboardInterrupt:
-                 pass
- 
 -- 
-2.1.4
+Lucas Dutra Nunes
 
+--001a114c888c539e31052cfc9568
+Content-Type: text/html; charset=UTF-8
 
+<div dir="ltr">Please ignore the [Documentation] tag, I forgot to remove it.<br><div><div class="gmail_extra"><br>-- <br><div class="gmail_signature">Lucas Dutra Nunes</div>
+</div></div></div>
+
+--001a114c888c539e31052cfc9568--
