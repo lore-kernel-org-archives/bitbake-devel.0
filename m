@@ -1,49 +1,52 @@
 Return-Path: <avery.brian@gmail.com>
 Received: from mail-pa0-f68.google.com (mail-pa0-f68.google.com
 	[209.85.220.68])
-	by mail.openembedded.org (Postfix) with ESMTP id C032876803
+	by mail.openembedded.org (Postfix) with ESMTP id 261FD731C4
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Mar 2016 06:41:30 +0000 (UTC)
-Received: by mail-pa0-f68.google.com with SMTP id hj7so776270pac.1
+	Thu,  3 Mar 2016 06:41:31 +0000 (UTC)
+Received: by mail-pa0-f68.google.com with SMTP id a7so767190pax.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Mar 2016 22:41:31 -0800 (PST)
+	Wed, 02 Mar 2016 22:41:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=0sZvLLtF5oiWN5g1D+dTWYZeh6An9znuNa34KZ1xRck=;
-	b=bpHyBWzKpaDodwVFI7obPftq7a7DydNvHCAVZT9FTgIwx4dbuWU/A7+qPW+pRwWZpC
-	FrEhRHxOntGp0l7oBwEDQ1RpYtTcSb6jHFIndWwDVBXCZbFIsxC8t0ujEeEcDIOLq1/n
-	xOjwHfVNEIdBHdEfPSd2BleWUb4fP6E1V3Qv4M6lRF6SLV5YWppRyD+9qHju9UgrPa7W
-	R8o3N6T4nxO36VB60pLkCCYLDNYcvOSOFoK1RQ2MD85ZuxUGHOx+aETlSkqmW/rp6pZs
-	8X3JKPUFtBWJxBJTsWsETKsbjTPhGg9quW3prdmX9FqX1hYBRkAY/WPHq3m5LU7GTmAR
-	P3kQ==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:in-reply-to:references;
+	bh=RyYNxXHMQmIqXtKQ/oiQRi+AA2cbz7lgX+CbWoLSNbc=;
+	b=GPGm1zEWgFohmGBEz22gpvghCcolZoRjzGqn8pPj8ndDPkEc2vP8WiKC8JX8I4dnfM
+	8FiNdpnGg09mGuweQowD56abFSObrjIgtz9hKDxFG5PygAaXOqzRlJ/kY6SChty1JeEa
+	duvKGw2gxTQxR1XJBuduw4PBLgnvM/V+v7daq4ve91iHp2ybiIIGun3jwAc9UxrdO4I9
+	WORfU87hd4gWFl8ORlTQNFoErmoEs//tU+WqbcDfsr/vqeP6cus7JfcBkOlGnfPBVoER
+	hfkNCyfU9k15jmDZYQv1HO8Hl+QetQustuSFSy2x3OqKQaqRVpPDfsoSW8qvuE+UyO7t
+	PobA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=0sZvLLtF5oiWN5g1D+dTWYZeh6An9znuNa34KZ1xRck=;
-	b=lMDa2Bfdu6U1+uE0+rG6qiYTA0EubV7VuwAWR8rONr0t4/UZFQpeWg46c3CKVsb1az
-	cjmOcZmWqEEOfm55JYHR5ruEAYNbPJxRWdKT0gReiwzj7Y5JFFPE7Z6D5DpXvGtvawjq
-	HaK5XkbaTxdrVZZzo2W7Y44eGWRYegT3QQDX0Fm8HymwH5ZaYgcd+LiMKoczt1tWaPT/
-	NjpAk3IR5j6oWRBcRf6HivyRVnaFoj5OVNT1z8YQ95rbshSslnwdvn57etPsweJJhs+v
-	O+roZaleEpdp9+qALrJLj1EmeLudgmH/RDu+tBt6W4d6OgzPy98USTvUAKqLwOcg3QUG
-	cY1g==
-X-Gm-Message-State: AD7BkJLINIrymPHrRYyvOBSxKutSHY9xlETE3EzNDXiraHwN4MyC6N1TFbF+XUUUavvi9A==
-X-Received: by 10.67.6.10 with SMTP id cq10mr1445076pad.120.1456987291260;
-	Wed, 02 Mar 2016 22:41:31 -0800 (PST)
+	:references:in-reply-to:references;
+	bh=RyYNxXHMQmIqXtKQ/oiQRi+AA2cbz7lgX+CbWoLSNbc=;
+	b=B4a4pUopw59mkSfBTyB8jZHCdhFmRxCx7AThU1G8NPyORYy48xyTS+RBFlP+6QOKwa
+	lR79LJQncxVOYVuwlFjGgmgpIyyfjjqlPtVEWf9O1f+ODzzxmO2J2//HhWPXpvUEfZKz
+	KzglllK0K4V1SlGGnSH/ExDCsNMps6S/Uj8cBEtAeKjyhl3b57To590UuR3GaXiu57c/
+	JFoGL5uyBIlJpCWShOhV9jfemA0rk8Z3Y/O3e/f0uZHW00XF9Acb7mOrWSjNJkT6uW39
+	PqbYQ3QSpXi1LOG6GE4IxKfA9j4+dUWJ31ESKY7jUYtV1QyUBPMMA5UJB8AOUhIOnrp/
+	A6hg==
+X-Gm-Message-State: AD7BkJLSkm/VTPjgxfC8ps+3pB77BMdswxshOXIE7arx+nBhMnhGLkozn69BxnuSmp4IiA==
+X-Received: by 10.66.160.7 with SMTP id xg7mr1460519pab.10.1456987293021;
+	Wed, 02 Mar 2016 22:41:33 -0800 (PST)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	r62sm57476673pfr.26.2016.03.02.22.41.30
+	r62sm57476673pfr.26.2016.03.02.22.41.32
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 02 Mar 2016 22:41:30 -0800 (PST)
+	Wed, 02 Mar 2016 22:41:32 -0800 (PST)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Mar 2016 22:47:38 -0800
-Message-Id: <05400d100e891245541e10b1d5db9a783004b20e.1456987460.git.avery.brian@gmail.com>
+Date: Wed,  2 Mar 2016 22:47:40 -0800
+Message-Id: <59ecf27a090608524c5c93258400d1b49df510bf.1456987460.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <05400d100e891245541e10b1d5db9a783004b20e.1456987460.git.avery.brian@gmail.com>
+References: <05400d100e891245541e10b1d5db9a783004b20e.1456987460.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1456987460.git.avery.brian@gmail.com>
 References: <cover.1456987460.git.avery.brian@gmail.com>
-Subject: [PATCH 1/7] toasterui: reformat list of events
+Subject: [PATCH 3/7] command: make setEventMask readonly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,66 +59,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Mar 2016 06:41:30 -0000
+X-List-Received-Date: Thu, 03 Mar 2016 06:41:32 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Reformatted and reordered list of events to make changes
-easily and see them clearly in the diffs.
+Executing setEventMask command when bitbake server is in readonly
+mode causes runCommand to fail with the following error:
+ 'Not able to execute not readonly commands in readonly mode'
+
+Set readonly attribute for setEventMask command to make it working
+for Toaster UI. This should not do any harm as this command doesn't
+influence cooker state.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/bb/ui/toasterui.py | 36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+ lib/bb/command.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 32b1889..377526e 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -92,15 +92,33 @@ def _close_build_log(build_log):
-         build_log.close()
-         logger.removeHandler(build_log)
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 74106d1..0559ffc 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -279,6 +279,7 @@ class CommandsSync:
+         mask = params[3]
+         return bb.event.set_UIHmask(handlerNum, llevel, debug_domains, mask)
+     setEventMask.needconfig = False
++    setEventMask.readonly = True
  
--_evt_list = [ "bb.runqueue.runQueueExitWait", "bb.event.LogExecTTY", "logging.LogRecord",
--              "bb.build.TaskFailed", "bb.build.TaskBase", "bb.event.ParseStarted",
--              "bb.event.ParseProgress", "bb.event.ParseCompleted", "bb.event.CacheLoadStarted",
--              "bb.event.CacheLoadProgress", "bb.event.CacheLoadCompleted", "bb.command.CommandFailed",
--              "bb.command.CommandExit", "bb.command.CommandCompleted",  "bb.cooker.CookerExit",
--              "bb.event.MultipleProviders", "bb.event.NoProvider", "bb.runqueue.sceneQueueTaskStarted",
--              "bb.runqueue.runQueueTaskStarted", "bb.runqueue.runQueueTaskFailed", "bb.runqueue.sceneQueueTaskFailed",
--              "bb.event.BuildBase", "bb.build.TaskStarted", "bb.build.TaskSucceeded", "bb.build.TaskFailedSilent",
--              "bb.event.MetadataEvent"]
-+_evt_list = [
-+    "bb.build.TaskBase",
-+    "bb.build.TaskFailed",
-+    "bb.build.TaskFailedSilent",
-+    "bb.build.TaskStarted",
-+    "bb.build.TaskSucceeded",
-+    "bb.command.CommandCompleted",
-+    "bb.command.CommandExit",
-+    "bb.command.CommandFailed",
-+    "bb.cooker.CookerExit",
-+    "bb.event.BuildBase",
-+    "bb.event.CacheLoadCompleted",
-+    "bb.event.CacheLoadProgress",
-+    "bb.event.CacheLoadStarted",
-+    "bb.event.LogExecTTY",
-+    "bb.event.MetadataEvent",
-+    "bb.event.MultipleProviders",
-+    "bb.event.NoProvider",
-+    "bb.event.ParseCompleted",
-+    "bb.event.ParseProgress",
-+    "bb.event.ParseStarted",
-+    "bb.runqueue.runQueueExitWait",
-+    "bb.runqueue.runQueueTaskFailed",
-+    "bb.runqueue.runQueueTaskStarted",
-+    "bb.runqueue.sceneQueueTaskFailed",
-+    "bb.runqueue.sceneQueueTaskStarted",
-+    "logging.LogRecord"]
- 
- def main(server, eventHandler, params):
-     # set to a logging.FileHandler instance when a build starts;
+     def setFeatures(self, command, params):
+         """
 -- 
 1.9.1
 
