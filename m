@@ -1,36 +1,46 @@
-Return-Path: <tanuk@iki.fi>
-X-Greylist: delayed 444 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 01 Mar 2016 12:57:54 UTC
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com
-	[66.111.4.27])
-	by mail.openembedded.org (Postfix) with ESMTP id 4C7FE6AC3C
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f68.google.com (mail-pa0-f68.google.com
+	[209.85.220.68])
+	by mail.openembedded.org (Postfix) with ESMTP id BB94D602D9
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Mar 2016 12:57:54 +0000 (UTC)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 0AAA0213BD
+	Thu,  3 Mar 2016 05:20:38 +0000 (UTC)
+Received: by mail-pa0-f68.google.com with SMTP id a7so672953pax.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Mar 2016 07:50:31 -0500 (EST)
-Received: from frontend1 ([10.202.2.160])
-	by compute5.internal (MEProxy); Tue, 01 Mar 2016 07:50:31 -0500
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=
-	messagingengine.com; h=content-transfer-encoding:content-type
-	:date:from:message-id:mime-version:subject:to:x-sasl-enc
-	:x-sasl-enc; s=smtpout; bh=ng7rFhDJ6pkQIgx76eG4UDPzveM=; b=KWaTE
-	/u866iVVEjAndDadXECM7ynZSY3m/LR21y/MHAbEqNaBuYpRMBZVLgWntSkmCkNv
-	ddp+r2kNuou2/pL0BEUcj+v3jUq4WP4wsq7qkQnoTOskSEF3mincKwgJTDUlS9di
-	n7r3qYzhbo+v2pILGsIIiSXpIWpWhuD/gKQu4w=
-X-Sasl-enc: HHfjySKKOSOT9Ai53iynXlihGtGYw13ie7TjDKHrNfbg 1456836630
-Received: from laptop (a88-113-211-72.elisa-laajakaista.fi [88.113.211.72])
-	by mail.messagingengine.com (Postfix) with ESMTPA id 8CC91C0001B
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Mar 2016 07:50:30 -0500 (EST)
-Message-ID: <1456836629.1737.41.camel@iki.fi>
-From: Tanu Kaskinen <tanuk@iki.fi>
+	Wed, 02 Mar 2016 21:20:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=qM8WW8luoWy5h1WJFCmBbE5zu3v0SriB+DfgO1vftUk=;
+	b=VUYb4A+w7p+xoujXzue4ZhVXvENW824EigbEzKOXJQTYM/jhKyaHb3jU6V0oSONitY
+	TFioTZMDtNzSH6eqNdO8JgrSutY5n+FLghm++MnmdiGs5GB2oaMe/cUY80fZ6l9OpQbF
+	PB+EgCXUmeRdfoJ8KUlSXGzvvYnusbhG6UD8IHGpEJTNGcpsWn5dRwNwdlBhP8gMkRam
+	5OsCKOeW+fJwj5L08W/eSAbxkRJ2Kkd2f0uDwo7htcAXbk+a2l6bPNin5lArpjbFkks9
+	BqIKJYdyxX2Vu5Vz0gSROOwBLrzg3mVnea8F5wgkHBTCIZiFa9fICPZtpr0HHFCD9OZt
+	jxsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=qM8WW8luoWy5h1WJFCmBbE5zu3v0SriB+DfgO1vftUk=;
+	b=DlR8ROwtx3TfSISZ91n/WRuktYbEFJ74MwDMLRXip5AxK6JuDR9zkLeqaCoJ9rcWA9
+	Rji/xhog28iIfgYU48v6aAZihOFRvIrgbpBaY4TBANRd/e05Y4CjxNTLdUTEMau/s2iq
+	BeiFHRM3y7aBzauqOpFQoNVEMMdbx5hmEMTECFQNsHdrN+Zdur0oWO0ykMc994yvMiGg
+	RMvK94OCvtVlQy3CPCQLHneNzr3PQ0XoNmVjlmTkI84bfIfQJO79U2OW326ZAlHx0+0D
+	dYEMRAQouqixksEuDFIr7YR4loukFKQwhUQDQ8J8RxVaCglV7eWmM4yqydcXszzG9yI4
+	XqDw==
+X-Gm-Message-State: AD7BkJIm6vNRPA9BAXJLI0K+lr+4qQB5xZwEV+CQ2Gfj+vqdpZVi0CrocuBIRpdA+qEOPA==
+X-Received: by 10.66.65.228 with SMTP id a4mr1082403pat.4.1456982439156;
+	Wed, 02 Mar 2016 21:20:39 -0800 (PST)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	s197sm56825198pfs.62.2016.03.02.21.20.38
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 02 Mar 2016 21:20:38 -0800 (PST)
+From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 01 Mar 2016 14:50:29 +0200
-X-Mailer: Evolution 3.18.3-1 
-Mime-Version: 1.0
-Subject: Triggering graceful bitbake shutdown
+Date: Wed,  2 Mar 2016 21:26:52 -0800
+Message-Id: <cover.1456982682.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 0/3] toaster: remove ssh build controller
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,36 +53,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 01 Mar 2016 12:57:56 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 03 Mar 2016 05:20:40 -0000
 
-Hi,
+sshbecontroller code and tests have been broken for months. Its functionality(running
+builds on remote machine) can be achieved by simply running manage.py runbuilds
+on the remote machine. There is no need to keep it in the codebase.
 
-I wrote a small script that runs bitbake sequentially with multiple
-MACHINE values. Sometimes I want to stop it with ctrl-c before it has
-finished, but it didn't work properly out-of-the box when running
-bitbake under the script (my script would not wait for bitbake to exit,
-and bitbake threw some backtrace too). I then modified SIGINT handling
-in my script so that it forwards the signal to bitbake and then waits
-for bitbake to exit. The problem is that bitbake ignores SIGINT. The UI
-handles python's KeyboardInterrupt exception, but that exception
-doesn't get raised when bitbake runs under my script. I don't know what
-triggers KeyboardInterrupt in normal conditions, since SIGINT doesn't
-seem to be sufficient, does python perhaps monitor stdin to catch the
-actual ctrl-c keypress?
+This change would also make refactoring of buildcontroller code
+[YOCTO #8806] easier.
 
-Anyway, sending SIGTERM instead of SIGINT "works". However, the SIGTERM
-handler shuts down bitbake immediately rather than waiting for the
-current tasks to finish. Is that less safe than the normal ctrl-c
-handling? If the immediate shutdown is equally safe, then I have no
-problem, but if SIGTERM can cause state corruption so that resuming
-later doesn't work reliably, then I'd like to have some way for
-triggering graceful bitbake shutdown from my script. Any suggestions?
+-bavery
 
-Or maybe there is already some way to run bitbake for multiple
-MACHINEs, and I don't need to write any script myself?
+The following changes since commit ed3decf958ff7fd09da3ca931808bb68e7915971:
 
--- 
-Tanu
+  toaster: update the meta-yocto toaster configuration file (2016-03-02 20:30:17 -0800)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib bavery/submit/ed/2016-03-03_remove-ssh-controller
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/ed/2016-03-03_remove-ssh-controller
+
+Ed Bartosh (3):
+  toaster: raise NotImplementedError
+  toaster: don't use sshbecontroller
+  toaster: remove sshbecontroller module
+
+ lib/toaster/bldcontrol/bbcontroller.py             |  16 +-
+ .../migrations/0002_auto_20160120_1250.py          |  19 +++
+ lib/toaster/bldcontrol/models.py                   |  10 +-
+ lib/toaster/bldcontrol/sshbecontroller.py          | 169 ---------------------
+ lib/toaster/bldcontrol/tests.py                    |  30 +---
+ 5 files changed, 32 insertions(+), 212 deletions(-)
+ create mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0002_auto_20160120_1250.py
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/sshbecontroller.py
+
+--
+1.9.1
 
