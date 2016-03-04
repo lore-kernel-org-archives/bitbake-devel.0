@@ -1,52 +1,23 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-pf0-f195.google.com (mail-pf0-f195.google.com
-	[209.85.192.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 4185E731BA
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id A7B5F7320F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Mar 2016 06:41:35 +0000 (UTC)
-Received: by mail-pf0-f195.google.com with SMTP id q129so803159pfb.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Mar 2016 22:41:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:in-reply-to:references;
-	bh=BzGKEdIjF1MNa2Gtg+jeudrK73Pe2gzmisF88ASy9FY=;
-	b=SKpi2kNt7s8fnyQf60ABgs87OINYhX35qGtZR5abRsQFB2RXOJ0ElfF2ftL9CEALEu
-	kHMQ7WpPvOFLeZZ92JsENcvGp3SKoWTIwG/b7tu95TTYl8u5HaheLCRV63x8YNVqUF5I
-	kunZ/pKW7QZsufNg+pnYptBsl2g73sAxlUunm51wg/mKmdR2uXxs57dDhZ1t8pHhXwWd
-	mlR/F9mVk3sY7gWcZSdp2P27ZjwgHpJp6ZVgFWqfpxAFJY9xEg2uxwPs1xnlI4XG83No
-	dY5XYPBfDywQqf7/B1zkaZxrxgvELr7b07WPwtsm9dCtDEd/P3/AzBshtVJRf9CNu8Wp
-	6tOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=BzGKEdIjF1MNa2Gtg+jeudrK73Pe2gzmisF88ASy9FY=;
-	b=eRbzX8lBGrux81dbUHkp/njbuaVTNBpRnG36chNbPLgYu5mg9bNZRK2MSk5bIOtx2F
-	/cn2gxXFgIwns4yOyvRuAgYqkDRZtjYk33Izp8UKNHm5FXIqMWXSur79VIOz0qsQtdxx
-	ijAeiH3cfkPWF8eDiULua8+EcOAs6UOfRsSMY9xtTHVkndV0K+szaWYIMYwjBbLrhytY
-	DHCdM1npeOTFrHh3T5yWM07oDlmRQBKqRoiDjU/GJ1lpgM83KSC3Rv8W+v3v7fgzriPE
-	SwgM/K87UfjiKmzZaqk3ib7W0amrhwevYFxjsUjrgIW+f4XswJtDu3BWizNFeCywVF/F
-	1WWQ==
-X-Gm-Message-State: AD7BkJJKnMTV5P/KOctd1yYfHL5JkwJXvMBPy3P1D3Lv8KKV1++NsT/uAiIwR5eNQXbudQ==
-X-Received: by 10.98.11.88 with SMTP id t85mr1442356pfi.98.1456987296903;
-	Wed, 02 Mar 2016 22:41:36 -0800 (PST)
-Received: from whisper.hsd1.or.comcast.net
-	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id
-	r62sm57476673pfr.26.2016.03.02.22.41.36
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 02 Mar 2016 22:41:36 -0800 (PST)
-From: brian avery <avery.brian@gmail.com>
+	Fri,  4 Mar 2016 10:23:34 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga103.jf.intel.com with ESMTP; 04 Mar 2016 02:23:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,535,1449561600"; d="scan'208";a="929497419"
+Received: from linux.intel.com ([10.23.219.25])
+	by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2016 02:23:29 -0800
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
+	by linux.intel.com (Postfix) with ESMTP id 091C46A4002;
+	Fri,  4 Mar 2016 03:11:15 -0800 (PST)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Mar 2016 22:47:44 -0800
-Message-Id: <743453a7908d1fd344ccb66db3da50d3f3abd7f6.1456987460.git.avery.brian@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <05400d100e891245541e10b1d5db9a783004b20e.1456987460.git.avery.brian@gmail.com>
-References: <05400d100e891245541e10b1d5db9a783004b20e.1456987460.git.avery.brian@gmail.com>
-In-Reply-To: <cover.1456987460.git.avery.brian@gmail.com>
-References: <cover.1456987460.git.avery.brian@gmail.com>
-Subject: [PATCH 7/7] toasterui: fix warning 'Unknown event'
+Date: Fri,  4 Mar 2016 10:13:40 +0200
+Message-Id: <1457079220-27980-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] xmlrpc: fix bug in setting XMLRPCServer.single_use
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,32 +30,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Mar 2016 06:41:36 -0000
+X-List-Received-Date: Fri, 04 Mar 2016 10:23:36 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-
-Continue after processing BuildStarted event to fix
-WARNING: Unknown event: <bb.event.BuildStarted object at 0x2554150>
+XMLRPCServer.single_use attribute was always set to False.
+This caused xmlrpc server to keep running after build is done as
+BitBakeServerCommands.removeClient only shuts down server if its
+single_use attribute is set to True.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/bb/ui/toasterui.py | 1 +
- 1 file changed, 1 insertion(+)
+ bitbake/lib/bb/server/xmlrpc.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 728803d..eee8d14 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -244,6 +244,7 @@ def main(server, eventHandler, params):
-                     build_log, build_log_file_path = _open_build_log(log_dir)
+diff --git a/bitbake/lib/bb/server/xmlrpc.py b/bitbake/lib/bb/server/xmlrpc.py
+index 1ceca51..d627550 100644
+--- a/bitbake/lib/bb/server/xmlrpc.py
++++ b/bitbake/lib/bb/server/xmlrpc.py
+@@ -193,6 +193,8 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+         BaseImplServer.__init__(self)
+         if (interface[1] == 0):     # anonymous port, not getting reused
+             self.single_use = True
++        else:
++            self.singe_use = False
+         # Use auto port configuration
+         if (interface[1] == -1):
+             interface = (interface[0], 0)
+@@ -205,7 +207,6 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+         self.commands = BitBakeServerCommands(self)
+         self.autoregister_all_functions(self.commands, "")
+         self.interface = interface
+-        self.single_use = False
  
-                 buildinfohelper.store_started_build(event, build_log_file_path)
-+                continue
- 
-             if isinstance(event, (bb.build.TaskStarted, bb.build.TaskSucceeded, bb.build.TaskFailedSilent)):
-                 buildinfohelper.update_and_store_task(event)
+     def addcooker(self, cooker):
+         BaseImplServer.addcooker(self, cooker)
 -- 
-1.9.1
+2.1.4
 
 
