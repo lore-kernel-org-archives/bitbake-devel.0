@@ -1,58 +1,32 @@
-Return-Path: <lucas.dutra.nunes@gmail.com>
-Received: from mail-yw0-f195.google.com (mail-yw0-f195.google.com
-	[209.85.161.195])
-	by mail.openembedded.org (Postfix) with ESMTP id CE34D7317E
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id E5B696FF93
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Mar 2016 13:17:11 +0000 (UTC)
-Received: by mail-yw0-f195.google.com with SMTP id h80so9299726ywc.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 01 Mar 2016 05:17:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:date:message-id:subject
-	:from:to:cc; bh=Z5c6U5A0Va1T7TzOgqAEeOinBxcC83CnYh/PoYyXBYI=;
-	b=xD28lmj0z5upUK2WbvxWr1BjNARUo1EWcccJz6z2fnEuw1P/KEhzJVuSxGZ3VXpgRw
-	ELITfz9zBTtKFP+CdzX6B3VpmgmGWm9VSv4N5WlEMVk+00GTpJmVVFCM1Ac+khymgmhj
-	occS8JsXU5UVKyoQyTbYLQrZMq5PGtnhSrFEd3w9Iswo7cx0IrEaxLnQi5GLo1Fc4+Bp
-	YjBikcvBM0e1iOosG4OWTWGvydviifdGQVTYWrS6d9iX5/9WtYgl3FipWaOUNROt7esT
-	0pAWbPDvVdH/eU/WeNkCfyM6GbkW9auiUCfTRnhAhec6F2Xx8OJ9StANyLtGLSM+XJl9
-	fOHA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ossystems-com-br.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:sender:in-reply-to:references:date:message-id:subject
-	:from:to:cc; bh=Z5c6U5A0Va1T7TzOgqAEeOinBxcC83CnYh/PoYyXBYI=;
-	b=Z5b8+Hd5S4Co8H3qk+fd2NbTe0wPG0wOQ8gazxvpn2RiEIw1xvdSEXksy+4sVeoN3T
-	/hk9T31M+QqXNoJOUVqt181bM7RzBAVvpduoMh3uHspdbnUoEwGxSjoLwkhnDFthmklq
-	EL6u2+Ewavyji+VZkUtiVmpJWtVQwzbmZ+Xq6EkkNqGlmBuGWPG4cW/utx1+7IUC69AD
-	XhMpW8x4S9R5d/zBeVZgVH8iCRUMP/9pxLEX47GbMCTJnAYNZXq9fqXDZ0cx8L7fdvc4
-	Iu7Wc+YYY0/aE1qeLF1bPo5jGYalBJ6rymG012r6vW718s+dsMzz4yboiQH1yT8e4LI0
-	Etaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:sender:in-reply-to:references:date
-	:message-id:subject:from:to:cc;
-	bh=Z5c6U5A0Va1T7TzOgqAEeOinBxcC83CnYh/PoYyXBYI=;
-	b=DaxQHnWwEGBXWysaIZ3aXw8g4m/DfBV5WqlY5YoSpbTphhiR8dwpJlZ7HgvCPONs96
-	vPine4a0utbP4BdQsvtoVmZm9lFG9znDvz7DhcWIKAWEkHNWdc8U8dp21bjqRjnlExpG
-	shNBP5XgeXWHGL6+fWMro8z7i0NA6OpAE+IEhUPEhN7LEUN2sOSV87fdIfRxb504M6Gt
-	ubTArdOaASLzrV2BykLME6zvXuTt4EGQv393MHJ7eSF1EzmkTjbYpL90wBae45OdVuFg
-	gZ/2w1a48r7IfT8QdLnF6YVFwns3UILN38EeYZKvT4Pn02JqF0fBV1m1d/aN8CM/vWWS
-	vFEA==
-X-Gm-Message-State: AD7BkJL9oCVETSbdVo9zsOADZdlZ1LBGxsGZNiIOMtaNgLirCASuozaJ2JwD0rR8O4HpHihY2SgfmhylIrwyDA==
+	Mon,  7 Mar 2016 21:41:12 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by fmsmga102.fm.intel.com with ESMTP; 07 Mar 2016 13:41:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,553,1449561600"; d="scan'208";a="61605901"
+Received: from linux.intel.com ([10.23.219.25])
+	by fmsmga004.fm.intel.com with ESMTP; 07 Mar 2016 13:41:12 -0800
+Received: from linux.intel.com (vmed.fi.intel.com [10.237.72.51])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTP id 598426A4002;
+	Mon,  7 Mar 2016 14:28:58 -0800 (PST)
+Date: Mon, 7 Mar 2016 21:21:20 +0200
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: Joshua G Lock <joshua.g.lock@linux.intel.com>
+Message-ID: <20160307192120.GA5834@linux.intel.com>
+Reply-To: ed.bartosh@linux.intel.com
+References: <1457079220-27980-1-git-send-email-ed.bartosh@linux.intel.com>
+	<1457087406.3285.3.camel@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 10.129.91.6 with SMTP id p6mr11061074ywb.325.1456838232215;
-	Tue, 01 Mar 2016 05:17:12 -0800 (PST)
-Sender: lucas.dutra.nunes@gmail.com
-Received: by 10.129.147.65 with HTTP; Tue, 1 Mar 2016 05:17:12 -0800 (PST)
-In-Reply-To: <1456838014-9941-1-git-send-email-ldnunes@ossystems.com.br>
-References: <1456838014-9941-1-git-send-email-ldnunes@ossystems.com.br>
-Date: Tue, 1 Mar 2016 10:17:12 -0300
-X-Google-Sender-Auth: O2ZjqlAPyZUty6RJdM5HU7_4_IQ
-Message-ID: <CABLrhkj5vJj8O2LDmZE8k7n33g+Lj=3rfbEbrKiGTamEEZXbhQ@mail.gmail.com>
-From: Lucas Nunes <ldnunes@ossystems.com.br>
-To: bitbake-devel@lists.openembedded.org
-X-Mailman-Approved-At: Mon, 07 Mar 2016 17:22:11 +0000
-Cc: Lucas Dutra Nunes <ldnunes@ossystems.com.br>
-Subject: Re: [Documentation][PATCH v1] Server comm: try connecting 4 times before giving up
+In-Reply-To: <1457087406.3285.3.camel@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] xmlrpc: fix bug in setting XMLRPCServer.single_use
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -65,21 +39,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 01 Mar 2016 13:17:13 -0000
-Content-Type: multipart/alternative; boundary=001a114c888c539e31052cfc9568
+X-List-Received-Date: Mon, 07 Mar 2016 21:41:16 -0000
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
---001a114c888c539e31052cfc9568
-Content-Type: text/plain; charset=UTF-8
+On Fri, Mar 04, 2016 at 10:30:06AM +0000, Joshua G Lock wrote:
+> On Fri, 2016-03-04 at 10:13 +0200, Ed Bartosh wrote:
+> > XMLRPCServer.single_use attribute was always set to False.
+> > This caused xmlrpc server to keep running after build is done as
+> > BitBakeServerCommands.removeClient only shuts down server if its
+> > single_use attribute is set to True.
+> > 
+> > Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+> > ---
+> >  bitbake/lib/bb/server/xmlrpc.py | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/bitbake/lib/bb/server/xmlrpc.py
+> > b/bitbake/lib/bb/server/xmlrpc.py
+> > index 1ceca51..d627550 100644
+> > --- a/bitbake/lib/bb/server/xmlrpc.py
+> > +++ b/bitbake/lib/bb/server/xmlrpc.py
+> > @@ -193,6 +193,8 @@ class XMLRPCServer(SimpleXMLRPCServer,
+> > BaseImplServer):
+> >          BaseImplServer.__init__(self)
+> >          if (interface[1] == 0):     # anonymous port, not getting
+> > reused
+> >              self.single_use = True
+> > +        else:
+> > +            self.singe_use = False
+> 
+> This won't work, right? Typo.
+>
+Why do you think so? It works for me so far :)
 
-Please ignore the [Documentation] tag, I forgot to remove it.
+--
+Regards,
+Ed
 
--- 
-Lucas Dutra Nunes
-
---001a114c888c539e31052cfc9568
-Content-Type: text/html; charset=UTF-8
-
-<div dir="ltr">Please ignore the [Documentation] tag, I forgot to remove it.<br><div><div class="gmail_extra"><br>-- <br><div class="gmail_signature">Lucas Dutra Nunes</div>
-</div></div></div>
-
---001a114c888c539e31052cfc9568--
