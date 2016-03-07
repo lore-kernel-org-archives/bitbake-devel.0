@@ -1,32 +1,34 @@
-Return-Path: <praveenreddy.p@hcl.com>
-X-Greylist: delayed 637 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 07 Mar 2016 08:41:12 UTC
-Received: from GWS07.hcl.com (gws07.hcl.com [192.8.186.130])
-	by mail.openembedded.org (Postfix) with ESMTP id 880F3601D3
+Return-Path: <gary@mlbassoc.com>
+X-Greylist: delayed 559 seconds by postgrey-1.34 at layers.openembedded.org;
+	Mon, 07 Mar 2016 09:21:08 UTC
+Received: from mail.analogue-micro.com (mail.analogue-micro.com
+	[217.144.149.242])
+	by mail.openembedded.org (Postfix) with ESMTP id 5B7726FF22
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  7 Mar 2016 08:41:11 +0000 (UTC)
-X-IronPort-AV: E=Sophos;i="5.22,550,1449513000"; d="scan'208,217";a="46634409"
-Received: from unknown (HELO CHN-CORP-HT02.CORP.HCL.IN) ([10.249.2.34])
-	by GWS07.hcl.com with ESMTP/TLS/AES128-SHA; 07 Mar 2016 14:00:31 +0530
-Received: from CHN-HCLT-CSHT03.HCLT.CORP.HCL.IN (10.150.12.28) by
-	CHN-CORP-HT02.CORP.HCL.IN (10.249.2.34) with Microsoft SMTP Server
-	(TLS) id 14.3.123.3; Mon, 7 Mar 2016 14:00:31 +0530
-Received: from CHN-HCLT-MBS02.HCLT.CORP.HCL.IN ([fe80::45e7:d7f7:b243:fdd9])
-	by CHN-HCLT-CSHT03.HCLT.CORP.HCL.IN ([::1]) with mapi id 14.03.0235.001;
-	Mon, 7 Mar 2016 14:00:31 +0530
-From: Praveenreddy Padamati <praveenreddy.p@hcl.com>
-To: "'bitbake-devel@lists.openembedded.org'"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: chromium browser
-Thread-Index: AdF4S3DvGU38BROqQtKunTWfxbIwIg==
-Date: Mon, 7 Mar 2016 08:30:30 +0000
-Message-ID: <09856974BCEE6F48AB378E52E4CAA73C226D79DD@CHN-HCLT-MBS02.HCLT.CORP.HCL.IN>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.150.5.114]
+	Mon,  7 Mar 2016 09:21:08 +0000 (UTC)
+Received: by mail.analogue-micro.com (Postfix, from userid 999)
+	id 84FAD68A01D; Mon,  7 Mar 2016 09:11:48 +0000 (GMT)
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	loki.analogue-micro-ltd.com
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=5.0 tests=ALL_TRUSTED,BAYES_20,
+	DNS_FROM_AHBL_RHSBL autolearn=no version=3.3.2
+Received: from zeus.mlbassoc.com (unknown [10.8.0.2])
+	by mail.analogue-micro.com (Postfix) with ESMTP id 31DBE68A019;
+	Mon,  7 Mar 2016 09:11:48 +0000 (GMT)
+Received: from [127.0.0.1] (localhost.localdomain [127.0.0.1])
+	by zeus.mlbassoc.com (Postfix) with ESMTP id D39A16740716;
+	Mon,  7 Mar 2016 10:11:47 +0100 (CET)
+To: bitbake-devel@lists.openembedded.org
+References: <09856974BCEE6F48AB378E52E4CAA73C226D79DD@CHN-HCLT-MBS02.HCLT.CORP.HCL.IN>
+From: Gary Thomas <gary@mlbassoc.com>
+Message-ID: <56DD45D3.5030506@mlbassoc.com>
+Date: Mon, 7 Mar 2016 10:11:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.5.1
 MIME-Version: 1.0
-Subject: chromium browser
+In-Reply-To: <09856974BCEE6F48AB378E52E4CAA73C226D79DD@CHN-HCLT-MBS02.HCLT.CORP.HCL.IN>
+Subject: Re: chromium browser
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,188 +41,22 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 07 Mar 2016 08:41:13 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_09856974BCEE6F48AB378E52E4CAA73C226D79DDCHNHCLTMBS02HCL_"
+X-List-Received-Date: Mon, 07 Mar 2016 09:21:08 -0000
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 
---_000_09856974BCEE6F48AB378E52E4CAA73C226D79DDCHNHCLTMBS02HCL_
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+On 2016-03-07 09:30, Praveenreddy Padamati wrote:
+> Hi,
+>
+> When I added chromium browser in yocto build configuration then bitbake is stucking at do compile. Can you please help me?
+>
 
-Hi,
-When I added chromium browser in yocto build configuration then bitbake is =
-stucking at do compile. Can you please help me?
+How long have you waited?  Depending on your target and host/build
+settings, building chromium can take a LONG time (measured in hours)
 
-Thanks and Regards,
-Praveen Reddy P
-HCL Technologies Ltd | Lead Engineer | Alstom ODC| ERS-SS-SCS-Embedded Plat=
-form Lab
-Phone: +914443935173 | Mobile: +919989642159 | E-mail: praveenreddy.p@hcl.c=
-om<mailto:praveenreddy.p@hcl.com>
-Company address: HCL Technologies Ltd ,73-74, South Phase,Ambattur Industri=
-al Estate (AMB-5), Chennai - 600 058,India
-Switchboard: +91-44-4393-5000  WebSite: www.hclt.com<http://www.hclt.com/>
+-- 
+------------------------------------------------------------
+Gary Thomas                 |  Consulting for the
+MLB Associates              |    Embedded world
+------------------------------------------------------------
 
-
-::DISCLAIMER::
----------------------------------------------------------------------------=
--------------------------------------------------------------------------
-
-The contents of this e-mail and any attachment(s) are confidential and inte=
-nded for the named recipient(s) only.
-E-mail transmission is not guaranteed to be secure or error-free as informa=
-tion could be intercepted, corrupted,
-lost, destroyed, arrive late or incomplete, or may contain viruses in trans=
-mission. The e mail and its contents
-(with or without referred errors) shall therefore not attach any liability =
-on the originator or HCL or its affiliates.
-Views or opinions, if any, presented in this email are solely those of the =
-author and may not necessarily reflect the
-views or opinions of HCL or its affiliates. Any form of reproduction, disse=
-mination, copying, disclosure, modification,
-distribution and / or publication of this message without the prior written=
- consent of authorized representative of
-HCL is strictly prohibited. If you have received this email in error please=
- delete it and notify the sender immediately.
-Before opening any email and/or attachments, please check them for viruses =
-and other defects.
-
----------------------------------------------------------------------------=
--------------------------------------------------------------------------
-
---_000_09856974BCEE6F48AB378E52E4CAA73C226D79DDCHNHCLTMBS02HCL_
-Content-Type: text/html; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii">
-<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:"Segoe UI";
-	panose-1:2 11 5 2 4 2 4 2 2 3;}
-@font-face
-	{font-family:Alstom;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri",sans-serif;}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:#0563C1;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:#954F72;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Calibri",sans-serif;
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-family:"Calibri",sans-serif;}
-@page WordSection1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"EN-US" link=3D"#0563C1" vlink=3D"#954F72">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Hi,<o:p></o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"color:#1F497D">When I added chromium =
-browser in yocto build configuration then bitbake is stucking at do compile=
-. Can you please help me?<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal"><b><span style=3D"font-size:9.0pt;font-family:Alstom=
-;color:#E36C0A">Thanks and Regards,<o:p></o:p></span></b></p>
-<p class=3D"MsoNormal" style=3D"background:white"><b><span lang=3D"EN-GB" s=
-tyle=3D"font-size:12.0pt;font-family:Alstom;color:#1F497D;mso-fareast-langu=
-age:EN-GB">Praveen Reddy P</span></b><b><span lang=3D"EN-GB" style=3D"font-=
-family:Alstom;color:#1F497D;mso-fareast-language:EN-GB"><br>
-</span></b><b><span lang=3D"EN-GB" style=3D"font-size:9.0pt;font-family:Als=
-tom;color:#1F497D;mso-fareast-language:EN-GB">HCL Technologies Ltd</span></=
-b><span lang=3D"EN-GB" style=3D"font-size:9.0pt;font-family:Alstom;color:#1=
-F497D;mso-fareast-language:EN-GB"> | Lead
- Engineer | Alstom ODC| </span><span style=3D"font-size:9.0pt;font-family:A=
-lstom;color:#1F497D">ERS-SS-SCS-Embedded Platform Lab</span><span style=3D"=
-font-size:9.0pt;font-family:&quot;Segoe UI&quot;,sans-serif;color:#666666">=
-<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-GB" style=3D"font-size:9.0pt;font-f=
-amily:Alstom;color:#1F497D;mso-fareast-language:EN-GB">P<b>hone:</b> &#43;9=
-14443935173 |
-<b>Mobile:</b> &#43;919989642159 | <b>E-mail:</b> </span><u><span lang=3D"E=
-N-GB" style=3D"font-size:9.0pt;font-family:Alstom;color:blue;mso-fareast-la=
-nguage:EN-GB"><a href=3D"mailto:praveenreddy.p@hcl.com">praveenreddy.p@hcl.=
-com</a></span></u><span lang=3D"EN-GB" style=3D"font-size:9.0pt;font-family=
-:Alstom;color:#1F497D;mso-fareast-language:EN-GB"><o:p></o:p></span></p>
-<p class=3D"MsoNormal"><b><span lang=3D"EN-GB" style=3D"font-size:9.0pt;fon=
-t-family:Alstom;color:#1F497D;mso-fareast-language:EN-GB">Company address:<=
-/span></b><span lang=3D"EN-GB" style=3D"font-size:9.0pt;font-family:Alstom;=
-color:#1F497D;mso-fareast-language:EN-GB">
- HCL Technologies Ltd ,73-74, South Phase,Ambattur Industrial Estate (AMB-5=
-), Chennai - 600 058,India&nbsp;
-<br>
-<b>Switchboard:</b></span><u><span lang=3D"EN-GB" style=3D"font-size:9.0pt;=
-color:blue">
-</span></u><span lang=3D"EN-GB" style=3D"font-size:9.0pt;font-family:Alstom=
-;color:#1F497D;mso-fareast-language:EN-GB">&#43;91-44-4393-5000&nbsp; Web<b=
->Site:</b>
-<a href=3D"http://www.hclt.com/"><span style=3D"color:#1F497D;text-decorati=
-on:none">www.hclt.com</span></a><o:p></o:p></span></p>
-</div>
-<span style=3D"FONT-FAMILY: 'Arial','sans-serif'; COLOR: gray; FONT-SIZE: 7=
-.5pt; mso-fareast-font-family: 'Times New Roman'">
-<P style=3D"MARGIN: 0in 0in 0pt" class=3DMsoNormal><br><br><font style=3D"F=
-ONT-FAMILY: 'Arial','sans-serif'; COLOR: gray; FONT-SIZE: 9px">::DISCLAIMER=
-::<br>---------------------------------------------------------------------=
----------------------------------------------------------------------------=
-----</font></P>
-<P style=3D"MARGIN: 0in 0in 0pt" class=3DMsoNormal><font style=3D"FONT-FAMI=
-LY: 'Arial','sans-serif'; COLOR: gray; FONT-SIZE: 11px">The contents of thi=
-s e-mail and any attachment(s) are confidential and intended for the named =
-recipient(s) only.<br>E-mail transmission is not guaranteed to be secure or=
- error-free as information could be intercepted, corrupted, <br>lost, destr=
-oyed, arrive late or incomplete, or may contain viruses in transmission. Th=
-e e mail and its contents <br>(with or without referred errors) shall there=
-fore not attach any liability on the originator or HCL or its affiliates. <=
-br>Views or opinions, if any, presented in this email are solely those of t=
-he author and may not necessarily reflect the <br>views or opinions of HCL =
-or its affiliates. Any form of reproduction, dissemination, copying, disclo=
-sure, modification, <br>distribution and / or publication of this message w=
-ithout the prior written consent of authorized representative of <br>HCL is=
- strictly prohibited. If you have received this email in error please delet=
-e it and notify the sender immediately. <br>Before opening any email and/or=
- attachments, please check them for viruses and other defects.</font></P>
-<P style=3D"MARGIN: 0in 0in 0pt" class=3DMsoNormal><font style=3D"FONT-FAMI=
-LY: 'Arial','sans-serif'; COLOR: gray; FONT-SIZE: 11px">-------------------=
----------------------------------------------------------------------------=
-------------------------------------------------------</font></span></P></b=
-ody>
-</html>
-
---_000_09856974BCEE6F48AB378E52E4CAA73C226D79DDCHNHCLTMBS02HCL_--
