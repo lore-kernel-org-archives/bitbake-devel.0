@@ -1,21 +1,52 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id D4D6D6FF6B
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 3FE736E630
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  8 Mar 2016 18:09:09 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga103.jf.intel.com with ESMTP; 08 Mar 2016 10:09:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,557,1449561600"; d="scan'208";a="932378027"
-Received: from hkrasnod-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.2.56])
-	by fmsmga002.fm.intel.com with ESMTP; 08 Mar 2016 10:09:08 -0800
-From: Elliot Smith <elliot.smith@intel.com>
+	Tue,  8 Mar 2016 23:54:04 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id C2CD92E1C4
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  9 Mar 2016 00:54:04 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "References"
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id U5HDTAYADqwj for <bitbake-devel@lists.openembedded.org>;
+	Wed,  9 Mar 2016 00:54:03 +0100 (CET)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id 7BDC32E1C5
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  9 Mar 2016 00:54:03 +0100 (CET)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 64CFF14B7
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  9 Mar 2016 00:54:03 +0100 (CET)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id 59AC41433
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  9 Mar 2016 00:54:03 +0100 (CET)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by thoth.se.axis.com (Postfix) with ESMTP id 57FB2FE4
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  9 Mar 2016 00:54:03 +0100 (CET)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id u28Ns3GW023123
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 9 Mar 2016 00:54:03 +0100
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id u28Ns3Ex023122
+	for bitbake-devel@lists.openembedded.org; Wed, 9 Mar 2016 00:54:03 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  8 Mar 2016 18:09:02 +0000
-Message-Id: <1457460542-17462-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: use force_bytes to display non-ascii project names
+Date: Wed,  9 Mar 2016 00:53:58 +0100
+Message-Id: <7bfb8f7c0d281351e03d299bdd5890c12a068934.1457481171.git.pkj@axis.com>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <cover.1457481171.git.pkj@axis.com>
+References: <cover.1457481171.git.pkj@axis.com>
+In-Reply-To: <cover.1457481171.git.pkj@axis.com>
+References: <cover.1457481171.git.pkj@axis.com>
+Subject: [PATCH 1/1] fetch2: Make SRC_URI[md5sum] and SRC_URI[sha256sum] expand their values
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,99 +59,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Mar 2016 18:09:10 -0000
+X-List-Received-Date: Tue, 08 Mar 2016 23:54:06 -0000
 
-From: Sujith H <sujith.h@gmail.com>
+For some reason, the values for SRC_URI[md5sum] and SRC_URI[sha256sum]
+were not being expanded. That lead to the following code not working
+as expected:
 
-When user enters a non-ascii character in the project
-name of toaster, the build doesn't get triggered.
-Use force_bytes to fix this.
+SRC_URI = "http://.../${PN}-${PV}.tar.gz"
 
-Also deal with non-ascii project names when logging the
-build request in runbuilds.
+MD5SUM = "123abc..."
+SHA256SUM = "abcd1234..."
 
-[YOCTO #9071]
+SRC_URI[md5sum] = "${MD5SUM}"
+SRC_URI[sha256sum] = "${SHA256SUM}"
 
-Signed-off-by: Sujith H <sujith.h@gmail.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py | 2 +-
- bitbake/lib/toaster/bldcontrol/models.py                        | 4 +++-
- bitbake/lib/toaster/orm/models.py                               | 5 ++++-
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/fetch2/__init__.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py b/bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py
-index edf71a7..0bd5d08 100644
---- a/bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py
-+++ b/bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py
-@@ -47,7 +47,7 @@ class Command(NoArgsCommand):
-                 logger.debug("runbuilds: No build env")
-                 return
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index e8d3af7..f86014c 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -1153,13 +1153,13 @@ class FetchData(object):
+         elif self.type not in ["http", "https", "ftp", "ftps", "sftp"]:
+             self.md5_expected = None
+         else:
+-            self.md5_expected = d.getVarFlag("SRC_URI", self.md5_name, False)
++            self.md5_expected = d.getVarFlag("SRC_URI", self.md5_name, True)
+         if self.sha256_name in self.parm:
+             self.sha256_expected = self.parm[self.sha256_name]
+         elif self.type not in ["http", "https", "ftp", "ftps", "sftp"]:
+             self.sha256_expected = None
+         else:
+-            self.sha256_expected = d.getVarFlag("SRC_URI", self.sha256_name, False)
++            self.sha256_expected = d.getVarFlag("SRC_URI", self.sha256_name, True)
+         self.ignore_checksums = False
  
--            logger.debug("runbuilds: starting build %s, environment %s" % (br, bec.be))
-+            logger.debug("runbuilds: starting build %s, environment %s" % (str(br).decode('utf-8'), bec.be))
- 
-             # write the build identification variable
-             BRVariable.objects.create(req = br, name="TOASTER_BRBE", value="%d:%d" % (br.pk, bec.be.pk))
-diff --git a/bitbake/lib/toaster/bldcontrol/models.py b/bitbake/lib/toaster/bldcontrol/models.py
-index 9244ed1..9b2d0d0 100644
---- a/bitbake/lib/toaster/bldcontrol/models.py
-+++ b/bitbake/lib/toaster/bldcontrol/models.py
-@@ -1,5 +1,7 @@
-+from __future__ import unicode_literals
- from django.db import models
- from django.core.validators import MaxValueValidator, MinValueValidator
-+from django.utils.encoding import force_bytes
- from orm.models import Project, ProjectLayer, ProjectVariable, ProjectTarget, Build, Layer_Version
- 
- # a BuildEnvironment is the equivalent of the "build/" directory on the localhost
-@@ -94,7 +96,7 @@ class BuildRequest(models.Model):
-         return self.brvariable_set.get(name="MACHINE").value
- 
-     def __str__(self):
--        return "%s %s" % (self.project, self.get_state_display())
-+        return force_bytes('%s %s' % (self.project, self.get_state_display()))
- 
- # These tables specify the settings for running an actual build.
- # They MUST be kept in sync with the tables in orm.models.Project*
-diff --git a/bitbake/lib/toaster/orm/models.py b/bitbake/lib/toaster/orm/models.py
-index 182d355..cfc6ea8 100644
---- a/bitbake/lib/toaster/orm/models.py
-+++ b/bitbake/lib/toaster/orm/models.py
-@@ -19,9 +19,12 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
-+from __future__ import unicode_literals
-+
- from django.db import models, IntegrityError
- from django.db.models import F, Q, Avg, Max, Sum
- from django.utils import timezone
-+from django.utils.encoding import force_bytes
- 
- from django.core.urlresolvers import reverse
- 
-@@ -1628,7 +1631,7 @@ class LogMessage(models.Model):
-     lineno = models.IntegerField(null=True)
- 
-     def __str__(self):
--        return "%s %s %s" % (self.get_level_display(), self.message, self.build)
-+        return force_bytes('%s %s %s' % (self.get_level_display(), self.message, self.build))
- 
- def invalidate_cache(**kwargs):
-     from django.core.cache import cache
+         self.names = self.parm.get("name",'default').split(',')
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+2.1.0
 
 
