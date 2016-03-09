@@ -1,25 +1,23 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 703396FFA1
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 62E9A6FF30
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Mar 2016 04:22:58 +0000 (UTC)
+	Wed,  9 Mar 2016 10:27:33 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga103.jf.intel.com with ESMTP; 08 Mar 2016 20:23:00 -0800
+	by fmsmga104.fm.intel.com with ESMTP; 09 Mar 2016 02:27:34 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,559,1455004800"; d="scan'208";a="905624170"
-Received: from mlim-mobl4.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.143.14])
-	by orsmga001.jf.intel.com with ESMTP; 08 Mar 2016 20:22:57 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.24,311,1455004800"; d="scan'208";a="905886186"
+Received: from linux.intel.com ([10.23.219.25])
+	by orsmga001.jf.intel.com with ESMTP; 09 Mar 2016 02:27:34 -0800
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
+	by linux.intel.com (Postfix) with ESMTP id 287B72C8001;
+	Wed,  9 Mar 2016 03:15:19 -0800 (PST)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Mar 2016 17:22:14 +1300
-Message-Id: <86e520994b017a2e8e77184fddd10d7c58071c86.1457497288.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <cover.1457497288.git.paul.eggleton@linux.intel.com>
-References: <cover.1457497288.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1457497288.git.paul.eggleton@linux.intel.com>
-References: <cover.1457497288.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 3/3] fetch2/npm: add missing URL argument to ParameterError
+Date: Wed,  9 Mar 2016 10:07:40 +0200
+Message-Id: <1457510860-25465-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH v2] xmlrpc: fix bug in setting XMLRPCServer.single_use
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,34 +30,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Mar 2016 04:22:58 -0000
+X-List-Received-Date: Wed, 09 Mar 2016 10:27:34 -0000
 
-Without this you get a rather odd traceback instead of the proper
-exception message.
+XMLRPCServer.single_use attribute was always set to False.
+This caused xmlrpc server to keep running after build is done as
+BitBakeServerCommands.removeClient only shuts down server if its
+single_use attribute is set to True.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/bb/fetch2/npm.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/server/xmlrpc.py | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 3ff11e9..d44454c 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -75,10 +75,10 @@ class Npm(FetchMethod):
-         # TODO: find a way to get an sha1/sha256 manifest of pkg & all deps
-         ud.pkgname = ud.parm.get("name", None)
-         if not ud.pkgname:
--            raise ParameterError("NPM fetcher requires a name parameter")
-+            raise ParameterError("NPM fetcher requires a name parameter", ud.url)
-         ud.version = ud.parm.get("version", None)
-         if not ud.version:
--            raise ParameterError("NPM fetcher requires a version parameter")
-+            raise ParameterError("NPM fetcher requires a version parameter", ud.url)
-         ud.bbnpmmanifest = "%s-%s.deps.json" % (ud.pkgname, ud.version)
-         ud.registry = "http://%s" % ud.basename
-         prefixdir = "npm/%s" % ud.pkgname
+diff --git a/bitbake/lib/bb/server/xmlrpc.py b/bitbake/lib/bb/server/xmlrpc.py
+index 1ceca51..7528138 100644
+--- a/bitbake/lib/bb/server/xmlrpc.py
++++ b/bitbake/lib/bb/server/xmlrpc.py
+@@ -191,8 +191,7 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+         Constructor
+         """
+         BaseImplServer.__init__(self)
+-        if (interface[1] == 0):     # anonymous port, not getting reused
+-            self.single_use = True
++        self.single_use = interface[1] == 0 # anonymous port, not getting reused
+         # Use auto port configuration
+         if (interface[1] == -1):
+             interface = (interface[0], 0)
+@@ -205,7 +204,6 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+         self.commands = BitBakeServerCommands(self)
+         self.autoregister_all_functions(self.commands, "")
+         self.interface = interface
+-        self.single_use = False
+ 
+     def addcooker(self, cooker):
+         BaseImplServer.addcooker(self, cooker)
 -- 
-2.5.0
+2.1.4
 
 
