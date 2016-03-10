@@ -1,43 +1,45 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-wm0-f41.google.com (mail-wm0-f41.google.com [74.125.82.41])
-	by mail.openembedded.org (Postfix) with ESMTP id CEB48606D0
+Return-Path: <kergoth@gmail.com>
+Received: from mail-ig0-f180.google.com (mail-ig0-f180.google.com
+	[209.85.213.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 79791601B8
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Mar 2016 17:38:06 +0000 (UTC)
-Received: by mail-wm0-f41.google.com with SMTP id l68so40930249wml.0
+	Thu, 10 Mar 2016 18:10:31 +0000 (UTC)
+Received: by mail-ig0-f180.google.com with SMTP id ig19so24809738igb.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Mar 2016 09:38:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc; bh=QvWYGq1gzKZkSHiJ2FwYklHif9eDnicVv+iGxX9TpxE=;
-	b=nirLiMJKoAf02slk1Qnm74GBemr0AtutFKoERH5obv4SJgINYf4buBFQVgGjHcmRV9
-	n4jV6H2TgI9T+9MG9pu04Iffd+zStJZ4rl8EUXUtU9vMAC2n8hFdaxCEHQoTeUWemEGn
-	SHu+sCPnC1QA0jZ4lS0AgSyJspYytwNivf320MWrOTGK5HpGbJbS8/OFRwukyKl24Oh7
-	YsdgKg+ZgSO5owqkiomtG/4edniUYhXKGHuNUqaTgA/5ngSdgoevCVBPrOcMNo0mcVmQ
-	xj98oou6kdMelV/76mC1VjeVL8s28DLjrQgSMPLi6m14Fa52yEw7aQaN9wcMmENshLya
-	i6ug==
+	Thu, 10 Mar 2016 10:10:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=kergoth-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=bcyr4jo6Vr7BdjltEo2PKtjQ34rrq+nhgTmIohilRtU=;
+	b=biHltd5RYPCPLZV/LPAD5gXAU6W1nnz0D6JdRSLnyj2OHjJYYW95+8n4jcSi2ssNYa
+	CQ/QURitA8hJmMVRR/fqEQhlRqM0gBXTq3hZy3BtxVQP+WdtUr6CjudysvZz2DeM3iqA
+	yHgUG0IS7M+rO16QCCuzCBn6ZutLppijWnYGwbvL8r3xbJ7B3mhaQhHICiKEADbo0bgL
+	2OY8Q79dd5l0qKJp1lZUehMM7hIaKXBf2P+as9j2bQPegTHZqjUzXVA9N0kTKH6G1KPa
+	GDY1EUumgNBl6sifYcFnKdVxRoJpiB8ISy7tl6O+6f8Dljxp/GiJRR28bpYkzqB23Eec
+	psdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:date
-	:message-id:subject:from:to:cc;
-	bh=QvWYGq1gzKZkSHiJ2FwYklHif9eDnicVv+iGxX9TpxE=;
-	b=Dycyhuiq0EDDNTD8svPlQ5kTEPP2HACTCcOARx7QUsqKdzvpywT4ZpRc+81Z9QCghG
-	FOgT1AHx9naOPMDFhUD66u4m7lp0E61BhPrjwFiVSrNnFy/iqiBX60h+7Vh0DadXNYK7
-	js+uiCdl9vrNXRbjyeXlziTWJpjlcXMvJQu0KffwLPIC/AK584zbfFJp7jXX38rJhX12
-	5JxeQJ8bbwcB543luNPU4UiVKftfy0wE25foVfcCxL2yOrPnbn02ajShSMTFjQkI7JO/
-	hhQLX1n57PwOnF3rPfOV7bbs6QExCBTK6CYFws6ZEq8YStRdWl2zXej6LX6SqHZvt81k
-	p3ag==
-X-Gm-Message-State: AD7BkJKyWAep94wXAPvuk8VynVVQsR+e9myME3wtAjIp8GfIxTSPMbvGuQ1OyHJsIVHSseyhtR12PnD+9bVjmw==
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=bcyr4jo6Vr7BdjltEo2PKtjQ34rrq+nhgTmIohilRtU=;
+	b=MbG69drDkCsoR76RtpUX6vUe81JyEnujOygpoahXaiU/SlULOnG2qsZXhhxU/Q7Z9+
+	Y9sSOsJkt+lcpfmjXpCd94ECpLCAbdghZfDzxoyb+23Xq2DRy6R5B/w2ofiKgo8YuwDq
+	pAebiAV1YbjyuBtFuwQEH4VkIr4JmZxzNpAJLIvw/nRA2lWLStR8pHBEMynOO0ziMFTI
+	V9Ye2rMmFj3bFCLysgsaxCGtopfdFyEQkgXTpLJcXFuixaoYLDKY3YEE8WG9AvLnNffM
+	92hCDapzS1bf3pdD+lv3Y8OOJA3ZLORdf+j2GsX91nHEuq2r4emXl4ZQ/xC86XrOSBIw
+	opjg==
+X-Gm-Message-State: AD7BkJKp122LSNWyPCiqpsv2yeQuRLoGikl9dQU/wmId3RTWgkeOJBhcuJsczai7cO/HTZDwC/nrBF4h36KEfQ==
+X-Received: by 10.50.61.234 with SMTP id t10mr5681411igr.20.1457633431881;
+	Thu, 10 Mar 2016 10:10:31 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 10.194.63.242 with SMTP id j18mr5923663wjs.114.1457631486631;
-	Thu, 10 Mar 2016 09:38:06 -0800 (PST)
-Received: by 10.194.201.104 with HTTP; Thu, 10 Mar 2016 09:38:06 -0800 (PST)
-In-Reply-To: <20160310170350.GL2573@jama>
 References: <1457626532-11121-1-git-send-email-armccurdy@gmail.com>
 	<20160310170350.GL2573@jama>
-Date: Thu, 10 Mar 2016 09:38:06 -0800
-Message-ID: <CAJ86T=WeQg_r6jNk2KK5En09mFQX3m0aNtwwtxUyzGpzRFqZGQ@mail.gmail.com>
-From: Andre McCurdy <armccurdy@gmail.com>
-To: Martin Jansa <martin.jansa@gmail.com>
+	<CAJ86T=WeQg_r6jNk2KK5En09mFQX3m0aNtwwtxUyzGpzRFqZGQ@mail.gmail.com>
+In-Reply-To: <CAJ86T=WeQg_r6jNk2KK5En09mFQX3m0aNtwwtxUyzGpzRFqZGQ@mail.gmail.com>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Thu, 10 Mar 2016 18:10:22 +0000
+Message-ID: <CABcZANkfUrM+=k26SohUFM9c359+tHTPD_yKZLMqF3sg5ntKuQ@mail.gmail.com>
+To: Andre McCurdy <armccurdy@gmail.com>, Martin Jansa <martin.jansa@gmail.com>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] fetch2: include PV in 'Unable to get checksum for SRC_URI entry' warnings
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -52,51 +54,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Mar 2016 17:38:07 -0000
+X-List-Received-Date: Thu, 10 Mar 2016 18:10:31 -0000
+Content-Type: multipart/alternative; boundary=047d7bdc07e2eb9228052db5baec
+
+--047d7bdc07e2eb9228052db5baec
 Content-Type: text/plain; charset=UTF-8
 
-On Thu, Mar 10, 2016 at 9:03 AM, Martin Jansa <martin.jansa@gmail.com> wrote:
-> On Thu, Mar 10, 2016 at 08:15:32AM -0800, Andre McCurdy wrote:
->> Referencing PN only is ambiguous if multiple versions of a recipe are
->> present.
+On Thu, Mar 10, 2016 at 10:38 AM Andre McCurdy <armccurdy@gmail.com> wrote:
+
+> On Thu, Mar 10, 2016 at 9:03 AM, Martin Jansa <martin.jansa@gmail.com>
+> wrote:
+> > On Thu, Mar 10, 2016 at 08:15:32AM -0800, Andre McCurdy wrote:
+> >> Referencing PN only is ambiguous if multiple versions of a recipe are
+> >> present.
+> >
+> > Would it work with FILE to get immediate pointer to file where to update
+> > them?
 >
-> Would it work with FILE to get immediate pointer to file where to update
-> them?
-
-Yes, that works. It's a bit more verbose but having the full path to
-the recipe is useful.
-
->>
->> Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
->> ---
->>  lib/bb/fetch2/__init__.py | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
->> index f86014c..124420d 100644
->> --- a/lib/bb/fetch2/__init__.py
->> +++ b/lib/bb/fetch2/__init__.py
->> @@ -1102,9 +1102,9 @@ def get_checksum_file_list(d):
->>                  if f.startswith(dl_dir):
->>                      # The local fetcher's behaviour is to return a path under DL_DIR if it couldn't find the file anywhere else
->>                      if os.path.exists(f):
->> -                        bb.warn("Getting checksum for %s SRC_URI entry %s: file not found except in DL_DIR" % (d.getVar('PN', True), os.path.basename(f)))
->> +                        bb.warn("Getting checksum for %s SRC_URI entry %s: file not found except in DL_DIR" % (d.getVar('P', True), os.path.basename(f)))
->>                      else:
->> -                        bb.warn("Unable to get checksum for %s SRC_URI entry %s: file could not be found" % (d.getVar('PN', True), os.path.basename(f)))
->> +                        bb.warn("Unable to get checksum for %s SRC_URI entry %s: file could not be found" % (d.getVar('P', True), os.path.basename(f)))
->>                  filelist.append(f + ":" + str(os.path.exists(f)))
->>
->>      return " ".join(filelist)
->> --
->> 1.9.1
->>
->> --
->> _______________________________________________
->> bitbake-devel mailing list
->> bitbake-devel@lists.openembedded.org
->> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+> Yes, that works. It's a bit more verbose but having the full path to
+> the recipe is useful.
 >
-> --
-> Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+It's worth noting that current bitbake master includes PN/PV in all log
+messages coming from tasks for the knotty UI already.
+
+--047d7bdc07e2eb9228052db5baec
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><br><div class=3D"gmail_quote"><div dir=3D"ltr">On Thu=
+, Mar 10, 2016 at 10:38 AM Andre McCurdy &lt;<a href=3D"mailto:armccurdy@gm=
+ail.com">armccurdy@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"g=
+mail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-l=
+eft:1ex">On Thu, Mar 10, 2016 at 9:03 AM, Martin Jansa &lt;<a href=3D"mailt=
+o:martin.jansa@gmail.com" target=3D"_blank">martin.jansa@gmail.com</a>&gt; =
+wrote:<br>
+&gt; On Thu, Mar 10, 2016 at 08:15:32AM -0800, Andre McCurdy wrote:<br>
+&gt;&gt; Referencing PN only is ambiguous if multiple versions of a recipe =
+are<br>
+&gt;&gt; present.<br>
+&gt;<br>
+&gt; Would it work with FILE to get immediate pointer to file where to upda=
+te<br>
+&gt; them?<br>
+<br>
+Yes, that works. It&#39;s a bit more verbose but having the full path to<br=
+>
+the recipe is useful.<br></blockquote><div><br></div><div>It&#39;s worth no=
+ting that current bitbake master includes PN/PV in all log messages coming =
+from tasks for the knotty UI already.=C2=A0</div></div></div>
+
+--047d7bdc07e2eb9228052db5baec--
