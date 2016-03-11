@@ -1,37 +1,28 @@
-Return-Path: <alex@stunpix.com>
-Received: from forward20m.cmail.yandex.net (forward20m.cmail.yandex.net
-	[5.255.216.151])
-	by mail.openembedded.org (Postfix) with ESMTP id 200C8607F8
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id A0F10731D3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Mar 2016 22:00:27 +0000 (UTC)
-Received: from smtp1m.mail.yandex.net (smtp1m.mail.yandex.net
-	[IPv6:2a02:6b8:0:2519::121])
-	by forward20m.cmail.yandex.net (Yandex) with ESMTP id 6CE5721F31
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Mar 2016 01:00:27 +0300 (MSK)
-Received: from smtp1m.mail.yandex.net (localhost [127.0.0.1])
-	by smtp1m.mail.yandex.net (Yandex) with ESMTP id 244E267405C3
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Mar 2016 01:00:27 +0300 (MSK)
-Received: by smtp1m.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id
-	GEvv3rc66w-0QE48Eo0; Fri, 11 Mar 2016 01:00:26 +0300
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-	(Client certificate not present)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stunpix.com; s=mail;
-	t=1457647226; bh=IHVzNZGOHbwCGFXxzpBE8pAq94lvC/NIFBYcKhq5XLc=;
-	h=From:To:Subject:Date:Message-Id:X-Mailer;
-	b=h8ES+vIdDvMcGKB1Ptw4VlyZi/JgpT+bcLRSlRZ/ylL28PMIaU1ZX0zA0DCBASGkF
-	RPSPg9rEJHmxdz8w7vMKetSx8Fo9Sr/e4hoEq9NChFYWK5WKkHC/xrlP/oS3s82Eyn
-	6BJXq5dz2AAXVWDvgAkelqiNK8tTXr7XR6nbLRtM=
-Authentication-Results: smtp1m.mail.yandex.net; dkim=pass header.i=@stunpix.com
-X-Yandex-ForeignMX: US
-X-Yandex-Suid-Status: 1 0
-From: Alexander Shashkevich <alex@stunpix.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 10 Mar 2016 23:58:07 +0200
-Message-Id: <1457647087-97827-1-git-send-email-alex@stunpix.com>
-X-Mailer: git-send-email 2.5.0
-Subject: [PATCH] tests/fetch: new test case for absolute paths with wildcards
+	Fri, 11 Mar 2016 03:22:17 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id u2B3MAWE027494
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK);
+	Thu, 10 Mar 2016 19:22:13 -0800
+Received: from [128.224.162.155] (128.224.162.155) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.248.2;
+	Thu, 10 Mar 2016 19:22:10 -0800
+To: Praveenreddy Padamati <praveenreddy.p@hcl.com>,
+	"'bitbake-devel@lists.openembedded.org'"
+	<bitbake-devel@lists.openembedded.org>
+References: <09856974BCEE6F48AB378E52E4CAA73C226DA890@CHN-HCLT-MBS02.HCLT.CORP.HCL.IN>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <56E239E0.7010003@windriver.com>
+Date: Fri, 11 Mar 2016 11:22:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.5.1
+MIME-Version: 1.0
+In-Reply-To: <09856974BCEE6F48AB378E52E4CAA73C226DA890@CHN-HCLT-MBS02.HCLT.CORP.HCL.IN>
+Subject: Re: Hi
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,30 +35,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Mar 2016 22:00:30 -0000
+X-List-Received-Date: Fri, 11 Mar 2016 03:22:19 -0000
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Alexander Shashkevich <alex@stunpix.com>
----
- bitbake/lib/bb/tests/fetch.py | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index b3de37e..80b5f17 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -497,6 +497,11 @@ class FetcherLocalTest(FetcherTest):
-         tree = self.fetchUnpack([abspath + '/dir/subdir/', abspath + '/dir/subdir/;subdir=bar'])
-         self.assertEqual(tree, ['bar/subdir/e', 'subdir/e'])
- 
-+    def test_local_abspath_wildcard(self):
-+        abspath = 'file://%s' % self.localsrcdir
-+        tree = self.fetchUnpack([abspath + '/dir/*', abspath + '/dir/*;subdir=bar'])
-+        self.assertEqual(tree, ['bar/c', 'bar/d', 'bar/subdir/e', 'c', 'd', 'subdir/e'])
-+
- class FetcherNetworkTest(FetcherTest):
- 
-     if os.environ.get("BB_SKIP_NETTESTS") == "yes":
--- 
-2.5.0
 
+On 03/10/2016 03:10 PM, Praveenreddy Padamati wrote:
+> Hi all,
+>
+> I need to add zetakey browser to the yocto core-image-sato. Can you provide any
+> data how to add this browse to the build.
+
+Add this to local.conf:
+
+IMAGE_INSTALL_append = " zetakey"
+
+Note, there is a space " " which is a must, then:
+
+$ bitbake core-image-sato
+
+>
+> *Thanks and Regards,*
+>
+> *Praveen Reddy P**
+> **HCL Technologies Ltd*| Lead Engineer | Alstom ODC| ERS-SS-SCS-Embedded
+> Platform Lab
+>
+> P*hone:* +914443935173 | *Mobile:* +919989642159 | *E-mail:*
+> _praveenreddy.p@hcl.com <mailto:praveenreddy.p@hcl.com>_
+>
+> *Company address:*HCL Technologies Ltd ,73-74, South Phase,Ambattur Industrial
+> Estate (AMB-5), Chennai - 600 058,India
+> *Switchboard:*__+91-44-4393-5000  Web*Site:* www.hclt.com <http://www.hclt.com/>
+>
+>
+>
+> ::DISCLAIMER::
+> ----------------------------------------------------------------------------------------------------------------------------------------------------
+>
+> The contents of this e-mail and any attachment(s) are confidential and intended
+> for the named recipient(s) only.
+> E-mail transmission is not guaranteed to be secure or error-free as information
+> could be intercepted, corrupted,
+> lost, destroyed, arrive late or incomplete, or may contain viruses in
+> transmission. The e mail and its contents
+> (with or without referred errors) shall therefore not attach any liability on
+> the originator or HCL or its affiliates.
+> Views or opinions, if any, presented in this email are solely those of the
+> author and may not necessarily reflect the
+> views or opinions of HCL or its affiliates. Any form of reproduction,
+> dissemination, copying, disclosure, modification,
+> distribution and / or publication of this message without the prior written
+> consent of authorized representative of
+> HCL is strictly prohibited. If you have received this email in error please
+> delete it and notify the sender immediately.
+> Before opening any email and/or attachments, please check them for viruses and
+> other defects.
+>
+> ----------------------------------------------------------------------------------------------------------------------------------------------------
+>
+>
+>
 
