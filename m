@@ -1,36 +1,37 @@
 Return-Path: <luwei.zhou@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id EBBED71957
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 849186B6F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Mar 2016 08:32:11 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga103.jf.intel.com with ESMTP; 18 Mar 2016 01:32:12 -0700
+	Fri, 18 Mar 2016 08:20:58 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga102.fm.intel.com with ESMTP; 18 Mar 2016 01:20:44 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.24,354,1455004800"; 
-	d="scan'208,217";a="913730506"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-	by orsmga001.jf.intel.com with ESMTP; 18 Mar 2016 01:32:11 -0700
-Received: from fmsmsx152.amr.corp.intel.com (10.18.125.5) by
-	FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server
-	(TLS) id 14.3.248.2; Fri, 18 Mar 2016 01:32:07 -0700
-Received: from shsmsx104.ccr.corp.intel.com (10.239.110.15) by
-	FMSMSX152.amr.corp.intel.com (10.18.125.5) with Microsoft SMTP Server
-	(TLS) id 14.3.248.2; Fri, 18 Mar 2016 01:32:06 -0700
+	d="scan'208,217";a="671759687"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+	by FMSMGA003.fm.intel.com with ESMTP; 18 Mar 2016 01:20:44 -0700
+Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
+	FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server
+	(TLS) id 14.3.248.2; Fri, 18 Mar 2016 01:20:43 -0700
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+	fmsmsx158.amr.corp.intel.com (10.18.116.75) with Microsoft SMTP Server
+	(TLS) id 14.3.248.2; Fri, 18 Mar 2016 01:20:44 -0700
 Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.232]) by
-	SHSMSX104.ccr.corp.intel.com ([169.254.5.132]) with mapi id
-	14.03.0248.002; Fri, 18 Mar 2016 16:32:05 +0800
+	SHSMSX152.ccr.corp.intel.com ([169.254.6.42]) with mapi id
+	14.03.0248.002; Fri, 18 Mar 2016 16:20:42 +0800
 From: "Zhou, Luwei" <luwei.zhou@intel.com>
 To: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
 Thread-Topic: bitbake fetching fails on git repo but can manually git clone
-Thread-Index: AdGA8HK+YBuIHIPMRrK6eGXezUOV3Q==
-Date: Fri, 18 Mar 2016 08:32:04 +0000
-Message-ID: <46BA6A9193234D4CB7051E63F3A63ED52DF9AE@shsmsx102.ccr.corp.intel.com>
+Thread-Index: AdGA7fB+uiu1Amb3QQiCpl2FCQsyIg==
+Date: Fri, 18 Mar 2016 08:20:41 +0000
+Message-ID: <46BA6A9193234D4CB7051E63F3A63ED52DF97C@shsmsx102.ccr.corp.intel.com>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [10.239.127.40]
 MIME-Version: 1.0
+X-Mailman-Approved-At: Sun, 20 Mar 2016 14:25:05 +0000
 Subject: bitbake fetching fails on git repo but can manually git clone
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -44,12 +45,12 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Mar 2016 08:32:14 -0000
+X-List-Received-Date: Fri, 18 Mar 2016 08:20:59 -0000
 Content-Language: en-US
 Content-Type: multipart/alternative;
-	boundary="_000_46BA6A9193234D4CB7051E63F3A63ED52DF9AEshsmsx102ccrcorpi_"
+	boundary="_000_46BA6A9193234D4CB7051E63F3A63ED52DF97Cshsmsx102ccrcorpi_"
 
---_000_46BA6A9193234D4CB7051E63F3A63ED52DF9AEshsmsx102ccrcorpi_
+--_000_46BA6A9193234D4CB7051E63F3A63ED52DF97Cshsmsx102ccrcorpi_
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
@@ -71,13 +72,11 @@ s/git2/github.com.intel-iot-devkit.mraa.git
 
 The git clone can be completed. My current setting is below. It is kind of =
 weird.  Why git clone can work manually but bitbake fetching would return w=
-arning and then fail. I have checked the wiki below and didn't find out the=
- reason.
+arning and then fail.
+
 https://wiki.yoctoproject.org/wiki/Working_Behind_a_Network_Proxy
 
-
-My ~/.bashrc proxy settingis:
-
+~/.bashrc:
 export SOCKS_SERVER=3Dproxy-png.intel.com
 export HTTP_PROXY=3Dhttp://proxy-chain.intel.com:911
 export HTTPS_PROXY=3Dhttps://proxy-chain.intel.com:912
@@ -134,8 +133,7 @@ Best Regards
 Luwei
 
 
-
---_000_46BA6A9193234D4CB7051E63F3A63ED52DF9AEshsmsx102ccrcorpi_
+--_000_46BA6A9193234D4CB7051E63F3A63ED52DF97Cshsmsx102ccrcorpi_
 Content-Type: text/html; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
@@ -224,20 +222,16 @@ git2/github.com.intel-iot-devkit.mraa.git<o:p></o:p></span></b></p>
 <p class=3D"MsoNormal"><span style=3D"color:#1F497D">The git clone can be c=
 ompleted. My current setting is below. It is kind of weird. &nbsp;Why git c=
 lone can work manually but bitbake fetching would return warning and then f=
-ail. I have checked the wiki below and didn&#8217;t
- find out the reason.<o:p></o:p></span></p>
+ail.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
 <p class=3D"MsoNormal"><span style=3D"color:#1F497D"><a href=3D"https://wik=
-i.yoctoproject.org/wiki/Working_Behind_a_Network_Proxy"><span style=3D"colo=
-r:#0563C1">https://wiki.yoctoproject.org/wiki/Working_Behind_a_Network_Prox=
-y</span></a><o:p></o:p></span></p>
+i.yoctoproject.org/wiki/Working_Behind_a_Network_Proxy">https://wiki.yoctop=
+roject.org/wiki/Working_Behind_a_Network_Proxy</a><o:p></o:p></span></p>
 <p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
 n></p>
-<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
-n></p>
-<p class=3D"MsoNormal"><span style=3D"color:#1F497D">My ~/.bashrc proxy set=
-tingis:<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
-n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">~/.bashrc:<o:p></o:p><=
+/span></p>
 <p class=3D"MsoNormal"><b><span style=3D"font-size:10.0pt;color:#1F497D">ex=
 port SOCKS_SERVER=3Dproxy-png.intel.com<o:p></o:p></span></b></p>
 <p class=3D"MsoNormal"><b><span style=3D"font-size:10.0pt;color:#1F497D">ex=
@@ -332,14 +326,12 @@ f available<o:p></o:p></span></p>
 <p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
 n></p>
 <p class=3D"MsoNormal"><a name=3D"_MailEndCompose"><span style=3D"color:#1F=
-497D">Best Regards</span></a><span style=3D"color:#1F497D"><o:p></o:p></spa=
-n></p>
+497D">Best Regards<o:p></o:p></span></a></p>
 <p class=3D"MsoNormal"><span style=3D"color:#1F497D">Luwei<o:p></o:p></span=
 ></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
 <p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
 </div>
 </body>
 </html>
 
---_000_46BA6A9193234D4CB7051E63F3A63ED52DF9AEshsmsx102ccrcorpi_--
+--_000_46BA6A9193234D4CB7051E63F3A63ED52DF97Cshsmsx102ccrcorpi_--
