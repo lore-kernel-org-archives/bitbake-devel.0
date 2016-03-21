@@ -1,27 +1,27 @@
 Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 5B7C96AC00
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 140CC60761
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Mar 2016 01:47:24 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 20 Mar 2016 18:47:25 -0700
+	Mon, 21 Mar 2016 22:08:04 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga101.jf.intel.com with ESMTP; 21 Mar 2016 15:08:05 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,368,1455004800"; d="scan'208";a="938041461"
-Received: from edeshpan-mobl5.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.136.133])
-	by orsmga002.jf.intel.com with ESMTP; 20 Mar 2016 18:47:23 -0700
+X-IronPort-AV: E=Sophos;i="5.24,374,1455004800"; d="scan'208";a="768578614"
+Received: from ngocthuy-mobl.ccr.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.169.222])
+	by orsmga003.jf.intel.com with ESMTP; 21 Mar 2016 15:08:04 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: "Zhou, Luwei" <luwei.zhou@intel.com>
-Date: Mon, 21 Mar 2016 14:47:21 +1300
-Message-ID: <2409005.uOzAKMEWXG@peggleto-mobl.ger.corp.intel.com>
+To: Gary Thomas <gary@mlbassoc.com>
+Date: Tue, 22 Mar 2016 11:08:01 +1300
+Message-ID: <5861476.KL7KapCN76@peggleto-mobl.ger.corp.intel.com>
 Organization: Intel Corporation
-User-Agent: KMail/4.14.10 (Linux/4.4.4-301.fc23.x86_64; KDE/4.14.17; x86_64; ;
+User-Agent: KMail/4.14.10 (Linux/4.4.5-300.fc23.x86_64; KDE/4.14.18; x86_64; ;
 	)
-In-Reply-To: <46BA6A9193234D4CB7051E63F3A63ED52DF9AE@shsmsx102.ccr.corp.intel.com>
-References: <46BA6A9193234D4CB7051E63F3A63ED52DF9AE@shsmsx102.ccr.corp.intel.com>
+In-Reply-To: <56EA7B5F.9030700@mlbassoc.com>
+References: <56EA7B5F.9030700@mlbassoc.com>
 MIME-Version: 1.0
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: bitbake fetching fails on git repo but can manually git clone
+Subject: Re: bitbake hang
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,44 +34,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Mar 2016 01:47:25 -0000
+X-List-Received-Date: Mon, 21 Mar 2016 22:08:07 -0000
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-Hi Luwei,
-
-On Fri, 18 Mar 2016 08:32:04 Zhou, Luwei wrote:
-> I am new to yocto and hope the mail list is the right place to ask.
+On Thu, 17 Mar 2016 10:39:43 Gary Thomas wrote:
+> Typing ^C very early on causes a complete hang:
 > 
-> I am using jethro 2.0 to build my yocto system. I have met some weird issue
-> when bitbake fetching source. When I try bitbake image, there would be
-> fetching error caused by some components(mraa etc). I have tried enabling
-> -D option when running bitbake -D mraa -c fetch to see the log.  I can see
-> bitbake will first trying using git clone to fetch the code and failed(with
-> a return of warning) and then trying mirror still failed with error.
-> However, When I manually run the command  below:
+> $ bitbake some-image
+> NOTE: Started PRServer with DBfile:
+> /local/p7619_2016-02-23/cache/prserv.sqlite3, IP: 127.0.0.1, PORT: 43616,
+> PID: 14386 Parsing recipes:  11% |###########
 > 
-> git -c core.fsyncobjectfiles=0 clone --bare --mirror
-> git://github.com/intel-iot-devkit/mraa.git
-> /home/luweizho/build/ambr-yocto-build/build/downloads/git2/github.com.intel
-> -iot-devkit.mraa.git
+>          | ETA:  00:00:21
 > 
-> The git clone can be completed. My current setting is below. It is kind of
-> weird.  Why git clone can work manually but bitbake fetching would return
-> warning and then fail. I have checked the wiki below and didn't find out
-> the reason.
-> https://wiki.yoctoproject.org/wiki/Working_Behind_a_Network_Proxy
+> Keyboard Interrupt, closing down...
+> 
+> WARNING: Timeout while attempting to communicate with bitbake server
+> WARNING: Timeout while attempting to communicate with bitbake server
+> WARNING: Timeout while attempting to communicate with bitbake server
+> WARNING: Timeout while attempting to communicate with bitbake server
+> ERROR: Gave up; Too many tries: timeout while attempting to communicate with
+> bitbake server
+> 
+> Tested using poky:8debfea81e69d038bd2d56314b272cb74f5582ed
+> 
+> Should I file a bug?
 
-I've just noticed this page is significantly out-of-date and have updated it.
- 
-> My ~/.bashrc proxy settingis:
-> ...
-
-I suspect the reason this is failing is that SOCKS_SERVER isn't being allowed 
-through into the environment where the fetcher is running. However, instead of 
-fixing that I would suggest using our git proxy script (scripts/oe-git-proxy) 
-and setting ALL_PROXY instead of SOCKS_SERVER (the syntax is slightly different 
-though, see the updated wiki page or the script file itself for details).
+Yes please.
 
 Cheers,
 Paul
