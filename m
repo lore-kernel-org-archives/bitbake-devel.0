@@ -1,20 +1,22 @@
 Return-Path: <markus.lehtonen@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id EDCC065D00
+	by mail.openembedded.org (Postfix) with ESMTP id 1316965D00
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Mar 2016 15:00:26 +0000 (UTC)
+	Tue, 22 Mar 2016 15:00:27 +0000 (UTC)
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga101.fm.intel.com with ESMTP; 22 Mar 2016 07:59:57 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 22 Mar 2016 07:59:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,377,1455004800"; d="scan'208";a="769111992"
+X-IronPort-AV: E=Sophos;i="5.24,377,1455004800"; d="scan'208";a="769112005"
 Received: from marquiz.fi.intel.com ([10.237.72.155])
-	by orsmga003.jf.intel.com with ESMTP; 22 Mar 2016 07:59:56 -0700
+	by orsmga003.jf.intel.com with ESMTP; 22 Mar 2016 07:59:57 -0700
 From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 22 Mar 2016 16:59:54 +0200
-Message-Id: <1458658795-15511-1-git-send-email-markus.lehtonen@linux.intel.com>
+Date: Tue, 22 Mar 2016 16:59:55 +0200
+Message-Id: <1458658795-15511-2-git-send-email-markus.lehtonen@linux.intel.com>
 X-Mailer: git-send-email 2.6.2
-Subject: [PATCH] FileChecksumCache: don't follow directory symlinks
+In-Reply-To: <1458658795-15511-1-git-send-email-markus.lehtonen@linux.intel.com>
+References: <1458658795-15511-1-git-send-email-markus.lehtonen@linux.intel.com>
+Subject: [PATCH] Make BB_DONT_CACHE variable external
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,44 +29,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Mar 2016 15:00:27 -0000
+X-List-Received-Date: Tue, 22 Mar 2016 15:00:28 -0000
 
-Before this patch, directory symlinks mathcing filename pattern (either
-a file name or a glob pattern) were followed. However, directory
-symlinks deeper in the search chain were omitted by os.walk(). Now
-directory traversal behaves consistently, ignoring syminks on all
-levels.
+This makes it possible to prevent a recipe to be cached, and thus,
+parsed every time.
 
-One reason for choosing not to "walk into" directory symlinks is that
-dir symlinks in externalsrc.bbclass in oe-core are causing problems in
-source tree checksumming.
+Use with care.
 
 [YOCTO #8853]
----
- lib/bb/checksum.py | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
-index 7fb46d8..2369db3 100644
---- a/lib/bb/checksum.py
-+++ b/lib/bb/checksum.py
-@@ -123,11 +123,14 @@ class FileChecksumCache(MultiProcessCache):
-                 # Handle globs
-                 for f in glob.glob(pth):
-                     if os.path.isdir(f):
--                        checksums.extend(checksum_dir(f))
-+                        if os.path.islink(f):
-+                            continue
-+                        else:
-+                            checksums.extend(checksum_dir(f))
-                     else:
-                         checksum = checksum_file(f)
-                         checksums.append((f, checksum))
--            elif os.path.isdir(pth):
-+            elif os.path.isdir(pth) and not os.path.islink(f):
-                 checksums.extend(checksum_dir(pth))
-             else:
-                 checksum = checksum_file(pth)
+Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+---
+ lib/bb/cache.py           | 2 +-
+ lib/bb/fetch2/__init__.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index 063ab15..af5b9fb 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -99,7 +99,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         self.timestamp = bb.parse.cached_mtime(filename)
+         self.variants = self.listvar('__VARIANTS', metadata) + ['']
+         self.appends = self.listvar('__BBAPPEND', metadata)
+-        self.nocache = self.getvar('__BB_DONT_CACHE', metadata)
++        self.nocache = self.getvar('BB_DONT_CACHE', metadata)
+ 
+         self.skipreason = self.getvar('__SKIPPED', metadata)
+         if self.skipreason:
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index f86014c..5df642e 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -713,7 +713,7 @@ def subprocess_setup():
+ def get_autorev(d):
+     #  only not cache src rev in autorev case
+     if d.getVar('BB_SRCREV_POLICY', True) != "cache":
+-        d.setVar('__BB_DONT_CACHE', '1')
++        d.setVar('BB_DONT_CACHE', '1')
+     return "AUTOINC"
+ 
+ def get_srcrev(d, method_name='sortable_revision'):
 -- 
 2.6.2
 
