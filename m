@@ -1,25 +1,25 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id DFCEE607A4
+	by mail.openembedded.org (Postfix) with ESMTP id 994F565CB6
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 Mar 2016 08:29:21 +0000 (UTC)
+	Wed, 23 Mar 2016 08:29:22 +0000 (UTC)
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga102.jf.intel.com with ESMTP; 23 Mar 2016 01:28:52 -0700
+	by orsmga102.jf.intel.com with ESMTP; 23 Mar 2016 01:28:54 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,381,1455004800"; d="scan'208";a="769709432"
+X-IronPort-AV: E=Sophos;i="5.24,381,1455004800"; d="scan'208";a="769709458"
 Received: from rmoran-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.1.250])
-	by orsmga003.jf.intel.com with ESMTP; 23 Mar 2016 01:28:50 -0700
+	by orsmga003.jf.intel.com with ESMTP; 23 Mar 2016 01:28:52 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 23 Mar 2016 08:28:39 +0000
-Message-Id: <8ec0f747e292202c01dd515c1b1ebed71b154a05.1458721297.git.elliot.smith@intel.com>
+Date: Wed, 23 Mar 2016 08:28:40 +0000
+Message-Id: <59805259d6d41e5b33dee70a74a6892be37d253d.1458721297.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <867f3199ac6e68411ba49fc0f20e6ad8f9a743f7.1458721297.git.elliot.smith@intel.com>
 References: <867f3199ac6e68411ba49fc0f20e6ad8f9a743f7.1458721297.git.elliot.smith@intel.com>
 In-Reply-To: <cover.1458721297.git.elliot.smith@intel.com>
 References: <cover.1458721297.git.elliot.smith@intel.com>
-Subject: [PATCH 4/5] toaster: localhostbecontroller put generated layer in the builddir
+Subject: [PATCH 5/5] toaster: orm generate CustomImageRecipe contents try secondary path
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,32 +36,41 @@ X-List-Received-Date: Wed, 23 Mar 2016 08:29:22 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Move the generated layer for custom recipes into the build directory.
-The build directory makes more sense as this layer/recipe is generated
-for a particular build/project.
+Try a secondary file path if the first does not exist. When we get the
+recipe paths and layer information from the layer index it is not a
+complete path but we are usually able to reconstruct it. If the complete
+real path has been discovered by building then use this instead.
+
+[YOCTO #9206]
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- lib/toaster/bldcontrol/localhostbecontroller.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ lib/toaster/orm/models.py | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index 9deb572..08419f2 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -218,9 +218,8 @@ class LocalhostBEController(BuildEnvironmentController):
-             raise BuildSetupException("BE is not consistent: bblayers.conf file missing at %s" % bblayerconf)
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index a8b0408..6ae6316 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -1533,10 +1533,13 @@ class CustomImageRecipe(Recipe):
+                 packages_conf += pkg.name+' '
  
-         # 5. create custom layer and add custom recipes to it
--        layerpath = os.path.join(self.be.sourcedir,
--                                 "_meta-toaster-custom_",
--                                 bitbake.req.project.name)
-+        layerpath = os.path.join(self.be.builddir,
-+                                 CustomImageRecipe.LAYER_NAME)
-         for target in targets:
-             try:
-                 customrecipe = CustomImageRecipe.objects.get(name=target.target,
+         packages_conf += "\""
+-
+-        base_recipe = open("%s/%s" %
+-                           (self.base_recipe.layer_version.dirpath,
+-                            self.base_recipe.file_path), 'r').read()
++        try:
++            base_recipe = open("%s/%s" %
++                               (self.base_recipe.layer_version.dirpath,
++                                self.base_recipe.file_path), 'r').read()
++        except IOError:
++            # The path may now be the full path if the recipe has been built
++            base_recipe = open(self.base_recipe.file_path, 'r').read()
+ 
+         # Add a special case for when the recipe we have based a custom image
+         # recipe on requires another recipe.
 -- 
 1.9.3
 
