@@ -1,36 +1,21 @@
-Return-Path: <straka.derek@gmail.com>
-Received: from mail-qk0-f174.google.com (mail-qk0-f174.google.com
-	[209.85.220.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 187136018C
+Return-Path: <elliot.smith@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 49CFE6018C
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Mar 2016 12:08:44 +0000 (UTC)
-Received: by mail-qk0-f174.google.com with SMTP id p130so18505581qke.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Mar 2016 05:08:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=jOiMOg0DTugayI8B7PP7FhwoSWqcnV1sy8bo+8aN80Q=;
-	b=Pw86ULf/ojuFSpP/yyncHmWfGD5HarM5ransosPZt2ls3rvwTFPIR+kWnCUpw66A6K
-	Xa4nOdhjHkD8k0qq0g/OvY0t+f5+Vk+yBUQTiFHcLHAXn2jhHNATAs4jvd94HVmX1KOC
-	ifRk3L00ka7uBEwTZNt3lj+8va9adeAoOim0oiU89FnfmBzBTTCJCxpF6KiLEFEihgWT
-	DFLx5+mKP0Is57OrlIu8K+MrGGMXMaD+fB/j81PP8XkhjVMpFD+a19TgWZJb9/z91nqG
-	H7HgcDs8JUhHmRN3tP488ogBZzslsdADskEb+Yh2DqIKbsAw4xiyXPPQcjL8E7zTj2LA
-	J2oQ==
-X-Gm-Message-State: AD7BkJIRqiz/Lij8aifvGgpATDGOvVNU6vHYN0sYj/iPcs3TvgpwBl18NjMy71xgN/ouUw==
-X-Received: by 10.55.20.223 with SMTP id 92mr9817450qku.61.1458821324760;
-	Thu, 24 Mar 2016 05:08:44 -0700 (PDT)
-Received: from localhost.localdomain ([96.91.222.230])
-	by smtp.gmail.com with ESMTPSA id 43sm3165933qgh.28.2016.03.24.05.08.44
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 24 Mar 2016 05:08:44 -0700 (PDT)
-From: Derek Straka <derek@asterius.io>
+	Thu, 24 Mar 2016 12:12:44 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga103.jf.intel.com with ESMTP; 24 Mar 2016 05:12:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.24,385,1455004800"; d="scan'208";a="917905741"
+Received: from unknown (HELO lp.ger.corp.intel.com) ([10.252.9.87])
+	by orsmga001.jf.intel.com with ESMTP; 24 Mar 2016 05:12:43 -0700
+From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 24 Mar 2016 08:08:35 -0400
-Message-Id: <1458821315-25577-1-git-send-email-derek@asterius.io>
-X-Mailer: git-send-email 1.9.1
-Cc: Derek Straka <derek@asterius.io>
-Subject: [PATCH] bitbake: fetch2/gitsm: Fix fetch when the repository contains nested submodules
+Date: Thu, 24 Mar 2016 12:12:09 +0000
+Message-Id: <1458821531-10484-1-git-send-email-elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Cc: Dave Lerner <dave.lerner@windriver.com>
+Subject: [PATCH 1/3] toaster: show full list of dependents to remove
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,38 +28,152 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 24 Mar 2016 12:08:47 -0000
+X-List-Received-Date: Thu, 24 Mar 2016 12:12:45 -0000
 
-This fixes a problem when the repository contains multiple levels of submodules via a resursive submodule init.
+From: Dave Lerner <dave.lerner@windriver.com>
 
-Signed-off-by: Derek Straka <derek@asterius.io>
+When a package is to be removed, show the full list of packages that are
+dependent on that package, telling user that these packages will also be
+removed.
+
+[YOCTO #9121]
+
+Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/bb/fetch2/gitsm.py | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ .../toaster/toastergui/static/js/customrecipe.js   | 72 ++++++++++++++++++++--
+ 1 file changed, 66 insertions(+), 6 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py
-index 2ecea7c..752f1d3 100644
---- a/bitbake/lib/bb/fetch2/gitsm.py
-+++ b/bitbake/lib/bb/fetch2/gitsm.py
-@@ -110,8 +110,7 @@ class GitSM(Git):
-         os.chdir(tmpclonedir)
-         runfetchcmd(ud.basecmd + " reset --hard", d)
-         runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d)
--        runfetchcmd(ud.basecmd + " submodule init", d)
--        runfetchcmd(ud.basecmd + " submodule update", d)
-+        runfetchcmd(ud.basecmd + " submodule update --init --recursive", d)
-         self._set_relative_paths(tmpclonedir)
-         runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*false/bare = true/'", d)
-         os.rename(gitdir, ud.clonedir,)
-@@ -132,6 +131,4 @@ class GitSM(Git):
-         submodules = self.uses_submodules(ud, d)
-         if submodules:
-             runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d)
--            runfetchcmd(ud.basecmd + " submodule init", d)
--            runfetchcmd(ud.basecmd + " submodule update", d)
--
-+            runfetchcmd(ud.basecmd + " submodule update --init --recursive", d)
+diff --git a/bitbake/lib/toaster/toastergui/static/js/customrecipe.js b/bitbake/lib/toaster/toastergui/static/js/customrecipe.js
+index 3c57899..f1b8afb 100644
+--- a/bitbake/lib/toaster/toastergui/static/js/customrecipe.js
++++ b/bitbake/lib/toaster/toastergui/static/js/customrecipe.js
+@@ -89,7 +89,21 @@ function customRecipePageInit(ctx) {
+     var depsList = modal.find("#package-reverse-dep-list");
+     var deps = pkgData.reverse_dependencies;
+ 
++    var depsCount = deps.length;
++    var vDepends = "depends";
++    var vPackage = "package";
++    var vThis = "this";
++    if (depsCount > 1) {
++      vDepends = "depend";
++      vPackage = "packages";
++      vThis = "these";
++    }
+     modal.find(".package-to-rm-name").text(targetPkg.name);
++    modal.find(".reverse-deps-count").text(depsCount);
++    modal.find(".reverse-deps-count-plus1").text((depsCount+1) + " packages");
++    modal.find(".reverse-deps-depends").text(vDepends);
++    modal.find(".reverse-deps-package").text(vPackage);
++    modal.find(".reverse-deps-this").text(vThis);
+ 
+     depsList.text("");
+ 
+@@ -103,6 +117,8 @@ function customRecipePageInit(ctx) {
+     modal.find("#package-reverse-deps-total-size").text(
+       pkgData.reverse_dependencies_size_formatted);
+ 
++    targetPkg.depsRemoved = deps;
++
+     rmdPkgReverseDepsModalBtn.data(targetPkg);
+     modal.modal('show');
+   }
+@@ -121,6 +137,10 @@ function customRecipePageInit(ctx) {
+     var btnCell = $("#package-btn-cell-" + targetPkg.id);
+     var inlineNotify = btnCell.children(".inline-notification");
+ 
++    var i;
++    var dep;
++    var depBtnCell;
++
+     if (targetPkg.directive === 'add') {
+       method = 'PUT';
+       /* If the package had dependencies also notify that they were added */
+@@ -132,15 +152,15 @@ function customRecipePageInit(ctx) {
+         msg += " packages to " + ctx.recipe.name + ": ";
+         msg += "<strong>" + targetPkg.name + "</strong> and its dependencies";
+ 
+-        for (var i in targetPkg.depsAdded){
+-          var dep = targetPkg.depsAdded[i];
++        for (i in targetPkg.depsAdded){
++          dep = targetPkg.depsAdded[i];
+ 
+           msg += " <strong>" + dep.name + "</strong>";
+ 
+           /* Add any cells currently in view to the list of cells which get
+            * an inline notification inside them and which change add/rm state
+            */
+-          var depBtnCell = $("#package-btn-cell-" + dep.pk);
++          depBtnCell = $("#package-btn-cell-" + dep.pk);
+           btnCell = btnCell.add(depBtnCell);
+ 
+           inlineNotify = inlineNotify.add(
+@@ -159,9 +179,49 @@ function customRecipePageInit(ctx) {
+ 
+     } else if (targetPkg.directive === 'remove') {
+       method = 'DELETE';
+-      msg += "removed 1 package from "+ctx.recipe.name+":";
+-      msg += ' <strong>' + targetPkg.name + '<strong>';
+-      inlineNotify.text("1 package removed");
++      var numPackageString = "1 package ";
++      var revDepList = "";
++      if (targetPkg.hasOwnProperty('depsRemoved') &&
++              targetPkg.depsRemoved.length > 0) {
++        var depsRemovedLength = targetPkg.depsRemoved.length;
++        var ending = "y: ";
++        var maxRevDepsDisplayed  = 5;
++        var d = 0;
++        if (depsRemovedLength > 1) {
++            ending = "ies: ";
++        }
++        numPackageString = (depsRemovedLength + 1) + " packages";
++        revDepList = " and its " + depsRemovedLength + " reverse dependenc" + ending;
++        for (i in targetPkg.depsRemoved){
++          /* include up to maxRevDepsDisplayed rev deps on the page notification */
++          var notShownCount = depsRemovedLength - maxRevDepsDisplayed;
++          dep = targetPkg.depsRemoved[i];
++          if (d < maxRevDepsDisplayed) {
++            if (d > 0) {
++                revDepList += ", ";
++            }
++            revDepList += dep.name;
++            d++;
++            if ((d === maxRevDepsDisplayed) && (notShownCount > 0)) {
++                revDepList += " and " + notShownCount + " more";
++            }
++          }
++
++          /* Add any cells currently in view to the list of cells which get
++           * an inline notification inside them and which change add/rm state
++           */
++          depBtnCell = $("#package-btn-cell-" + dep.pk);
++          btnCell = btnCell.add(depBtnCell);
++
++          inlineNotify = inlineNotify.add(
++            depBtnCell.children(".inline-notification"));
++        }
++      }
++      msg+= "removed " + numPackageString + " from " + ctx.recipe.name + ":";
++      msg += " <strong>" + targetPkg.name + "</strong>";
++      msg += revDepList;
++
++      inlineNotify.text(numPackageString + " removed");
+     } else {
+       throw("Unknown package directive: should be add or remove");
+     }
 -- 
-1.9.1
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
 
 
