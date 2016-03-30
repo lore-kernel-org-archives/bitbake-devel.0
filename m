@@ -1,26 +1,20 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 8278E62133
+Return-Path: <markus.lehtonen@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 790216014F
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Mar 2016 09:32:56 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id u2U9WuSq022297
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Mar 2016 02:32:57 -0700
-Received: from ala-blade48.wrs.com (147.11.105.68) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Wed, 30 Mar 2016 02:32:56 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 30 Mar 2016 02:32:55 -0700
-Message-ID: <96108bac83f88289ad4851f781742f515e882f5d.1459330331.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1459330331.git.liezhi.yang@windriver.com>
-References: <cover.1459330331.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] cookerdata.py: remove slash in the end
+	Wed, 30 Mar 2016 12:54:13 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga101.fm.intel.com with ESMTP; 30 Mar 2016 05:54:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.24,416,1455004800"; d="scan'208";a="677971546"
+Received: from marquiz.fi.intel.com ([10.237.72.155])
+	by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2016 05:54:03 -0700
+From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 30 Mar 2016 15:54:00 +0300
+Message-Id: <1459342440-562-1-git-send-email-markus.lehtonen@linux.intel.com>
+X-Mailer: git-send-email 2.6.2
+Subject: [PATCH] cooker: fix CookerParser.shutdown()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,36 +27,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 30 Mar 2016 09:32:56 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 30 Mar 2016 12:54:17 -0000
 
-It's very possible that we added layer as:
-BBLAYERS += "/path/to/meta/"
+Prevent a hang when shutdown() is called during parsing (e.g. after
+SIGINT). We must not append 'None' to the jobs queue. Otherwise the
+worker loop inside Parser.realrun() may break out at the wrong point,
+causing the results queue thread blocking bitbake indefinitely.
 
-then there would be warning:
-WARNING: No bb files matched BBFILE_PATTERN_core '^/path/to/meta//'
+[YOCTO #9319]
 
-This patch can fix the problem.
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
 ---
- bitbake/lib/bb/cookerdata.py | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/bb/cooker.py | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
-index c5fdf66..50259a9 100644
---- a/bitbake/lib/bb/cookerdata.py
-+++ b/bitbake/lib/bb/cookerdata.py
-@@ -292,6 +292,8 @@ class CookerDataBuilder(object):
-                 parselog.debug(2, "Adding layer %s", layer)
-                 if 'HOME' in approved and '~' in layer:
-                     layer = os.path.expanduser(layer)
-+                if layer.endswith('/'):
-+                    layer = layer.rstrip('/')
-                 data.setVar('LAYERDIR', layer)
-                 data = parse_config_file(os.path.join(layer, "conf", "layer.conf"), data)
-                 data.expandVarref('LAYERDIR')
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 96cefc7..de395b3 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -2063,7 +2063,6 @@ class CookerParser(object):
+             bb.event.fire(event, self.cfgdata)
+             self.feeder_quit.put(None)
+             for process in self.processes:
+-                self.jobs.put(None)
+                 self.parser_quit.put(None)
+         else:
+             self.feeder_quit.put('cancel')
 -- 
-2.7.4
+2.6.2
 
 
