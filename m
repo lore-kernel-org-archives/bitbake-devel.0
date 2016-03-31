@@ -1,48 +1,48 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f50.google.com (mail-wm0-f50.google.com [74.125.82.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 238CA65C8A
+Received: from mail-wm0-f41.google.com (mail-wm0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 9559265C8A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 31 Mar 2016 18:56:04 +0000 (UTC)
-Received: by mail-wm0-f50.google.com with SMTP id f198so13465187wme.0
+	Thu, 31 Mar 2016 18:56:06 +0000 (UTC)
+Received: by mail-wm0-f41.google.com with SMTP id 191so136482341wmq.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 31 Mar 2016 11:56:05 -0700 (PDT)
+	Thu, 31 Mar 2016 11:56:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=J/StokK0CzmmBI4HHsUdn5SV6PmWcCeylqPNHof+31M=;
-	b=1zwDLSTPiFbjCOadweBMyhk7mCV7ZwBg4bW1A73kd3bbuN/PJn1FwRfQUtJkAbLQUd
-	3TyoStwDHW0kjeIhT8A/6TK/GWFv6aYWBDqVa0ASVxXtLJSxlIso1PfuM6KieEBU3UXX
-	jzW8RuoBBCV35W5BFsfigC+RfeOWWP72YutNLW76JlFYbpVP6BUWlX2PE1xHo6DkuyNI
-	zTfdXLHSPwOUSlaYFJw0cPqP+b96AT+2TShJ92YH9I2mJ7+BsLm9Q5XXHixMi9g1O8zb
-	Ojv0KZik3KeXxVW5F8BAtWe2zzW375Ab4n+AB5cafjW1UvOidfs1VLpuLo+KMUe6/ni7
-	Lv9A==
+	bh=mphOLs3GIXTlW2gfxNrIyVB8fZr8NvHZsvIJoWsbHHI=;
+	b=A4HVFrgpcVSmDSnsyC+L5d4tBa6RFexLOmOG+1dUqtH1ENBiNiq2q7VCX3vaWOHG7m
+	+on0+Lj+eDQWtw9z3fLYJtTr2kI2tDeDnuaAKjAslynBMZCpeBZrTa5B/15knrfxRDTo
+	r8eMhyqxfCoIsyyQpNXuExLfS+saKlc5d71ev/F8BKnk3QVI9cWWxLlxh2CQzNmjL2C2
+	XrIKucbcUE/FP/K6ZBRAf4Qlc5eOfNf4KvYyC6rofSASEQqW73fKxbT2J8kdUs79jRI6
+	jgKxNjSfj1PFidNtgbeYqzlHLSdD+yxm4eyhfa+z1ByZ3bMhTBPxT9n+yxLwUwXe7xrp
+	zGLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=J/StokK0CzmmBI4HHsUdn5SV6PmWcCeylqPNHof+31M=;
-	b=f7+8EedkWfVgIBybeOXqoqCahJSE5Uh0fGwQcYF2Z81peOXhV+hbAdukvPLK+rE3J4
-	YJOfS0GHQrrtrb95bTX+zz90Ol2xhXmgwwl5inHnAOpMOwmUhazM/txIKlOR+XdKn7mT
-	GR7ZHNv4+1qtAm61nc3C3aGVKRhnHXY4nqbgrVr/vaQyhUmm2kkkJl0aOmTP1WWZs28r
-	G6pBXQg5l/+FbasLSQHQNAQAtOu/SbBEnz57kyNKR8stNYTWPhyyktdFNt3Wd43QjklH
-	2ExICQxhhTQOkQ8cbSbG7P+qqk/qtRnVQuNPINeicf2fkwUViwydQgVloIFRZILfW7DE
-	re+w==
-X-Gm-Message-State: AD7BkJKkmg/WfrWNCWD8/AGoc9He6j1vTNohKB94bQwwlMd/WW3whqASCCHjqFiB7+SAQJB5
-X-Received: by 10.28.184.194 with SMTP id i185mr504821wmf.90.1459450565004;
-	Thu, 31 Mar 2016 11:56:05 -0700 (PDT)
+	bh=mphOLs3GIXTlW2gfxNrIyVB8fZr8NvHZsvIJoWsbHHI=;
+	b=KaS4iVC9U7iWlxLqAw2HwUUJdHsv9bFd4vJnFuBF0GkzJYSiFwNdvCmjzDauBGLxG0
+	FCy8UPfOz2WpA14nzwqXL1JMyY6JxNGnEFXBWuAq6qLiY4fI80VhkRO3I5CklzJXazGG
+	vnaktjAxZCe2zDMkSSESiHGqME2B3R2eRHWpMEe6iptpKY+eUPmOZLvw3Sx5lkDpkjdv
+	n6i1paMimocrsn6mYYz3bsl89mDbGw18IouiTzpD9WJbAE00h98OBarc3ru6DMgIfaW6
+	Dydexs3mw6cBSX/rNtntntsYKrMKxlBqvnSiVc56XfyBEuoC2Iyvzb8Daq7W1X2XvjCb
+	e/xA==
+X-Gm-Message-State: AD7BkJLhOVh+97NMxfe9fMMqRFs3qpZIxv4jwPBV5MkjRB2XVj/jC7QqFa1bSjILjxTiIOG6
+X-Received: by 10.28.48.147 with SMTP id w141mr1069286wmw.85.1459450566147;
+	Thu, 31 Mar 2016 11:56:06 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
 	by smtp.gmail.com with ESMTPSA id
-	fv6sm10406288wjc.12.2016.03.31.11.56.04
+	fv6sm10406288wjc.12.2016.03.31.11.56.05
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 31 Mar 2016 11:56:04 -0700 (PDT)
+	Thu, 31 Mar 2016 11:56:05 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 31 Mar 2016 19:55:45 +0100
-Message-Id: <1459450547-26248-3-git-send-email-michael.g.wood@intel.com>
+Date: Thu, 31 Mar 2016 19:55:46 +0100
+Message-Id: <1459450547-26248-4-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1459450547-26248-1-git-send-email-michael.g.wood@intel.com>
 References: <1459450547-26248-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 3/5] toaster: tests Migrate project builds page tests to Selenium
+Subject: [PATCH 4/5] toaster: tests Migrate all projects page tests to Selenium
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,24 +55,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 31 Mar 2016 18:56:06 -0000
+X-List-Received-Date: Thu, 31 Mar 2016 18:56:07 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- .../tests/browser/test_project_builds_page.py      | 168 +++++++++++++++++++++
- lib/toaster/toastergui/tests.py                    | 133 ----------------
- 2 files changed, 168 insertions(+), 133 deletions(-)
- create mode 100644 lib/toaster/tests/browser/test_project_builds_page.py
+ .../tests/browser/test_all_projects_page.py        | 214 +++++++++++++++++++++
+ lib/toaster/toastergui/tests.py                    | 197 -------------------
+ 2 files changed, 214 insertions(+), 197 deletions(-)
+ create mode 100644 lib/toaster/tests/browser/test_all_projects_page.py
 
-diff --git a/lib/toaster/tests/browser/test_project_builds_page.py b/lib/toaster/tests/browser/test_project_builds_page.py
+diff --git a/lib/toaster/tests/browser/test_all_projects_page.py b/lib/toaster/tests/browser/test_all_projects_page.py
 new file mode 100644
-index 0000000..9fe91ab
+index 0000000..ed8e620
 --- /dev/null
-+++ b/lib/toaster/tests/browser/test_project_builds_page.py
-@@ -0,0 +1,168 @@
++++ b/lib/toaster/tests/browser/test_all_projects_page.py
+@@ -0,0 +1,214 @@
 +#! /usr/bin/env python
 +# ex:ts=4:sw=4:sts=4:et
 +# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
@@ -100,287 +100,404 @@ index 0000000..9fe91ab
 +from django.utils import timezone
 +from tests.browser.selenium_helpers import SeleniumTestCase
 +
-+from orm.models import BitbakeVersion, Release, Project, Build, Target
++from orm.models import BitbakeVersion, Release, Project, Build
++from orm.models import ProjectVariable
 +
-+class TestProjectBuildsPage(SeleniumTestCase):
-+    """ Test data at /project/X/builds is displayed correctly """
++class TestAllProjectsPage(SeleniumTestCase):
++    """ Browser tests for projects page /projects/ """
 +
 +    PROJECT_NAME = 'test project'
 +    CLI_BUILDS_PROJECT_NAME = 'command line builds'
++    MACHINE_NAME = 'delorean'
 +
 +    def setUp(self):
-+        bbv = BitbakeVersion.objects.create(name='bbv1', giturl='/tmp/',
-+                                            branch='master', dirpath='')
-+        release = Release.objects.create(name='release1',
-+                                         bitbake_version=bbv)
-+        self.project1 = Project.objects.create_project(name=self.PROJECT_NAME,
-+                                                       release=release)
-+        self.project1.save()
-+
-+        self.project2 = Project.objects.create_project(name=self.PROJECT_NAME,
-+                                                       release=release)
-+        self.project2.save()
-+
-+        self.default_project = Project.objects.create_project(
-+            name=self.CLI_BUILDS_PROJECT_NAME,
-+            release=release
-+        )
++        """ Add default project manually """
++        project = Project.objects.create_project(self.CLI_BUILDS_PROJECT_NAME, None)
++        self.default_project = project
 +        self.default_project.is_default = True
 +        self.default_project.save()
 +
-+        # parameters for builds to associate with the projects
++        # this project is only set for some of the tests
++        self.project = None
++
++        self.release = None
++
++    def _add_build_to_default_project(self):
++        """ Add a build to the default project (not used in all tests) """
 +        now = timezone.now()
++        build = Build.objects.create(project=self.default_project,
++                                     started_on=now,
++                                     completed_on=now)
++        build.save()
 +
-+        self.project1_build_success = {
-+            'project': self.project1,
-+            'started_on': now,
-+            'completed_on': now,
-+            'outcome': Build.SUCCEEDED
-+        }
++    def _add_non_default_project(self):
++        """ Add another project """
++        bbv = BitbakeVersion.objects.create(name='test bbv', giturl='/tmp/',
++                                            branch='master', dirpath='')
++        self.release = Release.objects.create(name='test release',
++                                              branch_name='master',
++                                              bitbake_version=bbv)
++        self.project = Project.objects.create_project(self.PROJECT_NAME, self.release)
++        self.project.is_default = False
++        self.project.save()
 +
-+        self.project1_build_in_progress = {
-+            'project': self.project1,
-+            'started_on': now,
-+            'completed_on': now,
-+            'outcome': Build.IN_PROGRESS
-+        }
++        # fake the MACHINE variable
++        project_var = ProjectVariable.objects.create(project=self.project,
++                                                     name='MACHINE',
++                                                     value=self.MACHINE_NAME)
++        project_var.save()
 +
-+        self.project2_build_success = {
-+            'project': self.project2,
-+            'started_on': now,
-+            'completed_on': now,
-+            'outcome': Build.SUCCEEDED
-+        }
++    def _get_row_for_project(self, project_name):
++        """ Get the HTML row for a project, or None if not found """
++        self.wait_until_present('#projectstable tbody tr')
++        rows = self.find_all('#projectstable tbody tr')
 +
-+        self.project2_build_in_progress = {
-+            'project': self.project2,
-+            'started_on': now,
-+            'completed_on': now,
-+            'outcome': Build.IN_PROGRESS
-+        }
++        # find the row with a project name matching the one supplied
++        found_row = None
++        for row in rows:
++            if re.search(project_name, row.get_attribute('innerHTML')):
++                found_row = row
++                break
 +
-+    def _get_rows_for_project(self, project_id):
++        return found_row
++
++    def test_default_project_hidden(self):
 +        """
-+        Helper to retrieve HTML rows for a project's builds,
-+        as shown in the main table of the page
++        The default project should be hidden if it has no builds
++        and we should see the "no results" area
 +        """
-+        url = reverse('projectbuilds', args=(project_id,))
++        url = reverse('all-projects')
 +        self.get(url)
-+        self.wait_until_present('#projectbuildstable tbody tr')
-+        return self.find_all('#projectbuildstable tbody tr')
++        self.wait_until_visible('#no-results-projectstable')
 +
-+    def test_show_builds_for_project(self):
-+        """ Builds for a project should be displayed in the main table """
-+        Build.objects.create(**self.project1_build_success)
-+        Build.objects.create(**self.project1_build_success)
-+        build_rows = self._get_rows_for_project(self.project1.id)
-+        self.assertEqual(len(build_rows), 2)
++        rows = self.find_all('#projectstable tbody tr')
++        self.assertEqual(len(rows), 0, 'should be no projects displayed')
 +
-+    def test_show_builds_project_only(self):
-+        """ Builds for other projects should be excluded """
-+        Build.objects.create(**self.project1_build_success)
-+        Build.objects.create(**self.project1_build_success)
-+        Build.objects.create(**self.project1_build_success)
++    def test_default_project_has_build(self):
++        """ The default project should be shown if it has builds """
++        self._add_build_to_default_project()
 +
-+        # shouldn't see these two
-+        Build.objects.create(**self.project2_build_success)
-+        Build.objects.create(**self.project2_build_in_progress)
-+
-+        build_rows = self._get_rows_for_project(self.project1.id)
-+        self.assertEqual(len(build_rows), 3)
-+
-+    def test_builds_exclude_in_progress(self):
-+        """ "in progress" builds should not be shown in main table """
-+        Build.objects.create(**self.project1_build_success)
-+        Build.objects.create(**self.project1_build_success)
-+
-+        # shouldn't see this one
-+        Build.objects.create(**self.project1_build_in_progress)
-+
-+        # shouldn't see these two either, as they belong to a different project
-+        Build.objects.create(**self.project2_build_success)
-+        Build.objects.create(**self.project2_build_in_progress)
-+
-+        build_rows = self._get_rows_for_project(self.project1.id)
-+        self.assertEqual(len(build_rows), 2)
-+
-+    def test_show_tasks_with_suffix(self):
-+        """ Task should be shown as suffixes on build names """
-+        build = Build.objects.create(**self.project1_build_success)
-+        target = 'bash'
-+        task = 'clean'
-+        Target.objects.create(build=build, target=target, task=task)
-+
-+        url = reverse('projectbuilds', args=(self.project1.id,))
++        url = reverse('all-projects')
 +        self.get(url)
-+        self.wait_until_present('td[class="target"]')
 +
-+        cell = self.find('td[class="target"]')
-+        content = cell.get_attribute('innerHTML')
-+        expected_text = '%s:%s' % (target, task)
++        default_project_row = self._get_row_for_project(self.default_project.name)
 +
-+        self.assertTrue(re.search(expected_text, content),
-+                        '"target" cell should contain text %s' % expected_text)
++        self.assertNotEqual(default_project_row, None,
++                            'default project "cli builds" should be in page')
 +
-+    def test_cli_builds_hides_tabs(self):
++    def test_default_project_release(self):
 +        """
-+        Display for command line builds should hide tabs
++        The release for the default project should display as
++        'Not applicable'
 +        """
-+        url = reverse('projectbuilds', args=(self.default_project.id,))
-+        self.get(url)
-+        tabs = self.find_all('#project-topbar')
-+        self.assertEqual(len(tabs), 0,
-+                         'should be no top bar shown for command line builds')
++        # need a build, otherwise project doesn't display at all
++        self._add_build_to_default_project()
 +
-+    def test_non_cli_builds_has_tabs(self):
++        # another project to test, which should show release
++        self._add_non_default_project()
++
++        self.get(reverse('all-projects'))
++
++        # find the row for the default project
++        default_project_row = self._get_row_for_project(self.default_project.name)
++
++        # check the release text for the default project
++        selector = 'span[data-project-field="release"] span.muted'
++        element = default_project_row.find_element_by_css_selector(selector)
++        text = element.text.strip()
++        self.assertEqual(text, 'Not applicable',
++                         'release should be "not applicable" for default project')
++
++        # find the row for the default project
++        other_project_row = self._get_row_for_project(self.project.name)
++
++        # check the link in the release cell for the other project
++        selector = 'span[data-project-field="release"] a'
++        element = other_project_row.find_element_by_css_selector(selector)
++        text = element.text.strip()
++        self.assertEqual(text, self.release.name,
++                         'release name should be shown for non-default project')
++
++    def test_default_project_machine(self):
 +        """
-+        Non-command-line builds projects should show the tabs
++        The machine for the default project should display as
++        'Not applicable'
 +        """
-+        url = reverse('projectbuilds', args=(self.project1.id,))
-+        self.get(url)
-+        tabs = self.find_all('#project-topbar')
-+        self.assertEqual(len(tabs), 1,
-+                         'should be a top bar shown for non-command-line builds')
++        # need a build, otherwise project doesn't display at all
++        self._add_build_to_default_project()
++
++        # another project to test, which should show machine
++        self._add_non_default_project()
++
++        self.get(reverse('all-projects'))
++
++        # find the row for the default project
++        default_project_row = self._get_row_for_project(self.default_project.name)
++
++        # check the machine cell for the default project
++        selector = 'span[data-project-field="machine"] span.muted'
++        element = default_project_row.find_element_by_css_selector(selector)
++        text = element.text.strip()
++        self.assertEqual(text, 'Not applicable',
++                         'machine should be not applicable for default project')
++
++        # find the row for the default project
++        other_project_row = self._get_row_for_project(self.project.name)
++
++        # check the link in the machine cell for the other project
++        selector = 'span[data-project-field="machine"] a'
++        element = other_project_row.find_element_by_css_selector(selector)
++        text = element.text.strip()
++        self.assertEqual(text, self.MACHINE_NAME,
++                         'machine name should be shown for non-default project')
++
++    def test_project_page_links(self):
++        """
++        Test that links for the default project point to the builds
++        page /projects/X/builds for that project, and that links for
++        other projects point to their configuration pages /projects/X/
++        """
++
++        # need a build, otherwise project doesn't display at all
++        self._add_build_to_default_project()
++
++        # another project to test
++        self._add_non_default_project()
++
++        self.get(reverse('all-projects'))
++
++        # find the row for the default project
++        default_project_row = self._get_row_for_project(self.default_project.name)
++
++        # check the link on the name field
++        selector = 'span[data-project-field="name"] a'
++        element = default_project_row.find_element_by_css_selector(selector)
++        link_url = element.get_attribute('href').strip()
++        expected_url = reverse('projectbuilds', args=(self.default_project.id,))
++        msg = 'link on default project name should point to builds but was %s' % link_url
++        self.assertTrue(link_url.endswith(expected_url), msg)
++
++        # find the row for the other project
++        other_project_row = self._get_row_for_project(self.project.name)
++
++        # check the link for the other project
++        selector = 'span[data-project-field="name"] a'
++        element = other_project_row.find_element_by_css_selector(selector)
++        link_url = element.get_attribute('href').strip()
++        expected_url = reverse('project', args=(self.project.id,))
++        msg = 'link on project name should point to configuration but was %s' % link_url
++        self.assertTrue(link_url.endswith(expected_url), msg)
 diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-index 78b7c04..7192947 100644
+index 7192947..6975ac1 100644
 --- a/lib/toaster/toastergui/tests.py
 +++ b/lib/toaster/toastergui/tests.py
-@@ -764,139 +764,6 @@ class AllProjectsPageTests(TestCase):
-         self.assertEqual(soup.find('a')['href'], expected_url,
-                          'link on project name should point to configuration')
+@@ -493,7 +493,6 @@ class ViewTests(TestCase):
+                                 "Changed page on table %s but first row is the "
+                                 "same as the previous page" % name)
  
--class ProjectBuildsPageTests(TestCase):
--    """ Test data at /project/X/builds is displayed correctly """
+-
+ class LandingPageTests(TestCase):
+     """ Tests for redirects on the landing page """
+     # disable bogus pylint message error:
+@@ -568,202 +567,6 @@ class LandingPageTests(TestCase):
+         self.assertTrue('/builds' in response.url,
+                         'should redirect to builds')
+ 
+-class AllProjectsPageTests(TestCase):
+-    """ Tests for projects page /projects/ """
+-
+-    MACHINE_NAME = 'delorean'
 -
 -    def setUp(self):
--        bbv = BitbakeVersion.objects.create(name="bbv1", giturl="/tmp/",
--                                            branch="master", dirpath="")
--        release = Release.objects.create(name="release1",
--                                         bitbake_version=bbv)
--        self.project1 = Project.objects.create_project(name=PROJECT_NAME,
--                                                       release=release)
--        self.project1.save()
--
--        self.project2 = Project.objects.create_project(name=PROJECT_NAME,
--                                                       release=release)
--        self.project2.save()
--
--        self.default_project = Project.objects.create_project(
--            name=CLI_BUILDS_PROJECT_NAME,
--            release=release
--        )
+-        """ Add default project manually """
+-        project = Project.objects.create_project(CLI_BUILDS_PROJECT_NAME, None)
+-        self.default_project = project
 -        self.default_project.is_default = True
 -        self.default_project.save()
 -
--        # parameters for builds to associate with the projects
+-        # this project is only set for some of the tests
+-        self.project = None
+-
+-        self.release = None
+-
+-    def _add_build_to_default_project(self):
+-        """ Add a build to the default project (not used in all tests) """
 -        now = timezone.now()
+-        build = Build.objects.create(project=self.default_project,
+-                                     started_on=now,
+-                                     completed_on=now)
+-        build.save()
 -
--        self.project1_build_success = {
--            "project": self.project1,
--            "started_on": now,
--            "completed_on": now,
--            "outcome": Build.SUCCEEDED
--        }
+-    def _add_non_default_project(self):
+-        """ Add another project """
+-        bbv = BitbakeVersion.objects.create(name="test bbv", giturl="/tmp/",
+-                                            branch="master", dirpath="")
+-        self.release = Release.objects.create(name="test release",
+-                                              branch_name="master",
+-                                              bitbake_version=bbv)
+-        self.project = Project.objects.create_project(PROJECT_NAME, self.release)
+-        self.project.is_default = False
+-        self.project.save()
 -
--        self.project1_build_in_progress = {
--            "project": self.project1,
--            "started_on": now,
--            "completed_on": now,
--            "outcome": Build.IN_PROGRESS
--        }
+-        # fake the MACHINE variable
+-        project_var = ProjectVariable.objects.create(project=self.project,
+-                                                     name='MACHINE',
+-                                                     value=self.MACHINE_NAME)
+-        project_var.save()
 -
--        self.project2_build_success = {
--            "project": self.project2,
--            "started_on": now,
--            "completed_on": now,
--            "outcome": Build.SUCCEEDED
--        }
+-    def _get_row_for_project(self, data, project_id):
+-        """ Get the object representing the table data for a project """
+-        return [row for row in data['rows'] if row['id'] == project_id][0]
 -
--        self.project2_build_in_progress = {
--            "project": self.project2,
--            "started_on": now,
--            "completed_on": now,
--            "outcome": Build.IN_PROGRESS
--        }
+-    def test_default_project_hidden(self):
+-        """ The default project should be hidden if it has no builds """
+-        params = {"count": 10, "orderby": "updated:-", "page": 1}
+-        response = self.client.get(reverse('all-projects'), params)
 -
--    def _get_rows_for_project(self, project_id):
--        """ Helper to retrieve HTML rows for a project """
--        url = reverse("projectbuilds", args=(project_id,))
--        response = self.client.get(url, {'format': 'json'}, follow=True)
+-        self.assertTrue(not('tr class="data"' in response.content),
+-                        'should be no project rows in the page')
+-        self.assertTrue(not(CLI_BUILDS_PROJECT_NAME in response.content),
+-                        'default project "cli builds" should not be in page')
+-
+-    def test_default_project_has_build(self):
+-        """ The default project should be shown if it has builds """
+-        self._add_build_to_default_project()
+-
+-        params = {"count": 10, "orderby": "updated:-", "page": 1}
+-
+-        response = self.client.get(
+-            reverse('all-projects'),
+-            {'format': 'json'},
+-            params
+-        )
+-
 -        data = json.loads(response.content)
--        return data['rows']
 -
--    def test_show_builds_for_project(self):
--        """ Builds for a project should be displayed """
--        Build.objects.create(**self.project1_build_success)
--        Build.objects.create(**self.project1_build_success)
--        build_rows = self._get_rows_for_project(self.project1.id)
--        self.assertEqual(len(build_rows), 2)
+-        # find the row for the default project
+-        default_project_row = self._get_row_for_project(data, self.default_project.id)
 -
--    def test_show_builds_project_only(self):
--        """ Builds for other projects should be excluded """
--        Build.objects.create(**self.project1_build_success)
--        Build.objects.create(**self.project1_build_success)
--        Build.objects.create(**self.project1_build_success)
+-        # check its name template has the correct text
+-        self.assertEqual(default_project_row['name'], CLI_BUILDS_PROJECT_NAME,
+-                        'default project "cli builds" should be in page')
 -
--        # shouldn't see these two
--        Build.objects.create(**self.project2_build_success)
--        Build.objects.create(**self.project2_build_in_progress)
+-    def test_default_project_release(self):
+-        """
+-        The release for the default project should display as
+-        'Not applicable'
+-        """
+-        # need a build, otherwise project doesn't display at all
+-        self._add_build_to_default_project()
 -
--        build_rows = self._get_rows_for_project(self.project1.id)
--        self.assertEqual(len(build_rows), 3)
+-        # another project to test, which should show release
+-        self._add_non_default_project()
 -
--    def test_builds_exclude_in_progress(self):
--        """ "in progress" builds should not be shown """
--        Build.objects.create(**self.project1_build_success)
--        Build.objects.create(**self.project1_build_success)
+-        response = self.client.get(
+-            reverse('all-projects'),
+-            {'format': 'json'},
+-            follow=True
+-        )
 -
--        # shouldn't see this one
--        Build.objects.create(**self.project1_build_in_progress)
--
--        # shouldn't see these two either, as they belong to a different project
--        Build.objects.create(**self.project2_build_success)
--        Build.objects.create(**self.project2_build_in_progress)
--
--        build_rows = self._get_rows_for_project(self.project1.id)
--        self.assertEqual(len(build_rows), 2)
--
--    def test_tasks_in_projectbuilds(self):
--        """ Task should be shown as suffix on build name """
--        build = Build.objects.create(**self.project1_build_success)
--        Target.objects.create(build=build, target='bash', task='clean')
--
--        url = reverse('projectbuilds', args=(self.project1.id,))
--        response = self.client.get(url, {'format': 'json'}, follow=True)
 -        data = json.loads(response.content)
--        cell = data['rows'][0]['static:target']
 -
--        result = re.findall('^ +bash:clean', cell, re.MULTILINE)
--        self.assertEqual(len(result), 1)
+-        # used to find the correct span in the template output
+-        attrs = {'data-project-field': 'release'}
 -
--    def test_cli_builds_hides_tabs(self):
--        """
--        Display for command line builds should hide tabs;
--        note that the latest builds section is already tested in
--        AllBuildsPageTests, as the template is the same
--        """
--        url = reverse("projectbuilds", args=(self.default_project.id,))
--        response = self.client.get(url, follow=True)
--        soup = BeautifulSoup(response.content)
--        tabs = soup.select('#project-topbar')
--        self.assertEqual(len(tabs), 0,
--                         'should be no top bar shown for command line builds')
+-        # find the row for the default project
+-        default_project_row = self._get_row_for_project(data, self.default_project.id)
 -
--    def test_non_cli_builds_has_tabs(self):
+-        # check the release text for the default project
+-        soup = BeautifulSoup(default_project_row['static:release'])
+-        text = soup.find('span', attrs=attrs).select('span.muted')[0].text
+-        self.assertEqual(text, 'Not applicable',
+-                         'release should be not applicable for default project')
+-
+-        # find the row for the default project
+-        other_project_row = self._get_row_for_project(data, self.project.id)
+-
+-        # check the link in the release cell for the other project
+-        soup = BeautifulSoup(other_project_row['static:release'])
+-        text = soup.find('span', attrs=attrs).select('a')[0].text.strip()
+-        self.assertEqual(text, self.release.name,
+-                         'release name should be shown for non-default project')
+-
+-    def test_default_project_machine(self):
 -        """
--        Non-command-line builds projects should show the tabs
+-        The machine for the default project should display as
+-        'Not applicable'
 -        """
--        url = reverse("projectbuilds", args=(self.project1.id,))
--        response = self.client.get(url, follow=True)
--        soup = BeautifulSoup(response.content)
--        tabs = soup.select('#project-topbar')
--        self.assertEqual(len(tabs), 1,
--                         'should be a top bar shown for non-command-line builds')
+-        # need a build, otherwise project doesn't display at all
+-        self._add_build_to_default_project()
+-
+-        # another project to test, which should show machine
+-        self._add_non_default_project()
+-
+-        response = self.client.get(
+-            reverse('all-projects'),
+-            {'format': 'json'},
+-            follow=True
+-        )
+-
+-        data = json.loads(response.content)
+-
+-        # used to find the correct span in the template output
+-        attrs = {'data-project-field': 'machine'}
+-
+-        # find the row for the default project
+-        default_project_row = self._get_row_for_project(data, self.default_project.id)
+-
+-        # check the machine cell for the default project
+-        soup = BeautifulSoup(default_project_row['static:machine'])
+-        text = soup.find('span', attrs=attrs).select('span.muted')[0].text.strip()
+-        self.assertEqual(text, 'Not applicable',
+-            'machine should be not applicable for default project')
+-
+-        # find the row for the default project
+-        other_project_row = self._get_row_for_project(data, self.project.id)
+-
+-        # check the link in the machine cell for the other project
+-        soup = BeautifulSoup(other_project_row['static:machine'])
+-        text = soup.find('span', attrs=attrs).find('a').text.strip()
+-        self.assertEqual(text, self.MACHINE_NAME,
+-                         'machine name should be shown for non-default project')
+-
+-    def test_project_page_links(self):
+-        """
+-        Test that links for the default project point to the builds
+-        page /projects/X/builds for that project, and that links for
+-        other projects point to their configuration pages /projects/X/
+-        """
+-
+-        # need a build, otherwise project doesn't display at all
+-        self._add_build_to_default_project()
+-
+-        # another project to test
+-        self._add_non_default_project()
+-
+-        response = self.client.get(
+-            reverse('all-projects'),
+-            {'format': 'json'},
+-            follow=True
+-        )
+-
+-        data = json.loads(response.content)
+-
+-        # find the row for the default project
+-        default_project_row = self._get_row_for_project(data, self.default_project.id)
+-
+-        # check the link on the name field
+-        soup = BeautifulSoup(default_project_row['static:name'])
+-        expected_url = reverse('projectbuilds', args=(self.default_project.id,))
+-        self.assertEqual(soup.find('a')['href'], expected_url,
+-                         'link on default project name should point to builds')
+-
+-        # find the row for the other project
+-        other_project_row = self._get_row_for_project(data, self.project.id)
+-
+-        # check the link for the other project
+-        soup = BeautifulSoup(other_project_row['static:name'])
+-        expected_url = reverse('project', args=(self.project.id,))
+-        self.assertEqual(soup.find('a')['href'], expected_url,
+-                         'link on project name should point to configuration')
 -
  class BuildDashboardTests(TestCase):
      """ Tests for the build dashboard /build/X """
