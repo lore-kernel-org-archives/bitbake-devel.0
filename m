@@ -1,23 +1,22 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 3309E75D4B
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id ADBAD7326D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 11:56:01 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga101.fm.intel.com with ESMTP; 01 Apr 2016 04:55:45 -0700
+	Fri,  1 Apr 2016 11:58:01 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by orsmga101.jf.intel.com with ESMTP; 01 Apr 2016 04:58:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,427,1455004800"; 
-	d="scan'208,217";a="776140015"
+X-IronPort-AV: E=Sophos;i="5.24,427,1455004800"; d="scan'208";a="77245788"
 Received: from cmjones2-mobl3.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.22.222])
-	by orsmga003.jf.intel.com with ESMTP; 01 Apr 2016 04:55:43 -0700
+	by fmsmga004.fm.intel.com with ESMTP; 01 Apr 2016 04:58:01 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  1 Apr 2016 12:55:40 +0100
-Message-Id: <1459511740-1996-1-git-send-email-elliot.smith@intel.com>
+Date: Fri,  1 Apr 2016 12:57:58 +0100
+Message-Id: <1459511878-2212-1-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH] toaster: Correct typo on build form help text
+Cc: Joshua Lock <joshua.g.lock@intel.com>
+Subject: [PATCH] toaster: orm better detect requires during CustomImageRecipe generation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,34 +29,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Apr 2016 11:56:02 -0000
+X-List-Received-Date: Fri, 01 Apr 2016 11:58:04 -0000
 
-From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+From: Joshua Lock <joshua.g.lock@intel.com>
 
-The help text said to append a semicolon and a task name to a target to
-run a task other than do_build. What you need to append is a colon.
+We were doing a string search for the literal string "require" and
+assuming that a match meant the recipe uses the require keyword to
+include the contents of another recipe. This test isn't very smart (it
+should at least have matched on "require ") and triggers on the word
+require anywhere in the recipe, i.e. the word "required" in the
+DESCRIPTION of core-image-lsb.bb, and then breaks as the much smarter
+regex fails to match anything.
 
-[YOCTO #9326]
+Instead always run the regex search and only try to update the
+require entry when the regex matches.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Signed-off-by: Joshua Lock <joshua.g.lock@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/toaster/toastergui/templates/projecttopbar.html | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/toaster/orm/models.py | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/templates/projecttopbar.html b/bitbake/lib/toaster/toastergui/templates/projecttopbar.html
-index 268a99e..007de06 100644
---- a/bitbake/lib/toaster/toastergui/templates/projecttopbar.html
-+++ b/bitbake/lib/toaster/toastergui/templates/projecttopbar.html
-@@ -66,7 +66,7 @@
-       </li>
-       <li class="pull-right">
-         <form class="form-inline" style="margin-bottom:0px;">
--          <i class="icon-question-sign get-help heading-help" data-placement="left" title="" data-original-title="Type the name of one or more recipes you want to build, separated by a space. You can also specify a task by appending a semicolon and a task name to the recipe name, like so: <code>busybox:clean</code>"></i>
-+          <i class="icon-question-sign get-help heading-help" data-placement="left" title="" data-original-title="Type the name of one or more recipes you want to build, separated by a space. You can also specify a task by appending a colon and a task name to the recipe name, like so: <code>busybox:clean</code>"></i>
-           <div class="input-append">
-             <input id="build-input" type="text" class="input-xlarge input-lg build-target-input" placeholder="Type the recipe you want to build" autocomplete="off" disabled>
-             <button id="build-button" class="btn btn-primary btn-large build-button" data-project-id="{{project.id}}" disabled>Build</button>
+diff --git a/bitbake/lib/toaster/orm/models.py b/bitbake/lib/toaster/orm/models.py
+index 6ae6316..610d542 100644
+--- a/bitbake/lib/toaster/orm/models.py
++++ b/bitbake/lib/toaster/orm/models.py
+@@ -1547,11 +1547,10 @@ class CustomImageRecipe(Recipe):
+         # "require core-image-minimal.bb" is changed to:
+         # "require recipes-core/images/core-image-minimal.bb"
+ 
+-        if "require" in base_recipe:
+-            req_search = re.search(r'(require\s+)(.+\.bb\s*$)',
++        req_search = re.search(r'(require\s+)(.+\.bb\s*$)',
+                                    base_recipe,
+                                    re.MULTILINE)
+-
++        if req_search:
+             require_filename = req_search.group(2).strip()
+ 
+             corrected_location = Recipe.objects.filter(
 -- 
 1.9.3
 
