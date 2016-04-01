@@ -1,44 +1,45 @@
 Return-Path: <olof.johansson@axis.com>
-Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
-	by mail.openembedded.org (Postfix) with ESMTP id 39B00763F0
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 41E1D75A31
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 15:01:54 +0000 (UTC)
+	Fri,  1 Apr 2016 15:02:56 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by bes.se.axis.com (Postfix) with ESMTP id 907482E3CC
+	by bastet.se.axis.com (Postfix) with ESMTP id 44D8418344
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:01:54 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	Fri,  1 Apr 2016 17:02:57 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
 	port 10024)
-	with LMTP id AhKx92BESs4F for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:01:50 +0200 (CEST)
+	with LMTP id lEBpqHju8Klg for <bitbake-devel@lists.openembedded.org>;
+	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
 Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bes.se.axis.com (Postfix) with ESMTP id B74DA2E3AB
+	by bastet.se.axis.com (Postfix) with ESMTP id B4FA918113
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:01:48 +0200 (CEST)
+	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
 Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id A1D3617D1
+	by postfix.imss71 (Postfix) with ESMTP id 9F6E61105
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:01:48 +0200 (CEST)
-Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by boulder.se.axis.com (Postfix) with ESMTP id 96E5617CF
+	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id 949FCC6
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:01:48 +0200 (CEST)
+	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
 Received: from lnxolofjn.se.axis.com (lnxolofjn.se.axis.com [10.92.17.1])
-	by seth.se.axis.com (Postfix) with ESMTP id 9589D1151
+	by thoth.se.axis.com (Postfix) with ESMTP id 9321910D2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:01:48 +0200 (CEST)
+	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
 Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)
-	id 8441A9C04E; Fri,  1 Apr 2016 17:01:48 +0200 (CEST)
+	id 87FC79C09E; Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
+Date: Fri, 1 Apr 2016 17:02:56 +0200
 From: Olof Johansson <olof.johansson@axis.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  1 Apr 2016 17:01:48 +0200
-Message-Id: <1459522908-26650-2-git-send-email-olofjn@axis.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1459522908-26650-1-git-send-email-olofjn@axis.com>
-References: <1459522908-26650-1-git-send-email-olofjn@axis.com>
-Subject: [PATCH v2 2/2] tests/fetch.py: Improve unit tests for trusted network check
+Message-ID: <20160401150255.GU4238@axis.com>
+References: <1459522188-4421-1-git-send-email-olof.johansson@axis.com>
+MIME-Version: 1.0
+In-Reply-To: <1459522188-4421-1-git-send-email-olof.johansson@axis.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+Subject: Re: [PATCH] fetch2: BB_ALLOWED_NETWORKS should not care about port numbers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,110 +52,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Apr 2016 15:01:55 -0000
+X-List-Received-Date: Fri, 01 Apr 2016 15:02:59 -0000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Olof Johansson <olof.johansson@axis.com>
+On 16-04-01 16:49 +0200, Olof Johansson wrote:
+> Bitbake would fail to classify the following URL as belonging to a
+> allowed network, because of the port number in the url.
+> 
+>  BB_ALLOWED_NETWORKS = "*.example.com"
+>  SRC_URI = "http://git.example.com:8080/foo.tar.gz"
+> 
+> Since protocols aren't specified in the BB_ALLOWED_NETWORKS variable,
+> it's reasonable to believe that this should work regardless of protocol
+> being used.
 
-The tests were skipped when running without network even though they
-didn't require network. This commit also adds a test case for URLs with
-ports in them (the ports should not be considered when doing trusted
-network checks).
+I noticed that this area actually has test coverage, so I resent
+an updated patch series with updates to the unit tests as well.
 
-Signed-off-by: Olof Johansson <olof.johansson@axis.com>
----
- bitbake/lib/bb/tests/fetch.py | 77 +++++++++++++++++++++++--------------------
- 1 file changed, 42 insertions(+), 35 deletions(-)
-
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index 29d8999..4ba688b 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -611,42 +611,49 @@ class FetcherNetworkTest(FetcherTest):
-             os.chdir(os.path.dirname(self.unpackdir))
-             fetcher.unpack(self.unpackdir)
- 
--        def test_trusted_network(self):
--            # Ensure trusted_network returns False when the host IS in the list.
--            url = "git://Someserver.org/foo;rev=1"
--            self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org someserver.org server2.org server3.org")
--            self.assertTrue(bb.fetch.trusted_network(self.d, url))
--
--        def test_wild_trusted_network(self):
--            # Ensure trusted_network returns true when the *.host IS in the list.
--            url = "git://Someserver.org/foo;rev=1"
--            self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org *.someserver.org server2.org server3.org")
--            self.assertTrue(bb.fetch.trusted_network(self.d, url))
--
--        def test_prefix_wild_trusted_network(self):
--            # Ensure trusted_network returns true when the prefix matches *.host.
--            url = "git://git.Someserver.org/foo;rev=1"
--            self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org *.someserver.org server2.org server3.org")
--            self.assertTrue(bb.fetch.trusted_network(self.d, url))
--
--        def test_two_prefix_wild_trusted_network(self):
--            # Ensure trusted_network returns true when the prefix matches *.host.
--            url = "git://something.git.Someserver.org/foo;rev=1"
--            self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org *.someserver.org server2.org server3.org")
--            self.assertTrue(bb.fetch.trusted_network(self.d, url))
--
--        def test_untrusted_network(self):
--            # Ensure trusted_network returns False when the host is NOT in the list.
--            url = "git://someserver.org/foo;rev=1"
--            self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org server2.org server3.org")
--            self.assertFalse(bb.fetch.trusted_network(self.d, url))
--
--        def test_wild_untrusted_network(self):
--            # Ensure trusted_network returns False when the host is NOT in the list.
--            url = "git://*.someserver.org/foo;rev=1"
--            self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org server2.org server3.org")
--            self.assertFalse(bb.fetch.trusted_network(self.d, url))
- 
-+class TrustedNetworksTest(FetcherTest):
-+    def test_trusted_network(self):
-+        # Ensure trusted_network returns False when the host IS in the list.
-+        url = "git://Someserver.org/foo;rev=1"
-+        self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org someserver.org server2.org server3.org")
-+        self.assertTrue(bb.fetch.trusted_network(self.d, url))
-+
-+    def test_wild_trusted_network(self):
-+        # Ensure trusted_network returns true when the *.host IS in the list.
-+        url = "git://Someserver.org/foo;rev=1"
-+        self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org *.someserver.org server2.org server3.org")
-+        self.assertTrue(bb.fetch.trusted_network(self.d, url))
-+
-+    def test_prefix_wild_trusted_network(self):
-+        # Ensure trusted_network returns true when the prefix matches *.host.
-+        url = "git://git.Someserver.org/foo;rev=1"
-+        self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org *.someserver.org server2.org server3.org")
-+        self.assertTrue(bb.fetch.trusted_network(self.d, url))
-+
-+    def test_two_prefix_wild_trusted_network(self):
-+        # Ensure trusted_network returns true when the prefix matches *.host.
-+        url = "git://something.git.Someserver.org/foo;rev=1"
-+        self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org *.someserver.org server2.org server3.org")
-+        self.assertTrue(bb.fetch.trusted_network(self.d, url))
-+
-+    def test_port_trusted_network(self):
-+        # Ensure trusted_network returns True, even if the url specifies a port.
-+        url = "git://someserver.org:8080/foo;rev=1"
-+        self.d.setVar("BB_ALLOWED_NETWORKS", "someserver.org")
-+        self.assertTrue(bb.fetch.trusted_network(self.d, url))
-+
-+    def test_untrusted_network(self):
-+        # Ensure trusted_network returns False when the host is NOT in the list.
-+        url = "git://someserver.org/foo;rev=1"
-+        self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org server2.org server3.org")
-+        self.assertFalse(bb.fetch.trusted_network(self.d, url))
-+
-+    def test_wild_untrusted_network(self):
-+        # Ensure trusted_network returns False when the host is NOT in the list.
-+        url = "git://*.someserver.org/foo;rev=1"
-+        self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org server2.org server3.org")
-+        self.assertFalse(bb.fetch.trusted_network(self.d, url))
- 
- class URLHandle(unittest.TestCase):
- 
 -- 
-2.1.4
-
+olofjn
 
