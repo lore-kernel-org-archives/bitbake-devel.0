@@ -1,21 +1,23 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 714A8738AE
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 3309E75D4B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 11:53:58 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga103.fm.intel.com with ESMTP; 01 Apr 2016 04:53:59 -0700
+	Fri,  1 Apr 2016 11:56:01 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by fmsmga101.fm.intel.com with ESMTP; 01 Apr 2016 04:55:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,427,1455004800"; d="scan'208";a="923334591"
+X-IronPort-AV: E=Sophos;i="5.24,427,1455004800"; 
+	d="scan'208,217";a="776140015"
 Received: from cmjones2-mobl3.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.22.222])
-	by orsmga001.jf.intel.com with ESMTP; 01 Apr 2016 04:53:57 -0700
+	by orsmga003.jf.intel.com with ESMTP; 01 Apr 2016 04:55:43 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  1 Apr 2016 12:53:55 +0100
-Message-Id: <1459511635-1788-1-git-send-email-elliot.smith@intel.com>
+Date: Fri,  1 Apr 2016 12:55:40 +0100
+Message-Id: <1459511740-1996-1-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: buildinfohelper Add additional metadata to the built layer
+Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Subject: [PATCH] toaster: Correct typo on build form help text
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,84 +30,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Apr 2016 11:53:58 -0000
+X-List-Received-Date: Fri, 01 Apr 2016 11:56:02 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 
-Add additional metadata to the layer created for build history to be
-able to identify the layer and recipe later on. Specifically this is the
-branch and release to which the recipe and layer are associated with
-enabling differentiation of two recipes which are local release and
-master and 'master' release.
+The help text said to append a semicolon and a task name to a target to
+run a task other than do_build. What you need to append is a colon.
 
-[YOCTO #8528]
-[YOCTO #8545]
+[YOCTO #9326]
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/bb/ui/buildinfohelper.py | 34 +++++++++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 11 deletions(-)
+ bitbake/lib/toaster/toastergui/templates/projecttopbar.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
-index 7b8b1a5..5a33d53 100644
---- a/bitbake/lib/bb/ui/buildinfohelper.py
-+++ b/bitbake/lib/bb/ui/buildinfohelper.py
-@@ -355,12 +355,17 @@ class ORMWrapper(object):
- 
-             # create a new copy of this layer version as a snapshot for
-             # historical purposes
--            layer_copy, c = Layer_Version.objects.get_or_create(build=build_obj,
--                            layer=layer_obj.layer,
--                            commit=layer_version_information['commit'],
--                            local_path = layer_version_information['local_path'],
--                            )
--            logger.info("created new historical layer version %d", layer_copy.pk)
-+            layer_copy, c = Layer_Version.objects.get_or_create(
-+                build=build_obj,
-+                layer=layer_obj.layer,
-+                up_branch=layer_obj.up_branch,
-+                branch=layer_version_information['branch'],
-+                commit=layer_version_information['commit'],
-+                local_path=layer_version_information['local_path'],
-+            )
-+
-+            logger.info("created new historical layer version %d",
-+                        layer_copy.pk)
- 
-             self.layer_version_built.append(layer_copy)
- 
-@@ -581,11 +586,15 @@ class ORMWrapper(object):
-                 packagedict[p]['object'].package_dependencies_target.all().delete()
-                 packagedict[p]['object'].package_dependencies_source.all().delete()
-                 try:
--                    recipe = self._cached_get(Recipe,
--                                              name=built_recipe.name,
--                                              layer_version__build=None,
--                                              file_path=built_recipe.file_path,
--                                              version=built_recipe.version)
-+                    recipe = self._cached_get(
-+                        Recipe,
-+                        name=built_recipe.name,
-+                        layer_version__build=None,
-+                        layer_version__up_branch=
-+                        built_recipe.layer_version.up_branch,
-+                        file_path=built_recipe.file_path,
-+                        version=built_recipe.version
-+                    )
-                 except (Recipe.DoesNotExist,
-                         Recipe.MultipleObjectsReturned) as e:
-                     logger.info("We did not find one recipe for the"
-@@ -1293,6 +1302,9 @@ class BuildInfoHelper(object):
-                 for cls in event._depgraph['pn'][pn]['inherits']:
-                     if cls.endswith('/image.bbclass'):
-                         recipe.is_image = True
-+                        recipe_info['is_image'] = True
-+                        # Save the is_image state to the relevant recipe objects
-+                        self.orm_wrapper.get_update_recipe_object(recipe_info)
-                         break
-             if recipe.is_image:
-                 for t in self.internal_state['targets']:
+diff --git a/bitbake/lib/toaster/toastergui/templates/projecttopbar.html b/bitbake/lib/toaster/toastergui/templates/projecttopbar.html
+index 268a99e..007de06 100644
+--- a/bitbake/lib/toaster/toastergui/templates/projecttopbar.html
++++ b/bitbake/lib/toaster/toastergui/templates/projecttopbar.html
+@@ -66,7 +66,7 @@
+       </li>
+       <li class="pull-right">
+         <form class="form-inline" style="margin-bottom:0px;">
+-          <i class="icon-question-sign get-help heading-help" data-placement="left" title="" data-original-title="Type the name of one or more recipes you want to build, separated by a space. You can also specify a task by appending a semicolon and a task name to the recipe name, like so: <code>busybox:clean</code>"></i>
++          <i class="icon-question-sign get-help heading-help" data-placement="left" title="" data-original-title="Type the name of one or more recipes you want to build, separated by a space. You can also specify a task by appending a colon and a task name to the recipe name, like so: <code>busybox:clean</code>"></i>
+           <div class="input-append">
+             <input id="build-input" type="text" class="input-xlarge input-lg build-target-input" placeholder="Type the recipe you want to build" autocomplete="off" disabled>
+             <button id="build-button" class="btn btn-primary btn-large build-button" data-project-id="{{project.id}}" disabled>Build</button>
 -- 
 1.9.3
 
