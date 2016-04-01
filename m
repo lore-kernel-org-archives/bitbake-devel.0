@@ -1,53 +1,44 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
-	[209.85.220.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 722C973172
+Return-Path: <olof.johansson@axis.com>
+X-Greylist: delayed 494 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 01 Apr 2016 14:58:02 UTC
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id E9575763F0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 14:42:58 +0000 (UTC)
-Received: by mail-pa0-f50.google.com with SMTP id fe3so92025472pab.1
+	Fri,  1 Apr 2016 14:58:02 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 0D26B1833F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 01 Apr 2016 07:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=subject:to:references:from:message-id:date:user-agent:mime-version
-	:in-reply-to:content-transfer-encoding;
-	bh=7ERydUb5GHs4SAo2aYRuYC3oG/4RIdFn+3ZEZt/VQL8=;
-	b=VUoIRTRlq6dpDCTFsDrsqSyxfIYCjI3Li6jmk6zanpqcYxxrFHTEzDStRqhWz0tMy+
-	dfDlCTt6g1pFeHt9bKFqmBzXgDaDoWQguZ9nMV+Za9uxglJllUfO2LkJJwCwz9T4U6o7
-	RCI2+/3UK7APOIM680Uj2KFZKlnV4/ZZq3fLy0FiE25FSKpQygTHCXLAMrMGjXMOa3Ew
-	dqdBamaBmHAj6l5uylYsay0g1ZysN9wD6uGVPBF4EHhZrkRGTZM/sbzjBtHk28ZhaGrw
-	qsetQaAl02aG3TzarZ03Zd+YW+oPpohGs+StVZ2uhe9+P01oBDnK9e3BYzLfWyZMpmJv
-	uP6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:subject:to:references:from:message-id:date
-	:user-agent:mime-version:in-reply-to:content-transfer-encoding;
-	bh=7ERydUb5GHs4SAo2aYRuYC3oG/4RIdFn+3ZEZt/VQL8=;
-	b=EnvOqK6VHqwCr+bEEntxhKcHnV+M6VQrpt41oac7/+vzpZxW9g1s8hW7Ba1eEIKWhL
-	A/6df5kJd3Jkgfy5KE7M2+W503FeCLWz4m5rvYOh7lY4xoshauSqPPzrfJ6REzaXQTQD
-	HJeu/809MYid33ndNJOcIgtjIM27yzEPcdBSBigf2JVKJXZbrM2PGkR+19BU5luPXet4
-	Dn9fOuJzg5BZBMr2P6pRyCRUNheYPupeJwsa/QNs4hxFWkc2r3vqOMaeYhbpLCza3SrS
-	Ab0y3aOU9gH96rd2zsHmEYGKxDZPd0IGanI3deqzOzpv0/2Vs0gBEl0PzsvvmhSSIQnl
-	pPkw==
-X-Gm-Message-State: AD7BkJIxkUL40lUQFiawLREhmd232kR/7nr/cZjqewvWht7oVR7DEV0pzNoiPKBaDBqx9YJG
-X-Received: by 10.66.192.195 with SMTP id hi3mr31329516pac.149.1459521779483; 
-	Fri, 01 Apr 2016 07:42:59 -0700 (PDT)
-Received: from [192.168.0.44]
-	(host109-150-201-247.range109-150.btcentralplus.com.
-	[109.150.201.247]) by smtp.googlemail.com with ESMTPSA id
-	tn5sm21571116pac.32.2016.04.01.07.42.57
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Fri, 01 Apr 2016 07:42:58 -0700 (PDT)
-To: Elliot Smith <elliot.smith@intel.com>, bitbake-devel@lists.openembedded.org
-References: <1459511592-1641-1-git-send-email-elliot.smith@intel.com>
-From: Michael Wood <michael.g.wood@intel.com>
-Message-ID: <56FE88EF.5010201@intel.com>
-Date: Fri, 1 Apr 2016 15:42:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-	Thunderbird/38.6.0
-MIME-Version: 1.0
-In-Reply-To: <1459511592-1641-1-git-send-email-elliot.smith@intel.com>
-Subject: Re: [PATCH] toaster: buildinfohelper Create target list for all types of build
+	Fri,  1 Apr 2016 16:49:49 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id P5zBobCBa+3x for <bitbake-devel@lists.openembedded.org>;
+	Fri,  1 Apr 2016 16:49:48 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bastet.se.axis.com (Postfix) with ESMTP id 713731828D
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri,  1 Apr 2016 16:49:48 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 546A3F11
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri,  1 Apr 2016 16:49:48 +0200 (CEST)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id 49D6217CC
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri,  1 Apr 2016 16:49:48 +0200 (CEST)
+Received: from lnxolofjn.se.axis.com (lnxolofjn.se.axis.com [10.92.17.1])
+	by thoth.se.axis.com (Postfix) with ESMTP id 483BB10D2
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri,  1 Apr 2016 16:49:48 +0200 (CEST)
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)
+	id 3498F9C09E; Fri,  1 Apr 2016 16:49:48 +0200 (CEST)
+From: Olof Johansson <olof.johansson@axis.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  1 Apr 2016 16:49:48 +0200
+Message-Id: <1459522188-4421-1-git-send-email-olof.johansson@axis.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] fetch2: BB_ALLOWED_NETWORKS should not care about port numbers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,57 +51,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Apr 2016 14:43:00 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 01 Apr 2016 14:58:03 -0000
 
-On 01/04/16 12:53, Elliot Smith wrote:
-> From: Michael Wood <michael.g.wood@intel.com>
->
-> Create the target list cache for command line builds and toaster
-> triggered builds. This fixes a regression where the target is not
-> identified as an image after building as the target cache is empty for
-> toaster triggered builds
->
-> [YOCTO #9266]
->
-> Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-> Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-> ---
->   bitbake/lib/bb/ui/buildinfohelper.py | 15 ++++++++-------
->   1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
-> index 9021c63..7b8b1a5 100644
-> --- a/bitbake/lib/bb/ui/buildinfohelper.py
-> +++ b/bitbake/lib/bb/ui/buildinfohelper.py
-> @@ -977,15 +977,16 @@ class BuildInfoHelper(object):
->           event: a TargetsAcquired event with a task property (e.g. "build")
->           and a targetsList property (e.g. ["zlib", "dropbear"])
->           """
-> -        if self.internal_state['build'].project.is_default:
-> -            targets = map(lambda target: target + ':' + event.task, event.targetsList)
-> +        targets = map(lambda target: target + ':' + event.task,
-> +                      event.targetsList)
->   
-> -            target_information = {
-> -              'targets': targets,
-> -              'build': self.internal_state['build']
-> -            }
-> +        target_information = {
-> +            'targets': targets,
-> +            'build': self.internal_state['build']
-> +        }
->   
-> -            self.internal_state['targets'] = self.orm_wrapper.get_or_create_targets(target_information)
-> +        self.internal_state['targets'] = \
-> +            self.orm_wrapper.get_or_create_targets(target_information)
->   
->       def update_build(self, event):
->           """
-This patch depends on:
+Bitbake would fail to classify the following URL as belonging to a
+allowed network, because of the port number in the url.
 
-10/03/16 13:57 - [PATCH] toaster: create Build object earlier in bitbake 
-processing
+ BB_ALLOWED_NETWORKS = "*.example.com"
+ SRC_URI = "http://git.example.com:8080/foo.tar.gz"
+
+Since protocols aren't specified in the BB_ALLOWED_NETWORKS variable,
+it's reasonable to believe that this should work regardless of protocol
+being used.
+
+Signed-off-by: Olof Johansson <olof.johansson@axis.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 288a1c8..5763a80 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -1028,6 +1028,7 @@ def trusted_network(d, url):
+     if not network:
+         return True
+ 
++    network = network.split(':')[0]
+     network = network.lower()
+ 
+     for host in trusted_hosts.split(" "):
+-- 
+2.1.4
 
 
