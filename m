@@ -1,45 +1,29 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 41E1D75A31
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id AFE7476536
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 15:02:56 +0000 (UTC)
+	Sat,  2 Apr 2016 16:09:02 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 44D8418344
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u32G9212025311 for <bitbake-devel@lists.openembedded.org>;
+	Sat, 2 Apr 2016 17:09:02 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id I1lCRkTzd_Q3 for <bitbake-devel@lists.openembedded.org>;
+	Sat,  2 Apr 2016 17:09:02 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u32G8v0J025295
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:02:57 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id lEBpqHju8Klg for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bastet.se.axis.com (Postfix) with ESMTP id B4FA918113
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 9F6E61105
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id 949FCC6
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
-Received: from lnxolofjn.se.axis.com (lnxolofjn.se.axis.com [10.92.17.1])
-	by thoth.se.axis.com (Postfix) with ESMTP id 9321910D2
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)
-	id 87FC79C09E; Fri,  1 Apr 2016 17:02:56 +0200 (CEST)
-Date: Fri, 1 Apr 2016 17:02:56 +0200
-From: Olof Johansson <olof.johansson@axis.com>
-To: bitbake-devel@lists.openembedded.org
-Message-ID: <20160401150255.GU4238@axis.com>
-References: <1459522188-4421-1-git-send-email-olof.johansson@axis.com>
-MIME-Version: 1.0
-In-Reply-To: <1459522188-4421-1-git-send-email-olof.johansson@axis.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-Subject: Re: [PATCH] fetch2: BB_ALLOWED_NETWORKS should not care about port numbers
+	Sat, 2 Apr 2016 17:08:58 +0100
+Message-ID: <1459613337.7348.121.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Sat, 02 Apr 2016 17:08:57 +0100
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: [PATCH] siggen: Drop misleading duplicate method
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,24 +36,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Apr 2016 15:02:59 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Sat, 02 Apr 2016 16:09:05 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On 16-04-01 16:49 +0200, Olof Johansson wrote:
-> Bitbake would fail to classify the following URL as belonging to a
-> allowed network, because of the port number in the url.
-> 
->  BB_ALLOWED_NETWORKS = "*.example.com"
->  SRC_URI = "http://git.example.com:8080/foo.tar.gz"
-> 
-> Since protocols aren't specified in the BB_ALLOWED_NETWORKS variable,
-> it's reasonable to believe that this should work regardless of protocol
-> being used.
+The real method is a few lines later, this one is incorrect and
+just causing confusion. Remove it.
 
-I noticed that this area actually has test coverage, so I resent
-an updated patch series with updates to the unit tests as well.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
--- 
-olofjn
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index 43cf7b6..be0f0b5 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -49,9 +49,6 @@ class SignatureGenerator(object):
+         """Write/update the file checksum cache onto disk"""
+         return
+ 
+-    def set_taskdata(self, hashes, deps, checksum):
+-        return
+-
+     def stampfile(self, stampbase, file_name, taskname, extrainfo):
+         return ("%s.%s.%s" % (stampbase, taskname, extrainfo)).rstrip('.')
+ 
+
+
 
