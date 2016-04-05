@@ -1,21 +1,30 @@
-Return-Path: <markus.lehtonen@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 73847770EF
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id A0315770EF
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Apr 2016 13:21:40 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga103.jf.intel.com with ESMTP; 05 Apr 2016 06:21:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,444,1455004800"; d="scan'208";a="938668554"
-Received: from marquiz.fi.intel.com ([10.237.72.155])
-	by fmsmga001.fm.intel.com with ESMTP; 05 Apr 2016 06:21:20 -0700
-From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org,
-	paul.eggleton@linux.intel.com
-Date: Tue,  5 Apr 2016 16:21:19 +0300
-Message-Id: <1459862479-13596-1-git-send-email-markus.lehtonen@linux.intel.com>
-X-Mailer: git-send-email 2.6.2
-Subject: [PATCH] externalsrc: avoid race in temporary git index file
+	Tue,  5 Apr 2016 13:36:24 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u35DaNbW029903; Tue, 5 Apr 2016 14:36:23 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id A-Z5-8WzKv42; Tue,  5 Apr 2016 14:36:23 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u35DaLkW029900
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 5 Apr 2016 14:36:22 +0100
+Message-ID: <1459863381.7348.163.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 05 Apr 2016 14:36:21 +0100
+In-Reply-To: <422c156e028c615327a780b83db657ba68259549.1459852436.git.liezhi.yang@windriver.com>
+References: <cover.1459852436.git.liezhi.yang@windriver.com>
+	<422c156e028c615327a780b83db657ba68259549.1459852436.git.liezhi.yang@windriver.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH 1/1] fetch2/git.py: remove .indirectiondir workaround
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,55 +37,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Apr 2016 13:21:41 -0000
+X-List-Received-Date: Tue, 05 Apr 2016 13:36:28 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Use a unique tempfile as the temporary git index file when determining
-the git hash of the source tree. A fixed filename was obviously causing
-races (with the git index.lock file) under oe-selftest where multiple
-bitbake instances were run against the same source tree at the same
-time.
+On Tue, 2016-04-05 at 03:35 -0700, Robert Yang wrote:
+> It was used for workaround git 1.7.9.2 which was released in 2012
+> which
+> should not be existed on nowadays host, so remove it to avoid
+> confusions.
 
-Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
----
- meta/classes/externalsrc.bbclass | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+I like the idea of this however:
 
-diff --git a/meta/classes/externalsrc.bbclass b/meta/classes/externalsrc.bbclass
-index dff6184..da7eb478 100644
---- a/meta/classes/externalsrc.bbclass
-+++ b/meta/classes/externalsrc.bbclass
-@@ -130,21 +130,22 @@ python externalsrc_compile_prefunc() {
- def srctree_hash_files(d):
-     import shutil
-     import subprocess
-+    import tempfile
- 
-     s_dir = d.getVar('EXTERNALSRC', True)
-     git_dir = os.path.join(s_dir, '.git')
--    oe_index_file = os.path.join(git_dir, 'oe-devtool-index')
-     oe_hash_file = os.path.join(git_dir, 'oe-devtool-tree-sha1')
- 
-     ret = " "
-     if os.path.exists(git_dir):
--        # Clone index
--        shutil.copy2(os.path.join(git_dir, 'index'), oe_index_file)
--        # Update our custom index
--        env = os.environ.copy()
--        env['GIT_INDEX_FILE'] = oe_index_file
--        subprocess.check_output(['git', 'add', '.'], cwd=s_dir, env=env)
--        sha1 = subprocess.check_output(['git', 'write-tree'], cwd=s_dir, env=env)
-+        with tempfile.NamedTemporaryFile(dir=git_dir, prefix='oe-devtool-index') as tmp_index:
-+            # Clone index
-+            shutil.copy2(os.path.join(git_dir, 'index'), tmp_index.name)
-+            # Update our custom index
-+            env = os.environ.copy()
-+            env['GIT_INDEX_FILE'] = tmp_index.name
-+            subprocess.check_output(['git', 'add', '.'], cwd=s_dir, env=env)
-+            sha1 = subprocess.check_output(['git', 'write-tree'], cwd=s_dir, env=env)
-         with open(oe_hash_file, 'w') as fobj:
-             fobj.write(sha1)
-         ret = oe_hash_file + ':True'
--- 
-2.6.2
+$ cat classes/sanity.bbclass | grep 7.8
+# We use git parameters and functionality only found in 1.7.8 or later
+    if LooseVersion(version) < LooseVersion("1.7.8"):
+        return "Your version of git is older than 1.7.8 and has bugs
+which will break builds. Please install a newer version of git.\n"
 
+so we have a minimum version of 1.7.8 defined right now...
+
+I'd be ok merging this if we increase the minimum version requirement.
+
+Cheers,
+
+Richard
 
