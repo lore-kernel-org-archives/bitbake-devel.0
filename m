@@ -1,31 +1,38 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8D1C377116
+Return-Path: <kevin@teforia.com>
+Received: from mail-qg0-f49.google.com (mail-qg0-f49.google.com
+	[209.85.192.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 34F2773167
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Apr 2016 14:47:06 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u35El60X001541; Tue, 5 Apr 2016 15:47:06 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id dzelqOMfsyx8; Tue,  5 Apr 2016 15:47:06 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u35El2iu001538
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 5 Apr 2016 15:47:03 +0100
-Message-ID: <1459867622.7348.168.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 05 Apr 2016 15:47:02 +0100
-In-Reply-To: <1459863381.7348.163.camel@linuxfoundation.org>
-References: <cover.1459852436.git.liezhi.yang@windriver.com>
-	<422c156e028c615327a780b83db657ba68259549.1459852436.git.liezhi.yang@windriver.com>
-	<1459863381.7348.163.camel@linuxfoundation.org>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: [PATCH 1/1] fetch2/git.py: remove .indirectiondir workaround
+	Tue,  5 Apr 2016 21:26:51 +0000 (UTC)
+Received: by mail-qg0-f49.google.com with SMTP id y89so21491777qge.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 05 Apr 2016 14:26:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=teforia.com; s=google;
+	h=mime-version:date:message-id:subject:from:to;
+	bh=tW9xVJ43oz6XdYZophQZA5foUL0Fuop/LBZG79lSPoY=;
+	b=hY46Vvi/4AtqCjVjrWI91cXnMkLKrXOyyu7S5ifXvWj4Aa6ubNMz7ITEpMAj0egris
+	xpvEREeDgIG5tD6ITVBRbTmoRGLxZhbr442e8DaCosJUSc5hD1MYi2+ER+btEgRU3qu1
+	7mjNZXB8tOV42ccolqDlYu/49nPRubJoTnVtQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+	bh=tW9xVJ43oz6XdYZophQZA5foUL0Fuop/LBZG79lSPoY=;
+	b=GxW0XvronKWBjjN5hJ0Qn3H04fPZ/aF2ssLjkQFIMkknWxYFCPkHGGKB0vulIgXgW5
+	QdwIPcNrwGiRbkHxnVxK8PY39Gq4mghdKXHFYj781VNK2w1HbF5pgUHGhHhpE18TDeR5
+	9mnUtwaMYapRXVzPuxYfefP1/PU5WJj9fbHxRf690ILdfm7HGuR+f9qI9Jp75wH6B/tr
+	K3uGWdeRu/TvmjlqiQ6fT39/0gPActPEsURGex1v+leVOzf4XjaNtMWSnpOMBHwkSzkn
+	C3GOig5TknF1GDORzJ7ns9l1iooDpSzUTnAMRA6nfzNaNRW5SNXXxQx8UG6ut5IKQWDT
+	uXKA==
+X-Gm-Message-State: AD7BkJKLTIxZn/IZXUteWZw0boGxiiRCx5Q/ybGOzx4tXWKxO1KspjsPNq9iBIcnxUBvbTwnIXxa9PkFHKR3bw==
+MIME-Version: 1.0
+X-Received: by 10.140.169.132 with SMTP id p126mr684528qhp.71.1459891611928;
+	Tue, 05 Apr 2016 14:26:51 -0700 (PDT)
+Received: by 10.233.235.82 with HTTP; Tue, 5 Apr 2016 14:26:51 -0700 (PDT)
+Date: Tue, 5 Apr 2016 14:26:51 -0700
+Message-ID: <CAOpAm03zZESdXBxqDDTY7c-d0Dms0wgZko1vNaAXBO3sFDNvrw@mail.gmail.com>
+From: Kevin Kwan <kevin@teforia.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Opkg first boot configure timeout
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,35 +45,20 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Apr 2016 14:47:07 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 05 Apr 2016 21:26:52 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Tue, 2016-04-05 at 14:36 +0100, Richard Purdie wrote:
-> On Tue, 2016-04-05 at 03:35 -0700, Robert Yang wrote:
-> > It was used for workaround git 1.7.9.2 which was released in 2012
-> > which
-> > should not be existed on nowadays host, so remove it to avoid
-> > confusions.
-> 
-> I like the idea of this however:
-> 
-> $ cat classes/sanity.bbclass | grep 7.8
-> # We use git parameters and functionality only found in 1.7.8 or
-> later
->     if LooseVersion(version) < LooseVersion("1.7.8"):
->         return "Your version of git is older than 1.7.8 and has bugs
-> which will break builds. Please install a newer version of git.\n"
-> 
-> so we have a minimum version of 1.7.8 defined right now...
-> 
-> I'd be ok merging this if we increase the minimum version
-> requirement.
+Hi,
 
-There is also another issue pending on increased git version so I've
-just sent a patch for this, which would then unblock this one.
+In a recipe, I've defined a post install task that executes on first
+time bootup.
 
-Cheers,
+When executed, I witness the following output from serial console of my device:
 
-Richard
+[   ***   ] A start job is running for Opkg first boot configure...
+(23s / no limit)
+
+
+How do I define a timeout, in order to prevent the case where my task
+ends up in an infinite-loop?
 
