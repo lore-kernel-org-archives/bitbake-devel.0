@@ -1,29 +1,45 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id AD0116FFED
+Return-Path: <Daniel.Klauer@gin.de>
+X-Greylist: delayed 4196 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 05 Apr 2016 09:59:19 UTC
+Received: from good-out-02.clustermail.de (good-out-02.clustermail.de
+	[212.223.35.18])
+	by mail.openembedded.org (Postfix) with ESMTP id 83B5977101
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  2 Apr 2016 16:11:31 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u32GBVpl025392 for <bitbake-devel@lists.openembedded.org>;
-	Sat, 2 Apr 2016 17:11:31 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id F-xg3M5AWaAm for <bitbake-devel@lists.openembedded.org>;
-	Sat,  2 Apr 2016 17:11:31 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u32GBQ6H025387
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 2 Apr 2016 17:11:27 +0100
-Message-ID: <1459613486.7348.125.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sat, 02 Apr 2016 17:11:26 +0100
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: [PATCH] siggen: Add checksum recalculation/checking code
+	Tue,  5 Apr 2016 09:59:19 +0000 (UTC)
+Received: from frontend-06 ([10.0.0.6] helo=frontend.clustermail.de)
+	by smtpout-01.clustermail.de with esmtps
+	(TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256) (Exim 4.84)
+	(envelope-from <Daniel.Klauer@gin.de>) id 1anMfl-0006l8-9b
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 05 Apr 2016 10:49:22 +0200
+Received: from [217.6.33.234] (helo=Win2012-02.gin-domain.local)
+	by frontend.clustermail.de with esmtpsa (TLSv1.2:AES256-SHA:256)
+	(Exim 4.84) (envelope-from <Daniel.Klauer@gin.de>)
+	id 1anMfl-00043R-3x for bitbake-devel@lists.openembedded.org;
+	Tue, 05 Apr 2016 10:49:17 +0200
+Received: from Win2012-02.gin-domain.local (192.168.1.12) by
+	Win2012-02.gin-domain.local (192.168.1.12) with Microsoft SMTP Server
+	(TLS) id 15.0.1130.7; Tue, 5 Apr 2016 10:49:16 +0200
+Received: from Win2012-02.gin-domain.local ([fe80::3db4:55fd:d76e:9d90]) by
+	Win2012-02.gin-domain.local ([fe80::3db4:55fd:d76e:9d90%12]) with mapi
+	id 15.00.1130.005; Tue, 5 Apr 2016 10:49:16 +0200
+From: "Klauer, Daniel" <Daniel.Klauer@gin.de>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [PATCH] persist_data: Return str instead of unicode for sqlite3
+	text queries
+Thread-Index: AQHRjxgIh2eNybjGkke7h15zLvzTWw==
+Date: Tue, 5 Apr 2016 08:49:15 +0000
+Message-ID: <327956a38ac84520a444c9003c494266@Win2012-02.gin-domain.local>
+Accept-Language: en-US, de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [192.168.1.219]
+x-brightmail-tracker: H4sIAAAAAAAAC+NgFnrNqsTGxXJgBSOPLk8Nc7jBug8vDrJb3L92msWBMYAhijUzLym/IoE14/a77UwFm20rpsybydrAeNyqi5GLQ0hgN6PEuy0rWCCcE4wSTQsnAzmcHMwCphJXvjZC2YoSF+41gNlsAroS59rfs4LYIgLBEutW9TCB2MIC4RL3nxxmhojHSCy+0ccIYetJdG1uArMlBHQk/i5qBOrl4GARUJE4N8cOJMwr4CUx7d0JsDGMArISnQ3vmCDWikvcejKfCaJVQGLJnvPMELaSRO9tkBoOIDtE4sVRIYgxghInZz5hgSgxk9j7YAlUq67Et2OboeKBEk+b9rBDtJpKXH0fDBE2kHi39jNUibHEyo3/oQ62ldgzYyLUJmeJeTfqIcJOEm863rJC2NoS21/tY4X5b9O1VVBj5CX+37sPZTtKXHnXzwZhK0p8ut3ENoFRbRZSMM9CCuZZSH6fheSxBYwsqxilwzPzjAwMjXQNjPTSM/N0U/JzEzPz9HLykxNzNjFCE8IOxkefXQ8xSnIwKYnyXipgDhfiS8pPqcxILM6ILyrNSS0+xCjBwaMkwmtcBZTjLS5IzC3OTIdJyXBwKEnwXq8ESgkWpaanVqRl5pSkFkGkTzFKSonzCoP0CYD0ZZTmweUuMYpKCfNeBmnkKUgtys0sgYjfYhTmeMgkxJKXn5cqBXQiAxBoML5iFOdgVBLmlQCZxZOZVwJ3wiug65iArqsXZgK5riQRISXVwDj1kPXyhHe+9qabnHl2mCb3JZ8pbrrYemptlEAr3/7Ne09UWIi6ddftvDpj0paGbWF9vLM+qc5b0l97L0SBbeWheS7Ba8OzdTR+5fJNPq7Bv6Dzn99z5t1fkzqXrz75Rfjkkd8bnA7P+jZX5YvShUepV1cmy+5ll3vVEda3vTfc9+OexAe/U0qVWIozEg21mIuKEwFoE2cjfgMAAA==
+MIME-Version: 1.0
+Subject: [PATCH] persist_data: Return str instead of unicode for sqlite3 text queries
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,131 +52,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 02 Apr 2016 16:11:32 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 05 Apr 2016 09:59:19 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-In theory all the information to recalcuate the task signatures was written
-into the siginfo/sigdata files. In reality, some of the information was
-written into the filename.
-
-Firstly this patch duplicates that info into the file itself just for easy
-of use since its small.
-
-Secondly, we abstract out the existing "calculate the checksum" code for
-the taskhash, and add a function to calculate the bashhash based on the
-informaiton within the file.
-
-Finally, we call these functions when we're writing out the data to check
-that the data we're writing is consistent. I've found a couple of places
-it wasn't and its good to know about these in advance, rather than having
-a siginfo/sigdata file which a given hash in its filename but a contents
-which give a different result.
-
-This should all combine to avoid a certain class of checksum bugs making
-it into world, and identifying problems in advance.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index d8ba1d4..2f0fb71 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -248,6 +248,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         bb.utils.mkdirhier(os.path.dirname(sigfile))
- 
-         data = {}
-+        data['task'] = task
-         data['basewhitelist'] = self.basewhitelist
-         data['taskwhitelist'] = self.taskwhitelist
-         data['taskdeps'] = self.taskdeps[fn][task]
-@@ -267,6 +268,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             data['runtaskhashes'] = {}
-             for dep in data['runtaskdeps']:
-                 data['runtaskhashes'][dep] = self.taskhash[dep]
-+            data['taskhash'] = self.taskhash[k]
- 
-         taint = self.read_taint(fn, task, stampbase)
-         if taint:
-@@ -290,6 +292,15 @@ class SignatureGeneratorBasic(SignatureGenerator):
-                 pass
-             raise err
- 
-+        computed_basehash = calc_basehash(data)
-+        if computed_basehash != self.basehash[k]:
-+            bb.error("Basehash mismatch %s verses %s for %s" % (computed_basehash, self.basehash[k], k))
-+        if k in self.taskhash:
-+            computed_taskhash = calc_taskhash(data)
-+            if computed_taskhash != self.taskhash[k]:
-+                bb.error("Taskhash mismatch %s verses %s for %s" % (computed_taskhash, self.taskhash[k], k))
-+
-+
-     def dump_sigs(self, dataCache, options):
-         for fn in self.taskdeps:
-             for task in self.taskdeps[fn]:
-@@ -506,6 +517,37 @@ def compare_sigfiles(a, b, recursecb = None):
-     return output
- 
- 
-+def calc_basehash(sigdata):
-+    task = sigdata['task']
-+    basedata = sigdata['varvals'][task]
-+
-+    if basedata is None:
-+        basedata = ''
-+
-+    alldeps = sigdata['taskdeps']
-+    for dep in alldeps:
-+        basedata = basedata + dep
-+        val = sigdata['varvals'][dep]
-+        if val is not None:
-+            basedata = basedata + str(val)
-+
-+    return hashlib.md5(basedata).hexdigest()
-+
-+def calc_taskhash(sigdata):
-+    data = sigdata['basehash']
-+
-+    for dep in sigdata['runtaskdeps']:
-+        data = data + sigdata['runtaskhashes'][dep]
-+
-+    for c in sigdata['file_checksum_values']:
-+        data = data + c[1]
-+
-+    if 'taint' in sigdata:
-+        data = data + sigdata['taint']
-+
-+    return hashlib.md5(data).hexdigest()
-+
-+
- def dump_sigfile(a):
-     output = []
- 
-@@ -539,17 +581,13 @@ def dump_sigfile(a):
-     if 'taint' in a_data:
-         output.append("Tainted (by forced/invalidated task): %s" % a_data['taint'])
- 
--    data = a_data['basehash']
--    for dep in a_data['runtaskdeps']:
--        data = data + a_data['runtaskhashes'][dep]
--
--    for c in a_data['file_checksum_values']:
--        data = data + c[1]
--
--    if 'taint' in a_data:
--        data = data + a_data['taint']
-+    if 'task' in a_data:
-+        computed_basehash = calc_basehash(a_data)
-+        output.append("Computed base hash is %s and from file %s" % (computed_basehash, a_data['basehash']))
-+    else:
-+        output.append("Unable to compute base hash")
- 
--    h = hashlib.md5(data).hexdigest()
--    output.append("Computed Hash is %s" % h)
-+    computed_taskhash = calc_taskhash(a_data)
-+    output.append("Computed task hash is %s" % computed_taskhash)
- 
-     return output
-
-
+Python 2's sqlite3 module defaults to returning Unicode strings for SQL=0A=
+text queries, which could trickle down to other parts of bitbake code and=
+=0A=
+cause unexpected Unicode conversions. Using byte strings avoids this issue.=
+=0A=
+=0A=
+For example, the git fetcher's AUTOREV support caches HEAD SHA1's using=0A=
+bb.persist_data, so sometimes the git command strings passed to fetch2's=0A=
+runfetchcmd() were unicode, potentially causing UnicodeDecodeErrors when=0A=
+it appended the values of environment variables containing non-ASCII chars.=
+=0A=
+=0A=
+[YOCTO #9382]=0A=
+=0A=
+Signed-off-by: Daniel Klauer <daniel.klauer@gin.de>=0A=
+---=0A=
+ lib/bb/persist_data.py | 1 +=0A=
+ 1 file changed, 1 insertion(+)=0A=
+=0A=
+diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py=0A=
+index 5795bc8..e450423 100644=0A=
+--- a/lib/bb/persist_data.py=0A=
++++ b/lib/bb/persist_data.py=0A=
+@@ -201,6 +201,7 @@ class PersistData(object):=0A=
+ def connect(database):=0A=
+     connection =3D sqlite3.connect(database, timeout=3D5, isolation_level=
+=3DNone)=0A=
+     connection.execute("pragma synchronous =3D off;")=0A=
++    connection.text_factory =3D str=0A=
+     return connection=0A=
+ =0A=
+ def persist(domain, d):=0A=
+-- =0A=
+1.9.1=0A=
 
