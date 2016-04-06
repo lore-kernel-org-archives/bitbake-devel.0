@@ -1,50 +1,50 @@
 Return-Path: <michael.g.wood@intel.com>
 Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
-	by mail.openembedded.org (Postfix) with ESMTP id D27CD771C3
+	by mail.openembedded.org (Postfix) with ESMTP id 7B420771CD
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Apr 2016 16:47:30 +0000 (UTC)
-Received: by mail-wm0-f51.google.com with SMTP id l6so73377082wml.1
+	Wed,  6 Apr 2016 16:47:31 +0000 (UTC)
+Received: by mail-wm0-f51.google.com with SMTP id n3so71351823wmn.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 06 Apr 2016 09:47:31 -0700 (PDT)
+	Wed, 06 Apr 2016 09:47:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:subject:date:message-id:in-reply-to:references:in-reply-to
-	:references; bh=17os9mvTUTDzMvYTS1hMvXAMIe8nKmLz5OgVYu5koLg=;
-	b=JX47ZEB9YcEPgmljT75rAVTaLa1gJ98Umu4eWgxtcY8cUnNfkLmKISYctDCtOdwcOq
-	uJFQOV9yni5X/HfUc0WuGQGvrXzefZI3FH6m3KfDfieg9Za9PMO3oHhvQtR7rUT1M5ev
-	sqaG86ORWmJm1u32aiCj+wEGHDBCmzlny39/kCzqS9hDF+reC0W0TTAxHObg/uHTk2ev
-	0n4g0Qw510WV+wDTH4YRjWVAWVCxUq+BhxKvT2vpxF7ih3ES1Z9XH3s/nKuNDn4gF4xd
-	5h42kJTRFFwNyLhbvHd9Eq8zDhNtlZ4m83IwrrKaKaEGOxr80aj2pZXxKdPt/qRKBq5t
-	IrRg==
+	:references; bh=mxxamK52i9/7SP/uSxePycYzaAPvbcpg5KKkxGpjYSE=;
+	b=gwWKQQE70hCpaj8eoASf9eg6A1XAtUbptNo4jsnlx9fQaRS7QVK3CmFnJsDp0Y++DZ
+	nJX6+DD61nWxkP4NiR4Hmjm4NDrq4UmHi2NyP9cT7AN4EFFwM1Or7QJUjWMuF+8Wx3gx
+	hDi7gxmcVlS6c+2+OCAWhitMX1j+5+tOgRoLvXFCM+fiz8bX/6hU8O3stCARIzf/emLX
+	Z5gEvNEuRxDTHUwydM1ko06/1vxdwmo2ES95qiSEGUzeLt9TIZa0zLHKWC8G/+4SR5Qr
+	e+RZMx+tGxb7OSnHGeg3UOe6hl8pzmsx4dLhhdw5+7n3jOrzogcZuKIiYeUL4qIbednr
+	N0Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=17os9mvTUTDzMvYTS1hMvXAMIe8nKmLz5OgVYu5koLg=;
-	b=j7Auo0vF8GH1yxvxLQxKgrDMpzxz1uZ1EeTrjxqghf/iyixXijEsUwgY8na/nlK0cH
-	3yjRN9EQ8uWVcbCmhUZYtzDn5V1LswDORJGrfk2iuH+a38npjX58WhDLJ/1qtuNmuf9G
-	Mjt8/TIWqoqI1/+qN8ttmoahRT21AiLcn+PkcTwe6k8FsYqYQK9r0f1pz7WQ/BFECH6R
-	id9RoS0efOoN0DVWBDUlq1i0ZlUshUEztFFUGNjZ6YvI1xBveIQYY2lF6NoMlsNw7gRo
-	I1J1Dyx2IgqC0JjK1gfH5+IAvw60XWmE6458F1T/Cbe3QZ95EN5JsDGPGjt1I8vGUX/l
-	3p4w==
-X-Gm-Message-State: AD7BkJL1Xb2UBI2sCs7U5AEqq8hTUoDkpbojR3/gQi6syKBDEkiLncnnv+UamcnbbeEpKGiz
-X-Received: by 10.28.132.212 with SMTP id g203mr25151719wmd.30.1459961250994; 
-	Wed, 06 Apr 2016 09:47:30 -0700 (PDT)
+	bh=mxxamK52i9/7SP/uSxePycYzaAPvbcpg5KKkxGpjYSE=;
+	b=FKKhQh6kwml4Rha5TrP9V/PTo/VD2xQKNrEbyw/fa5jnupzIQ09qOCVprBe7MHZNmY
+	VdRMQ79Dlfb2soh6nMYUEGUJnJbZk8AuAxP+owqjJKPNmfJ2yxrOV1IXjGV9u547wULd
+	suKsLKpouhpXlbBwWDyDbCFRgjfLhE/7YamEA5rYFOVxZP8V3YB/NLRSEzNKpliigBsT
+	NrNEX/ho9nVXiylAos97MCmlUsicQfqByrNR50V3p+GjieXNi4rzJmF3kQIHK8UtLTmE
+	bZHTibwu+LZnZOmaTPgbIBlOjuK8UtAzRT7/6Yc3LjZc4vme/a31mJYosCCsGqfIjgcU
+	Ckcg==
+X-Gm-Message-State: AD7BkJLCnNnza7pm/g80DDP6cFsu2GeT9BEx6QBKo3vzzjSutZmDrbbl/aSxXKMU4m6kCGMw
+X-Received: by 10.28.127.4 with SMTP id a4mr18866873wmd.76.1459961251928;
+	Wed, 06 Apr 2016 09:47:31 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id gt7sm4145345wjc.1.2016.04.06.09.47.30
+	by smtp.gmail.com with ESMTPSA id gt7sm4145345wjc.1.2016.04.06.09.47.31
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 06 Apr 2016 09:47:30 -0700 (PDT)
+	Wed, 06 Apr 2016 09:47:31 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  6 Apr 2016 17:46:35 +0100
-Message-Id: <e2533ccd84bdb791f65b97c4bb9b84019909acd5.1459960764.git.michael.g.wood@intel.com>
+Date: Wed,  6 Apr 2016 17:46:36 +0100
+Message-Id: <9cdd8604a5058358cceb5b5a34dfc952717edaa5.1459960764.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <c991037b9fb1fe7bf4ef2d96d16c7187b0f4299c.1459960764.git.michael.g.wood@intel.com>
 References: <c991037b9fb1fe7bf4ef2d96d16c7187b0f4299c.1459960764.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1459960764.git.michael.g.wood@intel.com>
 References: <cover.1459960764.git.michael.g.wood@intel.com>
-Subject: [PATCH 25/38] toaster: bldcontrol models Add a cancelling state the BuildRequest
+Subject: [PATCH 26/38] buildinfohelper: Add handler for cancelling a build
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,113 +59,54 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 06 Apr 2016 16:47:31 -0000
 
-To accurately reflect the state of a build request we also need a
-cancelling state. This is set when we've started a build and then for
-whatever reason cancel it, cancelling is not instantaneous so we have
-this state to indicate that a cancel is in progress.
-
-Also add a state transition guard. As the state of a BuildRequest can
-currently be modified by three processes; Toastergui,
-Runbuilds/bldcontrol and the buildinofhelper we cannot say for sure
-which process will be running at the time of cancellation so in order to
-avoid one of these processes making an incorrect transition only allow
-transitions of state to increase.
-
-e.g. CREATED -> QUEUED -> INPROGRESS
-And to ignore such requested changes such as
-INPROGRESS -> CREATED
+When a build is cancelled the build (action) is complete if it has been
+caused the request being cancelled then update the build outcome
+accordingly.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- .../migrations/0003_add_cancelling_state.py        | 19 +++++++++++++++
- lib/toaster/bldcontrol/models.py                   | 27 +++++++++++++++++++++-
- 2 files changed, 45 insertions(+), 1 deletion(-)
- create mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0003_add_cancelling_state.py
+ lib/bb/ui/buildinfohelper.py | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/bldcontrol/migrations/0003_add_cancelling_state.py b/lib/toaster/bldcontrol/migrations/0003_add_cancelling_state.py
-new file mode 100644
-index 0000000..eec9216
---- /dev/null
-+++ b/lib/toaster/bldcontrol/migrations/0003_add_cancelling_state.py
-@@ -0,0 +1,19 @@
-+# -*- coding: utf-8 -*-
-+from __future__ import unicode_literals
-+
-+from django.db import migrations, models
-+
-+
-+class Migration(migrations.Migration):
-+
-+    dependencies = [
-+        ('bldcontrol', '0002_auto_20160120_1250'),
-+    ]
-+
-+    operations = [
-+        migrations.AlterField(
-+            model_name='buildrequest',
-+            name='state',
-+            field=models.IntegerField(default=0, choices=[(0, b'created'), (1, b'queued'), (2, b'in progress'), (3, b'completed'), (4, b'failed'), (5, b'deleted'), (6, b'cancelling'), (7, b'archive')]),
-+        ),
-+    ]
-diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
-index 9b2d0d0..cb49a58 100644
---- a/lib/toaster/bldcontrol/models.py
-+++ b/lib/toaster/bldcontrol/models.py
-@@ -4,6 +4,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
- from django.utils.encoding import force_bytes
- from orm.models import Project, ProjectLayer, ProjectVariable, ProjectTarget, Build, Layer_Version
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index e4177f2..0ce36b0 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -218,6 +218,15 @@ class ORMWrapper(object):
+         assert isinstance(errors, int)
+         assert isinstance(warnings, int)
  
-+import logging
-+logger = logging.getLogger("toaster")
- # a BuildEnvironment is the equivalent of the "build/" directory on the localhost
- class BuildEnvironment(models.Model):
-     SERVER_STOPPED = 0
-@@ -64,7 +66,8 @@ class BuildRequest(models.Model):
-     REQ_COMPLETED = 3
-     REQ_FAILED = 4
-     REQ_DELETED = 5
--    REQ_ARCHIVE = 6
-+    REQ_CANCELLING = 6
-+    REQ_ARCHIVE = 7
- 
-     REQUEST_STATE = (
-         (REQ_CREATED, "created"),
-@@ -73,6 +76,7 @@ class BuildRequest(models.Model):
-         (REQ_COMPLETED, "completed"),
-         (REQ_FAILED, "failed"),
-         (REQ_DELETED, "deleted"),
-+        (REQ_CANCELLING, "cancelling"),
-         (REQ_ARCHIVE, "archive"),
-     )
- 
-@@ -85,6 +89,27 @@ class BuildRequest(models.Model):
-     created     = models.DateTimeField(auto_now_add = True)
-     updated     = models.DateTimeField(auto_now = True)
- 
-+    def __init__(self, *args, **kwargs):
-+        super(BuildRequest, self).__init__(*args, **kwargs)
-+        # Save the old state incase it's about to be modified
-+        self.old_state = self.state
-+
-+    def save(self, *args, **kwargs):
-+        # Check that the state we're trying to set is not going backwards
-+        # e.g. from REQ_FAILED to REQ_INPROGRESS
-+        if self.old_state != self.state and self.old_state > self.state:
-+            logger.warn("Invalid state change requested: "
-+                        "Cannot go from %s to %s - ignoring request" %
-+                        (BuildRequest.REQUEST_STATE[self.old_state][1],
-+                         BuildRequest.REQUEST_STATE[self.state][1])
-+                       )
-+            # Set property back to the old value
-+            self.state = self.old_state
++        if build.outcome == Build.CANCELLED:
 +            return
++        try:
++            if build.buildrequest.state == BuildRequest.REQ_CANCELLING:
++                return
++        except AttributeError:
++            # We may not have a buildrequest if this is a command line build
++            pass
 +
-+        super(BuildRequest, self).save(*args, **kwargs)
+         outcome = Build.SUCCEEDED
+         if errors or taskfailures:
+             outcome = Build.FAILED
+@@ -1407,9 +1416,17 @@ class BuildInfoHelper(object):
+         be.lock = BuildEnvironment.LOCK_LOCK
+         be.save()
+         br = BuildRequest.objects.get(pk = br_id)
 +
++        # if we're 'done' because we got cancelled update the build outcome
++        if br.state == BuildRequest.REQ_CANCELLING:
++            logger.info("Build cancelled")
++            br.build.outcome = Build.CANCELLED
++            br.build.save()
++            errorcode = 0
 +
-     def get_duration(self):
-         return (self.updated - self.created).total_seconds()
- 
+         if errorcode == 0:
+             # request archival of the project artifacts
+-            br.state = BuildRequest.REQ_ARCHIVE
++            br.state = BuildRequest.REQ_COMPLETED
+         else:
+             br.state = BuildRequest.REQ_FAILED
+         br.save()
 -- 
 2.1.4
 
