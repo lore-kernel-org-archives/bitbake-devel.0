@@ -1,50 +1,50 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f49.google.com (mail-wm0-f49.google.com [74.125.82.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 91E0D77139
+Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 80EE477153
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Apr 2016 16:47:22 +0000 (UTC)
-Received: by mail-wm0-f49.google.com with SMTP id u206so53859102wme.1
+	Wed,  6 Apr 2016 16:47:23 +0000 (UTC)
+Received: by mail-wm0-f52.google.com with SMTP id v188so29618060wme.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 06 Apr 2016 09:47:23 -0700 (PDT)
+	Wed, 06 Apr 2016 09:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:subject:date:message-id:in-reply-to:references:in-reply-to
-	:references; bh=jfW2faChJeFuPreWSsc/4OzREwMJSo9Rl0pe2Bx0BWU=;
-	b=ZEvHQ3P3sjYC40aYyNzE3wgqiMTykWhX7X86WIdTPSZVI6kY4tMFMVgEOKdHwn7NAF
-	unwM6PI7onj3bMQC8eeY41NPiPe5Ddt6Z1SrFLekHfa8DHfFb4WxxwyfIVFoniledvvw
-	h5x3069RFrForlo9xCGcWkn9xir8h+zSqJ1B9Vl0Bequ+2YFxrwqgnU8yXOeue/JssKS
-	PxZ8Gu88rqUnxqr54/GJJ0ib8gSavmbXPtjbtB8lD0M+gt0rtzI1NhJ0oS283RxHcV9e
-	emeh+DBMDP6YYxhqK2w5Z15tINntakSzF2i8RGG4TlYWITMDoHYeuO3Hc9CcJ11ycf6+
-	v+xQ==
+	:references; bh=ZYDyoWeB7IbGsht7sriVZ1yNJ4bzWYtBuWADM98zC3A=;
+	b=APBxV4mt3HNBELQmUzCF8uDDKSrhI9E8/XJtioxFeIX2soJIteniaApB53Dbo5QGNN
+	S/jdTPtADGhrGwfvsCXQVLe/wXjhkrkXr5oVkbpUXWSTvB9qZwOh9sy1dOjQNfM3mmx8
+	MrSkGEGL33GpHDRR2+ZSTJSxFruJZwNzSeQfgJzyKWVp/EHB2C2YDUBshuX1zv7im4P7
+	CH4Yfa0V/4HckVascWcn9oNiP93xWBIdpOYfWKih9vyT7vowAywQMbcLOoYJ3BKp6V8Y
+	qoNDyMZFXy6w82W3nhDQyooKWWSlbRMZcAiFMy96suzxx/dCv66tF6zZSTTf7gxY4o1B
+	q/0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=jfW2faChJeFuPreWSsc/4OzREwMJSo9Rl0pe2Bx0BWU=;
-	b=iNq7LHKsDggMXq4vbTLJ1NDZozkzwEsoSgPTN42dEMbpFkKOCcQ3d4A4VoNC/MqHJ7
-	6Uczmqv7Mblt0KSoNru8+Cp8JSnLun2+Q5TWDNRiFRqV59MZsOV4Q3XU6GJ5JrirJVhN
-	1ZCdQFp3CEFqQ5pLKhF5RebToAt9ZMVrVc93LtQ0wKhPuem1SrF204Qkh1qZ3n7ITAlm
-	ew1zvSHBPLNMA3OKFc0hI4231S6TBUUyvO2L4VviqskaPQN95Po1uJtTrxnuOAMntW6q
-	v/sAt+Bgy8d7i+SknUUvzA7N/14KQ7OTM2ldtwUYXMw78E3gJm3GJezJ8+66yJIHfm9d
-	lm8Q==
-X-Gm-Message-State: AD7BkJJ+bJrS27ccneQO9Er3qrKJis0iZ8yB+aY5GXFT0SAwOLC71YEwBJ4eE9Rqza8Pt1NJ
-X-Received: by 10.28.53.4 with SMTP id c4mr25734585wma.34.1459961243162;
-	Wed, 06 Apr 2016 09:47:23 -0700 (PDT)
+	bh=ZYDyoWeB7IbGsht7sriVZ1yNJ4bzWYtBuWADM98zC3A=;
+	b=hHqvRgv/fQyfbMSCQEAbkpfzehn0csLH05jjgZsmLOnbRLn9wn2skDx7SWzjKQevwG
+	7QteNoFqVxNqF1InkPhjlckbkb2dH0e1VvOh4/U+rS08eUThXPUPt/4fZICueZJFGQif
+	FJt6Sib/OqAi7fsfCnyxPqtuI41CWnaYkQPnuoWJfg9jadRNFY90R/c4nLFepg2B2PYG
+	eAPRw6bHtTrtdRkZpnXuYLnA3YEjIP3eWPPtem6yFJYCUiV4oGcr9I3+d7+MmQEsobQz
+	8UNqis117lhwlXW8k5c7ENi1NrtMneO3JK7NHvSfPKxHVITAvsAjnj5NfI8J0IvWA3oI
+	tueg==
+X-Gm-Message-State: AD7BkJJyou3E4gmiUAILvZRyRUfuwyWhvDdl+NzuKWasZXv5ISwsOKlSUH3SiIBz+q9LcNzD
+X-Received: by 10.28.61.8 with SMTP id k8mr25586356wma.7.1459961244070;
+	Wed, 06 Apr 2016 09:47:24 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id gt7sm4145345wjc.1.2016.04.06.09.47.22
+	by smtp.gmail.com with ESMTPSA id gt7sm4145345wjc.1.2016.04.06.09.47.23
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 06 Apr 2016 09:47:22 -0700 (PDT)
+	Wed, 06 Apr 2016 09:47:23 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  6 Apr 2016 17:46:26 +0100
-Message-Id: <5f7ef8d0f71a7a59dd11bf066bb102c5c1972e88.1459960764.git.michael.g.wood@intel.com>
+Date: Wed,  6 Apr 2016 17:46:27 +0100
+Message-Id: <be871202a00a9c13b1f46e2a38a3e4e1fb5883ae.1459960764.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <c991037b9fb1fe7bf4ef2d96d16c7187b0f4299c.1459960764.git.michael.g.wood@intel.com>
 References: <c991037b9fb1fe7bf4ef2d96d16c7187b0f4299c.1459960764.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1459960764.git.michael.g.wood@intel.com>
 References: <cover.1459960764.git.michael.g.wood@intel.com>
-Subject: [PATCH 16/38] toaster: fix jethro build
+Subject: [PATCH 17/38] toaster: use bash explicitly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,51 +57,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Apr 2016 16:47:23 -0000
+X-List-Received-Date: Wed, 06 Apr 2016 16:47:24 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-The keys 'started', 'ended', 'cpu_time_user', 'disk_io_read' and
-'disk_io_write' were added to the event recently, so they don't
-exist in the events generated by bitbake server from older releases.
-
-Checking if task_to_update structure has these keys before using
-them should fix build of older releases.
+Toaster can't run builds on Ubuntu as default /bin/sh points
+to dash there. The reason is that oe-init-build-env can't
+be sourced under dash for various reasons. It can be fixed
+or work arounded, but it wouldn't fix builds for older releases.
+Explicitly using bash to start builds should fix the issue.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/bb/ui/buildinfohelper.py | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ lib/toaster/bldcontrol/localhostbecontroller.py | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index e2161d8..e4177f2 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -241,14 +241,16 @@ class ORMWrapper(object):
-             recipe__name = recipe_name
-         )
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 6d7f433..73c5f1f 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -258,7 +258,8 @@ class LocalhostBEController(BuildEnvironmentController):
+         builddir = '%s-toaster-%d' % (self.be.builddir, bitbake.req.project.id)
+         oe_init = os.path.join(self.pokydirname, 'oe-init-build-env')
+         # init build environment
+-        self._shellcmd('source %s %s' % (oe_init, builddir), self.be.sourcedir)
++        self._shellcmd("bash -c 'source %s %s'" % (oe_init, builddir),
++                       self.be.sourcedir)
  
--        task_to_update.started = self._timestamp_to_datetime(task_stats['started'])
--        task_to_update.ended = self._timestamp_to_datetime(task_stats['ended'])
--        task_to_update.elapsed_time = (task_stats['ended'] - task_stats['started'])
--        task_to_update.cpu_time_user = task_stats['cpu_time_user']
--        task_to_update.cpu_time_system = task_stats['cpu_time_system']
--        task_to_update.disk_io_read = task_stats['disk_io_read']
--        task_to_update.disk_io_write = task_stats['disk_io_write']
--        task_to_update.disk_io = task_stats['disk_io_read'] + task_stats['disk_io_write']
-+        if 'started' in task_stats and 'ended' in task_stats:
-+            task_to_update.started = self._timestamp_to_datetime(task_stats['started'])
-+            task_to_update.ended = self._timestamp_to_datetime(task_stats['ended'])
-+            task_to_update.elapsed_time = (task_stats['ended'] - task_stats['started'])
-+        task_to_update.cpu_time_user = task_stats.get('cpu_time_user')
-+        task_to_update.cpu_time_system = task_stats.get('cpu_time_system')
-+        if 'disk_io_read' in task_stats and 'disk_io_write' in task_stats:
-+            task_to_update.disk_io_read = task_stats['disk_io_read']
-+            task_to_update.disk_io_write = task_stats['disk_io_write']
-+            task_to_update.disk_io = task_stats['disk_io_read'] + task_stats['disk_io_write']
+         # update bblayers.conf
+         bblconfpath = os.path.join(builddir, "conf/bblayers.conf")
+@@ -286,9 +287,9 @@ class LocalhostBEController(BuildEnvironmentController):
  
-         task_to_update.save()
+         # run bitbake server from the clone
+         bitbake = os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitbake')
+-        self._shellcmd('source %s %s; BITBAKE_UI="" %s --read %s '
+-                       '--server-only -t xmlrpc -B 0.0.0.0:0' % (oe_init, builddir,
+-                       bitbake, confpath), self.be.sourcedir)
++        self._shellcmd('bash -c \"source %s %s; BITBAKE_UI="" %s --read %s '
++                       '--server-only -t xmlrpc -B 0.0.0.0:0\"' % (oe_init,
++                       builddir, bitbake, confpath), self.be.sourcedir)
+ 
+         # read port number from bitbake.lock
+         self.be.bbport = ""
+@@ -319,9 +320,9 @@ class LocalhostBEController(BuildEnvironmentController):
+ 
+         # run build with local bitbake. stop the server after the build.
+         log = os.path.join(builddir, 'toaster_ui.log')
+-        self._shellcmd(['(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:-1" '
++        self._shellcmd(['bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:-1" '
+                         '../bitbake/bin/bitbake %s -u toasterui >>%s 2>&1;'
+-                        'BITBAKE_UI="" BBSERVER=0.0.0.0:-1 %s -m)&' \
++                        'BITBAKE_UI="" BBSERVER=0.0.0.0:-1 %s -m)&\"' \
+                         % (brbe, bbtargets, log, bitbake)], builddir,
+                         nowait=True)
  
 -- 
 2.1.4
