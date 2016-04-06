@@ -1,50 +1,50 @@
 Return-Path: <michael.g.wood@intel.com>
 Received: from mail-wm0-f54.google.com (mail-wm0-f54.google.com [74.125.82.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 7D18977194
+	by mail.openembedded.org (Postfix) with ESMTP id 5106277180
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Apr 2016 16:47:24 +0000 (UTC)
-Received: by mail-wm0-f54.google.com with SMTP id f198so81802880wme.0
+	Wed,  6 Apr 2016 16:47:25 +0000 (UTC)
+Received: by mail-wm0-f54.google.com with SMTP id v188so29618811wme.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 06 Apr 2016 09:47:25 -0700 (PDT)
+	Wed, 06 Apr 2016 09:47:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:subject:date:message-id:in-reply-to:references:in-reply-to
-	:references; bh=IC9qkYjc7PbZnSlIHkb81G6s3851mB2T+R5s0lYs36M=;
-	b=VBpPEY/KyXic+B3yPQZWryuhLJ0FtqHhExRHCU7MH9aYE43M4L4CxHplKi62oKoPNa
-	R350AkYyIA0AwUzLiR6MZuFXwQJ02Nr4nv2KyWuaoZSBydbwzw+9ZzXt9Hf5q2C/wYqc
-	MwSvqjACqScS+M2NwZ9psjid5Td7AGZjoD1lQobVuAw50VzvbqsJNBOw0CvTSE94PRsQ
-	JVv38EOF/FI3TmfTyk/10qJG5mSKJF7Ux/KzPNU6xPIr5/jTZ3Hn6BVBhBETakFR/z5X
-	tSHtG8IWkJdXB0tzZcvfJO2cWD3AaF+QBCuvGkKuVHYgn1S5DpqQpcueaga3sU89FHbV
-	fWqg==
+	:references; bh=KeYEZJDQj0MejlQd56dPckGYBf3W8UAoJ5cOitEEoj8=;
+	b=DvJf1RoJyal2ouseXaRlv4T0Cu3cx1qFWyRzE5zkcoYaMqnb98padP/nZxjmh3G3Vr
+	YcpTmfjSgKADjkzmzkViFLsrsPT4O4DXnzwm4ip82+SYZ6BCMQqwxVIBjbN47uIvS/q8
+	qvOuzYpTYTWMgqFvrZwfXtTE/0ofnKSaPY/qyqJCtFkcuQTRMK7WeYLMHYxHAs+MG6qx
+	pPlIu4h+l1VIW+bTVUWxfVtSfl1hwKFqpRe7z8fcalib/UCcMy1w0yCZSPe/ydzePpAg
+	QQLShAk5eqTgHRukvPvGew+gh9874yqSeskfyE7RqANZshyEuF4gWryH7+bg5VLpCejt
+	BRUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=IC9qkYjc7PbZnSlIHkb81G6s3851mB2T+R5s0lYs36M=;
-	b=UpnWqq751DzXKZ6NzRYLX/R8Jj6f774tY0oHwwfbKDaPzajuatzTgDWAsnYH7LXxj2
-	NiK3wrbDKDK5QqJPnynKfEvLs9RbdxXvwoBgnRt+kBJEBsdZ/zHG3OYdve4e43CMTc1m
-	+bILkziiRGLdliWM0KsWwlYpCpcvkKXGfivZUFbpb5p2Z5Ho/xfjQhcXm8cCGSZf8xdQ
-	h0nu0G4ZbOJGOXouGiJKUQZMt2K30uo6o0vYYbfUiCdatXlLG7u36mMNfUByXAGf6744
-	pZSUTJSiwdt89ajeMcoEco1hYIEIGMQ562lYyT0xh0hNR5YOJbfIL/LWtK7nN/HmBOJ/
-	i6UA==
-X-Gm-Message-State: AD7BkJLTtJUQm0uXWhqUp/GooMIKGX7bM3OfLrAbwSzbL4UKFHUuxA05uxqjZjVRiep3en2T
-X-Received: by 10.28.60.134 with SMTP id j128mr15684586wma.71.1459961244822;
-	Wed, 06 Apr 2016 09:47:24 -0700 (PDT)
+	bh=KeYEZJDQj0MejlQd56dPckGYBf3W8UAoJ5cOitEEoj8=;
+	b=mmV9tk8YgrcIZY0KYeD3cUdxC9AZWoIlqa4pl2kx8gvftUaz8xe/u3Y9mDWQgqIRDG
+	WRHSTFWaAbZPlJ2MTYlotR8Fjfsxbn9bHvm86+WmAWDdXzyRlaqTdfqDC5Fpp46AmrOC
+	aOtl0gxQm45dYUjaETddsPGTORwv07xc0YV93jo30u0E+8HRqV/X4ZaZItVdmIKhtmBB
+	kjTUjv6eJcxk26TG9Nu2FRxuizJsS7VrW/VbEyZPHIF6/yBoRiNUCF3c5PL8I4WacD3C
+	Uomw5RkfQbZ2A9w/jKdY6R6txIUYCzpLo3Jyi0lac1kCQQjvdI/RpvyXpvowBdxfTw8t
+	99Yg==
+X-Gm-Message-State: AD7BkJLCo6LJ1qKqW4w4cD82MyP1rGalnvdLobL4EvfLiKBlnosAv+xUmrSt4HW+CCCY+lao
+X-Received: by 10.28.184.194 with SMTP id i185mr25319591wmf.90.1459961245833; 
+	Wed, 06 Apr 2016 09:47:25 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
 	by smtp.gmail.com with ESMTPSA id gt7sm4145345wjc.1.2016.04.06.09.47.24
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 06 Apr 2016 09:47:24 -0700 (PDT)
+	Wed, 06 Apr 2016 09:47:25 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  6 Apr 2016 17:46:28 +0100
-Message-Id: <0d9519d7a24bdbf0b845b51724bf9be4b5803f27.1459960764.git.michael.g.wood@intel.com>
+Date: Wed,  6 Apr 2016 17:46:29 +0100
+Message-Id: <efafbf633386d3d0fc97af0e442c9d4e326956ee.1459960764.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <c991037b9fb1fe7bf4ef2d96d16c7187b0f4299c.1459960764.git.michael.g.wood@intel.com>
 References: <c991037b9fb1fe7bf4ef2d96d16c7187b0f4299c.1459960764.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1459960764.git.michael.g.wood@intel.com>
 References: <cover.1459960764.git.michael.g.wood@intel.com>
-Subject: [PATCH 18/38] toasterui: shutdown on BuildCompleted event
+Subject: [PATCH 19/38] toaster: bldcontrol Add forceShutDown function to BitbakeController
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,51 +59,35 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 06 Apr 2016 16:47:25 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+From: Sujith H <sujith.h@gmail.com>
 
-toasterui exits event loop on one of the following events:
-CommandCompleted, CommandFailed or CommandExit.
-Unfortunately none of them come from bitbake when build fails.
-This is normai if toasterui runs in observer mode. However, if it's
-in build mode this causes toasterui to stuck in the infinite loop
-waiting for new events.
+Add forceShutDown function to BitbakeController class. This function
+provides a mechanism to cancel the build from toaster. An API which
+can be used safely to cancel build and hence shutdown running bitbake
+server.
 
-The only event we can rely on is BuildCompleted as it always
-comes from bitbake unlike 3 above mentioned events.
+[YOCTO #6787]
 
-Modified the code to always shutdown toasterui in build mode
-on BuildCompleted event.
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Sujith H <sujith.h@gmail.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/bb/ui/toasterui.py | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ lib/toaster/bldcontrol/bbcontroller.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 39a4fe5..6bf4c1f 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -377,11 +377,14 @@ def main(server, eventHandler, params):
-                 buildinfohelper.close(errorcode)
+diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
+index 058e490..0f7b66d 100644
+--- a/lib/toaster/bldcontrol/bbcontroller.py
++++ b/lib/toaster/bldcontrol/bbcontroller.py
+@@ -63,6 +63,9 @@ class BitbakeController(object):
+             task = "build"
+         return self._runCommand(["buildTargets", targets, task])
  
-                 # we start a new build info
--                logger.debug("ToasterUI prepared for new build")
--                errors = 0
--                warnings = 0
--                taskfailures = []
--                buildinfohelper = BuildInfoHelper(server, build_history_enabled)
-+                if params.observe_only:
-+                    logger.debug("ToasterUI prepared for new build")
-+                    errors = 0
-+                    warnings = 0
-+                    taskfailures = []
-+                    buildinfohelper = BuildInfoHelper(server, build_history_enabled)
-+                else:
-+                    main.shutdown = 1
++    def forceShutDown(self):
++        return self._runCommand(["stateForceShutdown"])
++
  
-                 logger.info("ToasterUI build done, brbe: %s", brbe)
-                 continue
+ 
+ def getBuildEnvironmentController(**kwargs):
 -- 
 2.1.4
 
