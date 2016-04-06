@@ -1,50 +1,50 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f53.google.com (mail-wm0-f53.google.com [74.125.82.53])
-	by mail.openembedded.org (Postfix) with ESMTP id BFDFD770B4
+Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 907FF770B4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Apr 2016 16:47:14 +0000 (UTC)
-Received: by mail-wm0-f53.google.com with SMTP id v188so29613593wme.1
+	Wed,  6 Apr 2016 16:47:16 +0000 (UTC)
+Received: by mail-wm0-f52.google.com with SMTP id 191so64803106wmq.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 06 Apr 2016 09:47:15 -0700 (PDT)
+	Wed, 06 Apr 2016 09:47:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:subject:date:message-id:in-reply-to:references:in-reply-to
-	:references; bh=8CW+IlVpvzb+FoH1NeIxqnq9lm0ks7diy/us8OrHdik=;
-	b=1lV9Xf/Z2Mp1mnRnATseHObkEnISsze8Q29FyuN/HVA2KWYuBwTFd9GfE4siifplBQ
-	SH8ixbX4+ECo3yOB1/uBJbx/lhb+vyztwXGZNfxZ527levZLTSbSJSzJ3GT/3OCAFfxg
-	H+W19eKZRI84Vod5DdJrtsbVkHlCD30/RLX406imSKCNs8O/s8/ppm1DPh0nytxsPnbI
-	oTso/DsWoQcg/gqzSq9Ym0GfWHyseM1Qv2OgKQJWirFHiS8o+L3fP2jyIppu733vGB30
-	+P9FHm9mXVvdOZMohM/sQozk4lAy8BmK0VU1psisQvjvOYVO91gvLvxsDe+1F5XBUm8V
-	K/5A==
+	:references; bh=qdeEug3WJHsnq9byHvRXCCHqgEqatF9bPhcEn46zxSc=;
+	b=ZExXdeWml/R80mp6T8AJVDIp9jKCiGPRWreg9ajqaryTNnSRNM6cCGwVrbcRohBVFu
+	X3voWNvTNrkyWn8bNxePCUPaa4zKHZqZ2BTk3NJScaTxJJ5kPFftx7UnaUOFfnJ/h9g8
+	FqaTMpnegjhfpgBXKZkkmhPJDwZIo6pwWJaDf5HV/9vGdVeubc3PP0r+3f000zWkgRNz
+	zJFKb7QmwE4Ea5Bq2JZ1JWGdZLOkcvHOx2eKKiV9n0zWt/UDemxDV07n2Yp8jhhQ7vTP
+	eIlWy3eJpmbF3xmFx49SMecKuXlWdtd4MFtHTIo3qlrgutrlCGciA0Tu2L40mtr+/rY/
+	yPVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=8CW+IlVpvzb+FoH1NeIxqnq9lm0ks7diy/us8OrHdik=;
-	b=TQzdrRyzPp8PFHsjmPSTiE9SKLcaV8KJK9u75pj3+/m8aoRvGB8i+26g0hb8mZXPT5
-	sEaHNFwKEVC2TMolEPfGo/SipjitPJak+4VAwy9f7WMoJ9vs/fChZlrBA95NsUxXLu7y
-	URcaSXokTz6lWYVUNzfjMJ3G1xGi7C9RNDI1tSArBWZ2YuHxNSou8aEKBN6V6r+n/2xU
-	5ImPvPu2qF8PBQap6/inv3wh8qVioCOZir/h/PuQ5KYL/vtiNPO6xQzu4cuJ0e1rhTOl
-	ffgEyPTSxy0hjsdIMEM+atQWDkYfvP2yH5t9bHR3ruI96NgVUJn9O9Wr7Q3FysdkF5un
-	v2Wg==
-X-Gm-Message-State: AD7BkJJJP2N8gZ+yo6ZJwz+x+G2aSh0He6qIak7NKLjZ/3uHhSq4lIoU7DfZBnOvgjjd204I
-X-Received: by 10.194.123.102 with SMTP id lz6mr19114863wjb.2.1459961234787;
-	Wed, 06 Apr 2016 09:47:14 -0700 (PDT)
+	bh=qdeEug3WJHsnq9byHvRXCCHqgEqatF9bPhcEn46zxSc=;
+	b=c2Uhb/7JkhsKz8RCOq8nMbfrRQs4Mx/wCzyVoiW3XLH+A+GEi4AYMPgVotoPZxzbhQ
+	QjGn43pkQeiDsUe54/bOF7b+AiO5Uy+PWHGMINkEv3SJB900vSIYe1bVDyR4tUCixwa9
+	9Gufo9bFphr2zIchSm6hq0v+W1mQX1q36qOFnVVBzy25xPluGZeSAQn6ZRAOZd6UnIKI
+	crfqR5G9rJmhGW5QgWaUsbf2Pt6mcap8+Ga+Ows3CVW0IF1b3SnRCi+tyuRmRjO5iHuu
+	oAFyx0wlIQhuutHn1l/vcCnuzxQpGvVF7fuHqXRXoJgurYUDWnyHfT1iFh847N3xa62H
+	06Lw==
+X-Gm-Message-State: AD7BkJIdKei4NJbynQzmf32goZ7eH7Jp+wp1oz1mmr64dE9UliJRhvX5AiaJFh6L5jli5i74
+X-Received: by 10.194.119.201 with SMTP id kw9mr27723794wjb.173.1459961236943; 
+	Wed, 06 Apr 2016 09:47:16 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id gt7sm4145345wjc.1.2016.04.06.09.47.13
+	by smtp.gmail.com with ESMTPSA id gt7sm4145345wjc.1.2016.04.06.09.47.15
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 06 Apr 2016 09:47:13 -0700 (PDT)
+	Wed, 06 Apr 2016 09:47:15 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  6 Apr 2016 17:46:17 +0100
-Message-Id: <398bdbfb65f0944587525361802523695a5c778a.1459960764.git.michael.g.wood@intel.com>
+Date: Wed,  6 Apr 2016 17:46:19 +0100
+Message-Id: <73343f1c932c6b824745776e6f9c8fd971a5abb4.1459960764.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <c991037b9fb1fe7bf4ef2d96d16c7187b0f4299c.1459960764.git.michael.g.wood@intel.com>
 References: <c991037b9fb1fe7bf4ef2d96d16c7187b0f4299c.1459960764.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1459960764.git.michael.g.wood@intel.com>
 References: <cover.1459960764.git.michael.g.wood@intel.com>
-Subject: [PATCH 07/38] toasterui: fix brbe reporting
+Subject: [PATCH 09/38] toaster: remove release API
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,50 +57,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Apr 2016 16:47:16 -0000
+X-List-Received-Date: Wed, 06 Apr 2016 16:47:17 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-buildinfohelper.brbe is lost when buildinfohelper is closed.
-This causes incorrect report of brbe when build is done.
-
-Saved brbe attribute before closing buildinfohelper and used
-it to report correct brbe.
-
-Got rid of useless and confusing 'ToasterUI build done 1'
-log message.
+This API is quite dangerous as it removes build directory.
+It's not used anywhere and most probably will not be used in future
+as toaster is going to have one build directory per project.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/bb/ui/toasterui.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/toaster/bldcontrol/bbcontroller.py          | 6 ------
+ lib/toaster/bldcontrol/localhostbecontroller.py | 6 ------
+ 2 files changed, 12 deletions(-)
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 06a5f17..39a4fe5 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -372,9 +372,9 @@ def main(server, eventHandler, params):
+diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
+index 535a398..2ca2661 100644
+--- a/lib/toaster/bldcontrol/bbcontroller.py
++++ b/lib/toaster/bldcontrol/bbcontroller.py
+@@ -163,12 +163,6 @@ class BuildEnvironmentController(object):
+         """
+         raise NotImplementedError("Must return the REST URL of the artifact")
  
-                 # update the build info helper on BuildCompleted, not on CommandXXX
-                 buildinfohelper.update_build_information(event, errors, warnings, taskfailures)
-+
-+                brbe = buildinfohelper.brbe
-                 buildinfohelper.close(errorcode)
--                # mark the log output; controllers may kill the toasterUI after seeing this log
--                logger.info("ToasterUI build done 1, brbe: %s", buildinfohelper.brbe )
+-    def release(self):
+-        """ This stops the server and releases any resources. After this point, all resources
+-            are un-available for further reference
+-        """
+-        raise NotImplementedError("Must override BE release")
+-
+     def triggerBuild(self, bitbake, layers, variables, targets):
+         raise NotImplementedError("Must override BE release")
  
-                 # we start a new build info
-                 logger.debug("ToasterUI prepared for new build")
-@@ -383,7 +383,7 @@ def main(server, eventHandler, params):
-                 taskfailures = []
-                 buildinfohelper = BuildInfoHelper(server, build_history_enabled)
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 7d6abe6..1ccdd24 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -255,12 +255,6 @@ class LocalhostBEController(BuildEnvironmentController):
+     def readServerLogFile(self):
+         return open(os.path.join(self.be.builddir, "toaster_server.log"), "r").read()
  
--                logger.info("ToasterUI build done 2")
-+                logger.info("ToasterUI build done, brbe: %s", brbe)
-                 continue
+-    def release(self):
+-        assert self.be.sourcedir and os.path.exists(self.be.builddir)
+-        import shutil
+-        shutil.rmtree(os.path.join(self.be.sourcedir, "build"))
+-        assert not os.path.exists(self.be.builddir)
+-
  
-             if isinstance(event, (bb.command.CommandCompleted,
+     def triggerBuild(self, bitbake, layers, variables, targets):
+         # set up the build environment with the needed layers
 -- 
 2.1.4
 
