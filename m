@@ -1,44 +1,45 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-ig0-f173.google.com (mail-ig0-f173.google.com
-	[209.85.213.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 36DE46AC4B
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-wm0-f43.google.com (mail-wm0-f43.google.com [74.125.82.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 76A8360620
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 10 Apr 2016 18:37:12 +0000 (UTC)
-Received: by mail-ig0-f173.google.com with SMTP id kb1so67328541igb.0
+	Mon, 11 Apr 2016 22:42:38 +0000 (UTC)
+Received: by mail-wm0-f43.google.com with SMTP id v188so104679903wme.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 10 Apr 2016 11:37:13 -0700 (PDT)
+	Mon, 11 Apr 2016 15:42:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to; 
-	bh=HECm1t226pmL9Ws2q328rLGryofq+/naki7u9o9syvw=;
-	b=IvFRQoqKqBnZqUD9N5O7bY3OrDyZFT2bkKUYWTKgDy1xdqL/41UQCpf8xN4rPw60tg
-	k1SnjjgOBwjMVQWRrP/tUTAJKEgfSzyykKJQb/hzUOxMKlmiQBs0wjpnrQvAynQFQ416
-	peBXP7ZR1/j7B1SVW/pLadX/VO5s2c1nUCg+MwdhOA/rHyrdi67y5q4PMEBNx/B7dKO/
-	arfP3IGmhYIM5RykJ7AGn0mBX/Wtv4I58NqJyCodYXSFWQWzs+/o9sskitfIxGM7/xFJ
-	k3wVX9VQqtHo4I9N5Dg2sOQFCJIglq5k1T3J1T09+i12LSCIRgWRvLWBzvfRjuIVNXds
-	Uo/A==
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-transfer-encoding;
+	bh=4+IClZKH570djIunfx9nzv4nPBm28DTu00wUoKSnvWA=;
+	b=EufB0ekpW8b4Tyht+BTyTFTgr8nduThP8mo1ROKW+rvfzKQUFFqAlly3OxY+sd7F0a
+	cuNyTT/O0f6x8bEC3IoZKNVpwPI+a6tpZatjUNf4HSFpxYqZkTqFs0OS8sv8E/nibLS5
+	vTc1FkfmZLRYpDZS2H3XyA+YEuiY1vfKLGc05Fimz/6aiiM2M+cg2f6gZOfallFXAny2
+	VhANsx4jwHk2ohYkoEsC3cFBjTeoPIMH9MYraYkSr7SsjwLtWdgdpFGZGtyXMhUgQWDi
+	1hnxZNwJRgqbzyYfdUvh8PYfhZl9n4XHLsrHaNyW7R3rs+BfCwwDtraoWcj3L7+3rx9D
+	HQXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to;
-	bh=HECm1t226pmL9Ws2q328rLGryofq+/naki7u9o9syvw=;
-	b=MlLiFHX/T6G0jy+jv1FWTP+i5Gs1fd2VI4XEZe4aEWHq7hcyd9AbFMsQpfjVzB+Kj2
-	WZ3KAGkvkWA8zxQyMig3kB7oZfHOZyls4BYRKGOEi+v+Mnn0X41U1VB8hykwdJhQR8oS
-	uDZMrh3IK6fEWDLgoIr7ZSPcCHFWCYaaMuM5MA+r7uNf65z7iDQM+he8+R8aM2/24xUH
-	HfgWFANWRpNJMOBD1KNvTNJZQW/x17ufD2Z95p5k7uTo23H2DeBjqX8cpiQQxvrkKCzq
-	dzYJ1KQjee1o/QoXBfGZ7//zvPgP8UoQLL56z9PIRKGPYRAhQAT7N3goDxcgfxN1RGmv
-	E1pw==
-X-Gm-Message-State: AD7BkJJhch4OiJsp1GHGf6N7PCi/g6QTVuI7RDlvrR61zw4rH9XRVw0KAC+LAMBbaO6Md29vU7Xi/26Dy444JQ==
-X-Received: by 10.50.150.70 with SMTP id ug6mr14573638igb.87.1460313433024;
-	Sun, 10 Apr 2016 11:37:13 -0700 (PDT)
+	h=x-gm-message-state:mime-version:in-reply-to:references:date
+	:message-id:subject:from:to:cc:content-transfer-encoding;
+	bh=4+IClZKH570djIunfx9nzv4nPBm28DTu00wUoKSnvWA=;
+	b=GC5JCRjt5pXkYKX05Qh7YmRDz6Go0Qr/N0eKHzDXjkTw/ugPyMr7399tI7v7sAU5AW
+	YA/HQz0isWavKEg6vNS0AYMXhS50l58Xv5BgmiJQvBPq84PqoK+MQW2o8YEwv2Njls1L
+	F/HY2pzKhOoSmULCQArqr4FzERBBmGQKk3Bh49GDx7chHgFzVbgS+OGDBxRizP065H6K
+	/JFPYsCEecYKbb/35uF9hmbzZMse0NpuNU1M6+169oTnsoJMYc5fyn4SaS3yIC1hD543
+	LUV8FtpXkaT076LdVEAIvua77j/VcKYBMkYrQ4d023bmytZSAJciZsoxBFAlTlC8jl0S
+	DSCw==
+X-Gm-Message-State: AOPr4FVuYylV2yfkVLzldmL/FE/MOVJTB1EnKzllz0RsYFOZe1q9M8qbJC3dYhLM57prTaZVMJYnUyfg9jP6vA==
 MIME-Version: 1.0
-References: <1460155678.9308.2.camel@linuxfoundation.org>
-In-Reply-To: <1460155678.9308.2.camel@linuxfoundation.org>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Sun, 10 Apr 2016 18:37:03 +0000
-Message-ID: <CABcZAN=Xhtpnm4HOwq-Cm1XGQvYbZtP0g5h3x3YfHNEwujoKfw@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data_smart: Restrict expansion regexp to not include : characters
+X-Received: by 10.28.182.195 with SMTP id g186mr414983wmf.72.1460414559138;
+	Mon, 11 Apr 2016 15:42:39 -0700 (PDT)
+Received: by 10.194.201.104 with HTTP; Mon, 11 Apr 2016 15:42:39 -0700 (PDT)
+In-Reply-To: <1460282961.9308.13.camel@linuxfoundation.org>
+References: <1460282961.9308.13.camel@linuxfoundation.org>
+Date: Mon, 11 Apr 2016 15:42:39 -0700
+Message-ID: <CAJ86T=WM8KvcegV5mhHq7T=LcnVhf3AGimW_heFWT8o_Qzw7Gg@mail.gmail.com>
+From: Andre McCurdy <armccurdy@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] runqueue: Improve 'mulitiple .bb files are due to be built' message
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,47 +52,187 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 10 Apr 2016 18:37:16 -0000
-Content-Type: multipart/alternative; boundary=001a1133cb0a6fafa6053025b717
-
---001a1133cb0a6fafa6053025b717
+X-List-Received-Date: Mon, 11 Apr 2016 22:42:40 -0000
 Content-Type: text/plain; charset=UTF-8
-
-On Fri, Apr 8, 2016 at 3:48 PM Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> Bitbake variables don't include ":" characters so exclude these from the
-> variable
-> expansion regexp.
->
-> This assists when parsing shell code which does A=${B:-C} as we don't want
-> a
-> dependency on a variable called "B:-C".
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->
-
-Nice, this one's been bugging me on and off for a while :) Looks good.
-
---001a1133cb0a6fafa6053025b717
-Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr">On Fri, Apr 8,=
- 2016 at 3:48 PM Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxf=
-oundation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><=
-blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px=
- #ccc solid;padding-left:1ex">Bitbake variables don&#39;t include &quot;:&q=
-uot; characters so exclude these from the variable<br>
-expansion regexp.<br>
-<br>
-This assists when parsing shell code which does A=3D${B:-C} as we don&#39;t=
- want a<br>
-dependency on a variable called &quot;B:-C&quot;.<br>
-<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
-r></blockquote><div><br></div><div>Nice, this one&#39;s been bugging me on =
-and off for a while :) Looks good.</div></div></div>
+On Sun, Apr 10, 2016 at 3:09 AM, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> When multiple recipes which both provide something are being built, bitba=
+ke
+> informs us that most likely one of them provides something the other does=
+n't,
+> which is usually correct, but unfortunately it's rather painful to figure=
+ out
+> exactly what that is.
+>
+> This patch dumps two sets of information, one is the provides information=
+ for
+> each recipe, filtered so only common components are removed. The other is=
+ a list
+> of dependees on the recipe, since sometimes this can easily identify why =
+something
+> is being built.
+>
+> Its not straightforward for bitbake to obtain the information but since t=
+he
+> warning/error code path isn't the normal one, we can afford to go through=
+ some
+> less than optimal processing to aid debugging.
+>
+> Also provide the same information even if we're showing a warning since i=
+ts still
+> useful.
+>
+> [YOCTO #8032]
 
---001a1133cb0a6fafa6053025b717--
+Seems to cause problems for me:
+
+$ bitbake harfbuzz
+Traceback (most recent call last):
+  File "/home/andre/rdk/rdk-master/openembedded-core/bitbake/bin/bitbake",
+line 36, in <module>
+    from bb.main import bitbake_main, BitBakeConfigParameters, BBMainExcept=
+ion
+  File "/home/andre/rdk/rdk-master/openembedded-core/bitbake/lib/bb/main.py=
+",
+line 34, in <module>
+    from bb import cooker
+  File "/home/andre/rdk/rdk-master/openembedded-core/bitbake/lib/bb/cooker.=
+py",
+line 38, in <module>
+    from bb import utils, data, parse, event, cache, providers,
+taskdata, runqueue, build
+  File "/home/andre/rdk/rdk-master/openembedded-core/bitbake/lib/bb/runqueu=
+e.py",
+line 773
+    for task, fnid in enumerate(self.runq_fnid)
+                                              ^
+SyntaxError: invalid syntax
+
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+>
+> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+> index 2990de7..ac3cdae 100644
+> --- a/bitbake/lib/bb/runqueue.py
+> +++ b/bitbake/lib/bb/runqueue.py
+> @@ -261,6 +261,13 @@ class RunQueueData:
+>          taskname =3D self.runq_task[task] + task_name_suffix
+>          return "%s, %s" % (fn, taskname)
+>
+> +    def get_short_user_idstring(self, task, task_name_suffix =3D ""):
+> +        fn =3D self.taskData.fn_index[self.runq_fnid[task]]
+> +        pn =3D self.dataCache.pkg_fn[fn]
+> +        taskname =3D self.runq_task[task] + task_name_suffix
+> +        return "%s:%s" % (pn, taskname)
+> +
+> +
+>      def get_task_id(self, fnid, taskname):
+>          for listid in xrange(len(self.runq_fnid)):
+>              if self.runq_fnid[listid] =3D=3D fnid and self.runq_task[lis=
+tid] =3D=3D taskname:
+> @@ -753,11 +760,72 @@ class RunQueueData:
+>                          seen_pn.append(pn)
+>                      else:
+>                          bb.fatal("Multiple versions of %s are due to be =
+built (%s). Only one version of a given PN should be built in any given bui=
+ld. You likely need to set PREFERRED_VERSION_%s to select the correct versi=
+on or don't depend on multiple versions." % (pn, " ".join(prov_list[prov]),=
+ pn))
+> -                msg =3D "Multiple .bb files are due to be built which ea=
+ch provide %s (%s)." % (prov, " ".join(prov_list[prov]))
+> +                msg =3D "Multiple .bb files are due to be built which ea=
+ch provide %s:\n  %s" % (prov, "\n  ".join(prov_list[prov]))
+> +                #
+> +                # Construct a list of things which uniquely depend on ea=
+ch provider
+> +                # since this may help the user figure out which dependen=
+cy is triggering this warning
+> +                #
+> +                msg +=3D "\nA list of tasks depending on these providers=
+ is shown and may help explain where the dependency comes from."
+> +                deplist =3D {}
+> +                commondeps =3D None
+> +                for provfn in prov_list[prov]:
+> +                    deps =3D set()
+> +                    for task in xrange(len(self.runq_fnid)):
+> +                        fn =3D taskData.fn_index[self.runq_fnid[task]]
+> +                        if fn !=3D provfn:
+> +                            continue
+> +                        for dep in self.runq_revdeps[task]:
+> +                            fn =3D taskData.fn_index[self.runq_fnid[dep]=
+]
+> +                            if fn =3D=3D provfn:
+> +                                continue
+> +                            deps.add(self.get_short_user_idstring(dep))
+> +                    if not commondeps:
+> +                        commondeps =3D set(deps)
+> +                    else:
+> +                        commondeps &=3D deps
+> +                    deplist[provfn] =3D deps
+> +                for provfn in deplist:
+> +                    msg +=3D "\n%s has unique dependees:\n  %s" % (provf=
+n, "\n  ".join(deplist[provfn] - commondeps))
+> +                #
+> +                # Construct a list of provides and runtime providers for=
+ each recipe
+> +                # (rprovides has to cover RPROVIDES, PACKAGES, PACKAGES_=
+DYNAMIC)
+> +                #
+> +                msg +=3D "\nIt could be that one recipe provides somethi=
+ng the other doesn't and should. The following provider and runtime provide=
+r differences may be helpful."
+> +                provlist =3D {}
+> +                rprovlist =3D {}
+> +                commonprovs =3D None
+> +                commonrprovs =3D None
+> +                for provfn in prov_list[prov]:
+> +                    provides =3D set(self.dataCache.fn_provides[provfn])
+> +                    rprovides =3D set()
+> +                    for rprovide in self.dataCache.rproviders:
+> +                        if provfn in self.dataCache.rproviders[rprovide]=
+:
+> +                            rprovides.add(rprovide)
+> +                    for package in self.dataCache.packages:
+> +                        if provfn in self.dataCache.packages[package]:
+> +                            rprovides.add(package)
+> +                    for package in self.dataCache.packages_dynamic:
+> +                        if provfn in self.dataCache.packages_dynamic[pac=
+kage]:
+> +                            rprovides.add(package)
+> +                    if not commonprovs:
+> +                        commonprovs =3D set(provides)
+> +                    else:
+> +                        commonprovs &=3D provides
+> +                    provlist[provfn] =3D provides
+> +                    if not commonrprovs:
+> +                        commonrprovs =3D set(rprovides)
+> +                    else:
+> +                        commonrprovs &=3D rprovides
+> +                    rprovlist[provfn] =3D rprovides
+> +                #msg +=3D "\nCommon provides:\n  %s" % ("\n  ".join(comm=
+onprovs))
+> +                #msg +=3D "\nCommon rprovides:\n  %s" % ("\n  ".join(com=
+monrprovs))
+> +                for provfn in prov_list[prov]:
+> +                    msg +=3D "\n%s has unique provides:\n  %s" % (provfn=
+, "\n  ".join(provlist[provfn] - commonprovs))
+> +                    msg +=3D "\n%s has unique rprovides:\n  %s" % (provf=
+n, "\n  ".join(rprovlist[provfn] - commonrprovs))
+> +
+>                  if self.warn_multi_bb:
+>                      logger.warn(msg)
+>                  else:
+> -                    msg +=3D "\n This usually means one provides somethi=
+ng the other doesn't and should."
+>                      logger.error(msg)
+>
+>          # Create a whitelist usable by the stamp checks
+>
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+
