@@ -1,48 +1,48 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
-	by mail.openembedded.org (Postfix) with ESMTP id E797D62133
+Received: from mail-wm0-f43.google.com (mail-wm0-f43.google.com [74.125.82.43])
+	by mail.openembedded.org (Postfix) with ESMTP id AAFB970022
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Apr 2016 16:28:59 +0000 (UTC)
-Received: by mail-wm0-f51.google.com with SMTP id u206so39017742wme.1
+	Tue, 19 Apr 2016 16:29:01 +0000 (UTC)
+Received: by mail-wm0-f43.google.com with SMTP id u206so39018995wme.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Apr 2016 09:29:00 -0700 (PDT)
+	Tue, 19 Apr 2016 09:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=j4p8ez5vveiPF5SCbwycf3+WMS+QeeiKQ55jo6W/2Ys=;
-	b=an9ySFAOPZ1jbPJSD7ttTDBX6LCg12Rfiv37nsSC4ryhmDPhvjEUmsuYtDatKvm2d2
-	QKE+NTofY78hbHgXQ7qYoZNbZjjmNmddbiiqbrxgNy+LAIu9zwHz5ybdOgnlUIFH5ANY
-	bae4zTBm1okEu3AZFr0bLZxyubo7H0n/0YIGgamC2sH+Y5IGLk7eV33Xi1Gx127MOmUQ
-	YspiaUL6lz8YkXQpUl5XUHddW+rSGx8Sz4hF7h7eu+GrDy4IeDoA3wpNBtAs0qsBplCo
-	poq9/YsvssOtwnYf2rFAm5mKYX6fL+FsVAIkmMNZgCTj2qwQiYCLjNlIXsNIqRSInxrm
-	xS9A==
+	bh=8L20qwejzOzUWe3lQikUXKbxHJtPQNUyfmXxFY5XDqo=;
+	b=S571P8axYGFWJOLuom3tfXLqm2O6AlMEEiVMJ43TqVgrgujwiW+IWKiXKiGoVYaGNX
+	kuVNeADfsCD9dHbQkxtVynEGUrPVSECH73g0OoeTcXBPMAZN0HxLaxSaqm0CphFl8U8X
+	FSR2kGKHGDKJfjTmjP+CjfwUrMh5luJEYWAjXOKwzmtR2QXE/lq902rfk/hsAwEXTzJx
+	ww7Z2aaiQ95yh2p4E70YkwhmkEGwZml/YRdXOWXcMzzKpFzObJs1ElqcWmp6Ul5fIThL
+	he3JIuiFKe0k2VXX/FpGScCqgmv9np9spBxIxechDczS8/eSUuguiVqj8m6VxjTMlc3a
+	V/9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=j4p8ez5vveiPF5SCbwycf3+WMS+QeeiKQ55jo6W/2Ys=;
-	b=Z8hhEfj/2t/Ma0nmDH393XUNlhdjmSASYvu82bHNS51kaE7SvEXY5a3bFIvrqTYAT1
-	f5J7C8z+rHkOoU8/x3tYw/Fp5IGqrZ5oxOXMBdCERGzJr6cuHCqlXWYgBgF67lzHElz3
-	+EO+QIhsQruOZVmiWC8anckxDTFo71c/P0x+NBGVqYRWKNm80DYgMjmAZfXS6HVLSeQl
-	LuyejCOXT+1QeZ+swKERfglqOOjrtvJdi3EZKytuB6icjvfoQWaNGviP8pDFIoLmkCnP
-	S85Lmq/IBAX7Aa2DrDAnxwT3LwDIdjm4pPd+C9mYauHrNSYFArWiCsB7eFpwKqeIxeGf
-	U5Hw==
-X-Gm-Message-State: AOPr4FUk3asaFyJDLVVH0T/BVOHtsfZYRL2CBFlND2ndUwSxin09O5D/U3wthPqWRVsL99NS
-X-Received: by 10.194.63.8 with SMTP id c8mr4099814wjs.89.1461083340148;
-	Tue, 19 Apr 2016 09:29:00 -0700 (PDT)
+	bh=8L20qwejzOzUWe3lQikUXKbxHJtPQNUyfmXxFY5XDqo=;
+	b=ciIhbOn0lRThwpBaP9xeDPdhY7Dcg1OtGfq0OXzylYOy/HTX6zq31Qsu8x8yz7pMBT
+	q26E0lHpGNQJFG6IoFl87k/BaL2YI4ZxF3dkkrh1Q1zBC67uBUE0MBD0xRVOJHsxK3mz
+	Vc0d4c/l8Qc+i68cRrw3xWhhpEvvRNy0+O3XiIOYjM26ilFCC++LTWl7iJzspyQzWhCu
+	AEcbNRDJrqYCSZ8uPOwjV8SECHEOJJVKYhq0rpBCqQsuqIfzg9bWR/AQiEJRlgiX8N2R
+	SmTTp7IqXPu4oP1sSk0KHUogiTAWq4v/YcTSmXGd5H0ZZIYt6LOh62XChhaEl7U1OCyV
+	Z0og==
+X-Gm-Message-State: AOPr4FXj/K94UxnR9Jr5eBzXo9halow45fVI+rcbPPW6f+ITKuJvg7hriMjQ7PELMxhdKUPD
+X-Received: by 10.194.166.228 with SMTP id zj4mr4225138wjb.83.1461083341849;
+	Tue, 19 Apr 2016 09:29:01 -0700 (PDT)
 Received: from orion.home (host109-150-176-203.range109-150.btcentralplus.com.
 	[109.150.176.203])
-	by smtp.gmail.com with ESMTPSA id v64sm5168806wmv.1.2016.04.19.09.28.59
+	by smtp.gmail.com with ESMTPSA id v64sm5168806wmv.1.2016.04.19.09.29.01
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 19 Apr 2016 09:28:59 -0700 (PDT)
+	Tue, 19 Apr 2016 09:29:01 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 19 Apr 2016 17:28:42 +0100
-Message-Id: <1461083327-11668-6-git-send-email-michael.g.wood@intel.com>
+Date: Tue, 19 Apr 2016 17:28:44 +0100
+Message-Id: <1461083327-11668-8-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1461083327-11668-1-git-send-email-michael.g.wood@intel.com>
 References: <1461083327-11668-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 05/10] toaster: prevent exception when Project.release is null
+Subject: [PATCH 07/10] toaster-tests: make helper click on input before entering text
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,49 +55,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Apr 2016 16:29:00 -0000
+X-List-Received-Date: Tue, 19 Apr 2016 16:29:02 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Project.release can be null. This causes an exception when calling
-get_all_compatible_layer_versions(), as the query to fetch
-the layer versions references release.branch_name.
+The Selenium helper's enter_text() method doesn't cause
+keyup events to trigger unless the element where text is
+being entered has been clicked.
 
-Add a guard to the function so that an empty queryset is returned
-if the release isn't set for a project.
+Prefix all text entry with a click() on the element to ensure
+that keyup events fire.
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/orm/models.py | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ lib/toaster/tests/browser/selenium_helpers.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 68c3072..f0a8786 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -264,11 +264,17 @@ class Project(models.Model):
-     def get_all_compatible_layer_versions(self):
-         """ Returns Queryset of all Layer_Versions which are compatible with
-         this project"""
--        queryset = Layer_Version.objects.filter(
--            (Q(up_branch__name=self.release.branch_name) &
--             Q(build=None) &
--             Q(project=None)) |
--             Q(project=self))
-+        queryset = None
-+
-+        # guard on release, as it can be null
-+        if self.release:
-+            queryset = Layer_Version.objects.filter(
-+                (Q(up_branch__name=self.release.branch_name) &
-+                 Q(build=None) &
-+                 Q(project=None)) |
-+                 Q(project=self))
-+        else:
-+            queryset = Layer_Version.objects.none()
+diff --git a/lib/toaster/tests/browser/selenium_helpers.py b/lib/toaster/tests/browser/selenium_helpers.py
+index d3ab3ca..56dbe2b 100644
+--- a/lib/toaster/tests/browser/selenium_helpers.py
++++ b/lib/toaster/tests/browser/selenium_helpers.py
+@@ -185,7 +185,11 @@ class SeleniumTestCase(StaticLiveServerTestCase):
  
-         return queryset
+     def enter_text(self, selector, value):
+         """ Insert text into element matching selector """
+-        field = self.wait_until_present(selector)
++        # note that keyup events don't occur until the element is clicked
++        # (in the case of <input type="text"...>, for example), so simulate
++        # user clicking the element before inserting text into it
++        field = self.click(selector)
++
+         field.send_keys(value)
+         return field
  
 -- 
 2.5.0
