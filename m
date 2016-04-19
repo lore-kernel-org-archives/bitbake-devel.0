@@ -1,45 +1,48 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 433E660616
+Received: from mail-wm0-f53.google.com (mail-wm0-f53.google.com [74.125.82.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 4FA5C62133
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Apr 2016 16:28:55 +0000 (UTC)
-Received: by mail-wm0-f45.google.com with SMTP id v188so169463773wme.1
+	Tue, 19 Apr 2016 16:28:57 +0000 (UTC)
+Received: by mail-wm0-f53.google.com with SMTP id u206so39016437wme.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Apr 2016 09:28:56 -0700 (PDT)
+	Tue, 19 Apr 2016 09:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=ZjXZ9/cPFQjONbK1rLrgZrSyaroxFdQMzZ5OUXfEaEo=;
-	b=x1U8jKjtfwV+0w8xLqBSsrUkflREvDHqGF+f5TB7ybKjoOOQHnF0F8Vc4R5pPwD9hm
-	BZByfWbSY61NifguTuBV2z5HkleuKcI/+F/pbaI1AbHPIeP69aBwHuRlOU38UbX2q+pX
-	1CgWAM6qqjyZSZ9Kp9rlAv1/35OOi2ZvRMxr6thTfiZnfL77FAvFhcErx6NaHYL/AApi
-	VKRTHc09ZgU95JRH/g4u1WymyPhhxtTK1xB2qrBkQ92spi/JhwJwUeLWW8cJGavYsYgX
-	+rTzGp7AioN7t5i6frZIGtwgzjPFSp2Ic2blYijUN1q8yqUOCpRaAtWHR00zsakRMuhY
-	570A==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=fcyI6ic0Qwath65KMSkeLtEQShh6vRjjB6Bw+3k4xqg=;
+	b=vTdazoVkXwckDYeriCpgyaJ4Bv++EcuwigAmwnQMm8M8RznVQAT0gzFDuiLIO3koTz
+	76PBAwiWjjuMi2LHAzw0EhdPu56smTZ/kNT4Ci5r0gkixmlsFqIlF0NHn/zibCWKkW1M
+	WkU8JK3LoSQ+NZ3Nw4snNgq1y4dBSoU8TIa8Hik/DNBkSMYVnTYitlRw5lCWOLP45Tu9
+	jodSqU7pK78cw/7GkFCa1ch51ulAXyoUC0tnLVulCZ2b67PxyvhJiqLeUvH4Owa5WyvE
+	e81PKd7WfrXa4iQNCPHzTA1hB3LcjYcv+MHpSB+H170qWghJudTtyOPK1ttfp2kIQJZQ
+	afqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=ZjXZ9/cPFQjONbK1rLrgZrSyaroxFdQMzZ5OUXfEaEo=;
-	b=bytN1gqJHgJGnBOq7oRjAz09C0GjXIHo14vg+UIcurTQ41YP6OlTuKQFVOjrUxWzz3
-	O4mdbmYyJsPU9IUk+RzqgXU9bGmwFdWltKdxZcTVsdLz95K7h+hsuJlh1hcVwG2XGoE9
-	jh4nOqN3xUv9BxwydwSCmR92JUAMqJqUVeKvJfQxw7f0NydmeO8UXUTX+FRUKVgJuYsp
-	JqlsD/HO6d7G0d5gVknifCiYGlMNpk1NHFTIF9I82flR8W56L43rcCGHSgzSLlLds1Es
-	YyADE6c9gOMLf+1VaNJ4aPC89CYagNuXuZ15PrI6x+r3uIVyJc4C98mtJcAZrbMsieY7
-	G+pg==
-X-Gm-Message-State: AOPr4FVNl5lxRzde6VHXejME6C9GdIMJ2eKyr6xYg5GnFvGTJQd/R/eI4+SuetYAPwJ3fe12
-X-Received: by 10.28.47.206 with SMTP id v197mr1286204wmv.87.1461083335534;
-	Tue, 19 Apr 2016 09:28:55 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=fcyI6ic0Qwath65KMSkeLtEQShh6vRjjB6Bw+3k4xqg=;
+	b=b2TRASpxacIMrM8L8HUdS7678LXg/+73aCg3kyfo/DaATEmTHZuti8ypQq7uersvom
+	YgRecqGMDTPatget5BDjrtClHZWfeWSqrN1m8fN47aQy1WPMhoXmiK3emtIFSC0JtNpG
+	Il2z7lCmzzL2RQZfN70rSO9tCz70xjxFNWm38SbisKAnNCAJOmjPLK+iofEXyBwEjXq6
+	5vAtEwao77IoCvtHbWRV3KXj7+Fs9Q/fIcer6Be4dIeqCayxpI8AJCdY5Gj2ch1bzVuj
+	DjQ0exEBvPBtm0kU9DpWuJ40Zo7R9ObDBgbnSSD/GDjlC4q8DKfAGGGOTWFuLvFk8+7B
+	AtRQ==
+X-Gm-Message-State: AOPr4FU9EVrRC6q92J9hxs+0mu+gMYTKbnJ+2PbMWH6GNdAerRKT1f2V7sdmAwgtQM/ecB+c
+X-Received: by 10.28.150.193 with SMTP id y184mr5746749wmd.41.1461083338381;
+	Tue, 19 Apr 2016 09:28:58 -0700 (PDT)
 Received: from orion.home (host109-150-176-203.range109-150.btcentralplus.com.
 	[109.150.176.203])
-	by smtp.gmail.com with ESMTPSA id v64sm5168806wmv.1.2016.04.19.09.28.54
+	by smtp.gmail.com with ESMTPSA id v64sm5168806wmv.1.2016.04.19.09.28.57
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 19 Apr 2016 09:28:54 -0700 (PDT)
+	Tue, 19 Apr 2016 09:28:57 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 19 Apr 2016 17:28:37 +0100
-Message-Id: <1461083327-11668-1-git-send-email-michael.g.wood@intel.com>
+Date: Tue, 19 Apr 2016 17:28:40 +0100
+Message-Id: <1461083327-11668-4-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.5.0
-Subject: [PATCH 00/10] Patches from Toaster reivew queue
+In-Reply-To: <1461083327-11668-1-git-send-email-michael.g.wood@intel.com>
+References: <1461083327-11668-1-git-send-email-michael.g.wood@intel.com>
+Subject: [PATCH 03/10] toaster: disable/enable "Add layer" button according to input's content
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,53 +57,94 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 19 Apr 2016 16:28:58 -0000
 
-Patches from toaster-next which were held up.
+From: Elliot Smith <elliot.smith@intel.com>
 
-Fixes for:
+In the import layer page, the "Add layer" button in the layer dependencies
+section doesn't accurately reflect whether the layer name in the
+corresponding input can be added. A partial or empty layer name can
+leave the button active, such that when it is clicked, a
+previously-selected layer can be accidentally added.
+
+Fix by keeping track of the items currently available in the typeahead,
+only activating the "Add layer" button when the input matches the name
+of one of those items.
+
 [YOCTO #8511]
-[YOCTO #9011]
-[YOCTO #9123]
-[YOCTO #9209]
 
-Elliot Smith (9):
-  toaster: fix sorting after hiding a column in build tables
-  toaster: disable/enable "Add layer" button according to input's
-    content
-  toaster: only prevent duplicate custom image names within a project
-  toaster: prevent exception when Project.release is null
-  toaster-tests: add tests for new custom image page
-  toaster-tests: make helper click on input before entering text
-  toaster: add build dashboard buttons to edit/create custom images
-  toaster: add modal to select custom image for editing
-  toaster-tests: tests for build dashboard
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/toaster/toastergui/static/js/importlayer.js | 30 ++++++++++++++++++++++++-
+ lib/toaster/toastergui/static/js/libtoaster.js  |  5 +++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
 
-Michael Wood (1):
-  toaster: ensure ToasterTable headings are reset when order by changes
-
- lib/toaster/orm/models.py                          |  64 +++++-
- lib/toaster/tests/browser/selenium_helpers.py      |   6 +-
- .../tests/browser/test_builddashboard_page.py      | 251 +++++++++++++++++++++
- .../tests/browser/test_new_custom_image_page.py    | 160 +++++++++++++
- lib/toaster/toastergui/static/js/importlayer.js    |  30 ++-
- lib/toaster/toastergui/static/js/layerBtn.js       |   3 +-
- lib/toaster/toastergui/static/js/libtoaster.js     |   5 +
- .../toastergui/static/js/newcustomimage_modal.js   | 104 ++++++++-
- lib/toaster/toastergui/static/js/recipedetails.js  |   3 +-
- lib/toaster/toastergui/static/js/table.js          |   6 +-
- lib/toaster/toastergui/templates/base.html         |   1 -
- .../toastergui/templates/basebuildpage.html        | 213 +++++++++++------
- .../templates/editcustomimage_modal.html           |  71 ++++++
- .../toastergui/templates/newcustomimage_modal.html |  28 ++-
- lib/toaster/toastergui/templates/tasks.html        |   2 +-
- .../templatetags/objects_to_dictionaries_filter.py |  35 +++
- lib/toaster/toastergui/tests.py                    |  87 -------
- lib/toaster/toastergui/views.py                    | 116 ++++++----
- 18 files changed, 953 insertions(+), 232 deletions(-)
- create mode 100644 lib/toaster/tests/browser/test_builddashboard_page.py
- create mode 100644 lib/toaster/tests/browser/test_new_custom_image_page.py
- create mode 100644 lib/toaster/toastergui/templates/editcustomimage_modal.html
- create mode 100644 lib/toaster/toastergui/templatetags/objects_to_dictionaries_filter.py
-
+diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
+index c68f366..5a59799 100644
+--- a/lib/toaster/toastergui/static/js/importlayer.js
++++ b/lib/toaster/toastergui/static/js/importlayer.js
+@@ -18,10 +18,38 @@ function importLayerPageInit (ctx) {
+ 
+   libtoaster.makeTypeahead(layerDepInput, libtoaster.ctx.layersTypeAheadUrl, { include_added: "true" }, function(item){
+     currentLayerDepSelection = item;
++  });
++
++  // choices available in the typeahead
++  var layerDepsChoices = {};
++
++  // when the typeahead choices change, store an array of the available layer
++  // choices locally, to use for enabling/disabling the "Add layer" button
++  layerDepInput.on("typeahead-choices-change", function (event, data) {
++    layerDepsChoices = {};
+ 
+-    layerDepBtn.removeAttr("disabled");
++    if (data.choices) {
++      data.choices.forEach(function (item) {
++        layerDepsChoices[item.name] = item;
++      });
++    }
+   });
+ 
++  // disable the "Add layer" button when the layer input typeahead is empty
++  // or not in the typeahead choices
++  layerDepInput.on("input change", function () {
++    // get the choices from the typeahead
++    var choice = layerDepsChoices[$(this).val()];
++
++    if (choice) {
++      layerDepBtn.removeAttr("disabled");
++      currentLayerDepSelection = choice;
++    }
++    else {
++      layerDepBtn.attr("disabled", "disabled");
++      currentLayerDepSelection = undefined;
++    }
++  });
+ 
+   /* We automatically add "openembedded-core" layer for convenience as a
+    * dependency as pretty much all layers depend on this one
+diff --git a/lib/toaster/toastergui/static/js/libtoaster.js b/lib/toaster/toastergui/static/js/libtoaster.js
+index 8d1d20f..43930a2 100644
+--- a/lib/toaster/toastergui/static/js/libtoaster.js
++++ b/lib/toaster/toastergui/static/js/libtoaster.js
+@@ -21,6 +21,9 @@ var libtoaster = (function (){
+     var xhrReq;
+ 
+     jQElement.typeahead({
++        // each time the typeahead's choices change, a
++        // "typeahead-choices-change" event is fired with an object
++        // containing the available choices in a "choices" property
+         source: function(query, process){
+           xhrParams.search = query;
+ 
+@@ -36,6 +39,8 @@ var libtoaster = (function (){
+ 
+             xhrReq = null;
+ 
++            jQElement.trigger("typeahead-choices-change", {choices: data.results});
++
+             return process(data.results);
+           });
+         },
 -- 
 2.5.0
 
