@@ -1,21 +1,23 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id AA53865CC3
+	by mail.openembedded.org (Postfix) with ESMTP id AB3246E6B1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Apr 2016 13:22:20 +0000 (UTC)
+	Thu, 21 Apr 2016 13:22:21 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 21 Apr 2016 06:22:19 -0700
+	by orsmga102.jf.intel.com with ESMTP; 21 Apr 2016 06:22:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,512,1455004800"; d="scan'208";a="949956227"
+X-IronPort-AV: E=Sophos;i="5.24,512,1455004800"; d="scan'208";a="949956252"
 Received: from santhige-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.8.209])
-	by fmsmga001.fm.intel.com with ESMTP; 21 Apr 2016 06:22:18 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 21 Apr 2016 06:22:21 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Apr 2016 14:22:04 +0100
-Message-Id: <1461244926-20236-1-git-send-email-elliot.smith@intel.com>
+Date: Thu, 21 Apr 2016 14:22:05 +0100
+Message-Id: <1461244926-20236-2-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 1/3] toaster: bin/toaster Add help text for unrecognised command
+In-Reply-To: <1461244926-20236-1-git-send-email-elliot.smith@intel.com>
+References: <1461244926-20236-1-git-send-email-elliot.smith@intel.com>
+Subject: [PATCH 2/3] toaster: bin/toaster Add ability to specify port and address to bind to
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,64 +34,75 @@ X-List-Received-Date: Thu, 21 Apr 2016 13:22:23 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Add help text for unrecognised or missing command for toaster script
-Remove assumption that no command is 'start' as the default.
+Allow binding to a specified address and port to start the django
+development server on.
+Remove the assumption that you want to bind to 0.0.0.0 and set the
+default to localhost.
+Add some additional help text after Toaster webserver has started
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/bin/toaster | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ bitbake/bin/toaster | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/bitbake/bin/toaster b/bitbake/bin/toaster
-index 70c66d2..2d07255 100755
+index 2d07255..9540fc9 100755
 --- a/bitbake/bin/toaster
 +++ b/bitbake/bin/toaster
-@@ -17,10 +17,12 @@
- # You should have received a copy of the GNU General Public License
- # along with this program. If not, see http://www.gnu.org/licenses/.
+@@ -69,7 +69,7 @@ webserverStartAll()
  
--# Usage: source toaster [start|stop]
--#                       [webport=<port>] [noui] [noweb]
--
--# Helper function to kill a background toaster development server
-+HELP="
-+Usage: source toaster start|stop [webport=<address:port>] [noweb]
-+    Optional arguments:
-+        [noweb] Setup the environment for building with toaster but don't start the development server
-+        [webport] Set the development server (default: localhost:8000)
-+"
+     echo "Starting webserver..."
  
- webserverKillAll()
- {
-@@ -193,6 +195,12 @@ for param in $*; do
+-    $MANAGE runserver "0.0.0.0:$WEB_PORT" \
++    $MANAGE runserver "$ADDR_PORT" \
+            </dev/null >>${BUILDDIR}/toaster_web.log 2>&1 \
+            & echo $! >${BUILDDIR}/.toastermain.pid
+ 
+@@ -79,7 +79,8 @@ webserverStartAll()
+         retval=1
+         rm "${BUILDDIR}/.toastermain.pid"
+     else
+-        echo "Webserver address:  http://0.0.0.0:$WEB_PORT/"
++        echo "Toaster development webserver started at http://$ADDR_PORT"
++        echo -e "\nYou can now run 'bitbake <target>' on the command line and monitor your build in Toaster.\nYou can also use a Toaster project to configure and run a build.\n"
+     fi
+ 
+     return $retval
+@@ -180,7 +181,7 @@ fi
+ export TOASTER_DIR=`pwd`
+ 
+ WEBSERVER=1
+-WEB_PORT="8000"
++ADDR_PORT="localhost:8000"
+ unset CMD
+ for param in $*; do
+     case $param in
+@@ -194,7 +195,14 @@ for param in $*; do
+             CMD=$param
      ;;
      webport=*)
-             WEB_PORT="${param#*=}"
-+    ;;
-+    *)
-+            echo "$HELP"
-+            return 1
-+    ;;
-+
-     esac
- done
+-            WEB_PORT="${param#*=}"
++            ADDR_PORT="${param#*=}"
++            # Split the addr:port string
++            ADDR=`echo $ADDR_PORT | cut -f 1 -d ':'`
++            PORT=`echo $ADDR_PORT | cut -f 2 -d ':'`
++            # If only a port has been speified then set address to localhost.
++            if [ $ADDR = $PORT ] ; then
++                ADDR_PORT="localhost:$PORT"
++            fi
+     ;;
+     *)
+             echo "$HELP"
+@@ -247,7 +255,7 @@ case $CMD in
+     start )
+         # check if addr:port is not in use
+         if [ "$CMD" == 'start' ]; then
+-             $MANAGE checksocket "0.0.0.0:$WEB_PORT" || return 1
++             $MANAGE checksocket "$ADDR_PORT" || return 1
+         fi
  
-@@ -226,11 +234,9 @@ if [ "$CMD" = "start" ] ; then
- 	return 1
- fi
- elif [ "$CMD" = "" ]; then
--    if [ -z "$BBSERVER" ]; then
--        CMD="start"
--    else
--        CMD="stop"
--    fi
-+    echo "No command specified"
-+    echo "$HELP"
-+    return 1
- fi
- 
- echo "The system will $CMD."
+         # kill Toaster web server if it's alive
 -- 
 1.9.3
 
