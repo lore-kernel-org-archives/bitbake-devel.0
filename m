@@ -1,25 +1,25 @@
 Return-Path: <ed.bartosh@linux.intel.com>
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id C63AD6FF56
+	by mail.openembedded.org (Postfix) with ESMTP id DD54B700FD
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Apr 2016 10:37:39 +0000 (UTC)
+	Mon, 25 Apr 2016 10:37:40 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga103.jf.intel.com with ESMTP; 25 Apr 2016 03:37:24 -0700
+	by orsmga103.jf.intel.com with ESMTP; 25 Apr 2016 03:37:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,532,1455004800"; d="scan'208";a="962137161"
+X-IronPort-AV: E=Sophos;i="5.24,532,1455004800"; d="scan'208";a="962137182"
 Received: from linux.intel.com ([10.23.219.25])
-	by orsmga002.jf.intel.com with ESMTP; 25 Apr 2016 03:37:19 -0700
+	by orsmga002.jf.intel.com with ESMTP; 25 Apr 2016 03:37:22 -0700
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 8D94E6A4006;
-	Mon, 25 Apr 2016 04:24:55 -0700 (PDT)
+	by linux.intel.com (Postfix) with ESMTP id B69706A4006;
+	Mon, 25 Apr 2016 04:24:57 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 25 Apr 2016 11:16:29 +0300
-Message-Id: <1461572190-17421-3-git-send-email-ed.bartosh@linux.intel.com>
+Date: Mon, 25 Apr 2016 11:16:30 +0300
+Message-Id: <1461572190-17421-4-git-send-email-ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1461572190-17421-1-git-send-email-ed.bartosh@linux.intel.com>
 References: <1461572190-17421-1-git-send-email-ed.bartosh@linux.intel.com>
-Subject: [PATCH 3/4] bitake: main: fix line-too-long pytling warnings
+Subject: [PATCH 4/4] bitbake: main: fix invalid variable names
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,243 +32,216 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Apr 2016 10:37:40 -0000
+X-List-Received-Date: Mon, 25 Apr 2016 10:37:41 -0000
 
-Wrapped long lines to fix "Line too long" pylint warnings.
+Fixed the follwoing pylint warnings:
+  C:118, 8: Invalid variable name "s" (invalid-name)
+  C:307,20: Invalid variable name "lf" (invalid-name)
+  C:313,36: Invalid variable name "e" (invalid-name)
+  C:319, 0: Invalid argument name "configParams" (invalid-name)
+  C:337,24: Invalid variable name "e" (invalid-name)
+  C:356, 0: Invalid argument name "configParams" (invalid-name)
+  C:447,28: Invalid variable name "e" (invalid-name)
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- bitbake/lib/bb/main.py | 121 +++++++++++++++++++++++++++++++++----------------
- 1 file changed, 82 insertions(+), 39 deletions(-)
+ bitbake/lib/bb/main.py | 81 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 41 insertions(+), 40 deletions(-)
 
 diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-index 3978a1b..60c7da3 100755
+index 60c7da3..0f5635b 100755
 --- a/bitbake/lib/bb/main.py
 +++ b/bitbake/lib/bb/main.py
-@@ -103,8 +103,9 @@ def import_extension_module(pkg, modulename, checkattr):
-         module = __import__(pkg.__name__, fromlist=[modulename])
-         return getattr(module, modulename)
-     except AttributeError:
--        raise BBMainException('FATAL: Unable to import extension module "%s" from %s. Valid extension modules: %s' % (modulename, pkg.__name__, present_options(list_extension_modules(pkg, checkattr))))
--
-+        modules = present_options(list_extension_modules(pkg, checkattr))
-+        raise BBMainException('FATAL: Unable to import extension module "%s" from %s. '
-+                              'Valid extension modules: %s' % (modulename, pkg.__name__, modules))
+@@ -115,8 +115,8 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
+         if _warnings_showwarning is not None:
+             _warnings_showwarning(message, category, filename, lineno, file, line)
+     else:
+-        s = warnings.formatwarning(message, category, filename, lineno)
+-        warnlog.warn(s)
++        warning = warnings.formatwarning(message, category, filename, lineno)
++        warnlog.warn(warning)
  
- # Display bitbake/OE warnings via the BitBake.Warnings logger, ignoring others"""
- warnlog = logging.getLogger("BitBake.Warnings")
-@@ -138,21 +139,32 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-     will provide the layer, BBFILES and other configuration information.""")
+ warnings.showwarning = _showwarning
+ warnings.filterwarnings("ignore")
+@@ -304,23 +304,24 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+                 # we try to read the address at all times; if the server is not started,
+                 # we'll try to start it after the first connect fails, below
+                 try:
+-                    lf = open(lock_location, 'r')
+-                    remotedef = lf.readline()
++                    lockf = open(lock_location, 'r')
++                    remotedef = lockf.readline()
+                     [host, port] = remotedef.split(":")
+                     port = int(port)
+-                    lf.close()
++                    lockf.close()
+                     options.remote_server = remotedef
+-                except Exception as e:
+-                    raise BBMainException("Failed to read bitbake.lock (%s), invalid port" % str(e))
++                except Exception as err:
++                    raise BBMainException("Failed to read bitbake.lock (%s), "
++                                          "invalid port" % str(err))
  
-         parser.add_option("-b", "--buildfile", action="store", dest="buildfile", default=None,
--                          help="Execute tasks from a specific .bb recipe directly. WARNING: Does not handle any dependencies from other recipes.")
-+                          help="Execute tasks from a specific .bb recipe directly. WARNING: Does "
-+                               "not handle any dependencies from other recipes.")
-+
-         parser.add_option("-k", "--continue", action="store_false", dest="abort", default=True,
--                          help="Continue as much as possible after an error. While the target that failed and anything depending on it cannot be built, as much as possible will be built before stopping.")
-+                          help="Continue as much as possible after an error. While the target that "
-+                               "failed and anything depending on it cannot be built, as much as "
-+                               "possible will be built before stopping.")
+         return options, targets[1:]
  
--        parser.add_option("-a", "--tryaltconfigs", action="store_true", dest="tryaltconfigs", default=False,
--                          help="Continue with builds by trying to use alternative providers where possible.")
-+        parser.add_option("-a", "--tryaltconfigs", action="store_true",
-+                          dest="tryaltconfigs", default=False,
-+                          help="Continue with builds by trying to use alternative providers "
-+                               "where possible.")
  
-         parser.add_option("-f", "--force", action="store_true", dest="force", default=False,
--                          help="Force the specified targets/task to run (invalidating any existing stamp file).")
-+                          help="Force the specified targets/task to run (invalidating any "
-+                               "existing stamp file).")
+-def start_server(servermodule, configParams, configuration, features):
++def start_server(servermodule, configparams, configuration, features):
+     server = servermodule.BitBakeServer()
+-    single_use = not configParams.server_only
+-    if configParams.bind:
+-        (host, port) = configParams.bind.split(':')
++    single_use = not configparams.server_only
++    if configparams.bind:
++        (host, port) = configparams.bind.split(':')
+         server.initServer((host, int(port)), single_use)
+         configuration.interface = [server.serverImpl.host, server.serverImpl.port]
+     else:
+@@ -334,7 +335,7 @@ def start_server(servermodule, configParams, configuration, features):
  
-         parser.add_option("-c", "--cmd", action="store", dest="cmd",
--                          help="Specify the task to execute. The exact options available depend on the metadata. Some examples might be 'compile' or 'populate_sysroot' or 'listtasks' may give a list of the tasks available.")
-+                          help="Specify the task to execute. The exact options available "
-+                               "depend on the metadata. Some examples might be 'compile'"
-+                               " or 'populate_sysroot' or 'listtasks' may give a list of "
-+                               "the tasks available.")
+         server.addcooker(cooker)
+         server.saveConnectionDetails()
+-    except Exception as e:
++    except Exception:
+         exc_info = sys.exc_info()
+         while hasattr(server, "event_queue"):
+             try:
+@@ -353,7 +354,7 @@ def start_server(servermodule, configParams, configuration, features):
+     return server
  
-         parser.add_option("-C", "--clear-stamp", action="store", dest="invalidate_stamp",
--                          help="Invalidate the stamp for the specified task such as 'compile' and then run the default task for the specified target(s).")
-+                          help="Invalidate the stamp for the specified task such as 'compile' "
-+                               "and then run the default task for the specified target(s).")
  
-         parser.add_option("-r", "--read", action="append", dest="prefile", default=[],
-                           help="Read the specified file before bitbake.conf.")
-@@ -171,31 +183,44 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+-def bitbake_main(configParams, configuration):
++def bitbake_main(configparams, configuration):
  
-         parser.add_option("-S", "--dump-signatures", action="append", dest="dump_signatures",
-                           default=[], metavar="SIGNATURE_HANDLER",
--                          help="Dump out the signature construction information, with no task execution. The SIGNATURE_HANDLER parameter is passed to the handler. Two common values are none and printdiff but the handler may define more/less. none means only dump the signature, printdiff means compare the dumped signature with the cached one.")
--
--        parser.add_option("-p", "--parse-only", action="store_true", dest="parse_only", default=False,
-+                          help="Dump out the signature construction information, with no task "
-+                               "execution. The SIGNATURE_HANDLER parameter is passed to the "
-+                               "handler. Two common values are none and printdiff but the handler "
-+                               "may define more/less. none means only dump the signature, printdiff"
-+                               " means compare the dumped signature with the cached one.")
-+
-+        parser.add_option("-p", "--parse-only", action="store_true",
-+                          dest="parse_only", default=False,
-                           help="Quit after parsing the BB recipes.")
+     # Python multiprocessing requires /dev/shm on Linux
+     if sys.platform.startswith('linux') and not os.access('/dev/shm', os.W_OK | os.X_OK):
+@@ -369,36 +370,36 @@ def bitbake_main(configParams, configuration):
+         pass
  
--        parser.add_option("-s", "--show-versions", action="store_true", dest="show_versions", default=False,
-+        parser.add_option("-s", "--show-versions", action="store_true",
-+                          dest="show_versions", default=False,
-                           help="Show current and preferred versions of all recipes.")
  
--        parser.add_option("-e", "--environment", action="store_true", dest="show_environment", default=False,
--                          help="Show the global or per-recipe environment complete with information about where variables were set/changed.")
-+        parser.add_option("-e", "--environment", action="store_true",
-+                          dest="show_environment", default=False,
-+                          help="Show the global or per-recipe environment complete with information"
-+                               " about where variables were set/changed.")
+-    configuration.setConfigParameters(configParams)
++    configuration.setConfigParameters(configparams)
  
-         parser.add_option("-g", "--graphviz", action="store_true", dest="dot_graph", default=False,
--                          help="Save dependency tree information for the specified targets in the dot syntax.")
-+                          help="Save dependency tree information for the specified "
-+                               "targets in the dot syntax.")
+-    ui_module = import_extension_module(bb.ui, configParams.ui, 'main')
+-    servermodule = import_extension_module(bb.server, configParams.servertype, 'BitBakeServer')
++    ui_module = import_extension_module(bb.ui, configparams.ui, 'main')
++    servermodule = import_extension_module(bb.server, configparams.servertype, 'BitBakeServer')
  
--        parser.add_option("-I", "--ignore-deps", action="append", dest="extra_assume_provided", default=[],
--                          help="""Assume these dependencies don't exist and are already provided (equivalent to ASSUME_PROVIDED). Useful to make dependency graphs more appealing""")
-+        parser.add_option("-I", "--ignore-deps", action="append",
-+                          dest="extra_assume_provided", default=[],
-+                          help="Assume these dependencies don't exist and are already provided "
-+                               "(equivalent to ASSUME_PROVIDED). Useful to make dependency "
-+                               "graphs more appealing")
+-    if configParams.server_only:
+-        if configParams.servertype != "xmlrpc":
++    if configparams.server_only:
++        if configparams.servertype != "xmlrpc":
+             raise BBMainException("FATAL: If '--server-only' is defined, we must set the "
+                                   "servertype as 'xmlrpc'.\n")
+-        if not configParams.bind:
++        if not configparams.bind:
+             raise BBMainException("FATAL: The '--server-only' option requires a name/address "
+                                   "to bind to with the -B option.\n")
+-        if configParams.remote_server:
++        if configparams.remote_server:
+             raise BBMainException("FATAL: The '--server-only' option conflicts with %s.\n" %
+                                   ("the BBSERVER environment variable" if "BBSERVER" in os.environ \
+                                    else "the '--remote-server' option"))
  
-         parser.add_option("-l", "--log-domains", action="append", dest="debug_domains", default=[],
--                          help="""Show debug logging for the specified logging domains""")
-+                          help="Show debug logging for the specified logging domains")
+-    if configParams.bind and configParams.servertype != "xmlrpc":
++    if configparams.bind and configparams.servertype != "xmlrpc":
+         raise BBMainException("FATAL: If '-B' or '--bind' is defined, we must "
+                               "set the servertype as 'xmlrpc'.\n")
  
-         parser.add_option("-P", "--profile", action="store_true", dest="profile", default=False,
-                           help="Profile the command and save reports.")
+-    if configParams.remote_server and configParams.servertype != "xmlrpc":
++    if configparams.remote_server and configparams.servertype != "xmlrpc":
+         raise BBMainException("FATAL: If '--remote-server' is defined, we must "
+                               "set the servertype as 'xmlrpc'.\n")
  
-         # @CHOICES@ is substituted out by BitbakeHelpFormatter above
--        parser.add_option("-u", "--ui", action="store", dest="ui", default=os.environ.get('BITBAKE_UI', 'knotty'),
-+        parser.add_option("-u", "--ui", action="store", dest="ui",
-+                          default=os.environ.get('BITBAKE_UI', 'knotty'),
-                           help="The user interface to use (@CHOICES@ - default %default).")
- 
-         # @CHOICES@ is substituted out by BitbakeHelpFormatter above
-@@ -203,40 +228,53 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-                           default=["process", "xmlrpc"]["BBSERVER" in os.environ],
-                           help="Choose which server type to use (@CHOICES@ - default %default).")
- 
--        parser.add_option("", "--token", action="store", dest="xmlrpctoken", default=os.environ.get("BBTOKEN"),
--                          help="Specify the connection token to be used when connecting to a remote server.")
-+        parser.add_option("", "--token", action="store", dest="xmlrpctoken",
-+                          default=os.environ.get("BBTOKEN"),
-+                          help="Specify the connection token to be used when connecting "
-+                               "to a remote server.")
- 
--        parser.add_option("", "--revisions-changed", action="store_true", dest="revisions_changed", default=False,
--                          help="Set the exit code depending on whether upstream floating revisions have changed or not.")
-+        parser.add_option("", "--revisions-changed", action="store_true",
-+                          dest="revisions_changed", default=False,
-+                          help="Set the exit code depending on whether upstream floating "
-+                               "revisions have changed or not.")
- 
--        parser.add_option("", "--server-only", action="store_true", dest="server_only", default=False,
--                          help="Run bitbake without a UI, only starting a server (cooker) process.")
-+        parser.add_option("", "--server-only", action="store_true",
-+                          dest="server_only", default=False,
-+                          help="Run bitbake without a UI, only starting a server "
-+                               "(cooker) process.")
- 
-         parser.add_option("-B", "--bind", action="store", dest="bind", default=False,
-                           help="The name/address for the bitbake server to bind to.")
- 
--        parser.add_option("", "--no-setscene", action="store_true", dest="nosetscene", default=False,
--                          help="Do not run any setscene tasks. sstate will be ignored and everything needed, built.")
-+        parser.add_option("", "--no-setscene", action="store_true",
-+                          dest="nosetscene", default=False,
-+                          help="Do not run any setscene tasks. sstate will be ignored and "
-+                               "everything needed, built.")
- 
--        parser.add_option("", "--setscene-only", action="store_true", dest="setsceneonly", default=False,
-+        parser.add_option("", "--setscene-only", action="store_true",
-+                          dest="setsceneonly", default=False,
-                           help="Only run setscene tasks, don't run any real tasks.")
- 
-         parser.add_option("", "--remote-server", action="store", dest="remote_server",
-                           default=os.environ.get("BBSERVER"),
-                           help="Connect to the specified server.")
- 
--        parser.add_option("-m", "--kill-server", action="store_true", dest="kill_server", default=False,
-+        parser.add_option("-m", "--kill-server", action="store_true",
-+                          dest="kill_server", default=False,
-                           help="Terminate the remote server.")
- 
--        parser.add_option("", "--observe-only", action="store_true", dest="observe_only", default=False,
-+        parser.add_option("", "--observe-only", action="store_true",
-+                          dest="observe_only", default=False,
-                           help="Connect to a server as an observing-only client.")
- 
--        parser.add_option("", "--status-only", action="store_true", dest="status_only", default=False,
-+        parser.add_option("", "--status-only", action="store_true",
-+                          dest="status_only", default=False,
-                           help="Check the status of the remote bitbake server.")
- 
-         parser.add_option("-w", "--write-log", action="store", dest="writeeventlog",
-                           default=os.environ.get("BBEVENTLOG"),
--                          help="Writes the event log of the build to a bitbake event json file. Use '' (empty string) to assign the name automatically.")
-+                          help="Writes the event log of the build to a bitbake event json file. "
-+                               "Use '' (empty string) to assign the name automatically.")
- 
-         options, targets = parser.parse_args(argv)
- 
-@@ -249,8 +287,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
- 
-         # fill in proper log name if not supplied
-         if options.writeeventlog is not None and len(options.writeeventlog) == 0:
--            import datetime
--            options.writeeventlog = "bitbake_eventlog_%s.json" % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-+            from datetime import datetime
-+            eventlog = "bitbake_eventlog_%s.json" % datetime.now().strftime("%Y%m%d%H%M%S")
-+            options.writeeventlog = eventlog
- 
-         # if BBSERVER says to autodetect, let's do that
-         if options.remote_server:
-@@ -360,7 +399,8 @@ def bitbake_main(configParams, configuration):
+-    if configParams.observe_only and (not configParams.remote_server or configParams.bind):
++    if configparams.observe_only and (not configparams.remote_server or configparams.bind):
+         raise BBMainException("FATAL: '--observe-only' can only be used by UI clients "
                                "connecting to a server.\n")
  
-     if configParams.kill_server and not configParams.remote_server:
--        raise BBMainException("FATAL: '--kill-server' can only be used to terminate a remote server")
-+        raise BBMainException("FATAL: '--kill-server' can only be used to "
-+                              "terminate a remote server")
+-    if configParams.kill_server and not configParams.remote_server:
++    if configparams.kill_server and not configparams.remote_server:
+         raise BBMainException("FATAL: '--kill-server' can only be used to "
+                               "terminate a remote server")
  
-     if "BBDEBUG" in os.environ:
-         level = int(os.environ["BBDEBUG"])
-@@ -397,7 +437,8 @@ def bitbake_main(configParams, configuration):
+@@ -407,12 +408,12 @@ def bitbake_main(configParams, configuration):
+         if level > configuration.debug:
+             configuration.debug = level
+ 
+-    bb.msg.init_msgconfig(configParams.verbose, configuration.debug,
++    bb.msg.init_msgconfig(configparams.verbose, configuration.debug,
+                           configuration.debug_domains)
+ 
+     # Ensure logging messages get sent to the UI as events
+     handler = bb.event.LogHandler()
+-    if not configParams.status_only:
++    if not configparams.status_only:
+         # In status only mode there are no logs and no UI
+         logger.addHandler(handler)
+ 
+@@ -420,35 +421,35 @@ def bitbake_main(configParams, configuration):
+     cleanedvars = bb.utils.clean_environment()
+ 
+     featureset = []
+-    if not configParams.server_only:
++    if not configparams.server_only:
+         # Collect the feature set for the UI
+         featureset = getattr(ui_module, "featureSet", [])
+ 
+-    if configParams.server_only:
++    if configparams.server_only:
+         for param in ('prefile', 'postfile'):
+-            value = getattr(configParams, param)
++            value = getattr(configparams, param)
+             if value:
+                 setattr(configuration, "%s_server" % param, value)
+                 param = "%s_server" % param
+ 
+-    if not configParams.remote_server:
++    if not configparams.remote_server:
+         # we start a server with a given configuration
+-        server = start_server(servermodule, configParams, configuration, featureset)
++        server = start_server(servermodule, configparams, configuration, featureset)
          bb.event.ui_queue = []
      else:
          # we start a stub server that is actually a XMLRPClient that connects to a real server
--        server = servermodule.BitBakeXMLRPCClient(configParams.observe_only, configParams.xmlrpctoken)
-+        server = servermodule.BitBakeXMLRPCClient(configParams.observe_only,
-+                                                  configParams.xmlrpctoken)
-         server.saveConnectionDetails(configParams.remote_server)
+-        server = servermodule.BitBakeXMLRPCClient(configParams.observe_only,
+-                                                  configParams.xmlrpctoken)
+-        server.saveConnectionDetails(configParams.remote_server)
++        server = servermodule.BitBakeXMLRPCClient(configparams.observe_only,
++                                                  configparams.xmlrpctoken)
++        server.saveConnectionDetails(configparams.remote_server)
  
  
-@@ -426,12 +467,14 @@ def bitbake_main(configParams, configuration):
+-    if not configParams.server_only:
++    if not configparams.server_only:
+         try:
+             server_connection = server.establishConnection(featureset)
+-        except Exception as e:
+-            bb.fatal("Could not connect to server %s: %s" % (configParams.remote_server, str(e)))
++        except Exception as err:
++            bb.fatal("Could not connect to server %s: %s" % (configparams.remote_server, str(err)))
+ 
+-        if configParams.kill_server:
++        if configparams.kill_server:
+             server_connection.connection.terminateServer()
+             bb.event.ui_queue = []
+             return 0
+@@ -462,13 +463,13 @@ def bitbake_main(configParams, configuration):
+         logger.removeHandler(handler)
+ 
+ 
+-        if configParams.status_only:
++        if configparams.status_only:
+             server_connection.terminate()
              return 0
  
          try:
--            return ui_module.main(server_connection.connection, server_connection.events, configParams)
-+            return ui_module.main(server_connection.connection, server_connection.events,
-+                                  configParams)
+             return ui_module.main(server_connection.connection, server_connection.events,
+-                                  configParams)
++                                  configparams)
          finally:
              bb.event.ui_queue = []
              server_connection.terminate()
-     else:
--        print("Bitbake server address: %s, server port: %s" % (server.serverImpl.host, server.serverImpl.port))
-+        print("Bitbake server address: %s, server port: %s" % (server.serverImpl.host,
-+                                                               server.serverImpl.port))
-         return 0
- 
-     return 1
 -- 
 2.1.4
 
