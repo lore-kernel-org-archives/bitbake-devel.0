@@ -1,116 +1,23 @@
-Return-Path: <Joel.Esponde@Honeywell.com>
-X-Greylist: delayed 923 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 22 Apr 2016 16:37:21 UTC
-Received: from na01-bn1-obe.outbound.protection.outlook.com
-	(mail-bn1bon0133.outbound.protection.outlook.com [157.56.111.133])
-	by mail.openembedded.org (Postfix) with ESMTP id 73011731C6
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 628696FF56
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Apr 2016 16:37:21 +0000 (UTC)
-Received: from BN1PR07CA0038.namprd07.prod.outlook.com (10.255.193.13) by
-	DM3PR07MB2123.namprd07.prod.outlook.com (10.164.4.141) with Microsoft
-	SMTP Server (TLS) id 15.1.466.19; Fri, 22 Apr 2016 16:21:58 +0000
-Received: from BY2FFO11FD032.protection.gbl (2a01:111:f400:7c0c::161) by
-	BN1PR07CA0038.outlook.office365.com (2a01:111:e400:45::13) with
-	Microsoft
-	SMTP Server (TLS) id 15.1.477.8 via Frontend Transport; Fri, 22 Apr 2016
-	16:21:57 +0000
-Authentication-Results: spf=neutral (sender IP is 199.61.26.153)
-	smtp.mailfrom=Honeywell.com; lists.openembedded.org;
-	dkim=none (message not
-	signed) header.d=none;lists.openembedded.org; dmarc=none action=none
-	header.from=Honeywell.com;
-Received-SPF: Neutral (protection.outlook.com: 199.61.26.153 is neither
-	permitted nor denied by domain of Honeywell.com)
-Received: from DE08W1025.honeywell.com (199.61.26.153) by
-	BY2FFO11FD032.mail.protection.outlook.com (10.1.14.210) with Microsoft
-	SMTP Server (TLS) id 15.1.472.8 via Frontend Transport;
-	Fri, 22 Apr 2016 16:21:56 +0000
-Received: from de08ex5003.global.ds.honeywell.com (10.216.34.42) by
-	DE08W1025.honeywell.com (10.221.248.36) with Microsoft SMTP Server id
-	14.3.266.1; Fri, 22 Apr 2016 12:21:22 -0400
-Received: from DE08W1305.global.ds.honeywell.com ([169.254.1.251]) by
-	de08ex5003.global.ds.honeywell.com ([10.216.14.76]) with mapi id
-	14.03.0266.001; Fri, 22 Apr 2016 12:21:23 -0400
-From: "Esponde, Joel" <Joel.Esponde@Honeywell.com>
-To: "Burton, Ross" <ross.burton@intel.com>
-Thread-Topic: [bitbake-devel] Fetcher issue: Error communicating with
-	gnome-keyring-daemon
-Thread-Index: AdGceHU9FcWlpVhrTX+l8V+kRxiwFgAWeAkAAAgaHcA=
-Date: Fri, 22 Apr 2016 16:21:22 +0000
-Message-ID: <F6CD090A69E64C4289DC608E1C5D2024253E1E0E@DE08W1305.global.ds.honeywell.com>
-References: <F6CD090A69E64C4289DC608E1C5D2024253E0CBB@DE08W1305.global.ds.honeywell.com>
-	<CAJTo0LZW8x_KVjOhAsp-uv3Ax5yKiKz9FxaDS-me33iF7BvcCw@mail.gmail.com>
-In-Reply-To: <CAJTo0LZW8x_KVjOhAsp-uv3Ax5yKiKz9FxaDS-me33iF7BvcCw@mail.gmail.com>
-Accept-Language: fr-FR, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [158.138.38.18]
-MIME-Version: 1.0
-X-CFilter-Loop: Forwarded
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:199.61.26.153; IPV:NLI; CTRY:US; EFV:NLI;
-	SFV:NSPM;
-	SFS:(10019020)(2980300002)(24454002)(189002)(199003)(6116002)(16236675004)(2906002)(66066001)(1096002)(87936001)(15975445007)(2900100001)(2920100001)(2950100001)(77096005)(105586002)(3846002)(5008740100001)(102836003)(106466001)(19580395003)(81166005)(4326007)(1220700001)(790700001)(586003)(19580405001)(33656002)(86362001)(5003600100002)(85806002)(16796002)(19617315012)(19625215002)(84326002)(19300405004)(5004730100002)(189998001)(92566002)(55846006)(6806005)(110136002)(230783001)(54356999)(512874002)(76176999)(50986999);
-	DIR:OUT; SFP:1102; SCL:1; SRVR:DM3PR07MB2123;
-	H:DE08W1025.honeywell.com; FPR:; SPF:Neutral; MLV:sfv; MX:1; A:1;
-	LANG:en; 
-X-Microsoft-Exchange-Diagnostics: 1; BY2FFO11FD032;
-	1:OGMhNSW+NihhQ5kD4cLot+zccSS5caSJnCrnNyfvzHB9+FfWuL/fSM4L14/V8jug/UfYVna+XyV1FCT7GqB3icTNniZvcFWbU+tTIQGvXkv/EUV0pXNzI06poHw0ss8cgZyXnX72WVcTHdBcnx5PDyt2Zqtub+xNnK5OsCmGkQkN42GggfnKz4VB5Nye6fXQfPUbg5YibcnQzOXZpzxQuBNTe+B1sc3KppYrzQ18TV6CvRH9LqxuwtSpH20W1uCVrHOtzJp6AGS9T6XXNIZZbfyt3GYudwy94L/E01h705SLrPFpH5gH8YoP1Md2hboBiShu0nqh3dGADtCvgcYG1VpyYzTKDutAMWNcppW7b4+inn2+iQAhc9Ev19yHinxePPtJsuhDqt9p9GtrN8ghK4KTOIWQZQdk2N8dyrJcbzS6BnsSbzXhAC+RY33Ru0sEd4PaSG2ieCPysftSjWmA6HYAHWxw3N1g1IayNUw8gBRnvI1uoQidY4gube46ziIUsdHVUgWLzSImj1r8Tn2D3dhn0+QNDfFl2mcCYminkaHmI58LZ/UuwiGYLfkxbH38iVGnselr+h2IR/rwA9h4xA==
-X-MS-Office365-Filtering-Correlation-Id: f1c8365e-5cd4-4c03-fb9f-08d36aca39a2
-X-Microsoft-Exchange-Diagnostics: 1; DM3PR07MB2123;
-	2:eV8XlydughunahT2iotam432ykdCa76mH6rQGKN15Nm719SAqBis4Um/1In7zYjty34FsOzNZE+7zgfMeU9jkWi6ulYQTntpDjghi+3dk/ghu29fdkobBLQgG/q9Xe9nNcU0WWlVyEJb6HCGLKz5fD+rO/iumwnty/c9UGipp+pxwcmmsV9CMi3O+HUvOXdf;
-	3:T5osSYDSm9oqWTREHT4PjuUG3x/k4qOvqFSxso0B0FsD8o1lq8nLWPSWfgpDmFU6/7vo+7KYr7LxsTntCQdJM8RxZQtdbPSeY69z9D06Hfme3/+sE4gVZXQGrVZ6DFUNkaYhXrJ/z9/el7Bf90Mo/sjuTgE0kuDEPPNTr2vi4SKK5EW8CifYRNU7RhCEmpjnikWPcxxnr0Ft9oB2wSAE/nIjUKTBWdfOZljkJ5sz2NI=;
-	25:+9TmlKhJ8Dnlbz+aKp21NulIucDGXc+BMqVn5h9W45RC+h7qMVmJZUnpaDEaYVI+QtkiAY6Yi5rPW0pEMYl7QFb16IA/Ph0UwN30g3KfwNniW86z/3jhRRQW236GXMJ2EU50qRYnTLg9yTZo/CqD0yr0BLtJP1d90XD6Y6DP/li0WNvI7xJeGx7HN3EyKa/ty0wYSFN18zq8aviHcZaDNhjdP4kmcvZd5+BET3FKI+NiU20V1Xxcrjr6p9xzBnzO6V2B438GCMYfVvxCU+wLBFW5O5rlfHfYiWZCY6CezzNpMr/MfMapAp38S629t6EZOnbAKVBTDgHynmdQe8+Igg==
-X-Microsoft-Antispam: UriScan:;BCL:0;PCL:0;RULEID:;SRVR:DM3PR07MB2123;
-X-Microsoft-Exchange-Diagnostics: 1; DM3PR07MB2123;
-	20:71dx/43RxfZVNLqZfVufkhO4CTrX3ZrLM48WhBvEGivnrmq/owpG4Bk/OxIr6+1QsRwBOOFsI8Ztyzs8ERcJQFRAtVYVCg5MAfN6Ng8BZXeIHWK/mGGgSTvTRLRCxQDobT3liw2XpJxjOHVexOFgR4y1sfDslpVYszl51KEwf+423Ce8p5UXW0HEaDEKavyxBfg69eu3/s8KsYjFWgBwkrqZQRBscNnljIBpZVFL6tfinV6O38UBzzBWn9n7YVla6TE3mxqEguejE+PYroiE0n96bXoPCwFrogQMpXc1DJn1o0YRQ8uuzoCfbn/o9FTx1NrSwTh41TY1scBwgJdBj9MJeqhf0NDNLWGvihyRGtaSlSoX/OVYiAjjBLPVzyYvkvtR1vvva7UljSqVZGs9VZwvRO2OZgu4wQ3AGVXRkvZpX8Ya3/vcNPv2dK0MWalmpDTfmvcHVIBbq4n0977jxpsrmRvl5ZmEOp9RNvf5k225NmLXlsuvGUfLIusjwD32
-X-Microsoft-Antispam-PRVS: <DM3PR07MB212396C562E2C403EFFC76A2966F0@DM3PR07MB2123.namprd07.prod.outlook.com>
-X-Exchange-Antispam-Report-Test: UriScan:;
-X-Exchange-Antispam-Report-CFA-Test: BCL:0; PCL:0;
-	RULEID:(9101521026)(601004)(2401047)(13015025)(13017025)(5005006)(8121501046)(13018025)(13024025)(13023025)(3002001)(10201501046)(6055026);
-	SRVR:DM3PR07MB2123; BCL:0; PCL:0; RULEID:; SRVR:DM3PR07MB2123; 
-X-Microsoft-Exchange-Diagnostics: 1; DM3PR07MB2123;
-	4:fG/q3na6OonZwpCOfVLYTDS2ti3MY94U/f7R26leMyH2Vby/bhN8HUM5X5fHRoQ8xg53RkGbtXH8629Kd1KcW1v02r7r7WLaPpjLkUnwHMhKCU6lCMnSmGotqd/ZwPdYE5ABwYgdLDC3CproWXv3G5KpMf4BR/qW2jt/3Drd9T8IOwEL2Ep1BI4jkHWwn+bbVUticjoOEuHiBftGN3OOzXMRVV4wSimarLQxe+qPC6pL23TKOTj5cNk8CbxPp/i88InLwNqGkwmBHKAPywYtX5k1KJh6wO3AZAbwTtjSvsfhd/4lktsTB4/6cJ6GiDkr7+ZQglAbkWj/k0xjqrax8iAm+1cNbmGrJfu5cGkapwNXco4A4GBWFkqCr/TxDaYCpcbWI56mkp7jUoDqQtvhKQjogQCEb3doXm6FIU9zwVouBT9PwypBHBmQ2LWrBXE18XSfaljLCsx9sA+zoJ0O6YeEc7ongV/oDEoT97MPGqksMgPWJW1pMzG+JEc+a7ff
-X-Forefront-PRVS: 0920602B08
-X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1; DM3PR07MB2123;
-	23:9QnNVfnf3aKNJ91Kwoj38pFVncZWTJecDkOIw9I9Q?=
-	=?us-ascii?Q?ED0PxvPRnlQAHdzWZPvpUC8sB3JRRrTBB4sqCJ7g70PXL+OGHKAO2JYD0aB8?=
-	=?us-ascii?Q?tkFV/QBj8JC4f/GiBrDpJ5608D+nB0PplWAgrj1eoEkqAIeSR/MtqbzvYZ5r?=
-	=?us-ascii?Q?cw6hDy5Rre/o/Ur5HHnsdBFRXWiX8TuG6EpmQDLVhSJHiywzYlFWCazbPRZL?=
-	=?us-ascii?Q?ci4sv2vwD4QE941OQ3u5trBbe4dGX8BuAkACw/cbrPcrrDgTmPLw6yOz+GMy?=
-	=?us-ascii?Q?gQ8BVLw0QkG3W6NMg8wrA/HWmBoF0YxzJ1DYEa0HxVoAPUCER6eCHOazi9Cg?=
-	=?us-ascii?Q?cu1DIjH4R29uwjv9IkrGq9l9cI3A1jffW964sxPWkSNfvzNBcWAKHcRrT1LH?=
-	=?us-ascii?Q?fCR9TmsRY4w5oY9sVDpex6l5AXbiZnP9nUmztA0CrjWoyAc6WRm3HWQAKFXn?=
-	=?us-ascii?Q?z73tQQQJYhcGqf0fsmMM59ixvA8B5uTLcxYPxk9g9GnxCq5NHU+Bvj7h/W1Q?=
-	=?us-ascii?Q?Q/prCuvyaC+spt+GeSmi2QT6cGKqYZpwlva4MtXHvgsq/sK/2Sqqgf8dF6Ui?=
-	=?us-ascii?Q?WeFpm24EF9hqAr2g+Xz2scGyIthn3/uS6lj0zTAjIfvgFhjTS0ZqxAezFZ7y?=
-	=?us-ascii?Q?mMDEhSandNZFWyk/lCB6VAti1Q1og27IDaCnMZFpb5Eqz11WysRh+ITLBY2I?=
-	=?us-ascii?Q?MMThRgxDViBzieixzQ9XneioIBunDoSFSrbas+GjKUkrcCvVLyGr2T64T2pp?=
-	=?us-ascii?Q?6h0jwuBMZ02xYG/fJ1Vo9iua3en4B46QuVYf0u1LSgYafV/LpzPldiwBWlfD?=
-	=?us-ascii?Q?6ANZ9qJVU91FxerIIcT0vQSvPmDg3F3WUinF57xVWszxxBIC3LUmZFyBt09r?=
-	=?us-ascii?Q?zH3raCimmqwlJYZSLZ/Hi4DZGWrvjv9hTfg4nT22Z0GqkdapuiCPIfZzYisC?=
-	=?us-ascii?Q?yHWPpZVZzaJKxFkYw0xc3W41+xXthIfzOLvbeWhO5QD6Wxu/7YvjooY4ewkC?=
-	=?us-ascii?Q?bNvJpkmd0GQUTRpL8Qy9wgCayujYqETVKfPPTZh75GqSBB1Q2EEDCfEtiBjF?=
-	=?us-ascii?Q?3jIqTtDgX7s3GW7g2tPwCAwz1NJ7wZ3MLZUxHHqt17Sg7ZUE+KTxjuwtj2zp?=
-	=?us-ascii?Q?2pFuw7YdXpt1A/aJUHMO1Hro29eSP7d9bhuBc7hy/on/eOc7dUTlHYoHVhIf?=
-	=?us-ascii?Q?U9A+5Gi7ZMfK7RqvN9hTnE/+d6yfSOGhLo5v8NOqSrtIWXH/2k3zHPNsEiYh?=
-	=?us-ascii?Q?E11ec+o1g4RrO3exgI=3D?=
-X-Microsoft-Exchange-Diagnostics: 1; DM3PR07MB2123;
-	5:Td52NASAyJYjPJjD/RgqCczDajogbfkrSAVXLppZ1DdRkR/4gkOJR3rVhsPJVFZKf0zGJrKwImLT4xO4gD/jMe08D9HAu0VrESAEyOghBjm4DQsRwBNHllADhqi3lDGJnmMaqjxIFclivrVkLQC3hboCcKibmF6xTszrbB+Z7huORG6xG3PsFgW8UoraBO4/;
-	24:zTQiB6RYiIQKw8wzW7ngQm4ZrohQA2QqelqJ+DIgisYKK3JuSoeE0hU+E1kls9X8bs+Z68rznh1tQH5yFzDZVK5x3byBEP1Wl5pYlfiNZcE=;
-	7:jivekb/y2t9xil0osl9XkWVjpkfMbhZeWCRoiMeL0OTElV3WvqpMIiNFwE6q5jCE9NuC1g8W0OSbYFjydQUxjT5hJelLA4P3UITH9tU2nI3D7INWkiXaDexdKzGw9CDnJWUJpGXo17AhPLJzSn4stU/ZBQ29nCQvYm0ZXCBu/POvwoqZIqwyLWcGHScACzEmxBJcBjDLqwi18wAStlZdyI8712rTOoJLYSQ3tHggQ5U=
-SpamDiagnosticOutput: 1:23
-SpamDiagnosticMetadata: NSPM
-X-OriginatorOrg: Honeywell.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2016 16:21:56.8860 (UTC)
-X-MS-Exchange-CrossTenant-Id: 96ece526-9c7d-48b0-8daf-8b93c90a5d18
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=96ece526-9c7d-48b0-8daf-8b93c90a5d18;
-	Ip=[199.61.26.153]; Helo=[DE08W1025.honeywell.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR07MB2123
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: Fetcher issue: Error communicating with gnome-keyring-daemon
+	Mon, 25 Apr 2016 10:37:06 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 25 Apr 2016 03:37:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.24,532,1455004800"; d="scan'208";a="962136865"
+Received: from linux.intel.com ([10.23.219.25])
+	by orsmga002.jf.intel.com with ESMTP; 25 Apr 2016 03:36:20 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
+	by linux.intel.com (Postfix) with ESMTP id E18B16A4006;
+	Mon, 25 Apr 2016 04:23:56 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 25 Apr 2016 11:16:27 +0300
+Message-Id: <1461572190-17421-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH 1/4] bitbake: main: fix bad-witespace pylint warnings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -123,165 +30,228 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Apr 2016 16:37:23 -0000
-Content-Language: fr-FR
-Content-Type: multipart/alternative;
-	boundary="_000_F6CD090A69E64C4289DC608E1C5D2024253E1E0EDE08W1305global_"
+X-List-Received-Date: Mon, 25 Apr 2016 10:37:08 -0000
 
---_000_F6CD090A69E64C4289DC608E1C5D2024253E1E0EDE08W1305global_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Fixed pylint warnings:
+ No space allowed around keyword argument assignment
+ No space allowed after bracket
+ No space allowed before bracket
 
-SGkgUm9zcywNCg0KSSBqdXN0IHRyaWVkIHlvdXIgcGF0Y2guDQpBbmQgaXQgd29ya3MganVzdCBm
-aW5lIQ0KDQpZb3VyIGNvbW1pdCBwZXJmZWN0bHkgZml0cyB0byBvdXIgbmVlZC4NCkp1c3QgYSBs
-aXR0bGUgd29yZCBvbiBjb21taXTigJlzIGNvbW1lbnQsIGF1dGhlbnRpY2F0aW9uIGlzIG5vdCBk
-b25lIGluIHRoaXMgY2FzZSBvdmVyIHNzaCBpdCBpcyBkb25lIG92ZXIgaHR0cHMuIFNvIHRoaXMg
-Zml4IGlzIG1vcmUgZ2VuZXJpYyB0aGFuIHdoYXQgdGhlIGNvbW1lbnQgbWF5IGxldCB0aGluay4N
-Cg0KVGhhbmtzIGEgbG90IGZvciBoYXZpbmcgdGFrZW4gdGltZSB0byBsb29rIGF0IG15IGVtYWls
-IGFuZCBmb3IgaGF2aW5nIGFuc3dlcmVkIHNvIHF1aWNrbHkgYW5kIGVmZmljaWVudGx5IQ0KDQpK
-b8OrbCBFc3BvbmRlDQpIb25leXdlbGwgfCBTZW5zaW5nIGFuZCBQcm9kdWN0aXZpdHkgU29sdXRp
-b25zDQoNCkRlIDogQnVydG9uLCBSb3NzIFttYWlsdG86cm9zcy5idXJ0b25AaW50ZWwuY29tXQ0K
-RW52b3nDqSA6IHZlbmRyZWRpIDIyIGF2cmlsIDIwMTYgMTg6MDYNCsOAIDogRXNwb25kZSwgSm9l
-bA0KQ2MgOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCk9iamV0IDogUmU6
-IFtiaXRiYWtlLWRldmVsXSBGZXRjaGVyIGlzc3VlOiBFcnJvciBjb21tdW5pY2F0aW5nIHdpdGgg
-Z25vbWUta2V5cmluZy1kYWVtb24NCg0KSGkgSm9lbCwNCg0KT24gMjIgQXByaWwgMjAxNiBhdCAx
-MDozOCwgRXNwb25kZSwgSm9lbCA8Sm9lbC5Fc3BvbmRlQGhvbmV5d2VsbC5jb208bWFpbHRvOkpv
-ZWwuRXNwb25kZUBob25leXdlbGwuY29tPj4gd3JvdGU6DQpXaGVuIGJpdGJha2UgdHJpZXMgdG8g
-ZmV0Y2ggY29kZSBmcm9tIGEgZ2l0IHJlcG9zaXRvcnkgdGhhdCBuZWVkcyBhdXRoZW50aWNhdGlv
-biB3aG9zZSBjcmVkZW50aWFscyBhcmUgc3RvcmVkIGluIEdub21lIEtleXJpbmcsIGl0IGZhaWxz
-IGFuZCBwcm9kdWNlcyB0aGlzIGVycm9yOg0KDQpJIHRoaW5rIHdoYXQgd291bGQgd29yayBiZXN0
-IGlzIGEgbWFzaHVwIG9mIGJvdGggYXBwcm9hY2hlczogZXh0cmFjdGluZyB0aGUgdmFyaWFibGVz
-IHlvdSBuZWVkIGZyb20gQkJfT1JJR0lORU5WIGJ1dCBpbmplY3RpbmcgdGhlbSBpbnRvIHRoZSBl
-bnZpcm9ubWVudCBpbiBydW5mZXRjaGNtZC4NCg0KSSBkb24ndCB1c2UgZ25vbWUta2V5cmluZyBz
-byBJIGNhbid0IHRlc3QgaXQsIGJ1dCBjYW4geW91IHNlZSBpZiB0aGlzIHBhdGNoIHdvcmtzIGZv
-ciB5b3U6DQoNCmh0dHA6Ly9naXQueW9jdG9wcm9qZWN0Lm9yZy9jZ2l0L2NnaXQuY2dpL3Bva3kt
-Y29udHJpYi9jb21taXQvP2g9cm9zcy9tdXQmaWQ9NjBhZmIzYjJlYjIyMjgxNTc3NmU4ZDJlMTM2
-NDdlMTJkZWYzNjNhMg0KDQpDaGVlcnMsDQpSb3NzDQo=
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ bitbake/lib/bb/main.py | 138 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 69 insertions(+), 69 deletions(-)
 
---_000_F6CD090A69E64C4289DC608E1C5D2024253E1E0EDE08W1305global_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+index b843b7d..c1f14be 100755
+--- a/bitbake/lib/bb/main.py
++++ b/bitbake/lib/bb/main.py
+@@ -100,7 +100,7 @@ def import_extension_module(pkg, modulename, checkattr):
+         # Dynamically load the UI based on the ui name. Although we
+         # suggest a fixed set this allows you to have flexibility in which
+         # ones are available.
+-        module = __import__(pkg.__name__, fromlist = [modulename])
++        module = __import__(pkg.__name__, fromlist=[modulename])
+         return getattr(module, modulename)
+     except AttributeError:
+         raise BBMainException('FATAL: Unable to import extension module "%s" from %s. Valid extension modules: %s' % (modulename, pkg.__name__, present_options(list_extension_modules(pkg, checkattr))))
+@@ -129,111 +129,111 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+ 
+     def parseCommandLine(self, argv=sys.argv):
+         parser = optparse.OptionParser(
+-            formatter = BitbakeHelpFormatter(),
+-            version = "BitBake Build Tool Core version %s" % bb.__version__,
+-            usage = """%prog [options] [recipename/target recipe:do_task ...]
++            formatter=BitbakeHelpFormatter(),
++            version="BitBake Build Tool Core version %s" % bb.__version__,
++            usage="""%prog [options] [recipename/target recipe:do_task ...]
+ 
+     Executes the specified task (default is 'build') for a given set of target recipes (.bb files).
+     It is assumed there is a conf/bblayers.conf available in cwd or in BBPATH which
+     will provide the layer, BBFILES and other configuration information.""")
+ 
+-        parser.add_option("-b", "--buildfile", help = "Execute tasks from a specific .bb recipe directly. WARNING: Does not handle any dependencies from other recipes.",
+-                   action = "store", dest = "buildfile", default = None)
++        parser.add_option("-b", "--buildfile", help="Execute tasks from a specific .bb recipe directly. WARNING: Does not handle any dependencies from other recipes.",
++                   action="store", dest="buildfile", default=None)
+ 
+-        parser.add_option("-k", "--continue", help = "Continue as much as possible after an error. While the target that failed and anything depending on it cannot be built, as much as possible will be built before stopping.",
+-                   action = "store_false", dest = "abort", default = True)
++        parser.add_option("-k", "--continue", help="Continue as much as possible after an error. While the target that failed and anything depending on it cannot be built, as much as possible will be built before stopping.",
++                   action="store_false", dest="abort", default=True)
+ 
+-        parser.add_option("-a", "--tryaltconfigs", help = "Continue with builds by trying to use alternative providers where possible.",
+-                   action = "store_true", dest = "tryaltconfigs", default = False)
++        parser.add_option("-a", "--tryaltconfigs", help="Continue with builds by trying to use alternative providers where possible.",
++                   action="store_true", dest="tryaltconfigs", default=False)
+ 
+-        parser.add_option("-f", "--force", help = "Force the specified targets/task to run (invalidating any existing stamp file).",
+-                   action = "store_true", dest = "force", default = False)
++        parser.add_option("-f", "--force", help="Force the specified targets/task to run (invalidating any existing stamp file).",
++                   action="store_true", dest="force", default=False)
+ 
+-        parser.add_option("-c", "--cmd", help = "Specify the task to execute. The exact options available depend on the metadata. Some examples might be 'compile' or 'populate_sysroot' or 'listtasks' may give a list of the tasks available.",
+-                   action = "store", dest = "cmd")
++        parser.add_option("-c", "--cmd", help="Specify the task to execute. The exact options available depend on the metadata. Some examples might be 'compile' or 'populate_sysroot' or 'listtasks' may give a list of the tasks available.",
++                   action="store", dest="cmd")
+ 
+-        parser.add_option("-C", "--clear-stamp", help = "Invalidate the stamp for the specified task such as 'compile' and then run the default task for the specified target(s).",
+-                    action = "store", dest = "invalidate_stamp")
++        parser.add_option("-C", "--clear-stamp", help="Invalidate the stamp for the specified task such as 'compile' and then run the default task for the specified target(s).",
++                    action="store", dest="invalidate_stamp")
+ 
+-        parser.add_option("-r", "--read", help = "Read the specified file before bitbake.conf.",
+-                   action = "append", dest = "prefile", default = [])
++        parser.add_option("-r", "--read", help="Read the specified file before bitbake.conf.",
++                   action="append", dest="prefile", default=[])
+ 
+-        parser.add_option("-R", "--postread", help = "Read the specified file after bitbake.conf.",
+-                          action = "append", dest = "postfile", default = [])
++        parser.add_option("-R", "--postread", help="Read the specified file after bitbake.conf.",
++                          action="append", dest="postfile", default=[])
+ 
+-        parser.add_option("-v", "--verbose", help = "Output more log message data to the terminal.",
+-                   action = "store_true", dest = "verbose", default = False)
++        parser.add_option("-v", "--verbose", help="Output more log message data to the terminal.",
++                   action="store_true", dest="verbose", default=False)
+ 
+-        parser.add_option("-D", "--debug", help = "Increase the debug level. You can specify this more than once.",
+-                   action = "count", dest="debug", default = 0)
++        parser.add_option("-D", "--debug", help="Increase the debug level. You can specify this more than once.",
++                   action="count", dest="debug", default=0)
+ 
+-        parser.add_option("-n", "--dry-run", help = "Don't execute, just go through the motions.",
+-                   action = "store_true", dest = "dry_run", default = False)
++        parser.add_option("-n", "--dry-run", help="Don't execute, just go through the motions.",
++                   action="store_true", dest="dry_run", default=False)
+ 
+-        parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. The SIGNATURE_HANDLER parameter is passed to the handler. Two common values are none and printdiff but the handler may define more/less. none means only dump the signature, printdiff means compare the dumped signature with the cached one.",
+-                   action = "append", dest = "dump_signatures", default = [], metavar="SIGNATURE_HANDLER")
++        parser.add_option("-S", "--dump-signatures", help="Dump out the signature construction information, with no task execution. The SIGNATURE_HANDLER parameter is passed to the handler. Two common values are none and printdiff but the handler may define more/less. none means only dump the signature, printdiff means compare the dumped signature with the cached one.",
++                   action="append", dest="dump_signatures", default=[], metavar="SIGNATURE_HANDLER")
+ 
+-        parser.add_option("-p", "--parse-only", help = "Quit after parsing the BB recipes.",
+-                   action = "store_true", dest = "parse_only", default = False)
++        parser.add_option("-p", "--parse-only", help="Quit after parsing the BB recipes.",
++                   action="store_true", dest="parse_only", default=False)
+ 
+-        parser.add_option("-s", "--show-versions", help = "Show current and preferred versions of all recipes.",
+-                   action = "store_true", dest = "show_versions", default = False)
++        parser.add_option("-s", "--show-versions", help="Show current and preferred versions of all recipes.",
++                   action="store_true", dest="show_versions", default=False)
+ 
+-        parser.add_option("-e", "--environment", help = "Show the global or per-recipe environment complete with information about where variables were set/changed.",
+-                   action = "store_true", dest = "show_environment", default = False)
++        parser.add_option("-e", "--environment", help="Show the global or per-recipe environment complete with information about where variables were set/changed.",
++                   action="store_true", dest="show_environment", default=False)
+ 
+-        parser.add_option("-g", "--graphviz", help = "Save dependency tree information for the specified targets in the dot syntax.",
+-                    action = "store_true", dest = "dot_graph", default = False)
++        parser.add_option("-g", "--graphviz", help="Save dependency tree information for the specified targets in the dot syntax.",
++                    action="store_true", dest="dot_graph", default=False)
+ 
+-        parser.add_option("-I", "--ignore-deps", help = """Assume these dependencies don't exist and are already provided (equivalent to ASSUME_PROVIDED). Useful to make dependency graphs more appealing""",
+-                    action = "append", dest = "extra_assume_provided", default = [])
++        parser.add_option("-I", "--ignore-deps", help="""Assume these dependencies don't exist and are already provided (equivalent to ASSUME_PROVIDED). Useful to make dependency graphs more appealing""",
++                    action="append", dest="extra_assume_provided", default=[])
+ 
+-        parser.add_option("-l", "--log-domains", help = """Show debug logging for the specified logging domains""",
+-                    action = "append", dest = "debug_domains", default = [])
++        parser.add_option("-l", "--log-domains", help="""Show debug logging for the specified logging domains""",
++                    action="append", dest="debug_domains", default=[])
+ 
+-        parser.add_option("-P", "--profile", help = "Profile the command and save reports.",
+-                   action = "store_true", dest = "profile", default = False)
++        parser.add_option("-P", "--profile", help="Profile the command and save reports.",
++                   action="store_true", dest="profile", default=False)
+ 
+         # @CHOICES@ is substituted out by BitbakeHelpFormatter above
+-        parser.add_option("-u", "--ui", help = "The user interface to use (@CHOICES@ - default %default).",
++        parser.add_option("-u", "--ui", help="The user interface to use (@CHOICES@ - default %default).",
+                    action="store", dest="ui", default=os.environ.get('BITBAKE_UI', 'knotty'))
+ 
+         # @CHOICES@ is substituted out by BitbakeHelpFormatter above
+-        parser.add_option("-t", "--servertype", help = "Choose which server type to use (@CHOICES@ - default %default).",
+-                   action = "store", dest = "servertype", default = ["process", "xmlrpc"]["BBSERVER" in os.environ])
++        parser.add_option("-t", "--servertype", help="Choose which server type to use (@CHOICES@ - default %default).",
++                   action="store", dest="servertype", default=["process", "xmlrpc"]["BBSERVER" in os.environ])
+ 
+-        parser.add_option("", "--token", help = "Specify the connection token to be used when connecting to a remote server.",
+-                   action = "store", dest = "xmlrpctoken", default = os.environ.get("BBTOKEN"))
++        parser.add_option("", "--token", help="Specify the connection token to be used when connecting to a remote server.",
++                   action="store", dest="xmlrpctoken", default=os.environ.get("BBTOKEN"))
+ 
+-        parser.add_option("", "--revisions-changed", help = "Set the exit code depending on whether upstream floating revisions have changed or not.",
+-                   action = "store_true", dest = "revisions_changed", default = False)
++        parser.add_option("", "--revisions-changed", help="Set the exit code depending on whether upstream floating revisions have changed or not.",
++                   action="store_true", dest="revisions_changed", default=False)
+ 
+-        parser.add_option("", "--server-only", help = "Run bitbake without a UI, only starting a server (cooker) process.",
+-                   action = "store_true", dest = "server_only", default = False)
++        parser.add_option("", "--server-only", help="Run bitbake without a UI, only starting a server (cooker) process.",
++                   action="store_true", dest="server_only", default=False)
+ 
+-        parser.add_option("-B", "--bind", help = "The name/address for the bitbake server to bind to.",
+-                   action = "store", dest = "bind", default = False)
++        parser.add_option("-B", "--bind", help="The name/address for the bitbake server to bind to.",
++                   action="store", dest="bind", default=False)
+ 
+-        parser.add_option("", "--no-setscene", help = "Do not run any setscene tasks. sstate will be ignored and everything needed, built.",
+-                   action = "store_true", dest = "nosetscene", default = False)
++        parser.add_option("", "--no-setscene", help="Do not run any setscene tasks. sstate will be ignored and everything needed, built.",
++                   action="store_true", dest="nosetscene", default=False)
+ 
+-        parser.add_option("", "--setscene-only", help = "Only run setscene tasks, don't run any real tasks.",
+-                   action = "store_true", dest = "setsceneonly", default = False)
++        parser.add_option("", "--setscene-only", help="Only run setscene tasks, don't run any real tasks.",
++                   action="store_true", dest="setsceneonly", default=False)
+ 
+-        parser.add_option("", "--remote-server", help = "Connect to the specified server.",
+-                   action = "store", dest = "remote_server", default = os.environ.get("BBSERVER"))
++        parser.add_option("", "--remote-server", help="Connect to the specified server.",
++                   action="store", dest="remote_server", default=os.environ.get("BBSERVER"))
+ 
+-        parser.add_option("-m", "--kill-server", help = "Terminate the remote server.",
+-                    action = "store_true", dest = "kill_server", default = False)
++        parser.add_option("-m", "--kill-server", help="Terminate the remote server.",
++                    action="store_true", dest="kill_server", default=False)
+ 
+-        parser.add_option("", "--observe-only", help = "Connect to a server as an observing-only client.",
+-                   action = "store_true", dest = "observe_only", default = False)
++        parser.add_option("", "--observe-only", help="Connect to a server as an observing-only client.",
++                   action="store_true", dest="observe_only", default=False)
+ 
+-        parser.add_option("", "--status-only", help = "Check the status of the remote bitbake server.",
+-                   action = "store_true", dest = "status_only", default = False)
++        parser.add_option("", "--status-only", help="Check the status of the remote bitbake server.",
++                   action="store_true", dest="status_only", default=False)
+ 
+-        parser.add_option("-w", "--write-log", help = "Writes the event log of the build to a bitbake event json file. Use '' (empty string) to assign the name automatically.",
+-                   action = "store", dest = "writeeventlog", default = os.environ.get("BBEVENTLOG"))
++        parser.add_option("-w", "--write-log", help="Writes the event log of the build to a bitbake event json file. Use '' (empty string) to assign the name automatically.",
++                   action="store", dest="writeeventlog", default=os.environ.get("BBEVENTLOG"))
+ 
+         options, targets = parser.parse_args(argv)
+ 
+@@ -280,7 +280,7 @@ def start_server(servermodule, configParams, configuration, features):
+     if configParams.bind:
+         (host, port) = configParams.bind.split(':')
+         server.initServer((host, int(port)), single_use)
+-        configuration.interface = [ server.serverImpl.host, server.serverImpl.port ]
++        configuration.interface = [server.serverImpl.host, server.serverImpl.port]
+     else:
+         server.initServer(single_use=single_use)
+         configuration.interface = []
+@@ -342,7 +342,7 @@ def bitbake_main(configParams, configuration):
+         if configParams.remote_server:
+             raise BBMainException("FATAL: The '--server-only' option conflicts with %s.\n" %
+                                   ("the BBSERVER environment variable" if "BBSERVER" in os.environ \
+-                                   else "the '--remote-server' option" ))
++                                   else "the '--remote-server' option"))
+ 
+     if configParams.bind and configParams.servertype != "xmlrpc":
+         raise BBMainException("FATAL: If '-B' or '--bind' is defined, we must "
+-- 
+2.1.4
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9
-DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglj
-b2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
-Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpw
-dXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUxNw0K
-CXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1yZXBseTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIs
-c2Fucy1zZXJpZjsNCgljb2xvcjojNDAwMDAwOw0KCWZvbnQtd2VpZ2h0Om5vcm1hbDsNCglmb250
-LXN0eWxlOm5vcm1hbDsNCgl0ZXh0LWRlY29yYXRpb246bm9uZSBub25lO30NCi5Nc29DaHBEZWZh
-dWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJp
-IixzYW5zLXNlcmlmOw0KCW1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTO30NCkBwYWdlIFdvcmRT
-ZWN0aW9uMQ0KCXtzaXplOjYxMi4wcHQgNzkyLjBwdDsNCgltYXJnaW46NzAuODVwdCA3MC44NXB0
-IDcwLjg1cHQgNzAuODVwdDt9DQpkaXYuV29yZFNlY3Rpb24xDQoJe3BhZ2U6V29yZFNlY3Rpb24x
-O30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWRlZmF1bHRz
-IHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtp
-ZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+DQo8bzppZG1h
-cCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRp
-Zl0tLT4NCjwvaGVhZD4NCjxib2R5IGxhbmc9IkZSIiBsaW5rPSJibHVlIiB2bGluaz0icHVycGxl
-Ij4NCjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7
-LHNhbnMtc2VyaWY7Y29sb3I6IzQwMDAwMDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+SGkg
-Um9zcyw8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNh
-bnMtc2VyaWY7Y29sb3I6IzQwMDAwMDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4m
-bmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0i
-RU4tVVMiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZjtjb2xvcjojNDAwMDAwO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVT
-Ij5JIGp1c3QgdHJpZWQgeW91ciBwYXRjaC48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7
-Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiM0MDAwMDA7
-bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPkFuZCBpdCB3b3JrcyBqdXN0IGZpbmUhPG86cD48
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMi
-IHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDss
-c2Fucy1zZXJpZjtjb2xvcjojNDAwMDAwO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpw
-PiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5n
-PSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJy
-aSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiM0MDAwMDA7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4t
-VVMiPllvdXIgY29tbWl0IHBlcmZlY3RseSBmaXRzIHRvIG91ciBuZWVkLjxvOnA+PC9vOnA+PC9z
-cGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0i
-Zm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2Vy
-aWY7Y29sb3I6IzQwMDAwMDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+SnVzdCBhIGxpdHRs
-ZSB3b3JkIG9uIGNvbW1pdOKAmXMgY29tbWVudCwgYXV0aGVudGljYXRpb24gaXMgbm90IGRvbmUg
-aW4gdGhpcyBjYXNlIG92ZXIgc3NoIGl0IGlzIGRvbmUgb3ZlciBodHRwcy4gU28gdGhpcw0KIGZp
-eCBpcyBtb3JlIGdlbmVyaWMgdGhhbiB3aGF0IHRoZSBjb21tZW50IG1heSBsZXQgdGhpbmsuPG86
-cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4t
-VVMiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVv
-dDssc2Fucy1zZXJpZjtjb2xvcjojNDAwMDAwO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48
-bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBs
-YW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2Fs
-aWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiM0MDAwMDA7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6
-RU4tVVMiPlRoYW5rcyBhIGxvdCBmb3IgaGF2aW5nIHRha2VuIHRpbWUgdG8gbG9vayBhdCBteSBl
-bWFpbCBhbmQgZm9yIGhhdmluZyBhbnN3ZXJlZCBzbyBxdWlja2x5IGFuZCBlZmZpY2llbnRseSE8
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
-Ti1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
-dW90OyxzYW5zLXNlcmlmO2NvbG9yOiM0MDAwMDA7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxz
-cGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVv
-dDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiM3MDcwNzAiPkpvw6tsIEVzcG9uZGU8bzpw
-PjwvbzpwPjwvc3Bhbj48L2I+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gbGFu
-Zz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6OS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwm
-cXVvdDssc2Fucy1zZXJpZjtjb2xvcjojNzA3MDcwIj5Ib25leXdlbGwNCjwvc3Bhbj48L2I+PHNw
-YW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6OS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7
-QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojNzA3MDcwIj58IFNlbnNpbmcgYW5kIFByb2R1
-Y3Rpdml0eSBTb2x1dGlvbnM8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVT
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTti
-b3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGNtIDBjbSAwY20gNC4wcHQiPg0K
-PGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29saWQgI0UxRTFFMSAx
-LjBwdDtwYWRkaW5nOjMuMHB0IDBjbSAwY20gMGNtIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZiI+RGUmbmJzcDs6PC9zcGFuPjwvYj48c3BhbiBzdHlsZT0iZm9udC1z
-aXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWYiPiBC
-dXJ0b24sIFJvc3MgW21haWx0bzpyb3NzLmJ1cnRvbkBpbnRlbC5jb21dDQo8YnI+DQo8Yj5FbnZv
-ecOpJm5ic3A7OjwvYj4gdmVuZHJlZGkgMjIgYXZyaWwgMjAxNiAxODowNjxicj4NCjxiPsOAJm5i
-c3A7OjwvYj4gRXNwb25kZSwgSm9lbDxicj4NCjxiPkNjJm5ic3A7OjwvYj4gYml0YmFrZS1kZXZl
-bEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPGJyPg0KPGI+T2JqZXQmbmJzcDs6PC9iPiBSZTogW2Jp
-dGJha2UtZGV2ZWxdIEZldGNoZXIgaXNzdWU6IEVycm9yIGNvbW11bmljYXRpbmcgd2l0aCBnbm9t
-ZS1rZXlyaW5nLWRhZW1vbjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8ZGl2Pg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+SGkgSm9lbCw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRp
-dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPk9uIDIyIEFwcmlsIDIwMTYgYXQgMTA6MzgsIEVzcG9uZGUsIEpv
-ZWwgJmx0OzxhIGhyZWY9Im1haWx0bzpKb2VsLkVzcG9uZGVAaG9uZXl3ZWxsLmNvbSIgdGFyZ2V0
-PSJfYmxhbmsiPkpvZWwuRXNwb25kZUBob25leXdlbGwuY29tPC9hPiZndDsgd3JvdGU6PG86cD48
-L286cD48L3A+DQo8YmxvY2txdW90ZSBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29s
-aWQgI0NDQ0NDQyAxLjBwdDtwYWRkaW5nOjBjbSAwY20gMGNtIDYuMHB0O21hcmdpbi1sZWZ0OjQu
-OHB0O21hcmdpbi1yaWdodDowY20iPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1t
-YXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj48c3BhbiBsYW5n
-PSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM0MDAwMDAiPldoZW4gYml0YmFrZSB0cmllcyB0byBmZXRj
-aCBjb2RlIGZyb20gYSBnaXQgcmVwb3NpdG9yeSB0aGF0IG5lZWRzIGF1dGhlbnRpY2F0aW9uIHdo
-b3NlIGNyZWRlbnRpYWxzIGFyZSBzdG9yZWQgaW4gR25vbWUgS2V5cmluZywgaXQgZmFpbHMNCiBh
-bmQgcHJvZHVjZXMgdGhpcyBlcnJvcjo8L3NwYW4+PG86cD48L286cD48L3A+DQo8L2Jsb2NrcXVv
-dGU+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxicj4NCkkgdGhpbmsgd2hhdCB3b3Vs
-ZCB3b3JrIGJlc3QgaXMgYSBtYXNodXAgb2YgYm90aCBhcHByb2FjaGVzOiBleHRyYWN0aW5nIHRo
-ZSB2YXJpYWJsZXMgeW91IG5lZWQgZnJvbSBCQl9PUklHSU5FTlYgYnV0IGluamVjdGluZyB0aGVt
-IGludG8gdGhlIGVudmlyb25tZW50IGluIHJ1bmZldGNoY21kLjxvOnA+PC9vOnA+PC9wPg0KPC9k
-aXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8
-L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIGRvbid0IHVzZSBnbm9tZS1rZXly
-aW5nIHNvIEkgY2FuJ3QgdGVzdCBpdCwgYnV0IGNhbiB5b3Ugc2VlIGlmIHRoaXMgcGF0Y2ggd29y
-a3MgZm9yIHlvdTo8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PGEgaHJlZj0iaHR0cDovL2dpdC55b2N0b3Byb2plY3Qub3JnL2NnaXQvY2dpdC5j
-Z2kvcG9reS1jb250cmliL2NvbW1pdC8/aD1yb3NzL211dCZhbXA7aWQ9NjBhZmIzYjJlYjIyMjgx
-NTc3NmU4ZDJlMTM2NDdlMTJkZWYzNjNhMiI+aHR0cDovL2dpdC55b2N0b3Byb2plY3Qub3JnL2Nn
-aXQvY2dpdC5jZ2kvcG9reS1jb250cmliL2NvbW1pdC8/aD1yb3NzL211dCZhbXA7aWQ9NjBhZmIz
-YjJlYjIyMjgxNTc3NmU4ZDJlMTM2NDdlMTJkZWYzNjNhMjwvYT48bzpwPjwvbzpwPjwvcD4NCjwv
-ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0K
-PC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Q2hlZXJzLDxvOnA+PC9vOnA+PC9w
-Pg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Um9zczxvOnA+PC9vOnA+PC9w
-Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
 
---_000_F6CD090A69E64C4289DC608E1C5D2024253E1E0EDE08W1305global_--
