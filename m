@@ -1,21 +1,24 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 346EC601A4
+	by mail.openembedded.org (Postfix) with ESMTP id 4943470149
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 26 Apr 2016 16:18:19 +0000 (UTC)
+	Tue, 26 Apr 2016 16:18:20 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga103.jf.intel.com with ESMTP; 26 Apr 2016 09:18:19 -0700
+	by orsmga103.jf.intel.com with ESMTP; 26 Apr 2016 09:18:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,537,1455004800"; d="scan'208";a="963133140"
+X-IronPort-AV: E=Sophos;i="5.24,537,1455004800"; 
+	d="scan'208,217";a="963133155"
 Received: from mkamins1-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.29.92])
-	by orsmga002.jf.intel.com with ESMTP; 26 Apr 2016 09:18:16 -0700
+	by orsmga002.jf.intel.com with ESMTP; 26 Apr 2016 09:18:19 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 26 Apr 2016 17:18:06 +0100
-Message-Id: <1461687487-31757-1-git-send-email-elliot.smith@intel.com>
+Date: Tue, 26 Apr 2016 17:18:07 +0100
+Message-Id: <1461687487-31757-2-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 1/2] toaster: orm Add get_base_recipe_file to CustomImageRecipe
+In-Reply-To: <1461687487-31757-1-git-send-email-elliot.smith@intel.com>
+References: <1461687487-31757-1-git-send-email-elliot.smith@intel.com>
+Subject: [PATCH 2/2] toaster: customrecipe Only show download icon or button if it's possible
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,114 +35,82 @@ X-List-Received-Date: Tue, 26 Apr 2016 16:18:21 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-This function returns the base recipe file path only if it currently
-exists. This allows us to know whether we can proceed at this point with
-generating a custom image recipe. It also enables us to call this
-function from the templates to enable visual indication of this state.
+If the based on recipe has not yet been checked out/cloned we cannot
+generate the custom image recipe file that uses it. So disable/remove
+the option to download it.
 
-Some whitespace fixes also added in generate_recipe_file_contents
+[YOCTO #9425]
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/toaster/orm/models.py | 60 ++++++++++++++++++++++++---------------
- 1 file changed, 37 insertions(+), 23 deletions(-)
+ bitbake/lib/toaster/toastergui/tables.py                   |  4 +++-
+ bitbake/lib/toaster/toastergui/templates/customrecipe.html | 13 ++++++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/toaster/orm/models.py b/bitbake/lib/toaster/orm/models.py
-index 0b83b99..6716ddf 100644
---- a/bitbake/lib/toaster/orm/models.py
-+++ b/bitbake/lib/toaster/orm/models.py
-@@ -1585,6 +1585,21 @@ class CustomImageRecipe(Recipe):
-                                                   Q(recipe_includes=self)) &
-                                                  ~Q(recipe_excludes=self))
+diff --git a/bitbake/lib/toaster/toastergui/tables.py b/bitbake/lib/toaster/toastergui/tables.py
+index 2cc2f4e..d375da4 100644
+--- a/bitbake/lib/toaster/toastergui/tables.py
++++ b/bitbake/lib/toaster/toastergui/tables.py
+@@ -508,10 +508,12 @@ class CustomImagesTable(ToasterTable):
  
-+    def get_base_recipe_file(self):
-+        """Get the base recipe file path if it exists on the file system"""
-+        path_schema_one = "%s/%s" % (self.base_recipe.layer_version.dirpath,
-+                                     self.base_recipe.file_path)
-+
-+        path_schema_two = self.base_recipe.file_path
-+
-+        if os.path.exists(path_schema_one):
-+            return path_schema_one
-+
-+        # The path may now be the full path if the recipe has been built
-+        if os.path.exists(path_schema_two):
-+            return path_schema_two
-+
-+        return None
+         recipe_file_template = '''
+         <code>{{data.name}}_{{data.version}}.bb</code>
++        {% if data.get_base_recipe_file %}
+         <a href="{% url 'customrecipedownload' extra.pid data.pk %}">
+         <i class="icon-download-alt" data-original-title="Download recipe
+         file"></i>
+-        </a>'''
++        </a>
++        {% endif %}'''
  
-     def generate_recipe_file_contents(self):
-         """Generate the contents for the recipe file."""
-@@ -1599,17 +1614,16 @@ class CustomImageRecipe(Recipe):
-             # We add all the known packages to be built by this recipe apart
-             # from locale packages which are are controlled with IMAGE_LINGUAS.
-             for pkg in self.get_all_packages().exclude(
--                name__icontains="locale"):
-+                    name__icontains="locale"):
-                 packages_conf += pkg.name+' '
+         self.add_column(title="Recipe file",
+                         static_data_name='recipe_file_download',
+diff --git a/bitbake/lib/toaster/toastergui/templates/customrecipe.html b/bitbake/lib/toaster/toastergui/templates/customrecipe.html
+index ea3c9c7..aeb4466 100644
+--- a/bitbake/lib/toaster/toastergui/templates/customrecipe.html
++++ b/bitbake/lib/toaster/toastergui/templates/customrecipe.html
+@@ -4,6 +4,7 @@
+ {% load static %}
+ {% block pagecontent %}
  
-         packages_conf += "\""
--        try:
--            base_recipe = open("%s/%s" %
--                               (self.base_recipe.layer_version.dirpath,
--                                self.base_recipe.file_path), 'r').read()
--        except IOError:
--            # The path may now be the full path if the recipe has been built
--            base_recipe = open(self.base_recipe.file_path, 'r').read()
-+
-+        base_recipe_path = self.get_base_recipe_file()
-+        if base_recipe_path:
-+            base_recipe = open(base_recipe_path, 'r').read()
-+        else:
-+            raise IOError("Based on recipe file not found")
++{% with recipe.get_base_recipe_file as base_recipe_file %}
+ <div class="section">
+   <ul class="breadcrumb">
+     <li>
+@@ -99,8 +100,15 @@
+       <a class="btn btn-large span6 build-custom-image" href="#" style="width: 50%">
+         Build {{recipe.name}}
+       </a>
+-      <a href="{% url 'customrecipedownload' project.id recipe.id %}" class="btn btn-large span6" style="width: 50%">
++      <a href="{% url 'customrecipedownload' project.id recipe.id %}" class="btn btn-large span6" style="width: 50%"
++        {% if not base_recipe_file %}
++        disabled="disabled"
++        {% endif %}>
+         Download recipe file
++        {% if not base_recipe_file %}
++        <i class="icon-question-sign get-help"
++          data-original-title="The {{recipe.name}} recipe cannot yet be downloaded as the Based on recipe '{{recipe.base_recipe.name}}' has not yet been fetched"></i>
++        {% endif %}
+       </a>
+     </div>
+     <div id="no-results-special-{{table_name}}" class="air" style="display:none;">
+@@ -177,7 +185,9 @@
+         <dt>Recipe file</dt>
+         <dd>
+           <code>{{recipe.name}}_{{recipe.version}}.bb</code>
++          {% if base_recipe_path %}
+           <a href="{% url 'customrecipedownload' project.pk recipe.pk %}"><i class="icon-share" title="" data-original-title="View recipe file"></i></a>
++          {% endif %}
+         </dd>
+         <dt>Layer</dt>
+         <dd><a href="{% url 'layerdetails' project.id recipe.layer_version.pk %}">{{recipe.layer_version.layer.name}}</a></dd>
+@@ -220,4 +230,5 @@
+     </div>
+   </div>
  
-         # Add a special case for when the recipe we have based a custom image
-         # recipe on requires another recipe.
-@@ -1618,8 +1632,8 @@ class CustomImageRecipe(Recipe):
-         # "require recipes-core/images/core-image-minimal.bb"
- 
-         req_search = re.search(r'(require\s+)(.+\.bb\s*$)',
--                                   base_recipe,
--                                   re.MULTILINE)
-+                               base_recipe,
-+                               re.MULTILINE)
-         if req_search:
-             require_filename = req_search.group(2).strip()
- 
-@@ -1629,19 +1643,19 @@ class CustomImageRecipe(Recipe):
- 
-             new_require_line = "require %s" % corrected_location
- 
--            base_recipe = \
--                    base_recipe.replace(req_search.group(0), new_require_line)
--
--
--        info = {"date" : timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
--                "base_recipe" : base_recipe,
--                "recipe_name" : self.name,
--                "base_recipe_name" : self.base_recipe.name,
--                "license" : self.license,
--                "summary" : self.summary,
--                "description" : self.description,
--                "packages_conf" : packages_conf.strip(),
--               }
-+            base_recipe = base_recipe.replace(req_search.group(0),
-+                                              new_require_line)
-+
-+        info = {
-+            "date": timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
-+            "base_recipe": base_recipe,
-+            "recipe_name": self.name,
-+            "base_recipe_name": self.base_recipe.name,
-+            "license": self.license,
-+            "summary": self.summary,
-+            "description": self.description,
-+            "packages_conf": packages_conf.strip()
-+        }
- 
-         recipe_contents = ("# Original recipe %(base_recipe_name)s \n"
-                            "%(base_recipe)s\n\n"
++{% endwith %}{# end base_recipe_file #}
+   {% endblock %}
 -- 
 1.9.3
 
