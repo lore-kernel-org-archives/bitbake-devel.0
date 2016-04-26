@@ -1,25 +1,49 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id DD54B700FD
+Return-Path: <ross.burton@intel.com>
+Received: from mail-io0-f173.google.com (mail-io0-f173.google.com
+	[209.85.223.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 1D74370022
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Apr 2016 10:37:40 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga103.jf.intel.com with ESMTP; 25 Apr 2016 03:37:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,532,1455004800"; d="scan'208";a="962137182"
-Received: from linux.intel.com ([10.23.219.25])
-	by orsmga002.jf.intel.com with ESMTP; 25 Apr 2016 03:37:22 -0700
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id B69706A4006;
-	Mon, 25 Apr 2016 04:24:57 -0700 (PDT)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 25 Apr 2016 11:16:30 +0300
-Message-Id: <1461572190-17421-4-git-send-email-ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1461572190-17421-1-git-send-email-ed.bartosh@linux.intel.com>
-References: <1461572190-17421-1-git-send-email-ed.bartosh@linux.intel.com>
-Subject: [PATCH 4/4] bitbake: main: fix invalid variable names
+	Tue, 26 Apr 2016 08:59:35 +0000 (UTC)
+Received: by mail-io0-f173.google.com with SMTP id f89so9784293ioi.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 26 Apr 2016 01:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=ZWwiCVv8NKRpXuamvZ/AkjlzR2+vYQY7aUSs9P6p/vQ=;
+	b=aEfOtmEp7Q7s9Yyz2gbwr+kPMlZW6W5q/nGi2HQgTeHITweZowAEsjgGYSRJIQA3X9
+	udWfzuhYT6vY1FXzkX2fTinx+/0bg6MS0yNHmBcgQzZNzdGZAfAgpZ+emeLrhAITTQde
+	Il9/6cW+mV3dLwZAZa3qfF7Xvd7bsjq+I4S62FIydsVt9LuCpIzPxyhy7dMi1BJJCDj/
+	b51zcE3mkC6Y5Iyd93RTVlqUtDTxoHaJ8anaB7m7gSh7z6qaq7pFQUK4xoA1/ao42eS7
+	Il1XQapMABUhZBbJs1VQehJUckzBWIC0HokljA2SwdiEVEF/V+cfjUOz24onDOBaEuFE
+	ZeHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=ZWwiCVv8NKRpXuamvZ/AkjlzR2+vYQY7aUSs9P6p/vQ=;
+	b=gVxE0zPXnWdGEz4HvbiIgwOvmX9s6vLHC6CZzk83kVqiDSqvRbegJSp+czT44wk8cP
+	TP+/Ctrnz+Bwv+/QA7UoMVEBzqp5NGZaXSjdFdNvV/fc4tp9cUxmhZVsPtdrJjN6tTl0
+	pcU/ZrH4FHKprzs826CxUn7z8Kh4luMIJCkQScfb5Jr0GgAmDPx3CHltfHEay2hE4S/k
+	aiV03XhbUdpPlaDHUgiaP32M7AXorFOK4NSz2yXDJYXx5BjCrMtWwh1JTxV0c3whbd2l
+	r7QQuBYZW5Ls2Ob7fC6HkHb+rhj1KwKOOOmnByfwJAnKMC9w4Zl5mgxm6k5uh2W9Vrfb
+	1wDA==
+X-Gm-Message-State: AOPr4FXVC9GtijCaU56zPLXf9ph4lPa2nGZIo52J2gBLq0OTWo+tL/hPCVztEtopTIXALVfvPBRqIqq1oYFSZYyM
+X-Received: by 10.107.51.213 with SMTP id z204mr1914137ioz.148.1461661176563; 
+	Tue, 26 Apr 2016 01:59:36 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.107.9.106 with HTTP; Tue, 26 Apr 2016 01:59:17 -0700 (PDT)
+In-Reply-To: <F6CD090A69E64C4289DC608E1C5D2024253E1E0E@DE08W1305.global.ds.honeywell.com>
+References: <F6CD090A69E64C4289DC608E1C5D2024253E0CBB@DE08W1305.global.ds.honeywell.com>
+	<CAJTo0LZW8x_KVjOhAsp-uv3Ax5yKiKz9FxaDS-me33iF7BvcCw@mail.gmail.com>
+	<F6CD090A69E64C4289DC608E1C5D2024253E1E0E@DE08W1305.global.ds.honeywell.com>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Tue, 26 Apr 2016 09:59:17 +0100
+Message-ID: <CAJTo0LZC+tVTiw2EVdzF9DWibBPfVJPSw=y+vAGtpJPpa8fCTg@mail.gmail.com>
+To: "Esponde, Joel" <Joel.Esponde@honeywell.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: Fetcher issue: Error communicating with gnome-keyring-daemon
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,217 +56,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Apr 2016 10:37:41 -0000
+X-List-Received-Date: Tue, 26 Apr 2016 08:59:40 -0000
+Content-Type: multipart/alternative; boundary=001a11440cd0361cbd05315f83e4
 
-Fixed the follwoing pylint warnings:
-  C:118, 8: Invalid variable name "s" (invalid-name)
-  C:307,20: Invalid variable name "lf" (invalid-name)
-  C:313,36: Invalid variable name "e" (invalid-name)
-  C:319, 0: Invalid argument name "configParams" (invalid-name)
-  C:337,24: Invalid variable name "e" (invalid-name)
-  C:356, 0: Invalid argument name "configParams" (invalid-name)
-  C:447,28: Invalid variable name "e" (invalid-name)
+--001a11440cd0361cbd05315f83e4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- bitbake/lib/bb/main.py | 81 +++++++++++++++++++++++++-------------------------
- 1 file changed, 41 insertions(+), 40 deletions(-)
+On 22 April 2016 at 17:21, Esponde, Joel <Joel.Esponde@honeywell.com> wrote=
+:
 
-diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-index 60c7da3..0f5635b 100755
---- a/bitbake/lib/bb/main.py
-+++ b/bitbake/lib/bb/main.py
-@@ -115,8 +115,8 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
-         if _warnings_showwarning is not None:
-             _warnings_showwarning(message, category, filename, lineno, file, line)
-     else:
--        s = warnings.formatwarning(message, category, filename, lineno)
--        warnlog.warn(s)
-+        warning = warnings.formatwarning(message, category, filename, lineno)
-+        warnlog.warn(warning)
- 
- warnings.showwarning = _showwarning
- warnings.filterwarnings("ignore")
-@@ -304,23 +304,24 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-                 # we try to read the address at all times; if the server is not started,
-                 # we'll try to start it after the first connect fails, below
-                 try:
--                    lf = open(lock_location, 'r')
--                    remotedef = lf.readline()
-+                    lockf = open(lock_location, 'r')
-+                    remotedef = lockf.readline()
-                     [host, port] = remotedef.split(":")
-                     port = int(port)
--                    lf.close()
-+                    lockf.close()
-                     options.remote_server = remotedef
--                except Exception as e:
--                    raise BBMainException("Failed to read bitbake.lock (%s), invalid port" % str(e))
-+                except Exception as err:
-+                    raise BBMainException("Failed to read bitbake.lock (%s), "
-+                                          "invalid port" % str(err))
- 
-         return options, targets[1:]
- 
- 
--def start_server(servermodule, configParams, configuration, features):
-+def start_server(servermodule, configparams, configuration, features):
-     server = servermodule.BitBakeServer()
--    single_use = not configParams.server_only
--    if configParams.bind:
--        (host, port) = configParams.bind.split(':')
-+    single_use = not configparams.server_only
-+    if configparams.bind:
-+        (host, port) = configparams.bind.split(':')
-         server.initServer((host, int(port)), single_use)
-         configuration.interface = [server.serverImpl.host, server.serverImpl.port]
-     else:
-@@ -334,7 +335,7 @@ def start_server(servermodule, configParams, configuration, features):
- 
-         server.addcooker(cooker)
-         server.saveConnectionDetails()
--    except Exception as e:
-+    except Exception:
-         exc_info = sys.exc_info()
-         while hasattr(server, "event_queue"):
-             try:
-@@ -353,7 +354,7 @@ def start_server(servermodule, configParams, configuration, features):
-     return server
- 
- 
--def bitbake_main(configParams, configuration):
-+def bitbake_main(configparams, configuration):
- 
-     # Python multiprocessing requires /dev/shm on Linux
-     if sys.platform.startswith('linux') and not os.access('/dev/shm', os.W_OK | os.X_OK):
-@@ -369,36 +370,36 @@ def bitbake_main(configParams, configuration):
-         pass
- 
- 
--    configuration.setConfigParameters(configParams)
-+    configuration.setConfigParameters(configparams)
- 
--    ui_module = import_extension_module(bb.ui, configParams.ui, 'main')
--    servermodule = import_extension_module(bb.server, configParams.servertype, 'BitBakeServer')
-+    ui_module = import_extension_module(bb.ui, configparams.ui, 'main')
-+    servermodule = import_extension_module(bb.server, configparams.servertype, 'BitBakeServer')
- 
--    if configParams.server_only:
--        if configParams.servertype != "xmlrpc":
-+    if configparams.server_only:
-+        if configparams.servertype != "xmlrpc":
-             raise BBMainException("FATAL: If '--server-only' is defined, we must set the "
-                                   "servertype as 'xmlrpc'.\n")
--        if not configParams.bind:
-+        if not configparams.bind:
-             raise BBMainException("FATAL: The '--server-only' option requires a name/address "
-                                   "to bind to with the -B option.\n")
--        if configParams.remote_server:
-+        if configparams.remote_server:
-             raise BBMainException("FATAL: The '--server-only' option conflicts with %s.\n" %
-                                   ("the BBSERVER environment variable" if "BBSERVER" in os.environ \
-                                    else "the '--remote-server' option"))
- 
--    if configParams.bind and configParams.servertype != "xmlrpc":
-+    if configparams.bind and configparams.servertype != "xmlrpc":
-         raise BBMainException("FATAL: If '-B' or '--bind' is defined, we must "
-                               "set the servertype as 'xmlrpc'.\n")
- 
--    if configParams.remote_server and configParams.servertype != "xmlrpc":
-+    if configparams.remote_server and configparams.servertype != "xmlrpc":
-         raise BBMainException("FATAL: If '--remote-server' is defined, we must "
-                               "set the servertype as 'xmlrpc'.\n")
- 
--    if configParams.observe_only and (not configParams.remote_server or configParams.bind):
-+    if configparams.observe_only and (not configparams.remote_server or configparams.bind):
-         raise BBMainException("FATAL: '--observe-only' can only be used by UI clients "
-                               "connecting to a server.\n")
- 
--    if configParams.kill_server and not configParams.remote_server:
-+    if configparams.kill_server and not configparams.remote_server:
-         raise BBMainException("FATAL: '--kill-server' can only be used to "
-                               "terminate a remote server")
- 
-@@ -407,12 +408,12 @@ def bitbake_main(configParams, configuration):
-         if level > configuration.debug:
-             configuration.debug = level
- 
--    bb.msg.init_msgconfig(configParams.verbose, configuration.debug,
-+    bb.msg.init_msgconfig(configparams.verbose, configuration.debug,
-                           configuration.debug_domains)
- 
-     # Ensure logging messages get sent to the UI as events
-     handler = bb.event.LogHandler()
--    if not configParams.status_only:
-+    if not configparams.status_only:
-         # In status only mode there are no logs and no UI
-         logger.addHandler(handler)
- 
-@@ -420,35 +421,35 @@ def bitbake_main(configParams, configuration):
-     cleanedvars = bb.utils.clean_environment()
- 
-     featureset = []
--    if not configParams.server_only:
-+    if not configparams.server_only:
-         # Collect the feature set for the UI
-         featureset = getattr(ui_module, "featureSet", [])
- 
--    if configParams.server_only:
-+    if configparams.server_only:
-         for param in ('prefile', 'postfile'):
--            value = getattr(configParams, param)
-+            value = getattr(configparams, param)
-             if value:
-                 setattr(configuration, "%s_server" % param, value)
-                 param = "%s_server" % param
- 
--    if not configParams.remote_server:
-+    if not configparams.remote_server:
-         # we start a server with a given configuration
--        server = start_server(servermodule, configParams, configuration, featureset)
-+        server = start_server(servermodule, configparams, configuration, featureset)
-         bb.event.ui_queue = []
-     else:
-         # we start a stub server that is actually a XMLRPClient that connects to a real server
--        server = servermodule.BitBakeXMLRPCClient(configParams.observe_only,
--                                                  configParams.xmlrpctoken)
--        server.saveConnectionDetails(configParams.remote_server)
-+        server = servermodule.BitBakeXMLRPCClient(configparams.observe_only,
-+                                                  configparams.xmlrpctoken)
-+        server.saveConnectionDetails(configparams.remote_server)
- 
- 
--    if not configParams.server_only:
-+    if not configparams.server_only:
-         try:
-             server_connection = server.establishConnection(featureset)
--        except Exception as e:
--            bb.fatal("Could not connect to server %s: %s" % (configParams.remote_server, str(e)))
-+        except Exception as err:
-+            bb.fatal("Could not connect to server %s: %s" % (configparams.remote_server, str(err)))
- 
--        if configParams.kill_server:
-+        if configparams.kill_server:
-             server_connection.connection.terminateServer()
-             bb.event.ui_queue = []
-             return 0
-@@ -462,13 +463,13 @@ def bitbake_main(configParams, configuration):
-         logger.removeHandler(handler)
- 
- 
--        if configParams.status_only:
-+        if configparams.status_only:
-             server_connection.terminate()
-             return 0
- 
-         try:
-             return ui_module.main(server_connection.connection, server_connection.events,
--                                  configParams)
-+                                  configparams)
-         finally:
-             bb.event.ui_queue = []
-             server_connection.terminate()
--- 
-2.1.4
+> I just tried your patch.
+>
+> And it works just fine!
+>
+>
+>
+> Your commit perfectly fits to our need.
+>
+> Just a little word on commit=E2=80=99s comment, authentication is not don=
+e in this
+> case over ssh it is done over https. So this fix is more generic than wha=
+t
+> the comment may let think.
+>
+>
+>
+> Thanks a lot for having taken time to look at my email and for having
+> answered so quickly and efficiently!
+>
 
+Great, I've updated the message locally.  Thanks for testing the code.
 
+Ross
+
+--001a11440cd0361cbd05315f83e4
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On 22 April 2016 at 17:21, Esponde, Joel <span dir=3D"ltr">&lt;<a href=3D"m=
+ailto:Joel.Esponde@honeywell.com" target=3D"_blank">Joel.Esponde@honeywell.=
+com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"mar=
+gin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><p class=3D"Mso=
+Normal"><span lang=3D"EN-US" style=3D"font-size:11.0pt;font-family:&quot;Ca=
+libri&quot;,sans-serif;color:#400000">I just tried your patch.<u></u><u></u=
+></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:11.0pt;font-=
+family:&quot;Calibri&quot;,sans-serif;color:#400000">And it works just fine=
+!<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:11.0pt;font-=
+family:&quot;Calibri&quot;,sans-serif;color:#400000"><u></u>=C2=A0<u></u></=
+span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:11.0pt;font-=
+family:&quot;Calibri&quot;,sans-serif;color:#400000">Your commit perfectly =
+fits to our need.<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:11.0pt;font-=
+family:&quot;Calibri&quot;,sans-serif;color:#400000">Just a little word on =
+commit=E2=80=99s comment, authentication is not done in this case over ssh =
+it is done over https. So this
+ fix is more generic than what the comment may let think.<u></u><u></u></sp=
+an></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:11.0pt;font-=
+family:&quot;Calibri&quot;,sans-serif;color:#400000"><u></u>=C2=A0<u></u></=
+span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:11.0pt;font-=
+family:&quot;Calibri&quot;,sans-serif;color:#400000">Thanks a lot for havin=
+g taken time to look at my email and for having answered so quickly and eff=
+iciently!</span></p></blockquote></div><br>Great, I&#39;ve updated the mess=
+age locally.=C2=A0 Thanks for testing the code.</div><div class=3D"gmail_ex=
+tra"><br></div><div class=3D"gmail_extra">Ross</div></div>
+
+--001a11440cd0361cbd05315f83e4--
