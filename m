@@ -1,22 +1,45 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id A41F0731B9
+Return-Path: <kergoth@gmail.com>
+Received: from mail-pa0-f65.google.com (mail-pa0-f65.google.com
+	[209.85.220.65])
+	by mail.openembedded.org (Postfix) with ESMTP id C455C605BA
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Apr 2016 13:22:00 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 29 Apr 2016 06:22:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,551,1455004800"; d="scan'208";a="965382995"
-Received: from jdobrzan-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.9.231])
-	by orsmga002.jf.intel.com with ESMTP; 29 Apr 2016 06:22:00 -0700
-From: Elliot Smith <elliot.smith@intel.com>
+	Sat, 30 Apr 2016 19:40:56 +0000 (UTC)
+Received: by mail-pa0-f65.google.com with SMTP id yl2so15271913pac.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 30 Apr 2016 12:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=+Bt5u3p9OmkevFpDbjNKaRc8K7DvxXzca49NUxWOsjY=;
+	b=kuRoglbszQmVFwGocFo94SyTLojwPeUITIP+pN0pzFRRilU26hNm9y491+93klg0m/
+	1E2G2Vv/NehGexApCd6bzJDQffnBzifr2ER1PutaILL2tncJmGNzURIUDzHVp9hI47/G
+	IBDn8L7W1Uepc0chvcSUBp7sk8WCW8Sz7OA3iCe4JctTJSVVj9kiMxE01xk4eLRkMLgU
+	Yf3TzLrPz7HVDg94rdIgyA/TwNlslIa1xqj7gO6cpxIqZCupgpfdn3N4bUgyP0PEgfTh
+	j6kmf/y3jqkps5CNO0d+c7m5e4/VSXb0Ojasg5jLaJd9oAIA2rGYtbcCdyyn6HrC/yC+
+	28iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=+Bt5u3p9OmkevFpDbjNKaRc8K7DvxXzca49NUxWOsjY=;
+	b=UiCVWxssV0xqewQLTRoAKcl1IbfAY52dVKdwFoYenjkvBEFfZMo5q669Hje7JqVqth
+	mmXN2AaeKsG3grmdmHjzBBOCGu1SPhmixTyozgcC0kH4kCEpRo1agwtJhLzbQlJcROE0
+	XWx7nHeKKVcbcZyCXz6o6z8vNIm40ZHlbSc1a8nhSNLiNjiZNxxxfHvpN2xK4J/47i8y
+	eVO+TNrMOcnrtpCLhcxJiVk7B2n33+IPou6y4nEO3w4oxV338/jMDi7gfU4DsW2B6hsx
+	GAcVU0midfudEBE917PagKwXfLAN691KE9lrF/EAEN27KAp2qteu2BItR7cUdMkC/++j
+	1vag==
+X-Gm-Message-State: AOPr4FUteZjQ5dJJlnAqhF6VbvhzlfUW+lvkBrMxJwJP7AdM72i3GHUAW1WgcxetwsI1/w==
+X-Received: by 10.66.155.38 with SMTP id vt6mr4361525pab.157.1462045257091;
+	Sat, 30 Apr 2016 12:40:57 -0700 (PDT)
+Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
+	by smtp.gmail.com with ESMTPSA id h5sm40348516pat.0.2016.04.30.12.40.55
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Sat, 30 Apr 2016 12:40:55 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 29 Apr 2016 14:21:55 +0100
-Message-Id: <1461936115-6932-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH] toaster: tweaks to recipe file downloads
+Date: Sat, 30 Apr 2016 12:40:50 -0700
+Message-Id: <cover.1462040905.git.chris_larson@mentor.com>
+X-Mailer: git-send-email 2.8.0
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: [RFC master][PATCH 0/4] Convert bitbake-layers to plugin-based
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,96 +52,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 Apr 2016 13:22:03 -0000
+X-List-Received-Date: Sat, 30 Apr 2016 19:40:57 -0000
 
-From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+From: Christopher Larson <chris_larson@mentor.com>
 
-* In the custom images table, show the recipe file and download icon
-only when the recipe file exists and can be downloaded.
+This alters the bitbake-layers tool to use plugins for its sub-commands,
+following the same pattern as devtool and recipetool.
+`<bitbake>/lib/bblayers/` holds the default plugins, and layers can provide
+their own in `<layerdir>/lib/bblayers/`.
 
-* Also in the custom images table, make sure the download icon tooltip
-shows on hover.
+A few minor enhancements were made to the plugin loading function after
+pulling it in from scriptutils.
 
-* In the custom image details page, show the correct icon (download)
-next to the recipe file in the right hand column.
 
-* In the custom image details page, show the recipe file and download
-icon in the right hand column only when the recipe file exists and can
-be downloaded
+Please review the following changes for suitability for inclusion. If you have
+any objections or suggestions for improvement, please respond to the patches. If
+you agree with the changes, please provide your Acked-by.
 
-* Also in the custom image details page, simplify the help text we show
-when the 'download' button is disabled: it gave so much information about
-what's actually happening under the hood that it was a bit hard to
-follow.
+The following changes since commit 309f5907a3661821e041ed14645b5d165007b058:
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/toastergui/tables.py                   | 7 ++-----
- bitbake/lib/toaster/toastergui/templates/customrecipe.html | 8 ++++----
- 2 files changed, 6 insertions(+), 9 deletions(-)
+  bitbake: Switch to post release version (2016-04-29 07:41:34 +0100)
 
-diff --git a/bitbake/lib/toaster/toastergui/tables.py b/bitbake/lib/toaster/toastergui/tables.py
-index d375da4..eb876ec 100644
---- a/bitbake/lib/toaster/toastergui/tables.py
-+++ b/bitbake/lib/toaster/toastergui/tables.py
-@@ -507,12 +507,9 @@ class CustomImagesTable(ToasterTable):
-                         static_data_template=name_link_template)
- 
-         recipe_file_template = '''
--        <code>{{data.name}}_{{data.version}}.bb</code>
-         {% if data.get_base_recipe_file %}
--        <a href="{% url 'customrecipedownload' extra.pid data.pk %}">
--        <i class="icon-download-alt" data-original-title="Download recipe
--        file"></i>
--        </a>
-+        <code>{{data.name}}_{{data.version}}.bb</code>
-+        <a href="{% url 'customrecipedownload' extra.pid data.pk %}" class="icon-download-alt get-help" title="Download recipe file"></a>
-         {% endif %}'''
- 
-         self.add_column(title="Recipe file",
-diff --git a/bitbake/lib/toaster/toastergui/templates/customrecipe.html b/bitbake/lib/toaster/toastergui/templates/customrecipe.html
-index aeb4466..4b1ef66 100644
---- a/bitbake/lib/toaster/toastergui/templates/customrecipe.html
-+++ b/bitbake/lib/toaster/toastergui/templates/customrecipe.html
-@@ -107,7 +107,7 @@
-         Download recipe file
-         {% if not base_recipe_file %}
-         <i class="icon-question-sign get-help"
--          data-original-title="The {{recipe.name}} recipe cannot yet be downloaded as the Based on recipe '{{recipe.base_recipe.name}}' has not yet been fetched"></i>
-+          data-original-title="The recipe file doesn't exist yet, so you cannot download it. You need to build your custom image first"></i>
-         {% endif %}
-       </a>
-     </div>
-@@ -182,13 +182,13 @@
-         </dd>
-         {% endwith %}
-         {% endif %}
-+        {% if base_recipe_file %}
-         <dt>Recipe file</dt>
-         <dd>
-           <code>{{recipe.name}}_{{recipe.version}}.bb</code>
--          {% if base_recipe_path %}
--          <a href="{% url 'customrecipedownload' project.pk recipe.pk %}"><i class="icon-share" title="" data-original-title="View recipe file"></i></a>
--          {% endif %}
-+          <a href="{% url 'customrecipedownload' project.pk recipe.pk %}"><i class="icon-download-alt" title="Download recipe file"></i></a>
-         </dd>
-+        {% endif %}
-         <dt>Layer</dt>
-         <dd><a href="{% url 'layerdetails' project.id recipe.layer_version.pk %}">{{recipe.layer_version.layer.name}}</a></dd>
-         {% if recipe.summary %}
+are available in the git repository at:
+
+  https://github.com/kergoth/bitbake bitbake-layers-plugins
+  https://github.com/kergoth/bitbake/tree/bitbake-layers-plugins
+
+Christopher Larson (4):
+  bb.utils: add load_plugins from scriptutils
+  bb.utils: use imp.get_suffixes for load_plugins
+  bb.utils: let loaded plugins provide a plugin object
+  bitbake-layers: convert to plugin-based
+
+ bin/bitbake-layers                 | 1065 ++----------------------------------
+ bitbake/lib/bblayers/__init__.py   |    2 +
+ bitbake/lib/bblayers/action.py     |  233 ++++++++
+ bitbake/lib/bblayers/common.py     |   33 ++
+ bitbake/lib/bblayers/layerindex.py |  270 +++++++++
+ bitbake/lib/bblayers/query.py      |  499 +++++++++++++++++
+ lib/bb/utils.py                    |   31 ++
+ 7 files changed, 1128 insertions(+), 1005 deletions(-)
+ create mode 100644 bitbake/lib/bblayers/__init__.py
+ create mode 100644 bitbake/lib/bblayers/action.py
+ create mode 100644 bitbake/lib/bblayers/common.py
+ create mode 100644 bitbake/lib/bblayers/layerindex.py
+ create mode 100644 bitbake/lib/bblayers/query.py
+
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+2.8.0
 
 
