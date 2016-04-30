@@ -1,60 +1,46 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-io0-f194.google.com (mail-io0-f194.google.com
-	[209.85.223.194])
-	by mail.openembedded.org (Postfix) with ESMTP id B4923605BA
+Received: from mail-pa0-f66.google.com (mail-pa0-f66.google.com
+	[209.85.220.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 32A93605BA
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 30 Apr 2016 19:43:15 +0000 (UTC)
-Received: by mail-io0-f194.google.com with SMTP id k129so19444756iof.3
+	Sat, 30 Apr 2016 19:43:49 +0000 (UTC)
+Received: by mail-pa0-f66.google.com with SMTP id yl2so15275424pac.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 30 Apr 2016 12:43:16 -0700 (PDT)
+	Sat, 30 Apr 2016 12:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc;
-	bh=VfQyBiG597S74UInA53hwRb/lj6g2yfAKcsbXZIOx5I=;
-	b=gAxqejRqpnv86IqnE85Qh6JMVWz/1j8RUUULLSL/DhZkgUpvXftWNA/uh2dc4kVW9n
-	4dVLRMC3Z0oPJlaPdtM/btxCkp3WLcudrgRXo1o0DdFQGP5vEOD9idd42upHZsZJQ47w
-	R+ow3Va6oBszYdnR5vBszeggpxJsVpOpUHE94M79l9MaUi2igBgVJQDuL+jHWiWUqfY5
-	V2D1B3ObZKh8i4uhXvY9sveuYl863cbwqf3/osQRdOc31gjFw6XnASDMMv905teos6/h
-	DSWYjfQpwG5WPQ1aTLvNRI01BB2IDwI6CA42M97RE2audwrT8OJFgPxouA/G1cRkie0B
-	ZjgQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mentor-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc;
-	bh=VfQyBiG597S74UInA53hwRb/lj6g2yfAKcsbXZIOx5I=;
-	b=nMbR7q0vTtVdNm86czOdS1Dj26Ss2AIw+WVyXWkBpBFctWwHpYoptzzMdG5thnVJJ8
-	zUhgpuBL2srNh85pWP/lSaviY+A4hwVf5DIKWumJiNmOR8a5YqQljXQQzbCXiTMo/Z0a
-	NVkCnMLu+3t3ldtX4PWdRxEZIkqOcPGAGu4Y5hIFFEU/m4IxfwfDgIbXVOWiOYz07G2l
-	PZjCYIFYlpZo/NHps1q4zj2C+KZmB762Rqa57+BRsvPbIiwxS7vWBFPWCQQTJszxGsP4
-	iiCQ73ij9x9OInRQHPqKTip86z1gYyyPvQZLl7KwMOTysxrjA3H5LqQUK9XLO2D/LSdn
-	Z8cg==
+	h=from:to:cc:subject:date:message-id;
+	bh=93qTahe6qZTdU4ATtuW0MfPUOsA/x6f8QUMGfioAKRk=;
+	b=cMy+SwsngVq/c5ayCxeAdEG0tDQ51QAcSA514p2n4F79T63//68q/ujDkh/qmvOhyV
+	jrIW8SK2s7LtqFQAFnwnPDU3C5EShzwLoiwMUwbCjGLB2k+XEqjn/FNqziGojUiATZ6Z
+	KqCPA8py0SYylYSJu3XCwHSGH6X+0mdgznnINQPf0bpWSaBkXlAV/ZAK+l6y4RjNgsE6
+	Q86BL3FysBo1hLycXQKjKVEg3Wm3Ha8gbl/zuiYj5SLPTi1FUZcTuUKAIo42RDh5ODZt
+	iCLxAI51/BV9rChyF2WMruVvmF7tobAO6qZX1fbt/irSH9jL+hi/0VYIcPC1a+dKChTy
+	F0dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
-	:date:message-id:subject:to:cc;
-	bh=VfQyBiG597S74UInA53hwRb/lj6g2yfAKcsbXZIOx5I=;
-	b=gVPZub6sa1xTWsNI6IG5FR7udsRLus7GR+i4rcY3+gLAqYvtWodgfoZPOjt4EuGXj4
-	OGmD35ioocOVloKgIs4RfAYTU5262RLzErOb0WQLb4/jaqp6r9T1X5yXxSgRr5aUGahU
-	ubVRm5yGQqxvb5pDo/J32D6JtKdanB101848uSHcob2Sfg2cclgonKeYv72rN8AOt9zp
-	7fD1nFrTvD4+i57rx0+p5ALpzTSaHJM2i/UxiQOEwJNbDaNLk1T0Q4MUAXMJByqtALN6
-	EMjlupqK/fbtB0K6PnrWwXLI3M5Ta/vFrC+XTbGhGQHjHBzU8d7aNKGaTgLFykfNLbdg
-	j52Q==
-X-Gm-Message-State: AOPr4FVsT8yQgVF7wiWGNqMkYegVxLWtj3tuQe9k4stvRXDL+9efvekVOr4/8RCaw1BaALnHO9gRWbrq5EHNMQ==
-X-Received: by 10.107.147.7 with SMTP id v7mr31411867iod.3.1462045395896; Sat,
-	30 Apr 2016 12:43:15 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.79.134.70 with HTTP; Sat, 30 Apr 2016 12:42:56 -0700 (PDT)
-In-Reply-To: <cover.1462040905.git.chris_larson@mentor.com>
-References: <cover.1462040905.git.chris_larson@mentor.com>
-From: Christopher Larson <chris_larson@mentor.com>
-Date: Sat, 30 Apr 2016 12:42:56 -0700
-X-Google-Sender-Auth: biCs9mN_qI3hK6Bcg7j9hLh9Dic
-Message-ID: <CABcZAN=nmHxh=XU1r97N06wYDiY9W2_BmLLNqO5Nc=NNW9rUUw@mail.gmail.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=93qTahe6qZTdU4ATtuW0MfPUOsA/x6f8QUMGfioAKRk=;
+	b=AKCvvw+BTh1R1DL0TKwGKdojWVZwlh5qdiX064sU7MmwB81kupn9Lss7AMfK8ktJtZ
+	zvz80G2ZIt4TXeJo3WQ4HiRdzWxyldacaS9yMcBqBNwOWH39SWmgZyAaVo2zNSd36TUF
+	SeTGlj9Cw/8be0iBpWhASLQ340TcjrV+Ti9NR4U9JoF96fvTgC86BVPbDJ+q3l6IzyX2
+	7Aqq0M8eJZO+UkczzbfkCbncyzwi4mz5utxXHb9TnPtH03HxW2a+tO0Z4J1Lx1OueIRp
+	LhpAiah3h3fRFEDE2YSWRfSMRLN4HQvjP0CTF4dWRhaVoLYXyqF6tCHEIps4voKgnYZZ
+	vRbQ==
+X-Gm-Message-State: AOPr4FX9HfJN3T+HAqofGDQkRyXDhknRzhQDkahSubezHkkhZoymaOuhKQ3slWQh11oFJQ==
+X-Received: by 10.66.6.98 with SMTP id z2mr38864382paz.95.1462045430774;
+	Sat, 30 Apr 2016 12:43:50 -0700 (PDT)
+Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
+	by smtp.gmail.com with ESMTPSA id
+	v185sm564973pfb.72.2016.04.30.12.43.49
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Sat, 30 Apr 2016 12:43:49 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sat, 30 Apr 2016 12:43:30 -0700
+Message-Id: <cover.1462040900.git.chris_larson@mentor.com>
+X-Mailer: git-send-email 2.8.0
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: Re: [RFC master][PATCH 0/4] Convert bitbake-layers to plugin-based
+Subject: [master][PATCH 0/3] Fixes for PyPy
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -67,75 +53,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 30 Apr 2016 19:43:15 -0000
-Content-Type: multipart/alternative; boundary=94eb2c055f6877dc770531b8f819
+X-List-Received-Date: Sat, 30 Apr 2016 19:43:50 -0000
 
---94eb2c055f6877dc770531b8f819
-Content-Type: text/plain; charset=UTF-8
+From: Christopher Larson <chris_larson@mentor.com>
 
-On Sat, Apr 30, 2016 at 12:40 PM, Christopher Larson <kergoth@gmail.com>
-wrote:
+These reduce the dependence upon CPython, allowing bitbake to run under PyPy.
+There doesn't seem to be much performance improvement, but still likely
+worthwhile.
 
-> From: Christopher Larson <chris_larson@mentor.com>
->
-> This alters the bitbake-layers tool to use plugins for its sub-commands,
-> following the same pattern as devtool and recipetool.
-> `<bitbake>/lib/bblayers/` holds the default plugins, and layers can provide
-> their own in `<layerdir>/lib/bblayers/`.
->
-> A few minor enhancements were made to the plugin loading function after
-> pulling it in from scriptutils.
->
->
-> Please review the following changes for suitability for inclusion. If you
-> have
-> any objections or suggestions for improvement, please respond to the
-> patches. If
-> you agree with the changes, please provide your Acked-by.
->
 
-Erm, used the wrong arguments, didn't intend to send this as RFC, just as a
-patch series :)
+Please review the following changes for suitability for inclusion. If you have
+any objections or suggestions for improvement, please respond to the patches. If
+you agree with the changes, please provide your Acked-by.
+
+The following changes since commit 309f5907a3661821e041ed14645b5d165007b058:
+
+  bitbake: Switch to post release version (2016-04-29 07:41:34 +0100)
+
+are available in the git repository at:
+
+  https://github.com/kergoth/bitbake pypy-fixup
+  https://github.com/kergoth/bitbake/tree/pypy-fixup
+
+Christopher Larson (3):
+  bb.build: handle __builtins__ as a module
+  bb.event: handle __builtins__ as a module
+  bb.data_smart: use iter() for __len__
+
+ lib/bb/build.py      |  9 +++++++--
+ lib/bb/data_smart.py |  2 +-
+ lib/bb/event.py      | 11 ++++++++---
+ 3 files changed, 16 insertions(+), 6 deletions(-)
+
 -- 
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+2.8.0
 
---94eb2c055f6877dc770531b8f819
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Sat, Apr 30, 2016 at 12:40 PM, Christopher Larson <span dir=3D"ltr">&lt;=
-<a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com</a=
->&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 =
-0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":2xs" clas=
-s=3D"a3s aXjCH">From: Christopher Larson &lt;<a href=3D"mailto:chris_larson=
-@mentor.com">chris_larson@mentor.com</a>&gt;<br>
-<br>
-This alters the bitbake-layers tool to use plugins for its sub-commands,<br=
->
-following the same pattern as devtool and recipetool.<br>
-`&lt;bitbake&gt;/lib/bblayers/` holds the default plugins, and layers can p=
-rovide<br>
-their own in `&lt;layerdir&gt;/lib/bblayers/`.<br>
-<br>
-A few minor enhancements were made to the plugin loading function after<br>
-pulling it in from scriptutils.<br>
-<br>
-<br>
-Please review the following changes for suitability for inclusion. If you h=
-ave<br>
-any objections or suggestions for improvement, please respond to the patche=
-s. If<br>
-you agree with the changes, please provide your Acked-by.<br></div></blockq=
-uote></div><br>Erm, used the wrong arguments, didn&#39;t intend to send thi=
-s as RFC, just as a patch series :)<br>-- <br><div class=3D"gmail_signature=
-"><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>Founde=
-r - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Softw=
-are Engineer, Mentor Graphics</div></div>
-</div></div>
-
---94eb2c055f6877dc770531b8f819--
