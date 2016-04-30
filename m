@@ -1,49 +1,47 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pf0-f195.google.com (mail-pf0-f195.google.com
-	[209.85.192.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 27667760B0
+Received: from mail-ig0-f171.google.com (mail-ig0-f171.google.com
+	[209.85.213.171])
+	by mail.openembedded.org (Postfix) with ESMTP id 2508B76F8C
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 30 Apr 2016 19:52:59 +0000 (UTC)
-Received: by mail-pf0-f195.google.com with SMTP id 145so15351846pfz.1
+	Sat, 30 Apr 2016 20:07:09 +0000 (UTC)
+Received: by mail-ig0-f171.google.com with SMTP id bi2so53121743igb.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 30 Apr 2016 12:53:00 -0700 (PDT)
+	Sat, 30 Apr 2016 13:07:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=2Za4ZGehTBtdpCv3OXLIUTF3G0Kj194HXXGBJotwYbw=;
-	b=SZL+pyCg7u/6I7E6KdAQMqK+Fhc3KxCgN+oNo5Yl3u7e6PaV0t1FsW40ercpV/ouQJ
-	H8j1YuhM5Zgz5wsi9kYeOTHcFQT3fD0pBQ6m8v3GyL0c6Y7iADwHrTsC5gjkq6e9GFar
-	1V1WqX9S3YzvQZGW5Ha5Ui01bxK8SxSyuorFB/lq2DgcMAIsiMWOzil7fxsugMSSFNiB
-	Fz7EEanpvIeHBstNYaLx2C0lmjD6KwP9sUfldbtggvmFATnQ1Bp61AVarfZQ+2z+LfOG
-	T9r7Z8twosdwZZ8AOWVZor1P9tSxmpruld9AVDdZ5yGr5NgIg0qn+ev/kJ+7Is6dCAPG
-	s9zA==
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=N5nLG0P5mnkbnav7F4xqWPXVX8UUrYeKhzg0lJlLYgg=;
+	b=PUVVjlyDUM9PY3DNF4IS2gvn3Jyq1o+y2vQ11KHnmjfXrBQWZuTlYg16DEh+H1fnQh
+	UKfAVnN6jwALC7nInmw/YTEeSCbkJT5cbSaiOitRgZ/MQXcgMB0suJKKs3v9FNy0e0tl
+	0vjzUtOo+rRpU0SlkTF+0JL9AcSW+lSfyUX9suKFQZngaI+grvrYK+TrEkosR5Zx4oBh
+	Yyl4AcNpL48q916sjm7efQufqGtZkgADugMij/v8MdjL5mTSXsw96rMlm21F/3yLlCo6
+	fnig2LWsb4FmkrYYY5EqNgwMUY0Foh5mhDrAGOw68vGhL7hdj7IBdB6KRbN6DdlwWDKB
+	dfJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=2Za4ZGehTBtdpCv3OXLIUTF3G0Kj194HXXGBJotwYbw=;
-	b=dYL/XmA5qVee/CY5l0stCGBmjgwxuClfi3jHdGMbsbuMrhTqBCCOyfuIep/Dc/LLiL
-	CSKduZqiLDnw2qmYdiOPhPvQutVL077r2QtNNR5zUjntzblmYLJJxMxkTmPWKsZQQPEg
-	xzupdD/kjBVsMcsU97gumGDEPjThXWl/5SA4UgKcusg6RJ9agW1GwMTMjNCwrTqcfkGL
-	JFnTfK4rppKAuKXdI+VAWXLaj+hkcnUAQFDM2FszmMqIY+muzI3ZL15GjDEDPa3m1rfq
-	LmYwd7BzMfp9Ooybcq17323EWE0M570bQ+YoIcFZI2Bg8GwRLGt3yjo0rxMC3m+kaKeX
-	V0mA==
-X-Gm-Message-State: AOPr4FU1N8R0mTNyS6vxc4DxQS6tvOLN0ojFRI/mu+RKMFtL1WTH4hlVGL1kw4tK2XIBJw==
-X-Received: by 10.98.82.208 with SMTP id g199mr39198902pfb.113.1462045980801; 
-	Sat, 30 Apr 2016 12:53:00 -0700 (PDT)
-Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
-	by smtp.gmail.com with ESMTPSA id
-	z2sm33247522pfa.90.2016.04.30.12.52.59
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 30 Apr 2016 12:52:59 -0700 (PDT)
-From: Christopher Larson <kergoth@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Sat, 30 Apr 2016 12:52:49 -0700
-Message-Id: <1462045969-14538-5-git-send-email-kergoth@gmail.com>
-X-Mailer: git-send-email 2.8.0
-In-Reply-To: <1462045969-14538-1-git-send-email-kergoth@gmail.com>
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=N5nLG0P5mnkbnav7F4xqWPXVX8UUrYeKhzg0lJlLYgg=;
+	b=HD1PT/e9jKTAlbENcDQVnuZZo0tp1irGp85tszjNsDN84ZUIctP44rqnx67PaJGDTW
+	4LoI2+Z6rhQRhLWvGsLnbCAySS1XguQeH1npkWmsqD+rPwKznDGB1V+oRliyn47LV0vv
+	EmfU78kt4wmo9XQ8aeqVsr7EhQQawFYs2v3kogF8WidZcLSvSq0rQgnboDEWPIsbbnXR
+	94SJ9PRbAsXsd+/0+2AqdIRwVBnKE0nNhLWIYUiWmT6wjXS1WCMQIomR9ryOI2y6TFew
+	dMGmHqlqoDE5hEbh6oUP6TtPUQyxSQmAYqIZn8OLDWQU0QWe1NbaaraTDy29Vbg+G1dG
+	NbAw==
+X-Gm-Message-State: AOPr4FW0rOICaIdkPCfYd4CaDFno745F0g0g8vatLRKRIX6vXY36k1EmJrgpYKlnluDqMNjsvXdUMeXlUfgmng==
+X-Received: by 10.50.160.3 with SMTP id xg3mr12160907igb.87.1462046830247;
+	Sat, 30 Apr 2016 13:07:10 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.79.134.70 with HTTP; Sat, 30 Apr 2016 13:06:50 -0700 (PDT)
+In-Reply-To: <1462045969-14538-3-git-send-email-kergoth@gmail.com>
 References: <1462045969-14538-1-git-send-email-kergoth@gmail.com>
+	<1462045969-14538-3-git-send-email-kergoth@gmail.com>
+From: Christopher Larson <kergoth@gmail.com>
+Date: Sat, 30 Apr 2016 13:06:50 -0700
+Message-ID: <CABcZAN=DWHSWgOi-HBcShqH9t7tWQ603hPXJgGLFd8RZzwinvA@mail.gmail.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [master][PATCH] Provide LAYERDIR_RE for layer.conf
+Subject: Re: [master][PATCH] bb.cooker: only emit a var as python if 'func' is set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,90 +54,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 30 Apr 2016 19:53:00 -0000
+X-List-Received-Date: Sat, 30 Apr 2016 20:07:10 -0000
+Content-Type: multipart/alternative; boundary=001a11348a7af64a2e0531b94d10
 
-From: Christopher Larson <chris_larson@mentor.com>
+--001a11348a7af64a2e0531b94d10
+Content-Type: text/plain; charset=UTF-8
 
-This variable is a regex-escaped version of LAYERDIR, for safer use in
-BBFILE_PATTERN, so as to avoid issues with regex special characters in the
-layer path.
+On Sat, Apr 30, 2016 at 12:52 PM, Christopher Larson <kergoth@gmail.com>
+wrote:
 
-[YOCTO #8402]
+> From: Christopher Larson <chris_larson@mentor.com>
+>
+> This avoids a common issue where PACKAGECONFIG is emitted as a function in
+> bitbake -e when the 'python' flag exists. It isn't a python function unless
+> both 'func' and 'python' are set. This aligns with the behavior of
+> emit_func_python.
+>
+> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>
----
- doc/bitbake-user-manual/bitbake-user-manual-hello.xml         |  2 +-
- doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml | 11 +++++++++++
- lib/bb/cookerdata.py                                          |  9 +++++++--
- 3 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-hello.xml b/doc/bitbake-user-manual/bitbake-user-manual-hello.xml
-index f6d82b4..8b7edbf 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-hello.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-hello.xml
-@@ -399,7 +399,7 @@ ERROR: Unable to parse base: ParseError in configuration INHERITs: Could not inh
-      <link linkend='var-BBFILES'>BBFILES</link> += "${LAYERDIR}/*.bb"
- 
-      <link linkend='var-BBFILE_COLLECTIONS'>BBFILE_COLLECTIONS</link> += "mylayer"
--     <link linkend='var-BBFILE_PATTERN'>BBFILE_PATTERN_mylayer</link> := "^${LAYERDIR}/"
-+     <link linkend='var-BBFILE_PATTERN'>BBFILE_PATTERN_mylayer</link> := "^${LAYERDIR_RE}/"
-                 </literallayout>
-                 For information on these variables, click the links
-                 to go to the definitions in the glossary.</para>
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
-index ae7e4ce..4d06ff9 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
-@@ -1636,6 +1636,17 @@
-             </glossdef>
-         </glossentry>
- 
-+        <glossentry id='var-LAYERDIR_RE'><glossterm>LAYERDIR_RE</glossterm>
-+            <glossdef>
-+                <para>When used inside the <filename>layer.conf</filename> configuration
-+                    file, this variable provides the path of the current layer,
-+                    escaped for use in a regular expression
-+                    (<link linkend='var-BBFILE_PATTERN'><filename>BBFILE_PATTERN</filename></link>).
-+                    This variable is not available outside of <filename>layer.conf</filename>
-+                    and references are expanded immediately when parsing of the file completes.</para>
-+            </glossdef>
-+        </glossentry>
-+
-         <glossentry id='var-LAYERVERSION'><glossterm>LAYERVERSION</glossterm>
-             <glossdef>
-                 <para>Optionally specifies the version of a layer as a single number.
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 50259a9..2b11717 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -22,9 +22,11 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
--import os, sys
--from functools import wraps
- import logging
-+import os
-+import re
-+import sys
-+from functools import wraps
- import bb
- from bb import data
- import bb.parse
-@@ -295,9 +297,12 @@ class CookerDataBuilder(object):
-                 if layer.endswith('/'):
-                     layer = layer.rstrip('/')
-                 data.setVar('LAYERDIR', layer)
-+                data.setVar('LAYERDIR_RE', re.escape(layer))
-                 data = parse_config_file(os.path.join(layer, "conf", "layer.conf"), data)
-                 data.expandVarref('LAYERDIR')
-+                data.expandVarref('LAYERDIR_RE')
- 
-+            data.delVar('LAYERDIR_RE')
-             data.delVar('LAYERDIR')
- 
-         if not data.getVar("BBPATH", True):
+Don't apply this yet, v2 forthcoming.
 -- 
-2.8.0
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--001a11348a7af64a2e0531b94d10
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><br><div class=3D"gmail_extra">On Sat, Apr 30, 2016 at 12:=
+52 PM, Christopher Larson <span dir=3D"ltr">&lt;<a href=3D"mailto:kergoth@g=
+mail.com" target=3D"_blank">kergoth@gmail.com</a>&gt;</span> wrote:<br><div=
+ class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0 =
+0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">From: Christopher Lar=
+son &lt;<a href=3D"mailto:chris_larson@mentor.com">chris_larson@mentor.com<=
+/a>&gt;<br>
+<br>
+This avoids a common issue where PACKAGECONFIG is emitted as a function in<=
+br>
+bitbake -e when the &#39;python&#39; flag exists. It isn&#39;t a python fun=
+ction unless<br>
+both &#39;func&#39; and &#39;python&#39; are set. This aligns with the beha=
+vior of<br>
+emit_func_python.<br>
+<br>
+Signed-off-by: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor=
+.com">chris_larson@mentor.com</a>&gt;</blockquote><div><br></div><div>Don&#=
+39;t apply this yet, v2 forthcoming.<br>-- <br><div class=3D"gmail_signatur=
+e"><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>Found=
+er - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Soft=
+ware Engineer, Mentor Graphics</div></div>
+</div></div>
+</div></div>
+
+--001a11348a7af64a2e0531b94d10--
