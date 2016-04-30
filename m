@@ -1,46 +1,48 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pa0-f68.google.com (mail-pa0-f68.google.com
-	[209.85.220.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 2EC1E60118
+Received: from mail-io0-f195.google.com (mail-io0-f195.google.com
+	[209.85.223.195])
+	by mail.openembedded.org (Postfix) with ESMTP id A4D8860123
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 30 Apr 2016 20:10:38 +0000 (UTC)
-Received: by mail-pa0-f68.google.com with SMTP id zy2so18101931pac.2
+	Sat, 30 Apr 2016 20:11:22 +0000 (UTC)
+Received: by mail-io0-f195.google.com with SMTP id k129so19487231iof.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 30 Apr 2016 13:10:40 -0700 (PDT)
+	Sat, 30 Apr 2016 13:11:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=HSJGDnDWjuzITO5vAH8RUlYtD9Ovq/QFy59XV39NJ3w=;
-	b=yGzeCqlGecH/Jo/W7p08dMk2lrEButdJEqa5bl62d/PJth11IDhcvDEZToCxNKuEyG
-	erDTrp84PAPtB65AQXpopyeTKu9k0eoxEcRNd8E9B0tSt582I45nBlTM+V1mk7Rbn1uw
-	0PHrEaQ2tBwvAyBVRR9YK7IFsBN/enQrx+zrIDbBVGEjQODvqfubEPZRHCSBADPJrIWT
-	KtNgYFhWTfp8UYytOpNFySpS6eu3rHQz4kAvlojpwLvSjnpGYjhcIymqV6PCY12Qfgoq
-	8qZv3nJmWpcAkwnmm/509JCSJSe9y1IWLrxR4sK3GuebOvArpBXGpT7bXfreY7D1pIKr
-	6s/g==
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=9GQyHb6jcYs8hmQOTT3oc5+16jcp0UpkZYEbZZcwEaI=;
+	b=I1URPogKrHZWLKW231iwff6ee7nlegcv/+8jLe+46K/QOZyE/Wd26AljQDnUm2eMlC
+	hdoy5JiGG7jn2SYsfz1eOE6kyP8BHBcq9awscV7jOxVfhZY3kSxM3X4kt9OByZhY1RH5
+	+1kAzu1NJ6/PybDghQAWjbf3VKVXsOkxoQvWhzpc9E0j9fXXYe6diA8wpzh4WOS1TE+M
+	AYYP0Kxe1ecy7hqfaPfCUv4K2rp7ITHmUrtjjBfiTxknJ83xFCtnTUmPohNuSLXpECkv
+	PtEuU3WyyxYx13kbPcflyCosaMFLjqPUvZKdjwQm5fhrxa3KfSp1nvWJjqV0XBewUf5u
+	1Vtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=HSJGDnDWjuzITO5vAH8RUlYtD9Ovq/QFy59XV39NJ3w=;
-	b=I5lU7Gkv6xO2Q9Q38RdnJmE4RCpNCtEGJ7N/xPVyKwG4ZLdUNfn0BUUfx1sVqsIZwP
-	B4WoGxmjdJm1zeXCxYLaZUhL/uWlQC2lEK6z0xyktGGbM7fs+7aLQ3K2WjdPGivctABh
-	y+qmyOnv7x6G+N6o1KZ8oCffX6yqIgbkDS9ILFunxUae/Mt5mEMg82zo/ZuKl992EY57
-	Xo7XQ5aXUoPrqWbHMiJ2s5wt1SRHidn/hbABrSAlMxr+XDvdLr5HjeZxcXjwYS7RgKAe
-	cv8IiCwjXNOvd1kTP+WXlAIMx4Aqj6o5ylO4trte+yfFwuMHMWJ8wf9Fp89TU2JdRGAP
-	CoBQ==
-X-Gm-Message-State: AOPr4FUMJoTz3Ej3x+GobnvrspDgnjnrx5TckKeZBvIt+7N3CvKPzeb5iMXeSyE07/hZ5w==
-X-Received: by 10.66.50.105 with SMTP id b9mr38458499pao.122.1462047039736;
-	Sat, 30 Apr 2016 13:10:39 -0700 (PDT)
-Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
-	by smtp.gmail.com with ESMTPSA id
-	h88sm33394725pfd.10.2016.04.30.13.10.36
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 30 Apr 2016 13:10:37 -0700 (PDT)
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=9GQyHb6jcYs8hmQOTT3oc5+16jcp0UpkZYEbZZcwEaI=;
+	b=HBQ15OzreWxQDrQSuPgZZCt+Ys1XUaw66gJpeUxfPwVrvMo1yCemyqA03NyOIlqWm0
+	fNZjOMhdn5IHPDUXTQ0MkW7S7qdJQ7wrszXjbuV/y27HpJavi4IMF4oxz1c7yWu3FfZj
+	9tsvRa8RMw3tro9uoWuLciiRbf47nxeTph1l9M7XBsU6TGqhJe/EkJT/G5UK1QNQrbrU
+	SDbXvKX7PYX+JrhYRM0YnziRw2xXNMMLc3zFby1UK/AvHUJ0Yqd4NENKc+VYCza2TFVt
+	65evtLfIJCTNKSyVnx0iY8JsmUFGk+jdEXh8SniGRcpDST0xFbS94no3sUHmpQKceOvZ
+	bqUg==
+X-Gm-Message-State: AOPr4FU+KW1br6pyUKuVBT3EtbZ15but8v3t/NH3k/OcELITAl1T9il3pW3HNjTjRHSw0Tj1cGcDq3hb6nx6LA==
+X-Received: by 10.107.2.70 with SMTP id 67mr33156728ioc.70.1462047082965; Sat,
+	30 Apr 2016 13:11:22 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.79.134.70 with HTTP; Sat, 30 Apr 2016 13:11:03 -0700 (PDT)
+In-Reply-To: <CABcZAN=DWHSWgOi-HBcShqH9t7tWQ603hPXJgGLFd8RZzwinvA@mail.gmail.com>
+References: <1462045969-14538-1-git-send-email-kergoth@gmail.com>
+	<1462045969-14538-3-git-send-email-kergoth@gmail.com>
+	<CABcZAN=DWHSWgOi-HBcShqH9t7tWQ603hPXJgGLFd8RZzwinvA@mail.gmail.com>
 From: Christopher Larson <kergoth@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Sat, 30 Apr 2016 13:10:34 -0700
-Message-Id: <1462047034-21067-1-git-send-email-kergoth@gmail.com>
-X-Mailer: git-send-email 2.8.0
+Date: Sat, 30 Apr 2016 13:11:03 -0700
+Message-ID: <CABcZANnaCCc=z0Bi6gr1gTFg+B=Uze+fcguqxTOFby9TcGd+1g@mail.gmail.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [master][PATCH] bb.{cooker, data}: only emit a var as python if 'func' is set
+Subject: Re: [master][PATCH] bb.cooker: only emit a var as python if 'func' is set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,54 +55,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 30 Apr 2016 20:10:39 -0000
+X-List-Received-Date: Sat, 30 Apr 2016 20:11:22 -0000
+Content-Type: multipart/alternative; boundary=001a113968140673c10531b95d7e
 
-From: Christopher Larson <chris_larson@mentor.com>
+--001a113968140673c10531b95d7e
+Content-Type: text/plain; charset=UTF-8
 
-This avoids a common issue where PACKAGECONFIG is emitted as a function in
-bitbake -e when the 'python' flag exists. It isn't a python function unless
-both 'func' and 'python' are set. This aligns with the behavior of
-emit_func_python.
+On Sat, Apr 30, 2016 at 1:06 PM, Christopher Larson <kergoth@gmail.com>
+wrote:
 
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>
----
- lib/bb/cooker.py | 2 +-
- lib/bb/data.py   | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+> On Sat, Apr 30, 2016 at 12:52 PM, Christopher Larson <kergoth@gmail.com>
+> wrote:
+>
+>> From: Christopher Larson <chris_larson@mentor.com>
+>>
+>> This avoids a common issue where PACKAGECONFIG is emitted as a function in
+>> bitbake -e when the 'python' flag exists. It isn't a python function
+>> unless
+>> both 'func' and 'python' are set. This aligns with the behavior of
+>> emit_func_python.
+>>
+>> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+>
+>
+> Don't apply this yet, v2 forthcoming.
+>
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 9b565fc..b2187d7 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -656,7 +656,7 @@ class BBCooker:
-         # emit the metadata which isnt valid shell
-         data.expandKeys(envdata)
-         for e in envdata.keys():
--            if data.getVarFlag( e, 'python', envdata ):
-+            if envdata.getVarFlag(e, 'func', False) and envdata.getVarFlag(e, 'python', False):
-                 logger.plain("\npython %s () {\n%s}\n", e, envdata.getVar(e, False))
- 
- 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index dbc6dea..b5dcdbd 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -182,12 +182,12 @@ def inheritFromOS(d, savedenv, permitted):
- 
- def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-     """Emit a variable to be sourced by a shell."""
--    if d.getVarFlag(var, "python", False):
-+    func = d.getVarFlag(var, "func", False)
-+    if d.getVarFlag(var, 'python', False) and func:
-         return False
- 
-     export = d.getVarFlag(var, "export", False)
-     unexport = d.getVarFlag(var, "unexport", False)
--    func = d.getVarFlag(var, "func", False)
-     if not all and not export and not unexport and not func:
-         return False
- 
+Superceded by '[master][PATCH] bb.{cooker,data}: only emit a var as python
+if 'func'
+ is set'.
+
 -- 
-2.8.0
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--001a113968140673c10531b95d7e
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Sat, Apr 30, 2016 at 1:06 PM, Christopher Larson <span dir=3D"ltr">&lt;<=
+a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com</a>=
+&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px=
+ 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);bor=
+der-left-style:solid;padding-left:1ex"><span class=3D"">On Sat, Apr 30, 201=
+6 at 12:52 PM, Christopher Larson <span dir=3D"ltr">&lt;<a href=3D"mailto:k=
+ergoth@gmail.com" target=3D"_blank">kergoth@gmail.com</a>&gt;</span> wrote:=
+<br></span><div class=3D"gmail_quote"><span class=3D""><blockquote class=3D=
+"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;borde=
+r-left-color:rgb(204,204,204);border-left-style:solid;padding-left:1ex">Fro=
+m: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor.com" target=
+=3D"_blank">chris_larson@mentor.com</a>&gt;<br>
+<br>
+This avoids a common issue where PACKAGECONFIG is emitted as a function in<=
+br>
+bitbake -e when the &#39;python&#39; flag exists. It isn&#39;t a python fun=
+ction unless<br>
+both &#39;func&#39; and &#39;python&#39; are set. This aligns with the beha=
+vior of<br>
+emit_func_python.<br>
+<br>
+Signed-off-by: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor=
+.com" target=3D"_blank">chris_larson@mentor.com</a>&gt;</blockquote><div><b=
+r></div></span><div>Don&#39;t apply this yet, v2 forthcoming.</div></div></=
+blockquote></div><br>Superceded by &#39;[master][PATCH] bb.{cooker,data}: o=
+nly emit a var as python if &#39;func&#39;<div class=3D"gmail_extra">=C2=A0=
+is set&#39;.<br clear=3D"all"><div><br></div>-- <br><div class=3D"gmail_sig=
+nature"><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>=
+Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior=
+ Software Engineer, Mentor Graphics</div></div>
+</div></div>
+</div>
+
+--001a113968140673c10531b95d7e--
