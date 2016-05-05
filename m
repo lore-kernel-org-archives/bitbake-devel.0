@@ -1,29 +1,42 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 12D2965C5C
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 May 2016 16:51:32 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u45GpW4E000612
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 5 May 2016 09:51:32 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Thu, 5 May 2016 09:51:31 -0700
-To: <bitbake-devel@lists.openembedded.org>
-References: <20160505153158.GB2562@jama>
-	<CABcZANmn5iVp3_rP-WOCeqbW=iykHTrJghmW+JaNnKigOVmkpw@mail.gmail.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-Message-ID: <ad29d5a7-462f-6491-cd5c-adae43171c95@windriver.com>
-Date: Thu, 5 May 2016 11:51:31 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0)
-	Gecko/20100101 Thunderbird/45.0
+Return-Path: <dl9pf@gmx.de>
+X-Greylist: delayed 316 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 05 May 2016 17:34:46 UTC
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	by mail.openembedded.org (Postfix) with ESMTP id BC51373181;
+	Thu,  5 May 2016 17:34:46 +0000 (UTC)
+Received: from elrond.localnet ([95.90.4.156]) by mail.gmx.com (mrgmx003) with
+	ESMTPSA (Nemesis) id 0LiDrv-1bSFz90ZXf-00nOWH;
+	Thu, 05 May 2016 19:29:12 +0200
+From: Jan-Simon =?ISO-8859-1?Q?M=F6ller?= <dl9pf@gmx.de>
+To: openembedded-architecture@lists.openembedded.org
+Date: Thu, 05 May 2016 19:29:08 +0200
+Message-ID: <9084039.ulb8Qqh204@elrond>
+User-Agent: KMail/4.14.10 (Linux/4.1.20-11-default; KDE/4.14.18; x86_64; ; )
+In-Reply-To: <fce22d23-e66c-c692-f7d5-f1154081246a@windriver.com>
+References: <1462352176.18407.11.camel@linuxfoundation.org>
+	<cb3d3b05-4d43-dbdb-e905-c407ce6219ec@balister.org>
+	<fce22d23-e66c-c692-f7d5-f1154081246a@windriver.com>
 MIME-Version: 1.0
-In-Reply-To: <CABcZANmn5iVp3_rP-WOCeqbW=iykHTrJghmW+JaNnKigOVmkpw@mail.gmail.com>
-Subject: Re: lsof fails with python exception when bitbake is finished
+X-Provags-ID: V03:K0:veHKzOC3AQs+pyQ4+T0P5pPP8n0TPa6ehmFU0hCymAbtN3sIGUq
+	PzeEl+qbBCcJqhyb/MNzXFDcsjS7F6/D0u5mw+dadgwHo0z5HdxP8SOwI6+VgrtY3nf01+g
+	5pnBVM51sqXQozpiMGIeuQNB5Pyk30vu6b74Wg2enWDJ9ArlPeGw2plU6VadnpWolyDCo7t
+	LISMzva+PTtpf2JtJx5Og==
+X-UI-Out-Filterresults: notjunk:1;V01:K0:CS1ai3A+Zf0=:x768VnRnqrxFA6xFq+c8m8
+	R1RFes6vKSGYjiHn7r87EUIP7ZC4OkXjnAfxmyPemeQkv7/4EAZUFuy5qAbc4TuByoEyZWseD
+	1MKMPYcOS/CHpKUA1JyZBYl8xQ31S8qcrv0P7cZ3ffO5aOO/uijqt6vRR6qb5GpoRI8FQ341h
+	v1Y9Et5+k9ScjeTBGiKWy3hIP8FPtPOrxYZGz5qGNUT6vuVtYBfbMwk2xsop3wo+QPFIy853a
+	T5fi1Z1uhXNMZbYSvK568TCNZ2l73ZPwFsnZYByJX6XxPlwd9xRAHI+EzoazrbtkjOrV6cDVF
+	/EfA+i9SSkp77Tzibmy7NS+CzJBgY38ForKZHfePlIiKkLrBJNx+EuTz2BP+vuUeOsXPrzhHF
+	AhZzW0/lquJauiFb+o1towbYOA0gnUO8wkUryJUEXfvzvqlJh1d50a+GR+QBqDVmz1c86BraS
+	Hn8HfqcvMp63d2QSw6RTXH0RAsjiBAY9osnu9/3leoLOXRDcSSnhe39BfeHLpv04K1kGgAbCM
+	NTU8QeaSwjk58crl9OaADsqCKe/fqXYKbJK2fIzZO1HgGLh43cq7s1ljiyh6yka9ICWhJZfvK
+	kPQEKShvtrOxu2pGUqwpcYm5UizyQwB6uq/zCUQi2CLwH2FKHbAdokxlXHh+VHTS3la0bk9yk
+	C49/WIS8svZkBNg0DxScWHJwHbaNLFb1m7sKiv2RLDFGafgyNcoHCesK9Hlm98o+CFkjzPvRH
+	Wi43eFhgmJyC0b+Yv6jXtWOIyjstiDA+RlUz8fnPIa/8Cd/4mC0QHcUH6asZkAplDkriDeOR0
+	90AaiyJ
+Cc: Philip Balister <philip@balister.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [Openembedded-architecture] Python 3 for Bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,62 +49,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 May 2016 16:51:35 -0000
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 05 May 2016 17:34:50 -0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-On 5/5/16 11:29 AM, Christopher Larson wrote:
-> 
-> On Thu, May 5, 2016 at 8:31 AM, Martin Jansa <martin.jansa@gmail.com
-> <mailto:martin.jansa@gmail.com>> wrote:
-> 
->     I haven't checked what leads to this error, but with latest oe-core and bitbake
->     I've noticed ugly python exception after successful build with bitbake:
-> 
-> 
->     Summary: There were 35 WARNING messages shown.
->     Process ProcessServer-1:
->     Traceback (most recent call last):
->       File "/usr/lib/python2.7/multiprocessing/process.py", line 258, in _bootstrap
->         self.run()
->       File "/OE/bitbake/lib/bb/server/process.py", line 104, in run
->         bb.cooker.server_main(self.cooker, self.main)
->       File "/OE/bitbake/lib/bb/cooker.py", line 1692, in server_main
->         cooker.post_serve()
->       File "/OE/bitbake/lib/bb/cooker.py", line 1627, in post_serve
->         procs = subprocess.check_output(["lsof", '-w', lockfile],
->     stderr=subprocess.STDOUT)
->       File "/usr/lib/python2.7/subprocess.py", line 573, in check_output
->         raise CalledProcessError(retcode, cmd, output=output)
->     CalledProcessError: Command '['lsof', '-w', '/OE/bitbake.lock']' returned
->     non-zero exit status 1
->     /OE/$ lsof -w /OE/bitbake.lock
->     /OE/$ echo $?
->     1
->     /OE/$ ls -lah bitbake.lock
->     -rw-rw-r-- 1 mjansa mjansa 0 May  5 13:19 bitbake.lock
-> 
-> 
-> I'd suggest catching that exception at 1627 of cooker.py and at least printing
-> exc.output, so we can see if lsof showed any errors.
+Am Donnerstag, 5. Mai 2016, 10:13:21 schrieb Mark Hatle:
+> >> Question, do we need any type of identifier in layers to say they'=
+re
+> >> "python3" compatible or not?
+> >=20
+> > Layers that are python2 will need krogoth branches. I'd expect mast=
+er
+> > branches to follow oe-core/master and jump to python3.
+>=20
+> I don't disagree, but my experience has been that branching is late o=
+r never
+> in a lot of layers.
+>=20
+> This might be a place where we need to plan to go through the layer i=
+ndex
+> and at least see if the layer parses -- and flag things that no longe=
+r
+> parse?  (I don't even know if this is something reasonable to attempt=
+.)
+>=20
+> My fear is just we've already got a lot of "broken" (without defining=
+ that)
+> layers in the index, and I think it will be worse once the python3 ch=
+ange
+> happens.  I'd really like to make sure we don't confuse people with v=
+arious
+> errors.
+>=20
 
-We recently found this as well.  In our case it turns out we have a process
-(background) that was started by a special feature of our build.  (similar to
-the pseudo daemon, but with a 60 second timeout.)  This kept the lock file open,
-and 9 times out of 10, we'd end the build with the typical waiting on a process
-message, but very now and then we'd get the lsof you saw.
+As it is a hard cut anyway, call it YP 3.0 (!) and start with an empty=20=
 
-(we fixed it by closing the fd's on the fork/exec for the background item.)
+layerindex for 3.0 and only add layers that parse or are maintained.
+Legacy is 1.x/2.x and will be a separate page.
 
---Mark
 
-> -- 
-> Christopher Larson
-> clarson at kergoth dot com
-> Founder - BitBake, OpenEmbedded, OpenZaurus
-> Maintainer - Tslib
-> Senior Software Engineer, Mentor Graphics
-> 
-> 
-
+--
+Jan-Simon M=F6ller
+dl9pf@gmx.de
 
