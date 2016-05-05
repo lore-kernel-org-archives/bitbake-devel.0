@@ -1,63 +1,60 @@
-Return-Path: <otavio.salvador@ossystems.com.br>
-Received: from mail-pf0-f175.google.com (mail-pf0-f175.google.com
-	[209.85.192.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 37FD372DC4
+Return-Path: <kergoth@gmail.com>
+Received: from mail-io0-f181.google.com (mail-io0-f181.google.com
+	[209.85.223.181])
+	by mail.openembedded.org (Postfix) with ESMTP id B558E6FFFE
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 May 2016 15:50:08 +0000 (UTC)
-Received: by mail-pf0-f175.google.com with SMTP id 77so38901008pfv.2
+	Thu,  5 May 2016 16:29:46 +0000 (UTC)
+Received: by mail-io0-f181.google.com with SMTP id f89so89521706ioi.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 05 May 2016 08:50:09 -0700 (PDT)
+	Thu, 05 May 2016 09:29:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=c9ydjR82lf8fOdScUXySlKDrBSiw+AShbErr8v+ZQuE=;
+	b=fFunNzObAwEZ80YpBXU5erZPbIPLTFPrjQdkX5P7ODsMAUH/houWYF/RIpwUh30kMh
+	rKlr+GOeCLBpI8ZsbqQEOWFhXRkzZ4WBJ488yaTMYAwhp2H6iSA5D/7R+RBcjkMBEkS3
+	xciElFGI6YVW+3cKg/g2gxGdQoQdDHM6gFZmyyMDVnQ8sEKmqBriIbXEU5Ixnm1oAWIZ
+	vk4XmAt5Ey2eFHPZF4w9yO9D4Ef48lPJqFMz9349B0bxsVN/HYZCTC25J1dH/q4l3lZe
+	z1QXtPIZ6Y7d10O1KP26FykHZA974G3shZVvy8iJQoO3vICOuWJcPsXnGpsA2p+glDsy
+	2ZCQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ossystems-com-br.20150623.gappssmtp.com; s=20150623;
-	h=from:mime-version:in-reply-to:references:date:message-id:subject:to
-	:cc; bh=xSPoY+jrwUoERBpjC3MwdpYJvHra2nEIERtswDP6w3U=;
-	b=WIiKJaw/I+DM8kHT8oNresLkHZ4siRj0GXt9hsLbzIB+RNkcbKo6jxvdK8xWcnNhXS
-	c5eipZdwfui3Z4qrDzi1dIYmVuM1Tj/8929m1EctIlr+Uwyss5tzBqbK5ZBBcezImdg0
-	3GZx1PM2XdcT2FxfE0InN3VrS8zFlFnjA1/80RgWGNJ23jbZkFt33bl/2NhV4lXEkOiv
-	gLGwbOWZqD0dELhKlyUAP028bv5YD2KMnIapjXjf8tAaNeEmJihHheAtw8HYDSAytMJi
-	CPdMkm7cLzx7KP3i5ERAJnkfUhmeec1MZnk3uv2vZogOJXbiLN/zsWX6GIQa2ZT66OXv
-	OEnA==
+	d=kergoth-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=c9ydjR82lf8fOdScUXySlKDrBSiw+AShbErr8v+ZQuE=;
+	b=IXaLOJP2UtaevI3I3IJaRkX4euexpKQcq1t87aKHJxBfnvBLSfWxbGGU/KD7ZUJLy8
+	mtn+SLREkexQn1o/l+LUU21hbgTngI3UL1GAqHFy43mldH5Q+v5fEsRVw4GJkwnCtcgm
+	0x/ogV+UEu1Wzof96DzCWhwxqYNwEm5gF5J+GJBxlVNwd7xOcplhXJV4SPzqdx5+q92N
+	z+QsHQnFGC0eiDy5VuIXwshUyK0OkV7L7VNF5JqzJIbIFZJqwca/U8EkJyDLi/Lt0YjT
+	ammQt62gToSCU01oYXe3snk7N1V0x2S6MII/PdQb9a8rVJ+dtJMF2wxMrB4FRAHAalcF
+	HyLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:mime-version:in-reply-to:references:date
-	:message-id:subject:to:cc;
-	bh=xSPoY+jrwUoERBpjC3MwdpYJvHra2nEIERtswDP6w3U=;
-	b=kVz0kNlYlPm3e8GbJOhAz2oI3PD4QMVF3t08drepVBlbqWcVaY6qu3Og7DgwSvX/3Y
-	jL8Wln8/Hb0+TGYkOGLRtIvp1a7WblzKwd1cYbgyYH7Pf+h+OBwP1vb+vXvM+c2eS+ra
-	ADtNKxwdIJ6o+KE19Oei6PAUb2eVh7ccOzN+G94RiigFyQG9oDZPnJi0onmuODi/LZIE
-	pYcMMvo7/ct6qPXq9ov46wrWF3IGZa23G3uyzQa80a3ZXZuU8pmOZRe4Ar4IVKLHtPu5
-	J5SS4ImDJKMKa/Wjd4ZdP0DRbZw6zrh9njExDmBedfVQh6hAOEAwfulKkVxGGhNuGnuI
-	3hoA==
-X-Gm-Message-State: AOPr4FUBcyQdMP+FHSSq0ujeFu/fDTxHR9GlhM6NqxFKWebZq9ayF5+6Jxd15FcjDgCSZw==
-X-Received: by 10.98.55.129 with SMTP id e123mr21582351pfa.4.1462463408874;
-	Thu, 05 May 2016 08:50:08 -0700 (PDT)
-Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com.
-	[209.85.220.50]) by smtp.gmail.com with ESMTPSA id
-	w125sm14658330pfb.53.2016.05.05.08.50.07
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 05 May 2016 08:50:07 -0700 (PDT)
-From: Otavio Salvador <otavio.salvador@ossystems.com.br>
-X-Google-Original-From: Otavio Salvador <otavio@ossystems.com.br>
-Received: by mail-pa0-f50.google.com with SMTP id r5so38324744pag.1;
-	Thu, 05 May 2016 08:50:07 -0700 (PDT)
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc;
+	bh=c9ydjR82lf8fOdScUXySlKDrBSiw+AShbErr8v+ZQuE=;
+	b=hmMuOYXHTYJjypYPaUmqrqeQ8i6UMPf5J3K22FeL8GEgr/PZTWtOTUx/lZzhW0LDrS
+	x1Ram5ksLOS4jmd5MW509T86qtITsYKGqtdpmIZ7IvQkj4jvuq8aJ47wpBpWED3Eoerf
+	q78yc2ru8+bIcr4jGSOivYWpSn4xrvH2hdPoN5lfAxDFce9o/ypILl5R8JJAgLwtYMlK
+	QCp57Q0cgY6yFDrbQMBtHqCi943D6KV8WvAze2weXs9j4jjrqDVKzUVitWIQQITG5E3U
+	CKq4jOY4Pw4VovPEPiXdSqwGO7mlgYnQPHPD+wFJVCZWAiXgV7U+q6i2P09uK8tQi6M6
+	EsXA==
+X-Gm-Message-State: AOPr4FVjpnkvuTYKsRImI6tapVMfDmMptSlq+IvI0/UIEMGtbS+cRZU/zQz6A4WuqVT06FZwsMvwGw80HMz4lA==
+X-Received: by 10.107.147.7 with SMTP id v7mr18329418iod.3.1462465787344; Thu,
+	05 May 2016 09:29:47 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 10.66.65.169 with SMTP id y9mr21690892pas.102.1462463407212;
-	Thu, 05 May 2016 08:50:07 -0700 (PDT)
-Received: by 10.66.231.37 with HTTP; Thu, 5 May 2016 08:50:07 -0700 (PDT)
-In-Reply-To: <CABcZANkm4caMHo2kutQFBfzhVNxyD50xSS7K0vnHSpmKJj6qvQ@mail.gmail.com>
-References: <1462352176.18407.11.camel@linuxfoundation.org>
-	<53677acc-ca69-58d0-1747-b1144aaf8f1b@windriver.com>
-	<cb3d3b05-4d43-dbdb-e905-c407ce6219ec@balister.org>
-	<fce22d23-e66c-c692-f7d5-f1154081246a@windriver.com>
-	<CABcZANkm4caMHo2kutQFBfzhVNxyD50xSS7K0vnHSpmKJj6qvQ@mail.gmail.com>
-Date: Thu, 5 May 2016 12:50:07 -0300
-X-Gmail-Original-Message-ID: <CAP9ODKr0Woo6pVBf9GTS3OTE-gsKBd6_pBdUe5dbjXTgQd3C1Q@mail.gmail.com>
-Message-ID: <CAP9ODKr0Woo6pVBf9GTS3OTE-gsKBd6_pBdUe5dbjXTgQd3C1Q@mail.gmail.com>
-To: Christopher Larson <clarson@kergoth.com>
-Cc: openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [Openembedded-architecture] Python 3 for Bitbake
+Sender: kergoth@gmail.com
+Received: by 10.79.134.70 with HTTP; Thu, 5 May 2016 09:29:27 -0700 (PDT)
+In-Reply-To: <20160505153158.GB2562@jama>
+References: <20160505153158.GB2562@jama>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Thu, 5 May 2016 09:29:27 -0700
+X-Google-Sender-Auth: elLnoB12y3NhcVvrMgLMNmq5ZxM
+Message-ID: <CABcZANmn5iVp3_rP-WOCeqbW=iykHTrJghmW+JaNnKigOVmkpw@mail.gmail.com>
+To: Martin Jansa <martin.jansa@gmail.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: lsof fails with python exception when bitbake is finished
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -70,24 +67,99 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 May 2016 15:50:12 -0000
+X-List-Received-Date: Thu, 05 May 2016 16:29:47 -0000
+Content-Type: multipart/alternative; boundary=94eb2c055f68c0401a05321ad9fe
+
+--94eb2c055f68c0401a05321ad9fe
 Content-Type: text/plain; charset=UTF-8
 
-On Thu, May 5, 2016 at 12:18 PM, Christopher Larson <clarson@kergoth.com> wrote:
-> On Thu, May 5, 2016 at 8:13 AM, Mark Hatle <mark.hatle@windriver.com> wrote:
->> My fear is just we've already got a lot of "broken" (without defining
->> that)
->> layers in the index, and I think it will be worse once the python3 change
->> happens.  I'd really like to make sure we don't confuse people with
->> various errors.
+On Thu, May 5, 2016 at 8:31 AM, Martin Jansa <martin.jansa@gmail.com> wrote:
+
+> I haven't checked what leads to this error, but with latest oe-core and
+> bitbake
+> I've noticed ugly python exception after successful build with bitbake:
 >
-> Perhaps we should consider some sort of flag or dependency/versioning
-> statement in layer.conf?
+>
+> Summary: There were 35 WARNING messages shown.
+> Process ProcessServer-1:
+> Traceback (most recent call last):
+>   File "/usr/lib/python2.7/multiprocessing/process.py", line 258, in
+> _bootstrap
+>     self.run()
+>   File "/OE/bitbake/lib/bb/server/process.py", line 104, in run
+>     bb.cooker.server_main(self.cooker, self.main)
+>   File "/OE/bitbake/lib/bb/cooker.py", line 1692, in server_main
+>     cooker.post_serve()
+>   File "/OE/bitbake/lib/bb/cooker.py", line 1627, in post_serve
+>     procs = subprocess.check_output(["lsof", '-w', lockfile],
+> stderr=subprocess.STDOUT)
+>   File "/usr/lib/python2.7/subprocess.py", line 573, in check_output
+>     raise CalledProcessError(retcode, cmd, output=output)
+> CalledProcessError: Command '['lsof', '-w', '/OE/bitbake.lock']' returned
+> non-zero exit status 1
+> /OE/$ lsof -w /OE/bitbake.lock
+> /OE/$ echo $?
+> 1
+> /OE/$ ls -lah bitbake.lock
+> -rw-rw-r-- 1 mjansa mjansa 0 May  5 13:19 bitbake.lock
+>
 
-What about a bumping the OE-Core LAYERVERSION and force the check in the layers?
-
+I'd suggest catching that exception at 1627 of cooker.py and at least
+printing exc.output, so we can see if lsof showed any errors.
 -- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--94eb2c055f68c0401a05321ad9fe
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Thu, May 5, 2016 at 8:31 AM, Martin Jansa <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:martin.jansa@gmail.com" target=3D"_blank">martin.jansa@gmail.com=
+</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin=
+:0px 0px 0px 0.8ex;border-left-width:1px;border-left-style:solid;border-lef=
+t-color:rgb(204,204,204);padding-left:1ex"><div id=3D":1wi" class=3D"">I ha=
+ven&#39;t checked what leads to this error, but with latest oe-core and bit=
+bake<br>
+I&#39;ve noticed ugly python exception after successful build with bitbake:=
+<br>
+<br>
+<br>
+Summary: There were 35 WARNING messages shown.<br>
+Process ProcessServer-1:<br>
+Traceback (most recent call last):<br>
+=C2=A0 File &quot;/usr/lib/python2.7/multiprocessing/process.py&quot;, line=
+ 258, in _bootstrap<br>
+=C2=A0 =C2=A0 self.run()<br>
+=C2=A0 File &quot;/OE/bitbake/lib/bb/server/process.py&quot;, line 104, in =
+run<br>
+=C2=A0 =C2=A0 bb.cooker.server_main(self.cooker, self.main)<br>
+=C2=A0 File &quot;/OE/bitbake/lib/bb/cooker.py&quot;, line 1692, in server_=
+main<br>
+=C2=A0 =C2=A0 cooker.post_serve()<br>
+=C2=A0 File &quot;/OE/bitbake/lib/bb/cooker.py&quot;, line 1627, in post_se=
+rve<br>
+=C2=A0 =C2=A0 procs =3D subprocess.check_output([&quot;lsof&quot;, &#39;-w&=
+#39;, lockfile], stderr=3Dsubprocess.STDOUT)<br>
+=C2=A0 File &quot;/usr/lib/python2.7/subprocess.py&quot;, line 573, in chec=
+k_output<br>
+=C2=A0 =C2=A0 raise CalledProcessError(retcode, cmd, output=3Doutput)<br>
+CalledProcessError: Command &#39;[&#39;lsof&#39;, &#39;-w&#39;, &#39;/OE/bi=
+tbake.lock&#39;]&#39; returned non-zero exit status 1<br>
+/OE/$ lsof -w /OE/bitbake.lock<br>
+/OE/$ echo $?<br>
+1<br>
+/OE/$ ls -lah bitbake.lock<br>
+-rw-rw-r-- 1 mjansa mjansa 0 May=C2=A0 5 13:19 bitbake.lock</div></blockquo=
+te></div><br>I&#39;d suggest catching that exception at 1627 of cooker.py a=
+nd at least printing exc.output, so we can see if lsof showed any errors.<b=
+r>-- <br><div class=3D"gmail_signature">Christopher Larson<br>clarson at ke=
+rgoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer =
+- Tslib<br>Senior Software Engineer, Mentor Graphics</div>
+</div></div>
+
+--94eb2c055f68c0401a05321ad9fe--
