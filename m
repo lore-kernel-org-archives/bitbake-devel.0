@@ -1,57 +1,49 @@
-Return-Path: <akuster@mvista.com>
-Received: from mail-pa0-f49.google.com (mail-pa0-f49.google.com
-	[209.85.220.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 5DB7D731D4
+Return-Path: <ross.burton@intel.com>
+Received: from mail-ig0-f177.google.com (mail-ig0-f177.google.com
+	[209.85.213.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 095C760767
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 May 2016 17:50:28 +0000 (UTC)
-Received: by mail-pa0-f49.google.com with SMTP id xk12so38536670pac.0
+	Fri,  6 May 2016 08:41:16 +0000 (UTC)
+Received: by mail-ig0-f177.google.com with SMTP id bi2so39628521igb.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 05 May 2016 10:50:30 -0700 (PDT)
+	Fri, 06 May 2016 01:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mvista-com.20150623.gappssmtp.com; s=20150623;
-	h=subject:to:references:cc:from:message-id:date:user-agent
-	:mime-version:in-reply-to:content-transfer-encoding;
-	bh=VU+zXimfihXdCGYhCxpLFgrVLnwoABJ8AFlbjNoqog4=;
-	b=N83rL5lisHnMEqu7W9U56ED/WTSh+D9cGunc5koJYS8EV73UM1dj5DIJCE30Aa/0+/
-	Y7LY5kIZnyGA6cpAX+HzxGq3cer6B1agnBbVYHaPtfhct5OBp9sI/KL6PpTeI0ySdVac
-	BN61ve3iRYiUGk+y06IZkvryxWzu224K3VdllofPOpGZ+uzYXndN18i5i5qAPry/HncA
-	1X0etKqZuAMcpKVEF0o4JH+NEPH7PTocPJVqxP2aOIFLGp70Qu9LeuzwA/MsH+P8/jC/
-	gyILYXb6Cx5u+x1UXtmYJ3ZiwnWMDRd8yr4jCFrafvMfYemzrmyEfAFxZry3EVZp8LTi
-	N25Q==
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=sX2lGLjyW5mijcOCAysxnLSeXHBDccWkZI5a9LeCucQ=;
+	b=FicGtR5degflNjRlnplbQ2mZRjKyWTd3zWfECWLCu7U61N/zaWskW3APHgl220E3m+
+	YLZrbaX/q6k6GE9vAT07z9LhgcTrGp9SV3Cuj9WNJUSsLFja0bnjMDqXWJ8m1rTzNx0Y
+	K+qmVsciPWbnWc0DfpnFFdsDQe3v1/TZ03UG2dhNERIhTy7BQuq4ExUBm77CzK/v5QS5
+	mHNBmQ+BcAZJ0GEZflWDxXSgzrXvZMH9+WhzlLY73SR0OIF9POCYj79O2fUi4vQ08+06
+	V7uIGI2d0rT0a1tc1KSC5br7BxGdtV8yO1fvWNiFqc/xc/klJg8TRRO25V6189Z1/fO/
+	zkBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-	:user-agent:mime-version:in-reply-to:content-transfer-encoding;
-	bh=VU+zXimfihXdCGYhCxpLFgrVLnwoABJ8AFlbjNoqog4=;
-	b=AH7tbZhQcpV3pWYSXJSOttWkTVV1MtgFx3LwwhCz9jJZ+iAC6927EGspAitU/qG0oi
-	cI7CSe+hpLhlZBaiaMSL5AyMlCUrYBCZlWpNF5/PQEJ6s+nOriTeG8wR+4FxiDalWZmk
-	Bq9+ibjcgHAq2n5RtqnBuUOLGnOIDgUgRFHThOjYN2IxGn3f4maifJDc1DrOiWXQl44q
-	dYRZV7F6664jaljf/4jE8lN2IAXj1nKY6nZgcfzvoo3aXaPkiOaY5RAqSeKm7vr/3hMK
-	9TxXOATyHtgHkmxLAEq2hCQClX8NGpE7AH6VmtLJ5d50H8jA3kFycyopWG97eFl6SBVS
-	Q7eA==
-X-Gm-Message-State: AOPr4FV46fBB5E4Z4z9NVe9DsU+byR3cjfdsOfGr0zCAaskvs1BOUfv2q5R3mfvsbOlvqSN+
-X-Received: by 10.66.153.209 with SMTP id vi17mr22480682pab.0.1462470629752;
-	Thu, 05 May 2016 10:50:29 -0700 (PDT)
-Received: from ?IPv6:2601:202:4000:1239:f10a:9ff0:2d1d:e70f?
-	([2601:202:4000:1239:f10a:9ff0:2d1d:e70f])
-	by smtp.googlemail.com with ESMTPSA id
-	xn3sm15201318pab.32.2016.05.05.10.50.28
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Thu, 05 May 2016 10:50:28 -0700 (PDT)
-To: =?UTF-8?Q?Jan-Simon_M=c3=b6ller?= <dl9pf@gmx.de>,
-	openembedded-architecture@lists.openembedded.org
-References: <1462352176.18407.11.camel@linuxfoundation.org>
-	<cb3d3b05-4d43-dbdb-e905-c407ce6219ec@balister.org>
-	<fce22d23-e66c-c692-f7d5-f1154081246a@windriver.com>
-	<9084039.ulb8Qqh204@elrond>
-From: akuster <akuster@mvista.com>
-Message-ID: <572B87E3.9020105@mvista.com>
-Date: Thu, 5 May 2016 10:50:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-	Thunderbird/38.5.1
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=sX2lGLjyW5mijcOCAysxnLSeXHBDccWkZI5a9LeCucQ=;
+	b=FkKFU0rk1roVzonBZ2uJcojezVgpqvJgMQktSCmSYE9AxjuyUkrXkH4dWBLc2Iq+N1
+	Mgocc/OwNiOXM/e9r1pUmeOoLKs8hU9Tw0ZC5FDmAc4XwMbZPB3I3dNVY7PY/TGkRADo
+	5eK+n5GOzfc8NrvjNDrFl5QqAmIREt9E+RXdAQa5bWaNLPkn7MCl+uvjx0A9IAhmYcZQ
+	X1UbjH9/cxFYTCJrVGz0wb5ZshrDs0w0C+qw5iOPAeI5/MF56IZDumyQ6kqa/TUi+dA/
+	JolYbJKfCSiBFbD1yuShNcyD0xkoCC1gliXQ6vkTlHKNpbNxZkMqhak6qNLrKzt4IXC0
+	3C9w==
+X-Gm-Message-State: AOPr4FX1/9/KZwbmQNPX6jSBrvreAoV039oMMhHxTGpFZzq9HBuoI3/PxPho+nNWJpfC+t3r1ALJEiuHyCttFvwg
+X-Received: by 10.50.150.1 with SMTP id ue1mr8803752igb.52.1462524077387; Fri,
+	06 May 2016 01:41:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9084039.ulb8Qqh204@elrond>
-Cc: Philip Balister <philip@balister.org>,
+Received: by 10.107.34.142 with HTTP; Fri, 6 May 2016 01:40:58 -0700 (PDT)
+In-Reply-To: <B753B579-438D-4D33-A568-2B21D7BAE4AA@gmail.com>
+References: <1462352176.18407.11.camel@linuxfoundation.org>
+	<53677acc-ca69-58d0-1747-b1144aaf8f1b@windriver.com>
+	<CAJTo0LaFCGWy_NbXNu72zsYmLzjE58i5=_hdiyUvXUQbdpTMkg@mail.gmail.com>
+	<B753B579-438D-4D33-A568-2B21D7BAE4AA@gmail.com>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Fri, 6 May 2016 09:40:58 +0100
+Message-ID: <CAJTo0LaCk=XLgA-8_=KNauTzJV0xUSjA06f8PO0YccHaZ6bYyw@mail.gmail.com>
+To: Tim Orling <ticotimo@gmail.com>
+Cc: openembedded-architecture
+	<openembedded-architecture@lists.openembedded.org>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [Openembedded-architecture] Python 3 for Bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -66,46 +58,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 May 2016 17:50:30 -0000
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 06 May 2016 08:41:18 -0000
+Content-Type: multipart/alternative; boundary=001a11c30f0a1beef10532286c2c
 
+--001a11c30f0a1beef10532286c2c
+Content-Type: text/plain; charset=UTF-8
 
+On 5 May 2016 at 06:10, Tim Orling <ticotimo@gmail.com> wrote:
 
-On 05/05/2016 10:29 AM, Jan-Simon Möller wrote:
-> Am Donnerstag, 5. Mai 2016, 10:13:21 schrieb Mark Hatle:
->>>> Question, do we need any type of identifier in layers to say they're
->>>> "python3" compatible or not?
->>>
->>> Layers that are python2 will need krogoth branches. I'd expect master
->>> branches to follow oe-core/master and jump to python3.
->>
->> I don't disagree, but my experience has been that branching is late or never
->> in a lot of layers.
->>
->> This might be a place where we need to plan to go through the layer index
->> and at least see if the layer parses -- and flag things that no longer
->> parse?  (I don't even know if this is something reasonable to attempt.)
->>
->> My fear is just we've already got a lot of "broken" (without defining that)
->> layers in the index, and I think it will be worse once the python3 change
->> happens.  I'd really like to make sure we don't confuse people with various
->> errors.
->>
-> 
-> As it is a hard cut anyway, call it YP 3.0 (!) and start with an empty 
-> layerindex for 3.0 and only add layers that parse or are maintained.
-> Legacy is 1.x/2.x and will be a separate page.
+> "Just as long as we aren't switching to perl6 at the same time."
+>
 
-That would be the lest disruptive but I fear the Python3 switch over
-wont happen for a very long time. The same people doing that work would
-most likely be active on or maintaining 2.x
+I just spilt coffee over my desk you scoundrel.
 
-- armin
-> 
-> 
-> --
-> Jan-Simon Möller
-> dl9pf@gmx.de
-> 
+Ross
 
+--001a11c30f0a1beef10532286c2c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On 5 May 2016 at 06:10, Tim Orling <span dir=3D"ltr">&lt;<a href=3D"mailto:=
+ticotimo@gmail.com" target=3D"_blank">ticotimo@gmail.com</a>&gt;</span> wro=
+te:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-=
+left:1px #ccc solid;padding-left:1ex"><div>&quot;Just as long as we aren&#3=
+9;t switching to perl6 at the same time.&quot;</div><div></div></blockquote=
+></div><br>I just spilt coffee over my desk you scoundrel.</div><div class=
+=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Ross</div></div>
+
+--001a11c30f0a1beef10532286c2c--
