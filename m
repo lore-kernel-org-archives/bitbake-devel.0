@@ -1,29 +1,45 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 43F806FF4E;
-	Mon,  9 May 2016 20:39:03 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u49Kd38o004732; Mon, 9 May 2016 21:39:03 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id BEmy9za7pZDv; Mon,  9 May 2016 21:39:03 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u49Kd0JE004715
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 9 May 2016 21:39:01 +0100
-Message-ID: <1462826340.21831.151.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>, bitbake-devel
-	<bitbake-devel@lists.openembedded.org>
-Date: Mon, 09 May 2016 21:39:00 +0100
-In-Reply-To: <1462352176.18407.11.camel@linuxfoundation.org>
-References: <1462352176.18407.11.camel@linuxfoundation.org>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: Python 3 for Bitbake
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wm0-f44.google.com (mail-wm0-f44.google.com [74.125.82.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 731E3606A8
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon,  9 May 2016 23:01:59 +0000 (UTC)
+Received: by mail-wm0-f44.google.com with SMTP id g17so211542354wme.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 09 May 2016 16:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=DJs//4qJXcPbK3ipWBK/ZC3248xz5XheCaatBoaXz9c=;
+	b=tqFJ52Hq/+UdK5GVmx2s4hYhv7IaELDNyujgj8lQTla+N7o/8tOs3OznF1v6hHOJBe
+	+3dXssZsPKAFVhyrEp3HmuBzP969WnyFEwV6YxzYeONEzOxlPu0+avpIWd22aXQAr35l
+	K7BGX7j88je2Bc2PeJukmM1qTrZ6uUvAZAkjoCkahLeNSlS7FJy2XGJAV62WH7C3QHTN
+	DvtojhLhoq8sJNCoqAKPukxA1mT0+L6083Yac7QDizGjLX0P8QV+YMjWmtJnjvbRdlk6
+	w6Qcndia/9/k59qO3ND76P2IHtAj/rY+35R1DZemOkrXngO6WOPE5+r1VMcEFp9GtxLv
+	6AWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=DJs//4qJXcPbK3ipWBK/ZC3248xz5XheCaatBoaXz9c=;
+	b=Jmaof5lOV99B9JqESuH1ZrlxBOoRumCUrpTfheqkIuzt7tR9cGm8SRvhXhKyThCPR5
+	jn/SvGg39aKtTshmD+JcYR7k6dbsXyS0cdu3Hc29nIOd14r1vnWi8+pDBQrifgNJnaeE
+	ZVPyYgRGwACDqJeTVwwaWGvm5JcgAPF1AFectdcobVQWDJdQTgmErPgw8pNZn7vQOrep
+	0OgvozjyjjWHV6/jtj2ALaPwq1nlDMLoxsBWvlr9cFZYGfxlBw924zoqIw5jTnckjrph
+	1YvMm1BuBZvdY5u6414AcK+WISv18clh7euRtW8kKOUQOtsgbc5fi2FYESfNbQJCU4TH
+	8f4g==
+X-Gm-Message-State: AOPr4FW77TckBFuH6NjMB7evtO9UNS+uZkRAVwALzF71mFuneUP+7mZe1lMQUBfemKtznov5
+X-Received: by 10.28.175.143 with SMTP id y137mr12996823wme.21.1462834919414; 
+	Mon, 09 May 2016 16:01:59 -0700 (PDT)
+Received: from orion.home (host109-151-244-175.range109-151.btcentralplus.com.
+	[109.151.244.175]) by smtp.gmail.com with ESMTPSA id
+	b22sm27111436wmb.9.2016.05.09.16.01.58
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 09 May 2016 16:01:58 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 10 May 2016 00:01:47 +0100
+Message-Id: <1462834912-23449-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 0/5] Validate unique project names
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,41 +52,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 May 2016 20:39:06 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 09 May 2016 23:02:00 -0000
 
-On Wed, 2016-05-04 at 09:56 +0100, Richard Purdie wrote:
-> My proposal is we decide to have the flag day, we queue up the 
-> patches on a python3 branch both in oe-core and bitbake, then we 
-> switch when we get successful autobuilder builds. I'd ideally like to 
-> do this quite soon and get one with it (within a few weeks), leaving 
-> plenty of time to handle issues and the other changes planned for 
-> this release cycle and give other layers time to adapt.
+Patch series to add the unique project name validation at project creation and editing.
+Add selenium unit tests to cover the validation on new project creation page.
 
-To update, there are python3 branches in bitbake and OE-Core. With
-those I've been able to "bitbake core-image-sato:do_rootfs core-image
--sato:do_populate_sdk" with the process and xmlrpc backends.
+Michael Wood (2):
+  toaster: models Add missing import sys
+  toaster: tests browser Add test for creating a project
 
-I've had a few issues to resolve, not least that we need to ensure
-python is in utf-8 mode when it is started else files are opened as
-ascii and all kinds of things break. Once started, you can't change the
-default filesystem access mode and never will be able to for reasons
-explained in a PEP.
+Sujith H (3):
+  toaster: projectNameValidation API added
+  toaster: ui handles duplicate project name in new project page
+  toaster: ui handles duplicate project name in project page
 
-I still haven't tried the various supporting tools, toaster, UIs other
-than knotty, the oeqa framework.
+ lib/toaster/orm/models.py                          |   1 +
+ lib/toaster/tests/browser/test_new_project_page.py | 109 +++++++++++++++++++++
+ lib/toaster/toastergui/static/js/libtoaster.js     |  62 ++++++++++++
+ lib/toaster/toastergui/static/js/projecttopbar.js  |   7 ++
+ lib/toaster/toastergui/templates/newproject.html   |  12 ++-
+ .../toastergui/templates/projecttopbar.html        |   3 +-
+ 6 files changed, 191 insertions(+), 3 deletions(-)
+ create mode 100644 lib/toaster/tests/browser/test_new_project_page.py
 
-I've separated out some patches and key fixes and submitted them, I
-still have a monster patch which needs splitting up for both OE-Core
-and bitbake though.
-
-Help is welcome but a heads up on which area anyone is touching would
-be appreciated. I know Ed plans to look at toaster.
-
-Cheers,
-
-Richard
-
+-- 
+2.7.4
 
 
