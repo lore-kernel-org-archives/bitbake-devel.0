@@ -1,48 +1,48 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f42.google.com (mail-wm0-f42.google.com [74.125.82.42])
-	by mail.openembedded.org (Postfix) with ESMTP id BA444731B9
+Received: from mail-wm0-f48.google.com (mail-wm0-f48.google.com [74.125.82.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 8AE5A731B9
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 May 2016 23:02:01 +0000 (UTC)
-Received: by mail-wm0-f42.google.com with SMTP id n129so156451136wmn.1
+	Mon,  9 May 2016 23:02:02 +0000 (UTC)
+Received: by mail-wm0-f48.google.com with SMTP id g17so211543802wme.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 May 2016 16:02:02 -0700 (PDT)
+	Mon, 09 May 2016 16:02:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=Bp2bKNXLasWS8fWaE5dzKMoe9noODNtK3BmAVwZ2VOI=;
-	b=AY54uUQML/QrsmmlNrf8Ne/i1u7ZHt/4jrAlemkmjCIUzYehccnwDQLS/x4P7kh5G2
-	EKEFr+EKEZFB+/iL2tA9+b4QJRiD8TQaEVafOXkcbf1Qt1Cz/qimk2P5noVdSRqNgx6L
-	d6/v5JqHj4/fx+NXWIVZYgXgDZ5NUI7kvRI0VnYc9Sx0KSw+SXFIm7HKx5doqGITKnKT
-	JVRG9buFaC4ReOAkUklVUSlPBkawlTTUWtIFXVdGFO9rM/2/B0NzSDdfLgXVq9QFVEGL
-	4iMoiEKatNhMFFRRQXBOJPA/rZPDkPKNETYEnBWdnqRIuU5wuQ0f6nbOLAUBRlQ7DEnl
-	KXOA==
+	bh=HzwetoLFgmRIDksr2ztMSIYNbCQDlgvQvTKxCJnaQmA=;
+	b=YJ/gD7M3DczHw/Jr687CFKzBbhcYoW8gz2PP5GPTFt6je2ClFALpL9mH8Tw/ESz4xZ
+	QmK+LcbBRiog5TMArvA65IIvzvy9HdSNIhU9zTUvk9JNZ42dr2mAFiwTNTFtu5+uFs/3
+	Yt82reYunHtYteBjAVGZURdHEVnqs8Sw55C/eMrSuFP/ZAOzJ4DDAv2ijEm1WOiVEEnp
+	6hws/Ah4N2mJ+LIcggZj2/MNhr1u4FmlD3Obu1ECpnZzyvxIZNjm0cTfg3J+dLKWPZi0
+	mTMtN+kSXbvx1m/nK/6Gaqstc9izowYHtT3usD7bN3dO98MghLwpNCKr5eO8Nku80goB
+	TmVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=Bp2bKNXLasWS8fWaE5dzKMoe9noODNtK3BmAVwZ2VOI=;
-	b=k3OgDaLNN6kVyMtIwvJe/Zi7cTnIPv/FuBkm07KuwhBi7l1qpQjXLxJ5zmDzP1Gmsp
-	vKGUlTYUDxGkdPck6hPxfHhR98IfeIxWpsWBsov3uTaGCTghofFK22zsGfrK5QUfPchF
-	uEKTavLPwMZ5r/niz/mr5fUtnhPmVXGA/a42270jz+b75Q3Zk+I0EClUp/PWoq0BMQib
-	wFxi+jP76BN/gqWL4MUsy51Jfz1jcSjlJ43O1eOj3tHXf+HC8JqEpOHKB+wVRJIw3a7A
-	3I6W4eyWf7S5cqoJLuR4W01brEaXzUAzW9OlykWktGHbZuz0hOULwNtqV8EJFySet7tW
-	lfRg==
-X-Gm-Message-State: AOPr4FUjyQD/Mqx/USz6UZSoY9/73XGBfdqWB+GXXFowE+DZWymr8V5rbEdxPgNbC/XSvTom
-X-Received: by 10.194.94.229 with SMTP id df5mr35870383wjb.176.1462834921835; 
-	Mon, 09 May 2016 16:02:01 -0700 (PDT)
+	bh=HzwetoLFgmRIDksr2ztMSIYNbCQDlgvQvTKxCJnaQmA=;
+	b=HsCKxge0SnX6OTHs9eQrFMNmhu0IPYGbiDr3ecfho0uNF7q4x1Hvq7P1XgGsV3q7/V
+	5N2zm3ueDdJenu/prhJystjvMwNuJUEpqHUO6nfGMYzoiQ10B3MUL1hUZXFd0E+HQcYg
+	iM+A9Up3IwrqOKnJ1ikig1PO9cliRCbLC7TvxXMTXpr13akI5kLAuBUjmXJIbyYQV8AD
+	zzYs2A0S+QoULr8ow4hz010a3mETSNcDo237mBHhQX09q5wKDOeHcn6N+43A088m9H6a
+	c0CvRpd919HBnO8Ilxg3rwj77LFv4U5acS8cf3mCvo/Rb3FCXlUlLwbZdOvFDDLrq+eL
+	HhNQ==
+X-Gm-Message-State: AOPr4FVWafFUSpjlMHIxA3vUFfdUOXA02wOM2neTGlY9ZrDHd8ebOn/TiSrur4kbciERMuVN
+X-Received: by 10.194.109.65 with SMTP id hq1mr2421770wjb.45.1462834922634;
+	Mon, 09 May 2016 16:02:02 -0700 (PDT)
 Received: from orion.home (host109-151-244-175.range109-151.btcentralplus.com.
 	[109.151.244.175]) by smtp.gmail.com with ESMTPSA id
-	b22sm27111436wmb.9.2016.05.09.16.02.01
+	b22sm27111436wmb.9.2016.05.09.16.02.02
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 09 May 2016 16:02:01 -0700 (PDT)
+	Mon, 09 May 2016 16:02:02 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 10 May 2016 00:01:50 +0100
-Message-Id: <1462834912-23449-4-git-send-email-michael.g.wood@intel.com>
+Date: Tue, 10 May 2016 00:01:51 +0100
+Message-Id: <1462834912-23449-5-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1462834912-23449-1-git-send-email-michael.g.wood@intel.com>
 References: <1462834912-23449-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 3/5] toaster: ui handles duplicate project name in project page
+Subject: [PATCH 4/5] toaster: models Add missing import sys
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,64 +57,23 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 09 May 2016 23:02:02 -0000
 
-From: Sujith H <sujith.h@gmail.com>
-
-When already existing project name is typed by user,
-the ui pops up message regarding the existance of the
-project name. When an existing project is typed the save
-button will be disabled. Else user can proceed ahead by
-modifying the project name.
-
-[YOCTO #7005]
-
-Signed-off-by: Sujith H <sujith.h@gmail.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/static/js/projecttopbar.js   | 7 +++++++
- lib/toaster/toastergui/templates/projecttopbar.html | 3 ++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ lib/toaster/orm/models.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/toaster/toastergui/static/js/projecttopbar.js b/lib/toaster/toastergui/static/js/projecttopbar.js
-index b09f974..f0cd18b 100644
---- a/lib/toaster/toastergui/static/js/projecttopbar.js
-+++ b/lib/toaster/toastergui/static/js/projecttopbar.js
-@@ -25,6 +25,7 @@ function projectTopBarInit(ctx) {
-     e.preventDefault();
-     projectNameForm.hide();
-     projectNameContainer.fadeIn();
-+    $("#project-name-change-input").val(projectName.text());
-   });
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 6716ddf..2669606 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -32,6 +32,7 @@ from django.core import validators
+ from django.conf import settings
+ import django.db.models.signals
  
-   $("#project-name-change-btn").click(function(){
-@@ -87,4 +88,10 @@ function projectTopBarInit(ctx) {
-         window.location.replace(libtoaster.ctx.projectBuildsUrl);
-     }, null);
-   });
-+
-+  /* Call makeProjectNameValidation function */
-+  libtoaster.makeProjectNameValidation($("#project-name-change-input"),
-+      $("#hint-error-project-name"), $("#validate-project-name"),
-+      $("#project-name-change-btn"));
-+
- }
-diff --git a/lib/toaster/toastergui/templates/projecttopbar.html b/lib/toaster/toastergui/templates/projecttopbar.html
-index 007de06..e878cab 100644
---- a/lib/toaster/toastergui/templates/projecttopbar.html
-+++ b/lib/toaster/toastergui/templates/projecttopbar.html
-@@ -33,11 +33,12 @@
-     {% endif %}
-   </h1>
-   <form id="project-name-change-form" style="margin-bottom: 0px; display: none;">
--    <div class="input-append">
-+    <div class="input-append" id="validate-project-name">
-       <input class="huge input-xxlarge" type="text" id="project-name-change-input" autocomplete="off" value="{{project.name}}">
-         <button id="project-name-change-btn" class="btn btn-large" type="button">Save</button>
-         <a href="#" id="project-name-change-cancel" class="btn btn-large btn-link">Cancel</a>
-     </div>
-+    <p class="help-block error" style="display: none;margin-top: 10px;" id="hint-error-project-name">A project with this name exists. Project names must be unique.</p>
-   </form>
- </div>
- 
++import sys
+ import os.path
+ import re
+ import itertools
 -- 
 2.7.4
 
