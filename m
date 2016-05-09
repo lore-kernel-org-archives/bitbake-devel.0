@@ -1,59 +1,29 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-ig0-f195.google.com (mail-ig0-f195.google.com
-	[209.85.213.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 467E77321C
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 May 2016 16:37:37 +0000 (UTC)
-Received: by mail-ig0-f195.google.com with SMTP id c3so11861861igl.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 May 2016 09:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc;
-	bh=GeITjU7w2G3SUMRWldlCgPz5+LWJDMvnHyKxOn4IKTY=;
-	b=0YnM1AhhScziTHmM4fZwpRZvA5fIVe0AAM1v1ZHmucSgiCjZGpPjDRcUnfrMz0ccyq
-	MvJjG0JW/1RI4HYBf5fhVHa8IySc5PCpuN+5IBo3wCcDrkAAdQBUO9uCFtq1TzupC7PA
-	ijdoOYGDmQvzNsGp621tTtrqAqUuGPHzWvz6NxLlc5NlxKBxI4sglfuCY+nFYsxRhhnB
-	tCXz45kVo+QErKBwhR7mCiDKpGyMJdhMaEHzSlvuuq3c5JK+8dOzTYUEaXewDYWbEBYk
-	MJn0L+ld49J1TLiQ84B+f77NpdLA8QX2a0c/srAyyrMMghOzAEpw3lptq12/U+kKlAmK
-	2I6g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=kergoth-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc;
-	bh=GeITjU7w2G3SUMRWldlCgPz5+LWJDMvnHyKxOn4IKTY=;
-	b=a0uriEGhNbfsrPUTjDc5aXAsW/rrLHWlmilW9L/w2VMhgubaJcl4rb+U+2CSMDHr1h
-	292OAB77MpR//3UdFkz61azeXgMSry+EOV3A+LNSHf9vUf3meD66eExNvrPCpuq91ebL
-	nfw1ko62AKPaJAJqetgqUVWD87/c8+JcnwOQ9j22KqmTegyjDnr4Ald5mMLtwl9kVxfP
-	LrRYC9vN8KNYvtnu8dDME7iIFGGoMeSN5/4I2lbLRwxP4QBMDL3xPtAxPHbofxvtAapX
-	1nYckSTMRdfAkdlZKbMAMTssMsrZr4ZdosXT3t/Ym0rYEc8lps/WYxOkDCfmuVPynBY+
-	dn1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
-	:date:message-id:subject:to:cc;
-	bh=GeITjU7w2G3SUMRWldlCgPz5+LWJDMvnHyKxOn4IKTY=;
-	b=VaF0dUc+kXlePnE3s2KhgKIIFk7Tk2tRzZiCNmpuygsBnho5A88WL7P+LAs6TCIDIJ
-	RUjYhrF1k23NBNr97aWIjkgDzWficUDK9UVFWTa4QHdoM3ruzFZuhki7l+ZFES0domjK
-	SKqvb/6s7l65wsf9MiBUJBM534zis98vSocp/QiSXJEMPWaO64t+3caEul0yMt4Ynl1c
-	8Btw4Gw67gzDuyxlAkb042TRIFuylxbrBclMDR2tmP8Br3soN04My81C/OHhDTXeRLdJ
-	Ue52JJym6PUAkRP2ySdXwPoqktZz9WrnvqhHQeBH7fthmabxqULY2S2qs8f6os9iT0Pe
-	fGxQ==
-X-Gm-Message-State: AOPr4FVyNYO4odZP4K30JZRJl1Dg264W23HxiG/65j4WmsJSJSzllFWo65lo9XTQoijUsAmDoqYkcwS95FoO9A==
-X-Received: by 10.50.29.76 with SMTP id i12mr12405261igh.87.1462811858320;
-	Mon, 09 May 2016 09:37:38 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.79.134.70 with HTTP; Mon, 9 May 2016 09:37:19 -0700 (PDT)
-In-Reply-To: <1462798872.21831.128.camel@linuxfoundation.org>
-References: <1462798872.21831.128.camel@linuxfoundation.org>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Mon, 9 May 2016 09:37:19 -0700
-X-Google-Sender-Auth: WGJwcnFZCFSa0FVgZXPS4gcUS1c
-Message-ID: <CABcZANm6LBSKMhKAugX+g=2Giuohdxhej7W7Q1TSPO7QaGL+0A@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake: Update logger.warn() -> logger.warning()
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 43F806FF4E;
+	Mon,  9 May 2016 20:39:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u49Kd38o004732; Mon, 9 May 2016 21:39:03 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id BEmy9za7pZDv; Mon,  9 May 2016 21:39:03 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u49Kd0JE004715
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 9 May 2016 21:39:01 +0100
+Message-ID: <1462826340.21831.151.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: openembedded-architecture
+	<openembedded-architecture@lists.openembedded.org>, bitbake-devel
+	<bitbake-devel@lists.openembedded.org>
+Date: Mon, 09 May 2016 21:39:00 +0100
+In-Reply-To: <1462352176.18407.11.camel@linuxfoundation.org>
+References: <1462352176.18407.11.camel@linuxfoundation.org>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: Python 3 for Bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -66,52 +36,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 May 2016 16:37:39 -0000
-Content-Type: multipart/alternative; boundary=047d7bd75984304ce005326b6df1
+X-List-Received-Date: Mon, 09 May 2016 20:39:06 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---047d7bd75984304ce005326b6df1
-Content-Type: text/plain; charset=UTF-8
+On Wed, 2016-05-04 at 09:56 +0100, Richard Purdie wrote:
+> My proposal is we decide to have the flag day, we queue up the 
+> patches on a python3 branch both in oe-core and bitbake, then we 
+> switch when we get successful autobuilder builds. I'd ideally like to 
+> do this quite soon and get one with it (within a few weeks), leaving 
+> plenty of time to handle issues and the other changes planned for 
+> this release cycle and give other layers time to adapt.
 
-On Mon, May 9, 2016 at 6:01 AM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+To update, there are python3 branches in bitbake and OE-Core. With
+those I've been able to "bitbake core-image-sato:do_rootfs core-image
+-sato:do_populate_sdk" with the process and xmlrpc backends.
 
-> python deprecated logger.warn() in favour of logger.warning(). This is only
-> used in bitbake code so we may as well just translate everything to avoid
-> warnings under python 3. Its safe for python 2.7.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->
+I've had a few issues to resolve, not least that we need to ensure
+python is in utf-8 mode when it is started else files are opened as
+ascii and all kinds of things break. Once started, you can't change the
+default filesystem access mode and never will be able to for reasons
+explained in a PEP.
 
-Looks good.
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+I still haven't tried the various supporting tools, toaster, UIs other
+than knotty, the oeqa framework.
 
---047d7bd75984304ce005326b6df1
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+I've separated out some patches and key fixes and submitted them, I
+still have a monster patch which needs splitting up for both OE-Core
+and bitbake though.
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Mon, May 9, 2016 at 6:01 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.p=
-urdie@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gma=
-il_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-le=
-ft-style:solid;border-left-color:rgb(204,204,204);padding-left:1ex"><div id=
-=3D":qa" class=3D"">python deprecated logger.warn() in favour of logger.war=
-ning(). This is only<br>
-used in bitbake code so we may as well just translate everything to avoid<b=
-r>
-warnings under python 3. Its safe for python 2.7.<br>
-<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org">richard.purdie@linuxfoundation.org</a>&gt;<br></div></blockquo=
-te></div><br>Looks good.<br>-- <br><div class=3D"gmail_signature">Christoph=
-er Larson<br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded,=
- OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graph=
-ics</div>
-</div></div>
+Help is welcome but a heads up on which area anyone is touching would
+be appreciated. I know Ed plans to look at toaster.
 
---047d7bd75984304ce005326b6df1--
+Cheers,
+
+Richard
+
+
+
