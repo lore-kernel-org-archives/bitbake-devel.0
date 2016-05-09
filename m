@@ -1,32 +1,20 @@
-Return-Path: <philip@balister.org>
-X-Greylist: delayed 400 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 05 May 2016 12:20:00 UTC
-Received: from sanddollar.geekisp.com (sanddollar.geekisp.com
-	[216.168.135.167])
-	by mail.openembedded.org (Postfix) with SMTP id B241E73181
+Return-Path: <joshua.g.lock@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id CAA5B7016E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 May 2016 12:20:00 +0000 (UTC)
-Received: (qmail 20408 invoked by uid 1003); 5 May 2016 12:13:20 -0000
-Received: from unknown (HELO ?192.168.11.140?)
-	(philip@opensdr.com@108.44.118.32)
-	by mail.geekisp.com with (DHE-RSA-AES128-SHA encrypted) SMTP;
-	5 May 2016 12:13:20 -0000
-To: Mark Hatle <mark.hatle@windriver.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-References: <1462352176.18407.11.camel@linuxfoundation.org>
-	<53677acc-ca69-58d0-1747-b1144aaf8f1b@windriver.com>
-From: Philip Balister <philip@balister.org>
-Message-ID: <cb3d3b05-4d43-dbdb-e905-c407ce6219ec@balister.org>
-Date: Thu, 5 May 2016 08:13:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.0
-MIME-Version: 1.0
-In-Reply-To: <53677acc-ca69-58d0-1747-b1144aaf8f1b@windriver.com>
-X-Mailman-Approved-At: Fri, 06 May 2016 09:12:57 +0000
-Subject: Re: [Openembedded-architecture] Python 3 for Bitbake
+	Mon,  9 May 2016 09:10:58 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga101.fm.intel.com with ESMTP; 09 May 2016 02:10:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.24,600,1455004800"; d="scan'208";a="949088271"
+Received: from jlock-mobl2.ger.corp.intel.com ([10.252.11.52])
+	by orsmga001.jf.intel.com with ESMTP; 09 May 2016 02:10:57 -0700
+From: Joshua Lock <joshua.g.lock@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  9 May 2016 10:10:53 +0100
+Message-Id: <cover.1462784896.git.joshua.g.lock@intel.com>
+X-Mailer: git-send-email 2.5.5
+Subject: [1.26][PATCH 0/2] Backport fixes for bitbake-selftest
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,60 +27,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 May 2016 12:20:01 -0000
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 09 May 2016 09:10:58 -0000
 
-On 05/04/2016 05:29 PM, Mark Hatle wrote:
-> On 5/4/16 3:56 AM, Richard Purdie wrote:
->> My proposal is we decide to have the flag day, we queue up the patches
->> on a python3 branch both in oe-core and bitbake, then we switch when we
->> get successful autobuilder builds. I'd ideally like to do this quite
->> soon and get one with it (within a few weeks), leaving plenty of time
->> to handle issues and the other changes planned for this release cycle
->> and give other layers time to adapt.
->>
->> I will likely push things so the basics in the core work, I'll then
->> need help for things like toaster, the QA framework, the supporting
->> tools (devtool, recipetool and so on).
->>
->> Does anyone object to this?
-> 
-> I think this is a good plan.  Flag day, and switch.
-> 
-> Question, do we need any type of identifier in layers to say they're "python3"
-> compatible or not?
+When trying to run a fido build on the Yocto Project autobuilder I saw one
+error and one failure in the bitbake-selftest. This pull request backports
+fixes for these issues.
 
-Layers that are python2 will need krogoth branches. I'd expect master
-branches to follow oe-core/master and jump to python3.
+The following changes since commit b09966906ef054834f0b465f0c5a2a937b4c4a4c:
 
-Philip
+  toaster: Rework mimetype guessing to fix artifact downloads (2015-12-18 12:16:34 +0000)
 
+are available in the git repository at:
 
-> 
-> I'd hate for someone to bring in a layer and find it doesn't work, without
-> understanding WHY it doesn't work.
-> 
-> Alternative would be to change the 'python' identifier to 'python3'..  Then if
-> 'python' is parsed, we error?
-> 
-> --Mark
-> 
->> Cheers,
->>
->> Richard
->>
->>
->>
->> _______________________________________________
->> Openembedded-architecture mailing list
->> Openembedded-architecture@lists.openembedded.org
->> http://lists.openembedded.org/mailman/listinfo/openembedded-architecture
->>
-> 
-> _______________________________________________
-> Openembedded-architecture mailing list
-> Openembedded-architecture@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/openembedded-architecture
-> 
+  git://git.yoctoproject.org/poky-contrib joshuagl/bitbake-fido
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=joshuagl/bitbake-fido
+
+Paul Eggleton (1):
+  tests/fetch: ensure fetch tests preserve current dir
+
+Richard Purdie (1):
+  bb/tests/fetch: Update cups url
+
+ lib/bb/tests/fetch.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+2.5.5
+
 
