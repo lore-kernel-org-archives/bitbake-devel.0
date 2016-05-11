@@ -1,29 +1,29 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 3275E7001D
+	by mail.openembedded.org (Postfix) with ESMTP id 343B0700EB
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 11 May 2016 22:06:56 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4BM6o3V000365 for <bitbake-devel@lists.openembedded.org>;
+	u4BM6tU3000453 for <bitbake-devel@lists.openembedded.org>;
 	Wed, 11 May 2016 23:06:56 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id nwfU0AsxuFlZ for <bitbake-devel@lists.openembedded.org>;
+	with LMTP id rk2Csg6sKv3s for <bitbake-devel@lists.openembedded.org>;
 	Wed, 11 May 2016 23:06:56 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4BLtEuI032706
+	u4BLuTdu032725
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 May 2016 22:55:15 +0100
-Message-ID: <1463003714.21831.293.camel@linuxfoundation.org>
+	Wed, 11 May 2016 22:56:30 +0100
+Message-ID: <1463003789.21831.295.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 11 May 2016 22:55:14 +0100
+Date: Wed, 11 May 2016 22:56:29 +0100
 X-Mailer: Evolution 3.16.5-1ubuntu3.1 
 Mime-Version: 1.0
-Subject: [PATCH] runqueue: Improve timestamp comparisons
+Subject: [PATCH] contrib/dump_cache.py, cache: Fix to use python 3 syntax
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,37 +40,45 @@ X-List-Received-Date: Wed, 11 May 2016 22:06:59 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-python3 cares more about invalid type comparisons. Add break statements
-and better tests to make the code paths clearer and avoid type issues
-in python3. No code functionality change.
+Some tweaks to use python 3 syntax in a python 2 compatible way.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 8b3fe5a..aaaafc5 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1085,15 +1085,19 @@ class RunQueue:
-                 stampfile3 = bb.build.stampfile(taskname2 + "_setscene", self.rqdata.dataCache, fn2)
-                 t2 = get_timestamp(stampfile2)
-                 t3 = get_timestamp(stampfile3)
-+                if t3 and not t2:
-+                    continue
-                 if t3 and t3 > t2:
--                   continue
-+                    continue
-                 if fn == fn2 or (fulldeptree and fn2 not in stampwhitelist):
-                     if not t2:
-                         logger.debug(2, 'Stampfile %s does not exist', stampfile2)
-                         iscurrent = False
-+                        break
-                     if t1 < t2:
-                         logger.debug(2, 'Stampfile %s < %s', stampfile, stampfile2)
-                         iscurrent = False
-+                        break
-                     if recurse and iscurrent:
-                         if dep in cache:
-                             iscurrent = cache[dep]
+diff --git a/bitbake/contrib/dump_cache.py b/bitbake/contrib/dump_cache.py
+index e1f2309..97c5463 100755
+--- a/bitbake/contrib/dump_cache.py
++++ b/bitbake/contrib/dump_cache.py
+@@ -36,7 +36,7 @@ def main(argv=None):
+     Get the mapping for the target recipe.
+     """
+     if len(argv) != 1:
+-        print >>sys.stderr, "Error, need one argument!"
++        print("Error, need one argument!", file=sys.stderr)
+         return 2
+ 
+     cachefile = argv[0]
+@@ -56,7 +56,7 @@ def main(argv=None):
+                     continue
+ 
+                 # 1.0 is the default version for a no PV recipe.
+-                if val.__dict__.has_key("pv"):
++                if "pv" in val.__dict__:
+                     pv = val.pv
+                 else:
+                     pv = "1.0"
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index af5b9fb..742fe55 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -339,7 +339,7 @@ class Cache(object):
+                             value = pickled.load()
+                         except Exception:
+                             break
+-                        if self.depends_cache.has_key(key):
++                        if key in self.depends_cache:
+                             self.depends_cache[key].append(value)
+                         else:
+                             self.depends_cache[key] = [value]
 
 
 
