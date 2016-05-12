@@ -1,46 +1,45 @@
 Return-Path: <patrick.ohly@intel.com>
-Received: from mail-io0-f182.google.com (mail-io0-f182.google.com
-	[209.85.223.182])
-	by mail.openembedded.org (Postfix) with ESMTP id E2CF960088
+Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
+	[209.85.223.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 33FD165C8A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 May 2016 13:59:07 +0000 (UTC)
-Received: by mail-io0-f182.google.com with SMTP id i75so90406638ioa.3
+	Thu, 12 May 2016 15:00:15 +0000 (UTC)
+Received: by mail-io0-f172.google.com with SMTP id i75so92964086ioa.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 May 2016 06:59:08 -0700 (PDT)
+	Thu, 12 May 2016 08:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id;
 	bh=3E/tMx7flg7dj/qI4TNduyW3Fy9unK+FuCtgS81Jr0Y=;
-	b=mJXLgbxNfE2MswcXWvjtFKcYlh6OxHC5im/P50voz7qbFZlWQ0ZmZY2O82W63lsFWw
-	n02iouuQ7YAc3aIYIjOV9iNo+vQodCWdJBd29eSzqpORCHlI9dWorOs+zeSJyT+T+wh0
-	8R86GU9nj1kNa+6MGHWb719puBw+ykRwJm89bq4YV4qggVZigTPDYdP1UWOBWsthwG3K
-	nv8e2Cfx6dhC3FN31D1IDeOLnz4OiIQDRLu1h0AflqE5sMhfIREq4HAM8CRE4dQZYIfg
-	0xaMQR1X8GK+ztKErZ3x2kMRqiwY8pcP3RUnAZN1ir0OVJatjSp/bwRvJxg7Av+533+I
-	CUQg==
+	b=pOij1Hho/lIuh3+80gfwDrEVJ6GUM5dSd3C37L8+HlZPNbP9eYip2ApX7n3OfXbvwk
+	8AJmsgLqFtk6x8C7UgjX0KExUS0DOIq8ePwSC3QjMEtczS5kCKJfJ3RZd7g7VCQ1E+SR
+	eFGSimqABeBdoGUfjbqvIx6H7h0eDoN5ATXmAjXFqXf9Ac4fAqLSIXn1g2vRlBvT9bxn
+	+YQKWtVPCH6dR6wgfg1MOz3GBMr5RiCJ3bsyKFPMofqgnUh6Q8hOs5dUzahoktYdh7xi
+	/C9R3rB36OjgIqM6tZvv49XBtdVgs7HOyXrlBlhkdYrFWQB6/SO4xWPPuRqdCTRmmJRA
+	vRFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id;
 	bh=3E/tMx7flg7dj/qI4TNduyW3Fy9unK+FuCtgS81Jr0Y=;
-	b=FSdVB3qdRCoLGM1s1/jFX/lQc+395fPHqeZvf/aH97rfn4QIpLRmjRs9jTOEkVKZW+
-	2XIDxCEpwQXGUQJfCPi8WmBuUbqnHEPEhmeCM+D7cJEbbM9jFSQcawRziJn2WA73qCKp
-	RmN8MeAs1aj0+RBx8CWMT4ruKay1QLZK72yFk4FxKxQIXrFB/vHaJXRTLJGctM7tre44
-	O2vEAjUJmDmr913uM2gwbA79Lcz9M4ANnEZ5auHMqswVUGojSins9MdosuQWTrGos21e
-	DCz5nopnDr14MX50DX75S6TxVHYKOn/XgJLD4dNuUXVSUpgX2Ov7yDFlPXwb7pkNhrSW
-	Ikbg==
-X-Gm-Message-State: AOPr4FUjAUeU2r2ffrjXlICIHzg6HMrxqhJ1mR3gW8R0z8LdxM+VjbxH23y1BY8y6ux/ZZv+
-X-Received: by 10.36.47.74 with SMTP id j71mr7066491itj.48.1463061547565;
-	Thu, 12 May 2016 06:59:07 -0700 (PDT)
+	b=mtTyq4msPWYBybTSaDHxOyRMpocrv80LuNJyThTKieCPl5EPndn1YI79juuuTYYCOs
+	5tINr5LkfRKtB49b2byCaMTBt7ThWBdwEwxt5aTklMfLQzthnB/eJLk7InrI+91p6mHy
+	p38PX3ugf+it7xdbO33srCj7BmVYewTOtLYQADTrZisc400Xa68rLu3g25L779i+JPro
+	rA48NLUqy9TF3YHvYiyRgN9baJYu0wt9SqnBnOQuHtpJ7+HrF2kZmape8iYPp3sEJ1eL
+	Oa1inJKvVOEIRCGhOcnaqiiokX0CGnLt5dSvt+hGZ1+NPSEQ5PnhiUIvUt1m38Y5HWg3
+	4Q/A==
+X-Gm-Message-State: AOPr4FWohJe1X+BARdK5ThVwxhYzvQNcRDnAprqf/RejBPrqRZrM17kLj0Co7kkvXz35SVtl
+X-Received: by 10.36.95.143 with SMTP id r137mr9040736itb.24.1463065216139;
+	Thu, 12 May 2016 08:00:16 -0700 (PDT)
 Received: from pohly-desktop.fritz.box (p5DE8DCA9.dip0.t-ipconnect.de.
 	[93.232.220.169])
-	by smtp.gmail.com with ESMTPSA id 198sm3349892itk.5.2016.05.12.06.59.06
+	by smtp.gmail.com with ESMTPSA id d1sm4499713igv.5.2016.05.12.08.00.14
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 12 May 2016 06:59:06 -0700 (PDT)
+	Thu, 12 May 2016 08:00:15 -0700 (PDT)
 From: Patrick Ohly <patrick.ohly@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 12 May 2016 15:58:59 +0200
-Message-Id: <1463061539-13363-1-git-send-email-patrick.ohly@intel.com>
+Date: Thu, 12 May 2016 17:00:10 +0200
+Message-Id: <1463065210-3823-1-git-send-email-patrick.ohly@intel.com>
 X-Mailer: git-send-email 2.1.4
-X-Mailman-Approved-At: Thu, 12 May 2016 14:12:16 +0000
 Subject: [PATCH] runqueue.py: always emit bb.event.DepTreeGenerated
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -54,7 +53,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 May 2016 13:59:09 -0000
+X-List-Received-Date: Thu, 12 May 2016 15:00:16 -0000
 
 The data included in the event is useful for implementing a pre-build
 check that warns about unexpected components, for example because of
