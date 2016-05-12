@@ -1,20 +1,46 @@
-Return-Path: <humberto.ibarra.lopez@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id EA3B4608B7
+Return-Path: <jpuhlman@mvista.com>
+Received: from mail-pf0-f170.google.com (mail-pf0-f170.google.com
+	[209.85.192.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 52D266057B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 May 2016 19:17:34 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga101.fm.intel.com with ESMTP; 12 May 2016 12:17:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,610,1455004800"; d="scan'208";a="804968869"
-Received: from jhibarra-desk.zpn.intel.com ([10.219.18.66])
-	by orsmga003.jf.intel.com with ESMTP; 12 May 2016 12:17:34 -0700
-From: Humberto Ibarra <humberto.ibarra.lopez@intel.com>
+	Thu, 12 May 2016 22:32:30 +0000 (UTC)
+Received: by mail-pf0-f170.google.com with SMTP id y69so34852954pfb.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 12 May 2016 15:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=mvista-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=VhEwUw12MGINLssxaKzl3C5ORcBriMFqB9Y1d4pP3ZU=;
+	b=H61ET12mWqJWvCgxvrX11i4OUN2aoQu2HI4jrgJRhcuI0Ybdsr8hcDuwHK8BrWbj6e
+	3UXyf84d8tXKW5V+E1ZNTVDMp6n/gGUWijJ6LsSvO3w/ODnH0RMT7mtzxBKYGXh2g1ku
+	VnSnjbT9QAGnf+Pvm04fJ+7BE/oVjTf/QZO4hHWvCHz7PIrMqN0EGJHaVEBYRgWXanYc
+	AoM3S0DLwh5FX1uFZZbtNhlgCbjHKw2lDoXGeOmoDWvMHZCYy7C+i0IOH9YMFCtCPGv/
+	C/Ohsae4arVMomjN1Iiahss08rYA2OTlaPWN81QejLqEHxx0WUTQr2tmg8ZgRai1uTNn
+	l3xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=VhEwUw12MGINLssxaKzl3C5ORcBriMFqB9Y1d4pP3ZU=;
+	b=SHWpal89XzzIJGhQ9wbFZkDL0w6+ZlLojpmiHG9GLAn2BfQluZxu5vUsK3GHdqc/VW
+	J/GbSCUaEV4e7oovE8SEZnexlhunj5aEonsq2I3ZpJzKIF28f3+0xHVtOb8TEyucXL7w
+	NAlZxoSQIIx3BxxwlrIXfWuNsyUs7JR9Bt/x5JUJffY9sE7VfuZEaEHLjDT9r3eTeA7A
+	WRrelnESyqZvHn9rhNswMdgoGQ3DJUVS5YQ37rwNbu1o0XnwpWSL6uWc9KglzldVkrS2
+	XC+TVrcsKEmn3uygsMhuJX410uJbVS+Btx9I3v9WuipuNbtDkjzxzQKFnXHZqFkdcJtV
+	XfjQ==
+X-Gm-Message-State: AOPr4FV+U8I8vxXlqkKOxJXfJJl/EgHgY3TZNB3AZJOFpZkiVrqEeUtKXxtWYbeGzsOevp/5
+X-Received: by 10.98.44.81 with SMTP id s78mr17688914pfs.56.1463092351034;
+	Thu, 12 May 2016 15:32:31 -0700 (PDT)
+Received: from workhorse.mvista.com
+	(99-0-9-164.lightspeed.frokca.sbcglobal.net. [99.0.9.164])
+	by smtp.gmail.com with ESMTPSA id n6sm22239700pfa.2.2016.05.12.15.32.29
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 12 May 2016 15:32:29 -0700 (PDT)
+From: Jeremy Puhlman <jpuhlman@mvista.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 12 May 2016 14:17:51 -0500
-Message-Id: <1463080671-27074-1-git-send-email-humberto.ibarra.lopez@intel.com>
-X-Mailer: git-send-email 2.4.11
-Subject: [PATCH v3] bitbake/lib/bb/cookerdata.py: Improve response when bitbake-layers can't find layer conf file
+Date: Thu, 12 May 2016 15:32:05 -0700
+Message-Id: <1463092325-11724-1-git-send-email-jpuhlman@mvista.com>
+X-Mailer: git-send-email 2.6.2
+Subject: [python3][PATCH] Set required python 3 version to 3.4.0
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,44 +53,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 May 2016 19:17:38 -0000
+X-List-Received-Date: Thu, 12 May 2016 22:32:30 -0000
 
-If an invalid layer is added to bblayers.conf, the parsing of said file
-ends with a trace and an "Unable to parse" exception. This is not the
-ideal output, especially considering that we know exactly why this is failing.
+get_context was added to mutliprocessing as part of 3.4.0
 
-This patch handles this situation failing with a graceful error message. The
-message shows the path to the conf file that couldn't be found.
-
-[Yocto #9506]
-
-Signed-off-by: Humberto Ibarra <humberto.ibarra.lopez@intel.com>
+Signed-off-by: Jeremy Puhlman <jpuhlman@mvista.com>
 ---
- bitbake/lib/bb/cookerdata.py | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ lib/bb/__init__.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
-index 50259a9..a1b0457 100644
---- a/bitbake/lib/bb/cookerdata.py
-+++ b/bitbake/lib/bb/cookerdata.py
-@@ -178,9 +178,13 @@ def catch_parse_error(func):
-         try:
-             return func(fn, *args)
-         except IOError as exc:
--            import traceback
--            parselog.critical(traceback.format_exc())
--            parselog.critical("Unable to parse %s: %s" % (fn, exc))
-+            import errno
-+            if exc.errno == errno.ENOENT:
-+                parselog.critical("Unable to find the configuration file: %s" % fn)
-+            else:
-+                import traceback
-+                parselog.critical(traceback.format_exc())
-+                parselog.critical("Unable to parse %s: %s" % (fn, exc))
-             sys.exit(1)
-         except bb.data_smart.ExpansionError as exc:
-             import traceback
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 6b85984..a98ebd1 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -24,8 +24,8 @@
+ __version__ = "1.31.0"
+ 
+ import sys
+-if sys.version_info < (2, 7, 3):
+-    raise RuntimeError("Sorry, python 2.7.3 or later is required for this version of bitbake")
++if sys.version_info < (3, 4, 0):
++    raise RuntimeError("Sorry, python 3.4.0 or later is required for this version of bitbake")
+ 
+ 
+ class BBHandledException(Exception):
 -- 
-2.4.11
+2.6.2
 
 
