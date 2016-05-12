@@ -1,29 +1,44 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 4EE3262137
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wm0-f53.google.com (mail-wm0-f53.google.com [74.125.82.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 822306FF84
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 May 2016 09:57:39 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4C9vdLO031431 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 May 2016 10:57:39 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 42PpsV9loWtH for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 May 2016 10:57:39 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4C9vbjt031419
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	Thu, 12 May 2016 14:10:44 +0000 (UTC)
+Received: by mail-wm0-f53.google.com with SMTP id n129so261216980wmn.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 May 2016 10:57:38 +0100
-Message-ID: <1463047057.9746.8.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 12 May 2016 10:57:37 +0100
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: [PATCH] main: Ensure exceptions are correctly displayed
+	Thu, 12 May 2016 07:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=R3Zmp45NDVMkPhUiBXOrDyNAoZV+N1t2V38eqwvmbt8=;
+	b=kzg+XxTvEG7pgyvJkLQSB6561RpFcTYSSrc1dB5A8EGRztMcRNHN0SJp70eMmYMKXp
+	cWCCvobmTYv7Z6g9bOAqqqQvtnfZB/wry/1DAIO5BXERc3zr3XxSd3nhCNVl8qJjP4Pz
+	ArVSYQv9rt1neHj/NDPVKdeamSEDRWWIXpEgHxa4RpAV7MIsxB2XLa7YX3lJwKatx6oI
+	SHBnQaRhQ3+pc0CI+VE3G4O8Py8e424TJsqUeREhg9CfRL/nEWGKF0N9bk3Ri6VNEUt4
+	QUPrOrygJNRrRCKHI3wTlKhkh3RzCyFQOp7b0kNgZ3DSKfI8L5fPeA4S5CsoBbuIibir
+	/xCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=R3Zmp45NDVMkPhUiBXOrDyNAoZV+N1t2V38eqwvmbt8=;
+	b=CSa/iijcCHwji20g4GIVv+kHx+Or62Lc1p7xL9J2tp3TAwqjsOOsNfdXc6CV8h+pIY
+	g9nSUnPRGqO75v/Bkz2u22NPezOPqrnSouVLG4SUDDJiRMte+u4d1VTYKW4Ws/HOP033
+	xpJXSADttPqDAQpI9Xf1hiZ+lcEMmI2Ft8jq4lx3NCJXgXOOqOZQklDoreoWVHDvEq2k
+	pjpf0kVcvLbuZX1PPkMd2GdXjvSM/qyMgprIB1Rqng70iSSDTDZrl1xeoTknbS71TKXi
+	Ug5A0x1K+0imuXEpxfiyTPzYHJT1yy38EgPPHHC4v0NZv4WnjFUDU2kwuzbzbpz61IOt
+	/+AA==
+X-Gm-Message-State: AOPr4FVeuiDM9wpS1A7qhT97JDnR05x9fQQgxt3qayvLpF/D41p4k6aEBYHzcuLthjlwdcv0
+X-Received: by 10.28.178.129 with SMTP id b123mr6836264wmf.2.1463062245099;
+	Thu, 12 May 2016 07:10:45 -0700 (PDT)
+Received: from orion.icx.intel.com ([83.217.123.106])
+	by smtp.gmail.com with ESMTPSA id u4sm13653360wjz.4.2016.05.12.07.10.44
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Thu, 12 May 2016 07:10:44 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 12 May 2016 15:10:35 +0100
+Message-Id: <1463062238-12007-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 0/3] Cancel toaster builds when cli is interrupted
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,36 +51,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 May 2016 09:57:39 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 12 May 2016 14:10:46 -0000
 
-If the cooker fails to start, ensure a correct exception is displayed to the
-user. After handling any queued events simply re-raise the original exception
-else the output can be unclear.
+If a bitbake build is running on the command line and is interrupted (e.g. by
+Ctrl-c), capture the interrupt and shut down the bitbake server. Also set
+the outcome to CANCELLED so the build displays correctly in the Toaster UI.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Elliot Smith (3):
+  buildinfohelper: add method to set current build as CANCELLED
+  toasterui: capture keyboard interrupts the same way as knotty
+  toaster: don't show "Rebuild" button for cancelled cli builds
 
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index a287905..b296ef8 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -336,7 +336,6 @@ def start_server(servermodule, configParams, configuration, features):
-         server.addcooker(cooker)
-         server.saveConnectionDetails()
-     except Exception as e:
--        exc_info = sys.exc_info()
-         while hasattr(server, "event_queue"):
-             import queue
-             try:
-@@ -345,7 +344,7 @@ def start_server(servermodule, configParams, configuration, features):
-                 break
-             if isinstance(event, logging.LogRecord):
-                 logger.handle(event)
--        raise exc_info[1], None, exc_info[2]
-+        raise
-     server.detach()
-     cooker.lock.close()
-     return server
+ lib/bb/ui/buildinfohelper.py                      | 10 +++++++++
+ lib/bb/ui/toasterui.py                            | 17 ++++++++++++++-
+ lib/toaster/toastergui/templates/mrb_section.html | 25 +++++++++++++----------
+ 3 files changed, 40 insertions(+), 12 deletions(-)
+
+-- 
+2.7.4
 
 
