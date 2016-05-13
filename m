@@ -1,45 +1,46 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pf0-f172.google.com (mail-pf0-f172.google.com
-	[209.85.192.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 9F6576FFFE
+Received: from mail-pa0-f54.google.com (mail-pa0-f54.google.com
+	[209.85.220.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 21FB6731B9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 May 2016 16:03:09 +0000 (UTC)
-Received: by mail-pf0-f172.google.com with SMTP id 206so44072385pfu.0
+	Fri, 13 May 2016 16:12:13 +0000 (UTC)
+Received: by mail-pa0-f54.google.com with SMTP id iv1so42122665pac.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 May 2016 09:03:10 -0700 (PDT)
+	Fri, 13 May 2016 09:12:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id;
-	bh=3DxeVic6qavCGMk3xtz27OK2I5RvMAhmFDLChO/Z4dQ=;
-	b=EbQlB/EwuJq9Gb/TDWS+HX2ArJdVIjP/7JmNBOaz9euuaK9axy7SV3ZfxZi4HXV0dL
-	5xBsznmVThdRvckK+ylNkukXDURsIZV3NPox/KjSrAtIC4O3a6W+8cQygRiyHqK7qdnC
-	Dw9/DLKYxC9Rnj2TNaJbdqza+AgGOs3usZKzfwLQvSx13H2j1/x7/kAtqc7sDSq9XDDe
-	5CCs+2cxeKS5xT6pKehBmU40KRu4FMxSa0dE0aIrXe1h8RL2CUL2Ci0BqTLzS+Plnnrq
-	/QB53tbSpneHLP7zqog7Dk0F4TEO9jg2CvKKWxEKuI2zGkcSj/5siIADdzmwdmLMMYAd
-	+e6g==
+	bh=3GsMLYzq0UraIZ6p2MNtawg8Seoth+dOuZo19mr3zJ0=;
+	b=ASJjQJB1OLI2/j3oi7/zskM+KkQabH628yWW5gpZaBvjscnMmy82epFu/eB5+o5ZvR
+	3DaIjjTVidvj02mC8mE0bGXAVCiKwG0ng8JoSRFV7GCq9QXBGxgh3KxEsFd0M10B8gMK
+	b4zO0WIs8ttMiQCedBLGCCt7h9DoAVwmo65ZCq6Bj4Tm32ARinNWfiQF234xT08pbrsK
+	ydf0mQ9rx167pyyHQO2mTyLMQBw8t+CbJ0cPYlghBIGK6LR8+8L0V8u68nKeGNcx4yk2
+	XdjJPtE2oqJD2rrw8j1eBo76GYMY9BQT2pcQsWJlfP4dWolsuD74nJVVg5ovsv90ealY
+	dKCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=3DxeVic6qavCGMk3xtz27OK2I5RvMAhmFDLChO/Z4dQ=;
-	b=XK5dhX3x6uaGnd+OT3RqM1vGvFUxJoPGHUGAsJYX6ePL49Awblw8oGoBGixQuVAwGo
-	MXOZmeY8No4Ap3KABYAUxFQlKXahw1PIwCTUXzf89A+LuFBVj1GrC6PhqDEm0sUcW0As
-	FL1lJmw5Z5MLG+63SBG1FzQ4LME9Ime0pCY1df8LN7nln6f3UoFKssO6xxOZYf4qjcbm
-	ZJAHDY6UwpcuZGqR27mFJ60Pp9LRYI7E61ZblonuOKX34MQvX/68uHzvDKNE0eDwFEuI
-	bceEAIUpGu53/nrwXD58HIRntbApqcV7I60gqOsT2vrSyzfQR3LfdxiBqL3EU2/918LJ
-	hIpg==
-X-Gm-Message-State: AOPr4FUu3n0jAcWeU21dE1oOmIFlnsrk+bdcyiG6Wv6kPFqNhvDGJ42QE/bX8sTXTyhpCJds
-X-Received: by 10.98.93.131 with SMTP id n3mr24325231pfj.141.1463155389942;
-	Fri, 13 May 2016 09:03:09 -0700 (PDT)
+	bh=3GsMLYzq0UraIZ6p2MNtawg8Seoth+dOuZo19mr3zJ0=;
+	b=aMFXMY5MJvKabjFxdD/Zu5qHVv951LLZ+1cuxk//cwNqx3zlcaAaRX1ZxP4iC3rDVx
+	wyl/+VlITxxzyNyFIHgy6tcFPIpCWHZrWsshmVuW1bxEX1czUKXmJc0rlxfNEYw3yJnC
+	jN6Y9eRy9lF6oIOlmxdUZ5hJztE/nrJEX+h0ExjoBBbW7j11Gp0PbrVPbRaaPiDSaXzo
+	0HzlAyoz6D2JPMb056GnlV6DVTmS08O/BbPGXB66Iaj8OB7e0s8BlZtWEaHI99KT8yWS
+	kwKkYgKlX1ym2P6mro6BEGFjR3ryELOAJxPt2dslpQsznCe4rEU1ZavOO17/93N0t9oO
+	Utzw==
+X-Gm-Message-State: AOPr4FXJbRcahFdXHgKy30W6NibrH94V8mXWM1IBAEAG66VLcjdgOg7V30BqiIVasXOHwucM
+X-Received: by 10.66.66.234 with SMTP id i10mr24594523pat.114.1463155934573;
+	Fri, 13 May 2016 09:12:14 -0700 (PDT)
 Received: from orion.ger.corp.intel.com ([192.55.54.43])
-	by smtp.gmail.com with ESMTPSA id g5sm28528559pac.1.2016.05.13.09.03.07
+	by smtp.gmail.com with ESMTPSA id
+	u63sm28530175pfu.18.2016.05.13.09.12.12
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 13 May 2016 09:03:09 -0700 (PDT)
+	Fri, 13 May 2016 09:12:14 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 13 May 2016 17:02:58 +0100
-Message-Id: <1463155378-31402-1-git-send-email-michael.g.wood@intel.com>
+Date: Fri, 13 May 2016 17:12:09 +0100
+Message-Id: <1463155929-31660-1-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] toaster: fix progress bar in MySQL environment
+Subject: [PATCH][1.30] toaster: fix progress bar in MySQL environment
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,7 +53,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 May 2016 16:03:09 -0000
+X-List-Received-Date: Fri, 13 May 2016 16:12:14 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
@@ -76,10 +77,10 @@ Signed-off-by: Michael Wood <michael.g.wood@intel.com>
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 2669606..88967a2 100644
+index 0b83b99..dbdd060 100644
 --- a/lib/toaster/orm/models.py
 +++ b/lib/toaster/orm/models.py
-@@ -416,6 +416,7 @@ class Build(models.Model):
+@@ -415,6 +415,7 @@ class Build(models.Model):
          # to show build progress in mrb_section.html
          for build in recent_builds:
              build.percentDone = build.completeper()
