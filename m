@@ -1,21 +1,23 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id C2C5965CBA
+	by mail.openembedded.org (Postfix) with ESMTP id 70E1465CBA
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 16 May 2016 13:50:48 +0000 (UTC)
+	Mon, 16 May 2016 13:50:50 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 16 May 2016 06:50:49 -0700
+	by orsmga102.jf.intel.com with ESMTP; 16 May 2016 06:50:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,627,1455004800"; d="scan'208";a="977895223"
+X-IronPort-AV: E=Sophos;i="5.24,627,1455004800"; d="scan'208";a="977895250"
 Received: from joerthel-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.28.80])
-	by orsmga002.jf.intel.com with ESMTP; 16 May 2016 06:50:47 -0700
+	by orsmga002.jf.intel.com with ESMTP; 16 May 2016 06:50:50 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 16 May 2016 14:50:40 +0100
-Message-Id: <1463406641-20063-1-git-send-email-elliot.smith@intel.com>
+Date: Mon, 16 May 2016 14:50:41 +0100
+Message-Id: <1463406641-20063-2-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 1/2] toaster: toastertables: Clean up and fix up a number of items
+In-Reply-To: <1463406641-20063-1-git-send-email-elliot.smith@intel.com>
+References: <1463406641-20063-1-git-send-email-elliot.smith@intel.com>
+Subject: [PATCH 2/2] toaster: toastergui tests Fix toastertable tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,330 +30,174 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 May 2016 13:50:48 -0000
+X-List-Received-Date: Mon, 16 May 2016 13:50:50 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
- - Remove the unused 'computation' field
- - Remove the code to try to make the tables behave like an api
- - Remove custom JSON encoder in favour of DjangoJSONEncoder
- - Simplify get_data and add comments
- - Add exception type instead of using generic Exception
- - Clean up python style warnings
+After clean ups remove api assumptions. Our table data often contains
+html snippets to display certain things such as dependency pop overs or
+simply links to other parts of the UI. Take these into account when
+testing the values of the table data.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/toaster/toastergui/static/js/table.js |  21 +---
- bitbake/lib/toaster/toastergui/tables.py          |  11 --
- bitbake/lib/toaster/toastergui/widgets.py         | 127 ++++++++++++----------
- 3 files changed, 72 insertions(+), 87 deletions(-)
+ bitbake/lib/toaster/toastergui/tests.py | 98 ++++++++++++++++++++++-----------
+ 1 file changed, 66 insertions(+), 32 deletions(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/static/js/table.js b/bitbake/lib/toaster/toastergui/static/js/table.js
-index f738144..7f76f55 100644
---- a/bitbake/lib/toaster/toastergui/static/js/table.js
-+++ b/bitbake/lib/toaster/toastergui/static/js/table.js
-@@ -101,27 +101,8 @@ function tableInit(ctx){
-       var row = $("<tr></tr>");
-       column_index = -1;
-       for (var key_j in tableData.rows[i]){
--
--        /* if we have a static: version of a key, prefer the static: version for rendering */
--        var orig_key_j = key_j;
--
--        if (key_j.indexOf("static:") === 0) {
--          if (key_j.substr("static:".length) in tableData.rows[i]) {
--            continue;
--          }
--          orig_key_j = key_j.substr("static:".length)
--        } else if (("static:" + key_j) in tableData.rows[i]) {
--          key_j = "static:" + key_j;
--        }
--
--        /* we skip over un-displayable column entries */
--        column_index += 1;
--        if (! tableData.columns[column_index].displayable) {
--          continue;
--        }
--
-         var td = $("<td></td>");
--        td.prop("class", orig_key_j);
-+        td.prop("class", key_j);
-         if (tableData.rows[i][key_j]){
-           td.html(tableData.rows[i][key_j]);
-         }
-diff --git a/bitbake/lib/toaster/toastergui/tables.py b/bitbake/lib/toaster/toastergui/tables.py
-index eb876ec..29b68de 100644
---- a/bitbake/lib/toaster/toastergui/tables.py
-+++ b/bitbake/lib/toaster/toastergui/tables.py
-@@ -190,17 +190,6 @@ class LayersTable(ToasterTable):
-                         static_data_name="add-del-layers",
-                         static_data_template='{% include "layer_btn.html" %}')
+diff --git a/bitbake/lib/toaster/toastergui/tests.py b/bitbake/lib/toaster/toastergui/tests.py
+index a4cab58..869c39d 100644
+--- a/bitbake/lib/toaster/toastergui/tests.py
++++ b/bitbake/lib/toaster/toastergui/tests.py
+@@ -83,8 +83,12 @@ class ViewTests(TestCase):
+         self.assertEqual(data["error"], "ok")
+         self.assertTrue("rows" in data)
  
--        project = Project.objects.get(pk=kwargs['pid'])
--        self.add_column(title="LayerDetailsUrl",
--                        displayable = False,
--                        field_name="layerdetailurl",
--                        computation = lambda x: reverse('layerdetails', args=(project.id, x.id)))
--
--        self.add_column(title="name",
--                        displayable = False,
--                        field_name="name",
--                        computation = lambda x: x.layer.name)
--
- 
- class MachinesTable(ToasterTable):
-     """Table of Machines in Toaster"""
-diff --git a/bitbake/lib/toaster/toastergui/widgets.py b/bitbake/lib/toaster/toastergui/widgets.py
-index d2ef5d3..4117031 100644
---- a/bitbake/lib/toaster/toastergui/widgets.py
-+++ b/bitbake/lib/toaster/toastergui/widgets.py
-@@ -43,9 +43,12 @@ import urllib
- import logging
- logger = logging.getLogger("toaster")
- 
--from toastergui.views import objtojson
- from toastergui.tablefilter import TableFilterMap
- 
+-        self.assertTrue(self.project.name in [x["name"] for x in data["rows"]])
+-        self.assertTrue("id" in data["rows"][0])
++        name_found = False
++        for row in data["rows"]:
++            name_found = row['name'].find(self.project.name)
 +
-+class NoFieldOrDataNme(Exception):
-+    pass
-+
- class ToasterTable(TemplateView):
-     def __init__(self, *args, **kwargs):
-         super(ToasterTable, self).__init__()
-@@ -63,25 +66,19 @@ class ToasterTable(TemplateView):
-         self.empty_state = "Sorry - no data found"
-         self.default_orderby = ""
++        self.assertTrue(name_found,
++                        "project name not found in projects table")
  
--        # add the "id" column, undisplayable, by default
--        self.add_column(title="Id",
--                        displayable=False,
--                        orderable=True,
--                        field_name="id")
+     def test_typeaheads(self):
+         """Test typeahead ReST API"""
+@@ -322,22 +326,24 @@ class ViewTests(TestCase):
+         self.assertEqual(response.status_code, 200, 'should be 200 OK status')
+ 
+         # check other columns have been populated correctly
+-        self.assertEqual(row1['name'], self.recipe1.name)
+-        self.assertEqual(row1['version'], self.recipe1.version)
+-        self.assertEqual(row1['get_description_or_summary'],
+-                         self.recipe1.description)
+-        self.assertEqual(row1['layer_version__layer__name'],
+-                         self.recipe1.layer_version.layer.name)
+-        self.assertEqual(row2['name'], self.recipe2.name)
+-        self.assertEqual(row2['version'], self.recipe2.version)
+-        self.assertEqual(row2['get_description_or_summary'],
+-                         self.recipe2.description)
+-        self.assertEqual(row2['layer_version__layer__name'],
+-                         self.recipe2.layer_version.layer.name)
++        self.assertTrue(self.recipe1.name in row1['name'])
++        self.assertTrue(self.recipe1.version in row1['version'])
++        self.assertTrue(self.recipe1.description in
++                        row1['get_description_or_summary'])
++
++        self.assertTrue(self.recipe1.layer_version.layer.name in
++                        row1['layer_version__layer__name'])
++
++        self.assertTrue(self.recipe2.name in row2['name'])
++        self.assertTrue(self.recipe2.version in row2['version'])
++        self.assertTrue(self.recipe2.description in
++                        row2['get_description_or_summary'])
++
++        self.assertTrue(self.recipe2.layer_version.layer.name in
++                        row2['layer_version__layer__name'])
+ 
+     def test_toaster_tables(self):
+         """Test all ToasterTables instances"""
+-        current_recipes = self.project.get_available_recipes()
+ 
+         def get_data(table, options={}):
+             """Send a request and parse the json response"""
+@@ -354,12 +360,30 @@ class ViewTests(TestCase):
+                     'layerid': self.lver.pk,
+                     'recipeid': self.recipe1.pk,
+                     'recipe_id': image_recipe.pk,
+-                    'custrecipeid': self.customr.pk
+-                   }
++                    'custrecipeid': self.customr.pk}
+ 
+             response = table.get(request, **args)
+             return json.loads(response.content)
+ 
++        def get_text_from_td(td):
++            """If we have html in the td then extract the text portion"""
++            # just so we don't waste time parsing non html
++            if "<" not in td:
++                ret = td
++            else:
++                ret = BeautifulSoup(td).text
++
++            # We change the td into ascii as a way to remove characters
++            # such as \xa0 (non break space) which mess with the ordering
++            # comparisons
++            ret.strip().encode('ascii',
++                               errors='replace').replace('?', ' ')
++            # Case where the td is empty
++            if len(ret):
++                return "0"
++            else:
++                return ret
++
+         # Get a list of classes in tables module
+         tables = inspect.getmembers(toastergui.tables, inspect.isclass)
+ 
+@@ -379,8 +403,10 @@ class ViewTests(TestCase):
+                             "Cannot test on a %s table with < 1 row" % name)
+ 
+             if table.default_orderby:
+-                row_one = all_data['rows'][0][table.default_orderby.strip("-")]
+-                row_two = all_data['rows'][1][table.default_orderby.strip("-")]
++                row_one = get_text_from_td(
++                    all_data['rows'][0][table.default_orderby.strip("-")])
++                row_two = get_text_from_td(
++                    all_data['rows'][1][table.default_orderby.strip("-")])
+ 
+                 if '-' in table.default_orderby:
+                     self.assertTrue(row_one >= row_two,
+@@ -399,28 +425,36 @@ class ViewTests(TestCase):
+                     # If a column is orderable test it in both order
+                     # directions ordering on the columns field_name
+                     ascending = get_data(table_cls(),
+-                                         {"orderby" : column['field_name']})
++                                         {"orderby": column['field_name']})
+ 
+-                    row_one = ascending['rows'][0][column['field_name']]
+-                    row_two = ascending['rows'][1][column['field_name']]
++                    row_one = get_text_from_td(
++                        ascending['rows'][0][column['field_name']])
++                    row_two = get_text_from_td(
++                        ascending['rows'][1][column['field_name']])
+ 
+                     self.assertTrue(row_one <= row_two,
+-                                    "Ascending sort applied but row 0 is less "
+-                                    "than row 1 %s %s " %
+-                                    (column['field_name'], name))
 -
-     # prevent HTTP caching of table data
--    @cache_control(must_revalidate=True, max_age=0, no_store=True, no_cache=True)
-+    @cache_control(must_revalidate=True,
-+                   max_age=0, no_store=True, no_cache=True)
-     def dispatch(self, *args, **kwargs):
-         return super(ToasterTable, self).dispatch(*args, **kwargs)
++                                    "Ascending sort applied but row 0: \"%s\""
++                                    " is less than row 1: \"%s\" "
++                                    "%s %s " %
++                                    (row_one, row_two,
++                                     column['field_name'], name))
  
-     def get_context_data(self, **kwargs):
-         context = super(ToasterTable, self).get_context_data(**kwargs)
-         context['title'] = self.title
--        context['table_name'] =  type(self).__name__.lower()
-+        context['table_name'] = type(self).__name__.lower()
+                     descending = get_data(table_cls(),
+-                                          {"orderby" :
++                                          {"orderby":
+                                            '-'+column['field_name']})
  
-         return context
+-                    row_one = descending['rows'][0][column['field_name']]
+-                    row_two = descending['rows'][1][column['field_name']]
++                    row_one = get_text_from_td(
++                        descending['rows'][0][column['field_name']])
++                    row_two = get_text_from_td(
++                        descending['rows'][1][column['field_name']])
  
--
-     def get(self, request, *args, **kwargs):
-         if request.GET.get('format', None) == 'json':
+                     self.assertTrue(row_one >= row_two,
+-                                    "Descending sort applied but row 0 is "
+-                                    "greater than row 1 %s %s" %
+-                                    (column['field_name'], name))
++                                    "Descending sort applied but row 0: %s"
++                                    "is greater than row 1: %s"
++                                    "field %s table %s" %
++                                    (row_one,
++                                     row_two,
++                                     column['field_name'], name))
  
-@@ -102,8 +99,6 @@ class ToasterTable(TemplateView):
-         return super(ToasterTable, self).get(request, *args, **kwargs)
- 
-     def get_filter_info(self, request, **kwargs):
--        data = None
--
-         self.setup_filters(**kwargs)
- 
-         search = request.GET.get("search", None)
-@@ -117,13 +112,18 @@ class ToasterTable(TemplateView):
-                           cls=DjangoJSONEncoder)
- 
-     def setup_columns(self, *args, **kwargs):
--        """ function to implement in the subclass which sets up the columns """
-+        """ function to implement in the subclass which sets up
-+        the columns """
-         pass
-+
-     def setup_filters(self, *args, **kwargs):
--        """ function to implement in the subclass which sets up the filters """
-+        """ function to implement in the subclass which sets up the
-+        filters """
-         pass
-+
-     def setup_queryset(self, *args, **kwargs):
--        """ function to implement in the subclass which sets up the queryset"""
-+        """ function to implement in the subclass which sets up the
-+        queryset"""
-         pass
- 
-     def add_filter(self, table_filter):
-@@ -137,7 +137,6 @@ class ToasterTable(TemplateView):
-     def add_column(self, title="", help_text="",
-                    orderable=False, hideable=True, hidden=False,
-                    field_name="", filter_name=None, static_data_name=None,
--                   displayable=True, computation=None,
-                    static_data_template=None):
-         """Add a column to the table.
- 
-@@ -155,18 +154,15 @@ class ToasterTable(TemplateView):
-                 as data
-         """
- 
--        self.columns.append({'title' : title,
--                             'help_text' : help_text,
--                             'orderable' : orderable,
--                             'hideable' : hideable,
--                             'hidden' : hidden,
--                             'field_name' : field_name,
--                             'filter_name' : filter_name,
-+        self.columns.append({'title': title,
-+                             'help_text': help_text,
-+                             'orderable': orderable,
-+                             'hideable': hideable,
-+                             'hidden': hidden,
-+                             'field_name': field_name,
-+                             'filter_name': filter_name,
-                              'static_data_name': static_data_name,
--                             'static_data_template': static_data_template,
--                             'displayable': displayable,
--                             'computation': computation,
--                            })
-+                             'static_data_template': static_data_template})
- 
-     def set_column_hidden(self, title, hidden):
-         """
-@@ -190,8 +186,8 @@ class ToasterTable(TemplateView):
-         """Utility function to render the static data template"""
- 
-         context = {
--          'extra' : self.static_context_extra,
--          'data' : row,
-+          'extra': self.static_context_extra,
-+          'data': row,
-         }
- 
-         context = Context(context)
-@@ -241,7 +237,7 @@ class ToasterTable(TemplateView):
- 
-         if not hasattr(self.queryset.model, 'search_allowed_fields'):
-             raise Exception("Search fields aren't defined in the model %s"
--                           % self.queryset.model)
-+                            % self.queryset.model)
- 
-         search_queries = []
-         for st in search_term.split(" "):
-@@ -254,7 +250,6 @@ class ToasterTable(TemplateView):
- 
-         self.queryset = self.queryset.filter(search_queries)
- 
--
-     def get_data(self, request, **kwargs):
-         """
-         Returns the data for the page requested with the specified
-@@ -262,7 +257,8 @@ class ToasterTable(TemplateView):
- 
-         filters: filter and action name, e.g. "outcome:build_succeeded"
-         filter_value: value to pass to the named filter+action, e.g. "on"
--        (for a toggle filter) or "2015-12-11,2015-12-12" (for a date range filter)
-+        (for a toggle filter) or "2015-12-11,2015-12-12"
-+        (for a date range filter)
-         """
- 
-         page_num = request.GET.get("page", 1)
-@@ -313,16 +309,16 @@ class ToasterTable(TemplateView):
-             page = paginator.page(1)
- 
-         data = {
--            'total' : self.queryset.count(),
--            'default_orderby' : self.default_orderby,
--            'columns' : self.columns,
--            'rows' : [],
--            'error' : "ok",
-+            'total': self.queryset.count(),
-+            'default_orderby': self.default_orderby,
-+            'columns': self.columns,
-+            'rows': [],
-+            'error': "ok",
-         }
- 
-         try:
--            for row in page.object_list:
--                #Use collection to maintain the order
-+            for model_obj in page.object_list:
-+                # Use collection to maintain the order
-                 required_data = collections.OrderedDict()
- 
-                 for col in self.columns:
-@@ -330,38 +326,57 @@ class ToasterTable(TemplateView):
-                     if not field:
-                         field = col['static_data_name']
-                     if not field:
--                        raise Exception("Must supply a field_name or static_data_name for column %s.%s" % (self.__class__.__name__,col))
-+                        raise NoFieldOrDataNme("Must supply a field_name or"
-+                                               "static_data_name for column"
-+                                               "%s.%s" %
-+                                               (self.__class__.__name__, col))
-+
-                     # Check if we need to process some static data
-                     if "static_data_name" in col and col['static_data_name']:
--                        required_data["static:%s" % col['static_data_name']] = self.render_static_data(col['static_data_template'], row)
--
-                         # Overwrite the field_name with static_data_name
-                         # so that this can be used as the html class name
--
-                         col['field_name'] = col['static_data_name']
- 
--                    # compute the computation on the raw data if needed
--                    model_data = row
--                    if col['computation']:
--                        model_data = col['computation'](row)
-+                        # Render the template given
-+                        required_data[col['static_data_name']] = \
-+                            self.render_static_data(
-+                                col['static_data_template'], model_obj)
-                     else:
--                        # Traverse to any foriegn key in the object hierachy
--                        for subfield in field.split("__"):
--                            if hasattr(model_data, subfield):
--                                model_data = getattr(model_data, subfield)
--                        # The field could be a function on the model so check
--                        # If it is then call it
-+                        # Traverse to any foriegn key in the field
-+                        # e.g. recipe__layer_version__name
-+                        model_data = None
-+
-+                        if "__" in field:
-+                            for subfield in field.split("__"):
-+                                if not model_data:
-+                                    # The first iteration is always going to
-+                                    # be on the actual model object instance.
-+                                    # Subsequent ones are on the result of
-+                                    # that. e.g. forieng key objects
-+                                    model_data = getattr(model_obj,
-+                                                         subfield)
-+                                else:
-+                                    model_data = getattr(model_data,
-+                                                         subfield)
-+
-+                        else:
-+                            model_data = getattr(model_obj,
-+                                                 col['field_name'])
-+
-+                        # We might have a model function as the field so
-+                        # call it to return the data needed
-                         if isinstance(model_data, types.MethodType):
--                          model_data = model_data()
-+                            model_data = model_data()
- 
--                    required_data[col['field_name']] = model_data
-+                        required_data[col['field_name']] = model_data
- 
-                 data['rows'].append(required_data)
- 
-         except FieldError:
-             # pass  it to the user - programming-error here
-             raise
--        data = json.dumps(data, indent=2, default=objtojson)
-+
-+        data = json.dumps(data, indent=2, cls=DjangoJSONEncoder)
-         cache.set(cache_name, data, 60*30)
- 
-         return data
+                     # If the two start rows are the same we haven't actually
+                     # changed the order
 -- 
 1.9.3
 
