@@ -1,23 +1,30 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 70E1465CBA
+Return-Path: <paul.eggleton@intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 657D177038
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 16 May 2016 13:50:50 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 16 May 2016 06:50:52 -0700
+	Mon, 16 May 2016 21:02:55 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 16 May 2016 14:02:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.24,627,1455004800"; d="scan'208";a="977895250"
-Received: from joerthel-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.28.80])
-	by orsmga002.jf.intel.com with ESMTP; 16 May 2016 06:50:50 -0700
-From: Elliot Smith <elliot.smith@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 16 May 2016 14:50:41 +0100
-Message-Id: <1463406641-20063-2-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <1463406641-20063-1-git-send-email-elliot.smith@intel.com>
-References: <1463406641-20063-1-git-send-email-elliot.smith@intel.com>
-Subject: [PATCH 2/2] toaster: toastergui tests Fix toastertable tests
+X-IronPort-AV: E=Sophos;i="5.26,627,1459839600"; d="scan'208";a="968201420"
+Received: from ardiaz-mobl3.amr.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.174.156])
+	by fmsmga001.fm.intel.com with ESMTP; 16 May 2016 14:02:53 -0700
+From: Paul Eggleton <paul.eggleton@intel.com>
+To: Christopher Larson <chris_larson@mentor.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Tue, 17 May 2016 09:02:50 +1200
+Message-ID: <3915127.LqeJ5PDHqX@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.10 (Linux/4.4.9-300.fc23.x86_64; KDE/4.14.18; x86_64; ;
+	)
+In-Reply-To: <CABcZANkgjQRgahkKd+GoLw4h-8dXs=b9+sVTPHn0Ep3ZFTQw3A@mail.gmail.com>
+References: <cover.1462041562.git.chris_larson@mentor.com>
+	<1463095254.9746.61.camel@linuxfoundation.org>
+	<CABcZANkgjQRgahkKd+GoLw4h-8dXs=b9+sVTPHn0Ep3ZFTQw3A@mail.gmail.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [RFC master][PATCH 4/4] bitbake-layers: convert to plugin-based
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,186 +37,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 May 2016 13:50:50 -0000
+X-List-Received-Date: Mon, 16 May 2016 21:02:56 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-From: Michael Wood <michael.g.wood@intel.com>
+On Thu, 12 May 2016 16:22:15 Christopher Larson wrote:
+> On Thu, May 12, 2016 at 4:20 PM, Richard Purdie <
+> 
+> richard.purdie@linuxfoundation.org> wrote:
+> > On Thu, 2016-05-12 at 16:12 -0700, Christopher Larson wrote:
+> > > On Sat, Apr 30, 2016 at 12:41 PM, Christopher Larson <
+> > > 
+> > > kergoth@gmail.com> wrote:
+> > > > From: Christopher Larson <chris_larson@mentor.com>
+> > > > 
+> > > > This uses bb.utils.load_plugins, based on the plugin handling in
+> > > > recipetool
+> > > > and devtool in oe-core.
+> > > > 
+> > > > Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+> > > > ---
+> > > > 
+> > > >  bin/bitbake-layers                 | 1065 ++----------------------
+> > > > 
+> > > > ------------
+> > > > 
+> > > >  bitbake/lib/bblayers/__init__.py   |    2 +
+> > > >  bitbake/lib/bblayers/action.py     |  233 ++++++++
+> > > >  bitbake/lib/bblayers/common.py     |   33 ++
+> > > >  bitbake/lib/bblayers/layerindex.py |  270 +++++++++
+> > > >  bitbake/lib/bblayers/query.py      |  499 +++++++++++++++++
+> > > >  6 files changed, 1097 insertions(+), 1005 deletions(-)
+> > > >  create mode 100644 bitbake/lib/bblayers/__init__.py
+> > > >  create mode 100644 bitbake/lib/bblayers/action.py
+> > > >  create mode 100644 bitbake/lib/bblayers/common.py
+> > > >  create mode 100644 bitbake/lib/bblayers/layerindex.py
+> > > >  create mode 100644 bitbake/lib/bblayers/query.py
+> > > 
+> > > Was this patch not applied for a specific reason, or just needs more
+> > > time for review, or waiting until after python3 is merged?
+> > 
+> > The other pieces were straightforward so I merged them. I meant to ask
+> > Paul for an Acked-by on this piece as he'd done more work on the plugin
+> > based tools than I have but then I got distracted, sorry. Paul is
+> > cc'd...
+> 
+> Not a problem, just wanted to make sure it didn't slip through the cracks :)
 
-After clean ups remove api assumptions. Our table data often contains
-html snippets to display certain things such as dependency pop overs or
-simply links to other parts of the UI. Take these into account when
-testing the values of the table data.
+This looks pretty good to me - I like how you've put in a proper object 
+structure as well which is nicer than the flat functions used in 
+devtool/recipetool plugins.
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/toastergui/tests.py | 98 ++++++++++++++++++++++-----------
- 1 file changed, 66 insertions(+), 32 deletions(-)
+Acked-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
-diff --git a/bitbake/lib/toaster/toastergui/tests.py b/bitbake/lib/toaster/toastergui/tests.py
-index a4cab58..869c39d 100644
---- a/bitbake/lib/toaster/toastergui/tests.py
-+++ b/bitbake/lib/toaster/toastergui/tests.py
-@@ -83,8 +83,12 @@ class ViewTests(TestCase):
-         self.assertEqual(data["error"], "ok")
-         self.assertTrue("rows" in data)
- 
--        self.assertTrue(self.project.name in [x["name"] for x in data["rows"]])
--        self.assertTrue("id" in data["rows"][0])
-+        name_found = False
-+        for row in data["rows"]:
-+            name_found = row['name'].find(self.project.name)
-+
-+        self.assertTrue(name_found,
-+                        "project name not found in projects table")
- 
-     def test_typeaheads(self):
-         """Test typeahead ReST API"""
-@@ -322,22 +326,24 @@ class ViewTests(TestCase):
-         self.assertEqual(response.status_code, 200, 'should be 200 OK status')
- 
-         # check other columns have been populated correctly
--        self.assertEqual(row1['name'], self.recipe1.name)
--        self.assertEqual(row1['version'], self.recipe1.version)
--        self.assertEqual(row1['get_description_or_summary'],
--                         self.recipe1.description)
--        self.assertEqual(row1['layer_version__layer__name'],
--                         self.recipe1.layer_version.layer.name)
--        self.assertEqual(row2['name'], self.recipe2.name)
--        self.assertEqual(row2['version'], self.recipe2.version)
--        self.assertEqual(row2['get_description_or_summary'],
--                         self.recipe2.description)
--        self.assertEqual(row2['layer_version__layer__name'],
--                         self.recipe2.layer_version.layer.name)
-+        self.assertTrue(self.recipe1.name in row1['name'])
-+        self.assertTrue(self.recipe1.version in row1['version'])
-+        self.assertTrue(self.recipe1.description in
-+                        row1['get_description_or_summary'])
-+
-+        self.assertTrue(self.recipe1.layer_version.layer.name in
-+                        row1['layer_version__layer__name'])
-+
-+        self.assertTrue(self.recipe2.name in row2['name'])
-+        self.assertTrue(self.recipe2.version in row2['version'])
-+        self.assertTrue(self.recipe2.description in
-+                        row2['get_description_or_summary'])
-+
-+        self.assertTrue(self.recipe2.layer_version.layer.name in
-+                        row2['layer_version__layer__name'])
- 
-     def test_toaster_tables(self):
-         """Test all ToasterTables instances"""
--        current_recipes = self.project.get_available_recipes()
- 
-         def get_data(table, options={}):
-             """Send a request and parse the json response"""
-@@ -354,12 +360,30 @@ class ViewTests(TestCase):
-                     'layerid': self.lver.pk,
-                     'recipeid': self.recipe1.pk,
-                     'recipe_id': image_recipe.pk,
--                    'custrecipeid': self.customr.pk
--                   }
-+                    'custrecipeid': self.customr.pk}
- 
-             response = table.get(request, **args)
-             return json.loads(response.content)
- 
-+        def get_text_from_td(td):
-+            """If we have html in the td then extract the text portion"""
-+            # just so we don't waste time parsing non html
-+            if "<" not in td:
-+                ret = td
-+            else:
-+                ret = BeautifulSoup(td).text
-+
-+            # We change the td into ascii as a way to remove characters
-+            # such as \xa0 (non break space) which mess with the ordering
-+            # comparisons
-+            ret.strip().encode('ascii',
-+                               errors='replace').replace('?', ' ')
-+            # Case where the td is empty
-+            if len(ret):
-+                return "0"
-+            else:
-+                return ret
-+
-         # Get a list of classes in tables module
-         tables = inspect.getmembers(toastergui.tables, inspect.isclass)
- 
-@@ -379,8 +403,10 @@ class ViewTests(TestCase):
-                             "Cannot test on a %s table with < 1 row" % name)
- 
-             if table.default_orderby:
--                row_one = all_data['rows'][0][table.default_orderby.strip("-")]
--                row_two = all_data['rows'][1][table.default_orderby.strip("-")]
-+                row_one = get_text_from_td(
-+                    all_data['rows'][0][table.default_orderby.strip("-")])
-+                row_two = get_text_from_td(
-+                    all_data['rows'][1][table.default_orderby.strip("-")])
- 
-                 if '-' in table.default_orderby:
-                     self.assertTrue(row_one >= row_two,
-@@ -399,28 +425,36 @@ class ViewTests(TestCase):
-                     # If a column is orderable test it in both order
-                     # directions ordering on the columns field_name
-                     ascending = get_data(table_cls(),
--                                         {"orderby" : column['field_name']})
-+                                         {"orderby": column['field_name']})
- 
--                    row_one = ascending['rows'][0][column['field_name']]
--                    row_two = ascending['rows'][1][column['field_name']]
-+                    row_one = get_text_from_td(
-+                        ascending['rows'][0][column['field_name']])
-+                    row_two = get_text_from_td(
-+                        ascending['rows'][1][column['field_name']])
- 
-                     self.assertTrue(row_one <= row_two,
--                                    "Ascending sort applied but row 0 is less "
--                                    "than row 1 %s %s " %
--                                    (column['field_name'], name))
--
-+                                    "Ascending sort applied but row 0: \"%s\""
-+                                    " is less than row 1: \"%s\" "
-+                                    "%s %s " %
-+                                    (row_one, row_two,
-+                                     column['field_name'], name))
- 
-                     descending = get_data(table_cls(),
--                                          {"orderby" :
-+                                          {"orderby":
-                                            '-'+column['field_name']})
- 
--                    row_one = descending['rows'][0][column['field_name']]
--                    row_two = descending['rows'][1][column['field_name']]
-+                    row_one = get_text_from_td(
-+                        descending['rows'][0][column['field_name']])
-+                    row_two = get_text_from_td(
-+                        descending['rows'][1][column['field_name']])
- 
-                     self.assertTrue(row_one >= row_two,
--                                    "Descending sort applied but row 0 is "
--                                    "greater than row 1 %s %s" %
--                                    (column['field_name'], name))
-+                                    "Descending sort applied but row 0: %s"
-+                                    "is greater than row 1: %s"
-+                                    "field %s table %s" %
-+                                    (row_one,
-+                                     row_two,
-+                                     column['field_name'], name))
- 
-                     # If the two start rows are the same we haven't actually
-                     # changed the order
+Cheers,
+Paul
+
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
-
+Paul Eggleton
+Intel Open Source Technology Centre
 
