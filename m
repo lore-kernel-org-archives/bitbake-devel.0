@@ -1,32 +1,20 @@
-Return-Path: <rpurdie@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 1D44B6FF78
+Return-Path: <markus.lehtonen@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id E160D62132
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 May 2016 14:52:10 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4HEq9R2028342; Tue, 17 May 2016 15:52:09 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id vZIugIOoLACi; Tue, 17 May 2016 15:52:09 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4HEq6mk028334
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 17 May 2016 15:52:07 +0100
-Message-ID: <1463496726.4578.17.camel@rpsys.net>
-From: Richard Purdie <rpurdie@rpsys.net>
-To: Christopher Larson <kergoth@gmail.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 17 May 2016 15:52:06 +0100
-In-Reply-To: <1463436362.4578.4.camel@linuxfoundation.org>
-References: <4fceafdd226761b2716466f9fd522db9be554971.1462041562.git.chris_larson@mentor.com>
-	<b5acd266233c34a439097e8024ab8cbcb7e1e77c.1462041562.git.chris_larson@mentor.com>
-	<1463436362.4578.4.camel@linuxfoundation.org>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: Re: [RFC master][PATCH 4/4] bitbake-layers: convert to plugin-based
+	Wed, 18 May 2016 09:32:03 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga101.fm.intel.com with ESMTP; 18 May 2016 02:31:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.26,328,1459839600"; d="scan'208";a="957072406"
+Received: from marquiz.fi.intel.com ([10.237.72.155])
+	by orsmga001.jf.intel.com with ESMTP; 18 May 2016 02:31:42 -0700
+From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 18 May 2016 12:31:41 +0300
+Message-Id: <1463563901-3979-1-git-send-email-markus.lehtonen@linux.intel.com>
+X-Mailer: git-send-email 2.6.6
+Subject: [PATCH] fetch2/git: allow using 'HEAD' as a branch name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,61 +27,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 17 May 2016 14:52:11 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 18 May 2016 09:32:09 -0000
 
-On Mon, 2016-05-16 at 23:06 +0100, Richard Purdie wrote:
-> On Sat, 2016-04-30 at 12:41 -0700, Christopher Larson wrote:
-> > From: Christopher Larson <chris_larson@mentor.com>
-> > 
-> > This uses bb.utils.load_plugins, based on the plugin handling in
-> > recipetool
-> > and devtool in oe-core.
-> > 
-> > Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-> > ---
-> >  bin/bitbake-layers                 | 1065 ++----------------------
-> > --
-> > ----------
-> >  bitbake/lib/bblayers/__init__.py   |    2 +
-> >  bitbake/lib/bblayers/action.py     |  233 ++++++++
-> >  bitbake/lib/bblayers/common.py     |   33 ++
-> >  bitbake/lib/bblayers/layerindex.py |  270 +++++++++
-> >  bitbake/lib/bblayers/query.py      |  499 +++++++++++++++++
-> 
-> Sorry, one other question. Did you mean to create a bitbake/lib
-> within
-> the bitbake repo or should this just be lib/ ? I'm guessing the
-> latter
-> and have queued it in -next with that.
+This change makes it possible to e.g. build a currently checked out
+revision of a local Git repository and use AUTOREV. It will be possible
+to build HEAD of remote repositories, too, of course, but this is
+probably not that practical.
 
-The regression tests also found one small problem:
+In order to use this one must also use the nobranch parameter, i.e. have
+'branch=HEAD;nobranch=1' in the SRC_URI, because 'HEAD' is really not a
+Git branch as such. The wording in "branch=HEAD;nobranch=1" is probably a
+bit counter-intuitive and illogical but this seems to be the only easy
+way to make this work without complicating the fetcher even further.
+Another solution would be e.g. to introduce an alternative 'ref'
+parameter which could be used in place of 'branch' to give any ref. The
+effect would basically be the same (with better wording) with yet a bit
+more complex fetcher code.
 
-oe-selftest --run-tests bblayers.BitbakeLayers.test_bitbakelayers_showrecipes
+[YOCTO #9351]
 
-======================================================================
-FAIL: test_bitbakelayers_showrecipes (oeqa.selftest.bblayers.BitbakeLayers)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/media/build1/poky/meta/lib/oeqa/utils/decorators.py", line 109, in wrapped_f
-    return func(*args, **kwargs)
-  File "/media/build1/poky/meta/lib/oeqa/selftest/bblayers.py", line 92, in test_bitbakelayers_showrecipes
-    self.assertNotEqual(result.status, 0, 'bitbake-layers show-recipes -i nonexistentclass should have failed')
-AssertionError: 0 == 0 : bitbake-layers show-recipes -i nonexistentclass
+Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+---
+ lib/bb/fetch2/git.py | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-$ bitbake-layers show-recipes -i nonexistentclass
-Parsing recipes..done.
-ERROR: No class named classes/nonexistentclass.bbclass found in BBPATH
-$ echo $?
-0
-
-I've tweaked the patch to change the "return 1" to a sys.exit(1) since
-I'd prefer to get this patch in to avoid more rebasing with the python3
-branch.
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 526668b..99d7dc1 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -344,12 +344,15 @@ class Git(FetchMethod):
+         output = self._lsremote(ud, d, "")
+         # Tags of the form ^{} may not work, need to fallback to other form
+         if ud.unresolvedrev[name][:5] == "refs/":
+-            head = ud.unresolvedrev[name]
+-            tag = ud.unresolvedrev[name]
++            search_list = [ud.unresolvedrev[name],
++                           ud.unresolvedrev[name] + "^{}"]
++        elif ud.unresolvedrev[name] == 'HEAD':
++            search_list = ['HEAD']
+         else:
+             head = "refs/heads/%s" % ud.unresolvedrev[name]
+             tag = "refs/tags/%s" % ud.unresolvedrev[name]
+-        for s in [head, tag + "^{}", tag]:
++            search_list = [head, tag + "^{}", tag]
++        for s in search_list:
+             for l in output.split('\n'):
+                 if s in l:
+                     return l.split()[0]
+-- 
+2.6.6
 
 
