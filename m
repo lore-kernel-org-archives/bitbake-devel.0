@@ -1,23 +1,23 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id F26EB65CC3
+	by mail.openembedded.org (Postfix) with ESMTP id EB15C65CBB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 May 2016 12:59:47 +0000 (UTC)
+	Thu, 19 May 2016 12:59:49 +0000 (UTC)
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga104.fm.intel.com with ESMTP; 19 May 2016 05:59:49 -0700
+	by fmsmga104.fm.intel.com with ESMTP; 19 May 2016 05:59:51 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,334,1459839600"; d="scan'208";a="106841810"
+X-IronPort-AV: E=Sophos;i="5.26,334,1459839600"; d="scan'208";a="106841824"
 Received: from gfois-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.8.121])
-	by fmsmga004.fm.intel.com with ESMTP; 19 May 2016 05:59:49 -0700
+	by fmsmga004.fm.intel.com with ESMTP; 19 May 2016 05:59:51 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 19 May 2016 13:59:31 +0100
-Message-Id: <1463662773-31389-4-git-send-email-elliot.smith@intel.com>
+Date: Thu, 19 May 2016 13:59:32 +0100
+Message-Id: <1463662773-31389-5-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <1463662773-31389-1-git-send-email-elliot.smith@intel.com>
 References: <1463662773-31389-1-git-send-email-elliot.smith@intel.com>
-Subject: [PATCH 4/6] toaster: tests Add a BuildTest helper class
+Subject: [PATCH 5/6] toaster: tests build Add a test for a build of core-image-minimal
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,54 +30,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 May 2016 12:59:48 -0000
+X-List-Received-Date: Thu, 19 May 2016 12:59:50 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Add a helper class for running build tests. Subclass this and call the
-build method to get setup for running tests on the resulting data from a
-build.
+This is a port of the oe self test to the django test framework from
+oe-core meta/lib/oeqa/selftest/_toaster.py
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/toaster/tests/builds/README       |  14 +++
- bitbake/lib/toaster/tests/builds/__init__.py  |   0
- bitbake/lib/toaster/tests/builds/buildtest.py | 134 ++++++++++++++++++++++++++
- 3 files changed, 148 insertions(+)
- create mode 100644 bitbake/lib/toaster/tests/builds/README
- create mode 100644 bitbake/lib/toaster/tests/builds/__init__.py
- create mode 100644 bitbake/lib/toaster/tests/builds/buildtest.py
+ .../toaster/tests/builds/test_core_image_min.py    | 389 +++++++++++++++++++++
+ 1 file changed, 389 insertions(+)
+ create mode 100644 bitbake/lib/toaster/tests/builds/test_core_image_min.py
 
-diff --git a/bitbake/lib/toaster/tests/builds/README b/bitbake/lib/toaster/tests/builds/README
+diff --git a/bitbake/lib/toaster/tests/builds/test_core_image_min.py b/bitbake/lib/toaster/tests/builds/test_core_image_min.py
 new file mode 100644
-index 0000000..98e3e2e
+index 0000000..87d29c7
 --- /dev/null
-+++ b/bitbake/lib/toaster/tests/builds/README
-@@ -0,0 +1,14 @@
-+# Running build tests
-+
-+These tests are to test the running of builds and the data produced by the builds.
-+Your oe build environment must be sourced/initialised for these tests to run.
-+
-+The simplest way to run the tests are the following commands:
-+
-+$ . oe-init-build-env
-+$ cd bitbake/lib/toaster/ # path my vary but this is into toaster's directory
-+$ DJANGO_SETTINGS_MODULE='toastermain.settings-test' ./manage.py test tests.builds
-+
-+Optional environment variables:
-+ - TOASTER_DIR (where toaster keeps it's artifacts)
-+ - TOASTER_CONF a path to the toasterconf.json file. This will need to be set if you don't execute the tests from toaster's own directory.
-diff --git a/bitbake/lib/toaster/tests/builds/__init__.py b/bitbake/lib/toaster/tests/builds/__init__.py
-new file mode 100644
-index 0000000..e69de29
-diff --git a/bitbake/lib/toaster/tests/builds/buildtest.py b/bitbake/lib/toaster/tests/builds/buildtest.py
-new file mode 100644
-index 0000000..fc7bd5b
---- /dev/null
-+++ b/bitbake/lib/toaster/tests/builds/buildtest.py
-@@ -0,0 +1,134 @@
++++ b/bitbake/lib/toaster/tests/builds/test_core_image_min.py
+@@ -0,0 +1,389 @@
 +#! /usr/bin/env python
 +# ex:ts=4:sw=4:sts=4:et
 +# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
@@ -99,119 +71,374 @@ index 0000000..fc7bd5b
 +# with this program; if not, write to the Free Software Foundation, Inc.,
 +# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 +
++# Tests were part of openembedded-core oe selftest Authored by: Lucian Musat
++# Ionut Chisanovici, Paul Eggleton and Cristian Iorga
++
 +import os
-+import sys
-+import time
-+import unittest
 +
-+from orm.models import Project, Release, ProjectTarget, Build
-+from bldcontrol.models import BuildEnvironment
++from django.db.models import Q
 +
-+from bldcontrol.management.commands.loadconf import Command\
-+    as LoadConfigCommand
++from orm.models import Target_Image_File, Target_Installed_Package, Task
++from orm.models import Package_Dependency, Recipe_Dependency, Build
++from orm.models import Task_Dependency, Package, Target, Recipe
++from orm.models import CustomImagePackage
 +
-+from bldcontrol.management.commands.runbuilds import Command\
-+    as RunBuildsCommand
-+
-+import subprocess
-+
-+# We use unittest.TestCase instead of django.test.TestCase because we don't
-+# want to wrap everything in a database transaction as an external process
-+# (bitbake needs access to the database)
++from buildtest import BuildTest
 +
 +
-+class BuildTest(unittest.TestCase):
++class BuildCoreImageMinimal(BuildTest):
++    """Build core-image-minimal and test the results"""
 +
-+    PROJECT_NAME = "Testbuild"
++    def setUp(self):
++        self.build("core-image-minimal")
 +
-+    def build(self, target):
-+        # So that the buildinfo helper uses the test database'
++    # Check if build name is unique - tc_id=795
++    def test_Build_Unique_Name(self):
++        all_builds = Build.objects.all().count()
++        distinct_builds = Build.objects.values('id').distinct().count()
++        self.assertEqual(distinct_builds,
++                         all_builds,
++                         msg='Build name is not unique')
++
++    # Check if build cooker log path is unique - tc_id=819
++    def test_Build_Unique_Cooker_Log_Path(self):
++        distinct_path = Build.objects.values(
++            'cooker_log_path').distinct().count()
++        total_builds = Build.objects.values('id').count()
++        self.assertEqual(distinct_path,
++                         total_builds,
++                         msg='Build cooker log path is not unique')
++
++    # Check if task order is unique for one build - tc=824
++    def test_Task_Unique_Order(self):
++        builds = Build.objects.values('id')
++        cnt_err = []
++
++        for build in builds:
++            total_task_order = Task.objects.filter(
++                build=build['id']).values('order').count()
++            distinct_task_order = Task.objects.filter(
++                build=build['id']).values('order').distinct().count()
++
++            if (total_task_order != distinct_task_order):
++                cnt_err.append(build['id'])
++
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for build id: %s' % cnt_err)
++
++    # Check task order sequence for one build - tc=825
++    def test_Task_Order_Sequence(self):
++        builds = builds = Build.objects.values('id')
++        cnt_err = []
++        for build in builds:
++            tasks = Task.objects.filter(
++                Q(build=build['id']),
++                ~Q(order=None),
++                ~Q(task_name__contains='_setscene')
++            ).values('id', 'order').order_by("order")
++
++            cnt_tasks = 0
++            for task in tasks:
++                cnt_tasks += 1
++                if (task['order'] != cnt_tasks):
++                    cnt_err.append(task['id'])
 +        self.assertEqual(
-+            os.environ.get('DJANGO_SETTINGS_MODULE', ''),
-+            'toastermain.settings-test',
-+            "Please initialise django with the tests settings:  "
-+            "DJANGO_SETTINGS_MODULE='toastermain.settings-test'")
++            len(cnt_err), 0, msg='Errors for task id: %s' % cnt_err)
 +
-+        if self.target_already_built(target):
-+            return
++    # Check if disk_io matches the difference between EndTimeIO and
++    # StartTimeIO in build stats - tc=828
++    # def test_Task_Disk_IO_TC828(self):
 +
-+        # Take a guess at the location of the toasterconf
-+        poky_toaster_conf = '../../../meta-poky/conf/toasterconf.json'
-+        oe_toaster_conf = '../../../meta/conf/toasterconf.json'
-+        env_toaster_conf = os.environ.get('TOASTER_CONF')
++    # Check if outcome = 2 (SSTATE) then sstate_result must be 3 (RESTORED) -
++    # tc=832
++    def test_Task_If_Outcome_2_Sstate_Result_Must_Be_3(self):
++        tasks = Task.objects.filter(outcome=2).values('id', 'sstate_result')
++        cnt_err = []
++        for task in tasks:
++            if (task['sstate_result'] != 3):
++                cnt_err.append(task['id'])
 +
-+        config_file = None
-+        if env_toaster_conf:
-+            config_file = env_toaster_conf
-+        else:
-+            if os.path.exists(poky_toaster_conf):
-+                config_file = poky_toaster_conf
-+            elif os.path.exists(oe_toaster_conf):
-+                config_file = oe_toaster_conf
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for task id: %s' % cnt_err)
 +
-+        self.assertIsNotNone(config_file,
-+                             "Default locations for toasterconf not found"
-+                             "please set $TOASTER_CONF manually")
++    # Check if outcome = 1 (COVERED) or 3 (EXISTING) then sstate_result must
++    # be 0 (SSTATE_NA) - tc=833
++    def test_Task_If_Outcome_1_3_Sstate_Result_Must_Be_0(self):
++        tasks = Task.objects.filter(
++            outcome__in=(1, 3)).values('id', 'sstate_result')
++        cnt_err = []
 +
-+        # Setup the release information and default layers
-+        print("\nImporting file: %s" % config_file)
-+        os.environ['TOASTER_CONF'] = config_file
-+        LoadConfigCommand()._import_layer_config(config_file)
++        for task in tasks:
++            if (task['sstate_result'] != 0):
++                cnt_err.append(task['id'])
 +
-+        os.environ['TOASTER_DIR'] = \
-+            os.path.abspath(os.environ['BUILDDIR'] + "/../")
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for task id: %s' % cnt_err)
 +
-+        os.environ['BBBASEDIR'] = \
-+            subprocess.check_output('which bitbake', shell=True)
++    # Check if outcome is 0 (SUCCESS) or 4 (FAILED) then sstate_result must be
++    # 0 (NA), 1 (MISS) or 2 (FAILED) - tc=834
++    def test_Task_If_Outcome_0_4_Sstate_Result_Must_Be_0_1_2(self):
++        tasks = Task.objects.filter(
++            outcome__in=(0, 4)).values('id', 'sstate_result')
++        cnt_err = []
 +
-+        BuildEnvironment.objects.get_or_create(
-+            betype=BuildEnvironment.TYPE_LOCAL,
-+            sourcedir=os.environ['TOASTER_DIR'],
-+            builddir=os.environ['BUILDDIR']
-+        )
++        for task in tasks:
++            if (task['sstate_result'] not in [0, 1, 2]):
++                cnt_err.append(task['id'])
 +
-+        release = Release.objects.get(name='local')
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for task id: %s' % cnt_err)
 +
-+        # Create a project for this build to run in
-+        try:
-+            project = Project.objects.get(name=BuildTest.PROJECT_NAME)
-+        except Project.DoesNotExist:
-+            project = Project.objects.create_project(
-+                name=BuildTest.PROJECT_NAME,
-+                release=release
-+            )
++    # Check if task_executed = TRUE (1), script_type must be 0 (CODING_NA), 2
++    # (CODING_PYTHON), 3 (CODING_SHELL) - tc=891
++    def test_Task_If_Task_Executed_True_Script_Type_0_2_3(self):
++        tasks = Task.objects.filter(
++            task_executed=1).values('id', 'script_type')
++        cnt_err = []
 +
-+        ProjectTarget.objects.create(project=project,
-+                                     target=target,
-+                                     task="")
-+        build_request = project.schedule_build()
++        for task in tasks:
++            if (task['script_type'] not in [0, 2, 3]):
++                cnt_err.append(task['id'])
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for task id: %s' % cnt_err)
 +
-+        # run runbuilds command to dispatch the build
-+        # e.g. manage.py runubilds
-+        RunBuildsCommand().runbuild()
++    # Check if task_executed = TRUE (1), outcome must be 0 (SUCCESS) or 4
++    # (FAILED) - tc=836
++    def test_Task_If_Task_Executed_True_Outcome_0_4(self):
++        tasks = Task.objects.filter(task_executed=1).values('id', 'outcome')
++        cnt_err = []
 +
-+        build_pk = build_request.build.pk
-+        while Build.objects.get(pk=build_pk).outcome == Build.IN_PROGRESS:
-+            sys.stdout.write("\rBuilding %s %d%%" %
-+                             (target,
-+                              build_request.build.completeper()))
-+            sys.stdout.flush()
-+            time.sleep(1)
++        for task in tasks:
++            if (task['outcome'] not in [0, 4]):
++                cnt_err.append(task['id'])
 +
-+        self.assertNotEqual(build_request.build.outcome,
-+                            Build.SUCCEEDED, "Build did not SUCCEEDED")
-+        print("\nBuild finished")
-+        return build_request.build
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for task id: %s' % cnt_err)
 +
-+    def target_already_built(self, target):
-+        """ If the target is already built no need to build it again"""
-+        for build in Build.objects.filter(
-+                project__name=BuildTest.PROJECT_NAME):
-+            targets = build.target_set.values_list('target', flat=True)
-+            if target in targets:
-+                return True
++    # Check if task_executed = FALSE (0), script_type must be 0 - tc=890
++    def test_Task_If_Task_Executed_False_Script_Type_0(self):
++        tasks = Task.objects.filter(
++            task_executed=0).values('id', 'script_type')
++        cnt_err = []
 +
-+        return False
++        for task in tasks:
++            if (task['script_type'] != 0):
++                cnt_err.append(task['id'])
++
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for task id: %s' % cnt_err)
++
++    # Check if task_executed = FALSE (0) and build outcome = SUCCEEDED (0),
++    # task outcome must be 1 (COVERED), 2 (CACHED), 3 (PREBUILT), 5 (EMPTY) -
++    # tc=837
++    def test_Task_If_Task_Executed_False_Outcome_1_2_3_5(self):
++        builds = Build.objects.filter(outcome=0).values('id')
++        cnt_err = []
++        for build in builds:
++            tasks = Task.objects.filter(
++                build=build['id'], task_executed=0).values('id', 'outcome')
++            for task in tasks:
++                if (task['outcome'] not in [1, 2, 3, 5]):
++                    cnt_err.append(task['id'])
++
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for task id: %s' % cnt_err)
++
++    # Key verification - tc=888
++    def test_Target_Installed_Package(self):
++        rows = Target_Installed_Package.objects.values('id',
++                                                       'target_id',
++                                                       'package_id')
++        cnt_err = []
++
++        for row in rows:
++            target = Target.objects.filter(id=row['target_id']).values('id')
++            package = Package.objects.filter(id=row['package_id']).values('id')
++            if (not target or not package):
++                cnt_err.append(row['id'])
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for target installed package id: %s' %
++                         cnt_err)
++
++    # Key verification - tc=889
++    def test_Task_Dependency(self):
++        rows = Task_Dependency.objects.values('id',
++                                              'task_id',
++                                              'depends_on_id')
++        cnt_err = []
++        for row in rows:
++            task_id = Task.objects.filter(id=row['task_id']).values('id')
++            depends_on_id = Task.objects.filter(
++                id=row['depends_on_id']).values('id')
++            if (not task_id or not depends_on_id):
++                cnt_err.append(row['id'])
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg='Errors for task dependency id: %s' % cnt_err)
++
++    # Check if build target file_name is populated only if is_image=true AND
++    # orm_build.outcome=0 then if the file exists and its size matches
++    # the file_size value. Need to add the tc in the test run
++    def test_Target_File_Name_Populated(self):
++        builds = Build.objects.filter(outcome=0).values('id')
++        for build in builds:
++            targets = Target.objects.filter(
++                build_id=build['id'], is_image=1).values('id')
++            for target in targets:
++                target_files = Target_Image_File.objects.filter(
++                    target_id=target['id']).values('id',
++                                                   'file_name',
++                                                   'file_size')
++                cnt_err = []
++                for file_info in target_files:
++                    target_id = file_info['id']
++                    target_file_name = file_info['file_name']
++                    target_file_size = file_info['file_size']
++                    if (not target_file_name or not target_file_size):
++                        cnt_err.append(target_id)
++                    else:
++                        if (not os.path.exists(target_file_name)):
++                            cnt_err.append(target_id)
++                        else:
++                            if (os.path.getsize(target_file_name) !=
++                                    target_file_size):
++                                cnt_err.append(target_id)
++            self.assertEqual(len(cnt_err), 0,
++                             msg='Errors for target image file id: %s' %
++                             cnt_err)
++
++    # Key verification - tc=884
++    def test_Package_Dependency(self):
++        cnt_err = []
++        deps = Package_Dependency.objects.values(
++            'id', 'package_id', 'depends_on_id')
++        for dep in deps:
++            if (dep['package_id'] == dep['depends_on_id']):
++                cnt_err.append(dep['id'])
++        self.assertEqual(len(cnt_err), 0,
++                         msg='Errors for package dependency id: %s' % cnt_err)
++
++    # Recipe key verification, recipe name does not depends on a recipe having
++    # the same name - tc=883
++    def test_Recipe_Dependency(self):
++        deps = Recipe_Dependency.objects.values(
++            'id', 'recipe_id', 'depends_on_id')
++        cnt_err = []
++        for dep in deps:
++            if (not dep['recipe_id'] or not dep['depends_on_id']):
++                cnt_err.append(dep['id'])
++            else:
++                name = Recipe.objects.filter(
++                    id=dep['recipe_id']).values('name')
++                dep_name = Recipe.objects.filter(
++                    id=dep['depends_on_id']).values('name')
++                if (name == dep_name):
++                    cnt_err.append(dep['id'])
++        self.assertEqual(len(cnt_err), 0,
++                         msg='Errors for recipe dependency id: %s' % cnt_err)
++
++    # Check if package name does not start with a number (0-9) - tc=846
++    def test_Package_Name_For_Number(self):
++        packages = Package.objects.filter(~Q(size=-1)).values('id', 'name')
++        cnt_err = []
++        for package in packages:
++            if (package['name'][0].isdigit() is True):
++                cnt_err.append(package['id'])
++        self.assertEqual(
++            len(cnt_err), 0, msg='Errors for package id: %s' % cnt_err)
++
++    # Check if package version starts with a number (0-9) - tc=847
++    def test_Package_Version_Starts_With_Number(self):
++        packages = Package.objects.filter(
++            ~Q(size=-1)).values('id', 'version')
++        cnt_err = []
++        for package in packages:
++            if (package['version'][0].isdigit() is False):
++                cnt_err.append(package['id'])
++        self.assertEqual(
++            len(cnt_err), 0, msg='Errors for package id: %s' % cnt_err)
++
++    # Check if package revision starts with 'r' - tc=848
++    def test_Package_Revision_Starts_With_r(self):
++        packages = Package.objects.filter(
++            ~Q(size=-1)).values('id', 'revision')
++        cnt_err = []
++        for package in packages:
++            if (package['revision'][0].startswith("r") is False):
++                cnt_err.append(package['id'])
++        self.assertEqual(
++            len(cnt_err), 0, msg='Errors for package id: %s' % cnt_err)
++
++    # Check the validity of the package build_id
++    # TC must be added in test run
++    def test_Package_Build_Id(self):
++        packages = Package.objects.filter(
++            ~Q(size=-1)).values('id', 'build_id')
++        cnt_err = []
++        for package in packages:
++            build_id = Build.objects.filter(
++                id=package['build_id']).values('id')
++            if (not build_id):
++                # They have no build_id but if they are
++                # CustomImagePackage that's expected
++                try:
++                    CustomImagePackage.objects.get(pk=package['id'])
++                except CustomImagePackage.DoesNotExist:
++                    cnt_err.append(package['id'])
++
++        self.assertEqual(len(cnt_err),
++                         0,
++                         msg="Errors for package id: %s they have no build"
++                         "associated with them" % cnt_err)
++
++    # Check the validity of package recipe_id
++    # TC must be added in test run
++    def test_Package_Recipe_Id(self):
++        packages = Package.objects.filter(
++            ~Q(size=-1)).values('id', 'recipe_id')
++        cnt_err = []
++        for package in packages:
++            recipe_id = Recipe.objects.filter(
++                id=package['recipe_id']).values('id')
++            if (not recipe_id):
++                cnt_err.append(package['id'])
++        self.assertEqual(
++            len(cnt_err), 0, msg='Errors for package id: %s' % cnt_err)
++
++    # Check if package installed_size field is not null
++    # TC must be aded in test run
++    def test_Package_Installed_Size_Not_NULL(self):
++        packages = Package.objects.filter(
++            installed_size__isnull=True).values('id')
++        cnt_err = []
++        for package in packages:
++            cnt_err.append(package['id'])
++        self.assertEqual(
++            len(cnt_err), 0, msg='Errors for package id: %s' % cnt_err)
++
++    def test_custom_packages_generated(self):
++        """Test if there is a corresponding generated CustomImagePackage"""
++        """ for each of the packages generated"""
++        missing_packages = []
++
++        for package in Package.objects.all():
++            try:
++                CustomImagePackage.objects.get(name=package.name)
++            except CustomImagePackage.DoesNotExist:
++                missing_packages.append(package.name)
++
++        self.assertEqual(len(missing_packages), 0,
++                         "Some package were created from the build but their"
++                         " corresponding CustomImagePackage was not found")
 -- 
 1.9.3
 
