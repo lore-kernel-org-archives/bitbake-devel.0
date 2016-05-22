@@ -1,23 +1,30 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id DC65A65CBB
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 May 2016 12:59:51 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga104.fm.intel.com with ESMTP; 19 May 2016 05:59:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,334,1459839600"; d="scan'208";a="106841839"
-Received: from gfois-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.8.121])
-	by fmsmga004.fm.intel.com with ESMTP; 19 May 2016 05:59:53 -0700
-From: Elliot Smith <elliot.smith@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 19 May 2016 13:59:33 +0100
-Message-Id: <1463662773-31389-6-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <1463662773-31389-1-git-send-email-elliot.smith@intel.com>
-References: <1463662773-31389-1-git-send-email-elliot.smith@intel.com>
-Subject: [PATCH 6/6] toaster: tests builds Add SSTATE_MISS as a valid condition for tc=833
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 199986FFF7;
+	Sun, 22 May 2016 07:59:00 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u4M7x1Xs031351; Sun, 22 May 2016 08:59:01 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id p5k5Z9hU1r7K; Sun, 22 May 2016 08:59:01 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u4M7wvqJ031347
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Sun, 22 May 2016 08:58:58 +0100
+Message-ID: <1463903937.9570.12.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: openembedded-architecture
+	<openembedded-architecture@lists.openembedded.org>, bitbake-devel
+	<bitbake-devel@lists.openembedded.org>
+Date: Sun, 22 May 2016 08:58:57 +0100
+In-Reply-To: <1462826340.21831.151.camel@linuxfoundation.org>
+References: <1462352176.18407.11.camel@linuxfoundation.org>
+	<1462826340.21831.151.camel@linuxfoundation.org>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: Python 3 for Bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,58 +37,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 May 2016 12:59:52 -0000
+X-List-Received-Date: Sun, 22 May 2016 07:59:03 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Michael Wood <michael.g.wood@intel.com>
+Where are we at?
 
-Task.SSTATE_NA and Task.SSTATE_MISS are both valid conditions for the
-condition that a Task.OUTCOME_COVERED and Task.OUTCOME_PREBUILT.
+The python3 branches in bitbake, OE-Core and poky are looking fairly
+good from a build perspective. The run overnight on the autobuilder had
+the following issues:
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/tests/builds/test_core_image_min.py | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ppc specific sanity test failure:
+https://autobuilder.yoctoproject.org/main/builders/nightly-ppc/builds/7
+99
+https:
+//autobuilder.yoctoproject.org/main/builders/nightly-ppc-lsb/builds/770
 
-diff --git a/bitbake/lib/toaster/tests/builds/test_core_image_min.py b/bitbake/lib/toaster/tests/builds/test_core_image_min.py
-index 87d29c7..dec0bfa 100644
---- a/bitbake/lib/toaster/tests/builds/test_core_image_min.py
-+++ b/bitbake/lib/toaster/tests/builds/test_core_image_min.py
-@@ -115,12 +115,19 @@ class BuildCoreImageMinimal(BuildTest):
-     # be 0 (SSTATE_NA) - tc=833
-     def test_Task_If_Outcome_1_3_Sstate_Result_Must_Be_0(self):
-         tasks = Task.objects.filter(
--            outcome__in=(1, 3)).values('id', 'sstate_result')
-+            outcome__in=(Task.OUTCOME_COVERED,
-+                         Task.OUTCOME_PREBUILT)).values('id',
-+                                                        'task_name',
-+                                                        'sstate_result')
-         cnt_err = []
- 
-         for task in tasks:
--            if (task['sstate_result'] != 0):
--                cnt_err.append(task['id'])
-+            if (task['sstate_result'] != Task.SSTATE_NA and
-+                    task['sstate_result'] != Task.SSTATE_MISS):
-+                cnt_err.append({'id': task['id'],
-+                                'name': task['task_name'],
-+                                'sstate_result': task['sstate_result'],
-+                               })
- 
-         self.assertEqual(len(cnt_err),
-                          0,
--- 
-1.9.3
+weird intermittent multilib failure:
+https:/
+/autobuilder.yoctoproject.org/main/builders/nightly-multilib/builds/795
 
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
+4 test failures in oe-selftest:
+https://autobuilder.yoctoproject.org/main/builders/nightly-oe-selftest/
+builds/517
 
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+which given the scope of the changes isn't so bad.
+
+I have merged some of the pieces which are 2.7 safe into master. We've
+had some issues with buildtools-tarball and the python3 it contains but
+I think we're nearly there in resolving that. I don't believe toaster i
+quite there yet either but getting close.
+
+The question is therefore how much more work to do before those
+branches are ready for merging? They do need a little more cosmetic
+cleanup but I think things are very close.
+
+I would like to get them merged sooner than later since they are quite
+a nightmare to maintain.
+
+Cheers,
+
+Richard
 
 
