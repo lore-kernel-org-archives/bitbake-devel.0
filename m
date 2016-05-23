@@ -1,30 +1,48 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 199986FFF7;
-	Sun, 22 May 2016 07:59:00 +0000 (UTC)
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 1844E601A4
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 May 2016 11:35:52 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4M7x1Xs031351; Sun, 22 May 2016 08:59:01 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id p5k5Z9hU1r7K; Sun, 22 May 2016 08:59:01 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4M7wvqJ031347
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 22 May 2016 08:58:58 +0100
-Message-ID: <1463903937.9570.12.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>, bitbake-devel
-	<bitbake-devel@lists.openembedded.org>
-Date: Sun, 22 May 2016 08:58:57 +0100
-In-Reply-To: <1462826340.21831.151.camel@linuxfoundation.org>
-References: <1462352176.18407.11.camel@linuxfoundation.org>
-	<1462826340.21831.151.camel@linuxfoundation.org>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: Python 3 for Bitbake
+	by bastet.se.axis.com (Postfix) with ESMTP id CE8CB1811B
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 May 2016 13:35:51 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id 7yyt5PdAiGwn for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 May 2016 13:35:51 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bastet.se.axis.com (Postfix) with ESMTP id 8EB19180F2
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 May 2016 13:35:50 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 6FC471A8A
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 May 2016 13:35:50 +0200 (CEST)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id 64F121512
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 May 2016 13:35:50 +0200 (CEST)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by seth.se.axis.com (Postfix) with ESMTP id 5EF20FB1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 May 2016 13:35:50 +0200 (CEST)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id u4NBZoek027510
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 May 2016 13:35:50 +0200
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id u4NBZoYS027506
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 23 May 2016 13:35:50 +0200
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 23 May 2016 13:35:48 +0200
+Message-Id: <cover.1464003299.git.pkj@axis.com>
+X-Mailer: git-send-email 2.1.0
+Subject: [PATCH 0/1] Fixes for the Git fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,46 +55,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 22 May 2016 07:59:03 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 23 May 2016 11:35:54 -0000
 
-Where are we at?
+This fixes a problem with the Git fetcher where it could assign the
+wrong SHA-1 to a Git reference. The problem was that the matching done
+in _latest_revision() wasn't exact, which means that, e.g., SRCREV =
+"R${PV}" where PV = "1.0" would match a tag called R1.0.0, rather than
+fail as it should since the tag R1.0 does not exist.
 
-The python3 branches in bitbake, OE-Core and poky are looking fairly
-good from a build perspective. The run overnight on the autobuilder had
-the following issues:
+//Peter
 
-ppc specific sanity test failure:
-https://autobuilder.yoctoproject.org/main/builders/nightly-ppc/builds/7
-99
-https:
-//autobuilder.yoctoproject.org/main/builders/nightly-ppc-lsb/builds/770
+The following changes since commit c7e614c438706fb3ed7520b4990ebb3973366942:
 
-weird intermittent multilib failure:
-https:/
-/autobuilder.yoctoproject.org/main/builders/nightly-multilib/builds/795
+  useradd: Fix infinite build loop (2016-05-23 10:33:45 +0100)
 
-4 test failures in oe-selftest:
-https://autobuilder.yoctoproject.org/main/builders/nightly-oe-selftest/
-builds/517
+are available in the git repository at:
 
-which given the scope of the changes isn't so bad.
+  git://git.yoctoproject.org/poky-contrib pkj/exact_git_refs
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=pkj/exact_git_refs
 
-I have merged some of the pieces which are 2.7 safe into master. We've
-had some issues with buildtools-tarball and the python3 it contains but
-I think we're nearly there in resolving that. I don't believe toaster i
-quite there yet either but getting close.
+Peter Kjellerstedt (1):
+  fetch2/git.py: References must match exactly
 
-The question is therefore how much more work to do before those
-branches are ready for merging? They do need a little more cosmetic
-cleanup but I think things are very close.
+ bitbake/lib/bb/fetch2/git.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-I would like to get them merged sooner than later since they are quite
-a nightmare to maintain.
-
-Cheers,
-
-Richard
+-- 
+2.1.0
 
 
