@@ -1,49 +1,56 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-ig0-f180.google.com (mail-ig0-f180.google.com
-	[209.85.213.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 57BC760290
+Return-Path: <gerard.b@tekmagic.net>
+Received: from mail-qk0-f179.google.com (mail-qk0-f179.google.com
+	[209.85.220.179])
+	by mail.openembedded.org (Postfix) with ESMTP id D39FF60670
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 May 2016 20:09:21 +0000 (UTC)
-Received: by mail-ig0-f180.google.com with SMTP id l10so30459310igk.0
+	Mon, 23 May 2016 21:30:46 +0000 (UTC)
+Received: by mail-qk0-f179.google.com with SMTP id t145so26967474qke.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 May 2016 13:09:22 -0700 (PDT)
+	Mon, 23 May 2016 14:30:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=+W2zQ5JstIrUOWaB4qxYtAP3ujyL8vb5f2MqD4HM3wA=;
-	b=WXbUHLwwOtzXDprWTS0xBY0etnuJG1Ra+5xzVc3i1HSv3aOmmK/6v5rbqhjl6iKkd7
-	dd5RrGs/l6Ywt1s7DzXsU1U2We6LxvHc7UiogsQUO5IoqjWf9hxCPHagIP98/dXAgOum
-	Q8LpeDjBy10hUypM5H7DC4ixJ5tlFcu8frutCDPtPK9TUHv3D2HgX7AnwjTMnL798CKW
-	iAJ9aEPM2ZVMoDCf0NW+GEfyUhp59UGMR1qStt8m9KgTwx4zt/mN/jdHnwWhwdM6lssP
-	KkG5naKI1HtiCt3bSbrBtnRb+ctrRmNjz3KUwC0xCS/jZNByS3/tTbpgbiqenNWgW9sD
-	ttRQ==
+	d=tekmagic-net.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:subject:from:in-reply-to:date:cc
+	:content-transfer-encoding:message-id:references:to;
+	bh=vDFRJMEi3zcTMOt3ZAWmat8Ua6XBtTiSTJNxEl4GTCE=;
+	b=KLbViSFZOdQlxiuxhkU8r6Kw2HqKkWFr5Bkts49ksbcOzvQEH2RMxdh8zM9F5CGQtY
+	cUF4wZseRL8gKwlBLu+3k9eLdRW7G7dXP5bzhGy6xMvkWhzVjJEjSIfNdQAjLf/+2S2Q
+	58Bh3FALbe4dnc3cgSxDqrR3v48zDjQZp5eDyI7w5jJ5gWrMTZC4uYTUcby0oSUayQle
+	i8EiVd3wvqiZ060t5+X5OftYe34A6Mxg+JQ8td/7xJCF+TfCmgSNWTP3ZbeXfTlnFT6/
+	TGAAyiPy4FrDeTohfeQC1NX5QEfxAVskM5yiLbt/sNq/XTMJhA7lvbVc0sxjawIGaMNI
+	6hOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=+W2zQ5JstIrUOWaB4qxYtAP3ujyL8vb5f2MqD4HM3wA=;
-	b=cMMGUSb8E3Mx/gljNKJvNIDW6QixOWJATGvdHd4D8ttHZqbml4/m2FGbdr+fiMDh8Q
-	XZFfXApYMDN89BmNM6IFuRw0DLMUbvrdQecFlkExfMhtNivTKVdz8YHq6yGOynrztoO4
-	tf3CAuC9aufFYRa46ybtu/SmCGxhVj1n5XveZkC3nxPddUSV6gaIPb4PlfjA7jQ4VDc/
-	iyx1woSis68waFxVKqqO1ru84tpMIJDq19h6vFEY7933yt41x/jsx7RtCoUV/kZQGoXu
-	qLEO0BbSIoPP9H50NrP5SpW++D6I3GoXKNmvwSgvCdK1oLJqee5M9Bm5EktRIhY4l24/
-	dZhA==
-X-Gm-Message-State: AOPr4FUp/S/K3XqEhjQ6splDkyGFz/4cELeRbQL+9GCe6opbBvS2/YYhmoCfRWz2dKjixqc6hnJsK2rZGEV793lP
-X-Received: by 10.50.119.67 with SMTP id ks3mr14937558igb.78.1464034162386;
-	Mon, 23 May 2016 13:09:22 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.107.162.6 with HTTP; Mon, 23 May 2016 13:09:02 -0700 (PDT)
-In-Reply-To: <03f101d1b529$74cdb560$5e692020$@tekmagic.net>
+	h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+	:content-transfer-encoding:message-id:references:to;
+	bh=vDFRJMEi3zcTMOt3ZAWmat8Ua6XBtTiSTJNxEl4GTCE=;
+	b=O5HqwliOMi+clDPN8l51TKlsn0nlMGyNFWA1c/F4EGSLvZ9KfFebOTU4swjKPQ97NX
+	PjUXYLGF8EiYaiUCtjMZ/qrFo50IRNcO7OGU5bsq4DYwOuCeWJkWcRJ4OYpYVZEXuepP
+	wDBnziwqPX6AL4AYwHN6M0c/wte6S36TQnpD2Zf4cO+0V+Lc4AjoEVNvSa8urboOjtO7
+	zEY7sKJ2hmFdB2KPjkTTio0Mf+jYISgOFcg2oSnFOmewoWwqBQjUZoLyb/0fWZtxDZNO
+	79Wea9VRJ8YgiAKKp9ZMk0MTatnnEbNYNeWI9JJO8H0UbCC1AWG+QEDbBeRX7Nu4ONwL
+	W77Q==
+X-Gm-Message-State: ALyK8tJQxtdXOsiBEC+4gMX94rLwBk4UeL9154WTkprpWTO91a0142zdSWbbw9F2Fkwvvw==
+X-Received: by 10.200.49.119 with SMTP id h52mr1059037qtb.80.1464039046904;
+	Mon, 23 May 2016 14:30:46 -0700 (PDT)
+Received: from [10.148.215.202] (mobile-166-171-056-012.mycingular.net.
+	[166.171.56.12]) by smtp.gmail.com with ESMTPSA id
+	c35sm1795186qga.14.2016.05.23.14.30.45
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Mon, 23 May 2016 14:30:45 -0700 (PDT)
+Mime-Version: 1.0 (1.0)
+From: Gerard Bucas <gerard.b@tekmagic.net>
+X-Mailer: iPhone Mail (13F69)
+In-Reply-To: <CAJTo0LaT2gdqyv+XkUPofOj+NYsmGT0eqKN6XQEtPpkwqb_gqg@mail.gmail.com>
+Date: Mon, 23 May 2016 17:30:44 -0400
+Message-Id: <122C9769-19EB-4196-861A-25948215D75F@tekmagic.net>
 References: <03d601d1b528$7bca9b90$735fd2b0$@tekmagic.net>
 	<03e401d1b529$3aaa2210$affe6630$@tekmagic.net>
 	<03f101d1b529$74cdb560$5e692020$@tekmagic.net>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Mon, 23 May 2016 21:09:02 +0100
-Message-ID: <CAJTo0LaT2gdqyv+XkUPofOj+NYsmGT0eqKN6XQEtPpkwqb_gqg@mail.gmail.com>
-To: "gerard.b@tekmagic.net" <gerard.b@tekmagic.net>
+	<CAJTo0LaT2gdqyv+XkUPofOj+NYsmGT0eqKN6XQEtPpkwqb_gqg@mail.gmail.com>
+To: "Burton, Ross" <ross.burton@intel.com>
 Cc: Denis Carikli <denis@eukrea.com>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	=?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>,
+	=?utf-8?Q?Eric_B=C3=A9nard?= <eric@eukrea.com>,
 	Otavio Salvador <otavio@ossystems.com.br>
 Subject: Re: libsoup build error in master (missing gssapi/gssapi.h ?)
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -58,50 +65,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 May 2016 20:09:22 -0000
-Content-Type: multipart/alternative; boundary=089e011847f630bf3d05338804e3
+X-List-Received-Date: Mon, 23 May 2016 21:30:47 -0000
+Content-Type: multipart/alternative;
+	boundary=Apple-Mail-9C458636-E550-450B-9B0E-3DE91AA5D931
+Content-Transfer-Encoding: 7bit
 
---089e011847f630bf3d05338804e3
-Content-Type: text/plain; charset=UTF-8
+--Apple-Mail-9C458636-E550-450B-9B0E-3DE91AA5D931
+Content-Type: text/plain;
+	charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 23 May 2016 at 20:29, Gerard Bucas <gerard.b@tekmagic.net> wrote:
+Thanks Ross - will do!!
 
-> *I have been trying to build yocto with chromium but keep on getting a
-> libsoup error that I can=E2=80=99t seem to resolve.*
->
->
->
-> *Looks like: *fatal error: gssapi/gssapi.h: No such file or directory
->
->
-Update to current master, this has just been fixed.
+> On May 23, 2016, at 4:09 PM, Burton, Ross <ross.burton@intel.com> wrote:
+>=20
+>=20
+>> On 23 May 2016 at 20:29, Gerard Bucas <gerard.b@tekmagic.net> wrote:
+>> I have been trying to build yocto with chromium but keep on getting a lib=
+soup error that I can=E2=80=99t seem to resolve.
+>>=20
+>> =20
+>>=20
+>> Looks like: fatal error: gssapi/gssapi.h: No such file or directory
+>>=20
+>=20
+> Update to current master, this has just been fixed.
+>=20
+> Also for support like this for recipe in oe-core, please stick to yocto@ o=
+r oe-core@.
+>=20
+> Ross
 
-Also for support like this for recipe in oe-core, please stick to yocto@ or
-oe-core@.
-
-Ross
-
---089e011847f630bf3d05338804e3
-Content-Type: text/html; charset=UTF-8
+--Apple-Mail-9C458636-E550-450B-9B0E-3DE91AA5D931
+Content-Type: text/html;
+	charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On 23 May 2016 at 20:29, Gerard Bucas <span dir=3D"ltr">&lt;<a href=3D"mail=
-to:gerard.b@tekmagic.net" target=3D"_blank">gerard.b@tekmagic.net</a>&gt;</=
-span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8e=
-x;border-left:1px #ccc solid;padding-left:1ex"><p class=3D"MsoNormal"><b><s=
-pan style=3D"font-size:14.0pt">I have been trying to build yocto with chrom=
-ium but keep on getting a libsoup error that I can=E2=80=99t seem to resolv=
-e.<u></u><u></u></span></b></p><p class=3D"MsoNormal"><b><span style=3D"fon=
-t-size:14.0pt"><u></u>=C2=A0<u></u></span></b></p><p class=3D"MsoNormal"><b=
-><span style=3D"font-size:14.0pt">Looks like: </span></b><code><span style=
-=3D"font-size:10.0pt">fatal error: gssapi/gssapi.h: No such file or directo=
-ry<u></u><u></u></span></code></p><p class=3D"MsoNormal"></p></blockquote><=
-/div><br>Update to current master, this has just been fixed.</div><div clas=
-s=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Also for support lik=
-e this for recipe in oe-core, please stick to yocto@ or oe-core@.</div><div=
- class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Ross</div></div=
->
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charset=3D=
+utf-8"></head><body dir=3D"auto"><div></div><div>Thanks Ross - will do!!</di=
+v><div><br>On May 23, 2016, at 4:09 PM, Burton, Ross &lt;<a href=3D"mailto:r=
+oss.burton@intel.com">ross.burton@intel.com</a>&gt; wrote:<br><br></div><blo=
+ckquote type=3D"cite"><div><div dir=3D"ltr"><div class=3D"gmail_extra"><br><=
+div class=3D"gmail_quote">On 23 May 2016 at 20:29, Gerard Bucas <span dir=3D=
+"ltr">&lt;<a href=3D"mailto:gerard.b@tekmagic.net" target=3D"_blank">gerard.=
+b@tekmagic.net</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" st=
+yle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><p cla=
+ss=3D"MsoNormal"><b><span style=3D"font-size:14.0pt">I have been trying to b=
+uild yocto with chromium but keep on getting a libsoup error that I can=E2=80=
+=99t seem to resolve.<u></u><u></u></span></b></p><p class=3D"MsoNormal"><b>=
+<span style=3D"font-size:14.0pt"><u></u>&nbsp;<u></u></span></b></p><p class=
+=3D"MsoNormal"><b><span style=3D"font-size:14.0pt">Looks like: </span></b><c=
+ode><span style=3D"font-size:10.0pt">fatal error: gssapi/gssapi.h: No such f=
+ile or directory<u></u><u></u></span></code></p><p class=3D"MsoNormal"></p><=
+/blockquote></div><br>Update to current master, this has just been fixed.</d=
+iv><div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Also for s=
+upport like this for recipe in oe-core, please stick to yocto@ or oe-core@.<=
+/div><div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Ross</d=
+iv></div>
+</div></blockquote></body></html>=
 
---089e011847f630bf3d05338804e3--
+--Apple-Mail-9C458636-E550-450B-9B0E-3DE91AA5D931--
