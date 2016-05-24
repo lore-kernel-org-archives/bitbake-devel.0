@@ -1,26 +1,21 @@
-Return-Path: <leonardo.sandoval.gonzalez@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id E5578606D1
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 03ACC6018C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 May 2016 14:13:31 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga101.fm.intel.com with ESMTP; 24 May 2016 07:08:30 -0700
+	Tue, 24 May 2016 22:21:07 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 24 May 2016 15:21:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,359,1459839600"; d="scan'208";a="708153314"
-Received: from lsandov1-mobl2.zpn.intel.com (HELO [10.219.5.35])
-	([10.219.5.35])
-	by FMSMGA003.fm.intel.com with ESMTP; 24 May 2016 07:08:30 -0700
-To: Markus Lehtonen <markus.lehtonen@linux.intel.com>,
-	bitbake-devel@lists.openembedded.org
-References: <1464074730-23187-1-git-send-email-markus.lehtonen@linux.intel.com>
-From: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
-Message-ID: <35bff996-f13e-f7d3-4a85-ec710cbc61f8@linux.intel.com>
-Date: Tue, 24 May 2016 09:09:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.1.0
-MIME-Version: 1.0
-In-Reply-To: <1464074730-23187-1-git-send-email-markus.lehtonen@linux.intel.com>
-Subject: Re: [PATCH] cookerdata: print an error if layer dir does not exist
+X-IronPort-AV: E=Sophos;i="5.26,360,1459839600"; d="scan'208";a="961593721"
+Received: from ismailm-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.147.14])
+	by orsmga001.jf.intel.com with ESMTP; 24 May 2016 15:21:05 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 25 May 2016 10:20:36 +1200
+Message-Id: <cover.1464128340.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.5.5
+Subject: [1.30][PATCH 0/1] Backport fetch environment fix to 1.30
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,40 +28,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 24 May 2016 14:13:32 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 24 May 2016 22:21:08 -0000
+
+This will allow variables such as GIT_SSL_CAINFO through from the
+external environment to the fetch environment, which in OE will allow
+buildtools-tarball's included git version to find the included
+ca-certificates data.
 
 
+The following changes since commit 9ea7d3ec59c2b09ae60cf0c7f18472355bfb98d7:
 
-On 05/24/2016 02:25 AM, Markus Lehtonen wrote:
-> Makes it easier for user to identify problems, e.g. typos, in BBLAYERS.
->
-> [YOCTO #9507]
->
-> Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-> ---
->   lib/bb/cookerdata.py | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-> index 1615db5..7dfe7b5 100644
-> --- a/lib/bb/cookerdata.py
-> +++ b/lib/bb/cookerdata.py
-> @@ -292,6 +292,10 @@ class CookerDataBuilder(object):
->               data = bb.data.createCopy(data)
->               approved = bb.utils.approved_variables()
->               for layer in layers:
-> +                if not os.path.isdir(layer):
-> +                    parselog.critical("Layer directory '%s' does not to exist! "
-> +                                      "Please check BBLAYERS in %s" % (layer, layerconf))
-> +                    sys.exit(1)
+  toaster: fix progress bar in MySQL environment (2016-05-13 17:45:31 +0100)
 
-Markus, I am not familiar with this code, but instead of a sys.exit(1), 
-would it be better to raise a exception instead (raise SystemExit(msg))?
+are available in the git repository at:
 
->                   parselog.debug(2, "Adding layer %s", layer)
->                   if 'HOME' in approved and '~' in layer:
->                       layer = os.path.expanduser(layer)
+  git://git.yoctoproject.org/poky-contrib paule/bb-git-ssl-cainfo-1.30
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-git-ssl-cainfo-1.30
+
+Ross Burton (1):
+  fetch2: export DBUS_SESSION_BUS_ADDRESS to support authentication
+    agents
+
+ lib/bb/fetch2/__init__.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+-- 
+2.5.5
 
 
