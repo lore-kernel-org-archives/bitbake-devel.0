@@ -1,25 +1,52 @@
-Return-Path: <markus.lehtonen@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id E0358602D9
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 49D2770034
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 25 May 2016 09:04:49 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga101.fm.intel.com with ESMTP; 25 May 2016 02:04:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,363,1459839600"; d="scan'208";a="961915609"
-Received: from marquiz.fi.intel.com ([10.237.72.155])
-	by orsmga001.jf.intel.com with ESMTP; 25 May 2016 02:04:48 -0700
-Message-ID: <1464167087.941.8.camel@linux.intel.com>
-From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-To: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Wed, 25 May 2016 12:04:47 +0300
-In-Reply-To: <35bff996-f13e-f7d3-4a85-ec710cbc61f8@linux.intel.com>
+	Wed, 25 May 2016 09:57:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id B1FE72E1F4;
+	Wed, 25 May 2016 11:57:03 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id 9acGnazPXMR5; Wed, 25 May 2016 11:57:02 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id D9E492E1EE;
+	Wed, 25 May 2016 11:57:02 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id C3BC419F7;
+	Wed, 25 May 2016 11:57:02 +0200 (CEST)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id B8E931AF5;
+	Wed, 25 May 2016 11:57:02 +0200 (CEST)
+Received: from XBOX01.axis.com (xbox01.axis.com [10.0.5.15])
+	by seth.se.axis.com (Postfix) with ESMTP id B6D8EFA1;
+	Wed, 25 May 2016 11:57:02 +0200 (CEST)
+Received: from XBOX02.axis.com (10.0.5.16) by XBOX01.axis.com (10.0.5.15) with
+	Microsoft SMTP Server (TLS) id 15.0.1156.6;
+	Wed, 25 May 2016 11:57:02 +0200
+Received: from XBOX02.axis.com ([fe80::d00f:cb52:1b56:20d]) by XBOX02.axis.com
+	([fe80::d00f:cb52:1b56:20d%21]) with mapi id 15.00.1156.000;
+	Wed, 25 May 2016 11:57:02 +0200
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+Thread-Topic: [bitbake-devel] [PATCH] cookerdata: print an error if layer dir
+	does not exist
+Thread-Index: AQHRtY19zyP32fLj+kKfQ8j/2DTjgJ/Ja+5g
+Date: Wed, 25 May 2016 09:57:02 +0000
+Message-ID: <36332ede5fc34548b940ea5914723139@XBOX02.axis.com>
 References: <1464074730-23187-1-git-send-email-markus.lehtonen@linux.intel.com>
-	<35bff996-f13e-f7d3-4a85-ec710cbc61f8@linux.intel.com>
-X-Mailer: Evolution 3.16.5 
-Mime-Version: 1.0
-Subject: Re: [PATCH] cookerdata: print an error if layer dir does not exist
+In-Reply-To: <1464074730-23187-1-git-send-email-markus.lehtonen@linux.intel.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.55]
+MIME-Version: 1.0
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] cookerdata: print an error if layer dir	does not exist
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,86 +59,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 25 May 2016 09:04:50 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 25 May 2016 09:57:06 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Leonardo,
+> -----Original Message-----
+> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
+> devel-bounces@lists.openembedded.org] On Behalf Of Markus Lehtonen
+> Sent: den 24 maj 2016 09:26
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH] cookerdata: print an error if layer
+> dir does not exist
+>=20
+> Makes it easier for user to identify problems, e.g. typos, in BBLAYERS.
+>=20
+> [YOCTO #9507]
+>=20
+> Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+> ---
+>  lib/bb/cookerdata.py | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+> index 1615db5..7dfe7b5 100644
+> --- a/lib/bb/cookerdata.py
+> +++ b/lib/bb/cookerdata.py
+> @@ -292,6 +292,10 @@ class CookerDataBuilder(object):
+>              data =3D bb.data.createCopy(data)
+>              approved =3D bb.utils.approved_variables()
+>              for layer in layers:
+> +                if not os.path.isdir(layer):
+> +                    parselog.critical("Layer directory '%s' does not to =
+exist! "
+                                                                        ^^
+Change "not to exist" to "not exist".
 
-On Tue, 2016-05-24 at 09:09 -0500, Leonardo Sandoval wrote:
-> 
-> On 05/24/2016 02:25 AM, Markus Lehtonen wrote:
-> > Makes it easier for user to identify problems, e.g. typos, in
-> > BBLAYERS.
-> > 
-> > [YOCTO #9507]
-> > 
-> > Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-> > ---
-> >   lib/bb/cookerdata.py | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-> > index 1615db5..7dfe7b5 100644
-> > --- a/lib/bb/cookerdata.py
-> > +++ b/lib/bb/cookerdata.py
-> > @@ -292,6 +292,10 @@ class CookerDataBuilder(object):
-> >               data = bb.data.createCopy(data)
-> >               approved = bb.utils.approved_variables()
-> >               for layer in layers:
-> > +                if not os.path.isdir(layer):
-> > +                    parselog.critical("Layer directory '%s' does
-> > not to exist! "
-> > +                                      "Please check BBLAYERS in
-> > %s" % (layer, layerconf))
-> > +                    sys.exit(1)
-> 
-> Markus, I am not familiar with this code, but instead of a
-> sys.exit(1), 
-> would it be better to raise a exception instead (raise
-> SystemExit(msg))?
-> 
-> >                   parselog.debug(2, "Adding layer %s", layer)
-> >                   if 'HOME' in approved and '~' in layer:
-> >                       layer = os.path.expanduser(layer)
-> 
+> +                                      "Please check BBLAYERS in %s" % (l=
+ayer, layerconf))
+> +                    sys.exit(1)
+>                  parselog.debug(2, "Adding layer %s", layer)
+>                  if 'HOME' in approved and '~' in layer:
+>                      layer =3D os.path.expanduser(layer)
+> --
+> 2.6.6
 
-The reason for this is that with SystemExit() the output will be much
-uglier. Bitbake will not only print the error message but also all
-logging debug messages and I think that this may confuse the user. The
-output would look something like:
---- SNIP -----------------------------------------------------
-Layer directory '#' does not to exist! Please check BBLAYERS in
-/home/marquiz/yocto/openembedded-core/build-9507/conf/bblayers.conf
-DEBUG: Removed the following variables from the environment: _,
-LS_COLORS, EMAIL, JAVA_ROOT, LESS, G_BROKEN_FILENAMES, MINICOM,
-CSHEDIT, HOSTTYPE, LESSOPEN, QT_SYSTEM_DIR, PYTHONSTARTUP, CVS_RSH,
-GPG_AGENT_INFO, INPUTRC, XDG_VTNR, SOCKS_PROXY, CPU, QT_IM_SWITCHER,
-XSESSION_IS_UP, AUDIODRIVER, LESSKEY, XDG_DATA_DIRS, XNLSPATH,
-TERMINATOR_UUID, ALSA_CONFIG_PATH, HISTSIZE, SDL_AUDIODRIVER, WINDOWID,
-LESS_ADVANCED_PREPROCESSOR, gopher_proxy, MANPATH, XMODIFIERS,
-WINDOWPATH, JAVA_HOME, PROFILEREAD, XKEYSYMDB, VDPAU_DRIVER,
-GIT_CEILING_DIRECTORIES, JAVA_BINDIR, XDG_RUNTIME_DIR, DISPLAY,
-PYTHONPATH, COMP_WORDBREAKS, NNTPSERVER, XCURSOR_THEME,
-DBUS_SESSION_BUS_PID, G_FILENAME_ENCODING, OSTYPE, HOST, FROM_HEADER,
-LESSCLOSE, JRE_HOME, socks_proxy, LS_OPTIONS, GPG_TTY, XDG_SESSION_ID,
-DBUS_SESSION_BUS_ADDRESS, ORBIT_SOCKETDIR, LANG, GTK_IM_MODULE,
-CONFIG_SITE, XDG_CONFIG_DIRS, GTK_MODULES, SOCKS5_SERVER, XDG_SEAT,
-OLDPWD, HOSTNAME, WINDOWMANAGER, INPUT_METHOD, SHLVL, QT_IM_MODULE,
-COLORTERM, BUILDDIR, QEMU_AUDIO_DRV, MAIL, MACHTYPE, PAGER,
-XAUTHLOCALHOSTNAME, MORE
-DEBUG: Found bblayers.conf (/home/marquiz/yocto/openembedded-core/build
--9507/conf/bblayers.conf)
-DEBUG: Adding layer /home/marquiz/yocto/openembedded-core/meta
---- SNIP -----------------------------------------------------
-
-
-The reason for this behavior is that bitbake will spit out all log messages (even debug messages) if it exits at this early stage and there are no non-debug messages in the logger.
-
-
-Thanks,
-  Markus
-
-
+//Peter
 
 
