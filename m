@@ -1,33 +1,38 @@
-Return-Path: <prvs=946746f3a=Ulf.Magnusson@bmw.de>
-Received: from esa1.bmw.c3s2.iphmx.com (esa1.bmw.c3s2.iphmx.com
-	[68.232.133.201])
-	by mail.openembedded.org (Postfix) with ESMTP id 1C88860118
+Return-Path: <andrew@bradfordembedded.com>
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com
+	[66.111.4.26])
+	by mail.openembedded.org (Postfix) with ESMTP id BCC7B73176
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 25 May 2016 11:46:34 +0000 (UTC)
-Received: from esagw6.bmwgroup.com (HELO esagw6.muc) ([160.46.252.49]) by
-	esa1.bmw.c3s2.iphmx.com with ESMTP/TLS; 25 May 2016 13:46:24 +0200
-Received: from unknown (HELO esabb2.muc) ([160.50.100.34]) by esagw6.muc with
-	ESMTP/TLS; 25 May 2016 13:46:23 +0200
-Received: from smuch51a.muc (HELO SMUCH51A.europe.bmw.corp) ([160.46.137.115])
-	by esabb2.muc with ESMTP/TLS; 25 May 2016 13:46:23 +0200
-Received: from SMUCM59B.europe.bmw.corp ([160.46.136.59]) by
-	SMUCH51A.europe.bmw.corp ([160.46.137.115]) with mapi id 14.03.0279.002;
-	Wed, 25 May 2016 13:46:23 +0200
-From: <Ulf.Magnusson@bmw.de>
-To: <bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH] bitbake: fetch2/svn: Fix SVN
-	repository concurrent update race
-Thread-Index: AdG2eS8sZb9c8iY5To22Ot6K0H5Y+AAAdGx9
-Date: Wed, 25 May 2016 11:46:22 +0000
-Message-ID: <91CC97698835684980CD15EFCBE86BDC26CD3309@smucm59b>
-References: <91CC97698835684980CD15EFCBE86BDC26CD32E0@smucm59b>
-In-Reply-To: <91CC97698835684980CD15EFCBE86BDC26CD32E0@smucm59b>
-Accept-Language: en-US, de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [160.48.96.19]
-MIME-Version: 1.0
-Subject: Re: [PATCH] bitbake: fetch2/svn: Fix SVN repository concurrent update race
+	Wed, 25 May 2016 19:53:33 +0000 (UTC)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 3E33021511;
+	Wed, 25 May 2016 15:48:31 -0400 (EDT)
+Received: from frontend1 ([10.202.2.160])
+	by compute7.internal (MEProxy); Wed, 25 May 2016 15:48:31 -0400
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=
+	bradfordembedded.com; h=cc:date:from:message-id:subject:to
+	:x-sasl-enc:x-sasl-enc; s=mesmtp; bh=EDNpiBlmFbKseb8tub6SHuf+LRs
+	=; b=rJG6bDZK4fZHZUB9+4vUc+FaaH3J1hPTrClHjMA1qPADHUDDb0tX5J+WQdZ
+	c3psFEqbLMKbeDo2DhVnEUtFCz2fTlNauBymSfw7MowCV8aly1mwsXv9IV6aDqKM
+	Y+ujaZlQjE7CH4z+UCnH8NADMr8n8HCV7E+f6my8aQUWS5iI=
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:date:from:message-id:subject:to
+	:x-sasl-enc:x-sasl-enc; s=smtpout; bh=EDNpiBlmFbKseb8tub6SHuf+LR
+	s=; b=HM36IsKdv2gYW2cWyJa/aMUqv1PtvQiEPIQeUUNUXJMFo6U6vQgdRy+1oU
+	LhbvCzIzxvffjIMMWl+v5JM1BG7CpRnaysdxTYi1nKIqfUy3Js/Jq8Abs7OK7pdS
+	tQxZqXOVQaz9XBA/Grs3QDxqXWLBCm2vkx98Ayq5Qj0wfFfoA=
+X-Sasl-enc: lgqzFDaxiT94BzHgE+iJlUW/QX8ZnOprBSHhon/G9iiQ 1464205710
+Received: from kaim-eeyore.kodakalaris.net (clr-vpn01.kodakalaris.com
+	[198.140.222.129])
+	by mail.messagingengine.com (Postfix) with ESMTPA id ECBB7F284B;
+	Wed, 25 May 2016 15:48:30 -0400 (EDT)
+From: Andrew Bradford <andrew@bradfordembedded.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 25 May 2016 15:48:22 -0400
+Message-Id: <1464205704-26377-1-git-send-email-andrew@bradfordembedded.com>
+X-Mailer: git-send-email 2.8.1
+Cc: Andrew Bradford <andrew.bradford@kodakalaris.com>
+Subject: [PATCH 0/2] Enhance and document perforce fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,165 +45,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 25 May 2016 11:46:35 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 25 May 2016 19:53:35 -0000
 
-> The ${DL_DIR}/svn directory is used by BitBake to keep checked-out SVN=0A=
-> repositories from which tarballs are generated. These repositories were=
-=0A=
-> protected from concurrent update with a lock on the tarballs. However,=0A=
-> the tarballs are specific to the SRCREV and module checked out (many=0A=
-> tarballs can come from the same repository), meaning a repository could=
-=0A=
-> be modified concurrently if two recipes checked out two different=0A=
-> SRCREVs or modules from it in parallel.=0A=
-> =0A=
-> This caused errors like the following:=0A=
-> =0A=
-> ERROR: Fetcher failure: Fetch command failed with exit code 1, output:=0A=
-> svn: E155004: Run 'svn cleanup' to remove locks (type 'svn help cleanup' =
-for details)=0A=
-> svn: E155004: Working copy '/home/foo/downloads/svn/repo/trunk' locked.=
-=0A=
-> svn: E155004: '/home/foo/downloads/svn/repo/trunk' is already locked.=0A=
-> =0A=
-> Fix it by adding a per-repository lock that's independent of the module=
-=0A=
-> and SRCREV.=0A=
-> ---=0A=
->  bitbake/lib/bb/fetch2/svn.py | 69 +++++++++++++++++++++++++-------------=
-------=0A=
->  1 file changed, 39 insertions(+), 30 deletions(-)=0A=
-> =0A=
-> diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py=
-=0A=
-> index 8a29193..f83b740 100644=0A=
-> --- a/bitbake/lib/bb/fetch2/svn.py=0A=
-> +++ b/bitbake/lib/bb/fetch2/svn.py=0A=
-> @@ -63,6 +63,9 @@ class Svn(FetchMethod):=0A=
->          relpath =3D self._strip_leading_slashes(ud.path)=0A=
->          ud.pkgdir =3D os.path.join(data.expand('${SVNDIR}', d), ud.host,=
- relpath)=0A=
->          ud.moddir =3D os.path.join(ud.pkgdir, ud.module)=0A=
-> +        # Protects the repository from concurrent updates, e.g. from two=
-=0A=
-> +        # recipes fetching different revisions at the same time=0A=
-> +        ud.svnlock =3D os.path.join(ud.pkgdir, "svn.lock")=0A=
->  =0A=
->          ud.setup_revisons(d)=0A=
->  =0A=
-> @@ -123,38 +126,44 @@ class Svn(FetchMethod):=0A=
->  =0A=
->          logger.debug(2, "Fetch: checking for module directory '" + ud.mo=
-ddir + "'")=0A=
->  =0A=
-> -        if os.access(os.path.join(ud.moddir, '.svn'), os.R_OK):=0A=
-> -            svnupdatecmd =3D self._buildsvncommand(ud, d, "update")=0A=
-> -            logger.info("Update " + ud.url)=0A=
-> -            # update sources there=0A=
-> -            os.chdir(ud.moddir)=0A=
-> -            # We need to attempt to run svn upgrade first in case its an=
- older working format=0A=
-> -            try:=0A=
-> -                runfetchcmd(ud.basecmd + " upgrade", d)=0A=
-> -            except FetchError:=0A=
-> -                pass=0A=
-> -            logger.debug(1, "Running %s", svnupdatecmd)=0A=
-> -            bb.fetch2.check_network_access(d, svnupdatecmd, ud.url)=0A=
-> -            runfetchcmd(svnupdatecmd, d)=0A=
-> -        else:=0A=
-> -            svnfetchcmd =3D self._buildsvncommand(ud, d, "fetch")=0A=
-> -            logger.info("Fetch " + ud.url)=0A=
-> -            # check out sources there=0A=
-> -            bb.utils.mkdirhier(ud.pkgdir)=0A=
-> -            os.chdir(ud.pkgdir)=0A=
-> -            logger.debug(1, "Running %s", svnfetchcmd)=0A=
-> -            bb.fetch2.check_network_access(d, svnfetchcmd, ud.url)=0A=
-> -            runfetchcmd(svnfetchcmd, d)=0A=
-> +        lf =3D bb.utils.lockfile(ud.svnlock)=0A=
-> +=0A=
-> +        try:=0A=
-> +            if os.access(os.path.join(ud.moddir, '.svn'), os.R_OK):=0A=
-> +                svnupdatecmd =3D self._buildsvncommand(ud, d, "update")=
-=0A=
-> +                logger.info("Update " + ud.url)=0A=
-> +                # update sources there=0A=
-> +                os.chdir(ud.moddir)=0A=
-> +                # We need to attempt to run svn upgrade first in case it=
-s an older working format=0A=
-> +                try:=0A=
-> +                    runfetchcmd(ud.basecmd + " upgrade", d)=0A=
-> +                except FetchError:=0A=
-> +                    pass=0A=
-> +                logger.debug(1, "Running %s", svnupdatecmd)=0A=
-> +                bb.fetch2.check_network_access(d, svnupdatecmd, ud.url)=
-=0A=
-> +                runfetchcmd(svnupdatecmd, d)=0A=
-> +            else:=0A=
-> +                svnfetchcmd =3D self._buildsvncommand(ud, d, "fetch")=0A=
-> +                logger.info("Fetch " + ud.url)=0A=
-> +                # check out sources there=0A=
-> +                bb.utils.mkdirhier(ud.pkgdir)=0A=
-> +                os.chdir(ud.pkgdir)=0A=
-> +                logger.debug(1, "Running %s", svnfetchcmd)=0A=
-> +                bb.fetch2.check_network_access(d, svnfetchcmd, ud.url)=
-=0A=
-> +                runfetchcmd(svnfetchcmd, d)=0A=
-> +=0A=
-> +            scmdata =3D ud.parm.get("scmdata", "")=0A=
-> +            if scmdata =3D=3D "keep":=0A=
-> +                tar_flags =3D ""=0A=
-> +            else:=0A=
-> +                tar_flags =3D "--exclude '.svn'"=0A=
->  =0A=
-> -        scmdata =3D ud.parm.get("scmdata", "")=0A=
-> -        if scmdata =3D=3D "keep":=0A=
-> -            tar_flags =3D ""=0A=
-> -        else:=0A=
-> -            tar_flags =3D "--exclude '.svn'"=0A=
-> +            os.chdir(ud.pkgdir)=0A=
-> +            # tar them up to a defined filename=0A=
-> +            runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, =
-ud.path_spec), d, cleanup =3D [ud.localpath])=0A=
->  =0A=
-> -        os.chdir(ud.pkgdir)=0A=
-> -        # tar them up to a defined filename=0A=
-> -        runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, ud.p=
-ath_spec), d, cleanup =3D [ud.localpath])=0A=
-> +        finally:=0A=
-> +            bb.utils.unlockfile(lf)=0A=
->  =0A=
->      def clean(self, ud, d):=0A=
->          """ Clean SVN specific files and dirs """=0A=
-> -- =0A=
-> 2.7.4=0A=
-=0A=
-An easy way to reproduce the problem is with two recipes like the following=
-:=0A=
-=0A=
-first.bb:=0A=
-=0A=
-SRC_URI =3D "svn://moderately.big.repo.com;module=3Dtrunk;protocol=3Dhttps"=
-=0A=
-SRCREV =3D "1"=0A=
-=0A=
-=0A=
-second.bb:=0A=
-=0A=
-SRC_URI =3D "svn://moderately.big.repo.com;module=3Dtrunk;protocol=3Dhttps"=
-=0A=
-SRCREV =3D "2"=0A=
-=0A=
-=0A=
-Running 'bitbake first second' with empty download/sstate caches is then ve=
-ry=0A=
-likely to trigger the issue.=0A=
-=0A=
-Here's another guy that I think was having the same problem:=0A=
-https://lists.yoctoproject.org/pipermail/yocto/2014-August/021383.html=0A=
-=0A=
-Cheers,=0A=
-Ulf=0A=
+From: Andrew Bradford <andrew.bradford@kodakalaris.com>
+
+Allow the perforce fetcher to act more like the other source control
+fetchers so that it can use AUTOREV and the use of the p4 P4CONFIG
+variable to specify many p4 settings.  Also document these changes and
+how to use this new implementation of the perforce fetcher.
+
+These patches depend on oe-core patches [1].
+
+[1]:http://lists.openembedded.org/pipermail/openembedded-core/2016-May/122075.html
+
+Andrew Bradford (2):
+  perforce fetcher: Rework to support SRCREV and P4CONFIG
+  doc: Document use of Perforce fetcher
+
+ .../bitbake-user-manual-fetching.xml               |  72 +++++-
+ .../bitbake-user-manual-ref-variables.xml          |  11 +-
+ lib/bb/fetch2/__init__.py                          |   3 +-
+ lib/bb/fetch2/perforce.py                          | 279 +++++++++++----------
+ 4 files changed, 226 insertions(+), 139 deletions(-)
+
+-- 
+2.8.1
+
 
