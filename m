@@ -1,31 +1,31 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id A256477190
+	by mail.openembedded.org (Postfix) with ESMTP id 9B0A7773E4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 Jun 2016 12:37:06 +0000 (UTC)
+	Wed,  1 Jun 2016 12:37:13 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u51Cb3B4007479; Wed, 1 Jun 2016 13:37:04 +0100
+	u51Cb3BA007479; Wed, 1 Jun 2016 13:37:06 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id Mg5WVTdcNIqB; Wed,  1 Jun 2016 13:37:04 +0100 (BST)
+	with LMTP id o7mCP2swYWVz; Wed,  1 Jun 2016 13:37:06 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u51Caxjn007446
+	u51Caxrs007450
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
 	Wed, 1 Jun 2016 13:37:00 +0100
 Received: from richard by hex with local (Exim 4.86)
 	(envelope-from <richard@rpsys.net>)
-	id 1b85ON-0000nU-7R; Wed, 01 Jun 2016 13:36:59 +0100
+	id 1b85ON-0000nt-9g; Wed, 01 Jun 2016 13:36:59 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 Jun 2016 13:36:23 +0100
-Message-Id: <1464784607-2985-4-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Wed,  1 Jun 2016 13:36:27 +0100
+Message-Id: <1464784607-2985-8-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
 References: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailman-Approved-At: Wed, 01 Jun 2016 14:17:24 +0000
-Subject: [PATCH 04/28] bitbake: Convert to python 3 megacommit This needs breaking up into smaller changes.
+Subject: [PATCH 08/28] google/image-writer: Drop since bitrotting and no longer used
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,3017 +38,4200 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 Jun 2016 12:37:12 -0000
+X-List-Received-Date: Wed, 01 Jun 2016 12:37:16 -0000
+
+The upgrade to python3 is the final nail in the coffin for image-writer
+and the goggle UI. Neither seem used or recieve patches and are based
+on old versions of GTK+ so drop them, and the remaining crumbs support
+pieces.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake                      |   5 +-
- bin/bitbake-diffsigs             |   4 +-
- bin/bitbake-dumpsig              |   4 +-
- bin/bitbake-layers               |   5 +-
- bin/bitbake-prserv               |   2 +-
- bin/bitbake-selftest             |   2 +-
- bin/bitbake-worker               |  60 ++++++++++----------
- bin/bitdoc                       |   2 +-
- bin/image-writer                 |   8 ++-
- bin/toaster-eventreplay          |   2 +-
- contrib/dump_cache.py            |   2 +-
- lib/bb/COW.py                    |  44 +++++++--------
- lib/bb/__init__.py               |   2 +-
- lib/bb/build.py                  |  13 ++---
- lib/bb/cache.py                  |  18 ++----
- lib/bb/checksum.py               |   9 +--
- lib/bb/codeparser.py             |  15 ++---
- lib/bb/command.py                |   2 +-
- lib/bb/cooker.py                 |  38 ++++++-------
- lib/bb/data_smart.py             |   4 +-
- lib/bb/event.py                  |   9 +--
- lib/bb/exceptions.py             |   2 +-
- lib/bb/fetch2/__init__.py        |  36 ++++++------
- lib/bb/fetch2/local.py           |   4 +-
- lib/bb/fetch2/npm.py             |   6 +-
- lib/bb/fetch2/perforce.py        |   2 +-
- lib/bb/fetch2/sftp.py            |   8 +--
- lib/bb/fetch2/ssh.py             |   6 +-
- lib/bb/fetch2/wget.py            |  48 ++++++++--------
- lib/bb/main.py                   |  11 ++--
- lib/bb/msg.py                    |   2 +-
- lib/bb/parse/ast.py              |  18 +++---
- lib/bb/persist_data.py           |  10 ++--
- lib/bb/process.py                |  36 ++++++++----
- lib/bb/providers.py              |   2 +-
- lib/bb/pysh/builtin.py           |   2 +-
- lib/bb/pysh/interp.py            |   4 +-
- lib/bb/pysh/pyshlex.py           |   2 +-
- lib/bb/pysh/pyshyacc.py          |   4 +-
- lib/bb/runqueue.py               | 117 +++++++++++++++++++--------------------
- lib/bb/server/process.py         |   8 +--
- lib/bb/server/xmlrpc.py          |  48 ++++++++--------
- lib/bb/siggen.py                 |  19 +++----
- lib/bb/taskdata.py               |  12 ++--
- lib/bb/tests/codeparser.py       |   4 +-
- lib/bb/tests/data.py             |  12 ++--
- lib/bb/tests/parse.py            |   2 +-
- lib/bb/ui/crumbs/hobwidget.py    |   2 +-
- lib/bb/ui/crumbs/progressbar.py  |   6 +-
- lib/bb/ui/crumbs/runningbuild.py |  12 ++--
- lib/bb/ui/goggle.py              |  11 +++-
- lib/bb/ui/knotty.py              |   6 +-
- lib/bb/ui/ncurses.py             |   8 +--
- lib/bb/ui/uievent.py             |   4 +-
- lib/bb/utils.py                  |  20 +++----
- lib/bblayers/action.py           |   2 +-
- lib/bblayers/common.py           |   2 +-
- lib/bblayers/layerindex.py       |  12 ++--
- lib/bblayers/query.py            |   4 +-
- lib/codegen.py                   |   8 +--
- lib/ply/yacc.py                  |   2 +
- lib/prserv/db.py                 |   2 +-
- lib/prserv/serv.py               |  14 ++---
- 63 files changed, 390 insertions(+), 400 deletions(-)
+ bin/image-writer                             | 127 ----
+ lib/bb/ui/crumbs/__init__.py                 |  17 -
+ lib/bb/ui/crumbs/hig/__init__.py             |   0
+ lib/bb/ui/crumbs/hig/crumbsdialog.py         |  44 --
+ lib/bb/ui/crumbs/hig/crumbsmessagedialog.py  |  70 ---
+ lib/bb/ui/crumbs/hig/deployimagedialog.py    | 219 -------
+ lib/bb/ui/crumbs/hig/imageselectiondialog.py | 172 -----
+ lib/bb/ui/crumbs/hig/layerselectiondialog.py | 298 ---------
+ lib/bb/ui/crumbs/hig/propertydialog.py       | 437 -------------
+ lib/bb/ui/crumbs/hig/settingsuihelper.py     | 122 ----
+ lib/bb/ui/crumbs/hobcolor.py                 |  38 --
+ lib/bb/ui/crumbs/hobwidget.py                | 904 ---------------------------
+ lib/bb/ui/crumbs/persistenttooltip.py        | 186 ------
+ lib/bb/ui/crumbs/progress.py                 |  23 -
+ lib/bb/ui/crumbs/progressbar.py              |  60 --
+ lib/bb/ui/crumbs/puccho.glade                | 606 ------------------
+ lib/bb/ui/crumbs/runningbuild.py             | 551 ----------------
+ lib/bb/ui/crumbs/utils.py                    |  34 -
+ lib/bb/ui/goggle.py                          | 126 ----
+ 19 files changed, 4034 deletions(-)
+ delete mode 100755 bin/image-writer
+ delete mode 100644 lib/bb/ui/crumbs/__init__.py
+ delete mode 100644 lib/bb/ui/crumbs/hig/__init__.py
+ delete mode 100644 lib/bb/ui/crumbs/hig/crumbsdialog.py
+ delete mode 100644 lib/bb/ui/crumbs/hig/crumbsmessagedialog.py
+ delete mode 100644 lib/bb/ui/crumbs/hig/deployimagedialog.py
+ delete mode 100644 lib/bb/ui/crumbs/hig/imageselectiondialog.py
+ delete mode 100644 lib/bb/ui/crumbs/hig/layerselectiondialog.py
+ delete mode 100644 lib/bb/ui/crumbs/hig/propertydialog.py
+ delete mode 100644 lib/bb/ui/crumbs/hig/settingsuihelper.py
+ delete mode 100644 lib/bb/ui/crumbs/hobcolor.py
+ delete mode 100644 lib/bb/ui/crumbs/hobwidget.py
+ delete mode 100644 lib/bb/ui/crumbs/persistenttooltip.py
+ delete mode 100644 lib/bb/ui/crumbs/progress.py
+ delete mode 100644 lib/bb/ui/crumbs/progressbar.py
+ delete mode 100644 lib/bb/ui/crumbs/puccho.glade
+ delete mode 100644 lib/bb/ui/crumbs/runningbuild.py
+ delete mode 100644 lib/bb/ui/crumbs/utils.py
+ delete mode 100644 lib/bb/ui/goggle.py
 
-diff --git a/bin/bitbake b/bin/bitbake
-index bba87b0..9813a08 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- # ex:ts=4:sw=4:sts=4:et
- # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
-@@ -35,6 +35,9 @@ except RuntimeError as exc:
- from bb import cookerdata
- from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
- 
-+if sys.getfilesystemencoding() != "utf-8":
-+    sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
-+
- __version__ = "1.31.0"
- 
- if __name__ == "__main__":
-diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
-index 67c60db..3b6ef88 100755
---- a/bin/bitbake-diffsigs
-+++ b/bin/bitbake-diffsigs
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- 
- # bitbake-diffsigs
- # BitBake task signature data comparison utility
-@@ -24,6 +24,7 @@ import warnings
- import fnmatch
- import optparse
- import logging
-+import pickle
- 
- sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
- 
-@@ -121,7 +122,6 @@ else:
-     if len(args) == 1:
-         parser.print_help()
-     else:
--        import cPickle
-         try:
-             if len(args) == 2:
-                 output = bb.siggen.dump_sigfile(sys.argv[1])
-diff --git a/bin/bitbake-dumpsig b/bin/bitbake-dumpsig
-index ffaed1f..58ba1ca 100755
---- a/bin/bitbake-dumpsig
-+++ b/bin/bitbake-dumpsig
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- 
- # bitbake-dumpsig
- # BitBake task signature dump utility
-@@ -23,6 +23,7 @@ import sys
- import warnings
- import optparse
- import logging
-+import pickle
- 
- sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
- 
-@@ -51,7 +52,6 @@ options, args = parser.parse_args(sys.argv)
- if len(args) == 1:
-     parser.print_help()
- else:
--    import cPickle
-     try:
-         output = bb.siggen.dump_sigfile(args[1])
-     except IOError as e:
-diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index d8ffa95..0c973df 100755
---- a/bin/bitbake-layers
-+++ b/bin/bitbake-layers
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- 
- # This script has subcommands which operate against your bitbake layers, either
- # displaying useful information, or acting against them.
-@@ -48,7 +48,6 @@ def logger_create(name, output=sys.stderr):
-     logger.setLevel(logging.INFO)
-     return logger
- 
--
- def logger_setup_color(logger, color='auto'):
-     from bb.msg import BBLogFormatter
-     console = logging.StreamHandler(sys.stdout)
-@@ -61,7 +60,6 @@ def logger_setup_color(logger, color='auto'):
- 
- logger = logger_create('bitbake-layers', sys.stdout)
- 
--
- def main():
-     parser = argparse.ArgumentParser(
-         description="BitBake layers utility",
-@@ -78,6 +76,7 @@ def main():
-     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
-                         help='show this help message and exit')
-     subparsers = parser.add_subparsers(title='subcommands', metavar='<subcommand>')
-+    subparsers.required = True
- 
-     if global_args.debug:
-         logger.setLevel(logging.DEBUG)
-diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
-index 0382144..f38d2dd 100755
---- a/bin/bitbake-prserv
-+++ b/bin/bitbake-prserv
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- import os
- import sys,logging
- import optparse
-diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
-index 462eb1b..1e6f35e 100755
---- a/bin/bitbake-selftest
-+++ b/bin/bitbake-selftest
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- #
- # Copyright (C) 2012 Richard Purdie
- #
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 6a6b26b..5d062a2 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- 
- import os
- import sys
-@@ -10,8 +10,12 @@ import bb
- import select
- import errno
- import signal
-+import pickle
- from multiprocessing import Lock
- 
-+if sys.getfilesystemencoding() != "utf-8":
-+    sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
-+
- # Users shouldn't be running this code directly
- if len(sys.argv) != 2 or not sys.argv[1].startswith("decafbad"):
-     print("bitbake-worker is meant for internal execution by bitbake itself, please don't use it standalone.")
-@@ -30,19 +34,16 @@ if sys.argv[1].startswith("decafbadbad"):
- # updates to log files for use with tail
- try:
-     if sys.stdout.name == '<stdout>':
--        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-+        import fcntl
-+        fl = fcntl.fcntl(sys.stdout.fileno(), fcntl.F_GETFL)
-+        fl |= os.O_SYNC 
-+        fcntl.fcntl(sys.stdout.fileno(), fcntl.F_SETFL, fl)
-+        #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
- except:
-     pass
- 
- logger = logging.getLogger("BitBake")
- 
--try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
--    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
--
--
- worker_pipe = sys.stdout.fileno()
- bb.utils.nonblockingfd(worker_pipe)
- # Need to guard against multiprocessing being used in child processes
-@@ -62,10 +63,10 @@ if 0:
-     consolelog.setFormatter(conlogformat)
-     logger.addHandler(consolelog)
- 
--worker_queue = ""
-+worker_queue = b""
- 
- def worker_fire(event, d):
--    data = "<event>" + pickle.dumps(event) + "</event>"
-+    data = b"<event>" + pickle.dumps(event) + b"</event>"
-     worker_fire_prepickled(data)
- 
- def worker_fire_prepickled(event):
-@@ -91,7 +92,7 @@ def worker_child_fire(event, d):
-     global worker_pipe
-     global worker_pipe_lock
- 
--    data = "<event>" + pickle.dumps(event) + "</event>"
-+    data = b"<event>" + pickle.dumps(event) + b"</event>"
-     try:
-         worker_pipe_lock.acquire()
-         worker_pipe.write(data)
-@@ -251,7 +252,7 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdat
-                 bb.utils.process_profilelog(profname)
-                 os._exit(ret)
-     else:
--        for key, value in envbackup.iteritems():
-+        for key, value in iter(envbackup.items()):
-             if value is None:
-                 del os.environ[key]
-             else:
-@@ -268,22 +269,22 @@ class runQueueWorkerPipe():
-         if pipeout:
-             pipeout.close()
-         bb.utils.nonblockingfd(self.input)
--        self.queue = ""
-+        self.queue = b""
- 
-     def read(self):
-         start = len(self.queue)
-         try:
--            self.queue = self.queue + self.input.read(102400)
-+            self.queue = self.queue + (self.input.read(102400) or b"")
-         except (OSError, IOError) as e:
-             if e.errno != errno.EAGAIN:
-                 raise
- 
-         end = len(self.queue)
--        index = self.queue.find("</event>")
-+        index = self.queue.find(b"</event>")
-         while index != -1:
-             worker_fire_prepickled(self.queue[:index+8])
-             self.queue = self.queue[index+8:]
--            index = self.queue.find("</event>")
-+            index = self.queue.find(b"</event>")
-         return (end > start)
- 
-     def close(self):
-@@ -299,7 +300,7 @@ class BitbakeWorker(object):
-     def __init__(self, din):
-         self.input = din
-         bb.utils.nonblockingfd(self.input)
--        self.queue = ""
-+        self.queue = b""
-         self.cookercfg = None
-         self.databuilder = None
-         self.data = None
-@@ -336,12 +337,12 @@ class BitbakeWorker(object):
-                 except (OSError, IOError):
-                     pass
-             if len(self.queue):
--                self.handle_item("cookerconfig", self.handle_cookercfg)
--                self.handle_item("workerdata", self.handle_workerdata)
--                self.handle_item("runtask", self.handle_runtask)
--                self.handle_item("finishnow", self.handle_finishnow)
--                self.handle_item("ping", self.handle_ping)
--                self.handle_item("quit", self.handle_quit)
-+                self.handle_item(b"cookerconfig", self.handle_cookercfg)
-+                self.handle_item(b"workerdata", self.handle_workerdata)
-+                self.handle_item(b"runtask", self.handle_runtask)
-+                self.handle_item(b"finishnow", self.handle_finishnow)
-+                self.handle_item(b"ping", self.handle_ping)
-+                self.handle_item(b"quit", self.handle_quit)
- 
-             for pipe in self.build_pipes:
-                 self.build_pipes[pipe].read()
-@@ -351,12 +352,12 @@ class BitbakeWorker(object):
- 
- 
-     def handle_item(self, item, func):
--        if self.queue.startswith("<" + item + ">"):
--            index = self.queue.find("</" + item + ">")
-+        if self.queue.startswith(b"<" + item + b">"):
-+            index = self.queue.find(b"</" + item + b">")
-             while index != -1:
-                 func(self.queue[(len(item) + 2):index])
-                 self.queue = self.queue[(index + len(item) + 3):]
--                index = self.queue.find("</" + item + ">")
-+                index = self.queue.find(b"</" + item + b">")
- 
-     def handle_cookercfg(self, data):
-         self.cookercfg = pickle.loads(data)
-@@ -420,12 +421,12 @@ class BitbakeWorker(object):
-         self.build_pipes[pid].close()
-         del self.build_pipes[pid]
- 
--        worker_fire_prepickled("<exitcode>" + pickle.dumps((task, status)) + "</exitcode>")
-+        worker_fire_prepickled(b"<exitcode>" + pickle.dumps((task, status)) + b"</exitcode>")
- 
-     def handle_finishnow(self, _):
-         if self.build_pids:
-             logger.info("Sending SIGTERM to remaining %s tasks", len(self.build_pids))
--            for k, v in self.build_pids.iteritems():
-+            for k, v in iter(self.build_pids.items()):
-                 try:
-                     os.kill(-k, signal.SIGTERM)
-                     os.waitpid(-1, 0)
-@@ -435,6 +436,7 @@ class BitbakeWorker(object):
-             self.build_pipes[pipe].read()
- 
- try:
-+    sys.stdin = sys.stdin.detach()
-     worker = BitbakeWorker(sys.stdin)
-     if not profiling:
-         worker.serve()
-diff --git a/bin/bitdoc b/bin/bitdoc
-index defb3dd..2744678 100755
---- a/bin/bitdoc
-+++ b/bin/bitdoc
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- # ex:ts=4:sw=4:sts=4:et
- # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
 diff --git a/bin/image-writer b/bin/image-writer
-index e30ab45..7ab1d8c 100755
+deleted file mode 100755
+index 40e284d..0000000
 --- a/bin/image-writer
-+++ b/bin/image-writer
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- 
- # Copyright (c) 2012 Wind River Systems, Inc.
- #
-@@ -24,9 +24,13 @@ try:
- except RuntimeError as exc:
-     sys.exit(str(exc))
- 
-+from gi import pygtkcompat
-+
-+pygtkcompat.enable()
-+pygtkcompat.enable_gtk(version='3.0')
-+
- import gtk
- import optparse
--import pygtk
- 
- from bb.ui.crumbs.hobwidget import HobAltButton, HobButton
- from bb.ui.crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
-diff --git a/bin/toaster-eventreplay b/bin/toaster-eventreplay
-index 615a7ae..bdddb90 100755
---- a/bin/toaster-eventreplay
-+++ b/bin/toaster-eventreplay
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- # ex:ts=4:sw=4:sts=4:et
- # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
-diff --git a/contrib/dump_cache.py b/contrib/dump_cache.py
-index 97c5463..a1f09b4 100755
---- a/contrib/dump_cache.py
-+++ b/contrib/dump_cache.py
-@@ -29,7 +29,7 @@ import warnings
- sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '../lib'))
- from bb.cache import CoreRecipeInfo
- 
--import cPickle as pickle
-+import pickle as pickle
- 
- def main(argv=None):
-     """
-diff --git a/lib/bb/COW.py b/lib/bb/COW.py
-index 6917ec3..77a05cf 100644
---- a/lib/bb/COW.py
-+++ b/lib/bb/COW.py
-@@ -23,19 +23,17 @@
- # Assign a file to __warn__ to get warnings about slow operations.
- #
- 
--from __future__ import print_function
-+
- import copy
- import types
- ImmutableTypes = (
--    types.NoneType,
-     bool,
-     complex,
-     float,
-     int,
--    long,
-     tuple,
-     frozenset,
--    basestring
-+    str
- )
- 
- MUTABLE = "__mutable__"
-@@ -61,7 +59,7 @@ class COWDictMeta(COWMeta):
-     __call__ = cow
- 
-     def __setitem__(cls, key, value):
--        if not isinstance(value, ImmutableTypes):
-+        if value is not None and not isinstance(value, ImmutableTypes):
-             if not isinstance(value, COWMeta):
-                 cls.__hasmutable__ = True
-             key += MUTABLE
-@@ -116,7 +114,7 @@ class COWDictMeta(COWMeta):
-         cls.__setitem__(key, cls.__marker__)
- 
-     def __revertitem__(cls, key):
--        if not cls.__dict__.has_key(key):
-+        if key not in cls.__dict__:
-             key += MUTABLE
-         delattr(cls, key)
- 
-@@ -183,7 +181,7 @@ class COWSetMeta(COWDictMeta):
-         COWDictMeta.__delitem__(cls, repr(hash(value)))
- 
-     def __in__(cls, value):
--        return COWDictMeta.has_key(repr(hash(value)))
-+        return repr(hash(value)) in COWDictMeta
- 
-     def iterkeys(cls):
-         raise TypeError("sets don't have keys")
-@@ -192,12 +190,10 @@ class COWSetMeta(COWDictMeta):
-         raise TypeError("sets don't have 'items'")
- 
- # These are the actual classes you use!
--class COWDictBase(object):
--    __metaclass__ = COWDictMeta
-+class COWDictBase(object, metaclass = COWDictMeta):
-     __count__ = 0
- 
--class COWSetBase(object):
--    __metaclass__ = COWSetMeta
-+class COWSetBase(object, metaclass = COWSetMeta):
-     __count__ = 0
- 
- if __name__ == "__main__":
-@@ -217,11 +213,11 @@ if __name__ == "__main__":
-     print()
- 
-     print("a", a)
--    for x in a.iteritems():
-+    for x in a.items():
-         print(x)
-     print("--")
-     print("b", b)
--    for x in b.iteritems():
-+    for x in b.items():
-         print(x)
-     print()
- 
-@@ -229,11 +225,11 @@ if __name__ == "__main__":
-     b['a'] = 'c'
- 
-     print("a", a)
--    for x in a.iteritems():
-+    for x in a.items():
-         print(x)
-     print("--")
-     print("b", b)
--    for x in b.iteritems():
-+    for x in b.items():
-         print(x)
-     print()
- 
-@@ -248,22 +244,22 @@ if __name__ == "__main__":
-     a['set'].add("o2")
- 
-     print("a", a)
--    for x in a['set'].itervalues():
-+    for x in a['set'].values():
-         print(x)
-     print("--")
-     print("b", b)
--    for x in b['set'].itervalues():
-+    for x in b['set'].values():
-         print(x)
-     print()
- 
-     b['set'].add('o3')
- 
-     print("a", a)
--    for x in a['set'].itervalues():
-+    for x in a['set'].values():
-         print(x)
-     print("--")
-     print("b", b)
--    for x in b['set'].itervalues():
-+    for x in b['set'].values():
-         print(x)
-     print()
- 
-@@ -273,7 +269,7 @@ if __name__ == "__main__":
-     a['set2'].add("o2")
- 
-     print("a", a)
--    for x in a.iteritems():
-+    for x in a.items():
-         print(x)
-     print("--")
-     print("b", b)
-@@ -287,13 +283,13 @@ if __name__ == "__main__":
-     except KeyError:
-         print("Yay! deleted key raises error")
- 
--    if b.has_key('b'):
-+    if 'b' in b:
-         print("Boo!")
-     else:
-         print("Yay - has_key with delete works!")
- 
-     print("a", a)
--    for x in a.iteritems():
-+    for x in a.items():
-         print(x)
-     print("--")
-     print("b", b)
-@@ -304,7 +300,7 @@ if __name__ == "__main__":
-     b.__revertitem__('b')
- 
-     print("a", a)
--    for x in a.iteritems():
-+    for x in a.items():
-         print(x)
-     print("--")
-     print("b", b)
-@@ -314,7 +310,7 @@ if __name__ == "__main__":
- 
-     b.__revertitem__('dict')
-     print("a", a)
--    for x in a.iteritems():
-+    for x in a.items():
-         print(x)
-     print("--")
-     print("b", b)
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 4ae6b8a..6b85984 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -84,7 +84,7 @@ def plain(*args):
-     mainlogger.plain(''.join(args))
- 
- def debug(lvl, *args):
--    if isinstance(lvl, basestring):
-+    if isinstance(lvl, str):
-         mainlogger.warning("Passed invalid debug level '%s' to bb.debug", lvl)
-         args = (lvl,) + args
-         lvl = 1
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 9854553..e016ae3 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -35,8 +35,7 @@ import stat
- import bb
- import bb.msg
- import bb.process
--from contextlib import nested
--from bb import event, utils
-+from bb import data, event, utils
- 
- bblogger = logging.getLogger('BitBake')
- logger = logging.getLogger('BitBake.Build')
-@@ -328,7 +327,7 @@ trap '' 0
- exit $ret
- ''')
- 
--    os.chmod(runfile, 0775)
-+    os.chmod(runfile, 0o775)
- 
-     cmd = runfile
-     if d.getVarFlag(func, 'fakeroot', False):
-@@ -342,12 +341,12 @@ exit $ret
-         logfile = sys.stdout
- 
-     def readfifo(data):
--        lines = data.split('\0')
-+        lines = data.split(b'\0')
-         for line in lines:
--            splitval = line.split(' ', 1)
-+            splitval = line.split(b' ', 1)
-             cmd = splitval[0]
-             if len(splitval) > 1:
--                value = splitval[1]
-+                value = splitval[1].decode("utf-8")
-             else:
-                 value = ''
-             if cmd == 'bbplain':
-@@ -375,7 +374,7 @@ exit $ret
-     if os.path.exists(fifopath):
-         os.unlink(fifopath)
-     os.mkfifo(fifopath)
--    with open(fifopath, 'r+') as fifo:
-+    with open(fifopath, 'r+b', buffering=0) as fifo:
-         try:
-             bb.debug(2, "Executing shell function %s" % func)
- 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 393d541..96abd71 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -28,21 +28,15 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
++++ /dev/null
+@@ -1,127 +0,0 @@
+-#!/usr/bin/env python3
 -
- import os
-+import sys
- import logging
-+import pickle
- from collections import defaultdict
- import bb.utils
- 
- logger = logging.getLogger("BitBake.Cache")
- 
+-# Copyright (c) 2012 Wind River Systems, Inc.
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program; if not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+-
+-import os
+-import sys
+-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname( \
+-                                    os.path.abspath(__file__))), 'lib'))
 -try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
--    logger.info("Importing cPickle failed. "
--                "Falling back to a very slow implementation.")
+-    import bb
+-except RuntimeError as exc:
+-    sys.exit(str(exc))
 -
- __cache_version__ = "150"
- 
- def getCacheFile(path, filename, data_hash):
-@@ -80,7 +74,7 @@ class RecipeInfoCommon(object):
-         out_dict = dict((var, metadata.getVarFlag(var, flag, True))
-                     for var in varlist)
-         if squash:
--            return dict((k,v) for (k,v) in out_dict.iteritems() if v)
-+            return dict((k,v) for (k,v) in out_dict.items() if v)
-         else:
-             return out_dict
- 
-@@ -240,7 +234,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         cachedata.universe_target.append(self.pn)
- 
-         cachedata.hashfn[fn] = self.hashfilename
--        for task, taskhash in self.basetaskhashes.iteritems():
-+        for task, taskhash in self.basetaskhashes.items():
-             identifier = '%s.%s' % (fn, task)
-             cachedata.basetaskhash[identifier] = taskhash
- 
-@@ -404,7 +398,7 @@ class Cache(object):
-         infos = []
-         datastores = cls.load_bbfile(filename, appends, configdata)
-         depends = []
--        for variant, data in sorted(datastores.iteritems(),
-+        for variant, data in sorted(datastores.items(),
-                                     key=lambda i: i[0],
-                                     reverse=True):
-             virtualfn = cls.realfn2virtual(filename, variant)
-@@ -616,7 +610,7 @@ class Cache(object):
-         pickler_dict['CoreRecipeInfo'].dump(bb.__version__)
- 
-         try:
--            for key, info_array in self.depends_cache.iteritems():
-+            for key, info_array in self.depends_cache.items():
-                 for info in info_array:
-                     if isinstance(info, RecipeInfoCommon):
-                         cache_class_name = info.__class__.__name__
-diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
-index 2ec964d..be4ab68 100644
---- a/lib/bb/checksum.py
-+++ b/lib/bb/checksum.py
-@@ -19,20 +19,13 @@ import glob
- import operator
- import os
- import stat
-+import pickle
- import bb.utils
- import logging
- from bb.cache import MultiProcessCache
- 
- logger = logging.getLogger("BitBake.Cache")
- 
--try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
--    logger.info("Importing cPickle failed. "
--                "Falling back to a very slow implementation.")
+-from gi import pygtkcompat
 -
+-pygtkcompat.enable()
+-pygtkcompat.enable_gtk(version='3.0')
 -
- # mtime cache (non-persistent)
- # based upon the assumption that files do not change during bitbake run
- class FileMtimeCache(object):
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 70b0a8d..b1d067a 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -1,22 +1,17 @@
- import ast
-+import sys
- import codegen
- import logging
-+import pickle
-+import bb.pysh as pysh
- import os.path
- import bb.utils, bb.data
- from itertools import chain
--from pysh import pyshyacc, pyshlex, sherrors
-+from bb.pysh import pyshyacc, pyshlex, sherrors
- from bb.cache import MultiProcessCache
- 
+-import gtk
+-import optparse
 -
- logger = logging.getLogger('BitBake.CodeParser')
- 
--try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
--    logger.info('Importing cPickle failed.  Falling back to a very slow implementation.')
+-from bb.ui.crumbs.hobwidget import HobAltButton, HobButton
+-from bb.ui.crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
+-from bb.ui.crumbs.hig.deployimagedialog import DeployImageDialog
+-from bb.ui.crumbs.hig.imageselectiondialog import ImageSelectionDialog
 -
+-# I put all the fs bitbake supported here. Need more test.
+-DEPLOYABLE_IMAGE_TYPES = ["jffs2", "cramfs", "ext2", "ext3", "ext4", "btrfs", "squashfs", "ubi", "vmdk"]
+-Title = "USB Image Writer"
 -
- def check_indent(codestr):
-     """If the code is indented, add a top level piece of code to 'remove' the indentation"""
- 
-@@ -68,7 +63,7 @@ class SetCache(object):
-         
-         new = []
-         for i in items:
--            new.append(intern(i))
-+            new.append(sys.intern(i))
-         s = frozenset(new)
-         if hash(s) in self.setcache:
-             return self.setcache[hash(s)]
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 0559ffc..caa3e4d 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -110,7 +110,7 @@ class Command:
-             return False
-         except SystemExit as exc:
-             arg = exc.args[0]
--            if isinstance(arg, basestring):
-+            if isinstance(arg, str):
-                 self.finishAsyncCommand(arg)
-             else:
-                 self.finishAsyncCommand("Exited with %s" % arg)
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 11f17ef..2154ef4 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -30,13 +30,13 @@ import logging
- import multiprocessing
- import sre_constants
- import threading
--from cStringIO import StringIO
-+from io import StringIO
- from contextlib import closing
- from functools import wraps
- from collections import defaultdict
- import bb, bb.exceptions, bb.command
- from bb import utils, data, parse, event, cache, providers, taskdata, runqueue, build
--import Queue
-+import queue
- import signal
- import subprocess
- import errno
-@@ -65,7 +65,7 @@ class CollectionError(bb.BBHandledException):
-     """
- 
- class state:
--    initial, parsing, running, shutdown, forceshutdown, stopped, error = range(7)
-+    initial, parsing, running, shutdown, forceshutdown, stopped, error = list(range(7))
- 
-     @classmethod
-     def get_name(cls, code):
-@@ -93,7 +93,7 @@ class SkippedPackage:
- 
- 
- class CookerFeatures(object):
--    _feature_list = [HOB_EXTRA_CACHES, BASEDATASTORE_TRACKING, SEND_SANITYEVENTS] = range(3)
-+    _feature_list = [HOB_EXTRA_CACHES, BASEDATASTORE_TRACKING, SEND_SANITYEVENTS] = list(range(3))
- 
-     def __init__(self):
-         self._features=set()
-@@ -110,8 +110,8 @@ class CookerFeatures(object):
-     def __iter__(self):
-         return self._features.__iter__()
- 
--    def next(self):
--        return self._features.next()
-+    def __next__(self):
-+        return next(self._features)
- 
- 
- #============================================================================#
-@@ -726,13 +726,13 @@ class BBCooker:
-         depend_tree['providermap'] = {}
-         depend_tree["layer-priorities"] = self.recipecache.bbfile_config_priorities
- 
--        for name, fn in taskdata.get_providermap().iteritems():
-+        for name, fn in list(taskdata.get_providermap().items()):
-             pn = self.recipecache.pkg_fn[fn]
-             if name != pn:
-                 version = "%s:%s-%s" % self.recipecache.pkg_pepvpr[fn]
-                 depend_tree['providermap'][name] = (pn, version)
- 
--        for task in xrange(len(rq.rqdata.runq_fnid)):
-+        for task in range(len(rq.rqdata.runq_fnid)):
-             taskname = rq.rqdata.runq_task[task]
-             fnid = rq.rqdata.runq_fnid[task]
-             fn = taskdata.fn_index[fnid]
-@@ -807,7 +807,7 @@ class BBCooker:
-         _, taskdata = self.prepareTreeData(pkgs_to_build, task)
-         tasks_fnid = []
-         if len(taskdata.tasks_name) != 0:
--            for task in xrange(len(taskdata.tasks_name)):
-+            for task in range(len(taskdata.tasks_name)):
-                 tasks_fnid.append(taskdata.tasks_fnid[task])
- 
-         seen_fnids = []
-@@ -825,7 +825,7 @@ class BBCooker:
-                 cachefields = getattr(cache_class, 'cachefields', [])
-                 extra_info = extra_info + cachefields
- 
--        for task in xrange(len(tasks_fnid)):
-+        for task in range(len(tasks_fnid)):
-             fnid = tasks_fnid[task]
-             fn = taskdata.fn_index[fnid]
-             pn = self.recipecache.pkg_fn[fn]
-@@ -953,7 +953,7 @@ class BBCooker:
-         # Determine which bbappends haven't been applied
- 
-         # First get list of recipes, including skipped
--        recipefns = self.recipecache.pkg_fn.keys()
-+        recipefns = list(self.recipecache.pkg_fn.keys())
-         recipefns.extend(self.skiplist.keys())
- 
-         # Work out list of bbappends that have been applied
-@@ -1152,7 +1152,7 @@ class BBCooker:
-                         deplist = bb.utils.explode_dep_versions2(deps)
-                     except bb.utils.VersionStringException as vse:
-                         bb.fatal('Error parsing LAYERDEPENDS_%s: %s' % (c, str(vse)))
--                    for dep, oplist in deplist.iteritems():
-+                    for dep, oplist in list(deplist.items()):
-                         if dep in collection_list:
-                             for opstr in oplist:
-                                 layerver = self.data.getVar("LAYERVERSION_%s" % dep, True)
-@@ -1888,7 +1888,7 @@ class Feeder(multiprocessing.Process):
-         while True:
-             try:
-                 quit = self.quit.get_nowait()
--            except Queue.Empty:
-+            except queue.Empty:
-                 pass
-             else:
-                 if quit == 'cancel':
-@@ -1902,7 +1902,7 @@ class Feeder(multiprocessing.Process):
- 
-             try:
-                 self.to_parsers.put(job, timeout=0.5)
--            except Queue.Full:
-+            except queue.Full:
-                 self.jobs.insert(0, job)
-                 continue
- 
-@@ -1942,7 +1942,7 @@ class Parser(multiprocessing.Process):
-         while True:
-             try:
-                 self.quit.get_nowait()
--            except Queue.Empty:
-+            except queue.Empty:
-                 pass
-             else:
-                 self.results.cancel_join_thread()
-@@ -1953,7 +1953,7 @@ class Parser(multiprocessing.Process):
-             else:
-                 try:
-                     job = self.jobs.get(timeout=0.25)
--                except Queue.Empty:
-+                except queue.Empty:
-                     continue
- 
-                 if job is None:
-@@ -1962,7 +1962,7 @@ class Parser(multiprocessing.Process):
- 
-             try:
-                 self.results.put(result, timeout=0.25)
--            except Queue.Full:
-+            except queue.Full:
-                 pending.append(result)
- 
-     def parse(self, filename, appends, caches_array):
-@@ -2115,7 +2115,7 @@ class CookerParser(object):
- 
-             try:
-                 result = self.result_queue.get(timeout=0.25)
--            except Queue.Empty:
-+            except queue.Empty:
-                 pass
-             else:
-                 value = result[1]
-@@ -2128,7 +2128,7 @@ class CookerParser(object):
-         result = []
-         parsed = None
-         try:
--            parsed, result = self.results.next()
-+            parsed, result = next(self.results)
-         except StopIteration:
-             self.shutdown()
-             return False
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 2ab884b..2a61386 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -372,7 +372,7 @@ class DataSmart(MutableMapping):
- 
-     def expandWithRefs(self, s, varname):
- 
--        if not isinstance(s, basestring): # sanity check
-+        if not isinstance(s, str): # sanity check
-             return VariableParse(varname, self, s)
- 
-         if varname and varname in self.expand_cache:
-@@ -966,4 +966,4 @@ class DataSmart(MutableMapping):
-                     data.update({i:value})
- 
-         data_str = str([(k, data[k]) for k in sorted(data.keys())])
--        return hashlib.md5(data_str).hexdigest()
-+        return hashlib.md5(data_str.encode("utf-8")).hexdigest()
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 29b14f6..6fb3712 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -24,10 +24,7 @@ BitBake build tools.
- 
- import os, sys
- import warnings
--try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
-+import pickle
- import logging
- import atexit
- import traceback
-@@ -107,7 +104,7 @@ def fire_class_handlers(event, d):
- 
-     eid = str(event.__class__)[8:-2]
-     evt_hmap = _event_handler_map.get(eid, {})
--    for name, handler in _handlers.iteritems():
-+    for name, handler in list(_handlers.items()):
-         if name in _catchall_handlers or name in evt_hmap:
-             if _eventfilter:
-                 if not _eventfilter(name, handler, event, d):
-@@ -192,7 +189,7 @@ def register(name, handler, mask=None, filename=None, lineno=None):
- 
-     if handler is not None:
-         # handle string containing python code
--        if isinstance(handler, basestring):
-+        if isinstance(handler, str):
-             tmp = "def %s(e):\n%s" % (name, handler)
-             try:
-                 code = bb.methodpool.compile_cache(tmp)
-diff --git a/lib/bb/exceptions.py b/lib/bb/exceptions.py
-index eadfc57..cd71343 100644
---- a/lib/bb/exceptions.py
-+++ b/lib/bb/exceptions.py
-@@ -86,6 +86,6 @@ def format_exception(etype, value, tb, context=1, limit=None, formatter=None):
- 
- def to_string(exc):
-     if isinstance(exc, SystemExit):
--        if not isinstance(exc.code, basestring):
-+        if not isinstance(exc.code, str):
-             return 'Exited with "%d"' % exc.code
-     return str(exc)
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 14fe3c7..be01bdb 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -28,27 +28,23 @@ BitBake build tools.
- import os, re
- import signal
- import logging
--import urllib
--import urlparse
-+import urllib.request, urllib.parse, urllib.error
-+if 'git' not in urllib.parse.uses_netloc:
-+    urllib.parse.uses_netloc.append('git')
-+import operator
- import collections
-+import subprocess
-+import pickle
- import bb.persist_data, bb.utils
- import bb.checksum
- from bb import data
- import bb.process
+-class DeployWindow(gtk.Window):
+-    def __init__(self, image_path=''):
+-        super(DeployWindow, self).__init__()
+-
+-        if len(image_path) > 0:
+-            valid = True
+-            if not os.path.exists(image_path):
+-                valid = False
+-                lbl = "<b>Invalid image file path: %s.</b>\nPress <b>Select Image</b> to select an image." % image_path
+-            else:
+-                image_path = os.path.abspath(image_path)
+-                extend_name = os.path.splitext(image_path)[1][1:]
+-                if extend_name not in DEPLOYABLE_IMAGE_TYPES:
+-                    valid = False
+-                    lbl = "<b>Undeployable imge type: %s</b>\nPress <b>Select Image</b> to select an image." % extend_name
+-
+-            if not valid:
+-                image_path = ''
+-                crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
+-                button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
+-                HobButton.style_button(button)
+-                crumbs_dialog.run()
+-                crumbs_dialog.destroy()
+-
+-        self.deploy_dialog = DeployImageDialog(Title, image_path, self,
+-                                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT
+-                                        , None, standalone=True)
+-#FIXME | gtk.DIALOG_NO_SEPARATOR
+-        close_button = self.deploy_dialog.add_button("Close", gtk.RESPONSE_NO)
+-        HobAltButton.style_button(close_button)
+-        close_button.connect('clicked', gtk.main_quit)
+-
+-        write_button = self.deploy_dialog.add_button("Write USB image", gtk.RESPONSE_YES)
+-        HobAltButton.style_button(write_button)
+-
+-        self.deploy_dialog.connect('select_image_clicked', self.select_image_clicked_cb)
+-        self.deploy_dialog.connect('destroy', gtk.main_quit)
+-        response = self.deploy_dialog.show()
+-
+-    def select_image_clicked_cb(self, dialog):
+-        cwd = os.getcwd()
+-        dialog = ImageSelectionDialog(cwd, DEPLOYABLE_IMAGE_TYPES, Title, self, gtk.FILE_CHOOSER_ACTION_SAVE )
+-        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
+-        HobAltButton.style_button(button)
+-        button = dialog.add_button("Open", gtk.RESPONSE_YES)
+-        HobAltButton.style_button(button)
+-        response = dialog.run()
+-
+-        if response == gtk.RESPONSE_YES:
+-            if not dialog.image_names:
+-                lbl = "<b>No selections made</b>\nClicked the radio button to select a image."
+-                crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
+-                button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
+-                HobButton.style_button(button)
+-                crumbs_dialog.run()
+-                crumbs_dialog.destroy()
+-                dialog.destroy()
+-                return
+-
+-            # get the full path of image
+-            image_path = os.path.join(dialog.image_folder, dialog.image_names[0])
+-            self.deploy_dialog.set_image_text_buffer(image_path)
+-            self.deploy_dialog.set_image_path(image_path)
+-
+-        dialog.destroy()
+-
+-def main():
+-    parser = optparse.OptionParser(
+-                usage = """%prog [-h] [image_file]
+-
+-%prog writes bootable images to USB devices. You can
+-provide the image file on the command line or select it using the GUI.""")
+-
+-    options, args = parser.parse_args(sys.argv)
+-    image_file = args[1] if len(args) > 1 else ''
+-    dw = DeployWindow(image_file)
+-
+-if __name__ == '__main__':
+-    try:
+-        main()
+-        gtk.main()
+-    except Exception:
+-        import traceback
+-        traceback.print_exc()
+diff --git a/lib/bb/ui/crumbs/__init__.py b/lib/bb/ui/crumbs/__init__.py
+deleted file mode 100644
+index b7cbe1a..0000000
+--- a/lib/bb/ui/crumbs/__init__.py
++++ /dev/null
+@@ -1,17 +0,0 @@
+-#
+-# Gtk+ UI pieces for BitBake
+-#
+-# Copyright (C) 2006-2007 Richard Purdie
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+diff --git a/lib/bb/ui/crumbs/hig/__init__.py b/lib/bb/ui/crumbs/hig/__init__.py
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/lib/bb/ui/crumbs/hig/crumbsdialog.py b/lib/bb/ui/crumbs/hig/crumbsdialog.py
+deleted file mode 100644
+index 73b9234..0000000
+--- a/lib/bb/ui/crumbs/hig/crumbsdialog.py
++++ /dev/null
+@@ -1,44 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011-2012   Intel Corporation
+-#
+-# Authored by Joshua Lock <josh@linux.intel.com>
+-# Authored by Dongxiao Xu <dongxiao.xu@intel.com>
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gtk
+-
+-"""
+-The following are convenience classes for implementing GNOME HIG compliant
+-BitBake GUI's
+-In summary: spacing = 12px, border-width = 6px
+-"""
+-
+-class CrumbsDialog(gtk.Dialog):
+-    """
+-    A GNOME HIG compliant dialog widget.
+-    Add buttons with gtk.Dialog.add_button or gtk.Dialog.add_buttons
+-    """
+-    def __init__(self, title="", parent=None, flags=0, buttons=None):
+-        super(CrumbsDialog, self).__init__(title, parent, flags, buttons)
+-
+-        #FIXME self.set_property("has-separator", False) # note: deprecated in 2.22
+-
+-        self.set_border_width(6)
+-        self.vbox.set_property("spacing", 12)
+-        self.action_area.set_property("spacing", 12)
+-        self.action_area.set_property("border-width", 6)
+diff --git a/lib/bb/ui/crumbs/hig/crumbsmessagedialog.py b/lib/bb/ui/crumbs/hig/crumbsmessagedialog.py
+deleted file mode 100644
+index 3b998e4..0000000
+--- a/lib/bb/ui/crumbs/hig/crumbsmessagedialog.py
++++ /dev/null
+@@ -1,70 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011-2012   Intel Corporation
+-#
+-# Authored by Joshua Lock <josh@linux.intel.com>
+-# Authored by Dongxiao Xu <dongxiao.xu@intel.com>
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import glib
+-import gtk
+-from bb.ui.crumbs.hobwidget import HobIconChecker
+-from bb.ui.crumbs.hig.crumbsdialog import CrumbsDialog
+-
+-"""
+-The following are convenience classes for implementing GNOME HIG compliant
+-BitBake GUI's
+-In summary: spacing = 12px, border-width = 6px
+-"""
+-
+-class CrumbsMessageDialog(gtk.MessageDialog):
+-    """
+-    A GNOME HIG compliant dialog widget.
+-    Add buttons with gtk.Dialog.add_button or gtk.Dialog.add_buttons
+-    """
+-    def __init__(self, parent = None, label="", dialog_type = gtk.MESSAGE_QUESTION, msg=""):
+-        super(CrumbsMessageDialog, self).__init__(None,
+-                                                  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+-                                                  dialog_type,
+-                                                  gtk.BUTTONS_NONE,
+-                                                  None)
+-
+-        self.set_skip_taskbar_hint(False)
+-
+-        self.set_markup(label)
+-
+-        if 0 <= len(msg) < 300:
+-            self.format_secondary_markup(msg)
+-        else:
+-            vbox = self.get_message_area()
+-            vbox.set_border_width(1)
+-            vbox.set_property("spacing", 12)
+-            self.textWindow = gtk.ScrolledWindow()
+-            self.textWindow.set_shadow_type(gtk.SHADOW_IN)
+-            self.textWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+-            self.msgView = gtk.TextView()
+-            self.msgView.set_editable(False)
+-            self.msgView.set_wrap_mode(gtk.WRAP_WORD)
+-            self.msgView.set_cursor_visible(False)
+-            self.msgView.set_size_request(300, 300)
+-            self.buf = gtk.TextBuffer()
+-            self.buf.set_text(msg)
+-            self.msgView.set_buffer(self.buf)
+-            self.textWindow.add(self.msgView)
+-            self.msgView.show()
+-            vbox.add(self.textWindow)
+-            self.textWindow.show()
+diff --git a/lib/bb/ui/crumbs/hig/deployimagedialog.py b/lib/bb/ui/crumbs/hig/deployimagedialog.py
+deleted file mode 100644
+index a13fff9..0000000
+--- a/lib/bb/ui/crumbs/hig/deployimagedialog.py
++++ /dev/null
+@@ -1,219 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011-2012   Intel Corporation
+-#
+-# Authored by Joshua Lock <josh@linux.intel.com>
+-# Authored by Dongxiao Xu <dongxiao.xu@intel.com>
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import glob
+-import gtk
+-import gobject
+-import os
+-import re
+-import shlex
 -import subprocess
- 
- __version__ = "2"
- _checksum_cache = bb.checksum.FileChecksumCache()
- 
- logger = logging.getLogger("BitBake.Fetcher")
- 
--try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
--    logger.info("Importing cPickle failed. "
--                "Falling back to a very slow implementation.")
+-import tempfile
+-from bb.ui.crumbs.hobwidget import hic, HobButton
+-from bb.ui.crumbs.progressbar import HobProgressBar
+-import bb.ui.crumbs.utils
+-import bb.process
+-from bb.ui.crumbs.hig.crumbsdialog import CrumbsDialog
+-from bb.ui.crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
 -
- class BBFetchException(Exception):
-     """Class all fetch exceptions inherit from"""
-     def __init__(self, message):
-@@ -230,14 +226,14 @@ class URI(object):
-         # them are not quite RFC compliant.
-         uri, param_str = (uri.split(";", 1) + [None])[:2]
- 
--        urlp = urlparse.urlparse(uri)
-+        urlp = urllib.parse.urlparse(uri)
-         self.scheme = urlp.scheme
- 
-         reparse = 0
- 
-         # Coerce urlparse to make URI scheme use netloc
--        if not self.scheme in urlparse.uses_netloc:
--            urlparse.uses_params.append(self.scheme)
-+        if not self.scheme in urllib.parse.uses_netloc:
-+            urllib.parse.uses_params.append(self.scheme)
-             reparse = 1
- 
-         # Make urlparse happy(/ier) by converting local resources
-@@ -248,7 +244,7 @@ class URI(object):
-             reparse = 1
- 
-         if reparse:
--            urlp = urlparse.urlparse(uri)
-+            urlp = urllib.parse.urlparse(uri)
- 
-         # Identify if the URI is relative or not
-         if urlp.scheme in self._relative_schemes and \
-@@ -264,7 +260,7 @@ class URI(object):
-             if urlp.password:
-                 self.userinfo += ':%s' % urlp.password
- 
--        self.path = urllib.unquote(urlp.path)
-+        self.path = urllib.parse.unquote(urlp.path)
- 
-         if param_str:
-             self.params = self._param_str_split(param_str, ";")
-@@ -312,11 +308,11 @@ class URI(object):
- 
-     @property
-     def path_quoted(self):
--        return urllib.quote(self.path)
-+        return urllib.parse.quote(self.path)
- 
-     @path_quoted.setter
-     def path_quoted(self, path):
--        self.path = urllib.unquote(path)
-+        self.path = urllib.parse.unquote(path)
- 
-     @property
-     def path(self):
-@@ -398,7 +394,7 @@ def decodeurl(url):
-                 s1, s2 = s.split('=')
-                 p[s1] = s2
- 
--    return type, host, urllib.unquote(path), user, pswd, p
-+    return type, host, urllib.parse.unquote(path), user, pswd, p
- 
- def encodeurl(decoded):
-     """Encodes a URL from tokens (scheme, network location, path,
-@@ -422,7 +418,7 @@ def encodeurl(decoded):
-     # Standardise path to ensure comparisons work
-     while '//' in path:
-         path = path.replace("//", "/")
--    url += "%s" % urllib.quote(path)
-+    url += "%s" % urllib.parse.quote(path)
-     if p:
-         for parm in p:
-             url += ";%s=%s" % (parm, p[parm])
-@@ -1735,7 +1731,7 @@ class FetchConnectionCache(object):
-             del self.cache[cn]
- 
-     def close_connections(self):
--        for cn in self.cache.keys():
-+        for cn in list(self.cache.keys()):
-             self.cache[cn].close()
-             del self.cache[cn]
- 
-diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
-index 303a52b..51ca78d 100644
---- a/lib/bb/fetch2/local.py
-+++ b/lib/bb/fetch2/local.py
-@@ -26,7 +26,7 @@ BitBake build tools.
- # Based on functions from the base bb module, Copyright 2003 Holger Schurig
- 
- import os
--import urllib
-+import urllib.request, urllib.parse, urllib.error
- import bb
- import bb.utils
- from   bb import data
-@@ -42,7 +42,7 @@ class Local(FetchMethod):
- 
-     def urldata_init(self, ud, d):
-         # We don't set localfile as for this fetcher the file is already local!
--        ud.decodedurl = urllib.unquote(ud.url.split("://")[1].split(";")[0])
-+        ud.decodedurl = urllib.parse.unquote(ud.url.split("://")[1].split(";")[0])
-         ud.basename = os.path.basename(ud.decodedurl)
-         ud.basepath = ud.decodedurl
-         ud.needdonestamp = False
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index d9e46b2..2fd4303 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -20,7 +20,7 @@ Usage in the recipe:
- 
- import os
- import sys
--import urllib
-+import urllib.request, urllib.parse, urllib.error
- import json
- import subprocess
- import signal
-@@ -196,9 +196,9 @@ class Npm(FetchMethod):
-                 optdepsfound[dep] = dependencies[dep]
-             else:
-                 depsfound[dep] = dependencies[dep]
--        for dep, version in optdepsfound.iteritems():
-+        for dep, version in optdepsfound.items():
-             self._getdependencies(dep, data[pkg]['deps'], version, d, ud, optional=True)
--        for dep, version in depsfound.iteritems():
-+        for dep, version in depsfound.items():
-             self._getdependencies(dep, data[pkg]['deps'], version, d, ud)
- 
-     def _getshrinkeddependencies(self, pkg, data, version, d, ud, lockdown, manifest):
-diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
-index 1aef246..ce3cda2 100644
---- a/lib/bb/fetch2/perforce.py
-+++ b/lib/bb/fetch2/perforce.py
-@@ -61,7 +61,7 @@ class Perforce(FetchMethod):
-                     keys.append(key)
-                     values.append(value)
- 
--            parm = dict(zip(keys, values))
-+            parm = dict(list(zip(keys, values)))
-         path = "//" + path.split(';')[0]
-         host += ":%s" % (port)
-         parm["cset"] = Perforce.getcset(d, path, host, user, pswd, parm)
-diff --git a/lib/bb/fetch2/sftp.py b/lib/bb/fetch2/sftp.py
-index cb2f753..7989fcc 100644
---- a/lib/bb/fetch2/sftp.py
-+++ b/lib/bb/fetch2/sftp.py
-@@ -61,8 +61,7 @@ SRC_URI = "sftp://user@host.example.com/dir/path.file.txt"
- 
- import os
- import bb
--import urllib
--import commands
-+import urllib.request, urllib.parse, urllib.error
- from bb import data
- from bb.fetch2 import URI
- from bb.fetch2 import FetchMethod
-@@ -93,7 +92,7 @@ class SFTP(FetchMethod):
-         else:
-             ud.basename = os.path.basename(ud.path)
- 
--        ud.localfile = data.expand(urllib.unquote(ud.basename), d)
-+        ud.localfile = data.expand(urllib.parse.unquote(ud.basename), d)
- 
-     def download(self, ud, d):
-         """Fetch urls"""
-@@ -121,8 +120,7 @@ class SFTP(FetchMethod):
- 
-         remote = '%s%s:%s' % (user, urlo.hostname, path)
- 
--        cmd = '%s %s %s %s' % (basecmd, port, commands.mkarg(remote),
--                               commands.mkarg(lpath))
-+        cmd = '%s %s %s %s' % (basecmd, port, remote, lpath)
- 
-         bb.fetch2.check_network_access(d, cmd, ud.url)
-         runfetchcmd(cmd, d)
-diff --git a/lib/bb/fetch2/ssh.py b/lib/bb/fetch2/ssh.py
-index 635578a..56f9b7e 100644
---- a/lib/bb/fetch2/ssh.py
-+++ b/lib/bb/fetch2/ssh.py
-@@ -114,12 +114,10 @@ class SSH(FetchMethod):
-             fr = host
-         fr += ':%s' % path
- 
+-"""
+-The following are convenience classes for implementing GNOME HIG compliant
+-BitBake GUI's
+-In summary: spacing = 12px, border-width = 6px
+-"""
 -
--        import commands
-         cmd = 'scp -B -r %s %s %s/' % (
-             portarg,
--            commands.mkarg(fr),
--            commands.mkarg(dldir)
-+            fr,
-+            dldir
-         )
- 
-         bb.fetch2.check_network_access(d, cmd, urldata.url)
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 8bc9e93..d688fd9 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -31,7 +31,7 @@ import subprocess
- import os
- import logging
- import bb
--import urllib
-+import urllib.request, urllib.parse, urllib.error
- from   bb import data
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import FetchError
-@@ -62,9 +62,9 @@ class Wget(FetchMethod):
-         else:
-             ud.basename = os.path.basename(ud.path)
- 
--        ud.localfile = data.expand(urllib.unquote(ud.basename), d)
-+        ud.localfile = data.expand(urllib.parse.unquote(ud.basename), d)
-         if not ud.localfile:
--            ud.localfile = data.expand(urllib.unquote(ud.host + ud.path).replace("/", "."), d)
-+            ud.localfile = data.expand(urllib.parse.unquote(ud.host + ud.path).replace("/", "."), d)
- 
-         self.basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
- 
-@@ -105,11 +105,11 @@ class Wget(FetchMethod):
-         return True
- 
-     def checkstatus(self, fetch, ud, d):
--        import urllib2, socket, httplib
--        from urllib import addinfourl
-+        import urllib.request, urllib.error, urllib.parse, socket, http.client
-+        from urllib.response import addinfourl
-         from bb.fetch2 import FetchConnectionCache
- 
--        class HTTPConnectionCache(httplib.HTTPConnection):
-+        class HTTPConnectionCache(http.client.HTTPConnection):
-             if fetch.connection_cache:
-                 def connect(self):
-                     """Connect to the host and port specified in __init__."""
-@@ -125,7 +125,7 @@ class Wget(FetchMethod):
-                     if self._tunnel_host:
-                         self._tunnel()
- 
--        class CacheHTTPHandler(urllib2.HTTPHandler):
-+        class CacheHTTPHandler(urllib.request.HTTPHandler):
-             def http_open(self, req):
-                 return self.do_open(HTTPConnectionCache, req)
- 
-@@ -139,7 +139,7 @@ class Wget(FetchMethod):
-                     - geturl(): return the original request URL
-                     - code: HTTP status code
-                 """
--                host = req.get_host()
-+                host = req.host
-                 if not host:
-                     raise urlllib2.URLError('no host given')
- 
-@@ -147,7 +147,7 @@ class Wget(FetchMethod):
-                 h.set_debuglevel(self._debuglevel)
- 
-                 headers = dict(req.unredirected_hdrs)
--                headers.update(dict((k, v) for k, v in req.headers.items()
-+                headers.update(dict((k, v) for k, v in list(req.headers.items())
-                             if k not in headers))
- 
-                 # We want to make an HTTP/1.1 request, but the addinfourl
-@@ -164,7 +164,7 @@ class Wget(FetchMethod):
-                     headers["Connection"] = "Keep-Alive" # Works for HTTP/1.0
- 
-                 headers = dict(
--                    (name.title(), val) for name, val in headers.items())
-+                    (name.title(), val) for name, val in list(headers.items()))
- 
-                 if req._tunnel_host:
-                     tunnel_headers = {}
-@@ -177,12 +177,12 @@ class Wget(FetchMethod):
-                     h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
- 
-                 try:
--                    h.request(req.get_method(), req.get_selector(), req.data, headers)
--                except socket.error, err: # XXX what error?
-+                    h.request(req.get_method(), req.selector, req.data, headers)
-+                except socket.error as err: # XXX what error?
-                     # Don't close connection when cache is enabled.
-                     if fetch.connection_cache is None:
-                         h.close()
--                    raise urllib2.URLError(err)
-+                    raise urllib.error.URLError(err)
-                 else:
-                     try:
-                         r = h.getresponse(buffering=True)
-@@ -222,7 +222,7 @@ class Wget(FetchMethod):
- 
-                 return resp
- 
--        class HTTPMethodFallback(urllib2.BaseHandler):
-+        class HTTPMethodFallback(urllib.request.BaseHandler):
-             """
-             Fallback to GET if HEAD is not allowed (405 HTTP error)
-             """
-@@ -230,11 +230,11 @@ class Wget(FetchMethod):
-                 fp.read()
-                 fp.close()
- 
--                newheaders = dict((k,v) for k,v in req.headers.items()
-+                newheaders = dict((k,v) for k,v in list(req.headers.items())
-                                   if k.lower() not in ("content-length", "content-type"))
--                return self.parent.open(urllib2.Request(req.get_full_url(),
-+                return self.parent.open(urllib.request.Request(req.get_full_url(),
-                                                         headers=newheaders,
--                                                        origin_req_host=req.get_origin_req_host(),
-+                                                        origin_req_host=req.origin_req_host,
-                                                         unverifiable=True))
- 
-             """
-@@ -249,35 +249,35 @@ class Wget(FetchMethod):
-             """
-             http_error_406 = http_error_405
- 
--        class FixedHTTPRedirectHandler(urllib2.HTTPRedirectHandler):
-+        class FixedHTTPRedirectHandler(urllib.request.HTTPRedirectHandler):
-             """
-             urllib2.HTTPRedirectHandler resets the method to GET on redirect,
-             when we want to follow redirects using the original method.
-             """
-             def redirect_request(self, req, fp, code, msg, headers, newurl):
--                newreq = urllib2.HTTPRedirectHandler.redirect_request(self, req, fp, code, msg, headers, newurl)
-+                newreq = urllib.request.HTTPRedirectHandler.redirect_request(self, req, fp, code, msg, headers, newurl)
-                 newreq.get_method = lambda: req.get_method()
-                 return newreq
-         exported_proxies = export_proxies(d)
- 
-         handlers = [FixedHTTPRedirectHandler, HTTPMethodFallback]
-         if export_proxies:
--            handlers.append(urllib2.ProxyHandler())
-+            handlers.append(urllib.request.ProxyHandler())
-         handlers.append(CacheHTTPHandler())
-         # XXX: Since Python 2.7.9 ssl cert validation is enabled by default
-         # see PEP-0476, this causes verification errors on some https servers
-         # so disable by default.
-         import ssl
-         if hasattr(ssl, '_create_unverified_context'):
--            handlers.append(urllib2.HTTPSHandler(context=ssl._create_unverified_context()))
--        opener = urllib2.build_opener(*handlers)
-+            handlers.append(urllib.request.HTTPSHandler(context=ssl._create_unverified_context()))
-+        opener = urllib.request.build_opener(*handlers)
- 
-         try:
-             uri = ud.url.split(";")[0]
--            r = urllib2.Request(uri)
-+            r = urllib.request.Request(uri)
-             r.get_method = lambda: "HEAD"
-             opener.open(r)
--        except urllib2.URLError as e:
-+        except urllib.error.URLError as e:
-             # debug for now to avoid spamming the logs in e.g. remote sstate searches
-             logger.debug(2, "checkstatus() urlopen failed: %s" % e)
-             return False
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 761ea45..b296ef8 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -27,6 +27,7 @@ import sys
- import logging
- import optparse
- import warnings
-+import fcntl
- 
- import bb
- from bb import event
-@@ -336,10 +337,7 @@ def start_server(servermodule, configParams, configuration, features):
-         server.saveConnectionDetails()
-     except Exception as e:
-         while hasattr(server, "event_queue"):
--            try:
--                import queue
--            except ImportError:
--                import Queue as queue
-+            import queue
-             try:
-                 event = server.event_queue.get(block=False)
-             except (queue.Empty, IOError):
-@@ -363,7 +361,10 @@ def bitbake_main(configParams, configuration):
-     # updates to log files for use with tail
-     try:
-         if sys.stdout.name == '<stdout>':
--            sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-+            # Reopen with O_SYNC (unbuffered)
-+            fl = fcntl.fcntl(sys.stdout.fileno(), fcntl.F_GETFL)
-+            fl |= os.O_SYNC
-+            fcntl.fcntl(sys.stdout.fileno(), fcntl.F_SETFL, fl)
-     except:
-         pass
- 
-diff --git a/lib/bb/msg.py b/lib/bb/msg.py
-index 6fdd1f5..8c3ab47 100644
---- a/lib/bb/msg.py
-+++ b/lib/bb/msg.py
-@@ -57,7 +57,7 @@ class BBLogFormatter(logging.Formatter):
-     }
- 
-     color_enabled = False
--    BASECOLOR, BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(29,38)
-+    BASECOLOR, BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = list(range(29,38))
- 
-     COLORS = {
-         DEBUG3  : CYAN,
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index bc3a2f8..548929f 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -138,7 +138,7 @@ class DataNode(AstNode):
-             data.setVar(key, val, parsing=True, **loginfo)
- 
- class MethodNode(AstNode):
--    tr_tbl = string.maketrans('/.+-@%&', '_______')
-+    tr_tbl = str.maketrans('/.+-@%&', '_______')
- 
-     def __init__(self, filename, lineno, func_name, body, python, fakeroot):
-         AstNode.__init__(self, filename, lineno)
-@@ -340,17 +340,17 @@ def _create_variants(datastores, names, function, onlyfinalise):
-         function(arg or name, new_d)
-         datastores[name] = new_d
- 
--    for variant, variant_d in datastores.items():
-+    for variant in list(datastores.keys()):
-         for name in names:
-             if not variant:
-                 # Based on main recipe
--                create_variant(name, variant_d)
-+                create_variant(name, datastores[""])
-             else:
--                create_variant("%s-%s" % (variant, name), variant_d, name)
-+                create_variant("%s-%s" % (variant, name), datastores[variant], name)
- 
- def _expand_versions(versions):
-     def expand_one(version, start, end):
--        for i in xrange(start, end + 1):
-+        for i in range(start, end + 1):
-             ver = _bbversions_re.sub(str(i), version, 1)
-             yield ver
- 
-@@ -459,16 +459,16 @@ def multi_finalize(fn, d):
-         safe_d.setVar("BBCLASSEXTEND", extended)
-         _create_variants(datastores, extendedmap.keys(), extendfunc, onlyfinalise)
- 
--    for variant, variant_d in datastores.iteritems():
-+    for variant in datastores.keys():
-         if variant:
-             try:
-                 if not onlyfinalise or variant in onlyfinalise:
--                    finalize(fn, variant_d, variant)
-+                    finalize(fn, datastores[variant], variant)
-             except bb.parse.SkipRecipe as e:
--                variant_d.setVar("__SKIPPED", e.args[0])
-+                datastores[variant].setVar("__SKIPPED", e.args[0])
- 
-     if len(datastores) > 1:
--        variants = filter(None, datastores.iterkeys())
-+        variants = filter(None, datastores.keys())
-         safe_d.setVar("__VARIANTS", " ".join(variants))
- 
-     datastores[""] = d
-diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
-index e450423..403f3a5 100644
---- a/lib/bb/persist_data.py
-+++ b/lib/bb/persist_data.py
-@@ -92,9 +92,9 @@ class SQLTable(collections.MutableMapping):
-         self._execute("DELETE from %s where key=?;" % self.table, [key])
- 
-     def __setitem__(self, key, value):
--        if not isinstance(key, basestring):
-+        if not isinstance(key, str):
-             raise TypeError('Only string keys are supported')
--        elif not isinstance(value, basestring):
-+        elif not isinstance(value, str):
-             raise TypeError('Only string values are supported')
- 
-         data = self._execute("SELECT * from %s where key=?;" %
-@@ -131,14 +131,14 @@ class SQLTable(collections.MutableMapping):
-         return [row[1] for row in data]
- 
-     def values(self):
--        return list(self.itervalues())
-+        return list(self.values())
- 
-     def itervalues(self):
-         data = self._execute("SELECT value FROM %s;" % self.table)
-         return (row[0] for row in data)
- 
-     def items(self):
--        return list(self.iteritems())
-+        return list(self.items())
- 
-     def iteritems(self):
-         return self._execute("SELECT * FROM %s;" % self.table)
-@@ -178,7 +178,7 @@ class PersistData(object):
-         """
-         Return a list of key + value pairs for a domain
-         """
--        return self.data[domain].items()
-+        return list(self.data[domain].items())
- 
-     def getValue(self, domain, key):
-         """
-diff --git a/lib/bb/process.py b/lib/bb/process.py
-index 1c07f2d..c62d7bc 100644
---- a/lib/bb/process.py
-+++ b/lib/bb/process.py
-@@ -17,7 +17,7 @@ class CmdError(RuntimeError):
-         self.msg = msg
- 
-     def __str__(self):
--        if not isinstance(self.command, basestring):
-+        if not isinstance(self.command, str):
-             cmd = subprocess.list2cmdline(self.command)
-         else:
-             cmd = self.command
-@@ -97,6 +97,8 @@ def _logged_communicate(pipe, log, input, extrafiles):
-     try:
-         while pipe.poll() is None:
-             rlist = rin
-+            stdoutbuf = b""
-+            stderrbuf = b""
-             try:
-                 r,w,e = select.select (rlist, [], [], 1)
-             except OSError as e:
-@@ -104,16 +106,26 @@ def _logged_communicate(pipe, log, input, extrafiles):
-                     raise
- 
-             if pipe.stdout in r:
--                data = pipe.stdout.read()
--                if data is not None:
--                    outdata.append(data)
--                    log.write(data)
-+                data = stdoutbuf + pipe.stdout.read()
-+                if data is not None and len(data) > 0:
-+                    try:
-+                        data = data.decode("utf-8")
-+                        outdata.append(data)
-+                        log.write(data)
-+                        stdoutbuf = b""
-+                    except UnicodeDecodeError:
-+                        stdoutbuf = data
- 
-             if pipe.stderr in r:
--                data = pipe.stderr.read()
--                if data is not None:
--                    errdata.append(data)
--                    log.write(data)
-+                data = stderrbuf + pipe.stderr.read()
-+                if data is not None and len(data) > 0:
-+                    try:
-+                        data = data.decode("utf-8")
-+                        errdata.append(data)
-+                        log.write(data)
-+                        stderrbuf = b""
-+                    except UnicodeDecodeError:
-+                        stderrbuf = data
- 
-             readextras(r)
- 
-@@ -135,7 +147,7 @@ def run(cmd, input=None, log=None, extrafiles=None, **options):
-     if not extrafiles:
-         extrafiles = []
- 
--    if isinstance(cmd, basestring) and not "shell" in options:
-+    if isinstance(cmd, str) and not "shell" in options:
-         options["shell"] = True
- 
-     try:
-@@ -150,6 +162,10 @@ def run(cmd, input=None, log=None, extrafiles=None, **options):
-         stdout, stderr = _logged_communicate(pipe, log, input, extrafiles)
-     else:
-         stdout, stderr = pipe.communicate(input)
-+        if stdout:
-+            stdout = stdout.decode("utf-8")
-+        if stderr:
-+            stderr = stderr.decode("utf-8")
- 
-     if pipe.returncode != 0:
-         raise ExecutionError(cmd, pipe.returncode, stdout, stderr)
-diff --git a/lib/bb/providers.py b/lib/bb/providers.py
-index 563a091..80701b2 100644
---- a/lib/bb/providers.py
-+++ b/lib/bb/providers.py
-@@ -245,7 +245,7 @@ def _filterProviders(providers, item, cfgData, dataCache):
-             pkg_pn[pn] = []
-         pkg_pn[pn].append(p)
- 
--    logger.debug(1, "providers for %s are: %s", item, pkg_pn.keys())
-+    logger.debug(1, "providers for %s are: %s", item, list(pkg_pn.keys()))
- 
-     # First add PREFERRED_VERSIONS
-     for pn in pkg_pn:
-diff --git a/lib/bb/pysh/builtin.py b/lib/bb/pysh/builtin.py
-index b748e4a..a8814dc 100644
---- a/lib/bb/pysh/builtin.py
-+++ b/lib/bb/pysh/builtin.py
-@@ -527,7 +527,7 @@ def utility_sed(name, args, interp, env, stdin, stdout, stderr, debugflags):
-         print interp.log(' '.join([name, str(args), interp['PWD']]) + '\n')
-         
-     # Scan pattern arguments and append a space if necessary
--    for i in xrange(len(args)):
-+    for i in range(len(args)):
-         if not RE_SED.search(args[i]):
-             continue
-         args[i] = args[i] + ' '
-diff --git a/lib/bb/pysh/interp.py b/lib/bb/pysh/interp.py
-index 25d8c92..d14ecf3 100644
---- a/lib/bb/pysh/interp.py
-+++ b/lib/bb/pysh/interp.py
-@@ -474,7 +474,7 @@ class Environment:
-         """
-         # Save and remove previous arguments
-         prevargs = []        
--        for i in xrange(int(self._env['#'])):
-+        for i in range(int(self._env['#'])):
-             i = str(i+1)
-             prevargs.append(self._env[i])
-             del self._env[i]
-@@ -488,7 +488,7 @@ class Environment:
-         return prevargs
-         
-     def get_positional_args(self):
--        return [self._env[str(i+1)] for i in xrange(int(self._env['#']))]
-+        return [self._env[str(i+1)] for i in range(int(self._env['#']))]
-         
-     def get_variables(self):
-         return dict(self._env)
-diff --git a/lib/bb/pysh/pyshlex.py b/lib/bb/pysh/pyshlex.py
-index b301236..fbf094b 100644
---- a/lib/bb/pysh/pyshlex.py
-+++ b/lib/bb/pysh/pyshlex.py
-@@ -20,7 +20,7 @@ except NameError:
-     from Set import Set as set
- 
- from ply import lex
--from sherrors import *
-+from bb.pysh.sherrors import *
- 
- class NeedMore(Exception):
-     pass
-diff --git a/lib/bb/pysh/pyshyacc.py b/lib/bb/pysh/pyshyacc.py
-index e8e80aa..ba4cefd 100644
---- a/lib/bb/pysh/pyshyacc.py
-+++ b/lib/bb/pysh/pyshyacc.py
-@@ -10,11 +10,11 @@
- import os.path
- import sys
- 
--import pyshlex
-+import bb.pysh.pyshlex as pyshlex
- tokens = pyshlex.tokens
- 
- from ply import yacc
--import sherrors
-+import bb.pysh.sherrors as sherrors
-     
- class IORedirect:
-     def __init__(self, op, filename, io_number=None):
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 5ab7e97..376c9f5 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -35,11 +35,7 @@ import bb
- from bb import msg, data, event
- from bb import monitordisk
- import subprocess
+-class DeployImageDialog (CrumbsDialog):
 -
--try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
-+import pickle
- 
- bblogger = logging.getLogger("BitBake")
- logger = logging.getLogger("BitBake.RunQueue")
-@@ -108,7 +104,7 @@ class RunQueueScheduler(object):
- 
-         self.buildable = []
-         self.stamps = {}
--        for taskid in xrange(self.numTasks):
-+        for taskid in range(self.numTasks):
-             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[taskid]]
-             taskname = self.rqdata.runq_task[taskid]
-             self.stamps[taskid] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
-@@ -127,12 +123,12 @@ class RunQueueScheduler(object):
-         if len(self.buildable) == 1:
-             taskid = self.buildable[0]
-             stamp = self.stamps[taskid]
--            if stamp not in self.rq.build_stamps.itervalues():
-+            if stamp not in self.rq.build_stamps.values():
-                 return taskid
- 
-         if not self.rev_prio_map:
--            self.rev_prio_map = range(self.numTasks)
--            for taskid in xrange(self.numTasks):
-+            self.rev_prio_map = list(range(self.numTasks))
-+            for taskid in range(self.numTasks):
-                 self.rev_prio_map[self.prio_map[taskid]] = taskid
- 
-         best = None
-@@ -141,7 +137,7 @@ class RunQueueScheduler(object):
-             prio = self.rev_prio_map[taskid]
-             if bestprio is None or bestprio > prio:
-                 stamp = self.stamps[taskid]
--                if stamp in self.rq.build_stamps.itervalues():
-+                if stamp in self.rq.build_stamps.values():
-                     continue
-                 bestprio = prio
-                 best = taskid
-@@ -269,7 +265,7 @@ class RunQueueData:
- 
- 
-     def get_task_id(self, fnid, taskname):
--        for listid in xrange(len(self.runq_fnid)):
-+        for listid in range(len(self.runq_fnid)):
-             if self.runq_fnid[listid] == fnid and self.runq_task[listid] == taskname:
-                 return listid
-         return None
-@@ -291,7 +287,7 @@ class RunQueueData:
-             """
-             lowest = 0
-             new_chain = []
--            for entry in xrange(len(chain)):
-+            for entry in range(len(chain)):
-                 if chain[entry] < chain[lowest]:
-                     lowest = entry
-             new_chain.extend(chain[lowest:])
-@@ -304,7 +300,7 @@ class RunQueueData:
-             """
-             if len(chain1) != len(chain2):
-                 return False
--            for index in xrange(len(chain1)):
-+            for index in range(len(chain1)):
-                 if chain1[index] != chain2[index]:
-                     return False
-             return True
-@@ -375,7 +371,7 @@ class RunQueueData:
-         deps_left = []
-         task_done = []
- 
--        for listid in xrange(numTasks):
-+        for listid in range(numTasks):
-             task_done.append(False)
-             weight.append(1)
-             deps_left.append(len(self.runq_revdeps[listid]))
-@@ -399,7 +395,7 @@ class RunQueueData:
- 
-         # Circular dependency sanity check
-         problem_tasks = []
--        for task in xrange(numTasks):
-+        for task in range(numTasks):
-             if task_done[task] is False or deps_left[task] != 0:
-                 problem_tasks.append(task)
-                 logger.debug(2, "Task %s (%s) is not buildable", task, self.get_user_idstring(task))
-@@ -482,7 +478,7 @@ class RunQueueData:
-                     if taskid is not None:
-                         depends.add(taskid)
- 
--        for task in xrange(len(taskData.tasks_name)):
-+        for task in range(len(taskData.tasks_name)):
-             depends = set()
-             fnid = taskData.tasks_fnid[task]
-             fn = taskData.fn_index[fnid]
-@@ -597,7 +593,7 @@ class RunQueueData:
-         for task in recursivetasks:
-             extradeps[task].difference_update(recursivetasksselfref)
- 
--        for task in xrange(len(taskData.tasks_name)):
-+        for task in range(len(taskData.tasks_name)):
-             # Add in extra dependencies
-             if task in extradeps:
-                  self.runq_depends[task] = extradeps[task]
-@@ -675,7 +671,7 @@ class RunQueueData:
- 
-         maps = []
-         delcount = 0
--        for listid in xrange(len(self.runq_fnid)):
-+        for listid in range(len(self.runq_fnid)):
-             if runq_build[listid-delcount] == 1:
-                 maps.append(listid-delcount)
-             else:
-@@ -703,7 +699,7 @@ class RunQueueData:
- 
-         # Remap the dependencies to account for the deleted tasks
-         # Check we didn't delete a task we depend on
--        for listid in xrange(len(self.runq_fnid)):
-+        for listid in range(len(self.runq_fnid)):
-             newdeps = []
-             origdeps = self.runq_depends[listid]
-             for origdep in origdeps:
-@@ -715,14 +711,14 @@ class RunQueueData:
-         logger.verbose("Assign Weightings")
- 
-         # Generate a list of reverse dependencies to ease future calculations
--        for listid in xrange(len(self.runq_fnid)):
-+        for listid in range(len(self.runq_fnid)):
-             for dep in self.runq_depends[listid]:
-                 self.runq_revdeps[dep].add(listid)
- 
-         # Identify tasks at the end of dependency chains
-         # Error on circular dependency loops (length two)
-         endpoints = []
--        for listid in xrange(len(self.runq_fnid)):
-+        for listid in range(len(self.runq_fnid)):
-             revdeps = self.runq_revdeps[listid]
-             if len(revdeps) == 0:
-                 endpoints.append(listid)
-@@ -740,7 +736,7 @@ class RunQueueData:
-         # Sanity Check - Check for multiple tasks building the same provider
-         prov_list = {}
-         seen_fn = []
--        for task in xrange(len(self.runq_fnid)):
-+        for task in range(len(self.runq_fnid)):
-             fn = taskData.fn_index[self.runq_fnid[task]]
-             if fn in seen_fn:
-                 continue
-@@ -905,7 +901,7 @@ class RunQueueData:
-         Dump some debug information on the internal data structures
-         """
-         logger.debug(3, "run_tasks:")
--        for task in xrange(len(self.rqdata.runq_task)):
-+        for task in range(len(self.rqdata.runq_task)):
-             logger.debug(3, " (%s)%s - %s: %s   Deps %s RevDeps %s", task,
-                          taskQueue.fn_index[self.rqdata.runq_fnid[task]],
-                          self.rqdata.runq_task[task],
-@@ -914,7 +910,7 @@ class RunQueueData:
-                          self.rqdata.runq_revdeps[task])
- 
-         logger.debug(3, "sorted_tasks:")
--        for task1 in xrange(len(self.rqdata.runq_task)):
-+        for task1 in range(len(self.rqdata.runq_task)):
-             if task1 in self.prio_map:
-                 task = self.prio_map[task1]
-                 logger.debug(3, " (%s)%s - %s: %s   Deps %s RevDeps %s", task,
-@@ -982,8 +978,8 @@ class RunQueue:
-             "time" : self.cfgData.getVar("TIME", True),
-         }
- 
--        worker.stdin.write("<cookerconfig>" + pickle.dumps(self.cooker.configuration) + "</cookerconfig>")
--        worker.stdin.write("<workerdata>" + pickle.dumps(workerdata) + "</workerdata>")
-+        worker.stdin.write(b"<cookerconfig>" + pickle.dumps(self.cooker.configuration) + b"</cookerconfig>")
-+        worker.stdin.write(b"<workerdata>" + pickle.dumps(workerdata) + b"</workerdata>")
-         worker.stdin.flush()
- 
-         return worker, workerpipe
-@@ -993,8 +989,9 @@ class RunQueue:
-             return
-         logger.debug(1, "Teardown for bitbake-worker")
-         try:
--           worker.stdin.write("<quit></quit>")
-+           worker.stdin.write(b"<quit></quit>")
-            worker.stdin.flush()
-+           worker.stdin.close()
-         except IOError:
-            pass
-         while worker.returncode is None:
-@@ -1245,7 +1242,7 @@ class RunQueue:
-         stamppresent = []
-         valid_new = set()
- 
--        for task in xrange(len(self.rqdata.runq_fnid)):
-+        for task in range(len(self.rqdata.runq_fnid)):
-             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
-             taskname = self.rqdata.runq_task[task]
-             taskdep = self.rqdata.dataCache.task_deps[fn]
-@@ -1287,7 +1284,7 @@ class RunQueue:
-                     valid_new.add(dep)
- 
-         invalidtasks = set()
--        for task in xrange(len(self.rqdata.runq_fnid)):
-+        for task in range(len(self.rqdata.runq_fnid)):
-             if task not in valid_new and task not in noexec:
-                 invalidtasks.add(task)
- 
-@@ -1346,7 +1343,7 @@ class RunQueue:
-                     match = m
-             if match is None:
-                 bb.fatal("Can't find a task we're supposed to have written out? (hash: %s)?" % h)
--            matches = {k : v for k, v in matches.iteritems() if h not in k}
-+            matches = {k : v for k, v in iter(matches.items()) if h not in k}
-             if matches:
-                 latestmatch = sorted(matches.keys(), key=lambda f: matches[f])[-1]
-                 prevh = __find_md5__.search(latestmatch).group(0)
-@@ -1395,17 +1392,15 @@ class RunQueueExecute:
-         return True
- 
-     def finish_now(self):
+-    __dummy_usb__ = "--select a usb drive--"
 -
-         for worker in [self.rq.worker, self.rq.fakeworker]:
-             if not worker:
-                 continue
-             try:
--                worker.stdin.write("<finishnow></finishnow>")
-+                worker.stdin.write(b"<finishnow></finishnow>")
-                 worker.stdin.flush()
-             except IOError:
-                 # worker must have died?
-                 pass
+-    def __init__(self, title, image_path, parent, flags, buttons=None, standalone=False):
+-        super(DeployImageDialog, self).__init__(title, parent, flags, buttons)
 -
-         if len(self.failed_fnids) != 0:
-             self.rq.state = runQueueFailed
-             return
-@@ -1468,7 +1463,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-         initial_covered = self.rq.scenequeue_covered.copy()
- 
-         # Mark initial buildable tasks
--        for task in xrange(self.stats.total):
-+        for task in range(self.stats.total):
-             self.runq_running.append(0)
-             self.runq_complete.append(0)
-             if len(self.rqdata.runq_depends[task]) == 0:
-@@ -1481,7 +1476,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-         found = True
-         while found:
-             found = False
--            for task in xrange(self.stats.total):
-+            for task in range(self.stats.total):
-                 if task in self.rq.scenequeue_covered:
-                     continue
-                 logger.debug(1, 'Considering %s (%s): %s' % (task, self.rqdata.get_user_idstring(task), str(self.rqdata.runq_revdeps[task])))
-@@ -1496,7 +1491,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-         covered_remove = set()
-         if self.rq.setsceneverify:
-             invalidtasks = []
--            for task in xrange(len(self.rqdata.runq_task)):
-+            for task in range(len(self.rqdata.runq_task)):
-                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
-                 taskname = self.rqdata.runq_task[task]
-                 taskdep = self.rqdata.dataCache.task_deps[fn]
-@@ -1684,10 +1679,10 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                         logger.critical("Failed to spawn fakeroot worker to run %s:%s: %s" % (fn, taskname, str(exc)))
-                         self.rq.state = runQueueFailed
-                         return True
--                self.rq.fakeworker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + "</runtask>")
-+                self.rq.fakeworker.stdin.write(b"<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + b"</runtask>")
-                 self.rq.fakeworker.stdin.flush()
-             else:
--                self.rq.worker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + "</runtask>")
-+                self.rq.worker.stdin.write(b"<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + b"</runtask>")
-                 self.rq.worker.stdin.flush()
- 
-             self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
-@@ -1706,7 +1701,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-             return True
- 
-         # Sanity Checks
--        for task in xrange(self.stats.total):
-+        for task in range(self.stats.total):
-             if self.runq_buildable[task] == 0:
-                 logger.error("Task %s never buildable!", task)
-             if self.runq_running[task] == 0:
-@@ -1764,14 +1759,14 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         # therefore aims to collapse the huge runqueue dependency tree into a smaller one
-         # only containing the setscene functions.
- 
--        for task in xrange(self.stats.total):
-+        for task in range(self.stats.total):
-             self.runq_running.append(0)
-             self.runq_complete.append(0)
-             self.runq_buildable.append(0)
- 
-         # First process the chains up to the first setscene task.
-         endpoints = {}
--        for task in xrange(len(self.rqdata.runq_fnid)):
-+        for task in range(len(self.rqdata.runq_fnid)):
-             sq_revdeps.append(copy.copy(self.rqdata.runq_revdeps[task]))
-             sq_revdeps_new.append(set())
-             if (len(self.rqdata.runq_revdeps[task]) == 0) and task not in self.rqdata.runq_setscene:
-@@ -1833,7 +1828,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                         newendpoints[dep] = tasks
-             if len(newendpoints) != 0:
-                 process_endpoints2(newendpoints)
--        for task in xrange(len(self.rqdata.runq_fnid)):
-+        for task in range(len(self.rqdata.runq_fnid)):
-             sq_revdeps2.append(copy.copy(self.rqdata.runq_revdeps[task]))
-             sq_revdeps_new2.append(set())
-             if (len(self.rqdata.runq_revdeps[task]) == 0) and task not in self.rqdata.runq_setscene:
-@@ -1844,7 +1839,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             if sq_revdeps_new2[task]:
-                 self.unskippable.append(self.rqdata.runq_setscene.index(task))
- 
--        for task in xrange(len(self.rqdata.runq_fnid)):
-+        for task in range(len(self.rqdata.runq_fnid)):
-             if task in self.rqdata.runq_setscene:
-                 deps = set()
-                 for dep in sq_revdeps_new[task]:
-@@ -1883,7 +1878,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-              for dep in self.sq_harddeps[task]:
-                  sq_revdeps_squash[dep].add(task)
- 
--        #for task in xrange(len(sq_revdeps_squash)):
-+        #for task in range(len(sq_revdeps_squash)):
-         #    realtask = self.rqdata.runq_setscene[task]
-         #    bb.warn("Task %s: %s_setscene is %s " % (task, self.rqdata.get_user_idstring(realtask) , sq_revdeps_squash[task]))
- 
-@@ -1891,13 +1886,13 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         self.sq_revdeps = sq_revdeps_squash
-         self.sq_revdeps2 = copy.deepcopy(self.sq_revdeps)
- 
--        for task in xrange(len(self.sq_revdeps)):
-+        for task in range(len(self.sq_revdeps)):
-             self.sq_deps.append(set())
--        for task in xrange(len(self.sq_revdeps)):
-+        for task in range(len(self.sq_revdeps)):
-             for dep in self.sq_revdeps[task]:
-                 self.sq_deps[dep].add(task)
- 
--        for task in xrange(len(self.sq_revdeps)):
-+        for task in range(len(self.sq_revdeps)):
-             if len(self.sq_revdeps[task]) == 0:
-                 self.runq_buildable[task] = 1
- 
-@@ -1910,7 +1905,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             sq_task = []
-             noexec = []
-             stamppresent = []
--            for task in xrange(len(self.sq_revdeps)):
-+            for task in range(len(self.sq_revdeps)):
-                 realtask = self.rqdata.runq_setscene[task]
-                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
-                 taskname = self.rqdata.runq_task[realtask]
-@@ -1947,7 +1942,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             for v in valid:
-                 valid_new.append(sq_task[v])
- 
--            for task in xrange(len(self.sq_revdeps)):
-+            for task in range(len(self.sq_revdeps)):
-                 if task not in valid_new and task not in noexec:
-                     realtask = self.rqdata.runq_setscene[task]
-                     logger.debug(2, 'No package found, so skipping setscene task %s',
-@@ -2024,7 +2019,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         task = None
-         if self.stats.active < self.number_tasks:
-             # Find the next setscene to run
--            for nexttask in xrange(self.stats.total):
-+            for nexttask in range(self.stats.total):
-                 if self.runq_buildable[nexttask] == 1 and self.runq_running[nexttask] != 1:
-                     if nexttask in self.unskippable:
-                         logger.debug(2, "Setscene task %s is unskippable" % self.rqdata.get_user_idstring(self.rqdata.runq_setscene[nexttask]))                      
-@@ -2076,10 +2071,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
-                 if not self.rq.fakeworker:
-                     self.rq.start_fakeworker(self)
--                self.rq.fakeworker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + "</runtask>")
-+                self.rq.fakeworker.stdin.write(b"<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + b"</runtask>")
-                 self.rq.fakeworker.stdin.flush()
-             else:
--                self.rq.worker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + "</runtask>")
-+                self.rq.worker.stdin.write(b"<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + b"</runtask>")
-                 self.rq.worker.stdin.flush()
- 
-             self.runq_running[task] = 1
-@@ -2091,7 +2086,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             self.rq.read_workers()
-             return self.rq.active_fds()
- 
--        #for task in xrange(self.stats.total):
-+        #for task in range(self.stats.total):
-         #    if self.runq_running[task] != 1:
-         #        buildable = self.runq_buildable[task]
-         #        revdeps = self.sq_revdeps[task]
-@@ -2227,7 +2222,7 @@ class runQueuePipe():
-         if pipeout:
-             pipeout.close()
-         bb.utils.nonblockingfd(self.input)
--        self.queue = ""
-+        self.queue = b""
-         self.d = d
-         self.rq = rq
-         self.rqexec = rqexec
-@@ -2251,7 +2246,7 @@ class runQueuePipe():
- 
-         start = len(self.queue)
-         try:
--            self.queue = self.queue + self.input.read(102400)
-+            self.queue = self.queue + (self.input.read(102400) or b"")
-         except (OSError, IOError) as e:
-             if e.errno != errno.EAGAIN:
-                 raise
-@@ -2259,8 +2254,8 @@ class runQueuePipe():
-         found = True
-         while found and len(self.queue):
-             found = False
--            index = self.queue.find("</event>")
--            while index != -1 and self.queue.startswith("<event>"):
-+            index = self.queue.find(b"</event>")
-+            while index != -1 and self.queue.startswith(b"<event>"):
-                 try:
-                     event = pickle.loads(self.queue[7:index])
-                 except ValueError as e:
-@@ -2268,9 +2263,9 @@ class runQueuePipe():
-                 bb.event.fire_from_worker(event, self.d)
-                 found = True
-                 self.queue = self.queue[index+8:]
--                index = self.queue.find("</event>")
--            index = self.queue.find("</exitcode>")
--            while index != -1 and self.queue.startswith("<exitcode>"):
-+                index = self.queue.find(b"</event>")
-+            index = self.queue.find(b"</exitcode>")
-+            while index != -1 and self.queue.startswith(b"<exitcode>"):
-                 try:
-                     task, status = pickle.loads(self.queue[10:index])
-                 except ValueError as e:
-@@ -2278,7 +2273,7 @@ class runQueuePipe():
-                 self.rqexec.runqueue_process_waitpid(task, status)
-                 found = True
-                 self.queue = self.queue[index+11:]
--                index = self.queue.find("</exitcode>")
-+                index = self.queue.find(b"</exitcode>")
-         return (end > start)
- 
-     def close(self):
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index cc58c72..982fcf7 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -30,7 +30,7 @@ import signal
- import sys
- import time
- import select
--from Queue import Empty
-+from queue import Empty
- from multiprocessing import Event, Process, util, Queue, Pipe, queues, Manager
- 
- from . import BitBakeBaseServer, BitBakeBaseServerConnection, BaseImplServer
-@@ -137,7 +137,7 @@ class ProcessServer(Process, BaseImplServer):
-         if not fds:
-             fds = []
- 
--        for function, data in self._idlefuns.items():
-+        for function, data in list(self._idlefuns.items()):
-             try:
-                 retval = function(self, data, False)
-                 if retval is False:
-@@ -145,7 +145,7 @@ class ProcessServer(Process, BaseImplServer):
-                     nextsleep = None
-                 elif retval is True:
-                     nextsleep = None
--                elif isinstance(retval, float):
-+                elif isinstance(retval, float) and nextsleep:
-                     if (retval < nextsleep):
-                         nextsleep = retval
-                 elif nextsleep is None:
-@@ -213,7 +213,7 @@ class BitBakeProcessServerConnection(BitBakeBaseServerConnection):
- # Wrap Queue to provide API which isn't server implementation specific
- class ProcessEventQueue(multiprocessing.queues.Queue):
-     def __init__(self, maxsize):
--        multiprocessing.queues.Queue.__init__(self, maxsize)
-+        multiprocessing.queues.Queue.__init__(self, maxsize, ctx=multiprocessing.get_context())
-         self.exit = False
-         bb.utils.set_process_name("ProcessEQueue")
- 
-diff --git a/lib/bb/server/xmlrpc.py b/lib/bb/server/xmlrpc.py
-index ace1cf6..146ca17 100644
---- a/lib/bb/server/xmlrpc.py
-+++ b/lib/bb/server/xmlrpc.py
-@@ -31,31 +31,33 @@
-     in the server's main loop.
- """
- 
-+import os
-+import sys
-+
-+import hashlib
-+import time
-+import socket
-+import signal
-+import threading
-+import pickle
-+import inspect
-+import select
-+import http.client
-+import xmlrpc.client
-+from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
-+
- import bb
--import xmlrpclib, sys
- from bb import daemonize
- from bb.ui import uievent
--import hashlib, time
--import socket
--import os, signal
--import threading
--try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
-+from . import BitBakeBaseServer, BitBakeBaseServerConnection, BaseImplServer
- 
- DEBUG = False
- 
--from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
--import inspect, select, httplib
+-        self.image_path = image_path
+-        self.standalone = standalone
 -
--from . import BitBakeBaseServer, BitBakeBaseServerConnection, BaseImplServer
+-        self.create_visual_elements()
+-        self.connect("response", self.response_cb)
 -
--class BBTransport(xmlrpclib.Transport):
-+class BBTransport(xmlrpc.client.Transport):
-     def __init__(self, timeout):
-         self.timeout = timeout
-         self.connection_token = None
--        xmlrpclib.Transport.__init__(self)
-+        xmlrpc.client.Transport.__init__(self)
- 
-     # Modified from default to pass timeout to HTTPConnection
-     def make_connection(self, host):
-@@ -67,7 +69,7 @@ class BBTransport(xmlrpclib.Transport):
-         # create a HTTP connection object from a host descriptor
-         chost, self._extra_headers, x509 = self.get_host_info(host)
-         #store the host argument along with the connection object
--        self._connection = host, httplib.HTTPConnection(chost, timeout=self.timeout)
-+        self._connection = host, http.client.HTTPConnection(chost, timeout=self.timeout)
-         return self._connection[1]
- 
-     def set_connection_token(self, token):
-@@ -76,11 +78,11 @@ class BBTransport(xmlrpclib.Transport):
-     def send_content(self, h, body):
-         if self.connection_token:
-             h.putheader("Bitbake-token", self.connection_token)
--        xmlrpclib.Transport.send_content(self, h, body)
-+        xmlrpc.client.Transport.send_content(self, h, body)
- 
- def _create_server(host, port, timeout = 60):
-     t = BBTransport(timeout)
--    s = xmlrpclib.ServerProxy("http://%s:%d/" % (host, port), transport=t, allow_none=True)
-+    s = xmlrpc.client.ServerProxy("http://%s:%d/" % (host, port), transport=t, allow_none=True, use_builtin_types=True)
-     return s, t
- 
- class BitBakeServerCommands():
-@@ -128,7 +130,7 @@ class BitBakeServerCommands():
-     def addClient(self):
-         if self.has_client:
-             return None
--        token = hashlib.md5(str(time.time())).hexdigest()
-+        token = hashlib.md5(str(time.time()).encode("utf-8")).hexdigest()
-         self.server.set_connection_token(token)
-         self.has_client = True
-         return token
-@@ -232,7 +234,7 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
-         while not self.quit:
-             fds = [self]
-             nextsleep = 0.1
--            for function, data in self._idlefuns.items():
-+            for function, data in list(self._idlefuns.items()):
-                 retval = None
-                 try:
-                     retval = function(self, data, False)
-@@ -267,7 +269,7 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
-                 pass
- 
-         # Tell idle functions we're exiting
--        for function, data in self._idlefuns.items():
-+        for function, data in list(self._idlefuns.items()):
-             try:
-                 retval = function(self, data, True)
-             except:
-@@ -379,7 +381,7 @@ class BitBakeXMLRPCClient(BitBakeBaseServer):
-             bb.warn("Could not create socket for %s:%s (%s)" % (host, port, str(e)))
-             raise e
-         try:
--            self.serverImpl = XMLRPCProxyServer(host, port)
-+            self.serverImpl = XMLRPCProxyServer(host, port, use_builtin_types=True)
-             self.connection = BitBakeXMLRPCServerConnection(self.serverImpl, (ip, 0), self.observer_only, featureset)
-             return self.connection.connect(self.token)
-         except Exception as e:
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index e4085cf..db3daef 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -3,19 +3,14 @@ import logging
- import os
- import re
- import tempfile
-+import pickle
- import bb.data
- from bb.checksum import FileChecksumCache
- 
- logger = logging.getLogger('BitBake.SigGen')
- 
--try:
--    import cPickle as pickle
--except ImportError:
--    import pickle
--    logger.info('Importing cPickle failed.  Falling back to a very slow implementation.')
+-    def create_visual_elements(self):
+-        self.set_size_request(600, 400)
+-        label = gtk.Label()
+-        label.set_alignment(0.0, 0.5)
+-        markup = "<span font_desc='12'>The image to be written into usb drive:</span>"
+-        label.set_markup(markup)
+-        self.vbox.pack_start(label, expand=False, fill=False, padding=2)
 -
- def init(d):
--    siggens = [obj for obj in globals().itervalues()
-+    siggens = [obj for obj in globals().values()
-                       if type(obj) is type and issubclass(obj, SignatureGenerator)]
- 
-     desired = d.getVar("BB_SIGNATURE_HANDLER", True) or "noop"
-@@ -138,7 +133,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-                 var = lookupcache[dep]
-                 if var is not None:
-                     data = data + str(var)
--            self.basehash[fn + "." + task] = hashlib.md5(data).hexdigest()
-+            self.basehash[fn + "." + task] = hashlib.md5(data.encode("utf-8")).hexdigest()
-             taskdeps[task] = alldeps
- 
-         self.taskdeps[fn] = taskdeps
-@@ -223,7 +218,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             self.taints[k] = taint
-             logger.warning("%s is tainted from a forced run" % k)
- 
--        h = hashlib.md5(data).hexdigest()
-+        h = hashlib.md5(data.encode("utf-8")).hexdigest()
-         self.taskhash[k] = h
-         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
-         return h
-@@ -287,7 +282,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             with os.fdopen(fd, "wb") as stream:
-                 p = pickle.dump(data, stream, -1)
-                 stream.flush()
--            os.chmod(tmpfile, 0664)
-+            os.chmod(tmpfile, 0o664)
-             os.rename(tmpfile, sigfile)
-         except (OSError, IOError) as err:
-             try:
-@@ -545,7 +540,7 @@ def calc_basehash(sigdata):
-         if val is not None:
-             basedata = basedata + str(val)
- 
--    return hashlib.md5(basedata).hexdigest()
-+    return hashlib.md5(basedata.encode("utf-8")).hexdigest()
- 
- def calc_taskhash(sigdata):
-     data = sigdata['basehash']
-@@ -562,7 +557,7 @@ def calc_taskhash(sigdata):
-         else:
-             data = data + sigdata['taint']
- 
--    return hashlib.md5(data).hexdigest()
-+    return hashlib.md5(data.encode("utf-8")).hexdigest()
- 
- 
- def dump_sigfile(a):
-diff --git a/lib/bb/taskdata.py b/lib/bb/taskdata.py
-index 9ae52d7..65628c8 100644
---- a/lib/bb/taskdata.py
-+++ b/lib/bb/taskdata.py
-@@ -446,7 +446,7 @@ class TaskData:
-             return
- 
-         if not item in dataCache.providers:
--            close_matches = self.get_close_matches(item, dataCache.providers.keys())
-+            close_matches = self.get_close_matches(item, list(dataCache.providers.keys()))
-             # Is it in RuntimeProviders ?
-             all_p = bb.providers.getRuntimeProviders(dataCache, item)
-             for fn in all_p:
-@@ -576,7 +576,7 @@ class TaskData:
-         dependees = self.get_dependees(targetid)
-         for fnid in dependees:
-             self.fail_fnid(fnid, missing_list)
--        for taskid in xrange(len(self.tasks_idepends)):
-+        for taskid in range(len(self.tasks_idepends)):
-             idepends = self.tasks_idepends[taskid]
-             for (idependid, idependtask) in idepends:
-                 if idependid == targetid:
-@@ -602,7 +602,7 @@ class TaskData:
-         dependees = self.get_rdependees(targetid)
-         for fnid in dependees:
-             self.fail_fnid(fnid, missing_list)
--        for taskid in xrange(len(self.tasks_irdepends)):
-+        for taskid in range(len(self.tasks_irdepends)):
-             irdepends = self.tasks_irdepends[taskid]
-             for (idependid, idependtask) in irdepends:
-                 if idependid == targetid:
-@@ -658,7 +658,7 @@ class TaskData:
-         logger.debug(3, ", ".join(self.run_names_index))
- 
-         logger.debug(3, "build_targets:")
--        for buildid in xrange(len(self.build_names_index)):
-+        for buildid in range(len(self.build_names_index)):
-             target = self.build_names_index[buildid]
-             targets = "None"
-             if buildid in self.build_targets:
-@@ -666,7 +666,7 @@ class TaskData:
-             logger.debug(3, " (%s)%s: %s", buildid, target, targets)
- 
-         logger.debug(3, "run_targets:")
--        for runid in xrange(len(self.run_names_index)):
-+        for runid in range(len(self.run_names_index)):
-             target = self.run_names_index[runid]
-             targets = "None"
-             if runid in self.run_targets:
-@@ -674,7 +674,7 @@ class TaskData:
-             logger.debug(3, " (%s)%s: %s", runid, target, targets)
- 
-         logger.debug(3, "tasks:")
--        for task in xrange(len(self.tasks_name)):
-+        for task in range(len(self.tasks_name)):
-             logger.debug(3, " (%s)%s - %s: %s",
-                        task,
-                        self.fn_index[self.tasks_fnid[task]],
-diff --git a/lib/bb/tests/codeparser.py b/lib/bb/tests/codeparser.py
-index 5ea9d84..14f0e25 100644
---- a/lib/bb/tests/codeparser.py
-+++ b/lib/bb/tests/codeparser.py
-@@ -191,8 +191,8 @@ class PythonReferenceTest(ReferenceTest):
-         if hasattr(bb.utils, "_context"):
-             self.context = bb.utils._context
-         else:
--            import __builtin__
--            self.context = __builtin__.__dict__
-+            import builtins
-+            self.context = builtins.__dict__
- 
-     def parseExpression(self, exp):
-         parsedvar = self.d.expandWithRefs(exp, None)
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index 1223230..b54eb06 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -147,14 +147,14 @@ class DataExpansions(unittest.TestCase):
-         self.assertEqual(self.d.getVar("foo", False), None)
- 
-     def test_keys(self):
--        keys = self.d.keys()
--        self.assertEqual(keys, ['value_of_foo', 'foo', 'bar'])
-+        keys = list(self.d.keys())
-+        self.assertCountEqual(keys, ['value_of_foo', 'foo', 'bar'])
- 
-     def test_keys_deletion(self):
-         newd = bb.data.createCopy(self.d)
-         newd.delVar("bar")
--        keys = newd.keys()
--        self.assertEqual(keys, ['value_of_foo', 'foo'])
-+        keys = list(newd.keys())
-+        self.assertCountEqual(keys, ['value_of_foo', 'foo'])
- 
- class TestNestedExpansions(unittest.TestCase):
-     def setUp(self):
-@@ -334,7 +334,7 @@ class TestOverrides(unittest.TestCase):
-         self.d.setVar("TEST2_bar", "testvalue2")
-         bb.data.update_data(self.d)
-         self.assertEqual(self.d.getVar("TEST2", True), "testvalue2")
--        self.assertItemsEqual(self.d.keys(), ['TEST', 'TEST2', 'OVERRIDES', 'TEST2_bar'])
-+        self.assertCountEqual(list(self.d.keys()), ['TEST', 'TEST2', 'OVERRIDES', 'TEST2_bar'])
- 
-     def test_multiple_override(self):
-         self.d.setVar("TEST_bar", "testvalue2")
-@@ -342,7 +342,7 @@ class TestOverrides(unittest.TestCase):
-         self.d.setVar("TEST_foo", "testvalue4")
-         bb.data.update_data(self.d)
-         self.assertEqual(self.d.getVar("TEST", True), "testvalue3")
--        self.assertItemsEqual(self.d.keys(), ['TEST', 'TEST_foo', 'OVERRIDES', 'TEST_bar', 'TEST_local'])
-+        self.assertCountEqual(list(self.d.keys()), ['TEST', 'TEST_foo', 'OVERRIDES', 'TEST_bar', 'TEST_local'])
- 
-     def test_multiple_combined_overrides(self):
-         self.d.setVar("TEST_local_foo_bar", "testvalue3")
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index 6beb76a..c296db2 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -50,7 +50,7 @@ C = "3"
-     def parsehelper(self, content, suffix = ".bb"):
- 
-         f = tempfile.NamedTemporaryFile(suffix = suffix)
--        f.write(content)
-+        f.write(bytes(content, "utf-8"))
-         f.flush()
-         os.chdir(os.path.dirname(f.name))
-         return f
+-        table = gtk.Table(2, 10, False)
+-        table.set_col_spacings(5)
+-        table.set_row_spacings(5)
+-        self.vbox.pack_start(table, expand=True, fill=True)
+-
+-        scroll = gtk.ScrolledWindow()
+-        scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+-        scroll.set_shadow_type(gtk.SHADOW_IN)
+-        tv = gtk.TextView()
+-        tv.set_editable(False)
+-        tv.set_wrap_mode(gtk.WRAP_WORD)
+-        tv.set_cursor_visible(False)
+-        self.buf = gtk.TextBuffer()
+-        self.buf.set_text(self.image_path)
+-        tv.set_buffer(self.buf)
+-        scroll.add(tv)
+-        table.attach(scroll, 0, 10, 0, 1)
+-
+-        # There are 2 ways to use DeployImageDialog
+-        # One way is that called by HOB when the 'Deploy Image' button is clicked
+-        # The other way is that called by a standalone script.
+-        # Following block of codes handles the latter way. It adds a 'Select Image' button and
+-        # emit a signal when the button is clicked.
+-        if self.standalone:
+-                gobject.signal_new("select_image_clicked", self, gobject.SIGNAL_RUN_FIRST,
+-                                   gobject.TYPE_NONE, ())
+-                icon = gtk.Image()
+-                pix_buffer = gtk.gdk.pixbuf_new_from_file(hic.ICON_IMAGES_DISPLAY_FILE)
+-                icon.set_from_pixbuf(pix_buffer)
+-                button = gtk.Button("Select Image")
+-                button.set_image(icon)
+-                #button.set_size_request(140, 50)
+-                table.attach(button, 9, 10, 1, 2, gtk.FILL, 0, 0, 0)
+-                button.connect("clicked", self.select_image_button_clicked_cb)
+-
+-        separator = gtk.HSeparator()
+-        self.vbox.pack_start(separator, expand=False, fill=False, padding=10)
+-
+-        self.usb_desc = gtk.Label()
+-        self.usb_desc.set_alignment(0.0, 0.5)
+-        markup = "<span font_desc='12'>You haven't chosen any USB drive.</span>"
+-        self.usb_desc.set_markup(markup)
+-
+-        self.usb_combo = gtk.combo_box_new_text()
+-        self.usb_combo.connect("changed", self.usb_combo_changed_cb)
+-        model = self.usb_combo.get_model()
+-        model.clear()
+-        self.usb_combo.append_text(self.__dummy_usb__)
+-        for usb in self.find_all_usb_devices():
+-            self.usb_combo.append_text("/dev/" + usb)
+-        self.usb_combo.set_active(0)
+-        self.vbox.pack_start(self.usb_combo, expand=False, fill=False)
+-        self.vbox.pack_start(self.usb_desc, expand=False, fill=False, padding=2)
+-
+-        self.progress_bar = HobProgressBar()
+-        self.vbox.pack_start(self.progress_bar, expand=False, fill=False)
+-        separator = gtk.HSeparator()
+-        self.vbox.pack_start(separator, expand=False, fill=True, padding=10)
+-
+-        self.vbox.show_all()
+-        self.progress_bar.hide()
+-
+-    def set_image_text_buffer(self, image_path):
+-        self.buf.set_text(image_path)
+-
+-    def set_image_path(self, image_path):
+-        self.image_path = image_path
+-
+-    def popen_read(self, cmd):
+-        tmpout, errors = bb.process.run("%s" % cmd)
+-        return tmpout.strip()
+-
+-    def find_all_usb_devices(self):
+-        usb_devs = [ os.readlink(u)
+-            for u in glob.glob('/dev/disk/by-id/usb*')
+-            if not re.search(r'part\d+', u) ]
+-        return [ '%s' % u[u.rfind('/')+1:] for u in usb_devs ]
+-
+-    def get_usb_info(self, dev):
+-        return "%s %s" % \
+-            (self.popen_read('cat /sys/class/block/%s/device/vendor' % dev),
+-            self.popen_read('cat /sys/class/block/%s/device/model' % dev))
+-
+-    def select_image_button_clicked_cb(self, button):
+-            self.emit('select_image_clicked')
+-
+-    def usb_combo_changed_cb(self, usb_combo):
+-        combo_item = self.usb_combo.get_active_text()
+-        if not combo_item or combo_item == self.__dummy_usb__:
+-            markup = "<span font_desc='12'>You haven't chosen any USB drive.</span>"
+-            self.usb_desc.set_markup(markup)
+-        else:
+-            markup = "<span font_desc='12'>" + self.get_usb_info(combo_item.lstrip("/dev/")) + "</span>"
+-            self.usb_desc.set_markup(markup)
+-
+-    def response_cb(self, dialog, response_id):
+-        if response_id == gtk.RESPONSE_YES:
+-            lbl = ''
+-            msg = ''
+-            combo_item = self.usb_combo.get_active_text()
+-            if combo_item and combo_item != self.__dummy_usb__ and self.image_path:
+-                cmdline = bb.ui.crumbs.utils.which_terminal()
+-                if cmdline:
+-                    tmpfile = tempfile.NamedTemporaryFile()
+-                    cmdline += "\"sudo dd if=" + self.image_path + \
+-                                " of=" + combo_item + " && sync; echo $? > " + tmpfile.name + "\""
+-                    subprocess.call(shlex.split(cmdline))
+-
+-                    if int(tmpfile.readline().strip()) == 0:
+-                        lbl = "<b>Deploy image successfully.</b>"
+-                    else:
+-                        lbl = "<b>Failed to deploy image.</b>"
+-                        msg = "Please check image <b>%s</b> exists and USB device <b>%s</b> is writable." % (self.image_path, combo_item)
+-                    tmpfile.close()
+-            else:
+-                if not self.image_path:
+-                    lbl = "<b>No selection made.</b>"
+-                    msg = "You have not selected an image to deploy."
+-                else:
+-                    lbl = "<b>No selection made.</b>"
+-                    msg = "You have not selected a USB device."
+-            if len(lbl):
+-                crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.MESSAGE_INFO, msg)
+-                button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
+-                HobButton.style_button(button)
+-                crumbs_dialog.run()
+-                crumbs_dialog.destroy()
+-
+-    def update_progress_bar(self, title, fraction, status=None):
+-        self.progress_bar.update(fraction)
+-        self.progress_bar.set_title(title)
+-        self.progress_bar.set_rcstyle(status)
+-
+-    def write_file(self, ifile, ofile):
+-        self.progress_bar.reset()
+-        self.progress_bar.show()
+-
+-        f_from = os.open(ifile, os.O_RDONLY)
+-        f_to = os.open(ofile, os.O_WRONLY)
+-
+-        total_size = os.stat(ifile).st_size
+-        written_size = 0
+-
+-        while True:
+-            buf = os.read(f_from, 1024*1024)
+-            if not buf:
+-                break
+-            os.write(f_to, buf)
+-            written_size += 1024*1024
+-            self.update_progress_bar("Writing to usb:", written_size * 1.0/total_size)
+-
+-        self.update_progress_bar("Writing completed:", 1.0)
+-        os.close(f_from)
+-        os.close(f_to)
+-        self.progress_bar.hide()
+diff --git a/lib/bb/ui/crumbs/hig/imageselectiondialog.py b/lib/bb/ui/crumbs/hig/imageselectiondialog.py
+deleted file mode 100644
+index 21216ad..0000000
+--- a/lib/bb/ui/crumbs/hig/imageselectiondialog.py
++++ /dev/null
+@@ -1,172 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011-2012   Intel Corporation
+-#
+-# Authored by Joshua Lock <josh@linux.intel.com>
+-# Authored by Dongxiao Xu <dongxiao.xu@intel.com>
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gtk
+-import gobject
+-import os
+-from bb.ui.crumbs.hobwidget import HobViewTable, HobInfoButton, HobButton, HobAltButton
+-from bb.ui.crumbs.hig.crumbsdialog import CrumbsDialog
+-from bb.ui.crumbs.hig.layerselectiondialog import LayerSelectionDialog
+-
+-"""
+-The following are convenience classes for implementing GNOME HIG compliant
+-BitBake GUI's
+-In summary: spacing = 12px, border-width = 6px
+-"""
+-
+-class ImageSelectionDialog (CrumbsDialog):
+-
+-    __columns__ = [{
+-            'col_name' : 'Image name',
+-            'col_id'   : 0,
+-            'col_style': 'text',
+-            'col_min'  : 400,
+-            'col_max'  : 400
+-        }, {
+-            'col_name' : 'Select',
+-            'col_id'   : 1,
+-            'col_style': 'radio toggle',
+-            'col_min'  : 160,
+-            'col_max'  : 160
+-    }]
+-
+-
+-    def __init__(self, image_folder, image_types, title, parent, flags, buttons=None, image_extension = {}):
+-        super(ImageSelectionDialog, self).__init__(title, parent, flags, buttons)
+-        self.connect("response", self.response_cb)
+-
+-        self.image_folder = image_folder
+-        self.image_types  = image_types
+-        self.image_list = []
+-        self.image_names = []
+-        self.image_extension = image_extension
+-
+-        # create visual elements on the dialog
+-        self.create_visual_elements()
+-
+-        self.image_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN)
+-        self.fill_image_store()
+-
+-    def create_visual_elements(self):
+-        hbox = gtk.HBox(False, 6)
+-
+-        self.vbox.pack_start(hbox, expand=False, fill=False)
+-
+-        entry = gtk.Entry()
+-        entry.set_text(self.image_folder)
+-        table = gtk.Table(1, 10, True)
+-        table.set_size_request(560, -1)
+-        hbox.pack_start(table, expand=False, fill=False)
+-        table.attach(entry, 0, 9, 0, 1)
+-        image = gtk.Image()
+-        image.set_from_stock(gtk.STOCK_OPEN, gtk.ICON_SIZE_BUTTON)
+-        open_button = gtk.Button()
+-        open_button.set_image(image)
+-        open_button.connect("clicked", self.select_path_cb, self, entry)
+-        table.attach(open_button, 9, 10, 0, 1)
+-
+-        self.image_table = HobViewTable(self.__columns__, "Images")
+-        self.image_table.set_size_request(-1, 300)
+-        self.image_table.connect("toggled", self.toggled_cb)
+-        self.image_table.connect_group_selection(self.table_selected_cb)
+-        self.image_table.connect("row-activated", self.row_actived_cb)
+-        self.vbox.pack_start(self.image_table, expand=True, fill=True)
+-
+-        self.show_all()
+-
+-    def change_image_cb(self, model, path, columnid):
+-        if not model:
+-            return
+-        iter = model.get_iter_first()
+-        while iter:
+-            rowpath = model.get_path(iter)
+-            model[rowpath][columnid] = False
+-            iter = model.iter_next(iter)
+-
+-        model[path][columnid] = True
+-
+-    def toggled_cb(self, table, cell, path, columnid, tree):
+-        model = tree.get_model()
+-        self.change_image_cb(model, path, columnid)
+-
+-    def table_selected_cb(self, selection):
+-        model, paths = selection.get_selected_rows()
+-        if paths:
+-            self.change_image_cb(model, paths[0], 1)
+-
+-    def row_actived_cb(self, tab, model, path):
+-        self.change_image_cb(model, path, 1)
+-        self.emit('response', gtk.RESPONSE_YES)
+-
+-    def select_path_cb(self, action, parent, entry):
+-        dialog = gtk.FileChooserDialog("", parent,
+-                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+-        text = entry.get_text()
+-        dialog.set_current_folder(text if len(text) > 0 else os.getcwd())
+-        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
+-        HobAltButton.style_button(button)
+-        button = dialog.add_button("Open", gtk.RESPONSE_YES)
+-        HobButton.style_button(button)
+-        response = dialog.run()
+-        if response == gtk.RESPONSE_YES:
+-            path = dialog.get_filename()
+-            entry.set_text(path)
+-            self.image_folder = path
+-            self.fill_image_store()
+-
+-        dialog.destroy()
+-
+-    def fill_image_store(self):
+-        self.image_list = []
+-        self.image_store.clear()
+-        imageset = set()
+-        for root, dirs, files in os.walk(self.image_folder):
+-            # ignore the sub directories
+-            dirs[:] = []
+-            for f in files:
+-                for image_type in self.image_types:
+-                    if image_type in self.image_extension:
+-                        real_types = self.image_extension[image_type]
+-                    else:
+-                        real_types = [image_type]
+-                    for real_image_type in real_types:
+-                        if f.endswith('.' + real_image_type):
+-                            imageset.add(f.rsplit('.' + real_image_type)[0].rsplit('.rootfs')[0])
+-                            self.image_list.append(f)
+-
+-        for image in imageset:
+-            self.image_store.set(self.image_store.append(), 0, image, 1, False)
+-
+-        self.image_table.set_model(self.image_store)
+-
+-    def response_cb(self, dialog, response_id):
+-        self.image_names = []
+-        if response_id == gtk.RESPONSE_YES:
+-            iter = self.image_store.get_iter_first()
+-            while iter:
+-                path = self.image_store.get_path(iter)
+-                if self.image_store[path][1]:
+-                    for f in self.image_list:
+-                        if f.startswith(self.image_store[path][0] + '.'):
+-                            self.image_names.append(f)
+-                    break
+-                iter = self.image_store.iter_next(iter)
+diff --git a/lib/bb/ui/crumbs/hig/layerselectiondialog.py b/lib/bb/ui/crumbs/hig/layerselectiondialog.py
+deleted file mode 100644
+index 52d57b6..0000000
+--- a/lib/bb/ui/crumbs/hig/layerselectiondialog.py
++++ /dev/null
+@@ -1,298 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011-2012   Intel Corporation
+-#
+-# Authored by Joshua Lock <josh@linux.intel.com>
+-# Authored by Dongxiao Xu <dongxiao.xu@intel.com>
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gtk
+-import gobject
+-import os
+-import tempfile
+-from bb.ui.crumbs.hobwidget import hic, HobButton, HobAltButton
+-from bb.ui.crumbs.hig.crumbsdialog import CrumbsDialog
+-from bb.ui.crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
+-
+-"""
+-The following are convenience classes for implementing GNOME HIG compliant
+-BitBake GUI's
+-In summary: spacing = 12px, border-width = 6px
+-"""
+-
+-class CellRendererPixbufActivatable(gtk.CellRendererPixbuf):
+-    """
+-    A custom CellRenderer implementation which is activatable
+-    so that we can handle user clicks
+-    """
+-    __gsignals__    = { 'clicked' : (gobject.SIGNAL_RUN_LAST,
+-                                     gobject.TYPE_NONE,
+-                                     (gobject.TYPE_STRING,)), }
+-
+-    def __init__(self):
+-        gtk.CellRendererPixbuf.__init__(self)
+-        self.set_property('mode', gtk.CELL_RENDERER_MODE_ACTIVATABLE)
+-        self.set_property('follow-state', True)
+-
+-    """
+-    Respond to a user click on a cell
+-    """
+-    def do_activate(self, even, widget, path, background_area, cell_area, flags):
+-        self.emit('clicked', path)
+-
+-#
+-# LayerSelectionDialog
+-#
+-class LayerSelectionDialog (CrumbsDialog):
+-
+-    TARGETS = [
+-        ("MY_TREE_MODEL_ROW", gtk.TARGET_SAME_WIDGET, 0),
+-        ("text/plain", 0, 1),
+-        ("TEXT", 0, 2),
+-        ("STRING", 0, 3),
+-        ]
+-
+-    def gen_label_widget(self, content):
+-        label = gtk.Label()
+-        label.set_alignment(0, 0)
+-        label.set_markup(content)
+-        label.show()
+-        return label
+-
+-    def layer_widget_toggled_cb(self, cell, path, layer_store):
+-        name = layer_store[path][0]
+-        toggle = not layer_store[path][1]
+-        layer_store[path][1] = toggle
+-
+-    def layer_widget_add_clicked_cb(self, action, layer_store, parent):
+-        dialog = gtk.FileChooserDialog("Add new layer", parent,
+-                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+-        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
+-        HobAltButton.style_button(button)
+-        button = dialog.add_button("Open", gtk.RESPONSE_YES)
+-        HobButton.style_button(button)
+-        label = gtk.Label("Select the layer you wish to add")
+-        label.show()
+-        dialog.set_extra_widget(label)
+-        response = dialog.run()
+-        path = dialog.get_filename()
+-        dialog.destroy()
+-
+-        lbl = "<b>Error</b>"
+-        msg = "Unable to load layer <i>%s</i> because " % path
+-        if response == gtk.RESPONSE_YES:
+-            import os
+-            import os.path
+-            layers = []
+-            it = layer_store.get_iter_first()
+-            while it:
+-                layers.append(layer_store.get_value(it, 0))
+-                it = layer_store.iter_next(it)
+-
+-            if not path:
+-                msg += "it is an invalid path."
+-            elif not os.path.exists(path+"/conf/layer.conf"):
+-                msg += "there is no layer.conf inside the directory."
+-            elif path in layers:
+-                msg += "it is already in loaded layers."
+-            else:
+-                layer_store.append([path])
+-                return
+-            dialog = CrumbsMessageDialog(parent, lbl, gtk.MESSAGE_ERROR, msg)
+-            dialog.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_OK)
+-            response = dialog.run()
+-            dialog.destroy()
+-
+-    def layer_widget_del_clicked_cb(self, action, tree_selection, layer_store):
+-        model, iter = tree_selection.get_selected()
+-        if iter:
+-            layer_store.remove(iter)
+-
+-
+-    def gen_layer_widget(self, layers, layers_avail, window, tooltip=""):
+-        hbox = gtk.HBox(False, 6)
+-
+-        layer_tv = gtk.TreeView()
+-        layer_tv.set_rules_hint(True)
+-        layer_tv.set_headers_visible(False)
+-        tree_selection = layer_tv.get_selection()
+-        tree_selection.set_mode(gtk.SELECTION_SINGLE)
+-
+-        # Allow enable drag and drop of rows including row move
+-        dnd_internal_target = ''
+-        dnd_targets = [(dnd_internal_target, gtk.TARGET_SAME_WIDGET, 0)]
+-        layer_tv.enable_model_drag_source( gtk.gdk.BUTTON1_MASK,
+-            dnd_targets,
+-            gtk.gdk.ACTION_MOVE)
+-        layer_tv.enable_model_drag_dest(dnd_targets,
+-            gtk.gdk.ACTION_MOVE)
+-        layer_tv.connect("drag_data_get", self.drag_data_get_cb)
+-        layer_tv.connect("drag_data_received", self.drag_data_received_cb)
+-
+-        col0= gtk.TreeViewColumn('Path')
+-        cell0 = gtk.CellRendererText()
+-        cell0.set_padding(5,2)
+-        col0.pack_start(cell0, True)
+-        col0.set_cell_data_func(cell0, self.draw_layer_path_cb)
+-        layer_tv.append_column(col0)
+-
+-        scroll = gtk.ScrolledWindow()
+-        scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+-        scroll.set_shadow_type(gtk.SHADOW_IN)
+-        scroll.add(layer_tv)
+-
+-        table_layer = gtk.Table(2, 10, False)
+-        hbox.pack_start(table_layer, expand=True, fill=True)
+-
+-        table_layer.attach(scroll, 0, 10, 0, 1)
+-
+-        layer_store = gtk.ListStore(gobject.TYPE_STRING)
+-        for layer in layers:
+-            layer_store.append([layer])
+-
+-        col1 = gtk.TreeViewColumn('Enabled')
+-        layer_tv.append_column(col1)
+-
+-        cell1 = CellRendererPixbufActivatable()
+-        cell1.set_fixed_size(-1,35)
+-        cell1.connect("clicked", self.del_cell_clicked_cb, layer_store)
+-        col1.pack_start(cell1, True)
+-        col1.set_cell_data_func(cell1, self.draw_delete_button_cb, layer_tv)
+-
+-        add_button = gtk.Button()
+-        add_button.set_relief(gtk.RELIEF_NONE)
+-        box = gtk.HBox(False, 6)
+-        box.show()
+-        add_button.add(box)
+-        add_button.connect("enter-notify-event", self.add_hover_cb)
+-        add_button.connect("leave-notify-event", self.add_leave_cb)
+-        self.im = gtk.Image()
+-        self.im.set_from_file(hic.ICON_INDI_ADD_FILE)
+-        self.im.show()
+-        box.pack_start(self.im, expand=False, fill=False, padding=6)
+-        lbl = gtk.Label("Add layer")
+-        lbl.set_alignment(0.0, 0.5)
+-        lbl.show()
+-        box.pack_start(lbl, expand=True, fill=True, padding=6)
+-        add_button.connect("clicked", self.layer_widget_add_clicked_cb, layer_store, window)
+-        table_layer.attach(add_button, 0, 10, 1, 2, gtk.EXPAND | gtk.FILL, 0, 0, 6)
+-        layer_tv.set_model(layer_store)
+-
+-        hbox.show_all()
+-
+-        return hbox, layer_store
+-
+-    def drag_data_get_cb(self, treeview, context, selection, target_id, etime):
+-        treeselection = treeview.get_selection()
+-        model, iter = treeselection.get_selected()
+-        data = model.get_value(iter, 0)
+-        selection.set(selection.target, 8, data)
+-
+-    def drag_data_received_cb(self, treeview, context, x, y, selection, info, etime):
+-        model = treeview.get_model()
+-        data = selection.data
+-        drop_info = treeview.get_dest_row_at_pos(x, y)
+-        if drop_info:
+-            path, position = drop_info
+-            iter = model.get_iter(path)
+-            if (position == gtk.TREE_VIEW_DROP_BEFORE or position == gtk.TREE_VIEW_DROP_INTO_OR_BEFORE):
+-                model.insert_before(iter, [data])
+-            else:
+-                model.insert_after(iter, [data])
+-        else:
+-            model.append([data])
+-        if context.action == gtk.gdk.ACTION_MOVE:
+-            context.finish(True, True, etime)
+-        return
+-
+-    def add_hover_cb(self, button, event):
+-        self.im.set_from_file(hic.ICON_INDI_ADD_HOVER_FILE)
+-
+-    def add_leave_cb(self, button, event):
+-        self.im.set_from_file(hic.ICON_INDI_ADD_FILE)
+-
+-    def __init__(self, title, layers, layers_non_removable, all_layers, parent, flags, buttons=None):
+-        super(LayerSelectionDialog, self).__init__(title, parent, flags, buttons)
+-
+-        # class members from other objects
+-        self.layers = layers
+-        self.layers_non_removable = layers_non_removable
+-        self.all_layers = all_layers
+-        self.layers_changed = False
+-
+-        # icon for remove button in TreeView
+-        im = gtk.Image()
+-        im.set_from_file(hic.ICON_INDI_REMOVE_FILE)
+-        self.rem_icon = im.get_pixbuf()
+-
+-        # class members for internal use
+-        self.layer_store = None
+-
+-        # create visual elements on the dialog
+-        self.create_visual_elements()
+-        self.connect("response", self.response_cb)
+-
+-    def create_visual_elements(self):
+-        layer_widget, self.layer_store = self.gen_layer_widget(self.layers, self.all_layers, self, None)
+-        layer_widget.set_size_request(450, 250)
+-        self.vbox.pack_start(layer_widget, expand=True, fill=True)
+-        self.show_all()
+-
+-    def response_cb(self, dialog, response_id):
+-        model = self.layer_store
+-        it = model.get_iter_first()
+-        layers = []
+-        while it:
+-            layers.append(model.get_value(it, 0))
+-            it = model.iter_next(it)
+-
+-        self.layers_changed = (self.layers != layers)
+-        self.layers = layers
+-
+-    """
+-    A custom cell_data_func to draw a delete 'button' in the TreeView for layers
+-    other than the meta layer. The deletion of which is prevented so that the
+-    user can't shoot themselves in the foot too badly.
+-    """
+-    def draw_delete_button_cb(self, col, cell, model, it, tv):
+-        path =  model.get_value(it, 0)
+-        if path in self.layers_non_removable:
+-            cell.set_sensitive(False)
+-            cell.set_property('pixbuf', None)
+-            cell.set_property('mode', gtk.CELL_RENDERER_MODE_INERT)
+-        else:
+-            cell.set_property('pixbuf', self.rem_icon)
+-            cell.set_sensitive(True)
+-            cell.set_property('mode', gtk.CELL_RENDERER_MODE_ACTIVATABLE)
+-
+-        return True
+-
+-    """
+-    A custom cell_data_func to write an extra message into the layer path cell
+-    for the meta layer. We should inform the user that they can't remove it for
+-    their own safety.
+-    """
+-    def draw_layer_path_cb(self, col, cell, model, it):
+-        path = model.get_value(it, 0)
+-        if path in self.layers_non_removable:
+-            cell.set_property('markup', "<b>It cannot be removed</b>\n%s" % path)
+-        else:
+-            cell.set_property('text', path)
+-
+-    def del_cell_clicked_cb(self, cell, path, model):
+-        it = model.get_iter_from_string(path)
+-        model.remove(it)
+diff --git a/lib/bb/ui/crumbs/hig/propertydialog.py b/lib/bb/ui/crumbs/hig/propertydialog.py
+deleted file mode 100644
+index 09b9ce6..0000000
+--- a/lib/bb/ui/crumbs/hig/propertydialog.py
++++ /dev/null
+@@ -1,437 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011-2013   Intel Corporation
+-#
+-# Authored by Andrei Dinu <andrei.adrianx.dinu@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import string
+-import gtk
+-import gobject
+-import os
+-import tempfile
+-import glib
+-from bb.ui.crumbs.hig.crumbsdialog import CrumbsDialog
+-from bb.ui.crumbs.hig.settingsuihelper import SettingsUIHelper
+-from bb.ui.crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
+-from bb.ui.crumbs.hig.layerselectiondialog import LayerSelectionDialog
+-
+-"""
+-The following are convenience classes for implementing GNOME HIG compliant
+-BitBake GUI's
+-In summary: spacing = 12px, border-width = 6px
+-"""
+-
+-class PropertyDialog(CrumbsDialog):
+-	
+-	def __init__(self, title, parent, information, flags, buttons=None):
+-		
+-		super(PropertyDialog, self).__init__(title, parent, flags, buttons)
+-                
+-                self.properties = information
+-
+-                if len(self.properties) == 10:
+-		        self.create_recipe_visual_elements()
+-                elif len(self.properties) == 5:
+-                        self.create_package_visual_elements()
+-                else:
+-                        self.create_information_visual_elements()
+-
+-
+-        def create_information_visual_elements(self):
+-
+-                HOB_ICON_BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ("icons/"))
+-                ICON_PACKAGES_DISPLAY_FILE    = os.path.join(HOB_ICON_BASE_DIR, ('info/info_display.png'))
+-
+-                self.set_resizable(False)
+-
+-                self.table = gtk.Table(1,1,False)
+-                self.table.set_row_spacings(0)
+-                self.table.set_col_spacings(0)
+-
+-                self.image = gtk.Image()
+-                self.image.set_from_file(ICON_PACKAGES_DISPLAY_FILE)
+-                self.image.set_property("xalign",0)
+-                #self.vbox.add(self.image)
+-
+-                image_info = self.properties.split("*")[0]
+-                info = self.properties.split("*")[1]
+-                
+-                vbox = gtk.VBox(True, spacing=30)        
+-                
+-                self.label_short = gtk.Label()
+-                self.label_short.set_line_wrap(False)
+-                self.label_short.set_markup(image_info)
+-                self.label_short.set_property("xalign", 0)
+-
+-                self.info_label = gtk.Label()
+-                self.info_label.set_line_wrap(True)
+-                self.info_label.set_markup(info)
+-                self.info_label.set_property("yalign", 0.5)
+-
+-                self.table.attach(self.image, 0,1,0,1, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL,xpadding=5,ypadding=5)
+-                self.table.attach(self.label_short, 0,1,0,1, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL,xpadding=40,ypadding=5)
+-                self.table.attach(self.info_label, 0,1,1,2, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL,xpadding=40,ypadding=10)
+-        
+-                self.vbox.add(self.table)
+-                self.connect('delete-event', lambda w, e: self.destroy() or True) 
+-
+-        def treeViewTooltip( self, widget, e, tooltips, cell, emptyText="" ):
+-                 try:
+-                           (path,col,x,y) = widget.get_path_at_pos( int(e.x), int(e.y) )
+-                           it = widget.get_model().get_iter(path)
+-                           value = widget.get_model().get_value(it,cell)
+-                           if value in self.tooltip_items:
+-                                tooltips.set_tip(widget, self.tooltip_items[value])
+-                                tooltips.enable()
+-                           else:
+-                                tooltips.set_tip(widget, emptyText)
+-                 except:
+-                           tooltips.set_tip(widget, emptyText)
+-
+-                
+-        def create_package_visual_elements(self):
+-
+-                import json
+-
+-                name = self.properties['name']
+-                binb = self.properties['binb']
+-                size = self.properties['size']
+-                recipe = self.properties['recipe']
+-                file_list = json.loads(self.properties['files_list'])
+-
+-                files_temp = ''
+-                paths_temp = ''
+-                files_binb = []
+-                paths_binb = []
+-
+-                self.tooltip_items = {}
+-
+-                self.set_resizable(False)
+-                
+-                #cleaning out the recipe variable
+-                recipe = recipe.split("+")[0]
+-
+-                vbox = gtk.VBox(True,spacing = 0)
+-
+-                ###################################### NAME ROW + COL #################################
+-
+-                self.label_short = gtk.Label()
+-                self.label_short.set_size_request(300,-1)
+-                self.label_short.set_selectable(True)
+-                self.label_short.set_line_wrap(True)
+-                self.label_short.set_markup("<span weight=\"bold\">Name: </span>" + name)
+-                self.label_short.set_property("xalign", 0)
+-                                
+-                self.vbox.add(self.label_short)
+-
+-                ###################################### SIZE ROW + COL ######################################
+-
+-                self.label_short = gtk.Label()
+-                self.label_short.set_size_request(300,-1)
+-                self.label_short.set_selectable(True)
+-                self.label_short.set_line_wrap(True)
+-                self.label_short.set_markup("<span weight=\"bold\">Size: </span>" + size)
+-                self.label_short.set_property("xalign", 0)
+-                
+-                self.vbox.add(self.label_short)
+-
+-                ##################################### RECIPE ROW + COL #########################################
+-
+-                self.label_short = gtk.Label()
+-                self.label_short.set_size_request(300,-1)
+-                self.label_short.set_selectable(True)
+-                self.label_short.set_line_wrap(True)
+-                self.label_short.set_markup("<span weight=\"bold\">Recipe: </span>" + recipe)
+-                self.label_short.set_property("xalign", 0)
+-
+-                self.vbox.add(self.label_short)
+-
+-                ##################################### BINB ROW + COL #######################################
+-                
+-                if binb != '':
+-                        self.label_short = gtk.Label()
+-                        self.label_short.set_selectable(True)
+-                        self.label_short.set_line_wrap(True)
+-                        self.label_short.set_markup("<span weight=\"bold\">Brought in by: </span>")
+-                        self.label_short.set_property("xalign", 0)                
+-
+-                        self.label_info = gtk.Label()
+-                        self.label_info.set_size_request(300,-1)
+-                        self.label_info.set_selectable(True)
+-                        self.label_info.set_line_wrap(True)
+-                        self.label_info.set_markup(binb)
+-                        self.label_info.set_property("xalign", 0)               
+-                                                        
+-                        self.vbox.add(self.label_short)
+-                        self.vbox.add(self.label_info)
+-
+-                #################################### FILES BROUGHT BY PACKAGES ###################################
+-
+-                if file_list:
+-                
+-                        self.textWindow = gtk.ScrolledWindow()
+-                        self.textWindow.set_shadow_type(gtk.SHADOW_IN)
+-                        self.textWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+-                        self.textWindow.set_size_request(100, 170)
+-
+-                        packagefiles_store = gtk.ListStore(str)
+-
+-                        self.packagefiles_tv = gtk.TreeView()
+-                        self.packagefiles_tv.set_rules_hint(True)
+-                        self.packagefiles_tv.set_headers_visible(True)
+-                        self.textWindow.add(self.packagefiles_tv)
+-
+-                        self.cell1 = gtk.CellRendererText()
+-                        col1 = gtk.TreeViewColumn('Package files', self.cell1)
+-                        col1.set_cell_data_func(self.cell1, self.regex_field)
+-                        self.packagefiles_tv.append_column(col1)
+-
+-                        items = file_list.keys()
+-                        items.sort()
+-                        for item in items:
+-                                fullpath = item
+-                                while len(item) > 35:
+-                                        item = item[:len(item)/2] + "" + item[len(item)/2+1:]
+-                                if len(item) == 35:
+-                                        item = item[:len(item)/2] + "..." + item[len(item)/2+3:]
+-                                        self.tooltip_items[item] = fullpath
+-
+-                                packagefiles_store.append([str(item)])
+-
+-                        self.packagefiles_tv.set_model(packagefiles_store)
+-
+-                        tips = gtk.Tooltips()
+-                        tips.set_tip(self.packagefiles_tv, "")
+-                        self.packagefiles_tv.connect("motion-notify-event", self.treeViewTooltip, tips, 0)
+-                        self.packagefiles_tv.set_events(gtk.gdk.POINTER_MOTION_MASK)
+-                        
+-                        self.vbox.add(self.textWindow)                                      
+-
+-                self.vbox.show_all()
+-
+-
+-        def regex_field(self, column, cell, model, iter):
+-                cell.set_property('text', model.get_value(iter, 0))
+-                return
+-
+-
+-	def create_recipe_visual_elements(self):
+-
+-                summary = self.properties['summary']
+-		name = self.properties['name']
+-		version = self.properties['version']
+-		revision = self.properties['revision']
+-		binb = self.properties['binb']
+-		group = self.properties['group']
+-		license = self.properties['license']
+-		homepage = self.properties['homepage']
+-		bugtracker = self.properties['bugtracker']
+-		description = self.properties['description']
+-
+-                self.set_resizable(False)
+-		
+-                #cleaning out the version variable and also the summary
+-                version = version.split(":")[1]
+-                if len(version) > 30:
+-                        version = version.split("+")[0]
+-                else:
+-                        version = version.split("-")[0]
+-                license = license.replace("&" , "and")
+-                if (homepage == ''):
+-                        homepage = 'unknown'
+-                if (bugtracker == ''):
+-                        bugtracker = 'unknown'
+-                summary = summary.split("+")[0]
+-                
+-                #calculating the rows needed for the table
+-                binb_items_count = len(binb.split(','))
+-                binb_items = binb.split(',')
+-                               		
+-		vbox = gtk.VBox(False,spacing = 0)
+-
+-                ######################################## SUMMARY LABEL #########################################                	                
+-                
+-                if summary != '':                
+-                        self.label_short = gtk.Label()
+-                        self.label_short.set_width_chars(37)
+-                        self.label_short.set_selectable(True)                
+-                        self.label_short.set_line_wrap(True)
+-                        self.label_short.set_markup("<b>" + summary + "</b>")
+-                        self.label_short.set_property("xalign", 0)
+-                        
+-                        self.vbox.add(self.label_short)
+-                
+-                ########################################## NAME ROW + COL #######################################
+-                                
+-                self.label_short = gtk.Label()
+-                self.label_short.set_selectable(True)
+-                self.label_short.set_line_wrap(True)
+-                self.label_short.set_markup("<span weight=\"bold\">Name: </span>" + name)
+-                self.label_short.set_property("xalign", 0)
+-                                
+-                self.vbox.add(self.label_short)
+-
+-                ####################################### VERSION ROW + COL ####################################
+-                
+-                self.label_short = gtk.Label()
+-                self.label_short.set_selectable(True)
+-                self.label_short.set_line_wrap(True)
+-                self.label_short.set_markup("<span weight=\"bold\">Version: </span>" + version)
+-                self.label_short.set_property("xalign", 0)
+-                
+-                self.vbox.add(self.label_short)
+-
+-                ##################################### REVISION ROW + COL #####################################
+-
+-                self.label_short = gtk.Label()
+-                self.label_short.set_line_wrap(True)
+-                self.label_short.set_selectable(True)
+-                self.label_short.set_markup("<span weight=\"bold\">Revision: </span>" + revision)
+-                self.label_short.set_property("xalign", 0)                
+-                
+-                self.vbox.add(self.label_short)
+-
+-                ################################## GROUP ROW + COL ############################################
+-               
+-                self.label_short = gtk.Label()
+-                self.label_short.set_selectable(True)              
+-                self.label_short.set_line_wrap(True)                                
+-                self.label_short.set_markup("<span weight=\"bold\">Group: </span>" + group)
+-                self.label_short.set_property("xalign", 0)
+-                                
+-                self.vbox.add(self.label_short)
+-
+-                ################################# HOMEPAGE ROW + COL ############################################
+-                
+-                if homepage != 'unknown':
+-                        self.label_info = gtk.Label()
+-                        self.label_info.set_selectable(True)
+-                        self.label_info.set_line_wrap(True)
+-                        if len(homepage) > 35:
+-                                self.label_info.set_markup("<a href=\"" + homepage + "\">" + homepage[0:35] + "..." + "</a>")
+-                        else:
+-                                self.label_info.set_markup("<a href=\"" + homepage + "\">" + homepage[0:60] + "</a>")
+-
+-                        self.label_info.set_property("xalign", 0)
+-                       
+-                        self.label_short = gtk.Label()
+-                        self.label_short.set_selectable(True)                     
+-                        self.label_short.set_line_wrap(True)                        
+-                        self.label_short.set_markup("<b>Homepage: </b>")                      
+-                        self.label_short.set_property("xalign", 0)
+-                        
+-                        self.vbox.add(self.label_short)
+-                        self.vbox.add(self.label_info)
+-               
+-                ################################# BUGTRACKER ROW + COL ###########################################
+-                
+-                if bugtracker != 'unknown':
+-                        self.label_info = gtk.Label()
+-                        self.label_info.set_selectable(True)
+-                        self.label_info.set_line_wrap(True)
+-                        if len(bugtracker) > 35:
+-                                self.label_info.set_markup("<a href=\"" + bugtracker + "\">" + bugtracker[0:35] + "..." + "</a>")
+-                        else:
+-                                self.label_info.set_markup("<a href=\"" + bugtracker + "\">" + bugtracker[0:60] + "</a>")
+-                        self.label_info.set_property("xalign", 0)  
+-
+-                        self.label_short = gtk.Label()
+-                        self.label_short.set_selectable(True)                    
+-                        self.label_short.set_line_wrap(True)
+-                        self.label_short.set_markup("<b>Bugtracker: </b>")                   
+-                        self.label_short.set_property("xalign", 0)
+-                        
+-                        self.vbox.add(self.label_short)
+-                        self.vbox.add(self.label_info)
+-
+-                ################################# LICENSE ROW + COL ############################################
+-                
+-                self.label_info = gtk.Label()
+-                self.label_info.set_selectable(True)
+-                self.label_info.set_line_wrap(True)
+-                self.label_info.set_markup(license)
+-                self.label_info.set_property("xalign", 0)
+-
+-                self.label_short = gtk.Label()
+-                self.label_short.set_selectable(True)                
+-                self.label_short.set_line_wrap(True)                
+-                self.label_short.set_markup("<span weight=\"bold\">License: </span>")
+-                self.label_short.set_property("xalign", 0)
+-                
+-                self.vbox.add(self.label_short)
+-                self.vbox.add(self.label_info)
+-
+-                ################################### BINB ROW+COL #############################################
+-                
+-                if binb != '':
+-                        self.label_short = gtk.Label()
+-                        self.label_short.set_selectable(True)
+-                        self.label_short.set_line_wrap(True)
+-                        self.label_short.set_markup("<span weight=\"bold\">Brought in by: </span>")
+-                        self.label_short.set_property("xalign", 0)
+-                        self.vbox.add(self.label_short)
+-                        self.label_info = gtk.Label()
+-                        self.label_info.set_selectable(True)
+-                        self.label_info.set_width_chars(36)
+-                        if len(binb) > 200:
+-                            scrolled_window = gtk.ScrolledWindow()
+-                            scrolled_window.set_policy(gtk.POLICY_NEVER,gtk.POLICY_ALWAYS)
+-                            scrolled_window.set_size_request(100,100)
+-                            self.label_info.set_markup(binb)
+-                            self.label_info.set_padding(6,6)
+-                            self.label_info.set_alignment(0,0)
+-                            self.label_info.set_line_wrap(True)
+-                            scrolled_window.add_with_viewport(self.label_info)
+-                            self.vbox.add(scrolled_window)
+-                        else:
+-                            self.label_info.set_markup(binb)
+-                            self.label_info.set_property("xalign", 0)
+-                            self.label_info.set_line_wrap(True) 
+-                            self.vbox.add(self.label_info)
+-
+-                ################################ DESCRIPTION TAG ROW #################################################
+-                
+-                self.label_short = gtk.Label()
+-                self.label_short.set_line_wrap(True)
+-                self.label_short.set_markup("<span weight=\"bold\">Description </span>")
+-                self.label_short.set_property("xalign", 0)
+-                self.vbox.add(self.label_short)
+-                
+-                ################################ DESCRIPTION INFORMATION ROW ##########################################
+-                
+-                hbox = gtk.HBox(True,spacing = 0)
+-
+-                self.label_short = gtk.Label()
+-                self.label_short.set_selectable(True)
+-                self.label_short.set_width_chars(36)
+-                if len(description) > 200:
+-                    scrolled_window = gtk.ScrolledWindow()
+-                    scrolled_window.set_policy(gtk.POLICY_NEVER,gtk.POLICY_ALWAYS)
+-                    scrolled_window.set_size_request(100,100)
+-                    self.label_short.set_markup(description)
+-                    self.label_short.set_padding(6,6)
+-                    self.label_short.set_alignment(0,0)
+-                    self.label_short.set_line_wrap(True)
+-                    scrolled_window.add_with_viewport(self.label_short)
+-                    self.vbox.add(scrolled_window)
+-                else:    
+-                    self.label_short.set_markup(description)
+-                    self.label_short.set_property("xalign", 0)
+-                    self.label_short.set_line_wrap(True)
+-                    self.vbox.add(self.label_short)
+-
+-                self.vbox.show_all()
+diff --git a/lib/bb/ui/crumbs/hig/settingsuihelper.py b/lib/bb/ui/crumbs/hig/settingsuihelper.py
+deleted file mode 100644
+index e0285c9..0000000
+--- a/lib/bb/ui/crumbs/hig/settingsuihelper.py
++++ /dev/null
+@@ -1,122 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011-2012   Intel Corporation
+-#
+-# Authored by Joshua Lock <josh@linux.intel.com>
+-# Authored by Dongxiao Xu <dongxiao.xu@intel.com>
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gtk
+-import os
+-from bb.ui.crumbs.hobwidget import HobInfoButton, HobButton, HobAltButton
+-
+-"""
+-The following are convenience classes for implementing GNOME HIG compliant
+-BitBake GUI's
+-In summary: spacing = 12px, border-width = 6px
+-"""
+-
+-class SettingsUIHelper():
+-
+-    def gen_label_widget(self, content):
+-        label = gtk.Label()
+-        label.set_alignment(0, 0)
+-        label.set_markup(content)
+-        label.show()
+-        return label
+-
+-    def gen_label_info_widget(self, content, tooltip):
+-        table = gtk.Table(1, 10, False)
+-        label = self.gen_label_widget(content)
+-        info = HobInfoButton(tooltip, self)
+-        table.attach(label, 0, 1, 0, 1, xoptions=gtk.FILL)
+-        table.attach(info, 1, 2, 0, 1, xoptions=gtk.FILL, xpadding=10)
+-        return table
+-
+-    def gen_spinner_widget(self, content, lower, upper, tooltip=""):
+-        hbox = gtk.HBox(False, 12)
+-        adjust = gtk.Adjustment(value=content, lower=lower, upper=upper, step_incr=1)
+-        spinner = gtk.SpinButton(adjustment=adjust, climb_rate=1, digits=0)
+-
+-        spinner.set_value(content)
+-        hbox.pack_start(spinner, expand=False, fill=False)
+-
+-        info = HobInfoButton(tooltip, self)
+-        hbox.pack_start(info, expand=False, fill=False)
+-
+-        hbox.show_all()
+-        return hbox, spinner
+-
+-    def gen_combo_widget(self, curr_item, all_item, tooltip=""):
+-        hbox = gtk.HBox(False, 12)
+-        combo = gtk.combo_box_new_text()
+-        hbox.pack_start(combo, expand=False, fill=False)
+-
+-        index = 0
+-        for item in all_item or []:
+-            combo.append_text(item)
+-            if item == curr_item:
+-                combo.set_active(index)
+-            index += 1
+-
+-        info = HobInfoButton(tooltip, self)
+-        hbox.pack_start(info, expand=False, fill=False)
+-
+-        hbox.show_all()
+-        return hbox, combo
+-
+-    def entry_widget_select_path_cb(self, action, parent, entry):
+-        dialog = gtk.FileChooserDialog("", parent,
+-                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+-        text = entry.get_text()
+-        dialog.set_current_folder(text if len(text) > 0 else os.getcwd())
+-        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
+-        HobAltButton.style_button(button)
+-        button = dialog.add_button("Open", gtk.RESPONSE_YES)
+-        HobButton.style_button(button)
+-        response = dialog.run()
+-        if response == gtk.RESPONSE_YES:
+-            path = dialog.get_filename()
+-            entry.set_text(path)
+-
+-        dialog.destroy()
+-
+-    def gen_entry_widget(self, content, parent, tooltip="", need_button=True):
+-        hbox = gtk.HBox(False, 12)
+-        entry = gtk.Entry()
+-        entry.set_text(content)
+-        entry.set_size_request(350,30)
+-
+-        if need_button:
+-            table = gtk.Table(1, 10, False)
+-            hbox.pack_start(table, expand=True, fill=True)
+-            table.attach(entry, 0, 9, 0, 1, xoptions=gtk.SHRINK)
+-            image = gtk.Image()
+-            image.set_from_stock(gtk.STOCK_OPEN,gtk.ICON_SIZE_BUTTON)
+-            open_button = gtk.Button()
+-            open_button.set_image(image)
+-            open_button.connect("clicked", self.entry_widget_select_path_cb, parent, entry)
+-            table.attach(open_button, 9, 10, 0, 1, xoptions=gtk.SHRINK)
+-        else:
+-            hbox.pack_start(entry, expand=True, fill=True)
+-
+-        if tooltip != "":
+-            info = HobInfoButton(tooltip, self)
+-            hbox.pack_start(info, expand=False, fill=False)
+-
+-        hbox.show_all()
+-        return hbox, entry
+diff --git a/lib/bb/ui/crumbs/hobcolor.py b/lib/bb/ui/crumbs/hobcolor.py
+deleted file mode 100644
+index 3316542..0000000
+--- a/lib/bb/ui/crumbs/hobcolor.py
++++ /dev/null
+@@ -1,38 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2012        Intel Corporation
+-#
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-class HobColors:
+-    WHITE        = "#ffffff"
+-    PALE_GREEN   = "#aaffaa"
+-    ORANGE       = "#eb8e68"
+-    PALE_RED     = "#ffaaaa"
+-    GRAY         = "#aaaaaa"
+-    LIGHT_GRAY   = "#dddddd"
+-    SLIGHT_DARK  = "#5f5f5f"
+-    DARK         = "#3c3b37"
+-    BLACK        = "#000000"
+-    PALE_BLUE    = "#53b8ff"
+-    DEEP_RED     = "#aa3e3e"
+-    KHAKI        = "#fff68f"
+-
+-    OK = WHITE
+-    RUNNING = PALE_GREEN
+-    WARNING = ORANGE
+-    ERROR = PALE_RED
 diff --git a/lib/bb/ui/crumbs/hobwidget.py b/lib/bb/ui/crumbs/hobwidget.py
-index 2b969c1..1f51a3c 100644
+deleted file mode 100644
+index 3f6138b..0000000
 --- a/lib/bb/ui/crumbs/hobwidget.py
-+++ b/lib/bb/ui/crumbs/hobwidget.py
-@@ -612,7 +612,7 @@ class HobIconChecker(hic):
-     def set_hob_icon_to_stock_icon(self, file_path, stock_id=""):
-         try:
-             pixbuf = gtk.gdk.pixbuf_new_from_file(file_path)
--        except Exception, e:
-+        except Exception as e:
-             return None
- 
-         if stock_id and (gtk.icon_factory_lookup_default(stock_id) == None):
++++ /dev/null
+@@ -1,904 +0,0 @@
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011-2012   Intel Corporation
+-#
+-# Authored by Dongxiao Xu <dongxiao.xu@intel.com>
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-import gtk
+-import gobject
+-import os
+-import os.path
+-import sys
+-import pango, pangocairo
+-import cairo
+-import math
+-
+-from bb.ui.crumbs.hobcolor import HobColors
+-from bb.ui.crumbs.persistenttooltip import PersistentTooltip
+-
+-class hwc:
+-
+-    MAIN_WIN_WIDTH   = 1024
+-    MAIN_WIN_HEIGHT  = 700
+-
+-class hic:
+-
+-    HOB_ICON_BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ("ui/icons/"))
+-
+-    ICON_RCIPE_DISPLAY_FILE       = os.path.join(HOB_ICON_BASE_DIR, ('recipe/recipe_display.png'))
+-    ICON_RCIPE_HOVER_FILE         = os.path.join(HOB_ICON_BASE_DIR, ('recipe/recipe_hover.png'))
+-    ICON_PACKAGES_DISPLAY_FILE    = os.path.join(HOB_ICON_BASE_DIR, ('packages/packages_display.png'))
+-    ICON_PACKAGES_HOVER_FILE      = os.path.join(HOB_ICON_BASE_DIR, ('packages/packages_hover.png'))
+-    ICON_LAYERS_DISPLAY_FILE      = os.path.join(HOB_ICON_BASE_DIR, ('layers/layers_display.png'))
+-    ICON_LAYERS_HOVER_FILE        = os.path.join(HOB_ICON_BASE_DIR, ('layers/layers_hover.png'))
+-    ICON_IMAGES_DISPLAY_FILE      = os.path.join(HOB_ICON_BASE_DIR, ('images/images_display.png'))
+-    ICON_IMAGES_HOVER_FILE        = os.path.join(HOB_ICON_BASE_DIR, ('images/images_hover.png'))
+-    ICON_SETTINGS_DISPLAY_FILE    = os.path.join(HOB_ICON_BASE_DIR, ('settings/settings_display.png'))
+-    ICON_SETTINGS_HOVER_FILE      = os.path.join(HOB_ICON_BASE_DIR, ('settings/settings_hover.png'))
+-    ICON_INFO_DISPLAY_FILE        = os.path.join(HOB_ICON_BASE_DIR, ('info/info_display.png'))
+-    ICON_INFO_HOVER_FILE          = os.path.join(HOB_ICON_BASE_DIR, ('info/info_hover.png'))
+-    ICON_INDI_CONFIRM_FILE        = os.path.join(HOB_ICON_BASE_DIR, ('indicators/confirmation.png'))
+-    ICON_INDI_ERROR_FILE          = os.path.join(HOB_ICON_BASE_DIR, ('indicators/denied.png'))
+-    ICON_INDI_REMOVE_FILE         = os.path.join(HOB_ICON_BASE_DIR, ('indicators/remove.png'))
+-    ICON_INDI_REMOVE_HOVER_FILE   = os.path.join(HOB_ICON_BASE_DIR, ('indicators/remove-hover.png'))
+-    ICON_INDI_ADD_FILE            = os.path.join(HOB_ICON_BASE_DIR, ('indicators/add.png'))
+-    ICON_INDI_ADD_HOVER_FILE      = os.path.join(HOB_ICON_BASE_DIR, ('indicators/add-hover.png'))
+-    ICON_INDI_REFRESH_FILE        = os.path.join(HOB_ICON_BASE_DIR, ('indicators/refresh.png'))
+-    ICON_INDI_ALERT_FILE          = os.path.join(HOB_ICON_BASE_DIR, ('indicators/alert.png'))
+-    ICON_INDI_TICK_FILE           = os.path.join(HOB_ICON_BASE_DIR, ('indicators/tick.png'))
+-    ICON_INDI_INFO_FILE           = os.path.join(HOB_ICON_BASE_DIR, ('indicators/info.png'))
+-
+-class HobViewTable (gtk.VBox):
+-    """
+-    A VBox to contain the table for different recipe views and package view
+-    """
+-    __gsignals__ = {
+-         "toggled"       : (gobject.SIGNAL_RUN_LAST,
+-                            gobject.TYPE_NONE,
+-                           (gobject.TYPE_PYOBJECT,
+-                            gobject.TYPE_STRING,
+-                            gobject.TYPE_INT,
+-                            gobject.TYPE_PYOBJECT,)),
+-         "row-activated" : (gobject.SIGNAL_RUN_LAST,
+-                            gobject.TYPE_NONE,
+-                           (gobject.TYPE_PYOBJECT,
+-                            gobject.TYPE_PYOBJECT,)),
+-         "cell-fadeinout-stopped" : (gobject.SIGNAL_RUN_LAST,
+-                            gobject.TYPE_NONE,
+-                           (gobject.TYPE_PYOBJECT,
+-                            gobject.TYPE_PYOBJECT,
+-                            gobject.TYPE_PYOBJECT,)),
+-    }
+-
+-    def __init__(self, columns, name):
+-        gtk.VBox.__init__(self, False, 6)
+-        self.table_tree = gtk.TreeView()
+-        self.table_tree.set_headers_visible(True)
+-        self.table_tree.set_headers_clickable(True)
+-        self.table_tree.set_rules_hint(True)
+-        self.table_tree.set_enable_tree_lines(True)
+-        self.table_tree.get_selection().set_mode(gtk.SELECTION_SINGLE)
+-        self.toggle_columns = []
+-        self.table_tree.connect("row-activated", self.row_activated_cb)
+-        self.top_bar = None
+-        self.tab_name = name
+-
+-        for i, column in enumerate(columns):
+-            col_name = column['col_name']
+-            col = gtk.TreeViewColumn(col_name)
+-            col.set_clickable(True)
+-            col.set_resizable(True)
+-            if self.tab_name.startswith('Included'):
+-                if col_name!='Included':
+-                    col.set_sort_column_id(column['col_id'])
+-            else:
+-                col.set_sort_column_id(column['col_id'])
+-            if 'col_min' in column.keys():
+-                col.set_min_width(column['col_min'])
+-            if 'col_max' in column.keys():
+-                col.set_max_width(column['col_max'])
+-            if 'expand' in column.keys():
+-                col.set_expand(True)
+-            self.table_tree.append_column(col)
+-
+-            if (not 'col_style' in column.keys()) or column['col_style'] == 'text':
+-                cell = gtk.CellRendererText()
+-                col.pack_start(cell, True)
+-                col.set_attributes(cell, text=column['col_id'])
+-                if 'col_t_id' in column.keys():
+-                    col.add_attribute(cell, 'font', column['col_t_id'])
+-            elif column['col_style'] == 'check toggle':
+-                cell = HobCellRendererToggle()
+-                cell.set_property('activatable', True)
+-                cell.connect("toggled", self.toggled_cb, i, self.table_tree)
+-                cell.connect_render_state_changed(self.stop_cell_fadeinout_cb, self.table_tree)
+-                self.toggle_id = i
+-                col.pack_end(cell, True)
+-                col.set_attributes(cell, active=column['col_id'])
+-                self.toggle_columns.append(col_name)
+-                if 'col_group' in column.keys():
+-                    col.set_cell_data_func(cell, self.set_group_number_cb)
+-            elif column['col_style'] == 'radio toggle':
+-                cell = gtk.CellRendererToggle()
+-                cell.set_property('activatable', True)
+-                cell.set_radio(True)
+-                cell.connect("toggled", self.toggled_cb, i, self.table_tree)
+-                self.toggle_id = i
+-                col.pack_end(cell, True)
+-                col.set_attributes(cell, active=column['col_id'])
+-                self.toggle_columns.append(col_name)
+-            elif column['col_style'] == 'binb':
+-                cell = gtk.CellRendererText()
+-                col.pack_start(cell, True)
+-                col.set_cell_data_func(cell, self.display_binb_cb, column['col_id'])
+-                if 'col_t_id' in column.keys():
+-                    col.add_attribute(cell, 'font', column['col_t_id'])
+-
+-        self.scroll = gtk.ScrolledWindow()
+-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+-        self.scroll.add(self.table_tree)
+-
+-        self.pack_end(self.scroll, True, True, 0)
+-
+-    def add_no_result_bar(self, entry):
+-        color = HobColors.KHAKI
+-        self.top_bar = gtk.EventBox()
+-        self.top_bar.set_size_request(-1, 70)
+-        self.top_bar.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+-        self.top_bar.set_flags(gtk.CAN_DEFAULT)
+-        self.top_bar.grab_default()
+-
+-        no_result_tab = gtk.Table(5, 20, True)
+-        self.top_bar.add(no_result_tab)
+-
+-        label = gtk.Label()
+-        label.set_alignment(0.0, 0.5)
+-        title = "No results matching your search"
+-        label.set_markup("<span size='x-large'><b>%s</b></span>" % title)
+-        no_result_tab.attach(label, 1, 14, 1, 4)
+-
+-        clear_button = HobButton("Clear search")
+-        clear_button.set_tooltip_text("Clear search query")
+-        clear_button.connect('clicked', self.set_search_entry_clear_cb, entry)
+-        no_result_tab.attach(clear_button, 16, 19, 1, 4)
+-
+-        self.pack_start(self.top_bar, False, True, 12)
+-        self.top_bar.show_all()
+-
+-    def set_search_entry_clear_cb(self, button, search):
+-        if search.get_editable() == True:
+-            search.set_text("")
+-        search.set_icon_sensitive(gtk.ENTRY_ICON_SECONDARY, False)
+-        search.grab_focus()
+-
+-    def display_binb_cb(self, col, cell, model, it, col_id):
+-        binb =  model.get_value(it, col_id)
+-        # Just display the first item
+-        if binb:
+-            bin = binb.split(', ')
+-            total_no = len(bin)
+-            if total_no > 1 and bin[0] == "User Selected":
+-                if total_no > 2:
+-                    present_binb = bin[1] + ' (+' + str(total_no - 1) + ')'
+-                else:
+-                    present_binb = bin[1]
+-            else:
+-                if total_no > 1:
+-                    present_binb = bin[0] + ' (+' + str(total_no - 1) + ')'
+-                else:
+-                    present_binb = bin[0]
+-            cell.set_property('text', present_binb)
+-        else:
+-            cell.set_property('text', "")
+-        return True
+-
+-    def set_model(self, tree_model):
+-        self.table_tree.set_model(tree_model)
+-
+-    def toggle_default(self):
+-        model = self.table_tree.get_model()
+-        if not model:
+-            return
+-        iter = model.get_iter_first()
+-        if iter:
+-            rowpath = model.get_path(iter)
+-            model[rowpath][self.toggle_id] = True
+-
+-    def toggled_cb(self, cell, path, columnid, tree):
+-        self.emit("toggled", cell, path, columnid, tree)
+-
+-    def row_activated_cb(self, tree, path, view_column):
+-        if not view_column.get_title() in self.toggle_columns:
+-            self.emit("row-activated", tree.get_model(), path)
+-
+-    def stop_cell_fadeinout_cb(self, ctrl, cell, tree):
+-        self.emit("cell-fadeinout-stopped", ctrl, cell, tree)
+-
+-    def set_group_number_cb(self, col, cell, model, iter):
+-        if model and (model.iter_parent(iter) == None):
+-            cell.cell_attr["number_of_children"] = model.iter_n_children(iter)
+-        else:
+-            cell.cell_attr["number_of_children"] = 0
+-
+-    def connect_group_selection(self, cb_func):
+-        self.table_tree.get_selection().connect("changed", cb_func)
+-
+-"""
+-A method to calculate a softened value for the colour of widget when in the
+-provided state.
+-
+-widget: the widget whose style to use
+-state: the state of the widget to use the style for
+-
+-Returns a string value representing the softened colour
+-"""
+-def soften_color(widget, state=gtk.STATE_NORMAL):
+-    # this colour munging routine is heavily inspired bu gdu_util_get_mix_color()
+-    # from gnome-disk-utility:
+-    # http://git.gnome.org/browse/gnome-disk-utility/tree/src/gdu-gtk/gdu-gtk.c?h=gnome-3-0
+-    blend = 0.7
+-    style = widget.get_style()
+-    color = style.text[state]
+-    color.red = color.red * blend + style.base[state].red * (1.0 - blend)
+-    color.green = color.green * blend + style.base[state].green * (1.0 - blend)
+-    color.blue = color.blue * blend + style.base[state].blue * (1.0 - blend)
+-    return color.to_string()
+-
+-class BaseHobButton(gtk.Button):
+-    """
+-    A gtk.Button subclass which follows the visual design of Hob for primary
+-    action buttons
+-
+-    label: the text to display as the button's label
+-    """
+-    def __init__(self, label):
+-        gtk.Button.__init__(self, label)
+-        HobButton.style_button(self)
+-
+-    @staticmethod
+-    def style_button(button):
+-        style = button.get_style()
+-        style = gtk.rc_get_style_by_paths(gtk.settings_get_default(), 'gtk-button', 'gtk-button', gobject.TYPE_NONE)
+-
+-        #FIXME button.set_flags(gtk.CAN_DEFAULT)
+-        button.grab_default()
+-
+-#        label = "<span size='x-large'><b>%s</b></span>" % gobject.markup_escape_text(button.get_label())
+-        label = button.get_label()
+-        button.set_label(label)
+-        #FIXME button.child.set_use_markup(True)
+-
+-class HobButton(BaseHobButton):
+-    """
+-    A gtk.Button subclass which follows the visual design of Hob for primary
+-    action buttons
+-
+-    label: the text to display as the button's label
+-    """
+-    def __init__(self, label):
+-        BaseHobButton.__init__(self, label)
+-        HobButton.style_button(self)
+-
+-class HobAltButton(BaseHobButton):
+-    """
+-    A gtk.Button subclass which has no relief, and so is more discrete
+-    """
+-    def __init__(self, label):
+-        BaseHobButton.__init__(self, label)
+-        HobAltButton.style_button(self)
+-
+-    """
+-    A callback for the state-changed event to ensure the text is displayed
+-    differently when the widget is not sensitive
+-    """
+-    @staticmethod
+-    def desensitise_on_state_change_cb(button, state):
+-        if not button.get_property("sensitive"):
+-            HobAltButton.set_text(button, False)
+-        else:
+-            HobAltButton.set_text(button, True)
+-
+-    """
+-    Set the button label with an appropriate colour for the current widget state
+-    """
+-    @staticmethod
+-    def set_text(button, sensitive=True):
+-        if sensitive:
+-            colour = HobColors.PALE_BLUE
+-        else:
+-            colour = HobColors.LIGHT_GRAY
+-        button.set_label("<span size='large' color='%s'><b>%s</b></span>" % (colour, gobject.markup_escape_text(button.text)))
+-        button.child.set_use_markup(True)
+-
+-class HobImageButton(gtk.Button):
+-    """
+-    A gtk.Button with an icon and two rows of text, the second of which is
+-    displayed in a blended colour.
+-
+-    primary_text: the main button label
+-    secondary_text: optional second line of text
+-    icon_path: path to the icon file to display on the button
+-    """
+-    def __init__(self, primary_text, secondary_text="", icon_path="", hover_icon_path=""):
+-        gtk.Button.__init__(self)
+-        self.set_relief(gtk.RELIEF_NONE)
+-
+-        self.icon_path = icon_path
+-        self.hover_icon_path = hover_icon_path
+-
+-        hbox = gtk.HBox(False, 10)
+-        hbox.show()
+-        self.add(hbox)
+-        self.icon = gtk.Image()
+-        self.icon.set_from_file(self.icon_path)
+-        self.icon.set_alignment(0.5, 0.0)
+-        self.icon.show()
+-        if self.hover_icon_path and len(self.hover_icon_path):
+-            self.connect("enter-notify-event", self.set_hover_icon_cb)
+-            self.connect("leave-notify-event", self.set_icon_cb)
+-        hbox.pack_start(self.icon, False, False, 0)
+-        label = gtk.Label()
+-        label.set_alignment(0.0, 0.5)
+-        colour = soften_color(label)
+-        mark = "<span size='x-large'>%s</span>\n<span size='medium' fgcolor='%s' weight='ultralight'>%s</span>" % (primary_text, colour, secondary_text)
+-        label.set_markup(mark)
+-        label.show()
+-        hbox.pack_start(label, True, True, 0)
+-
+-    def set_hover_icon_cb(self, widget, event):
+-        self.icon.set_from_file(self.hover_icon_path)
+-
+-    def set_icon_cb(self, widget, event):
+-        self.icon.set_from_file(self.icon_path)
+-
+-class HobInfoButton(gtk.EventBox):
+-    """
+-    This class implements a button-like widget per the Hob visual and UX designs
+-    which will display a persistent tooltip, with the contents of tip_markup, when
+-    clicked.
+-
+-    tip_markup: the Pango Markup to be displayed in the persistent tooltip
+-    """
+-    def __init__(self, tip_markup, parent=None):
+-        gtk.EventBox.__init__(self)
+-        self.image = gtk.Image()
+-        self.image.set_from_file(
+-        hic.ICON_INFO_DISPLAY_FILE)
+-        self.image.show()
+-        self.add(self.image)
+-        self.tip_markup = tip_markup
+-        self.my_parent = parent
+-
+-        self.set_events(gtk.gdk.BUTTON_RELEASE |
+-                        gtk.gdk.ENTER_NOTIFY_MASK |
+-                        gtk.gdk.LEAVE_NOTIFY_MASK)
+-
+-        self.connect("button-release-event", self.button_release_cb)
+-        self.connect("enter-notify-event", self.mouse_in_cb)
+-        self.connect("leave-notify-event", self.mouse_out_cb)
+-
+-    """
+-    When the mouse click is released emulate a button-click and show the associated
+-    PersistentTooltip
+-    """
+-    def button_release_cb(self, widget, event):
+-        from bb.ui.crumbs.hig.propertydialog import PropertyDialog
+-        self.dialog = PropertyDialog(title = '',
+-                    parent = self.my_parent,
+-                    information = self.tip_markup,
+-                    flags = gtk.DIALOG_DESTROY_WITH_PARENT)
+-                        #FMXIE | gtk.DIALOG_NO_SEPARATOR
+-
+-        button = self.dialog.add_button("Close", gtk.RESPONSE_CANCEL)
+-        HobAltButton.style_button(button)
+-        button.connect("clicked", lambda w: self.dialog.destroy())
+-        self.dialog.show_all()
+-        self.dialog.run()
+-
+-    """
+-    Change to the prelight image when the mouse enters the widget
+-    """
+-    def mouse_in_cb(self, widget, event):
+-        self.image.set_from_file(hic.ICON_INFO_HOVER_FILE)
+-
+-    """
+-    Change to the stock image when the mouse enters the widget
+-    """
+-    def mouse_out_cb(self, widget, event):
+-        self.image.set_from_file(hic.ICON_INFO_DISPLAY_FILE)
+-
+-class HobIndicator(gtk.DrawingArea):
+-    def __init__(self, count):
+-        gtk.DrawingArea.__init__(self)
+-        # Set no window for transparent background
+-        self.set_has_window(False)
+-        self.set_size_request(38,38)
+-        # We need to pass through button clicks
+-        self.add_events(gtk.gdk.BUTTON_PRESS_MASK | gtk.gdk.BUTTON_RELEASE_MASK)
+-
+-        self.connect('expose-event', self.expose)
+-
+-        self.count = count
+-        self.color = HobColors.GRAY
+-
+-    def expose(self, widget, event):
+-        if self.count and self.count > 0:
+-            ctx = widget.window.cairo_create()
+-
+-            x, y, w, h = self.allocation
+-
+-            ctx.set_operator(cairo.OPERATOR_OVER)
+-            ctx.set_source_color(gtk.gdk.color_parse(self.color))
+-            ctx.translate(w/2, h/2)
+-            ctx.arc(x, y, min(w,h)/2 - 2, 0, 2*math.pi)
+-            ctx.fill_preserve()
+-
+-            layout = self.create_pango_layout(str(self.count))
+-            textw, texth = layout.get_pixel_size()
+-            x = (w/2)-(textw/2) + x
+-            y = (h/2) - (texth/2) + y
+-            ctx.move_to(x, y)
+-            self.window.draw_layout(self.style.light_gc[gtk.STATE_NORMAL], int(x), int(y), layout)
+-
+-    def set_count(self, count):
+-        self.count = count
+-
+-    def set_active(self, active):
+-        if active:
+-            self.color = HobColors.DEEP_RED
+-        else:
+-            self.color = HobColors.GRAY
+-
+-class HobTabLabel(gtk.HBox):
+-    def __init__(self, text, count=0):
+-        gtk.HBox.__init__(self, False, 0)
+-        self.indicator = HobIndicator(count)
+-        self.indicator.show()
+-        self.pack_end(self.indicator, False, False)
+-        self.lbl = gtk.Label(text)
+-        self.lbl.set_alignment(0.0, 0.5)
+-        self.lbl.show()
+-        self.pack_end(self.lbl, True, True, 6)
+-
+-    def set_count(self, count):
+-        self.indicator.set_count(count)
+-
+-    def set_active(self, active=True):
+-        self.indicator.set_active(active)
+-
+-class HobNotebook(gtk.Notebook):
+-    def __init__(self):
+-        gtk.Notebook.__init__(self)
+-        self.set_property('homogeneous', True)
+-
+-        self.pages = []
+-
+-        self.search = None
+-        self.search_focus = False
+-        self.page_changed = False
+-
+-        self.connect("switch-page", self.page_changed_cb)
+-
+-        self.show_all()
+-
+-    def page_changed_cb(self, nb, page, page_num):
+-        for p, lbl in enumerate(self.pages):
+-            if p == page_num:
+-                lbl.set_active()
+-            else:
+-                lbl.set_active(False)
+-
+-        if self.search:
+-            self.page_changed = True
+-            self.reset_entry(self.search, page_num)
+-
+-    def append_page(self, child, tab_label, tab_tooltip=None):
+-        label = HobTabLabel(tab_label)
+-        if tab_tooltip:
+-            label.set_tooltip_text(tab_tooltip)
+-        label.set_active(False)
+-        self.pages.append(label)
+-        gtk.Notebook.append_page(self, child, label)
+-
+-    def set_entry(self, names, tips):
+-        self.search = gtk.Entry()
+-        self.search_names = names
+-        self.search_tips = tips
+-        style = self.search.get_style()
+-        style.text[gtk.STATE_NORMAL] = self.get_colormap().alloc_color(HobColors.GRAY, False, False)
+-        self.search.set_style(style)
+-        self.search.set_text(names[0])
+-        self.search.set_tooltip_text(self.search_tips[0])
+-        self.search.props.has_tooltip = True
+-
+-        self.search.set_editable(False)
+-        self.search.set_icon_from_stock(gtk.ENTRY_ICON_SECONDARY, gtk.STOCK_CLEAR)
+-        self.search.set_icon_sensitive(gtk.ENTRY_ICON_SECONDARY, False)
+-        self.search.connect("icon-release", self.set_search_entry_clear_cb)
+-        self.search.set_width_chars(30)
+-        self.search.show()
+-
+-        self.search.connect("focus-in-event", self.set_search_entry_editable_cb)
+-        self.search.connect("focus-out-event", self.set_search_entry_reset_cb)
+-        self.set_action_widget(self.search, gtk.PACK_END)
+-
+-    def show_indicator_icon(self, title, number):
+-        for child in self.pages:
+-            if child.lbl.get_label() == title:
+-                child.set_count(number)
+-
+-    def hide_indicator_icon(self, title):
+-        for child in self.pages:
+-            if child.lbl.get_label() == title:
+-                child.set_count(0)
+-
+-    def set_search_entry_editable_cb(self, search, event):
+-        self.search_focus = True
+-        search.set_editable(True)
+-        text = search.get_text()
+-        if text in self.search_names:
+-            search.set_text("")
+-        style = self.search.get_style()
+-        style.text[gtk.STATE_NORMAL] = self.get_colormap().alloc_color(HobColors.BLACK, False, False)
+-        search.set_style(style)
+-
+-    def set_search_entry_reset_cb(self, search, event):
+-        page_num = self.get_current_page()
+-        text = search.get_text()
+-        if not text:
+-            self.reset_entry(search, page_num)
+-
+-    def reset_entry(self, entry, page_num):
+-        style = entry.get_style()
+-        style.text[gtk.STATE_NORMAL] = self.get_colormap().alloc_color(HobColors.GRAY, False, False)
+-        entry.set_style(style)
+-        entry.set_text(self.search_names[page_num])
+-        entry.set_tooltip_text(self.search_tips[page_num])
+-        entry.set_editable(False)
+-        entry.set_icon_sensitive(gtk.ENTRY_ICON_SECONDARY, False)
+-
+-    def set_search_entry_clear_cb(self, search, icon_pos, event):
+-        if search.get_editable() == True:
+-            search.set_text("")
+-        search.set_icon_sensitive(gtk.ENTRY_ICON_SECONDARY, False)
+-        search.grab_focus()
+-
+-    def set_page(self, title):
+-        for child in self.pages:
+-            if child.lbl.get_label() == title:
+-                child.grab_focus()
+-                self.set_current_page(self.pages.index(child))
+-                return
+-
+-class HobWarpCellRendererText(gtk.CellRendererText):
+-    def __init__(self, col_number):
+-        gtk.CellRendererText.__init__(self)
+-        self.set_property("wrap-mode", pango.WRAP_WORD_CHAR)
+-        self.set_property("wrap-width", 300) # default value wrap width is 300
+-        self.col_n = col_number
+-
+-    def do_render(self, window, widget, background_area, cell_area, expose_area, flags):
+-        if widget:
+-            self.props.wrap_width = self.get_resized_wrap_width(widget, widget.get_column(self.col_n))
+-        return gtk.CellRendererText.do_render(self, window, widget, background_area, cell_area, expose_area, flags)
+-
+-    def get_resized_wrap_width(self, treeview, column):
+-        otherCols = []
+-        for col in treeview.get_columns():
+-            if col != column:
+-                otherCols.append(col)
+-        adjwidth = treeview.allocation.width - sum(c.get_width() for c in otherCols)
+-        adjwidth -= treeview.style_get_property("horizontal-separator") * 4
+-        if self.props.wrap_width == adjwidth or adjwidth <= 0:
+-                adjwidth = self.props.wrap_width
+-        return adjwidth
+-
+-gobject.type_register(HobWarpCellRendererText)
+-
+-class HobIconChecker(hic):
+-    def set_hob_icon_to_stock_icon(self, file_path, stock_id=""):
+-        try:
+-            pixbuf = gtk.gdk.pixbuf_new_from_file(file_path)
+-        except Exception as e:
+-            return None
+-
+-        if stock_id and (gtk.icon_factory_lookup_default(stock_id) == None):
+-            icon_factory = gtk.IconFactory()
+-            icon_factory.add_default()
+-            icon_factory.add(stock_id, gtk.IconSet(pixbuf))
+-            gtk.stock_add([(stock_id, '_label', 0, 0, '')])
+-
+-            return icon_factory.lookup(stock_id)
+-
+-        return None
+-
+-    """
+-    For make hob icon consistently by request, and avoid icon view diff by system or gtk version, we use some 'hob icon' to replace the 'gtk icon'.
+-    this function check the stock_id and make hob_id to replaced the gtk_id then return it or ""
+-    """
+-    def check_stock_icon(self, stock_name=""):
+-        HOB_CHECK_STOCK_NAME = {
+-            ('hic-dialog-info', 'gtk-dialog-info', 'dialog-info')           : self.ICON_INDI_INFO_FILE,
+-            ('hic-ok',          'gtk-ok',           'ok')                   : self.ICON_INDI_TICK_FILE,
+-            ('hic-dialog-error', 'gtk-dialog-error', 'dialog-error')        : self.ICON_INDI_ERROR_FILE,
+-            ('hic-dialog-warning', 'gtk-dialog-warning', 'dialog-warning')  : self.ICON_INDI_ALERT_FILE,
+-            ('hic-task-refresh', 'gtk-execute', 'execute')                  : self.ICON_INDI_REFRESH_FILE,
+-        }
+-        valid_stock_id = stock_name
+-        if stock_name:
+-            for names, path in HOB_CHECK_STOCK_NAME.iteritems():
+-                if stock_name in names:
+-                    valid_stock_id = names[0]
+-                    if not gtk.icon_factory_lookup_default(valid_stock_id):
+-                        self.set_hob_icon_to_stock_icon(path, valid_stock_id)
+-
+-        return valid_stock_id
+-
+-class HobCellRendererController(gobject.GObject):
+-    (MODE_CYCLE_RUNNING, MODE_ONE_SHORT) = range(2)
+-    __gsignals__ = {
+-        "run-timer-stopped" : (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                                ()),
+-    }
+-    def __init__(self, runningmode=MODE_CYCLE_RUNNING, is_draw_row=False):
+-        gobject.GObject.__init__(self)
+-        self.timeout_id = None
+-        self.current_angle_pos = 0.0
+-        self.step_angle = 0.0
+-        self.tree_headers_height = 0
+-        self.running_cell_areas = []
+-        self.running_mode = runningmode
+-        self.is_queue_draw_row_area = is_draw_row
+-        self.force_stop_enable = False
+-
+-    def is_active(self):
+-        if self.timeout_id:
+-            return True
+-        else:
+-            return False
+-
+-    def reset_run(self):
+-        self.force_stop()
+-        self.running_cell_areas = []
+-        self.current_angle_pos = 0.0
+-        self.step_angle = 0.0
+-
+-    ''' time_iterval: (1~1000)ms, which will be as the basic interval count for timer
+-        init_usrdata: the current data which related the progress-bar will be at
+-        min_usrdata: the range of min of user data
+-        max_usrdata: the range of max of user data
+-        step: each step which you want to progress
+-        Note: the init_usrdata should in the range of from min to max, and max should > min
+-             step should < (max - min)
+-    '''
+-    def start_run(self, time_iterval, init_usrdata, min_usrdata, max_usrdata, step, tree):
+-        if (not time_iterval) or (not max_usrdata):
+-            return
+-        usr_range = (max_usrdata - min_usrdata) * 1.0
+-        self.current_angle_pos = (init_usrdata * 1.0) / usr_range
+-        self.step_angle = (step * 1) / usr_range
+-        self.timeout_id = gobject.timeout_add(int(time_iterval),
+-        self.make_image_on_progressing_cb, tree)
+-        self.tree_headers_height = self.get_treeview_headers_height(tree)
+-        self.force_stop_enable = False
+-
+-    def force_stop(self):
+-        self.emit("run-timer-stopped")
+-        self.force_stop_enable = True
+-        if self.timeout_id:
+-            if gobject.source_remove(self.timeout_id):
+-                self.timeout_id = None
+-
+-    def on_draw_pixbuf_cb(self, pixbuf, cr, x, y, img_width, img_height, do_refresh=True):
+-        if pixbuf:
+-            r = max(img_width/2, img_height/2)
+-            cr.translate(x + r, y + r)
+-            if do_refresh:
+-                cr.rotate(2 * math.pi * self.current_angle_pos)
+-
+-            cr.set_source_pixbuf(pixbuf, -img_width/2, -img_height/2)
+-            cr.paint()
+-
+-    def on_draw_fadeinout_cb(self, cr, color, x, y, width, height, do_fadeout=True):
+-        if do_fadeout:
+-            alpha = self.current_angle_pos * 0.8
+-        else:
+-            alpha = (1.0 - self.current_angle_pos) * 0.8
+-
+-        cr.set_source_rgba(color.red, color.green, color.blue, alpha)
+-        cr.rectangle(x, y, width, height)
+-        cr.fill()
+-
+-    def get_treeview_headers_height(self, tree):
+-        if tree and (tree.get_property("headers-visible") == True):
+-            height = tree.get_allocation().height - tree.get_bin_window().get_size()[1]
+-            return height
+-
+-        return 0
+-
+-    def make_image_on_progressing_cb(self, tree):
+-        self.current_angle_pos += self.step_angle
+-        if self.running_mode == self.MODE_CYCLE_RUNNING:
+-            if (self.current_angle_pos >= 1):
+-                self.current_angle_pos = 0
+-        else:
+-            if self.current_angle_pos > 1:
+-                self.force_stop()
+-                return False
+-
+-        if self.is_queue_draw_row_area:
+-            for path in self.running_cell_areas:
+-                rect = tree.get_cell_area(path, tree.get_column(0))
+-                row_x, _, row_width, _ = tree.get_visible_rect()
+-                tree.queue_draw_area(row_x, rect.y + self.tree_headers_height, row_width, rect.height)
+-        else:
+-            for rect in self.running_cell_areas:
+-                tree.queue_draw_area(rect.x, rect.y + self.tree_headers_height, rect.width, rect.height)
+-
+-        return (not self.force_stop_enable)
+-
+-    def append_running_cell_area(self, cell_area):
+-        if cell_area and (cell_area not in self.running_cell_areas):
+-            self.running_cell_areas.append(cell_area)
+-
+-    def remove_running_cell_area(self, cell_area):
+-        if cell_area in self.running_cell_areas:
+-            self.running_cell_areas.remove(cell_area)
+-        if not self.running_cell_areas:
+-            self.reset_run()
+-
+-gobject.type_register(HobCellRendererController)
+-
+-class HobCellRendererPixbuf(gtk.CellRendererPixbuf):
+-    def __init__(self):
+-        gtk.CellRendererPixbuf.__init__(self)
+-        self.control = HobCellRendererController()
+-        # add icon checker for make the gtk-icon transfer to hob-icon
+-        self.checker = HobIconChecker()
+-        self.set_property("stock-size", gtk.ICON_SIZE_DND)
+-
+-    def get_pixbuf_from_stock_icon(self, widget, stock_id="", size=gtk.ICON_SIZE_DIALOG):
+-        if widget and stock_id and gtk.icon_factory_lookup_default(stock_id):
+-            return widget.render_icon(stock_id, size)
+-
+-        return None
+-
+-    def set_icon_name_to_id(self, new_name):
+-        if new_name and type(new_name) == str:
+-            # check the name is need to transfer to hob icon or not
+-            name = self.checker.check_stock_icon(new_name)
+-            if name.startswith("hic") or name.startswith("gtk"):
+-                stock_id = name
+-            else:
+-                stock_id = 'gtk-' + name
+-
+-        return stock_id
+-
+-    ''' render cell exactly, "icon-name" is priority
+-        if use the 'hic-task-refresh' will make the pix animation
+-        if 'pix' will change the pixbuf for it from the pixbuf or image.
+-    '''
+-    def do_render(self, window, tree, background_area,cell_area, expose_area, flags):
+-        if (not self.control) or (not tree):
+-            return
+-
+-        x, y, w, h = self.on_get_size(tree, cell_area)
+-        x += cell_area.x
+-        y += cell_area.y
+-        w -= 2 * self.get_property("xpad")
+-        h -= 2 * self.get_property("ypad")
+-
+-        stock_id = ""
+-        if self.props.icon_name:
+-            stock_id = self.set_icon_name_to_id(self.props.icon_name)
+-        elif self.props.stock_id:
+-            stock_id = self.props.stock_id
+-        elif self.props.pixbuf:
+-            pix = self.props.pixbuf
+-        else:
+-            return
+-
+-        if stock_id:
+-            pix = self.get_pixbuf_from_stock_icon(tree, stock_id, self.props.stock_size)
+-        if stock_id == 'hic-task-refresh':
+-            self.control.append_running_cell_area(cell_area)
+-            if self.control.is_active():
+-                self.control.on_draw_pixbuf_cb(pix, window.cairo_create(), x, y, w, h, True)
+-            else:
+-                self.control.start_run(200, 0, 0, 1000, 150, tree)
+-        else:
+-            self.control.remove_running_cell_area(cell_area)
+-            self.control.on_draw_pixbuf_cb(pix, window.cairo_create(), x, y, w, h, False)
+-
+-    def on_get_size(self, widget, cell_area):
+-        if self.props.icon_name or self.props.pixbuf or self.props.stock_id:
+-            w, h = gtk.icon_size_lookup(self.props.stock_size)
+-            calc_width = self.get_property("xpad") * 2 + w
+-            calc_height = self.get_property("ypad") * 2 + h
+-            x_offset = 0
+-            y_offset = 0
+-            if cell_area and w > 0 and h > 0:
+-                x_offset = self.get_property("xalign") * (cell_area.width - calc_width - self.get_property("xpad"))
+-                y_offset = self.get_property("yalign") * (cell_area.height - calc_height - self.get_property("ypad"))
+-
+-            return x_offset, y_offset, w, h
+-
+-        return 0, 0, 0, 0
+-
+-gobject.type_register(HobCellRendererPixbuf)
+-
+-class HobCellRendererToggle(gtk.CellRendererToggle):
+-    def __init__(self):
+-        gtk.CellRendererToggle.__init__(self)
+-        self.ctrl = HobCellRendererController(is_draw_row=True)
+-        self.ctrl.running_mode = self.ctrl.MODE_ONE_SHORT
+-        self.cell_attr = {"fadeout": False, "number_of_children": 0}
+-
+-    def do_render(self, window, widget, background_area, cell_area, expose_area, flags):
+-        if (not self.ctrl) or (not widget):
+-            return
+-
+-        if flags & gtk.CELL_RENDERER_SELECTED:
+-            state = gtk.STATE_SELECTED
+-        else:
+-            state = gtk.STATE_NORMAL
+-
+-        if self.ctrl.is_active():
+-            path = widget.get_path_at_pos(cell_area.x + cell_area.width/2, cell_area.y + cell_area.height/2)
+-            # sometimes the parameters of cell_area will be a negative number,such as pull up down the scroll bar
+-            # it's over the tree container range, so the path will be bad
+-            if not path: return
+-            path = path[0]
+-            if path in self.ctrl.running_cell_areas:
+-                cr = window.cairo_create()
+-                color = widget.get_style().base[state]
+-
+-                row_x, _, row_width, _ = widget.get_visible_rect()
+-                border_y = self.get_property("ypad")
+-                self.ctrl.on_draw_fadeinout_cb(cr, color, row_x, cell_area.y - border_y, row_width, \
+-                                               cell_area.height + border_y * 2, self.cell_attr["fadeout"])
+-        # draw number of a group
+-        if self.cell_attr["number_of_children"]:
+-            text = "%d pkg" % self.cell_attr["number_of_children"]
+-            pangolayout = widget.create_pango_layout(text)
+-            textw, texth = pangolayout.get_pixel_size()
+-            x = cell_area.x + (cell_area.width/2) - (textw/2)
+-            y = cell_area.y + (cell_area.height/2) - (texth/2)
+-
+-            widget.style.paint_layout(window, state, True, cell_area, widget, "checkbox", x, y, pangolayout)
+-        else:
+-            return gtk.CellRendererToggle.do_render(self, window, widget, background_area, cell_area, expose_area, flags)
+-
+-    '''delay: normally delay time is 1000ms
+-       cell_list: whilch cells need to be render
+-    '''
+-    def fadeout(self, tree, delay, cell_list=None):
+-        if (delay < 200) or (not tree):
+-            return
+-        self.cell_attr["fadeout"] = True
+-        self.ctrl.running_cell_areas = cell_list
+-        self.ctrl.start_run(200, 0, 0, delay, (delay * 200 / 1000), tree)
+-
+-    def connect_render_state_changed(self, func, usrdata=None):
+-        if not func:
+-            return
+-        if usrdata:
+-            self.ctrl.connect("run-timer-stopped", func, self, usrdata)
+-        else:
+-            self.ctrl.connect("run-timer-stopped", func, self)
+-
+-gobject.type_register(HobCellRendererToggle)
+diff --git a/lib/bb/ui/crumbs/persistenttooltip.py b/lib/bb/ui/crumbs/persistenttooltip.py
+deleted file mode 100644
+index 927c194..0000000
+--- a/lib/bb/ui/crumbs/persistenttooltip.py
++++ /dev/null
+@@ -1,186 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2012   Intel Corporation
+-#
+-# Authored by Joshua Lock <josh@linux.intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gobject
+-import gtk
+-try:
+-    import gconf
+-except:
+-    pass
+-
+-class PersistentTooltip(gtk.Window):
+-    """
+-    A tooltip which persists once shown until the user dismisses it with the Esc
+-    key or by clicking the close button.
+-
+-    # FIXME: the PersistentTooltip should be disabled when the user clicks anywhere off
+-    # it. We can't do this with focus-out-event becuase modal ensures we have focus?
+-
+-    markup: some Pango text markup to display in the tooltip
+-    """
+-    def __init__(self, markup, parent_win=None):
+-        gtk.Window.__init__(self, gtk.WINDOW_POPUP)
+-
+-        # Inherit the system theme for a tooltip
+-        style = gtk.rc_get_style_by_paths(gtk.settings_get_default(),
+-                        'gtk-tooltip', 'gtk-tooltip', gobject.TYPE_NONE)
+-        self.set_style(style)
+-
+-        # The placement of the close button on the tip should reflect how the
+-        # window manager of the users system places close buttons. Try to read
+-        # the metacity gconf key to determine whether the close button is on the
+-        # left or the right.
+-        # In the case that we can't determine the users configuration we default
+-        # to close buttons being on the right.
+-        __button_right = True
+-        try:
+-            client = gconf.client_get_default()
+-            order = client.get_string("/apps/metacity/general/button_layout")
+-            if order and order.endswith(":"):
+-                __button_right = False
+-        except NameError:
+-            pass
+-
+-        # We need to ensure we're only shown once
+-        self.shown = False
+-
+-        # We don't want any WM decorations
+-        self.set_decorated(False)
+-        # We don't want to show in the taskbar or window switcher
+-        self.set_skip_pager_hint(True)
+-        self.set_skip_taskbar_hint(True)
+-        # We must be modal to ensure we grab focus when presented from a gtk.Dialog
+-        self.set_modal(True)
+-
+-        self.set_border_width(0)
+-        self.set_position(gtk.WIN_POS_MOUSE)
+-        self.set_opacity(0.95)
+-
+-        # Ensure a reasonable minimum size
+-        self.set_geometry_hints(self, 100, 50)
+-
+-        # Set this window as a transient window for parent(main window)
+-        if parent_win:
+-            self.set_transient_for(parent_win)
+-            self.set_destroy_with_parent(True)
+-        # Draw our label and close buttons
+-        hbox = gtk.HBox(False, 0)
+-        hbox.show()
+-        self.add(hbox)
+-
+-        img = gtk.Image()
+-        img.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_BUTTON)
+-
+-        self.button = gtk.Button()
+-        self.button.set_image(img)
+-        self.button.connect("clicked", self._dismiss_cb)
+-        self.button.set_flags(gtk.CAN_DEFAULT)
+-        self.button.grab_focus()
+-        self.button.show()
+-        vbox = gtk.VBox(False, 0)
+-        vbox.show()
+-        vbox.pack_start(self.button, False, False, 0)
+-        if __button_right:
+-            hbox.pack_end(vbox, True, True, 0)
+-        else:
+-            hbox.pack_start(vbox, True, True, 0)
+-
+-        self.set_default(self.button)
+-
+-        bin = gtk.HBox(True, 6)
+-        bin.set_border_width(6)
+-        bin.show()
+-        self.label = gtk.Label()
+-        self.label.set_line_wrap(True)
+-        # We want to match the colours of the normal tooltips, as dictated by
+-        # the users gtk+-2.0 theme, wherever possible - on some systems this
+-        # requires explicitly setting a fg_color for the label which matches the
+-        # tooltip_fg_color
+-        settings = gtk.settings_get_default()
+-        colours = settings.get_property('gtk-color-scheme').split('\n')
+-        # remove any empty lines, there's likely to be a trailing one after
+-        # calling split on a dictionary-like string
+-        colours = filter(None, colours)
+-        for col in colours:
+-            item, val = col.split(': ')
+-            if item == 'tooltip_fg_color':
+-                style = self.label.get_style()
+-                style.fg[gtk.STATE_NORMAL] = gtk.gdk.color_parse(val)
+-                self.label.set_style(style)
+-                break # we only care for the tooltip_fg_color
+-
+-        self.label.set_markup(markup)
+-        self.label.show()
+-        bin.add(self.label)
+-        hbox.pack_end(bin, True, True, 6)
+-
+-        # add the original URL display for user reference
+-        if 'a href' in markup:
+-            hbox.set_tooltip_text(self.get_markup_url(markup))
+-        hbox.show()
+-
+-        self.connect("key-press-event", self._catch_esc_cb)
+-
+-    """
+-    Callback when the PersistentTooltip's close button is clicked.
+-    Hides the PersistentTooltip.
+-    """
+-    def _dismiss_cb(self, button):
+-        self.hide()
+-        return True
+-
+-    """
+-    Callback when the Esc key is detected. Hides the PersistentTooltip.
+-    """
+-    def _catch_esc_cb(self, widget, event):
+-        keyname = gtk.gdk.keyval_name(event.keyval)
+-        if keyname == "Escape":
+-            self.hide()
+-        return True
+-
+-    """
+-    Called to present the PersistentTooltip.
+-    Overrides the superclasses show() method to include state tracking.
+-    """
+-    def show(self):
+-        if not self.shown:
+-            self.shown = True
+-            gtk.Window.show(self)
+-
+-    """
+-    Called to hide the PersistentTooltip.
+-    Overrides the superclasses hide() method to include state tracking.
+-    """
+-    def hide(self):
+-        self.shown = False
+-        gtk.Window.hide(self)
+-
+-    """
+-    Called to get the hyperlink URL from markup text.
+-    """
+-    def get_markup_url(self, markup):
+-        url = "http:"
+-        if markup and type(markup) == str:
+-            s = markup
+-            if 'http:' in s:
+-                import re
+-                url = re.search('(http:[^,\\ "]+)', s).group(0)
+-
+-        return url
+diff --git a/lib/bb/ui/crumbs/progress.py b/lib/bb/ui/crumbs/progress.py
+deleted file mode 100644
+index 1d28a11..0000000
+--- a/lib/bb/ui/crumbs/progress.py
++++ /dev/null
+@@ -1,23 +0,0 @@
+-import gtk
+-
+-class ProgressBar(gtk.Dialog):
+-    def __init__(self, parent):
+-
+-        gtk.Dialog.__init__(self, flags=(gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT))
+-        self.set_title("Parsing metadata, please wait...")
+-        self.set_default_size(500, 0)
+-        self.set_transient_for(parent)
+-        self.progress = gtk.ProgressBar()
+-        self.vbox.pack_start(self.progress)
+-        self.show_all()
+-
+-    def set_text(self, msg):
+-        self.progress.set_text(msg)
+-
+-    def update(self, x, y):
+-        self.progress.set_fraction(float(x)/float(y))
+-        self.progress.set_text("%2d %%" % (x*100/y))
+-
+-    def pulse(self):
+-        self.progress.set_text("Loading...")
+-        self.progress.pulse()
 diff --git a/lib/bb/ui/crumbs/progressbar.py b/lib/bb/ui/crumbs/progressbar.py
-index 3e2c660..03230ae 100644
+deleted file mode 100644
+index ba3c7a0..0000000
 --- a/lib/bb/ui/crumbs/progressbar.py
-+++ b/lib/bb/ui/crumbs/progressbar.py
-@@ -44,9 +44,9 @@ class HobProgressBar (gtk.ProgressBar):
-         self.set_text(text)
- 
-     def set_stop_title(self, text=None):
--	if not text:
--	    text = ""
--	self.set_text(text)
-+        if not text:
-+            text = ""
-+        self.set_text(text)
- 
-     def reset(self):
-         self.set_fraction(0)
++++ /dev/null
+@@ -1,60 +0,0 @@
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2011        Intel Corporation
+-#
+-# Authored by Shane Wang <shane.wang@intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gtk
+-from bb.ui.crumbs.hobcolor import HobColors
+-
+-class HobProgressBar (gtk.ProgressBar):
+-    def __init__(self):
+-        gtk.ProgressBar.__init__(self)
+-        self.set_rcstyle(True)
+-        self.percentage = 0
+-
+-    def set_rcstyle(self, status):
+-        rcstyle = gtk.RcStyle()
+-#FIXME
+-#        rcstyle.fg[2] = gtk.gdk.Color(HobColors.BLACK)
+-#        if status == "stop":
+-#            rcstyle.bg[3] = gtk.gdk.Color(HobColors.WARNING)
+-#        elif status == "fail":
+-#            rcstyle.bg[3] = gtk.gdk.Color(HobColors.ERROR)
+-#        else:
+-#            rcstyle.bg[3] = gtk.gdk.Color(HobColors.RUNNING)
+-        self.modify_style(rcstyle)
+-
+-    def set_title(self, text=None):
+-        if not text:
+-            text = ""
+-        text += " %.0f%%" % self.percentage
+-        self.set_text(text)
+-
+-    def set_stop_title(self, text=None):
+-        if not text:
+-            text = ""
+-        self.set_text(text)
+-
+-    def reset(self):
+-        self.set_fraction(0)
+-        self.set_text("")
+-        self.set_rcstyle(True)
+-        self.percentage = 0
+-
+-    def update(self, fraction):
+-        self.percentage = int(fraction * 100)
+-        self.set_fraction(fraction)
+diff --git a/lib/bb/ui/crumbs/puccho.glade b/lib/bb/ui/crumbs/puccho.glade
+deleted file mode 100644
+index d7553a6..0000000
+--- a/lib/bb/ui/crumbs/puccho.glade
++++ /dev/null
+@@ -1,606 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+-<!--Generated with glade3 3.4.5 on Mon Nov 10 12:24:12 2008 -->
+-<glade-interface>
+-  <widget class="GtkDialog" id="build_dialog">
+-    <property name="title" translatable="yes">Start a build</property>
+-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
+-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+-    <property name="has_separator">False</property>
+-    <child internal-child="vbox">
+-      <widget class="GtkVBox" id="dialog-vbox1">
+-        <property name="visible">True</property>
+-        <property name="spacing">2</property>
+-        <child>
+-          <widget class="GtkTable" id="build_table">
+-            <property name="visible">True</property>
+-            <property name="border_width">6</property>
+-            <property name="n_rows">7</property>
+-            <property name="n_columns">3</property>
+-            <property name="column_spacing">5</property>
+-            <property name="row_spacing">6</property>
+-            <child>
+-              <widget class="GtkAlignment" id="status_alignment">
+-                <property name="visible">True</property>
+-                <property name="left_padding">12</property>
+-                <child>
+-                  <widget class="GtkHBox" id="status_hbox">
+-                    <property name="spacing">6</property>
+-                    <child>
+-                      <widget class="GtkImage" id="status_image">
+-                        <property name="visible">True</property>
+-                        <property name="no_show_all">True</property>
+-                        <property name="xalign">0</property>
+-                        <property name="stock">gtk-dialog-error</property>
+-                      </widget>
+-                      <packing>
+-                        <property name="expand">False</property>
+-                        <property name="fill">False</property>
+-                      </packing>
+-                    </child>
+-                    <child>
+-                      <widget class="GtkLabel" id="status_label">
+-                        <property name="visible">True</property>
+-                        <property name="xalign">0</property>
+-                        <property name="label" translatable="yes">If you see this text something is wrong...</property>
+-                        <property name="use_markup">True</property>
+-                        <property name="use_underline">True</property>
+-                      </widget>
+-                      <packing>
+-                        <property name="position">1</property>
+-                      </packing>
+-                    </child>
+-                  </widget>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">2</property>
+-                <property name="bottom_attach">3</property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkLabel" id="label2">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="label" translatable="yes">&lt;b&gt;Build configuration&lt;/b&gt;</property>
+-                <property name="use_markup">True</property>
+-              </widget>
+-              <packing>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">3</property>
+-                <property name="bottom_attach">4</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkComboBox" id="image_combo">
+-                <property name="visible">True</property>
+-                <property name="sensitive">False</property>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">1</property>
+-                <property name="right_attach">2</property>
+-                <property name="top_attach">6</property>
+-                <property name="bottom_attach">7</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkLabel" id="image_label">
+-                <property name="visible">True</property>
+-                <property name="sensitive">False</property>
+-                <property name="xalign">0</property>
+-                <property name="xpad">12</property>
+-                <property name="label" translatable="yes">Image:</property>
+-              </widget>
+-              <packing>
+-                <property name="top_attach">6</property>
+-                <property name="bottom_attach">7</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkComboBox" id="distribution_combo">
+-                <property name="visible">True</property>
+-                <property name="sensitive">False</property>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">1</property>
+-                <property name="right_attach">2</property>
+-                <property name="top_attach">5</property>
+-                <property name="bottom_attach">6</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkLabel" id="distribution_label">
+-                <property name="visible">True</property>
+-                <property name="sensitive">False</property>
+-                <property name="xalign">0</property>
+-                <property name="xpad">12</property>
+-                <property name="label" translatable="yes">Distribution:</property>
+-              </widget>
+-              <packing>
+-                <property name="top_attach">5</property>
+-                <property name="bottom_attach">6</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkComboBox" id="machine_combo">
+-                <property name="visible">True</property>
+-                <property name="sensitive">False</property>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">1</property>
+-                <property name="right_attach">2</property>
+-                <property name="top_attach">4</property>
+-                <property name="bottom_attach">5</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkLabel" id="machine_label">
+-                <property name="visible">True</property>
+-                <property name="sensitive">False</property>
+-                <property name="xalign">0</property>
+-                <property name="xpad">12</property>
+-                <property name="label" translatable="yes">Machine:</property>
+-              </widget>
+-              <packing>
+-                <property name="top_attach">4</property>
+-                <property name="bottom_attach">5</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkButton" id="refresh_button">
+-                <property name="visible">True</property>
+-                <property name="sensitive">False</property>
+-                <property name="can_focus">True</property>
+-                <property name="receives_default">True</property>
+-                <property name="label" translatable="yes">gtk-refresh</property>
+-                <property name="use_stock">True</property>
+-                <property name="response_id">0</property>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">2</property>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">1</property>
+-                <property name="bottom_attach">2</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkEntry" id="location_entry">
+-                <property name="visible">True</property>
+-                <property name="can_focus">True</property>
+-                <property name="width_chars">32</property>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">1</property>
+-                <property name="right_attach">2</property>
+-                <property name="top_attach">1</property>
+-                <property name="bottom_attach">2</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkLabel" id="label3">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="xpad">12</property>
+-                <property name="label" translatable="yes">Location:</property>
+-              </widget>
+-              <packing>
+-                <property name="top_attach">1</property>
+-                <property name="bottom_attach">2</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkLabel" id="label1">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="label" translatable="yes">&lt;b&gt;Repository&lt;/b&gt;</property>
+-                <property name="use_markup">True</property>
+-              </widget>
+-              <packing>
+-                <property name="right_attach">3</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkAlignment" id="alignment1">
+-                <property name="visible">True</property>
+-                <child>
+-                  <placeholder/>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">2</property>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">4</property>
+-                <property name="bottom_attach">5</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkAlignment" id="alignment2">
+-                <property name="visible">True</property>
+-                <child>
+-                  <placeholder/>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">2</property>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">5</property>
+-                <property name="bottom_attach">6</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkAlignment" id="alignment3">
+-                <property name="visible">True</property>
+-                <child>
+-                  <placeholder/>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">2</property>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">6</property>
+-                <property name="bottom_attach">7</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-          </widget>
+-          <packing>
+-            <property name="position">1</property>
+-          </packing>
+-        </child>
+-        <child internal-child="action_area">
+-          <widget class="GtkHButtonBox" id="dialog-action_area1">
+-            <property name="visible">True</property>
+-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+-            <child>
+-              <placeholder/>
+-            </child>
+-            <child>
+-              <placeholder/>
+-            </child>
+-            <child>
+-              <placeholder/>
+-            </child>
+-          </widget>
+-          <packing>
+-            <property name="expand">False</property>
+-            <property name="pack_type">GTK_PACK_END</property>
+-          </packing>
+-        </child>
+-      </widget>
+-    </child>
+-  </widget>
+-  <widget class="GtkDialog" id="dialog2">
+-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
+-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+-    <property name="has_separator">False</property>
+-    <child internal-child="vbox">
+-      <widget class="GtkVBox" id="dialog-vbox2">
+-        <property name="visible">True</property>
+-        <property name="spacing">2</property>
+-        <child>
+-          <widget class="GtkTable" id="table2">
+-            <property name="visible">True</property>
+-            <property name="border_width">6</property>
+-            <property name="n_rows">7</property>
+-            <property name="n_columns">3</property>
+-            <property name="column_spacing">6</property>
+-            <property name="row_spacing">6</property>
+-            <child>
+-              <widget class="GtkLabel" id="label7">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="label" translatable="yes">&lt;b&gt;Repositories&lt;/b&gt;</property>
+-                <property name="use_markup">True</property>
+-              </widget>
+-              <packing>
+-                <property name="right_attach">3</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkAlignment" id="alignment4">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="left_padding">12</property>
+-                <child>
+-                  <widget class="GtkScrolledWindow" id="scrolledwindow1">
+-                    <property name="visible">True</property>
+-                    <property name="can_focus">True</property>
+-                    <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+-                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+-                    <child>
+-                      <widget class="GtkTreeView" id="treeview1">
+-                        <property name="visible">True</property>
+-                        <property name="can_focus">True</property>
+-                        <property name="headers_clickable">True</property>
+-                      </widget>
+-                    </child>
+-                  </widget>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">2</property>
+-                <property name="bottom_attach">3</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkEntry" id="entry1">
+-                <property name="visible">True</property>
+-                <property name="can_focus">True</property>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">1</property>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">1</property>
+-                <property name="bottom_attach">2</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkLabel" id="label9">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="label" translatable="yes">&lt;b&gt;Additional packages&lt;/b&gt;</property>
+-                <property name="use_markup">True</property>
+-              </widget>
+-              <packing>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">4</property>
+-                <property name="bottom_attach">5</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkAlignment" id="alignment6">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="xscale">0</property>
+-                <child>
+-                  <widget class="GtkLabel" id="label8">
+-                    <property name="visible">True</property>
+-                    <property name="xalign">0</property>
+-                    <property name="yalign">0</property>
+-                    <property name="xpad">12</property>
+-                    <property name="label" translatable="yes">Location: </property>
+-                  </widget>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="top_attach">1</property>
+-                <property name="bottom_attach">2</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkAlignment" id="alignment7">
+-                <property name="visible">True</property>
+-                <property name="xalign">1</property>
+-                <property name="xscale">0</property>
+-                <child>
+-                  <widget class="GtkHButtonBox" id="hbuttonbox1">
+-                    <property name="visible">True</property>
+-                    <property name="spacing">5</property>
+-                    <child>
+-                      <widget class="GtkButton" id="button7">
+-                        <property name="visible">True</property>
+-                        <property name="can_focus">True</property>
+-                        <property name="receives_default">True</property>
+-                        <property name="label" translatable="yes">gtk-remove</property>
+-                        <property name="use_stock">True</property>
+-                        <property name="response_id">0</property>
+-                      </widget>
+-                    </child>
+-                    <child>
+-                      <widget class="GtkButton" id="button6">
+-                        <property name="visible">True</property>
+-                        <property name="can_focus">True</property>
+-                        <property name="receives_default">True</property>
+-                        <property name="label" translatable="yes">gtk-edit</property>
+-                        <property name="use_stock">True</property>
+-                        <property name="response_id">0</property>
+-                      </widget>
+-                      <packing>
+-                        <property name="position">1</property>
+-                      </packing>
+-                    </child>
+-                    <child>
+-                      <widget class="GtkButton" id="button5">
+-                        <property name="visible">True</property>
+-                        <property name="can_focus">True</property>
+-                        <property name="receives_default">True</property>
+-                        <property name="label" translatable="yes">gtk-add</property>
+-                        <property name="use_stock">True</property>
+-                        <property name="response_id">0</property>
+-                      </widget>
+-                      <packing>
+-                        <property name="position">2</property>
+-                      </packing>
+-                    </child>
+-                  </widget>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">1</property>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">3</property>
+-                <property name="bottom_attach">4</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkAlignment" id="alignment5">
+-                <property name="visible">True</property>
+-                <child>
+-                  <placeholder/>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="top_attach">3</property>
+-                <property name="bottom_attach">4</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkLabel" id="label10">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="yalign">0</property>
+-                <property name="xpad">12</property>
+-                <property name="label" translatable="yes">Search:</property>
+-              </widget>
+-              <packing>
+-                <property name="top_attach">5</property>
+-                <property name="bottom_attach">6</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkEntry" id="entry2">
+-                <property name="visible">True</property>
+-                <property name="can_focus">True</property>
+-              </widget>
+-              <packing>
+-                <property name="left_attach">1</property>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">5</property>
+-                <property name="bottom_attach">6</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkAlignment" id="alignment8">
+-                <property name="visible">True</property>
+-                <property name="xalign">0</property>
+-                <property name="left_padding">12</property>
+-                <child>
+-                  <widget class="GtkScrolledWindow" id="scrolledwindow2">
+-                    <property name="visible">True</property>
+-                    <property name="can_focus">True</property>
+-                    <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+-                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+-                    <child>
+-                      <widget class="GtkTreeView" id="treeview2">
+-                        <property name="visible">True</property>
+-                        <property name="can_focus">True</property>
+-                        <property name="headers_clickable">True</property>
+-                      </widget>
+-                    </child>
+-                  </widget>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="right_attach">3</property>
+-                <property name="top_attach">6</property>
+-                <property name="bottom_attach">7</property>
+-                <property name="y_options"></property>
+-              </packing>
+-            </child>
+-          </widget>
+-          <packing>
+-            <property name="position">1</property>
+-          </packing>
+-        </child>
+-        <child internal-child="action_area">
+-          <widget class="GtkHButtonBox" id="dialog-action_area2">
+-            <property name="visible">True</property>
+-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+-            <child>
+-              <widget class="GtkButton" id="button4">
+-                <property name="visible">True</property>
+-                <property name="can_focus">True</property>
+-                <property name="receives_default">True</property>
+-                <property name="label" translatable="yes">gtk-close</property>
+-                <property name="use_stock">True</property>
+-                <property name="response_id">0</property>
+-              </widget>
+-            </child>
+-          </widget>
+-          <packing>
+-            <property name="expand">False</property>
+-            <property name="pack_type">GTK_PACK_END</property>
+-          </packing>
+-        </child>
+-      </widget>
+-    </child>
+-  </widget>
+-  <widget class="GtkWindow" id="main_window">
+-    <child>
+-      <widget class="GtkVBox" id="main_window_vbox">
+-        <property name="visible">True</property>
+-        <child>
+-          <widget class="GtkToolbar" id="main_toolbar">
+-            <property name="visible">True</property>
+-            <child>
+-              <widget class="GtkToolButton" id="main_toolbutton_build">
+-                <property name="visible">True</property>
+-                <property name="label" translatable="yes">Build</property>
+-                <property name="stock_id">gtk-execute</property>
+-              </widget>
+-              <packing>
+-                <property name="expand">False</property>
+-              </packing>
+-            </child>
+-          </widget>
+-          <packing>
+-            <property name="expand">False</property>
+-          </packing>
+-        </child>
+-        <child>
+-          <widget class="GtkVPaned" id="vpaned1">
+-            <property name="visible">True</property>
+-            <property name="can_focus">True</property>
+-            <child>
+-              <widget class="GtkScrolledWindow" id="results_scrolledwindow">
+-                <property name="visible">True</property>
+-                <property name="can_focus">True</property>
+-                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+-                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+-                <child>
+-                  <placeholder/>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="resize">False</property>
+-                <property name="shrink">True</property>
+-              </packing>
+-            </child>
+-            <child>
+-              <widget class="GtkScrolledWindow" id="progress_scrolledwindow">
+-                <property name="visible">True</property>
+-                <property name="can_focus">True</property>
+-                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+-                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+-                <child>
+-                  <placeholder/>
+-                </child>
+-              </widget>
+-              <packing>
+-                <property name="resize">True</property>
+-                <property name="shrink">True</property>
+-              </packing>
+-            </child>
+-          </widget>
+-          <packing>
+-            <property name="position">1</property>
+-          </packing>
+-        </child>
+-      </widget>
+-    </child>
+-  </widget>
+-</glade-interface>
 diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningbuild.py
-index 16a955d..9b695ac 100644
+deleted file mode 100644
+index 9b695ac..0000000
 --- a/lib/bb/ui/crumbs/runningbuild.py
-+++ b/lib/bb/ui/crumbs/runningbuild.py
-@@ -23,14 +23,14 @@ import gtk
- import gobject
- import logging
- import time
--import urllib
--import urllib2
-+import urllib.request, urllib.parse, urllib.error
-+import urllib.request, urllib.error, urllib.parse
- import pango
- from bb.ui.crumbs.hobcolor import HobColors
- from bb.ui.crumbs.hobwidget import HobWarpCellRendererText, HobCellRendererPixbuf
- 
- class RunningBuildModel (gtk.TreeStore):
--    (COL_LOG, COL_PACKAGE, COL_TASK, COL_MESSAGE, COL_ICON, COL_COLOR, COL_NUM_ACTIVE) = range(7)
-+    (COL_LOG, COL_PACKAGE, COL_TASK, COL_MESSAGE, COL_ICON, COL_COLOR, COL_NUM_ACTIVE) = list(range(7))
- 
-     def __init__ (self):
-         gtk.TreeStore.__init__ (self,
-@@ -443,8 +443,8 @@ def do_pastebin(text):
-     url = 'http://pastebin.com/api_public.php'
-     params = {'paste_code': text, 'paste_format': 'text'}
- 
--    req = urllib2.Request(url, urllib.urlencode(params))
--    response = urllib2.urlopen(req)
-+    req = urllib.request.Request(url, urllib.parse.urlencode(params))
-+    response = urllib.request.urlopen(req)
-     paste_url = response.read()
- 
-     return paste_url
-@@ -519,7 +519,7 @@ class RunningBuildTreeView (gtk.TreeView):
- 
-         # @todo Provide visual feedback to the user that it is done and that
-         # it worked.
--        print paste_url
-+        print(paste_url)
- 
-         self._add_to_clipboard(paste_url)
- 
++++ /dev/null
+@@ -1,551 +0,0 @@
+-
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2008        Intel Corporation
+-#
+-# Authored by Rob Bradford <rob@linux.intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-import gtk
+-import gobject
+-import logging
+-import time
+-import urllib.request, urllib.parse, urllib.error
+-import urllib.request, urllib.error, urllib.parse
+-import pango
+-from bb.ui.crumbs.hobcolor import HobColors
+-from bb.ui.crumbs.hobwidget import HobWarpCellRendererText, HobCellRendererPixbuf
+-
+-class RunningBuildModel (gtk.TreeStore):
+-    (COL_LOG, COL_PACKAGE, COL_TASK, COL_MESSAGE, COL_ICON, COL_COLOR, COL_NUM_ACTIVE) = list(range(7))
+-
+-    def __init__ (self):
+-        gtk.TreeStore.__init__ (self,
+-                                gobject.TYPE_STRING,
+-                                gobject.TYPE_STRING,
+-                                gobject.TYPE_STRING,
+-                                gobject.TYPE_STRING,
+-                                gobject.TYPE_STRING,
+-                                gobject.TYPE_STRING,
+-                                gobject.TYPE_INT)
+-
+-    def failure_model_filter(self, model, it):
+-        color = model.get(it, self.COL_COLOR)[0]
+-        if not color:
+-            return False
+-        if color == HobColors.ERROR or color == HobColors.WARNING:
+-            return True
+-        return False
+-
+-    def failure_model(self):
+-        model = self.filter_new()
+-        model.set_visible_func(self.failure_model_filter)
+-        return model
+-
+-    def foreach_cell_func(self, model, path, iter, usr_data=None):
+-        if model.get_value(iter, self.COL_ICON) == "gtk-execute":
+-            model.set(iter, self.COL_ICON, "")
+-
+-    def close_task_refresh(self):
+-        self.foreach(self.foreach_cell_func, None)
+-
+-class RunningBuild (gobject.GObject):
+-    __gsignals__ = {
+-          'build-started'   :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               ()),
+-          'build-succeeded' :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               ()),
+-          'build-failed'    :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               ()),
+-          'build-complete'  :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               ()),
+-          'build-aborted'   :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               ()),
+-          'task-started'    :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               (gobject.TYPE_PYOBJECT,)),
+-          'log-error'       :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               ()),
+-          'log-warning'     :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               ()),
+-          'disk-full'       :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               ()),
+-          'no-provider'     :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               (gobject.TYPE_PYOBJECT,)),
+-          'log'             :  (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                               (gobject.TYPE_STRING, gobject.TYPE_PYOBJECT,)),
+-          }
+-    pids_to_task = {}
+-    tasks_to_iter = {}
+-
+-    def __init__ (self, sequential=False):
+-        gobject.GObject.__init__ (self)
+-        self.model = RunningBuildModel()
+-        self.sequential = sequential
+-        self.buildaborted = False
+-
+-    def reset (self):
+-        self.pids_to_task.clear()
+-        self.tasks_to_iter.clear()
+-        self.model.clear()
+-
+-    def handle_event (self, event, pbar=None):
+-        # Handle an event from the event queue, this may result in updating
+-        # the model and thus the UI. Or it may be to tell us that the build
+-        # has finished successfully (or not, as the case may be.)
+-
+-        parent = None
+-        pid = 0
+-        package = None
+-        task = None
+-
+-        # If we have a pid attached to this message/event try and get the
+-        # (package, task) pair for it. If we get that then get the parent iter
+-        # for the message.
+-        if hasattr(event, 'pid'):
+-            pid = event.pid
+-        if hasattr(event, 'process'):
+-            pid = event.process
+-
+-        if pid and pid in self.pids_to_task:
+-            (package, task) = self.pids_to_task[pid]
+-            parent = self.tasks_to_iter[(package, task)]
+-
+-        if(isinstance(event, logging.LogRecord)):
+-            if event.taskpid == 0 or event.levelno > logging.INFO:
+-                self.emit("log", "handle", event)
+-            # FIXME: this is a hack! More info in Yocto #1433
+-            # http://bugzilla.pokylinux.org/show_bug.cgi?id=1433, temporarily
+-            # mask the error message as it's not informative for the user.
+-            if event.msg.startswith("Execution of event handler 'run_buildstats' failed"):
+-                return
+-
+-            if (event.levelno < logging.INFO or
+-                event.msg.startswith("Running task")):
+-                return # don't add these to the list
+-
+-            if event.levelno >= logging.ERROR:
+-                icon = "dialog-error"
+-                color = HobColors.ERROR
+-                self.emit("log-error")
+-            elif event.levelno >= logging.WARNING:
+-                icon = "dialog-warning"
+-                color = HobColors.WARNING
+-                self.emit("log-warning")
+-            else:
+-                icon = None
+-                color = HobColors.OK
+-
+-            # if we know which package we belong to, we'll append onto its list.
+-            # otherwise, we'll jump to the top of the master list
+-            if self.sequential or not parent:
+-                tree_add = self.model.append
+-            else:
+-                tree_add = self.model.prepend
+-            tree_add(parent,
+-                     (None,
+-                      package,
+-                      task,
+-                      event.getMessage(),
+-                      icon,
+-                      color,
+-                      0))
+-
+-            # if there are warnings while processing a package
+-            #  (parent), mark the task with warning color;
+-            # in case there are errors, the updates will be
+-            #  handled on TaskFailed.
+-            if color == HobColors.WARNING and parent:
+-                self.model.set(parent, self.model.COL_COLOR, color)
+-                if task: #then we have a parent (package), and update it's color
+-                    self.model.set(self.tasks_to_iter[(package, None)], self.model.COL_COLOR, color)
+-
+-        elif isinstance(event, bb.build.TaskStarted):
+-            (package, task) = (event._package, event._task)
+-
+-            # Save out this PID.
+-            self.pids_to_task[pid] = (package, task)
+-
+-            # Check if we already have this package in our model. If so then
+-            # that can be the parent for the task. Otherwise we create a new
+-            # top level for the package.
+-            if ((package, None) in self.tasks_to_iter):
+-                parent = self.tasks_to_iter[(package, None)]
+-            else:
+-                if self.sequential:
+-                    add = self.model.append
+-                else:
+-                    add = self.model.prepend
+-                parent = add(None, (None,
+-                                    package,
+-                                    None,
+-                                    "Package: %s" % (package),
+-                                    None,
+-                                    HobColors.OK,
+-                                    0))
+-                self.tasks_to_iter[(package, None)] = parent
+-
+-            # Because this parent package now has an active child mark it as
+-            # such.
+-            self.model.set(parent, self.model.COL_ICON, "gtk-execute")
+-            parent_color = self.model.get(parent, self.model.COL_COLOR)[0]
+-            if parent_color != HobColors.ERROR and parent_color != HobColors.WARNING:
+-                self.model.set(parent, self.model.COL_COLOR, HobColors.RUNNING)
+-
+-            # Add an entry in the model for this task
+-            i = self.model.append (parent, (None,
+-                                            package,
+-                                            task,
+-                                            "Task: %s" % (task),
+-                                            "gtk-execute",
+-                                            HobColors.RUNNING,
+-                                            0))
+-
+-            # update the parent's active task count
+-            num_active = self.model.get(parent, self.model.COL_NUM_ACTIVE)[0] + 1
+-            self.model.set(parent, self.model.COL_NUM_ACTIVE, num_active)
+-
+-            # Save out the iter so that we can find it when we have a message
+-            # that we need to attach to a task.
+-            self.tasks_to_iter[(package, task)] = i
+-
+-        elif isinstance(event, bb.build.TaskBase):
+-            self.emit("log", "info", event._message)
+-            current = self.tasks_to_iter[(package, task)]
+-            parent = self.tasks_to_iter[(package, None)]
+-
+-            # remove this task from the parent's active count
+-            num_active = self.model.get(parent, self.model.COL_NUM_ACTIVE)[0] - 1
+-            self.model.set(parent, self.model.COL_NUM_ACTIVE, num_active)
+-
+-            if isinstance(event, bb.build.TaskFailed):
+-                # Mark the task and parent as failed
+-                icon = "dialog-error"
+-                color = HobColors.ERROR
+-
+-                logfile = event.logfile
+-                if logfile and os.path.exists(logfile):
+-                    with open(logfile) as f:
+-                        logdata = f.read()
+-                        self.model.append(current, ('pastebin', None, None, logdata, 'gtk-error', HobColors.OK, 0))
+-
+-                for i in (current, parent):
+-                    self.model.set(i, self.model.COL_ICON, icon,
+-                                   self.model.COL_COLOR, color)
+-            else:
+-                # Mark the parent package and the task as inactive,
+-                # but make sure to preserve error, warnings and active
+-                # states
+-                parent_color = self.model.get(parent, self.model.COL_COLOR)[0]
+-                task_color = self.model.get(current, self.model.COL_COLOR)[0]
+-
+-                # Mark the task as inactive
+-                self.model.set(current, self.model.COL_ICON, None)
+-                if task_color != HobColors.ERROR:
+-                    if task_color == HobColors.WARNING:
+-                        self.model.set(current, self.model.COL_ICON, 'dialog-warning')
+-                    else:
+-                        self.model.set(current, self.model.COL_COLOR, HobColors.OK)
+-
+-                # Mark the parent as inactive
+-                if parent_color != HobColors.ERROR:
+-                    if parent_color == HobColors.WARNING:
+-                        self.model.set(parent, self.model.COL_ICON, "dialog-warning")
+-                    else:
+-                        self.model.set(parent, self.model.COL_ICON, None)
+-                        if num_active == 0:
+-                            self.model.set(parent, self.model.COL_COLOR, HobColors.OK)
+-
+-            # Clear the iters and the pids since when the task goes away the
+-            # pid will no longer be used for messages
+-            del self.tasks_to_iter[(package, task)]
+-            del self.pids_to_task[pid]
+-
+-        elif isinstance(event, bb.event.BuildStarted):
+-
+-            self.emit("build-started")
+-            self.model.prepend(None, (None,
+-                                      None,
+-                                      None,
+-                                      "Build Started (%s)" % time.strftime('%m/%d/%Y %H:%M:%S'),
+-                                      None,
+-                                      HobColors.OK,
+-                                      0))
+-            if pbar:
+-                pbar.update(0, self.progress_total)
+-                pbar.set_title(bb.event.getName(event))
+-
+-        elif isinstance(event, bb.event.BuildCompleted):
+-            failures = int (event._failures)
+-            self.model.prepend(None, (None,
+-                                      None,
+-                                      None,
+-                                      "Build Completed (%s)" % time.strftime('%m/%d/%Y %H:%M:%S'),
+-                                      None,
+-                                      HobColors.OK,
+-                                      0))
+-
+-            # Emit the appropriate signal depending on the number of failures
+-            if self.buildaborted:
+-                self.emit ("build-aborted")
+-                self.buildaborted = False
+-            elif (failures >= 1):
+-                self.emit ("build-failed")
+-            else:
+-                self.emit ("build-succeeded")
+-            # Emit a generic "build-complete" signal for things wishing to
+-            # handle when the build is finished
+-            self.emit("build-complete")
+-            # reset the all cell's icon indicator
+-            self.model.close_task_refresh()
+-            if pbar:
+-                pbar.set_text(event.msg)
+-
+-        elif isinstance(event, bb.event.DiskFull):
+-            self.buildaborted = True
+-            self.emit("disk-full")
+-
+-        elif isinstance(event, bb.command.CommandFailed):
+-            self.emit("log", "error", "Command execution failed: %s" % (event.error))
+-            if event.error.startswith("Exited with"):
+-                # If the command fails with an exit code we're done, emit the
+-                # generic signal for the UI to notify the user
+-                self.emit("build-complete")
+-                # reset the all cell's icon indicator
+-                self.model.close_task_refresh()
+-
+-        elif isinstance(event, bb.event.CacheLoadStarted) and pbar:
+-            pbar.set_title("Loading cache")
+-            self.progress_total = event.total
+-            pbar.update(0, self.progress_total)
+-        elif isinstance(event, bb.event.CacheLoadProgress) and pbar:
+-            pbar.update(event.current, self.progress_total)
+-        elif isinstance(event, bb.event.CacheLoadCompleted) and pbar:
+-            pbar.update(self.progress_total, self.progress_total)
+-            pbar.hide()
+-        elif isinstance(event, bb.event.ParseStarted) and pbar:
+-            if event.total == 0:
+-                return
+-            pbar.set_title("Processing recipes")
+-            self.progress_total = event.total
+-            pbar.update(0, self.progress_total)
+-        elif isinstance(event, bb.event.ParseProgress) and pbar:
+-            pbar.update(event.current, self.progress_total)
+-        elif isinstance(event, bb.event.ParseCompleted) and pbar:
+-            pbar.hide()
+-        #using runqueue events as many as possible to update the progress bar
+-        elif isinstance(event, bb.runqueue.runQueueTaskFailed):
+-            self.emit("log", "error", "Task %s (%s) failed with exit code '%s'" % (event.taskid, event.taskstring, event.exitcode))
+-        elif isinstance(event, bb.runqueue.sceneQueueTaskFailed):
+-            self.emit("log", "warn", "Setscene task %s (%s) failed with exit code '%s' - real task will be run instead" \
+-                                     % (event.taskid, event.taskstring, event.exitcode))
+-        elif isinstance(event, (bb.runqueue.runQueueTaskStarted, bb.runqueue.sceneQueueTaskStarted)):
+-            if isinstance(event, bb.runqueue.sceneQueueTaskStarted):
+-                self.emit("log", "info", "Running setscene task %d of %d (%s)" % \
+-                                         (event.stats.completed + event.stats.active + event.stats.failed + 1,
+-                                          event.stats.total, event.taskstring))
+-            else:
+-                if event.noexec:
+-                    tasktype = 'noexec task'
+-                else:
+-                    tasktype = 'task'
+-                self.emit("log", "info", "Running %s %s of %s (ID: %s, %s)" % \
+-                                         (tasktype, event.stats.completed + event.stats.active + event.stats.failed + 1,
+-                                          event.stats.total, event.taskid, event.taskstring))
+-            message = {}
+-            message["eventname"] = bb.event.getName(event)
+-            num_of_completed = event.stats.completed + event.stats.failed
+-            message["current"] = num_of_completed
+-            message["total"] = event.stats.total
+-            message["title"] = ""
+-            message["task"] = event.taskstring
+-            self.emit("task-started", message)
+-        elif isinstance(event, bb.event.MultipleProviders):
+-            self.emit("log", "info", "multiple providers are available for %s%s (%s)" \
+-                                     % (event._is_runtime and "runtime " or "", event._item, ", ".join(event._candidates)))
+-            self.emit("log", "info", "consider defining a PREFERRED_PROVIDER entry to match %s" % (event._item))
+-        elif isinstance(event, bb.event.NoProvider):
+-            msg = ""
+-            if event._runtime:
+-                r = "R"
+-            else:
+-                r = ""
+-
+-            extra = ''
+-            if not event._reasons:
+-                if event._close_matches:
+-                    extra = ". Close matches:\n  %s" % '\n  '.join(event._close_matches)
+-
+-            if event._dependees:
+-                msg = "Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)%s\n" % (r, event._item, ", ".join(event._dependees), r, extra)
+-            else:
+-                msg = "Nothing %sPROVIDES '%s'%s\n" % (r, event._item, extra)
+-            if event._reasons:
+-                for reason in event._reasons:
+-                    msg += ("%s\n" % reason)
+-            self.emit("no-provider", msg)
+-            self.emit("log", "error", msg)
+-        elif isinstance(event, bb.event.LogExecTTY):
+-            icon = "dialog-warning"
+-            color = HobColors.WARNING
+-            if self.sequential or not parent:
+-                tree_add = self.model.append
+-            else:
+-                tree_add = self.model.prepend
+-            tree_add(parent,
+-                     (None,
+-                      package,
+-                      task,
+-                      event.msg,
+-                      icon,
+-                      color,
+-                      0))
+-        else:
+-            if not isinstance(event, (bb.event.BuildBase,
+-                                      bb.event.StampUpdate,
+-                                      bb.event.ConfigParsed,
+-                                      bb.event.RecipeParsed,
+-                                      bb.event.RecipePreFinalise,
+-                                      bb.runqueue.runQueueEvent,
+-                                      bb.runqueue.runQueueExitWait,
+-                                      bb.event.OperationStarted,
+-                                      bb.event.OperationCompleted,
+-                                      bb.event.OperationProgress)):
+-                self.emit("log", "error", "Unknown event: %s" % (event.error if hasattr(event, 'error') else 'error'))
+-
+-        return
+-
+-
+-def do_pastebin(text):
+-    url = 'http://pastebin.com/api_public.php'
+-    params = {'paste_code': text, 'paste_format': 'text'}
+-
+-    req = urllib.request.Request(url, urllib.parse.urlencode(params))
+-    response = urllib.request.urlopen(req)
+-    paste_url = response.read()
+-
+-    return paste_url
+-
+-
+-class RunningBuildTreeView (gtk.TreeView):
+-    __gsignals__ = {
+-        "button_press_event" : "override"
+-        }
+-    def __init__ (self, readonly=False, hob=False):
+-        gtk.TreeView.__init__ (self)
+-        self.readonly = readonly
+-
+-        # The icon that indicates whether we're building or failed.
+-        # add 'hob' flag because there has not only hob to share this code
+-        if hob:
+-            renderer = HobCellRendererPixbuf ()
+-        else:
+-            renderer = gtk.CellRendererPixbuf()
+-        col = gtk.TreeViewColumn ("Status", renderer)
+-        col.add_attribute (renderer, "icon-name", 4)
+-        self.append_column (col)
+-
+-        # The message of the build.
+-        # add 'hob' flag because there has not only hob to share this code
+-        if hob:
+-            self.message_renderer = HobWarpCellRendererText (col_number=1)
+-        else:
+-            self.message_renderer = gtk.CellRendererText ()
+-        self.message_column = gtk.TreeViewColumn ("Message", self.message_renderer, text=3)
+-        self.message_column.add_attribute(self.message_renderer, 'background', 5)
+-        self.message_renderer.set_property('editable', (not self.readonly))
+-        self.append_column (self.message_column)
+-
+-    def do_button_press_event(self, event):
+-        gtk.TreeView.do_button_press_event(self, event)
+-
+-        if event.button == 3:
+-            selection = super(RunningBuildTreeView, self).get_selection()
+-            (model, it) = selection.get_selected()
+-            if it is not None:
+-                can_paste = model.get(it, model.COL_LOG)[0]
+-                if can_paste == 'pastebin':
+-                    # build a simple menu with a pastebin option
+-                    menu = gtk.Menu()
+-                    menuitem = gtk.MenuItem("Copy")
+-                    menu.append(menuitem)
+-                    menuitem.connect("activate", self.clipboard_handler, (model, it))
+-                    menuitem.show()
+-                    menuitem = gtk.MenuItem("Send log to pastebin")
+-                    menu.append(menuitem)
+-                    menuitem.connect("activate", self.pastebin_handler, (model, it))
+-                    menuitem.show()
+-                    menu.show()
+-                    menu.popup(None, None, None, event.button, event.time)
+-
+-    def _add_to_clipboard(self, clipping):
+-        """
+-        Add the contents of clipping to the system clipboard.
+-        """
+-        clipboard = gtk.clipboard_get()
+-        clipboard.set_text(clipping)
+-        clipboard.store()
+-
+-    def pastebin_handler(self, widget, data):
+-        """
+-        Send the log data to pastebin, then add the new paste url to the
+-        clipboard.
+-        """
+-        (model, it) = data
+-        paste_url = do_pastebin(model.get(it, model.COL_MESSAGE)[0])
+-
+-        # @todo Provide visual feedback to the user that it is done and that
+-        # it worked.
+-        print(paste_url)
+-
+-        self._add_to_clipboard(paste_url)
+-
+-    def clipboard_handler(self, widget, data):
+-        """
+-        """
+-        (model, it) = data
+-        message = model.get(it, model.COL_MESSAGE)[0]
+-
+-        self._add_to_clipboard(message)
+-
+-class BuildFailureTreeView(gtk.TreeView):
+-
+-    def __init__ (self):
+-        gtk.TreeView.__init__(self)
+-        self.set_rules_hint(False)
+-        self.set_headers_visible(False)
+-        self.get_selection().set_mode(gtk.SELECTION_SINGLE)
+-
+-        # The icon that indicates whether we're building or failed.
+-        renderer = HobCellRendererPixbuf ()
+-        col = gtk.TreeViewColumn ("Status", renderer)
+-        col.add_attribute (renderer, "icon-name", RunningBuildModel.COL_ICON)
+-        self.append_column (col)
+-
+-        # The message of the build.
+-        self.message_renderer = HobWarpCellRendererText (col_number=1)
+-        self.message_column = gtk.TreeViewColumn ("Message", self.message_renderer, text=RunningBuildModel.COL_MESSAGE, background=RunningBuildModel.COL_COLOR)
+-        self.append_column (self.message_column)
+diff --git a/lib/bb/ui/crumbs/utils.py b/lib/bb/ui/crumbs/utils.py
+deleted file mode 100644
+index 939864f..0000000
+--- a/lib/bb/ui/crumbs/utils.py
++++ /dev/null
+@@ -1,34 +0,0 @@
+-#
+-# BitBake UI Utils 
+-#
+-# Copyright (C) 2012 Intel Corporation
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-# This utility method looks for xterm or vte and return the 
+-# frist to exist, currently we are keeping this simple, but 
+-# we will likely move the oe.terminal implementation into 
+-# bitbake which will allow more flexibility.
+-
+-import os
+-import bb
+-
+-def which_terminal():
+-    term = bb.utils.which(os.environ["PATH"], "xterm")
+-    if term:
+-        return term + " -e "
+-    term = bb.utils.which(os.environ["PATH"], "vte")
+-    if term:
+-        return term + " -c "
+-    return None
 diff --git a/lib/bb/ui/goggle.py b/lib/bb/ui/goggle.py
-index f4ee7b4..f5f8f16 100644
+deleted file mode 100644
+index f5f8f16..0000000
 --- a/lib/bb/ui/goggle.py
-+++ b/lib/bb/ui/goggle.py
-@@ -18,13 +18,18 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
-+from gi import pygtkcompat
-+
-+pygtkcompat.enable()
-+pygtkcompat.enable_gtk(version='3.0')
-+
- import gobject
- import gtk
--import xmlrpclib
-+import xmlrpc.client
- from bb.ui.crumbs.runningbuild import RunningBuildTreeView, RunningBuild
- from bb.ui.crumbs.progress import ProgressBar
- 
--import Queue
-+import queue
- 
- 
- def event_handle_idle_func (eventHandler, build, pbar):
-@@ -96,7 +101,7 @@ def main (server, eventHandler, params):
-         elif ret != True:
-             print("Error running command '%s': returned %s" % (cmdline, ret))
-             return 1
--    except xmlrpclib.Fault as x:
-+    except xmlrpcclient.Fault as x:
-         print("XMLRPC Fault getting commandline:\n %s" % x)
-         return 1
- 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 08c872e..9605c8e 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -22,7 +22,7 @@ from __future__ import division
- 
- import os
- import sys
--import xmlrpclib
-+import xmlrpc.client as xmlrpclib
- import logging
- import progressbar
- import signal
-@@ -184,8 +184,8 @@ class TerminalFilter(object):
-     def clearFooter(self):
-         if self.footer_present:
-             lines = self.footer_present
--            sys.stdout.write(self.curses.tparm(self.cuu, lines))
--            sys.stdout.write(self.curses.tparm(self.ed))
-+            sys.stdout.buffer.write(self.curses.tparm(self.cuu, lines))
-+            sys.stdout.buffer.write(self.curses.tparm(self.ed))
-             sys.stdout.flush()
-         self.footer_present = False
- 
-diff --git a/lib/bb/ui/ncurses.py b/lib/bb/ui/ncurses.py
-index 9589a77..d81e413 100644
---- a/lib/bb/ui/ncurses.py
-+++ b/lib/bb/ui/ncurses.py
-@@ -45,7 +45,7 @@
- """
- 
- 
--from __future__ import division
-+
- import logging
- import os, sys, itertools, time, subprocess
- 
-@@ -55,7 +55,7 @@ except ImportError:
-     sys.exit("FATAL: The ncurses ui could not load the required curses python module.")
- 
- import bb
--import xmlrpclib
-+import xmlrpc.client
- from bb import ui
- from bb.ui import uihelper
- 
-@@ -252,7 +252,7 @@ class NCursesUI:
-             elif ret != True:
-                 print("Couldn't get default commandlind! %s" % ret)
-                 return
--        except xmlrpclib.Fault as x:
-+        except xmlrpc.client.Fault as x:
-             print("XMLRPC Fault getting commandline:\n %s" % x)
-             return
- 
-@@ -331,7 +331,7 @@ class NCursesUI:
-                     taw.setText(0, 0, "")
-                     if activetasks:
-                         taw.appendText("Active Tasks:\n")
--                        for task in activetasks.itervalues():
-+                        for task in activetasks.values():
-                             taw.appendText(task["title"] + '\n')
-                     if failedtasks:
-                         taw.appendText("Failed Tasks:\n")
-diff --git a/lib/bb/ui/uievent.py b/lib/bb/ui/uievent.py
-index df093c5..ca19166 100644
---- a/lib/bb/ui/uievent.py
-+++ b/lib/bb/ui/uievent.py
-@@ -25,7 +25,7 @@ client/server deadlocks.
- """
- 
- import socket, threading, pickle, collections
--from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
-+from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
- 
- class BBUIEventQueue:
-     def __init__(self, BBServer, clientinfo=("localhost, 0")):
-@@ -137,7 +137,7 @@ class UIXMLRPCServer (SimpleXMLRPCServer):
-         SimpleXMLRPCServer.__init__( self,
-                                     interface,
-                                     requestHandler=SimpleXMLRPCRequestHandler,
--                                    logRequests=False, allow_none=True)
-+                                    logRequests=False, allow_none=True, use_builtin_types=True)
- 
-     def get_request(self):
-         while not self.quit:
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 588c192..138da44 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -37,7 +37,7 @@ import errno
- import signal
- import ast
- import collections
--from commands import getstatusoutput
-+from subprocess import getstatusoutput
- from contextlib import contextmanager
- from ctypes import cdll
- 
-@@ -76,7 +76,7 @@ def explode_version(s):
-             r.append((0, int(m.group(1))))
-             s = m.group(2)
-             continue
--        if s[0] in string.letters:
-+        if s[0] in string.ascii_letters:
-             m = alpha_regexp.match(s)
-             r.append((1, m.group(1)))
-             s = m.group(2)
-@@ -588,7 +588,7 @@ def filter_environment(good_vars):
-     """
- 
-     removed_vars = {}
--    for key in os.environ.keys():
-+    for key in list(os.environ):
-         if key in good_vars:
-             continue
- 
-@@ -641,7 +641,7 @@ def empty_environment():
-     """
-     Remove all variables from the environment.
-     """
--    for s in os.environ.keys():
-+    for s in list(os.environ.keys()):
-         os.unsetenv(s)
-         del os.environ[s]
- 
-@@ -958,7 +958,7 @@ def contains(variable, checkvalues, truevalue, falsevalue, d):
-     if not val:
-         return falsevalue
-     val = set(val.split())
--    if isinstance(checkvalues, basestring):
-+    if isinstance(checkvalues, str):
-         checkvalues = set(checkvalues.split())
-     else:
-         checkvalues = set(checkvalues)
-@@ -971,7 +971,7 @@ def contains_any(variable, checkvalues, truevalue, falsevalue, d):
-     if not val:
-         return falsevalue
-     val = set(val.split())
--    if isinstance(checkvalues, basestring):
-+    if isinstance(checkvalues, str):
-         checkvalues = set(checkvalues.split())
-     else:
-         checkvalues = set(checkvalues)
-@@ -1040,7 +1040,7 @@ def exec_flat_python_func(func, *args, **kwargs):
-         aidx += 1
-     # Handle keyword arguments
-     context.update(kwargs)
--    funcargs.extend(['%s=%s' % (arg, arg) for arg in kwargs.iterkeys()])
-+    funcargs.extend(['%s=%s' % (arg, arg) for arg in kwargs.keys()])
-     code = 'retval = %s(%s)' % (func, ', '.join(funcargs))
-     comp = bb.utils.better_compile(code, '<string>', '<string>')
-     bb.utils.better_exec(comp, context, code, '<string>')
-@@ -1127,7 +1127,7 @@ def edit_metadata(meta_lines, variables, varfunc, match_overrides=False):
-             else:
-                 varset_new = varset_start
- 
--            if isinstance(indent, (int, long)):
-+            if isinstance(indent, int):
-                 if indent == -1:
-                     indentspc = ' ' * (len(varset_new) + 2)
-                 else:
-@@ -1195,7 +1195,7 @@ def edit_metadata(meta_lines, variables, varfunc, match_overrides=False):
-                 in_var = None
-         else:
-             skip = False
--            for (varname, var_re) in var_res.iteritems():
-+            for (varname, var_re) in var_res.items():
-                 res = var_re.match(line)
-                 if res:
-                     isfunc = varname.endswith('()')
-@@ -1373,7 +1373,7 @@ def get_file_layer(filename, d):
-         # Use longest path so we handle nested layers
-         matchlen = 0
-         match = None
--        for collection, regex in collection_res.iteritems():
-+        for collection, regex in collection_res.items():
-             if len(regex) > matchlen and re.match(regex, path):
-                 matchlen = len(regex)
-                 match = collection
-diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
-index 5b95e2e..d4c1792 100644
---- a/lib/bblayers/action.py
-+++ b/lib/bblayers/action.py
-@@ -117,7 +117,7 @@ build results (as the layer priority order has effectively changed).
-         applied_appends = []
-         for layer in layers:
-             overlayed = []
--            for f in self.tinfoil.cooker.collection.overlayed.iterkeys():
-+            for f in self.tinfoil.cooker.collection.overlayed.keys():
-                 for of in self.tinfoil.cooker.collection.overlayed[f]:
-                     if of.startswith(layer):
-                         overlayed.append(of)
-diff --git a/lib/bblayers/common.py b/lib/bblayers/common.py
-index 360b9d7..b10fb4c 100644
---- a/lib/bblayers/common.py
-+++ b/lib/bblayers/common.py
-@@ -14,7 +14,7 @@ class LayerPlugin():
-         self.tinfoil = tinfoil
-         self.bblayers = (self.tinfoil.config_data.getVar('BBLAYERS', True) or "").split()
-         layerconfs = self.tinfoil.config_data.varhistory.get_variable_items_files('BBFILE_COLLECTIONS', self.tinfoil.config_data)
--        self.bbfile_collections = {layer: os.path.dirname(os.path.dirname(path)) for layer, path in layerconfs.iteritems()}
-+        self.bbfile_collections = {layer: os.path.dirname(os.path.dirname(path)) for layer, path in layerconfs.items()}
- 
-     @staticmethod
-     def add_command(subparsers, cmdname, function, parserecipes=True, *args, **kwargs):
-diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index 3c39d8a..10ad718 100644
---- a/lib/bblayers/layerindex.py
-+++ b/lib/bblayers/layerindex.py
-@@ -1,10 +1,10 @@
- import argparse
--import httplib
-+import http.client
- import json
- import logging
- import os
- import subprocess
--import urlparse
-+import urllib.parse
- 
- from bblayers.action import ActionPlugin
- 
-@@ -24,12 +24,12 @@ class LayerIndexPlugin(ActionPlugin):
-     def get_json_data(self, apiurl):
-         proxy_settings = os.environ.get("http_proxy", None)
-         conn = None
--        _parsedurl = urlparse.urlparse(apiurl)
-+        _parsedurl = urllib.parse.urlparse(apiurl)
-         path = _parsedurl.path
-         query = _parsedurl.query
- 
-         def parse_url(url):
--            parsedurl = urlparse.urlparse(url)
-+            parsedurl = urllib.parse.urlparse(url)
-             if parsedurl.netloc[0] == '[':
-                 host, port = parsedurl.netloc[1:].split(']', 1)
-                 if ':' in port:
-@@ -46,11 +46,11 @@ class LayerIndexPlugin(ActionPlugin):
- 
-         if proxy_settings is None:
-             host, port = parse_url(apiurl)
--            conn = httplib.HTTPConnection(host, port)
-+            conn = http.client.HTTPConnection(host, port)
-             conn.request("GET", path + "?" + query)
-         else:
-             host, port = parse_url(proxy_settings)
--            conn = httplib.HTTPConnection(host, port)
-+            conn = http.client.HTTPConnection(host, port)
-             conn.request("GET", apiurl)
- 
-         r = conn.getresponse()
-diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
-index b5b98f7..b8c817b 100644
---- a/lib/bblayers/query.py
-+++ b/lib/bblayers/query.py
-@@ -128,7 +128,7 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
-         # Ensure we list skipped recipes
-         # We are largely guessing about PN, PV and the preferred version here,
-         # but we have no choice since skipped recipes are not fully parsed
--        skiplist = self.tinfoil.cooker.skiplist.keys()
-+        skiplist = list(self.tinfoil.cooker.skiplist.keys())
-         skiplist.sort( key=lambda fileitem: self.tinfoil.cooker.collection.calc_bbfile_priority(fileitem) )
-         skiplist.reverse()
-         for fn in skiplist:
-@@ -275,7 +275,7 @@ Lists recipes with the bbappends that apply to them as subitems.
- 
-     def show_appends_for_skipped(self):
-         filenames = [os.path.basename(f)
--                    for f in self.tinfoil.cooker.skiplist.iterkeys()]
-+                    for f in self.tinfoil.cooker.skiplist.keys()]
-         return self.show_appends_output(filenames, None, " (skipped)")
- 
-     def show_appends_output(self, filenames, best_filename, name_suffix = ''):
-diff --git a/lib/codegen.py b/lib/codegen.py
-index be772d5..62a6748 100644
---- a/lib/codegen.py
-+++ b/lib/codegen.py
-@@ -214,11 +214,11 @@ class SourceGenerator(NodeVisitor):
-                 paren_or_comma()
-                 self.write(keyword.arg + '=')
-                 self.visit(keyword.value)
--            if node.starargs is not None:
-+            if hasattr(node, 'starargs') and node.starargs is not None:
-                 paren_or_comma()
-                 self.write('*')
-                 self.visit(node.starargs)
--            if node.kwargs is not None:
-+            if hasattr(node, 'kwargs') and node.kwargs is not None:
-                 paren_or_comma()
-                 self.write('**')
-                 self.visit(node.kwargs)
-@@ -379,11 +379,11 @@ class SourceGenerator(NodeVisitor):
-             write_comma()
-             self.write(keyword.arg + '=')
-             self.visit(keyword.value)
--        if node.starargs is not None:
-+        if hasattr(node, 'starargs') and node.starargs is not None:
-             write_comma()
-             self.write('*')
-             self.visit(node.starargs)
--        if node.kwargs is not None:
-+        if hasattr(node, 'kwargs') and node.kwargs is not None:
-             write_comma()
-             self.write('**')
-             self.visit(node.kwargs)
-diff --git a/lib/ply/yacc.py b/lib/ply/yacc.py
-index 6168fd9..d50886e 100644
---- a/lib/ply/yacc.py
-+++ b/lib/ply/yacc.py
-@@ -195,6 +195,8 @@ class YaccProduction:
-         self.lexer = None
-         self.parser= None
-     def __getitem__(self,n):
-+        if isinstance(n,slice):
-+            return [self[i] for i in range(*(n.indices(len(self.slice))))]
-         if n >= 0: return self.slice[n].value
-         else: return self.stack[n].value
- 
-diff --git a/lib/prserv/db.py b/lib/prserv/db.py
-index 2a86184..495d09f 100644
---- a/lib/prserv/db.py
-+++ b/lib/prserv/db.py
-@@ -260,7 +260,7 @@ class PRData(object):
-         self.connection.close()
- 
-     def __getitem__(self,tblname):
--        if not isinstance(tblname, basestring):
-+        if not isinstance(tblname, str):
-             raise TypeError("tblname argument must be a string, not '%s'" %
-                             type(tblname))
-         if tblname in self._tables:
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index 8cec9f8..cafcc82 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -1,10 +1,10 @@
- import os,sys,logging
- import signal, time
--from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
-+from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
- import threading
--import Queue
-+import queue
- import socket
--import StringIO
-+import io
- 
- try:
-     import sqlite3
-@@ -64,7 +64,7 @@ class PRServer(SimpleXMLRPCServer):
-         self.register_function(self.importone, "importone")
-         self.register_introspection_functions()
- 
--        self.requestqueue = Queue.Queue()
-+        self.requestqueue = queue.Queue()
-         self.handlerthread = threading.Thread(target = self.process_request_thread)
-         self.handlerthread.daemon = False
- 
-@@ -83,7 +83,7 @@ class PRServer(SimpleXMLRPCServer):
-         while not self.quit:
-             try:
-                 (request, client_address) = self.requestqueue.get(True, 30)
--            except Queue.Empty:
-+            except queue.Empty:
-                 self.table.sync_if_dirty()
-                 continue
-             try:
-@@ -126,7 +126,7 @@ class PRServer(SimpleXMLRPCServer):
-         Returns None if the database engine does not support dumping to
-         script or if some other error is encountered in processing.
-         """
--        buff = StringIO.StringIO()
-+        buff = io.StringIO()
-         try:
-             self.table.sync()
-             self.table.dump_db(buff)
-@@ -420,7 +420,7 @@ class PRServiceConfigError(Exception):
- def auto_start(d):
-     global singleton
- 
--    host_params = filter(None, (d.getVar('PRSERV_HOST', True) or '').split(':'))
-+    host_params = list(filter(None, (d.getVar('PRSERV_HOST', True) or '').split(':')))
-     if not host_params:
-         return None
- 
++++ /dev/null
+@@ -1,126 +0,0 @@
+-#
+-# BitBake Graphical GTK User Interface
+-#
+-# Copyright (C) 2008        Intel Corporation
+-#
+-# Authored by Rob Bradford <rob@linux.intel.com>
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-from gi import pygtkcompat
+-
+-pygtkcompat.enable()
+-pygtkcompat.enable_gtk(version='3.0')
+-
+-import gobject
+-import gtk
+-import xmlrpc.client
+-from bb.ui.crumbs.runningbuild import RunningBuildTreeView, RunningBuild
+-from bb.ui.crumbs.progress import ProgressBar
+-
+-import queue
+-
+-
+-def event_handle_idle_func (eventHandler, build, pbar):
+-
+-    # Consume as many messages as we can in the time available to us
+-    event = eventHandler.getEvent()
+-    while event:
+-        build.handle_event (event, pbar)
+-        event = eventHandler.getEvent()
+-
+-    return True
+-
+-def scroll_tv_cb (model, path, iter, view):
+-    view.scroll_to_cell (path)
+-
+-
+-# @todo hook these into the GUI so the user has feedback...
+-def running_build_failed_cb (running_build):
+-    pass
+-
+-
+-def running_build_succeeded_cb (running_build):
+-    pass
+-
+-
+-class MainWindow (gtk.Window):
+-    def __init__ (self):
+-        gtk.Window.__init__ (self, gtk.WINDOW_TOPLEVEL)
+-
+-        # Setup tree view and the scrolled window
+-        scrolled_window = gtk.ScrolledWindow ()
+-        self.add (scrolled_window)
+-        self.cur_build_tv = RunningBuildTreeView()
+-        self.connect("delete-event", gtk.main_quit)
+-        self.set_default_size(640, 480)
+-        scrolled_window.add (self.cur_build_tv)
+-
+-
+-def main (server, eventHandler, params):
+-    gobject.threads_init()
+-    gtk.gdk.threads_init()
+-
+-    window = MainWindow ()
+-    window.show_all ()
+-    pbar = ProgressBar(window)
+-    pbar.connect("delete-event", gtk.main_quit)
+-
+-    # Create the object for the current build
+-    running_build = RunningBuild ()
+-    window.cur_build_tv.set_model (running_build.model)
+-    running_build.model.connect("row-inserted", scroll_tv_cb, window.cur_build_tv)
+-    running_build.connect ("build-succeeded", running_build_succeeded_cb)
+-    running_build.connect ("build-failed", running_build_failed_cb)
+-
+-    try:
+-        params.updateFromServer(server)
+-        cmdline = params.parseActions()
+-        if not cmdline:
+-            print("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
+-            return 1
+-        if 'msg' in cmdline and cmdline['msg']:
+-            logger.error(cmdline['msg'])
+-            return 1
+-        cmdline = cmdline['action']
+-        ret, error = server.runCommand(cmdline)
+-        if error:
+-            print("Error running command '%s': %s" % (cmdline, error))
+-            return 1
+-        elif ret != True:
+-            print("Error running command '%s': returned %s" % (cmdline, ret))
+-            return 1
+-    except xmlrpcclient.Fault as x:
+-        print("XMLRPC Fault getting commandline:\n %s" % x)
+-        return 1
+-
+-    # Use a timeout function for probing the event queue to find out if we
+-    # have a message waiting for us.
+-    gobject.timeout_add (100,
+-                         event_handle_idle_func,
+-                         eventHandler,
+-                         running_build,
+-                         pbar)
+-
+-    try:
+-        gtk.main()
+-    except EnvironmentError as ioerror:
+-        # ignore interrupted io
+-        if ioerror.args[0] == 4:
+-            pass
+-    except KeyboardInterrupt:
+-        pass
+-    finally:
+-        server.runCommand(["stateForceShutdown"])
+-
 -- 
 2.5.0
 
