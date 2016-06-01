@@ -1,29 +1,30 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id EC73C77175
+	by mail.openembedded.org (Postfix) with ESMTP id 389EB77190
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 31 May 2016 13:50:25 +0000 (UTC)
+	Wed,  1 Jun 2016 12:37:03 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4VDo2pL017387; Tue, 31 May 2016 14:50:15 +0100
+	u51Cb3B2007479; Wed, 1 Jun 2016 13:37:03 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id nxTC4T4iVcUS; Tue, 31 May 2016 14:50:15 +0100 (BST)
+	with LMTP id M2KcZJJxkgdP; Wed,  1 Jun 2016 13:37:03 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u4VDoD0X017395
+	u51CaxAn007449
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 31 May 2016 14:50:14 +0100
-Message-ID: <1464702613.3814.2.camel@linuxfoundation.org>
+	Wed, 1 Jun 2016 13:37:00 +0100
+Received: from richard by hex with local (Exim 4.86)
+	(envelope-from <richard@rpsys.net>)
+	id 1b85ON-0000nn-94; Wed, 01 Jun 2016 13:36:59 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: fabien.proriolpatch@kazoe.org, bitbake-devel@lists.openembedded.org
-Date: Tue, 31 May 2016 14:50:13 +0100
-In-Reply-To: <1464700684-24169-1-git-send-email-fabien.proriolpatch@kazoe.org>
-References: <1464700684-24169-1-git-send-email-fabien.proriolpatch@kazoe.org>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Cc: Fabien Proriol <fabien.proriol@jdsu.com>
-Subject: Re: [PATCH] bb.fetch.git: add a way to avoid git protocol, and force http or https mirrors
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  1 Jun 2016 13:36:26 +0100
+Message-Id: <1464784607-2985-7-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
+References: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 07/28] image-writer/goggle: Disable pygtkcompat problems
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,37 +37,106 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 31 May 2016 13:50:26 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 01 Jun 2016 12:37:05 -0000
 
-On Tue, 2016-05-31 at 15:18 +0200, fabien.proriolpatch@kazoe.org wrote:
-> From: Fabien Proriol <fabien.proriol@jdsu.com>
-> 
-> This patch add the possibility to bitbake to avoid git protocol to
-> fetch sources.
-> This is usefull in some network with firewall blocking git port.
-> 
-> When BB_GIT_PROTOCOL_FIREWALL is set, the PROTOCOL_MIRRORS table is
-> used to find the new protocol (http or https) and the new host (if
-> different) to used.
-> 
-> BB_GIT_PROTOCOL_FIREWALL can also contains a list of host accepted.
-> This is usefull for exemple, if we use local git repository inside
-> the network.
-> 
-> Exemple usage:
->     # Avoid all git protocol
->     BB_GIT_PROTOCOL_FIREWALL = "1"
-> 
->     # Avoid git protocol, except for srv1 and srv2 in local network
->     BB_GIT_PROTOCOL_FIREWALL = "srv1.mydomain.com;srv2.mydomain.com"
+Disable the problematic gtk usage for use with pygtkcompat. The following
+commit removes these tools/UIs entirely but we may as well leave this
+piece in the history in case anyone does want a starting point for reusing
+them.
 
-Why not use the more generic MIRRORS and PREMIRRORS for this? If they
-can't support this, we likely should figure out a way to make them work
-for it rather than adding new fetcher specific variables.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ bin/image-writer                     |  3 ++-
+ lib/bb/ui/crumbs/hig/crumbsdialog.py |  2 +-
+ lib/bb/ui/crumbs/hobwidget.py        |  8 ++++----
+ lib/bb/ui/crumbs/progressbar.py      | 15 ++++++++-------
+ 4 files changed, 15 insertions(+), 13 deletions(-)
 
-Cheers,
+diff --git a/bin/image-writer b/bin/image-writer
+index 7ab1d8c..40e284d 100755
+--- a/bin/image-writer
++++ b/bin/image-writer
+@@ -67,7 +67,8 @@ class DeployWindow(gtk.Window):
+ 
+         self.deploy_dialog = DeployImageDialog(Title, image_path, self,
+                                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT
+-                                        | gtk.DIALOG_NO_SEPARATOR, None, standalone=True)
++                                        , None, standalone=True)
++#FIXME | gtk.DIALOG_NO_SEPARATOR
+         close_button = self.deploy_dialog.add_button("Close", gtk.RESPONSE_NO)
+         HobAltButton.style_button(close_button)
+         close_button.connect('clicked', gtk.main_quit)
+diff --git a/lib/bb/ui/crumbs/hig/crumbsdialog.py b/lib/bb/ui/crumbs/hig/crumbsdialog.py
+index c679f9a..73b9234 100644
+--- a/lib/bb/ui/crumbs/hig/crumbsdialog.py
++++ b/lib/bb/ui/crumbs/hig/crumbsdialog.py
+@@ -36,7 +36,7 @@ class CrumbsDialog(gtk.Dialog):
+     def __init__(self, title="", parent=None, flags=0, buttons=None):
+         super(CrumbsDialog, self).__init__(title, parent, flags, buttons)
+ 
+-        self.set_property("has-separator", False) # note: deprecated in 2.22
++        #FIXME self.set_property("has-separator", False) # note: deprecated in 2.22
+ 
+         self.set_border_width(6)
+         self.vbox.set_property("spacing", 12)
+diff --git a/lib/bb/ui/crumbs/hobwidget.py b/lib/bb/ui/crumbs/hobwidget.py
+index 1f51a3c..3f6138b 100644
+--- a/lib/bb/ui/crumbs/hobwidget.py
++++ b/lib/bb/ui/crumbs/hobwidget.py
+@@ -273,13 +273,13 @@ class BaseHobButton(gtk.Button):
+         style = button.get_style()
+         style = gtk.rc_get_style_by_paths(gtk.settings_get_default(), 'gtk-button', 'gtk-button', gobject.TYPE_NONE)
+ 
+-        button.set_flags(gtk.CAN_DEFAULT)
++        #FIXME button.set_flags(gtk.CAN_DEFAULT)
+         button.grab_default()
+ 
+ #        label = "<span size='x-large'><b>%s</b></span>" % gobject.markup_escape_text(button.get_label())
+         label = button.get_label()
+         button.set_label(label)
+-        button.child.set_use_markup(True)
++        #FIXME button.child.set_use_markup(True)
+ 
+ class HobButton(BaseHobButton):
+     """
+@@ -399,8 +399,8 @@ class HobInfoButton(gtk.EventBox):
+         self.dialog = PropertyDialog(title = '',
+                     parent = self.my_parent,
+                     information = self.tip_markup,
+-                    flags = gtk.DIALOG_DESTROY_WITH_PARENT
+-                        | gtk.DIALOG_NO_SEPARATOR)
++                    flags = gtk.DIALOG_DESTROY_WITH_PARENT)
++                        #FMXIE | gtk.DIALOG_NO_SEPARATOR
+ 
+         button = self.dialog.add_button("Close", gtk.RESPONSE_CANCEL)
+         HobAltButton.style_button(button)
+diff --git a/lib/bb/ui/crumbs/progressbar.py b/lib/bb/ui/crumbs/progressbar.py
+index 03230ae..ba3c7a0 100644
+--- a/lib/bb/ui/crumbs/progressbar.py
++++ b/lib/bb/ui/crumbs/progressbar.py
+@@ -28,13 +28,14 @@ class HobProgressBar (gtk.ProgressBar):
+ 
+     def set_rcstyle(self, status):
+         rcstyle = gtk.RcStyle()
+-        rcstyle.fg[2] = gtk.gdk.Color(HobColors.BLACK)
+-        if status == "stop":
+-            rcstyle.bg[3] = gtk.gdk.Color(HobColors.WARNING)
+-        elif status == "fail":
+-            rcstyle.bg[3] = gtk.gdk.Color(HobColors.ERROR)
+-        else:
+-            rcstyle.bg[3] = gtk.gdk.Color(HobColors.RUNNING)
++#FIXME
++#        rcstyle.fg[2] = gtk.gdk.Color(HobColors.BLACK)
++#        if status == "stop":
++#            rcstyle.bg[3] = gtk.gdk.Color(HobColors.WARNING)
++#        elif status == "fail":
++#            rcstyle.bg[3] = gtk.gdk.Color(HobColors.ERROR)
++#        else:
++#            rcstyle.bg[3] = gtk.gdk.Color(HobColors.RUNNING)
+         self.modify_style(rcstyle)
+ 
+     def set_title(self, text=None):
+-- 
+2.5.0
 
-Richard
 
