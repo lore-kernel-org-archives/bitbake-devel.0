@@ -1,30 +1,30 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id BE75C773C8
+	by mail.openembedded.org (Postfix) with ESMTP id ECBB5773CB
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed,  1 Jun 2016 12:37:10 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u51Cb3BB007479; Wed, 1 Jun 2016 13:37:07 +0100
+	u51Cb48Q007485; Wed, 1 Jun 2016 13:37:07 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id MwUc9Whh8ORp; Wed,  1 Jun 2016 13:37:07 +0100 (BST)
+	with LMTP id khdbWm6-k_G5; Wed,  1 Jun 2016 13:37:07 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u51Caxkp007445
+	u51Caxqw007463
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
 	Wed, 1 Jun 2016 13:37:00 +0100
 Received: from richard by hex with local (Exim 4.86)
 	(envelope-from <richard@rpsys.net>)
-	id 1b85ON-0000nP-6p; Wed, 01 Jun 2016 13:36:59 +0100
+	id 1b85ON-0000p0-Gb; Wed, 01 Jun 2016 13:36:59 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 Jun 2016 13:36:22 +0100
-Message-Id: <1464784607-2985-3-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Wed,  1 Jun 2016 13:36:40 +0100
+Message-Id: <1464784607-2985-21-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
 References: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
-Subject: [PATCH 03/28] bitbake: Drop futures usage since we're python 3
+Subject: [PATCH 21/28] toaster: fix migrations
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,91 +39,155 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 01 Jun 2016 12:37:13 -0000
 
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+
+Created two new migrations due to the models changes made
+in python3 patchset.
+
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py                   | 2 +-
- lib/bb/exceptions.py               | 2 +-
- lib/bb/fetch2/__init__.py          | 2 --
- lib/bb/fetch2/perforce.py          | 1 -
- lib/bb/parse/ast.py                | 3 +--
- lib/bb/parse/parse_py/BBHandler.py | 2 +-
- 6 files changed, 4 insertions(+), 8 deletions(-)
+ .../migrations/0004_auto_20160509_0946.py          | 34 +++++++++
+ .../orm/migrations/0007_auto_20160509_0946.py      | 89 ++++++++++++++++++++++
+ 2 files changed, 123 insertions(+)
+ create mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0004_auto_20160509_0946.py
+ create mode 100644 bitbake/lib/toaster/orm/migrations/0007_auto_20160509_0946.py
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index fb86446..11f17ef 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -22,7 +22,7 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
--from __future__ import print_function
+diff --git a/bitbake/lib/toaster/bldcontrol/migrations/0004_auto_20160509_0946.py b/bitbake/lib/toaster/bldcontrol/migrations/0004_auto_20160509_0946.py
+new file mode 100644
+index 0000000..4a70e2d
+--- /dev/null
++++ b/bitbake/lib/toaster/bldcontrol/migrations/0004_auto_20160509_0946.py
+@@ -0,0 +1,34 @@
++# -*- coding: utf-8 -*-
++from __future__ import unicode_literals
 +
- import sys, os, glob, os.path, re, time
- import atexit
- import itertools
-diff --git a/lib/bb/exceptions.py b/lib/bb/exceptions.py
-index f182c8f..eadfc57 100644
---- a/lib/bb/exceptions.py
-+++ b/lib/bb/exceptions.py
-@@ -1,4 +1,4 @@
--from __future__ import absolute_import
++from django.db import migrations, models
 +
- import inspect
- import traceback
- import bb.namedtuple_with_abc
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 7d2f350..14fe3c7 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -25,8 +25,6 @@ BitBake build tools.
- #
- # Based on functions from the base bb module, Copyright 2003 Holger Schurig
- 
--from __future__ import absolute_import
--from __future__ import print_function
- import os, re
- import signal
- import logging
-diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
-index 3a10c7c..1aef246 100644
---- a/lib/bb/fetch2/perforce.py
-+++ b/lib/bb/fetch2/perforce.py
-@@ -25,7 +25,6 @@ BitBake build tools.
- #
- # Based on functions from the base bb module, Copyright 2003 Holger Schurig
- 
--from future_builtins import zip
- import os
- import subprocess
- import logging
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 5f55af5..bc3a2f8 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -21,8 +21,7 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
--from __future__ import absolute_import
--from future_builtins import filter
 +
- import re
- import string
- import logging
-diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-index ef72c37..c54a079 100644
---- a/lib/bb/parse/parse_py/BBHandler.py
-+++ b/lib/bb/parse/parse_py/BBHandler.py
-@@ -25,7 +25,7 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
--from __future__ import absolute_import
++class Migration(migrations.Migration):
 +
- import re, bb, os
- import logging
- import bb.build, bb.utils
++    dependencies = [
++        ('bldcontrol', '0003_add_cancelling_state'),
++    ]
++
++    operations = [
++        migrations.AlterField(
++            model_name='buildenvironment',
++            name='bbstate',
++            field=models.IntegerField(choices=[(0, 'stopped'), (1, 'started')], default=0),
++        ),
++        migrations.AlterField(
++            model_name='buildenvironment',
++            name='betype',
++            field=models.IntegerField(choices=[(0, 'local')]),
++        ),
++        migrations.AlterField(
++            model_name='buildenvironment',
++            name='lock',
++            field=models.IntegerField(choices=[(0, 'free'), (1, 'lock'), (2, 'running')], default=0),
++        ),
++        migrations.AlterField(
++            model_name='buildrequest',
++            name='state',
++            field=models.IntegerField(choices=[(0, 'created'), (1, 'queued'), (2, 'in progress'), (3, 'completed'), (4, 'failed'), (5, 'deleted'), (6, 'cancelling'), (7, 'archive')], default=0),
++        ),
++    ]
+diff --git a/bitbake/lib/toaster/orm/migrations/0007_auto_20160509_0946.py b/bitbake/lib/toaster/orm/migrations/0007_auto_20160509_0946.py
+new file mode 100644
+index 0000000..d866105
+--- /dev/null
++++ b/bitbake/lib/toaster/orm/migrations/0007_auto_20160509_0946.py
+@@ -0,0 +1,89 @@
++# -*- coding: utf-8 -*-
++from __future__ import unicode_literals
++
++from django.db import migrations, models
++
++
++class Migration(migrations.Migration):
++
++    dependencies = [
++        ('orm', '0006_add_cancelled_state'),
++    ]
++
++    operations = [
++        migrations.AlterField(
++            model_name='build',
++            name='outcome',
++            field=models.IntegerField(choices=[(0, 'Succeeded'), (1, 'Failed'), (2, 'In Progress'), (3, 'Cancelled')], default=2),
++        ),
++        migrations.AlterField(
++            model_name='helptext',
++            name='area',
++            field=models.IntegerField(choices=[(0, 'variable')]),
++        ),
++        migrations.AlterField(
++            model_name='layer',
++            name='summary',
++            field=models.TextField(null=True, help_text='One-line description of the layer', default=None),
++        ),
++        migrations.AlterField(
++            model_name='layer_version',
++            name='local_path',
++            field=models.FilePathField(max_length=1024, default='/'),
++        ),
++        migrations.AlterField(
++            model_name='layersource',
++            name='sourcetype',
++            field=models.IntegerField(choices=[(0, 'local'), (1, 'layerindex'), (2, 'imported')]),
++        ),
++        migrations.AlterField(
++            model_name='logmessage',
++            name='level',
++            field=models.IntegerField(choices=[(0, 'info'), (1, 'warn'), (2, 'error'), (3, 'critical'), (-1, 'toaster exception')], default=0),
++        ),
++        migrations.AlterField(
++            model_name='package',
++            name='installed_name',
++            field=models.CharField(max_length=100, default=''),
++        ),
++        migrations.AlterField(
++            model_name='package_dependency',
++            name='dep_type',
++            field=models.IntegerField(choices=[(0, 'depends'), (1, 'depends'), (3, 'recommends'), (2, 'recommends'), (4, 'suggests'), (5, 'provides'), (6, 'replaces'), (7, 'conflicts')]),
++        ),
++        migrations.AlterField(
++            model_name='recipe_dependency',
++            name='dep_type',
++            field=models.IntegerField(choices=[(0, 'depends'), (1, 'rdepends')]),
++        ),
++        migrations.AlterField(
++            model_name='release',
++            name='branch_name',
++            field=models.CharField(max_length=50, default=''),
++        ),
++        migrations.AlterField(
++            model_name='releasedefaultlayer',
++            name='layer_name',
++            field=models.CharField(max_length=100, default=''),
++        ),
++        migrations.AlterField(
++            model_name='target_file',
++            name='inodetype',
++            field=models.IntegerField(choices=[(1, 'regular'), (2, 'directory'), (3, 'symlink'), (4, 'socket'), (5, 'fifo'), (6, 'character'), (7, 'block')]),
++        ),
++        migrations.AlterField(
++            model_name='task',
++            name='outcome',
++            field=models.IntegerField(choices=[(-1, 'Not Available'), (0, 'Succeeded'), (1, 'Covered'), (2, 'Cached'), (3, 'Prebuilt'), (4, 'Failed'), (5, 'Empty')], default=-1),
++        ),
++        migrations.AlterField(
++            model_name='task',
++            name='script_type',
++            field=models.IntegerField(choices=[(0, 'N/A'), (2, 'Python'), (3, 'Shell')], default=0),
++        ),
++        migrations.AlterField(
++            model_name='task',
++            name='sstate_result',
++            field=models.IntegerField(choices=[(0, 'Not Applicable'), (1, 'File not in cache'), (2, 'Failed'), (3, 'Succeeded')], default=0),
++        ),
++    ]
 -- 
 2.5.0
 
