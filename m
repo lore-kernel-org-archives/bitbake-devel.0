@@ -1,30 +1,30 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 5A7B9773BE
+	by mail.openembedded.org (Postfix) with ESMTP id 2D3B3773CF
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 Jun 2016 12:37:11 +0000 (UTC)
+	Wed,  1 Jun 2016 12:37:10 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u51Cb3BF007479; Wed, 1 Jun 2016 13:37:08 +0100
+	u51Cb48N007485; Wed, 1 Jun 2016 13:37:06 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id DrZvRg3r_ljd; Wed,  1 Jun 2016 13:37:08 +0100 (BST)
+	with LMTP id ZcogXJ6uiOgb; Wed,  1 Jun 2016 13:37:06 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u51CaxYW007469
+	u51CaxGo007461
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
 	Wed, 1 Jun 2016 13:37:00 +0100
 Received: from richard by hex with local (Exim 4.86)
 	(envelope-from <richard@rpsys.net>)
-	id 1b85ON-0000pU-Jx; Wed, 01 Jun 2016 13:36:59 +0100
+	id 1b85ON-0000oo-FZ; Wed, 01 Jun 2016 13:36:59 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 Jun 2016 13:36:46 +0100
-Message-Id: <1464784607-2985-27-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Wed,  1 Jun 2016 13:36:38 +0100
+Message-Id: <1464784607-2985-19-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
 References: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
-Subject: [PATCH 27/28] toaster: fix urllib imports
+Subject: [PATCH 19/28] toaster: read timezone files in binary mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,62 +41,44 @@ X-List-Received-Date: Wed, 01 Jun 2016 12:37:14 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Some functions have been moved from urllib to urllib.parse
-in python 3. Modifying the code to import unquote, urlencode and
-unquote_plus from urllib.parse if import from urllib fails should
-make it working on both python 2 and python 3.
+Used 'rb' mode to open files to avoid unicode error when code
+runs on python 3:
+   UnicodeDecodeError: 'utf-8' codec can't decode byte 0x80
+                       in position 44: invalid start byte
+
+[YOCTO #9584]
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/toaster/toastergui/views.py   | 9 ++++++---
- lib/toaster/toastergui/widgets.py | 6 +++++-
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ lib/toaster/toastermain/settings.py | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 8e920f0..0510897 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -200,16 +200,19 @@ def _verify_parameters(g, mandatory_parameters):
-     return None
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index c7edff2..3dfa2b2 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -87,17 +87,16 @@ else:
+             try:
+                 import pytz
+                 from pytz.exceptions import UnknownTimeZoneError
+-                pass
+                 try:
+                     if pytz.timezone(zonename) is not None:
+-                        zonefilelist[hashlib.md5(open(filepath).read()).hexdigest()] = zonename
++                        zonefilelist[hashlib.md5(open(filepath, 'rb').read()).hexdigest()] = zonename
+                 except UnknownTimeZoneError as ValueError:
+                     # we expect timezone failures here, just move over
+                     pass
+             except ImportError:
+-                zonefilelist[hashlib.md5(open(filepath).read()).hexdigest()] = zonename
++                zonefilelist[hashlib.md5(open(filepath, 'rb').read()).hexdigest()] = zonename
  
- def _redirect_parameters(view, g, mandatory_parameters, *args, **kwargs):
--    import urllib
-+    try:
-+        from urllib import unquote, urlencode
-+    except ImportError:
-+        from urllib.parse import unquote, urlencode
-     url = reverse(view, kwargs=kwargs)
-     params = {}
-     for i in g:
-         params[i] = g[i]
-     for i in mandatory_parameters:
-         if not i in params:
--            params[i] = urllib.unquote(str(mandatory_parameters[i]))
-+            params[i] = unquote(str(mandatory_parameters[i]))
+-    TIME_ZONE = zonefilelist[hashlib.md5(open('/etc/localtime').read()).hexdigest()]
++    TIME_ZONE = zonefilelist[hashlib.md5(open('/etc/localtime', 'rb').read()).hexdigest()]
  
--    return redirect(url + "?%s" % urllib.urlencode(params), permanent = False, **kwargs)
-+    return redirect(url + "?%s" % urlencode(params), permanent = False, **kwargs)
- 
- class RedirectException(Exception):
-     def __init__(self, view, g, mandatory_parameters, *args, **kwargs):
-diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
-index 19850fb..551c33c 100644
---- a/lib/toaster/toastergui/widgets.py
-+++ b/lib/toaster/toastergui/widgets.py
-@@ -38,7 +38,11 @@ import json
- import collections
- import operator
- import re
--import urllib
-+
-+try:
-+    from urllib import unquote_plus
-+except ImportError:
-+    from urllib.parse import unquote_plus
- 
- import logging
- logger = logging.getLogger("toaster")
+ # Language code for this installation. All choices can be found here:
+ # http://www.i18nguy.com/unicode/language-identifiers.html
 -- 
 2.5.0
 
