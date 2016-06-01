@@ -1,30 +1,31 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 561637726C
+	by mail.openembedded.org (Postfix) with ESMTP id A256477190
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 Jun 2016 12:36:54 +0000 (UTC)
+	Wed,  1 Jun 2016 12:37:06 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u51Ca6ai006999; Wed, 1 Jun 2016 13:36:52 +0100
+	u51Cb3B4007479; Wed, 1 Jun 2016 13:37:04 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id Z7Ltg4eaFUAf; Wed,  1 Jun 2016 13:36:52 +0100 (BST)
+	with LMTP id Mg5WVTdcNIqB; Wed,  1 Jun 2016 13:37:04 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u51Caogs007439
+	u51Caxjn007446
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 1 Jun 2016 13:36:51 +0100
+	Wed, 1 Jun 2016 13:37:00 +0100
 Received: from richard by hex with local (Exim 4.86)
 	(envelope-from <richard@rpsys.net>)
-	id 1b85OE-0000nG-GZ; Wed, 01 Jun 2016 13:36:50 +0100
+	id 1b85ON-0000nU-7R; Wed, 01 Jun 2016 13:36:59 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 Jun 2016 13:36:20 +0100
-Message-Id: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Wed,  1 Jun 2016 13:36:23 +0100
+Message-Id: <1464784607-2985-4-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.5.0
-MIME-Version: 1.0
+In-Reply-To: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
+References: <1464784607-2985-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailman-Approved-At: Wed, 01 Jun 2016 14:17:24 +0000
-Subject: [PATCH 01/28] bitbake/bs4: Upgrade 4.3.2 -> 4.4.1 (python 3 version)
+Subject: [PATCH 04/28] bitbake: Convert to python 3 megacommit This needs breaking up into smaller changes.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,3078 +38,3017 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 Jun 2016 12:36:56 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Upgrade to 4.4.1 which has been run through 2to3 as per the maintainers
-recommendation for v3 use.
+X-List-Received-Date: Wed, 01 Jun 2016 12:37:12 -0000
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bs4/__init__.py                    | 112 ++++++++---
- lib/bs4/builder/__init__.py            |   7 +-
- lib/bs4/builder/_html5lib.py           |  71 +++++--
- lib/bs4/builder/_htmlparser.py         |  56 +++---
- lib/bs4/builder/_lxml.py               |  47 +++--
- lib/bs4/dammit.py                      |  31 ++-
- lib/bs4/diagnose.py                    |  68 ++++---
- lib/bs4/element.py                     | 346 ++++++++++++++++++++++-----------
- lib/bs4/testing.py                     | 129 ++++++++++--
- lib/bs4/tests/test_builder_registry.py |  14 +-
- lib/bs4/tests/test_html5lib.py         |  19 +-
- lib/bs4/tests/test_htmlparser.py       |  13 ++
- lib/bs4/tests/test_lxml.py             |  19 +-
- lib/bs4/tests/test_soup.py             | 107 +++++++---
- lib/bs4/tests/test_tree.py             | 294 ++++++++++++++++++++++------
- 15 files changed, 972 insertions(+), 361 deletions(-)
+ bin/bitbake                      |   5 +-
+ bin/bitbake-diffsigs             |   4 +-
+ bin/bitbake-dumpsig              |   4 +-
+ bin/bitbake-layers               |   5 +-
+ bin/bitbake-prserv               |   2 +-
+ bin/bitbake-selftest             |   2 +-
+ bin/bitbake-worker               |  60 ++++++++++----------
+ bin/bitdoc                       |   2 +-
+ bin/image-writer                 |   8 ++-
+ bin/toaster-eventreplay          |   2 +-
+ contrib/dump_cache.py            |   2 +-
+ lib/bb/COW.py                    |  44 +++++++--------
+ lib/bb/__init__.py               |   2 +-
+ lib/bb/build.py                  |  13 ++---
+ lib/bb/cache.py                  |  18 ++----
+ lib/bb/checksum.py               |   9 +--
+ lib/bb/codeparser.py             |  15 ++---
+ lib/bb/command.py                |   2 +-
+ lib/bb/cooker.py                 |  38 ++++++-------
+ lib/bb/data_smart.py             |   4 +-
+ lib/bb/event.py                  |   9 +--
+ lib/bb/exceptions.py             |   2 +-
+ lib/bb/fetch2/__init__.py        |  36 ++++++------
+ lib/bb/fetch2/local.py           |   4 +-
+ lib/bb/fetch2/npm.py             |   6 +-
+ lib/bb/fetch2/perforce.py        |   2 +-
+ lib/bb/fetch2/sftp.py            |   8 +--
+ lib/bb/fetch2/ssh.py             |   6 +-
+ lib/bb/fetch2/wget.py            |  48 ++++++++--------
+ lib/bb/main.py                   |  11 ++--
+ lib/bb/msg.py                    |   2 +-
+ lib/bb/parse/ast.py              |  18 +++---
+ lib/bb/persist_data.py           |  10 ++--
+ lib/bb/process.py                |  36 ++++++++----
+ lib/bb/providers.py              |   2 +-
+ lib/bb/pysh/builtin.py           |   2 +-
+ lib/bb/pysh/interp.py            |   4 +-
+ lib/bb/pysh/pyshlex.py           |   2 +-
+ lib/bb/pysh/pyshyacc.py          |   4 +-
+ lib/bb/runqueue.py               | 117 +++++++++++++++++++--------------------
+ lib/bb/server/process.py         |   8 +--
+ lib/bb/server/xmlrpc.py          |  48 ++++++++--------
+ lib/bb/siggen.py                 |  19 +++----
+ lib/bb/taskdata.py               |  12 ++--
+ lib/bb/tests/codeparser.py       |   4 +-
+ lib/bb/tests/data.py             |  12 ++--
+ lib/bb/tests/parse.py            |   2 +-
+ lib/bb/ui/crumbs/hobwidget.py    |   2 +-
+ lib/bb/ui/crumbs/progressbar.py  |   6 +-
+ lib/bb/ui/crumbs/runningbuild.py |  12 ++--
+ lib/bb/ui/goggle.py              |  11 +++-
+ lib/bb/ui/knotty.py              |   6 +-
+ lib/bb/ui/ncurses.py             |   8 +--
+ lib/bb/ui/uievent.py             |   4 +-
+ lib/bb/utils.py                  |  20 +++----
+ lib/bblayers/action.py           |   2 +-
+ lib/bblayers/common.py           |   2 +-
+ lib/bblayers/layerindex.py       |  12 ++--
+ lib/bblayers/query.py            |   4 +-
+ lib/codegen.py                   |   8 +--
+ lib/ply/yacc.py                  |   2 +
+ lib/prserv/db.py                 |   2 +-
+ lib/prserv/serv.py               |  14 ++---
+ 63 files changed, 390 insertions(+), 400 deletions(-)
 
-diff --git a/lib/bs4/__init__.py b/lib/bs4/__init__.py
-index 7ba3426..f6fdfd5 100644
---- a/lib/bs4/__init__.py
-+++ b/lib/bs4/__init__.py
-@@ -17,8 +17,8 @@ http://www.crummy.com/software/BeautifulSoup/bs4/doc/
- """
+diff --git a/bin/bitbake b/bin/bitbake
+index bba87b0..9813a08 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # ex:ts=4:sw=4:sts=4:et
+ # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
+ #
+@@ -35,6 +35,9 @@ except RuntimeError as exc:
+ from bb import cookerdata
+ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
  
- __author__ = "Leonard Richardson (leonardr@segfault.org)"
--__version__ = "4.3.2"
--__copyright__ = "Copyright (c) 2004-2013 Leonard Richardson"
-+__version__ = "4.4.1"
-+__copyright__ = "Copyright (c) 2004-2015 Leonard Richardson"
- __license__ = "MIT"
- 
- __all__ = ['BeautifulSoup']
-@@ -45,7 +45,7 @@ from .element import (
- 
- # The very first thing we do is give a useful error if someone is
- # running this code under Python 3 without converting it.
--syntax_error = u'You are trying to run the Python 2 version of Beautiful Soup under Python 3. This will not work. You need to convert the code, either by installing it (`python setup.py install`) or by running 2to3 (`2to3 -w bs4`).'
-+'You are trying to run the Python 2 version of Beautiful Soup under Python 3. This will not work.'!='You need to convert the code, either by installing it (`python setup.py install`) or by running 2to3 (`2to3 -w bs4`).'
- 
- class BeautifulSoup(Tag):
-     """
-@@ -69,7 +69,7 @@ class BeautifulSoup(Tag):
-     like HTML's <br> tag), call handle_starttag and then
-     handle_endtag.
-     """
--    ROOT_TAG_NAME = u'[document]'
-+    ROOT_TAG_NAME = '[document]'
- 
-     # If the end-user gives no indication which tree builder they
-     # want, look for one with these features.
-@@ -77,8 +77,11 @@ class BeautifulSoup(Tag):
- 
-     ASCII_SPACES = '\x20\x0a\x09\x0c\x0d'
- 
-+    NO_PARSER_SPECIFIED_WARNING = "No parser was explicitly specified, so I'm using the best available %(markup_type)s parser for this system (\"%(parser)s\"). This usually isn't a problem, but if you run this code on another system, or in a different virtual environment, it may use a different parser and behave differently.\n\nTo get rid of this warning, change this:\n\n BeautifulSoup([your markup])\n\nto this:\n\n BeautifulSoup([your markup], \"%(parser)s\")\n"
++if sys.getfilesystemencoding() != "utf-8":
++    sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
 +
-     def __init__(self, markup="", features=None, builder=None,
--                 parse_only=None, from_encoding=None, **kwargs):
-+                 parse_only=None, from_encoding=None, exclude_encodings=None,
-+                 **kwargs):
-         """The Soup object is initialized as the 'root tag', and the
-         provided markup (which can be a string or a file-like object)
-         is fed into the underlying parser."""
-@@ -114,9 +117,9 @@ class BeautifulSoup(Tag):
-             del kwargs['isHTML']
-             warnings.warn(
-                 "BS4 does not respect the isHTML argument to the "
--                "BeautifulSoup constructor. You can pass in features='html' "
--                "or features='xml' to get a builder capable of handling "
--                "one or the other.")
-+                "BeautifulSoup constructor. Suggest you use "
-+                "features='lxml' for HTML and features='lxml-xml' for "
-+                "XML.")
+ __version__ = "1.31.0"
  
-         def deprecated_argument(old_name, new_name):
-             if old_name in kwargs:
-@@ -135,12 +138,13 @@ class BeautifulSoup(Tag):
-             "fromEncoding", "from_encoding")
+ if __name__ == "__main__":
+diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
+index 67c60db..3b6ef88 100755
+--- a/bin/bitbake-diffsigs
++++ b/bin/bitbake-diffsigs
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
  
-         if len(kwargs) > 0:
--            arg = kwargs.keys().pop()
-+            arg = list(kwargs.keys()).pop()
-             raise TypeError(
-                 "__init__() got an unexpected keyword argument '%s'" % arg)
+ # bitbake-diffsigs
+ # BitBake task signature data comparison utility
+@@ -24,6 +24,7 @@ import warnings
+ import fnmatch
+ import optparse
+ import logging
++import pickle
  
-         if builder is None:
--            if isinstance(features, basestring):
-+            original_features = features
-+            if isinstance(features, str):
-                 features = [features]
-             if features is None or len(features) == 0:
-                 features = self.DEFAULT_BUILDER_FEATURES
-@@ -151,6 +155,16 @@ class BeautifulSoup(Tag):
-                     "requested: %s. Do you need to install a parser library?"
-                     % ",".join(features))
-             builder = builder_class()
-+            if not (original_features == builder.NAME or
-+                    original_features in builder.ALTERNATE_NAMES):
-+                if builder.is_xml:
-+                    markup_type = "XML"
-+                else:
-+                    markup_type = "HTML"
-+                warnings.warn(self.NO_PARSER_SPECIFIED_WARNING % dict(
-+                    parser=builder.NAME,
-+                    markup_type=markup_type))
-+
-         self.builder = builder
-         self.is_xml = builder.is_xml
-         self.builder.soup = self
-@@ -164,7 +178,7 @@ class BeautifulSoup(Tag):
-             # involving passing non-markup to Beautiful Soup.
-             # Beautiful Soup will still parse the input as markup,
-             # just in case that's what the user really wants.
--            if (isinstance(markup, unicode)
-+            if (isinstance(markup, str)
-                 and not os.path.supports_unicode_filenames):
-                 possible_filename = markup.encode("utf8")
-             else:
-@@ -172,25 +186,30 @@ class BeautifulSoup(Tag):
-             is_file = False
-             try:
-                 is_file = os.path.exists(possible_filename)
--            except Exception, e:
-+            except Exception as e:
-                 # This is almost certainly a problem involving
-                 # characters not valid in filenames on this
-                 # system. Just let it go.
-                 pass
-             if is_file:
-+                if isinstance(markup, str):
-+                    markup = markup.encode("utf8")
-                 warnings.warn(
-                     '"%s" looks like a filename, not markup. You should probably open this file and pass the filehandle into Beautiful Soup.' % markup)
-             if markup[:5] == "http:" or markup[:6] == "https:":
-                 # TODO: This is ugly but I couldn't get it to work in
-                 # Python 3 otherwise.
-                 if ((isinstance(markup, bytes) and not b' ' in markup)
--                    or (isinstance(markup, unicode) and not u' ' in markup)):
-+                    or (isinstance(markup, str) and not ' ' in markup)):
-+                    if isinstance(markup, str):
-+                        markup = markup.encode("utf8")
-                     warnings.warn(
-                         '"%s" looks like a URL. Beautiful Soup is not an HTTP client. You should probably use an HTTP client to get the document behind the URL, and feed that document to Beautiful Soup.' % markup)
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
  
-         for (self.markup, self.original_encoding, self.declared_html_encoding,
-          self.contains_replacement_characters) in (
--            self.builder.prepare_markup(markup, from_encoding)):
-+             self.builder.prepare_markup(
-+                 markup, from_encoding, exclude_encodings=exclude_encodings)):
-             self.reset()
-             try:
-                 self._feed()
-@@ -203,6 +222,16 @@ class BeautifulSoup(Tag):
-         self.markup = None
-         self.builder.soup = None
+@@ -121,7 +122,6 @@ else:
+     if len(args) == 1:
+         parser.print_help()
+     else:
+-        import cPickle
+         try:
+             if len(args) == 2:
+                 output = bb.siggen.dump_sigfile(sys.argv[1])
+diff --git a/bin/bitbake-dumpsig b/bin/bitbake-dumpsig
+index ffaed1f..58ba1ca 100755
+--- a/bin/bitbake-dumpsig
++++ b/bin/bitbake-dumpsig
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
  
-+    def __copy__(self):
-+        return type(self)(self.encode(), builder=self.builder)
-+
-+    def __getstate__(self):
-+        # Frequently a tree builder can't be pickled.
-+        d = dict(self.__dict__)
-+        if 'builder' in d and not self.builder.picklable:
-+            del d['builder']
-+        return d
-+
-     def _feed(self):
-         # Convert the document to Unicode.
-         self.builder.reset()
-@@ -229,9 +258,7 @@ class BeautifulSoup(Tag):
- 
-     def new_string(self, s, subclass=NavigableString):
-         """Create a new NavigableString associated with this soup."""
--        navigable = subclass(s)
--        navigable.setup()
--        return navigable
-+        return subclass(s)
- 
-     def insert_before(self, successor):
-         raise NotImplementedError("BeautifulSoup objects don't support insert_before().")
-@@ -259,7 +286,7 @@ class BeautifulSoup(Tag):
- 
-     def endData(self, containerClass=NavigableString):
-         if self.current_data:
--            current_data = u''.join(self.current_data)
-+            current_data = ''.join(self.current_data)
-             # If whitespace is not preserved, and this string contains
-             # nothing but ASCII spaces, replace it with a single space
-             # or newline.
-@@ -290,14 +317,49 @@ class BeautifulSoup(Tag):
-     def object_was_parsed(self, o, parent=None, most_recent_element=None):
-         """Add an object to the parse tree."""
-         parent = parent or self.currentTag
--        most_recent_element = most_recent_element or self._most_recent_element
--        o.setup(parent, most_recent_element)
-+        previous_element = most_recent_element or self._most_recent_element
-+
-+        next_element = previous_sibling = next_sibling = None
-+        if isinstance(o, Tag):
-+            next_element = o.next_element
-+            next_sibling = o.next_sibling
-+            previous_sibling = o.previous_sibling
-+            if not previous_element:
-+                previous_element = o.previous_element
-+
-+        o.setup(parent, previous_element, next_element, previous_sibling, next_sibling)
- 
--        if most_recent_element is not None:
--            most_recent_element.next_element = o
-         self._most_recent_element = o
-         parent.contents.append(o)
- 
-+        if parent.next_sibling:
-+            # This node is being inserted into an element that has
-+            # already been parsed. Deal with any dangling references.
-+            index = parent.contents.index(o)
-+            if index == 0:
-+                previous_element = parent
-+                previous_sibling = None
-+            else:
-+                previous_element = previous_sibling = parent.contents[index-1]
-+            if index == len(parent.contents)-1:
-+                next_element = parent.next_sibling
-+                next_sibling = None
-+            else:
-+                next_element = next_sibling = parent.contents[index+1]
-+
-+            o.previous_element = previous_element
-+            if previous_element:
-+                previous_element.next_element = o
-+            o.next_element = next_element
-+            if next_element:
-+                next_element.previous_element = o
-+            o.next_sibling = next_sibling
-+            if next_sibling:
-+                next_sibling.previous_sibling = o
-+            o.previous_sibling = previous_sibling
-+            if previous_sibling:
-+                previous_sibling.next_sibling = o
-+
-     def _popToTag(self, name, nsprefix=None, inclusivePop=True):
-         """Pops the tag stack up to and including the most recent
-         instance of the given tag. If inclusivePop is false, pops the tag
-@@ -367,9 +429,9 @@ class BeautifulSoup(Tag):
-             encoding_part = ''
-             if eventual_encoding != None:
-                 encoding_part = ' encoding="%s"' % eventual_encoding
--            prefix = u'<?xml version="1.0"%s?>\n' % encoding_part
-+            prefix = '<?xml version="1.0"%s?>\n' % encoding_part
-         else:
--            prefix = u''
-+            prefix = ''
-         if not pretty_print:
-             indent_level = None
-         else:
-@@ -403,4 +465,4 @@ class FeatureNotFound(ValueError):
- if __name__ == '__main__':
-     import sys
-     soup = BeautifulSoup(sys.stdin)
--    print soup.prettify()
-+    print(soup.prettify())
-diff --git a/lib/bs4/builder/__init__.py b/lib/bs4/builder/__init__.py
-index 740f5f2..6ccd4d2 100644
---- a/lib/bs4/builder/__init__.py
-+++ b/lib/bs4/builder/__init__.py
-@@ -80,9 +80,12 @@ builder_registry = TreeBuilderRegistry()
- class TreeBuilder(object):
-     """Turn a document into a Beautiful Soup object tree."""
- 
-+    NAME = "[Unknown tree builder]"
-+    ALTERNATE_NAMES = []
-     features = []
- 
-     is_xml = False
-+    picklable = False
-     preserve_whitespace_tags = set()
-     empty_element_tags = None # A tag will be considered an empty-element
-                               # tag when and only when it has no contents.
-@@ -153,13 +156,13 @@ class TreeBuilder(object):
-             universal = self.cdata_list_attributes.get('*', [])
-             tag_specific = self.cdata_list_attributes.get(
-                 tag_name.lower(), None)
--            for attr in attrs.keys():
-+            for attr in list(attrs.keys()):
-                 if attr in universal or (tag_specific and attr in tag_specific):
-                     # We have a "class"-type attribute whose string
-                     # value is a whitespace-separated list of
-                     # values. Split it into a list.
-                     value = attrs[attr]
--                    if isinstance(value, basestring):
-+                    if isinstance(value, str):
-                         values = whitespace_re.split(value)
-                     else:
-                         # html5lib sometimes calls setAttributes twice
-diff --git a/lib/bs4/builder/_html5lib.py b/lib/bs4/builder/_html5lib.py
-index 7de36ae..f0e5924 100644
---- a/lib/bs4/builder/_html5lib.py
-+++ b/lib/bs4/builder/_html5lib.py
-@@ -2,6 +2,7 @@ __all__ = [
-     'HTML5TreeBuilder',
-     ]
- 
-+from pdb import set_trace
+ # bitbake-dumpsig
+ # BitBake task signature dump utility
+@@ -23,6 +23,7 @@ import sys
  import warnings
- from bs4.builder import (
-     PERMISSIVE,
-@@ -9,7 +10,10 @@ from bs4.builder import (
-     HTML_5,
-     HTMLTreeBuilder,
-     )
--from bs4.element import NamespacedAttribute
-+from bs4.element import (
-+    NamespacedAttribute,
-+    whitespace_re,
-+)
- import html5lib
- from html5lib.constants import namespaces
- from bs4.element import (
-@@ -22,11 +26,20 @@ from bs4.element import (
- class HTML5TreeBuilder(HTMLTreeBuilder):
-     """Use html5lib to build a tree."""
+ import optparse
+ import logging
++import pickle
  
--    features = ['html5lib', PERMISSIVE, HTML_5, HTML]
-+    NAME = "html5lib"
-+
-+    features = [NAME, PERMISSIVE, HTML_5, HTML]
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
  
--    def prepare_markup(self, markup, user_specified_encoding):
-+    def prepare_markup(self, markup, user_specified_encoding,
-+                       document_declared_encoding=None, exclude_encodings=None):
-         # Store the user-specified encoding for use later on.
-         self.user_specified_encoding = user_specified_encoding
-+
-+        # document_declared_encoding and exclude_encodings aren't used
-+        # ATM because the html5lib TreeBuilder doesn't use
-+        # UnicodeDammit.
-+        if exclude_encodings:
-+            warnings.warn("You provided a value for exclude_encoding, but the html5lib tree builder doesn't support exclude_encoding.")
-         yield (markup, None, None, False)
+@@ -51,7 +52,6 @@ options, args = parser.parse_args(sys.argv)
+ if len(args) == 1:
+     parser.print_help()
+ else:
+-    import cPickle
+     try:
+         output = bb.siggen.dump_sigfile(args[1])
+     except IOError as e:
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index d8ffa95..0c973df 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
  
-     # These methods are defined by Beautiful Soup.
-@@ -37,7 +50,7 @@ class HTML5TreeBuilder(HTMLTreeBuilder):
-         doc = parser.parse(markup, encoding=self.user_specified_encoding)
+ # This script has subcommands which operate against your bitbake layers, either
+ # displaying useful information, or acting against them.
+@@ -48,7 +48,6 @@ def logger_create(name, output=sys.stderr):
+     logger.setLevel(logging.INFO)
+     return logger
  
-         # Set the character encoding detected by the tokenizer.
--        if isinstance(markup, unicode):
-+        if isinstance(markup, str):
-             # We need to special-case this because html5lib sets
-             # charEncoding to UTF-8 if it gets Unicode input.
-             doc.original_encoding = None
-@@ -51,7 +64,7 @@ class HTML5TreeBuilder(HTMLTreeBuilder):
+-
+ def logger_setup_color(logger, color='auto'):
+     from bb.msg import BBLogFormatter
+     console = logging.StreamHandler(sys.stdout)
+@@ -61,7 +60,6 @@ def logger_setup_color(logger, color='auto'):
  
-     def test_fragment_to_document(self, fragment):
-         """See `TreeBuilder`."""
--        return u'<html><head></head><body>%s</body></html>' % fragment
-+        return '<html><head></head><body>%s</body></html>' % fragment
+ logger = logger_create('bitbake-layers', sys.stdout)
  
+-
+ def main():
+     parser = argparse.ArgumentParser(
+         description="BitBake layers utility",
+@@ -78,6 +76,7 @@ def main():
+     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
+                         help='show this help message and exit')
+     subparsers = parser.add_subparsers(title='subcommands', metavar='<subcommand>')
++    subparsers.required = True
  
- class TreeBuilderForHtml5lib(html5lib.treebuilders._base.TreeBuilder):
-@@ -101,7 +114,16 @@ class AttrList(object):
-     def __iter__(self):
-         return list(self.attrs.items()).__iter__()
-     def __setitem__(self, name, value):
--        "set attr", name, value
-+        # If this attribute is a multi-valued attribute for this element,
-+        # turn its value into a list.
-+        list_attr = HTML5TreeBuilder.cdata_list_attributes
-+        if (name in list_attr['*']
-+            or (self.element.name in list_attr
-+                and name in list_attr[self.element.name])):
-+            # A node that is being cloned may have already undergone
-+            # this procedure.
-+            if not isinstance(value, list):
-+                value = whitespace_re.split(value)
-         self.element[name] = value
-     def items(self):
-         return list(self.attrs.items())
-@@ -124,7 +146,7 @@ class Element(html5lib.treebuilders._base.Node):
+     if global_args.debug:
+         logger.setLevel(logging.DEBUG)
+diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
+index 0382144..f38d2dd 100755
+--- a/bin/bitbake-prserv
++++ b/bin/bitbake-prserv
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ import os
+ import sys,logging
+ import optparse
+diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
+index 462eb1b..1e6f35e 100755
+--- a/bin/bitbake-selftest
++++ b/bin/bitbake-selftest
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # Copyright (C) 2012 Richard Purdie
+ #
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index 6a6b26b..5d062a2 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
  
-     def appendChild(self, node):
-         string_child = child = None
--        if isinstance(node, basestring):
-+        if isinstance(node, str):
-             # Some other piece of code decided to pass in a string
-             # instead of creating a TextElement object to contain the
-             # string.
-@@ -139,7 +161,7 @@ class Element(html5lib.treebuilders._base.Node):
-         else:
-             child = node.element
- 
--        if not isinstance(child, basestring) and child.parent is not None:
-+        if not isinstance(child, str) and child.parent is not None:
-             node.element.extract()
- 
-         if (string_child and self.element.contents
-@@ -152,7 +174,7 @@ class Element(html5lib.treebuilders._base.Node):
-             old_element.replace_with(new_element)
-             self.soup._most_recent_element = new_element
-         else:
--            if isinstance(node, basestring):
-+            if isinstance(node, str):
-                 # Create a brand new NavigableString from this string.
-                 child = self.soup.new_string(node)
- 
-@@ -161,6 +183,12 @@ class Element(html5lib.treebuilders._base.Node):
-             # immediately after the parent, if it has no children.)
-             if self.element.contents:
-                 most_recent_element = self.element._last_descendant(False)
-+            elif self.element.next_element is not None:
-+                # Something from further ahead in the parse tree is
-+                # being inserted into this earlier element. This is
-+                # very annoying because it means an expensive search
-+                # for the last element in the tree.
-+                most_recent_element = self.soup._last_descendant()
-             else:
-                 most_recent_element = self.element
- 
-@@ -172,6 +200,7 @@ class Element(html5lib.treebuilders._base.Node):
-         return AttrList(self.element)
- 
-     def setAttributes(self, attributes):
-+
-         if attributes is not None and len(attributes) > 0:
- 
-             converted_attributes = []
-@@ -183,7 +212,7 @@ class Element(html5lib.treebuilders._base.Node):
- 
-             self.soup.builder._replace_cdata_list_attribute_values(
-                 self.name, attributes)
--            for name, value in attributes.items():
-+            for name, value in list(attributes.items()):
-                 self.element[name] = value
- 
-             # The attributes may contain variables that need substitution.
-@@ -218,6 +247,9 @@ class Element(html5lib.treebuilders._base.Node):
- 
-     def reparentChildren(self, new_parent):
-         """Move all of this tag's children into another tag."""
-+        # print "MOVE", self.element.contents
-+        # print "FROM", self.element
-+        # print "TO", new_parent.element
-         element = self.element
-         new_parent_element = new_parent.element
-         # Determine what this tag's next_element will be once all the children
-@@ -236,17 +268,28 @@ class Element(html5lib.treebuilders._base.Node):
-             new_parents_last_descendant_next_element = new_parent_element.next_element
- 
-         to_append = element.contents
--        append_after = new_parent.element.contents
-+        append_after = new_parent_element.contents
-         if len(to_append) > 0:
-             # Set the first child's previous_element and previous_sibling
-             # to elements within the new parent
-             first_child = to_append[0]
--            first_child.previous_element = new_parents_last_descendant
-+            if new_parents_last_descendant:
-+                first_child.previous_element = new_parents_last_descendant
-+            else:
-+                first_child.previous_element = new_parent_element
-             first_child.previous_sibling = new_parents_last_child
-+            if new_parents_last_descendant:
-+                new_parents_last_descendant.next_element = first_child
-+            else:
-+                new_parent_element.next_element = first_child
-+            if new_parents_last_child:
-+                new_parents_last_child.next_sibling = first_child
- 
-             # Fix the last child's next_element and next_sibling
-             last_child = to_append[-1]
-             last_child.next_element = new_parents_last_descendant_next_element
-+            if new_parents_last_descendant_next_element:
-+                new_parents_last_descendant_next_element.previous_element = last_child
-             last_child.next_sibling = None
- 
-         for child in to_append:
-@@ -257,6 +300,10 @@ class Element(html5lib.treebuilders._base.Node):
-         element.contents = []
-         element.next_element = final_next_element
- 
-+        # print "DONE WITH MOVE"
-+        # print "FROM", self.element
-+        # print "TO", new_parent_element
-+
-     def cloneNode(self):
-         tag = self.soup.new_tag(self.element.name, self.namespace)
-         node = Element(tag, self.soup, self.namespace)
-diff --git a/lib/bs4/builder/_htmlparser.py b/lib/bs4/builder/_htmlparser.py
-index ca8d8b8..bb0a63f 100644
---- a/lib/bs4/builder/_htmlparser.py
-+++ b/lib/bs4/builder/_htmlparser.py
-@@ -4,10 +4,16 @@ __all__ = [
-     'HTMLParserTreeBuilder',
-     ]
- 
--from HTMLParser import (
--    HTMLParser,
--    HTMLParseError,
--    )
-+from html.parser import HTMLParser
-+
-+try:
-+    from html.parser import HTMLParseError
-+except ImportError as e:
-+    # HTMLParseError is removed in Python 3.5. Since it can never be
-+    # thrown in 3.5, we can just define our own class as a placeholder.
-+    class HTMLParseError(Exception):
-+        pass
-+
+ import os
  import sys
- import warnings
+@@ -10,8 +10,12 @@ import bb
+ import select
+ import errno
+ import signal
++import pickle
+ from multiprocessing import Lock
  
-@@ -19,10 +25,10 @@ import warnings
- # At the end of this file, we monkeypatch HTMLParser so that
- # strict=True works well on Python 3.2.2.
- major, minor, release = sys.version_info[:3]
--CONSTRUCTOR_TAKES_STRICT = (
--    major > 3
--    or (major == 3 and minor > 2)
--    or (major == 3 and minor == 2 and release >= 3))
-+CONSTRUCTOR_TAKES_STRICT = major == 3 and minor == 2 and release >= 3
-+CONSTRUCTOR_STRICT_IS_DEPRECATED = major == 3 and minor == 3
-+CONSTRUCTOR_TAKES_CONVERT_CHARREFS = major == 3 and minor >= 4
++if sys.getfilesystemencoding() != "utf-8":
++    sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
 +
+ # Users shouldn't be running this code directly
+ if len(sys.argv) != 2 or not sys.argv[1].startswith("decafbad"):
+     print("bitbake-worker is meant for internal execution by bitbake itself, please don't use it standalone.")
+@@ -30,19 +34,16 @@ if sys.argv[1].startswith("decafbadbad"):
+ # updates to log files for use with tail
+ try:
+     if sys.stdout.name == '<stdout>':
+-        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
++        import fcntl
++        fl = fcntl.fcntl(sys.stdout.fileno(), fcntl.F_GETFL)
++        fl |= os.O_SYNC 
++        fcntl.fcntl(sys.stdout.fileno(), fcntl.F_SETFL, fl)
++        #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+ except:
+     pass
  
- from bs4.element import (
-     CData,
-@@ -63,7 +69,8 @@ class BeautifulSoupHTMLParser(HTMLParser):
+ logger = logging.getLogger("BitBake")
  
-     def handle_charref(self, name):
-         # XXX workaround for a bug in HTMLParser. Remove this once
--        # it's fixed.
-+        # it's fixed in all supported versions.
-+        # http://bugs.python.org/issue13633
-         if name.startswith('x'):
-             real_name = int(name.lstrip('x'), 16)
-         elif name.startswith('X'):
-@@ -72,9 +79,9 @@ class BeautifulSoupHTMLParser(HTMLParser):
-             real_name = int(name)
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
+-    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
+-
+-
+ worker_pipe = sys.stdout.fileno()
+ bb.utils.nonblockingfd(worker_pipe)
+ # Need to guard against multiprocessing being used in child processes
+@@ -62,10 +63,10 @@ if 0:
+     consolelog.setFormatter(conlogformat)
+     logger.addHandler(consolelog)
  
+-worker_queue = ""
++worker_queue = b""
+ 
+ def worker_fire(event, d):
+-    data = "<event>" + pickle.dumps(event) + "</event>"
++    data = b"<event>" + pickle.dumps(event) + b"</event>"
+     worker_fire_prepickled(data)
+ 
+ def worker_fire_prepickled(event):
+@@ -91,7 +92,7 @@ def worker_child_fire(event, d):
+     global worker_pipe
+     global worker_pipe_lock
+ 
+-    data = "<event>" + pickle.dumps(event) + "</event>"
++    data = b"<event>" + pickle.dumps(event) + b"</event>"
+     try:
+         worker_pipe_lock.acquire()
+         worker_pipe.write(data)
+@@ -251,7 +252,7 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdat
+                 bb.utils.process_profilelog(profname)
+                 os._exit(ret)
+     else:
+-        for key, value in envbackup.iteritems():
++        for key, value in iter(envbackup.items()):
+             if value is None:
+                 del os.environ[key]
+             else:
+@@ -268,22 +269,22 @@ class runQueueWorkerPipe():
+         if pipeout:
+             pipeout.close()
+         bb.utils.nonblockingfd(self.input)
+-        self.queue = ""
++        self.queue = b""
+ 
+     def read(self):
+         start = len(self.queue)
          try:
--            data = unichr(real_name)
--        except (ValueError, OverflowError), e:
--            data = u"\N{REPLACEMENT CHARACTER}"
-+            data = chr(real_name)
-+        except (ValueError, OverflowError) as e:
-+            data = "\N{REPLACEMENT CHARACTER}"
+-            self.queue = self.queue + self.input.read(102400)
++            self.queue = self.queue + (self.input.read(102400) or b"")
+         except (OSError, IOError) as e:
+             if e.errno != errno.EAGAIN:
+                 raise
  
-         self.handle_data(data)
- 
-@@ -113,14 +120,6 @@ class BeautifulSoupHTMLParser(HTMLParser):
- 
-     def handle_pi(self, data):
-         self.soup.endData()
--        if data.endswith("?") and data.lower().startswith("xml"):
--            # "An XHTML processing instruction using the trailing '?'
--            # will cause the '?' to be included in data." - HTMLParser
--            # docs.
--            #
--            # Strip the question mark so we don't end up with two
--            # question marks.
--            data = data[:-1]
-         self.soup.handle_data(data)
-         self.soup.endData(ProcessingInstruction)
- 
-@@ -128,26 +127,31 @@ class BeautifulSoupHTMLParser(HTMLParser):
- class HTMLParserTreeBuilder(HTMLTreeBuilder):
- 
-     is_xml = False
--    features = [HTML, STRICT, HTMLPARSER]
-+    picklable = True
-+    NAME = HTMLPARSER
-+    features = [NAME, HTML, STRICT]
- 
-     def __init__(self, *args, **kwargs):
--        if CONSTRUCTOR_TAKES_STRICT:
-+        if CONSTRUCTOR_TAKES_STRICT and not CONSTRUCTOR_STRICT_IS_DEPRECATED:
-             kwargs['strict'] = False
-+        if CONSTRUCTOR_TAKES_CONVERT_CHARREFS:
-+            kwargs['convert_charrefs'] = False
-         self.parser_args = (args, kwargs)
- 
-     def prepare_markup(self, markup, user_specified_encoding=None,
--                       document_declared_encoding=None):
-+                       document_declared_encoding=None, exclude_encodings=None):
-         """
-         :return: A 4-tuple (markup, original encoding, encoding
-         declared within markup, whether any characters had to be
-         replaced with REPLACEMENT CHARACTER).
-         """
--        if isinstance(markup, unicode):
-+        if isinstance(markup, str):
-             yield (markup, None, None, False)
-             return
- 
-         try_encodings = [user_specified_encoding, document_declared_encoding]
--        dammit = UnicodeDammit(markup, try_encodings, is_html=True)
-+        dammit = UnicodeDammit(markup, try_encodings, is_html=True,
-+                               exclude_encodings=exclude_encodings)
-         yield (dammit.markup, dammit.original_encoding,
-                dammit.declared_html_encoding,
-                dammit.contains_replacement_characters)
-@@ -158,7 +162,7 @@ class HTMLParserTreeBuilder(HTMLTreeBuilder):
-         parser.soup = self.soup
-         try:
-             parser.feed(markup)
--        except HTMLParseError, e:
-+        except HTMLParseError as e:
-             warnings.warn(RuntimeWarning(
-                 "Python's built-in HTMLParser cannot parse the given document. This is not a bug in Beautiful Soup. The best solution is to install an external parser (lxml or html5lib), and use Beautiful Soup with that parser. See http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-a-parser for help."))
-             raise e
-diff --git a/lib/bs4/builder/_lxml.py b/lib/bs4/builder/_lxml.py
-index fa5d498..9c6c14e 100644
---- a/lib/bs4/builder/_lxml.py
-+++ b/lib/bs4/builder/_lxml.py
-@@ -4,10 +4,15 @@ __all__ = [
-     ]
- 
- from io import BytesIO
--from StringIO import StringIO
-+from io import StringIO
- import collections
- from lxml import etree
--from bs4.element import Comment, Doctype, NamespacedAttribute
-+from bs4.element import (
-+    Comment,
-+    Doctype,
-+    NamespacedAttribute,
-+    ProcessingInstruction,
-+)
- from bs4.builder import (
-     FAST,
-     HTML,
-@@ -25,8 +30,11 @@ class LXMLTreeBuilderForXML(TreeBuilder):
- 
-     is_xml = True
- 
-+    NAME = "lxml-xml"
-+    ALTERNATE_NAMES = ["xml"]
-+
-     # Well, it's permissive by XML parser standards.
--    features = [LXML, XML, FAST, PERMISSIVE]
-+    features = [NAME, LXML, XML, FAST, PERMISSIVE]
- 
-     CHUNK_SIZE = 512
- 
-@@ -70,6 +78,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
-             return (None, tag)
- 
-     def prepare_markup(self, markup, user_specified_encoding=None,
-+                       exclude_encodings=None,
-                        document_declared_encoding=None):
-         """
-         :yield: A series of 4-tuples.
-@@ -78,12 +87,12 @@ class LXMLTreeBuilderForXML(TreeBuilder):
- 
-         Each 4-tuple represents a strategy for parsing the document.
-         """
--        if isinstance(markup, unicode):
-+        if isinstance(markup, str):
-             # We were given Unicode. Maybe lxml can parse Unicode on
-             # this system?
-             yield markup, None, document_declared_encoding, False
- 
--        if isinstance(markup, unicode):
-+        if isinstance(markup, str):
-             # No, apparently not. Convert the Unicode to UTF-8 and
-             # tell lxml to parse it as UTF-8.
-             yield (markup.encode("utf8"), "utf8",
-@@ -95,14 +104,15 @@ class LXMLTreeBuilderForXML(TreeBuilder):
-         # the document as each one in turn.
-         is_html = not self.is_xml
-         try_encodings = [user_specified_encoding, document_declared_encoding]
--        detector = EncodingDetector(markup, try_encodings, is_html)
-+        detector = EncodingDetector(
-+            markup, try_encodings, is_html, exclude_encodings)
-         for encoding in detector.encodings:
-             yield (detector.markup, encoding, document_declared_encoding, False)
- 
-     def feed(self, markup):
-         if isinstance(markup, bytes):
-             markup = BytesIO(markup)
--        elif isinstance(markup, unicode):
-+        elif isinstance(markup, str):
-             markup = StringIO(markup)
- 
-         # Call feed() at least once, even if the markup is empty,
-@@ -117,7 +127,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
-                 if len(data) != 0:
-                     self.parser.feed(data)
-             self.parser.close()
--        except (UnicodeDecodeError, LookupError, etree.ParserError), e:
-+        except (UnicodeDecodeError, LookupError, etree.ParserError) as e:
-             raise ParserRejectedMarkup(str(e))
+         end = len(self.queue)
+-        index = self.queue.find("</event>")
++        index = self.queue.find(b"</event>")
+         while index != -1:
+             worker_fire_prepickled(self.queue[:index+8])
+             self.queue = self.queue[index+8:]
+-            index = self.queue.find("</event>")
++            index = self.queue.find(b"</event>")
+         return (end > start)
  
      def close(self):
-@@ -135,12 +145,12 @@ class LXMLTreeBuilderForXML(TreeBuilder):
-             self.nsmaps.append(None)
-         elif len(nsmap) > 0:
-             # A new namespace mapping has come into play.
--            inverted_nsmap = dict((value, key) for key, value in nsmap.items())
-+            inverted_nsmap = dict((value, key) for key, value in list(nsmap.items()))
-             self.nsmaps.append(inverted_nsmap)
-             # Also treat the namespace mapping as a set of attributes on the
-             # tag, so we can recreate it later.
-             attrs = attrs.copy()
--            for prefix, namespace in nsmap.items():
-+            for prefix, namespace in list(nsmap.items()):
-                 attribute = NamespacedAttribute(
-                     "xmlns", prefix, "http://www.w3.org/2000/xmlns/")
-                 attrs[attribute] = namespace
-@@ -149,7 +159,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
-         # from lxml with namespaces attached to their names, and
-         # turn then into NamespacedAttribute objects.
-         new_attrs = {}
--        for attr, value in attrs.items():
-+        for attr, value in list(attrs.items()):
-             namespace, attr = self._getNsTag(attr)
-             if namespace is None:
-                 new_attrs[attr] = value
-@@ -189,7 +199,9 @@ class LXMLTreeBuilderForXML(TreeBuilder):
-             self.nsmaps.pop()
+@@ -299,7 +300,7 @@ class BitbakeWorker(object):
+     def __init__(self, din):
+         self.input = din
+         bb.utils.nonblockingfd(self.input)
+-        self.queue = ""
++        self.queue = b""
+         self.cookercfg = None
+         self.databuilder = None
+         self.data = None
+@@ -336,12 +337,12 @@ class BitbakeWorker(object):
+                 except (OSError, IOError):
+                     pass
+             if len(self.queue):
+-                self.handle_item("cookerconfig", self.handle_cookercfg)
+-                self.handle_item("workerdata", self.handle_workerdata)
+-                self.handle_item("runtask", self.handle_runtask)
+-                self.handle_item("finishnow", self.handle_finishnow)
+-                self.handle_item("ping", self.handle_ping)
+-                self.handle_item("quit", self.handle_quit)
++                self.handle_item(b"cookerconfig", self.handle_cookercfg)
++                self.handle_item(b"workerdata", self.handle_workerdata)
++                self.handle_item(b"runtask", self.handle_runtask)
++                self.handle_item(b"finishnow", self.handle_finishnow)
++                self.handle_item(b"ping", self.handle_ping)
++                self.handle_item(b"quit", self.handle_quit)
  
-     def pi(self, target, data):
--        pass
-+        self.soup.endData()
-+        self.soup.handle_data(target + ' ' + data)
-+        self.soup.endData(ProcessingInstruction)
- 
-     def data(self, content):
-         self.soup.handle_data(content)
-@@ -207,12 +219,15 @@ class LXMLTreeBuilderForXML(TreeBuilder):
- 
-     def test_fragment_to_document(self, fragment):
-         """See `TreeBuilder`."""
--        return u'<?xml version="1.0" encoding="utf-8"?>\n%s' % fragment
-+        return '<?xml version="1.0" encoding="utf-8"?>\n%s' % fragment
+             for pipe in self.build_pipes:
+                 self.build_pipes[pipe].read()
+@@ -351,12 +352,12 @@ class BitbakeWorker(object):
  
  
- class LXMLTreeBuilder(HTMLTreeBuilder, LXMLTreeBuilderForXML):
+     def handle_item(self, item, func):
+-        if self.queue.startswith("<" + item + ">"):
+-            index = self.queue.find("</" + item + ">")
++        if self.queue.startswith(b"<" + item + b">"):
++            index = self.queue.find(b"</" + item + b">")
+             while index != -1:
+                 func(self.queue[(len(item) + 2):index])
+                 self.queue = self.queue[(index + len(item) + 3):]
+-                index = self.queue.find("</" + item + ">")
++                index = self.queue.find(b"</" + item + b">")
  
--    features = [LXML, HTML, FAST, PERMISSIVE]
-+    NAME = LXML
-+    ALTERNATE_NAMES = ["lxml-html"]
+     def handle_cookercfg(self, data):
+         self.cookercfg = pickle.loads(data)
+@@ -420,12 +421,12 @@ class BitbakeWorker(object):
+         self.build_pipes[pid].close()
+         del self.build_pipes[pid]
+ 
+-        worker_fire_prepickled("<exitcode>" + pickle.dumps((task, status)) + "</exitcode>")
++        worker_fire_prepickled(b"<exitcode>" + pickle.dumps((task, status)) + b"</exitcode>")
+ 
+     def handle_finishnow(self, _):
+         if self.build_pids:
+             logger.info("Sending SIGTERM to remaining %s tasks", len(self.build_pids))
+-            for k, v in self.build_pids.iteritems():
++            for k, v in iter(self.build_pids.items()):
+                 try:
+                     os.kill(-k, signal.SIGTERM)
+                     os.waitpid(-1, 0)
+@@ -435,6 +436,7 @@ class BitbakeWorker(object):
+             self.build_pipes[pipe].read()
+ 
+ try:
++    sys.stdin = sys.stdin.detach()
+     worker = BitbakeWorker(sys.stdin)
+     if not profiling:
+         worker.serve()
+diff --git a/bin/bitdoc b/bin/bitdoc
+index defb3dd..2744678 100755
+--- a/bin/bitdoc
++++ b/bin/bitdoc
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # ex:ts=4:sw=4:sts=4:et
+ # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
+ #
+diff --git a/bin/image-writer b/bin/image-writer
+index e30ab45..7ab1d8c 100755
+--- a/bin/image-writer
++++ b/bin/image-writer
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ # Copyright (c) 2012 Wind River Systems, Inc.
+ #
+@@ -24,9 +24,13 @@ try:
+ except RuntimeError as exc:
+     sys.exit(str(exc))
+ 
++from gi import pygtkcompat
 +
-+    features = ALTERNATE_NAMES + [NAME, HTML, FAST, PERMISSIVE]
-     is_xml = False
++pygtkcompat.enable()
++pygtkcompat.enable_gtk(version='3.0')
++
+ import gtk
+ import optparse
+-import pygtk
  
-     def default_parser(self, encoding):
-@@ -224,10 +239,10 @@ class LXMLTreeBuilder(HTMLTreeBuilder, LXMLTreeBuilderForXML):
-             self.parser = self.parser_for(encoding)
-             self.parser.feed(markup)
-             self.parser.close()
--        except (UnicodeDecodeError, LookupError, etree.ParserError), e:
-+        except (UnicodeDecodeError, LookupError, etree.ParserError) as e:
-             raise ParserRejectedMarkup(str(e))
+ from bb.ui.crumbs.hobwidget import HobAltButton, HobButton
+ from bb.ui.crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
+diff --git a/bin/toaster-eventreplay b/bin/toaster-eventreplay
+index 615a7ae..bdddb90 100755
+--- a/bin/toaster-eventreplay
++++ b/bin/toaster-eventreplay
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # ex:ts=4:sw=4:sts=4:et
+ # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
+ #
+diff --git a/contrib/dump_cache.py b/contrib/dump_cache.py
+index 97c5463..a1f09b4 100755
+--- a/contrib/dump_cache.py
++++ b/contrib/dump_cache.py
+@@ -29,7 +29,7 @@ import warnings
+ sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '../lib'))
+ from bb.cache import CoreRecipeInfo
  
+-import cPickle as pickle
++import pickle as pickle
  
-     def test_fragment_to_document(self, fragment):
-         """See `TreeBuilder`."""
--        return u'<html><body>%s</body></html>' % fragment
-+        return '<html><body>%s</body></html>' % fragment
-diff --git a/lib/bs4/dammit.py b/lib/bs4/dammit.py
-index 59640b7..68d419f 100644
---- a/lib/bs4/dammit.py
-+++ b/lib/bs4/dammit.py
-@@ -3,12 +3,14 @@
- 
- This library converts a bytestream to Unicode through any means
- necessary. It is heavily based on code from Mark Pilgrim's Universal
--Feed Parser. It works best on XML and XML, but it does not rewrite the
-+Feed Parser. It works best on XML and HTML, but it does not rewrite the
- XML or HTML to reflect a new encoding; that's the tree builder's job.
- """
-+__license__ = "MIT"
- 
-+from pdb import set_trace
- import codecs
--from htmlentitydefs import codepoint2name
-+from html.entities import codepoint2name
- import re
- import logging
- import string
-@@ -56,7 +58,7 @@ class EntitySubstitution(object):
-         reverse_lookup = {}
-         characters_for_re = []
-         for codepoint, name in list(codepoint2name.items()):
--            character = unichr(codepoint)
-+            character = chr(codepoint)
-             if codepoint != 34:
-                 # There's no point in turning the quotation mark into
-                 # &quot;, unless it happens within an attribute value, which
-@@ -212,8 +214,11 @@ class EncodingDetector:
- 
-     5. Windows-1252.
+ def main(argv=None):
      """
--    def __init__(self, markup, override_encodings=None, is_html=False):
-+    def __init__(self, markup, override_encodings=None, is_html=False,
-+                 exclude_encodings=None):
-         self.override_encodings = override_encodings or []
-+        exclude_encodings = exclude_encodings or []
-+        self.exclude_encodings = set([x.lower() for x in exclude_encodings])
-         self.chardet_encoding = None
-         self.is_html = is_html
-         self.declared_encoding = None
-@@ -224,6 +229,8 @@ class EncodingDetector:
-     def _usable(self, encoding, tried):
-         if encoding is not None:
-             encoding = encoding.lower()
-+            if encoding in self.exclude_encodings:
-+                return False
-             if encoding not in tried:
-                 tried.add(encoding)
-                 return True
-@@ -266,6 +273,9 @@ class EncodingDetector:
-     def strip_byte_order_mark(cls, data):
-         """If a byte-order mark is present, strip it and return the encoding it implies."""
-         encoding = None
-+        if isinstance(data, str):
-+            # Unicode data cannot have a byte-order mark.
-+            return data, encoding
-         if (len(data) >= 4) and (data[:2] == b'\xfe\xff') \
-                and (data[2:4] != '\x00\x00'):
-             encoding = 'utf-16be'
-@@ -306,7 +316,7 @@ class EncodingDetector:
-             declared_encoding_match = html_meta_re.search(markup, endpos=html_endpos)
-         if declared_encoding_match is not None:
-             declared_encoding = declared_encoding_match.groups()[0].decode(
--                'ascii')
-+                'ascii', 'replace')
-         if declared_encoding:
-             return declared_encoding.lower()
-         return None
-@@ -331,18 +341,19 @@ class UnicodeDammit:
-         ]
+diff --git a/lib/bb/COW.py b/lib/bb/COW.py
+index 6917ec3..77a05cf 100644
+--- a/lib/bb/COW.py
++++ b/lib/bb/COW.py
+@@ -23,19 +23,17 @@
+ # Assign a file to __warn__ to get warnings about slow operations.
+ #
  
-     def __init__(self, markup, override_encodings=[],
--                 smart_quotes_to=None, is_html=False):
-+                 smart_quotes_to=None, is_html=False, exclude_encodings=[]):
-         self.smart_quotes_to = smart_quotes_to
-         self.tried_encodings = []
-         self.contains_replacement_characters = False
-         self.is_html = is_html
+-from __future__ import print_function
++
+ import copy
+ import types
+ ImmutableTypes = (
+-    types.NoneType,
+     bool,
+     complex,
+     float,
+     int,
+-    long,
+     tuple,
+     frozenset,
+-    basestring
++    str
+ )
  
--        self.detector = EncodingDetector(markup, override_encodings, is_html)
-+        self.detector = EncodingDetector(
-+            markup, override_encodings, is_html, exclude_encodings)
+ MUTABLE = "__mutable__"
+@@ -61,7 +59,7 @@ class COWDictMeta(COWMeta):
+     __call__ = cow
  
-         # Short-circuit if the data is in Unicode to begin with.
--        if isinstance(markup, unicode) or markup == '':
-+        if isinstance(markup, str) or markup == '':
-             self.markup = markup
--            self.unicode_markup = unicode(markup)
-+            self.unicode_markup = str(markup)
-             self.original_encoding = None
-             return
+     def __setitem__(cls, key, value):
+-        if not isinstance(value, ImmutableTypes):
++        if value is not None and not isinstance(value, ImmutableTypes):
+             if not isinstance(value, COWMeta):
+                 cls.__hasmutable__ = True
+             key += MUTABLE
+@@ -116,7 +114,7 @@ class COWDictMeta(COWMeta):
+         cls.__setitem__(key, cls.__marker__)
  
-@@ -425,7 +436,7 @@ class UnicodeDammit:
-     def _to_unicode(self, data, encoding, errors="strict"):
-         '''Given a string and its encoding, decodes the string into Unicode.
-         %encoding is a string recognized by encodings.aliases'''
--        return unicode(data, encoding, errors)
-+        return str(data, encoding, errors)
+     def __revertitem__(cls, key):
+-        if not cls.__dict__.has_key(key):
++        if key not in cls.__dict__:
+             key += MUTABLE
+         delattr(cls, key)
+ 
+@@ -183,7 +181,7 @@ class COWSetMeta(COWDictMeta):
+         COWDictMeta.__delitem__(cls, repr(hash(value)))
+ 
+     def __in__(cls, value):
+-        return COWDictMeta.has_key(repr(hash(value)))
++        return repr(hash(value)) in COWDictMeta
+ 
+     def iterkeys(cls):
+         raise TypeError("sets don't have keys")
+@@ -192,12 +190,10 @@ class COWSetMeta(COWDictMeta):
+         raise TypeError("sets don't have 'items'")
+ 
+ # These are the actual classes you use!
+-class COWDictBase(object):
+-    __metaclass__ = COWDictMeta
++class COWDictBase(object, metaclass = COWDictMeta):
+     __count__ = 0
+ 
+-class COWSetBase(object):
+-    __metaclass__ = COWSetMeta
++class COWSetBase(object, metaclass = COWSetMeta):
+     __count__ = 0
+ 
+ if __name__ == "__main__":
+@@ -217,11 +213,11 @@ if __name__ == "__main__":
+     print()
+ 
+     print("a", a)
+-    for x in a.iteritems():
++    for x in a.items():
+         print(x)
+     print("--")
+     print("b", b)
+-    for x in b.iteritems():
++    for x in b.items():
+         print(x)
+     print()
+ 
+@@ -229,11 +225,11 @@ if __name__ == "__main__":
+     b['a'] = 'c'
+ 
+     print("a", a)
+-    for x in a.iteritems():
++    for x in a.items():
+         print(x)
+     print("--")
+     print("b", b)
+-    for x in b.iteritems():
++    for x in b.items():
+         print(x)
+     print()
+ 
+@@ -248,22 +244,22 @@ if __name__ == "__main__":
+     a['set'].add("o2")
+ 
+     print("a", a)
+-    for x in a['set'].itervalues():
++    for x in a['set'].values():
+         print(x)
+     print("--")
+     print("b", b)
+-    for x in b['set'].itervalues():
++    for x in b['set'].values():
+         print(x)
+     print()
+ 
+     b['set'].add('o3')
+ 
+     print("a", a)
+-    for x in a['set'].itervalues():
++    for x in a['set'].values():
+         print(x)
+     print("--")
+     print("b", b)
+-    for x in b['set'].itervalues():
++    for x in b['set'].values():
+         print(x)
+     print()
+ 
+@@ -273,7 +269,7 @@ if __name__ == "__main__":
+     a['set2'].add("o2")
+ 
+     print("a", a)
+-    for x in a.iteritems():
++    for x in a.items():
+         print(x)
+     print("--")
+     print("b", b)
+@@ -287,13 +283,13 @@ if __name__ == "__main__":
+     except KeyError:
+         print("Yay! deleted key raises error")
+ 
+-    if b.has_key('b'):
++    if 'b' in b:
+         print("Boo!")
+     else:
+         print("Yay - has_key with delete works!")
+ 
+     print("a", a)
+-    for x in a.iteritems():
++    for x in a.items():
+         print(x)
+     print("--")
+     print("b", b)
+@@ -304,7 +300,7 @@ if __name__ == "__main__":
+     b.__revertitem__('b')
+ 
+     print("a", a)
+-    for x in a.iteritems():
++    for x in a.items():
+         print(x)
+     print("--")
+     print("b", b)
+@@ -314,7 +310,7 @@ if __name__ == "__main__":
+ 
+     b.__revertitem__('dict')
+     print("a", a)
+-    for x in a.iteritems():
++    for x in a.items():
+         print(x)
+     print("--")
+     print("b", b)
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 4ae6b8a..6b85984 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -84,7 +84,7 @@ def plain(*args):
+     mainlogger.plain(''.join(args))
+ 
+ def debug(lvl, *args):
+-    if isinstance(lvl, basestring):
++    if isinstance(lvl, str):
+         mainlogger.warning("Passed invalid debug level '%s' to bb.debug", lvl)
+         args = (lvl,) + args
+         lvl = 1
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 9854553..e016ae3 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -35,8 +35,7 @@ import stat
+ import bb
+ import bb.msg
+ import bb.process
+-from contextlib import nested
+-from bb import event, utils
++from bb import data, event, utils
+ 
+ bblogger = logging.getLogger('BitBake')
+ logger = logging.getLogger('BitBake.Build')
+@@ -328,7 +327,7 @@ trap '' 0
+ exit $ret
+ ''')
+ 
+-    os.chmod(runfile, 0775)
++    os.chmod(runfile, 0o775)
+ 
+     cmd = runfile
+     if d.getVarFlag(func, 'fakeroot', False):
+@@ -342,12 +341,12 @@ exit $ret
+         logfile = sys.stdout
+ 
+     def readfifo(data):
+-        lines = data.split('\0')
++        lines = data.split(b'\0')
+         for line in lines:
+-            splitval = line.split(' ', 1)
++            splitval = line.split(b' ', 1)
+             cmd = splitval[0]
+             if len(splitval) > 1:
+-                value = splitval[1]
++                value = splitval[1].decode("utf-8")
+             else:
+                 value = ''
+             if cmd == 'bbplain':
+@@ -375,7 +374,7 @@ exit $ret
+     if os.path.exists(fifopath):
+         os.unlink(fifopath)
+     os.mkfifo(fifopath)
+-    with open(fifopath, 'r+') as fifo:
++    with open(fifopath, 'r+b', buffering=0) as fifo:
+         try:
+             bb.debug(2, "Executing shell function %s" % func)
+ 
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index 393d541..96abd71 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -28,21 +28,15 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+-
+ import os
++import sys
+ import logging
++import pickle
+ from collections import defaultdict
+ import bb.utils
+ 
+ logger = logging.getLogger("BitBake.Cache")
+ 
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
+-    logger.info("Importing cPickle failed. "
+-                "Falling back to a very slow implementation.")
+-
+ __cache_version__ = "150"
+ 
+ def getCacheFile(path, filename, data_hash):
+@@ -80,7 +74,7 @@ class RecipeInfoCommon(object):
+         out_dict = dict((var, metadata.getVarFlag(var, flag, True))
+                     for var in varlist)
+         if squash:
+-            return dict((k,v) for (k,v) in out_dict.iteritems() if v)
++            return dict((k,v) for (k,v) in out_dict.items() if v)
+         else:
+             return out_dict
+ 
+@@ -240,7 +234,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         cachedata.universe_target.append(self.pn)
+ 
+         cachedata.hashfn[fn] = self.hashfilename
+-        for task, taskhash in self.basetaskhashes.iteritems():
++        for task, taskhash in self.basetaskhashes.items():
+             identifier = '%s.%s' % (fn, task)
+             cachedata.basetaskhash[identifier] = taskhash
+ 
+@@ -404,7 +398,7 @@ class Cache(object):
+         infos = []
+         datastores = cls.load_bbfile(filename, appends, configdata)
+         depends = []
+-        for variant, data in sorted(datastores.iteritems(),
++        for variant, data in sorted(datastores.items(),
+                                     key=lambda i: i[0],
+                                     reverse=True):
+             virtualfn = cls.realfn2virtual(filename, variant)
+@@ -616,7 +610,7 @@ class Cache(object):
+         pickler_dict['CoreRecipeInfo'].dump(bb.__version__)
+ 
+         try:
+-            for key, info_array in self.depends_cache.iteritems():
++            for key, info_array in self.depends_cache.items():
+                 for info in info_array:
+                     if isinstance(info, RecipeInfoCommon):
+                         cache_class_name = info.__class__.__name__
+diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
+index 2ec964d..be4ab68 100644
+--- a/lib/bb/checksum.py
++++ b/lib/bb/checksum.py
+@@ -19,20 +19,13 @@ import glob
+ import operator
+ import os
+ import stat
++import pickle
+ import bb.utils
+ import logging
+ from bb.cache import MultiProcessCache
+ 
+ logger = logging.getLogger("BitBake.Cache")
+ 
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
+-    logger.info("Importing cPickle failed. "
+-                "Falling back to a very slow implementation.")
+-
+-
+ # mtime cache (non-persistent)
+ # based upon the assumption that files do not change during bitbake run
+ class FileMtimeCache(object):
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index 70b0a8d..b1d067a 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -1,22 +1,17 @@
+ import ast
++import sys
+ import codegen
+ import logging
++import pickle
++import bb.pysh as pysh
+ import os.path
+ import bb.utils, bb.data
+ from itertools import chain
+-from pysh import pyshyacc, pyshlex, sherrors
++from bb.pysh import pyshyacc, pyshlex, sherrors
+ from bb.cache import MultiProcessCache
+ 
+-
+ logger = logging.getLogger('BitBake.CodeParser')
+ 
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
+-    logger.info('Importing cPickle failed.  Falling back to a very slow implementation.')
+-
+-
+ def check_indent(codestr):
+     """If the code is indented, add a top level piece of code to 'remove' the indentation"""
+ 
+@@ -68,7 +63,7 @@ class SetCache(object):
+         
+         new = []
+         for i in items:
+-            new.append(intern(i))
++            new.append(sys.intern(i))
+         s = frozenset(new)
+         if hash(s) in self.setcache:
+             return self.setcache[hash(s)]
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 0559ffc..caa3e4d 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -110,7 +110,7 @@ class Command:
+             return False
+         except SystemExit as exc:
+             arg = exc.args[0]
+-            if isinstance(arg, basestring):
++            if isinstance(arg, str):
+                 self.finishAsyncCommand(arg)
+             else:
+                 self.finishAsyncCommand("Exited with %s" % arg)
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 11f17ef..2154ef4 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -30,13 +30,13 @@ import logging
+ import multiprocessing
+ import sre_constants
+ import threading
+-from cStringIO import StringIO
++from io import StringIO
+ from contextlib import closing
+ from functools import wraps
+ from collections import defaultdict
+ import bb, bb.exceptions, bb.command
+ from bb import utils, data, parse, event, cache, providers, taskdata, runqueue, build
+-import Queue
++import queue
+ import signal
+ import subprocess
+ import errno
+@@ -65,7 +65,7 @@ class CollectionError(bb.BBHandledException):
+     """
+ 
+ class state:
+-    initial, parsing, running, shutdown, forceshutdown, stopped, error = range(7)
++    initial, parsing, running, shutdown, forceshutdown, stopped, error = list(range(7))
+ 
+     @classmethod
+     def get_name(cls, code):
+@@ -93,7 +93,7 @@ class SkippedPackage:
+ 
+ 
+ class CookerFeatures(object):
+-    _feature_list = [HOB_EXTRA_CACHES, BASEDATASTORE_TRACKING, SEND_SANITYEVENTS] = range(3)
++    _feature_list = [HOB_EXTRA_CACHES, BASEDATASTORE_TRACKING, SEND_SANITYEVENTS] = list(range(3))
+ 
+     def __init__(self):
+         self._features=set()
+@@ -110,8 +110,8 @@ class CookerFeatures(object):
+     def __iter__(self):
+         return self._features.__iter__()
+ 
+-    def next(self):
+-        return self._features.next()
++    def __next__(self):
++        return next(self._features)
+ 
+ 
+ #============================================================================#
+@@ -726,13 +726,13 @@ class BBCooker:
+         depend_tree['providermap'] = {}
+         depend_tree["layer-priorities"] = self.recipecache.bbfile_config_priorities
+ 
+-        for name, fn in taskdata.get_providermap().iteritems():
++        for name, fn in list(taskdata.get_providermap().items()):
+             pn = self.recipecache.pkg_fn[fn]
+             if name != pn:
+                 version = "%s:%s-%s" % self.recipecache.pkg_pepvpr[fn]
+                 depend_tree['providermap'][name] = (pn, version)
+ 
+-        for task in xrange(len(rq.rqdata.runq_fnid)):
++        for task in range(len(rq.rqdata.runq_fnid)):
+             taskname = rq.rqdata.runq_task[task]
+             fnid = rq.rqdata.runq_fnid[task]
+             fn = taskdata.fn_index[fnid]
+@@ -807,7 +807,7 @@ class BBCooker:
+         _, taskdata = self.prepareTreeData(pkgs_to_build, task)
+         tasks_fnid = []
+         if len(taskdata.tasks_name) != 0:
+-            for task in xrange(len(taskdata.tasks_name)):
++            for task in range(len(taskdata.tasks_name)):
+                 tasks_fnid.append(taskdata.tasks_fnid[task])
+ 
+         seen_fnids = []
+@@ -825,7 +825,7 @@ class BBCooker:
+                 cachefields = getattr(cache_class, 'cachefields', [])
+                 extra_info = extra_info + cachefields
+ 
+-        for task in xrange(len(tasks_fnid)):
++        for task in range(len(tasks_fnid)):
+             fnid = tasks_fnid[task]
+             fn = taskdata.fn_index[fnid]
+             pn = self.recipecache.pkg_fn[fn]
+@@ -953,7 +953,7 @@ class BBCooker:
+         # Determine which bbappends haven't been applied
+ 
+         # First get list of recipes, including skipped
+-        recipefns = self.recipecache.pkg_fn.keys()
++        recipefns = list(self.recipecache.pkg_fn.keys())
+         recipefns.extend(self.skiplist.keys())
+ 
+         # Work out list of bbappends that have been applied
+@@ -1152,7 +1152,7 @@ class BBCooker:
+                         deplist = bb.utils.explode_dep_versions2(deps)
+                     except bb.utils.VersionStringException as vse:
+                         bb.fatal('Error parsing LAYERDEPENDS_%s: %s' % (c, str(vse)))
+-                    for dep, oplist in deplist.iteritems():
++                    for dep, oplist in list(deplist.items()):
+                         if dep in collection_list:
+                             for opstr in oplist:
+                                 layerver = self.data.getVar("LAYERVERSION_%s" % dep, True)
+@@ -1888,7 +1888,7 @@ class Feeder(multiprocessing.Process):
+         while True:
+             try:
+                 quit = self.quit.get_nowait()
+-            except Queue.Empty:
++            except queue.Empty:
+                 pass
+             else:
+                 if quit == 'cancel':
+@@ -1902,7 +1902,7 @@ class Feeder(multiprocessing.Process):
+ 
+             try:
+                 self.to_parsers.put(job, timeout=0.5)
+-            except Queue.Full:
++            except queue.Full:
+                 self.jobs.insert(0, job)
+                 continue
+ 
+@@ -1942,7 +1942,7 @@ class Parser(multiprocessing.Process):
+         while True:
+             try:
+                 self.quit.get_nowait()
+-            except Queue.Empty:
++            except queue.Empty:
+                 pass
+             else:
+                 self.results.cancel_join_thread()
+@@ -1953,7 +1953,7 @@ class Parser(multiprocessing.Process):
+             else:
+                 try:
+                     job = self.jobs.get(timeout=0.25)
+-                except Queue.Empty:
++                except queue.Empty:
+                     continue
+ 
+                 if job is None:
+@@ -1962,7 +1962,7 @@ class Parser(multiprocessing.Process):
+ 
+             try:
+                 self.results.put(result, timeout=0.25)
+-            except Queue.Full:
++            except queue.Full:
+                 pending.append(result)
+ 
+     def parse(self, filename, appends, caches_array):
+@@ -2115,7 +2115,7 @@ class CookerParser(object):
+ 
+             try:
+                 result = self.result_queue.get(timeout=0.25)
+-            except Queue.Empty:
++            except queue.Empty:
+                 pass
+             else:
+                 value = result[1]
+@@ -2128,7 +2128,7 @@ class CookerParser(object):
+         result = []
+         parsed = None
+         try:
+-            parsed, result = self.results.next()
++            parsed, result = next(self.results)
+         except StopIteration:
+             self.shutdown()
+             return False
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 2ab884b..2a61386 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -372,7 +372,7 @@ class DataSmart(MutableMapping):
+ 
+     def expandWithRefs(self, s, varname):
+ 
+-        if not isinstance(s, basestring): # sanity check
++        if not isinstance(s, str): # sanity check
+             return VariableParse(varname, self, s)
+ 
+         if varname and varname in self.expand_cache:
+@@ -966,4 +966,4 @@ class DataSmart(MutableMapping):
+                     data.update({i:value})
+ 
+         data_str = str([(k, data[k]) for k in sorted(data.keys())])
+-        return hashlib.md5(data_str).hexdigest()
++        return hashlib.md5(data_str.encode("utf-8")).hexdigest()
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 29b14f6..6fb3712 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -24,10 +24,7 @@ BitBake build tools.
+ 
+ import os, sys
+ import warnings
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
++import pickle
+ import logging
+ import atexit
+ import traceback
+@@ -107,7 +104,7 @@ def fire_class_handlers(event, d):
+ 
+     eid = str(event.__class__)[8:-2]
+     evt_hmap = _event_handler_map.get(eid, {})
+-    for name, handler in _handlers.iteritems():
++    for name, handler in list(_handlers.items()):
+         if name in _catchall_handlers or name in evt_hmap:
+             if _eventfilter:
+                 if not _eventfilter(name, handler, event, d):
+@@ -192,7 +189,7 @@ def register(name, handler, mask=None, filename=None, lineno=None):
+ 
+     if handler is not None:
+         # handle string containing python code
+-        if isinstance(handler, basestring):
++        if isinstance(handler, str):
+             tmp = "def %s(e):\n%s" % (name, handler)
+             try:
+                 code = bb.methodpool.compile_cache(tmp)
+diff --git a/lib/bb/exceptions.py b/lib/bb/exceptions.py
+index eadfc57..cd71343 100644
+--- a/lib/bb/exceptions.py
++++ b/lib/bb/exceptions.py
+@@ -86,6 +86,6 @@ def format_exception(etype, value, tb, context=1, limit=None, formatter=None):
+ 
+ def to_string(exc):
+     if isinstance(exc, SystemExit):
+-        if not isinstance(exc.code, basestring):
++        if not isinstance(exc.code, str):
+             return 'Exited with "%d"' % exc.code
+     return str(exc)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 14fe3c7..be01bdb 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -28,27 +28,23 @@ BitBake build tools.
+ import os, re
+ import signal
+ import logging
+-import urllib
+-import urlparse
++import urllib.request, urllib.parse, urllib.error
++if 'git' not in urllib.parse.uses_netloc:
++    urllib.parse.uses_netloc.append('git')
++import operator
+ import collections
++import subprocess
++import pickle
+ import bb.persist_data, bb.utils
+ import bb.checksum
+ from bb import data
+ import bb.process
+-import subprocess
+ 
+ __version__ = "2"
+ _checksum_cache = bb.checksum.FileChecksumCache()
+ 
+ logger = logging.getLogger("BitBake.Fetcher")
+ 
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
+-    logger.info("Importing cPickle failed. "
+-                "Falling back to a very slow implementation.")
+-
+ class BBFetchException(Exception):
+     """Class all fetch exceptions inherit from"""
+     def __init__(self, message):
+@@ -230,14 +226,14 @@ class URI(object):
+         # them are not quite RFC compliant.
+         uri, param_str = (uri.split(";", 1) + [None])[:2]
+ 
+-        urlp = urlparse.urlparse(uri)
++        urlp = urllib.parse.urlparse(uri)
+         self.scheme = urlp.scheme
+ 
+         reparse = 0
+ 
+         # Coerce urlparse to make URI scheme use netloc
+-        if not self.scheme in urlparse.uses_netloc:
+-            urlparse.uses_params.append(self.scheme)
++        if not self.scheme in urllib.parse.uses_netloc:
++            urllib.parse.uses_params.append(self.scheme)
+             reparse = 1
+ 
+         # Make urlparse happy(/ier) by converting local resources
+@@ -248,7 +244,7 @@ class URI(object):
+             reparse = 1
+ 
+         if reparse:
+-            urlp = urlparse.urlparse(uri)
++            urlp = urllib.parse.urlparse(uri)
+ 
+         # Identify if the URI is relative or not
+         if urlp.scheme in self._relative_schemes and \
+@@ -264,7 +260,7 @@ class URI(object):
+             if urlp.password:
+                 self.userinfo += ':%s' % urlp.password
+ 
+-        self.path = urllib.unquote(urlp.path)
++        self.path = urllib.parse.unquote(urlp.path)
+ 
+         if param_str:
+             self.params = self._param_str_split(param_str, ";")
+@@ -312,11 +308,11 @@ class URI(object):
  
      @property
-     def declared_html_encoding(self):
-diff --git a/lib/bs4/diagnose.py b/lib/bs4/diagnose.py
-index 4d0b00a..083395f 100644
---- a/lib/bs4/diagnose.py
-+++ b/lib/bs4/diagnose.py
-@@ -1,7 +1,10 @@
- """Diagnostic functions, mainly for use when doing tech support."""
-+
-+__license__ = "MIT"
-+
- import cProfile
--from StringIO import StringIO
--from HTMLParser import HTMLParser
-+from io import StringIO
-+from html.parser import HTMLParser
- import bs4
- from bs4 import BeautifulSoup, __version__
- from bs4.builder import builder_registry
-@@ -17,8 +20,8 @@ import cProfile
+     def path_quoted(self):
+-        return urllib.quote(self.path)
++        return urllib.parse.quote(self.path)
  
- def diagnose(data):
-     """Diagnostic suite for isolating common problems."""
--    print "Diagnostic running on Beautiful Soup %s" % __version__
--    print "Python version %s" % sys.version
-+    print("Diagnostic running on Beautiful Soup %s" % __version__)
-+    print("Python version %s" % sys.version)
+     @path_quoted.setter
+     def path_quoted(self, path):
+-        self.path = urllib.unquote(path)
++        self.path = urllib.parse.unquote(path)
  
-     basic_parsers = ["html.parser", "html5lib", "lxml"]
-     for name in basic_parsers:
-@@ -27,44 +30,53 @@ def diagnose(data):
-                 break
-         else:
-             basic_parsers.remove(name)
--            print (
-+            print((
-                 "I noticed that %s is not installed. Installing it may help." %
--                name)
-+                name))
+     @property
+     def path(self):
+@@ -398,7 +394,7 @@ def decodeurl(url):
+                 s1, s2 = s.split('=')
+                 p[s1] = s2
  
-     if 'lxml' in basic_parsers:
-         basic_parsers.append(["lxml", "xml"])
--        from lxml import etree
--        print "Found lxml version %s" % ".".join(map(str,etree.LXML_VERSION))
-+        try:
-+            from lxml import etree
-+            print("Found lxml version %s" % ".".join(map(str,etree.LXML_VERSION)))
-+        except ImportError as e:
-+            print (
-+                "lxml is not installed or couldn't be imported.")
-+
+-    return type, host, urllib.unquote(path), user, pswd, p
++    return type, host, urllib.parse.unquote(path), user, pswd, p
  
-     if 'html5lib' in basic_parsers:
--        import html5lib
--        print "Found html5lib version %s" % html5lib.__version__
-+        try:
-+            import html5lib
-+            print("Found html5lib version %s" % html5lib.__version__)
-+        except ImportError as e:
-+            print (
-+                "html5lib is not installed or couldn't be imported.")
+ def encodeurl(decoded):
+     """Encodes a URL from tokens (scheme, network location, path,
+@@ -422,7 +418,7 @@ def encodeurl(decoded):
+     # Standardise path to ensure comparisons work
+     while '//' in path:
+         path = path.replace("//", "/")
+-    url += "%s" % urllib.quote(path)
++    url += "%s" % urllib.parse.quote(path)
+     if p:
+         for parm in p:
+             url += ";%s=%s" % (parm, p[parm])
+@@ -1735,7 +1731,7 @@ class FetchConnectionCache(object):
+             del self.cache[cn]
  
-     if hasattr(data, 'read'):
-         data = data.read()
-     elif os.path.exists(data):
--        print '"%s" looks like a filename. Reading data from the file.' % data
-+        print('"%s" looks like a filename. Reading data from the file.' % data)
-         data = open(data).read()
-     elif data.startswith("http:") or data.startswith("https:"):
--        print '"%s" looks like a URL. Beautiful Soup is not an HTTP client.' % data
--        print "You need to use some other library to get the document behind the URL, and feed that document to Beautiful Soup."
-+        print('"%s" looks like a URL. Beautiful Soup is not an HTTP client.' % data)
-+        print("You need to use some other library to get the document behind the URL, and feed that document to Beautiful Soup.")
-         return
--    print
-+    print()
+     def close_connections(self):
+-        for cn in self.cache.keys():
++        for cn in list(self.cache.keys()):
+             self.cache[cn].close()
+             del self.cache[cn]
  
-     for parser in basic_parsers:
--        print "Trying to parse your markup with %s" % parser
-+        print("Trying to parse your markup with %s" % parser)
-         success = False
-         try:
-             soup = BeautifulSoup(data, parser)
-             success = True
--        except Exception, e:
--            print "%s could not parse the markup." % parser
-+        except Exception as e:
-+            print("%s could not parse the markup." % parser)
-             traceback.print_exc()
-         if success:
--            print "Here's what %s did with the markup:" % parser
--            print soup.prettify()
-+            print("Here's what %s did with the markup:" % parser)
-+            print(soup.prettify())
+diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
+index 303a52b..51ca78d 100644
+--- a/lib/bb/fetch2/local.py
++++ b/lib/bb/fetch2/local.py
+@@ -26,7 +26,7 @@ BitBake build tools.
+ # Based on functions from the base bb module, Copyright 2003 Holger Schurig
  
--        print "-" * 80
-+        print("-" * 80)
+ import os
+-import urllib
++import urllib.request, urllib.parse, urllib.error
+ import bb
+ import bb.utils
+ from   bb import data
+@@ -42,7 +42,7 @@ class Local(FetchMethod):
  
- def lxml_trace(data, html=True, **kwargs):
-     """Print out the lxml events that occur during parsing.
-@@ -74,7 +86,7 @@ def lxml_trace(data, html=True, **kwargs):
-     """
-     from lxml import etree
-     for event, element in etree.iterparse(StringIO(data), html=html, **kwargs):
--        print("%s, %4s, %s" % (event, element.tag, element.text))
-+        print(("%s, %4s, %s" % (event, element.tag, element.text)))
+     def urldata_init(self, ud, d):
+         # We don't set localfile as for this fetcher the file is already local!
+-        ud.decodedurl = urllib.unquote(ud.url.split("://")[1].split(";")[0])
++        ud.decodedurl = urllib.parse.unquote(ud.url.split("://")[1].split(";")[0])
+         ud.basename = os.path.basename(ud.decodedurl)
+         ud.basepath = ud.decodedurl
+         ud.needdonestamp = False
+diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+index d9e46b2..2fd4303 100644
+--- a/lib/bb/fetch2/npm.py
++++ b/lib/bb/fetch2/npm.py
+@@ -20,7 +20,7 @@ Usage in the recipe:
  
- class AnnouncingParser(HTMLParser):
-     """Announces HTMLParser parse events, without doing anything else."""
-@@ -156,9 +168,9 @@ def rdoc(num_elements=1000):
- 
- def benchmark_parsers(num_elements=100000):
-     """Very basic head-to-head performance benchmark."""
--    print "Comparative parser benchmark on Beautiful Soup %s" % __version__
-+    print("Comparative parser benchmark on Beautiful Soup %s" % __version__)
-     data = rdoc(num_elements)
--    print "Generated a large invalid HTML document (%d bytes)." % len(data)
-+    print("Generated a large invalid HTML document (%d bytes)." % len(data))
-     
-     for parser in ["lxml", ["lxml", "html"], "html5lib", "html.parser"]:
-         success = False
-@@ -167,24 +179,24 @@ def benchmark_parsers(num_elements=100000):
-             soup = BeautifulSoup(data, parser)
-             b = time.time()
-             success = True
--        except Exception, e:
--            print "%s could not parse the markup." % parser
-+        except Exception as e:
-+            print("%s could not parse the markup." % parser)
-             traceback.print_exc()
-         if success:
--            print "BS4+%s parsed the markup in %.2fs." % (parser, b-a)
-+            print("BS4+%s parsed the markup in %.2fs." % (parser, b-a))
- 
-     from lxml import etree
-     a = time.time()
-     etree.HTML(data)
-     b = time.time()
--    print "Raw lxml parsed the markup in %.2fs." % (b-a)
-+    print("Raw lxml parsed the markup in %.2fs." % (b-a))
- 
-     import html5lib
-     parser = html5lib.HTMLParser()
-     a = time.time()
-     parser.parse(data)
-     b = time.time()
--    print "Raw html5lib parsed the markup in %.2fs." % (b-a)
-+    print("Raw html5lib parsed the markup in %.2fs." % (b-a))
- 
- def profile(num_elements=100000, parser="lxml"):
- 
-diff --git a/lib/bs4/element.py b/lib/bs4/element.py
-index da9afdf..0e62c2e 100644
---- a/lib/bs4/element.py
-+++ b/lib/bs4/element.py
-@@ -1,3 +1,6 @@
-+__license__ = "MIT"
-+
-+from pdb import set_trace
- import collections
- import re
+ import os
  import sys
-@@ -21,22 +24,22 @@ def _alias(attr):
-     return alias
+-import urllib
++import urllib.request, urllib.parse, urllib.error
+ import json
+ import subprocess
+ import signal
+@@ -196,9 +196,9 @@ class Npm(FetchMethod):
+                 optdepsfound[dep] = dependencies[dep]
+             else:
+                 depsfound[dep] = dependencies[dep]
+-        for dep, version in optdepsfound.iteritems():
++        for dep, version in optdepsfound.items():
+             self._getdependencies(dep, data[pkg]['deps'], version, d, ud, optional=True)
+-        for dep, version in depsfound.iteritems():
++        for dep, version in depsfound.items():
+             self._getdependencies(dep, data[pkg]['deps'], version, d, ud)
  
+     def _getshrinkeddependencies(self, pkg, data, version, d, ud, lockdown, manifest):
+diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
+index 1aef246..ce3cda2 100644
+--- a/lib/bb/fetch2/perforce.py
++++ b/lib/bb/fetch2/perforce.py
+@@ -61,7 +61,7 @@ class Perforce(FetchMethod):
+                     keys.append(key)
+                     values.append(value)
  
--class NamespacedAttribute(unicode):
-+class NamespacedAttribute(str):
+-            parm = dict(zip(keys, values))
++            parm = dict(list(zip(keys, values)))
+         path = "//" + path.split(';')[0]
+         host += ":%s" % (port)
+         parm["cset"] = Perforce.getcset(d, path, host, user, pswd, parm)
+diff --git a/lib/bb/fetch2/sftp.py b/lib/bb/fetch2/sftp.py
+index cb2f753..7989fcc 100644
+--- a/lib/bb/fetch2/sftp.py
++++ b/lib/bb/fetch2/sftp.py
+@@ -61,8 +61,7 @@ SRC_URI = "sftp://user@host.example.com/dir/path.file.txt"
  
-     def __new__(cls, prefix, name, namespace=None):
-         if name is None:
--            obj = unicode.__new__(cls, prefix)
-+            obj = str.__new__(cls, prefix)
-         elif prefix is None:
-             # Not really namespaced.
--            obj = unicode.__new__(cls, name)
-+            obj = str.__new__(cls, name)
+ import os
+ import bb
+-import urllib
+-import commands
++import urllib.request, urllib.parse, urllib.error
+ from bb import data
+ from bb.fetch2 import URI
+ from bb.fetch2 import FetchMethod
+@@ -93,7 +92,7 @@ class SFTP(FetchMethod):
          else:
--            obj = unicode.__new__(cls, prefix + ":" + name)
-+            obj = str.__new__(cls, prefix + ":" + name)
-         obj.prefix = prefix
-         obj.name = name
-         obj.namespace = namespace
-         return obj
+             ud.basename = os.path.basename(ud.path)
  
--class AttributeValueWithCharsetSubstitution(unicode):
-+class AttributeValueWithCharsetSubstitution(str):
-     """A stand-in object for a character encoding specified in HTML."""
+-        ud.localfile = data.expand(urllib.unquote(ud.basename), d)
++        ud.localfile = data.expand(urllib.parse.unquote(ud.basename), d)
  
- class CharsetMetaAttributeValue(AttributeValueWithCharsetSubstitution):
-@@ -47,7 +50,7 @@ class CharsetMetaAttributeValue(AttributeValueWithCharsetSubstitution):
-     """
+     def download(self, ud, d):
+         """Fetch urls"""
+@@ -121,8 +120,7 @@ class SFTP(FetchMethod):
  
-     def __new__(cls, original_value):
--        obj = unicode.__new__(cls, original_value)
-+        obj = str.__new__(cls, original_value)
-         obj.original_value = original_value
-         return obj
+         remote = '%s%s:%s' % (user, urlo.hostname, path)
  
-@@ -70,9 +73,9 @@ class ContentMetaAttributeValue(AttributeValueWithCharsetSubstitution):
-         match = cls.CHARSET_RE.search(original_value)
-         if match is None:
-             # No substitution necessary.
--            return unicode.__new__(unicode, original_value)
-+            return str.__new__(str, original_value)
+-        cmd = '%s %s %s %s' % (basecmd, port, commands.mkarg(remote),
+-                               commands.mkarg(lpath))
++        cmd = '%s %s %s %s' % (basecmd, port, remote, lpath)
  
--        obj = unicode.__new__(cls, original_value)
-+        obj = str.__new__(cls, original_value)
-         obj.original_value = original_value
-         return obj
+         bb.fetch2.check_network_access(d, cmd, ud.url)
+         runfetchcmd(cmd, d)
+diff --git a/lib/bb/fetch2/ssh.py b/lib/bb/fetch2/ssh.py
+index 635578a..56f9b7e 100644
+--- a/lib/bb/fetch2/ssh.py
++++ b/lib/bb/fetch2/ssh.py
+@@ -114,12 +114,10 @@ class SSH(FetchMethod):
+             fr = host
+         fr += ':%s' % path
  
-@@ -152,7 +155,7 @@ class PageElement(object):
- 
-     def format_string(self, s, formatter='minimal'):
-         """Format the given string using the given formatter."""
--        if not callable(formatter):
-+        if not isinstance(formatter, collections.Callable):
-             formatter = self._formatter_for_name(formatter)
-         if formatter is None:
-             output = s
-@@ -185,24 +188,40 @@ class PageElement(object):
-             return self.HTML_FORMATTERS.get(
-                 name, HTMLAwareEntitySubstitution.substitute_xml)
- 
--    def setup(self, parent=None, previous_element=None):
-+    def setup(self, parent=None, previous_element=None, next_element=None,
-+              previous_sibling=None, next_sibling=None):
-         """Sets up the initial relations between this element and
-         other elements."""
-         self.parent = parent
-+
-         self.previous_element = previous_element
-         if previous_element is not None:
-             self.previous_element.next_element = self
--        self.next_element = None
--        self.previous_sibling = None
--        self.next_sibling = None
--        if self.parent is not None and self.parent.contents:
--            self.previous_sibling = self.parent.contents[-1]
-+
-+        self.next_element = next_element
-+        if self.next_element:
-+            self.next_element.previous_element = self
-+
-+        self.next_sibling = next_sibling
-+        if self.next_sibling:
-+            self.next_sibling.previous_sibling = self
-+
-+        if (not previous_sibling
-+            and self.parent is not None and self.parent.contents):
-+            previous_sibling = self.parent.contents[-1]
-+
-+        self.previous_sibling = previous_sibling
-+        if previous_sibling:
-             self.previous_sibling.next_sibling = self
- 
-     nextSibling = _alias("next_sibling")  # BS3
-     previousSibling = _alias("previous_sibling")  # BS3
- 
-     def replace_with(self, replace_with):
-+        if not self.parent:
-+            raise ValueError(
-+                "Cannot replace one element with another when the"
-+                "element to be replaced is not part of a tree.")
-         if replace_with is self:
-             return
-         if replace_with is self.parent:
-@@ -216,6 +235,10 @@ class PageElement(object):
- 
-     def unwrap(self):
-         my_parent = self.parent
-+        if not self.parent:
-+            raise ValueError(
-+                "Cannot replace an element with its contents when that"
-+                "element is not part of a tree.")
-         my_index = self.parent.index(self)
-         self.extract()
-         for child in reversed(self.contents[:]):
-@@ -240,17 +263,20 @@ class PageElement(object):
-         last_child = self._last_descendant()
-         next_element = last_child.next_element
- 
--        if self.previous_element is not None:
-+        if (self.previous_element is not None and
-+            self.previous_element is not next_element):
-             self.previous_element.next_element = next_element
--        if next_element is not None:
-+        if next_element is not None and next_element is not self.previous_element:
-             next_element.previous_element = self.previous_element
-         self.previous_element = None
-         last_child.next_element = None
- 
-         self.parent = None
--        if self.previous_sibling is not None:
-+        if (self.previous_sibling is not None
-+            and self.previous_sibling is not self.next_sibling):
-             self.previous_sibling.next_sibling = self.next_sibling
--        if self.next_sibling is not None:
-+        if (self.next_sibling is not None
-+            and self.next_sibling is not self.previous_sibling):
-             self.next_sibling.previous_sibling = self.previous_sibling
-         self.previous_sibling = self.next_sibling = None
-         return self
-@@ -263,16 +289,18 @@ class PageElement(object):
-             last_child = self
-             while isinstance(last_child, Tag) and last_child.contents:
-                 last_child = last_child.contents[-1]
--        if not accept_self and last_child == self:
-+        if not accept_self and last_child is self:
-             last_child = None
-         return last_child
-     # BS3: Not part of the API!
-     _lastRecursiveChild = _last_descendant
- 
-     def insert(self, position, new_child):
-+        if new_child is None:
-+            raise ValueError("Cannot insert None into a tag.")
-         if new_child is self:
-             raise ValueError("Cannot insert a tag into itself.")
--        if (isinstance(new_child, basestring)
-+        if (isinstance(new_child, str)
-             and not isinstance(new_child, NavigableString)):
-             new_child = NavigableString(new_child)
- 
-@@ -478,6 +506,10 @@ class PageElement(object):
-     def _find_all(self, name, attrs, text, limit, generator, **kwargs):
-         "Iterates over a generator looking for things that match."
- 
-+        if text is None and 'string' in kwargs:
-+            text = kwargs['string']
-+            del kwargs['string']
-+
-         if isinstance(name, SoupStrainer):
-             strainer = name
-         else:
-@@ -489,7 +521,7 @@ class PageElement(object):
-                 result = (element for element in generator
-                           if isinstance(element, Tag))
-                 return ResultSet(strainer, result)
--            elif isinstance(name, basestring):
-+            elif isinstance(name, str):
-                 # Optimization to find all tags with a given name.
-                 result = (element for element in generator
-                           if isinstance(element, Tag)
-@@ -548,17 +580,17 @@ class PageElement(object):
- 
-     # Methods for supporting CSS selectors.
- 
--    tag_name_re = re.compile('^[a-z0-9]+$')
-+    tag_name_re = re.compile('^[a-zA-Z0-9][-.a-zA-Z0-9:_]*$')
- 
--    # /^(\w+)\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]$/
--    #   \---/  \---/\-------------/    \-------/
--    #     |      |         |               |
--    #     |      |         |           The value
--    #     |      |    ~,|,^,$,* or =
--    #     |   Attribute
-+    # /^([a-zA-Z0-9][-.a-zA-Z0-9:_]*)\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]$/
-+    #   \---------------------------/  \---/\-------------/    \-------/
-+    #     |                              |         |               |
-+    #     |                              |         |           The value
-+    #     |                              |    ~,|,^,$,* or =
-+    #     |                           Attribute
-     #    Tag
-     attribselect_re = re.compile(
--        r'^(?P<tag>\w+)?\[(?P<attribute>\w+)(?P<operator>[=~\|\^\$\*]?)' +
-+        r'^(?P<tag>[a-zA-Z0-9][-.a-zA-Z0-9:_]*)?\[(?P<attribute>[\w-]+)(?P<operator>[=~\|\^\$\*]?)' +
-         r'=?"?(?P<value>[^\]"]*)"?\]$'
+-
+-        import commands
+         cmd = 'scp -B -r %s %s %s/' % (
+             portarg,
+-            commands.mkarg(fr),
+-            commands.mkarg(dldir)
++            fr,
++            dldir
          )
  
-@@ -640,7 +672,7 @@ class PageElement(object):
-         return self.parents
- 
- 
--class NavigableString(unicode, PageElement):
-+class NavigableString(str, PageElement):
- 
-     PREFIX = ''
-     SUFFIX = ''
-@@ -653,15 +685,21 @@ class NavigableString(unicode, PageElement):
-         passed in to the superclass's __new__ or the superclass won't know
-         how to handle non-ASCII characters.
-         """
--        if isinstance(value, unicode):
--            return unicode.__new__(cls, value)
--        return unicode.__new__(cls, value, DEFAULT_OUTPUT_ENCODING)
-+        if isinstance(value, str):
-+            u = str.__new__(cls, value)
-+        else:
-+            u = str.__new__(cls, value, DEFAULT_OUTPUT_ENCODING)
-+        u.setup()
-+        return u
- 
-     def __copy__(self):
--        return self
-+        """A copy of a NavigableString has the same contents and class
-+        as the original, but it is not connected to the parse tree.
-+        """
-+        return type(self)(self)
- 
-     def __getnewargs__(self):
--        return (unicode(self),)
-+        return (str(self),)
- 
-     def __getattr__(self, attr):
-         """text.string gives you text. This is for backwards
-@@ -701,23 +739,23 @@ class PreformattedString(NavigableString):
- 
- class CData(PreformattedString):
- 
--    PREFIX = u'<![CDATA['
--    SUFFIX = u']]>'
-+    PREFIX = '<![CDATA['
-+    SUFFIX = ']]>'
- 
- class ProcessingInstruction(PreformattedString):
- 
--    PREFIX = u'<?'
--    SUFFIX = u'?>'
-+    PREFIX = '<?'
-+    SUFFIX = '>'
- 
- class Comment(PreformattedString):
- 
--    PREFIX = u'<!--'
--    SUFFIX = u'-->'
-+    PREFIX = '<!--'
-+    SUFFIX = '-->'
- 
- 
- class Declaration(PreformattedString):
--    PREFIX = u'<!'
--    SUFFIX = u'!>'
-+    PREFIX = '<?'
-+    SUFFIX = '?>'
- 
- 
- class Doctype(PreformattedString):
-@@ -734,8 +772,8 @@ class Doctype(PreformattedString):
- 
-         return Doctype(value)
- 
--    PREFIX = u'<!DOCTYPE '
--    SUFFIX = u'>\n'
-+    PREFIX = '<!DOCTYPE '
-+    SUFFIX = '>\n'
- 
- 
- class Tag(PageElement):
-@@ -759,9 +797,12 @@ class Tag(PageElement):
-         self.prefix = prefix
-         if attrs is None:
-             attrs = {}
--        elif attrs and builder.cdata_list_attributes:
--            attrs = builder._replace_cdata_list_attribute_values(
--                self.name, attrs)
-+        elif attrs:
-+            if builder is not None and builder.cdata_list_attributes:
-+                attrs = builder._replace_cdata_list_attribute_values(
-+                    self.name, attrs)
-+            else:
-+                attrs = dict(attrs)
+         bb.fetch2.check_network_access(d, cmd, urldata.url)
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 8bc9e93..d688fd9 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -31,7 +31,7 @@ import subprocess
+ import os
+ import logging
+ import bb
+-import urllib
++import urllib.request, urllib.parse, urllib.error
+ from   bb import data
+ from   bb.fetch2 import FetchMethod
+ from   bb.fetch2 import FetchError
+@@ -62,9 +62,9 @@ class Wget(FetchMethod):
          else:
-             attrs = dict(attrs)
-         self.attrs = attrs
-@@ -778,6 +819,18 @@ class Tag(PageElement):
+             ud.basename = os.path.basename(ud.path)
  
-     parserClass = _alias("parser_class")  # BS3
+-        ud.localfile = data.expand(urllib.unquote(ud.basename), d)
++        ud.localfile = data.expand(urllib.parse.unquote(ud.basename), d)
+         if not ud.localfile:
+-            ud.localfile = data.expand(urllib.unquote(ud.host + ud.path).replace("/", "."), d)
++            ud.localfile = data.expand(urllib.parse.unquote(ud.host + ud.path).replace("/", "."), d)
  
-+    def __copy__(self):
-+        """A copy of a Tag is a new Tag, unconnected to the parse tree.
-+        Its contents are a copy of the old Tag's contents.
-+        """
-+        clone = type(self)(None, self.builder, self.name, self.namespace,
-+                           self.nsprefix, self.attrs)
-+        for attr in ('can_be_empty_element', 'hidden'):
-+            setattr(clone, attr, getattr(self, attr))
-+        for child in self.contents:
-+            clone.append(child.__copy__())
-+        return clone
-+
-     @property
-     def is_empty_element(self):
-         """Is this tag an empty-element tag? (aka a self-closing tag)
-@@ -843,7 +896,7 @@ class Tag(PageElement):
-         for string in self._all_strings(True):
-             yield string
+         self.basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
  
--    def get_text(self, separator=u"", strip=False,
-+    def get_text(self, separator="", strip=False,
-                  types=(NavigableString, CData)):
-         """
-         Get all child strings, concatenated using the given separator.
-@@ -915,7 +968,7 @@ class Tag(PageElement):
-     def __contains__(self, x):
-         return x in self.contents
- 
--    def __nonzero__(self):
-+    def __bool__(self):
-         "A tag is non-None even if it has no contents."
+@@ -105,11 +105,11 @@ class Wget(FetchMethod):
          return True
  
-@@ -971,15 +1024,25 @@ class Tag(PageElement):
-         as defined in __eq__."""
-         return not self == other
+     def checkstatus(self, fetch, ud, d):
+-        import urllib2, socket, httplib
+-        from urllib import addinfourl
++        import urllib.request, urllib.error, urllib.parse, socket, http.client
++        from urllib.response import addinfourl
+         from bb.fetch2 import FetchConnectionCache
  
--    def __repr__(self, encoding=DEFAULT_OUTPUT_ENCODING):
-+    def __repr__(self, encoding="unicode-escape"):
-         """Renders this tag as a string."""
--        return self.encode(encoding)
-+        if PY3K:
-+            # "The return value must be a string object", i.e. Unicode
-+            return self.decode()
-+        else:
-+            # "The return value must be a string object", i.e. a bytestring.
-+            # By convention, the return value of __repr__ should also be
-+            # an ASCII string.
-+            return self.encode(encoding)
+-        class HTTPConnectionCache(httplib.HTTPConnection):
++        class HTTPConnectionCache(http.client.HTTPConnection):
+             if fetch.connection_cache:
+                 def connect(self):
+                     """Connect to the host and port specified in __init__."""
+@@ -125,7 +125,7 @@ class Wget(FetchMethod):
+                     if self._tunnel_host:
+                         self._tunnel()
  
-     def __unicode__(self):
-         return self.decode()
+-        class CacheHTTPHandler(urllib2.HTTPHandler):
++        class CacheHTTPHandler(urllib.request.HTTPHandler):
+             def http_open(self, req):
+                 return self.do_open(HTTPConnectionCache, req)
  
-     def __str__(self):
--        return self.encode()
-+        if PY3K:
-+            return self.decode()
-+        else:
-+            return self.encode()
+@@ -139,7 +139,7 @@ class Wget(FetchMethod):
+                     - geturl(): return the original request URL
+                     - code: HTTP status code
+                 """
+-                host = req.get_host()
++                host = req.host
+                 if not host:
+                     raise urlllib2.URLError('no host given')
  
-     if PY3K:
-         __str__ = __repr__ = __unicode__
-@@ -1014,7 +1077,7 @@ class Tag(PageElement):
+@@ -147,7 +147,7 @@ class Wget(FetchMethod):
+                 h.set_debuglevel(self._debuglevel)
  
-         # First off, turn a string formatter into a function. This
-         # will stop the lookup from happening over and over again.
--        if not callable(formatter):
-+        if not isinstance(formatter, collections.Callable):
-             formatter = self._formatter_for_name(formatter)
+                 headers = dict(req.unredirected_hdrs)
+-                headers.update(dict((k, v) for k, v in req.headers.items()
++                headers.update(dict((k, v) for k, v in list(req.headers.items())
+                             if k not in headers))
  
-         attrs = []
-@@ -1025,8 +1088,8 @@ class Tag(PageElement):
+                 # We want to make an HTTP/1.1 request, but the addinfourl
+@@ -164,7 +164,7 @@ class Wget(FetchMethod):
+                     headers["Connection"] = "Keep-Alive" # Works for HTTP/1.0
+ 
+                 headers = dict(
+-                    (name.title(), val) for name, val in headers.items())
++                    (name.title(), val) for name, val in list(headers.items()))
+ 
+                 if req._tunnel_host:
+                     tunnel_headers = {}
+@@ -177,12 +177,12 @@ class Wget(FetchMethod):
+                     h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+ 
+                 try:
+-                    h.request(req.get_method(), req.get_selector(), req.data, headers)
+-                except socket.error, err: # XXX what error?
++                    h.request(req.get_method(), req.selector, req.data, headers)
++                except socket.error as err: # XXX what error?
+                     # Don't close connection when cache is enabled.
+                     if fetch.connection_cache is None:
+                         h.close()
+-                    raise urllib2.URLError(err)
++                    raise urllib.error.URLError(err)
                  else:
-                     if isinstance(val, list) or isinstance(val, tuple):
-                         val = ' '.join(val)
--                    elif not isinstance(val, basestring):
--                        val = unicode(val)
-+                    elif not isinstance(val, str):
-+                        val = str(val)
-                     elif (
-                         isinstance(val, AttributeValueWithCharsetSubstitution)
-                         and eventual_encoding is not None):
-@@ -1034,7 +1097,7 @@ class Tag(PageElement):
+                     try:
+                         r = h.getresponse(buffering=True)
+@@ -222,7 +222,7 @@ class Wget(FetchMethod):
  
-                     text = self.format_string(val, formatter)
-                     decoded = (
--                        unicode(key) + '='
-+                        str(key) + '='
-                         + EntitySubstitution.quoted_attribute_value(text))
-                 attrs.append(decoded)
-         close = ''
-@@ -1103,16 +1166,22 @@ class Tag(PageElement):
-                        formatter="minimal"):
-         """Renders the contents of this tag as a Unicode string.
+                 return resp
  
-+        :param indent_level: Each line of the rendering will be
-+           indented this many spaces.
-+
-         :param eventual_encoding: The tag is destined to be
-            encoded into this encoding. This method is _not_
-            responsible for performing that encoding. This information
-            is passed in so that it can be substituted in if the
-            document contains a <META> tag that mentions the document's
-            encoding.
-+
-+        :param formatter: The output formatter responsible for converting
-+           entities to Unicode characters.
+-        class HTTPMethodFallback(urllib2.BaseHandler):
++        class HTTPMethodFallback(urllib.request.BaseHandler):
+             """
+             Fallback to GET if HEAD is not allowed (405 HTTP error)
+             """
+@@ -230,11 +230,11 @@ class Wget(FetchMethod):
+                 fp.read()
+                 fp.close()
+ 
+-                newheaders = dict((k,v) for k,v in req.headers.items()
++                newheaders = dict((k,v) for k,v in list(req.headers.items())
+                                   if k.lower() not in ("content-length", "content-type"))
+-                return self.parent.open(urllib2.Request(req.get_full_url(),
++                return self.parent.open(urllib.request.Request(req.get_full_url(),
+                                                         headers=newheaders,
+-                                                        origin_req_host=req.get_origin_req_host(),
++                                                        origin_req_host=req.origin_req_host,
+                                                         unverifiable=True))
+ 
+             """
+@@ -249,35 +249,35 @@ class Wget(FetchMethod):
+             """
+             http_error_406 = http_error_405
+ 
+-        class FixedHTTPRedirectHandler(urllib2.HTTPRedirectHandler):
++        class FixedHTTPRedirectHandler(urllib.request.HTTPRedirectHandler):
+             """
+             urllib2.HTTPRedirectHandler resets the method to GET on redirect,
+             when we want to follow redirects using the original method.
+             """
+             def redirect_request(self, req, fp, code, msg, headers, newurl):
+-                newreq = urllib2.HTTPRedirectHandler.redirect_request(self, req, fp, code, msg, headers, newurl)
++                newreq = urllib.request.HTTPRedirectHandler.redirect_request(self, req, fp, code, msg, headers, newurl)
+                 newreq.get_method = lambda: req.get_method()
+                 return newreq
+         exported_proxies = export_proxies(d)
+ 
+         handlers = [FixedHTTPRedirectHandler, HTTPMethodFallback]
+         if export_proxies:
+-            handlers.append(urllib2.ProxyHandler())
++            handlers.append(urllib.request.ProxyHandler())
+         handlers.append(CacheHTTPHandler())
+         # XXX: Since Python 2.7.9 ssl cert validation is enabled by default
+         # see PEP-0476, this causes verification errors on some https servers
+         # so disable by default.
+         import ssl
+         if hasattr(ssl, '_create_unverified_context'):
+-            handlers.append(urllib2.HTTPSHandler(context=ssl._create_unverified_context()))
+-        opener = urllib2.build_opener(*handlers)
++            handlers.append(urllib.request.HTTPSHandler(context=ssl._create_unverified_context()))
++        opener = urllib.request.build_opener(*handlers)
+ 
+         try:
+             uri = ud.url.split(";")[0]
+-            r = urllib2.Request(uri)
++            r = urllib.request.Request(uri)
+             r.get_method = lambda: "HEAD"
+             opener.open(r)
+-        except urllib2.URLError as e:
++        except urllib.error.URLError as e:
+             # debug for now to avoid spamming the logs in e.g. remote sstate searches
+             logger.debug(2, "checkstatus() urlopen failed: %s" % e)
+             return False
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 761ea45..b296ef8 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -27,6 +27,7 @@ import sys
+ import logging
+ import optparse
+ import warnings
++import fcntl
+ 
+ import bb
+ from bb import event
+@@ -336,10 +337,7 @@ def start_server(servermodule, configParams, configuration, features):
+         server.saveConnectionDetails()
+     except Exception as e:
+         while hasattr(server, "event_queue"):
+-            try:
+-                import queue
+-            except ImportError:
+-                import Queue as queue
++            import queue
+             try:
+                 event = server.event_queue.get(block=False)
+             except (queue.Empty, IOError):
+@@ -363,7 +361,10 @@ def bitbake_main(configParams, configuration):
+     # updates to log files for use with tail
+     try:
+         if sys.stdout.name == '<stdout>':
+-            sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
++            # Reopen with O_SYNC (unbuffered)
++            fl = fcntl.fcntl(sys.stdout.fileno(), fcntl.F_GETFL)
++            fl |= os.O_SYNC
++            fcntl.fcntl(sys.stdout.fileno(), fcntl.F_SETFL, fl)
+     except:
+         pass
+ 
+diff --git a/lib/bb/msg.py b/lib/bb/msg.py
+index 6fdd1f5..8c3ab47 100644
+--- a/lib/bb/msg.py
++++ b/lib/bb/msg.py
+@@ -57,7 +57,7 @@ class BBLogFormatter(logging.Formatter):
+     }
+ 
+     color_enabled = False
+-    BASECOLOR, BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(29,38)
++    BASECOLOR, BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = list(range(29,38))
+ 
+     COLORS = {
+         DEBUG3  : CYAN,
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index bc3a2f8..548929f 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -138,7 +138,7 @@ class DataNode(AstNode):
+             data.setVar(key, val, parsing=True, **loginfo)
+ 
+ class MethodNode(AstNode):
+-    tr_tbl = string.maketrans('/.+-@%&', '_______')
++    tr_tbl = str.maketrans('/.+-@%&', '_______')
+ 
+     def __init__(self, filename, lineno, func_name, body, python, fakeroot):
+         AstNode.__init__(self, filename, lineno)
+@@ -340,17 +340,17 @@ def _create_variants(datastores, names, function, onlyfinalise):
+         function(arg or name, new_d)
+         datastores[name] = new_d
+ 
+-    for variant, variant_d in datastores.items():
++    for variant in list(datastores.keys()):
+         for name in names:
+             if not variant:
+                 # Based on main recipe
+-                create_variant(name, variant_d)
++                create_variant(name, datastores[""])
+             else:
+-                create_variant("%s-%s" % (variant, name), variant_d, name)
++                create_variant("%s-%s" % (variant, name), datastores[variant], name)
+ 
+ def _expand_versions(versions):
+     def expand_one(version, start, end):
+-        for i in xrange(start, end + 1):
++        for i in range(start, end + 1):
+             ver = _bbversions_re.sub(str(i), version, 1)
+             yield ver
+ 
+@@ -459,16 +459,16 @@ def multi_finalize(fn, d):
+         safe_d.setVar("BBCLASSEXTEND", extended)
+         _create_variants(datastores, extendedmap.keys(), extendfunc, onlyfinalise)
+ 
+-    for variant, variant_d in datastores.iteritems():
++    for variant in datastores.keys():
+         if variant:
+             try:
+                 if not onlyfinalise or variant in onlyfinalise:
+-                    finalize(fn, variant_d, variant)
++                    finalize(fn, datastores[variant], variant)
+             except bb.parse.SkipRecipe as e:
+-                variant_d.setVar("__SKIPPED", e.args[0])
++                datastores[variant].setVar("__SKIPPED", e.args[0])
+ 
+     if len(datastores) > 1:
+-        variants = filter(None, datastores.iterkeys())
++        variants = filter(None, datastores.keys())
+         safe_d.setVar("__VARIANTS", " ".join(variants))
+ 
+     datastores[""] = d
+diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
+index e450423..403f3a5 100644
+--- a/lib/bb/persist_data.py
++++ b/lib/bb/persist_data.py
+@@ -92,9 +92,9 @@ class SQLTable(collections.MutableMapping):
+         self._execute("DELETE from %s where key=?;" % self.table, [key])
+ 
+     def __setitem__(self, key, value):
+-        if not isinstance(key, basestring):
++        if not isinstance(key, str):
+             raise TypeError('Only string keys are supported')
+-        elif not isinstance(value, basestring):
++        elif not isinstance(value, str):
+             raise TypeError('Only string values are supported')
+ 
+         data = self._execute("SELECT * from %s where key=?;" %
+@@ -131,14 +131,14 @@ class SQLTable(collections.MutableMapping):
+         return [row[1] for row in data]
+ 
+     def values(self):
+-        return list(self.itervalues())
++        return list(self.values())
+ 
+     def itervalues(self):
+         data = self._execute("SELECT value FROM %s;" % self.table)
+         return (row[0] for row in data)
+ 
+     def items(self):
+-        return list(self.iteritems())
++        return list(self.items())
+ 
+     def iteritems(self):
+         return self._execute("SELECT * FROM %s;" % self.table)
+@@ -178,7 +178,7 @@ class PersistData(object):
          """
-         # First off, turn a string formatter into a function. This
-         # will stop the lookup from happening over and over again.
--        if not callable(formatter):
-+        if not isinstance(formatter, collections.Callable):
-             formatter = self._formatter_for_name(formatter)
+         Return a list of key + value pairs for a domain
+         """
+-        return self.data[domain].items()
++        return list(self.data[domain].items())
  
-         pretty_print = (indent_level is not None)
-@@ -1137,7 +1206,17 @@ class Tag(PageElement):
-     def encode_contents(
-         self, indent_level=None, encoding=DEFAULT_OUTPUT_ENCODING,
-         formatter="minimal"):
--        """Renders the contents of this tag as a bytestring."""
-+        """Renders the contents of this tag as a bytestring.
-+
-+        :param indent_level: Each line of the rendering will be
-+           indented this many spaces.
-+
-+        :param eventual_encoding: The bytestring will be in this encoding.
-+
-+        :param formatter: The output formatter responsible for converting
-+           entities to Unicode characters.
-+        """
-+
-         contents = self.decode_contents(indent_level, encoding, formatter)
-         return contents.encode(encoding)
- 
-@@ -1201,26 +1280,57 @@ class Tag(PageElement):
- 
-     _selector_combinators = ['>', '+', '~']
-     _select_debug = False
--    def select(self, selector, _candidate_generator=None):
-+    def select_one(self, selector):
-+        """Perform a CSS selection operation on the current element."""
-+        value = self.select(selector, limit=1)
-+        if value:
-+            return value[0]
-+        return None
-+
-+    def select(self, selector, _candidate_generator=None, limit=None):
-         """Perform a CSS selection operation on the current element."""
-+
-+        # Handle grouping selectors if ',' exists, ie: p,a
-+        if ',' in selector:
-+            context = []
-+            for partial_selector in selector.split(','):
-+                partial_selector = partial_selector.strip()
-+                if partial_selector == '':
-+                    raise ValueError('Invalid group selection syntax: %s' % selector)
-+                candidates = self.select(partial_selector, limit=limit)
-+                for candidate in candidates:
-+                    if candidate not in context:
-+                        context.append(candidate)
-+
-+                if limit and len(context) >= limit:
-+                    break
-+            return context
-+
-         tokens = selector.split()
-         current_context = [self]
- 
-         if tokens[-1] in self._selector_combinators:
-             raise ValueError(
-                 'Final combinator "%s" is missing an argument.' % tokens[-1])
-+
-         if self._select_debug:
--            print 'Running CSS selector "%s"' % selector
-+            print('Running CSS selector "%s"' % selector)
-+
-         for index, token in enumerate(tokens):
--            if self._select_debug:
--                print ' Considering token "%s"' % token
--            recursive_candidate_generator = None
--            tag_name = None
-+            new_context = []
-+            new_context_ids = set([])
-+
-             if tokens[index-1] in self._selector_combinators:
-                 # This token was consumed by the previous combinator. Skip it.
-                 if self._select_debug:
--                    print '  Token was consumed by the previous combinator.'
-+                    print('  Token was consumed by the previous combinator.')
-                 continue
-+
-+            if self._select_debug:
-+                print(' Considering token "%s"' % token)
-+            recursive_candidate_generator = None
-+            tag_name = None
-+
-             # Each operation corresponds to a checker function, a rule
-             # for determining whether a candidate matches the
-             # selector. Candidates are generated by the active
-@@ -1256,35 +1366,38 @@ class Tag(PageElement):
-                         "A pseudo-class must be prefixed with a tag name.")
-                 pseudo_attributes = re.match('([a-zA-Z\d-]+)\(([a-zA-Z\d]+)\)', pseudo)
-                 found = []
--                if pseudo_attributes is not None:
-+                if pseudo_attributes is None:
-+                    pseudo_type = pseudo
-+                    pseudo_value = None
-+                else:
-                     pseudo_type, pseudo_value = pseudo_attributes.groups()
--                    if pseudo_type == 'nth-of-type':
--                        try:
--                            pseudo_value = int(pseudo_value)
--                        except:
--                            raise NotImplementedError(
--                                'Only numeric values are currently supported for the nth-of-type pseudo-class.')
--                        if pseudo_value < 1:
--                            raise ValueError(
--                                'nth-of-type pseudo-class value must be at least 1.')
--                        class Counter(object):
--                            def __init__(self, destination):
--                                self.count = 0
--                                self.destination = destination
--
--                            def nth_child_of_type(self, tag):
--                                self.count += 1
--                                if self.count == self.destination:
--                                    return True
--                                if self.count > self.destination:
--                                    # Stop the generator that's sending us
--                                    # these things.
--                                    raise StopIteration()
--                                return False
--                        checker = Counter(pseudo_value).nth_child_of_type
--                    else:
-+                if pseudo_type == 'nth-of-type':
-+                    try:
-+                        pseudo_value = int(pseudo_value)
-+                    except:
-                         raise NotImplementedError(
--                            'Only the following pseudo-classes are implemented: nth-of-type.')
-+                            'Only numeric values are currently supported for the nth-of-type pseudo-class.')
-+                    if pseudo_value < 1:
-+                        raise ValueError(
-+                            'nth-of-type pseudo-class value must be at least 1.')
-+                    class Counter(object):
-+                        def __init__(self, destination):
-+                            self.count = 0
-+                            self.destination = destination
-+
-+                        def nth_child_of_type(self, tag):
-+                            self.count += 1
-+                            if self.count == self.destination:
-+                                return True
-+                            if self.count > self.destination:
-+                                # Stop the generator that's sending us
-+                                # these things.
-+                                raise StopIteration()
-+                            return False
-+                    checker = Counter(pseudo_value).nth_child_of_type
-+                else:
-+                    raise NotImplementedError(
-+                        'Only the following pseudo-classes are implemented: nth-of-type.')
- 
-             elif token == '*':
-                 # Star selector -- matches everything
-@@ -1311,7 +1424,6 @@ class Tag(PageElement):
-             else:
-                 raise ValueError(
-                     'Unsupported or invalid CSS selector: "%s"' % token)
--
-             if recursive_candidate_generator:
-                 # This happens when the selector looks like  "> foo".
-                 #
-@@ -1325,14 +1437,14 @@ class Tag(PageElement):
-                 next_token = tokens[index+1]
-                 def recursive_select(tag):
-                     if self._select_debug:
--                        print '    Calling select("%s") recursively on %s %s' % (next_token, tag.name, tag.attrs)
--                        print '-' * 40
-+                        print('    Calling select("%s") recursively on %s %s' % (next_token, tag.name, tag.attrs))
-+                        print('-' * 40)
-                     for i in tag.select(next_token, recursive_candidate_generator):
-                         if self._select_debug:
--                            print '(Recursive select picked up candidate %s %s)' % (i.name, i.attrs)
-+                            print('(Recursive select picked up candidate %s %s)' % (i.name, i.attrs))
-                         yield i
-                     if self._select_debug:
--                        print '-' * 40
-+                        print('-' * 40)
-                 _use_candidate_generator = recursive_select
-             elif _candidate_generator is None:
-                 # By default, a tag's candidates are all of its
-@@ -1343,7 +1455,7 @@ class Tag(PageElement):
-                         check = "[any]"
-                     else:
-                         check = tag_name
--                    print '   Default candidate generator, tag name="%s"' % check
-+                    print('   Default candidate generator, tag name="%s"' % check)
-                 if self._select_debug:
-                     # This is redundant with later code, but it stops
-                     # a bunch of bogus tags from cluttering up the
-@@ -1361,12 +1473,11 @@ class Tag(PageElement):
-             else:
-                 _use_candidate_generator = _candidate_generator
- 
--            new_context = []
--            new_context_ids = set([])
-+            count = 0
-             for tag in current_context:
-                 if self._select_debug:
--                    print "    Running candidate generator on %s %s" % (
--                        tag.name, repr(tag.attrs))
-+                    print("    Running candidate generator on %s %s" % (
-+                        tag.name, repr(tag.attrs)))
-                 for candidate in _use_candidate_generator(tag):
-                     if not isinstance(candidate, Tag):
-                         continue
-@@ -1381,21 +1492,24 @@ class Tag(PageElement):
-                             break
-                     if checker is None or result:
-                         if self._select_debug:
--                            print "     SUCCESS %s %s" % (candidate.name, repr(candidate.attrs))
-+                            print("     SUCCESS %s %s" % (candidate.name, repr(candidate.attrs)))
-                         if id(candidate) not in new_context_ids:
-                             # If a tag matches a selector more than once,
-                             # don't include it in the context more than once.
-                             new_context.append(candidate)
-                             new_context_ids.add(id(candidate))
-+                            if limit and len(new_context) >= limit:
-+                                break
-                     elif self._select_debug:
--                        print "     FAILURE %s %s" % (candidate.name, repr(candidate.attrs))
-+                        print("     FAILURE %s %s" % (candidate.name, repr(candidate.attrs)))
-+
- 
-             current_context = new_context
- 
-         if self._select_debug:
--            print "Final verdict:"
-+            print("Final verdict:")
-             for i in current_context:
--                print " %s %s" % (i.name, i.attrs)
-+                print(" %s %s" % (i.name, i.attrs))
-         return current_context
- 
-     # Old names for backwards compatibility
-@@ -1439,7 +1553,7 @@ class SoupStrainer(object):
-             else:
-                 attrs = kwargs
-         normalized_attrs = {}
--        for key, value in attrs.items():
-+        for key, value in list(attrs.items()):
-             normalized_attrs[key] = self._normalize_search_value(value)
- 
-         self.attrs = normalized_attrs
-@@ -1448,7 +1562,7 @@ class SoupStrainer(object):
-     def _normalize_search_value(self, value):
-         # Leave it alone if it's a Unicode string, a callable, a
-         # regular expression, a boolean, or None.
--        if (isinstance(value, unicode) or callable(value) or hasattr(value, 'match')
-+        if (isinstance(value, str) or isinstance(value, collections.Callable) or hasattr(value, 'match')
-             or isinstance(value, bool) or value is None):
-             return value
- 
-@@ -1461,7 +1575,7 @@ class SoupStrainer(object):
-             new_value = []
-             for v in value:
-                 if (hasattr(v, '__iter__') and not isinstance(v, bytes)
--                    and not isinstance(v, unicode)):
-+                    and not isinstance(v, str)):
-                     # This is almost certainly the user's mistake. In the
-                     # interests of avoiding infinite loops, we'll let
-                     # it through as-is rather than doing a recursive call.
-@@ -1473,7 +1587,7 @@ class SoupStrainer(object):
-         # Otherwise, convert it into a Unicode string.
-         # The unicode(str()) thing is so this will do the same thing on Python 2
-         # and Python 3.
--        return unicode(str(value))
-+        return str(str(value))
+     def getValue(self, domain, key):
+         """
+diff --git a/lib/bb/process.py b/lib/bb/process.py
+index 1c07f2d..c62d7bc 100644
+--- a/lib/bb/process.py
++++ b/lib/bb/process.py
+@@ -17,7 +17,7 @@ class CmdError(RuntimeError):
+         self.msg = msg
  
      def __str__(self):
-         if self.text:
-@@ -1527,7 +1641,7 @@ class SoupStrainer(object):
-         found = None
-         # If given a list of items, scan it for a text element that
-         # matches.
--        if hasattr(markup, '__iter__') and not isinstance(markup, (Tag, basestring)):
-+        if hasattr(markup, '__iter__') and not isinstance(markup, (Tag, str)):
-             for element in markup:
-                 if isinstance(element, NavigableString) \
-                        and self.search(element):
-@@ -1540,7 +1654,7 @@ class SoupStrainer(object):
-                 found = self.search_tag(markup)
-         # If it's text, make sure the text matches.
-         elif isinstance(markup, NavigableString) or \
--                 isinstance(markup, basestring):
-+                 isinstance(markup, str):
-             if not self.name and not self.attrs and self._matches(markup, self.text):
-                 found = markup
+-        if not isinstance(self.command, basestring):
++        if not isinstance(self.command, str):
+             cmd = subprocess.list2cmdline(self.command)
          else:
-@@ -1554,7 +1668,7 @@ class SoupStrainer(object):
-         if isinstance(markup, list) or isinstance(markup, tuple):
-             # This should only happen when searching a multi-valued attribute
-             # like 'class'.
--            if (isinstance(match_against, unicode)
-+            if (isinstance(match_against, str)
-                 and ' ' in match_against):
-                 # A bit of a special case. If they try to match "foo
-                 # bar" on a multivalue attribute's value, only accept
-@@ -1589,7 +1703,7 @@ class SoupStrainer(object):
-             # None matches None, False, an empty string, an empty list, and so on.
-             return not match_against
+             cmd = self.command
+@@ -97,6 +97,8 @@ def _logged_communicate(pipe, log, input, extrafiles):
+     try:
+         while pipe.poll() is None:
+             rlist = rin
++            stdoutbuf = b""
++            stderrbuf = b""
+             try:
+                 r,w,e = select.select (rlist, [], [], 1)
+             except OSError as e:
+@@ -104,16 +106,26 @@ def _logged_communicate(pipe, log, input, extrafiles):
+                     raise
  
--        if isinstance(match_against, unicode):
-+        if isinstance(match_against, str):
-             # Exact string match
-             return markup == match_against
+             if pipe.stdout in r:
+-                data = pipe.stdout.read()
+-                if data is not None:
+-                    outdata.append(data)
+-                    log.write(data)
++                data = stdoutbuf + pipe.stdout.read()
++                if data is not None and len(data) > 0:
++                    try:
++                        data = data.decode("utf-8")
++                        outdata.append(data)
++                        log.write(data)
++                        stdoutbuf = b""
++                    except UnicodeDecodeError:
++                        stdoutbuf = data
  
-diff --git a/lib/bs4/testing.py b/lib/bs4/testing.py
-index fd4495a..3a2f260 100644
---- a/lib/bs4/testing.py
-+++ b/lib/bs4/testing.py
-@@ -1,5 +1,8 @@
- """Helper classes for tests."""
+             if pipe.stderr in r:
+-                data = pipe.stderr.read()
+-                if data is not None:
+-                    errdata.append(data)
+-                    log.write(data)
++                data = stderrbuf + pipe.stderr.read()
++                if data is not None and len(data) > 0:
++                    try:
++                        data = data.decode("utf-8")
++                        errdata.append(data)
++                        log.write(data)
++                        stderrbuf = b""
++                    except UnicodeDecodeError:
++                        stderrbuf = data
  
-+__license__ = "MIT"
-+
+             readextras(r)
+ 
+@@ -135,7 +147,7 @@ def run(cmd, input=None, log=None, extrafiles=None, **options):
+     if not extrafiles:
+         extrafiles = []
+ 
+-    if isinstance(cmd, basestring) and not "shell" in options:
++    if isinstance(cmd, str) and not "shell" in options:
+         options["shell"] = True
+ 
+     try:
+@@ -150,6 +162,10 @@ def run(cmd, input=None, log=None, extrafiles=None, **options):
+         stdout, stderr = _logged_communicate(pipe, log, input, extrafiles)
+     else:
+         stdout, stderr = pipe.communicate(input)
++        if stdout:
++            stdout = stdout.decode("utf-8")
++        if stderr:
++            stderr = stderr.decode("utf-8")
+ 
+     if pipe.returncode != 0:
+         raise ExecutionError(cmd, pipe.returncode, stdout, stderr)
+diff --git a/lib/bb/providers.py b/lib/bb/providers.py
+index 563a091..80701b2 100644
+--- a/lib/bb/providers.py
++++ b/lib/bb/providers.py
+@@ -245,7 +245,7 @@ def _filterProviders(providers, item, cfgData, dataCache):
+             pkg_pn[pn] = []
+         pkg_pn[pn].append(p)
+ 
+-    logger.debug(1, "providers for %s are: %s", item, pkg_pn.keys())
++    logger.debug(1, "providers for %s are: %s", item, list(pkg_pn.keys()))
+ 
+     # First add PREFERRED_VERSIONS
+     for pn in pkg_pn:
+diff --git a/lib/bb/pysh/builtin.py b/lib/bb/pysh/builtin.py
+index b748e4a..a8814dc 100644
+--- a/lib/bb/pysh/builtin.py
++++ b/lib/bb/pysh/builtin.py
+@@ -527,7 +527,7 @@ def utility_sed(name, args, interp, env, stdin, stdout, stderr, debugflags):
+         print interp.log(' '.join([name, str(args), interp['PWD']]) + '\n')
+         
+     # Scan pattern arguments and append a space if necessary
+-    for i in xrange(len(args)):
++    for i in range(len(args)):
+         if not RE_SED.search(args[i]):
+             continue
+         args[i] = args[i] + ' '
+diff --git a/lib/bb/pysh/interp.py b/lib/bb/pysh/interp.py
+index 25d8c92..d14ecf3 100644
+--- a/lib/bb/pysh/interp.py
++++ b/lib/bb/pysh/interp.py
+@@ -474,7 +474,7 @@ class Environment:
+         """
+         # Save and remove previous arguments
+         prevargs = []        
+-        for i in xrange(int(self._env['#'])):
++        for i in range(int(self._env['#'])):
+             i = str(i+1)
+             prevargs.append(self._env[i])
+             del self._env[i]
+@@ -488,7 +488,7 @@ class Environment:
+         return prevargs
+         
+     def get_positional_args(self):
+-        return [self._env[str(i+1)] for i in xrange(int(self._env['#']))]
++        return [self._env[str(i+1)] for i in range(int(self._env['#']))]
+         
+     def get_variables(self):
+         return dict(self._env)
+diff --git a/lib/bb/pysh/pyshlex.py b/lib/bb/pysh/pyshlex.py
+index b301236..fbf094b 100644
+--- a/lib/bb/pysh/pyshlex.py
++++ b/lib/bb/pysh/pyshlex.py
+@@ -20,7 +20,7 @@ except NameError:
+     from Set import Set as set
+ 
+ from ply import lex
+-from sherrors import *
++from bb.pysh.sherrors import *
+ 
+ class NeedMore(Exception):
+     pass
+diff --git a/lib/bb/pysh/pyshyacc.py b/lib/bb/pysh/pyshyacc.py
+index e8e80aa..ba4cefd 100644
+--- a/lib/bb/pysh/pyshyacc.py
++++ b/lib/bb/pysh/pyshyacc.py
+@@ -10,11 +10,11 @@
+ import os.path
+ import sys
+ 
+-import pyshlex
++import bb.pysh.pyshlex as pyshlex
+ tokens = pyshlex.tokens
+ 
+ from ply import yacc
+-import sherrors
++import bb.pysh.sherrors as sherrors
+     
+ class IORedirect:
+     def __init__(self, op, filename, io_number=None):
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 5ab7e97..376c9f5 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -35,11 +35,7 @@ import bb
+ from bb import msg, data, event
+ from bb import monitordisk
+ import subprocess
+-
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
 +import pickle
- import copy
- import functools
- import unittest
-@@ -43,6 +46,16 @@ class SoupTest(unittest.TestCase):
  
-         self.assertEqual(obj.decode(), self.document_for(compare_parsed_to))
+ bblogger = logging.getLogger("BitBake")
+ logger = logging.getLogger("BitBake.RunQueue")
+@@ -108,7 +104,7 @@ class RunQueueScheduler(object):
  
-+    def assertConnectedness(self, element):
-+        """Ensure that next_element and previous_element are properly
-+        set for all descendants of the given element.
-+        """
-+        earlier = None
-+        for e in element.descendants:
-+            if earlier:
-+                self.assertEqual(e, earlier.next_element)
-+                self.assertEqual(earlier, e.previous_element)
-+            earlier = e
+         self.buildable = []
+         self.stamps = {}
+-        for taskid in xrange(self.numTasks):
++        for taskid in range(self.numTasks):
+             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[taskid]]
+             taskname = self.rqdata.runq_task[taskid]
+             self.stamps[taskid] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
+@@ -127,12 +123,12 @@ class RunQueueScheduler(object):
+         if len(self.buildable) == 1:
+             taskid = self.buildable[0]
+             stamp = self.stamps[taskid]
+-            if stamp not in self.rq.build_stamps.itervalues():
++            if stamp not in self.rq.build_stamps.values():
+                 return taskid
  
- class HTMLTreeBuilderSmokeTest(object):
+         if not self.rev_prio_map:
+-            self.rev_prio_map = range(self.numTasks)
+-            for taskid in xrange(self.numTasks):
++            self.rev_prio_map = list(range(self.numTasks))
++            for taskid in range(self.numTasks):
+                 self.rev_prio_map[self.prio_map[taskid]] = taskid
  
-@@ -54,6 +67,15 @@ class HTMLTreeBuilderSmokeTest(object):
-     markup in these tests, there's not much room for interpretation.
+         best = None
+@@ -141,7 +137,7 @@ class RunQueueScheduler(object):
+             prio = self.rev_prio_map[taskid]
+             if bestprio is None or bestprio > prio:
+                 stamp = self.stamps[taskid]
+-                if stamp in self.rq.build_stamps.itervalues():
++                if stamp in self.rq.build_stamps.values():
+                     continue
+                 bestprio = prio
+                 best = taskid
+@@ -269,7 +265,7 @@ class RunQueueData:
+ 
+ 
+     def get_task_id(self, fnid, taskname):
+-        for listid in xrange(len(self.runq_fnid)):
++        for listid in range(len(self.runq_fnid)):
+             if self.runq_fnid[listid] == fnid and self.runq_task[listid] == taskname:
+                 return listid
+         return None
+@@ -291,7 +287,7 @@ class RunQueueData:
+             """
+             lowest = 0
+             new_chain = []
+-            for entry in xrange(len(chain)):
++            for entry in range(len(chain)):
+                 if chain[entry] < chain[lowest]:
+                     lowest = entry
+             new_chain.extend(chain[lowest:])
+@@ -304,7 +300,7 @@ class RunQueueData:
+             """
+             if len(chain1) != len(chain2):
+                 return False
+-            for index in xrange(len(chain1)):
++            for index in range(len(chain1)):
+                 if chain1[index] != chain2[index]:
+                     return False
+             return True
+@@ -375,7 +371,7 @@ class RunQueueData:
+         deps_left = []
+         task_done = []
+ 
+-        for listid in xrange(numTasks):
++        for listid in range(numTasks):
+             task_done.append(False)
+             weight.append(1)
+             deps_left.append(len(self.runq_revdeps[listid]))
+@@ -399,7 +395,7 @@ class RunQueueData:
+ 
+         # Circular dependency sanity check
+         problem_tasks = []
+-        for task in xrange(numTasks):
++        for task in range(numTasks):
+             if task_done[task] is False or deps_left[task] != 0:
+                 problem_tasks.append(task)
+                 logger.debug(2, "Task %s (%s) is not buildable", task, self.get_user_idstring(task))
+@@ -482,7 +478,7 @@ class RunQueueData:
+                     if taskid is not None:
+                         depends.add(taskid)
+ 
+-        for task in xrange(len(taskData.tasks_name)):
++        for task in range(len(taskData.tasks_name)):
+             depends = set()
+             fnid = taskData.tasks_fnid[task]
+             fn = taskData.fn_index[fnid]
+@@ -597,7 +593,7 @@ class RunQueueData:
+         for task in recursivetasks:
+             extradeps[task].difference_update(recursivetasksselfref)
+ 
+-        for task in xrange(len(taskData.tasks_name)):
++        for task in range(len(taskData.tasks_name)):
+             # Add in extra dependencies
+             if task in extradeps:
+                  self.runq_depends[task] = extradeps[task]
+@@ -675,7 +671,7 @@ class RunQueueData:
+ 
+         maps = []
+         delcount = 0
+-        for listid in xrange(len(self.runq_fnid)):
++        for listid in range(len(self.runq_fnid)):
+             if runq_build[listid-delcount] == 1:
+                 maps.append(listid-delcount)
+             else:
+@@ -703,7 +699,7 @@ class RunQueueData:
+ 
+         # Remap the dependencies to account for the deleted tasks
+         # Check we didn't delete a task we depend on
+-        for listid in xrange(len(self.runq_fnid)):
++        for listid in range(len(self.runq_fnid)):
+             newdeps = []
+             origdeps = self.runq_depends[listid]
+             for origdep in origdeps:
+@@ -715,14 +711,14 @@ class RunQueueData:
+         logger.verbose("Assign Weightings")
+ 
+         # Generate a list of reverse dependencies to ease future calculations
+-        for listid in xrange(len(self.runq_fnid)):
++        for listid in range(len(self.runq_fnid)):
+             for dep in self.runq_depends[listid]:
+                 self.runq_revdeps[dep].add(listid)
+ 
+         # Identify tasks at the end of dependency chains
+         # Error on circular dependency loops (length two)
+         endpoints = []
+-        for listid in xrange(len(self.runq_fnid)):
++        for listid in range(len(self.runq_fnid)):
+             revdeps = self.runq_revdeps[listid]
+             if len(revdeps) == 0:
+                 endpoints.append(listid)
+@@ -740,7 +736,7 @@ class RunQueueData:
+         # Sanity Check - Check for multiple tasks building the same provider
+         prov_list = {}
+         seen_fn = []
+-        for task in xrange(len(self.runq_fnid)):
++        for task in range(len(self.runq_fnid)):
+             fn = taskData.fn_index[self.runq_fnid[task]]
+             if fn in seen_fn:
+                 continue
+@@ -905,7 +901,7 @@ class RunQueueData:
+         Dump some debug information on the internal data structures
+         """
+         logger.debug(3, "run_tasks:")
+-        for task in xrange(len(self.rqdata.runq_task)):
++        for task in range(len(self.rqdata.runq_task)):
+             logger.debug(3, " (%s)%s - %s: %s   Deps %s RevDeps %s", task,
+                          taskQueue.fn_index[self.rqdata.runq_fnid[task]],
+                          self.rqdata.runq_task[task],
+@@ -914,7 +910,7 @@ class RunQueueData:
+                          self.rqdata.runq_revdeps[task])
+ 
+         logger.debug(3, "sorted_tasks:")
+-        for task1 in xrange(len(self.rqdata.runq_task)):
++        for task1 in range(len(self.rqdata.runq_task)):
+             if task1 in self.prio_map:
+                 task = self.prio_map[task1]
+                 logger.debug(3, " (%s)%s - %s: %s   Deps %s RevDeps %s", task,
+@@ -982,8 +978,8 @@ class RunQueue:
+             "time" : self.cfgData.getVar("TIME", True),
+         }
+ 
+-        worker.stdin.write("<cookerconfig>" + pickle.dumps(self.cooker.configuration) + "</cookerconfig>")
+-        worker.stdin.write("<workerdata>" + pickle.dumps(workerdata) + "</workerdata>")
++        worker.stdin.write(b"<cookerconfig>" + pickle.dumps(self.cooker.configuration) + b"</cookerconfig>")
++        worker.stdin.write(b"<workerdata>" + pickle.dumps(workerdata) + b"</workerdata>")
+         worker.stdin.flush()
+ 
+         return worker, workerpipe
+@@ -993,8 +989,9 @@ class RunQueue:
+             return
+         logger.debug(1, "Teardown for bitbake-worker")
+         try:
+-           worker.stdin.write("<quit></quit>")
++           worker.stdin.write(b"<quit></quit>")
+            worker.stdin.flush()
++           worker.stdin.close()
+         except IOError:
+            pass
+         while worker.returncode is None:
+@@ -1245,7 +1242,7 @@ class RunQueue:
+         stamppresent = []
+         valid_new = set()
+ 
+-        for task in xrange(len(self.rqdata.runq_fnid)):
++        for task in range(len(self.rqdata.runq_fnid)):
+             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
+             taskname = self.rqdata.runq_task[task]
+             taskdep = self.rqdata.dataCache.task_deps[fn]
+@@ -1287,7 +1284,7 @@ class RunQueue:
+                     valid_new.add(dep)
+ 
+         invalidtasks = set()
+-        for task in xrange(len(self.rqdata.runq_fnid)):
++        for task in range(len(self.rqdata.runq_fnid)):
+             if task not in valid_new and task not in noexec:
+                 invalidtasks.add(task)
+ 
+@@ -1346,7 +1343,7 @@ class RunQueue:
+                     match = m
+             if match is None:
+                 bb.fatal("Can't find a task we're supposed to have written out? (hash: %s)?" % h)
+-            matches = {k : v for k, v in matches.iteritems() if h not in k}
++            matches = {k : v for k, v in iter(matches.items()) if h not in k}
+             if matches:
+                 latestmatch = sorted(matches.keys(), key=lambda f: matches[f])[-1]
+                 prevh = __find_md5__.search(latestmatch).group(0)
+@@ -1395,17 +1392,15 @@ class RunQueueExecute:
+         return True
+ 
+     def finish_now(self):
+-
+         for worker in [self.rq.worker, self.rq.fakeworker]:
+             if not worker:
+                 continue
+             try:
+-                worker.stdin.write("<finishnow></finishnow>")
++                worker.stdin.write(b"<finishnow></finishnow>")
+                 worker.stdin.flush()
+             except IOError:
+                 # worker must have died?
+                 pass
+-
+         if len(self.failed_fnids) != 0:
+             self.rq.state = runQueueFailed
+             return
+@@ -1468,7 +1463,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
+         initial_covered = self.rq.scenequeue_covered.copy()
+ 
+         # Mark initial buildable tasks
+-        for task in xrange(self.stats.total):
++        for task in range(self.stats.total):
+             self.runq_running.append(0)
+             self.runq_complete.append(0)
+             if len(self.rqdata.runq_depends[task]) == 0:
+@@ -1481,7 +1476,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
+         found = True
+         while found:
+             found = False
+-            for task in xrange(self.stats.total):
++            for task in range(self.stats.total):
+                 if task in self.rq.scenequeue_covered:
+                     continue
+                 logger.debug(1, 'Considering %s (%s): %s' % (task, self.rqdata.get_user_idstring(task), str(self.rqdata.runq_revdeps[task])))
+@@ -1496,7 +1491,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
+         covered_remove = set()
+         if self.rq.setsceneverify:
+             invalidtasks = []
+-            for task in xrange(len(self.rqdata.runq_task)):
++            for task in range(len(self.rqdata.runq_task)):
+                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
+                 taskname = self.rqdata.runq_task[task]
+                 taskdep = self.rqdata.dataCache.task_deps[fn]
+@@ -1684,10 +1679,10 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                         logger.critical("Failed to spawn fakeroot worker to run %s:%s: %s" % (fn, taskname, str(exc)))
+                         self.rq.state = runQueueFailed
+                         return True
+-                self.rq.fakeworker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + "</runtask>")
++                self.rq.fakeworker.stdin.write(b"<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + b"</runtask>")
+                 self.rq.fakeworker.stdin.flush()
+             else:
+-                self.rq.worker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + "</runtask>")
++                self.rq.worker.stdin.write(b"<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + b"</runtask>")
+                 self.rq.worker.stdin.flush()
+ 
+             self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
+@@ -1706,7 +1701,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
+             return True
+ 
+         # Sanity Checks
+-        for task in xrange(self.stats.total):
++        for task in range(self.stats.total):
+             if self.runq_buildable[task] == 0:
+                 logger.error("Task %s never buildable!", task)
+             if self.runq_running[task] == 0:
+@@ -1764,14 +1759,14 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         # therefore aims to collapse the huge runqueue dependency tree into a smaller one
+         # only containing the setscene functions.
+ 
+-        for task in xrange(self.stats.total):
++        for task in range(self.stats.total):
+             self.runq_running.append(0)
+             self.runq_complete.append(0)
+             self.runq_buildable.append(0)
+ 
+         # First process the chains up to the first setscene task.
+         endpoints = {}
+-        for task in xrange(len(self.rqdata.runq_fnid)):
++        for task in range(len(self.rqdata.runq_fnid)):
+             sq_revdeps.append(copy.copy(self.rqdata.runq_revdeps[task]))
+             sq_revdeps_new.append(set())
+             if (len(self.rqdata.runq_revdeps[task]) == 0) and task not in self.rqdata.runq_setscene:
+@@ -1833,7 +1828,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                         newendpoints[dep] = tasks
+             if len(newendpoints) != 0:
+                 process_endpoints2(newendpoints)
+-        for task in xrange(len(self.rqdata.runq_fnid)):
++        for task in range(len(self.rqdata.runq_fnid)):
+             sq_revdeps2.append(copy.copy(self.rqdata.runq_revdeps[task]))
+             sq_revdeps_new2.append(set())
+             if (len(self.rqdata.runq_revdeps[task]) == 0) and task not in self.rqdata.runq_setscene:
+@@ -1844,7 +1839,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             if sq_revdeps_new2[task]:
+                 self.unskippable.append(self.rqdata.runq_setscene.index(task))
+ 
+-        for task in xrange(len(self.rqdata.runq_fnid)):
++        for task in range(len(self.rqdata.runq_fnid)):
+             if task in self.rqdata.runq_setscene:
+                 deps = set()
+                 for dep in sq_revdeps_new[task]:
+@@ -1883,7 +1878,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+              for dep in self.sq_harddeps[task]:
+                  sq_revdeps_squash[dep].add(task)
+ 
+-        #for task in xrange(len(sq_revdeps_squash)):
++        #for task in range(len(sq_revdeps_squash)):
+         #    realtask = self.rqdata.runq_setscene[task]
+         #    bb.warn("Task %s: %s_setscene is %s " % (task, self.rqdata.get_user_idstring(realtask) , sq_revdeps_squash[task]))
+ 
+@@ -1891,13 +1886,13 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         self.sq_revdeps = sq_revdeps_squash
+         self.sq_revdeps2 = copy.deepcopy(self.sq_revdeps)
+ 
+-        for task in xrange(len(self.sq_revdeps)):
++        for task in range(len(self.sq_revdeps)):
+             self.sq_deps.append(set())
+-        for task in xrange(len(self.sq_revdeps)):
++        for task in range(len(self.sq_revdeps)):
+             for dep in self.sq_revdeps[task]:
+                 self.sq_deps[dep].add(task)
+ 
+-        for task in xrange(len(self.sq_revdeps)):
++        for task in range(len(self.sq_revdeps)):
+             if len(self.sq_revdeps[task]) == 0:
+                 self.runq_buildable[task] = 1
+ 
+@@ -1910,7 +1905,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             sq_task = []
+             noexec = []
+             stamppresent = []
+-            for task in xrange(len(self.sq_revdeps)):
++            for task in range(len(self.sq_revdeps)):
+                 realtask = self.rqdata.runq_setscene[task]
+                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
+                 taskname = self.rqdata.runq_task[realtask]
+@@ -1947,7 +1942,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             for v in valid:
+                 valid_new.append(sq_task[v])
+ 
+-            for task in xrange(len(self.sq_revdeps)):
++            for task in range(len(self.sq_revdeps)):
+                 if task not in valid_new and task not in noexec:
+                     realtask = self.rqdata.runq_setscene[task]
+                     logger.debug(2, 'No package found, so skipping setscene task %s',
+@@ -2024,7 +2019,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         task = None
+         if self.stats.active < self.number_tasks:
+             # Find the next setscene to run
+-            for nexttask in xrange(self.stats.total):
++            for nexttask in range(self.stats.total):
+                 if self.runq_buildable[nexttask] == 1 and self.runq_running[nexttask] != 1:
+                     if nexttask in self.unskippable:
+                         logger.debug(2, "Setscene task %s is unskippable" % self.rqdata.get_user_idstring(self.rqdata.runq_setscene[nexttask]))                      
+@@ -2076,10 +2071,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
+                 if not self.rq.fakeworker:
+                     self.rq.start_fakeworker(self)
+-                self.rq.fakeworker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + "</runtask>")
++                self.rq.fakeworker.stdin.write(b"<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + b"</runtask>")
+                 self.rq.fakeworker.stdin.flush()
+             else:
+-                self.rq.worker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + "</runtask>")
++                self.rq.worker.stdin.write(b"<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + b"</runtask>")
+                 self.rq.worker.stdin.flush()
+ 
+             self.runq_running[task] = 1
+@@ -2091,7 +2086,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             self.rq.read_workers()
+             return self.rq.active_fds()
+ 
+-        #for task in xrange(self.stats.total):
++        #for task in range(self.stats.total):
+         #    if self.runq_running[task] != 1:
+         #        buildable = self.runq_buildable[task]
+         #        revdeps = self.sq_revdeps[task]
+@@ -2227,7 +2222,7 @@ class runQueuePipe():
+         if pipeout:
+             pipeout.close()
+         bb.utils.nonblockingfd(self.input)
+-        self.queue = ""
++        self.queue = b""
+         self.d = d
+         self.rq = rq
+         self.rqexec = rqexec
+@@ -2251,7 +2246,7 @@ class runQueuePipe():
+ 
+         start = len(self.queue)
+         try:
+-            self.queue = self.queue + self.input.read(102400)
++            self.queue = self.queue + (self.input.read(102400) or b"")
+         except (OSError, IOError) as e:
+             if e.errno != errno.EAGAIN:
+                 raise
+@@ -2259,8 +2254,8 @@ class runQueuePipe():
+         found = True
+         while found and len(self.queue):
+             found = False
+-            index = self.queue.find("</event>")
+-            while index != -1 and self.queue.startswith("<event>"):
++            index = self.queue.find(b"</event>")
++            while index != -1 and self.queue.startswith(b"<event>"):
+                 try:
+                     event = pickle.loads(self.queue[7:index])
+                 except ValueError as e:
+@@ -2268,9 +2263,9 @@ class runQueuePipe():
+                 bb.event.fire_from_worker(event, self.d)
+                 found = True
+                 self.queue = self.queue[index+8:]
+-                index = self.queue.find("</event>")
+-            index = self.queue.find("</exitcode>")
+-            while index != -1 and self.queue.startswith("<exitcode>"):
++                index = self.queue.find(b"</event>")
++            index = self.queue.find(b"</exitcode>")
++            while index != -1 and self.queue.startswith(b"<exitcode>"):
+                 try:
+                     task, status = pickle.loads(self.queue[10:index])
+                 except ValueError as e:
+@@ -2278,7 +2273,7 @@ class runQueuePipe():
+                 self.rqexec.runqueue_process_waitpid(task, status)
+                 found = True
+                 self.queue = self.queue[index+11:]
+-                index = self.queue.find("</exitcode>")
++                index = self.queue.find(b"</exitcode>")
+         return (end > start)
+ 
+     def close(self):
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index cc58c72..982fcf7 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -30,7 +30,7 @@ import signal
+ import sys
+ import time
+ import select
+-from Queue import Empty
++from queue import Empty
+ from multiprocessing import Event, Process, util, Queue, Pipe, queues, Manager
+ 
+ from . import BitBakeBaseServer, BitBakeBaseServerConnection, BaseImplServer
+@@ -137,7 +137,7 @@ class ProcessServer(Process, BaseImplServer):
+         if not fds:
+             fds = []
+ 
+-        for function, data in self._idlefuns.items():
++        for function, data in list(self._idlefuns.items()):
+             try:
+                 retval = function(self, data, False)
+                 if retval is False:
+@@ -145,7 +145,7 @@ class ProcessServer(Process, BaseImplServer):
+                     nextsleep = None
+                 elif retval is True:
+                     nextsleep = None
+-                elif isinstance(retval, float):
++                elif isinstance(retval, float) and nextsleep:
+                     if (retval < nextsleep):
+                         nextsleep = retval
+                 elif nextsleep is None:
+@@ -213,7 +213,7 @@ class BitBakeProcessServerConnection(BitBakeBaseServerConnection):
+ # Wrap Queue to provide API which isn't server implementation specific
+ class ProcessEventQueue(multiprocessing.queues.Queue):
+     def __init__(self, maxsize):
+-        multiprocessing.queues.Queue.__init__(self, maxsize)
++        multiprocessing.queues.Queue.__init__(self, maxsize, ctx=multiprocessing.get_context())
+         self.exit = False
+         bb.utils.set_process_name("ProcessEQueue")
+ 
+diff --git a/lib/bb/server/xmlrpc.py b/lib/bb/server/xmlrpc.py
+index ace1cf6..146ca17 100644
+--- a/lib/bb/server/xmlrpc.py
++++ b/lib/bb/server/xmlrpc.py
+@@ -31,31 +31,33 @@
+     in the server's main loop.
+ """
+ 
++import os
++import sys
++
++import hashlib
++import time
++import socket
++import signal
++import threading
++import pickle
++import inspect
++import select
++import http.client
++import xmlrpc.client
++from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
++
+ import bb
+-import xmlrpclib, sys
+ from bb import daemonize
+ from bb.ui import uievent
+-import hashlib, time
+-import socket
+-import os, signal
+-import threading
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
++from . import BitBakeBaseServer, BitBakeBaseServerConnection, BaseImplServer
+ 
+ DEBUG = False
+ 
+-from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
+-import inspect, select, httplib
+-
+-from . import BitBakeBaseServer, BitBakeBaseServerConnection, BaseImplServer
+-
+-class BBTransport(xmlrpclib.Transport):
++class BBTransport(xmlrpc.client.Transport):
+     def __init__(self, timeout):
+         self.timeout = timeout
+         self.connection_token = None
+-        xmlrpclib.Transport.__init__(self)
++        xmlrpc.client.Transport.__init__(self)
+ 
+     # Modified from default to pass timeout to HTTPConnection
+     def make_connection(self, host):
+@@ -67,7 +69,7 @@ class BBTransport(xmlrpclib.Transport):
+         # create a HTTP connection object from a host descriptor
+         chost, self._extra_headers, x509 = self.get_host_info(host)
+         #store the host argument along with the connection object
+-        self._connection = host, httplib.HTTPConnection(chost, timeout=self.timeout)
++        self._connection = host, http.client.HTTPConnection(chost, timeout=self.timeout)
+         return self._connection[1]
+ 
+     def set_connection_token(self, token):
+@@ -76,11 +78,11 @@ class BBTransport(xmlrpclib.Transport):
+     def send_content(self, h, body):
+         if self.connection_token:
+             h.putheader("Bitbake-token", self.connection_token)
+-        xmlrpclib.Transport.send_content(self, h, body)
++        xmlrpc.client.Transport.send_content(self, h, body)
+ 
+ def _create_server(host, port, timeout = 60):
+     t = BBTransport(timeout)
+-    s = xmlrpclib.ServerProxy("http://%s:%d/" % (host, port), transport=t, allow_none=True)
++    s = xmlrpc.client.ServerProxy("http://%s:%d/" % (host, port), transport=t, allow_none=True, use_builtin_types=True)
+     return s, t
+ 
+ class BitBakeServerCommands():
+@@ -128,7 +130,7 @@ class BitBakeServerCommands():
+     def addClient(self):
+         if self.has_client:
+             return None
+-        token = hashlib.md5(str(time.time())).hexdigest()
++        token = hashlib.md5(str(time.time()).encode("utf-8")).hexdigest()
+         self.server.set_connection_token(token)
+         self.has_client = True
+         return token
+@@ -232,7 +234,7 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+         while not self.quit:
+             fds = [self]
+             nextsleep = 0.1
+-            for function, data in self._idlefuns.items():
++            for function, data in list(self._idlefuns.items()):
+                 retval = None
+                 try:
+                     retval = function(self, data, False)
+@@ -267,7 +269,7 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+                 pass
+ 
+         # Tell idle functions we're exiting
+-        for function, data in self._idlefuns.items():
++        for function, data in list(self._idlefuns.items()):
+             try:
+                 retval = function(self, data, True)
+             except:
+@@ -379,7 +381,7 @@ class BitBakeXMLRPCClient(BitBakeBaseServer):
+             bb.warn("Could not create socket for %s:%s (%s)" % (host, port, str(e)))
+             raise e
+         try:
+-            self.serverImpl = XMLRPCProxyServer(host, port)
++            self.serverImpl = XMLRPCProxyServer(host, port, use_builtin_types=True)
+             self.connection = BitBakeXMLRPCServerConnection(self.serverImpl, (ip, 0), self.observer_only, featureset)
+             return self.connection.connect(self.token)
+         except Exception as e:
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index e4085cf..db3daef 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -3,19 +3,14 @@ import logging
+ import os
+ import re
+ import tempfile
++import pickle
+ import bb.data
+ from bb.checksum import FileChecksumCache
+ 
+ logger = logging.getLogger('BitBake.SigGen')
+ 
+-try:
+-    import cPickle as pickle
+-except ImportError:
+-    import pickle
+-    logger.info('Importing cPickle failed.  Falling back to a very slow implementation.')
+-
+ def init(d):
+-    siggens = [obj for obj in globals().itervalues()
++    siggens = [obj for obj in globals().values()
+                       if type(obj) is type and issubclass(obj, SignatureGenerator)]
+ 
+     desired = d.getVar("BB_SIGNATURE_HANDLER", True) or "noop"
+@@ -138,7 +133,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+                 var = lookupcache[dep]
+                 if var is not None:
+                     data = data + str(var)
+-            self.basehash[fn + "." + task] = hashlib.md5(data).hexdigest()
++            self.basehash[fn + "." + task] = hashlib.md5(data.encode("utf-8")).hexdigest()
+             taskdeps[task] = alldeps
+ 
+         self.taskdeps[fn] = taskdeps
+@@ -223,7 +218,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+             self.taints[k] = taint
+             logger.warning("%s is tainted from a forced run" % k)
+ 
+-        h = hashlib.md5(data).hexdigest()
++        h = hashlib.md5(data.encode("utf-8")).hexdigest()
+         self.taskhash[k] = h
+         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
+         return h
+@@ -287,7 +282,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+             with os.fdopen(fd, "wb") as stream:
+                 p = pickle.dump(data, stream, -1)
+                 stream.flush()
+-            os.chmod(tmpfile, 0664)
++            os.chmod(tmpfile, 0o664)
+             os.rename(tmpfile, sigfile)
+         except (OSError, IOError) as err:
+             try:
+@@ -545,7 +540,7 @@ def calc_basehash(sigdata):
+         if val is not None:
+             basedata = basedata + str(val)
+ 
+-    return hashlib.md5(basedata).hexdigest()
++    return hashlib.md5(basedata.encode("utf-8")).hexdigest()
+ 
+ def calc_taskhash(sigdata):
+     data = sigdata['basehash']
+@@ -562,7 +557,7 @@ def calc_taskhash(sigdata):
+         else:
+             data = data + sigdata['taint']
+ 
+-    return hashlib.md5(data).hexdigest()
++    return hashlib.md5(data.encode("utf-8")).hexdigest()
+ 
+ 
+ def dump_sigfile(a):
+diff --git a/lib/bb/taskdata.py b/lib/bb/taskdata.py
+index 9ae52d7..65628c8 100644
+--- a/lib/bb/taskdata.py
++++ b/lib/bb/taskdata.py
+@@ -446,7 +446,7 @@ class TaskData:
+             return
+ 
+         if not item in dataCache.providers:
+-            close_matches = self.get_close_matches(item, dataCache.providers.keys())
++            close_matches = self.get_close_matches(item, list(dataCache.providers.keys()))
+             # Is it in RuntimeProviders ?
+             all_p = bb.providers.getRuntimeProviders(dataCache, item)
+             for fn in all_p:
+@@ -576,7 +576,7 @@ class TaskData:
+         dependees = self.get_dependees(targetid)
+         for fnid in dependees:
+             self.fail_fnid(fnid, missing_list)
+-        for taskid in xrange(len(self.tasks_idepends)):
++        for taskid in range(len(self.tasks_idepends)):
+             idepends = self.tasks_idepends[taskid]
+             for (idependid, idependtask) in idepends:
+                 if idependid == targetid:
+@@ -602,7 +602,7 @@ class TaskData:
+         dependees = self.get_rdependees(targetid)
+         for fnid in dependees:
+             self.fail_fnid(fnid, missing_list)
+-        for taskid in xrange(len(self.tasks_irdepends)):
++        for taskid in range(len(self.tasks_irdepends)):
+             irdepends = self.tasks_irdepends[taskid]
+             for (idependid, idependtask) in irdepends:
+                 if idependid == targetid:
+@@ -658,7 +658,7 @@ class TaskData:
+         logger.debug(3, ", ".join(self.run_names_index))
+ 
+         logger.debug(3, "build_targets:")
+-        for buildid in xrange(len(self.build_names_index)):
++        for buildid in range(len(self.build_names_index)):
+             target = self.build_names_index[buildid]
+             targets = "None"
+             if buildid in self.build_targets:
+@@ -666,7 +666,7 @@ class TaskData:
+             logger.debug(3, " (%s)%s: %s", buildid, target, targets)
+ 
+         logger.debug(3, "run_targets:")
+-        for runid in xrange(len(self.run_names_index)):
++        for runid in range(len(self.run_names_index)):
+             target = self.run_names_index[runid]
+             targets = "None"
+             if runid in self.run_targets:
+@@ -674,7 +674,7 @@ class TaskData:
+             logger.debug(3, " (%s)%s: %s", runid, target, targets)
+ 
+         logger.debug(3, "tasks:")
+-        for task in xrange(len(self.tasks_name)):
++        for task in range(len(self.tasks_name)):
+             logger.debug(3, " (%s)%s - %s: %s",
+                        task,
+                        self.fn_index[self.tasks_fnid[task]],
+diff --git a/lib/bb/tests/codeparser.py b/lib/bb/tests/codeparser.py
+index 5ea9d84..14f0e25 100644
+--- a/lib/bb/tests/codeparser.py
++++ b/lib/bb/tests/codeparser.py
+@@ -191,8 +191,8 @@ class PythonReferenceTest(ReferenceTest):
+         if hasattr(bb.utils, "_context"):
+             self.context = bb.utils._context
+         else:
+-            import __builtin__
+-            self.context = __builtin__.__dict__
++            import builtins
++            self.context = builtins.__dict__
+ 
+     def parseExpression(self, exp):
+         parsedvar = self.d.expandWithRefs(exp, None)
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index 1223230..b54eb06 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -147,14 +147,14 @@ class DataExpansions(unittest.TestCase):
+         self.assertEqual(self.d.getVar("foo", False), None)
+ 
+     def test_keys(self):
+-        keys = self.d.keys()
+-        self.assertEqual(keys, ['value_of_foo', 'foo', 'bar'])
++        keys = list(self.d.keys())
++        self.assertCountEqual(keys, ['value_of_foo', 'foo', 'bar'])
+ 
+     def test_keys_deletion(self):
+         newd = bb.data.createCopy(self.d)
+         newd.delVar("bar")
+-        keys = newd.keys()
+-        self.assertEqual(keys, ['value_of_foo', 'foo'])
++        keys = list(newd.keys())
++        self.assertCountEqual(keys, ['value_of_foo', 'foo'])
+ 
+ class TestNestedExpansions(unittest.TestCase):
+     def setUp(self):
+@@ -334,7 +334,7 @@ class TestOverrides(unittest.TestCase):
+         self.d.setVar("TEST2_bar", "testvalue2")
+         bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST2", True), "testvalue2")
+-        self.assertItemsEqual(self.d.keys(), ['TEST', 'TEST2', 'OVERRIDES', 'TEST2_bar'])
++        self.assertCountEqual(list(self.d.keys()), ['TEST', 'TEST2', 'OVERRIDES', 'TEST2_bar'])
+ 
+     def test_multiple_override(self):
+         self.d.setVar("TEST_bar", "testvalue2")
+@@ -342,7 +342,7 @@ class TestOverrides(unittest.TestCase):
+         self.d.setVar("TEST_foo", "testvalue4")
+         bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST", True), "testvalue3")
+-        self.assertItemsEqual(self.d.keys(), ['TEST', 'TEST_foo', 'OVERRIDES', 'TEST_bar', 'TEST_local'])
++        self.assertCountEqual(list(self.d.keys()), ['TEST', 'TEST_foo', 'OVERRIDES', 'TEST_bar', 'TEST_local'])
+ 
+     def test_multiple_combined_overrides(self):
+         self.d.setVar("TEST_local_foo_bar", "testvalue3")
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 6beb76a..c296db2 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -50,7 +50,7 @@ C = "3"
+     def parsehelper(self, content, suffix = ".bb"):
+ 
+         f = tempfile.NamedTemporaryFile(suffix = suffix)
+-        f.write(content)
++        f.write(bytes(content, "utf-8"))
+         f.flush()
+         os.chdir(os.path.dirname(f.name))
+         return f
+diff --git a/lib/bb/ui/crumbs/hobwidget.py b/lib/bb/ui/crumbs/hobwidget.py
+index 2b969c1..1f51a3c 100644
+--- a/lib/bb/ui/crumbs/hobwidget.py
++++ b/lib/bb/ui/crumbs/hobwidget.py
+@@ -612,7 +612,7 @@ class HobIconChecker(hic):
+     def set_hob_icon_to_stock_icon(self, file_path, stock_id=""):
+         try:
+             pixbuf = gtk.gdk.pixbuf_new_from_file(file_path)
+-        except Exception, e:
++        except Exception as e:
+             return None
+ 
+         if stock_id and (gtk.icon_factory_lookup_default(stock_id) == None):
+diff --git a/lib/bb/ui/crumbs/progressbar.py b/lib/bb/ui/crumbs/progressbar.py
+index 3e2c660..03230ae 100644
+--- a/lib/bb/ui/crumbs/progressbar.py
++++ b/lib/bb/ui/crumbs/progressbar.py
+@@ -44,9 +44,9 @@ class HobProgressBar (gtk.ProgressBar):
+         self.set_text(text)
+ 
+     def set_stop_title(self, text=None):
+-	if not text:
+-	    text = ""
+-	self.set_text(text)
++        if not text:
++            text = ""
++        self.set_text(text)
+ 
+     def reset(self):
+         self.set_fraction(0)
+diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningbuild.py
+index 16a955d..9b695ac 100644
+--- a/lib/bb/ui/crumbs/runningbuild.py
++++ b/lib/bb/ui/crumbs/runningbuild.py
+@@ -23,14 +23,14 @@ import gtk
+ import gobject
+ import logging
+ import time
+-import urllib
+-import urllib2
++import urllib.request, urllib.parse, urllib.error
++import urllib.request, urllib.error, urllib.parse
+ import pango
+ from bb.ui.crumbs.hobcolor import HobColors
+ from bb.ui.crumbs.hobwidget import HobWarpCellRendererText, HobCellRendererPixbuf
+ 
+ class RunningBuildModel (gtk.TreeStore):
+-    (COL_LOG, COL_PACKAGE, COL_TASK, COL_MESSAGE, COL_ICON, COL_COLOR, COL_NUM_ACTIVE) = range(7)
++    (COL_LOG, COL_PACKAGE, COL_TASK, COL_MESSAGE, COL_ICON, COL_COLOR, COL_NUM_ACTIVE) = list(range(7))
+ 
+     def __init__ (self):
+         gtk.TreeStore.__init__ (self,
+@@ -443,8 +443,8 @@ def do_pastebin(text):
+     url = 'http://pastebin.com/api_public.php'
+     params = {'paste_code': text, 'paste_format': 'text'}
+ 
+-    req = urllib2.Request(url, urllib.urlencode(params))
+-    response = urllib2.urlopen(req)
++    req = urllib.request.Request(url, urllib.parse.urlencode(params))
++    response = urllib.request.urlopen(req)
+     paste_url = response.read()
+ 
+     return paste_url
+@@ -519,7 +519,7 @@ class RunningBuildTreeView (gtk.TreeView):
+ 
+         # @todo Provide visual feedback to the user that it is done and that
+         # it worked.
+-        print paste_url
++        print(paste_url)
+ 
+         self._add_to_clipboard(paste_url)
+ 
+diff --git a/lib/bb/ui/goggle.py b/lib/bb/ui/goggle.py
+index f4ee7b4..f5f8f16 100644
+--- a/lib/bb/ui/goggle.py
++++ b/lib/bb/ui/goggle.py
+@@ -18,13 +18,18 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
++from gi import pygtkcompat
++
++pygtkcompat.enable()
++pygtkcompat.enable_gtk(version='3.0')
++
+ import gobject
+ import gtk
+-import xmlrpclib
++import xmlrpc.client
+ from bb.ui.crumbs.runningbuild import RunningBuildTreeView, RunningBuild
+ from bb.ui.crumbs.progress import ProgressBar
+ 
+-import Queue
++import queue
+ 
+ 
+ def event_handle_idle_func (eventHandler, build, pbar):
+@@ -96,7 +101,7 @@ def main (server, eventHandler, params):
+         elif ret != True:
+             print("Error running command '%s': returned %s" % (cmdline, ret))
+             return 1
+-    except xmlrpclib.Fault as x:
++    except xmlrpcclient.Fault as x:
+         print("XMLRPC Fault getting commandline:\n %s" % x)
+         return 1
+ 
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 08c872e..9605c8e 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -22,7 +22,7 @@ from __future__ import division
+ 
+ import os
+ import sys
+-import xmlrpclib
++import xmlrpc.client as xmlrpclib
+ import logging
+ import progressbar
+ import signal
+@@ -184,8 +184,8 @@ class TerminalFilter(object):
+     def clearFooter(self):
+         if self.footer_present:
+             lines = self.footer_present
+-            sys.stdout.write(self.curses.tparm(self.cuu, lines))
+-            sys.stdout.write(self.curses.tparm(self.ed))
++            sys.stdout.buffer.write(self.curses.tparm(self.cuu, lines))
++            sys.stdout.buffer.write(self.curses.tparm(self.ed))
+             sys.stdout.flush()
+         self.footer_present = False
+ 
+diff --git a/lib/bb/ui/ncurses.py b/lib/bb/ui/ncurses.py
+index 9589a77..d81e413 100644
+--- a/lib/bb/ui/ncurses.py
++++ b/lib/bb/ui/ncurses.py
+@@ -45,7 +45,7 @@
+ """
+ 
+ 
+-from __future__ import division
++
+ import logging
+ import os, sys, itertools, time, subprocess
+ 
+@@ -55,7 +55,7 @@ except ImportError:
+     sys.exit("FATAL: The ncurses ui could not load the required curses python module.")
+ 
+ import bb
+-import xmlrpclib
++import xmlrpc.client
+ from bb import ui
+ from bb.ui import uihelper
+ 
+@@ -252,7 +252,7 @@ class NCursesUI:
+             elif ret != True:
+                 print("Couldn't get default commandlind! %s" % ret)
+                 return
+-        except xmlrpclib.Fault as x:
++        except xmlrpc.client.Fault as x:
+             print("XMLRPC Fault getting commandline:\n %s" % x)
+             return
+ 
+@@ -331,7 +331,7 @@ class NCursesUI:
+                     taw.setText(0, 0, "")
+                     if activetasks:
+                         taw.appendText("Active Tasks:\n")
+-                        for task in activetasks.itervalues():
++                        for task in activetasks.values():
+                             taw.appendText(task["title"] + '\n')
+                     if failedtasks:
+                         taw.appendText("Failed Tasks:\n")
+diff --git a/lib/bb/ui/uievent.py b/lib/bb/ui/uievent.py
+index df093c5..ca19166 100644
+--- a/lib/bb/ui/uievent.py
++++ b/lib/bb/ui/uievent.py
+@@ -25,7 +25,7 @@ client/server deadlocks.
+ """
+ 
+ import socket, threading, pickle, collections
+-from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
++from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
+ 
+ class BBUIEventQueue:
+     def __init__(self, BBServer, clientinfo=("localhost, 0")):
+@@ -137,7 +137,7 @@ class UIXMLRPCServer (SimpleXMLRPCServer):
+         SimpleXMLRPCServer.__init__( self,
+                                     interface,
+                                     requestHandler=SimpleXMLRPCRequestHandler,
+-                                    logRequests=False, allow_none=True)
++                                    logRequests=False, allow_none=True, use_builtin_types=True)
+ 
+     def get_request(self):
+         while not self.quit:
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 588c192..138da44 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -37,7 +37,7 @@ import errno
+ import signal
+ import ast
+ import collections
+-from commands import getstatusoutput
++from subprocess import getstatusoutput
+ from contextlib import contextmanager
+ from ctypes import cdll
+ 
+@@ -76,7 +76,7 @@ def explode_version(s):
+             r.append((0, int(m.group(1))))
+             s = m.group(2)
+             continue
+-        if s[0] in string.letters:
++        if s[0] in string.ascii_letters:
+             m = alpha_regexp.match(s)
+             r.append((1, m.group(1)))
+             s = m.group(2)
+@@ -588,7 +588,7 @@ def filter_environment(good_vars):
      """
  
-+    def test_pickle_and_unpickle_identity(self):
-+        # Pickling a tree, then unpickling it, yields a tree identical
-+        # to the original.
-+        tree = self.soup("<a><b>foo</a>")
-+        dumped = pickle.dumps(tree, 2)
-+        loaded = pickle.loads(dumped)
-+        self.assertEqual(loaded.__class__, BeautifulSoup)
-+        self.assertEqual(loaded.decode(), tree.decode())
-+
-     def assertDoctypeHandled(self, doctype_fragment):
-         """Assert that a given doctype string is handled correctly."""
-         doctype_str, soup = self._document_with_doctype(doctype_fragment)
-@@ -114,6 +136,11 @@ class HTMLTreeBuilderSmokeTest(object):
-             soup.encode("utf-8").replace(b"\n", b""),
-             markup.replace(b"\n", b""))
+     removed_vars = {}
+-    for key in os.environ.keys():
++    for key in list(os.environ):
+         if key in good_vars:
+             continue
  
-+    def test_processing_instruction(self):
-+        markup = b"""<?PITarget PIContent?>"""
-+        soup = self.soup(markup)
-+        self.assertEqual(markup, soup.encode("utf8"))
-+
-     def test_deepcopy(self):
-         """Make sure you can copy the tree builder.
+@@ -641,7 +641,7 @@ def empty_environment():
+     """
+     Remove all variables from the environment.
+     """
+-    for s in os.environ.keys():
++    for s in list(os.environ.keys()):
+         os.unsetenv(s)
+         del os.environ[s]
  
-@@ -155,6 +182,23 @@ class HTMLTreeBuilderSmokeTest(object):
-     def test_nested_formatting_elements(self):
-         self.assertSoupEquals("<em><em></em></em>")
+@@ -958,7 +958,7 @@ def contains(variable, checkvalues, truevalue, falsevalue, d):
+     if not val:
+         return falsevalue
+     val = set(val.split())
+-    if isinstance(checkvalues, basestring):
++    if isinstance(checkvalues, str):
+         checkvalues = set(checkvalues.split())
+     else:
+         checkvalues = set(checkvalues)
+@@ -971,7 +971,7 @@ def contains_any(variable, checkvalues, truevalue, falsevalue, d):
+     if not val:
+         return falsevalue
+     val = set(val.split())
+-    if isinstance(checkvalues, basestring):
++    if isinstance(checkvalues, str):
+         checkvalues = set(checkvalues.split())
+     else:
+         checkvalues = set(checkvalues)
+@@ -1040,7 +1040,7 @@ def exec_flat_python_func(func, *args, **kwargs):
+         aidx += 1
+     # Handle keyword arguments
+     context.update(kwargs)
+-    funcargs.extend(['%s=%s' % (arg, arg) for arg in kwargs.iterkeys()])
++    funcargs.extend(['%s=%s' % (arg, arg) for arg in kwargs.keys()])
+     code = 'retval = %s(%s)' % (func, ', '.join(funcargs))
+     comp = bb.utils.better_compile(code, '<string>', '<string>')
+     bb.utils.better_exec(comp, context, code, '<string>')
+@@ -1127,7 +1127,7 @@ def edit_metadata(meta_lines, variables, varfunc, match_overrides=False):
+             else:
+                 varset_new = varset_start
  
-+    def test_double_head(self):
-+        html = '''<!DOCTYPE html>
-+<html>
-+<head>
-+<title>Ordinary HEAD element test</title>
-+</head>
-+<script type="text/javascript">
-+alert("Help!");
-+</script>
-+<body>
-+Hello, world!
-+</body>
-+</html>
-+'''
-+        soup = self.soup(html)
-+        self.assertEqual("text/javascript", soup.find('script')['type'])
-+
-     def test_comment(self):
-         # Comments are represented as Comment objects.
-         markup = "<p>foo<!--foobar-->baz</p>"
-@@ -221,18 +265,26 @@ class HTMLTreeBuilderSmokeTest(object):
-         soup = self.soup(markup)
-         self.assertEqual(["css"], soup.div.div['class'])
+-            if isinstance(indent, (int, long)):
++            if isinstance(indent, int):
+                 if indent == -1:
+                     indentspc = ' ' * (len(varset_new) + 2)
+                 else:
+@@ -1195,7 +1195,7 @@ def edit_metadata(meta_lines, variables, varfunc, match_overrides=False):
+                 in_var = None
+         else:
+             skip = False
+-            for (varname, var_re) in var_res.iteritems():
++            for (varname, var_re) in var_res.items():
+                 res = var_re.match(line)
+                 if res:
+                     isfunc = varname.endswith('()')
+@@ -1373,7 +1373,7 @@ def get_file_layer(filename, d):
+         # Use longest path so we handle nested layers
+         matchlen = 0
+         match = None
+-        for collection, regex in collection_res.iteritems():
++        for collection, regex in collection_res.items():
+             if len(regex) > matchlen and re.match(regex, path):
+                 matchlen = len(regex)
+                 match = collection
+diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
+index 5b95e2e..d4c1792 100644
+--- a/lib/bblayers/action.py
++++ b/lib/bblayers/action.py
+@@ -117,7 +117,7 @@ build results (as the layer priority order has effectively changed).
+         applied_appends = []
+         for layer in layers:
+             overlayed = []
+-            for f in self.tinfoil.cooker.collection.overlayed.iterkeys():
++            for f in self.tinfoil.cooker.collection.overlayed.keys():
+                 for of in self.tinfoil.cooker.collection.overlayed[f]:
+                     if of.startswith(layer):
+                         overlayed.append(of)
+diff --git a/lib/bblayers/common.py b/lib/bblayers/common.py
+index 360b9d7..b10fb4c 100644
+--- a/lib/bblayers/common.py
++++ b/lib/bblayers/common.py
+@@ -14,7 +14,7 @@ class LayerPlugin():
+         self.tinfoil = tinfoil
+         self.bblayers = (self.tinfoil.config_data.getVar('BBLAYERS', True) or "").split()
+         layerconfs = self.tinfoil.config_data.varhistory.get_variable_items_files('BBFILE_COLLECTIONS', self.tinfoil.config_data)
+-        self.bbfile_collections = {layer: os.path.dirname(os.path.dirname(path)) for layer, path in layerconfs.iteritems()}
++        self.bbfile_collections = {layer: os.path.dirname(os.path.dirname(path)) for layer, path in layerconfs.items()}
  
-+    def test_multivalued_attribute_on_html(self):
-+        # html5lib uses a different API to set the attributes ot the
-+        # <html> tag. This has caused problems with multivalued
-+        # attributes.
-+        markup = '<html class="a b"></html>'
-+        soup = self.soup(markup)
-+        self.assertEqual(["a", "b"], soup.html['class'])
-+
-     def test_angle_brackets_in_attribute_values_are_escaped(self):
-         self.assertSoupEquals('<a b="<a>"></a>', '<a b="&lt;a&gt;"></a>')
- 
-     def test_entities_in_attributes_converted_to_unicode(self):
--        expect = u'<p id="pi\N{LATIN SMALL LETTER N WITH TILDE}ata"></p>'
-+        expect = '<p id="pi\N{LATIN SMALL LETTER N WITH TILDE}ata"></p>'
-         self.assertSoupEquals('<p id="pi&#241;ata"></p>', expect)
-         self.assertSoupEquals('<p id="pi&#xf1;ata"></p>', expect)
-         self.assertSoupEquals('<p id="pi&#Xf1;ata"></p>', expect)
-         self.assertSoupEquals('<p id="pi&ntilde;ata"></p>', expect)
- 
-     def test_entities_in_text_converted_to_unicode(self):
--        expect = u'<p>pi\N{LATIN SMALL LETTER N WITH TILDE}ata</p>'
-+        expect = '<p>pi\N{LATIN SMALL LETTER N WITH TILDE}ata</p>'
-         self.assertSoupEquals("<p>pi&#241;ata</p>", expect)
-         self.assertSoupEquals("<p>pi&#xf1;ata</p>", expect)
-         self.assertSoupEquals("<p>pi&#Xf1;ata</p>", expect)
-@@ -243,7 +295,7 @@ class HTMLTreeBuilderSmokeTest(object):
-                               '<p>I said "good day!"</p>')
- 
-     def test_out_of_range_entity(self):
--        expect = u"\N{REPLACEMENT CHARACTER}"
-+        expect = "\N{REPLACEMENT CHARACTER}"
-         self.assertSoupEquals("&#10000000000000;", expect)
-         self.assertSoupEquals("&#x10000000000000;", expect)
-         self.assertSoupEquals("&#1000000000;", expect)
-@@ -253,6 +305,35 @@ class HTMLTreeBuilderSmokeTest(object):
-         soup = self.soup("<html><h2>\nfoo</h2><p></p></html>")
-         self.assertEqual("p", soup.h2.string.next_element.name)
-         self.assertEqual("p", soup.p.name)
-+        self.assertConnectedness(soup)
-+
-+    def test_head_tag_between_head_and_body(self):
-+        "Prevent recurrence of a bug in the html5lib treebuilder."
-+        content = """<html><head></head>
-+  <link></link>
-+  <body>foo</body>
-+</html>
-+"""
-+        soup = self.soup(content)
-+        self.assertNotEqual(None, soup.html.body)
-+        self.assertConnectedness(soup)
-+
-+    def test_multiple_copies_of_a_tag(self):
-+        "Prevent recurrence of a bug in the html5lib treebuilder."
-+        content = """<!DOCTYPE html>
-+<html>
-+ <body>
-+   <article id="a" >
-+   <div><a href="1"></div>
-+   <footer>
-+     <a href="2"></a>
-+   </footer>
-+  </article>
-+  </body>
-+</html>
-+"""
-+        soup = self.soup(content)
-+        self.assertConnectedness(soup.article)
- 
-     def test_basic_namespaces(self):
-         """Parsers don't need to *understand* namespaces, but at the
-@@ -285,9 +366,9 @@ class HTMLTreeBuilderSmokeTest(object):
-         # A seemingly innocuous document... but it's in Unicode! And
-         # it contains characters that can't be represented in the
-         # encoding found in the  declaration! The horror!
--        markup = u'<html><head><meta encoding="euc-jp"></head><body>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</body>'
-+        markup = '<html><head><meta encoding="euc-jp"></head><body>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</body>'
-         soup = self.soup(markup)
--        self.assertEqual(u'Sacr\xe9 bleu!', soup.body.string)
-+        self.assertEqual('Sacr\xe9 bleu!', soup.body.string)
- 
-     def test_soupstrainer(self):
-         """Parsers should be able to work with SoupStrainers."""
-@@ -327,7 +408,7 @@ class HTMLTreeBuilderSmokeTest(object):
-         # Both XML and HTML entities are converted to Unicode characters
-         # during parsing.
-         text = "<p>&lt;&lt;sacr&eacute;&#32;bleu!&gt;&gt;</p>"
--        expected = u"<p>&lt;&lt;sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</p>"
-+        expected = "<p>&lt;&lt;sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</p>"
-         self.assertSoupEquals(text, expected)
- 
-     def test_smart_quotes_converted_on_the_way_in(self):
-@@ -337,15 +418,15 @@ class HTMLTreeBuilderSmokeTest(object):
-         soup = self.soup(quote)
-         self.assertEqual(
-             soup.p.string,
--            u"\N{LEFT SINGLE QUOTATION MARK}Foo\N{RIGHT SINGLE QUOTATION MARK}")
-+            "\N{LEFT SINGLE QUOTATION MARK}Foo\N{RIGHT SINGLE QUOTATION MARK}")
- 
-     def test_non_breaking_spaces_converted_on_the_way_in(self):
-         soup = self.soup("<a>&nbsp;&nbsp;</a>")
--        self.assertEqual(soup.a.string, u"\N{NO-BREAK SPACE}" * 2)
-+        self.assertEqual(soup.a.string, "\N{NO-BREAK SPACE}" * 2)
- 
-     def test_entities_converted_on_the_way_out(self):
-         text = "<p>&lt;&lt;sacr&eacute;&#32;bleu!&gt;&gt;</p>"
--        expected = u"<p>&lt;&lt;sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</p>".encode("utf-8")
-+        expected = "<p>&lt;&lt;sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</p>".encode("utf-8")
-         soup = self.soup(text)
-         self.assertEqual(soup.p.encode("utf-8"), expected)
- 
-@@ -354,7 +435,7 @@ class HTMLTreeBuilderSmokeTest(object):
-         # easy-to-understand document.
- 
-         # Here it is in Unicode. Note that it claims to be in ISO-Latin-1.
--        unicode_html = u'<html><head><meta content="text/html; charset=ISO-Latin-1" http-equiv="Content-type"/></head><body><p>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</p></body></html>'
-+        unicode_html = '<html><head><meta content="text/html; charset=ISO-Latin-1" http-equiv="Content-type"/></head><body><p>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</p></body></html>'
- 
-         # That's because we're going to encode it into ISO-Latin-1, and use
-         # that to test.
-@@ -463,11 +544,25 @@ class HTMLTreeBuilderSmokeTest(object):
- 
- class XMLTreeBuilderSmokeTest(object):
- 
-+    def test_pickle_and_unpickle_identity(self):
-+        # Pickling a tree, then unpickling it, yields a tree identical
-+        # to the original.
-+        tree = self.soup("<a><b>foo</a>")
-+        dumped = pickle.dumps(tree, 2)
-+        loaded = pickle.loads(dumped)
-+        self.assertEqual(loaded.__class__, BeautifulSoup)
-+        self.assertEqual(loaded.decode(), tree.decode())
-+
-     def test_docstring_generated(self):
-         soup = self.soup("<root/>")
-         self.assertEqual(
-             soup.encode(), b'<?xml version="1.0" encoding="utf-8"?>\n<root/>')
- 
-+    def test_xml_declaration(self):
-+        markup = b"""<?xml version="1.0" encoding="utf8"?>\n<foo/>"""
-+        soup = self.soup(markup)
-+        self.assertEqual(markup, soup.encode("utf8"))
-+
-     def test_real_xhtml_document(self):
-         """A real XHTML document should come out *exactly* the same as it went in."""
-         markup = b"""<?xml version="1.0" encoding="utf-8"?>
-@@ -485,7 +580,7 @@ class XMLTreeBuilderSmokeTest(object):
-   <script type="text/javascript">
-   </script>
- """
--        soup = BeautifulSoup(doc, "xml")
-+        soup = BeautifulSoup(doc, "lxml-xml")
-         # lxml would have stripped this while parsing, but we can add
-         # it later.
-         soup.script.string = 'console.log("< < hey > > ");'
-@@ -493,15 +588,15 @@ class XMLTreeBuilderSmokeTest(object):
-         self.assertTrue(b"&lt; &lt; hey &gt; &gt;" in encoded)
- 
-     def test_can_parse_unicode_document(self):
--        markup = u'<?xml version="1.0" encoding="euc-jp"><root>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</root>'
-+        markup = '<?xml version="1.0" encoding="euc-jp"><root>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</root>'
-         soup = self.soup(markup)
--        self.assertEqual(u'Sacr\xe9 bleu!', soup.root.string)
-+        self.assertEqual('Sacr\xe9 bleu!', soup.root.string)
- 
-     def test_popping_namespaced_tag(self):
-         markup = '<rss xmlns:dc="foo"><dc:creator>b</dc:creator><dc:date>2012-07-02T20:33:42Z</dc:date><dc:rights>c</dc:rights><image>d</image></rss>'
-         soup = self.soup(markup)
-         self.assertEqual(
--            unicode(soup.rss), markup)
-+            str(soup.rss), markup)
- 
-     def test_docstring_includes_correct_encoding(self):
-         soup = self.soup("<root/>")
-@@ -532,17 +627,17 @@ class XMLTreeBuilderSmokeTest(object):
-     def test_closing_namespaced_tag(self):
-         markup = '<p xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:date>20010504</dc:date></p>'
-         soup = self.soup(markup)
--        self.assertEqual(unicode(soup.p), markup)
-+        self.assertEqual(str(soup.p), markup)
- 
-     def test_namespaced_attributes(self):
-         markup = '<foo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><bar xsi:schemaLocation="http://www.example.com"/></foo>'
-         soup = self.soup(markup)
--        self.assertEqual(unicode(soup.foo), markup)
-+        self.assertEqual(str(soup.foo), markup)
- 
-     def test_namespaced_attributes_xml_namespace(self):
-         markup = '<foo xml:lang="fr">bar</foo>'
-         soup = self.soup(markup)
--        self.assertEqual(unicode(soup.foo), markup)
-+        self.assertEqual(str(soup.foo), markup)
- 
- class HTML5TreeBuilderSmokeTest(HTMLTreeBuilderSmokeTest):
-     """Smoke test for a tree builder that supports HTML5."""
-diff --git a/lib/bs4/tests/test_builder_registry.py b/lib/bs4/tests/test_builder_registry.py
-index 92ad10f..90cad82 100644
---- a/lib/bs4/tests/test_builder_registry.py
-+++ b/lib/bs4/tests/test_builder_registry.py
-@@ -1,6 +1,7 @@
- """Tests of the builder registry."""
- 
- import unittest
-+import warnings
- 
- from bs4 import BeautifulSoup
- from bs4.builder import (
-@@ -67,10 +68,15 @@ class BuiltInRegistryTest(unittest.TestCase):
-                           HTMLParserTreeBuilder)
- 
-     def test_beautifulsoup_constructor_does_lookup(self):
--        # You can pass in a string.
--        BeautifulSoup("", features="html")
--        # Or a list of strings.
--        BeautifulSoup("", features=["html", "fast"])
-+
-+        with warnings.catch_warnings(record=True) as w:
-+            # This will create a warning about not explicitly
-+            # specifying a parser, but we'll ignore it.
-+
-+            # You can pass in a string.
-+            BeautifulSoup("", features="html")
-+            # Or a list of strings.
-+            BeautifulSoup("", features=["html", "fast"])
- 
-         # You'll get an exception if BS can't find an appropriate
-         # builder.
-diff --git a/lib/bs4/tests/test_html5lib.py b/lib/bs4/tests/test_html5lib.py
-index 594c3e1..a7494ca 100644
---- a/lib/bs4/tests/test_html5lib.py
-+++ b/lib/bs4/tests/test_html5lib.py
-@@ -5,7 +5,7 @@ import warnings
- try:
-     from bs4.builder import HTML5TreeBuilder
-     HTML5LIB_PRESENT = True
--except ImportError, e:
-+except ImportError as e:
-     HTML5LIB_PRESENT = False
- from bs4.element import SoupStrainer
- from bs4.testing import (
-@@ -74,12 +74,25 @@ class HTML5LibBuilderSmokeTest(SoupTest, HTML5TreeBuilderSmokeTest):
-     def test_reparented_markup(self):
-         markup = '<p><em>foo</p>\n<p>bar<a></a></em></p>'
-         soup = self.soup(markup)
--        self.assertEqual(u"<body><p><em>foo</em></p><em>\n</em><p><em>bar<a></a></em></p></body>", soup.body.decode())
-+        self.assertEqual("<body><p><em>foo</em></p><em>\n</em><p><em>bar<a></a></em></p></body>", soup.body.decode())
-         self.assertEqual(2, len(soup.find_all('p')))
- 
- 
-     def test_reparented_markup_ends_with_whitespace(self):
-         markup = '<p><em>foo</p>\n<p>bar<a></a></em></p>\n'
-         soup = self.soup(markup)
--        self.assertEqual(u"<body><p><em>foo</em></p><em>\n</em><p><em>bar<a></a></em></p>\n</body>", soup.body.decode())
-+        self.assertEqual("<body><p><em>foo</em></p><em>\n</em><p><em>bar<a></a></em></p>\n</body>", soup.body.decode())
-         self.assertEqual(2, len(soup.find_all('p')))
-+
-+    def test_processing_instruction(self):
-+        """Processing instructions become comments."""
-+        markup = b"""<?PITarget PIContent?>"""
-+        soup = self.soup(markup)
-+        assert str(soup).startswith("<!--?PITarget PIContent?-->")
-+
-+    def test_cloned_multivalue_node(self):
-+        markup = b"""<a class="my_class"><p></a>"""
-+        soup = self.soup(markup)
-+        a1, a2 = soup.find_all('a')
-+        self.assertEqual(a1, a2)
-+        assert a1 is not a2
-diff --git a/lib/bs4/tests/test_htmlparser.py b/lib/bs4/tests/test_htmlparser.py
-index bcb5ed2..b45e35f 100644
---- a/lib/bs4/tests/test_htmlparser.py
-+++ b/lib/bs4/tests/test_htmlparser.py
-@@ -1,6 +1,8 @@
- """Tests to ensure that the html.parser tree builder generates good
- trees."""
- 
-+from pdb import set_trace
-+import pickle
- from bs4.testing import SoupTest, HTMLTreeBuilderSmokeTest
- from bs4.builder import HTMLParserTreeBuilder
- 
-@@ -17,3 +19,14 @@ class HTMLParserTreeBuilderSmokeTest(SoupTest, HTMLTreeBuilderSmokeTest):
-     def test_namespaced_public_doctype(self):
-         # html.parser can't handle namespaced doctypes, so skip this one.
-         pass
-+
-+    def test_builder_is_pickled(self):
-+        """Unlike most tree builders, HTMLParserTreeBuilder and will
-+        be restored after pickling.
-+        """
-+        tree = self.soup("<a><b>foo</a>")
-+        dumped = pickle.dumps(tree, 2)
-+        loaded = pickle.loads(dumped)
-+        self.assertTrue(isinstance(loaded.builder, type(tree.builder)))
-+
-+
-diff --git a/lib/bs4/tests/test_lxml.py b/lib/bs4/tests/test_lxml.py
-index 2b2e9b7..6c2a1d7 100644
---- a/lib/bs4/tests/test_lxml.py
-+++ b/lib/bs4/tests/test_lxml.py
-@@ -7,7 +7,7 @@ try:
-     import lxml.etree
-     LXML_PRESENT = True
-     LXML_VERSION = lxml.etree.LXML_VERSION
--except ImportError, e:
-+except ImportError as e:
-     LXML_PRESENT = False
-     LXML_VERSION = (0,)
- 
-@@ -62,24 +62,9 @@ class LXMLTreeBuilderSmokeTest(SoupTest, HTMLTreeBuilderSmokeTest):
-         # if one is installed.
-         with warnings.catch_warnings(record=True) as w:
-             soup = BeautifulStoneSoup("<b />")
--        self.assertEqual(u"<b/>", unicode(soup.b))
-+        self.assertEqual("<b/>", str(soup.b))
-         self.assertTrue("BeautifulStoneSoup class is deprecated" in str(w[0].message))
- 
--    def test_real_xhtml_document(self):
--        """lxml strips the XML definition from an XHTML doc, which is fine."""
--        markup = b"""<?xml version="1.0" encoding="utf-8"?>
--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
--<html xmlns="http://www.w3.org/1999/xhtml">
--<head><title>Hello.</title></head>
--<body>Goodbye.</body>
--</html>"""
--        soup = self.soup(markup)
--        self.assertEqual(
--            soup.encode("utf-8").replace(b"\n", b''),
--            markup.replace(b'\n', b'').replace(
--                b'<?xml version="1.0" encoding="utf-8"?>', b''))
--
--
- @skipIf(
-     not LXML_PRESENT,
-     "lxml seems not to be present, not testing its XML tree builder.")
-diff --git a/lib/bs4/tests/test_soup.py b/lib/bs4/tests/test_soup.py
-index 47ac245..f87949e 100644
---- a/lib/bs4/tests/test_soup.py
-+++ b/lib/bs4/tests/test_soup.py
-@@ -1,6 +1,7 @@
- # -*- coding: utf-8 -*-
- """Tests of Beautiful Soup as a whole."""
- 
-+from pdb import set_trace
+     @staticmethod
+     def add_command(subparsers, cmdname, function, parserecipes=True, *args, **kwargs):
+diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
+index 3c39d8a..10ad718 100644
+--- a/lib/bblayers/layerindex.py
++++ b/lib/bblayers/layerindex.py
+@@ -1,10 +1,10 @@
+ import argparse
+-import httplib
++import http.client
+ import json
  import logging
- import unittest
- import sys
-@@ -20,6 +21,7 @@ import bs4.dammit
- from bs4.dammit import (
-     EntitySubstitution,
-     UnicodeDammit,
-+    EncodingDetector,
- )
- from bs4.testing import (
-     SoupTest,
-@@ -30,7 +32,7 @@ import warnings
+ import os
+ import subprocess
+-import urlparse
++import urllib.parse
+ 
+ from bblayers.action import ActionPlugin
+ 
+@@ -24,12 +24,12 @@ class LayerIndexPlugin(ActionPlugin):
+     def get_json_data(self, apiurl):
+         proxy_settings = os.environ.get("http_proxy", None)
+         conn = None
+-        _parsedurl = urlparse.urlparse(apiurl)
++        _parsedurl = urllib.parse.urlparse(apiurl)
+         path = _parsedurl.path
+         query = _parsedurl.query
+ 
+         def parse_url(url):
+-            parsedurl = urlparse.urlparse(url)
++            parsedurl = urllib.parse.urlparse(url)
+             if parsedurl.netloc[0] == '[':
+                 host, port = parsedurl.netloc[1:].split(']', 1)
+                 if ':' in port:
+@@ -46,11 +46,11 @@ class LayerIndexPlugin(ActionPlugin):
+ 
+         if proxy_settings is None:
+             host, port = parse_url(apiurl)
+-            conn = httplib.HTTPConnection(host, port)
++            conn = http.client.HTTPConnection(host, port)
+             conn.request("GET", path + "?" + query)
+         else:
+             host, port = parse_url(proxy_settings)
+-            conn = httplib.HTTPConnection(host, port)
++            conn = http.client.HTTPConnection(host, port)
+             conn.request("GET", apiurl)
+ 
+         r = conn.getresponse()
+diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
+index b5b98f7..b8c817b 100644
+--- a/lib/bblayers/query.py
++++ b/lib/bblayers/query.py
+@@ -128,7 +128,7 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+         # Ensure we list skipped recipes
+         # We are largely guessing about PN, PV and the preferred version here,
+         # but we have no choice since skipped recipes are not fully parsed
+-        skiplist = self.tinfoil.cooker.skiplist.keys()
++        skiplist = list(self.tinfoil.cooker.skiplist.keys())
+         skiplist.sort( key=lambda fileitem: self.tinfoil.cooker.collection.calc_bbfile_priority(fileitem) )
+         skiplist.reverse()
+         for fn in skiplist:
+@@ -275,7 +275,7 @@ Lists recipes with the bbappends that apply to them as subitems.
+ 
+     def show_appends_for_skipped(self):
+         filenames = [os.path.basename(f)
+-                    for f in self.tinfoil.cooker.skiplist.iterkeys()]
++                    for f in self.tinfoil.cooker.skiplist.keys()]
+         return self.show_appends_output(filenames, None, " (skipped)")
+ 
+     def show_appends_output(self, filenames, best_filename, name_suffix = ''):
+diff --git a/lib/codegen.py b/lib/codegen.py
+index be772d5..62a6748 100644
+--- a/lib/codegen.py
++++ b/lib/codegen.py
+@@ -214,11 +214,11 @@ class SourceGenerator(NodeVisitor):
+                 paren_or_comma()
+                 self.write(keyword.arg + '=')
+                 self.visit(keyword.value)
+-            if node.starargs is not None:
++            if hasattr(node, 'starargs') and node.starargs is not None:
+                 paren_or_comma()
+                 self.write('*')
+                 self.visit(node.starargs)
+-            if node.kwargs is not None:
++            if hasattr(node, 'kwargs') and node.kwargs is not None:
+                 paren_or_comma()
+                 self.write('**')
+                 self.visit(node.kwargs)
+@@ -379,11 +379,11 @@ class SourceGenerator(NodeVisitor):
+             write_comma()
+             self.write(keyword.arg + '=')
+             self.visit(keyword.value)
+-        if node.starargs is not None:
++        if hasattr(node, 'starargs') and node.starargs is not None:
+             write_comma()
+             self.write('*')
+             self.visit(node.starargs)
+-        if node.kwargs is not None:
++        if hasattr(node, 'kwargs') and node.kwargs is not None:
+             write_comma()
+             self.write('**')
+             self.visit(node.kwargs)
+diff --git a/lib/ply/yacc.py b/lib/ply/yacc.py
+index 6168fd9..d50886e 100644
+--- a/lib/ply/yacc.py
++++ b/lib/ply/yacc.py
+@@ -195,6 +195,8 @@ class YaccProduction:
+         self.lexer = None
+         self.parser= None
+     def __getitem__(self,n):
++        if isinstance(n,slice):
++            return [self[i] for i in range(*(n.indices(len(self.slice))))]
+         if n >= 0: return self.slice[n].value
+         else: return self.stack[n].value
+ 
+diff --git a/lib/prserv/db.py b/lib/prserv/db.py
+index 2a86184..495d09f 100644
+--- a/lib/prserv/db.py
++++ b/lib/prserv/db.py
+@@ -260,7 +260,7 @@ class PRData(object):
+         self.connection.close()
+ 
+     def __getitem__(self,tblname):
+-        if not isinstance(tblname, basestring):
++        if not isinstance(tblname, str):
+             raise TypeError("tblname argument must be a string, not '%s'" %
+                             type(tblname))
+         if tblname in self._tables:
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 8cec9f8..cafcc82 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -1,10 +1,10 @@
+ import os,sys,logging
+ import signal, time
+-from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
++from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
+ import threading
+-import Queue
++import queue
+ import socket
+-import StringIO
++import io
+ 
  try:
-     from bs4.builder import LXMLTreeBuilder, LXMLTreeBuilderForXML
-     LXML_PRESENT = True
--except ImportError, e:
-+except ImportError as e:
-     LXML_PRESENT = False
+     import sqlite3
+@@ -64,7 +64,7 @@ class PRServer(SimpleXMLRPCServer):
+         self.register_function(self.importone, "importone")
+         self.register_introspection_functions()
+ 
+-        self.requestqueue = Queue.Queue()
++        self.requestqueue = queue.Queue()
+         self.handlerthread = threading.Thread(target = self.process_request_thread)
+         self.handlerthread.daemon = False
+ 
+@@ -83,7 +83,7 @@ class PRServer(SimpleXMLRPCServer):
+         while not self.quit:
+             try:
+                 (request, client_address) = self.requestqueue.get(True, 30)
+-            except Queue.Empty:
++            except queue.Empty:
+                 self.table.sync_if_dirty()
+                 continue
+             try:
+@@ -126,7 +126,7 @@ class PRServer(SimpleXMLRPCServer):
+         Returns None if the database engine does not support dumping to
+         script or if some other error is encountered in processing.
+         """
+-        buff = StringIO.StringIO()
++        buff = io.StringIO()
+         try:
+             self.table.sync()
+             self.table.dump_db(buff)
+@@ -420,7 +420,7 @@ class PRServiceConfigError(Exception):
+ def auto_start(d):
+     global singleton
+ 
+-    host_params = filter(None, (d.getVar('PRSERV_HOST', True) or '').split(':'))
++    host_params = list(filter(None, (d.getVar('PRSERV_HOST', True) or '').split(':')))
+     if not host_params:
+         return None
  
- PYTHON_2_PRE_2_7 = (sys.version_info < (2,7))
-@@ -39,17 +41,43 @@ PYTHON_3_PRE_3_2 = (sys.version_info[0] == 3 and sys.version_info < (3,2))
- class TestConstructor(SoupTest):
- 
-     def test_short_unicode_input(self):
--        data = u"<h1>éé</h1>"
-+        data = "<h1>éé</h1>"
-         soup = self.soup(data)
--        self.assertEqual(u"éé", soup.h1.string)
-+        self.assertEqual("éé", soup.h1.string)
- 
-     def test_embedded_null(self):
--        data = u"<h1>foo\0bar</h1>"
-+        data = "<h1>foo\0bar</h1>"
-         soup = self.soup(data)
--        self.assertEqual(u"foo\0bar", soup.h1.string)
-+        self.assertEqual("foo\0bar", soup.h1.string)
- 
-+    def test_exclude_encodings(self):
-+        utf8_data = "Räksmörgås".encode("utf-8")
-+        soup = self.soup(utf8_data, exclude_encodings=["utf-8"])
-+        self.assertEqual("windows-1252", soup.original_encoding)
- 
--class TestDeprecatedConstructorArguments(SoupTest):
-+
-+class TestWarnings(SoupTest):
-+
-+    def _no_parser_specified(self, s, is_there=True):
-+        v = s.startswith(BeautifulSoup.NO_PARSER_SPECIFIED_WARNING[:80])
-+        self.assertTrue(v)
-+
-+    def test_warning_if_no_parser_specified(self):
-+        with warnings.catch_warnings(record=True) as w:
-+            soup = self.soup("<a><b></b></a>")
-+        msg = str(w[0].message)
-+        self._assert_no_parser_specified(msg)
-+
-+    def test_warning_if_parser_specified_too_vague(self):
-+        with warnings.catch_warnings(record=True) as w:
-+            soup = self.soup("<a><b></b></a>", "html")
-+        msg = str(w[0].message)
-+        self._assert_no_parser_specified(msg)
-+
-+    def test_no_warning_if_explicit_parser_specified(self):
-+        with warnings.catch_warnings(record=True) as w:
-+            soup = self.soup("<a><b></b></a>", "html.parser")
-+        self.assertEqual([], w)
- 
-     def test_parseOnlyThese_renamed_to_parse_only(self):
-         with warnings.catch_warnings(record=True) as w:
-@@ -117,9 +145,9 @@ class TestEntitySubstitution(unittest.TestCase):
-     def test_simple_html_substitution(self):
-         # Unicode characters corresponding to named HTML entites
-         # are substituted, and no others.
--        s = u"foo\u2200\N{SNOWMAN}\u00f5bar"
-+        s = "foo\u2200\N{SNOWMAN}\u00f5bar"
-         self.assertEqual(self.sub.substitute_html(s),
--                          u"foo&forall;\N{SNOWMAN}&otilde;bar")
-+                          "foo&forall;\N{SNOWMAN}&otilde;bar")
- 
-     def test_smart_quote_substitution(self):
-         # MS smart quotes are a common source of frustration, so we
-@@ -184,7 +212,7 @@ class TestEncodingConversion(SoupTest):
- 
-     def setUp(self):
-         super(TestEncodingConversion, self).setUp()
--        self.unicode_data = u'<html><head><meta charset="utf-8"/></head><body><foo>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</foo></body></html>'
-+        self.unicode_data = '<html><head><meta charset="utf-8"/></head><body><foo>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</foo></body></html>'
-         self.utf8_data = self.unicode_data.encode("utf-8")
-         # Just so you know what it looks like.
-         self.assertEqual(
-@@ -204,7 +232,7 @@ class TestEncodingConversion(SoupTest):
-             ascii = b"<foo>a</foo>"
-             soup_from_ascii = self.soup(ascii)
-             unicode_output = soup_from_ascii.decode()
--            self.assertTrue(isinstance(unicode_output, unicode))
-+            self.assertTrue(isinstance(unicode_output, str))
-             self.assertEqual(unicode_output, self.document_for(ascii.decode()))
-             self.assertEqual(soup_from_ascii.original_encoding.lower(), "utf-8")
-         finally:
-@@ -216,7 +244,7 @@ class TestEncodingConversion(SoupTest):
-         # is not set.
-         soup_from_unicode = self.soup(self.unicode_data)
-         self.assertEqual(soup_from_unicode.decode(), self.unicode_data)
--        self.assertEqual(soup_from_unicode.foo.string, u'Sacr\xe9 bleu!')
-+        self.assertEqual(soup_from_unicode.foo.string, 'Sacr\xe9 bleu!')
-         self.assertEqual(soup_from_unicode.original_encoding, None)
- 
-     def test_utf8_in_unicode_out(self):
-@@ -224,7 +252,7 @@ class TestEncodingConversion(SoupTest):
-         # attribute is set.
-         soup_from_utf8 = self.soup(self.utf8_data)
-         self.assertEqual(soup_from_utf8.decode(), self.unicode_data)
--        self.assertEqual(soup_from_utf8.foo.string, u'Sacr\xe9 bleu!')
-+        self.assertEqual(soup_from_utf8.foo.string, 'Sacr\xe9 bleu!')
- 
-     def test_utf8_out(self):
-         # The internal data structures can be encoded as UTF-8.
-@@ -235,14 +263,14 @@ class TestEncodingConversion(SoupTest):
-         PYTHON_2_PRE_2_7 or PYTHON_3_PRE_3_2,
-         "Bad HTMLParser detected; skipping test of non-ASCII characters in attribute name.")
-     def test_attribute_name_containing_unicode_characters(self):
--        markup = u'<div><a \N{SNOWMAN}="snowman"></a></div>'
-+        markup = '<div><a \N{SNOWMAN}="snowman"></a></div>'
-         self.assertEqual(self.soup(markup).div.encode("utf8"), markup.encode("utf8"))
- 
- class TestUnicodeDammit(unittest.TestCase):
-     """Standalone tests of UnicodeDammit."""
- 
-     def test_unicode_input(self):
--        markup = u"I'm already Unicode! \N{SNOWMAN}"
-+        markup = "I'm already Unicode! \N{SNOWMAN}"
-         dammit = UnicodeDammit(markup)
-         self.assertEqual(dammit.unicode_markup, markup)
- 
-@@ -250,7 +278,7 @@ class TestUnicodeDammit(unittest.TestCase):
-         markup = b"<foo>\x91\x92\x93\x94</foo>"
-         dammit = UnicodeDammit(markup)
-         self.assertEqual(
--            dammit.unicode_markup, u"<foo>\u2018\u2019\u201c\u201d</foo>")
-+            dammit.unicode_markup, "<foo>\u2018\u2019\u201c\u201d</foo>")
- 
-     def test_smart_quotes_to_xml_entities(self):
-         markup = b"<foo>\x91\x92\x93\x94</foo>"
-@@ -271,16 +299,17 @@ class TestUnicodeDammit(unittest.TestCase):
-             dammit.unicode_markup, """<foo>''""</foo>""")
- 
-     def test_detect_utf8(self):
--        utf8 = b"\xc3\xa9"
-+        utf8 = b"Sacr\xc3\xa9 bleu! \xe2\x98\x83"
-         dammit = UnicodeDammit(utf8)
--        self.assertEqual(dammit.unicode_markup, u'\xe9')
-         self.assertEqual(dammit.original_encoding.lower(), 'utf-8')
-+        self.assertEqual(dammit.unicode_markup, 'Sacr\xe9 bleu! \N{SNOWMAN}')
-+
- 
-     def test_convert_hebrew(self):
-         hebrew = b"\xed\xe5\xec\xf9"
-         dammit = UnicodeDammit(hebrew, ["iso-8859-8"])
-         self.assertEqual(dammit.original_encoding.lower(), 'iso-8859-8')
--        self.assertEqual(dammit.unicode_markup, u'\u05dd\u05d5\u05dc\u05e9')
-+        self.assertEqual(dammit.unicode_markup, '\u05dd\u05d5\u05dc\u05e9')
- 
-     def test_dont_see_smart_quotes_where_there_are_none(self):
-         utf_8 = b"\343\202\261\343\203\274\343\202\277\343\202\244 Watch"
-@@ -289,16 +318,36 @@ class TestUnicodeDammit(unittest.TestCase):
-         self.assertEqual(dammit.unicode_markup.encode("utf-8"), utf_8)
- 
-     def test_ignore_inappropriate_codecs(self):
--        utf8_data = u"Räksmörgås".encode("utf-8")
-+        utf8_data = "Räksmörgås".encode("utf-8")
-         dammit = UnicodeDammit(utf8_data, ["iso-8859-8"])
-         self.assertEqual(dammit.original_encoding.lower(), 'utf-8')
- 
-     def test_ignore_invalid_codecs(self):
--        utf8_data = u"Räksmörgås".encode("utf-8")
-+        utf8_data = "Räksmörgås".encode("utf-8")
-         for bad_encoding in ['.utf8', '...', 'utF---16.!']:
-             dammit = UnicodeDammit(utf8_data, [bad_encoding])
-             self.assertEqual(dammit.original_encoding.lower(), 'utf-8')
- 
-+    def test_exclude_encodings(self):
-+        # This is UTF-8.
-+        utf8_data = "Räksmörgås".encode("utf-8")
-+
-+        # But if we exclude UTF-8 from consideration, the guess is
-+        # Windows-1252.
-+        dammit = UnicodeDammit(utf8_data, exclude_encodings=["utf-8"])
-+        self.assertEqual(dammit.original_encoding.lower(), 'windows-1252')
-+
-+        # And if we exclude that, there is no valid guess at all.
-+        dammit = UnicodeDammit(
-+            utf8_data, exclude_encodings=["utf-8", "windows-1252"])
-+        self.assertEqual(dammit.original_encoding, None)
-+
-+    def test_encoding_detector_replaces_junk_in_encoding_name_with_replacement_character(self):
-+        detected = EncodingDetector(
-+            b'<?xml version="1.0" encoding="UTF-\xdb" ?>')
-+        encodings = list(detected.encodings)
-+        assert 'utf-\N{REPLACEMENT CHARACTER}' in encodings
-+
-     def test_detect_html5_style_meta_tag(self):
- 
-         for data in (
-@@ -337,7 +386,7 @@ class TestUnicodeDammit(unittest.TestCase):
-             bs4.dammit.chardet_dammit = noop
-             dammit = UnicodeDammit(doc)
-             self.assertEqual(True, dammit.contains_replacement_characters)
--            self.assertTrue(u"\ufffd" in dammit.unicode_markup)
-+            self.assertTrue("\ufffd" in dammit.unicode_markup)
- 
-             soup = BeautifulSoup(doc, "html.parser")
-             self.assertTrue(soup.contains_replacement_characters)
-@@ -349,17 +398,17 @@ class TestUnicodeDammit(unittest.TestCase):
-         # A document written in UTF-16LE will have its byte order marker stripped.
-         data = b'\xff\xfe<\x00a\x00>\x00\xe1\x00\xe9\x00<\x00/\x00a\x00>\x00'
-         dammit = UnicodeDammit(data)
--        self.assertEqual(u"<a>áé</a>", dammit.unicode_markup)
-+        self.assertEqual("<a>áé</a>", dammit.unicode_markup)
-         self.assertEqual("utf-16le", dammit.original_encoding)
- 
-     def test_detwingle(self):
-         # Here's a UTF8 document.
--        utf8 = (u"\N{SNOWMAN}" * 3).encode("utf8")
-+        utf8 = ("\N{SNOWMAN}" * 3).encode("utf8")
- 
-         # Here's a Windows-1252 document.
-         windows_1252 = (
--            u"\N{LEFT DOUBLE QUOTATION MARK}Hi, I like Windows!"
--            u"\N{RIGHT DOUBLE QUOTATION MARK}").encode("windows_1252")
-+            "\N{LEFT DOUBLE QUOTATION MARK}Hi, I like Windows!"
-+            "\N{RIGHT DOUBLE QUOTATION MARK}").encode("windows_1252")
- 
-         # Through some unholy alchemy, they've been stuck together.
-         doc = utf8 + windows_1252 + utf8
-@@ -374,7 +423,7 @@ class TestUnicodeDammit(unittest.TestCase):
- 
-         fixed = UnicodeDammit.detwingle(doc)
-         self.assertEqual(
--            u"☃☃☃“Hi, I like Windows!”☃☃☃", fixed.decode("utf8"))
-+            "☃☃☃“Hi, I like Windows!”☃☃☃", fixed.decode("utf8"))
- 
-     def test_detwingle_ignores_multibyte_characters(self):
-         # Each of these characters has a UTF-8 representation ending
-@@ -382,9 +431,9 @@ class TestUnicodeDammit(unittest.TestCase):
-         # Windows-1252. But our code knows to skip over multibyte
-         # UTF-8 characters, so they'll survive the process unscathed.
-         for tricky_unicode_char in (
--            u"\N{LATIN SMALL LIGATURE OE}", # 2-byte char '\xc5\x93'
--            u"\N{LATIN SUBSCRIPT SMALL LETTER X}", # 3-byte char '\xe2\x82\x93'
--            u"\xf0\x90\x90\x93", # This is a CJK character, not sure which one.
-+            "\N{LATIN SMALL LIGATURE OE}", # 2-byte char '\xc5\x93'
-+            "\N{LATIN SUBSCRIPT SMALL LETTER X}", # 3-byte char '\xe2\x82\x93'
-+            "\xf0\x90\x90\x93", # This is a CJK character, not sure which one.
-             ):
-             input = tricky_unicode_char.encode("utf8")
-             self.assertTrue(input.endswith(b'\x93'))
-diff --git a/lib/bs4/tests/test_tree.py b/lib/bs4/tests/test_tree.py
-index f8515c0..6d3e67f 100644
---- a/lib/bs4/tests/test_tree.py
-+++ b/lib/bs4/tests/test_tree.py
-@@ -9,6 +9,7 @@ same markup, but all Beautiful Soup trees can be traversed with the
- methods tested here.
- """
- 
-+from pdb import set_trace
- import copy
- import pickle
- import re
-@@ -19,8 +20,10 @@ from bs4.builder import (
-     HTMLParserTreeBuilder,
- )
- from bs4.element import (
-+    PY3K,
-     CData,
-     Comment,
-+    Declaration,
-     Doctype,
-     NavigableString,
-     SoupStrainer,
-@@ -67,8 +70,14 @@ class TestFind(TreeTest):
-         self.assertEqual(soup.find("b").string, "2")
- 
-     def test_unicode_text_find(self):
--        soup = self.soup(u'<h1>Räksmörgås</h1>')
--        self.assertEqual(soup.find(text=u'Räksmörgås'), u'Räksmörgås')
-+        soup = self.soup('<h1>Räksmörgås</h1>')
-+        self.assertEqual(soup.find(string='Räksmörgås'), 'Räksmörgås')
-+
-+    def test_unicode_attribute_find(self):
-+        soup = self.soup('<h1 id="Räksmörgås">here it is</h1>')
-+        str(soup)
-+        self.assertEqual("here it is", soup.find(id='Räksmörgås').text)
-+
- 
-     def test_find_everything(self):
-         """Test an optimization that finds all tags."""
-@@ -87,16 +96,17 @@ class TestFindAll(TreeTest):
-         """You can search the tree for text nodes."""
-         soup = self.soup("<html>Foo<b>bar</b>\xbb</html>")
-         # Exact match.
--        self.assertEqual(soup.find_all(text="bar"), [u"bar"])
-+        self.assertEqual(soup.find_all(string="bar"), ["bar"])
-+        self.assertEqual(soup.find_all(text="bar"), ["bar"])
-         # Match any of a number of strings.
-         self.assertEqual(
--            soup.find_all(text=["Foo", "bar"]), [u"Foo", u"bar"])
-+            soup.find_all(text=["Foo", "bar"]), ["Foo", "bar"])
-         # Match a regular expression.
-         self.assertEqual(soup.find_all(text=re.compile('.*')),
--                         [u"Foo", u"bar", u'\xbb'])
-+                         ["Foo", "bar", '\xbb'])
-         # Match anything.
-         self.assertEqual(soup.find_all(text=True),
--                         [u"Foo", u"bar", u'\xbb'])
-+                         ["Foo", "bar", '\xbb'])
- 
-     def test_find_all_limit(self):
-         """You can limit the number of items returned by find_all."""
-@@ -227,8 +237,8 @@ class TestFindAllByAttribute(TreeTest):
-                            ["Matching a.", "Matching b."])
- 
-     def test_find_all_by_utf8_attribute_value(self):
--        peace = u"םולש".encode("utf8")
--        data = u'<a title="םולש"></a>'.encode("utf8")
-+        peace = "םולש".encode("utf8")
-+        data = '<a title="םולש"></a>'.encode("utf8")
-         soup = self.soup(data)
-         self.assertEqual([soup.a], soup.find_all(title=peace))
-         self.assertEqual([soup.a], soup.find_all(title=peace.decode("utf8")))
-@@ -688,7 +698,7 @@ class TestTagCreation(SoupTest):
- 
-     def test_tag_inherits_self_closing_rules_from_builder(self):
-         if XML_BUILDER_PRESENT:
--            xml_soup = BeautifulSoup("", "xml")
-+            xml_soup = BeautifulSoup("", "lxml-xml")
-             xml_br = xml_soup.new_tag("br")
-             xml_p = xml_soup.new_tag("p")
- 
-@@ -697,7 +707,7 @@ class TestTagCreation(SoupTest):
-             self.assertEqual(b"<br/>", xml_br.encode())
-             self.assertEqual(b"<p/>", xml_p.encode())
- 
--        html_soup = BeautifulSoup("", "html")
-+        html_soup = BeautifulSoup("", "html.parser")
-         html_br = html_soup.new_tag("br")
-         html_p = html_soup.new_tag("p")
- 
-@@ -773,6 +783,14 @@ class TestTreeModification(SoupTest):
-         new_a = a.unwrap()
-         self.assertEqual(a, new_a)
- 
-+    def test_replace_with_and_unwrap_give_useful_exception_when_tag_has_no_parent(self):
-+        soup = self.soup("<a><b>Foo</b></a><c>Bar</c>")
-+        a = soup.a
-+        a.extract()
-+        self.assertEqual(None, a.parent)
-+        self.assertRaises(ValueError, a.unwrap)
-+        self.assertRaises(ValueError, a.replace_with, soup.c)
-+
-     def test_replace_tag_with_itself(self):
-         text = "<a><b></b><c>Foo<d></d></c></a><a><e></e></a>"
-         soup = self.soup(text)
-@@ -1067,6 +1085,31 @@ class TestTreeModification(SoupTest):
-         self.assertEqual(foo_2, soup.a.string)
-         self.assertEqual(bar_2, soup.b.string)
- 
-+    def test_extract_multiples_of_same_tag(self):
-+        soup = self.soup("""
-+<html>
-+<head>
-+<script>foo</script>
-+</head>
-+<body>
-+ <script>bar</script>
-+ <a></a>
-+</body>
-+<script>baz</script>
-+</html>""")
-+        [soup.script.extract() for i in soup.find_all("script")]
-+        self.assertEqual("<body>\n\n<a></a>\n</body>", str(soup.body))
-+
-+
-+    def test_extract_works_when_element_is_surrounded_by_identical_strings(self):
-+        soup = self.soup(
-+ '<html>\n'
-+ '<body>hi</body>\n'
-+ '</html>')
-+        soup.find('body').extract()
-+        self.assertEqual(None, soup.find('body'))
-+
-+
-     def test_clear(self):
-         """Tag.clear()"""
-         soup = self.soup("<p><a>String <em>Italicized</em></a> and another</p>")
-@@ -1287,27 +1330,72 @@ class TestPersistence(SoupTest):
- 
-     def test_unicode_pickle(self):
-         # A tree containing Unicode characters can be pickled.
--        html = u"<b>\N{SNOWMAN}</b>"
-+        html = "<b>\N{SNOWMAN}</b>"
-         soup = self.soup(html)
-         dumped = pickle.dumps(soup, pickle.HIGHEST_PROTOCOL)
-         loaded = pickle.loads(dumped)
-         self.assertEqual(loaded.decode(), soup.decode())
- 
-+    def test_copy_navigablestring_is_not_attached_to_tree(self):
-+        html = "<b>Foo<a></a></b><b>Bar</b>"
-+        soup = self.soup(html)
-+        s1 = soup.find(string="Foo")
-+        s2 = copy.copy(s1)
-+        self.assertEqual(s1, s2)
-+        self.assertEqual(None, s2.parent)
-+        self.assertEqual(None, s2.next_element)
-+        self.assertNotEqual(None, s1.next_sibling)
-+        self.assertEqual(None, s2.next_sibling)
-+        self.assertEqual(None, s2.previous_element)
-+
-+    def test_copy_navigablestring_subclass_has_same_type(self):
-+        html = "<b><!--Foo--></b>"
-+        soup = self.soup(html)
-+        s1 = soup.string
-+        s2 = copy.copy(s1)
-+        self.assertEqual(s1, s2)
-+        self.assertTrue(isinstance(s2, Comment))
-+
-+    def test_copy_entire_soup(self):
-+        html = "<div><b>Foo<a></a></b><b>Bar</b></div>end"
-+        soup = self.soup(html)
-+        soup_copy = copy.copy(soup)
-+        self.assertEqual(soup, soup_copy)
-+
-+    def test_copy_tag_copies_contents(self):
-+        html = "<div><b>Foo<a></a></b><b>Bar</b></div>end"
-+        soup = self.soup(html)
-+        div = soup.div
-+        div_copy = copy.copy(div)
-+
-+        # The two tags look the same, and evaluate to equal.
-+        self.assertEqual(str(div), str(div_copy))
-+        self.assertEqual(div, div_copy)
-+
-+        # But they're not the same object.
-+        self.assertFalse(div is div_copy)
-+
-+        # And they don't have the same relation to the parse tree. The
-+        # copy is not associated with a parse tree at all.
-+        self.assertEqual(None, div_copy.parent)
-+        self.assertEqual(None, div_copy.previous_element)
-+        self.assertEqual(None, div_copy.find(string='Bar').next_element)
-+        self.assertNotEqual(None, div.find(string='Bar').next_element)
- 
- class TestSubstitutions(SoupTest):
- 
-     def test_default_formatter_is_minimal(self):
--        markup = u"<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"
-+        markup = "<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"
-         soup = self.soup(markup)
-         decoded = soup.decode(formatter="minimal")
-         # The < is converted back into &lt; but the e-with-acute is left alone.
-         self.assertEqual(
-             decoded,
-             self.document_for(
--                u"<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"))
-+                "<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"))
- 
-     def test_formatter_html(self):
--        markup = u"<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"
-+        markup = "<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"
-         soup = self.soup(markup)
-         decoded = soup.decode(formatter="html")
-         self.assertEqual(
-@@ -1315,49 +1403,49 @@ class TestSubstitutions(SoupTest):
-             self.document_for("<b>&lt;&lt;Sacr&eacute; bleu!&gt;&gt;</b>"))
- 
-     def test_formatter_minimal(self):
--        markup = u"<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"
-+        markup = "<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"
-         soup = self.soup(markup)
-         decoded = soup.decode(formatter="minimal")
-         # The < is converted back into &lt; but the e-with-acute is left alone.
-         self.assertEqual(
-             decoded,
-             self.document_for(
--                u"<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"))
-+                "<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"))
- 
-     def test_formatter_null(self):
--        markup = u"<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"
-+        markup = "<b>&lt;&lt;Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!&gt;&gt;</b>"
-         soup = self.soup(markup)
-         decoded = soup.decode(formatter=None)
-         # Neither the angle brackets nor the e-with-acute are converted.
-         # This is not valid HTML, but it's what the user wanted.
-         self.assertEqual(decoded,
--                          self.document_for(u"<b><<Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!>></b>"))
-+                          self.document_for("<b><<Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!>></b>"))
- 
-     def test_formatter_custom(self):
--        markup = u"<b>&lt;foo&gt;</b><b>bar</b>"
-+        markup = "<b>&lt;foo&gt;</b><b>bar</b>"
-         soup = self.soup(markup)
-         decoded = soup.decode(formatter = lambda x: x.upper())
-         # Instead of normal entity conversion code, the custom
-         # callable is called on every string.
-         self.assertEqual(
-             decoded,
--            self.document_for(u"<b><FOO></b><b>BAR</b>"))
-+            self.document_for("<b><FOO></b><b>BAR</b>"))
- 
-     def test_formatter_is_run_on_attribute_values(self):
--        markup = u'<a href="http://a.com?a=b&c=é">e</a>'
-+        markup = '<a href="http://a.com?a=b&c=é">e</a>'
-         soup = self.soup(markup)
-         a = soup.a
- 
--        expect_minimal = u'<a href="http://a.com?a=b&amp;c=é">e</a>'
-+        expect_minimal = '<a href="http://a.com?a=b&amp;c=é">e</a>'
- 
-         self.assertEqual(expect_minimal, a.decode())
-         self.assertEqual(expect_minimal, a.decode(formatter="minimal"))
- 
--        expect_html = u'<a href="http://a.com?a=b&amp;c=&eacute;">e</a>'
-+        expect_html = '<a href="http://a.com?a=b&amp;c=&eacute;">e</a>'
-         self.assertEqual(expect_html, a.decode(formatter="html"))
- 
-         self.assertEqual(markup, a.decode(formatter=None))
--        expect_upper = u'<a href="HTTP://A.COM?A=B&C=É">E</a>'
-+        expect_upper = '<a href="HTTP://A.COM?A=B&C=É">E</a>'
-         self.assertEqual(expect_upper, a.decode(formatter=lambda x: x.upper()))
- 
-     def test_formatter_skips_script_tag_for_html_documents(self):
-@@ -1366,7 +1454,7 @@ class TestSubstitutions(SoupTest):
-    console.log("< < hey > > ");
-   </script>
- """
--        encoded = BeautifulSoup(doc).encode()
-+        encoded = BeautifulSoup(doc, 'html.parser').encode()
-         self.assertTrue(b"< < hey > >" in encoded)
- 
-     def test_formatter_skips_style_tag_for_html_documents(self):
-@@ -1375,7 +1463,7 @@ class TestSubstitutions(SoupTest):
-    console.log("< < hey > > ");
-   </style>
- """
--        encoded = BeautifulSoup(doc).encode()
-+        encoded = BeautifulSoup(doc, 'html.parser').encode()
-         self.assertTrue(b"< < hey > >" in encoded)
- 
-     def test_prettify_leaves_preformatted_text_alone(self):
-@@ -1383,24 +1471,24 @@ class TestSubstitutions(SoupTest):
-         # Everything outside the <pre> tag is reformatted, but everything
-         # inside is left alone.
-         self.assertEqual(
--            u'<div>\n foo\n <pre>  \tbar\n  \n  </pre>\n baz\n</div>',
-+            '<div>\n foo\n <pre>  \tbar\n  \n  </pre>\n baz\n</div>',
-             soup.div.prettify())
- 
-     def test_prettify_accepts_formatter(self):
--        soup = BeautifulSoup("<html><body>foo</body></html>")
-+        soup = BeautifulSoup("<html><body>foo</body></html>", 'html.parser')
-         pretty = soup.prettify(formatter = lambda x: x.upper())
-         self.assertTrue("FOO" in pretty)
- 
-     def test_prettify_outputs_unicode_by_default(self):
-         soup = self.soup("<a></a>")
--        self.assertEqual(unicode, type(soup.prettify()))
-+        self.assertEqual(str, type(soup.prettify()))
- 
-     def test_prettify_can_encode_data(self):
-         soup = self.soup("<a></a>")
-         self.assertEqual(bytes, type(soup.prettify("utf-8")))
- 
-     def test_html_entity_substitution_off_by_default(self):
--        markup = u"<b>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</b>"
-+        markup = "<b>Sacr\N{LATIN SMALL LETTER E WITH ACUTE} bleu!</b>"
-         soup = self.soup(markup)
-         encoded = soup.b.encode("utf-8")
-         self.assertEqual(encoded, markup.encode('utf-8'))
-@@ -1444,45 +1532,53 @@ class TestEncoding(SoupTest):
-     """Test the ability to encode objects into strings."""
- 
-     def test_unicode_string_can_be_encoded(self):
--        html = u"<b>\N{SNOWMAN}</b>"
-+        html = "<b>\N{SNOWMAN}</b>"
-         soup = self.soup(html)
-         self.assertEqual(soup.b.string.encode("utf-8"),
--                          u"\N{SNOWMAN}".encode("utf-8"))
-+                          "\N{SNOWMAN}".encode("utf-8"))
- 
-     def test_tag_containing_unicode_string_can_be_encoded(self):
--        html = u"<b>\N{SNOWMAN}</b>"
-+        html = "<b>\N{SNOWMAN}</b>"
-         soup = self.soup(html)
-         self.assertEqual(
-             soup.b.encode("utf-8"), html.encode("utf-8"))
- 
-     def test_encoding_substitutes_unrecognized_characters_by_default(self):
--        html = u"<b>\N{SNOWMAN}</b>"
-+        html = "<b>\N{SNOWMAN}</b>"
-         soup = self.soup(html)
-         self.assertEqual(soup.b.encode("ascii"), b"<b>&#9731;</b>")
- 
-     def test_encoding_can_be_made_strict(self):
--        html = u"<b>\N{SNOWMAN}</b>"
-+        html = "<b>\N{SNOWMAN}</b>"
-         soup = self.soup(html)
-         self.assertRaises(
-             UnicodeEncodeError, soup.encode, "ascii", errors="strict")
- 
-     def test_decode_contents(self):
--        html = u"<b>\N{SNOWMAN}</b>"
-+        html = "<b>\N{SNOWMAN}</b>"
-         soup = self.soup(html)
--        self.assertEqual(u"\N{SNOWMAN}", soup.b.decode_contents())
-+        self.assertEqual("\N{SNOWMAN}", soup.b.decode_contents())
- 
-     def test_encode_contents(self):
--        html = u"<b>\N{SNOWMAN}</b>"
-+        html = "<b>\N{SNOWMAN}</b>"
-         soup = self.soup(html)
-         self.assertEqual(
--            u"\N{SNOWMAN}".encode("utf8"), soup.b.encode_contents(
-+            "\N{SNOWMAN}".encode("utf8"), soup.b.encode_contents(
-                 encoding="utf8"))
- 
-     def test_deprecated_renderContents(self):
--        html = u"<b>\N{SNOWMAN}</b>"
-+        html = "<b>\N{SNOWMAN}</b>"
-         soup = self.soup(html)
-         self.assertEqual(
--            u"\N{SNOWMAN}".encode("utf8"), soup.b.renderContents())
-+            "\N{SNOWMAN}".encode("utf8"), soup.b.renderContents())
-+
-+    def test_repr(self):
-+        html = "<b>\N{SNOWMAN}</b>"
-+        soup = self.soup(html)
-+        if PY3K:
-+            self.assertEqual(html, repr(soup))
-+        else:
-+            self.assertEqual(b'<b>\\u2603</b>', repr(soup))
- 
- class TestNavigableStringSubclasses(SoupTest):
- 
-@@ -1522,6 +1618,9 @@ class TestNavigableStringSubclasses(SoupTest):
-         soup.insert(1, doctype)
-         self.assertEqual(soup.encode(), b"<!DOCTYPE foo>\n")
- 
-+    def test_declaration(self):
-+        d = Declaration("foo")
-+        self.assertEqual("<?foo?>", d.output_ready())
- 
- class TestSoupSelector(TreeTest):
- 
-@@ -1534,7 +1633,7 @@ class TestSoupSelector(TreeTest):
- <link rel="stylesheet" href="blah.css" type="text/css" id="l1">
- </head>
- <body>
--
-+<custom-dashed-tag class="dashed" id="dash1">Hello there.</custom-dashed-tag>
- <div id="main" class="fancy">
- <div id="inner">
- <h1 id="header1">An H1</h1>
-@@ -1552,8 +1651,18 @@ class TestSoupSelector(TreeTest):
- <a href="#" id="s2a1">span2a1</a>
- </span>
- <span class="span3"></span>
-+<custom-dashed-tag class="dashed" id="dash2"/>
-+<div data-tag="dashedvalue" id="data1"/>
- </span>
- </div>
-+<x id="xid">
-+<z id="zida"/>
-+<z id="zidab"/>
-+<z id="zidac"/>
-+</x>
-+<y id="yid">
-+<z id="zidb"/>
-+</y>
- <p lang="en" id="lang-en">English</p>
- <p lang="en-gb" id="lang-en-gb">English UK</p>
- <p lang="en-us" id="lang-en-us">English US</p>
-@@ -1565,7 +1674,7 @@ class TestSoupSelector(TreeTest):
- """
- 
-     def setUp(self):
--        self.soup = BeautifulSoup(self.HTML)
-+        self.soup = BeautifulSoup(self.HTML, 'html.parser')
- 
-     def assertSelects(self, selector, expected_ids):
-         el_ids = [el['id'] for el in self.soup.select(selector)]
-@@ -1587,21 +1696,29 @@ class TestSoupSelector(TreeTest):
-         els = self.soup.select('title')
-         self.assertEqual(len(els), 1)
-         self.assertEqual(els[0].name, 'title')
--        self.assertEqual(els[0].contents, [u'The title'])
-+        self.assertEqual(els[0].contents, ['The title'])
- 
-     def test_one_tag_many(self):
-         els = self.soup.select('div')
--        self.assertEqual(len(els), 3)
-+        self.assertEqual(len(els), 4)
-         for div in els:
-             self.assertEqual(div.name, 'div')
- 
-+        el = self.soup.select_one('div')
-+        self.assertEqual('main', el['id'])
-+
-+    def test_select_one_returns_none_if_no_match(self):
-+        match = self.soup.select_one('nonexistenttag')
-+        self.assertEqual(None, match)
-+
-+
-     def test_tag_in_tag_one(self):
-         els = self.soup.select('div div')
--        self.assertSelects('div div', ['inner'])
-+        self.assertSelects('div div', ['inner', 'data1'])
- 
-     def test_tag_in_tag_many(self):
-         for selector in ('html div', 'html body div', 'body div'):
--            self.assertSelects(selector, ['main', 'inner', 'footer'])
-+            self.assertSelects(selector, ['data1', 'main', 'inner', 'footer'])
- 
-     def test_tag_no_match(self):
-         self.assertEqual(len(self.soup.select('del')), 0)
-@@ -1609,6 +1726,20 @@ class TestSoupSelector(TreeTest):
-     def test_invalid_tag(self):
-         self.assertRaises(ValueError, self.soup.select, 'tag%t')
- 
-+    def test_select_dashed_tag_ids(self):
-+        self.assertSelects('custom-dashed-tag', ['dash1', 'dash2'])
-+
-+    def test_select_dashed_by_id(self):
-+        dashed = self.soup.select('custom-dashed-tag[id=\"dash2\"]')
-+        self.assertEqual(dashed[0].name, 'custom-dashed-tag')
-+        self.assertEqual(dashed[0]['id'], 'dash2')
-+
-+    def test_dashed_tag_text(self):
-+        self.assertEqual(self.soup.select('body > custom-dashed-tag')[0].text, 'Hello there.')
-+
-+    def test_select_dashed_matches_find_all(self):
-+        self.assertEqual(self.soup.select('custom-dashed-tag'), self.soup.find_all('custom-dashed-tag'))
-+
-     def test_header_tags(self):
-         self.assertSelectMultiple(
-             ('h1', ['header1']),
-@@ -1709,6 +1840,7 @@ class TestSoupSelector(TreeTest):
-             ('[id^="m"]', ['me', 'main']),
-             ('div[id^="m"]', ['main']),
-             ('a[id^="m"]', ['me']),
-+            ('div[data-tag^="dashed"]', ['data1'])
-         )
- 
-     def test_attribute_endswith(self):
-@@ -1716,8 +1848,8 @@ class TestSoupSelector(TreeTest):
-             ('[href$=".css"]', ['l1']),
-             ('link[href$=".css"]', ['l1']),
-             ('link[id$="1"]', ['l1']),
--            ('[id$="1"]', ['l1', 'p1', 'header1', 's1a1', 's2a1', 's1a2s1']),
--            ('div[id$="1"]', []),
-+            ('[id$="1"]', ['data1', 'l1', 'p1', 'header1', 's1a1', 's2a1', 's1a2s1', 'dash1']),
-+            ('div[id$="1"]', ['data1']),
-             ('[id$="noending"]', []),
-         )
- 
-@@ -1730,7 +1862,6 @@ class TestSoupSelector(TreeTest):
-             ('[rel*="notstyle"]', []),
-             ('link[rel*="notstyle"]', []),
-             ('link[href*="bla"]', ['l1']),
--            ('a[href*="http://"]', ['bob', 'me']),
-             ('[href*="http://"]', ['bob', 'me']),
-             ('[id*="p"]', ['pmulti', 'p1']),
-             ('div[id*="m"]', ['main']),
-@@ -1739,8 +1870,8 @@ class TestSoupSelector(TreeTest):
-             ('[href*=".css"]', ['l1']),
-             ('link[href*=".css"]', ['l1']),
-             ('link[id*="1"]', ['l1']),
--            ('[id*="1"]', ['l1', 'p1', 'header1', 's1a1', 's1a2', 's2a1', 's1a2s1']),
--            ('div[id*="1"]', []),
-+            ('[id*="1"]', ['data1', 'l1', 'p1', 'header1', 's1a1', 's1a2', 's2a1', 's1a2s1', 'dash1']),
-+            ('div[id*="1"]', ['data1']),
-             ('[id*="noending"]', []),
-             # New for this test
-             ('[href*="."]', ['bob', 'me', 'l1']),
-@@ -1748,6 +1879,7 @@ class TestSoupSelector(TreeTest):
-             ('link[href*="."]', ['l1']),
-             ('div[id*="n"]', ['main', 'inner']),
-             ('div[id*="nn"]', ['inner']),
-+            ('div[data-tag*="edval"]', ['data1'])
-         )
- 
-     def test_attribute_exact_or_hypen(self):
-@@ -1767,18 +1899,27 @@ class TestSoupSelector(TreeTest):
-             ('p[class]', ['p1', 'pmulti']),
-             ('[blah]', []),
-             ('p[blah]', []),
-+            ('div[data-tag]', ['data1'])
-         )
- 
-+    def test_unsupported_pseudoclass(self):
-+        self.assertRaises(
-+            NotImplementedError, self.soup.select, "a:no-such-pseudoclass")
-+
-+        self.assertRaises(
-+            NotImplementedError, self.soup.select, "a:nth-of-type(a)")
-+
-+
-     def test_nth_of_type(self):
-         # Try to select first paragraph
-         els = self.soup.select('div#inner p:nth-of-type(1)')
-         self.assertEqual(len(els), 1)
--        self.assertEqual(els[0].string, u'Some text')
-+        self.assertEqual(els[0].string, 'Some text')
- 
-         # Try to select third paragraph
-         els = self.soup.select('div#inner p:nth-of-type(3)')
-         self.assertEqual(len(els), 1)
--        self.assertEqual(els[0].string, u'Another')
-+        self.assertEqual(els[0].string, 'Another')
- 
-         # Try to select (non-existent!) fourth paragraph
-         els = self.soup.select('div#inner p:nth-of-type(4)')
-@@ -1791,7 +1932,7 @@ class TestSoupSelector(TreeTest):
-     def test_nth_of_type_direct_descendant(self):
-         els = self.soup.select('div#inner > p:nth-of-type(1)')
-         self.assertEqual(len(els), 1)
--        self.assertEqual(els[0].string, u'Some text')
-+        self.assertEqual(els[0].string, 'Some text')
- 
-     def test_id_child_selector_nth_of_type(self):
-         self.assertSelects('#inner > p:nth-of-type(2)', ['p1'])
-@@ -1803,7 +1944,7 @@ class TestSoupSelector(TreeTest):
-         selected = inner.select("div")
-         # The <div id="inner"> tag was selected. The <div id="footer">
-         # tag was not.
--        self.assertSelectsIDs(selected, ['inner'])
-+        self.assertSelectsIDs(selected, ['inner', 'data1'])
- 
-     def test_overspecified_child_id(self):
-         self.assertSelects(".fancy #inner", ['inner'])
-@@ -1827,3 +1968,44 @@ class TestSoupSelector(TreeTest):
- 
-     def test_sibling_combinator_wont_select_same_tag_twice(self):
-         self.assertSelects('p[lang] ~ p', ['lang-en-gb', 'lang-en-us', 'lang-fr'])
-+
-+    # Test the selector grouping operator (the comma)
-+    def test_multiple_select(self):
-+        self.assertSelects('x, y', ['xid', 'yid'])
-+
-+    def test_multiple_select_with_no_space(self):
-+        self.assertSelects('x,y', ['xid', 'yid'])
-+
-+    def test_multiple_select_with_more_space(self):
-+        self.assertSelects('x,    y', ['xid', 'yid'])
-+
-+    def test_multiple_select_duplicated(self):
-+        self.assertSelects('x, x', ['xid'])
-+
-+    def test_multiple_select_sibling(self):
-+        self.assertSelects('x, y ~ p[lang=fr]', ['xid', 'lang-fr'])
-+
-+    def test_multiple_select_tag_and_direct_descendant(self):
-+        self.assertSelects('x, y > z', ['xid', 'zidb'])
-+
-+    def test_multiple_select_direct_descendant_and_tags(self):
-+        self.assertSelects('div > x, y, z', ['xid', 'yid', 'zida', 'zidb', 'zidab', 'zidac'])
-+
-+    def test_multiple_select_indirect_descendant(self):
-+        self.assertSelects('div x,y,  z', ['xid', 'yid', 'zida', 'zidb', 'zidab', 'zidac'])
-+
-+    def test_invalid_multiple_select(self):
-+        self.assertRaises(ValueError, self.soup.select, ',x, y')
-+        self.assertRaises(ValueError, self.soup.select, 'x,,y')
-+
-+    def test_multiple_select_attrs(self):
-+        self.assertSelects('p[lang=en], p[lang=en-gb]', ['lang-en', 'lang-en-gb'])
-+
-+    def test_multiple_select_ids(self):
-+        self.assertSelects('x, y > z[id=zida], z[id=zidab], z[id=zidb]', ['xid', 'zidb', 'zidab'])
-+
-+    def test_multiple_select_nested(self):
-+        self.assertSelects('body > div > x, y > z', ['xid', 'zidb'])
-+
-+
-+
 -- 
 2.5.0
 
