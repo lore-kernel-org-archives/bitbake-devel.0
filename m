@@ -1,33 +1,29 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E857774F3
+	by mail.openembedded.org (Postfix) with ESMTP id 9CE527751E
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Jun 2016 10:38:13 +0000 (UTC)
+	Fri,  3 Jun 2016 12:35:37 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u53Ac5hc001790; Fri, 3 Jun 2016 11:38:05 +0100
+	u53CZbBh009650 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 3 Jun 2016 13:35:37 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id HDE5TO19dgJv; Fri,  3 Jun 2016 11:38:05 +0100 (BST)
+	with LMTP id Ko69RUHF5lL6 for <bitbake-devel@lists.openembedded.org>;
+	Fri,  3 Jun 2016 13:35:37 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u53Ac1SH001778
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 3 Jun 2016 11:38:02 +0100
-Message-ID: <1464950281.13979.13.camel@linuxfoundation.org>
+	u53CZWNW009647
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 3 Jun 2016 13:35:33 +0100
+Message-ID: <1464957332.13979.15.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Burton, Ross" <ross.burton@intel.com>, Andrew Bradford
-	<andrew@bradfordembedded.com>
-Date: Fri, 03 Jun 2016 11:38:01 +0100
-In-Reply-To: <CAJTo0LbvONwNTroCJrJ8K1MP1zJ_98g-NrWw7SbNfeOp94nQGA@mail.gmail.com>
-References: <1464205704-26377-1-git-send-email-andrew@bradfordembedded.com>
-	<1464205704-26377-2-git-send-email-andrew@bradfordembedded.com>
-	<CAJTo0LbvONwNTroCJrJ8K1MP1zJ_98g-NrWw7SbNfeOp94nQGA@mail.gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 03 Jun 2016 13:35:32 +0100
 X-Mailer: Evolution 3.16.5-1ubuntu3.1 
 Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Andrew Bradford <andrew.bradford@kodakalaris.com>
-Subject: Re: [PATCH 1/2] perforce fetcher: Rework to support SRCREV and P4CONFIG
+Subject: [PATCH] codeparser: Small optimisation to stop repeated hash() calls
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,19 +36,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Jun 2016 10:38:14 -0000
+X-List-Received-Date: Fri, 03 Jun 2016 12:35:39 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2016-06-03 at 10:47 +0100, Burton, Ross wrote:
-> Master has just landed the Python3 port, so can you rebase this to
-> current git master?
+No functionality change, just avoids function call overhead in a
+function which loops heavily.
 
-I replied to the OE-Core patches and I think that will mean there are
-some changes needed to this patch too so that can all hopefully be
-rolled together in the next version of the patch.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Cheers,
+diff --git a/bitbake/lib/bb/codeparser.py b/bitbake/lib/bb/codeparser.py
+index 00551ba..25938d6 100644
+--- a/bitbake/lib/bb/codeparser.py
++++ b/bitbake/lib/bb/codeparser.py
+@@ -69,9 +69,10 @@ class SetCache(object):
+         for i in items:
+             new.append(sys.intern(i))
+         s = frozenset(new)
+-        if hash(s) in self.setcache:
+-            return self.setcache[hash(s)]
+-        self.setcache[hash(s)] = s
++        h = hash(s)
++        if h in self.setcache:
++            return self.setcache[h]
++        self.setcache[h] = s
+         return s
+ 
+ codecache = SetCache()
 
-Richard
+
 
