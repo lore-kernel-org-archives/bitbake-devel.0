@@ -1,29 +1,47 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id B3A5C77519
+Return-Path: <andrew@bradfordembedded.com>
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com
+	[66.111.4.26])
+	by mail.openembedded.org (Postfix) with ESMTP id DC818774FD
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Jun 2016 12:38:36 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u53CcaQD009908 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 3 Jun 2016 13:38:36 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id QgE3C5hkXoeD for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Jun 2016 13:38:36 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u53CcXkp009904
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 3 Jun 2016 13:38:34 +0100
-Message-ID: <1464957513.13979.16.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 03 Jun 2016 13:38:33 +0100
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: [OE-core] [PATCH] codeparser: Use hashlib for hashing, not hash()
+	Fri,  3 Jun 2016 13:33:06 +0000 (UTC)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+	by mailout.nyi.internal (Postfix) with ESMTP id 51BD8208C1;
+	Fri,  3 Jun 2016 09:33:07 -0400 (EDT)
+Received: from frontend1 ([10.202.2.160])
+	by compute2.internal (MEProxy); Fri, 03 Jun 2016 09:33:07 -0400
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=
+	bradfordembedded.com; h=cc:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to:x-sasl-enc
+	:x-sasl-enc; s=mesmtp; bh=NlJQgVDr4r5zyWNVGe+nm66OAVw=; b=fzmfpE
+	cuSXOFlxHHlh+wKOWLmBmrpDvnf4qCdBkDgfU5p82t9x26bBnOFuC26CGcuwGBAH
+	9ldi1A6JkCqfI9Zu6GGJ4Fegepb94J5MgfbkSmwf4NmGZKsTcXrgiHf6JAFvxuJH
+	vu6QZgjx4eTtgUFVvPSlIuMxFqeIbI3hRXKkM=
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to:x-sasl-enc
+	:x-sasl-enc; s=smtpout; bh=NlJQgVDr4r5zyWNVGe+nm66OAVw=; b=qwtsV
+	vHcb4rMGCkmkaGeehaHKl8+t4NXhpqEl28tCLTLrIHpJAWJlLx8tdF7CXajYfpsI
+	FSK0QUzF2kDJILv+2WWBGN06liJZrWSs0zJEU77jfE8vDj1zcHV367xM5X0nCKH1
+	r0tDCCU2uzMWfiEPxDFbmg8WnHDaie27c6h+go=
+X-Sasl-enc: ulXBql2/MJ7jH2jCSVhhswi7wx8C47XYsaZkkW8jZ4NB 1464960787
+Received: from kaim-eeyore.kodakalaris.net (clr-vpn01.kodakalaris.com
+	[198.140.222.129])
+	by mail.messagingengine.com (Postfix) with ESMTPA id E791BF29F5;
+	Fri,  3 Jun 2016 09:33:06 -0400 (EDT)
+Date: Fri, 3 Jun 2016 09:33:05 -0400
+From: Andrew Bradford <andrew@bradfordembedded.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20160603133305.GA18943@kaim-eeyore.kodakalaris.net>
+References: <1464205704-26377-1-git-send-email-andrew@bradfordembedded.com>
+	<1464205704-26377-2-git-send-email-andrew@bradfordembedded.com>
+	<CAJTo0LbvONwNTroCJrJ8K1MP1zJ_98g-NrWw7SbNfeOp94nQGA@mail.gmail.com>
+	<1464950281.13979.13.camel@linuxfoundation.org>
+MIME-Version: 1.0
+In-Reply-To: <1464950281.13979.13.camel@linuxfoundation.org>
+User-Agent: Mutt/1.6.0 (2016-04-01)
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Andrew Bradford <andrew.bradford@kodakalaris.com>
+Subject: Re: [PATCH 1/2] perforce fetcher: Rework to support SRCREV and P4CONFIG
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,62 +54,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Jun 2016 12:38:37 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 03 Jun 2016 13:33:07 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-"hash() is randomised by default each time you start a new instance of
-recent
-versions (Python3.3+) to prevent dictionary insertion DOS attacks"
+Hi Richard,
 
-which means we need to use hashlib.md5 to get consistent values for
-the codeparser cache under python 3. Prior to this, the codeparser
-cache was effectively useless under python3 as shown by performance
-regressions.
+On 06/03 11:38, Richard Purdie wrote:
+> On Fri, 2016-06-03 at 10:47 +0100, Burton, Ross wrote:
+> > Master has just landed the Python3 port, so can you rebase this to
+> > current git master?
+> 
+> I replied to the OE-Core patches and I think that will mean there are
+> some changes needed to this patch too so that can all hopefully be
+> rolled together in the next version of the patch.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Yes, I have a few changes from your oe-core patch comments and I'll also
+rebase on the python3 changes.  I'll be sending a v2 bitbake patchset
+for the perforce fetcher and documentation changes.
 
-diff --git a/bitbake/lib/bb/codeparser.py
-b/bitbake/lib/bb/codeparser.py
-index b1d067a..00551ba 100644
---- a/bitbake/lib/bb/codeparser.py
-+++ b/bitbake/lib/bb/codeparser.py
-@@ -6,12 +6,16 @@ import pickle
- import bb.pysh as pysh
- import os.path
- import bb.utils, bb.data
-+import hashlib
- from itertools import chain
- from bb.pysh import pyshyacc, pyshlex, sherrors
- from bb.cache import MultiProcessCache
- 
- logger = logging.getLogger('BitBake.CodeParser')
- 
-+def bbhash(s):
-+    return hashlib.md5(s.encode("utf-8")).hexdigest()
-+
- def check_indent(codestr):
-     """If the code is indented, add a top level piece of code to
-'remove' the indentation"""
- 
-@@ -269,7 +273,7 @@ class PythonParser():
-         if not node or not node.strip():
-             return
- 
--        h = hash(str(node))
-+        h = bbhash(str(node))
- 
-         if h in codeparsercache.pythoncache:
-             self.references = set(codeparsercache.pythoncache[h].refs)
-@@ -314,7 +318,7 @@ class ShellParser():
-         commands it executes.
-         """
- 
--        h = hash(str(value))
-+        h = bbhash(str(value))
- 
-         if h in codeparsercache.shellcache:
-             self.execs = set(codeparsercache.shellcache[h].execs)
-
-
+Thanks!
+-Andrew
 
