@@ -1,25 +1,38 @@
-Return-Path: <benjamin.esquivel@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id B0ED6612E5
+Return-Path: <andrew@bradfordembedded.com>
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com
+	[66.111.4.26])
+	by mail.openembedded.org (Postfix) with ESMTP id 9473A607A5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Jun 2016 16:56:31 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga104.fm.intel.com with ESMTP; 08 Jun 2016 09:56:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,440,1459839600"; d="scan'208";a="715990857"
-Received: from besquive-mobl2.zpn.intel.com ([10.219.128.114])
-	by FMSMGA003.fm.intel.com with ESMTP; 08 Jun 2016 09:56:31 -0700
-Message-ID: <1465405026.19191.9.camel@linux.intel.com>
-From: Benjamin Esquivel <benjamin.esquivel@linux.intel.com>
-Reply-To: benjamin.esquivel@linux.intel.com
-To: mariano.lopez@linux.intel.com, bitbake-devel@lists.openembedded.org
-In-Reply-To: <1465302459-38277-1-git-send-email-mariano.lopez@linux.intel.com>
-References: <1465302459-38277-1-git-send-email-mariano.lopez@linux.intel.com>
-Organization: Intel Corporation
-Date: Wed, 08 Jun 2016 11:57:06 -0500
-Mime-Version: 1.0
-X-Mailer: Evolution 3.18.5.2 (3.18.5.2-1.fc23) 
-Subject: Re: [PATCH] lib/bb/main.py: Fix use of BBPOSTCONF and BBPRECONF
+	Thu,  9 Jun 2016 13:44:42 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id B8D7420DE4;
+	Thu,  9 Jun 2016 09:44:42 -0400 (EDT)
+Received: from frontend2 ([10.202.2.161])
+	by compute6.internal (MEProxy); Thu, 09 Jun 2016 09:44:42 -0400
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=
+	bradfordembedded.com; h=cc:date:from:message-id:subject:to
+	:x-sasl-enc:x-sasl-enc; s=mesmtp; bh=ZLX7VeFivgWrnfVtW+SDBWtWmCE
+	=; b=H9taPMjB/Ccii0nxTAoFLREtVvwsz3cyaEePdiLeyJw2+626SZixKMrE3qf
+	vrwjaySz0DbTDhfZs8OgvGHmgmKwC0SpOzqbb4TqAmxLDFNp5UQaPxoya4Qmsc1a
+	H73y5PSjypaEU7CzHy22qeLAKh/tDaM2Scg8/ta6hJb2W94k=
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:date:from:message-id:subject:to
+	:x-sasl-enc:x-sasl-enc; s=smtpout; bh=ZLX7VeFivgWrnfVtW+SDBWtWmC
+	E=; b=k5Ce5yjpsPwPR2j/LHBXeuSmFKWIL4tCWdCvsQv1ggbzmWAy65Uvb8wdU8
+	SSLAoOmbGj2AT8a+ZRW/25jY19fp6Xy7fNVR1zkXFfll9FyPXkIO0m8dXjR/f+8L
+	mOTI5g8Fsn4TWYZJlcyiScVBIVSUO3IVUimw1cufNnrJ2f+O4=
+X-Sasl-enc: lqwV184kCzkQRN8L6EK/c9Ud66JnGAkByHjTXMxADRF0 1465479882
+Received: from kaim-eeyore.kodakalaris.net (clr-vpn01.kodakalaris.com
+	[198.140.222.129])
+	by mail.messagingengine.com (Postfix) with ESMTPA id 00073CCDAC;
+	Thu,  9 Jun 2016 09:44:41 -0400 (EDT)
+From: Andrew Bradford <andrew@bradfordembedded.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  9 Jun 2016 09:44:07 -0400
+Message-Id: <1465479849-28634-1-git-send-email-andrew@bradfordembedded.com>
+X-Mailer: git-send-email 2.8.1
+Cc: Andrew Bradford <andrew.bradford@kodakalaris.com>
+Subject: [PATCH v2 0/2] Enhance and document perforce fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,47 +45,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Jun 2016 16:56:31 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 09 Jun 2016 13:44:43 -0000
 
-Looking good!
+From: Andrew Bradford <andrew.bradford@kodakalaris.com>
 
-On Tue, 2016-06-07 at 12:27 +0000, mariano.lopez@linux.intel.com wrote:
-> From: Mariano Lopez <mariano.lopez@linux.intel.com>
-> 
-> The functionality of BBPOSTCONF and BBPRECONF was added in
-> commit 21b314d4d1e5b8fbeb4cc57006f0a110f0b3aa8f but there
-> was a typo in the variable name that raises an exception
-> in bitbake.
-> 
-> [YOCTO #9235]
-> 
-> Signed-off-by: Mariano Lopez <mariano.lopez@linux.intel.com>
-> ---
->  bitbake/lib/bb/main.py | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-> index b296ef8..283f29b 100755
-> --- a/bitbake/lib/bb/main.py
-> +++ b/bitbake/lib/bb/main.py
-> @@ -281,10 +281,10 @@ class
-> BitBakeConfigParameters(cookerdata.ConfigParameters):
->  
->          # use configuration files from environment variables
->          if "BBPRECONF" in os.environ:
-> -            option.prefile.append(os.environ["BBPRECONF"])
-> +            options.prefile.append(os.environ["BBPRECONF"])
->  
->          if "BBPOSTCONF" in os.environ:
-> -            option.postfile.append(os.environ["BBPOSTCONF"])
-> +            options.postfile.append(os.environ["BBPOSTCONF"])
->  
->          # fill in proper log name if not supplied
->          if options.writeeventlog is not None and
-> len(options.writeeventlog) == 0:
-> -- 
-> 2.6.6
-> 
+Allow the perforce fetcher to act more like the other source control
+fetchers so that it can use AUTOREV and the use of the p4 P4CONFIG
+variable to specify many p4 settings.  Also document these changes and
+how to use this new implementation of the perforce fetcher.
+
+This series depends only on one patch from my oe-core series [1]
+which enables srcrev capability for the perforce fetcher.  The other
+patches in my oe-core series are not required.
+
+[1]: http://patches.openembedded.org/patch/123523/
+
+Changes from v1:
+* Rebase on bitbake python3 changes
+* Enable ability to fetch a single file from perforce, not just
+  directories
+* Slight cleanup of code style
+* Remove some unneeded debug logging
+* Set defaults for P4DIR and FETCHCMD_p4 in fetcher itself, not in
+  oe-core
+* Update documentation as per these changes
+
+
+Andrew Bradford (2):
+  fetch2/perforce: Rework to support SRCREV and P4CONFIG
+  doc: Document use of Perforce fetcher
+
+ .../bitbake-user-manual-fetching.xml               |  68 +++++-
+ .../bitbake-user-manual-ref-variables.xml          |  11 +-
+ lib/bb/fetch2/__init__.py                          |   3 +-
+ lib/bb/fetch2/perforce.py                          | 270 +++++++++++----------
+ 4 files changed, 225 insertions(+), 127 deletions(-)
+
+-- 
+2.8.1
+
 
