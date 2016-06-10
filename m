@@ -1,29 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8D05C60767
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id DCA6A6E688
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jun 2016 22:38:04 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u59Mc4ou017804 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 9 Jun 2016 23:38:04 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ce2IB60JviGM for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jun 2016 23:38:04 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u59Mc1t8017801
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 9 Jun 2016 23:38:02 +0100
-Message-ID: <1465511881.13979.156.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 09 Jun 2016 23:38:01 +0100
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: [PATCH] data_smart/utils: Add 'd' to the context used for better_eval in python expansion
+	Fri, 10 Jun 2016 09:50:07 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga101.fm.intel.com with ESMTP; 10 Jun 2016 02:50:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.26,449,1459839600"; d="scan'208";a="972883710"
+Received: from linux.intel.com ([10.23.219.25])
+	by orsmga001.jf.intel.com with ESMTP; 10 Jun 2016 02:50:08 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
+	by linux.intel.com (Postfix) with ESMTP id 249646A4006;
+	Fri, 10 Jun 2016 03:37:32 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 10 Jun 2016 12:49:54 +0300
+Message-Id: <1465552194-10841-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Cc: Ed Bartosh <eduard.bartosh@intel.com>
+Subject: [PATCH] bitbake: fix wrong usage of format_exc
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,67 +31,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Jun 2016 22:38:06 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 10 Jun 2016 09:50:09 -0000
 
-If a line like:
+From: Ed Bartosh <eduard.bartosh@intel.com>
 
-foo=${@' '.join([d.getVar('D', True) + x for x in (' '.join([d.getVar('FILES_bash-' + p, True) or '' for p in ['lib', 'dev', 'staticdev', 'doc', 'locale', 'ptest']])).split()])}
+First parameter of traceback.format_exc APIs is a 'limit' - a
+number of stracktraces to print.
 
-is added to a function like do_install, it fails with Exception name 'd'
-is not defined. This is due to a change of behaviour in python 3 compared
-to python 2. Generator expressions, dict comprehensions  and set comprehensions
-are executed in a new scope but list comprehensions in python 2.x are not. In
-python 3 they all use a new scope.
+Passing exception object to print_exc or format_exc is incorrect,
+but it works in Python 2 and causes printing only one line of traceback
+as exception object is compared with the integer counter in the
+traceback module code.
 
-To allow these kinds of expressions to work, the easiest approach is
-to add 'd' to the global context. To do this, an extra optional parameter
-is added to better_eval and we use that to add 'd'.
+In Python 3 comparison of integer and exception object throws
+an exception:
+    TypeError: unorderable types: int() < <Exception type>()
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+As format_exc is used in except block of handling another
+exception this can cause hard to find and debug bugs.
 
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 25c412c..f100446 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -135,7 +135,7 @@ class VariableParse:
-                     self.contains[k] = parser.contains[k].copy()
-                 else:
-                     self.contains[k].update(parser.contains[k])
--            value = utils.better_eval(codeobj, DataContext(self.d))
-+            value = utils.better_eval(codeobj, DataContext(self.d), {'d' : self.d})
-             return str(value)
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ lib/bb/ui/uievent.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/bb/ui/uievent.py b/lib/bb/ui/uievent.py
+index ca19166..9542b91 100644
+--- a/lib/bb/ui/uievent.py
++++ b/lib/bb/ui/uievent.py
+@@ -116,7 +116,7 @@ class BBUIEventQueue:
+                 self.server.handle_request()
+             except Exception as e:
+                 import traceback
+-                logger.error("BBUIEventQueue.startCallbackHandler: Exception while trying to handle request: %s\n%s" % (e, traceback.format_exc(e)))
++                logger.error("BBUIEventQueue.startCallbackHandler: Exception while trying to handle request: %s\n%s" % (e, traceback.format_exc()))
  
+         self.server.server_close()
  
-diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index 8f75871..0a1bf68 100644
---- a/bitbake/lib/bb/utils.py
-+++ b/bitbake/lib/bb/utils.py
-@@ -37,6 +37,7 @@ import errno
- import signal
- import ast
- import collections
-+import copy
- from subprocess import getstatusoutput
- from contextlib import contextmanager
- from ctypes import cdll
-@@ -407,8 +408,13 @@ def better_exec(code, context, text = None, realfile = "<code>", pythonexception
- def simple_exec(code, context):
-     exec(code, get_context(), context)
- 
--def better_eval(source, locals):
--    return eval(source, get_context(), locals)
-+def better_eval(source, locals, extraglobals = None):
-+    ctx = get_context()
-+    if extraglobals:
-+        ctx = copy.copy(ctx)
-+        for g in extraglobals:
-+            ctx[g] = extraglobals[g]
-+    return eval(source, ctx, locals)
- 
- @contextmanager
- def fileslocked(files):
-
+-- 
+2.1.4
 
 
