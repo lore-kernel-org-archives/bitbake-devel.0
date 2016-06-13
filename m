@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id C3C776FFCC
+	by mail.openembedded.org (Postfix) with ESMTP id 5A08F6FFCC
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Jun 2016 02:53:13 +0000 (UTC)
+	Mon, 13 Jun 2016 02:53:16 +0000 (UTC)
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by orsmga103.jf.intel.com with ESMTP; 12 Jun 2016 19:53:14 -0700
+	by orsmga103.jf.intel.com with ESMTP; 12 Jun 2016 19:53:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,464,1459839600"; d="scan'208";a="120682999"
+X-IronPort-AV: E=Sophos;i="5.26,464,1459839600"; d="scan'208";a="120683010"
 Received: from ctan5-mobl1.gar.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.255.176.32])
-	by fmsmga004.fm.intel.com with ESMTP; 12 Jun 2016 19:53:14 -0700
+	by fmsmga004.fm.intel.com with ESMTP; 12 Jun 2016 19:53:16 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 13 Jun 2016 14:52:24 +1200
-Message-Id: <a3a4d9ca05e0afba937fd63e92365cb7485af649.1465786269.git.paul.eggleton@linux.intel.com>
+Date: Mon, 13 Jun 2016 14:52:25 +1200
+Message-Id: <787bac60c4724c3b5528d211cc79e97b0d0680d9.1465786269.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.5.5
 In-Reply-To: <cover.1465786269.git.paul.eggleton@linux.intel.com>
 References: <cover.1465786269.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1465786269.git.paul.eggleton@linux.intel.com>
 References: <cover.1465786269.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 08/10] knotty: add quiet output mode
+Subject: [PATCH 09/10] runqueue: add ability to enforce that tasks are setscened
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,192 +32,140 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 13 Jun 2016 02:53:13 -0000
+X-List-Received-Date: Mon, 13 Jun 2016 02:53:16 -0000
 
-Quiet output mode disables printing most messages (below warnings) to
-the console; however these messages still go to the console log file.
-This is primarily for cases where bitbake is being launched
-interactively from some other process, but where full console output is
-not needed.
+Add the ability to enter a mode where only a specified whitelist of
+tasks can be executed outright; everything else must be successfully
+provided in the form of a setscene task (or covered by a setscene task).
+Any setscene failure outside of the whitelist will cause the build to
+fail immediately instead of running the real task, and any real tasks
+that would execute outside of the whitelist cause an immediate build
+failure when it comes to executing the runqueue as well.
 
-Because of the need to keep logging all normal events to the console
-log, this functionality was implemented within the knotty UI rather
-than in bb.msg (where verbose mode is implemented). We don't currently
-have a means of registering command line options from the UI end, thus
-the option actually has to be registered in main.py regardless of the
-UI, however I didn't feel like it was worth setting up such a mechanism
-just for this option.
+The mode is enabled by setting BB_SETSCENE_ENFORCE="1", and the
+whitelist is specified through BB_SETSCENE_ENFORCE_WHITELIST, consisting
+of pn:taskname pairs. A single % character can be substituted for the pn
+value to match any target explicitly specified on the bitbake command
+line. Wildcards * and ? can also be used as per standard unix file name
+matching for both pn and taskname.
+
+Part of the implementation of [YOCTO #9367].
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bb/main.py      |  9 +++++++++
- lib/bb/msg.py       |  5 ++++-
- lib/bb/ui/knotty.py | 57 ++++++++++++++++++++++++++++++-----------------------
- 3 files changed, 45 insertions(+), 26 deletions(-)
+ lib/bb/runqueue.py | 66 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 65 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 283f29b..3fc3ff5 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -179,6 +179,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-         parser.add_option("-D", "--debug", action="count", dest="debug", default=0,
-                           help="Increase the debug level. You can specify this more than once.")
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 376c9f5..c68a3fe 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -224,6 +224,7 @@ class RunQueueData:
  
-+        parser.add_option("-q", "--quiet", action="store_true", dest="quiet", default=False,
-+                          help="Output less log message data to the terminal.")
+         self.stampwhitelist = cfgData.getVar("BB_STAMP_WHITELIST", True) or ""
+         self.multi_provider_whitelist = (cfgData.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
++        self.setscenewhitelist = get_setscene_enforce_whitelist(cfgData)
+ 
+         self.reset()
+ 
+@@ -1629,8 +1630,35 @@ class RunQueueExecuteTasks(RunQueueExecute):
+         Run the tasks in a queue prepared by rqdata.prepare()
+         """
+ 
++        if self.rqdata.setscenewhitelist:
++            # Check tasks that are going to run against the whitelist
++            unexpected = False
++            for taskid in range(len(self.rqdata.runq_fnid)):
++                fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[taskid]]
++                taskname = self.rqdata.runq_task[taskid]
++                # Ignore covered tasks
++                if taskid in self.rq.scenequeue_covered:
++                    continue
++                # Ignore stamped tasks
++                if self.rq.check_stamp_task(taskid, taskname, cache=self.stampcache):
++                    continue
++                # Ignore noexec tasks
++                taskdep = self.rqdata.dataCache.task_deps[fn]
++                if 'noexec' in taskdep and taskname in taskdep['noexec']:
++                    continue
 +
-         parser.add_option("-n", "--dry-run", action="store_true", dest="dry_run", default=False,
-                           help="Don't execute, just go through the motions.")
- 
-@@ -279,6 +282,12 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
- 
-         options, targets = parser.parse_args(argv)
- 
-+        if options.quiet and options.verbose:
-+            parser.error("options --quiet and --verbose are mutually exclusive")
-+
-+        if options.quiet and options.debug:
-+            parser.error("options --quiet and --debug are mutually exclusive")
-+
-         # use configuration files from environment variables
-         if "BBPRECONF" in os.environ:
-             options.prefile.append(os.environ["BBPRECONF"])
-diff --git a/lib/bb/msg.py b/lib/bb/msg.py
-index 8c3ab47..b7c39fa 100644
---- a/lib/bb/msg.py
-+++ b/lib/bb/msg.py
-@@ -182,9 +182,12 @@ def constructLogOptions():
-         debug_domains["BitBake.%s" % domainarg] = logging.DEBUG - dlevel + 1
-     return level, debug_domains
- 
--def addDefaultlogFilter(handler, cls = BBLogFilter):
-+def addDefaultlogFilter(handler, cls = BBLogFilter, forcelevel=None):
-     level, debug_domains = constructLogOptions()
- 
-+    if forcelevel is not None:
-+        level = forcelevel
-+
-     cls(handler, level, debug_domains)
- 
- #
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index c245c22..dbcb9c4 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -161,7 +161,7 @@ class TerminalFilter(object):
-                 cr = (25, 80)
-         return cr
- 
--    def __init__(self, main, helper, console, errconsole, format):
-+    def __init__(self, main, helper, console, errconsole, format, quiet):
-         self.main = main
-         self.helper = helper
-         self.cuu = None
-@@ -169,6 +169,7 @@ class TerminalFilter(object):
-         self.interactive = sys.stdout.isatty()
-         self.footer_present = False
-         self.lastpids = []
-+        self.quiet = quiet
- 
-         if not self.interactive:
-             return
-@@ -267,25 +268,26 @@ class TerminalFilter(object):
-             self.main_progress.update(self.helper.tasknumber_current)
-             print('')
-         lines = 1 + int(len(content) / (self.columns + 1))
--        for tasknum, task in enumerate(tasks[:(self.rows - 2)]):
--            if isinstance(task, tuple):
--                pbar, progress, rate, start_time = task
--                if not pbar.start_time:
--                    pbar.start(False)
--                    if start_time:
--                        pbar.start_time = start_time
--                pbar.setmessage('%s:%s' % (tasknum, pbar.msg.split(':', 1)[1]))
--                if progress > -1:
--                    pbar.setextra(rate)
--                    output = pbar.update(progress)
-+        if not self.quiet:
-+            for tasknum, task in enumerate(tasks[:(self.rows - 2)]):
-+                if isinstance(task, tuple):
-+                    pbar, progress, rate, start_time = task
-+                    if not pbar.start_time:
-+                        pbar.start(False)
-+                        if start_time:
-+                            pbar.start_time = start_time
-+                    pbar.setmessage('%s:%s' % (tasknum, pbar.msg.split(':', 1)[1]))
-+                    if progress > -1:
-+                        pbar.setextra(rate)
-+                        output = pbar.update(progress)
++                pn = self.rqdata.dataCache.pkg_fn[fn]
++                if not check_setscene_enforce_whitelist(pn, taskname, self.rqdata.setscenewhitelist):
++                    unexpected = True
++                    if taskid in self.rqdata.runq_setscene:
++                        logger.error('Task %s.%s attempted to execute unexpectedly and should have been setscened' % (pn, taskname))
 +                    else:
-+                        output = pbar.update(1)
-+                    if not output or (len(output) <= pbar.term_width):
-+                        print('')
-                 else:
--                    output = pbar.update(1)
--                if not output or (len(output) <= pbar.term_width):
--                    print('')
--            else:
--                content = "%s: %s" % (tasknum, task)
--                print(content)
--            lines = lines + 1 + int(len(content) / (self.columns + 1))
-+                    content = "%s: %s" % (tasknum, task)
-+                    print(content)
-+                lines = lines + 1 + int(len(content) / (self.columns + 1))
-         self.footer_present = lines
-         self.lastpids = runningpids[:]
-         self.lastcount = self.helper.tasknumber_current
-@@ -336,7 +338,10 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-     errconsole = logging.StreamHandler(sys.stderr)
-     format_str = "%(levelname)s: %(message)s"
-     format = bb.msg.BBLogFormatter(format_str)
--    bb.msg.addDefaultlogFilter(console, bb.msg.BBLogFilterStdOut)
-+    if params.options.quiet:
-+        bb.msg.addDefaultlogFilter(console, bb.msg.BBLogFilterStdOut, bb.msg.BBLogFormatter.WARNING)
-+    else:
-+        bb.msg.addDefaultlogFilter(console, bb.msg.BBLogFilterStdOut)
-     bb.msg.addDefaultlogFilter(errconsole, bb.msg.BBLogFilterStdErr)
-     console.setFormatter(format)
-     errconsole.setFormatter(format)
-@@ -399,7 +404,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-     warnings = 0
-     taskfailures = []
++                        logger.error('Task %s.%s attempted to execute unexpectedly' % (pn, taskname))
++            if unexpected:
++                self.rq.state = runQueueCleanUp
++                return True
++
+         self.rq.read_workers()
+-        
  
--    termfilter = tf(main, helper, console, errconsole, format)
-+    termfilter = tf(main, helper, console, errconsole, format, params.options.quiet)
-     atexit.register(termfilter.finish)
+         if self.stats.total == 0:
+             # nothing to do
+@@ -1982,6 +2010,16 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         self.scenequeue_covered.add(task)
+         self.scenequeue_updatecounters(task)
  
-     while True:
-@@ -498,8 +503,9 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                     continue
++    def check_taskfail(self, task):
++        if self.rqdata.setscenewhitelist:
++            realtask = self.rqdata.runq_setscene[task]
++            fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
++            pn = self.rqdata.dataCache.pkg_fn[fn]
++            taskname = self.rqdata.runq_task[realtask]
++            if not check_setscene_enforce_whitelist(pn, taskname, self.rqdata.setscenewhitelist):
++                logger.error('Task %s.%s failed' % (pn, taskname + "_setscene"))
++                self.rq.state = runQueueCleanUp
++
+     def task_complete(self, task):
+         self.stats.taskCompleted()
+         bb.event.fire(sceneQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
+@@ -1992,6 +2030,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         bb.event.fire(sceneQueueTaskFailed(task, self.stats, result, self), self.cfgData)
+         self.scenequeue_notcovered.add(task)
+         self.scenequeue_updatecounters(task, True)
++        self.check_taskfail(task)
  
-                 parseprogress.finish()
--                print(("Parsing of %d .bb files complete (%d cached, %d parsed). %d targets, %d skipped, %d masked, %d errors."
--                    % ( event.total, event.cached, event.parsed, event.virtuals, event.skipped, event.masked, event.errors)))
-+                if not params.options.quiet:
-+                    print(("Parsing of %d .bb files complete (%d cached, %d parsed). %d targets, %d skipped, %d masked, %d errors."
-+                        % ( event.total, event.cached, event.parsed, event.virtuals, event.skipped, event.masked, event.errors)))
-                 continue
+     def task_failoutright(self, task):
+         self.runq_running[task] = 1
+@@ -2001,6 +2040,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         index = self.rqdata.runq_setscene[task]
+         self.scenequeue_notcovered.add(task)
+         self.scenequeue_updatecounters(task, True)
++        self.check_taskfail(task)
  
-             if isinstance(event, bb.event.CacheLoadStarted):
-@@ -510,7 +516,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 continue
-             if isinstance(event, bb.event.CacheLoadCompleted):
-                 cacheprogress.finish()
--                print("Loaded %d entries from dependency cache." % event.num_entries)
-+                if not params.options.quiet:
-+                    print("Loaded %d entries from dependency cache." % event.num_entries)
-                 continue
- 
-             if isinstance(event, bb.command.CommandFailed):
-@@ -670,7 +677,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-         if return_value and errors:
-             summary += pluralise("\nSummary: There was %s ERROR message shown, returning a non-zero exit code.",
-                                  "\nSummary: There were %s ERROR messages shown, returning a non-zero exit code.", errors)
--        if summary:
-+        if summary and not params.options.quiet:
-             print(summary)
- 
-         if interrupted:
+     def task_skip(self, task):
+         self.runq_running[task] = 1
+@@ -2282,3 +2322,27 @@ class runQueuePipe():
+         if len(self.queue) > 0:
+             print("Warning, worker left partial message: %s" % self.queue)
+         self.input.close()
++
++def get_setscene_enforce_whitelist(d):
++    if d.getVar('BB_SETSCENE_ENFORCE', True) != '1':
++        return None
++    whitelist = (d.getVar("BB_SETSCENE_ENFORCE_WHITELIST", True) or "").split()
++    outlist = []
++    for item in whitelist[:]:
++        if item.startswith('%:'):
++            for target in sys.argv[1:]:
++                if not target.startswith('-'):
++                    outlist.append(target.split(':')[0] + ':' + item.split(':')[1])
++        else:
++            outlist.append(item)
++    return outlist
++
++def check_setscene_enforce_whitelist(pn, taskname, whitelist):
++    import fnmatch
++    if whitelist:
++        item = '%s:%s' % (pn, taskname)
++        for whitelist_item in whitelist:
++            if fnmatch.fnmatch(item, whitelist_item):
++                return True
++        return False
++    return True
 -- 
 2.5.5
 
