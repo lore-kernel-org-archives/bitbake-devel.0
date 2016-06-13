@@ -1,53 +1,61 @@
-Return-Path: <bartosz@woronicz.com>
-Received: from mail-lf0-f68.google.com (mail-lf0-f68.google.com
-	[209.85.215.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 8694970179
+Return-Path: <otavio.salvador@ossystems.com.br>
+Received: from mail-vk0-f54.google.com (mail-vk0-f54.google.com
+	[209.85.213.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 315656FF3D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Jun 2016 12:16:18 +0000 (UTC)
-Received: by mail-lf0-f68.google.com with SMTP id l184so1261032lfl.1
+	Mon, 13 Jun 2016 13:48:13 +0000 (UTC)
+Received: by mail-vk0-f54.google.com with SMTP id t129so51354236vka.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Jun 2016 05:16:19 -0700 (PDT)
+	Mon, 13 Jun 2016 06:48:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=woronicz.com; s=greetings;
-	h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=kRvFoWwSGjIaggMVLLhpWThZ+JlLmqjO1Y8pbG9UZnA=;
-	b=a8nJN+jNqQXVhpDVsZP9Oa2xJcd+aatRPXwx5uArE2Vc8WxbCoBIFqVliZi/KM8E38
-	/YB0ocff3IH0MAfbTLDccKmWral4euC6xQqAXcGP3+iaOecJ2X6CMChzu+wBhPdKDkH7
-	zA5WxGeGr8dD4bHVJnOOFZQDlMfdX+FUgqPOU=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mastier.pl; s=mastier;
-	h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=kRvFoWwSGjIaggMVLLhpWThZ+JlLmqjO1Y8pbG9UZnA=;
-	b=Qg6dH6DiAt66nrmNrMtHJUpN6t3ejj4cul/lGwGz9cABYy3UPnJSEtP/4p2jznsJqp
-	G6YsI+YIuIeGSEjMAUYPIxtFmM2QZfo2aCR+Gt30Jlz6L89NrYjgvhswluJnQywBuAEe
-	C7jzH57jMZ+SyyZCK0STnJaSiOOal7446A5Ic=
+	d=ossystems-com-br.20150623.gappssmtp.com; s=20150623;
+	h=from:mime-version:in-reply-to:references:date:message-id:subject:to
+	:cc; bh=OPqD6h+EmzXh/burSO7xySSFwlIlDE2BcuR8hCFLhE0=;
+	b=MdlFaBxZVeOhljvY7l76OqpcTcTQMbXJnLiKwYTln4u5usJiGlYsjF2fUSjmlY08H4
+	sLC00XLyAYv+4pUacJ0Mu4dwD9uAyAY04T04WzO0YhktdxyVNgAp+Z76/WzRDt4MBidd
+	Upl60nEDbgioBplueeQWKcH+FN6WS9godRtTaMp8h3XY/bhzcXO3QkSrI+1mx9I2hAHw
+	qk0TcrBZBYPVNfsskcSqERjjWxVIOix2eB+iGfPUdc3FVhbV6RsJLTPM+DMZQq+TwPJB
+	yqTwu8jeLljVwptG80zxdDxJw1H3pnwXLcdsrhY8RY4kpbimU625Q2mKDs1URKeWNsJi
+	BDHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-	:in-reply-to:references;
-	bh=kRvFoWwSGjIaggMVLLhpWThZ+JlLmqjO1Y8pbG9UZnA=;
-	b=IK2PSmlAm8q49dQ9UWTZolLx1DPwR8ylKJLBOKH2r5PIE2tiGSNGtIgefODbrcMhJ8
-	aO59Yem6xNXZ1d28OpZX8EU8qBMYvYy2jhVkLzqrSzRdTKLSOOjEMXyGvrhnn1qBFVDG
-	Nlb3QPyvsvZNeMGkL4DBsoCVjnXqYr1cz9Bynwwl4Sy5KfddSqY/qhPWiCIR0L2rdojg
-	yJ9u/DRTFJ3XQhPhO5UdQZlMOy4GMyXWtIVIcjqdlzFymjuxYpIKaNeba59L6vSFXyBx
-	ud2dYcAR8hJVe+glIRtv0H51n0vZMHozqJiDYngn+ao5LneaCkLilFWyW6ZgqipB4pfo
-	h16Q==
-X-Gm-Message-State: ALyK8tLcQQSPDSk2Pqgf2iMb8yONzo9X2PN0qi9uWgRduxq81x8tQiL9gWZTVjeYp9dowA==
-X-Received: by 10.46.0.159 with SMTP id e31mr3585766lji.54.1465820178611;
-	Mon, 13 Jun 2016 05:16:18 -0700 (PDT)
-Received: from localhost.localdomain (user-94-254-241-90.play-internet.pl.
-	[94.254.241.90]) by smtp.gmail.com with ESMTPSA id
-	f20sm1247607lji.46.2016.06.13.05.16.17
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 13 Jun 2016 05:16:17 -0700 (PDT)
-Sender: Bartosz Woronicz <bartosz@woronicz.com>
-From: Bartosz 'mastier' Woronicz <mastier@mastier.pl>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 13 Jun 2016 14:16:08 +0200
-Message-Id: <1465820168-1657-2-git-send-email-mastier@mastier.pl>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1465820168-1657-1-git-send-email-mastier@mastier.pl>
-References: <1465820168-1657-1-git-send-email-mastier@mastier.pl>
-Subject: [PATCH 2/2] depexp: fix the progressbar
+	h=x-gm-message-state:from:mime-version:in-reply-to:references:date
+	:message-id:subject:to:cc;
+	bh=OPqD6h+EmzXh/burSO7xySSFwlIlDE2BcuR8hCFLhE0=;
+	b=eZ+/G2b0KyFzI5HLjK9TEFEWz7WbqEtX8OQAldyXqXYR1gmEXhYhhHFEgjnQ7Gq7Hx
+	jyKy0vm6P7CcHrr4HLiuYK63uvMAiKYCvY1x6U+CU8N6MHOUBVZ5+zvavgQUbi8iVaim
+	Qqn8LtGKmrZqcwtG8yZPXXNjQmGX1fqBBBBRDAyzfbTj1RrhhfkXdffvKF44pn3MLApP
+	bND+MQEeSy+QfI9rYfLmxJJ9iVBFsJWGqnxdUNbqLVQbv9EISkkTFzRKHYzyc7v72Nkm
+	KkXeHrkk/q7bkum1Zx1+6gWZbRb1UvIKNPBMgtCfWcoD0fHA6sGErGdCK5ZTqUTIkUMP
+	3MLA==
+X-Gm-Message-State: ALyK8tItXue2NMXBUZQuXqQyH5ipqIQ1e+kNWfeLBVoF2Wnb4W+5SCmxXc5TdRIGpRKnZg==
+X-Received: by 10.159.33.3 with SMTP id 3mr5006486uab.96.1465825693917;
+	Mon, 13 Jun 2016 06:48:13 -0700 (PDT)
+Received: from mail-vk0-f47.google.com (mail-vk0-f47.google.com.
+	[209.85.213.47])
+	by smtp.gmail.com with ESMTPSA id t64sm3992794vka.4.2016.06.13.06.48.12
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 13 Jun 2016 06:48:12 -0700 (PDT)
+From: Otavio Salvador <otavio.salvador@ossystems.com.br>
+X-Google-Original-From: Otavio Salvador <otavio@ossystems.com.br>
+Received: by mail-vk0-f47.google.com with SMTP id u64so67880224vkf.3;
+	Mon, 13 Jun 2016 06:48:12 -0700 (PDT)
+X-Received: by 10.176.7.102 with SMTP id h93mr5131563uah.70.1465825691961;
+	Mon, 13 Jun 2016 06:48:11 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.31.189.21 with HTTP; Mon, 13 Jun 2016 06:48:11 -0700 (PDT)
+In-Reply-To: <1465575223.13979.188.camel@linuxfoundation.org>
+References: <1465572809.13979.185.camel@linuxfoundation.org>
+	<20160610160710.GA18625@openSUSE-i7.site>
+	<1465575223.13979.188.camel@linuxfoundation.org>
+Date: Mon, 13 Jun 2016 10:48:11 -0300
+X-Gmail-Original-Message-ID: <CAP9ODKrXpD1RC2AVxqszvkM3MZsQ-1dU=BNO4DNzGgCg8k+avw@mail.gmail.com>
+Message-ID: <CAP9ODKrXpD1RC2AVxqszvkM3MZsQ-1dU=BNO4DNzGgCg8k+avw@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: openembedded-architecture
+	<openembedded-architecture@lists.openembedded.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [Openembedded-architecture] Multi-configuration builds
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,67 +68,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 13 Jun 2016 12:16:21 -0000
+X-List-Received-Date: Mon, 13 Jun 2016 13:48:16 -0000
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Bartosz 'mastier' Woronicz <mastier@mastier.pl>
----
- bitbake/lib/bb/ui/depexp.py | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+On Fri, Jun 10, 2016 at 1:13 PM, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> On Fri, 2016-06-10 at 12:07 -0400, Trevor Woerner wrote:
+>> On Fri 2016-06-10 @ 04:33:29 PM, Richard Purdie wrote:
+>> > A few people have asked about multi-machine builds.
+>>
+>> Do you envision each config also pointing to individual bblayer
+>> configurations
+>> too? I.e. if I'm building for 3 different MACHINEs, with 3 different
+>> configs
+>> (local.conf?), then there would also be 3 different bblayers.conf's?
+>
+>
+> No, there is one local.conf and one bblayers.conf file and then three
+> different multiconfig files, each one of which sets a different
+> MACHINE.
+>
+> Would people really want to support different bblayer files? That would
+> complicate things quite a lot :/.
 
-diff --git a/bitbake/lib/bb/ui/depexp.py b/bitbake/lib/bb/ui/depexp.py
-index 6a6bfd5..2903e43 100644
---- a/bitbake/lib/bb/ui/depexp.py
-+++ b/bitbake/lib/bb/ui/depexp.py
-@@ -264,7 +264,6 @@ def main(server, eventHandler, params):
-                 continue
- 
-             if isinstance(event, bb.event.CacheLoadCompleted):
--                bardialog.hide()
-                 continue
- 
-             if isinstance(event, bb.event.ParseStarted):
-@@ -274,7 +273,6 @@ def main(server, eventHandler, params):
-                 gtk.gdk.threads_enter()
-                 pbar.update(0)
-                 bardialog.set_title("Processing recipes")
--
-                 gtk.gdk.threads_leave()
- 
-             if isinstance(event, bb.event.ParseProgress):
-@@ -286,13 +284,31 @@ def main(server, eventHandler, params):
-                 continue
- 
-             if isinstance(event, bb.event.ParseCompleted):
--                bardialog.hide()
-+                continue
-+
-+            if isinstance(event, bb.event.TreeDataPreparationStarted):
-+                gtk.gdk.threads_enter()
-+                pbar.update(0)
-+                bardialog.set_title("Processing tree data")
-+                gtk.gdk.threads_leave()
-+                continue
-+
-+            if isinstance(event, bb.event.TreeDataPreparationProgress):
-+                x = event.current
-+                gtk.gdk.threads_enter()
-+                pbar.update(x * 1.0 / event.total)
-+                pbar.set_title('')
-+                gtk.gdk.threads_leave()
-+                continue
-+
-+            if isinstance(event, bb.event.TreeDataPreparationCompleted):
-                 continue
- 
-             if isinstance(event, bb.event.DepTreeGenerated):
-                 gtk.gdk.threads_enter()
-                 dep.parse(event._depgraph)
-                 gtk.gdk.threads_leave()
-+                bardialog.hide()
- 
-             if isinstance(event, bb.command.CommandCompleted):
-                 continue
+The multi configuration should imply same metadata setup; for
+different things people need to use different builddirs.
+
+My $ 0.02c
+
 -- 
-2.7.4
-
+Otavio Salvador                             O.S. Systems
+http://www.ossystems.com.br        http://code.ossystems.com.br
+Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
 
