@@ -1,52 +1,48 @@
-Return-Path: <Sandeep_Nair2@cable.comcast.com>
-X-Greylist: delayed 901 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 14 Jun 2016 19:00:01 UTC
-Received: from pacdcmhout01.cable.comcast.com (PACDCMHOUT01.cable.comcast.com
-	[68.87.31.167])
-	by mail.openembedded.org (Postfix) with ESMTP id 5DDA9607A5
+Return-Path: <kergoth@gmail.com>
+Received: from mail-it0-f67.google.com (mail-it0-f67.google.com
+	[209.85.214.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 5C8586612C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jun 2016 19:00:01 +0000 (UTC)
-X-AuditID: 44571fa7-e8fff70000008495-84-576050ac5931
-Received: from PACDCEX33.cable.comcast.com
-	(cas-umc02.ndceast.pa.bo.comcast.net [68.87.34.28])
-	(using TLS with cipher AES256-SHA256 (256/256 bits))
-	(Client did not present a certificate)
-	by  (SMTP Gateway) with SMTP id 18.BD.33941.CA050675;
-	Tue, 14 Jun 2016 14:45:00 -0400 (EDT)
-Received: from PACDCEX33.cable.comcast.com (24.40.2.132) by
-	PACDCEX33.cable.comcast.com (24.40.2.132) with Microsoft SMTP Server
-	(TLS) id 15.0.1130.7; Tue, 14 Jun 2016 14:44:59 -0400
-Received: from PACDCEX33.cable.comcast.com ([fe80::3aea:a7ff:fe36:8984]) by
-	PACDCEX33.cable.comcast.com ([fe80::3aea:a7ff:fe36:8984%19]) with mapi
-	id 15.00.1130.005; Tue, 14 Jun 2016 14:44:59 -0400
-From: "Nair, Sandeep (Contractor)" <Sandeep_Nair2@cable.comcast.com>
-To: Christopher Larson <clarson@kergoth.com>
-Thread-Topic: [bitbake-devel] Random Bitbake build failures
-Thread-Index: AQHRvqtRVKouOpSMoUuGOn8aRRSGS5/pTgRw
-Date: Tue, 14 Jun 2016 18:44:59 +0000
-Message-ID: <6ba89ed1550846468db3183a33ec1435@PACDCEX33.cable.comcast.com>
+	Tue, 14 Jun 2016 19:00:57 +0000 (UTC)
+Received: by mail-it0-f67.google.com with SMTP id d71so407723ith.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 14 Jun 2016 12:00:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=1S7QWMZKWC5uRIvaeQSlV7M8yMgpRZT90gb0jhsFEAA=;
+	b=zm6xQJPJg2AXDVdUw+nvFbeJGvoMNWTgC6sJhkBJsSpNx8DvQhyXxRatwFOzJvlyt+
+	TZbfzIbymZTXInD2JCpTydAZNUiWbn+ibv/SLQpktJlZG0qw7fjJOQSTCLL/bBdFYJXx
+	JNanQ5o+LoFQZctV76y+7SSKZ1tSpCiKF/3iGAIJc5MkgTRRfbs5jj5Rsi+9xzVuCqdK
+	ZZVe+eWphlWqOskgNVLLy2NJsKncdoVR9obdEflYoqfgZUxxENe4jkg7O2iXOyA3A4wh
+	aBiwls2yL8EYyoFhBuR60nzPrgs1S0wj6NfLe3+935QP9xCHg4MRxpyG04E7NQ4QZDpL
+	04Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc;
+	bh=1S7QWMZKWC5uRIvaeQSlV7M8yMgpRZT90gb0jhsFEAA=;
+	b=OyVP5/oaJOQe92olCb/kcSd8HotSfElyVQjEM2r7YepxM6TTRPz13ieuBa3KTsQ3Kw
+	eb25xmUiiKe9AsU7qxZKGGFNspDDdi8isXaU/+aOhtbeRH8rrHEs2hBP2hmo5D8CqxDB
+	RYQgbKGmjAuhL5/M4xjD1myBhI92M8gLLnIsq+AnKAJZ8GDirKC1u3+r6AL15kOvkeJZ
+	hEPQygxRownKDUe4hcJIw7A7FeEyqh6r8LcVDR6Hpw9hkFTCFe2xGsKLJ2U1+w2AWmLp
+	Q6Ah3dKNlJwO0MHJ/USlFIV6ClIGb1c786bA9EETHdSkQviOx2xk8pOp2j6VLw4Rqd8A
+	uQMw==
+X-Gm-Message-State: ALyK8tIL5osqYkRzgQpt7poSV8m8DSS+sFmg3AfJ8YaraX1ddkJExcBGqhKRQQSy3os6CJVj9Pnc/iV4ur8lBQ==
+X-Received: by 10.36.53.145 with SMTP id k139mr11174174ita.66.1465930858215;
+	Tue, 14 Jun 2016 12:00:58 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.79.130.66 with HTTP; Tue, 14 Jun 2016 12:00:38 -0700 (PDT)
+In-Reply-To: <6ba89ed1550846468db3183a33ec1435@PACDCEX33.cable.comcast.com>
 References: <9547b470c88646879f86e63f4371ad71@VAADCEX01.cable.comcast.com>
 	<CABcZANmO0ymS8uUFq-GRdwi4LHm+aKwLjWRSfnafqYytNKGmOw@mail.gmail.com>
-In-Reply-To: <CABcZANmO0ymS8uUFq-GRdwi4LHm+aKwLjWRSfnafqYytNKGmOw@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [68.87.29.8]
-MIME-Version: 1.0
-X-CFilter-Loop: Forward
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsXiEq4ko7smICHc4EivmcX1o6EW7dv/sTow
-	eRw+tIDF49zGFYwBTFFcNimpOZllqUX6dglcGcvebWcumDSBseL+T+8GxiU9jF2MnBwSAiYS
-	p/d2s3cxcnEICcxhkph9YAaUs4tR4saLBiYI5ySjxO5j69hBWtgEXCR2r2oEs0UEdCQmzToF
-	NopZIFhi+fL5bCC2sICVxOqzU1khaqwletZ/YYawjSSmnJkHVs8ioCpxquMRmM0r4CWx9d8+
-	FohlExklVj98DdbMKRAo0fDrLQuIzSggJvH91BomiGXiEreezGeC+EFAYsme88wQtqjEy8f/
-	WCFsA4mtS/exQNhyEj07WqEOzZf42z2LCWKxoMTJmU+gasQlDh/ZwTqBUXwWkhWzkLTMQtIy
-	i5EDKK4psX6XPkSJosSU7ofsELaGROucuezI4gsY2VcxyhUkJqck52bkl5YYGOolJyblpOol
-	5+cmJxaXgOhNjOColV++g/HeC6dDjAIcjEo8vJ+dEsKFWBPLiitzDzFKcDArifA+8wUK8aYk
-	VlalFuXHF5XmpBYfYpTmYFES5301KSZcSCA9sSQ1OzW1ILUIJsvEwSnVwJi3oYu9U/XUsivl
-	s9iZlky+KnD21NX8luCSnAPC7ozKvqe7pSZfmVa5cH3x2yM5wmtUZzA1Lps88dmVBY3s7ckr
-	bjYaq/4pqpwXGdR47XRZ4bKp2RPXyF+JsH9+5X3WgfcXr+ktN0/oCXBu0hM/9URL9bBa1Irn
-	DxdkB7nJrzl49G323oxwOxslluKMREMt5qLiRADRwkCj1gIAAA==
+	<6ba89ed1550846468db3183a33ec1435@PACDCEX33.cable.comcast.com>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Tue, 14 Jun 2016 12:00:38 -0700
+X-Google-Sender-Auth: lk7GiHUrXJ6a70dMghE2KjfOymE
+Message-ID: <CABcZANkPNCXaxk-5WMWPgdEqWB9jodo0PpMUV_Gk4TRybk6UhA@mail.gmail.com>
+To: "Nair, Sandeep (Contractor)" <Sandeep_Nair2@cable.comcast.com>
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
 Subject: Re: Random Bitbake build failures
@@ -62,252 +58,111 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Jun 2016 19:00:02 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_6ba89ed1550846468db3183a33ec1435PACDCEX33cablecomcastco_"
+X-List-Received-Date: Tue, 14 Jun 2016 19:00:58 -0000
+Content-Type: multipart/alternative; boundary=001a114a93d811bebe053541a0e4
 
---_000_6ba89ed1550846468db3183a33ec1435PACDCEX33cablecomcastco_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+--001a114a93d811bebe053541a0e4
+Content-Type: text/plain; charset=UTF-8
 
-SGkgQ2hyaXN0b3BoZXIsDQoNClRoYW5rcyBmb3IgdGhlIGRldGFpbHMuIFBsZWFzZSBmaW5kIHRo
-ZSBhZGRpdGlvbmFsIGRldGFpbHMgYmFzZWQgb24geW91ciBmZWVkYmFjaw0KDQo+PnJlbW90ZSBz
-aWRlPyBiaXRiYWtlIGJ1aWxkcyBoYXZlIG5ldmVyIGJlZW4gc3VwcG9ydGVkIG9uIG5mcy4NCg0K
-V2UgbW91bnQgcmVtb3RlIGZvbGRlcnMgYW5kIGJpdGJha2Ugc2VlcyB0aGVzZSBhcyBhIHJlZ3Vs
-YXIgZm9sZGVyLiBTaW5jZSB0aGlzIGNhbiBiZSB0cmVhdGVkIGFzIGEgcmVndWxhciBmb2xkZXIs
-IHdlIG1heSBub3QgbmVlZCBuZnMgc3VwcG9ydCBpbiBiaXRiYWtlLg0KDQo+PiBCdXQgeWVzLCBn
-ZW5lcmFsbHkgdGhlIHJlYWwgdGFzayBydW5zIGlmIHRoZSBzZXRzY2VuZSBmYWlscy4NCg0KV2Ug
-ZG8gdGhlIHJlYWwgdGFzayB3aGVuIHNzdGF0ZSBjYWNoZSBmZXRjaCBmYWlscyBhbmQgd2UgYXJl
-IHRyeWluZyB0byBpZGVudGlmeSB0aGUgcmVhc29uIHdoeSBiaXRiYWtlIHJldHVybnMgMSAod2hp
-Y2ggaGFwcGVucyB3aGVuIGVycm9yIGNvdW50ICE9IDApIGV2ZW4gd2hlbiByZWFsIHRhc2sgc3Vj
-Y2VlZHMuICBXZSBzZWUgdGhhdCBCaXRiYWtlIHJldHVybnMgMSBpbiB0aGlzIGNhc2Ugd2hpY2gg
-Y2F1c2VzIHJhbmRvbSBidWlsZCBmYWlsdXJlIGV2ZW4gd2hlbiB0aGUgcmVhbCB0YXNrIHdhcyBw
-ZXJmb3JtZWQgc3VjY2Vzc2Z1bGx5Lg0KDQpUaGFua3MsDQpTYW5kZWVwDQoNCg0KRnJvbToga2Vy
-Z290aEBnbWFpbC5jb20gW21haWx0bzprZXJnb3RoQGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIENo
-cmlzdG9waGVyIExhcnNvbg0KU2VudDogU2F0dXJkYXksIEp1bmUgMDQsIDIwMTYgNTo1MiBQTQ0K
-VG86IE5haXIsIFNhbmRlZXAgKENvbnRyYWN0b3IpIDxTYW5kZWVwX05haXIyQGNhYmxlLmNvbWNh
-c3QuY29tPg0KQ2M6IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVj
-dDogUmU6IFtiaXRiYWtlLWRldmVsXSBSYW5kb20gQml0YmFrZSBidWlsZCBmYWlsdXJlcw0KDQoN
-Ck9uIFNhdCwgSnVuIDQsIDIwMTYgYXQgMTE6MDkgQU0sIE5haXIsIFNhbmRlZXAgKENvbnRyYWN0
-b3IpIDxTYW5kZWVwX05haXIyQGNhYmxlLmNvbWNhc3QuY29tPG1haWx0bzpTYW5kZWVwX05haXIy
-QGNhYmxlLmNvbWNhc3QuY29tPj4gd3JvdGU6DQpXZSBhcmUgZmFjaW5nIHJhbmRvbSBmYWlsdXJl
-cyB3aXRoIEJpdGJha2UgYnVpbGRzLiBCaXRiYWtlIGlzIHJldHVybmluZyBhbiBlcnJvciBldmVu
-IHdoZW4gdGhlIG9wZXJhdGlvbiBzdWNjZWVkZWQgb24gdGhlIHN1Y2Nlc3NmdWwgcmV0cnkuDQoN
-CkVnOg0KDQpFUlJPUjogRXJyb3IgZXhlY3V0aW5nIGEgcHl0aG9uIGZ1bmN0aW9uIGluIC9tbnQv
-amVua2lucy93b3Jrc3BhY2UvUEFDRVhJM1YyLVlvY3RvLUJ1aWxkL21ldGEtcmRrLWNvbWNhc3Qv
-cmVjaXBlcy1leHRlbmRlZC9uZXR6eW4vbmV0enluX2dpdC5iYjxodHRwOi8vbmV0enluX2dpdC5i
-Yj46DQpFeGNlcHRpb246IElPRXJyb3I6IFtFcnJubyAxMTZdIFN0YWxlIGZpbGUgaGFuZGxlDQoN
-CldBUk5JTkc6IExvZ2ZpbGUgZm9yIGZhaWxlZCBzZXRzY2VuZSB0YXNrIGlzIC9tbnQvamVua2lu
-cy93b3Jrc3BhY2UvUEFDRVhJM1YyLVlvY3RvLUJ1aWxkL2J1aWxkLXBhY2V4aTN2Mi90bXAvd29y
-ay9taXBzMzJlbC1yZGstbGludXgvbmV0enluLzEuOTkrZ2l0QVVUT0lOQytjMzc1MmNhMDM4X2M3
-MDY4OTY3YTEtcjAvdGVtcC9sb2cuZG9fcGFja2FnZV9zZXRzY2VuZS44OTQ2DQpXQVJOSU5HOiBT
-ZXRzY2VuZSB0YXNrIDEyNzcgKC9tbnQvamVua2lucy93b3Jrc3BhY2UvUEFDRVhJM1YyLVlvY3Rv
-LUJ1aWxkL21ldGEtcmRrLWNvbWNhc3QvcmVjaXBlcy1leHRlbmRlZC9uZXR6eW4vbmV0enluX2dp
-dC5iYjxodHRwOi8vbmV0enluX2dpdC5iYj4sIGRvX3BhY2thZ2Vfc2V0c2NlbmUpIGZhaWxlZCB3
-aXRoIGV4aXQgY29kZSAnMScgLSByZWFsIHRhc2sgd2lsbCBiZSBydW4gaW5zdGVhZA0KDQrigJxT
-ZXRzY2VuZeKAnSBpcyBhIGJiIGF0dGVtcHQgdG8gdXNlIHNzdGF0ZSBjYWNoZS4NCg0KSXQgc2F5
-cyBhYm91dCByZWFsIHRhc2sgd2lsbCBydW4gaW5zdGVhZC4gRG9lcyB0aGF0IG1lYW4gaXQgdHJp
-ZWQgYnVpbGQgbG9jYWxseSAoaXQgc2hvdWxkKT8NCg0KSW4gYWxsIHN0YWxlIGNhc2VzIGl0IGZh
-aWxzIGluIHRoaXMgY29kZToNCg0KRmlsZTog4oCY4oCmLi9vcGVuZW1iZWRkZWQtY29yZS9iaXRi
-YWtlL2xpYi9iYi91dGlscy5weScsIGxpbmVubzogNDY3LCBmdW5jdGlvbjogbWQ1X2ZpbGUNCiAg
-ICAgMDQ2MzogICAgICAgIGltcG9ydCBtZDUNCiAgICAgMDQ2NDogICAgICAgIG0gPSBtZDUubmV3
-KCkNCiAgICAgMDQ2NToNCiAgICAgMDQ2NjogICAgd2l0aCBvcGVuKGZpbGVuYW1lLCAicmIiKSBh
-cyBmOg0KKioqIDA0Njc6ICAgICAgICBmb3IgbGluZSBpbiBmOg0KICAgICAwNDY4OiAgICAgICAg
-ICAgIG0udXBkYXRlKGxpbmUpDQogICAgIDA0Njk6ICAgIHJldHVybiBtLmhleGRpZ2VzdCgpDQog
-ICAgIDA0NzA6DQoNCkFzIGNhbiBiZSBzZWVuIGl0IHRyaWVzIHVzZSBoYW5kbGUgaXQgd2FzIGdp
-dmVuIGJ1dCB0aGUgZmlsZSBpcyBub3QgdmFsaWQgb24gcmVtb3RlIHNpZGUgYWxyZWFkeS4gU28g
-c3lzdGVtIGxpYiByZXR1cm5zIHN0YWxlIGhhbmRsZS4NCg0KcmVtb3RlIHNpZGU/IGJpdGJha2Ug
-YnVpbGRzIGhhdmUgbmV2ZXIgYmVlbiBzdXBwb3J0ZWQgb24gbmZzLiBCdXQgeWVzLCBnZW5lcmFs
-bHkgdGhlIHJlYWwgdGFzayBydW5zIGlmIHRoZSBzZXRzY2VuZSBmYWlscy4NCi0tDQpDaHJpc3Rv
-cGhlciBMYXJzb24NCmNsYXJzb24gYXQga2VyZ290aCBkb3QgY29tDQpGb3VuZGVyIC0gQml0QmFr
-ZSwgT3BlbkVtYmVkZGVkLCBPcGVuWmF1cnVzDQpNYWludGFpbmVyIC0gVHNsaWINClNlbmlvciBT
-b2Z0d2FyZSBFbmdpbmVlciwgTWVudG9yIEdyYXBoaWNzDQo=
+On Tue, Jun 14, 2016 at 11:44 AM, Nair, Sandeep (Contractor) <
+Sandeep_Nair2@cable.comcast.com> wrote:
 
---_000_6ba89ed1550846468db3183a33ec1435PACDCEX33cablecomcastco_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+> Thanks for the details. Please find the additional details based on your
+> feedback
+>
+>
+>
+> >>remote side? bitbake builds have never been supported on nfs.
+>
+>
+>
+> We mount remote folders and bitbake sees these as a regular folder. Since
+> this can be treated as a regular folder, we may not need nfs support in
+> bitbake.
+>
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9
-DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglj
-b2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
-Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpw
-dXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUxNw0K
-CXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1yZXBseTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIs
-c2Fucy1zZXJpZjsNCgljb2xvcjojMUY0OTdEO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHls
-ZS10eXBlOmV4cG9ydC1vbmx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30N
-CkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjguNWluIDExLjBpbjsNCgltYXJnaW46MS4waW4g
-MS4waW4gMS4waW4gMS4waW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9u
-MTt9DQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0
-cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1b
-aWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRt
-YXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5k
-aWZdLS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1
-cnBsZSI+DQo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
-dW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPkhpIENocmlzdG9waGVyLDxvOnA+PC9vOnA+
-PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
-MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjoj
-MUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJp
-JnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+VGhhbmtzIGZvciB0aGUgZGV0YWlscy4g
-UGxlYXNlIGZpbmQgdGhlIGFkZGl0aW9uYWwgZGV0YWlscyBiYXNlZCBvbiB5b3VyIGZlZWRiYWNr
-PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
-L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mZ3Q7Jmd0O3JlbW90ZSBzaWRlPyBiaXRi
-YWtlIGJ1aWxkcyBoYXZlIG5ldmVyIGJlZW4gc3VwcG9ydGVkIG9uIG5mcy48c3BhbiBzdHlsZT0i
-Zm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2Vy
-aWY7Y29sb3I6IzFGNDk3RCI+Jm5ic3A7DQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTom
-cXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQt
-c2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2Nv
-bG9yOiMxRjQ5N0QiPldlIG1vdW50IHJlbW90ZSBmb2xkZXJzIGFuZCBiaXRiYWtlIHNlZXMgdGhl
-c2UgYXMgYSByZWd1bGFyIGZvbGRlci4gU2luY2UgdGhpcyBjYW4gYmUgdHJlYXRlZCBhcyBhIHJl
-Z3VsYXIgZm9sZGVyLCB3ZSBtYXkgbm90IG5lZWQgbmZzIHN1cHBvcnQgaW4gYml0YmFrZS48bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9u
-dC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7
-Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+Jmd0OyZndDsgQnV0IHllcywgZ2VuZXJhbGx5IHRoZSByZWFsIHRhc2sgcnVucyBp
-ZiB0aGUgc2V0c2NlbmUgZmFpbHMuPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1z
-ZXJpZjtjb2xvcjojMUY0OTdEIj5XZSBkbyB0aGUgcmVhbCB0YXNrIHdoZW4gc3N0YXRlIGNhY2hl
-IGZldGNoIGZhaWxzIGFuZCB3ZSBhcmUgdHJ5aW5nIHRvIGlkZW50aWZ5IHRoZSByZWFzb24gd2h5
-IGJpdGJha2UgcmV0dXJucyAxICh3aGljaCBoYXBwZW5zIHdoZW4gZXJyb3IgY291bnQgIT0gMCkg
-ZXZlbiB3aGVuDQogcmVhbCB0YXNrIHN1Y2NlZWRzLiAmbmJzcDtXZSBzZWUgdGhhdCBCaXRiYWtl
-IHJldHVybnMgMSBpbiB0aGlzIGNhc2Ugd2hpY2ggY2F1c2VzIHJhbmRvbSBidWlsZCBmYWlsdXJl
-IGV2ZW4gd2hlbiB0aGUgcmVhbCB0YXNrIHdhcyBwZXJmb3JtZWQgc3VjY2Vzc2Z1bGx5Lg0KPG86
-cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
-bnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlm
-O2NvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90
-O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj5UaGFua3MsPG86cD48L286
-cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9y
-OiMxRjQ5N0QiPlNhbmRlZXA8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxp
-YnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3Nw
-YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4w
-cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5
-N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZiI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
-MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+IGtlcmdv
-dGhAZ21haWwuY29tIFttYWlsdG86a2VyZ290aEBnbWFpbC5jb21dDQo8Yj5PbiBCZWhhbGYgT2Yg
-PC9iPkNocmlzdG9waGVyIExhcnNvbjxicj4NCjxiPlNlbnQ6PC9iPiBTYXR1cmRheSwgSnVuZSAw
-NCwgMjAxNiA1OjUyIFBNPGJyPg0KPGI+VG86PC9iPiBOYWlyLCBTYW5kZWVwIChDb250cmFjdG9y
-KSAmbHQ7U2FuZGVlcF9OYWlyMkBjYWJsZS5jb21jYXN0LmNvbSZndDs8YnI+DQo8Yj5DYzo8L2I+
-IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzxicj4NCjxiPlN1YmplY3Q6PC9i
-PiBSZTogW2JpdGJha2UtZGV2ZWxdIFJhbmRvbSBCaXRiYWtlIGJ1aWxkIGZhaWx1cmVzPG86cD48
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48
-L3A+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPk9uIFNhdCwgSnVuIDQsIDIwMTYgYXQg
-MTE6MDkgQU0sIE5haXIsIFNhbmRlZXAgKENvbnRyYWN0b3IpICZsdDs8YSBocmVmPSJtYWlsdG86
-U2FuZGVlcF9OYWlyMkBjYWJsZS5jb21jYXN0LmNvbSIgdGFyZ2V0PSJfYmxhbmsiPlNhbmRlZXBf
-TmFpcjJAY2FibGUuY29tY2FzdC5jb208L2E+Jmd0OyB3cm90ZTo8bzpwPjwvbzpwPjwvcD4NCjxi
-bG9ja3F1b3RlIHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCAjQ0NDQ0NDIDEu
-MHB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNi4wcHQ7bWFyZ2luLWxlZnQ6NC44cHQ7bWFyZ2luLXJp
-Z2h0OjBpbiI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0
-OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPldlIGFyZSBmYWNpbmcgcmFuZG9tIGZh
-aWx1cmVzIHdpdGggQml0YmFrZSBidWlsZHMuIEJpdGJha2UgaXMgcmV0dXJuaW5nIGFuIGVycm9y
-IGV2ZW4gd2hlbiB0aGUgb3BlcmF0aW9uIHN1Y2NlZWRlZCBvbiB0aGUgc3VjY2Vzc2Z1bCByZXRy
-eS4NCjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJn
-aW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4mbmJzcDs8bzpwPjwv
-bzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6
-YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+RWc6DQo8bzpwPjwvbzpwPjwvcD4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFy
-Z2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20t
-YWx0OmF1dG8iPkVSUk9SOiBFcnJvciBleGVjdXRpbmcgYSBweXRob24gZnVuY3Rpb24gaW4gL21u
-dC9qZW5raW5zL3dvcmtzcGFjZS9QQUNFWEkzVjItWW9jdG8tQnVpbGQvbWV0YS1yZGstY29tY2Fz
-dC9yZWNpcGVzLWV4dGVuZGVkL25ldHp5bi88YSBocmVmPSJodHRwOi8vbmV0enluX2dpdC5iYiIg
-dGFyZ2V0PSJfYmxhbmsiPm5ldHp5bl9naXQuYmI8L2E+OjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4t
-Ym90dG9tLWFsdDphdXRvIj5FeGNlcHRpb246IElPRXJyb3I6IFtFcnJubyAxMTZdIFN0YWxlIGZp
-bGUgaGFuZGxlPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNv
-LW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPiZuYnNwOzxv
-OnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9w
-LWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj5XQVJOSU5HOiBMb2dmaWxlIGZv
-ciBmYWlsZWQgc2V0c2NlbmUgdGFzayBpcyAvbW50L2plbmtpbnMvd29ya3NwYWNlL1BBQ0VYSTNW
-Mi1Zb2N0by1CdWlsZC9idWlsZC1wYWNleGkzdjIvdG1wL3dvcmsvbWlwczMyZWwtcmRrLWxpbnV4
-L25ldHp5bi8xLjk5JiM0MztnaXRBVVRPSU5DJiM0MztjMzc1MmNhMDM4X2M3MDY4OTY3YTEtcjAv
-dGVtcC9sb2cuZG9fcGFja2FnZV9zZXRzY2VuZS44OTQ2PG86cD48L286cD48L3A+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1i
-b3R0b20tYWx0OmF1dG8iPldBUk5JTkc6IFNldHNjZW5lIHRhc2sgMTI3NyAoL21udC9qZW5raW5z
-L3dvcmtzcGFjZS9QQUNFWEkzVjItWW9jdG8tQnVpbGQvbWV0YS1yZGstY29tY2FzdC9yZWNpcGVz
-LWV4dGVuZGVkL25ldHp5bi88YSBocmVmPSJodHRwOi8vbmV0enluX2dpdC5iYiIgdGFyZ2V0PSJf
-YmxhbmsiPm5ldHp5bl9naXQuYmI8L2E+LA0KIGRvX3BhY2thZ2Vfc2V0c2NlbmUpIGZhaWxlZCB3
-aXRoIGV4aXQgY29kZSAnMScgLSByZWFsIHRhc2sgd2lsbCBiZSBydW4gaW5zdGVhZDxvOnA+PC9v
-OnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDph
-dXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFy
-Z2luLWJvdHRvbS1hbHQ6YXV0byI+4oCcU2V0c2NlbmXigJ0gaXMgYSBiYiBhdHRlbXB0IHRvIHVz
-ZSBzc3RhdGUgY2FjaGUuPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHls
-ZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPiZu
-YnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJn
-aW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj5JdCBzYXlzIGFib3V0
-IHJlYWwgdGFzayB3aWxsIHJ1biBpbnN0ZWFkLiBEb2VzIHRoYXQgbWVhbiBpdCB0cmllZCBidWls
-ZCBsb2NhbGx5IChpdCBzaG91bGQpPzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1h
-bCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDph
-dXRvIj4mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJt
-c28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+SW4gYWxs
-IHN0YWxlIGNhc2VzIGl0IGZhaWxzIGluIHRoaXMgY29kZToNCjxvOnA+PC9vOnA+PC9wPg0KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJn
-aW4tYm90dG9tLWFsdDphdXRvIj4mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1h
-bHQ6YXV0byI+RmlsZTog4oCY4oCmLi9vcGVuZW1iZWRkZWQtY29yZS9iaXRiYWtlL2xpYi9iYi91
-dGlscy5weScsIGxpbmVubzogNDY3LCBmdW5jdGlvbjogbWQ1X2ZpbGU8bzpwPjwvbzpwPjwvcD4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28t
-bWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDA0NjM6Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGltcG9ydCBtZDU8bzpwPjwv
-bzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6
-YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-IDA0NjQ6Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IG0gPSBtZDUu
-bmV3KCk8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFy
-Z2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7IDA0NjU6PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBz
-dHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8i
-PiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAwNDY2OiZuYnNwOyZuYnNwOyZuYnNwOyB3aXRoIG9w
-ZW4oZmlsZW5hbWUsICZxdW90O3JiJnF1b3Q7KSBhcyBmOjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4t
-Ym90dG9tLWFsdDphdXRvIj4qKiogMDQ2NzombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsgZm9yIGxpbmUgaW4gZjo8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1h
-bHQ6YXV0byI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDA0Njg6Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyZuYnNwOyZuYnNwO20udXBkYXRl
-KGxpbmUpPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1h
-cmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPiZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyAwNDY5OiZuYnNwOyZuYnNwOyZuYnNwOyByZXR1cm4gbS5oZXhkaWdlc3Qo
-KTxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4t
-dG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4mbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsgMDQ3MDo8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxl
-PSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5i
-c3A7PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdp
-bi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPkFzIGNhbiBiZSBzZWVu
-IGl0IHRyaWVzIHVzZSBoYW5kbGUgaXQgd2FzIGdpdmVuIGJ1dCB0aGUgZmlsZSBpcyBub3QgdmFs
-aWQgb24gcmVtb3RlIHNpZGUgYWxyZWFkeS4gU28gc3lzdGVtIGxpYiByZXR1cm5zIHN0YWxlIGhh
-bmRsZS48bzpwPjwvbzpwPjwvcD4NCjwvYmxvY2txdW90ZT4NCjxkaXY+DQo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPnJlbW90ZSBzaWRlPyBiaXRiYWtlIGJ1aWxkcyBoYXZlIG5ldmVyIGJlZW4gc3Vw
-cG9ydGVkIG9uIG5mcy4gQnV0IHllcywgZ2VuZXJhbGx5IHRoZSByZWFsIHRhc2sgcnVucyBpZiB0
-aGUgc2V0c2NlbmUgZmFpbHMuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+LS0gPG86cD48L286cD48L3A+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+Q2hyaXN0b3BoZXIgTGFyc29uPGJyPg0KY2xhcnNvbiBhdCBrZXJnb3RoIGRvdCBjb208
-YnI+DQpGb3VuZGVyIC0gQml0QmFrZSwgT3BlbkVtYmVkZGVkLCBPcGVuWmF1cnVzPGJyPg0KTWFp
-bnRhaW5lciAtIFRzbGliPGJyPg0KU2VuaW9yIFNvZnR3YXJlIEVuZ2luZWVyLCBNZW50b3IgR3Jh
-cGhpY3M8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9i
-b2R5Pg0KPC9odG1sPg0K
+That's not actually the case, because bitbake needs certain reliable
+features of the filesystem, particularly locking, which are problematic on
+nfs. It's not completely transparent. You can likely use nfs for
+SSTATE_DIR/DL_DIR, though, just not the tmp dir where builds occur.
 
---_000_6ba89ed1550846468db3183a33ec1435PACDCEX33cablecomcastco_--
+>> But yes, generally the real task runs if the setscene fails.
+>
+>
+>
+> We do the real task when sstate cache fetch fails and we are trying to
+> identify the reason why bitbake returns 1 (which happens when error count
+> != 0) even when real task succeeds.  We see that Bitbake returns 1 in this
+> case which causes random build failure even when the real task was
+> performed successfully.
+>
+
+If that's actually the case, I'd say it's a bug. sstate fetch failure
+shouldn't show error messages, the user doesn't care. I had a bug open for
+a similar case at https://bugzilla.yoctoproject.org/show_bug.cgi?id=4499.
+I'd suggest setting ;downloadfilename=PATH on the replacement side of the
+sstate mirrors (this is automatic in very recent yocto, but wasn't in the
+past), as is mentioned in that issue.
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
+
+--001a114a93d811bebe053541a0e4
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Tue, Jun 14, 2016 at 11:44 AM, Nair, Sandeep (Contractor) <span dir=3D"l=
+tr">&lt;<a href=3D"mailto:Sandeep_Nair2@cable.comcast.com" target=3D"_blank=
+">Sandeep_Nair2@cable.comcast.com</a>&gt;</span> wrote:<br><blockquote clas=
+s=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;b=
+order-left-style:solid;border-left-color:rgb(204,204,204);padding-left:1ex"=
+><p class=3D"MsoNormal"><span style=3D"font-size:11pt;font-family:Calibri,s=
+ans-serif;color:rgb(31,73,125)">Thanks for the details. Please find the add=
+itional details based on your feedback<u></u><u></u></span></p><span class=
+=3D"">
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+<p class=3D"MsoNormal">&gt;&gt;remote side? bitbake builds have never been =
+supported on nfs.<span style=3D"font-size:11pt;font-family:Calibri,sans-ser=
+if;color:rgb(31,73,125)">=C2=A0
+<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11pt;font-family:Calibri,sa=
+ns-serif;color:rgb(31,73,125)"><u></u>=C2=A0<u></u></span></p>
+</span><p class=3D"MsoNormal"><span style=3D"font-size:11pt;font-family:Cal=
+ibri,sans-serif;color:rgb(31,73,125)">We mount remote folders and bitbake s=
+ees these as a regular folder. Since this can be treated as a regular folde=
+r, we may not need nfs support in bitbake.</span></p></blockquote><div><br>=
+</div><div>That&#39;s not actually the case, because bitbake needs certain =
+reliable features of the filesystem, particularly locking, which are proble=
+matic on nfs. It&#39;s not completely transparent. You can likely use nfs f=
+or SSTATE_DIR/DL_DIR, though, just not the tmp dir where builds occur.=C2=
+=A0</div><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0=
+px 0px 0px 0.8ex;border-left-width:1px;border-left-style:solid;border-left-=
+color:rgb(204,204,204);padding-left:1ex"><span class=3D"">
+<p class=3D"MsoNormal">&gt;&gt; But yes, generally the real task runs if th=
+e setscene fails.<u></u><u></u></p>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</span><p class=3D"MsoNormal"><span style=3D"font-size:11pt;font-family:Cal=
+ibri,sans-serif;color:rgb(31,73,125)">We do the real task when sstate cache=
+ fetch fails and we are trying to identify the reason why bitbake returns 1=
+ (which happens when error count !=3D 0) even when
+ real task succeeds.=C2=A0 We see that Bitbake returns 1 in this case which=
+ causes random build failure even when the real task was performed successf=
+ully.</span></p></blockquote></div><br>If that&#39;s actually the case, I&#=
+39;d say it&#39;s a bug. sstate fetch failure shouldn&#39;t show error mess=
+ages, the user doesn&#39;t care. I had a bug open for a similar case at=C2=
+=A0<a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D4499">htt=
+ps://bugzilla.yoctoproject.org/show_bug.cgi?id=3D4499</a>. I&#39;d suggest =
+setting ;<span style=3D"color:rgb(0,0,0);white-space:pre-wrap">downloadfile=
+name=3DPATH on the replacement side of the sstate mirrors (this is automati=
+c in very recent yocto, but wasn&#39;t in the past), as is mentioned in tha=
+t issue.</span><br>-- <br><div class=3D"gmail_signature" data-smartmail=3D"=
+gmail_signature">Christopher Larson<br>clarson at kergoth dot com<br>Founde=
+r - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Softw=
+are Engineer, Mentor Graphics</div>
+</div></div>
+
+--001a114a93d811bebe053541a0e4--
