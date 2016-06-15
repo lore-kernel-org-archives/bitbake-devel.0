@@ -1,26 +1,32 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 1D3176FF01
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id B0679601A5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Jun 2016 02:42:11 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u5F2gCJn013149
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jun 2016 19:42:12 -0700 (PDT)
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Tue, 14 Jun 2016 19:42:11 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 14 Jun 2016 19:42:10 -0700
-Message-ID: <1002d2b4b2a2a715982f4351f0412954b1735d74.1465958474.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.8.0
-In-Reply-To: <cover.1465958474.git.liezhi.yang@windriver.com>
-References: <cover.1465958474.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] lib/bb/build.py: remove task flag in deltask()
+	Wed, 15 Jun 2016 21:46:47 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u5FLkYXw016421; Wed, 15 Jun 2016 22:46:46 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id EEgMdRLNSg2z; Wed, 15 Jun 2016 22:46:46 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u5FLkfu6016439
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 15 Jun 2016 22:46:42 +0100
+Message-ID: <1466027201.13979.240.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Wed, 15 Jun 2016 22:46:41 +0100
+In-Reply-To: <1951483.CXMg640ZQm@peggleto-mobl.ger.corp.intel.com>
+References: <cover.1465786269.git.paul.eggleton@linux.intel.com>
+	<ea0b3c1b34818a2eb5f0beb998a4c4e63f334b19.1465786269.git.paul.eggleton@linux.intel.com>
+	<1465816173.13979.204.camel@linuxfoundation.org>
+	<1951483.CXMg640ZQm@peggleto-mobl.ger.corp.intel.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 10/10] runqueue: report progress for "Preparing RunQueue" step
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,30 +39,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 Jun 2016 02:42:13 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 15 Jun 2016 21:46:49 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Otherwise the function like d.getVarFlag(e, 'task', True) which is used by
-do_listtasks will still get it, and list the deleted tasks.
+On Tue, 2016-06-14 at 00:16 +1200, Paul Eggleton wrote:
+> On Mon, 13 Jun 2016 12:09:33 Richard Purdie wrote:
+> > On Mon, 2016-06-13 at 14:52 +1200, Paul Eggleton wrote:
+> > > @@ -1119,14 +1150,19 @@ class RunQueue:
+> > >          if self.state is runQueuePrepare:
+> > >              self.rqexe = RunQueueExecuteDummy(self)
+> > > 
+> > > +            self.rqdata.init_progress_reporter =
+> > > bb.progress.MultiStageProcessProgressReporter(self.cooker.data, +
+> > >         
+> > >                                                    "Initialising
+> > > tasks",
+> > > +                                                            [27,
+> > > 870, 3,
+> > > 33, 1, 3, 3, 2, 3, 6, 1, 13, 1, 1, 132, 32, 1, 61, 1, 13, 2, 243,
+> > > 151,
+> > > 299, 81, 1, 15, 72])> 
+> > >              if self.rqdata.prepare() == 0:
+> > >                  self.state = runQueueComplete
+> > >              
+> > >              else:
+> > >                  self.state = runQueueSceneInit
+> > > 
+> > > +                self.rqdata.init_progress_reporter.next_stage()
+> > 
+> > I appreciate the difficulty in figuring some of this out and the
+> > changes look quite neat on the most part. I am however very worried
+> > by
+> > the above from a code maintenance standpoint.
+> > 
+> > If for example I add or remove a step in runqueue, how do I know
+> > where
+> > in this array to make a change? How do I calculate what the new
+> > weighting should be?
+> 
+> Actually with the current patchset it's pretty easy. Just temporarily
+> specify 
+> debug=True to the reporter when constructing and it will print out
+> the list of 
+> weightings (based on timing each stage) when finish() is called,
+> along with a 
+> map of the weightings to the lines where next_stage() was called.
+> (Perhaps if 
+> we'd want a comment to that effect for anyone editing this code.)
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/build.py | 1 +
- 1 file changed, 1 insertion(+)
+I think a comment in there about this would be helpful as it isn't
+clear how to handle this. What does it do in the case you have a next()
+call without a weight? Will that give a warning?
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index e016ae3..2ebe673 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -778,6 +778,7 @@ def deltask(task, d):
-     bbtasks = d.getVar('__BBTASKS', False) or []
-     if task in bbtasks:
-         bbtasks.remove(task)
-+        d.delVarFlag(task, 'task')
-         d.setVar('__BBTASKS', bbtasks)
- 
-     d.delVarFlag(task, 'deps')
--- 
-2.8.0
+Cheers,
 
+Richard
 
