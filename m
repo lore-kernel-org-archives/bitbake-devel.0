@@ -1,29 +1,45 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id A0B12731A3
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 60928607F8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Jun 2016 21:50:01 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga101.fm.intel.com with ESMTP; 15 Jun 2016 14:50:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,477,1459839600"; d="scan'208";a="719704774"
-Received: from ctan86-mobl2.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.141.217])
-	by FMSMGA003.fm.intel.com with ESMTP; 15 Jun 2016 14:49:59 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Thu, 16 Jun 2016 09:49:52 +1200
-Message-ID: <1816755.NLEoNl8zbq@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.10 (Linux/4.5.6-200.fc23.x86_64; KDE/4.14.20; x86_64; ;
-	)
-In-Reply-To: <1466027201.13979.240.camel@linuxfoundation.org>
-References: <cover.1465786269.git.paul.eggleton@linux.intel.com>
-	<1951483.CXMg640ZQm@peggleto-mobl.ger.corp.intel.com>
-	<1466027201.13979.240.camel@linuxfoundation.org>
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 10/10] runqueue: report progress for "Preparing RunQueue" step
+	Thu, 16 Jun 2016 14:02:05 +0000 (UTC)
+Received: by mail-wm0-f45.google.com with SMTP id a66so59589491wme.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 16 Jun 2016 07:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=NP7XDOwI5bn/hsoQyRWUml6mAWgbVp07hF9urbOWZt8=;
+	b=Q5VR0evFEO0Age7UHN0VzHaR04a3yQOluE1tURh+uTlLvVoWzVaMTiCeglOcfxFXHR
+	A2DMgwVArBUoXMqPGSgKGxPm53hk7xd4jMAHQkfQXgtmiHi2NoKTA89Ijijr72iaQGqq
+	M0Gc8QRapg3FZiuuDB2JfNcX3W9asvuUSJoxcbeRCYFdLLx0JtkfrPC9oJ9lt+WFHU2a
+	AYrqcT7MsstR25ptGYVUUgC/HKNM383qWCZqCV+2YKK6zaB7CINpvu6n+sZgocckhDjJ
+	5Pe0knV2ez7l+DavMOihbi8KbKanitw2Ri45mRI1Ba308dMYCJM0JfWX4Ln72I0zmYEd
+	1rvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=NP7XDOwI5bn/hsoQyRWUml6mAWgbVp07hF9urbOWZt8=;
+	b=M5bTOPDCEjHwddDEWbmkp6BTWy6LERICuYHnemV0cDTr/Cin2YYZZKkQqtwDM/lzHC
+	ibRGPElnRsf89C0HK5tscErRpypoCHOtbk5V1fQBqLAHNvdlNOwW8ZBK/fc6Qi4mbQ20
+	opZdlpIEBjoInc6x6vA9oe+PelVbQQJDC72eVJ+f5Nc9k2nY/G6JwT9Qq6juUIKdEF+e
+	oBCjPmFEL8S8YXdD1EKM5UFOYDzV5cFhmtn4FIwpqGUTtl4oSqkjLlxFWa6r1wEPvk/w
+	eikdwK3rJnYFxZhhhqUN5u9W9FpQVGdft1ekIyyPwj9ekP1eVtY8sgDc8tOEiTN5lYKk
+	sNVA==
+X-Gm-Message-State: ALyK8tJE4t6c5e036F7s0iqzXAw74bagLA30688ZJJyI/H7jUvBv0WoKREn2xq2Cazd0IzBh
+X-Received: by 10.194.123.199 with SMTP id mc7mr807361wjb.12.1466085726267;
+	Thu, 16 Jun 2016 07:02:06 -0700 (PDT)
+Received: from orion.home (host86-169-85-169.range86-169.btcentralplus.com.
+	[86.169.85.169]) by smtp.gmail.com with ESMTPSA id
+	kp9sm43794788wjb.28.2016.06.16.07.02.05
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Thu, 16 Jun 2016 07:02:05 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 16 Jun 2016 15:02:00 +0100
+Message-Id: <1466085720-6698-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH] toaster: fix typo which causes table searches to fail
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,73 +52,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 Jun 2016 21:50:01 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Thu, 16 Jun 2016 14:02:09 -0000
 
-On Wed, 15 Jun 2016 22:46:41 Richard Purdie wrote:
-> On Tue, 2016-06-14 at 00:16 +1200, Paul Eggleton wrote:
-> > On Mon, 13 Jun 2016 12:09:33 Richard Purdie wrote:
-> > > On Mon, 2016-06-13 at 14:52 +1200, Paul Eggleton wrote:
-> > > > @@ -1119,14 +1150,19 @@ class RunQueue:
-> > > >          if self.state is runQueuePrepare:
-> > > >              self.rqexe = RunQueueExecuteDummy(self)
-> > > > 
-> > > > +            self.rqdata.init_progress_reporter =
-> > > > bb.progress.MultiStageProcessProgressReporter(self.cooker.data, +
-> > > > 
-> > > >                                                    "Initialising
-> > > > 
-> > > > tasks",
-> > > > +                                                            [27,
-> > > > 870, 3,
-> > > > 33, 1, 3, 3, 2, 3, 6, 1, 13, 1, 1, 132, 32, 1, 61, 1, 13, 2, 243,
-> > > > 151,
-> > > > 299, 81, 1, 15, 72])>
-> > > > 
-> > > >              if self.rqdata.prepare() == 0:
-> > > >                  self.state = runQueueComplete
-> > > >              
-> > > >              else:
-> > > >                  self.state = runQueueSceneInit
-> > > > 
-> > > > +                self.rqdata.init_progress_reporter.next_stage()
-> > > 
-> > > I appreciate the difficulty in figuring some of this out and the
-> > > changes look quite neat on the most part. I am however very worried
-> > > by
-> > > the above from a code maintenance standpoint.
-> > > 
-> > > If for example I add or remove a step in runqueue, how do I know
-> > > where
-> > > in this array to make a change? How do I calculate what the new
-> > > weighting should be?
-> > 
-> > Actually with the current patchset it's pretty easy. Just temporarily
-> > specify
-> > debug=True to the reporter when constructing and it will print out
-> > the list of
-> > weightings (based on timing each stage) when finish() is called,
-> > along with a
-> > map of the weightings to the lines where next_stage() was called.
-> > (Perhaps if
-> > we'd want a comment to that effect for anyone editing this code.)
-> 
-> I think a comment in there about this would be helpful as it isn't
-> clear how to handle this. 
+From: Elliot Smith <elliot.smith@intel.com>
 
-OK, I'll add one - I need to rebase this patchset anyway.
+The iterator used to create a search query refers to a
+variable "x" which isn't set, causing an "'x' is not defined" error
+and preventing table searches (on non-ToasterTables) from working.
 
-> What does it do in the case you have a next()
-> call without a weight? Will that give a warning?
+Use the "field" variable instead, which contains the name of the
+field to add to the query.
 
-It will yes.
+[YOCTO #9749]
 
-Cheers,
-Paul
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/toaster/toastergui/views.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 0254876..28ff67b 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -324,7 +324,7 @@ def _get_search_results(search_term, queryset, model):
+     for st in search_term.split(" "):
+         queries = None
+         for field in model.search_allowed_fields:
+-            query =  Q(**{x+'__icontains': st})
++            query = Q(**{field + '__icontains': st})
+             queries = queries | query if queries else query
+ 
+         search_object = search_object & queries if search_object else queries
 -- 
+2.7.4
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
