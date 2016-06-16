@@ -1,45 +1,45 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 60928607F8
+Return-Path: <george.mccollister@gmail.com>
+Received: from mail-oi0-f66.google.com (mail-oi0-f66.google.com
+	[209.85.218.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 392A3763F0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Jun 2016 14:02:05 +0000 (UTC)
-Received: by mail-wm0-f45.google.com with SMTP id a66so59589491wme.0
+	Thu, 16 Jun 2016 20:22:23 +0000 (UTC)
+Received: by mail-oi0-f66.google.com with SMTP id a64so10194008oii.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Jun 2016 07:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	Thu, 16 Jun 2016 13:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id;
-	bh=NP7XDOwI5bn/hsoQyRWUml6mAWgbVp07hF9urbOWZt8=;
-	b=Q5VR0evFEO0Age7UHN0VzHaR04a3yQOluE1tURh+uTlLvVoWzVaMTiCeglOcfxFXHR
-	A2DMgwVArBUoXMqPGSgKGxPm53hk7xd4jMAHQkfQXgtmiHi2NoKTA89Ijijr72iaQGqq
-	M0Gc8QRapg3FZiuuDB2JfNcX3W9asvuUSJoxcbeRCYFdLLx0JtkfrPC9oJ9lt+WFHU2a
-	AYrqcT7MsstR25ptGYVUUgC/HKNM383qWCZqCV+2YKK6zaB7CINpvu6n+sZgocckhDjJ
-	5Pe0knV2ez7l+DavMOihbi8KbKanitw2Ri45mRI1Ba308dMYCJM0JfWX4Ln72I0zmYEd
-	1rvA==
+	bh=cEWUjiQxmfY5DRRHltlUC6kqG2V7kLJ325qFMNaZ2f4=;
+	b=Kq83fVk56nOqll00x/Lle1x6Z9uf9T8tKrEx7xZ88yJI6R+ZYtksWFWnqNtWS6Yhtq
+	CYcNJqU3LgdvI9F5PRJV9rPcGvk0Nl2ZdAQ5CL3WFFn1U6m3oi6a+PnEG5ezVFP5Q1cv
+	yhVRMgoqXFs61WStPHCbQ+XbDb7ucOlovt+kh8v+591lD4Selio7pKqd8zhFT0MMas+L
+	qBv8bAALwpiPqToueOyVz9eo5ddMUoeGRTasZvICfmHeuN+mtAalqHNgCrSzPgldIEwA
+	vaSULj7lk5tqAOpUgXnlGaQw8F/H3oFAqrzwHK0msQ/53/oFdNHBEbqI58u9v3TJ75Fi
+	Rp2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=NP7XDOwI5bn/hsoQyRWUml6mAWgbVp07hF9urbOWZt8=;
-	b=M5bTOPDCEjHwddDEWbmkp6BTWy6LERICuYHnemV0cDTr/Cin2YYZZKkQqtwDM/lzHC
-	ibRGPElnRsf89C0HK5tscErRpypoCHOtbk5V1fQBqLAHNvdlNOwW8ZBK/fc6Qi4mbQ20
-	opZdlpIEBjoInc6x6vA9oe+PelVbQQJDC72eVJ+f5Nc9k2nY/G6JwT9Qq6juUIKdEF+e
-	oBCjPmFEL8S8YXdD1EKM5UFOYDzV5cFhmtn4FIwpqGUTtl4oSqkjLlxFWa6r1wEPvk/w
-	eikdwK3rJnYFxZhhhqUN5u9W9FpQVGdft1ekIyyPwj9ekP1eVtY8sgDc8tOEiTN5lYKk
-	sNVA==
-X-Gm-Message-State: ALyK8tJE4t6c5e036F7s0iqzXAw74bagLA30688ZJJyI/H7jUvBv0WoKREn2xq2Cazd0IzBh
-X-Received: by 10.194.123.199 with SMTP id mc7mr807361wjb.12.1466085726267;
-	Thu, 16 Jun 2016 07:02:06 -0700 (PDT)
-Received: from orion.home (host86-169-85-169.range86-169.btcentralplus.com.
-	[86.169.85.169]) by smtp.gmail.com with ESMTPSA id
-	kp9sm43794788wjb.28.2016.06.16.07.02.05
+	bh=cEWUjiQxmfY5DRRHltlUC6kqG2V7kLJ325qFMNaZ2f4=;
+	b=cNqt12wxDBuS1UF1gwegnyKAyNNhOrckqmPlqUDp0jH/MKVbVj+utGHSaY1CVyiu4M
+	cN/VglOthapkAM9YK0uvpuff3xmEF1m7lt/+a8KzAtzRntyHPQhL5FOFnhfXQqB7tfUs
+	0aITlUTCxknYrp4jKmXvLnZWw9oF7vAsFVFVv74EerHJcWjTs+dQgV9ujs0KiIrz35FS
+	+Q6alpP861RMAPvnRmRWAkHnG0tbRp8DRF2HMguMMx3oKiIk11GOyibqVy0RAojxe3St
+	dwC8YVTT1sRbGG/AAJPmL1QYyfmHkGpd+kdtXzm+cKhPmF3CQE/FpZQkCW8gzk0rbaxN
+	wv1g==
+X-Gm-Message-State: ALyK8tK7FYZ65GAkPTuOTHQs+VBCltiR4B6ExIQEMRS1iO7YRFQ/hiE/FzB+G5YpBeFzrQ==
+X-Received: by 10.202.114.65 with SMTP id p62mr3892766oic.105.1466108544395;
+	Thu, 16 Jun 2016 13:22:24 -0700 (PDT)
+Received: from localhost.localdomain (216-21-169-52.slc.googlefiber.net.
+	[216.21.169.52]) by smtp.gmail.com with ESMTPSA id
+	k28sm11935458ote.35.2016.06.16.13.22.23
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 16 Jun 2016 07:02:05 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
+	Thu, 16 Jun 2016 13:22:23 -0700 (PDT)
+From: George McCollister <george.mccollister@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 16 Jun 2016 15:02:00 +0100
-Message-Id: <1466085720-6698-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] toaster: fix typo which causes table searches to fail
+Date: Thu, 16 Jun 2016 15:22:03 -0500
+Message-Id: <1466108523-2051-1-git-send-email-george.mccollister@gmail.com>
+X-Mailer: git-send-email 2.8.0
+Subject: [PATCH] runqueue: Use tid instead of taskid in find_chains()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,39 +52,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 Jun 2016 14:02:09 -0000
+X-List-Received-Date: Thu, 16 Jun 2016 20:22:24 -0000
 
-From: Elliot Smith <elliot.smith@intel.com>
+In 2c88afb6 find_chains()'s taskid argument was renamed to tid but
+taskid is still used as key to explored_deps dictionary. Use tid instead
+of taskid.
 
-The iterator used to create a search query refers to a
-variable "x" which isn't set, causing an "'x' is not defined" error
-and preventing table searches (on non-ToasterTables) from working.
-
-Use the "field" variable instead, which contains the name of the
-field to add to the query.
-
-[YOCTO #9749]
-
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: George McCollister <george.mccollister@gmail.com>
 ---
- lib/toaster/toastergui/views.py | 2 +-
+ lib/bb/runqueue.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 0254876..28ff67b 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -324,7 +324,7 @@ def _get_search_results(search_term, queryset, model):
-     for st in search_term.split(" "):
-         queries = None
-         for field in model.search_allowed_fields:
--            query =  Q(**{x+'__icontains': st})
-+            query = Q(**{field + '__icontains': st})
-             queries = queries | query if queries else query
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index b32e8e6..c9b6b84 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -347,7 +347,7 @@ class RunQueueData:
+                     if dep not in total_deps:
+                         total_deps.append(dep)
  
-         search_object = search_object & queries if search_object else queries
+-            explored_deps[taskid] = total_deps
++            explored_deps[tid] = total_deps
+ 
+         for task in tasks:
+             find_chains(task, [])
 -- 
-2.7.4
+2.8.0
 
 
