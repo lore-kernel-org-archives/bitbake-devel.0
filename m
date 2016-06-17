@@ -1,48 +1,45 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f42.google.com (mail-wm0-f42.google.com [74.125.82.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 14D1073CBD
+Received: from mail-wm0-f54.google.com (mail-wm0-f54.google.com [74.125.82.54])
+	by mail.openembedded.org (Postfix) with ESMTP id D9D4573CBD
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jun 2016 17:52:56 +0000 (UTC)
-Received: by mail-wm0-f42.google.com with SMTP id v199so6995830wmv.0
+	Fri, 17 Jun 2016 17:52:55 +0000 (UTC)
+Received: by mail-wm0-f54.google.com with SMTP id f126so6982711wma.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jun 2016 10:52:57 -0700 (PDT)
+	Fri, 17 Jun 2016 10:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=BakXSNAZbXtvLpoAUMQvP11wIPGKDAIR0TcsNj/8MB4=;
-	b=0Rxx7+Z2aP+EHlqLVMEfIyMtIEhLCv0IBjdEXqXiXCwFC2sIVKJp0d8jOSQDvc2tIh
-	npGYmJCCzlH0SNQt24LR4+UVhXrJExGx5t2o/LXcyqc2aiimssEvf8ctmxBZcaB+0u/P
-	FXKw6oiTEhElSzP9qwePsUy+Qx4NE5mvcYKes/cGklpqJbc/S7EuLej9q1NvSDz3UECm
-	kjmuwwoA6hspvVFn9Q271kwT72f+1j/t6yh/+hauImPdmH24o/95gaI2EN9MUbhTYJpH
-	Lh13L78pI1cyg77Mi/Opb3+lUafZKnupN4Ui/kZ7mfU8Oh8WIuW2ny8chYgRylBqwz03
-	FpZA==
+	h=from:to:cc:subject:date:message-id;
+	bh=19/56HnfaO/x6On5zNmYCcdxsBei9K4+dle6jaAdTSU=;
+	b=wnLjZKPABPSKGUNVwTDUzSgNOrz/DISfE5VHrfNioN0g2lrqIRQimZZI+ZzkZoivzs
+	h0J/z0T0jP6P2m5PtgxDnAdQ+VmgB7rtKk4iglkyaJYrgqZcFwF8bQ1yB0ZDB8KvecRk
+	KUsjMPK2lVlFET/ev8Q/L7e615of2mNRDGIxwppMN4pJ5DaJ0kX8v69j+VJA7pcSnBNy
+	QGqmYRaDxi6IGAfvnKeon5SnPq4VBf9vO19HMTpWGLesp1JqK9w1RoDEuUzrpzts+KzB
+	2DOpsZRQmc54+2OYB67jttbI3HeQT4VObQNeGcPj0pLa44XNsqIu5Y+W3+yVqHRTj+BK
+	SrxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=BakXSNAZbXtvLpoAUMQvP11wIPGKDAIR0TcsNj/8MB4=;
-	b=L756h5Fa71dwW4yNtsa5FJP9UW/BsysSk3flHEPePC1+VAzbqQhzj8JApPlspjjIi9
-	tO6tZV22sqA9JPjNe/oEk/wHJPlfSMrJgu/OaHP/9aKvSyXn9/UV/5rN01ElpwltkqDX
-	pYvrZYAMERiecJWIVgouvJ3xSQD0SfO6yFWPKXVz8RQXKH5Veryb69wUkYCmFJ4L+MYJ
-	dROdWadZMxBGpZ5T35IBXQuyYg1M/URbeuEVV31cq6X/HLSr51MzWfw+2gozS9Yd5oEO
-	fwHasEkrNCzRKhP4Yuhx9fzvWcKGOyun7PSN7Tbk0/R38U4slEPbCYgCbBcHsAxcSyp/
-	SsUA==
-X-Gm-Message-State: ALyK8tL6IkngTDt4BVGgriuVC4RpfYjF2822r75Lj/HF83QDKy7MIeIw2z7kOAnIZ4u8WJXD
-X-Received: by 10.28.27.8 with SMTP id b8mr846249wmb.40.1466185976521;
-	Fri, 17 Jun 2016 10:52:56 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=19/56HnfaO/x6On5zNmYCcdxsBei9K4+dle6jaAdTSU=;
+	b=GsS7E6rLJOYwnJ02DJFAYDre9hTX5485wBxIG8PGvqqgy/N+RFC6MVKmlTbSo8wmyV
+	YwCTaS81lHCPJ5Vu8EyaKRPFJeIor/ymdl1zeK6VwpJCCeAeTEV4DvHKCuIqLmpXPdzN
+	prTUfrDmcpPVoLzNP1T9T4bng2O6KJFzLzvd/I7mGEB0NjBp5W2YIJICnxlHr225KoQC
+	pmrnVhoWIV7v5PRFT6+u7M9SWVCNoQndKnIG/gjwyu/edyR45D+czuJ4Blt8HLTuFeUI
+	wHcmZEAWU9ljvSAc/+ayBk3kuzBsbJ6QXFDoWmLikg58veMKqi+cQcQYDyDBWiT9lgbk
+	znkA==
+X-Gm-Message-State: ALyK8tKgaXZy/mA5QAWij8WBB1zNS593mrB1maMFU43T6qSEgHOSrXUdiyetZbPKkVLeLQCv
+X-Received: by 10.28.223.215 with SMTP id w206mr780785wmg.61.1466185975655;
+	Fri, 17 Jun 2016 10:52:55 -0700 (PDT)
 Received: from localhost.localdomain
 	(host86-169-85-169.range86-169.btcentralplus.com. [86.169.85.169])
-	by smtp.gmail.com with ESMTPSA id a129sm488171wma.2.2016.06.17.10.52.55
+	by smtp.gmail.com with ESMTPSA id a129sm488171wma.2.2016.06.17.10.52.54
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 17 Jun 2016 10:52:55 -0700 (PDT)
+	Fri, 17 Jun 2016 10:52:54 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 17 Jun 2016 18:52:51 +0100
-Message-Id: <1466185971-18537-2-git-send-email-michael.g.wood@intel.com>
+Date: Fri, 17 Jun 2016 18:52:50 +0100
+Message-Id: <1466185971-18537-1-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1466185971-18537-1-git-send-email-michael.g.wood@intel.com>
-References: <1466185971-18537-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 2/2] toaster-tests: define capabilities for latest Firefox driver
+Subject: [PATCH 1/2] toaster-tests: remove click on disabled element in test
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,84 +52,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Jun 2016 17:52:57 -0000
+X-List-Received-Date: Fri, 17 Jun 2016 17:52:58 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-For the latest Firefox versions, WebDriver requires a download of a
-separate binary and an additional capability to be defined on it.
+On Firefox 47, attempting to click on the "Submit" button in
+the test which attempts to create a project with a duplicate name
+fails, as the button is not enabled if the name is a duplicate. This
+also causes the test to fail.
 
-Modify our tests so that when "marionette" is set as the browser,
-this capability is defined on the Firefox driver. Also add a note to the
-README about the additional installation steps required.
+Remove the call to the click() method which causes the test to fail.
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/tests/browser/README              | 19 +++++++++++++++++--
- lib/toaster/tests/browser/selenium_helpers.py |  5 +++++
- 2 files changed, 22 insertions(+), 2 deletions(-)
+ lib/toaster/tests/browser/test_new_project_page.py | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/lib/toaster/tests/browser/README b/lib/toaster/tests/browser/README
-index f57154e..969f06c 100644
---- a/lib/toaster/tests/browser/README
-+++ b/lib/toaster/tests/browser/README
-@@ -24,15 +24,30 @@ To run tests against PhantomJS (headless):
- * On *nix systems, put phantomjs on PATH
- * Not tested on Windows
+diff --git a/lib/toaster/tests/browser/test_new_project_page.py b/lib/toaster/tests/browser/test_new_project_page.py
+index 1b038ac..180a690 100644
+--- a/lib/toaster/tests/browser/test_new_project_page.py
++++ b/lib/toaster/tests/browser/test_new_project_page.py
+@@ -80,7 +80,7 @@ class TestNewProjectPage(SeleniumTestCase):
+         """
+         Should not be able to create a new project whose name is the same
+         as an existing project
+-       """
++        """
  
--Firefox should work without requiring additional software to be installed.
-+To run tests against Firefox, you may need to install the Marionette driver,
-+depending on how new your version of Firefox is. One clue that you need to do
-+this is if you see an exception like:
+         project_name = "dupproject"
  
--The test case will instantiate a Selenium driver set by the
-+  selenium.common.exceptions.WebDriverException: Message: The browser
-+  appears to have exited before we could connect. If you specified
-+  a log_file in the FirefoxBinary constructor, check it for details.
-+
-+See https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
-+for installation instructions. Ensure that the Marionette executable (renamed
-+as wires on Linux or wires.exe on Windows) is on your PATH; and use "marionette"
-+as the browser string passed via TOASTER_TESTS_BROWSER (see below).
-+
-+(Note: The Toaster tests have been checked against Firefox 47 with the
-+Marionette driver.)
-+
-+The test cases will instantiate a Selenium driver set by the
- TOASTER_TESTS_BROWSER environment variable, or Chrome if this is not specified.
+@@ -100,10 +100,6 @@ class TestNewProjectPage(SeleniumTestCase):
+         self.assertTrue(("Project names must be unique" in element.text),
+                         "Did not find unique project name error message")
  
- Available drivers:
- 
- * chrome (default)
- * firefox
-+* marionette (for newer Firefoxes)
- * ie
- * phantomjs
- 
-diff --git a/lib/toaster/tests/browser/selenium_helpers.py b/lib/toaster/tests/browser/selenium_helpers.py
-index 54db2e8..000937f 100644
---- a/lib/toaster/tests/browser/selenium_helpers.py
-+++ b/lib/toaster/tests/browser/selenium_helpers.py
-@@ -34,6 +34,7 @@ import time
- from django.contrib.staticfiles.testing import StaticLiveServerTestCase
- from selenium import webdriver
- from selenium.webdriver.support.ui import WebDriverWait
-+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
- from selenium.common.exceptions import NoSuchElementException, \
-         StaleElementReferenceException, TimeoutException
- 
-@@ -49,6 +50,10 @@ def create_selenium_driver(browser='chrome'):
-         )
-     elif browser == 'firefox':
-         return webdriver.Firefox()
-+    elif browser == 'marionette':
-+        capabilities = DesiredCapabilities.FIREFOX
-+        capabilities['marionette'] = True
-+        return webdriver.Firefox(capabilities=capabilities)
-     elif browser == 'ie':
-         return webdriver.Ie()
-     elif browser == 'phantomjs':
+-        # Try and click it anyway, if it submits we'll have a new project in
+-        # the db and assert then
+-        self.click("#create-project-button")
+-
+         self.assertTrue(
+             (Project.objects.filter(name=project_name).count() == 1),
+-            "New project not found in database")
++            "New project not found in database")
+\ No newline at end of file
 -- 
 2.7.4
 
