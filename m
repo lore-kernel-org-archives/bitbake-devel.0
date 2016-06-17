@@ -1,42 +1,27 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mail-yw0-f178.google.com (mail-yw0-f178.google.com
-	[209.85.161.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 237F273174
+Return-Path: <maxin.john@intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 5942B6FFCC
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jun 2016 09:55:49 +0000 (UTC)
-Received: by mail-yw0-f178.google.com with SMTP id v78so3168727ywa.3
+	Fri, 17 Jun 2016 14:42:12 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga102.jf.intel.com with ESMTP; 17 Jun 2016 07:42:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.26,484,1459839600"; d="scan'208";a="1004346099"
+Received: from linux.intel.com ([10.54.29.200])
+	by fmsmga002.fm.intel.com with ESMTP; 17 Jun 2016 07:42:13 -0700
+Received: from mbabyjoh-desk.fi.intel.com (mbabyjoh-desk.fi.intel.com
+	[10.237.72.71])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTP id 9BF066A4006
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jun 2016 02:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:date:message-id:subject:from:to;
-	bh=+fT5Zei9RtM44zs+INUr5L4/Wd6QS61Wi2/ehkf9hEc=;
-	b=pK2AKWKI9yMn0JLGski9lcJGMxHQdIOakEopimVf2jLRJdU0kPG1KrjDBMfSS49AGm
-	jOBYGXH6lB8HKHsfuaJ/fdTJszRpdjyN+lO9MvsN+8FVDJ2o5+eLcPzltFe8mBzkVE3A
-	BOkADj/BD76gDex+VDS3ZD3iTIacTd8JgFYWFMSOVbeTYhd0N5GJQRmMCPXmmfwXnBX9
-	k418lvxeI5JZKnO1RJDZXH2nJM+nPcoO4K2s0WCf8KjDyO2PqxERDggr0n+/CeXYHyOc
-	dCoz2K8CDOpvSdz42dAX7WC9lWxUtrasb1A4Tjm9PwxURjofYR5xTy+5tnwev9ybu8wq
-	I2Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-	bh=+fT5Zei9RtM44zs+INUr5L4/Wd6QS61Wi2/ehkf9hEc=;
-	b=J4sAt6e53+hyK6sntqaq9+nVOkmGkmWzuv2/TsPkuuvCyDEIugPU/kpQJOzRjhmHae
-	qnvkt5/J2DmNUFNGg2yJYt3SfFH/v3vnbXlRGAzdQwdrp9cD/u7mWMigueTXtpx8xYvN
-	xA7SapJqp8wxf3ugMxOrrMZPrHrUwcj2ITl0KvOcZfFqJBn65wKdA5xI5jdGtpcFgCPn
-	PSfdXpenHH4rn3rhWmNm9RsLz0LGiWWNikY5E2E1EYY9pxngcBgYM/d5KfyMrSgZWSA+
-	CS0W5bTKigAlVEudqErbl3GOXJ9Tr3j0cdlAjlvLR0Us6vqiTVlK517ViYLkZCJDzSZ3
-	Iuhg==
-X-Gm-Message-State: ALyK8tL7j/EL25MSdIq0PJID+5UxUUltliT+wKqw0md5s4YqOXNIzzj6sXhvyYN6wiqcqIJ7yQJI6OjlxClbHKDD
-MIME-Version: 1.0
-X-Received: by 10.37.223.66 with SMTP id w63mr532931ybg.172.1466157349960;
-	Fri, 17 Jun 2016 02:55:49 -0700 (PDT)
-Received: by 10.13.198.193 with HTTP; Fri, 17 Jun 2016 02:55:49 -0700 (PDT)
-Date: Fri, 17 Jun 2016 10:55:49 +0100
-Message-ID: <CA+1hgUju+pA1c--e=uJervsuEsKA7y_422b0KowkZ8EBejqreQ@mail.gmail.com>
-From: "Smith, Elliot" <elliot.smith@intel.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: [PULL] remove last Bootstrap 2 file for Toaster
+	Fri, 17 Jun 2016 07:42:11 -0700 (PDT)
+From: "Maxin B. John" <maxin.john@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 17 Jun 2016 17:41:58 +0300
+Message-Id: <1466174518-19538-1-git-send-email-maxin.john@intel.com>
+X-Mailer: git-send-email 2.4.0
+Subject: [PATCH] depexp.py: port to gtk+3
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,57 +34,279 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Jun 2016 09:55:51 -0000
-Content-Type: multipart/alternative; boundary=94eb2c08835c07afb90535765c93
+X-List-Received-Date: Fri, 17 Jun 2016 14:42:13 -0000
 
---94eb2c08835c07afb90535765c93
-Content-Type: text/plain; charset=UTF-8
+Update depexp.py to support gtk+3
 
-The branch
+Signed-off-by: Maxin B. John <maxin.john@intel.com>
+---
+ bitbake/lib/bb/ui/depexp.py | 127 ++++++++++++++++++++------------------------
+ 1 file changed, 58 insertions(+), 69 deletions(-)
 
-poky-contrib, elliot/submit/bavery/toaster/removeLastBootstrapV2File
-
-contains a single commit for inclusion in master:
-
-f7d8db806167e8d3628456fe8b021cac8b0b6643
-
-(The patch for this commit has lines longer than 998 characters so could
-not be submitted as a single patch.)
-
-This commit removes that file.(It is not used afaik, but it does have a
-reference to bootstrap v2, which we are no longer supporting).
-
-Elliot
-
+diff --git a/bitbake/lib/bb/ui/depexp.py b/bitbake/lib/bb/ui/depexp.py
+index 240aafc..8f603dd 100644
+--- a/bitbake/lib/bb/ui/depexp.py
++++ b/bitbake/lib/bb/ui/depexp.py
+@@ -18,14 +18,15 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ import sys
+-import gobject
+-import gtk
+-import Queue
++import gi
++gi.require_version('Gtk', '3.0')
++from gi.repository import Gtk, Gdk, GObject
++from multiprocessing import Queue
+ import threading
+-import xmlrpclib
++from xmlrpc import client
++import time
+ import bb
+ import bb.event
+-from bb.ui.crumbs.progressbar import HobProgressBar
+ 
+ # Package Model
+ (COL_PKG_NAME) = (0)
+@@ -35,19 +36,19 @@ from bb.ui.crumbs.progressbar import HobProgressBar
+ (COL_DEP_TYPE, COL_DEP_PARENT, COL_DEP_PACKAGE) = (0, 1, 2)
+ 
+ 
+-class PackageDepView(gtk.TreeView):
++class PackageDepView(Gtk.TreeView):
+     def __init__(self, model, dep_type, label):
+-        gtk.TreeView.__init__(self)
++        Gtk.TreeView.__init__(self)
+         self.current = None
+         self.dep_type = dep_type
+         self.filter_model = model.filter_new()
+-        self.filter_model.set_visible_func(self._filter)
++        self.filter_model.set_visible_func(self._filter, data=None)
+         self.set_model(self.filter_model)
+-        #self.connect("row-activated", self.on_package_activated, COL_DEP_PACKAGE)
+-        self.append_column(gtk.TreeViewColumn(label, gtk.CellRendererText(), text=COL_DEP_PACKAGE))
++        self.append_column(Gtk.TreeViewColumn(label, Gtk.CellRendererText(), text=COL_DEP_PACKAGE))
+ 
+-    def _filter(self, model, iter):
+-        (this_type, package) = model.get(iter, COL_DEP_TYPE, COL_DEP_PARENT)
++    def _filter(self, model, iter, data):
++        this_type = model[iter][COL_DEP_TYPE]
++        package = model[iter][COL_DEP_PARENT]
+         if this_type != self.dep_type: return False
+         return package == self.current
+ 
+@@ -56,17 +57,17 @@ class PackageDepView(gtk.TreeView):
+         self.filter_model.refilter()
+ 
+ 
+-class PackageReverseDepView(gtk.TreeView):
++class PackageReverseDepView(Gtk.TreeView):
+     def __init__(self, model, label):
+-        gtk.TreeView.__init__(self)
++        Gtk.TreeView.__init__(self)
+         self.current = None
+         self.filter_model = model.filter_new()
+         self.filter_model.set_visible_func(self._filter)
+         self.set_model(self.filter_model)
+-        self.append_column(gtk.TreeViewColumn(label, gtk.CellRendererText(), text=COL_DEP_PARENT))
++        self.append_column(Gtk.TreeViewColumn(label, Gtk.CellRendererText(), text=COL_DEP_PARENT))
+ 
+-    def _filter(self, model, iter):
+-        package = model.get_value(iter, COL_DEP_PACKAGE)
++    def _filter(self, model, iter, data):
++        package = model[iter][COL_DEP_PACKAGE]
+         return package == self.current
+ 
+     def set_current_package(self, package):
+@@ -74,50 +75,50 @@ class PackageReverseDepView(gtk.TreeView):
+         self.filter_model.refilter()
+ 
+ 
+-class DepExplorer(gtk.Window):
++class DepExplorer(Gtk.Window):
+     def __init__(self):
+-        gtk.Window.__init__(self)
++        Gtk.Window.__init__(self)
+         self.set_title("Dependency Explorer")
+         self.set_default_size(500, 500)
+-        self.connect("delete-event", gtk.main_quit)
++        self.connect("delete-event", Gtk.main_quit)
+ 
+         # Create the data models
+-        self.pkg_model = gtk.ListStore(gobject.TYPE_STRING)
+-        self.pkg_model.set_sort_column_id(COL_PKG_NAME, gtk.SORT_ASCENDING)
+-        self.depends_model = gtk.ListStore(gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_STRING)
+-        self.depends_model.set_sort_column_id(COL_DEP_PACKAGE, gtk.SORT_ASCENDING)
++        self.pkg_model = Gtk.ListStore(GObject.TYPE_STRING)
++        self.pkg_model.set_sort_column_id(COL_PKG_NAME, Gtk.SortType.ASCENDING)
++        self.depends_model = Gtk.ListStore(GObject.TYPE_INT, GObject.TYPE_STRING, GObject.TYPE_STRING)
++        self.depends_model.set_sort_column_id(COL_DEP_PACKAGE, Gtk.SortType.ASCENDING)
+ 
+-        pane = gtk.HPaned()
++        pane = Gtk.HPaned()
+         pane.set_position(250)
+         self.add(pane)
+ 
+         # The master list of packages
+-        scrolled = gtk.ScrolledWindow()
+-        scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+-        scrolled.set_shadow_type(gtk.SHADOW_IN)
++        scrolled = Gtk.ScrolledWindow()
++        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
++        scrolled.set_shadow_type(Gtk.ShadowType.IN)
+ 
+-        self.pkg_treeview = gtk.TreeView(self.pkg_model)
++        self.pkg_treeview = Gtk.TreeView(self.pkg_model)
+         self.pkg_treeview.get_selection().connect("changed", self.on_cursor_changed)
+-        column = gtk.TreeViewColumn("Package", gtk.CellRendererText(), text=COL_PKG_NAME)
++        column = Gtk.TreeViewColumn("Package", Gtk.CellRendererText(), text=COL_PKG_NAME)
+         self.pkg_treeview.append_column(column)
+         pane.add1(scrolled)
+         scrolled.add(self.pkg_treeview)
+ 
+-        box = gtk.VBox(homogeneous=True, spacing=4)
++        box = Gtk.VBox(homogeneous=True, spacing=4)
+ 
+         # Runtime Depends
+-        scrolled = gtk.ScrolledWindow()
+-        scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+-        scrolled.set_shadow_type(gtk.SHADOW_IN)
++        scrolled = Gtk.ScrolledWindow()
++        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
++        scrolled.set_shadow_type(Gtk.ShadowType.IN)
+         self.rdep_treeview = PackageDepView(self.depends_model, TYPE_RDEP, "Runtime Depends")
+         self.rdep_treeview.connect("row-activated", self.on_package_activated, COL_DEP_PACKAGE)
+         scrolled.add(self.rdep_treeview)
+         box.add(scrolled)
+ 
+         # Build Depends
+-        scrolled = gtk.ScrolledWindow()
+-        scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+-        scrolled.set_shadow_type(gtk.SHADOW_IN)
++        scrolled = Gtk.ScrolledWindow()
++        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
++        scrolled.set_shadow_type(Gtk.ShadowType.IN)
+         self.dep_treeview = PackageDepView(self.depends_model, TYPE_DEP, "Build Depends")
+         self.dep_treeview.connect("row-activated", self.on_package_activated, COL_DEP_PACKAGE)
+         scrolled.add(self.dep_treeview)
+@@ -125,9 +126,9 @@ class DepExplorer(gtk.Window):
+         pane.add2(box)
+ 
+         # Reverse Depends
+-        scrolled = gtk.ScrolledWindow()
+-        scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+-        scrolled.set_shadow_type(gtk.SHADOW_IN)
++        scrolled = Gtk.ScrolledWindow()
++        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
++        scrolled.set_shadow_type(Gtk.ShadowType.IN)
+         self.revdep_treeview = PackageReverseDepView(self.depends_model, "Reverse Depends")
+         self.revdep_treeview.connect("row-activated", self.on_package_activated, COL_DEP_PARENT)
+         scrolled.add(self.revdep_treeview)
+@@ -185,9 +186,10 @@ class gtkthread(threading.Thread):
+         self.shutdown = shutdown
+ 
+     def run(self):
+-        gobject.threads_init()
+-        gtk.gdk.threads_init()
+-        gtk.main()
++        time.sleep(1)
++        GObject.threads_init()
++        Gdk.threads_init()
++        Gtk.main()
+         gtkthread.quit.set()
+ 
+ 
+@@ -212,12 +214,12 @@ def main(server, eventHandler, params):
+         elif ret != True:
+             print("Error running command '%s': returned %s" % (cmdline, ret))
+             return 1
+-    except xmlrpclib.Fault as x:
++    except client.Fault as x:
+         print("XMLRPC Fault getting commandline:\n %s" % x)
+         return
+ 
+     try:
+-        gtk.init_check()
++        Gtk.init_check()
+     except RuntimeError:
+         sys.stderr.write("Please set DISPLAY variable before running this command \n")
+         return
+@@ -227,16 +229,14 @@ def main(server, eventHandler, params):
+     gtkgui = gtkthread(shutdown)
+     gtkgui.start()
+ 
+-    gtk.gdk.threads_enter()
++    Gdk.threads_enter()
+     dep = DepExplorer()
+-    bardialog = gtk.Dialog(parent=dep,
+-                           flags=gtk.DIALOG_MODAL|gtk.DIALOG_DESTROY_WITH_PARENT)
++    bardialog = Gtk.Dialog(parent=dep,
++            flags=Gtk.DialogFlags.MODAL|Gtk.DialogFlags.DESTROY_WITH_PARENT)
+     bardialog.set_default_size(400, 50)
+-    pbar = HobProgressBar()
+-    bardialog.vbox.pack_start(pbar)
+     bardialog.show_all()
+-    bardialog.connect("delete-event", gtk.main_quit)
+-    gtk.gdk.threads_leave()
++    bardialog.connect("delete-event", Gtk.main_quit)
++    Gdk.threads_leave()
+ 
+     progress_total = 0
+     while True:
+@@ -253,17 +253,12 @@ def main(server, eventHandler, params):
+ 
+             if isinstance(event, bb.event.CacheLoadStarted):
+                 progress_total = event.total
+-                gtk.gdk.threads_enter()
++                Gdk.threads_enter()
+                 bardialog.set_title("Loading Cache")
+-                pbar.update(0)
+-                gtk.gdk.threads_leave()
++                Gdk.threads_leave()
+ 
+             if isinstance(event, bb.event.CacheLoadProgress):
+                 x = event.current
+-                gtk.gdk.threads_enter()
+-                pbar.update(x * 1.0 / progress_total)
+-                pbar.set_title('')
+-                gtk.gdk.threads_leave()
+                 continue
+ 
+             if isinstance(event, bb.event.CacheLoadCompleted):
+@@ -274,18 +269,12 @@ def main(server, eventHandler, params):
+                 progress_total = event.total
+                 if progress_total == 0:
+                     continue
+-                gtk.gdk.threads_enter()
+-                pbar.update(0)
++                Gdk.threads_enter()
+                 bardialog.set_title("Processing recipes")
+-
+-                gtk.gdk.threads_leave()
++                Gdk.threads_leave()
+ 
+             if isinstance(event, bb.event.ParseProgress):
+                 x = event.current
+-                gtk.gdk.threads_enter()
+-                pbar.update(x * 1.0 / progress_total)
+-                pbar.set_title('')
+-                gtk.gdk.threads_leave()
+                 continue
+ 
+             if isinstance(event, bb.event.ParseCompleted):
+@@ -293,9 +282,9 @@ def main(server, eventHandler, params):
+                 continue
+ 
+             if isinstance(event, bb.event.DepTreeGenerated):
+-                gtk.gdk.threads_enter()
++                Gdk.threads_enter()
+                 dep.parse(event._depgraph)
+-                gtk.gdk.threads_leave()
++                Gdk.threads_leave()
+ 
+             if isinstance(event, bb.command.CommandCompleted):
+                 continue
 -- 
-Elliot Smith
-Software Engineer
-Intel Open Source Technology Centre
+2.4.0
 
---94eb2c08835c07afb90535765c93
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div><span style=3D"font-size:12.8px">The branch</span></d=
-iv><div><span style=3D"font-size:12.8px"><br></span></div><div><span style=
-=3D"font-size:12.8px">poky-contri</span><span style=3D"font-size:12.8px">b,=
- elliot/submit/bavery/toaster/r</span><span style=3D"font-size:12.8px">emov=
-eLastBootstrapV2File</span></div><div><span style=3D"font-size:12.8px"><br>=
-</span></div><div><span style=3D"font-size:12.8px">contains a single commit=
- for inclusion in master:</span></div><div><span style=3D"font-size:12.8px"=
-><br></span></div><div><span style=3D"font-size:12.8px">f7d8db806167e8d3628=
-456fe8b021cac8b0b6643</span><br></div><div><span style=3D"font-size:12.8px"=
-><br></span></div><div><span style=3D"font-size:12.8px">(The patch for this=
- commit</span><span style=3D"font-size:12.8px">=C2=A0has lines longer than =
-998 characters so could not be submitted as a single patch.)</span></div><d=
-iv><span style=3D"font-size:12.8px"><br></span></div><div><span style=3D"fo=
-nt-size:12.8px">This commit removes that file.(It is not used afaik, but it=
- does=C2=A0</span><span style=3D"font-size:12.8px">have a reference to boot=
-strap v2, which we are no longer supporting).</span></div><div><span style=
-=3D"font-size:12.8px"><br></span></div><div><span style=3D"font-size:12.8px=
-">Elliot</span></div><div><br></div>-- <br><div class=3D"gmail_signature" d=
-ata-smartmail=3D"gmail_signature"><div dir=3D"ltr"><div>Elliot Smith<br>Sof=
-tware Engineer<br>Intel Open Source Technology Centre</div></div></div>
-</div>
-
---94eb2c08835c07afb90535765c93--
