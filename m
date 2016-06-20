@@ -1,45 +1,52 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f54.google.com (mail-wm0-f54.google.com [74.125.82.54])
-	by mail.openembedded.org (Postfix) with ESMTP id D9D4573CBD
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jun 2016 17:52:55 +0000 (UTC)
-Received: by mail-wm0-f54.google.com with SMTP id f126so6982711wma.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jun 2016 10:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=19/56HnfaO/x6On5zNmYCcdxsBei9K4+dle6jaAdTSU=;
-	b=wnLjZKPABPSKGUNVwTDUzSgNOrz/DISfE5VHrfNioN0g2lrqIRQimZZI+ZzkZoivzs
-	h0J/z0T0jP6P2m5PtgxDnAdQ+VmgB7rtKk4iglkyaJYrgqZcFwF8bQ1yB0ZDB8KvecRk
-	KUsjMPK2lVlFET/ev8Q/L7e615of2mNRDGIxwppMN4pJ5DaJ0kX8v69j+VJA7pcSnBNy
-	QGqmYRaDxi6IGAfvnKeon5SnPq4VBf9vO19HMTpWGLesp1JqK9w1RoDEuUzrpzts+KzB
-	2DOpsZRQmc54+2OYB67jttbI3HeQT4VObQNeGcPj0pLa44XNsqIu5Y+W3+yVqHRTj+BK
-	SrxA==
+Return-Path: <twoerner@gmail.com>
+Received: from mail-qk0-f172.google.com (mail-qk0-f172.google.com
+	[209.85.220.172])
+	by mail.openembedded.org (Postfix) with ESMTP id D4EBD73186;
+	Mon, 20 Jun 2016 02:46:27 +0000 (UTC)
+Received: by mail-qk0-f172.google.com with SMTP id c73so145878189qkg.2;
+	Sun, 19 Jun 2016 19:46:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-disposition:in-reply-to:user-agent;
+	bh=C11KbfCGPwXoI1YCeKRPowQgIxP3F2Ge+w3W/jq1qnU=;
+	b=UfJf8pbZokD/Nyq4Rkvd0esrhYhYMDbG+iaUg3ElOsW3ic7O/lkMWq7QTvsD/htgi5
+	j3hDlgCGEx+CLxaaeA1oxqZVMl/WNadbgggu27UmaXhLzICcKt4oIJLZnlVIR+4OEgsM
+	0Ooe4Qdelvc1OKm++ZQYy2ax8bDvESVyMAYI/cZL3ie5M9jmx3ug6+tUhoGEqLRNuWAR
+	SGV+Avtk1eYhw1RiZGNHrfqOyljP5pr7FA/fis1XNS/OOYawNNc9jJECRHR6GpJMggYu
+	SQXfTrSi77LPDKtu+uX26xtQXz8rA6uKXgO/w072UKE6PmrWMJ+wC6crtNmxEGij6t1t
+	KSYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=19/56HnfaO/x6On5zNmYCcdxsBei9K4+dle6jaAdTSU=;
-	b=GsS7E6rLJOYwnJ02DJFAYDre9hTX5485wBxIG8PGvqqgy/N+RFC6MVKmlTbSo8wmyV
-	YwCTaS81lHCPJ5Vu8EyaKRPFJeIor/ymdl1zeK6VwpJCCeAeTEV4DvHKCuIqLmpXPdzN
-	prTUfrDmcpPVoLzNP1T9T4bng2O6KJFzLzvd/I7mGEB0NjBp5W2YIJICnxlHr225KoQC
-	pmrnVhoWIV7v5PRFT6+u7M9SWVCNoQndKnIG/gjwyu/edyR45D+czuJ4Blt8HLTuFeUI
-	wHcmZEAWU9ljvSAc/+ayBk3kuzBsbJ6QXFDoWmLikg58veMKqi+cQcQYDyDBWiT9lgbk
-	znkA==
-X-Gm-Message-State: ALyK8tKgaXZy/mA5QAWij8WBB1zNS593mrB1maMFU43T6qSEgHOSrXUdiyetZbPKkVLeLQCv
-X-Received: by 10.28.223.215 with SMTP id w206mr780785wmg.61.1466185975655;
-	Fri, 17 Jun 2016 10:52:55 -0700 (PDT)
-Received: from localhost.localdomain
-	(host86-169-85-169.range86-169.btcentralplus.com. [86.169.85.169])
-	by smtp.gmail.com with ESMTPSA id a129sm488171wma.2.2016.06.17.10.52.54
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 17 Jun 2016 10:52:54 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 17 Jun 2016 18:52:50 +0100
-Message-Id: <1466185971-18537-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH 1/2] toaster-tests: remove click on disabled element in test
+	h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+	:mime-version:content-disposition:in-reply-to:user-agent;
+	bh=C11KbfCGPwXoI1YCeKRPowQgIxP3F2Ge+w3W/jq1qnU=;
+	b=k+SlM5PctzNl5nRs/+Hi3NUnKVg950GMFD6PpR9IDK0kN3K9NbmlRjnTNmR0u9VxE6
+	ybYJXqslQth5SnGeZKGlWwVIA3O7jaeVgH6OEcBHb1mNelKEdRxrzQwCsG2wRqKk4Pmh
+	vhLaphuacaIl4pJTZNmVhvNwpNMK8mO2fD55GwJQRguusBRaxfwaiIVlUfseCmf4gqng
+	NOnqyaTS4TuZWepq8WBWjiBstC43O2qtrt5eol+F6m8seOhzSnvbTrTv4MwfSrf1YJ8z
+	vZcyrXVL6zR9cCSkydA8njY2WOv3RD0QWrEZLmJDViLU85MKlZoiZZ8Bllr11rrAHdhg
+	Vf5g==
+X-Gm-Message-State: ALyK8tJnht98iutU1r15uh8KV3mdFuklbToPKeRKoVOYMzoHSkrOjgvZjaWcUi6ZLqBwqA==
+X-Received: by 10.55.217.148 with SMTP id q20mr18747442qkl.62.1466390788009;
+	Sun, 19 Jun 2016 19:46:28 -0700 (PDT)
+Received: from openSUSE-i7.site (dsl-67-55-28-109.acanac.net. [67.55.28.109])
+	by smtp.gmail.com with ESMTPSA id
+	d64sm19564119qkg.35.2016.06.19.19.46.26
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sun, 19 Jun 2016 19:46:27 -0700 (PDT)
+Date: Sun, 19 Jun 2016 22:46:47 -0400
+From: Trevor Woerner <twoerner@gmail.com>
+To: openembedded-architecture
+	<openembedded-architecture@lists.openembedded.org>
+Message-ID: <20160620024647.GA29701@openSUSE-i7.site>
+References: <1465572809.13979.185.camel@linuxfoundation.org>
+	<20160610160710.GA18625@openSUSE-i7.site>
+	<1465575223.13979.188.camel@linuxfoundation.org>
+MIME-Version: 1.0
+In-Reply-To: <1465575223.13979.188.camel@linuxfoundation.org>
+User-Agent: Mutt/1.6.0 (2016-04-01)
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: Multi-configuration builds
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,50 +59,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Jun 2016 17:52:58 -0000
+X-List-Received-Date: Mon, 20 Jun 2016 02:46:28 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-From: Elliot Smith <elliot.smith@intel.com>
+On Fri 2016-06-10 @ 05:13:43 PM, Richard Purdie wrote:
+> On Fri, 2016-06-10 at 12:07 -0400, Trevor Woerner wrote:
+> > On Fri 2016-06-10 @ 04:33:29 PM, Richard Purdie wrote:
+> > > A few people have asked about multi-machine builds.
+> > 
+> > Do you envision each config also pointing to individual bblayer
+> > configurations
+> > too? I.e. if I'm building for 3 different MACHINEs, with 3 different
+> > configs
+> > (local.conf?), then there would also be 3 different bblayers.conf's?
+> 
+> 
+> No, there is one local.conf and one bblayers.conf file and then three
+> different multiconfig files, each one of which sets a different
+> MACHINE.
+> 
+> Would people really want to support different bblayer files? That would
+> complicate things quite a lot :/.
 
-On Firefox 47, attempting to click on the "Submit" button in
-the test which attempts to create a project with a duplicate name
-fails, as the button is not enabled if the name is a duplicate. This
-also causes the test to fail.
+Personally I have a common "Downloads" directory (this is probably quite normal).
 
-Remove the call to the click() method which causes the test to fail.
+Then, I have a common "layers" directory in which I checkout every layer of
+which I'm aware. I also have a script that I run manually from time to time to
+keep each layer up to date (although it's capable of running any general git
+command on each git repository it finds one level beneath it):
+	https://github.com/twoerner/oe-misc/blob/master/scripts/gitcmd.sh
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/toaster/tests/browser/test_new_project_page.py | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+I then create separate directories for each platform for which I'm interested
+in building (e.g. raspi2, raspi3, minnow, dragon, etc...). In each of those
+directories I have separate local.conf, bblayers.conf, sstate-cache, and tmp
+directories.
 
-diff --git a/lib/toaster/tests/browser/test_new_project_page.py b/lib/toaster/tests/browser/test_new_project_page.py
-index 1b038ac..180a690 100644
---- a/lib/toaster/tests/browser/test_new_project_page.py
-+++ b/lib/toaster/tests/browser/test_new_project_page.py
-@@ -80,7 +80,7 @@ class TestNewProjectPage(SeleniumTestCase):
-         """
-         Should not be able to create a new project whose name is the same
-         as an existing project
--       """
-+        """
- 
-         project_name = "dupproject"
- 
-@@ -100,10 +100,6 @@ class TestNewProjectPage(SeleniumTestCase):
-         self.assertTrue(("Project names must be unique" in element.text),
-                         "Did not find unique project name error message")
- 
--        # Try and click it anyway, if it submits we'll have a new project in
--        # the db and assert then
--        self.click("#create-project-button")
--
-         self.assertTrue(
-             (Project.objects.filter(name=project_name).count() == 1),
--            "New project not found in database")
-+            "New project not found in database")
-\ No newline at end of file
--- 
-2.7.4
+I know most will disagree with this arrangement (especially the separate
+sstate-cache directories) but it's a system that has evolved over time, each
+decision was made based on experience, and it works great for me!
 
+It's been my experience that having too many layers in a build slows down the
+initial parsing stage noticeably and too often layers don't play well with
+each other. Also *many* build issues after an update can be fixed by blowing
+away tmp *and* sstate and starting over. Often, building for a particular
+board requires particular tweaks to local.conf (whether to enable a vendor
+license or to enable specific hardware/features) which don't apply to other
+boards and builds.
+
+I'm happy with the speed of my builds, and I have enough disk space to
+maintain the multiple sstates/tmps/etc. *Most* of my builds are
+core-image-full-cmdline-type builds and I can crank one of those out from
+scratch in 20 minutes (assuming the majority of sources have already been
+downloaded). Although I do sometimes need chromium (which takes an hour on its
+own) and I used to do qt (which is also quite painful). So I can understand
+how sstate might be more useful to others, but for me, not so much.
 
