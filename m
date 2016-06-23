@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 5902C738AE
+	by mail.openembedded.org (Postfix) with ESMTP id B86EA73281
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 23 Jun 2016 11:00:09 +0000 (UTC)
+	Thu, 23 Jun 2016 11:00:11 +0000 (UTC)
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga101.jf.intel.com with ESMTP; 23 Jun 2016 04:00:11 -0700
+	by orsmga101.jf.intel.com with ESMTP; 23 Jun 2016 04:00:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,516,1459839600"; d="scan'208";a="723879194"
+X-IronPort-AV: E=Sophos;i="5.26,516,1459839600"; d="scan'208";a="723879224"
 Received: from clim19-mobl.gar.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.255.149.148])
-	by FMSMGA003.fm.intel.com with ESMTP; 23 Jun 2016 04:00:08 -0700
+	by FMSMGA003.fm.intel.com with ESMTP; 23 Jun 2016 04:00:10 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 23 Jun 2016 22:59:11 +1200
-Message-Id: <0448133e60f2ee7b6ff13d1e81d6c84a72f8b046.1466679280.git.paul.eggleton@linux.intel.com>
+Date: Thu, 23 Jun 2016 22:59:12 +1200
+Message-Id: <74266e7cfd4280dbf0c6963f1312ba90741b9a9e.1466679280.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.5.5
 In-Reply-To: <cover.1466679280.git.paul.eggleton@linux.intel.com>
 References: <cover.1466679280.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1466679280.git.paul.eggleton@linux.intel.com>
 References: <cover.1466679280.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH v2 09/10] runqueue: add ability to enforce that tasks are setscened
+Subject: [PATCH v2 10/10] runqueue: report progress for "Preparing RunQueue" step
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,148 +32,357 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Jun 2016 11:00:09 -0000
+X-List-Received-Date: Thu, 23 Jun 2016 11:00:11 -0000
 
-Add the ability to enter a mode where only a specified whitelist of
-tasks can be executed outright; everything else must be successfully
-provided in the form of a setscene task (or covered by a setscene task).
-Any setscene failure outside of the whitelist will cause the build to
-fail immediately instead of running the real task, and any real tasks
-that would execute outside of the whitelist cause an immediate build
-failure when it comes to executing the runqueue as well.
+When "Preparing RunQueue" shows up you can expect to wait up to 30
+seconds while it works - which is a bit long to leave the user waiting
+without any kind of output. Since the work being carried out during this
+time is divided into stages such that it's practical to determine
+internally how it's progressing, replace the message with a progress
+bar.
 
-The mode is enabled by setting BB_SETSCENE_ENFORCE="1", and the
-whitelist is specified through BB_SETSCENE_ENFORCE_WHITELIST, consisting
-of pn:taskname pairs. A single % character can be substituted for the pn
-value to match any target explicitly specified on the bitbake command
-line. Wildcards * and ? can also be used as per standard unix file name
-matching for both pn and taskname.
-
-Part of the implementation of [YOCTO #9367].
+Actually what happens during this time is two major steps rather than
+just one - the runqueue preparation itself, followed by the
+initialisation prior to running setscene tasks. I elected to have the
+progress bar cover both as one (there doesn't appear to be much point in
+doing otherwise from a user perspective). I did however describe it as
+"initialising tasks".
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bb/runqueue.py | 81 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 80 insertions(+), 1 deletion(-)
+ lib/bb/progress.py | 42 ++++++++++++++++++++++++++++++++
+ lib/bb/runqueue.py | 70 +++++++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 109 insertions(+), 3 deletions(-)
 
+diff --git a/lib/bb/progress.py b/lib/bb/progress.py
+index 1365068..f8fa692 100644
+--- a/lib/bb/progress.py
++++ b/lib/bb/progress.py
+@@ -226,3 +226,45 @@ class MultiStageProgressReporter(object):
+                 else:
+                     out.append('Up to finish: %d' % stage_weight)
+             bb.warn('Stage times:\n  %s' % '\n  '.join(out))
++
++class MultiStageProcessProgressReporter(MultiStageProgressReporter):
++    """
++    Version of MultiStageProgressReporter intended for use with
++    standalone processes (such as preparing the runqueue)
++    """
++    def __init__(self, d, processname, stage_weights, debug=False):
++        self._processname = processname
++        MultiStageProgressReporter.__init__(self, d, stage_weights, debug)
++
++    def start(self):
++        bb.event.fire(bb.event.ProcessStarted(self._processname, 100), self._data)
++
++    def _fire_progress(self, taskprogress):
++        bb.event.fire(bb.event.ProcessProgress(self._processname, taskprogress), self._data)
++
++    def finish(self):
++        MultiStageProgressReporter.finish(self)
++        bb.event.fire(bb.event.ProcessFinished(self._processname), self._data)
++
++class DummyMultiStageProcessProgressReporter(MultiStageProgressReporter):
++    """
++    MultiStageProcessProgressReporter that takes the calls and does nothing
++    with them (to avoid a bunch of "if progress_reporter:" checks)
++    """
++    def __init__(self):
++        MultiStageProcessProgressReporter.__init__(self, "", None, [])
++
++    def _fire_progress(self, taskprogress, rate=None):
++        pass
++
++    def start(self):
++        pass
++
++    def next_stage(self, stage_total=None):
++        pass
++
++    def update(self, stage_progress):
++        pass
++
++    def finish(self):
++        pass
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index c9b6b84..b62a28a 100644
+index b62a28a..57be15a 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -240,6 +240,7 @@ class RunQueueData:
- 
+@@ -241,6 +241,7 @@ class RunQueueData:
          self.stampwhitelist = cfgData.getVar("BB_STAMP_WHITELIST", True) or ""
          self.multi_provider_whitelist = (cfgData.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
-+        self.setscenewhitelist = get_setscene_enforce_whitelist(cfgData)
+         self.setscenewhitelist = get_setscene_enforce_whitelist(cfgData)
++        self.init_progress_reporter = bb.progress.DummyMultiStageProcessProgressReporter()
  
          self.reset()
  
-@@ -1596,8 +1597,51 @@ class RunQueueExecuteTasks(RunQueueExecute):
-         Run the tasks in a queue prepared by rqdata.prepare()
-         """
+@@ -432,7 +433,8 @@ class RunQueueData:
+             # Nothing to do
+             return 0
  
--        self.rq.read_workers()
-+        if self.rqdata.setscenewhitelist:
-+            # Check tasks that are going to run against the whitelist
-+            def check_norun_task(tid, showerror=False):
-+                fn = fn_from_tid(tid)
-+                taskname = taskname_from_tid(tid)
-+                # Ignore covered tasks
-+                if tid in self.rq.scenequeue_covered:
-+                    return False
-+                # Ignore stamped tasks
-+                if self.rq.check_stamp_task(tid, taskname, cache=self.stampcache):
-+                    return False
-+                # Ignore noexec tasks
-+                taskdep = self.rqdata.dataCache.task_deps[fn]
-+                if 'noexec' in taskdep and taskname in taskdep['noexec']:
-+                    return False
+-        logger.info("Preparing RunQueue")
++        self.init_progress_reporter.start()
++        self.init_progress_reporter.next_stage()
  
-+                pn = self.rqdata.dataCache.pkg_fn[fn]
-+                if not check_setscene_enforce_whitelist(pn, taskname, self.rqdata.setscenewhitelist):
-+                    if showerror:
-+                        if tid in self.rqdata.runq_setscene_tids:
-+                            logger.error('Task %s.%s attempted to execute unexpectedly and should have been setscened' % (pn, taskname))
-+                        else:
-+                            logger.error('Task %s.%s attempted to execute unexpectedly' % (pn, taskname))
-+                    return True
-+                return False
-+            # Look to see if any tasks that we think shouldn't run are going to
-+            unexpected = False
-+            for tid in self.rqdata.runtaskentries:
-+                if check_norun_task(tid):
-+                    unexpected = True
-+                    break
-+            if unexpected:
-+                # Run through the tasks in the rough order they'd have executed and print errors
-+                # (since the order can be useful - usually missing sstate for the last few tasks
-+                # is the cause of the problem)
-+                task = self.sched.next()
-+                while task is not None:
-+                    check_norun_task(task, showerror=True)
-+                    self.task_skip(task, 'Setscene enforcement check')
-+                    task = self.sched.next()
-+
-+                self.rq.state = runQueueCleanUp
-+                return True
-+
-+        self.rq.read_workers()
+         # Step A - Work out a list of tasks to run
+         #
+@@ -562,8 +564,9 @@ class RunQueueData:
+         # e.g. do_sometask[recrdeptask] = "do_someothertask"
+         # (makes sure sometask runs after someothertask of all DEPENDS, RDEPENDS and intertask dependencies, recursively)
+         # We need to do this separately since we need all of runtaskentries[*].depends to be complete before this is processed
++        self.init_progress_reporter.next_stage(len(recursivetasks))
+         extradeps = {}
+-        for tid in recursivetasks:
++        for taskcounter, tid in enumerate(recursivetasks):
+             extradeps[tid] = set(self.runtaskentries[tid].depends)
  
-         if self.stats.total == 0:
-             # nothing to do
-@@ -1940,6 +1984,16 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         self.scenequeue_covered.add(task)
-         self.scenequeue_updatecounters(task)
+             tasknames = recursivetasks[tid]
+@@ -585,6 +588,7 @@ class RunQueueData:
+             if tid in recursiveitasks:
+                 for dep in recursiveitasks[tid]:
+                     generate_recdeps(dep)
++            self.init_progress_reporter.update(taskcounter)
  
-+    def check_taskfail(self, task):
-+        if self.rqdata.setscenewhitelist:
-+            realtask = task.split('_setscene')[0]
-+            fn = fn_from_tid(realtask)
-+            taskname = taskname_from_tid(realtask)
-+            pn = self.rqdata.dataCache.pkg_fn[fn]
-+            if not check_setscene_enforce_whitelist(pn, taskname, self.rqdata.setscenewhitelist):
-+                logger.error('Task %s.%s failed' % (pn, taskname + "_setscene"))
-+                self.rq.state = runQueueCleanUp
-+
-     def task_complete(self, task):
-         self.stats.taskCompleted()
-         bb.event.fire(sceneQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
-@@ -1950,6 +2004,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         bb.event.fire(sceneQueueTaskFailed(task, self.stats, result, self), self.cfgData)
-         self.scenequeue_notcovered.add(task)
-         self.scenequeue_updatecounters(task, True)
-+        self.check_taskfail(task)
+         # Remove circular references so that do_a[recrdeptask] = "do_a do_b" can work
+         for tid in recursivetasks:
+@@ -600,6 +604,8 @@ class RunQueueData:
+                 logger.debug(2, "Task %s contains self reference!", tid)
+                 self.runtaskentries[tid].depends.remove(tid)
  
-     def task_failoutright(self, task):
-         self.runq_running.add(task)
-@@ -2231,3 +2286,27 @@ class runQueuePipe():
-         if len(self.queue) > 0:
-             print("Warning, worker left partial message: %s" % self.queue)
-         self.input.close()
++        self.init_progress_reporter.next_stage()
 +
-+def get_setscene_enforce_whitelist(d):
-+    if d.getVar('BB_SETSCENE_ENFORCE', True) != '1':
-+        return None
-+    whitelist = (d.getVar("BB_SETSCENE_ENFORCE_WHITELIST", True) or "").split()
-+    outlist = []
-+    for item in whitelist[:]:
-+        if item.startswith('%:'):
-+            for target in sys.argv[1:]:
-+                if not target.startswith('-'):
-+                    outlist.append(target.split(':')[0] + ':' + item.split(':')[1])
-+        else:
-+            outlist.append(item)
-+    return outlist
+         # Step B - Mark all active tasks
+         #
+         # Start with the tasks we were asked to run and mark all dependencies
+@@ -664,6 +670,8 @@ class RunQueueData:
+             else:
+                 mark_active(tid, 1)
+ 
++        self.init_progress_reporter.next_stage()
 +
-+def check_setscene_enforce_whitelist(pn, taskname, whitelist):
-+    import fnmatch
-+    if whitelist:
-+        item = '%s:%s' % (pn, taskname)
-+        for whitelist_item in whitelist:
-+            if fnmatch.fnmatch(item, whitelist_item):
-+                return True
-+        return False
-+    return True
+         # Step C - Prune all inactive tasks
+         #
+         # Once all active tasks are marked, prune the ones we don't need.
+@@ -674,6 +682,8 @@ class RunQueueData:
+                 del self.runtaskentries[tid]
+                 delcount += 1
+ 
++        self.init_progress_reporter.next_stage()
++
+         #
+         # Step D - Sanity checks and computation
+         #
+@@ -689,11 +699,15 @@ class RunQueueData:
+ 
+         logger.verbose("Assign Weightings")
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Generate a list of reverse dependencies to ease future calculations
+         for tid in self.runtaskentries:
+             for dep in self.runtaskentries[tid].depends:
+                 self.runtaskentries[dep].revdeps.add(tid)
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Identify tasks at the end of dependency chains
+         # Error on circular dependency loops (length two)
+         endpoints = []
+@@ -709,10 +723,14 @@ class RunQueueData:
+ 
+         logger.verbose("Compute totals (have %s endpoint(s))", len(endpoints))
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Calculate task weights
+         # Check of higher length circular dependencies
+         self.runq_weight = self.calculate_task_weights(endpoints)
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Sanity Check - Check for multiple tasks building the same provider
+         prov_list = {}
+         seen_fn = []
+@@ -804,6 +822,8 @@ class RunQueueData:
+                 else:
+                     logger.error(msg)
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Create a whitelist usable by the stamp checks
+         stampfnwhitelist = []
+         for entry in self.stampwhitelist.split():
+@@ -813,6 +833,8 @@ class RunQueueData:
+             stampfnwhitelist.append(fn)
+         self.stampfnwhitelist = stampfnwhitelist
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Iterate over the task list looking for tasks with a 'setscene' function
+         self.runq_setscene_tids = []
+         if not self.cooker.configuration.nosetscene:
+@@ -837,6 +859,8 @@ class RunQueueData:
+                 logger.verbose("Invalidate task %s, %s", taskname, fn)
+                 bb.parse.siggen.invalidate_task(taskname, self.dataCache, fn)
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Invalidate task if force mode active
+         if self.cooker.configuration.force:
+             for (fn, target) in self.target_pairs:
+@@ -850,6 +874,8 @@ class RunQueueData:
+                         st = "do_%s" % st
+                     invalidate_task(fn, st, True)
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Create and print to the logs a virtual/xxxx -> PN (fn) table
+         virtmap = taskData.get_providermap(prefix="virtual/")
+         virtpnmap = {}
+@@ -859,6 +885,8 @@ class RunQueueData:
+         if hasattr(bb.parse.siggen, "tasks_resolved"):
+             bb.parse.siggen.tasks_resolved(virtmap, virtpnmap, self.dataCache)
+ 
++        self.init_progress_reporter.next_stage()
++
+         # Iterate over the task list and call into the siggen code
+         dealtwith = set()
+         todeal = set(self.runtaskentries)
+@@ -1096,14 +1124,25 @@ class RunQueue:
+ 
+         if self.state is runQueuePrepare:
+             self.rqexe = RunQueueExecuteDummy(self)
++            # NOTE: if you add, remove or significantly refactor the stages of this
++            # process then you should recalculate the weightings here. This is quite
++            # easy to do - just change the next line temporarily to pass debug=True as
++            # the last parameter and you'll get a printout of the weightings as well
++            # as a map to the lines where next_stage() was called. Of course this isn't
++            # critical, but it helps to keep the progress reporting accurate.
++            self.rqdata.init_progress_reporter = bb.progress.MultiStageProcessProgressReporter(self.cooker.data,
++                                                            "Initialising tasks",
++                                                            [43, 967, 4, 3, 1, 5, 3, 7, 13, 1, 2, 1, 1, 246, 35, 1, 38, 1, 35, 2, 338, 204, 142, 3, 3, 37, 244])
+             if self.rqdata.prepare() == 0:
+                 self.state = runQueueComplete
+             else:
+                 self.state = runQueueSceneInit
++                self.rqdata.init_progress_reporter.next_stage()
+ 
+                 # we are ready to run,  emit dependency info to any UI or class which
+                 # needs it
+                 depgraph = self.cooker.buildDependTree(self, self.rqdata.taskData)
++                self.rqdata.init_progress_reporter.next_stage()
+                 bb.event.fire(bb.event.DepTreeGenerated(depgraph), self.cooker.data)
+ 
+         if self.state is runQueueSceneInit:
+@@ -1116,7 +1155,9 @@ class RunQueue:
+                     self.write_diffscenetasks(invalidtasks)
+                 self.state = runQueueComplete
+             else:
++                self.rqdata.init_progress_reporter.next_stage()
+                 self.start_worker()
++                self.rqdata.init_progress_reporter.next_stage()
+                 self.rqexe = RunQueueExecuteScenequeue(self)
+ 
+         if self.state in [runQueueSceneRun, runQueueRunning, runQueueCleanUp]:
+@@ -1129,6 +1170,8 @@ class RunQueue:
+             if self.cooker.configuration.setsceneonly:
+                 self.state = runQueueComplete
+             else:
++                # Just in case we didn't setscene
++                self.rqdata.init_progress_reporter.finish()
+                 logger.info("Executing RunQueue Tasks")
+                 self.rqexe = RunQueueExecuteTasks(self)
+                 self.state = runQueueRunning
+@@ -1769,6 +1812,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         # therefore aims to collapse the huge runqueue dependency tree into a smaller one
+         # only containing the setscene functions.
+ 
++        self.rqdata.init_progress_reporter.next_stage()
++
+         # First process the chains up to the first setscene task.
+         endpoints = {}
+         for tid in self.rqdata.runtaskentries:
+@@ -1778,6 +1823,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                 #bb.warn("Added endpoint %s" % (tid))
+                 endpoints[tid] = set()
+ 
++        self.rqdata.init_progress_reporter.next_stage()
++
+         # Secondly process the chains between setscene tasks.
+         for tid in self.rqdata.runq_setscene_tids:
+             #bb.warn("Added endpoint 2 %s" % (tid))
+@@ -1787,6 +1834,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                     #bb.warn("  Added endpoint 3 %s" % (dep))
+                     endpoints[dep].add(tid)
+ 
++        self.rqdata.init_progress_reporter.next_stage()
++
+         def process_endpoints(endpoints):
+             newendpoints = {}
+             for point, task in endpoints.items():
+@@ -1811,6 +1860,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+ 
+         process_endpoints(endpoints)
+ 
++        self.rqdata.init_progress_reporter.next_stage()
++
+         # Build a list of setscene tasks which are "unskippable"
+         # These are direct endpoints referenced by the build
+         endpoints2 = {}
+@@ -1847,7 +1898,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             if sq_revdeps_new2[tid]:
+                 self.unskippable.append(tid)
+ 
+-        for tid in self.rqdata.runtaskentries:
++        self.rqdata.init_progress_reporter.next_stage(len(self.rqdata.runtaskentries))
++
++        for taskcounter, tid in enumerate(self.rqdata.runtaskentries):
+             if tid in self.rqdata.runq_setscene_tids:
+                 deps = set()
+                 for dep in sq_revdeps_new[tid]:
+@@ -1855,6 +1908,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                 sq_revdeps_squash[tid] = deps
+             elif len(sq_revdeps_new[tid]) != 0:
+                 bb.msg.fatal("RunQueue", "Something went badly wrong during scenequeue generation, aborting. Please report this problem.")
++            self.rqdata.init_progress_reporter.update(taskcounter)
++
++        self.rqdata.init_progress_reporter.next_stage()
+ 
+         # Resolve setscene inter-task dependencies
+         # e.g. do_sometask_setscene[depends] = "targetname:do_someothertask_setscene"
+@@ -1882,10 +1938,14 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                     # Have to zero this to avoid circular dependencies
+                     sq_revdeps_squash[deptid] = set()
+ 
++        self.rqdata.init_progress_reporter.next_stage()
++
+         for task in self.sq_harddeps:
+              for dep in self.sq_harddeps[task]:
+                  sq_revdeps_squash[dep].add(task)
+ 
++        self.rqdata.init_progress_reporter.next_stage()
++
+         #for tid in sq_revdeps_squash:
+         #    for dep in sq_revdeps_squash[tid]:
+         #        data = data + "\n   %s" % dep
+@@ -1901,6 +1961,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             for dep in self.sq_revdeps[tid]:
+                 self.sq_deps[dep].add(tid)
+ 
++        self.rqdata.init_progress_reporter.next_stage()
++
+         for tid in self.sq_revdeps:
+             if len(self.sq_revdeps[tid]) == 0:
+                 self.runq_buildable.add(tid)
+@@ -1956,6 +2018,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                     logger.debug(2, 'No package found, so skipping setscene task %s', tid)
+                     self.outrightfail.append(tid)
+ 
++        self.rqdata.init_progress_reporter.finish()
++
+         logger.info('Executing SetScene Tasks')
+ 
+         self.rq.state = runQueueSceneRun
 -- 
 2.5.5
 
