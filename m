@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 6DCBF73219
+	by mail.openembedded.org (Postfix) with ESMTP id 12756731D8
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 23 Jun 2016 10:59:56 +0000 (UTC)
+	Thu, 23 Jun 2016 10:59:59 +0000 (UTC)
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga101.jf.intel.com with ESMTP; 23 Jun 2016 03:59:58 -0700
+	by orsmga101.jf.intel.com with ESMTP; 23 Jun 2016 04:00:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,516,1459839600"; d="scan'208";a="723878791"
+X-IronPort-AV: E=Sophos;i="5.26,516,1459839600"; d="scan'208";a="723878798"
 Received: from clim19-mobl.gar.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.255.149.148])
-	by FMSMGA003.fm.intel.com with ESMTP; 23 Jun 2016 03:59:55 -0700
+	by FMSMGA003.fm.intel.com with ESMTP; 23 Jun 2016 03:59:58 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 23 Jun 2016 22:59:06 +1200
-Message-Id: <edb8ce8181a820456b47a5803b5004dcfe35d61e.1466679280.git.paul.eggleton@linux.intel.com>
+Date: Thu, 23 Jun 2016 22:59:07 +1200
+Message-Id: <3b15ae1a30cb247128e003512c036b1f95909674.1466679280.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.5.5
 In-Reply-To: <cover.1466679280.git.paul.eggleton@linux.intel.com>
 References: <cover.1466679280.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1466679280.git.paul.eggleton@linux.intel.com>
 References: <cover.1466679280.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH v2 04/10] lib/bb/progress: add MultiStageProgressReporter
+Subject: [PATCH v2 05/10] fetch2: implement progress support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,146 +32,241 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Jun 2016 10:59:56 -0000
+X-List-Received-Date: Thu, 23 Jun 2016 10:59:59 -0000
 
-Add a class to help report progress in a task that consists of multiple
-stages, some of which may have internal progress (do_rootfs within
-OpenEmbedded is one example). Each stage is weighted to try to give
-a reasonable representation of progress over time.
+Implement progress reporting support specifically for the fetchers. For
+fetch tasks we don't necessarily know which fetcher will be used (we
+might initially be fetching a git:// URI, but if we instead download a
+mirror tarball we may fetch that over http using wget). These programs
+also have different abilities as far as reporting progress goes (e.g.
+wget gives us percentage complete and rate, git gives this some of the
+time depending on what stage it's at). Additionally we filter out the
+progress output before it makes it to the logs, in order to prevent the
+logs filling up with junk.
+
+At the moment this is only implemented for the wget and git fetchers
+since they are the most commonly used (and svn doesn't seem to support
+any kind of progress output, at least not without doing a relatively
+expensive remote file listing first).
+
+Line changes such as the ones you get in git's output as it progresses
+don't make it to the log files, you only get the final state of the line
+so the logs aren't filled with progress information that's useless after
+the fact.
 
 Part of the implementation for [YOCTO #5383].
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bb/progress.py | 111 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 111 insertions(+)
+ lib/bb/fetch2/__init__.py |  4 ++--
+ lib/bb/fetch2/git.py      | 52 +++++++++++++++++++++++++++++++++++++++++++----
+ lib/bb/fetch2/wget.py     | 26 +++++++++++++++++++++++-
+ lib/bb/progress.py        | 31 ++++++++++++++++++++++++++++
+ 4 files changed, 106 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/progress.py b/lib/bb/progress.py
-index bab8e94..93e42df 100644
---- a/lib/bb/progress.py
-+++ b/lib/bb/progress.py
-@@ -20,6 +20,7 @@ BitBake progress handling code
- import sys
- import re
- import time
-+import inspect
- import bb.event
- import bb.build
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index b6fcaaa..a27512c 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -779,7 +779,7 @@ def localpath(url, d):
+     fetcher = bb.fetch2.Fetch([url], d)
+     return fetcher.localpath(url)
  
-@@ -84,3 +85,113 @@ class OutOfProgressHandler(ProgressHandler):
-             progress = (float(nums[-1][0]) / float(nums[-1][1])) * 100
-             self.update(progress)
-         super(OutOfProgressHandler, self).write(string)
+-def runfetchcmd(cmd, d, quiet=False, cleanup=None):
++def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None):
+     """
+     Run cmd returning the command output
+     Raise an error if interrupted or cmd fails
+@@ -821,7 +821,7 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None):
+     error_message = ""
+ 
+     try:
+-        (output, errors) = bb.process.run(cmd, shell=True, stderr=subprocess.PIPE)
++        (output, errors) = bb.process.run(cmd, log=log, shell=True, stderr=subprocess.PIPE)
+         success = True
+     except bb.process.NotFoundError as e:
+         error_message = "Fetch command %s" % (e.command)
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 59827e3..4e2dcec 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -71,11 +71,53 @@ import os
+ import re
+ import bb
+ import errno
++import bb.progress
+ from   bb    import data
+ from   bb.fetch2 import FetchMethod
+ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
+ 
 +
-+class MultiStageProgressReporter(object):
-+    """
-+    Class which allows reporting progress without the caller
-+    having to know where they are in the overall sequence. Useful
-+    for tasks made up of python code spread across multiple
-+    classes / functions - the progress reporter object can
-+    be passed around or stored at the object level and calls
-+    to next_stage() and update() made whereever needed.
-+    """
-+    def __init__(self, d, stage_weights, debug=False):
-+        """
-+        Initialise the progress reporter.
++class GitProgressHandler(bb.progress.LineFilterProgressHandler):
++    """Extract progress information from git output"""
++    def __init__(self, d):
++        self._buffer = ''
++        self._count = 0
++        super(GitProgressHandler, self).__init__(d)
++        # Send an initial progress event so the bar gets shown
++        self._fire_progress(-1)
 +
-+        Parameters:
-+        * d: the datastore (needed for firing the events)
-+        * stage_weights: a list of weight values, one for each stage.
-+          The value is scaled internally so you only need to specify
-+          values relative to other values in the list, so if there
-+          are two stages and the first takes 2s and the second takes
-+          10s you would specify [2, 10] (or [1, 5], it doesn't matter).
-+        * debug: specify True (and ensure you call finish() at the end)
-+          in order to show a printout of the calculated stage weights
-+          based on timing each stage. Use this to determine what the
-+          weights should be when you're not sure.
-+        """
-+        self._data = d
-+        total = sum(stage_weights)
-+        self._stage_weights = [float(x)/total for x in stage_weights]
-+        self._stage = -1
-+        self._base_progress = 0
++    def write(self, string):
++        self._buffer += string
++        stages = ['Counting objects', 'Compressing objects', 'Receiving objects', 'Resolving deltas']
++        stage_weights = [0.2, 0.05, 0.5, 0.25]
++        stagenum = 0
++        for i, stage in reversed(list(enumerate(stages))):
++            if stage in self._buffer:
++                stagenum = i
++                self._buffer = ''
++                break
++        self._status = stages[stagenum]
++        percs = re.findall(r'(\d+)%', string)
++        if percs:
++            progress = int(round((int(percs[-1]) * stage_weights[stagenum]) + (sum(stage_weights[:stagenum]) * 100)))
++            rates = re.findall(r'([\d.]+ [a-zA-Z]*/s+)', string)
++            if rates:
++                rate = rates[-1]
++            else:
++                rate = None
++            self.update(progress, rate)
++        else:
++            if stagenum == 0:
++                percs = re.findall(r': (\d+)', string)
++                if percs:
++                    count = int(percs[-1])
++                    if count > self._count:
++                        self._count = count
++                        self._fire_progress(-count)
++        super(GitProgressHandler, self).write(string)
++
++
+ class Git(FetchMethod):
+     """Class to fetch a module or modules from git repositories"""
+     def init(self, d):
+@@ -196,10 +238,11 @@ class Git(FetchMethod):
+             # We do this since git will use a "-l" option automatically for local urls where possible
+             if repourl.startswith("file://"):
+                 repourl = repourl[7:]
+-            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
++            clone_cmd = "LANG=C %s clone --bare --mirror %s %s --progress" % (ud.basecmd, repourl, ud.clonedir)
+             if ud.proto.lower() != 'file':
+                 bb.fetch2.check_network_access(d, clone_cmd)
+-            runfetchcmd(clone_cmd, d)
++            progresshandler = GitProgressHandler(d)
++            runfetchcmd(clone_cmd, d, log=progresshandler)
+ 
+         os.chdir(ud.clonedir)
+         # Update the checkout if needed
+@@ -214,10 +257,11 @@ class Git(FetchMethod):
+                 logger.debug(1, "No Origin")
+ 
+             runfetchcmd("%s remote add --mirror=fetch origin %s" % (ud.basecmd, repourl), d)
+-            fetch_cmd = "%s fetch -f --prune %s refs/*:refs/*" % (ud.basecmd, repourl)
++            fetch_cmd = "LANG=C %s fetch -f --prune --progress %s refs/*:refs/*" % (ud.basecmd, repourl)
+             if ud.proto.lower() != 'file':
+                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
+-            runfetchcmd(fetch_cmd, d)
++            progresshandler = GitProgressHandler(d)
++            runfetchcmd(fetch_cmd, d, log=progresshandler)
+             runfetchcmd("%s prune-packed" % ud.basecmd, d)
+             runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d)
+             try:
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index d688fd9..3a381b7 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -31,6 +31,7 @@ import subprocess
+ import os
+ import logging
+ import bb
++import bb.progress
+ import urllib.request, urllib.parse, urllib.error
+ from   bb import data
+ from   bb.fetch2 import FetchMethod
+@@ -41,6 +42,27 @@ from   bb.utils import export_proxies
+ from   bs4 import BeautifulSoup
+ from   bs4 import SoupStrainer
+ 
++class WgetProgressHandler(bb.progress.LineFilterProgressHandler):
++    """
++    Extract progress information from wget output.
++    Note: relies on --progress=dot --show-progress being specified on the
++    wget command line.
++    """
++    def __init__(self, d):
++        super(WgetProgressHandler, self).__init__(d)
 +        # Send an initial progress event so the bar gets shown
 +        self._fire_progress(0)
-+        self._debug = debug
-+        self._finished = False
-+        if self._debug:
-+            self._last_time = time.time()
-+            self._stage_times = []
-+            self._stage_total = None
-+            self._callers = []
 +
-+    def _fire_progress(self, taskprogress):
-+        bb.event.fire(bb.build.TaskProgress(taskprogress), self._data)
++    def writeline(self, line):
++        percs = re.findall(r'(\d+)%\s+([\d.]+[A-Z])', line)
++        if percs:
++            progress = int(percs[-1][0])
++            rate = percs[-1][1] + '/s'
++            self.update(progress, rate)
++            return False
++        return True
 +
-+    def next_stage(self, stage_total=None):
-+        """
-+        Move to the next stage.
-+        Parameters:
-+        * stage_total: optional total for progress within the stage,
-+          see update() for details
-+        NOTE: you need to call this before the first stage.
-+        """
-+        self._stage += 1
-+        self._stage_total = stage_total
-+        if self._stage == 0:
-+            # First stage
-+            if self._debug:
-+                self._last_time = time.time()
-+        else:
-+            if self._stage < len(self._stage_weights):
-+                self._base_progress = sum(self._stage_weights[:self._stage]) * 100
-+                if self._debug:
-+                    currtime = time.time()
-+                    self._stage_times.append(currtime - self._last_time)
-+                    self._last_time = currtime
-+                    self._callers.append(inspect.getouterframes(inspect.currentframe())[1])
-+            elif not self._debug:
-+                bb.warn('ProgressReporter: current stage beyond declared number of stages')
-+                self._base_progress = 100
-+            self._fire_progress(self._base_progress)
 +
-+    def update(self, stage_progress):
-+        """
-+        Update progress within the current stage.
-+        Parameters:
-+        * stage_progress: progress value within the stage. If stage_total
-+          was specified when next_stage() was last called, then this
-+          value is considered to be out of stage_total, otherwise it should
-+          be a percentage value from 0 to 100.
-+        """
-+        if self._stage_total:
-+            stage_progress = (float(stage_progress) / self._stage_total) * 100
-+        if self._stage < 0:
-+            bb.warn('ProgressReporter: update called before first call to next_stage()')
-+        elif self._stage < len(self._stage_weights):
-+            progress = self._base_progress + (stage_progress * self._stage_weights[self._stage])
-+        else:
-+            progress = self._base_progress
-+        if progress > 100:
-+            progress = 100
-+        self._fire_progress(progress)
+ class Wget(FetchMethod):
+     """Class to fetch urls via 'wget'"""
+     def supports(self, ud, d):
+@@ -70,9 +92,11 @@ class Wget(FetchMethod):
+ 
+     def _runwget(self, ud, d, command, quiet):
+ 
++        progresshandler = WgetProgressHandler(d)
 +
-+    def finish(self):
-+        if self._finished:
-+            return
-+        self._finished = True
-+        if self._debug:
-+            import math
-+            self._stage_times.append(time.time() - self._last_time)
-+            mintime = max(min(self._stage_times), 0.01)
-+            self._callers.append(None)
-+            stage_weights = [int(math.ceil(x / mintime)) for x in self._stage_times]
-+            bb.warn('Stage weights: %s' % stage_weights)
-+            out = []
-+            for stage_weight, caller in zip(stage_weights, self._callers):
-+                if caller:
-+                    out.append('Up to %s:%d: %d' % (caller[1], caller[2], stage_weight))
-+                else:
-+                    out.append('Up to finish: %d' % stage_weight)
-+            bb.warn('Stage times:\n  %s' % '\n  '.join(out))
+         logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
+         bb.fetch2.check_network_access(d, command)
+-        runfetchcmd(command, d, quiet)
++        runfetchcmd(command + ' --progress=dot --show-progress', d, quiet, log=progresshandler)
+ 
+     def download(self, ud, d):
+         """Fetch urls"""
+diff --git a/lib/bb/progress.py b/lib/bb/progress.py
+index 93e42df..1365068 100644
+--- a/lib/bb/progress.py
++++ b/lib/bb/progress.py
+@@ -58,6 +58,37 @@ class ProgressHandler(object):
+             self._lastevent = ts
+             self._progress = progress
+ 
++class LineFilterProgressHandler(ProgressHandler):
++    """
++    A ProgressHandler variant that provides the ability to filter out
++    the lines if they contain progress information. Additionally, it
++    filters out anything before the last line feed on a line. This can
++    be used to keep the logs clean of output that we've only enabled for
++    getting progress, assuming that that can be done on a per-line
++    basis.
++    """
++    def __init__(self, d, outfile=None):
++        self._linebuffer = ''
++        super(LineFilterProgressHandler, self).__init__(d, outfile)
++
++    def write(self, string):
++        self._linebuffer += string
++        while True:
++            breakpos = self._linebuffer.find('\n') + 1
++            if breakpos == 0:
++                break
++            line = self._linebuffer[:breakpos]
++            self._linebuffer = self._linebuffer[breakpos:]
++            # Drop any line feeds and anything that precedes them
++            lbreakpos = line.rfind('\r') + 1
++            if lbreakpos:
++                line = line[lbreakpos:]
++            if self.writeline(line):
++                super(LineFilterProgressHandler, self).write(line)
++
++    def writeline(self, line):
++        return True
++
+ class BasicProgressHandler(ProgressHandler):
+     def __init__(self, d, regex=r'(\d+)%', outfile=None):
+         super(BasicProgressHandler, self).__init__(d, outfile)
 -- 
 2.5.5
 
