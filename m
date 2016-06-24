@@ -1,24 +1,31 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 8C891731C4
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 8862D606D0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jun 2016 07:55:50 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id u5O7toOB010122
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jun 2016 00:55:50 -0700
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Fri, 24 Jun 2016 00:55:50 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 24 Jun 2016 00:55:48 -0700
-Message-ID: <cover.1466754896.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.8.2
-MIME-Version: 1.0
-Subject: [PATCH 0/1] fetch2: remove "." in the end
+	Fri, 24 Jun 2016 13:15:25 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u5ODFOrs015175; Fri, 24 Jun 2016 14:15:24 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 8o6Dpd2ZTLj7; Fri, 24 Jun 2016 14:15:24 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u5ODFMdL015167
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 24 Jun 2016 14:15:23 +0100
+Message-ID: <1466774122.3319.235.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>,
+	bitbake-devel@lists.openembedded.org, "Wessel, Jason"
+	<jason.wessel@windriver.com>, Mark Hatle <mark.hatle@windriver.com>
+Date: Fri, 24 Jun 2016 14:15:22 +0100
+In-Reply-To: <ba8db9342c0793e7ee796140da0c9c638ae7e6ff.1466754896.git.liezhi.yang@windriver.com>
+References: <cover.1466754896.git.liezhi.yang@windriver.com>
+	<ba8db9342c0793e7ee796140da0c9c638ae7e6ff.1466754896.git.liezhi.yang@windriver.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH 1/1] fetch2: remove "." in the end
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,26 +38,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Jun 2016 07:55:54 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 24 Jun 2016 13:15:27 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit c6d50b272936b61b98a056ea2e1de5d0f4ef53ce:
+On Fri, 2016-06-24 at 00:55 -0700, Robert Yang wrote:
+> From: Jason Wessel <jason.wessel@windriver.com>
+> 
+> The filename can't be "foo." for MS Windows filesystem, it will
+> renamed
+> to "foo" automatically, so we can't upload sources like "foo." to the
+> Windows server, remove "." in the end will fix the problem.
 
-  bitbake: lib/bb/build.py: remove task flag in deltask() (2016-06-23 14:26:33 +0100)
+This patch on its own is probably ok. What I worry about is that if I
+merge this, I'll then get all the follow ups which for example force
+lower or upper case everywhere, remove ":" characters from all
+filenames (including sstate?), remove various other characters and so
+on.
 
-are available in the git repository at:
+We don't run on windows filesystems and we're not likely ever to be
+able to.
 
-  git://git.pokylinux.org/poky-contrib rbt/dot
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/dot
+So what are we aiming for here?
 
-Jason Wessel (1):
-  fetch2: remove "." in the end
+Cheers,
 
- bitbake/lib/bb/fetch2/__init__.py | 2 ++
- bitbake/lib/bb/fetch2/git.py      | 2 ++
- 2 files changed, 4 insertions(+)
-
--- 
-2.8.2
-
+Richard
 
