@@ -1,27 +1,26 @@
-Return-Path: <leonardo.sandoval.gonzalez@linux.intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id B13A173173
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id A144E60111
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 23 Jun 2016 20:48:27 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga102.fm.intel.com with ESMTP; 23 Jun 2016 13:48:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.26,518,1459839600"; d="scan'208";a="127509893"
-Received: from lsandov1-mobl2.zpn.intel.com (HELO [10.219.5.155])
-	([10.219.5.155])
-	by fmsmga004.fm.intel.com with ESMTP; 23 Jun 2016 13:48:28 -0700
-To: Stefan Christ <s.christ@phytec.de>, akuster <akuster@mvista.com>
-References: <1466588072-37331-1-git-send-email-s.christ@phytec.de>
-	<576AB396.3020207@mvista.com> <20160623110038.GD2346@lws-christ>
-From: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
-Message-ID: <a3db0402-f89e-a971-29b1-ecfa02514688@linux.intel.com>
-Date: Thu, 23 Jun 2016 15:50:35 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.1.1
+	Fri, 24 Jun 2016 07:55:51 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u5O7tp90001266
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 24 Jun 2016 00:55:51 -0700 (PDT)
+Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
+	Fri, 24 Jun 2016 00:55:50 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 24 Jun 2016 00:55:49 -0700
+Message-ID: <ba8db9342c0793e7ee796140da0c9c638ae7e6ff.1466754896.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 2.8.2
+In-Reply-To: <cover.1466754896.git.liezhi.yang@windriver.com>
+References: <cover.1466754896.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-In-Reply-To: <20160623110038.GD2346@lws-christ>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH krogoth+] fetch2: fix unpack of symbolic links
+Subject: [PATCH 1/1] fetch2: remove "." in the end
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,70 +33,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Jun 2016 20:48:30 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 24 Jun 2016 07:55:51 -0000
+Content-Type: text/plain
 
-I believe there is no agreement but in general, sending n patches 
-(perhaps all identical) just changing the branch target would be the way 
-to do this. Doing some patchwork patch fetching and parsing, this is 
-what I found related to the format between [XXX]
+From: Jason Wessel <jason.wessel@windriver.com>
 
+The filename can't be "foo." for MS Windows filesystem, it will renamed
+to "foo" automatically, so we can't upload sources like "foo." to the
+Windows server, remove "." in the end will fix the problem.
 
-* fraction only, i.e. [0/10]
-* version only, i.e. [v2]
-* fraction + branch, i.e. [0/10, fido]
-* branch + fraction, i.e. [fido, 0/10]
-* fraction + branch + version, i.e. [0/10, fido, v2]
-* patch string, i.e. [PATCH]
-* patch string + version, i.e. [PATCHv2]
-* etc..
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 2 ++
+ bitbake/lib/bb/fetch2/git.py      | 2 ++
+ 2 files changed, 4 insertions(+)
 
-So this indicates that we need a better guideline to submit patches, at 
-least on this area.
-
-On 06/23/2016 06:00 AM, Stefan Christ wrote:
-> Hi Armin,
->
-> On Wed, Jun 22, 2016 at 08:49:42AM -0700, akuster wrote:
->> Does the "Krogoth+" mean "master" too?
->>
->> - armin
->>
-> Yes. The patch applies on master and krogoth.
->
-> Mit freundlichen Grüßen / Kind regards,
-> 	Stefan Christ
->
->> On 06/22/2016 02:34 AM, Stefan Christ wrote:
->>> Files in the download directory can be symbolic links to the real file.
->>> The fetcher must copy the real file instead of copying the symbolic
->>> link. Otherwise other tasks will fail, like patching, or the recipe will
->>> modify files in the download directory.
->>>
->>> This patch fixes commit 865d2fef ("bitbake: fetch2: fixes copying of
->>> file://dir; subdir=foo, bug 6128 and bug 6129").
->>>
->>> Signed-off-by: Stefan Christ <s.christ@phytec.de>
->>> ---
->>>   bitbake/lib/bb/fetch2/__init__.py | 4 +++-
->>>   1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
->>> index e8fbe89..a1819e7 100644
->>> --- a/bitbake/lib/bb/fetch2/__init__.py
->>> +++ b/bitbake/lib/bb/fetch2/__init__.py
->>> @@ -1423,7 +1423,9 @@ class FetchMethod(object):
->>>                       if urlpath.find("/") != -1:
->>>                           destdir = urlpath.rsplit("/", 1)[0] + '/'
->>>                           bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
->>> -                cmd = 'cp -fpPR %s %s' % (file, destdir)
->>> +                # Use -L to always resolve symbolic links. Files in download
->>> +                # directory can be links to the real file.
->>> +                cmd = 'cp -fpLR %s %s' % (file, destdir)
->>>   
->>>           if not cmd:
->>>               return
->>>
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index b6fcaaa..1633c81 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -865,6 +865,8 @@ def build_mirroruris(origud, mirrors, ld):
+     replacements["PATH"] = origud.path
+     replacements["BASENAME"] = origud.path.split("/")[-1]
+     replacements["MIRRORNAME"] = origud.host.replace(':','.') + origud.path.replace('/', '.').replace('*', '.')
++    if replacements["MIRRORNAME"].endswith('.'):
++        replacements["MIRRORNAME"] = replacements["MIRRORNAME"][:-1]
+ 
+     def adduri(ud, uris, uds, mirrors):
+         for line in mirrors:
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 59827e3..e669efc 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -142,6 +142,8 @@ class Git(FetchMethod):
+         gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.'))
+         if gitsrcname.startswith('.'):
+             gitsrcname = gitsrcname[1:]
++        if gitsrcname.endswith('.'):
++            gitsrcname = gitsrcname[:-1]
+ 
+         # for rebaseable git repo, it is necessary to keep mirror tar ball
+         # per revision, so that even the revision disappears from the
+-- 
+2.8.2
 
 
