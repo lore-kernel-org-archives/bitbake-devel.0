@@ -1,31 +1,45 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8862D606D0
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-pf0-f172.google.com (mail-pf0-f172.google.com
+	[209.85.192.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 167FD6067C
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jun 2016 13:15:25 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u5ODFOrs015175; Fri, 24 Jun 2016 14:15:24 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 8o6Dpd2ZTLj7; Fri, 24 Jun 2016 14:15:24 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u5ODFMdL015167
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 24 Jun 2016 14:15:23 +0100
-Message-ID: <1466774122.3319.235.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>,
-	bitbake-devel@lists.openembedded.org, "Wessel, Jason"
-	<jason.wessel@windriver.com>, Mark Hatle <mark.hatle@windriver.com>
-Date: Fri, 24 Jun 2016 14:15:22 +0100
-In-Reply-To: <ba8db9342c0793e7ee796140da0c9c638ae7e6ff.1466754896.git.liezhi.yang@windriver.com>
-References: <cover.1466754896.git.liezhi.yang@windriver.com>
-	<ba8db9342c0793e7ee796140da0c9c638ae7e6ff.1466754896.git.liezhi.yang@windriver.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: [PATCH 1/1] fetch2: remove "." in the end
+	Fri, 24 Jun 2016 15:26:02 +0000 (UTC)
+Received: by mail-pf0-f172.google.com with SMTP id h14so40292765pfe.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 24 Jun 2016 08:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=JcVtkB78POZjC4JClG09/MWBwJRf6i/XYdQGd7AULjE=;
+	b=evzFgISISo4UJUUORl+2t8aXb4nVFfLk7DSlHB5IY2uCx4ScEe1fk2fWKQoTGdtvjB
+	fyAw3HThz0BUCKFlOb8QOxX1YUueVR6HpqP48ElVRjL6te4KVPzgzILJkrh0Ft79zshx
+	Vum7bYaH0XZkojwG8NmN09EkP+u26HNpAC1OUqbrVxhK3ttZdSUWussqbz2wAdyqoQtU
+	isn3IybprmbsY4vZacC8JydzNtD/6opZ+gcNEj9GFCYizVd9jMpww4Pju8aSifpdpBym
+	JoNz2JkytE0pTO43LRV+i4M44SnA/p37kHdn8NAx7lwhTfkS9ybeq0IB4x1EahFalZ42
+	wfIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=JcVtkB78POZjC4JClG09/MWBwJRf6i/XYdQGd7AULjE=;
+	b=T7jYeuCSbmCZt6v/okbA4Fr5A1wgUtza6vLUbXQxgcTh3T4ngfOQIMjHGZm8RJJ5hG
+	7oulcJV+RPw4xyv07yW7nCzt6ecV1gKHC4Rns1qykc4Mr9ZpAURVmsboqTzFeLNPm78P
+	F6j5uUt0UtNq5bAiWRuBHhPTR+rHsxAPVhAsPwuSIdwCMw3ZPf9MVawJE8heQ62JLMtL
+	PK7HII7rLLGgKj9o5T+SnIHsHBRQdF6ybPAD/lSRxz4hImy2SVvmcdfAHwCsME4rqYnB
+	YkGGanNogG+V0xfkfiKFVHneQJu5xxBmjGQCUJ/SHDZimR3TWPdKpW89yK/gMu7iJfrq
+	eh9g==
+X-Gm-Message-State: ALyK8tJXbhHmddbNiy3En5PyoboQk58Zpnhzx5xiCYO+vi88cJmlCnNFOtV9MEQs3kDvSl0H
+X-Received: by 10.98.71.155 with SMTP id p27mr8495868pfi.132.1466781962706;
+	Fri, 24 Jun 2016 08:26:02 -0700 (PDT)
+Received: from orion.ger.corp.intel.com ([192.55.54.45])
+	by smtp.gmail.com with ESMTPSA id w67sm939643pfw.41.2016.06.24.08.26.00
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 24 Jun 2016 08:26:02 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 24 Jun 2016 16:25:53 +0100
+Message-Id: <1466781954-16044-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 1/2] toaster: remove SSTATE_MIRRORS from blacklists in views
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,30 +52,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Jun 2016 13:15:27 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 24 Jun 2016 15:26:07 -0000
 
-On Fri, 2016-06-24 at 00:55 -0700, Robert Yang wrote:
-> From: Jason Wessel <jason.wessel@windriver.com>
-> 
-> The filename can't be "foo." for MS Windows filesystem, it will
-> renamed
-> to "foo" automatically, so we can't upload sources like "foo." to the
-> Windows server, remove "." in the end will fix the problem.
+From: Sujith H <sujith.h@gmail.com>
 
-This patch on its own is probably ok. What I worry about is that if I
-merge this, I'll then get all the follow ups which for example force
-lower or upper case everywhere, remove ":" characters from all
-filenames (including sstate?), remove various other characters and so
-on.
+Remove SSTATE_MIRRORS variable from blacklists in views.py
+This helps user to point mirrors using SSTATE_MIRRORS with
+toaster.
 
-We don't run on windows filesystems and we're not likely ever to be
-able to.
+[#YOCTO 9598]
 
-So what are we aiming for here?
+Signed-off-by: Sujith H <sujith.h@gmail.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/toaster/toastergui/views.py | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-Cheers,
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 28ff67b..c40273c 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -1533,11 +1533,16 @@ if True:
+     def xhr_configvaredit(request, pid):
+         try:
+             prj = Project.objects.get(id = pid)
++            # There are cases where user can add variables which hold values
++            # like http://, file:/// etc. In such case a simple split(":")
++            # would fail. One example is SSTATE_MIRRORS variable. So we use
++            # max_split var to handle them.
++            max_split = 1
+             # add conf variables
+             if 'configvarAdd' in request.POST:
+                 t=request.POST['configvarAdd'].strip()
+                 if ":" in t:
+-                    variable, value = t.split(":")
++                    variable, value = t.split(":", max_split)
+                 else:
+                     variable = t
+                     value = ""
+@@ -1547,7 +1552,7 @@ if True:
+             if 'configvarChange' in request.POST:
+                 t=request.POST['configvarChange'].strip()
+                 if ":" in t:
+-                    variable, value = t.split(":")
++                    variable, value = t.split(":", max_split)
+                 else:
+                     variable = t
+                     value = ""
+@@ -2210,7 +2215,7 @@ if True:
+         vars_blacklist  = {
+             'PARALLEL_MAKE','BB_NUMBER_THREADS',
+             'BB_DISKMON_DIRS','BB_NUMBER_THREADS','CVS_PROXY_HOST','CVS_PROXY_PORT',
+-            'PARALLEL_MAKE','SSTATE_MIRRORS','TMPDIR',
++            'PARALLEL_MAKE','TMPDIR',
+             'all_proxy','ftp_proxy','http_proxy ','https_proxy'
+             }
+ 
+-- 
+2.7.4
 
-Richard
 
