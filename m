@@ -1,48 +1,30 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pf0-f171.google.com (mail-pf0-f171.google.com
-	[209.85.192.171])
-	by mail.openembedded.org (Postfix) with ESMTP id DA52A6FFCE
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 810E36E630
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jun 2016 15:26:04 +0000 (UTC)
-Received: by mail-pf0-f171.google.com with SMTP id t190so40251051pfb.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jun 2016 08:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=GtXmIufj2DaxuWND7I4we6r7zzL0wgSct+skbN+7PiM=;
-	b=RUUpQtFfOq2an1JAzdflyxIDo5vEu0tkChbfjvPPyk/pH2MyRAUBayDGVkYSulJfuS
-	As5Yqn2Dj9GZM7IobLUeiRfvtLXd5glOY0Ktvj7hiBDCi9XyjH+li24x3fkwoSzhYnL3
-	uGnieVe38pVyNSer71O70TISdYHJO0YpUNB5drpNHNIb52Nc/a8nBemghST336Dv7qKn
-	32+iFXLS2KFyVcpXBnpzrWnv+mMsaQynMRrqQkBgW+L09hpRyr2102ScY5JbqLcovU2g
-	Rnyk+5/KKHnGRLrc8n2y3jBGhwwaJn+e87pzh0vTJKXWAKVu9jeYfehJVN84qTfIiu9f
-	xmLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=GtXmIufj2DaxuWND7I4we6r7zzL0wgSct+skbN+7PiM=;
-	b=H5HxN3GTiEEAa/tAqejj/X5Xdo/vgKr8CXHY7mJ0/VP4pBiGuRfe4R4oZZ3R28E4M9
-	8XyzbZ6EKbh0+pgQc+PIsegsPjkmQP3y3/mo0FO9uiGMWREDpBCtw3iLjYUbdbLJADR0
-	ebtvuAgURn6G5xgyu2Vq7t66vGiSw0+jC8V5GfZip+2BEfx53GY9yDR4KUdg/mVpqokk
-	WsOOsktvL2DXQvLPv8p7yRHwFYBvKmQQLIwQsKdjr8IB58PWbN11Be8MgRukr9FwnX8/
-	5xOFEtYbekt4GNIGu33yYnqMeDtNltmoFVE2Ztq/3S9EvEKLj2hq+CzK3FfXZ6TZAAMF
-	oZEg==
-X-Gm-Message-State: ALyK8tLNhX4B+4o687qIWcjQzADt56xGPfbEGEPE1U2QrUYfBF1ng4MdFyiEPj1ShkwIYLs5
-X-Received: by 10.98.25.66 with SMTP id 63mr8392430pfz.94.1466781964865;
-	Fri, 24 Jun 2016 08:26:04 -0700 (PDT)
-Received: from orion.ger.corp.intel.com ([192.55.54.45])
-	by smtp.gmail.com with ESMTPSA id w67sm939643pfw.41.2016.06.24.08.26.02
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 24 Jun 2016 08:26:04 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 24 Jun 2016 16:25:54 +0100
-Message-Id: <1466781954-16044-2-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1466781954-16044-1-git-send-email-michael.g.wood@intel.com>
-References: <1466781954-16044-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 2/2] toaster: remove SSTATE_MIRRORS from projectconf
+	Mon, 27 Jun 2016 03:31:56 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u5R3Vus7026981
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Sun, 26 Jun 2016 20:31:56 -0700 (PDT)
+Received: from [128.224.162.240] (128.224.162.240) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.248.2;
+	Sun, 26 Jun 2016 20:31:55 -0700
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	<bitbake-devel@lists.openembedded.org>, "Wessel, Jason"
+	<jason.wessel@windriver.com>, Mark Hatle <mark.hatle@windriver.com>
+References: <cover.1466754896.git.liezhi.yang@windriver.com>
+	<ba8db9342c0793e7ee796140da0c9c638ae7e6ff.1466754896.git.liezhi.yang@windriver.com>
+	<1466774122.3319.235.camel@linuxfoundation.org>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <57709E29.2000707@windriver.com>
+Date: Mon, 27 Jun 2016 11:31:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.8.0
+MIME-Version: 1.0
+In-Reply-To: <1466774122.3319.235.camel@linuxfoundation.org>
+Subject: Re: [PATCH 1/1] fetch2: remove "." in the end
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,35 +37,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Jun 2016 15:26:07 -0000
+X-List-Received-Date: Mon, 27 Jun 2016 03:31:57 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Sujith H <sujith.h@gmail.com>
 
-Remove SSTATE_MIRRORS from getting blacklisted. Hence the SSTATE_MIRRORS
-should be removed from projectconf.html file so that users can know that
-this variable is no more blacklisted.
 
-[YOCTO #9598]
+On 06/24/2016 09:15 PM, Richard Purdie wrote:
+> On Fri, 2016-06-24 at 00:55 -0700, Robert Yang wrote:
+>> From: Jason Wessel <jason.wessel@windriver.com>
+>>
+>> The filename can't be "foo." for MS Windows filesystem, it will
+>> renamed
+>> to "foo" automatically, so we can't upload sources like "foo." to the
+>> Windows server, remove "." in the end will fix the problem.
+>
+> This patch on its own is probably ok. What I worry about is that if I
+> merge this, I'll then get all the follow ups which for example force
+> lower or upper case everywhere, remove ":" characters from all
+> filenames (including sstate?), remove various other characters and so
+> on.
+>
+> We don't run on windows filesystems and we're not likely ever to be
+> able to.
+>
+> So what are we aiming for here?
 
-Signed-off-by: Sujith H <sujith.h@gmail.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/toaster/toastergui/templates/projectconf.html | 1 -
- 1 file changed, 1 deletion(-)
+We don't run bitbake on windows, either. Our problem is that we put
+the downloaded sources on a windows server, and the filename mismatches
+when the name is "foo.", so it would fail to download.
 
-diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
-index bfa386d..9a8b841 100644
---- a/lib/toaster/toastergui/templates/projectconf.html
-+++ b/lib/toaster/toastergui/templates/projectconf.html
-@@ -203,7 +203,6 @@
-           <code>CVS_PROXY_HOST</code>
-           <code>CVS_PROXY_PORT</code>
-           <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-PARALLEL_MAKE" target="_blank">PARALLEL_MAKE</a></code>
--          <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-SSTATE_MIRRORS" target="_blank">SSTATE_MIRRORS</a></code>
-           <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-TMPDIR" target="_blank">TMPDIR</a></code></p>
-           <p>Plus the following standard shell environment variables:</p>
-           <p><code>http_proxy</code> <code>ftp_proxy</code> <code>https_proxy</code> <code>all_proxy</code></p>
--- 
-2.7.4
+// Robert
 
+>
+> Cheers,
+>
+> Richard
+>
 
