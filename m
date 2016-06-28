@@ -1,30 +1,47 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 81A8070016
+Return-Path: <ross.burton@intel.com>
+Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
+	[209.85.223.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 5654A6FFAB
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Jun 2016 18:19:47 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u5RIJmel003181
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Tue, 28 Jun 2016 10:23:51 +0000 (UTC)
+Received: by mail-io0-f172.google.com with SMTP id s63so12491493ioi.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Jun 2016 11:19:48 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.230) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Mon, 27 Jun 2016 11:19:47 -0700
-To: Robert Yang <liezhi.yang@windriver.com>,
-	<bitbake-devel@lists.openembedded.org>
-References: <cover.1466754896.git.liezhi.yang@windriver.com>
-	<ba8db9342c0793e7ee796140da0c9c638ae7e6ff.1466754896.git.liezhi.yang@windriver.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-Message-ID: <d81d4085-5f4e-8f51-035a-b1f2570ff644@windriver.com>
-Date: Mon, 27 Jun 2016 13:19:46 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0)
-	Gecko/20100101 Thunderbird/45.1.1
+	Tue, 28 Jun 2016 03:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=dcB8sy9R/6a7ti8RG4H60OQtJmYRhObIXS6DGQpL/Go=;
+	b=0AprIOYqH3FP5GFE5yVQC1D7vebbQOuyEoq39Bzdw2ZimoL9TBoeYkQ7slMT4AW78n
+	kvqc4ShiGHH33qE+VTE9WETi2fPgAtFAo49suLYw2izFaSBPLPHlGQeDCx60vuKTMzdQ
+	9vWGcPO5FSJbtDSJx6bNYsdv99Sbab9aTIr25ZqISAS/MeP4rq+/qo/Oud2MNBuLxsrg
+	LQ6Cv1CGHHMkBf6SdkvIue8khTRuAET48IxZJ6hHwC/PxSP7YPTLgJXJjlZpMqWrmrS8
+	rQVBnoSKorjAVNcnFUDUPTuUVoaTa5KMLxbhXurf5AY428he/P1AdKSzyjG7W6CwZl6H
+	JA3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=dcB8sy9R/6a7ti8RG4H60OQtJmYRhObIXS6DGQpL/Go=;
+	b=V8W5t19A068k+baXDMTRozbCwXEuLj3pZaZ4WmtMUBdIHkjG0wv63F5Y+pi0mUaSgI
+	yXwLCCLyi+Zb6hP+6OHNL1tc2P3AhwH26a/1EfDxI+1ZO5moS8K5XGo+YfEf6DMxCh5N
+	jdc5rGIui/BaiqiNa9kB3PnSqM5263AV6Wi2tzYKInF5zzTOzmej0HMeE/Y1VFGumWRc
+	DwhQNCmQolUbISZRdjYxW541XCpoXLuAeoBNO9/Mphcw6DLJ7H3XZNKkUzp2rFzsuI3z
+	XNiM5qZPbOHNObZOl073i2zRRhYtRUxlAnRLXKRti8nvAVBh4LYO8oSs7KA8/lWJx67y
+	U7jg==
+X-Gm-Message-State: ALyK8tLhxinOHPQe1zX3XqmWYH81XQyPtJMssGvuvShmAM2JoTLszBMFUxZK1BRIbD2gHPjfEmm9T0KXulFWEnE1
+X-Received: by 10.107.154.210 with SMTP id c201mr2522270ioe.99.1467109432305; 
+	Tue, 28 Jun 2016 03:23:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ba8db9342c0793e7ee796140da0c9c638ae7e6ff.1466754896.git.liezhi.yang@windriver.com>
-Subject: Re: [PATCH 1/1] fetch2: remove "." in the end
+Received: by 10.107.142.151 with HTTP; Tue, 28 Jun 2016 03:23:32 -0700 (PDT)
+In-Reply-To: <5e1ed9818cf97c1de778cc25a640d8bc589f4d55.1465786269.git.paul.eggleton@linux.intel.com>
+References: <cover.1465786269.git.paul.eggleton@linux.intel.com>
+	<5e1ed9818cf97c1de778cc25a640d8bc589f4d55.1465786269.git.paul.eggleton@linux.intel.com>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Tue, 28 Jun 2016 11:23:32 +0100
+Message-ID: <CAJTo0Lbfx7mDE1f0Oa3EtAp+-HdYGXJ8AY0T4adDiMKi=fLzzw@mail.gmail.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 05/10] fetch2: implement progress support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,85 +54,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Jun 2016 18:19:48 -0000
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 28 Jun 2016 10:23:53 -0000
+Content-Type: multipart/alternative; boundary=001a1140fab68f3e1a05365408ff
 
-Based on some feedback on IRC.  I tried to move this into the git.py
-'urldata_init' function.
+--001a1140fab68f3e1a05365408ff
+Content-Type: text/plain; charset=UTF-8
 
-This was pretty simple and appeared to work on the surface.  I then added a test
-case to the fetch.py test cases.  At which point I can not reconcile the work.
+On 13 June 2016 at 03:52, Paul Eggleton <paul.eggleton@linux.intel.com>
+wrote:
 
-In the test harness, around line 296 -- 'def test_uri', the system compares the
-input URI, to the generated URI, i.e.:
+> +        runfetchcmd(command + ' --progress=dot --show-progress', d,
+> quiet, log=progresshandler)
+>
 
-        "git://example.net/path/example/": {
-            'uri': 'git://example.net/path/example',
-            'scheme': 'git',
-            ...
+wget: unrecognized option '--show-progress'
 
-The URI function and the fetch processing run two different paths.  Since the
-URI class has no concept of special processing, the 'uri' it ends up with is
-always "git://example.net/path/example/".  However, the fetchers processing,
-after stripping the trailing '/' from the ud.path and then reconstructing the
-URI ends up with "git://example.net/path/example".  And a test case failure I
-can't get around.
+Turns out wget on Ubuntu 14.04 (wget 1.15) doesn't support this option.
 
-So I have a couple of questions:
+Ross
 
-1) Why do we have both a URI and encodeurl/decodeurl set of functions?  It seems
-like we have multiple ways of getting exactly the same data.
+--001a1140fab68f3e1a05365408ff
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-2) Is there a flaw in this test harness, that it verifies that element 1 and
-element 2:uri always have to match?
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On 13 June 2016 at 03:52, Paul Eggleton <span dir=3D"ltr">&lt;<a href=3D"ma=
+ilto:paul.eggleton@linux.intel.com" target=3D"_blank">paul.eggleton@linux.i=
+ntel.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(20=
+4,204,204);border-left-style:solid;padding-left:1ex"><div id=3D":8yl" class=
+=3D"">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 runfetchcmd(command + &#39; --progress=
+=3Ddot --show-progress&#39;, d, quiet, log=3Dprogresshandler)<br></div></bl=
+ockquote></div><br>wget: unrecognized option &#39;--show-progress&#39;</div=
+><div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Turns out =
+wget on Ubuntu 14.04 (wget 1.15) doesn&#39;t support this option.</div><div=
+ class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Ross</div></div=
+>
 
-The commit that highlights this issue is available as:
-
-http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/commit/?h=mgh/bitbake-git&id=5e45f3dea413f5b95fd8a872d48b72c11df15680
-
---Mark
-
-On 6/24/16 2:55 AM, Robert Yang wrote:
-> From: Jason Wessel <jason.wessel@windriver.com>
-> 
-> The filename can't be "foo." for MS Windows filesystem, it will renamed
-> to "foo" automatically, so we can't upload sources like "foo." to the
-> Windows server, remove "." in the end will fix the problem.
-> 
-> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
->  bitbake/lib/bb/fetch2/__init__.py | 2 ++
->  bitbake/lib/bb/fetch2/git.py      | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-> index b6fcaaa..1633c81 100644
-> --- a/bitbake/lib/bb/fetch2/__init__.py
-> +++ b/bitbake/lib/bb/fetch2/__init__.py
-> @@ -865,6 +865,8 @@ def build_mirroruris(origud, mirrors, ld):
->      replacements["PATH"] = origud.path
->      replacements["BASENAME"] = origud.path.split("/")[-1]
->      replacements["MIRRORNAME"] = origud.host.replace(':','.') + origud.path.replace('/', '.').replace('*', '.')
-> +    if replacements["MIRRORNAME"].endswith('.'):
-> +        replacements["MIRRORNAME"] = replacements["MIRRORNAME"][:-1]
->  
->      def adduri(ud, uris, uds, mirrors):
->          for line in mirrors:
-> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> index 59827e3..e669efc 100644
-> --- a/bitbake/lib/bb/fetch2/git.py
-> +++ b/bitbake/lib/bb/fetch2/git.py
-> @@ -142,6 +142,8 @@ class Git(FetchMethod):
->          gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.'))
->          if gitsrcname.startswith('.'):
->              gitsrcname = gitsrcname[1:]
-> +        if gitsrcname.endswith('.'):
-> +            gitsrcname = gitsrcname[:-1]
->  
->          # for rebaseable git repo, it is necessary to keep mirror tar ball
->          # per revision, so that even the revision disappears from the
-> 
-
-
+--001a1140fab68f3e1a05365408ff--
