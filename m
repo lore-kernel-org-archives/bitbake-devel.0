@@ -1,45 +1,48 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 97B8160119
+Return-Path: <mhalstead@linuxfoundation.org>
+Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
+	[209.85.220.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 6E3AC62132
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jun 2016 21:32:31 +0000 (UTC)
-Received: by mail-wm0-f45.google.com with SMTP id v199so3359577wmv.0
+	Thu, 30 Jun 2016 23:03:07 +0000 (UTC)
+Received: by mail-pa0-f44.google.com with SMTP id b13so32534123pat.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jun 2016 14:32:32 -0700 (PDT)
+	Thu, 30 Jun 2016 16:03:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=PLReNCDswm/WjHJiM9Q9/6GxdxyL15ZGgdE4we/ATAs=;
-	b=BnbNVUPfCspLjEaqf29DjWZyVabjwdTkY1pc+5s7YF3wX3EVTFFckX61EoCbev/MLv
-	L6YYXPKCV4J4wRvvFeB1VVTXtRy6VhRiZOq8RYed2mh5ePyxT/vOpzd/4js6RO+/4+4x
-	LZ0xDF7wK+5lUY0HUMZ3bxBFI95ttw00yTaPxFC6PX382rHROl+T+JUUSQ8c31F4Of1i
-	DM0xtkQ952JgmHu+KDpN7MUHRKVuiX+lVpywDrtTYe3q3uK0BwvJGfFoAY8BYEXzhBGF
-	SnXvIDElmVQ1d3XwiZUnxVdkUSuZMfJwmkwv5WgPejSX2+6SYNbr4KgT9OJGt59wGP0+
-	aSww==
+	d=linuxfoundation.org; s=google;
+	h=to:from:subject:message-id:date:user-agent:mime-version
+	:content-transfer-encoding;
+	bh=JdyA5e9e8cGPSPva1gKfq9rs7DpFmLWV//og5oxYWKM=;
+	b=WOO8wEwo2MAl3Rjc0JR7Ax3WHFP+Un2BoM99L5DOwsnEdqlGUF2EYIYgGILC5Djc4y
+	sfhOkONj6yTOwjhpjqzPyNJJfDLuMO89jESah3yVM0f4yAIXg0evQ6nLYBoQOlU3Egz8
+	LmD7+IiYU2FzNaIZm9inUEqezL3jOtpp5MCXU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=PLReNCDswm/WjHJiM9Q9/6GxdxyL15ZGgdE4we/ATAs=;
-	b=OKKYHPiz/WhMQN9Ym/RmgCJ0Jx1RXUOFCF91by32ckZ64iZRi5rtm1guzUyo3F22Q+
-	YMDG16yJnMCCRNJmCxTwzVnxjQq6j35z3eYalNhRq2+r1d2oALi3PHe9/WuAVs0xaKWn
-	EdJSBq+L2bMtJWPBrSHrsBIoVD+Vhm5k4ucWrA5myVr5CD0Yoa9CQwrxv6wXDCnNj30C
-	uRRKeMUwAOMTBnrr0W2Id+rxc2MZMT0uHFNXyAcE7ITpBayaonW8R6fN9D1XAPWHYPSD
-	To0ri2UMQ/a16i116nTt1amiL6hS3xVa58wbmX5gOzS/fUJ0g1Ah+1HkByj6kLK+TISH
-	WEmQ==
-X-Gm-Message-State: ALyK8tJqagAYr+oiaxmkaO8EOBJVLALhXk9CSuy4k77oztDwp33abaTvn9eMeHWNGU+Zaj82
-X-Received: by 10.195.10.131 with SMTP id ea3mr240494wjd.86.1467322351211;
-	Thu, 30 Jun 2016 14:32:31 -0700 (PDT)
-Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
-	by smtp.gmail.com with ESMTPSA id q71sm202538wme.17.2016.06.30.14.32.29
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 30 Jun 2016 14:32:30 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Jun 2016 22:32:24 +0100
-Message-Id: <1467322344-1356-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 2.8.1
-Subject: [PATCH] fetch2/wget: attempt checkstatus again if it fails
+	h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=JdyA5e9e8cGPSPva1gKfq9rs7DpFmLWV//og5oxYWKM=;
+	b=bfDRUnOJivtMHs6+q40Tj1JfCmAkjTTfOyl0O5/dpqzhf9EsaX7qn0AKfspes+VTsj
+	nWGI8ZKI8DeeOkiZlsq+qeY0YsM9VyBNk/OjtWN4uj81vmfpl36PvOq7jVP3a4Up4HG8
+	J3ZaomopOuB0x1d2RZNihll/vaKITuJmOTaudOUrtJ+18hSfProDQSYpKQjefCfvkX+Z
+	HKwsex5aNvR18tGasOntu38LVLxunRJabBxKwf4q0L5FrHyP6ffCxoH9eBBTjZ4IwYXU
+	yqLOO0LSLZzLohJPVXJcDPXwpWRnYI+aOfSvcg4CZiG7T2bEUl1KatDNZSm+XLieXtFB
+	JKPg==
+X-Gm-Message-State: ALyK8tJti4SPq7igInw8hhVaL2jzSKTanK/TUxZ5Le7X7EntYgzng4CCfjVi2uCamAoqKErl
+X-Received: by 10.66.234.65 with SMTP id uc1mr25495792pac.81.1467327788549;
+	Thu, 30 Jun 2016 16:03:08 -0700 (PDT)
+Received: from yct-desktop.lan ([2001:470:b:16e:222:4dff:fe50:c906])
+	by smtp.gmail.com with ESMTPSA id s12sm168716pfj.57.2016.06.30.16.03.07
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 30 Jun 2016 16:03:07 -0700 (PDT)
+To: bitbake-devel@lists.openembedded.org,
+	Openembedded-core@lists.openembedded.org,
+	Openembedded-devel@lists.openembedded.org, yocto@yoctoproject.org
+From: Michael Halstead <mhalstead@linuxfoundation.org>
+Message-ID: <ae4e2654-ca20-85d1-d53b-b0b05ab25a26@linuxfoundation.org>
+Date: Thu, 30 Jun 2016 16:03:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+	Thunderbird/45.1.1
+MIME-Version: 1.0
+Subject: Patchwork upgrade tonight
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,50 +55,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Jun 2016 21:32:34 -0000
+X-List-Received-Date: Thu, 30 Jun 2016 23:03:09 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Some services such as SourceForge seem to struggle to keep up under load, with
-the result that over half of the autobuilder checkuri runs fail with
-sourceforge.net "connection timed out".
+After 2 weeks of testing and some performance tuning we are going to
+proceed with the Patchwork upgrade. Data entered into the current
+version in the next few hours may need to be re-entered after the upgrade.
 
-Attempt to mitigate this by re-attempting once the network operation on failure.
+All features of the current Patchwork install work in the new version.
+So while there are still issues surrounding detection of patch series
+there are no known regressions. Series detection can be addressed after
+the upgrade.
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
----
- bitbake/lib/bb/fetch2/wget.py | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+The rollback plan can be executed very quickly if needed.
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index d688fd9..6cb22ae 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -104,7 +104,7 @@ class Wget(FetchMethod):
- 
-         return True
- 
--    def checkstatus(self, fetch, ud, d):
-+    def checkstatus(self, fetch, ud, d, try_again=True):
-         import urllib.request, urllib.error, urllib.parse, socket, http.client
-         from urllib.response import addinfourl
-         from bb.fetch2 import FetchConnectionCache
-@@ -278,9 +278,13 @@ class Wget(FetchMethod):
-             r.get_method = lambda: "HEAD"
-             opener.open(r)
-         except urllib.error.URLError as e:
--            # debug for now to avoid spamming the logs in e.g. remote sstate searches
--            logger.debug(2, "checkstatus() urlopen failed: %s" % e)
--            return False
-+            if try_again:
-+                logger.debug(2, "checkstatus: trying again")
-+                return self.checkstatus(fetch, ud, d, False)
-+            else:
-+                # debug for now to avoid spamming the logs in e.g. remote sstate searches
-+                logger.debug(2, "checkstatus() urlopen failed: %s" % e)
-+                return False
-         return True
- 
-     def _parse_path(self, regex, s):
+Please reach out if you have concerns.
+
 -- 
-2.8.1
-
+Michael Halstead
+Linux Foundation / SysAdmin
 
