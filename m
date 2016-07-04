@@ -1,40 +1,23 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from bird.oak.relay.mailchannels.net
-	(bird.oak.relay.mailchannels.net [23.83.215.17])
-	by mail.openembedded.org (Postfix) with ESMTP id 696476011C
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 7698F601D4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  4 Jul 2016 15:42:40 +0000 (UTC)
-X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 82CEA124842;
-	Mon,  4 Jul 2016 15:34:57 +0000 (UTC)
-Received: from uscentral428.accountservergroup.com
-	(ip-10-123-105-117.us-west-2.compute.internal [10.123.105.117])
-	by relay.mailchannels.net (Postfix) with ESMTPA id B9E28123F56;
-	Mon,  4 Jul 2016 15:34:56 +0000 (UTC)
-X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.91.5.35])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.6.15); Mon, 04 Jul 2016 15:34:57 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
-X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1467646497060:1259397535
-X-MC-Ingress-Time: 1467646497060
-Received: from [176.251.41.101] (port=51684 helo=localhost.localdomain)
-	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
-	(envelope-from <elliot.smith@intel.com>)
-	id 1bK5wH-0007ND-Uh; Mon, 04 Jul 2016 11:37:38 -0400
-From: Elliot Smith <elliot.smith@intel.com>
+	Mon,  4 Jul 2016 22:04:01 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 04 Jul 2016 15:04:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.26,576,1459839600"; d="scan'208";a="989103684"
+Received: from linux.intel.com ([10.54.29.200])
+	by orsmga001.jf.intel.com with ESMTP; 04 Jul 2016 15:04:02 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
+	by linux.intel.com (Postfix) with ESMTP id E472A6A4080;
+	Mon,  4 Jul 2016 15:03:56 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  4 Jul 2016 16:34:46 +0100
-Message-Id: <1467646486-3262-2-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1467646486-3262-1-git-send-email-elliot.smith@intel.com>
-References: <1467646486-3262-1-git-send-email-elliot.smith@intel.com>
-X-AuthUser: elliot@townx.org
-Subject: [PATCH 2/2] toaster: views Fix most frequently built target in project reporting
+Date: Tue,  5 Jul 2016 00:53:59 +0300
+Message-Id: <1467669239-16680-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] bitbake-worker: don't reassign sys.stdout
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,82 +30,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 04 Jul 2016 15:42:42 -0000
+X-List-Received-Date: Mon, 04 Jul 2016 22:04:02 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+Worker needs input stream in binary mode as it reads binary content
+from it. Current code does it by detaching a buffer from sys.stdin
+and assigning it back to sys.stdin.
 
-Clean up and fix the most frequently built targets for the "Most built
-recipes" section for the project configuration page.
+Detached buffer is io.BufferedReader in binary mode. This operation
+is implicit as its purpose is not easily understandable from the code.
+Replacing it with fdopen(sys.stdin.fileno(), 'rb') should make the
+code more understandable.
 
-[YOCTO #9846]
+Assigning the buffer to sys.stdin is not needed as worker doesn't
+use sys.stdin. Moreover, it leads to difficult to debug issues down
+the stack. For example, devpyshell doesn't work without reopening
+sys.stdin in text mode. This is not needed anymore after this fix as
+sys.stdin is not changed in worker code and remains in text mode.
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- bitbake/lib/toaster/toastergui/views.py | 42 +++++++++++++++++++++++++--------
- 1 file changed, 32 insertions(+), 10 deletions(-)
+ bitbake/bin/bitbake-worker | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/views.py b/bitbake/lib/toaster/toastergui/views.py
-index c40273c..2db68bd 100755
---- a/bitbake/lib/toaster/toastergui/views.py
-+++ b/bitbake/lib/toaster/toastergui/views.py
-@@ -1404,15 +1404,37 @@ if True:
-         pid = prj.id
+diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+index 5d062a2..963b4cd 100755
+--- a/bitbake/bin/bitbake-worker
++++ b/bitbake/bin/bitbake-worker
+@@ -436,8 +436,7 @@ class BitbakeWorker(object):
+             self.build_pipes[pipe].read()
  
-         from collections import Counter
--        freqtargets = []
--        try:
--            btargets = sum(build.target_set.all() for build in Build.objects.filter(project=prj, outcome__lt=Build.IN_PROGRESS))
--            brtargets = sum(br.brtarget_set.all() for br in BuildRequest.objects.filter(project = prj, state = BuildRequest.REQ_FAILED))
--            freqtargets = [x.target for x in btargets] + [x.target for x in brtargets]
--        except TypeError:
--            pass
--        freqtargets = Counter(freqtargets)
--        freqtargets = sorted(freqtargets, key = lambda x: freqtargets[x], reverse=True)
-+
-+        freqtargets = Counter(Target.objects.filter(
-+            Q(build__project=prj),
-+            ~Q(build__outcome=Build.IN_PROGRESS)
-+        ).order_by("target").values_list("target", flat=True))
-+
-+        freqtargets = freqtargets.most_common(5)
-+
-+        # We now have the targets in order of frequency but if there are two
-+        # with the same frequency then we need to make sure those are in
-+        # alphabetical order without losing the frequency ordering
-+
-+        tmp = []
-+        switch = None
-+        for i, freqtartget in enumerate(freqtargets):
-+            target, count = freqtartget
-+            try:
-+                target_next, count_next = freqtargets[i+1]
-+                if count == count_next and target > target_next:
-+                    switch = target
-+                    continue
-+            except IndexError:
-+                pass
-+
-+            tmp.append(target)
-+
-+            if switch:
-+                tmp.append(switch)
-+                switch = None
-+
-+        freqtargets = tmp
- 
-         layers = [{"id": x.layercommit.pk, "orderid": x.pk, "name" : x.layercommit.layer.name,
-                    "vcs_url": x.layercommit.layer.vcs_url, "vcs_reference" : x.layercommit.get_vcs_reference(),
-@@ -1432,7 +1454,7 @@ if True:
-             "layers" : layers,
-             "targets" : [{"target" : x.target, "task" : x.task, "pk": x.pk} for x in prj.projecttarget_set.all()],
-             "variables": [(x.name, x.value) for x in prj.projectvariable_set.all()],
--            "freqtargets": freqtargets[:5],
-+            "freqtargets": freqtargets,
-             "releases": [{"id": x.pk, "name": x.name, "description":x.description} for x in Release.objects.all()],
-             "project_html": 1,
-             "recipesTypeAheadUrl": reverse('xhr_recipestypeahead', args=(prj.pk,)),
+ try:
+-    sys.stdin = sys.stdin.detach()
+-    worker = BitbakeWorker(sys.stdin)
++    worker = BitbakeWorker(os.fdopen(sys.stdin.fileno(), 'rb'))
+     if not profiling:
+         worker.serve()
+     else:
 -- 
-2.7.4
+2.1.4
 
 
