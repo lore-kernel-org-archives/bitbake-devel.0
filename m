@@ -1,40 +1,42 @@
 Return-Path: <elliot.smith@intel.com>
-X-Greylist: delayed 156261 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 06 Jul 2016 10:59:22 UTC
-Received: from gainsboro.cherry.relay.mailchannels.net
-	(gainsboro.cherry.relay.mailchannels.net [23.83.223.65])
-	by mail.openembedded.org (Postfix) with ESMTP id D5DBE6013D
+Received: from bird.oak.relay.mailchannels.net
+	(bird.oak.relay.mailchannels.net [23.83.215.17])
+	by mail.openembedded.org (Postfix) with ESMTP id ACDC56013D
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Jul 2016 10:59:21 +0000 (UTC)
+	Wed,  6 Jul 2016 11:00:42 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 0EF7D1270F8;
-	Wed,  6 Jul 2016 10:59:15 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id D3A54E1A9F;
+	Wed,  6 Jul 2016 11:00:41 +0000 (UTC)
 Received: from uscentral428.accountservergroup.com
-	(ip-10-21-3-36.us-west-2.compute.internal [10.21.3.36])
-	by relay.mailchannels.net (Postfix) with ESMTPA id 6E308123C1A;
-	Wed,  6 Jul 2016 10:59:14 +0000 (UTC)
+	(ip-10-229-11-165.us-west-2.compute.internal [10.229.11.165])
+	by relay.mailchannels.net (Postfix) with ESMTPA id 5EFAEE2606;
+	Wed,  6 Jul 2016 11:00:41 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.91.5.35])
+	(uscentral428.accountservergroup.com [10.132.194.146])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.6.15); Wed, 06 Jul 2016 10:59:14 +0000
+	by 0.0.0.0:2500 (trex/5.6.15); Wed, 06 Jul 2016 11:00:41 +0000
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
 X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1467802754756:3271362506
-X-MC-Ingress-Time: 1467802754756
-Received: from [176.251.41.101] (port=50290 helo=localhost.localdomain)
+X-MC-Loop-Signature: 1467802841694:3400427938
+X-MC-Ingress-Time: 1467802841694
+Received: from [176.251.41.101] (port=50296 helo=localhost.localdomain)
 	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
 	(envelope-from <elliot.smith@intel.com>)
-	id 1bKkad-0006Ud-2o; Wed, 06 Jul 2016 07:01:59 -0400
+	id 1bKkc1-00073u-W0; Wed, 06 Jul 2016 07:03:26 -0400
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  6 Jul 2016 11:58:58 +0100
-Message-Id: <cover.1467802608.git.elliot.smith@intel.com>
+Date: Wed,  6 Jul 2016 12:00:30 +0100
+Message-Id: <c6a2625d57a2eeb2b90ad4c1c29d1294db2be125.1467802608.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <a7d2770e95b9c7987a55cdf0b88effc7ffcecd3a.1467802608.git.elliot.smith@intel.com>
+References: <a7d2770e95b9c7987a55cdf0b88effc7ffcecd3a.1467802608.git.elliot.smith@intel.com>
+In-Reply-To: <cover.1467802608.git.elliot.smith@intel.com>
+References: <cover.1467802608.git.elliot.smith@intel.com>
 X-AuthUser: elliot@townx.org
-Subject: [PATCH 0/7] fixes for toaster-eventreplay
+Subject: [PATCH 2/7] eventprelay: implement setEventMask command
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,40 +49,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jul 2016 10:59:26 -0000
+X-List-Received-Date: Wed, 06 Jul 2016 11:00:42 -0000
 
-Fix the Toaster event replay script so that it is able to run dumped
-bitbake event JSON files.
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-For testing instructions, see
-https://lists.yoctoproject.org/pipermail/toaster/2016-June/004875.html
+Stored event mask list as self.eventmask for future use.
+Fixed Exception: Command setEventMask not implemented.
 
-The following changes since commit 025a2de5d67e491208fb7e76996ee0293d6fcf07
-(toaster-next):
+[YOCTO #9585]
 
-  toaster: views Fix most frequently built target in project reporting (2016-07-04 13:37:28 +0100)
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ bin/toaster-eventreplay | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib elliot/submit/ed/toaster/eventplay-9585
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/ed/toaster/eventplay-9585
-
-Ed Bartosh (6):
-  eventreplay: add MockConnection.getEventHandle method
-  eventprelay: implement setEventMask command
-  eventreplay: fix event loading code
-  eventreplay: replace MockConfigParameters with namedtuple
-  eventreplay: reorganize imports
-  eventreplay: rewrite the script
-
-Elliot Smith (1):
-  buildinfohelper: ensure task datetimes are timezone-aware
-
- bin/toaster-eventreplay      | 220 +++++++++++++++++--------------------------
- lib/bb/ui/buildinfohelper.py |   2 +-
- 2 files changed, 87 insertions(+), 135 deletions(-)
-
---
+diff --git a/bin/toaster-eventreplay b/bin/toaster-eventreplay
+index 14f4f00..03b5dde 100755
+--- a/bin/toaster-eventreplay
++++ b/bin/toaster-eventreplay
+@@ -53,6 +53,7 @@ class FileReadEventsServerConnection():
+         """
+         def __init__(self, sc):
+             self._sc = sc
++            self.eventmask = []
+ 
+         def runCommand(self, commandArray):
+             """ emulates running a command on the server; only read-only commands are accepted """
+@@ -79,6 +80,11 @@ class FileReadEventsServerConnection():
+                     except Exception as e:
+                         print(e)
+                 return (dump, None)
++
++            elif command_name == 'setEventMask':
++                self.eventmask = commandArray[-1]
++                return True, None
++
+             else:
+                 raise Exception("Command %s not implemented" % commandArray[0])
+ 
+-- 
 2.7.4
 
 
