@@ -1,27 +1,47 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 31514606D0
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f68.google.com (mail-pa0-f68.google.com
+	[209.85.220.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 38ECA607A4
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Jul 2016 13:27:48 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u67DRjZf000375; Thu, 7 Jul 2016 14:27:45 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ljwSMXzpbRDR; Thu,  7 Jul 2016 14:27:45 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u67DRhn5000371
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 7 Jul 2016 14:27:45 +0100
-Message-ID: <1467898063.8590.225.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 07 Jul 2016 14:27:43 +0100
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Cc: "Eggleton, Paul" <paul.eggleton@intel.com>
-Subject: [PATCH] progress: Ensure missing start event is fired
+	Sat,  9 Jul 2016 00:52:45 +0000 (UTC)
+Received: by mail-pa0-f68.google.com with SMTP id ts6so9075902pac.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 08 Jul 2016 17:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=I4C0z3V/WiqkOr+61BT13u0sCPqot7PSSBe9yfEw0gk=;
+	b=jSDJ0KjW4F5O/s8rB2tF5+NIV+jYLuNvFTLW+HKZ7BuoGZaEIfJMqAuV5rAb4YWPSC
+	7vda2H+vKB1AgMYLz1FcDHJR6yQssY2hnwO96KHFDp2FaHLEFthQIIMKm8gSPxn9SSxq
+	Nwpw6MNPhqCQv6u8gqCPx6Cso2Lrech9F3gzKoaqN1NIsnOl3o1TJEbt4CZNb5BF68EM
+	kqBeWSMFflPWmNUqBSGLKXO8TYx+CvViocDRiN1ndJm8MaWdzE7nyJ6lxOuyYlP/OMBv
+	sa4/HXDv8x6GRKoCERO2MI9V9tNIGzx0X8Q38MIkCO0rL6Mhv9Cj+c0zfBbXB6K0PLUI
+	3DZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=I4C0z3V/WiqkOr+61BT13u0sCPqot7PSSBe9yfEw0gk=;
+	b=T2zxRvqW1C+2YqIfmb+szsFm2yXDYXgso1WMai2hz1WOB7NYSneKGSQWvDBCo2usTM
+	r3POyoPoGodFmrXu89e5Y7daK3VhPG3MKnP8KPYf4QFljI1tNOvgNpxEU3Xb1AfC1lbx
+	Qrl4xfovtj9t0AvaiLrT2N2OCNQlk6OYzGgtILr2EmGnJKiCqdqjgis+WK8BH+7upeLo
+	IA0KLDm+UMjqeocntU4fp3OZ0oIZAiwOQUOUr5Dup7j98ZwMv0uxWe9G27fG0kMPm3fQ
+	6zr40B7f91OHQenlvu/SXWBfK55Lu8aXFohhN4o3KCdZy8vbfGCE8S2Haqfz5yM7bzf/
+	fYaQ==
+X-Gm-Message-State: ALyK8tL0Bm1ZLzNHliIf8UeFbaHA1Un6DK5hel7qxLEsW6XNo5Ang2F4CSyFAOMhzVIJ5g==
+X-Received: by 10.66.134.20 with SMTP id pg20mr14340168pab.98.1468025566649;
+	Fri, 08 Jul 2016 17:52:46 -0700 (PDT)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id 6sm966pfx.68.2016.07.08.17.52.45
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 08 Jul 2016 17:52:46 -0700 (PDT)
+From: brian avery <avery.brian@gmail.com>
+X-Google-Original-From: brian avery <brian.avery@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  8 Jul 2016 17:52:41 -0700
+Message-Id: <cover.1468024992.git.brian.avery@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: brian avery <brian.avery@intel.com>
+Subject: [PATCH 0/7] toaster: Artifact Selection Improvement
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,34 +54,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Jul 2016 13:27:48 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 09 Jul 2016 00:52:46 -0000
 
-The init function of the parent class fires a progress event for 0
-progress rather than a start event. UI code was assuming that progress
-events should always have a start event first. This change ensures that
-the start event is correctly generated.
+This is part of a patch set that is split over the openembedded-core and
+bitbake-devel mailing lists.
 
-This fixes crashes that were seen in knotty in some configurations.
+This patch removes complexity from toaster.bbclass in order to move those
+functions to bitbake/lib/toaster.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+The intent of this set is to improve Toaster's ability to locate artifacts such as
+kernel images, rootfs, and sdk tar files.
 
-diff --git a/bitbake/lib/bb/progress.py b/bitbake/lib/bb/progress.py
-index 4941776..ee6b953 100644
---- a/bitbake/lib/bb/progress.py
-+++ b/bitbake/lib/bb/progress.py
-@@ -209,6 +209,9 @@ class MultiStageProcessProgressReporter(MultiStageProgressReporter):
-         bb.event.fire(bb.event.ProcessStarted(self._processname, 100), self._data)
- 
-     def _fire_progress(self, taskprogress):
-+        if taskprogress == 0:
-+            self.start()
-+            return
-         bb.event.fire(bb.event.ProcessProgress(self._processname, taskprogress), self._data)
- 
-     def finish(self):
+-Brian Avery
+an Intel employee
 
+The following changes since commit 308d0a8f1d06b22a9be8e5d55194544a2ee764ef:
 
+  toaster: fix typo in arguments for libtoaster.js function (2016-07-08 16:25:39 -0700)
 
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib poky-contrib/bavery/submit/elliot/toaster/8556-image_fstypes
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/elliot/toaster/8556-image_fstypes
+
+Ed Bartosh (1):
+  runqueue: improve exception logging
+
+Elliot Smith (6):
+  toaster: display Target targets in build dashboard
+  toaster: do image and artifact scan on BuildCompleted
+  toaster: improve image file suffix retrieval
+  toaster: attach kernel artifacts to targets
+  buildinfohelper: fix retrieval of targets
+  toaster: improve scan for SDK artifacts
+
+ lib/bb/runqueue.py                                 |   6 +-
+ lib/bb/ui/buildinfohelper.py                       | 370 ++++++++++++++++++---
+ lib/bb/ui/toasterui.py                             |  11 +-
+ .../migrations/0008_refactor_artifact_models.py    |  39 +++
+ lib/toaster/orm/models.py                          | 243 ++++++++++----
+ .../toastergui/templates/builddashboard.html       |  84 +++--
+ .../toastergui/templatetags/field_values_filter.py |  18 +
+ lib/toaster/toastergui/views.py                    |  18 +-
+ 8 files changed, 645 insertions(+), 144 deletions(-)
+ create mode 100644 bitbake/lib/toaster/orm/migrations/0008_refactor_artifact_models.py
+ create mode 100644 bitbake/lib/toaster/toastergui/templatetags/field_values_filter.py
+
+--
+1.9.1
 
