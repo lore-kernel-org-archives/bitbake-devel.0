@@ -1,53 +1,53 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pf0-f178.google.com (mail-pf0-f178.google.com
-	[209.85.192.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E5DE607A4
+Received: from mail-pf0-f195.google.com (mail-pf0-f195.google.com
+	[209.85.192.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CE2C65D00
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  9 Jul 2016 00:52:50 +0000 (UTC)
-Received: by mail-pf0-f178.google.com with SMTP id c2so17413663pfa.2
+	Sat,  9 Jul 2016 00:52:51 +0000 (UTC)
+Received: by mail-pf0-f195.google.com with SMTP id t190so9408469pfb.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 08 Jul 2016 17:52:51 -0700 (PDT)
+	Fri, 08 Jul 2016 17:52:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=fGCEr4LgenvB0cocBWr4xZtS7jminO6/CnZCXDfUmpw=;
-	b=pB9odNmvIgVEmZXKAYGM5VhBircuYwb4oTAIwqVTcB12XOb8ZQQogBBBVUv54XCu8T
-	MoXr95uIrc9YI44Gso3D8+mrLwMPLe3fmZd1hdmRsm08/xJBWKrAfiZjZTK22ywhOEj4
-	tDzHeRX5GAldrs/rXYXbv6fStBmpJjioKhrBZQKqDsTnPQHK84jYHxhBXbOsEyKEpjlX
-	2SJeTsiEbHNgH518C/XQALvG1CpvStCWmIS8PQ/i2b9fcylpXRdt2ELV0bDngUXzG+Yq
-	dhVtaK2NtE31mSX76DmD3LKBKJuxX3zyUOp7gUo6XCozHWnfS3FJ7g+prIOms2MfbzEj
-	XZjQ==
+	bh=eK1mJFc20mTLtLeCoH/ZYoGfwfXgVKHiXzwL23VaWTs=;
+	b=lAPdjzWUG0b59YAqtHlvZDFLcrWarQOGpoObUaIqjNZh10fW0SFDda4qjYwV79nvIz
+	sjCmYcGpxvnuP/O0K4PCS8bqCp4Mt+j40M9BPGiuc1EbD0UHgqSLb0e1agZ9jt90Jjy4
+	HMxl2E4qo4IjiOo0JY85dY6f+RuYyYALS1uRSDJo8WC26ZsG7njDqhXgQ71f7xL21DJF
+	WjOVtzm4vqnpmyDSY9OBb+HcvRNKrOofvtmJsm1NEH/2kBrsWwqlEcRktmPWBMTZVpb5
+	l86HycZTPHiWbGH1ME7A6pGx1oCzfwRYmepNkORWGlRAOAZdVvwWElMHHVRD38y39fja
+	XtAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=fGCEr4LgenvB0cocBWr4xZtS7jminO6/CnZCXDfUmpw=;
-	b=dTTM1OGpiL0GzYBpmBOu2KZ464AyfBS2UoVjjlao05vpobuF/C3my3+YMpHd2H4xSr
-	RROUd1IlYOuKc5SmsX4ll9OOz/5IhdX0Buf1BUwt/pYUqBSX8s21e1s8RwrAJcn5TVW+
-	Y2W3e+TJAquz7vw02vvjcPTWkvmKPYu/I0qqnzE3tplWro3frKykh/rE2Ht0j3G4wrBN
-	OobPtSqfnb/KmjL1OnhT4MSbXSwIB0usFTyh7fDLG/9vQeEHPIjzcUhNf7HGPdWMP+XE
-	lSsYcbRn1gTcCVkkJjYxOh2uz14PjNfT53XzU1YhT6QYW3Arw0iHmxWjchJQfHvfUOrw
-	wYNA==
-X-Gm-Message-State: ALyK8tIbOUu0Wts5naR4C0h/i1MsD3c4D+09XfEw66iRVxT4Ucrn738BbeXRV8/e9xJA/Q==
-X-Received: by 10.98.41.198 with SMTP id p189mr14531149pfp.18.1468025571462;
-	Fri, 08 Jul 2016 17:52:51 -0700 (PDT)
+	bh=eK1mJFc20mTLtLeCoH/ZYoGfwfXgVKHiXzwL23VaWTs=;
+	b=gCt/vrRWaasDpm0qtzw0qYeTP14vaP72HCPJK7BwnbsTsGonppYBQF0O5NK8R0AMES
+	+k+YaTWtRYpEU/9tDwapuPQ/QaWw7L7cRCWnZFKndSTH3XSYapV8F0AZw/2aMh2yc30g
+	BdBJ320nGttCTJhK4WVVo+Ae4zHysxcuEAXH5jn3Gh/STd2BBwGwki5A6t9gx1BitiIN
+	Qv/GyJ7yCOy2I5NDGjhatESkvl5IFbxKh04OysXo8XdFsmWeQL+obRVOVBr8bxQdKEvM
+	kzBfz8dPi/aaKBiqh2y3Uuac1vX+U9H9jDoQ1NgfduBxKqzi2jiycWCwi8ROe2lBB/aX
+	qRYw==
+X-Gm-Message-State: ALyK8tKvRSR4rfyuZoMcKlhc6L+Sk14lLvOgwvx9jIJWuPAxOJzyMuq8RktTP2V2AfFSow==
+X-Received: by 10.98.206.77 with SMTP id y74mr14625993pfg.55.1468025572281;
+	Fri, 08 Jul 2016 17:52:52 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id bm8sm213836pad.10.2016.07.08.17.52.50
+	by smtp.gmail.com with ESMTPSA id bm8sm213836pad.10.2016.07.08.17.52.51
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 08 Jul 2016 17:52:50 -0700 (PDT)
+	Fri, 08 Jul 2016 17:52:51 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 X-Google-Original-From: brian avery <brian.avery@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  8 Jul 2016 17:52:42 -0700
-Message-Id: <c6b1985584b95826bbe0f901e7fbf1205c64e69e.1468024992.git.brian.avery@intel.com>
+Date: Fri,  8 Jul 2016 17:52:43 -0700
+Message-Id: <666211fd890c5f74b3062b6e6ebd321730b1c541.1468024992.git.brian.avery@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <fb5a436289d7cfd1c86e0308b996e1db36ae63bb.1468024992.git.brian.avery@intel.com>
 References: <fb5a436289d7cfd1c86e0308b996e1db36ae63bb.1468024992.git.brian.avery@intel.com>
 In-Reply-To: <cover.1468024992.git.brian.avery@intel.com>
 References: <cover.1468024992.git.brian.avery@intel.com>
 Cc: brian avery <brian.avery@intel.com>
-Subject: [PATCH 2/7] toaster: display Target targets in build dashboard
+Subject: [PATCH 3/7] toaster: do image and artifact scan on BuildCompleted
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,95 +60,291 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 09 Jul 2016 00:52:51 -0000
+X-List-Received-Date: Sat, 09 Jul 2016 00:52:52 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-The build dashboard was showing the targets for the build in the page
-heading and title as "Target object".
+Move the image and artifact scan code from toaster.bbclass and
+consolidate its logic with the existing logic in buildinfohelper.
 
-Add a filter which extracts the "target" from each Target object
-as a string so that the heading and title display correctly.
-
-Also sort the image file suffixes alphabetically.
+Remove handler setup for events which used to be fired from
+toaster.bbclass but which are now handled directly by buildinfohelper.
 
 [YOCTO #8556]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: brian avery <brian.avery@intel.com>
 ---
- lib/toaster/toastergui/templates/builddashboard.html   |  9 +++++----
- .../toastergui/templatetags/field_values_filter.py     | 18 ++++++++++++++++++
- 2 files changed, 23 insertions(+), 4 deletions(-)
- create mode 100644 bitbake/lib/toaster/toastergui/templatetags/field_values_filter.py
+ lib/bb/ui/buildinfohelper.py | 201 ++++++++++++++++++++++++++++++++++++++-----
+ lib/bb/ui/toasterui.py       |   6 +-
+ 2 files changed, 181 insertions(+), 26 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
-index 04a57ef..dcda2a8 100644
---- a/lib/toaster/toastergui/templates/builddashboard.html
-+++ b/lib/toaster/toastergui/templates/builddashboard.html
-@@ -1,8 +1,9 @@
- {% extends "basebuildpage.html" %}
- {% load humanize %}
- {% load projecttags %}
-+{% load field_values_filter %}
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index 447670c..8bdc9cc 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -678,6 +678,16 @@ class ORMWrapper(object):
+                             file_name = file_name,
+                             file_size = file_size)
 
--{% block title %} {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
-+{% block title %} {{build.get_sorted_target_list|field_values:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block parentbreadcrumb %}
- {% if build.get_sorted_target_list.count > 0 %}
-   {{build.get_sorted_target_list.0.target}}
-@@ -15,7 +16,7 @@
- <!-- page title -->
- <div class="col-md-10">
-  <div class="page-header build-data">
--     <h1>{{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}}</h1>
-+     <h1>{{build.get_sorted_target_list|field_values:"target"|join:", "}} {{build.machine}}</h1>
-  </div>
++    def save_artifact_information_no_dedupe(self, build_obj, file_name, file_size):
++        """
++        Save artifact information without checking for duplicate paths;
++        this is used when we are saving data about an artifact which was
++        generated by a previous build but which is also relevant to this build,
++        e.g. a bzImage file.
++        """
++        BuildArtifact.objects.create(build=build_obj, file_name=file_name,
++            file_size=file_size)
++
+     def save_artifact_information(self, build_obj, file_name, file_size):
+         # we skip the image files from other builds
+         if Target_Image_File.objects.filter(file_name = file_name).count() > 0:
+@@ -687,7 +697,8 @@ class ORMWrapper(object):
+         if BuildArtifact.objects.filter(file_name = file_name).count() > 0:
+             return
 
- <!-- build result bar -->
-@@ -113,7 +114,7 @@
-             </dt>
-             <dd>
-                 <ul class="list-unstyled">
--                    {% for i in target.imageFiles %}
-+                    {% for i in target.imageFiles|dictsort:"suffix" %}
-                         <li>
-                             <a href="{% url 'build_artifact' build.pk 'imagefile' i.id %}">
-                                 {{i.suffix}}
-@@ -261,7 +262,7 @@
-         if (location.href.search('#warnings') > -1) {
-             $('#warning-info').addClass('in');
-         }
+-        BuildArtifact.objects.create(build = build_obj, file_name = file_name, file_size = file_size)
++        self.save_artifact_information_no_dedupe(self, build_obj, file_name,
++            file_size)
+
+     def create_logmessage(self, log_information):
+         assert 'build' in log_information
+@@ -1061,17 +1072,6 @@ class BuildInfoHelper(object):
+
+         return self.brbe
+
 -
+-    def update_target_image_file(self, event):
+-        evdata = BuildInfoHelper._get_data_from_event(event)
+-
+-        for t in self.internal_state['targets']:
+-            if t.is_image == True:
+-                output_files = list(evdata.keys())
+-                for output in output_files:
+-                    if t.target in output and 'rootfs' in output and not output.endswith(".manifest"):
+-                        self.orm_wrapper.save_target_image_file_information(t, output, evdata[output])
+-
+     def update_artifact_image_file(self, event):
+         evdata = BuildInfoHelper._get_data_from_event(event)
+         for artifact_path in evdata.keys():
+@@ -1081,16 +1081,6 @@ class BuildInfoHelper(object):
+         if 'build' in self.internal_state:
+             self.orm_wrapper.update_build_object(self.internal_state['build'], errors, warnings, taskfailures)
+
+-
+-    def store_license_manifest_path(self, event):
+-        deploy_dir = BuildInfoHelper._get_data_from_event(event)['deploy_dir']
+-        image_name = BuildInfoHelper._get_data_from_event(event)['image_name']
+-        path = deploy_dir + "/licenses/" + image_name + "/license.manifest"
+-        for target in self.internal_state['targets']:
+-            if target.target in image_name:
+-                self.orm_wrapper.update_target_set_license_manifest(target, path)
+-
+-
+     def store_started_task(self, event):
+         assert isinstance(event, (bb.runqueue.sceneQueueTaskStarted, bb.runqueue.runQueueTaskStarted, bb.runqueue.runQueueTaskSkipped))
+         assert 'taskfile' in vars(event)
+@@ -1506,6 +1496,173 @@ class BuildInfoHelper(object):
+
+         self.orm_wrapper.create_logmessage(log_information)
+
++    def _get_files_from_image_license(self, image_license_manifest_path):
++        """
++        Find the FILES line in the image_license.manifest file,
++        which has the basenames of the bzImage and modules files
++        in this format:
++        FILES: bzImage--4.4.11+git0+3a5f494784_53e84104c5-r0-qemux86-20160603165040.bin modules--4.4.11+git0+3a5f494784_53e84104c5-r0-qemux86-20160603165040.tgz
++        """
++        files = []
++        with open(image_license_manifest_path) as image_license:
++            for line in image_license:
++                if line.startswith('FILES'):
++                    files_str = line.split(':')[1].strip()
++                    files_str = re.sub(r' {2,}', ' ', files_str)
++                    files = files_str.split(' ')
++        return files
 +
- 	//show warnings section when requested from the build outcome
- 	$(".show-warnings").click(function() {
- 	    $('#warning-info').addClass('in');
-diff --git a/lib/toaster/toastergui/templatetags/field_values_filter.py b/lib/toaster/toastergui/templatetags/field_values_filter.py
-new file mode 100644
-index 0000000..5a73af7
---- /dev/null
-+++ b/lib/toaster/toastergui/templatetags/field_values_filter.py
-@@ -0,0 +1,18 @@
-+from django import template
++    def _endswith(self, str_to_test, endings):
++        """
++        Returns True if str ends with one of the strings in the list
++        endings, False otherwise
++        """
++        endswith = False
++        for ending in endings:
++            if str_to_test.endswith(ending):
++                endswith = True
++                break
++        return endswith
 +
-+register = template.Library()
++    def _get_image_files(self, deploy_dir_image, image_name, image_file_extensions):
++        """
++        Find files in deploy_dir_image whose basename starts with the
++        string image_name and ends with one of the strings in
++        image_file_extensions.
 +
-+def field_values(iterable, field):
-+    """
-+    Convert an iterable of models into a list of strings, one for each model,
-+    where the string for each model is the value of the field "field".
-+    """
-+    objects = []
++        Returns a list of file dictionaries like
 +
-+    if field:
-+        for item in iterable:
-+            objects.append(getattr(item, field))
++        [
++            {
++                'path': '/path/to/image/file',
++                'size': <file size in bytes>
++            }
++        ]
++        """
++        image_files = []
 +
-+    return objects
++        for dirpath, _, filenames in os.walk(deploy_dir_image):
++            for filename in filenames:
++                if filename.startswith(image_name) and \
++                self._endswith(filename, image_file_extensions):
++                    image_file_path = os.path.join(dirpath, filename)
++                    image_file_size = os.stat(image_file_path).st_size
 +
-+register.filter('field_values', field_values)
-\ No newline at end of file
++                    image_files.append({
++                        'path': image_file_path,
++                        'size': image_file_size
++                    })
++
++        return image_files
++
++    def scan_build_artifacts(self):
++        """
++        Scan for build artifacts in DEPLOY_DIR_IMAGE and associate them
++        with a Target object in self.internal_state['targets'].
++
++        We have two situations to handle:
++
++        1. This is the first time a target + machine has been built, so
++        add files from the DEPLOY_DIR_IMAGE to the target.
++
++        OR
++
++        2. There are no files for the target, so copy them from a
++        previous build with the same target + machine.
++        """
++        deploy_dir_image = \
++            self.server.runCommand(['getVariable', 'DEPLOY_DIR_IMAGE'])[0]
++
++        # if there's no DEPLOY_DIR_IMAGE, there aren't going to be
++        # any build artifacts, so we can return immediately
++        if not deploy_dir_image:
++            return
++
++        buildname = self.server.runCommand(['getVariable', 'BUILDNAME'])[0]
++        machine =  self.server.runCommand(['getVariable', 'MACHINE'])[0]
++        image_name = self.server.runCommand(['getVariable', 'IMAGE_NAME'])[0]
++
++        # location of the image_license.manifest files for this build;
++        # note that this file is only produced if an image is produced
++        license_directory = \
++            self.server.runCommand(['getVariable', 'LICENSE_DIRECTORY'])[0]
++
++        # file name extensions for image files
++        image_file_extensions_unique = {}
++        image_fstypes = self.server.runCommand(
++            ['getVariable', 'IMAGE_FSTYPES'])[0]
++        if image_fstypes != None:
++            image_types_str = image_fstypes.strip()
++            image_file_extensions = re.sub(r' {2,}', ' ', image_types_str)
++            image_file_extensions_unique = set(image_file_extensions.split(' '))
++
++        targets = self.internal_state['targets']
++        image_targets = [target for target in targets if target.is_image]
++        for target in image_targets:
++            # this is set to True if we find at least one file relating to
++            # this target; if this remains False after the scan, we copy the
++            # files from the most-recent Target with the same target + machine
++            # onto this Target instead
++            has_files = False
++
++            # we construct this because by the time we reach
++            # BuildCompleted, this has reset to
++            # 'defaultpkgname-<MACHINE>-<BUILDNAME>';
++            # we need to change it to
++            # <TARGET>-<MACHINE>-<BUILDNAME>
++            real_image_name = re.sub(r'^defaultpkgname', target.target,
++                image_name)
++
++            image_license_manifest_path = os.path.join(
++                license_directory,
++                real_image_name,
++                'image_license.manifest')
++
++            # if image_license.manifest exists, we can read the names of bzImage
++            # and modules files for this build from it, then look for them
++            # in the DEPLOY_DIR_IMAGE; note that this file is only produced
++            # if an image file was produced
++            if os.path.isfile(image_license_manifest_path):
++                has_files = True
++
++                basenames = self._get_files_from_image_license(
++                    image_license_manifest_path)
++
++                for basename in basenames:
++                    artifact_path = os.path.join(deploy_dir_image, basename)
++                    artifact_size = os.stat(artifact_path).st_size
++
++                    self.orm_wrapper.save_artifact_information_no_dedupe(
++                        self.internal_state['build'], artifact_path,
++                        artifact_size)
++
++                # store the license manifest path on the target
++                # (this file is also created any time an image file is created)
++                license_path = os.path.join(license_directory,
++                    real_image_name, 'license.manifest')
++
++                self.orm_wrapper.update_target_set_license_manifest(target,
++                    license_path)
++
++            # scan the directory for image files relating to this build
++            # (via real_image_name); note that we don't have to set
++            # has_files = True, as searching for the license manifest file
++            # will already have set it to true if at least one image file was
++            # produced
++            image_files = self._get_image_files(deploy_dir_image,
++                real_image_name, image_file_extensions_unique)
++
++            for image_file in image_files:
++                self.orm_wrapper.save_target_image_file_information(
++                    target, image_file['path'], image_file['size'])
++
++            if not has_files:
++                # TODO copy artifact and image files from the
++                # most-recently-built Target with the same target + machine
++                # as this Target; also copy the license manifest path,
++                # as that is treated differently
++                pass
++
+     def close(self, errorcode):
+         if self.brbe is not None:
+             self._store_build_done(errorcode)
+diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
+index 5382935..d8bccdb 100644
+--- a/lib/bb/ui/toasterui.py
++++ b/lib/bb/ui/toasterui.py
+@@ -363,6 +363,8 @@ def main(server, eventHandler, params):
+                     errors += 1
+                     errorcode = 1
+                     logger.error("Command execution failed: %s", event.error)
++                elif isinstance(event, bb.event.BuildCompleted):
++                    buildinfohelper.scan_build_artifacts()
+
+                 # turn off logging to the current build log
+                 _close_build_log(build_log)
+@@ -410,12 +412,8 @@ def main(server, eventHandler, params):
+                     buildinfohelper.store_target_package_data(event)
+                 elif event.type == "MissedSstate":
+                     buildinfohelper.store_missed_state_tasks(event)
+-                elif event.type == "ImageFileSize":
+-                    buildinfohelper.update_target_image_file(event)
+                 elif event.type == "ArtifactFileSize":
+                     buildinfohelper.update_artifact_image_file(event)
+-                elif event.type == "LicenseManifestPath":
+-                    buildinfohelper.store_license_manifest_path(event)
+                 elif event.type == "SetBRBE":
+                     buildinfohelper.brbe = buildinfohelper._get_data_from_event(event)
+                 elif event.type == "OSErrorException":
 --
 1.9.1
 
