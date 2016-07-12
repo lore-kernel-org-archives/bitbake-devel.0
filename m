@@ -1,26 +1,25 @@
 Return-Path: <brian.avery@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 9004D731BD
+	by mail.openembedded.org (Postfix) with ESMTP id A05A973199
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 12 Jul 2016 22:53:55 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
 	by orsmga102.jf.intel.com with ESMTP; 12 Jul 2016 15:53:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,354,1464678000"; 
-	d="scan'208,217";a="1015672944"
+X-IronPort-AV: E=Sophos;i="5.28,354,1464678000"; d="scan'208";a="1015672948"
 Received: from bavery-ws-desk.jf.intel.com ([10.7.201.28])
 	by orsmga002.jf.intel.com with ESMTP; 12 Jul 2016 15:53:44 -0700
 From: bavery <brian.avery@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Jul 2016 15:54:43 -0700
-Message-Id: <02d0fe25d3c640048b3faecae4ddf44df9517c14.1468363530.git.brian.avery@intel.com>
+Date: Tue, 12 Jul 2016 15:54:45 -0700
+Message-Id: <e6f02a69237ea63d82021f8a30864e855ddaf1d4.1468363530.git.brian.avery@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
 References: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
 In-Reply-To: <cover.1468363530.git.brian.avery@intel.com>
 References: <cover.1468363530.git.brian.avery@intel.com>
 Cc: bavery <brian.avery@intel.com>
-Subject: [PATCH 02/17] toaster: display Target targets in build dashboard
+Subject: [PATCH 04/17] toaster: improve image file suffix retrieval
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,91 +36,92 @@ X-List-Received-Date: Tue, 12 Jul 2016 22:53:55 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-The build dashboard was showing the targets for the build in the page
-heading and title as "Target object".
-
-Add a filter which extracts the "target" from each Target object
-as a string so that the heading and title display correctly.
-
-Also sort the image file suffixes alphabetically.
-
-[YOCTO #8556]
+Refactor retrieval of suffix from image file path, making it a
+a method on Target_Image_File. This makes it easier to use this
+in the build dashboard for individual images, plus reduces the
+complexity of the code required to get all of the image file
+suffixes for a build.
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: bavery <brian.avery@intel.com>
 ---
- lib/toaster/toastergui/templates/builddashboard.html   |  9 +++++----
- .../toastergui/templatetags/field_values_filter.py     | 18 ++++++++++++++++++
- 2 files changed, 23 insertions(+), 4 deletions(-)
- create mode 100644 bitbake/lib/toaster/toastergui/templatetags/field_values_filter.py
+ lib/toaster/orm/models.py | 48 +++++++++++------------------------------------
+ 1 file changed, 11 insertions(+), 37 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
-index 04a57ef..dcda2a8 100644
---- a/lib/toaster/toastergui/templates/builddashboard.html
-+++ b/lib/toaster/toastergui/templates/builddashboard.html
-@@ -1,8 +1,9 @@
- {% extends "basebuildpage.html" %}
- {% load humanize %}
- {% load projecttags %}
-+{% load field_values_filter %}
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 61737c7..40cdb9e 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -440,51 +440,21 @@ class Build(models.Model):
+         """
+         Get list of file name extensions for images produced by this build
+         """
+-        targets = Target.objects.filter(build_id = self.id)
+         extensions = []
  
--{% block title %} {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
-+{% block title %} {{build.get_sorted_target_list|field_values:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block parentbreadcrumb %}
- {% if build.get_sorted_target_list.count > 0 %}
-   {{build.get_sorted_target_list.0.target}}
-@@ -15,7 +16,7 @@
- <!-- page title -->
- <div class="col-md-10">
-  <div class="page-header build-data">
--     <h1>{{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}}</h1>
-+     <h1>{{build.get_sorted_target_list|field_values:"target"|join:", "}} {{build.machine}}</h1>
-  </div>
+-        # pattern to match against file path for building extension string
+-        pattern = re.compile('\.([^\.]+?)$')
+-
++        targets = Target.objects.filter(build_id = self.id)
+         for target in targets:
+             if (not target.is_image):
+                 continue
  
- <!-- build result bar -->
-@@ -113,7 +114,7 @@
-             </dt>
-             <dd>
-                 <ul class="list-unstyled">
--                    {% for i in target.imageFiles %}
-+                    {% for i in target.imageFiles|dictsort:"suffix" %}
-                         <li>
-                             <a href="{% url 'build_artifact' build.pk 'imagefile' i.id %}">
-                                 {{i.suffix}}
-@@ -261,7 +262,7 @@
-         if (location.href.search('#warnings') > -1) {
-             $('#warning-info').addClass('in');
-         }
--	
+-            target_image_files = Target_Image_File.objects.filter(target_id = target.id)
++            target_image_files = Target_Image_File.objects.filter(
++                target_id=target.id)
+ 
+             for target_image_file in target_image_files:
+-                file_name = os.path.basename(target_image_file.file_name)
+-                suffix = ''
+-
+-                continue_matching = True
+-
+-                # incrementally extract the suffix from the file path,
+-                # checking it against the list of valid suffixes at each
+-                # step; if the path is stripped of all potential suffix
+-                # parts without matching a valid suffix, this returns all
+-                # characters after the first '.' in the file name
+-                while continue_matching:
+-                    matches = pattern.search(file_name)
+-
+-                    if None == matches:
+-                        continue_matching = False
+-                        suffix = re.sub('^\.', '', suffix)
+-                        continue
+-                    else:
+-                        suffix = matches.group(1) + suffix
+-
+-                    if suffix in Target_Image_File.SUFFIXES:
+-                        continue_matching = False
+-                        continue
+-                    else:
+-                        # reduce the file name and try to find the next
+-                        # segment from the path which might be part
+-                        # of the suffix
+-                        file_name = re.sub('.' + matches.group(1), '', file_name)
+-                        suffix = '.' + suffix
+-
+-                if not suffix in extensions:
+-                    extensions.append(suffix)
++                extensions.append(target_image_file.suffix)
 +
- 	//show warnings section when requested from the build outcome
- 	$(".show-warnings").click(function() {
- 	    $('#warning-info').addClass('in');
-diff --git a/lib/toaster/toastergui/templatetags/field_values_filter.py b/lib/toaster/toastergui/templatetags/field_values_filter.py
-new file mode 100644
-index 0000000..5a73af7
---- /dev/null
-+++ b/lib/toaster/toastergui/templatetags/field_values_filter.py
-@@ -0,0 +1,18 @@
-+from django import template
++        extensions = list(set(extensions))
++        extensions.sort()
+ 
+         return ', '.join(extensions)
+ 
+@@ -658,6 +628,10 @@ class Target_Image_File(models.Model):
+ 
+     @property
+     def suffix(self):
++        for suffix in Target_Image_File.SUFFIXES:
++            if self.file_name.endswith(suffix):
++                return suffix
 +
-+register = template.Library()
-+
-+def field_values(iterable, field):
-+    """
-+    Convert an iterable of models into a list of strings, one for each model,
-+    where the string for each model is the value of the field "field".
-+    """
-+    objects = []
-+
-+    if field:
-+        for item in iterable:
-+            objects.append(getattr(item, field))
-+
-+    return objects
-+
-+register.filter('field_values', field_values)
-\ No newline at end of file
+         filename, suffix = os.path.splitext(self.file_name)
+         suffix = suffix.lstrip('.')
+         return suffix
 -- 
 1.9.1
 
