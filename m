@@ -1,25 +1,50 @@
-Return-Path: <brian.avery@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 4E57A731CD
+Return-Path: <kergoth@gmail.com>
+Received: from mail-it0-f51.google.com (mail-it0-f51.google.com
+	[209.85.214.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 6A7636067C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Jul 2016 22:53:56 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 12 Jul 2016 15:53:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,354,1464678000"; d="scan'208";a="1015672987"
-Received: from bavery-ws-desk.jf.intel.com ([10.7.201.28])
-	by orsmga002.jf.intel.com with ESMTP; 12 Jul 2016 15:53:44 -0700
-From: bavery <brian.avery@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Jul 2016 15:54:58 -0700
-Message-Id: <5d26b89dab09d52eeec9c6b6635d5a0dbab5c738.1468363530.git.brian.avery@intel.com>
-X-Mailer: git-send-email 1.9.1
+	Tue, 12 Jul 2016 22:58:22 +0000 (UTC)
+Received: by mail-it0-f51.google.com with SMTP id f6so6425249ith.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 12 Jul 2016 15:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=iq8+L7mQOFop/GWZomzn/Dj//rmAjhc2XVUvY2+N25Y=;
+	b=Sa5Yxb13VREmv1MXWI8L/2UYUWsTVsWbCTswCUcWemEeFjbf2O8oqNkzMjI2Hzv3Ha
+	ABdtxsAwU/6YAsCFtbbbhkub2dkqfSydXnUoU90Gx9es9hb00v0a4h4wswoabNnPai3M
+	svfoXlAdC+3LMDLnNX8cr1D6swqXz4SwodP7379AA3Zfi35XHgRBdK89pMHMX8+iXREr
+	9k/SmvuZpobnQ9+Ovtc9tKasn3PysJ2pS3wXlsEXV9v7ml1k0+WxTFxJFsZhoVSKAeuC
+	E3n5tYmHJiwFpzNXmZc5nhubi9bEa+tH9kGVi7O2zKpkJOsdRjadUcFX0SunHZtiOA7a
+	wviQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc;
+	bh=iq8+L7mQOFop/GWZomzn/Dj//rmAjhc2XVUvY2+N25Y=;
+	b=YxH7XQT7kPdaW0hCCuQt0IPlaDDlkz1NU1eVOyGf7rERyNChP2kEK/6kVsj9cm3Dxb
+	gsGoD/a+dZoK2eGOop/I9eSlfUd4doUIHiXEuKg63hO97EcrZ45sgExO6o2pxyQ60egI
+	/g9XSwo+tIYIJKaLrZpBpzi2aRGFUKO9t8BMKmfwMht1k8ZJzkroGf0bs5d4YcvwHyzJ
+	uy67IpcOnTGVhRlU+SOuQ0QdzkEmZLiTJRucyjFEmLbrid/2/Q1Ie3M0iky21keHC/Vc
+	nFG92qU5nKO29Xc00M0e9quv+H9aPh5j2OkTZRp/4UGoQJCWgmGPwPovnIdVVqdXpCIQ
+	WcGQ==
+X-Gm-Message-State: ALyK8tIL3bW12TBh29lUbZEiqf8VOoOrfqhwJ6wUQIoPRhAnyHEh/jeTdkpURkD9pQrASWU1nI6hd5ZH4iThLg==
+X-Received: by 10.36.216.5 with SMTP id b5mr5772440itg.19.1468364303272; Tue,
+	12 Jul 2016 15:58:23 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.79.21.197 with HTTP; Tue, 12 Jul 2016 15:58:03 -0700 (PDT)
 In-Reply-To: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
-References: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
-In-Reply-To: <cover.1468363530.git.brian.avery@intel.com>
 References: <cover.1468363530.git.brian.avery@intel.com>
-Cc: bavery <brian.avery@intel.com>
-Subject: [PATCH 17/17] toaster-tests: package count/size shouldn't show for non-image builds
+	<4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Tue, 12 Jul 2016 15:58:03 -0700
+X-Google-Sender-Auth: wDLQ_Xt5Pf9R2N14-KwuS8uysfI
+Message-ID: <CABcZANnVeckXjiT5eueAucA5LBtPYsH0d7xuv4QFjgkoFM+fAQ@mail.gmail.com>
+To: bavery <brian.avery@intel.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 01/17] runqueue: improve exception logging
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,148 +57,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Jul 2016 22:53:58 -0000
+X-List-Received-Date: Tue, 12 Jul 2016 22:58:23 -0000
+Content-Type: multipart/alternative; boundary=94eb2c05cc14b2931f05377834da
 
-From: Elliot Smith <elliot.smith@intel.com>
+--94eb2c05cc14b2931f05377834da
+Content-Type: text/plain; charset=UTF-8
 
-If a build doesn't produce any image files, the package count
-and size shouldn't be shown.
+On Tue, Jul 12, 2016 at 3:54 PM, bavery <brian.avery@intel.com> wrote:
 
-Also add some metadata to build dashboard elements so it is clear
-what they're for, and so they can be queried by the tests.
+> -            logger.error("An uncaught exception occured in runqueue,
+> please see the failure below:")
+> +        except Exception as err:
+> +            logger.exception("An uncaught exception occured in runqueue")
+>
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: bavery <brian.avery@intel.com>
----
- .../browser/test_builddashboard_page_artifacts.py  | 42 +++++++++++++++++++++-
- .../toastergui/templates/builddashboard.html       | 29 +++++++++++----
- 2 files changed, 63 insertions(+), 8 deletions(-)
-
-diff --git a/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py b/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
-index 18e4475..39b0e20 100644
---- a/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
-+++ b/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
-@@ -24,8 +24,9 @@ from django.utils import timezone
- 
- from tests.browser.selenium_helpers import SeleniumTestCase
- 
--from orm.models import Project, Release, BitbakeVersion, Build, Target
-+from orm.models import Project, Release, BitbakeVersion, Build, Target, Package
- from orm.models import Target_Image_File, TargetSDKFile, TargetKernelFile
-+from orm.models import Target_Installed_Package
- 
- class TestBuildDashboardPageArtifacts(SeleniumTestCase):
-     """ Tests for artifacts on the build dashboard /build/X """
-@@ -86,6 +87,8 @@ class TestBuildDashboardPageArtifacts(SeleniumTestCase):
-         """
-         If a build produced SDK artifacts, they should be shown, but the section
-         for image files and the images menu option should be hidden.
-+
-+        The packages count and size should also be hidden.
-         """
-         now = timezone.now()
-         build = Build.objects.create(project=self.project,
-@@ -120,11 +123,28 @@ class TestBuildDashboardPageArtifacts(SeleniumTestCase):
-         self.assertEqual(len(sdk_artifact_links), 2,
-             'should be links to 2 SDK artifacts')
- 
-+        # package count and size should not be visible, no link on
-+        # target name
-+        selector = '[data-value="target-package-count"]'
-+        self.assertFalse(self.element_exists(selector),
-+            'package count should not be shown for non-image builds')
-+
-+        selector = '[data-value="target-package-size"]'
-+        self.assertFalse(self.element_exists(selector),
-+            'package size should not be shown for non-image builds')
-+
-+        selector = '[data-link="target-packages"]'
-+        self.assertFalse(self.element_exists(selector),
-+            'link to target packages should not be on target heading')
-+
-     def test_image_artifacts(self):
-         """
-         If a build produced image files, kernel artifacts, and manifests,
-         they should all be shown, as well as the image link in the left-hand
-         menu.
-+
-+        The packages count and size should be shown, with a link to the
-+        package display page.
-         """
-         now = timezone.now()
-         build = Build.objects.create(project=self.project,
-@@ -145,6 +165,11 @@ class TestBuildDashboardPageArtifacts(SeleniumTestCase):
-         kernel_file2 = TargetKernelFile.objects.create(target=target,
-             file_name='/home/foo/bzImage', file_size=2000)
- 
-+        package = Package.objects.create(build=build, name='foo', size=1024,
-+            installed_name='foo1')
-+        installed_package = Target_Installed_Package.objects.create(
-+            target=target, package=package)
-+
-         self._get_build_dashboard(build)
- 
-         # check build artifacts heading
-@@ -175,3 +200,18 @@ class TestBuildDashboardPageArtifacts(SeleniumTestCase):
-         selector = 'a[data-link="package-manifest"]'
-         self.assertTrue(self.element_exists(selector),
-             'should be a link to the package manifest (selector %s)' % selector)
-+
-+        # check package count and size, link on target name
-+        selector = '[data-value="target-package-count"]'
-+        element = self.find(selector)
-+        self.assertEquals(element.text, '1',
-+            'package count should be shown for image builds')
-+
-+        selector = '[data-value="target-package-size"]'
-+        element = self.find(selector)
-+        self.assertEquals(element.text, '1.0 KB',
-+            'package size should be shown for image builds')
-+
-+        selector = '[data-link="target-packages"]'
-+        self.assertTrue(self.element_exists(selector),
-+            'link to target packages should be on target heading')
-diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
-index bc41e23..07fc26c 100644
---- a/lib/toaster/toastergui/templates/builddashboard.html
-+++ b/lib/toaster/toastergui/templates/builddashboard.html
-@@ -74,13 +74,28 @@
-     {% for target in targets %}
-         {% if target.target.is_image %}
-     <div class="well well-transparent dashboard-section" data-artifacts-for-target="{{target.target.pk}}">
--        <h3><a href="{% url 'target' build.pk target.target.pk %}">{{target.target.target}}</a></h3>
--        <dl class="dl-horizontal">
--            <dt>Packages included</dt>
--            <dd><a href="{% url 'target' build.pk target.target.pk %}">{{target.npkg}}</a></dd>
--            <dt>Total package size</dt>
--            <dd>{{target.pkgsz|filtered_filesizeformat}}</dd>
--        </dl>
-+        {% if target.npkg > 0 %}
-+            <h3>
-+                <a href="{% url 'target' build.pk target.target.pk %}" data-link="target-packages">
-+                  {{target.target.target}}
-+                </a>
-+            </h3>
-+            <dl class="dl-horizontal">
-+                <dt>Packages included</dt>
-+                <dd>
-+                    <a href="{% url 'target' build.pk target.target.pk %}">
-+                        <span data-value="target-package-count">{{target.npkg}}</span>
-+                    </a>
-+                </dd>
-+                <dt>Total package size</dt>
-+                <dd>
-+                    <span data-value="target-package-size">{{target.pkgsz|filtered_filesizeformat}}</span>
-+                </dd>
-+            </dl>
-+        {% else %}
-+            <h3>{{target.target.target}}</h3>
-+        {% endif %}
-+
-         {% if target.targetHasImages %}
-           <dl class="dl-horizontal">
-             <dt>
+Should probably fix the typo while we're here. 'occured' isn't spelled
+correctly, 'occurred' is.
 -- 
-1.9.1
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--94eb2c05cc14b2931f05377834da
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Tue, Jul 12, 2016 at 3:54 PM, bavery <span dir=3D"ltr">&lt;<a href=3D"ma=
+ilto:brian.avery@intel.com" target=3D"_blank">brian.avery@intel.com</a>&gt;=
+</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
+8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":wb" class=3D"a=
+3s aXjCH m155e15122d302a37">-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 logg=
+er.error(&quot;An uncaught exception occured in runqueue, please see the fa=
+ilure below:&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 except Exception as err:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 logger.exception(&quot;An uncaug=
+ht exception occured in runqueue&quot;)</div></blockquote></div><br>Should =
+probably fix the typo while we&#39;re here. &#39;occured&#39; isn&#39;t spe=
+lled correctly, &#39;occurred&#39; is.<br>-- <br><div class=3D"gmail_signat=
+ure" data-smartmail=3D"gmail_signature">Christopher Larson<br>clarson at ke=
+rgoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer =
+- Tslib<br>Senior Software Engineer, Mentor Graphics</div>
+</div></div>
+
+--94eb2c05cc14b2931f05377834da--
