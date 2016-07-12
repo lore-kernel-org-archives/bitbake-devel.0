@@ -1,26 +1,25 @@
 Return-Path: <brian.avery@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 0FA14731D3
+	by mail.openembedded.org (Postfix) with ESMTP id 2D8F2731DF
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Jul 2016 22:53:55 +0000 (UTC)
+	Tue, 12 Jul 2016 22:53:56 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
 	by orsmga102.jf.intel.com with ESMTP; 12 Jul 2016 15:53:46 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,354,1464678000"; 
-	d="scan'208,217";a="1015672967"
+X-IronPort-AV: E=Sophos;i="5.28,354,1464678000"; d="scan'208";a="1015672979"
 Received: from bavery-ws-desk.jf.intel.com ([10.7.201.28])
 	by orsmga002.jf.intel.com with ESMTP; 12 Jul 2016 15:53:44 -0700
 From: bavery <brian.avery@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Jul 2016 15:54:51 -0700
-Message-Id: <87c8705bdbdb5241e6fe186f72dc7eb728872925.1468363530.git.brian.avery@intel.com>
+Date: Tue, 12 Jul 2016 15:54:55 -0700
+Message-Id: <701957f6e427b810d0d374203fbf9e28faeb8976.1468363530.git.brian.avery@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
 References: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
 In-Reply-To: <cover.1468363530.git.brian.avery@intel.com>
 References: <cover.1468363530.git.brian.avery@intel.com>
 Cc: bavery <brian.avery@intel.com>
-Subject: [PATCH 10/17] toaster: only show "New custom image" button for builds with image targets
+Subject: [PATCH 14/17] toaster: the customise image button shouldn't rely on targets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,100 +36,62 @@ X-List-Received-Date: Tue, 12 Jul 2016 22:53:57 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Add a has_image_targets() method to Build, and use that to hide
-the "New custom image" button on the build dashboard if a build
-has no targets which build images.
+The build dashboard customise image button (for creating a new
+custom image based on an image recipe used by a build) shouldn't
+rely on targets: whether a new custom image can be created or not
+depends on whether any of the recipes used by the build are image
+recipes.
 
-[YOCTO #9514]
+Modify the method used to determine whether a build has customisable
+images to look at the image recipes used during the build, rather
+than whether the targets run by the build refer to image recipes.
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: bavery <brian.avery@intel.com>
 ---
- lib/toaster/orm/models.py                          | 13 +++++++
- .../toastergui/templates/basebuildpage.html        | 42 +++++++++++-----------
- 2 files changed, 35 insertions(+), 20 deletions(-)
+ lib/toaster/orm/models.py                           | 11 +++--------
+ lib/toaster/toastergui/templates/basebuildpage.html |  2 +-
+ 2 files changed, 4 insertions(+), 9 deletions(-)
 
 diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 0443a45..a111916 100644
+index 8e40f0a..048399f 100644
 --- a/lib/toaster/orm/models.py
 +++ b/lib/toaster/orm/models.py
-@@ -449,6 +449,19 @@ class Build(models.Model):
+@@ -449,18 +449,13 @@ class Build(models.Model):
                  break
          return has_images
  
-+    def has_image_targets(self):
-+        """
-+        Returns True if a build has any targets which were built from
-+        image recipes.
-+        """
-+        targets = Target.objects.filter(build_id=self.id)
-+        has_image_targets = False
-+        for target in targets:
-+            if target.is_image:
-+                has_image_targets = True
-+                break
-+        return has_image_targets
-+
+-    def has_image_targets(self):
++    def has_image_recipes(self):
+         """
+         Returns True if a build has any targets which were built from
+         image recipes.
+         """
+-        targets = Target.objects.filter(build_id=self.id)
+-        has_image_targets = False
+-        for target in targets:
+-            if target.is_image:
+-                has_image_targets = True
+-                break
+-        return has_image_targets
++        image_recipes = self.get_image_recipes()
++        return len(image_recipes) > 0
+ 
      def get_image_file_extensions(self):
          """
-         Get string of file name extensions for images produced by this build;
 diff --git a/lib/toaster/toastergui/templates/basebuildpage.html b/lib/toaster/toastergui/templates/basebuildpage.html
-index e9927eb..8d7c562 100644
+index 8d7c562..eb709bb 100644
 --- a/lib/toaster/toastergui/templates/basebuildpage.html
 +++ b/lib/toaster/toastergui/templates/basebuildpage.html
-@@ -117,30 +117,32 @@
+@@ -117,7 +117,7 @@
          {% endwith %}
  
            <!-- new custom image from image recipe in this build -->
--          <button class="btn btn-default btn-block navbar-btn" data-role="new-custom-image-trigger">New custom image</button>
--          {% include 'newcustomimage_modal.html' %}
--          <script>
--            // imageRecipes includes both custom image recipes and built-in
--            // image recipes, any of which can be used as the basis for a
--            // new custom image
--            var imageRecipes = {{ build.get_image_recipes | objects_to_dictionaries:"id,name" | json }};
-+          {% if build.has_image_targets %}
-+            <button class="btn btn-default btn-block navbar-btn" data-role="new-custom-image-trigger">New custom image</button>
-+            {% include 'newcustomimage_modal.html' %}
-+            <script>
-+              // imageRecipes includes both custom image recipes and built-in
-+              // image recipes, any of which can be used as the basis for a
-+              // new custom image
-+              var imageRecipes = {{ build.get_image_recipes | objects_to_dictionaries:"id,name" | json }};
- 
--            $(document).ready(function () {
--              var newCustomImageModal = $('#new-custom-image-modal');
--              var newCustomImageTrigger = $('[data-role="new-custom-image-trigger"]');
-+              $(document).ready(function () {
-+                var newCustomImageModal = $('#new-custom-image-modal');
-+                var newCustomImageTrigger = $('[data-role="new-custom-image-trigger"]');
- 
--              // show create new custom image modal to select an image built
--              // during this build as the basis for the custom recipe
--              newCustomImageTrigger.click(function () {
--                if (!imageRecipes.length) {
--                  return;
--                }
-+                // show create new custom image modal to select an image built
-+                // during this build as the basis for the custom recipe
-+                newCustomImageTrigger.click(function () {
-+                  if (!imageRecipes.length) {
-+                    return;
-+                  }
- 
--                newCustomImageModalSetRecipes(imageRecipes);
--                newCustomImageModal.modal('show');
-+                  newCustomImageModalSetRecipes(imageRecipes);
-+                  newCustomImageModal.modal('show');
-+                });
-               });
--            });
--          </script>
-+            </script>
-+          {% endif %}
-       </ul>
- 
-     </div>
+-          {% if build.has_image_targets %}
++          {% if build.has_image_recipes %}
+             <button class="btn btn-default btn-block navbar-btn" data-role="new-custom-image-trigger">New custom image</button>
+             {% include 'newcustomimage_modal.html' %}
+             <script>
 -- 
 1.9.1
 
