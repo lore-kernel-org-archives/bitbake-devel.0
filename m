@@ -1,57 +1,45 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-X-Greylist: delayed 444 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 14 Jul 2016 02:47:22 UTC
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id CF1896067C
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f49.google.com (mail-wm0-f49.google.com [74.125.82.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 9ED006AC4B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Jul 2016 02:47:22 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 22D24181A3;
-	Thu, 14 Jul 2016 04:39:57 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id snT7E02350oq; Thu, 14 Jul 2016 04:39:56 +0200 (CEST)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bastet.se.axis.com (Postfix) with ESMTP id D79A418198;
-	Thu, 14 Jul 2016 04:39:55 +0200 (CEST)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 596FB19C9;
-	Thu, 14 Jul 2016 04:39:55 +0200 (CEST)
-Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by boulder.se.axis.com (Postfix) with ESMTP id 4E856188B;
-	Thu, 14 Jul 2016 04:39:55 +0200 (CEST)
-Received: from XBOX04.axis.com (xbox04.axis.com [10.0.5.18])
-	by seth.se.axis.com (Postfix) with ESMTP id 4AA7A39C;
-	Thu, 14 Jul 2016 04:39:55 +0200 (CEST)
-Received: from XBOX02.axis.com (10.0.5.16) by XBOX04.axis.com (10.0.5.18) with
-	Microsoft SMTP Server (TLS) id 15.0.1156.6;
-	Thu, 14 Jul 2016 04:39:55 +0200
-Received: from XBOX02.axis.com ([fe80::d00f:cb52:1b56:20d]) by XBOX02.axis.com
-	([fe80::d00f:cb52:1b56:20d%21]) with mapi id 15.00.1156.000;
-	Thu, 14 Jul 2016 04:39:55 +0200
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] Analyzing dependencies
-Thread-Index: AQHRlUqFa3tXFlX13EiUl5EbyqsGh5+HSbKAgAADYwCAkBbiAIAAXI7g
-Date: Thu, 14 Jul 2016 02:39:54 +0000
-Message-ID: <7476b09f96bf4d1fbaf28fd2e0639bbd@XBOX02.axis.com>
-References: <570DE199.3010802@mlbassoc.com>
-	<CAMKF1soC0Yy13GyVVoe3KY3SjP26MvrHSbr3WS6x=dRW0uy=0Q@mail.gmail.com>
-	<570DE536.9020701@mlbassoc.com>
-	<3820835.WMpdxrdKEt@peggleto-mobl.ger.corp.intel.com>
-In-Reply-To: <3820835.WMpdxrdKEt@peggleto-mobl.ger.corp.intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
-MIME-Version: 1.0
-Cc: Gary Thomas <gary@mlbassoc.com>
-Subject: Re: Analyzing dependencies
+	Thu, 14 Jul 2016 18:56:26 +0000 (UTC)
+Received: by mail-wm0-f49.google.com with SMTP id f126so310177wma.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 14 Jul 2016 11:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=Nyr1FLiggmrIq4dshUuR8AmbeA2Y2+rmm3X5knfXvrU=;
+	b=QS+JF1WtCcnffsdc8GQe70sgiWmAACK3ED7EZGU3NF060jvfb89xaHdduUlZ/dTBkO
+	/W6D0Ub0PZneZNENqRROOU9vKrSxHfgTyy771t0Lh9q2JQ3kL3cYX7SyZCgP75xjEu6M
+	m5T5ZGZk6j7Utk2fvEatomY7dnxFhFjpWLFSNSSwNwlu7KyxU5aF6Xkn6b0tT/AqqyTs
+	sEa5y4k9jYwP9A2PT4CAmYy6MQ23r6y+kpdQ3E5yaViKE1XMF04l6dsWwcu3xXGW6sxD
+	8nn7RwaZyMTKyEMamypoYp5udL0Org/tvRAwjktwXYhIriaIzkvxXvZP0I091WwraY3H
+	H1rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=Nyr1FLiggmrIq4dshUuR8AmbeA2Y2+rmm3X5knfXvrU=;
+	b=aQ/RicOS9sj5fvRGuf3IXsptMY6xcIBS66dT0tEvn7iXw2P+D5iEaZAVs8DwpgPUYM
+	sQdCfp7qyKIYDTV3yrCuNdYm3drTtqiDcxy4j7sZ+es9RXRtUvCSOcOyBAQOfOAyTLP1
+	RFjwv00vTzDWeUXLVy8PT80Qh58wU8iVrgOWI5BrpRalgFlnXjKpmeAu9CYsM26EW/rq
+	R5Z4+n+gh65S0g+pS/3yfgwRDrhwQ4f+tnci7VizbPpxoffEfTCS7U8iPuZoCp6LPWUl
+	VxsEEpDBkR/F6Xsw3Vi2zxskqfGHLhPvrCufLvFC4WcYLYYJuufXF8g1bJ0ccO92/k6n
+	8KEw==
+X-Gm-Message-State: ALyK8tLEPv9Cgk6JTjm9BLHwG5flkmbvk1U2gq2hycB6QRPf//1sBDzOcwdgZpjJJMcsghM1
+X-Received: by 10.28.158.87 with SMTP id h84mr34163302wme.43.1468522586004;
+	Thu, 14 Jul 2016 11:56:26 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id z5sm3837268wme.5.2016.07.14.11.56.24
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Thu, 14 Jul 2016 11:56:25 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 14 Jul 2016 19:56:22 +0100
+Message-Id: <1468522582-25301-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.8.1
+Subject: [PATCH] build: don't use $B as the default cwd for functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,58 +52,93 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Jul 2016 02:47:25 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 14 Jul 2016 18:56:27 -0000
 
-> -----Original Message-----
-> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
-> devel-bounces@lists.openembedded.org] On Behalf Of Paul Eggleton
-> Sent: den 14 juli 2016 00:44
-> To: bitbake-devel@lists.openembedded.org
-> Cc: Gary Thomas
-> Subject: Re: [bitbake-devel] Analyzing dependencies
->=20
-> On Wed, 13 Apr 2016 08:20:38 Gary Thomas wrote:
-> > On 2016-04-13 08:08, Khem Raj wrote:
-> > > Use any program that reads dotty files
-> >
-> > Know of any interactive ones that let you explore like the 'depexp'?
->=20
-> It's not quite like that but FYI I have found "xdot" useful for viewing
-> dot files - it performs well with reasonably large graphs (though still
-> struggles with the bitbake -g task graph unfortunately).
->=20
->   https://github.com/jrfonseca/xdot.py
->=20
-> Cheers,
-> Paul
->=20
-> --
->=20
-> Paul Eggleton
-> Intel Open Source Technology Centre
+When bitbake executes a shell or Python function it can cd/chdir() into a
+directory before executing the task. If no directory is specified then the
+default of $B is used.  However $B is an OpenEmbedded variable and BitBake
+shouldn't be aware of it.
 
-To make it possible to view the BitBake graphs in a sane way, I recommend=20
-to use gvpr and tred (from graphviz) to filter them.
+To solve this change the semantics slightly so that if no directory is
+specified, the current working directory isn't changed.  There's also a sanity
+check that emits a warning if a Python task does os.chdir() without restoring
+the old path, and the previous working directory is restored.
 
-Here is an example filter for gvpr that I have used to filter out native=20
-recipes. It also changes the labels for each node to only be the recipe=20
-name. To use it, first run "bitbake -g <recipe>" for the recipe you are=20
-interested in, e.g., core-image-minimal. Then run=20
-"gvpr -i -f filter_non-native.txt pn-depends.dot | tred | xdot.py&".
+This does change semantics: whereas before a function in OE would have $B as the
+working directory unless specified, now the working directory is the top of the
+build tree.  Any breakage this causes can be solved by either adding
+do_some_task[dirs] = "${B}" or by using absolute paths in the task.
 
----- 8< -------- filter_non-native.txt ---------------------------------
-N[match(label, "/meta") !=3D -1 &&
-  match(label, "virtual:native:") =3D=3D -1 &&
-  match(name, "-native") =3D=3D -1]
+[ YOCTO #4634 ]
 
-N {
-	label =3D gsub(label, ' *');
-}
----- >8 -------- filter_non-native.txt ---------------------------------
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/build.py | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-//Peter
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 4fb2a77..4f01d66 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -188,6 +188,11 @@ class LogTee(object):
+ def exec_func(func, d, dirs = None, pythonexception=False):
+     """Execute a BB 'function'"""
+ 
++    try:
++        oldcwd = os.getcwd()
++    except:
++        oldcwd = None
++
+     body = d.getVar(func, False)
+     if not body:
+         if body is None:
+@@ -211,9 +216,7 @@ def exec_func(func, d, dirs = None, pythonexception=False):
+             bb.utils.mkdirhier(adir)
+         adir = dirs[-1]
+     else:
+-        adir = d.getVar('B', True)
+-        bb.utils.mkdirhier(adir)
+-
++        adir = None
+     ispython = flags.get('python')
+ 
+     lockflag = flags.get('lockfiles')
+@@ -257,6 +260,13 @@ def exec_func(func, d, dirs = None, pythonexception=False):
+         else:
+             exec_func_shell(func, d, runfile, cwd=adir)
+ 
++    if oldcwd and os.getcwd() != oldcwd:
++        try:
++            bb.warn("Task %s changed cwd to %s" % (func, os.getcwd()))
++            os.chdir(oldcwd)
++        except:
++            pass
++
+ _functionfmt = """
+ {function}(d)
+ """
+@@ -272,7 +282,8 @@ def exec_func_python(func, d, runfile, cwd=None, pythonexception=False):
+     if cwd:
+         try:
+             olddir = os.getcwd()
+-        except OSError:
++        except OSError as e:
++            bb.warn("%s: Cannot get cwd: %s" % (func, e))
+             olddir = None
+         os.chdir(cwd)
+ 
+@@ -298,8 +309,8 @@ def exec_func_python(func, d, runfile, cwd=None, pythonexception=False):
+         if cwd and olddir:
+             try:
+                 os.chdir(olddir)
+-            except OSError:
+-                pass
++            except OSError as e:
++                bb.warn("%s: Cannot restore cwd %s: %s" % (func, olddir, e))
+ 
+ def shell_trap_code():
+     return '''#!/bin/sh\n
+-- 
+2.8.1
 
 
