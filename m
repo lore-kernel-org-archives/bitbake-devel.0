@@ -1,46 +1,39 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wm0-f42.google.com (mail-wm0-f42.google.com [74.125.82.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 0DA286067C
+Return-Path: <elliot.smith@intel.com>
+Received: from bird.oak.relay.mailchannels.net
+	(bird.oak.relay.mailchannels.net [23.83.215.17])
+	by mail.openembedded.org (Postfix) with ESMTP id DF9A9606D0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jul 2016 10:27:25 +0000 (UTC)
-Received: by mail-wm0-f42.google.com with SMTP id o80so23378623wme.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jul 2016 03:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=ImOzww3+/fmBR6lXfmwwTqwezUEK7tvmB7U52A6+fgM=;
-	b=GmcD5bgngwirJ506v4lbqRwVxgKC195Birbc56rxC9KxN4q+YeqR+6l9KCGuRNy9oa
-	Njy8dNWLCuK0EoXAKM8zvr8rgYyDaUX0OaDW+5+82pXIEcyPwpWB9/nuYJiJVji65MKP
-	9BawX8x9dA9NAUWuV5a1OY28eCvrWuOq2Zl9t2YUvi2AFL05RrVugouA2H071AGUSbxk
-	DHKsfllypqLuh23Azjv/qv/HTzZBVC9pKyeRV5FsEviuQ/+T5aAIH+UbG5DXjOyWKiyu
-	lrrd7hJ4+GhPROvyszT5TJVE454I+P/hlkGHdJqzu8h8uN6zqxSlCdGDVadKWcxWEgxb
-	2GrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=ImOzww3+/fmBR6lXfmwwTqwezUEK7tvmB7U52A6+fgM=;
-	b=KqgZXkNAAiMEfS3eA+PFsQ8tRZ/lv0G08MbnV8s9txCEWrBiCzzZk8aQlBDxcekdqI
-	ocISKQMm6JR0YoPniYlVQ+iKFSB9Yp9jIL6/LrO5U5g30DNANSlsLekwBSAhMN3O115o
-	V+RgT4D8aRFEPmKzQU15mIyXjYTXo9Xt1R2lXenjJ+iij8I/5ye4hjKoomWOjcrXLt7d
-	wSuqfkGJar1EV1/Khz6+LZYRxsgqntUHGW/HifZ90cExMa1uRbY6miKOkfldjMyxLYUn
-	Uaofn9P7Nk/ZcLKDM+U9uwKm8ohuXcD7qqayI/aLvjdEvPVTpdr305yzYa112MWu+K4d
-	9EYQ==
-X-Gm-Message-State: ALyK8tI8QwJVctILiylcaAex8AGT1MgjOawN7EXDnqj6kz+G7W9wgavrA5Ibh6OKElRdYcMT
-X-Received: by 10.28.27.143 with SMTP id b137mr32726507wmb.12.1468578445718;
-	Fri, 15 Jul 2016 03:27:25 -0700 (PDT)
-Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
-	by smtp.gmail.com with ESMTPSA id
-	a203sm2062825wma.0.2016.07.15.03.27.24
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 15 Jul 2016 03:27:24 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
+	Fri, 15 Jul 2016 10:32:21 +0000 (UTC)
+X-Sender-Id: wwwh|x-authuser|elliot@townx.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 8D890100EC0;
+	Fri, 15 Jul 2016 10:32:20 +0000 (UTC)
+Received: from uscentral428.accountservergroup.com
+	(ip-10-120-4-226.us-west-2.compute.internal [10.120.4.226])
+	by relay.mailchannels.net (Postfix) with ESMTPA id B3034100368;
+	Fri, 15 Jul 2016 10:32:19 +0000 (UTC)
+X-Sender-Id: wwwh|x-authuser|elliot@townx.org
+Received: from uscentral428.accountservergroup.com
+	(uscentral428.accountservergroup.com [10.107.128.240])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+	by 0.0.0.0:2500 (trex/5.6.16); Fri, 15 Jul 2016 10:32:20 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
+X-MailChannels-Auth-Id: wwwh
+X-MC-Loop-Signature: 1468578740191:2074854944
+X-MC-Ingress-Time: 1468578740191
+Received: from [176.253.151.47] (port=58976 helo=localhost.localdomain)
+	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
+	(envelope-from <elliot.smith@intel.com>)
+	id 1bO0Pq-0001ho-4p; Fri, 15 Jul 2016 06:32:18 -0400
+From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jul 2016 11:27:22 +0100
-Message-Id: <1468578442-23552-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 2.8.1
-Subject: [PATCH] lib/bb/build.py: decode the command as UTF-8
+Date: Fri, 15 Jul 2016 11:32:07 +0100
+Message-Id: <1468578727-30368-1-git-send-email-elliot.smith@intel.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+X-AuthUser: elliot@townx.org
+Subject: [PATCH] toaster-tests: add class SeleniumTestCaseBase for browser tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,43 +46,495 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jul 2016 10:27:27 -0000
+X-List-Received-Date: Fri, 15 Jul 2016 10:32:24 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The messaging FIFO is UTF-8, so decode the command as UTF-8 as well as the value
-as otherwise "bberror" != b("bberror") and none of the messages from shell
-functions are ever displayed.
+From: An=C3=ADbal Lim=C3=B3n <anibal.limon@linux.intel.com>
 
-Also add an else to the command parser so unhandled commands are noticed.
+In order to reuse the Selenium helper outside a Django
+environment (for functional testing), add a new module
+containing the base class SeleniumTestCaseBase, which only
+inherits unittest.TestCase
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
+Add a class SeleniumTestCase with multiple inheritance of
+StaticLiveServerTestCase and SeleniumTestCaseBase to prevent
+existing tests from breaking.
+
+Signed-off-by: An=C3=ADbal Lim=C3=B3n <anibal.limon@linux.intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/bb/build.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../lib/toaster/tests/browser/selenium_helpers.py  | 187 +--------------=
+---
+ .../toaster/tests/browser/selenium_helpers_base.py | 216 +++++++++++++++=
+++++++
+ 2 files changed, 221 insertions(+), 182 deletions(-)
+ create mode 100644 bitbake/lib/toaster/tests/browser/selenium_helpers_ba=
+se.py
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 4f01d66..7c47680 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -389,7 +389,7 @@ exit $ret
-         lines = data.split(b'\0')
-         for line in lines:
-             splitval = line.split(b' ', 1)
--            cmd = splitval[0]
-+            cmd = splitval[0].decode("utf-8")
-             if len(splitval) > 1:
-                 value = splitval[1].decode("utf-8")
-             else:
-@@ -413,7 +413,8 @@ exit $ret
-                 level = int(splitval[0])
-                 value = splitval[1]
-                 bb.debug(level, value)
+diff --git a/bitbake/lib/toaster/tests/browser/selenium_helpers.py b/bitb=
+ake/lib/toaster/tests/browser/selenium_helpers.py
+index ef07858..ddb43fd 100644
+--- a/bitbake/lib/toaster/tests/browser/selenium_helpers.py
++++ b/bitbake/lib/toaster/tests/browser/selenium_helpers.py
+@@ -23,195 +23,18 @@
+ # modified from Patchwork, released under the same licence terms as Toas=
+ter:
+ # https://github.com/dlespiau/patchwork/blob/master/patchwork/tests.brow=
+ser.py
+=20
++from django.contrib.staticfiles.testing import StaticLiveServerTestCase
++from tests.browser.selenium_helpers_base import SeleniumTestCaseBase
++
+ """
+ Helper methods for creating Toaster Selenium tests which run within
+ the context of Django unit tests.
+ """
+=20
+-import os
+-import time
 -
-+            else:
-+                bb.warn("Unrecognised command '%s' on FIFO" % cmd)
-     tempdir = d.getVar('T', True)
-     fifopath = os.path.join(tempdir, 'fifo.%s' % os.getpid())
-     if os.path.exists(fifopath):
--- 
-2.8.1
+-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+-from selenium import webdriver
+-from selenium.webdriver.support.ui import WebDriverWait
+-from selenium.webdriver.common.desired_capabilities import DesiredCapabi=
+lities
+-from selenium.common.exceptions import NoSuchElementException, \
+-        StaleElementReferenceException, TimeoutException
+-
+-def create_selenium_driver(browser=3D'chrome'):
+-    # set default browser string based on env (if available)
+-    env_browser =3D os.environ.get('TOASTER_TESTS_BROWSER')
+-    if env_browser:
+-        browser =3D env_browser
+-
+-    if browser =3D=3D 'chrome':
+-        return webdriver.Chrome(
+-            service_args=3D["--verbose", "--log-path=3Dselenium.log"]
+-        )
+-    elif browser =3D=3D 'firefox':
+-        return webdriver.Firefox()
+-    elif browser =3D=3D 'marionette':
+-        capabilities =3D DesiredCapabilities.FIREFOX
+-        capabilities['marionette'] =3D True
+-        return webdriver.Firefox(capabilities=3Dcapabilities)
+-    elif browser =3D=3D 'ie':
+-        return webdriver.Ie()
+-    elif browser =3D=3D 'phantomjs':
+-        return webdriver.PhantomJS()
+-    else:
+-        msg =3D 'Selenium driver for browser %s is not available' % brow=
+ser
+-        raise RuntimeError(msg)
+-
+-class Wait(WebDriverWait):
+-    """
+-    Subclass of WebDriverWait with predetermined timeout and poll
+-    frequency. Also deals with a wider variety of exceptions.
+-    """
+-    _TIMEOUT =3D 10
+-    _POLL_FREQUENCY =3D 0.5
+-
+-    def __init__(self, driver):
+-        super(Wait, self).__init__(driver, self._TIMEOUT, self._POLL_FRE=
+QUENCY)
+-
+-    def until(self, method, message=3D''):
+-        """
+-        Calls the method provided with the driver as an argument until t=
+he
+-        return value is not False.
+-        """
+-
+-        end_time =3D time.time() + self._timeout
+-        while True:
+-            try:
+-                value =3D method(self._driver)
+-                if value:
+-                    return value
+-            except NoSuchElementException:
+-                pass
+-            except StaleElementReferenceException:
+-                pass
+-
+-            time.sleep(self._poll)
+-            if time.time() > end_time:
+-                break
+-
+-        raise TimeoutException(message)
+-
+-    def until_not(self, method, message=3D''):
+-        """
+-        Calls the method provided with the driver as an argument until t=
+he
+-        return value is False.
+-        """
+-
+-        end_time =3D time.time() + self._timeout
+-        while True:
+-            try:
+-                value =3D method(self._driver)
+-                if not value:
+-                    return value
+-            except NoSuchElementException:
+-                return True
+-            except StaleElementReferenceException:
+-                pass
+-
+-            time.sleep(self._poll)
+-            if time.time() > end_time:
+-                break
+-
+-        raise TimeoutException(message)
+-
+-class SeleniumTestCase(StaticLiveServerTestCase):
++class SeleniumTestCase(SeleniumTestCaseBase, StaticLiveServerTestCase):
+     """
+     NB StaticLiveServerTestCase is used as the base test case so that
+     static files are served correctly in a Selenium test run context; se=
+e
+     https://docs.djangoproject.com/en/1.9/ref/contrib/staticfiles/#speci=
+alized-test-case-to-support-live-testing
+     """
+-
+-    @classmethod
+-    def setUpClass(cls):
+-        """ Create a webdriver driver at the class level """
+-
+-        super(SeleniumTestCase, cls).setUpClass()
+-
+-        # instantiate the Selenium webdriver once for all the test metho=
+ds
+-        # in this test case
+-        cls.driver =3D create_selenium_driver()
+-        cls.driver.maximize_window()
+-
+-    @classmethod
+-    def tearDownClass(cls):
+-        """ Clean up webdriver driver """
+-
+-        cls.driver.quit()
+-        super(SeleniumTestCase, cls).tearDownClass()
+-
+-    def get(self, url):
+-        """
+-        Selenium requires absolute URLs, so convert Django URLs returned
+-        by resolve() or similar to absolute ones and get using the
+-        webdriver instance.
+-
+-        url: a relative URL
+-        """
+-        abs_url =3D '%s%s' % (self.live_server_url, url)
+-        self.driver.get(abs_url)
+-
+-    def find(self, selector):
+-        """ Find single element by CSS selector """
+-        return self.driver.find_element_by_css_selector(selector)
+-
+-    def find_all(self, selector):
+-        """ Find all elements matching CSS selector """
+-        return self.driver.find_elements_by_css_selector(selector)
+-
+-    def element_exists(self, selector):
+-        """
+-        Return True if one element matching selector exists,
+-        False otherwise
+-        """
+-        return len(self.find_all(selector)) =3D=3D 1
+-
+-    def focused_element(self):
+-        """ Return the element which currently has focus on the page """
+-        return self.driver.switch_to.active_element
+-
+-    def wait_until_present(self, selector):
+-        """ Wait until element matching CSS selector is on the page """
+-        is_present =3D lambda driver: self.find(selector)
+-        msg =3D 'An element matching "%s" should be on the page' % selec=
+tor
+-        element =3D Wait(self.driver).until(is_present, msg)
+-        return element
+-
+-    def wait_until_visible(self, selector):
+-        """ Wait until element matching CSS selector is visible on the p=
+age """
+-        is_visible =3D lambda driver: self.find(selector).is_displayed()
+-        msg =3D 'An element matching "%s" should be visible' % selector
+-        Wait(self.driver).until(is_visible, msg)
+-        return self.find(selector)
+-
+-    def wait_until_focused(self, selector):
+-        """ Wait until element matching CSS selector has focus """
+-        is_focused =3D \
+-            lambda driver: self.find(selector) =3D=3D self.focused_eleme=
+nt()
+-        msg =3D 'An element matching "%s" should be focused' % selector
+-        Wait(self.driver).until(is_focused, msg)
+-        return self.find(selector)
+-
+-    def enter_text(self, selector, value):
+-        """ Insert text into element matching selector """
+-        # note that keyup events don't occur until the element is clicke=
+d
+-        # (in the case of <input type=3D"text"...>, for example), so sim=
+ulate
+-        # user clicking the element before inserting text into it
+-        field =3D self.click(selector)
+-
+-        field.send_keys(value)
+-        return field
+-
+-    def click(self, selector):
+-        """ Click on element which matches CSS selector """
+-        element =3D self.wait_until_visible(selector)
+-        element.click()
+-        return element
+-
+-    def get_page_source(self):
+-        """ Get raw HTML for the current page """
+-        return self.driver.page_source
++    pass
+diff --git a/bitbake/lib/toaster/tests/browser/selenium_helpers_base.py b=
+/bitbake/lib/toaster/tests/browser/selenium_helpers_base.py
+new file mode 100644
+index 0000000..c4161d7
+--- /dev/null
++++ b/bitbake/lib/toaster/tests/browser/selenium_helpers_base.py
+@@ -0,0 +1,216 @@
++#! /usr/bin/env python
++# ex:ts=3D4:sw=3D4:sts=3D4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# BitBake Toaster Implementation
++#
++# Copyright (C) 2013-2016 Intel Corporation
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License alon=
+g
++# with this program; if not, write to the Free Software Foundation, Inc.=
+,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++# The Wait class and some of SeleniumDriverHelper and SeleniumTestCase a=
+re
++# modified from Patchwork, released under the same licence terms as Toas=
+ter:
++# https://github.com/dlespiau/patchwork/blob/master/patchwork/tests.brow=
+ser.py
++
++"""
++Base helper methods for creating Toaster Selenium tests.
++"""
++
++import os
++import time
++import unittest
++
++from selenium import webdriver
++from selenium.webdriver.support.ui import WebDriverWait
++from selenium.webdriver.common.desired_capabilities import DesiredCapabi=
+lities
++from selenium.common.exceptions import NoSuchElementException, \
++        StaleElementReferenceException, TimeoutException
++
++def create_selenium_driver(browser=3D'chrome'):
++    # set default browser string based on env (if available)
++    env_browser =3D os.environ.get('TOASTER_TESTS_BROWSER')
++    if env_browser:
++        browser =3D env_browser
++
++    if browser =3D=3D 'chrome':
++        return webdriver.Chrome(
++            service_args=3D["--verbose", "--log-path=3Dselenium.log"]
++        )
++    elif browser =3D=3D 'firefox':
++        return webdriver.Firefox()
++    elif browser =3D=3D 'marionette':
++        capabilities =3D DesiredCapabilities.FIREFOX
++        capabilities['marionette'] =3D True
++        return webdriver.Firefox(capabilities=3Dcapabilities)
++    elif browser =3D=3D 'ie':
++        return webdriver.Ie()
++    elif browser =3D=3D 'phantomjs':
++        return webdriver.PhantomJS()
++    else:
++        msg =3D 'Selenium driver for browser %s is not available' % brow=
+ser
++        raise RuntimeError(msg)
++
++class Wait(WebDriverWait):
++    """
++    Subclass of WebDriverWait with predetermined timeout and poll
++    frequency. Also deals with a wider variety of exceptions.
++    """
++    _TIMEOUT =3D 10
++    _POLL_FREQUENCY =3D 0.5
++
++    def __init__(self, driver):
++        super(Wait, self).__init__(driver, self._TIMEOUT, self._POLL_FRE=
+QUENCY)
++
++    def until(self, method, message=3D''):
++        """
++        Calls the method provided with the driver as an argument until t=
+he
++        return value is not False.
++        """
++
++        end_time =3D time.time() + self._timeout
++        while True:
++            try:
++                value =3D method(self._driver)
++                if value:
++                    return value
++            except NoSuchElementException:
++                pass
++            except StaleElementReferenceException:
++                pass
++
++            time.sleep(self._poll)
++            if time.time() > end_time:
++                break
++
++        raise TimeoutException(message)
++
++    def until_not(self, method, message=3D''):
++        """
++        Calls the method provided with the driver as an argument until t=
+he
++        return value is False.
++        """
++
++        end_time =3D time.time() + self._timeout
++        while True:
++            try:
++                value =3D method(self._driver)
++                if not value:
++                    return value
++            except NoSuchElementException:
++                return True
++            except StaleElementReferenceException:
++                pass
++
++            time.sleep(self._poll)
++            if time.time() > end_time:
++                break
++
++        raise TimeoutException(message)
++
++class SeleniumTestCaseBase(unittest.TestCase):
++    """
++    NB StaticLiveServerTestCase is used as the base test case so that
++    static files are served correctly in a Selenium test run context; se=
+e
++    https://docs.djangoproject.com/en/1.9/ref/contrib/staticfiles/#speci=
+alized-test-case-to-support-live-testing
++    """
++
++    @classmethod
++    def setUpClass(cls):
++        """ Create a webdriver driver at the class level """
++
++        super(SeleniumTestCaseBase, cls).setUpClass()
++
++        # instantiate the Selenium webdriver once for all the test metho=
+ds
++        # in this test case
++        cls.driver =3D create_selenium_driver()
++        cls.driver.maximize_window()
++
++    @classmethod
++    def tearDownClass(cls):
++        """ Clean up webdriver driver """
++
++        cls.driver.quit()
++        super(SeleniumTestCaseBase, cls).tearDownClass()
++
++    def get(self, url):
++        """
++        Selenium requires absolute URLs, so convert Django URLs returned
++        by resolve() or similar to absolute ones and get using the
++        webdriver instance.
++
++        url: a relative URL
++        """
++        abs_url =3D '%s%s' % (self.live_server_url, url)
++        self.driver.get(abs_url)
++
++    def find(self, selector):
++        """ Find single element by CSS selector """
++        return self.driver.find_element_by_css_selector(selector)
++
++    def find_all(self, selector):
++        """ Find all elements matching CSS selector """
++        return self.driver.find_elements_by_css_selector(selector)
++
++    def element_exists(self, selector):
++        """
++        Return True if one element matching selector exists,
++        False otherwise
++        """
++        return len(self.find_all(selector)) =3D=3D 1
++
++    def focused_element(self):
++        """ Return the element which currently has focus on the page """
++        return self.driver.switch_to.active_element
++
++    def wait_until_present(self, selector):
++        """ Wait until element matching CSS selector is on the page """
++        is_present =3D lambda driver: self.find(selector)
++        msg =3D 'An element matching "%s" should be on the page' % selec=
+tor
++        element =3D Wait(self.driver).until(is_present, msg)
++        return element
++
++    def wait_until_visible(self, selector):
++        """ Wait until element matching CSS selector is visible on the p=
+age """
++        is_visible =3D lambda driver: self.find(selector).is_displayed()
++        msg =3D 'An element matching "%s" should be visible' % selector
++        Wait(self.driver).until(is_visible, msg)
++        return self.find(selector)
++
++    def wait_until_focused(self, selector):
++        """ Wait until element matching CSS selector has focus """
++        is_focused =3D \
++            lambda driver: self.find(selector) =3D=3D self.focused_eleme=
+nt()
++        msg =3D 'An element matching "%s" should be focused' % selector
++        Wait(self.driver).until(is_focused, msg)
++        return self.find(selector)
++
++    def enter_text(self, selector, value):
++        """ Insert text into element matching selector """
++        # note that keyup events don't occur until the element is clicke=
+d
++        # (in the case of <input type=3D"text"...>, for example), so sim=
+ulate
++        # user clicking the element before inserting text into it
++        field =3D self.click(selector)
++
++        field.send_keys(value)
++        return field
++
++    def click(self, selector):
++        """ Click on element which matches CSS selector """
++        element =3D self.wait_until_visible(selector)
++        element.click()
++        return element
++
++    def get_page_source(self):
++        """ Get raw HTML for the current page """
++        return self.driver.page_source
+--=20
+2.7.4
 
 
