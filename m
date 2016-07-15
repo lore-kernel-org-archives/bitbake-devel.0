@@ -1,22 +1,26 @@
-Return-Path: <brian.avery@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 992BF606D0
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 1721B731A2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jul 2016 16:42:44 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga101.fm.intel.com with ESMTP; 15 Jul 2016 09:42:46 -0700
+	Fri, 15 Jul 2016 23:08:16 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga104.fm.intel.com with ESMTP; 15 Jul 2016 16:08:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,368,1464678000"; d="scan'208";a="996020618"
-Received: from bavery-ws-desk.jf.intel.com ([10.7.201.28])
-	by orsmga001.jf.intel.com with ESMTP; 15 Jul 2016 09:42:45 -0700
-From: bavery <brian.avery@intel.com>
+X-IronPort-AV: E=Sophos;i="5.28,370,1464678000"; d="scan'208";a="1022691063"
+Received: from njaafar1-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.147.71])
+	by fmsmga002.fm.intel.com with ESMTP; 15 Jul 2016 16:08:15 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jul 2016 09:44:01 -0700
-Message-Id: <1468601041-15423-1-git-send-email-brian.avery@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
-References: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
-Subject: [PATCHV4 01/17] runqueue: improve exception logging
+Date: Sat, 16 Jul 2016 11:08:12 +1200
+Message-ID: <11213377.AP4gMkxMt0@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.10 (Linux/4.5.7-202.fc23.x86_64; KDE/4.14.20; x86_64; ;
+	)
+In-Reply-To: <1468578442-23552-1-git-send-email-ross.burton@intel.com>
+References: <1468578442-23552-1-git-send-email-ross.burton@intel.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] lib/bb/build.py: decode the command as UTF-8
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,39 +33,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jul 2016 16:42:46 -0000
+X-List-Received-Date: Fri, 15 Jul 2016 23:08:17 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+On Fri, 15 Jul 2016 11:27:22 Ross Burton wrote:
+> The messaging FIFO is UTF-8, so decode the command as UTF-8 as well as the
+> value as otherwise "bberror" != b("bberror") and none of the messages from
+> shell functions are ever displayed.
+> 
+> Also add an else to the command parser so unhandled commands are noticed.
 
-Runqueue errors direct the user to view the "failure below",
-but no additional error message is available.
+Thanks. Ideally this should be marked as "Fixes [YOCTO #9947]" when it gets 
+merged.
 
-Log the stacktrace so that the user can see what went wrong.
+Cheers,
+Paul
 
-Also fix a typo in the log message.
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: bavery <brian.avery@intel.com>
----
- lib/bb/runqueue.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index c9b6b84..48c01c0 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1175,8 +1175,8 @@ class RunQueue:
-                 pass
-             self.state = runQueueComplete
-             raise
--        except:
--            logger.error("An uncaught exception occured in runqueue, please see the failure below:")
-+        except Exception as err:
-+            logger.exception("An uncaught exception occurred in runqueue")
-             try:
-                 self.teardown_workers()
-             except:
 -- 
-1.9.1
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
