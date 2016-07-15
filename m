@@ -1,22 +1,25 @@
-Return-Path: <brian.avery@intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id C52F56FF93
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 4884360722
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jul 2016 00:10:55 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga104.fm.intel.com with ESMTP; 14 Jul 2016 17:10:56 -0700
+	Fri, 15 Jul 2016 08:55:17 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga103.jf.intel.com with ESMTP; 15 Jul 2016 01:55:10 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,365,1464678000"; d="scan'208";a="1017184833"
-Received: from bavery-ws-desk.jf.intel.com ([10.7.201.28])
-	by orsmga002.jf.intel.com with ESMTP; 14 Jul 2016 17:10:56 -0700
-From: bavery <brian.avery@intel.com>
+X-IronPort-AV: E=Sophos;i="5.28,367,1464678000"; d="scan'208";a="995777821"
+Received: from apbalanx-mobl.ccr.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.177.79])
+	by orsmga001.jf.intel.com with ESMTP; 15 Jul 2016 01:55:06 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 14 Jul 2016 17:12:12 -0700
-Message-Id: <1468541532-36152-1-git-send-email-brian.avery@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
-References: <4551b56f132497c055f39567946a5d3be347d770.1468363530.git.brian.avery@intel.com>
-Subject: [PATCHV3 01/17] runqueue: improve exception logging
+Date: Fri, 15 Jul 2016 20:54:30 +1200
+Message-Id: <6a92138e0bd9674023389cffebf29a33a49211b2.1468572805.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.5.5
+In-Reply-To: <cover.1468572805.git.paul.eggleton@linux.intel.com>
+References: <cover.1468572805.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1468572805.git.paul.eggleton@linux.intel.com>
+References: <cover.1468572805.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 1/1] knotty: avoid errors when fetching outside of a task
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,39 +32,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jul 2016 00:10:57 -0000
+X-List-Received-Date: Fri, 15 Jul 2016 08:55:17 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+In a few places we use the fetcher code to fetch files outside of a
+task, for example uninative in OE. In that case the pid of the event is
+0 and that was causing an error in BBUIHelper.eventHandler(). Check the
+pid and do nothing if it's 0.
 
-Runqueue errors direct the user to view the "failure below",
-but no additional error message is available.
-
-Log the stacktrace so that the user can see what went wrong.
-
-Also fix a typo in the log message.
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: bavery <brian.avery@intel.com>
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/runqueue.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/ui/uihelper.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index c9b6b84..48c01c0 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1175,8 +1175,8 @@ class RunQueue:
-                 pass
-             self.state = runQueueComplete
-             raise
--        except:
--            logger.error("An uncaught exception occured in runqueue, please see the failure below:")
-+        except Exception as err:
-+            logger.exception("An uncaught exception occurred in runqueue")
-             try:
-                 self.teardown_workers()
-             except:
+diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
+index 1915e47..f64fa18 100644
+--- a/lib/bb/ui/uihelper.py
++++ b/lib/bb/ui/uihelper.py
+@@ -54,9 +54,10 @@ class BBUIHelper:
+             self.tasknumber_total = event.stats.total
+             self.needUpdate = True
+         if isinstance(event, bb.build.TaskProgress):
+-            self.running_tasks[event.pid]['progress'] = event.progress
+-            self.running_tasks[event.pid]['rate'] = event.rate
+-            self.needUpdate = True
++            if event.pid > 0:
++                self.running_tasks[event.pid]['progress'] = event.progress
++                self.running_tasks[event.pid]['rate'] = event.rate
++                self.needUpdate = True
+ 
+     def getTasks(self):
+         self.needUpdate = False
 -- 
-1.9.1
+2.5.5
 
 
