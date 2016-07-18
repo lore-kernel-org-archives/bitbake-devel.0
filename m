@@ -1,26 +1,24 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 1721B731A2
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 95220731A2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jul 2016 23:08:16 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga104.fm.intel.com with ESMTP; 15 Jul 2016 16:08:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,370,1464678000"; d="scan'208";a="1022691063"
-Received: from njaafar1-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.147.71])
-	by fmsmga002.fm.intel.com with ESMTP; 15 Jul 2016 16:08:15 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Sat, 16 Jul 2016 11:08:12 +1200
-Message-ID: <11213377.AP4gMkxMt0@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.10 (Linux/4.5.7-202.fc23.x86_64; KDE/4.14.20; x86_64; ;
-	)
-In-Reply-To: <1468578442-23552-1-git-send-email-ross.burton@intel.com>
-References: <1468578442-23552-1-git-send-email-ross.burton@intel.com>
+	Mon, 18 Jul 2016 03:42:51 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u6I3gpq3017366
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 17 Jul 2016 20:42:52 -0700 (PDT)
+Received: from ala-blade48.wrs.com (147.11.105.68) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
+	Sun, 17 Jul 2016 20:42:51 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Sun, 17 Jul 2016 20:42:50 -0700
+Message-ID: <cover.1468813269.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 2.9.0
 MIME-Version: 1.0
-Subject: Re: [PATCH] lib/bb/build.py: decode the command as UTF-8
+Subject: [PATCH 0/1] lib/bb/utils.py: return sorted OrderedDict in explode_dep_versions2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,25 +31,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jul 2016 23:08:17 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Mon, 18 Jul 2016 03:42:52 -0000
+Content-Type: text/plain
 
-On Fri, 15 Jul 2016 11:27:22 Ross Burton wrote:
-> The messaging FIFO is UTF-8, so decode the command as UTF-8 as well as the
-> value as otherwise "bberror" != b("bberror") and none of the messages from
-> shell functions are ever displayed.
-> 
-> Also add an else to the command parser so unhandled commands are noticed.
+Hi RP,
 
-Thanks. Ideally this should be marked as "Fixes [YOCTO #9947]" when it gets 
-merged.
+The binary pkg(rpm, ipk and deb) maybe different when rebuild without
+this fix.
 
-Cheers,
-Paul
+// Robert
+
+The following changes since commit 627d01997fcf6a0581d88047735769ffb2592b82:
+
+  useradd-staticids: use map() instead of imap() (2016-07-12 23:12:00 +0100)
+
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib rbt/sort
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/sort
+
+Robert Yang (1):
+  lib/bb/utils.py: return sorted OrderedDict in explode_dep_versions2
+
+ bitbake/lib/bb/utils.py | 1 +
+ 1 file changed, 1 insertion(+)
 
 -- 
+2.9.0
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
