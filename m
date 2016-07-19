@@ -1,29 +1,36 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 5A85E606D1
+Return-Path: <belen.barros.pena@intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 46F3360746
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Jul 2016 09:25:07 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga102.jf.intel.com with ESMTP; 19 Jul 2016 02:25:08 -0700
+	Tue, 19 Jul 2016 09:43:17 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by fmsmga104.fm.intel.com with ESMTP; 19 Jul 2016 02:43:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,388,1464678000"; d="scan'208";a="736532467"
-Received: from ssuppiah-mobl1.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.140.160])
-	by FMSMGA003.fm.intel.com with ESMTP; 19 Jul 2016 02:25:06 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Sai Pavan Boddu <sai.pavan.boddu@xilinx.com>
-Date: Tue, 19 Jul 2016 21:25:03 +1200
-Message-ID: <12775485.NNVrWsqQxr@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.10 (Linux/4.5.7-202.fc23.x86_64; KDE/4.14.20; x86_64; ;
-	)
-In-Reply-To: <4025671C58A6E340B47F5CA342BC783A42BF96F4@XAP-PVEXMBX02.xlnx.xilinx.com>
-References: <4025671C58A6E340B47F5CA342BC783A42BF96F4@XAP-PVEXMBX02.xlnx.xilinx.com>
+X-IronPort-AV: E=Sophos;i="5.28,389,1464678000"; d="scan'208";a="141767063"
+Received: from irsmsx107.ger.corp.intel.com ([163.33.3.99])
+	by fmsmga004.fm.intel.com with ESMTP; 19 Jul 2016 02:43:17 -0700
+Received: from irsmsx110.ger.corp.intel.com ([169.254.15.97]) by
+	IRSMSX107.ger.corp.intel.com ([169.254.10.204]) with mapi id
+	14.03.0248.002; Tue, 19 Jul 2016 10:43:16 +0100
+From: "Barros Pena, Belen" <belen.barros.pena@intel.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>, Gary Thomas
+	<gary@mlbassoc.com>
+Thread-Topic: [bitbake-devel] New progress meters
+Thread-Index: AQHR4aH5NEeTa9ZtOki7ZG6hjsCATg==
+Date: Tue, 19 Jul 2016 09:43:16 +0000
+Message-ID: <D3B3B3B3.81640%belen.barros.pena@intel.com>
+References: <578DC9D2.1060607@mlbassoc.com>
+	<9795063.LvlJDZtIeJ@peggleto-mobl.ger.corp.intel.com>
+In-Reply-To: <9795063.LvlJDZtIeJ@peggleto-mobl.ger.corp.intel.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/14.6.5.160527
+x-originating-ip: [10.252.2.235]
 MIME-Version: 1.0
-Cc: Manjukumar Harthikote Matha <MANJUKUM@xilinx.com>,
-	Vineeth Karumanchi <VINEETHC@xilinx.com>,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: recipetool issue with empty bbappends
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: New progress meters
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,45 +43,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Jul 2016 09:25:08 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Tue, 19 Jul 2016 09:43:20 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <52ACF67787DF494490AE68CB729CBF68@intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi there,
 
-On Tue, 19 Jul 2016 07:33:00 Sai Pavan Boddu wrote:
-> I see an issue, working with recipetool, which  basically gives error when I
-> point out an empty bbappend file generated form recipetool itself. Below
-> are the steps
-> recipetool newappend meta-saip/ linux-xlnx
-> recipetool setvar -r meta-saip/recipes-kernel/linux/linux-xlnx_4.4.bbappend
-> XSCTH_PROC "arm" Traceback (most recent call last):
->   File "<path>/yocto/scripts/recipetool", line 116, in <module>
->     ret = main()
->   File "<path>/yocto/scripts/recipetool", line 107, in main
->     ret = args.func(args)
->   File "<path>/components/yocto/scripts/lib/recipetool/setvar.py", line 52,
-> in setvar patches = [oe.recipeutils.patch_recipe_file(args.recipefile,
-> varvalues, patch=args.patch)] File
-> "<path>/yocto/meta/lib/oe/recipeutils.py", line 258, in patch_recipe_file
-> if tolines[-1].strip() != '':
-> IndexError: list index out of range
-> 
-> But I don't see the error if, bbappend file has atlease one line
 
-I've just reproduced this and have filed the following bug for the issue:
+On 19/07/2016 10:16, "bitbake-devel-bounces@lists.openembedded.org on
+behalf of Paul Eggleton" <bitbake-devel-bounces@lists.openembedded.org on
+behalf of paul.eggleton@linux.intel.com> wrote:
 
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=9972
+>Hi Gary,
+>
+>On Tue, 19 Jul 2016 08:33:54 Gary Thomas wrote:
+>> I quite like the new progress meters, but they seem to not be very
+>> accurate.  I was just rebuilding webkitgtk and got this:
+>>=20
+>> 0: webkitgtk-2.12.3-r0 do_compile (pid 30494)  96%
+>> |#######################################  | ETA:  0:02:58
+>>=20
+>> Sadly, it sat there, waffling between 02:58 and 03:44 for about
+>> 10 minutes...
+>>=20
+>> * How is this [estimate] calculated?
+>> * Should I be concerned when it's not accurate (or even moving)?
+>
+>There are a few different types of progress handling for different types
+>of=20
+>tasks. To be specific in this example, for recipes that inherit cmake
+>during=20
+>do_compile we report the progress that the cmake-produced makefile prints
+>out.=20
+>The ETA, which is implemented in the python-progressbar code we are using
+>is=20
+>kind of a rolling average calculated based on recent progress, so it's
+>possible it's inaccurate in this instance if there are places where it
+>stalls.=20
+>Python-progressbar has an alternative ETA mode which we could try, but to
+>be=20
+>honest when the progress value sent to it isn't evenly apportioned with
+>respect to time and we don't have any weighting information, there's not
+>a lot=20
+>anyone can do to estimate time remaining accurately. If it's truly
+>bothersome=20
+>we could just turn off the ETA display I suppose.
 
-BTW in future for issues with recipetool / devtool could you please use the 
-openembedded-core@lists.openembedded.org (or yocto@yoctoproject.org if you 
-prefer) since recipetool isn't part of BitBake.
+Big caveat: this is just my opinion. Displaying information we are not
+sure is accurate is probably not a good idea: it disconcerts people,
+creates false expectations and ultimately undermines trust on the system.
 
-Thanks,
-Paul
+If you are not sure the ETA is reliable, I would remove it.
 
--- 
+Just my 2c.
 
-Paul Eggleton
-Intel Open Source Technology Centre
+Cheers
+
+Bel=E9n
+=20
+>
+>> n.b. I wasn't sure the best place for this question, the bitbake
+>> list, generic Yocto or OE-core.  Feel free to redirect as needed.
+>
+>Technically this is an OE question although I know that isn't obvious -
+>there=20
+>are parts of this that are implemented in BitBake and parts in OE, so
+>asking=20
+>here is fine.
+>
+>Cheers,
+>Paul
+>
+>--=20
+>
+>Paul Eggleton
+>Intel Open Source Technology Centre
+>--=20
+>_______________________________________________
+>bitbake-devel mailing list
+>bitbake-devel@lists.openembedded.org
+>http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+
 
