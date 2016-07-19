@@ -1,47 +1,46 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mail-yw0-f177.google.com (mail-yw0-f177.google.com
-	[209.85.161.177])
-	by mail.openembedded.org (Postfix) with ESMTP id C13B66FF78
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f47.google.com (mail-wm0-f47.google.com [74.125.82.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CD8960722
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Jul 2016 13:51:04 +0000 (UTC)
-Received: by mail-yw0-f177.google.com with SMTP id u134so15717151ywg.3
+	Tue, 19 Jul 2016 14:19:08 +0000 (UTC)
+Received: by mail-wm0-f47.google.com with SMTP id i5so28393108wmg.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Jul 2016 06:51:06 -0700 (PDT)
+	Tue, 19 Jul 2016 07:19:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=KG4NTJUAnh4D9IQzZJV/GZUKLYN3iX8m1/ZRXszwfis=;
-	b=UCkRuuqCIu3BcdsEEBvXjvXtjEHPF2FZ1q5jUDopWPAmAcFWCm0TdQWRbrFjTMHOK4
-	HA5HHZviV+aKGxsxAjbtBwaeV9nEY4InGqPjMjgABD9iqeCZ9qpPGHPEV74nopzh82wE
-	v5l1BwVK0ETdUbAn1tYQJvKBgxA5JmI7NspyCOoK7vwHPkDqOhPbkaW3ZtmyA/A57GS3
-	fBkJhZ87T9iNhS8URGZ6F1GV0KGO+GXcBBVAHMW1kZiR6XAffdSBKejDaIM+XsGjwMnA
-	6hzd0dkS4KsAJAaiZQXWRmYDFy1GX1GmaLH7aVxK0igfxdqdGYRgYidqwojizxYZEj+c
-	FG2Q==
+	h=from:to:subject:date:message-id;
+	bh=Fwt273brT04uhXhd1y1YBHaIEdbLCO/u2Uc3OMC/J/0=;
+	b=nL5jVo+LSBYjEvF11EwqjEpT5IFAZlHNGrnwNiE57C2Z7FLolNvn06P3JGbonGmwLf
+	lvJGkzYUqbGegRPidx3rGArz4SRPZ4pvHO9KzBjO6K3pBdvjsbfXVmzZ72b9EZinEt+o
+	X4p9oUNi9gYlhjGUa2qBbmUUg/HgqYwCEbe+YDQtO2i4/rAzKFalEz1a3r5jF6UfaUbe
+	WDtkaFOEG9ZIMoor4N3NC/jjRGwMYjSwRK6yo5DNgskgB85jVc1vqYcQQMIqOkkCMz8t
+	TtAMstwUD7Bt14nb3/EOLez61NWYISfKgCgdPRLp87y0+Kaa82xOcm1hNnLmbnfQtjFP
+	EfaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=KG4NTJUAnh4D9IQzZJV/GZUKLYN3iX8m1/ZRXszwfis=;
-	b=RYxc2KtjIdo9WDRaE8cQ1oxt2fdH042+Gd5z1hbIDSvJON8yWIJearu57W9YXQT91d
-	QqMQgTvbygdpuxElREl47h1h0tXEt8NwG/F49Sj0MmRD1eItsA5Kf1MQtkzbuQ5LU7Qk
-	ZKcEoujE5IbBkP9YNkK4Yp5/ilgl1whWmpsYdjYLpgfElAti8GPLAPpDnBw36blUvOrZ
-	RoP3b6FN5HXUILoAx6Ys6XlVpOuw8yZe46DYDEeEJYrGEf+VA6yD+cZWE/j5yAUQk3iU
-	b09SHJsCfS1Ex2iQqz2YL9R8poWEVS/mDnN7BPO60XmY8JIZU1Njc7nqZUJViQSDxbm/
-	xWjw==
-X-Gm-Message-State: ALyK8tKZUD2osOfvn4ugpsXia/hSTmF7viiRSsfz2txw+2sSxv6G6RtVVkbTD+SUywr32574fsmq1PEzYwjQTVde
-X-Received: by 10.37.85.139 with SMTP id j133mr25133013ybb.32.1468936265286;
-	Tue, 19 Jul 2016 06:51:05 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.129.111.5 with HTTP; Tue, 19 Jul 2016 06:51:04 -0700 (PDT)
-In-Reply-To: <1468915119.14148.12.camel@linuxfoundation.org>
-References: <1468578727-30368-1-git-send-email-elliot.smith@intel.com>
-	<1468915119.14148.12.camel@linuxfoundation.org>
-From: "Smith, Elliot" <elliot.smith@intel.com>
-Date: Tue, 19 Jul 2016 14:51:04 +0100
-Message-ID: <CA+1hgUhJBeD=EJWTvFQrJ6g0ziefaRwWRccYMOmxMW9ynDiWyg@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] toaster-tests: add class SeleniumTestCaseBase for browser tests
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=Fwt273brT04uhXhd1y1YBHaIEdbLCO/u2Uc3OMC/J/0=;
+	b=HkPjtb3VppK3dzcD+gYE0RT67r506OIK+ARApwnHTU+ObPlX9X/Wo+g+jsnd4fPezo
+	6A7FiW9dChCrdCNc1tFy/insJ0ZmD/3TwcKHpKprs5SuzkpgA4fEv+SL81C8S0ZvS1tX
+	n6VpAPWpIoEjEJjWSaIoGJ91MAvboByguuGFIf+Rr492nrKOxPN6m4tKcwEwZkCtSStY
+	o7RGcIRgE/DBxIw/87Bdzo2I5/8/vpBCnnnXtyGmV4qhZv9mp9ewz+8J0Y676JDsKA79
+	fvV27LWVz8RvMLoqUIdjZs23TLRvkHf+1zTkWLA260ErCCAdTMjQMeLh0jrJZBVA7hX/
+	xVSQ==
+X-Gm-Message-State: ALyK8tKFHnSFYVsCl9M2iKTzXufJKtONKD3R6EWX9FSYnQ9I3w3eKbeDg0pMaU+Z+TU1RuK7
+X-Received: by 10.28.27.211 with SMTP id b202mr5035847wmb.12.1468937948987;
+	Tue, 19 Jul 2016 07:19:08 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id
+	z18sm23318573wmz.6.2016.07.19.07.19.07
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 19 Jul 2016 07:19:08 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 19 Jul 2016 15:19:04 +0100
+Message-Id: <1468937944-14508-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.8.1
+Subject: [PATCH] lib/bb/utils: no need to unsetenv when manipulating os.environ
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,96 +53,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Jul 2016 13:51:08 -0000
-Content-Type: multipart/alternative; boundary=001a113e7eaa4a87c60537fd6092
+X-List-Received-Date: Tue, 19 Jul 2016 14:19:09 -0000
 
---001a113e7eaa4a87c60537fd6092
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Doing both os.unsetenv(foo) and then del os.environ[foo] is pointless as del
+will call unsetenv automatically.
 
-On 19 July 2016 at 08:58, Richard Purdie <richard.purdie@linuxfoundation.or=
-g
-> wrote:
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/utils.py | 1 -
+ 1 file changed, 1 deletion(-)
 
-> On Fri, 2016-07-15 at 11:32 +0100, Elliot Smith wrote:
-> > From: An=C3=ADbal Lim=C3=B3n <anibal.limon@linux.intel.com>
-> >
-> > In order to reuse the Selenium helper outside a Django
-> > environment (for functional testing), add a new module
-> > containing the base class SeleniumTestCaseBase, which only
-> > inherits unittest.TestCase
-> >
-> > Add a class SeleniumTestCase with multiple inheritance of
-> > StaticLiveServerTestCase and SeleniumTestCaseBase to prevent
-> > existing tests from breaking.
-> >
-> > Signed-off-by: An=C3=ADbal Lim=C3=B3n <anibal.limon@linux.intel.com>
-> > Signed-off-by: Elliot Smith <elliot.smith@intel.com>
->
-> Could someone rebase this against master please? I merged Brian/Ed's
-> larger series and I think this has conflicts with it.
->
-
-I'll do it.
-
-Cheers.
-Elliot
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 561db6b..995089a 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -600,7 +600,6 @@ def filter_environment(good_vars):
+             continue
+ 
+         removed_vars[key] = os.environ[key]
+-        os.unsetenv(key)
+         del os.environ[key]
+ 
+     # If we spawn a python process, we need to have a UTF-8 locale, else python's file
+-- 
+2.8.1
 
 
->
-> Cheers,
->
-> Richard
->
-
-
-
---=20
-Elliot Smith
-Software Engineer
-Intel Open Source Technology Centre
-
---001a113e7eaa4a87c60537fd6092
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On 1=
-9 July 2016 at 08:58, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"mailt=
-o:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@linu=
-xfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" =
-style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><sp=
-an class=3D"">On Fri, 2016-07-15 at 11:32 +0100, Elliot Smith wrote:<br>
-&gt; From: An=C3=ADbal Lim=C3=B3n &lt;<a href=3D"mailto:anibal.limon@linux.=
-intel.com">anibal.limon@linux.intel.com</a>&gt;<br>
-&gt;<br>
-&gt; In order to reuse the Selenium helper outside a Django<br>
-&gt; environment (for functional testing), add a new module<br>
-&gt; containing the base class SeleniumTestCaseBase, which only<br>
-&gt; inherits unittest.TestCase<br>
-&gt;<br>
-&gt; Add a class SeleniumTestCase with multiple inheritance of<br>
-&gt; StaticLiveServerTestCase and SeleniumTestCaseBase to prevent<br>
-&gt; existing tests from breaking.<br>
-&gt;<br>
-&gt; Signed-off-by: An=C3=ADbal Lim=C3=B3n &lt;<a href=3D"mailto:anibal.lim=
-on@linux.intel.com">anibal.limon@linux.intel.com</a>&gt;<br>
-&gt; Signed-off-by: Elliot Smith &lt;<a href=3D"mailto:elliot.smith@intel.c=
-om">elliot.smith@intel.com</a>&gt;<br>
-<br>
-</span>Could someone rebase this against master please? I merged Brian/Ed&#=
-39;s<br>
-larger series and I think this has conflicts with it.<br></blockquote><div>=
-<br></div><div>I&#39;ll do it.</div><div><br></div><div>Cheers.</div><div>E=
-lliot</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-</blockquote></div><br><br clear=3D"all"><div><br></div>-- <br><div class=
-=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><d=
-iv>Elliot Smith<br>Software Engineer<br>Intel Open Source Technology Centre=
-</div></div></div>
-</div></div>
-
---001a113e7eaa4a87c60537fd6092--
