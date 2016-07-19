@@ -1,39 +1,39 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from bongo.birch.relay.mailchannels.net
-	(bongo.birch.relay.mailchannels.net [23.83.209.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 1DEAF60290
+Received: from gainsboro.cherry.relay.mailchannels.net
+	(gainsboro.cherry.relay.mailchannels.net [23.83.223.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 50F5360290
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Jul 2016 15:49:18 +0000 (UTC)
+	Tue, 19 Jul 2016 15:52:32 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id B41C2100581;
-	Tue, 19 Jul 2016 15:49:16 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id 42A66101440;
+	Tue, 19 Jul 2016 15:45:52 +0000 (UTC)
 Received: from uscentral428.accountservergroup.com
-	(ip-10-229-2-62.us-west-2.compute.internal [10.229.2.62])
-	by relay.mailchannels.net (Postfix) with ESMTPA id 0329A100A55;
-	Tue, 19 Jul 2016 15:49:15 +0000 (UTC)
+	(ip-10-220-3-24.us-west-2.compute.internal [10.220.3.24])
+	by relay.mailchannels.net (Postfix) with ESMTPA id 9FB31101470;
+	Tue, 19 Jul 2016 15:45:49 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.92.147.53])
+Received: from uscentral428.accountservergroup.com ([TEMPUNAVAIL].
+	[10.132.194.146])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.1); Tue, 19 Jul 2016 15:49:16 +0000
+	by 0.0.0.0:2500 (trex/5.7.1); Tue, 19 Jul 2016 15:45:52 +0000
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
 X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1468943356430:1059008487
-X-MC-Ingress-Time: 1468943356430
-Received: from [176.249.240.35] (port=45880 helo=localhost.localdomain)
+X-MC-Loop-Signature: 1468943150021:2587214420
+X-MC-Ingress-Time: 1468943150021
+Received: from [176.249.240.35] (port=45864 helo=localhost.localdomain)
 	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
 	(envelope-from <elliot.smith@intel.com>)
-	id 1bPXGk-0001TJ-NR; Tue, 19 Jul 2016 11:49:15 -0400
+	id 1bPXDK-0007HI-UX; Tue, 19 Jul 2016 11:45:43 -0400
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 19 Jul 2016 16:49:10 +0100
-Message-Id: <1468943350-30580-1-git-send-email-elliot.smith@intel.com>
+Date: Tue, 19 Jul 2016 16:45:36 +0100
+Message-Id: <1468943136-30446-1-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 X-AuthUser: elliot@townx.org
-Subject: [PATCH][v3] toaster-tests: add class SeleniumTestCaseBase for browser tests
+Subject: [PATCH][v2] toaster-tests: add class SeleniumTestCaseBase for browser tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,11 +46,9 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Jul 2016 15:49:20 -0000
+X-List-Received-Date: Tue, 19 Jul 2016 15:52:36 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-
-From: An=C3=ADbal Lim=C3=B3n <anibal.limon@linux.intel.com>
 
 In order to reuse the Selenium helper outside a Django
 environment (for functional testing), add a new module
