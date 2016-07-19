@@ -1,35 +1,33 @@
-Return-Path: <belen.barros.pena@intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 46F3360746
+Return-Path: <gary@mlbassoc.com>
+Received: from mail.analogue-micro.com (mail.analogue-micro.com
+	[217.144.149.242])
+	by mail.openembedded.org (Postfix) with ESMTP id D3C42606D1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Jul 2016 09:43:17 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga104.fm.intel.com with ESMTP; 19 Jul 2016 02:43:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,389,1464678000"; d="scan'208";a="141767063"
-Received: from irsmsx107.ger.corp.intel.com ([163.33.3.99])
-	by fmsmga004.fm.intel.com with ESMTP; 19 Jul 2016 02:43:17 -0700
-Received: from irsmsx110.ger.corp.intel.com ([169.254.15.97]) by
-	IRSMSX107.ger.corp.intel.com ([169.254.10.204]) with mapi id
-	14.03.0248.002; Tue, 19 Jul 2016 10:43:16 +0100
-From: "Barros Pena, Belen" <belen.barros.pena@intel.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>, Gary Thomas
-	<gary@mlbassoc.com>
-Thread-Topic: [bitbake-devel] New progress meters
-Thread-Index: AQHR4aH5NEeTa9ZtOki7ZG6hjsCATg==
-Date: Tue, 19 Jul 2016 09:43:16 +0000
-Message-ID: <D3B3B3B3.81640%belen.barros.pena@intel.com>
+	Tue, 19 Jul 2016 09:53:52 +0000 (UTC)
+Received: by mail.analogue-micro.com (Postfix, from userid 999)
+	id 0342968A01C; Tue, 19 Jul 2016 10:53:52 +0100 (BST)
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	loki.analogue-micro-ltd.com
+X-Spam-Level: **
+X-Spam-Status: No, score=2.5 required=5.0 tests=ALL_TRUSTED,BAYES_50,
+	DNS_FROM_AHBL_RHSBL autolearn=no version=3.3.2
+Received: from zeus.mlbassoc.com (unknown [10.8.0.2])
+	by mail.analogue-micro.com (Postfix) with ESMTP id 81C2A68A019;
+	Tue, 19 Jul 2016 10:53:50 +0100 (BST)
+Received: from [127.0.0.1] (localhost.localdomain [127.0.0.1])
+	by zeus.mlbassoc.com (Postfix) with ESMTP id ED80367403D0;
+	Tue, 19 Jul 2016 11:53:49 +0200 (CEST)
+To: bitbake-devel@lists.openembedded.org
 References: <578DC9D2.1060607@mlbassoc.com>
 	<9795063.LvlJDZtIeJ@peggleto-mobl.ger.corp.intel.com>
-In-Reply-To: <9795063.LvlJDZtIeJ@peggleto-mobl.ger.corp.intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/14.6.5.160527
-x-originating-ip: [10.252.2.235]
+	<D3B3B3B3.81640%belen.barros.pena@intel.com>
+From: Gary Thomas <gary@mlbassoc.com>
+Message-ID: <578DF8AD.1090003@mlbassoc.com>
+Date: Tue, 19 Jul 2016 11:53:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.8.0
 MIME-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
+In-Reply-To: <D3B3B3B3.81640%belen.barros.pena@intel.com>
 Subject: Re: New progress meters
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -43,86 +41,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Jul 2016 09:43:20 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <52ACF67787DF494490AE68CB729CBF68@intel.com>
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 19 Jul 2016 09:53:53 -0000
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 19/07/2016 10:16, "bitbake-devel-bounces@lists.openembedded.org on
-behalf of Paul Eggleton" <bitbake-devel-bounces@lists.openembedded.org on
-behalf of paul.eggleton@linux.intel.com> wrote:
-
->Hi Gary,
+On 2016-07-19 11:43, Barros Pena, Belen wrote:
 >
->On Tue, 19 Jul 2016 08:33:54 Gary Thomas wrote:
->> I quite like the new progress meters, but they seem to not be very
->> accurate.  I was just rebuilding webkitgtk and got this:
->>=20
->> 0: webkitgtk-2.12.3-r0 do_compile (pid 30494)  96%
->> |#######################################  | ETA:  0:02:58
->>=20
->> Sadly, it sat there, waffling between 02:58 and 03:44 for about
->> 10 minutes...
->>=20
->> * How is this [estimate] calculated?
->> * Should I be concerned when it's not accurate (or even moving)?
 >
->There are a few different types of progress handling for different types
->of=20
->tasks. To be specific in this example, for recipes that inherit cmake
->during=20
->do_compile we report the progress that the cmake-produced makefile prints
->out.=20
->The ETA, which is implemented in the python-progressbar code we are using
->is=20
->kind of a rolling average calculated based on recent progress, so it's
->possible it's inaccurate in this instance if there are places where it
->stalls.=20
->Python-progressbar has an alternative ETA mode which we could try, but to
->be=20
->honest when the progress value sent to it isn't evenly apportioned with
->respect to time and we don't have any weighting information, there's not
->a lot=20
->anyone can do to estimate time remaining accurately. If it's truly
->bothersome=20
->we could just turn off the ETA display I suppose.
-
-Big caveat: this is just my opinion. Displaying information we are not
-sure is accurate is probably not a good idea: it disconcerts people,
-creates false expectations and ultimately undermines trust on the system.
-
-If you are not sure the ETA is reliable, I would remove it.
-
-Just my 2c.
-
-Cheers
-
-Bel=E9n
-=20
+> On 19/07/2016 10:16, "bitbake-devel-bounces@lists.openembedded.org on
+> behalf of Paul Eggleton" <bitbake-devel-bounces@lists.openembedded.org on
+> behalf of paul.eggleton@linux.intel.com> wrote:
 >
->> n.b. I wasn't sure the best place for this question, the bitbake
->> list, generic Yocto or OE-core.  Feel free to redirect as needed.
+>> Hi Gary,
+>>
+>> On Tue, 19 Jul 2016 08:33:54 Gary Thomas wrote:
+>>> I quite like the new progress meters, but they seem to not be very
+>>> accurate.  I was just rebuilding webkitgtk and got this:
+>>>
+>>> 0: webkitgtk-2.12.3-r0 do_compile (pid 30494)  96%
+>>> |#######################################  | ETA:  0:02:58
+>>>
+>>> Sadly, it sat there, waffling between 02:58 and 03:44 for about
+>>> 10 minutes...
+>>>
+>>> * How is this [estimate] calculated?
+>>> * Should I be concerned when it's not accurate (or even moving)?
+>>
+>> There are a few different types of progress handling for different types
+>> of
+>> tasks. To be specific in this example, for recipes that inherit cmake
+>> during
+>> do_compile we report the progress that the cmake-produced makefile prints
+>> out.
+>> The ETA, which is implemented in the python-progressbar code we are using
+>> is
+>> kind of a rolling average calculated based on recent progress, so it's
+>> possible it's inaccurate in this instance if there are places where it
+>> stalls.
+>> Python-progressbar has an alternative ETA mode which we could try, but to
+>> be
+>> honest when the progress value sent to it isn't evenly apportioned with
+>> respect to time and we don't have any weighting information, there's not
+>> a lot
+>> anyone can do to estimate time remaining accurately. If it's truly
+>> bothersome
+>> we could just turn off the ETA display I suppose.
 >
->Technically this is an OE question although I know that isn't obvious -
->there=20
->are parts of this that are implemented in BitBake and parts in OE, so
->asking=20
->here is fine.
+> Big caveat: this is just my opinion. Displaying information we are not
+> sure is accurate is probably not a good idea: it disconcerts people,
+> creates false expectations and ultimately undermines trust on the system.
 >
->Cheers,
->Paul
->
->--=20
->
->Paul Eggleton
->Intel Open Source Technology Centre
->--=20
->_______________________________________________
->bitbake-devel mailing list
->bitbake-devel@lists.openembedded.org
->http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+> If you are not sure the ETA is reliable, I would remove it.
 
+ETA is always that - ESTIMATED.  That said, I'd agree that it should be "close"
+or not used at all. Who amongst us has waited for that last 2 minutes downloading
+some update...?
+
+>
+> Just my 2c.
+>
+> Cheers
+>
+> Belén
+>
+>>
+>>> n.b. I wasn't sure the best place for this question, the bitbake
+>>> list, generic Yocto or OE-core.  Feel free to redirect as needed.
+>>
+>> Technically this is an OE question although I know that isn't obvious -
+>> there
+>> are parts of this that are implemented in BitBake and parts in OE, so
+>> asking
+>> here is fine.
+
+-- 
+------------------------------------------------------------
+Gary Thomas                 |  Consulting for the
+MLB Associates              |    Embedded world
+------------------------------------------------------------
 
