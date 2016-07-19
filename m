@@ -1,28 +1,30 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 298126FFD4
+Return-Path: <gary@mlbassoc.com>
+Received: from mail.analogue-micro.com (mail.analogue-micro.com
+	[217.144.149.242])
+	by mail.openembedded.org (Postfix) with ESMTP id 1FA1A60746
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jul 2016 16:32:27 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga104.fm.intel.com with ESMTP; 18 Jul 2016 09:32:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,384,1464678000"; d="scan'208";a="848550729"
-Received: from linux.intel.com ([10.54.29.200])
-	by orsmga003.jf.intel.com with ESMTP; 18 Jul 2016 09:32:28 -0700
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
-	by linux.intel.com (Postfix) with ESMTP id 39D4D6A4080
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jul 2016 09:32:19 -0700 (PDT)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 18 Jul 2016 19:07:18 +0300
-Message-Id: <b9277d7a104783685f196b5a34621299bd808a31.1468857803.git.ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <cover.1468857803.git.ed.bartosh@linux.intel.com>
-References: <cover.1468857803.git.ed.bartosh@linux.intel.com>
-In-Reply-To: <cover.1468857803.git.ed.bartosh@linux.intel.com>
-References: <cover.1468857803.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 3/3] bitbake: main: implement server autostart feature
+	Tue, 19 Jul 2016 06:33:55 +0000 (UTC)
+Received: by mail.analogue-micro.com (Postfix, from userid 999)
+	id 47A1168A01C; Tue, 19 Jul 2016 07:33:55 +0100 (BST)
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	loki.analogue-micro-ltd.com
+X-Spam-Level: **
+X-Spam-Status: No, score=2.5 required=5.0 tests=ALL_TRUSTED,BAYES_50,
+	DNS_FROM_AHBL_RHSBL autolearn=no version=3.3.2
+Received: from zeus.mlbassoc.com (unknown [10.8.0.2])
+	by mail.analogue-micro.com (Postfix) with ESMTP id F3C1068A019;
+	Tue, 19 Jul 2016 07:33:54 +0100 (BST)
+Received: from [127.0.0.1] (localhost.localdomain [127.0.0.1])
+	by zeus.mlbassoc.com (Postfix) with ESMTP id A8B506740021;
+	Tue, 19 Jul 2016 08:33:54 +0200 (CEST)
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+From: Gary Thomas <gary@mlbassoc.com>
+Message-ID: <578DC9D2.1060607@mlbassoc.com>
+Date: Tue, 19 Jul 2016 08:33:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.8.0
+MIME-Version: 1.0
+Subject: New progress meters
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,77 +37,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Jul 2016 16:32:29 -0000
+X-List-Received-Date: Tue, 19 Jul 2016 06:33:58 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If environment variable BBSERVER == 'autostart' bitbake will
-automatically load server if it's not running yet.
+I quite like the new progress meters, but they seem to not be very
+accurate.  I was just rebuilding webkitgtk and got this:
 
-If host and port are in bitbake.lock then bitbake tries to check
-if server is running and responses to commands and starts new
-server only if this check fails.
+0: webkitgtk-2.12.3-r0 do_compile (pid 30494)  96% |#######################################  | ETA:  0:02:58
 
-[YOCTO #5534]
+Sadly, it sat there, waffling between 02:58 and 03:44 for about
+10 minutes...
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- bitbake/lib/bb/main.py | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+* How is this [estimate] calculated?
+* Should I be concerned when it's not accurate (or even moving)?
 
-diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-index 3fc3ff5..1c32e93 100755
---- a/bitbake/lib/bb/main.py
-+++ b/bitbake/lib/bb/main.py
-@@ -303,8 +303,10 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
- 
-         # if BBSERVER says to autodetect, let's do that
-         if options.remote_server:
--            [host, port] = options.remote_server.split(":", 2)
--            port = int(port)
-+            port = -1
-+            if options.remote_server != 'autostart':
-+                host, port = options.remote_server.split(":", 2)
-+                port = int(port)
-             # use automatic port if port set to -1, means read it from
-             # the bitbake.lock file; this is a bit tricky, but we always expect
-             # to be in the base of the build directory if we need to have a
-@@ -321,17 +323,18 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-                     lf.close()
-                     options.remote_server = remotedef
-                 except Exception as e:
--                    raise BBMainException("Failed to read bitbake.lock (%s), invalid port" % str(e))
-+                    if options.remote_server != 'autostart':
-+                        raise BBMainException("Failed to read bitbake.lock (%s), invalid port" % str(e))
- 
-         return options, targets[1:]
- 
- 
- def start_server(servermodule, configParams, configuration, features):
-     server = servermodule.BitBakeServer()
--    single_use = not configParams.server_only
-+    single_use = not configParams.server_only and os.getenv('BBSERVER') != 'autostart'
-     if configParams.bind:
-         (host, port) = configParams.bind.split(':')
--        server.initServer((host, int(port)), single_use)
-+        server.initServer((host, int(port)), single_use=single_use)
-         configuration.interface = [server.serverImpl.host, server.serverImpl.port]
-     else:
-         server.initServer(single_use=single_use)
-@@ -445,6 +448,14 @@ def bitbake_main(configParams, configuration):
-         server = start_server(servermodule, configParams, configuration, featureset)
-         bb.event.ui_queue = []
-     else:
-+        if os.getenv('BBSERVER') == 'autostart':
-+            if configParams.remote_server == 'autostart' or \
-+               not servermodule.check_connection(configParams.remote_server, timeout=2):
-+                configParams.bind = 'localhost:0'
-+                srv = start_server(servermodule, configParams, configuration, featureset)
-+                configParams.remote_server = '%s:%d' % tuple(configuration.interface)
-+                bb.event.ui_queue = []
-+
-         # we start a stub server that is actually a XMLRPClient that connects to a real server
-         server = servermodule.BitBakeXMLRPCClient(configParams.observe_only,
-                                                   configParams.xmlrpctoken)
+n.b. I wasn't sure the best place for this question, the bitbake
+list, generic Yocto or OE-core.  Feel free to redirect as needed.
+
 -- 
-2.1.4
-
+------------------------------------------------------------
+Gary Thomas                 |  Consulting for the
+MLB Associates              |    Embedded world
+------------------------------------------------------------
 
