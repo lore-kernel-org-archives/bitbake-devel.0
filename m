@@ -1,32 +1,23 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id D317460589
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 9612E60589
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Jul 2016 17:06:49 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u6JH6mM1009288
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 19 Jul 2016 10:06:48 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.235) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Tue, 19 Jul 2016 10:06:47 -0700
-To: "Burton, Ross" <ross.burton@intel.com>, Gary Thomas <gary@mlbassoc.com>
-References: <578DC9D2.1060607@mlbassoc.com>
-	<9795063.LvlJDZtIeJ@peggleto-mobl.ger.corp.intel.com>
-	<578DF132.7020101@mlbassoc.com>
-	<CAJTo0LaXhGF3eFt=tfRBHfU56kf_nheBrV8Sshsxrpq+fGn7cA@mail.gmail.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-Message-ID: <f4f9f0d1-9827-b239-5458-328a947af066@windriver.com>
-Date: Tue, 19 Jul 2016 12:06:46 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0)
-	Gecko/20100101 Thunderbird/45.1.1
-MIME-Version: 1.0
-In-Reply-To: <CAJTo0LaXhGF3eFt=tfRBHfU56kf_nheBrV8Sshsxrpq+fGn7cA@mail.gmail.com>
-Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: New progress meters
+	Tue, 19 Jul 2016 20:19:00 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by fmsmga102.fm.intel.com with ESMTP; 19 Jul 2016 13:19:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.28,390,1464678000"; d="scan'208";a="142097541"
+Received: from linux.intel.com ([10.54.29.200])
+	by fmsmga004.fm.intel.com with ESMTP; 19 Jul 2016 13:19:01 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
+	by linux.intel.com (Postfix) with ESMTP id 255AF6A4006;
+	Tue, 19 Jul 2016 13:18:49 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 19 Jul 2016 22:54:38 +0300
+Message-Id: <1468958078-27587-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] bitbake: implement --foreground command line option
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,42 +30,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Jul 2016 17:06:50 -0000
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 19 Jul 2016 20:19:02 -0000
 
-On 7/19/16 11:45 AM, Burton, Ross wrote:
-> 
-> On 19 July 2016 at 10:21, Gary Thomas <gary@mlbassoc.com
-> <mailto:gary@mlbassoc.com>> wrote:
-> 
->     Thanks.  I was mostly asking to see what the expected "user experience"
->     should be since the webkitgtk (which takes FOREVER to build) seemed a
->     bit misleading/optimistic.  For the most part, I do like the additional
->     information.
-> 
-> 
-> The situation here is that cmake counts the steps and announces its progress
-> through them as the progress.  Of course the last step is to link about 8GB of
-> binaries... 
-> 
-> A progress bar is better than no progress bar, so I still call this an
-> improvement :)
+This option makes bitbake xmlrpc server to run in foreground.
+It should be useful for debugging purposes.
 
-We have (had, python 3 broke it) a patch to knotty that permits the logs to be
-presented on the screen during a build so for places where you think it might
-have hung you can at least get some status.
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ bitbake/lib/bb/main.py | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-I like the idea of a progress bar.. but we need to weigh the 'it looks like it
-froze' vs 'make sure people know things are still moving'.
-
-in the GUI world this is the old hour glass/spinning cursor/rotating progress
-bar -- vs a progress meter behavior..
-
---Mark
-
-> Ross
-> 
-> 
+diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+index 3fc3ff5..09aeb9a 100755
+--- a/bitbake/lib/bb/main.py
++++ b/bitbake/lib/bb/main.py
+@@ -247,6 +247,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+                           help="Run bitbake without a UI, only starting a server "
+                                "(cooker) process.")
+ 
++        parser.add_option("", "--foreground", action="store_true",
++                          help="Run bitbake server in foreground.")
++
+         parser.add_option("-B", "--bind", action="store", dest="bind", default=False,
+                           help="The name/address for the bitbake server to bind to.")
+ 
+@@ -354,7 +357,8 @@ def start_server(servermodule, configParams, configuration, features):
+             if isinstance(event, logging.LogRecord):
+                 logger.handle(event)
+         raise
+-    server.detach()
++    if not configParams.foreground:
++        server.detach()
+     cooker.lock.close()
+     return server
+ 
+@@ -395,6 +399,10 @@ def bitbake_main(configParams, configuration):
+                                   ("the BBSERVER environment variable" if "BBSERVER" in os.environ \
+                                    else "the '--remote-server' option"))
+ 
++    elif configParams.foreground:
++        raise BBMainException("FATAL: The '--foreground' option can only be used "
++                              "with --server-only.\n")
++
+     if configParams.bind and configParams.servertype != "xmlrpc":
+         raise BBMainException("FATAL: If '-B' or '--bind' is defined, we must "
+                               "set the servertype as 'xmlrpc'.\n")
+@@ -484,6 +492,8 @@ def bitbake_main(configParams, configuration):
+     else:
+         print("Bitbake server address: %s, server port: %s" % (server.serverImpl.host,
+                                                                server.serverImpl.port))
++        if configParams.foreground:
++            server.serverImpl.serve_forever()
+         return 0
+ 
+     return 1
+-- 
+2.1.4
 
 
