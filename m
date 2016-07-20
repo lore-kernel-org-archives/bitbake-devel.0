@@ -1,53 +1,53 @@
-Return-Path: <patrick.ohly@intel.com>
-Received: from mail-yw0-f170.google.com (mail-yw0-f170.google.com
-	[209.85.161.170])
-	by mail.openembedded.org (Postfix) with ESMTP id 368BE606A8
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wm0-f53.google.com (mail-wm0-f53.google.com [74.125.82.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 559C3606A8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Jul 2016 15:34:26 +0000 (UTC)
-Received: by mail-yw0-f170.google.com with SMTP id z8so26758019ywa.1
+	Wed, 20 Jul 2016 15:55:27 +0000 (UTC)
+Received: by mail-wm0-f53.google.com with SMTP id f65so181313019wmi.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Jul 2016 08:34:27 -0700 (PDT)
+	Wed, 20 Jul 2016 08:55:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:organization:mime-version:content-transfer-encoding;
-	bh=0YBRikaIN+fUtKIf6nKLuM8v/pdD54uoM5bmk3J/WnA=;
-	b=sKJL6sFRRoN1n1+LEmwgAc2Dn3h5lqf2GjjsPZNhZbi5deVRS1mcQNi88Tj46bCkV7
-	6DknXlvz46k1iTvP7viZM/+qOH6+YW6+qOvNBqI/g8xjYSjBG/yYSsdK3qls0WfnDP+Z
-	lJia/e5NuLLTpx19JdNQDllgJLB/M7xGjnTjNQ5GrvcKBKg4E+BgB0ldRU8Q2Z/jVlOx
-	zWZQuC/cx1aD/JLL2/FcsGpkbndJyw5OCPyC2fFbKJbgHTSNv244eStew5h/SrBpHXlV
-	9o35lsfq78Nl8+1wile0jgADy/EqppyzaLCvNQqsmDqjFfptcMzKQHSrJ4QLBygBj0yt
-	+rJw==
+	h=subject:to:references:cc:from:message-id:date:user-agent
+	:mime-version:in-reply-to:content-transfer-encoding;
+	bh=odstFt+y9CHEyjzqjhmUS23/EY1b0xNF9lAxNwL+T1w=;
+	b=zuEKxhpCplzx3bIIUBmj4ZBubSDN9BVbSkq+muo79YxiwhYO584VAT35qjGF4Zo0oz
+	xB0a8BvjP8dAZEHEBNwE73rjcKMOIavugNCm/EK8oyQl+BmKa36ItsN3hYx3VCQ+OuCh
+	XNdhPGZG7XMz7wKf3ksQBs3VkP1G8HVqzXerjnKFiyNUQj6vZyq7oxPPR4277TwmUZvh
+	fWuzY8NSmU53nFxZFevQOgz2LAsi8zZvl6xKdpK781k8kaGv+b37A5vIbZgF8mp7OsoB
+	0a76rRRv4DuABEW1VU+3hVumpkHLH7/MrYA25cIi7W2HTRS3XEqyfK/iCs1MUm5pmU5w
+	QdrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:organization:mime-version:content-transfer-encoding;
-	bh=0YBRikaIN+fUtKIf6nKLuM8v/pdD54uoM5bmk3J/WnA=;
-	b=F8gNulEr4tOeR/+pU3jSiDDrlw+xBhOQR7zbD1eKztWvgqvd96aYdhaY2rHrMCUyaX
-	tzzYTN7kJUhr/0nCX0uDeAVB41b/uqyivIZ23weZOPuzbl2hS2RLEbqklK34yLwHckq1
-	QP2/cfWertAx0kV1sn5ZSvdPRJU8mdd3svdh4+YXhITLE0oGo9rZAbm2waefrKp3vH2B
-	If3WikugD6sxCEx5kDjNi9uZmRh9xJny53LOllv6BwZhA0HRYCGU5suRNoxAh2FW66dJ
-	qsvh0wH8ThZevJKsa5i4lHGff1FsUOTyJ0gfjKHCy8hgzpnbEAAc7pBR5cbt2qfbIm0r
-	bsIw==
-X-Gm-Message-State: ALyK8tIeG11J/4vq0bfL/xB9clb7fDKr3X9ksTMW/Ko8oFcuBG2Bds/hOb0u4MXuKH+HQw0m
-X-Received: by 10.13.217.20 with SMTP id b20mr31687148ywe.44.1469028867333;
-	Wed, 20 Jul 2016 08:34:27 -0700 (PDT)
-Received: from pohly-mobl1 (p57A57E84.dip0.t-ipconnect.de. [87.165.126.132])
-	by smtp.gmail.com with ESMTPSA id
-	f62sm1212910ywh.19.2016.07.20.08.34.26
+	h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+	:user-agent:mime-version:in-reply-to:content-transfer-encoding;
+	bh=odstFt+y9CHEyjzqjhmUS23/EY1b0xNF9lAxNwL+T1w=;
+	b=RpEhoYwRGCZkl6MiyMTAZfQoW9yrOq7lW2R4K4q21lyMSF6cIOu40IuZAwfK0TEWPa
+	ho0zXewq6fKjDVqkiFLr5oKVI5yv1r6crGKDkSZ1B4GRewM4IQREpny2GuTzxnW6UqaE
+	YEk7sKByE7Q2csbg4sTQr78IICzgrHl4I/PhIiPeAAAo6FxYViNlvylmszEhwqMWgIIo
+	z4vwL+MIjYHAijXL5qL0pPebZx+AT0qepPPD8eFQZ+qLLkvsE0fwouLnB/eah5McU/jA
+	sfKidgp8JBWixsVY/A8ePtGYiNblN4ijsNsZsQyIjCIeH+vMrY6WM/4FRdIbaXIO26ny
+	8O2g==
+X-Gm-Message-State: ALyK8tJx7xytp6sBsOvT1azJS+BPLHWM5OtP4dkwd5Pj1S5v+3vTqgonPq0ftUvk52Ts7eoI
+X-Received: by 10.28.157.214 with SMTP id g205mr12609911wme.34.1469030127870; 
+	Wed, 20 Jul 2016 08:55:27 -0700 (PDT)
+Received: from [192.168.0.78]
+	(host109-153-40-30.range109-153.btcentralplus.com. [109.153.40.30])
+	by smtp.googlemail.com with ESMTPSA id
+	zb5sm1908032wjc.44.2016.07.20.08.55.26
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 20 Jul 2016 08:34:26 -0700 (PDT)
-Message-ID: <1469028864.20940.0.camel@intel.com>
-From: Patrick Ohly <patrick.ohly@intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Wed, 20 Jul 2016 17:34:24 +0200
-In-Reply-To: <1469027297.23580.17.camel@linuxfoundation.org>
-References: <1469027297.23580.17.camel@linuxfoundation.org>
-Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
-X-Mailer: Evolution 3.12.9-1+b1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] cooker: Fix incorrect dot file generation
+	Wed, 20 Jul 2016 08:55:26 -0700 (PDT)
+To: bitbake-devel@lists.openembedded.org
+References: <1466185971-18537-1-git-send-email-michael.g.wood@intel.com>
+	<1466185971-18537-2-git-send-email-michael.g.wood@intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
+Message-ID: <578F9EEE.9000708@intel.com>
+Date: Wed, 20 Jul 2016 16:55:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.8.0
+MIME-Version: 1.0
+In-Reply-To: <1466185971-18537-2-git-send-email-michael.g.wood@intel.com>
+Subject: Re: [PATCH 2/2] toaster-tests: define capabilities for latest Firefox driver
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,41 +60,91 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Jul 2016 15:34:27 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 20 Jul 2016 15:55:31 -0000
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2016-07-20 at 16:08 +0100, Richard Purdie wrote:
-> In the runqueue cleanup/conversion, "dep" was mistakenly used where "tid" should
-> be leading to incorrect task-depends.dot files and causing general confusion. 
-> Fix this, its clearly incorrect looking at the code.
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> 
-> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-> index 9bd3460..a73a55d 100644
-> --- a/bitbake/lib/bb/cooker.py
-> +++ b/bitbake/lib/bb/cooker.py
-> @@ -744,7 +744,7 @@ class BBCooker:
->              for dep in rq.rqdata.runtaskentries[tid].depends:
->                  depfn = bb.runqueue.fn_from_tid(dep)
->                  deppn = self.recipecache.pkg_fn[depfn]
-> -                dotname = "%s.%s" % (pn, bb.runqueue.taskname_from_tid(dep))
-> +                dotname = "%s.%s" % (pn, bb.runqueue.taskname_from_tid(tid))
->                  if not dotname in depend_tree["tdepends"]:
->                      depend_tree["tdepends"][dotname] = []
->                  depend_tree["tdepends"][dotname].append("%s.%s" % (deppn, bb.runqueue.taskname_from_tid(dep)))
+On 17/06/16 18:52, Michael Wood wrote:
+> From: Elliot Smith <elliot.smith@intel.com>
+>
+> For the latest Firefox versions, WebDriver requires a download of a
+> separate binary and an additional capability to be defined on it.
+>
+> Modify our tests so that when "marionette" is set as the browser,
+> this capability is defined on the Firefox driver. Also add a note to the
+> README about the additional installation steps required.
+>
+> Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+> Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+> ---
+>   lib/toaster/tests/browser/README              | 19 +++++++++++++++++--
+>   lib/toaster/tests/browser/selenium_helpers.py |  5 +++++
+>   2 files changed, 22 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/toaster/tests/browser/README b/lib/toaster/tests/browser/README
+> index f57154e..969f06c 100644
+> --- a/lib/toaster/tests/browser/README
+> +++ b/lib/toaster/tests/browser/README
+> @@ -24,15 +24,30 @@ To run tests against PhantomJS (headless):
+>   * On *nix systems, put phantomjs on PATH
+>   * Not tested on Windows
+>   
+> -Firefox should work without requiring additional software to be installed.
+> +To run tests against Firefox, you may need to install the Marionette driver,
+> +depending on how new your version of Firefox is. One clue that you need to do
+> +this is if you see an exception like:
+>   
+> -The test case will instantiate a Selenium driver set by the
+> +  selenium.common.exceptions.WebDriverException: Message: The browser
+> +  appears to have exited before we could connect. If you specified
+> +  a log_file in the FirefoxBinary constructor, check it for details.
+> +
+> +See https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver
+> +for installation instructions. Ensure that the Marionette executable (renamed
+> +as wires on Linux or wires.exe on Windows) is on your PATH; and use "marionette"
+> +as the browser string passed via TOASTER_TESTS_BROWSER (see below).
+> +
+> +(Note: The Toaster tests have been checked against Firefox 47 with the
+> +Marionette driver.)
+> +
+> +The test cases will instantiate a Selenium driver set by the
+>   TOASTER_TESTS_BROWSER environment variable, or Chrome if this is not specified.
+>   
+>   Available drivers:
+>   
+>   * chrome (default)
+>   * firefox
+> +* marionette (for newer Firefoxes)
+>   * ie
+>   * phantomjs
+>   
+> diff --git a/lib/toaster/tests/browser/selenium_helpers.py b/lib/toaster/tests/browser/selenium_helpers.py
+> index 54db2e8..000937f 100644
+> --- a/lib/toaster/tests/browser/selenium_helpers.py
+> +++ b/lib/toaster/tests/browser/selenium_helpers.py
+> @@ -34,6 +34,7 @@ import time
+>   from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+>   from selenium import webdriver
+>   from selenium.webdriver.support.ui import WebDriverWait
+> +from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+>   from selenium.common.exceptions import NoSuchElementException, \
+>           StaleElementReferenceException, TimeoutException
+>   
+> @@ -49,6 +50,10 @@ def create_selenium_driver(browser='chrome'):
+>           )
+>       elif browser == 'firefox':
+>           return webdriver.Firefox()
+> +    elif browser == 'marionette':
+> +        capabilities = DesiredCapabilities.FIREFOX
+> +        capabilities['marionette'] = True
+> +        return webdriver.Firefox(capabilities=capabilities)
+>       elif browser == 'ie':
+>           return webdriver.Ie()
+>       elif browser == 'phantomjs':
 
-+1, this is indeed fixing the issue I was seeing. Thanks!
+Ping on these two patches.
 
--- 
-Best Regards, Patrick Ohly
+Thanks,
 
-The content of this message is my personal opinion only and although
-I am an employee of Intel, the statements I make here in no way
-represent Intel's position on the issue, nor am I authorized to speak
-on behalf of Intel on this matter.
-
-
-
+Michael
 
