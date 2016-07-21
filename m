@@ -1,32 +1,29 @@
-Return-Path: <mario.goulart@bmw-carit.de>
-X-Greylist: delayed 7058 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 21 Jul 2016 16:06:03 UTC
-Received: from cit-hm8-gw01.bmw-carit.de (cit-hm8-mail01.bmw-carit.de
-	[212.118.206.84])
-	by mail.openembedded.org (Postfix) with ESMTP id 5626665CBF
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id D716265CBF
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jul 2016 16:06:03 +0000 (UTC)
-Received: from [10.40.100.13] (port=47891 helo=cit-hm8-mail01.bmw-carit.de)
-	by cit-hm8-gw01.bmw-carit.de with esmtps (TLSv1.2:AES256-SHA:256)
-	(Exim 4.82_1-5b7a7c0-XX) (envelope-from <Mario.Goulart@bmw-carit.de>)
-	id 1bQEeF-0002WT-14 for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Jul 2016 16:08:23 +0200
-Received: from macbook-bmw.bmw-car.intra (10.242.6.13) by
-	CIT-HM8-EX01.bmw-carit.intra (10.40.100.13) with Microsoft SMTP Server
-	(TLS) id 15.0.1178.4; Thu, 21 Jul 2016 16:08:21 +0200
-X-CTCH-RefID: str=0001.0A0C0208.5790D757.00D5, ss=1, re=0.000, recu=0.000,
-	reip=0.000, cl=1, cld=1, fgs=0
-From: Mario Domenech Goulart <mario.goulart@bmw-carit.de>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 21 Jul 2016 16:08:01 +0200
-Message-ID: <1469110081-3602-1-git-send-email-mario.goulart@bmw-carit.de>
-X-Mailer: git-send-email 2.8.1
-MIME-Version: 1.0
-X-Originating-IP: [10.242.6.13]
-X-ClientProxiedBy: CIT-HM8-EX01.bmw-carit.intra (10.40.100.13) To
-	CIT-HM8-EX01.bmw-carit.intra (10.40.100.13)
-Cc: Mario Domenech Goulart <mario.goulart@bmw-carit.de>
-Subject: [PATCH] fetcher2/__init__: Print command in case of ExecutionError in runfetchcmd
+	Thu, 21 Jul 2016 16:25:24 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u6LGPODt023900 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Jul 2016 17:25:24 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id E-SUuQsOrvlw for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Jul 2016 17:25:24 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u6LGPJfZ023897
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Jul 2016 17:25:20 +0100
+Message-ID: <1469118319.23580.44.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 21 Jul 2016 17:25:19 +0100
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: [PATCH] cache: Move the parsing message to a more logical place
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,28 +36,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2016 16:06:07 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 21 Jul 2016 16:25:25 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Mario Domenech Goulart <mario.goulart@bmw-carit.de>
----
- lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Otherwise you can look at the log and wonder why parsing isn't happening
+when it really is due to other code paths.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index a27512c..0cf512b 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -832,7 +832,7 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None):
-             output = "output:\n%s" % e.stderr
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index 96abd71..afd373d 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -395,6 +395,7 @@ class Cache(object):
+     @classmethod
+     def parse(cls, filename, appends, configdata, caches_array):
+         """Parse the specified filename, returning the recipe information"""
++        logger.debug(1, "Parsing %s", filename)
+         infos = []
+         datastores = cls.load_bbfile(filename, appends, configdata)
+         depends = []
+@@ -432,7 +433,6 @@ class Cache(object):
+                 virtualfn = self.realfn2virtual(filename, variant)
+                 infos.append((virtualfn, self.depends_cache[virtualfn]))
          else:
-             output = "no output"
--        error_message = "Fetch command failed with exit code %s, %s" % (e.exitcode, output)
-+        error_message = "Fetch command %s failed with exit code %s, %s" % (e.command, e.exitcode, output)
-     except bb.process.CmdError as e:
-         error_message = "Fetch command %s could not be run:\n%s" % (e.command, e.msg)
-     if not success:
--- 
-2.8.1
+-            logger.debug(1, "Parsing %s", filename)
+             return self.parse(filename, appends, configdata, self.caches_array)
+ 
+         return cached, infos
+
 
 
