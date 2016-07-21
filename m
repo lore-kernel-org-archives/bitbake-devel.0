@@ -1,40 +1,39 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from bongo.birch.relay.mailchannels.net
-	(bongo.birch.relay.mailchannels.net [23.83.209.21])
-	by mail.openembedded.org (Postfix) with ESMTP id EAEDC731BC
+Received: from bird.oak.relay.mailchannels.net
+	(bird.oak.relay.mailchannels.net [23.83.215.17])
+	by mail.openembedded.org (Postfix) with ESMTP id 20BF9731C6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jul 2016 13:39:37 +0000 (UTC)
+	Thu, 21 Jul 2016 13:39:39 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 26DE91BC77B;
-	Thu, 21 Jul 2016 13:39:38 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id AC0FCA1534;
+	Thu, 21 Jul 2016 13:39:39 +0000 (UTC)
 Received: from uscentral428.accountservergroup.com
-	(ip-10-120-4-226.us-west-2.compute.internal [10.120.4.226])
-	by relay.mailchannels.net (Postfix) with ESMTPA id B14931BCFA8;
-	Thu, 21 Jul 2016 13:39:37 +0000 (UTC)
+	(ip-10-27-139-41.us-west-2.compute.internal [10.27.139.41])
+	by relay.mailchannels.net (Postfix) with ESMTPA id 0EA25A1580;
+	Thu, 21 Jul 2016 13:39:39 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.135.9.54])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:39:38 +0000
+Received: from uscentral428.accountservergroup.com ([TEMPUNAVAIL].
+	[10.21.150.52]) (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:39:39 +0000
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
 X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1469108377971:184665528
-X-MC-Ingress-Time: 1469108377971
+X-MC-Loop-Signature: 1469108379517:3107119346
+X-MC-Ingress-Time: 1469108379517
 Received: from [176.249.240.35] (port=56876 helo=localhost.localdomain)
 	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
 	(envelope-from <elliot.smith@intel.com>)
-	id 1bQECO-00012R-Hy; Thu, 21 Jul 2016 09:39:36 -0400
+	id 1bQECK-00012R-Pr; Thu, 21 Jul 2016 09:39:33 -0400
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Jul 2016 14:39:12 +0100
-Message-Id: <1469108352-12098-10-git-send-email-elliot.smith@intel.com>
+Date: Thu, 21 Jul 2016 14:39:08 +0100
+Message-Id: <1469108352-12098-6-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1469108352-12098-1-git-send-email-elliot.smith@intel.com>
 References: <1469108352-12098-1-git-send-email-elliot.smith@intel.com>
 X-AuthUser: elliot@townx.org
-Subject: [PATCH 10/10] toaster: loadconf Partially add back some of the layerSource parsing
+Subject: [PATCH 06/10] toaster: tests: Remove references to LayerSource model
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,126 +46,420 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2016 13:39:38 -0000
+X-List-Received-Date: Thu, 21 Jul 2016 13:39:39 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Partially add back a revised version of the layersource handling so that
-we can continue to support the old toasterconf.json and it's setup of
-the local project.
+Remove and replace layersource model references in the tests and test
+data. Remove the orm/test as this only tested LayerSource interactions
+which have now been removed.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- .../bldcontrol/management/commands/loadconf.py     | 85 +++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 3 deletions(-)
+ .../bldcontrol/management/commands/loadconf.py     |  18 ---
+ bitbake/lib/toaster/orm/tests.py                   | 180 ---------------------
+ .../tests/browser/test_layerdetails_page.py        |   2 +-
+ .../fixtures/toastergui-unittest-data.xml          |  39 -----
+ bitbake/lib/toaster/toastergui/tests.py            |   3 +-
+ 5 files changed, 2 insertions(+), 240 deletions(-)
+ delete mode 100644 bitbake/lib/toaster/orm/tests.py
 
 diff --git a/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py b/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
-index 59324ac..4f8c9c6 100644
+index 6f08f1d..1f57fc1 100644
 --- a/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
 +++ b/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
-@@ -9,6 +9,20 @@ from .checksettings import DN
+@@ -9,24 +9,6 @@ from .checksettings import DN
  import logging
  logger = logging.getLogger("toaster")
  
-+# Temporary old code to support old toasterconf.json
-+def _reduce_canon_path(path):
-+    components = []
-+    for c in path.split("/"):
-+        if c == "..":
-+            del components[-1]
-+        elif c == ".":
-+            pass
-+        else:
-+            components.append(c)
-+    if len(components) < 2:
-+        components.append('')
-+    return "/".join(components)
-+# End temp code
+-def _reduce_canon_path(path):
+-    components = []
+-    for c in path.split("/"):
+-        if c == "..":
+-            del components[-1]
+-        elif c == ".":
+-            pass
+-        else:
+-            components.append(c)
+-    if len(components) < 2:
+-        components.append('')
+-    return "/".join(components)
+-
+-def _get_id_for_sourcetype(s):
+-    for i in LayerSource.SOURCE_TYPE:
+-        if s == i[1]:
+-            return i[0]
+-    raise Exception("Could not find definition for sourcetype '%s'. Valid source types are %s" % (str(s), ', '.join(map(lambda x: "'%s'" % x[1], LayerSource.SOURCE_TYPE ))))
  
  class Command(BaseCommand):
      help = "Loads a toasterconf.json file in the database"
-@@ -76,6 +90,74 @@ class Command(BaseCommand):
-                 # find layers with the same name
-                 ReleaseDefaultLayer.objects.get_or_create( release = ro, layer_name = dli)
+diff --git a/bitbake/lib/toaster/orm/tests.py b/bitbake/lib/toaster/orm/tests.py
+deleted file mode 100644
+index 719266e..0000000
+--- a/bitbake/lib/toaster/orm/tests.py
++++ /dev/null
+@@ -1,180 +0,0 @@
+-#! /usr/bin/env python
+-# ex:ts=4:sw=4:sts=4:et
+-# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
+-#
+-# BitBake Toaster Implementation
+-#
+-# Copyright (C) 2013-2015 Intel Corporation
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License version 2 as
+-# published by the Free Software Foundation.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License along
+-# with this program; if not, write to the Free Software Foundation, Inc.,
+-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-"""Test cases for Toaster ORM."""
+-
+-from django.test import TestCase, TransactionTestCase
+-from orm.models import LocalLayerSource, LayerIndexLayerSource, ImportedLayerSource, LayerSource
+-from orm.models import Branch, LayerVersionDependency
+-
+-from orm.models import Project, Layer, Layer_Version, Branch, ProjectLayer
+-from orm.models import Release, ReleaseLayerSourcePriority, BitbakeVersion
+-
+-from django.db import IntegrityError
+-
+-import os
+-
+-# set TTS_LAYER_INDEX to the base url to use a different instance of the layer index
+-
+-class LayerSourceVerifyInheritanceSaveLoad(TestCase):
+-    """
+-    Tests to verify inheritance for the LayerSource proxy-inheritance classes.
+-    """
+-    def test_object_creation(self):
+-        """Test LayerSource object creation."""
+-        for name, sourcetype in [("a1", LayerSource.TYPE_LOCAL),
+-                                 ("a2", LayerSource.TYPE_LAYERINDEX),
+-                                 ("a3", LayerSource.TYPE_IMPORTED)]:
+-            LayerSource.objects.create(name=name, sourcetype=sourcetype)
+-
+-        objects = LayerSource.objects.all()
+-        self.assertTrue(isinstance(objects[0], LocalLayerSource))
+-        self.assertTrue(isinstance(objects[1], LayerIndexLayerSource))
+-        self.assertTrue(isinstance(objects[2], ImportedLayerSource))
+-
+-    def test_duplicate_error(self):
+-        """Test creation of duplicate LayerSource objects."""
+-        stype = LayerSource.TYPE_LOCAL
+-        LayerSource.objects.create(name="a1", sourcetype=stype)
+-        with self.assertRaises(IntegrityError):
+-            LayerSource.objects.create(name="a1", sourcetype=stype)
+-
+-
+-class LILSUpdateTestCase(TransactionTestCase):
+-    """Test Layer Source update."""
+-
+-    def setUp(self):
+-        """Create release."""
+-        bbv = BitbakeVersion.objects.create(\
+-                  name="master", giturl="git://git.openembedded.org/bitbake")
+-        Release.objects.create(name="default-release", bitbake_version=bbv,
+-                               branch_name="master")
+-
+-    def test_update(self):
+-        """Check if LayerSource.update can fetch branches."""
+-        url = os.getenv("TTS_LAYER_INDEX",
+-                        default="http://layers.openembedded.org/")
+-
+-        lsobj = LayerSource.objects.create(\
+-                    name="b1", sourcetype=LayerSource.TYPE_LAYERINDEX,
+-                    apiurl=url + "layerindex/api/")
+-        lsobj.update()
+-        self.assertTrue(lsobj.branch_set.all().count() > 0,
+-                        "no branches fetched")
+-
+-class LayerVersionEquivalenceTestCase(TestCase):
+-    """Verify Layer_Version priority selection."""
+-
+-    def setUp(self):
+-        """Create required objects."""
+-        # create layer source
+-        self.lsrc = LayerSource.objects.create(name="dummy-layersource",
+-                                               sourcetype=LayerSource.TYPE_LOCAL)
+-        # create release
+-        bbv = BitbakeVersion.objects.create(\
+-                  name="master", giturl="git://git.openembedded.org/bitbake")
+-        self.release = Release.objects.create(name="default-release",
+-                                              bitbake_version=bbv,
+-                                              branch_name="master")
+-        # attach layer source to release
+-        ReleaseLayerSourcePriority.objects.create(\
+-            release=self.release, layer_source=self.lsrc, priority=1)
+-
+-        # create a layer version for the layer on the specified branch
+-        self.layer = Layer.objects.create(name="meta-testlayer",
+-                                          layer_source=self.lsrc)
+-        self.branch = Branch.objects.create(name="master", layer_source=self.lsrc)
+-        self.lver = Layer_Version.objects.create(\
+-            layer=self.layer, layer_source=self.lsrc, up_branch=self.branch)
+-
+-        # create project and project layer
+-        self.project = Project.objects.create_project(name="test-project",
+-                                                      release=self.release)
+-        ProjectLayer.objects.create(project=self.project,
+-                                    layercommit=self.lver)
+-
+-        # create spoof layer that should not appear in the search results
+-        layer = Layer.objects.create(name="meta-notvalid",
+-                                     layer_source=self.lsrc)
+-        self.lver2 = Layer_Version.objects.create(layer=layer,
+-                                                  layer_source=self.lsrc,
+-                                                  up_branch=self.branch)
+-
+-    def test_single_layersource(self):
+-        """
+-        When we have a single layer version,
+-        get_equivalents_wpriority() should return a list with
+-        just this layer_version.
+-        """
+-        equivqs = self.lver.get_equivalents_wpriority(self.project)
+-        self.assertEqual(list(equivqs), [self.lver])
+-
+-    def test_dual_layersource(self):
+-        """
+-        If we have two layers with the same name, from different layer sources,
+-        we expect both layers in, in increasing priority of the layer source.
+-        """
+-        lsrc2 = LayerSource.objects.create(\
+-                    name="dummy-layersource2",
+-                    sourcetype=LayerSource.TYPE_LOCAL,
+-                    apiurl="test")
+-
+-        # assign a lower priority for the second layer source
+-        self.release.releaselayersourcepriority_set.create(layer_source=lsrc2,
+-                                                           priority=2)
+-
+-        # create a new layer_version for a layer with the same name
+-        # coming from the second layer source
+-        layer2 = Layer.objects.create(name="meta-testlayer",
+-                                      layer_source=lsrc2)
+-        lver2 = Layer_Version.objects.create(layer=layer2, layer_source=lsrc2,
+-                                             up_branch=self.branch)
+-
+-        # expect two layer versions, in the priority order
+-        equivqs = self.lver.get_equivalents_wpriority(self.project)
+-        self.assertEqual(list(equivqs), [lver2, self.lver])
+-
+-    def test_compatible_layer_versions(self):
+-        """
+-        When we have a 2 layer versions, get_all_compatible_layerversions()
+-        should return a queryset with both.
+-        """
+-        compat_lv = self.project.get_all_compatible_layer_versions()
+-        self.assertEqual(list(compat_lv), [self.lver, self.lver2])
+-
+-    def test_layerversion_get_alldeps(self):
+-        """Test Layer_Version.get_alldeps API."""
+-        lvers = {}
+-        for i in range(10):
+-            name = "layer%d" % i
+-            lvers[name] = Layer_Version.objects.create(layer=Layer.objects.create(name=name),
+-                                                       project=self.project)
+-            if i:
+-                LayerVersionDependency.objects.create(layer_version=lvers["layer%d" % (i - 1)],
+-                                                      depends_on=lvers[name])
+-                # Check dinamically added deps
+-                self.assertEqual(lvers['layer0'].get_alldeps(self.project.id),
+-                                 [lvers['layer%d' % n] for n in range(1, i+1)])
+-
+-        # Check chain of deps created in previous loop
+-        for i in range(10):
+-            self.assertEqual(lvers['layer%d' % i].get_alldeps(self.project.id),
+-                             [lvers['layer%d' % n] for n in range(i+1, 10)])
+diff --git a/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py b/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
+index 71c5c12..0005192 100644
+--- a/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
+@@ -63,7 +63,7 @@ class TestLayerDetailsPage(SeleniumTestCase):
  
-+        # NOTE Temporary old code to handle old toasterconf.json. All this to
-+        # be removed after rewrite of config loading mechanism
-+        for lsi in data['layersources']:
-+            assert 'sourcetype' in lsi
-+            assert 'apiurl' in lsi
-+            assert 'name' in lsi
-+            assert 'branches' in lsi
-+
-+            if "local" in lsi['sourcetype']:
-+                ls = LayerSource.TYPE_LOCAL
-+            else:
-+                ls = LayerSource.TYPE_LAYERINDEX
-+
-+            layer_releases = []
-+            for branchname in lsi['branches']:
-+                try:
-+                    release = Release.objects.get(branch_name=branchname)
-+                    layer_releases.append(release)
-+                except Release.DoesNotExist:
-+                    logger.error("Layer set for %s but no release matches this"
-+                                 "in the config" % branchname)
-+
-+            apiurl = _reduce_canon_path(
-+                os.path.join(DN(os.path.abspath(filepath)), lsi['apiurl']))
-+
-+            if 'layers' in lsi:
-+                for layerinfo in lsi['layers']:
-+                    lo, created = Layer.objects.get_or_create(
-+                        name=layerinfo['name'],
-+                        vcs_url=layerinfo['vcs_url'],
-+                    )
-+                    if layerinfo['local_path'].startswith("/"):
-+                        lo.local_path = layerinfo['local_path']
-+                    else:
-+                        lo.local_path = _reduce_canon_path(
-+                            os.path.join(apiurl, layerinfo['local_path']))
-+
-+                    if layerinfo['vcs_url'].startswith("remote:"):
-+                        lo.vcs_url = _read_git_url_from_local_repository(
-+                            layerinfo['vcs_url'])
-+                        if lo.vcs_url is None:
-+                            logger.error("The toaster config file references"
-+                                         " the local git repo, but Toaster "
-+                                         "cannot detect it.\nYour local "
-+                                         "configuration for layer %s is "
-+                                         "invalid. Make sure that the "
-+                                         "toasterconf.json file is correct."
-+                                         % layerinfo['name'])
-+
-+                    if lo.vcs_url is None:
-+                        lo.vcs_url = layerinfo['vcs_url']
-+
-+                    if 'layer_index_url' in layerinfo:
-+                        lo.layer_index_url = layerinfo['layer_index_url']
-+                    lo.save()
-+
-+                    for release in layer_releases:
-+                        lvo, created = Layer_Version.objects.get_or_create(
-+                            layer_source=ls,
-+                            release=release,
-+                            commit=release.branch_name,
-+                            branch=release.branch_name,
-+                            layer=lo)
-+                        lvo.dirpath = layerinfo['dirpath']
-+                        lvo.save()
-+        # END temporary code
-+
-+
-         # set default release
-         if ToasterSetting.objects.filter(name = "DEFAULT_RELEASE").count() > 0:
-             ToasterSetting.objects.filter(name = "DEFAULT_RELEASE").update(value = data['defaultrelease'])
-@@ -95,6 +177,3 @@ class Command(BaseCommand):
-             raise CommandError("Need a path to the toasterconf.json file")
-         filepath = args[0]
-         self._import_layer_config(filepath)
--
--
--
+         self.imported_layer_version = Layer_Version.objects.create(
+             layer=imported_layer,
+-            layer_source=layer_source,
++            layer_source=LayerSource.TYPE_IMPORTED,
+             branch=gitrev,
+             commit=gitrev,
+             dirpath=subdir,
+diff --git a/bitbake/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml b/bitbake/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml
+index 213bf0f..80c1e19 100644
+--- a/bitbake/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml
++++ b/bitbake/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml
+@@ -195,8 +195,6 @@
+     <field to="orm.customimagerecipe" name="recipe_appends" rel="ManyToManyRel"><object pk="3"></object></field>
+   </object>
+   <object pk="1" model="orm.recipe">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field type="CharField" name="name">z recipe</field>
+     <field type="CharField" name="version">5.2</field>
+@@ -212,8 +210,6 @@
+     <field type="BooleanField" name="is_image">False</field>
+   </object>
+   <object pk="2" model="orm.recipe">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field type="CharField" name="name">a recipe</field>
+     <field type="CharField" name="version">1.2</field>
+@@ -229,8 +225,6 @@
+     <field type="BooleanField" name="is_image">False</field>
+   </object>
+   <object pk="3" model="orm.recipe">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel"><None></None></field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field type="CharField" name="name">a custom recipe</field>
+     <field type="CharField" name="version"></field>
+@@ -246,8 +240,6 @@
+     <field type="BooleanField" name="is_image">False</field>
+   </object>
+   <object pk="4" model="orm.recipe">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field type="CharField" name="name">a image recipe</field>
+     <field type="CharField" name="version">1.2</field>
+@@ -263,8 +255,6 @@
+     <field type="BooleanField" name="is_image">True</field>
+   </object>
+   <object pk="5" model="orm.recipe">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field type="CharField" name="name">z image recipe</field>
+     <field type="CharField" name="version">1.3</field>
+@@ -280,8 +270,6 @@
+     <field type="BooleanField" name="is_image">True</field>
+   </object>
+   <object pk="6" model="orm.recipe">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel"><None></None></field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field type="CharField" name="name">z custom recipe</field>
+     <field type="CharField" name="version"></field>
+@@ -307,34 +295,23 @@
+   </object>
+ 
+   <object pk="1" model="orm.machine">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel"><None></None></field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field to="orm.layer_version" name="layer_version" rel="ManyToOneRel">1</field>
+     <field type="CharField" name="name">a machine</field>
+     <field type="CharField" name="description">a machine</field>
+   </object>
+   <object pk="2" model="orm.machine">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel"><None></None></field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field to="orm.layer_version" name="layer_version" rel="ManyToOneRel">2</field>
+     <field type="CharField" name="name">z machine</field>
+     <field type="CharField" name="description">z machine</field>
+   </object>
+   <object pk="3" model="orm.machine">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel"><None></None></field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field to="orm.layer_version" name="layer_version" rel="ManyToOneRel">1</field>
+     <field type="CharField" name="name">g machine</field>
+     <field type="CharField" name="description">g machine</field>
+   </object>
+-  <object pk="1" model="orm.layersource">
+-    <field type="CharField" name="name">local</field>
+-    <field type="IntegerField" name="sourcetype">1</field>
+-    <field type="CharField" name="apiurl"></field>
+-  </object>
+   <object pk="1" model="orm.bitbakeversion">
+     <field type="CharField" name="name">test bbv</field>
+     <field type="CharField" name="giturl">/tmp/</field>
+@@ -355,26 +332,16 @@
+     <field type="CharField" name="branch_name">master</field>
+     <field type="TextField" name="helptext"><None></None></field>
+   </object>
+-  <object pk="1" model="orm.releaselayersourcepriority">
+-    <field to="orm.release" name="release" rel="ManyToOneRel">1</field>
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="priority">0</field>
+-  </object>
+   <object pk="1" model="orm.branch">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+     <field type="CharField" name="name">master</field>
+     <field type="CharField" name="short_description"></field>
+   </object>
+   <object pk="1" model="orm.layer">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel"><None></None></field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field type="CharField" name="name">a layer</field>
+     <field type="CharField" name="vcs_url">/tmp/</field>
+   </object>
+   <object pk="2" model="orm.layer">
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field type="CharField" name="name">z layer</field>
+     <field type="CharField" name="layer_index_url"></field>
+@@ -383,8 +350,6 @@
+   <object pk="1" model="orm.layer_version">
+     <field to="orm.build" name="build" rel="ManyToOneRel">1</field>
+     <field to="orm.layer" name="layer" rel="ManyToOneRel">1</field>
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field to="orm.branch" name="up_branch" rel="ManyToOneRel">1</field>
+     <field type="CharField" name="branch">master</field>
+@@ -397,8 +362,6 @@
+   <object pk="2" model="orm.layer_version">
+     <field to="orm.build" name="build" rel="ManyToOneRel"><None></None></field>
+     <field to="orm.layer" name="layer" rel="ManyToOneRel">2</field>
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field to="orm.branch" name="up_branch" rel="ManyToOneRel">1</field>
+     <field type="CharField" name="branch">testing-branch</field>
+@@ -411,8 +374,6 @@
+   <object pk="3" model="orm.layer_version">
+     <field to="orm.build" name="build" rel="ManyToOneRel">1</field>
+     <field to="orm.layer" name="layer" rel="ManyToOneRel">2</field>
+-    <field to="orm.layersource" name="layer_source" rel="ManyToOneRel">1</field>
+-    <field type="IntegerField" name="up_id"><None></None></field>
+     <field type="DateTimeField" name="up_date"><None></None></field>
+     <field to="orm.branch" name="up_branch" rel="ManyToOneRel">1</field>
+     <field type="CharField" name="branch">testing-branch</field>
+diff --git a/bitbake/lib/toaster/toastergui/tests.py b/bitbake/lib/toaster/toastergui/tests.py
+index da530a1..03b73a9 100644
+--- a/bitbake/lib/toaster/toastergui/tests.py
++++ b/bitbake/lib/toaster/toastergui/tests.py
+@@ -28,7 +28,7 @@ from django.utils import timezone
+ from django.db.models import Q
+ 
+ from orm.models import Project, Release, BitbakeVersion, Package, LogMessage
+-from orm.models import ReleaseLayerSourcePriority, LayerSource, Layer, Build
++from orm.models import LayerSource, Layer, Build
+ from orm.models import Layer_Version, Recipe, Machine, ProjectLayer, Target
+ from orm.models import CustomImageRecipe, ProjectVariable
+ from orm.models import Branch, CustomImagePackage
+@@ -149,7 +149,6 @@ class ViewTests(TestCase):
+ 
+     def test_xhr_import_layer(self):
+         """Test xhr_importlayer API"""
+-        LayerSource.objects.create(sourcetype=LayerSource.TYPE_IMPORTED)
+         #Test for importing an already existing layer
+         args = {'vcs_url' : "git://git.example.com/test",
+                 'name' : "base-layer",
 -- 
 2.7.4
 
