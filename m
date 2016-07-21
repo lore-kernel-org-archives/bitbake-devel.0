@@ -1,38 +1,40 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from nov-007-i511.relay.mailchannels.net
-	(nov-007-i511.relay.mailchannels.net [46.232.183.65])
-	by mail.openembedded.org (Postfix) with ESMTP id C8F8D731E0
+Received: from bongo.birch.relay.mailchannels.net
+	(bongo.birch.relay.mailchannels.net [23.83.209.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 2E746731D9
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jul 2016 13:44:25 +0000 (UTC)
+	Thu, 21 Jul 2016 13:44:29 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id DBDED21743;
-	Thu, 21 Jul 2016 13:44:22 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id 8981412123B;
+	Thu, 21 Jul 2016 13:44:29 +0000 (UTC)
 Received: from uscentral428.accountservergroup.com
-	(ip-10-229-10-199.us-west-2.compute.internal [10.229.10.199])
-	by relay.mailchannels.net (Postfix) with ESMTPA id 4AE9620036;
-	Thu, 21 Jul 2016 13:44:22 +0000 (UTC)
+	(ip-10-229-2-62.us-west-2.compute.internal [10.229.2.62])
+	by relay.mailchannels.net (Postfix) with ESMTPA id D0BFC1212F6;
+	Thu, 21 Jul 2016 13:44:28 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.91.5.35])
+	(uscentral428.accountservergroup.com [10.135.9.54])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:44:22 +0000
+	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:44:29 +0000
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
 X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1469108696581:2568385952
-X-MC-Ingress-Time: 1469108696580
+X-MC-Loop-Signature: 1469108669158:1723879947
+X-MC-Ingress-Time: 1469108669158
 Received: from [176.249.240.35] (port=56888 helo=localhost.localdomain)
 	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
 	(envelope-from <elliot.smith@intel.com>)
-	id 1bQEGz-0002ZY-1J; Thu, 21 Jul 2016 09:44:21 -0400
+	id 1bQEH5-0002ZY-K2; Thu, 21 Jul 2016 09:44:27 -0400
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Jul 2016 14:43:23 +0100
-Message-Id: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
+Date: Thu, 21 Jul 2016 14:43:29 +0100
+Message-Id: <1469108612-12433-7-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
+References: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
 X-AuthUser: elliot@townx.org
-Subject: [PATCH][v2 01/10] toaster: loadconf remove Loading LayerSources
+Subject: [PATCH][v2 07/10] toaster: lsupdates Add progress information and clean up logging
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,119 +47,208 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2016 13:44:28 -0000
+X-List-Received-Date: Thu, 21 Jul 2016 13:44:29 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-We don't need to configure layer sources in the initial configuration as
-this information is provided by the models.
+Adds basic progress % information and provides better description of
+what is happening.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- .../bldcontrol/management/commands/loadconf.py     | 69 +---------------------
- 1 file changed, 2 insertions(+), 67 deletions(-)
+ .../toaster/orm/management/commands/lsupdates.py   | 81 ++++++++++++++++------
+ 1 file changed, 58 insertions(+), 23 deletions(-)
 
-diff --git a/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py b/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
-index 173e3ce..6f08f1d 100644
---- a/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
-+++ b/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
-@@ -1,6 +1,6 @@
- from django.core.management.base import BaseCommand, CommandError
- from orm.models import LayerSource, ToasterSetting, Branch, Layer, Layer_Version
--from orm.models import BitbakeVersion, Release, ReleaseDefaultLayer, ReleaseLayerSourcePriority
-+from orm.models import BitbakeVersion, Release, ReleaseDefaultLayer
- from django.db import IntegrityError
+diff --git a/bitbake/lib/toaster/orm/management/commands/lsupdates.py b/bitbake/lib/toaster/orm/management/commands/lsupdates.py
+index 89ee53e..138b686 100644
+--- a/bitbake/lib/toaster/orm/management/commands/lsupdates.py
++++ b/bitbake/lib/toaster/orm/management/commands/lsupdates.py
+@@ -25,6 +25,8 @@ from orm.models import LayerSource, Layer, Release, Layer_Version
+ from orm.models import LayerVersionDependency, Machine, Recipe
+ 
  import os
++import sys
++
+ import json
+ import logging
+ logger = logging.getLogger("toaster")
+@@ -36,6 +38,18 @@ class Command(NoArgsCommand):
+     args = ""
+     help = "Updates locally cached information from a layerindex server"
  
-@@ -42,7 +42,7 @@ class Command(BaseCommand):
-         data = json.loads(open(filepath, "r").read())
++    def mini_progress(self, what, i, total):
++        i = i + 1
++        pec = (float(i)/float(total))*100
++
++        sys.stdout.write("\rUpdating %s %d%%" %
++                         (what,
++                          pec))
++        sys.stdout.flush()
++        if int(pec) is 100:
++            sys.stdout.write("\n")
++            sys.stdout.flush()
++
+     def update(self):
+         """
+             Fetches layer, recipe and machine information from a layerindex
+@@ -85,7 +99,8 @@ class Command(NoArgsCommand):
+         if len(whitelist_branch_names) == 0:
+             raise Exception("Failed to make list of branches to fetch")
  
-         # verify config file validity before updating settings
--        for i in ['bitbake', 'releases', 'defaultrelease', 'config', 'layersources']:
-+        for i in ['bitbake', 'releases', 'defaultrelease', 'config']:
-             assert i in data
+-        logger.debug("Fetching branches")
++        logger.info("Fetching metadata releases for %s",
++                    " ".join(whitelist_branch_names))
  
-         def _read_git_url_from_local_repository(address):
-@@ -81,65 +81,6 @@ class Command(BaseCommand):
-             bvo.dirpath = bvi['dirpath']
-             bvo.save()
+         # keep a track of the id mappings so that layer_versions can be created
+         # for these layers later on
+@@ -96,10 +111,10 @@ class Command(NoArgsCommand):
+         #                                   "?filter=name:%s"
+         #                                   % "OR".join(whitelist_branch_names))
  
--        # set the layer sources
--        for lsi in data['layersources']:
--            assert 'sourcetype' in lsi
--            assert 'apiurl' in lsi
--            assert 'name' in lsi
--            assert 'branches' in lsi
--
--
--            if _get_id_for_sourcetype(lsi['sourcetype']) == LayerSource.TYPE_LAYERINDEX or lsi['apiurl'].startswith("/"):
--                apiurl = lsi['apiurl']
--            else:
--                apiurl = _reduce_canon_path(os.path.join(DN(os.path.abspath(filepath)), lsi['apiurl']))
--
--            assert ((_get_id_for_sourcetype(lsi['sourcetype']) == LayerSource.TYPE_LAYERINDEX) or apiurl.startswith("/")), (lsi['sourcetype'],apiurl)
--
--            try:
--                ls, created = LayerSource.objects.get_or_create(sourcetype = _get_id_for_sourcetype(lsi['sourcetype']), apiurl = apiurl)
--                ls.name = lsi['name']
--                ls.save()
--            except IntegrityError as e:
--                logger.warning("IntegrityError %s \nWhile setting name %s for layer source %s " % (e, lsi['name'], ls))
--
--
--            layerbranches = []
--            for branchname in lsi['branches']:
--                bo, created = Branch.objects.get_or_create(layer_source = ls, name = branchname)
--                layerbranches.append(bo)
--
--            if 'layers' in lsi:
--                for layerinfo in lsi['layers']:
--                    lo, created = Layer.objects.get_or_create(layer_source = ls, name = layerinfo['name'])
--                    if layerinfo['local_path'].startswith("/"):
--                        lo.local_path = layerinfo['local_path']
--                    else:
--                        lo.local_path = _reduce_canon_path(os.path.join(ls.apiurl, layerinfo['local_path']))
--
--                    if not os.path.exists(lo.local_path):
--                        logger.error("Local layer path %s must exists. Are you trying to import a layer that does not exist ? Check your local toasterconf.json" % lo.local_path)
--
--                    if layerinfo['vcs_url'].startswith("remote:"):
--                        lo.vcs_url = _read_git_url_from_local_repository(layerinfo['vcs_url'])
--                        if lo.vcs_url is None:
--                            logger.error("The toaster config file references the local git repo, but Toaster cannot detect it.\nYour local configuration for layer %s is invalid. Make sure that the toasterconf.json file is correct." % layerinfo['name'])
--
--                    if lo.vcs_url is None:
--                        lo.vcs_url = layerinfo['vcs_url']
--
--                    if 'layer_index_url' in layerinfo:
--                        lo.layer_index_url = layerinfo['layer_index_url']
--                    lo.save()
--
--                    for branch in layerbranches:
--                        lvo, created = Layer_Version.objects.get_or_create(layer_source = ls,
--                                up_branch = branch,
--                                commit = branch.name,
--                                layer = lo)
--                        lvo.dirpath = layerinfo['dirpath']
--                        lvo.save()
--        # set releases
-         for ri in data['releases']:
-             bvo = BitbakeVersion.objects.get(name = ri['bitbake'])
-             assert bvo is not None
-@@ -149,12 +90,6 @@ class Command(BaseCommand):
-             ro.helptext = ri['helptext']
-             ro.save()
+-        # update layers
+         layers_info = _get_json_response(apilinks['layerItems'])
  
--            # save layer source priority for release
--            for ls_name in ri['layersourcepriority'].keys():
--                rlspo, created = ReleaseLayerSourcePriority.objects.get_or_create(release = ro, layer_source = LayerSource.objects.get(name=ls_name))
--                rlspo.priority = ri['layersourcepriority'][ls_name]
--                rlspo.save()
--
-             for dli in ri['defaultlayers']:
-                 # find layers with the same name
-                 ReleaseDefaultLayer.objects.get_or_create( release = ro, layer_name = dli)
+-        for li in layers_info:
++        total = len(layers_info)
++        for i, li in enumerate(layers_info):
+             # Special case for the openembedded-core layer
+             if li['name'] == oe_core_layer:
+                 try:
+@@ -113,25 +128,34 @@ class Command(NoArgsCommand):
+                     oe_core_l.description = li['description']
+                     oe_core_l.save()
+                     li_layer_id_to_toaster_layer_id[li['id']] = oe_core_l.pk
++                    self.mini_progress("layers", i, total)
+                     continue
+ 
+                 except Layer.DoesNotExist:
+                     pass
+ 
+-            l, created = Layer.objects.get_or_create(name=li['name'])
+-            l.up_date = li['updated']
+-            l.vcs_url = li['vcs_url']
+-            l.vcs_web_url = li['vcs_web_url']
+-            l.vcs_web_tree_base_url = li['vcs_web_tree_base_url']
+-            l.vcs_web_file_base_url = li['vcs_web_file_base_url']
+-            l.summary = li['summary']
+-            l.description = li['description']
+-            l.save()
++            try:
++                l, created = Layer.objects.get_or_create(name=li['name'],
++                                                         vcs_url=li['vcs_url'])
++                l.up_date = li['updated']
++                l.vcs_url = li['vcs_url']
++                l.vcs_web_url = li['vcs_web_url']
++                l.vcs_web_tree_base_url = li['vcs_web_tree_base_url']
++                l.vcs_web_file_base_url = li['vcs_web_file_base_url']
++                l.summary = li['summary']
++                l.description = li['description']
++                l.save()
++            except Layer.MultipleObjectsReturned:
++                logger.info("Skipped %s as we found multiple layers and "
++                            "don't know which to update" %
++                            li['name'])
+ 
+             li_layer_id_to_toaster_layer_id[li['id']] = l.pk
+ 
+-        # update layerbranches/layer_versions
+-        logger.debug("Fetching layer information")
++            self.mini_progress("layers", i, total)
++
++        # update layer_versions
++        logger.info("Fetching layer versions")
+         layerbranches_info = _get_json_response(
+             apilinks['layerBranches'] + "?filter=branch__name:%s" %
+             "OR".join(whitelist_branch_names))
+@@ -140,7 +164,8 @@ class Command(NoArgsCommand):
+         # layer_version toaster object id
+         li_layer_branch_id_to_toaster_lv_id = {}
+ 
+-        for lbi in layerbranches_info:
++        total = len(layerbranches_info)
++        for i, lbi in enumerate(layerbranches_info):
+ 
+             try:
+                 lv, created = Layer_Version.objects.get_or_create(
+@@ -149,8 +174,9 @@ class Command(NoArgsCommand):
+                         pk=li_layer_id_to_toaster_layer_id[lbi['layer']])
+                 )
+             except KeyError:
+-                print("No such layerindex layer referenced by layerbranch %d" %
+-                      lbi['layer'])
++                logger.warning(
++                    "No such layerindex layer referenced by layerbranch %d" %
++                    lbi['layer'])
+                 continue
+ 
+             lv.up_date = lbi['updated']
+@@ -160,7 +186,9 @@ class Command(NoArgsCommand):
+ 
+             li_layer_branch_id_to_toaster_lv_id[lbi['id']] =\
+                 lv.pk
++            self.mini_progress("layer versions", i, total)
+ 
++        logger.info("Fetching layer version dependencies")
+         # update layer dependencies
+         layerdependencies_info = _get_json_response(
+             apilinks['layerDependencies'] +
+@@ -190,19 +218,22 @@ class Command(NoArgsCommand):
+                                "up_id:%s lv:%s" %
+                                (self, ldi['dependency'], lv))
+ 
+-        for lv in dependlist:
++        total = len(dependlist)
++        for i, lv in enumerate(dependlist):
+             LayerVersionDependency.objects.filter(layer_version=lv).delete()
+             for lvd in dependlist[lv]:
+                 LayerVersionDependency.objects.get_or_create(layer_version=lv,
+                                                              depends_on=lvd)
++            self.mini_progress("Layer version dependencies", i, total)
+ 
+         # update machines
+-        logger.debug("Fetching machine information")
++        logger.info("Fetching machine information")
+         machines_info = _get_json_response(
+             apilinks['machines'] + "?filter=layerbranch__branch__name:%s" %
+             "OR".join(whitelist_branch_names))
+ 
+-        for mi in machines_info:
++        total = len(machines_info)
++        for i, mi in enumerate(machines_info):
+             mo, created = Machine.objects.get_or_create(
+                 name=mi['name'],
+                 layer_version=Layer_Version.objects.get(
+@@ -211,14 +242,16 @@ class Command(NoArgsCommand):
+             mo.name = mi['name']
+             mo.description = mi['description']
+             mo.save()
++            self.mini_progress("machines", i, total)
+ 
+         # update recipes; paginate by layer version / layer branch
+-        logger.debug("Fetching target information")
++        logger.info("Fetching recipe information")
+         recipes_info = _get_json_response(
+             apilinks['recipes'] + "?filter=layerbranch__branch__name:%s" %
+             "OR".join(whitelist_branch_names))
+ 
+-        for ri in recipes_info:
++        total = len(recipes_info)
++        for i, ri in enumerate(recipes_info):
+             try:
+                 lv_id = li_layer_branch_id_to_toaster_lv_id[ri['layerbranch']]
+                 lv = Layer_Version.objects.get(pk=lv_id)
+@@ -245,7 +278,9 @@ class Command(NoArgsCommand):
+                     ro.is_image = "-image-" in ri['pn']
+                 ro.save()
+             except Exception as e:
+-                logger.debug("Failed saving recipe %s", e)
++                logger.warning("Failed saving recipe %s", e)
++
++            self.mini_progress("recipes", i, total)
+ 
+     def handle_noargs(self, **options):
+             self.update()
 -- 
 2.7.4
 
