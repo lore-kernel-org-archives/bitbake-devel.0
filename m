@@ -1,23 +1,24 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 564416FFCD
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 4A38A6FFCD
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jul 2016 15:42:47 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga101.jf.intel.com with ESMTP; 21 Jul 2016 08:42:49 -0700
+	Thu, 21 Jul 2016 15:58:57 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga104.fm.intel.com with ESMTP; 21 Jul 2016 08:58:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,399,1464678000"; d="scan'208";a="737805608"
+X-IronPort-AV: E=Sophos;i="5.28,399,1464678000"; d="scan'208";a="999882833"
 Received: from linux.intel.com ([10.54.29.200])
-	by FMSMGA003.fm.intel.com with ESMTP; 21 Jul 2016 08:42:48 -0700
+	by orsmga001.jf.intel.com with ESMTP; 21 Jul 2016 08:58:45 -0700
 Received: from ed.fi.intel.com (ed.fi.intel.com [10.237.72.179])
-	by linux.intel.com (Postfix) with ESMTP id 9B9736A4006;
-	Thu, 21 Jul 2016 08:42:37 -0700 (PDT)
+	by linux.intel.com (Postfix) with ESMTP id 1662A6A4006
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Jul 2016 08:58:34 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Jul 2016 18:42:35 +0300
-Message-Id: <1469115755-12513-1-git-send-email-ed.bartosh@linux.intel.com>
+Date: Thu, 21 Jul 2016 18:58:37 +0300
+Message-Id: <cover.1469116389.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.6.6
-Subject: [PATCH] toaster: fix download URL for task logs
+Subject: [PATCH 0/3] Prevent removal of all columns on tasks and recipe tables
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,55 +31,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2016 15:42:48 -0000
+X-List-Received-Date: Thu, 21 Jul 2016 15:59:01 -0000
 
-From: Elliot Smith <elliot.smith@intel.com>
+All of the columns for the tasks and recipes tables (sub-pages of the
+build-dashboard) are optional. This means you can remove all the columns for
+those tables and make them disappear from the page.
 
-The task display template formatting had split the Django
-url template tag across two lines and broken it. This resulted
-in a gibberish URL for task logs.
+Set the non-hideable columns and add some UI tests to check that those columns
+are disabled in the edit columns drop-down.
 
-Fix by placing the tag and its arguments on a single line.
+The following changes since commit 0bf1a5a6c8d731a0f4f75091621dc999ee6d5ce1:
 
-[YOCTO #9837]
+  toaster: fix download URL for task logs (2016-07-20 17:05:57 +0300)
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- bitbake/lib/toaster/toastergui/templates/task.html | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+are available in the git repository at:
 
-diff --git a/bitbake/lib/toaster/toastergui/templates/task.html b/bitbake/lib/toaster/toastergui/templates/task.html
-index 86789bd..214c777 100644
---- a/bitbake/lib/toaster/toastergui/templates/task.html
-+++ b/bitbake/lib/toaster/toastergui/templates/task.html
-@@ -25,8 +25,10 @@
- {%if task.task_executed %}
-     {# executed tasks outcome #}
-     {% if task.logfile %}
--            <a class="btn btn-default btn-lg" href="{% url 'build_artifact' build.id
--                "tasklogfile" task.pk %}">Download task log</a>
-+            <a class="btn btn-default btn-lg"
-+               href="{% url 'build_artifact' build.id 'tasklogfile' task.pk %}">
-+              Download task log
-+            </a>
-     {% endif %}
-         {# show stack trace for failed task #}
-         {% if task.outcome == task.OUTCOME_FAILED and log_head %}
-@@ -156,8 +158,10 @@ this prebuilt task is reusing"></span></a>
-     {%elif task.outcome == task.OUTCOME_CACHED%}
-             {% for t in task.get_related_setscene %}
-                 {% if forloop.last %}
--                    <a class="btn btn-default btn-lg" href="{% url
--                        'build_artifact' build.id "tasklogfile" t.pk %}">Download task log</a>
-+                    <a class="btn btn-default btn-lg"
-+                       href="{% url 'build_artifact' build.id "tasklogfile" t.pk %}">
-+                      Download task log
-+                    </a>
-                 {% endif %}
-             {% endfor %}
- 
--- 
-2.6.6
+  git://git.yoctoproject.org/poky-contrib ed/submit/elliot/toaster/9833-remove_columns
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/submit/elliot/toaster/9833-remove_columns
+
+Elliot Smith (3):
+  toaster: set non-hideable columns for build tasks table
+  toaster: set non-hideable columns for built recipes table
+  toaster-tests: add tasks and recipes sub-page tests
+
+ .../browser/test_builddashboard_page_recipes.py    | 66 ++++++++++++++++++++++
+ .../browser/test_builddashboard_page_tasks.py      | 65 +++++++++++++++++++++
+ bitbake/lib/toaster/toastergui/buildtables.py      |  7 ++-
+ 3 files changed, 137 insertions(+), 1 deletion(-)
+ create mode 100644 bitbake/lib/toaster/tests/browser/test_builddashboard_page_recipes.py
+ create mode 100644 bitbake/lib/toaster/tests/browser/test_builddashboard_page_tasks.py
+
+--
+Regards,
+Ed
 
 
