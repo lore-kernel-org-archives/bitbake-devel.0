@@ -1,40 +1,52 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from gainsboro.cherry.relay.mailchannels.net
-	(gainsboro.cherry.relay.mailchannels.net [23.83.223.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 69AFE6FFFE
+Return-Path: <boucman2@gmail.com>
+Received: from mail-wm0-f67.google.com (mail-wm0-f67.google.com [74.125.82.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 2B429607A5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jul 2016 13:44:36 +0000 (UTC)
-X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id B998B1213D2;
-	Thu, 21 Jul 2016 13:44:32 +0000 (UTC)
-Received: from uscentral428.accountservergroup.com
-	(ip-10-27-139-41.us-west-2.compute.internal [10.27.139.41])
-	by relay.mailchannels.net (Postfix) with ESMTPA id 2E8FD12179F;
-	Thu, 21 Jul 2016 13:44:32 +0000 (UTC)
-X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.135.9.54])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:44:32 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
-X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1469108672507:3232113918
-X-MC-Ingress-Time: 1469108672506
-Received: from [176.249.240.35] (port=56888 helo=localhost.localdomain)
-	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
-	(envelope-from <elliot.smith@intel.com>)
-	id 1bQEH8-0002ZY-Oc; Thu, 21 Jul 2016 09:44:31 -0400
-From: Elliot Smith <elliot.smith@intel.com>
+	Thu, 21 Jul 2016 10:56:09 +0000 (UTC)
+Received: by mail-wm0-f67.google.com with SMTP id x83so2077256wma.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Jul 2016 03:56:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=sender:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=pcZS64vQKonDfuVEhWFOPN2DGYJTKxuPhy9bbbOtpBE=;
+	b=ePEowyfiX5xFmDvdCeM4Qa43CajAJY41+Sd/15ilpp0RAikjAi5loGQgPR31c7h78G
+	bd2DwfvBmT1Py0nBWHiU2G+72zb4ZThEs0OHDPc364qsRRZPm4gWuwnBmxJxt7UkNjH0
+	nJl5ScUO3o8+V9kd+U3WtlDP8CmoVrTyl2BmwuyIGYYTehGuXtW8BaUSd0kYP/1xW3I+
+	Ie73FCYy29mq5b7FOkKOWyJLDlG2God9A9IaH4owvz2Ycw+eyE+9ER2xT4ExvmTvtlKc
+	y1KD5Os0Ov2R0t07fQcLvCKTBRZcvU/+6ejQ+NCZh1OoOyq1qmRH0Fx3VenCaSGa3r6y
+	uotQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding;
+	bh=pcZS64vQKonDfuVEhWFOPN2DGYJTKxuPhy9bbbOtpBE=;
+	b=Zq2pJQBnluOV9c1y9snOCqOjkJtwCN2s4yhDHQvOWPUMN9hGQTb5VdVleZYqqRSIXi
+	WR6cdQGbadV363kxaB+AkdqVowLslUkvDKGR22GpG+09Wtcek2VzxQ6FythdrD26vkDA
+	UvDvabIFmBcgr4vRN4kfeZLH/MGEheJzM6XEJ/3UKxot7VGPZEX9UyEtQzzQh3PLZKKC
+	2jo+le80jDccV+y1yjg6Mb7bswqJnydfdkcsfIeQ76MtRDurPNryWPlMrfIQm9q2oZCT
+	VIPidLeK27jGfItWAFYPCDDmKeK4AJAvCtUwiRX/kuygf99FhEyzsvoWeG6FY+fFRBee
+	Pnuw==
+X-Gm-Message-State: ALyK8tIMQyJzvSTFgECdla81dgJmD6lbKI6rRqa50kIAkf8RFXlOSz4ifWEYgDyFcGlu8Q==
+X-Received: by 10.28.167.80 with SMTP id q77mr17559760wme.62.1469098570021;
+	Thu, 21 Jul 2016 03:56:10 -0700 (PDT)
+Received: from localhost.localdomain (229.29.205.77.rev.sfr.net.
+	[77.205.29.229]) by smtp.gmail.com with ESMTPSA id
+	d80sm3058052wmd.14.2016.07.21.03.56.05
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 21 Jul 2016 03:56:08 -0700 (PDT)
+Sender: jeremy rosen <boucman2@gmail.com>
+From: "=?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?=" <jeremy.rosen@enst-bretagne.fr>
+X-Google-Original-From: =?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?=
+	<jeremy.rosen@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Jul 2016 14:43:32 +0100
-Message-Id: <1469108612-12433-10-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
-References: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
-X-AuthUser: elliot@townx.org
-Subject: [PATCH][v2 10/10] toaster: loadconf Partially add back some of the layerSource parsing
+Date: Thu, 21 Jul 2016 12:55:37 +0200
+Message-Id: <1469098538-14867-1-git-send-email-jeremy.rosen@smile.fr>
+X-Mailer: git-send-email 2.8.1
+MIME-Version: 1.0
+X-Mailman-Approved-At: Thu, 21 Jul 2016 14:29:05 +0000
+Cc: =?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?= <jeremy.rosen@openwide.fr>
+Subject: [PATCH 0/1] Add a syntax to clear variables and flags from a conf file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,128 +59,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2016 13:44:40 -0000
+X-List-Received-Date: Thu, 21 Jul 2016 10:56:10 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Michael Wood <michael.g.wood@intel.com>
+From: Jérémy Rosen <jeremy.rosen@openwide.fr>
 
-Partially add back a revised version of the layersource handling so that
-we can continue to support the old toasterconf.json and it's setup of
-the local project.
+While working on a Yocto project I had a need to reactivate a task that was
+disabled (do_fetch[noexec]="1") Currently, bitbake does not check the value
+of the noexec flag but only if the flag is set. The only way to unset a flag
+is to use an inline python syntax like the one below
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- .../bldcontrol/management/commands/loadconf.py     | 85 +++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 3 deletions(-)
+python () {
+   d.delVarFlag("do_fetch","noexec")
+}
 
-diff --git a/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py b/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
-index 59324ac..4f8c9c6 100644
---- a/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
-+++ b/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
-@@ -9,6 +9,20 @@ from .checksettings import DN
- import logging
- logger = logging.getLogger("toaster")
- 
-+# Temporary old code to support old toasterconf.json
-+def _reduce_canon_path(path):
-+    components = []
-+    for c in path.split("/"):
-+        if c == "..":
-+            del components[-1]
-+        elif c == ".":
-+            pass
-+        else:
-+            components.append(c)
-+    if len(components) < 2:
-+        components.append('')
-+    return "/".join(components)
-+# End temp code
- 
- class Command(BaseCommand):
-     help = "Loads a toasterconf.json file in the database"
-@@ -76,6 +90,74 @@ class Command(BaseCommand):
-                 # find layers with the same name
-                 ReleaseDefaultLayer.objects.get_or_create( release = ro, layer_name = dli)
- 
-+        # NOTE Temporary old code to handle old toasterconf.json. All this to
-+        # be removed after rewrite of config loading mechanism
-+        for lsi in data['layersources']:
-+            assert 'sourcetype' in lsi
-+            assert 'apiurl' in lsi
-+            assert 'name' in lsi
-+            assert 'branches' in lsi
-+
-+            if "local" in lsi['sourcetype']:
-+                ls = LayerSource.TYPE_LOCAL
-+            else:
-+                ls = LayerSource.TYPE_LAYERINDEX
-+
-+            layer_releases = []
-+            for branchname in lsi['branches']:
-+                try:
-+                    release = Release.objects.get(branch_name=branchname)
-+                    layer_releases.append(release)
-+                except Release.DoesNotExist:
-+                    logger.error("Layer set for %s but no release matches this"
-+                                 "in the config" % branchname)
-+
-+            apiurl = _reduce_canon_path(
-+                os.path.join(DN(os.path.abspath(filepath)), lsi['apiurl']))
-+
-+            if 'layers' in lsi:
-+                for layerinfo in lsi['layers']:
-+                    lo, created = Layer.objects.get_or_create(
-+                        name=layerinfo['name'],
-+                        vcs_url=layerinfo['vcs_url'],
-+                    )
-+                    if layerinfo['local_path'].startswith("/"):
-+                        lo.local_path = layerinfo['local_path']
-+                    else:
-+                        lo.local_path = _reduce_canon_path(
-+                            os.path.join(apiurl, layerinfo['local_path']))
-+
-+                    if layerinfo['vcs_url'].startswith("remote:"):
-+                        lo.vcs_url = _read_git_url_from_local_repository(
-+                            layerinfo['vcs_url'])
-+                        if lo.vcs_url is None:
-+                            logger.error("The toaster config file references"
-+                                         " the local git repo, but Toaster "
-+                                         "cannot detect it.\nYour local "
-+                                         "configuration for layer %s is "
-+                                         "invalid. Make sure that the "
-+                                         "toasterconf.json file is correct."
-+                                         % layerinfo['name'])
-+
-+                    if lo.vcs_url is None:
-+                        lo.vcs_url = layerinfo['vcs_url']
-+
-+                    if 'layer_index_url' in layerinfo:
-+                        lo.layer_index_url = layerinfo['layer_index_url']
-+                    lo.save()
-+
-+                    for release in layer_releases:
-+                        lvo, created = Layer_Version.objects.get_or_create(
-+                            layer_source=ls,
-+                            release=release,
-+                            commit=release.branch_name,
-+                            branch=release.branch_name,
-+                            layer=lo)
-+                        lvo.dirpath = layerinfo['dirpath']
-+                        lvo.save()
-+        # END temporary code
-+
-+
-         # set default release
-         if ToasterSetting.objects.filter(name = "DEFAULT_RELEASE").count() > 0:
-             ToasterSetting.objects.filter(name = "DEFAULT_RELEASE").update(value = data['defaultrelease'])
-@@ -95,6 +177,3 @@ class Command(BaseCommand):
-             raise CommandError("Need a path to the toasterconf.json file")
-         filepath = args[0]
-         self._import_layer_config(filepath)
--
--
--
+Using inline python to do something as simple as clearing a flag sounded too
+complicated to me so I added a new keyword "unset" to bitbake with the
+following syntax :
+
+unset VAR
+
+will call d.delVar("VAR")
+
+unset VAR[flag]
+
+will call d.delVarFlag("VAR","flag")
+
+Documentation has been updated accordingly
+
+
+Jérémy Rosen (1):
+  add a syntax to clear variable
+
+ .../bitbake-user-manual-metadata.xml               | 17 +++++++++++
+ bitbake/lib/bb/parse/ast.py                        | 33 ++++++++++++++++++++++
+ bitbake/lib/bb/parse/parse_py/ConfHandler.py       | 12 ++++++++
+ 3 files changed, 62 insertions(+)
+
 -- 
-2.7.4
+2.8.1
 
 
