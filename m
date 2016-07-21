@@ -1,39 +1,40 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from goldenrod.cherry.relay.mailchannels.net
-	(goldenrod.cherry.relay.mailchannels.net [23.83.223.74])
-	by mail.openembedded.org (Postfix) with ESMTP id E2FE9731C6
+Received: from gainsboro.cherry.relay.mailchannels.net
+	(gainsboro.cherry.relay.mailchannels.net [23.83.223.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 69AFE6FFFE
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jul 2016 13:44:33 +0000 (UTC)
+	Thu, 21 Jul 2016 13:44:36 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 1ACFD1BCBEA;
-	Thu, 21 Jul 2016 13:44:29 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id B998B1213D2;
+	Thu, 21 Jul 2016 13:44:32 +0000 (UTC)
 Received: from uscentral428.accountservergroup.com
-	(ip-10-107-69-155.us-west-2.compute.internal [10.107.69.155])
-	by relay.mailchannels.net (Postfix) with ESMTPA id 490E71BC844;
-	Thu, 21 Jul 2016 13:44:28 +0000 (UTC)
+	(ip-10-27-139-41.us-west-2.compute.internal [10.27.139.41])
+	by relay.mailchannels.net (Postfix) with ESMTPA id 2E8FD12179F;
+	Thu, 21 Jul 2016 13:44:32 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from uscentral428.accountservergroup.com ([TEMPUNAVAIL].
-	[10.135.9.54]) (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:44:29 +0000
-X-MC-Relay: Good
+Received: from uscentral428.accountservergroup.com
+	(uscentral428.accountservergroup.com [10.135.9.54])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:44:32 +0000
+X-MC-Relay: Neutral
 X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
 X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1469108668695:922830129
-X-MC-Ingress-Time: 1469108668695
+X-MC-Loop-Signature: 1469108672507:3232113918
+X-MC-Ingress-Time: 1469108672506
 Received: from [176.249.240.35] (port=56888 helo=localhost.localdomain)
 	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
 	(envelope-from <elliot.smith@intel.com>)
-	id 1bQEH3-0002ZY-EZ; Thu, 21 Jul 2016 09:44:25 -0400
+	id 1bQEH8-0002ZY-Oc; Thu, 21 Jul 2016 09:44:31 -0400
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Jul 2016 14:43:27 +0100
-Message-Id: <1469108612-12433-5-git-send-email-elliot.smith@intel.com>
+Date: Thu, 21 Jul 2016 14:43:32 +0100
+Message-Id: <1469108612-12433-10-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
 References: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
 X-AuthUser: elliot@townx.org
-Subject: [PATCH][v2 05/10] toaster: Replace references to LayerSource models
+Subject: [PATCH][v2 10/10] toaster: loadconf Partially add back some of the layerSource parsing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,287 +47,127 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2016 13:44:38 -0000
+X-List-Received-Date: Thu, 21 Jul 2016 13:44:40 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Replace references to the now deprecated layersource models across
-Toaster with the new enums for layer source types.
+Partially add back a revised version of the layersource handling so that
+we can continue to support the old toasterconf.json and it's setup of
+the local project.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/toaster/bldcontrol/tests.py            | 19 --------
- bitbake/lib/toaster/orm/models.py                  |  8 ++++
- .../tests/browser/test_layerdetails_page.py        |  3 --
- bitbake/lib/toaster/toastergui/api.py              |  6 +--
- .../toaster/toastergui/static/js/layerdetails.js   |  2 +-
- .../toaster/toastergui/templates/layerdetails.html | 16 +++----
- bitbake/lib/toaster/toastergui/views.py            | 56 +++++++++++++++-------
- 7 files changed, 57 insertions(+), 53 deletions(-)
+ .../bldcontrol/management/commands/loadconf.py     | 85 +++++++++++++++++++++-
+ 1 file changed, 82 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/toaster/bldcontrol/tests.py b/bitbake/lib/toaster/bldcontrol/tests.py
-index 32985c3..475ac0a 100644
---- a/bitbake/lib/toaster/bldcontrol/tests.py
-+++ b/bitbake/lib/toaster/bldcontrol/tests.py
-@@ -139,22 +139,3 @@ class RunBuildsCommandTests(TestCase):
-         self.assertTrue(br.state == BuildRequest.REQ_INPROGRESS, "Request is not updated")
-         # no more selections possible here
-         self.assertRaises(IndexError, command._selectBuildRequest)
--
--
--class UtilityTests(TestCase):
--    def test_reduce_path(self):
--        from bldcontrol.management.commands.loadconf import _reduce_canon_path, _get_id_for_sourcetype
--
--        self.assertTrue( _reduce_canon_path("/") == "/")
--        self.assertTrue( _reduce_canon_path("/home/..") == "/")
--        self.assertTrue( _reduce_canon_path("/home/../ana") == "/ana")
--        self.assertTrue( _reduce_canon_path("/home/../ana/..") == "/")
--        self.assertTrue( _reduce_canon_path("/home/ana/mihai/../maria") == "/home/ana/maria")
--
--    def test_get_id_for_sorucetype(self):
--        from bldcontrol.management.commands.loadconf import _reduce_canon_path, _get_id_for_sourcetype
--        self.assertTrue( _get_id_for_sourcetype("layerindex") == 1)
--        self.assertTrue( _get_id_for_sourcetype("local") == 0)
--        self.assertTrue( _get_id_for_sourcetype("imported") == 2)
--        with self.assertRaises(Exception):
--            _get_id_for_sourcetype("unknown")
-diff --git a/bitbake/lib/toaster/orm/models.py b/bitbake/lib/toaster/orm/models.py
-index 1daec9c..34ea28c 100644
---- a/bitbake/lib/toaster/orm/models.py
-+++ b/bitbake/lib/toaster/orm/models.py
-@@ -1287,6 +1287,14 @@ class LayerSource(object):
-         (TYPE_BUILD, "build"),
-     )
+diff --git a/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py b/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
+index 59324ac..4f8c9c6 100644
+--- a/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
++++ b/bitbake/lib/toaster/bldcontrol/management/commands/loadconf.py
+@@ -9,6 +9,20 @@ from .checksettings import DN
+ import logging
+ logger = logging.getLogger("toaster")
  
-+    def types_dict():
-+        """ Turn the TYPES enums into a simple dictionary """
-+        dictionary = {}
-+        for key in LayerSource.__dict__:
-+            if "TYPE" in key:
-+                dictionary[key] = getattr(LayerSource, key)
-+        return dictionary
++# Temporary old code to support old toasterconf.json
++def _reduce_canon_path(path):
++    components = []
++    for c in path.split("/"):
++        if c == "..":
++            del components[-1]
++        elif c == ".":
++            pass
++        else:
++            components.append(c)
++    if len(components) < 2:
++        components.append('')
++    return "/".join(components)
++# End temp code
+ 
+ class Command(BaseCommand):
+     help = "Loads a toasterconf.json file in the database"
+@@ -76,6 +90,74 @@ class Command(BaseCommand):
+                 # find layers with the same name
+                 ReleaseDefaultLayer.objects.get_or_create( release = ro, layer_name = dli)
+ 
++        # NOTE Temporary old code to handle old toasterconf.json. All this to
++        # be removed after rewrite of config loading mechanism
++        for lsi in data['layersources']:
++            assert 'sourcetype' in lsi
++            assert 'apiurl' in lsi
++            assert 'name' in lsi
++            assert 'branches' in lsi
 +
- 
- class Layer(models.Model):
- 
-diff --git a/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py b/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
-index fb1007f..71c5c12 100644
---- a/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
-+++ b/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
-@@ -49,9 +49,6 @@ class TestLayerDetailsPage(SeleniumTestCase):
-         # project to add new custom images to
-         self.project = Project.objects.create(name='foo', release=release)
- 
--        layer_source = LayerSource.objects.create(
--            sourcetype=LayerSource.TYPE_IMPORTED)
--
-         name = "meta-imported"
-         vcs_url = "git://example.com/meta-imported"
-         subdir = "/layer"
-diff --git a/bitbake/lib/toaster/toastergui/api.py b/bitbake/lib/toaster/toastergui/api.py
-index 112ce58..414afce 100644
---- a/bitbake/lib/toaster/toastergui/api.py
-+++ b/bitbake/lib/toaster/toastergui/api.py
-@@ -147,7 +147,7 @@ class XhrLayer(View):
-             layer_version = Layer_Version.objects.get(
-                 id=kwargs['layerversion_id'],
-                 project=kwargs['pid'],
--                layer_source__sourcetype=LayerSource.TYPE_IMPORTED)
-+                layer_source=LayerSource.TYPE_IMPORTED)
- 
-         except Layer_Version.DoesNotExist:
-             return error_response("Cannot find imported layer to update")
-@@ -159,8 +159,6 @@ class XhrLayer(View):
-         if "commit" in request.POST:
-             layer_version.commit = request.POST["commit"]
-             layer_version.branch = request.POST["commit"]
--        if "up_branch" in request.POST:
--            layer_version.up_branch_id = int(request.POST["up_branch"])
-         if "summary" in request.POST:
-             layer_version.layer.summary = request.POST["summary"]
-         if "description" in request.POST:
-@@ -193,7 +191,7 @@ class XhrLayer(View):
-             layer_version = Layer_Version.objects.get(
-                 id=kwargs['layerversion_id'],
-                 project=kwargs['pid'],
--                layer_source__sourcetype=LayerSource.TYPE_IMPORTED)
-+                layer_source=LayerSource.TYPE_IMPORTED)
-         except Layer_Version.DoesNotExist:
-             return error_response("Cannot find imported layer to delete")
- 
-diff --git a/bitbake/lib/toaster/toastergui/static/js/layerdetails.js b/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
-index 683486e..0d4240b 100644
---- a/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
-+++ b/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
-@@ -366,7 +366,7 @@ function layerDetailsPageInit (ctx) {
-     if ($(this).is("dt")) {
-       var dd = $(this).next("dd");
-       if (!dd.children("form:visible")|| !dd.find(".current-value").html()){
--        if (ctx.layerVersion.sourceId == 3){
-+        if (ctx.layerVersion.layer_source == ctx.layerSourceTypes.TYPE_IMPORTED){
-         /* There's no current value and the layer is editable
-          * so show the "Not set" and hide the delete icon
-          */
-diff --git a/bitbake/lib/toaster/toastergui/templates/layerdetails.html b/bitbake/lib/toaster/toastergui/templates/layerdetails.html
-index 4b51d1a..029c93b 100644
---- a/bitbake/lib/toaster/toastergui/templates/layerdetails.html
-+++ b/bitbake/lib/toaster/toastergui/templates/layerdetails.html
-@@ -36,7 +36,7 @@
-     </ul>
- 
-     {# If this is not an imported layer then hide the edit ui #}
--    {% if not layerversion.layer_source_id or layerversion.layer_source.sourcetype != layerversion.layer_source.TYPE_IMPORTED %}
-+    {% if layerversion.layer_source != layer_source.TYPE_IMPORTED %}
-     <style scoped>
-     .glyphicon-edit {
-       display:none;
-@@ -69,8 +69,9 @@
-           inCurrentPrj : false,
-           {% endif %}
-           layerdetailurl : "{% url 'layerdetails' project.id layerversion.id  %}",
--          sourceId: {{layerversion.layer_source_id|json}},
--        }
-+          layer_source: {{layerversion.layer_source|json}},
-+        },
-+        layerSourceTypes: {{layer_source|json}},
-       };
- 
-       try {
-@@ -89,7 +90,6 @@
-         {% endif %}>({{layerversion.get_vcs_reference|truncatechars:13}})</small>
-       </h1>
-     </div>
--
-     <div class="row">
-       <!-- container for tabs -->
-       <div class="col-md-8 tabbable">
-@@ -277,15 +277,15 @@
-             <span class="glyphicon glyphicon-edit"></span>
-             <span class="glyphicon glyphicon-trash delete-current-value" data-toggle="tooltip" title="Delete"></span>
-             </dd>
--            {% if layerversion.layer.up_id %}
-+            {% if layerversion.layer_source == layer_source.TYPE_LAYERINDEX  %}
-             <dt>Layer index</dt>
-             <dd>
--            <a href="http://layers.openembedded.org/layerindex/branch/{{layerversion.up_branch.name}}/layer/{{layerversion.layer.name}}">layer index link</a>
--
-+            <a href="http://layers.openembedded.org/layerindex/branch/{{layerversion.release.name}}/layer/{{layerversion.layer.name}}">Layer index {{layerversion.layer.name}}</a>
-             </dd>
-             {% endif %}
-           </dl>
--          {% if layerversion.layer_source_id and layerversion.layer_source.sourcetype == layerversion.layer_source.TYPE_IMPORTED %}
-+          {# Only show delete link for imported layers #}
-+          {% if layerversion.layer_source == layer_source.TYPE_IMPORTED %}
-           <i class="icon-trash text-danger"></i>
-           <a href="#delete-layer-modal"  role="button" class="text-danger" data-toggle="modal" data-target="#delete-layer-modal">Delete {{layerversion.layer.name}}</a>
-           {% endif %}
-diff --git a/bitbake/lib/toaster/toastergui/views.py b/bitbake/lib/toaster/toastergui/views.py
-index aab6536..d19815f 100755
---- a/bitbake/lib/toaster/toastergui/views.py
-+++ b/bitbake/lib/toaster/toastergui/views.py
-@@ -1452,9 +1452,8 @@ if True:
-         layers = [{"id": x.layercommit.pk, "orderid": x.pk, "name" : x.layercommit.layer.name,
-                    "vcs_url": x.layercommit.layer.vcs_url, "vcs_reference" : x.layercommit.get_vcs_reference(),
-                    "url": x.layercommit.layer.layer_index_url, "layerdetailurl": x.layercommit.get_detailspage_url(prj.pk),
--                   # This branch name is actually the release
-                    "branch" : {"name" : x.layercommit.get_vcs_reference(),
--                               "layersource" : x.layercommit.up_branch.layer_source.name if x.layercommit.up_branch != None else None}
-+                               "layersource" : x.layercommit.layer_source }
-                    } for x in prj.projectlayer_set.all().order_by("id")]
- 
-         context = {
-@@ -1670,10 +1669,7 @@ if True:
- 
-         # We need to know what release the current project is so that we
-         # can set the imported layer's up_branch_id
--        prj_branch_name = Release.objects.get(pk=prj.release_id).branch_name
--        up_branch, branch_created = Branch.objects.get_or_create(name=prj_branch_name, layer_source_id=LayerSource.TYPE_IMPORTED)
- 
--        layer_source = LayerSource.objects.get(sourcetype=LayerSource.TYPE_IMPORTED)
-         try:
-             layer, layer_created = Layer.objects.get_or_create(name=post_data['name'])
-         except MultipleObjectsReturned:
-@@ -1681,7 +1677,6 @@ if True:
- 
-         if layer:
-             if layer_created:
--                layer.layer_source = layer_source
-                 layer.vcs_url = post_data['vcs_url']
-                 layer.up_date = timezone.now()
-                 layer.save()
-@@ -1692,12 +1687,24 @@ if True:
-                 if layer.vcs_url != post_data['vcs_url']:
-                     return HttpResponse(jsonfilter({"error": "hint-layer-exists-with-different-url" , "current_url" : layer.vcs_url, "current_id": layer.id }), content_type = "application/json")
- 
--
--            layer_version, version_created = Layer_Version.objects.get_or_create(layer_source=layer_source, layer=layer, project=prj, up_branch_id=up_branch.id,branch=post_data['git_ref'],  commit=post_data['git_ref'], dirpath=post_data['dir_path'])
-+            layer_version, version_created = \
-+                Layer_Version.objects.get_or_create(
-+                        layer_source=LayerSource.TYPE_IMPORTED,
-+                        layer=layer, project=prj,
-+                        release=prj.release,
-+                        branch=post_data['git_ref'],
-+                        commit=post_data['git_ref'],
-+                        dirpath=post_data['dir_path'])
- 
-             if layer_version:
-                 if not version_created:
--                    return HttpResponse(jsonfilter({"error": "hint-layer-version-exists", "existing_layer_version": layer_version.id }), content_type = "application/json")
-+                    return HttpResponse(jsonfilter({"error":
-+                                                    "hint-layer-version-exists",
-+                                                    "existing_layer_version":
-+                                                    layer_version.id }),
-+                                        content_type = "application/json")
++            if "local" in lsi['sourcetype']:
++                ls = LayerSource.TYPE_LOCAL
++            else:
++                ls = LayerSource.TYPE_LAYERINDEX
 +
-+                layer_version.layer_source = LayerSource.TYPE_IMPORTED
- 
-                 layer_version.up_date = timezone.now()
-                 layer_version.save()
-@@ -2179,20 +2186,33 @@ if True:
-         }
-         return render(request, template, context)
- 
-+    # TODO merge with api pseudo api here is used for deps modal
-     @_template_renderer('layerdetails.html')
-     def layerdetails(request, pid, layerid):
-         project = Project.objects.get(pk=pid)
-         layer_version = Layer_Version.objects.get(pk=layerid)
- 
--        context = {'project' : project,
--            'layerversion' : layer_version,
--            'layerdeps' : {"list": [{"id": dep.id,
--                "name": dep.layer.name,
--                "layerdetailurl": reverse('layerdetails', args=(pid, dep.pk)),
--                "vcs_url": dep.layer.vcs_url,
--                "vcs_reference": dep.get_vcs_reference()} \
--                for dep in layer_version.get_alldeps(project.id)]},
--            'projectlayers': [player.layercommit.id for player in ProjectLayer.objects.filter(project=project)]
-+        project_layers = ProjectLayer.objects.filter(
-+            project=project).values_list("layercommit_id",
-+                                         flat=True)
++            layer_releases = []
++            for branchname in lsi['branches']:
++                try:
++                    release = Release.objects.get(branch_name=branchname)
++                    layer_releases.append(release)
++                except Release.DoesNotExist:
++                    logger.error("Layer set for %s but no release matches this"
++                                 "in the config" % branchname)
 +
-+        context = {
-+            'project': project,
-+            'layer_source': LayerSource.types_dict(),
-+            'layerversion': layer_version,
-+            'layerdeps': {
-+                "list": [
-+                    {
-+                        "id": dep.id,
-+                        "name": dep.layer.name,
-+                        "layerdetailurl": reverse('layerdetails',
-+                                                  args=(pid, dep.pk)),
-+                        "vcs_url": dep.layer.vcs_url,
-+                        "vcs_reference": dep.get_vcs_reference()
-+                    }
-+                    for dep in layer_version.get_alldeps(project.id)]
-+            },
-+            'projectlayers': list(project_layers)
-         }
- 
-         return context
++            apiurl = _reduce_canon_path(
++                os.path.join(DN(os.path.abspath(filepath)), lsi['apiurl']))
++
++            if 'layers' in lsi:
++                for layerinfo in lsi['layers']:
++                    lo, created = Layer.objects.get_or_create(
++                        name=layerinfo['name'],
++                        vcs_url=layerinfo['vcs_url'],
++                    )
++                    if layerinfo['local_path'].startswith("/"):
++                        lo.local_path = layerinfo['local_path']
++                    else:
++                        lo.local_path = _reduce_canon_path(
++                            os.path.join(apiurl, layerinfo['local_path']))
++
++                    if layerinfo['vcs_url'].startswith("remote:"):
++                        lo.vcs_url = _read_git_url_from_local_repository(
++                            layerinfo['vcs_url'])
++                        if lo.vcs_url is None:
++                            logger.error("The toaster config file references"
++                                         " the local git repo, but Toaster "
++                                         "cannot detect it.\nYour local "
++                                         "configuration for layer %s is "
++                                         "invalid. Make sure that the "
++                                         "toasterconf.json file is correct."
++                                         % layerinfo['name'])
++
++                    if lo.vcs_url is None:
++                        lo.vcs_url = layerinfo['vcs_url']
++
++                    if 'layer_index_url' in layerinfo:
++                        lo.layer_index_url = layerinfo['layer_index_url']
++                    lo.save()
++
++                    for release in layer_releases:
++                        lvo, created = Layer_Version.objects.get_or_create(
++                            layer_source=ls,
++                            release=release,
++                            commit=release.branch_name,
++                            branch=release.branch_name,
++                            layer=lo)
++                        lvo.dirpath = layerinfo['dirpath']
++                        lvo.save()
++        # END temporary code
++
++
+         # set default release
+         if ToasterSetting.objects.filter(name = "DEFAULT_RELEASE").count() > 0:
+             ToasterSetting.objects.filter(name = "DEFAULT_RELEASE").update(value = data['defaultrelease'])
+@@ -95,6 +177,3 @@ class Command(BaseCommand):
+             raise CommandError("Need a path to the toasterconf.json file")
+         filepath = args[0]
+         self._import_layer_config(filepath)
+-
+-
+-
 -- 
 2.7.4
 
