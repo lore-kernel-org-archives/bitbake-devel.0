@@ -1,40 +1,40 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from gainsboro.cherry.relay.mailchannels.net
-	(gainsboro.cherry.relay.mailchannels.net [23.83.223.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 74FFD731C6
+Received: from bongo.birch.relay.mailchannels.net
+	(bongo.birch.relay.mailchannels.net [23.83.209.21])
+	by mail.openembedded.org (Postfix) with ESMTP id F24486FFFE
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jul 2016 13:39:38 +0000 (UTC)
+	Thu, 21 Jul 2016 13:44:24 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 0267B10081E;
-	Thu, 21 Jul 2016 13:39:32 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id 5325D200B5;
+	Thu, 21 Jul 2016 13:44:25 +0000 (UTC)
 Received: from uscentral428.accountservergroup.com
-	(ip-10-229-10-199.us-west-2.compute.internal [10.229.10.199])
-	by relay.mailchannels.net (Postfix) with ESMTPA id 387E6100BC7;
-	Thu, 21 Jul 2016 13:39:31 +0000 (UTC)
+	(ip-10-107-69-155.us-west-2.compute.internal [10.107.69.155])
+	by relay.mailchannels.net (Postfix) with ESMTPA id 9D68521999;
+	Thu, 21 Jul 2016 13:44:24 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.92.147.53])
+	(uscentral428.accountservergroup.com [10.135.9.54])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:39:31 +0000
+	by 0.0.0.0:2500 (trex/5.7.1); Thu, 21 Jul 2016 13:44:25 +0000
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
 X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1469108371653:2361538465
-X-MC-Ingress-Time: 1469108371653
-Received: from [176.249.240.35] (port=56876 helo=localhost.localdomain)
+X-MC-Loop-Signature: 1469108665144:1861244801
+X-MC-Ingress-Time: 1469108665143
+Received: from [176.249.240.35] (port=56888 helo=localhost.localdomain)
 	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
 	(envelope-from <elliot.smith@intel.com>)
-	id 1bQECH-00012R-QE; Thu, 21 Jul 2016 09:39:30 -0400
+	id 1bQEH1-0002ZY-32; Thu, 21 Jul 2016 09:44:23 -0400
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Jul 2016 14:39:05 +0100
-Message-Id: <1469108352-12098-3-git-send-email-elliot.smith@intel.com>
+Date: Thu, 21 Jul 2016 14:43:25 +0100
+Message-Id: <1469108612-12433-3-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1469108352-12098-1-git-send-email-elliot.smith@intel.com>
-References: <1469108352-12098-1-git-send-email-elliot.smith@intel.com>
+In-Reply-To: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
+References: <1469108612-12433-1-git-send-email-elliot.smith@intel.com>
 X-AuthUser: elliot@townx.org
-Subject: [PATCH 03/10] toaster: models Remove LayerSource models and replace with enum
+Subject: [PATCH][v2 03/10] toaster: models Remove LayerSource models and replace with enum
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,7 +47,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2016 13:39:43 -0000
+X-List-Received-Date: Thu, 21 Jul 2016 13:44:25 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
@@ -70,6 +70,7 @@ Clean up a number of flake8 warnings in classes which were modified.
 [YOCTO #9853]
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
  .../0010_delete_layer_source_references.py         | 118 +++++
  .../orm/migrations/0011_delete_layersource.py      |  17 +
