@@ -1,69 +1,29 @@
-Return-Path: <zhenhua.luo@nxp.com>
-X-Greylist: delayed 64599 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 21 Jul 2016 22:30:52 UTC
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-	(mail-db5eur01on0066.outbound.protection.outlook.com [104.47.2.66])
-	by mail.openembedded.org (Postfix) with ESMTP id CF5AD605BA
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 2C4E7606BF
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jul 2016 22:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1; 
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
-	bh=EjCIpxlaUpGnwXSAXtqOd5QSw4THZwod/atxyyaTKsw=;
-	b=f794jO3A8OUHMJAp8alZbsEdMTma+Q46gB70KdTk0o8Vn8hjbLSpPwRihxaaO82kcPTTPVssaDC/u89gqCQ4kcTei8TUwgdqb1SR1HIqkFfUfoHB6Q3SsBqkMMG1WnJED2taaqpKaEC+rsbZ5/RukiBBh1nzenS+/Omspsh4pz4=
-Received: from DB6PR0401MB2630.eurprd04.prod.outlook.com (10.169.225.139) by
-	DB6PR0401MB2630.eurprd04.prod.outlook.com (10.169.225.139) with
-	Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.549.5;
-	Thu, 21 Jul 2016 04:00:17 +0000
-Received: from DB6PR0401MB2630.eurprd04.prod.outlook.com ([10.169.225.139]) by
-	DB6PR0401MB2630.eurprd04.prod.outlook.com ([10.169.225.139]) with
-	mapi id 15.01.0549.003; Thu, 21 Jul 2016 04:00:17 +0000
-From: Zhenhua Luo <zhenhua.luo@nxp.com>
-To: nousi <bnousilal@gmail.com>
-Thread-Topic: [bitbake-devel] source modification and re-build
-Thread-Index: AQHR4mrPhmZYJ/+DWkqNWd1qXVpIlKAiQtIQ
-Date: Thu, 21 Jul 2016 04:00:17 +0000
-Message-ID: <DB6PR0401MB2630808F7A718CC38A2291ADEE090@DB6PR0401MB2630.eurprd04.prod.outlook.com>
-References: <CAJ5vXcR+QuZ3KTBgY5TFHfetTzLvvC6moYdDDa4fRV385tKwsA@mail.gmail.com>
-In-Reply-To: <CAJ5vXcR+QuZ3KTBgY5TFHfetTzLvvC6moYdDDa4fRV385tKwsA@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=zhenhua.luo@nxp.com; 
-x-originating-ip: [192.158.241.86]
-x-ms-office365-filtering-correlation-id: 6bf5ed84-7864-45a4-0f64-08d3b11b86f3
-x-microsoft-exchange-diagnostics: 1; DB6PR0401MB2630;
-	6:y6sqXst9tsljr/pAJHQAvO07UFyrJLzXwqQslk839GN+cy+Mgi+v/oS0JiCM513EAlMTN5w75Kp4tfCcoUCuB0eS8jhqFhn1JKKb+mU8rfBjy8O0jeviK2HC5Vwzom9ztTS6qFRVbExQDX9JLd8IWKAPyBLn0n8cxXuR3O2fjEjGFf5hTwvmbya8J8XstRktMGQXDdkVukw+PYwmhCo57xAzzmnqQ1bWD5HPXApNNl3/LcxHq4Js1A2sLMzi02QHVzqkWlA2wr1GoT4M5CtmB0CxjIUYMfgT49t/4fe622YO0sV+o5hks5J2U7QfwtUIXs9qU4shwBfD96PtFplfqg==;
-	5:MqxRR8zcRUOvgjRVOqyQoUCTO0kRybepScHqaHbURlNzuBOm3wsWW8Xi92I3aJVFCu9hTnrEAnPj6vi1dTJ6O2rb1F7gQ5tQRWAiw7+p1msQGZl7pCWxW+sT8UN3vdfrVsWqe+c+HZdCIelTuZZwaQ==;
-	24:sDhe5FfQmPE0FSv+NreV7B6RmoDb/da1sobVhrGMYseA/dlpobMkHEQNVQFSx5qAnJKQ31POdQj50vv3P+YaSCqdh/AbLsZpFQ60mZB7eeo=;
-	7:dBZXfevaGVBbSkZm07lVHLrVmGkm/gMxiPv2T2ageywa6pBUJQsoZcmGqatnYZpAnHsnjrRDm/rjTE/6kla4z4ReJoOT3eImWP30QwFbn6NjsonwWNduXeWX384Iyclj9EkZ07j/7GkAKPg890LxJ6jZh9i46WgPRbf/ZYterCo0ynO34GTeJ7CZF0XLj/yoBLsSAFUqbIMFEB9pCde1/WyVAOdrQZkIRRC4loQ8L+f4xagS4E19442jbhxD0EJ3
-x-microsoft-antispam: UriScan:;BCL:0;PCL:0;RULEID:;SRVR:DB6PR0401MB2630;
-x-microsoft-antispam-prvs: <DB6PR0401MB263079A50DEEF94E2DA67C7DEE090@DB6PR0401MB2630.eurprd04.prod.outlook.com>
-x-exchange-antispam-report-test: UriScan:(264703809997249)(21748063052155);
-x-exchange-antispam-report-cfa-test: BCL:0; PCL:0;
-	RULEID:(601004)(2401047)(5005006)(8121501046)(10201501046)(3002001)(6055026);
-	SRVR:DB6PR0401MB2630; BCL:0; PCL:0; RULEID:;
-	SRVR:DB6PR0401MB2630; 
-x-forefront-prvs: 0010D93EFE
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(6009001)(7916002)(189002)(199003)(377454003)(53754006)(110136002)(5002640100001)(86362001)(4326007)(11100500001)(3280700002)(101416001)(5003600100003)(7696003)(76176999)(50986999)(9686002)(7736002)(189998001)(81166006)(81156014)(19580405001)(19580395003)(105586002)(3660700001)(74316002)(2906002)(122556002)(19300405004)(76576001)(6116002)(790700001)(3846002)(15975445007)(77096005)(2950100001)(97736004)(2900100001)(7846002)(16236675004)(106116001)(10400500002)(102836003)(106356001)(33656002)(8936002)(87936001)(9326002)(586003)(54356999)(92566002)(1411001)(8676002)(68736007)(19625215002)(66066001);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:DB6PR0401MB2630;
-	H:DB6PR0401MB2630.eurprd04.prod.outlook.com; FPR:; SPF:None;
-	PTR:InfoNoRecords; MX:1; A:1; LANG:en; 
-received-spf: None (protection.outlook.com: nxp.com does not designate
-	permitted sender hosts)
-spamdiagnosticoutput: 1:99
-spamdiagnosticmetadata: NSPM
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2016 04:00:17.4110 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2630
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: source modification and re-build
+	Fri, 22 Jul 2016 10:27:26 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u6MARQlG031525 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 22 Jul 2016 11:27:26 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id Dw6gjn5XEadA for <bitbake-devel@lists.openembedded.org>;
+	Fri, 22 Jul 2016 11:27:26 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u6MARLQU031522
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 22 Jul 2016 11:27:22 +0100
+Message-ID: <1469183241.23580.47.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 22 Jul 2016 11:27:21 +0100
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: [PATCH] cache: Improve versions fields handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -76,137 +36,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2016 22:30:54 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_DB6PR0401MB2630808F7A718CC38A2291ADEE090DB6PR0401MB2630_"
+X-List-Received-Date: Fri, 22 Jul 2016 10:27:28 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---_000_DB6PR0401MB2630808F7A718CC38A2291ADEE090DB6PR0401MB2630_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Firstly, don't store the versions fields in memory in the cache objects
+data store. This just complicates the code for no good reason.
 
-SGkgTm91c2lsYWwsDQoNCuKAnGJpdGJha2UgLWMgbWVudWNvbmZpZyBub3VzaS1saW51eOKAnSBp
-cyB1c2VkIGZvciBjaGFuZ2luZyB0aGUga2VybmVsIGNvbmZpZ3MgaW5zdGVhZCBvZiBtb2RpZnlp
-bmcgc291cmNlIGNvZGUsIHlvdSBjYW4gcnVuIOKAnGJpdGJha2UgLUMgY29tcGlsZSAtZiBub3Vz
-aS1saW51eCDigJ0gdG8gZm9yY2UgcmVidWlsZCB3aXRoIHVwZGF0ZWQga2VybmVsIGNvbmZpZ3Mu
-DQoNClRvIG1vZGlmeSB0aGUgc291cmNlIGNvZGUsIHlvdSBjYW4gZG8gaXQgaW4gdG1wL3dvcmst
-c2hhcmVkLzxtYWNoaW5lPi9rZXJuZWwtc291cmNlLywgdGhlbiBydW4g4oCcYml0YmFrZSAtQyBj
-b21waWxlIOKAk2Ygbm91c2ktbGludXjigJ0gdG8gcmVidWlsZCBuZXcga2VybmVsIGltYWdlLg0K
-DQoNCkJlc3QgUmVnYXJkcywNCg0KWmhlbmh1YQ0KDQpGcm9tOiBiaXRiYWtlLWRldmVsLWJvdW5j
-ZXNAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyBbbWFpbHRvOmJpdGJha2UtZGV2ZWwtYm91bmNlc0Bs
-aXN0cy5vcGVuZW1iZWRkZWQub3JnXSBPbiBCZWhhbGYgT2Ygbm91c2kNClNlbnQ6IFdlZG5lc2Rh
-eSwgSnVseSAyMCwgMjAxNiAyOjE4IFBNDQpUbzogYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1i
-ZWRkZWQub3JnDQpTdWJqZWN0OiBbYml0YmFrZS1kZXZlbF0gc291cmNlIG1vZGlmaWNhdGlvbiBh
-bmQgcmUtYnVpbGQNCg0KSGkgQWxsLA0KDQpBbSBuZXcgdG8geW9jdG8gZW52aXJvbm1lbnQsIHBs
-ZWFzZSBsZXQgbWUga25vdyB0aGUgcHJvY2VzcyB0byBjaGFuZ2Uga2VybmVsIHNvdXJjZSB1c2lu
-ZyAiYml0YmFrZSBub3VzaS1saW51eCAtYyBtZW51Y29uZmlnIi4NCg0KSSBjYW4gYWJsZSB0byBt
-YWtlIGNoYW5nZXMgdXNpbmcgImJpdGJha2Ugbm91c2ktbGludXggLWMgbWVudWNvbmZpZyIgdGhp
-cyBjb21tYW5kIGJ1dCBteSBjaGFuZ2VzIHdlcmUgbm90IGluY2x1ZGVkIGluIHRoZSBuZXcgcmUt
-YnVpbHQgaW1hZ2UuDQpBbSB1c2luZyB0aGUgZGV2ZWxvcG1lbnQgbGludXggc291cmNlIGNvZGUu
-DQpBbnkgaGVscCBpcyBhcHByZWNpYXRlZC4NCg0KLS0NClRoYW5rcyAmIFJlZ2FyZHMsDQpCLk5v
-dXNpbGFsLA0K
+Secondly, write the version fields to all cache files, not just the
+core one. This makes everything consistent and easier.
 
---_000_DB6PR0401MB2630808F7A718CC38A2291ADEE090DB6PR0401MB2630_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-5a6L5L2TOw0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KQGZvbnQtZmFjZQ0KCXtm
-b250LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMgMiA0
-O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToyIDE1IDUg
-MiAyIDIgNCAzIDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OiJcQOWui+S9kyI7DQoJ
-cGFub3NlLTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9DQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLw0K
-cC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbA0KCXttYXJnaW46MGluOw0K
-CW1hcmdpbi1ib3R0b206LjAwMDFwdDsNCglmb250LXNpemU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5
-OiJUaW1lcyBOZXcgUm9tYW4iLHNlcmlmO30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsNCgl7
-bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOiMwNTYzQzE7DQoJdGV4dC1kZWNvcmF0aW9u
-OnVuZGVybGluZTt9DQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQNCgl7bXNv
-LXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOiM5NTRGNzI7DQoJdGV4dC1kZWNvcmF0aW9uOnVu
-ZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUxNw0KCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1y
-ZXBseTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsNCgljb2xvcjojMUY0OTdE
-O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5Ow0KCWZvbnQt
-ZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXpl
-OjguNWluIDExLjBpbjsNCgltYXJnaW46MS4waW4gMS4yNWluIDEuMGluIDEuMjVpbjt9DQpkaXYu
-V29yZFNlY3Rpb24xDQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBn
-dGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIx
-MDI2IiAvPg0KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpz
-aGFwZWxheW91dCB2OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIg
-Lz4NCjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxh
-bmc9IkVOLVVTIiBsaW5rPSIjMDU2M0MxIiB2bGluaz0iIzk1NEY3MiI+DQo8ZGl2IGNsYXNzPSJX
-b3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9y
-OiMxRjQ5N0QiPkhpIE5vdXNpbGFsLA0KPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1
-b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9v
-OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNp
-emU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xv
-cjojMUY0OTdEIj7igJxiaXRiYWtlIC1jIG1lbnVjb25maWcgbm91c2ktbGludXjigJ0gaXMgdXNl
-ZCBmb3IgY2hhbmdpbmcgdGhlIGtlcm5lbCBjb25maWdzIGluc3RlYWQgb2YgbW9kaWZ5aW5nIHNv
-dXJjZSBjb2RlLCB5b3UgY2FuIHJ1biDigJxiaXRiYWtlIC1DIGNvbXBpbGUgLWYgbm91c2ktbGlu
-dXgg4oCdDQogdG8gZm9yY2UgcmVidWlsZCB3aXRoIHVwZGF0ZWQga2VybmVsIGNvbmZpZ3MuIDxv
-OnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
-b250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJp
-Zjtjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVv
-dDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+VG8gbW9kaWZ5IHRoZSBz
-b3VyY2UgY29kZSwgeW91IGNhbiBkbyBpdCBpbiB0bXAvd29yay1zaGFyZWQvJmx0O21hY2hpbmUm
-Z3Q7L2tlcm5lbC1zb3VyY2UvLCB0aGVuIHJ1biDigJxiaXRiYWtlIC1DIGNvbXBpbGUg4oCTZiBu
-b3VzaS1saW51eOKAnSB0byByZWJ1aWxkIG5ldyBrZXJuZWwgaW1hZ2UuDQo8bzpwPjwvbzpwPjwv
-c3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEx
-LjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFG
-NDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
-dW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwv
-cD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2Zv
-bnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj5C
-ZXN0IFJlZ2FyZHMsPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
-dW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwv
-cD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2Zv
-bnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj5a
-aGVuaHVhPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
-c3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90Oyxz
-YW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxk
-aXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkIGJsdWUgMS41cHQ7cGFkZGlu
-ZzowaW4gMGluIDBpbiA0LjBwdCI+DQo8ZGl2Pg0KPGRpdiBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9y
-ZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEuMHB0O3BhZGRpbmc6My4wcHQgMGluIDBpbiAwaW4iPg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5Gcm9tOjwvc3Bhbj48L2I+
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
-dW90OyxzYW5zLXNlcmlmIj4gYml0YmFrZS1kZXZlbC1ib3VuY2VzQGxpc3RzLm9wZW5lbWJlZGRl
-ZC5vcmcgW21haWx0bzpiaXRiYWtlLWRldmVsLWJvdW5jZXNAbGlzdHMub3BlbmVtYmVkZGVkLm9y
-Z10NCjxiPk9uIEJlaGFsZiBPZiA8L2I+bm91c2k8YnI+DQo8Yj5TZW50OjwvYj4gV2VkbmVzZGF5
-LCBKdWx5IDIwLCAyMDE2IDI6MTggUE08YnI+DQo8Yj5Ubzo8L2I+IGJpdGJha2UtZGV2ZWxAbGlz
-dHMub3BlbmVtYmVkZGVkLm9yZzxicj4NCjxiPlN1YmplY3Q6PC9iPiBbYml0YmFrZS1kZXZlbF0g
-c291cmNlIG1vZGlmaWNhdGlvbiBhbmQgcmUtYnVpbGQ8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8
-L2Rpdj4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+
-DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGkgQWxsLDxvOnA+PC9vOnA+PC9wPg0KPGRp
-dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8
-ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QW0gbmV3IHRvJm5ic3A7eW9jdG8gZW52aXJvbm1l
-bnQsIHBsZWFzZSBsZXQgbWUga25vdyB0aGUgcHJvY2VzcyB0byBjaGFuZ2Uga2VybmVsIHNvdXJj
-ZSB1c2luZyAmcXVvdDtiaXRiYWtlIG5vdXNpLWxpbnV4IC1jIG1lbnVjb25maWcmcXVvdDsuPG86
-cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZu
-YnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgY2Fu
-IGFibGUgdG8gbWFrZSBjaGFuZ2VzIHVzaW5nJm5ic3A7JnF1b3Q7Yml0YmFrZSZuYnNwO25vdXNp
-LWxpbnV4Jm5ic3A7LWMgbWVudWNvbmZpZyZxdW90OyB0aGlzIGNvbW1hbmQgYnV0IG15IGNoYW5n
-ZXMgd2VyZSBub3QgaW5jbHVkZWQgaW4gdGhlIG5ldyByZS1idWlsdCBpbWFnZS48bzpwPjwvbzpw
-PjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkFtIHVzaW5nIHRoZSZu
-YnNwO2RldmVsb3BtZW50IGxpbnV4IHNvdXJjZSBjb2RlLjxiciBjbGVhcj0iYWxsIj4NCjxvOnA+
-PC9vOnA+PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkFueSBoZWxwIGlzIGFwcHJl
-Y2lhdGVkLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPi0t
-IDxvOnA+PC9vOnA+PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJn
-aW4tYm90dG9tOjEyLjBwdCI+PGk+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1m
-YW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMzMzM0ZGIj5UaGFua3Mg
-JmFtcDsgUmVnYXJkcyw8YnI+DQpCLk5vdXNpbGFsLDwvc3Bhbj48L2k+PG86cD48L286cD48L3A+
-DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1s
-Pg0K
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index b90d488..d0fb234 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -290,25 +290,6 @@ class Cache(object):
+             logger.info("Out of date cache found, rebuilding...")
+ 
+     def load_cachefile(self):
+-        # Firstly, using core cache file information for
+-        # valid checking
+-        with open(self.cachefile, "rb") as cachefile:
+-            pickled = pickle.Unpickler(cachefile)
+-            try:
+-                cache_ver = pickled.load()
+-                bitbake_ver = pickled.load()
+-            except Exception:
+-                logger.info('Invalid cache, rebuilding...')
+-                return
+-
+-            if cache_ver != __cache_version__:
+-                logger.info('Cache version mismatch, rebuilding...')
+-                return
+-            elif bitbake_ver != bb.__version__:
+-                logger.info('Bitbake version mismatch, rebuilding...')
+-                return
+-
+-
+         cachesize = 0
+         previous_progress = 0
+         previous_percent = 0
+@@ -326,7 +307,24 @@ class Cache(object):
+             if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
+                 cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
+                 with open(cachefile, "rb") as cachefile:
+-                    pickled = pickle.Unpickler(cachefile)                    
++                    pickled = pickle.Unpickler(cachefile)
++                    # Check cache version information
++                    try:
++                        cache_ver = pickled.load()
++                        bitbake_ver = pickled.load()
++                    except Exception:
++                        logger.info('Invalid cache, rebuilding...')
++                        return
++
++                    if cache_ver != __cache_version__:
++                        logger.info('Cache version mismatch, rebuilding...')
++                        return
++                    elif bitbake_ver != bb.__version__:
++                         logger.info('Bitbake version mismatch, rebuilding...')
++                         return
++
++                    # Load the rest of the cache file
++                    current_progress = 0
+                     while cachefile:
+                         try:
+                             key = pickled.load()
+@@ -608,9 +606,8 @@ class Cache(object):
+                 cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
+                 file_dict[cache_class_name] = open(cachefile, "wb")
+                 pickler_dict[cache_class_name] =  pickle.Pickler(file_dict[cache_class_name], pickle.HIGHEST_PROTOCOL)
+-                   
+-        pickler_dict['CoreRecipeInfo'].dump(__cache_version__)
+-        pickler_dict['CoreRecipeInfo'].dump(bb.__version__)
++                pickler_dict[cache_class_name].dump(__cache_version__)
++                pickler_dict[cache_class_name].dump(bb.__version__)
+ 
+         try:
+             for key, info_array in self.depends_cache.items():
 
---_000_DB6PR0401MB2630808F7A718CC38A2291ADEE090DB6PR0401MB2630_--
+
+
