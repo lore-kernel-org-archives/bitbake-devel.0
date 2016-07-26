@@ -1,26 +1,30 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id C9B3A606BF
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 1249F606BF
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 26 Jul 2016 05:44:15 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u6Q5iEmq027654
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 25 Jul 2016 22:44:14 -0700 (PDT)
-Received: from [128.224.162.240] (128.224.162.240) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.248.2;
-	Mon, 25 Jul 2016 22:44:13 -0700
-To: Ross Burton <ross.burton@intel.com>, <bitbake-devel@lists.openembedded.org>
-References: <1469485946-6370-1-git-send-email-ross.burton@intel.com>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <5796F8AC.9050309@windriver.com>
-Date: Tue, 26 Jul 2016 13:44:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-	Thunderbird/38.8.0
-MIME-Version: 1.0
-In-Reply-To: <1469485946-6370-1-git-send-email-ross.burton@intel.com>
-Subject: Re: [PATCH] lib/bb/build: handle incomplete message fragments in log FIFO
+	Tue, 26 Jul 2016 07:08:47 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u6Q78iXl029969; Tue, 26 Jul 2016 08:08:44 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id EgwAmAeWC8Kg; Tue, 26 Jul 2016 08:08:44 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u6Q78g4t029965
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 26 Jul 2016 08:08:43 +0100
+Message-ID: <1469516922.23580.92.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 26 Jul 2016 08:08:42 +0100
+In-Reply-To: <c6d59200973e19d358a2fa1a1e5bec4523894e69.1469504165.git.paul.eggleton@linux.intel.com>
+References: <cover.1469504165.git.paul.eggleton@linux.intel.com>
+	<c6d59200973e19d358a2fa1a1e5bec4523894e69.1469504165.git.paul.eggleton@linux.intel.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH 1/1] lib/bb/checksum: avoid exception on broken symlinks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,111 +37,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 26 Jul 2016 05:44:15 -0000
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+X-List-Received-Date: Tue, 26 Jul 2016 07:08:49 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
+On Tue, 2016-07-26 at 15:36 +1200, Paul Eggleton wrote:
+> If using OE's externalsrc with a source tree that is not tracked by
+> git
+> and contains broken symlinks, you can receive "TypeError: unorderable
+> types: NoneType() < str()" within the file checksum code due to:
+> 
+>  checksums.sort(key=operator.itemgetter(1))
+> 
+> Don't add files with no checksum to the checksums list in order to
+> avoid
+> this.
 
-I tested this patch, didn't see the "Unrecognised command" any more.
+In some of the cache code we have to note whether files were checked
+for but didn't exist. This means that if they then do exist in a later
+run, we know to invalidate the cache.
 
-// Robert
+Does this change break that?
 
-On 07/26/2016 06:32 AM, Ross Burton wrote:
-> It's possible that the logging FIFO doesn't do a complete read (or the sender a
-> complete write) with the result that an incomplete message is read in bitbake.
-> This used to result in silently truncated lines but since 42d727 now also
-> results in a warning as the start of the rest of the message isn't a valid
-> logging command.
->
-> Solve this by storing incoming bytes in a bytearray() across reads, and parsing
-> complete messages from that.
->
-> [ YOCTO #9999 ]
->
-> Signed-off-by: Ross Burton <ross.burton@intel.com>
+Cheers,
+
+Richard
+
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 > ---
->   bitbake/lib/bb/build.py | 67 ++++++++++++++++++++++++++-----------------------
->   1 file changed, 36 insertions(+), 31 deletions(-)
->
-> diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-> index a4deb00..c632a27 100644
-> --- a/bitbake/lib/bb/build.py
-> +++ b/bitbake/lib/bb/build.py
-> @@ -385,39 +385,44 @@ exit $ret
->           else:
->               bb.warn('%s: invalid task progress varflag value "%s", ignoring' % (func, progress))
->
-> +    fifobuffer = bytearray()
->       def readfifo(data):
-> -        lines = data.split(b'\0')
-> -        for line in lines:
-> -            # Just skip empty commands
-> -            if not line:
-> -                continue
-> -            splitval = line.split(b' ', 1)
-> -            cmd = splitval[0].decode("utf-8")
-> -            if len(splitval) > 1:
-> -                value = splitval[1].decode("utf-8")
-> -            else:
-> -                value = ''
-> -            if cmd == 'bbplain':
-> -                bb.plain(value)
-> -            elif cmd == 'bbnote':
-> -                bb.note(value)
-> -            elif cmd == 'bbwarn':
-> -                bb.warn(value)
-> -            elif cmd == 'bberror':
-> -                bb.error(value)
-> -            elif cmd == 'bbfatal':
-> -                # The caller will call exit themselves, so bb.error() is
-> -                # what we want here rather than bb.fatal()
-> -                bb.error(value)
-> -            elif cmd == 'bbfatal_log':
-> -                bb.error(value, forcelog=True)
-> -            elif cmd == 'bbdebug':
-> -                splitval = value.split(' ', 1)
-> -                level = int(splitval[0])
-> -                value = splitval[1]
-> -                bb.debug(level, value)
-> +        nonlocal fifobuffer
-> +        fifobuffer.extend(data)
-> +        while fifobuffer:
-> +            message, token, nextmsg = fifobuffer.partition(b"\00")
-> +            if token:
-> +                splitval = message.split(b' ', 1)
-> +                cmd = splitval[0].decode("utf-8")
-> +                if len(splitval) > 1:
-> +                    value = splitval[1].decode("utf-8")
-> +                else:
-> +                    value = ''
-> +                if cmd == 'bbplain':
-> +                    bb.plain(value)
-> +                elif cmd == 'bbnote':
-> +                    bb.note(value)
-> +                elif cmd == 'bbwarn':
-> +                    bb.warn(value)
-> +                elif cmd == 'bberror':
-> +                    bb.error(value)
-> +                elif cmd == 'bbfatal':
-> +                    # The caller will call exit themselves, so bb.error() is
-> +                    # what we want here rather than bb.fatal()
-> +                    bb.error(value)
-> +                elif cmd == 'bbfatal_log':
-> +                    bb.error(value, forcelog=True)
-> +                elif cmd == 'bbdebug':
-> +                    splitval = value.split(' ', 1)
-> +                    level = int(splitval[0])
-> +                    value = splitval[1]
-> +                    bb.debug(level, value)
-> +                else:
-> +                    bb.warn("Unrecognised command '%s' on FIFO" % cmd)
-> +                fifobuffer = nextmsg
->               else:
-> -                bb.warn("Unrecognised command '%s' on FIFO" % cmd)
-> +                break
-> +
->       tempdir = d.getVar('T', True)
->       fifopath = os.path.join(tempdir, 'fifo.%s' % os.getpid())
->       if os.path.exists(fifopath):
->
+>  lib/bb/checksum.py | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
+> index be4ab68..8428920 100644
+> --- a/lib/bb/checksum.py
+> +++ b/lib/bb/checksum.py
+> @@ -120,13 +120,15 @@ class FileChecksumCache(MultiProcessCache):
+>                              checksums.extend(checksum_dir(f))
+>                      else:
+>                          checksum = checksum_file(f)
+> -                        checksums.append((f, checksum))
+> +                        if checksum:
+> +                            checksums.append((f, checksum))
+>              elif os.path.isdir(pth):
+>                  if not os.path.islink(pth):
+>                      checksums.extend(checksum_dir(pth))
+>              else:
+>                  checksum = checksum_file(pth)
+> -                checksums.append((pth, checksum))
+> +                if checksum:
+> +                    checksums.append((pth, checksum))
+>  
+>          checksums.sort(key=operator.itemgetter(1))
+>          return checksums
+> -- 
+> 2.5.5
+> 
 
