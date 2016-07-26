@@ -1,30 +1,46 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 1249F606BF
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f44.google.com (mail-wm0-f44.google.com [74.125.82.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 58774606BF
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 26 Jul 2016 07:08:47 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u6Q78iXl029969; Tue, 26 Jul 2016 08:08:44 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id EgwAmAeWC8Kg; Tue, 26 Jul 2016 08:08:44 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u6Q78g4t029965
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 26 Jul 2016 08:08:43 +0100
-Message-ID: <1469516922.23580.92.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 26 Jul 2016 08:08:42 +0100
-In-Reply-To: <c6d59200973e19d358a2fa1a1e5bec4523894e69.1469504165.git.paul.eggleton@linux.intel.com>
-References: <cover.1469504165.git.paul.eggleton@linux.intel.com>
-	<c6d59200973e19d358a2fa1a1e5bec4523894e69.1469504165.git.paul.eggleton@linux.intel.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: [PATCH 1/1] lib/bb/checksum: avoid exception on broken symlinks
+	Tue, 26 Jul 2016 14:15:07 +0000 (UTC)
+Received: by mail-wm0-f44.google.com with SMTP id q128so175291007wma.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 26 Jul 2016 07:15:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=mDEZ7z4Td6/CVr/7vnK3gTkIs23N20+Yg8vhsKLwEuk=;
+	b=tA+exb9VbdLpYFOcWOZDefe7FhKRh6m565162yBULJ6iiugGvMdSzdLJELog5lEa21
+	wAbVCu1OjNGhyh9m6ANuyMjzXErLcGqaPgNtmEEFqDmYJvEKOfsFM9KhJy7rkuUCbf2B
+	TxAwwpExT3uRko1u5ASItjNafU/2c0LAC5mGBK1h6fdTvfWyi/cw56kPUKEBLX0kemFe
+	NqUiodJQTkSCRKGH/SJ16eh/Jw7SWYqYoDPNxr2sUWdAPEljm+1vCYBwc6YJxb4bUIGg
+	HbXz1xl+LXbnlp66iF943u7B5iff6Bkjt3fOpBabM4f/kSB6RFyOt4hbU7XNd9SbTFcV
+	LOXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=mDEZ7z4Td6/CVr/7vnK3gTkIs23N20+Yg8vhsKLwEuk=;
+	b=YHG5ReqdR8dIWGAzLolvW2lvC3BUv6R4qUL3h9MCaYsj30TrVT3W1qLF8DsmgRS5al
+	ewPEHDHPCd7ZMertZIey+2B1zTMP5XmNNXkNkT8SLY37LJq7lw8Z40WXdjUy64Q5t8U8
+	fBPFv5UPqVjpVDY/+8RSw2e3yRJHzKKtozmqtIq9jTFIWpSAvKhY54g8dzEZQgct4vDW
+	zLgh8wiK/nu1KNmzIoEY2Ldk23GlIIMZVWbcDU7oe+wrq7hdcDewPhAexiYpXwByv/gp
+	LTJ5ahsh+T0Z9gLYXfyl5058z3PgiZh8yOIouycVS0vEmwdIVmRmMEWuU4msi8lYGK7Q
+	WdOg==
+X-Gm-Message-State: AEkoouvpE18wmfQSfrU6TXbkrNYd4CE8J/nG/WOxyrJ8JdT4DFucY16l/8l32yc6IOQWXEL4
+X-Received: by 10.194.57.244 with SMTP id l20mr21073460wjq.1.1469542507954;
+	Tue, 26 Jul 2016 07:15:07 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id
+	f10sm1221900wje.14.2016.07.26.07.15.07
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 26 Jul 2016 07:15:07 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 26 Jul 2016 15:15:05 +0100
+Message-Id: <1469542505-5660-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.8.1
+Subject: [PATCH] lib/bb/utils: show subprocess output in stack traces
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,60 +53,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 26 Jul 2016 07:08:49 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 26 Jul 2016 14:15:08 -0000
 
-On Tue, 2016-07-26 at 15:36 +1200, Paul Eggleton wrote:
-> If using OE's externalsrc with a source tree that is not tracked by
-> git
-> and contains broken symlinks, you can receive "TypeError: unorderable
-> types: NoneType() < str()" within the file checksum code due to:
-> 
->  checksums.sort(key=operator.itemgetter(1))
-> 
-> Don't add files with no checksum to the checksums list in order to
-> avoid
-> this.
+If better_exec() throws a subprocess.CalledProcessError then show the output to
+the user as it likely contains useful information for solving the problem.
 
-In some of the cache code we have to note whether files were checked
-for but didn't exist. This means that if they then do exist in a later
-run, we know to invalidate the cache.
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/utils.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Does this change break that?
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 995089a..ce52960 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -375,6 +375,12 @@ def _print_exception(t, value, tb, realfile, text, context):
+             level = level + 1
+ 
+         error.append("Exception: %s" % ''.join(exception))
++
++        # If the exception is from spwaning a task, let's be helpful and display
++        # the output (which hopefully includes stderr).
++        if isinstance(value, subprocess.CalledProcessError):
++            error.append("Subprocess output:")
++            error.append(value.output.decode("utf-8", errors="ignore"))
+     finally:
+         logger.error("\n".join(error))
+ 
+-- 
+2.8.1
 
-Cheers,
-
-Richard
-
-> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-> ---
->  lib/bb/checksum.py | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
-> index be4ab68..8428920 100644
-> --- a/lib/bb/checksum.py
-> +++ b/lib/bb/checksum.py
-> @@ -120,13 +120,15 @@ class FileChecksumCache(MultiProcessCache):
->                              checksums.extend(checksum_dir(f))
->                      else:
->                          checksum = checksum_file(f)
-> -                        checksums.append((f, checksum))
-> +                        if checksum:
-> +                            checksums.append((f, checksum))
->              elif os.path.isdir(pth):
->                  if not os.path.islink(pth):
->                      checksums.extend(checksum_dir(pth))
->              else:
->                  checksum = checksum_file(pth)
-> -                checksums.append((pth, checksum))
-> +                if checksum:
-> +                    checksums.append((pth, checksum))
->  
->          checksums.sort(key=operator.itemgetter(1))
->          return checksums
-> -- 
-> 2.5.5
-> 
 
