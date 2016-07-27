@@ -1,51 +1,29 @@
-Return-Path: <bnousilal@gmail.com>
-Received: from mail-oi0-f67.google.com (mail-oi0-f67.google.com
-	[209.85.218.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 7B0AC6FF9B
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 30214606BF
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jul 2016 06:13:19 +0000 (UTC)
-Received: by mail-oi0-f67.google.com with SMTP id c199so324376oig.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 26 Jul 2016 23:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=5nXJgstEng4wkvrjIJZRYs4V8sfBgoUICmGyCbmqSvQ=;
-	b=wthBxInTqopLefRPfrgveJUypAHHwj0q5hFF51rYuo0WL1cR16ds9My6VOSlhoOL+Q
-	WLZ0TA3MuQGXiQ2EaPX+WoN3g5lahl9//1dBOCzQboxjeVTPl+zTv0GcLPH2Zv749l9P
-	ncjwNaCkLxxLBvL3jeQjTp0Zi/XmzueOCP/IcjWAeHwM/RI1V8pyRvK5Wf2O8joyPURs
-	Kd+3/bBhGH4R0nUsAAaunEY6FlZhD2I0kSTchpwaGnRtsONnQ3II30l695ldY42nUGi4
-	y8MOrd+nU5AX4CqMJuwaGJ16EOkzSWtHc5/gwuUjv8E1I4+S1pp6QcHSXEt6bnpwrdy8
-	naww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=5nXJgstEng4wkvrjIJZRYs4V8sfBgoUICmGyCbmqSvQ=;
-	b=CbKbhc2ZX9JCpzJdSGmE612zU3WQL9kAAGgj22xH2s+V2Hs0EmHI0mQPLxFHIT4l3E
-	Tv3gZh7pA0+ZiyQoXPN7kZ9Kb1N0HKc1TG+iOuGsNC+JJE6OAAAGJiyK77GW58e4YP54
-	IiuqpRx5Qvd1AVy1FL57iG1EseYVarxD/W1NL0itlWxGmBOIeBmUo/C5KB1eR0YAW533
-	atWyYw/65M/TxlUQYRvjKQeo2le82nLUykm9EMlhl56U/ZYCV7DIqI6a8oCQNwmWX7NX
-	Ddap+SOVq0/EupvimMrUU91Q0aUz23JPIB1NRQ1cbtguBSuPtfCPlU2lL/v7XkYPzxV5
-	Sibg==
-X-Gm-Message-State: AEkoouuMa/q/YoHBJ4gzCJDAVr9IJBec8HhRMU1fts8ggbFDCZQRO7ZfP+WEZRPIceuZ8iqfJ1p6q2hOnq8j6Q==
-X-Received: by 10.157.12.70 with SMTP id 64mr15667489otr.192.1469599999683;
-	Tue, 26 Jul 2016 23:13:19 -0700 (PDT)
+	Wed, 27 Jul 2016 20:53:36 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga103.fm.intel.com with ESMTP; 27 Jul 2016 13:53:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.28,431,1464678000"; d="scan'208";a="1030358697"
+Received: from ndrai-mobl2.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.178.75])
+	by fmsmga002.fm.intel.com with ESMTP; 27 Jul 2016 13:53:35 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Thu, 28 Jul 2016 08:53:33 +1200
+Message-ID: <11574390.7kjj5FOXUz@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.10 (Linux/4.6.4-201.fc23.x86_64; KDE/4.14.20; x86_64; ;
+	)
+In-Reply-To: <1469516922.23580.92.camel@linuxfoundation.org>
+References: <cover.1469504165.git.paul.eggleton@linux.intel.com>
+	<c6d59200973e19d358a2fa1a1e5bec4523894e69.1469504165.git.paul.eggleton@linux.intel.com>
+	<1469516922.23580.92.camel@linuxfoundation.org>
 MIME-Version: 1.0
-Received: by 10.157.42.168 with HTTP; Tue, 26 Jul 2016 23:13:19 -0700 (PDT)
-In-Reply-To: <CAHiDW_HZGSDwu7HQdGT684dA3e1_5hPkTgOZoFN-s-WW3O7RpA@mail.gmail.com>
-References: <CAJ5vXcR+QuZ3KTBgY5TFHfetTzLvvC6moYdDDa4fRV385tKwsA@mail.gmail.com>
-	<DB6PR0401MB2630808F7A718CC38A2291ADEE090@DB6PR0401MB2630.eurprd04.prod.outlook.com>
-	<CAJ5vXcQZH=zXWnF7bseRDGtGHJ3gkLRh=sc388cw+_aZyO0F1Q@mail.gmail.com>
-	<CAJ5vXcRB1ue67dWdxRdP9xr2LV5tYFgV5COTLU-xAQ98qCCVHQ@mail.gmail.com>
-	<CAHiDW_HZGSDwu7HQdGT684dA3e1_5hPkTgOZoFN-s-WW3O7RpA@mail.gmail.com>
-From: nousi <bnousilal@gmail.com>
-Date: Wed, 27 Jul 2016 11:43:19 +0530
-Message-ID: <CAJ5vXcSF8gSpCeXPKrykn=0p+dHogBJZkOZhiHMuAtAtHhZ8DQ@mail.gmail.com>
-To: Jussi Kukkonen <jussi.kukkonen@intel.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: source modification and re-build
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] lib/bb/checksum: avoid exception on broken symlinks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,212 +36,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Jul 2016 06:13:20 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 27 Jul 2016 20:53:38 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Hi,
+On Tue, 26 Jul 2016 08:08:42 Richard Purdie wrote:
+> On Tue, 2016-07-26 at 15:36 +1200, Paul Eggleton wrote:
+> > If using OE's externalsrc with a source tree that is not tracked by
+> > git and contains broken symlinks, you can receive "TypeError: unorderable
+> > 
+> > types: NoneType() < str()" within the file checksum code due to:
+> >  checksums.sort(key=operator.itemgetter(1))
+> > 
+> > Don't add files with no checksum to the checksums list in order to
+> > avoid this.
+> 
+> In some of the cache code we have to note whether files were checked
+> for but didn't exist. This means that if they then do exist in a later
+> run, we know to invalidate the cache.
+> 
+> Does this change break that?
 
-kernel image name is "uImage-nousi-linux.img" in
-"poky/build/tmp/deploy/images/nousi12k/" directory when I use "bitbake
-nousi-dev-image", it will create all the images including rootfs,
-u-boot, dtb and takes lot of time to build.
+Took me a couple of days to get back to this, but after double-checking both 
+the code and the behaviour the answer is no. As you may recall the file 
+checksum operation is broken into two parts:
 
-I would like to build only kernel image "uImage-nousi-linux.img".
-Please, let me know how can I do it.
+1) Getting the list of files regardless of whether they exist or not, which is 
+done at parse time and goes into the cache
 
-Thanks,
-Nousi.
+2) Actually getting the checksum of each file that does exist, which is done 
+when we calculate the task hashes. The hashes are also cached in their own 
+separate cache file based on mtime.
 
+#1 is where we handle files that may appear at some time in future. This patch 
+changes the code for #2 and doesn't have any effect on #1.
 
-On Thu, Jul 21, 2016 at 4:56 PM, Jussi Kukkonen
-<jussi.kukkonen@intel.com> wrote:
->
->
-> On 21 July 2016 at 13:32, nousi <bnousilal@gmail.com> wrote:
->>
->> please, ignore my previous mail.
->> There was an issue with the option "-C", it should be "-c".
->>
->> I have compiled modified kernel using " bitbake -c compile -f nousi-linu=
-x"
->> command but, it seems kernel image does not get update with new
->> configuration at below path.
->>
->> "poky/build/tmp/deploy/images/nousi123k/"
->
->
-> You forced a kernel compile only, after that you probably want to
-> re-generate the image ("bitbake <image-name>").
->
-> Note that this method of modifying kernel configuration is not how you'd =
-do
-> it in production: See
-> http://www.yoctoproject.org/docs/current/kernel-dev/kernel-dev.html#gener=
-ating-configuration-files
-> for how to create a defconfig or a config fragment and
-> http://www.yoctoproject.org/docs/current/kernel-dev/kernel-dev.html#chang=
-ing-the-configuration
-> for configuring your kernel with them.
->
-> Jussi
->
->>
->> Please, let me know if I am missing something in the process.
->>
->> On Thu, Jul 21, 2016 at 3:51 PM, nousi <bnousilal@gmail.com> wrote:
->>>
->>> Hi Zhenhua Luo,
->>>
->>> Could not able to compile the kernel after changing the kernel
->>> configuration using "bitbake -c menuconfig nousi-linux" command.
->>> Please, have a look at the console logs below.
->>>
->>> #bitbake -C compile =E2=80=93f nousi-linux
->>> NOTE: Preparing RunQueue
->>> NOTE: Tainting hash to force rebuild of task
->>> /projects/nousi-linux/nousilal/ns2/poky/build/../meta-nousi/common/reci=
-pes-kernel/linux/nousi-linux_0.0.0.bb,
->>> do_rm_work_all
->>> ERROR: Task do_compile is marked nostamp, cannot invalidate this task
->>> ERROR: An uncaught exception occured in runqueue, please see the failur=
-e
->>> below:
->>> ERROR: Running idle function
->>> Traceback (most recent call last):
->>>   File
->>> "/projects/nousi123-linux/nousilal/nn2/poky/bitbake/lib/bb/runqueue.py"=
-,
->>> line 1094, in RunQueue.execute_runqueue():
->>>              try:
->>>     >            return self._execute_runqueue()
->>>              except bb.runqueue.TaskFailure:
->>>   File
->>> "/projects/nousi123-linux/nousilal/nn2/poky/bitbake/lib/bb/runqueue.py"=
-,
->>> line 1029, in RunQueue._execute_runqueue():
->>>                  self.rqexe =3D RunQueueExecuteDummy(self)
->>>     >            if self.rqdata.prepare() =3D=3D 0:
->>>                      self.state =3D runQueueComplete
->>>   File
->>> "/projects/nousi123-linux/nousilal/nn2/poky/bitbake/lib/bb/runqueue.py"=
-,
->>> line 796, in RunQueueData.prepare():
->>>                      for st in
->>> self.cooker.configuration.invalidate_stamp.split(','):
->>>     >                    invalidate_task(fn, "do_%s" % st, True)
->>>
->>>   File
->>> "/projects/nousi123-linux/nousilal/nn2/poky/bitbake/lib/bb/runqueue.py"=
-,
->>> line 780, in
->>> invalidate_task(fn=3D'/projects/nousi123-linux/nousilal/nn2/poky/build/=
-../meta-nousi/common/recipes-kernel/linux/nousi-linux_0.0.0.bb',
->>> taskname=3D'do_compile', error_nostamp=3DTrue):
->>>                      if error_nostamp:
->>>     >                    bb.fatal("Task %s is marked nostamp, cannot
->>> invalidate this task" % taskname)
->>>                      else:
->>>   File
->>> "/projects/nousi123-linux/nousilal/nn2/poky/bitbake/lib/bb/__init__.py"=
-,
->>> line 102, in fatal:
->>>          logger.critical(''.join(args))
->>>     >    raise BBHandledException()
->>>
->>> BBHandledException
->>>
->>> On Thu, Jul 21, 2016 at 9:30 AM, Zhenhua Luo <zhenhua.luo@nxp.com> wrot=
-e:
->>>>
->>>> Hi Nousilal,
->>>>
->>>>
->>>>
->>>> =E2=80=9Cbitbake -c menuconfig nousi-linux=E2=80=9D is used for changi=
-ng the kernel
->>>> configs instead of modifying source code, you can run =E2=80=9Cbitbake=
- -C compile -f
->>>> nousi-linux =E2=80=9D to force rebuild with updated kernel configs.
->>>>
->>>>
->>>>
->>>> To modify the source code, you can do it in
->>>> tmp/work-shared/<machine>/kernel-source/, then run =E2=80=9Cbitbake -C=
- compile =E2=80=93f
->>>> nousi-linux=E2=80=9D to rebuild new kernel image.
->>>>
->>>>
->>>>
->>>>
->>>>
->>>> Best Regards,
->>>>
->>>>
->>>>
->>>> Zhenhua
->>>>
->>>>
->>>>
->>>> From: bitbake-devel-bounces@lists.openembedded.org
->>>> [mailto:bitbake-devel-bounces@lists.openembedded.org] On Behalf Of nou=
-si
->>>> Sent: Wednesday, July 20, 2016 2:18 PM
->>>> To: bitbake-devel@lists.openembedded.org
->>>> Subject: [bitbake-devel] source modification and re-build
->>>>
->>>>
->>>>
->>>> Hi All,
->>>>
->>>>
->>>>
->>>> Am new to yocto environment, please let me know the process to change
->>>> kernel source using "bitbake nousi-linux -c menuconfig".
->>>>
->>>>
->>>>
->>>> I can able to make changes using "bitbake nousi-linux -c menuconfig"
->>>> this command but my changes were not included in the new re-built imag=
-e.
->>>>
->>>> Am using the development linux source code.
->>>>
->>>> Any help is appreciated.
->>>>
->>>>
->>>>
->>>> --
->>>>
->>>> Thanks & Regards,
->>>> B.Nousilal,
->>>
->>>
->>>
->>>
->>> --
->>> Thanks & Regards,
->>> B.Nousilal,
->>>
->>
->>
->>
->> --
->> Thanks & Regards,
->> B.Nousilal,
->>
->>
->> --
->> _______________________________________________
->> bitbake-devel mailing list
->> bitbake-devel@lists.openembedded.org
->> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->>
->
+We should definitely have an oe-selftest test for this though.
 
+Cheers,
+Paul
 
+-- 
 
---=20
-Thanks & Regards,
-B.Nousilal,
+Paul Eggleton
+Intel Open Source Technology Centre
 
