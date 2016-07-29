@@ -1,28 +1,27 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 9277D606BF
+Return-Path: <maxin.john@intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id ACF9260721
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jul 2016 20:55:33 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga104.fm.intel.com with ESMTP; 27 Jul 2016 13:55:34 -0700
+	Fri, 29 Jul 2016 08:24:11 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga102.jf.intel.com with ESMTP; 29 Jul 2016 01:24:12 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,431,1464678000"; d="scan'208";a="1015085290"
-Received: from ndrai-mobl2.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.178.75])
-	by fmsmga001.fm.intel.com with ESMTP; 27 Jul 2016 13:55:33 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.28,438,1464678000"; d="scan'208";a="1031368505"
+Received: from linux.intel.com ([10.54.29.200])
+	by fmsmga002.fm.intel.com with ESMTP; 29 Jul 2016 01:24:12 -0700
+Received: from mbabyjoh-desk.fi.intel.com (mbabyjoh-desk.fi.intel.com
+	[10.237.72.71])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTP id 1A3026A4080
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 29 Jul 2016 01:23:59 -0700 (PDT)
+From: "Maxin B. John" <maxin.john@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 28 Jul 2016 08:55:30 +1200
-Message-ID: <9999959.NysMaTSW10@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.10 (Linux/4.6.4-201.fc23.x86_64; KDE/4.14.20; x86_64; ;
-	)
-In-Reply-To: <11574390.7kjj5FOXUz@peggleto-mobl.ger.corp.intel.com>
-References: <cover.1469504165.git.paul.eggleton@linux.intel.com>
-	<1469516922.23580.92.camel@linuxfoundation.org>
-	<11574390.7kjj5FOXUz@peggleto-mobl.ger.corp.intel.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/1] lib/bb/checksum: avoid exception on broken symlinks
+Date: Fri, 29 Jul 2016 11:23:35 +0300
+Message-Id: <1469780615-1657-1-git-send-email-maxin.john@intel.com>
+X-Mailer: git-send-email 2.4.0
+Subject: [RFC][PATCH] bitbake: fetch2: fix warning while switching from master to krogoth
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,48 +34,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Jul 2016 20:55:33 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Fri, 29 Jul 2016 08:24:13 -0000
 
-On Thu, 28 Jul 2016 08:53:33 Paul Eggleton wrote:
-> On Tue, 26 Jul 2016 08:08:42 Richard Purdie wrote:
-> > On Tue, 2016-07-26 at 15:36 +1200, Paul Eggleton wrote:
-> > > If using OE's externalsrc with a source tree that is not tracked by
-> > > git and contains broken symlinks, you can receive "TypeError:
-> > > unorderable
-> > > 
-> > > types: NoneType() < str()" within the file checksum code due to:
-> > >  checksums.sort(key=operator.itemgetter(1))
-> > > 
-> > > Don't add files with no checksum to the checksums list in order to
-> > > avoid this.
-> > 
-> > In some of the cache code we have to note whether files were checked
-> > for but didn't exist. This means that if they then do exist in a later
-> > run, we know to invalidate the cache.
-> > 
-> > Does this change break that?
-> 
-> Took me a couple of days to get back to this, but after double-checking both
-> the code and the behaviour the answer is no. As you may recall the file
-> checksum operation is broken into two parts:
-> 
-> 1) Getting the list of files regardless of whether they exist or not, which
-> is done at parse time and goes into the cache
-> 
-> 2) Actually getting the checksum of each file that does exist, which is done
-> when we calculate the task hashes. The hashes are also cached in their own
-> separate cache file based on mtime.
+While switching from master to krogoth build with a common download directory,
+got a large number of warnings like the one listed below:
 
-Sorry, for clarity that should have read "The file checksums are also 
-cached..."
+WARNING: freetype-2.6.3-r0 do_fetch: Couldn't load checksums from
+donestamp /home/maxin/downloads/freetype-2.6.3.tar.bz2.done: ValueError
+(msg: unsupported pickle protocol: 4)
 
-Cheers,
-Paul
+These warnings are caused by the difference in pickle module
+implementation in python3(master) and python2(krogoth). Python2 supports
+3 different protocols (0, 1, 2) and pickle.HIGHEST_PROTOCOL is 2 where as
+Python3 supports 5 different protocols (0, 1, 2, 3, 4) and
+pickle.HIGHEST_PROTOCOL is obviously 4.
 
+My suggestion is to use 2 since it is backward compatible with python2
+(all the supported distros for krogoth provides python2 which supports
+pickle protocol version 2)
+
+Signed-off-by: Maxin B. John <maxin.john@intel.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 3eabba1..9054b2e 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -664,7 +664,7 @@ def verify_donestamp(ud, d, origud=None):
+         # as an upgrade path from the previous done stamp file format.
+         if checksums != precomputed_checksums:
+             with open(ud.donestamp, "wb") as cachefile:
+-                p = pickle.Pickler(cachefile, pickle.HIGHEST_PROTOCOL)
++                p = pickle.Pickler(cachefile, 2)
+                 p.dump(checksums)
+         return True
+     except ChecksumError as e:
+@@ -698,7 +698,7 @@ def update_stamp(ud, d):
+             checksums = verify_checksum(ud, d)
+             # Store the checksums for later re-verification against the recipe
+             with open(ud.donestamp, "wb") as cachefile:
+-                p = pickle.Pickler(cachefile, pickle.HIGHEST_PROTOCOL)
++                p = pickle.Pickler(cachefile, 2)
+                 p.dump(checksums)
+         except ChecksumError as e:
+             # Checksums failed to verify, trigger re-download and remove the
 -- 
+2.4.0
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
