@@ -1,29 +1,41 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 13107607A4
+Return-Path: <bnousilal@gmail.com>
+Received: from mail-oi0-f68.google.com (mail-oi0-f68.google.com
+	[209.85.218.68])
+	by mail.openembedded.org (Postfix) with ESMTP id E21D060853
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Jul 2016 11:56:34 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u6TBuWKk021855; Fri, 29 Jul 2016 12:56:32 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id dbrljZU0zInG; Fri, 29 Jul 2016 12:56:32 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u6TBuTF4021852
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 29 Jul 2016 12:56:30 +0100
-Message-ID: <1469793389.9142.59.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Maxin B. John" <maxin.john@intel.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Fri, 29 Jul 2016 12:56:29 +0100
-In-Reply-To: <1469780615-1657-1-git-send-email-maxin.john@intel.com>
-References: <1469780615-1657-1-git-send-email-maxin.john@intel.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: [RFC][PATCH] bitbake: fetch2: fix warning while switching from master to krogoth
+	Mon,  1 Aug 2016 06:37:28 +0000 (UTC)
+Received: by mail-oi0-f68.google.com with SMTP id c199so13113784oig.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 31 Jul 2016 23:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=lM7zb5HO7xfVmvcubPAc7Um6tIQKa/cOa0lHmVPR3dU=;
+	b=bx92yIIDr8ADJeJNBhOKU8pgVKpKoFubvOSYSHALAKr2Vd9lkPo0cmX+pKUGUjYikO
+	pFTqZri5Z6EbzgOkkxfS1QNCdSjcqRUGCTvvkUox34J+qtR1uQhou18/lfFgsNEVAYPT
+	ox10sFVphbIdCEVfW3JStmQdc/7VkCUXM8fbouDAlRVqvnz7m0xFyVuhDzBYMZrql8bb
+	UOaYlqs7kO3QoAwuznq3k6a/0PXGzPkoxW7t5jikHwT/TkA5Q84xnUtZtijEAtJv9qpG
+	z/tj0cmGjft+AxoPQL6tWQeCtY0uinyc6tqmF+j2krfiO80h/ATSweJJ6txynxgzx1DU
+	0VjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=lM7zb5HO7xfVmvcubPAc7Um6tIQKa/cOa0lHmVPR3dU=;
+	b=YciSD6XBTdFuKLP7UlUGc+5WZM/fJIo5uX0rOaNeH7xnYIXZYazol4j7Juo6sf6kov
+	WQz7EAxk0Y8Jwo8TZSaZPBdL4wsHkRkQEnc4LjQJFlXyw5r39fnNylzxsNcIXAa0I2AZ
+	h4zswKnQaQo1LIGLwXK6nDLHqmwjFZ4PWM70o+F8fkbSfCIWWMcw82uOSggITRld4cVO
+	0wxKMV1iuaSQC7Jf7mPrDv6GhelrIKEEOABunHoZ0aU2/ZEuv6Mzf0l1540HqkOooSfd
+	SszLjcOARgVRN0qkE4sNY3FAND7kVjpBFoLsZe1LLmsXdf3S2jzkyzU45DsBS8RSGpuA
+	EZYQ==
+X-Gm-Message-State: AEkooutx37a9kVj20+IHqOYHEoeJmnE1cwKeah/z8tWWgGcqa9J289RbkkRfrz5rKNNmp41i9gaMFI8BYK3YuQ==
+X-Received: by 10.202.81.211 with SMTP id f202mr31956380oib.173.1470033448705; 
+	Sun, 31 Jul 2016 23:37:28 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.157.42.168 with HTTP; Sun, 31 Jul 2016 23:37:28 -0700 (PDT)
+From: nousi <bnousilal@gmail.com>
+Date: Mon, 1 Aug 2016 12:07:28 +0530
+Message-ID: <CAJ5vXcTv6PRkV+oo=eENiTLf9mOQwaxStCMbyn2w6o_SzRiisw@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: bitbake cleanall nousi-linux
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,42 +48,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 Jul 2016 11:56:36 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 01 Aug 2016 06:37:29 -0000
+Content-Type: multipart/alternative; boundary=001a113b05c684a4dd0538fcd574
 
-On Fri, 2016-07-29 at 11:23 +0300, Maxin B. John wrote:
-> While switching from master to krogoth build with a common download
-> directory,
-> got a large number of warnings like the one listed below:
-> 
-> WARNING: freetype-2.6.3-r0 do_fetch: Couldn't load checksums from
-> donestamp /home/maxin/downloads/freetype-2.6.3.tar.bz2.done:
-> ValueError
-> (msg: unsupported pickle protocol: 4)
-> 
-> These warnings are caused by the difference in pickle module
-> implementation in python3(master) and python2(krogoth). Python2
-> supports
-> 3 different protocols (0, 1, 2) and pickle.HIGHEST_PROTOCOL is 2
-> where as
-> Python3 supports 5 different protocols (0, 1, 2, 3, 4) and
-> pickle.HIGHEST_PROTOCOL is obviously 4.
-> 
-> My suggestion is to use 2 since it is backward compatible with
-> python2
-> (all the supported distros for krogoth provides python2 which
-> supports
-> pickle protocol version 2)
+--001a113b05c684a4dd0538fcd574
+Content-Type: text/plain; charset=UTF-8
 
-This looks good to me, well spotted. I've merged it since the
-autobuilder is likely spending a lot of time churning sources around at
-the moment due to this.
+Hi All,
 
-Ideally we'd use a better data format in these files so I'd welcome
-other improvements but this fixes the immediate problem.
+I have set STAGING_KERNEL_DIR in "local.inc file" and when I issue
+"bitbake cleanall nosi-linux " it is removing all the source code from
+STAGING_KERNEL_DIR location.
 
-Cheers,
+Please, let me know the process to clean the kernel source code which is
+under the build directory tree?
+-- 
 
-Richard
 
+*Thanks & Regards,B.Nousilal,*
+
+--001a113b05c684a4dd0538fcd574
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi All,<div><br></div><div>I have set STAGING_KERNEL_DIR i=
+n &quot;local.inc file&quot; and when I issue &quot;bitbake=C2=A0cleanall=
+=C2=A0nosi-linux &quot; it is removing all the source code from STAGING_KER=
+NEL_DIR location.</div><div><br></div><div>Please, let me know the process =
+to clean the kernel source code which is under the build directory tree?</d=
+iv><div>-- <br><div class=3D"gmail_signature"><i style=3D"color:rgb(51,51,2=
+55)"><font style=3D"font-family:arial,helvetica,sans-serif" size=3D"2">Than=
+ks &amp; Regards,<br>B.Nousilal,<br></font></i><br></div>
+</div></div>
+
+--001a113b05c684a4dd0538fcd574--
