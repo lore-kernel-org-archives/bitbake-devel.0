@@ -1,31 +1,25 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 30F8560745
+Return-Path: <Liam.Howlett@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 6D2B273243
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  3 Aug 2016 15:24:02 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u73FNRxY021330; Wed, 3 Aug 2016 16:23:27 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id J8eTzm_BomLh; Wed,  3 Aug 2016 16:23:27 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u73FNLEw021322
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 3 Aug 2016 16:23:22 +0100
-Message-ID: <1470237801.9142.134.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: =?UTF-8?Q?=E5=BC=A0=E5=BF=A0=E5=B1=B1?= <zzs213@126.com>, Robert Yang
-	<liezhi.yang@windriver.com>, bitbake-devel@lists.openembedded.org
-Date: Wed, 03 Aug 2016 16:23:21 +0100
-In-Reply-To: <06719fa1-4361-f8d1-c4ef-c10534c3f1f3@126.com>
-References: <360daea.d273.1564bad5108.Coremail.zzs213@126.com>
-	<57A0B48A.6000606@windriver.com>
-	<06719fa1-4361-f8d1-c4ef-c10534c3f1f3@126.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: howto build specific version package
+	Wed,  3 Aug 2016 19:57:52 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id u73JvrYm019330
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 3 Aug 2016 12:57:53 -0700
+Received: from yow-lhowlett-d0.wrs.com (128.224.56.205) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.248.2; Wed, 3 Aug 2016 12:57:50 -0700
+From: "Liam R. Howlett" <Liam.Howlett@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 3 Aug 2016 15:57:48 -0400
+Message-ID: <1470254270-5368-1-git-send-email-Liam.Howlett@WindRiver.com>
+X-Mailer: git-send-email 2.1.4
+MIME-Version: 1.0
+Cc: Liam.Howlett@WindRiver.com
+Subject: [PATCH 0/2] bin/toaster: clean up unnecessary if statement and zsh fix.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,55 +32,21 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Aug 2016 15:24:06 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 03 Aug 2016 19:57:53 -0000
+Content-Type: text/plain
 
-On Wed, 2016-08-03 at 14:14 +0800, 张忠山 wrote:
-> 在 2016年08月02日 22:56, Robert Yang 写道:
-> > Hi,
-> > 
-> > On 08/02/2016 10:34 PM, zzs wrote:
-> > > 
-> > > 
-> > > Hello, everyone
-> > > 
-> > > I have two version .bb recipe, sya test_1.0.bb and test_2.0.bb.
-> > > When build the `test` package  using the flowwing cmd:
-> > >      bitbake test
-> > > Always 2.0 was built.
-> > > My question is: how to let bitbake to build version 1.0 of the
-> > > test
-> > > package
-> > 
-> > You can:
-> > 1) PREFERRED_VERSION_test = "1.0" in conf file such as local.conf
-> > Or:
-> > 2) Set DEFAULT_PREFERENCE = "-1" in test_2.0.bb.
-> > 
-> > // Robert
-> > 
-> Thanks for your repley.
-> 
-> Your suggested method can select any version sure.
-> 
-> But whenever I finish  my project. some time later I wan't rebuilt
-> this 
-> project.
-> Then I must edit the source to select specific version. It is not 
-> convenient and buggy.
-> Is there a way to select version that no need to edit the source,
-> e.g. 
-> select it on command line
+Remove an unnecessary if statement that was left over from a change to a case
+statement and set a required zsh setting for the existing code to work more
+reliably.
 
-You can't select everything from the commandline. Its for the reasons
-of reproducibility that we suggest people set things in configuration
-files like local.conf. You can then provide the exact configuration to
-reproduce any given build by saving that configuration file.
+Liam R. Howlett (2):
+  bin/toaster: Remove extra CMD check.
+  bin/toaster: set shwordsplit if using zsh.
 
-Cheers,
+ bin/toaster | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Richard
-
+-- 
+1.9.1
 
 
