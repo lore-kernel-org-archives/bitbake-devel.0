@@ -1,20 +1,31 @@
-Return-Path: <markus.lehtonen@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 134C273281
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 30F8560745
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  3 Aug 2016 14:06:24 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga104.fm.intel.com with ESMTP; 03 Aug 2016 07:06:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,465,1464678000"; d="scan'208";a="743646137"
-Received: from marquiz.fi.intel.com ([10.237.72.155])
-	by FMSMGA003.fm.intel.com with ESMTP; 03 Aug 2016 07:06:24 -0700
-From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  3 Aug 2016 17:06:23 +0300
-Message-Id: <1470233183-5470-1-git-send-email-markus.lehtonen@linux.intel.com>
-X-Mailer: git-send-email 2.6.6
-Subject: [PATCH] fetch2/git: allow using 'HEAD' as a branch name
+	Wed,  3 Aug 2016 15:24:02 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u73FNRxY021330; Wed, 3 Aug 2016 16:23:27 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id J8eTzm_BomLh; Wed,  3 Aug 2016 16:23:27 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u73FNLEw021322
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 3 Aug 2016 16:23:22 +0100
+Message-ID: <1470237801.9142.134.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: =?UTF-8?Q?=E5=BC=A0=E5=BF=A0=E5=B1=B1?= <zzs213@126.com>, Robert Yang
+	<liezhi.yang@windriver.com>, bitbake-devel@lists.openembedded.org
+Date: Wed, 03 Aug 2016 16:23:21 +0100
+In-Reply-To: <06719fa1-4361-f8d1-c4ef-c10534c3f1f3@126.com>
+References: <360daea.d273.1564bad5108.Coremail.zzs213@126.com>
+	<57A0B48A.6000606@windriver.com>
+	<06719fa1-4361-f8d1-c4ef-c10534c3f1f3@126.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: howto build specific version package
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,54 +38,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Aug 2016 14:06:27 -0000
+X-List-Received-Date: Wed, 03 Aug 2016 15:24:06 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-This change makes it possible to e.g. build a currently checked out
-revision of a local Git repository and use AUTOREV. It will be possible
-to build HEAD of remote repositories, too, of course, but this is
-probably not that practical.
+On Wed, 2016-08-03 at 14:14 +0800, 张忠山 wrote:
+> 在 2016年08月02日 22:56, Robert Yang 写道:
+> > Hi,
+> > 
+> > On 08/02/2016 10:34 PM, zzs wrote:
+> > > 
+> > > 
+> > > Hello, everyone
+> > > 
+> > > I have two version .bb recipe, sya test_1.0.bb and test_2.0.bb.
+> > > When build the `test` package  using the flowwing cmd:
+> > >      bitbake test
+> > > Always 2.0 was built.
+> > > My question is: how to let bitbake to build version 1.0 of the
+> > > test
+> > > package
+> > 
+> > You can:
+> > 1) PREFERRED_VERSION_test = "1.0" in conf file such as local.conf
+> > Or:
+> > 2) Set DEFAULT_PREFERENCE = "-1" in test_2.0.bb.
+> > 
+> > // Robert
+> > 
+> Thanks for your repley.
+> 
+> Your suggested method can select any version sure.
+> 
+> But whenever I finish  my project. some time later I wan't rebuilt
+> this 
+> project.
+> Then I must edit the source to select specific version. It is not 
+> convenient and buggy.
+> Is there a way to select version that no need to edit the source,
+> e.g. 
+> select it on command line
 
-In order to use this one must also use the nobranch parameter, i.e. have
-'branch=HEAD;nobranch=1' in the SRC_URI, because 'HEAD' is really not a
-Git branch as such. The wording in "branch=HEAD;nobranch=1" is probably a
-bit counter-intuitive and illogical but this seems to be the only easy
-way to make this work without complicating the fetcher even further.
-Another solution would be e.g. to introduce an alternative 'ref'
-parameter which could be used in place of 'branch' to give any ref. The
-effect would basically be the same (with better wording) with yet a bit
-more complex fetcher code.
+You can't select everything from the commandline. Its for the reasons
+of reproducibility that we suggest people set things in configuration
+files like local.conf. You can then provide the exact configuration to
+reproduce any given build by saving that configuration file.
 
-[YOCTO #9351]
+Cheers,
 
-Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
----
- lib/bb/fetch2/git.py | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Richard
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 4e2dcec..0c07d64 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -388,12 +388,15 @@ class Git(FetchMethod):
-         output = self._lsremote(ud, d, "")
-         # Tags of the form ^{} may not work, need to fallback to other form
-         if ud.unresolvedrev[name][:5] == "refs/":
--            head = ud.unresolvedrev[name]
--            tag = ud.unresolvedrev[name]
-+            search_list = [ud.unresolvedrev[name],
-+                           ud.unresolvedrev[name] + "^{}"]
-+        elif ud.unresolvedrev[name] == 'HEAD':
-+            search_list = ['HEAD']
-         else:
-             head = "refs/heads/%s" % ud.unresolvedrev[name]
-             tag = "refs/tags/%s" % ud.unresolvedrev[name]
--        for s in [head, tag + "^{}", tag]:
-+            search_list = [head, tag + "^{}", tag]
-+        for s in search_list:
-             for l in output.strip().split('\n'):
-                 sha1, ref = l.split()
-                 if s == ref:
--- 
-2.6.6
 
 
