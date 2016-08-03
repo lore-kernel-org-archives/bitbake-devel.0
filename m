@@ -1,36 +1,20 @@
-Return-Path: <zzs213@126.com>
-Received: from m15-113.126.com (m15-113.126.com [220.181.15.113])
-	by mail.openembedded.org (Postfix) with ESMTP id 8AE476AC00
+Return-Path: <markus.lehtonen@linux.intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 134C273281
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  3 Aug 2016 06:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=lNfV5
-	KuYnOPSJItXjPhlh6Hxga1/rda3rTOe1PsNQa0=; b=Cmos8o/41AA4IyBM64ZQ4
-	s16+UEgq3WzbgxUYo82j1DbHnpL+W7Kau+8KV8RzVbQn0hwH+6p2OziLfZOGjD8+
-	V7KUEbjPUINMstAfmj3/t5sCGKeazjH8nRO3wIw9ClM/99gHfBTPvBMCPS4BBtdI
-	jwokIhUqt/MArRYQS23qFM=
-Received: from [192.168.0.12] (unknown [171.212.168.97])
-	by smtp3 (Coremail) with SMTP id DcmowAD3bLrQi6FXmeQTDQ--.49214S2;
-	Wed, 03 Aug 2016 14:14:42 +0800 (CST)
-To: Robert Yang <liezhi.yang@windriver.com>,
-	bitbake-devel@lists.openembedded.org
-References: <360daea.d273.1564bad5108.Coremail.zzs213@126.com>
-	<57A0B48A.6000606@windriver.com>
-From: =?UTF-8?B?5byg5b+g5bGx?= <zzs213@126.com>
-Message-ID: <06719fa1-4361-f8d1-c4ef-c10534c3f1f3@126.com>
-Date: Wed, 3 Aug 2016 14:14:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <57A0B48A.6000606@windriver.com>
-X-CM-TRANSID: DcmowAD3bLrQi6FXmeQTDQ--.49214S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZw1kGw4ruF4xWrW3AFW8JFb_yoW3KFX_uF
-	1vvFykXwsrur47t3ZxKrs5CrZ2qF4DKaykXryUJry29a4rCwsaqw4kur9Igw1xGwnrKr9a
-	g3y7t3s8K34jgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU5ynQUUUUUU==
-X-Originating-IP: [171.212.168.97]
-X-CM-SenderInfo: x22vjiat6rjloofrz/1tbiYBO6GVbdVz0EngAAsr
-Subject: Re: howto build specific version package
+	Wed,  3 Aug 2016 14:06:24 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga104.fm.intel.com with ESMTP; 03 Aug 2016 07:06:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.28,465,1464678000"; d="scan'208";a="743646137"
+Received: from marquiz.fi.intel.com ([10.237.72.155])
+	by FMSMGA003.fm.intel.com with ESMTP; 03 Aug 2016 07:06:24 -0700
+From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  3 Aug 2016 17:06:23 +0300
+Message-Id: <1470233183-5470-1-git-send-email-markus.lehtonen@linux.intel.com>
+X-Mailer: git-send-email 2.6.6
+Subject: [PATCH] fetch2/git: allow using 'HEAD' as a branch name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,43 +27,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Aug 2016 06:14:50 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 03 Aug 2016 14:06:27 -0000
 
-在 2016年08月02日 22:56, Robert Yang 写道:
-> Hi,
->
-> On 08/02/2016 10:34 PM, zzs wrote:
->>
->>
->> Hello, everyone
->>
->> I have two version .bb recipe, sya test_1.0.bb and test_2.0.bb.
->> When build the `test` package  using the flowwing cmd:
->>      bitbake test
->> Always 2.0 was built.
->> My question is: how to let bitbake to build version 1.0 of the test
->> package
->
-> You can:
-> 1) PREFERRED_VERSION_test = "1.0" in conf file such as local.conf
-> Or:
-> 2) Set DEFAULT_PREFERENCE = "-1" in test_2.0.bb.
->
-> // Robert
->
-Thanks for your repley.
+This change makes it possible to e.g. build a currently checked out
+revision of a local Git repository and use AUTOREV. It will be possible
+to build HEAD of remote repositories, too, of course, but this is
+probably not that practical.
 
-Your suggested method can select any version sure.
+In order to use this one must also use the nobranch parameter, i.e. have
+'branch=HEAD;nobranch=1' in the SRC_URI, because 'HEAD' is really not a
+Git branch as such. The wording in "branch=HEAD;nobranch=1" is probably a
+bit counter-intuitive and illogical but this seems to be the only easy
+way to make this work without complicating the fetcher even further.
+Another solution would be e.g. to introduce an alternative 'ref'
+parameter which could be used in place of 'branch' to give any ref. The
+effect would basically be the same (with better wording) with yet a bit
+more complex fetcher code.
 
-But whenever I finish  my project. some time later I wan't rebuilt this 
-project.
-Then I must edit the source to select specific version. It is not 
-convenient and buggy.
-Is there a way to select version that no need to edit the source, e.g. 
-select it on command line
+[YOCTO #9351]
 
+Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+---
+ lib/bb/fetch2/git.py | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 4e2dcec..0c07d64 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -388,12 +388,15 @@ class Git(FetchMethod):
+         output = self._lsremote(ud, d, "")
+         # Tags of the form ^{} may not work, need to fallback to other form
+         if ud.unresolvedrev[name][:5] == "refs/":
+-            head = ud.unresolvedrev[name]
+-            tag = ud.unresolvedrev[name]
++            search_list = [ud.unresolvedrev[name],
++                           ud.unresolvedrev[name] + "^{}"]
++        elif ud.unresolvedrev[name] == 'HEAD':
++            search_list = ['HEAD']
+         else:
+             head = "refs/heads/%s" % ud.unresolvedrev[name]
+             tag = "refs/tags/%s" % ud.unresolvedrev[name]
+-        for s in [head, tag + "^{}", tag]:
++            search_list = [head, tag + "^{}", tag]
++        for s in search_list:
+             for l in output.strip().split('\n'):
+                 sha1, ref = l.split()
+                 if s == ref:
+-- 
+2.6.6
 
 
