@@ -1,25 +1,38 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id AE8376FFEF
+Return-Path: <zzs213@126.com>
+Received: from m15-112.126.com (m15-112.126.com [220.181.15.112])
+	by mail.openembedded.org (Postfix) with ESMTP id 226A66AC00
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Aug 2016 12:17:21 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga102.jf.intel.com with ESMTP; 04 Aug 2016 05:17:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,470,1464678000"; d="scan'208";a="1034989879"
-Received: from jmiler-mobl.ger.corp.intel.com (HELO [10.252.8.71])
-	([10.252.8.71])
-	by fmsmga002.fm.intel.com with ESMTP; 04 Aug 2016 05:17:18 -0700
+	Fri,  5 Aug 2016 03:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=31u3q
+	0P3cppv713Gv64NO+Ll+isU3hYXZfBz25YdOw0=; b=Nqjj/MlnR+83St8ziYdsL
+	2cleiwCrOgB4R6PDYvqJu9r67n5ZGgARddrZEA2cS80sPC358mr2SWj48NtE9ri4
+	dr9+UuQ8qqfYkDMptrCMWQUxlP3AcT4NPgTxbamdxVL8fu6H7FKlaFR2PGGHVcy4
+	lzoPyvqt8aOGCmYwq8vQLw=
+Received: from [192.168.0.12] (unknown [171.212.168.97])
+	by smtp2 (Coremail) with SMTP id DMmowAAHtWGTBKRXyZOvCg--.22187S2;
+	Fri, 05 Aug 2016 11:14:28 +0800 (CST)
 To: bitbake-devel@lists.openembedded.org
-References: <c0fc1eb3-7da5-58ed-d3be-0b6c1f9c951e@intel.com>
-From: Michael Wood <michael.g.wood@intel.com>
-Message-ID: <0eb9fb02-bc15-1177-2cea-9fd42dfeaa9d@intel.com>
-Date: Thu, 4 Aug 2016 13:17:17 +0100
+References: <360daea.d273.1564bad5108.Coremail.zzs213@126.com>
+	<57A0B48A.6000606@windriver.com>
+	<06719fa1-4361-f8d1-c4ef-c10534c3f1f3@126.com>
+	<1470237801.9142.134.camel@linuxfoundation.org>
+	<093B67FB09E7C1439E8DF68949D5ACF32A619126@IRSMSX109.ger.corp.intel.com>
+From: =?UTF-8?B?5byg5b+g5bGx?= <zzs213@126.com>
+Message-ID: <c3d77159-3c6c-332f-3364-f04ee43eea63@126.com>
+Date: Fri, 5 Aug 2016 11:14:43 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
 	Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <c0fc1eb3-7da5-58ed-d3be-0b6c1f9c951e@intel.com>
-Subject: Re: [pull-request] michaelw/submit/elliot/9475-9631-9836-9952_combined
+In-Reply-To: <093B67FB09E7C1439E8DF68949D5ACF32A619126@IRSMSX109.ger.corp.intel.com>
+X-CM-TRANSID: DMmowAAHtWGTBKRXyZOvCg--.22187S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWw4kur1UAFW8GryfWr1rZwb_yoW5Aw1UpF
+	W7Ka4Yk3ykJr1rArnFyr18KFZ5tw4fKwsagrn8Jry8Arn09F4qv3yvgr15uasrArn7tw4j
+	93yYqF17Zws8AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b8zuAUUUUU=
+X-Originating-IP: [171.212.168.97]
+X-CM-SenderInfo: x22vjiat6rjloofrz/1tbiTxa8GVYY6W7b6QAAsH
+Subject: Re: howto build specific version package
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,100 +45,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Aug 2016 12:17:21 -0000
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Fri, 05 Aug 2016 03:14:42 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-T24gMDIvMDgvMTYgMTQ6NTEsIE1pY2hhZWwgV29vZCB3cm90ZToKPiBUaGlzIGlzIGEgcHVsbCBy
-ZXF1ZXN0IGZvciBhIGJyYW5jaCB3aGljaCBjb21iaW5lcyBhbGwgb2YgRWxsaW90IAo+IFNtaXRo
-J3MgcmVjZW50IFRvYXN0ZXIgd29yay4KPgo+IGJpdGJha2UgYmFzZWQgYnJhbmNoIG9uIHBva3kt
-Y29udHJpYiAKPiBtaWNoYWVsdy9zdWJtaXQvZWxsaW90Lzk0NzUtOTYzMS05ODM2LTk5NTJfY29t
-YmluZWQKPgo+IE5vdGUgdGhhdCBiZWNhdXNlIHRoaXMgYnJhbmNoIGluY2x1ZGVzIGEgY29tbWl0
-IG9mIGEgSlMgZmlsZSB3aXRoIHZlcnkgCj4gbG9uZyBsaW5lcywgaXQgaXMgdXBzdHJlYW1lZCB0
-byBiaXRiYWtlLWRldmVsIGFzIGEgcHVsbCByZXF1ZXN0LCAKPiByYXRoZXIgdGhhbiBpbmRpdmlk
-dWFsIHBhdGNoZXMuCj4KPiBTdW1tYXJ5Ogo+Cj4gRWxsaW90IFNtaXRoICgxNyk6Cj4gICBjb29r
-ZXI6IGFkZCBCdWlsZEluaXQgZXZlbnQKPiAgIHRvYXN0ZXI6IG1vdmUgbW9zdCByZWNlbnQgYnVp
-bGRzIHRlbXBsYXRpbmcgdG8gY2xpZW50Cj4gICB0b2FzdGVyOiBzaG93IHByb2dyZXNzIG9mIHJl
-Y2lwZSBwYXJzaW5nIGluIHJlY2VudCBidWlsZHMgYXJlYQo+ICAgdG9hc3Rlcjogc2hvdyAiVGFz
-a3Mgc3RhcnRpbmcuLi4iIHVudGlsIHRoZSBmaXJzdCB0YXNrIGNvbXBsZXRlcwo+ICAgdG9hc3Rl
-cjogdHdlYWsgc3R5bGluZyBhbmQgdHlwb3MgaW4gcmVjZW50IGJ1aWxkcyBhcmVhCj4gICB0b2Fz
-dGVyOiByZW1vdmUgbGlua3MgZnJvbSB0aW1lIGZpZWxkIG9uIGZhaWxlZCBidWlsZHMKPiAgIHRv
-YXN0ZXI6IGFkZCBzdGFydGVkIHByb3BlcnR5IHRvIEJ1aWxkCj4gICB0b2FzdGVyOiBhZGp1c3Qg
-YnVpbGQgZGFzaGJvYXJkIGZvciBmYWlsZWQgYnVpbGRzCj4gICB0b2FzdGVyLXRlc3RzOiBhZGQg
-dGVzdHMgZm9yIGJ1aWxkIHRpbWUgbGlua3MgaW4gdGhlIGFsbCBidWlsZHMgcGFnZQo+ICAgdG9h
-c3Rlci10ZXN0czogYWRkIHRlc3RzIGZvciBidWlsZCBkYXNoYm9hcmQgbWVudSBhbmQgc3VtbWFy
-eQo+ICAgICB2aXNpYmlsaXR5Cj4gICB0b2FzdGVyLXRlc3RzOiBhZGQgdGVzdHMgZm9yIG1vc3Qg
-cmVjZW50IGJ1aWxkcyBzdGF0ZSBjaGFuZ2VzCj4gICB0b2FzdGVyLXRlc3RzOiBmaXggZXJyb25l
-b3VzIG1lc3NhZ2Ugd2hlbiB0ZXN0IGZhaWxzCj4gICB0b2FzdGVyOiBzaG93IGxvYWRpbmcgc3Bp
-bm5lciBhZnRlciBjcmVhdGluZyBjdXN0b20gaW1hZ2UKPiAgIHRvYXN0ZXI6IHJlc2V0IHRhYmxl
-IHRvIGRlZmF1bHQgb3JkZXJieSB3aGVuIG9yZGVyYnkgY29sdW1uIGlzIGhpZGRlbgo+ICAgdG9h
-c3Rlci10ZXN0czogYWRkIHRlc3RzIGZvciByZXZlcnRpbmcgdG8gZGVmYXVsdCBzb3J0Cj4gICB0
-b2FzdGVyOiBwcmV2ZW50IGluZmluaXRlIGxvb3Agd2hlbiBmaW5kaW5nIHRhc2sgZGVwZW5kZW5j
-aWVzCj4gICB0b2FzdGVyLXRlc3RzOiBhZGQgdGVzdCBmb3Igc2hvd2luZyBzZWxmLWRlcGVuZGVu
-dCB0YXNrCj4KPiAgTElDRU5TRSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgIDIgKwo+ICBsaWIvYmIvY29va2VyLnB5ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgNCArCj4gIGxpYi9iYi9ldmVudC5weSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICA2ICstCj4gIGxpYi9iYi91aS9idWlsZGluZm9oZWxwZXIucHkg
-ICAgICAgICAgICAgICAgICAgICAgIHwgMTE4ICsrKystLS0KPiAgbGliL2JiL3VpL3RvYXN0ZXJ1
-aS5weSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMzEgKy0KPiAgLi4uL21pZ3JhdGlv
-bnMvMDAwNV9yZW9yZGVyX2J1aWxkcmVxdWVzdF9zdGF0ZXMucHkgfCAgMTkgKysKPiAgbGliL3Rv
-YXN0ZXIvYmxkY29udHJvbC9tb2RlbHMucHkgICAgICAgICAgICAgICAgICAgfCAgMTIgKy0KPiAg
-Li4uLzAwMTNfcmVjaXBlX3BhcnNlX3Byb2dyZXNzX2ZpZWxkcy5weSAgICAgICAgICAgfCAgMjQg
-KysKPiAgLi4uL29ybS9taWdyYXRpb25zLzAwMTRfYWxsb3dfZW1wdHlfYnVpbGRuYW1lLnB5ICAg
-fCAgMTkgKysKPiAgbGliL3RvYXN0ZXIvb3JtL21vZGVscy5weSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgODcgKysrKy0KPiAgbGliL3RvYXN0ZXIvdGVzdHMvYnJvd3Nlci90ZXN0X2FsbF9i
-dWlsZHNfcGFnZS5weSAgfCAgOTMgKysrKystCj4gIC4uLi90ZXN0cy9icm93c2VyL3Rlc3RfYnVp
-bGRkYXNoYm9hcmRfcGFnZS5weSAgICAgIHwgMTI3ICsrKysrLS0KPiAgLi4uL2Jyb3dzZXIvdGVz
-dF9idWlsZGRhc2hib2FyZF9wYWdlX2FydGlmYWN0cy5weSAgfCAgIDcgKy0KPiAgLi4uL3Rlc3Rz
-L2Jyb3dzZXIvdGVzdF9sYXllcmRldGFpbHNfcGFnZS5weSAgICAgICAgfCAgIDggKy0KPiAgLi4u
-L2Jyb3dzZXIvdGVzdF9tb3N0X3JlY2VudF9idWlsZHNfc3RhdGVzLnB5ICAgICAgfCAyMTEgKysr
-KysrKysrKysrCj4gIGxpYi90b2FzdGVyL3Rlc3RzL2Jyb3dzZXIvdGVzdF90YXNrX3BhZ2UucHkg
-ICAgICAgIHwgIDc2ICsrKysrCj4gIGxpYi90b2FzdGVyL3Rlc3RzL2Jyb3dzZXIvdGVzdF90b2Fz
-dGVydGFibGVfdWkucHkgIHwgMTYwICsrKysrKysrKwo+ICBsaWIvdG9hc3Rlci90b2FzdGVyZ3Vp
-L2FwaS5weSAgICAgICAgICAgICAgICAgICAgICB8IDExNSArKysrKystCj4gIGxpYi90b2FzdGVy
-L3RvYXN0ZXJndWkvc3RhdGljL2Nzcy9kZWZhdWx0LmNzcyAgICAgIHwgIDEzICsKPiAgbGliL3Rv
-YXN0ZXIvdG9hc3Rlcmd1aS9zdGF0aWMvanMvanNyZW5kZXIubWluLmpzICAgfCAgIDQgKwo+ICBs
-aWIvdG9hc3Rlci90b2FzdGVyZ3VpL3N0YXRpYy9qcy9saWJ0b2FzdGVyLmpzICAgICB8ICAzNiAr
-LQo+ICBsaWIvdG9hc3Rlci90b2FzdGVyZ3VpL3N0YXRpYy9qcy9tcmJzZWN0aW9uLmpzICAgICB8
-IDE4MCArKysrKystLS0tCj4gIC4uLi90b2FzdGVyZ3VpL3N0YXRpYy9qcy9uZXdjdXN0b21pbWFn
-ZV9tb2RhbC5qcyAgIHwgIDMzICstCj4gIGxpYi90b2FzdGVyL3RvYXN0ZXJndWkvc3RhdGljL2pz
-L3RhYmxlLmpzICAgICAgICAgIHwgIDc4ICsrKystCj4gIGxpYi90b2FzdGVyL3RvYXN0ZXJndWkv
-dGFibGVzLnB5ICAgICAgICAgICAgICAgICAgIHwgICA4ICstCj4gIGxpYi90b2FzdGVyL3RvYXN0
-ZXJndWkvdGVtcGxhdGVzL2Jhc2UuaHRtbCAgICAgICAgIHwgICA2ICsKPiAgLi4uL3RvYXN0ZXJn
-dWkvdGVtcGxhdGVzL2Jhc2VidWlsZHBhZ2UuaHRtbCAgICAgICAgfCAxNzYgKysrKystLS0tLQo+
-ICAuLi4vdG9hc3Rlcmd1aS90ZW1wbGF0ZXMvYnVpbGRkYXNoYm9hcmQuaHRtbCAgICAgICB8IDE1
-OCArKysrKy0tLS0KPiAgLi4uL3RvYXN0ZXJndWkvdGVtcGxhdGVzL2J1aWxkcmVxdWVzdGRldGFp
-bHMuaHRtbCAgfCAgNjQgLS0tLQo+ICBsaWIvdG9hc3Rlci90b2FzdGVyZ3VpL3RlbXBsYXRlcy9t
-cmJfc2VjdGlvbi5odG1sICB8IDM3MSAKPiArKysrKysrKysrKysrLS0tLS0tLS0KPiAgLi4uL3Rv
-YXN0ZXJndWkvdGVtcGxhdGVzL25ld2N1c3RvbWltYWdlX21vZGFsLmh0bWwgfCAgIDcgKy0KPiAg
-Li4uL3RlbXBsYXRlcy9wcm9qZWN0YnVpbGRzLXRvYXN0ZXJ0YWJsZS5odG1sICAgICAgfCAgIDIg
-Ky0KPiAgbGliL3RvYXN0ZXIvdG9hc3Rlcmd1aS90ZW1wbGF0ZXRhZ3MvcHJvamVjdHRhZ3MucHkg
-fCAgIDggLQo+ICBsaWIvdG9hc3Rlci90b2FzdGVyZ3VpL3VybHMucHkgICAgICAgICAgICAgICAg
-ICAgICB8ICAgMyArCj4gIGxpYi90b2FzdGVyL3RvYXN0ZXJndWkvdmlld3MucHkgICAgICAgICAg
-ICAgICAgICAgIHwgIDEwICsKPiAgMzUgZmlsZXMgY2hhbmdlZCwgMTcwMSBpbnNlcnRpb25zKCsp
-LCA1NzUgZGVsZXRpb25zKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCAKPiBsaWIvdG9hc3Rlci9i
-bGRjb250cm9sL21pZ3JhdGlvbnMvMDAwNV9yZW9yZGVyX2J1aWxkcmVxdWVzdF9zdGF0ZXMucHkK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IAo+IGxpYi90b2FzdGVyL29ybS9taWdyYXRpb25zLzAwMTNf
-cmVjaXBlX3BhcnNlX3Byb2dyZXNzX2ZpZWxkcy5weQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgCj4g
-bGliL3RvYXN0ZXIvb3JtL21pZ3JhdGlvbnMvMDAxNF9hbGxvd19lbXB0eV9idWlsZG5hbWUucHkK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IAo+IGxpYi90b2FzdGVyL3Rlc3RzL2Jyb3dzZXIvdGVzdF9t
-b3N0X3JlY2VudF9idWlsZHNfc3RhdGVzLnB5Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBsaWIvdG9h
-c3Rlci90ZXN0cy9icm93c2VyL3Rlc3RfdGFza19wYWdlLnB5Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBsaWIvdG9hc3Rlci90ZXN0cy9icm93c2VyL3Rlc3RfdG9hc3RlcnRhYmxlX3VpLnB5Cj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBsaWIvdG9hc3Rlci90b2FzdGVyZ3VpL3N0YXRpYy9qcy9qc3JlbmRl
-ci5taW4uanMKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IAo+IGxpYi90b2FzdGVyL3RvYXN0ZXJndWkv
-dGVtcGxhdGVzL2J1aWxkcmVxdWVzdGRldGFpbHMuaHRtbAo+Cj4gVGhhbmtzLAo+Cj4gTWljaGFl
-bAo+CgpQbGVhc2UgcGF1c2UgdGhpcyBwdWxsIHJlcXVlc3QuIFdlJ3JlIGN1cnJlbnRseSBpbnZl
-c3RpZ2F0aW5nIHNvbWUgCmlzc3VlcyB3aXRoIGJ1aWxkcyBnZXR0aW5nIHN0dWNrIGFmdGVyIGFu
-IGluaXRpYWwgYnVpbGQgd2hpY2ggbWF5IG9yIG1heSAKbm90IGJlIHJlbGF0ZWQgdG8gdGhlc2Ug
-Y2hhbmdlcy4KClRoYW5rcywKCk1pY2hhZWwKCgoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCkludGVsIENvcnBvcmF0
-aW9uIChVSykgTGltaXRlZApSZWdpc3RlcmVkIE5vLiAxMTM0OTQ1IChFbmdsYW5kKQpSZWdpc3Rl
-cmVkIE9mZmljZTogUGlwZXJzIFdheSwgU3dpbmRvbiBTTjMgMVJKClZBVCBObzogODYwIDIxNzMg
-NDcKClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29uZmlkZW50
-aWFsIG1hdGVyaWFsIGZvcgp0aGUgc29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lwaWVudChz
-KS4gQW55IHJldmlldyBvciBkaXN0cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5IHByb2hp
-Yml0ZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFzZSBjb250
-YWN0IHRoZSBzZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29waWVzLgo=
+在 2016年08月04日 19:44, Schroeder, Henning 写道:
+>> -----Original Message-----
+>> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
+>> devel-bounces@lists.openembedded.org] On Behalf Of Richard Purdie
+>> Sent: Wednesday, August 3, 2016 17:23
+>> To: 张忠山 <zzs213@126.com>; Yang, Liezhi (Wind River)
+>> <liezhi.yang@windriver.com>; bitbake-devel@lists.openembedded.org
+>> Subject: Re: [bitbake-devel] howto build specific version package
+>>
+>> On Wed, 2016-08-03 at 14:14 +0800, 张忠山 wrote:
+>>> 在 2016年08月02日 22:56, Robert Yang 写道:
+>>>> Hi,
+>>>>
+>>>> On 08/02/2016 10:34 PM, zzs wrote:
+>>>>>
+>>>>>
+>>>>> Hello, everyone
+>>>>>
+>>>>> I have two version .bb recipe, sya test_1.0.bb and test_2.0.bb.
+>>>>> When build the `test` package  using the flowwing cmd:
+>>>>>      bitbake test
+>>>>> Always 2.0 was built.
+>>>>> My question is: how to let bitbake to build version 1.0 of the
+>>>>> test package
+>>>>
+>>>> You can:
+>>>> 1) PREFERRED_VERSION_test = "1.0" in conf file such as local.conf
+>>>> Or:
+>>>> 2) Set DEFAULT_PREFERENCE = "-1" in test_2.0.bb.
+>>>>
+>>>> // Robert
+>>>>
+>>> Thanks for your repley.
+>>>
+>>> Your suggested method can select any version sure.
+>>>
+>>> But whenever I finish  my project. some time later I wan't rebuilt
+>>> this project.
+>>> Then I must edit the source to select specific version. It is not
+>>> convenient and buggy.
+>>> Is there a way to select version that no need to edit the source, e.g.
+>>> select it on command line
+>>
+>> You can't select everything from the commandline. Its for the reasons of
+>> reproducibility that we suggest people set things in configuration files like
+>> local.conf. You can then provide the exact configuration to reproduce any
+>> given build by saving that configuration file.
+>>
+>> Cheers,
+>>
+>> Richard
+>
+> Hi,
+> I do see two options for you.
+> 1.) As explained by the folks already you create two build directories which share download and sstate folders. Then you create one local.conf with the "Production Version" and one with the "Development Version". Depending on which build folder you utilize you get the product or development version.
+> 2.) If you incline to use the command line to switch, there is the option to specify a config file explicitely read by bitbake. If called with "-R product.conf" you get your product version and otherwise you stick with Yocto choice of taking newest one.
+>
+> Example:
+> bash-4.3$ cat -> product.conf
+> PREFERRED_VERSION_test="1.0"
+> bash-4.3$ bitbake -R product.conf test
+> ...
+>
+> Option One is the most conflict free variant as your configurations are cleanly separated and your calls to bitbake are identical. At the cost of having the build directory two times and two different environments (Shell instances).
+> Option Two is risky if you do not tell bitbake to clean (bitbake -c cleanall test) from the former build as you may end up with a mixed sysroot.
+>
+> Hope this helps.
+>
+
+Thanks very much.
+Now I use the second option.
+
 
 
