@@ -1,53 +1,23 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-pa0-f67.google.com (mail-pa0-f67.google.com
-	[209.85.220.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 343E67705F
+Return-Path: <mariano.lopez@linux.intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 4071777150
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  5 Aug 2016 14:29:39 +0000 (UTC)
-Received: by mail-pa0-f67.google.com with SMTP id ez1so19398805pab.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 05 Aug 2016 07:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=subject:to:references:from:organization:message-id:date:user-agent
-	:mime-version:in-reply-to:content-transfer-encoding;
-	bh=xVyhXEpIg3Y5guvaM5EIW7T/xnaoLfMJPabrSBjYexc=;
-	b=M9IHvBX/2USPSyTsKtF6KLoiWBlK5+jpGaqzxkODLorfd4SRXRWWyMXnL2H4LnpgXa
-	43wQtiDbiCfrLJmFnDDbS8i/2EPdzFh+Vg+0uvYyUqSzhqybEg8hX49YK3RsSBjHX8kD
-	tKq7V/hc53y85FuD4aW1Qifs5hjyq6RK28cqRWg92yhLnRhRonT5CTFZ0B+QNSRaQjYl
-	z3IV8BxgrSzB3ehAqHZZ/eLV+x3PWnOgzyIo59DmGEYjA2ZUEmHS5iBL6AWNmtmFSyxO
-	ZvXuyp8IlGPvNfmu7TNEpAGpLO+KJb2+Waif51mMEv3ufL1jVhKYLrZL7VraqjUyW6R3
-	sOlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:subject:to:references:from:organization
-	:message-id:date:user-agent:mime-version:in-reply-to
-	:content-transfer-encoding;
-	bh=xVyhXEpIg3Y5guvaM5EIW7T/xnaoLfMJPabrSBjYexc=;
-	b=FtAHzAeEllGe7LCQFN9DnFeRV6vhZ2Z4PkBDvsxIJKzLrBbhOLKBshKbFrpOPwze6q
-	oFVgVHm6SdQ7u41EyYBYu/A25cVfyM73hxzGIpGMhC6Fv/lXqtSu0LZ8nYS+Pr1EobLj
-	39lpo0PWi7f3Gr7I4t29V2oRxqofUbf9OfLA75XHgRSz32cCRY2Gq/KxjaLQuPxaPNe3
-	ldYcMpR+pi2tiRcXNSbzQytf8yoNJSybSKd7Riciuaj+FaXhYU9jlb7iOHvLLppbEKIv
-	D8XLrRSOnM4se32vTh8iX+VutOEgh0cAEQmNHpk1jdk+6ItRAcYGFW4D6Ew6eB1BO6H6
-	XE6g==
-X-Gm-Message-State: AEkooutsnI0/GoFwNyUVE34CrJuH4gZT6ZA/aRVKswoJl5CP/C3UyLIxwSDCDT1KObda/A==
-X-Received: by 10.66.235.100 with SMTP id ul4mr31729405pac.50.1470407380670;
-	Fri, 05 Aug 2016 07:29:40 -0700 (PDT)
-Received: from CACSVMO-14452.local ([2601:646:8882:b8c:41d7:99c1:5cc6:c627])
-	by smtp.gmail.com with ESMTPSA id
-	r10sm28567291pfk.84.2016.08.05.07.29.39
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 05 Aug 2016 07:29:39 -0700 (PDT)
-To: zzs <zzs213@126.com>, bitbake-devel@lists.openembedded.org
-References: <1c7e8f51.d202.1564ba890a5.Coremail.zzs213@126.com>
-From: Khem Raj <raj.khem@gmail.com>
-Organization: himvis.com
-Message-ID: <27cfffee-84cd-6c77-26b7-b9de8c1d0745@gmail.com>
-Date: Fri, 5 Aug 2016 07:29:59 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0)
-	Gecko/20100101 Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <1c7e8f51.d202.1564ba890a5.Coremail.zzs213@126.com>
-Subject: Re: howto build specific version package
+	Fri,  5 Aug 2016 21:57:23 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by fmsmga104.fm.intel.com with ESMTP; 05 Aug 2016 14:57:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.28,475,1464678000"; d="scan'208";a="151384086"
+Received: from yctb01.ostc.intel.com (HELO yctb01.otcr.intel.com)
+	([10.54.69.55])
+	by fmsmga004.fm.intel.com with ESMTP; 05 Aug 2016 14:57:23 -0700
+From: mariano.lopez@linux.intel.com
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  5 Aug 2016 13:54:44 +0000
+Message-Id: <95a804b83e274eaaab5175b8540eba4ea599730d.1470405217.git.mariano.lopez@linux.intel.com>
+X-Mailer: git-send-email 2.6.6
+In-Reply-To: <cover.1470405217.git.mariano.lopez@linux.intel.com>
+References: <cover.1470405217.git.mariano.lopez@linux.intel.com>
+Subject: [PATCH 1/1] Fix use of tar's --exclude option for tar >= 1.29
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,29 +30,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 05 Aug 2016 14:29:40 -0000
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 05 Aug 2016 21:57:23 -0000
 
+From: Mariano Lopez <mariano.lopez@linux.intel.com>
 
+Starting from tar 1.29 the --exclude option won't work
+anymore if is not used before the path. There are some
+fetch modules that copy the ptest using tar and --exclude
+option. This fixes these for bitbake.
 
-On 8/2/16 7:29 AM, zzs wrote:
-> Hello, everyone
-> 
-> I have two version .bb recipe, sya test_1.0.bb and test_2.0.bb.
-> When build the `test` package  using the flowwing cmd:
->     bitbake test
-> Always 2.0 was built.
-> My question is: how to let bitbake to build version 1.0 of the test package
-> 
+[YOCTO #9763]
 
-You can add PREFERRED_VERSION_pn-test = "1.0" in local.conf
-or you can add DEFAULT_PREFERENCE = "-1" to test_2.0.bb
+Signed-off-by: Mariano Lopez <mariano.lopez@linux.intel.com>
+---
+ bitbake/lib/bb/fetch2/bzr.py  | 2 +-
+ bitbake/lib/bb/fetch2/cvs.py  | 2 +-
+ bitbake/lib/bb/fetch2/repo.py | 2 +-
+ bitbake/lib/bb/fetch2/svn.py  | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/bitbake/lib/bb/fetch2/bzr.py b/bitbake/lib/bb/fetch2/bzr.py
+index 03e9ac4..ce11ee7 100644
+--- a/bitbake/lib/bb/fetch2/bzr.py
++++ b/bitbake/lib/bb/fetch2/bzr.py
+@@ -106,7 +106,7 @@ class Bzr(FetchMethod):
+         if scmdata == "keep":
+             tar_flags = ""
+         else:
+-            tar_flags = "--exclude '.bzr' --exclude '.bzrtags'"
++            tar_flags = "--exclude='.bzr' --exclude='.bzrtags'"
+ 
+         # tar them up to a defined filename
+         runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, os.path.basename(ud.pkgdir)), d, cleanup = [ud.localpath])
+diff --git a/bitbake/lib/bb/fetch2/cvs.py b/bitbake/lib/bb/fetch2/cvs.py
+index d27d96f..43a234f 100644
+--- a/bitbake/lib/bb/fetch2/cvs.py
++++ b/bitbake/lib/bb/fetch2/cvs.py
+@@ -147,7 +147,7 @@ class Cvs(FetchMethod):
+         if scmdata == "keep":
+             tar_flags = ""
+         else:
+-            tar_flags = "--exclude 'CVS'"
++            tar_flags = "--exclude='CVS'"
+ 
+         # tar them up to a defined filename
+         if 'fullpath' in ud.parm:
+diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
+index 21678eb..fd64b7e 100644
+--- a/bitbake/lib/bb/fetch2/repo.py
++++ b/bitbake/lib/bb/fetch2/repo.py
+@@ -83,7 +83,7 @@ class Repo(FetchMethod):
+         if scmdata == "keep":
+             tar_flags = ""
+         else:
+-            tar_flags = "--exclude '.repo' --exclude '.git'"
++            tar_flags = "--exclude='.repo' --exclude='.git'"
+ 
+         # Create a cache
+         runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, os.path.join(".", "*") ), d)
+diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
+index 8a29193..968ca79 100644
+--- a/bitbake/lib/bb/fetch2/svn.py
++++ b/bitbake/lib/bb/fetch2/svn.py
+@@ -150,7 +150,7 @@ class Svn(FetchMethod):
+         if scmdata == "keep":
+             tar_flags = ""
+         else:
+-            tar_flags = "--exclude '.svn'"
++            tar_flags = "--exclude='.svn'"
+ 
+         os.chdir(ud.pkgdir)
+         # tar them up to a defined filename
+-- 
+2.6.6
 
-> 
->  
-> 
-> 
-> 
 
