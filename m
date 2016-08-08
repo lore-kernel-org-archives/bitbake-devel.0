@@ -1,44 +1,26 @@
-Return-Path: <olof.johansson@axis.com>
-X-Greylist: delayed 505 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 08 Aug 2016 16:47:48 UTC
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 6563C771C7
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 741FA771C7
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Aug 2016 16:47:48 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id D4AC918117;
-	Mon,  8 Aug 2016 18:39:23 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id i9sbVdYPK0FO; Mon,  8 Aug 2016 18:39:23 +0200 (CEST)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bastet.se.axis.com (Postfix) with ESMTP id 488291811B;
-	Mon,  8 Aug 2016 18:39:23 +0200 (CEST)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 328F71BD4;
-	Mon,  8 Aug 2016 18:39:23 +0200 (CEST)
-Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by boulder.se.axis.com (Postfix) with ESMTP id 27B6216C0;
-	Mon,  8 Aug 2016 18:39:23 +0200 (CEST)
-Received: from lnxolofjn.se.axis.com (lnxolofjn.se.axis.com [10.92.17.1])
-	by seth.se.axis.com (Postfix) with ESMTP id 263EE401;
-	Mon,  8 Aug 2016 18:39:23 +0200 (CEST)
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)
-	id 3DD3F9C09F; Mon,  8 Aug 2016 18:39:27 +0200 (CEST)
-Date: Mon, 8 Aug 2016 18:39:27 +0200
-From: Olof Johansson <olof.johansson@axis.com>
-To: Khem Raj <raj.khem@gmail.com>, bitbake-devel@lists.openembedded.org
-Message-ID: <20160808163926.GO4674@axis.com>
-References: <1470645281559.73326@axis.com>
-	<1470650127.8166.40.camel@linuxfoundation.org>
-	<7a284480-47ae-674c-3073-5680e626f769@smile.fr>
-	<C61ACEF2-94CC-4609-91F5-D9139A779926@gmail.com>
+	Mon,  8 Aug 2016 16:50:09 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga101.fm.intel.com with ESMTP; 08 Aug 2016 09:50:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.28,490,1464678000"; 
+	d="asc'?scan'208";a="1031860450"
+Received: from alimonb-mobl1.zpn.intel.com (HELO [10.219.5.36]) ([10.219.5.36])
+	by orsmga002.jf.intel.com with ESMTP; 08 Aug 2016 09:50:11 -0700
+To: Francisco Pedraza <francisco.j.pedraza.gonzalez@intel.com>,
+	bitbake-devel@lists.openembedded.org
+References: <1470347547-5037-1-git-send-email-francisco.j.pedraza.gonzalez@intel.com>
+From: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
+Message-ID: <57A8B845.5020702@linux.intel.com>
+Date: Mon, 8 Aug 2016 11:50:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.3.0
 MIME-Version: 1.0
-In-Reply-To: <C61ACEF2-94CC-4609-91F5-D9139A779926@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-Subject: Re: [PATCH] BB_NO_NETWORK: Fallback to local source for git lsremote
+In-Reply-To: <1470347547-5037-1-git-send-email-francisco.j.pedraza.gonzalez@intel.com>
+Subject: Re: [PATCH] bb/utils.py: export_proxies add GIT_PROXY_COMMAND
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,21 +33,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Aug 2016 16:47:51 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Mon, 08 Aug 2016 16:50:09 -0000
+X-Groupsio-MsgNum: 7820
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="f84OvRaJoVNRSXA05TTSDxtoxBAun8lUe"
 
-On 16-08-08 08:35 -0700, Khem Raj wrote:
-> tags are floating types in git, you can not use them reliably.
+--f84OvRaJoVNRSXA05TTSDxtoxBAun8lUe
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-This is not always true. We could choose to trust tags set
-according to our processes to not move (e.g. enforced rules that
-disallows deletion/updates of tags), and only use tags for these
-recipes, and rely on commit object ids eleswhere.
 
-Tags are only a problem in git if people insist on
-modifying/deleting them.
 
--- 
-olofjn
+On 08/04/2016 04:52 PM, Francisco Pedraza wrote:
+> This was added to enable the usage of git through proxies.
+>=20
+> Signed-off-by: Francisco Pedraza <francisco.j.pedraza.gonzalez@intel.co=
+m>
+Acked-by: An=EDbal Lim=F3n <anibal.limon@linux.intel.com>
+> ---
+>  lib/bb/utils.py | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index ce52960..a855d58 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -1461,7 +1461,8 @@ def export_proxies(d):
+>      import os
+> =20
+>      variables =3D ['http_proxy', 'HTTP_PROXY', 'https_proxy', 'HTTPS_P=
+ROXY',
+> -                    'ftp_proxy', 'FTP_PROXY', 'no_proxy', 'NO_PROXY']
+> +                    'ftp_proxy', 'FTP_PROXY', 'no_proxy', 'NO_PROXY',
+> +                    'GIT_PROXY_COMMAND']
+>      exported =3D False
+> =20
+>      for v in variables:
+>=20
 
+
+--f84OvRaJoVNRSXA05TTSDxtoxBAun8lUe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJXqLhHAAoJEGJqcE9h3glgiGkP/iE0fVlvfpje0tsZH6L2eCY9
+35+AnZyraWI2GUoqkkosmqmQcCR9RwUV1GVUqUMqRVUh02cA4ZAmiKtvA9yVa5Qp
+my7koHGIZXVwJqrnN9AmjuSAWkKIozN+L7BbjXPDaPaYbfGMN6caOVdV2i5SHVbU
+NFRLYt2RRDLCcfARX8HzqCMyQb2bgmX6H6o0UQwRy1d6x5idvfHG6Lyg/Psleal7
+LzkPrHOB+PeQtgWCL61IZ3JPElY+RC4uesXzy87Hna5B4yY8HNheD6cudymBzWyA
+NTqmPJFzYik4+cs9UiTZzGNop7FCQO2V8hr2jcZqR6khjzhdfB6CIHbeYYPM9Ltr
+Aqfc1ZShxiZyWHF9exlTB8r3Ya5Bf6nyZeysiPeV6hPTuLJLrwcEoVFYh2C7QyPf
+QwfkAdknk4NyX08e0oRefPvXsL+DCP2sQL28ys9AgQobKTfLBy6Mq+DVtPkFgk2X
+UuF0qPE+HULV+tZfEsQmeGSO8VKNg//oI9M7YgcRH72VaPeMZVPbfl4yT/iQCbuq
+yWLeQbB+K3xtqibapqojCyzgMMAe8o+mkrt6FW5xVBD//e+PURVrkUFGOfvvyQeH
+Its4maPXvDynCZ6cBNrUdREHa+e6JGuuzBQRsB3DiuYvIV6eFrHhjDmpOy5BRjtO
+t5l25jyv6UMdgJVenIc5
+=n4ot
+-----END PGP SIGNATURE-----
+
+--f84OvRaJoVNRSXA05TTSDxtoxBAun8lUe--
