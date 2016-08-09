@@ -1,28 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id E559D73289
+Return-Path: <zzs213@126.com>
+Received: from m15-113.126.com (m15-113.126.com [220.181.15.113])
+	by mail.openembedded.org (Postfix) with ESMTP id 40D6B771DF
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  9 Aug 2016 03:23:04 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga103.fm.intel.com with ESMTP; 08 Aug 2016 20:23:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,493,1464678000"; d="scan'208";a="1022074536"
-Received: from kwang27-mobl8.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.179.174])
-	by fmsmga001.fm.intel.com with ESMTP; 08 Aug 2016 20:23:01 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Tue,  9 Aug 2016 07:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=yLycm
+	eOtIDHFKC6SHTEfFYKQuUv5JTexzR4S13Vw4z4=; b=kLKnmRFsRSKEndpqZInMn
+	DhvdjI/F5Xc8u+KJgmwBpZ9MTIPXpUA9zalOOE0S0Wt4in9cE7qve4RHTvp+U+eO
+	dxhsGVNPqUQkDfseqkLwzmTUiRbYNk15axy8lqfV6xfG70/nsGpxivuzaHQNRG6W
+	UCJQoNgUrtN1hnTQszthR8=
+Received: from [192.168.0.12] (unknown [171.212.168.165])
+	by smtp3 (Coremail) with SMTP id DcmowACHg7miiKlXo0O_Dg--.11469S2;
+	Tue, 09 Aug 2016 15:39:16 +0800 (CST)
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 09 Aug 2016 15:22:59 +1200
-Message-ID: <11674755.DJQ5KUJ55z@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.10 (Linux/4.6.4-201.fc23.x86_64; KDE/4.14.20; x86_64; ;
-	)
-In-Reply-To: <C61ACEF2-94CC-4609-91F5-D9139A779926@gmail.com>
-References: <1470645281559.73326@axis.com>
-	<7a284480-47ae-674c-3073-5680e626f769@smile.fr>
-	<C61ACEF2-94CC-4609-91F5-D9139A779926@gmail.com>
+From: =?UTF-8?B?5byg5b+g5bGx?= <zzs213@126.com>
+Message-ID: <dec52a2f-ef2f-f9c1-9ca2-e8b99cea7694@126.com>
+Date: Tue, 9 Aug 2016 15:39:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+	Thunderbird/45.2.0
 MIME-Version: 1.0
-Subject: Re: [PATCH] BB_NO_NETWORK: Fallback to local source for git lsremote
+X-CM-TRANSID: DcmowACHg7miiKlXo0O_Dg--.11469S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUkQzVUUUUU
+X-Originating-IP: [171.212.168.165]
+X-CM-SenderInfo: x22vjiat6rjloofrz/1tbiLQTAGVc1osHBpAAAsU
+Subject: howto rerun a task whenever it's content chang
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,88 +37,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 09 Aug 2016 03:23:05 -0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+X-List-Received-Date: Tue, 09 Aug 2016 07:39:24 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 08 Aug 2016 08:35:38 Khem Raj wrote:
-> > On Aug 8, 2016, at 4:24 AM, J=C3=A9r=C3=A9my Rosen <jeremy.rosen@sm=
-ile.fr> wrote:
-> >=20
-> > On 08/08/2016 11:55, Richard Purdie wrote:
-> >> On Mon, 2016-08-08 at 08:34 +0000, Tobias Hagelborn wrote:
-> >>> Change made to enable building offline also with git tag referenc=
-es
-> >>> in SRC_URI.
-> >>>=20
-> >>> If BB_NO_NETWORK is set, fallback to search for tags and revision=
-s
-> >>> in local DL_DIR / GITDIR in order to avoid network access.
-> >>=20
-> >> I'm not sure I agree with this since you'd get different build res=
-ults
-> >> depending on whether BB_NO_NETWORK is set or not.
-> >>=20
-> >> I think if BB_NO_NETWORK is set, its reasonable to assume that the=
+I have a task in test.bb. say do_task1
 
-> >> configuration should be locked down and that BB_NO_NETWORK should =
-not
-> >> have other side effects like this.
-> >>=20
-> >> It would also make it very hard to detect unlocked configurations
-> >> during testing which currently are quite easily identified.
-> >=20
-> > To be honest, this is a real world problem I have on a regular basi=
-s...
-> >=20
-> > The problem we have is that our customers want to keep an archive f=
-or
-> > (very) long term support and they test offline mode.
-> >=20
-> > This problem means that we have to set all our SRC_URI to git SHA i=
-nstead
-> > of the much more readable and easy to check git tags.
-> >=20
-> >=20
-> > you think to assume that a reference is a branch, but the real-life=
+run 'bitbake test -c task1'. then generate stamp file for it.
 
-> > problem is when reference is a tag. Tag don't move so this is a cas=
-e of
-> > locked configuration, but i'm not sure how to handle it.
-> >=20
-> > Is there a way to have the best of both world somehow ?
->=20
-> Don=E2=80=99t use tags instead rely on SHA numbers in SRCREV and use
-> BB_GENERATE_MIRROR_TARBALLS like mentioned here
->=20
-> https://wiki.yoctoproject.org/wiki/How_do_I#Q:_How_do_I_create_my_own=
-_source
-> _download_mirror_.3F
->=20
-> tags are floating types in git, you can not use them reliably.
-> You may tool in a method to automate updating the
-> recipes SRCREVs if you dont want to do it by hand.
->=20
-> That should help hopefully
+Now I found a bug and edit do_task1. but run 'bitbake test -c task1' 
+again, Bitbake said
 
-FYI, another way to handle this is to enable buildhistory, run your bui=
-ld and=20
-then use the buildhistory-collect-srcrevs script. This will produce out=
-put=20
-that you can save to .inc file that will lock down the SRCREV values to=
- exact=20
-hashes, which you can then include and commit with your sources. This a=
-llows=20
-you to keep your tags and even ${AUTOREV} if you want within each of yo=
-ur=20
-recipes and still have everything locked down for future reproducibilit=
-y.
+	'Attempted 1 tasks of which 1 didn't need to be rerun and all succeeded'
 
-Cheers,
-Paul
+I remove the stamp file, then the task rerun ok.
 
---=20
+It's so strange! The meta data changed, Why the task refuse to rerun?
 
-Paul Eggleton
-Intel Open Source Technology Centre
+It should rerun automaticaly.
+
+Any one told me howto let the task auto rerun whenenver it's content 
+changed!
+
 
