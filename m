@@ -1,47 +1,28 @@
-Return-Path: <matt@madison.systems>
-Received: from mail-pf0-f175.google.com (mail-pf0-f175.google.com
-	[209.85.192.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 646D0771A7
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id E559D73289
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Aug 2016 22:44:08 +0000 (UTC)
-Received: by mail-pf0-f175.google.com with SMTP id h186so123009785pfg.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 08 Aug 2016 15:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=madison-systems.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=tMafzwjypL0iS2ox4FtD0Sd9s5FBIYKmkAbN3Ob3pdY=;
-	b=lkC7fP39kqtBYgsZRpsHI+cOhb5ygXx265K3XCNwSU4i/27ow4Bbn1/bFP+Qeb+rZl
-	DH/jX+JvYZutUp8zIGpX7rKUwz7m7oVlIKEknRZHvLt6gAjDN3zbeGReeiWCbW4kjy8Y
-	N+Nx9gerW+n8Yh5RfBUfJqEC5vnF1zHswUe0oBkl9CXXi4VKp/uSFgbn93xVvfnrqm7L
-	zV1ThtJHhzfbvK/VAbdn1NfDvV39eg/s+98aN6XG6yn3Z4PqPXp79s5uzFkZC94n7JHG
-	zyVPjx/4RUz66m/J7qbuc/LTHZVb1cfKKQJtfCraXn5xp19S80ErNc8M3Q/ScXt6/1Qj
-	vkng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=tMafzwjypL0iS2ox4FtD0Sd9s5FBIYKmkAbN3Ob3pdY=;
-	b=XrH4rXr1F4kAmCK65Z2BAAl91jOkpd4qRCpsFDkuZ27TtcdS7LdJiBcKIVMsIfMRzN
-	bRaSLBvYskRH962OF6Xna8Ow2MyRyjvBT3oh0iTASrJF0/cpFwCC8vDO8D2eFxlTD54C
-	V2M2vQKmzg17ehnO7huaYnTXWi6v7/s1+gyKNBctN0cFfOLPLI/tGd+49oLA7moPzZwI
-	KEhkjhi2yiMNilLPiXh+J058EjARHB6iszt9w1hU+dJbEn558ohPCCNS32LM8TwNk4rt
-	FfbMMfZGRF2qisrzZ+6Sf6fK7qUKXLupD/9nEGzfbscCNKtfG6k4fbcdtl88kpe6lMZQ
-	gQqg==
-X-Gm-Message-State: AEkooutzEZpViKzK4HnJGI+6XIjfrkxHSjRHhHzYaHGEywl1GAxRZB8CG+DpTUEUDwoY+g==
-X-Received: by 10.98.24.194 with SMTP id 185mr165914526pfy.52.1470696248787;
-	Mon, 08 Aug 2016 15:44:08 -0700 (PDT)
-Received: from workhorse.madison.systems
-	(70.90.175.93-BusName-ca.sfba.hfc.comcastbusiness.net.
-	[70.90.175.93]) by smtp.gmail.com with ESMTPSA id
-	d72sm50548450pfj.15.2016.08.08.15.44.06
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 08 Aug 2016 15:44:07 -0700 (PDT)
-From: Matt Madison <matt@madison.systems>
+	Tue,  9 Aug 2016 03:23:04 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga103.fm.intel.com with ESMTP; 08 Aug 2016 20:23:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.28,493,1464678000"; d="scan'208";a="1022074536"
+Received: from kwang27-mobl8.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.179.174])
+	by fmsmga001.fm.intel.com with ESMTP; 08 Aug 2016 20:23:01 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  8 Aug 2016 15:43:43 -0700
-Message-Id: <1470696223-9260-1-git-send-email-matt@madison.systems>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] fetch2: save/restore cwd for mirror URL downloads
+Date: Tue, 09 Aug 2016 15:22:59 +1200
+Message-ID: <11674755.DJQ5KUJ55z@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.10 (Linux/4.6.4-201.fc23.x86_64; KDE/4.14.20; x86_64; ;
+	)
+In-Reply-To: <C61ACEF2-94CC-4609-91F5-D9139A779926@gmail.com>
+References: <1470645281559.73326@axis.com>
+	<7a284480-47ae-674c-3073-5680e626f769@smile.fr>
+	<C61ACEF2-94CC-4609-91F5-D9139A779926@gmail.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] BB_NO_NETWORK: Fallback to local source for git lsremote
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,54 +35,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Aug 2016 22:44:10 -0000
+X-List-Received-Date: Tue, 09 Aug 2016 03:23:05 -0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Fixes "changed cwd" warnings from setscene tasks when the
-packages are downloaded from a shared-state mirror.
+On Mon, 08 Aug 2016 08:35:38 Khem Raj wrote:
+> > On Aug 8, 2016, at 4:24 AM, J=C3=A9r=C3=A9my Rosen <jeremy.rosen@sm=
+ile.fr> wrote:
+> >=20
+> > On 08/08/2016 11:55, Richard Purdie wrote:
+> >> On Mon, 2016-08-08 at 08:34 +0000, Tobias Hagelborn wrote:
+> >>> Change made to enable building offline also with git tag referenc=
+es
+> >>> in SRC_URI.
+> >>>=20
+> >>> If BB_NO_NETWORK is set, fallback to search for tags and revision=
+s
+> >>> in local DL_DIR / GITDIR in order to avoid network access.
+> >>=20
+> >> I'm not sure I agree with this since you'd get different build res=
+ults
+> >> depending on whether BB_NO_NETWORK is set or not.
+> >>=20
+> >> I think if BB_NO_NETWORK is set, its reasonable to assume that the=
 
-Signed-off-by: Matt Madison <matt@madison.systems>
----
- lib/bb/fetch2/__init__.py | 5 +++++
- 1 file changed, 5 insertions(+)
+> >> configuration should be locked down and that BB_NO_NETWORK should =
+not
+> >> have other side effects like this.
+> >>=20
+> >> It would also make it very hard to detect unlocked configurations
+> >> during testing which currently are quite easily identified.
+> >=20
+> > To be honest, this is a real world problem I have on a regular basi=
+s...
+> >=20
+> > The problem we have is that our customers want to keep an archive f=
+or
+> > (very) long term support and they test offline mode.
+> >=20
+> > This problem means that we have to set all our SRC_URI to git SHA i=
+nstead
+> > of the much more readable and easy to check git tags.
+> >=20
+> >=20
+> > you think to assume that a reference is a branch, but the real-life=
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 9054b2e..c0017a8 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -928,6 +928,8 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-     if ud.lockfile and ud.lockfile != origud.lockfile:
-         lf = bb.utils.lockfile(ud.lockfile)
- 
-+    save_cwd = os.getcwd()
-+
-     try:
-         if check:
-             found = ud.method.checkstatus(fetch, ud, ld)
-@@ -995,6 +997,7 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-             pass
-         return False
-     finally:
-+        os.chdir(save_cwd)
-         if ud.lockfile and ud.lockfile != origud.lockfile:
-             bb.utils.unlockfile(lf)
- 
-@@ -1558,6 +1561,7 @@ class Fetch(object):
- 
-         network = self.d.getVar("BB_NO_NETWORK", True)
-         premirroronly = (self.d.getVar("BB_FETCH_PREMIRRORONLY", True) == "1")
-+        save_cwd = os.getcwd()
- 
-         for u in urls:
-             ud = self.ud[u]
-@@ -1635,6 +1639,7 @@ class Fetch(object):
-             finally:
-                 if ud.lockfile:
-                     bb.utils.unlockfile(lf)
-+        os.chdir(save_cwd)
- 
-     def checkstatus(self, urls=None):
-         """
--- 
-2.7.4
+> > problem is when reference is a tag. Tag don't move so this is a cas=
+e of
+> > locked configuration, but i'm not sure how to handle it.
+> >=20
+> > Is there a way to have the best of both world somehow ?
+>=20
+> Don=E2=80=99t use tags instead rely on SHA numbers in SRCREV and use
+> BB_GENERATE_MIRROR_TARBALLS like mentioned here
+>=20
+> https://wiki.yoctoproject.org/wiki/How_do_I#Q:_How_do_I_create_my_own=
+_source
+> _download_mirror_.3F
+>=20
+> tags are floating types in git, you can not use them reliably.
+> You may tool in a method to automate updating the
+> recipes SRCREVs if you dont want to do it by hand.
+>=20
+> That should help hopefully
 
+FYI, another way to handle this is to enable buildhistory, run your bui=
+ld and=20
+then use the buildhistory-collect-srcrevs script. This will produce out=
+put=20
+that you can save to .inc file that will lock down the SRCREV values to=
+ exact=20
+hashes, which you can then include and commit with your sources. This a=
+llows=20
+you to keep your tags and even ${AUTOREV} if you want within each of yo=
+ur=20
+recipes and still have everything locked down for future reproducibilit=
+y.
+
+Cheers,
+Paul
+
+--=20
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
