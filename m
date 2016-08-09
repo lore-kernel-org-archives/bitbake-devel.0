@@ -1,30 +1,33 @@
-Return-Path: <zzs213@126.com>
-Received: from m15-113.126.com (m15-113.126.com [220.181.15.113])
-	by mail.openembedded.org (Postfix) with ESMTP id 40D6B771DF
+Return-Path: <jeremy.rosen@smile.fr>
+Received: from idris.smile.fr (idris.smile.fr [91.216.209.19])
+	by mail.openembedded.org (Postfix) with ESMTP id AA828771D8
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  9 Aug 2016 07:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=yLycm
-	eOtIDHFKC6SHTEfFYKQuUv5JTexzR4S13Vw4z4=; b=kLKnmRFsRSKEndpqZInMn
-	DhvdjI/F5Xc8u+KJgmwBpZ9MTIPXpUA9zalOOE0S0Wt4in9cE7qve4RHTvp+U+eO
-	dxhsGVNPqUQkDfseqkLwzmTUiRbYNk15axy8lqfV6xfG70/nsGpxivuzaHQNRG6W
-	UCJQoNgUrtN1hnTQszthR8=
-Received: from [192.168.0.12] (unknown [171.212.168.165])
-	by smtp3 (Coremail) with SMTP id DcmowACHg7miiKlXo0O_Dg--.11469S2;
-	Tue, 09 Aug 2016 15:39:16 +0800 (CST)
-To: bitbake-devel@lists.openembedded.org
-From: =?UTF-8?B?5byg5b+g5bGx?= <zzs213@126.com>
-Message-ID: <dec52a2f-ef2f-f9c1-9ca2-e8b99cea7694@126.com>
-Date: Tue, 9 Aug 2016 15:39:23 +0800
+	Tue,  9 Aug 2016 08:15:50 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by idris.smile.fr (Postfix) with ESMTP id 65E4E1EE0945;
+	Tue,  9 Aug 2016 10:15:50 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at smile.fr
+Received: from idris.smile.fr ([127.0.0.1])
+	by localhost (bluemind-mta.prod.vitry.intranet [127.0.0.1])
+	(amavisd-new, port 10024)
+	with ESMTP id Htu24N7AYLMC; Tue,  9 Aug 2016 10:15:50 +0200 (CEST)
+Received: from [10.9.18.224] (229.29.205.77.rev.sfr.net [77.205.29.229])
+	by idris.smile.fr (Postfix) with ESMTPSA id C42BA1EE0946;
+	Tue,  9 Aug 2016 10:15:45 +0200 (CEST)
+To: Paul Eggleton <paul.eggleton@linux.intel.com>,
+	bitbake-devel@lists.openembedded.org
+References: <1470645281559.73326@axis.com>
+	<7a284480-47ae-674c-3073-5680e626f769@smile.fr>
+	<C61ACEF2-94CC-4609-91F5-D9139A779926@gmail.com>
+	<11674755.DJQ5KUJ55z@peggleto-mobl.ger.corp.intel.com>
+From: =?UTF-8?B?SsOpcsOpbXkgUm9zZW4=?= <jeremy.rosen@smile.fr>
+Message-ID: <0c698cef-4aa5-ee7a-93ee-ccd830defb56@smile.fr>
+Date: Tue, 9 Aug 2016 10:15:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.2.0
+	Firefox/45.0 Icedove/45.2.0
 MIME-Version: 1.0
-X-CM-TRANSID: DcmowACHg7miiKlXo0O_Dg--.11469S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUkQzVUUUUU
-X-Originating-IP: [171.212.168.165]
-X-CM-SenderInfo: x22vjiat6rjloofrz/1tbiLQTAGVc1osHBpAAAsU
-Subject: howto rerun a task whenever it's content chang
+In-Reply-To: <11674755.DJQ5KUJ55z@peggleto-mobl.ger.corp.intel.com>
+Subject: Re: [PATCH] BB_NO_NETWORK: Fallback to local source for git lsremote
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,26 +40,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 09 Aug 2016 07:39:24 -0000
+X-List-Received-Date: Tue, 09 Aug 2016 08:15:52 -0000
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-I have a task in test.bb. say do_task1
+I am not very good at internal git magic, but how possible would it be 
+to use the output of git-describe --long in SRC_URI...
 
-run 'bitbake test -c task1'. then generate stamp file for it.
+This output contains both the tag name and the (abreviated) SHA, so it's 
+both readable for the human user, easy to check and can't change...
 
-Now I found a bug and edit do_task1. but run 'bitbake test -c task1' 
-again, Bitbake said
 
-	'Attempted 1 tasks of which 1 didn't need to be rerun and all succeeded'
-
-I remove the stamp file, then the task rerun ok.
-
-It's so strange! The meta data changed, Why the task refuse to rerun?
-
-It should rerun automaticaly.
-
-Any one told me howto let the task auto rerun whenenver it's content 
-changed!
+On 09/08/2016 05:22, Paul Eggleton wrote:
+> On Mon, 08 Aug 2016 08:35:38 Khem Raj wrote:
+>>> On Aug 8, 2016, at 4:24 AM, Jérémy Rosen <jeremy.rosen@smile.fr> wrote:
+>>>
+>>> On 08/08/2016 11:55, Richard Purdie wrote:
+>>>> On Mon, 2016-08-08 at 08:34 +0000, Tobias Hagelborn wrote:
+>>>>> Change made to enable building offline also with git tag references
+>>>>> in SRC_URI.
+>>>>>
+>>>>> If BB_NO_NETWORK is set, fallback to search for tags and revisions
+>>>>> in local DL_DIR / GITDIR in order to avoid network access.
+>>>> I'm not sure I agree with this since you'd get different build results
+>>>> depending on whether BB_NO_NETWORK is set or not.
+>>>>
+>>>> I think if BB_NO_NETWORK is set, its reasonable to assume that the
+>>>> configuration should be locked down and that BB_NO_NETWORK should not
+>>>> have other side effects like this.
+>>>>
+>>>> It would also make it very hard to detect unlocked configurations
+>>>> during testing which currently are quite easily identified.
+>>> To be honest, this is a real world problem I have on a regular basis...
+>>>
+>>> The problem we have is that our customers want to keep an archive for
+>>> (very) long term support and they test offline mode.
+>>>
+>>> This problem means that we have to set all our SRC_URI to git SHA instead
+>>> of the much more readable and easy to check git tags.
+>>>
+>>>
+>>> you think to assume that a reference is a branch, but the real-life
+>>> problem is when reference is a tag. Tag don't move so this is a case of
+>>> locked configuration, but i'm not sure how to handle it.
+>>>
+>>> Is there a way to have the best of both world somehow ?
+>> Don’t use tags instead rely on SHA numbers in SRCREV and use
+>> BB_GENERATE_MIRROR_TARBALLS like mentioned here
+>>
+>> https://wiki.yoctoproject.org/wiki/How_do_I#Q:_How_do_I_create_my_own_source
+>> _download_mirror_.3F
+>>
+>> tags are floating types in git, you can not use them reliably.
+>> You may tool in a method to automate updating the
+>> recipes SRCREVs if you dont want to do it by hand.
+>>
+>> That should help hopefully
+> FYI, another way to handle this is to enable buildhistory, run your build and
+> then use the buildhistory-collect-srcrevs script. This will produce output
+> that you can save to .inc file that will lock down the SRCREV values to exact
+> hashes, which you can then include and commit with your sources. This allows
+> you to keep your tags and even ${AUTOREV} if you want within each of your
+> recipes and still have everything locked down for future reproducibility.
+>
+> Cheers,
+> Paul
+>
 
 
