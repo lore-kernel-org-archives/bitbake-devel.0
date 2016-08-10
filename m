@@ -1,39 +1,28 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id D07BA6FF78
+	by mail.openembedded.org (Postfix) with ESMTP id 98DD977139
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Aug 2016 08:54:23 +0000 (UTC)
+	Wed, 10 Aug 2016 10:40:31 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u7A8sJtp023960; Wed, 10 Aug 2016 09:54:19 +0100
+	u7AAeVHa029731; Wed, 10 Aug 2016 11:40:31 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id BVH3fehJTUVU; Wed, 10 Aug 2016 09:54:19 +0100 (BST)
+	with LMTP id VY1aqt6GXSjy; Wed, 10 Aug 2016 11:40:31 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u7A8sFd8023956
+	u7AAeO80029717
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 10 Aug 2016 09:54:17 +0100
-Message-ID: <1470819255.8166.67.camel@linuxfoundation.org>
+	Wed, 10 Aug 2016 11:40:26 +0100
+Message-ID: <1470825624.18638.1.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Olof Johansson <olof.johansson@axis.com>, Khem Raj <raj.khem@gmail.com>
-Date: Wed, 10 Aug 2016 09:54:15 +0100
-In-Reply-To: <20160809162629.GT4674@axis.com>
-References: <1470645281559.73326@axis.com>
-	<1470650127.8166.40.camel@linuxfoundation.org>
-	<7a284480-47ae-674c-3073-5680e626f769@smile.fr>
-	<C61ACEF2-94CC-4609-91F5-D9139A779926@gmail.com>
-	<20160808163926.GO4674@axis.com>
-	<5D5A3DA9-5197-492B-8A63-E28A882D99F0@gmail.com>
-	<20160809093647.GP4674@axis.com>
-	<917EB417-8D19-45C7-AE21-E11828557010@gmail.com>
-	<20160809150902.GR4674@axis.com>
-	<601FD807-0341-4764-AE68-0E3DA0BB0E11@gmail.com>
-	<20160809162629.GT4674@axis.com>
+To: Matt Madison <matt@madison.systems>, bitbake-devel@lists.openembedded.org
+Date: Wed, 10 Aug 2016 11:40:24 +0100
+In-Reply-To: <1470696223-9260-1-git-send-email-matt@madison.systems>
+References: <1470696223-9260-1-git-send-email-matt@madison.systems>
 X-Mailer: Evolution 3.16.5-1ubuntu3.1 
 Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] BB_NO_NETWORK: Fallback to local source for git lsremote
+Subject: Re: [PATCH] fetch2: save/restore cwd for mirror URL downloads
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,72 +35,70 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Aug 2016 08:54:27 -0000
+X-List-Received-Date: Wed, 10 Aug 2016 10:40:33 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2016-08-09 at 18:26 +0200, Olof Johansson wrote:
-> On 16-08-09 08:54 -0700, Khem Raj wrote:
-> > I am sorry if its coming across this way.I for one was trying to
-> > convey
-> > that there are reasons to not have such a patch e.g. predictable
-> > builds and general support problems with BB_NO_NETWORK.
-> > 
-> > We have been through this very same problem and decided to use
-> > srcrev
-> > collection approach which is similar to buildhistory collection
-> > approach. It was a bit of getting used to, but in the end it was
-> > a very good way.
+On Mon, 2016-08-08 at 15:43 -0700, Matt Madison wrote:
+> Fixes "changed cwd" warnings from setscene tasks when the
+> packages are downloaded from a shared-state mirror.
 > 
-> Thanks for clarifying, this is a reasonable stance, and I can see
-> where you are coming from. But I'm not advocating that this
-> behavior should be forced upon anybody. What I'm trying to convey
-> is that not all environments have issues with volatile tags, and
-> from my pov, it's reasonably easy to fight people (within an
-> organization) moving tags if you own the Git infrastructure =).
+> Signed-off-by: Matt Madison <matt@madison.systems>
+> ---
+>  lib/bb/fetch2/__init__.py | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-The trouble is that whilst you and others posting on this mailing list
-understand this problem (in some cases now its been explained), in the
-general case people don't realise that git tags can be rewritten.
+bitbake-selftest doesn't seem to like this change:
 
-If there is an "easy" option to make a failure go away, people will
-take it every time, without understanding why it can be a bad idea.
-People prefer not to think if they don't need to.
+https://autobuilder.yoctoproject.org/main/builders/nightly/builds/973/steps/BitbakeSelftest/logs/stdio
 
-I've watched git tags get rewritten by upstreams who you'd have thought
-would have known better, with all kinds of nasty fallout from the
-result as few people understood what happened, why or how to fix it.
-The usual "solution" is to blame bitbake or sstate, since they're
-complex, people don't understand them and they're therefore clearly at
-fault and broken.
-
-So my position on this is based on experience of how badly you can get
-burnt by it. I was very reluctant to make bitbake behave in the way it
-does today originally but in the end various discussions brought me to
-that conclusion.
-
-What I'm trying to avoid in the fetcher is too many code paths. We
-already have a lot of them, probably too many, and it makes maintaining
-and enhancing the fetchers very very hard as you generally end up
-trampling on some weird usecase someone relies upon. I therefore in
-general don't like magic switches that drastically alter behaviour,
-prefering to have one standard path we all use. Add to that the
-concerns above and the idea of making this optional for people makes me
-very nervous.
-
-Having better descriptions of revisions is a semi-tangential issue.
-There have been a few different approaches to using the output of git
-describe or counting revisions and injecting it into PV. The
-gitpkgv.bbclass was one similar idea and we did end up putting a method
-into the fetcher to better enable this where the revision number was
-based on numbers of commits in a branch. I'd be ok with extending or
-supplementing that idea to work with git describe so that package
-output revisions are human readable. I would however want the recipes
-and fetcher to primarily work with the real sha revisions as those are
-what define a specific revision in git.
+I do wonder if we need to fix the individual fetcher modules...
 
 Cheers,
 
 Richard
 
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index 9054b2e..c0017a8 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -928,6 +928,8 @@ def try_mirror_url(fetch, origud, ud, ld, check =
+> False):
+>      if ud.lockfile and ud.lockfile != origud.lockfile:
+>          lf = bb.utils.lockfile(ud.lockfile)
+>  
+> +    save_cwd = os.getcwd()
+> +
+>      try:
+>          if check:
+>              found = ud.method.checkstatus(fetch, ud, ld)
+> @@ -995,6 +997,7 @@ def try_mirror_url(fetch, origud, ud, ld, check =
+> False):
+>              pass
+>          return False
+>      finally:
+> +        os.chdir(save_cwd)
+>          if ud.lockfile and ud.lockfile != origud.lockfile:
+>              bb.utils.unlockfile(lf)
+>  
+> @@ -1558,6 +1561,7 @@ class Fetch(object):
+>  
+>          network = self.d.getVar("BB_NO_NETWORK", True)
+>          premirroronly = (self.d.getVar("BB_FETCH_PREMIRRORONLY",
+> True) == "1")
+> +        save_cwd = os.getcwd()
+>  
+>          for u in urls:
+>              ud = self.ud[u]
+> @@ -1635,6 +1639,7 @@ class Fetch(object):
+>              finally:
+>                  if ud.lockfile:
+>                      bb.utils.unlockfile(lf)
+> +        os.chdir(save_cwd)
+>  
+>      def checkstatus(self, urls=None):
+>          """
+> -- 
+> 2.7.4
+> 
 
