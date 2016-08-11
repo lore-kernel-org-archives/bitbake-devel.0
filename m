@@ -1,21 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id A4D33771C2
+	by mail.openembedded.org (Postfix) with ESMTP id A3D4C75CF1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Aug 2016 03:37:30 +0000 (UTC)
+	Thu, 11 Aug 2016 03:37:32 +0000 (UTC)
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga104.fm.intel.com with ESMTP; 10 Aug 2016 20:37:32 -0700
+	by fmsmga104.fm.intel.com with ESMTP; 10 Aug 2016 20:37:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,503,1464678000"; d="scan'208";a="863452236"
+X-IronPort-AV: E=Sophos;i="5.28,503,1464678000"; d="scan'208";a="863452245"
 Received: from unknown (HELO peggleto-mobl.ger.corp.intel.com)
 	([10.255.171.53])
-	by orsmga003.jf.intel.com with ESMTP; 10 Aug 2016 20:37:29 -0700
+	by orsmga003.jf.intel.com with ESMTP; 10 Aug 2016 20:37:31 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 11 Aug 2016 15:36:56 +1200
-Message-Id: <cover.1470886482.git.paul.eggleton@linux.intel.com>
+Date: Thu, 11 Aug 2016 15:36:57 +1200
+Message-Id: <6aeaed72459f6c9d533bcea0b0d63605e1cef12a.1470886482.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.5.5
-Subject: [PATCH 0/4] Progress fixes
+In-Reply-To: <cover.1470886482.git.paul.eggleton@linux.intel.com>
+References: <cover.1470886482.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1470886482.git.paul.eggleton@linux.intel.com>
+References: <cover.1470886482.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 1/4] runqueue: fix two minor issues with the initialising tasks progress
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,30 +34,48 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 11 Aug 2016 03:37:36 -0000
 
-Fixes for minor issues in the progress bar display, plus a patch for
-some unclosed files that I noticed at the same time as working on these.
+A couple of fixes for the "Initialising tasks" progress bar behaviour:
+* Properly finish the progress bar when using bitbake -S
+* Finish the progress bar before calling BB_HASHCHECK_FUNCTION (so that
+  in OE when that shows its own "Checking sstate mirror object
+  availability"  progress bar it gets shown on the next line as it
+  should).
 
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ lib/bb/runqueue.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-The following changes since commit 0a9b5d7d9655dbb09d458fc6e330e932f0f9dab6:
-
-  toaster: buildinfohelper Add handling local layers (i.e. non-git) layers (2016-08-11 00:08:18 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib paule/bb-progress-fixes2
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-progress-fixes2
-
-Paul Eggleton (4):
-  runqueue: fix two minor issues with the initialising tasks progress
-  knotty: fix task progress bar not starting at 0%
-  knotty: don't show number of running tasks in quiet mode
-  siggen: properly close files rather than opening them inline
-
- lib/bb/runqueue.py  |  5 +++--
- lib/bb/siggen.py    | 15 +++++++++------
- lib/bb/ui/knotty.py | 11 ++++++++---
- 3 files changed, 20 insertions(+), 11 deletions(-)
-
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index aa939d0..3a593b6 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1148,6 +1148,7 @@ class RunQueue:
+         if self.state is runQueueSceneInit:
+             dump = self.cooker.configuration.dump_signatures
+             if dump:
++                self.rqdata.init_progress_reporter.finish()
+                 if 'printdiff' in dump:
+                     invalidtasks = self.print_diffscenetasks()
+                 self.dump_signatures(dump)
+@@ -1967,6 +1968,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             if len(self.sq_revdeps[tid]) == 0:
+                 self.runq_buildable.add(tid)
+ 
++        self.rqdata.init_progress_reporter.finish()
++
+         self.outrightfail = []
+         if self.rq.hashvalidate:
+             sq_hash = []
+@@ -2018,8 +2021,6 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                     logger.debug(2, 'No package found, so skipping setscene task %s', tid)
+                     self.outrightfail.append(tid)
+ 
+-        self.rqdata.init_progress_reporter.finish()
+-
+         logger.info('Executing SetScene Tasks')
+ 
+         self.rq.state = runQueueSceneRun
 -- 
 2.5.5
 
