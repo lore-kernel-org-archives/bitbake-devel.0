@@ -1,47 +1,46 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pa0-f46.google.com (mail-pa0-f46.google.com
-	[209.85.220.46])
-	by mail.openembedded.org (Postfix) with ESMTP id A57F67680A
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
+	by mail.openembedded.org (Postfix) with ESMTP id BB3C577142
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Aug 2016 10:41:41 +0000 (UTC)
-Received: by mail-pa0-f46.google.com with SMTP id i5so15543454pat.2
+	Mon, 15 Aug 2016 14:20:55 +0000 (UTC)
+Received: by mail-wm0-f45.google.com with SMTP id i5so106411319wmg.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Aug 2016 03:41:42 -0700 (PDT)
+	Mon, 15 Aug 2016 07:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=wNx1WnzPl6vNZ7GMq9G5WWKkmWf1qWYLCEoNNZMwA7E=;
-	b=XeLLBYbSEHKylaSK/PbARcgBxCIZs3cV3nH6AFJLCkroKO0oZot+NeS5I1FNfwADvG
-	AAgj+0cXgGaxHTVq+4iC+gX9J+p6BDfyA+Nq+g/r87xhETl4mOMbNKsQlimgmxJqGDOP
-	LmG7ZkiUs8d5/0JAgN/4g9demqkQ1Jm+0cRQqo+3bB7C1/1VGnBDULdJIuUbL8MquCmp
-	x4Gubj8bfWQGRJsOyTUIJLLo394BFBDCQjFoCN+Gm4OF/L4f8zBQsT+1n7HKRnS029UA
-	NF3XxtdqpSTfr7UEeoHC/FEpMjaZyZ5+g/JWG+rPKF1o0xWXo9b1pRVybLnwdGZtekoq
-	W6pA==
+	h=from:to:subject:date:message-id;
+	bh=907/a39BTJ8Ok9L7EQW1ePnP0NOzaisTepUlyYiHuw8=;
+	b=p30etIgFCGVM0c7wQEvEtN6p+t97UWS0kGjd5tN1T3K/ikpzXuELKI2exlU3aNiTCk
+	QOia7NHLyzPXYe0atPuJCj0A3sFgVWUwDNexMwcRr9jLTXoNT1dll7KIsxnScXhp4hO9
+	yV8Mlvj4G1nGJE3aqVkSbOt8v9yIiQpMU3nLqMC0I51DY27ZgYNFy6fEdR+KLUMZ1e74
+	63xHThGWX3XoPCffCffps8kGOTOgxhgTSgVI71a2UQciSnLRRnYF9C6aqs7bAWn2r2Yw
+	TN84wzXxle1gcDknlqXw9gG73ZnXAfn6Ogzvvkw070bkKXAzU5kEHjvk99P6qhSlJs8d
+	sY5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=wNx1WnzPl6vNZ7GMq9G5WWKkmWf1qWYLCEoNNZMwA7E=;
-	b=imdHaqu49t0ZqkFy3KmhM0k9clwvQgs2x3mGQmjct0LZIzy3n4g5PHprDfnNPxovdx
-	HBht7AXbQY/Cer/8cwjMrjiluzmKMAYK6ECs4d2460IXxRo5DYqZ1XdTx2mEvPDcvGsF
-	WNPtEcOG6+UbrYSRxzoQufpShisiLQhYW+qGn50x4e9tGExUCHV+HjMOkq2gEd1k4yft
-	ZRmTNWMNePDCyPXVvQK73Nt7z+bl8YuDHg37A/0BUXT0RemmpB3AU3wEm5ulHaqUKyMX
-	8ZhdGPNqa7JzNsFv6zRz1gYepuIDeOISiB4ksvdCskARgGefJtfSH67wjbpsBugAHOoY
-	YBJQ==
-X-Gm-Message-State: AEkoouubwH6IBbeQ9syKFP+9CJM19x/wsP6p89tIercaDv2blyA2wJHZ32L0ASX+TNEDRScR
-X-Received: by 10.66.48.133 with SMTP id l5mr408361pan.151.1471257702121;
-	Mon, 15 Aug 2016 03:41:42 -0700 (PDT)
-Received: from orion.ger.corp.intel.com ([192.55.54.43])
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=907/a39BTJ8Ok9L7EQW1ePnP0NOzaisTepUlyYiHuw8=;
+	b=I8wuw4ysUQXt4TuG1F011QPGCr0/+fvjB9dZKHxqxCOz3a2NRANCEt7RPaE1fsrF6l
+	x6SnS9CdrmsLEBItiiL9W1bDvcLvFHsBoDSLC9yFx+/kCir7hmeX5kmTiFaMCYdcv5zf
+	u8UyW0cyZM8PO+5QznNVc0fboUdq7OPMD7Isq1gmSN40BRayb7DbiaLsHBA5Fx3Ds7V0
+	MRlRgB+Ezkn7tocRNTDZokw/yAhfvw84xrVwqYTEzWYF9xrAo4Q5bNgysrkoG32u2mBi
+	5NnLl9HciJ5BYpk5pvkfcd0jBl09UsCdK5YRBbMxuCdTab69nqHiK223x9uk9LodtPpM
+	mKZQ==
+X-Gm-Message-State: AEkoouvg8YAe+/RFWEVJq6nZiXi398s66+wRDK5Fn1qjyCiQKYkGfrn86miuFb4gCfCKucny
+X-Received: by 10.28.169.82 with SMTP id s79mr15643197wme.87.1471270854832;
+	Mon, 15 Aug 2016 07:20:54 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
 	by smtp.gmail.com with ESMTPSA id
-	n10sm31033917pap.16.2016.08.15.03.41.39
+	207sm16795935wmb.7.2016.08.15.07.20.53
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 15 Aug 2016 03:41:41 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
+	Mon, 15 Aug 2016 07:20:54 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 15 Aug 2016 11:41:33 +0100
-Message-Id: <1471257693-11263-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.7.4
-Cc: David Reyna <david.reyna@windriver.com>
-Subject: [PATCH] toaster: update web urls for openembedded-core's special case
+Date: Mon, 15 Aug 2016 15:20:50 +0100
+Message-Id: <1471270850-27986-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.8.1
+Subject: [PATCH] lib/bb/tests/fetch: remove URL that doesn't exist anymore
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,40 +53,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Aug 2016 10:41:41 -0000
+X-List-Received-Date: Mon, 15 Aug 2016 14:20:56 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+The CUPS ipptool URL we were checking now redirects to github where the tarball
+isn't present, so remove it from the test suite.
 
-The layer index update command has a special case for the
-updating 'openembedded-core' layer, and it was missing reading
-and updating the git web URL fields.
-
-[YOCTO #8037]
-
-Signed-off-by: David Reyna <david.reyna@windriver.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- lib/toaster/orm/management/commands/lsupdates.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+ bitbake/lib/bb/tests/fetch.py | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/lib/toaster/orm/management/commands/lsupdates.py b/lib/toaster/orm/management/commands/lsupdates.py
-index 89817c8..8ff120e 100644
---- a/lib/toaster/orm/management/commands/lsupdates.py
-+++ b/lib/toaster/orm/management/commands/lsupdates.py
-@@ -165,6 +165,12 @@ class Command(NoArgsCommand):
-                     # layerindex
-                     oe_core_l.summary = li['summary']
-                     oe_core_l.description = li['description']
-+                    oe_core_l.vcs_web_url = li['vcs_web_url']
-+                    oe_core_l.vcs_web_tree_base_url = \
-+                        li['vcs_web_tree_base_url']
-+                    oe_core_l.vcs_web_file_base_url = \
-+                        li['vcs_web_file_base_url']
-+
-                     oe_core_l.save()
-                     li_layer_id_to_toaster_layer_id[li['id']] = oe_core_l.pk
-                     self.mini_progress("layers", i, total)
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index 5ff156c..272078f 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -768,7 +768,6 @@ class FetchLatestVersionTest(FetcherTest):
+ 
+ class FetchCheckStatusTest(FetcherTest):
+     test_wget_uris = ["http://www.cups.org/software/1.7.2/cups-1.7.2-source.tar.bz2",
+-                      "http://www.cups.org/software/ipptool/ipptool-20130731-linux-ubuntu-i686.tar.gz",
+                       "http://www.cups.org/",
+                       "http://downloads.yoctoproject.org/releases/sato/sato-engine-0.1.tar.gz",
+                       "http://downloads.yoctoproject.org/releases/sato/sato-engine-0.2.tar.gz",
 -- 
-2.7.4
+2.8.1
 
 
