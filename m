@@ -1,29 +1,48 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 6D9C374197
+Return-Path: <kergoth@gmail.com>
+Received: from mail-oi0-f67.google.com (mail-oi0-f67.google.com
+	[209.85.218.67])
+	by mail.openembedded.org (Postfix) with ESMTP id C0B5C7710C
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Aug 2016 17:03:31 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u7FH3VUQ011036 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Aug 2016 18:03:31 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id X57uKNyCmO5D for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Aug 2016 18:03:31 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u7FH3TVH011033
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	Mon, 15 Aug 2016 17:16:36 +0000 (UTC)
+Received: by mail-oi0-f67.google.com with SMTP id b22so4885020oii.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Aug 2016 18:03:30 +0100
-Message-ID: <1471280609.20391.99.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 15 Aug 2016 18:03:29 +0100
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: [PATCH] cache: Build datastores from databuilder object
+	Mon, 15 Aug 2016 10:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=G4+0kkuDEF/Iy/zvA6ciQSF0SG71zyqka4bSrqL5b5Q=;
+	b=a/MuBCeXSv4yF4ttuApOca8lYC1nAhP8aGgQ+T1Xn24Rj+jQEZ2Ng2lVAzRoREB0Kt
+	Y/FtDGo5ibOMENckEerF0I8k6FXGrN+SotcoG3X3+n4iGe5XbRZZvfcvBoGobCejmbfj
+	riT3GzsD5w26m9sCToTxp+PtxeGILb4GmS0W2bvImjUI23Yq89uNNe2Fl4Rpq7Zy5xY/
+	PUfEAIbtJoeYgdHCcVY3VTF37EmR8Td0eH6JaMZ+NA0TKz2VwnqeVVAeRsZmHDcD6JWC
+	n0y6TPYGLLCJDa96zKMy2aSGJYhlOGSBMOAd455zRv4dRhanMAPVnOJkoxDV7JJXczhX
+	IZyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc;
+	bh=G4+0kkuDEF/Iy/zvA6ciQSF0SG71zyqka4bSrqL5b5Q=;
+	b=TsGbTfaHgIIz32MmiJOMNkdAFPHlo+0h+03QoJyhL9oKItXEeiBOISBy0xvUWcujuM
+	ihHvXKnXYlsIo++iIBJBIkfTqiRbfELtRmiboXc+0chS31/SIoRYnnLg9yGSeiN8pSPZ
+	Utplj1J0QbbXxhpAeIIHs5InsM4pMU+IaX0jsPIBAIxUCT2NKaLEBCiAdq8EOZKzrCQ6
+	CxAb3EmSoecr606EiwfMD4FMGg/LOVAC4CNrswwqxcvsPMJrtiOpHYv5l5ZfNM19GHsU
+	SJa3LrJPiLyVpBLNW5MfZQlCg8kw/nvC1VQ6yJMBRWM2qxyn52TkBErMkQ0W0hGlIipS
+	IZMA==
+X-Gm-Message-State: AEkooutEBj0KoH44ziSslpMsDVxjth+bXWV2jnIHnNcsZIwPpmagrJOU3dmtEwlGZ/ZflBldPwqvaDTDEC2z+Q==
+X-Received: by 10.202.223.132 with SMTP id w126mr1534052oig.20.1471281397206; 
+	Mon, 15 Aug 2016 10:16:37 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.157.20.3 with HTTP; Mon, 15 Aug 2016 10:16:16 -0700 (PDT)
+In-Reply-To: <1471280319.20391.93.camel@linuxfoundation.org>
+References: <1471280319.20391.93.camel@linuxfoundation.org>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Mon, 15 Aug 2016 10:16:16 -0700
+X-Google-Sender-Auth: lbdzFP0WYy2H_qxj8smy6mU26S4
+Message-ID: <CABcZANnCFXP4vS70_qitWWHru_RoC1uDzpKNU-Zy5D6JGhXxAQ@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] runqueue: Abstract worker functionality to an object/array
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,242 +55,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Aug 2016 17:03:31 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 15 Aug 2016 17:16:38 -0000
+Content-Type: multipart/alternative; boundary=001a113d40be0b9acc053a1f6583
 
-Rather than passing in a datastore to build on top of, use the data builder
-object in the cache and base the parsed recipe from this. This turns
-things into proper objects building from one another rather than messy
-mixes of static and class functions.
+--001a113d40be0b9acc053a1f6583
+Content-Type: text/plain; charset=UTF-8
 
-This sets things up so we can support parsing and building multiple
-configurations.
+On Mon, Aug 15, 2016 at 9:58 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> +                    if w in self.rq.worker:
+> +                        name = "Worker"
+> +                    elif w in self.rq.fakeworker:
+> +                        name = "Fakeroot"
+>
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index b3353fb..96648da 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -199,15 +199,18 @@ def fork_off_task(worker, cfg, data, databuilder, workerdata, fn, task, taskname
-             if umask:
-                 os.umask(umask)
- 
--            data.setVar("BB_WORKERCONTEXT", "1")
--            data.setVar("BB_TASKDEPDATA", taskdepdata)
--            data.setVar("BUILDNAME", workerdata["buildname"])
--            data.setVar("DATE", workerdata["date"])
--            data.setVar("TIME", workerdata["time"])
--            bb.parse.siggen.set_taskdata(workerdata["sigdata"])
--            ret = 0
-             try:
--                the_data = bb.cache.Cache.loadDataFull(fn, appends, data)
-+                bb_cache = bb.cache.NoCache(databuilder)
-+                the_data = databuilder.data
-+                the_data.setVar("BB_WORKERCONTEXT", "1")
-+                the_data.setVar("BB_TASKDEPDATA", taskdepdata)
-+                the_data.setVar("BUILDNAME", workerdata["buildname"])
-+                the_data.setVar("DATE", workerdata["date"])
-+                the_data.setVar("TIME", workerdata["time"])
-+                bb.parse.siggen.set_taskdata(workerdata["sigdata"])
-+                ret = 0
-+
-+                the_data = bb_cache.loadDataFull(fn, appends)
-                 the_data.setVar('BB_TASKHASH', workerdata["runq_hash"][task])
- 
-                 bb.utils.set_process_name("%s:%s" % (the_data.getVar("PN", True), taskname.replace("do_", "")))
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 8c1fe11..5f302d6 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -271,35 +271,44 @@ class NoCache(object):
-         self.databuilder = databuilder
-         self.data = databuilder.data
- 
--    @classmethod
--    def loadDataFull(cls, virtualfn, appends, cfgData):
-+    def loadDataFull(self, virtualfn, appends):
-         """
-         Return a complete set of data for fn.
-         To do this, we need to parse the file.
-         """
--
-+        logger.debug(1, "Parsing %s (full)" % virtualfn)
-         (fn, virtual) = virtualfn2realfn(virtualfn)
--
--        logger.debug(1, "Parsing %s (full)", fn)
--
--        cfgData.setVar("__ONLYFINALISE", virtual or "default")
--        bb_data = cls.load_bbfile(fn, appends, cfgData)
-+        bb_data = self.load_bbfile(virtualfn, appends, virtonly=True)
-         return bb_data[virtual]
- 
--    @staticmethod
--    def load_bbfile(bbfile, appends, config):
-+    def load_bbfile(self, bbfile, appends, virtonly = False):
-         """
-         Load and parse one .bb build file
-         Return the data and whether parsing resulted in the file being skipped
-         """
-+
-+        if virtonly:
-+            (bbfile, virtual) = virtualfn2realfn(bbfile)
-+            bb_data = self.data.createCopy()
-+            bb_data.setVar("__BBMULTICONFIG", mc) 
-+            bb_data.setVar("__ONLYFINALISE", virtual or "default")
-+            datastores = self._load_bbfile(bb_data, bbfile, appends)
-+            return datastores
-+
-+        bb_data = self.data.createCopy()
-+        datastores = self._load_bbfile(bb_data, bbfile, appends)
-+
-+        return datastores
-+
-+    def _load_bbfile(self, bb_data, bbfile, appends):
-         chdir_back = False
- 
-         # expand tmpdir to include this topdir
--        config.setVar('TMPDIR', config.getVar('TMPDIR', True) or "")
-+        bb_data.setVar('TMPDIR', bb_data.getVar('TMPDIR', True) or "")
-         bbfile_loc = os.path.abspath(os.path.dirname(bbfile))
-         oldpath = os.path.abspath(os.getcwd())
-         bb.parse.cached_mtime_noerror(bbfile_loc)
--        bb_data = config.createCopy()
-+
-         # The ConfHandler first looks if there is a TOPDIR and if not
-         # then it would call getcwd().
-         # Previously, we chdir()ed to bbfile_loc, called the handler
-@@ -431,12 +440,11 @@ class Cache(NoCache):
-                                                   len(self.depends_cache)),
-                       self.data)
- 
--    @classmethod
--    def parse(cls, filename, appends, configdata, caches_array):
-+    def parse(self, filename, appends):
-         """Parse the specified filename, returning the recipe information"""
-         logger.debug(1, "Parsing %s", filename)
-         infos = []
--        datastores = cls.load_bbfile(filename, appends, configdata)
-+        datastores = self.load_bbfile(filename, appends)
-         depends = []
-         variants = []
-         # Process the "real" fn last so we can store variants list
-@@ -451,14 +459,14 @@ class Cache(NoCache):
-             if virtualfn == filename:
-                 data.setVar("__VARIANTS", " ".join(variants))
-             info_array = []
--            for cache_class in caches_array:
-+            for cache_class in self.caches_array:
-                 info = cache_class(filename, data)
-                 info_array.append(info)
-             infos.append((virtualfn, info_array))
- 
-         return infos
- 
--    def load(self, filename, appends, configdata):
-+    def load(self, filename, appends):
-         """Obtain the recipe information for the specified filename,
-         using cached values if available, otherwise parsing.
- 
-@@ -479,13 +487,13 @@ class Cache(NoCache):
- 
-         return cached, infos
- 
--    def loadData(self, fn, appends, cfgData, cacheData):
-+    def loadData(self, fn, appends, cacheData):
-         """Load the recipe info for the specified filename,
-         parsing and adding to the cache if necessary, and adding
-         the recipe information to the supplied CacheData instance."""
-         skipped, virtuals = 0, 0
- 
--        cached, infos = self.load(fn, appends, cfgData)
-+        cached, infos = self.load(fn, appends)
-         for virtualfn, info_array in infos:
-             if info_array[0].skipped:
-                 logger.debug(1, "Skipping %s: %s", virtualfn, info_array[0].skipreason)
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 43c4f78..fe95e73 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -617,7 +617,8 @@ class BBCooker:
- 
-         if fn:
-             try:
--                envdata = bb.cache.Cache.loadDataFull(fn, self.collection.get_file_appends(fn), self.data)
-+                bb_cache = bb.cache.Cache(self.databuilder, self.data_hash, self.caches_array)
-+                envdata = bb_cache.loadDataFull(fn, self.collection.get_file_appends(fn))
-             except Exception as e:
-                 parselog.exception("Unable to read %s", fn)
-                 raise
-@@ -1254,9 +1255,9 @@ class BBCooker:
- 
-         self.buildSetVars()
- 
--        infos = bb.cache.Cache.parse(fn, self.collection.get_file_appends(fn), \
--                                     self.data,
--                                     self.caches_array)
-+        bb_cache = bb.cache.Cache(self.databuilder, self.data_hash, self.caches_array)
-+
-+        infos = bb_cache.parse(fn, self.collection.get_file_appends(fn))
-         infos = dict(infos)
- 
-         fn = bb.cache.realfn2virtual(fn, cls)
-@@ -1943,7 +1944,7 @@ class Parser(multiprocessing.Process):
-             except queue.Full:
-                 pending.append(result)
- 
--    def parse(self, filename, appends, caches_array):
-+    def parse(self, filename, appends):
-         try:
-             # Record the filename we're parsing into any events generated
-             def parse_filter(self, record):
-@@ -1956,7 +1957,7 @@ class Parser(multiprocessing.Process):
-             bb.event.set_class_handlers(self.handlers.copy())
-             bb.event.LogHandler.filter = parse_filter
- 
--            return True, bb.cache.Cache.parse(filename, appends, self.cfg, caches_array)
-+            return True, self.bb_cache.parse(filename, appends)
-         except Exception as exc:
-             tb = sys.exc_info()[2]
-             exc.recipe = filename
-@@ -1995,7 +1996,7 @@ class CookerParser(object):
-         for filename in self.filelist:
-             appends = self.cooker.collection.get_file_appends(filename)
-             if not self.bb_cache.cacheValid(filename, appends):
--                self.willparse.append((filename, appends, cooker.caches_array))
-+                self.willparse.append((filename, appends))
-             else:
-                 self.fromcache.append((filename, appends))
-         self.toparse = self.total - len(self.fromcache)
-@@ -2013,7 +2014,7 @@ class CookerParser(object):
-         if self.toparse:
-             bb.event.fire(bb.event.ParseStarted(self.toparse), self.cfgdata)
-             def init():
--                Parser.cfg = self.cfgdata
-+                Parser.bb_cache = self.bb_cache
-                 bb.utils.set_process_name(multiprocessing.current_process().name)
-                 multiprocessing.util.Finalize(None, bb.codeparser.parser_cache_save, exitpriority=1)
-                 multiprocessing.util.Finalize(None, bb.fetch.fetcher_parse_save, exitpriority=1)
-@@ -2084,7 +2085,7 @@ class CookerParser(object):
- 
-     def load_cached(self):
-         for filename, appends in self.fromcache:
--            cached, infos = self.bb_cache.load(filename, appends, self.cfgdata)
-+            cached, infos = self.bb_cache.load(filename, appends)
-             yield not cached, infos
- 
-     def parse_generator(self):
-@@ -2168,8 +2169,6 @@ class CookerParser(object):
-         return True
- 
-     def reparse(self, filename):
--        infos = self.bb_cache.parse(filename,
--                                    self.cooker.collection.get_file_appends(filename),
--                                    self.cfgdata, self.cooker.caches_array)
-+        infos = self.bb_cache.parse(filename, self.cooker.collection.get_file_appends(filename))
-         for vfn, info_array in infos:
-             self.cooker.recipecache.add_from_recipeinfo(vfn, info_array)
+The concept seems sound, but there's still a fair bit of handling which is
+do this thing for workers and that thing for fake workers, makes me think
+we might want to split out objects to bind the workers, their names, and
+their logic.
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--001a113d40be0b9acc053a1f6583
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Mon, Aug 15, 2016 at 9:58 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hr=
+ef=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.=
+purdie@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
+ft:1ex"><div id=3D":395" class=3D"a3s aXjCH m1568f2430c1fbae9">+=C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if w in self.rq=
+.worker:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 name =3D &quot;Worker&quot;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 elif=
+ w in self.rq.fakeworker:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 name =3D &quot;Fakeroot&quot;</div></blockquote></div><br>The co=
+ncept seems sound, but there&#39;s still a fair bit of handling which is do=
+ this thing for workers and that thing for fake workers, makes me think we =
+might want to split out objects to bind the workers, their names, and their=
+ logic.<br>-- <br><div class=3D"gmail_signature" data-smartmail=3D"gmail_si=
+gnature">Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitB=
+ake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engi=
+neer, Mentor Graphics</div>
+</div></div>
 
+--001a113d40be0b9acc053a1f6583--
