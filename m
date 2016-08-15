@@ -1,25 +1,47 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id D8F26771C4
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-pa0-f46.google.com (mail-pa0-f46.google.com
+	[209.85.220.46])
+	by mail.openembedded.org (Postfix) with ESMTP id A57F67680A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Aug 2016 03:37:39 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga104.fm.intel.com with ESMTP; 10 Aug 2016 20:37:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,503,1464678000"; d="scan'208";a="863452271"
-Received: from unknown (HELO peggleto-mobl.ger.corp.intel.com)
-	([10.255.171.53])
-	by orsmga003.jf.intel.com with ESMTP; 10 Aug 2016 20:37:38 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Mon, 15 Aug 2016 10:41:41 +0000 (UTC)
+Received: by mail-pa0-f46.google.com with SMTP id i5so15543454pat.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 15 Aug 2016 03:41:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=wNx1WnzPl6vNZ7GMq9G5WWKkmWf1qWYLCEoNNZMwA7E=;
+	b=XeLLBYbSEHKylaSK/PbARcgBxCIZs3cV3nH6AFJLCkroKO0oZot+NeS5I1FNfwADvG
+	AAgj+0cXgGaxHTVq+4iC+gX9J+p6BDfyA+Nq+g/r87xhETl4mOMbNKsQlimgmxJqGDOP
+	LmG7ZkiUs8d5/0JAgN/4g9demqkQ1Jm+0cRQqo+3bB7C1/1VGnBDULdJIuUbL8MquCmp
+	x4Gubj8bfWQGRJsOyTUIJLLo394BFBDCQjFoCN+Gm4OF/L4f8zBQsT+1n7HKRnS029UA
+	NF3XxtdqpSTfr7UEeoHC/FEpMjaZyZ5+g/JWG+rPKF1o0xWXo9b1pRVybLnwdGZtekoq
+	W6pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=wNx1WnzPl6vNZ7GMq9G5WWKkmWf1qWYLCEoNNZMwA7E=;
+	b=imdHaqu49t0ZqkFy3KmhM0k9clwvQgs2x3mGQmjct0LZIzy3n4g5PHprDfnNPxovdx
+	HBht7AXbQY/Cer/8cwjMrjiluzmKMAYK6ECs4d2460IXxRo5DYqZ1XdTx2mEvPDcvGsF
+	WNPtEcOG6+UbrYSRxzoQufpShisiLQhYW+qGn50x4e9tGExUCHV+HjMOkq2gEd1k4yft
+	ZRmTNWMNePDCyPXVvQK73Nt7z+bl8YuDHg37A/0BUXT0RemmpB3AU3wEm5ulHaqUKyMX
+	8ZhdGPNqa7JzNsFv6zRz1gYepuIDeOISiB4ksvdCskARgGefJtfSH67wjbpsBugAHOoY
+	YBJQ==
+X-Gm-Message-State: AEkoouubwH6IBbeQ9syKFP+9CJM19x/wsP6p89tIercaDv2blyA2wJHZ32L0ASX+TNEDRScR
+X-Received: by 10.66.48.133 with SMTP id l5mr408361pan.151.1471257702121;
+	Mon, 15 Aug 2016 03:41:42 -0700 (PDT)
+Received: from orion.ger.corp.intel.com ([192.55.54.43])
+	by smtp.gmail.com with ESMTPSA id
+	n10sm31033917pap.16.2016.08.15.03.41.39
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 15 Aug 2016 03:41:41 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 11 Aug 2016 15:37:00 +1200
-Message-Id: <3c460ccdf61654f7d74713e10c305476c5db1aee.1470886482.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.5.5
-In-Reply-To: <cover.1470886482.git.paul.eggleton@linux.intel.com>
-References: <cover.1470886482.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1470886482.git.paul.eggleton@linux.intel.com>
-References: <cover.1470886482.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 4/4] siggen: properly close files rather than opening them inline
+Date: Mon, 15 Aug 2016 11:41:33 +0100
+Message-Id: <1471257693-11263-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Cc: David Reyna <david.reyna@windriver.com>
+Subject: [PATCH] toaster: update web urls for openembedded-core's special case
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,50 +54,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 11 Aug 2016 03:37:40 -0000
+X-List-Received-Date: Mon, 15 Aug 2016 10:41:41 -0000
 
-If you don't do this, with Python 3 you get a warning on exit under some
-circumstances.
+From: David Reyna <David.Reyna@windriver.com>
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+The layer index update command has a special case for the
+updating 'openembedded-core' layer, and it was missing reading
+and updating the git web URL fields.
+
+[YOCTO #8037]
+
+Signed-off-by: David Reyna <david.reyna@windriver.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/bb/siggen.py | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ lib/toaster/orm/management/commands/lsupdates.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 5d8a253..9b2f658 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -363,10 +363,12 @@ def clean_basepaths_list(a):
- def compare_sigfiles(a, b, recursecb = None):
-     output = []
- 
--    p1 = pickle.Unpickler(open(a, "rb"))
--    a_data = p1.load()
--    p2 = pickle.Unpickler(open(b, "rb"))
--    b_data = p2.load()
-+    with open(a, 'rb') as f:
-+        p1 = pickle.Unpickler(ff)
-+        a_data = p1.load()
-+    with open(b, 'rb') as f:
-+        p2 = pickle.Unpickler(f)
-+        b_data = p2.load()
- 
-     def dict_diff(a, b, whitelist=set()):
-         sa = set(a.keys())
-@@ -563,8 +565,9 @@ def calc_taskhash(sigdata):
- def dump_sigfile(a):
-     output = []
- 
--    p1 = pickle.Unpickler(open(a, "rb"))
--    a_data = p1.load()
-+    with open(a, 'rb') as f:
-+        p1 = pickle.Unpickler(f)
-+        a_data = p1.load()
- 
-     output.append("basewhitelist: %s" % (a_data['basewhitelist']))
- 
+diff --git a/lib/toaster/orm/management/commands/lsupdates.py b/lib/toaster/orm/management/commands/lsupdates.py
+index 89817c8..8ff120e 100644
+--- a/lib/toaster/orm/management/commands/lsupdates.py
++++ b/lib/toaster/orm/management/commands/lsupdates.py
+@@ -165,6 +165,12 @@ class Command(NoArgsCommand):
+                     # layerindex
+                     oe_core_l.summary = li['summary']
+                     oe_core_l.description = li['description']
++                    oe_core_l.vcs_web_url = li['vcs_web_url']
++                    oe_core_l.vcs_web_tree_base_url = \
++                        li['vcs_web_tree_base_url']
++                    oe_core_l.vcs_web_file_base_url = \
++                        li['vcs_web_file_base_url']
++
+                     oe_core_l.save()
+                     li_layer_id_to_toaster_layer_id[li['id']] = oe_core_l.pk
+                     self.mini_progress("layers", i, total)
 -- 
-2.5.5
+2.7.4
 
 
