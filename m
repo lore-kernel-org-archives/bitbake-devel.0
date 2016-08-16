@@ -1,27 +1,33 @@
 Return-Path: <jeremy.rosen@smile.fr>
 Received: from idris.smile.fr (idris.smile.fr [91.216.209.19])
-	by mail.openembedded.org (Postfix) with ESMTP id 7746673CF7
+	by mail.openembedded.org (Postfix) with ESMTP id EF8B975CF1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 16 Aug 2016 12:04:54 +0000 (UTC)
+	Tue, 16 Aug 2016 12:04:56 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by idris.smile.fr (Postfix) with ESMTP id 4E15A1EE0896;
-	Tue, 16 Aug 2016 14:04:55 +0200 (CEST)
+	by idris.smile.fr (Postfix) with ESMTP id 97A311EE08AA;
+	Tue, 16 Aug 2016 14:04:57 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at smile.fr
+X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "References"
 Received: from idris.smile.fr ([127.0.0.1])
 	by localhost (bluemind-mta.prod.vitry.intranet [127.0.0.1])
 	(amavisd-new, port 10024)
-	with ESMTP id KAQjZG+Zit1T; Tue, 16 Aug 2016 14:04:55 +0200 (CEST)
+	with ESMTP id gA+UUM-X7REB; Tue, 16 Aug 2016 14:04:57 +0200 (CEST)
 Received: from pcrosen.dhcp.idf.intranet (gre92-5-82-237-199-7.fbx.proxad.net
 	[82.237.199.7])
-	by idris.smile.fr (Postfix) with ESMTPA id 1FC331EE083A;
-	Tue, 16 Aug 2016 14:04:55 +0200 (CEST)
+	by idris.smile.fr (Postfix) with ESMTPA id 6C0121EE0896;
+	Tue, 16 Aug 2016 14:04:57 +0200 (CEST)
 From: =?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?= <jeremy.rosen@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 16 Aug 2016 14:04:46 +0200
-Message-Id: <cover.f65a7c2b6ae08fbad3e423dd6b23367d5039f196.1471349005.git-series.jeremy.rosen@smile.fr>
+Date: Tue, 16 Aug 2016 14:04:47 +0200
+Message-Id: <320ea3092e4cdc1c8f9a7177ca09fc21ebce5eff.1471349005.git-series.jeremy.rosen@smile.fr>
 X-Mailer: git-send-email 2.8.1
+In-Reply-To: <cover.f65a7c2b6ae08fbad3e423dd6b23367d5039f196.1471349005.git-series.jeremy.rosen@smile.fr>
+References: <cover.f65a7c2b6ae08fbad3e423dd6b23367d5039f196.1471349005.git-series.jeremy.rosen@smile.fr>
 MIME-Version: 1.0
-Subject: [PATCH v2 0/1] Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.f65a7c2b6ae08fbad3e423dd6b23367d5039f196.1471349005.git-series.jeremy.rosen@smile.fr>
+References: <cover.f65a7c2b6ae08fbad3e423dd6b23367d5039f196.1471349005.git-series.jeremy.rosen@smile.fr>
+Cc: =?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?= <jeremy.rosen@openwide.fr>
+Subject: [PATCH v2 1/1] add a syntax to clear variable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,46 +40,160 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 16 Aug 2016 12:04:55 -0000
+X-List-Received-Date: Tue, 16 Aug 2016 12:04:57 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-While working on a Yocto project I had a need to reactivate a task that was
-disabled (do_fetch[noexec]="1") Currently, bitbake does not check the value
-of the noexec flag but only if the flag is set. The only way to unset a flag
-is to use an inline python syntax like the one below
-
-python () {
-   d.delVarFlag("do_fetch","noexec")
-}
-
-Using inline python to do something as simple as clearing a flag sounded too
-complicated to me so I added a new keyword "unset" to bitbake with the
-following syntax :
-
 unset VAR
-
-will call d.delVar("VAR")
-
+will clear variable VAR
 unset VAR[flag]
+will clear flag "flag" from var VAR
 
-will call d.delVarFlag("VAR","flag")
-
-Documentation has been updated accordingly
-
+Signed-off-by: Jérémy Rosen <jeremy.rosen@openwide.fr>
 ---
-v2 : fix some wording in documentation
-     add unit test
-
-Jérémy Rosen (1):
-  add a syntax to clear variable
-
  bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 17 ++++-
  bitbake/lib/bb/parse/ast.py                                      | 33 +++++++-
  bitbake/lib/bb/parse/parse_py/ConfHandler.py                     | 12 +++-
  bitbake/lib/bb/tests/parse.py                                    | 17 ++++-
  4 files changed, 79 insertions(+), 0 deletions(-)
 
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+index 7ef848f..47db85b 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+@@ -431,6 +431,23 @@
+             </para>
+         </section>
+ 
++        <section id='unsetting-variables'>
++            <title>Unseting variables</title>
++
++            <para>
++                It is possible to completely remove a variable or a variable flag 
++                from BitBake's internal data dictionary by using the "unset" keyword.
++                Here is an example:
++                <literallayout class='monospaced'>
++        unset DATE
++        unset do_fetch[noexec]
++                </literallayout>
++                These two statements remove the <filename>DATE</filename> and the 
++                <filename>do_fetch[noexec]</filename> flag.
++            </para>
++
++        </section>
++
+         <section id='providing-pathnames'>
+             <title>Providing Pathnames</title>
+ 
+diff --git a/bitbake/lib/bb/parse/ast.py b/bitbake/lib/bb/parse/ast.py
+index 8b9baa7..b407b09 100644
+--- a/bitbake/lib/bb/parse/ast.py
++++ b/bitbake/lib/bb/parse/ast.py
+@@ -69,6 +69,33 @@ class ExportNode(AstNode):
+     def eval(self, data):
+         data.setVarFlag(self.var, "export", 1, op = 'exported')
+ 
++class UnsetNode(AstNode):
++    def __init__(self, filename, lineno, var):
++        AstNode.__init__(self, filename, lineno)
++        self.var = var
++
++    def eval(self, data):
++        loginfo = {
++            'variable': self.var,
++            'file': self.filename,
++            'line': self.lineno,
++        }
++        data.delVar(self.var,**loginfo)
++
++class UnsetFlagNode(AstNode):
++    def __init__(self, filename, lineno, var, flag):
++        AstNode.__init__(self, filename, lineno)
++        self.var = var
++        self.flag = flag
++
++    def eval(self, data):
++        loginfo = {
++            'variable': self.var,
++            'file': self.filename,
++            'line': self.lineno,
++        }
++        data.delVarFlag(self.var, self.flag, **loginfo)
++
+ class DataNode(AstNode):
+     """
+     Various data related updates. For the sake of sanity
+@@ -270,6 +297,12 @@ def handleInclude(statements, filename, lineno, m, force):
+ def handleExport(statements, filename, lineno, m):
+     statements.append(ExportNode(filename, lineno, m.group(1)))
+ 
++def handleUnset(statements, filename, lineno, m):
++    statements.append(UnsetNode(filename, lineno, m.group(1)))
++
++def handleUnsetFlag(statements, filename, lineno, m):
++    statements.append(UnsetFlagNode(filename, lineno, m.group(1), m.group(2)))
++
+ def handleData(statements, filename, lineno, groupd):
+     statements.append(DataNode(filename, lineno, groupd))
+ 
+diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+index b971292..875250d 100644
+--- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+@@ -57,6 +57,8 @@ __config_regexp__  = re.compile( r"""
+ __include_regexp__ = re.compile( r"include\s+(.+)" )
+ __require_regexp__ = re.compile( r"require\s+(.+)" )
+ __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/]+)$" )
++__unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/]+)$" )
++__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/]+)\[([a-zA-Z0-9\-_+.${}/]+)\]$" )
+ 
+ def init(data):
+     topdir = data.getVar('TOPDIR', False)
+@@ -185,6 +187,16 @@ def feeder(lineno, s, fn, statements):
+         ast.handleExport(statements, fn, lineno, m)
+         return
+ 
++    m = __unset_regexp__.match(s)
++    if m:
++        ast.handleUnset(statements, fn, lineno, m)
++        return
++
++    m = __unset_flag_regexp__.match(s)
++    if m:
++        ast.handleUnsetFlag(statements, fn, lineno, m)
++        return
++
+     raise ParseError("unparsed line: '%s'" % s, fn, lineno);
+ 
+ # Add us to the handlers list
+diff --git a/bitbake/lib/bb/tests/parse.py b/bitbake/lib/bb/tests/parse.py
+index c296db2..0b2706a 100644
+--- a/bitbake/lib/bb/tests/parse.py
++++ b/bitbake/lib/bb/tests/parse.py
+@@ -68,6 +68,23 @@ C = "3"
+         with self.assertRaises(bb.parse.ParseError):
+             d = bb.parse.handle(f.name, self.d)['']
+ 
++    unsettest = """
++A = "1"
++B = "2"
++B[flag] = "3"
++
++unset A
++unset B[flag]
++"""
++
++    def test_parse_unset(self):
++        f = self.parsehelper(self.unsettest)
++        d = bb.parse.handle(f.name, self.d)['']
++        self.assertEqual(d.getVar("A", True), None)
++        self.assertEqual(d.getVarFlag("A","flag", True), None)
++        self.assertEqual(d.getVar("B", True), "2")
++        
++
+     overridetest = """
+ RRECOMMENDS_${PN} = "a"
+ RRECOMMENDS_${PN}_libc = "b"
 -- 
 git-series 0.8.7
 
