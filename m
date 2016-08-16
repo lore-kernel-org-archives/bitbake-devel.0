@@ -1,30 +1,38 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 2DDB0734B8
+Return-Path: <jeremy.rosen@smile.fr>
+Received: from idris.smile.fr (idris.smile.fr [91.216.209.19])
+	by mail.openembedded.org (Postfix) with ESMTP id 0B8B673232
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Aug 2016 20:28:17 +0000 (UTC)
+	Tue, 16 Aug 2016 10:38:10 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u7FKSG0K019509; Mon, 15 Aug 2016 21:28:16 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ZG0xZrDlfTxb; Mon, 15 Aug 2016 21:28:16 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u7FKSFfC019501
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 15 Aug 2016 21:28:16 +0100
-Message-ID: <1471292894.20391.105.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Christopher Larson <clarson@kergoth.com>
-Date: Mon, 15 Aug 2016 21:28:14 +0100
-In-Reply-To: <CABcZANkPs9Y=4Xq9jWRJf8=bhqYM8DE=uv3KjwNckqavUt8G0w@mail.gmail.com>
-References: <1471280561.20391.98.camel@linuxfoundation.org>
-	<CABcZANkPs9Y=4Xq9jWRJf8=bhqYM8DE=uv3KjwNckqavUt8G0w@mail.gmail.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] cache: Split Cache() into a NoCache() parent object
+	by idris.smile.fr (Postfix) with ESMTP id 282C41EE0868;
+	Tue, 16 Aug 2016 12:38:11 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at smile.fr
+Received: from idris.smile.fr ([127.0.0.1])
+	by localhost (bluemind-mta.prod.vitry.intranet [127.0.0.1])
+	(amavisd-new, port 10024)
+	with ESMTP id 8hqglYdzmBrA; Tue, 16 Aug 2016 12:38:11 +0200 (CEST)
+Received: from [10.1.8.214] (gre92-5-82-237-199-7.fbx.proxad.net
+	[82.237.199.7])
+	by idris.smile.fr (Postfix) with ESMTPSA id EE2FA1EE0807;
+	Tue, 16 Aug 2016 12:38:10 +0200 (CEST)
+To: Christopher Larson <clarson@kergoth.com>,
+	Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+References: <1469098538-14867-1-git-send-email-jeremy.rosen@smile.fr>
+	<1469098538-14867-2-git-send-email-jeremy.rosen@smile.fr>
+	<14c66145ed854a22bac20bcc53769fc1@XBOX02.axis.com>
+	<CABcZANnzPGjXXvMqmOiVSG4sTYTk0y5iKRZdpCk9Fg+4DHHqQg@mail.gmail.com>
+From: =?UTF-8?B?SsOpcsOpbXkgUm9zZW4=?= <jeremy.rosen@smile.fr>
+Message-ID: <11041fd5-2248-53b2-a2aa-ffb75331ed24@smile.fr>
+Date: Tue, 16 Aug 2016 12:38:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+	Firefox/45.0 Icedove/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <CABcZANnzPGjXXvMqmOiVSG4sTYTk0y5iKRZdpCk9Fg+4DHHqQg@mail.gmail.com>
+Cc: =?UTF-8?B?SsOpcsOpbXkgUm9zZW4=?= <jeremy.rosen@openwide.fr>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	=?UTF-8?B?SsOpcsOpbXkgUm9zZW4=?= <jeremy.rosen@enst-bretagne.fr>
+Subject: Re: [PATCH 1/1] add a syntax to clear variable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,50 +45,109 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Aug 2016 20:28:20 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 16 Aug 2016 10:38:11 -0000
+Content-Type: multipart/alternative;
+	boundary="------------BBD73FCE606CB213EBA67FB4"
+
+--------------BBD73FCE606CB213EBA67FB4
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2016-08-15 at 10:20 -0700, Christopher Larson wrote:
-> 
-> On Mon, Aug 15, 2016 at 10:02 AM, Richard Purdie <
-> richard.purdie@linuxfoundation.org> wrote:
-> > There are some cases we want to parse recipes without any cache
-> > setup or involvement. Split out the standalone functions into
-> > a NoCache variant which the Cache is based upon, setting the scene
-> > for further cleanup and restructuring.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > 
-> > diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-> > index 7118c83..8c1fe11 100644
-> > --- a/bitbake/lib/bb/cache.py
-> > +++ b/bitbake/lib/bb/cache.py
-> > @@ -265,12 +265,68 @@ def realfn2virtual(realfn, cls):
-> >          return realfn
-> >      return "virtual:" + cls + ":" + realfn
-> > 
-> > -class Cache(object):
-> > +class NoCache(object):
-> > +
-> > +    def __init__(self, databuilder):
-> > +        self.databuilder = databuilder
-> > +        self.data = databuilder.data
-> > 
-> I like the idea, but do we really need to pass in databuilder and set
-> data if this class makes no use of it? It's all class methods, after
-> all.
+As Christopher explained, this is an immediate operation.
 
-If I remember correctly it is used by users of the class, e.g. in
-bitbake-worker so this is setting things up for later changes.
-
-data is set since we have a ton of code which knows about this
-namespace and I didn't really want to go and patch it all right now.
-
-Cheers,
-
-Richard
+I'll look into unit test, I've never looked into this so I'm not sure 
+how they work...
 
 
+On 15/08/2016 16:47, Christopher Larson wrote:
+>
+> On Mon, Aug 15, 2016 at 7:44 AM, Peter Kjellerstedt 
+> <peter.kjellerstedt@axis.com <mailto:peter.kjellerstedt@axis.com>> wrote:
+>
+>     How will this interact with ?=, ??=, _append and _remove?
+>
+>     Shouldn't there be unit tests for this? It seems like it can easily
+>     break and/or be broken by other changes.
+>
+>
+> It's implemented as an immediate operation, so it'd happen long before 
+> ??=, _append, or _remove are applied. ?= is also immediate, so isn't 
+> relevant -- ?= before it would do nothing, as the unset would undo it, 
+> and ?= after the unset would apply fine.
+>
+> I think that's the most sane approach for something like this. If you 
+> want the operation postponed, you can use anonymous python for that. 
+> Agreed re: unit tests, though.
+> -- 
+> Christopher Larson
+> clarson at kergoth dot com
+> Founder - BitBake, OpenEmbedded, OpenZaurus
+> Maintainer - Tslib
+> Senior Software Engineer, Mentor Graphics
 
 
+--------------BBD73FCE606CB213EBA67FB4
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <p>As Christopher explained, this is an immediate operation.</p>
+    <p>I'll look into unit test, I've never looked into this so I'm not
+      sure how they work...<br>
+    </p>
+    <br>
+    <div class="moz-cite-prefix">On 15/08/2016 16:47, Christopher Larson
+      wrote:<br>
+    </div>
+    <blockquote
+cite="mid:CABcZANnzPGjXXvMqmOiVSG4sTYTk0y5iKRZdpCk9Fg+4DHHqQg@mail.gmail.com"
+      type="cite">
+      <div dir="ltr">
+        <div class="gmail_extra"><br>
+          <div class="gmail_quote">On Mon, Aug 15, 2016 at 7:44 AM,
+            Peter Kjellerstedt <span dir="ltr">&lt;<a
+                moz-do-not-send="true"
+                href="mailto:peter.kjellerstedt@axis.com"
+                target="_blank">peter.kjellerstedt@axis.com</a>&gt;</span>
+            wrote:<br>
+            <blockquote class="gmail_quote" style="margin:0 0 0
+              .8ex;border-left:1px #ccc solid;padding-left:1ex">
+              <div id=":2a6" class="a3s aXjCH m1568ea9f9d3743de">How
+                will this interact with ?=, ??=, _append and _remove?<br>
+                <br>
+                Shouldn't there be unit tests for this? It seems like it
+                can easily<br>
+                break and/or be broken by other changes.</div>
+            </blockquote>
+          </div>
+          <br>
+          It's implemented as an immediate operation, so it'd happen
+          long before ??=, _append, or _remove are applied. ?= is also
+          immediate, so isn't relevant -- ?= before it would do nothing,
+          as the unset would undo it, and ?= after the unset would apply
+          fine.</div>
+        <div class="gmail_extra"><br>
+        </div>
+        <div class="gmail_extra">I think that's the most sane approach
+          for something like this. If you want the operation postponed,
+          you can use anonymous python for that. Agreed re: unit tests,
+          though.<br>
+          -- <br>
+          <div class="gmail_signature" data-smartmail="gmail_signature">Christopher
+            Larson<br>
+            clarson at kergoth dot com<br>
+            Founder - BitBake, OpenEmbedded, OpenZaurus<br>
+            Maintainer - Tslib<br>
+            Senior Software Engineer, Mentor Graphics</div>
+        </div>
+      </div>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------BBD73FCE606CB213EBA67FB4--
