@@ -1,22 +1,30 @@
-Return-Path: <markus.lehtonen@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 9D13276FF2
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 4AF6D77026
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Aug 2016 16:56:00 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga103.jf.intel.com with ESMTP; 18 Aug 2016 09:56:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,540,1464678000"; d="scan'208";a="1016782747"
-Received: from marquiz.fi.intel.com ([10.237.72.155])
-	by orsmga001.jf.intel.com with ESMTP; 18 Aug 2016 09:55:59 -0700
-From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 Aug 2016 19:55:54 +0300
-Message-Id: <1471539354-32382-5-git-send-email-markus.lehtonen@linux.intel.com>
-X-Mailer: git-send-email 2.6.6
-In-Reply-To: <1471539354-32382-1-git-send-email-markus.lehtonen@linux.intel.com>
+	Thu, 18 Aug 2016 17:04:00 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u7IH3wDI017022; Thu, 18 Aug 2016 18:03:58 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 2MbnCFDqCWcH; Thu, 18 Aug 2016 18:03:58 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u7IH3rnj017018
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 18 Aug 2016 18:03:54 +0100
+Message-ID: <1471539833.16712.19.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Markus Lehtonen <markus.lehtonen@linux.intel.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 18 Aug 2016 18:03:53 +0100
+In-Reply-To: <1471539354-32382-2-git-send-email-markus.lehtonen@linux.intel.com>
 References: <1471539354-32382-1-git-send-email-markus.lehtonen@linux.intel.com>
-Subject: [PATCH 4/4] bitbake-selftest: enable bitbake logging to stdout
+	<1471539354-32382-2-git-send-email-markus.lehtonen@linux.intel.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH 1/4] bitbake-selftest: utilize unittest.main better
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,53 +37,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 18 Aug 2016 16:56:00 -0000
+X-List-Received-Date: Thu, 18 Aug 2016 17:04:01 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Now you get the bb logger output for failed tests. This helps debugging
-problems. Also, all stdout/stderr data for successful tests is silenced
-which makes for less cluttered console output.
+On Thu, 2016-08-18 at 19:55 +0300, Markus Lehtonen wrote:
+> This simplifies the script, and, gives new features. It is now
+> possible
+> to run single test functions, for example. This is nice when writing
+> new
+> test cases.
+> 
+> Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+> ---
+>  bin/bitbake-selftest | 30 ++++++++----------------------
+>  1 file changed, 8 insertions(+), 22 deletions(-)
+> 
+> diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
+> index 1e6f35e..1e615cc 100755
+> --- a/bin/bitbake-selftest
+> +++ b/bin/bitbake-selftest
+> @@ -25,31 +25,17 @@ try:
+>  except RuntimeError as exc:
+>      sys.exit(str(exc))
+>  
+> -def usage():
+> -    print('usage: [BB_SKIP_NETTESTS=yes] %s [-v] [testname1
+> [testname2]...]' % os.path.basename(sys.argv[0]))
 
-Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
----
- bin/bitbake-selftest | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+Could we at least preserve the usage message which is helpful as I can
+never remember BB_SKIP_NETTESTS=yes without prompting...
 
-diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
-index 1e00e33..380e003 100755
---- a/bin/bitbake-selftest
-+++ b/bin/bitbake-selftest
-@@ -37,6 +37,24 @@ for t in tests:
-     __import__(t)
- 
- 
-+# Set-up logging
-+class StdoutStreamHandler(logging.StreamHandler):
-+    """Special handler so that unittest is able to capture stdout"""
-+    def __init__(self):
-+        # Override __init__() because we don't want to set self.stream here
-+        logging.Handler.__init__(self)
-+
-+    @property
-+    def stream(self):
-+        # We want to dynamically write wherever sys.stdout is pointing to
-+        return sys.stdout
-+
-+
-+handler = StdoutStreamHandler()
-+bb.logger.addHandler(handler)
-+bb.logger.setLevel(logging.DEBUG)
-+
-+
- ENV_HELP = """\
- Environment variables:
-   BB_SKIP_NETTESTS      set to 'yes' in order to skip tests using network
-@@ -51,4 +69,4 @@ class main(unittest.main):
- 
- 
- if __name__ == '__main__':
--        main(defaultTest=tests)
-+        main(defaultTest=tests, buffer=True)
--- 
-2.6.6
+Cheers,
 
+Richard
 
