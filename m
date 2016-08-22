@@ -1,35 +1,38 @@
-Return-Path: <zzs213@126.com>
-Received: from m15-113.126.com (m15-113.126.com [220.181.15.113])
-	by mail.openembedded.org (Postfix) with ESMTP id C281F60123
+Return-Path: <elliot.smith@intel.com>
+Received: from burlywood.birch.relay.mailchannels.net
+	(burlywood.birch.relay.mailchannels.net [23.83.209.26])
+	by mail.openembedded.org (Postfix) with ESMTP id A1D2F731B9
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 22 Aug 2016 09:56:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=QHqeg
-	pgF6IeMX90acx7FY172x60iSIn6DbP2MTOhzv8=; b=fyQHaXjt6zIHCPfprEH9E
-	6/4iDl2EVSBDpSubnzf1hUHzdhqoh+ccM+CXZDEFYh5LIzHks6U40bsVpeN90rdm
-	GI/2+hm8DL/GUAiWgCFCehKztP5XNmlrscmUw1duodtK4S4ks+hxrkuEZCzEwNuF
-	P0hY4RL6cGZlBc8gTx4dcw=
-Received: from [192.168.0.12] (unknown [171.212.168.219])
-	by smtp3 (Coremail) with SMTP id DcmowADn7iZizLpXzd2NEQ--.59951S2;
-	Mon, 22 Aug 2016 17:56:52 +0800 (CST)
+	Mon, 22 Aug 2016 15:42:44 +0000 (UTC)
+X-Sender-Id: wwwh|x-authuser|elliot@townx.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 75B70A249A;
+	Mon, 22 Aug 2016 15:42:42 +0000 (UTC)
+Received: from uscentral428.accountservergroup.com
+	(ip-10-229-10-199.us-west-2.compute.internal [10.229.10.199])
+	by relay.mailchannels.net (Postfix) with ESMTPA id B40ACA2739;
+	Mon, 22 Aug 2016 15:42:41 +0000 (UTC)
+X-Sender-Id: wwwh|x-authuser|elliot@townx.org
+Received: from uscentral428.accountservergroup.com
+	(uscentral428.accountservergroup.com [10.45.13.172])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+	by 0.0.0.0:2500 (trex/5.7.6); Mon, 22 Aug 2016 15:42:42 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
+X-MailChannels-Auth-Id: wwwh
+X-MC-Loop-Signature: 1471880562064:821329112
+X-MC-Ingress-Time: 1471880562064
+Received: from [176.249.240.35] (port=48672 helo=localhost.localdomain)
+	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
+	(envelope-from <elliot.smith@intel.com>)
+	id 1bbrN2-0002ZA-FF; Mon, 22 Aug 2016 11:42:40 -0400
+From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-References: <0c2145f0-3c85-fe8e-ef71-5008daa03423@126.com>
-	<754ba7e8-128f-cd67-7f1c-d3e2a57b006c@126.com>
-From: =?UTF-8?B?5byg5b+g5bGx?= <zzs213@126.com>
-Message-ID: <d14aa6a9-7e47-55ff-aa24-d9e3892fa677@126.com>
-Date: Mon, 22 Aug 2016 17:56:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <754ba7e8-128f-cd67-7f1c-d3e2a57b006c@126.com>
-X-CM-TRANSID: DcmowADn7iZizLpXzd2NEQ--.59951S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tryUAF4kXFW5Kr17ZrWfAFb_yoW8Cr1rpF
-	n7Ga4xAr1jgry8Wr97Jr4Utr1UJw4UtFW7Jr18Jr1v9ws3Jw1kX3yYkr15Kw1UCrs0y34a
-	vF4ayrW5Jr1DWaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jZ3ktUUUUU=
-X-Originating-IP: [171.212.168.219]
-X-CM-SenderInfo: x22vjiat6rjloofrz/1tbi4gTNGVUw4VdxjAAAsc
-Subject: Re: question about BBVERSIONS OVERRIDES and PREFERRED_VERSION
+Date: Mon, 22 Aug 2016 16:42:28 +0100
+Message-Id: <1471880556-9232-1-git-send-email-elliot.smith@intel.com>
+X-Mailer: git-send-email 2.7.4
+X-AuthUser: elliot@townx.org
+Subject: [PATCH 1/9] toaster: add switch of git and not-git layers imported
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,63 +45,208 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 22 Aug 2016 09:56:53 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 22 Aug 2016 15:42:45 -0000
 
+From: Sujith H <sujith.h@gmail.com>
 
-> Use 'bitbake test -e' to examine the overrides of var 'NAME', It is
-> still not contain override for '1.1.7':
->
-> #
-> # $NAME [2 operations]
-> #   override[develop]:set
-> /home/zzs/temp/bitbake-hello-world/main/../mylayer/test.bb:10
-> #     "version is develop"
-> #   override[pp]:set
-> /home/zzs/temp/bitbake-hello-world/main/../mylayer/test.bb:11
-> #     "version is pp"
-> # pre-expansion value:
-> #   "version is pp"
-> NAME="version is pp"
->
-> Why ? I expect it should contain override for '1.1.7', like this:
->          override[1.1.7]:set
-> /home/zzs/temp/bitbake-hello-world/main/../mylayer/test.bb:11
->          ....
-> And I found all NAME_xxx, where xxx is [a-z] all OK? I has no idea about
-> this.
-> Anybody help me?
->
+This patch updates the layerdetails html file to
+add the feature of switching imported layers between
+directories and git repositories.
 
-I found using the flowwing patch can solve my problem about override for 
-'1.1.7':
+[YOCTO #9913]
 
-============================================================
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 2ab884b..216ba93 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -552,7 +552,7 @@ class DataSmart(MutableMapping):
-          # aka pay the cookie monster
-          override = var[var.rfind('_')+1:]
-          shortvar = var[:var.rfind('_')]
--        while override and override.islower():
-+        while override and (override + 'a').islower():
-              if shortvar not in self.overridedata:
-                  self.overridedata[shortvar] = []
-              if [var, override] not in self.overridedata[shortvar]:
+Signed-off-by: Sujith H <sujith.h@gmail.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ .../toaster/toastergui/templates/layerdetails.html | 125 +++++++++++++++++----
+ 1 file changed, 101 insertions(+), 24 deletions(-)
 
-============================================================
-
-But, I'm not sure this work for other env.
-
-I don't know why just lower case override permited in  this function.
-
-Version string just include digit and point is very common, but 
-islower() return False for these strings.
-
-This behavior is intended or a bug?
-Or has another way to solve my problem?
+diff --git a/bitbake/lib/toaster/toastergui/templates/layerdetails.html b/bitbake/lib/toaster/toastergui/templates/layerdetails.html
+index 029c93b..3e13756 100644
+--- a/bitbake/lib/toaster/toastergui/templates/layerdetails.html
++++ b/bitbake/lib/toaster/toastergui/templates/layerdetails.html
+@@ -84,11 +84,16 @@
+     </script>
+ 
+     <div class="page-header">
++      {% if layerversion.layer.local_source_dir %}
++      <h1>{{layerversion.layer.name}} <small class="commit" style="display:none;"></small>
++      </h1>
++      {% else %}
+       <h1>{{layerversion.layer.name}} <small class="commit"
+         {% if layerversion.get_vcs_reference|length > 13 %}
+            data-toggle="tooltip" title="{{layerversion.get_vcs_reference}}"
+         {% endif %}>({{layerversion.get_vcs_reference|truncatechars:13}})</small>
+       </h1>
++      {% endif %}
+     </div>
+     <div class="row">
+       <!-- container for tabs -->
+@@ -97,6 +102,21 @@
+           <button type="button" class="close" id="dismiss-alert">&times;</button>
+           <span id="alert-msg"></span>
+         </div>
++
++        <span class="button-place">
++        {% if layerversion.id not in projectlayers %}
++         <button id="add-remove-layer-btn" data-directive="add" class="btn btn-default btn-lg btn-block">
++           <span class="glyphicon glyphicon-plus"></span>
++           Add the {{layerversion.layer.name}} layer to your project
++         </button>
++         {% else %}
++         <button id="add-remove-layer-btn" data-directive="remove" class="btn btn-default btn-block btn-lg btn-danger">
++           <span class="glyphicon glyphicon-trash"></span>
++           Remove the {{layerversion.layer.name}} layer from your project
++         </button>
++         {% endif %}
++       </span>
++
+         <ul class="nav nav-tabs">
+           <li class="active">
+             <a data-toggle="tab" href="#information" id="details-tab">Layer details</a>
+@@ -109,23 +129,21 @@
+           </li>
+         </ul>
+         <div class="tab-content">
+-          <span class="button-place">
+-            {% if layerversion.id not in projectlayers %}
+-            <button id="add-remove-layer-btn" data-directive="add" class="btn btn-default btn-lg btn-block">
+-              <span class="glyphicon glyphicon-plus"></span>
+-              Add the {{layerversion.layer.name}} layer to your project
+-            </button>
+-            {% else %}
+-            <button id="add-remove-layer-btn" data-directive="remove" class="btn btn-default btn-block btn-lg btn-danger">
+-              <span class="glyphicon glyphicon-trash"></span>
+-              Remove the {{layerversion.layer.name}} layer from your project
+-            </button>
+-            {% endif %}
+-          </span>
+ 
+           <!-- layer details pane -->
+           <div id="information" class="tab-pane active">
+-            <dl class="dl-horizontal">
++           {% if layerversion.layer.local_source_dir %}
++           <h3>Layer source code location</h3>
++           <dl class="dl-horizontal" id="directory-info">
++             <dt>
++               Path to the layer directory
++             </dt>
++             <dd>
++               <code>{{layerversion.layer.local_source_dir}}</code>
++             </dd>
++           </dl>
++           {% else %}
++            <dl class="dl-horizontal" id="git-repo-info">
+               <dt class="">
+               <span class="glyphicon glyphicon-question-sign get-help" title="Fetch/clone URL of the repository"></span>
+               Repository URL
+@@ -139,11 +157,9 @@
+                 <div class="form-group">
+                   <input type="text" class="form-control" value="{{layerversion.layer.vcs_url}}">
+                 </div>
+-                <button data-layer-prop="vcs_url" class="btn btn-default change-btn" type="button">Save</button>
+-                <a href="#" style="display:none" class="btn btn-link cancel">Cancel</a>
+               </form>
+-              <span class="glyphicon glyphicon-edit"></span>
+               </dd>
++	      {% if layerversion.dirpath %}
+               <dt>
+               <span class="glyphicon glyphicon-question-sign get-help" title="Subdirectory within the repository where the layer is located, if not in the root (usually only used if the repository contains more than one layer)"></span>
+               Repository subdirectory
+@@ -158,12 +174,9 @@
+                 <div class="form-group">
+                   <input type="text" class="form-control" value="{{layerversion.dirpath}}">
+                 </div>
+-                <button data-layer-prop="dirpath" class="btn btn-default change-btn" type="button">Save</button>
+-                <a href="#" style="display:none" class="btn btn-link cancel">Cancel</a>
+               </form>
+-              <span id="change-subdir" class="glyphicon glyphicon-edit"></span>
+-              <span class="glyphicon glyphicon-trash delete-current-value" data-toggle="tooltip" title="Delete"></span>
+               </dd>
++	      {% endif %}
+               <dt>
+               <span class="glyphicon glyphicon-question-sign get-help" title="The Git branch, tag or commit"></span>
+               Git revision
+@@ -174,11 +187,75 @@
+                 <div class="form-group">
+                   <input type="text" class="form-control" value="{{layerversion.get_vcs_reference}}">
+                 </div>
+-                <button  data-layer-prop="commit" class="btn btn-default change-btn" type="button">Save</button>
+-                <a href="#" style="display:none" class="btn btn-link cancel">Cancel</a>
+               </form>
+-              <span class="glyphicon glyphicon-edit"></i>
+               </dd>
++            </dl>
++            {% endif %}
++            {% if layerversion.layer_source == layer_source.TYPE_IMPORTED %}
++            <button class="btn btn-default btn-lg" id="edit-layer-source" style="margin-left:220px;">Edit layer source code location</button>
++            {% endif %}
++           <form id="edit-layer-source-form" style="display:none;">
++             <fieldset>
++               <legend class="radioLegend">Where is the layer source code?</legend>
++               <div class="radio">
++                 <label>
++                   <input type="radio" name="source-location" id="repo" value="repo">
++                   In a <strong>Git repository</strong>
++                 </label>
++                 <p class="help-block" style="margin-left:20px;width:70%;">To build the layer Toaster must be able to access the Git repository, otherwise builds will fail. Toaster will\
++                   fetch and checkout your chosen Git revision every time you start a build.</p>
++               </div>
++               <div class="radio" style="margin-top:15px;">
++                 <label>
++                   <input type="radio" name="source-location" id="dir" value="dir" checked>
++                   In a <strong>directory</strong>
++                 </label>
++                 <p class="help-block" style="margin-left:20px;width:70%;">Use this option for quick layer development, by simply providing the path to the layer source code.</p>
++               </div>
++             </fieldset>
++
++             <fieldset id="layer-git">
++               <legend>Git repository information</legend>
++               <div class="form-group">
++                 <label for="layer-git-repo-url">
++                   Git repository URL
++                   <span class="glyphicon glyphicon-question-sign get-help" title="Fetch/clone URL of the repository. Currently, Toaster only supports Git repositories." ></span>
++                 </label>
++                 <input type="text" id="layer-git-repo-url" class="form-control">
++               </div>
++               <div class="form-group">
++                 <label for="layer-subdir">
++                   Repository subdirectory
++                   <span class="text-muted">(optional)</span>
++                   <span class="glyphicon glyphicon-question-sign get-help" title="Subdirectory within the repository where the layer is located, if not in the root (usually only used if the repository contains more than one layer)"></span>
++                 </label>
++                 <input type="text" class="form-control" id="layer-subdir">
++               </div>
++               <div class="form-group" id="layer-revision-ctrl">
++                 <label for="layer-git-ref">Git revision
++                   <span class="glyphicon glyphicon-question-sign get-help" title="You can provide a Git branch, a tag or a commit SHA as the revision"></span>
++                 </label>
++                 <input type="text" class="form-control" id="layer-git-ref">
++                 <span class="help-inline" style="display:none;" id="invalid-layer-revision-hint"></span>
++               </div>
++             </fieldset>
++
++             <fieldset id="layer-dir">
++               <legend>Layer directory information</legend>
++               <div class="form-group">
++                 <label for="layer-dir-path">
++                   Enter the absolute path to the layer directory
++                 </label>
++                 <input type="text" id="layer-dir-path-in-details" class="form-control" value="{{layerversion.layer.local_source_dir}}" required>
++               </div>
++             </fieldset>
++
++             <div style="margin-top:25px;">
++               <a href="#" class="btn btn-primary btn-lg" id="save-changes-for-switch">Save changes</a>
++               <a href="#" class="btn btn-link btn-lg" id="cancel-changes-for-switch">Cancel</a>
++             </div>
++           </form>
++
+               <dt>
+               <span class="glyphicon glyphicon-question-sign get-help" title="Other layers this layer depends upon"></span>
+               Layer dependencies
+-- 
+2.7.4
 
 
