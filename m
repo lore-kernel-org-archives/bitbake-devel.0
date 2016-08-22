@@ -1,40 +1,40 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from bird.oak.relay.mailchannels.net
 	(bird.oak.relay.mailchannels.net [23.83.215.17])
-	by mail.openembedded.org (Postfix) with ESMTP id 945E66E64A
+	by mail.openembedded.org (Postfix) with ESMTP id 7843C6E64A
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 22 Aug 2016 15:48:23 +0000 (UTC)
+	Mon, 22 Aug 2016 15:49:13 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 90878100F84;
-	Mon, 22 Aug 2016 15:42:50 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id 692F7128753;
+	Mon, 22 Aug 2016 15:42:43 +0000 (UTC)
 Received: from uscentral428.accountservergroup.com
-	(ip-10-220-3-24.us-west-2.compute.internal [10.220.3.24])
-	by relay.mailchannels.net (Postfix) with ESMTPA id EF3BB1005B4;
-	Mon, 22 Aug 2016 15:42:49 +0000 (UTC)
+	(ip-10-120-4-226.us-west-2.compute.internal [10.120.4.226])
+	by relay.mailchannels.net (Postfix) with ESMTPA id 9111012815D;
+	Mon, 22 Aug 2016 15:42:42 +0000 (UTC)
 X-Sender-Id: wwwh|x-authuser|elliot@townx.org
 Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.91.5.35])
+	(uscentral428.accountservergroup.com [10.107.128.240])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.6); Mon, 22 Aug 2016 15:42:50 +0000
+	by 0.0.0.0:2500 (trex/5.7.6); Mon, 22 Aug 2016 15:42:43 +0000
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
 X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1471880570384:495722113
-X-MC-Ingress-Time: 1471880570384
+X-MC-Loop-Signature: 1471880562942:2175265105
+X-MC-Ingress-Time: 1471880562942
 Received: from [176.249.240.35] (port=48672 helo=localhost.localdomain)
 	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
 	(envelope-from <elliot.smith@intel.com>)
-	id 1bbrN6-0002ZA-BL; Mon, 22 Aug 2016 11:42:44 -0400
+	id 1bbrN3-0002ZA-EU; Mon, 22 Aug 2016 11:42:41 -0400
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 22 Aug 2016 16:42:32 +0100
-Message-Id: <1471880556-9232-5-git-send-email-elliot.smith@intel.com>
+Date: Mon, 22 Aug 2016 16:42:29 +0100
+Message-Id: <1471880556-9232-2-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1471880556-9232-1-git-send-email-elliot.smith@intel.com>
 References: <1471880556-9232-1-git-send-email-elliot.smith@intel.com>
 X-AuthUser: elliot@townx.org
-Subject: [PATCH 5/9] toaster: Fix oe-core fixture
+Subject: [PATCH 2/9] toaster: layerdetails js changes for switching layers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,193 +47,137 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 22 Aug 2016 15:48:26 -0000
+X-List-Received-Date: Mon, 22 Aug 2016 15:49:13 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+From: Sujith H <sujith.h@gmail.com>
 
-Due to a copy paste error we managed to get some of the wrong
-information in the oe fixture that provides a suggested default settings
-for Toaster. This meant it tested correctly when it shouldn't have.
-Fix:
- - The use of local bitbake
- - An incorrect call to realpath which didn't include its parent module.
- - The field used for the local_dir of an existing openembedded-core
+This patch helps to implement the switching of layers
+between directories and git repositories. Specifically
+selection of git and local directory. Also enabling
+form to view the selection.
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+[YOCTO #9913]
+
+Signed-off-by: Sujith H <sujith.h@gmail.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/toaster/bldcontrol/localhostbecontroller.py | 10 ++++++----
- .../bldcontrol/management/commands/checksettings.py     | 10 ++++++----
- bitbake/lib/toaster/orm/fixtures/oe-core.xml            | 16 +++++++++-------
- bitbake/lib/toaster/orm/fixtures/poky.xml               |  6 ++++++
- bitbake/lib/toaster/orm/fixtures/settings.xml           | 17 +++++++----------
- 5 files changed, 34 insertions(+), 25 deletions(-)
+ .../toaster/toastergui/static/js/layerdetails.js   | 98 ++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-diff --git a/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py b/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-index 283e154..fbc5ee9 100644
---- a/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -98,8 +98,12 @@ class LocalhostBEController(BuildEnvironmentController):
-         # 1. get a list of repos with branches, and map dirpaths for each layer
-         gitrepos = {}
+diff --git a/bitbake/lib/toaster/toastergui/static/js/layerdetails.js b/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
+index 0d4240b..2ff8e59 100644
+--- a/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
++++ b/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
+@@ -10,6 +10,7 @@ function layerDetailsPageInit (ctx) {
+   var targetTab = $("#targets-tab");
+   var machineTab = $("#machines-tab");
+   var detailsTab = $("#details-tab");
++  var editLayerSource = $("#edit-layer-source");
  
--        gitrepos[(bitbake.giturl, bitbake.commit)] = []
--        gitrepos[(bitbake.giturl, bitbake.commit)].append( ("bitbake", bitbake.dirpath) )
-+        # if we're using a remotely fetched version of bitbake add its git
-+        # details to the list of repos to clone
-+        if bitbake.giturl and bitbake.commit:
-+            gitrepos[(bitbake.giturl, bitbake.commit)] = []
-+            gitrepos[(bitbake.giturl, bitbake.commit)].append(
-+                ("bitbake", bitbake.dirpath))
+   /* setup the dependencies typeahead */
+   libtoaster.makeTypeahead(layerDepInput, libtoaster.ctx.layersTypeAheadUrl, { include_added: "true" }, function(item){
+@@ -423,4 +424,101 @@ function layerDetailsPageInit (ctx) {
+   $(".glyphicon-trash").tooltip();
+   $(".commit").tooltip();
  
-         for layer in layers:
-             # We don't need to git clone the layer for the CustomImageRecipe
-@@ -142,8 +146,6 @@ class LocalhostBEController(BuildEnvironmentController):
- 
-         logger.info("Using pre-checked out source for layer %s", cached_layers)
- 
--
--
-         # 3. checkout the repositories
-         for giturl, commit in gitrepos.keys():
-             localdirname = os.path.join(self.be.sourcedir, self.getGitCloneDirectory(giturl, commit))
-diff --git a/bitbake/lib/toaster/bldcontrol/management/commands/checksettings.py b/bitbake/lib/toaster/bldcontrol/management/commands/checksettings.py
-index 0dc55f6..28b9945 100644
---- a/bitbake/lib/toaster/bldcontrol/management/commands/checksettings.py
-+++ b/bitbake/lib/toaster/bldcontrol/management/commands/checksettings.py
-@@ -84,8 +84,9 @@ class Command(NoArgsCommand):
-                             print("Loading OE-Core configuration")
-                             call_command("loaddata", "oe-core")
-                             if template_conf:
--                                oe_core_path = os.realpath(template_conf +
--                                                           "/../")
-+                                oe_core_path = os.path.realpath(
-+                                    template_conf +
-+                                    "/../")
-                             else:
-                                 print("TEMPLATECONF not found. You may have to"
-                                       " manually configure layer paths")
-@@ -94,8 +95,9 @@ class Command(NoArgsCommand):
-                                                      "layer: ")
-                             # Update the layer instances of openemebedded-core
-                             for layer in Layer.objects.filter(
--                                    name="openembedded-core"):
--                                layer.local_source_dir = oe_core_path
-+                                    name="openembedded-core",
-+                                    local_source_dir="OE-CORE-LAYER-DIR"):
-+                                layer.local_path = oe_core_path
-                                 layer.save()
- 
-                         # Import the custom fixture if it's present
-diff --git a/bitbake/lib/toaster/orm/fixtures/oe-core.xml b/bitbake/lib/toaster/orm/fixtures/oe-core.xml
-index 9572ef6..d062de5 100644
---- a/bitbake/lib/toaster/orm/fixtures/oe-core.xml
-+++ b/bitbake/lib/toaster/orm/fixtures/oe-core.xml
-@@ -1,17 +1,19 @@
- <?xml version="1.0" encoding="utf-8"?>
- <django-objects version="1.0">
-+  <!-- Set the project default value for DISTRO -->
-+  <object model="orm.toastersetting" pk="1">
-+    <field type="CharField" name="name">DEFCONF_DISTRO</field>
-+    <field type="CharField" name="value">nodistro</field>
-+  </object>
++  editLayerSource.click(function() {
++    // Kindly bring the git layers imported from layerindex to normal page and not this new page :(
++    $(this).hide();
++    $("#save-changes-for-switch").attr("disabled", "disabled");
 +
-   <!-- Bitbake versions which correspond to the metadata release -->
-   <object model="orm.bitbakeversion" pk="1">
-     <field type="CharField" name="name">master</field>
-     <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">master</field>
--    <field type="CharField" name="dirpath">bitbake</field>
-   </object>
-   <object model="orm.bitbakeversion" pk="2">
-     <field type="CharField" name="name">HEAD</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
--    <field type="CharField" name="branch">HEAD</field>
--    <field type="CharField" name="dirpath">bitbake</field>
-   </object>
- 
-   <!-- Releases available -->
-@@ -43,15 +45,15 @@
-   <!-- TYPE_LOCAL = 0 Layers for the Local release -->
-   <object model="orm.layer" pk="1">
-     <field type="CharField" name="name">openembedded-core</field>
--    <field type="CharField" name="layer_index_url"></field>
-     <field type="CharField" name="vcs_url">git://git.openembedded.org/openembedded-core</field>
-   </object> 
-   <object model="orm.layer_version" pk="1">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
--    <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
-+    <field type="CharField" name="local_path">OE-CORE-LAYER-DIR</field>
-     <field type="CharField" name="branch">HEAD</field>
--    <field type="CharField" name="commit">HEAD</field>
-+    <field type="CharField" name="dirpath">meta</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-   </object>
- 
- </django-objects>
-diff --git a/bitbake/lib/toaster/orm/fixtures/poky.xml b/bitbake/lib/toaster/orm/fixtures/poky.xml
-index 373e43d..75a2916 100644
---- a/bitbake/lib/toaster/orm/fixtures/poky.xml
-+++ b/bitbake/lib/toaster/orm/fixtures/poky.xml
-@@ -1,5 +1,11 @@
- <?xml version="1.0" encoding="utf-8"?>
- <django-objects version="1.0">
-+  <!-- Set the project default value for DISTRO -->
-+  <object model="orm.toastersetting" pk="1">
-+    <field type="CharField" name="name">DEFCONF_DISTRO</field>
-+    <field type="CharField" name="value">poky</field>
-+  </object>
++    $("#git-repo-info", "#directory-info").hide();
++    $("#edit-layer-source-form").fadeIn();
++    if ($("#layer-dir-path-in-details").val() == "") {
++      //Local dir path is empty...
++      $("#repo").prop("checked", true);
++      $("#layer-git").fadeIn();
++      $("#layer-dir").hide();
++    } else {
++      $("#layer-git").hide();
++      $("#layer-dir").fadeIn();
++    }
++  });
 +
-   <!-- Bitbake versions which correspond to the metadata release -->
-   <object model="orm.bitbakeversion" pk="1">
-     <field type="CharField" name="name">master</field>
-diff --git a/bitbake/lib/toaster/orm/fixtures/settings.xml b/bitbake/lib/toaster/orm/fixtures/settings.xml
-index 64a26f5..78c0fdc 100644
---- a/bitbake/lib/toaster/orm/fixtures/settings.xml
-+++ b/bitbake/lib/toaster/orm/fixtures/settings.xml
-@@ -1,34 +1,31 @@
- <?xml version="1.0" encoding="utf-8"?>
- <django-objects version="1.0">
-   <!-- Default project settings -->
--  <object model="orm.toastersetting" pk="1">
-+  <!-- pk=1 is DISTRO -->
-+  <object model="orm.toastersetting" pk="2">
-     <field type="CharField" name="name">DEFAULT_RELEASE</field>
-     <field type="CharField" name="value">master</field>
-   </object>
--  <object model="orm.toastersetting" pk="2">
-+  <object model="orm.toastersetting" pk="3">
-     <field type="CharField" name="name">DEFCONF_PACKAGE_CLASSES</field>
-     <field type="CharField" name="value">package_rpm</field>
-   </object>
--  <object model="orm.toastersetting" pk="3">
-+  <object model="orm.toastersetting" pk="4">
-     <field type="CharField" name="name">DEFCONF_MACHINE</field>
-     <field type="CharField" name="value">qemux86</field>
-   </object>
--  <object model="orm.toastersetting" pk="4">
-+  <object model="orm.toastersetting" pk="5">
-     <field type="CharField" name="name">DEFCONF_SSTATE_DIR</field>
-     <field type="CharField" name="value">${TOPDIR}/../sstate-cache</field>
-   </object>
--  <object model="orm.toastersetting" pk="5">
-+  <object model="orm.toastersetting" pk="6">
-     <field type="CharField" name="name">DEFCONF_IMAGE_INSTALL_append</field>
-     <field type="CharField" name="value"></field>
-   </object>
--  <object model="orm.toastersetting" pk="6">
-+  <object model="orm.toastersetting" pk="7">
-     <field type="CharField" name="name">DEFCONF_IMAGE_FSTYPES</field>
-     <field type="CharField" name="value">ext3 jffs2 tar.bz2</field>
-   </object>
--  <object model="orm.toastersetting" pk="7">
--    <field type="CharField" name="name">DEFCONF_DISTRO</field>
--    <field type="CharField" name="value">poky</field>
--  </object>
-   <object model="orm.toastersetting" pk="8">
-     <field type="CharField" name="name">DEFCONF_DL_DIR</field>
-     <field type="CharField" name="value">${TOPDIR}/../downloads</field>
++  $('input:radio[name="source-location"]').change(function() {
++    if ($('input[name=source-location]:checked').val() == "repo") {
++      $("#layer-git").fadeIn();
++      $("#layer-dir").hide();
++	if ($("#layer-git-repo-url").val().length === 0 && $("#layer-git-ref").val().length === 0) {
++	    $("#save-changes-for-switch").attr("disabled", "disabled");
++	}
++    } else {
++      $("#layer-dir").fadeIn();
++      $("#layer-git").hide();
++    }
++  });
++
++  $("#layer-dir-path-in-details").keyup(function() {
++    $("#save-changes-for-switch").removeAttr("disabled");
++  });
++
++  $("#layer-git-repo-url").keyup(function() {
++    if ($("#layer-git-repo-url").val().length > 0 && $("#layer-git-ref").val().length > 0) {
++      $("#save-changes-for-switch").removeAttr("disabled");
++    }
++  });
++
++  $("#layer-git-ref").keyup(function() {
++    if ($("#layer-git-repo-url").val().length > 0 && $("#layer-git-ref").val().length > 0) {
++      $("#save-changes-for-switch").removeAttr("disabled");
++    }
++  });
++
++  $('#cancel-changes-for-switch').click(function() {
++    editLayerSource.show();
++    $("#git-repo-info", "#directory-info").fadeIn();
++    $("#edit-layer-source-form").fadeOut();
++
++    if ($("#layer-dir-path-in-details").val().length) {
++      $("#dir").prop("checked", true);
++      $("#layer-git").fadeOut();
++      $("#layer-dir").fadeIn();
++    } else {
++      $("#layer-git").fadeIn();
++      $("#layer-dir").fadeOut();
++    }
++  });
++
++  $('#save-changes-for-switch').click(function() {
++
++    var layerData = {
++      vcs_url: $('#layer-git-repo-url').val(),
++      commit: $('#layer-git-ref').val(),
++      dirpath: $('#layer-subdir').val(),
++      local_source_dir: $('#layer-dir-path-in-details').val(),
++    };
++
++    if ($('input[name=source-location]:checked').val() == "repo") {
++      layerData.local_source_dir = "";
++    } else {
++      layerData.vcs_url = "";
++      layerData.git_ref = "";
++    }
++
++    $.ajax({
++        type: "POST",
++        url: ctx.xhrUpdateLayerUrl,
++        data: layerData,
++        headers: { 'X-CSRFToken' : $.cookie('csrftoken')},
++        success: function (data) {
++          if (data.error != "ok") {
++            console.warn(data.error);
++          } else {
++            /* success layer property changed */
++            window.location.reload();
++          }
++        },
++        error: function (data) {
++          console.warn("Call failed");
++          console.warn(data);
++        }
++    });
++  });
+ }
 -- 
 2.7.4
 
