@@ -1,40 +1,26 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from bird.oak.relay.mailchannels.net
-	(bird.oak.relay.mailchannels.net [23.83.215.17])
-	by mail.openembedded.org (Postfix) with ESMTP id 7843C6E64A
+Return-Path: <jeremy.rosen@smile.fr>
+Received: from idris.smile.fr (idris.smile.fr [91.216.209.19])
+	by mail.openembedded.org (Postfix) with ESMTP id CEDB9731DB
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 22 Aug 2016 15:49:13 +0000 (UTC)
-X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 692F7128753;
-	Mon, 22 Aug 2016 15:42:43 +0000 (UTC)
-Received: from uscentral428.accountservergroup.com
-	(ip-10-120-4-226.us-west-2.compute.internal [10.120.4.226])
-	by relay.mailchannels.net (Postfix) with ESMTPA id 9111012815D;
-	Mon, 22 Aug 2016 15:42:42 +0000 (UTC)
-X-Sender-Id: wwwh|x-authuser|elliot@townx.org
-Received: from uscentral428.accountservergroup.com
-	(uscentral428.accountservergroup.com [10.107.128.240])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.6); Mon, 22 Aug 2016 15:42:43 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: wwwh|x-authuser|elliot@townx.org
-X-MailChannels-Auth-Id: wwwh
-X-MC-Loop-Signature: 1471880562942:2175265105
-X-MC-Ingress-Time: 1471880562942
-Received: from [176.249.240.35] (port=48672 helo=localhost.localdomain)
-	by uscentral428.accountservergroup.com with esmtpa (Exim 4.87)
-	(envelope-from <elliot.smith@intel.com>)
-	id 1bbrN3-0002ZA-EU; Mon, 22 Aug 2016 11:42:41 -0400
-From: Elliot Smith <elliot.smith@intel.com>
+	Tue, 23 Aug 2016 09:45:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by idris.smile.fr (Postfix) with ESMTP id 415CF1EE081E;
+	Tue, 23 Aug 2016 11:45:03 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at smile.fr
+Received: from idris.smile.fr ([127.0.0.1])
+	by localhost (bluemind-mta.prod.vitry.intranet [127.0.0.1])
+	(amavisd-new, port 10024)
+	with ESMTP id I+Iv3T5UpCrt; Tue, 23 Aug 2016 11:45:03 +0200 (CEST)
+Received: from pcrosen.daviel.openwide.fr (unknown [193.56.60.161])
+	by idris.smile.fr (Postfix) with ESMTPA id 7D9141EE0476;
+	Tue, 23 Aug 2016 11:45:02 +0200 (CEST)
+From: =?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?= <jeremy.rosen@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 22 Aug 2016 16:42:29 +0100
-Message-Id: <1471880556-9232-2-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1471880556-9232-1-git-send-email-elliot.smith@intel.com>
-References: <1471880556-9232-1-git-send-email-elliot.smith@intel.com>
-X-AuthUser: elliot@townx.org
-Subject: [PATCH 2/9] toaster: layerdetails js changes for switching layers
+Date: Tue, 23 Aug 2016 11:44:50 +0200
+Message-Id: <cover.d26c020bb7163ba8281b0826f12094be699d8182.1471945418.git-series.jeremy.rosen@smile.fr>
+X-Mailer: git-send-email 2.9.3
+MIME-Version: 1.0
+Subject: [PATCH v2 0/1][resend] Add a syntax to unset variable from bitbake configuration file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,138 +33,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 22 Aug 2016 15:49:13 -0000
+X-List-Received-Date: Tue, 23 Aug 2016 09:45:05 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Sujith H <sujith.h@gmail.com>
+While working on a Yocto project I had a need to reactivate a task that was
+disabled (do_fetch[noexec]="1") Currently, bitbake does not check the value
+of the noexec flag but only if the flag is set. The only way to unset a flag
+is to use an inline python syntax like the one below
 
-This patch helps to implement the switching of layers
-between directories and git repositories. Specifically
-selection of git and local directory. Also enabling
-form to view the selection.
+python () {
+   d.delVarFlag("do_fetch","noexec")
+}
 
-[YOCTO #9913]
+Using inline python to do something as simple as clearing a flag sounded too
+complicated to me so I added a new keyword "unset" to bitbake with the
+following syntax :
 
-Signed-off-by: Sujith H <sujith.h@gmail.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+unset VAR
+
+will call d.delVar("VAR")
+
+unset VAR[flag]
+
+will call d.delVarFlag("VAR","flag")
+
+Documentation has been updated accordingly
+
 ---
- .../toaster/toastergui/static/js/layerdetails.js   | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+v2 : fix some wording in documentation
+     add unit test
 
-diff --git a/bitbake/lib/toaster/toastergui/static/js/layerdetails.js b/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
-index 0d4240b..2ff8e59 100644
---- a/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
-+++ b/bitbake/lib/toaster/toastergui/static/js/layerdetails.js
-@@ -10,6 +10,7 @@ function layerDetailsPageInit (ctx) {
-   var targetTab = $("#targets-tab");
-   var machineTab = $("#machines-tab");
-   var detailsTab = $("#details-tab");
-+  var editLayerSource = $("#edit-layer-source");
- 
-   /* setup the dependencies typeahead */
-   libtoaster.makeTypeahead(layerDepInput, libtoaster.ctx.layersTypeAheadUrl, { include_added: "true" }, function(item){
-@@ -423,4 +424,101 @@ function layerDetailsPageInit (ctx) {
-   $(".glyphicon-trash").tooltip();
-   $(".commit").tooltip();
- 
-+  editLayerSource.click(function() {
-+    // Kindly bring the git layers imported from layerindex to normal page and not this new page :(
-+    $(this).hide();
-+    $("#save-changes-for-switch").attr("disabled", "disabled");
-+
-+    $("#git-repo-info", "#directory-info").hide();
-+    $("#edit-layer-source-form").fadeIn();
-+    if ($("#layer-dir-path-in-details").val() == "") {
-+      //Local dir path is empty...
-+      $("#repo").prop("checked", true);
-+      $("#layer-git").fadeIn();
-+      $("#layer-dir").hide();
-+    } else {
-+      $("#layer-git").hide();
-+      $("#layer-dir").fadeIn();
-+    }
-+  });
-+
-+  $('input:radio[name="source-location"]').change(function() {
-+    if ($('input[name=source-location]:checked').val() == "repo") {
-+      $("#layer-git").fadeIn();
-+      $("#layer-dir").hide();
-+	if ($("#layer-git-repo-url").val().length === 0 && $("#layer-git-ref").val().length === 0) {
-+	    $("#save-changes-for-switch").attr("disabled", "disabled");
-+	}
-+    } else {
-+      $("#layer-dir").fadeIn();
-+      $("#layer-git").hide();
-+    }
-+  });
-+
-+  $("#layer-dir-path-in-details").keyup(function() {
-+    $("#save-changes-for-switch").removeAttr("disabled");
-+  });
-+
-+  $("#layer-git-repo-url").keyup(function() {
-+    if ($("#layer-git-repo-url").val().length > 0 && $("#layer-git-ref").val().length > 0) {
-+      $("#save-changes-for-switch").removeAttr("disabled");
-+    }
-+  });
-+
-+  $("#layer-git-ref").keyup(function() {
-+    if ($("#layer-git-repo-url").val().length > 0 && $("#layer-git-ref").val().length > 0) {
-+      $("#save-changes-for-switch").removeAttr("disabled");
-+    }
-+  });
-+
-+  $('#cancel-changes-for-switch').click(function() {
-+    editLayerSource.show();
-+    $("#git-repo-info", "#directory-info").fadeIn();
-+    $("#edit-layer-source-form").fadeOut();
-+
-+    if ($("#layer-dir-path-in-details").val().length) {
-+      $("#dir").prop("checked", true);
-+      $("#layer-git").fadeOut();
-+      $("#layer-dir").fadeIn();
-+    } else {
-+      $("#layer-git").fadeIn();
-+      $("#layer-dir").fadeOut();
-+    }
-+  });
-+
-+  $('#save-changes-for-switch').click(function() {
-+
-+    var layerData = {
-+      vcs_url: $('#layer-git-repo-url').val(),
-+      commit: $('#layer-git-ref').val(),
-+      dirpath: $('#layer-subdir').val(),
-+      local_source_dir: $('#layer-dir-path-in-details').val(),
-+    };
-+
-+    if ($('input[name=source-location]:checked').val() == "repo") {
-+      layerData.local_source_dir = "";
-+    } else {
-+      layerData.vcs_url = "";
-+      layerData.git_ref = "";
-+    }
-+
-+    $.ajax({
-+        type: "POST",
-+        url: ctx.xhrUpdateLayerUrl,
-+        data: layerData,
-+        headers: { 'X-CSRFToken' : $.cookie('csrftoken')},
-+        success: function (data) {
-+          if (data.error != "ok") {
-+            console.warn(data.error);
-+          } else {
-+            /* success layer property changed */
-+            window.location.reload();
-+          }
-+        },
-+        error: function (data) {
-+          console.warn("Call failed");
-+          console.warn(data);
-+        }
-+    });
-+  });
- }
+Jérémy Rosen (1):
+  add a syntax to clear variable
+
+ bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 17 ++++-
+ bitbake/lib/bb/parse/ast.py                                      | 33 +++++++-
+ bitbake/lib/bb/parse/parse_py/ConfHandler.py                     | 12 +++-
+ bitbake/lib/bb/tests/parse.py                                    | 17 ++++-
+ 4 files changed, 79 insertions(+), 0 deletions(-)
+
 -- 
-2.7.4
-
+git-series 0.8.9
 
