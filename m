@@ -1,32 +1,24 @@
-Return-Path: <jeremy.rosen@smile.fr>
-Received: from idris.smile.fr (idris.smile.fr [91.216.209.19])
-	by mail.openembedded.org (Postfix) with ESMTP id CFBB273243
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id E68A6731F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Aug 2016 09:45:03 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by idris.smile.fr (Postfix) with ESMTP id 15AC91EE0820;
-	Tue, 23 Aug 2016 11:45:04 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at smile.fr
-X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "References"
-Received: from idris.smile.fr ([127.0.0.1])
-	by localhost (bluemind-mta.prod.vitry.intranet [127.0.0.1])
-	(amavisd-new, port 10024)
-	with ESMTP id 2lydx+23Bjaf; Tue, 23 Aug 2016 11:45:03 +0200 (CEST)
-Received: from pcrosen.daviel.openwide.fr (unknown [193.56.60.161])
-	by idris.smile.fr (Postfix) with ESMTPA id 49CB61EE0476;
-	Tue, 23 Aug 2016 11:45:03 +0200 (CEST)
-From: =?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?= <jeremy.rosen@smile.fr>
+	Tue, 23 Aug 2016 11:18:48 +0000 (UTC)
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+	by orsmga102.jf.intel.com with ESMTP; 23 Aug 2016 04:18:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.28,565,1464678000"; 
+   d="scan'208";a="841404"
+Received: from linux.intel.com ([10.54.29.200])
+	by fmsmga005.fm.intel.com with ESMTP; 23 Aug 2016 04:18:48 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
+	by linux.intel.com (Postfix) with ESMTP id E75CB6A4006;
+	Tue, 23 Aug 2016 04:18:29 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 23 Aug 2016 11:44:51 +0200
-Message-Id: <320ea3092e4cdc1c8f9a7177ca09fc21ebce5eff.1471945418.git-series.jeremy.rosen@smile.fr>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <cover.d26c020bb7163ba8281b0826f12094be699d8182.1471945418.git-series.jeremy.rosen@smile.fr>
-References: <cover.d26c020bb7163ba8281b0826f12094be699d8182.1471945418.git-series.jeremy.rosen@smile.fr>
-MIME-Version: 1.0
-In-Reply-To: <cover.d26c020bb7163ba8281b0826f12094be699d8182.1471945418.git-series.jeremy.rosen@smile.fr>
-References: <cover.d26c020bb7163ba8281b0826f12094be699d8182.1471945418.git-series.jeremy.rosen@smile.fr>
-Cc: =?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?= <jeremy.rosen@openwide.fr>
-Subject: [PATCH v2 1/1] add a syntax to clear variable
+Date: Tue, 23 Aug 2016 14:18:26 +0300
+Message-Id: <1471951106-1316-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] buildinfohelper: discover kernel artifacts correctly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,160 +31,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 23 Aug 2016 09:45:05 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 23 Aug 2016 11:18:49 -0000
 
-unset VAR
-will clear variable VAR
-unset VAR[flag]
-will clear flag "flag" from var VAR
+From: Elliot Smith <elliot.smith@intel.com>
 
-Signed-off-by: Jérémy Rosen <jeremy.rosen@openwide.fr>
+Because some image_license.manifest files contain multiple
+FILES lines, and because those lines can sometimes not contain
+a list of files (i.e. they look like "FILES:\n"), we were
+resetting the list of kernel artifacts when we hit the second
+"empty" line.
+
+Fix by ignoring any FILES line which doesn't list files, and by
+appending any files found in a valid FILES line, rather than
+overwriting the existing list.
+
+[YOCTO #10107]
+
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 17 ++++-
- bitbake/lib/bb/parse/ast.py                                      | 33 +++++++-
- bitbake/lib/bb/parse/parse_py/ConfHandler.py                     | 12 +++-
- bitbake/lib/bb/tests/parse.py                                    | 17 ++++-
- 4 files changed, 79 insertions(+), 0 deletions(-)
+ bitbake/lib/bb/ui/buildinfohelper.py | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-index 7ef848f..47db85b 100644
---- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-+++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-@@ -431,6 +431,23 @@
-             </para>
-         </section>
+diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
+index 7a16ec6..0f09b5c 100644
+--- a/bitbake/lib/bb/ui/buildinfohelper.py
++++ b/bitbake/lib/bb/ui/buildinfohelper.py
+@@ -1616,7 +1616,10 @@ class BuildInfoHelper(object):
+                 if line.startswith('FILES'):
+                     files_str = line.split(':')[1].strip()
+                     files_str = re.sub(r' {2,}', ' ', files_str)
+-                    files = files_str.split(' ')
++
++                    # ignore lines like "FILES:" with no filenames
++                    if files_str:
++                        files += files_str.split(' ')
+         return files
  
-+        <section id='unsetting-variables'>
-+            <title>Unseting variables</title>
-+
-+            <para>
-+                It is possible to completely remove a variable or a variable flag 
-+                from BitBake's internal data dictionary by using the "unset" keyword.
-+                Here is an example:
-+                <literallayout class='monospaced'>
-+        unset DATE
-+        unset do_fetch[noexec]
-+                </literallayout>
-+                These two statements remove the <filename>DATE</filename> and the 
-+                <filename>do_fetch[noexec]</filename> flag.
-+            </para>
-+
-+        </section>
-+
-         <section id='providing-pathnames'>
-             <title>Providing Pathnames</title>
+     def _endswith(self, str_to_test, endings):
+@@ -1734,9 +1737,9 @@ class BuildInfoHelper(object):
+                 real_image_name,
+                 'image_license.manifest')
  
-diff --git a/bitbake/lib/bb/parse/ast.py b/bitbake/lib/bb/parse/ast.py
-index 8b9baa7..b407b09 100644
---- a/bitbake/lib/bb/parse/ast.py
-+++ b/bitbake/lib/bb/parse/ast.py
-@@ -69,6 +69,33 @@ class ExportNode(AstNode):
-     def eval(self, data):
-         data.setVarFlag(self.var, "export", 1, op = 'exported')
- 
-+class UnsetNode(AstNode):
-+    def __init__(self, filename, lineno, var):
-+        AstNode.__init__(self, filename, lineno)
-+        self.var = var
-+
-+    def eval(self, data):
-+        loginfo = {
-+            'variable': self.var,
-+            'file': self.filename,
-+            'line': self.lineno,
-+        }
-+        data.delVar(self.var,**loginfo)
-+
-+class UnsetFlagNode(AstNode):
-+    def __init__(self, filename, lineno, var, flag):
-+        AstNode.__init__(self, filename, lineno)
-+        self.var = var
-+        self.flag = flag
-+
-+    def eval(self, data):
-+        loginfo = {
-+            'variable': self.var,
-+            'file': self.filename,
-+            'line': self.lineno,
-+        }
-+        data.delVarFlag(self.var, self.flag, **loginfo)
-+
- class DataNode(AstNode):
-     """
-     Various data related updates. For the sake of sanity
-@@ -270,6 +297,12 @@ def handleInclude(statements, filename, lineno, m, force):
- def handleExport(statements, filename, lineno, m):
-     statements.append(ExportNode(filename, lineno, m.group(1)))
- 
-+def handleUnset(statements, filename, lineno, m):
-+    statements.append(UnsetNode(filename, lineno, m.group(1)))
-+
-+def handleUnsetFlag(statements, filename, lineno, m):
-+    statements.append(UnsetFlagNode(filename, lineno, m.group(1), m.group(2)))
-+
- def handleData(statements, filename, lineno, groupd):
-     statements.append(DataNode(filename, lineno, groupd))
- 
-diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index b971292..875250d 100644
---- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-@@ -57,6 +57,8 @@ __config_regexp__  = re.compile( r"""
- __include_regexp__ = re.compile( r"include\s+(.+)" )
- __require_regexp__ = re.compile( r"require\s+(.+)" )
- __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/]+)$" )
-+__unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/]+)$" )
-+__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/]+)\[([a-zA-Z0-9\-_+.${}/]+)\]$" )
- 
- def init(data):
-     topdir = data.getVar('TOPDIR', False)
-@@ -185,6 +187,16 @@ def feeder(lineno, s, fn, statements):
-         ast.handleExport(statements, fn, lineno, m)
-         return
- 
-+    m = __unset_regexp__.match(s)
-+    if m:
-+        ast.handleUnset(statements, fn, lineno, m)
-+        return
-+
-+    m = __unset_flag_regexp__.match(s)
-+    if m:
-+        ast.handleUnsetFlag(statements, fn, lineno, m)
-+        return
-+
-     raise ParseError("unparsed line: '%s'" % s, fn, lineno);
- 
- # Add us to the handlers list
-diff --git a/bitbake/lib/bb/tests/parse.py b/bitbake/lib/bb/tests/parse.py
-index c296db2..0b2706a 100644
---- a/bitbake/lib/bb/tests/parse.py
-+++ b/bitbake/lib/bb/tests/parse.py
-@@ -68,6 +68,23 @@ C = "3"
-         with self.assertRaises(bb.parse.ParseError):
-             d = bb.parse.handle(f.name, self.d)['']
- 
-+    unsettest = """
-+A = "1"
-+B = "2"
-+B[flag] = "3"
-+
-+unset A
-+unset B[flag]
-+"""
-+
-+    def test_parse_unset(self):
-+        f = self.parsehelper(self.unsettest)
-+        d = bb.parse.handle(f.name, self.d)['']
-+        self.assertEqual(d.getVar("A", True), None)
-+        self.assertEqual(d.getVarFlag("A","flag", True), None)
-+        self.assertEqual(d.getVar("B", True), "2")
-+        
-+
-     overridetest = """
- RRECOMMENDS_${PN} = "a"
- RRECOMMENDS_${PN}_libc = "b"
+-            # if image_license.manifest exists, we can read the names of bzImage
+-            # and modules files for this build from it, then look for them
+-            # in the DEPLOY_DIR_IMAGE; note that this file is only produced
++            # if image_license.manifest exists, we can read the names of
++            # bzImage, modules etc. files for this build from it, then look for
++            # them in the DEPLOY_DIR_IMAGE; note that this file is only produced
+             # if an image file was produced
+             if os.path.isfile(image_license_manifest_path):
+                 has_files = True
 -- 
-git-series 0.8.9
+2.1.4
+
 
