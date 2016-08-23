@@ -1,24 +1,23 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id E68A6731F7
+Return-Path: <mariano.lopez@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 86C5576651
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Aug 2016 11:18:48 +0000 (UTC)
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-	by orsmga102.jf.intel.com with ESMTP; 23 Aug 2016 04:18:49 -0700
+	Tue, 23 Aug 2016 15:09:00 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by fmsmga101.fm.intel.com with ESMTP; 23 Aug 2016 08:09:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,565,1464678000"; 
-   d="scan'208";a="841404"
-Received: from linux.intel.com ([10.54.29.200])
-	by fmsmga005.fm.intel.com with ESMTP; 23 Aug 2016 04:18:48 -0700
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
-	by linux.intel.com (Postfix) with ESMTP id E75CB6A4006;
-	Tue, 23 Aug 2016 04:18:29 -0700 (PDT)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.28,566,1464678000"; d="scan'208";a="869934832"
+Received: from yctb01.ostc.intel.com (HELO yctb01.otcr.intel.com)
+	([10.54.69.55])
+	by orsmga003.jf.intel.com with ESMTP; 23 Aug 2016 08:09:00 -0700
+From: mariano.lopez@linux.intel.com
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 23 Aug 2016 14:18:26 +0300
-Message-Id: <1471951106-1316-1-git-send-email-ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] buildinfohelper: discover kernel artifacts correctly
+Date: Tue, 23 Aug 2016 07:06:11 +0000
+Message-Id: <4948ba266e0dbc588c3c81dd845bd2ee1a343587.1471935918.git.mariano.lopez@linux.intel.com>
+X-Mailer: git-send-email 2.6.6
+In-Reply-To: <cover.1471935918.git.mariano.lopez@linux.intel.com>
+References: <cover.1471935918.git.mariano.lopez@linux.intel.com>
+Subject: [PATCH 1/1] cooker.py: Catch when stdout doesn't have a file descriptor
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,58 +30,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 23 Aug 2016 11:18:49 -0000
+X-List-Received-Date: Tue, 23 Aug 2016 15:09:00 -0000
 
-From: Elliot Smith <elliot.smith@intel.com>
+From: Mariano Lopez <mariano.lopez@linux.intel.com>
 
-Because some image_license.manifest files contain multiple
-FILES lines, and because those lines can sometimes not contain
-a list of files (i.e. they look like "FILES:\n"), we were
-resetting the list of kernel artifacts when we hit the second
-"empty" line.
+Currently, there is a check to remove the TOSTOP attribute from
+a tty to avoid hangs. It assumes that sys.stdout will have a
+file descriptor and this is not always true, some IO classes
+will throw exceptions when trying to get its file descriptor.
 
-Fix by ignoring any FILES line which doesn't list files, and by
-appending any files found in a valid FILES line, rather than
-overwriting the existing list.
+This will add a check for such cases and avoid throwing an
+exception.
 
-[YOCTO #10107]
+[YOCTO #10162]
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Mariano Lopez <mariano.lopez@linux.intel.com>
 ---
- bitbake/lib/bb/ui/buildinfohelper.py | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/cooker.py | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
-index 7a16ec6..0f09b5c 100644
---- a/bitbake/lib/bb/ui/buildinfohelper.py
-+++ b/bitbake/lib/bb/ui/buildinfohelper.py
-@@ -1616,7 +1616,10 @@ class BuildInfoHelper(object):
-                 if line.startswith('FILES'):
-                     files_str = line.split(':')[1].strip()
-                     files_str = re.sub(r' {2,}', ' ', files_str)
--                    files = files_str.split(' ')
-+
-+                    # ignore lines like "FILES:" with no filenames
-+                    if files_str:
-+                        files += files_str.split(' ')
-         return files
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index d1ab4aa..b7d7a7e 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -30,7 +30,7 @@ import logging
+ import multiprocessing
+ import sre_constants
+ import threading
+-from io import StringIO
++from io import StringIO, UnsupportedOperation
+ from contextlib import closing
+ from functools import wraps
+ from collections import defaultdict, namedtuple
+@@ -230,14 +230,17 @@ class BBCooker:
+             pass
  
-     def _endswith(self, str_to_test, endings):
-@@ -1734,9 +1737,9 @@ class BuildInfoHelper(object):
-                 real_image_name,
-                 'image_license.manifest')
+         # TOSTOP must not be set or our children will hang when they output
+-        fd = sys.stdout.fileno()
+-        if os.isatty(fd):
+-            import termios
+-            tcattr = termios.tcgetattr(fd)
+-            if tcattr[3] & termios.TOSTOP:
+-                buildlog.info("The terminal had the TOSTOP bit set, clearing...")
+-                tcattr[3] = tcattr[3] & ~termios.TOSTOP
+-                termios.tcsetattr(fd, termios.TCSANOW, tcattr)
++        try:
++            fd = sys.stdout.fileno()
++            if os.isatty(fd):
++                import termios
++                tcattr = termios.tcgetattr(fd)
++                if tcattr[3] & termios.TOSTOP:
++                    buildlog.info("The terminal had the TOSTOP bit set, clearing...")
++                    tcattr[3] = tcattr[3] & ~termios.TOSTOP
++                    termios.tcsetattr(fd, termios.TCSANOW, tcattr)
++        except UnsupportedOperation:
++            pass
  
--            # if image_license.manifest exists, we can read the names of bzImage
--            # and modules files for this build from it, then look for them
--            # in the DEPLOY_DIR_IMAGE; note that this file is only produced
-+            # if image_license.manifest exists, we can read the names of
-+            # bzImage, modules etc. files for this build from it, then look for
-+            # them in the DEPLOY_DIR_IMAGE; note that this file is only produced
-             # if an image file was produced
-             if os.path.isfile(image_license_manifest_path):
-                 has_files = True
+         self.command = bb.command.Command(self)
+         self.state = state.initial
 -- 
-2.1.4
+2.6.6
 
 
