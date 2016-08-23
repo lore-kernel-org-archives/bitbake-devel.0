@@ -1,26 +1,36 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id D96B9731BE
+Return-Path: <mike.looijmans@topic.nl>
+X-Greylist: delayed 395 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 23 Aug 2016 06:53:48 UTC
+Received: from atl4mhfb04.myregisteredsite.com
+	(atl4mhfb04.myregisteredsite.com [209.17.115.120])
+	by mail.openembedded.org (Postfix) with ESMTP id C8DB7731C9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Aug 2016 10:42:00 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 31 Aug 2016 03:42:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.30,261,1470726000"; d="scan'208";a="1022681828"
-Received: from irdmzpr01.ir.intel.com (HELO [163.33.54.142]) ([163.33.54.142])
-	by orsmga001.jf.intel.com with ESMTP; 31 Aug 2016 03:42:01 -0700
-To: bitbake-devel@lists.openembedded.org,
-	"Bartosh, Eduard" <eduard.bartosh@intel.com>,
-	Alexander.Egorenkov@vector.com
-References: <1472553028-3404-1-git-send-email-ed.bartosh@linux.intel.com>
-From: Michael Wood <michael.g.wood@intel.com>
-Message-ID: <af13866e-4bd3-15a6-baca-b24b1edd21d5@intel.com>
-Date: Wed, 31 Aug 2016 11:41:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <1472553028-3404-1-git-send-email-ed.bartosh@linux.intel.com>
-Subject: Re: [krogoth][PATCH] toaster: Increase maximum length of file path of build artifact
+	Tue, 23 Aug 2016 06:53:48 +0000 (UTC)
+Received: from atl4mhob07.myregisteredsite.com
+	(atl4mhob07.myregisteredsite.com [209.17.115.45])
+	by atl4mhfb04.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id
+	u7N6ppVO021518 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 23 Aug 2016 02:51:51 -0400
+Received: from mailpod.hostingplatform.com ([10.30.71.206])
+	by atl4mhob07.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id
+	u7N6pmY8002444 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 23 Aug 2016 02:51:48 -0400
+Received: (qmail 26069 invoked by uid 0); 23 Aug 2016 06:51:48 -0000
+X-TCPREMOTEIP: 37.74.225.130
+X-Authenticated-UID: mike@milosoftware.com
+Received: from unknown (HELO mikebuntu.TOPIC.LOCAL)
+	(mike@milosoftware.com@37.74.225.130)
+	by 0 with ESMTPA; 23 Aug 2016 06:51:48 -0000
+From: Mike Looijmans <mike.looijmans@topic.nl>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 23 Aug 2016 08:51:45 +0200
+Message-Id: <1471935105-1684-1-git-send-email-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 1.9.1
+References: <1471934427-16959-1-git-send-email-mike.looijmans@topic.nl>
+In-Reply-To: <1471934427-16959-1-git-send-email-mike.looijmans@topic.nl>
+X-Mailman-Approved-At: Wed, 31 Aug 2016 14:36:36 +0000
+Cc: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH v2] lib/bb/siggen.py: Prevent ResourceWarning exceptions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,89 +43,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 31 Aug 2016 10:42:02 -0000
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 23 Aug 2016 06:53:49 -0000
 
-On 30/08/16 11:30, Ed Bartosh wrote:
-> From: Alexander Egorenkov <Alexander.Egorenkov@vector.com>
->
-> The default maximum length of the file path for a build artifact on
-> Krogoth Toaster is 100 characters (Django default for FilePathField).
-> This value makes it impossible to download build artifacts because
-> default file paths are quite long and therefore are being truncated
-> by Toaster.
->
-> Example of a long file path which does not work on my machine:
-> /var/www/toaster/poky/build-toaster-2/tmp/deploy/sdk/poky-glibc-x86_64-co=
-re-image-sato-cortexa8hf-neon-toolchain-2.1.1.sh
->
-> To fix this problem i increased the size of 'file_name' column
-> of the corresponding MySQL table to 255 characters.
->
-> Signed-off-by: Alexander.Egorenkov <Alexander.Egorenkov@vector.com>
-> Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-> ---
->   bitbake/lib/toaster/orm/migrations/0001_initial.py | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/bitbake/lib/toaster/orm/migrations/0001_initial.py b/bitbake=
-/lib/toaster/orm/migrations/0001_initial.py
-> index 760462f..0c780a9 100644
-> --- a/bitbake/lib/toaster/orm/migrations/0001_initial.py
-> +++ b/bitbake/lib/toaster/orm/migrations/0001_initial.py
-> @@ -52,7 +52,7 @@ class Migration(migrations.Migration):
->               name=3D'BuildArtifact',
->               fields=3D[
->                   ('id', models.AutoField(verbose_name=3D'ID', serialize=
-=3DFalse, auto_created=3DTrue, primary_key=3DTrue)),
-> -                ('file_name', models.FilePathField()),
-> +                ('file_name', models.FilePathField(max_length=3D255)),
->                   ('file_size', models.IntegerField()),
->                   ('build', models.ForeignKey(to=3D'orm.Build')),
->               ],
+Add a "with" statement to explicitly close files. This prevents hundreds of
+"ResourceWarning: unclosed file" outputs.
 
-To change this field the model definition needs changing at the source =
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+v2: Smaller object scope. Wrapped both open() calls.
 
-of the definition.
+ lib/bb/siggen.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-All the migration files in /migrations/ are auto generated by Django =
-
-itself and will be overwritten the next time the migrations are reset. =
-
-It is also applied in order; so if someone has an existing database the =
-
-changes will not be applied as the initial migration has already run.
-
-To make this a permanent change edit the definition in orm/models.py (I =
-
-think the classes you are looking for would be TargetSDKFile and =
-
-TargetKernelFile? to add a max_length parameters) once that has be =
-
-edited you can run "./manage.py makemigrations" and it will create a new =
-
-migration file in /migrations/ to make that amendment to the schema, add =
-
-this  new file and the changes to models.py and it'll be all good!
-
-More info on migrations here =
-
-https://docs.djangoproject.com/en/1.8/topics/migrations/
-
-Thanks,
-
-Michael
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index db3daef..1b3f205 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -363,10 +363,10 @@ def clean_basepaths_list(a):
+ def compare_sigfiles(a, b, recursecb = None):
+     output = []
+ 
+-    p1 = pickle.Unpickler(open(a, "rb"))
+-    a_data = p1.load()
+-    p2 = pickle.Unpickler(open(b, "rb"))
+-    b_data = p2.load()
++    with open(a, "rb") as file_a:
++        a_data = pickle.Unpickler(file_a).load()
++    with open(b, "rb") as file_b:
++        b_data = pickle.Unpickler(file_b).load()
+ 
+     def dict_diff(a, b, whitelist=set()):
+         sa = set(a.keys())
+@@ -563,8 +563,8 @@ def calc_taskhash(sigdata):
+ def dump_sigfile(a):
+     output = []
+ 
+-    p1 = pickle.Unpickler(open(a, "rb"))
+-    a_data = p1.load()
++    with open(a, "rb") as fa:
++        a_data = pickle.Unpickler(fa).load()
+ 
+     output.append("basewhitelist: %s" % (a_data['basewhitelist']))
+ 
+-- 
+1.9.1
 
 
