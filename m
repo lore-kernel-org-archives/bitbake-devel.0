@@ -1,21 +1,35 @@
-Return-Path: <stephano.cetola@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id B5C0B770B4
+Return-Path: <zzs213@126.com>
+Received: from m15-114.126.com (m15-114.126.com [220.181.15.114])
+	by mail.openembedded.org (Postfix) with ESMTP id 5C2AB6FF9F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Aug 2016 17:41:33 +0000 (UTC)
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-	by fmsmga104.fm.intel.com with ESMTP; 26 Aug 2016 10:41:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.28,581,1464678000"; 
-   d="scan'208";a="1577672"
-Received: from pequod.jf.intel.com ([10.7.201.50])
-	by orsmga005.jf.intel.com with ESMTP; 26 Aug 2016 10:41:33 -0700
-From: Stephano Cetola <stephano.cetola@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 26 Aug 2016 10:41:43 -0700
-Message-Id: <20160826174143.116764-1-stephano.cetola@linux.intel.com>
-X-Mailer: git-send-email 2.9.3
-Subject: [PATCH] wget: allow basic http auth for SSTATE_MIRRORS
+	Sat, 27 Aug 2016 07:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=oSWoP
+	iGL9eRr+tLtoa1dqE8gQo8NYJzD7dKDFgTrkzU=; b=oGSf0BomS/+7hb7rle4CM
+	Wbd0zMjHHn82UFPFQ0B02O/mA8Yn8Iqkt0/DBJyNr6u4j6wy435inqWtfDqwftBZ
+	6xYVDkLKmgxjL4/phqtZF7pWt2gysMp95NIkJwXFN6KhnvKD6XZyhVf2zXv+/LJc
+	yShn7LGNF2dAGSpOJyHkag=
+Received: from [192.168.0.12] (unknown [171.212.170.252])
+	by smtp7 (Coremail) with SMTP id DsmowAB3DbYgQsFX68TQEg--.18730S2;
+	Sat, 27 Aug 2016 15:32:49 +0800 (CST)
+References: <1472189699-6646-1-git-send-email-zzs213@126.com>
+	<CAMKF1soRMSf9EvC5RMuVuJbyA4dRC=n+B9nSjCXovD_F_zvTwQ@mail.gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+From: =?UTF-8?B?5byg5b+g5bGx?= <zzs213@126.com>
+Message-ID: <77d61119-5b4f-d897-fa94-4490098219bc@126.com>
+Date: Sat, 27 Aug 2016 15:32:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+	Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <CAMKF1soRMSf9EvC5RMuVuJbyA4dRC=n+B9nSjCXovD_F_zvTwQ@mail.gmail.com>
+X-CM-TRANSID: DsmowAB3DbYgQsFX68TQEg--.18730S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7XFyfJry5GF4fXrWkGrykZrb_yoWkJwb_WF
+	40vryktFs8Jr4xta13tan8A3srK3W5uFW0q3yfKw1Ska47G3WagrZrXrykZw17WryjkFsI
+	kFyavry7tr92kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU57R67UUUUU==
+X-Originating-IP: [171.212.170.252]
+X-CM-SenderInfo: x22vjiat6rjloofrz/1tbiLQLSGVc1o2OowAAAsu
+Subject: Re: [PATCH] enable override for suffix just include digit and dot
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,54 +42,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 26 Aug 2016 17:41:33 -0000
+X-List-Received-Date: Sat, 27 Aug 2016 07:32:55 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If http basic auth creds were added to sstate mirrors like so:
+>>
+>> Without this patch, if we write these in recipe test.bb <http://test.bb>:
+>>
+>>         NAME_1.1.7   = 'version is 1.1.7'
+>>         NAME_develop = 'version is develop'
+>>
+>> Use 'bitbake test -e' to observe 'NAME':
+>>         #
+>>         # $NAME [2 operations]
+>>         #   override[develop]:set .../test.bb:10 <http://test.bb:10>
+>>         #     "version is develop"
+>>         # pre-expansion value:
+>>         #   "version is develop"
+>>         NAME="version is develop"
+>>
+>> Obviously, override for '1.1.7' missing.
+>
+> Dot is not allowed in variable names intentionally since its file
+> extension separator. I am not sure if its a good idea to allow it in
+> variable names
 
-https://foo.com/sstate/PATH;user=foo:bar;downloadfilename=PATH
+Since we can use the path delimeter '/' in override like 
+'virtual/kernel'. Why we can't use dot in override.
 
-The sstate mirror check would silently fail with 401 unauthorized.
-This patch allows both the check, and the wget download to succeed by
-checking for user credentials and if present adding the correct
-headers, or wget params as needed.
+And bitbkae would add 'PV'(which default to '1.0' in OE) to 'OVERRIDES'. 
+So using dot in override may not be an issue.
 
-[ YOCTO #9815 ]
+In bitbake manual, It said we can use BBVERSIONS and override to let 
+sigle recipe support multiple package version
 
-Signed-off-by: Stephano Cetola <stephano.cetola@linux.intel.com>
----
- lib/bb/fetch2/wget.py | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+If we can't use dot in override, Howto use BBVERSIONS? Use embedded 
+python code to set var according version? But it is ugly tahn using 
+override!
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 6b60d9b..ecb946a 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -108,6 +108,10 @@ class Wget(FetchMethod):
-             bb.utils.mkdirhier(os.path.dirname(dldir + os.sep + ud.localfile))
-             fetchcmd += " -O " + dldir + os.sep + ud.localfile
- 
-+        if ud.user:
-+            up = ud.user.split(":")
-+            fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (up[0],up[1])
-+
-         uri = ud.url.split(";")[0]
-         if os.path.exists(ud.localpath):
-             # file exists, but we didnt complete it.. trying again..
-@@ -300,6 +304,13 @@ class Wget(FetchMethod):
-             uri = ud.url.split(";")[0]
-             r = urllib.request.Request(uri)
-             r.get_method = lambda: "HEAD"
-+
-+            if ud.user:
-+                import base64
-+                encodeuser = base64.b64encode(ud.user.encode('utf-8')).decode("utf-8")
-+                authheader =  "Basic %s" % encodeuser
-+                r.add_header("Authorization", authheader)
-+
-             opener.open(r)
-         except urllib.error.URLError as e:
-             if try_again:
--- 
-2.9.3
 
 
