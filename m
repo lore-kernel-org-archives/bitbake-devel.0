@@ -1,21 +1,24 @@
-Return-Path: <markus.lehtonen@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 65671731F9
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 51949606D0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Aug 2016 09:53:42 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga103.fm.intel.com with ESMTP; 30 Aug 2016 02:53:33 -0700
+	Tue, 30 Aug 2016 10:19:18 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga104.fm.intel.com with ESMTP; 30 Aug 2016 03:19:19 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.30,255,1470726000"; d="scan'208";a="1022186488"
-Received: from dthoumin-mobl2.ger.corp.intel.com (HELO
-	mqz-osx-suse64.fi.intel.com) ([10.252.6.138])
-	by orsmga001.jf.intel.com with ESMTP; 30 Aug 2016 02:53:33 -0700
-From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.30,255,1470726000"; d="scan'208";a="1049095794"
+Received: from linux.intel.com ([10.54.29.200])
+	by fmsmga002.fm.intel.com with ESMTP; 30 Aug 2016 03:19:18 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
+	by linux.intel.com (Postfix) with ESMTP id A71516A4080;
+	Tue, 30 Aug 2016 03:18:58 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 30 Aug 2016 12:53:30 +0300
-Message-Id: <1472550810-10006-1-git-send-email-markus.lehtonen@linux.intel.com>
-X-Mailer: git-send-email 2.6.6
-Subject: [PATCH] Fail gracefully if event handler function is not found
+Date: Tue, 30 Aug 2016 13:18:58 +0300
+Message-Id: <1472552338-3048-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Cc: Alexander Egorenkov <Alexander.Egorenkov@vector.com>
+Subject: [krogoth][PATCH] toaster: Fix adding of bitbake variables containing ':'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,44 +31,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 30 Aug 2016 09:53:43 -0000
+X-List-Received-Date: Tue, 30 Aug 2016 10:19:18 -0000
 
-[YOCTO #10186]
+From: Alexander Egorenkov <Alexander.Egorenkov@vector.com>
 
-Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+This fix is a backport from toaster-next.
+
+Krogoth Toaster is unable to add a variable containing ':'
+and fails with the following error message:
+
+error on request:
+too many values to unpack
+Traceback (most recent call last):
+ File "bitbake/lib/toaster/toastergui/views.py", line 2171, in
+xhr_configvaredit
+  variable, value = t.spli(":")
+ValueError: too many values to unpack.
+
+[YOCTO #10170]
+
+Signed-off-by: Alexander Egorenkov <Alexander.Egorenkov@vector.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/bb/cookerdata.py | 3 +++
- lib/bb/parse/ast.py  | 2 ++
- 2 files changed, 5 insertions(+)
+ bitbake/lib/toaster/toastergui/views.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index fa1de7a..bf9bfbf 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -357,6 +357,9 @@ class CookerDataBuilder(object):
-         # We register any handlers we've found so far here...
-         for var in data.getVar('__BBHANDLERS', False) or []:
-             handlerfn = data.getVarFlag(var, "filename", False)
-+            if not handlerfn:
-+                parselog.critical("Undefined event handler function '%s'" % var)
-+                sys.exit(1)
-             handlerln = int(data.getVarFlag(var, "lineno", False))
-             bb.event.register(var, data.getVar(var, False),  (data.getVarFlag(var, "eventmask", True) or "").split(), handlerfn, handlerln)
- 
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index d7185b1..fa83b18 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -344,6 +344,8 @@ def finalize(fn, d, variant = None):
-     for var in d.getVar('__BBHANDLERS', False) or []:
-         # try to add the handler
-         handlerfn = d.getVarFlag(var, "filename", False)
-+        if not handlerfn:
-+            bb.fatal("Undefined event handler function '%s'" % var)
-         handlerln = int(d.getVarFlag(var, "lineno", False))
-         bb.event.register(var, d.getVar(var, False), (d.getVarFlag(var, "eventmask", True) or "").split(), handlerfn, handlerln)
- 
+diff --git a/bitbake/lib/toaster/toastergui/views.py b/bitbake/lib/toaster/toastergui/views.py
+index bd5bf63..febd17f 100755
+--- a/bitbake/lib/toaster/toastergui/views.py
++++ b/bitbake/lib/toaster/toastergui/views.py
+@@ -2168,7 +2168,7 @@ if True:
+             if 'configvarAdd' in request.POST:
+                 t=request.POST['configvarAdd'].strip()
+                 if ":" in t:
+-                    variable, value = t.split(":")
++                    variable, value = t.split(":", 1)
+                 else:
+                     variable = t
+                     value = ""
+@@ -2178,7 +2178,7 @@ if True:
+             if 'configvarChange' in request.POST:
+                 t=request.POST['configvarChange'].strip()
+                 if ":" in t:
+-                    variable, value = t.split(":")
++                    variable, value = t.split(":", 1)
+                 else:
+                     variable = t
+                     value = ""
 -- 
-2.6.6
+2.1.4
 
 
