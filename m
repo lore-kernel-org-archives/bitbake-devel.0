@@ -1,25 +1,27 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id A360073199
+	by mail.openembedded.org (Postfix) with ESMTP id 9CF866E630
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Aug 2016 20:48:56 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga104.fm.intel.com with ESMTP; 30 Aug 2016 13:48:57 -0700
+	Tue, 30 Aug 2016 21:12:00 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by fmsmga104.fm.intel.com with ESMTP; 30 Aug 2016 14:12:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.30,258,1470726000"; d="scan'208";a="162622946"
+X-IronPort-AV: E=Sophos;i="5.30,258,1470726000"; d="scan'208";a="872761147"
 Received: from ashuvini-mobl.gar.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.255.145.135])
-	by fmsmga004.fm.intel.com with ESMTP; 30 Aug 2016 13:48:55 -0700
+	by orsmga003.jf.intel.com with ESMTP; 30 Aug 2016 14:11:59 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 31 Aug 2016 08:48:09 +1200
-Message-Id: <a70189a2822f2a26dbdc15df4ec10fba3dc93b7a.1472589757.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.5.5
-In-Reply-To: <cover.1472589757.git.paul.eggleton@linux.intel.com>
+Date: Wed, 31 Aug 2016 09:11:57 +1200
+Message-ID: <2511417.6ZKDnD8nxc@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.10 (Linux/4.6.7-200.fc23.x86_64; KDE/4.14.20; x86_64; ;
+	)
+In-Reply-To: <634deb5b43cf3470c41e1ee86cef05c7fd31df9d.1472589757.git.paul.eggleton@linux.intel.com>
 References: <cover.1472589757.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1472589757.git.paul.eggleton@linux.intel.com>
-References: <cover.1472589757.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH v2 4/4] tinfoil: add a parse_recipe_file function
+	<634deb5b43cf3470c41e1ee86cef05c7fd31df9d.1472589757.git.paul.eggleton@linux.intel.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2 3/4] cache: allow parsing a recipe with a custom config datastore
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,69 +34,96 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 30 Aug 2016 20:48:56 -0000
+X-List-Received-Date: Tue, 30 Aug 2016 21:12:00 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Parsing a recipe is such a common task for tinfoil-using scripts, and is
-a little awkward to do properly, so add an API function to do it. This
-should also isolate scripts a little from future changes to the internal
-code. The first user of this will be the OpenEmbedded layer index update
-script.
+On Wed, 31 Aug 2016 08:48:08 Paul Eggleton wrote:
+> To accommodate the OpenEmbedded layer index recipe parsing, we have to
+> have the ability to pass in a custom config datastore since it
+> constructs a synthetic one. To make this possible after the multi-config
+> changes, rename the internal _load_bbfile() function to parse_recipe(),
+> make it a function at the module level (since it doesn't actually need
+> to access any members of the class or instance) and move setting
+> __BBMULTICONFIG inside it since other code will expect that to be set.
+> 
+> Part of the fix for [YOCTO #10192].
+> 
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+> ---
+>  lib/bb/cache.py | 73
+> ++++++++++++++++++++++++++++++--------------------------- 1 file changed,
+> 39 insertions(+), 34 deletions(-)
+> 
+> diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+> index 0d5a034..ccad5c8 100644
+> --- a/lib/bb/cache.py
+> +++ b/lib/bb/cache.py
+> @@ -286,6 +286,42 @@ def variant2virtual(realfn, variant):
+>          return "multiconfig:" + elems[1] + ":" + realfn
+>      return "virtual:" + variant + ":" + realfn
+> 
+> +def parse_recipe(bb_data, bbfile, appends, mc=''):
+> +    """
+> +    Parse a recipe
+> +    """
+> +
+> +    chdir_back = False
+> +
+> +    bb_data.setVar("__BBMULTICONFIG", mc)
+> +
+> +    # expand tmpdir to include this topdir
+> +    bb_data.setVar('TMPDIR', bb_data.getVar('TMPDIR', True) or "")
+> +    bbfile_loc = os.path.abspath(os.path.dirname(bbfile))
+> +    oldpath = os.path.abspath(os.getcwd())
+> +    bb.parse.cached_mtime_noerror(bbfile_loc)
+> +
+> +    # The ConfHandler first looks if there is a TOPDIR and if not
+> +    # then it would call getcwd().
+> +    # Previously, we chdir()ed to bbfile_loc, called the handler
+> +    # and finally chdir()ed back, a couple of thousand times. We now
+> +    # just fill in TOPDIR to point to bbfile_loc if there is no TOPDIR yet.
+> +    if not bb_data.getVar('TOPDIR', False):
+> +        chdir_back = True
+> +        bb_data.setVar('TOPDIR', bbfile_loc)
+> +    try:
+> +        if appends:
+> +            bb_data.setVar('__BBAPPEND', " ".join(appends))
+> +        bb_data = bb.parse.handle(bbfile, bb_data)
+> +        if chdir_back:
+> +            os.chdir(oldpath)
+> +        return bb_data
+> +    except:
+> +        if chdir_back:
+> +            os.chdir(oldpath)
+> +        raise
+> +
+> +
+> 
+>  class NoCache(object):
+> 
+> @@ -312,54 +348,23 @@ class NoCache(object):
+>          if virtonly:
+>              (bbfile, virtual, mc) = virtualfn2realfn(bbfile)
+>              bb_data = self.databuilder.mcdata[mc].createCopy()
+> -            bb_data.setVar("__BBMULTICONFIG", mc)
+>              bb_data.setVar("__ONLYFINALISE", virtual or "default")
+> -            datastores = self._load_bbfile(bb_data, bbfile, appends)
+> +            datastores = parse_recipe(bb_data, bbfile, appends, mc)
+>              return datastores
+> 
+>          bb_data = self.data.createCopy()
+> -        datastores = self._load_bbfile(bb_data, bbfile, appends)
+> +        datastores = parse_recipe(bb_data, bbfile, appends, mc)
 
-Part of the fix for [YOCTO #10192].
+So the last line above was definitely wrong - I've dropped the "mc" parameter 
+in this call and pushed a new paule/tinfoil-fixes-bb branch.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/tinfoil.py | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Cheers,
+Paul
 
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 441be2c..8899e86 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -90,6 +90,42 @@ class Tinfoil:
-             else:
-                 self.parseRecipes()
- 
-+    def parse_recipe_file(self, fn, appends=True, appendlist=None, config_data=None):
-+        """
-+        Parse the specified recipe file (with or without bbappends)
-+        and return a datastore object representing the environment
-+        for the recipe.
-+        Parameters:
-+            fn: recipe file to parse - can be a file path or virtual
-+                specification
-+            appends: True to apply bbappends, False otherwise
-+            appendlist: optional list of bbappend files to apply, if you
-+                        want to filter them
-+            config_data: custom config datastore to use. NOTE: if you
-+                         specify config_data then you cannot use a virtual
-+                         specification for fn.
-+        """
-+        if appends and appendlist == []:
-+            appends = False
-+        if appends:
-+            if appendlist:
-+                appendfiles = appendlist
-+            else:
-+                if not hasattr(self.cooker, 'collection'):
-+                    raise Exception('You must call tinfoil.prepare() with config_only=False in order to get bbappends')
-+                appendfiles = self.cooker.collection.get_file_appends(fn)
-+        else:
-+            appendfiles = None
-+        if config_data:
-+            # We have to use a different function here if we're passing in a datastore
-+            localdata = bb.data.createCopy(config_data)
-+            envdata = bb.cache.parse_recipe(localdata, fn, appendfiles)['']
-+        else:
-+            # Use the standard path
-+            parser = bb.cache.NoCache(self.cooker.databuilder)
-+            envdata = parser.loadDataFull(fn, appendfiles)
-+        return envdata
-+
-     def shutdown(self):
-         self.cooker.shutdown(force=True)
-         self.cooker.post_serve()
 -- 
-2.5.5
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
