@@ -1,35 +1,40 @@
-Return-Path: <zzs213@126.com>
-Received: from m15-112.126.com (m15-112.126.com [220.181.15.112])
-	by mail.openembedded.org (Postfix) with ESMTP id 4836F605BA
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-wm0-f44.google.com (mail-wm0-f44.google.com [74.125.82.44])
+	by mail.openembedded.org (Postfix) with ESMTP id A321E60017
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Aug 2016 05:58:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=SQyPB
-	NV/+y79RKVornhip4shLlsz8TCrSaYi77mmxzo=; b=WNrFhtOHakeOS2czBgv9+
-	PVGkPZnWB/so1z/qhoPMLByY9/LP1swZoAOQRHIaTQq37Q5VYzVbCHkl5vhwzbAd
-	9NxLjCYXC0b7n1HwMkFqaJq50tm2XGOYa0vEEcFe0GvqhlJE7OagBNurUyoELB41
-	EU5HAHUYy2SPWMOui7GpVM=
-Received: from [192.168.0.12] (unknown [171.212.170.252])
-	by smtp2 (Coremail) with SMTP id DMmowAD3pGEUz8NXq+ZSEA--.46659S2;
-	Mon, 29 Aug 2016 13:58:46 +0800 (CST)
-References: <1472189699-6646-1-git-send-email-zzs213@126.com>
-	<CAMKF1soRMSf9EvC5RMuVuJbyA4dRC=n+B9nSjCXovD_F_zvTwQ@mail.gmail.com>
-	<77d61119-5b4f-d897-fa94-4490098219bc@126.com>
-	<CABcZANkpWPy6fxnyr4SQL1Zmcv-ckn6yW2Y=4mgMhm59W_Fegg@mail.gmail.com>
-From: =?UTF-8?B?5byg5b+g5bGx?= <zzs213@126.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Message-ID: <b9692b20-b61f-cfb0-8c15-bc2ff763172f@126.com>
-Date: Mon, 29 Aug 2016 13:58:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.2.0
+	Tue, 30 Aug 2016 02:12:19 +0000 (UTC)
+Received: by mail-wm0-f44.google.com with SMTP id i5so11993359wmg.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 29 Aug 2016 19:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=D9z9pnKUYAucpp0TKpFdJfSkzwnHJrz6nWhZLPzeAYs=;
+	b=Qh4JaJnSDwk52UzMX4WxqQCYZfWmxEYhfB98cejScmdeiVfEm2npT/EXkFBRKz3elO
+	vtT8i4YPqws9HkU1xBcTzAjvYWX36iEGHMtNzGsvJnahMyNfyUeuGEBnEGaIx44agfoX
+	Tctpv/hh32egON/gOcTKUPjn+3Ek+y6nzsPqNf1jyYu2kBQdHxfZYgn5pCrnzMvAbN5h
+	FUMd4DTZVg4RZSg6m7KHaOhdDPk4F68GnGwjj7LGG5n593W6TE88S2P35KFSCHQYckr/
+	93GW5eVJPvZvQDWdoW91i1g3mmIJ7hI4jJW+m8LGSTXjbNac+aBIAjPXthAkcteEDvt+
+	JtIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=D9z9pnKUYAucpp0TKpFdJfSkzwnHJrz6nWhZLPzeAYs=;
+	b=TKLeNVCTSRFm3s3SLoTCIprsHprykTMXUEZDYpYYfcRVaZfv2tRviuoqk5V4pcoO/4
+	LxBbaAKnGb5xAJAPlnCT8ML9YoJc1LF/l/tsFpgI0fTJFrhc9aR/6LOq+j6ag9y1UEp/
+	l2Y0QVHlJ+5nxYngLqjpZeQKXvz0+etIlgQjn9+sGGTpHjP+ZDr6dnwrxQRAtASPhxTn
+	dMbCu4tpv2JK8O71e+XLLMmH7ZBMIrdPGo8dH0ijtNsVoR8gLgA7fOqENds88rzMLEno
+	ak9TMF/DgQwv/c32iWIZceVuy7k49XeOFiXOI6upuwAv02J3hHHpVS7zpruT3CRvqVlH
+	t06A==
+X-Gm-Message-State: AE9vXwOEt+3xzhRn38FSQg8rf7UtxiXP5pD2oXtH9r4RUQpEZNR/JV4xVZPxMeoLnEDsjg3pTJ7kVIRo42UvGA==
+X-Received: by 10.194.164.229 with SMTP id yt5mr781212wjb.39.1472523140033;
+	Mon, 29 Aug 2016 19:12:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABcZANkpWPy6fxnyr4SQL1Zmcv-ckn6yW2Y=4mgMhm59W_Fegg@mail.gmail.com>
-X-CM-TRANSID: DMmowAD3pGEUz8NXq+ZSEA--.46659S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUq1EEUUUUU
-X-Originating-IP: [171.212.170.252]
-X-CM-SenderInfo: x22vjiat6rjloofrz/1tbiJBbUGVWnkmcJFgAAsn
-Subject: Re: [PATCH] enable override for suffix just include digit and dot
+Received: by 10.195.10.194 with HTTP; Mon, 29 Aug 2016 19:12:19 -0700 (PDT)
+From: Andre McCurdy <armccurdy@gmail.com>
+Date: Mon, 29 Aug 2016 19:12:19 -0700
+Message-ID: <CAJ86T=UnA3cUU80pdTfgAvc0Ht-Pc9sJJoUK5rjdvuoUKa+4sw@mail.gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: How to prevent expansion of bitbake variables inside tasks?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,25 +47,18 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Aug 2016 05:58:52 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 30 Aug 2016 02:12:22 -0000
+Content-Type: text/plain; charset=UTF-8
 
->
-> OVERRIDES .= ":pv-${@'${PV}'.replace('.', '_')}"
-> FOO_pv-1_1_7 = "bar"
->
+Say I want to create a do_install() task which does:
 
-Now I test my project fully, Found can't use ${PV} to generate OVERRIDES.
+  do_install() {
+    echo '${BP} was ${BP}' > ${D}/test
+  }
 
-Because of BBVERSIONS, When generage OVERRIDES, the PV not setted 
-according PREFFERED_VERSION_xxx. It use the setting in bitbake.conf 
-which default to `1.0`
+but I don't want first ${BP} bitbake variable to be expanded. ie after
+the task has run I want ${D}/test to contain the string "${BP} was
+foo-1.0".
 
-So maybe this worked:
-
-OVERRIDES .= ":pv-${PREFERRED_VERSION_${PN}}"
-FOO_pv-1_1_7 = "bar"
-
-
+What's the recommended way to escape the first ${BP} in do_install()?
 
