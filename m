@@ -1,25 +1,21 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 83AC16FF7B
+Return-Path: <markus.lehtonen@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 65671731F9
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Aug 2016 04:37:13 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga102.fm.intel.com with ESMTP; 29 Aug 2016 21:37:14 -0700
+	Tue, 30 Aug 2016 09:53:42 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga103.fm.intel.com with ESMTP; 30 Aug 2016 02:53:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.30,254,1470726000"; d="scan'208";a="872441207"
-Received: from unknown (HELO peggleto-mobl.ger.corp.intel.com)
-	([10.255.182.37])
-	by orsmga003.jf.intel.com with ESMTP; 29 Aug 2016 21:37:13 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.30,255,1470726000"; d="scan'208";a="1022186488"
+Received: from dthoumin-mobl2.ger.corp.intel.com (HELO
+	mqz-osx-suse64.fi.intel.com) ([10.252.6.138])
+	by orsmga001.jf.intel.com with ESMTP; 30 Aug 2016 02:53:33 -0700
+From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 30 Aug 2016 16:36:38 +1200
-Message-Id: <84157c8e45d40788c11c3ef5955825e3b5b20112.1472531645.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.5.5
-In-Reply-To: <cover.1472531645.git.paul.eggleton@linux.intel.com>
-References: <cover.1472531645.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1472531645.git.paul.eggleton@linux.intel.com>
-References: <cover.1472531645.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 3/3] tinfoil: add a parse_recipe_file function
+Date: Tue, 30 Aug 2016 12:53:30 +0300
+Message-Id: <1472550810-10006-1-git-send-email-markus.lehtonen@linux.intel.com>
+X-Mailer: git-send-email 2.6.6
+Subject: [PATCH] Fail gracefully if event handler function is not found
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,51 +28,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 30 Aug 2016 04:37:13 -0000
+X-List-Received-Date: Tue, 30 Aug 2016 09:53:43 -0000
 
-Parsing a recipe is such a common task for tinfoil-using scripts, and is
-a little awkward to do properly, so we should add an API function to do
-it. This should also isolate scripts a little from future changes to the
-internal code.
+[YOCTO #10186]
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
 ---
- lib/bb/tinfoil.py | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ lib/bb/cookerdata.py | 3 +++
+ lib/bb/parse/ast.py  | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 441be2c..793565f 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -90,6 +90,27 @@ class Tinfoil:
-             else:
-                 self.parseRecipes()
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index fa1de7a..bf9bfbf 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -357,6 +357,9 @@ class CookerDataBuilder(object):
+         # We register any handlers we've found so far here...
+         for var in data.getVar('__BBHANDLERS', False) or []:
+             handlerfn = data.getVarFlag(var, "filename", False)
++            if not handlerfn:
++                parselog.critical("Undefined event handler function '%s'" % var)
++                sys.exit(1)
+             handlerln = int(data.getVarFlag(var, "lineno", False))
+             bb.event.register(var, data.getVar(var, False),  (data.getVarFlag(var, "eventmask", True) or "").split(), handlerfn, handlerln)
  
-+    def parse_recipe_file(self, fn, appends=True, appendlist=None):
-+        """
-+        Parse the specified recipe file (with or without bbappends)
-+        and return a datastore object representing the environment
-+        for the recipe.
-+        """
-+        if appends and appendlist == []:
-+            appends = False
-+        parser = bb.cache.NoCache(self.cooker.databuilder)
-+        if appends:
-+            if appendlist:
-+                appendfiles = appendlist
-+            else:
-+                if not hasattr(self.cooker, 'collection'):
-+                    raise Exception('You must call tinfoil.prepare() with config_only=False in order to get bbappends')
-+                appendfiles = self.cooker.collection.get_file_appends(fn)
-+        else:
-+            appendfiles = None
-+        envdata = parser.loadDataFull(fn, appendfiles)
-+        return envdata
-+
-     def shutdown(self):
-         self.cooker.shutdown(force=True)
-         self.cooker.post_serve()
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index d7185b1..fa83b18 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -344,6 +344,8 @@ def finalize(fn, d, variant = None):
+     for var in d.getVar('__BBHANDLERS', False) or []:
+         # try to add the handler
+         handlerfn = d.getVarFlag(var, "filename", False)
++        if not handlerfn:
++            bb.fatal("Undefined event handler function '%s'" % var)
+         handlerln = int(d.getVarFlag(var, "lineno", False))
+         bb.event.register(var, d.getVar(var, False), (d.getVarFlag(var, "eventmask", True) or "").split(), handlerfn, handlerln)
+ 
 -- 
-2.5.5
+2.6.6
 
 
