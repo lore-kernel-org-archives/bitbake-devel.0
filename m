@@ -1,29 +1,26 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 410F9731E5
+Return-Path: <michael.g.wood@intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id D96B9731BE
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Aug 2016 10:37:59 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u7VAbxKs016744 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Aug 2016 11:37:59 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id gZ6Xvkueo951 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Aug 2016 11:37:59 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u7VAbr96016738
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Aug 2016 11:37:55 +0100
-Message-ID: <1472639873.29583.76.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 31 Aug 2016 11:37:53 +0100
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: [PATCH] build/runqueue: Add noextra stamp file parameter to fix multiconfig builds
+	Wed, 31 Aug 2016 10:42:00 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 31 Aug 2016 03:42:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.30,261,1470726000"; d="scan'208";a="1022681828"
+Received: from irdmzpr01.ir.intel.com (HELO [163.33.54.142]) ([163.33.54.142])
+	by orsmga001.jf.intel.com with ESMTP; 31 Aug 2016 03:42:01 -0700
+To: bitbake-devel@lists.openembedded.org,
+	"Bartosh, Eduard" <eduard.bartosh@intel.com>,
+	Alexander.Egorenkov@vector.com
+References: <1472553028-3404-1-git-send-email-ed.bartosh@linux.intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
+Message-ID: <af13866e-4bd3-15a6-baca-b24b1edd21d5@intel.com>
+Date: Wed, 31 Aug 2016 11:41:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+	Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <1472553028-3404-1-git-send-email-ed.bartosh@linux.intel.com>
+Subject: Re: [krogoth][PATCH] toaster: Increase maximum length of file path of build artifact
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,81 +33,89 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 31 Aug 2016 10:37:59 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 31 Aug 2016 10:42:02 -0000
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 
-We can't execute the same task for the same package_arch multiple
-times as the current setup has conflicting directories. Since
-these would usually have the same stamp/hash, we want to execute in 
-sequence rather than in parallel, so for the purposes of task execution,
-don't consider the "extra-info" on the stamp files. We need to add
-a parameter to the stamp function to achieve this.
+On 30/08/16 11:30, Ed Bartosh wrote:
+> From: Alexander Egorenkov <Alexander.Egorenkov@vector.com>
+>
+> The default maximum length of the file path for a build artifact on
+> Krogoth Toaster is 100 characters (Django default for FilePathField).
+> This value makes it impossible to download build artifacts because
+> default file paths are quite long and therefore are being truncated
+> by Toaster.
+>
+> Example of a long file path which does not work on my machine:
+> /var/www/toaster/poky/build-toaster-2/tmp/deploy/sdk/poky-glibc-x86_64-co=
+re-image-sato-cortexa8hf-neon-toolchain-2.1.1.sh
+>
+> To fix this problem i increased the size of 'file_name' column
+> of the corresponding MySQL table to 255 characters.
+>
+> Signed-off-by: Alexander.Egorenkov <Alexander.Egorenkov@vector.com>
+> Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+> ---
+>   bitbake/lib/toaster/orm/migrations/0001_initial.py | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/bitbake/lib/toaster/orm/migrations/0001_initial.py b/bitbake=
+/lib/toaster/orm/migrations/0001_initial.py
+> index 760462f..0c780a9 100644
+> --- a/bitbake/lib/toaster/orm/migrations/0001_initial.py
+> +++ b/bitbake/lib/toaster/orm/migrations/0001_initial.py
+> @@ -52,7 +52,7 @@ class Migration(migrations.Migration):
+>               name=3D'BuildArtifact',
+>               fields=3D[
+>                   ('id', models.AutoField(verbose_name=3D'ID', serialize=
+=3DFalse, auto_created=3DTrue, primary_key=3DTrue)),
+> -                ('file_name', models.FilePathField()),
+> +                ('file_name', models.FilePathField(max_length=3D255)),
+>                   ('file_size', models.IntegerField()),
+>                   ('build', models.ForeignKey(to=3D'orm.Build')),
+>               ],
 
-This avoids multiple update-rc.d populate_sysroot tasks executing in
-parallel and breaking multiconfig builds.
+To change this field the model definition needs changing at the source =
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+of the definition.
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 50f0276..9dfcfec 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -633,7 +633,7 @@ def exec_task(fn, task, d, profile = False):
-             event.fire(failedevent, d)
-         return 1
- 
--def stamp_internal(taskname, d, file_name, baseonly=False):
-+def stamp_internal(taskname, d, file_name, baseonly=False, noextra=False):
-     """
-     Internal stamp helper function
-     Makes sure the stamp directory exists
-@@ -656,6 +656,8 @@ def stamp_internal(taskname, d, file_name, baseonly=False):
- 
-     if baseonly:
-         return stamp
-+    if noextra:
-+        extrainfo = ""
- 
-     if not stamp:
-         return
-@@ -751,12 +753,12 @@ def write_taint(task, d, file_name = None):
-     with open(taintfn, 'w') as taintf:
-         taintf.write(str(uuid.uuid4()))
- 
--def stampfile(taskname, d, file_name = None):
-+def stampfile(taskname, d, file_name = None, noextra=False):
-     """
-     Return the stamp for a given task
-     (d can be a data dict or dataCache)
-     """
--    return stamp_internal(taskname, d, file_name)
-+    return stamp_internal(taskname, d, file_name, noextra=noextra)
- 
- def add_tasks(tasklist, d):
-     task_deps = d.getVar('_task_deps', False)
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 3e49e21..761c660 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -137,7 +137,7 @@ class RunQueueScheduler(object):
-         for tid in self.rqdata.runtaskentries:
-             (mc, fn, taskname) = split_tid(tid)
-             taskfn = taskfn_fromtid(tid)
--            self.stamps[tid] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn)
-+            self.stamps[tid] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn, noextra=True)
-             if tid in self.rq.runq_buildable:
-                 self.buildable.append(tid)
- 
-@@ -1805,7 +1805,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                 self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata)) + b"</runtask>")
-                 self.rq.worker[mc].process.stdin.flush()
- 
--            self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn)
-+            self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn, noextra=True)
-             self.build_stamps2.append(self.build_stamps[task])
-             self.runq_running.add(task)
-             self.stats.taskActive()
+All the migration files in /migrations/ are auto generated by Django =
 
+itself and will be overwritten the next time the migrations are reset. =
+
+It is also applied in order; so if someone has an existing database the =
+
+changes will not be applied as the initial migration has already run.
+
+To make this a permanent change edit the definition in orm/models.py (I =
+
+think the classes you are looking for would be TargetSDKFile and =
+
+TargetKernelFile? to add a max_length parameters) once that has be =
+
+edited you can run "./manage.py makemigrations" and it will create a new =
+
+migration file in /migrations/ to make that amendment to the schema, add =
+
+this  new file and the changes to models.py and it'll be all good!
+
+More info on migrations here =
+
+https://docs.djangoproject.com/en/1.8/topics/migrations/
+
+Thanks,
+
+Michael
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
 
 
