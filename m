@@ -1,32 +1,46 @@
-Return-Path: <mike.looijmans@topic.nl>
-Received: from atl4mhfb03.myregisteredsite.com
-	(atl4mhfb03.myregisteredsite.com [209.17.115.119])
-	by mail.openembedded.org (Postfix) with ESMTP id DD5DA731C9
+Return-Path: <kergoth@gmail.com>
+Received: from mail-pf0-f193.google.com (mail-pf0-f193.google.com
+	[209.85.192.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 75F0A73216
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Aug 2016 06:54:09 +0000 (UTC)
-Received: from atl4mhob07.myregisteredsite.com
-	(atl4mhob07.myregisteredsite.com [209.17.115.45])
-	by atl4mhfb03.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id
-	u7N6lJ5a002368 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Aug 2016 02:47:19 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.205])
-	by atl4mhob07.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id
-	u7N6lBs7028343 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Aug 2016 02:47:11 -0400
-Received: (qmail 18435 invoked by uid 0); 23 Aug 2016 06:40:31 -0000
-X-TCPREMOTEIP: 37.74.225.130
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO mikebuntu.TOPIC.LOCAL)
-	(mike@milosoftware.com@37.74.225.130)
-	by 0 with ESMTPA; 23 Aug 2016 06:40:31 -0000
-From: Mike Looijmans <mike.looijmans@topic.nl>
+	Wed, 31 Aug 2016 19:57:12 +0000 (UTC)
+Received: by mail-pf0-f193.google.com with SMTP id y134so3216159pfg.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 31 Aug 2016 12:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=Ljf/zjrtIGEN1/oVPlwHpsDVPXXoEO4yJjtDhYDrzQU=;
+	b=oetnxdpIDGEb5luvfPVZEsKnKYlkYG4SW4eAwm6Ddw3hz96atHGNO2+hGTEUSKF0Qt
+	L76s1x+ZalQtLtHLAKhK3AXYQfHWhcE4F+1JpFtOwCyWLZrzbk5Vcs/E0F5xaCiL9v5h
+	e4+jv+36VfsGcna6Izab1Za2DrHyAjkQDG7i4XJN89X2WtnCWtqqjVPVMP07vwr03Y1i
+	VuUjZJgp7HrB6ZYkeCKFm/ENTlz0jUAWoXW4YmvmOEAi+x5L6tXbkgFohHXsZswxFEpW
+	ju9m1HeMC4zymvh7WlUfuCGTVnFv7muqz05Zg7gemOTO0gyXD8gAtIwS4yifYHJ4wLRx
+	OvVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=Ljf/zjrtIGEN1/oVPlwHpsDVPXXoEO4yJjtDhYDrzQU=;
+	b=UWn+fyvcT53bk0+Mm0kjVOqJ+nU3wwsAjmsQfWb5RsTWrk8trPxtpIUiQEln7hjr+o
+	+Bp9d6S9q3JjTugZGWIE2Y7OCJzC+W5lo3i5V53pqUVmjEJqQTxUydL3/U0zbmg9BXfH
+	tGuq9YJ9tPQ3ySFdpGBb8PozR4wU+n4ynMU3z9jbFF/0En6/fuWmBscMsB4TjNsOqLst
+	SUvw+Qt8r+4SjWEuPywahPpQe3VOgRvAbXf8A98tUuAa1kN8fsN3HCNzKCN5L7o0R1zB
+	co0ge/zPJIJO9kIp/9KF2oYR1AYUmDVPVjDEAMx9/EsMF5DLmMerqkskmctW2Jl7D21Q
+	c/vw==
+X-Gm-Message-State: AE9vXwOO6BwJUhKGIT+GRMi9gP0plGSbVwoslacA4cXWO5RtqCH/GayOaDSGpzwU75WIfw==
+X-Received: by 10.98.25.8 with SMTP id 8mr20052075pfz.94.1472673433430;
+	Wed, 31 Aug 2016 12:57:13 -0700 (PDT)
+Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
+	by smtp.gmail.com with ESMTPSA id
+	h86sm1644491pfh.46.2016.08.31.12.57.11
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 31 Aug 2016 12:57:12 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 23 Aug 2016 08:40:27 +0200
-Message-Id: <1471934427-16959-1-git-send-email-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 1.9.1
-X-Mailman-Approved-At: Wed, 31 Aug 2016 14:36:36 +0000
-Cc: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] lib/bb/siggen.py: Prevent ResourceWarning exceptions
+Date: Wed, 31 Aug 2016 12:57:08 -0700
+Message-Id: <1472673428-16400-1-git-send-email-kergoth@gmail.com>
+X-Mailer: git-send-email 2.8.0
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: [PATCH] bb.fetch2.svn: correctly pass workdir when fetching
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,344 +53,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 23 Aug 2016 06:54:10 -0000
+X-List-Received-Date: Wed, 31 Aug 2016 19:57:13 -0000
 
-Add a "with" statement to explicitly close files. This prevents hundreds of
-"ResourceWarning: unclosed file" outputs.
+From: Christopher Larson <chris_larson@mentor.com>
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+The ud.pkgdir argument was being passed as the 'quiet' argument to
+runfetchcmd, not the 'workdir' argument, resulting in fetching the svn module
+into the root of DL_DIR, not where it belongs.
+
+Cc: Matt Madison <matt@madison.systems>
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 ---
- lib/bb/siggen.py | 309 ++++++++++++++++++++++++++++---------------------------
- 1 file changed, 155 insertions(+), 154 deletions(-)
+ lib/bb/fetch2/svn.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index db3daef..467e07a 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -363,167 +363,168 @@ def clean_basepaths_list(a):
- def compare_sigfiles(a, b, recursecb = None):
-     output = []
+diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
+index 9ff9410..6ca79d3 100644
+--- a/lib/bb/fetch2/svn.py
++++ b/lib/bb/fetch2/svn.py
+@@ -141,7 +141,7 @@ class Svn(FetchMethod):
+             bb.utils.mkdirhier(ud.pkgdir)
+             logger.debug(1, "Running %s", svnfetchcmd)
+             bb.fetch2.check_network_access(d, svnfetchcmd, ud.url)
+-            runfetchcmd(svnfetchcmd, d, ud.pkgdir)
++            runfetchcmd(svnfetchcmd, d, workdir=ud.pkgdir)
  
--    p1 = pickle.Unpickler(open(a, "rb"))
--    a_data = p1.load()
--    p2 = pickle.Unpickler(open(b, "rb"))
--    b_data = p2.load()
--
--    def dict_diff(a, b, whitelist=set()):
--        sa = set(a.keys())
--        sb = set(b.keys())
--        common = sa & sb
--        changed = set()
--        for i in common:
--            if a[i] != b[i] and i not in whitelist:
--                changed.add(i)
--        added = sb - sa
--        removed = sa - sb
--        return changed, added, removed
--
--    def file_checksums_diff(a, b):
--        from collections import Counter
--        # Handle old siginfo format
--        if isinstance(a, dict):
--            a = [(os.path.basename(f), cs) for f, cs in a.items()]
--        if isinstance(b, dict):
--            b = [(os.path.basename(f), cs) for f, cs in b.items()]
--        # Compare lists, ensuring we can handle duplicate filenames if they exist
--        removedcount = Counter(a)
--        removedcount.subtract(b)
--        addedcount = Counter(b)
--        addedcount.subtract(a)
--        added = []
--        for x in b:
--            if addedcount[x] > 0:
--                addedcount[x] -= 1
--                added.append(x)
--        removed = []
--        changed = []
--        for x in a:
--            if removedcount[x] > 0:
--                removedcount[x] -= 1
--                for y in added:
--                    if y[0] == x[0]:
--                        changed.append((x[0], x[1], y[1]))
--                        added.remove(y)
--                        break
--                else:
--                    removed.append(x)
--        added = [x[0] for x in added]
--        removed = [x[0] for x in removed]
--        return changed, added, removed
--
--    if 'basewhitelist' in a_data and a_data['basewhitelist'] != b_data['basewhitelist']:
--        output.append("basewhitelist changed from '%s' to '%s'" % (a_data['basewhitelist'], b_data['basewhitelist']))
--        if a_data['basewhitelist'] and b_data['basewhitelist']:
--            output.append("changed items: %s" % a_data['basewhitelist'].symmetric_difference(b_data['basewhitelist']))
--
--    if 'taskwhitelist' in a_data and a_data['taskwhitelist'] != b_data['taskwhitelist']:
--        output.append("taskwhitelist changed from '%s' to '%s'" % (a_data['taskwhitelist'], b_data['taskwhitelist']))
--        if a_data['taskwhitelist'] and b_data['taskwhitelist']:
--            output.append("changed items: %s" % a_data['taskwhitelist'].symmetric_difference(b_data['taskwhitelist']))
--
--    if a_data['taskdeps'] != b_data['taskdeps']:
--        output.append("Task dependencies changed from:\n%s\nto:\n%s" % (sorted(a_data['taskdeps']), sorted(b_data['taskdeps'])))
--
--    if a_data['basehash'] != b_data['basehash']:
--        output.append("basehash changed from %s to %s" % (a_data['basehash'], b_data['basehash']))
--
--    changed, added, removed = dict_diff(a_data['gendeps'], b_data['gendeps'], a_data['basewhitelist'] & b_data['basewhitelist'])
--    if changed:
--        for dep in changed:
--            output.append("List of dependencies for variable %s changed from '%s' to '%s'" % (dep, a_data['gendeps'][dep], b_data['gendeps'][dep]))
--            if a_data['gendeps'][dep] and b_data['gendeps'][dep]:
--                output.append("changed items: %s" % a_data['gendeps'][dep].symmetric_difference(b_data['gendeps'][dep]))
--    if added:
--        for dep in added:
--            output.append("Dependency on variable %s was added" % (dep))
--    if removed:
--        for dep in removed:
--            output.append("Dependency on Variable %s was removed" % (dep))
--
--
--    changed, added, removed = dict_diff(a_data['varvals'], b_data['varvals'])
--    if changed:
--        for dep in changed:
--            output.append("Variable %s value changed from '%s' to '%s'" % (dep, a_data['varvals'][dep], b_data['varvals'][dep]))
--
--    if not 'file_checksum_values' in a_data:
--         a_data['file_checksum_values'] = {}
--    if not 'file_checksum_values' in b_data:
--         b_data['file_checksum_values'] = {}
--
--    changed, added, removed = file_checksums_diff(a_data['file_checksum_values'], b_data['file_checksum_values'])
--    if changed:
--        for f, old, new in changed:
--            output.append("Checksum for file %s changed from %s to %s" % (f, old, new))
--    if added:
--        for f in added:
--            output.append("Dependency on checksum of file %s was added" % (f))
--    if removed:
--        for f in removed:
--            output.append("Dependency on checksum of file %s was removed" % (f))
--
--    if not 'runtaskdeps' in a_data:
--         a_data['runtaskdeps'] = {}
--    if not 'runtaskdeps' in b_data:
--         b_data['runtaskdeps'] = {}
--
--    if len(a_data['runtaskdeps']) != len(b_data['runtaskdeps']):
--        changed = ["Number of task dependencies changed"]
--    else:
--        changed = []
--        for idx, task in enumerate(a_data['runtaskdeps']):
--            a = a_data['runtaskdeps'][idx]
--            b = b_data['runtaskdeps'][idx]
--            if a_data['runtaskhashes'][a] != b_data['runtaskhashes'][b]:
--                changed.append("%s with hash %s\n changed to\n%s with hash %s" % (a, a_data['runtaskhashes'][a], b, b_data['runtaskhashes'][b]))
--
--    if changed:
--        output.append("runtaskdeps changed from %s to %s" % (clean_basepaths_list(a_data['runtaskdeps']), clean_basepaths_list(b_data['runtaskdeps'])))
--        output.append("\n".join(changed))
--
--
--    if 'runtaskhashes' in a_data and 'runtaskhashes' in b_data:
--        a = a_data['runtaskhashes']
--        b = b_data['runtaskhashes']
--        changed, added, removed = dict_diff(a, b)
-+    with open(a, "rb") as file_a, open(b, "rb") as file_b:
-+        p1 = pickle.Unpickler(file_a)
-+        a_data = p1.load()
-+        p2 = pickle.Unpickler(file_b)
-+        b_data = p2.load()
-+
-+        def dict_diff(a, b, whitelist=set()):
-+            sa = set(a.keys())
-+            sb = set(b.keys())
-+            common = sa & sb
-+            changed = set()
-+            for i in common:
-+                if a[i] != b[i] and i not in whitelist:
-+                    changed.add(i)
-+            added = sb - sa
-+            removed = sa - sb
-+            return changed, added, removed
-+
-+        def file_checksums_diff(a, b):
-+            from collections import Counter
-+            # Handle old siginfo format
-+            if isinstance(a, dict):
-+                a = [(os.path.basename(f), cs) for f, cs in a.items()]
-+            if isinstance(b, dict):
-+                b = [(os.path.basename(f), cs) for f, cs in b.items()]
-+            # Compare lists, ensuring we can handle duplicate filenames if they exist
-+            removedcount = Counter(a)
-+            removedcount.subtract(b)
-+            addedcount = Counter(b)
-+            addedcount.subtract(a)
-+            added = []
-+            for x in b:
-+                if addedcount[x] > 0:
-+                    addedcount[x] -= 1
-+                    added.append(x)
-+            removed = []
-+            changed = []
-+            for x in a:
-+                if removedcount[x] > 0:
-+                    removedcount[x] -= 1
-+                    for y in added:
-+                        if y[0] == x[0]:
-+                            changed.append((x[0], x[1], y[1]))
-+                            added.remove(y)
-+                            break
-+                    else:
-+                        removed.append(x)
-+            added = [x[0] for x in added]
-+            removed = [x[0] for x in removed]
-+            return changed, added, removed
-+
-+        if 'basewhitelist' in a_data and a_data['basewhitelist'] != b_data['basewhitelist']:
-+            output.append("basewhitelist changed from '%s' to '%s'" % (a_data['basewhitelist'], b_data['basewhitelist']))
-+            if a_data['basewhitelist'] and b_data['basewhitelist']:
-+                output.append("changed items: %s" % a_data['basewhitelist'].symmetric_difference(b_data['basewhitelist']))
-+
-+        if 'taskwhitelist' in a_data and a_data['taskwhitelist'] != b_data['taskwhitelist']:
-+            output.append("taskwhitelist changed from '%s' to '%s'" % (a_data['taskwhitelist'], b_data['taskwhitelist']))
-+            if a_data['taskwhitelist'] and b_data['taskwhitelist']:
-+                output.append("changed items: %s" % a_data['taskwhitelist'].symmetric_difference(b_data['taskwhitelist']))
-+
-+        if a_data['taskdeps'] != b_data['taskdeps']:
-+            output.append("Task dependencies changed from:\n%s\nto:\n%s" % (sorted(a_data['taskdeps']), sorted(b_data['taskdeps'])))
-+
-+        if a_data['basehash'] != b_data['basehash']:
-+            output.append("basehash changed from %s to %s" % (a_data['basehash'], b_data['basehash']))
-+
-+        changed, added, removed = dict_diff(a_data['gendeps'], b_data['gendeps'], a_data['basewhitelist'] & b_data['basewhitelist'])
-+        if changed:
-+            for dep in changed:
-+                output.append("List of dependencies for variable %s changed from '%s' to '%s'" % (dep, a_data['gendeps'][dep], b_data['gendeps'][dep]))
-+                if a_data['gendeps'][dep] and b_data['gendeps'][dep]:
-+                    output.append("changed items: %s" % a_data['gendeps'][dep].symmetric_difference(b_data['gendeps'][dep]))
-         if added:
-             for dep in added:
--                bdep_found = False
--                if removed:
--                    for bdep in removed:
--                        if b[dep] == a[bdep]:
--                            #output.append("Dependency on task %s was replaced by %s with same hash" % (dep, bdep))
--                            bdep_found = True
--                if not bdep_found:
--                    output.append("Dependency on task %s was added with hash %s" % (clean_basepath(dep), b[dep]))
-+                output.append("Dependency on variable %s was added" % (dep))
-         if removed:
-             for dep in removed:
--                adep_found = False
--                if added:
--                    for adep in added:
--                        if b[adep] == a[dep]:
--                            #output.append("Dependency on task %s was replaced by %s with same hash" % (adep, dep))
--                            adep_found = True
--                if not adep_found:
--                    output.append("Dependency on task %s was removed with hash %s" % (clean_basepath(dep), a[dep]))
-+                output.append("Dependency on Variable %s was removed" % (dep))
-+
-+
-+        changed, added, removed = dict_diff(a_data['varvals'], b_data['varvals'])
-         if changed:
-             for dep in changed:
--                output.append("Hash for dependent task %s changed from %s to %s" % (clean_basepath(dep), a[dep], b[dep]))
--                if callable(recursecb):
--                    # If a dependent hash changed, might as well print the line above and then defer to the changes in 
--                    # that hash since in all likelyhood, they're the same changes this task also saw.
--                    recout = recursecb(dep, a[dep], b[dep])
--                    if recout:
--                        output = [output[-1]] + recout
--
--    a_taint = a_data.get('taint', None)
--    b_taint = b_data.get('taint', None)
--    if a_taint != b_taint:
--        output.append("Taint (by forced/invalidated task) changed from %s to %s" % (a_taint, b_taint))
-+                output.append("Variable %s value changed from '%s' to '%s'" % (dep, a_data['varvals'][dep], b_data['varvals'][dep]))
- 
--    return output
-+        if not 'file_checksum_values' in a_data:
-+             a_data['file_checksum_values'] = {}
-+        if not 'file_checksum_values' in b_data:
-+             b_data['file_checksum_values'] = {}
-+
-+        changed, added, removed = file_checksums_diff(a_data['file_checksum_values'], b_data['file_checksum_values'])
-+        if changed:
-+            for f, old, new in changed:
-+                output.append("Checksum for file %s changed from %s to %s" % (f, old, new))
-+        if added:
-+            for f in added:
-+                output.append("Dependency on checksum of file %s was added" % (f))
-+        if removed:
-+            for f in removed:
-+                output.append("Dependency on checksum of file %s was removed" % (f))
-+
-+        if not 'runtaskdeps' in a_data:
-+             a_data['runtaskdeps'] = {}
-+        if not 'runtaskdeps' in b_data:
-+             b_data['runtaskdeps'] = {}
-+
-+        if len(a_data['runtaskdeps']) != len(b_data['runtaskdeps']):
-+            changed = ["Number of task dependencies changed"]
-+        else:
-+            changed = []
-+            for idx, task in enumerate(a_data['runtaskdeps']):
-+                a = a_data['runtaskdeps'][idx]
-+                b = b_data['runtaskdeps'][idx]
-+                if a_data['runtaskhashes'][a] != b_data['runtaskhashes'][b]:
-+                    changed.append("%s with hash %s\n changed to\n%s with hash %s" % (a, a_data['runtaskhashes'][a], b, b_data['runtaskhashes'][b]))
-+
-+        if changed:
-+            output.append("runtaskdeps changed from %s to %s" % (clean_basepaths_list(a_data['runtaskdeps']), clean_basepaths_list(b_data['runtaskdeps'])))
-+            output.append("\n".join(changed))
-+
-+
-+        if 'runtaskhashes' in a_data and 'runtaskhashes' in b_data:
-+            a = a_data['runtaskhashes']
-+            b = b_data['runtaskhashes']
-+            changed, added, removed = dict_diff(a, b)
-+            if added:
-+                for dep in added:
-+                    bdep_found = False
-+                    if removed:
-+                        for bdep in removed:
-+                            if b[dep] == a[bdep]:
-+                                #output.append("Dependency on task %s was replaced by %s with same hash" % (dep, bdep))
-+                                bdep_found = True
-+                    if not bdep_found:
-+                        output.append("Dependency on task %s was added with hash %s" % (clean_basepath(dep), b[dep]))
-+            if removed:
-+                for dep in removed:
-+                    adep_found = False
-+                    if added:
-+                        for adep in added:
-+                            if b[adep] == a[dep]:
-+                                #output.append("Dependency on task %s was replaced by %s with same hash" % (adep, dep))
-+                                adep_found = True
-+                    if not adep_found:
-+                        output.append("Dependency on task %s was removed with hash %s" % (clean_basepath(dep), a[dep]))
-+            if changed:
-+                for dep in changed:
-+                    output.append("Hash for dependent task %s changed from %s to %s" % (clean_basepath(dep), a[dep], b[dep]))
-+                    if callable(recursecb):
-+                        # If a dependent hash changed, might as well print the line above and then defer to the changes in 
-+                        # that hash since in all likelyhood, they're the same changes this task also saw.
-+                        recout = recursecb(dep, a[dep], b[dep])
-+                        if recout:
-+                            output = [output[-1]] + recout
-+
-+        a_taint = a_data.get('taint', None)
-+        b_taint = b_data.get('taint', None)
-+        if a_taint != b_taint:
-+            output.append("Taint (by forced/invalidated task) changed from %s to %s" % (a_taint, b_taint))
-+
-+        return output
- 
- 
- def calc_basehash(sigdata):
+         scmdata = ud.parm.get("scmdata", "")
+         if scmdata == "keep":
 -- 
-1.9.1
+2.8.0
 
 
