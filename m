@@ -1,41 +1,47 @@
-Return-Path: <evadeflow@gmail.com>
-Received: from mail-it0-f53.google.com (mail-it0-f53.google.com
-	[209.85.214.53])
-	by mail.openembedded.org (Postfix) with ESMTP id DB03B73243
+Return-Path: <matt@madison.systems>
+Received: from mail-lf0-f49.google.com (mail-lf0-f49.google.com
+	[209.85.215.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 7739673166
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Sep 2016 15:29:15 +0000 (UTC)
-Received: by mail-it0-f53.google.com with SMTP id e124so109366720ith.0
+	Thu,  1 Sep 2016 20:01:06 +0000 (UTC)
+Received: by mail-lf0-f49.google.com with SMTP id b199so69057118lfe.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 01 Sep 2016 08:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=nS46kRKuOsd/NzxoFvJX3myp2llnqIWedbg0BKLtMI0=;
-	b=P7gYo34v0KjKCjeYsxSATFU9oHRBtWMfU7qwcER88O+9CUyskTqBmhoyfGT36Ya13x
-	T6/2t2GuM+VYVfeG/V2G1LPMX0STT6QITgRIXpfWNnvh0gkGFAUnFJn2yXUj9bPY9MX7
-	gbmo8FZQwtArOGdvc8MhpqhKu687MKHFBMWr2e67Uc2apKw5ie5Z5WpTNLOUOPzj3nqr
-	lgGWJn3Oi23C00/g2rQtz86fvi8QiimT6+EFnPALKz7q2REgleqCT6TWGTxjoUmbhmVy
-	uiI50XODJzUaQtSJ6wRS81tPa71I98vh9Djz6jQitMq2qcgaeIRSUDnZhv59uzQ+ZsA3
-	oLRw==
+	Thu, 01 Sep 2016 13:01:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=madison-systems.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=wmnyIF0mLlt71/zPRPiyh0OEb4aiepHDQFQ2x6kekJU=;
+	b=ohIsxGSbuzOB579eBZTwI4oaJrbHQq46SBSuXo/OqrbvPDuGkBSZk0T6n1fHNstQx9
+	sf9MGX3KDmMBvxe7aQZPXignaP6eZy/Szgfdtx/tFcbCJieqaYHpI8SMtwt728Pc9+5o
+	3Eaasc5LRbpCv2cxHkwOGP+rJqfcm8IdYHFVEKiYLlgnZ2SPO4i5/DVz8zt9imn5K/4h
+	e1aKcJgMWFidhcpzV1GfHXLAIEwxa4im1wBLg3RKEJVu8hGWARRXdTkJy27LUX+CYLRL
+	0EYeOfrL7lRAGFKpNaZXQhLHDVMaAgtNUqn/Ybti7uGg8cKbMjyC40ov2llHdUfhadYQ
+	B/Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=nS46kRKuOsd/NzxoFvJX3myp2llnqIWedbg0BKLtMI0=;
-	b=lG7yY+ErFIg7lch8IvfxAlnB0sBakHvI/vc2QalPQFQJeGuJIF7DwsXxE7GSYjXcfs
-	h2LG6zLg+383CAtuTK925H0DVZ4JkWUdFB+paZA5CFNfazjRKQ1tWsjYSmPGkXQ/FIe9
-	GlxQq1SlS1v/sbcOcfWOV6lR6dEt3VQwB+154TYUkccFdsJGYzocuuwY+qkra5yjz1bp
-	yaCfN+mKw4Z1Xh3b2fek4SHZoz5SaSb2EBzJLbJFpacb2tUt4uP6JpMZlPv2ICBheB3k
-	Vp0bAkAoXDfQZn8d/RmZpAPNDdAENstxOA2bZHUdjqIOsaNUaqqB/m+xlrjzoiBbPfDo
-	bahw==
-X-Gm-Message-State: AE9vXwO/hR9+fwnGzrgiusoHtCBmgmhSPPdp2UNtRm1Zrf6Kn40akQMKcsoZu5oaUMP+SiSnCllTs882xmuUwA==
-X-Received: by 10.36.34.204 with SMTP id o195mr21154265ito.29.1472743755811;
-	Thu, 01 Sep 2016 08:29:15 -0700 (PDT)
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=wmnyIF0mLlt71/zPRPiyh0OEb4aiepHDQFQ2x6kekJU=;
+	b=jktlpjK3dfRqOiXjLxC/AegKJdkrx+vqywMNxbKAq6dS1u0dt+1mczAuajWyMcFe4v
+	vdUlUUHWGndAoZCekYpnIcLMB/nuz+/sNXn1Vf4od0TfK2xGIvCWYZ9JJN2Ex07akOYe
+	GjLiGcs9sNjeXHJFw+FMLXPpNU7FN3yKwEOH+WERnSn/WSaYzSBkAzvOE/yQ5iM8haK9
+	UPhG3xC4VMAaNACGNZcQbcNTslF5AwfE5ssGeoLXix9LzJqAQXVGAZArCQ489SxUTaVs
+	KSQUs+B7EtxvcWD3JOvPBjn9WpbgFXJAJ1qQJXqGG1c21wgfWUmFW656h21HLrN+TNvG
+	JJGQ==
+X-Gm-Message-State: AE9vXwOtUbTfv2nGZNRhoV0Aq8I4swS61ULgbfWkRwlIJh0n6As77raxx/wdgF9uBW2baGEKq5RlGqU8KORR7A==
+X-Received: by 10.46.71.69 with SMTP id u66mr5510909lja.14.1472760066935; Thu,
+	01 Sep 2016 13:01:06 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 10.36.147.4 with HTTP; Thu, 1 Sep 2016 08:29:15 -0700 (PDT)
-From: Evade Flow <evadeflow@gmail.com>
-Date: Thu, 1 Sep 2016 11:29:15 -0400
-Message-ID: <CAMAb8ZNGCbyo+49tXBPZJy-jvSbwgShfbFjZ18OU4kARRLqVNw@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: Conditionally inherit own-mirrors and set SOURCE_MIRROR_URL?
+Received: by 10.25.24.162 with HTTP; Thu, 1 Sep 2016 13:01:06 -0700 (PDT)
+In-Reply-To: <1472673428-16400-1-git-send-email-kergoth@gmail.com>
+References: <1472673428-16400-1-git-send-email-kergoth@gmail.com>
+From: Matt Madison <matt@madison.systems>
+Date: Thu, 1 Sep 2016 13:01:06 -0700
+Message-ID: <CAGgRHJri42PNhxkMSa+odU5sVTTU+mLLpUknaJ0oS19Hd8x00A@mail.gmail.com>
+To: Christopher Larson <kergoth@gmail.com>
+Cc: Christopher Larson <chris_larson@mentor.com>,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] bb.fetch2.svn: correctly pass workdir when fetching
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,63 +54,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Sep 2016 15:29:16 -0000
-Content-Type: multipart/alternative; boundary=001a114057486911a8053b73e0ce
-
---001a114057486911a8053b73e0ce
+X-List-Received-Date: Thu, 01 Sep 2016 20:01:07 -0000
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-This might be an 'X-Y' problem, so I should explain what I'm trying to
-achieve. We have a somewhat beefy build server with 32 cores that most of
-my team likes to `ssh` into to do builds of our Yocto/OE-based BSP. But a
-few of us build on different machines often enough that I recently spun up
-a web server=E2=80=94on the 32-core build machine=E2=80=94to act as a 'pre-=
-mirror' to
-statically serve  our dependencies for remote builds. The web server is
-serving the exact same folder that I've been pointing `SOURCE_MIRROR_URL`
-at, as described at:
-https://wiki.yoctoproject.org/wiki/How_do_I#Q:_How_do_I_create_my_own_sourc=
-e_download_mirror_.3F
+Thanks.  I think that's the only instance I missed.
 
-When I went to integrate support for the HTTP pre-mirror, I ran into the
-following problem: if I assign `SOURCE_MIRROR_URL` and the specified folder
-doesn't exist (as will be the case for remote builds), the build *fails*. I
-had hoped that bitbake would 'fall through' to searching other pre-mirrors,
-but that doesn't appear to be the case(?)
+-Matt
 
-IIs there some way I can use a specific (and *invariant*) local source
-mirror folder *only if it exists*, and use our internal HTTP pre-mirror
-otherwise?
+On Wed, Aug 31, 2016 at 12:57 PM, Christopher Larson <kergoth@gmail.com> wrote:
+> From: Christopher Larson <chris_larson@mentor.com>
+>
+> The ud.pkgdir argument was being passed as the 'quiet' argument to
+> runfetchcmd, not the 'workdir' argument, resulting in fetching the svn module
+> into the root of DL_DIR, not where it belongs.
+>
+> Cc: Matt Madison <matt@madison.systems>
+> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+> ---
+>  lib/bb/fetch2/svn.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
+> index 9ff9410..6ca79d3 100644
+> --- a/lib/bb/fetch2/svn.py
+> +++ b/lib/bb/fetch2/svn.py
+> @@ -141,7 +141,7 @@ class Svn(FetchMethod):
+>              bb.utils.mkdirhier(ud.pkgdir)
+>              logger.debug(1, "Running %s", svnfetchcmd)
+>              bb.fetch2.check_network_access(d, svnfetchcmd, ud.url)
+> -            runfetchcmd(svnfetchcmd, d, ud.pkgdir)
+> +            runfetchcmd(svnfetchcmd, d, workdir=ud.pkgdir)
+>
+>          scmdata = ud.parm.get("scmdata", "")
+>          if scmdata == "keep":
+> --
+> 2.8.0
+>
 
-```
-$ bitbake --version
-BitBake Build Tool Core version 1.28.0
-```
-
---001a114057486911a8053b73e0ce
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><div>This might be an &#39;X-Y&#39; problem, so I sho=
-uld explain what I&#39;m trying to achieve. We have a somewhat beefy build =
-server with 32 cores that most of my team likes to `ssh` into to do builds =
-of our Yocto/OE-based BSP. But a few of us build on different machines ofte=
-n enough that I recently spun up a web server=E2=80=94on the 32-core build =
-machine=E2=80=94to act as a &#39;pre-mirror&#39; to statically serve=C2=A0 =
-our dependencies for remote builds. The web server is serving the exact sam=
-e folder that I&#39;ve been pointing `SOURCE_MIRROR_URL` at, as described a=
-t: <a href=3D"https://wiki.yoctoproject.org/wiki/How_do_I#Q:_How_do_I_creat=
-e_my_own_source_download_mirror_.3F">https://wiki.yoctoproject.org/wiki/How=
-_do_I#Q:_How_do_I_create_my_own_source_download_mirror_.3F</a><br><br></div=
->When I went to integrate support for the HTTP pre-mirror, I ran into the f=
-ollowing problem: if I assign `SOURCE_MIRROR_URL` and the specified folder =
-doesn&#39;t exist (as will be the case for remote builds), the build *fails=
-*. I had hoped that bitbake would &#39;fall through&#39; to searching other=
- pre-mirrors, but that doesn&#39;t appear to be the case(?)<br><br></div>II=
-s there some way I can use a specific (and *invariant*) local source mirror=
- folder *only if it exists*, and use our internal HTTP pre-mirror otherwise=
-?<br><br>```<br>$ bitbake --version<br>BitBake Build Tool Core version 1.28=
-.0<br>```<br><br></div>
-
---001a114057486911a8053b73e0ce--
