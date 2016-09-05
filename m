@@ -1,46 +1,50 @@
 Return-Path: <michael.g.wood@intel.com>
 Received: from mail-pf0-f175.google.com (mail-pf0-f175.google.com
 	[209.85.192.175])
-	by mail.openembedded.org (Postfix) with ESMTP id AD62573204
+	by mail.openembedded.org (Postfix) with ESMTP id E986C760B0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Sep 2016 14:29:39 +0000 (UTC)
-Received: by mail-pf0-f175.google.com with SMTP id w87so7235554pfk.2
+	Mon,  5 Sep 2016 14:29:43 +0000 (UTC)
+Received: by mail-pf0-f175.google.com with SMTP id w87so7235892pfk.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 05 Sep 2016 07:29:40 -0700 (PDT)
+	Mon, 05 Sep 2016 07:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=1V13JIsPA1dW3RC/yHwU0lupPQU5dWTG+zlA7HVX0Fc=;
-	b=Beog58AU9WpEiAjRS0vT5X03qnGiifdde/kVjl0uXFtJaj7KowOCzZM0+HKGQ5PZ42
-	osQqoe8BjzeqomFE5i5ftE6EgyDwPYFOS1L12X91UFT+R1kkqRzokhXmekOK16FYTJaQ
-	2rUaEbU+jUe3Z38mOvpFmRVEPW9HWyCUzIsm9Z3SGHh71e/y39EViZTEeNsy4jQ/NjXQ
-	Kc3Pp91hmlNRwOSb78vTsi5cBCcvbbMBWepwQiHq3RdA7T+gLtmQy1VHdt1W3fJCtAG6
-	dhujIsLg/tVGHYwAYryQyL3M3wSc6QS//eMRV4fa8NFq5pd5+ibN8NFHnUXRYQC5lpL3
-	NxaA==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=3N+3bgDHBOANB15MWhrexb91CAz1vvH1aBtxsHP5lvY=;
+	b=hXnnNJ9nh2a3bIal/aXSresCANjTPXHqviYRA7jtfH4HJ4qIvstRdwrINMTIVMQNiw
+	U/ymyPVKpm8GsJdctK+Uh4qe8XcRtdW6wRd7KDomzta3g/N+yaK05J+Lw2tu972N3cIF
+	mBcsge9/J3e95gksCPUSaBpxCw1H1vctpmT4DqthAu8dQTUGYoNHjXswpxO8rgYsCTgL
+	p0FfTHuyobuXKA4cX2cI/UGbBimFGwGFqmSWOhsgcxvT4UBv+mcTN5/oARb95zEoZ1/g
+	liSTuwq6vXIA5NVto0wtMtzpzSiagNBL9e7RmfloCfoNl6KHujXAbHT2VMujvXJiLMuO
+	ZjqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=1V13JIsPA1dW3RC/yHwU0lupPQU5dWTG+zlA7HVX0Fc=;
-	b=M0s2B2p744YLpiW4JcgdVlzUKBnuq9E9uJw+1+pqVVYXliWHs9pJRJOsNVS3OVMe6k
-	sq3jWcqV7MUyclijM/FVTSi0NQW8cmjXmBUIpSt1Zx/wLYNXOh6oz1zBhwsdGm0Lk+KT
-	qnPvgQu13cd5F5f4PVomHJ50L1WqG67cck/whUkOghHc7SpLNpEaRtwP1g3T/F1C8uy7
-	q58id4ThCMOaLZPwRT1ZcjtpIdRKOpaEEeRqHXA+EJdI+sGlBcxxf+vXUlWOVl7iRJdi
-	bpMI8v4iKcO/MTDEJfelkk2rOtPNnODGrnbQ+l1W0TkYm6qcDFAoOyJ1SKVIZgmy9RnM
-	sZ2Q==
-X-Gm-Message-State: AE9vXwP9t7ViFU7cwgImyI2RU4juFjMtoYO2b6iMHWG/YGXOgNpw+rSgFQFsod57aOpElmBr
-X-Received: by 10.98.153.1 with SMTP id d1mr6937577pfe.13.1473085780123;
-	Mon, 05 Sep 2016 07:29:40 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=3N+3bgDHBOANB15MWhrexb91CAz1vvH1aBtxsHP5lvY=;
+	b=m0240q9yzpmRRSjmHeVc/haNL5HM1pSGy//r5+yLwGGNZzuPvL4PI+CLhYv5K+9TTw
+	c3XSRflC8lJnU9xo66iMToAX9q8d7MtWSUNdQn3MCCel5sUrIgioL75oSO9m3Rn+qIdb
+	JzRn6nO8bRfKS4gxaf0u6Sg8oVmuznpqZx+DKQdGWAxlmXQbHH/v0ejyea5v7QHVWdw7
+	QEbcddADjaF1PYdmSm9mQ3NDTzvcxa/QAQMs2FOMh8CZM6513wJYf18Wb4Gl2vrkySU3
+	GYHmSphrLp/jzJrYYeLF9nybm1iGDemM6NgzvZmQl0dvuwqje6rqS1bzIa+GU3z+oGQj
+	urcw==
+X-Gm-Message-State: AE9vXwMBpsjbKVginlmkO6981SBIkOEKXsqKA4deodreCM3ST2wJjwSSWLUY6WIlr5o//kgX
+X-Received: by 10.98.33.72 with SMTP id h69mr63420094pfh.28.1473085784096;
+	Mon, 05 Sep 2016 07:29:44 -0700 (PDT)
 Received: from orion.ger.corp.intel.com (fmdmzpr03-ext.fm.intel.com.
 	[192.55.54.38]) by smtp.gmail.com with ESMTPSA id
-	j21sm34058285pfj.75.2016.09.05.07.29.38
+	j21sm34058285pfj.75.2016.09.05.07.29.42
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 05 Sep 2016 07:29:39 -0700 (PDT)
+	Mon, 05 Sep 2016 07:29:43 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Sep 2016 15:29:21 +0100
-Message-Id: <1473085772-17878-1-git-send-email-michael.g.wood@intel.com>
+Date: Mon,  5 Sep 2016 15:29:23 +0100
+Message-Id: <1473085772-17878-3-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
-Subject: [PATCH 00/11] Toaster patches
+In-Reply-To: <1473085772-17878-1-git-send-email-michael.g.wood@intel.com>
+References: <1473085772-17878-1-git-send-email-michael.g.wood@intel.com>
+Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Subject: [PATCH 02/11] toaster: configuration Provide machine help text
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,37 +59,43 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 05 Sep 2016 14:29:44 -0000
 
-Latest patches for bitbake reviewed on toaster mailing list:
+From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 
-Belen Barros Pena (7):
-  toaster: tasks Remove recipe version from defaults
-  toaster: configuration Provide machine help text
-  toaster: layer details Layout fixes
-  toaster: import layer Layout fixes
-  toaster: layer details Fix "edit" form interaction
-  toaster: Allow forward slash in variable names
-  toaster: orm Update IMAGE_FSTYPES values
+When you change the machine from the project configuration page, you get
+some useful suggestions as you start typing a machine name. However, the
+suggestions only include machines provided by the layers added to your
+project. This is not necessarily clear from the design (yes, it should
+be improved), which means you might be looking for a machine, not see it
+in the suggestions, and assume the machine is not supported by
+OpenEmbedded.
 
-David Reyna (1):
-  toaster: keep layer name in variable history path
+Since we are in no position to change the design of this page right now,
+add some explanatory help text to address the situation.
 
-Ed Bartosh (3):
-  toaster: don't kill toaster on start
-  toaster: remove handling of .toasterui.pid
-  toaster: don't kill all runserver processes
+[YOCTO #8034]
 
- bin/toaster                                        | 15 ---------------
- lib/bb/ui/buildinfohelper.py                       |  3 ++-
- lib/toaster/orm/models.py                          |  7 ++++---
- lib/toaster/toastergui/buildtables.py              |  3 ++-
- lib/toaster/toastergui/static/css/default.css      | 10 +++++++++-
- lib/toaster/toastergui/static/js/layerdetails.js   |  8 ++++----
- lib/toaster/toastergui/templates/importlayer.html  | 12 +++++++-----
- lib/toaster/toastergui/templates/layerdetails.html |  7 +++----
- lib/toaster/toastergui/templates/project.html      |  5 +----
- lib/toaster/toastergui/templates/projectconf.html  |  6 +++---
- 10 files changed, 35 insertions(+), 41 deletions(-)
+Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/toaster/toastergui/templates/project.html | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
+diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
+index ff9eab7..30ee93a 100644
+--- a/lib/toaster/toastergui/templates/project.html
++++ b/lib/toaster/toastergui/templates/project.html
+@@ -57,10 +57,7 @@
+       <p class="lead"><span id="project-machine-name"></span> <span class="glyphicon glyphicon-edit" id="change-machine-toggle"></span></p>
+ 
+       <form id="select-machine-form" style="display:none;" class="form-inline">
+-        <div class="alert alert-info">
+-          <strong>Machine changes have a big impact on build outcome.</strong> You cannot really compare the builds for the new machine with the previous ones.
+-        </div>
+-
++        <span class="help-block">Machine suggestions come from the list of layers added to your project. If you don't see the machine you are looking for, <a href="{% url 'projectmachines' project.id %}">check the full list of machines</a></span>
+         <div class="form-group">
+           <input class="form-control" id="machine-change-input" autocomplete="off" value="" data-provide="typeahead" data-minlength="1" data-autocomplete="off" type="text">
+         </div>
 -- 
 2.7.4
 
