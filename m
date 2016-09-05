@@ -1,50 +1,50 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
-	[209.85.220.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 8370F760B0
+Received: from mail-pf0-f175.google.com (mail-pf0-f175.google.com
+	[209.85.192.175])
+	by mail.openembedded.org (Postfix) with ESMTP id 034B0760B0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Sep 2016 14:29:45 +0000 (UTC)
-Received: by mail-pa0-f44.google.com with SMTP id cm16so14822649pac.0
+	Mon,  5 Sep 2016 14:29:47 +0000 (UTC)
+Received: by mail-pf0-f175.google.com with SMTP id w87so7236245pfk.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 05 Sep 2016 07:29:46 -0700 (PDT)
+	Mon, 05 Sep 2016 07:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=uQMMvmMcLDp2lQMsZn1aMY4FlH5ewur1pBM9vZY8ny0=;
-	b=lknK4rBgOQO85Om+LgBdzcVFcamU+GKckzafvtvZU8P2O6JspnszwH4lUYZIc7b1FY
-	cOBC2PgBINGFMyV2hE7Ypu9ukjplSpn4EQXpJBycwPy1IWiDfVI5E+RCEwVKGw1h0K7G
-	ww+Tc6I1y2Hv54MmaYxg40CESebDYuiwMgmGmf/V0VlV/RGvkbuQzNLnCnHTPIjsqx6B
-	TkqiCzgS7U7nuofQ4yyvw6kuSbIredk7P2YSOvavphLVKHa90CqQRK+vQ6FYcQgl8Skx
-	hLkPa0DQRCFDIqsQEitTwH9aG+2TFAoCDF3pLuixIIYtLP5CBvzPjNirT6rKo5WIpB+B
-	PBEw==
+	bh=1/wuQw65iPE4K/ClMb8uFwVtWeF+HOLJL+uqvzmeYiM=;
+	b=GgwREgj1nVcLuwRzHtmwc8PFsFtOqfSio4ZQpZuE2CDg7PuucjunIlHut+sGw5xYJ1
+	sf633tKOZbPGC0Y/Usp6rAjH38uiK9+Ieebth9Qtax2TwuNo8dFEsmCfDAdvYaYIAYIU
+	wuRket2UkVwKos7WpvR31fy1esO5hqy3HGeRQvSJEO4RHhair6xGNVl7JI7p1xZzJ1zU
+	MavPG2T5wcvq9TlwO2SCXetPcTfYkeI99Oyx9yhOWEg5JDJeSTn1IiL5tuKgadeyiq+P
+	m+4hukZnvFVFL/Zl3aLshJ7p34I+NmPSA60loHHVmSFmHHAHCxB+W7YZ1ZO4CBrE+4q3
+	m/IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=uQMMvmMcLDp2lQMsZn1aMY4FlH5ewur1pBM9vZY8ny0=;
-	b=AcqNKZ0NxvTe9ebXfUzxkOs1eTvMGM/hr49wzZvUX9k9YfH3js3n2Wo+s4bLUsKmqy
-	R05d1qakdTOdthBVVKvJs89dLBgosaO3QI6kZBlzFe9nyJxT0MSoWLTRtjVlxgcC4Yd0
-	fcdblnxdlvHbKSxMgjoJTgEzd/oFntzx+5a1dSOTi6bDiw+vfoI3GLh5LYqv7RAn5Ydk
-	oAOVZA/oB5A5Xq6VE9Wv8wgbGCI1BICMX2zgrm9SVJjD+58WxN8tutovZEC0/WkWjhdP
-	L42g0IXS+jyjaRrzGc3paAZ2QVJNfGTfKkWs3vcl078Vh6z4YIvAny3Pqi4aKnDCiizE
-	i4bA==
-X-Gm-Message-State: AE9vXwP/IPc/lO+6+SS+8ZvPgdC11E9WOdmnRNmnuWtOUmPuTPPC4M3jsVDILl1RD96R+iec
-X-Received: by 10.66.144.164 with SMTP id sn4mr61896040pab.0.1473085786010;
-	Mon, 05 Sep 2016 07:29:46 -0700 (PDT)
+	bh=1/wuQw65iPE4K/ClMb8uFwVtWeF+HOLJL+uqvzmeYiM=;
+	b=eMGqc1POaagkklyyMv+QhMpIbQNXKnL7n97IvRHdHKp0ib06WtaMUcY7FGCfH9/Gsc
+	xd/qXu6n0xisYneYEYPslL+m5YSlYbfEOC0v8h6TYAucxAtJWngqnWScLKRitVyyNGeR
+	JqYrtTgXqSJAS9FNVOjrNwRY7SYZ8R8s9n3HWO3Gzga2J5agxbpA/eEnCKpdmU4ghOqy
+	9h5DZo0LY+4y1wWwsXOT6wVAkZs5j5DM8u4qrZrAFxLKHWwE+2DCYYoZPfDGa8iYvyPv
+	gOoGTlzEqCmvy7JyudgHAyvlKhZj3zEd+f5V0geOlEZZl4/9Ks2ro1VBrxDRtN2TpULC
+	VyTA==
+X-Gm-Message-State: AE9vXwOFsLW+ARfFAXIKmu4ApSxmZlcWpPOVQDReto/NptFF2/VH6zeYy17VIH5QrNAzFG+G
+X-Received: by 10.98.6.68 with SMTP id 65mr47800658pfg.116.1473085788011;
+	Mon, 05 Sep 2016 07:29:48 -0700 (PDT)
 Received: from orion.ger.corp.intel.com (fmdmzpr03-ext.fm.intel.com.
 	[192.55.54.38]) by smtp.gmail.com with ESMTPSA id
-	j21sm34058285pfj.75.2016.09.05.07.29.44
+	j21sm34058285pfj.75.2016.09.05.07.29.46
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 05 Sep 2016 07:29:45 -0700 (PDT)
+	Mon, 05 Sep 2016 07:29:47 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Sep 2016 15:29:24 +0100
-Message-Id: <1473085772-17878-4-git-send-email-michael.g.wood@intel.com>
+Date: Mon,  5 Sep 2016 15:29:25 +0100
+Message-Id: <1473085772-17878-5-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1473085772-17878-1-git-send-email-michael.g.wood@intel.com>
 References: <1473085772-17878-1-git-send-email-michael.g.wood@intel.com>
 Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH 03/11] toaster: layer details Layout fixes
+Subject: [PATCH 04/11] toaster: import layer Layout fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,60 +57,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Sep 2016 14:29:45 -0000
+X-List-Received-Date: Mon, 05 Sep 2016 14:29:47 -0000
 
 From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 
-The layout of the layer details page was looking a bit awkward. This
-commit tidies things up.
+The layout of the import layer form was looking a bit awkward. This
+commit tidies things up a bit.
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/static/css/default.css      | 8 +++++++-
- lib/toaster/toastergui/templates/layerdetails.html | 2 +-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ lib/toaster/toastergui/static/css/default.css     |  1 +
+ lib/toaster/toastergui/templates/importlayer.html | 12 +++++++-----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
-index a56bb8c..22510e8 100644
+index 22510e8..88fe864 100644
 --- a/lib/toaster/toastergui/static/css/default.css
 +++ b/lib/toaster/toastergui/static/css/default.css
-@@ -161,7 +161,13 @@ dd .glyphicon-edit { margin-left: 5px; }
- 
- /* Style the forms and definition lists in the layer details pages */
- #change-repo-form .form-control { width: 17em; }
-+#information { margin-bottom: 5em; }
- #information dd > form { margin-bottom: 5px; margin-top: 5px; }
-+#edit-layer-source-form fieldset { margin-top: 20px; }
-+#directory-info,
-+#git-repo-info { margin-top: 20px; }
-+#layer-dir-path-in-details { width: 55%; }
-+.add-deps .form-control { width: 15em; }
- 
- /* Style the forms and definition lists in the BitBake variables page */
- .variable-list { margin-bottom: 20px; }
-@@ -196,7 +202,7 @@ h2 { margin-bottom: 25px; }
- .tt-suggestion:active { background-color: #f5f5f5; cursor: pointer; }
+@@ -203,6 +203,7 @@ h2 { margin-bottom: 25px; }
  
  /* Style the import layer form controls*/
--legend { border: none; margin-top: 20px; }
-+legend { border: none; }
+ legend { border: none; }
++fieldset.fields-apart-from-layer-name { margin-top: 20px; }
  .radioLegend { margin-bottom: 0; }
  #layer-name-ctrl { margin-top: 20px; }
  #import-layer-name,
-diff --git a/lib/toaster/toastergui/templates/layerdetails.html b/lib/toaster/toastergui/templates/layerdetails.html
-index 08e41ce..7dd0c47 100644
---- a/lib/toaster/toastergui/templates/layerdetails.html
-+++ b/lib/toaster/toastergui/templates/layerdetails.html
-@@ -258,7 +258,7 @@
-              <span class="glyphicon glyphicon-question-sign get-help" title="Other layers this layer depends upon"></span>
-            </h3>
+diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
+index eb02440..1f42696 100644
+--- a/lib/toaster/toastergui/templates/importlayer.html
++++ b/lib/toaster/toastergui/templates/importlayer.html
+@@ -113,16 +113,18 @@
+           <span class="glyphicon glyphicon-question-sign get-help" title="You can provide a Git branch, a tag or a commit SHA as the revision"></span>
+         </label>
+         <input type="text" class="form-control" id="layer-git-ref" required>
+-        <span class="help-inline" style="diaply:none;" id="invalid-layer-revision-hint"></span>
++        <span class="help-inline" style="display:none;" id="invalid-layer-revision-hint"></span>
+       </div>
+     </fieldset>
  
--           <ul class="list-unstyled current-value" id="layer-deps-list">
-+           <ul class="list-unstyled current-value lead" id="layer-deps-list">
-              {% for ld in layerversion.dependencies.all %}
-              <li data-layer-id="{{ld.depends_on.id}}">
-              <a data-toggle="tooltip" title="{{ld.depends_on.layer.vcs_url}} | {{ld.depends_on.get_vcs_reference}}" href="{% url 'layerdetails' project.id ld.depends_on.id %}">{{ld.depends_on.layer.name}}</a>
+     <fieldset class="fields-apart-from-layer-name" id="local-dir" style="display:none;">
+       <legend>Layer directory information</legend>
+-	<label for="local-dir-path" class="control-label">Enter the absolute path to the layer directory</label>
+-	<input type="text" class="form-control" id="local-dir-path" required/>
+-	<p class="help-block" id="hintError-dir-path-starts-with-slash" style="display:none;">The absolute path must start with "/".</p>
+-	<p class="help-block" id="hintError-dir-path" style="display:none;">The directory path cannot include spaces or any of these characters: . \ ? % * : | " " &lt; &gt;</p>
++      <div class="form-group">
++        <label for="local-dir-path" class="control-label">Enter the absolute path to the layer directory</label>
++        <input type="text" class="form-control" id="local-dir-path" required/>
++        <p class="help-block" id="hintError-dir-path-starts-with-slash" style="display:none;">The absolute path must start with "/".</p>
++        <p class="help-block" id="hintError-dir-path" style="display:none;">The directory path cannot include spaces or any of these characters: . \ ? % * : | " " &lt; &gt;</p>
++      </div>
+     </fieldset>
+ 
+     <fieldset class="fields-apart-from-layer-name">
 -- 
 2.7.4
 
