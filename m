@@ -1,50 +1,50 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pf0-f173.google.com (mail-pf0-f173.google.com
-	[209.85.192.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 51E30760B0
+Received: from mail-pf0-f182.google.com (mail-pf0-f182.google.com
+	[209.85.192.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 66FB6760B0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Sep 2016 14:29:53 +0000 (UTC)
-Received: by mail-pf0-f173.google.com with SMTP id w87so7236758pfk.2
+	Mon,  5 Sep 2016 14:29:55 +0000 (UTC)
+Received: by mail-pf0-f182.google.com with SMTP id w87so7236903pfk.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 05 Sep 2016 07:29:54 -0700 (PDT)
+	Mon, 05 Sep 2016 07:29:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=2KimDUDmPG5ekYE0MvbakSg5W3dhtUn1wNQmTgNPXsI=;
-	b=G6H5gYRtif/ekEbkFeY1WbK/RUwlQGx9PhC4TDJcCLTVuYQIPM9bfpiLfmKnuEMMkO
-	mI/8HeGzaTyAPQhn8bRj5m1QGo/kADcp1iCruBPSuVfEZhvtcTaYjr36+XT+gI8f366r
-	eNJHjVtcwlJcohqS6hAgjtu1XhqgIuVp8US2VBOvGgajjZreL0aKtEtja+MgK1WKbN+M
-	mHR2ZS1NWwkkovw3b6gHxcRK1gLqiAfDtKWF5W7BKxMTr5thJTF13/qF6wvPGN2jduG0
-	thHIyc/MIcLC4KJJw6SpEXHhiHcdoVtU9NUcx9CuHIwaaF7tUjdFqP+UbFjO//ZNF95i
-	h6aQ==
+	bh=ysvE5Ds3zLMYq1dNNFkfDMgsAbAjT1iiWr4RXcO4Lto=;
+	b=y8R4Hc6fMJ4BIRW//MQqKl+rKrEjSQVU4oBM1jUkIx+8JzaT72TGahOL2iCo7lG8Zz
+	bw+/x60UoRynjHqDCVVoe4L6rOpoQJmId9yvFtDdYO2MPGWYa3Y+LUUX8oZmcCy70sl/
+	ckEZ1fC2hY3z5ho76yMQYXoPeDRopxpJp4sNIIHtfZGaZatG3ZjhYxQzO3Tf9BHngqJn
+	WoUJ69rV3c0DtqUYfxEtkFd+giwTGAJkb8TP4B10wsDB1U5nnSRS/vXPEgqnPsQ/b0ae
+	LiDXD6rQqMZ7ng8MsYAFebY6Tqnpqxxr+7ZFv5t2kjiebsd3d6aK7ZWRKOZEkn8cITBh
+	sPYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=2KimDUDmPG5ekYE0MvbakSg5W3dhtUn1wNQmTgNPXsI=;
-	b=k5tQfB/cnBls9HhDMVKx0HxlrNzOl5vi/6PbPiwdf8gkdYYulCoaLc6j5vZlDw9VXf
-	HJOq6z3elHPFKEAobtCf+OMv0kDOB3+4GcSmNJi8OpuHL2Xkx1OhJBnWLsBkAmlZq6MT
-	0y4Vm8+4JDlOB5rXDKVZXwiMfCCjGRhmZAOjDFRVGa3GIL9NXZ3RHVBgbTU7qmlez7xw
-	RKRJiYFAb0R7q/veUZ6vyAHeTIb4/EdS5Xm3SOYsfCHeqamwwHclOrGJCMVKAzg5fo3Z
-	FXAN41Ed3Q0WD/2ytUgz2guGD6kwGNqaPrY7n7TiGby1s+g9529fotBeCJNg27Dg3FRC
-	nUKQ==
-X-Gm-Message-State: AE9vXwM63ngJLjvC3tOAqkknjBm4Krsc13JAMxGUR2cOiGmKXgfT429nybdwAu6oQFfl+Zka
-X-Received: by 10.98.11.65 with SMTP id t62mr31736103pfi.51.1473085793714;
-	Mon, 05 Sep 2016 07:29:53 -0700 (PDT)
+	bh=ysvE5Ds3zLMYq1dNNFkfDMgsAbAjT1iiWr4RXcO4Lto=;
+	b=kANNOdcrq0djrvHCjpt3U756TMgiN1C99sGIT4KtmV+6FGJNMgR8LR2eVycxL0yQRB
+	ruLHJGP+CKDV/Nk1v+tYQzO1WQ08iDGc1siIuqJUSZvOZhxJgtLQZcGH7+2ekqLZXRPt
+	6s1cEwAgOGX+liv+RYXPAThKtgm2z2zBtXzq4E7Gd4Xt94fiT5MoKQYPb1JHGK8A4gcE
+	9+PnfD8a1HpG32x7Aq7Zp8yugYYil9wxgRmHudb2AWhCOp3M4hvaCWcxwUDnIXa+G7Ji
+	QqvuiNqccxacikFXTD1Udtrn+r5ASaqpwqFh0n5HIUzMzUEDM3UtTgVUyy5qI72fG0qc
+	z3Qw==
+X-Gm-Message-State: AE9vXwPpqdnoqxusqnTvU8I9mCtIxHlyoDLvIPdtzvZcIYIt5JgQZ/b3mIQH6nk88FOK0ejW
+X-Received: by 10.98.65.139 with SMTP id g11mr22183790pfd.145.1473085795870;
+	Mon, 05 Sep 2016 07:29:55 -0700 (PDT)
 Received: from orion.ger.corp.intel.com (fmdmzpr03-ext.fm.intel.com.
 	[192.55.54.38]) by smtp.gmail.com with ESMTPSA id
-	j21sm34058285pfj.75.2016.09.05.07.29.51
+	j21sm34058285pfj.75.2016.09.05.07.29.53
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 05 Sep 2016 07:29:53 -0700 (PDT)
+	Mon, 05 Sep 2016 07:29:55 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Sep 2016 15:29:27 +0100
-Message-Id: <1473085772-17878-7-git-send-email-michael.g.wood@intel.com>
+Date: Mon,  5 Sep 2016 15:29:28 +0100
+Message-Id: <1473085772-17878-8-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1473085772-17878-1-git-send-email-michael.g.wood@intel.com>
 References: <1473085772-17878-1-git-send-email-michael.g.wood@intel.com>
-Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH 06/11] toaster: Allow forward slash in variable names
+Cc: David Reyna <david.reyna@windriver.com>
+Subject: [PATCH 07/11] toaster: keep layer name in variable history path
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,59 +57,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Sep 2016 14:29:54 -0000
+X-List-Received-Date: Mon, 05 Sep 2016 14:29:55 -0000
 
-From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-Add forward slash to the list of special characters allowed in variable
-names. Also update the list of allowed special characters in the error
-messages.
+When converting variable history file names to relative
+paths, keep the layer directory's name so that the user
+can distinguish between conf files with the same name.
 
-[YOCTO #9611]
+[YOCTO #8188]
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Signed-off-by: David Reyna <david.reyna@windriver.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/static/css/default.css     | 1 +
- lib/toaster/toastergui/templates/projectconf.html | 6 +++---
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ lib/bb/ui/buildinfohelper.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
-index 88fe864..ff24e8c 100644
---- a/lib/toaster/toastergui/static/css/default.css
-+++ b/lib/toaster/toastergui/static/css/default.css
-@@ -182,6 +182,7 @@ dd.variable-list form { margin-top: 10px; }
- .scrolling.has-error { border-color: #a94442; }
- .help-block.text-danger { color: #a94442; }
- .tooltip-inner code { color: #fff; }
-+.text-danger > code { color: #a94442; }
- dd.variable-list .glyphicon-question-sign { font-size: 14px; }
- dd.variable-list .glyphicon-edit { font-size: 16px; }
- dt .glyphicon-trash { margin-left: 5px; font-size: 16px; }
-diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
-index c3ed216..fcf6df2 100644
---- a/lib/toaster/toastergui/templates/projectconf.html
-+++ b/lib/toaster/toastergui/templates/projectconf.html
-@@ -251,16 +251,16 @@ function validate_new_variable() {
-     }
-   }
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index 0f09b5c..96166dc 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -1127,7 +1127,8 @@ class BuildInfoHelper(object):
+                         abs_file_name = vh['file']
+                         for pp in path_prefixes:
+                             if abs_file_name.startswith(pp + "/"):
+-                                vh['file']=abs_file_name[len(pp + "/"):]
++                                # preserve layer name in relative path
++                                vh['file']=abs_file_name[pp.rfind("/")+1:]
+                                 break
  
--  var bad_chars  = /[^a-zA-Z0-9\-_]/.test(variable);
-+  var bad_chars  = /[^a-zA-Z0-9\-_/]/.test(variable);
-   var has_spaces = (0 <= variable.indexOf(" "));
-   var only_spaces = (0 < variable.length) && (0 == variable.trim().length);
- 
-   if (only_spaces) {
-     error_msg = "A valid variable name cannot include spaces";
-   } else if (bad_chars && has_spaces) {
--    error_msg = "A valid variable name can only include letters, numbers, underscores, dashes, and cannot include spaces";
-+    error_msg = "A valid variable name can only include letters, numbers and the special characters <code> _ - /</code>. Variable names cannot include spaces";
-   } else if (bad_chars) {
--    error_msg = "A valid variable name can only include letters, numbers, underscores, and dashes";
-+    error_msg = "A valid variable name can only include letters, numbers and the special characters <code>_ - /</code>";
-   }
- 
-   if ("" != error_msg) {
+         # save the variables
 -- 
 2.7.4
 
