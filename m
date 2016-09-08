@@ -1,32 +1,24 @@
-Return-Path: <jeremy.rosen@smile.fr>
-Received: from idris.smile.fr (idris.smile.fr [91.216.209.19])
-	by mail.openembedded.org (Postfix) with ESMTP id 89F7377589
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 189E4602D9
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  6 Sep 2016 15:25:35 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by idris.smile.fr (Postfix) with ESMTP id E2EFF1EF5F09;
-	Tue,  6 Sep 2016 17:25:35 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at smile.fr
-Received: from idris.smile.fr ([127.0.0.1])
-	by localhost (bluemind-mta.prod.vitry.intranet [127.0.0.1])
-	(amavisd-new, port 10024)
-	with ESMTP id viYot5HbvbBQ; Tue,  6 Sep 2016 17:25:35 +0200 (CEST)
-Received: from [10.9.18.228] (246.105.204.77.rev.sfr.net [77.204.105.246])
-	by idris.smile.fr (Postfix) with ESMTPSA id 192151EF5F00;
-	Tue,  6 Sep 2016 17:25:26 +0200 (CEST)
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	bitbake-devel@lists.openembedded.org
-References: <cover.d26c020bb7163ba8281b0826f12094be699d8182.1471945418.git-series.jeremy.rosen@smile.fr>
-	<0c15d6b9-0664-3ff3-710d-c0ca940a4412@smile.fr>
-	<1473168030.20226.46.camel@linuxfoundation.org>
-From: =?UTF-8?B?SsOpcsOpbXkgUm9zZW4=?= <jeremy.rosen@smile.fr>
-Message-ID: <af8d6a6c-1ee1-c5d7-4c46-1da9b8e6ea88@smile.fr>
-Date: Tue, 6 Sep 2016 17:25:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Firefox/45.0 Icedove/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <1473168030.20226.46.camel@linuxfoundation.org>
-Subject: Re: [PATCH v2 0/1][resend] Add a syntax to unset variable from bitbake configuration file
+	Thu,  8 Sep 2016 11:02:51 +0000 (UTC)
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+	by orsmga102.jf.intel.com with ESMTP; 08 Sep 2016 04:02:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.30,300,1470726000"; 
+   d="scan'208";a="5973657"
+Received: from linux.intel.com ([10.54.29.200])
+	by fmsmga006.fm.intel.com with ESMTP; 08 Sep 2016 04:02:51 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
+	by linux.intel.com (Postfix) with ESMTP id 1AB506A4006;
+	Thu,  8 Sep 2016 04:02:28 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  8 Sep 2016 14:02:33 +0300
+Message-Id: <1473332553-26072-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] event.py: output errors and warnings to stderr
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,26 +31,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 06 Sep 2016 15:25:38 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 08 Sep 2016 11:02:52 -0000
 
+All logging messages are printed on stdout when processing
+UI event queue. This makes it impossible to distinguish between
+errors and normal bitbake output. Output to stderror or stdout
+depending on log level should fix this.
 
-On 06/09/2016 15:20, Richard Purdie wrote:
-> On Tue, 2016-09-06 at 12:44 +0200, Jérémy Rosen wrote:
->> Any news ?
-> It merged three weeks ago?:
->
-> http://git.openembedded.org/bitbake/commit/?id=bedbd46ece8d1285b5cd2ea07dc64b4875b479aa
->
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ bitbake/lib/bb/event.py | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-daaaam
-
-my bad, thx
-
-> Cheers,
->
-> Richard
->
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index 1f3200e..42745e2 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -119,21 +119,28 @@ def print_ui_queue():
+     logger = logging.getLogger("BitBake")
+     if not _uiready:
+         from bb.msg import BBLogFormatter
+-        console = logging.StreamHandler(sys.stdout)
+-        console.setFormatter(BBLogFormatter("%(levelname)s: %(message)s"))
+-        logger.handlers = [console]
++        stdout = logging.StreamHandler(sys.stdout)
++        stderr = logging.StreamHandler(sys.stderr)
++        formatter = BBLogFormatter("%(levelname)s: %(message)s")
++        stdout.setFormatter(formatter)
++        stderr.setFormatter(formatter)
+ 
+         # First check to see if we have any proper messages
+         msgprint = False
+         for event in ui_queue:
+             if isinstance(event, logging.LogRecord):
+                 if event.levelno > logging.DEBUG:
++                    if event.levelno >= logging.WARNING:
++                        logger.handlers = [stderr]
++                    else:
++                        logger.handlers = [stdout]
+                     logger.handle(event)
+                     msgprint = True
+         if msgprint:
+             return
+ 
+         # Nope, so just print all of the messages we have (including debug messages)
++        logger.handlers = [stdout]
+         for event in ui_queue:
+             if isinstance(event, logging.LogRecord):
+                 logger.handle(event)
+-- 
+2.1.4
 
 
