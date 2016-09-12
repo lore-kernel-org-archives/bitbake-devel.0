@@ -1,47 +1,44 @@
 Return-Path: <ulfalizer@gmail.com>
-Received: from mail-wm0-f66.google.com (mail-wm0-f66.google.com [74.125.82.66])
-	by mail.openembedded.org (Postfix) with ESMTP id B073A7720B
+Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 92B1A7720B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Sep 2016 22:33:41 +0000 (UTC)
-Received: by mail-wm0-f66.google.com with SMTP id g141so4641148wmd.1
+	Mon, 12 Sep 2016 22:40:43 +0000 (UTC)
+Received: by mail-wm0-f52.google.com with SMTP id c131so82300320wmh.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Sep 2016 15:33:42 -0700 (PDT)
+	Mon, 12 Sep 2016 15:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=sHmPeu8ErZMnJ/eUsBgvVMnVbggWGqmmaRcMBvJaabc=;
-	b=XBMNzV/qMzgGL3fIZRyrsGd9cwd/hPN0RrRZ+LpltTHAv6D9sxIgAB5lzZC8qxmbAH
-	PVxrnswtaM9KfLshZQmL2BqktTKb3D/eHEoHNJ6vzzntv1Kp6Eg84bMg/9RF1Auth91Z
-	BQwqDH6v+sg24j4aU9JH681WTm9F28E3Db7W3vmQzN6+M7RujpoeeAPH2GshPSubiwrZ
-	KPMnzwFhdRl572ZBFUOvKSUga4SDiQlu6AMMgPiONxGaYGayYynX2rZOICpKS4Sa1PUY
-	+9P+WxP8g8/Z3rLHXZNzkt4glKl9s1Y2nvTgnccnhlw8xOr4pCGHDr/FeC99c2SCobt2
-	OrvQ==
+	h=from:to:cc:subject:date:message-id;
+	bh=SS4nfTfOMXGr8y/gTUcf7vbFbX3lpBr1NkDeyXpZcDU=;
+	b=ImoAei//Mzvls8lVm/SIbMgPVVpLpwHqAnHzMGIXJfNx2ixZ+emvnbjhA8jJfqfAoF
+	6fRlxj0cbN7ybGmEJwOOABjNMDQJsEpFX4VeTI+uyce8TSPUBchgkPzL0Wt5U6eXhXzX
+	awDVKDKpdyCYEUTNdnzkHRXZlIA5IgxZo+GE4RF9yTzgpxAHCXqpc5v5K+wwG+42O0p9
+	+GHcDrvP3sspf28YDiq8UU8YvdO6AtKBv2hCOWOtrQH6erRNfEPkTecLmiN/EAQT6ori
+	gjlnR45bMFcroQuZAPji+BvQONTtTbWXAg7qVNnWWt1SgHdbm8tjEcAtvBom/yHt3Yt4
+	NA7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=sHmPeu8ErZMnJ/eUsBgvVMnVbggWGqmmaRcMBvJaabc=;
-	b=KW7+te35vof9zzHfsUD/5wsU4hAQbplD4zDaRtCLnJkPU7laOSZAaF80tltlJlVbxp
-	orC+sUBn8DKrRU4FfmOOha2bjRYk9+d1XUBlSyWO5MNQR7HR3+/ievPxorOK+/JNrN0+
-	mM+Xn/at2C9cIqV/eFN/CYnFaOCtvT3SCQ1mjzBKmxR9k9GMDTUe1PW227QvnKDci7XE
-	P1lv11CXt6PRQruhd6lPC62Yvpsuwhjb3WfYUAMrkXoyzvxbYucP5WoUEg05KvPUaeH/
-	Jda+kL4oZ3Oo9+brun7etbIu0Gg2Ysll9G6Fawn3jgBrJXyWqfEgNWYqg7KwmwdbjH0m
-	k2Eg==
-X-Gm-Message-State: AE9vXwPyuxgNfpjf9e3Pt7JRC//lSaTEbWb2hEbtXRqyhR2O8QcDLACj1CKt62qpqxxb7Q==
-X-Received: by 10.28.170.197 with SMTP id t188mr12267709wme.42.1473719621801; 
-	Mon, 12 Sep 2016 15:33:41 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=SS4nfTfOMXGr8y/gTUcf7vbFbX3lpBr1NkDeyXpZcDU=;
+	b=LG8ya2+uAcX1SCRKhu6w8qFXPpek/rtP/7ul149OkF72zw7xL0cZVPMLs1MhdHQSz0
+	bjpSyZLVlWiwPG4Dx9gPT7I3koAcmiLaSJfPxOK49ooqBUTUUhp6aLKdaKlF2slgUfAo
+	uH8AUw1w22Al14bgfs5asGzlH98xxbX5kAflnh3YjhWOeKfbN71r+sO8mIkiAVHElkA2
+	MQdmu9lZAlh6wbUPFqx8Ix/nzEF/AMzaozlbkxK0QzfJ5RvXcEIeYUx59O2Iy/vkrEdZ
+	i25kV9ESgzEIwlRz+NivQ0qQPNNNxKXIByENNbJtBVXhtPc1QAKjgPK1xnQNIjfpMosG
+	yizQ==
+X-Gm-Message-State: AE9vXwOHSHxdVFdljXZRJSCLIkIU6HuqxddG62lX5NcpD1dBl8s2LIkvP4/SBFi+jE9UkQ==
+X-Received: by 10.28.48.19 with SMTP id w19mr1900061wmw.54.1473720043543;
+	Mon, 12 Sep 2016 15:40:43 -0700 (PDT)
 Received: from huvuddator.home (ip5f5bfeac.dynamic.kabel-deutschland.de.
-	[95.91.254.172]) by smtp.gmail.com with ESMTPSA id
-	j10sm4428858wjy.13.2016.09.12.15.33.41
+	[95.91.254.172])
+	by smtp.gmail.com with ESMTPSA id o2sm19899989wjo.3.2016.09.12.15.40.42
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 12 Sep 2016 15:33:41 -0700 (PDT)
+	Mon, 12 Sep 2016 15:40:43 -0700 (PDT)
 From: Ulf Magnusson <ulfalizer@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 13 Sep 2016 00:33:32 +0200
-Message-Id: <1473719612-1200-2-git-send-email-ulfalizer@gmail.com>
+Date: Tue, 13 Sep 2016 00:40:36 +0200
+Message-Id: <1473720037-1789-1-git-send-email-ulfalizer@gmail.com>
 X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1473719612-1200-1-git-send-email-ulfalizer@gmail.com>
-References: <1473719612-1200-1-git-send-email-ulfalizer@gmail.com>
-Subject: [PATCH v3 1/1] bitbake: fetch2: Make SRCREV_FORMAT name substitution safer
+Subject: [PATCH v4 0/1] Make SRCREV_FORMAT name substitution safer
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,58 +51,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 12 Sep 2016 22:33:41 -0000
+X-List-Received-Date: Mon, 12 Sep 2016 22:40:45 -0000
 
-The implementation of SRCREV_FORMAT has at least two issues:
+Changes since v3:
 
- 1. Given two names "foo" and "foobar" and SRCREV_FORMAT = "foo_foobar",
-    "foo" might currently get substituted twice, and "foobar" not at
-    all.
+Replace "ascending" with "descending". Word fail.
 
- 2. If the revision substitued for some name happens to contain another
-    name as a substring, then that substring might incorrectly get
-    replaced.
+Changes since v2:
 
-Fix both issues by sorting the names with the longest ones first and
-replacing all names at once with a regular expression. This was inspired
-by
-http://stackoverflow.com/questions/6116978/python-replace-multiple-strings.
+Using re.compile() is a bit silly for a one-off regex. Use re.sub() directly
+instead.
 
-Signed-off-by: Ulf Magnusson <ulfalizer@gmail.com>
----
+Changes since v1:
+
+Fix the original patch to make it actually work, and broaden it to make the
+substitution more robust in general by substituting all names at once.
+
+Ulf Magnusson (1):
+  bitbake: fetch2: Make SRCREV_FORMAT name substitution safer
+
  bitbake/lib/bb/fetch2/__init__.py | 12 +++++++++++-
  1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 11c75cc..5568fc3 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -761,6 +761,7 @@ def get_srcrev(d, method_name='sortable_revision'):
-     if not format:
-         raise FetchError("The SRCREV_FORMAT variable must be set when multiple SCMs are used.")
- 
-+    name_to_rev = {}
-     seenautoinc = False
-     for scm in scms:
-         ud = urldata[scm]
-@@ -769,7 +770,16 @@ def get_srcrev(d, method_name='sortable_revision'):
-             seenautoinc = seenautoinc or autoinc
-             if len(rev) > 10:
-                 rev = rev[:10]
--            format = format.replace(name, rev)
-+            name_to_rev[name] = rev
-+    # Replace names by revisions in the SRCREV_FORMAT string. The approach used
-+    # here can handle names being prefixes of other names and names appearing
-+    # as substrings in revisions (in which case the name should not be
-+    # expanded). The '|' regular expression operator tries matches from left to
-+    # right, so we need to sort the names with the longest ones first.
-+    names_ascending_len = sorted(name_to_rev, key=len, reverse=True)
-+    name_to_rev_re = "|".join(re.escape(name) for name in names_ascending_len)
-+    format = re.sub(name_to_rev_re, lambda match: name_to_rev[match.group(0)], format)
-+
-     if seenautoinc:
-        format = "AUTOINC+" + format
- 
 -- 
 2.5.0
 
