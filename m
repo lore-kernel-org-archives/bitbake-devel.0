@@ -1,24 +1,44 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-	by mail.openembedded.org (Postfix) with ESMTP id D427075D4B
+Return-Path: <ulfalizer@gmail.com>
+Received: from mail-wm0-f66.google.com (mail-wm0-f66.google.com [74.125.82.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 9FA1773289
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Sep 2016 14:49:13 +0000 (UTC)
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-	by orsmga104.jf.intel.com with ESMTP; 09 Sep 2016 07:49:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.30,305,1470726000"; 
-   d="scan'208";a="6568840"
-Received: from linux.intel.com ([10.54.29.200])
-	by orsmga005.jf.intel.com with ESMTP; 09 Sep 2016 07:49:13 -0700
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
-	by linux.intel.com (Postfix) with ESMTP id 742EF6A4080;
-	Fri,  9 Sep 2016 07:48:51 -0700 (PDT)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+	Mon, 12 Sep 2016 20:17:00 +0000 (UTC)
+Received: by mail-wm0-f66.google.com with SMTP id g141so4232900wmd.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 12 Sep 2016 13:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=u37GVM/5EmDtLtT/qkOGv24tkFKLqn8I3rAZcmQKjQU=;
+	b=rK1jizNOYpoNinUWv0UxOUA0XuR++lI8mQ0up6EMeKMo9bkmrJSVqqGSrc9shQe/uJ
+	XNeLdsETBgyDe5Lh3QVVY89A6M2l3BWPHZCjeiXhYUVC/1yd7F5HURsW/rduK3Opp2SP
+	urvC0sv/OVU48Nf9/jZENmo2XeWgmM+N4JQ6bgUYArk4j997IASwSiBscjhEXkoo4Rd9
+	zSyRzb8NfnHr5XUVtyl+gxhSguc4hhkI4AU9Zvdv7jVKKwX9Umo4GKy19KAGZ7zSOrh4
+	S+h+oJSCKOXheY2hjomJ9AjnzH8y1YWLTfF9preYHS6A3KSyZMdrTInFrG5T/+uUeACn
+	7rUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=u37GVM/5EmDtLtT/qkOGv24tkFKLqn8I3rAZcmQKjQU=;
+	b=hvZFMZTJ6ABmIAonmvkmuiOATx+1LBc4oARwArZJqVxWDPaNnEYQ1UPL4PszLmPUai
+	vCGu+d5E3pIn8G7fZHNQATgOBOEkEtl16sPrDp93bmYQwVr+MhcrU8pH2WB7heDLgn+L
+	ZSVEkoelbyJqateTkYR6DPfULa6/0HF9aR2cDFHB7k4eZpItYFs5pUXqi4ffxS9f7qUX
+	SE/wVA5atfz2/gOKvayqXORbt4JcV+Vekme/UmSrTR87Gl89V/N1ImjoOHjss9geODm8
+	k911vSaM/0XxSF1cCWe389SAvcADyTle1NqO3ZMjC5QnLZOyMsH5zvGkFeEw+QjkSVVX
+	iN6A==
+X-Gm-Message-State: AE9vXwOM96H71YdvEY0n/58HhExwU1mhFT2BF4yvNQDJBAN7GXUxQ0dkXJeCw9TIX0lqlA==
+X-Received: by 10.28.91.12 with SMTP id p12mr2313517wmb.34.1473711420611;
+	Mon, 12 Sep 2016 13:17:00 -0700 (PDT)
+Received: from huvuddator.home (ip5f5bfeac.dynamic.kabel-deutschland.de.
+	[95.91.254.172]) by smtp.gmail.com with ESMTPSA id
+	ka5sm19463606wjb.7.2016.09.12.13.16.59
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 12 Sep 2016 13:17:00 -0700 (PDT)
+From: Ulf Magnusson <ulfalizer@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  9 Sep 2016 17:49:00 +0300
-Message-Id: <1473432540-22120-1-git-send-email-ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] cooker: check if target contains task
+Date: Mon, 12 Sep 2016 22:16:52 +0200
+Message-Id: <1473711412-22161-1-git-send-email-ulfalizer@gmail.com>
+X-Mailer: git-send-email 2.5.0
+Subject: [PATCH] bitbake: fetch2: Make SRCREV_FORMAT name substitution safer
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,35 +51,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 09 Sep 2016 14:49:17 -0000
+X-List-Received-Date: Mon, 12 Sep 2016 20:17:01 -0000
 
-Task name was incorrectly added to the targets that already
-contained :task suffix and fired with BuildInit event. This
-caused Toaster to create incorrect Target objects and show
-them in UI.
+Given two names "foo" and "foobar" and SRCREV_FORMAT = "foo_foobar",
+"foo" might currently get substituted twice. Work around the issue by
+sorting the list of names by length and substituting longer names first.
 
-[YOCTO #10221]
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Ulf Magnusson <ulfalizer@gmail.com>
 ---
- bitbake/lib/bb/cooker.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/fetch2/__init__.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index b7d7a7e..2952f9e 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1421,7 +1421,8 @@ class BBCooker:
-         if not task.startswith("do_"):
-             task = "do_%s" % task
- 
--        packages = ["%s:%s" % (target, task) for target in targets]
-+        packages = [target if ':' in target else '%s:%s' (target, task) for target in targets]
-+
-         bb.event.fire(bb.event.BuildInit(packages), self.expanded_data)
- 
-         taskdata, runlist = self.buildTaskData(targets, task, self.configuration.abort)
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 11c75cc..4ca024e 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -764,7 +764,10 @@ def get_srcrev(d, method_name='sortable_revision'):
+     seenautoinc = False
+     for scm in scms:
+         ud = urldata[scm]
+-        for name in ud.names:
++        # Sort the list of names and replace the longest names first. Given two
++        # names "foo" and "foobar", this prevents "foo" being substituted twice
++        # in "foo_foobar" (and "foobar" from not being substituted at all).
++        for name in sorted(ud.names, key=len, reverse=True):
+             autoinc, rev = getattr(ud.method, method_name)(ud, d, name)
+             seenautoinc = seenautoinc or autoinc
+             if len(rev) > 10:
 -- 
-2.1.4
+2.5.0
 
 
