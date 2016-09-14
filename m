@@ -1,25 +1,26 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id A0D9477206
+Return-Path: <joe.slater@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 0E4957422C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 13 Sep 2016 02:12:07 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga101.jf.intel.com with ESMTP; 12 Sep 2016 19:12:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.30,326,1470726000"; d="scan'208";a="1055111533"
-Received: from wooi-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.156.68])
-	by fmsmga002.fm.intel.com with ESMTP; 12 Sep 2016 19:12:06 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 13 Sep 2016 14:11:41 +1200
-Message-Id: <c721b0e15df71fff0dc17122d128ded0195751c3.1473732670.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.5.5
-In-Reply-To: <cover.1473732670.git.paul.eggleton@linux.intel.com>
-References: <cover.1473732670.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1473732670.git.paul.eggleton@linux.intel.com>
-References: <cover.1473732670.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] fetch2/npm: don't download same URL multiple times
+	Wed, 14 Sep 2016 17:29:52 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u8EHTqjl022050
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Sep 2016 10:29:52 -0700 (PDT)
+Received: from ala-jslater-lx3.wrs.com (147.11.152.42) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.294.0; Wed, 14 Sep 2016 10:29:52 -0700
+From: Joe Slater <jslater@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 14 Sep 2016 10:29:52 -0700
+Message-ID: <1473874192-1358-1-git-send-email-jslater@windriver.com>
+X-Mailer: git-send-email 1.7.3.4
+MIME-Version: 1.0
+X-Mailman-Approved-At: Wed, 14 Sep 2016 21:23:35 +0000
+Cc: joe.slater@windriver.com
+Subject: [bitbake][PATCH 1/1] cooker.py: add LAYERRECOMMENDS processing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,56 +33,94 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Sep 2016 02:12:07 -0000
+X-List-Received-Date: Wed, 14 Sep 2016 17:29:54 -0000
+Content-Type: text/plain
 
-If we've already fetched a particular URL then we do not need to do so
-again within in the same operation. Maintain an internal list of fetched
-URLs to avoid doing that.
+Add recommended layers to collection_depends[] so that dynamic
+priority assignment will work for both depends and recommends.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Recommended layers do not cause an error or warning
+if they are not in the collection list, but debug messages
+are output for level 3 and above.
+
+explode_dep_versions2 returns a dictionary, so we
+change the variable deplist to depDict.  The dictionary
+values are lists which are either empty or contain only one
+version specification.
+
+Signed-off-by: Joe Slater <jslater@windriver.com>
 ---
- lib/bb/fetch2/npm.py | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ lib/bb/cooker.py |   37 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 43929ce..699ae72 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -165,7 +165,9 @@ class Npm(FetchMethod):
-             pdata = json.loads('\n'.join(datalines))
-         return pdata
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 0e78106..093ac70 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1147,6 +1147,8 @@ class BBCooker:
+             collection_list = collections.split()
+             min_prio = 0
+             for c in collection_list:
++                bb.debug(1,'Processing %s in collection list' % (c))
++
+                 # Get collection priority if defined explicitly
+                 priority = self.data.getVar("BBFILE_PRIORITY_%s" % c, True)
+                 if priority:
+@@ -1165,10 +1167,10 @@ class BBCooker:
+                 deps = self.data.getVar("LAYERDEPENDS_%s" % c, True)
+                 if deps:
+                     try:
+-                        deplist = bb.utils.explode_dep_versions2(deps)
++                        depDict = bb.utils.explode_dep_versions2(deps)
+                     except bb.utils.VersionStringException as vse:
+                         bb.fatal('Error parsing LAYERDEPENDS_%s: %s' % (c, str(vse)))
+-                    for dep, oplist in list(deplist.items()):
++                    for dep, oplist in list(depDict.items()):
+                         if dep in collection_list:
+                             for opstr in oplist:
+                                 layerver = self.data.getVar("LAYERVERSION_%s" % dep, True)
+@@ -1187,10 +1189,39 @@ class BBCooker:
+                         else:
+                             parselog.error("Layer '%s' depends on layer '%s', but this layer is not enabled in your configuration", c, dep)
+                             errors = True
+-                    collection_depends[c] = deplist.keys()
++                    collection_depends[c] = list(depDict.keys())
+                 else:
+                     collection_depends[c] = []
  
--    def _getdependencies(self, pkg, data, version, d, ud, optional=False):
-+    def _getdependencies(self, pkg, data, version, d, ud, optional=False, fetchedlist=None):
-+        if fetchedlist is None:
-+            fetchedlist = []
-         pkgfullname = pkg
-         if version != '*' and not '/' in version:
-             pkgfullname += "@'%s'" % version
-@@ -187,7 +189,9 @@ class Npm(FetchMethod):
-         outputurl = pdata['dist']['tarball']
-         data[pkg] = {}
-         data[pkg]['tgz'] = os.path.basename(outputurl)
--        self._runwget(ud, d, "%s --directory-prefix=%s %s" % (self.basecmd, ud.prefixdir, outputurl), False)
-+        if not outputurl in fetchedlist:
-+            self._runwget(ud, d, "%s --directory-prefix=%s %s" % (self.basecmd, ud.prefixdir, outputurl), False)
-+            fetchedlist.append(outputurl)
- 
-         dependencies = pdata.get('dependencies', {})
-         optionalDependencies = pdata.get('optionalDependencies', {})
-@@ -200,9 +204,9 @@ class Npm(FetchMethod):
-             else:
-                 depsfound[dep] = dependencies[dep]
-         for dep, version in optdepsfound.items():
--            self._getdependencies(dep, data[pkg]['deps'], version, d, ud, optional=True)
-+            self._getdependencies(dep, data[pkg]['deps'], version, d, ud, optional=True, fetchedlist=fetchedlist)
-         for dep, version in depsfound.items():
--            self._getdependencies(dep, data[pkg]['deps'], version, d, ud)
-+            self._getdependencies(dep, data[pkg]['deps'], version, d, ud, fetchedlist=fetchedlist)
- 
-     def _getshrinkeddependencies(self, pkg, data, version, d, ud, lockdown, manifest, toplevel=True):
-         logger.debug(2, "NPM shrinkwrap file is %s" % data)
++                # Check recommends and store information for priority calculation
++                recs = self.data.getVar("LAYERRECOMMENDS_%s" % c, True)
++                if recs:
++                    try:
++                        recDict = bb.utils.explode_dep_versions2(recs)
++                    except bb.utils.VersionStringException as vse:
++                        bb.fatal('Error parsing LAYERRECOMMENDS_%s: %s' % (c, str(vse)))
++                    for rec, oplist in list(recDict.items()):
++                        if rec in collection_list:
++                            if oplist:
++                                opstr = oplist[0]
++                                layerver = self.data.getVar("LAYERVERSION_%s" % rec, True)
++                                if layerver:
++                                    (op, recver) = opstr.split()
++                                    try:
++                                        res = bb.utils.vercmp_string_op(layerver, recver, op)
++                                    except bb.utils.VersionStringException as vse:
++                                        bb.fatal('Error parsing LAYERRECOMMENDS_%s: %s' % (c, str(vse)))
++                                    if not res:
++                                        parselog.debug(3,"Layer '%s' recommends version %s of layer '%s', but version %s is currently enabled in your configuration. Check that you are using the correct matching versions/branches of these two layers.", c, opstr, rec, layerver)
++                                        continue
++                                else:
++                                    parselog.debug(3,"Layer '%s' recommends version %s of layer '%s', which exists in your configuration but does not specify a version. Check that you are using the correct matching versions/branches of these two layers.", c, opstr, rec)
++                                    continue
++                            parselog.debug(3,"Layer '%s' recommends layer '%s', so we are adding it", c, rec)
++                            collection_depends[c].append(rec)
++                        else:
++                            parselog.debug(3,"Layer '%s' recommends layer '%s', but this layer is not enabled in your configuration", c, rec)
++
+             # Recursively work out collection priorities based on dependencies
+             def calc_layer_priority(collection):
+                 if not collection_priorities[collection]:
 -- 
-2.5.5
+1.7.9.5
 
 
