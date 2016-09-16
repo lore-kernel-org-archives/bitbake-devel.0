@@ -1,49 +1,50 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pa0-f43.google.com (mail-pa0-f43.google.com
-	[209.85.220.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 6399676F8C
+Return-Path: <kergoth@gmail.com>
+Received: from mail-oi0-f66.google.com (mail-oi0-f66.google.com
+	[209.85.218.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 66DBD65CBA
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 16:22:59 +0000 (UTC)
-Received: by mail-pa0-f43.google.com with SMTP id cm16so27480299pac.0
+	Fri, 16 Sep 2016 16:35:11 +0000 (UTC)
+Received: by mail-oi0-f66.google.com with SMTP id 2so7299598oif.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 09:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=o/oos6BsIBrTDD18zHQ4p3QNIsffSTDjavt42jd9//M=;
-	b=UNJa20GAW0PMMWqz/x8WkA9CqzvHO9cHpb1D5VQXG5HafKksW5CORahoWPfSAROnIi
-	tZUZgo2D+j2iDrrqwiwOnhnbo9rxJP4XkJNhNP5+a+y+bmHXJ36l2obFpdQmSLvh0MKc
-	Ej6OOZLr53uihMc15sNiSZAzm1H0/fZGcSv76IQbTftDlzyVXBYJ4Q29yBc4geexcXOK
-	S+ddD3fwWVhPGhmk0gOMWZxTeENGFAiRoTuLlyPTqXrvOD9TMEYXkIqqKjccIM/USrK8
-	bw6HgCuUcWDqiA/5Hw0ylvIE/FyMdI8+jfk+YQMfCAYrctVbFC8mfe8SXjfmi+oEFtsL
-	io2g==
+	Fri, 16 Sep 2016 09:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=ZUevaZ2itxvCd+TJia+TUX5dnudfLv4st5Tyn1Pj2zw=;
+	b=ef3Y+bvZeY5f80er0t8cp+uPSbIOquWeOgCjHpJHwyHkfhjfXkKL+8bPhafCr4TEG9
+	AfrBLXOEUIqlZGyN29lzA/YLAAmzBNtQiVN8gTJs9YHNZOjJpgo1mEuClNMInlgoxYXG
+	Sn89Otq7dpZSlPWSyxfN3MvEBOkCxSTG2IcCwd48Hx8Ho35YFBiRY6TDVUpXgOAyU0KO
+	VwzH6L0/RbsqnvhbsUgLIcHL2vkPdBV8N3C5QoNLIeYBdtuih9NY+9fdhNQkebimr0ke
+	b5ef5V+cBrC5DKvI4q+ZTpM1PoCniRbG3s9+TWRFi+1HkcdsP9+AKsxZUxq5Z5kg/Mv3
+	X71A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=o/oos6BsIBrTDD18zHQ4p3QNIsffSTDjavt42jd9//M=;
-	b=KpROYCYama6u45sLrryyhPRw9ozdSbWDapH8zsQMOGphMu/aIdN/l5KUS4kBX58uHZ
-	ce2NsOdyPIhGNqAUZZg9NaBY6Ar69qHsgLTiGKcUHEu9xzIV+QrF2uWeQLqHDnScRph0
-	LUrTpeNTCHlP5H8gaSAxpm4haNP5PJwxDjNu7cQRL9Lkw4DUeBMOrKJvENHPsHL0e62D
-	UVcupnOkZG0u611r0hS/LwkQ83XKCISaIRZK1coNow8Bzbw3j0GOMf6g0i8W3WxbHHNo
-	XrNxggsMB1vAm/Hu26QrQ7YcpGofDUycuSthIOMzm0Dyhe1+CHi1Qb8xr7lw3Twcb02G
-	rfig==
-X-Gm-Message-State: AE9vXwPMoA5dKV6Gyc85j9WdjvI27JIQfNMIhpXTUeJWIw1D5JxBAvJLOWc1VJ/w53G5saOG
-X-Received: by 10.66.10.170 with SMTP id j10mr24343935pab.3.1474042980282;
-	Fri, 16 Sep 2016 09:23:00 -0700 (PDT)
-Received: from orion.ger.corp.intel.com (fmdmzpr04-ext.fm.intel.com.
-	[192.55.55.39]) by smtp.gmail.com with ESMTPSA id
-	bm8sm13336146pac.16.2016.09.16.09.22.58
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 16 Sep 2016 09:22:59 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Sep 2016 17:22:35 +0100
-Message-Id: <1474042955-12618-9-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
-References: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 8/8] toaster: unlock BuildEnvirnoment when build is done
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc;
+	bh=ZUevaZ2itxvCd+TJia+TUX5dnudfLv4st5Tyn1Pj2zw=;
+	b=FoOKFnpBl+Z/aBwfe6EDcfMJ5e/T/u0cqpO0D+WEcGrz+E7KdGTWoJ/zbpWUqfD4K/
+	h1KdFmkb0R/sJRW7Y6n8czTybTTdgS3KM0atvdPeZeok+XuQUcRfmRBii9dQSRONj5Pw
+	0JZamXVIqQ5mhOIEr4ZSQ4+zfJVcyoyCT3RGwRwekbIZoV+Yc+mo0EAEY1QCAT8KapIG
+	VgQ3dBi32XvPyNhkvSuR674p8taQbkHi2jfESvPMxflw8LYD5D9lbhoe9Ua4OsyADH/T
+	IlRLYnxxtQ/Rr9EoDyw7Yu2dDUeYK9/LqwNn9ecm+Wl8ptrVTvjQxBpYgpgJoObSgg58
+	NMSw==
+X-Gm-Message-State: AE9vXwNQWjXPa76YS4H9EuAvvmRHW531WZRjAoOUrUYceN4WywkAONa427ggJdvqxla2juSQtwqvsU9ACMZEUA==
+X-Received: by 10.202.206.73 with SMTP id e70mr13875015oig.183.1474043711781; 
+	Fri, 16 Sep 2016 09:35:11 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.157.13.194 with HTTP; Fri, 16 Sep 2016 09:34:51 -0700 (PDT)
+In-Reply-To: <1473974147-29966-2-git-send-email-kergoth@gmail.com>
+References: <1473974147-29966-1-git-send-email-kergoth@gmail.com>
+	<1473974147-29966-2-git-send-email-kergoth@gmail.com>
+From: Christopher Larson <chris_larson@mentor.com>
+Date: Fri, 16 Sep 2016 09:34:51 -0700
+X-Google-Sender-Auth: CjWQu-E3li3_uAlZlDBrdIi3unc
+Message-ID: <CABcZANkH_ONvZXW2b930nKTTbRqvLpyszHL=B6W4E2zEJws40g@mail.gmail.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: Re: [PATCH 2/2] bb.build: in _exec_task, catch BBHandledException
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,51 +57,109 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Sep 2016 16:23:00 -0000
+X-List-Received-Date: Fri, 16 Sep 2016 16:35:13 -0000
+Content-Type: multipart/alternative; boundary=001a113d2920d30224053ca28b0c
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+--001a113d2920d30224053ca28b0c
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-There is no need to lock build environment before changing
-build status as this operation is very fast. However, there
-is a need to unlock it after changing build status.
+On Thu, Sep 15, 2016 at 2:15 PM, Christopher Larson <kergoth@gmail.com>
+wrote:
 
-Explicitly unlocked BuildEnvironment after build reaches
-final status SUCCEEDED, FAILED or CANCELLED. This should
-allow runbuilds process to pickup next build faster.
+> From: Christopher Larson <chris_larson@mentor.com>
+>
+> We don't want a traceback for this exception, we need to catch it, fire
+> TaskFailed, and return failure.
+>
+> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+> ---
+>  lib/bb/build.py | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/lib/bb/build.py b/lib/bb/build.py
+> index 28401b3..8581e72 100644
+> --- a/lib/bb/build.py
+> +++ b/lib/bb/build.py
+> @@ -575,6 +575,9 @@ def _exec_task(fn, task, d, quieterr):
+>              logger.error(str(exc))
+>              event.fire(TaskFailed(task, logfn, localdata, errprinted),
+> localdata)
+>          return 1
+> +    except bb.BBHandledException:
+> +        event.fire(TaskFailed(task, logfn, localdata, True), localdata)
+> +        return 1
+>
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/bb/ui/buildinfohelper.py | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Don=E2=80=99t merge this, v2 is forthcoming. Apparently firing the TaskFail=
+ed is
+problematic if it was the TaskStarted event handler which failed, as the UI
+won=E2=80=99t have the pid of the task, resulting in this:
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index c93ee94..2246960 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -1524,9 +1524,7 @@ class BuildInfoHelper(object):
-             return
- 
-         br_id, be_id = self.brbe.split(":")
--        be = BuildEnvironment.objects.get(pk = be_id)
--        be.lock = BuildEnvironment.LOCK_LOCK
--        be.save()
-+
-         br = BuildRequest.objects.get(pk = br_id)
- 
-         # if we're 'done' because we got cancelled update the build outcome
-@@ -1543,6 +1541,10 @@ class BuildInfoHelper(object):
-         else:
-             br.state = BuildRequest.REQ_FAILED
-         br.save()
-+
-+        be = BuildEnvironment.objects.get(pk = be_id)
-+        be.lock = BuildEnvironment.LOCK_FREE
-+        be.save()
-         signal_runbuilds()
- 
-     def store_log_error(self, text):
--- 
-2.7.4
+Traceback (most recent call last):
+  File "/scratch/dogwood/pdk-licensing/poky/bitbake/lib/bb/ui/knotty.py",
+line 426, in main
+    helper.eventHandler(event)
+  File "/scratch/dogwood/pdk-licensing/poky/bitbake/lib/bb/ui/uihelper.py",
+line 48, in eventHandler
+    del self.running_tasks[event.pid]
+--=20
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--001a113d2920d30224053ca28b0c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Thu, Sep 15, 2016 at 2:15 PM, Christopher Larson <span dir=3D"ltr">&lt;<=
+a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com</a>=
+&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px=
+ 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);bor=
+der-left-style:solid;padding-left:1ex"><div id=3D"gmail-:9u" class=3D"gmail=
+-a3s gmail-aXjCH gmail-m1572fb4b491cc4a4">From: Christopher Larson &lt;<a h=
+ref=3D"mailto:chris_larson@mentor.com">chris_larson@mentor.com</a>&gt;<br>
+<br>
+We don&#39;t want a traceback for this exception, we need to catch it, fire=
+<br>
+TaskFailed, and return failure.<br>
+<br>
+Signed-off-by: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor=
+.com">chris_larson@mentor.com</a>&gt;<br>
+---<br>
+=C2=A0lib/bb/build.py | 3 +++<br>
+=C2=A01 file changed, 3 insertions(+)<br>
+<br>
+diff --git a/lib/bb/build.py b/lib/bb/build.py<br>
+index 28401b3..8581e72 100644<br>
+--- a/lib/bb/build.py<br>
++++ b/lib/bb/build.py<br>
+@@ -575,6 +575,9 @@ def _exec_task(fn, task, d, quieterr):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.error(str(exc))<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0event.fire(TaskFailed(task,=
+ logfn, localdata, errprinted), localdata)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return 1<br>
++=C2=A0 =C2=A0 except bb.BBHandledException:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 event.fire(TaskFailed(task, logfn, localdata, =
+True), localdata)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 return 1</div></blockquote></div><br>Don=E2=80=
+=99t merge this, v2 is forthcoming. Apparently firing the TaskFailed is pro=
+blematic if it was the TaskStarted event handler which failed, as the UI wo=
+n=E2=80=99t have the pid of the task, resulting in this:</div><div class=3D=
+"gmail_extra"><br></div><div class=3D"gmail_extra"><div class=3D"gmail_extr=
+a">Traceback (most recent call last):</div><div class=3D"gmail_extra">=C2=
+=A0 File &quot;/scratch/dogwood/pdk-licensing/poky/bitbake/lib/bb/ui/knotty=
+.py&quot;, line 426, in main</div><div class=3D"gmail_extra">=C2=A0 =C2=A0 =
+helper.eventHandler(event)</div><div class=3D"gmail_extra">=C2=A0 File &quo=
+t;/scratch/dogwood/pdk-licensing/poky/bitbake/lib/bb/ui/uihelper.py&quot;, =
+line 48, in eventHandler</div><div class=3D"gmail_extra">=C2=A0 =C2=A0 del =
+self.running_tasks[event.pid]</div>-- <br><div class=3D"gmail_signature"><d=
+iv dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>Founder - =
+BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software =
+Engineer, Mentor Graphics</div></div>
+</div></div>
+
+--001a113d2920d30224053ca28b0c--
