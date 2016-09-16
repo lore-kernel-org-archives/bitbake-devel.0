@@ -1,46 +1,49 @@
 Return-Path: <akuster808@gmail.com>
 Received: from mail-pf0-f196.google.com (mail-pf0-f196.google.com
 	[209.85.192.196])
-	by mail.openembedded.org (Postfix) with ESMTP id A3A3E70030
+	by mail.openembedded.org (Postfix) with ESMTP id C456B70030
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 23:36:47 +0000 (UTC)
-Received: by mail-pf0-f196.google.com with SMTP id 21so2720539pfy.1
+	Fri, 16 Sep 2016 23:36:48 +0000 (UTC)
+Received: by mail-pf0-f196.google.com with SMTP id n24so4151644pfb.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 16:36:48 -0700 (PDT)
+	Fri, 16 Sep 2016 16:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:subject:date:message-id;
-	bh=DOqBfJ/nkz+J1BSP/z1iXce9vFeLWYQ4dL9sFN5AMak=;
-	b=Ixw8AWFxPYV7MsLE/RVumii74Bm4qW1NOx/4oxHzXHXMn4Z4yhAxtWR3GmPnPY4ZiR
-	I52XWK4zFwR5oNahVEguHGHPD4iAa/WPg8OfhXEBUuUAj+VJQeFUwCQvn3+UFUPEDB7s
-	9IgJupUBS+JsO0IN+sTjUb7gzzrsHwupAl4ceuKdBw0hdrtO2CcXdBZHA7fy7NZmn9un
-	6QP+qiJlOqJfm1HElGX0NY3VkAisOOTl98Uq3dbNSEWYImeXP4P8QT04nrJv7SXFXfFZ
-	s+qO5vBSg+BzzbeJ8P1IIk23mE1WRhvbuXgS6HtMKBOYfCzCIajLYFDQJ7XvjNn+FFIY
-	2IqA==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=fJ8aJXvboDwbDptswd1oyV0FpiVzCR0dWrrScwGk3u4=;
+	b=Ucisi4Qkvyw0qcgF6L2GdfrnMmL54WPEQf6ukkNam6M7TOZigpFXheD5DDbw36X+hA
+	pDCUDMhykIPUUbpXW6izP6dIxREj7DD4IJeFUTUWaudZU4u124GF7AxtGYhoUmKa9QwU
+	KlOQGUYadK70YeWAQ5a+/1WVQolAV7N3kjZCSxqxUjVBALGOAIoLO4zKup46Tdlk3g1n
+	Vk9kh/ED9djUVcn+cyPZoGxDog/Ktd+OgdLLsycUokzVhnSd4RlZztJUXizGAWfrfoHU
+	qCGvL/mMA6T6YShSpZdtxNsye53Wox1LlPT+2ryucwCfPWRsV1zeUsy30OjA/Uyvy3s4
+	IUrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=DOqBfJ/nkz+J1BSP/z1iXce9vFeLWYQ4dL9sFN5AMak=;
-	b=aa9xbxjHE6eq6hYI6aSMbUy3Q7zONuZ7h2btFYQeldkXUQvRJEMqROJrtjQzKCexij
-	GfNxZT1vwX3+POA0X9fX4CPTdZVWYITjUdcUEbXrrrDIR1t2fCAu9BAD7exPLIY5mCeO
-	BoZlMgrmAi7pQ1OZbvuuZDy8nnuhu2ANl9ak6rDTM8W0KRenP3fhniIyTiOtXMFlfPwp
-	rc3TbqG60p6Qp6a2ZCREeybOKERyvG2fLWVhWUbrjcs+gUTd7JeNnCeNXFNjcQVKH9bv
-	vfUTnic9PgAM24BGh3Dihr5jZJ5fF88ajEQzF/2Y/AzRq1Zl57cSR3tEXQtHwm9tTyDb
-	ZgBw==
-X-Gm-Message-State: AE9vXwPocpNgsAwl+hki525NaJp6SFjZm/eWVcOBi7YEQbvmQyRYdfz6jV3g/bCTLW0/kw==
-X-Received: by 10.98.193.193 with SMTP id i184mr20214054pfg.69.1474069008003; 
-	Fri, 16 Sep 2016 16:36:48 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=fJ8aJXvboDwbDptswd1oyV0FpiVzCR0dWrrScwGk3u4=;
+	b=b6ZD+N0Bx2zmxpHx2qAURG4Vi/+a3hPiF1Qr8K4mj38QBfWB348f51yzuxDcPsPXiw
+	RtJjX1p43b4dW78D9HEbq1aW/Mi3bGbyZrSmX9qrQgSOWiQKZUK8a0Zi5DsELcqIbMNA
+	WiBxYNn3AC8mmm3/JZR2ncHfqylLrLr9Mp/z/l4RymZaIShaa+LA5zQGyDse7F3nDRwy
+	yY1rQ4e6YFIa2Tp6YKd0NT+R2qrG3VpCm6jZFvyXhT4piPOzn19dCaVE71QODUYPLu+3
+	HAoaahXvmLdIySbXDYw28Fm0OVYLDIaoVWJh+H0r0SUGMb0dVzJZ0fmkvGW+qRex3UXc
+	xLhA==
+X-Gm-Message-State: AE9vXwPvkLQBVTUl6Nyg0gI4fh6isxmy362bwWuiGzlsmdpPSaqz6meP1rqlAl77PiLOvg==
+X-Received: by 10.98.90.133 with SMTP id o127mr26801043pfb.61.1474069009776;
+	Fri, 16 Sep 2016 16:36:49 -0700 (PDT)
 Received: from akuster-ThinkPad-X240.mvista.com
 	([2601:202:4001:9ea0:142f:f172:55ee:c116])
-	by smtp.gmail.com with ESMTPSA id q9sm8988434pfi.35.2016.09.16.16.36.46
+	by smtp.gmail.com with ESMTPSA id q9sm8988434pfi.35.2016.09.16.16.36.48
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 16 Sep 2016 16:36:47 -0700 (PDT)
+	Fri, 16 Sep 2016 16:36:48 -0700 (PDT)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org,
 	akuster808@gmail.com
-Date: Fri, 16 Sep 2016 16:36:41 -0700
-Message-Id: <1474069004-10786-1-git-send-email-akuster808@gmail.com>
+Date: Fri, 16 Sep 2016 16:36:42 -0700
+Message-Id: <1474069004-10786-2-git-send-email-akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
-Subject: [PATCH 0/3] Bitbake 1.28-next
+In-Reply-To: <1474069004-10786-1-git-send-email-akuster808@gmail.com>
+References: <1474069004-10786-1-git-send-email-akuster808@gmail.com>
+Subject: [PATCH 1/3] bb/tests/fetch: Update cups url
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,21 +58,36 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 16 Sep 2016 23:36:48 -0000
 
-Please consider these changes for 1.28
-to fix bitbake-selftest failures.
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
+Update the upstream url used for testing cups versions after upstream website
+changes.
 
-Richard Purdie (1):
-  bb/tests/fetch: Update cups url
+minor fixup to apply
 
-Ross Burton (2):
-  lib/bb/tests/fetch: remove URL that doesn't exist anymore
-  fetch2/wget: fallback to GET if HEAD is rejected in checkstatus()
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
- lib/bb/fetch2/wget.py | 72 +++++++++++++++++++++++++++++++++++----------------
- lib/bb/tests/fetch.py |  7 ++---
- 2 files changed, 53 insertions(+), 26 deletions(-)
+[Bitbake upstream: 5f06041d4936fc22297945bbbad7020bfa9083c6 ]
+Signed-off-by: Armin Kuster <akuster@mvista.com>
+---
+ lib/bb/tests/fetch.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 94173c1..73eba8c 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -692,8 +692,8 @@ class FetchLatestVersionTest(FetcherTest):
+             : "5.0",
+         ("xserver-xorg", "http://xorg.freedesktop.org/releases/individual/xserver/xorg-server-1.15.1.tar.bz2", "", "")
+             : "1.15.1",
+-        # packages with valid REGEX_URI and REGEX
+-        ("cups", "http://www.cups.org/software/1.7.2/cups-1.7.2-source.tar.bz2", "http://www.cups.org/software.php", "(?P<name>cups\-)(?P<pver>((\d+[\.\-_]*)+))\-source\.tar\.gz")
++        # packages with valid UPSTREAM_CHECK_URI and UPSTREAM_CHECK_REGEX
++        ("cups", "http://www.cups.org/software/1.7.2/cups-1.7.2-source.tar.bz2", "https://github.com/apple/cups/releases", "(?P<name>cups\-)(?P<pver>((\d+[\.\-_]*)+))\-source\.tar\.gz")
+             : "2.0.0",
+         ("db", "http://download.oracle.com/berkeley-db/db-5.3.21.tar.gz", "http://www.oracle.com/technetwork/products/berkeleydb/downloads/index-082944.html", "http://download.oracle.com/otn/berkeley-db/(?P<name>db-)(?P<pver>((\d+[\.\-_]*)+))\.tar\.gz")
+             : "6.1.19",
 -- 
 2.7.4
 
