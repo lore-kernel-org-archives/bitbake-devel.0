@@ -1,46 +1,49 @@
-Return-Path: <sujith.h@gmail.com>
-Received: from mail-qk0-f175.google.com (mail-qk0-f175.google.com
-	[209.85.220.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 67DB270016
+Return-Path: <kergoth@gmail.com>
+Received: from mail-oi0-f67.google.com (mail-oi0-f67.google.com
+	[209.85.218.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 2520B65CBF
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 11:01:16 +0000 (UTC)
-Received: by mail-qk0-f175.google.com with SMTP id h8so78958027qka.1
+	Fri, 16 Sep 2016 16:20:22 +0000 (UTC)
+Received: by mail-oi0-f67.google.com with SMTP id w11so7227533oia.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 04:01:18 -0700 (PDT)
+	Fri, 16 Sep 2016 09:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=mNw+hhwVW+hoq6LwoD82fpcoaGFYseNOVkDqT7Htq8s=;
-	b=uNrNlIiUz3ztwG7jpEoOxwG1Y4a9SHOVKf5u1WdGmYJpE+5FCs8lUAT/sYkzGui/q/
-	6ojuOh3WCfhagoh8JV76Qgq/Pe5uUP6dg2vPP5RyPVrMJH/tvWUxa8ASsRTEo7VQttLU
-	w42f0zrrzOWAkqNtzK0LB8zF4fvtOO5K+NE9N32JpfJ/ZEfEgV+7OLmwQ0MNEm751a0p
-	6GQQKDG/xjBp49rJi3NFpI9cWQYk77qCIi4kwbE5J7unklSzcDglLKLkc7yirx/b2Gec
-	bpA1ogj5erj/vuI8knaOR1eqVjUeE+Bh8YDgcmf9fgGvfQIGj4Ife2OrFXVFfNh0Y2oI
-	xHwA==
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=K2tAPpI6qdWZvDULMp0hjTRRv8n/BmKAA+4ZdOCyFMU=;
+	b=JmmEMjRnVmLreWvU1MoHGcFxVo7QY9JBCfntKXZ/ncwcAHdGM74MxcjR5CeO0FAa+I
+	WGeP9MLJ/S6QW/usV8zoizku7xLG81TZxZv37b3W7HedRkoIxhZLurSZd83d2JdP/zPV
+	U+wsK7mR6TfC9zFs40MRAlgrbdCE8xgWN7DjeeGwoGoeEFq/6hoLnoWF1rZn2p4rrjzm
+	WlkpL0fgB4z5nUQwH8LO/ORpb6qBMwr24ZI5KdPZA+q6IwtovvozLznP5z3dj3WpWvH3
+	4IA1+wmzRu0yyRkxNJVXjn59kozcc/KGznkB5HyJp5Yd5fVCkYecJ4Ysfa7gxRs1/jv5
+	ROyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=mNw+hhwVW+hoq6LwoD82fpcoaGFYseNOVkDqT7Htq8s=;
-	b=VARe5sqT9ZvGay0YJLIuKgUl5EvvGmXy6+qFTArw+SmYrIQWkkKZya0CIpztSY2+Aw
-	xID3R+iihM+h272uU7rHEJu+kyTLnkoDkyu99+GNq4ve6IcCrjg5VxOQdAJAPRfY+4Af
-	PBs+5+l7PeRonIpdFXq4Wf/9PkS7791ynhiWW6EgbuC3ameNTLlP5A+i3xFyuh/YGEqy
-	jxSLmiQM7/DnILqJ7HPOArJ8gN41MIOHNkytu/rwxEmso5FA4cS6K1wWZzPnaoXt/3Rp
-	hbKHTzPjAnXFwAMidP4U5SyETUFh/QtjXwwh9xZ7SCSipzCdMXreVcr7VbgbjTJTLJye
-	BHVw==
-X-Gm-Message-State: AE9vXwO+8B7Ey1Q6AR/DQwaSOYEhiNlgHkFfVgmVdF0JMI0OjALGpA16UkTd1/Abf+Pg4jrP03/HvtRx29Evbw==
-X-Received: by 10.55.168.78 with SMTP id r75mr14697480qke.19.1474023677496;
-	Fri, 16 Sep 2016 04:01:17 -0700 (PDT)
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc;
+	bh=K2tAPpI6qdWZvDULMp0hjTRRv8n/BmKAA+4ZdOCyFMU=;
+	b=UxhIe2HZgGxbpXvRlruaR/rgu/GNaVMkO/9MYvXYkhZZxqBBM7KupqvvJNAeS4fCAC
+	5M+nFPo8qHY9fdNIbBO2ffRpO9MDrSTsjws7MuaSV6x6TSS8NmZwuYBmHixDdW9iOWQF
+	cl/k8wXGbi1m5VuvbdrKj/LRcB+gui2csdBetRY9J5QZoCC/3bIwU8eARZNMB0YCaKWM
+	t7PEFg1YrjNUjbW9x265uBg1pckWKfOQKThWaOFn7UMQdZm7G/oyggqiW7QewPqG2nlp
+	UZcrl+vCQoEdSbMsq9I+C0MtJju3uEGNywPqnncejav7eHTc4uP/QEU/q3gGiifIpewV
+	3AMA==
+X-Gm-Message-State: AE9vXwN91mQj8epabWsAy5mzcGKQX2HR/9G0uib/aDhnc06MmIVu79xWyV6TzfgbpodBZmk3AxYgjCwn60H6uw==
+X-Received: by 10.157.16.82 with SMTP id o18mr6973448oto.111.1474042823127;
+	Fri, 16 Sep 2016 09:20:23 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 10.55.183.1 with HTTP; Fri, 16 Sep 2016 04:00:57 -0700 (PDT)
-In-Reply-To: <1471880556-9232-8-git-send-email-elliot.smith@intel.com>
-References: <1471880556-9232-1-git-send-email-elliot.smith@intel.com>
-	<1471880556-9232-8-git-send-email-elliot.smith@intel.com>
-From: sujith h <sujith.h@gmail.com>
-Date: Fri, 16 Sep 2016 16:30:57 +0530
-Message-ID: <CADyYWLnZVn2+yB-zPb8bOqRA=EtN3ssc9ZBZPP7FF58kGOkf7A@mail.gmail.com>
-To: Elliot Smith <elliot.smith@intel.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 8/9] toaster: Allow git information to be null for BRLayer
+Sender: kergoth@gmail.com
+Received: by 10.157.13.194 with HTTP; Fri, 16 Sep 2016 09:20:01 -0700 (PDT)
+In-Reply-To: <1474016293-26538-1-git-send-email-pascal.bach@siemens.com>
+References: <1474016293-26538-1-git-send-email-pascal.bach@siemens.com>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Fri, 16 Sep 2016 09:20:01 -0700
+X-Google-Sender-Auth: 4aDSMlXNfk9eEvSmPehwp7QhhxU
+Message-ID: <CABcZAN=E+cw8Dvay34EObcDcyoUh7OPUmrvx6iuQQ89jTHYk_A@mail.gmail.com>
+To: Pascal Bach <pascal.bach@siemens.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] fetch2/git: always use premirror first if update is required
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,259 +56,110 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Sep 2016 11:01:17 -0000
-Content-Type: multipart/alternative; boundary=94eb2c07514cb016d4053c9de1af
+X-List-Received-Date: Fri, 16 Sep 2016 16:20:23 -0000
+Content-Type: multipart/alternative; boundary=001a1140bcd2db3990053ca25683
 
---94eb2c07514cb016d4053c9de1af
+--001a1140bcd2db3990053ca25683
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-Seems like the migration changes are not merged upstream. Only models
-changes are there.
-
-Thanks,
-Sujith H
-
-On Mon, Aug 22, 2016 at 9:12 PM, Elliot Smith <elliot.smith@intel.com>
+On Fri, Sep 16, 2016 at 1:58 AM, Pascal Bach <pascal.bach@siemens.com>
 wrote:
 
-> From: Michael Wood <michael.g.wood@intel.com>
+> When an update of the local copy is required always try to fetch the update
+> from a premirror first.
+> The premirror should always have precedence over the upstream repository
+> as updating from there might not work if BB_FETCH_PREMIRRORONLY,
+> BB_NO_NBB_ALLOWED_NETWORKS or BB_NO_NETWORK is set.
 >
-> We no longer only deal with layers that have their source in a gir
-> repository, we also allow for local directories too so update the
-> BRLayer model to reflect this.
+> This also gets rid of the special case for BB_FETCH_PREMIRRORONLY.
 >
-> Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-> Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+> Signed-off-by: Pascal Bach <pascal.bach@siemens.com>
 > ---
->  .../migrations/0007_brlayers_optional_gitinfo.py   | 29
-> ++++++++++++++++++++++
->  bitbake/lib/toaster/bldcontrol/models.py           | 11 ++++----
->  2 files changed, 35 insertions(+), 5 deletions(-)
->  create mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0007_
-> brlayers_optional_gitinfo.py
+>  lib/bb/fetch2/git.py | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
 >
-> diff --git a/bitbake/lib/toaster/bldcontrol/migrations/0007_brlayers_opti=
-onal_gitinfo.py
-> b/bitbake/lib/toaster/bldcontrol/migrations/0007_
-> brlayers_optional_gitinfo.py
-> new file mode 100644
-> index 0000000..4be42a4
-> --- /dev/null
-> +++ b/bitbake/lib/toaster/bldcontrol/migrations/0007_
-> brlayers_optional_gitinfo.py
-> @@ -0,0 +1,29 @@
-> +# -*- coding: utf-8 -*-
-> +from __future__ import unicode_literals
-> +
-> +from django.db import migrations, models
-> +
-> +
-> +class Migration(migrations.Migration):
-> +
-> +    dependencies =3D [
-> +        ('bldcontrol', '0006_brlayer_local_source_dir'),
-> +    ]
-> +
-> +    operations =3D [
-> +        migrations.AlterField(
-> +            model_name=3D'brlayer',
-> +            name=3D'commit',
-> +            field=3Dmodels.CharField(max_length=3D254, null=3DTrue),
-> +        ),
-> +        migrations.AlterField(
-> +            model_name=3D'brlayer',
-> +            name=3D'dirpath',
-> +            field=3Dmodels.CharField(max_length=3D254, null=3DTrue),
-> +        ),
-> +        migrations.AlterField(
-> +            model_name=3D'brlayer',
-> +            name=3D'giturl',
-> +            field=3Dmodels.CharField(max_length=3D254, null=3DTrue),
-> +        ),
-> +    ]
-> diff --git a/bitbake/lib/toaster/bldcontrol/models.py
-> b/bitbake/lib/toaster/bldcontrol/models.py
-> index 83b6969..409614b 100644
-> --- a/bitbake/lib/toaster/bldcontrol/models.py
-> +++ b/bitbake/lib/toaster/bldcontrol/models.py
-> @@ -126,13 +126,14 @@ class BuildRequest(models.Model):
->  # These tables specify the settings for running an actual build.
->  # They MUST be kept in sync with the tables in orm.models.Project*
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index 1bec60a..cac2a87 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -227,13 +227,8 @@ class Git(FetchMethod):
+>          return False
 >
-> +
->  class BRLayer(models.Model):
-> -    req         =3D models.ForeignKey(BuildRequest)
-> -    name        =3D models.CharField(max_length =3D 100)
-> -    giturl      =3D models.CharField(max_length =3D 254)
-> +    req =3D models.ForeignKey(BuildRequest)
-> +    name =3D models.CharField(max_length=3D100)
-> +    giturl =3D models.CharField(max_length=3D254, null=3DTrue)
->      local_source_dir =3D models.CharField(max_length=3D254, null=3DTrue)
-> -    commit      =3D models.CharField(max_length =3D 254)
-> -    dirpath     =3D models.CharField(max_length =3D 254)
-> +    commit =3D models.CharField(max_length=3D254, null=3DTrue)
-> +    dirpath =3D models.CharField(max_length=3D254, null=3DTrue)
->      layer_version =3D models.ForeignKey(Layer_Version, null=3DTrue)
->
->  class BRBitbake(models.Model):
-> --
-> 2.7.4
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>      def try_premirror(self, ud, d):
+> -        # If we don't do this, updating an existing checkout with only
+> premirrors
+> -        # is not possible
+> -        if d.getVar("BB_FETCH_PREMIRRORONLY", True) is not None:
+> -            return True
+> -        if os.path.exists(ud.clonedir):
+> -            return False
+> -        return True
+> +        # Always try premirror if an update is required
+> +        return self.need_update(ud, d)
 >
 
+Will this result in fetching a mirror tarball even if you already have a
+clone in ud.clonedir? The previous logic always returned False if the
+clonedir existed..
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
-
---=20
-=E0=B4=B8=E0=B5=81=E0=B4=9C=E0=B4=BF=E0=B4=A4=E0=B5=8D =E0=B4=B9=E0=B4=B0=
-=E0=B4=BF=E0=B4=A6=E0=B4=BE=E0=B4=B8=E0=B4=A8=E0=B5=8D
-Bangalore
-<Project>Contributor to KDE project
-<Project>Contributor to Yocto project
-http://fci.wikia.com/wiki/Anti-DRM-Campaign
-<Blog> http://sujithh.info
-C-x C-c
-
---94eb2c07514cb016d4053c9de1af
+--001a1140bcd2db3990053ca25683
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div><div><div>Hi,<br><br></div>Seems like the migration c=
-hanges are not merged upstream. Only models changes are there.<br><br></div=
->Thanks,<br></div>Sujith H<br><div><div><div><div><div><div class=3D"gmail_=
-extra"><br><div class=3D"gmail_quote">On Mon, Aug 22, 2016 at 9:12 PM, Elli=
-ot Smith <span dir=3D"ltr">&lt;<a href=3D"mailto:elliot.smith@intel.com" ta=
-rget=3D"_blank">elliot.smith@intel.com</a>&gt;</span> wrote:<br><blockquote=
- class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc soli=
-d;padding-left:1ex">From: Michael Wood &lt;<a href=3D"mailto:michael.g.wood=
-@intel.com">michael.g.wood@intel.com</a>&gt;<br>
-<br>
-We no longer only deal with layers that have their source in a gir<br>
-repository, we also allow for local directories too so update the<br>
-BRLayer model to reflect this.<br>
-<br>
-Signed-off-by: Michael Wood &lt;<a href=3D"mailto:michael.g.wood@intel.com"=
->michael.g.wood@intel.com</a>&gt;<br>
-Signed-off-by: Elliot Smith &lt;<a href=3D"mailto:elliot.smith@intel.com">e=
-lliot.smith@intel.com</a>&gt;<br>
----<br>
-=C2=A0.../migrations/0007_brlayers_<wbr>optional_gitinfo.py=C2=A0 =C2=A0| 2=
-9 ++++++++++++++++++++++<br>
-=C2=A0bitbake/lib/toaster/<wbr>bldcontrol/models.py=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0| 11 ++++----<br>
-=C2=A02 files changed, 35 insertions(+), 5 deletions(-)<br>
-=C2=A0create mode 100644 bitbake/lib/toaster/<wbr>bldcontrol/migrations/000=
-7_<wbr>brlayers_optional_gitinfo.py<br>
-<br>
-diff --git a/bitbake/lib/toaster/<wbr>bldcontrol/migrations/0007_<wbr>brlay=
-ers_optional_gitinfo.py b/bitbake/lib/toaster/<wbr>bldcontrol/migrations/00=
-07_<wbr>brlayers_optional_gitinfo.py<br>
-new file mode 100644<br>
-index 0000000..4be42a4<br>
---- /dev/null<br>
-+++ b/bitbake/lib/toaster/<wbr>bldcontrol/migrations/0007_<wbr>brlayers_opt=
-ional_gitinfo.py<br>
-@@ -0,0 +1,29 @@<br>
-+# -*- coding: utf-8 -*-<br>
-+from __future__ import unicode_literals<br>
-+<br>
-+from django.db import migrations, models<br>
-+<br>
-+<br>
-+class Migration(migrations.<wbr>Migration):<br>
-+<br>
-+=C2=A0 =C2=A0 dependencies =3D [<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 (&#39;bldcontrol&#39;, &#39;0006_brlayer_local=
-_source_<wbr>dir&#39;),<br>
-+=C2=A0 =C2=A0 ]<br>
-+<br>
-+=C2=A0 =C2=A0 operations =3D [<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 migrations.AlterField(<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 model_name=3D&#39;brlayer&#39;,<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 name=3D&#39;commit&#39;,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 field=3Dmodels.CharField(max_<wb=
-r>length=3D254, null=3DTrue),<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 ),<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 migrations.AlterField(<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 model_name=3D&#39;brlayer&#39;,<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 name=3D&#39;dirpath&#39;,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 field=3Dmodels.CharField(max_<wb=
-r>length=3D254, null=3DTrue),<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 ),<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 migrations.AlterField(<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 model_name=3D&#39;brlayer&#39;,<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 name=3D&#39;giturl&#39;,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 field=3Dmodels.CharField(max_<wb=
-r>length=3D254, null=3DTrue),<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 ),<br>
-+=C2=A0 =C2=A0 ]<br>
-diff --git a/bitbake/lib/toaster/<wbr>bldcontrol/models.py b/bitbake/lib/to=
-aster/<wbr>bldcontrol/models.py<br>
-index 83b6969..409614b 100644<br>
---- a/bitbake/lib/toaster/<wbr>bldcontrol/models.py<br>
-+++ b/bitbake/lib/toaster/<wbr>bldcontrol/models.py<br>
-@@ -126,13 +126,14 @@ class BuildRequest(models.Model):<br>
-=C2=A0# These tables specify the settings for running an actual build.<br>
-=C2=A0# They MUST be kept in sync with the tables in orm.models.Project*<br=
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Fri, Sep 16, 2016 at 1:58 AM, Pascal Bach <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:pascal.bach@siemens.com" target=3D"_blank">pascal.bach@siemens.c=
+om</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":1n1"=
+ class=3D"a3s aXjCH m15732581c0425444">When an update of the local copy is =
+required always try to fetch the update<br>
+from a premirror first.<br>
+The premirror should always have precedence over the upstream repository<br=
 >
+as updating from there might not work if BB_FETCH_PREMIRRORONLY,<br>
+BB_NO_NBB_ALLOWED_NETWORKS or BB_NO_NETWORK is set.<br>
 <br>
-+<br>
-=C2=A0class BRLayer(models.Model):<br>
--=C2=A0 =C2=A0 req=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D models.ForeignKey(<=
-wbr>BuildRequest)<br>
--=C2=A0 =C2=A0 name=C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D models.CharField(max_len=
-gth =3D 100)<br>
--=C2=A0 =C2=A0 giturl=C2=A0 =C2=A0 =C2=A0 =3D models.CharField(max_length =
-=3D 254)<br>
-+=C2=A0 =C2=A0 req =3D models.ForeignKey(<wbr>BuildRequest)<br>
-+=C2=A0 =C2=A0 name =3D models.CharField(max_length=3D<wbr>100)<br>
-+=C2=A0 =C2=A0 giturl =3D models.CharField(max_length=3D<wbr>254, null=3DTr=
-ue)<br>
-=C2=A0 =C2=A0 =C2=A0local_source_dir =3D models.CharField(max_length=3D<wbr=
->254, null=3DTrue)<br>
--=C2=A0 =C2=A0 commit=C2=A0 =C2=A0 =C2=A0 =3D models.CharField(max_length =
-=3D 254)<br>
--=C2=A0 =C2=A0 dirpath=C2=A0 =C2=A0 =C2=A0=3D models.CharField(max_length =
-=3D 254)<br>
-+=C2=A0 =C2=A0 commit =3D models.CharField(max_length=3D<wbr>254, null=3DTr=
-ue)<br>
-+=C2=A0 =C2=A0 dirpath =3D models.CharField(max_length=3D<wbr>254, null=3DT=
-rue)<br>
-=C2=A0 =C2=A0 =C2=A0layer_version =3D models.ForeignKey(Layer_<wbr>Version,=
- null=3DTrue)<br>
+This also gets rid of the special case for BB_FETCH_PREMIRRORONLY.<br>
 <br>
-=C2=A0class BRBitbake(models.Model):<br>
-<span class=3D"HOEnZb"><font color=3D"#888888">--<br>
-2.7.4<br>
+Signed-off-by: Pascal Bach &lt;<a href=3D"mailto:pascal.bach@siemens.com">p=
+ascal.bach@siemens.com</a>&gt;<br>
+---<br>
+=C2=A0lib/<span class=3D"il">bb</span>/fetch2/git.py | 9 ++-------<br>
+=C2=A01 file changed, 2 insertions(+), 7 deletions(-)<br>
 <br>
---<br>
-______________________________<wbr>_________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists=
-.<wbr>openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/<wbr>mailm=
-an/listinfo/bitbake-devel</a><br>
-</font></span></blockquote></div><br><br clear=3D"all"><br>-- <br><div clas=
-s=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><=
-div><div dir=3D"ltr"><div>=E0=B4=B8=E0=B5=81=E0=B4=9C=E0=B4=BF=E0=B4=A4=E0=
-=B5=8D =E0=B4=B9=E0=B4=B0=E0=B4=BF=E0=B4=A6=E0=B4=BE=E0=B4=B8=E0=B4=A8=E0=
-=B5=8D<br>Bangalore<br>&lt;Project&gt;Contributor to KDE project<br></div><=
-div>&lt;Project&gt;Contributor to Yocto project<br></div><div><a href=3D"ht=
-tp://fci.wikia.com/wiki/Anti-DRM-Campaign" target=3D"_blank">http://fci.wik=
-ia.com/wiki/Anti-DRM-Campaign</a><br>&lt;Blog&gt; <a href=3D"http://sujithh=
-.info" target=3D"_blank">http://sujithh.info</a><br></div><div>C-x C-c<br><=
-/div></div></div></div></div>
-</div></div></div></div></div></div></div>
+diff --git a/lib/<span class=3D"il">bb</span>/fetch2/git.py b/lib/<span cla=
+ss=3D"il">bb</span>/fetch2/git.py<br>
+index 1bec60a..cac2a87 100644<br>
+--- a/lib/<span class=3D"il">bb</span>/fetch2/git.py<br>
++++ b/lib/<span class=3D"il">bb</span>/fetch2/git.py<br>
+@@ -227,13 +227,8 @@ <span class=3D"il">class</span> Git(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return False<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0def try_premirror(self, ud, d):<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 # If we don&#39;t do this, updating an existin=
+g checkout with only premirrors<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 # is not possible<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 if d.getVar(&quot;BB_FETCH_<wbr>PREMIRRORONLY&=
+quot;, True) is not None:<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return True<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 if os.path.exists(ud.clonedir):<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return False<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 return True<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Always try premirror if an update is require=
+d<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 return self.need_update(ud, d)</div></blockquo=
+te></div><br>Will this result in fetching a mirror tarball even if you alre=
+ady have a clone in ud.clonedir? The previous logic always returned False i=
+f the clonedir existed..<br>-- <br><div class=3D"gmail_signature" data-smar=
+tmail=3D"gmail_signature">Christopher Larson<br>clarson at kergoth dot com<=
+br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Sen=
+ior Software Engineer, Mentor Graphics</div>
+</div></div>
 
---94eb2c07514cb016d4053c9de1af--
+--001a1140bcd2db3990053ca25683--
