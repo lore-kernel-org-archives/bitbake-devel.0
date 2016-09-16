@@ -1,49 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
-	[209.85.220.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 61AC5731D7
+Received: from mail-pa0-f43.google.com (mail-pa0-f43.google.com
+	[209.85.220.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 6399676F8C
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 16:22:57 +0000 (UTC)
-Received: by mail-pa0-f44.google.com with SMTP id wk8so27411159pab.1
+	Fri, 16 Sep 2016 16:22:59 +0000 (UTC)
+Received: by mail-pa0-f43.google.com with SMTP id cm16so27480299pac.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 09:22:58 -0700 (PDT)
+	Fri, 16 Sep 2016 09:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=xFXI57p6Ddtbx8bv8ooZckuxY9H7a7KgdAKHNfTj++c=;
-	b=moxlM84IjYTvAYg8E89G1VFeJuWYUSrSOohd3UclSmAie+7sqW+RY97TDwVnF7fzW9
-	C+NjRlf1YIOlW5+arL7ZyPhXz9i0rfFgxgHomhfo6+fPmg0EUjFB8zwa4xVyncmGmId7
-	ZOrJ3rBW4xw+l+ToxGOeIjBtp+V6lQuwhivPGM7+I4H/a1XHIBZgPEs+myNpzGVVMACg
-	O/x8d+zwVOmQW8LuqqB1//XAQFMjRJhxe/G5mC55SaG1+RvY0lS6w1NnPYq8S9lKxoKw
-	3dU76Yg8Z4MVwJnqMNSfBASAmXz9w/5SUlvbCTB0UWeGact/+0hoVI2xwjLUC2kvMvFH
-	w7AQ==
+	bh=o/oos6BsIBrTDD18zHQ4p3QNIsffSTDjavt42jd9//M=;
+	b=UNJa20GAW0PMMWqz/x8WkA9CqzvHO9cHpb1D5VQXG5HafKksW5CORahoWPfSAROnIi
+	tZUZgo2D+j2iDrrqwiwOnhnbo9rxJP4XkJNhNP5+a+y+bmHXJ36l2obFpdQmSLvh0MKc
+	Ej6OOZLr53uihMc15sNiSZAzm1H0/fZGcSv76IQbTftDlzyVXBYJ4Q29yBc4geexcXOK
+	S+ddD3fwWVhPGhmk0gOMWZxTeENGFAiRoTuLlyPTqXrvOD9TMEYXkIqqKjccIM/USrK8
+	bw6HgCuUcWDqiA/5Hw0ylvIE/FyMdI8+jfk+YQMfCAYrctVbFC8mfe8SXjfmi+oEFtsL
+	io2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=xFXI57p6Ddtbx8bv8ooZckuxY9H7a7KgdAKHNfTj++c=;
-	b=IsWKnkRfVwuqIlO4MGVwkr+cyew90cittlIiEz0TjuojbwrK4SysYwLmRoNWIrGu5e
-	LchODv3uTTmxd+vmI+NTqadtZmXrxuzUvRfL5PsJgBQlXRqWown0DaMpbhw02sBGyKtz
-	Uu0sn1QtXo5qjFhTLTUfq/m+Ix1OcHl2fqVhsLWXrmyHI9jN8yhVejJh8Xw8Cdbq+em/
-	83cIhitqEK/CVnhNm2R6iHpdjPC/2uU0OXAdH0Alt4x+1JK1dc9fSvGZQkwOCbSJtOyz
-	i1IDmZ8ZjSDOVOum2ZXonOPpxy1jWdA0/l7Kl3xKrhyMmGWBuABhwzl3p76Im9zPZDJQ
-	buMA==
-X-Gm-Message-State: AE9vXwN1x9R+B0Y9pLcMbrx6E2fEvr0FtFlapWAyf2AdhCPqc75mGE58ArlcbcAGUbMddsvZ
-X-Received: by 10.66.5.5 with SMTP id o5mr24329639pao.38.1474042978371;
-	Fri, 16 Sep 2016 09:22:58 -0700 (PDT)
+	bh=o/oos6BsIBrTDD18zHQ4p3QNIsffSTDjavt42jd9//M=;
+	b=KpROYCYama6u45sLrryyhPRw9ozdSbWDapH8zsQMOGphMu/aIdN/l5KUS4kBX58uHZ
+	ce2NsOdyPIhGNqAUZZg9NaBY6Ar69qHsgLTiGKcUHEu9xzIV+QrF2uWeQLqHDnScRph0
+	LUrTpeNTCHlP5H8gaSAxpm4haNP5PJwxDjNu7cQRL9Lkw4DUeBMOrKJvENHPsHL0e62D
+	UVcupnOkZG0u611r0hS/LwkQ83XKCISaIRZK1coNow8Bzbw3j0GOMf6g0i8W3WxbHHNo
+	XrNxggsMB1vAm/Hu26QrQ7YcpGofDUycuSthIOMzm0Dyhe1+CHi1Qb8xr7lw3Twcb02G
+	rfig==
+X-Gm-Message-State: AE9vXwPMoA5dKV6Gyc85j9WdjvI27JIQfNMIhpXTUeJWIw1D5JxBAvJLOWc1VJ/w53G5saOG
+X-Received: by 10.66.10.170 with SMTP id j10mr24343935pab.3.1474042980282;
+	Fri, 16 Sep 2016 09:23:00 -0700 (PDT)
 Received: from orion.ger.corp.intel.com (fmdmzpr04-ext.fm.intel.com.
 	[192.55.55.39]) by smtp.gmail.com with ESMTPSA id
-	bm8sm13336146pac.16.2016.09.16.09.22.56
+	bm8sm13336146pac.16.2016.09.16.09.22.58
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 16 Sep 2016 09:22:57 -0700 (PDT)
+	Fri, 16 Sep 2016 09:22:59 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Sep 2016 17:22:34 +0100
-Message-Id: <1474042955-12618-8-git-send-email-michael.g.wood@intel.com>
+Date: Fri, 16 Sep 2016 17:22:35 +0100
+Message-Id: <1474042955-12618-9-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
 References: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 7/8] runbuilds: code cleanup - remove unused imports
+Subject: [PATCH 8/8] toaster: unlock BuildEnvirnoment when build is done
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,42 +56,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Sep 2016 16:22:57 -0000
+X-List-Received-Date: Fri, 16 Sep 2016 16:23:00 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Fixed pylint warning:  W0611(unused-import): Unused import
+There is no need to lock build environment before changing
+build status as this operation is very fast. However, there
+is a need to unlock it after changing build status.
+
+Explicitly unlocked BuildEnvironment after build reaches
+final status SUCCEEDED, FAILED or CANCELLED. This should
+allow runbuilds process to pickup next build faster.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/bldcontrol/management/commands/runbuilds.py | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ lib/bb/ui/buildinfohelper.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
-index 3421726..7f7a5a9 100644
---- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
-+++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
-@@ -1,17 +1,14 @@
--from django.core.management.base import NoArgsCommand, CommandError
-+from django.core.management.base import NoArgsCommand
- from django.db import transaction
- from django.db.models import Q
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index c93ee94..2246960 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -1524,9 +1524,7 @@ class BuildInfoHelper(object):
+             return
  
- from bldcontrol.bbcontroller import getBuildEnvironmentController
--from bldcontrol.bbcontroller import ShellCmdException, BuildSetupException
- from bldcontrol.models import BuildRequest, BuildEnvironment
- from bldcontrol.models import BRError, BRVariable
+         br_id, be_id = self.brbe.split(":")
+-        be = BuildEnvironment.objects.get(pk = be_id)
+-        be.lock = BuildEnvironment.LOCK_LOCK
+-        be.save()
++
+         br = BuildRequest.objects.get(pk = br_id)
  
--from orm.models import Build, ToasterSetting, LogMessage, Target
-+from orm.models import Build, LogMessage, Target
+         # if we're 'done' because we got cancelled update the build outcome
+@@ -1543,6 +1541,10 @@ class BuildInfoHelper(object):
+         else:
+             br.state = BuildRequest.REQ_FAILED
+         br.save()
++
++        be = BuildEnvironment.objects.get(pk = be_id)
++        be.lock = BuildEnvironment.LOCK_FREE
++        be.save()
+         signal_runbuilds()
  
--import os
- import logging
--import sys
- import traceback
- import signal
- 
+     def store_log_error(self, text):
 -- 
 2.7.4
 
