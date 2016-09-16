@@ -1,49 +1,46 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-oi0-f67.google.com (mail-oi0-f67.google.com
-	[209.85.218.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 2520B65CBF
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
+	[209.85.220.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 108A965CBF
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 16:20:22 +0000 (UTC)
-Received: by mail-oi0-f67.google.com with SMTP id w11so7227533oia.0
+	Fri, 16 Sep 2016 16:22:42 +0000 (UTC)
+Received: by mail-pa0-f44.google.com with SMTP id cm16so27478187pac.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 09:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc;
-	bh=K2tAPpI6qdWZvDULMp0hjTRRv8n/BmKAA+4ZdOCyFMU=;
-	b=JmmEMjRnVmLreWvU1MoHGcFxVo7QY9JBCfntKXZ/ncwcAHdGM74MxcjR5CeO0FAa+I
-	WGeP9MLJ/S6QW/usV8zoizku7xLG81TZxZv37b3W7HedRkoIxhZLurSZd83d2JdP/zPV
-	U+wsK7mR6TfC9zFs40MRAlgrbdCE8xgWN7DjeeGwoGoeEFq/6hoLnoWF1rZn2p4rrjzm
-	WlkpL0fgB4z5nUQwH8LO/ORpb6qBMwr24ZI5KdPZA+q6IwtovvozLznP5z3dj3WpWvH3
-	4IA1+wmzRu0yyRkxNJVXjn59kozcc/KGznkB5HyJp5Yd5fVCkYecJ4Ysfa7gxRs1/jv5
-	ROyQ==
+	Fri, 16 Sep 2016 09:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=8/5FcqU0hL7AloRi9GcSvqMbs2I6V0K+BuzXP6O4PGs=;
+	b=yEzg6CdZpzkxFiEpPEgmomdU18UlsNArr+m0egir0ivxRLDP5D0ZI53MjsyPrnzG4N
+	37NWYDHCLQrHXYwaGWHko8IzAIZ4Dp/D4Erug9NvQRt8eepiA6BqOcd9wOXO0OzgAI5+
+	dhxPAlXThSMBt8Ly3LGI0Rw2bMz+Aan44qVJMMBM49/LYn19O2lcR6/0rHQnaO2WvSKl
+	p9RcDmrdJuGCUkFD8Goxu6LrqK4C0GkiT+TVjDQPsQ9j2aS9fDj7ckWtJgpdpa9PL996
+	4sobgXLuvlPmqmlQcCtk7PWzx5U5ssowXhLyOx6PXTcXz7ha7Fn1edkg4BFxtzBsbaXW
+	bwaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
-	:date:message-id:subject:to:cc;
-	bh=K2tAPpI6qdWZvDULMp0hjTRRv8n/BmKAA+4ZdOCyFMU=;
-	b=UxhIe2HZgGxbpXvRlruaR/rgu/GNaVMkO/9MYvXYkhZZxqBBM7KupqvvJNAeS4fCAC
-	5M+nFPo8qHY9fdNIbBO2ffRpO9MDrSTsjws7MuaSV6x6TSS8NmZwuYBmHixDdW9iOWQF
-	cl/k8wXGbi1m5VuvbdrKj/LRcB+gui2csdBetRY9J5QZoCC/3bIwU8eARZNMB0YCaKWM
-	t7PEFg1YrjNUjbW9x265uBg1pckWKfOQKThWaOFn7UMQdZm7G/oyggqiW7QewPqG2nlp
-	UZcrl+vCQoEdSbMsq9I+C0MtJju3uEGNywPqnncejav7eHTc4uP/QEU/q3gGiifIpewV
-	3AMA==
-X-Gm-Message-State: AE9vXwN91mQj8epabWsAy5mzcGKQX2HR/9G0uib/aDhnc06MmIVu79xWyV6TzfgbpodBZmk3AxYgjCwn60H6uw==
-X-Received: by 10.157.16.82 with SMTP id o18mr6973448oto.111.1474042823127;
-	Fri, 16 Sep 2016 09:20:23 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.157.13.194 with HTTP; Fri, 16 Sep 2016 09:20:01 -0700 (PDT)
-In-Reply-To: <1474016293-26538-1-git-send-email-pascal.bach@siemens.com>
-References: <1474016293-26538-1-git-send-email-pascal.bach@siemens.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Fri, 16 Sep 2016 09:20:01 -0700
-X-Google-Sender-Auth: 4aDSMlXNfk9eEvSmPehwp7QhhxU
-Message-ID: <CABcZAN=E+cw8Dvay34EObcDcyoUh7OPUmrvx6iuQQ89jTHYk_A@mail.gmail.com>
-To: Pascal Bach <pascal.bach@siemens.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] fetch2/git: always use premirror first if update is required
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=8/5FcqU0hL7AloRi9GcSvqMbs2I6V0K+BuzXP6O4PGs=;
+	b=Fg95eTr1Aod2B8A3b72yG+IjzhFHv1Mk/asyLJEdycGtR9y1LBN1bUxsxU73Jb8IMu
+	FpWxinmmjiE9P7eJcRHa19zjZDXx8K9gIToERuRNCEZEM0SOx22YHJyw3vXgNvAVk9lk
+	2O2nz5tqbULAvL+H/CnUcfJNX1XuJ3UBsunH+4eW6Oo5v16iOfzUsjSfoEJO5v391IsW
+	83LUKEU1w/c7NR17I9oFAtGdmMVt6Sv1E9sgAQ9BWzngE2W4aNgqUJgJ0RM0MPgbnG/2
+	juuc36+LN0ciULJSHJqq3ZpLw9taW0AK05OdUtex9gw5PNQv3VxGkzKubaFg2bWk+kGL
+	vmFw==
+X-Gm-Message-State: AE9vXwMhW6ceCW1w3D1PMmJeUfN1ubss4QfNzkORJ7uIQZpQQh22Sze0gVUiORWAX0jyWVjN
+X-Received: by 10.66.51.129 with SMTP id k1mr4371751pao.5.1474042963375;
+	Fri, 16 Sep 2016 09:22:43 -0700 (PDT)
+Received: from orion.ger.corp.intel.com (fmdmzpr04-ext.fm.intel.com.
+	[192.55.55.39]) by smtp.gmail.com with ESMTPSA id
+	bm8sm13336146pac.16.2016.09.16.09.22.41
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 16 Sep 2016 09:22:42 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 16 Sep 2016 17:22:27 +0100
+Message-Id: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 0/8]
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,110 +53,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Sep 2016 16:20:23 -0000
-Content-Type: multipart/alternative; boundary=001a1140bcd2db3990053ca25683
+X-List-Received-Date: Fri, 16 Sep 2016 16:22:44 -0000
 
---001a1140bcd2db3990053ca25683
-Content-Type: text/plain; charset=UTF-8
+Series to improve process handling of runbuilds and one additional patch for fixing checking out HEAD as a reference. Changes reviewed on toaster mailing list.
 
-On Fri, Sep 16, 2016 at 1:58 AM, Pascal Bach <pascal.bach@siemens.com>
-wrote:
+Copy of process handling patchset cover letter:
 
-> When an update of the local copy is required always try to fetch the update
-> from a premirror first.
-> The premirror should always have precedence over the upstream repository
-> as updating from there might not work if BB_FETCH_PREMIRRORONLY,
-> BB_NO_NBB_ALLOWED_NETWORKS or BB_NO_NETWORK is set.
->
-> This also gets rid of the special case for BB_FETCH_PREMIRRORONLY.
->
-> Signed-off-by: Pascal Bach <pascal.bach@siemens.com>
-> ---
->  lib/bb/fetch2/git.py | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
->
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index 1bec60a..cac2a87 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -227,13 +227,8 @@ class Git(FetchMethod):
->          return False
->
->      def try_premirror(self, ud, d):
-> -        # If we don't do this, updating an existing checkout with only
-> premirrors
-> -        # is not possible
-> -        if d.getVar("BB_FETCH_PREMIRRORONLY", True) is not None:
-> -            return True
-> -        if os.path.exists(ud.clonedir):
-> -            return False
-> -        return True
-> +        # Always try premirror if an update is required
-> +        return self.need_update(ud, d)
->
+This patchset introduced a bit lighter way of handling builds.
+Instead of polling database every second we process builds only when runbuilds
+receives SIGUSR1. The signal is sent when build is either scheduled, canceled or
+finished. A little bit of code cleanup is also included into this patchset.
 
-Will this result in fetching a mirror tarball even if you already have a
-clone in ud.clonedir? The previous logic always returned False if the
-clonedir existed..
+Test instructions:
+ - Create multiple builds in UI. Check if they'll be built sequentially
+ - Create multiple builds in UI, cancel one. Check if the next one starts building.
+ - Repeat first two test cases when command line build is run. Only one UI build
+   should be run in parallel with command line build.
+ - Test any other combinations of running and cancelling builds to make sure
+   there are no regressions.
+
+
+
+Ed Bartosh (8):
+  toaster: fix checking of repository url
+  toaster: implement signal_runbuilds function
+  toaster: notify runbuilds when build status changes
+  runbuilds: process builds on SIGUSR1
+  runbuilds: process builds on start
+  runbuilds: code cleanup - whitespaces, long lines
+  runbuilds: code cleanup - remove unused imports
+  toaster: unlock BuildEnvirnoment when build is done
+
+ lib/bb/ui/buildinfohelper.py                       | 12 ++++--
+ lib/toaster/bldcontrol/localhostbecontroller.py    |  2 +-
+ .../bldcontrol/management/commands/runbuilds.py    | 49 ++++++++++------------
+ lib/toaster/orm/models.py                          | 10 ++++-
+ 4 files changed, 42 insertions(+), 31 deletions(-)
+
 -- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+2.7.4
 
---001a1140bcd2db3990053ca25683
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Fri, Sep 16, 2016 at 1:58 AM, Pascal Bach <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:pascal.bach@siemens.com" target=3D"_blank">pascal.bach@siemens.c=
-om</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":1n1"=
- class=3D"a3s aXjCH m15732581c0425444">When an update of the local copy is =
-required always try to fetch the update<br>
-from a premirror first.<br>
-The premirror should always have precedence over the upstream repository<br=
->
-as updating from there might not work if BB_FETCH_PREMIRRORONLY,<br>
-BB_NO_NBB_ALLOWED_NETWORKS or BB_NO_NETWORK is set.<br>
-<br>
-This also gets rid of the special case for BB_FETCH_PREMIRRORONLY.<br>
-<br>
-Signed-off-by: Pascal Bach &lt;<a href=3D"mailto:pascal.bach@siemens.com">p=
-ascal.bach@siemens.com</a>&gt;<br>
----<br>
-=C2=A0lib/<span class=3D"il">bb</span>/fetch2/git.py | 9 ++-------<br>
-=C2=A01 file changed, 2 insertions(+), 7 deletions(-)<br>
-<br>
-diff --git a/lib/<span class=3D"il">bb</span>/fetch2/git.py b/lib/<span cla=
-ss=3D"il">bb</span>/fetch2/git.py<br>
-index 1bec60a..cac2a87 100644<br>
---- a/lib/<span class=3D"il">bb</span>/fetch2/git.py<br>
-+++ b/lib/<span class=3D"il">bb</span>/fetch2/git.py<br>
-@@ -227,13 +227,8 @@ <span class=3D"il">class</span> Git(FetchMethod):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return False<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0def try_premirror(self, ud, d):<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 # If we don&#39;t do this, updating an existin=
-g checkout with only premirrors<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 # is not possible<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if d.getVar(&quot;BB_FETCH_<wbr>PREMIRRORONLY&=
-quot;, True) is not None:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return True<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if os.path.exists(ud.clonedir):<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return False<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 return True<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Always try premirror if an update is require=
-d<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 return self.need_update(ud, d)</div></blockquo=
-te></div><br>Will this result in fetching a mirror tarball even if you alre=
-ady have a clone in ud.clonedir? The previous logic always returned False i=
-f the clonedir existed..<br>-- <br><div class=3D"gmail_signature" data-smar=
-tmail=3D"gmail_signature">Christopher Larson<br>clarson at kergoth dot com<=
-br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Sen=
-ior Software Engineer, Mentor Graphics</div>
-</div></div>
-
---001a1140bcd2db3990053ca25683--
