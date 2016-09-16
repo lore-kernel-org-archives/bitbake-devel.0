@@ -1,49 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
 Received: from mail-pa0-f41.google.com (mail-pa0-f41.google.com
 	[209.85.220.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 151F0736B6
+	by mail.openembedded.org (Postfix) with ESMTP id 530FA731F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 16:22:44 +0000 (UTC)
-Received: by mail-pa0-f41.google.com with SMTP id oz2so22896101pac.2
+	Fri, 16 Sep 2016 16:22:46 +0000 (UTC)
+Received: by mail-pa0-f41.google.com with SMTP id oz2so22896302pac.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 09:22:45 -0700 (PDT)
+	Fri, 16 Sep 2016 09:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=AWEK8gnxhapfjoKzU4GbidNPMT/MigUFXFEo145oEpA=;
-	b=djabPNlwgE3bjvuMhe+KRMzRLxmV//B6QEP+gc0LCh9XQ7DwkhFKxDhWxHCRgpGAcA
-	aDqEqnWZoQX9qGWwXOpns3BbCNQCW0hDE4sv/nRbuKB73EOVexntc0CWi3a+lyebRVy1
-	3XnfE5yc3s0FNicJvueaSrKHv3aCE1t0EpKP3X2COWSl00j/QC0IvPeIOZ4DmjFEVkjx
-	91LUzewa9yDfTFOmVG82kfeJbt8QOhhUZGdt1VcauLKJr5XPJCBIbq2lSiIhJl2sGgcv
-	PU9xMrMNoRb40L4v8JWw2X3N5jy2mgADl94l3ckXttOlp9EEt7zwbymImuLyqCa1dukH
-	PglQ==
+	bh=hE84opXUlz6QOr9j5g8piBc4er1AoCZlLqVZ+N5AjfM=;
+	b=RQ7rl7xU2OjXc9fG0MPjUp5XqgmyKJLbLlGHUvOLEe8qeXaxi3Z8GRrLZ6k207Mp1Q
+	Q9vt9AtPqp7Tcuh6cpnaU7EA6J6UKU5Fv1AEA1quoy8X9UikVCaJBdkuojF/zKgVtAkr
+	AHS3QxKjIErpmnHJ3IyG03T33jKofCkoyrM4AkfmvBf2fw4Ku4TbJZdPgV8tNxzCmMrD
+	nXzdbnJqX+Lp/OAr5mzefTMep8S8hZDSb9QyDgfhTQQzt9F+/3PQ7ZIT90+nv8ioWyE+
+	D0gUbxGEEPFMqACK9Wc3nQJ9ZcC+OWTZPs9dpbrTeja+vShPDQZhPjGOfxj8S3r+P9hE
+	X8UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=AWEK8gnxhapfjoKzU4GbidNPMT/MigUFXFEo145oEpA=;
-	b=NnJ0MSgv+fIR1WS9dDnQVovNP+f4l2EAFsbCgjzPn+8qyD8PkSNXOf+j1hWWvVg+Vn
-	xpHm/BUTFmZZoSyJyHOMtELCBFTNTV8/JDLUdFKEqYFIe/y45nQ645d6NRXSDOG8tPO6
-	DiBy5SIZvtRHF2pWowCQ72JIOC82TtCpqAfZwIuQsQ/9R8eOHhpwQv3fon2c144QUk7T
-	Hq1H02Q0OtgHoY9Sa7qaXpaB2+/drT3mz4AKRWaKT+++osM4OXMAKZ10bDFgKUlxa+yw
-	BL36bT3olVPWK/Fnrh2I2+k5M0BNH5yF0u82PRY1/xfpSBxFrK7ugusoM21HNP0wVN1e
-	ODww==
-X-Gm-Message-State: AE9vXwMKKJVqy3oc9VDH0ygWbA4V8jnq1EExvcd28w3smwsqkqW4qen0vaxixrtcY4qr856c
-X-Received: by 10.66.100.225 with SMTP id fb1mr24389594pab.4.1474042965357;
-	Fri, 16 Sep 2016 09:22:45 -0700 (PDT)
+	bh=hE84opXUlz6QOr9j5g8piBc4er1AoCZlLqVZ+N5AjfM=;
+	b=Ae36nVa7bEfkk2TlDpfENQCDcUwVWu8cGydRZ94/Xl6ZCiXqGfEyEFc9nZun6QS1B1
+	R9Ypbjmlyy2bkaApiTkjyWieaGyNYdmBl54w983KUbhDi39UUAIEWuT9C0Lvi5pRGV7I
+	LuEsjEYl1bYZuUllLceXFM72Gw/zNnivk5G6k7M2kefsUo1lYLtk7jxGEdvp+u8JEeq8
+	jEiOObVPOSDDNEKJDAkbN9Hg+d27w9DmcYc/j0mnNVOKJxy6e17mHJVKmM9xM+bGtixD
+	att4MCXvOoyzGBLuqSQuDzgX0m7t4Uvq68rMd359LFZECWGH/35rZiHw7uhbAy0JPEni
+	c9jA==
+X-Gm-Message-State: AE9vXwPijEC1wQUzS+R4/luXrwPAuN+JTV4TPPMvzwm2YSjQfiJ+zbN5gOQC5ohUXu7fq54C
+X-Received: by 10.66.7.8 with SMTP id f8mr24307813paa.91.1474042967342;
+	Fri, 16 Sep 2016 09:22:47 -0700 (PDT)
 Received: from orion.ger.corp.intel.com (fmdmzpr04-ext.fm.intel.com.
 	[192.55.55.39]) by smtp.gmail.com with ESMTPSA id
-	bm8sm13336146pac.16.2016.09.16.09.22.43
+	bm8sm13336146pac.16.2016.09.16.09.22.45
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 16 Sep 2016 09:22:44 -0700 (PDT)
+	Fri, 16 Sep 2016 09:22:46 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Sep 2016 17:22:28 +0100
-Message-Id: <1474042955-12618-2-git-send-email-michael.g.wood@intel.com>
+Date: Fri, 16 Sep 2016 17:22:29 +0100
+Message-Id: <1474042955-12618-3-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
 References: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 1/8] toaster: fix checking of repository url
+Subject: [PATCH 2/8] toaster: implement signal_runbuilds function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,36 +56,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Sep 2016 16:22:45 -0000
+X-List-Received-Date: Fri, 16 Sep 2016 16:22:47 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Toaster checks gir repository url is the same as locally cloned before
-checking it out to existing local clone. This check can be skipped if
-commit is 'HEAD' as in this case repository is not hard reset to
-commit, so the local clone won't be changed.
-
-[YOCTO #10163]
+This function reads pid of runbuilds process from
+BUILDDIR/.runbuilds.pid and sends SIGUSR1 to it. signal_runbuilds
+function will be used in Toaster code to notify runbuilds when
+build is scheduled, finished or cancelled.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/bldcontrol/localhostbecontroller.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/orm/models.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index 39de6dd..a64e89b 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -156,7 +156,7 @@ class LocalhostBEController(BuildEnvironmentController):
-                 try:
-                     localremotes = self._shellcmd("git remote -v",
-                                                   localdirname)
--                    if not giturl in localremotes:
-+                    if not giturl in localremotes and commit != 'HEAD':
-                         raise BuildSetupException("Existing git repository at %s, but with different remotes ('%s', expected '%s'). Toaster will not continue out of fear of damaging something." % (localdirname, ", ".join(localremotes.split("\n")), giturl))
-                 except ShellCmdException:
-                     # our localdirname might not be a git repository
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 8ee0c87..38d014a 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -33,9 +33,10 @@ from django.conf import settings
+ import django.db.models.signals
+ 
+ import sys
+-import os.path
++import os
+ import re
+ import itertools
++from signal import SIGUSR1
+ 
+ import logging
+ logger = logging.getLogger("toaster")
+@@ -1736,6 +1737,11 @@ def invalidate_cache(**kwargs):
+     except Exception as e:
+       logger.warning("Problem with cache backend: Failed to clear cache: %s" % e)
+ 
++def signal_runbuilds():
++    """Send SIGUSR1 to runbuilds process"""
++    with open(os.path.join(os.getenv('BUILDDIR'), '.runbuilds.pid')) as pidf:
++        os.kill(int(pidf.read()), SIGUSR1)
++
+ django.db.models.signals.post_save.connect(invalidate_cache)
+ django.db.models.signals.post_delete.connect(invalidate_cache)
+ django.db.models.signals.m2m_changed.connect(invalidate_cache)
 -- 
 2.7.4
 
