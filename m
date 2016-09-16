@@ -1,46 +1,49 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pf0-f194.google.com (mail-pf0-f194.google.com
-	[209.85.192.194])
-	by mail.openembedded.org (Postfix) with ESMTP id CF4DF731D7
+Received: from mail-pa0-f65.google.com (mail-pa0-f65.google.com
+	[209.85.220.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 83A46731D7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 20:05:15 +0000 (UTC)
-Received: by mail-pf0-f194.google.com with SMTP id q2so1331481pfj.0
+	Fri, 16 Sep 2016 20:05:17 +0000 (UTC)
+Received: by mail-pa0-f65.google.com with SMTP id my20so836476pab.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 13:05:16 -0700 (PDT)
+	Fri, 16 Sep 2016 13:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=b6gZHvgvnaEqXbLRgRu2tTtKBR6pbpc07e2jyTm9yNs=;
-	b=MPoh6jMgABuAFuIGXcBNXUDnjW4v6cl42BFXToetvckvGyYWP9QSFZysESrNmutRfl
-	GsDSCPr6q6NLFfKEABeAcbUdHs2UgpUateDf6WpsIlK0pngQ9Szh/oNTF0yaDgTNI2QS
-	DxTpTY4KokdnBsq3e419oyfEvtVf5kcqs8BlKXag24QFJzJY8GwaZPNijOBgW/ltgaRT
-	l+tuY1cu8swjzHvw6trcB5pnYpaN6u8liyLgPnsIbmZ8JWqjXLYDO9IfnsGDe41Z9Oic
-	3YTxLOeBHM1xrDkY42xkaFBgiBRRfVajWMASvRzUtAgDMEGJwCD6mB7LCiLRIPR7wibV
-	sj7Q==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=GHa+2lZ4p79sFUsQMFm5ud4GN7bZdkMBi8GxwgaaAlc=;
+	b=xS/avdpclU//NVAH0yl2CqlxsMRkrYEfN7VrLU74YxDF7Igy5UXqeh7FJDhjixlUuA
+	5/4aHAeZTpye8QPbBxSyOeRqodyF6fBwFY/Pa0K/NLi8oiK5ncOwCFaZwDbMtzXhBhhr
+	x6JiwXYceXTlweMrUjpGFAsg2BeT7P9hYlrOpZkAT69SfNvtf6E50iNxosZK3fDxrGeo
+	ID769nLI779WOJ5bwSoo9KnrV9tdxoF7LOE8F2bA+nDwK2uY9ZMhiEfZNH50jg+WxeiV
+	NJABmAAUDU2uhiV4De68vzKYDhVeDdMoPQhAAFjo/QjoB1R/3TjRDTO5uhUQ2xM6udqT
+	HABA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=b6gZHvgvnaEqXbLRgRu2tTtKBR6pbpc07e2jyTm9yNs=;
-	b=Rt0RRvZfbt8QcgNgmcHRN5ZaMCBn7JgdTSRUnWtG/+onRt17pO5n1jrsZ6TFfPzHYX
-	7Woa1WmlphOmxtmWxW/NvAH46SK22G04nyzqnor81pIKg6OoH6zUkUlg2Af91pYKTXlB
-	S4hnwk+1ij3sA6UL6FSmhSuTTHa9g0wrrSLmDCCgJsXGaOmDnxL4P2IOLEOZbmdOccSy
-	x3IxdaWA9rKK+9w/5xb0C9PQZou7NOWzE9rZ1rAHWBI6p9XT1YzAV6K8NlfWy/7G05WA
-	Kx8ZnR/Ln83BZKWx/J1ot5EnLUCGkP5bwXAmnQv56N9NKmrS/1kwNIDUouWbFndhASQq
-	7qOQ==
-X-Gm-Message-State: AE9vXwPLBt1QmkI4ayn684BuId6L3gMNYdF/AW7TkRiWNhlZv3RadrS58x1oi0kIUjMTMg==
-X-Received: by 10.98.113.135 with SMTP id m129mr25553036pfc.41.1474056316253; 
-	Fri, 16 Sep 2016 13:05:16 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=GHa+2lZ4p79sFUsQMFm5ud4GN7bZdkMBi8GxwgaaAlc=;
+	b=btM7QOg/Wy+e4IWvBluJRiZUVYvW0ESAVsjnzPLgJwNfIwi/X9+2y77qjkbrnwvsSG
+	IBIbFkqecrtiRJVCCvm0eE0gRMVZHUk16OWvSvp0+bR/ja1P1MmQNKvxMLzfQddnoO6Q
+	qCEh7/R8SZl0SvIvUbp143O+btpD9uw/s9iL/eSIF8EkEJitd/Gzr+00A/45rzoIK1I9
+	K+eCT/0uThfL1CnINXPskeaFmRQhpwMJSEfM5C21y8r+fk6BkjYt4z2DxZCs51dNwUsx
+	S/ASqwEAxn4XwlEzm1tDTdemlvDkFK6i34ersKwdg4r2h1JqqzUz8pcHVyR/SJWAoUh6
+	GVCg==
+X-Gm-Message-State: AE9vXwOFq6hAdgI/zhrUM5tRBvOj81kuMJQ5kcC1fU9Zfws07crT653Vw8oTqwxls1RS4Q==
+X-Received: by 10.66.120.69 with SMTP id la5mr15417752pab.65.1474056318015;
+	Fri, 16 Sep 2016 13:05:18 -0700 (PDT)
 Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
 	by smtp.gmail.com with ESMTPSA id
-	h123sm54113642pfe.69.2016.09.16.13.05.14
+	h123sm54113642pfe.69.2016.09.16.13.05.16
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 16 Sep 2016 13:05:14 -0700 (PDT)
+	Fri, 16 Sep 2016 13:05:16 -0700 (PDT)
 From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Sep 2016 13:05:11 -0700
-Message-Id: <1474056312-13817-1-git-send-email-kergoth@gmail.com>
+Date: Fri, 16 Sep 2016 13:05:12 -0700
+Message-Id: <1474056312-13817-2-git-send-email-kergoth@gmail.com>
 X-Mailer: git-send-email 2.8.0
+In-Reply-To: <1474056312-13817-1-git-send-email-kergoth@gmail.com>
+References: <1474056312-13817-1-git-send-email-kergoth@gmail.com>
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCHv2 1/2] bb.build: in _exec_task, catch BBHandledException
+Subject: [PATCHv2 2/2] bb.build: in _exec_task, catch errors from TaskStarted
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,29 +56,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Sep 2016 20:05:16 -0000
+X-List-Received-Date: Fri, 16 Sep 2016 20:05:17 -0000
 
 From: Christopher Larson <chris_larson@mentor.com>
 
-We don't want a traceback for this exception, we need to catch it, fire
-TaskFailed, and return failure.
+We want any exceptions raised by the TaskStarted event handlers to be caught
+rather than unconditionally hitting the exception formatting + traceback in
+exec_task, otherwise we can't cleanly exit the task with a nice message from
+such a handler.
+
+This is done via a separate try/catch block, to avoid firing TaskFailed if all
+the TaskStarted event handlers didn't complete, otherwise the bitbake UIs get
+unhappy.
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 ---
- lib/bb/build.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/bb/build.py | 39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
 
 diff --git a/lib/bb/build.py b/lib/bb/build.py
-index fcf0149..2ed0441 100644
+index 2ed0441..b74557a 100644
 --- a/lib/bb/build.py
 +++ b/lib/bb/build.py
-@@ -575,6 +575,9 @@ def _exec_task(fn, task, d, quieterr):
-             logger.error(str(exc))
-             event.fire(TaskFailed(task, logfn, localdata, errprinted), localdata)
-         return 1
-+    except bb.BBHandledException:
-+        event.fire(TaskFailed(task, logfn, localdata, True), localdata)
-+        return 1
+@@ -560,24 +560,29 @@ def _exec_task(fn, task, d, quieterr):
+ 
+     flags = localdata.getVarFlags(task)
+ 
+-    event.fire(TaskStarted(task, logfn, flags, localdata), localdata)
+     try:
+-        for func in (prefuncs or '').split():
+-            exec_func(func, localdata)
+-        exec_func(task, localdata)
+-        for func in (postfuncs or '').split():
+-            exec_func(func, localdata)
+-    except FuncFailed as exc:
+-        if quieterr:
+-            event.fire(TaskFailedSilent(task, logfn, localdata), localdata)
+-        else:
+-            errprinted = errchk.triggered
+-            logger.error(str(exc))
+-            event.fire(TaskFailed(task, logfn, localdata, errprinted), localdata)
+-        return 1
+-    except bb.BBHandledException:
+-        event.fire(TaskFailed(task, logfn, localdata, True), localdata)
+-        return 1
++        try:
++            event.fire(TaskStarted(task, logfn, flags, localdata), localdata)
++        except BaseException:
++            return 1
++
++        try:
++            for func in (prefuncs or '').split():
++                exec_func(func, localdata)
++            exec_func(task, localdata)
++            for func in (postfuncs or '').split():
++                exec_func(func, localdata)
++        except FuncFailed as exc:
++            if quieterr:
++                event.fire(TaskFailedSilent(task, logfn, localdata), localdata)
++            else:
++                errprinted = errchk.triggered
++                logger.error(str(exc))
++                event.fire(TaskFailed(task, logfn, localdata, errprinted), localdata)
++            return 1
++        except bb.BBHandledException:
++            event.fire(TaskFailed(task, logfn, localdata, True), localdata)
++            return 1
      finally:
          sys.stdout.flush()
          sys.stderr.flush()
