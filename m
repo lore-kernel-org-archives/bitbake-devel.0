@@ -1,49 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pa0-f49.google.com (mail-pa0-f49.google.com
-	[209.85.220.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 4AAFC73285
+Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
+	[209.85.220.44])
+	by mail.openembedded.org (Postfix) with ESMTP id A71A073D27
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 16:22:49 +0000 (UTC)
-Received: by mail-pa0-f49.google.com with SMTP id wk8so27410276pab.1
+	Fri, 16 Sep 2016 16:22:51 +0000 (UTC)
+Received: by mail-pa0-f44.google.com with SMTP id id6so27412717pad.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 09:22:50 -0700 (PDT)
+	Fri, 16 Sep 2016 09:22:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=PD1Is5wFTvq30yhdkinmZLK+Dz+Z3ZXhk89iIi4Z9M0=;
-	b=fol3d73GoOldy+TGdIoTaMXvTJnxbYprsSUTQdIB6boENPNQfzS4w0XojW4/1BfzZp
-	Wmwm/jL7/uy+RcuhOdJuKwS950q22UKObRvu2odEWlBr7T5kWf3UYW7Fu0dOPqoI0c0V
-	FUOJuToJiMpfCs8rL5j/JhvUsD1mLJC3zksw4vPnElz8UlT3wjZCaenQmPbGmaf9ZDWz
-	0QRUbDC882Szz0rVCEP4ODBVwqejt7tmbJPQTNlylJuCcQdYTOOlxIZBCoZYYADN7duH
-	vYoEifiGzggpKrKScyzOSPtrerJwMWFrxf6l6MZ1iKxDBi8MTFwvt00DxfO4udB9TKLJ
-	r24Q==
+	bh=b2VzoFSszCEXJJ8tqfWRiGa0Ya/6xdB6N4C1ewvtRlU=;
+	b=1SuZO8wz6ss0e/+X94uc5zXiV09FoHAVQ1pS/ZQXbqRxDxoUpyoJviPW5vk2r/Z4Ja
+	FuZYc4/Kq9wKW6IenIkhhbtszhmKO7RMOQmrO5E70wDnsyAIz6QtzCRYC532Roaxy7q8
+	QeLA4ZKFHplg7WwhQxFwEJkGYSeb4/YMTwrjdp7tVbFoyzIWOKC3V73SHvcVsWc6/lj5
+	z2oQl5mtBlOBeHpdDXiy7MAxSPPfDoE5ta+UqJ0VWRy8Jh5J1Pb9bQWGNIE8FGCeeDsf
+	apPEjEmwdeC2KjUvoChWYHePGwOlzGSZZZvbpNzGfquf+f5Gv//PnOcqMFN2vj2XMVGQ
+	gzDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=PD1Is5wFTvq30yhdkinmZLK+Dz+Z3ZXhk89iIi4Z9M0=;
-	b=RJ5eGm3BQllQ68PvD1XkdqX2q7HWfXBRZhudP8APxZUF4lmK9F3DoqyFPH3m8Hwteq
-	UuSabiZutNcd0xM4Q3dMgFvIEOtK3votxDUbEpg8aW34ktqQle9RhWFPFt51RzUGq2dd
-	fLprvn5JRn4UHKbhY6Q8SEiASUirCKJP1AYukZ4J6ZDNov4d/BR/G2p+Vwue9Keqh71G
-	enUtm137TrSENc2ki5RtgfaEAKccJw1p4D2a/ENuxyVL/3aa2grQuq8AqxakuXAhgqH2
-	zyVAPYn+DNbhEKUEyp64JVXu8Rs0jVRyZlsDBgcJuMpLvXmwAMjNbAUn9ejSWd2nz8iy
-	kmuw==
-X-Gm-Message-State: AE9vXwMJcZYIAR/h3J1nChR94aCxdfXa8+N2Qy1B2mMSBKRKu4c+lJroQi1JEeIKmN3mMrmG
-X-Received: by 10.66.224.101 with SMTP id rb5mr24614695pac.45.1474042970518;
-	Fri, 16 Sep 2016 09:22:50 -0700 (PDT)
+	bh=b2VzoFSszCEXJJ8tqfWRiGa0Ya/6xdB6N4C1ewvtRlU=;
+	b=Gx2Cu1pQ6SXA1R7URdilpJhMoSTMu6C+EhPVrvHNc0nzhVpBDtO7sn/YoOUCdtvqaP
+	OuVp0WP5JgB3WZyP2rtNu9KY6DtI1nRdpp2B6wN4KlfKpsLy7+3uOKlPmPH8Oq6SIVnt
+	Bg+awvekX375rKAY1wj2Qg5O0cTOfKgWCQu6J7s8PWmzssPOGIAlMPgjCsOHZGG8y5iY
+	JMqsymbO1bdH39Er63TbDku9WmGH7L9UQLxVroTgIdj0BtgB8BtXzWQuXmeonk5JanQm
+	rFP4W4+aL97ywxn2FASgI+MzQuRquaxIzSwDa0SNX2E0gfigoB6ap4xSy+EVAtdvIerD
+	wKRw==
+X-Gm-Message-State: AE9vXwMs9CsCxLXH8ALMCUne9GjPT1BGBlPipB9qhIKFeU/vEcL2U9rgWh67K2c5fcejgAcs
+X-Received: by 10.66.127.14 with SMTP id nc14mr24276865pab.18.1474042972413;
+	Fri, 16 Sep 2016 09:22:52 -0700 (PDT)
 Received: from orion.ger.corp.intel.com (fmdmzpr04-ext.fm.intel.com.
 	[192.55.55.39]) by smtp.gmail.com with ESMTPSA id
-	bm8sm13336146pac.16.2016.09.16.09.22.47
+	bm8sm13336146pac.16.2016.09.16.09.22.50
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 16 Sep 2016 09:22:49 -0700 (PDT)
+	Fri, 16 Sep 2016 09:22:51 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Sep 2016 17:22:30 +0100
-Message-Id: <1474042955-12618-4-git-send-email-michael.g.wood@intel.com>
+Date: Fri, 16 Sep 2016 17:22:31 +0100
+Message-Id: <1474042955-12618-5-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
 References: <1474042955-12618-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 3/8] toaster: notify runbuilds when build status changes
+Subject: [PATCH 4/8] runbuilds: process builds on SIGUSR1
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,71 +56,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Sep 2016 16:22:50 -0000
+X-List-Received-Date: Fri, 16 Sep 2016 16:22:51 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Called signal_runbuilds API when build is scheduled, cancelled or
-finished to notify runbuilds process about builds status change.
+Run main processing function 'runbuild' only if SIGUSR1 is
+received. This signal is sent by Toaster when build status
+is changed (either started, cancelled or finished).
+
+This should stop continuous database polling as run_builds function
+will be called only when needed, i.e. after build status is changed.
 
 [YOCTO #8918]
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/bb/ui/buildinfohelper.py | 4 ++++
- lib/toaster/orm/models.py    | 2 ++
- 2 files changed, 6 insertions(+)
+ lib/toaster/bldcontrol/management/commands/runbuilds.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 96166dc..c93ee94 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -43,6 +43,7 @@ from orm.models import Package, Package_File, Target_Installed_Package, Target_F
- from orm.models import Task_Dependency, Package_Dependency
- from orm.models import Recipe_Dependency, Provides
- from orm.models import Project, CustomImagePackage, CustomImageRecipe
-+from orm.models import signal_runbuilds
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index a703770..61a520c 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -11,9 +11,9 @@ from orm.models import Build, ToasterSetting, LogMessage, Target
  
- from bldcontrol.models import BuildEnvironment, BuildRequest
+ import os
+ import logging
+-import time
+ import sys
+ import traceback
++import signal
  
-@@ -234,6 +235,7 @@ class ORMWrapper(object):
-         build.completed_on = timezone.now()
-         build.outcome = outcome
-         build.save()
-+        signal_runbuilds()
+ logger = logging.getLogger("toaster")
  
-     def update_target_set_license_manifest(self, target, license_manifest_path):
-         target.license_manifest_path = license_manifest_path
-@@ -1354,6 +1356,7 @@ class BuildInfoHelper(object):
-         self._ensure_build()
-         self.internal_state['build'].outcome = Build.CANCELLED
-         self.internal_state['build'].save()
-+        signal_runbuilds()
+@@ -175,6 +175,8 @@ class Command(NoArgsCommand):
+             logger.warn("runbuilds: schedule exception %s" % str(e))
  
-     def store_dependency_information(self, event):
-         assert '_depgraph' in vars(event)
-@@ -1540,6 +1543,7 @@ class BuildInfoHelper(object):
-         else:
-             br.state = BuildRequest.REQ_FAILED
-         br.save()
-+        signal_runbuilds()
- 
-     def store_log_error(self, text):
-         mockevent = MockEvent()
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 38d014a..a7de57c 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -377,6 +377,8 @@ class Project(models.Model):
-             except ProjectVariable.DoesNotExist:
-                 pass
-             br.save()
-+            signal_runbuilds()
+     def handle_noargs(self, **options):
++        signal.signal(signal.SIGUSR1, lambda sig, frame: None)
 +
-         except Exception:
-             # revert the build request creation since we're not done cleanly
-             br.delete()
+         while True:
++            signal.pause()
+             self.runbuild()
+-            time.sleep(1)
 -- 
 2.7.4
 
