@@ -1,50 +1,54 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-oi0-f52.google.com (mail-oi0-f52.google.com
-	[209.85.218.52])
-	by mail.openembedded.org (Postfix) with ESMTP id DBB7E6FF78
+Return-Path: <akuster@mvista.com>
+Received: from mail-pa0-f49.google.com (mail-pa0-f49.google.com
+	[209.85.220.49])
+	by mail.openembedded.org (Postfix) with ESMTP id D9E4965CB5
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 17 Sep 2016 05:13:08 +0000 (UTC)
-Received: by mail-oi0-f52.google.com with SMTP id a62so1130561oib.1
+	Sat, 17 Sep 2016 05:54:10 +0000 (UTC)
+Received: by mail-pa0-f49.google.com with SMTP id cm16so32199520pac.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Sep 2016 22:13:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc;
-	bh=Ei6JugQ2oc4ZaLbWRx/Okls/xDLoiCo7/A5KornZgF8=;
-	b=UDVQDEUnLSaFnx3+3XHE3xXyWTrqtXAYG2r8N/ygPW2qNZPZXYNgJseS+CJHYevxMf
-	ER5BJx89JoFhjtJShaNPraWBx0vuqfaoq1qm+om8vbsHSIUj51mnA4e+XsRuH3W4ic+W
-	qL5bRJMDpuVzVrUF7LcChIQ7bITPu3Vpo9O4HepWU+G6yZ+SJ0GQbjESid1Rsxntpqt5
-	Z0cD9+DzlvqEX9+gz0x7lYNgOt9sj6InW/pndv2JcTOwMGdMqZX5s9nq2fwHADmMsGY2
-	dr/qtasyECU6vFDbej7rZEaayG1oAlB6d4CszEN1V03bEGkBZm2QzPZL9khdDhIhCxQM
-	pZ9g==
+	Fri, 16 Sep 2016 22:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=mvista-com.20150623.gappssmtp.com; s=20150623;
+	h=subject:to:references:from:message-id:date:user-agent:mime-version
+	:in-reply-to:content-transfer-encoding;
+	bh=AzEl0hnTdrADatfNNrcRxGOz0NnYQWsMplLhQTEFjd4=;
+	b=TnJDN9nhaw7N/nps2CGSKMNrP3DvfnETdN5pKNtfI6cYvm1+XshcQgqyG91ZQ5Ge7S
+	yd5fOrZESXZ7/FRAkt3RitDo/xWb2E8jg/dKIKxcDkAKmT28447ywisESVQ9DayyZH1X
+	WnUSR3V1VmzT3eZfaRxguwJ3X8gpj9HT7jC0U0LKr7RyaQpw47nkpI3WO4S9rzd6FyEc
+	6aLCVUPeSOGniFaCE53CGwN/CnZfZEAi1eK7VaKpDNkLMtp/4tSkTcq0awCBoAPLV436
+	4gVBeczJeJYrO1ylNrEqziXXMX3zqxvb6b/RyxKypWsR2LV18LQOhcLMNaSFpQ3ZFmEW
+	Zbww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
-	:date:message-id:subject:to:cc;
-	bh=Ei6JugQ2oc4ZaLbWRx/Okls/xDLoiCo7/A5KornZgF8=;
-	b=QZV4akJYMIuWHbLwUfQW+fE3zW2XDmXN3uVl2IDDRIoxwWyRazzMxlzuOrICS58N2A
-	XLm5hN5EPVQxx51wBhbXb2J4QRu8GnXUkaFImv51ZdDT+IOrQtxsSGDl/cPb7SV4JzqY
-	ZSRc6Ekm3XsDOayxGe5UQGeKtlldw3PTUR62aFEKJCfV8RLcGWuSsIsiVlXZ8UMt0URQ
-	Hr4Wtqy0FyyDSBTlSJm9/gXQliDHRdWfb41Rm/fXisINPz9TWiT8FKcXmSN4yh2K+PPZ
-	dLCXoPW2FiWc5fu8aGMKbWekYc7K3kbxSxPYIfqFrEE+Iz3xCkbGL7nWwCFoaSnwELnp
-	nVcg==
-X-Gm-Message-State: AE9vXwMD8eA1dzKovAYZeqMskSlrw3D/JTiGFhRZWQW684GVJBpo2MH4hGY8s2uSNYhSwolBnCV6udZsEMyR6g==
-X-Received: by 10.202.197.148 with SMTP id v142mr17356207oif.110.1474089188992;
-	Fri, 16 Sep 2016 22:13:08 -0700 (PDT)
+	h=x-gm-message-state:subject:to:references:from:message-id:date
+	:user-agent:mime-version:in-reply-to:content-transfer-encoding;
+	bh=AzEl0hnTdrADatfNNrcRxGOz0NnYQWsMplLhQTEFjd4=;
+	b=gnZrkzi7Mxt0BlZX4UFUOPNqP7RBRv2LGaw9yAGXoAa9L116Y6G6iQJCnAwb7jLzcK
+	+lL5N+zMJ8Yz/IJ9k3G2wU4c7Qj2/7BINu/bX8dJt1QgJLuVIMd0v9YyzPIizu6+/s8S
+	g3xSvxdlA4qr+CqfNwTp9VbC8CqtySaWg/oSD3qutrhd31tNoiSdbFUKRBjq7jMvzi6S
+	/i2xt5l5e3Du3i3f9+TWD9P0vOaCzXu3ayTs8SXjkyK+AiI1QS2yVsVlkeNaV0NzdqDa
+	jhtvlG6nJHtbgLCBdupVcakUpA5MRULqrNqUKIAxgmUPkd1NycrEjeweE3ulH8SuXukw
+	YV5Q==
+X-Gm-Message-State: AE9vXwOUoPLIZ1rYud3//fm3WCr/hClPKHV0uOcFy3YwXFwE6SqQ1C5UFgfPAYZIyDLjXLL8
+X-Received: by 10.66.160.99 with SMTP id xj3mr28941021pab.73.1474091651267;
+	Fri, 16 Sep 2016 22:54:11 -0700 (PDT)
+Received: from ?IPv6:2601:202:4001:9ea0:142f:f172:55ee:c116?
+	([2601:202:4001:9ea0:142f:f172:55ee:c116])
+	by smtp.gmail.com with ESMTPSA id
+	xv9sm15923446pab.36.2016.09.16.22.54.10
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 16 Sep 2016 22:54:10 -0700 (PDT)
+To: bitbake-devel@lists.openembedded.org
+References: <1474069004-10786-1-git-send-email-akuster808@gmail.com>
+From: akuster <akuster@mvista.com>
+Message-ID: <ecb2b37b-ce03-34d1-273f-09f799eced54@mvista.com>
+Date: Fri, 16 Sep 2016 22:54:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+	Thunderbird/45.2.0
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.157.13.194 with HTTP; Fri, 16 Sep 2016 22:12:48 -0700 (PDT)
-In-Reply-To: <1474056312-13817-2-git-send-email-kergoth@gmail.com>
-References: <1474056312-13817-1-git-send-email-kergoth@gmail.com>
-	<1474056312-13817-2-git-send-email-kergoth@gmail.com>
-From: Christopher Larson <chris_larson@mentor.com>
-Date: Fri, 16 Sep 2016 22:12:48 -0700
-X-Google-Sender-Auth: _yD2xHVn7Id6EUZFMqyZQvffmHU
-Message-ID: <CABcZANk1MRmzGW0RyhNH8BxYwXhRVr0nKSXaVnVxkDoT1Roy_Q@mail.gmail.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: Re: [PATCHv2 2/2] bb.build: in _exec_task, catch errors from TaskStarted
+In-Reply-To: <1474069004-10786-1-git-send-email-akuster808@gmail.com>
+Subject: Re: [PATCH 0/3] Bitbake 1.28-next
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,55 +61,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 17 Sep 2016 05:13:09 -0000
-Content-Type: multipart/alternative; boundary=001a1134fd2e7a3409053cad22cc
+X-List-Received-Date: Sat, 17 Sep 2016 05:54:13 -0000
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 
---001a1134fd2e7a3409053cad22cc
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 16, 2016 at 1:05 PM, Christopher Larson <kergoth@gmail.com>
-wrote:
+sheesh. I thought I was working on bitbake used for jethro, looks like I 
+was off. patches are still applicable.
 
-> +        try:
-> +            event.fire(TaskStarted(task, logfn, flags, localdata),
-> localdata)
-> +        except BaseException:
-> +            return 1
+
+On 09/16/2016 04:36 PM, Armin Kuster wrote:
+> Please consider these changes for 1.28
+> to fix bitbake-selftest failures.
+>
+>
+> Richard Purdie (1):
+>    bb/tests/fetch: Update cups url
+>
+> Ross Burton (2):
+>    lib/bb/tests/fetch: remove URL that doesn't exist anymore
+>    fetch2/wget: fallback to GET if HEAD is rejected in checkstatus()
+>
+>   lib/bb/fetch2/wget.py | 72 +++++++++++++++++++++++++++++++++++----------------
+>   lib/bb/tests/fetch.py |  7 ++---
+>   2 files changed, 53 insertions(+), 26 deletions(-)
 >
 
-Thinking about it, this isn=E2=80=99t ideal either, as it will obscure case=
-s where
-a traceback is most appropriate. Will need to duplicate the handling of
-BBHandledException and possibly SystemExit, I expect, instead.
---=20
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
 
---001a1134fd2e7a3409053cad22cc
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Fri, Sep 16, 2016 at 1:05 PM, Christopher Larson <span dir=3D"ltr">&lt;<=
-a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com</a>=
-&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
- 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":3p6" class=
-=3D"a3s aXjCH m157349a67de96fb2">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 try:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 event.fire(TaskStarted(task, log=
-fn, flags, localdata), localdata)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 except BaseException:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 1</div></blockquote></div=
-><br>Thinking about it, this isn=E2=80=99t ideal either, as it will obscure=
- cases where a traceback is most appropriate. Will need to duplicate the ha=
-ndling of BBHandledException and possibly SystemExit, I expect, instead.<br=
->-- <br><div class=3D"gmail_signature" data-smartmail=3D"gmail_signature"><=
-div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>Founder -=
- BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software=
- Engineer, Mentor Graphics</div></div>
-</div></div>
-
---001a1134fd2e7a3409053cad22cc--
