@@ -1,31 +1,27 @@
-Return-Path: <s.lengfeld@phytec.de>
-X-Greylist: delayed 415 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 20 Sep 2016 12:19:05 UTC
-Received: from root.phytec.de (mail.phytec.eu [217.6.246.34])
-	by mail.openembedded.org (Postfix) with ESMTP id 6890D6025F
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 987AA6011F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 12:19:05 +0000 (UTC)
-Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
-	by root.phytec.de (Postfix) with ESMTP id EAF82A00279
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 14:12:26 +0200 (CEST)
-Received: from augenblix.phytec.de ([172.16.0.56])
-	by idefix.phytec.de (IBM Domino Release 9.0.1FP5 HF413)
-	with ESMTP id 2016092014120871-223672 ;
-	Tue, 20 Sep 2016 14:12:08 +0200 
-From: Stefan Lengfeld <s.lengfeld@phytec.de>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Sep 2016 14:12:08 +0200
-Message-Id: <1474373528-5865-1-git-send-email-s.lengfeld@phytec.de>
-X-Mailer: git-send-email 1.9.1
-X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP5
-	HF413|March 21, 2016) at 20.09.2016 14:12:08,
-	Serialize by Router on Idefix/Phytec(Release 9.0.1FP5 HF413|March 21,
-	2016) at 20.09.2016 14:12:08,
-	Serialize complete at 20.09.2016 14:12:08
-X-TNEFEvaluated: 1
-X-Mailman-Approved-At: Tue, 20 Sep 2016 14:15:53 +0000
-Subject: [PATCH krogoth] bitbake: fetch: copy files with -H
+	Tue, 20 Sep 2016 15:27:02 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u8KFQvlX001022; Tue, 20 Sep 2016 16:26:57 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id a8f4awMAeDQi; Tue, 20 Sep 2016 16:26:57 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u8KFPncT000995
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 20 Sep 2016 16:25:50 +0100
+Message-ID: <1474385149.7207.309.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 20 Sep 2016 16:25:49 +0100
+X-Mailer: Evolution 3.18.5.2-0ubuntu3 
+Mime-Version: 1.0
+Cc: "Avery, Brian" <brian.avery@intel.com>
+Subject: [PATCH] runqueue: Handle missing sstate dependencies better
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,59 +34,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Sep 2016 12:19:06 -0000
+X-List-Received-Date: Tue, 20 Sep 2016 15:27:03 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+If you "bitbake glibc-locale" then delete the libpcre-native sstate
+and "bitbake glibc-locale -C package_write_rpm", it will fail with
+rpmbuild missing the libprce library.
 
-When using a PREMIRROR with plain (non-unpack) files, a SRC_URI like
+The reason is that libpcre-native fails to install from sstate (since
+it isn't present) but doesn't get built and hence rpm-native tries to
+run without its dependencies.
 
-SRC_URI = "file://devmem2.c"
+The simplest fix is not to add "covered" tasks which have failed to
+install sstate. I can't help feeling there is more to this issue but
+this does fix the current problem and shouldn't have adverse affects.
+It is an unusual situation to have missing dependencies in sstate since
+they're usually all present or not at all.
 
-will cause devmem2.c to be a symlink in the WORKDIR pointing to the
-local PREMIRROR.
+I've taken the opportunity to remove some old cruft from when we had
+numeric task ids, the code can be simpler now.
 
-Trying to apply a patch on this file will either modify the file on
-the PREMIRROR or will fail due to sanity checks:
-
-ERROR: devmem2-1.0-r7 do_patch: Command Error: 'quilt --quiltrc /cache/build-ubuntu/sysroots/x86_64-oe-linux/etc/quiltrc push' exited with 1  Output:
-Applying patch devmem2-fixups-2.patch
-File devmem2.c is not a regular file -- refusing to patch
-
-(Bitbake rev: cfd481fe9799e7a4c6bfac32e56cc91cfcd81088)
-
-Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-Hi,
 
-this patch was already applied on poky's master branch. Can you please backport
-it to krogoth. The bug is there, too. I already posted a different patch some
-time ago:
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 761c660..018025e 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1555,6 +1555,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                 logger.debug(1, 'Considering %s: %s' % (tid, str(self.rqdata.runtaskentries[tid].revdeps)))
+ 
+                 if len(self.rqdata.runtaskentries[tid].revdeps) > 0 and self.rqdata.runtaskentries[tid].revdeps.issubset(self.rq.scenequeue_covered):
++                    if tid in self.rq.scenequeue_notcovered:
++                        continue
+                     found = True
+                     self.rq.scenequeue_covered.add(tid)
+ 
+@@ -2242,11 +2244,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         #        revdeps = self.sq_revdeps[tid]
+         #        bb.warn("Found we didn't run %s %s %s" % (tid, buildable, str(revdeps)))
+ 
+-        # Convert scenequeue_covered task numbers into full taskgraph ids
+-        oldcovered = self.scenequeue_covered
+-        self.rq.scenequeue_covered = set()
+-        for task in oldcovered:
+-            self.rq.scenequeue_covered.add(task)
++        self.rq.scenequeue_covered = self.scenequeue_covered
++        self.rq.scenequeue_notcovered = self.scenequeue_notcovered
+ 
+         logger.debug(1, 'We can skip tasks %s', sorted(self.rq.scenequeue_covered))
+ 
 
-    http://lists.openembedded.org/pipermail/bitbake-devel/2016-June/007621.html
-
-Thanks.
-
-Kind regards,
-	Stefan Lengfeld
----
- bitbake/lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 6ef0c6f..7773c16 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1424,7 +1424,7 @@ class FetchMethod(object):
-                     if urlpath.find("/") != -1:
-                         destdir = urlpath.rsplit("/", 1)[0] + '/'
-                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
--                cmd = 'cp -fpPR %s %s' % (file, destdir)
-+                cmd = 'cp -fpPRH %s %s' % (file, destdir)
- 
-         if not cmd:
-             return
--- 
-1.9.1
 
 
