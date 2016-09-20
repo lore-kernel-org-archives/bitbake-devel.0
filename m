@@ -1,46 +1,31 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wm0-f46.google.com (mail-wm0-f46.google.com [74.125.82.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 78AFB6093F
+Return-Path: <s.lengfeld@phytec.de>
+X-Greylist: delayed 415 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 20 Sep 2016 12:19:05 UTC
+Received: from root.phytec.de (mail.phytec.eu [217.6.246.34])
+	by mail.openembedded.org (Postfix) with ESMTP id 6890D6025F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 08:00:46 +0000 (UTC)
-Received: by mail-wm0-f46.google.com with SMTP id w84so118045790wmg.1
+	Tue, 20 Sep 2016 12:19:05 +0000 (UTC)
+Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
+	by root.phytec.de (Postfix) with ESMTP id EAF82A00279
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 01:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=/q+fsfBMsOtQT3nI+MrXpgqPWn1DHp6TD0McbPHIn2U=;
-	b=YZSYDq+cRSILZsx5oGEMVuje0nE/bcoTYjiU2DkzEPa4sWvk8B0CAXbHnNWmiaOiE3
-	TVfUMyM3RoSsclI7sMLKJwLE6PHaH5QLt1e9l2zRwRKl8W6LSXDQBp2ZwBpZApXVh/Qk
-	AfcUaYz1dTFIVRCeA2Por1hIWe7/AubQOMIMXtlcZz23oppRggMkH/OCwymBbpBTF4sK
-	rYCNuSwTkLKpdriVETN2MCg10rb1HtFywIFcvHb/nXYqmS3aA5sfmAJOCn9zDoWr+E1N
-	C0mv8US0ns3Xx84xmCy61jIe4Y0hIVdKbBxjxIkhKvBEYWi0kqzgstOVtUipTGVJKSK7
-	uX1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=/q+fsfBMsOtQT3nI+MrXpgqPWn1DHp6TD0McbPHIn2U=;
-	b=EgH/nxugBjiKfU8kFnu5ZdQe6t4tPGSGhh0p6tCkiyHifrZXoCMDou/vrvSrifm/+Q
-	d/b5LrgZiI0EoAAvsaY8wMwNt+cblCHbHsnlIGL6A626oaTcydsyxXejiKN+B4sQLP0b
-	MNEm0ZWZBY4Mf/Y8edQ/7xPMJpe2jillZe0pkk8PgiRPepRb33Lcu7iG1CnmUIYI0pp4
-	lwdXqh4CVgC7/oDq2tRL0eUsuC5xEDrYWUN7LNGszXNShNAkUmu/m7stQpvuE/ZSxA3O
-	4cKCelR3fsYiLx3mTvoQVJtMsooFFI5SBDat2opd5ovaesxu56Shy2V2OCSpCFBf9lC/
-	euLw==
-X-Gm-Message-State: AE9vXwMC8ZdczpZg8OjJ44GIHtTYFz+qkVtIDmxlW6tBOTB3hAxNe8kY2T0hRSBG2h1prIVw
-X-Received: by 10.28.140.5 with SMTP id o5mr2127418wmd.13.1474358447079;
-	Tue, 20 Sep 2016 01:00:47 -0700 (PDT)
-Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
-	by smtp.gmail.com with ESMTPSA id
-	17sm26932021wju.44.2016.09.20.01.00.46
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 20 Sep 2016 01:00:46 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
+	Tue, 20 Sep 2016 14:12:26 +0200 (CEST)
+Received: from augenblix.phytec.de ([172.16.0.56])
+	by idefix.phytec.de (IBM Domino Release 9.0.1FP5 HF413)
+	with ESMTP id 2016092014120871-223672 ;
+	Tue, 20 Sep 2016 14:12:08 +0200 
+From: Stefan Lengfeld <s.lengfeld@phytec.de>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Sep 2016 09:00:41 +0100
-Message-Id: <1474358441-1948-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 2.8.1
-Subject: [PATCH] uihelper: use elif instead of repeated if
+Date: Tue, 20 Sep 2016 14:12:08 +0200
+Message-Id: <1474373528-5865-1-git-send-email-s.lengfeld@phytec.de>
+X-Mailer: git-send-email 1.9.1
+X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP5
+	HF413|March 21, 2016) at 20.09.2016 14:12:08,
+	Serialize by Router on Idefix/Phytec(Release 9.0.1FP5 HF413|March 21,
+	2016) at 20.09.2016 14:12:08,
+	Serialize complete at 20.09.2016 14:12:08
+X-TNEFEvaluated: 1
+X-Mailman-Approved-At: Tue, 20 Sep 2016 14:15:53 +0000
+Subject: [PATCH krogoth] bitbake: fetch: copy files with -H
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,54 +38,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Sep 2016 08:00:47 -0000
+X-List-Received-Date: Tue, 20 Sep 2016 12:19:06 -0000
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
+From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+
+When using a PREMIRROR with plain (non-unpack) files, a SRC_URI like
+
+SRC_URI = "file://devmem2.c"
+
+will cause devmem2.c to be a symlink in the WORKDIR pointing to the
+local PREMIRROR.
+
+Trying to apply a patch on this file will either modify the file on
+the PREMIRROR or will fail due to sanity checks:
+
+ERROR: devmem2-1.0-r7 do_patch: Command Error: 'quilt --quiltrc /cache/build-ubuntu/sysroots/x86_64-oe-linux/etc/quiltrc push' exited with 1  Output:
+Applying patch devmem2-fixups-2.patch
+File devmem2.c is not a regular file -- refusing to patch
+
+(Bitbake rev: cfd481fe9799e7a4c6bfac32e56cc91cfcd81088)
+
+Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/ui/uihelper.py | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+Hi,
 
-diff --git a/bitbake/lib/bb/ui/uihelper.py b/bitbake/lib/bb/ui/uihelper.py
-index f64fa18..fda7cc2 100644
---- a/bitbake/lib/bb/ui/uihelper.py
-+++ b/bitbake/lib/bb/ui/uihelper.py
-@@ -35,25 +35,25 @@ class BBUIHelper:
-             self.running_tasks[event.pid] = { 'title' : "%s %s" % (event._package, event._task), 'starttime' : time.time() }
-             self.running_pids.append(event.pid)
-             self.needUpdate = True
--        if isinstance(event, bb.build.TaskSucceeded):
-+        elif isinstance(event, bb.build.TaskSucceeded):
-             del self.running_tasks[event.pid]
-             self.running_pids.remove(event.pid)
-             self.needUpdate = True
--        if isinstance(event, bb.build.TaskFailedSilent):
-+        elif isinstance(event, bb.build.TaskFailedSilent):
-             del self.running_tasks[event.pid]
-             self.running_pids.remove(event.pid)
-             # Don't add to the failed tasks list since this is e.g. a setscene task failure
-             self.needUpdate = True
--        if isinstance(event, bb.build.TaskFailed):
-+        elif isinstance(event, bb.build.TaskFailed):
-             del self.running_tasks[event.pid]
-             self.running_pids.remove(event.pid)
-             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
-             self.needUpdate = True
--        if isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
-+        elif isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
-             self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
-             self.tasknumber_total = event.stats.total
-             self.needUpdate = True
--        if isinstance(event, bb.build.TaskProgress):
-+        elif isinstance(event, bb.build.TaskProgress):
-             if event.pid > 0:
-                 self.running_tasks[event.pid]['progress'] = event.progress
-                 self.running_tasks[event.pid]['rate'] = event.rate
-@@ -62,4 +62,3 @@ class BBUIHelper:
-     def getTasks(self):
-         self.needUpdate = False
-         return (self.running_tasks, self.failed_tasks)
--
+this patch was already applied on poky's master branch. Can you please backport
+it to krogoth. The bug is there, too. I already posted a different patch some
+time ago:
+
+    http://lists.openembedded.org/pipermail/bitbake-devel/2016-June/007621.html
+
+Thanks.
+
+Kind regards,
+	Stefan Lengfeld
+---
+ bitbake/lib/bb/fetch2/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 6ef0c6f..7773c16 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -1424,7 +1424,7 @@ class FetchMethod(object):
+                     if urlpath.find("/") != -1:
+                         destdir = urlpath.rsplit("/", 1)[0] + '/'
+                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
+-                cmd = 'cp -fpPR %s %s' % (file, destdir)
++                cmd = 'cp -fpPRH %s %s' % (file, destdir)
+ 
+         if not cmd:
+             return
 -- 
-2.8.1
+1.9.1
 
 
