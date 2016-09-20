@@ -1,33 +1,46 @@
-Return-Path: <pascal.bach@siemens.com>
-X-Greylist: delayed 684 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 20 Sep 2016 07:02:35 UTC
-Received: from lizzard.sbs.de (lizzard.sbs.de [194.138.37.39])
-	by mail.openembedded.org (Postfix) with ESMTP id C882B6074F
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f46.google.com (mail-wm0-f46.google.com [74.125.82.46])
+	by mail.openembedded.org (Postfix) with ESMTP id 78AFB6093F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 07:02:35 +0000 (UTC)
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-	by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id u8K6pA05015599
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK); 
-	Tue, 20 Sep 2016 08:51:10 +0200
-Received: from [139.16.76.169] (MD1FZU9C.ww002.siemens.net [139.16.76.169])
-	by mail1.sbs.de (8.15.2/8.15.2) with ESMTPS id u8K6pAWs025775
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 20 Sep 2016 08:51:10 +0200
-To: Christopher Larson <clarson@kergoth.com>
-References: <1474016293-26538-1-git-send-email-pascal.bach@siemens.com>
-	<CABcZAN=E+cw8Dvay34EObcDcyoUh7OPUmrvx6iuQQ89jTHYk_A@mail.gmail.com>
-	<508fb644-1ed9-8c92-e6ed-e09f52c03e00@siemens.com>
-	<CABcZANn4D8Qog6ukM_7XM65ZY+OymnmD2K8DeipxoVOOaY1FcA@mail.gmail.com>
-From: Pascal Bach <pascal.bach@siemens.com>
-Message-ID: <64d81891-801e-292e-e26c-1c44bd38a8c5@siemens.com>
-Date: Tue, 20 Sep 2016 08:51:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
-	Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <CABcZANn4D8Qog6ukM_7XM65ZY+OymnmD2K8DeipxoVOOaY1FcA@mail.gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] fetch2/git: always use premirror first if update is required
+	Tue, 20 Sep 2016 08:00:46 +0000 (UTC)
+Received: by mail-wm0-f46.google.com with SMTP id w84so118045790wmg.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 20 Sep 2016 01:00:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=/q+fsfBMsOtQT3nI+MrXpgqPWn1DHp6TD0McbPHIn2U=;
+	b=YZSYDq+cRSILZsx5oGEMVuje0nE/bcoTYjiU2DkzEPa4sWvk8B0CAXbHnNWmiaOiE3
+	TVfUMyM3RoSsclI7sMLKJwLE6PHaH5QLt1e9l2zRwRKl8W6LSXDQBp2ZwBpZApXVh/Qk
+	AfcUaYz1dTFIVRCeA2Por1hIWe7/AubQOMIMXtlcZz23oppRggMkH/OCwymBbpBTF4sK
+	rYCNuSwTkLKpdriVETN2MCg10rb1HtFywIFcvHb/nXYqmS3aA5sfmAJOCn9zDoWr+E1N
+	C0mv8US0ns3Xx84xmCy61jIe4Y0hIVdKbBxjxIkhKvBEYWi0kqzgstOVtUipTGVJKSK7
+	uX1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=/q+fsfBMsOtQT3nI+MrXpgqPWn1DHp6TD0McbPHIn2U=;
+	b=EgH/nxugBjiKfU8kFnu5ZdQe6t4tPGSGhh0p6tCkiyHifrZXoCMDou/vrvSrifm/+Q
+	d/b5LrgZiI0EoAAvsaY8wMwNt+cblCHbHsnlIGL6A626oaTcydsyxXejiKN+B4sQLP0b
+	MNEm0ZWZBY4Mf/Y8edQ/7xPMJpe2jillZe0pkk8PgiRPepRb33Lcu7iG1CnmUIYI0pp4
+	lwdXqh4CVgC7/oDq2tRL0eUsuC5xEDrYWUN7LNGszXNShNAkUmu/m7stQpvuE/ZSxA3O
+	4cKCelR3fsYiLx3mTvoQVJtMsooFFI5SBDat2opd5ovaesxu56Shy2V2OCSpCFBf9lC/
+	euLw==
+X-Gm-Message-State: AE9vXwMC8ZdczpZg8OjJ44GIHtTYFz+qkVtIDmxlW6tBOTB3hAxNe8kY2T0hRSBG2h1prIVw
+X-Received: by 10.28.140.5 with SMTP id o5mr2127418wmd.13.1474358447079;
+	Tue, 20 Sep 2016 01:00:47 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id
+	17sm26932021wju.44.2016.09.20.01.00.46
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 20 Sep 2016 01:00:46 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 20 Sep 2016 09:00:41 +0100
+Message-Id: <1474358441-1948-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.8.1
+Subject: [PATCH] uihelper: use elif instead of repeated if
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,60 +53,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Sep 2016 07:02:36 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 20 Sep 2016 08:00:47 -0000
 
-On 19.09.2016 17:10, Christopher Larson wrote:
->
-> On Mon, Sep 19, 2016 at 12:22 AM, Pascal Bach <pascal.bach@siemens.com <mailto:pascal.bach@siemens.com>> wrote:
->
->     On 16.09.2016 18:20, Christopher Larson wrote:
->
->     >
->     > On Fri, Sep 16, 2016 at 1:58 AM, Pascal Bach <pascal.bach@siemens.com <mailto:pascal.bach@siemens.com> <mailto:pascal.bach@siemens.com <mailto:pascal.bach@siemens.com>>> wrote:
->     >
->     >     When an update of the local copy is required always try to fetch the update
->     >     from a premirror first.
->     >     The premirror should always have precedence over the upstream repository
->     >     as updating from there might not work if BB_FETCH_PREMIRRORONLY,
->     >     BB_NO_NBB_ALLOWED_NETWORKS or BB_NO_NETWORK is set.
->     >
->     >     This also gets rid of the special case for BB_FETCH_PREMIRRORONLY.
->     >
->     >     Signed-off-by: Pascal Bach <pascal.bach@siemens.com <mailto:pascal.bach@siemens.com> <mailto:pascal.bach@siemens.com <mailto:pascal.bach@siemens.com>>>
->     >     ---
->     >      lib/bb/fetch2/git.py | 9 ++-------
->     >      1 file changed, 2 insertions(+), 7 deletions(-)
->     >
->     >     diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
->     >     index 1bec60a..cac2a87 100644
->     >     --- a/lib/bb/fetch2/git.py
->     >     +++ b/lib/bb/fetch2/git.py
->     >     @@ -227,13 +227,8 @@ class Git(FetchMethod):
->     >              return False
->     >
->     >          def try_premirror(self, ud, d):
->     >     -        # If we don't do this, updating an existing checkout with only premirrors
->     >     -        # is not possible
->     >     -        if d.getVar("BB_FETCH_PREMIRRORONLY", True) is not None:
->     >     -            return True
->     >     -        if os.path.exists(ud.clonedir):
->     >     -            return False
->     >     -        return True
->     >     +        # Always try premirror if an update is required
->     >     +        return self.need_update(ud, d)
->     >
->     >
->     > Will this result in fetching a mirror tarball even if you already have a clone in ud.clonedir? The previous logic always returned False if the clonedir existed..
->     The tarball should only be fetched if the local ud.clonedir is out of date, this means the revision that is requested via SRCREV is not in the local repository.
->     In the case the revision is present the tarball should not be fetched again, at least that was the intention and my local tests didn't indicate otherwise.
->
->
-> Yes, but it’s better to run ‘git fetch’ in an out of date clone than to re-download a 1gb mirror tarball which may well be out of date too.
-Agreed, but this doesn't work in the case where the machine doesn't have access to the upstream git repository. For example in the case where BB_ALLOWED_NETWORKS = "*.my.company". The fetcher would still got to to github.com which is not allowed, in that case it should fall back to fetch the tarball from "mirror.my.company".
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/ui/uihelper.py | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-I'm open for suggestions how to make this more efficient.
+diff --git a/bitbake/lib/bb/ui/uihelper.py b/bitbake/lib/bb/ui/uihelper.py
+index f64fa18..fda7cc2 100644
+--- a/bitbake/lib/bb/ui/uihelper.py
++++ b/bitbake/lib/bb/ui/uihelper.py
+@@ -35,25 +35,25 @@ class BBUIHelper:
+             self.running_tasks[event.pid] = { 'title' : "%s %s" % (event._package, event._task), 'starttime' : time.time() }
+             self.running_pids.append(event.pid)
+             self.needUpdate = True
+-        if isinstance(event, bb.build.TaskSucceeded):
++        elif isinstance(event, bb.build.TaskSucceeded):
+             del self.running_tasks[event.pid]
+             self.running_pids.remove(event.pid)
+             self.needUpdate = True
+-        if isinstance(event, bb.build.TaskFailedSilent):
++        elif isinstance(event, bb.build.TaskFailedSilent):
+             del self.running_tasks[event.pid]
+             self.running_pids.remove(event.pid)
+             # Don't add to the failed tasks list since this is e.g. a setscene task failure
+             self.needUpdate = True
+-        if isinstance(event, bb.build.TaskFailed):
++        elif isinstance(event, bb.build.TaskFailed):
+             del self.running_tasks[event.pid]
+             self.running_pids.remove(event.pid)
+             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
+             self.needUpdate = True
+-        if isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
++        elif isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
+             self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
+             self.tasknumber_total = event.stats.total
+             self.needUpdate = True
+-        if isinstance(event, bb.build.TaskProgress):
++        elif isinstance(event, bb.build.TaskProgress):
+             if event.pid > 0:
+                 self.running_tasks[event.pid]['progress'] = event.progress
+                 self.running_tasks[event.pid]['rate'] = event.rate
+@@ -62,4 +62,3 @@ class BBUIHelper:
+     def getTasks(self):
+         self.needUpdate = False
+         return (self.running_tasks, self.failed_tasks)
+-
+-- 
+2.8.1
 
-Pascal
 
