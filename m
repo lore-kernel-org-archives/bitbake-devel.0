@@ -1,45 +1,45 @@
-Return-Path: <ulfalizer@gmail.com>
-Received: from mail-vk0-f41.google.com (mail-vk0-f41.google.com
-	[209.85.213.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 8047A60770
+Return-Path: <gmstima@gmail.com>
+Received: from mail-wm0-f65.google.com (mail-wm0-f65.google.com [74.125.82.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 7CC4E60770
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 16:20:05 +0000 (UTC)
-Received: by mail-vk0-f41.google.com with SMTP id u196so34046086vkd.0
+	Tue, 20 Sep 2016 16:23:12 +0000 (UTC)
+Received: by mail-wm0-f65.google.com with SMTP id 133so4268455wmq.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 09:20:07 -0700 (PDT)
+	Tue, 20 Sep 2016 09:23:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=vSED/oI6/svIR0o/+NOgVI92qRxdcbW8P2xuTRAAZOw=;
-	b=VqDUTIVbckRBGr2dnqS4D+/J3n/xatDKmAlK0Mcf1xjikKAIvYmyIuEzHolIiscAf7
-	Rlo9v2D9G4h+/vQVIPAIQ+DfZieAJLup6fk03XfuWJkTiu3s2y16VIiJ9FW2Y/uxXMzc
-	aTfxzFj8Pkv3jQwsT2xRKtmfDZmMArvRSKWMxFatqKxbLb+m9EuYnusJhqEG8LfDvGcV
-	2WUQaYf/YUYA0S2kYExf7j7hIP5TxQL8UZOdTsMeIZvnvuVDkpWqachkcT/v9pQScmR8
-	fMJKjZwjgpjhgh0DWUeIfBQxZ3/vVM81+tKL5kkvlCsjlqu2mgmG2MD8rKglYjOhG0Q/
-	a5lw==
+	h=from:to:subject:date:message-id;
+	bh=X3o/qY9pdG7A2/MQRDAjfCCVWq0kT6urVi1s5p9gBog=;
+	b=KC8Ghrs/wkkCzK0MZkrCkjUfiQqhcGZNUu9mq12I8XQ1z0HWF7kN0g3J/nBrl56MI1
+	lTBuxOv5+Rl8Rtj6Eqvd4N4SM+psESfcB1rrZl+t8AVVllU29oHfhNwzgMcTt+6nhmj6
+	tiOBvmmcRNQVnsWr/1jMN6OB3oWQQX+7iUhp1FI/Tv+G3knCVcCv1yXFebMnUMY5NgNz
+	VZNCYc1vkDBtZG5IWSJlhN8TA13K4C4k1VO1w/5d7tmtb+5TX76Y865xoS1WUV+KIN0X
+	GUGc6rtv5Yc3oeVk2uXMUVGyYNP9kmNqfpGhSWukoVFCHF2SQN9m6F00mwM0OuZFf6dv
+	89CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=vSED/oI6/svIR0o/+NOgVI92qRxdcbW8P2xuTRAAZOw=;
-	b=FtuMSCBreCj2u8C10smIhHtyR/FBgcbcuVksx0xkG6I6nxvHgPRsdCCAdYQic22uBI
-	FH5umTmnxSJNOdtSVXxLPAlijBU1MRZr7r8TdggdO+jgubGWQFLI10/3POPQPR+QD+HD
-	eb+s7IaY3L6VWi/AZ+bm752i0mkK6jvnMTjqru/0xZ60lmCNBA0ed2KLAKpBRDjBS1uL
-	ku28S3CZ2PaDDCFg3Kn/cIMeoMyYRsrcZMKrO2M9F36uBYZyy1BBKqgYgXN0hBm3s/pF
-	w5WFuR1/HNhyva59K0GbyGF4C7OzrANU32ITCaK2kHRSsGFa/hxfF06hBQrv6TlVTX+J
-	5RGA==
-X-Gm-Message-State: AE9vXwPos5IDmdMi192trghdHJhYDQZkqt2VlBKqlvlt+M/0PLo16jZ+Sa/N+tamHU2GxL1TKhgoGJHM7oNF7w==
-X-Received: by 10.31.200.70 with SMTP id y67mr4019327vkf.58.1474388399111;
-	Tue, 20 Sep 2016 09:19:59 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.103.140.8 with HTTP; Tue, 20 Sep 2016 09:19:58 -0700 (PDT)
-In-Reply-To: <1474358441-1948-1-git-send-email-ross.burton@intel.com>
-References: <1474358441-1948-1-git-send-email-ross.burton@intel.com>
-From: Ulf Magnusson <ulfalizer@gmail.com>
-Date: Tue, 20 Sep 2016 18:19:58 +0200
-Message-ID: <CAFkk2KSR9SBtmPV-hOJETERC=gifVYVGKkyiFk4t-Ep5YyQGVg@mail.gmail.com>
-To: Ross Burton <ross.burton@intel.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] uihelper: use elif instead of repeated if
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=X3o/qY9pdG7A2/MQRDAjfCCVWq0kT6urVi1s5p9gBog=;
+	b=mQKeY6+lawlQzVoWdK0jydZSpvKNbUKb2vJ36++gaKM2tXsuC3VmaZ6RmD8IaZ7WGc
+	18HwJuL5REMJNF4VrbFHpLHBM+DhJ+iMCEXGNkE3DR7exglEajxdWvxpcyB+rwhDTyyR
+	NHb+kmieOWbmBpjtv8MpSAyEf+kPkqyo0gpCehmCgOUeG0QigEVYnNy0E0++RJtoH8cL
+	eSXKvxnGygy/Q04+P8nd/nDDr+2SFCTok+Iex9IicbjIseu/bvEP9fsBa6s4AZOHSPLI
+	fsNcbTQq13UGgd3rRdKDHu3sN28GMRVuUcPLYV+HtYqVrJ7nPHIyXo5NACCVTUhpRYsl
+	0lHQ==
+X-Gm-Message-State: AE9vXwOgiV5dy5t5NVXez0QKmUaxOPM6ZeCyybamZchMLtAjNSDjKk/vqLFxCgTCa902KA==
+X-Received: by 10.28.94.85 with SMTP id s82mr3908848wmb.24.1474388593616;
+	Tue, 20 Sep 2016 09:23:13 -0700 (PDT)
+Received: from work.int.attocapital.com ([80.64.81.111])
+	by smtp.googlemail.com with ESMTPSA id
+	vs7sm28756187wjb.10.2016.09.20.09.23.12
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 20 Sep 2016 09:23:13 -0700 (PDT)
+From: Roman Savchenko <gmstima@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 20 Sep 2016 19:23:08 +0300
+Message-Id: <1474388588-1111-1-git-send-email-gmstima@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH] bitbake: Correct broken symlink behaviour
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,71 +52,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Sep 2016 16:20:08 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Tue, 20 Sep 2016 16:23:13 -0000
 
-On Tue, Sep 20, 2016 at 10:00 AM, Ross Burton <ross.burton@intel.com> wrote:
-> Signed-off-by: Ross Burton <ross.burton@intel.com>
-> ---
->  bitbake/lib/bb/ui/uihelper.py | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
->
-> diff --git a/bitbake/lib/bb/ui/uihelper.py b/bitbake/lib/bb/ui/uihelper.py
-> index f64fa18..fda7cc2 100644
-> --- a/bitbake/lib/bb/ui/uihelper.py
-> +++ b/bitbake/lib/bb/ui/uihelper.py
-> @@ -35,25 +35,25 @@ class BBUIHelper:
->              self.running_tasks[event.pid] = { 'title' : "%s %s" % (event._package, event._task), 'starttime' : time.time() }
->              self.running_pids.append(event.pid)
->              self.needUpdate = True
-> -        if isinstance(event, bb.build.TaskSucceeded):
-> +        elif isinstance(event, bb.build.TaskSucceeded):
->              del self.running_tasks[event.pid]
->              self.running_pids.remove(event.pid)
->              self.needUpdate = True
-> -        if isinstance(event, bb.build.TaskFailedSilent):
-> +        elif isinstance(event, bb.build.TaskFailedSilent):
->              del self.running_tasks[event.pid]
->              self.running_pids.remove(event.pid)
->              # Don't add to the failed tasks list since this is e.g. a setscene task failure
->              self.needUpdate = True
-> -        if isinstance(event, bb.build.TaskFailed):
-> +        elif isinstance(event, bb.build.TaskFailed):
->              del self.running_tasks[event.pid]
->              self.running_pids.remove(event.pid)
->              self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
->              self.needUpdate = True
-> -        if isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
-> +        elif isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
+From: Roman Savchenko <roman.savchenko@attocapital.com>
 
-An obscure feature of isinstance() is that it can test multiple types
-in a single call. This could be simplified to the following:
+Unlink broken symlink.
 
-  elif isinstance(event, (bb.runqueue.runQueueTaskStarted,
-bb.runqueue.sceneQueueTaskStarted)):
+Signed-off-by: Roman Savchenko <gmstima@gmail.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-Cheers,
-Ulf
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 6ef0c6f..a752c6c 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -925,6 +925,17 @@ def rename_bad_checksum(ud, suffix):
+     bb.utils.movefile(ud.localpath, new_localpath)
+ 
+ 
++def try_symlink(source, link_name):
++    """
++    Tries to make link to passed source if link name does not
++    exist.
++    """
++    if not os.path.exists(link_name):
++        if os.path.islink(link_name):
++            os.unlink(link_name)
++
++        os.symlink(source, link_name)
++
+ def try_mirror_url(fetch, origud, ud, ld, check = False):
+     # Return of None or a value means we're finished
+     # False means try another url
+@@ -962,20 +973,14 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+                 bb.utils.mkdirhier(os.path.dirname(ud.donestamp))
+                 open(ud.donestamp, 'w').close()
+             dest = os.path.join(dldir, os.path.basename(ud.localpath))
+-            if not os.path.exists(dest):
+-                os.symlink(ud.localpath, dest)
++            try_symlink(ud.localpath, dest)
+             if not verify_donestamp(origud, ld) or origud.method.need_update(origud, ld):
+                 origud.method.download(origud, ld)
+                 if hasattr(origud.method,"build_mirror_data"):
+                     origud.method.build_mirror_data(origud, ld)
+             return origud.localpath
+         # Otherwise the result is a local file:// and we symlink to it
+-        if not os.path.exists(origud.localpath):
+-            if os.path.islink(origud.localpath):
+-                # Broken symbolic link
+-                os.unlink(origud.localpath)
+-
+-            os.symlink(ud.localpath, origud.localpath)
++        try_symlink(ud.localpath, origud.localpath)
+         update_stamp(origud, ld)
+         return ud.localpath
+ 
+-- 
+2.7.4
 
->              self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
->              self.tasknumber_total = event.stats.total
->              self.needUpdate = True
-> -        if isinstance(event, bb.build.TaskProgress):
-> +        elif isinstance(event, bb.build.TaskProgress):
->              if event.pid > 0:
->                  self.running_tasks[event.pid]['progress'] = event.progress
->                  self.running_tasks[event.pid]['rate'] = event.rate
-> @@ -62,4 +62,3 @@ class BBUIHelper:
->      def getTasks(self):
->          self.needUpdate = False
->          return (self.running_tasks, self.failed_tasks)
-> -
-> --
-> 2.8.1
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
