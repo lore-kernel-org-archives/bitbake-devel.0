@@ -1,45 +1,46 @@
-Return-Path: <gmstima@gmail.com>
-Received: from mail-wm0-f65.google.com (mail-wm0-f65.google.com [74.125.82.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 7CC4E60770
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f48.google.com (mail-wm0-f48.google.com [74.125.82.48])
+	by mail.openembedded.org (Postfix) with ESMTP id D454A606B2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 16:23:12 +0000 (UTC)
-Received: by mail-wm0-f65.google.com with SMTP id 133so4268455wmq.2
+	Wed, 21 Sep 2016 16:49:01 +0000 (UTC)
+Received: by mail-wm0-f48.google.com with SMTP id l132so101544557wmf.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2016 09:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	Wed, 21 Sep 2016 09:49:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:subject:date:message-id;
-	bh=X3o/qY9pdG7A2/MQRDAjfCCVWq0kT6urVi1s5p9gBog=;
-	b=KC8Ghrs/wkkCzK0MZkrCkjUfiQqhcGZNUu9mq12I8XQ1z0HWF7kN0g3J/nBrl56MI1
-	lTBuxOv5+Rl8Rtj6Eqvd4N4SM+psESfcB1rrZl+t8AVVllU29oHfhNwzgMcTt+6nhmj6
-	tiOBvmmcRNQVnsWr/1jMN6OB3oWQQX+7iUhp1FI/Tv+G3knCVcCv1yXFebMnUMY5NgNz
-	VZNCYc1vkDBtZG5IWSJlhN8TA13K4C4k1VO1w/5d7tmtb+5TX76Y865xoS1WUV+KIN0X
-	GUGc6rtv5Yc3oeVk2uXMUVGyYNP9kmNqfpGhSWukoVFCHF2SQN9m6F00mwM0OuZFf6dv
-	89CQ==
+	bh=wsOlT3gQky5Z5oksgdcc1V4lOlWoP3NN8Nh0RQTUgAs=;
+	b=L1Lcw4Cbt2M4a3DYizfUBJoUFVIlQlkSExE0NXVpkir+coRlunRQYiT9JPTE0lpy5R
+	1o82N8HeTx5TRuB8b1IZXVk8uIz0HD7OEydxHsX6Z36W2HXZjT1hCZ9KF9pMit6lMJUR
+	kNY5eosgPe8WfwrWbBK0ZwsYJOYCL1UevUub3sNImP/QcK4oPVgy2gdBJjH+Jd8r9sUG
+	SG5+zzUCeXPcK02keE+8DOJlyCsperpI77XjqqdJHPqWl+liPKqUlhAMAXdQHzCcm5um
+	EUgrnY57jksKE0TuryuLAhmf1FJQ+4PCWtBuI6wSTq+RRu8mHxRXElhZZvIbSHI5UC6m
+	0C1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=X3o/qY9pdG7A2/MQRDAjfCCVWq0kT6urVi1s5p9gBog=;
-	b=mQKeY6+lawlQzVoWdK0jydZSpvKNbUKb2vJ36++gaKM2tXsuC3VmaZ6RmD8IaZ7WGc
-	18HwJuL5REMJNF4VrbFHpLHBM+DhJ+iMCEXGNkE3DR7exglEajxdWvxpcyB+rwhDTyyR
-	NHb+kmieOWbmBpjtv8MpSAyEf+kPkqyo0gpCehmCgOUeG0QigEVYnNy0E0++RJtoH8cL
-	eSXKvxnGygy/Q04+P8nd/nDDr+2SFCTok+Iex9IicbjIseu/bvEP9fsBa6s4AZOHSPLI
-	fsNcbTQq13UGgd3rRdKDHu3sN28GMRVuUcPLYV+HtYqVrJ7nPHIyXo5NACCVTUhpRYsl
-	0lHQ==
-X-Gm-Message-State: AE9vXwOgiV5dy5t5NVXez0QKmUaxOPM6ZeCyybamZchMLtAjNSDjKk/vqLFxCgTCa902KA==
-X-Received: by 10.28.94.85 with SMTP id s82mr3908848wmb.24.1474388593616;
-	Tue, 20 Sep 2016 09:23:13 -0700 (PDT)
-Received: from work.int.attocapital.com ([80.64.81.111])
-	by smtp.googlemail.com with ESMTPSA id
-	vs7sm28756187wjb.10.2016.09.20.09.23.12
+	bh=wsOlT3gQky5Z5oksgdcc1V4lOlWoP3NN8Nh0RQTUgAs=;
+	b=kZgmFF6yeOXuHM3xhOJG0MYfxU2ts2oeTmksKZggGX8lxA9Ij7sDw5Bsrg9x3AruVR
+	kBerTnhU7IWv16lp5etdMhRdj91pIMEzAhv5TofLiBKXhMkS2UJZlKNk5aWgJY1piWYF
+	i0oeYv/sXY/63v0/vbyzbJzuedP0i7ncUcxUIUnE6zItYQv4rOTtlX7sepP7/RPr7+MN
+	APrZ0JfPVMEod89Weq7LBBlwzgMfWLOnIVDotpVzx555QAKs4RaUPc85vHL2tD7UHqHn
+	F0pAY8UUtD8bDIk01c0hYwFqnH3TLOcOxtzLykr5d2DMbSR11AABxg6VIraUC73zlUk8
+	P6VA==
+X-Gm-Message-State: AE9vXwN61S29WZgvS1uXvtQ56jr17Y2/yXupGbWE6YpQ9vXpQB0HRtLyzuC0yUn0BRFRU3Zx
+X-Received: by 10.194.114.100 with SMTP id jf4mr33419383wjb.87.1474476542262; 
+	Wed, 21 Sep 2016 09:49:02 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id
+	b8sm10260505wmb.18.2016.09.21.09.49.01
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 20 Sep 2016 09:23:13 -0700 (PDT)
-From: Roman Savchenko <gmstima@gmail.com>
+	Wed, 21 Sep 2016 09:49:01 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Sep 2016 19:23:08 +0300
-Message-Id: <1474388588-1111-1-git-send-email-gmstima@gmail.com>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] bitbake: Correct broken symlink behaviour
+Date: Wed, 21 Sep 2016 17:48:55 +0100
+Message-Id: <1474476535-22713-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.8.1
+Subject: [PATCH] fetch2: handle absolute paths in subdir
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,63 +53,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Sep 2016 16:23:13 -0000
+X-List-Received-Date: Wed, 21 Sep 2016 16:49:02 -0000
 
-From: Roman Savchenko <roman.savchenko@attocapital.com>
+Currently if you use the subdir parameter in a SRC_URI and pass an absolute path
+then it gets appended to the unpack directory instead of being used directly.
+This is inconvenient as it may be useful to use ${S} when you want to unpack a
+file into the source tree.
 
-Unlink broken symlink.
+Change this behaviour so that absolute paths are used directly instead of being
+appended to the root directory.  To ensure that recipes cannot write files to an
+arbitrary location enforce that the subdir starts with the unpack root.
 
-Signed-off-by: Roman Savchenko <gmstima@gmail.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- bitbake/lib/bb/fetch2/__init__.py | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ bitbake/lib/bb/fetch2/__init__.py | 8 +++++++-
+ bitbake/lib/bb/tests/fetch.py     | 9 +++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 6ef0c6f..a752c6c 100644
+index 06f1eb4..cd7362c 100644
 --- a/bitbake/lib/bb/fetch2/__init__.py
 +++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -925,6 +925,17 @@ def rename_bad_checksum(ud, suffix):
-     bb.utils.movefile(ud.localpath, new_localpath)
+@@ -1420,7 +1420,13 @@ class FetchMethod(object):
  
+         # If 'subdir' param exists, create a dir and use it as destination for unpack cmd
+         if 'subdir' in urldata.parm:
+-            unpackdir = '%s/%s' % (rootdir, urldata.parm.get('subdir'))
++            subdir = urldata.parm.get('subdir')
++            if os.path.isabs(subdir):
++                if not os.path.realpath(subdir).startswith(os.path.realpath(rootdir)):
++                    raise UnpackError("subdir argument isn't a subdirectory of unpack root %s" % rootdir, urldata.url)
++                unpackdir = subdir
++            else:
++                unpackdir = os.path.join(rootdir, subdir)
+             bb.utils.mkdirhier(unpackdir)
+         else:
+             unpackdir = rootdir
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index d7c73dd..0fd2c02 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -508,6 +508,15 @@ class FetcherLocalTest(FetcherTest):
+         tree = self.fetchUnpack(['file://dir/subdir/e;subdir=bar'])
+         self.assertEqual(tree, ['bar/dir/subdir/e'])
  
-+def try_symlink(source, link_name):
-+    """
-+    Tries to make link to passed source if link name does not
-+    exist.
-+    """
-+    if not os.path.exists(link_name):
-+        if os.path.islink(link_name):
-+            os.unlink(link_name)
++    def test_local_absolutedir(self):
++        # Unpacking to an absolute path that is a subdirectory of the root
++        # should work
++        tree = self.fetchUnpack(['file://a;subdir=%s' % os.path.join(self.unpackdir, 'bar')])
 +
-+        os.symlink(source, link_name)
++        # Unpacking to an absolute path outside of the root should fail
++        with self.assertRaises(bb.fetch2.UnpackError):
++            self.fetchUnpack(['file://a;subdir=/bin/sh'])
 +
- def try_mirror_url(fetch, origud, ud, ld, check = False):
-     # Return of None or a value means we're finished
-     # False means try another url
-@@ -962,20 +973,14 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-                 bb.utils.mkdirhier(os.path.dirname(ud.donestamp))
-                 open(ud.donestamp, 'w').close()
-             dest = os.path.join(dldir, os.path.basename(ud.localpath))
--            if not os.path.exists(dest):
--                os.symlink(ud.localpath, dest)
-+            try_symlink(ud.localpath, dest)
-             if not verify_donestamp(origud, ld) or origud.method.need_update(origud, ld):
-                 origud.method.download(origud, ld)
-                 if hasattr(origud.method,"build_mirror_data"):
-                     origud.method.build_mirror_data(origud, ld)
-             return origud.localpath
-         # Otherwise the result is a local file:// and we symlink to it
--        if not os.path.exists(origud.localpath):
--            if os.path.islink(origud.localpath):
--                # Broken symbolic link
--                os.unlink(origud.localpath)
--
--            os.symlink(ud.localpath, origud.localpath)
-+        try_symlink(ud.localpath, origud.localpath)
-         update_stamp(origud, ld)
-         return ud.localpath
+ class FetcherNetworkTest(FetcherTest):
  
+     if os.environ.get("BB_SKIP_NETTESTS") == "yes":
 -- 
-2.7.4
+2.8.1
 
 
