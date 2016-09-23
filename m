@@ -1,29 +1,48 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 9C7E4600E3
+Return-Path: <gmstima@gmail.com>
+Received: from mail-wm0-f65.google.com (mail-wm0-f65.google.com [74.125.82.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 25CD860778
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Sep 2016 12:54:48 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u8MCs1Zq015406 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Sep 2016 13:54:49 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id uFBsJ-i1YOeS for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Sep 2016 13:54:49 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u8MCsh7Z015603
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	Fri, 23 Sep 2016 07:46:05 +0000 (UTC)
+Received: by mail-wm0-f65.google.com with SMTP id 133so1338475wmq.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Sep 2016 13:54:44 +0100
-Message-ID: <1474548883.7207.362.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 22 Sep 2016 13:54:43 +0100
-X-Mailer: Evolution 3.18.5.2-0ubuntu3 
-Mime-Version: 1.0
-Subject: [PATCH] knotty: Show task elapsed time
+	Fri, 23 Sep 2016 00:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:subject:date:message-id:in-reply-to:references;
+	bh=iT1i9f4KKRHe4GBq6n47ZtTZ6WN7lBuD3n+O1kgbXwY=;
+	b=amOzBr9I5KnhdDCbOKz/V4bp1Qu8DjLHXfJFKOHQyhW8aflVHpgCKp+vs5U8RuoYpB
+	rSmOoaWcAMwzkD1IDU7UyrO0lXMP6e9UgSv2LuPyLP1r1K/w40CtVuI1bz3Wczy1xQoj
+	JVh6tSRAJN4Tfc+F1t9PFN9cEg7FqS4yD9X75eXslj2r5uchOsNFxpapiJzcTA8IHI+j
+	6KX557WVShuQezXdPKJHMUM2eGT/HjJGTaKK6VaxwBKymIrNOIiCcexMMpgKdEDvhKY1
+	w0pmuV1tvkZzkdD9NJ2FLJ1w37Ek9NLYq5Z7yOgfM4igXGHzre5xgsYRoT+nroILG3ji
+	/R8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references;
+	bh=iT1i9f4KKRHe4GBq6n47ZtTZ6WN7lBuD3n+O1kgbXwY=;
+	b=V7U3NFJzmxwie/7XNE81oY2g13ABLs3aRdq70KjgMqskntaqZTz+hRO2f+1HcKCLuy
+	wvD608+Ewt8+KeICCHEstVo1/WtHdGhfaxqJi/dJn7uyzOgu9AnHPqVRHZHyzIJIqZi+
+	LYfFZDtfiCOme//ITzPVicareFMz3Gfg5hB8wNKb1d6+sgvM3r4iDDtLsdpTVtwod7LF
+	dt+KDBgdnm7AdHW0PAgoE/5BqKVl5cZmvxq4qOQnypOzrAHeNH806+Jj40+dKDOBVLrB
+	HkPFxvz+/ZgkjYQG5CMSGPJtZcX8q52q/wtf5vThu0hRZHwPexeAJeBP0pBDU0dQAsjr
+	ZGZA==
+X-Gm-Message-State: AA6/9RmqE/hA3dZdLVhxxNSk0LnX+qpjFN3+JT9k2lxfv1F/M/aaZSDLmaxQ0WQe8zThQQ==
+X-Received: by 10.28.186.68 with SMTP id k65mr1486157wmf.57.1474616766692;
+	Fri, 23 Sep 2016 00:46:06 -0700 (PDT)
+Received: from work.int.attocapital.com ([80.64.81.111])
+	by smtp.googlemail.com with ESMTPSA id
+	188sm1759873wmo.1.2016.09.23.00.46.05
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 23 Sep 2016 00:46:06 -0700 (PDT)
+From: Roman Savchenko <gmstima@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 23 Sep 2016 10:45:53 +0300
+Message-Id: <1474616753-26510-1-git-send-email-gmstima@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1474388588-1111-1-git-send-email-gmstima@gmail.com>
+References: <1474388588-1111-1-git-send-email-gmstima@gmail.com>
+Subject: [PATCH] bitbake: Correct broken symlink behaviour
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,55 +55,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Sep 2016 12:54:51 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 23 Sep 2016 07:46:08 -0000
 
-Its often useful to know how long a task has been running for. This patch
-adds that information to the task display, updating every 5s if there
-were no other updates so the user can see how long tasks have been running
-for.
+From: Roman Savchenko <roman.savchenko@attocapital.com>
 
-[YOCTO #9737]
+When making new symlink in case when link name does not exist
+possible broken symlink behaviour should be taken into account.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Roman Savchenko <gmstima@gmail.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index a1856ec..c34b6f6 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -170,6 +170,7 @@ class TerminalFilter(object):
-         self.interactive = sys.stdout.isatty()
-         self.footer_present = False
-         self.lastpids = []
-+        self.lasttime = None
-         self.quiet = quiet
- 
-         if not self.interactive:
-@@ -226,6 +227,10 @@ class TerminalFilter(object):
-         activetasks = self.helper.running_tasks
-         failedtasks = self.helper.failed_tasks
-         runningpids = self.helper.running_pids
-+        currenttime = time.time()
-+        if not self.lasttime or (currenttime - self.lasttime > 5):
-+            self.helper.needUpdate = True
-+            self.lasttime = currenttime
-         if self.footer_present and not self.helper.needUpdate:
-             return
-         self.helper.needUpdate = False
-@@ -250,7 +256,11 @@ class TerminalFilter(object):
-                     activetasks[t]["progressbar"] = pbar
-                 tasks.append((pbar, progress, rate, start_time))
-             else:
--                tasks.append("%s (pid %s)" % (activetasks[t]["title"], t))
-+                start_time = activetasks[t].get("starttime", None)
-+                if start_time:
-+                    tasks.append("%s - %ds (pid %s)" % (activetasks[t]["title"], currenttime - start_time, t))
-+                else:
-+                    tasks.append("%s (pid %s)" % (activetasks[t]["title"], t))
- 
-         if self.main.shutdown:
-             content = "Waiting for %s running tasks to finish:" % len(activetasks)
-
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 6ef0c6f..d8a3b96 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -925,6 +925,17 @@ def rename_bad_checksum(ud, suffix):
+     bb.utils.movefile(ud.localpath, new_localpath)
+ 
+ 
++def try_symlink(source, link_name):
++    """
++    Tries to make link to passed source if link name does not
++    exist or it is the invalid symlink.
++    """
++    if not os.path.exists(link_name):
++        if os.path.islink(link_name):
++            os.unlink(link_name)
++
++        os.symlink(source, link_name)
++
+ def try_mirror_url(fetch, origud, ud, ld, check = False):
+     # Return of None or a value means we're finished
+     # False means try another url
+@@ -962,20 +973,14 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+                 bb.utils.mkdirhier(os.path.dirname(ud.donestamp))
+                 open(ud.donestamp, 'w').close()
+             dest = os.path.join(dldir, os.path.basename(ud.localpath))
+-            if not os.path.exists(dest):
+-                os.symlink(ud.localpath, dest)
++            try_symlink(ud.localpath, dest)
+             if not verify_donestamp(origud, ld) or origud.method.need_update(origud, ld):
+                 origud.method.download(origud, ld)
+                 if hasattr(origud.method,"build_mirror_data"):
+                     origud.method.build_mirror_data(origud, ld)
+             return origud.localpath
+         # Otherwise the result is a local file:// and we symlink to it
+-        if not os.path.exists(origud.localpath):
+-            if os.path.islink(origud.localpath):
+-                # Broken symbolic link
+-                os.unlink(origud.localpath)
+-
+-            os.symlink(ud.localpath, origud.localpath)
++        try_symlink(ud.localpath, origud.localpath)
+         update_stamp(origud, ld)
+         return ud.localpath
+ 
+-- 
+2.7.4
 
 
