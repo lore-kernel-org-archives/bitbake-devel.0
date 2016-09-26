@@ -1,53 +1,24 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pa0-f67.google.com (mail-pa0-f67.google.com
-	[209.85.220.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 6209760750
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id C5CB560125
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Sep 2016 17:19:28 +0000 (UTC)
-Received: by mail-pa0-f67.google.com with SMTP id i5so2181502pad.1
+	Mon, 26 Sep 2016 10:59:50 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by orsmga102.jf.intel.com with ESMTP; 26 Sep 2016 03:59:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.30,399,1470726000"; d="scan'208";a="766007343"
+Received: from linux.intel.com ([10.54.29.200])
+	by FMSMGA003.fm.intel.com with ESMTP; 26 Sep 2016 03:59:51 -0700
+Received: from ed.fi.intel.com (ed.fi.intel.com [10.237.72.179])
+	by linux.intel.com (Postfix) with ESMTP id 0B5626A4006
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Sep 2016 10:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=subject:references:to:from:message-id:date:user-agent:mime-version
-	:in-reply-to; bh=8i7NEyIrAliiF2ULZLzCYk0U6UB+/JqpUDU9jch9p0Q=;
-	b=e1tB/1lhDdi+2Uvq2ZrF10ilrEx1/5Bfzws83fCCr05tG1UuVVCNXaBEBDVfMbjuYc
-	zn5k9vYC1Q8IEHf95vv6lNJ34Mb/BfK626w+60SGe/Ok3Ge20duZXVGnvisrLY3Jialc
-	2supBdWChge9uEEcFa/TaKTAq1qVitp3xnxtLIaDgOFH19df4aLNAovwhgws6QHKRGQM
-	rked0KBZTgHdtDfegLcLi/cYkH0nCaSze7wA1VmcJZ0/qFoo93cb9TqolGNYW+0JNg5+
-	We1UsLHpVGNit42u0F1L0wEhqnDd+4hMf5Tg8UQYlpo9JkKz0AZK6fokhsuo4vzH4Muf
-	tPaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:subject:references:to:from:message-id:date
-	:user-agent:mime-version:in-reply-to;
-	bh=8i7NEyIrAliiF2ULZLzCYk0U6UB+/JqpUDU9jch9p0Q=;
-	b=bOzokXFo9+IpWtpNkDQAwtyRy0opXhstXmYlrCmrqH3s9HcIqqFWkqS6H9ynp3rJRz
-	HEpItPEPBQF4J6hxGHnLLIH7o7KFcMPmGy16vTOoMUReo4hsog3R2QbyrigD8TG9OfGR
-	HqERog7zI2PeXZUO5FG5X7DRCVKtmo25N/LAWfAuTCYP3yPteWooRBpz5FUOqJdcBq3X
-	LauSIbjdEMLjfoD/v7SyE3GLg6APNNd3qr6uCQPtGD2KwEsPPCYhedZeYHNicil88j0O
-	x9LUfTOcjLoPU/xgnTML8YdDaftykNeBhxSkZ056Jah+yaFgeuIZMwChwQNXv3MmG8wt
-	ts+g==
-X-Gm-Message-State: AE9vXwM6pqOj6PLsFrW2A1jo/1BbNrEcVAMM0CZ4XYvkmMneo9e0mz/ZTC/v98REhMNDMg==
-X-Received: by 10.66.43.230 with SMTP id z6mr14007209pal.150.1474651170674;
-	Fri, 23 Sep 2016 10:19:30 -0700 (PDT)
-Received: from ?IPv6:2601:202:4001:9ea0:c560:5d36:d9b:7d07?
-	([2601:202:4001:9ea0:c560:5d36:d9b:7d07])
-	by smtp.gmail.com with ESMTPSA id
-	q25sm12913390pfj.48.2016.09.23.10.19.29
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 23 Sep 2016 10:19:29 -0700 (PDT)
-References: <1474069004-10786-1-git-send-email-akuster808@gmail.com>
-To: bitbake-devel@lists.openembedded.org,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-From: akuster808 <akuster808@gmail.com>
-X-Forwarded-Message-Id: <1474069004-10786-1-git-send-email-akuster808@gmail.com>
-Message-ID: <ee245bab-9f01-c26a-baee-fab952080e79@gmail.com>
-Date: Fri, 23 Sep 2016 10:19:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <1474069004-10786-1-git-send-email-akuster808@gmail.com>
-Subject: [PATCH 0/3] Bitbake 1.28-next
+	Mon, 26 Sep 2016 03:59:24 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 26 Sep 2016 13:59:27 +0300
+Message-Id: <cover.1474887106.git.ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.6.6
+Subject: [PATCH 00/10] delete builds, projects, recipes, layers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,108 +31,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Sep 2016 17:19:29 -0000
-Content-Type: multipart/alternative;
-	boundary="------------FECDE8AC8AE08B6647F56621"
+X-List-Received-Date: Mon, 26 Sep 2016 10:59:50 -0000
 
---------------FECDE8AC8AE08B6647F56621
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Work to implement deleting of builds projects recipes and layers.
+Includes a number of clean ups in affected areas.
 
-Ping?
+The following changes since commit 725e66e1d08ae000d8f68455ddca0e192080dc1f:
 
+  meta-environment: ensure corret TOOLCHAIN_CONFIGSITE_NOCACHE value (2016-09-26 10:06:02 +0100)
 
+are available in the git repository at:
 
+  git://git.yoctoproject.org/poky-contrib ed/submit/michaelw/toaster/delete_buttons
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/submit/michaelw/toaster/delete_buttons
 
--------- Forwarded Message --------
-Subject: 	[PATCH 0/3] Bitbake 1.28-next
-Date: 	Fri, 16 Sep 2016 16:36:41 -0700
-From: 	Armin Kuster <akuster808@gmail.com>
-To: 	bitbake-devel@lists.openembedded.org, akuster808@gmail.com
+Michael Wood (10):
+  toaster: Clean up and convert to rest api project edit and get calls
+  toaster: move MostRecentBuildsView to its own widget
+  toaster: libtoaster Add a global notification set/show mechanism
+  toaster: project page Implement front end feature to delete project
+  toaster: alerts and modals Avoid modals and alerts overlaying each
+    other
+  toaster: Add backend API for deleting a build
+  toaster: Add front end controls for deleting a build
+  toaster: importlayer Convert success import to new notification system
+  toaster: customrecipe Add frontend feature to delete custom image
+    recipe
+  toaster: layerdetails Update implementation of delete imported layer
 
-
-
-Please consider these changes for 1.28
-to fix bitbake-selftest failures.
-
-
-Richard Purdie (1):
-   bb/tests/fetch: Update cups url
-
-Ross Burton (2):
-   lib/bb/tests/fetch: remove URL that doesn't exist anymore
-   fetch2/wget: fallback to GET if HEAD is rejected in checkstatus()
-
-  lib/bb/fetch2/wget.py | 72 +++++++++++++++++++++++++++++++++++----------------
-  lib/bb/tests/fetch.py |  7 ++---
-  2 files changed, 53 insertions(+), 26 deletions(-)
-
--- 
-2.7.4
-
-
---------------FECDE8AC8AE08B6647F56621
-Content-Type: text/html; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-
-    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <p>Ping?</p>
-    <p><br>
-    </p>
-    <div class="moz-forward-container"><br>
-      <br>
-      -------- Forwarded Message --------
-      <table class="moz-email-headers-table" border="0" cellpadding="0"
-        cellspacing="0">
-        <tbody>
-          <tr>
-            <th align="RIGHT" valign="BASELINE" nowrap="nowrap">Subject:
-            </th>
-            <td>[PATCH 0/3] Bitbake 1.28-next</td>
-          </tr>
-          <tr>
-            <th align="RIGHT" valign="BASELINE" nowrap="nowrap">Date: </th>
-            <td>Fri, 16 Sep 2016 16:36:41 -0700</td>
-          </tr>
-          <tr>
-            <th align="RIGHT" valign="BASELINE" nowrap="nowrap">From: </th>
-            <td>Armin Kuster <a class="moz-txt-link-rfc2396E" href="mailto:akuster808@gmail.com">&lt;akuster808@gmail.com&gt;</a></td>
-          </tr>
-          <tr>
-            <th align="RIGHT" valign="BASELINE" nowrap="nowrap">To: </th>
-            <td><a class="moz-txt-link-abbreviated" href="mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists.openembedded.org</a>,
-              <a class="moz-txt-link-abbreviated" href="mailto:akuster808@gmail.com">akuster808@gmail.com</a></td>
-          </tr>
-        </tbody>
-      </table>
-      <br>
-      <br>
-      <pre>Please consider these changes for 1.28
-to fix bitbake-selftest failures.
-
-
-Richard Purdie (1):
-  bb/tests/fetch: Update cups url
-
-Ross Burton (2):
-  lib/bb/tests/fetch: remove URL that doesn't exist anymore
-  fetch2/wget: fallback to GET if HEAD is rejected in checkstatus()
-
- lib/bb/fetch2/wget.py | 72 +++++++++++++++++++++++++++++++++++----------------
- lib/bb/tests/fetch.py |  7 ++---
- 2 files changed, 53 insertions(+), 26 deletions(-)
+ lib/toaster/toastergui/api.py                      | 312 +++++++++++++--------
+ lib/toaster/toastergui/static/js/customrecipe.js   |  32 +++
+ lib/toaster/toastergui/static/js/importlayer.js    |  59 +++-
+ lib/toaster/toastergui/static/js/layerDepsModal.js |  12 +-
+ lib/toaster/toastergui/static/js/layerdetails.js   |   7 +-
+ lib/toaster/toastergui/static/js/libtoaster.js     |  42 ++-
+ lib/toaster/toastergui/static/js/projectpage.js    | 237 +++-------------
+ lib/toaster/toastergui/static/js/projecttopbar.js  |   6 +-
+ lib/toaster/toastergui/static/js/tests/test.js     |   7 +-
+ lib/toaster/toastergui/templates/base.html         |   1 +
+ .../toastergui/templates/basebuildpage.html        | 138 ++++++---
+ .../toastergui/templates/baseprojectpage.html      |   6 +
+ .../toastergui/templates/builddashboard.html       |   2 +-
+ lib/toaster/toastergui/templates/customrecipe.html |  35 ++-
+ lib/toaster/toastergui/templates/layerdetails.html |   9 +-
+ lib/toaster/toastergui/templates/project.html      |  35 ++-
+ .../toastergui/templates/projecttopbar.html        |   2 +-
+ lib/toaster/toastergui/urls.py                     |  11 +-
+ lib/toaster/toastergui/views.py                    | 131 +--------
+ lib/toaster/toastergui/widgets.py                  | 141 ++++++++--
+ 20 files changed, 679 insertions(+), 546 deletions(-)
 
 -- 
-2.7.4
+2.6.6
 
-</pre>
-    </div>
-  </body>
-</html>
 
---------------FECDE8AC8AE08B6647F56621--
