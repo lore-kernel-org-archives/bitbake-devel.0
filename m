@@ -1,42 +1,30 @@
-Return-Path: <sdishu20@gmail.com>
-Received: from mail-oi0-f52.google.com (mail-oi0-f52.google.com
-	[209.85.218.52])
-	by mail.openembedded.org (Postfix) with ESMTP id B263860079
+Return-Path: <s.lengfeld@phytec.de>
+Received: from root.phytec.de (mail.phytec.de [217.6.246.34])
+	by mail.openembedded.org (Postfix) with ESMTP id A40D960102
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Sep 2016 04:05:29 +0000 (UTC)
-Received: by mail-oi0-f52.google.com with SMTP id t83so194263309oie.3
+	Tue, 27 Sep 2016 08:13:10 +0000 (UTC)
+Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
+	by root.phytec.de (Postfix) with ESMTP id BB301A00244
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 25 Sep 2016 21:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=wgPzE9zH11ECibBqWooqnlKaO5FfVzIL4fobClVsK+Q=;
-	b=J18qBsWD/YnVgmDQAO9dr4nvIDHqsiv6gGHvMqH0oK9z6+/mmNGMmLF+qo50jAF28Q
-	byvf0LO2Pr1JUIgubH01VtIsZFfnLiN5IeIro0jisqhndvxlgs1dSBImToMSQW4Qv9+N
-	GT+vSMhAKaHfud+AJPfRl0nqR6mdgwPZGVqjvCe93oep1b4obiY0hOzD1Ik5WuKgeahN
-	XLB1JsMJe1s0qXqULs7dUGlxrdYQhpygTVNoYfSYDp+jwv5DOTsigYxfVLHk1/OaoJmd
-	HSvhmNjdw+eXuzojdvECy+TYjDyf0CR6uK4YUEffWpNu6U4/y752NftzImp0k8eaAjkw
-	Axgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=wgPzE9zH11ECibBqWooqnlKaO5FfVzIL4fobClVsK+Q=;
-	b=gRedMryV2U00VwG/2FB6RX8KL1DClz4yYo1w4EBQo5xZNkbDMbAKyJ501R/9+xtqwQ
-	jPse0jxSy0CrukEfTgAvVsF+Q5dd5zji0plWoVTO6jYEQ56XdNMulHkZmoiCYhUTF5W1
-	0c9cN5g8U7wJ70C1dofGlGhwXJboSER5w3fDPtWRDpbNeSuqa8EJmpdCIy/3AwCY+ZCx
-	4Ek6ZBRG8nzHXe/kDI0EAbV9FvdVd4ANzucWzrdIX5SDyjof6NKBzK+w6f0vM7gGwdTP
-	RRzvzWYT1nlnL2v6eWuecLIGrM4Fs/hMgU7o7hMzcQprjVCUKcWdmYMsfn23GCGBe7Ua
-	k1YQ==
-X-Gm-Message-State: AE9vXwO+gypU5hKtZlOzm8349i79s+QwoCGEJoYtcCayFQPJ/rrVXL0SX+jvsM0gZRDDFHBc686fCg/0zB11Jg==
-X-Received: by 10.202.94.86 with SMTP id s83mr24568173oib.18.1474862730508;
-	Sun, 25 Sep 2016 21:05:30 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.182.80.229 with HTTP; Sun, 25 Sep 2016 21:05:30 -0700 (PDT)
-From: Dishu Sharma <sdishu20@gmail.com>
-Date: Mon, 26 Sep 2016 09:35:30 +0530
-Message-ID: <CAPPN1iEXQ7w__pFUeOhX1Hzunc6hJXmDNLQChfboeV3F+kxMEg@mail.gmail.com>
+	Tue, 27 Sep 2016 10:13:31 +0200 (CEST)
+Received: from lws-christ ([172.16.11.121])
+	by idefix.phytec.de (IBM Domino Release 9.0.1FP5 HF413)
+	with ESMTP id 2016092710131101-249430 ;
+	Tue, 27 Sep 2016 10:13:11 +0200 
+Date: Tue, 27 Sep 2016 10:13:11 +0200
+From: Stefan Lengfeld <s.lengfeld@phytec.de>
 To: bitbake-devel@lists.openembedded.org
-X-Mailman-Approved-At: Tue, 27 Sep 2016 07:54:57 +0000
-Subject: do_configure failure in dbus recipe
+Message-ID: <20160927081311.GA3984@lws-christ>
+References: <1474373528-5865-1-git-send-email-s.lengfeld@phytec.de>
+MIME-Version: 1.0
+In-Reply-To: <1474373528-5865-1-git-send-email-s.lengfeld@phytec.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP5
+	HF413|March 21, 2016) at 27.09.2016 10:13:11,
+	Serialize by Router on Idefix/Phytec(Release 9.0.1FP5 HF413|March 21,
+	2016) at 27.09.2016 10:13:11
+X-TNEFEvaluated: 1
+Subject: Re: [PATCH krogoth] bitbake: fetch: copy files with -H
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,31 +37,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 26 Sep 2016 04:05:31 -0000
-Content-Type: multipart/alternative; boundary=001a113d514424fe60053d613d60
-
---001a113d514424fe60053d613d60
-Content-Type: text/plain; charset=UTF-8
-
-Hello Sir,
-
-I'm working on yocto and I m getting do_configure failure in dbus_1.8.10.bb
- .
-Could you please help me in debugging the error.
-
-Thankyou,
-Priyanshu Sharma
-
---001a113d514424fe60053d613d60
-Content-Type: text/html; charset=UTF-8
+X-List-Received-Date: Tue, 27 Sep 2016 08:13:10 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><span style=3D"font-size:12.8px">Hello Sir,</span><div sty=
-le=3D"font-size:12.8px"><br></div><div style=3D"font-size:12.8px">I&#39;m w=
-orking on yocto and I m getting do_configure failure in=C2=A0<a href=3D"htt=
-p://dbus_1.8.10.bb/" target=3D"_blank">dbus_1.8.10.bb</a>=C2=A0.<br>Could y=
-ou please help me in debugging the error.</div><div style=3D"font-size:12.8=
-px"><br></div><div style=3D"font-size:12.8px">Thankyou,</div><div style=3D"=
-font-size:12.8px">Priyanshu Sharma</div></div>
+Hi,
 
---001a113d514424fe60053d613d60--
+*ping.
+
+Is there a way I can help to speed up the backport of this patch to krogoth?
+Should I send the patch to a different mailing list? Thanks.
+
+Mit freundlichen Gr=C3=BC=C3=9Fen / Kind regards,
+	Stefan Lengfeld
+
+On Tue, Sep 20, 2016 at 02:12:08PM +0200, Stefan Lengfeld wrote:
+> From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+>=20
+> When using a PREMIRROR with plain (non-unpack) files, a SRC=5FURI like
+>=20
+> SRC=5FURI =3D "file://devmem2.c"
+>=20
+> will cause devmem2.c to be a symlink in the WORKDIR pointing to the
+> local PREMIRROR.
+>=20
+> Trying to apply a patch on this file will either modify the file on
+> the PREMIRROR or will fail due to sanity checks:
+>=20
+> ERROR: devmem2-1.0-r7 do=5Fpatch: Command Error: 'quilt --quiltrc /cache/=
+build-ubuntu/sysroots/x86=5F64-oe-linux/etc/quiltrc push' exited with 1  Ou=
+tput:
+> Applying patch devmem2-fixups-2.patch
+> File devmem2.c is not a regular file -- refusing to patch
+>=20
+> (Bitbake rev: cfd481fe9799e7a4c6bfac32e56cc91cfcd81088)
+>=20
+> Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+> Hi,
+>=20
+> this patch was already applied on poky's master branch. Can you please ba=
+ckport
+> it to krogoth. The bug is there, too. I already posted a different patch =
+some
+> time ago:
+>=20
+>     http://lists.openembedded.org/pipermail/bitbake-devel/2016-June/00762=
+1.html
+>=20
+> Thanks.
+>=20
+> Kind regards,
+> 	Stefan Lengfeld
+> ---
+>  bitbake/lib/bb/fetch2/=5F=5Finit=5F=5F.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/bitbake/lib/bb/fetch2/=5F=5Finit=5F=5F.py b/bitbake/lib/bb/f=
+etch2/=5F=5Finit=5F=5F.py
+> index 6ef0c6f..7773c16 100644
+> --- a/bitbake/lib/bb/fetch2/=5F=5Finit=5F=5F.py
+> +++ b/bitbake/lib/bb/fetch2/=5F=5Finit=5F=5F.py
+> @@ -1424,7 +1424,7 @@ class FetchMethod(object):
+>                      if urlpath.find("/") !=3D -1:
+>                          destdir =3D urlpath.rsplit("/", 1)[0] + '/'
+>                          bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir=
+))
+> -                cmd =3D 'cp -fpPR %s %s' % (file, destdir)
+> +                cmd =3D 'cp -fpPRH %s %s' % (file, destdir)
+> =20
+>          if not cmd:
+>              return
+> --=20
+> 1.9.1
+>=20
+> --=20
+> =5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+
