@@ -1,46 +1,29 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-it0-f48.google.com (mail-it0-f48.google.com
-	[209.85.214.48])
-	by mail.openembedded.org (Postfix) with ESMTP id A2730607B3
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Sep 2016 11:42:40 +0000 (UTC)
-Received: by mail-it0-f48.google.com with SMTP id u134so38859557itb.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Sep 2016 04:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=WxBle8IGOLuQjjLCrHcNuxDzt9y7A4O5nbJwGYWdwdI=;
-	b=GZd9SIPaWy8jUtUzMZZvL1YKcHvUCXejeMXRZEq05VzNaiiRfrGH7TOI0o59hLgfTt
-	X3oM2ZXQ+CBrdkvhHiYRKp7mkKLR3KrhXt7azGdAKIFw2+8jeGWk1GJrl9k7CLDpGhqe
-	0xy5t+SBohAAyBJ72UCytm4bAXriOaA7KkP1eWE4Nqsr9HDuWogT6eeI+T3nOhuC9Qjp
-	Y4lNEjZ63G1IayIXsBO3k+BIwMt/xH+8hQzxLRMd/qCEDUjzRcMZ6GIunU9pnEyouv45
-	482sfBjFfLq7kTMQJuegasPzJ/x8WI6Zs1iguH0OwUCd8aO4d7UcJLnYo18v2k5zRKrx
-	sk9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=WxBle8IGOLuQjjLCrHcNuxDzt9y7A4O5nbJwGYWdwdI=;
-	b=ahgOaEu14PP+vci/EYrHpuJjVfkgRPjNkfhmQdlbQJIL3G9HOEeYtj/XL+Vle9VwXA
-	CFr/uZKSkdsS6P69JMTrT+pVVXXZOfYtKojule1vGq+nHR9U8W0cQ8bp6JRn8TD1pfMZ
-	15YPUd0zvW59GKaKAzKXEanl2vDjD1jfEcj2iSq/1aIEt/xqXCjI1+P7IQ0mY+jFG32C
-	ey3DXFrxOsih+uukHo3jh0R07to8eutsatKTQosXib6lDSQ4KwOEkmmbughDwAM0jNgC
-	ED7Tf2wHwWmhlF0tRrOlVR0WGiQFwbZCzDayoAJYEgkfe18eLI75F0bvRE2krRHK7EjH
-	cp5A==
-X-Gm-Message-State: AA6/9RmP9RJqGSTUembDHm03N+HF2yeWxLW73qF5xSKJ+4h5LOFrtgmUCiqIpvZweTCDn6QyPvMbirYEPvjUEqra
-X-Received: by 10.36.200.86 with SMTP id w83mr3592266itf.74.1474976562256;
-	Tue, 27 Sep 2016 04:42:42 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.107.155.66 with HTTP; Tue, 27 Sep 2016 04:42:21 -0700 (PDT)
-In-Reply-To: <CAPPN1iEXQ7w__pFUeOhX1Hzunc6hJXmDNLQChfboeV3F+kxMEg@mail.gmail.com>
-References: <CAPPN1iEXQ7w__pFUeOhX1Hzunc6hJXmDNLQChfboeV3F+kxMEg@mail.gmail.com>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Tue, 27 Sep 2016 12:42:21 +0100
-Message-ID: <CAJTo0Lb5OvFSG8ZKmvn1w3G919=4EWVXC=yEwKps0F29RPLuXA@mail.gmail.com>
-To: Dishu Sharma <sdishu20@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id B08EF6022E;
+	Tue, 27 Sep 2016 12:25:53 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u8RCPojd000648; Tue, 27 Sep 2016 13:25:50 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id Cj4R5OuXVCoa; Tue, 27 Sep 2016 13:25:50 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u8RCPkbj000643
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 27 Sep 2016 13:25:47 +0100
+Message-ID: <1474979146.30475.19.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Juro Bystricky <juro.bystricky@intel.com>,
+	openembedded-core@lists.openembedded.org
+Date: Tue, 27 Sep 2016 13:25:46 +0100
+In-Reply-To: <1474923193-25918-1-git-send-email-juro.bystricky@intel.com>
+References: <1474923193-25918-1-git-send-email-juro.bystricky@intel.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3 
+Mime-Version: 1.0
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: do_configure failure in dbus recipe
+Subject: Re: [PATCH] build.py: fix os.getcwd() exception
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,43 +36,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Sep 2016 11:42:46 -0000
-Content-Type: multipart/alternative; boundary=94eb2c057dd80bbbf8053d7bbe20
+X-List-Received-Date: Tue, 27 Sep 2016 12:25:55 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
---94eb2c057dd80bbbf8053d7bbe20
-Content-Type: text/plain; charset=UTF-8
+On Mon, 2016-09-26 at 13:53 -0700, Juro Bystricky wrote:
+> When trying to obtain the current directory from a directory
+> that does not exist anymore, an exception is raised.
+> This patch handles such exception.
 
-On 26 September 2016 at 05:05, Dishu Sharma <sdishu20@gmail.com> wrote:
+This should have gone to bitbake-devel, I've cc'd there and queued in
+master-next for testing.
 
-> I'm working on yocto and I m getting do_configure failure in
-> dbus_1.8.10.bb .
-> Could you please help me in debugging the error.
->
+Cheers,
 
-Please use the yocto@yoctoproject.org list for user support, this list is
-for the development of bitbake.
+Richard
 
-Also it helps if you include the error messages in your email.
+> [YOCTO #10331]
+> 
+> Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
+> ---
+>  bitbake/lib/bb/build.py | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+> index 2ed0441..249f7d6 100644
+> --- a/bitbake/lib/bb/build.py
+> +++ b/bitbake/lib/bb/build.py
+> @@ -261,9 +261,14 @@ def exec_func(func, d, dirs = None,
+> pythonexception=False):
+>          else:
+>              exec_func_shell(func, d, runfile, cwd=adir)
+>  
+> -    if oldcwd and os.getcwd() != oldcwd:
+> +    try:
+> +        curcwd = os.getcwd()
+> +    except:
+> +        curcwd = None
+> +
+> +    if oldcwd and curcwd != oldcwd:
+>          try:
+> -            bb.warn("Task %s changed cwd to %s" % (func,
+> os.getcwd()))
+> +            bb.warn("Task %s changed cwd to %s" % (func, curcwd))
+>              os.chdir(oldcwd)
+>          except:
+>              pass
 
-Ross
-
---94eb2c057dd80bbbf8053d7bbe20
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On 26 September 2016 at 05:05, Dishu Sharma <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:sdishu20@gmail.com" target=3D"_blank">sdishu20@gmail.com</a>&gt;=
-</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
-8ex;border-left:1px #ccc solid;padding-left:1ex"><div style=3D"font-size:12=
-.8px">I&#39;m working on yocto and I m getting do_configure failure in=C2=
-=A0<a href=3D"http://dbus_1.8.10.bb/" target=3D"_blank">dbus_1.8.10.bb</a>=
-=C2=A0.<br>Could you please help me in debugging the error.</div></blockquo=
-te></div><br></div><div class=3D"gmail_extra">Please use the <a href=3D"mai=
-lto:yocto@yoctoproject.org">yocto@yoctoproject.org</a> list for user suppor=
-t, this list is for the development of bitbake.</div><div class=3D"gmail_ex=
-tra"><br></div><div class=3D"gmail_extra">Also it helps if you include the =
-error messages in your email.</div><div class=3D"gmail_extra"><br></div><di=
-v class=3D"gmail_extra">Ross</div></div>
-
---94eb2c057dd80bbbf8053d7bbe20--
