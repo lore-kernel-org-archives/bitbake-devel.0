@@ -1,30 +1,49 @@
-Return-Path: <s.lengfeld@phytec.de>
-Received: from root.phytec.de (mail.phytec.de [217.6.246.34])
-	by mail.openembedded.org (Postfix) with ESMTP id A40D960102
+Return-Path: <gmstima@gmail.com>
+Received: from mail-lf0-f68.google.com (mail-lf0-f68.google.com
+	[209.85.215.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 87B2260234
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Sep 2016 08:13:10 +0000 (UTC)
-Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
-	by root.phytec.de (Postfix) with ESMTP id BB301A00244
+	Tue, 27 Sep 2016 10:22:59 +0000 (UTC)
+Received: by mail-lf0-f68.google.com with SMTP id s29so1553770lfg.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Sep 2016 10:13:31 +0200 (CEST)
-Received: from lws-christ ([172.16.11.121])
-	by idefix.phytec.de (IBM Domino Release 9.0.1FP5 HF413)
-	with ESMTP id 2016092710131101-249430 ;
-	Tue, 27 Sep 2016 10:13:11 +0200 
-Date: Tue, 27 Sep 2016 10:13:11 +0200
-From: Stefan Lengfeld <s.lengfeld@phytec.de>
+	Tue, 27 Sep 2016 03:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:subject:date:message-id:in-reply-to:references;
+	bh=Vevi3YzeEk9OQbKMF6dymUk/4HJVDQavlfPyzJkRqXo=;
+	b=kTzaFMIP/4ZnyD285VToxUFLfWq4xIjOhTBCy2sjvqjhmdskBegdf6ZSpPg4HIJAyW
+	LQ1UEP7WELoCT+bxHC7OaGrDjdO8f6LZXOiAdvwiKgGDHiOD0D5qN52kefnLKhXIkgIS
+	85WFNvngOEWQZ3kDPjsZkdutWP+Csno8cPBlzRBqej+uB7ZQIoQf5mnwWQCw8PjjB+ub
+	XldtvLiZf+8Flqn27zxo00Q/soewdAccbFDAN1AaXVU3zGdgriR+jD+aiP8FBnmK61zR
+	8uP37En8T2xBVxjXMTfT9iqvuPw6fiAHPatTXfOIMY8n6Jf7IecsJNcssdfUgdECX2q8
+	e/JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references;
+	bh=Vevi3YzeEk9OQbKMF6dymUk/4HJVDQavlfPyzJkRqXo=;
+	b=PSPC8g+s127gHnBjE1XEgbttL4o58d8R+8c2/fNh6Yo9dyptL1o/D2DVcl89TwDslo
+	VFWSs6aSffFWKIjAc4rTWHCb36syb/BOjPo8DDmMflE9ePtFIloM1VXksvwzgdWYyWTi
+	NOqv8BYuoe7smmitoWrzG9Z7jyCxTvhtdcujWdqTXPvBSqYKfeLjhSAdkug4u8B93Vwr
+	P605hqFQMv3YKZ8Sa4l03V1p6mfFV2K3dRLifzrdAhuPWQJ1P1nh55fAGSlz+3zr52zJ
+	NeOYHjrvGQkFqYqFperfcNmtknPHjeksYGzT4ZdMMQzJDEeCG4u/zE//0Ezo7OTqnkn0
+	HgiA==
+X-Gm-Message-State: AE9vXwM+dvM6y+6yghMSqwUKGTsue8I5ChizJILUPDBWI2E3f5QIz1PC41LHdjl56It9lA==
+X-Received: by 10.25.212.5 with SMTP id l5mr10276325lfg.73.1474971780512;
+	Tue, 27 Sep 2016 03:23:00 -0700 (PDT)
+Received: from work.int.attocapital.com ([77.91.146.126])
+	by smtp.googlemail.com with ESMTPSA id
+	j196sm302031lfg.9.2016.09.27.03.22.59
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 27 Sep 2016 03:23:00 -0700 (PDT)
+From: Roman Savchenko <gmstima@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Message-ID: <20160927081311.GA3984@lws-christ>
-References: <1474373528-5865-1-git-send-email-s.lengfeld@phytec.de>
-MIME-Version: 1.0
-In-Reply-To: <1474373528-5865-1-git-send-email-s.lengfeld@phytec.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP5
-	HF413|March 21, 2016) at 27.09.2016 10:13:11,
-	Serialize by Router on Idefix/Phytec(Release 9.0.1FP5 HF413|March 21,
-	2016) at 27.09.2016 10:13:11
-X-TNEFEvaluated: 1
-Subject: Re: [PATCH krogoth] bitbake: fetch: copy files with -H
+Date: Tue, 27 Sep 2016 13:22:47 +0300
+Message-Id: <1474971767-30806-1-git-send-email-gmstima@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1474388588-1111-1-git-send-email-gmstima@gmail.com>
+References: <1474388588-1111-1-git-send-email-gmstima@gmail.com>
+Subject: [PATCH] bitbake: Correct broken symlink behaviour
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,86 +56,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Sep 2016 08:13:10 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 27 Sep 2016 10:23:00 -0000
 
-Hi,
+From: Roman Savchenko <roman.savchenko@attocapital.com>
 
-*ping.
+When making new symlink in case when link name does not exist
+possible broken symlink behaviour should be taken into account.
 
-Is there a way I can help to speed up the backport of this patch to krogoth?
-Should I send the patch to a different mailing list? Thanks.
+Signed-off-by: Roman Savchenko <gmstima@gmail.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-Mit freundlichen Gr=C3=BC=C3=9Fen / Kind regards,
-	Stefan Lengfeld
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 6ef0c6f..6638b34 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -925,6 +925,17 @@ def rename_bad_checksum(ud, suffix):
+     bb.utils.movefile(ud.localpath, new_localpath)
+ 
+ 
++def create_symlink_if_not_exist(source, link_name):
++    """
++    Tries to make link to passed source if link name does not
++    exist or it is the invalid symlink.
++    """
++    if not os.path.exists(link_name):
++        if os.path.islink(link_name):
++            os.unlink(link_name)
++
++        os.symlink(source, link_name)
++
+ def try_mirror_url(fetch, origud, ud, ld, check = False):
+     # Return of None or a value means we're finished
+     # False means try another url
+@@ -962,20 +973,14 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+                 bb.utils.mkdirhier(os.path.dirname(ud.donestamp))
+                 open(ud.donestamp, 'w').close()
+             dest = os.path.join(dldir, os.path.basename(ud.localpath))
+-            if not os.path.exists(dest):
+-                os.symlink(ud.localpath, dest)
++            create_symlink_if_not_exist(ud.localpath, dest)
+             if not verify_donestamp(origud, ld) or origud.method.need_update(origud, ld):
+                 origud.method.download(origud, ld)
+                 if hasattr(origud.method,"build_mirror_data"):
+                     origud.method.build_mirror_data(origud, ld)
+             return origud.localpath
+         # Otherwise the result is a local file:// and we symlink to it
+-        if not os.path.exists(origud.localpath):
+-            if os.path.islink(origud.localpath):
+-                # Broken symbolic link
+-                os.unlink(origud.localpath)
+-
+-            os.symlink(ud.localpath, origud.localpath)
++        create_symlink_if_not_exist(ud.localpath, origud.localpath)
+         update_stamp(origud, ld)
+         return ud.localpath
+ 
+-- 
+2.7.4
 
-On Tue, Sep 20, 2016 at 02:12:08PM +0200, Stefan Lengfeld wrote:
-> From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
->=20
-> When using a PREMIRROR with plain (non-unpack) files, a SRC=5FURI like
->=20
-> SRC=5FURI =3D "file://devmem2.c"
->=20
-> will cause devmem2.c to be a symlink in the WORKDIR pointing to the
-> local PREMIRROR.
->=20
-> Trying to apply a patch on this file will either modify the file on
-> the PREMIRROR or will fail due to sanity checks:
->=20
-> ERROR: devmem2-1.0-r7 do=5Fpatch: Command Error: 'quilt --quiltrc /cache/=
-build-ubuntu/sysroots/x86=5F64-oe-linux/etc/quiltrc push' exited with 1  Ou=
-tput:
-> Applying patch devmem2-fixups-2.patch
-> File devmem2.c is not a regular file -- refusing to patch
->=20
-> (Bitbake rev: cfd481fe9799e7a4c6bfac32e56cc91cfcd81088)
->=20
-> Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
-> Hi,
->=20
-> this patch was already applied on poky's master branch. Can you please ba=
-ckport
-> it to krogoth. The bug is there, too. I already posted a different patch =
-some
-> time ago:
->=20
->     http://lists.openembedded.org/pipermail/bitbake-devel/2016-June/00762=
-1.html
->=20
-> Thanks.
->=20
-> Kind regards,
-> 	Stefan Lengfeld
-> ---
->  bitbake/lib/bb/fetch2/=5F=5Finit=5F=5F.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/bitbake/lib/bb/fetch2/=5F=5Finit=5F=5F.py b/bitbake/lib/bb/f=
-etch2/=5F=5Finit=5F=5F.py
-> index 6ef0c6f..7773c16 100644
-> --- a/bitbake/lib/bb/fetch2/=5F=5Finit=5F=5F.py
-> +++ b/bitbake/lib/bb/fetch2/=5F=5Finit=5F=5F.py
-> @@ -1424,7 +1424,7 @@ class FetchMethod(object):
->                      if urlpath.find("/") !=3D -1:
->                          destdir =3D urlpath.rsplit("/", 1)[0] + '/'
->                          bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir=
-))
-> -                cmd =3D 'cp -fpPR %s %s' % (file, destdir)
-> +                cmd =3D 'cp -fpPRH %s %s' % (file, destdir)
-> =20
->          if not cmd:
->              return
-> --=20
-> 1.9.1
->=20
-> --=20
-> =5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
-=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
