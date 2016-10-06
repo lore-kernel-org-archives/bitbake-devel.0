@@ -1,25 +1,22 @@
-Return-Path: <brian.avery@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 8858B71AA1
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+	by mail.openembedded.org (Postfix) with ESMTP id 7D59C60745
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Oct 2016 00:07:26 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga101.fm.intel.com with ESMTP; 05 Oct 2016 17:07:28 -0700
+	Thu,  6 Oct 2016 21:51:06 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga104.jf.intel.com with ESMTP; 06 Oct 2016 14:51:07 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.31,451,1473145200"; d="scan'208";a="1040898353"
-Received: from bavery-ws-desk.jf.intel.com ([10.7.198.85])
-	by orsmga001.jf.intel.com with ESMTP; 05 Oct 2016 17:07:27 -0700
-From: bavery <brian.avery@intel.com>
+X-IronPort-AV: E=Sophos;i="5.31,454,1473145200"; d="scan'208";a="887503140"
+Received: from alimonb-mobl1.zpn.intel.com ([10.219.5.33])
+	by orsmga003.jf.intel.com with ESMTP; 06 Oct 2016 14:51:06 -0700
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  5 Oct 2016 17:08:52 -0700
-Message-Id: <cd4d3d865e12ea4113c8452ca57cc8d33a370af6.1475712223.git.brian.avery@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <9be76de394b4a43c7dc6326545b33e2ee25b50e2.1475712223.git.brian.avery@intel.com>
-References: <9be76de394b4a43c7dc6326545b33e2ee25b50e2.1475712223.git.brian.avery@intel.com>
-In-Reply-To: <cover.1475712223.git.brian.avery@intel.com>
-References: <cover.1475712223.git.brian.avery@intel.com>
-Cc: bavery <brian.avery@intel.com>
-Subject: [PATCH 4/6] toaster: importlayer Fix layer dependencies button state toggle
+Date: Thu,  6 Oct 2016 16:52:07 -0500
+Message-Id: <1475790727-31154-1-git-send-email-anibal.limon@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+MIME-Version: 1.0
+Cc: paul.eggleton@linux.intel.com, clarson@kergoth.com
+Subject: [PATCH] ui/knotty.py: Fix signal handling of SIGWINCH in BBProgress
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,73 +29,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Oct 2016 00:07:26 -0000
+X-List-Received-Date: Thu, 06 Oct 2016 21:51:06 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Michael Wood <michael.g.wood@intel.com>
+Add the ability to pass default signal handler for SIGWINCH in BBProgress
+because with multiple instace of BBProgress the original signal handler
+set by TerminalFilter (sigwinch_handle) is lost.
 
-Fix regression introduced by switching typeahead library. Make sure we
-enable and disable the add button based on whether the selection event
-has fired or not.
+This is a fix for stack trace due to multiple async calls of ProgressBar
+_handle_resize (ioctl to terminal fd), see:
 
-[YOCTO #9936]
+NOTE: Executing SetScene Tasks
+Fatal Python error: Cannot recover from stack overflow.
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: bavery <brian.avery@intel.com>
+Current thread 0x00007f70a4793700 (most recent call first):
+  File
+"/home/alimonb/repos/poky/bitbake/lib/progressbar/progressbar.py", line
+183 in _handle_resize
+  File "/home/alimonb/repos/poky/bitbake/lib/bb/ui/knotty.py", line 58
+in _handle_resize
+  File "/home/alimonb/repos/poky/bitbake/lib/bb/ui/knotty.py", line 60
+in _handle_resize
+...
+  File "/home/alimonb/repos/poky/bitbake/lib/bb/ui/knotty.py", line 60
+in _handle_resize
+...
+Aborted
+
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 ---
- lib/toaster/toastergui/static/js/importlayer.js | 30 +++++--------------------
- 1 file changed, 5 insertions(+), 25 deletions(-)
+ lib/bb/ui/knotty.py | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
-index 570ca33..30dc282 100644
---- a/lib/toaster/toastergui/static/js/importlayer.js
-+++ b/lib/toaster/toastergui/static/js/importlayer.js
-@@ -21,21 +21,11 @@ function importLayerPageInit (ctx) {
-                            libtoaster.ctx.layersTypeAheadUrl,
-                            { include_added: "true" }, function(item){
-     currentLayerDepSelection = item;
-+    layerDepBtn.removeAttr("disabled");
-   });
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index b31a8a1..948f527 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -32,6 +32,7 @@ import fcntl
+ import struct
+ import copy
+ import atexit
++
+ from bb.ui import uihelper
  
--  // choices available in the typeahead
--  var layerDepsChoices = {};
--
--  // when the typeahead choices change, store an array of the available layer
--  // choices locally, to use for enabling/disabling the "Add layer" button
--  layerDepInput.on("typeahead-choices-change", function (event, data) {
--    layerDepsChoices = {};
--
--    if (data.choices) {
--      data.choices.forEach(function (item) {
--        layerDepsChoices[item.name] = item;
--      });
--    }
-+  layerDepInput.on("typeahead:select", function(event, data){
-+    currentLayerDepSelection = data;
-   });
+ featureSet = [bb.cooker.CookerFeatures.SEND_SANITYEVENTS]
+@@ -40,7 +41,7 @@ logger = logging.getLogger("BitBake")
+ interactive = sys.stdout.isatty()
  
-   // Disable local dir repo when page is loaded.
-@@ -43,18 +33,8 @@ function importLayerPageInit (ctx) {
+ class BBProgress(progressbar.ProgressBar):
+-    def __init__(self, msg, maxval, widgets=None, extrapos=-1):
++    def __init__(self, msg, maxval, widgets=None, extrapos=-1, resize_handler=None):
+         self.msg = msg
+         self.extrapos = extrapos
+         if not widgets:
+@@ -48,10 +49,10 @@ class BBProgress(progressbar.ProgressBar):
+             progressbar.ETA()]
+             self.extrapos = 4
  
-   // disable the "Add layer" button when the layer input typeahead is empty
-   // or not in the typeahead choices
--  layerDepInput.on("input change", function () {
--    // get the choices from the typeahead
--    var choice = layerDepsChoices[$(this).val()];
--
--    if (choice) {
--      layerDepBtn.removeAttr("disabled");
--      currentLayerDepSelection = choice;
--    }
--    else {
--      layerDepBtn.attr("disabled","disabled");
--      currentLayerDepSelection = undefined;
--    }
-+  layerDepInput.on("input change", function(){
-+    layerDepBtn.attr("disabled","disabled");
-   });
+-        try:
++        if resize_handler:
++            self._resize_default = resize_handler
++        else:
+             self._resize_default = signal.getsignal(signal.SIGWINCH)
+-        except:
+-            self._resize_default = None
+         progressbar.ProgressBar.__init__(self, maxval, [self.msg + ": "] + widgets, fd=sys.stdout)
  
-   /* We automatically add "openembedded-core" layer for convenience as a
+     def _handle_resize(self, signum=None, frame=None):
+@@ -247,10 +248,10 @@ class TerminalFilter(object):
+                 start_time = activetasks[t].get("starttime", None)
+                 if not pbar or pbar.bouncing != (progress < 0):
+                     if progress < 0:
+-                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], t), 100, widgets=[progressbar.BouncingSlider(), ''], extrapos=2)
++                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], t), 100, widgets=[progressbar.BouncingSlider(), ''], extrapos=2, resize_handler=self.sigwinch_handle)
+                         pbar.bouncing = True
+                     else:
+-                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], t), 100, widgets=[progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=4)
++                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], t), 100, widgets=[progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=4, resize_handler=self.sigwinch_handle)
+                         pbar.bouncing = False
+                     activetasks[t]["progressbar"] = pbar
+                 tasks.append((pbar, progress, rate, start_time))
+@@ -274,7 +275,7 @@ class TerminalFilter(object):
+             maxtask = self.helper.tasknumber_total
+             if not self.main_progress or self.main_progress.maxval != maxtask:
+                 widgets = [' ', progressbar.Percentage(), ' ', progressbar.Bar()]
+-                self.main_progress = BBProgress("Running tasks", maxtask, widgets=widgets)
++                self.main_progress = BBProgress("Running tasks", maxtask, widgets=widgets, resize_handler=self.sigwinch_handle)
+                 self.main_progress.start(False)
+             self.main_progress.setmessage(content)
+             progress = self.helper.tasknumber_current - 1
 -- 
-1.9.1
+2.1.4
 
 
