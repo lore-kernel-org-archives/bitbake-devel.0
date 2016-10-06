@@ -1,29 +1,21 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 5F13571A73;
-	Wed,  5 Oct 2016 14:44:39 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u95EieGQ018912
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 5 Oct 2016 07:44:40 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.294.0;
-	Wed, 5 Oct 2016 07:44:39 -0700
-To: Jeff Hatch <jhatch@multitech.com>
-References: <1475675870.8940.167.camel@hatchville>
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-Message-ID: <6f6867da-29f4-545f-2484-763584667738@windriver.com>
-Date: Wed, 5 Oct 2016 09:44:38 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:45.0)
-	Gecko/20100101 Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <1475675870.8940.167.camel@hatchville>
-Cc: bitbake-devel@lists.openembedded.org,
-	Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-Subject: Re: Not building python socketmodule.c with openssl 1.0.2h
+Return-Path: <brian.avery@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id E426A71A25
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  6 Oct 2016 00:07:24 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga103.jf.intel.com with ESMTP; 05 Oct 2016 17:07:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.31,451,1473145200"; d="scan'208";a="887159584"
+Received: from bavery-ws-desk.jf.intel.com ([10.7.198.85])
+	by orsmga003.jf.intel.com with ESMTP; 05 Oct 2016 17:07:25 -0700
+From: bavery <brian.avery@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  5 Oct 2016 17:08:52 -0700
+Message-Id: <cover.1475712223.git.brian.avery@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: bavery <brian.avery@intel.com>
+Subject: [PATCH 0/6] toaster: Delete project fixes and clean ups
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,55 +28,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 05 Oct 2016 14:44:40 -0000
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 06 Oct 2016 00:07:26 -0000
 
-On 10/5/16 8:57 AM, Jeff Hatch wrote:
-> I am seeing an issue where we upgraded the openssl bitbake recipes to build and
-> install openssl 1.0.2h in a higher layer than the base openembedded layer which
-> was building openssl 1.0.1m.  After this was done, the build of python 2.7.3
-> stopped building the socketmodule.c and ssl was not integrated into python.  For
-> example, the httplib object no longer has a reference for the HTTPSConnection
-> object.  I have spent some time digging around and cannot find anything that
-> makes sense as to why this is happening.  Is there anyone that has enough Python
-> knowledge to know what might be causing this, or has run into this already and
-> fixed it?
-> 
-> We are a little behind on Yocto (Daisy), but I don't know that that should be a
-> problem. 
+This addresses several toaster bugs:
 
-This question should go to the "openembedded-core@lists.openembedded.org"
-mailing list, or a list specific to the layers.  (I have CC'd this list.)
+9936 - import layer dependencies button toggle
+9097 - startup message cleanup
+10289 - stop in progress build before deleting project
 
-Unfortunately I am not surprised by this.  Daisy is quite old at this point.  It
-was released in April of 2014.  OpenSSL 1.0.2 was not released until January
-2015.  I doubt that the system, nor python 2.7.3 (as integrated) has any idea
-that version 1.0.2 exists.
+Also has some buildinfohelper cleanup as well as some test fixes for the ui changes.
 
-You will likely need to look at backporting support from a newer version of
-python to support the 1.0.2 API.
+-bavery
 
---Mark
+The following changes since commit 4189a1977e65f71ddb8fc0498bcef91754c673d8:
 
-> Thank You,
-> 
-> -- 
-> Jeff Hatch
-> Senior Software Engineer
-> 
-> 
-> 1 (763) 717 - 5574   DIRECT
-> 1 (763) 228 - 3603   MOBILE
-> 
-> 2205 Woodale Drive 
-> Mounds View, MN 55112
-> 
-> www.multitech.com <http://www.multitech.com/>
-> 
-> 
-> 
-> 
-> 
+  bitbake: toaster: add Font Awesome license (2016-10-05 10:28:53 +0100)
 
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib bavery/submit/michaelw/toaster/pending_for_upstream_5_10_16
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/michaelw/toaster/pending_for_upstream_5_10_16
+
+Michael Wood (6):
+  toaster: api / project Cancel any in progress builds before project
+    delete
+  toaster: buildinfohelper: Use correct way to get message from
+    LogMessage
+  toaster: checksettings Remove confusing startup messages
+  toaster: importlayer Fix layer dependencies button state toggle
+  toaster: Delete notification update front end implementation to design
+  toaster: Update tests to reflect front end changes
+
+ lib/bb/ui/buildinfohelper.py                       |  9 ++--
+ .../management/commands/checksettings.py           |  2 -
+ .../tests/browser/test_layerdetails_page.py        |  4 ++
+ lib/toaster/tests/browser/test_project_page.py     |  2 +-
+ lib/toaster/toastergui/api.py                      | 57 +++++++++++++---------
+ lib/toaster/toastergui/static/js/importlayer.js    | 30 ++----------
+ lib/toaster/toastergui/static/js/layerdetails.js   |  2 +
+ lib/toaster/toastergui/static/js/libtoaster.js     |  2 +-
+ lib/toaster/toastergui/templates/base.html         |  2 +-
+ .../toastergui/templates/basebuildpage.html        |  6 ++-
+ lib/toaster/toastergui/templates/project.html      | 12 +++--
+ lib/toaster/toastergui/tests.py                    |  8 ++-
+ 12 files changed, 71 insertions(+), 65 deletions(-)
+
+--
+1.9.1
 
