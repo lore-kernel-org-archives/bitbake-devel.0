@@ -1,21 +1,23 @@
 Return-Path: <brian.avery@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id E426A71A25
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 0122371A9B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Oct 2016 00:07:24 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga103.jf.intel.com with ESMTP; 05 Oct 2016 17:07:25 -0700
+	Thu,  6 Oct 2016 00:07:25 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga101.fm.intel.com with ESMTP; 05 Oct 2016 17:07:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.31,451,1473145200"; d="scan'208";a="887159584"
+X-IronPort-AV: E=Sophos;i="5.31,451,1473145200"; d="scan'208";a="1040898347"
 Received: from bavery-ws-desk.jf.intel.com ([10.7.198.85])
-	by orsmga003.jf.intel.com with ESMTP; 05 Oct 2016 17:07:25 -0700
+	by orsmga001.jf.intel.com with ESMTP; 05 Oct 2016 17:07:27 -0700
 From: bavery <brian.avery@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  5 Oct 2016 17:08:52 -0700
-Message-Id: <cover.1475712223.git.brian.avery@intel.com>
+Date: Wed,  5 Oct 2016 17:08:49 -0700
+Message-Id: <9be76de394b4a43c7dc6326545b33e2ee25b50e2.1475712223.git.brian.avery@intel.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1475712223.git.brian.avery@intel.com>
+References: <cover.1475712223.git.brian.avery@intel.com>
 Cc: bavery <brian.avery@intel.com>
-Subject: [PATCH 0/6] toaster: Delete project fixes and clean ups
+Subject: [PATCH 1/6] toaster: api / project Cancel any in progress builds before project delete
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,49 +32,130 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 06 Oct 2016 00:07:26 -0000
 
-This addresses several toaster bugs:
+From: Michael Wood <michael.g.wood@intel.com>
 
-9936 - import layer dependencies button toggle
-9097 - startup message cleanup
-10289 - stop in progress build before deleting project
+Before we finally delete any project make sure we send the cancel command to
+any in-progress builds. This ensures that an inaccessible build doesn't block
+up the system and that we don't get errors after deletion.
 
-Also has some buildinfohelper cleanup as well as some test fixes for the ui changes.
+[YOCTO #10289]
 
--bavery
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: bavery <brian.avery@intel.com>
+---
+ lib/toaster/toastergui/api.py                 | 55 +++++++++++++++++----------
+ lib/toaster/toastergui/templates/project.html | 12 +++---
+ 2 files changed, 41 insertions(+), 26 deletions(-)
 
-The following changes since commit 4189a1977e65f71ddb8fc0498bcef91754c673d8:
-
-  bitbake: toaster: add Font Awesome license (2016-10-05 10:28:53 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib bavery/submit/michaelw/toaster/pending_for_upstream_5_10_16
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/michaelw/toaster/pending_for_upstream_5_10_16
-
-Michael Wood (6):
-  toaster: api / project Cancel any in progress builds before project
-    delete
-  toaster: buildinfohelper: Use correct way to get message from
-    LogMessage
-  toaster: checksettings Remove confusing startup messages
-  toaster: importlayer Fix layer dependencies button state toggle
-  toaster: Delete notification update front end implementation to design
-  toaster: Update tests to reflect front end changes
-
- lib/bb/ui/buildinfohelper.py                       |  9 ++--
- .../management/commands/checksettings.py           |  2 -
- .../tests/browser/test_layerdetails_page.py        |  4 ++
- lib/toaster/tests/browser/test_project_page.py     |  2 +-
- lib/toaster/toastergui/api.py                      | 57 +++++++++++++---------
- lib/toaster/toastergui/static/js/importlayer.js    | 30 ++----------
- lib/toaster/toastergui/static/js/layerdetails.js   |  2 +
- lib/toaster/toastergui/static/js/libtoaster.js     |  2 +-
- lib/toaster/toastergui/templates/base.html         |  2 +-
- .../toastergui/templates/basebuildpage.html        |  6 ++-
- lib/toaster/toastergui/templates/project.html      | 12 +++--
- lib/toaster/toastergui/tests.py                    |  8 ++-
- 12 files changed, 71 insertions(+), 65 deletions(-)
-
---
+diff --git a/lib/toaster/toastergui/api.py b/lib/toaster/toastergui/api.py
+index 3a05d66..b01d4ba 100644
+--- a/lib/toaster/toastergui/api.py
++++ b/lib/toaster/toastergui/api.py
+@@ -49,6 +49,28 @@ class XhrBuildRequest(View):
+     def get(self, request, *args, **kwargs):
+         return HttpResponse()
+ 
++    @staticmethod
++    def cancel_build(br):
++        """Cancel a build request"""
++        try:
++            bbctrl = bbcontroller.BitbakeController(br.environment)
++            bbctrl.forceShutDown()
++        except:
++            # We catch a bunch of exceptions here because
++            # this is where the server has not had time to start up
++            # and the build request or build is in transit between
++            # processes.
++            # We can safely just set the build as cancelled
++            # already as it never got started
++            build = br.build
++            build.outcome = Build.CANCELLED
++            build.save()
++
++        # We now hand over to the buildinfohelper to update the
++        # build state once we've finished cancelling
++        br.state = BuildRequest.REQ_CANCELLING
++        br.save()
++
+     def post(self, request, *args, **kwargs):
+         """
+           Build control
+@@ -74,26 +96,7 @@ class XhrBuildRequest(View):
+             for i in request.POST['buildCancel'].strip().split(" "):
+                 try:
+                     br = BuildRequest.objects.get(project=project, pk=i)
+-
+-                    try:
+-                        bbctrl = bbcontroller.BitbakeController(br.environment)
+-                        bbctrl.forceShutDown()
+-                    except:
+-                        # We catch a bunch of exceptions here because
+-                        # this is where the server has not had time to start up
+-                        # and the build request or build is in transit between
+-                        # processes.
+-                        # We can safely just set the build as cancelled
+-                        # already as it never got started
+-                        build = br.build
+-                        build.outcome = Build.CANCELLED
+-                        build.save()
+-
+-                    # We now hand over to the buildinfohelper to update the
+-                    # build state once we've finished cancelling
+-                    br.state = BuildRequest.REQ_CANCELLING
+-                    br.save()
+-
++                    self.cancel_build(br)
+                 except BuildRequest.DoesNotExist:
+                     return error_response('No such build request id %s' % i)
+ 
+@@ -823,11 +826,21 @@ class XhrProject(View):
+         return HttpResponse()
+ 
+     def delete(self, request, *args, **kwargs):
++        """Delete a project. Cancels any builds in progress"""
+         try:
+-            Project.objects.get(pk=kwargs['project_id']).delete()
++            project = Project.objects.get(pk=kwargs['project_id'])
++            # Cancel any builds in progress
++            for br in BuildRequest.objects.filter(
++                    project=project,
++                    state=BuildRequest.REQ_INPROGRESS):
++                XhrBuildRequest.cancel_build(br)
++
++            project.delete()
++
+         except Project.DoesNotExist:
+             return error_response("Project %s does not exist" %
+                                   kwargs['project_id'])
++
+         return JsonResponse({
+             "error": "ok",
+             "gotoUrl": reverse("all-projects", args=[])
+diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
+index 7644dad..5abe241 100644
+--- a/lib/toaster/toastergui/templates/project.html
++++ b/lib/toaster/toastergui/templates/project.html
+@@ -31,12 +31,14 @@
+         <h4>Are you sure you want to delete this project?</h4>
+       </div>
+       <div class="modal-body">
+-        <p>Deleting the <strong class="project-name"></strong> project will remove forever:</p>
++        <p>Deleting the <strong class="project-name"></strong> project
++        will:</p>
+         <ul>
+-          <li>Its configuration information</li>
+-          <li>Its imported layers</li>
+-          <li>Its custom images</li>
+-          <li>All its build information</li>
++          <li>Cancel its builds currently in progress</li>
++          <li>Remove its configuration information</li>
++          <li>Remove its imported layers</li>
++          <li>Remove its custom images</li>
++          <li>Remove all its build information</li>
+         </ul>
+       </div>
+       <div class="modal-footer">
+-- 
 1.9.1
+
 
