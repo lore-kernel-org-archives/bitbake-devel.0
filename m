@@ -1,24 +1,20 @@
-Return-Path: <Kai.Kang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id A11CE719CC
+Return-Path: <randy.e.witt@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 660BE71999
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  9 Oct 2016 08:34:35 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u998YaUL003211
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 9 Oct 2016 01:34:36 -0700 (PDT)
-Received: from k-desktop.wrs.com (128.224.162.231) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.294.0;
-	Sun, 9 Oct 2016 01:34:35 -0700
-From: <kai.kang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 9 Oct 2016 16:34:32 +0800
-Message-ID: <20161009083432.12803-1-kai.kang@windriver.com>
-X-Mailer: git-send-email 2.10.0
-MIME-Version: 1.0
-Subject: [PATCH] COW.py: fix sample codes
+	Tue, 11 Oct 2016 22:36:20 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga103.fm.intel.com with ESMTP; 11 Oct 2016 15:36:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.31,479,1473145200"; d="scan'208";a="1063541455"
+Received: from bitbang.jf.intel.com ([10.7.199.68])
+	by orsmga002.jf.intel.com with ESMTP; 11 Oct 2016 15:36:22 -0700
+From: Randy Witt <randy.e.witt@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 11 Oct 2016 15:36:19 -0700
+Message-Id: <1476225379-11423-1-git-send-email-randy.e.witt@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH] runqueue.py: Remove redundant whitelist checks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,119 +27,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 09 Oct 2016 08:34:35 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 11 Oct 2016 22:36:26 -0000
 
-From: Kai Kang <kai.kang@windriver.com>
+The whitelist checks for BB_SETSCENE_ENFORCE were running for every call
+to execute(). Since the task list doesn't change for each call into
+execute, the checks only need to be ran once.
 
-The call of methods iteritems() and itervalues() in sample codes were
-replaced by items() and values() to convert to Python 3 by Bitbake rev
-d0f904d407f57998419bd9c305ce53e5eaa36b24. But the methods iteritems()
-and itervalues() belong to class COWDictMeta not class dict or set. The
-modifications should not be made in purpose that it fails to run sample
-codes, so revert them.
+[YOCTO #10369]
 
-Signed-off-by: Kai Kang <kai.kang@windriver.com>
+Signed-off-by: Randy Witt <randy.e.witt@linux.intel.com>
 ---
- bitbake/lib/bb/COW.py | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ lib/bb/runqueue.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/COW.py b/bitbake/lib/bb/COW.py
-index 77a05cf..36ebbd9 100644
---- a/bitbake/lib/bb/COW.py
-+++ b/bitbake/lib/bb/COW.py
-@@ -213,11 +213,11 @@ if __name__ == "__main__":
-     print()
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 1306263..84b2685 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -265,6 +265,7 @@ class RunQueueData:
+         self.stampwhitelist = cfgData.getVar("BB_STAMP_WHITELIST", True) or ""
+         self.multi_provider_whitelist = (cfgData.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
+         self.setscenewhitelist = get_setscene_enforce_whitelist(cfgData)
++        self.setscenewhitelist_checked = False
+         self.init_progress_reporter = bb.progress.DummyMultiStageProcessProgressReporter()
  
-     print("a", a)
--    for x in a.items():
-+    for x in a.iteritems():
-         print(x)
-     print("--")
-     print("b", b)
--    for x in b.items():
-+    for x in b.iteritems():
-         print(x)
-     print()
+         self.reset()
+@@ -1701,7 +1702,9 @@ class RunQueueExecuteTasks(RunQueueExecute):
+         Run the tasks in a queue prepared by rqdata.prepare()
+         """
  
-@@ -225,11 +225,11 @@ if __name__ == "__main__":
-     b['a'] = 'c'
- 
-     print("a", a)
--    for x in a.items():
-+    for x in a.iteritems():
-         print(x)
-     print("--")
-     print("b", b)
--    for x in b.items():
-+    for x in b.iteritems():
-         print(x)
-     print()
- 
-@@ -244,22 +244,22 @@ if __name__ == "__main__":
-     a['set'].add("o2")
- 
-     print("a", a)
--    for x in a['set'].values():
-+    for x in a['set'].itervalues():
-         print(x)
-     print("--")
-     print("b", b)
--    for x in b['set'].values():
-+    for x in b['set'].itervalues():
-         print(x)
-     print()
- 
-     b['set'].add('o3')
- 
-     print("a", a)
--    for x in a['set'].values():
-+    for x in a['set'].itervalues():
-         print(x)
-     print("--")
-     print("b", b)
--    for x in b['set'].values():
-+    for x in b['set'].itervalues():
-         print(x)
-     print()
- 
-@@ -269,7 +269,7 @@ if __name__ == "__main__":
-     a['set2'].add("o2")
- 
-     print("a", a)
--    for x in a.items():
-+    for x in a.iteritems():
-         print(x)
-     print("--")
-     print("b", b)
-@@ -289,7 +289,7 @@ if __name__ == "__main__":
-         print("Yay - has_key with delete works!")
- 
-     print("a", a)
--    for x in a.items():
-+    for x in a.iteritems():
-         print(x)
-     print("--")
-     print("b", b)
-@@ -300,7 +300,7 @@ if __name__ == "__main__":
-     b.__revertitem__('b')
- 
-     print("a", a)
--    for x in a.items():
-+    for x in a.iteritems():
-         print(x)
-     print("--")
-     print("b", b)
-@@ -310,7 +310,7 @@ if __name__ == "__main__":
- 
-     b.__revertitem__('dict')
-     print("a", a)
--    for x in a.items():
-+    for x in a.iteritems():
-         print(x)
-     print("--")
-     print("b", b)
+-        if self.rqdata.setscenewhitelist:
++        if self.rqdata.setscenewhitelist and not self.rqdata.setscenewhitelist_checked:
++            self.rqdata.setscenewhitelist_checked = True
++
+             # Check tasks that are going to run against the whitelist
+             def check_norun_task(tid, showerror=False):
+                 (mc, fn, taskname, _) = split_tid_mcfn(tid)
 -- 
-2.10.0
+2.7.4
 
 
