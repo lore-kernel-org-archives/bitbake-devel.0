@@ -1,32 +1,46 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-	by mail.openembedded.org (Postfix) with ESMTP id BF21F60602
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-pf0-f179.google.com (mail-pf0-f179.google.com
+	[209.85.192.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 54BD571B15
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 14 Oct 2016 09:09:33 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by orsmga104.jf.intel.com with ESMTP; 14 Oct 2016 02:09:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.31,344,1473145200"; d="scan'208";a="179764472"
-Received: from linux.intel.com ([10.54.29.200])
-	by fmsmga004.fm.intel.com with ESMTP; 14 Oct 2016 02:09:35 -0700
-Received: from linux.intel.com (vmed.fi.intel.com [10.237.72.68])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTP id 1EA346A4006;
-	Fri, 14 Oct 2016 02:09:01 -0700 (PDT)
-Date: Fri, 14 Oct 2016 11:44:08 +0300
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-To: =?iso-8859-1?Q?An=EDbal_Lim=F3n?= <anibal.limon@linux.intel.com>
-Message-ID: <20161014084408.GA392@linux.intel.com>
-Reply-To: ed.bartosh@linux.intel.com
-References: <1476400294-17333-1-git-send-email-anibal.limon@linux.intel.com>
-MIME-Version: 1.0
-In-Reply-To: <1476400294-17333-1-git-send-email-anibal.limon@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.5.21 (2010-09-15)
-Cc: benjamin.esquivel@intel.com, brian.avery@intel.com,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bb.event: fix infinite loop on print_ui_queue
+	Fri, 14 Oct 2016 15:28:09 +0000 (UTC)
+Received: by mail-pf0-f179.google.com with SMTP id r16so27708660pfg.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 14 Oct 2016 08:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=WoA/XfFcLKj4laz1WKxy+1xxbyLcuPF8LsKCTalP24Q=;
+	b=gCZ6T97BbbJzncDGubPrs4+iG7cOIzo0BAugUOWwto0ejjQHqS1GDu2F87XyqGP4MK
+	PYPsFbewfpcnnjLpHJ4GuJtItQDusCdgkeOjqhsUSYPcXsoowVkADFN2Wz+W2FensYgA
+	cL3YI9CCwbH0NpaPuODQFn49FxUqHXoFqpYBCU1QJy4OUJHf1swzvsz0x7KgNLv4Eedl
+	ujijY4CDx6dZOIoIo030aPD3k9S6TxqPrtQPDk40aHWNr9XdsC4nybKNmys2YZ2IMKU6
+	IcDpkpjTFCwOdu7Mz2WxC8WsIsIHXTO3a39tFDRUw38e+r2xnlC3TqbfRixspvqqrt8m
+	6Hpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=WoA/XfFcLKj4laz1WKxy+1xxbyLcuPF8LsKCTalP24Q=;
+	b=YQV7jVXPodPxvXPOZCFQWd1NmazNJ9HSSIra7MN+uuS7295q50Gp+q9MASJripN07x
+	IYIQWGpkDdj47zpYmiS2z9H+/3uKeFdDtfaMYSYdk0IiG9OGclxKp8TCNmDj0MOs/RVL
+	0TID1Qt4aHRUJ02zX339DKZWXw+CKSAhMWLYV1BgJRXQq22V1UqfpKyAfcySp2a6KIHJ
+	eCOct1AytA+wxZAKRsZg9YL55wjEVSxPBferCLzzPXVj68C9dY5VvZ0s8m7NeJKaSJgX
+	QfNHx8dyXpo5NfC6ZZnnQ3rt28Zem4DRmZLko5SX9vpekcowBdceZEw7s9BXr1O++AZx
+	9Szw==
+X-Gm-Message-State: AA6/9RnlVW+8SuttPWAkko6KKYfbomrkJUeY0SPkcMGyju2Ef/XyHEGL/72UeR4X5LXdsk8e
+X-Received: by 10.99.184.25 with SMTP id p25mr7566897pge.120.1476458891440;
+	Fri, 14 Oct 2016 08:28:11 -0700 (PDT)
+Received: from orion.ger.corp.intel.com ([192.55.54.40])
+	by smtp.gmail.com with ESMTPSA id
+	n7sm28386090pfn.62.2016.10.14.08.28.09
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 14 Oct 2016 08:28:10 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 14 Oct 2016 16:27:58 +0100
+Message-Id: <1476458881-10624-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 0/3][1.32] Add morty/2.2/1.32 release information to toaster
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,87 +53,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Oct 2016 09:09:33 -0000
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 14 Oct 2016 15:28:10 -0000
 
-On Thu, Oct 13, 2016 at 06:11:34PM -0500, Aníbal Limón wrote:
-> If bitbake ends before _uiready and bb.event.LogHandler was add
-> to the bitbake logger it causes an infinite loop when logging
-> something.
-> 
-> The scenario is print_ui_queue is called at exit and executes
-> the log handlers [2] one of them is bb.event.LogHandler this handler
-> appends the same entry to ui_queue causing the inifine loop [3].
-> 
-> In order to fix we need to keep track of events already handled to
-> avoid the infinite loop.
-> 
-> [YOCTO #10399]
-> 
-> [1] https://bugzilla.yoctoproject.org/show_bug.cgi?id=10399#c0
-> [2] http://git.openembedded.org/bitbake/tree/lib/bb/event.py?id=41d9cd41d40b04746c82b4a940dca47df02514fc#n156
-> [3]
-> http://git.openembedded.org/bitbake/tree/lib/bb/event.py?id=41d9cd41d40b04746c82b4a940dca47df02514fc#n164
-> 
-> Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
-> ---
->  lib/bb/event.py | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/lib/bb/event.py b/lib/bb/event.py
-> index c5a5f94..8464e06 100644
-> --- a/lib/bb/event.py
-> +++ b/lib/bb/event.py
-> @@ -139,7 +139,11 @@ def print_ui_queue():
->  
->          # First check to see if we have any proper messages
->          msgprint = False
-> +        events_handled = []
->          for event in ui_queue:
-> +            if event in events_handled:
-> +                continue
-> +
->              if isinstance(event, logging.LogRecord):
->                  if event.levelno > logging.DEBUG:
->                      if event.levelno >= logging.WARNING:
-> @@ -148,14 +152,20 @@ def print_ui_queue():
->                          logger.addHandler(stdout)
->                      logger.handle(event)
->                      msgprint = True
-> +            events_handled.append(event)
->          if msgprint:
->              return
->  
->          # Nope, so just print all of the messages we have (including debug messages)
->          logger.addHandler(stdout)
-> +        events_handled = []
->          for event in ui_queue:
-> +            if event in events_handled:
-> +                continue
-> +
->              if isinstance(event, logging.LogRecord):
->                  logger.handle(event)
-> +            events_handled.append(event)
->  
->  def fire_ui_handlers(event, d):
->      global _thread_lock
+From Brian:
 
-Would using full slice of ui_queue work the same way?
+This changes the fixtures for toaster in Morty so that
+1) We only allow the morty branch for new projects
+2) we default to morty when making a new project.
 
-@@ -139,7 +139,7 @@ def print_ui_queue():
+This release we do not support building older releases due to
+the Python 2.7 -> Python 3 change Morty represents.
 
-         # First check to see if we have any proper messages
-         msgprint = False
--        for event in ui_queue:
-+        for event in ui_queue[:]:
-             if isinstance(event, logging.LogRecord):
-                 if event.levelno > logging.DEBUG:
-                     if event.levelno >= logging.WARNING:
+This patch set updates both the poky and oe-core fixtures.
+
+Note: this only applies to the Morty branch and should *not* be applied to
+master.
+
+-bavery
+
+Changes by me:
+ - Fix branch name in oe-core for bitbake
+ - Add "2.2" as part of the description
 
 
---
-Regards,
-Ed
+brian avery (3):
+  toaster: Update oe-core fixture for Morty release
+  toaster: Update poky fixture for Morty release
+  toaster: Update default release to Morty
+
+ lib/toaster/orm/fixtures/oe-core.xml  | 16 ++++++++--------
+ lib/toaster/orm/fixtures/poky.xml     | 12 ++++++------
+ lib/toaster/orm/fixtures/settings.xml |  2 +-
+ 3 files changed, 15 insertions(+), 15 deletions(-)
+
+-- 
+2.7.4
+
 
