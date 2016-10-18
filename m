@@ -1,46 +1,42 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-vk0-f68.google.com (mail-vk0-f68.google.com
-	[209.85.213.68])
-	by mail.openembedded.org (Postfix) with ESMTP id A2CBA6022E
+Return-Path: <davis.roman84@gmail.com>
+Received: from mail-io0-f175.google.com (mail-io0-f175.google.com
+	[209.85.223.175])
+	by mail.openembedded.org (Postfix) with ESMTP id DAC2871A7E
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Oct 2016 22:25:15 +0000 (UTC)
-Received: by mail-vk0-f68.google.com with SMTP id 130so6309727vkg.2
+	Tue, 18 Oct 2016 21:50:58 +0000 (UTC)
+Received: by mail-io0-f175.google.com with SMTP id j37so12526355ioo.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Oct 2016 15:25:17 -0700 (PDT)
+	Tue, 18 Oct 2016 14:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=4KCgMQ9AJuLEmr0iRJxBcA/Ogug1Bi3ZXuQwZUyxxRY=;
-	b=bT7LXu3h4EAqzNjJwfNf2BifQ4ZZuBzbrHak0niwDSXMUIiCmQdNqnBKae6pP+SGQa
-	4NxFYMJh/sr1L9pfp9DKhCYe0ALHM50+3SSIAj/T2mLKkMNpbcL9/KHioKdx/jk2Uvmc
-	BrI9FA3GFUzv/0161peF2+ovT0L5tZXh9DFZQ33+UH9tLQvScnnxIxl1pG9yx5R7ZYdq
-	IRSg0OVG8/vg7ZXF094b7P2Cokp3ImV8aj+RKxN8j1+UEkZYVcLndp47ag7OJnQChfp/
-	EXfFF8/Gj1WJ5jVPgl6RyhMqgP0Y0FGPoB0IzYCrrghCWP4k5xXVv3JvJG0AfTf7h6P+
-	u62w==
+	h=mime-version:from:date:message-id:subject:to;
+	bh=MTU4AgGXcipI1unIh9YQXsvwDECDerW7NfqabhsMZSk=;
+	b=S0xk3PZrbdDLn+X8BYLMtiiRQ87QkCOMYH3mwMD6HPJiHFDanDMf6QdK7xKVlZ8zko
+	iptt7fJQbD0VRsUXY8i2DwJXOdJFkCMXD+IRCcfgDOdkXpf5BF1T3vgOArWv6Sfsf7UQ
+	qg8O0OkNEsCAGdaJakfggHjOjaISgbNCpjt8wIBodbXWA0fRV3nV/OK6uNeetddEzwnu
+	L7qqRfEj5vBJt7+dLmTGDdHbAyNs6aIM4KqzOmKZpoPuwuMpky7+PnfdXNUiDIlYCfDS
+	xXEuwlivbVj7ywmuTEX87SokumlfyHAHMkA4NO7v4DopYV1BFxurp+fD+N6ZoA3mMvlI
+	diTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=4KCgMQ9AJuLEmr0iRJxBcA/Ogug1Bi3ZXuQwZUyxxRY=;
-	b=ffkCWoV80cwbUaFZaQU9kzEyGi6RYuN0zl9CnQVKWGm3Qu6/SCuM0HlSXCCQX9fk+i
-	IgTiiv4cz6cp4Kb0sg9weC6m1iHeLX+KV1x3kHuk/nmDG4qE78bVx+C6qqARjXOQS1qh
-	uZhy9IK/vGBnJ3EThDAxceMGGLNJQ3Lc/YPYnT8dHOSGLaMQmt9cX4J+6spAdiayTDAx
-	gQRRTfxPKrYFNkdfHjpi3d6mdQmSJdai7jBPmYTqKH1NywqAogmHI7YbqL96fY+KrYrZ
-	ERSkVowHMK0UNCgwTnE8mJw2Ha5AqCg5NfPZM8N1ixRv3MeuG7MDMB81bjyS8vfDXy8q
-	cynQ==
-X-Gm-Message-State: AA6/9Rk1ehPmn3QGnmX+mtD/8go+sJwOqpMc5bbOwa9SuCf1VZwGh/c980T/WAz9d0KRj43cF11OmFa2Da4oqA==
-X-Received: by 10.31.12.17 with SMTP id 17mr20640495vkm.108.1476743117460;
-	Mon, 17 Oct 2016 15:25:17 -0700 (PDT)
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=MTU4AgGXcipI1unIh9YQXsvwDECDerW7NfqabhsMZSk=;
+	b=CU4rapHPkeOW7ZTkJR2SKYgzzcB4TwE6kBIz0BgRuuMDJRDvNNNdo7D2mywBMZzLGH
+	Fg8f1Kod5U9YmVya0kR479foqvFTKUA1NbJz3vz2+SwN+lNqzAkfCGFIuJFaBRIR5bVt
+	WpiXxRtQuKWCnjU+O6DK9AcEHq8P7hN6reIVL5v7Rw0iFjiXOQHPyd3R0C+P5rqBddP8
+	jj50Wv2MAk7aPvIFAboaRoPvM8kwrYOcc/8DN2IcQOyMHjLb6y2afgnZsiDhNDbw+Pnn
+	4o/t9fK1i3Zlds2e6YHGrdoV7ZiTbtyV1/6m12+CSsyPJpoFVAmkiHdVLStY+Hy8yRfc
+	mhwA==
+X-Gm-Message-State: AA6/9RlVubbRJ1hgV55s9Frgyzl39coKFkkdEuMqAvHELnlhgalM8uBZQDdYnLEXP9IXpRCHDOT4Nzkv82AVUg==
+X-Received: by 10.107.25.11 with SMTP id 11mr3367505ioz.138.1476827459383;
+	Tue, 18 Oct 2016 14:50:59 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 10.31.67.194 with HTTP; Mon, 17 Oct 2016 15:25:16 -0700 (PDT)
-In-Reply-To: <1476458881-10624-1-git-send-email-michael.g.wood@intel.com>
-References: <1476458881-10624-1-git-send-email-michael.g.wood@intel.com>
-From: Brian Avery <avery.brian@gmail.com>
-Date: Mon, 17 Oct 2016 15:25:16 -0700
-Message-ID: <CAKV_0eiDd-JeBsem3XTW0vHUWqvCvBwCETgkhtAt-TuiW=H_8Q@mail.gmail.com>
-To: Michael Wood <michael.g.wood@intel.com>
-Cc: Richard Purdie <richard.purdie@intel.com>,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/3][1.32] Add morty/2.2/1.32 release information to toaster
+Received: by 10.64.54.36 with HTTP; Tue, 18 Oct 2016 14:50:58 -0700 (PDT)
+From: Davis Roman <davis.roman84@gmail.com>
+Date: Tue, 18 Oct 2016 17:50:58 -0400
+Message-ID: <CACfi_Z10fp9_iL9FX_jHSgES=N6CF+uBv2ouVSyb-ab9wtbLcQ@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+X-Mailman-Approved-At: Thu, 20 Oct 2016 09:23:21 +0000
+Subject: Difference between inclusion and inheritance
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,171 +49,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Oct 2016 22:25:16 -0000
-Content-Type: multipart/alternative; boundary=001a114573aaf0dd1c053f170cb1
+X-List-Received-Date: Tue, 18 Oct 2016 21:51:01 -0000
+Content-Type: multipart/alternative; boundary=001a114097aa1c7b86053f2ab077
 
---001a114573aaf0dd1c053f170cb1
+--001a114097aa1c7b86053f2ab077
 Content-Type: text/plain; charset=UTF-8
 
-So,
+Hello Bitbake community,
 
-This patch set lost the MORTY part of the subject line in it's journey from
-the toaster mailing list to the bitbake maling list.
+I'm a bitbake newbie and so naturally I'm becoming familiar with the
+bitbake documentation.
 
-This patch was supposed to be applied only to morty since it limits the
-available toaster project releases to morty.
+I came across something confusing ( well atleast for me ) regarding the
+difference between optional/required Inclusion versus inheritance.
 
-Master should have the choice of making a morty project or a master project
-and so should get a *different* patch that appends the morty release
-options to the master options.
+As far as optional/required inclusion is concerned, the documentation
+states quite clearly that the main difference is that the former will not
+issue an error message if the specified file is not found while the latter
+will so there is no issue here.
 
-Ideally, these 3 patches:
+My issue has to do with the 'inherit' command. Sounds to me like 'include'
+and 'require' already do the trick so I'm curious to know what value does
+'inherit' bring ?
 
-4b94b49 bitbake: toaster: Update default release to Morty
+Any clarification would be extremely appreciated.
 
-3332426 bitbake: toaster: Update poky fixture for Morty release
+Thank you,
 
-7656dea bitbake: toaster: Update oe-core fixture for Morty release
+Davis
 
-
-Would be reverted and we would make a different patch that adds morty as an
-option.
-
-
-Sorry :(
-
--Brian
-
-an Intel employee
-
-
-
-On Fri, Oct 14, 2016 at 8:27 AM, Michael Wood <michael.g.wood@intel.com>
-wrote:
-
-> From Brian:
->
-> This changes the fixtures for toaster in Morty so that
-> 1) We only allow the morty branch for new projects
-> 2) we default to morty when making a new project.
->
-> This release we do not support building older releases due to
-> the Python 2.7 -> Python 3 change Morty represents.
->
-> This patch set updates both the poky and oe-core fixtures.
->
-> Note: this only applies to the Morty branch and should *not* be applied to
-> master.
->
-> -bavery
->
-> Changes by me:
->  - Fix branch name in oe-core for bitbake
->  - Add "2.2" as part of the description
->
->
-> brian avery (3):
->   toaster: Update oe-core fixture for Morty release
->   toaster: Update poky fixture for Morty release
->   toaster: Update default release to Morty
->
->  lib/toaster/orm/fixtures/oe-core.xml  | 16 ++++++++--------
->  lib/toaster/orm/fixtures/poky.xml     | 12 ++++++------
->  lib/toaster/orm/fixtures/settings.xml |  2 +-
->  3 files changed, 15 insertions(+), 15 deletions(-)
->
-> --
-> 2.7.4
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
-
---001a114573aaf0dd1c053f170cb1
+--001a114097aa1c7b86053f2ab077
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">So,=C2=A0<div><br></div><div>This patch set lost the MORTY=
- part of the subject line in it&#39;s journey from the toaster mailing list=
- to the bitbake maling list.</div><div><br></div><div>This patch was suppos=
-ed to be applied only to morty since it limits the available toaster projec=
-t releases to morty. =C2=A0</div><div><br></div><div>Master should have the=
- choice of making a morty project or a master project and so should get a *=
-different* patch that appends the morty release options to the master optio=
-ns.</div><div><br></div><div>Ideally, these 3 patches:</div><div>
+<div dir=3D"ltr"><font face=3D"monospace, monospace">Hello Bitbake communit=
+y,</font><div><font face=3D"monospace, monospace"><br></font></div><div><fo=
+nt face=3D"monospace, monospace">I&#39;m a bitbake newbie and so naturally =
+I&#39;m becoming familiar with the bitbake documentation.=C2=A0</font></div=
+><div><font face=3D"monospace, monospace"><br></font></div><div><font face=
+=3D"monospace, monospace">I came across something confusing ( well atleast =
+for me ) regarding the difference between optional/required Inclusion versu=
+s inheritance.</font></div><div><font face=3D"monospace, monospace"><br></f=
+ont></div><div><font face=3D"monospace, monospace">As far as optional/requi=
+red inclusion is concerned, the documentation states quite clearly that the=
+ main difference is that the former will not issue an error message if the =
+specified file is not found while the latter will so there is no issue here=
+.</font></div><div><font face=3D"monospace, monospace"><br></font></div><di=
+v><font face=3D"monospace, monospace">My issue has to do with the &#39;inhe=
+rit&#39; command. Sounds to me like &#39;include&#39; and &#39;require&#39;=
+ already do the trick so I&#39;m curious to know what value does &#39;inher=
+it&#39; bring ?</font></div><div><font face=3D"monospace, monospace"><br></=
+font></div><div><font face=3D"monospace, monospace">Any clarification would=
+ be extremely appreciated.</font></div><div><font face=3D"monospace, monosp=
+ace"><br></font></div><div><font face=3D"monospace, monospace">Thank you,</=
+font></div><div><font face=3D"monospace, monospace"><br></font></div><div><=
+font face=3D"monospace, monospace">Davis</font></div><div><br></div><div><b=
+r></div></div>
 
-
-
-
-
-
-
-<p class=3D"gmail-p1"><span class=3D"gmail-s1">4b94b49</span><span class=3D=
-"gmail-s2"> bitbake: toaster: Update default release to Morty =C2=A0</span>=
-</p><p class=3D"gmail-p1"><span class=3D"gmail-s1">3332426</span><span clas=
-s=3D"gmail-s2"> bitbake: toaster: Update poky fixture for Morty release</sp=
-an></p>
-<p class=3D"gmail-p1"><span class=3D"gmail-s1">7656dea</span><span class=3D=
-"gmail-s2"> bitbake: toaster: Update oe-core fixture for Morty release</spa=
-n></p><p class=3D"gmail-p1"><span class=3D"gmail-s2"><br></span></p><p clas=
-s=3D"gmail-p1"><span class=3D"gmail-s2">Would be reverted and we would make=
- a different patch that adds morty as an option.</span></p><p class=3D"gmai=
-l-p1"><span class=3D"gmail-s2"><br></span></p><p class=3D"gmail-p1"><span c=
-lass=3D"gmail-s2">Sorry :(</span></p><p class=3D"gmail-p1"><span class=3D"g=
-mail-s2">-Brian</span></p><p class=3D"gmail-p1"><span class=3D"gmail-s2">an=
- Intel employee</span></p><p class=3D"gmail-p1"><br></p></div></div><div cl=
-ass=3D"gmail_extra"><br><div class=3D"gmail_quote">On Fri, Oct 14, 2016 at =
-8:27 AM, Michael Wood <span dir=3D"ltr">&lt;<a href=3D"mailto:michael.g.woo=
-d@intel.com" target=3D"_blank">michael.g.wood@intel.com</a>&gt;</span> wrot=
-e:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-l=
-eft:1px #ccc solid;padding-left:1ex">From Brian:<br>
-<br>
-This changes the fixtures for toaster in Morty so that<br>
-1) We only allow the morty branch for new projects<br>
-2) we default to morty when making a new project.<br>
-<br>
-This release we do not support building older releases due to<br>
-the Python 2.7 -&gt; Python 3 change Morty represents.<br>
-<br>
-This patch set updates both the poky and oe-core fixtures.<br>
-<br>
-Note: this only applies to the Morty branch and should *not* be applied to<=
-br>
-master.<br>
-<br>
--bavery<br>
-<br>
-Changes by me:<br>
-=C2=A0- Fix branch name in oe-core for bitbake<br>
-=C2=A0- Add &quot;2.2&quot; as part of the description<br>
-<br>
-<br>
-brian avery (3):<br>
-=C2=A0 toaster: Update oe-core fixture for Morty release<br>
-=C2=A0 toaster: Update poky fixture for Morty release<br>
-=C2=A0 toaster: Update default release to Morty<br>
-<br>
-=C2=A0lib/toaster/orm/fixtures/oe-<wbr>core.xml=C2=A0 | 16 ++++++++--------=
-<br>
-=C2=A0lib/toaster/orm/fixtures/poky.<wbr>xml=C2=A0 =C2=A0 =C2=A0| 12 ++++++=
-------<br>
-=C2=A0lib/toaster/orm/fixtures/<wbr>settings.xml |=C2=A0 2 +-<br>
-=C2=A03 files changed, 15 insertions(+), 15 deletions(-)<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
---<br>
-2.7.4<br>
-<br>
---<br>
-______________________________<wbr>_________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists=
-.<wbr>openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/<wbr>mailm=
-an/listinfo/bitbake-devel</a><br>
-</font></span></blockquote></div><br></div>
-
---001a114573aaf0dd1c053f170cb1--
+--001a114097aa1c7b86053f2ab077--
