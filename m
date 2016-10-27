@@ -1,26 +1,35 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 3DF6160616
+Return-Path: <o.mandel@menlosystems.com>
+X-Greylist: delayed 475 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 27 Oct 2016 16:42:59 UTC
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 52E6571C84
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Oct 2016 08:50:22 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id u9R8oJEc024561
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Oct 2016 01:50:24 -0700
-Received: from ala-blade48.wrs.com (147.11.105.68) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.294.0;
-	Thu, 27 Oct 2016 01:50:18 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 27 Oct 2016 01:50:18 -0700
-Message-ID: <c624edf8377d8b8443fe9c6f76a1d600110db2d1.1477557932.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.9.0
-In-Reply-To: <cover.1477557932.git.liezhi.yang@windriver.com>
-References: <cover.1477557932.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] lib/bb/cooker.py: fix for BBFILE_PATTERN = ""
+	Thu, 27 Oct 2016 16:42:59 +0000 (UTC)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 3t4XYP2z40z3hjhF;
+	Thu, 27 Oct 2016 18:35:05 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
+	by mail.m-online.net (Postfix) with ESMTP id 3t4XYP2hmrzvl7R;
+	Thu, 27 Oct 2016 18:35:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+	by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavisd-new,
+	port 10024)
+	with ESMTP id rsPfWWRLYWVZ; Thu, 27 Oct 2016 18:35:04 +0200 (CEST)
+X-Auth-Info: MgDz0eI5ZcYSY2PExgzbTehvCdSuRY8Ppkrh8PkR4Q031/11JJx46nKgWcX4YbDL
+Received: from menlobuildsrv.menlosystems.local
+	(host-141-40-253-38.customer.izb-online.de [141.40.253.38])
+	(using TLSv1 with cipher AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Thu, 27 Oct 2016 18:35:04 +0200 (CEST)
+From: Olaf Mandel <o.mandel@menlosystems.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 27 Oct 2016 16:34:39 +0000
+Message-Id: <1477586079-29340-1-git-send-email-o.mandel@menlosystems.com>
+X-Mailer: git-send-email 2.1.4
+Cc: Olaf Mandel <o.mandel@menlosystems.com>
+Subject: [PATCH] toaster: fix if USER_CLASSES is missing buildstats
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,42 +42,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Oct 2016 08:50:24 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 27 Oct 2016 16:43:00 -0000
 
-There would be error when BBFILE_PATTERN = None:
-  BBFILE_PATTERN_foo not defined
+buildstats not being in USER_CLASSES is no reason to fail every
+single task in toaster_collect_task_stats: using a non-existing
+variable results in a None argument to os.path.join().
 
-This is the correct behaviour, but when the layer sets BBFILE_PATTERN = "",
-it would match all the remaining recipes, and cause "No bb files matched BBFILE_PATTERN"
-warnings for all the layers which behind it.
+Check the variable availability before trying to use it.
 
-When a layer sets BBFILE_PATTERN = "" (for example, a layer only
-provides git repos and source tarballs), now it means has no recipes.
-This is different from BBFILE_PATTERN_IGNORE_EMPTY, the later one means
-that it *may* not have any recipes.
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Olaf Mandel <o.mandel@menlosystems.com>
 ---
- bitbake/lib/bb/cooker.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ meta/classes/toaster.bbclass | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 42831e2..c08af45 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1240,6 +1240,10 @@ class BBCooker:
-                     parselog.error("BBFILE_PATTERN_%s not defined" % c)
-                     errors = True
-                     continue
-+                elif regex == "":
-+                    parselog.debug(1, "BBFILE_PATTERN_%s is empty" % c)
-+                    errors = False
-+                    continue
-                 try:
-                     cre = re.compile(regex)
-                 except re.error:
+diff --git a/meta/classes/toaster.bbclass b/meta/classes/toaster.bbclass
+index 4bddf34..638bb39 100644
+--- a/meta/classes/toaster.bbclass
++++ b/meta/classes/toaster.bbclass
+@@ -157,11 +157,11 @@ python toaster_collect_task_stats() {
+     import bb.utils
+     import os
+ 
+-    toaster_statlist_file = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist")
+-
+     if not e.data.getVar('BUILDSTATS_BASE', True):
+         return  # if we don't have buildstats, we cannot collect stats
+ 
++    toaster_statlist_file = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist")
++
+     def stat_to_float(value):
+         return float(value.strip('% \n\r'))
+ 
 -- 
-2.9.0
+2.1.4
 
 
