@@ -1,27 +1,47 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 4CEB471DAA
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-pf0-f179.google.com (mail-pf0-f179.google.com
+	[209.85.192.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 90B0F607A3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Oct 2016 15:49:58 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 28 Oct 2016 08:49:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.31,410,1473145200"; d="scan'208";a="1060664044"
-Received: from linux.intel.com ([10.54.29.200])
-	by fmsmga001.fm.intel.com with ESMTP; 28 Oct 2016 08:49:50 -0700
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.68])
-	by linux.intel.com (Postfix) with ESMTP id 2E7A16A4006;
-	Fri, 28 Oct 2016 08:49:11 -0700 (PDT)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+	Fri, 28 Oct 2016 16:53:08 +0000 (UTC)
+Received: by mail-pf0-f179.google.com with SMTP id 197so40310909pfu.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Oct 2016 09:53:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=nqeBeHy+2rh40/UObf2rHdhly50+gtu3aqjjFHJrOjU=;
+	b=aWu3vkcbqh/k489tx3zp8g5MOv2VGpjAXfwG8SIFX3Z6zI8xdhwgEcr1dakAND8rql
+	FY0SnZmGuqrCKblLnVl5od3IAQ4yrbNf8F06stHTHqnVQXBaaUiHGIZ+esLqn5hu4Pv0
+	I4wQNNSUmg15YdnAaStN8DXliZEAOsxwheJYv/utjFcIECJxS84X7Bt0YHxO4KZiUFlG
+	mnwxboH7QB00lp/0dhkHC0S0eoJHBPbv9M985gsfCDOLwnll/FwUsI0YNq1+cxWXiMgo
+	48Fw61VQsmqUp3Rd/KBzJRpyCmZZ4G9KUnxA1DNRWB27M0IkRbxemJXUTbOpSOnJ+y2j
+	3eag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=nqeBeHy+2rh40/UObf2rHdhly50+gtu3aqjjFHJrOjU=;
+	b=LZFjeCGVv0JtLNuTeGuFQgDrVkfzYMAqMdfCQemndeMsV0gEsi57qBBSIWoMlDHQ/k
+	GgYBTD3RtlWg35DoAn+hhbsSGtno73KS9aT++CH3vj9B5hh0uuEFv/FTCqN0bFw2BnZH
+	FxfggIU+HlwyXOA5Jo2YiLV0aH5vvfTzR1pZWzfTcoFWsRtCyOiej99fyikl5YsTwPUc
+	UPhSx214nD04H/iG+WbdwAulhmAhtSmOmLBzOxzR90dyWbP9wDvWySO66vKi0AhxDXQQ
+	uBRHeuqYqv17OO8whNseyi9CFZA6WL6UM5CsGQQgoCR0Jffibcweuh6Ra+ScLG4md/aH
+	8VCQ==
+X-Gm-Message-State: ABUngvc5mMvMUk1EV3rYDJ6BPPy+rZT0gGM7n/PG8y02F1hW7gwm2Qsq9PxDXy1JZ0rhySm+
+X-Received: by 10.98.8.130 with SMTP id 2mr26325979pfi.54.1477673590067;
+	Fri, 28 Oct 2016 09:53:10 -0700 (PDT)
+Received: from orion.ger.corp.intel.com ([192.55.55.41])
+	by smtp.gmail.com with ESMTPSA id
+	x196sm1900396pfd.61.2016.10.28.09.53.08
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 28 Oct 2016 09:53:09 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 28 Oct 2016 18:48:48 +0300
-Message-Id: <5e8ad6a5f332f53cf2cc1557220fc9cfa09ff0ad.1477669487.git.ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <9f194bc2e4eb2c366782ae6ac9a111c6157d8b01.1477669486.git.ed.bartosh@linux.intel.com>
-References: <9f194bc2e4eb2c366782ae6ac9a111c6157d8b01.1477669486.git.ed.bartosh@linux.intel.com>
-In-Reply-To: <cover.1477669486.git.ed.bartosh@linux.intel.com>
-References: <cover.1477669486.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 7/8] toaster: tests builds Update buildtest
+Date: Fri, 28 Oct 2016 17:52:51 +0100
+Message-Id: <1477673571-5503-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Cc: brian avery <brian.avery@intel.com>
+Subject: [PATCH] toaster: buildinfohelper Handle regex paths
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,207 +54,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Oct 2016 15:49:59 -0000
+X-List-Received-Date: Fri, 28 Oct 2016 16:53:10 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+From: brian avery <brian.avery@intel.com>
 
-Now that we're using fixtures for configuration just load these instead
-of trying to search for a toasterconf json file.
+We were presuming that all the layer dependency information was of the
+form "^/path/to/layer" to we were just stripping the leading "^" off of
+the layer information when we were matching the layer priorities to the
+toaster database.  This patch splits out the priorities layer match which
+gets a  regex from the task/recipe match which is gets a path.
 
-Also for convenience add the ability for the tests to source the build
-environment script. To use this test make sure that directories are in
-the same layout as poky.
-
+Signed-off-by: brian avery <brian.avery@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/tests/builds/buildtest.py | 129 +++++++++++++++++++++-------------
- 1 file changed, 81 insertions(+), 48 deletions(-)
+ lib/bb/ui/buildinfohelper.py | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/tests/builds/buildtest.py b/lib/toaster/tests/builds/buildtest.py
-index fc7bd5b..bf147f0 100644
---- a/lib/toaster/tests/builds/buildtest.py
-+++ b/lib/toaster/tests/builds/buildtest.py
-@@ -24,16 +24,18 @@ import sys
- import time
- import unittest
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index 5b69660..3ddcb2a 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -982,6 +982,31 @@ class BuildInfoHelper(object):
+             pass
+         return task_information
  
--from orm.models import Project, Release, ProjectTarget, Build
-+from orm.models import Project, Release, ProjectTarget, Build, ProjectVariable
- from bldcontrol.models import BuildEnvironment
- 
--from bldcontrol.management.commands.loadconf import Command\
--    as LoadConfigCommand
--
- from bldcontrol.management.commands.runbuilds import Command\
-     as RunBuildsCommand
- 
-+from django.core.management import call_command
++    def _get_layer_version_for_dependency(self, pathRE):
++        """ Returns the layer in the toaster db that has a full regex match to the pathRE.
++        pathRE - the layer path passed as a regex in the event. It is created in
++          cooker.py as a collection for the layer priorities.
++        """
++        self._ensure_build()
 +
- import subprocess
-+import logging
++        def _sort_longest_path(layer_version):
++            assert isinstance(layer_version, Layer_Version)
++            return len(layer_version.local_path)
 +
-+logger = logging.getLogger("toaster")
- 
- # We use unittest.TestCase instead of django.test.TestCase because we don't
- # want to wrap everything in a database transaction as an external process
-@@ -43,63 +45,92 @@ import subprocess
- class BuildTest(unittest.TestCase):
- 
-     PROJECT_NAME = "Testbuild"
-+    BUILDDIR = "/tmp/build/"
- 
-     def build(self, target):
-         # So that the buildinfo helper uses the test database'
-         self.assertEqual(
-             os.environ.get('DJANGO_SETTINGS_MODULE', ''),
--            'toastermain.settings-test',
-+            'toastermain.settings_test',
-             "Please initialise django with the tests settings:  "
--            "DJANGO_SETTINGS_MODULE='toastermain.settings-test'")
-+            "DJANGO_SETTINGS_MODULE='toastermain.settings_test'")
- 
--        if self.target_already_built(target):
--            return
-+        built = self.target_already_built(target)
-+        if built:
-+            return built
- 
--        # Take a guess at the location of the toasterconf
--        poky_toaster_conf = '../../../meta-poky/conf/toasterconf.json'
--        oe_toaster_conf = '../../../meta/conf/toasterconf.json'
--        env_toaster_conf = os.environ.get('TOASTER_CONF')
-+        call_command('loaddata', 'settings.xml', app_label="orm")
-+        call_command('loaddata', 'poky.xml', app_label="orm")
- 
--        config_file = None
--        if env_toaster_conf:
--            config_file = env_toaster_conf
-+        current_builddir = os.environ.get("BUILDDIR")
-+        if current_builddir:
-+            BuildTest.BUILDDIR = current_builddir
-         else:
--            if os.path.exists(poky_toaster_conf):
--                config_file = poky_toaster_conf
--            elif os.path.exists(oe_toaster_conf):
--                config_file = oe_toaster_conf
--
--        self.assertIsNotNone(config_file,
--                             "Default locations for toasterconf not found"
--                             "please set $TOASTER_CONF manually")
--
--        # Setup the release information and default layers
--        print("\nImporting file: %s" % config_file)
--        os.environ['TOASTER_CONF'] = config_file
--        LoadConfigCommand()._import_layer_config(config_file)
--
--        os.environ['TOASTER_DIR'] = \
--            os.path.abspath(os.environ['BUILDDIR'] + "/../")
--
--        os.environ['BBBASEDIR'] = \
--            subprocess.check_output('which bitbake', shell=True)
-+            # Setup a builddir based on default layout
-+            # bitbake inside openebedded-core
-+            oe_init_build_env_path = os.path.join(
-+                os.path.dirname(os.path.abspath(__file__)),
-+                os.pardir,
-+                os.pardir,
-+                os.pardir,
-+                os.pardir,
-+                os.pardir,
-+                'oe-init-build-env'
-+            )
-+            if not os.path.exists(oe_init_build_env_path):
-+                raise Exception("We had no BUILDDIR set and couldn't "
-+                                "find oe-init-build-env to set this up "
-+                                "ourselves please run oe-init-build-env "
-+                                "before running these tests")
++        # we don't care if we match the trailing slashes
++        p = re.compile(re.sub("/[^/]*?$","",pathRE))
++        # Heuristics: we always match recipe to the deepest layer path in the discovered layers
++        for lvo in sorted(self.orm_wrapper.layer_version_objects, reverse=True, key=_sort_longest_path):
++            if p.fullmatch(lvo.local_path):
++                return lvo
++            if lvo.layer.local_source_dir:
++                if p.fullmatch(lvo.layer.local_source_dir):
++                    return lvo
++        #if we get here, we didn't read layers correctly; dump whatever information we have on the error log
++        logger.warning("Could not match layer dependency for path %s : %s", path, self.orm_wrapper.layer_version_objects)
 +
-+            oe_init_build_env_path = os.path.realpath(oe_init_build_env_path)
-+            cmd = "bash -c 'source oe-init-build-env %s'" % BuildTest.BUILDDIR
-+            p = subprocess.Popen(
-+                cmd,
-+                cwd=os.path.dirname(oe_init_build_env_path),
-+                shell=True,
-+                stdout=subprocess.PIPE,
-+                stderr=subprocess.PIPE)
 +
-+            output, err = p.communicate()
-+            p.wait()
 +
-+            logger.info("oe-init-build-env %s %s" % (output, err))
-+
-+            os.environ['BUILDDIR'] = BuildTest.BUILDDIR
-+
-+        # Setup the path to bitbake we know where to find this
-+        bitbake_path = os.path.join(
-+            os.path.dirname(os.path.abspath(__file__)),
-+            os.pardir,
-+            os.pardir,
-+            os.pardir,
-+            os.pardir,
-+            'bin',
-+            'bitbake')
-+        if not os.path.exists(bitbake_path):
-+            raise Exception("Could not find bitbake at the expected path %s"
-+                            % bitbake_path)
-+
-+        os.environ['BBBASEDIR'] = bitbake_path
+     def _get_layer_version_for_path(self, path):
+         self._ensure_build()
  
-         BuildEnvironment.objects.get_or_create(
-             betype=BuildEnvironment.TYPE_LOCAL,
--            sourcedir=os.environ['TOASTER_DIR'],
--            builddir=os.environ['BUILDDIR']
-+            sourcedir=BuildTest.BUILDDIR,
-+            builddir=BuildTest.BUILDDIR
-         )
- 
-         release = Release.objects.get(name='local')
- 
-         # Create a project for this build to run in
--        try:
--            project = Project.objects.get(name=BuildTest.PROJECT_NAME)
--        except Project.DoesNotExist:
--            project = Project.objects.create_project(
--                name=BuildTest.PROJECT_NAME,
--                release=release
--            )
-+        project = Project.objects.create_project(name=BuildTest.PROJECT_NAME,
-+                                                 release=release)
-+
-+        if os.environ.get("TOASTER_TEST_USE_SSTATE_MIRROR"):
-+            ProjectVariable.objects.get_or_create(
-+                name="SSTATE_MIRRORS",
-+                value="file://.* http://autobuilder.yoctoproject.org/pub/sstate/PATH;downloadfilename=PATH",
-+                project=project)
- 
-         ProjectTarget.objects.create(project=project,
-                                      target=target,
-@@ -118,9 +149,11 @@ class BuildTest(unittest.TestCase):
-             sys.stdout.flush()
-             time.sleep(1)
- 
--        self.assertNotEqual(build_request.build.outcome,
--                            Build.SUCCEEDED, "Build did not SUCCEEDED")
--        print("\nBuild finished")
-+        self.assertEqual(Build.objects.get(pk=build_pk).outcome,
-+                         Build.SUCCEEDED,
-+                         "Build did not SUCCEEDED")
-+
-+        logger.info("\nBuild finished %s" % build_request.build.outcome)
-         return build_request.build
- 
-     def target_already_built(self, target):
-@@ -129,6 +162,6 @@ class BuildTest(unittest.TestCase):
-                 project__name=BuildTest.PROJECT_NAME):
-             targets = build.target_set.values_list('target', flat=True)
-             if target in targets:
--                return True
-+                return build
- 
--        return False
-+        return None
+@@ -1372,7 +1397,7 @@ class BuildInfoHelper(object):
+         if 'layer-priorities' in event._depgraph.keys():
+             for lv in event._depgraph['layer-priorities']:
+                 (_, path, _, priority) = lv
+-                layer_version_obj = self._get_layer_version_for_path(path[1:]) # paths start with a ^
++                layer_version_obj = self._get_layer_version_for_dependency(path)
+                 assert layer_version_obj is not None
+                 layer_version_obj.priority = priority
+                 layer_version_obj.save()
 -- 
-2.1.4
+2.7.4
 
 
