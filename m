@@ -1,41 +1,24 @@
-Return-Path: <o.mandel@menlosystems.com>
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 1074A71976
+Return-Path: <joshua.g.lock@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id B7D7E60750
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Oct 2016 16:47:56 +0000 (UTC)
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-	by mail-out.m-online.net (Postfix) with ESMTP id 3t4Xg64fy6z3hjHM
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Oct 2016 18:40:02 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
-	by mail.m-online.net (Postfix) with ESMTP id 3t4Xg646vxzvlDX
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Oct 2016 18:40:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-	by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavisd-new,
-	port 10024)
-	with ESMTP id AMzSeDwhsx1t for <bitbake-devel@lists.openembedded.org>; 
-	Thu, 27 Oct 2016 18:40:01 +0200 (CEST)
-X-Auth-Info: V5HibCIUyS5Bkq5sHAPrn8bEFv6Dql7ZxaJofEhAXUkSn03VMME1zDLvd8L3Lrel
-Received: from [10.0.0.72] (host-141-40-253-38.customer.izb-online.de
-	[141.40.253.38])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.mnet-online.de (Postfix) with ESMTPSA
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Oct 2016 18:40:01 +0200 (CEST)
-To: bitbake-devel@lists.openembedded.org
-References: <1477586079-29340-1-git-send-email-o.mandel@menlosystems.com>
-From: Olaf Mandel <o.mandel@menlosystems.com>
-Organization: Menlo Systems
-Message-ID: <69506fef-76f1-d985-6a2d-5beab03a2dac@menlosystems.com>
-Date: Thu, 27 Oct 2016 18:39:34 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
-	Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <1477586079-29340-1-git-send-email-o.mandel@menlosystems.com>
-Subject: Re: [PATCH] toaster: fix if USER_CLASSES is missing buildstats
+	Fri, 28 Oct 2016 09:27:59 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga103.jf.intel.com with ESMTP; 28 Oct 2016 02:28:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.31,557,1473145200"; d="scan'208";a="895032736"
+Received: from jlock-mobl1.ger.corp.intel.com ([10.252.24.131])
+	by orsmga003.jf.intel.com with ESMTP; 28 Oct 2016 02:27:59 -0700
+Message-ID: <1477646878.3717.83.camel@linux.intel.com>
+From: Joshua Lock <joshua.g.lock@linux.intel.com>
+To: Olaf Mandel <o.mandel@menlosystems.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Fri, 28 Oct 2016 10:27:58 +0100
+In-Reply-To: <1477586197-29398-1-git-send-email-o.mandel@menlosystems.com>
+References: <1477586197-29398-1-git-send-email-o.mandel@menlosystems.com>
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Subject: Re: [PATCH] toasterui.py: warn if buildstats is missing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,47 +31,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Oct 2016 16:47:57 -0000
-X-Groupsio-MsgNum: 8145
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="MaF9KhSqm9kwm5shIbdQFqmg6sXAiBFBH"
+X-List-Received-Date: Fri, 28 Oct 2016 09:28:01 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
---MaF9KhSqm9kwm5shIbdQFqmg6sXAiBFBH
-Content-Type: multipart/mixed; boundary="qWE9rneaSwvBgN1KpxHJHobT56i7QbadD";
- protected-headers="v1"
-From: Olaf Mandel <o.mandel@menlosystems.com>
-To: bitbake-devel@lists.openembedded.org
-Message-ID: <69506fef-76f1-d985-6a2d-5beab03a2dac@menlosystems.com>
-Subject: Re: [PATCH] toaster: fix if USER_CLASSES is missing buildstats
-References: <1477586079-29340-1-git-send-email-o.mandel@menlosystems.com>
-In-Reply-To: <1477586079-29340-1-git-send-email-o.mandel@menlosystems.com>
+On Thu, 2016-10-27 at 16:36 +0000, Olaf Mandel wrote:
+> Like for buildhistory and INHERIT, warn if buildstats is missing
+> from USER_CLASSES.
+> 
+> Signed-off-by: Olaf Mandel <o.mandel@menlosystems.com>
+> ---
+>  lib/bb/ui/toasterui.py | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
+> index 9808f6b..2687faf 100644
+> --- a/lib/bb/ui/toasterui.py
+> +++ b/lib/bb/ui/toasterui.py
+> @@ -168,6 +168,11 @@ def main(server, eventHandler, params):
+>          logger.warning("buildhistory is not enabled. Please enable
+> INHERIT += \"buildhistory\" to see image details.")
+>          build_history_enabled = False
+>  
+> +    userclasseslist, _ = server.runCommand(["getVariable",
+> "USER_CLASSES"])
+> +
+> +    if not "buildstats" in userclasseslist.split(" "):
+> +        logger.warning("buildstats is not enabled. Please enable
+> USER_CLASSES += \"buildstats\" to generate build statistics.")
 
---qWE9rneaSwvBgN1KpxHJHobT56i7QbadD
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: quoted-printable
+As USER_CLASSES is an intermediate variable whose value becomes part of
+the INHERIT assignment it'd be better to check whether buildstats is in
+INHERIT, rather than USER_CLASSES. 
 
-Sorry about the original email: I accidentally sent it to the wrong
-mailing list... Please ignore it here.
+This should better handle configurations which include buildstats in a
+different manner.
 
+> +
+>      if not params.observe_only:
+>          params.updateFromServer(server)
+>          params.updateToServer(server, os.environ.copy())
+> -- 
+> 2.1.4
+> 
 
---qWE9rneaSwvBgN1KpxHJHobT56i7QbadD--
-
---MaF9KhSqm9kwm5shIbdQFqmg6sXAiBFBH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJYEi3VAAoJEFS9nbRiUh3/p8oIAJxmj+sU0ntXFSZ7Hs9ypd5L
-BCRYXzMctKr+nKW9+Db/LzWHq8ZUGaMm93+v8zTBIR9/YQ86v5nDroePW6NQZHpf
-9aBUrYUyLrJUjDzglZZX1bG81AUDTk8UnAteo0iKIcXHNxN4bJTUvIHMo0RcTKKa
-3k23hpKuwOy95YyxRAfdUPHPRG12X/AJnFOBvRmTnLHbecI6SRKqiq7t78ZIWO02
-koKKDej1UgE6QvfqX+SgmmzRB8qx48kXczoUUjEF6uY5o8hyqoJebL+KmM57ZlAS
-RhmaaRGKWrtw5oC0tx7biQ3CYctHkgdni32boyGBZgBgM5vNYA6OZ6I2pTGvH4k=
-=cxEq
------END PGP SIGNATURE-----
-
---MaF9KhSqm9kwm5shIbdQFqmg6sXAiBFBH--
