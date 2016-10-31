@@ -1,49 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
 Received: from mail-pf0-f177.google.com (mail-pf0-f177.google.com
 	[209.85.192.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 4A53B71AAD
+	by mail.openembedded.org (Postfix) with ESMTP id 6D8C171AAE
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Oct 2016 16:40:47 +0000 (UTC)
-Received: by mail-pf0-f177.google.com with SMTP id 189so25679725pfz.3
+	Mon, 31 Oct 2016 16:40:49 +0000 (UTC)
+Received: by mail-pf0-f177.google.com with SMTP id 189so25680065pfz.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Oct 2016 09:40:49 -0700 (PDT)
+	Mon, 31 Oct 2016 09:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=dj/g6BkOQU1UBTap8/JyFXNSBcieWVHWaIWyaoDXtoA=;
-	b=rn7Gz8vO9yaTAxTpOhXtTiTqpFIXd67rWv24IqEebWig2f0DCCCrj7B5Zqmy6gYvSO
-	qdfGJSX90bketD1QZcw89HWD5fET+inDpNoJlqwbsRiA06zbqgv7ysI3LHzDptgo38Ro
-	aK+yDPYkIDeQqD8uuZk2Jksm+V7k6Wj1QhOWrbhtgdz9vWy3OSmvR01dwhK6hrgP3dTf
-	IFcaKqZhYyelQqgACoq1HXyl6xQi/xr/KBVThfgPF2JBVj4FB4ir13jogBhhtPDnvM53
-	OAU4b1p86Xe2FVGUqV7b5m6OWs3+w1vzQqM/hgp/mjJnu+kCftKEdpTA6NcJ1YfKGTiy
-	7pvg==
+	bh=WMq1on6liJEKG5HMIrz4auMxBlt6exhkd9hwuWnzi9U=;
+	b=kO1MwQ9asaKvknEa+Lyq4IcdET7TIt6uWhmNleyXUyJTjvaS8JWc1PUB40p6JsKpwx
+	wddX0JaCy3XXGQfRxJHe/9hT4j3wE6pkjzsrgzEPFpU2vPhoEwzHxvwjea7v7INyLYnj
+	4vUXVU8FidL3Ghl4iOMgNRsfpG4knMIuh46PXMyxbB27+f3G4SMdsBds8STdolio7pgE
+	1QCn5HOMfVyPkDvH06hZXVXxs9QX7JK+RnPZPR83zftlly+V4dMVuFDGey8dNFiJ4+f3
+	nlmLjFg7VQknYBdhHv23N/4yPEA92xm//Ry5c2tg/Czs1KxxS4ZHXxoj8EaRaMatJI6Y
+	SntA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=dj/g6BkOQU1UBTap8/JyFXNSBcieWVHWaIWyaoDXtoA=;
-	b=ZZ3k+TAdGuC1GGWxGKAzHtGKbVHHKN0KtytZMm1hNqvpLowb1p3E9x/LISi1pyTZRi
-	dJVCqWht3Wv/ZcXFyJtOYltYS0tNMq1OWsxWG47pLv0yWrx7rb/h/kYnyXq5Z9Te5h30
-	qGaVMRvjqHhrEDISOsb8V2aoIcdFX+IkCIH3n7ztWv+iDrZ+HkwoShEVy7CVYSy7XzSf
-	xot5Lp5fG+3y7MWjzBb16DSvVCfkrZ2b9mZ4GGhuwVAn/yqqV4/s5AMd/iHcwvbDw+Fu
-	MUPi+v8XmrTSBq3aBdgTfrM6r3pOkEFrDeGjPC+pQ+MfxpWCjZIIaOm7pOUpvdwHlrVE
-	/Osg==
-X-Gm-Message-State: ABUngvf0Ktdrf60VnV2KQr5VQNX4ziQCYlrz8C3veyXud4o3KGaYJ9gKYizlZlaFR+kolwUs
-X-Received: by 10.98.44.212 with SMTP id s203mr51107197pfs.84.1477932049226;
-	Mon, 31 Oct 2016 09:40:49 -0700 (PDT)
+	bh=WMq1on6liJEKG5HMIrz4auMxBlt6exhkd9hwuWnzi9U=;
+	b=Bun8AjfBnX1/aGvebmeGPpIhkmzgzpoVN64A15CTtCu5a5Xq0qwNJJp64lf8pcRpUp
+	3/8LtK3yR73UrjZYbnyvaHk/V0HKYS60d8DNzgL/yMDy6fqTHvs/127V6UCzVp89iSgJ
+	/hYxcAIetNozYDhg/nWtuYD7Y3yVOTV/U3TZjMb2g6OjGhczLxuActxjXB0U477483Qn
+	2IeGxs+N16RZpt/8OxyLuRpKiEBC4IzqoOZg3CjZavMbA5WniQYmPiQM8ucjVJKiXQNv
+	io7diNGHhc9avWiKcDsihJL9MRCbmiNIQ28UjxA9rbDmJAbs3bj7GCQw1A6BHeCPjGW5
+	nYdQ==
+X-Gm-Message-State: ABUngvelGBISIR7M8D16DEtVsrMO+K2JaJAD2UJdsl/iCgB//GA8wgmmll/6uKY1lyRtMerA
+X-Received: by 10.98.20.131 with SMTP id 125mr11994467pfu.51.1477932051096;
+	Mon, 31 Oct 2016 09:40:51 -0700 (PDT)
 Received: from orion.ger.corp.intel.com (fmdmzpr04-ext.fm.intel.com.
 	[192.55.55.39]) by smtp.gmail.com with ESMTPSA id
-	j192sm36718494pfc.60.2016.10.31.09.40.47
+	j192sm36718494pfc.60.2016.10.31.09.40.49
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 31 Oct 2016 09:40:48 -0700 (PDT)
+	Mon, 31 Oct 2016 09:40:50 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 31 Oct 2016 16:40:38 +0000
-Message-Id: <1477932040-10112-3-git-send-email-michael.g.wood@intel.com>
+Date: Mon, 31 Oct 2016 16:40:39 +0000
+Message-Id: <1477932040-10112-4-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1477932040-10112-1-git-send-email-michael.g.wood@intel.com>
 References: <1477932040-10112-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 2/4] toaster: add eventreplay test case for core-image-minimal
+Subject: [PATCH 3/4] toaster: add eventreplay test case for zlib
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,114 +56,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 31 Oct 2016 16:40:48 -0000
+X-List-Received-Date: Mon, 31 Oct 2016 16:40:49 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Run toaster-eventreplay with core-image-minimal.events and
-test if all required packages present in Target_Installed_Package
-table.
+Run toaster-eventreplay with zlib.events.
+Check if zlib build and package present in Toaster database.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/tests/eventreplay/__init__.py | 87 +++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 lib/toaster/tests/eventreplay/__init__.py
+ lib/toaster/tests/eventreplay/__init__.py | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/lib/toaster/tests/eventreplay/__init__.py b/lib/toaster/tests/eventreplay/__init__.py
-new file mode 100644
-index 0000000..792f07d
---- /dev/null
+index 792f07d..6956619 100644
+--- a/lib/toaster/tests/eventreplay/__init__.py
 +++ b/lib/toaster/tests/eventreplay/__init__.py
-@@ -0,0 +1,87 @@
-+#! /usr/bin/env python
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+#
-+# BitBake Toaster Implementation
-+#
-+# Copyright (C) 2016 Intel Corporation
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+@@ -34,7 +34,7 @@ from pathlib import Path
+ 
+ from django.test import TestCase
+ 
+-from orm.models import Target_Installed_Package
++from orm.models import Target_Installed_Package, Package, Build
+ 
+ class EventReplay(TestCase):
+     """Base class for eventreplay test cases"""
+@@ -85,3 +85,13 @@ class CoreImageMinimalEventReplay(EventReplay):
+                                     'update-alternatives-opkg',
+                                     'update-rc.d', 'util-linux-libblkid',
+                                     'util-linux-libuuid', 'v86d', 'zlib'])
 +
-+# Tests were part of openembedded-core oe selftest Authored by: Lucian Musat
-+# Ionut Chisanovici, Paul Eggleton and Cristian Iorga
++class ZlibEventReplay(EventReplay):
++    """Replay zlib events"""
 +
-+"""
-+Test toaster backend by playing build event log files
-+using toaster-eventreplay script
-+"""
++    def test_replay_zlib(self):
++        """Test if zlib build and package are in the database"""
++        self._replay("zlib.events")
 +
-+import os
-+
-+from subprocess import getstatusoutput
-+from pathlib import Path
-+
-+from django.test import TestCase
-+
-+from orm.models import Target_Installed_Package
-+
-+class EventReplay(TestCase):
-+    """Base class for eventreplay test cases"""
-+
-+    def setUp(self):
-+        """
-+        Setup build environment:
-+            - set self.script to toaster-eventreplay path
-+            - set self.eventplay_dir to the value of EVENTPLAY_DIR env variable
-+        """
-+        bitbake_dir = Path(__file__.split('lib/toaster')[0])
-+        self.script = bitbake_dir /  'bin' / 'toaster-eventreplay'
-+        self.assertTrue(self.script.exists(), "%s doesn't exist")
-+        self.eventplay_dir = os.getenv("EVENTREPLAY_DIR")
-+        self.assertTrue(self.eventplay_dir,
-+                        "Environment variable EVENTREPLAY_DIR is not set")
-+
-+    def _replay(self, eventfile):
-+        """Run toaster-eventplay <eventfile>"""
-+        eventpath = Path(self.eventplay_dir) / eventfile
-+        status, output = getstatusoutput('%s %s' % (self.script, eventpath))
-+        if status:
-+            print(output)
-+
-+        self.assertEqual(status, 0)
-+
-+class CoreImageMinimalEventReplay(EventReplay):
-+    """Replay core-image-minimal events"""
-+
-+    def test_installed_packages(self):
-+        """Test if all required packages have been installed"""
-+
-+        self._replay('core-image-minimal.events')
-+
-+        # test installed packages
-+        packages = sorted(Target_Installed_Package.objects.\
-+                          values_list('package__name', flat=True))
-+        self.assertEqual(packages, ['base-files', 'base-passwd', 'busybox',
-+                                    'busybox-hwclock', 'busybox-syslog',
-+                                    'busybox-udhcpc', 'eudev', 'glibc',
-+                                    'init-ifupdown', 'initscripts',
-+                                    'initscripts-functions', 'kernel-base',
-+                                    'kernel-module-uvesafb', 'libkmod',
-+                                    'modutils-initscripts', 'netbase',
-+                                    'packagegroup-core-boot', 'run-postinsts',
-+                                    'sysvinit', 'sysvinit-inittab',
-+                                    'sysvinit-pidof', 'udev-cache',
-+                                    'update-alternatives-opkg',
-+                                    'update-rc.d', 'util-linux-libblkid',
-+                                    'util-linux-libuuid', 'v86d', 'zlib'])
++        self.assertEqual(Build.objects.last().target_set.last().target, "zlib")
++        self.assertTrue('zlib' in Package.objects.values_list('name', flat=True))
 -- 
 2.7.4
 
