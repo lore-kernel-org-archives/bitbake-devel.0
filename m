@@ -1,49 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pf0-f175.google.com (mail-pf0-f175.google.com
-	[209.85.192.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 5384671A8D
+Received: from mail-pf0-f177.google.com (mail-pf0-f177.google.com
+	[209.85.192.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 4A53B71AAD
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Oct 2016 16:40:45 +0000 (UTC)
-Received: by mail-pf0-f175.google.com with SMTP id n85so79021620pfi.1
+	Mon, 31 Oct 2016 16:40:47 +0000 (UTC)
+Received: by mail-pf0-f177.google.com with SMTP id 189so25679725pfz.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Oct 2016 09:40:47 -0700 (PDT)
+	Mon, 31 Oct 2016 09:40:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=3Y7BQzq3l45+Rkdr4hE1aH4SlmgMAZMaKKxqseLLJrk=;
-	b=PXUYxIdvlT4SA+Mqkh4ZTT8XA3/OF8+r80/bu4VdaytKG0AkU82+TerCFUVnQzLsnd
-	ekoDDo9jWBj7t6otzjcio5yw12xHknMhTTjfJwRDDfMbt5w7ax3FwclBwBk2r1FqyPb9
-	YqDk2Cd5OmngJ+eAad5gdRU8A29pYde9FedH7B935/zKpefmuYuFQnGgS8zxe95F2Mir
-	v1sHir2bSQ9mC/P8vfQRheqJjOHMv8BzHPaaqg4zESs6Q8YREpoRdYA7XAMltSL3NSXF
-	SlYk6prHuxA2nKGLNjksOpJBst6UydHpDLq0VcfE3tyzXSOyK3fjoN+aXT6iHAr29T2b
-	Bz/w==
+	bh=dj/g6BkOQU1UBTap8/JyFXNSBcieWVHWaIWyaoDXtoA=;
+	b=rn7Gz8vO9yaTAxTpOhXtTiTqpFIXd67rWv24IqEebWig2f0DCCCrj7B5Zqmy6gYvSO
+	qdfGJSX90bketD1QZcw89HWD5fET+inDpNoJlqwbsRiA06zbqgv7ysI3LHzDptgo38Ro
+	aK+yDPYkIDeQqD8uuZk2Jksm+V7k6Wj1QhOWrbhtgdz9vWy3OSmvR01dwhK6hrgP3dTf
+	IFcaKqZhYyelQqgACoq1HXyl6xQi/xr/KBVThfgPF2JBVj4FB4ir13jogBhhtPDnvM53
+	OAU4b1p86Xe2FVGUqV7b5m6OWs3+w1vzQqM/hgp/mjJnu+kCftKEdpTA6NcJ1YfKGTiy
+	7pvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=3Y7BQzq3l45+Rkdr4hE1aH4SlmgMAZMaKKxqseLLJrk=;
-	b=J7F6BtJNhfeu7Guqqo9/zHI78Ei6WBPeo1mIrm3EWl0+VCUZ7XQa1+rgFBTaZaViJC
-	JdYcDXXTsuE2uvGleu+ZZj4+9FAvVcAwtx32LBo6qAAKa7ZGPd6UR7y7CZ705JDqetFT
-	LfPoKNLj/LQw6Tk7RCGb9Kp9qBlD9c1UFL8uGiv0AHUvWAiMiGzhpw9AirKuHOg3hwyH
-	dS5zCiyZ5rDVwGO21ALbJnJLI+Zd5c9jMlaSRMHEP350hQWjoyhQ9cXoP63gk9uKPYZ3
-	vw/6vQtxIPfN+YBe2KF2fioBT0auJRag347V4cb3kjP7do7YGG+G1elwhRXLNkZIZt9o
-	pBcA==
-X-Gm-Message-State: ABUngvfWm7uDyhp7goNi/lbPRsVFcbGxYSoc0038z4d4bZag2tJxjUNxocv6qz8qVPrzb5lr
-X-Received: by 10.98.147.78 with SMTP id b75mr50523746pfe.167.1477932047404;
-	Mon, 31 Oct 2016 09:40:47 -0700 (PDT)
+	bh=dj/g6BkOQU1UBTap8/JyFXNSBcieWVHWaIWyaoDXtoA=;
+	b=ZZ3k+TAdGuC1GGWxGKAzHtGKbVHHKN0KtytZMm1hNqvpLowb1p3E9x/LISi1pyTZRi
+	dJVCqWht3Wv/ZcXFyJtOYltYS0tNMq1OWsxWG47pLv0yWrx7rb/h/kYnyXq5Z9Te5h30
+	qGaVMRvjqHhrEDISOsb8V2aoIcdFX+IkCIH3n7ztWv+iDrZ+HkwoShEVy7CVYSy7XzSf
+	xot5Lp5fG+3y7MWjzBb16DSvVCfkrZ2b9mZ4GGhuwVAn/yqqV4/s5AMd/iHcwvbDw+Fu
+	MUPi+v8XmrTSBq3aBdgTfrM6r3pOkEFrDeGjPC+pQ+MfxpWCjZIIaOm7pOUpvdwHlrVE
+	/Osg==
+X-Gm-Message-State: ABUngvf0Ktdrf60VnV2KQr5VQNX4ziQCYlrz8C3veyXud4o3KGaYJ9gKYizlZlaFR+kolwUs
+X-Received: by 10.98.44.212 with SMTP id s203mr51107197pfs.84.1477932049226;
+	Mon, 31 Oct 2016 09:40:49 -0700 (PDT)
 Received: from orion.ger.corp.intel.com (fmdmzpr04-ext.fm.intel.com.
 	[192.55.55.39]) by smtp.gmail.com with ESMTPSA id
-	j192sm36718494pfc.60.2016.10.31.09.40.45
+	j192sm36718494pfc.60.2016.10.31.09.40.47
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 31 Oct 2016 09:40:47 -0700 (PDT)
+	Mon, 31 Oct 2016 09:40:48 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 31 Oct 2016 16:40:37 +0000
-Message-Id: <1477932040-10112-2-git-send-email-michael.g.wood@intel.com>
+Date: Mon, 31 Oct 2016 16:40:38 +0000
+Message-Id: <1477932040-10112-3-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1477932040-10112-1-git-send-email-michael.g.wood@intel.com>
 References: <1477932040-10112-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 1/4] toaster: use current directory if BUILDDIR is not set
+Subject: [PATCH 2/4] toaster: add eventreplay test case for core-image-minimal
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,55 +56,114 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 31 Oct 2016 16:40:46 -0000
+X-List-Received-Date: Mon, 31 Oct 2016 16:40:48 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-If BUILDDIR environment variable is not set signal_runbuilds function
-throws TypeError as os.getenv('BUILDDIR') returns None:
-
-ERROR: unsupported operand type(s) for +=: 'NoneType' and 'str'
-Traceback (most recent call last):
-  File "bitbake/lib/bb/ui/toasterui.py", line
-391, in main
-    buildinfohelper.update_build_information(event, errors, warnings,
-taskfailures)
-  File "bitbake/lib/bb/ui/buildinfohelper.py",
-line 1184, in update_build_information
-    self.internal_state['build'], errors, warnings, taskfailures)
-  File "bitbake/lib/bb/ui/buildinfohelper.py",
-line 238, in update_build_stats_and_outcome
-    signal_runbuilds()
-  File "bitbake/lib/toaster/orm/models.py", line
-1746, in signal_runbuilds
-    '.runbuilds.pid')) as pidf:
-  File "/usr/lib64/python3.4/posixpath.py", line 82, in join
-    path += b
-TypeError: unsupported operand type(s) for +=: 'NoneType' and 'str'
-
-Used os.getenv('BUILDIR', '.') to make it always return meaningful
-directory path. Current directory '.' will be used if BUILDDIR is
-not set.
+Run toaster-eventreplay with core-image-minimal.events and
+test if all required packages present in Target_Installed_Package
+table.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/orm/models.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/tests/eventreplay/__init__.py | 87 +++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 lib/toaster/tests/eventreplay/__init__.py
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 9a4db1e..4f8510c 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -1742,7 +1742,7 @@ def invalidate_cache(**kwargs):
- def signal_runbuilds():
-     """Send SIGUSR1 to runbuilds process"""
-     try:
--        with open(os.path.join(os.getenv('BUILDDIR'),
-+        with open(os.path.join(os.getenv('BUILDDIR', '.'),
-                                '.runbuilds.pid')) as pidf:
-             os.kill(int(pidf.read()), SIGUSR1)
-     except FileNotFoundError:
+diff --git a/lib/toaster/tests/eventreplay/__init__.py b/lib/toaster/tests/eventreplay/__init__.py
+new file mode 100644
+index 0000000..792f07d
+--- /dev/null
++++ b/lib/toaster/tests/eventreplay/__init__.py
+@@ -0,0 +1,87 @@
++#! /usr/bin/env python
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# BitBake Toaster Implementation
++#
++# Copyright (C) 2016 Intel Corporation
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++
++# Tests were part of openembedded-core oe selftest Authored by: Lucian Musat
++# Ionut Chisanovici, Paul Eggleton and Cristian Iorga
++
++"""
++Test toaster backend by playing build event log files
++using toaster-eventreplay script
++"""
++
++import os
++
++from subprocess import getstatusoutput
++from pathlib import Path
++
++from django.test import TestCase
++
++from orm.models import Target_Installed_Package
++
++class EventReplay(TestCase):
++    """Base class for eventreplay test cases"""
++
++    def setUp(self):
++        """
++        Setup build environment:
++            - set self.script to toaster-eventreplay path
++            - set self.eventplay_dir to the value of EVENTPLAY_DIR env variable
++        """
++        bitbake_dir = Path(__file__.split('lib/toaster')[0])
++        self.script = bitbake_dir /  'bin' / 'toaster-eventreplay'
++        self.assertTrue(self.script.exists(), "%s doesn't exist")
++        self.eventplay_dir = os.getenv("EVENTREPLAY_DIR")
++        self.assertTrue(self.eventplay_dir,
++                        "Environment variable EVENTREPLAY_DIR is not set")
++
++    def _replay(self, eventfile):
++        """Run toaster-eventplay <eventfile>"""
++        eventpath = Path(self.eventplay_dir) / eventfile
++        status, output = getstatusoutput('%s %s' % (self.script, eventpath))
++        if status:
++            print(output)
++
++        self.assertEqual(status, 0)
++
++class CoreImageMinimalEventReplay(EventReplay):
++    """Replay core-image-minimal events"""
++
++    def test_installed_packages(self):
++        """Test if all required packages have been installed"""
++
++        self._replay('core-image-minimal.events')
++
++        # test installed packages
++        packages = sorted(Target_Installed_Package.objects.\
++                          values_list('package__name', flat=True))
++        self.assertEqual(packages, ['base-files', 'base-passwd', 'busybox',
++                                    'busybox-hwclock', 'busybox-syslog',
++                                    'busybox-udhcpc', 'eudev', 'glibc',
++                                    'init-ifupdown', 'initscripts',
++                                    'initscripts-functions', 'kernel-base',
++                                    'kernel-module-uvesafb', 'libkmod',
++                                    'modutils-initscripts', 'netbase',
++                                    'packagegroup-core-boot', 'run-postinsts',
++                                    'sysvinit', 'sysvinit-inittab',
++                                    'sysvinit-pidof', 'udev-cache',
++                                    'update-alternatives-opkg',
++                                    'update-rc.d', 'util-linux-libblkid',
++                                    'util-linux-libuuid', 'v86d', 'zlib'])
 -- 
 2.7.4
 
