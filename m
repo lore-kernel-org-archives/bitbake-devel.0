@@ -1,22 +1,28 @@
-Return-Path: <markus.lehtonen@linux.intel.com>
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	by mail.openembedded.org (Postfix) with ESMTP id B6B4571BF8
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id EEDF471A6C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Nov 2016 15:05:14 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by orsmga105.jf.intel.com with ESMTP; 01 Nov 2016 08:05:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.31,580,1473145200"; d="scan'208";a="186337522"
-Received: from marquiz.fi.intel.com ([10.237.72.155])
-	by fmsmga004.fm.intel.com with ESMTP; 01 Nov 2016 08:05:15 -0700
-From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue,  1 Nov 2016 17:05:12 +0200
-Message-Id: <1478012712-17287-3-git-send-email-markus.lehtonen@linux.intel.com>
-X-Mailer: git-send-email 2.6.6
-In-Reply-To: <1478012712-17287-1-git-send-email-markus.lehtonen@linux.intel.com>
-References: <1478012712-17287-1-git-send-email-markus.lehtonen@linux.intel.com>
-Subject: [PATCH 2/2] bitbake-worker: print full traceback instead of message only
+	Wed,  2 Nov 2016 15:06:04 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	uA2F5N25017465
+	for <bitbake-devel@lists.openembedded.org>; Wed, 2 Nov 2016 15:06:05 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 1368DkY7jMqn for <bitbake-devel@lists.openembedded.org>;
+	Wed,  2 Nov 2016 15:06:05 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	uA2F60Fv017609
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Wed, 2 Nov 2016 15:06:01 GMT
+Message-ID: <1478099160.23123.61.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 02 Nov 2016 15:06:00 +0000
+X-Mailer: Evolution 3.18.5.2-0ubuntu3 
+Mime-Version: 1.0
+Subject: [PATCH] build: Ensure we preserve sigbasedata files as well as sigdata ones
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,45 +35,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 01 Nov 2016 15:05:14 -0000
+X-List-Received-Date: Wed, 02 Nov 2016 15:06:05 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Print full traceback instead of just the exception message in the
-child() function inside fork_off_task(). This makes debugging a lot
-easier as the function catches a generic "Exception" and the exception
-message alone might not give much information.
+We don't remove sigdata files, we also shouldn't remove sigbasedata files
+as this hinders debugging.
 
-[YOCTO #10393]
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
----
- bin/bitbake-worker | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index b5e80bc..574c64f 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -715,7 +715,7 @@ def make_stamp(task, d, file_name = None):
+     for mask in cleanmask:
+         for name in glob.glob(mask):
+             # Preserve sigdata files in the stamps directory
+-            if "sigdata" in name:
++            if "sigdata" in name or "sigbasedata" in name:
+                 continue
+             # Preserve taint files in the stamps directory
+             if name.endswith('.taint'):
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 500f2ad..af66ff0 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -11,6 +11,7 @@ import select
- import errno
- import signal
- import pickle
-+import traceback
- from multiprocessing import Lock
- 
- if sys.getfilesystemencoding() != "utf-8":
-@@ -234,9 +235,9 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
-                 if quieterrors:
-                     the_data.setVarFlag(taskname, "quieterrors", "1")
- 
--            except Exception as exc:
-+            except Exception:
-                 if not quieterrors:
--                    logger.critical(str(exc))
-+                    logger.critical(traceback.format_exc())
-                 os._exit(1)
-             try:
-                 if cfg.dry_run:
--- 
-2.6.6
 
 
