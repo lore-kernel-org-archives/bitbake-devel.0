@@ -1,30 +1,46 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 3C775719EE
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wm0-f46.google.com (mail-wm0-f46.google.com [74.125.82.46])
+	by mail.openembedded.org (Postfix) with ESMTP id D1D7C71A73
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Nov 2016 16:43:38 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	uA2GhWOp025620; Wed, 2 Nov 2016 16:43:32 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id FSPVSnLvCWzW; Wed,  2 Nov 2016 16:43:32 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	uA2GhS43025615
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 2 Nov 2016 16:43:29 GMT
-Message-ID: <1478105008.23123.66.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Christopher Larson <clarson@kergoth.com>
-Date: Wed, 02 Nov 2016 16:43:28 +0000
-In-Reply-To: <CABcZANkNPT+wqHMkUE3z0N_0R=QWYrfPDzU1R+qw31N_WjHdnw@mail.gmail.com>
-References: <1478099253.23123.63.camel@linuxfoundation.org>
-	<CABcZANkNPT+wqHMkUE3z0N_0R=QWYrfPDzU1R+qw31N_WjHdnw@mail.gmail.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] siggen: Ensure taskhash mismatches don't override existing data
+	Fri,  4 Nov 2016 12:27:15 +0000 (UTC)
+Received: by mail-wm0-f46.google.com with SMTP id a197so47684547wmd.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 04 Nov 2016 05:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=McavX4Oz1ST5Vq6JrfZrX5mLXjtmvsbMS5VctwrgmyM=;
+	b=pTtRXjZ85O/c40DNF9+KRwglMdo3el9CgFyMI43+7+xiyMcCxYhLa2xZP6pmF33ots
+	fWb3sF7xph+5CAiCIKmPDltyVigXQ8z43yL4XiZxn40Ii0zy1TmOtIAejbmC37RI8Nx5
+	XyBeX4eH5s4ZW+/k+o1Z2nvbyRuyub0lUgR8y1MNBF1vDvF+GmgCdyIjbvBZBn2zaMqU
+	J75WuhOL3rwHWJK0O+CW/XuvrL2nBVSBK827rPcX1srnwcMPRKCqFiW6Bc74opVs/F28
+	pWfu/KzsOOFc6vh+TruHktHPSii3dVUxtYoYkGHwjS+hI396bEuoM/Sm+Ho/KCIEAOWU
+	A6Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=McavX4Oz1ST5Vq6JrfZrX5mLXjtmvsbMS5VctwrgmyM=;
+	b=AAH0snszat5UkNi2cZiD5kXOhDaITGrgNSfhy/EZBXXEAG6WQFa98PJjN2wwwNtfjh
+	fFYPjnV3DQoNkh3N3SBy89LoGQLXadCTNMSZBJFc5laGKHqjuv/kxqLG29gnKMi4U79R
+	+k6as1gsX+gfqrj44Cpg1yFC2cE0KSMb+TrC+iIfgpAe26KbOjemF1+/Lm+nbPtELPgm
+	boLUavUlCE2dH1osSP+N1/eBA5gHuzdP/0ODfnqnAOUHY885rfVPbtkyWJ+1duYiIK0o
+	kaUXp9LX2b1m2H2Vb+WCM8bBsmVW6WsFVVDk6zz9zOXdGPCjZkeelt3ZOeLXyztfSnlb
+	EmIg==
+X-Gm-Message-State: ABUngvfqdRhieZArORd6Mm354KYKhXfDvBNCxPcOqHDCCO2zSW9LJMf++eaPaB6QPcdADh0k
+X-Received: by 10.28.210.195 with SMTP id j186mr3011155wmg.73.1478262436083;
+	Fri, 04 Nov 2016 05:27:16 -0700 (PDT)
+Received: from orion.home (host31-48-249-102.range31-48.btcentralplus.com.
+	[31.48.249.102]) by smtp.gmail.com with ESMTPSA id
+	p13sm4319174wmd.20.2016.11.04.05.27.15
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 04 Nov 2016 05:27:15 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  4 Nov 2016 12:27:06 +0000
+Message-Id: <1478262426-5350-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Cc: brian avery <brian.avery@intel.com>
+Subject: [PATCH][master/morty/1.32] toaster: settings set ALLOWED_HOSTS to * in debug mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,37 +53,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 02 Nov 2016 16:43:39 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 04 Nov 2016 12:27:16 -0000
 
-On Wed, 2016-11-02 at 08:46 -0700, Christopher Larson wrote:
-> 
-> On Wed, Nov 2, 2016 at 8:07 AM, Richard Purdie <richard.purdie@linuxf
-> oundation.org> wrote:
-> > We recalculate the taskhash to ensure the version we have matches
-> > what we think it should be. When we write out a sigdata file, use
-> > the calculated value so that we don't overwrite any existing file.
-> > This leaves any original taskhash sigdata file intact to allow a
-> > debugging comparison.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > 
-> Thanks, I ran into this trying to diagnose a mismatch with our
-> automated builds a while back. These patches should make those a lot
-> easier to debug.
+From: brian avery <brian.avery@intel.com>
 
-Otavio gave me a reproducible test case which was nearly impossible to
-debug with the codebase the way it was. I've been beating it up until
-it actually gave good debug output which could be used to debug the
-problem. Hopefully it works better than before, which wouldn't take
-much. Still not 100% happy with it but it has to be better than it
-was...
+As of Django 1.8.16, Django is rejecting any HTTP_HOST header that is
+not on the ALLOWED_HOST list.  We often need to reference the
+toaster server via a fqdn, if we start it via webport=0.0.0.0:8000 for
+instance, and are hitting the server from a laptop. This change does
+reduce  the protection from a DNS rebinding attack, however, if you are
+running the toaster server outside a protected network, you should be
+using the production instance.
 
-I'd love to find a way to always write out the sigbasedata but it uses
-far too much time and slows down parsing too much :(.
+[YOCTO #10578]
 
-Cheers,
+Signed-off-by: brian avery <brian.avery@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/toaster/toastermain/settings.py | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Richard
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index 3dfa2b2..aec9dbb 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -60,9 +60,19 @@ DATABASES = {
+ if 'sqlite' in DATABASES['default']['ENGINE']:
+     DATABASES['default']['OPTIONS'] = { 'timeout': 20 }
+ 
+-# Hosts/domain names that are valid for this site; required if DEBUG is False
+-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+-ALLOWED_HOSTS = []
++# Update as of django 1.8.16 release, the '*' is needed to allow us to connect while running
++# on hosts without explicitly setting the fqdn for the toaster server.
++# See https://docs.djangoproject.com/en/dev/ref/settings/ for info on ALLOWED_HOSTS
++# Previously this setting was not enforced if DEBUG was set but it is now.
++# The previous behavior was such that ALLOWED_HOSTS defaulted to ['localhost','127.0.0.1','::1']
++# and if you bound to 0.0.0.0:<port #> then accessing toaster as localhost or fqdn would both work.
++# To have that same behavior, with a fqdn explicitly enabled you would set
++# ALLOWED_HOSTS= ['localhost','127.0.0.1','::1','myserver.mycompany.com'] for
++# Django >= 1.8.16. By default, we are not enforcing this restriction in
++# DEBUG mode.
++if DEBUG is True:
++    # this will allow connection via localhost,hostname, or fqdn
++    ALLOWED_HOSTS = ['*']
+ 
+ # Local time zone for this installation. Choices can be found here:
+ # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+-- 
+2.7.4
+
 
