@@ -1,52 +1,48 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 21879719EF
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pf0-f193.google.com (mail-pf0-f193.google.com
+	[209.85.192.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 3442A60616
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  4 Nov 2016 12:30:29 +0000 (UTC)
-Received: by mail-wm0-f52.google.com with SMTP id n67so46776033wme.1
+	Thu, 10 Nov 2016 03:48:56 +0000 (UTC)
+Received: by mail-pf0-f193.google.com with SMTP id i88so2463008pfk.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 04 Nov 2016 05:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=subject:references:to:from:message-id:date:user-agent:mime-version
-	:in-reply-to:content-transfer-encoding;
-	bh=MtGXs5GGC74LDgNuk+wPEc8RxDXTsdyKzgdT/QYv/wM=;
-	b=WWgZ9HzbI+pgVIrLdG0rhleTfRQwVydLXTGRGV+yr7/vtYpV81QA8lIF3M+pAQG0Tr
-	LpfNwhf+MQzaG9/cgpy7Ndp8pGRKAJAJ+IMMtMhi+MCgwIULT3su1saxbOk6bZw0FIFF
-	CGTJzYkMNb2GrDIdpY1ReOtfert1l3ICkisaZf2MuhE2omBaxnrIbznxn2kQLa/Z+RJF
-	s1Sgc5TgK+jG9rPevwkjiDw3EKQJuM4Vdto5cJl/IoDDMD0LGoMuevY/FIKuFwPiZnMt
-	yRaRaWF62Mr/G0I+RVwEXPeE6lFgWYzuLlfB3MN9NZYm389Xhzxc2nV5djPrF7nnUFXV
-	Q72g==
+	Wed, 09 Nov 2016 19:48:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=O7DLjvYW5q0kIpNMD++pZUCGPmXwzCk7h6EyXa94ggc=;
+	b=phP7CrgIqX8X5iUNUivksRtS1lWtEZEeDrFiRqnYMBIVhKPYtV7y5zYodkTjq4IuSZ
+	NLkxLXsI0Yhoj0iC7e11c4JjHfM4sNF0fycImDOqnJzEtU602f+XpO6Db34x8VndxWy5
+	Kjax94pEPyW0zBtcO3DH0dS5TnorZh7scarQ1WXVDdDZRYL8drgJ26k22bJsMbK5Lrea
+	+fHBU9kkBWOrdfPO9AgzOY1PR1yKdnFIctviAwPPCS2BFUO9Cq3L53lS2nx0lnrIw2xN
+	9EWfqQbVyBigMn6YgiLHe38JlLrYentP3OysyPYdFQD/OxbEYgwYheAQbfkDXxRaGg4M
+	VpEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:subject:references:to:from:message-id:date
-	:user-agent:mime-version:in-reply-to:content-transfer-encoding;
-	bh=MtGXs5GGC74LDgNuk+wPEc8RxDXTsdyKzgdT/QYv/wM=;
-	b=EAqDTUhu+e7yqUQ3S2aQ/c0bF8810MrvsuU3PSMDDGN18p865uy+xgHxBb64CY4IMv
-	m2zDDLTtLsaPqNXcczeHd2XWlqCKTPMqHj1WN9P6fyWAkoAYXDuatyPZMpkr2c0Wpk2o
-	5UHn5etBeiNBorCaL4SGHxjJ/CweDmWf9+0fruhDMpXBMCNksxkodbpG60hFYclykz5A
-	zc/3oqSj1xD8GL+cNPxQgW5qWEpVmtGaAlnw7mNqm/QHtYGDp+2JfddtBm/lS/2yocG4
-	Ln7eAyS6agSRSJV0QO+SqKv1SXB4jrcnUHKhguwj52nKTSdR+3lCoz/KjgE4VCGV7AIx
-	5a+g==
-X-Gm-Message-State: ABUngvcrY668cJGkUEHpVbpvqYhMDv9uCFyTsbrNZRxTAJyU6FFSNgmtcSY/XD5OQQxyglp/
-X-Received: by 10.195.11.134 with SMTP id ei6mr11613849wjd.176.1478262630458; 
-	Fri, 04 Nov 2016 05:30:30 -0700 (PDT)
-Received: from [192.168.0.78] (host31-48-249-102.range31-48.btcentralplus.com.
-	[31.48.249.102]) by smtp.googlemail.com with ESMTPSA id
-	u64sm4370961wmd.6.2016.11.04.05.30.28
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 04 Nov 2016 05:30:30 -0700 (PDT)
-References: <1478262426-5350-1-git-send-email-michael.g.wood@intel.com>
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=O7DLjvYW5q0kIpNMD++pZUCGPmXwzCk7h6EyXa94ggc=;
+	b=NULB7CWJmVzc4JIduwNgRcGs+GtHnW2N6Eutxq5iQVqYNcH9zXtEk5rIpkj8SC6r+f
+	pL3NkGsOzFilVNLORhus+8Z9lkcusERfCyN9LosMywO3zfpBG96IdRtJbVHCYXlt/U2Y
+	Jc+eVQQCyjuAhY98eoUV6q/kWQzv/R8YtC6JM7X4UzRrhtBtxgFsLFkjGyyV96y+cbjD
+	F2znbfijR2IfVm11GYgsqV41/4ZYA6q0ma+NHkVHcSGgow3VAbZYhRSHnM4Gpyq1RUlv
+	LI2KQ/xknk71GWOXERdw0ZZ9NVSqQBr7vKmPVmD+nBicK5wflOfUTnkmR2BiiCXVx4Zt
+	rMlw==
+X-Gm-Message-State: ABUngvfO9/33CRl/F7DY0F5lOMgeaqyjms4Ni8TSSzIZoLhSOLgD3r2WM+WCNiT2agCPKA==
+X-Received: by 10.99.161.2 with SMTP id b2mr32561136pgf.5.1478749738340;
+	Wed, 09 Nov 2016 19:48:58 -0800 (PST)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	w15sm2540706pfi.55.2016.11.09.19.48.56
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 09 Nov 2016 19:48:57 -0800 (PST)
+From: brian avery <avery.brian@gmail.com>
+X-Google-Original-From: brian avery <brian.avery@intel.com>
 To: bitbake-devel@lists.openembedded.org
-From: Michael Wood <michael.g.wood@intel.com>
-Message-ID: <7a43f58b-8ced-2032-1d1e-3dcebc4a4301@intel.com>
-Date: Fri, 4 Nov 2016 12:30:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <1478262426-5350-1-git-send-email-michael.g.wood@intel.com>
-Subject: Re: [PATCH][master/morty/1.32] toaster: settings set ALLOWED_HOSTS to * in debug mode
+Date: Wed,  9 Nov 2016 19:52:31 -0800
+Message-Id: <cover.1478749786.git.brian.avery@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: brian avery <brian.avery@intel.com>
+Subject: [PATCH 0/3] toaster: add master branch back into new project options
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,65 +55,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Nov 2016 12:30:31 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 10 Nov 2016 03:48:57 -0000
 
-On 04/11/16 12:27, Michael Wood wrote:
-> From: brian avery <brian.avery@intel.com>
->
-> As of Django 1.8.16, Django is rejecting any HTTP_HOST header that is
-> not on the ALLOWED_HOST list.  We often need to reference the
-> toaster server via a fqdn, if we start it via webport=0.0.0.0:8000 for
-> instance, and are hitting the server from a laptop. This change does
-> reduce  the protection from a DNS rebinding attack, however, if you are
-> running the toaster server outside a protected network, you should be
-> using the production instance.
->
-> [YOCTO #10578]
->
-> Signed-off-by: brian avery <brian.avery@intel.com>
-> Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-> ---
->   lib/toaster/toastermain/settings.py | 16 +++++++++++++---
->   1 file changed, 13 insertions(+), 3 deletions(-)
->
-> diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
-> index 3dfa2b2..aec9dbb 100644
-> --- a/lib/toaster/toastermain/settings.py
-> +++ b/lib/toaster/toastermain/settings.py
-> @@ -60,9 +60,19 @@ DATABASES = {
->   if 'sqlite' in DATABASES['default']['ENGINE']:
->       DATABASES['default']['OPTIONS'] = { 'timeout': 20 }
->   
-> -# Hosts/domain names that are valid for this site; required if DEBUG is False
-> -# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-> -ALLOWED_HOSTS = []
-> +# Update as of django 1.8.16 release, the '*' is needed to allow us to connect while running
-> +# on hosts without explicitly setting the fqdn for the toaster server.
-> +# See https://docs.djangoproject.com/en/dev/ref/settings/ for info on ALLOWED_HOSTS
-> +# Previously this setting was not enforced if DEBUG was set but it is now.
-> +# The previous behavior was such that ALLOWED_HOSTS defaulted to ['localhost','127.0.0.1','::1']
-> +# and if you bound to 0.0.0.0:<port #> then accessing toaster as localhost or fqdn would both work.
-> +# To have that same behavior, with a fqdn explicitly enabled you would set
-> +# ALLOWED_HOSTS= ['localhost','127.0.0.1','::1','myserver.mycompany.com'] for
-> +# Django >= 1.8.16. By default, we are not enforcing this restriction in
-> +# DEBUG mode.
-> +if DEBUG is True:
-> +    # this will allow connection via localhost,hostname, or fqdn
-> +    ALLOWED_HOSTS = ['*']
->   
->   # Local time zone for this installation. Choices can be found here:
->   # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+This patch adds master to the oe and poky fixtures so that a new project can be
+based on morty or the master branch.
 
-Should also say that this is needed for backport because the 
-requirements for django was effectively also added as a backported to 
-the version we are currently using i.e Django>1.8,<1.9
+It also has an fix for lsupdates to support the layers in fixtures definition.
 
-More info in Brian's cover letter on the toaster mailing list.
+-Brian
+an intel employee
 
-https://lists.yoctoproject.org/pipermail/toaster/2016-November/005300.html
+The following changes since commit 065310e77ab4c8c914c53ff43d5e601ebf9468b5:
 
-Michael
+  toaster: settings set ALLOWED_HOSTS to * in debug mode (2016-11-09 16:28:17 -0800)
 
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib bavery/submit/toaster/mw-masterproj-11-2016
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/toaster/mw-masterproj-11-2016
+
+Michael Wood (3):
+  toaster: settings fixture Set default release to master
+  toaster: orm/fixtures Add the master release and correct morty release
+  toaster: layerindex updater Take into account layers being predefined
+
+ lib/toaster/orm/fixtures/oe-core.xml             | 23 ++++++-
+ lib/toaster/orm/fixtures/poky.xml                | 82 ++++++++++++++++++++++--
+ lib/toaster/orm/fixtures/settings.xml            |  2 +-
+ lib/toaster/orm/management/commands/lsupdates.py | 60 ++++++-----------
+ 4 files changed, 116 insertions(+), 51 deletions(-)
+
+--
+1.9.1
 
