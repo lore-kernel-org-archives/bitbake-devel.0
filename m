@@ -1,53 +1,46 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-pf0-f193.google.com (mail-pf0-f193.google.com
-	[209.85.192.193])
-	by mail.openembedded.org (Postfix) with ESMTP id C38E560616
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-it0-f51.google.com (mail-it0-f51.google.com
+	[209.85.214.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 04DD871979
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Nov 2016 03:49:00 +0000 (UTC)
-Received: by mail-pf0-f193.google.com with SMTP id 144so2476927pfv.0
+	Mon, 14 Nov 2016 09:39:11 +0000 (UTC)
+Received: by mail-it0-f51.google.com with SMTP id b123so21621804itb.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Nov 2016 19:49:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:in-reply-to:references;
-	bh=g7NMPi0L1lAntzeFDwyKFt38xeYELuYfuHi5r2s9IFI=;
-	b=kDwrpTUwEfKEm/gQJRlsGVpvi0ZOydUxwOCOwmkWP9JxljWLbcjB0nc21DobVeKuTo
-	cX6Sa7QkyZmFdqB1NXyf+Wlr34sGmAlxtVZOsXw+v7Jg/T3P6CWYv6g1gGx49RXy8axW
-	dsKBXwntZLhbRWPyi8nsfXdDYbUe2gioQbu8TdxIvPgxB9ux1s9fReUnnRdErPABVuYn
-	nCsHYKNmM4qVRVNnN/oGNqiW/eepj6fajQ1tFUtHQtgznIeKgU0DKN6sU/KeAVpGVeGK
-	crrNH++Z7+MF4gCglt+C99a8LpG/EWsH4ihB+c+9tXKO4fNA+q/R+YR3884iFQVlAvDU
-	61Fg==
+	Mon, 14 Nov 2016 01:39:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=Ncf7tOAGjhKZLUhN+jedzMkw3E1yiE8pO18tZJZDYKc=;
+	b=rKUSzGbxt2UIdV87q1LePNunEMUpsMSz10E02EDercqNCqQBn8127ZHHweNZRcHKH9
+	+HC++VoO9DwNhMFjJIb9dFo7ubur0YJD36hWCz0d03MH/aV8fZw9ABdhtFVI+bAWTtlo
+	HwAy0XongSMMrFGAPXu6/fREnoAAJWxKqgZGtQW234PRHrF80aweEtciQcKLoGWcnsE+
+	0S/mTkvZFtMu08JiFqSCtD6unQIZ/ovlfYb2uTlmzXgAj8Grq5xCS+f1BAUznWoPXwWG
+	PkM29HJ2uC7/evg1Z6YpAZN69KpDk9N5PfaO0hbFde9bMxMA3C9R9og9nX7Qklan2t9H
+	ofaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=g7NMPi0L1lAntzeFDwyKFt38xeYELuYfuHi5r2s9IFI=;
-	b=DACNmr7wY9bJWIAhxB0Cfr1WWOEj4lNbP2kExD6yYcAq4rENFh9oMtzwzYg0YEuiwy
-	Z9OIUmtTtXBdKIqMZHATxCbdUOEwSdM7ysMQWdTTg8NdOVR+iORoHGf04aY2+YNgj4JY
-	FXbT7qOAXq8qWaHyMra31XJqbnpcQPZ2HtpIOqBpYnxEaa9/8Sqeo4DYbgOPbiuNKXoW
-	A2sTfxEP+eXM3xKTnnKPDOtf7aKMN9vAMDLiPtX6nl+UiAwGRvKd7iBTg0RTWKFSAcRB
-	49hDRjowo9ya3YTkw3K0mFlOkGGe6aE5hgaxMdDvhC4j7OJV1B9CuGzi3toZikGOblX/
-	Nr1g==
-X-Gm-Message-State: ABUngveMU2u4aHlM9rh1dqyh3JYTCpxD98J7x15vBFOsaI1ATm2NkkFQQuCXlzOvUVPRew==
-X-Received: by 10.98.4.6 with SMTP id 6mr5742286pfe.152.1478749742513;
-	Wed, 09 Nov 2016 19:49:02 -0800 (PST)
-Received: from whisper.hsd1.or.comcast.net
-	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id t5sm2536480pfb.58.2016.11.09.19.49.01
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=Ncf7tOAGjhKZLUhN+jedzMkw3E1yiE8pO18tZJZDYKc=;
+	b=Vs6GHelcUU9wGpJiySr58/gw7+0PmNfp/jZAQ8IGOCdVpFq8zJSB2LaodrmWtIiAgv
+	CTwLB01xVc2gphlPTJmskLndX7V3HjHcaxLymplNsM2nSxbGR88XaYEOoKozRVFBOAnJ
+	X8a2Z+lzCRmXgMllAMzELAcv42ltXv+51zglq0+ulBHZBYI94/6Rg+7ad8SLjXBcFQuU
+	D9ySCygwTtHaod9p2pGBlZMetpt+13ZU+HeoaAWznqCLe2eKj7MIkuDY8RgY/Qi/KMxl
+	cJHC1SPUzdueFUqwB840DWB++xGt2otPT226PRctRTcdl7hId1woLYah9NilQWIHl/9B
+	WdAQ==
+X-Gm-Message-State: ABUngvf7lqdQeuuSy5CU8vdvtestBxIk4lp9TcxIZP5XhgKoqzVUXK4VPPPfcp8JGMKrWzQT
+X-Received: by 10.36.95.140 with SMTP id r134mr5243899itb.76.1479116350415;
+	Mon, 14 Nov 2016 01:39:10 -0800 (PST)
+Received: from pohly-desktop.fritz.box (p5DE8FC67.dip0.t-ipconnect.de.
+	[93.232.252.103])
+	by smtp.gmail.com with ESMTPSA id 22sm9021286iog.28.2016.11.14.01.39.08
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 09 Nov 2016 19:49:01 -0800 (PST)
-From: brian avery <avery.brian@gmail.com>
-X-Google-Original-From: brian avery <brian.avery@intel.com>
+	Mon, 14 Nov 2016 01:39:09 -0800 (PST)
+From: Patrick Ohly <patrick.ohly@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Nov 2016 19:52:34 -0800
-Message-Id: <6eec988c6a5f276a78b3c2de9aa231c8b0097d20.1478749786.git.brian.avery@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <c8d2d3015115bc44b7f29000463bff7840f45447.1478749786.git.brian.avery@intel.com>
-References: <c8d2d3015115bc44b7f29000463bff7840f45447.1478749786.git.brian.avery@intel.com>
-In-Reply-To: <cover.1478749786.git.brian.avery@intel.com>
-References: <cover.1478749786.git.brian.avery@intel.com>
-Cc: brian avery <brian.avery@intel.com>
-Subject: [PATCH 3/3] toaster: layerindex updater Take into account layers being predefined
+Date: Mon, 14 Nov 2016 10:39:00 +0100
+Message-Id: <1479116340-4996-1-git-send-email-patrick.ohly@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] data_smart.py: don't reorder internal bitbake variables when calculating hash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,127 +53,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Nov 2016 03:49:00 -0000
+X-List-Received-Date: Mon, 14 Nov 2016 09:39:12 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+Commit 260ced745 added __BBTASKS, __BBANONFUNCS, __BBHANDLERS to the
+data that gets hashed, but only after reordering these lists. The
+intention probably was to make the hash deterministic, but that's
+unnecessary (the content of the variables should already be
+deterministic) and hides potential reasons that might require
+re-parsing.
 
-As we can now provide layer definitions through fixtures we need to be
-more clever how we update the metadata in the database to avoid
-duplicate metadata being created. To do this we make more effort to
-match existing data in the database and update only the fields which
-will be better provided by the layer index.
-
-This removes the need for us to special case layers which are provided
-as part of poky such as openembedded-core or meta-poky which exist on
-the layerindex but with different git urls.
-
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: brian avery <brian.avery@intel.com>
+Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
 ---
- lib/toaster/orm/management/commands/lsupdates.py | 60 ++++++++----------------
- 1 file changed, 19 insertions(+), 41 deletions(-)
+ lib/bb/data_smart.py | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/lib/toaster/orm/management/commands/lsupdates.py b/lib/toaster/orm/management/commands/lsupdates.py
-index 8ff120e..688918e 100644
---- a/lib/toaster/orm/management/commands/lsupdates.py
-+++ b/lib/toaster/orm/management/commands/lsupdates.py
-@@ -154,41 +154,17 @@ class Command(NoArgsCommand):
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index f100446..b35ee9b 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -956,7 +956,6 @@ class DataSmart(MutableMapping):
  
-         total = len(layers_info)
-         for i, li in enumerate(layers_info):
--            # Special case for the openembedded-core layer
--            if li['name'] == oe_core_layer:
--                try:
--                    # If we have an existing openembedded-core for example
--                    # from the toasterconf.json augment the info using the
--                    # layerindex rather than duplicate it
--                    oe_core_l = Layer.objects.get(name=oe_core_layer)
--                    # Take ownership of the layer as now coming from the
--                    # layerindex
--                    oe_core_l.summary = li['summary']
--                    oe_core_l.description = li['description']
--                    oe_core_l.vcs_web_url = li['vcs_web_url']
--                    oe_core_l.vcs_web_tree_base_url = \
--                        li['vcs_web_tree_base_url']
--                    oe_core_l.vcs_web_file_base_url = \
--                        li['vcs_web_file_base_url']
--
--                    oe_core_l.save()
--                    li_layer_id_to_toaster_layer_id[li['id']] = oe_core_l.pk
--                    self.mini_progress("layers", i, total)
--                    continue
--
--                except Layer.DoesNotExist:
--                    pass
--
-             try:
--                l, created = Layer.objects.get_or_create(name=li['name'],
--                                                         vcs_url=li['vcs_url'])
-+                l, created = Layer.objects.get_or_create(name=li['name'])
-                 l.up_date = li['updated']
--                l.vcs_url = li['vcs_url']
--                l.vcs_web_url = li['vcs_web_url']
--                l.vcs_web_tree_base_url = li['vcs_web_tree_base_url']
--                l.vcs_web_file_base_url = li['vcs_web_file_base_url']
-                 l.summary = li['summary']
-                 l.description = li['description']
-+
-+                if created:
-+                    l.vcs_url = li['vcs_url']
-+                    l.vcs_web_url = li['vcs_web_url']
-+                    l.vcs_web_tree_base_url = li['vcs_web_tree_base_url']
-+                    l.vcs_web_file_base_url = li['vcs_web_file_base_url']
-                 l.save()
-             except Layer.MultipleObjectsReturned:
-                 logger.info("Skipped %s as we found multiple layers and "
-@@ -211,12 +187,14 @@ class Command(NoArgsCommand):
+         for key in ["__BBTASKS", "__BBANONFUNCS", "__BBHANDLERS"]:
+             bb_list = d.getVar(key, False) or []
+-            bb_list.sort()
+             data.update({key:str(bb_list)})
  
-         total = len(layerbranches_info)
-         for i, lbi in enumerate(layerbranches_info):
-+            # release as defined by toaster map to layerindex branch
-+            release = li_branch_id_to_toaster_release[lbi['branch']]
- 
-             try:
-                 lv, created = Layer_Version.objects.get_or_create(
--                    layer_source=LayerSource.TYPE_LAYERINDEX,
-                     layer=Layer.objects.get(
--                        pk=li_layer_id_to_toaster_layer_id[lbi['layer']])
-+                        pk=li_layer_id_to_toaster_layer_id[lbi['layer']]),
-+                    release=release
-                 )
-             except KeyError:
-                 logger.warning(
-@@ -224,11 +202,12 @@ class Command(NoArgsCommand):
-                     lbi['layer'])
-                 continue
- 
--            lv.release = li_branch_id_to_toaster_release[lbi['branch']]
--            lv.up_date = lbi['updated']
--            lv.commit = lbi['actual_branch']
--            lv.dirpath = lbi['vcs_subdir']
--            lv.save()
-+            if created:
-+                lv.release = li_branch_id_to_toaster_release[lbi['branch']]
-+                lv.up_date = lbi['updated']
-+                lv.commit = lbi['actual_branch']
-+                lv.dirpath = lbi['vcs_subdir']
-+                lv.save()
- 
-             li_layer_branch_id_to_toaster_lv_id[lbi['id']] =\
-                 lv.pk
-@@ -255,9 +234,8 @@ class Command(NoArgsCommand):
-                 layer_id = li_layer_id_to_toaster_layer_id[ldi['dependency']]
- 
-                 dependlist[lv].append(
--                    Layer_Version.objects.get(
--                        layer_source=LayerSource.TYPE_LAYERINDEX,
--                        layer__pk=layer_id))
-+                    Layer_Version.objects.get(layer__pk=layer_id,
-+                                              release=lv.release))
- 
-             except Layer_Version.DoesNotExist:
-                 logger.warning("Cannot find layer version (ls:%s),"
+             if key == "__BBANONFUNCS":
 -- 
-1.9.1
+2.1.4
 
 
