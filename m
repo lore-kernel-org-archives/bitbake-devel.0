@@ -1,49 +1,50 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-yw0-f181.google.com (mail-yw0-f181.google.com
-	[209.85.161.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 6BFFA6078D
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-it0-f50.google.com (mail-it0-f50.google.com
+	[209.85.214.50])
+	by mail.openembedded.org (Postfix) with ESMTP id 1627F6FF9F
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 16 Nov 2016 20:02:21 +0000 (UTC)
-Received: by mail-yw0-f181.google.com with SMTP id a10so136776758ywa.3
+	Fri, 18 Nov 2016 15:22:11 +0000 (UTC)
+Received: by mail-it0-f50.google.com with SMTP id c20so30752149itb.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 16 Nov 2016 12:02:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc;
-	bh=kdSbEklAajPNz5lFK9H1oMLYQJaJQfEv7DAYnYll2pY=;
-	b=UsDATtep3sbbs8z0uAJJaeddun0tgc8KFYvXHNU4vtdPLXzxRTpERh7CmOEaRXSuKr
-	vMjjyWWP5VvGYg4+xuceGHVaFDI6FsdCcAHUzxNsbXGWjlKXuQ/lcgUVAveFynjKNPCw
-	Vuvpfe2KXOg7FG34rWx6HKmBbg1pKMLV3TKh8hvpVp63VopbUL+YQ37p7Jm5sR5s0NPZ
-	p6ZQw+a4VshC5lrVvCK87C6rtsoY6BlVs0IklQGKpC1Caszj8N1KNIs8Yu0f0yqWUnTp
-	3ZijINqVuWPqfgDBjF/MBJaMQErKSE5akr7mmOoycfONxkx29gtLTiMDEHTImIWclAXz
-	qhvQ==
+	Fri, 18 Nov 2016 07:22:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=message-id:subject:from:to:date:organization:mime-version
+	:content-transfer-encoding;
+	bh=j1zmNoHchbInsY0gmAHU8AzEsNVQvjgTeebxuoDtWIM=;
+	b=X7o8Fr1ZUvgm7gH4yp8Lxh0Fb78WVlACxavJaI268q353SfIzVKOk6WfnkHo/NGH2b
+	St/C+EiqiA977ONW8pvjOl5BGrNebRO/ccg/NX8HN6IIIO4zZPR2IZUnR588+FuVXUR6
+	4vHodnQVdq2GShJ4J5Nj3UlcPbRd9TnEvAbH14aOSHMzUtunOmdTk/DFcavpp14Am8ZR
+	IZbYnax/DwhHJQJ1kwTTUcX2Uyzc+5wX4S+uMnPETBxzLLSw9ZzKg3bSBXMieOlaLvAm
+	2MDMUJoc94q25HmijVGcK8VRo5Rjb3nn462EoJkcBBgynINQi5+XcorGz5qSt7SWFEbm
+	IEkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
-	:date:message-id:subject:to:cc;
-	bh=kdSbEklAajPNz5lFK9H1oMLYQJaJQfEv7DAYnYll2pY=;
-	b=hl5BFM6ScryMN7ek23ywfuNPvPMzgsTkYPN9YVEeDg9rmQO2oskWapCVP0hYSs9TaF
-	uatk7/SwU2kNYADZLisF86fCYLyDlz1KJG4k2LtuaTF0eoJaXNCFigmPmm7erPnS6AzD
-	abCo5JN0BVVw3EKQBnnNGuBukgkRyZbkIE9Y5z9G2qLdu7fbq9S/at/90isSC/Ke7HDr
-	SonJKfPWIL+mkM7cdF6Gd6oUzktt2XdckxJgdMnL/nOhV78VAdT4BqLYWP7QyvFEVxK/
-	5KQOdKD61zW7xUX7HFYO5hZvjUHQI9MB44EnhPkkFY/9wwfEFPAL7eBnO7uvdGo35N1u
-	Bbkg==
-X-Gm-Message-State: AKaTC03qW//3QELQCecG/Aq1Gnf0KM2GOEy0H1ESdefnXBx2dsk5TP69e6r10OJgAzJ1HA3WB8aoaWIU1PKN9w==
-X-Received: by 10.157.3.143 with SMTP id f15mr3574059otf.150.1479326543193;
-	Wed, 16 Nov 2016 12:02:23 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.157.35.65 with HTTP; Wed, 16 Nov 2016 12:02:02 -0800 (PST)
-In-Reply-To: <1479316925-22066-1-git-send-email-ross.burton@intel.com>
-References: <1479316925-22066-1-git-send-email-ross.burton@intel.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Wed, 16 Nov 2016 13:02:02 -0700
-X-Google-Sender-Auth: o0H5ckPo1TB7ZLLclrWOp9OYIZQ
-Message-ID: <CABcZANn58cYVzNBma_hWbQLJF4C7qtf46UuS8zhXGJA9acGdvA@mail.gmail.com>
-To: Ross Burton <ross.burton@intel.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] ast: remove BBVERSIONS support
+	h=x-gm-message-state:message-id:subject:from:to:date:organization
+	:mime-version:content-transfer-encoding;
+	bh=j1zmNoHchbInsY0gmAHU8AzEsNVQvjgTeebxuoDtWIM=;
+	b=ecolT9tIHTFul+3T4ja1qo/VBF6FzGWngrbYe0GuQVy00T3QRXXsf2cPY1WyB2nb4c
+	7M/1fiXBsh+ptyY7bVATLIAcsDD4nKU7cEQV5niXy5C4SCBYRQAIZdlXrOghk3ciqAh5
+	6XSdH5PeOcQ+TjwlIGDBs9/Hv6uefrs2IoAoOgCWEDNzJxX4zhYXMoImsjBktGXsdJ/E
+	E9u/Bga9pFqwAymeJ4A+y2p5SruMEGPBmnbGqEMyO8b/mp5Ro2dfs6W4FzGjVhLCNVvO
+	uhERXNXGqch23OGJ+bYWnMarDV2+aJ0MpXS5SFNd7RjkAnZ15bQxPKmm7yUpZbmar6l1
+	4Zsg==
+X-Gm-Message-State: AKaTC03fQJoFrsGsYINIk3FO0DjTySkj2jLFfw6VLNB9UB7Y/4vd/DCjJrWK3n5opkUpoG+L
+X-Received: by 10.107.159.68 with SMTP id i65mr173094ioe.153.1479482531946;
+	Fri, 18 Nov 2016 07:22:11 -0800 (PST)
+Received: from pohly-mobl1 (p5DE8EE38.dip0.t-ipconnect.de. [93.232.238.56])
+	by smtp.gmail.com with ESMTPSA id l73sm884410ioe.37.2016.11.18.07.22.10
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 18 Nov 2016 07:22:11 -0800 (PST)
+Message-ID: <1479482529.27625.76.camel@intel.com>
+From: Patrick Ohly <patrick.ohly@intel.com>
+To: bitbake <bitbake-devel@lists.openembedded.org>
+Date: Fri, 18 Nov 2016 16:22:09 +0100
+Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
+X-Mailer: Evolution 3.12.9-1+b1 
+Mime-Version: 1.0
+Subject: shell parser: deep nesting
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,49 +57,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 16 Nov 2016 20:02:22 -0000
-Content-Type: multipart/alternative; boundary=94eb2c03b0221d2c0a0541708d41
+X-List-Received-Date: Fri, 18 Nov 2016 15:22:12 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---94eb2c03b0221d2c0a0541708d41
-Content-Type: text/plain; charset=UTF-8
+Hello!
 
-On Wed, Nov 16, 2016 at 10:22 AM, Ross Burton <ross.burton@intel.com> wrote:
+I ran into a bug
+(https://bugzilla.yoctoproject.org/show_bug.cgi?id=10668) where parsing
+a shell fragment like "echo hello & wait $!" triggers this error:
 
-> BBVERSIONS is moderately horrible and it doesn't appear to be actually
-> used by
-> anyone, so remove it to simplify the finalise codepaths.
->
-> Signed-off-by: Ross Burton <ross.burton@intel.com>
->
+Traceback (most recent call last):
+  File "/work/poky/bitbake/lib/bb/codeparser.py", line 400, in ShellParser.process_tokens(tokens=[('if_clause', <bb.pysh.pyshyacc.IfCond object at 0x7fb480963390>)]):
+                 if more_tokens:
+    >                self.process_tokens(more_tokens)
+     
+  File "/work/poky/bitbake/lib/bb/codeparser.py", line 400, in ShellParser.process_tokens(tokens=<itertools.chain object at 0x7fb480949278>):
+                 if more_tokens:
+    >                self.process_tokens(more_tokens)
+     
+  File "/work/poky/bitbake/lib/bb/codeparser.py", line 400, in ShellParser.process_tokens(tokens=[('while_clause', <bb.pysh.pyshyacc.WhileLoop object at 0x7fb480949518>)]):
+                 if more_tokens:
+    >                self.process_tokens(more_tokens)
+     
+  File "/work/poky/bitbake/lib/bb/codeparser.py", line 400, in ShellParser.process_tokens(tokens=<itertools.chain object at 0x7fb480446668>):
+                 if more_tokens:
+    >                self.process_tokens(more_tokens)
+     
+  File "/work/poky/bitbake/lib/bb/codeparser.py", line 393, in ShellParser.process_tokens(tokens=[[('pipeline', <bb.pysh.pyshyacc.Pipeline object at 0x7fb480949c88>)]]):
+             for token in tokens:
+    >            name, value = token
+                 try:
+ValueError: need more than 1 value to unpack
 
-Acked-by: Christopher Larson <chris_larson@mentor.com>
+After thinking about this a bit more I *think* I understand the problem
+(expecting a certain level of nesting while the parser may also hand out
+tokens with deeper nesting in the pipeline case) and I'll send a patch
+fixing the issue for me.
+
+But I'm not entirely sure whether that's really addressing the root
+cause of the problem - perhaps such deep nesting shouldn't occur?
+
+So I hope that someone familiar with this code can have a look at the
+problem and the proposed solution.
+
+Also, does it have performance implications that
+ShellParser.process_tokens() defines the same helper functions
+repeatedly? They don't depend on the current invocation context and thus
+could also be defined as private helper functions in ShellParser.
+
 -- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+Best Regards, Patrick Ohly
 
---94eb2c03b0221d2c0a0541708d41
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The content of this message is my personal opinion only and although
+I am an employee of Intel, the statements I make here in no way
+represent Intel's position on the issue, nor am I authorized to speak
+on behalf of Intel on this matter.
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Wed, Nov 16, 2016 at 10:22 AM, Ross Burton <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:ross.burton@intel.com" target=3D"_blank">ross.burton@intel.com</=
-a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0=
- 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":1kx" cla=
-ss=3D"a3s aXjCH m1586e34217c71d8e">BBVERSIONS is moderately horrible and it=
- doesn&#39;t appear to be actually used by<br>
-anyone, so remove it to simplify the finalise codepaths.<br>
-<br>
-Signed-off-by: Ross Burton &lt;<a href=3D"mailto:ross.burton@intel.com">ros=
-s.burton@intel.com</a>&gt;</div></blockquote></div><br>Acked-by: Christophe=
-r Larson &lt;<a href=3D"mailto:chris_larson@mentor.com">chris_larson@mentor=
-.com</a>&gt;<br>-- <br><div class=3D"gmail_signature" data-smartmail=3D"gma=
-il_signature">Christopher Larson<br>clarson at kergoth dot com<br>Founder -=
- BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software=
- Engineer, Mentor Graphics</div>
-</div></div>
 
---94eb2c03b0221d2c0a0541708d41--
+
+
