@@ -1,49 +1,21 @@
-Return-Path: <patrick.ohly@intel.com>
-Received: from mail-it0-f52.google.com (mail-it0-f52.google.com
-	[209.85.214.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 2B2486078D
+Return-Path: <markus.lehtonen@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 96C7871A60
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Nov 2016 15:23:30 +0000 (UTC)
-Received: by mail-it0-f52.google.com with SMTP id y23so36644149itc.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Nov 2016 07:23:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=2nn+e6lM6bolr21XFZXGsleBrcCuL0sT7DXR7E7MPQQ=;
-	b=ZX4AFzOnkV2KdnhFMm3M253DbGSVvKujGlXqlnaQIXJ0npIRUAj6zD0jSkRupqwLHT
-	GfkOnBExme3dyHw68tijyTJwe5podQ+ffxXkZVyS/ym9danTm5shuzr81IRei1mf/5vI
-	9qjpg59p/VJMdw+gnhfRUtXKHP2Z8Xs/16A/c3dyt4yU9OSSm6fp3w18emtQhLuOzgWd
-	bwTuKQLBML5Tn70a/WGdwxr8apVelTYKZ89OIpruyCPle5le1uirBBmuaufCMm92MNtO
-	+bhf9wKLYGuCNnK5EodfcQqCwgY/+nhHwd9Vma4iDVJv1WbjOEnErQ7I23GDPoPX92Ix
-	wkEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=2nn+e6lM6bolr21XFZXGsleBrcCuL0sT7DXR7E7MPQQ=;
-	b=C+X40DPBm2i6sy7YOb32KSuLHyLQph1hQBLtz4rXMkWLqp18mTY9ht1YYCSClYo4Na
-	NhjSYdjXN0nCW/szZCdCV51lYZfobIP7FaT0pKUVLOgggsGaZdM5inlz0ncK+ClfKdcp
-	ihXu1MEhsMiy45bt/ymInC77pYtN0JPt01BMcAjUlP/Xb5YzCY5W+qcNOL2hyr4eRuLK
-	pROWAAUzjerBaUWpxxRrNVaH9YDE9bXJP4A1MIEtLC/edBydOxbVxTLpoBSYLA6eRbAX
-	QnjkF8SPNkK6hl7hclF23gxK3g2lb8twIXujXukoPVYV7K8ggY58ZYUkQeI0+MdtH9AG
-	D0Ow==
-X-Gm-Message-State: AKaTC01HieZhr7gjFy66L2yXAFaseipcOVojlJltoPGaXKNzaxHpJ/Q75VdtaAJEmNTjeC9d
-X-Received: by 10.107.169.221 with SMTP id f90mr183718ioj.107.1479482611988;
-	Fri, 18 Nov 2016 07:23:31 -0800 (PST)
-Received: from pohly-desktop.fritz.box (p5DE8EE38.dip0.t-ipconnect.de.
-	[93.232.238.56]) by smtp.gmail.com with ESMTPSA id
-	g127sm1143229itc.7.2016.11.18.07.23.30
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 18 Nov 2016 07:23:30 -0800 (PST)
-From: Patrick Ohly <patrick.ohly@intel.com>
+	Mon, 21 Nov 2016 12:31:49 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga103.jf.intel.com with ESMTP; 21 Nov 2016 04:31:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.31,675,1473145200"; 
+   d="scan'208";a="7378518"
+Received: from marquiz.fi.intel.com ([10.237.72.155])
+	by orsmga002.jf.intel.com with ESMTP; 21 Nov 2016 04:31:43 -0800
+From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 18 Nov 2016 16:23:22 +0100
-Message-Id: <1479482602-9750-1-git-send-email-patrick.ohly@intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1479482529.27625.76.camel@intel.com>
-References: <1479482529.27625.76.camel@intel.com>
-Subject: [PATCH] codeparser.py: support deeply nested tokens
+Date: Mon, 21 Nov 2016 14:31:43 +0200
+Message-Id: <1479731503-12780-1-git-send-email-markus.lehtonen@linux.intel.com>
+X-Mailer: git-send-email 2.6.6
+Subject: [PATCH] fetch2: obey BB_ALLOWED_NETWORKS when checking network access
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,82 +28,158 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Nov 2016 15:23:31 -0000
+X-List-Received-Date: Mon, 21 Nov 2016 12:31:49 -0000
 
-For shell constructs like
-   echo hello & wait $!
-the process_tokens() method ended up with a situation where "token"
-in the "name, value = token" assignment was a list of tuples
-and not the expected tuple, causing the assignment to fail.
+[YOCTO #10508]
 
-There were already two for loops (one in _parse_shell(), one in
-process_tokens()) which iterated over token lists. Apparently the
-actual nesting can also be deeper.
-
-Now there is just one such loop in process_token_list() which calls
-itself recursively when it detects that a list entry is another list.
-
-As a side effect (improvement?!) of the loop removal in
-_parse_shell(), the local function definitions in process_tokens() get
-executed less often.
-
-Fixes: [YOCTO #10668]
-
-Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
+Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
 ---
- lib/bb/codeparser.py | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ lib/bb/fetch2/__init__.py | 7 +++++--
+ lib/bb/fetch2/git.py      | 4 ++--
+ lib/bb/fetch2/hg.py       | 2 +-
+ lib/bb/fetch2/npm.py      | 2 +-
+ lib/bb/fetch2/perforce.py | 8 ++++----
+ lib/bb/fetch2/svn.py      | 2 +-
+ lib/bb/fetch2/wget.py     | 2 +-
+ 7 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 25938d6..5d2d440 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -342,8 +342,7 @@ class ShellParser():
-         except pyshlex.NeedMore:
-             raise sherrors.ShellSyntaxError("Unexpected EOF")
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index cd7362c..4bb7526 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -856,12 +856,15 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None):
  
--        for token in tokens:
--            self.process_tokens(token)
-+        self.process_tokens(tokens)
+     return output
  
-     def process_tokens(self, tokens):
-         """Process a supplied portion of the syntax tree as returned by
-@@ -389,18 +388,24 @@ class ShellParser():
-             "case_clause": case_clause,
-         }
+-def check_network_access(d, info = "", url = None):
++def check_network_access(d, info, url):
+     """
+-    log remote network access, and error if BB_NO_NETWORK is set
++    log remote network access, and error if BB_NO_NETWORK is set or the given
++    URI is untrusted
+     """
+     if d.getVar("BB_NO_NETWORK", True) == "1":
+         raise NetworkAccess(url, info)
++    elif not trusted_network(d, url):
++        raise UntrustedUrl(url, info)
+     else:
+         logger.debug(1, "Fetcher accessed the network with the command %s" % info)
  
--        for token in tokens:
--            name, value = token
--            try:
--                more_tokens, words = token_handlers[name](value)
--            except KeyError:
--                raise NotImplementedError("Unsupported token type " + name)
-+        def process_token_list(tokens):
-+            for token in tokens:
-+                if isinstance(token, list):
-+                    process_token_list(token)
-+                    continue
-+                name, value = token
-+                try:
-+                    more_tokens, words = token_handlers[name](value)
-+                except KeyError:
-+                    raise NotImplementedError("Unsupported token type " + name)
-+
-+                if more_tokens:
-+                    self.process_tokens(more_tokens)
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 1bec60a..11d0b9c 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -252,7 +252,7 @@ class Git(FetchMethod):
+                 repourl = repourl[7:]
+             clone_cmd = "LANG=C %s clone --bare --mirror %s %s --progress" % (ud.basecmd, repourl, ud.clonedir)
+             if ud.proto.lower() != 'file':
+-                bb.fetch2.check_network_access(d, clone_cmd)
++                bb.fetch2.check_network_access(d, clone_cmd, ud.url)
+             progresshandler = GitProgressHandler(d)
+             runfetchcmd(clone_cmd, d, log=progresshandler)
  
--            if more_tokens:
--                self.process_tokens(more_tokens)
-+                if words:
-+                    self.process_words(words)
+@@ -384,7 +384,7 @@ class Git(FetchMethod):
+         cmd = "%s ls-remote %s %s" % \
+               (ud.basecmd, repourl, search)
+         if ud.proto.lower() != 'file':
+-            bb.fetch2.check_network_access(d, cmd)
++            bb.fetch2.check_network_access(d, cmd, repourl)
+         output = runfetchcmd(cmd, d, True)
+         if not output:
+             raise bb.fetch2.FetchError("The command %s gave empty output unexpectedly" % cmd, ud.url)
+diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
+index 20df801..dc87998 100644
+--- a/lib/bb/fetch2/hg.py
++++ b/lib/bb/fetch2/hg.py
+@@ -221,7 +221,7 @@ class Hg(FetchMethod):
+         """
+         Compute tip revision for the url
+         """
+-        bb.fetch2.check_network_access(d, self._buildhgcommand(ud, d, "info"))
++        bb.fetch2.check_network_access(d, self._buildhgcommand(ud, d, "info"), ud.url)
+         output = runfetchcmd(self._buildhgcommand(ud, d, "info"), d)
+         return output.strip()
  
--            if words:
--                self.process_words(words)
-+        process_token_list(tokens)
+diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+index 699ae72..29faea1 100644
+--- a/lib/bb/fetch2/npm.py
++++ b/lib/bb/fetch2/npm.py
+@@ -101,7 +101,7 @@ class Npm(FetchMethod):
  
-     def process_words(self, words):
-         """Process a set of 'words' in pyshyacc parlance, which includes
+     def _runwget(self, ud, d, command, quiet):
+         logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
+-        bb.fetch2.check_network_access(d, command)
++        bb.fetch2.check_network_access(d, command, ud.url)
+         dldir = d.getVar("DL_DIR", True)
+         runfetchcmd(command, d, quiet, workdir=dldir)
+ 
+diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
+index 50cb479..e332e7c 100644
+--- a/lib/bb/fetch2/perforce.py
++++ b/lib/bb/fetch2/perforce.py
+@@ -71,7 +71,7 @@ class Perforce(FetchMethod):
+             logger.debug(1, 'Trying to use P4CONFIG to automatically set P4PORT...')
+             ud.usingp4config = True
+             p4cmd = '%s info | grep "Server address"' % ud.basecmd
+-            bb.fetch2.check_network_access(d, p4cmd)
++            bb.fetch2.check_network_access(d, p4cmd, ud.url)
+             ud.host = runfetchcmd(p4cmd, d, True)
+             ud.host = ud.host.split(': ')[1].strip()
+             logger.debug(1, 'Determined P4PORT to be: %s' % ud.host)
+@@ -140,7 +140,7 @@ class Perforce(FetchMethod):
+         'p4 files' command, including trailing '#rev' file revision indicator
+         """
+         p4cmd = self._buildp4command(ud, d, 'files')
+-        bb.fetch2.check_network_access(d, p4cmd)
++        bb.fetch2.check_network_access(d, p4cmd, ud.url)
+         p4fileslist = runfetchcmd(p4cmd, d, True)
+         p4fileslist = [f.rstrip() for f in p4fileslist.splitlines()]
+ 
+@@ -171,7 +171,7 @@ class Perforce(FetchMethod):
+ 
+         for afile in filelist:
+             p4fetchcmd = self._buildp4command(ud, d, 'print', afile)
+-            bb.fetch2.check_network_access(d, p4fetchcmd)
++            bb.fetch2.check_network_access(d, p4fetchcmd, ud.url)
+             runfetchcmd(p4fetchcmd, d, workdir=ud.pkgdir)
+ 
+         runfetchcmd('tar -czf %s p4' % (ud.localpath), d, cleanup=[ud.localpath], workdir=ud.pkgdir)
+@@ -191,7 +191,7 @@ class Perforce(FetchMethod):
+     def _latest_revision(self, ud, d, name):
+         """ Return the latest upstream scm revision number """
+         p4cmd = self._buildp4command(ud, d, "changes")
+-        bb.fetch2.check_network_access(d, p4cmd)
++        bb.fetch2.check_network_access(d, p4cmd, ud.url)
+         tip = runfetchcmd(p4cmd, d, True)
+ 
+         if not tip:
+diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
+index 6ca79d3..71dee9f 100644
+--- a/lib/bb/fetch2/svn.py
++++ b/lib/bb/fetch2/svn.py
+@@ -173,7 +173,7 @@ class Svn(FetchMethod):
+         """
+         Return the latest upstream revision number
+         """
+-        bb.fetch2.check_network_access(d, self._buildsvncommand(ud, d, "log1"))
++        bb.fetch2.check_network_access(d, self._buildsvncommand(ud, d, "log1"), ud.url)
+ 
+         output = runfetchcmd("LANG=C LC_ALL=C " + self._buildsvncommand(ud, d, "log1"), d, True)
+ 
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index ecb946a..1d81c08 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -95,7 +95,7 @@ class Wget(FetchMethod):
+         progresshandler = WgetProgressHandler(d)
+ 
+         logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
+-        bb.fetch2.check_network_access(d, command)
++        bb.fetch2.check_network_access(d, command, ud.url)
+         runfetchcmd(command + ' --progress=dot -v', d, quiet, log=progresshandler)
+ 
+     def download(self, ud, d):
 -- 
-2.1.4
+2.6.6
 
 
