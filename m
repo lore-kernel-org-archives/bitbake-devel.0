@@ -1,49 +1,48 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wj0-f175.google.com (mail-wj0-f175.google.com
-	[209.85.210.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 333D271B58
+Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id A02AF71B58
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 11:20:21 +0000 (UTC)
-Received: by mail-wj0-f175.google.com with SMTP id mp19so31052806wjc.1
+	Thu, 24 Nov 2016 11:20:20 +0000 (UTC)
+Received: by mail-wm0-f51.google.com with SMTP id f82so57224251wmf.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 03:20:23 -0800 (PST)
+	Thu, 24 Nov 2016 03:20:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=k15eI0QXBQ3hK0e05ed+AMyTZG3scsbox+BUFfTSMO0=;
-	b=qZDLM7UNFVPFTiKYsIF9qmVKdL/eJyYWh5V79fYNrHuFKcIMmHWk5CjUkNuSqKIec4
-	h1N65DN+Q/gQwshWydUoPyIV2zkodzkn+d2CAkeIuKzWZIobiQR6SedWwLmENckBVxzx
-	WLCBxPQdV8wIGXZst5TZnmX1iSc/sXc7HNsaWnN7lweObhleEIjXDLucnat9hL/Ekmna
-	o+R4RDu8BqhNUdnPhHCob1IGwpBKE8hk5AAQgO2zd9w2Gz8yN0flHgqpzDa9zQoiWczf
-	o1jc9xxSVxFJsiQXYHAk7UNYvqRu/11fVmbe4eBqN+hY2Qm301/lXgToeHplHRtnwgxo
-	iDKA==
+	bh=DxqSWGmQR7EqrjZbWFI+YxOHcjhZ142F6sh7SNvw0Aw=;
+	b=FVGNavTTCcAOOsDnBfydqPbrWyTNG10K3N/AzjwzMWdLstFE2LpbI2/zj6afyfRmiG
+	jVVlSQbTwnpi83r27gjn6Vu9kHiG0NaNjGl+ER+u9kzePAVRW/T5A09MoikLB8A3KPvL
+	j2k0nX+5reXvmaR/Bh88jAKP7un3KOVX5iFWCBNwkCdy9M2lwX+mmHJ4Sybzh6Fq8D7q
+	0byc/ZjRnD7A4PVAkmQiAAdK9bUuWWYb8Ux6P+uF5r/RcG0/pP3c6z+VHrYTj6jNpcVf
+	pxnVpDI76LxxNJ+OQ/h91BVVqNfHdGaggWx0T+QBsleO7HQBsvy9auSyRK9DQDMue1Ep
+	zQ3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=k15eI0QXBQ3hK0e05ed+AMyTZG3scsbox+BUFfTSMO0=;
-	b=O4/zKJ4e2xjF576unKpSAX4bbuu+MbIUkw+NJktZpWnrgCLdXvbwDaY9sc4TpGnjLx
-	uRbP9VduksEjCd9jnRx9E68wx0j+WaVGOWNqUWslwICL/GKBWGBCh6/mVKAg23EoiZ5l
-	JtdGlVCQJDibDzm14wR5zmAY2N62vq7bDBuykcSB6GzHwcIDKFomuUTzfCCymwZnIVtO
-	I5GZcwrinoTLr3ugLSUW2GWIai1qWuARTOXeTOSfgh1jrgbUqCkw32jLFtArAE6pZELv
-	MGHuTKbZ0CQGj9R6z2G4w7LMp/MlpeqwHidwrPg7ecNtmCCiARJN2DnwOVE1lLeVNxQ1
-	aM4Q==
-X-Gm-Message-State: AKaTC03WTmJr/k4L5j0YSRtbsuil13ETHAWn65zAnJWvvntnnGdK6EStGXA+WoMmnVBOIbZD
-X-Received: by 10.194.14.105 with SMTP id o9mr1813263wjc.66.1479986422739;
-	Thu, 24 Nov 2016 03:20:22 -0800 (PST)
+	bh=DxqSWGmQR7EqrjZbWFI+YxOHcjhZ142F6sh7SNvw0Aw=;
+	b=NVslEF9tnEoyZ0oRpilxdIiECLWxLcf2pfcKMCX9/eyE01QN55hHSgXHsv6HFTgqez
+	JRIb9bkNxhjSgoJwLcnppWkHHoMlWbRlNsLk6thLk+Ty5SqtUBuzNJrDSpG7cQIuaHho
+	QHSsAIwz+WHtSg9SkztzSl8bmcXORyJGTFf5ZlzjmO4fHTfJU5vU1zJC9X2Mwt/CoCOk
+	yALL5AAs03huQPx9MRqvGtn18EWijpkTAcMOMR3CORll9crE41rwPaibOyNJQB90Ra+8
+	eoKA7MYsLfSC3SyN4ssbu4hb1sZmECf2uTpHjcd9ir8mA29T/i4tjzG26G9UOrskUXSB
+	cL3Q==
+X-Gm-Message-State: AKaTC01NIet+rzn6UvFfGgiSusueI7YRMQqaMI3L71gos/L/FtR0/seJ8HjPypxb7K+akTcA
+X-Received: by 10.194.172.42 with SMTP id az10mr1795653wjc.145.1479986421545; 
+	Thu, 24 Nov 2016 03:20:21 -0800 (PST)
 Received: from localhost.localdomain ([192.198.151.62])
 	by smtp.gmail.com with ESMTPSA id
-	g184sm7696900wme.23.2016.11.24.03.20.21
+	g184sm7696900wme.23.2016.11.24.03.20.20
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 24 Nov 2016 03:20:22 -0800 (PST)
+	Thu, 24 Nov 2016 03:20:21 -0800 (PST)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 24 Nov 2016 11:19:53 +0000
-Message-Id: <1479986406-4657-3-git-send-email-michael.g.wood@intel.com>
+Date: Thu, 24 Nov 2016 11:19:52 +0000
+Message-Id: <1479986406-4657-2-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1479986406-4657-1-git-send-email-michael.g.wood@intel.com>
 References: <1479986406-4657-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 02/15] toaster: tests Add management command tests
+Subject: [PATCH 01/15] toaster: runbuilds Write the pidfile in python rather than shell script
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,242 +57,123 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 24 Nov 2016 11:20:22 -0000
 
-Add some simple sanity tests for the management commands that we use for
-Toaster.
+Write the pid file out in the start up of this management command. This
+ensures this has happened instead of relying on the shell command having
+been run which may or may not be the case. This also makes it simpler for
+testing.
 
-Can be executed with ./manage.py test tests.commands
-
-For faster execution use the test settings and keepdb flag:
-DJANGO_SETTINGS_MODULE=toastermain.settings_test ./manage.py test
-tests.commands --keepdb
+Couple of clean ups of runbuilds as identified by pyflake
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/tests/commands/__init__.py       |  0
- lib/toaster/tests/commands/test_loaddata.py  | 61 +++++++++++++++++++
- lib/toaster/tests/commands/test_lsupdates.py | 45 ++++++++++++++
- lib/toaster/tests/commands/test_runbuilds.py | 88 ++++++++++++++++++++++++++++
- 4 files changed, 194 insertions(+)
- create mode 100644 lib/toaster/tests/commands/__init__.py
- create mode 100644 lib/toaster/tests/commands/test_loaddata.py
- create mode 100644 lib/toaster/tests/commands/test_lsupdates.py
- create mode 100644 lib/toaster/tests/commands/test_runbuilds.py
+ bin/toaster                                         |  2 +-
+ .../bldcontrol/management/commands/runbuilds.py     | 21 ++++++++++++++-------
+ lib/toaster/orm/management/commands/lsupdates.py    |  1 -
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/lib/toaster/tests/commands/__init__.py b/lib/toaster/tests/commands/__init__.py
-new file mode 100644
-index 0000000..e69de29
-diff --git a/lib/toaster/tests/commands/test_loaddata.py b/lib/toaster/tests/commands/test_loaddata.py
-new file mode 100644
-index 0000000..951f6ff
---- /dev/null
-+++ b/lib/toaster/tests/commands/test_loaddata.py
-@@ -0,0 +1,61 @@
-+#! /usr/bin/env python
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+#
-+# BitBake Toaster Implementation
-+#
-+# Copyright (C) 2016 Intel Corporation
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
-+from django.test import TestCase
-+from django.core import management
-+
-+from orm.models import Layer_Version, Layer, Release, ToasterSetting
-+
-+
-+class TestLoadDataFixtures(TestCase):
-+    """ Test loading our 3 provided fixtures """
-+    def test_run_loaddata_poky_command(self):
-+        management.call_command('loaddata', 'poky')
-+
-+        num_releases = Release.objects.count()
-+
-+        self.assertTrue(
-+            Layer_Version.objects.filter(
-+                layer__name="meta-poky").count() == num_releases,
-+            "Loaded poky fixture but don't have a meta-poky for all releases"
-+            " defined")
-+
-+    def test_run_loaddata_oecore_command(self):
-+        management.call_command('loaddata', 'oe-core')
-+
-+        # We only have the one layer for oe-core setup
-+        self.assertTrue(
-+            Layer.objects.filter(name="openembedded-core").count() > 0,
-+            "Loaded oe-core fixture but still have no openemebedded-core"
-+            " layer")
-+
-+    def test_run_loaddata_settings_command(self):
-+        management.call_command('loaddata', 'settings')
-+
-+        self.assertTrue(
-+            ToasterSetting.objects.filter(name="DEFAULT_RELEASE").count() > 0,
-+            "Loaded settings but have no DEFAULT_RELEASE")
-+
-+        self.assertTrue(
-+            ToasterSetting.objects.filter(
-+                name__startswith="DEFCONF").count() > 0,
-+            "Loaded settings but have no DEFCONF (default project "
-+            "configuration values)")
-diff --git a/lib/toaster/tests/commands/test_lsupdates.py b/lib/toaster/tests/commands/test_lsupdates.py
-new file mode 100644
-index 0000000..49897a4
---- /dev/null
-+++ b/lib/toaster/tests/commands/test_lsupdates.py
-@@ -0,0 +1,45 @@
-+#! /usr/bin/env python
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+#
-+# BitBake Toaster Implementation
-+#
-+# Copyright (C) 2016 Intel Corporation
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
-+from django.test import TestCase
-+from django.core import management
-+
-+from orm.models import Layer_Version, Machine, Recipe
-+
-+
-+class TestLayerIndexUpdater(TestCase):
-+    def test_run_lsupdates_command(self):
-+        # Load some release information for us to fetch from the layer index
-+        management.call_command('loaddata', 'poky')
-+
-+        old_layers_count = Layer_Version.objects.count()
-+        old_recipes_count = Recipe.objects.count()
-+        old_machines_count = Machine.objects.count()
-+
-+        # Now fetch the metadata from the layer index
-+        management.call_command('lsupdates')
-+
-+        self.assertTrue(Layer_Version.objects.count() > old_layers_count,
-+                        "lsupdates ran but we still have no more layers!")
-+        self.assertTrue(Recipe.objects.count() > old_recipes_count,
-+                        "lsupdates ran but we still have no more Recipes!")
-+        self.assertTrue(Machine.objects.count() > old_machines_count,
-+                        "lsupdates ran but we still have no more Machines!")
-diff --git a/lib/toaster/tests/commands/test_runbuilds.py b/lib/toaster/tests/commands/test_runbuilds.py
-new file mode 100644
-index 0000000..3e63483
---- /dev/null
-+++ b/lib/toaster/tests/commands/test_runbuilds.py
-@@ -0,0 +1,88 @@
-+#! /usr/bin/env python
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+#
-+# BitBake Toaster Implementation
-+#
-+# Copyright (C) 2016 Intel Corporation
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
+diff --git a/bin/toaster b/bin/toaster
+index f92d38e..e0aac1a 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -254,7 +254,7 @@ case $CMD in
+             return 4
+         fi
+         export BITBAKE_UI='toasterui'
+-        $MANAGE runbuilds & echo $! >${BUILDDIR}/.runbuilds.pid
++        $MANAGE runbuilds &
+         # set fail safe stop system on terminal exit
+         trap stop_system SIGHUP
+         echo "Successful ${CMD}."
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 7f7a5a9..df11f9d 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -11,9 +11,11 @@ from orm.models import Build, LogMessage, Target
+ import logging
+ import traceback
+ import signal
 +import os
+ 
+ logger = logging.getLogger("toaster")
+ 
 +
-+from django.test import TestCase
-+from django.core import management
-+
-+from orm.models import signal_runbuilds
-+
-+import threading
-+import time
-+import subprocess
-+import signal
-+
-+
-+class KillRunbuilds(threading.Thread):
-+    """ Kill the runbuilds process after an amount of time """
-+    def __init__(self, *args, **kwargs):
-+        super(KillRunbuilds, self).__init__(*args, **kwargs)
-+        self.setDaemon(True)
-+
-+    def run(self):
-+        time.sleep(5)
-+        signal_runbuilds()
-+        time.sleep(1)
-+
+ class Command(NoArgsCommand):
+     args = ""
+     help = "Schedules and executes build requests as possible. "\
+@@ -50,7 +52,7 @@ class Command(NoArgsCommand):
+                 logger.debug("runbuilds: No build env")
+                 return
+ 
+-            logger.info("runbuilds: starting build %s, environment %s" % \
++            logger.info("runbuilds: starting build %s, environment %s" %
+                         (br, bec.be))
+ 
+             # let the build request know where it is being executed
+@@ -80,7 +82,7 @@ class Command(NoArgsCommand):
+ 
+     def archive(self):
+         for br in BuildRequest.objects.filter(state=BuildRequest.REQ_ARCHIVE):
+-            if br.build == None:
++            if br.build is None:
+                 br.state = BuildRequest.REQ_FAILED
+             else:
+                 br.state = BuildRequest.REQ_COMPLETED
+@@ -99,10 +101,10 @@ class Command(NoArgsCommand):
+             Q(updated__lt=timezone.now() - timedelta(seconds=30))
+         ).update(lock=BuildEnvironment.LOCK_FREE)
+ 
+-
+         # update all Builds that were in progress and failed to start
+-        for br in BuildRequest.objects.filter(state=BuildRequest.REQ_FAILED,
+-                                              build__outcome=Build.IN_PROGRESS):
++        for br in BuildRequest.objects.filter(
++                state=BuildRequest.REQ_FAILED,
++                build__outcome=Build.IN_PROGRESS):
+             # transpose the launch errors in ToasterExceptions
+             br.build.outcome = Build.FAILED
+             for brerror in br.brerror_set.all():
+@@ -117,7 +119,6 @@ class Command(NoArgsCommand):
+             br.environment.lock = BuildEnvironment.LOCK_FREE
+             br.environment.save()
+ 
+-
+         # update all BuildRequests without a build created
+         for br in BuildRequest.objects.filter(build=None):
+             br.build = Build.objects.create(project=br.project,
+@@ -144,7 +145,7 @@ class Command(NoArgsCommand):
+ 
+         # Make sure the LOCK is removed for builds which have been fully
+         # cancelled
+-        for br in BuildRequest.objects.filter(\
++        for br in BuildRequest.objects.filter(
+                       Q(build__outcome=Build.CANCELLED) &
+                       Q(state=BuildRequest.REQ_CANCELLING) &
+                       ~Q(environment=None)):
+@@ -168,6 +169,12 @@ class Command(NoArgsCommand):
+             logger.warn("runbuilds: schedule exception %s" % str(e))
+ 
+     def handle_noargs(self, **options):
 +        pidfile_path = os.path.join(os.environ.get("BUILDDIR", "."),
 +                                    ".runbuilds.pid")
 +
-+        with open(pidfile_path) as pidfile:
-+            pid = pidfile.read()
-+            os.kill(int(pid), signal.SIGTERM)
++        with open(pidfile_path, 'w') as pidfile:
++            pidfile.write("%s" % os.getpid())
 +
-+
-+class TestCommands(TestCase):
-+    """ Sanity test that runbuilds executes OK """
-+
-+    def setUp(self):
-+        os.environ.setdefault("DJANGO_SETTINGS_MODULE",
-+                              "toastermain.settings_test")
-+        os.environ.setdefault("BUILDDIR",
-+                              "/tmp/")
-+
-+        # Setup a real database if needed for runbuilds process
-+        # to connect to
-+        management.call_command('migrate')
-+
-+    def test_runbuilds_command(self):
-+        kill_runbuilds = KillRunbuilds()
-+        kill_runbuilds.start()
-+
-+        manage_py = os.path.join(
-+            os.path.dirname(os.path.abspath(__file__)),
-+            os.pardir,
-+            os.pardir,
-+            "manage.py")
-+
-+        command = "%s runbuilds" % manage_py
-+
-+        process = subprocess.Popen(command,
-+                                   shell=True,
-+                                   stdout=subprocess.PIPE,
-+                                   stderr=subprocess.PIPE)
-+
-+        (out, err) = process.communicate()
-+        process.wait()
-+
-+        self.assertNotEqual(process.returncode, 1,
-+                            "Runbuilds returned an error %s" % err)
+         self.runbuild()
+ 
+         signal.signal(signal.SIGUSR1, lambda sig, frame: None)
+diff --git a/lib/toaster/orm/management/commands/lsupdates.py b/lib/toaster/orm/management/commands/lsupdates.py
+index 688918e..68c6c42 100644
+--- a/lib/toaster/orm/management/commands/lsupdates.py
++++ b/lib/toaster/orm/management/commands/lsupdates.py
+@@ -90,7 +90,6 @@ class Command(NoArgsCommand):
+             from urlparse import urlparse
+ 
+         proxy_settings = os.environ.get("http_proxy", None)
+-        oe_core_layer = 'openembedded-core'
+ 
+         def _get_json_response(apiurl=DEFAULT_LAYERINDEX_SERVER):
+             http_progress = Spinner()
 -- 
 2.7.4
 
