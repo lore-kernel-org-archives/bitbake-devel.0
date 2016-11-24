@@ -1,50 +1,46 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-pg0-f68.google.com (mail-pg0-f68.google.com [74.125.83.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 02AC66B6F7
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-io0-f180.google.com (mail-io0-f180.google.com
+	[209.85.223.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 3274971AE9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 Nov 2016 18:51:20 +0000 (UTC)
-Received: by mail-pg0-f68.google.com with SMTP id p66so1634006pga.2
+	Thu, 24 Nov 2016 07:21:05 +0000 (UTC)
+Received: by mail-io0-f180.google.com with SMTP id a124so65397277ioe.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 Nov 2016 10:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=KOlBtvvtw0SoDZD9hY7O0Fl4829B1VpRDjvW83BEeuM=;
-	b=0z5CnqzWiBYPrCUBsWYi/YtRjqtwnBSB4YQU4hCF0/gJyNZoLoI/+DzSZiGBxfzW+b
-	GR03SNmxtRjOKlk1ubWEnDljNA2kM2q3hLNEGyFkR/epqyna1cZlfSUO+0ttq6krAIXU
-	cm+/yvHJkvKc677rqFbBoy6KT8Jh4PQjCDbuJF3c5GzAKf270dbxllZRNONwr/mvG9tl
-	+KVO8cEVPxsoA+pOAn/Vov1idcdeknSKcMDLpKfG29WcF8V5EuSvUnxBOMvu1NDk6JVD
-	hSStIOvUMUe2KT+mwpOLCk3QvPvqCLurOLPQpjD8g42nY5mBZYZ6LoaPYjW2dXdwlP4v
-	gNgQ==
+	Wed, 23 Nov 2016 23:21:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=MFCIMBVbCzd3NcKcglWhhH1FJgvjNI5iXcwbsXa8YIY=;
+	b=Mw/VlUJ3zBlgnlB7UqpdrDb/wd0LpwS2SkWfW3KjjyJggOYuBPxeWLHzRaOPRShPwS
+	osjp1+YKGoHGMfNMZAxnlUA1DmsUX6m4I2s4ElImNRgN1G2291rOJLM0UD4TZg8BHcOw
+	qE9zbhhDvr5gpJIIOl/CnB1cuq5Kuuu4csa8KmF0OIZkPY5DavVXA34GJUqbahE7LGOZ
+	ggD4t8aH1GXvuC9efnnEy0fFOtI4tDEaDpVnzT6q0qpUMQvCA4AAq8h7LqIKjyRJkenz
+	SmAP/3RS8epnoFF/mZzPYmpFIheSOO2pZVLNCGPpzQ19tY5PT8AzRnoRiZCxwfmU4YVs
+	Dy4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=KOlBtvvtw0SoDZD9hY7O0Fl4829B1VpRDjvW83BEeuM=;
-	b=BnLXXJDE/VXOZBsvk/ptjRwRkRea2fTdSbv4kecnWzoT2XrYr566JzaSZTFPRW8Pck
-	3g9UgxB2b9BFCH8fbjo5sY8SDOEhwTGevEx19ZYXKyfk4gWKQzc5VlNgQ9X8674MxMeE
-	av3Wj/gWx0BCfZsfaoH/V7WsWckWagY1r6aTpRDUQzVi5NUwWIhCoVe80oRlC+OFrKge
-	Fk27lEJ1gwjJIpTnazYw7IIsNpFwTADvAArQC3OC/EgkBRci8AL6qpyFx+vbBFjQNeeH
-	dXtflLUwnhgNeje8Pc/qYBr8+0Br9FPAnVXmonQIcCI66wFnsPLopoWfX9VqXpHfWrg4
-	8A/g==
-X-Gm-Message-State: AKaTC01Ux1ainRvIEMGsaW3jHqh7DgkloqO4QEhUdhZX4WBpEndJWvfIGZP3puEo8T6X2w==
-X-Received: by 10.84.216.28 with SMTP id m28mr9706514pli.107.1479927081718;
-	Wed, 23 Nov 2016 10:51:21 -0800 (PST)
-Received: from whisper.hsd1.or.comcast.net
-	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id
-	v1sm36537583pgv.33.2016.11.23.10.51.21
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=MFCIMBVbCzd3NcKcglWhhH1FJgvjNI5iXcwbsXa8YIY=;
+	b=VZS9+92OzoRR8wbzpkU1PbkbvbKtukGZbmC8s+BxlkOuW98IONSCSz+5Qu71k+5Die
+	EN9o8viBcP9G/HtIb/dqSzWCDWJ1YRzzNmMpmRgX9lmigrHju1nvQTL0pIHNVVswkpZU
+	HJrZO2hUnO+mzn74Ig5QWPe7MKtaDOTAsVvba/nGoaACUXZKtRHaVFWPwDTS2jGVMQFR
+	InhBxi96VL4ZSubngADtCPlqEGyMvOczJyr+4kwN6Nz3Z+eZXFjHxcjRSD3R4iyPOLN0
+	fG7V2AD+c3x+ZI5w1mpJpWB6lux9TjwDgVf1eyij9bjbMzYh/JCfZtgHvj3vP8OvV71I
+	6O4w==
+X-Gm-Message-State: AKaTC03JjMSpwtwpfSTvEQD7AxpSqlrmYvzKDWe4j3PQ3CBIXh39ZzxGSaczbivByBkCaJEi
+X-Received: by 10.36.152.68 with SMTP id n65mr807955itd.93.1479972066337;
+	Wed, 23 Nov 2016 23:21:06 -0800 (PST)
+Received: from pohly-desktop.fritz.box (p5DE8D6D7.dip0.t-ipconnect.de.
+	[93.232.214.215])
+	by smtp.gmail.com with ESMTPSA id t20sm2314035ita.7.2016.11.23.23.21.04
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 23 Nov 2016 10:51:21 -0800 (PST)
-From: brian avery <avery.brian@gmail.com>
-X-Google-Original-From: brian avery <brian.avery@intel.com>
+	Wed, 23 Nov 2016 23:21:05 -0800 (PST)
+From: Patrick Ohly <patrick.ohly@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 23 Nov 2016 10:55:20 -0800
-Message-Id: <d407c04fa487bb2021e9b3cf9025ac8c413eb4f3.1479764304.git.brian.avery@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1479764304.git.brian.avery@intel.com>
-References: <cover.1479764304.git.brian.avery@intel.com>
-Cc: brian avery <brian.avery@intel.com>
-Subject: [PATCH 1/1] bitbake: toaster: settings set ALLOWED_HOSTS to * in debug mode
+Date: Thu, 24 Nov 2016 08:20:55 +0100
+Message-Id: <1479972055-1998-1-git-send-email-patrick.ohly@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] pseudo: include fix for xattr corruption
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,54 +53,92 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Nov 2016 18:51:20 -0000
+X-List-Received-Date: Thu, 24 Nov 2016 07:21:07 -0000
 
-This is a backport of 7c3a47ed8965c3a3eb90a9a4678d5caedbba6337
+pseudo_1.8.1.bb gets the backported patch and pseudo_git.bb gets
+updated to include the commit, which currently is the most recent
+commit on the pseudo master branch.
 
-From the commit to master:
-As of Django 1.8.16, Django is rejecting any HTTP_HOST header that is
-not on the ALLOWED_HOST list.  We often need to reference the toaster
-server via a fqdn, if we start it via webport=0.0.0.0:8000 for instance,
-and are hitting the server from a laptop. This change does reduce  the
-protection from a DNS rebinding attack, however, if you are running the
-toaster server outside a protected network, you should be using the
-production instance.
+There's just one problem - it breaks other cases:
 
-[YOCTO #10586]
+foo: security.SMACK64: No such attribute
 
-Signed-off-by: brian avery <brian.avery@intel.com>
+Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
 ---
- lib/toaster/toastermain/settings.py | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ .../pseudo/files/More-correctly-fix-xattrs.patch   | 37 ++++++++++++++++++++++
+ meta/recipes-devtools/pseudo/pseudo_1.8.1.bb       |  1 +
+ meta/recipes-devtools/pseudo/pseudo_git.bb         |  2 +-
+ 3 files changed, 39 insertions(+), 1 deletion(-)
+ create mode 100644 meta/recipes-devtools/pseudo/files/More-correctly-fix-xattrs.patch
 
-diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
-index 74ab604..6572acc 100644
---- a/lib/toaster/toastermain/settings.py
-+++ b/lib/toaster/toastermain/settings.py
-@@ -107,9 +107,19 @@ def getDATABASE_URL():
+diff --git a/meta/recipes-devtools/pseudo/files/More-correctly-fix-xattrs.patch b/meta/recipes-devtools/pseudo/files/More-correctly-fix-xattrs.patch
+new file mode 100644
+index 0000000..3d178f9
+--- /dev/null
++++ b/meta/recipes-devtools/pseudo/files/More-correctly-fix-xattrs.patch
+@@ -0,0 +1,37 @@
++From 45eca34c754d416a38bee90fb2d3c110a0b6cc5f Mon Sep 17 00:00:00 2001
++From: Seebs <seebs@seebs.net>
++Date: Thu, 3 Nov 2016 11:36:12 -0500
++Subject: [PATCH] More-correctly fix xattrs
++
++Fix provided by Patrick Ohly <patrick.ohly@intel.com>. This resolves
++the actual cause of the path length mismatches, and explains why
++I couldn't quite explain why the previous one had only sometimes
++worked, also why it showed up on directories but not plain files.
++
++Signed-off-by: Seebs <seebs@seebs.net>
++
++Fixes [YOCTO #10623]
++
++Upstream-Status: Backport [commit 45eca34c754d416a38bee90fb2d3c110a0b6cc5f]
++
++Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
++---
++ pseudo_client.c | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/pseudo_client.c b/pseudo_client.c
++index 6a08df3..b1a00fa 100644
++--- a/pseudo_client.c
+++++ b/pseudo_client.c
++@@ -1676,7 +1676,7 @@ pseudo_client_op(pseudo_op_t op, int access, int fd, int dirfd, const char *path
++ 	 * empty path for that.
++ 	 */
++ 	if (path_extra_1) {
++-		size_t full_len = path_extra_1len + 1 + pathlen;
+++		size_t full_len = path_extra_1len + 1 + pathlen - strip_slash;
++ 		size_t partial_len = pathlen - 1 - strip_slash;
++ 		if (path_extra_2) {
++ 			full_len += path_extra_2len + 1;
++-- 
++2.1.4
++
+diff --git a/meta/recipes-devtools/pseudo/pseudo_1.8.1.bb b/meta/recipes-devtools/pseudo/pseudo_1.8.1.bb
+index fb70034..90b53c0 100644
+--- a/meta/recipes-devtools/pseudo/pseudo_1.8.1.bb
++++ b/meta/recipes-devtools/pseudo/pseudo_1.8.1.bb
+@@ -10,6 +10,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/pseudo/${BPN}-${PV}.tar.bz
+            file://0001-Quiet-diagnostics-during-startup-for-pseudo-d.patch \
+            file://0002-Use-correct-file-descriptor.patch \
+            file://0003-Fix-renameat-parallel-to-previous-fix-to-rename.patch \
++           file://More-correctly-fix-xattrs.patch \
+            "
  
+ SRC_URI[md5sum] = "ee38e4fb62ff88ad067b1a5a3825bac7"
+diff --git a/meta/recipes-devtools/pseudo/pseudo_git.bb b/meta/recipes-devtools/pseudo/pseudo_git.bb
+index 8110b1a..ac923bb 100644
+--- a/meta/recipes-devtools/pseudo/pseudo_git.bb
++++ b/meta/recipes-devtools/pseudo/pseudo_git.bb
+@@ -1,6 +1,6 @@
+ require pseudo.inc
  
+-SRCREV = "befc6dbd6469d428c9e0830dbe51bdf7ac39d9ae"
++SRCREV = "45eca34c754d416a38bee90fb2d3c110a0b6cc5f"
+ PV = "1.8.1+git${SRCPV}"
  
--# Hosts/domain names that are valid for this site; required if DEBUG is False
--# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
--ALLOWED_HOSTS = []
-+# Update as of django 1.8.16 release, the '*' is needed to allow us to connect while running
-+# on hosts without explicitly setting the fqdn for the toaster server.
-+# See https://docs.djangoproject.com/en/dev/ref/settings/ for info on ALLOWED_HOSTS
-+# Previously this setting was not enforced if DEBUG was set but it is now.
-+# The previous behavior was such that ALLOWED_HOSTS defaulted to ['localhost','127.0.0.1','::1']
-+# and if you bound to 0.0.0.0:<port #> then accessing toaster as localhost or fqdn would both work.
-+# To have that same behavior, with a fqdn explicitly enabled you would set
-+# ALLOWED_HOSTS= ['localhost','127.0.0.1','::1','myserver.mycompany.com'] for
-+# Django >= 1.8.16. By default, we are not enforcing this restriction in
-+# DEBUG mode.
-+if DEBUG is True:
-+    # this will allow connection via localhost,hostname, or fqdn
-+    ALLOWED_HOSTS = ['*']
- 
- # Local time zone for this installation. Choices can be found here:
- # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+ DEFAULT_PREFERENCE = "-1"
 -- 
-1.9.1
+2.1.4
 
 
