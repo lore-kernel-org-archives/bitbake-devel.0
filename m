@@ -1,49 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
 Received: from mail-wj0-f180.google.com (mail-wj0-f180.google.com
 	[209.85.210.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 4B8F271B60
+	by mail.openembedded.org (Postfix) with ESMTP id C985D71B6F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 11:20:26 +0000 (UTC)
-Received: by mail-wj0-f180.google.com with SMTP id mp19so31054511wjc.1
+	Thu, 24 Nov 2016 11:20:27 +0000 (UTC)
+Received: by mail-wj0-f180.google.com with SMTP id v7so30973739wjy.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 03:20:28 -0800 (PST)
+	Thu, 24 Nov 2016 03:20:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=XLmQ8dPTwq6yGAMBFCqecd+bSHwqG+JsLT8vckEzGXE=;
-	b=FwnX40GCWw5cJdwj7r9V3TQoAK866QXTUox1mEDDdA6HmIyY4OHCQVdUTXQ1h4vTIS
-	9fz5mLgjY7rjgwsmEHHteceW4TVPkr9R7HoXyBWNP37+vaemS4Fe/mlz+pHV3FDzI4Zu
-	FJsYpnTCvb0iyqoUx0kVLomRD2KSuAe/sNrEEi37pIkoClvFK3HmVzao78Cp/QHMP+Eb
-	3j+ab8hL4G1idedtDKfTwHS3xo7e97RAKQBwBzbhHpHn/NDI6loFzjpsaMNu6TfpkysD
-	jLI3Bs254F+fmNncHq9lKZm93M6AdOiwEh9D92UMV/2WkJXpdL1PfUQ7zLvRCpqzQ9l2
-	s07w==
+	bh=jrXLBcDuwXvTtOaQwEdXR9rmRZ7zn1FdPS/g2BA89tQ=;
+	b=pWcCxBOsSN12GJuRBtvcjEAVsebZzJcbk1IzZF6veQRUJ6I03BlHGnwEBLcGhEtbav
+	QMpKq9A3FsZCYrfk/uLnkym9Mj9hFSLke8xwFiqPlUGWwP8Cg5e6ovvJ7LFPrXo3Xz+I
+	CezxRL0R7kqEIJsWdyahQRPhaNjWrbLwlY/cS2DTIp1Cpt87v7K6wPoGRmlOyR2cEg5d
+	6FZ2QeAJGJZfepH/bPXzBTmAex/MPnwimByhBH/G4SNTIFs8DzThuvW+XMxKAZFMzTRY
+	rS0bu2ikKBHeB7QctxhMnY7rZisqn3lJxQdvDmj19HJ7SqtkfJWR5spZg8hwBBzDEf7A
+	mm9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=XLmQ8dPTwq6yGAMBFCqecd+bSHwqG+JsLT8vckEzGXE=;
-	b=Z8f2PnqJwOJHRDkslcliZgmVi8kAP8nPNwqJMZUHHNuUhViRqRuSX2JFRQ53KWv/aq
-	WpDTu248q4MQpee+dKPGzjnCDlEDpUYs2iLFdrhgQNVrpdraJC6D6c7if7TVg/J7XGi4
-	2nGRbsllBfwwisNyKylFPwZcrTOJAfALrM6biDfd97447FD3AAbznfG9+HGPfS0c4vsv
-	AIh1IBArNMoHNg/RGiEC1pCyBiXMa26CScF47dwB/bJWOXo/fJ9RVn+sFsFJ+2jTV6VH
-	ZOFf1GXfh8KmiNGne1dfyYqxJ2Cq2r3UUSrnSik1+YABnsvmZAvMyI51HAOK/Z6hpaHp
-	iPRw==
-X-Gm-Message-State: AKaTC01k+yFGS8bjgVqKzbF9ztRD+OqyrML7sjgmFb3lw/oMlm/FwOXPhnL14sImLqCa1W1a
-X-Received: by 10.194.124.100 with SMTP id mh4mr2000848wjb.154.1479986427792; 
-	Thu, 24 Nov 2016 03:20:27 -0800 (PST)
+	bh=jrXLBcDuwXvTtOaQwEdXR9rmRZ7zn1FdPS/g2BA89tQ=;
+	b=fttsdzGEGxFi4MyTN2uZUCD/5iOrmfL5BQ0fB8bk0zlUVCz4Wvi8A3PT3I57N0jCrZ
+	EWM5vW/OGL6FuTVRtGRMy4IBpvU736R4XAI1RUCa4IjJQ9N6lFupRpRUwUBID/IBFZKa
+	+AxBLTtcxuUBPWcGXWgNgx6y6Owwwfo/4EFofXk4hhp3UYc8x1Z3GEkeCAVhp0QzYISP
+	kZAWmGpjHxLijYJwRqTQ0slFTXKSeZdnOnSRr5Tvm47S45bRF+TnrwXiDREx9MOdevBb
+	w3UHOpzIcp2sWrwOBQ78HZpeiy22ggZ5mu0TltR9Cqje2cuwE2HFw/XGW1xRhoPGGZKU
+	NmLA==
+X-Gm-Message-State: AKaTC018WiFU5//9TlS3DPjaidi7StaA9v7D2sLcUSzbMdj6o5B4iHVMLEny8jtIAEKY/23a
+X-Received: by 10.194.44.41 with SMTP id b9mr2121694wjm.56.1479986428820;
+	Thu, 24 Nov 2016 03:20:28 -0800 (PST)
 Received: from localhost.localdomain ([192.198.151.62])
 	by smtp.gmail.com with ESMTPSA id
 	g184sm7696900wme.23.2016.11.24.03.20.27
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 24 Nov 2016 03:20:27 -0800 (PST)
+	Thu, 24 Nov 2016 03:20:28 -0800 (PST)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 24 Nov 2016 11:19:58 +0000
-Message-Id: <1479986406-4657-8-git-send-email-michael.g.wood@intel.com>
+Date: Thu, 24 Nov 2016 11:19:59 +0000
+Message-Id: <1479986406-4657-9-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1479986406-4657-1-git-send-email-michael.g.wood@intel.com>
 References: <1479986406-4657-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 07/15] toaster: localhostbecontroller accept custom init script for build
+Subject: [PATCH 08/15] toaster: localhostbecontroller write toaster layers for project to toaster-bblayers.conf
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,47 +56,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 24 Nov 2016 11:20:27 -0000
+X-List-Received-Date: Thu, 24 Nov 2016 11:20:28 -0000
 
 From: Sujith H <sujith.h@gmail.com>
 
-When passed variable CUSTOM_BUILD_INIT_SCRIPT to toaster
-setting, it would be nice to use it. Else toaster
-can use oe-init script. This gives an oppurtunity to
-use customized build init scritps.
+Instead of updating conf/bblayers, here we update toaster-bblayers.conf
+file. So extra effort to update bblayers.conf can be removed safely.
 
 Signed-off-by: Sujith H <sujith.h@gmail.com>
 ---
- lib/toaster/bldcontrol/localhostbecontroller.py | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ lib/toaster/bldcontrol/localhostbecontroller.py | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
 diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index e5f7c98..3896a82 100644
+index 3896a82..11335ac 100644
 --- a/lib/toaster/bldcontrol/localhostbecontroller.py
 +++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -27,7 +27,7 @@ import shutil
- from django.db import transaction
- from django.db.models import Q
- from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget, BRBitbake
--from orm.models import CustomImageRecipe, Layer, Layer_Version, ProjectLayer
-+from orm.models import CustomImageRecipe, Layer, Layer_Version, ProjectLayer, ToasterSetting
- import subprocess
- 
- from toastermain import settings
-@@ -277,7 +277,12 @@ class LocalhostBEController(BuildEnvironmentController):
-         builddir = '%s-toaster-%d' % (self.be.builddir, bitbake.req.project.id)
-         oe_init = os.path.join(self.pokydirname, 'oe-init-build-env')
-         # init build environment
--        self._shellcmd("bash -c 'source %s %s'" % (oe_init, builddir),
-+        try:
-+            custom_script = ToasterSetting.objects.get(name="CUSTOM_BUILD_INIT_SCRIPT").value
-+            custom_script = custom_script.replace("%BUILDDIR%" ,builddir)
-+            self._shellcmd("bash -c 'source %s'" % (custom_script))
-+        except ToasterSetting.DoesNotExist:
-+            self._shellcmd("bash -c 'source %s %s'" % (oe_init, builddir),
+@@ -286,19 +286,8 @@ class LocalhostBEController(BuildEnvironmentController):
                         self.be.sourcedir)
  
          # update bblayers.conf
+-        bblconfpath = os.path.join(builddir, "conf/bblayers.conf")
+-        conflines = open(bblconfpath, "r").readlines()
+-        skip = False
++        bblconfpath = os.path.join(builddir, "conf/toaster-bblayers.conf")
+         with open(bblconfpath, 'w') as bblayers:
+-            for line in conflines:
+-                if line.startswith("# line added by toaster"):
+-                    skip = True
+-                    continue
+-                if skip:
+-                    skip = False
+-                else:
+-                    bblayers.write(line)
+-
+             bblayers.write('# line added by toaster build control\n'
+                            'BBLAYERS = "%s"' % ' '.join(layers))
+ 
+@@ -311,9 +300,10 @@ class LocalhostBEController(BuildEnvironmentController):
+ 
+         # run bitbake server from the clone
+         bitbake = os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitbake')
+-        self._shellcmd('bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s '
++        toasterlayers = os.path.join(builddir,"conf/toaster-bblayers.conf")
++        self._shellcmd('bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s --read %s '
+                        '--server-only -t xmlrpc -B 0.0.0.0:0\"' % (oe_init,
+-                       builddir, bitbake, confpath), self.be.sourcedir)
++                       builddir, bitbake, confpath, toasterlayers), self.be.sourcedir)
+ 
+         # read port number from bitbake.lock
+         self.be.bbport = ""
 -- 
 2.7.4
 
