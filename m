@@ -1,50 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wj0-f182.google.com (mail-wj0-f182.google.com
-	[209.85.210.182])
-	by mail.openembedded.org (Postfix) with ESMTP id BEEDD71B3F
+Received: from mail-wj0-f180.google.com (mail-wj0-f180.google.com
+	[209.85.210.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 4B8F271B60
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 11:20:25 +0000 (UTC)
-Received: by mail-wj0-f182.google.com with SMTP id v7so30972922wjy.2
+	Thu, 24 Nov 2016 11:20:26 +0000 (UTC)
+Received: by mail-wj0-f180.google.com with SMTP id mp19so31054511wjc.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 03:20:27 -0800 (PST)
+	Thu, 24 Nov 2016 03:20:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=QBXRQy6vvTXt0/ZJ9C+S7tHy4QjkZMpIrFZ4ciJtpEc=;
-	b=M9/tn0iKx/9NrM7tcY2miCgt3HkPCIkkgoLv5wStz5QxvS0N6VHdxY10+5dmrfNG9o
-	H8LZ7dHY2whUTP/ZglQgonY8wWevYLaSFOMWhWfJcQyo6ULrEJ24DIOHiqboN9aKwRZa
-	9nkUl0mGwczl/qANEQERShiZeAse/Fq85fzOMyGLrjEnk0KTkC/y1kTZeXu0Rp15jQns
-	uwHdssTSqmkf6+m3MVV6nsQ6Lw8CjylLErGFrQmm8DF88UifKwCqNTYtKjWTnbpGLx4M
-	E0HfFEAA5nEXKpM3wACnr5jMKQAs15sRxbBYqM7vKW96wIBk8qTvGUDPK7OExRg4MneU
-	Rycw==
+	bh=XLmQ8dPTwq6yGAMBFCqecd+bSHwqG+JsLT8vckEzGXE=;
+	b=FwnX40GCWw5cJdwj7r9V3TQoAK866QXTUox1mEDDdA6HmIyY4OHCQVdUTXQ1h4vTIS
+	9fz5mLgjY7rjgwsmEHHteceW4TVPkr9R7HoXyBWNP37+vaemS4Fe/mlz+pHV3FDzI4Zu
+	FJsYpnTCvb0iyqoUx0kVLomRD2KSuAe/sNrEEi37pIkoClvFK3HmVzao78Cp/QHMP+Eb
+	3j+ab8hL4G1idedtDKfTwHS3xo7e97RAKQBwBzbhHpHn/NDI6loFzjpsaMNu6TfpkysD
+	jLI3Bs254F+fmNncHq9lKZm93M6AdOiwEh9D92UMV/2WkJXpdL1PfUQ7zLvRCpqzQ9l2
+	s07w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=QBXRQy6vvTXt0/ZJ9C+S7tHy4QjkZMpIrFZ4ciJtpEc=;
-	b=mJT78m+rdArISN/Xc9lgbY68DzBEc0nalkcc4ZEtByo2rZW30NFChgVPPVCdTHVWJV
-	XTQPdrRyaUyHriscFK07JduIQNH+w+IhQKRXqn8X3ream+LIK+MKi+SOU00Ck+bAf2ES
-	nTmazXU0L2/ZVbBsiuT1Mi8LLS1OmagGaYcZGPBFXPwlNsJgyfensANPRBKADOtIU2Mh
-	kXReDfXYM0MtOhgipX/rtPEbVWDharSXlIBFp+8w84vMXZwZqnf30VC8RifYxxzFJB2N
-	ZECp3dWd/SG4+YUkEiAR0aa2THZp7ziQ+m5hLyEzga1FZ9wFyskBV2wQxn9ts7cAazVP
-	DOxA==
-X-Gm-Message-State: AKaTC025CG5BT1vvAn6RDfYhwRr3Gkv38VWRJLKMZWp/41sB3/gkpm1KlTUe6PiR6YbdSFhs
-X-Received: by 10.194.8.226 with SMTP id u2mr1785209wja.91.1479986427013;
+	bh=XLmQ8dPTwq6yGAMBFCqecd+bSHwqG+JsLT8vckEzGXE=;
+	b=Z8f2PnqJwOJHRDkslcliZgmVi8kAP8nPNwqJMZUHHNuUhViRqRuSX2JFRQ53KWv/aq
+	WpDTu248q4MQpee+dKPGzjnCDlEDpUYs2iLFdrhgQNVrpdraJC6D6c7if7TVg/J7XGi4
+	2nGRbsllBfwwisNyKylFPwZcrTOJAfALrM6biDfd97447FD3AAbznfG9+HGPfS0c4vsv
+	AIh1IBArNMoHNg/RGiEC1pCyBiXMa26CScF47dwB/bJWOXo/fJ9RVn+sFsFJ+2jTV6VH
+	ZOFf1GXfh8KmiNGne1dfyYqxJ2Cq2r3UUSrnSik1+YABnsvmZAvMyI51HAOK/Z6hpaHp
+	iPRw==
+X-Gm-Message-State: AKaTC01k+yFGS8bjgVqKzbF9ztRD+OqyrML7sjgmFb3lw/oMlm/FwOXPhnL14sImLqCa1W1a
+X-Received: by 10.194.124.100 with SMTP id mh4mr2000848wjb.154.1479986427792; 
 	Thu, 24 Nov 2016 03:20:27 -0800 (PST)
 Received: from localhost.localdomain ([192.198.151.62])
 	by smtp.gmail.com with ESMTPSA id
-	g184sm7696900wme.23.2016.11.24.03.20.26
+	g184sm7696900wme.23.2016.11.24.03.20.27
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 24 Nov 2016 03:20:26 -0800 (PST)
+	Thu, 24 Nov 2016 03:20:27 -0800 (PST)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 24 Nov 2016 11:19:57 +0000
-Message-Id: <1479986406-4657-7-git-send-email-michael.g.wood@intel.com>
+Date: Thu, 24 Nov 2016 11:19:58 +0000
+Message-Id: <1479986406-4657-8-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1479986406-4657-1-git-send-email-michael.g.wood@intel.com>
 References: <1479986406-4657-1-git-send-email-michael.g.wood@intel.com>
-Cc: David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 06/15] toaster: tablejs Fix missing close square bracket
+Subject: [PATCH 07/15] toaster: localhostbecontroller accept custom init script for build
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,30 +58,45 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 24 Nov 2016 11:20:27 -0000
 
-From: "Reyna, David" <david.reyna@windriver.com>
+From: Sujith H <sujith.h@gmail.com>
 
-There is a missing close square bracket.
+When passed variable CUSTOM_BUILD_INIT_SCRIPT to toaster
+setting, it would be nice to use it. Else toaster
+can use oe-init script. This gives an oppurtunity to
+use customized build init scritps.
 
-[YOCTO #10631]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Sujith H <sujith.h@gmail.com>
 ---
- lib/toaster/toastergui/static/js/table.js | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/bldcontrol/localhostbecontroller.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/table.js b/lib/toaster/toastergui/static/js/table.js
-index 176ce57..aaa3e1f 100644
---- a/lib/toaster/toastergui/static/js/table.js
-+++ b/lib/toaster/toastergui/static/js/table.js
-@@ -706,7 +706,7 @@ function tableInit(ctx){
-             if (action) {
-               // Setup the current selected filter; default to 'all' if
-               // no current filter selected
--              var radioInput = action.find('input[name="filter"]');
-+              var radioInput = action.find('input[name]="filter"]');
-               if ((tableParams.filter &&
-                   tableParams.filter === radioInput.val()) ||
-                   filterActionData.action_name == 'all') {
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index e5f7c98..3896a82 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -27,7 +27,7 @@ import shutil
+ from django.db import transaction
+ from django.db.models import Q
+ from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget, BRBitbake
+-from orm.models import CustomImageRecipe, Layer, Layer_Version, ProjectLayer
++from orm.models import CustomImageRecipe, Layer, Layer_Version, ProjectLayer, ToasterSetting
+ import subprocess
+ 
+ from toastermain import settings
+@@ -277,7 +277,12 @@ class LocalhostBEController(BuildEnvironmentController):
+         builddir = '%s-toaster-%d' % (self.be.builddir, bitbake.req.project.id)
+         oe_init = os.path.join(self.pokydirname, 'oe-init-build-env')
+         # init build environment
+-        self._shellcmd("bash -c 'source %s %s'" % (oe_init, builddir),
++        try:
++            custom_script = ToasterSetting.objects.get(name="CUSTOM_BUILD_INIT_SCRIPT").value
++            custom_script = custom_script.replace("%BUILDDIR%" ,builddir)
++            self._shellcmd("bash -c 'source %s'" % (custom_script))
++        except ToasterSetting.DoesNotExist:
++            self._shellcmd("bash -c 'source %s %s'" % (oe_init, builddir),
+                        self.be.sourcedir)
+ 
+         # update bblayers.conf
 -- 
 2.7.4
 
