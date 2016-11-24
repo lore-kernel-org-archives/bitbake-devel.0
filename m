@@ -1,53 +1,45 @@
-Return-Path: <patrick.ohly@intel.com>
-Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
-	[209.85.223.172])
-	by mail.openembedded.org (Postfix) with ESMTP id E475671AC5
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wm0-f43.google.com (mail-wm0-f43.google.com [74.125.82.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 280F16011A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 09:44:38 +0000 (UTC)
-Received: by mail-io0-f172.google.com with SMTP id x94so70530144ioi.3
+	Thu, 24 Nov 2016 11:20:19 +0000 (UTC)
+Received: by mail-wm0-f43.google.com with SMTP id f82so57223760wmf.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 01:44:40 -0800 (PST)
+	Thu, 24 Nov 2016 03:20:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=message-id:subject:from:to:date:in-reply-to:references:organization
-	:mime-version:content-transfer-encoding;
-	bh=nQsRMSfoc/iLxgt5o/HYyXIwlBhTtRZDmHEtrhLUs58=;
-	b=ONvHClUFWRwqe5B6reNXhri+DDy/9wvxzD2NlSJqj5/eO4gM4qZ6ZX2XA37JCqUWCm
-	ZZrFDVqj74eAQWHM1QVENc90kqEMgQleitcSs+InI1ok1FANcJ7QYUrjbkhr/oudhsy8
-	1YZo1qg7KdbzVYrL7OLR03HbQRfj1Q75QDkVTJljOswxwEuYMvHpIZXzLyayqpg4xGq7
-	0XqomuW1VIIKJRxOC+zu+lBJUzKkeRe3397GMJg3nCw7MD/Es3zuTLjIcyaT21TBm6cu
-	igc8GR20oxQI8wOhPStJxuMDZN3OY6CjO/H52cyc07qmwVvSs+/MSk5sNbpmJizF7r1g
-	uCxw==
+	h=from:to:cc:subject:date:message-id;
+	bh=n5g9aRorr4dHkAU/AUO35TdXj49d9qz0b5ECou8dgzw=;
+	b=e5t8sxtWiB8Ch7QLq6Qnbqe+gIDyNsYwx4e8JfftZLBrKRPR//t4XkZ9tpP7KBymZg
+	rZmug5CanKhDCumL6fg+dENTAcFpkC5G0h5KGrePrTvnKyY91fw5atYno5IvJFZA7eMw
+	Br2Ie4IxRIRWKESIZN2m/VLSYOMMTxNT+9EzF4dH1NdPSK2zWuN1VtAJf7hiwtRTNj1K
+	Dpxe/ZUaoRDTLhCBe9teGt4g4xpXg7kY0EialAyvGenmrOoCmwjUMGsp2aOBt/OXgU2z
+	HLVPY1iSGe+GZA36LRBSqHGNV7OSTAu6XwO5wLhXHIgZZUcWHh3rHJhKTTZfLOxiSWly
+	qgsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:organization:mime-version:content-transfer-encoding;
-	bh=nQsRMSfoc/iLxgt5o/HYyXIwlBhTtRZDmHEtrhLUs58=;
-	b=DbhaBv4sgxz6qnmJw7HafM7Tl59/8fq5eZYu5SqI7pmgfTwqDhgHlqOWnHzs1EkV2D
-	NmxJ4psPxkj4GS/c01OYEclu8dj+FgYcIPENYWS5Xh9lReDNZCfMS0cOxXTDce677HEs
-	W6mbzkP1RjdKovnta5fwcUaAbF9ko4+sINZXl5DSddL+QUW7pDUcg+bfBBuMW1EJ7o7W
-	MOzceF3Azbnam0pZosthGUFC/0WHapBYet6fQDZ5OlYp578JkKYW/JgUFZWQfyAGp57q
-	HjjPkK2psJ9otxUz5qEGkXlWUY76b6LzxkUlfJKMifTNpHJAYHR0o6iKJ0+R2QyoiFzw
-	lfmw==
-X-Gm-Message-State: AKaTC03TknDcRa+1vOVo5kEQq2d9PL4QsZk+vsO6zu7DY6s+SgcdLvEHTLGDiymrxjPvVJ4p
-X-Received: by 10.36.203.66 with SMTP id u63mr1293606itg.111.1479980679155;
-	Thu, 24 Nov 2016 01:44:39 -0800 (PST)
-Received: from pohly-mobl1 (p5DE8D6D7.dip0.t-ipconnect.de. [93.232.214.215])
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=n5g9aRorr4dHkAU/AUO35TdXj49d9qz0b5ECou8dgzw=;
+	b=Q8xCO3KndP5RBo7i9ENjzRRaG4PpdmmkuPdswVpcamxQwSFK+A2HbCoJBgh5LclHKk
+	mflyVBxUb2bzfU8YiTQhqewxZmx/74o+5WbUsKwIciWMzoz3aTolPJJK24ec0mbYeMq1
+	NQrEqTV9lmDhCeooFytDSk6AtS4z+orYsAaKxdpYiNrCHf5iZcykTf0VlmkOXDcIje7N
+	8/bcFP0pBh2Crw+AprJvNXD44I7foh6b28XJPezpFwRlSeNawAfZ31qzAu1ncA6sk9Lo
+	A7E8Vd4e9UcY4L1cP9dvHlzfg2R6zis6WNsiVUaGG8eh7c0S8KTul37I7wDWyqjOwWcP
+	eqAg==
+X-Gm-Message-State: AKaTC03sKlBFl2xrxNY2hQJON71rIVCp+d2F1vvtl9a2GOhE/uoBZh5xLOIYOL/NwWW68TK8
+X-Received: by 10.28.91.143 with SMTP id p137mr1969123wmb.51.1479986420616;
+	Thu, 24 Nov 2016 03:20:20 -0800 (PST)
+Received: from localhost.localdomain ([192.198.151.62])
 	by smtp.gmail.com with ESMTPSA id
-	y125sm2462435ity.13.2016.11.24.01.44.37
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 24 Nov 2016 01:44:37 -0800 (PST)
-Message-ID: <1479980675.6873.26.camel@intel.com>
-From: Patrick Ohly <patrick.ohly@intel.com>
+	g184sm7696900wme.23.2016.11.24.03.20.19
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Thu, 24 Nov 2016 03:20:20 -0800 (PST)
+From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 24 Nov 2016 10:44:35 +0100
-In-Reply-To: <1479972055-1998-1-git-send-email-patrick.ohly@intel.com>
-References: <1479972055-1998-1-git-send-email-patrick.ohly@intel.com>
-Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
-X-Mailer: Evolution 3.12.9-1+b1 
-Mime-Version: 1.0
-Subject: Re: [PATCH] pseudo: include fix for xattr corruption
+Date: Thu, 24 Nov 2016 11:19:51 +0000
+Message-Id: <1479986406-4657-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 00/15] Patches for Toaster 22.11.16
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,24 +52,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 24 Nov 2016 09:44:39 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 24 Nov 2016 11:20:22 -0000
 
-On Thu, 2016-11-24 at 08:20 +0100, Patrick Ohly wrote:
-> pseudo_1.8.1.bb gets the backported patch and pseudo_git.bb gets
-> updated to include the commit, which currently is the most recent
-> commit on the pseudo master branch.
+This is the latest patchset for submission upstream from Toaster.
 
-Please ignore, wrong list. I'll resend.
+Branch available at poky-contrib michaelw/toaster/patch_queue_22_11_16
+http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=michaelw/toaster/patch_queue_22_11_16
+
+*Note* there are new files added in this patchset 
+
+Thanks
+
+Michael Wood (11):
+  toaster: runbuilds Write the pidfile in python rather than shell
+    script
+  toaster: tests Add management command tests
+  toaster: Add an example production settings file
+  toaster: customrecipejs Consume click event on 'a' link if disabled
+  toaster: buildinfohelper toaster-custom-images layer
+  toaster: orm models Project class Fix pyflake errors
+  toaster: orm models Handle CustomImageRecipe BRLayer here
+  toaster: bldcontrol Move CustomImageRecipe file creation into own
+    function
+  toaster: buildinfohelper Simplify layer event to toaster layer
+    function
+  toaster: buildinfohelper fix _get_layer_version_for_dependency
+  toaster: buildinfohelper Clarify log message for build history
+
+Reyna, David (2):
+  toaster: orm gen_layerdeps Protect against circular Layer dependencies
+  toaster: tablejs Fix missing close square bracket
+
+Sujith H (2):
+  toaster: localhostbecontroller accept custom init script for build
+  toaster: localhostbecontroller write toaster layers for project to
+    toaster-bblayers.conf
+
+ bin/toaster                                        |   2 +-
+ lib/bb/ui/buildinfohelper.py                       | 112 +++++++--------
+ lib/toaster/bldcontrol/localhostbecontroller.py    | 160 +++++++++++----------
+ .../bldcontrol/management/commands/runbuilds.py    |  21 ++-
+ lib/toaster/orm/management/commands/lsupdates.py   |   1 -
+ lib/toaster/orm/models.py                          |  94 +++++++-----
+ lib/toaster/tests/commands/__init__.py             |   0
+ lib/toaster/tests/commands/test_loaddata.py        |  61 ++++++++
+ lib/toaster/tests/commands/test_lsupdates.py       |  45 ++++++
+ lib/toaster/tests/commands/test_runbuilds.py       |  88 ++++++++++++
+ lib/toaster/toastergui/api.py                      |  16 ++-
+ lib/toaster/toastergui/static/js/customrecipe.js   |   6 +
+ lib/toaster/toastergui/static/js/table.js          |   2 +-
+ .../toastermain/settings_production_example.py     |  58 ++++++++
+ 14 files changed, 481 insertions(+), 185 deletions(-)
+ create mode 100644 lib/toaster/tests/commands/__init__.py
+ create mode 100644 lib/toaster/tests/commands/test_loaddata.py
+ create mode 100644 lib/toaster/tests/commands/test_lsupdates.py
+ create mode 100644 lib/toaster/tests/commands/test_runbuilds.py
+ create mode 100644 lib/toaster/toastermain/settings_production_example.py
+
 -- 
-Best Regards, Patrick Ohly
-
-The content of this message is my personal opinion only and although
-I am an employee of Intel, the statements I make here in no way
-represent Intel's position on the issue, nor am I authorized to speak
-on behalf of Intel on this matter.
-
-
+2.7.4
 
 
