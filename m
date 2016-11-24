@@ -1,46 +1,53 @@
 Return-Path: <patrick.ohly@intel.com>
-Received: from mail-io0-f176.google.com (mail-io0-f176.google.com
-	[209.85.223.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 2C19E719E8
+Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
+	[209.85.223.172])
+	by mail.openembedded.org (Postfix) with ESMTP id E475671AC5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2016 07:21:19 +0000 (UTC)
-Received: by mail-io0-f176.google.com with SMTP id a124so65404913ioe.2
+	Thu, 24 Nov 2016 09:44:38 +0000 (UTC)
+Received: by mail-io0-f172.google.com with SMTP id x94so70530144ioi.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 Nov 2016 23:21:21 -0800 (PST)
+	Thu, 24 Nov 2016 01:44:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=0bg+5v7fGbyBlQkrgpcgNRFJ5ECliys8jElYIJoyNJY=;
-	b=mgHOeeSlWHJvX1+GsmQSerAuO4tuc4dnHQVEUL6Ht5+nS3MPuOLMzZtpz9NtL4xQ3U
-	o/VBJrKEzT6/EdlRxnP0x/ILLC1yvny/JZycXyXX1Idoe3Kjxgtk7jpkERVJXEtQLHhS
-	PJPQp+lbjdDaiHu0EHO/CKlAeSC/ChfhtEuoI/syZVxZgREDPnFqC4x0w9ECP0nkGLJq
-	yChyh8ZAr9GMDrpCUCQzOFWw99SJmlIfTkylDqip4oMp/kMlqmImSCe7GAxxIKWHs8oV
-	RJF5FJs2T6KgwdWs+83ztuLLbGxcqvphBSFJ+bJp5oehto3zAzOiLswtpzW3kNuWfYCY
-	2S4A==
+	h=message-id:subject:from:to:date:in-reply-to:references:organization
+	:mime-version:content-transfer-encoding;
+	bh=nQsRMSfoc/iLxgt5o/HYyXIwlBhTtRZDmHEtrhLUs58=;
+	b=ONvHClUFWRwqe5B6reNXhri+DDy/9wvxzD2NlSJqj5/eO4gM4qZ6ZX2XA37JCqUWCm
+	ZZrFDVqj74eAQWHM1QVENc90kqEMgQleitcSs+InI1ok1FANcJ7QYUrjbkhr/oudhsy8
+	1YZo1qg7KdbzVYrL7OLR03HbQRfj1Q75QDkVTJljOswxwEuYMvHpIZXzLyayqpg4xGq7
+	0XqomuW1VIIKJRxOC+zu+lBJUzKkeRe3397GMJg3nCw7MD/Es3zuTLjIcyaT21TBm6cu
+	igc8GR20oxQI8wOhPStJxuMDZN3OY6CjO/H52cyc07qmwVvSs+/MSk5sNbpmJizF7r1g
+	uCxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=0bg+5v7fGbyBlQkrgpcgNRFJ5ECliys8jElYIJoyNJY=;
-	b=NZtxHG/ShSvMb8WPhqLf7YRMbhd4M8CQmxZmOc8xqRI1vOK01YCtdK2ERSTHH0AstR
-	qyyW4VpJtHdwfgeIuqKY9EL8Vr0LJc6VYlFvopdmyLZMBW8IBhoZPVYjNZy5u46nvWhB
-	YDu0rFo8wZ3KFVjKW8VwYGfGaKJBA/VTlklHKT2lYqCjkZU4UmFcCpiwCA5oxdzFJmIN
-	2aHBTDrvxXeiJnHXtVkJamSy9e7OqiF+6TwKVY05FiiXuiqiRcw3JYIR0r4gFDzQAbUS
-	TzwaiHy/t3y9nC87DR+KlBC5F2diCJhdcdIaZysxslZZX+q3oYGyR0A+5SKXopiVRqT6
-	NMlg==
-X-Gm-Message-State: AKaTC02VaqvlBxNONoZYcOxuwNHIr8ZbR66yIl05Uwsj97QrbtqNMzg6EgnUSzo/NvilDyNf
-X-Received: by 10.36.159.193 with SMTP id c184mr790604ite.72.1479972081071;
-	Wed, 23 Nov 2016 23:21:21 -0800 (PST)
-Received: from pohly-desktop.fritz.box (p5DE8D6D7.dip0.t-ipconnect.de.
-	[93.232.214.215]) by smtp.gmail.com with ESMTPSA id
-	e68sm12948226ioj.39.2016.11.23.23.21.19
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 23 Nov 2016 23:21:20 -0800 (PST)
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:organization:mime-version:content-transfer-encoding;
+	bh=nQsRMSfoc/iLxgt5o/HYyXIwlBhTtRZDmHEtrhLUs58=;
+	b=DbhaBv4sgxz6qnmJw7HafM7Tl59/8fq5eZYu5SqI7pmgfTwqDhgHlqOWnHzs1EkV2D
+	NmxJ4psPxkj4GS/c01OYEclu8dj+FgYcIPENYWS5Xh9lReDNZCfMS0cOxXTDce677HEs
+	W6mbzkP1RjdKovnta5fwcUaAbF9ko4+sINZXl5DSddL+QUW7pDUcg+bfBBuMW1EJ7o7W
+	MOzceF3Azbnam0pZosthGUFC/0WHapBYet6fQDZ5OlYp578JkKYW/JgUFZWQfyAGp57q
+	HjjPkK2psJ9otxUz5qEGkXlWUY76b6LzxkUlfJKMifTNpHJAYHR0o6iKJ0+R2QyoiFzw
+	lfmw==
+X-Gm-Message-State: AKaTC03TknDcRa+1vOVo5kEQq2d9PL4QsZk+vsO6zu7DY6s+SgcdLvEHTLGDiymrxjPvVJ4p
+X-Received: by 10.36.203.66 with SMTP id u63mr1293606itg.111.1479980679155;
+	Thu, 24 Nov 2016 01:44:39 -0800 (PST)
+Received: from pohly-mobl1 (p5DE8D6D7.dip0.t-ipconnect.de. [93.232.214.215])
+	by smtp.gmail.com with ESMTPSA id
+	y125sm2462435ity.13.2016.11.24.01.44.37
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 24 Nov 2016 01:44:37 -0800 (PST)
+Message-ID: <1479980675.6873.26.camel@intel.com>
 From: Patrick Ohly <patrick.ohly@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 24 Nov 2016 08:21:12 +0100
-Message-Id: <1479972072-2045-1-git-send-email-patrick.ohly@intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] qemuboot.bbclass: do not hook into do_rootfs
+Date: Thu, 24 Nov 2016 10:44:35 +0100
+In-Reply-To: <1479972055-1998-1-git-send-email-patrick.ohly@intel.com>
+References: <1479972055-1998-1-git-send-email-patrick.ohly@intel.com>
+Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
+X-Mailer: Evolution 3.12.9-1+b1 
+Mime-Version: 1.0
+Subject: Re: [PATCH] pseudo: include fix for xattr corruption
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,52 +60,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 24 Nov 2016 07:21:20 -0000
+X-List-Received-Date: Thu, 24 Nov 2016 09:44:39 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Writing qemuboot.conf in write_qemuboot_conf() does not modify the
-rootfs and thus conceptually shouldn't be executed as part of rootfs
-creation.
+On Thu, 2016-11-24 at 08:20 +0100, Patrick Ohly wrote:
+> pseudo_1.8.1.bb gets the backported patch and pseudo_git.bb gets
+> updated to include the commit, which currently is the most recent
+> commit on the pseudo master branch.
 
-Running it as separate task is cleaner and fixes the problem of
-missing qemuboot.conf files for meta-swupd virtual images; those
-images replace do_rootfs and ROOTFS_POSTPROCESS_COMMANDs don't run at
-all.
-
-The task gets added such that it runs roughly at the same time as
-before. Probably it doesn't actually need to depend on do_rootfs, but
-this way we don't write a useless qemuboot.conf in cases where
-do_rootfs fails.
-
-Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
----
- meta/classes/qemuboot.bbclass | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/meta/classes/qemuboot.bbclass b/meta/classes/qemuboot.bbclass
-index 39df3ad..8b1d4d0 100644
---- a/meta/classes/qemuboot.bbclass
-+++ b/meta/classes/qemuboot.bbclass
-@@ -42,7 +42,7 @@ QB_DEFAULT_FSTYPE ?= "ext4"
- QB_OPT_APPEND ?= "-show-cursor"
- 
- # Create qemuboot.conf
--ROOTFS_POSTPROCESS_COMMAND += "write_qemuboot_conf; "
-+addtask do_write_qemuboot_conf after do_rootfs before do_image
- 
- def qemuboot_vars(d):
-     build_vars = ['MACHINE', 'TUNE_ARCH', 'DEPLOY_DIR_IMAGE',
-@@ -51,8 +51,8 @@ def qemuboot_vars(d):
-                 'STAGING_DIR_HOST']
-     return build_vars + [k for k in d.keys() if k.startswith('QB_')]
- 
--write_qemuboot_conf[vardeps] += "${@' '.join(qemuboot_vars(d))}"
--python write_qemuboot_conf() {
-+do_write_qemuboot_conf[vardeps] += "${@' '.join(qemuboot_vars(d))}"
-+python do_write_qemuboot_conf() {
-     import configparser
- 
-     qemuboot = "%s/%s.qemuboot.conf" % (d.getVar('DEPLOY_DIR_IMAGE', True), d.getVar('IMAGE_NAME', True))
+Please ignore, wrong list. I'll resend.
 -- 
-2.1.4
+Best Regards, Patrick Ohly
+
+The content of this message is my personal opinion only and although
+I am an employee of Intel, the statements I make here in no way
+represent Intel's position on the issue, nor am I authorized to speak
+on behalf of Intel on this matter.
+
+
 
 
