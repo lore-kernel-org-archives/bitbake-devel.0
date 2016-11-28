@@ -1,52 +1,29 @@
-Return-Path: <patrick.ohly@intel.com>
-Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
-	[209.85.223.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 2BCA971A06
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id E5CD271B59
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Nov 2016 15:15:27 +0000 (UTC)
-Received: by mail-io0-f172.google.com with SMTP id j65so235048709iof.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Nov 2016 07:15:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:in-reply-to:references;
-	bh=6W/c1vkdzIiEqHX1uUrfOLDZqrvox3LjTlUgo7oU1Is=;
-	b=C8RuUaAl9XqloU2mWdzzzVfBIyVfy0eMENqpQq/Wr2d0k/iLtzpoksci7tDD3OJEVq
-	QsErCGfZkwU6EZlpUJN30q3bCqCSOSWAC4LHl09U2+qb6/GUtyjvO+KOdtKopddcIjO1
-	0q+MZYIolBIp80JEGl/CZVvhB8+hySnCbT8n5mXSLnz9dqUwcP53L/HmfdqqzGJZ/N9S
-	RR20wEjiXBkI4FduofBEO9hibV0OFWzVv5j3kwqr+TVSw65liX7n7Ufiwjfy33cLEWHY
-	/TUP6cX8yVRqTbVIDOSNYDPtULdfjMLL1J22ht5n4L5QS5uaoz0vKWmt+7+xug6i3E1e
-	SCiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=6W/c1vkdzIiEqHX1uUrfOLDZqrvox3LjTlUgo7oU1Is=;
-	b=XIZRv7xdELS4f9jcMsirKpj/biFGJ5jWlttgqbxgb969mnBZkSNwOSIWy9+QiWmvVD
-	Sqo8jhEmOkBaRYLGaCyrw9ot+USfH0yidL6iaq0ng7nhx1RgVVLD3W5U9bFNk7Ilxhon
-	2FBTrx8UAPTXERUfGV4DbJLRDEbmD1Rm5SvB6CemSxIttxYlosS+I7u9152aojwlC8lb
-	J7u0aUo6RVEjrpc8ErnRiBPtRlJxFGFnm1zERi+u3tB2RUAkxi64ADRL+J1fwZVc44lg
-	t8aFEqZ+f1dOouFUC/iz5Yqt/XYEVVIFNTPpgqKTLvslnZl6yfvX3T4fBLxhcDBW1ANw
-	EheQ==
-X-Gm-Message-State: AKaTC03UCWmDpEl8r43UPSG9osbGKtZUjV4iYiIvaE+/4GNpB4YXPE5SgSCPDrUadOm+mjBH
-X-Received: by 10.107.7.27 with SMTP id 27mr16436271ioh.130.1480346128526;
-	Mon, 28 Nov 2016 07:15:28 -0800 (PST)
-Received: from pohly-desktop.fritz.box (p5DE8C83A.dip0.t-ipconnect.de.
-	[93.232.200.58]) by smtp.gmail.com with ESMTPSA id
-	i75sm9364092itf.10.2016.11.28.07.15.26
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 28 Nov 2016 07:15:27 -0800 (PST)
-From: Patrick Ohly <patrick.ohly@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Nov 2016 16:15:13 +0100
-Message-Id: <a4c3aff7b86967c0fbf3b9b27fff7ccb342d85df.1480345719.git.patrick.ohly@intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <90660fc75cc3fedceabef02ac2ade99d7c26fbb2.1480345719.git.patrick.ohly@intel.com>
+	Mon, 28 Nov 2016 15:58:59 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	uASFwu7K004100; Mon, 28 Nov 2016 15:58:56 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id niIxx8ub9EVc; Mon, 28 Nov 2016 15:58:56 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	uASFwoOY004097
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 28 Nov 2016 15:58:51 GMT
+Message-ID: <1480348730.28508.185.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Patrick Ohly <patrick.ohly@intel.com>, bitbake-devel@lists.openembedded.org
+Date: Mon, 28 Nov 2016 15:58:50 +0000
+In-Reply-To: <4a82fef918264b2e74022e8ed95cb198f44300c7.1480345719.git.patrick.ohly@intel.com>
 References: <90660fc75cc3fedceabef02ac2ade99d7c26fbb2.1480345719.git.patrick.ohly@intel.com>
-In-Reply-To: <cover.1480345719.git.patrick.ohly@intel.com>
-References: <cover.1480345719.git.patrick.ohly@intel.com>
-Subject: [PATCH 4/4] monitordisk: add event
+	<4a82fef918264b2e74022e8ed95cb198f44300c7.1480345719.git.patrick.ohly@intel.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3 
+Mime-Version: 1.0
+Subject: Re: [PATCH 2/4] runqueue.py: monitor disk space at regular time intervals
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,86 +36,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 28 Nov 2016 15:15:27 -0000
+X-List-Received-Date: Mon, 28 Nov 2016 15:59:00 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-The current disk usage is interesting and may be worth logging over
-time as part of the build statistics. Instead of re-implementing the
-code and the configuration option (BB_DISKMON_DIRS), the information
-gathered by monitordisk.py is made available to buildstats.bbclass via
-a new event.
+On Mon, 2016-11-28 at 16:15 +0100, Patrick Ohly wrote:
+> Hooking the disk monitor into the regular heatbeat event instead
+> of the runqueue solves two problems:
+> 
+> - When there is just one long running task which fills up the disk,
+>   the previous approach did not notice that until after the
+> completion
+>   of the task because _execute_runqueue() only gets called on task
+>   state changes. As a result, aborting a build did not work in this
+>   case.
+> 
+> - When there are many short-lived tasks, disk space was getting
+>   checked very frequently. When the storage that is getting checked
+>   is on an NFS server, that can lead to noticable traffic to the
+>   server.
+> 
+> Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
+> ---
+>  lib/bb/runqueue.py | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+> index 84b2685..3772e2e 100644
+> --- a/lib/bb/runqueue.py
+> +++ b/lib/bb/runqueue.py
+> @@ -984,7 +984,12 @@ class RunQueue:
+>          self.state = runQueuePrepare
+>  
+>          # For disk space monitor
+> +        # Invoked at regular time intervals via the bitbake
+> heartbeat event
+> +        # while the build is running.
+>          self.dm = monitordisk.diskMonitor(cfgData)
+> +        bb.event.register('_bb_diskmonitor',
+> +                          lambda x: self.dm.check(self) if
+> self.state in [runQueueSceneRun, runQueueRunning, runQueueCleanUp]
+> else False,
+> +                          ('bb.event.HeartbeatEvent',))
+>  
+>          self.rqexe = None
+>          self.worker = {}
+> @@ -1208,9 +1213,6 @@ class RunQueue:
+>                  self.rqdata.init_progress_reporter.next_stage()
+>                  self.rqexe = RunQueueExecuteScenequeue(self)
+>  
+> -        if self.state in [runQueueSceneRun, runQueueRunning,
+> runQueueCleanUp]:
+> -            self.dm.check(self)
+> -
+>          if self.state is runQueueSceneRun:
+>              retval = self.rqexe.execute()
 
-This has pros and cons:
-- there is already a useful default configuration for "interesting" directories
-- no code duplication
-- on the other hand, users cannot configure recording separately from
-  monitoring (probably not that important)
+Don't we have to unregister this at some point too? Cooker can persist
+across multiple builds (although its not the default).
 
-Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
----
- lib/bb/event.py       | 17 +++++++++++++++++
- lib/bb/monitordisk.py |  8 ++++++++
- 2 files changed, 25 insertions(+)
+Cheers,
 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index cacbac8..5491914 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -451,6 +451,23 @@ class DiskFull(Event):
-         self._free = freespace
-         self._mountpoint = mountpoint
- 
-+class DiskUsageSample:
-+    def __init__(self, available_bytes, free_bytes, total_bytes):
-+        # Number of bytes available to non-root processes.
-+        self.available_bytes = available_bytes
-+        # Number of bytes available to root processes.
-+        self.free_bytes = free_bytes
-+        # Total capacity of the volume.
-+        self.total_bytes = total_bytes
-+
-+class MonitorDiskEvent(Event):
-+    """If BB_DISKMON_DIRS is set, then this event gets triggered each time disk space is checked.
-+       Provides information about devices that are getting monitored."""
-+    def __init__(self, disk_usage):
-+        Event.__init__(self)
-+        # hash of device root path -> DiskUsageSample
-+        self.disk_usage = disk_usage
-+
- class NoProvider(Event):
-     """No Provider for an Event"""
- 
-diff --git a/lib/bb/monitordisk.py b/lib/bb/monitordisk.py
-index 0f9010a..f3e8193 100644
---- a/lib/bb/monitordisk.py
-+++ b/lib/bb/monitordisk.py
-@@ -205,6 +205,7 @@ class diskMonitor:
-         """ Take action for the monitor """
- 
-         if self.enableMonitor:
-+            diskUsage = {}
-             for k, attributes in self.devDict.items():
-                 path, action = k
-                 dev, minSpace, minInode = attributes
-@@ -214,6 +215,11 @@ class diskMonitor:
-                 # The available free space, integer number
-                 freeSpace = st.f_bavail * st.f_frsize
- 
-+                # Send all relevant information in the event.
-+                freeSpaceRoot = st.f_bfree * st.f_frsize
-+                totalSpace = st.f_blocks * st.f_frsize
-+                diskUsage[dev] = bb.event.DiskUsageSample(freeSpace, freeSpaceRoot, totalSpace)
-+
-                 if minSpace and freeSpace < minSpace:
-                     # Always show warning, the self.checked would always be False if the action is WARN
-                     if self.preFreeS[k] == 0 or self.preFreeS[k] - freeSpace > self.spaceInterval and not self.checked[k]:
-@@ -257,4 +263,6 @@ class diskMonitor:
-                         self.checked[k] = True
-                         rq.finish_runqueue(True)
-                         bb.event.fire(bb.event.DiskFull(dev, 'inode', freeInode, path), self.configuration)
-+
-+            bb.event.fire(bb.event.MonitorDiskEvent(diskUsage), self.configuration)
-         return
--- 
-2.1.4
-
+Richard
 
