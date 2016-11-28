@@ -1,28 +1,46 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id EF1DD60603
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
+	[209.85.223.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 635BC71B16
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Nov 2016 14:17:26 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	uASEHQii026518; Mon, 28 Nov 2016 14:17:26 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id URL51t7DWLFe; Mon, 28 Nov 2016 14:17:26 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	uASEHL9a026514
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 28 Nov 2016 14:17:22 GMT
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1cBMkD-0007gT-MT; Mon, 28 Nov 2016 14:17:21 +0000
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Mon, 28 Nov 2016 15:15:11 +0000 (UTC)
+Received: by mail-io0-f172.google.com with SMTP id m5so96708018ioe.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 28 Nov 2016 07:15:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=Gq/CYZGt3LADMcJb1wYV76EGh42mmpxYNbN/4pxDYvw=;
+	b=ux6ZBzwswVKFGvQMl5dzPcVxmpek8bNlITN2JKYsmGWk/5fsCqU1jHgWj4xsrRvmzt
+	dRdIcljugbTjECJeCtg//ER85EL+abru836W1/+OIPUdwD8q/XBz4Sw1TjOfa6grDREk
+	ao8lS26N3kp7FGujLHXvfJQtwANlmsoC5/uo5PWVLKE3hBJNEfcIjK9iWo6/OYImlFmA
+	v6SLboYX/GI7srScFI4Uy+HNwqr/peoWQuPDnD7OR3B9MryCK3dp0pDErjaBjSwS0VF+
+	+YTDwzZsZNCi5bh5uBGvyj5KEFfcehsMPUpYTVcOsx0pJN9uYtffq71Hf+n9l2bGNgl+
+	xxbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=Gq/CYZGt3LADMcJb1wYV76EGh42mmpxYNbN/4pxDYvw=;
+	b=IenkHjdsHX5NuvQe4yNVKKpMkIIeuXgsYeV+I3Xj4QS1cBwmCmDRos1GqITDPBNJP0
+	pQM74MoovKAzm3UR3J3Ejstg8CamcTPe05G3iy5zFs7W7GDXgBMJwTOV5+I3ZvtTkxtl
+	nI+1h2TfBrJHc7iBN+dwfjyljvmjSY/D1MGSw1e9aXEESdyoQ0KaSjJeFiiDlXUzgfua
+	hh30SJEWqYmwhZZ3QKKlMLfPH8RFWGznAuEvmZTWz4/hqIvKcRMb2fCb+HI7ewut/3OP
+	xlFAM5TtHA7JkOY7Ow+e9pwnqgCmIbe/IELh9pQBZanfrB+ehSxIHqdTGjKr80trYn6n
+	Cy7g==
+X-Gm-Message-State: AKaTC03otq+iMQIhq/tBsGBHul+ZSVlLbGfVp+vKXZcI/Q3gvpK4iEauTr4issEyWnBK3xXq
+X-Received: by 10.107.19.29 with SMTP id b29mr17401267ioj.219.1480346113323;
+	Mon, 28 Nov 2016 07:15:13 -0800 (PST)
+Received: from pohly-desktop.fritz.box (p5DE8C83A.dip0.t-ipconnect.de.
+	[93.232.200.58])
+	by smtp.gmail.com with ESMTPSA id p2sm9297000itg.5.2016.11.28.07.15.11
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 28 Nov 2016 07:15:12 -0800 (PST)
+From: Patrick Ohly <patrick.ohly@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Nov 2016 14:17:20 +0000
-Message-Id: <1480342640-29497-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] bitbake-worker: Handle cooker/worker IO deadlocking
+Date: Mon, 28 Nov 2016 16:15:05 +0100
+Message-Id: <cover.1480345719.git.patrick.ohly@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH 0/4] system statistics sampling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,127 +53,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 28 Nov 2016 14:17:27 -0000
+X-List-Received-Date: Mon, 28 Nov 2016 15:15:13 -0000
 
-I noiced builds where tasks seemed to be taking a surprisingly long time.
-When I looked at the output of top/pstree, these tasks were no longer
-running despite being listed in knotty. Some were in D/Z state waiting for
-their exit code to be collected, others were simply not present at all.
+These patches are a precondition for the corresponding patches to
+OE-core. See https://bugzilla.yoctoproject.org/show_bug.cgi?id=10583
 
-strace showed communication problems between the worker and cooker, each
-was trying to write to the other and nearly deadlocking. Eventually, timeouts
-would allow them to echange 64kb of data but this was only happening every
-few seconds.
+The original motivation for the heartbeat event was the system
+statistics sampling, but it also turned out to be useful for
+monitoring disks more deterministically. That improvement is also
+included here and shows that the heartbeat mechanism is useful also
+without the OE-core patches.
 
-Whilst this particularly affected builds on machines with large numbers
-of cores (and hence highly parallal task execution) and in cases where
-I had a lot of debug enabled, this situation is clearly bad in general.
+The following changes since commit d140f0ee6f301264e226914766d9f63558acfd6c:
 
-This patch introduces a thread to the worker which is used to write data
-back to cooker. This means that the deadlock can't occur and data flows
-much more freely and effectively.
+  COW.py: fix sample codes (2016-11-23 10:59:49 +0000)
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- bitbake/bin/bitbake-worker | 52 ++++++++++++++++++++++++++++++++--------------
- 1 file changed, 36 insertions(+), 16 deletions(-)
+are available in the git repository at:
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index 9e709375d..7a35492 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -13,7 +13,9 @@ import signal
- import pickle
- import traceback
- import subprocess
-+import queue
- from multiprocessing import Lock
-+from threading import Thread
- 
- if sys.getfilesystemencoding() != "utf-8":
-     sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
-@@ -65,7 +67,7 @@ if 0:
-     consolelog.setFormatter(conlogformat)
-     logger.addHandler(consolelog)
- 
--worker_queue = b""
-+worker_queue = queue.Queue()
- 
- def worker_fire(event, d):
-     data = b"<event>" + pickle.dumps(event) + b"</event>"
-@@ -74,21 +76,38 @@ def worker_fire(event, d):
- def worker_fire_prepickled(event):
-     global worker_queue
- 
--    worker_queue = worker_queue + event
--    worker_flush()
-+    worker_queue.put(event)
- 
--def worker_flush():
--    global worker_queue, worker_pipe
-+#
-+# We can end up with write contention with the cooker, it can be trying to send commands
-+# and we can be trying to send event data back. Therefore use a separate thread for writing 
-+# back data to cooker.
-+#
-+worker_thread_exit = False
- 
--    if not worker_queue:
--        return
-+def worker_flush(worker_queue):
-+    worker_queue_int = b""
-+    global worker_pipe, worker_thread_exit
- 
--    try:
--        written = os.write(worker_pipe, worker_queue)
--        worker_queue = worker_queue[written:]
--    except (IOError, OSError) as e:
--        if e.errno != errno.EAGAIN and e.errno != errno.EPIPE:
--            raise
-+    while True:
-+        try:
-+            worker_queue_int = worker_queue_int + worker_queue.get(True, 1)
-+        except queue.Empty:
-+            pass
-+        while (worker_queue_int or not worker_queue.empty()):
-+            try:
-+                if not worker_queue.empty():
-+                    worker_queue_int = worker_queue_int + worker_queue.get()
-+                written = os.write(worker_pipe, worker_queue_int)
-+                worker_queue_int = worker_queue_int[written:]
-+            except (IOError, OSError) as e:
-+                if e.errno != errno.EAGAIN and e.errno != errno.EPIPE:
-+                    raise
-+        if worker_thread_exit and worker_queue.empty() and not worker_queue_int:
-+            return
-+
-+worker_thread = Thread(target=worker_flush, args=(worker_queue,))
-+worker_thread.start()
- 
- def worker_child_fire(event, d):
-     global worker_pipe
-@@ -366,7 +385,6 @@ class BitbakeWorker(object):
-                 self.build_pipes[pipe].read()
-             if len(self.build_pids):
-                 self.process_waitpid()
--            worker_flush()
- 
- 
-     def handle_item(self, item, func):
-@@ -475,8 +493,10 @@ except BaseException as e:
-         import traceback
-         sys.stderr.write(traceback.format_exc())
-         sys.stderr.write(str(e))
--while len(worker_queue):
--    worker_flush()
-+
-+worker_thread_exit = True
-+worker_thread.join()
-+
- workerlog_write("exitting")
- sys.exit(0)
- 
+  git://github.com/pohly/bitbake heartbeat
+  https://github.com/pohly/bitbake/tree/heartbeat
+
+Patrick Ohly (4):
+  cooker process: fire heartbeat event at regular time intervals
+  runqueue.py: monitor disk space at regular time intervals
+  monitordisk.py: minor code and comment cleanup
+  monitordisk: add event
+
+ lib/bb/event.py          | 27 +++++++++++++++++++++++++++
+ lib/bb/monitordisk.py    | 23 ++++++++++++++---------
+ lib/bb/runqueue.py       |  8 +++++---
+ lib/bb/server/process.py | 25 +++++++++++++++++++++++++
+ lib/bb/ui/knotty.py      |  1 +
+ lib/bb/ui/toasterui.py   |  3 +++
+ 6 files changed, 75 insertions(+), 12 deletions(-)
+
 -- 
-2.7.4
+2.1.4
 
 
