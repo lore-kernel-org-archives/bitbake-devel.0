@@ -1,44 +1,30 @@
-Return-Path: <sujith.h@gmail.com>
-Received: from mail-pg0-f68.google.com (mail-pg0-f68.google.com [74.125.83.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 8569070016
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id C0CA460806
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  6 Dec 2016 07:17:37 +0000 (UTC)
-Received: by mail-pg0-f68.google.com with SMTP id p66so18987681pga.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 05 Dec 2016 23:17:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=UueQ+SxnWSpv6iTZhXryMzWjIeUMJusXmUKLZE5au5k=;
-	b=zhUOErpSzDqWS034arMXvw7FSVGCI96co4Lvz+37SX80ypTKXw7XBWk5VQsB6T+KNI
-	Cvvsj0IDfqXfWNfRbtedtbTzFuo9l2ueAVKXr0UgJ3q+GqbjDhpp5qdSXsgSUOjyqKAZ
-	bVsLkW46a5PrkoHWBSuvufsQl4Ur0/+jV43sMEEtENB//RrBMIn7F335syxUg8vILEZf
-	eUvTdr/HwjD+xtRUmJMRL/KQ9X529vIDiOVIAp7OSWlDX3h8Bk93jLCjdA5iA0L0Eyfr
-	dO8h1WNjxRncpKmDdpm972XQ8Mac/+1eGtIFsNNi2z5vpkhmiitMI0O09BA9OSsqLXLo
-	nmqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=UueQ+SxnWSpv6iTZhXryMzWjIeUMJusXmUKLZE5au5k=;
-	b=fm/7BD6Hqk/N6IpwILbsHUtYv6rcafQMk9IVKG1ncxfzMrE8p1Z4nKPi34F7ccAGKc
-	DxOb7t5o03GU741drDdoj2uosqYIvFiWGPZRo1FuPiCzU2WXdHFYfaXZrKZX4iCjJaDi
-	PwRVpgK3AGOuoI4WsIPoFDe2+G9+R7Qx1QRn20DPdhCRm9emzbs5QTrdPJdPiBIpJrrl
-	zZVwi9XW20MEnPN+6RLnwoKuvAOApHy0IvmipZ8HMYbwuotCOrxEAcI2FKFfXXluqq+W
-	WmQmiuBAWO2oLT7e8Ahh+wMOq2F2DmOrj7gGWvWlaWLsOVr9OnN37JUy4+Iu+j9P1tOt
-	eMng==
-X-Gm-Message-State: AKaTC03NCc3lxKZVupiVyw4i441HqZ+eRxviTjE+O1Myl6ej93devEekDW+ff0KzB5V62g==
-X-Received: by 10.84.205.69 with SMTP id o5mr130955297plh.70.1481008658970;
-	Mon, 05 Dec 2016 23:17:38 -0800 (PST)
-Received: from kdekidd0.inp-wifi.mentorg.com ([139.181.35.34])
-	by smtp.gmail.com with ESMTPSA id
-	89sm32045041pfi.70.2016.12.05.23.17.36
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 05 Dec 2016 23:17:38 -0800 (PST)
-From: Sujith H <sujith.h@gmail.com>
+	Wed,  7 Dec 2016 12:04:55 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	uB7C4tLW006366; Wed, 7 Dec 2016 12:04:55 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id vSyd8-QFM9jK; Wed,  7 Dec 2016 12:04:55 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	uB7C4r8Q006359
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 7 Dec 2016 12:04:54 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1cEaxx-0008NR-4I; Wed, 07 Dec 2016 12:04:53 +0000
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  6 Dec 2016 12:47:29 +0530
-Message-Id: <1481008649-23173-1-git-send-email-sujith.h@gmail.com>
-X-Mailer: git-send-email 1.9.1
-Subject: [PATCH v3] bitbake: cooker: convert type which needs to be marshalled
+Date: Wed,  7 Dec 2016 12:04:45 +0000
+Message-Id: <1481112285-32150-3-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1481112285-32150-1-git-send-email-richard.purdie@linuxfoundation.org>
+References: <1481112285-32150-1-git-send-email-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 3/3] runqueue: Send BB_TASKDEPDATA for setscene tasks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,34 +37,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 06 Dec 2016 07:17:37 -0000
+X-List-Received-Date: Wed, 07 Dec 2016 12:04:56 -0000
 
-We assume that the value taken by variable v can be string,
-integer or any type which can be marshalled by xmlrpc. This
-change would help us to convert the non marshallable types
-to string. So that we don't get exception from xmlrpc.
+We now have code in OE that needs BB_TASKDEPDATA for setscene tasks. Therefore
+generate and send this data. In this case its a "pre collapsed" tree
+but that is fine for the use cases in question.
 
-[YOCTO #10740]
-
-Signed-off-by: Sujith H <sujith.h@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/cooker.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/runqueue.py | 44 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 42 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index c08af45..d59cd7b 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1488,7 +1488,7 @@ class BBCooker:
-                 v = self.data.getVar(k, expand)
-                 if not k.startswith("__") and not isinstance(v, bb.data_smart.DataSmart):
-                     dump[k] = {
--    'v' : v ,
-+    'v' : str(v) ,
-     'history' : self.data.varhistory.variable(k),
-                     }
-                     for d in flaglist:
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 41e4768..75060e5 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -2211,14 +2211,16 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             startevent = sceneQueueTaskStarted(task, self.stats, self.rq)
+             bb.event.fire(startevent, self.cfgData)
+ 
++            taskdepdata = self.build_taskdepdata(task)
++
+             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
+             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
+                 if not self.rq.fakeworker:
+                     self.rq.start_fakeworker(self)
+-                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), None)) + b"</runtask>")
++                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata)) + b"</runtask>")
+                 self.rq.fakeworker[mc].process.stdin.flush()
+             else:
+-                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), None)) + b"</runtask>")
++                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata)) + b"</runtask>")
+                 self.rq.worker[mc].process.stdin.flush()
+ 
+             self.runq_running.add(task)
+@@ -2251,6 +2253,44 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+     def runqueue_process_waitpid(self, task, status):
+         RunQueueExecute.runqueue_process_waitpid(self, task, status)
+ 
++
++    def build_taskdepdata(self, task):
++        def getsetscenedeps(tid):
++            deps = set()
++            (mc, fn, taskname, _) = split_tid_mcfn(tid)
++            realtid = fn + ":" + taskname + "_setscene"
++            idepends = self.rqdata.taskData[mc].taskentries[realtid].idepends
++            for (depname, idependtask) in idepends:
++                if depname not in self.rqdata.taskData[mc].build_targets:
++                    continue
++
++                depfn = self.rqdata.taskData[mc].build_targets[depname][0]
++                if depfn is None:
++                     continue
++                deptid = depfn + ":" + idependtask.replace("_setscene", "")
++                deps.add(deptid)
++            return deps
++
++        taskdepdata = {}
++        next = getsetscenedeps(task)
++        next.add(task)
++        while next:
++            additional = []
++            for revdep in next:
++                (mc, fn, taskname, taskfn) = split_tid_mcfn(revdep)
++                pn = self.rqdata.dataCaches[mc].pkg_fn[taskfn]
++                deps = getsetscenedeps(revdep)
++                provides = self.rqdata.dataCaches[mc].fn_provides[taskfn]
++                taskhash = self.rqdata.runtaskentries[revdep].hash
++                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
++                for revdep2 in deps:
++                    if revdep2 not in taskdepdata:
++                        additional.append(revdep2)
++            next = additional
++
++        #bb.note("Task %s: " % task + str(taskdepdata).replace("], ", "],\n"))
++        return taskdepdata
++
+ class TaskFailure(Exception):
+     """
+     Exception raised when a task in a runqueue fails
 -- 
-1.9.1
+2.7.4
 
 
