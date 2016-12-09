@@ -1,49 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wj0-f178.google.com (mail-wj0-f178.google.com
-	[209.85.210.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 1627571D3D
+Received: from mail-wj0-f175.google.com (mail-wj0-f175.google.com
+	[209.85.210.175])
+	by mail.openembedded.org (Postfix) with ESMTP id B50EC6013D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Dec 2016 16:53:14 +0000 (UTC)
-Received: by mail-wj0-f178.google.com with SMTP id xy5so19451538wjc.0
+	Fri,  9 Dec 2016 16:53:15 +0000 (UTC)
+Received: by mail-wj0-f175.google.com with SMTP id v7so19391114wjy.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 09 Dec 2016 08:53:16 -0800 (PST)
+	Fri, 09 Dec 2016 08:53:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=Qq0STKTFP4bEBopoJSup0uc5ip1u33Qo2+QIAo7wKoQ=;
-	b=FMDMGeOT5gAeaQuLv7fNnOjAxy5+Uaho35L1N5nxthn28+P9ZT3WgweH128IG0yKRR
-	59bMVQ5puYQzu6ilSkI8GSjBm6UCs0nuBamet9mPNwdO2EIUKYh0apanlD7pCjMl9rHU
-	0cZopI0kXxjDvaNySTKfW1pVlT8Je5NnTDlBNUoGKxXX8ndz9f4G7NxSdGtAgBwqyJkQ
-	lekk6ooUjgt/8A1/ivsL4KyAN3XwXtXMRFiIXQAslU2rpvJ7clKys6xslQH/qBAx9YTn
-	BB8H7uLJJwf6N8m6/jWM1UD2LxSujxPmm63Uxx3eRvxKPjdt8+RQQr/K8H4uiyx4xDv7
-	x46g==
+	bh=wgfFUVtJ+hyw5KhzNUsjGwnIyCYYR17T4Fx/sXUJzxY=;
+	b=b0E7royyTQPZt3DLwjWLaUfpSFod9FTF7ZQ3o2UiRwrWweo36NiBvyoplIdbox17Un
+	r0CPp5vrR4YdfwHHEYy6+o+TCv6YiRoI4oSE+GY/RYq6lRQ+zhV85ZfT2u12S6+jg8Qc
+	iQz8f/w1E4rbW/Bs4yMrs9PITjCctrdtiPiN/OKhiIY0YHF7gszGZokS1kMjniSAx9vh
+	ncOkD6g93UW25fC2WDTyBb712yelPRJ11NY8hVD8CTXAyKJG+DE/yO6v8rlHH8MsecPH
+	+BirGwklcUvqoTWo2Mib4bKe89H09qQHiYY3nf1hfmeOzrFgWrxVCF4DOMbNN8Yr1Flc
+	iRRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=Qq0STKTFP4bEBopoJSup0uc5ip1u33Qo2+QIAo7wKoQ=;
-	b=Sq6i7rLAxaYlNq2jsTIPdZf3Eo9oDKQ+ciniHzlGaPaDy/C9x1KaAa7GiHmgFkc9ZX
-	Lhp5sa78YVdyEtRwWqW6ZLD68k8yRBVXULXhtEEL3cQy5M9+3qyEd8sa4nTRs7wr1eTH
-	fnDpaSr9AEIqKMJBoJR9BEOajqSSoGDM+xqGw9/pMRNKST0/Tz6Div9crXx7ZZvst59W
-	AdnG+FuwznZML7Yo7NltC6B8FYtFNh9hlEPHuj0veluy6tN/2i7wa/QSCmFQhJsNmskD
-	2F1eLgN+RVzejrDOAlvP8oj693XUWLa1X051/hXMoXhEaPa2M5pSXLzWgU4NdQWQmR/A
-	fwPw==
-X-Gm-Message-State: AKaTC00Q8bDCaZ1Jk/Q3V5LCB70aK7uhMmE+xTgtq+vr7rcAVe5V36RQAaODfJXkMmNuzCxO
-X-Received: by 10.194.0.167 with SMTP id 7mr66468504wjf.80.1481302395707;
-	Fri, 09 Dec 2016 08:53:15 -0800 (PST)
+	bh=wgfFUVtJ+hyw5KhzNUsjGwnIyCYYR17T4Fx/sXUJzxY=;
+	b=HUTfQ+SzTga8diZM3jwum5wUyIJgNQq9RySk64bd1bcRDbXQdE0JK3cmWkWNmqXP8Y
+	EgXSOuh8PG08QZwQ1pFzLho54pw8KIeoMh8No3V2ynFlM2z9CLJioePxS3nwyx69rl+6
+	o6s2g5L6F7sd8VSKlbJ7/DusPGlbhNmUq2zCd+OfvRy3fNZOzR7REkKh9ThKQ5ObXYk4
+	ezss3E5TnZOYFQMkpXkCV+01C6xcc1yfVozwDB1lxktaik3LYjD4LLnvSsWoY+f2K3Cd
+	+Akem07JNZ5o/z7Ar7zzGe2jm0VRMmcmllJnztmD9/rUvg6ORUddrGYbcNvs7TugD+0y
+	O1GA==
+X-Gm-Message-State: AKaTC02Lb/yWYtHz0l8NcoSmeqhlVBiAGUuqc31+6/M6wC/ZZQP6kB5HYAot3juDpYQcY5tN
+X-Received: by 10.194.114.10 with SMTP id jc10mr39181901wjb.157.1481302396699; 
+	Fri, 09 Dec 2016 08:53:16 -0800 (PST)
 Received: from localhost.localdomain ([192.198.151.62])
 	by smtp.gmail.com with ESMTPSA id
-	ke6sm43170601wjb.21.2016.12.09.08.53.14
+	ke6sm43170601wjb.21.2016.12.09.08.53.15
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 09 Dec 2016 08:53:15 -0800 (PST)
+	Fri, 09 Dec 2016 08:53:16 -0800 (PST)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  9 Dec 2016 16:52:54 +0000
-Message-Id: <1481302375-7985-14-git-send-email-michael.g.wood@intel.com>
+Date: Fri,  9 Dec 2016 16:52:55 +0000
+Message-Id: <1481302375-7985-15-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1481302375-7985-1-git-send-email-michael.g.wood@intel.com>
 References: <1481302375-7985-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 13/14] toaster: js test Update js tests to use correct url for layer REST
+Subject: [PATCH 14/14] toaster: views Remove old code that converts template context to JSON
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,53 +56,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 09 Dec 2016 16:53:15 -0000
+X-List-Received-Date: Fri, 09 Dec 2016 16:53:16 -0000
 
-Update js tests so that we use the new Layer REST API.
+Remove the template context to JSON decorator function as this is
+deprecated by having a proper REST API.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/static/js/tests/test.js | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/toaster/toastergui/views.py | 33 ++-------------------------------
+ 1 file changed, 2 insertions(+), 31 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/tests/test.js b/lib/toaster/toastergui/static/js/tests/test.js
-index f3bf8d7..4a4c83f 100644
---- a/lib/toaster/toastergui/static/js/tests/test.js
-+++ b/lib/toaster/toastergui/static/js/tests/test.js
-@@ -5,6 +5,7 @@
- QUnit.test("Layer alert notification", function(assert) {
-   var layer = {
-     "layerdetailurl":"/toastergui/project/1/layer/22",
-+    "xhrLayerUrl":"/toastergui/xhr_layer/1/9",
-     "vcs_url":"git://example.com/example.git",
-     "detail":"[ git://example.com/example.git | master ]",
-     "vcs_reference":"master",
-@@ -15,6 +16,7 @@ QUnit.test("Layer alert notification", function(assert) {
-   var layerDepsList = [
-     {
-     "layerdetailurl":"/toastergui/project/1/layer/9",
-+    "xhrLayerUrl":"/toastergui/xhr_layer/1/9",
-     "vcs_url":"git://example.com/example.git",
-     "detail":"[ git://example.com/example.git | master ]",
-     "vcs_reference":"master",
-@@ -23,6 +25,7 @@ QUnit.test("Layer alert notification", function(assert) {
-     },
-     {
-     "layerdetailurl":"/toastergui/project/1/layer/9",
-+    "xhrLayerUrl":"/toastergui/xhr_layer/1/9",
-     "vcs_url":"git://example.com/example.git",
-     "detail":"[ git://example.com/example.git | master ]",
-     "vcs_reference":"master",
-@@ -66,7 +69,8 @@ QUnit.test("Show notification", function(assert){
- var layer = {
-   "id": 1,
-   "name":  "meta-testing",
--  "layerdetailurl": "/toastergui/project/1/layer/1"
-+  "layerdetailurl": "/toastergui/project/1/layer/1",
-+  "xhrLayerUrl": "/toastergui/xhr_layer/1/1"
- };
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 94b630a..75c5911 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -120,32 +120,6 @@ def objtojson(obj):
+         raise TypeError("Unserializable object %s (%s) of type %s" % ( obj, dir(obj), type(obj)))
  
- QUnit.test("Add layer", function(assert){
+ 
+-def _template_renderer(template):
+-    def func_wrapper(view):
+-        def returned_wrapper(request, *args, **kwargs):
+-            try:
+-                context = view(request, *args, **kwargs)
+-            except RedirectException as e:
+-                return e.get_redirect_response()
+-
+-            if request.GET.get('format', None) == 'json':
+-                # objects is a special keyword - it's a Page, but we need the actual objects here
+-                # in XHR, the objects come in the "rows" property
+-                if "objects" in context:
+-                    context["rows"] = context["objects"].object_list
+-                    del context["objects"]
+-
+-                # we're about to return; to keep up with the XHR API, we set the error to OK
+-                context["error"] = "ok"
+-
+-                return HttpResponse(jsonfilter(context, default=objtojson ),
+-                            content_type = "application/json; charset=utf-8")
+-            else:
+-                return render(request, template, context)
+-        return returned_wrapper
+-    return func_wrapper
+-
+-
+ def _lv_to_dict(prj, x = None):
+     if x is None:
+         def wrapper(x):
+@@ -1528,8 +1502,6 @@ if True:
+         }
+         return render(request, template, context)
+ 
+-    # TODO merge with api pseudo api here is used for deps modal
+-    @_template_renderer('layerdetails.html')
+     def layerdetails(request, pid, layerid):
+         project = Project.objects.get(pk=pid)
+         layer_version = Layer_Version.objects.get(pk=layerid)
+@@ -1557,7 +1529,7 @@ if True:
+             'projectlayers': list(project_layers)
+         }
+ 
+-        return context
++        return render(request, 'layerdetails.html', context)
+ 
+ 
+     def get_project_configvars_context():
+@@ -1577,7 +1549,6 @@ if True:
+ 
+         return(vars_managed,sorted(vars_fstypes),vars_blacklist)
+ 
+-    @_template_renderer("projectconf.html")
+     def projectconf(request, pid):
+ 
+         try:
+@@ -1648,7 +1619,7 @@ if True:
+         except (ProjectVariable.DoesNotExist, BuildEnvironment.DoesNotExist):
+             pass
+ 
+-        return context
++        return render(request, "projectconf.html", context)
+ 
+     def _file_names_for_artifact(build, artifact_type, artifact_id):
+         """
 -- 
 2.7.4
 
