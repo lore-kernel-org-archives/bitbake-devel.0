@@ -1,23 +1,23 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 1D01B71B45
+	by mail.openembedded.org (Postfix) with ESMTP id C5F8371C0C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 13 Dec 2016 07:08:54 +0000 (UTC)
+	Tue, 13 Dec 2016 07:08:56 +0000 (UTC)
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga103.fm.intel.com with ESMTP; 12 Dec 2016 23:08:55 -0800
+	by fmsmga103.fm.intel.com with ESMTP; 12 Dec 2016 23:08:58 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.33,340,1477983600"; d="scan'208";a="201961493"
+X-IronPort-AV: E=Sophos;i="5.33,340,1477983600"; d="scan'208";a="201961507"
 Received: from mauric9x-mobl.amr.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.158.7])
-	by fmsmga004.fm.intel.com with ESMTP; 12 Dec 2016 23:08:53 -0800
+	by fmsmga004.fm.intel.com with ESMTP; 12 Dec 2016 23:08:56 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 13 Dec 2016 20:07:10 +1300
-Message-Id: <9daac7c0333e6ebf732e4ef5e1e5deef1530cb4f.1481611138.git.paul.eggleton@linux.intel.com>
+Date: Tue, 13 Dec 2016 20:07:11 +1300
+Message-Id: <6807f090d600a410cb46df405b85aa94c6f98c85.1481611138.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.5.5
 In-Reply-To: <cover.1481611138.git.paul.eggleton@linux.intel.com>
 References: <cover.1481611138.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 11/15] cooker: allow buildFile warning to be hidden programmatically
+Subject: [PATCH 12/15] data_smart: support serialisation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,77 +30,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Dec 2016 07:08:54 -0000
+X-List-Received-Date: Tue, 13 Dec 2016 07:08:57 -0000
 
-If we want to use this function/command internally, we don't want this
-warning shown.
+The COW object used within VariableHistory can't be serialised itself,
+but we can convert it to a dict when serializing and then back when
+deserialising. This finally allows DataSmart objects to be serialized.
+NOTE: "serialisation" here means pickling, not over XMLRPC or any other
+transport.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bb/command.py | 6 +++++-
- lib/bb/cooker.py  | 9 +++++----
- lib/bb/tinfoil.py | 4 ++--
- 3 files changed, 12 insertions(+), 7 deletions(-)
+ lib/bb/data_smart.py | 13 +++++++++++++
+ lib/bb/tests/data.py | 23 +++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 352838b..3b68c1a 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -549,8 +549,12 @@ class CommandsAsync:
-         """
-         bfile = params[0]
-         task = params[1]
-+        if len(params) > 2:
-+            hidewarning = params[2]
-+        else:
-+            hidewarning = False
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 4d0a771..79d591a 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -230,6 +230,19 @@ class VariableHistory(object):
+         new.variables = self.variables.copy()
+         return new
  
--        command.cooker.buildFile(bfile, task)
-+        command.cooker.buildFile(bfile, task, hidewarning)
-     buildFile.needcache = False
++    def __getstate__(self):
++        vardict = {}
++        for k, v in self.variables.iteritems():
++            vardict[k] = v
++        return {'dataroot': self.dataroot,
++                'variables': vardict}
++
++    def __setstate__(self, state):
++        self.dataroot = state['dataroot']
++        self.variables = COWDictBase.copy()
++        for k, v in state['variables'].items():
++            self.variables[k] = v
++
+     def record(self, *kwonly, **loginfo):
+         if not self.dataroot._tracking:
+             return
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index a17245f..ba30d12 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -446,6 +446,29 @@ class Contains(unittest.TestCase):
+         self.assertFalse(bb.utils.contains_any("SOMEFLAG", "x y z", True, False, self.d))
  
-     def buildTargets(self, command, params):
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 48904a5..a4aaac5 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1334,15 +1334,16 @@ class BBCooker:
-             raise NoSpecificMatch
-         return matches[0]
  
--    def buildFile(self, buildfile, task):
-+    def buildFile(self, buildfile, task, hidewarning=False):
-         """
-         Build the file matching regexp buildfile
-         """
-         bb.event.fire(bb.event.BuildInit(), self.expanded_data)
- 
--        # Too many people use -b because they think it's how you normally
--        # specify a target to be built, so show a warning
--        bb.warn("Buildfile specified, dependencies will not be handled. If this is not what you want, do not use -b / --buildfile.")
-+        if not hidewarning:
-+            # Too many people use -b because they think it's how you normally
-+            # specify a target to be built, so show a warning
-+            bb.warn("Buildfile specified, dependencies will not be handled. If this is not what you want, do not use -b / --buildfile.")
- 
-         # Parse the configuration here. We need to do it explicitly here since
-         # buildFile() doesn't use the cache
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 720bf4b..96275fd 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -366,9 +366,9 @@ class Tinfoil:
-     def build_file(self, buildfile, task):
-         """
-         Runs the specified task for just a single recipe (i.e. no dependencies).
--        This is equivalent to bitbake -b.
-+        This is equivalent to bitbake -b, except no warning will be printed.
-         """
--        return self.run_command('buildFile', buildfile, task)
-+        return self.run_command('buildFile', buildfile, task, True)
- 
-     def shutdown(self):
-         if self.server_connection:
++class Serialize(unittest.TestCase):
++
++    def test_serialize(self):
++        import tempfile
++        import pickle
++        d = bb.data.init()
++        d.enableTracking()
++        d.setVar('HELLO', 'world')
++        d.setVarFlag('HELLO', 'other', 'planet')
++        with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
++            tmpfilename = tmpfile.name
++            pickle.dump(d, tmpfile)
++
++        with open(tmpfilename, 'rb') as f:
++            newd = pickle.load(f)
++
++        os.remove(tmpfilename)
++
++        self.assertEqual(d, newd)
++        self.assertEqual(newd.getVar('HELLO', True), 'world')
++        self.assertEqual(newd.getVarFlag('HELLO', 'other'), 'planet')
++
++
+ class Remote(unittest.TestCase):
+     def test_remote(self):
+         class TestConnector:
 -- 
 2.5.5
 
