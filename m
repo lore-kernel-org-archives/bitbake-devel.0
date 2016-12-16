@@ -1,23 +1,42 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E159772E7
+Return-Path: <msm-oss@mcclintock.net>
+Received: from mail-oi0-f65.google.com (mail-oi0-f65.google.com
+	[209.85.218.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 363D87735B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 15 Dec 2016 18:09:28 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga104.jf.intel.com with ESMTP; 15 Dec 2016 10:09:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.33,353,1477983600"; d="scan'208";a="1072495201"
-Received: from weipengl-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.182.212])
-	by orsmga001.jf.intel.com with ESMTP; 15 Dec 2016 10:09:27 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Fri, 16 Dec 2016 09:32:49 +0000 (UTC)
+Received: by mail-oi0-f65.google.com with SMTP id u15so9336037oie.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 16 Dec 2016 01:32:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=mcclintock.net; s=google;
+	h=from:to:cc:subject:date:message-id;
+	bh=+3wb5y+JhTqCQg7fqBvTokD3w6V95k1aby7Fz/X37dk=;
+	b=CKFUCn4LWkhLubzl9tROITpSMqom1Q6w6VKy0bp9hOYAAjyxB7an9lf6vlY5KC6V49
+	jpp9mes4CGP/qmBP/7/R9JmZ/QkxfXnxoGz18MgFyYYiYk/Gd0teWJcZrDzFPMQD26Kt
+	SivrtfKSlgcMID26wvtqrd1hUZLdeFGZ6H9yE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=+3wb5y+JhTqCQg7fqBvTokD3w6V95k1aby7Fz/X37dk=;
+	b=ZKcx2TG8uKSp94pn2tkKC9Ef6WcB0wKaB7izHS6/wOZBcLt3jBar1WdLQPIoPqz+AK
+	9xFtMU1pEPfL1kywmN62XUSMQNxt2U2NHqOeURnHc/pY6vHoAEI822EVcTRjvn+aNurm
+	qIes8DItRn4dW9XEqeJmpWnXWxOywU2mi0CzcnLbrKSJ7qHUgojyoSIYQtMN7SOKvtsF
+	yGDRf4fiHIvIhrqd5UikG3/LdT/hIKGQDHHIhM9E6Su2U4HcwEYYvpupu/PQLusFudmt
+	D9ZtTS53ghfcc9GpwXgV3VH+fz0DUpHjjJN28wBrhYbOruVa6e2sQ8n9bPds0pUjY93T
+	eNXw==
+X-Gm-Message-State: AIkVDXK2ZdVftCUzNcyUyUsXlBLvDfMpfyhGjzfBUnVyuR0hFh67KXBinuWMmftD1GIymw==
+X-Received: by 10.202.197.17 with SMTP id v17mr1302883oif.16.1481880771163;
+	Fri, 16 Dec 2016 01:32:51 -0800 (PST)
+Received: from pandora.lan ([2605:6000:1019:149:5a77:b80:8e7b:e835])
+	by smtp.gmail.com with ESMTPSA id 31sm2141740otj.26.2016.12.16.01.32.49
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 16 Dec 2016 01:32:50 -0800 (PST)
+From: Matthew McClintock <msm-oss@mcclintock.net>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Dec 2016 07:09:13 +1300
-Message-Id: <971801f85cdf460a5f6bc645844cdc08148a885f.1481825296.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.5.5
-In-Reply-To: <cover.1481825296.git.paul.eggleton@linux.intel.com>
-References: <cover.1481825296.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH v3 1/1] runqueue: dry-run real tasks when BB_SETSCENE_ENFORCE is set
+Date: Fri, 16 Dec 2016 03:32:42 -0600
+Message-Id: <1481880762-26028-1-git-send-email-msm-oss@mcclintock.net>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH] fetch2/wget: add Basic Auth from netrc to checkstatus()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,135 +49,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Dec 2016 18:09:28 -0000
+X-List-Received-Date: Fri, 16 Dec 2016 09:32:50 -0000
 
-For the purposes BB_SETSCENE_ENFORCE is designed for (in OE, it is used
-by the installation process for the extensible SDK), we don't actually
-need the whitelisted real tasks to execute - we just need to have them
-in the dependency tree so that we get all of the setscene tasks they
-depend on to run. Therefore we can actually dry-run those real tasks
-i.e. they won't be run (and thus we won't waste a significant amount of
-time doing so) and won't be stamped as having run either. We do already
-have a dry-run mode in BitBake (activated by the -n or --dry-run command
-line option), but it dry-runs the setscene tasks as well which we don't
-want here.
+fetch2/wget uses urllib to check the status of the mirrors, wget will
+use netrc to pass login and password information however checkstatus
+will skip that.
 
-Note that this has no effect on the checking we are doing with
-BB_SETSCENE_ENFORCE to ensure that only whitelisted real tasks are
-scheduled to run - that's handled separately.
+This adds netrc login and password to checkstatus so both will work the
+same.
 
-Fixes [YOCTO #10369].
-
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Matthew McClintock <msm-oss@mcclintock.net>
 ---
- bin/bitbake-worker | 12 +++++++-----
- lib/bb/runqueue.py | 13 +++++++------
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ lib/bb/fetch2/wget.py | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 4dbd681..5010bad 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -136,7 +136,7 @@ def sigterm_handler(signum, frame):
-     os.killpg(0, signal.SIGTERM)
-     sys.exit()
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 6dfb27b..88349c9 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -305,12 +305,24 @@ class Wget(FetchMethod):
+             r = urllib.request.Request(uri)
+             r.get_method = lambda: "HEAD"
  
--def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, appends, taskdepdata, extraconfigdata, quieterrors=False):
-+def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, appends, taskdepdata, extraconfigdata, quieterrors=False, dry_run_exec=False):
-     # We need to setup the environment BEFORE the fork, since
-     # a fork() or exec*() activates PSEUDO...
+-            if ud.user:
++            def add_basic_auth(login_str, request):
++                '''Adds Basic auth to http request, pass in login:password as string'''
+                 import base64
+-                encodeuser = base64.b64encode(ud.user.encode('utf-8')).decode("utf-8")
++                encodeuser = base64.b64encode(login_str.encode('utf-8')).decode("utf-8")
+                 authheader =  "Basic %s" % encodeuser
+                 r.add_header("Authorization", authheader)
  
-@@ -152,8 +152,10 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
-         except TypeError:
-              umask = taskdep['umask'][taskname]
- 
-+    dry_run = cfg.dry_run or dry_run_exec
++            if ud.user:
++                add_basic_auth(ud.user, r)
 +
-     # We can't use the fakeroot environment in a dry run as it possibly hasn't been built
--    if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not cfg.dry_run:
-+    if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not dry_run:
-         envvars = (workerdata["fakerootenv"][fn] or "").split()
-         for key, value in (var.split('=') for var in envvars):
-             envbackup[key] = os.environ.get(key)
-@@ -263,7 +265,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
-                     logger.critical(traceback.format_exc())
-                 os._exit(1)
-             try:
--                if cfg.dry_run:
-+                if dry_run:
-                     return 0
-                 return bb.build.exec_task(fn, taskname, the_data, cfg.profile)
-             except:
-@@ -421,10 +423,10 @@ class BitbakeWorker(object):
-         sys.exit(0)
- 
-     def handle_runtask(self, data):
--        fn, task, taskname, quieterrors, appends, taskdepdata = pickle.loads(data)
-+        fn, task, taskname, quieterrors, appends, taskdepdata, dry_run_exec = pickle.loads(data)
-         workerlog_write("Handling runtask %s %s %s\n" % (task, fn, taskname))
- 
--        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.databuilder, self.workerdata, fn, task, taskname, appends, taskdepdata, self.extraconfigdata, quieterrors)
-+        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.databuilder, self.workerdata, fn, task, taskname, appends, taskdepdata, self.extraconfigdata, quieterrors, dry_run_exec)
- 
-         self.build_pids[pid] = task
-         self.build_pipes[pid] = runQueueWorkerPipe(pipein, pipeout)
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 2ad8aad..d305bb1 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -266,6 +266,7 @@ class RunQueueData:
-         self.multi_provider_whitelist = (cfgData.getVar("MULTI_PROVIDER_WHITELIST") or "").split()
-         self.setscenewhitelist = get_setscene_enforce_whitelist(cfgData)
-         self.setscenewhitelist_checked = False
-+        self.setscene_enforce = (cfgData.getVar('BB_SETSCENE_ENFORCE') == "1")
-         self.init_progress_reporter = bb.progress.DummyMultiStageProcessProgressReporter()
- 
-         self.reset()
-@@ -1790,7 +1791,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                 bb.event.fire(startevent, self.cfgData)
-                 self.runq_running.add(task)
-                 self.stats.taskActive()
--                if not self.cooker.configuration.dry_run:
-+                if not (self.cooker.configuration.dry_run or self.rqdata.setscene_enforce):
-                     bb.build.make_stamp(taskname, self.rqdata.dataCaches[mc], taskfn)
-                 self.task_complete(task)
-                 return True
-@@ -1801,7 +1802,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-             taskdepdata = self.build_taskdepdata(task)
- 
-             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
--            if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
-+            if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not (self.cooker.configuration.dry_run or self.rqdata.setscene_enforce):
-                 if not self.rq.fakeworker:
-                     try:
-                         self.rq.start_fakeworker(self)
-@@ -1810,10 +1811,10 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                         self.rq.state = runQueueFailed
-                         self.stats.taskFailed()
-                         return True
--                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + b"</runtask>")
-+                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-                 self.rq.fakeworker[mc].process.stdin.flush()
-             else:
--                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata)) + b"</runtask>")
-+                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-                 self.rq.worker[mc].process.stdin.flush()
- 
-             self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn, noextra=True)
-@@ -2219,10 +2220,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
-                 if not self.rq.fakeworker:
-                     self.rq.start_fakeworker(self)
--                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata)) + b"</runtask>")
-+                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-                 self.rq.fakeworker[mc].process.stdin.flush()
-             else:
--                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata)) + b"</runtask>")
-+                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-                 self.rq.worker[mc].process.stdin.flush()
- 
-             self.runq_running.add(task)
++            try:
++                import netrc, urllib.parse
++                n = netrc.netrc()
++                login, unused, password = n.authenticators(urllib.parse.urlparse(uri).hostname)
++                add_basic_auth("%s:%s" % (login, password), r)
++            except (ImportError, IOError, netrc.NetrcParseError):
++                 pass
++
+             opener.open(r)
+         except urllib.error.URLError as e:
+             if try_again:
 -- 
-2.5.5
+2.7.4
 
 
