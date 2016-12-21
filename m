@@ -1,30 +1,20 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 22428774B1
+Return-Path: <jianxun.zhang@linux.intel.com>
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+	by mail.openembedded.org (Postfix) with ESMTP id 13544774A9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Dec 2016 17:06:36 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	uBLH6YRP001647; Wed, 21 Dec 2016 17:06:35 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id GtUjbhm3oFiC; Wed, 21 Dec 2016 17:06:35 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	uBLH6TNT001594
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 21 Dec 2016 17:06:30 GMT
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1cJkLV-0006ua-HA; Wed, 21 Dec 2016 17:06:29 +0000
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Wed, 21 Dec 2016 20:24:21 +0000 (UTC)
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+	by orsmga104.jf.intel.com with ESMTP; 21 Dec 2016 12:24:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.33,385,1477983600"; d="scan'208";a="45173483"
+Received: from chang-s2600cp.jf.intel.com ([10.54.77.22])
+	by orsmga005.jf.intel.com with ESMTP; 21 Dec 2016 12:24:23 -0800
+From: Jianxun Zhang <jianxun.zhang@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Dec 2016 17:06:25 +0000
-Message-Id: <1482339985-26495-7-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Wed, 21 Dec 2016 12:27:37 -0800
+Message-Id: <1482352057-26139-1-git-send-email-jianxun.zhang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1482339985-26495-1-git-send-email-richard.purdie@linuxfoundation.org>
-References: <1482339985-26495-1-git-send-email-richard.purdie@linuxfoundation.org>
-Subject: [PATCH 7/7] cookerdata: Convert multiconfig to use BB_CURRENT_MC
+Subject: [PATCH] use multiple processes to dump signatures.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,48 +27,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Dec 2016 17:06:38 -0000
+X-List-Received-Date: Wed, 21 Dec 2016 20:24:22 -0000
 
-People are struggling with multiconfig as the point the conf file
-is injected into the data store is not what people expect. We can't
-really use a post config since that is too late and we can't really
-use a pre config file since that is too early. In OE terms, we need
-something right around the local.conf point so it behaves in a similar
-way.
+This change significantly shortens the time on reparsing stage
+of '-S' option.
 
-A way to handle this is to set the new variable BB_CURRENT_MC to be the
-currently selected multiconfig, then the metadata itself can choose
-when to inject the approriate configuration.
+Each file is reparsed and then dumped within a dedicated
+process. The maximum number of the running processes is not
+greater than the value of BB_NUMBER_PARSE_THREADS if it is set.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+The dump_sigs() in class SignatureGeneratorBasic is _replaced_
+by a new dump_sigfn() interface, so calls from the outside and
+subclasses are dispatched to the implementation in the base
+class of SignatureGeneratorBasic.
+
+Fixes [YOCTO #10352]
+
+Signed-off-by: Jianxun Zhang <jianxun.zhang@linux.intel.com>
 ---
- lib/bb/cookerdata.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/runqueue.py | 32 +++++++++++++++++++++++++++-----
+ bitbake/lib/bb/siggen.py   |  4 ++--
+ 2 files changed, 29 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index c6e958b..d9eab56 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -289,7 +289,7 @@ class CookerDataBuilder(object):
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 2ad8aad..c7d8d53 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -36,6 +36,7 @@ from bb import msg, data, event
+ from bb import monitordisk
+ import subprocess
+ import pickle
++from multiprocessing import Process
  
-             multiconfig = (self.data.getVar("BBMULTICONFIG") or "").split()
-             for config in multiconfig:
--                mcdata = self.parseConfigurationFiles(['conf/multiconfig/%s.conf' % config] + self.prefiles, self.postfiles)
-+                mcdata = self.parseConfigurationFiles(self.prefiles, self.postfiles, config)
-                 bb.event.fire(bb.event.ConfigParsed(), mcdata)
-                 self.mcdata[config] = mcdata
+ bblogger = logging.getLogger("BitBake")
+ logger = logging.getLogger("BitBake.RunQueue")
+@@ -1302,15 +1303,36 @@ class RunQueue:
+         else:
+             self.rqexe.finish()
  
-@@ -305,8 +305,9 @@ class CookerDataBuilder(object):
-     def _findLayerConf(self, data):
-         return findConfigFile("bblayers.conf", data)
++    def rq_dump_sigfn(self, fn, options):
++        bb_cache = bb.cache.NoCache(self.cooker.databuilder)
++        the_data = bb_cache.loadDataFull(fn, self.cooker.collection.get_file_appends(fn))
++        siggen = bb.parse.siggen
++        dataCaches = self.rqdata.dataCaches
++        siggen.dump_sigfn(fn, dataCaches, options)
++
+     def dump_signatures(self, options):
+-        done = set()
++        fns = set()
+         bb.note("Reparsing files to collect dependency data")
+-        bb_cache = bb.cache.NoCache(self.cooker.databuilder)
++
+         for tid in self.rqdata.runtaskentries:
+             fn = fn_from_tid(tid)
+-            if fn not in done:
+-                the_data = bb_cache.loadDataFull(fn, self.cooker.collection.get_file_appends(fn))
+-                done.add(fn)
++            fns.add(fn)
++
++        max_process = int(self.cfgData.getVar("BB_NUMBER_PARSE_THREADS") or os.cpu_count() or 1)
++        # We cannot use the real multiprocessing.Pool easily due to some local data
++        # that can't be pickled. This is a cheap multi-process solution.
++        launched = []
++        while fns:
++            if len(launched) < max_process:
++                p = Process(target=self.rq_dump_sigfn, args=(fns.pop(), options))
++                p.start()
++                launched.append(p)
++            for q in launched:
++                # The finished processes are joined when calling is_alive()
++                if not q.is_alive():
++                    launched.remove(q)
++        for p in launched:
++                p.join()
  
--    def parseConfigurationFiles(self, prefiles, postfiles):
-+    def parseConfigurationFiles(self, prefiles, postfiles, mc = "default"):
-         data = bb.data.createCopy(self.basedata)
-+        data.setVar("BB_CURRENT_MC", mc)
+         bb.parse.siggen.dump_sigs(self.rqdata.dataCaches, options)
  
-         # Parse files for loading *before* bitbake.conf and any includes
-         for f in prefiles:
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index b20b9cf..ae50a18 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -307,8 +307,8 @@ class SignatureGeneratorBasic(SignatureGenerator):
+                 pass
+             raise err
+ 
+-    def dump_sigs(self, dataCaches, options):
+-        for fn in self.taskdeps:
++    def dump_sigfn(self, fn, dataCaches, options):
++        if fn in self.taskdeps:
+             for task in self.taskdeps[fn]:
+                 tid = fn + ":" + task
+                 (mc, _, _) = bb.runqueue.split_tid(tid)
 -- 
 2.7.4
 
