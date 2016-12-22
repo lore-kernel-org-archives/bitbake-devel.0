@@ -1,28 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 6D2E477502
+Return-Path: <jianxun.zhang@linux.intel.com>
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	by mail.openembedded.org (Postfix) with ESMTP id B8552776CE
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Dec 2016 08:59:25 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	uBM8xKLd013936; Thu, 22 Dec 2016 08:59:20 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id oNySoZEZzfJt; Thu, 22 Dec 2016 08:59:20 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	uBM8xIE1013933
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 22 Dec 2016 08:59:20 GMT
-Message-ID: <1482397158.9843.130.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jianxun Zhang <jianxun.zhang@linux.intel.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Thu, 22 Dec 2016 08:59:18 +0000
-In-Reply-To: <1482352057-26139-1-git-send-email-jianxun.zhang@linux.intel.com>
+	Thu, 22 Dec 2016 18:39:15 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by orsmga105.jf.intel.com with ESMTP; 22 Dec 2016 10:39:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.33,389,1477983600"; d="scan'208";a="205845469"
+Received: from phack-mobl3.amr.corp.intel.com ([10.254.114.225])
+	by fmsmga004.fm.intel.com with ESMTP; 22 Dec 2016 10:39:16 -0800
+Mime-Version: 1.0 (Mac OS X Mail 10.1 \(3251\))
+From: Jianxun Zhang <jianxun.zhang@linux.intel.com>
+In-Reply-To: <1482397158.9843.130.camel@linuxfoundation.org>
+Date: Thu, 22 Dec 2016 10:39:19 -0800
+Message-Id: <48AEE85D-1072-4C81-922D-D9DF9A3E4D66@linux.intel.com>
 References: <1482352057-26139-1-git-send-email-jianxun.zhang@linux.intel.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3 
-Mime-Version: 1.0
+	<1482397158.9843.130.camel@linuxfoundation.org>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3251)
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] use multiple processes to dump signatures.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -36,121 +32,166 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Dec 2016 08:59:26 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-
-On Wed, 2016-12-21 at 12:27 -0800, Jianxun Zhang wrote:
-> This change significantly shortens the time on reparsing stage
-> of '-S' option.
-> 
-> Each file is reparsed and then dumped within a dedicated
-> process. The maximum number of the running processes is not
-> greater than the value of BB_NUMBER_PARSE_THREADS if it is set.
-> 
-> The dump_sigs() in class SignatureGeneratorBasic is _replaced_
-> by a new dump_sigfn() interface, so calls from the outside and
-> subclasses are dispatched to the implementation in the base
-> class of SignatureGeneratorBasic.
-> 
-> Fixes [YOCTO #10352]
-
-Thanks, I think this is heading in the right direction. 
-
-I am a little bit worried that this leaves OE's sstatesig.py with a
-dump_sigs() function which isn't used/connected into everything else
-though? Does this still write out a locked sigs file after this change?
-
-Cheers,
-
-Richard
+X-List-Received-Date: Thu, 22 Dec 2016 18:39:16 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-> Signed-off-by: Jianxun Zhang <jianxun.zhang@linux.intel.com>
-> ---
->  bitbake/lib/bb/runqueue.py | 32 +++++++++++++++++++++++++++-----
->  bitbake/lib/bb/siggen.py   |  4 ++--
->  2 files changed, 29 insertions(+), 7 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-> index 2ad8aad..c7d8d53 100644
-> --- a/bitbake/lib/bb/runqueue.py
-> +++ b/bitbake/lib/bb/runqueue.py
-> @@ -36,6 +36,7 @@ from bb import msg, data, event
->  from bb import monitordisk
->  import subprocess
->  import pickle
-> +from multiprocessing import Process
->  
->  bblogger = logging.getLogger("BitBake")
->  logger = logging.getLogger("BitBake.RunQueue")
-> @@ -1302,15 +1303,36 @@ class RunQueue:
->          else:
->              self.rqexe.finish()
->  
-> +    def rq_dump_sigfn(self, fn, options):
-> +        bb_cache = bb.cache.NoCache(self.cooker.databuilder)
-> +        the_data = bb_cache.loadDataFull(fn,
-> self.cooker.collection.get_file_appends(fn))
-> +        siggen = bb.parse.siggen
-> +        dataCaches = self.rqdata.dataCaches
-> +        siggen.dump_sigfn(fn, dataCaches, options)
-> +
->      def dump_signatures(self, options):
-> -        done = set()
-> +        fns = set()
->          bb.note("Reparsing files to collect dependency data")
-> -        bb_cache = bb.cache.NoCache(self.cooker.databuilder)
-> +
->          for tid in self.rqdata.runtaskentries:
->              fn = fn_from_tid(tid)
-> -            if fn not in done:
-> -                the_data = bb_cache.loadDataFull(fn,
-> self.cooker.collection.get_file_appends(fn))
-> -                done.add(fn)
-> +            fns.add(fn)
-> +
-> +        max_process =
-> int(self.cfgData.getVar("BB_NUMBER_PARSE_THREADS") or os.cpu_count()
-> or 1)
-> +        # We cannot use the real multiprocessing.Pool easily due to
-> some local data
-> +        # that can't be pickled. This is a cheap multi-process
-> solution.
-> +        launched = []
-> +        while fns:
-> +            if len(launched) < max_process:
-> +                p = Process(target=self.rq_dump_sigfn,
-> args=(fns.pop(), options))
-> +                p.start()
-> +                launched.append(p)
-> +            for q in launched:
-> +                # The finished processes are joined when calling
-> is_alive()
-> +                if not q.is_alive():
-> +                    launched.remove(q)
-> +        for p in launched:
-> +                p.join()
->  
->          bb.parse.siggen.dump_sigs(self.rqdata.dataCaches, options)
->  
-> diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-> index b20b9cf..ae50a18 100644
-> --- a/bitbake/lib/bb/siggen.py
-> +++ b/bitbake/lib/bb/siggen.py
-> @@ -307,8 +307,8 @@ class
-> SignatureGeneratorBasic(SignatureGenerator):
->                  pass
->              raise err
->  
-> -    def dump_sigs(self, dataCaches, options):
-> -        for fn in self.taskdeps:
-> +    def dump_sigfn(self, fn, dataCaches, options):
-> +        if fn in self.taskdeps:
->              for task in self.taskdeps[fn]:
->                  tid = fn + ":" + task
->                  (mc, _, _) = bb.runqueue.split_tid(tid)
-> -- 
-> 2.7.4
-> 
+> On Dec 22, 2016, at 12:59 AM, Richard Purdie =
+<richard.purdie@linuxfoundation.org> wrote:
+>=20
+> On Wed, 2016-12-21 at 12:27 -0800, Jianxun Zhang wrote:
+>> This change significantly shortens the time on reparsing stage
+>> of '-S' option.
+>>=20
+>> Each file is reparsed and then dumped within a dedicated
+>> process. The maximum number of the running processes is not
+>> greater than the value of BB_NUMBER_PARSE_THREADS if it is set.
+>>=20
+>> The dump_sigs() in class SignatureGeneratorBasic is _replaced_
+>> by a new dump_sigfn() interface, so calls from the outside and
+>> subclasses are dispatched to the implementation in the base
+>> class of SignatureGeneratorBasic.
+>>=20
+>> Fixes [YOCTO #10352]
+>=20
+> Thanks, I think this is heading in the right direction.=20
+>=20
+> I am a little bit worried that this leaves OE's sstatesig.py with a
+> dump_sigs() function which isn't used/connected into everything else
+> though? Does this still write out a locked sigs file after this =
+change?
+I am not the expert in this area, so just share the result and my =
+understanding here.
+
+OE=E2=80=99s dump_sigs is still connected and used. The lock-sigs.inc is =
+in output and looks okay with a manual diff against one from master tip. =
+This is because I still keep the calling dump_sigs() in =
+dump_signatures() in runqueue.py. That line triggers OE to dump =
+lock-sigs.inc.
+
+The instance =E2=80=9Csiggen=E2=80=9D in dump_signatures() should be the =
+type of subclass in OE=E2=80=99s sstatesig.py. The dump_sigs() of OE =
+class, in return, writes out the additional lock-sigs.inc and also calls =
+its base class (BB) SignatureGeneratorBasic=E2=80=99s dump_sigs(), which =
+is nothing now.
+
+This change removes dump_sigs() in SignatureGeneratorBasic=E2=80=99s to =
+say "let=E2=80=99s fall back to our base class (SignatureGenerator) =
+dump_sigs() since the inside of the removed dump_sigs() is replaced with =
+parallel dumping". Another motivation of the removal is for code =
+clarity. The loops in old dump_sigs() won=E2=80=99t work without a full =
+data store. Keeping a loop in it to call new API doesn=E2=80=99t seem =
+effective.
+
+What we miss by removing SignatureGeneratorBasic=E2=80=99s dump_sigs() =
+is any existing logic/class directly calls dump_sigs() in this class =
+outside of -S option path. But I don=E2=80=99t see such a case after =
+some searching in BB and OE. (Another reason to remove it).
+
+In a short, it is a struggle between a parallelized stamp dumping and =
+leaving lock-sigs.inc in a single main process. I don=E2=80=99t go =
+further to parallelize writing lock-sigs.inc in OE because I think =
+synchronization could be another deep hole, and this part doesn=E2=80=99t =
+contribute much to perf either.
+
+I also ran test module sstatetest in oe-selftest and passed it.
+
+Feel free to let me know any better idea and improvement I should make.
+
+
+>=20
+> Cheers,
+>=20
+> Richard
+>=20
+>=20
+>> Signed-off-by: Jianxun Zhang <jianxun.zhang@linux.intel.com>
+>> ---
+>>  bitbake/lib/bb/runqueue.py | 32 +++++++++++++++++++++++++++-----
+>>  bitbake/lib/bb/siggen.py   |  4 ++--
+>>  2 files changed, 29 insertions(+), 7 deletions(-)
+>>=20
+>> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+>> index 2ad8aad..c7d8d53 100644
+>> --- a/bitbake/lib/bb/runqueue.py
+>> +++ b/bitbake/lib/bb/runqueue.py
+>> @@ -36,6 +36,7 @@ from bb import msg, data, event
+>>  from bb import monitordisk
+>>  import subprocess
+>>  import pickle
+>> +from multiprocessing import Process
+>> =20
+>>  bblogger =3D logging.getLogger("BitBake")
+>>  logger =3D logging.getLogger("BitBake.RunQueue")
+>> @@ -1302,15 +1303,36 @@ class RunQueue:
+>>          else:
+>>              self.rqexe.finish()
+>> =20
+>> +    def rq_dump_sigfn(self, fn, options):
+>> +        bb_cache =3D bb.cache.NoCache(self.cooker.databuilder)
+>> +        the_data =3D bb_cache.loadDataFull(fn,
+>> self.cooker.collection.get_file_appends(fn))
+>> +        siggen =3D bb.parse.siggen
+>> +        dataCaches =3D self.rqdata.dataCaches
+>> +        siggen.dump_sigfn(fn, dataCaches, options)
+>> +
+>>      def dump_signatures(self, options):
+>> -        done =3D set()
+>> +        fns =3D set()
+>>          bb.note("Reparsing files to collect dependency data")
+>> -        bb_cache =3D bb.cache.NoCache(self.cooker.databuilder)
+>> +
+>>          for tid in self.rqdata.runtaskentries:
+>>              fn =3D fn_from_tid(tid)
+>> -            if fn not in done:
+>> -                the_data =3D bb_cache.loadDataFull(fn,
+>> self.cooker.collection.get_file_appends(fn))
+>> -                done.add(fn)
+>> +            fns.add(fn)
+>> +
+>> +        max_process =3D
+>> int(self.cfgData.getVar("BB_NUMBER_PARSE_THREADS") or os.cpu_count()
+>> or 1)
+>> +        # We cannot use the real multiprocessing.Pool easily due to
+>> some local data
+>> +        # that can't be pickled. This is a cheap multi-process
+>> solution.
+>> +        launched =3D []
+>> +        while fns:
+>> +            if len(launched) < max_process:
+>> +                p =3D Process(target=3Dself.rq_dump_sigfn,
+>> args=3D(fns.pop(), options))
+>> +                p.start()
+>> +                launched.append(p)
+>> +            for q in launched:
+>> +                # The finished processes are joined when calling
+>> is_alive()
+>> +                if not q.is_alive():
+>> +                    launched.remove(q)
+>> +        for p in launched:
+>> +                p.join()
+>> =20
+>>          bb.parse.siggen.dump_sigs(self.rqdata.dataCaches, options)
+>> =20
+>> diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+>> index b20b9cf..ae50a18 100644
+>> --- a/bitbake/lib/bb/siggen.py
+>> +++ b/bitbake/lib/bb/siggen.py
+>> @@ -307,8 +307,8 @@ class
+>> SignatureGeneratorBasic(SignatureGenerator):
+>>                  pass
+>>              raise err
+>> =20
+>> -    def dump_sigs(self, dataCaches, options):
+>> -        for fn in self.taskdeps:
+>> +    def dump_sigfn(self, fn, dataCaches, options):
+>> +        if fn in self.taskdeps:
+>>              for task in self.taskdeps[fn]:
+>>                  tid =3D fn + ":" + task
+>>                  (mc, _, _) =3D bb.runqueue.split_tid(tid)
+>> --=20
+>> 2.7.4
+>>=20
+
 
