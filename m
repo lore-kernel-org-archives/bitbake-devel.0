@@ -1,30 +1,22 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 750FC65C90
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 958A971998
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 Jan 2017 14:56:11 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v05Es9VK023820; Thu, 5 Jan 2017 14:54:09 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id AbzGa9dU4TpB; Thu,  5 Jan 2017 14:54:09 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v05Es75x023817
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 5 Jan 2017 14:54:09 GMT
-Message-ID: <1483628047.4367.92.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Lock <joshua.g.lock@linux.intel.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Thu, 05 Jan 2017 14:54:07 +0000
-In-Reply-To: <1483627614.7913.1.camel@linux.intel.com>
-References: <1483624327-18607-1-git-send-email-richard.purdie@linuxfoundation.org>
-	<1483627614.7913.1.camel@linux.intel.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3 
-Mime-Version: 1.0
-Subject: Re: [PATCH v2] prserv/serv: Tweak stdout manipulation to be stream safe
+	Thu,  5 Jan 2017 23:42:12 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by orsmga101.jf.intel.com with ESMTP; 05 Jan 2017 15:41:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.33,323,1477983600"; d="scan'208";a="805636911"
+Received: from alimonb-mobl1.zpn.intel.com ([10.219.5.143])
+	by FMSMGA003.fm.intel.com with ESMTP; 05 Jan 2017 15:41:59 -0800
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  5 Jan 2017 17:44:46 -0600
+Message-Id: <1483659886-28280-1-git-send-email-anibal.limon@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+MIME-Version: 1.0
+Cc: benjamin.esquivel@intel.com, jose.perez.carranza@intel.com
+Subject: [PATCH] bb/cooker: BBCooker stops notifier at shutdown
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,40 +29,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Jan 2017 14:56:13 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Thu, 05 Jan 2017 23:42:13 -0000
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Thu, 2017-01-05 at 14:46 +0000, Joshua Lock wrote:
-> On Thu, 2017-01-05 at 13:52 +0000, Richard Purdie wrote:
-> > +        # to physically close the fds to prevent the program
-> > launching us from
-> > +        # potentially hanging on a pipe. Handle both cases.
-> >          si = open('/dev/null', 'r')
-> > +        try:
-> > +            os.dup2(si.fileno(),sys.stdin.fileno())
-> > +        except (AttributeError, io.UnsupportedOperation):
-> > +            sys.stdin = si
-> >          so = open(self.logfile, 'a+')
-> > -        se = so
-> > -        os.dup2(si.fileno(),sys.stdin.fileno())
-> > -        os.dup2(so.fileno(),sys.stdout.fileno())
-> > -        os.dup2(se.fileno(),sys.stderr.fileno())
-> > +        try:
-> > +            os.dup2(so.fileno(),sys.stdout.fileno())
-> > +        except (AttributeError, io.UnsupportedOperation):
-> > +            sys.stdout = so
-> > +        try:
-> > +            os.dup2(so.fileno(),sys.stderr.fileno())
-> > +        except (AttributeError, io.UnsupportedOperation):
-> > +            sys.stderr = so
-> I think there's a copy/paste error here — shouldn't the second
-> try/except be duplicating/assigning se not so?
+At end of  BBCooker needs to release fd's associated with pyinotify
+watchers to  avoid: Too many open files (EMFILE) error in different
+scenarios like several instances of tinfoil.
 
-so == se in the original code and I dropped that just using so
-everywhere here so I believe the code is ok.
+[YOCTO #10873]
 
-Cheers,
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
+---
+ lib/bb/cooker.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Richard
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 30131fb..182d044 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1731,6 +1731,8 @@ class BBCooker:
+ 
+         if self.parser:
+             self.parser.shutdown(clean=not force, force=force)
++        self.notifier.stop()
++        self.confignotifier.stop()
+ 
+     def finishcommand(self):
+         self.state = state.initial
+-- 
+2.1.4
+
 
