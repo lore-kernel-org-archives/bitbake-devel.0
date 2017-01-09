@@ -1,21 +1,21 @@
 Return-Path: <anibal.limon@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 810D771AE4
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id DFCD271AC3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Jan 2017 14:19:30 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga104.fm.intel.com with ESMTP; 09 Jan 2017 06:19:30 -0800
+	Mon,  9 Jan 2017 16:20:06 +0000 (UTC)
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+	by fmsmga103.fm.intel.com with ESMTP; 09 Jan 2017 08:20:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.33,339,1477983600"; d="scan'208";a="920490100"
+X-IronPort-AV: E=Sophos;i="5.33,340,1477983600"; d="scan'208";a="51188391"
 Received: from alimonb-mobl1.zpn.intel.com ([10.219.5.143])
-	by orsmga003.jf.intel.com with ESMTP; 09 Jan 2017 06:19:28 -0800
+	by fmsmga005.fm.intel.com with ESMTP; 09 Jan 2017 08:20:02 -0800
 From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Jan 2017 08:22:16 -0600
-Message-Id: <1483971736-29460-1-git-send-email-anibal.limon@linux.intel.com>
+Date: Mon,  9 Jan 2017 10:22:50 -0600
+Message-Id: <1483978971-15880-1-git-send-email-anibal.limon@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 MIME-Version: 1.0
-Subject: [PATCH] bb/server/process.py: ProcessEventQueue add close of _writer pipe
+Subject: [PATCH 1/2] bb/server/process.py: ProcessEventQueue add close of _writer pipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,12 +28,14 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Jan 2017 14:19:31 -0000
+X-List-Received-Date: Mon, 09 Jan 2017 16:20:07 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Call explicity close in _writer to avoid fd leakage because isn't
 called on Queue.close()
+
+[YOCTO #10873]
 
 Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 ---
