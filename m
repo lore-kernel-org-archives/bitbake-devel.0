@@ -1,30 +1,34 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id BC42871C7E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 4829371C92
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jan 2017 19:52:51 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v0CJqgoA003357
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 12 Jan 2017 11:52:42 -0800 (PST)
-Received: from soho-mhatle-m.local (172.25.36.235) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.294.0;
-	Thu, 12 Jan 2017 11:52:42 -0800
-To: Juro Bystricky <juro.bystricky@intel.com>,
-	<bitbake-devel@lists.openembedded.org>
-References: <1484249037-36445-1-git-send-email-juro.bystricky@intel.com>
-	<1484249037-36445-2-git-send-email-juro.bystricky@intel.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-Message-ID: <e1da4ee5-4165-7d25-7811-5fba37607eb3@windriver.com>
-Date: Thu, 12 Jan 2017 13:52:40 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:45.0)
-	Gecko/20100101 Thunderbird/45.6.0
-MIME-Version: 1.0
-In-Reply-To: <1484249037-36445-2-git-send-email-juro.bystricky@intel.com>
-Cc: jurobystricky@hotmail.com
-Subject: Re: [PATCH 2/2] sanity.bbclass: Improved error message
+	Thu, 12 Jan 2017 21:19:07 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v0CLGFSK028780; Thu, 12 Jan 2017 21:17:01 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id fL_zmcNyttyQ; Thu, 12 Jan 2017 21:17:01 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v0CLGu82028814
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 12 Jan 2017 21:16:57 GMT
+Message-ID: <1484255816.4367.236.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Jianxun Zhang <jianxun.zhang@linux.intel.com>
+Date: Thu, 12 Jan 2017 21:16:56 +0000
+In-Reply-To: <2A86F721-051E-4344-AC93-362DB2E4EF56@linux.intel.com>
+References: <1482352057-26139-1-git-send-email-jianxun.zhang@linux.intel.com>
+	<1482397158.9843.130.camel@linuxfoundation.org>
+	<48AEE85D-1072-4C81-922D-D9DF9A3E4D66@linux.intel.com>
+	<DA1C4B84-D5CA-4BE4-97D3-CA19F1E89C2F@linux.intel.com>
+	<1484242870.4367.219.camel@linuxfoundation.org>
+	<2A86F721-051E-4344-AC93-362DB2E4EF56@linux.intel.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] use multiple processes to dump signatures.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,92 +41,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Jan 2017 19:52:52 -0000
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 12 Jan 2017 21:19:09 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On 1/12/17 1:23 PM, Juro Bystricky wrote:
-> When a non-existing MACHINE is specified, sanity check issues
-> the following message:
+On Thu, 2017-01-12 at 11:33 -0800, Jianxun Zhang wrote:
+> I appreciate your multiple hints on the road for this issue! I do
+> _feel_ this patch needs some improvement or tests, but I cannot
+> identify them in my sight. Well, things shouldn’t be such easy with a
+> V1 due to the complexity.
+
+I think your testing was fine, I just wanted to double check a few
+things with the patch which I've now done and things seem fine.
+
+> That’s why I have to hand over the burden to you. :-) Feel free to
+> let me know any new possibilities.
 > 
->     Please set a valid MACHINE in your local.conf or environment
+> I am actually interested in the data you shared. I improved my sig-
+> dumping over 10 times (14.4 sec to 1 sec). Your test should covers
+> other steps, so the improvement on sig dumping is less significant,
+> 325.08 to 93.93 sec.
 > 
-> However, MACHINE can also be set in multiconfig .conf file(s).
-> Hence we may have several different MACHINE settings within one
-> (multiconfig) build, so the present error message is fairly
-> ambiguous.
-> 
-> This patch remedies this by explicitly naming the offending MACHINE and
-> adding conf/multiconfig/*.conf to the list of places where this erroneous
-> MACHINE definition could have originated.
-> 
->     Invalid MACHINE=xyz. Please set a valid MACHINE in your local.conf, conf/multiconfig/*.conf or environment
+> Maybe we should find some time to investigate any room to speed up
+> the rest in test suite...
 
-(I don't have any problem with the change, but I do have a suggestion that may
-make it better.)
+I knew that improvement would help this set of tests significantly and
+230s or ~4 minutes is a good saving to have per test. oe-selftest
+currently takes up to around 8 hours and if we can knock 4 minutes off
+say 10 tests that is a good saving! :)
 
-I'm not sure if it's available without specifically using the bitbake -e flag,
-but we do usually capture where variables are defined.  Could this be used to
-provide a better error message for the user?
+I very much agree that we need to look at other ways of speeding up oe-
+selftest. I actually found another problem Ross sent a patch for
+earlier today which improve the test load time significantly and should
+take another ~10mins off the 8 hours and makes running this manually
+less annoying. We also have plans to use memory resident bitbake to
+help. There are lots of places in oe-selftest it runs "bitbake -e XXX"
+to get variables an the time taken to do this mounts up quickly. If
+bitbake is memory resident, we should be able to get answers much
+faster.
 
-i.e. bitbake -e output:
+There is also the option of parallelising oe-selftest too, currently
+the tests run in series but running in parallel would help too.
 
-# $MACHINE [3 operations]
-#   set /home/mhatle/oe/build/conf/local.conf:76
-#     [_defaultval] "qemux86-64"
-#   set /home/mhatle/oe/meta/conf/documentation.co
-nf:274
-#     [doc] "Specifies the target device for which the image is built. You defin
-e MACHINE in the conf/local.conf file in the Build Directory."
-#   set /home/mhatle/oe/meta/conf/bitbake.conf:795
-#     [unexport] "1"
-# pre-expansion value:
-#   "qemux86-64"
-unset MACHINE
+So plenty more work to do but this is a good start (and there are
+several other use cases for this codepath I'm happy to see speeded up
+too!).
 
-in this case it knows it was defined in the local.conf on line 76.
+Cheers,
 
-... and if I set it in the environment:
+Richard
 
-# $MACHINE [4 operations]
-#   from env data.py:177 [inheritFromOS]
-#     "foobar"
-#   set /home/mhatle/oe/build/conf/local.conf:76
-#     [_defaultval] "qemux86-64"
-#   set /home/mhatle/oe/meta/conf/documentation.co
-nf:274
-#     [doc] "Specifies the target device for which the image is built. You defin
-e MACHINE in the conf/local.conf file in the Build Directory."
-#   set /home/mhatle/oe/meta/conf/bitbake.conf:795
-#     [unexport] "1"
-# pre-expansion value:
-#   "foobar"
-unset MACHINE
-
-It knows it was 'inheritFromOS'.
-
---Mark
-
-> [YOCTO#10810]
-> 
-> Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
-> ---
->  meta/classes/sanity.bbclass | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/meta/classes/sanity.bbclass b/meta/classes/sanity.bbclass
-> index c876dc6..8477d38 100644
-> --- a/meta/classes/sanity.bbclass
-> +++ b/meta/classes/sanity.bbclass
-> @@ -823,7 +823,7 @@ def check_sanity_everybuild(status, d):
->      machinevalid = True
->      if d.getVar('MACHINE'):
->          if not check_conf_exists("conf/machine/${MACHINE}.conf", d):
-> -            status.addresult('Please set a valid MACHINE in your local.conf or environment\n')
-> +            status.addresult('Invalid MACHINE=%s. Please set a valid MACHINE in your local.conf, conf/multiconfig/*.conf or environment\n' % (d.getVar('MACHINE')))
->              machinevalid = False
->          else:
->              status.addresult(check_sanity_validmachine(d))
-> 
 
 
