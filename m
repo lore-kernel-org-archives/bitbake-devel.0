@@ -1,42 +1,29 @@
-Return-Path: <msm-oss@mcclintock.net>
-Received: from mail-oi0-f67.google.com (mail-oi0-f67.google.com
-	[209.85.218.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 85D3D71988
+Return-Path: <ola.redell@retotech.se>
+X-Greylist: delayed 964 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 12 Jan 2017 10:49:57 UTC
+Received: from mailrelay11.public.one.com (mailrelay11.public.one.com
+	[195.47.247.189])
+	by mail.openembedded.org (Postfix) with ESMTP id B02C871AEB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jan 2017 00:44:23 +0000 (UTC)
-Received: by mail-oi0-f67.google.com with SMTP id j15so713371oih.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Jan 2017 16:44:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mcclintock.net; s=google;
-	h=from:to:cc:subject:date:message-id;
-	bh=ie0X3s3r1h624ic8n7ZqWe/nUmx+brCkxTy51kKrwF0=;
-	b=IZxNeCm5BKJ6rPi4sCEBysnxVfsGDZZDsGbLTuwNm3mLdLozFrUWfkI8ROKxk/K6h/
-	TgOKVFj/uTH42KJ3pef3rOIIbxaTDOhy32avDfGwZqfxnGQKfa26xAsTsU/9k+MHDMeX
-	z9doqnvV+xg7O4BgB0UBTXRKmp6rJjX70bJC4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=ie0X3s3r1h624ic8n7ZqWe/nUmx+brCkxTy51kKrwF0=;
-	b=NfSgbYhI2yCQx0QIQIL3Jd5CshW0/wCVKF7ZswuULvTMuXPtlafiSSCZfiGtYu1aTL
-	b/KmpoDBZKn/Nrs70GrXGGsrkBzNAONll4jzHrtNiVpz+0+fKGWWCbaC+USHNSzlRobt
-	y+GH/qa6PCqNY/ciiaQb2ljdr1r8R5gaJ49IjDlZXezioNGGhWf1KLtFGR7nXfhRkdb3
-	8OFBoTUyLNy6/rYQ3rrsMHsV/+Z6ob8clLHnqUy8aIMH6zNcSwb5NvrITbrLHxqJDbWU
-	GK4zQWCjocUAGPLLsrKNGkBChx47Ac6E7KaN5Z+NehdBKLNNBCBKmUIMk8QC+eA43xsD
-	jBbw==
-X-Gm-Message-State: AIkVDXK5Bw3GCblanuGiuQi8HfAYOuktWWw9wizb9DiFppk0wEq1fIRIRXNZGEvWUonbog==
-X-Received: by 10.202.207.202 with SMTP id f193mr5895693oig.81.1484181863294; 
-	Wed, 11 Jan 2017 16:44:23 -0800 (PST)
-Received: from pandora.lan ([2605:6000:1019:149:5a77:b80:8e7b:e835])
-	by smtp.gmail.com with ESMTPSA id r28sm3387381otd.0.2017.01.11.16.44.22
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 11 Jan 2017 16:44:22 -0800 (PST)
-From: Matthew McClintock <msm-oss@mcclintock.net>
+	Thu, 12 Jan 2017 10:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=retotech.se; s=20140924;
+	h=from:subject:date:message-id:to:cc;
+	bh=colmvmQ/Kv4CKNnJ5esn0RrVLiqZxsRD83+gBxPwa58=;
+	b=gKlh0GBeSEDR00T8EzfS68lSb2Ns/8t8UvP8hQbx9J3+sh8H9xi2sQHby1rKfwZsAMWN53gAF5dwz
+	d5d9H96PuTInCL4///tWLW2249GMcz1d2zweobTDpJSUhPiS7q6IfKYWf8fOuvae3t+MpXy2RgFxC4
+	YemndQlzwvq6OqMo=
+X-HalOne-Cookie: 4434b19f8c236ca15cf7b2fc530a48072170afd7
+X-HalOne-ID: 97a99a8e-d8b2-11e6-ba0f-b82a72d06996
+Received: from localhost.localdomain (unknown [109.228.128.54])
+	by smtpfilter3.public.one.com (Halon) with ESMTPSA
+	id 97a99a8e-d8b2-11e6-ba0f-b82a72d06996;
+	Thu, 12 Jan 2017 10:33:51 +0000 (UTC)
+From: Ola Redell <ola.redell@retotech.se>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Jan 2017 18:44:18 -0600
-Message-Id: <1484181858-2247-1-git-send-email-msm-oss@mcclintock.net>
+Date: Thu, 12 Jan 2017 11:33:27 +0100
+Message-Id: <1484217207-1889-1-git-send-email-ola.redell@retotech.se>
 X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] bitbake-layers: show-appends: add optional argument to limit package list
+Subject: [PATCH] gitsm.py: Add force flag to git checkout command in update_submodules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,63 +36,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Jan 2017 00:44:23 -0000
+X-List-Received-Date: Thu, 12 Jan 2017 10:49:59 -0000
 
-Add ability to limit output per package:
+When the gitsm fetcher is used with a repo that includes a .gitattributes
+file that makes git modify files on cloning (e.g. line break characters),
+the subsequent checkout performed in the update_submodules function fails.
+This is fixed by adding the force flag (-f) to the checkout command.
 
-$ bitbake-layers show-appends m4
-=== Matched appended recipes ===
-m4_1.4.17.bb:
-  /home/mattsm/git/openembedded-core/meta-selftest/recipes-test/m4/m4_1.4.17.bbappend
-
-Useful for writing tools to process the output, and debugging
-bbappends for specific packages
-
-Signed-off-by: Matthew McClintock <msm-oss@mcclintock.net>
+Signed-off-by: Ola Redell <ola.redell@retotech.se>
 ---
- lib/bblayers/query.py | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ lib/bb/fetch2/gitsm.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
-index 5def717..bef3af3 100644
---- a/lib/bblayers/query.py
-+++ b/lib/bblayers/query.py
-@@ -242,17 +242,22 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
- 
- Lists recipes with the bbappends that apply to them as subitems.
- """
--
--        logger.plain('=== Appended recipes ===')
-+        if args.pnspec:
-+            logger.plain('=== Matched appended recipes ===')
-+        else:
-+            logger.plain('=== Appended recipes ===')
- 
-         pnlist = list(self.tinfoil.cooker_data.pkg_pn.keys())
-         pnlist.sort()
-         appends = False
-         for pn in pnlist:
-+            if args.pnspec and pn != args.pnspec:
-+                continue
-+
-             if self.show_appends_for_pn(pn):
-                 appends = True
- 
--        if self.show_appends_for_skipped():
-+        if not args.pnspec and self.show_appends_for_skipped():
-             appends = True
- 
-         if not appends:
-@@ -477,7 +482,8 @@ NOTE: .bbappend files can impact the dependencies.
-         parser_show_recipes.add_argument('-i', '--inherits', help='only list recipes that inherit the named class', metavar='CLASS', default='')
-         parser_show_recipes.add_argument('pnspec', nargs='?', help='optional recipe name specification (wildcards allowed, enclose in quotes to avoid shell expansion)')
- 
--        self.add_command(sp, 'show-appends', self.do_show_appends)
-+        parser_show_appends = self.add_command(sp, 'show-appends', self.do_show_appends)
-+        parser_show_appends.add_argument('pnspec', nargs='?', help='optional recipe name specification (wildcards allowed, enclose in quotes to avoid shell expansion)')
- 
-         parser_show_cross_depends = self.add_command(sp, 'show-cross-depends', self.do_show_cross_depends)
-         parser_show_cross_depends.add_argument('-f', '--filenames', help='show full file path', action='store_true')
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index 6613762..939fb3f 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -108,7 +108,7 @@ class GitSM(Git):
+         os.rename(ud.clonedir, gitdir)
+         runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*true/bare = false/'", d)
+         runfetchcmd(ud.basecmd + " reset --hard", d, workdir=tmpclonedir)
+-        runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d, workdir=tmpclonedir)
++        runfetchcmd(ud.basecmd + " checkout -f " + ud.revisions[ud.names[0]], d, workdir=tmpclonedir)
+         runfetchcmd(ud.basecmd + " submodule update --init --recursive", d, workdir=tmpclonedir)
+         self._set_relative_paths(tmpclonedir)
+         runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*false/bare = true/'", d, workdir=tmpclonedir)
 -- 
 2.7.4
 
