@@ -1,34 +1,21 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 4829371C92
+Return-Path: <juro.bystricky@intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 6A7C471AC8
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jan 2017 21:19:07 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v0CLGFSK028780; Thu, 12 Jan 2017 21:17:01 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id fL_zmcNyttyQ; Thu, 12 Jan 2017 21:17:01 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v0CLGu82028814
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 12 Jan 2017 21:16:57 GMT
-Message-ID: <1484255816.4367.236.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jianxun Zhang <jianxun.zhang@linux.intel.com>
-Date: Thu, 12 Jan 2017 21:16:56 +0000
-In-Reply-To: <2A86F721-051E-4344-AC93-362DB2E4EF56@linux.intel.com>
-References: <1482352057-26139-1-git-send-email-jianxun.zhang@linux.intel.com>
-	<1482397158.9843.130.camel@linuxfoundation.org>
-	<48AEE85D-1072-4C81-922D-D9DF9A3E4D66@linux.intel.com>
-	<DA1C4B84-D5CA-4BE4-97D3-CA19F1E89C2F@linux.intel.com>
-	<1484242870.4367.219.camel@linuxfoundation.org>
-	<2A86F721-051E-4344-AC93-362DB2E4EF56@linux.intel.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] use multiple processes to dump signatures.
+	Thu, 12 Jan 2017 23:44:09 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga103.fm.intel.com with ESMTP; 12 Jan 2017 15:44:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.33,220,1477983600"; d="scan'208";a="29749361"
+Received: from juro-precision-t5610.jf.intel.com ([10.7.198.149])
+	by orsmga002.jf.intel.com with ESMTP; 12 Jan 2017 15:44:09 -0800
+From: Juro Bystricky <juro.bystricky@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 12 Jan 2017 15:40:31 -0800
+Message-Id: <1484264431-28529-1-git-send-email-juro.bystricky@intel.com>
+X-Mailer: git-send-email 2.7.4
+Cc: jurobystricky@hotmail.com
+Subject: [PATCH] cookerdata.py: check for existence of configuration files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,55 +28,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Jan 2017 21:19:09 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 12 Jan 2017 23:44:13 -0000
 
-On Thu, 2017-01-12 at 11:33 -0800, Jianxun Zhang wrote:
-> I appreciate your multiple hints on the road for this issue! I do
-> _feel_ this patch needs some improvement or tests, but I cannot
-> identify them in my sight. Well, things shouldn’t be such easy with a
-> V1 due to the complexity.
+Presently there is no check to verify the existence of configuration
+files as listed in BBMULTICONFIG. For example, BBMULTICONFIG = "foobar" in local.conf
+does not trigger an error when there is no conf/multiconfig/foobar.conf.
+The missing file is silently ignored.
 
-I think your testing was fine, I just wanted to double check a few
-things with the patch which I've now done and things seem fine.
+This patch verifies the existence of config files and errors-out with the message:
 
-> That’s why I have to hand over the burden to you. :-) Feel free to
-> let me know any new possibilities.
-> 
-> I am actually interested in the data you shared. I improved my sig-
-> dumping over 10 times (14.4 sec to 1 sec). Your test should covers
-> other steps, so the improvement on sig dumping is less significant,
-> 325.08 to 93.93 sec.
-> 
-> Maybe we should find some time to investigate any room to speed up
-> the rest in test suite...
+ERROR: BBMULTICONFIG="foobar" but the configuration file './conf/multiconfig/foobar.conf' does not exist!
 
-I knew that improvement would help this set of tests significantly and
-230s or ~4 minutes is a good saving to have per test. oe-selftest
-currently takes up to around 8 hours and if we can knock 4 minutes off
-say 10 tests that is a good saving! :)
+when the file does not exist.
 
-I very much agree that we need to look at other ways of speeding up oe-
-selftest. I actually found another problem Ross sent a patch for
-earlier today which improve the test load time significantly and should
-take another ~10mins off the 8 hours and makes running this manually
-less annoying. We also have plans to use memory resident bitbake to
-help. There are lots of places in oe-selftest it runs "bitbake -e XXX"
-to get variables an the time taken to do this mounts up quickly. If
-bitbake is memory resident, we should be able to get answers much
-faster.
+[YOCTO#10917]
 
-There is also the option of parallelising oe-selftest too, currently
-the tests run in series but running in parallel would help too.
+Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
+---
+ bitbake/lib/bb/cookerdata.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-So plenty more work to do but this is a good start (and there are
-several other use cases for this codepath I'm happy to see speeded up
-too!).
-
-Cheers,
-
-Richard
-
+diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
+index d9eab56..bb1e2c3 100644
+--- a/bitbake/lib/bb/cookerdata.py
++++ b/bitbake/lib/bb/cookerdata.py
+@@ -289,6 +289,12 @@ class CookerDataBuilder(object):
+ 
+             multiconfig = (self.data.getVar("BBMULTICONFIG") or "").split()
+             for config in multiconfig:
++                if config != "":
++                    src = "./conf/multiconfig/" + config + ".conf"
++                    if not os.access(src, os.R_OK):
++                        parselog.critical("BBMULTICONFIG=\"%s\" but the configuration file '%s' does not exist! " % (self.data.getVar("BBMULTICONFIG"),src))
++                        sys.exit(1)
++
+                 mcdata = self.parseConfigurationFiles(self.prefiles, self.postfiles, config)
+                 bb.event.fire(bb.event.ConfigParsed(), mcdata)
+                 self.mcdata[config] = mcdata
+-- 
+2.7.4
 
 
