@@ -1,29 +1,59 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id DD64D65C5B
+Return-Path: <Javier.Viguera@digi.com>
+Received: from mail1.bemta12.messagelabs.com (mail1.bemta12.messagelabs.com
+	[216.82.251.13])
+	by mail.openembedded.org (Postfix) with ESMTP id F1B0671C1A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jan 2017 17:48:39 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v0CHmaQM014027; Thu, 12 Jan 2017 17:48:36 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id CDvAHmhBlwWG; Thu, 12 Jan 2017 17:48:36 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v0CHmW8k014012
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 12 Jan 2017 17:48:33 GMT
-Message-ID: <1484243312.4367.220.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Viguera, Javier" <Javier.Viguera@digi.com>,
+	Thu, 12 Jan 2017 18:16:21 +0000 (UTC)
+Received: from [216.82.249.131] by server-13.bemta-12.messagelabs.com id
+	55/F5-07319-5F7C7785; Thu, 12 Jan 2017 18:16:21 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMKsWRWlGSWpSXmKPExsXi5LtOQPfr8fI
+	Igx/T1S2uHw21+PFsIqsDk8f+uWvYPc5tXMEYwBTFmpmXlF+RwJqx/PlC9oLljBXfbrazNDAu
+	Yexi5OIQEljFKHF21W0WCGcJo8TM5/dZuxg5OdgEDCUmfPrEBmKLCLQzSixcVQViCws4SSzZ+
+	gCogQMo7iyx4nkgRImVxJJ3e8BaWQRUJT5eXs4IYvMK+Ep0zOpmAbGFBOokTj2bzARicwrYSF
+	xdMxGshlFAVuJL42pmEJtZQFzi1pP5YDUSAgISS/acZ4awRSVePv7HCmHLS0z5cJERwjaUWDX
+	tAAuELS3xpmcdG8hpzAKaEut36UOMVJSY0v2QHeIcQYmTM59AnaMiseHGb6YJjGKzkGyehdA9
+	C0n3LCTdCxhZVjFqFKcWlaUW6RqZ6CUVZaZnlOQmZuboGhoa6eWmFhcnpqfmJCYV6yXn525iB
+	EZVPQMD4w7GhdO9DjFKcjApifLKbCmPEOJLyk+pzEgszogvKs1JLT7EKMPBoSTB+/oYUE6wKD
+	U9tSItMwcY3zBpCQ4eJRHezSBp3uKCxNzizHSI1ClGY45DN06+ZOI49enCSyYhlrz8vFQpcV5
+	9YOIQEgApzSjNgxsESzuXGGWlhHkZGRgYhHgKUotyM0tQ5V8xinMwKgnzVoIs5MnMK4Hb9wro
+	FCagUy7agJ1SkoiQkmpgXHlb5nbt433WjB55u0K8NBNXaLTUcsX0T0jureqsema2eprw7aOrr
+	Yu2vp85uSD699IZDId379p8yiz1eO+2T3c7F2ZIMP+8vkcio8rUoqn3tsTOZ5/+HxJcrzFFxP
+	PDGzuDs/diq99UzV4l0HIn/eNqyScxoh9FNgSpV6ysDJP4nN+g+dxjohJLcUaioRZzUXEiAHP
+	howc2AwAA
+X-Env-Sender: Javier.Viguera@digi.com
+X-Msg-Ref: server-6.tower-28.messagelabs.com!1484244981!54198362!1
+X-Originating-IP: [66.77.174.16]
+X-StarScan-Received: 
+X-StarScan-Version: 9.1.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 23220 invoked from network); 12 Jan 2017 18:16:21 -0000
+Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
+	by server-6.tower-28.messagelabs.com with SMTP;
+	12 Jan 2017 18:16:21 -0000
+Received: from DOR-VMS-XCH01.digi.com (10.49.8.98) by MCL-VMS-XCH01.digi.com
+	(10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.319.2;
+	Thu, 12 Jan 2017 12:16:17 -0600
+Received: from DOR-SMS-XCH01.digi.com ([fe80::894b:3bdc:74ae:6efc]) by
+	DOR-VMS-XCH01.digi.com ([::1]) with mapi id 14.03.0319.002;
+	Thu, 12 Jan 2017 19:16:16 +0100
+From: "Viguera, Javier" <Javier.Viguera@digi.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
 	"bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Date: Thu, 12 Jan 2017 17:48:32 +0000
-In-Reply-To: <DA8287CC96892A4EB4FCF4FB3FBDA1AB01414A8E@dor-sms-xch01.digi.com>
+Thread-Topic: [bitbake-devel] Backport git submodules fetcher fixes
+Thread-Index: AdJs9b1OSD/106AjT+abjXpMveSR3///++8A///n8IA=
+Date: Thu, 12 Jan 2017 18:16:15 +0000
+Message-ID: <DA8287CC96892A4EB4FCF4FB3FBDA1AB01414ABE@dor-sms-xch01.digi.com>
 References: <DA8287CC96892A4EB4FCF4FB3FBDA1AB01414A8E@dor-sms-xch01.digi.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3 
-Mime-Version: 1.0
+	<1484243312.4367.220.camel@linuxfoundation.org>
+In-Reply-To: <1484243312.4367.220.camel@linuxfoundation.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.101.2.55]
+x-kse-antivirus-interceptor-info: scan successful
+x-kse-antivirus-info: Clean
+MIME-Version: 1.0
 Subject: Re: Backport git submodules fetcher fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -37,29 +67,12 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Jan 2017 17:48:40 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 12 Jan 2017 18:16:29 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Thu, 2017-01-12 at 17:04 +0000, Viguera, Javier wrote:
-> Hi all,
->  
-> I'm using bitbake 1.28 (under Yocto Jethro) and I have a problem with
-> a git repository that has nested submodules. There are a couple of
-> commits in version 1.30 that fix the problem. Those commits apply
-> cleanly with git cherry-pick.
->  
-> Could someone cherry-pick following commits into 1.28 branch?
->  
-> In this order:
->  
-> 1. 54a3864246f2be0b62761f639a1d5c9407aded4f
-> 2. dbafbe229360ffe5908b106a9c10e274712b9b17
->  
-> And eventually will these late fixes make it into Yocto  Jethro
-> branch (poky.git repository)?
-
-Done, thanks.
-
-Richard
+SXQncyB3b3JraW5nIGZpbmUgbm93Lg0KDQpUaGFua3MgUmljaGFyZC4NCg0KLS0NCkphdmllciBW
+aWd1ZXJhDQpTb2Z0d2FyZSBFbmdpbmVlcg0KRGlnaSBJbnRlcm5hdGlvbmFswq4gU3BhaW4gUy5B
+LlUuDQoNCg==
 
