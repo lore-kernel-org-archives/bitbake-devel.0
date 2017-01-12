@@ -1,32 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id C582E71C48
+	by mail.openembedded.org (Postfix) with ESMTP id DD64D65C5B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jan 2017 17:41:16 +0000 (UTC)
+	Thu, 12 Jan 2017 17:48:39 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v0CHfCoe013206; Thu, 12 Jan 2017 17:41:12 GMT
+	v0CHmaQM014027; Thu, 12 Jan 2017 17:48:36 GMT
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 7ajRSquFPomu; Thu, 12 Jan 2017 17:41:12 +0000 (GMT)
+	with LMTP id CDvAHmhBlwWG; Thu, 12 Jan 2017 17:48:36 +0000 (GMT)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v0CHfADc013189
+	v0CHmW8k014012
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 12 Jan 2017 17:41:11 GMT
-Message-ID: <1484242870.4367.219.camel@linuxfoundation.org>
+	Thu, 12 Jan 2017 17:48:33 GMT
+Message-ID: <1484243312.4367.220.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jianxun Zhang <jianxun.zhang@linux.intel.com>
-Date: Thu, 12 Jan 2017 17:41:10 +0000
-In-Reply-To: <DA1C4B84-D5CA-4BE4-97D3-CA19F1E89C2F@linux.intel.com>
-References: <1482352057-26139-1-git-send-email-jianxun.zhang@linux.intel.com>
-	<1482397158.9843.130.camel@linuxfoundation.org>
-	<48AEE85D-1072-4C81-922D-D9DF9A3E4D66@linux.intel.com>
-	<DA1C4B84-D5CA-4BE4-97D3-CA19F1E89C2F@linux.intel.com>
+To: "Viguera, Javier" <Javier.Viguera@digi.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Thu, 12 Jan 2017 17:48:32 +0000
+In-Reply-To: <DA8287CC96892A4EB4FCF4FB3FBDA1AB01414A8E@dor-sms-xch01.digi.com>
+References: <DA8287CC96892A4EB4FCF4FB3FBDA1AB01414A8E@dor-sms-xch01.digi.com>
 X-Mailer: Evolution 3.18.5.2-0ubuntu3 
 Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] use multiple processes to dump signatures.
+Subject: Re: Backport git submodules fetcher fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,34 +37,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Jan 2017 17:41:17 -0000
+X-List-Received-Date: Thu, 12 Jan 2017 17:48:40 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+On Thu, 2017-01-12 at 17:04 +0000, Viguera, Javier wrote:
+> Hi all,
+>  
+> I'm using bitbake 1.28 (under Yocto Jethro) and I have a problem with
+> a git repository that has nested submodules. There are a couple of
+> commits in version 1.30 that fix the problem. Those commits apply
+> cleanly with git cherry-pick.
+>  
+> Could someone cherry-pick following commits into 1.28 branch?
+>  
+> In this order:
+>  
+> 1. 54a3864246f2be0b62761f639a1d5c9407aded4f
+> 2. dbafbe229360ffe5908b106a9c10e274712b9b17
+>  
+> And eventually will these late fixes make it into Yocto  Jethro
+> branch (poky.git repository)?
 
-On Tue, 2017-01-10 at 14:54 -0800, Jianxun Zhang wrote:
-> Do you have further suggestion based on my explanation?
-> 
-> https://bugzilla.yoctoproject.org/show_bug.cgi?id=10352
-
-I needed to sit and look at that patch for a while to check a few
-things but I think you have it right. I've been doing some local
-testing and its now queued in -next, thanks!
-
-Just out of interest, before:
-
-oe-selftest -r sstatetests.SStateTests.test_sstate_allarch_samesigs_multilib
-
-2017-01-12 17:06:18 -   test_sstate_allarch_samesigs_multilib (oeqa.selftest.sstatetests.SStateTests) ... OK (325.084s)
-
-and after:
-
-2017-01-12 16:58:59 -   test_sstate_allarch_samesigs_multilib (oeqa.selftest.sstatetests.SStateTests) ... OK (93.926s)
-
-and this change should help multiple tests so its a nice improvement!
-
-Cheers,
+Done, thanks.
 
 Richard
 
