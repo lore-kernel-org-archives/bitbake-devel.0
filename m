@@ -1,23 +1,22 @@
-Return-Path: <brian.avery@intel.com>
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	by mail.openembedded.org (Postfix) with ESMTP id 95E9C71CBF
+Return-Path: <juro.bystricky@intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 50F97605C3
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 15 Jan 2017 03:16:45 +0000 (UTC)
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-	by orsmga105.jf.intel.com with ESMTP; 14 Jan 2017 19:16:46 -0800
+	Sun, 15 Jan 2017 19:17:28 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	15 Jan 2017 11:17:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.33,231,1477983600"; d="scan'208";a="48945209"
-Received: from bavery-ws-desk.jf.intel.com ([10.7.198.85])
-	by orsmga004.jf.intel.com with ESMTP; 14 Jan 2017 19:16:46 -0800
-From: brian avery <brian.avery@intel.com>
+X-IronPort-AV: E=Sophos;i="5.33,235,1477983600"; d="scan'208";a="922837278"
+Received: from juro-precision-t5610.jf.intel.com ([10.7.198.149])
+	by orsmga003.jf.intel.com with ESMTP; 15 Jan 2017 11:17:28 -0800
+From: Juro Bystricky <juro.bystricky@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 14 Jan 2017 19:18:32 -0800
-Message-Id: <db99305fc21415713cc1d127e97f7e5f654ea578.1484450104.git.brian.avery@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1484450104.git.brian.avery@intel.com>
-References: <cover.1484450104.git.brian.avery@intel.com>
-Cc: brian avery <brian.avery@intel.com>
-Subject: [PATCH 1/1] toaster: bin/toaster whitelist TOASTER_DIR
+Date: Sun, 15 Jan 2017 11:13:36 -0800
+Message-Id: <1484507616-24254-1-git-send-email-juro.bystricky@intel.com>
+X-Mailer: git-send-email 2.7.4
+Cc: jurobystricky@hotmail.com
+Subject: [PATCH] cooker.py: new multiconfig '*' syntax support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,34 +29,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 15 Jan 2017 03:16:46 -0000
+X-List-Received-Date: Sun, 15 Jan 2017 19:17:29 -0000
 
-Some of the tinfoil2 changes resulted in TOASTER_DIR being cleared by
-the memory resident bitbake server toaster starts up.  This prevented
-toaster from being able to connect to its sqlite database. Adding
-TOASTER_DIR to the BB_ENV_EXTRAWHITE list stops the cooker from clearing
-out the TOASTER_DIR variable.
+Currently you cannot build a target for all the configured multiconfigs without
+specifying a list. The list can be quite long, requiring to type several lines
+of text.
 
-[YOCTO #9252]
+This enhancement is to support globbing so that you can do this,
+e.g. instead of:
 
-Signed-off-by: brian avery <brian.avery@intel.com>
+    $ bitbake multiconfig:A:bash multiconfig:B:bash bash
+
+you can do:
+
+    $ bitbake multiconfig:*:bash
+
+There are real world use cases where it is desirable to use multiconfig with
+two different tasks. For example:  SDKs with multiple toolchains but also
+containing set of additional host tools, or multiconfig builds requiring one image for
+the  main CPU(s) and a different co-image for a companion CPU.
+For this reason, two variations of the new syntax are supported.
+
+For example, the following:
+
+    $ bitbake multiconfig:*:meta-toolhchain
+
+would expand to:
+
+    $ bitbake multiconfig:A:meta-toolchain multiconfig:B:meta-toolchain meta-toolchain
+
+However the following:
+
+    $ bitbake multiconfig:*:meta-toolhchain hosttools
+
+would expand to:
+
+    $ bitbake multiconfig:A:meta-toolchain multiconfig:B:meta-toolchain hosttools
+
+In other words, if the user specified the "default" task explicitly, it replaces the implicit
+"default" task.
+
+[YOCTO#10680]
+
+Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
 ---
- bin/toaster | 1 +
- 1 file changed, 1 insertion(+)
+ bitbake/lib/bb/cooker.py | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/bin/toaster b/bin/toaster
-index de38cec..daaf8ea 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -158,6 +158,7 @@ unset OE_ROOT
- # 4) pid's we need to clean up on exit/shutdown
- # note: for future. in order to make this an arbitrary directory, we need to
- # make sure that the toaster.sqlite file doesn't default to `pwd` like it currently does.
-+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE TOASTER_DIR"
- export TOASTER_DIR=`pwd`
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index f6bad36..094a871 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -666,7 +666,37 @@ class BBCooker:
+         if not task.startswith("do_"):
+             task = "do_%s" % task
  
- WEBSERVER=1
+-        fulltargetlist = self.checkPackages(pkgs_to_build, task)
++        targetlist = self.checkPackages(pkgs_to_build, task)
++        fulltargetlist = []
++        defaulttask_implicit = ''
++        defaulttask_explicit = False
++        wildcard = False
++
++        # Wild card expansion:
++        # Replace string such as "multiconfig:*:bash"
++        # into "multiconfig:A:bash multiconfig:B:bash bash"
++        for k in targetlist:
++            if k.startswith("multiconfig:"):
++                if wildcard:
++                    bb.fatal('multiconfig conflict')
++                if k.split(":")[1] == "*":
++                    wildcard = True
++                    for mc in self.multiconfigs:
++                        if mc:
++                            fulltargetlist.append(k.replace('*', mc))
++                        # implicit default task
++                        else:
++                            defaulttask_implicit = k.split(":")[2]
++                else:
++                    fulltargetlist.append(k)
++            else:
++                defaulttask_explicit = True
++                fulltargetlist.append(k)
++
++        if not defaulttask_explicit and defaulttask_implicit != '':
++            fulltargetlist.append(defaulttask_implicit)
++
++        bb.debug(1,"Target list: %s" % (str(fulltargetlist)))
+         taskdata = {}
+         localdata = {}
+ 
 -- 
-1.9.1
+2.7.4
 
 
