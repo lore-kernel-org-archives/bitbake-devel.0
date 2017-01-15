@@ -1,21 +1,23 @@
 Return-Path: <brian.avery@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 2E3A260721
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	by mail.openembedded.org (Postfix) with ESMTP id 95E9C71CBF
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 15 Jan 2017 03:16:44 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 14 Jan 2017 19:16:45 -0800
+	Sun, 15 Jan 2017 03:16:45 +0000 (UTC)
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+	by orsmga105.jf.intel.com with ESMTP; 14 Jan 2017 19:16:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.33,231,1477983600"; d="scan'208";a="1083120175"
+X-IronPort-AV: E=Sophos;i="5.33,231,1477983600"; d="scan'208";a="48945209"
 Received: from bavery-ws-desk.jf.intel.com ([10.7.198.85])
-	by orsmga001.jf.intel.com with ESMTP; 14 Jan 2017 19:16:44 -0800
+	by orsmga004.jf.intel.com with ESMTP; 14 Jan 2017 19:16:46 -0800
 From: brian avery <brian.avery@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 14 Jan 2017 19:18:30 -0800
-Message-Id: <cover.1484450104.git.brian.avery@intel.com>
+Date: Sat, 14 Jan 2017 19:18:32 -0800
+Message-Id: <db99305fc21415713cc1d127e97f7e5f654ea578.1484450104.git.brian.avery@intel.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1484450104.git.brian.avery@intel.com>
+References: <cover.1484450104.git.brian.avery@intel.com>
 Cc: brian avery <brian.avery@intel.com>
-Subject: [PATCH 0/1] toaster: Fixes 9252 broken image builds
+Subject: [PATCH 1/1] toaster: bin/toaster whitelist TOASTER_DIR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,28 +32,32 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Sun, 15 Jan 2017 03:16:46 -0000
 
-This fixes the "cannot connect to database" errors in Yocto 9252 that
-were preventing toaster from building anything. The tinfoil2 changes
-resulted in TOASTER_DIR bring cleared by the server. I added
-TOASTER_DIR to the BB_ENV_EXTRAWHITE list so it is preserved.
+Some of the tinfoil2 changes resulted in TOASTER_DIR being cleared by
+the memory resident bitbake server toaster starts up.  This prevented
+toaster from being able to connect to its sqlite database. Adding
+TOASTER_DIR to the BB_ENV_EXTRAWHITE list stops the cooker from clearing
+out the TOASTER_DIR variable.
 
--brian
+[YOCTO #9252]
 
-The following changes since commit 81021bc0aa0f64e67535f6a9551e921a64fe4395:
-
-  yocto-project-qs, ref-manual: Added note for "resources temporarily unavailable" error (2017-01-11 17:23:18 +0000)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib toaster-next
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/toaster-9252
-
-brian avery (1):
-  toaster: bin/toaster whitelist TOASTER_DIR
-
+Signed-off-by: brian avery <brian.avery@intel.com>
+---
  bin/toaster | 1 +
  1 file changed, 1 insertion(+)
 
---
+diff --git a/bin/toaster b/bin/toaster
+index de38cec..daaf8ea 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -158,6 +158,7 @@ unset OE_ROOT
+ # 4) pid's we need to clean up on exit/shutdown
+ # note: for future. in order to make this an arbitrary directory, we need to
+ # make sure that the toaster.sqlite file doesn't default to `pwd` like it currently does.
++export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE TOASTER_DIR"
+ export TOASTER_DIR=`pwd`
+ 
+ WEBSERVER=1
+-- 
 1.9.1
+
 
