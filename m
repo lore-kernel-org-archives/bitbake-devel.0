@@ -1,33 +1,28 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8209E71C22
+	by mail.openembedded.org (Postfix) with ESMTP id 6166271C73
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Jan 2017 16:05:23 +0000 (UTC)
+	Thu, 19 Jan 2017 16:13:30 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v0JG5Mq1001656; Thu, 19 Jan 2017 16:05:22 GMT
+	v0JGDC2Z002520; Thu, 19 Jan 2017 16:13:29 GMT
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 5eZNYLozh9c3; Thu, 19 Jan 2017 16:05:22 +0000 (GMT)
+	with LMTP id 3ChCq0aBpnTA; Thu, 19 Jan 2017 16:13:29 +0000 (GMT)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v0JG5IWQ001652
+	v0JGDQx1002777
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 19 Jan 2017 16:05:19 GMT
-Message-ID: <1484841918.4367.426.camel@linuxfoundation.org>
+	Thu, 19 Jan 2017 16:13:27 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1cUFL4-0000me-BM; Thu, 19 Jan 2017 16:13:26 +0000
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Mark Hatle <mark.hatle@windriver.com>, Robert Yang
-	<liezhi.yang@windriver.com>, bitbake-devel
-	<bitbake-devel@lists.openembedded.org>
-Date: Thu, 19 Jan 2017 16:05:18 +0000
-In-Reply-To: <8d3f903a-0ff2-8c27-e2bc-258ad2c7fd7d@windriver.com>
-References: <f8610648-ea83-06ab-01fa-f8260597973c@windriver.com>
-	<a8d463a0-f40a-afaf-c326-1f3bdffd49b7@windriver.com>
-	<1484821262.4367.424.camel@linuxfoundation.org>
-	<8d3f903a-0ff2-8c27-e2bc-258ad2c7fd7d@windriver.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3 
-Mime-Version: 1.0
-Subject: Re: Filename too long
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 19 Jan 2017 16:13:20 +0000
+Message-Id: <1484842404-2960-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 1/5] cooker: Only add universe targets where the task exists
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,36 +35,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Jan 2017 16:05:25 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 19 Jan 2017 16:13:30 -0000
 
-On Thu, 2017-01-19 at 09:07 -0600, Mark Hatle wrote:
-> On 1/19/17 4:21 AM, Richard Purdie wrote:
-> > 
-> > On Thu, 2017-01-19 at 14:13 +0800, Robert Yang wrote:
-> > > 
-> > Looking at the code in your patch, this second piece clearly isn't
-> > true
-> > due to this code:
-> > 
-> >           if gitsrcname.startswith('.'):
-> >               gitsrcname = gitsrcname[1:]
-> > 
-> > I also don't believe this patch is correct since we're meant to be
-> > creating a filename, not a path and if you leave the '/' characters
-> > in,
-> > it isn't a filename. I think we likely just need to truncate the
-> > path
-> > to the last say 225 chars if its over length. The unique piece
-> > should
-> > be towards the right hand end of the name.
-> Ok.. I can certainly implement that.  Should the truncation be in the
-> lockfile code or in the code that generatd the name itself?
+Currently "bitbake universe -c fetch" will error if every task in the system
+doesn't have a fetch task. This seems unreasonable so filter the list based
+upon whether the task exists. This implementation does assume if a task exits
+for a given provider name, it can run, even if the preferred provider that
+ends up getting built might be the namespace without the task. This is unlikely
+to be a real world issue at this point.
 
-Gut feeling says I think the generated name is safest.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Cheers,
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 5608845..a7b9745 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1704,6 +1704,15 @@ class BBCooker:
+             pkgs_to_build.remove('universe')
+             for mc in self.multiconfigs:
+                 for t in self.recipecaches[mc].universe_target:
++                    if task:
++                        foundtask = False
++                        for provider_fn in self.recipecaches[mc].providers[t]:
++                            if task in self.recipecaches[mc].task_deps[provider_fn]['tasks']:
++                                foundtask = True
++                                break
++                        if not foundtask:
++                            bb.debug(1, "Skipping %s for universe tasks as task %s doesn't exist" % (t, task))
++                            continue
+                     if mc:
+                         t = "multiconfig:" + mc + ":" + t
+                     pkgs_to_build.append(t)
+-- 
+2.7.4
 
-Richard
 
