@@ -1,23 +1,21 @@
-Return-Path: <juro.bystricky@intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 807EF71997
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	by mail.openembedded.org (Postfix) with ESMTP id 411EE71999
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  6 Feb 2017 16:53:14 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga104.fm.intel.com with ESMTP; 06 Feb 2017 08:53:14 -0800
+	Mon,  6 Feb 2017 20:08:54 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by orsmga105.jf.intel.com with ESMTP; 06 Feb 2017 12:08:55 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.33,342,1477983600"; d="scan'208";a="930737371"
-Received: from juro-precision-t5610.jf.intel.com ([10.7.198.149])
-	by orsmga003.jf.intel.com with ESMTP; 06 Feb 2017 08:53:14 -0800
-From: Juro Bystricky <juro.bystricky@intel.com>
+X-IronPort-AV: E=Sophos;i="5.33,342,1477983600"; d="scan'208";a="222023471"
+Received: from mmurr6x-mobl1.amr.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.252.199.82])
+	by fmsmga004.fm.intel.com with ESMTP; 06 Feb 2017 12:08:54 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  6 Feb 2017 08:49:20 -0800
-Message-Id: <1486399760-14115-2-git-send-email-juro.bystricky@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1486399760-14115-1-git-send-email-juro.bystricky@intel.com>
-References: <1486399760-14115-1-git-send-email-juro.bystricky@intel.com>
-Cc: jurobystricky@hotmail.com
-Subject: [PATCH 1/1] cooker.py: run sanity checks for multiconfig
+Date: Tue,  7 Feb 2017 09:08:48 +1300
+Message-Id: <cover.1486411669.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.3
+Subject: [PATCH 0/3] OE eSDK related fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,33 +28,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 06 Feb 2017 16:53:15 -0000
+X-List-Received-Date: Mon, 06 Feb 2017 20:08:55 -0000
 
-Also run sanity check for all additional multiconfig configurations
-as listed in BBMULTICONFIG, not just the "default" configuration.
+One fix directly relating to the extensible SDK in OE and two for the
+npm fetcher.
 
-[YOCTO#10810]
 
-Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
----
- bitbake/lib/bb/cooker.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The following changes since commit 2a309cd20cddf3d2258bd00ad06b26452e6cc043:
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 80007c5..f8def47 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1641,7 +1641,8 @@ class BBCooker:
-         if self.state != state.parsing and not self.parsecache_valid:
-             self.parseConfiguration ()
-             if CookerFeatures.SEND_SANITYEVENTS in self.featureset:
--                bb.event.fire(bb.event.SanityCheck(False), self.data)
-+                for mc in self.multiconfigs:
-+                    bb.event.fire(bb.event.SanityCheck(False), self.databuilder.mcdata[mc])
- 
-             for mc in self.multiconfigs:
-                 ignore = self.databuilder.mcdata[mc].getVar("ASSUME_PROVIDED") or ""
+  bitbake: Bump version to 1.33.0 (develoment version) (2017-01-27 10:40:53 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/bb-esdk-fixes
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-esdk-fixes
+
+Paul Eggleton (3):
+  lib/bb/build: add tasksbetween() function
+  fetch2/npm: handle items only in optionalDependencies
+  fetch2/npm: fix handling of os field
+
+ lib/bb/build.py      | 27 +++++++++++++++++++++++++++
+ lib/bb/fetch2/npm.py |  8 +++++++-
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+
 -- 
-2.7.4
+2.9.3
 
 
