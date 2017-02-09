@@ -1,28 +1,46 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 9704660589
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-pf0-f196.google.com (mail-pf0-f196.google.com
+	[209.85.192.196])
+	by mail.openembedded.org (Postfix) with ESMTP id 6254571DDA
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Feb 2017 04:09:37 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 08 Feb 2017 20:09:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.35,349,1484035200"; d="scan'208";a="1124074397"
-Received: from ystew-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.191.171])
-	by fmsmga002.fm.intel.com with ESMTP; 08 Feb 2017 20:09:27 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Trevor Woerner <twoerner@gmail.com>
-Date: Thu, 09 Feb 2017 17:09:20 +1300
-Message-ID: <2583370.YQW5y1mmkv@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/5.3.3 (Linux/4.9.7-201.fc25.x86_64; KDE/5.29.0; x86_64; ; )
-In-Reply-To: <20170209011411.GA26866@linux-uys3>
-References: <578DC9D2.1060607@mlbassoc.com>
-	<2475257.7Bltr6I3so@peggleto-mobl.ger.corp.intel.com>
-	<20170209011411.GA26866@linux-uys3>
-MIME-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: New progress meters
+	Thu,  9 Feb 2017 06:42:02 +0000 (UTC)
+Received: by mail-pf0-f196.google.com with SMTP id 19so13142075pfo.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 08 Feb 2017 22:42:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=eNXqsX76Prjiiwt2NcxMetg713qeK7MTS/M1izDu1eM=;
+	b=SBQVAYsaJzyOKB9+3sdDHfGkirrWbhLMYGlUoc2OkDfLpSP0W4kQK9dQEnu8NkUI8h
+	7c1Hbm7jqtYm35o5MQtlZ3yxSVt1VkwM5Cn7MFSYh7kxQ7un6GJ+QdiEYTUmaYOy5I9M
+	rm3FBMy3yGwVZJsY+qk0u2PnYKXvZx31wXgDNVaLvxCjtYzG493kl8hUgMJh+CjC5DaB
+	fstVdZkqftHfKvTPL5WiEn7h9SBD88EjimOKJnckPM3T3GVwYrFxgBOw/8juutCUxEPM
+	nWSzX+jUR9eFdOeoO6DukamKJgmIyPNzOg851nht9A1cDbKjyTA8h7Gl8oa3xsdUMsja
+	91JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=eNXqsX76Prjiiwt2NcxMetg713qeK7MTS/M1izDu1eM=;
+	b=StHpWRP0t5MBsT+dJdMrSiJKW273xhGmz4XNcWKp7MgqSwXtra0SnFkF3HJsCaE17S
+	pJCFnTU6arYQfdA9ZSrOOfx72E1EJlC/OvcIZ5C5TM8Tk4U5MTr03WHdG3Xkp7gl+JLz
+	QBqQDSY1TufNDQQAZ97C5pS9azAZgsdbPBA7IyI3Ct5TZ1KlUvnV2tuKgpFk40dzAQLX
+	qj71ySB+8ImYLeos2NiOzLHp0X/PRGZaKu6ZSlRkOF02ktvQ05U5DR2xM6qaLc2XFQ25
+	LuYRGb9Z5UD3eICcP7hN9NgiTxRBTWKGjNZLHxyYZvjcBat3jNTeLzok/FJQOg5PcBRa
+	XV2w==
+X-Gm-Message-State: AMke39nQPIJeNoUCeMuSc8aUomn6qeUkZ3gaehP/TH4xJbqh2tn21pg4qhN3FR0T9YJKkQ==
+X-Received: by 10.84.160.197 with SMTP id v5mr2136497plg.161.1486622523382;
+	Wed, 08 Feb 2017 22:42:03 -0800 (PST)
+Received: from localhost.localdomain (c-76-102-32-192.hsd1.ca.comcast.net.
+	[76.102.32.192])
+	by smtp.gmail.com with ESMTPSA id t6sm25524218pgt.8.2017.02.08.22.42.01
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 08 Feb 2017 22:42:01 -0800 (PST)
+From: Khem Raj <raj.khem@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  8 Feb 2017 22:41:50 -0800
+Message-Id: <20170209064150.11946-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.11.1
+Cc: Balaji Punnuru <balaji_punnuru@cable.comcast.com>
+Subject: [PATCH] fetch2: Add NFS Stale file exception handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,97 +53,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Feb 2017 04:09:38 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Thu, 09 Feb 2017 06:42:04 -0000
 
-On Wednesday, 8 February 2017 8:14:11 PM NZDT Trevor Woerner wrote:
-> On Wed 2016-07-20 @ 08:29:52 AM, Paul Eggleton wrote:
->        ^^^^^^^^^^
-> ... talk about showing up late to the party! ;-)
+- In some cases the file descriptor
+  is held by nfs client and none of os.path.* is catching
+  that, it could mean that error is not doled out because
+  client has cached the stat info. In this case we are
+  out of luck. Needed to catch IOError, which would be
+  causing the Stale error.
 
-It's never too late :)
+- In download method, update_stamp is invoked
+  md5sum validation which is found to be throwing
+  Stale errors.
+- Added error handling to fix the stale errors.
 
-> > We can certainly do something like that - the progress handler sees all
-> > output even if it doesn't contain anything interesting to it (e.g. %
-> > complete). The trouble comes when the process prints out nothing - such
-> > as when linking a very large binary. I'm not sure how you would
-> > introspect into that part of the process.
-> 
-> Would it be possible to show progress such that once a recipe started to be
-> processed, it would remain in view until it was done (preferably in the same
-> relative location)?
-> 
-> Let's say you have a recipe abc.bb whose tasks are: fetch, unpack, patch,
-> configure, compile, deploy, package. I think it might be nice if, once
-> bitbake started processing abc, we saw something like:
-> 
-> 
-> 	before-4.5.6 ...
-> 	abc-1.2.3 do_fetch ===>
-> 	after-0.9.8 ...
-> 
-> Then when the fetch was done we'd see
-> 
-> 	before-4.5.6 ...
-> 	abc-1.2.3 do_unpack ===|==>
-> 	after-0.9.8 ...
-> 
-> then
-> 
-> 	before-4.5.6 ...
-> 	abc-1.2.3 do_patch ===|===|=>
-> 	after-0.9.8 ...
-> 
-> 
-> Or, maybe:
-> 
-> 	before-4.5.6 ...
-> 	abc-1.2.3  =fetch=
-> 	after-0.9.8 ...
-> 
-> 	before-4.5.6 ...
-> 	abc-1.2.3  =fetch=|=unpack=
-> 	after-0.9.8 ...
-> 
-> 	before-4.5.6 ...
-> 	abc-1.2.3  =fetch=|=unpack=|=patch=
-> 	after-0.9.8 ...
-> 
-> Maybe the different tasks could have their own colours? Perhaps the equals
-> signs could be used to show progress: as a task progresses more equals signs
-> would be printed, then the pipe drawn and the new task drawing started when
-> the next task begins? At the end of processing abc we might see something
-> like:
-> 
-> 	abc-1.2.3
-> =fetch===========|=unpack=|=patch=|=configure====|=compile=================
-> ==========================|=deploy===|=package==
-> 
-> which tells us that fetching and compiling were this recipe's largest jobs.
-> 
-> I guess the largest problem would be handling the vertical real-estate. With
-> hundreds of packages, the output would scroll off rather quickly. Maybe
-> once a recipe was complete it could drop off?
+Signed-off-by: Balaji Punnuru <balaji_punnuru@cable.comcast.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ lib/bb/fetch2/__init__.py | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-So this is an interesting idea. The challenge though as I mentioned in my 
-previous email is about knowing how long the task is going to take - right now 
-we only have this for a few tasks. In this case you would use that to scale 
-the bar for each task with respect to the screen width - if you don't have 
-this scaling then either horizontal real-estate is going to be an additional 
-problem, or there won't be any ability to compare the task times (at least 
-within the same recipe - this would prevent comparing between recipes).
-
-Whilst we could get an approximation of total task time if we know how long 
-the log file is expected to be, I still haven't figured out a good way of 
-having even that information available before the build, though I have to 
-admit I haven't spent much time thinking about it since the changes went in.
-
-Cheers,
-Paul
-
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 525f47e4..69944a8b 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -35,6 +35,7 @@ import operator
+ import collections
+ import subprocess
+ import pickle
++import errno
+ import bb.persist_data, bb.utils
+ import bb.checksum
+ from bb import data
+@@ -998,6 +999,12 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+     except bb.fetch2.NetworkAccess:
+         raise
+ 
++    except IOError as e:
++        if e.errno in [os.errno.ESTALE]:
++            logger.warn("Stale Error Observed %s." % ud.url)
++            return False
++        raise
++
+     except bb.fetch2.BBFetchException as e:
+         if isinstance(e, ChecksumError):
+             logger.warning("Mirror checksum failure for url %s (original url: %s)\nCleaning and trying again." % (ud.url, origud.url))
+@@ -1646,6 +1653,11 @@ class Fetch(object):
+ 
+                 update_stamp(ud, self.d)
+ 
++            except IOError as e:
++                if e.errno in [os.errno.ESTALE]:
++                    logger.error("Stale Error Observed %s." % u)
++                    raise ChecksumError("Stale Error Detected")
++
+             except BBFetchException as e:
+                 if isinstance(e, ChecksumError):
+                     logger.error("Checksum failure fetching %s" % u)
 -- 
+2.11.1
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
