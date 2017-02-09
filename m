@@ -1,23 +1,53 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	by mail.openembedded.org (Postfix) with ESMTP id 2A62371A0C
+Return-Path: <twoerner@gmail.com>
+Received: from mail-io0-f195.google.com (mail-io0-f195.google.com
+	[209.85.223.195])
+	by mail.openembedded.org (Postfix) with ESMTP id C5E8565CC7
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  6 Feb 2017 20:09:08 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by orsmga105.jf.intel.com with ESMTP; 06 Feb 2017 12:08:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.33,342,1477983600"; d="scan'208";a="222023483"
-Received: from mmurr6x-mobl1.amr.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.252.199.82])
-	by fmsmga004.fm.intel.com with ESMTP; 06 Feb 2017 12:08:57 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue,  7 Feb 2017 09:08:51 +1300
-Message-Id: <c87951820de6cf7b1066e222e59cfaee551824ee.1486411669.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <cover.1486411669.git.paul.eggleton@linux.intel.com>
-References: <cover.1486411669.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 3/3] fetch2/npm: fix handling of os field
+	Thu,  9 Feb 2017 01:14:14 +0000 (UTC)
+Received: by mail-io0-f195.google.com with SMTP id 101so756949iom.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 08 Feb 2017 17:14:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-disposition:in-reply-to:user-agent;
+	bh=sMRqjPwfHc4G5GfeqOfhrWdQpPVXEiEqOZckScA1c0A=;
+	b=Ze+6smxcBFs1HthtSjr6Lnla4sFyft+8yN22H0MmIP9gGgyhL9FHs0gveEhVFmfjrJ
+	xmMHXTSWnnwiaHWVHarRfG+dL/o1RQ5ncMl3tcciyoxCMW6q90do0JUbo+r6QQXthEB4
+	elAj/9z2ecaeqDQGL9fAA960uOT0nYKpcNh0HWl03HhsLcDrtuV3YvkTkkqZ4RMoZH6B
+	YL1mvrlhoYcIkcGSzvVYh41i+5E1T98wg5tiKJFqyjSJrNTmfKpmYdcl3RA8QjdvUacD
+	18zlGnwSeZ9Q1XauX8dar5oIjHmjp91iCRrjS7OfAeS/+q3qbIE1KVKb1RV2mO8vbIOz
+	KY0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+	:mime-version:content-disposition:in-reply-to:user-agent;
+	bh=sMRqjPwfHc4G5GfeqOfhrWdQpPVXEiEqOZckScA1c0A=;
+	b=cJHhdZl52mJaRpQhkmE5SsxnGfo0Lf5bhaLPwMYblWgHtprjbuRFIcOA1pQ0pu/zzz
+	zM0GA97xK/K+psjuJLVdQM3bSntUmZ4SduiCb/yC+W0a42C2whwHFzI+sPAqWPPQUTGs
+	svCnESiaF06E96ypENZfR13BCzJb5rNx/4xaFefXGvfJWch35DdpcIyvBJ/NIV5d3YW8
+	sTXS3QmcKZ3RAUAfrKCsmL8ONP/Mz4C1NI1Bq/MBMHDFWLGU9vVIJyDuirVWvVyGhviM
+	aJz2qzKSMomKnc7XWExR5oOE67554S+LykzhGnIrtrwjloH8CPZIdEwZ0ohMgHKaaP2u
+	IyPA==
+X-Gm-Message-State: AMke39mofZCjKalnKaS+tx7isI63EyumqbDstoFP3MLie7cWKKYBLGPqA1kqUrtWSUa5Jg==
+X-Received: by 10.107.172.7 with SMTP id v7mr1143555ioe.49.1486602854805;
+	Wed, 08 Feb 2017 17:14:14 -0800 (PST)
+Received: from linux-uys3 (dsl-67-55-28-109.acanac.net. [67.55.28.109])
+	by smtp.gmail.com with ESMTPSA id d11sm2048445itg.1.2017.02.08.17.14.12
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 08 Feb 2017 17:14:13 -0800 (PST)
+Date: Wed, 8 Feb 2017 20:14:11 -0500
+From: Trevor Woerner <twoerner@gmail.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Message-ID: <20170209011411.GA26866@linux-uys3>
+References: <578DC9D2.1060607@mlbassoc.com>
+	<CAJTo0LaXhGF3eFt=tfRBHfU56kf_nheBrV8Sshsxrpq+fGn7cA@mail.gmail.com>
+	<f4f9f0d1-9827-b239-5458-328a947af066@windriver.com>
+	<2475257.7Bltr6I3so@peggleto-mobl.ger.corp.intel.com>
+MIME-Version: 1.0
+In-Reply-To: <2475257.7Bltr6I3so@peggleto-mobl.ger.corp.intel.com>
+User-Agent: Mutt/1.6.0 (2016-04-01)
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: New progress meters
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,42 +60,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 06 Feb 2017 20:09:08 -0000
+X-List-Received-Date: Thu, 09 Feb 2017 01:14:15 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-When I originally added this check I didn't quite understand how the
-values in this field should be expressed - it seems from reading the
-documentation if there is an entry starting with '!' then the list is
-a blacklist and we shouldn't expect "linux" to be in the list, or we'll
-end up skipping important dependencies.
+On Wed 2016-07-20 @ 08:29:52 AM, Paul Eggleton wrote:
+       ^^^^^^^^^^
+... talk about showing up late to the party! ;-)
 
-This fixes fetching the "statsd" npm package.
+> We can certainly do something like that - the progress handler sees all output 
+> even if it doesn't contain anything interesting to it (e.g. % complete). The 
+> trouble comes when the process prints out nothing - such as when linking a 
+> very large binary. I'm not sure how you would introspect into that part of the 
+> process.
 
-Fixes [YOCTO #10760].
+Would it be possible to show progress such that once a recipe started to be
+processed, it would remain in view until it was done (preferably in the same
+relative location)?
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/fetch2/npm.py | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Let's say you have a recipe abc.bb whose tasks are: fetch, unpack, patch,
+configure, compile, deploy, package. I think it might be nice if, once bitbake
+started processing abc, we saw something like:
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 8c32f81..15b281f 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -182,7 +182,12 @@ class Npm(FetchMethod):
-             if pkg_os:
-                 if not isinstance(pkg_os, list):
-                     pkg_os = [pkg_os]
--                if 'linux' not in pkg_os or '!linux' in pkg_os:
-+                blacklist = False
-+                for item in pkg_os:
-+                    if item.startswith('!'):
-+                        blacklist = True
-+                        break
-+                if (not blacklist and 'linux' not in pkg_os) or '!linux' in pkg_os:
-                     logger.debug(2, "Skipping %s since it's incompatible with Linux" % pkg)
-                     return
-         #logger.debug(2, "Output URL is %s - %s - %s" % (ud.basepath, ud.basename, ud.localfile))
--- 
-2.9.3
 
+	before-4.5.6 ...
+	abc-1.2.3 do_fetch ===>
+	after-0.9.8 ...
+
+Then when the fetch was done we'd see
+
+	before-4.5.6 ...
+	abc-1.2.3 do_unpack ===|==>
+	after-0.9.8 ...
+
+then
+
+	before-4.5.6 ...
+	abc-1.2.3 do_patch ===|===|=>
+	after-0.9.8 ...
+
+
+Or, maybe:
+
+	before-4.5.6 ...
+	abc-1.2.3  =fetch=
+	after-0.9.8 ...
+
+	before-4.5.6 ...
+	abc-1.2.3  =fetch=|=unpack=
+	after-0.9.8 ...
+
+	before-4.5.6 ...
+	abc-1.2.3  =fetch=|=unpack=|=patch=
+	after-0.9.8 ...
+
+Maybe the different tasks could have their own colours? Perhaps the equals
+signs could be used to show progress: as a task progresses more equals signs
+would be printed, then the pipe drawn and the new task drawing started when
+the next task begins? At the end of processing abc we might see something
+like:
+
+	abc-1.2.3 =fetch===========|=unpack=|=patch=|=configure====|=compile===========================================|=deploy===|=package==
+
+which tells us that fetching and compiling were this recipe's largest jobs.
+
+I guess the largest problem would be handling the vertical real-estate. With
+hundreds of packages, the output would scroll off rather quickly. Maybe once a
+recipe was complete it could drop off?
 
