@@ -1,46 +1,28 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-pf0-f196.google.com (mail-pf0-f196.google.com
-	[209.85.192.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 6254571DDA
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id C732C771A3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Feb 2017 06:42:02 +0000 (UTC)
-Received: by mail-pf0-f196.google.com with SMTP id 19so13142075pfo.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 08 Feb 2017 22:42:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=eNXqsX76Prjiiwt2NcxMetg713qeK7MTS/M1izDu1eM=;
-	b=SBQVAYsaJzyOKB9+3sdDHfGkirrWbhLMYGlUoc2OkDfLpSP0W4kQK9dQEnu8NkUI8h
-	7c1Hbm7jqtYm35o5MQtlZ3yxSVt1VkwM5Cn7MFSYh7kxQ7un6GJ+QdiEYTUmaYOy5I9M
-	rm3FBMy3yGwVZJsY+qk0u2PnYKXvZx31wXgDNVaLvxCjtYzG493kl8hUgMJh+CjC5DaB
-	fstVdZkqftHfKvTPL5WiEn7h9SBD88EjimOKJnckPM3T3GVwYrFxgBOw/8juutCUxEPM
-	nWSzX+jUR9eFdOeoO6DukamKJgmIyPNzOg851nht9A1cDbKjyTA8h7Gl8oa3xsdUMsja
-	91JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=eNXqsX76Prjiiwt2NcxMetg713qeK7MTS/M1izDu1eM=;
-	b=StHpWRP0t5MBsT+dJdMrSiJKW273xhGmz4XNcWKp7MgqSwXtra0SnFkF3HJsCaE17S
-	pJCFnTU6arYQfdA9ZSrOOfx72E1EJlC/OvcIZ5C5TM8Tk4U5MTr03WHdG3Xkp7gl+JLz
-	QBqQDSY1TufNDQQAZ97C5pS9azAZgsdbPBA7IyI3Ct5TZ1KlUvnV2tuKgpFk40dzAQLX
-	qj71ySB+8ImYLeos2NiOzLHp0X/PRGZaKu6ZSlRkOF02ktvQ05U5DR2xM6qaLc2XFQ25
-	LuYRGb9Z5UD3eICcP7hN9NgiTxRBTWKGjNZLHxyYZvjcBat3jNTeLzok/FJQOg5PcBRa
-	XV2w==
-X-Gm-Message-State: AMke39nQPIJeNoUCeMuSc8aUomn6qeUkZ3gaehP/TH4xJbqh2tn21pg4qhN3FR0T9YJKkQ==
-X-Received: by 10.84.160.197 with SMTP id v5mr2136497plg.161.1486622523382;
-	Wed, 08 Feb 2017 22:42:03 -0800 (PST)
-Received: from localhost.localdomain (c-76-102-32-192.hsd1.ca.comcast.net.
-	[76.102.32.192])
-	by smtp.gmail.com with ESMTPSA id t6sm25524218pgt.8.2017.02.08.22.42.01
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 08 Feb 2017 22:42:01 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
+	Thu,  9 Feb 2017 23:06:50 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v19N6nTi001522; Thu, 9 Feb 2017 23:06:49 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id HnGWsRM3ianV; Thu,  9 Feb 2017 23:06:49 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v19N6mZ9001474
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 9 Feb 2017 23:06:49 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1cbxnc-0002Ge-9X; Thu, 09 Feb 2017 23:06:48 +0000
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  8 Feb 2017 22:41:50 -0800
-Message-Id: <20170209064150.11946-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.11.1
-Cc: Balaji Punnuru <balaji_punnuru@cable.comcast.com>
-Subject: [PATCH] fetch2: Add NFS Stale file exception handling
+Date: Thu,  9 Feb 2017 23:06:46 +0000
+Message-Id: <1486681606-8677-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH] lib: Drop now unneeded update_data calls
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,64 +35,218 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Feb 2017 06:42:04 -0000
+X-List-Received-Date: Thu, 09 Feb 2017 23:06:51 -0000
 
-- In some cases the file descriptor
-  is held by nfs client and none of os.path.* is catching
-  that, it could mean that error is not doled out because
-  client has cached the stat info. In this case we are
-  out of luck. Needed to catch IOError, which would be
-  causing the Stale error.
+Now that the datastore works dynamically we don't need the update_data calls
+so we can just remove them. They're not actually done anything at all for
+a while.
 
-- In download method, update_stamp is invoked
-  md5sum validation which is found to be throwing
-  Stale errors.
-- Added error handling to fix the stale errors.
-
-Signed-off-by: Balaji Punnuru <balaji_punnuru@cable.comcast.com>
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/__init__.py | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ lib/bb/cooker.py     |  3 ---
+ lib/bb/data_smart.py |  1 -
+ lib/bb/parse/ast.py  |  3 ---
+ lib/bb/providers.py  |  1 -
+ lib/bb/tests/data.py | 18 +-----------------
+ 5 files changed, 1 insertion(+), 25 deletions(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 525f47e4..69944a8b 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -35,6 +35,7 @@ import operator
- import collections
- import subprocess
- import pickle
-+import errno
- import bb.persist_data, bb.utils
- import bb.checksum
- from bb import data
-@@ -998,6 +999,12 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-     except bb.fetch2.NetworkAccess:
-         raise
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index e654a60..3968e19 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -642,7 +642,6 @@ class BBCooker:
+             logger.plain(env.getvalue())
  
-+    except IOError as e:
-+        if e.errno in [os.errno.ESTALE]:
-+            logger.warn("Stale Error Observed %s." % ud.url)
-+            return False
-+        raise
+         # emit variables and shell functions
+-        data.update_data(envdata)
+         with closing(StringIO()) as env:
+             data.emit_env(env, envdata, True)
+             logger.plain(env.getvalue())
+@@ -703,7 +702,6 @@ class BBCooker:
+         for mc in self.multiconfigs:
+             taskdata[mc] = bb.taskdata.TaskData(abort, skiplist=self.skiplist, allowincomplete=allowincomplete)
+             localdata[mc] = data.createCopy(self.databuilder.mcdata[mc])
+-            bb.data.update_data(localdata[mc])
+             bb.data.expandKeys(localdata[mc])
+ 
+         current = 0
+@@ -992,7 +990,6 @@ class BBCooker:
+ 
+         for mc in self.multiconfigs:
+             localdata = data.createCopy(self.databuilder.mcdata[mc])
+-            bb.data.update_data(localdata)
+             bb.data.expandKeys(localdata)
+ 
+             # Handle PREFERRED_PROVIDERS
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 0cd4168..4d56081 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -976,7 +976,6 @@ class DataSmart(MutableMapping):
+         data = {}
+         d = self.createCopy()
+         bb.data.expandKeys(d)
+-        bb.data.update_data(d)
+ 
+         config_whitelist = set((d.getVar("BB_HASHCONFIG_WHITELIST") or "").split())
+         keys = set(key for key in iter(d) if not key.startswith("__"))
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 8b5b366..dba4540 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -130,7 +130,6 @@ class DataNode(AstNode):
+                 val = groupd["value"]
+         elif "colon" in groupd and groupd["colon"] != None:
+             e = data.createCopy()
+-            bb.data.update_data(e)
+             op = "immediate"
+             val = e.expand(groupd["value"], key + "[:=]")
+         elif "append" in groupd and groupd["append"] != None:
+@@ -350,12 +349,10 @@ def finalize(fn, d, variant = None):
+     bb.event.fire(bb.event.RecipePreFinalise(fn), d)
+ 
+     bb.data.expandKeys(d)
+-    bb.data.update_data(d)
+     code = []
+     for funcname in d.getVar("__BBANONFUNCS", False) or []:
+         code.append("%s(d)" % funcname)
+     bb.utils.better_exec("\n".join(code), {"d": d})
+-    bb.data.update_data(d)
+ 
+     tasklist = d.getVar('__BBTASKS', False) or []
+     bb.event.fire(bb.event.RecipeTaskPreProcess(fn, list(tasklist)), d)
+diff --git a/lib/bb/providers.py b/lib/bb/providers.py
+index 0e9c834..443187e 100644
+--- a/lib/bb/providers.py
++++ b/lib/bb/providers.py
+@@ -48,7 +48,6 @@ def findProviders(cfgData, dataCache, pkg_pn = None):
+ 
+     # Need to ensure data store is expanded
+     localdata = data.createCopy(cfgData)
+-    bb.data.update_data(localdata)
+     bb.data.expandKeys(localdata)
+ 
+     preferred_versions = {}
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index 0903ba7..be46ffc 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -258,13 +258,11 @@ class TestConcatOverride(unittest.TestCase):
+     def test_prepend(self):
+         self.d.setVar("TEST", "${VAL}")
+         self.d.setVar("TEST_prepend", "${FOO}:")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "foo:val")
+ 
+     def test_append(self):
+         self.d.setVar("TEST", "${VAL}")
+         self.d.setVar("TEST_append", ":${BAR}")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "val:bar")
+ 
+     def test_multiple_append(self):
+@@ -272,47 +270,40 @@ class TestConcatOverride(unittest.TestCase):
+         self.d.setVar("TEST_prepend", "${FOO}:")
+         self.d.setVar("TEST_append", ":val2")
+         self.d.setVar("TEST_append", ":${BAR}")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "foo:val:val2:bar")
+ 
+     def test_append_unset(self):
+         self.d.setVar("TEST_prepend", "${FOO}:")
+         self.d.setVar("TEST_append", ":val2")
+         self.d.setVar("TEST_append", ":${BAR}")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "foo::val2:bar")
+ 
+     def test_remove(self):
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+         self.d.setVar("TEST_remove", "val")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "bar")
+ 
+     def test_doubleref_remove(self):
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+         self.d.setVar("TEST_remove", "val")
+         self.d.setVar("TEST_TEST", "${TEST} ${TEST}")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST_TEST"), "bar bar")
+ 
+     def test_empty_remove(self):
+         self.d.setVar("TEST", "")
+         self.d.setVar("TEST_remove", "val")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "")
+ 
+     def test_remove_expansion(self):
+         self.d.setVar("BAR", "Z")
+         self.d.setVar("TEST", "${BAR}/X Y")
+         self.d.setVar("TEST_remove", "${BAR}/X")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "Y")
+ 
+     def test_remove_expansion_items(self):
+         self.d.setVar("TEST", "A B C D")
+         self.d.setVar("BAR", "B D")
+         self.d.setVar("TEST_remove", "${BAR}")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "A C")
+ 
+ class TestOverrides(unittest.TestCase):
+@@ -322,17 +313,15 @@ class TestOverrides(unittest.TestCase):
+         self.d.setVar("TEST", "testvalue")
+ 
+     def test_no_override(self):
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "testvalue")
+ 
+     def test_one_override(self):
+         self.d.setVar("TEST_bar", "testvalue2")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "testvalue2")
+ 
+     def test_one_override_unset(self):
+         self.d.setVar("TEST2_bar", "testvalue2")
+-        bb.data.update_data(self.d)
 +
-     except bb.fetch2.BBFetchException as e:
-         if isinstance(e, ChecksumError):
-             logger.warning("Mirror checksum failure for url %s (original url: %s)\nCleaning and trying again." % (ud.url, origud.url))
-@@ -1646,6 +1653,11 @@ class Fetch(object):
+         self.assertEqual(self.d.getVar("TEST2"), "testvalue2")
+         self.assertCountEqual(list(self.d.keys()), ['TEST', 'TEST2', 'OVERRIDES', 'TEST2_bar'])
  
-                 update_stamp(ud, self.d)
+@@ -340,18 +329,15 @@ class TestOverrides(unittest.TestCase):
+         self.d.setVar("TEST_bar", "testvalue2")
+         self.d.setVar("TEST_local", "testvalue3")
+         self.d.setVar("TEST_foo", "testvalue4")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "testvalue3")
+         self.assertCountEqual(list(self.d.keys()), ['TEST', 'TEST_foo', 'OVERRIDES', 'TEST_bar', 'TEST_local'])
  
-+            except IOError as e:
-+                if e.errno in [os.errno.ESTALE]:
-+                    logger.error("Stale Error Observed %s." % u)
-+                    raise ChecksumError("Stale Error Detected")
-+
-             except BBFetchException as e:
-                 if isinstance(e, ChecksumError):
-                     logger.error("Checksum failure fetching %s" % u)
+     def test_multiple_combined_overrides(self):
+         self.d.setVar("TEST_local_foo_bar", "testvalue3")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "testvalue3")
+ 
+     def test_multiple_overrides_unset(self):
+         self.d.setVar("TEST2_local_foo_bar", "testvalue3")
+-        bb.data.update_data(self.d)
+         self.assertEqual(self.d.getVar("TEST2"), "testvalue3")
+ 
+     def test_keyexpansion_override(self):
+@@ -359,14 +345,12 @@ class TestOverrides(unittest.TestCase):
+         self.d.setVar("TEST_bar", "testvalue2")
+         self.d.setVar("TEST_${LOCAL}", "testvalue3")
+         self.d.setVar("TEST_foo", "testvalue4")
+-        bb.data.update_data(self.d)
+         bb.data.expandKeys(self.d)
+         self.assertEqual(self.d.getVar("TEST"), "testvalue3")
+ 
+     def test_rename_override(self):
+         self.d.setVar("ALTERNATIVE_ncurses-tools_class-target", "a")
+         self.d.setVar("OVERRIDES", "class-target")
+-        bb.data.update_data(self.d)
+         self.d.renameVar("ALTERNATIVE_ncurses-tools", "ALTERNATIVE_lib32-ncurses-tools")
+         self.assertEqual(self.d.getVar("ALTERNATIVE_lib32-ncurses-tools"), "a")
+ 
 -- 
-2.11.1
+2.7.4
 
 
