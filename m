@@ -1,23 +1,28 @@
 Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 3F403719B8
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 9704660589
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Feb 2017 03:42:35 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga105.fm.intel.com with ESMTP; 08 Feb 2017 19:42:36 -0800
+	Thu,  9 Feb 2017 04:09:37 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 08 Feb 2017 20:09:37 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.35,349,1484035200"; d="scan'208";a="223091769"
+X-IronPort-AV: E=Sophos;i="5.35,349,1484035200"; d="scan'208";a="1124074397"
 Received: from ystew-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.191.171])
-	by fmsmga004.fm.intel.com with ESMTP; 08 Feb 2017 19:42:34 -0800
+	peggleto-mobl.ger.corp.intel.com) ([10.255.191.171])
+	by fmsmga002.fm.intel.com with ESMTP; 08 Feb 2017 20:09:27 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  9 Feb 2017 16:42:29 +1300
-Message-Id: <9f8cd57cf888ec1c29a07a25517af38ae88e5fc6.1486611730.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <cover.1486611730.git.paul.eggleton@linux.intel.com>
-References: <cover.1486611730.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] tinfoil: ensure PATH includes bitbake's bin directory
+To: Trevor Woerner <twoerner@gmail.com>
+Date: Thu, 09 Feb 2017 17:09:20 +1300
+Message-ID: <2583370.YQW5y1mmkv@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/5.3.3 (Linux/4.9.7-201.fc25.x86_64; KDE/5.29.0; x86_64; ; )
+In-Reply-To: <20170209011411.GA26866@linux-uys3>
+References: <578DC9D2.1060607@mlbassoc.com>
+	<2475257.7Bltr6I3so@peggleto-mobl.ger.corp.intel.com>
+	<20170209011411.GA26866@linux-uys3>
+MIME-Version: 1.0
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: New progress meters
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,48 +35,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Feb 2017 03:42:35 -0000
+X-List-Received-Date: Thu, 09 Feb 2017 04:09:38 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-The runqueue expects to be able to run 'bitbake-worker' from PATH, but
-for example in the OE extensible SDK, tinfoil is used within devtool
-where this isn't the case (we're not exposing bitbake to the user, thus
-bitbake's bin directory isn't in PATH).
+On Wednesday, 8 February 2017 8:14:11 PM NZDT Trevor Woerner wrote:
+> On Wed 2016-07-20 @ 08:29:52 AM, Paul Eggleton wrote:
+>        ^^^^^^^^^^
+> ... talk about showing up late to the party! ;-)
 
-This fixes devtool modify usage within the extensible SDK which has
-apparently been broken since the tinfoil2 changes went in.
+It's never too late :)
 
-Fixes [YOCTO #11034].
+> > We can certainly do something like that - the progress handler sees all
+> > output even if it doesn't contain anything interesting to it (e.g. %
+> > complete). The trouble comes when the process prints out nothing - such
+> > as when linking a very large binary. I'm not sure how you would
+> > introspect into that part of the process.
+> 
+> Would it be possible to show progress such that once a recipe started to be
+> processed, it would remain in view until it was done (preferably in the same
+> relative location)?
+> 
+> Let's say you have a recipe abc.bb whose tasks are: fetch, unpack, patch,
+> configure, compile, deploy, package. I think it might be nice if, once
+> bitbake started processing abc, we saw something like:
+> 
+> 
+> 	before-4.5.6 ...
+> 	abc-1.2.3 do_fetch ===>
+> 	after-0.9.8 ...
+> 
+> Then when the fetch was done we'd see
+> 
+> 	before-4.5.6 ...
+> 	abc-1.2.3 do_unpack ===|==>
+> 	after-0.9.8 ...
+> 
+> then
+> 
+> 	before-4.5.6 ...
+> 	abc-1.2.3 do_patch ===|===|=>
+> 	after-0.9.8 ...
+> 
+> 
+> Or, maybe:
+> 
+> 	before-4.5.6 ...
+> 	abc-1.2.3  =fetch=
+> 	after-0.9.8 ...
+> 
+> 	before-4.5.6 ...
+> 	abc-1.2.3  =fetch=|=unpack=
+> 	after-0.9.8 ...
+> 
+> 	before-4.5.6 ...
+> 	abc-1.2.3  =fetch=|=unpack=|=patch=
+> 	after-0.9.8 ...
+> 
+> Maybe the different tasks could have their own colours? Perhaps the equals
+> signs could be used to show progress: as a task progresses more equals signs
+> would be printed, then the pipe drawn and the new task drawing started when
+> the next task begins? At the end of processing abc we might see something
+> like:
+> 
+> 	abc-1.2.3
+> =fetch===========|=unpack=|=patch=|=configure====|=compile=================
+> ==========================|=deploy===|=package==
+> 
+> which tells us that fetching and compiling were this recipe's largest jobs.
+> 
+> I guess the largest problem would be handling the vertical real-estate. With
+> hundreds of packages, the output would scroll off rather quickly. Maybe
+> once a recipe was complete it could drop off?
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/tinfoil.py | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+So this is an interesting idea. The challenge though as I mentioned in my 
+previous email is about knowing how long the task is going to take - right now 
+we only have this for a few tasks. In this case you would use that to scale 
+the bar for each task with respect to the screen width - if you don't have 
+this scaling then either horizontal real-estate is going to be an additional 
+problem, or there won't be any ability to compare the task times (at least 
+within the same recipe - this would prevent comparing between recipes).
 
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 96275fd..940f9ab 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -211,6 +211,19 @@ class Tinfoil:
- 
-         self.ui_module = ui_module
- 
-+        # Ensure the path to bitbake's bin directory is in PATH so that things like
-+        # bitbake-worker can be run (usually this is the case, but it doesn't have to be)
-+        path = os.getenv('PATH').split(':')
-+        bitbakebinpath = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'bin'))
-+        for entry in path:
-+            if entry.endswith(os.sep):
-+                entry = entry[:-1]
-+            if os.path.abspath(entry) == bitbakebinpath:
-+                break
-+        else:
-+            path.insert(0, bitbakebinpath)
-+            os.environ['PATH'] = ':'.join(path)
-+
-         if self.server_connection:
-             _server_connections.append(self.server_connection)
-             if config_only:
+Whilst we could get an approximation of total task time if we know how long 
+the log file is expected to be, I still haven't figured out a good way of 
+having even that information available before the build, though I have to 
+admit I haven't spent much time thinking about it since the changes went in.
+
+Cheers,
+Paul
+
 -- 
-2.9.3
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
