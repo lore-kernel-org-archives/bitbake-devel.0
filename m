@@ -1,31 +1,28 @@
-Return-Path: <rpjday@crashcourse.ca>
-X-Greylist: delayed 629 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 13 Feb 2017 12:01:07 UTC
-Received: from smtp484.redcondor.net (smtp484.redcondor.net [208.80.204.84])
-	by mail.openembedded.org (Postfix) with ESMTP id 753DB71A72
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 08CD76E64A
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Feb 2017 12:01:07 +0000 (UTC)
-Received: from astoria.ccjclearline.com ([64.235.106.9])
-	by smtp484.redcondor.net ({c48374e7-08df-40d9-a0de-96cc9883a037})
-	via TCP (outbound) with ESMTPS id 20170213115037659_0484
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Feb 2017 11:50:37 +0000
-X-RC-FROM: <rpjday@crashcourse.ca>
-X-RC-RCPT: <bitbake-devel@lists.openembedded.org>
-Received: from [216.191.234.70] (port=28452 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1cdF9L-00077q-F7 for bitbake-devel@lists.openembedded.org;
-	Mon, 13 Feb 2017 06:50:31 -0500
-Date: Mon, 13 Feb 2017 06:50:29 -0500 (EST)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@uk63952.mitel.com
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.20.1702130648100.8363@uk63952.mitel.com>
-User-Agent: Alpine 2.20 (LFD 67 2015-01-07)
+	Tue, 14 Feb 2017 16:29:07 +0000 (UTC)
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	14 Feb 2017 08:29:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.35,162,1484035200"; 
+	d="asc'?scan'208";a="65688190"
+Received: from alimonb-mobl1.zpn.intel.com (HELO [10.219.128.120])
+	([10.219.128.120])
+	by fmsmga006.fm.intel.com with ESMTP; 14 Feb 2017 08:29:07 -0800
+To: bitbake-devel@lists.openembedded.org
+References: <1486074561-27644-1-git-send-email-anibal.limon@linux.intel.com>
+From: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
+Message-ID: <58A3311B.6090205@linux.intel.com>
+Date: Tue, 14 Feb 2017 10:32:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.3.0
 MIME-Version: 1.0
-X-MAG-OUTBOUND: ccj.redcondor.net@64.235.106.9/32
-Subject: [PATCH] fetch2: Rename "setup_revisons" to "setup_revisions"
+In-Reply-To: <1486074561-27644-1-git-send-email-anibal.limon@linux.intel.com>
+Cc: paul.eggleton@linux.intel.com
+Subject: Re: [PATCH] bitbake-layers: Handle exception raised bytinfoil.prepare()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,107 +35,115 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 13 Feb 2017 12:01:09 -0000
-Content-Type: text/plain; charset=US-ASCII
+X-List-Received-Date: Tue, 14 Feb 2017 16:29:08 -0000
+X-Groupsio-MsgNum: 8418
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="hvmfFl2RP747gIuMT1Blp9DKXekW5GVEw"
+
+--hvmfFl2RP747gIuMT1Blp9DKXekW5GVEw
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+ping
+
+On 02/02/2017 04:29 PM, An=C3=ADbal Lim=C3=B3n wrote:
+> The tinfoil.prepare method can raise Exceptions when is parsing initial=
+
+>  data so add this call inside try, finally to avoid get blocked for
+> don't call tinfoil.shutdown().
+>=20
+> The tinfoil_init function was remove because isn't make sense now since=
+
+>  tinfoil.prepare() needs to be inside try, finally closures.
+>=20
+> Example of raised exception and gets blocked:
+>=20
+> $ bitbake-layers add-layer ~/repos/meta-openembedded/meta-python/
+>=20
+> Traceback (most recent call last):
+>   File "/home/alimon/repos/poky/bitbake/bin/bitbake-layers", line 83, i=
+n
+> main
+>     tinfoil.prepare(True)
+> ...
+>   File "/home/alimon/repos/poky/bitbake/lib/bb/tinfoil.py", line 268, i=
+n
+> run_command
+>     raise TinfoilCommandFailed(result[1])
+> bb.tinfoil.TinfoilCommandFailed: Traceback (most recent call last):
+>   File "/home/alimon/repos/poky/bitbake/lib/bb/command.py", line 81, in=
+
+> runCommand
+>     result =3D command_method(self, commandline)
+> ...
+>   File "/home/alimon/repos/poky/bitbake/lib/bb/cooker.py", line 1314, i=
+n
+> handleCollections
+>     raise CollectionError("Errors during parsing layer configuration")
+> bb.cooker.CollectionError: Errors during parsing layer configuration
+>=20
+> Signed-off-by: An=C3=ADbal Lim=C3=B3n <anibal.limon@linux.intel.com>
+> ---
+>  bin/bitbake-layers | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+> index 1e2cfbc..66fc7ca 100755
+> --- a/bin/bitbake-layers
+> +++ b/bin/bitbake-layers
+> @@ -31,15 +31,6 @@ sys.path[0:0] =3D [os.path.join(topdir, 'lib')]
+> =20
+>  import bb.tinfoil
+> =20
+> -
+> -def tinfoil_init(parserecipes):
+> -    import bb.tinfoil
+> -    tinfoil =3D bb.tinfoil.Tinfoil(tracking=3DTrue)
+> -    tinfoil.prepare(not parserecipes)
+> -    tinfoil.logger.setLevel(logger.getEffectiveLevel())
+> -    return tinfoil
+> -
+> -
+>  def logger_create(name, output=3Dsys.stderr):
+>      logger =3D logging.getLogger(name)
+>      loggerhandler =3D logging.StreamHandler(output)
+> @@ -86,8 +77,10 @@ def main():
+>      logger_setup_color(logger, global_args.color)
+> =20
+>      plugins =3D []
+> -    tinfoil =3D tinfoil_init(False)
+> +    tinfoil =3D bb.tinfoil.Tinfoil(tracking=3DTrue)
+> +    tinfoil.logger.setLevel(logger.getEffectiveLevel())
+>      try:
+> +        tinfoil.prepare(True)
+>          for path in ([topdir] +
+>                      tinfoil.config_data.getVar('BBPATH').split(':')):
+>              pluginpath =3D os.path.join(path, 'lib', 'bblayers')
+>=20
 
 
-For spelling's sake, rename Python routine "setup_revisons" to
-"setup_revisions."
+--hvmfFl2RP747gIuMT1Blp9DKXekW5GVEw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
----
+iQIcBAEBAgAGBQJYozEdAAoJEGJqcE9h3glgbjUP/0HCepK2bypBDYKuJiWCo1OE
+Y/58XSdhTqnunBE9T97agkjveXPxnzU4ojfTmvPih+TIVPvQ7KVyDe1kGrq2rS/9
+5HVIweaEdKSnCJZVDMGa4B32BfCL+j7ofp6imPeRbT26PEq0gvpwuZ1ALTPPiNd4
+odgVPeytosE2ihfZowzfL3qcOucgXlAKg12M/GeRCYdYypRY7I6IdI0F7GuB2dPa
+LQsd2SlfZZLEtwCM3LT/HtHxsjpeImL0bl1v04WVdPBbEqvUvRYQLj5pUtmNRZyw
+yg13k7S7V6lzBJ7Ym4CZxIJHNpPu8p6BhNLQWESqABvPHE3a/d4U10Hvc5O4UX9E
+HAzx3hUf8hTpTRvWNud94JCknhgS6rlFkTSuvxFDSQs868V4hlC+LSAJUmgGWBXS
+cdbNI5P17U4ItoQ7fPBbf1NdVUNf38y22BxaxB4LhkaEp5xJ1TU8lwffiUpPLKRK
+qEUFWo3P3MagNJ5VhP92c4zQuowYVvWfVHoCGlRMIjFmMrgZ0Oo+blRe4obdboYJ
+HiRZpwg8rsuk3t3ONWywiJgmE600fEF3DgwcGpmjwXPtzxKRKQnuP56+2f3Gsn2S
+vMRY0fxuPmBdFahEkDrxRYMM0qA1KObNOrQmtHjYbu9JHYRfUEk63BK27BQaLLfH
++9wLjk1/23Mgp4NQVGNU
+=Fa8F
+-----END PGP SIGNATURE-----
 
-  since this actually modifies code, i'm fine if someone decides it's
-not worth the churn. i believe i got all of them.
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 525f47e..21afc2a 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1247,7 +1247,7 @@ class FetchData(object):
-         self.donestamp = basepath + '.done'
-         self.lockfile = basepath + '.lock'
-
--    def setup_revisons(self, d):
-+    def setup_revisions(self, d):
-         self.revisions = {}
-         for name in self.names:
-             self.revisions[name] = srcrev_internal_helper(self, d, name)
-diff --git a/lib/bb/fetch2/bzr.py b/lib/bb/fetch2/bzr.py
-index 72264af..0f1c420 100644
---- a/lib/bb/fetch2/bzr.py
-+++ b/lib/bb/fetch2/bzr.py
-@@ -45,7 +45,7 @@ class Bzr(FetchMethod):
-         relpath = self._strip_leading_slashes(ud.path)
-         ud.pkgdir = os.path.join(data.expand('${BZRDIR}', d), ud.host, relpath)
-
--        ud.setup_revisons(d)
-+        ud.setup_revisions(d)
-
-         if not ud.revision:
-             ud.revision = self.latest_revision(ud, d)
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index f7a0c01..39eb907 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -186,7 +186,7 @@ class Git(FetchMethod):
-
-         ud.write_tarballs = ((d.getVar("BB_GENERATE_MIRROR_TARBALLS") or "0") != "0") or ud.rebaseable
-
--        ud.setup_revisons(d)
-+        ud.setup_revisions(d)
-
-         for name in ud.names:
-             # Ensure anything that doesn't look like a sha256 checksum/revision is translated into one
-diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index 7e9afce..ddbebb5 100644
---- a/lib/bb/fetch2/hg.py
-+++ b/lib/bb/fetch2/hg.py
-@@ -67,7 +67,7 @@ class Hg(FetchMethod):
-         else:
-             ud.proto = "hg"
-
--        ud.setup_revisons(d)
-+        ud.setup_revisions(d)
-
-         if 'rev' in ud.parm:
-             ud.revision = ud.parm['rev']
-diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
-index 0f0d739..e00cca9 100644
---- a/lib/bb/fetch2/perforce.py
-+++ b/lib/bb/fetch2/perforce.py
-@@ -87,7 +87,7 @@ class Perforce(FetchMethod):
-         cleanedhost = ud.host.replace(':', '.')
-         ud.pkgdir = os.path.join(ud.dldir, cleanedhost, cleanedpath)
-
--        ud.setup_revisons(d)
-+        ud.setup_revisions(d)
-
-         ud.localfile = data.expand('%s_%s_%s.tar.gz' % (cleanedhost, cleanedpath, ud.revision), d)
-
-diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
-index d6feeb2..cabc290 100644
---- a/lib/bb/fetch2/svn.py
-+++ b/lib/bb/fetch2/svn.py
-@@ -64,7 +64,7 @@ class Svn(FetchMethod):
-         ud.pkgdir = os.path.join(data.expand('${SVNDIR}', d), ud.host, relpath)
-         ud.moddir = os.path.join(ud.pkgdir, ud.module)
-
--        ud.setup_revisons(d)
-+        ud.setup_revisions(d)
-
-         if 'rev' in ud.parm:
-             ud.revision = ud.parm['rev']
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
-
-
+--hvmfFl2RP747gIuMT1Blp9DKXekW5GVEw--
