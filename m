@@ -1,23 +1,28 @@
-Return-Path: <markus.lehtonen@linux.intel.com>
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 69D80772E3
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 3A60A71CB8
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Feb 2017 09:39:21 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga105.fm.intel.com with ESMTP; 17 Feb 2017 01:39:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.35,171,1484035200"; d="scan'208";a="47687499"
-Received: from bpaczek-mobl.ger.corp.intel.com (HELO
-	mqz-osx-suse64.fi.intel.com) ([10.252.29.32])
-	by orsmga002.jf.intel.com with ESMTP; 17 Feb 2017 01:39:21 -0800
-From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+	Sun, 19 Feb 2017 14:16:15 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v1JEGFhx026082; Sun, 19 Feb 2017 14:16:15 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 4f0koHbSk77K; Sun, 19 Feb 2017 14:16:15 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v1JEGBgq026072
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Sun, 19 Feb 2017 14:16:14 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1cfSHb-00077s-6Z; Sun, 19 Feb 2017 06:16:11 -0800
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 17 Feb 2017 11:39:18 +0200
-Message-Id: <1487324358-2675-2-git-send-email-markus.lehtonen@linux.intel.com>
-X-Mailer: git-send-email 2.6.6
-In-Reply-To: <1487324358-2675-1-git-send-email-markus.lehtonen@linux.intel.com>
-References: <1487324358-2675-1-git-send-email-markus.lehtonen@linux.intel.com>
-Subject: [PATCH] fetch2/svn: change 'rsh' parameter to 'ssh'
+Date: Sun, 19 Feb 2017 06:16:09 -0800
+Message-Id: <1487513769-27354-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH] runqueue: Fix collapsed setscene dependency tree
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,54 +35,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Feb 2017 09:39:22 -0000
+X-List-Received-Date: Sun, 19 Feb 2017 14:16:17 -0000
 
-The functionality around the 'rsh' parameter seemed to be broken. The
-'rsh' parameter was only used when 'protocol' was set to 'svn+ssh' which
-is confusing. The 'rsh' parameter was used for setting the value of
-'svn_RSH' environment variable, which however, is not supported by svn
-(not at least according to SVN documentation).
+When we removed the postinst sstate dependency handling code from
+setscene_depvalid, we noticed things being installed into the old
+style sysroot for rootfs tasks which should not have been there,
+causing a performance regression.
 
-This patch removes the 'rsh' parameter and replaces it with 'ssh'. This
-new (optional) parameter is used when svn+ssh protocol is used and it
-can be used to specify the ssh program used by svn. This is achieved by
-setting the SVN_SSH environment variable which is mentioned in SVN
-documentation.
+Analysis revealed that setscene dependencies were "bubbling" over
+sstate tasks when they should have been stopping there. The
+'continue' added by this patch avoids this issue and eusures
+sstate tasks remain contained to their specific chains.
 
-Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+There was another bug in the code this exposed where the acconting
+for tasks as they were removed from sq_revdeps was not correct. In
+fixing this, what looks like a workaround in another test can then
+be simplified.
+
+After this change, populate_sysroot tasks are no longer depending
+on package_write_rpm tasks for example, which would make no sense.
+
+A before/after analysis of image dependencies only revealed improved
+dependencies after this change.
+
+Recipe specific sysroots did highlight the issue here since the
+behaviour of the sysroot dependencies (and processing with depvalid)
+was not matching what bitbake itself was doing, with bitbake being
+incorrect. Failures were 'safe' in that too many dependencies would
+get installed.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/svn.py | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ lib/bb/runqueue.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
-index d6feeb2..7111895 100644
---- a/lib/bb/fetch2/svn.py
-+++ b/lib/bb/fetch2/svn.py
-@@ -79,9 +79,9 @@ class Svn(FetchMethod):
- 
-         proto = ud.parm.get('protocol', 'svn')
- 
--        svn_rsh = None
--        if proto == "svn+ssh" and "rsh" in ud.parm:
--            svn_rsh = ud.parm["rsh"]
-+        svn_ssh = None
-+        if proto == "svn+ssh" and "ssh" in ud.parm:
-+            svn_ssh = ud.parm["ssh"]
- 
-         svnroot = ud.host + ud.path
- 
-@@ -113,8 +113,8 @@ class Svn(FetchMethod):
-             else:
-                 raise FetchError("Invalid svn command %s" % command, ud.url)
- 
--        if svn_rsh:
--            svncmd = "svn_RSH=\"%s\" %s" % (svn_rsh, svncmd)
-+        if svn_ssh:
-+            svncmd = "SVN_SSH=\"%s\" %s" % (svn_ssh, svncmd)
- 
-         return svncmd
- 
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 728b5fb..a3b451a 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2010,6 +2010,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         for tid in self.rqdata.runq_setscene_tids:
+             #bb.warn("Added endpoint 2 %s" % (tid))
+             for dep in self.rqdata.runtaskentries[tid].depends:
++                    if tid in sq_revdeps[dep]:
++                        sq_revdeps[dep].remove(tid)
+                     if dep not in endpoints:
+                         endpoints[dep] = set()
+                     #bb.warn("  Added endpoint 3 %s" % (dep))
+@@ -2029,12 +2031,13 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                 if point in self.rqdata.runq_setscene_tids:
+                     sq_revdeps_new[point] = tasks
+                     tasks = set()
++                    continue
+                 for dep in self.rqdata.runtaskentries[point].depends:
+                     if point in sq_revdeps[dep]:
+                         sq_revdeps[dep].remove(point)
+                     if tasks:
+                         sq_revdeps_new[dep] |= tasks
+-                    if (len(sq_revdeps[dep]) == 0 or len(sq_revdeps_new[dep]) != 0) and dep not in self.rqdata.runq_setscene_tids:
++                    if len(sq_revdeps[dep]) == 0 and dep not in self.rqdata.runq_setscene_tids:
+                         newendpoints[dep] = task
+             if len(newendpoints) != 0:
+                 process_endpoints(newendpoints)
 -- 
-2.6.6
+2.7.4
 
 
