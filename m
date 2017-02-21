@@ -1,22 +1,55 @@
-Return-Path: <alexander.kanavin@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 171AB71E14
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 400B172F1F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Feb 2017 11:37:36 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	21 Feb 2017 03:37:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.35,189,1484035200"; d="scan'208";a="227880407"
-Received: from kanavin-desktop.fi.intel.com (HELO
-	kanavin-desktop.fi.intel.comfi.intel.com) ([10.237.68.161])
-	by fmsmga004.fm.intel.com with ESMTP; 21 Feb 2017 03:37:36 -0800
-From: Alexander Kanavin <alexander.kanavin@linux.intel.com>
+	Tue, 21 Feb 2017 15:19:02 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 178DE1834A
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Feb 2017 16:19:04 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id UItFeQ61X1ah for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Feb 2017 16:19:03 +0100 (CET)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id D9B38182A2
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Feb 2017 16:19:02 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AA6641E072
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Feb 2017 16:19:02 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9F6E91E070
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Feb 2017 16:19:02 +0100 (CET)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder03.se.axis.com (Postfix) with ESMTP
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Feb 2017 16:19:02 +0100 (CET)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by seth.se.axis.com (Postfix) with ESMTP id 94520E35
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Feb 2017 16:19:02 +0100 (CET)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v1LFJ22D023521
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Feb 2017 16:19:02 +0100
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v1LFJ2aL023520
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 21 Feb 2017 16:19:02 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 21 Feb 2017 13:36:42 +0200
-Message-Id: <20170221113642.27744-1-alexander.kanavin@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-Subject: [PATCH] wget.py: match .lz tarballs as well when determining latest version
+Date: Tue, 21 Feb 2017 16:18:59 +0100
+Message-Id: <5d593990b9eb18202a613ca5facc3f73064eaf4f.1487690243.git.pkj@axis.com>
+X-Mailer: git-send-email 2.9.0
+In-Reply-To: <cover.1487690243.git.pkj@axis.com>
+References: <cover.1487690243.git.pkj@axis.com>
+X-TM-AS-GCONF: 00
+Subject: [PATCH 1/2] lib/bb/utils: Add filter()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,27 +62,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Feb 2017 11:37:37 -0000
+X-List-Received-Date: Tue, 21 Feb 2017 15:19:03 -0000
 
-Signed-off-by: Alexander Kanavin <alexander.kanavin@linux.intel.com>
+The bb.utils.filter() function can be used to filter a variable
+containing whitespace separated words based on another set of words.
+It has been modeled after the bb.utils.contains_any() function.
+
+A typical example of how it can be used is to simplify constructs for
+PACKAGECONFIG that depend on DISTRO_FEATURES:
+
+-PACKAGECONFIG ?= "\
+-    ${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
+-    ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
+-"
++PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'acl selinux', d)}"
+
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- bitbake/lib/bb/fetch2/wget.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/utils.py | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 737b98dd032..1cc445a4263 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -547,7 +547,7 @@ class Wget(FetchMethod):
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 2845126..d6bcfa3 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -979,6 +979,30 @@ def contains_any(variable, checkvalues, truevalue, falsevalue, d):
+         return truevalue
+     return falsevalue
  
-         # src.rpm extension was added only for rpm package. Can be removed if the rpm
-         # packaged will always be considered as having to be manually upgraded
--        psuffix_regex = "(tar\.gz|tgz|tar\.bz2|zip|xz|rpm|bz2|orig\.tar\.gz|tar\.xz|src\.tar\.gz|src\.tgz|svnr\d+\.tar\.bz2|stable\.tar\.gz|src\.rpm)"
-+        psuffix_regex = "(tar\.gz|tgz|tar\.bz2|zip|xz|tar\.lz|rpm|bz2|orig\.tar\.gz|tar\.xz|src\.tar\.gz|src\.tgz|svnr\d+\.tar\.bz2|stable\.tar\.gz|src\.rpm)"
++def filter(variable, checkvalues, d):
++    """Return all words in the variable that are present in the checkvalues.
++
++    Arguments:
++
++    variable -- the variable name. This will be fetched and expanded (using
++    d.getVar(variable)) and then split into a set().
++
++    checkvalues -- if this is a string it is split on whitespace into a set(),
++    otherwise coerced directly into a set().
++
++    d -- the data store.
++    """
++
++    val = d.getVar(variable)
++    if not val:
++        return ''
++    val = set(val.split())
++    if isinstance(checkvalues, str):
++        checkvalues = set(checkvalues.split())
++    else:
++        checkvalues = set(checkvalues)
++    return ' '.join(sorted(checkvalues & val))
++
+ def cpu_count():
+     return multiprocessing.cpu_count()
  
-         # match name, version and archive type of a package
-         package_regex_comp = re.compile("(?P<name>%s?\.?v?)(?P<pver>%s)(?P<arch>%s)?[\.-](?P<type>%s$)"
 -- 
-2.11.0
+2.9.0
 
 
