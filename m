@@ -1,56 +1,22 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id C5EDB71C27
+Return-Path: <alexander.kanavin@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 171AB71E14
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Feb 2017 09:01:03 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 960E718176;
-	Mon, 20 Feb 2017 10:01:02 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id cGUx8uy4T9Jq; Mon, 20 Feb 2017 10:01:01 +0100 (CET)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bastet.se.axis.com (Postfix) with ESMTPS id 7C94F18319;
-	Mon, 20 Feb 2017 10:01:01 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 395991E07A;
-	Mon, 20 Feb 2017 10:01:01 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E7C61E079;
-	Mon, 20 Feb 2017 10:01:01 +0100 (CET)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-	by boulder03.se.axis.com (Postfix) with ESMTP;
-	Mon, 20 Feb 2017 10:01:01 +0100 (CET)
-Received: from XBOX04.axis.com (xbox04.axis.com [10.0.5.18])
-	by seth.se.axis.com (Postfix) with ESMTP id 22B6A263;
-	Mon, 20 Feb 2017 10:01:01 +0100 (CET)
-Received: from XBOX02.axis.com (10.0.5.16) by XBOX04.axis.com (10.0.5.18) with
-	Microsoft SMTP Server (TLS) id 15.0.1210.3;
-	Mon, 20 Feb 2017 10:01:01 +0100
-Received: from XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776]) by
-	XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776%21]) with mapi id
-	15.00.1210.000; Mon, 20 Feb 2017 10:01:01 +0100
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Thread-Topic: [bitbake-devel] [PATCH] runqueue: Fix collapsed setscene
-	dependency	tree
-Thread-Index: AQHSirrIkkz1p8KCm0yTQwbboCV71aFxmaFg
-Date: Mon, 20 Feb 2017 09:01:01 +0000
-Message-ID: <37597e8986434bca9d8874a4b69480ce@XBOX02.axis.com>
-References: <1487513769-27354-1-git-send-email-richard.purdie@linuxfoundation.org>
-In-Reply-To: <1487513769-27354-1-git-send-email-richard.purdie@linuxfoundation.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] runqueue: Fix collapsed setscene dependency	tree
+	Tue, 21 Feb 2017 11:37:36 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	21 Feb 2017 03:37:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.35,189,1484035200"; d="scan'208";a="227880407"
+Received: from kanavin-desktop.fi.intel.com (HELO
+	kanavin-desktop.fi.intel.comfi.intel.com) ([10.237.68.161])
+	by fmsmga004.fm.intel.com with ESMTP; 21 Feb 2017 03:37:36 -0800
+From: Alexander Kanavin <alexander.kanavin@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 21 Feb 2017 13:36:42 +0200
+Message-Id: <20170221113642.27744-1-alexander.kanavin@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+Subject: [PATCH] wget.py: match .lz tarballs as well when determining latest version
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,54 +29,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Feb 2017 09:01:05 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 21 Feb 2017 11:37:37 -0000
 
-> -----Original Message-----
-> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
-> devel-bounces@lists.openembedded.org] On Behalf Of Richard Purdie
-> Sent: den 19 februari 2017 15:16
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH] runqueue: Fix collapsed setscene
-> dependency tree
->=20
-> When we removed the postinst sstate dependency handling code from
-> setscene_depvalid, we noticed things being installed into the old
-> style sysroot for rootfs tasks which should not have been there,
-> causing a performance regression.
->=20
-> Analysis revealed that setscene dependencies were "bubbling" over
-> sstate tasks when they should have been stopping there. The
-> 'continue' added by this patch avoids this issue and eusures
+Signed-off-by: Alexander Kanavin <alexander.kanavin@linux.intel.com>
+---
+ bitbake/lib/bb/fetch2/wget.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Change "eusures" to "ensures".
-
-> sstate tasks remain contained to their specific chains.
->=20
-> There was another bug in the code this exposed where the acconting
-
-Change "acconting" to "accounting".
-
-> for tasks as they were removed from sq_revdeps was not correct. In
-> fixing this, what looks like a workaround in another test can then
-> be simplified.
->=20
-> After this change, populate_sysroot tasks are no longer depending
-> on package_write_rpm tasks for example, which would make no sense.
->=20
-> A before/after analysis of image dependencies only revealed improved
-> dependencies after this change.
->=20
-> Recipe specific sysroots did highlight the issue here since the
-> behaviour of the sysroot dependencies (and processing with depvalid)
-> was not matching what bitbake itself was doing, with bitbake being
-> incorrect. Failures were 'safe' in that too many dependencies would
-> get installed.
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
-//Peter
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 737b98dd032..1cc445a4263 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -547,7 +547,7 @@ class Wget(FetchMethod):
+ 
+         # src.rpm extension was added only for rpm package. Can be removed if the rpm
+         # packaged will always be considered as having to be manually upgraded
+-        psuffix_regex = "(tar\.gz|tgz|tar\.bz2|zip|xz|rpm|bz2|orig\.tar\.gz|tar\.xz|src\.tar\.gz|src\.tgz|svnr\d+\.tar\.bz2|stable\.tar\.gz|src\.rpm)"
++        psuffix_regex = "(tar\.gz|tgz|tar\.bz2|zip|xz|tar\.lz|rpm|bz2|orig\.tar\.gz|tar\.xz|src\.tar\.gz|src\.tgz|svnr\d+\.tar\.bz2|stable\.tar\.gz|src\.rpm)"
+ 
+         # match name, version and archive type of a package
+         package_regex_comp = re.compile("(?P<name>%s?\.?v?)(?P<pver>%s)(?P<arch>%s)?[\.-](?P<type>%s$)"
+-- 
+2.11.0
 
 
