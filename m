@@ -1,21 +1,21 @@
-Return-Path: <jair.de.jesus.gonzalez.plascencia@linux.intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 215B172F37
+Return-Path: <markus.lehtonen@linux.intel.com>
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	by mail.openembedded.org (Postfix) with ESMTP id 6738072FDD
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Feb 2017 00:00:46 +0000 (UTC)
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-	by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	21 Feb 2017 16:00:47 -0800
+	Thu, 23 Feb 2017 10:13:21 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga105.jf.intel.com with ESMTP; 23 Feb 2017 02:13:22 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.35,191,1484035200"; d="scan'208";a="68032543"
-Received: from jairdeje-mobl1.zpn.intel.com ([10.219.4.48])
-	by fmsmga005.fm.intel.com with ESMTP; 21 Feb 2017 16:00:47 -0800
-From: Jair Gonzalez <jair.de.jesus.gonzalez.plascencia@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.35,197,1484035200"; d="scan'208";a="51723648"
+Received: from mburny-mobl.ger.corp.intel.com (HELO
+	mqz-osx-suse64.fi.intel.com) ([10.252.22.38])
+	by orsmga002.jf.intel.com with ESMTP; 23 Feb 2017 02:13:21 -0800
+From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 21 Feb 2017 18:00:09 -0600
-Message-Id: <1487721630-3712-3-git-send-email-jair.de.jesus.gonzalez.plascencia@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-Subject: [selftest][PATCH V3 3/3] bitbake: event: remove mapping for deleted event handlers
+Date: Thu, 23 Feb 2017 12:13:19 +0200
+Message-Id: <1487844799-23976-1-git-send-email-markus.lehtonen@linux.intel.com>
+X-Mailer: git-send-email 2.6.6
+Subject: [PATCH] lib/oe/gpg_sign: sign rpm packages in chunks of 100
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,45 +28,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Feb 2017 00:00:46 -0000
+X-List-Received-Date: Thu, 23 Feb 2017 10:13:21 -0000
 
-The current remove method for class event handlers does not update the
-event mapping after an event handler is deleted from the main dictionary.
+Split the file list into chunks in order to avoid
+"OSError: [Errno 7] Argument list too long"
 
-This change enhances the remove method by also updating the event mapping
-accordingly.
+This would happend when a package has huge amount of subpackages, e.g.
+glibc-locale.
 
-This was detected after creating the bb.tests.event module.
+[YOCTO #11069]
 
-[YOCTO #10368]
-
-Signed-off-by: Jair Gonzalez <jair.de.jesus.gonzalez.plascencia@linux.intel.com>
+Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
 ---
- lib/bb/event.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ meta/lib/oe/gpg_sign.py | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 6d8493b..e5b7447 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -264,6 +264,11 @@ def register(name, handler, mask=None, filename=None, lineno=None):
- def remove(name, handler):
-     """Remove an Event handler"""
-     _handlers.pop(name)
-+    if name in _catchall_handlers:
-+        _catchall_handlers.pop(name)
-+    for event in _event_handler_map.keys():
-+        if name in _event_handler_map[event]:
-+            _event_handler_map[event].pop(name)
+diff --git a/meta/lib/oe/gpg_sign.py b/meta/lib/oe/gpg_sign.py
+index dcd1990..bf36226 100644
+--- a/meta/lib/oe/gpg_sign.py
++++ b/meta/lib/oe/gpg_sign.py
+@@ -35,11 +35,12 @@ class LocalSigner(object):
+             cmd += "--define '%%__gpg %s' " % self.gpg_bin
+         if self.gpg_path:
+             cmd += "--define '_gpg_path %s' " % self.gpg_path
+-        cmd += ' '.join(files)
  
- def get_handlers():
-     return _handlers
-@@ -783,4 +788,3 @@ class NetworkTestFailed(Event):
-     """
-     Event to indicate network test has failed
-     """
--
+-        status, output = oe.utils.getstatusoutput(cmd)
+-        if status:
+-            raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output)
++        # Sign in chunks of 100 packages
++        for i in range(0, len(files), 100):
++            status, output = oe.utils.getstatusoutput(cmd + ' '.join(files[i:i+100]))
++            if status:
++                raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output)
+ 
+     def detach_sign(self, input_file, keyid, passphrase_file, passphrase=None, armor=True):
+         """Create a detached signature of a file"""
 -- 
-2.7.4
+2.6.6
 
 
