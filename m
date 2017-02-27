@@ -1,29 +1,57 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 53CF36011A
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id DF60073057
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Feb 2017 21:24:40 +0000 (UTC)
+	Mon, 27 Feb 2017 08:22:06 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v1OLOcd0019809; Fri, 24 Feb 2017 21:24:38 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id zS07pKa3Tv3m; Fri, 24 Feb 2017 21:24:38 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v1OLOVOl019802
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 24 Feb 2017 21:24:34 GMT
-Message-ID: <1487971470.30253.14.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Fri, 24 Feb 2017 13:24:30 -0800
-In-Reply-To: <00321a9f25646b839353eca39092ac2d0a2da225.1487690243.git.pkj@axis.com>
+	by bes.se.axis.com (Postfix) with ESMTP id F0C052E3D7;
+	Mon, 27 Feb 2017 09:22:06 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id a8TkCkgHFOIz; Mon, 27 Feb 2017 09:22:01 +0100 (CET)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bes.se.axis.com (Postfix) with ESMTPS id 83F4E2E3D1;
+	Mon, 27 Feb 2017 09:22:01 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6BEFA1E064;
+	Mon, 27 Feb 2017 09:22:01 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 60C851E060;
+	Mon, 27 Feb 2017 09:22:01 +0100 (CET)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder03.se.axis.com (Postfix) with ESMTP;
+	Mon, 27 Feb 2017 09:22:01 +0100 (CET)
+Received: from XBOX04.axis.com (xbox04.axis.com [10.0.5.18])
+	by seth.se.axis.com (Postfix) with ESMTP id 54D8320A;
+	Mon, 27 Feb 2017 09:22:01 +0100 (CET)
+Received: from XBOX02.axis.com (10.0.5.16) by XBOX04.axis.com (10.0.5.18) with
+	Microsoft SMTP Server (TLS) id 15.0.1210.3;
+	Mon, 27 Feb 2017 09:22:01 +0100
+Received: from XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776]) by
+	XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776%21]) with mapi id
+	15.00.1210.000; Mon, 27 Feb 2017 09:22:01 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 2/2] Make use of the new
+	bb.utils.filter() function
+Thread-Index: AQHSjuaJ2VcN/lblLUKpMcSCDRUEnqF8huhA
+Date: Mon, 27 Feb 2017 08:22:01 +0000
+Message-ID: <c4c76fdf78db42fd8160c7350436d3af@XBOX02.axis.com>
 References: <cover.1487690243.git.pkj@axis.com>
 	<00321a9f25646b839353eca39092ac2d0a2da225.1487690243.git.pkj@axis.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
-Mime-Version: 1.0
+	<1487971470.30253.14.camel@linuxfoundation.org>
+In-Reply-To: <1487971470.30253.14.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
 Subject: Re: [PATCH 2/2] Make use of the new bb.utils.filter() function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -37,23 +65,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Feb 2017 21:24:41 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 27 Feb 2017 08:22:07 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Tue, 2017-02-21 at 16:19 +0100, Peter Kjellerstedt wrote:
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-
-This really needs to go to the openembedded-core list. It also means we
-have to bump the minimum bitbake version. I have queued this in master-
-next along with a version bump.
-
-Since OE-Core does change quite quickly and there have been changes,
-the patch also didn't 100% apply. Could you check for the recipes where
-the changes didn't apply and send an updated against master-next to the
-oe-core list please?
-
-Cheers,
-
-Richard
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSBbbWFp
+bHRvOnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmddDQo+IFNlbnQ6IGRlbiAyNCBm
+ZWJydWFyaSAyMDE3IDIyOjI1DQo+IFRvOiBQZXRlciBLamVsbGVyc3RlZHQ7IGJpdGJha2UtZGV2
+ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxd
+IFtQQVRDSCAyLzJdIE1ha2UgdXNlIG9mIHRoZSBuZXcNCj4gYmIudXRpbHMuZmlsdGVyKCkgZnVu
+Y3Rpb24NCj4gDQo+IE9uIFR1ZSwgMjAxNy0wMi0yMSBhdCAxNjoxOSArMDEwMCwgUGV0ZXIgS2pl
+bGxlcnN0ZWR0IHdyb3RlOg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBldGVyIEtqZWxsZXJzdGVkdCA8
+cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPg0KPiANCj4gVGhpcyByZWFsbHkgbmVlZHMgdG8g
+Z28gdG8gdGhlIG9wZW5lbWJlZGRlZC1jb3JlIGxpc3QuIEl0IGFsc28gbWVhbnMgd2UNCj4gaGF2
+ZSB0byBidW1wIHRoZSBtaW5pbXVtIGJpdGJha2UgdmVyc2lvbi4gSSBoYXZlIHF1ZXVlZCB0aGlz
+IGluIG1hc3Rlci0NCj4gbmV4dCBhbG9uZyB3aXRoIGEgdmVyc2lvbiBidW1wLg0KPiANCj4gU2lu
+Y2UgT0UtQ29yZSBkb2VzIGNoYW5nZSBxdWl0ZSBxdWlja2x5IGFuZCB0aGVyZSBoYXZlIGJlZW4g
+Y2hhbmdlcywNCj4gdGhlIHBhdGNoIGFsc28gZGlkbid0IDEwMCUgYXBwbHkuIENvdWxkIHlvdSBj
+aGVjayBmb3IgdGhlIHJlY2lwZXMgd2hlcmUNCj4gdGhlIGNoYW5nZXMgZGlkbid0IGFwcGx5IGFu
+ZCBzZW5kIGFuIHVwZGF0ZWQgYWdhaW5zdCBtYXN0ZXItbmV4dCB0byB0aGUNCj4gb2UtY29yZSBs
+aXN0IHBsZWFzZT8NCj4gDQo+IENoZWVycywNCj4gDQo+IFJpY2hhcmQNCg0KSSB3aWxsIHNlbmQg
+YW4gdXBkYXRlZCB2ZXJzaW9uIHRvIHRoZSBPRS1Db3JlIGxpc3QuDQoNCi8vUGV0ZXINCg0K
 
