@@ -1,45 +1,45 @@
 Return-Path: <armccurdy@gmail.com>
-Received: from mail-pf0-f195.google.com (mail-pf0-f195.google.com
-	[209.85.192.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 2F90272F3C
+Received: from mail-pf0-f196.google.com (mail-pf0-f196.google.com
+	[209.85.192.196])
+	by mail.openembedded.org (Postfix) with ESMTP id 7EA2772F3C
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Mar 2017 00:22:05 +0000 (UTC)
-Received: by mail-pf0-f195.google.com with SMTP id j5so8151309pfb.3
+	Fri,  3 Mar 2017 00:24:27 +0000 (UTC)
+Received: by mail-pf0-f196.google.com with SMTP id 67so3745106pfg.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 02 Mar 2017 16:22:07 -0800 (PST)
+	Thu, 02 Mar 2017 16:24:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id;
-	bh=4c/w8EncKLccjqw8apNUtfuT40/SSO4gCXa9HV4uOpo=;
-	b=IwJCr9ajYK5GVk3Q/dW2FSLKOZK1Hs7hexMeb0qwFngkWAk6Z8qpOd/xRayW+0gxCp
-	iSLB5RiM8YoPeIdamTwXeR9hkNPBNulBN9Ajqu7XX0Cc/GWL+L2a9FagoNXMTHdfRZD4
-	Mmz4gsPc/cVHedU4MCe5Bix2QDTWolQcdHakyTgPkw5QvJYqOTD/9u7KiaD1PMiFCl4T
-	QxWpjRi+thDE9+ApuTFTOaEu5EENf9k8AgOkRxNU0ITGc7YltP/SkwXWrdCKc4nXAITN
-	3Twlo99Z1UDBpPHPkNb9IjaXHchqCStRdc3pPX/YdoQblA5w3s/ApJM7wrXSjx1nHnDk
-	2QGw==
+	bh=8k96ynedceFf4HGZfuHr9gxAQN9jO70f5WKm1FmkIW0=;
+	b=GrMaayGmoaVn1ai4THmmrZXTIElqXKQ8uaDof4O2LZFa1XCrJ85s7wSTjeYF/jL2p8
+	TIWkIduqEUGxOWJb7Ndym7P9f+DoUUp/eQdzRazZc+2BYMpTXg9u8alW47jOcp7Yfgih
+	2b/18+qUW7iODKGBrIkXgmuUnacLYWuqDAidvjTnP8VuBgHbSre9cxfufoF+CHrxmZ/m
+	EdXpJbcrnr9oi47EYjWx3Lgj66p2NXo5UAuLWgcPe/7fWjhinclnqoqHaJgSIQV+8Qg9
+	1DnzoR5xMomZuM7tnfDjcD2JiwYM38yBj5UtP5NBTntZz3vgP26g5oq9Dyuk19+dNIzc
+	2cAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=4c/w8EncKLccjqw8apNUtfuT40/SSO4gCXa9HV4uOpo=;
-	b=gIcVWHW32T+nmTlgt+PmGCs/R9pIfxIeKNHpMeC5sbg8ynoes7OBU07q78C9yUmIis
-	vC/XZqMNKLSVN+Rn/ggcVj3BcQmYjAZgjAj+KakpSmWUC7guy34ZY+G5VB517ZOvbl3E
-	LOdpap4wOxNzbwVdmRFvRAbEN1KHlAAUqCr1jEKiNb7tXGa+JFNG7gf0hZzvidmzEl2r
-	bsgOesGMRJsWFdUJZVpIaTCdXGiMPQWF2vxXPyhc0dFMlvVJ4avM7jRHpXYlo1WOJ37j
-	Tec62qm2xR2DS/ejNfeulawAPdv2+Bn9bMDN+CfSDn41DNqsUkYy317a2k6LZh+/yY28
-	StzA==
-X-Gm-Message-State: AMke39k7GfvgLd39S+xVIOJ0SVKE4Yf3gn69ltzsXecmvCj56rf8DpeIHf4+dTArYBUK+g==
-X-Received: by 10.99.43.71 with SMTP id r68mr18883426pgr.21.1488500527109;
-	Thu, 02 Mar 2017 16:22:07 -0800 (PST)
+	bh=8k96ynedceFf4HGZfuHr9gxAQN9jO70f5WKm1FmkIW0=;
+	b=iFAzi/oWGN8S9bhpyw9/EVmNJTKJpsKA0ZMIIYktN+a+qR/0Iletkg4yVnljZ6PnvJ
+	D2ZH+Sms70y3J6jN3XioOm/VAjAvzyjb9pQnw5MH5whmfHvfNnMA4nMbgZUIWzPdJO+H
+	JYdUwOpRBmxZ/tQnEaoJKoqAPTf/doUsAO5x3ysfywxt8JGHIk6WGGqY9sBGR8sOeCCw
+	yChY+Ru/7lvjQyzd2M0i4FDI8fzNu2YpkI8p4omsbUHq/C95XWR1i8SEPhd6qTQMUiEO
+	KhC4qxXt7EnTdI4GqFqI/wvAYwER5dLxyv21sPwwPF2rf5gnB6vAKn4CSlTZOYjx8EwJ
+	Flag==
+X-Gm-Message-State: AMke39l0HPkd1HzMjq5/FJMtXxZjB28V2wS/cr7th/xLFsbEp0to1QflYDilVbl6M2/d5A==
+X-Received: by 10.84.133.36 with SMTP id 33mr22401154plf.87.1488500668455;
+	Thu, 02 Mar 2017 16:24:28 -0800 (PST)
 Received: from e6520.cablelabs.com ([4.16.80.121])
 	by smtp.gmail.com with ESMTPSA id
-	o125sm19186001pfb.109.2017.03.02.16.22.05
+	g27sm19198233pfk.95.2017.03.02.16.24.27
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 02 Mar 2017 16:22:05 -0800 (PST)
+	Thu, 02 Mar 2017 16:24:27 -0800 (PST)
 From: Andre McCurdy <armccurdy@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  2 Mar 2017 16:22:00 -0800
-Message-Id: <1488500520-2086-1-git-send-email-armccurdy@gmail.com>
+Date: Thu,  2 Mar 2017 16:24:22 -0800
+Message-Id: <1488500662-2237-1-git-send-email-armccurdy@gmail.com>
 X-Mailer: git-send-email 1.9.1
-Subject: [PATCH] fetch2: remove last remaining usage of deprecated bb.data APIs
+Subject: [PATCH] fetch2: pass --no-same-owner when extracting tar files compressed with 7-Zip
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,47 +52,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Mar 2017 00:22:07 -0000
+X-List-Received-Date: Fri, 03 Mar 2017 00:24:27 -0000
+
+Treat tar files compressed with 7-Zip in the same way as tar files
+compressed with other compression formats.
 
 Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
 ---
- lib/bb/fetch2/__init__.py | 3 +--
- lib/bb/fetch2/npm.py      | 1 -
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ lib/bb/fetch2/__init__.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 0205c3d..2f9813e 100644
+index 2f9813e..e635318 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -38,7 +38,6 @@ import pickle
- import errno
- import bb.persist_data, bb.utils
- import bb.checksum
--from bb import data
- import bb.process
+@@ -1400,6 +1400,10 @@ class FetchMethod(object):
+                 cmd = 'lzip -dc %s | tar x --no-same-owner -f -' % file
+             elif file.endswith('.lz'):
+                 cmd = 'lzip -dc %s > %s' % (file, efile)
++            elif file.endswith('.tar.7z'):
++                cmd = '7z x -so %s | tar x --no-same-owner -f -' % file
++            elif file.endswith('.7z'):
++                cmd = '7za x -y %s 1>/dev/null' % file
+             elif file.endswith('.zip') or file.endswith('.jar'):
+                 try:
+                     dos = bb.utils.to_boolean(urldata.parm.get('dos'), False)
+@@ -1431,10 +1435,6 @@ class FetchMethod(object):
+                 else:
+                     raise UnpackError("Unable to unpack deb/ipk package - could not list contents", urldata.url)
+                 cmd = 'ar x %s %s && tar --no-same-owner -xpf %s && rm %s' % (file, datafile, datafile, datafile)
+-            elif file.endswith('.tar.7z'):
+-                cmd = '7z x -so %s | tar xf - ' % file
+-            elif file.endswith('.7z'):
+-                cmd = '7za x -y %s 1>/dev/null' % file
  
- __version__ = "2"
-@@ -1179,7 +1178,7 @@ class FetchData(object):
-         self.mirrortarball = None
-         self.basename = None
-         self.basepath = None
--        (self.type, self.host, self.path, self.user, self.pswd, self.parm) = decodeurl(data.expand(url, d))
-+        (self.type, self.host, self.path, self.user, self.pswd, self.parm) = decodeurl(d.expand(url))
-         self.date = self.getSRCDate(d)
-         self.url = url
-         if not self.user and "user" in self.parm:
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 780f26d..73a75fe 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -25,7 +25,6 @@ import json
- import subprocess
- import signal
- import bb
--from   bb import data
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import FetchError
- from   bb.fetch2 import ChecksumError
+         # If 'subdir' param exists, create a dir and use it as destination for unpack cmd
+         if 'subdir' in urldata.parm:
 -- 
 1.9.1
 
