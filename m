@@ -1,41 +1,28 @@
-Return-Path: <pinganddu90@gmail.com>
-Received: from mail-yw0-f180.google.com (mail-yw0-f180.google.com
-	[209.85.161.180])
-	by mail.openembedded.org (Postfix) with ESMTP id A98927307C
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id D5FB971B57
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Mar 2017 08:41:04 +0000 (UTC)
-Received: by mail-yw0-f180.google.com with SMTP id d1so75889474ywd.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 03 Mar 2017 00:41:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=EAfoNOlyYOJYsDlkpJgXfgH3cOpaRowb/LQk5auJjD8=;
-	b=PozbwRemNRT0qA3ZC42bOHb4mv3y7WQlZIOdQSvPCvTKANbQ7Qm11/oXQMUMl4cYn8
-	OD05mXAKOD0QFHFrd2hxEipDcnBkj06dljW23dtNUxgE61NMGuw4FZ8S5AkR2pNhmJ1w
-	5RAbF2xLz31+P91xnivz0sn6fDLLBYlilpNGXjYvex6QJN8Dc8BTjqnz9Zwu0oyGGvRq
-	xGN3kOVb4ER8+eIjM72SMGT1vn8rcf+2gwm0Ks3MvXd7SskZqY6WOyxhDSa7aOin1IHf
-	YuztpvyVKsC7uTTbVyfsuPvpBQf8QBfMKuzfB0b32rYpNTnCPxrREsIzBLn6HUUtrNRE
-	zegA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=EAfoNOlyYOJYsDlkpJgXfgH3cOpaRowb/LQk5auJjD8=;
-	b=uXtKEI2lbKOv8RKoJKdd7hz6jIUuesYbyVF9AGypnXqbXXFD33taVVNVFwHClg7su5
-	x+pehSe4jAuZSNSiQkwjCaZ+1imwWo7x2cQXN84zc4RlzVMWhc0dFMl/yLkXJhpRjt6E
-	9+m7IHxXJ4/lPqwmlbQkmK1VGVNiCPaX0GKvGzkV6QZK2J20B/76X2m2j03TyeobZe7w
-	zvYD4EwhNtqIzMlSymTHXpygAKakoQiXT4KD6h9CqOuaCOopTymnRYygwRrEOs5TX5eX
-	jsj/vw7BefbTn4cykNM/Vdm62bZI8eNwfllQdTcjm41oSRG4/azqSDlGycXh1lFP9LWy
-	2eTA==
-X-Gm-Message-State: AMke39lMsUPmjCMj5sksBtu9oUpFvucZ76QYrJ9d6VeHacm+4E9/vZ2KilKg0KYcoBICcRkyH/q6QPynQePiMw==
-X-Received: by 10.37.5.207 with SMTP id 198mr877034ybf.78.1488530466109; Fri,
-	03 Mar 2017 00:41:06 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.37.12.202 with HTTP; Fri, 3 Mar 2017 00:41:05 -0800 (PST)
-From: Du Dengke <pinganddu90@gmail.com>
-Date: Fri, 3 Mar 2017 16:41:05 +0800
-Message-ID: <CAKHP1dvb0zhmV=FgYWuyMUMpLHxEX+8a=MrZ0+WyEvzKocfBtg@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: bitbake-worker: where the data come from in handle_runtask?
+	Fri,  3 Mar 2017 10:00:20 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v239xUSI031101; Fri, 3 Mar 2017 10:00:19 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id JA6zTeAD_JHL; Fri,  3 Mar 2017 10:00:19 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v23A0GOR031292
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 3 Mar 2017 10:00:17 GMT
+Message-ID: <1488535216.24526.128.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Du Dengke <pinganddu90@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Fri, 03 Mar 2017 10:00:16 +0000
+In-Reply-To: <CAKHP1dvb0zhmV=FgYWuyMUMpLHxEX+8a=MrZ0+WyEvzKocfBtg@mail.gmail.com>
+References: <CAKHP1dvb0zhmV=FgYWuyMUMpLHxEX+8a=MrZ0+WyEvzKocfBtg@mail.gmail.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: bitbake-worker: where the data come from in handle_runtask?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,57 +35,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Mar 2017 08:41:06 -0000
-Content-Type: multipart/alternative; boundary=001a11c05022abbb170549cf818f
+X-List-Received-Date: Fri, 03 Mar 2017 10:00:21 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
---001a11c05022abbb170549cf818f
-Content-Type: text/plain; charset=UTF-8
+On Fri, 2017-03-03 at 16:41 +0800, Du Dengke wrote:
+> In file bitbake-worker, the function handle_runtask:
+> 
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> fn, task, taskname, quieterrors, appends, taskdepdata, dry_run_exec =
+> pickle.loads(data)
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> why the "pickle.loads(data)" return 7 results, before this commit:
+> 
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 58f08429 (Paul Eggleton      2016-12-16 07:09:13 +1300 428)
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> it returns 6 results:
+> 
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> fn, task, taskname, quieterrors, appends, taskdepdata =
+> pickle.loads(data)
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> where the data come from, I want to forcus on the taskdepdata.
 
-Hi bitbake-devel
+In the commit you mention, you'll see this piece:
 
-In file bitbake-worker, the function handle_runtask:
+-                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata)) + b"</runtask>")
++                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fn, task, taskname, quieterrors, appends, taskdepdata, dry_run_exec =
-pickle.loads(data)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is the change which means "data" now has seven elements instead of
+six since self.rqdata.setscene_enforce was added.
 
-why the "pickle.loads(data)" return 7 results, before this commit:
+Cheers,
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-58f08429 (Paul Eggleton      2016-12-16 07:09:13 +1300 428)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Richard
 
-it returns 6 results:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fn, task, taskname, quieterrors, appends, taskdepdata = pickle.loads(data)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-where the data come from, I want to forcus on the taskdepdata.
-
-Thanks
-pad
-
---001a11c05022abbb170549cf818f
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi bitbake-devel<div><br></div><div>In file bitbake-worker=
-, the function handle_runtask:</div><div><br></div><div>~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div>fn, task, taskna=
-me, quieterrors, appends, taskdepdata, dry_run_exec =3D pickle.loads(data)<=
-br></div><div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~</div><div><br></div><div>why the &quot;pickle.loads(data)&quot; retu=
-rn 7 results, before this commit:</div><div><br></div><div>~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div>58f08429 (Paul Eggleton =C2=A0 =
-=C2=A0 =C2=A02016-12-16 07:09:13 +1300 428)<br></div><div>~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div><br></div><div>it returns 6 result=
-s:</div><div><br></div><div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~</div><div>fn, task, taskname, quieterrors, appends, taskdepdata =
-=3D pickle.loads(data)<br></div><div>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~</div><div><br></div><div>where the data come from, I wan=
-t to forcus on the taskdepdata.</div><div><br></div><div>Thanks</div><div>p=
-ad</div></div>
-
---001a11c05022abbb170549cf818f--
