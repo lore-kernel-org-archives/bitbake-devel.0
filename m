@@ -1,28 +1,48 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id D5FB971B57
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pf0-f195.google.com (mail-pf0-f195.google.com
+	[209.85.192.195])
+	by mail.openembedded.org (Postfix) with ESMTP id D317D773E5
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Mar 2017 10:00:20 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v239xUSI031101; Fri, 3 Mar 2017 10:00:19 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id JA6zTeAD_JHL; Fri,  3 Mar 2017 10:00:19 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v23A0GOR031292
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 3 Mar 2017 10:00:17 GMT
-Message-ID: <1488535216.24526.128.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Du Dengke <pinganddu90@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Fri, 03 Mar 2017 10:00:16 +0000
-In-Reply-To: <CAKHP1dvb0zhmV=FgYWuyMUMpLHxEX+8a=MrZ0+WyEvzKocfBtg@mail.gmail.com>
-References: <CAKHP1dvb0zhmV=FgYWuyMUMpLHxEX+8a=MrZ0+WyEvzKocfBtg@mail.gmail.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: bitbake-worker: where the data come from in handle_runtask?
+	Mon,  6 Mar 2017 22:03:43 +0000 (UTC)
+Received: by mail-pf0-f195.google.com with SMTP id v190so7946343pfb.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 06 Mar 2017 14:03:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=YZuulJn2EN3gcbJ2iJ6/XHi2Yjlvcx2HEVAfFiX6K+I=;
+	b=WuB3OLeoJAlqYWhKbL46jBOpFx3hSVoP8ws8Dxrw1t+2s7JiBMAnf1UKWqPGRK3vaL
+	sL+EN1wfM0T8bfaarhfzQWBd4oT/yGn/iV9yfafoH5rOateRhBBEWO6b60sBFJKNB4uL
+	hkxhyRgMkS/Qmp1NFeb23LYXQ7icXSVzXTfvqfxw+9HdORhPZrlO1oxYeIv5tmrEtOiD
+	COYP+l+M7vzWT1i8mSkeEeCXqnH+w7ksq01OmeaNF3Aos8F4lEbcZw2StnWETk4f+pso
+	6Izp9AkMSWjY8DiaaWDDkfKEEMDiMCKP10EIz8oimDhAB/PSOPhQlZsJp7OJaozFsvpv
+	YpzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=YZuulJn2EN3gcbJ2iJ6/XHi2Yjlvcx2HEVAfFiX6K+I=;
+	b=gx8v62Crl8Qt2ARU9vHR+1PXYgFdETd3gSnakcdjr0DgvArt60WlPaIzH3A2F1LNBz
+	MtgQs3I1oUYPbthfZz9zj6D6vxSUqutJQVbWpBhOMQ2R1KrwzFGbTn+3m45ed63gMAO4
+	4aK5kQBJoEAKgeJhP7JPPMCMJGcPRoOl43Y4zzglbmhwxNvjayRy6x74oTR4UsNFJ6uR
+	2TKibuw/gx/pCUMQgIXO9GF5MwXEWj42rdUMap2AyO81ES4GRfXHwm/+k7NgpnlGjZGO
+	JUWlxFEB5QpvyH2XNj5cmmUbwKFLEoLLFBwXCK5XK/HfQeaGOxq+k+gZaJDbPE6TkMmG
+	o9CA==
+X-Gm-Message-State: AMke39lJ6C8Qb25hMNby6f0+2GmAjvQaGTTrBV25Jz1D18KziZoE5WAJILBVIB47T3ubvA==
+X-Received: by 10.99.158.2 with SMTP id s2mr23451548pgd.116.1488837824617;
+	Mon, 06 Mar 2017 14:03:44 -0800 (PST)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	n189sm41375332pfn.108.2017.03.06.14.03.43
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 06 Mar 2017 14:03:44 -0800 (PST)
+From: brian avery <avery.brian@gmail.com>
+X-Google-Original-From: brian avery <brian.avery@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  6 Mar 2017 14:04:59 -0800
+Message-Id: <cover.1488837822.git.brian.avery@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: brian avery <brian.avery@intel.com>
+Subject: [PATCH 0/1] toaster: resolve missing native[sdk]: prefixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,44 +55,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Mar 2017 10:00:21 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-
-On Fri, 2017-03-03 at 16:41 +0800, Du Dengke wrote:
-> In file bitbake-worker, the function handle_runtask:
-> 
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> fn, task, taskname, quieterrors, appends, taskdepdata, dry_run_exec =
-> pickle.loads(data)
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> why the "pickle.loads(data)" return 7 results, before this commit:
-> 
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 58f08429 (Paul Eggleton      2016-12-16 07:09:13 +1300 428)
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> it returns 6 results:
-> 
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> fn, task, taskname, quieterrors, appends, taskdepdata =
-> pickle.loads(data)
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> where the data come from, I want to forcus on the taskdepdata.
-
-In the commit you mention, you'll see this piece:
-
--                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata)) + b"</runtask>")
-+                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-
-This is the change which means "data" now has seven elements instead of
-six since self.rqdata.setscene_enforce was added.
-
-Cheers,
-
-Richard
+X-List-Received-Date: Mon, 06 Mar 2017 22:03:44 -0000
 
 
+Some task events are missing the 'virtual:native[sdk]:' prefixes.
+The Toaster has code to help match missing prefixes, but needs
+additional help resolving between 'native:' and 'nativesdk:', by
+way of the '_package' event field.
+
+[YOCTO #10849]
+
+-brian
+
+The following changes since commit 4188e53f803aefdb26768abfad591283662cd27e:
+
+  poky: make 4.10 the qemu* default (2017-03-04 23:19:03 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib bavery/toaster/submit/resolve-missing-native-sdk-prefixes
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/toaster/submit/resolve-missing-native-sdk-prefixes
+
+David Reyna (1):
+  toaster: resolve missing 'native[sdk]:' prefixes
+
+ lib/bb/ui/buildinfohelper.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+--
+1.9.1
 
