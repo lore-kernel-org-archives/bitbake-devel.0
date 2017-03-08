@@ -1,45 +1,44 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-ot0-f193.google.com (mail-ot0-f193.google.com
-	[74.125.82.193])
-	by mail.openembedded.org (Postfix) with ESMTP id A52A177776
+Return-Path: <msm-oss@mcclintock.net>
+Received: from mail-pf0-f194.google.com (mail-pf0-f194.google.com
+	[209.85.192.194])
+	by mail.openembedded.org (Postfix) with ESMTP id AFB9D71CA3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Mar 2017 03:10:08 +0000 (UTC)
-Received: by mail-ot0-f193.google.com with SMTP id a12so2642983ota.2
+	Wed,  8 Mar 2017 03:19:05 +0000 (UTC)
+Received: by mail-pf0-f194.google.com with SMTP id o126so2137511pfb.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 07 Mar 2017 19:10:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	Tue, 07 Mar 2017 19:19:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=mcclintock.net; s=google;
 	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=jFFkpiKBRbzNTdqW2HJqY32Qx5Mj3tgRhONaE5x3KVU=;
-	b=XzU5UVY1KA5TfHgtWjM3HILKrV45wgPF1Y7cq2RLAXO0Am+GHZPf6LbFAQrDD9PAVc
-	9XtXBLav0FOaUPGgsIFiYazDu3fR2T61lKuXwqLIDCaIlD5NBWpDB95zLLak0xElh8aD
-	LkfGLlIj8td0UHTexzvRTWepiFfx2pCzzKIr2uCMRhwbSg6EycnW8HVeSumoyM0UwXIv
-	8EYDd8pvtODy8uvqgQOay3JqXh6JNLD8qGu72Y1t515dCATxZ2Ba4CrGAu666AnqqFh/
-	czU+LH5h0ruO5qmtAp4vdyWwaPs6/BqK1OcOiqrJp9Odyl47BlpT4TOZCR8E4Rxt3jfU
-	MzjA==
+	:cc; bh=JJ2sMQ2W0IVAjeEAmtWAU3zuo9+s21yHYYXN0dg4qMY=;
+	b=HzNCezE0t3ZMkn6L/4NELwGz/BrDFZehaIhqd3rv+ULk7tdPthJHnyIcjxmUyTbSM0
+	1kVnAKa6UnbvyXkgND6+jSE8hP+S4LfqstY1aF0H93ndeFPQzlB+ZazT9D0Wj/4AvBQF
+	I+xGTW18XQvvIdFjgeir4QMKpNaOP1Tr6N1r0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
 	:message-id:subject:to:cc;
-	bh=jFFkpiKBRbzNTdqW2HJqY32Qx5Mj3tgRhONaE5x3KVU=;
-	b=jNzIV5e2d1B7qoSn0C2lA9EkxmJH4RIrk3pidfERZMZ4FDfzxjstWy3SF4lBlNq0Lj
-	6UIZoI/iSQkh6RioLE3oe8EkjV76Nwy/t9POrtHup7ItUNYD4r8dMdgLThnRughNoH6R
-	sygpeX4dDp6b74E/3db9DK3SjDp+52/UqPiPj47Ez/pGK7wEVHlmWOKMaYsBbNstlEem
-	Sf7YuOAMAWFzCy6tOItQ14SVp8Zi5YU/mc/MyaHDRtOGxMbc0ugSjAJ71NZlzY6j2OPs
-	OpepPOhNWI/KL4I8xOkW3LNbAodqWUfU38zHSDd3D/uYxpbq88CIhor/XDPN+UH39b5q
-	wmGQ==
-X-Gm-Message-State: AMke39kfP0MNhNrMgbPV1csq5ZULxvwTsw9jPF7vYwbHuRaD5EcuDho60VPDwOOipl1TJvSPbAqMrkMIfjt4Hw==
-X-Received: by 10.157.34.36 with SMTP id o33mr2428308ota.111.1488942609721;
-	Tue, 07 Mar 2017 19:10:09 -0800 (PST)
+	bh=JJ2sMQ2W0IVAjeEAmtWAU3zuo9+s21yHYYXN0dg4qMY=;
+	b=c5HY3JLy/3/yjhJ/I9X3m11oqTEeZaj670O0uPtLXBLP0qu8BNft6gfQm6gsXGTtlD
+	ZDs59/kC6sPvAIAnVb3PjI+CdCN2UUL8EAdepW/jmb2ZQPXk7lShRh5Iw9TI0kIws7ER
+	qhig2qQSHS7lhWOPyUD4GqeV+6XO2yc7Jp/MAdyTYzpqQR/iVpJ2tfWyBVDrWRoR+cXm
+	b9NnTZQ+DKJXyl+zQ/vttF/6UmYDFWbFe21WrRrewuOR8stw2/QqRb7JDoteUL4GqMF+
+	umRgLb2nsokzNktsk27Yvk+RyWNEPPrNX3NOlO1Vwd9mUaYWVMJ2QO5jReC5WtuFK+ZG
+	r6kg==
+X-Gm-Message-State: AMke39ksXp7/tLqA6opcQr6RbkK9lACtpq40cszAefydGbL5Hq3zwwLLf32R5YtvL7VFYPdz6wIGBPHkbBsaVg==
+X-Received: by 10.99.108.74 with SMTP id h71mr4113895pgc.99.1488943146785;
+	Tue, 07 Mar 2017 19:19:06 -0800 (PST)
 MIME-Version: 1.0
-Received: by 10.157.32.161 with HTTP; Tue, 7 Mar 2017 19:09:49 -0800 (PST)
-In-Reply-To: <1488941850-22002-1-git-send-email-msm-oss@mcclintock.net>
+Received: by 10.100.177.198 with HTTP; Tue, 7 Mar 2017 19:19:05 -0800 (PST)
+Received: by 10.100.177.198 with HTTP; Tue, 7 Mar 2017 19:19:05 -0800 (PST)
+In-Reply-To: <CABcZAN=48nxf2k4v0eKdbNs8pz+NnRh4gHaC_n7cEBKVVAHEng@mail.gmail.com>
 References: <1488941850-22002-1-git-send-email-msm-oss@mcclintock.net>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Tue, 7 Mar 2017 20:09:49 -0700
-Message-ID: <CABcZAN=48nxf2k4v0eKdbNs8pz+NnRh4gHaC_n7cEBKVVAHEng@mail.gmail.com>
-To: Matthew McClintock <msm-oss@mcclintock.net>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
+	<CABcZAN=48nxf2k4v0eKdbNs8pz+NnRh4gHaC_n7cEBKVVAHEng@mail.gmail.com>
+From: Matthew McClintock <msm-oss@mcclintock.net>
+Date: Tue, 7 Mar 2017 21:19:05 -0600
+Message-ID: <CAEsOVNcf+FJKm37LafOdX8igEZ+JG+EadBGVmY745TwRQaStTw@mail.gmail.com>
+To: Chris Larson <kergoth@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH v2] runqueue: add option to run all tasks in specific build target
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -53,12 +52,15 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Mar 2017 03:10:09 -0000
-Content-Type: multipart/alternative; boundary=001a113ad6a657f1e6054a2f772f
+X-List-Received-Date: Wed, 08 Mar 2017 03:19:05 -0000
+Content-Type: multipart/alternative; boundary=94eb2c1407425af28b054a2f97fc
 
---001a113ad6a657f1e6054a2f772f
+--94eb2c1407425af28b054a2f97fc
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+
+On Mar 7, 2017 9:10 PM, "Christopher Larson" <kergoth@gmail.com> wrote:
+
 
 On Tue, Mar 7, 2017 at 7:57 PM, Matthew McClintock <msm-oss@mcclintock.net>
 wrote:
@@ -102,8 +104,8 @@ wrote:
 > index 3ff43cf..bda3e0c 100755
 > --- a/lib/bb/main.py
 > +++ b/lib/bb/main.py
-> @@ -287,6 +287,9 @@ class BitBakeConfigParameters(
-> cookerdata.ConfigParameters):
+> @@ -287,6 +287,9 @@ class BitBakeConfigParameters(cooker
+> data.ConfigParameters):
 >                            help=3D"Writes the event log of the build to a
 > bitbake event json file. "
 >                                 "Use '' (empty string) to assign the name
@@ -120,22 +122,34 @@ This looks good (I=E2=80=99m sick of having to keep adding =E2=80=98all=E2=
 =80=99 variants for
 tasks), but I don=E2=80=99t think this argument help description is very cl=
 ear.
+
+
+Ah I was struggling with the verbiage here. Feel free to make a suggestion
+otherwise I'll try for something better tomorrow.
+
+-M
+
+
 --=20
 Christopher Larson
 kergoth at gmail dot com
 Founder - BitBake, OpenEmbedded, OpenZaurus
 Senior Software Engineer, Mentor Graphics
 
---001a113ad6a657f1e6054a2f772f
+--94eb2c1407425af28b054a2f97fc
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Tue, Mar 7, 2017 at 7:57 PM, Matthew McClintock <span dir=3D"ltr">&lt;<a=
- href=3D"mailto:msm-oss@mcclintock.net" target=3D"_blank">msm-oss@mcclintoc=
-k.net</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"m=
-argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=
-=3D"">For example:<br>
+<div dir=3D"auto"><div><br><div class=3D"gmail_extra"><br><div class=3D"gma=
+il_quote">On Mar 7, 2017 9:10 PM, &quot;Christopher Larson&quot; &lt;<a hre=
+f=3D"mailto:kergoth@gmail.com">kergoth@gmail.com</a>&gt; wrote:<br type=3D"=
+attribution"><blockquote class=3D"quote" style=3D"margin:0 0 0 .8ex;border-=
+left:1px #ccc solid;padding-left:1ex"><div dir=3D"ltr"><div class=3D"gmail_=
+extra"><div class=3D"elided-text"><br><div class=3D"gmail_quote">On Tue, Ma=
+r 7, 2017 at 7:57 PM, Matthew McClintock <span dir=3D"ltr">&lt;<a href=3D"m=
+ailto:msm-oss@mcclintock.net" target=3D"_blank">msm-oss@mcclintock.net</a>&=
+gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 =
+0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span>For example:<br>
 <br>
 $ bitbake core-image-minimal --runall unpack<br>
 ...<br>
@@ -152,13 +166,13 @@ NOTE: Tasks Summary: Attempted 135 tasks of which 119 didn&#39;t need to be=
  rerun and all succeeded.<br>
 <br>
 Signed-off-by: Matthew McClintock &lt;<a href=3D"mailto:msm-oss@mcclintock.=
-net">msm-oss@mcclintock.net</a>&gt;<br>
+net" target=3D"_blank">msm-oss@mcclintock.net</a>&gt;<br>
 ---<br>
 =C2=A0lib/bb/cookerdata.py |=C2=A0 1 +<br>
 =C2=A0lib/bb/main.py=C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 3 +++<br>
 </span>=C2=A0lib/bb/runqueue.py=C2=A0 =C2=A0| 14 ++++++++++++++<br>
 =C2=A03 files changed, 18 insertions(+)<br>
-<span class=3D""><br>
+<span><br>
 diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py<br>
 index 53f4587..722d860 100644<br>
 --- a/lib/bb/cookerdata.py<br>
@@ -175,7 +189,7 @@ diff --git a/lib/bb/main.py b/lib/bb/main.py<br>
 index 3ff43cf..bda3e0c 100755<br>
 --- a/lib/bb/main.py<br>
 +++ b/lib/bb/main.py<br>
-@@ -287,6 +287,9 @@ class BitBakeConfigParameters(<wbr>cookerdata.ConfigPar=
+@@ -287,6 +287,9 @@ class BitBakeConfigParameters(cooker<wbr>data.ConfigPar=
 ameters):<br>
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 =C2=A0help=3D&quot;Writes the event log of the build to a=
@@ -189,13 +203,21 @@ to assign the name automatically.&quot;)<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 help=3D&quot;Run all tasks in build target that is specif=
 ied.&quot;)<br>
-+</span></blockquote></div><br>This looks good (I=E2=80=99m sick of having =
-to keep adding =E2=80=98all=E2=80=99 variants for tasks), but I don=E2=80=
-=99t think this argument help description is very clear.<br>-- <br><div cla=
-ss=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr">=
-<div><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>Fou=
-nder - BitBake, OpenEmbedded, OpenZaurus<br>Senior Software Engineer, Mento=
-r Graphics</div></div></div></div>
-</div></div>
++</span></blockquote></div><br></div>This looks good (I=E2=80=99m sick of h=
+aving to keep adding =E2=80=98all=E2=80=99 variants for tasks), but I don=
+=E2=80=99t think this argument help description is very clear.</div></div><=
+/blockquote></div></div></div><div dir=3D"auto"><br></div><div dir=3D"auto"=
+>Ah I was struggling with the verbiage here. Feel free to make a suggestion=
+ otherwise I&#39;ll try for something better tomorrow.=C2=A0</div><div dir=
+=3D"auto"><br></div><div dir=3D"auto">-M</div><div dir=3D"auto"><div class=
+=3D"gmail_extra"><div class=3D"gmail_quote"><blockquote class=3D"quote" sty=
+le=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div d=
+ir=3D"ltr"><div class=3D"gmail_extra"><font color=3D"#888888"><br>-- <br><d=
+iv class=3D"m_9127871252908766455gmail_signature" data-smartmail=3D"gmail_s=
+ignature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kerg=
+oth at gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Seni=
+or Software Engineer, Mentor Graphics</div></div></div></div>
+</font></div></div>
+</blockquote></div><br></div></div></div>
 
---001a113ad6a657f1e6054a2f772f--
+--94eb2c1407425af28b054a2f97fc--
