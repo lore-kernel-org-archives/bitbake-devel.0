@@ -1,44 +1,58 @@
-Return-Path: <msm-oss@mcclintock.net>
-Received: from mail-pf0-f194.google.com (mail-pf0-f194.google.com
-	[209.85.192.194])
-	by mail.openembedded.org (Postfix) with ESMTP id AFB9D71CA3
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 2D127774E6
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Mar 2017 03:19:05 +0000 (UTC)
-Received: by mail-pf0-f194.google.com with SMTP id o126so2137511pfb.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 07 Mar 2017 19:19:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mcclintock.net; s=google;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=JJ2sMQ2W0IVAjeEAmtWAU3zuo9+s21yHYYXN0dg4qMY=;
-	b=HzNCezE0t3ZMkn6L/4NELwGz/BrDFZehaIhqd3rv+ULk7tdPthJHnyIcjxmUyTbSM0
-	1kVnAKa6UnbvyXkgND6+jSE8hP+S4LfqstY1aF0H93ndeFPQzlB+ZazT9D0Wj/4AvBQF
-	I+xGTW18XQvvIdFjgeir4QMKpNaOP1Tr6N1r0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=JJ2sMQ2W0IVAjeEAmtWAU3zuo9+s21yHYYXN0dg4qMY=;
-	b=c5HY3JLy/3/yjhJ/I9X3m11oqTEeZaj670O0uPtLXBLP0qu8BNft6gfQm6gsXGTtlD
-	ZDs59/kC6sPvAIAnVb3PjI+CdCN2UUL8EAdepW/jmb2ZQPXk7lShRh5Iw9TI0kIws7ER
-	qhig2qQSHS7lhWOPyUD4GqeV+6XO2yc7Jp/MAdyTYzpqQR/iVpJ2tfWyBVDrWRoR+cXm
-	b9NnTZQ+DKJXyl+zQ/vttF/6UmYDFWbFe21WrRrewuOR8stw2/QqRb7JDoteUL4GqMF+
-	umRgLb2nsokzNktsk27Yvk+RyWNEPPrNX3NOlO1Vwd9mUaYWVMJ2QO5jReC5WtuFK+ZG
-	r6kg==
-X-Gm-Message-State: AMke39ksXp7/tLqA6opcQr6RbkK9lACtpq40cszAefydGbL5Hq3zwwLLf32R5YtvL7VFYPdz6wIGBPHkbBsaVg==
-X-Received: by 10.99.108.74 with SMTP id h71mr4113895pgc.99.1488943146785;
-	Tue, 07 Mar 2017 19:19:06 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.100.177.198 with HTTP; Tue, 7 Mar 2017 19:19:05 -0800 (PST)
-Received: by 10.100.177.198 with HTTP; Tue, 7 Mar 2017 19:19:05 -0800 (PST)
-In-Reply-To: <CABcZAN=48nxf2k4v0eKdbNs8pz+NnRh4gHaC_n7cEBKVVAHEng@mail.gmail.com>
+	Wed,  8 Mar 2017 08:53:08 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 520221835F;
+	Wed,  8 Mar 2017 09:53:09 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id vyqY0WRSyEtE; Wed,  8 Mar 2017 09:53:07 +0100 (CET)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id A2D4A1835E;
+	Wed,  8 Mar 2017 09:53:07 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 85CD41E078;
+	Wed,  8 Mar 2017 09:53:07 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 709721E060;
+	Wed,  8 Mar 2017 09:53:07 +0100 (CET)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder03.se.axis.com (Postfix) with ESMTP;
+	Wed,  8 Mar 2017 09:53:07 +0100 (CET)
+Received: from XBOX04.axis.com (xbox04.axis.com [10.0.5.18])
+	by seth.se.axis.com (Postfix) with ESMTP id 612F528E;
+	Wed,  8 Mar 2017 09:53:07 +0100 (CET)
+Received: from XBOX02.axis.com (10.0.5.16) by XBOX04.axis.com (10.0.5.18) with
+	Microsoft SMTP Server (TLS) id 15.0.1210.3;
+	Wed, 8 Mar 2017 09:53:06 +0100
+Received: from XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776]) by
+	XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776%21]) with mapi id
+	15.00.1210.000; Wed, 8 Mar 2017 09:53:06 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Matthew McClintock <msm-oss@mcclintock.net>, Chris Larson
+	<kergoth@gmail.com>
+Thread-Topic: [bitbake-devel] [PATCH v2] runqueue: add option to run all tasks
+	in specific build target
+Thread-Index: AQHSl7mIdt2lqZ544UeysC38xt8QhaGKNUSAgABqsGA=
+Date: Wed, 8 Mar 2017 08:53:06 +0000
+Message-ID: <79565c43b65b4ac0a093f459e3508c78@XBOX02.axis.com>
 References: <1488941850-22002-1-git-send-email-msm-oss@mcclintock.net>
 	<CABcZAN=48nxf2k4v0eKdbNs8pz+NnRh4gHaC_n7cEBKVVAHEng@mail.gmail.com>
-From: Matthew McClintock <msm-oss@mcclintock.net>
-Date: Tue, 7 Mar 2017 21:19:05 -0600
-Message-ID: <CAEsOVNcf+FJKm37LafOdX8igEZ+JG+EadBGVmY745TwRQaStTw@mail.gmail.com>
-To: Chris Larson <kergoth@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
+	<CAEsOVNcf+FJKm37LafOdX8igEZ+JG+EadBGVmY745TwRQaStTw@mail.gmail.com>
+In-Reply-To: <CAEsOVNcf+FJKm37LafOdX8igEZ+JG+EadBGVmY745TwRQaStTw@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH v2] runqueue: add option to run all tasks in specific build target
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -52,172 +66,213 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Mar 2017 03:19:05 -0000
-Content-Type: multipart/alternative; boundary=94eb2c1407425af28b054a2f97fc
+X-List-Received-Date: Wed, 08 Mar 2017 08:53:09 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_79565c43b65b4ac0a093f459e3508c78XBOX02axiscom_"
 
---94eb2c1407425af28b054a2f97fc
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+--_000_79565c43b65b4ac0a093f459e3508c78XBOX02axiscom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Mar 7, 2017 9:10 PM, "Christopher Larson" <kergoth@gmail.com> wrote:
+DQpGcm9tOiBiaXRiYWtlLWRldmVsLWJvdW5jZXNAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyBbbWFp
+bHRvOmJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3JnXSBPbiBCZWhh
+bGYgT2YgTWF0dGhldyBNY0NsaW50b2NrDQpTZW50OiBkZW4gOCBtYXJzIDIwMTcgMDQ6MTkNClRv
+OiBDaHJpcyBMYXJzb24NCkNjOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcN
+ClN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIIHYyXSBydW5xdWV1ZTogYWRkIG9w
+dGlvbiB0byBydW4gYWxsIHRhc2tzIGluIHNwZWNpZmljIGJ1aWxkIHRhcmdldA0KDQpPbiBNYXIg
+NywgMjAxNyA5OjEwIFBNLCAiQ2hyaXN0b3BoZXIgTGFyc29uIiA8a2VyZ290aEBnbWFpbC5jb208
+bWFpbHRvOmtlcmdvdGhAZ21haWwuY29tPj4gd3JvdGU6DQoNCk9uIFR1ZSwgTWFyIDcsIDIwMTcg
+YXQgNzo1NyBQTSwgTWF0dGhldyBNY0NsaW50b2NrIDxtc20tb3NzQG1jY2xpbnRvY2submV0PG1h
+aWx0bzptc20tb3NzQG1jY2xpbnRvY2submV0Pj4gd3JvdGU6DQpGb3IgZXhhbXBsZToNCg0KJCBi
+aXRiYWtlIGNvcmUtaW1hZ2UtbWluaW1hbCAtLXJ1bmFsbCB1bnBhY2sNCi4uLg0KTk9URTogVGFz
+a3MgU3VtbWFyeTogQXR0ZW1wdGVkIDMyNiB0YXNrcyBvZiB3aGljaCA4OCBkaWRuJ3QgbmVlZCB0
+byBiZSByZXJ1biBhbmQgYWxsIHN1Y2NlZWRlZC4NCg0KJCBiaXRiYWtlIGNvcmUtaW1hZ2UtbWlu
+aW1hbCAtLXJ1bmFsbCBwYXRjaA0KTk9URTogVGFza3MgU3VtbWFyeTogQXR0ZW1wdGVkIDQ1MyB0
+YXNrcyBvZiB3aGljaCAzMzIgZGlkbid0IG5lZWQgdG8gYmUgcmVydW4gYW5kIGFsbCBzdWNjZWVk
+ZWQuDQoNClRoaXMgY2FuIHJlcGxhY2UgZmV0Y2hhbGwgYXMgd2VsbDoNCiQgYml0YmFrZSBjb3Jl
+LWltYWdlLW1pbmltYWwgLS1ydW5hbGwgZmV0Y2gNCk5PVEU6IFRhc2tzIFN1bW1hcnk6IEF0dGVt
+cHRlZCAxMzUgdGFza3Mgb2Ygd2hpY2ggMTE5IGRpZG4ndCBuZWVkIHRvIGJlIHJlcnVuIGFuZCBh
+bGwgc3VjY2VlZGVkLg0KDQpTaWduZWQtb2ZmLWJ5OiBNYXR0aGV3IE1jQ2xpbnRvY2sgPG1zbS1v
+c3NAbWNjbGludG9jay5uZXQ8bWFpbHRvOm1zbS1vc3NAbWNjbGludG9jay5uZXQ+Pg0KLS0tDQog
+bGliL2JiL2Nvb2tlcmRhdGEucHkgfCAgMSArDQogbGliL2JiL21haW4ucHkgICAgICAgfCAgMyAr
+KysNCiBsaWIvYmIvcnVucXVldWUucHkgICB8IDE0ICsrKysrKysrKysrKysrDQogMyBmaWxlcyBj
+aGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9saWIvYmIvY29va2VyZGF0
+YS5weSBiL2xpYi9iYi9jb29rZXJkYXRhLnB5DQppbmRleCA1M2Y0NTg3Li43MjJkODYwIDEwMDY0
+NA0KLS0tIGEvbGliL2JiL2Nvb2tlcmRhdGEucHkNCisrKyBiL2xpYi9iYi9jb29rZXJkYXRhLnB5
+DQpAQCAtMTQ4LDYgKzE0OCw3IEBAIGNsYXNzIENvb2tlckNvbmZpZ3VyYXRpb24ob2JqZWN0KToN
+CiAgICAgICAgIHNlbGYud3JpdGVldmVudGxvZyA9IEZhbHNlDQogICAgICAgICBzZWxmLnNlcnZl
+cl9vbmx5ID0gRmFsc2UNCiAgICAgICAgIHNlbGYubGltaXRlZF9kZXBzID0gRmFsc2UNCisgICAg
+ICAgIHNlbGYucnVuYWxsID0gTm9uZQ0KDQogICAgICAgICBzZWxmLmVudiA9IHt9DQoNCmRpZmYg
+LS1naXQgYS9saWIvYmIvbWFpbi5weSBiL2xpYi9iYi9tYWluLnB5DQppbmRleCAzZmY0M2NmLi5i
+ZGEzZTBjIDEwMDc1NQ0KLS0tIGEvbGliL2JiL21haW4ucHkNCisrKyBiL2xpYi9iYi9tYWluLnB5
+DQpAQCAtMjg3LDYgKzI4Nyw5IEBAIGNsYXNzIEJpdEJha2VDb25maWdQYXJhbWV0ZXJzKGNvb2tl
+cmRhdGEuQ29uZmlnUGFyYW1ldGVycyk6DQogICAgICAgICAgICAgICAgICAgICAgICAgICBoZWxw
+PSJXcml0ZXMgdGhlIGV2ZW50IGxvZyBvZiB0aGUgYnVpbGQgdG8gYSBiaXRiYWtlIGV2ZW50IGpz
+b24gZmlsZS4gIg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiVXNlICcnIChlbXB0
+eSBzdHJpbmcpIHRvIGFzc2lnbiB0aGUgbmFtZSBhdXRvbWF0aWNhbGx5LiIpDQoNCisgICAgICAg
+IHBhcnNlci5hZGRfb3B0aW9uKCIiLCAiLS1ydW5hbGwiLCBhY3Rpb249InN0b3JlIiwgZGVzdD0i
+cnVuYWxsIiwNCisgICAgICAgICAgICAgICAgICAgICAgICAgIGhlbHA9IlJ1biBhbGwgdGFza3Mg
+aW4gYnVpbGQgdGFyZ2V0IHRoYXQgaXMgc3BlY2lmaWVkLiIpDQorDQoNClRoaXMgbG9va3MgZ29v
+ZCAoSeKAmW0gc2ljayBvZiBoYXZpbmcgdG8ga2VlcCBhZGRpbmcg4oCYYWxs4oCZIHZhcmlhbnRz
+IGZvciB0YXNrcyksIGJ1dCBJIGRvbuKAmXQgdGhpbmsgdGhpcyBhcmd1bWVudCBoZWxwIGRlc2Ny
+aXB0aW9uIGlzIHZlcnkgY2xlYXIuDQoNCkFoIEkgd2FzIHN0cnVnZ2xpbmcgd2l0aCB0aGUgdmVy
+YmlhZ2UgaGVyZS4gRmVlbCBmcmVlIHRvIG1ha2UgYSBzdWdnZXN0aW9uIG90aGVyd2lzZSBJJ2xs
+IHRyeSBmb3Igc29tZXRoaW5nIGJldHRlciB0b21vcnJvdy4NCg0KLU0NCg0KLS0NCkNocmlzdG9w
+aGVyIExhcnNvbg0Ka2VyZ290aCBhdCBnbWFpbCBkb3QgY29tDQpGb3VuZGVyIC0gQml0QmFrZSwg
+T3BlbkVtYmVkZGVkLCBPcGVuWmF1cnVzDQpTZW5pb3IgU29mdHdhcmUgRW5naW5lZXIsIE1lbnRv
+ciBHcmFwaGljcw0KDQoNCk1heWJlIHNvbWV0aGluZyBsaWtlOg0KDQpSdW4gdGhlIHNwZWNpZmll
+ZCB0YXNrIGZvciBhbGwgYnVpbGQgdGFyZ2V0cyBhbmQgdGhlaXIgZGVwZW5kZW5jaWVzLg0KDQov
+L1BldGVyDQoNCg==
 
+--_000_79565c43b65b4ac0a093f459e3508c78XBOX02axiscom_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Tue, Mar 7, 2017 at 7:57 PM, Matthew McClintock <msm-oss@mcclintock.net>
-wrote:
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9
+DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglj
+b2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
+Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpw
+dXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUxNw0K
+CXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1yZXBseTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIs
+c2Fucy1zZXJpZjsNCgljb2xvcjojOTQzNjM0Ow0KCWZvbnQtd2VpZ2h0Om5vcm1hbDsNCglmb250
+LXN0eWxlOm5vcm1hbDsNCgl0ZXh0LWRlY29yYXRpb246bm9uZSBub25lO30NCi5Nc29DaHBEZWZh
+dWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5O30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0K
+CXtzaXplOjYxMi4wcHQgNzkyLjBwdDsNCgltYXJnaW46NzIuMHB0IDcyLjBwdCA3Mi4wcHQgNzIu
+MHB0O30NCmRpdi5Xb3JkU2VjdGlvbjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQ0KLS0+PC9zdHls
+ZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQi
+IHNwaWRtYXg9IjEwMjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+
+PHhtbD4NCjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFwIHY6ZXh0PSJlZGl0
+IiBkYXRhPSIxIiAvPg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPg0KPC9oZWFk
+Pg0KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZsaW5rPSJwdXJwbGUiPg0KPGRpdiBj
+bGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
+b250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJp
+Zjtjb2xvcjojOTQzNjM0Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8ZGl2IHN0eWxl
+PSJib3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGNtIDBj
+bSAwY20gNC4wcHQiPg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6
+c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBjbSAwY20gMGNtIj4NCjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPjxiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5
+OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
+cy1zZXJpZiI+IGJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3JnIFtt
+YWlsdG86Yml0YmFrZS1kZXZlbC1ib3VuY2VzQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmddDQo8Yj5P
+biBCZWhhbGYgT2YgPC9iPk1hdHRoZXcgTWNDbGludG9jazxicj4NCjxiPlNlbnQ6PC9iPiBkZW4g
+OCBtYXJzIDIwMTcgMDQ6MTk8YnI+DQo8Yj5Ubzo8L2I+IENocmlzIExhcnNvbjxicj4NCjxiPkNj
+OjwvYj4gYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPGJyPg0KPGI+U3ViamVj
+dDo8L2I+IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIIHYyXSBydW5xdWV1ZTogYWRkIG9wdGlv
+biB0byBydW4gYWxsIHRhc2tzIGluIHNwZWNpZmljIGJ1aWxkIHRhcmdldDxvOnA+PC9vOnA+PC9z
+cGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
+OzwvbzpwPjwvcD4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5PbiBNYXIgNywgMjAxNyA5OjEwIFBNLCAmcXVvdDtDaHJpc3RvcGhlciBMYXJzb24mcXVv
+dDsgJmx0OzxhIGhyZWY9Im1haWx0bzprZXJnb3RoQGdtYWlsLmNvbSI+a2VyZ290aEBnbWFpbC5j
+b208L2E+Jmd0OyB3cm90ZTo8bzpwPjwvbzpwPjwvcD4NCjxibG9ja3F1b3RlIHN0eWxlPSJib3Jk
+ZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCAjQ0NDQ0NDIDEuMHB0O3BhZGRpbmc6MGNtIDBjbSAw
+Y20gNi4wcHQ7bWFyZ2luLWxlZnQ6NC44cHQ7bWFyZ2luLXJpZ2h0OjBjbSI+DQo8ZGl2Pg0KPGRp
+dj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxk
+aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5PbiBUdWUsIE1hciA3LCAyMDE3IGF0IDc6NTcgUE0s
+IE1hdHRoZXcgTWNDbGludG9jayAmbHQ7PGEgaHJlZj0ibWFpbHRvOm1zbS1vc3NAbWNjbGludG9j
+ay5uZXQiIHRhcmdldD0iX2JsYW5rIj5tc20tb3NzQG1jY2xpbnRvY2submV0PC9hPiZndDsgd3Jv
+dGU6PG86cD48L286cD48L3A+DQo8YmxvY2txdW90ZSBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVy
+LWxlZnQ6c29saWQgI0NDQ0NDQyAxLjBwdDtwYWRkaW5nOjBjbSAwY20gMGNtIDYuMHB0O21hcmdp
+bi1sZWZ0OjQuOHB0O21hcmdpbi1yaWdodDowY20iPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Rm9y
+IGV4YW1wbGU6PGJyPg0KPGJyPg0KJCBiaXRiYWtlIGNvcmUtaW1hZ2UtbWluaW1hbCAtLXJ1bmFs
+bCB1bnBhY2s8YnI+DQouLi48YnI+DQpOT1RFOiBUYXNrcyBTdW1tYXJ5OiBBdHRlbXB0ZWQgMzI2
+IHRhc2tzIG9mIHdoaWNoIDg4IGRpZG4ndCBuZWVkIHRvIGJlIHJlcnVuIGFuZCBhbGwgc3VjY2Vl
+ZGVkLjxicj4NCjxicj4NCiQgYml0YmFrZSBjb3JlLWltYWdlLW1pbmltYWwgLS1ydW5hbGwgcGF0
+Y2g8YnI+DQpOT1RFOiBUYXNrcyBTdW1tYXJ5OiBBdHRlbXB0ZWQgNDUzIHRhc2tzIG9mIHdoaWNo
+IDMzMiBkaWRuJ3QgbmVlZCB0byBiZSByZXJ1biBhbmQgYWxsIHN1Y2NlZWRlZC48YnI+DQo8YnI+
+DQpUaGlzIGNhbiByZXBsYWNlIGZldGNoYWxsIGFzIHdlbGw6PGJyPg0KJCBiaXRiYWtlIGNvcmUt
+aW1hZ2UtbWluaW1hbCAtLXJ1bmFsbCBmZXRjaDxicj4NCk5PVEU6IFRhc2tzIFN1bW1hcnk6IEF0
+dGVtcHRlZCAxMzUgdGFza3Mgb2Ygd2hpY2ggMTE5IGRpZG4ndCBuZWVkIHRvIGJlIHJlcnVuIGFu
+ZCBhbGwgc3VjY2VlZGVkLjxicj4NCjxicj4NClNpZ25lZC1vZmYtYnk6IE1hdHRoZXcgTWNDbGlu
+dG9jayAmbHQ7PGEgaHJlZj0ibWFpbHRvOm1zbS1vc3NAbWNjbGludG9jay5uZXQiIHRhcmdldD0i
+X2JsYW5rIj5tc20tb3NzQG1jY2xpbnRvY2submV0PC9hPiZndDs8YnI+DQotLS08YnI+DQombmJz
+cDtsaWIvYmIvY29va2VyZGF0YS5weSB8Jm5ic3A7IDEgJiM0Mzs8YnI+DQombmJzcDtsaWIvYmIv
+bWFpbi5weSZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO3wmbmJzcDsgMyAmIzQzOyYjNDM7JiM0
+Mzs8YnI+DQombmJzcDtsaWIvYmIvcnVucXVldWUucHkmbmJzcDsgJm5ic3A7fCAxNCAmIzQzOyYj
+NDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQz
+OyYjNDM7PGJyPg0KJm5ic3A7MyBmaWxlcyBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCYjNDM7KTxi
+cj4NCjxicj4NCmRpZmYgLS1naXQgYS9saWIvYmIvY29va2VyZGF0YS5weSBiL2xpYi9iYi9jb29r
+ZXJkYXRhLnB5PGJyPg0KaW5kZXggNTNmNDU4Ny4uNzIyZDg2MCAxMDA2NDQ8YnI+DQotLS0gYS9s
+aWIvYmIvY29va2VyZGF0YS5weTxicj4NCiYjNDM7JiM0MzsmIzQzOyBiL2xpYi9iYi9jb29rZXJk
+YXRhLnB5PGJyPg0KQEAgLTE0OCw2ICYjNDM7MTQ4LDcgQEAgY2xhc3MgQ29va2VyQ29uZmlndXJh
+dGlvbihvYmplY3QpOjxicj4NCiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtzZWxm
+LndyaXRlZXZlbnRsb2cgPSBGYWxzZTxicj4NCiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
+bmJzcDtzZWxmLnNlcnZlcl9vbmx5ID0gRmFsc2U8YnI+DQombmJzcDsgJm5ic3A7ICZuYnNwOyAm
+bmJzcDsgJm5ic3A7c2VsZi5saW1pdGVkX2RlcHMgPSBGYWxzZTxicj4NCiYjNDM7Jm5ic3A7ICZu
+YnNwOyAmbmJzcDsgJm5ic3A7IHNlbGYucnVuYWxsID0gTm9uZTxicj4NCjxicj4NCiZuYnNwOyAm
+bmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtzZWxmLmVudiA9IHt9PGJyPg0KPGJyPg0KZGlmZiAt
+LWdpdCBhL2xpYi9iYi9tYWluLnB5IGIvbGliL2JiL21haW4ucHk8YnI+DQppbmRleCAzZmY0M2Nm
+Li5iZGEzZTBjIDEwMDc1NTxicj4NCi0tLSBhL2xpYi9iYi9tYWluLnB5PGJyPg0KJiM0MzsmIzQz
+OyYjNDM7IGIvbGliL2JiL21haW4ucHk8YnI+DQpAQCAtMjg3LDYgJiM0MzsyODcsOSBAQCBjbGFz
+cyBCaXRCYWtlQ29uZmlnUGFyYW1ldGVycyhjb29rZXJkYXRhLkNvbmZpZ1BhcmFtZXRlcnMpOjxi
+cj4NCiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJz
+cDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtoZWxwPSZxdW90O1dy
+aXRlcyB0aGUgZXZlbnQgbG9nIG9mIHRoZSBidWlsZCB0byBhIGJpdGJha2UgZXZlbnQganNvbiBm
+aWxlLiAmcXVvdDs8YnI+DQombmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
+OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
+ICZuYnNwOyAmbmJzcDsgJnF1b3Q7VXNlICcnIChlbXB0eSBzdHJpbmcpIHRvIGFzc2lnbiB0aGUg
+bmFtZSBhdXRvbWF0aWNhbGx5LiZxdW90Oyk8YnI+DQo8YnI+DQomIzQzOyZuYnNwOyAmbmJzcDsg
+Jm5ic3A7ICZuYnNwOyBwYXJzZXIuYWRkX29wdGlvbigmcXVvdDsmcXVvdDssICZxdW90Oy0tcnVu
+YWxsJnF1b3Q7LCBhY3Rpb249JnF1b3Q7c3RvcmUmcXVvdDssIGRlc3Q9JnF1b3Q7cnVuYWxsJnF1
+b3Q7LDxicj4NCiYjNDM7Jm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsg
+Jm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IGhlbHA9JnF1
+b3Q7UnVuIGFsbCB0YXNrcyBpbiBidWlsZCB0YXJnZXQgdGhhdCBpcyBzcGVjaWZpZWQuJnF1b3Q7
+KTxicj4NCiYjNDM7PG86cD48L286cD48L3A+DQo8L2Jsb2NrcXVvdGU+DQo8L2Rpdj4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj5UaGlzIGxvb2tzIGdvb2QgKEnigJltIHNpY2sgb2YgaGF2aW5nIHRvIGtlZXAg
+YWRkaW5nIOKAmGFsbOKAmSB2YXJpYW50cyBmb3IgdGFza3MpLCBidXQgSSBkb27igJl0IHRoaW5r
+IHRoaXMgYXJndW1lbnQgaGVscCBkZXNjcmlwdGlvbiBpcyB2ZXJ5IGNsZWFyLjxvOnA+PC9vOnA+
+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvYmxvY2txdW90ZT4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rp
+dj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwv
+ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkFoIEkgd2FzIHN0cnVnZ2xpbmcgd2l0
+aCB0aGUgdmVyYmlhZ2UgaGVyZS4gRmVlbCBmcmVlIHRvIG1ha2UgYSBzdWdnZXN0aW9uIG90aGVy
+d2lzZSBJJ2xsIHRyeSBmb3Igc29tZXRoaW5nIGJldHRlciB0b21vcnJvdy4mbmJzcDs8bzpwPjwv
+bzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7
+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+LU08bzpwPjwv
+bzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGJsb2NrcXVvdGUgc3R5bGU9
+ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkICNDQ0NDQ0MgMS4wcHQ7cGFkZGluZzowY20g
+MGNtIDBjbSA2LjBwdDttYXJnaW4tbGVmdDo0LjhwdDttYXJnaW4tcmlnaHQ6MGNtIj4NCjxkaXY+
+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiM4ODg4ODgi
+Pjxicj4NCi0tIDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxk
+aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iY29sb3I6Izg4ODg4OCI+Q2hy
+aXN0b3BoZXIgTGFyc29uPGJyPg0Ka2VyZ290aCBhdCBnbWFpbCBkb3QgY29tPGJyPg0KRm91bmRl
+ciAtIEJpdEJha2UsIE9wZW5FbWJlZGRlZCwgT3BlblphdXJ1czxicj4NClNlbmlvciBTb2Z0d2Fy
+ZSBFbmdpbmVlciwgTWVudG9yIEdyYXBoaWNzPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+
+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9ibG9ja3F1b3RlPg0K
+PC9kaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iY29sb3I6Izk0MzYzNCI+
+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9k
+aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtm
+b250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Izk0MzYzNCI+
+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+c3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90Oyxz
+YW5zLXNlcmlmO2NvbG9yOiM5NDM2MzQiPk1heWJlIHNvbWV0aGluZyBsaWtlOjxvOnA+PC9vOnA+
+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
+MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjoj
+OTQzNjM0Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJp
+JnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Izk0MzYzNCI+UnVuIHRoZSBzcGVjaWZpZWQgdGFzayBm
+b3IgYWxsIGJ1aWxkIHRhcmdldHMgYW5kIHRoZWlyIGRlcGVuZGVuY2llcy48bzpwPjwvbzpwPjwv
+c3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEx
+LjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Izk0
+MzYzNCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PHNwYW4gbGFuZz0iU1YiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90
+O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojOTQzNjM0Ij4vL1BldGVyPG86cD48L286
+cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iU1YiIHN0eWxl
+PSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1z
+ZXJpZjtjb2xvcjojOTQzNjM0Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4N
+CjwvYm9keT4NCjwvaHRtbD4NCg==
 
-> For example:
->
-> $ bitbake core-image-minimal --runall unpack
-> ...
-> NOTE: Tasks Summary: Attempted 326 tasks of which 88 didn't need to be
-> rerun and all succeeded.
->
-> $ bitbake core-image-minimal --runall patch
-> NOTE: Tasks Summary: Attempted 453 tasks of which 332 didn't need to be
-> rerun and all succeeded.
->
-> This can replace fetchall as well:
-> $ bitbake core-image-minimal --runall fetch
-> NOTE: Tasks Summary: Attempted 135 tasks of which 119 didn't need to be
-> rerun and all succeeded.
->
-> Signed-off-by: Matthew McClintock <msm-oss@mcclintock.net>
-> ---
->  lib/bb/cookerdata.py |  1 +
->  lib/bb/main.py       |  3 +++
->  lib/bb/runqueue.py   | 14 ++++++++++++++
->  3 files changed, 18 insertions(+)
->
-> diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-> index 53f4587..722d860 100644
-> --- a/lib/bb/cookerdata.py
-> +++ b/lib/bb/cookerdata.py
-> @@ -148,6 +148,7 @@ class CookerConfiguration(object):
->          self.writeeventlog =3D False
->          self.server_only =3D False
->          self.limited_deps =3D False
-> +        self.runall =3D None
->
->          self.env =3D {}
->
-> diff --git a/lib/bb/main.py b/lib/bb/main.py
-> index 3ff43cf..bda3e0c 100755
-> --- a/lib/bb/main.py
-> +++ b/lib/bb/main.py
-> @@ -287,6 +287,9 @@ class BitBakeConfigParameters(cooker
-> data.ConfigParameters):
->                            help=3D"Writes the event log of the build to a
-> bitbake event json file. "
->                                 "Use '' (empty string) to assign the name
-> automatically.")
->
-> +        parser.add_option("", "--runall", action=3D"store", dest=3D"runa=
-ll",
-> +                          help=3D"Run all tasks in build target that is
-> specified.")
-> +
-
-
-This looks good (I=E2=80=99m sick of having to keep adding =E2=80=98all=E2=
-=80=99 variants for
-tasks), but I don=E2=80=99t think this argument help description is very cl=
-ear.
-
-
-Ah I was struggling with the verbiage here. Feel free to make a suggestion
-otherwise I'll try for something better tomorrow.
-
--M
-
-
---=20
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
-
---94eb2c1407425af28b054a2f97fc
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto"><div><br><div class=3D"gmail_extra"><br><div class=3D"gma=
-il_quote">On Mar 7, 2017 9:10 PM, &quot;Christopher Larson&quot; &lt;<a hre=
-f=3D"mailto:kergoth@gmail.com">kergoth@gmail.com</a>&gt; wrote:<br type=3D"=
-attribution"><blockquote class=3D"quote" style=3D"margin:0 0 0 .8ex;border-=
-left:1px #ccc solid;padding-left:1ex"><div dir=3D"ltr"><div class=3D"gmail_=
-extra"><div class=3D"elided-text"><br><div class=3D"gmail_quote">On Tue, Ma=
-r 7, 2017 at 7:57 PM, Matthew McClintock <span dir=3D"ltr">&lt;<a href=3D"m=
-ailto:msm-oss@mcclintock.net" target=3D"_blank">msm-oss@mcclintock.net</a>&=
-gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 =
-0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span>For example:<br>
-<br>
-$ bitbake core-image-minimal --runall unpack<br>
-...<br>
-NOTE: Tasks Summary: Attempted 326 tasks of which 88 didn&#39;t need to be =
-rerun and all succeeded.<br>
-<br>
-$ bitbake core-image-minimal --runall patch<br>
-NOTE: Tasks Summary: Attempted 453 tasks of which 332 didn&#39;t need to be=
- rerun and all succeeded.<br>
-<br>
-This can replace fetchall as well:<br>
-$ bitbake core-image-minimal --runall fetch<br>
-NOTE: Tasks Summary: Attempted 135 tasks of which 119 didn&#39;t need to be=
- rerun and all succeeded.<br>
-<br>
-Signed-off-by: Matthew McClintock &lt;<a href=3D"mailto:msm-oss@mcclintock.=
-net" target=3D"_blank">msm-oss@mcclintock.net</a>&gt;<br>
----<br>
-=C2=A0lib/bb/cookerdata.py |=C2=A0 1 +<br>
-=C2=A0lib/bb/main.py=C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 3 +++<br>
-</span>=C2=A0lib/bb/runqueue.py=C2=A0 =C2=A0| 14 ++++++++++++++<br>
-=C2=A03 files changed, 18 insertions(+)<br>
-<span><br>
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py<br>
-index 53f4587..722d860 100644<br>
---- a/lib/bb/cookerdata.py<br>
-+++ b/lib/bb/cookerdata.py<br>
-@@ -148,6 +148,7 @@ class CookerConfiguration(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.writeeventlog =3D False<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.server_only =3D False<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.limited_deps =3D False<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.runall =3D None<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.env =3D {}<br>
-<br>
-diff --git a/lib/bb/main.py b/lib/bb/main.py<br>
-index 3ff43cf..bda3e0c 100755<br>
---- a/lib/bb/main.py<br>
-+++ b/lib/bb/main.py<br>
-@@ -287,6 +287,9 @@ class BitBakeConfigParameters(cooker<wbr>data.ConfigPar=
-ameters):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0help=3D&quot;Writes the event log of the build to a=
- bitbake event json file. &quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;Use &#39;&#39; (empty string) =
-to assign the name automatically.&quot;)<br>
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 parser.add_option(&quot;&quot;, &quot;--runall=
-&quot;, action=3D&quot;store&quot;, dest=3D&quot;runall&quot;,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 help=3D&quot;Run all tasks in build target that is specif=
-ied.&quot;)<br>
-+</span></blockquote></div><br></div>This looks good (I=E2=80=99m sick of h=
-aving to keep adding =E2=80=98all=E2=80=99 variants for tasks), but I don=
-=E2=80=99t think this argument help description is very clear.</div></div><=
-/blockquote></div></div></div><div dir=3D"auto"><br></div><div dir=3D"auto"=
->Ah I was struggling with the verbiage here. Feel free to make a suggestion=
- otherwise I&#39;ll try for something better tomorrow.=C2=A0</div><div dir=
-=3D"auto"><br></div><div dir=3D"auto">-M</div><div dir=3D"auto"><div class=
-=3D"gmail_extra"><div class=3D"gmail_quote"><blockquote class=3D"quote" sty=
-le=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div d=
-ir=3D"ltr"><div class=3D"gmail_extra"><font color=3D"#888888"><br>-- <br><d=
-iv class=3D"m_9127871252908766455gmail_signature" data-smartmail=3D"gmail_s=
-ignature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kerg=
-oth at gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Seni=
-or Software Engineer, Mentor Graphics</div></div></div></div>
-</font></div></div>
-</blockquote></div><br></div></div></div>
-
---94eb2c1407425af28b054a2f97fc--
+--_000_79565c43b65b4ac0a093f459e3508c78XBOX02axiscom_--
