@@ -1,43 +1,55 @@
-Return-Path: <msm-oss@mcclintock.net>
-Received: from mail-oi0-f48.google.com (mail-oi0-f48.google.com
-	[209.85.218.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 345E572F45
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 54481778B0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Mar 2017 20:24:41 +0000 (UTC)
-Received: by mail-oi0-f48.google.com with SMTP id m124so26238085oig.1
+	Sat, 11 Mar 2017 05:22:19 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 9D1D3182F3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 08 Mar 2017 12:24:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mcclintock.net; s=google;
-	h=from:to:cc:subject:date:message-id;
-	bh=CCOnmOWx+2qL43j4gTxbGmWll4al9Ki7nwJU0YN+Bk8=;
-	b=aUOP/YuVcQCcKPY4vr9hbNyf59lbtV6gNROeDCTjuFkk0zKmAMRSRoA2NxaBpQ8zJ1
-	R1o16pt7B8ypakZPfsK89Pejz+KtQ0g/PEQlbpiX2RB/azSbAL+N89QLyZpPW8RLyMkK
-	HRlCr8grkhUZFwOzfMH7fRbputlQWaubw+mI8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=CCOnmOWx+2qL43j4gTxbGmWll4al9Ki7nwJU0YN+Bk8=;
-	b=GFORFnB8dUtDrZgTobh/JNr/3e4E4scqxKyoxKm8kGzcFKG/yYHmR2sV1Iq3qDba43
-	FzJRoWIcXAZg7o9Fu+y++zLAvyL90Z+j2dzHjohjPxcklWc86jAMUwI5AiZGeNJuJON5
-	iJx8tsgYrkqel+W5unjoFFwHTu8rD1GsNEh8GhEEiv0Ahg+2t05voBWLscrRl3E0jJNa
-	n/eARM3SAgH80hPwZIdevVGP1173GvBTYP0S4sl87NYI9l7JbVix9sA6Esn4LjH6iGKx
-	rc1mHtHPT5UDtnOA1mKr4ScOFNXBYg6IYZzU3gqt6b0X/mp8Zipt2gJMuEw4wIvy56UJ
-	1asA==
-X-Gm-Message-State: AMke39luAkltRQlN9oFsH1KjD0+9ZRmLkIfpwmMnthzjsuID0tJE/h1grBImN2echH4V+w==
-X-Received: by 10.202.50.7 with SMTP id y7mr4833800oiy.111.1489004683235;
-	Wed, 08 Mar 2017 12:24:43 -0800 (PST)
-Received: from pandora.lan ([2605:6000:1019:e0:c0c6:fae8:f021:62cd])
-	by smtp.gmail.com with ESMTPSA id
-	u131sm1939398oig.24.2017.03.08.12.24.42
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 08 Mar 2017 12:24:42 -0800 (PST)
-From: Matthew McClintock <msm-oss@mcclintock.net>
+	Sat, 11 Mar 2017 06:22:19 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id aVVBk89fBD24 for <bitbake-devel@lists.openembedded.org>;
+	Sat, 11 Mar 2017 06:22:19 +0100 (CET)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id 06C1D18414
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 11 Mar 2017 06:22:19 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BBB861E070
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 11 Mar 2017 06:22:18 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B0C171E075
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 11 Mar 2017 06:22:18 +0100 (CET)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder03.se.axis.com (Postfix) with ESMTP
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 11 Mar 2017 06:22:18 +0100 (CET)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by seth.se.axis.com (Postfix) with ESMTP id A52E2211
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 11 Mar 2017 06:22:18 +0100 (CET)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v2B5MIQv004419
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 11 Mar 2017 06:22:18 +0100
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v2B5MICs004416
+	for bitbake-devel@lists.openembedded.org;
+	Sat, 11 Mar 2017 06:22:18 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  8 Mar 2017 14:24:38 -0600
-Message-Id: <1489004678-31921-1-git-send-email-msm-oss@mcclintock.net>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH v3] runqueue: add option to run all tasks in specific build target
+Date: Sat, 11 Mar 2017 06:22:16 +0100
+Message-Id: <1288c36048807e9a5694a76b5c05f686bdf18f2f.1489209703.git.pkj@axis.com>
+X-Mailer: git-send-email 2.12.0
+In-Reply-To: <cover.1489209703.git.pkj@axis.com>
+References: <cover.1489209703.git.pkj@axis.com>
+X-TM-AS-GCONF: 00
+Subject: [PATCH 2/3] bitbake-dumpsig: Add debug support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,91 +62,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Mar 2017 20:24:42 -0000
+X-List-Received-Date: Sat, 11 Mar 2017 05:22:21 -0000
 
-For example:
-
-$ bitbake core-image-minimal --runall unpack
-...
-NOTE: Tasks Summary: Attempted 326 tasks of which 88 didn't need to be rerun and all succeeded.
-
-$ bitbake core-image-minimal --runall patch
-NOTE: Tasks Summary: Attempted 453 tasks of which 332 didn't need to be rerun and all succeeded.
-
-This can replace fetchall as well:
-$ bitbake core-image-minimal --runall fetch
-NOTE: Tasks Summary: Attempted 135 tasks of which 119 didn't need to be rerun and all succeeded.
-
-Signed-off-by: Matthew McClintock <msm-oss@mcclintock.net>
+Currently shows the name of the signature file that was found when
+--task is used.
 ---
+ bitbake/bin/bitbake-dumpsig | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Notes:
-        v2:
-    	- removed debug code that was left behind
-        v3:
-    	- update help message
-    	- emit fatal error if no tasks remain after runall filter
-
- lib/bb/cookerdata.py |  1 +
- lib/bb/main.py       |  3 +++
- lib/bb/runqueue.py   | 17 +++++++++++++++++
- 3 files changed, 21 insertions(+)
-
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 53f4587..722d860 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -148,6 +148,7 @@ class CookerConfiguration(object):
-         self.writeeventlog = False
-         self.server_only = False
-         self.limited_deps = False
-+        self.runall = None
+diff --git a/bitbake/bin/bitbake-dumpsig b/bitbake/bin/bitbake-dumpsig
+index b1fce2510d..38efd22864 100755
+--- a/bitbake/bin/bitbake-dumpsig
++++ b/bitbake/bin/bitbake-dumpsig
+@@ -67,16 +67,24 @@ parser = optparse.OptionParser(
+   %prog -t recipename taskname
+   %prog sigdatafile""")
  
-         self.env = {}
- 
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 3ff43cf..b3cd2cf 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -287,6 +287,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-                           help="Writes the event log of the build to a bitbake event json file. "
-                                "Use '' (empty string) to assign the name automatically.")
- 
-+        parser.add_option("", "--runall", action="store", dest="runall",
-+                          help="Run the specified task for all build targets and their dependencies.")
++parser.add_option("-D", "--debug",
++        help = "enable debug",
++        action = "store_true", dest="debug", default = False)
 +
-         options, targets = parser.parse_args(argv)
+ parser.add_option("-t", "--task",
+         help = "find the signature data file for the specified task",
+         action="store", dest="taskargs", nargs=2, metavar='recipename taskname')
  
-         if options.quiet and options.verbose:
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index a3b451a..38304d1 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -803,6 +803,23 @@ class RunQueueData:
+ options, args = parser.parse_args(sys.argv)
  
-         self.init_progress_reporter.next_stage()
- 
-+        if self.cooker.configuration.runall is not None:
-+            runall = "do_%s" % self.cooker.configuration.runall
-+            runall_tids = { k: v for k, v in self.runtaskentries.items() if taskname_from_tid(k) == runall }
++if options.debug:
++    logger.setLevel(logging.DEBUG)
 +
-+            # re-run the mark_active and then drop unused tasks from new list
-+            runq_build = {}
-+            for tid in list(runall_tids):
-+                mark_active(tid,1)
-+
-+            for tid in list(self.runtaskentries.keys()):
-+                if tid not in runq_build:
-+                    del self.runtaskentries[tid]
-+                    delcount += 1
-+
-+            if len(self.runtaskentries) == 0:
-+                bb.msg.fatal("RunQueue", "No remaining tasks to run run for build target %s with runall %s" % (target, runall))
-+
-         #
-         # Step D - Sanity checks and computation
-         #
+ if options.taskargs:
+     tinfoil = bb.tinfoil.Tinfoil()
+     tinfoil.prepare(config_only = True)
+     file = find_siginfo_task(tinfoil, options.taskargs[0], options.taskargs[1])
++    logger.debug("Signature file: %s" % file)
+ elif len(args) == 1:
+     parser.print_help()
+     sys.exit(0)
 -- 
-2.7.4
+2.12.0
 
 
