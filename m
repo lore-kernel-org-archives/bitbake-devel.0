@@ -1,53 +1,53 @@
 Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
-	by mail.openembedded.org (Postfix) with ESMTP id F100477316
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 20EFE77316
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 05:30:07 +0000 (UTC)
+	Sat, 11 Mar 2017 05:30:34 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by bes.se.axis.com (Postfix) with ESMTP id E21612E59B
+	by bastet.se.axis.com (Postfix) with ESMTP id 2E5B1182F3
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:08 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	Sat, 11 Mar 2017 06:30:35 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
 	port 10024)
-	with LMTP id ujNUPPgmRQ1b for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:08 +0100 (CET)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-	by bes.se.axis.com (Postfix) with ESMTPS id 4F0852E59A
+	with LMTP id 1fymxSfqy3uy for <bitbake-devel@lists.openembedded.org>;
+	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id 2881B180F8
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:08 +0100 (CET)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3DD281A077
+	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 161851E072
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:08 +0100 (CET)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 309CE1A075
+	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0B3AB1E070
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:08 +0100 (CET)
+	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
 Received: from thoth.se.axis.com (unknown [10.0.2.173])
-	by boulder02.se.axis.com (Postfix) with ESMTP
+	by boulder03.se.axis.com (Postfix) with ESMTP
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:08 +0100 (CET)
+	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
 Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
-	by thoth.se.axis.com (Postfix) with ESMTP id 24B6FA24
+	by thoth.se.axis.com (Postfix) with ESMTP id F3844A24
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:08 +0100 (CET)
+	Sat, 11 Mar 2017 06:30:33 +0100 (CET)
 Received: from saur-2.se.axis.com (localhost [127.0.0.1])
-	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v2B5U81X022676
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v2B5UXDG023268
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:08 +0100
+	Sat, 11 Mar 2017 06:30:33 +0100
 Received: (from pkj@localhost)
-	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v2B5U8cn022675
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v2B5UXol023267
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 11 Mar 2017 06:30:08 +0100
+	Sat, 11 Mar 2017 06:30:33 +0100
 From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 11 Mar 2017 06:30:06 +0100
-Message-Id: <20170311053006.22619-1-pkj@axis.com>
+Date: Sat, 11 Mar 2017 06:30:32 +0100
+Message-Id: <20170311053032.23184-1-pkj@axis.com>
 X-Mailer: git-send-email 2.12.0
 X-TM-AS-GCONF: 00
-Subject: [PATCH] knotty: Remove extra whitespace after task progress bars
+Subject: [PATCH] ConfHandler: Use the same regular expression for all variable names
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,35 +60,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 11 Mar 2017 05:30:08 -0000
+X-List-Received-Date: Sat, 11 Mar 2017 05:30:34 -0000
 
-For some reason, BBProgress.setextra() always adds a space at the end.
-This prevents the task progress bars from filling the entire width of
-the terminal, making them stop one character short. This looks odd
-when shown together with the main progress bar, which does fill the
-entire terminal width.
+When the regular expression for matching a variable name was amended
+with allowing the ~ character as part of the variable name, this was
+never done to the regular expression that matches export
+lines. Similarly, the regular expression that was used for matching
+unset variables also used the one without support for the ~ character.
+
+This unifies the regular expressions. For good measures it also
+corrects the regular expression used to match a variable flag name for
+the unset command to match the one used when setting a variable flag.
 
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- bitbake/lib/bb/ui/knotty.py | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ bitbake/lib/bb/parse/parse_py/ConfHandler.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 521c262e45..82aa7c4644 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -75,10 +75,8 @@ class BBProgress(progressbar.ProgressBar):
-                 extrastr = str(extra)
-                 if extrastr[0] != ' ':
-                     extrastr = ' ' + extrastr
--                if extrastr[-1] != ' ':
--                    extrastr += ' '
-             else:
--                extrastr = ' '
-+                extrastr = ''
-             self.widgets[self.extrapos] = extrastr
+diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+index 5759cb20ed..f7d0cf74ab 100644
+--- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+@@ -33,7 +33,7 @@ from bb.parse import ParseError, resolve_file, ast, logger, handle
+ __config_regexp__  = re.compile( r"""
+     ^
+     (?P<exp>export\s*)?
+-    (?P<var>[a-zA-Z0-9\-~_+.${}/]+?)
++    (?P<var>[a-zA-Z0-9\-_+.${}/~]+?)
+     (\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?
  
-     def _need_update(self):
+     \s* (
+@@ -56,9 +56,9 @@ __config_regexp__  = re.compile( r"""
+     """, re.X)
+ __include_regexp__ = re.compile( r"include\s+(.+)" )
+ __require_regexp__ = re.compile( r"require\s+(.+)" )
+-__export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/]+)$" )
+-__unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/]+)$" )
+-__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/]+)\[([a-zA-Z0-9\-_+.${}/]+)\]$" )
++__export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
++__unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
++__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.]+)\]$" )
+ 
+ def init(data):
+     topdir = data.getVar('TOPDIR', False)
 -- 
 2.12.0
 
