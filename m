@@ -1,53 +1,41 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 20EFE77316
+Return-Path: <pinganddu90@gmail.com>
+Received: from mail-yw0-f180.google.com (mail-yw0-f180.google.com
+	[209.85.161.180])
+	by mail.openembedded.org (Postfix) with ESMTP id CB7AC776EB
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 05:30:34 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 2E5B1182F3
+	Sun, 12 Mar 2017 13:24:32 +0000 (UTC)
+Received: by mail-yw0-f180.google.com with SMTP id v198so46224510ywc.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:35 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id 1fymxSfqy3uy for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bastet.se.axis.com (Postfix) with ESMTPS id 2881B180F8
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 161851E072
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0B3AB1E070
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
-	by boulder03.se.axis.com (Postfix) with ESMTP
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:34 +0100 (CET)
-Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
-	by thoth.se.axis.com (Postfix) with ESMTP id F3844A24
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:33 +0100 (CET)
-Received: from saur-2.se.axis.com (localhost [127.0.0.1])
-	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v2B5UXDG023268
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Mar 2017 06:30:33 +0100
-Received: (from pkj@localhost)
-	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v2B5UXol023267
-	for bitbake-devel@lists.openembedded.org;
-	Sat, 11 Mar 2017 06:30:33 +0100
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+	Sun, 12 Mar 2017 06:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=dkkkgPZlnfPaDIl8fNKPSv0RtMIFEMYAjik9vF60pko=;
+	b=NJ3DBrQPhJu8q2L3ziMKOviCuVBHSNEKLbRgFocd+VA167Y/F4yh1IugwKvR20pimh
+	wq1WfaF23VArmqe3gDZMiC2OY1oXXsV+Cb6FmPX9SD6oKRDRRwz6+OEEDhyC15+UOWmm
+	dkYnmDfV/vVv2awQ1FAqppMCjhKsmnE43uaJTd4CNmIQpH7edPJtj3NAeCSkW6DBVQ+x
+	tgDR9gdBeSUbPz2PPWWuVAjDR4Dip6aP959JmYjmCR135Xsk5NbZ50MOlHDrgoaHtuyC
+	c05i3AQAPP01Jpc6cG5Mp8HPhFGKqZDwyJd54e7l4vnFq2/XGeEjjHfrLzrHuxRw1jp6
+	74nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=dkkkgPZlnfPaDIl8fNKPSv0RtMIFEMYAjik9vF60pko=;
+	b=hzvM5FDcbub2+dAheso4JZdQ7BteEYqicxyRq7Jlf1oDThXzlhqUj+Um2oyuGAPwMz
+	hHj1L13fu4lE1luyprvLdxzdfM52OaIu3291sQ7/kpx8e2MaWYbYuyU4xkkEKUR5uP2s
+	PDyT0zCJm3jhJrtx0APO/SY4TM2ikjU9Nn0TENBfK3ZvkEnj7a7OXd3Lw74fMI1A4VoG
+	u2GvFXgLwSy4czhOjkoWzfEJNeyIQQhvLsCqwGBLOfZRnjFUPMxSWrTuaow5dfHV9/JM
+	69OV6/AOaysnGSLfnoGQfyCxd71F1hI5MTSz8K/jG63BlC0NcHa4AA2QMYO9+6rId01D
+	scOg==
+X-Gm-Message-State: AMke39lr8xAP2O1dELHGsv+WPWGsrZd39gMqOGQWiLH7F9ln530Myz3DdoLmgruDEUK3nD1VLynUhElLcTlAjg==
+X-Received: by 10.129.89.193 with SMTP id n184mr14159834ywb.280.1489325073309; 
+	Sun, 12 Mar 2017 06:24:33 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.37.12.202 with HTTP; Sun, 12 Mar 2017 06:24:32 -0700 (PDT)
+From: kk <pinganddu90@gmail.com>
+Date: Sun, 12 Mar 2017 21:24:32 +0800
+Message-ID: <CAKHP1dvO0V3+d5jbAXx6-3t+TxnjZzh210voMqrbxZKGmrai1A@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 11 Mar 2017 06:30:32 +0100
-Message-Id: <20170311053032.23184-1-pkj@axis.com>
-X-Mailer: git-send-email 2.12.0
-X-TM-AS-GCONF: 00
-Subject: [PATCH] ConfHandler: Use the same regular expression for all variable names
+Subject: What does the "fn" represent for in "<fn>:<taskname>"?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,50 +48,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 11 Mar 2017 05:30:34 -0000
+X-List-Received-Date: Sun, 12 Mar 2017 13:24:33 -0000
+Content-Type: multipart/alternative; boundary=001a1141c2f0f326ae054a8883a1
 
-When the regular expression for matching a variable name was amended
-with allowing the ~ character as part of the variable name, this was
-never done to the regular expression that matches export
-lines. Similarly, the regular expression that was used for matching
-unset variables also used the one without support for the ~ character.
+--001a1141c2f0f326ae054a8883a1
+Content-Type: text/plain; charset=UTF-8
 
-This unifies the regular expressions. For good measures it also
-corrects the regular expression used to match a variable flag name for
-the unset command to match the one used when setting a variable flag.
+In commit:
+    2c88afb60da54e58f555411a7bd7b006b0c29306
+uses "<fn>:<taskname>" as the ID for tasks rather than a number, I know
+taskname represent for, but the <fn> I don't understand, does it means file
+name or function name?
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
- bitbake/lib/bb/parse/parse_py/ConfHandler.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks
 
-diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index 5759cb20ed..f7d0cf74ab 100644
---- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-@@ -33,7 +33,7 @@ from bb.parse import ParseError, resolve_file, ast, logger, handle
- __config_regexp__  = re.compile( r"""
-     ^
-     (?P<exp>export\s*)?
--    (?P<var>[a-zA-Z0-9\-~_+.${}/]+?)
-+    (?P<var>[a-zA-Z0-9\-_+.${}/~]+?)
-     (\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?
- 
-     \s* (
-@@ -56,9 +56,9 @@ __config_regexp__  = re.compile( r"""
-     """, re.X)
- __include_regexp__ = re.compile( r"include\s+(.+)" )
- __require_regexp__ = re.compile( r"require\s+(.+)" )
--__export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/]+)$" )
--__unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/]+)$" )
--__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/]+)\[([a-zA-Z0-9\-_+.${}/]+)\]$" )
-+__export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
-+__unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
-+__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.]+)\]$" )
- 
- def init(data):
-     topdir = data.getVar('TOPDIR', False)
--- 
-2.12.0
+--001a1141c2f0f326ae054a8883a1
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div><div>In commit:<br>=C2=A0=C2=A0=C2=A0 2c88afb60da54e5=
+8f555411a7bd7b006b0c29306<br></div>uses &quot;&lt;fn&gt;:&lt;taskname&gt;&q=
+uot; as the ID for tasks rather than a number, I know taskname represent fo=
+r, but the &lt;fn&gt; I don&#39;t understand, does it means file name or fu=
+nction name?<br><br></div>Thanks<br></div>
 
+--001a1141c2f0f326ae054a8883a1--
