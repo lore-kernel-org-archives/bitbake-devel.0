@@ -1,43 +1,26 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-pg0-f66.google.com (mail-pg0-f66.google.com [74.125.83.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 65B4377640
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id C913660796
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Mar 2017 02:36:31 +0000 (UTC)
-Received: by mail-pg0-f66.google.com with SMTP id m5so532676pgk.3
+	Thu, 16 Mar 2017 04:14:48 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v2G4EkVh027609
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Mar 2017 19:36:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=puCwFzB3GuDFs7EcRuzVfueZzYNhYrQ1yb5gQT/edKs=;
-	b=tlmhbcuNoUkulrhpntstWbz8n7RLWCWrABfxrxZHga+q/v/WlbtOsBihgqKixKpKBy
-	498wfDsiXNZmxUE9Gtdgyu8g6oYZmL0faLOHC4AD7Twr1DYSg2VKKwAefqYKrhwYAQg4
-	SapzN018i8Rc+d3uZR81ciMcKseETdcG89qAzNpiS6Wp+jp/Z+65ysNf3miRTbBry1nB
-	23mDun/+uUyuBdVfbFpJpzr9WcPzMw6Y1I1+Y5FjF8cX2+GK06MQEx5l0iVWvJBEJ38/
-	XKK6oPZdM4am6wYv8tZzEU0AycVNRzuEJMpK0GRgOKCBba3g8X11FtyYIkOA5C43aX7r
-	hK1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=puCwFzB3GuDFs7EcRuzVfueZzYNhYrQ1yb5gQT/edKs=;
-	b=GcgMPt7pI5y2Buy5QcFN5LsQNNniILke9bmZEzCCZQtHyuce6jabfh8SOumQeGZh5D
-	9n2i+9Z+FYfzJGgSHTHK/Rh0T8By5gAYpsoB9cPfYPhHEkTUrgYMdbXem+GNWwHfbkxf
-	OwPxiAMNbJJXF7pYhw5+CY7BjYqzrU3kICEVJ+jJPpPmgJCkhdVJSEETqDhFfQbtTiEL
-	EdutO0HYnncvEvHZvkpIIDFxW+6onsbPfHO5eP+tPA9RjGaazZ4ICA33ypyKsVwqzzi6
-	J7NG2cE7ey9PvQnSni15jEX5SoLxvTaplpnu7bFYRcnL/Kk3juTcN5SGTYRkjrUn7/71
-	H81g==
-X-Gm-Message-State: AFeK/H36O7Yn1TGkQP7P+yipPPXejDv9ZXvMKPUln7YgSkLZPSo7ZiS/j9wd323n7AH40g==
-X-Received: by 10.84.232.131 with SMTP id i3mr1289057plk.172.1489545392633;
-	Tue, 14 Mar 2017 19:36:32 -0700 (PDT)
-Received: from e6520.guest-wifi.scl.liberty.com ([4.16.80.121])
-	by smtp.gmail.com with ESMTPSA id q23sm481282pfg.63.2017.03.14.19.36.31
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 14 Mar 2017 19:36:31 -0700 (PDT)
-From: Andre McCurdy <armccurdy@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 14 Mar 2017 19:36:26 -0700
-Message-Id: <1489545386-21291-1-git-send-email-armccurdy@gmail.com>
-X-Mailer: git-send-email 1.9.1
-Subject: [PATCH] runqueue: minor typo fix
+	Wed, 15 Mar 2017 21:14:49 -0700
+Received: from soho-mhatle-m.local (172.25.36.230) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.294.0;
+	Wed, 15 Mar 2017 21:14:45 -0700
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+From: Mark Hatle <mark.hatle@windriver.com>
+Organization: Wind River Systems
+Message-ID: <2c5e1707-851f-5d82-15e8-a4c39bb8af89@windriver.com>
+Date: Wed, 15 Mar 2017 23:14:44 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:45.0)
+	Gecko/20100101 Thunderbird/45.8.0
+MIME-Version: 1.0
+Subject: _remove operator -- taskhash issue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,27 +33,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 Mar 2017 02:36:33 -0000
+X-List-Received-Date: Thu, 16 Mar 2017 04:14:49 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
----
- lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I noticed something today on morty.  (So this might be fixed in master.)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 38304d1..701ef1d 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -818,7 +818,7 @@ class RunQueueData:
-                     delcount += 1
- 
-             if len(self.runtaskentries) == 0:
--                bb.msg.fatal("RunQueue", "No remaining tasks to run run for build target %s with runall %s" % (target, runall))
-+                bb.msg.fatal("RunQueue", "No remaining tasks to run for build target %s with runall %s" % (target, runall))
- 
-         #
-         # Step D - Sanity checks and computation
--- 
-1.9.1
+I've got a variable that is defined as (-e output):
 
+# $PACKAGECONFIG [20 operations]
+#   _append[pn-qemu-native]
+/home/mhatle/git/lpd/wr9-Base/build-test/conf/local.conf:384
+#     " sdl"
+#   _append[pn-nativesdk-qemu]
+/home/mhatle/git/lpd/wr9-Base/build-test/conf/local.conf:385
+#     " sdl"
+#   set
+/home/mhatle/git/lpd/wr9-Base/layers/oe-core/meta/conf/documentation.conf:317
+#     [doc] "This variable provides a means of enabling or disabling features of
+a recipe on a per-recipe basis."
+#   set
+/home/mhatle/git/lpd/wr9-Base/layers/oe-core/meta/recipes-graphics/mesa/mesa.inc:30
+#     [_defaultval] "gbm egl gles dri ${MESA_CRYPTO}
+${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '',
+d)}           ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '',
+d)}           "
+# pre-expansion value:
+#   "gbm egl gles dri ${MESA_CRYPTO}
+${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}           ${
+@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}           "
+PACKAGECONFIG="gbm egl gles dri openssl                 x11
+       "
+
+(note lots of white space above).
+
+If I add:
+
+PACKAGECONFIG_remove_override = "foobar"
+
+where the override is _NOT_ selected I now get, same as above --except-- for the
+following:
+
+#   _remove[override] /home/mhatle/git/lpd/wr9-Base/build-test/conf/local.conf:1
+#     "foobar"
+# pre-expansion value:
+#   "gbm egl gles dri ${MESA_CRYPTO} ${@bb.utils.contains('DISTRO_FEATURES',
+'x11', 'x11', '', d)} ${@bb.utils.contains('DISTRO_FEATURES', 'wayland',
+'wayland', '', d)}"
+PACKAGECONFIG="gbm egl gles dri openssl x11"
+
+
+Note, the white space is gone, even though the evaluated contents of the
+variable is not affected.  The problem with this is that it's changing the task
+hash for my recipe's .bbappend, even though the override is not triggered.
+
+--Mark
 
