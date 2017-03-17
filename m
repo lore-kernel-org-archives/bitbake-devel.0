@@ -1,27 +1,21 @@
-Return-Path: <joshua.g.lock@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 8596D77ABD
+Return-Path: <juro.bystricky@intel.com>
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	by mail.openembedded.org (Postfix) with ESMTP id 5ED8C77AD4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Mar 2017 15:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
-	t=1489766099; x=1521302099; h=from:to:subject:date:message-id;
-	bh=r1f7c7gMB9VRXFsXwc3tQv9VlAkQkDsYpdMdm1x34Hw=;
-	b=Di7KSvjbxEQLb/6upaglsORSnom0WA50M+W1HRdZYNmiSad4N5HSpo5D
-	CFauYtiNRvLOnE+7uqBO8PoG+I0EEQ==;
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	17 Mar 2017 08:54:49 -0700
+	Fri, 17 Mar 2017 19:44:13 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga105.jf.intel.com with ESMTP; 17 Mar 2017 12:44:14 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.36,177,1486454400"; d="scan'208";a="1109586459"
-Received: from jlock-mobl1.ger.corp.intel.com ([10.252.34.237])
-	by orsmga001.jf.intel.com with ESMTP; 17 Mar 2017 08:54:47 -0700
-From: Joshua Lock <joshua.g.lock@intel.com>
+X-IronPort-AV: E=Sophos;i="5.36,178,1486454400"; d="scan'208";a="61805746"
+Received: from juro-precision-t5610.jf.intel.com ([10.7.198.53])
+	by orsmga002.jf.intel.com with ESMTP; 17 Mar 2017 12:44:14 -0700
+From: Juro Bystricky <juro.bystricky@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 17 Mar 2017 15:54:39 +0000
-Message-Id: <20170317155439.4770-1-joshua.g.lock@intel.com>
-X-Mailer: git-send-email 2.9.3
-Subject: [PATCH] lib/bb/tests/codeparser: update expand syntax in comment
+Date: Fri, 17 Mar 2017 12:44:07 -0700
+Message-Id: <1489779847-31506-1-git-send-email-juro.bystricky@intel.com>
+X-Mailer: git-send-email 2.7.4
+Cc: richard.purdie@intel.com
+Subject: [PATCH] data.py: sort exported variables
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,31 +28,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Mar 2017 15:54:56 -0000
+X-List-Received-Date: Fri, 17 Mar 2017 19:44:14 -0000
 
-bb.data.expand(x, d) is deprecated API
+Various run.do_xxx files export dozens of variables.
+Presently they are in random order. Among other things,
+this makes it difficult to compare two files for relevant changes.
+This patch ensures they are enumerated/printed in a sorted
+(alphabetical) order.
 
-Signed-off-by: Joshua Lock <joshua.g.lock@intel.com>
+Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
 ---
- lib/bb/tests/codeparser.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/data.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/tests/codeparser.py b/lib/bb/tests/codeparser.py
-index a681841..a45a582 100644
---- a/lib/bb/tests/codeparser.py
-+++ b/lib/bb/tests/codeparser.py
-@@ -285,8 +285,8 @@ def a():
+diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
+index 0f05b60..d145f1b 100644
+--- a/bitbake/lib/bb/data.py
++++ b/bitbake/lib/bb/data.py
+@@ -220,7 +220,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
+     """Emits all items in the data store in a format such that it can be sourced by a shell."""
  
- test(d)
+     keys = (key for key in d.keys() if not key.startswith("__") and not d.getVarFlag(key, "func", False))
+-    for key in keys:
++    for key in sorted(keys):
+         emit_var(key, o, d, False)
  
--bb.data.expand(d.getVar("something", False), d)
--bb.data.expand("${inexpand} somethingelse", d)
-+d.expand(d.getVar("something", False))
-+d.expand("${inexpand} somethingelse")
- d.getVar(a(), False)
- """
- 
+     o.write('\n')
 -- 
-2.9.3
+2.7.4
 
 
