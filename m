@@ -1,49 +1,49 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pf0-f195.google.com (mail-pf0-f195.google.com
-	[209.85.192.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 7CA5E7300D
+Received: from mail-pf0-f194.google.com (mail-pf0-f194.google.com
+	[209.85.192.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 3B9FA7300D
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Mar 2017 18:41:14 +0000 (UTC)
-Received: by mail-pf0-f195.google.com with SMTP id r137so19485782pfr.3
+	Tue, 21 Mar 2017 18:41:15 +0000 (UTC)
+Received: by mail-pf0-f194.google.com with SMTP id p189so17764125pfp.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Mar 2017 11:41:15 -0700 (PDT)
+	Tue, 21 Mar 2017 11:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=mD0VrwXDIZmWNHIsGyTuJoD2WoatXT+4vwN9Z0zYp1Q=;
-	b=HRdRJJXhQAugNQ6kaa0waI6briyR0Nt6Cd8YTiMDPX+twYSRg5EVB7RokCARHl73Ql
-	ft0aU3FsOKobI7Ynifw7+5jh9I/4bLJYaIb+jklkbclCjEhujPXtBAB8Oa70x9GcZChL
-	zfQYMEKDuO61ibaD6S0oqvEA0DO55dt8ADu31gyajG/OzdJDGEAcwbHmqUNhsjj+51WX
-	Uc3auTRF4jw3XR+rLBBYViH5GFEopor5KnFc3S+riFbjjf0oph5ZiGmn8KuK+5tTdr9E
-	hyoPgcOFpkNJ0AZ/yJN4BWImQR14/x5koUexdhKO0YfWMOQVnypt2FybsgGJLUi4Qr/b
-	2WKQ==
+	bh=rB2vWAG/hnpyM9M0KkFJ8R8IL53BFSHo8ClcLR2uBV4=;
+	b=YKGlzzOPfNmx7xQDUonQ3a2UAiaN71eN63sbbzfYBdqTKgL00HvTr5gxeFvt2wWd7/
+	TgEXU1R8haKLkSQuNIw8CRu99UcjLRINPbzOB/7su010fs1WTbPXH/IQCf6q1MF2aCWM
+	7dk/7TFs01s2fE5R/B3+qJgYzhwNOg5rwAgCUAKc6bSnA345HTqaNHTZUDeN/kk5lh5X
+	7t6tl7uXE4eoULC1gHxAWy2Vos7Qd1gENTTjZCfUaRp3xPRbUh74s5cf9tAHkI0Ziv2D
+	R3/CcNl1pnQiERQE257WEq0XHLouD62XVq53GRJoYOISlHPbOxx96pokhLWeEqYSi7BR
+	/8Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=mD0VrwXDIZmWNHIsGyTuJoD2WoatXT+4vwN9Z0zYp1Q=;
-	b=lmkvtryRhCOeVnsSRg9AqYj7UE4oYiPpZPouKrC2NwUmXJ+H8UNNAv7rF0CsdhJzqj
-	Ep+8BlT5Yyu9Dx8oTvUjm3kPYcMOUR+/KMSS/+OmKU7Y4thMhEPXPynaG+Qnz58hX6nQ
-	kAO4+SkYIu7H6p+m4sgLlmkBL2urjws4oUiZPUuem5Q1kBRUQr0+p66ugjc0mVtTjoGc
-	ZcOBtXZUprdHZM1hSSlDstpzqXCk8rnaked6CCcFsoSK7inboRngsxjEsiZHxiNckEZh
-	6J0w18ez57aKWVx5cYJzjhbVMBZCD4y+Tk0kDlCv1AvCj5k6kkKF7VhOccBAK+BN7N4i
-	HHOw==
-X-Gm-Message-State: AFeK/H0AVA62TQZKDpO0sXCOvgYrBpA0fn+LkFWye8x2AJIdctc7xAWeCXm2ig0Yv1p1MA==
-X-Received: by 10.98.13.197 with SMTP id 66mr41735368pfn.91.1490121675746;
-	Tue, 21 Mar 2017 11:41:15 -0700 (PDT)
+	bh=rB2vWAG/hnpyM9M0KkFJ8R8IL53BFSHo8ClcLR2uBV4=;
+	b=NBo6dXC1E+9Xrk7aRK+F8cgWdekxgiEzbtn0KRltZGO8SnpmLvU8KfkmrfwCrBjo0r
+	tYqgOv3XW1Rucbf24YE8lBWBd7HlOuhXkvLgzxpWcIev3gG2GQSvgUbKD7ITwc8RmXkD
+	SWNLli/riSNXG+VipSwYVxannqeHj5L4moCYdmuNbpz6rKKj6pOTcORcSVt1Q+mNvT6H
+	bStFIrBnQ6hoJH0NJ08ggiydb87EUtgcFqTYFgQDeCapMx6fTj0CZg2kwPmVFTQI6mst
+	Sy7x/xk1kmBo2iHilAUpBlCDunereZDFU3jiQ8lIL9I8qGTro1rod+2OowLoblBd2NGZ
+	sEdg==
+X-Gm-Message-State: AFeK/H0igEC2QSMuDGoYWnNnENpSrnn0GPrAqeDjadIXt0yrWpaendl0GjuGD/G4XqecoA==
+X-Received: by 10.98.15.145 with SMTP id 17mr30311247pfp.183.1490121677454;
+	Tue, 21 Mar 2017 11:41:17 -0700 (PDT)
 Received: from quark.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
 	by smtp.gmail.com with ESMTPSA id
-	z19sm25324304pfd.81.2017.03.21.11.41.14
+	z19sm25324304pfd.81.2017.03.21.11.41.15
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 21 Mar 2017 11:41:14 -0700 (PDT)
+	Tue, 21 Mar 2017 11:41:16 -0700 (PDT)
 From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 21 Mar 2017 11:41:03 -0700
-Message-Id: <c8733f4f6e7c4a65c1a077fab8b708e3b09f8f24.1490121529.git.chris_larson@mentor.com>
+Date: Tue, 21 Mar 2017 11:41:04 -0700
+Message-Id: <0f71517b5208e117133b67fe728d482e7a575f35.1490121529.git.chris_larson@mentor.com>
 X-Mailer: git-send-email 2.8.0
 In-Reply-To: <cover.1490121529.git.chris_larson@mentor.com>
 References: <cover.1490121529.git.chris_larson@mentor.com>
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH 3/4] fetch/git: drop pointless os.path.join, workdir=
+Subject: [PATCH 4/4] fetch/git: fix FetchError reference
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,33 +56,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Mar 2017 18:41:14 -0000
+X-List-Received-Date: Tue, 21 Mar 2017 18:41:16 -0000
 
 From: Christopher Larson <chris_larson@mentor.com>
 
-The touch of .done explicitly specifies the path, so there's no need for
-workdir=, and "os.path.join('.')" is identical to just '.'.
+FetchError isn't defined, use bb.fetch2.FetchError in this context.
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 ---
- lib/bb/fetch2/git.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/git.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index e1e8765..e420232 100644
+index e420232..a8be859 100644
 --- a/lib/bb/fetch2/git.py
 +++ b/lib/bb/fetch2/git.py
-@@ -291,8 +291,8 @@ class Git(FetchMethod):
-                 os.unlink(ud.fullmirror)
- 
-             logger.info("Creating tarball of git repository")
--            runfetchcmd("tar -czf %s %s" % (ud.fullmirror, os.path.join(".") ), d, workdir=ud.clonedir)
--            runfetchcmd("touch %s.done" % ud.fullmirror, d, workdir=ud.clonedir)
-+            runfetchcmd("tar -czf %s ." % ud.fullmirror, d, workdir=ud.clonedir)
-+            runfetchcmd("touch %s.done" % ud.fullmirror, d)
- 
-     def unpack(self, ud, destdir, d):
-         """ unpack the downloaded src to destdir"""
+@@ -484,5 +484,5 @@ class Git(FetchMethod):
+         try:
+             self._lsremote(ud, d, "")
+             return True
+-        except FetchError:
++        except bb.fetch2.FetchError:
+             return False
 -- 
 2.8.0
 
