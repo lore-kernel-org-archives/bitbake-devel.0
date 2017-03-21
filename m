@@ -1,31 +1,46 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 199D377908
+Return-Path: <kergoth@gmail.com>
+Received: from mail-pf0-f194.google.com (mail-pf0-f194.google.com
+	[209.85.192.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 8B90E71974
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Mar 2017 04:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
-	t=1489982831; x=1521518831;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=R/135oqQzW6hNdYpdI/5QPzuvfPXxCZJ6SKyCt+0TfA=;
-	b=QDAAyXInk65ZcTMLEGZmcc8asCT60WkYCZS+WXc7UPgS/C/RUkVEjgTu
-	osa3Kr9Rwb1tuJSK8ZH5/P1XepQpTw==;
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	19 Mar 2017 21:07:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.36,191,1486454400"; d="scan'208";a="68903098"
-Received: from cloy-mobl.amr.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.161.201])
-	by orsmga004.jf.intel.com with ESMTP; 19 Mar 2017 21:07:09 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Tue, 21 Mar 2017 18:40:44 +0000 (UTC)
+Received: by mail-pf0-f194.google.com with SMTP id r137so19481823pfr.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Mar 2017 11:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=Zw5vn4EmazhPWt53W5r7sLAAibZfJuTkLOJEV+gvI0o=;
+	b=HhYZ9ACxi1zE3yhwgNzOD4IOTwns4CW9Eh9kId7HpAWbwyA1/6T8FLyTGHR9hFoYOV
+	lhjMjUaxXpKL3VUUwnmRLW2v/R8frZRqOW3AijLgOfBqXWQxwZQmSgRepq2jbGUbJQF1
+	N3wcgBzE1YAP3g0JEqJy/gMWFv22CukYdeXXKrnsZ5Dm/8NWpThVwbs349xQ/2fgaBBM
+	885zsb792x3F67ScgsYRrjbgzDvbPqA9Wkz7P8ByLUQN3ISf+7mGb/ZHw7f29BaZeQz4
+	GRJqViNBulNsbT72e5Kad7VAYIMVYVwJxUE4Bd8j9ejsdrv+3OaKUXlN2fWd/ws1uei1
+	EqPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=Zw5vn4EmazhPWt53W5r7sLAAibZfJuTkLOJEV+gvI0o=;
+	b=BT9jLbqh+/0CCfY3WaH1VRxVWSK+kQAWUVjXXoBTGOm6nHJd4irjDlSwTXX5BqB9u6
+	IFaxwOIFHTVSCqGYQtCQ+NraR4eJs8/mBCGZBqe5ghKLDQXRAEhn3PWFK1q0/A+lDlZx
+	siEakLTD63pCdPyq/Kc0vQ9yUf09mBe0Gip+FEttq+LlbcmAW6KZ4EWdlnIBDEQF3KZP
+	tPohiJPJ76uLC4mxRskB8BUtV4e1984q2ggaKoFOX4+aH0o3VtNHCD6gHO8xK3nG+33F
+	lfvUnTiD9vjn5pAPT8rMdU/xOXPVX6B7KISx4Ld4ALEyeDU2vQD+TdcpFuSLoH50EztW
+	xxww==
+X-Gm-Message-State: AFeK/H25VybdbZ80UXPGbKQwiL/BSMT8Hn+dichC5WkuxyME9HjUOhbmlgAg2hNc0aYBiQ==
+X-Received: by 10.98.12.148 with SMTP id 20mr41025535pfm.116.1490121646272;
+	Tue, 21 Mar 2017 11:40:46 -0700 (PDT)
+Received: from quark.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
+	by smtp.gmail.com with ESMTPSA id
+	w28sm35938489pfl.115.2017.03.21.11.40.44
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 21 Mar 2017 11:40:45 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 20 Mar 2017 17:07:04 +1300
-Message-Id: <2640d485d6d529bec1bce7ef01997ea077f2c392.1489982808.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <cover.1489982808.git.paul.eggleton@linux.intel.com>
-References: <cover.1489982808.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] bitbake-layers: fix layerindex-fetch for Python 3
+Date: Tue, 21 Mar 2017 11:40:16 -0700
+Message-Id: <cover.1490121529.git.chris_larson@mentor.com>
+X-Mailer: git-send-email 2.8.0
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: [PATCH 0/4] fetch/git: a few cleanups and one minor fix
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,31 +53,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Mar 2017 04:07:09 -0000
+X-List-Received-Date: Tue, 21 Mar 2017 18:40:46 -0000
 
-The data we read from an HTTPConnection comes in the form of bytes, but
-we need it as a string, so in Python 3 we need to decode it (missed in
-the Python 3 migration).
+From: Christopher Larson <chris_larson@mentor.com>
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bblayers/layerindex.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The following changes since commit 1ff9b3c669fa187f152de7b8b57d14c2468d926c:
 
-diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index 013e952..506c110 100644
---- a/lib/bblayers/layerindex.py
-+++ b/lib/bblayers/layerindex.py
-@@ -56,7 +56,7 @@ class LayerIndexPlugin(ActionPlugin):
-         r = conn.getresponse()
-         if r.status != 200:
-             raise Exception("Failed to read " + path + ": %d %s" % (r.status, r.reason))
--        return json.loads(r.read())
-+        return json.loads(r.read().decode())
- 
-     def get_layer_deps(self, layername, layeritems, layerbranches, layerdependencies, branchnum, selfname=False):
-         def layeritems_info_id(items_name, layeritems):
+  tests/data: Add inactive remove override test (2017-03-16 12:54:59 +0000)
+
+are available in the git repository at:
+
+  git@github.com:kergoth/bitbake bb-fetch-git-cleanup
+
+for you to fetch changes up to 0f71517b5208e117133b67fe728d482e7a575f35:
+
+  fetch/git: fix FetchError reference (2017-03-17 14:32:25 -0700)
+
+----------------------------------------------------------------
+Christopher Larson (4):
+  fetch/git: use enumerate for ud.names
+  fetch/git: kill pointless quotes around single % args
+  fetch/git: drop pointless os.path.join, workdir=
+  fetch/git: fix FetchError reference
+
+ lib/bb/fetch2/git.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
 -- 
-2.9.3
+2.8.0
 
 
