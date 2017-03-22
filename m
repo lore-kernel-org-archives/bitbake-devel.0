@@ -1,46 +1,46 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-wr0-f195.google.com (mail-wr0-f195.google.com
-	[209.85.128.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 17AAD760AC
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-it0-f47.google.com (mail-it0-f47.google.com
+	[209.85.214.47])
+	by mail.openembedded.org (Postfix) with ESMTP id CA98077B44
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Mar 2017 23:00:24 +0000 (UTC)
-Received: by mail-wr0-f195.google.com with SMTP id y90so719689wrb.1
+	Wed, 22 Mar 2017 13:36:14 +0000 (UTC)
+Received: by mail-it0-f47.google.com with SMTP id y18so24625136itc.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Mar 2017 16:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=MocdYLi1Ep5gw9MPn7rE7RNXHXc+1Gt5o+QVT3+/E6M=;
-	b=X0FN9KhLaChS1CmPtHi7fDb5w+cqO6w1GT2mMK6Nw60tv8hemW4IO5hIrWTlmMr98V
-	N6E+2sNBovVxVP1jaGllR002O2hyKDcLjsycFLbsaaejSYHYHjboDcAayORI1qEKHEbx
-	Hvqq/GurdeU8BojlNmcHSqU8LrRSULOB/shjuiXP3tjI8qpCBDaRVCs/GQgNLgD0y6Zo
-	wfC0kaIxXr19MTXXpaRrU2VyMyExBbdh+mLSj4aSKhlkyhCaPCM9yH41eMG3hw+az4zi
-	htLKMQrsOPppfFiA233wTTwWmHnHlwjci81tenYAgM9COKecktqqrhA+NiJJRcOK43YR
-	hqog==
+	Wed, 22 Mar 2017 06:36:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=jCnAHnk/5wguEkbcwfw9TNxaGQy1Yy6aodxUMmIlIs0=;
+	b=IagWIHP3H25MtIe6fTcVMpJmwzG7RQg24cW/GZ710KUm7q31KVZ+gJfbZqkSerfa49
+	H0F3WenZ1BzYRv4PFLTDo+4C+xUuPyqlT4p4HQZvNX3YdbDGbEvj73CA9FHlyvDGDafO
+	vcMXLpR5qzXpex3I4aiSN89Xql3jCNoN0T9P3kgTdj4I4092lEBHLP1pS0ORhnyGw3Eh
+	c5tzkYhg92R1hrrjuDsHqUg/Ahiv+TxOpdWRWqmfabQzLHPClITw6iv6pKW6xcdZNrO+
+	kalN/zoASPK7O7o6As5Td4WFXF/i+RNz5RAHvUPy9wtmTe7xXJBzUHPPnbfu1cymcgNN
+	Q3vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=MocdYLi1Ep5gw9MPn7rE7RNXHXc+1Gt5o+QVT3+/E6M=;
-	b=t/QoIwEfuj8shoFC2MdBaLDk4hueXMIyp9Qn08Lwbj5nwkTFYeq2Yaa5fUXelSF1yC
-	VO5yHoyyR+LQC0qqQb2B4KBNvSdLKl/MSvg89MZRC1fpvHJojSRtdLADDILCu8fmRVFp
-	RJVBSiGkBIbsekkWXaIeQ8Vd/KdXUASxL6A4kVhmw9cStNnMZWoLF55+Dyy6EZJX89ZU
-	I5lAVnQJcUKFBkz/8fl3rBjI2WZYIpIu6iDnz55UAqikGDSXvSedl80dn3dGMX7QUgeE
-	DU0iwOTG1Z8gexQ948iHn1Fp4yiBmhJrcuC+S86zmrLMX8RR97uXQDwZtkl7GfEklxYk
-	CYYQ==
-X-Gm-Message-State: AFeK/H0LEb3iJa6iJQlM0vWzQQHLLbV6DAYZLUF/KegxJjWyzRovHWbhCz1VuicBUptMZyr8OjvYRwQhTNbZ/A==
-X-Received: by 10.223.152.239 with SMTP id w102mr34703189wrb.72.1490137225488; 
-	Tue, 21 Mar 2017 16:00:25 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.223.179.24 with HTTP; Tue, 21 Mar 2017 16:00:24 -0700 (PDT)
-In-Reply-To: <1489779847-31506-1-git-send-email-juro.bystricky@intel.com>
-References: <1489779847-31506-1-git-send-email-juro.bystricky@intel.com>
-From: Andre McCurdy <armccurdy@gmail.com>
-Date: Tue, 21 Mar 2017 16:00:24 -0700
-Message-ID: <CAJ86T=XD3W42QGiSZibBQen--xo13TO3W65bzQCeu7=yBnb02A@mail.gmail.com>
-To: Juro Bystricky <juro.bystricky@intel.com>
-Cc: richard.purdie@intel.com,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data.py: sort exported variables
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=jCnAHnk/5wguEkbcwfw9TNxaGQy1Yy6aodxUMmIlIs0=;
+	b=YPendeenfJUy+ysnTGdIrR4A39FElq7KSUfprnTyFdOseB6oeVWKjr7YewKjQFyJEO
+	QO1CCLoD3r/poxdQEk3XY6iCS0aIzrc1WrZKnVCDK2W76/gQhRYLk9R7xr19jHRh6vBq
+	zvzUnKXXEsSjpL2QI/tgSmRScvy75NIgu3BVZEYrV02n9jtvkUhDQq0ObpxJ2J5ycIbe
+	s66nUttlBVpmN7+XkDbPQhGLZSs7lnZVQKIdSa/oAFf5/nrUCg8UH0NDweHKDkVfgFxT
+	aXRJHXu9X79dwwxgGEza4f0JWVZqsJzD4OgyYlLXX+7xLsFI2+FLLrZyxmlL1W+BiM34
+	4ENg==
+X-Gm-Message-State: AFeK/H2EuwYUK/BEJXhGmIqNdaFi9ZHjXpeMsqVytOqeL94j4dXHq1st5SNr2+FYGQdzRDvy
+X-Received: by 10.36.67.133 with SMTP id s127mr7862558itb.50.1490189775672;
+	Wed, 22 Mar 2017 06:36:15 -0700 (PDT)
+Received: from pohly-desktop.fritz.box (p5DE8F72D.dip0.t-ipconnect.de.
+	[93.232.247.45])
+	by smtp.gmail.com with ESMTPSA id 78sm128489ity.7.2017.03.22.06.36.13
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 22 Mar 2017 06:36:14 -0700 (PDT)
+From: Patrick Ohly <patrick.ohly@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 22 Mar 2017 14:36:10 +0100
+Message-Id: <16602fdd8a9fc57eb0c927c79a2c687f9cdaee4f.1490185431.git-series.patrick.ohly@intel.com>
+X-Mailer: git-send-email 2.11.0
+Subject: [PATCH] cooker.py: use correct multiconfig prefix in dependency graph
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,49 +53,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Mar 2017 23:00:25 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 22 Mar 2017 13:36:15 -0000
 
-On Fri, Mar 17, 2017 at 12:44 PM, Juro Bystricky
-<juro.bystricky@intel.com> wrote:
-> Various run.do_xxx files export dozens of variables.
-> Presently they are in random order. Among other things,
-> this makes it difficult to compare two files for relevant changes.
-> This patch ensures they are enumerated/printed in a sorted
-> (alphabetical) order.
+The dependency graph in the bb.event.DepTreeGenerated and the
+corresponding pn-buildlist and task-depends.dot from "bitbake -g"
+contained entries like multiconfig:qemuarm.gcc (dot as last separator)
+instead of the correct multiconfig:qemuarm:gcc (colon as separator).
 
-+1
+Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
+---
+ lib/bb/cooker.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My version from last year (which also separated out variables being unset):
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 662a7ac..3e6ab30 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -762,7 +762,7 @@ class BBCooker:
+     @staticmethod
+     def add_mc_prefix(mc, pn):
+         if mc:
+-            return "multiconfig:%s.%s" % (mc, pn)
++            return "multiconfig:%s:%s" % (mc, pn)
+         return pn
+ 
+     def buildDependTree(self, rq, taskdata):
 
-  http://lists.openembedded.org/pipermail/bitbake-devel/2016-January/006970.html
-
-was never merged, so hopefully this one fares better.
-
-> Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
-> ---
->  bitbake/lib/bb/data.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-> index 0f05b60..d145f1b 100644
-> --- a/bitbake/lib/bb/data.py
-> +++ b/bitbake/lib/bb/data.py
-> @@ -220,7 +220,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
->      """Emits all items in the data store in a format such that it can be sourced by a shell."""
->
->      keys = (key for key in d.keys() if not key.startswith("__") and not d.getVarFlag(key, "func", False))
-> -    for key in keys:
-> +    for key in sorted(keys):
->          emit_var(key, o, d, False)
->
->      o.write('\n')
-> --
-> 2.7.4
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+base-commit: 1ff9b3c669fa187f152de7b8b57d14c2468d926c
+-- 
+git-series 0.9.1
 
