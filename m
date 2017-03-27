@@ -1,29 +1,28 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 3324171A8C
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 5441F60762
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 26 Mar 2017 12:20:15 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v2QCKB0E026242; Sun, 26 Mar 2017 13:20:11 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id U73Uv3nTRJp9; Sun, 26 Mar 2017 13:20:11 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v2QCK6ZK026233
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 26 Mar 2017 13:20:08 +0100
-Message-ID: <1490530806.13980.251.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jussi Kukkonen <jussi.kukkonen@intel.com>, daniel@lublin.se
-Date: Sun, 26 Mar 2017 13:20:06 +0100
-In-Reply-To: <CAHiDW_Ewz6TjRW5A7V31U9128cA65EAepYoVcKHxJN43AyyD8g@mail.gmail.com>
-References: <CAHiDW_Ewz6TjRW5A7V31U9128cA65EAepYoVcKHxJN43AyyD8g@mail.gmail.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [1.32][PATCH 1/1] bitbake: Fix imports from html5lib >= 0.9999999/1.0b8
+	Mon, 27 Mar 2017 00:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
+	t=1490573854; x=1522109854; h=from:to:subject:date:message-id;
+	bh=tmtSscedvI03Wn9ATs5QN3U7wpFwItMDcJXUOs7NMj4=;
+	b=JJbMZn3rDk0r8wS02UCsK+tfpjR7gD/KJynI1/np9xqFiq4g9UTRZXfg
+	atVEdglk6/ElaZh+XgZu4AoW+GZGUg==;
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+	by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	26 Mar 2017 17:17:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.36,229,1486454400"; d="scan'208";a="80843969"
+Received: from tienhauh-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.171.185])
+	by fmsmga005.fm.intel.com with ESMTP; 26 Mar 2017 17:17:31 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 27 Mar 2017 13:17:25 +1300
+Message-Id: <cover.1490573768.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.3
+Subject: [PATCH 0/3] Fixes for tinfoil usage issues
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,24 +35,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 26 Mar 2017 12:20:16 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 27 Mar 2017 00:17:32 -0000
 
-On Thu, 2017-03-23 at 10:39 +0200, Jussi Kukkonen wrote:
-> On 5 December 2016 at 19:42, <daniel@lublin.se> wrote:
-> > From: Daniel Lublin <daniel@lublin.se>
-> > 
-> > As of html5lib 0.9999999/1.0b8 (released on July 14, 2016), some
-> > modules
-> > have moved from _base to base. Handle this, while staying
-> > compatible
-> > with earlier versions.
-> This fixes a build breaking bug on newish host OSes and should be
-> cherry-picked to supported releases. I've tested 1.32: applies
-> cleanly and fixes the issue.
+Fixes for a recursion issue triggered by RSS in OE, and a logging issue
+caused by the tinfoil2 rework.
 
-Done, thanks.
 
-Richard
+The following changes since commit 751b06c25d22eea8240f9429cb49874082245e52:
+
+  bitbake-diffsigs: Add debug support (2017-03-22 14:52:39 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/tinfoil-fixes-bb2
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/tinfoil-fixes-bb2
+
+Paul Eggleton (3):
+  fetch2/git: prevent recursion on getting latest revision
+  lib/bb/msg: introduce logger_create() function
+  tinfoil: enable client-side logger handling by default
+
+ bin/bitbake-diffsigs | 14 ++------------
+ bin/bitbake-dumpsig  | 14 ++------------
+ bin/bitbake-layers   | 25 +++++--------------------
+ lib/bb/fetch2/git.py | 28 ++++++++++++++++++++--------
+ lib/bb/msg.py        | 15 +++++++++++++++
+ lib/bb/tinfoil.py    |  6 +++++-
+ 6 files changed, 49 insertions(+), 53 deletions(-)
+
+-- 
+2.9.3
+
 
