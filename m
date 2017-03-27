@@ -1,28 +1,32 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 2E8F177B60
+Return-Path: <leonardo.sandoval.gonzalez@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 78CA660685
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Mar 2017 10:15:46 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTP id v2RAExd0021037; 
-	Mon, 27 Mar 2017 11:15:46 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id FM2a3iw5Gjqv; Mon, 27 Mar 2017 11:15:46 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v2RAEsLx021016
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 27 Mar 2017 11:15:45 +0100
-Message-ID: <1490609694.13980.255.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Diana Thayer <garbados@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Mon, 27 Mar 2017 11:14:54 +0100
-In-Reply-To: <CA++8a_CFVb+=mHSH5x45Fg==D5pG-Ja=OiAiNpd2H4gvD3zSjA@mail.gmail.com>
+	Mon, 27 Mar 2017 17:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
+	t=1490634005; x=1522170005;
+	h=message-id:subject:from:to:cc:date:in-reply-to:
+	references:mime-version:content-transfer-encoding;
+	bh=LucTv65lG78NbSyUhwClhJFZABnbch9idkdPLX98pEQ=;
+	b=fFSehN4q7bGp+M/pINYpO1ofIGYTbP6Nfw4nUeevfeM8VjRouM3V6PnX
+	4XaduYhG90+vRMMfjz3Aj+LfIpsx7g==;
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	27 Mar 2017 09:59:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.36,232,1486454400"; d="scan'208";a="1112621352"
+Received: from lsandov1-mobl2.zpn.intel.com ([10.219.128.141])
+	by orsmga001.jf.intel.com with ESMTP; 27 Mar 2017 09:59:49 -0700
+Message-ID: <1490634472.28281.111.camel@linux.intel.com>
+From: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
+To: Diana Thayer <garbados@gmail.com>
+Date: Mon, 27 Mar 2017 11:07:52 -0600
+In-Reply-To: <1490128025-7864-1-git-send-email-garbados@gmail.com>
 References: <1490128025-7864-1-git-send-email-garbados@gmail.com>
-	<CA++8a_CFVb+=mHSH5x45Fg==D5pG-Ja=OiAiNpd2H4gvD3zSjA@mail.gmail.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
+X-Mailer: Evolution 3.12.9-1+b1 
 Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] bug 9962: improve -v, -D documentation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -36,41 +40,83 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Mar 2017 10:15:47 -0000
+X-List-Received-Date: Mon, 27 Mar 2017 17:00:03 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2017-03-21 at 13:33 -0700, Diana Thayer wrote:
-> Hi!
+On Tue, 2017-03-21 at 13:27 -0700, Diana Thayer wrote:
+> Per bug-9962, expanded and clarified documentation
+> for -v, --verbose and -D, --debug.
 > 
-> I did my best to follow patch submission guidelines and code
-> styleguide but this is my very first patch to anything in the Yocto
-> project. Please let me know if and how I can improve future patch
-> submissions! I figured since it's my first time, I would follow up
-> and say hello :)
+> Signed-off-by: Diana Thayer <garbados@gmail.com>
+> ---
+>  doc/bitbake-user-manual/bitbake-user-manual-intro.xml | 16 +++++++++++++---
+>  lib/bb/main.py                                        | 15 +++++++++++++--
+>  2 files changed, 26 insertions(+), 5 deletions(-)
 > 
-> This patch addresses bug 9962 by updating the documentation of
-> bitbake's -v and -D CLI options. I copied the updated text directly
-> from the bug report, and changed it both in the code and in the user
-> manual.
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
+> index 7248a0b..5bbfc67 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
+> @@ -504,9 +504,19 @@
+>                               Read the specified file before bitbake.conf.
+>         -R POSTFILE, --postread=POSTFILE
+>                               Read the specified file after bitbake.conf.
+> -       -v, --verbose         Output more log message data to the terminal.
+> -       -D, --debug           Increase the debug level. You can specify this more
+> -                             than once.
+> +       -v, --verbose         Enable tracing of shell tasks (with 'set -x').
+> +                             Also print bb.note(...) messages to stdout (in
+> +                             addition to writing them to ${T}/log.do_<task>).
+> +       -D, --debug           Increase the debug level. You can specify this
+> +                             more than once. -D sets the debug level to 1,
+> +                             where only bb.debug(1, ...) messages are printed
+> +                             to stdout; -DD sets the debug level to 2, where
+> +                             both bb.debug(1, ...) and bb.debug(2, ...)
+> +                             messages are printed; etc. Without -D, no debug
+> +                             messages are printed. Note that -D only affects
+> +                             output to stdout. All debug messages are written
+> +                             to ${T}/log.do_taskname, regardless of the debug
+> +                             level.
+
+I think the description is fine for -D/--debug , but I am not sure if
+this is the place to describe that level N includes N-1, etc.. This is
+something standard, and describing here make it a bit verbose.
+
+>         -n, --dry-run         Don't execute, just go through the motions.
+>         -S SIGNATURE_HANDLER, --dump-signatures=SIGNATURE_HANDLER
+>                               Dump out the signature construction information, with
+> diff --git a/lib/bb/main.py b/lib/bb/main.py
+> index b3cd2cf..8c948c2 100755
+> --- a/lib/bb/main.py
+> +++ b/lib/bb/main.py
+> @@ -174,10 +174,21 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+>                            help="Read the specified file after bitbake.conf.")
+>  
+>          parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
+> -                          help="Output more log message data to the terminal.")
+> +                          help="Enable tracing of shell tasks (with 'set -x'). "
+> +                               "Also print bb.note(...) messages to stdout (in "
+> +                               "addition to writing them to ${T}/log.do_<task>).")
+>  
+>          parser.add_option("-D", "--debug", action="count", dest="debug", default=0,
+> -                          help="Increase the debug level. You can specify this more than once.")
+> +                          help="Increase the debug level. You can specify this "
+> +                               "more than once. -D sets the debug level to 1, "
+> +                               "where only bb.debug(1, ...) messages are printed "
+> +                               "to stdout; -DD sets the debug level to 2, where "
+> +                               "both bb.debug(1, ...) and bb.debug(2, ...) "
+> +                               "messages are printed; etc. Without -D, no debug "
+> +                               "messages are printed. Note that -D only affects "
+> +                               "output to stdout. All debug messages are written "
+> +                               "to ${T}/log.do_taskname, regardless of the debug "
+> +                               "level.")
+>  
+>          parser.add_option("-q", "--quiet", action="count", dest="quiet", default=0,
+>                            help="Output less log message data to the terminal. You can specify this more than once.")
+> -- 
+> 2.7.4
 > 
-> Anyway hi! I hope to contribute more soon :)
 
-Hi!
 
-Thanks for taking the time to submit the patch and sorry for the delay
-in getting back to you. I've just queued this in master-next for
-further testing. The patch itself is great, I did have to tweak the
-commit message a bit. In particular:
-
-I added "main: " as a prefix to the shortlog since this indicates there
-the change was made. I also changed the bug reference to our standard
-form [YOCTO #XXXX] so that when we search commits for bug references,
-its in a standard form. The commit message needs to stand alone without
-someone needing to read the bug, that is there just as a useful link
-for more information. All just minor formatting tweaks really though.
-
-Cheers,
-
-Richard
 
