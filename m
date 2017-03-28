@@ -1,45 +1,38 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-wr0-f174.google.com (mail-wr0-f174.google.com
-	[209.85.128.174])
-	by mail.openembedded.org (Postfix) with ESMTP id C156D77B91
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 9991177B5B
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Mar 2017 16:30:23 +0000 (UTC)
-Received: by mail-wr0-f174.google.com with SMTP id u1so110544313wra.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Mar 2017 09:30:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=maD4OPjYyzieTLnh18CUwsgpbyjh9F4aQoSpoaGjoJU=;
-	b=eoZE8D2YRtO4tHxgz9IwX5ZFWa6OZo12nIdu7W/g85z/QeDvMniiwEBj7Iak68eXjt
-	brpcx6aAO6+AgDcvf5erlbeaqKbX23ptsh67/y3PtoA1oSa4RfRH1Qux/9mtfCp74ux9
-	u5xIMILi1zuv5JmZDQuryaQDNXv0zLteKzlhphgzhw/VgCeQeXfXU2sIwVR84VWTw+z5
-	v1J8dNdTW9Brlg5YSFIMp35A3SbZbvF2MbZufMg3a42DXLLvYm3+GNTESbR+IZMc+f5x
-	pPmby0eod8gmlzoC4y6vFwtBplYMI5V+yCmG0o/ofakdFnz6u7DbjGi/y6mKwYe/dznp
-	jIqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=maD4OPjYyzieTLnh18CUwsgpbyjh9F4aQoSpoaGjoJU=;
-	b=bFc+F3sxk6Hq7I0Fl6igDfseC4eFxYG3bd3XJ2jYUH0g31MQ+mn+TqmkkHNAW5hCWq
-	GkZ1zGQOHsPOGVguW+sAWfB5IuKS18SmkrqQN3I6wbfwoqgbty3Cwiq0Ze01PMca9h2o
-	DawEA+DcUFgj+L7NCZEdaG4TpJE7Fhl1ir/38e2ZhLEco3bZQN/a99bPs1uUi/uuUtpM
-	g5I7cpiPOYBQ8NOr6BV30KeTb/nfdmMxGH+wyy+t4fTaFE687BGzuHWX4MT8cCTZ964F
-	6XKXfBunbhUyuEDYZtqJFUQWkSQ8FDTZXDmUIqlV8KB0V0Ink5ZrmlcDhhQ9jETLGLdn
-	4F7w==
-X-Gm-Message-State: AFeK/H2W0uO8a1gsGV0itv2HgfkY7vPwJnoGmiTYwqZdpWrrK1lpmegioN1RUQ7J8dIi2pqNX0AsVmdNl/uodg==
-X-Received: by 10.223.152.237 with SMTP id w100mr17217540wrb.72.1490718624431; 
-	Tue, 28 Mar 2017 09:30:24 -0700 (PDT)
+	Tue, 28 Mar 2017 19:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
+	t=1490730652; x=1522266652;
+	h=from:to:cc:subject:date:message-id:in-reply-to:
+	references:mime-version:content-transfer-encoding;
+	bh=JzVrGbCK1T+r9FXWIvmZkNIDFqrVmdN1R4sQjbyd04Y=;
+	b=T/jOFLCfjXtnVl1Gs/hpnfqOFJWrI+AEneZQXq+WhuDp8SoejxHTXeQf
+	jjnzxwYvTJmDBXfxmKAbI8I67FoZEw==;
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	28 Mar 2017 12:50:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.36,238,1486454400"; 
+	d="py'?scan'208";a="839413394"
+Received: from dalin-mobl1.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.138.23])
+	by FMSMGA003.fm.intel.com with ESMTP; 28 Mar 2017 12:50:48 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Christopher Larson <chris_larson@mentor.com>
+Date: Wed, 29 Mar 2017 08:50:46 +1300
+Message-ID: <4811829.bIhWvhHDll@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+In-Reply-To: <CABcZANnahbPL5bLobQ8TTQu=+UmdyHpmi8u7wbduZFSkcQzBgQ@mail.gmail.com>
+References: <cover.1490662146.git.paul.eggleton@linux.intel.com>
+	<93968aed34753e90e05945b2bce34ccfb4743a60.1490662146.git.paul.eggleton@linux.intel.com>
+	<CABcZANnahbPL5bLobQ8TTQu=+UmdyHpmi8u7wbduZFSkcQzBgQ@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 10.223.152.55 with HTTP; Tue, 28 Mar 2017 09:30:23 -0700 (PDT)
-In-Reply-To: <1490709894-31154-1-git-send-email-pidge@toganlabs.com>
-References: <1490709894-31154-1-git-send-email-pidge@toganlabs.com>
-From: Andre McCurdy <armccurdy@gmail.com>
-Date: Tue, 28 Mar 2017 09:30:23 -0700
-Message-ID: <CAJ86T=UYhwXiQ0EdVUxhT7wJXqwn-QDeTWrYruB-1go3Ak1FDg@mail.gmail.com>
-To: "Elizabeth 'pidge' Flanagan" <pidge@toganlabs.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCHv2] s3.py: Add support for fetching source mirrors/minor cleanup
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 1/1] lib/bb/codeparser: ensure BufferedLogger respects target filtering
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,127 +45,108 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Mar 2017 16:30:24 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Tue, 28 Mar 2017 19:50:52 -0000
+X-Groupsio-MsgNum: 8517
+Content-Type: multipart/mixed; boundary="nextPart4238051.qs5SfqrDQ1"
+Content-Transfer-Encoding: 7Bit
 
-On Tue, Mar 28, 2017 at 7:04 AM, Elizabeth 'pidge' Flanagan
-<pidge@toganlabs.com> wrote:
-> This commits main purpose is to add support for fetching source
-> mirrors. In the current incarnation:
->
-> SOURCE_MIRROR_URL ?= "s3://mybucket/downloads"
->
-> will fail for two reasons. First, download doesn't support it,
-> but second, without aws included in HOSTTOOLS you'll end up
-> with aws not being found by bitbake (for either source mirrors or
-> sstate mirrors).
->
-> Part of this is fixed with this commit. However, this will still
-> fail if HOSTTOOLS doesn't include 'aws' in bitbake.conf. I've another
-> commit or two to fix that as well.
->
-> I've also DRYed up some of the error handling, removed the hardcoded
-> aws and added some logging.
->
-> Signed-off-by: Elizabeth 'pidge' Flanagan <pidge@toganlabs.com>
-> ---
->  lib/bb/fetch2/s3.py | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
->
-> diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
-> index 27993aa..791f3b2 100644
-> --- a/lib/bb/fetch2/s3.py
-> +++ b/lib/bb/fetch2/s3.py
-> @@ -34,6 +34,7 @@ import urllib.request, urllib.parse, urllib.error
->  from bb.fetch2 import FetchMethod
->  from bb.fetch2 import FetchError
->  from bb.fetch2 import runfetchcmd
-> +from bb.fetch2 import logger
->
->  class S3(FetchMethod):
->      """Class to fetch urls via 'aws s3'"""
-> @@ -48,6 +49,8 @@ class S3(FetchMethod):
->          return True
->
->      def urldata_init(self, ud, d):
-> +        ud.basecmd = d.getVar("FETCHCMD_s3", True) or "/usr/bin/env aws s3"
-> +
->          if 'downloadfilename' in ud.parm:
->              ud.basename = ud.parm['downloadfilename']
->          else:
-> @@ -60,8 +63,13 @@ class S3(FetchMethod):
->          Fetch urls
->          Assumes localpath was called first
->          """
-> -
-> -        cmd = 'aws s3 cp s3://%s%s %s' % (ud.host, ud.path, ud.localpath)
-> +        if 'downloadfilename' in ud.parm:
-> +            dldir = d.getVar("DL_DIR", True)
-> +            bb.utils.mkdirhier(os.path.dirname(dldir + os.sep + ud.localfile))
-> +            cmd = '%s cp s3://%s%s %s%s%s' % (ud.basecmd, ud.host, ud.path, dldir, os.sep, ud.localpath)
-> +        else:
-> +            cmd = '%s cp s3://%s%s %s' % (ud.basecmd, ud.host, ud.path, ud.localpath)
-> +        logger.debug(2, "Fetching %s using command '%s'" % (ud.url, cmd))
+--nextPart4238051.qs5SfqrDQ1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-The intention is that "downloadfilename" is incorporated into
-ud.localfile by urldata_init(). Did you find a case where that doesn't
-work?
+On Wednesday, 29 March 2017 5:01:31 AM NZDT Christopher Larson wrote:
+> On Mon, Mar 27, 2017 at 5:51 PM, Paul Eggleton <
+> paul.eggleton@linux.intel.com> wrote:
+> > BufferedLogger was sending log records to the target logger using
+> > handle() - this meant that the filtering (e.g. log level set)
+> > on the target logger was bypassed, leading for example to debug records
+> > getting printed when the log level was set to logging.WARNING.
+> >=20
+> > Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+>=20
+> The =E2=80=98filter=E2=80=99 method of a Logger instance doesn=E2=80=99t =
+log anything, it=E2=80=99s a
+> subclass of Filterer, which just checks whether it should be logged. The
+> =E2=80=98handle=E2=80=99 method of a Logger already consults self.filter(=
+), if you check
+> the code:
+>=20
+>    def handle(self, record):
+>           """
+>           Call the handlers for the specified record.
+>=20
+>           This method is used for unpickled records received from a socke=
+t,
+> as
+>           well as those created locally. Logger-level filtering is applie=
+d.
+>           """
+>           if (not self.disabled) and self.filter(record):
+>               self.callHandlers(record)
 
->          bb.fetch2.check_network_access(d, cmd, ud.url)
->          runfetchcmd(cmd, d)
->
-> @@ -70,11 +78,11 @@ class S3(FetchMethod):
->          # tool with a little healthy suspicion).
->
->          if not os.path.exists(ud.localpath):
-> -            raise FetchError("The aws cp command returned success for s3://%s%s but %s doesn't exist?!" % (ud.host, ud.path, ud.localpath))
-> +            raise FetchError("The command  %s returned success but %s doesn't exist?!" % (cmd, ud.localpath))
+Oops, you're right. I'm still confused about why I'm seeing debugging messa=
+ges=20
+when the target logger is set to INFO then. Do you have any suggestions on =
+how=20
+we fix this?
 
-This seems fairly arbitrary churn...
+(I've attached a simplified test script demonstrating the issue.)
 
->
->          if os.path.getsize(ud.localpath) == 0:
->              os.remove(ud.localpath)
-> -            raise FetchError("The aws cp command for s3://%s%s resulted in a zero size file?! Deleting and failing since this isn't right." % (ud.host, ud.path))
-> +            raise FetchError("The command %s resulted in a zero size file?! Deleting and failing since this isn't right." % (cmd))
+Cheers,
+Paul
 
-Ditto.
+=2D-=20
 
->
->          return True
->
-> @@ -83,7 +91,9 @@ class S3(FetchMethod):
->          Check the status of a URL
->          """
->
-> -        cmd = 'aws s3 ls s3://%s%s' % (ud.host, ud.path)
-> +        cmd = '%s ls s3://%s%s' % (ud.basecmd, ud.host, ud.path)
-> +        logger.debug(2, "Checking %s using command '%s'" % (ud.url, cmd))
+Paul Eggleton
+Intel Open Source Technology Centre
 
-runfetchcmd() will output basically the same thing, so this isn't
-really required.
+--nextPart4238051.qs5SfqrDQ1
+Content-Disposition: attachment; filename="testlogging.py"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/x-python; charset="UTF-8"; name="testlogging.py"
 
-> +
->          bb.fetch2.check_network_access(d, cmd, ud.url)
->          output = runfetchcmd(cmd, d)
->
-> @@ -91,6 +101,6 @@ class S3(FetchMethod):
->          # is not found, so check output of the command to confirm success.
->
->          if not output:
-> -            raise FetchError("The aws ls command for s3://%s%s gave empty output" % (ud.host, ud.path))
-> +            raise FetchError("The command %s gave empty output" % (cmd))
+import logging
+import sys
+import os
 
-More churn for little obvious gain.
 
->
->          return True
-> --
-> 1.9.1
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+def logger_create(name, stream=None):
+    logger = logging.getLogger(name)
+    loggerhandler = logging.StreamHandler(stream=stream)
+    formatter = logging.Formatter("%(levelname)s: %(message)s")
+    loggerhandler.setFormatter(formatter)
+    logger.addHandler(loggerhandler)
+    logger.setLevel(logging.INFO)
+    return logger
 
+Logger = logging.getLoggerClass()
+class BufferedLogger(Logger):
+    def __init__(self, name, level=0, target=None):
+        Logger.__init__(self, name)
+        self.setLevel(level)
+        self.buffer = []
+        self.target = target
+
+    def handle(self, record):
+        self.buffer.append(record)
+
+    def flush(self):
+        for record in self.buffer:
+            self.target.handle(record)
+        self.buffer = []
+
+
+logger = logger_create('mylogger')
+logger.setLevel(logging.INFO)
+
+buflogger = BufferedLogger('mylogger.Data.PythonParser', logging.DEBUG, logger)
+buflogger.debug('buffered debug')
+
+logger.debug('hello debug')
+logger.info('hello info')
+logger.warn('hello warning')
+logger.error('hello error')
+
+buflogger.flush()
+
+--nextPart4238051.qs5SfqrDQ1--
