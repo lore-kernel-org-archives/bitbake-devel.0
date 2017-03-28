@@ -1,41 +1,50 @@
-Return-Path: <pidge@toganlabs.com>
-Received: from burlywood.maple.relay.mailchannels.net
-	(burlywood.maple.relay.mailchannels.net [23.83.214.26])
-	by mail.openembedded.org (Postfix) with ESMTP id 534AE77A8A
+Return-Path: <kergoth@gmail.com>
+Received: from mail-oi0-f54.google.com (mail-oi0-f54.google.com
+	[209.85.218.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 4725771C9A
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Mar 2017 13:54:30 +0000 (UTC)
-X-Sender-Id: hostpapa|x-authuser|pidge@toganlabs.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 0FD77203AD2
+	Tue, 28 Mar 2017 16:01:50 +0000 (UTC)
+Received: by mail-oi0-f54.google.com with SMTP id r203so42167089oib.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Mar 2017 13:54:31 +0000 (UTC)
-Received: from hp181.hostpapa.com (unknown [100.96.128.152])
-	by relay.mailchannels.net (Postfix) with ESMTPA id AA1B820368F
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Mar 2017 13:54:30 +0000 (UTC)
-X-Sender-Id: hostpapa|x-authuser|pidge@toganlabs.com
-Received: from hp181.hostpapa.com (hp181.hostpapa.com [172.20.55.158])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.37); Tue, 28 Mar 2017 13:54:31 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostpapa|x-authuser|pidge@toganlabs.com
-X-MailChannels-Auth-Id: hostpapa
-X-Grain-Robust: 5addefe66aa4a162_1490709270971_993948391
-X-MC-Loop-Signature: 1490709270971:500971595
-X-MC-Ingress-Time: 1490709270971
-Received: from ns325767.ip-37-187-157.eu ([37.187.157.197]:37956
-	helo=ns325767.ovh.net) by hp181.hostpapa.com with esmtpsa
-	(TLSv1.2:ECDHE-RSA-AES128-SHA256:128) (Exim 4.87)
-	(envelope-from <pidge@toganlabs.com>)
-	id 1csrZt-001040-UR; Tue, 28 Mar 2017 15:54:30 +0200
-From: Elizabeth 'pidge' Flanagan <pidge@toganlabs.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 28 Mar 2017 16:04:54 +0200
-Message-Id: <1490709894-31154-1-git-send-email-pidge@toganlabs.com>
-X-Mailer: git-send-email 1.9.1
-X-OutGoing-Spam-Status: No, score=5.0
-X-AuthUser: pidge@toganlabs.com
-Subject: [PATCHv2] s3.py: Add support for fetching source mirrors/minor cleanup
+	Tue, 28 Mar 2017 09:01:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=hKWljFVxz9AlBxd2TLwAuMUiAmdO8cp6MN/ajt4PwIE=;
+	b=vO2MPy5ONLHW9K2xbAaTLLFbzSH4SKZ3mt/ozTW5Qavk2zx0K5etiLcqBrbU106E+1
+	K9ymhanYvyjlz/TG4u4EPDoYNE6yrr13Cyya7WuhSDQV9ZfXmBWzcLbW7rUJSqBlPQKA
+	a1xfn37rjF+SugFYfl3gPJcmPZ8fl4mZdh9p07f7Otgt5doClvAwYC2tg7h1GJxy98WN
+	pIZpETk+bKlE0/UZ0dOzYwnB4i8cSVhmMXJ2pjp3IRK2FBuM984UJ0A0KREdlcIJWR5w
+	HhO/U0b7yjVh17cMgqpAWJxCdadWj31BFwk2tm7DTNcayQvAVA44wa35sdEasEoxpFBE
+	4KOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc;
+	bh=hKWljFVxz9AlBxd2TLwAuMUiAmdO8cp6MN/ajt4PwIE=;
+	b=snit+KzQI0BsEi+RVhaYA7Vuepj9haIL274/ZeDyhb2cUxGZLNLEoNYhCGcoQR3RT6
+	w9WuN32wH3eOcvpKMdk5UZqQysUK9VNKAVVo1Z+OLpLydsbTL+4Lcmn4uyRaBFSe9QjY
+	zdSBihXtFDVdwOg5w2Tni3wkGnbP1DljTMVcGk/P+l8Xz1VOdgBhilCcUYViEYhiUUch
+	a7G6xiPMmmu0bRaTkhJvkEmakHLIZEJiCGuGDJJzYUreSVxyq/YoqgawnL6yvXjDjtGf
+	w/sEDZedc8lak4dZFNVtV1FajYSAy+m1RU5q1PD0eQoFBA5kXkJyIH7RNtm+qO0XvZ+H
+	po1w==
+X-Gm-Message-State: AFeK/H3BhphC9A8GaVW5zUxfvJzcfFFYj4OY3FQ3oDnH8VhhFv3B9hlalbXlASUAYmjDVWm48JDn6hHYS04b3Q==
+X-Received: by 10.202.237.65 with SMTP id l62mr6814185oih.38.1490716912122;
+	Tue, 28 Mar 2017 09:01:52 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.157.32.161 with HTTP; Tue, 28 Mar 2017 09:01:31 -0700 (PDT)
+In-Reply-To: <93968aed34753e90e05945b2bce34ccfb4743a60.1490662146.git.paul.eggleton@linux.intel.com>
+References: <cover.1490662146.git.paul.eggleton@linux.intel.com>
+	<93968aed34753e90e05945b2bce34ccfb4743a60.1490662146.git.paul.eggleton@linux.intel.com>
+From: Christopher Larson <chris_larson@mentor.com>
+Date: Tue, 28 Mar 2017 09:01:31 -0700
+X-Google-Sender-Auth: qrBNYxZG-GO--tCm31hB5hBKrrE
+Message-ID: <CABcZANnahbPL5bLobQ8TTQu=+UmdyHpmi8u7wbduZFSkcQzBgQ@mail.gmail.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 1/1] lib/bb/codeparser: ensure BufferedLogger respects target filtering
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,101 +57,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Mar 2017 13:54:33 -0000
+X-List-Received-Date: Tue, 28 Mar 2017 16:01:53 -0000
+Content-Type: multipart/alternative; boundary=001a113d24240203a3054bcc949d
 
-This commits main purpose is to add support for fetching source
-mirrors. In the current incarnation:
+--001a113d24240203a3054bcc949d
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-SOURCE_MIRROR_URL ?= "s3://mybucket/downloads"
+On Mon, Mar 27, 2017 at 5:51 PM, Paul Eggleton <
+paul.eggleton@linux.intel.com> wrote:
 
-will fail for two reasons. First, download doesn't support it,
-but second, without aws included in HOSTTOOLS you'll end up
-with aws not being found by bitbake (for either source mirrors or
-sstate mirrors).
-
-Part of this is fixed with this commit. However, this will still
-fail if HOSTTOOLS doesn't include 'aws' in bitbake.conf. I've another
-commit or two to fix that as well.
-
-I've also DRYed up some of the error handling, removed the hardcoded
-aws and added some logging.
-
-Signed-off-by: Elizabeth 'pidge' Flanagan <pidge@toganlabs.com>
----
- lib/bb/fetch2/s3.py | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
-index 27993aa..791f3b2 100644
---- a/lib/bb/fetch2/s3.py
-+++ b/lib/bb/fetch2/s3.py
-@@ -34,6 +34,7 @@ import urllib.request, urllib.parse, urllib.error
- from bb.fetch2 import FetchMethod
- from bb.fetch2 import FetchError
- from bb.fetch2 import runfetchcmd
-+from bb.fetch2 import logger
- 
- class S3(FetchMethod):
-     """Class to fetch urls via 'aws s3'"""
-@@ -48,6 +49,8 @@ class S3(FetchMethod):
-         return True
- 
-     def urldata_init(self, ud, d):
-+        ud.basecmd = d.getVar("FETCHCMD_s3", True) or "/usr/bin/env aws s3"
-+
-         if 'downloadfilename' in ud.parm:
-             ud.basename = ud.parm['downloadfilename']
-         else:
-@@ -60,8 +63,13 @@ class S3(FetchMethod):
-         Fetch urls
-         Assumes localpath was called first
-         """
--
--        cmd = 'aws s3 cp s3://%s%s %s' % (ud.host, ud.path, ud.localpath)
-+        if 'downloadfilename' in ud.parm:
-+            dldir = d.getVar("DL_DIR", True)
-+            bb.utils.mkdirhier(os.path.dirname(dldir + os.sep + ud.localfile))
-+            cmd = '%s cp s3://%s%s %s%s%s' % (ud.basecmd, ud.host, ud.path, dldir, os.sep, ud.localpath)
-+        else:
-+            cmd = '%s cp s3://%s%s %s' % (ud.basecmd, ud.host, ud.path, ud.localpath)
-+        logger.debug(2, "Fetching %s using command '%s'" % (ud.url, cmd))
-         bb.fetch2.check_network_access(d, cmd, ud.url)
-         runfetchcmd(cmd, d)
- 
-@@ -70,11 +78,11 @@ class S3(FetchMethod):
-         # tool with a little healthy suspicion).
- 
-         if not os.path.exists(ud.localpath):
--            raise FetchError("The aws cp command returned success for s3://%s%s but %s doesn't exist?!" % (ud.host, ud.path, ud.localpath))
-+            raise FetchError("The command  %s returned success but %s doesn't exist?!" % (cmd, ud.localpath))
- 
-         if os.path.getsize(ud.localpath) == 0:
-             os.remove(ud.localpath)
--            raise FetchError("The aws cp command for s3://%s%s resulted in a zero size file?! Deleting and failing since this isn't right." % (ud.host, ud.path))
-+            raise FetchError("The command %s resulted in a zero size file?! Deleting and failing since this isn't right." % (cmd))
- 
-         return True
- 
-@@ -83,7 +91,9 @@ class S3(FetchMethod):
-         Check the status of a URL
-         """
- 
--        cmd = 'aws s3 ls s3://%s%s' % (ud.host, ud.path)
-+        cmd = '%s ls s3://%s%s' % (ud.basecmd, ud.host, ud.path)
-+        logger.debug(2, "Checking %s using command '%s'" % (ud.url, cmd))
-+
-         bb.fetch2.check_network_access(d, cmd, ud.url)
-         output = runfetchcmd(cmd, d)
- 
-@@ -91,6 +101,6 @@ class S3(FetchMethod):
-         # is not found, so check output of the command to confirm success.
- 
-         if not output:
--            raise FetchError("The aws ls command for s3://%s%s gave empty output" % (ud.host, ud.path))
-+            raise FetchError("The command %s gave empty output" % (cmd))
- 
-         return True
--- 
-1.9.1
+> BufferedLogger was sending log records to the target logger using
+> handle() - this meant that the filtering (e.g. log level set)
+> on the target logger was bypassed, leading for example to debug records
+> getting printed when the log level was set to logging.WARNING.
+>
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
 
+The =E2=80=98filter=E2=80=99 method of a Logger instance doesn=E2=80=99t lo=
+g anything, it=E2=80=99s a
+subclass of Filterer, which just checks whether it should be logged. The
+=E2=80=98handle=E2=80=99 method of a Logger already consults self.filter(),=
+ if you check
+the code:
+
+   def handle(self, record):
+          """
+          Call the handlers for the specified record.
+
+          This method is used for unpickled records received from a socket,
+as
+          well as those created locally. Logger-level filtering is applied.
+          """
+          if (not self.disabled) and self.filter(record):
+              self.callHandlers(record)
+--=20
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
+
+--001a113d24240203a3054bcc949d
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">On Mon, Mar 27, 2017 at 5:51 PM, Paul Eggleton <span dir=
+=3D"ltr">&lt;<a href=3D"mailto:paul.eggleton@linux.intel.com" target=3D"_bl=
+ank">paul.eggleton@linux.intel.com</a>&gt;</span> wrote:<br><div class=3D"g=
+mail_extra"><div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" st=
+yle=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb=
+(204,204,204);border-left-style:solid;padding-left:1ex">BufferedLogger was =
+sending log records to the target logger using<br>
+handle() - this meant that the filtering (e.g. log level set)<br>
+on the target logger was bypassed, leading for example to debug records<br>
+getting printed when the log level was set to logging.WARNING.<br>
+<br>
+Signed-off-by: Paul Eggleton &lt;<a href=3D"mailto:paul.eggleton@linux.inte=
+l.com">paul.eggleton@linux.intel.com</a><wbr>&gt;</blockquote><div><br></di=
+v><div>The =E2=80=98filter=E2=80=99 method of a Logger instance doesn=E2=80=
+=99t log anything, it=E2=80=99s a subclass of Filterer, which just checks w=
+hether it should be logged. The =E2=80=98handle=E2=80=99 method of a Logger=
+ already consults self.filter(), if you check the code:</div><div><div><br>=
+</div><div>=C2=A0 =C2=A0def handle(self, record):</div><div>=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot;</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 Call the handlers for the specified record.</div><div><br></div>=
+<div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 This method is used for unpickled r=
+ecords received from a socket, as</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 well as those created locally. Logger-level filtering is applied.</div>=
+<div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot;</div><div>=C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (not self.disabled) and self.filter(record)=
+:</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.callHandl=
+ers(record)</div></div></div>-- <br><div class=3D"gmail_signature"><div dir=
+=3D"ltr"><div><div dir=3D"ltr"><div><div dir=3D"ltr"><div>Christopher Larso=
+n<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZauru=
+s<br>Senior Software Engineer, Mentor Graphics</div></div></div></div></div=
+></div></div>
+</div></div>
+
+--001a113d24240203a3054bcc949d--
