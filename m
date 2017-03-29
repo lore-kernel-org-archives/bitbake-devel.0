@@ -1,32 +1,46 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id D63FF77BB4
+Return-Path: <pidge@toganlabs.com>
+Received: from nov-007-i592.relay.mailchannels.net
+	(nov-007-i592.relay.mailchannels.net [46.232.183.146])
+	by mail.openembedded.org (Postfix) with ESMTP id 4CE5C60290
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Mar 2017 20:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
-	t=1490733721; x=1522269721;
-	h=from:to:cc:subject:date:message-id:in-reply-to: references;
-	bh=7n2xqq+vews5c6a9lKi80mo5Ldr5U1H06GutxoLJTiY=;
-	b=pChOW+APr/AwSaMrdr12sLS14B8EFzjHxTMml6cY0CXkJd61IxW+Y79D
-	dMTR808EbxtBA/dMAxkEt0oyPB1dEg==;
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	28 Mar 2017 13:41:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.36,238,1486454400"; d="scan'208";a="1128218153"
-Received: from dalin-mobl1.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.138.23])
-	by fmsmga001.fm.intel.com with ESMTP; 28 Mar 2017 13:41:57 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 29 Mar 2017 09:41:47 +1300
-Message-Id: <1c04460ad9b11930f74afcc4d1aa88e800056580.1490733586.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <cover.1490733586.git.paul.eggleton@linux.intel.com>
-References: <cover.1490733586.git.paul.eggleton@linux.intel.com>
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH v2 1/1] lib/bb/codeparser: ensure BufferedLogger respects target logging level
+	Wed, 29 Mar 2017 09:08:05 +0000 (UTC)
+X-Sender-Id: hostpapa|x-authuser|pidge@toganlabs.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 7013D8A07E0;
+	Wed, 29 Mar 2017 09:08:03 +0000 (UTC)
+Received: from hp181.hostpapa.com (unknown [100.96.126.101])
+	by relay.mailchannels.net (Postfix) with ESMTPA id C471D8A28B0;
+	Wed, 29 Mar 2017 09:08:02 +0000 (UTC)
+X-Sender-Id: hostpapa|x-authuser|pidge@toganlabs.com
+Received: from hp181.hostpapa.com (hp181.hostpapa.com [172.20.55.158])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+	by 0.0.0.0:2500 (trex/5.7.37); Wed, 29 Mar 2017 09:08:03 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostpapa|x-authuser|pidge@toganlabs.com
+X-MailChannels-Auth-Id: hostpapa
+X-Minister-Blushing: 2e15bda960ab1190_1490778483290_121908983
+X-MC-Loop-Signature: 1490778483290:1866560494
+X-MC-Ingress-Time: 1490778483289
+Received: from [213.46.252.136] (port=39706 helo=[192.168.229.56])
+	by hp181.hostpapa.com with esmtpsa
+	(TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim 4.87)
+	(envelope-from <pidge@toganlabs.com>)
+	id 1ct9aC-000OvL-M6; Wed, 29 Mar 2017 11:08:01 +0200
+Message-ID: <1490778478.15543.10.camel@toganlabs.com>
+From: Beth 'pidge' Flanagan <pidge@toganlabs.com>
+Reply-To: pidge@toganlabs.com
+To: Andre McCurdy <armccurdy@gmail.com>
+Date: Wed, 29 Mar 2017 11:07:58 +0200
+In-Reply-To: <CAJ86T=UYhwXiQ0EdVUxhT7wJXqwn-QDeTWrYruB-1go3Ak1FDg@mail.gmail.com>
+References: <1490709894-31154-1-git-send-email-pidge@toganlabs.com>
+	<CAJ86T=UYhwXiQ0EdVUxhT7wJXqwn-QDeTWrYruB-1go3Ak1FDg@mail.gmail.com>
+Organization: toganlabs.com
+X-Mailer: Evolution 3.18.5.2-0ubuntu3 
+Mime-Version: 1.0
+X-OutGoing-Spam-Status: No, score=5.0
+X-AuthUser: pidge@toganlabs.com
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCHv2] s3.py: Add support for fetching source mirrors/minor cleanup
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,35 +53,219 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Mar 2017 20:42:01 -0000
+X-List-Received-Date: Wed, 29 Mar 2017 09:08:07 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-BufferedLogger was sending log records to the target logger without
-checking if the logger is enabled for the level of the record - and
-handle() doesn't check this either (it's normally checked earlier when
-the relevant log function is called e.g. logger.debug()), leading for
-example to debug messages from codeparser getting printed when the log
-level for the main BitBake logger was set to logging.WARNING.
+On Tue, 2017-03-28 at 09:30 -0700, Andre McCurdy wrote:
+> On Tue, Mar 28, 2017 at 7:04 AM, Elizabeth 'pidge' Flanagan
+> <pidge@toganlabs.com> wrote:
+> >=20
+> > This commits main purpose is to add support for fetching source
+> > mirrors. In the current incarnation:
+> >=20
+> > SOURCE_MIRROR_URL ?=3D "s3://mybucket/downloads"
+> >=20
+> > will fail for two reasons. First, download doesn't support it,
+> > but second, without aws included in HOSTTOOLS you'll end up
+> > with aws not being found by bitbake (for either source mirrors or
+> > sstate mirrors).
+> >=20
+> > Part of this is fixed with this commit. However, this will still
+> > fail if HOSTTOOLS doesn't include 'aws' in bitbake.conf. I've
+> > another
+> > commit or two to fix that as well.
+> >=20
+> > I've also DRYed up some of the error handling, removed the
+> > hardcoded
+> > aws and added some logging.
+> >=20
+> > Signed-off-by: Elizabeth 'pidge' Flanagan <pidge@toganlabs.com>
+> > ---
+> > =C2=A0lib/bb/fetch2/s3.py | 22 ++++++++++++++++------
+> > =C2=A01 file changed, 16 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
+> > index 27993aa..791f3b2 100644
+> > --- a/lib/bb/fetch2/s3.py
+> > +++ b/lib/bb/fetch2/s3.py
+> > @@ -34,6 +34,7 @@ import urllib.request, urllib.parse, urllib.error
+> > =C2=A0from bb.fetch2 import FetchMethod
+> > =C2=A0from bb.fetch2 import FetchError
+> > =C2=A0from bb.fetch2 import runfetchcmd
+> > +from bb.fetch2 import logger
+> >=20
+> > =C2=A0class S3(FetchMethod):
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"""Class to fetch urls via 'aws s3'"""
+> > @@ -48,6 +49,8 @@ class S3(FetchMethod):
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return True
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0def urldata_init(self, ud, d):
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ud.basecmd =3D d.get=
+Var("FETCHCMD_s3", True) or
+> > "/usr/bin/env aws s3"
+> > +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if 'downloadfil=
+ename' in ud.parm:
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0ud.basename =3D ud.parm['downloadfilename']
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0else:
+> > @@ -60,8 +63,13 @@ class S3(FetchMethod):
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Fetch urls
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Assumes localpa=
+th was called first
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"""
+> > -
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cmd =3D 'aws s3 cp s=
+3://%s%s %s' % (ud.host, ud.path,
+> > ud.localpath)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if 'downloadfilename=
+' in ud.parm:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0dldir =3D d.getVar("DL_DIR", True)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0bb.utils.mkdirhier(os.path.dirname(dldir + os.sep +
+> > ud.localfile))
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0cmd =3D '%s cp s3://%s%s %s%s%s' % (ud.basecmd, ud.host,
+> > ud.path, dldir, os.sep, ud.localpath)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0else:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0cmd =3D '%s cp s3://%s%s %s' % (ud.basecmd, ud.host,
+> > ud.path, ud.localpath)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0logger.debug(2, "Fet=
+ching %s using command '%s'" %
+> > (ud.url, cmd))
+> The intention is that "downloadfilename" is incorporated into
+> ud.localfile by urldata_init(). Did you find a case where that
+> doesn't
+> work?
+>=20
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/codeparser.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Well, out of the box, the fetcher doesn't work:
 
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 5d2d440..89d24ab 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -186,7 +186,8 @@ class BufferedLogger(Logger):
- 
-     def flush(self):
-         for record in self.buffer:
--            self.target.handle(record)
-+            if self.target.isEnabledFor(record.levelno):
-+                self.target.handle(record)
-         self.buffer = []
- 
- class PythonParser():
--- 
-2.9.3
+DEBUG: lzo-native-2.09-r0 do_fetch: Fetcher failure: Fetch command
+export SSH_AGENT_PID=3D"26127"; export SSH_AUTH_SOCK=3D"/tmp/ssh-
+3LoCAIBmY5WA/agent.26126"; export PATH=3D"/home/pidge/openembedded-
+core/scripts/native-intercept:/home/pidge/openembedded-
+core/scripts:/home/pidge/openembedded-core/build/tmp-glibc/work/x86_64-
+linux/lzo-native/2.09-r0/recipe-sysroot-native/usr/bin/x86_64-
+linux:/home/pidge/openembedded-core/build/tmp-glibc/work/x86_64-
+linux/lzo-native/2.09-r0/recipe-sysroot-
+native/usr/bin:/home/pidge/openembedded-core/build/tmp-
+glibc/work/x86_64-linux/lzo-native/2.09-r0/recipe-sysroot-
+native/usr/sbin:/home/pidge/openembedded-core/build/tmp-
+glibc/work/x86_64-linux/lzo-native/2.09-r0/recipe-sysroot-
+native/usr/bin:/home/pidge/openembedded-core/build/tmp-
+glibc/work/x86_64-linux/lzo-native/2.09-r0/recipe-sysroot-
+native/sbin:/home/pidge/openembedded-core/build/tmp-glibc/work/x86_64-
+linux/lzo-native/2.09-r0/recipe-sysroot-
+native/bin:/home/pidge/openembedded-
+core/bitbake/bin:/home/pidge/openembedded-core/build/tmp-
+glibc/hosttools"; export HOME=3D"/home/pidge"; aws s3 cp s3://lgi-onemw-
+staging/beth-test/downloads/lzo-2.09.tar.gz /home/pidge/openembedded-
+core/build/downloads/lzo-2.09.tar.gz failed with exit code 127, output:
+/bin/sh: aws: command not found
 
+I agree that part of the above isn't needed (I had pulled them in from
+an older version of an s3 fetcher I wrote for krogoth last year).
+
+Some of this however is needed/desired (like assigning the FETCHCMD and
+using ud.basecmd). Aws also needs to be added to HOSTTOOLS_NONFATAL in
+order to get past all this (which is really the core issue).
+
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bb.fetch2.check=
+_network_access(d, cmd, ud.url)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0runfetchcmd(cmd=
+, d)
+> >=20
+> > @@ -70,11 +78,11 @@ class S3(FetchMethod):
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0# tool with a l=
+ittle healthy suspicion).
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if not os.path.=
+exists(ud.localpath):
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0raise FetchError("The aws cp command returned success
+> > for s3://%s%s but %s doesn't exist?!" % (ud.host, ud.path,
+> > ud.localpath))
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0raise FetchError("The command=C2=A0=C2=A0%s returned success but
+> > %s doesn't exist?!" % (cmd, ud.localpath))
+> This seems fairly arbitrary churn...
+>=20
+
+I wouldn't agree that it's arbitrary churn neccessarily. If FetchErrors
+are raised, I'd want to know the exact command that was issued.
+
+> >=20
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if os.path.gets=
+ize(ud.localpath) =3D=3D 0:
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0os.remove(ud.localpath)
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0raise FetchError("The aws cp command for s3://%s%s
+> > resulted in a zero size file?! Deleting and failing since this
+> > isn't right." % (ud.host, ud.path))
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0raise FetchError("The command %s resulted in a zero
+> > size file?! Deleting and failing since this isn't right." % (cmd))
+> Ditto.
+>=20
+> >=20
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return True
+> >=20
+> > @@ -83,7 +91,9 @@ class S3(FetchMethod):
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Check the statu=
+s of a URL
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"""
+> >=20
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cmd =3D 'aws s3 ls s=
+3://%s%s' % (ud.host, ud.path)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cmd =3D '%s ls s3://=
+%s%s' % (ud.basecmd, ud.host, ud.path)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0logger.debug(2, "Che=
+cking %s using command '%s'" %
+> > (ud.url, cmd))
+> runfetchcmd() will output basically the same thing, so this isn't
+> really required.
+>=20
+
+Agreed.
+
+> >=20
+> > +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bb.fetch2.check=
+_network_access(d, cmd, ud.url)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0output =3D runf=
+etchcmd(cmd, d)
+> >=20
+> > @@ -91,6 +101,6 @@ class S3(FetchMethod):
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0# is not found,=
+ so check output of the command to confirm
+> > success.
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if not output:
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0raise FetchError("The aws ls command for s3://%s%s
+> > gave empty output" % (ud.host, ud.path))
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0raise FetchError("The command %s gave empty output" %
+> > (cmd))
+> More churn for little obvious gain.
+>=20
+> >=20
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return True
+> > --
+> > 1.9.1
+> >=20
+> > --
+> > _______________________________________________
+> > bitbake-devel mailing list
+> > bitbake-devel@lists.openembedded.org
+> > http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
