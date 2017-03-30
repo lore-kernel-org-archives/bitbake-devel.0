@@ -1,28 +1,47 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id B933477D05
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wr0-f179.google.com (mail-wr0-f179.google.com
+	[209.85.128.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 788AF77CFB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Mar 2017 10:44:57 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTP id v2UAiwNL010634; 
-	Thu, 30 Mar 2017 11:44:58 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id qi9Nmu48RrJe; Thu, 30 Mar 2017 11:44:58 +0100 (BST)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	v2UAitp2010631
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 30 Mar 2017 11:44:56 +0100
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1ctXZX-0006LS-CL; Thu, 30 Mar 2017 11:44:55 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Thu, 30 Mar 2017 13:34:19 +0000 (UTC)
+Received: by mail-wr0-f179.google.com with SMTP id k6so55416330wre.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Mar 2017 06:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=5d40UEBevCUiP5u26K2iYxWidrWZoAoNrf4QeesEmn0=;
+	b=cie4FK3KztOKSQLexv5g9Aa1rVBHlgtsFWLItmT/B47RNUXPPmn5cz7rl/1c6ANvn1
+	snv30cLAzDRCo6w/JSm5HCm88g6tdG6lIwaEpwtEerWxVeJaoLM11Q5C5yIQ0gjyUAK9
+	zistoYtXIcJB6oJQCTlIvY/r3qZ3Wb8f3zntB4QOTsAXWcWCCyKCGpCAfLj854CfZqRr
+	0pGWLn/e35OdR2Cr07A39cHFbPE/F7Omio5yFDQ79/QclM56AbpRmyrhyLH2AlH8pt0B
+	hLrxeUh7gwhbSsmcBOwgzNhN5pKrH78pOjN0v1p/J8cQzTejBbsYV5qF4OXKDaJG8Eat
+	Pj+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=5d40UEBevCUiP5u26K2iYxWidrWZoAoNrf4QeesEmn0=;
+	b=CI+qPFTjJSEffdFHRBnPz1vRWc/eIGESDh2Sb7dhiskSN8qFYyLKPZZZPvHeGZ4E0w
+	rL96PpSG0z6w4qljYQeKYzYx41weTK156PZ7U20iCvU9UYUEqG5IqkHbQWAkhmsRdWDm
+	++52bn6vkFQEWJUbIjIERAcnixNZmEjtKgXvkBSbp6Wsg4LiU69bwMMXcCQa02cVWTWf
+	VVaiYUJLp0U3rn4LxePKDc0yXsTOCxd1NDRmKE+eMyZLs4EvLCJLyLiH0Fgu0VxYn3em
+	cyDGys4yCNdVZGE5OsCOJlRZ0C3qiXspc1n5P8oMIUlCX6UwXgx9GqROknObYRZSUPNp
+	wF8A==
+X-Gm-Message-State: AFeK/H1t6fBEHSzulLgPBYyjl/9yBw43N6kPQ7/l0CpLjwsCObeP81iNcMrRq5yttZI5U/W3
+X-Received: by 10.28.168.150 with SMTP id r144mr427992wme.43.1490880859937;
+	Thu, 30 Mar 2017 06:34:19 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id
+	b66sm1273848wrd.29.2017.03.30.06.34.19
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Thu, 30 Mar 2017 06:34:19 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Mar 2017 11:44:54 +0100
-Message-Id: <1490870694-24350-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] wget: Fix handling of urls with user/password
+Date: Thu, 30 Mar 2017 14:34:17 +0100
+Message-Id: <1490880857-31771-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.8.1
+Subject: [PATCH] bb/utils: extend which() so it can look for just executables
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,37 +54,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Mar 2017 10:44:59 -0000
+X-List-Received-Date: Thu, 30 Mar 2017 13:34:19 -0000
 
-URL decoding was improved in the core a while ago and this looks like
-a leftover from those times which caused urls needing a user/password to
-fail. Use the parameters from the core instead of the broken split
-implementation.
+Normally bb.utils.which() is used by the unpack code to find a file in a variety
+of places, but it is useful as a slightly more powerful version of os.which().
 
-[YOCTO #11262]
+Support this by allowing it to only return matches which are executable files,
+instead of just the first filename that matches.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- lib/bb/fetch2/wget.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/utils.py | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 0c61dfa..ae0ffa8 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -107,9 +107,8 @@ class Wget(FetchMethod):
-             bb.utils.mkdirhier(os.path.dirname(dldir + os.sep + ud.localfile))
-             fetchcmd += " -O " + dldir + os.sep + ud.localfile
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index d6bcfa3..077fddc 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -899,11 +899,20 @@ def copyfile(src, dest, newmtime = None, sstat = None):
+         newmtime = sstat[stat.ST_MTIME]
+     return newmtime
  
--        if ud.user:
--            up = ud.user.split(":")
--            fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (up[0],up[1])
-+        if ud.user and ud.pswd:
-+            fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (ud.user, ud.pswd)
+-def which(path, item, direction = 0, history = False):
++def which(path, item, direction = 0, history = False, executable=False):
+     """
+-    Locate a file in a PATH
++    Locate `item` in the list of paths `path` (colon separated string like $PATH).
++    If `direction` is non-zero then the list is reversed.
++    If `history` is True then the list of candidates also returned as result,history.
++    If `executable` is True then the candidate has to be an executable file,
++    otherwise the candidate simply has to exist.
+     """
  
-         uri = ud.url.split(";")[0]
-         if os.path.exists(ud.localpath):
++    if executable:
++        is_candidate = lambda p: os.path.isfile(p) and os.access(p, os.X_OK)
++    else:
++        is_candidate = lambda p: os.path.exists(p)
++
+     hist = []
+     paths = (path or "").split(':')
+     if direction != 0:
+@@ -912,7 +921,7 @@ def which(path, item, direction = 0, history = False):
+     for p in paths:
+         next = os.path.join(p, item)
+         hist.append(next)
+-        if os.path.exists(next):
++        if is_candidate(next):
+             if not os.path.isabs(next):
+                 next = os.path.abspath(next)
+             if history:
 -- 
-2.7.4
+2.8.1
 
 
