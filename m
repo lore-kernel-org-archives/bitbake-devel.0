@@ -1,23 +1,41 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 39F13719BD
+Return-Path: <pidge@toganlabs.com>
+Received: from egyptian.birch.relay.mailchannels.net
+	(egyptian.birch.relay.mailchannels.net [23.83.209.56])
+	by mail.openembedded.org (Postfix) with ESMTP id 85D6E77BDA
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Mar 2017 02:24:07 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga105.fm.intel.com with ESMTP; 29 Mar 2017 19:24:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.36,244,1486454400"; d="scan'208";a="1128726364"
-Received: from driley-mobl5.amr.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.172.155])
-	by fmsmga001.fm.intel.com with ESMTP; 29 Mar 2017 19:24:07 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Thu, 30 Mar 2017 08:53:34 +0000 (UTC)
+X-Sender-Id: hostpapa|x-authuser|pidge@toganlabs.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 1192E122E01
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Mar 2017 08:53:35 +0000 (UTC)
+Received: from hp181.hostpapa.com (unknown [100.96.126.101])
+	by relay.mailchannels.net (Postfix) with ESMTPA id B88F312269C
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Mar 2017 08:53:34 +0000 (UTC)
+X-Sender-Id: hostpapa|x-authuser|pidge@toganlabs.com
+Received: from hp181.hostpapa.com (hp181.hostpapa.com [172.20.104.49])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+	by 0.0.0.0:2500 (trex/5.7.37); Thu, 30 Mar 2017 08:53:35 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostpapa|x-authuser|pidge@toganlabs.com
+X-MailChannels-Auth-Id: hostpapa
+X-Eyes-Befitting: 636c38ec63b02dfc_1490864014994_307417010
+X-MC-Loop-Signature: 1490864014994:4058679056
+X-MC-Ingress-Time: 1490864014993
+Received: from ns325767.ip-37-187-157.eu ([37.187.157.197]:40972
+	helo=ns325767.ovh.net) by hp181.hostpapa.com with esmtpsa
+	(TLSv1.2:ECDHE-RSA-AES128-SHA256:128) (Exim 4.87)
+	(envelope-from <pidge@toganlabs.com>)
+	id 1ctVpl-000kTF-FE; Thu, 30 Mar 2017 10:53:34 +0200
+From: Elizabeth 'pidge' Flanagan <pidge@toganlabs.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Mar 2017 15:24:00 +1300
-Message-Id: <478d4c6b740a26b8af498db5624440de00b691dd.1490840595.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <cover.1490840595.git.paul.eggleton@linux.intel.com>
-References: <cover.1490840595.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] tinfoil: improve get_recipe_file() exception text
+Date: Thu, 30 Mar 2017 11:06:13 +0200
+Message-Id: <1490864773-28529-1-git-send-email-pidge@toganlabs.com>
+X-Mailer: git-send-email 1.9.1
+X-OutGoing-Spam-Status: No, score=5.0
+X-AuthUser: pidge@toganlabs.com
+Subject: [PATCHv2] s3.py: Remove hardcoded aws
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,35 +48,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Mar 2017 02:24:07 -0000
+X-List-Received-Date: Thu, 30 Mar 2017 08:53:36 -0000
 
-* Turn reasons from a list into a string (usually there will be only one
-  reason, but the interface provides for more than one) and state up
-  front that the recipe is unavailable for clarity
-* Use quotes around invalid recipe name
+This commit looks to see if FETCHCMD_s3 is set and if not, sets
+it.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+This is needed because I've use cases where I don't use aws, but
+s3cmd (due to license).
+
+Signed-off-by: Elizabeth 'pidge' Flanagan <pidge@toganlabs.com>
 ---
- lib/bb/tinfoil.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/s3.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 14a2271..928333a 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -368,9 +368,9 @@ class Tinfoil:
-             taskdata = bb.taskdata.TaskData(None, skiplist=skiplist)
-             skipreasons = taskdata.get_reasons(pn)
-             if skipreasons:
--                raise bb.providers.NoProvider(skipreasons)
-+                raise bb.providers.NoProvider('%s is unavailable:\n  %s' % (pn, '  \n'.join(skipreasons)))
-             else:
--                raise bb.providers.NoProvider('Unable to find any recipe file matching %s' % pn)
-+                raise bb.providers.NoProvider('Unable to find any recipe file matching "%s"' % pn)
-         return best[3]
+diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
+index 27993aa..1629288 100644
+--- a/lib/bb/fetch2/s3.py
++++ b/lib/bb/fetch2/s3.py
+@@ -55,13 +55,15 @@ class S3(FetchMethod):
  
-     def get_file_appends(self, fn):
+         ud.localfile = d.expand(urllib.parse.unquote(ud.basename))
+ 
++        ud.basecmd = d.getVar("FETCHCMD_s3") or "/usr/bin/env aws s3"
++
+     def download(self, ud, d):
+         """
+         Fetch urls
+         Assumes localpath was called first
+         """
+ 
+-        cmd = 'aws s3 cp s3://%s%s %s' % (ud.host, ud.path, ud.localpath)
++        cmd = '%s cp s3://%s%s %s' % (ud.basecmd, ud.host, ud.path, ud.localpath)
+         bb.fetch2.check_network_access(d, cmd, ud.url)
+         runfetchcmd(cmd, d)
+ 
+@@ -83,7 +85,7 @@ class S3(FetchMethod):
+         Check the status of a URL
+         """
+ 
+-        cmd = 'aws s3 ls s3://%s%s' % (ud.host, ud.path)
++        cmd = '%s ls s3://%s%s' % (ud.basecmd, ud.host, ud.path)
+         bb.fetch2.check_network_access(d, cmd, ud.url)
+         output = runfetchcmd(cmd, d)
+ 
 -- 
-2.9.3
+1.9.1
 
 
