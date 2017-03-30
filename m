@@ -1,41 +1,31 @@
-Return-Path: <pidge@toganlabs.com>
-Received: from egyptian.birch.relay.mailchannels.net
-	(egyptian.birch.relay.mailchannels.net [23.83.209.56])
-	by mail.openembedded.org (Postfix) with ESMTP id 85D6E77BDA
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 1C69C719B3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Mar 2017 08:53:34 +0000 (UTC)
-X-Sender-Id: hostpapa|x-authuser|pidge@toganlabs.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 1192E122E01
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Mar 2017 08:53:35 +0000 (UTC)
-Received: from hp181.hostpapa.com (unknown [100.96.126.101])
-	by relay.mailchannels.net (Postfix) with ESMTPA id B88F312269C
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Mar 2017 08:53:34 +0000 (UTC)
-X-Sender-Id: hostpapa|x-authuser|pidge@toganlabs.com
-Received: from hp181.hostpapa.com (hp181.hostpapa.com [172.20.104.49])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-	by 0.0.0.0:2500 (trex/5.7.37); Thu, 30 Mar 2017 08:53:35 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostpapa|x-authuser|pidge@toganlabs.com
-X-MailChannels-Auth-Id: hostpapa
-X-Eyes-Befitting: 636c38ec63b02dfc_1490864014994_307417010
-X-MC-Loop-Signature: 1490864014994:4058679056
-X-MC-Ingress-Time: 1490864014993
-Received: from ns325767.ip-37-187-157.eu ([37.187.157.197]:40972
-	helo=ns325767.ovh.net) by hp181.hostpapa.com with esmtpsa
-	(TLSv1.2:ECDHE-RSA-AES128-SHA256:128) (Exim 4.87)
-	(envelope-from <pidge@toganlabs.com>)
-	id 1ctVpl-000kTF-FE; Thu, 30 Mar 2017 10:53:34 +0200
-From: Elizabeth 'pidge' Flanagan <pidge@toganlabs.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Mar 2017 11:06:13 +0200
-Message-Id: <1490864773-28529-1-git-send-email-pidge@toganlabs.com>
-X-Mailer: git-send-email 1.9.1
-X-OutGoing-Spam-Status: No, score=5.0
-X-AuthUser: pidge@toganlabs.com
-Subject: [PATCHv2] s3.py: Remove hardcoded aws
+	Thu, 30 Mar 2017 10:11:19 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTP id v2UABETW004988; 
+	Thu, 30 Mar 2017 11:11:14 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id uzFDpgZBsZDf; Thu, 30 Mar 2017 11:11:14 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	v2UAB99R004983
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 30 Mar 2017 11:11:10 +0100
+Message-ID: <1490868669.13980.354.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>, Diana
+	Thayer <garbados@gmail.com>
+Date: Thu, 30 Mar 2017 11:11:09 +0100
+In-Reply-To: <1490634472.28281.111.camel@linux.intel.com>
+References: <1490128025-7864-1-git-send-email-garbados@gmail.com>
+	<1490634472.28281.111.camel@linux.intel.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] bug 9962: improve -v, -D documentation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,50 +38,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Mar 2017 08:53:36 -0000
+X-List-Received-Date: Thu, 30 Mar 2017 10:11:21 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-This commit looks to see if FETCHCMD_s3 is set and if not, sets
-it.
+On Mon, 2017-03-27 at 11:07 -0600, Leonardo Sandoval wrote:
+> On Tue, 2017-03-21 at 13:27 -0700, Diana Thayer wrote:
+> >                  Read the specified file before
+> > bitbake.conf.
+> >         -R POSTFILE, --postread=POSTFILE
+> >                               Read the specified file after bitbake.conf.
+> > -       -v, --verbose         Output more log message data to the terminal.
+> > -       -D, --debug           Increase the debug level. You can specify this more
+> > -                             than once.
+> > +       -v, --verbose         Enable tracing of shell tasks (with 'set -x').
+> > +                             Also print bb.note(...) messages to stdout (in
+> > +                             addition to writing them to ${T}/log.do_).
+> > +       -D, --debug           Increase the debug level. You can specify this
+> > +                             more than once. -D sets the debug level to 1,
+> > +                             where only bb.debug(1, ...) messages are printed
+> > +                             to stdout; -DD sets the debug level to 2, where
+> > +                             both bb.debug(1, ...) and bb.debug(2, ...)
+> > +                             messages are printed; etc. Without -D, no debug
+> > +                             messages are printed. Note that -D only affects
+> > +                             output to stdout. All debug messages are written
+> > +                             to ${T}/log.do_taskname, regardless of the debug
+> > +                             level.
+> I think the description is fine for -D/--debug , but I am not sure if
+> this is the place to describe that level N includes N-1, etc.. This 
+> is something standard, and describing here make it a bit verbose.
 
-This is needed because I've use cases where I don't use aws, but
-s3cmd (due to license).
+FWIW I tend to agree with you. Further patches are welcome.
 
-Signed-off-by: Elizabeth 'pidge' Flanagan <pidge@toganlabs.com>
----
- lib/bb/fetch2/s3.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Cheers,
 
-diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
-index 27993aa..1629288 100644
---- a/lib/bb/fetch2/s3.py
-+++ b/lib/bb/fetch2/s3.py
-@@ -55,13 +55,15 @@ class S3(FetchMethod):
- 
-         ud.localfile = d.expand(urllib.parse.unquote(ud.basename))
- 
-+        ud.basecmd = d.getVar("FETCHCMD_s3") or "/usr/bin/env aws s3"
-+
-     def download(self, ud, d):
-         """
-         Fetch urls
-         Assumes localpath was called first
-         """
- 
--        cmd = 'aws s3 cp s3://%s%s %s' % (ud.host, ud.path, ud.localpath)
-+        cmd = '%s cp s3://%s%s %s' % (ud.basecmd, ud.host, ud.path, ud.localpath)
-         bb.fetch2.check_network_access(d, cmd, ud.url)
-         runfetchcmd(cmd, d)
- 
-@@ -83,7 +85,7 @@ class S3(FetchMethod):
-         Check the status of a URL
-         """
- 
--        cmd = 'aws s3 ls s3://%s%s' % (ud.host, ud.path)
-+        cmd = '%s ls s3://%s%s' % (ud.basecmd, ud.host, ud.path)
-         bb.fetch2.check_network_access(d, cmd, ud.url)
-         output = runfetchcmd(cmd, d)
- 
--- 
-1.9.1
-
+Richard
 
