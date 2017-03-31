@@ -1,53 +1,55 @@
 Return-Path: <peter.kjellerstedt@axis.com>
 Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id D15A277D81
+	by mail.openembedded.org (Postfix) with ESMTP id D24EC77DB7
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 31 Mar 2017 15:00:04 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 9223A1839F
+	by bastet.se.axis.com (Postfix) with ESMTP id A02CE1843A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:05 +0200 (CEST)
+	Fri, 31 Mar 2017 17:00:04 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
 Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
 	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
 	port 10024)
-	with LMTP id RZjZLedElL30 for <bitbake-devel@lists.openembedded.org>;
+	with LMTP id 7bk75t5QdJjY for <bitbake-devel@lists.openembedded.org>;
 	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-	by bastet.se.axis.com (Postfix) with ESMTPS id A5A3B183C6
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id A5A70183CC
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 870B81A075
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 923471E05C
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7A9B01A072
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 86D011E056
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
-	by boulder02.se.axis.com (Postfix) with ESMTP
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder03.se.axis.com (Postfix) with ESMTP
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
 Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
-	by thoth.se.axis.com (Postfix) with ESMTP id 6F7CD2368
+	by seth.se.axis.com (Postfix) with ESMTP id 7AC1F23D1
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
 Received: from saur-2.se.axis.com (localhost [127.0.0.1])
-	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v2VF01fv008262
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v2VF01V1008266
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 31 Mar 2017 17:00:01 +0200
 Received: (from pkj@localhost)
-	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v2VF01KR008260
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v2VF01Ap008265
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 31 Mar 2017 17:00:01 +0200
 From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 31 Mar 2017 16:59:55 +0200
-Message-Id: <cover.1490972335.git.pkj@axis.com>
+Date: Fri, 31 Mar 2017 16:59:56 +0200
+Message-Id: <938bb5a85f8bbb61946504f1ac477ade83441d81.1490972335.git.pkj@axis.com>
 X-Mailer: git-send-email 2.12.0
+In-Reply-To: <cover.1490972335.git.pkj@axis.com>
+References: <cover.1490972335.git.pkj@axis.com>
 X-TM-AS-GCONF: 00
-Subject: [PATCH 0/1] The fetcher should not fail due to an alredy existing symlink
+Subject: [PATCH 1/1] fetch2: Do not fail to create symbolic links if they already exist
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,137 +64,52 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 31 Mar 2017 15:00:05 -0000
 
-[ This is a follow up to a similar change that was erroneously sent to
-  the OE-Core list. Now there is actually an explanation below to what
-  is happening. ]
+When the fetcher retrieves file:// URLs, there is no lock file being
+used. This means that in case two separate tasks (typically from two
+concurrent invocations of bitbake) want to download the same file://
+URL at the same time, there is a very small chance that they also end
+up wanting to create a symbolic link to the file at the same time.
+This would previously lead to one of the tasks failing as the other
+task would have created the link.
 
-We have occasional failures in our autobuilders where a setscene task
-fails, causing the original task to be run instead, but bitbake still
-fails with an error code in the end, causing unnecessary grief. One
-such case has been identified through the following error log:
-
-The stack trace of python calls that resulted in this exception/failure was:
-File: 'exec_python_func() autogenerated', lineno: 2, function: <module>
-     0001:
- *** 0002:do_package_write_rpm_setscene(d)
-     0003:
-File: '${COREBASE}/meta/classes/package_rpm.bbclass', lineno: 757, function: do_package_write_rpm_setscene
-     0753:# but we need to stop the rootfs/solver from running while we do...
-     0754:do_package_write_rpm[sstate-lockfile-shared] += "${DEPLOY_DIR_RPM}/rpm.lock"
-     0755:
-     0756:python do_package_write_rpm_setscene () {
- *** 0757:    sstate_setscene(d)
-     0758:}
-     0759:addtask do_package_write_rpm_setscene
-     0760:
-     0761:python do_package_write_rpm () {
-File: '${COREBASE}/meta/classes/sstate.bbclass', lineno: 648, function: sstate_setscene
-     0644:            break
-     0645:
-     0646:def sstate_setscene(d):
-     0647:    shared_state = sstate_state_fromvars(d)
- *** 0648:    accelerate = sstate_installpkg(shared_state, d)
-     0649:    if not accelerate:
-     0650:        raise bb.build.FuncFailed("No suitable staging package found")
-     0651:
-     0652:python sstate_task_prefunc () {
-File: '${COREBASE}/meta/classes/sstate.bbclass', lineno: 297, function: sstate_installpkg
-     0293:    sstatefetch = d.getVar('SSTATE_PKGNAME', True) + '_' + ss['task'] + ".tgz"
-     0294:    sstatepkg = d.getVar('SSTATE_PKG', True) + '_' + ss['task'] + ".tgz"
-     0295:
-     0296:    if not os.path.exists(sstatepkg):
- *** 0297:        pstaging_fetch(sstatefetch, sstatepkg, d)
-     0298:
-     0299:    if not os.path.isfile(sstatepkg):
-     0300:        bb.note("Staging package %s does not exist" % sstatepkg)
-     0301:        return False
-File: '${COREBASE}/meta/classes/sstate.bbclass', lineno: 635, function: pstaging_fetch
-     0631:    for srcuri in uris:
-     0632:        localdata.setVar('SRC_URI', srcuri)
-     0633:        try:
-     0634:            fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
- *** 0635:            fetcher.download()
-     0636:
-     0637:            # Need to optimise this, if using file:// urls, the fetcher just changes the local path
-     0638:            # For now work around by symlinking
-     0639:            localpath = bb.data.expand(fetcher.localpath(srcuri), localdata)
-File: '${COREBASE}/poky/bitbake/lib/bb/fetch2/__init__.py', lineno: 1572, function: download
-     1568:                    localpath = ud.localpath
-     1569:                elif m.try_premirror(ud, self.d):
-     1570:                    logger.debug(1, "Trying PREMIRRORS")
-     1571:                    mirrors = mirror_from_string(self.d.getVar('PREMIRRORS', True))
- *** 1572:                    localpath = try_mirrors(self, self.d, ud, mirrors, False)
-     1573:
-     1574:                if premirroronly:
-     1575:                    self.d.setVar("BB_NO_NETWORK", "1")
-     1576:
-File: '${COREBASE}/poky/bitbake/lib/bb/fetch2/__init__.py', lineno: 1020, function: try_mirrors
-     1016:
-     1017:    uris, uds = build_mirroruris(origud, mirrors, ld)
-     1018:
-     1019:    for index, uri in enumerate(uris):
- *** 1020:        ret = try_mirror_url(fetch, origud, uds[index], ld, check)
-     1021:        if ret != False:
-     1022:            return ret
-     1023:    return None
-     1024:
-File: '${COREBASE}/poky/bitbake/lib/bb/fetch2/__init__.py', lineno: 978, function: try_mirror_url
-     0974:            if os.path.islink(origud.localpath):
-     0975:                # Broken symbolic link
-     0976:                os.unlink(origud.localpath)
-     0977:
- *** 0978:            os.symlink(ud.localpath, origud.localpath)
-     0979:        update_stamp(origud, ld)
-     0980:        return ud.localpath
-     0981:
-     0982:    except bb.fetch2.NetworkAccess:
-Exception: OSError: [Errno 17] File exists
-
-What happens here is that two tasks simultaneously decide to download
-something, and both come to the conclusion that they need to create a
-symbolic link. And even if there is a check for whether the link
-already exists, there is a small window of time where both tasks see
-the missing link and tries to create it with the result that the
-second task fails as per above.
-
-I have now managed to determine under what circumstances this occurs.
-This happens when two separate tasks (typically executed by two
-concurrent invocations of bitbake) want to retrieve the same file://
-URL. This is because there is no file lock being used for file://
-URLs.
-
-In our case it was easy to recreate the failure by adding a five
-seconds sleep before the call to os.symlink(). Also worth noting is
-that we have a global sstate cache accessed via a file:// URL (it is
-an NFS mount) and that we use a local sstate cache shared by multiple
-builds. So to cause the failure, all I had to do after that was to (in
-two separate build directories) cleansstate a recipe which had its
-sstate available in the global sstate cache and then start the two
-builds simultaneously.
-
-The change proposed here just causes FileExistsError exceptions from
-os.symlink() to be ignored. The alternative would be to actually
-enable file locks for file:// URLs. However, as that is more invasive
-and the situation happening here should be extremely rare, that does
-not seem motivated.
-
-//Peter
-
-The following changes since commit 330302711377475e2fba0c6e9871e2dff5e1ee08:
-
-  poky.ent: Removed python3-expect from the CentOS distro (2017-03-31 12:14:18 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib pkj/handle_existing_links
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=pkj/handle_existing_links
-
-Peter Kjellerstedt (1):
-  fetch2: Do not fail to create symbolic links if they already exist
-
+Signed-off-by: Peter Kjellerstedt <pkj@axis.com>
+---
  bitbake/lib/bb/fetch2/__init__.py | 15 +++++++++++++--
  1 file changed, 13 insertions(+), 2 deletions(-)
 
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index ea72025c22..136fc29c16 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -983,7 +983,14 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+                 open(ud.donestamp, 'w').close()
+             dest = os.path.join(dldir, os.path.basename(ud.localpath))
+             if not os.path.exists(dest):
+-                os.symlink(ud.localpath, dest)
++                # In case this is executing without any file locks held (as is
++                # the case for file:// URLs), two tasks may end up here at the
++                # same time, in which case we do not want the second task to
++                # fail when the link has already been created by the first task.
++                try:
++                    os.symlink(ud.localpath, dest)
++                except FileExistsError:
++                    pass
+             if not verify_donestamp(origud, ld) or origud.method.need_update(origud, ld):
+                 origud.method.download(origud, ld)
+                 if hasattr(origud.method,"build_mirror_data"):
+@@ -995,7 +1002,11 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+                 # Broken symbolic link
+                 os.unlink(origud.localpath)
+ 
+-            os.symlink(ud.localpath, origud.localpath)
++            # As per above, in case two tasks end up here simultaneously.
++            try:
++                os.symlink(ud.localpath, origud.localpath)
++            except FileExistsError:
++                pass
+         update_stamp(origud, ld)
+         return ud.localpath
+ 
 -- 
 2.12.0
 
