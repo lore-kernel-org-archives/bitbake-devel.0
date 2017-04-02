@@ -1,55 +1,21 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id D24EC77DB7
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	by mail.openembedded.org (Postfix) with ESMTP id 97D5470031
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 15:00:04 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id A02CE1843A
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:04 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id 7bk75t5QdJjY for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bastet.se.axis.com (Postfix) with ESMTPS id A5A70183CC
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 923471E05C
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 86D011E056
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-	by boulder03.se.axis.com (Postfix) with ESMTP
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
-	by seth.se.axis.com (Postfix) with ESMTP id 7AC1F23D1
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:01 +0200 (CEST)
-Received: from saur-2.se.axis.com (localhost [127.0.0.1])
-	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v2VF01V1008266
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Mar 2017 17:00:01 +0200
-Received: (from pkj@localhost)
-	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v2VF01Ap008265
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 31 Mar 2017 17:00:01 +0200
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+	Sun,  2 Apr 2017 23:19:21 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by orsmga105.jf.intel.com with ESMTP; 02 Apr 2017 16:19:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.36,266,1486454400"; d="scan'208";a="243247991"
+Received: from rbek-mobl1.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.164.56])
+	by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2017 16:19:21 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 31 Mar 2017 16:59:56 +0200
-Message-Id: <938bb5a85f8bbb61946504f1ac477ade83441d81.1490972335.git.pkj@axis.com>
-X-Mailer: git-send-email 2.12.0
-In-Reply-To: <cover.1490972335.git.pkj@axis.com>
-References: <cover.1490972335.git.pkj@axis.com>
-X-TM-AS-GCONF: 00
-Subject: [PATCH 1/1] fetch2: Do not fail to create symbolic links if they already exist
+Date: Mon,  3 Apr 2017 11:19:02 +1200
+Message-Id: <cover.1491175014.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.3
+Subject: [PATCH 0/4] Fixes for variable dependency handling with contains functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,55 +28,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 Mar 2017 15:00:05 -0000
+X-List-Received-Date: Sun, 02 Apr 2017 23:19:24 -0000
 
-When the fetcher retrieves file:// URLs, there is no lock file being
-used. This means that in case two separate tasks (typically from two
-concurrent invocations of bitbake) want to download the same file://
-URL at the same time, there is a very small chance that they also end
-up wanting to create a symbolic link to the file at the same time.
-This would previously lead to one of the tasks failing as the other
-task would have created the link.
+Fixes for a few issues I discovered while working on bitbake-diffsigs.
 
-Signed-off-by: Peter Kjellerstedt <pkj@axis.com>
----
- bitbake/lib/bb/fetch2/__init__.py | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+The following changes since commit 58a03531c8183b165bb7dcad86d8559c92bc150d:
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index ea72025c22..136fc29c16 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -983,7 +983,14 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-                 open(ud.donestamp, 'w').close()
-             dest = os.path.join(dldir, os.path.basename(ud.localpath))
-             if not os.path.exists(dest):
--                os.symlink(ud.localpath, dest)
-+                # In case this is executing without any file locks held (as is
-+                # the case for file:// URLs), two tasks may end up here at the
-+                # same time, in which case we do not want the second task to
-+                # fail when the link has already been created by the first task.
-+                try:
-+                    os.symlink(ud.localpath, dest)
-+                except FileExistsError:
-+                    pass
-             if not verify_donestamp(origud, ld) or origud.method.need_update(origud, ld):
-                 origud.method.download(origud, ld)
-                 if hasattr(origud.method,"build_mirror_data"):
-@@ -995,7 +1002,11 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-                 # Broken symbolic link
-                 os.unlink(origud.localpath)
- 
--            os.symlink(ud.localpath, origud.localpath)
-+            # As per above, in case two tasks end up here simultaneously.
-+            try:
-+                os.symlink(ud.localpath, origud.localpath)
-+            except FileExistsError:
-+                pass
-         update_stamp(origud, ld)
-         return ud.localpath
- 
+  fetch2: Do not fail to create symbolic links if they already exist (2017-04-01 08:23:29 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/bb-contains
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-contains
+
+Paul Eggleton (4):
+  lib/bb/data: fix dependency handling for contains and multiple values
+  codeparser: improve handling of contains_any() and filter()
+  bitbake-selftest: add contains tests
+  codeparser: add some comments
+
+ lib/bb/cache.py            |  2 +-
+ lib/bb/codeparser.py       | 34 +++++++++++++++++++++++++++++---
+ lib/bb/data.py             | 10 ++++++----
+ lib/bb/tests/codeparser.py | 48 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 86 insertions(+), 8 deletions(-)
+
 -- 
-2.12.0
+2.9.3
 
 
