@@ -1,21 +1,23 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	by mail.openembedded.org (Postfix) with ESMTP id 97D5470031
+	by mail.openembedded.org (Postfix) with ESMTP id B88AE77D24
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  2 Apr 2017 23:19:21 +0000 (UTC)
+	Sun,  2 Apr 2017 23:19:23 +0000 (UTC)
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by orsmga105.jf.intel.com with ESMTP; 02 Apr 2017 16:19:23 -0700
+	by orsmga105.jf.intel.com with ESMTP; 02 Apr 2017 16:19:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.36,266,1486454400"; d="scan'208";a="243247991"
+X-IronPort-AV: E=Sophos;i="5.36,266,1486454400"; d="scan'208";a="243247994"
 Received: from rbek-mobl1.ger.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.164.56])
-	by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2017 16:19:21 -0700
+	by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2017 16:19:23 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  3 Apr 2017 11:19:02 +1200
-Message-Id: <cover.1491175014.git.paul.eggleton@linux.intel.com>
+Date: Mon,  3 Apr 2017 11:19:03 +1200
+Message-Id: <969d16a740607be9477d19ed9ef04dbbeae2548a.1491175014.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.9.3
-Subject: [PATCH 0/4] Fixes for variable dependency handling with contains functions
+In-Reply-To: <cover.1491175014.git.paul.eggleton@linux.intel.com>
+References: <cover.1491175014.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 1/4] lib/bb/data: fix dependency handling for contains and multiple values
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,29 +32,42 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Sun, 02 Apr 2017 23:19:24 -0000
 
-Fixes for a few issues I discovered while working on bitbake-diffsigs.
+The code that determines variable dependencies uses the codeparser to
+find references to "contains" type operations e.g. bb.utils.contains().
+That function can take multiple items to check, and all specified items
+have to be present. However this code didn't handle that - it assumed
+that only one item would be specified and thus it was treating the
+multiple items as a single item with spaces in between. Split the value
+and check if all words are present in order to determine whether the
+check is "set" or "unset".
 
-The following changes since commit 58a03531c8183b165bb7dcad86d8559c92bc150d:
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ lib/bb/data.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-  fetch2: Do not fail to create symbolic links if they already exist (2017-04-01 08:23:29 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib paule/bb-contains
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-contains
-
-Paul Eggleton (4):
-  lib/bb/data: fix dependency handling for contains and multiple values
-  codeparser: improve handling of contains_any() and filter()
-  bitbake-selftest: add contains tests
-  codeparser: add some comments
-
- lib/bb/cache.py            |  2 +-
- lib/bb/codeparser.py       | 34 +++++++++++++++++++++++++++++---
- lib/bb/data.py             | 10 ++++++----
- lib/bb/tests/codeparser.py | 48 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 86 insertions(+), 8 deletions(-)
-
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index a85cb3a..0403754 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -296,11 +296,13 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
+             newvalue = ""
+             for k in sorted(contains):
+                 l = (d.getVar(k) or "").split()
+-                for word in sorted(contains[k]):
+-                    if word in l:
+-                        newvalue += "\n%s{%s} = Set" %  (k, word)
++                for item in sorted(contains[k]):
++                    for word in item.split():
++                        if not word in l:
++                            newvalue += "\n%s{%s} = Unset" % (k, item)
++                            break
+                     else:
+-                        newvalue += "\n%s{%s} = Unset" %  (k, word)
++                        newvalue += "\n%s{%s} = Set" % (k, item)
+             if not newvalue:
+                 return value
+             if not value:
 -- 
 2.9.3
 
