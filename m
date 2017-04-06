@@ -1,28 +1,31 @@
-Return-Path: <richard@rpsys.net>
+Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 4A4EA77BFD
+	by mail.openembedded.org (Postfix) with ESMTP id 6898B77C87
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Apr 2017 11:24:43 +0000 (UTC)
+	Thu,  6 Apr 2017 11:52:13 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTP id v36BOP5M002224; 
-	Thu, 6 Apr 2017 12:24:43 +0100
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTP id v36BqAf4006012; 
+	Thu, 6 Apr 2017 12:52:10 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id XeMjrHl5W8u0; Thu,  6 Apr 2017 12:24:43 +0100 (BST)
+	with LMTP id j4GqYCp7pyxV; Thu,  6 Apr 2017 12:52:10 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v36BOQ5J002234
+	v36Bjh2p005536
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Thu, 6 Apr 2017 12:24:27 +0100
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1cw5Wc-0002Uy-EV; Thu, 06 Apr 2017 12:24:26 +0100
+	verify=NOT); Thu, 6 Apr 2017 12:45:44 +0100
+Message-ID: <1491479143.17200.36.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  6 Apr 2017 12:24:25 +0100
-Message-Id: <1491477865-9566-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] Bump version to 1.33.4
+To: Patrick Ohly <patrick.ohly@intel.com>, Juro Bystricky
+	<juro.bystricky@intel.com>
+Date: Thu, 06 Apr 2017 12:45:43 +0100
+In-Reply-To: <1491468186.10884.38.camel@intel.com>
+References: <1491428045-10132-1-git-send-email-juro.bystricky@intel.com>
+	<1491468186.10884.38.camel@intel.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] cooker.py: multiconfig support for findBestProvider
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,41 +38,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Apr 2017 11:24:45 -0000
+X-List-Received-Date: Thu, 06 Apr 2017 11:52:14 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- bin/bitbake        | 2 +-
- lib/bb/__init__.py | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Thu, 2017-04-06 at 10:43 +0200, Patrick Ohly wrote:
+> On Wed, 2017-04-05 at 14:34 -0700, Juro Bystricky wrote:
+> > 
+> > In a multiconfig environment, a tinfoil call such as
+> > 
+> >     tinfoil.parse_recipe("multiconfig:arduino-101-sss:gcc")
+> > 
+> > can fail with an error such as:
+> > 
+> >   File "/data/master/poky/bitbake/lib/bb/tinfoil.py", line 373, in
+> > get_recipe_file
+> >     raise bb.providers.NoProvider('Unable to find any recipe file
+> > matching "%s"' % pn)
+> > bb.providers.NoProvider: Unable to find any recipe file matching
+> > "multiconfig:arduino-101-sss:gcc"
+> > 
+> > The culprit is findBestProvider (only called from tinfoil), which
+> > does not
+> > handle multiconfig. This patch fixes the error and the tinfoil call
+> > returns absolute path
+> > to the recipe, i.e:
+> > 
+> >   "/data/master/poky/meta/recipes-devtools/gcc/gcc_6.3.bb"
+> So tinfoil.parse_recipe("multiconfig:arduino-101-sss:gcc") and
+> tinfoil.parse_recipe("gcc") then return identical data, because both
+> end
+> up parsing "/data/master/poky/meta/recipes-devtools/gcc/gcc_6.3.bb"
+> without taking the "arduino-101-sss" config into account?
+> 
+> That wouldn't be correct.
+> 
+> As far as I understand it, the mapping has to be:
+> multiconfig:arduino-101-sss:gcc ->
+> multiconfig:arduino-101-sss:/data/master/poky/meta/recipes-
+> devtools/gcc/gcc_6.3.bb
 
-diff --git a/bin/bitbake b/bin/bitbake
-index 787d4fd..10115d2 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -38,7 +38,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
- if sys.getfilesystemencoding() != "utf-8":
-     sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
- 
--__version__ = "1.33.3"
-+__version__ = "1.33.4"
- 
- if __name__ == "__main__":
-     if __version__ != bb.__version__:
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 42977d0..b3567b1 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -21,7 +21,7 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
--__version__ = "1.33.3"
-+__version__ = "1.33.4"
- 
- import sys
- if sys.version_info < (3, 4, 0):
--- 
-2.7.4
+I agree with Patrick. At a quick glance, I think the caller
+of findBestProvider is going to need to handle the mc, which is
+why findBestProvider takes it as a parameter.
 
+Cheers,
+
+Richard
 
