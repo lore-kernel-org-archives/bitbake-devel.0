@@ -1,46 +1,52 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-oi0-f54.google.com (mail-oi0-f54.google.com
-	[209.85.218.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 0C6E277A50
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-io0-f176.google.com (mail-io0-f176.google.com
+	[209.85.223.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 04FF977921
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Apr 2017 01:32:38 +0000 (UTC)
-Received: by mail-oi0-f54.google.com with SMTP id d2so35974398oig.1
+	Thu,  6 Apr 2017 08:43:09 +0000 (UTC)
+Received: by mail-io0-f176.google.com with SMTP id f84so25313667ioj.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 05 Apr 2017 18:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=Hzh5GJZkXFpX4CX4/PH0LgJJbFZNiZ0cURj+/ySbv4k=;
-	b=C9ShWgFnk4W4HWwV2i1pKbStwYN3VpQoo5zxwYEjAEtlAWElIIDsuVJ00RiY+FzGL4
-	chewdiIiNyAR7fPq2ZJJw1Bk4lgwxkWhtUz7LsYrIJXvIXHf/enpdBRqO/0NIVLFsMSl
-	5OlTm6V3bRYApKs5QmJ20GXFdjgOC7Ma0oU0yfAT4i7wJ2kZAXoSXibyLe0wbMIbMpM2
-	2FzS8XWes0R0toGF8nSRXCL99oQI8tvA2MyHWMvldPUV/Lyytv7fMfQ7G8ZJ7e8xLq3x
-	hS3Flk3u3OnBPyeKn3hn1lwJN5VbWc81I+6UbIe886gf/FbMV+Rw1MXtCzs8XVaZiV9e
-	KZxg==
+	Thu, 06 Apr 2017 01:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=message-id:subject:from:to:cc:date:in-reply-to:references
+	:organization:mime-version:content-transfer-encoding;
+	bh=OIqk7wBEdLPL42x/QLUVoOU9OV05WI/l/n0FaZvHEdw=;
+	b=XcmNhlvDdxsJxfDs8pGm5ouZFEIQxKDLlZLeo8vX/ZcXvpEwAAaJiNyf6M/mROvOOr
+	z8t7ta3QobI9qzlnRlukx8OgtYYDCr41WelfawKnLB7npsI+eJm7A0Ts8qNwuEpP2MYn
+	D1lUulN4joPMSNtdK0+3VdZX/YYjzKciw8zXRF5yb8nZguZiPpC1bEJQNgN7+PuNWRrL
+	oq6+sKzquzXVklsC0llwoFV4DMGlEfh/c8vbNwWvULU9Vg5fVINHbzPdosKE51a13O+u
+	z0oDsX0TceDRLVvfG2SddTZhNNtLZCdTqb20H8ceJBqMFQXiFlcOkROvn2awatzxbK2c
+	pW4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=Hzh5GJZkXFpX4CX4/PH0LgJJbFZNiZ0cURj+/ySbv4k=;
-	b=SORBcz7Per809H3njtINnqP0QhNnyHFEGqQAGZY1B4uJPDv1VB2WM5z/+YDXfF1hEt
-	mDLhqTDGgSgB864/UOBPbcodT9iZa2Lx0unDSm1s8cQB4FKpIAYVjhdwVA3fMFZ1YSdH
-	pw72lyDNtg3Rs6zEyXH/QGK0Z9OC8koaw4iz5eDEUfD1r/a2x0SrfvWT7C6HFqX/Y3rE
-	+GsMNusnX4KoFA9zq7MCVTKYb+dfnHWQFRcgav1tkxxebAFlFEgJAz55hOi8Gcohfp6x
-	+DUcdgDVILqC7bfvkebfXeL5PfAKdLe9C/fXmbJ7dN98IDa1FUva8kXgu/OJ8p+aQXDx
-	mMyQ==
-X-Gm-Message-State: AN3rC/7cFwp+BjW3UsXQ9MnDFeSzFW9Fv2nYK2zgIMVZM0yMKr1DRQboIjUlzhMoJLs8YUy5Gw/qYEM36r8Ydw==
-X-Received: by 10.157.56.216 with SMTP id k24mr3292183ote.15.1491442359954;
-	Wed, 05 Apr 2017 18:32:39 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.157.33.197 with HTTP; Wed, 5 Apr 2017 18:32:19 -0700 (PDT)
-In-Reply-To: <1491427991-8595-1-git-send-email-juro.bystricky@intel.com>
-References: <1491427991-8595-1-git-send-email-juro.bystricky@intel.com>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Wed, 5 Apr 2017 18:32:19 -0700
-Message-ID: <CABcZAN=6rGsbmXsQaDdpRspNwJBv5p5zD_DqJkJxBMs42j0K+Q@mail.gmail.com>
+	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+	:references:organization:mime-version:content-transfer-encoding;
+	bh=OIqk7wBEdLPL42x/QLUVoOU9OV05WI/l/n0FaZvHEdw=;
+	b=p+239hKYH2vjKmrl5l/pn97D3UO5BgRcy46YGZWNoXGzVBROhxP9Y/8L7/Ff2M1yBy
+	1LXqUpZoBOjNe86eGcmc1iTwIMdrQi/7EXV67+iWZhvUyBTyRaOzUGqRRy3xgDCG9njQ
+	ekKEa2ozssliFoJuVteVKcwh1tCGIoPEhN3XKrgNStRB3EZZEMNa1UX+VBwAa1AoKma8
+	yfHwpuXTVo/lOciHhKed08/fIB7Qacgm+PwrdDk0ZvaXIjCWjOFnhQFOLZqnHQ8R4UCd
+	hPBhWLK+OEgQKc6oPz0V413SJeFv11ZTEa40l0fNN7khDuXEIWsajuQWCGpTDt7zjU/G
+	mU4A==
+X-Gm-Message-State: AFeK/H34q3kZ1cXcOSkRWDcIFjk0QhprAhU0mTdm61/7BlUupmIbEgAkvjcNNEVteiMAkgCV
+X-Received: by 10.107.174.220 with SMTP id n89mr33924700ioo.166.1491468191072; 
+	Thu, 06 Apr 2017 01:43:11 -0700 (PDT)
+Received: from pohly-mobl1 (p5DE8E7C4.dip0.t-ipconnect.de. [93.232.231.196])
+	by smtp.gmail.com with ESMTPSA id l79sm584778itb.24.2017.04.06.01.43.09
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 06 Apr 2017 01:43:09 -0700 (PDT)
+Message-ID: <1491468186.10884.38.camel@intel.com>
+From: Patrick Ohly <patrick.ohly@intel.com>
 To: Juro Bystricky <juro.bystricky@intel.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] tinfoil.py: validate argument in parse_recipe_file
+Date: Thu, 06 Apr 2017 10:43:06 +0200
+In-Reply-To: <1491428045-10132-1-git-send-email-juro.bystricky@intel.com>
+References: <1491428045-10132-1-git-send-email-juro.bystricky@intel.com>
+Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
+X-Mailer: Evolution 3.12.9-1+b1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] cooker.py: multiconfig support for findBestProvider
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,57 +59,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Apr 2017 01:32:39 -0000
-Content-Type: multipart/alternative; boundary=001a11c0478611708d054c757c40
+X-List-Received-Date: Thu, 06 Apr 2017 08:43:10 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---001a11c0478611708d054c757c40
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2017-04-05 at 14:34 -0700, Juro Bystricky wrote:
+> In a multiconfig environment, a tinfoil call such as
+> 
+>     tinfoil.parse_recipe("multiconfig:arduino-101-sss:gcc")
+> 
+> can fail with an error such as:
+> 
+>   File "/data/master/poky/bitbake/lib/bb/tinfoil.py", line 373, in get_recipe_file
+>     raise bb.providers.NoProvider('Unable to find any recipe file matching "%s"' % pn)
+> bb.providers.NoProvider: Unable to find any recipe file matching "multiconfig:arduino-101-sss:gcc"
+> 
+> The culprit is findBestProvider (only called from tinfoil), which does not
+> handle multiconfig. This patch fixes the error and the tinfoil call returns absolute path
+> to the recipe, i.e:
+> 
+>   "/data/master/poky/meta/recipes-devtools/gcc/gcc_6.3.bb"
 
-On Wed, Apr 5, 2017 at 2:33 PM, Juro Bystricky <juro.bystricky@intel.com>
-wrote:
+So tinfoil.parse_recipe("multiconfig:arduino-101-sss:gcc") and
+tinfoil.parse_recipe("gcc") then return identical data, because both end
+up parsing "/data/master/poky/meta/recipes-devtools/gcc/gcc_6.3.bb"
+without taking the "arduino-101-sss" config into account?
 
-> Check for an empty file name to avoid an exception.
->
-> [YOCTO#11210]
->
-> Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
->
+That wouldn't be correct.
 
-IMO this is pointless. If you=E2=80=99re calling parse_recipe_file with an =
-empty
-string, it=E2=80=99s programmer error, which means raising an exception is =
-a
-completely reasonable thing to do.
---=20
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
+As far as I understand it, the mapping has to be:
+multiconfig:arduino-101-sss:gcc ->
+multiconfig:arduino-101-sss:/data/master/poky/meta/recipes-devtools/gcc/gcc_6.3.bb
 
---001a11c0478611708d054c757c40
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+-- 
+Best Regards, Patrick Ohly
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Wed, Apr 5, 2017 at 2:33 PM, Juro Bystricky <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:juro.bystricky@intel.com" target=3D"_blank">juro.bystricky@inte=
-l.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"m=
-argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":o=
-4" class=3D"a3s aXjCH m15b400977f39b78d">Check for an empty file name to av=
-oid an exception.<br>
-<br>
-[YOCTO#11210]<br>
-<br>
-Signed-off-by: Juro Bystricky &lt;<a href=3D"mailto:juro.bystricky@intel.co=
-m">juro.bystricky@intel.com</a>&gt;</div></blockquote></div><div class=3D"g=
-mail_extra"><br></div>IMO this is pointless. If you=E2=80=99re calling pars=
-e_recipe_file with an empty string, it=E2=80=99s programmer error, which me=
-ans raising an exception is a completely reasonable thing to do.<br>-- <br>=
-<div class=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=
-=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot c=
-om<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior Software Engine=
-er, Mentor Graphics</div></div></div></div>
-</div></div>
+The content of this message is my personal opinion only and although
+I am an employee of Intel, the statements I make here in no way
+represent Intel's position on the issue, nor am I authorized to speak
+on behalf of Intel on this matter.
 
---001a11c0478611708d054c757c40--
+
+
+
