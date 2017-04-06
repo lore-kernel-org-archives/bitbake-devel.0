@@ -1,23 +1,23 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-	by mail.openembedded.org (Postfix) with ESMTP id 5B83577CFA
+	by mail.openembedded.org (Postfix) with ESMTP id E0A9D77D44
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Apr 2017 21:53:11 +0000 (UTC)
+	Thu,  6 Apr 2017 21:53:14 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga104.jf.intel.com with ESMTP; 06 Apr 2017 14:53:13 -0700
+	by orsmga104.jf.intel.com with ESMTP; 06 Apr 2017 14:53:16 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.37,161,1488873600"; d="scan'208";a="1116565925"
+X-IronPort-AV: E=Sophos;i="5.37,161,1488873600"; d="scan'208";a="1116565931"
 Received: from anatara2-mobl2.gar.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.141.179])
-	by orsmga001.jf.intel.com with ESMTP; 06 Apr 2017 14:53:10 -0700
+	by orsmga001.jf.intel.com with ESMTP; 06 Apr 2017 14:53:13 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  7 Apr 2017 09:52:10 +1200
-Message-Id: <c8a90f77840faf124571f3b7b52004b70b1c2426.1491514854.git.paul.eggleton@linux.intel.com>
+Date: Fri,  7 Apr 2017 09:52:11 +1200
+Message-Id: <767944922959b57cfcdce7c4f107dc3ce6786fd8.1491514854.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.9.3
 In-Reply-To: <cover.1491514854.git.paul.eggleton@linux.intel.com>
 References: <cover.1491514854.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 10/11] lib/bb/siggen: show word-diff for single-line values containing spaces
+Subject: [PATCH 11/11] bitbake-diffsigs: colourise output
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,339 +30,324 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Apr 2017 21:53:11 -0000
+X-List-Received-Date: Thu, 06 Apr 2017 21:53:15 -0000
 
-If a variable value has changed and either the new or old value contains
-spaces, a word diff should be appropriate and may be a bit more readable.
-Import the "simplediff" module and use it to show a word diff (in the
-style of GNU wdiff and git diff --word-diff).
+If the output is a TTY, add colour to the output in order to make it
+easier to read. At the moment this is fairly basic, just add colour to
+the "titles" of each change and to the diff output.
 
-Also use a similar style diff to show changes in the runtaskhashes list.
-I didn't use an actual word-diff here since it's a little different - we
-can be sure that the list is a list and not simply a free-format string.
+I tried to introduce this without changing the code too much - rather
+than moving everything over to the new python formatting style, I've
+introduced a color_format() function which takes care of the colour
+formatting, either accepting additional format arguments or
+alternatively leaving the caller to use the old-style formatting (%) to
+insert values.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- LICENSE                    |   2 +
- lib/bb/siggen.py           |  38 ++++++++-
- lib/simplediff/LICENSE     |  22 +++++
- lib/simplediff/__init__.py | 198 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 259 insertions(+), 1 deletion(-)
- create mode 100644 lib/simplediff/LICENSE
- create mode 100644 lib/simplediff/__init__.py
+ bin/bitbake-diffsigs |  18 ++++++---
+ lib/bb/siggen.py     | 101 +++++++++++++++++++++++++++++++++++++--------------
+ 2 files changed, 85 insertions(+), 34 deletions(-)
 
-diff --git a/LICENSE b/LICENSE
-index 5d4a4c2..7d4e5f4 100644
---- a/LICENSE
-+++ b/LICENSE
-@@ -15,3 +15,5 @@ Foundation and individual contributors.
- * QUnit is redistributed under the MIT license.
+diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
+index e9fdb48..884be1e 100755
+--- a/bin/bitbake-diffsigs
++++ b/bin/bitbake-diffsigs
+@@ -34,7 +34,7 @@ import bb.msg
  
- * Font Awesome fonts redistributed under the SIL Open Font License 1.1
+ logger = bb.msg.logger_create('bitbake-diffsigs')
+ 
+-def find_compare_task(bbhandler, pn, taskname, sig1=None, sig2=None):
++def find_compare_task(bbhandler, pn, taskname, sig1=None, sig2=None, color=False):
+     """ Find the most recent signature files for the specified PN/task and compare them """
+ 
+     if not hasattr(bb.siggen, 'find_siginfo'):
+@@ -79,7 +79,7 @@ def find_compare_task(bbhandler, pn, taskname, sig1=None, sig2=None):
+         elif not hash2 in hashfiles:
+             recout.append("Unable to find matching sigdata for %s with hash %s" % (key, hash2))
+         else:
+-            out2 = bb.siggen.compare_sigfiles(hashfiles[hash1], hashfiles[hash2], recursecb)
++            out2 = bb.siggen.compare_sigfiles(hashfiles[hash1], hashfiles[hash2], recursecb, color=color)
+             for change in out2:
+                 for line in change.splitlines():
+                     recout.append('  ' + line)
+@@ -89,7 +89,7 @@ def find_compare_task(bbhandler, pn, taskname, sig1=None, sig2=None):
+     # Recurse into signature comparison
+     logger.debug("Signature file (previous): %s" % latestfiles[-2])
+     logger.debug("Signature file (latest): %s" % latestfiles[-1])
+-    output = bb.siggen.compare_sigfiles(latestfiles[-2], latestfiles[-1], recursecb)
++    output = bb.siggen.compare_sigfiles(latestfiles[-2], latestfiles[-1], recursecb, color=color)
+     if output:
+         print('\n'.join(output))
+     sys.exit(0)
+@@ -103,6 +103,10 @@ parser.add_argument('-d', '--debug',
+                     help='Enable debug output',
+                     action='store_true')
+ 
++parser.add_argument('--color',
++        help='Colorize output (where %(metavar)s is %(choices)s)',
++        choices=['auto', 'always', 'never'], default='auto', metavar='color')
 +
-+* simplediff is distributed under the zlib license.
+ parser.add_argument("-t", "--task",
+         help="find the signature data files for last two runs of the specified task and compare them",
+         action="store", dest="taskargs", nargs=2, metavar=('recipename', 'taskname'))
+@@ -125,20 +129,22 @@ options = parser.parse_args()
+ if options.debug:
+     logger.setLevel(logging.DEBUG)
+ 
++color = (options.color == 'always' or (options.color == 'auto' and sys.stdout.isatty()))
++
+ if options.taskargs:
+     with bb.tinfoil.Tinfoil() as tinfoil:
+         tinfoil.prepare(config_only=True)
+         if options.sigargs:
+-            find_compare_task(tinfoil, options.taskargs[0], options.taskargs[1], options.sigargs[0], options.sigargs[1])
++            find_compare_task(tinfoil, options.taskargs[0], options.taskargs[1], options.sigargs[0], options.sigargs[1], color=color)
+         else:
+-            find_compare_task(tinfoil, options.taskargs[0], options.taskargs[1])
++            find_compare_task(tinfoil, options.taskargs[0], options.taskargs[1], color=color)
+ else:
+     if options.sigargs:
+         logger.error('-s/--signature can only be used together with -t/--task')
+         sys.exit(1)
+     try:
+         if options.sigdatafile1 and options.sigdatafile2:
+-            output = bb.siggen.compare_sigfiles(options.sigdatafile1, options.sigdatafile2)
++            output = bb.siggen.compare_sigfiles(options.sigdatafile1, options.sigdatafile2, color=color)
+         elif options.sigdatafile1:
+             output = bb.siggen.dump_sigfile(options.sigdatafile1)
+     except IOError as e:
 diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 3c5d862..d40c721 100644
+index d40c721..25ad3e9 100644
 --- a/lib/bb/siggen.py
 +++ b/lib/bb/siggen.py
-@@ -6,6 +6,7 @@ import tempfile
- import pickle
- import bb.data
- import difflib
-+import simplediff
- from bb.checksum import FileChecksumCache
- 
- logger = logging.getLogger('BitBake.SigGen')
-@@ -352,6 +353,39 @@ def dump_this_task(outfile, d):
+@@ -353,7 +353,23 @@ def dump_this_task(outfile, d):
      referencestamp = bb.build.stamp_internal(task, d, None, True)
      bb.parse.siggen.dump_sigtask(fn, task, outfile, "customfile:" + referencestamp)
  
-+def worddiff_str(oldstr, newstr):
-+    diff = simplediff.diff(oldstr.split(' '), newstr.split(' '))
-+    ret = []
-+    for change, value in diff:
-+        value = ' '.join(value)
-+        if change == '=':
-+            ret.append(value)
-+        elif change == '+':
-+            item = '{+%s+}' % value
-+            ret.append(item)
-+        elif change == '-':
-+            item = '[-%s-]' % value
-+            ret.append(item)
-+    whitespace_note = ''
-+    if oldstr != newstr and ' '.join(oldstr.split()) == ' '.join(newstr.split()):
-+        whitespace_note = ' (whitespace changed)'
-+    return '"%s"%s' % (' '.join(ret), whitespace_note)
+-def worddiff_str(oldstr, newstr):
++def init_colors(enable_color):
++    """Initialise colour dict for passing to compare_sigfiles()"""
++    # First set up the colours
++    colors = {'color_title':   '\033[1;37;40m',
++              'color_default': '\033[0;37;40m',
++              'color_add':     '\033[1;32;40m',
++              'color_remove':  '\033[1;31;40m',
++             }
++    # Leave all keys present but clear the values
++    if not enable_color:
++        for k in colors.keys():
++            colors[k] = ''
++    return colors
 +
-+def list_inline_diff(oldlist, newlist):
-+    diff = simplediff.diff(oldlist, newlist)
-+    ret = []
-+    for change, value in diff:
-+        value = ' '.join(value)
-+        if change == '=':
-+            ret.append("'%s'" % value)
-+        elif change == '+':
-+            item = "+'%s'" % value
-+            ret.append(item)
-+        elif change == '-':
-+            item = "-'%s'" % value
-+            ret.append(item)
-+    return '[%s]' % (', '.join(ret))
++def worddiff_str(oldstr, newstr, colors=None):
++    if not colors:
++        colors = init_colors(False)
+     diff = simplediff.diff(oldstr.split(' '), newstr.split(' '))
+     ret = []
+     for change, value in diff:
+@@ -361,17 +377,19 @@ def worddiff_str(oldstr, newstr):
+         if change == '=':
+             ret.append(value)
+         elif change == '+':
+-            item = '{+%s+}' % value
++            item = '{color_add}{{+{value}+}}{color_default}'.format(value=value, **colors)
+             ret.append(item)
+         elif change == '-':
+-            item = '[-%s-]' % value
++            item = '{color_remove}[-{value}-]{color_default}'.format(value=value, **colors)
+             ret.append(item)
+     whitespace_note = ''
+     if oldstr != newstr and ' '.join(oldstr.split()) == ' '.join(newstr.split()):
+         whitespace_note = ' (whitespace changed)'
+     return '"%s"%s' % (' '.join(ret), whitespace_note)
+ 
+-def list_inline_diff(oldlist, newlist):
++def list_inline_diff(oldlist, newlist, colors=None):
++    if not colors:
++        colors = init_colors(False)
+     diff = simplediff.diff(oldlist, newlist)
+     ret = []
+     for change, value in diff:
+@@ -379,10 +397,10 @@ def list_inline_diff(oldlist, newlist):
+         if change == '=':
+             ret.append("'%s'" % value)
+         elif change == '+':
+-            item = "+'%s'" % value
++            item = '{color_add}+{value}{color_default}'.format(value=value, **colors)
+             ret.append(item)
+         elif change == '-':
+-            item = "-'%s'" % value
++            item = '{color_remove}-{value}{color_default}'.format(value=value, **colors)
+             ret.append(item)
+     return '[%s]' % (', '.join(ret))
+ 
+@@ -409,9 +427,26 @@ def clean_basepaths_list(a):
+         b.append(clean_basepath(x))
+     return b
+ 
+-def compare_sigfiles(a, b, recursecb=None, collapsed=False):
++def compare_sigfiles(a, b, recursecb=None, color=False, collapsed=False):
+     output = []
+ 
++    colors = init_colors(color)
++    def color_format(formatstr, **values):
++        """
++        Return colour formatted string.
++        NOTE: call with the format string, not an already formatted string
++        containing values (otherwise you could have trouble with { and }
++        characters)
++        """
++        if not formatstr.endswith('{color_default}'):
++            formatstr += '{color_default}'
++        # In newer python 3 versions you can pass both of these directly,
++        # but we only require 3.4 at the moment
++        formatparams = {}
++        formatparams.update(colors)
++        formatparams.update(values)
++        return formatstr.format(**formatparams)
 +
- def clean_basepath(a):
-     mc = None
-     if a.startswith("multiconfig:"):
-@@ -471,6 +505,8 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+     with open(a, 'rb') as f:
+         p1 = pickle.Unpickler(f)
+         a_data = p1.load()
+@@ -465,33 +500,33 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+         return changed, added, removed
+ 
+     if 'basewhitelist' in a_data and a_data['basewhitelist'] != b_data['basewhitelist']:
+-        output.append("basewhitelist changed from '%s' to '%s'" % (a_data['basewhitelist'], b_data['basewhitelist']))
++        output.append(color_format("{color_title}basewhitelist changed{color_default} from '%s' to '%s'") % (a_data['basewhitelist'], b_data['basewhitelist']))
+         if a_data['basewhitelist'] and b_data['basewhitelist']:
+             output.append("changed items: %s" % a_data['basewhitelist'].symmetric_difference(b_data['basewhitelist']))
+ 
+     if 'taskwhitelist' in a_data and a_data['taskwhitelist'] != b_data['taskwhitelist']:
+-        output.append("taskwhitelist changed from '%s' to '%s'" % (a_data['taskwhitelist'], b_data['taskwhitelist']))
++        output.append(color_format("{color_title}taskwhitelist changed{color_default} from '%s' to '%s'") % (a_data['taskwhitelist'], b_data['taskwhitelist']))
+         if a_data['taskwhitelist'] and b_data['taskwhitelist']:
+             output.append("changed items: %s" % a_data['taskwhitelist'].symmetric_difference(b_data['taskwhitelist']))
+ 
+     if a_data['taskdeps'] != b_data['taskdeps']:
+-        output.append("Task dependencies changed from:\n%s\nto:\n%s" % (sorted(a_data['taskdeps']), sorted(b_data['taskdeps'])))
++        output.append(color_format("{color_title}Task dependencies changed{color_default} from:\n%s\nto:\n%s") % (sorted(a_data['taskdeps']), sorted(b_data['taskdeps'])))
+ 
+     if a_data['basehash'] != b_data['basehash'] and not collapsed:
+-        output.append("basehash changed from %s to %s" % (a_data['basehash'], b_data['basehash']))
++        output.append(color_format("{color_title}basehash changed{color_default} from %s to %s") % (a_data['basehash'], b_data['basehash']))
+ 
+     changed, added, removed = dict_diff(a_data['gendeps'], b_data['gendeps'], a_data['basewhitelist'] & b_data['basewhitelist'])
+     if changed:
+         for dep in changed:
+-            output.append("List of dependencies for variable %s changed from '%s' to '%s'" % (dep, a_data['gendeps'][dep], b_data['gendeps'][dep]))
++            output.append(color_format("{color_title}List of dependencies for variable %s changed from '{color_default}%s{color_title}' to '{color_default}%s{color_title}'") % (dep, a_data['gendeps'][dep], b_data['gendeps'][dep]))
+             if a_data['gendeps'][dep] and b_data['gendeps'][dep]:
+                 output.append("changed items: %s" % a_data['gendeps'][dep].symmetric_difference(b_data['gendeps'][dep]))
+     if added:
+         for dep in added:
+-            output.append("Dependency on variable %s was added" % (dep))
++            output.append(color_format("{color_title}Dependency on variable %s was added") % (dep))
+     if removed:
+         for dep in removed:
+-            output.append("Dependency on Variable %s was removed" % (dep))
++            output.append(color_format("{color_title}Dependency on Variable %s was removed") % (dep))
+ 
+ 
+     changed, added, removed = dict_diff(a_data['varvals'], b_data['varvals'])
+@@ -504,11 +539,20 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+                 # Cut off the first two lines, since we aren't interested in
                  # the old/new filename (they are blank anyway in this case)
                  difflines = list(diff)[2:]
-                 output.append("Variable %s value changed:\n%s" % (dep, '\n'.join(difflines)))
-+            elif newval and oldval and (' ' in oldval or ' ' in newval):
-+                output.append("Variable %s value changed:\n%s" % (dep, worddiff_str(oldval, newval)))
+-                output.append("Variable %s value changed:\n%s" % (dep, '\n'.join(difflines)))
++                if color:
++                    # Add colour to diff output
++                    for i, line in enumerate(difflines):
++                        if line.startswith('+'):
++                            line = color_format('{color_add}{line}', line=line)
++                            difflines[i] = line
++                        elif line.startswith('-'):
++                            line = color_format('{color_remove}{line}', line=line)
++                            difflines[i] = line
++                output.append(color_format("{color_title}Variable {var} value changed:{color_default}\n{diff}", var=dep, diff='\n'.join(difflines)))
+             elif newval and oldval and (' ' in oldval or ' ' in newval):
+-                output.append("Variable %s value changed:\n%s" % (dep, worddiff_str(oldval, newval)))
++                output.append(color_format("{color_title}Variable {var} value changed:{color_default}\n{diff}", var=dep, diff=worddiff_str(oldval, newval, colors)))
              else:
-                 output.append("Variable %s value changed from '%s' to '%s'" % (dep, oldval, newval))
+-                output.append("Variable %s value changed from '%s' to '%s'" % (dep, oldval, newval))
++                output.append(color_format("{color_title}Variable {var} value changed from '{color_default}{oldval}{color_title}' to '{color_default}{newval}{color_title}'{color_default}", var=dep, oldval=oldval, newval=newval))
  
-@@ -510,7 +546,7 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+     if not 'file_checksum_values' in a_data:
+          a_data['file_checksum_values'] = {}
+@@ -518,13 +562,13 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+     changed, added, removed = file_checksums_diff(a_data['file_checksum_values'], b_data['file_checksum_values'])
+     if changed:
+         for f, old, new in changed:
+-            output.append("Checksum for file %s changed from %s to %s" % (f, old, new))
++            output.append(color_format("{color_title}Checksum for file %s changed{color_default} from %s to %s") % (f, old, new))
+     if added:
+         for f in added:
+-            output.append("Dependency on checksum of file %s was added" % (f))
++            output.append(color_format("{color_title}Dependency on checksum of file %s was added") % (f))
+     if removed:
+         for f in removed:
+-            output.append("Dependency on checksum of file %s was removed" % (f))
++            output.append(color_format("{color_title}Dependency on checksum of file %s was removed") % (f))
+ 
+     if not 'runtaskdeps' in a_data:
+          a_data['runtaskdeps'] = {}
+@@ -539,18 +583,19 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+             for idx, task in enumerate(a_data['runtaskdeps']):
+                 a = a_data['runtaskdeps'][idx]
+                 b = b_data['runtaskdeps'][idx]
+-                if a_data['runtaskhashes'][a] != b_data['runtaskhashes'][b]:
+-                    changed.append("%s with hash %s\n changed to\n%s with hash %s" % (a, a_data['runtaskhashes'][a], b, b_data['runtaskhashes'][b]))
++                if a_data['runtaskhashes'][a] != b_data['runtaskhashes'][b] and not collapsed:
++                    changed.append("%s with hash %s\n changed to\n%s with hash %s" % (clean_basepath(a), a_data['runtaskhashes'][a], clean_basepath(b), b_data['runtaskhashes'][b]))
+ 
+         if changed:
              clean_a = clean_basepaths_list(a_data['runtaskdeps'])
              clean_b = clean_basepaths_list(b_data['runtaskdeps'])
              if clean_a != clean_b:
--                output.append("runtaskdeps changed from %s to %s" % (clean_a, clean_b))
-+                output.append("runtaskdeps changed:\n%s" % list_inline_diff(clean_a, clean_b))
+-                output.append("runtaskdeps changed:\n%s" % list_inline_diff(clean_a, clean_b))
++                output.append(color_format("{color_title}runtaskdeps changed:{color_default}\n%s") % list_inline_diff(clean_a, clean_b, colors))
              else:
-                 output.append("runtaskdeps changed:")
+-                output.append("runtaskdeps changed:")
++                output.append(color_format("{color_title}runtaskdeps changed:"))
              output.append("\n".join(changed))
-diff --git a/lib/simplediff/LICENSE b/lib/simplediff/LICENSE
-new file mode 100644
-index 0000000..8242dde
---- /dev/null
-+++ b/lib/simplediff/LICENSE
-@@ -0,0 +1,22 @@
-+Copyright (c) 2008 - 2013 Paul Butler and contributors
+ 
 +
-+This sofware may be used under a zlib/libpng-style license:
-+
-+This software is provided 'as-is', without any express or implied warranty. In
-+no event will the authors be held liable for any damages arising from the use
-+of this software.
-+
-+Permission is granted to anyone to use this software for any purpose, including
-+commercial applications, and to alter it and redistribute it freely, subject to
-+the following restrictions:
-+
-+1. The origin of this software must not be misrepresented; you must not claim
-+that you wrote the original software. If you use this software in a product, an
-+acknowledgment in the product documentation would be appreciated but is not
-+required.
-+
-+2. Altered source versions must be plainly marked as such, and must not be
-+misrepresented as being the original software.
-+
-+3. This notice may not be removed or altered from any source distribution.
-+
-diff --git a/lib/simplediff/__init__.py b/lib/simplediff/__init__.py
-new file mode 100644
-index 0000000..57ee3c5
---- /dev/null
-+++ b/lib/simplediff/__init__.py
-@@ -0,0 +1,198 @@
-+'''
-+Simple Diff for Python version 1.0
-+
-+Annotate two versions of a list with the values that have been
-+changed between the versions, similar to unix's `diff` but with
-+a dead-simple Python interface.
-+
-+(C) Paul Butler 2008-2012 <http://www.paulbutler.org/>
-+May be used and distributed under the zlib/libpng license
-+<http://www.opensource.org/licenses/zlib-license.php>
-+'''
-+
-+__all__ = ['diff', 'string_diff', 'html_diff']
-+__version__ = '1.0'
-+
-+
-+def diff(old, new):
-+    '''
-+    Find the differences between two lists. Returns a list of pairs, where the
-+    first value is in ['+','-','='] and represents an insertion, deletion, or
-+    no change for that list. The second value of the pair is the list
-+    of elements.
-+
-+    Params:
-+        old     the old list of immutable, comparable values (ie. a list
-+                of strings)
-+        new     the new list of immutable, comparable values
-+   
-+    Returns:
-+        A list of pairs, with the first part of the pair being one of three
-+        strings ('-', '+', '=') and the second part being a list of values from
-+        the original old and/or new lists. The first part of the pair
-+        corresponds to whether the list of values is a deletion, insertion, or
-+        unchanged, respectively.
-+
-+    Examples:
-+        >>> diff([1,2,3,4],[1,3,4])
-+        [('=', [1]), ('-', [2]), ('=', [3, 4])]
-+
-+        >>> diff([1,2,3,4],[2,3,4,1])
-+        [('-', [1]), ('=', [2, 3, 4]), ('+', [1])]
-+
-+        >>> diff('The quick brown fox jumps over the lazy dog'.split(),
-+        ...      'The slow blue cheese drips over the lazy carrot'.split())
-+        ... # doctest: +NORMALIZE_WHITESPACE
-+        [('=', ['The']),
-+         ('-', ['quick', 'brown', 'fox', 'jumps']),
-+         ('+', ['slow', 'blue', 'cheese', 'drips']),
-+         ('=', ['over', 'the', 'lazy']),
-+         ('-', ['dog']),
-+         ('+', ['carrot'])]
-+
-+    '''
-+
-+    # Create a map from old values to their indices
-+    old_index_map = dict()
-+    for i, val in enumerate(old):
-+        old_index_map.setdefault(val,list()).append(i)
-+
-+    # Find the largest substring common to old and new.
-+    # We use a dynamic programming approach here.
-+    # 
-+    # We iterate over each value in the `new` list, calling the
-+    # index `inew`. At each iteration, `overlap[i]` is the
-+    # length of the largest suffix of `old[:i]` equal to a suffix
-+    # of `new[:inew]` (or unset when `old[i]` != `new[inew]`).
-+    #
-+    # At each stage of iteration, the new `overlap` (called
-+    # `_overlap` until the original `overlap` is no longer needed)
-+    # is built from the old one.
-+    #
-+    # If the length of overlap exceeds the largest substring
-+    # seen so far (`sub_length`), we update the largest substring
-+    # to the overlapping strings.
-+
-+    overlap = dict()
-+    # `sub_start_old` is the index of the beginning of the largest overlapping
-+    # substring in the old list. `sub_start_new` is the index of the beginning
-+    # of the same substring in the new list. `sub_length` is the length that
-+    # overlaps in both.
-+    # These track the largest overlapping substring seen so far, so naturally
-+    # we start with a 0-length substring.
-+    sub_start_old = 0
-+    sub_start_new = 0
-+    sub_length = 0
-+
-+    for inew, val in enumerate(new):
-+        _overlap = dict()
-+        for iold in old_index_map.get(val,list()):
-+            # now we are considering all values of iold such that
-+            # `old[iold] == new[inew]`.
-+            _overlap[iold] = (iold and overlap.get(iold - 1, 0)) + 1
-+            if(_overlap[iold] > sub_length):
-+                # this is the largest substring seen so far, so store its
-+                # indices
-+                sub_length = _overlap[iold]
-+                sub_start_old = iold - sub_length + 1
-+                sub_start_new = inew - sub_length + 1
-+        overlap = _overlap
-+
-+    if sub_length == 0:
-+        # If no common substring is found, we return an insert and delete...
-+        return (old and [('-', old)] or []) + (new and [('+', new)] or [])
-+    else:
-+        # ...otherwise, the common substring is unchanged and we recursively
-+        # diff the text before and after that substring
-+        return diff(old[ : sub_start_old], new[ : sub_start_new]) + \
-+               [('=', new[sub_start_new : sub_start_new + sub_length])] + \
-+               diff(old[sub_start_old + sub_length : ],
-+                       new[sub_start_new + sub_length : ])
-+
-+
-+def string_diff(old, new):
-+    '''
-+    Returns the difference between the old and new strings when split on
-+    whitespace. Considers punctuation a part of the word
-+
-+    This function is intended as an example; you'll probably want
-+    a more sophisticated wrapper in practice.
-+
-+    Params:
-+        old     the old string
-+        new     the new string
-+
-+    Returns:
-+        the output of `diff` on the two strings after splitting them
-+        on whitespace (a list of change instructions; see the docstring
-+        of `diff`)
-+
-+    Examples:
-+        >>> string_diff('The quick brown fox', 'The fast blue fox')
-+        ... # doctest: +NORMALIZE_WHITESPACE
-+        [('=', ['The']),
-+         ('-', ['quick', 'brown']),
-+         ('+', ['fast', 'blue']),
-+         ('=', ['fox'])]
-+
-+    '''
-+    return diff(old.split(), new.split())
-+
-+
-+def html_diff(old, new):
-+    '''
-+    Returns the difference between two strings (as in stringDiff) in
-+    HTML format. HTML code in the strings is NOT escaped, so you
-+    will get weird results if the strings contain HTML.
-+
-+    This function is intended as an example; you'll probably want
-+    a more sophisticated wrapper in practice.
-+
-+    Params:
-+        old     the old string
-+        new     the new string
-+
-+    Returns:
-+        the output of the diff expressed with HTML <ins> and <del>
-+        tags.
-+
-+    Examples:
-+        >>> html_diff('The quick brown fox', 'The fast blue fox')
-+        'The <del>quick brown</del> <ins>fast blue</ins> fox'
-+    '''
-+    con = {'=': (lambda x: x),
-+           '+': (lambda x: "<ins>" + x + "</ins>"),
-+           '-': (lambda x: "<del>" + x + "</del>")}
-+    return " ".join([(con[a])(" ".join(b)) for a, b in string_diff(old, new)])
-+
-+
-+def check_diff(old, new):
-+    '''
-+    This tests that diffs returned by `diff` are valid. You probably won't
-+    want to use this function, but it's provided for documentation and
-+    testing.
-+
-+    A diff should satisfy the property that the old input is equal to the
-+    elements of the result annotated with '-' or '=' concatenated together.
-+    Likewise, the new input is equal to the elements of the result annotated
-+    with '+' or '=' concatenated together. This function compares `old`,
-+    `new`, and the results of `diff(old, new)` to ensure this is true.
-+
-+    Tests:
-+        >>> check_diff('ABCBA', 'CBABA')
-+        >>> check_diff('Foobarbaz', 'Foobarbaz')
-+        >>> check_diff('Foobarbaz', 'Boobazbam')
-+        >>> check_diff('The quick brown fox', 'Some quick brown car')
-+        >>> check_diff('A thick red book', 'A quick blue book')
-+        >>> check_diff('dafhjkdashfkhasfjsdafdasfsda', 'asdfaskjfhksahkfjsdha')
-+        >>> check_diff('88288822828828288282828', '88288882882828282882828')
-+        >>> check_diff('1234567890', '24689')
-+    '''
-+    old = list(old)
-+    new = list(new)
-+    result = diff(old, new)
-+    _old = [val for (a, vals) in result if (a in '=-') for val in vals]
-+    assert old == _old, 'Expected %s, got %s' % (old, _old)
-+    _new = [val for (a, vals) in result if (a in '=+') for val in vals]
-+    assert new == _new, 'Expected %s, got %s' % (new, _new)
-+
+     if 'runtaskhashes' in a_data and 'runtaskhashes' in b_data:
+         a = a_data['runtaskhashes']
+         b = b_data['runtaskhashes']
+@@ -564,7 +609,7 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+                             #output.append("Dependency on task %s was replaced by %s with same hash" % (dep, bdep))
+                             bdep_found = True
+                 if not bdep_found:
+-                    output.append("Dependency on task %s was added with hash %s" % (clean_basepath(dep), b[dep]))
++                    output.append(color_format("{color_title}Dependency on task %s was added{color_default} with hash %s") % (clean_basepath(dep), b[dep]))
+         if removed:
+             for dep in removed:
+                 adep_found = False
+@@ -574,11 +619,11 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+                             #output.append("Dependency on task %s was replaced by %s with same hash" % (adep, dep))
+                             adep_found = True
+                 if not adep_found:
+-                    output.append("Dependency on task %s was removed with hash %s" % (clean_basepath(dep), a[dep]))
++                    output.append(color_format("{color_title}Dependency on task %s was removed{color_default} with hash %s") % (clean_basepath(dep), a[dep]))
+         if changed:
+             for dep in changed:
+                 if not collapsed:
+-                    output.append("Hash for dependent task %s changed from %s to %s" % (clean_basepath(dep), a[dep], b[dep]))
++                    output.append(color_format("{color_title}Hash for dependent task %s changed{color_default} from %s to %s") % (clean_basepath(dep), a[dep], b[dep]))
+                 if callable(recursecb):
+                     recout = recursecb(dep, a[dep], b[dep])
+                     if recout:
+@@ -592,7 +637,7 @@ def compare_sigfiles(a, b, recursecb=None, collapsed=False):
+     a_taint = a_data.get('taint', None)
+     b_taint = b_data.get('taint', None)
+     if a_taint != b_taint:
+-        output.append("Taint (by forced/invalidated task) changed from %s to %s" % (a_taint, b_taint))
++        output.append(color_format("{color_title}Taint (by forced/invalidated task) changed{color_default} from %s to %s") % (a_taint, b_taint))
+ 
+     return output
+ 
 -- 
 2.9.3
 
