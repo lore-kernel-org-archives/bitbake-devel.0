@@ -1,36 +1,35 @@
 Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id D453277D76
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id B754877D76
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Apr 2017 08:26:41 +0000 (UTC)
+	Fri,  7 Apr 2017 08:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
 	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
-	t=1491553605; x=1523089605;
+	t=1491553763; x=1523089763;
 	h=from:to:cc:subject:date:message-id:in-reply-to:
 	references:mime-version:content-transfer-encoding;
-	bh=maflEXNhWZ7mxuLoc2KDMQzt5pOO9eFRUsf4CZigbbU=;
-	b=WjCZ0iONOHepL29VXtwv5H5GjQ5+u7eRkZ0SQ/4Fvbw0VFppuK7m/GzQ
-	I2YvF4qwnOij7l/e47OaV/SV6egqvA==;
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-	by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	07 Apr 2017 01:26:42 -0700
+	bh=iRCW5Ver/lXJoRp+EZjwqia5xHZJqDRL+Ykb7cvGuRg=;
+	b=rKMoaD/lhKB0u3p3puXWVmpanmGG9OTYPuog/QOAeuO89ZUAbjanyepy
+	dm/cXdDjryX+AC6JWSy9MfxOT8HLQg==;
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	07 Apr 2017 01:29:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.37,164,1488873600"; d="scan'208";a="84612160"
+X-IronPort-AV: E=Sophos;i="5.37,164,1488873600"; d="scan'208";a="70951123"
 Received: from anatara2-mobl2.gar.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.255.141.179])
-	by orsmga005.jf.intel.com with ESMTP; 07 Apr 2017 01:26:40 -0700
+	by orsmga002.jf.intel.com with ESMTP; 07 Apr 2017 01:29:19 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: Patrick Ohly <patrick.ohly@intel.com>
-Date: Fri, 07 Apr 2017 20:26:37 +1200
-Message-ID: <1955431.r1d7W8j1YV@peggleto-mobl.ger.corp.intel.com>
+Date: Fri, 07 Apr 2017 20:29:18 +1200
+Message-ID: <16393836.ok1xE2uA39@peggleto-mobl.ger.corp.intel.com>
 Organization: Intel Corporation
-In-Reply-To: <1491547069.10884.55.camel@intel.com>
+In-Reply-To: <1491551779.10884.69.camel@intel.com>
 References: <cover.1491514854.git.paul.eggleton@linux.intel.com>
-	<9a743ad396af642fc20961e38fb7f6c5752f2446.1491514854.git.paul.eggleton@linux.intel.com>
-	<1491547069.10884.55.camel@intel.com>
+	<1491551779.10884.69.camel@intel.com>
 MIME-Version: 1.0
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 09/11] lib/bb/siggen: add collapsed mode to compare_sigfiles()
+Subject: Re: [PATCH 00/11] bitbake-diffsigs fixes/improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,30 +42,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Apr 2017 08:26:44 -0000
+X-List-Received-Date: Fri, 07 Apr 2017 08:29:21 -0000
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Friday, 7 April 2017 6:37:49 PM NZST Patrick Ohly wrote:
+Hi Patrick,
+
+On Friday, 7 April 2017 7:56:19 PM NZST Patrick Ohly wrote:
 > On Fri, 2017-04-07 at 09:52 +1200, Paul Eggleton wrote:
-> > If we just want to drill down to the actual differences then we don't
-> > need to see certain things in the output, e.g. basehash changing or the
-> > signature of dependent tasks. This will be used for comparing signatures
-> > within buildhistory-diff in OE-Core; the default mode as used by
-> > bitbake-diffsigs and bitbake -S printdiff remains unchanged for the
-> > moment.
+> > As part of an effort to add task signature recording and comparison to
+> > buildhistory in OE, I went digging into bitbake-diffsigs and the code
+> > that supports it and discovered that unfortunately it had a number of
+> > bugs - in particular the -t option despite being around for a while and
+> > having numerous band-aids applied in the past still wasn't really
+> > working properly.
 > 
-> This sounds interesting. The bitbake-diffsigs output I got for the
-> yocto-compat-layer had such useless "basehash changed" comments. Should
-> we add a mode parameter to bitbake-diffsigs that allows choosing this
-> collapsed mode?
+> I'm not sure whether it is working now, even with your changes. My
+> test, using poky master and your bitbake branch:
+> 
+> 1. bitbake -c cleansstate m4
+> 2. bitbake m4
+> 3. patch m4:
+> diff --git a/meta/recipes-devtools/m4/m4_1.4.18.bb
+> b/meta/recipes-devtools/m4/m4_1.4.18.bb
+> index b12c0adf3ad..0a8e9c10778 100644
+> --- a/meta/recipes-devtools/m4/m4_1.4.18.bb
+> +++ b/meta/recipes-devtools/m4/m4_1.4.18.bb
+> @@ -1,3 +1,7 @@
+>  require m4-${PV}.inc
+> 
+> +do_install_append () {
+> +    echo hello world
+> +}
+> +
+>  BBCLASSEXTEND = "nativesdk"
+> 4. bitbake m4
+> 5. bitbake-diffsigs -t m4 do_build
+> => ERROR: No sigdata files found matching m4 do_build
+> 
+> There is one file for do_build in tmp/stamps/i586-poky-linux/m4 and
+> several for do_install:
+> 
+> $ ls -l tmp/stamps/i586-poky-linux/m4/*do_build*
+> tmp/stamps/i586-poky-linux/m4/*do_install* -rw-r--r-- 1 pohly pohly     0
+> Apr  7 09:53
+> tmp/stamps/i586-poky-linux/m4/1.4.18-r0.do_build.aa7d33bbb2dfef67ef3ca1b5d3
+> f2cde1 -rw-r--r-- 1 pohly pohly     0 Apr  7 09:53
+> tmp/stamps/i586-poky-linux/m4/1.4.18-r0.do_install.a0954ae23d8da50c4af22f71
+> 9255411f -rw-r--r-- 1 pohly pohly 20573 Apr  7 09:52
+> tmp/stamps/i586-poky-linux/m4/1.4.18-r0.do_install.sigdata.464e707d80ec982f
+> b5b0c50a6526f05a -rw-r--r-- 1 pohly pohly 19610 Apr  7 09:53
+> tmp/stamps/i586-poky-linux/m4/1.4.18-r0.do_install.sigdata.a0954ae23d8da50c
+> 4af22f719255411f
+> 
+> 
+> bitbake-diffsigs does not fail for do_install, but does not print
+> anything either (= no output at all from "bitbake-diffsigs -t m4
+> do_install").
+> 
+> Hmm, does it pick the right files to compare?
+> 
+> $ bitbake-diffsigs -d -t m4 do_install
+> DEBUG: Signature file (previous):
+> /fast/build/poky/x86/sstate-cache/a0/sstate:m4:i586-poky-linux:1.4.18:r0:i5
+> 86:3:a0954ae23d8da50c4af22f719255411f_install.tgz.siginfo DEBUG: Signature
+> file (latest):
+> /fast/build/poky/x86/tmp/stamps/i586-poky-linux/m4/1.4.18-r0.do_install.sig
+> data.a0954ae23d8da50c4af22f719255411f
+> 
+> Am I using the tool incorrectly or are my expectations wrong?
+>
+> My expectation was that "bitbake-diffsigs -t m4 do_build" would tell me
+> that m4 was rebuilt because some tasks that it depends on changed, and
+> then I would drill down to those tasks, eventually arriving at
+> do_install.
 
-We could, but to be effective the caller needs to handle the output in a 
-particular way (see what I've done in the buildhistory-diff patchset I sent 
-today).
-
-FYI my plan for 2.4 is to evaluate whether this collapsed mode or something 
-like it is better as a default display mode.
+Hmm, something has gone wrong here because this is the exact scenario it's 
+supposed to handle. In my similar tests it did work, so I'm not sure why it 
+didn't work in this case - I'll have to give it a try here.
 
 Cheers,
 Paul
