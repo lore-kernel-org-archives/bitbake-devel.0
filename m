@@ -1,28 +1,25 @@
-Return-Path: <markus.lehtonen@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 469DB77D82
+Return-Path: <david.reyna@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id A1A4D77C6F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Apr 2017 10:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
-	t=1491821454; x=1523357454; h=from:to:subject:date:message-id;
-	bh=P6kOtlv6/kuRUplN82P3yCDtEAYVKgSjThEtTm9BOSE=;
-	b=ACjh+OlqODcrA1n6osPSsv22AVHVOlL9QMT79ZyMKI9nz8avpcj2S563
-	ejntvwXEwyllOIO0HUarpFQOj86YYw==;
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-	by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	10 Apr 2017 03:50:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.37,182,1488873600"; d="scan'208";a="87212929"
-Received: from ggalliga-mobl1.ger.corp.intel.com (HELO
-	mqz-osx-suse64.fi.intel.com) ([10.252.16.55])
-	by fmsmga006.fm.intel.com with ESMTP; 10 Apr 2017 03:50:51 -0700
-From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Apr 2017 13:50:41 +0300
-Message-Id: <20170410105041.28282-1-markus.lehtonen@linux.intel.com>
-X-Mailer: git-send-email 2.12.0
-Subject: [PATCH] bb.cache: prevent division-by-zero in load_cahefile()
+	Mon, 10 Apr 2017 13:39:17 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v3ADdIW0015836
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 10 Apr 2017 06:39:19 -0700
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.216.91) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
+	(TLS) id 14.3.294.0; Mon, 10 Apr 2017 06:39:17 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 10 Apr 2017 06:29:43 -0700
+Message-ID: <cover.1491830925.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+X-Originating-IP: [147.11.216.91]
+Subject: [PATCH 0/1] toaster: restore Toaster filter feature
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,31 +32,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Apr 2017 10:50:52 -0000
+X-List-Received-Date: Mon, 10 Apr 2017 13:39:19 -0000
+Content-Type: text/plain
 
-[YOCTO 11315]
+From: David Reyna <David.Reyna@windriver.com>
 
-Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
----
- lib/bb/cache.py | 4 ++++
- 1 file changed, 4 insertions(+)
+Testing revealed that a syntax fix broke the Toaster filter feature. 
+This commit reverts that and restores the functionality.
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 28e8a874..e7eeb4f5 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -462,6 +462,10 @@ class Cache(NoCache):
-                         self.depends_cache[key] = [value]
-                     # only fire events on even percentage boundaries
-                     current_progress = cachefile.tell() + previous_progress
-+                    if current_progress > cachesize:
-+                        # we might have calculated incorrect total size because a file
-+                        # might've been written out just after we checked its size
-+                        cachesize = current_progress
-                     current_percent = 100 * current_progress / cachesize
-                     if current_percent > previous_percent:
-                         previous_percent = current_percent
+The following changes since commit 633ad6c9f436f5d2b6ee1a005b697661a054a394:
+
+  oeqa/runtime/utils/targetbuildproject: use parent classes defaults tmpdir (2017-04-06 10:13:39 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/toaster/filters_broken_11317
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/filters_broken_11317
+
+David Reyna (1):
+  toaster: Toaster filters are broken
+
+ lib/toaster/toastergui/static/js/table.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 -- 
-2.12.0
+1.9.1
 
 
