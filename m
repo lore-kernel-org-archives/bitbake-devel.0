@@ -1,25 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id A1A4D77C6F
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 9957777D6E
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Apr 2017 13:39:17 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v3ADdIW0015836
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	Mon, 10 Apr 2017 13:39:27 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v3ADdNbp012315
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Apr 2017 06:39:19 -0700
+	Mon, 10 Apr 2017 06:39:28 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.216.91) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.294.0; Mon, 10 Apr 2017 06:39:17 -0700
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.294.0; Mon, 10 Apr 2017 06:39:24 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 10 Apr 2017 06:29:43 -0700
-Message-ID: <cover.1491830925.git.David.Reyna@windriver.com>
+Date: Mon, 10 Apr 2017 06:29:55 -0700
+Message-ID: <5f4c677c7395c7671a0ef53b9dd56adb3b22f691.1491830925.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1491830925.git.David.Reyna@windriver.com>
+References: <cover.1491830925.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.216.91]
-Subject: [PATCH 0/1] toaster: restore Toaster filter feature
+Subject: [PATCH 1/1] toaster: Toaster filters are broken
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,29 +34,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Apr 2017 13:39:19 -0000
+X-List-Received-Date: Mon, 10 Apr 2017 13:39:27 -0000
 Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-Testing revealed that a syntax fix broke the Toaster filter feature. 
-This commit reverts that and restores the functionality.
+A syntax fix inadvertantly broke the Toaster filter feature.
 
-The following changes since commit 633ad6c9f436f5d2b6ee1a005b697661a054a394:
+[YOCTO #11317]
 
-  oeqa/runtime/utils/targetbuildproject: use parent classes defaults tmpdir (2017-04-06 10:13:39 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib dreyna/toaster/filters_broken_11317
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/filters_broken_11317
-
-David Reyna (1):
-  toaster: Toaster filters are broken
-
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
+---
  lib/toaster/toastergui/static/js/table.js | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/lib/toaster/toastergui/static/js/table.js b/lib/toaster/toastergui/static/js/table.js
+index 9db3902..1bbc8d1 100644
+--- a/lib/toaster/toastergui/static/js/table.js
++++ b/lib/toaster/toastergui/static/js/table.js
+@@ -708,7 +708,7 @@ function tableInit(ctx){
+             if (action) {
+               // Setup the current selected filter; default to 'all' if
+               // no current filter selected
+-              var radioInput = action.find('input[name]="filter"]');
++              var radioInput = action.find('input[name="filter"]');
+               if ((tableParams.filter &&
+                   tableParams.filter === radioInput.val()) ||
+                   filterActionData.action_name == 'all') {
 -- 
 1.9.1
 
