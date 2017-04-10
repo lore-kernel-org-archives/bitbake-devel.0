@@ -1,30 +1,53 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 3CB0571ABD
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-io0-f174.google.com (mail-io0-f174.google.com
+	[209.85.223.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 0FAFB77BE0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Apr 2017 05:36:28 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v3A5aTnC018668
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Mon, 10 Apr 2017 06:01:10 +0000 (UTC)
+Received: by mail-io0-f174.google.com with SMTP id a103so18178679ioj.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 9 Apr 2017 22:36:29 -0700 (PDT)
-Received: from ALA-MBC.corp.ad.wrs.com ([fe80::fcbe:9b7:1141:89a1]) by
-	ALA-HCB.corp.ad.wrs.com ([147.11.189.41]) with mapi id 14.03.0294.000;
-	Sun, 9 Apr 2017 22:36:28 -0700
-From: "Reyna, David" <david.reyna@windriver.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [PATCH 0/1] toaster: fix add layer button for Machines
-Thread-Index: AdKxvFSdd9+JAvzPT2iZfAC/d8gMpQ==
-Date: Mon, 10 Apr 2017 05:36:27 +0000
-Message-ID: <5E53D14CE4667A45B9A06760DE5D13D0CF60308E@ALA-MBC.corp.ad.wrs.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [147.11.117.92]
-MIME-Version: 1.0
-Subject: [PATCH 0/1] toaster: fix add layer button for Machines
+	Sun, 09 Apr 2017 23:01:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=message-id:subject:from:to:cc:date:in-reply-to:references
+	:organization:mime-version:content-transfer-encoding;
+	bh=calYmbXNHExHFbUhXxEf8l3Z+EZmLFh7FdHrk1DWj0s=;
+	b=fvco0WBUggYB3LqD5TDIiF9lGtxgbMpSSnI3e6TVETdXQLf4awkyWReGsLqZ8VrNIl
+	QTZrKpLjDUfKQFB8xWYLlj3WJH/RP9GjDl+TJxyNYrT57aKZYTD6pvqBg+YYTirTumNQ
+	HrnEitywn7NRMvZ4nsHkLrM69GC8nxhX9JF6qwiVFWbF65czbHisYyZbZsFIaFftZ75S
+	HBYpULfyY8iTE0+PPyzptYbWP7k03ID/QI/eH5gHpepeG+Cqsls7/VENg4mvzyeEUWyI
+	tNunmOwysrmgdgl353Cv99ih3QS4hL2HEzCMEvwIKlMnYV9BMuZQ57c4Bv0WiSj91t+w
+	nLpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+	:references:organization:mime-version:content-transfer-encoding;
+	bh=calYmbXNHExHFbUhXxEf8l3Z+EZmLFh7FdHrk1DWj0s=;
+	b=KjMWuHVIKcgrIed9npL2rrUL7gi0it0GpP6UgVLPdtiX6ZagsuHyL9A0a8zmNduED+
+	HEwH5J/TcMdDfZDgYZmZx+7sJ/8J6diW5nw9MvyMomP5FVyMAROIdREoDy1wnxy7PIrY
+	NHqsN8i0YC8Mfs4jkgLXFHBr/Ozcb5nX940Yll3vRZhRMXqr2hdUCVgsLFoDePYpYxf8
+	hzLVOi96uPWFQGvGlFqH1NApkZCIwOcZkn+ZMO/Iz91PXGNqbI/f5fTwlPr1SrEnUCUV
+	px7H0rVxX+16DaHlL2SSXq5tabqcV7X+aju65VMupwfN6WLHnuM38v7Wuf648NE+b3gT
+	ZmUA==
+X-Gm-Message-State: AFeK/H07gJtB/iBAWAbKqm3B1Ko2HU+VJYQjXf6YL/AxIPksLvmVc8O+Si47B6fN1bhFLZ+c
+X-Received: by 10.107.47.102 with SMTP id j99mr50342032ioo.52.1491804071765;
+	Sun, 09 Apr 2017 23:01:11 -0700 (PDT)
+Received: from pohly-mobl1 (p57A56DBC.dip0.t-ipconnect.de. [87.165.109.188])
+	by smtp.gmail.com with ESMTPSA id
+	m83sm3657164ioi.32.2017.04.09.23.01.09
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sun, 09 Apr 2017 23:01:10 -0700 (PDT)
+Message-ID: <1491804067.10884.88.camel@intel.com>
+From: Patrick Ohly <patrick.ohly@intel.com>
+To: Juro Bystricky <juro.bystricky@intel.com>
+Date: Mon, 10 Apr 2017 08:01:07 +0200
+In-Reply-To: <1491672821-14233-1-git-send-email-juro.bystricky@intel.com>
+References: <1491672821-14233-1-git-send-email-juro.bystricky@intel.com>
+Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
+X-Mailer: Evolution 3.12.9-1+b1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH v2] command.py: multiconfig support for findBestProvider
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,45 +60,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Apr 2017 05:36:31 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 10 Apr 2017 06:01:11 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Fixing email title...
+On Sat, 2017-04-08 at 10:33 -0700, Juro Bystricky wrote:
+> In a multiconfig environment, a tinfoil call such as
+> 
+>     tinfoil.parse_recipe("multiconfig:arduino-101-sss:gcc")
+> 
+> can fail with an error such as:
+> 
+>   File "/data/master/poky/bitbake/lib/bb/tinfoil.py", line 373, in get_recipe_file
+>     raise bb.providers.NoProvider('Unable to find any recipe file matching "%s"' % pn)
+> bb.providers.NoProvider: Unable to find any recipe file matching "multiconfig:arduino-101-sss:gcc"
+> 
+> The culprit is findBestProvider, which does not handle multiconfig.
+> This patch fixes the error and in the case mentioned above the tinfoil call returns:
+> 
+>   "multiconfig:arduino-101-sss:/data/master/poky/meta/recipes-devtools/gcc/gcc_6.3.bb"
+> 
+> [YOCTO#11210]
+> 
+> Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
+> ---
+>  bitbake/lib/bb/command.py | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+> index 78a86ac..340842b 100644
+> --- a/bitbake/lib/bb/command.py
+> +++ b/bitbake/lib/bb/command.py
+> @@ -141,6 +141,13 @@ class Command:
+>          self.currentAsyncCommand = None
+>          self.cooker.finishcommand()
+>  
+> +def split_mc_pn(pn):
+> +    if pn.startswith("multiconfig:"):
+> +        mc = pn.split(":")[1]
+> +        pn = ":".join(pn.split(":")[2:])
 
------Original Message-----
-From: Reyna, David=20
-Sent: Sunday, April 09, 2017 10:13 PM
-To: bitbake-devel@lists.openembedded.org
-Cc: Reyna, David
-Subject: [PATCH 0/1] toaster: fix SDK artifact capture
+I find this more readable:
 
-From: David Reyna <David.Reyna@windriver.com>
+if pn.startswith("multiconfig:"):
+    _, mc, pn = pn.split(":", 2)
 
-"toaster: fix add layer button for Machines". Tested on Firefox and Chrome.
+Not sure whether it is worth a v3, though.
+
+-- 
+Best Regards, Patrick Ohly
+
+The content of this message is my personal opinion only and although
+I am an employee of Intel, the statements I make here in no way
+represent Intel's position on the issue, nor am I authorized to speak
+on behalf of Intel on this matter.
 
 
-The following changes since commit 633ad6c9f436f5d2b6ee1a005b697661a054a394=
-:
-
-  oeqa/runtime/utils/targetbuildproject: use parent classes defaults tmpdir=
- (2017-04-06 10:13:39 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/add_=
-layers_machine_11213
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=3Ddreyna/submit/=
-dreyna/toaster/add_layers_machine_11213
-
-David Reyna (1):
-  toaster: fix add layer button for Machines
-
- lib/toaster/toastergui/templates/machine_btn.html | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---=20
-1.9.1
 
 
