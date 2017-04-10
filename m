@@ -1,28 +1,28 @@
-Return-Path: <juro.bystricky@intel.com>
+Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 9399360069
+	by mail.openembedded.org (Postfix) with ESMTP id CED4C71C72
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Apr 2017 15:51:04 +0000 (UTC)
+	Mon, 10 Apr 2017 22:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
 	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
-	t=1491839467; x=1523375467;
-	h=from:to:cc:subject:date:message-id;
-	bh=GEtXQ+hF07RKf6mP4TqLQcqLTnmDT8XD37QSme/Zc2M=;
-	b=bhUBTqRl6LncdBq946fFYVkxt6u8CNSaAz48fTIu5lV70ySQ9d/tumLH
-	QUwgKIkRoH7m1tVwzJt2FTC69ciI3A==;
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
+	t=1491863745; x=1523399745; h=from:to:subject:date:message-id;
+	bh=GLYJ0TLffRCqb+kfNVQgi4asgyyNs0zT6M+m8G6qaHk=;
+	b=lpRYGggu3skru+25zjSeDaHHvWVxHkmZ+B3Tss6DksYod8A6yO6wB9x1
+	Ru3YcgrQ8oiVBb1S2N/qVpwGMe9aEQ==;
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
 	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	10 Apr 2017 08:51:06 -0700
+	10 Apr 2017 15:35:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.37,182,1488873600"; d="scan'208";a="85639466"
-Received: from juro-precision-t5610.jf.intel.com ([10.7.198.53])
-	by orsmga005.jf.intel.com with ESMTP; 10 Apr 2017 08:51:06 -0700
-From: Juro Bystricky <juro.bystricky@intel.com>
+X-IronPort-AV: E=Sophos;i="5.37,183,1488873600"; d="scan'208";a="87467138"
+Received: from lheah-mobl1.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.133.64])
+	by fmsmga006.fm.intel.com with ESMTP; 10 Apr 2017 15:35:43 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Apr 2017 08:51:04 -0700
-Message-Id: <1491839464-38205-1-git-send-email-juro.bystricky@intel.com>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH v3] command.py: multiconfig support for findBestProvider
+Date: Tue, 11 Apr 2017 10:35:38 +1200
+Message-Id: <cover.1491863723.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.3
+Subject: [PATCH 0/1] bitbake-diffsigs: fix traceback with no arguments
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,59 +35,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Apr 2017 15:51:05 -0000
+X-List-Received-Date: Mon, 10 Apr 2017 22:35:44 -0000
 
-In a multiconfig environment, a tinfoil call such as
+The following changes since commit 04a023c8fdea1e1812fcdcaf00345aab59f9abe1:
 
-    tinfoil.parse_recipe("multiconfig:arduino-101-sss:gcc")
+  bitbake-diffsigs: colourise output (2017-04-07 00:51:12 +0100)
 
-can fail with an error such as:
+are available in the git repository at:
 
-  File "/data/master/poky/bitbake/lib/bb/tinfoil.py", line 373, in get_recipe_file
-    raise bb.providers.NoProvider('Unable to find any recipe file matching "%s"' % pn)
-bb.providers.NoProvider: Unable to find any recipe file matching "multiconfig:arduino-101-sss:gcc"
+  git://git.yoctoproject.org/poky-contrib paule/bb-sigstuff-fix
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-sigstuff-fix
 
-The culprit is findBestProvider, which does not handle multiconfig.
-This patch fixes the error and in the case mentioned above the tinfoil call returns:
+Paul Eggleton (1):
+  bitbake-diffsigs: fix traceback with no arguments
 
-  "multiconfig:arduino-101-sss:/data/master/poky/meta/recipes-devtools/gcc/gcc_6.3.bb"
+ bin/bitbake-diffsigs | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-[YOCTO#11210]
-
-Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
----
- bitbake/lib/bb/command.py | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index 78a86ac..390d4f1 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -141,6 +141,12 @@ class Command:
-         self.currentAsyncCommand = None
-         self.cooker.finishcommand()
- 
-+def split_mc_pn(pn):
-+    if pn.startswith("multiconfig:"):
-+        _, mc, pn = pn.split(":", 2)
-+        return (mc, pn)
-+    return ('', pn)
-+
- class CommandsSync:
-     """
-     A class of synchronous commands
-@@ -425,8 +431,8 @@ class CommandsSync:
-     findProviders.readonly = True
- 
-     def findBestProvider(self, command, params):
--        pn = params[0]
--        return command.cooker.findBestProvider(pn)
-+        (mc, pn) = split_mc_pn(params[0])
-+        return command.cooker.findBestProvider(pn, mc)
-     findBestProvider.readonly = True
- 
-     def allProviders(self, command, params):
 -- 
-2.7.4
+2.9.3
 
 
