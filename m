@@ -1,28 +1,29 @@
-Return-Path: <richard@rpsys.net>
+Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 65FF677BE8
+	by mail.openembedded.org (Postfix) with ESMTP id 4499077C2A
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 11 Apr 2017 14:17:17 +0000 (UTC)
+	Tue, 11 Apr 2017 15:16:41 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTP id v3BEHHYa022038; 
-	Tue, 11 Apr 2017 15:17:18 +0100
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTP id v3BFGgkI028980; 
+	Tue, 11 Apr 2017 16:16:42 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id s8dahBagw54v; Tue, 11 Apr 2017 15:17:18 +0100 (BST)
+	with LMTP id d73GYZAoNzmP; Tue, 11 Apr 2017 16:16:42 +0100 (BST)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v3BE9tiv021100
+	v3BElHSa025632
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Tue, 11 Apr 2017 15:09:56 +0100
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1cxwUV-0007qx-MW; Tue, 11 Apr 2017 15:09:55 +0100
+	verify=NOT); Tue, 11 Apr 2017 15:47:18 +0100
+Message-ID: <1491922037.12091.20.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 11 Apr 2017 15:09:49 +0100
-Message-Id: <1491919789-30149-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] data_smart: Ensure _remove operations on newly set variables are cleared
+To: Zhixiong Chi <zhixiong.chi@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 11 Apr 2017 15:47:17 +0100
+In-Reply-To: <1491816164-18274-1-git-send-email-zhixiong.chi@windriver.com>
+References: <1491816164-18274-1-git-send-email-zhixiong.chi@windriver.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: bitbake-layers: add signal hander to avoid exception
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,53 +36,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Apr 2017 14:17:19 -0000
+X-List-Received-Date: Tue, 11 Apr 2017 15:16:42 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-We clear append/prepend on newly set variables, we should also clear
-remove operations. If we don't do this, there is no way we can actually
-delete a remove operation. Bitbake internally uses parsing=True to avoid
-these side effects when making its own internal calls.
+On Mon, 2017-04-10 at 17:22 +0800, Zhixiong Chi wrote:
+> Fixed:
+> bitbake-layers show-recipes | less
+> press "q" to exit
+> 
+> There will be a Broken pipe error output as follows:
+> "BrokenPipeError: [Errno 32] Broken pipe"
+> 
+> Signed-off-by: Zhixiong Chi <zhixiong.chi@windriver.com>
+> ---
+>  bin/bitbake-layers | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+> index 390ad05..d58022d 100755
+> --- a/bin/bitbake-layers
+> +++ b/bin/bitbake-layers
+> @@ -20,6 +20,7 @@
+>  # with this program; if not, write to the Free Software Foundation,
+> Inc.,
+>  # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+>  
+> +from signal import signal, SIGPIPE, SIG_DFL
 
-Also add a testcase to bitbake-selftest to ensure we remain consistent going
-forward from here.
+Stylistically, we tend to do:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/data_smart.py | 2 ++
- lib/bb/tests/data.py | 6 ++++++
- 2 files changed, 8 insertions(+)
+import signal
 
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index d6dd698..7dc1c68 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -546,6 +546,8 @@ class DataSmart(MutableMapping):
-                 del self.dict[var]["_append"]
-             if "_prepend" in self.dict[var]:
-                 del self.dict[var]["_prepend"]
-+            if "_remove" in self.dict[var]:
-+                del self.dict[var]["_remove"]
-             if var in self.overridedata:
-                 active = []
-                 self.need_overrides()
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index fe947f5..a4a9dd3 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -283,6 +283,12 @@ class TestConcatOverride(unittest.TestCase):
-         self.d.setVar("TEST_remove", "val")
-         self.assertEqual(self.d.getVar("TEST"), "bar")
- 
-+    def test_remove_cleared(self):
-+        self.d.setVar("TEST", "${VAL} ${BAR}")
-+        self.d.setVar("TEST_remove", "val")
-+        self.d.setVar("TEST", "${VAL} ${BAR}")
-+        self.assertEqual(self.d.getVar("TEST"), "val bar")
-+
-     # Ensure the value is unchanged if we have an inactive remove override
-     # (including that whitespace is preserved)
-     def test_remove_inactive_override(self):
--- 
-2.7.4
+signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
+so I've a small preference for that. I discussed this with Paul and we
+think other bitbake tools may also have this issue. We wondered if it
+was possible to do something more centrally in bitbake, and/or fix the
+other tools at the same time.
+
+Any thoughts on that?
+
+Cheers,
+
+Richard
+
+>  import logging
+>  import os
+>  import sys
+> @@ -35,6 +36,7 @@ import bb.msg
+>  logger = bb.msg.logger_create('bitbake-layers', sys.stdout)
+>  
+>  def main():
+> +    signal(SIGPIPE, SIG_DFL)
+>      parser = argparse.ArgumentParser(
+>          description="BitBake layers utility",
+>          epilog="Use %(prog)s <subcommand> --help to get help on a
+> specific command",
+> -- 
+> 1.9.1
+> 
 
