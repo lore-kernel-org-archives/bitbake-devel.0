@@ -1,31 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 4696A77C28
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 20C0877CA1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Apr 2017 22:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-	d=intel.com; i=@intel.com; q=dns/txt; s=intel;
-	t=1491863747; x=1523399747;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=Qx2ET9f0VQs0RhpZhJgDYqZQcQmCHW/RPX4F0I4cNUM=;
-	b=PbZuBMInzXkBJ+CWMF575X0uog/QpoFZab3BljNp1KkDQEd8gZQS4N35
-	hacUzko+rf9X2HoOVpeA0jhROmlqSA==;
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	10 Apr 2017 15:35:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.37,183,1488873600"; d="scan'208";a="87467167"
-Received: from lheah-mobl1.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com.fritz.box) ([10.255.133.64])
-	by fmsmga006.fm.intel.com with ESMTP; 10 Apr 2017 15:35:45 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 11 Apr 2017 10:35:39 +1200
-Message-Id: <ca32559f007df35d7c5bbc818c709a305acce406.1491863723.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.3
-In-Reply-To: <cover.1491863723.git.paul.eggleton@linux.intel.com>
-References: <cover.1491863723.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] bitbake-diffsigs: fix traceback with no arguments
+	Tue, 11 Apr 2017 11:34:08 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTP id v3BBXttg005160; 
+	Tue, 11 Apr 2017 12:34:09 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id wlP8jh4An8tP; Tue, 11 Apr 2017 12:34:09 +0100 (BST)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v3BBVr13005066
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Tue, 11 Apr 2017 12:31:55 +0100
+Message-ID: <1491910313.12091.13.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: David Reyna <david.reyna@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 11 Apr 2017 12:31:53 +0100
+In-Reply-To: <07c4805b646e9c2ff9d9f75febdabcf1c4c3a485.1491800468.git.David.Reyna@windriver.com>
+References: <cover.1491800468.git.David.Reyna@windriver.com>
+	<07c4805b646e9c2ff9d9f75febdabcf1c4c3a485.1491800468.git.David.Reyna@windriver.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH 1/1] toaster: fix SDK artifact capture
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,34 +37,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Apr 2017 22:35:45 -0000
+X-List-Received-Date: Tue, 11 Apr 2017 11:34:09 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-In the move over to argparse we've made the two signature file arguments
-optional and thus if -t is not in use we need to explicitly check if at
-least one signature file has been specified - and if not, show an error
-and the command-line help.
+On Sun, 2017-04-09 at 22:07 -0700, David Reyna wrote:
+> From: David Reyna <David.Reyna@windriver.com>
+> 
+> Use the TaskArtifacts event to scan the SDK and ESDK manifests
+> to cleanly collect the respective artifact files.
+> 
+> The previous method was broken when the SDK file deployment moved
+> from the do_populate_sdk[_ext] tasks to their sstate tasks. That
+> method is disabled (but not yet removed) in preparation for the
+> rest of refactor work for the parent #10283 work.
+> 
+> [YOCTO #10850]
+> 
+> Signed-off-by: David Reyna <David.Reyna@windriver.com>
+> ---
+>  bitbake/lib/bb/ui/buildinfohelper.py | 30
+> ++++++++++++++++++++++++++++++
+>  bitbake/lib/bb/ui/toasterui.py       |  4 +---
+>  meta/classes/toaster.bbclass         | 21 ++++++++++++++++-----
+>  3 files changed, 47 insertions(+), 8 deletions(-)
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bin/bitbake-diffsigs | 4 ++++
- 1 file changed, 4 insertions(+)
+This isn't really in the right format, the patches against
+toaster.bbclass needs to be sent separately to OE-Core since its in a
+separate repository.
 
-diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
-index 884be1e..eb2f859 100755
---- a/bin/bitbake-diffsigs
-+++ b/bin/bitbake-diffsigs
-@@ -147,6 +147,10 @@ else:
-             output = bb.siggen.compare_sigfiles(options.sigdatafile1, options.sigdatafile2, color=color)
-         elif options.sigdatafile1:
-             output = bb.siggen.dump_sigfile(options.sigdatafile1)
-+        else:
-+            logger.error('Must specify signature file(s) or -t/--task')
-+            parser.print_help()
-+            sys.exit(1)
-     except IOError as e:
-         logger.error(str(e))
-         sys.exit(1)
--- 
-2.9.3
+I've sorted this out and merged it as we're close to release builds and
+I appreciate this needed fixing, please just keep it in mind next time,
+thanks!
 
+Richard
 
