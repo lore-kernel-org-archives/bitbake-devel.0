@@ -1,24 +1,28 @@
-Return-Path: <Zhixiong.Chi@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 5346377BC1
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 2814E77C3B
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Apr 2017 03:29:18 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v3C3TJ8j013145
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 11 Apr 2017 20:29:19 -0700 (PDT)
-Received: from pek-zchi-d1.corp.ad.wrs.com (128.224.162.239) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.294.0; Tue, 11 Apr 2017 20:29:19 -0700
-From: Zhixiong Chi <zhixiong.chi@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 12 Apr 2017 11:29:17 +0800
-Message-ID: <1491967757-28627-1-git-send-email-zhixiong.chi@windriver.com>
-X-Mailer: git-send-email 1.9.1
+	Wed, 12 Apr 2017 10:07:53 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	12 Apr 2017 03:07:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.37,190,1488873600"; d="scan'208";a="247644397"
+Received: from lheah-mobl1.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.133.64])
+	by fmsmga004.fm.intel.com with ESMTP; 12 Apr 2017 03:07:51 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Zhixiong Chi <zhixiong.chi@windriver.com>
+Date: Wed, 12 Apr 2017 22:07:50 +1200
+Message-ID: <3838289.2vYOkdbIYi@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+In-Reply-To: <58ED9EA4.8020806@windriver.com>
+References: <1491816164-18274-1-git-send-email-zhixiong.chi@windriver.com>
+	<1491922037.12091.20.camel@linuxfoundation.org>
+	<58ED9EA4.8020806@windriver.com>
 MIME-Version: 1.0
-Subject: [v2][PATCH] bitbake-layers: add signal hander to avoid exception
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: bitbake-layers: add signal hander to avoid exception
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,42 +35,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 12 Apr 2017 03:29:19 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 12 Apr 2017 10:07:55 -0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Fixed:
-bitbake-layers show-recipes | less
-press "q" to exit
+On Wednesday, 12 April 2017 3:27:32 PM NZST Zhixiong Chi wrote:
+> On 2017=E5=B9=B404=E6=9C=8811=E6=97=A5 22:47, Richard Purdie wrote:
+> > I discussed this with Paul and we
+> > think other bitbake tools may also have this issue. We wondered if it
+> > was possible to do something more centrally in bitbake, and/or fix the
+> > other tools at the same time.
+> >=20
+> > Any thoughts on that?
+>=20
+> I agree with this, unfortunately out testing team haven't met this issue
+> in other bitbake tools yet.
 
-There will be a Broken pipe error output as follows:
-"BrokenPipeError: [Errno 32] Broken pipe"
+=46YI bitbake -e | less and then quit will trigger it with bitbake itself.
 
-Signed-off-by: Zhixiong Chi <zhixiong.chi@windriver.com>
----
- bin/bitbake-layers | 2 ++
- 1 file changed, 2 insertions(+)
+Cheers,
+Paul
 
-diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 390ad05..2b05d28 100755
---- a/bin/bitbake-layers
-+++ b/bin/bitbake-layers
-@@ -24,6 +24,7 @@ import logging
- import os
- import sys
- import argparse
-+import signal
- 
- bindir = os.path.dirname(__file__)
- topdir = os.path.dirname(bindir)
-@@ -35,6 +36,7 @@ import bb.msg
- logger = bb.msg.logger_create('bitbake-layers', sys.stdout)
- 
- def main():
-+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-     parser = argparse.ArgumentParser(
-         description="BitBake layers utility",
-         epilog="Use %(prog)s <subcommand> --help to get help on a specific command",
--- 
-1.9.1
+=2D-=20
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
