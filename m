@@ -1,52 +1,53 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pg0-f68.google.com (mail-pg0-f68.google.com [74.125.83.68])
-	by mail.openembedded.org (Postfix) with ESMTP id E4CA677D29
+Received: from mail-pf0-f196.google.com (mail-pf0-f196.google.com
+	[209.85.192.196])
+	by mail.openembedded.org (Postfix) with ESMTP id CC50177D43
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 May 2017 21:46:54 +0000 (UTC)
-Received: by mail-pg0-f68.google.com with SMTP id h64so4262346pge.3
+	Fri, 12 May 2017 21:46:57 +0000 (UTC)
+Received: by mail-pf0-f196.google.com with SMTP id n23so7195190pfb.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 May 2017 14:46:56 -0700 (PDT)
+	Fri, 12 May 2017 14:46:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=qg368w16W2kWYksiHPysek76STASdeWEK5nEdzcVO5A=;
-	b=N27XMlsRY83QaATwWeSUWTuzu6LqZq/5GD+7hK+gryZHcBL5CijKcmPLtXw5kGznLQ
-	2BPGkJVI/oLgBYMF02VnYXpFfY98qrl/trJ7qfMYZAeWaA811Lej/D1HCpwkiCSU73SW
-	15N14k/2dvzcHz6HIe13uASZCovuUX4UVoI9z5I3/h+D+wFQZwO/Vlzw8yRgp4v2lmtP
-	JudrmseRVyNc0XiMBGW58gWS16cyep3jCU2Et3bLz/XbeUo8XsHh/g7+cZhZla7/waiu
-	GfM/r8lZUrvTsjYYPDczUp5hCTo6NhLGUavCyFSmtMV8mexwZ4NLeI7ueYaYg0KFb9mi
-	ZE4w==
+	bh=Uu0YQzHqAfOHNfBjQR046mB3T5PnlO7n6u2aN8c8eEg=;
+	b=b9zGZPx5GnUB23+BCeMEo+IPMPn5+eCj/2Lq2hXY0zP5Z3rGkpSMV3aPVECc3P+5UT
+	JA27OUWb0xMjJZ8MaqB3iWK+yB1KcNs0URGMwY/0Hz0AdIRm6n7vIWzpajp4cQaP6rPc
+	Z8kHOGUu8LVTF+fvhTY+lvpFwZIbYPJNL/w1/z9XIZze09NDcYdZhsyDxoCqD35vw3t5
+	CH2NsCzo6hUrVMJkDiXtuul9C9W9vHced6/hozXBJq6K3MCGzalTQqAn/375feAlHrwm
+	00ql4+R2Fn/UNeSBLzY0kWuaplHAVQib7bG+OsUdYKAZMJSIfXjtxErqVC3ZjyxrUR0U
+	jSFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=qg368w16W2kWYksiHPysek76STASdeWEK5nEdzcVO5A=;
-	b=ZZSFBBanAvpETvStlIOuCBVoT39ipzcMqSm8VKC922JeBGlIz82cCH1FflZz3/4Jns
-	L+QkYzpDDsCUyDJW+IcyRIYyJV/Qn5xhxm5jZI6vVJta5i0IPyD8vk0huCPjLnp5PfsA
-	xULrJ7/rN/Q4q3Vvz9o4eMb/RPSxTe5kCpYdEY0bNfoPpMuZLbUxKLvOmHhb4wl/fHL+
-	mUGGzw8Ef8x587/7pBvo0viaA0OT4fLihGGeU8iu7LhDMYy97BpowqEMb42nqLU+BD5m
-	xH47LsQXubeUcRgIpKD2QRT5+AAbVSfWyF641jX8vAl92dwhbnOBjXg+/3r+6T8+XLjc
-	w/iw==
-X-Gm-Message-State: AODbwcAiwlPPAgCmfghLSiDWVGP7bRP2SVuUH4iR0e79CFjDQczs0PwE
-	YJES7fUVmmU1Eg==
-X-Received: by 10.99.39.194 with SMTP id n185mr6579602pgn.15.1494625616085;
-	Fri, 12 May 2017 14:46:56 -0700 (PDT)
+	bh=Uu0YQzHqAfOHNfBjQR046mB3T5PnlO7n6u2aN8c8eEg=;
+	b=mjyRu13oOXm0xIddTTCjIlWl0H6J8HjT8zkLK8gRhENC8MVmAYcVAl0As/F60edPGn
+	gyze+RcHb+XQtHqJMGmDRhz9TPjm4CoHyGuPmalEv1n56tNVmlJkqN7JbAgLDB0Zc9+J
+	uKxcuC1HSBPwtebskIM5KwwNNEljQCaz08QaD56mTvTaBrbRzLWuYiRYL6B1UiphVoaY
+	u1Tw+tEsadJbz/tfWeEOTmV9rW8xxUBCdwwBO4dkw2LNGEB2eHT1Mb9iLb0yYyGVxhYw
+	lr1aQiebME1IwZiMnTApdrkVG+gMGUE1Qj8Ohf/NZxDrfcqTAqt5gNSoh32j/AfTFi9q
+	R3bw==
+X-Gm-Message-State: AODbwcBvTXmkKngt8rxvPzpeKs8l/FHxIgzUu/Xma3oqXN18SY9PVrbw
+	hAcx+VVi14+PiIb39ik=
+X-Received: by 10.99.151.9 with SMTP id n9mr6663164pge.199.1494625618894;
+	Fri, 12 May 2017 14:46:58 -0700 (PDT)
 Received: from svr-pkl-eng-07.mgc.mentorg.com ([110.93.212.98])
 	by smtp.gmail.com with ESMTPSA id
-	v63sm1244051pfi.133.2017.05.12.14.46.53
+	v63sm1244051pfi.133.2017.05.12.14.46.56
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 12 May 2017 14:46:54 -0700 (PDT)
+	Fri, 12 May 2017 14:46:57 -0700 (PDT)
 From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 13 May 2017 02:46:30 +0500
-Message-Id: <57fc90550504cbdb2b843126aa22fc79d0340608.1494623828.git.chris_larson@mentor.com>
+Date: Sat, 13 May 2017 02:46:31 +0500
+Message-Id: <9a674afd4d31b51fb8c7cddc40a8bfe55890095f.1494623828.git.chris_larson@mentor.com>
 X-Mailer: git-send-email 2.11.1
 In-Reply-To: <cover.1494623828.git.chris_larson@mentor.com>
 References: <cover.1494623828.git.chris_larson@mentor.com>
 In-Reply-To: <cover.1494623828.git.chris_larson@mentor.com>
 References: <cover.1494623828.git.chris_larson@mentor.com>
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH 5/8] fetch/git: add support for keeping extra refs for shallow
+Subject: [PATCH 6/8] fetch/gitsm: add support for shallow mirror tarballs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,135 +60,101 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 May 2017 21:46:55 -0000
+X-List-Received-Date: Fri, 12 May 2017 21:46:58 -0000
 
-By default, all unused refs (branches & tags) are removed from the repository,
-as shallow processing scales with the number of refs it has to process. Add
-the ability to explicitly specify additional refs to keep. This is
-particularly useful for recipes with custom checkout processes, or whose
-git-based versioning requires a tag be available (i.e. for `git describe
---tags`). The new `BB_GIT_SHALLOW_EXTRA_REFS` variable is a space-separated
-list of refs, fully specified, and support wildcards.
-
-Example usages:
-
-    BB_GIT_SHALLOW_EXTRA_REFS = "refs/tags/v1.0"
-    BB_GIT_SHALLOW_EXTRA_REFS += "refs/heads/*"
+When we're building from a shallow mirror tarball, we don't want to do
+anything with ud.clonedir, as it's not being used when we unpack. As such,
+disable updating the submodules in that case. Also include the repositories in
+.git/modules in the shallow tarball. It does not actually make the submodule
+repositories shallow at this time.
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 ---
- lib/bb/fetch2/git.py  | 22 +++++++++++++++++++++-
- lib/bb/tests/fetch.py | 42 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 63 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/gitsm.py | 17 +++++++++++------
+ lib/bb/tests/fetch.py  | 31 +++++++++++++++++++++++++++----
+ 2 files changed, 38 insertions(+), 10 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 250109bf..aa972c5c 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -72,6 +72,7 @@ Supported SRC_URI options are:
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index a95584c8..0aff1008 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -117,14 +117,19 @@ class GitSM(Git):
+     def download(self, ud, d):
+         Git.download(self, ud, d)
  
- import collections
- import errno
-+import fnmatch
- import os
- import re
- import subprocess
-@@ -180,6 +181,7 @@ class Git(FetchMethod):
-             ud.cloneflags += " --mirror"
- 
-         ud.shallow = d.getVar("BB_GIT_SHALLOW") == "1"
-+        ud.shallow_extra_refs = (d.getVar("BB_GIT_SHALLOW_EXTRA_REFS") or "").split()
- 
-         depth_default = d.getVar("BB_GIT_SHALLOW_DEPTH")
-         if depth_default is not None:
-@@ -265,8 +267,13 @@ class Git(FetchMethod):
-                 if depth:
-                     tarballname = "%s-%s" % (tarballname, depth)
- 
-+            shallow_refs = []
-             if not ud.nobranch:
--                tarballname = "%s_%s" % (tarballname, "_".join(sorted(ud.branches.values())).replace('/', '.'))
-+                shallow_refs.extend(ud.branches.values())
-+            if ud.shallow_extra_refs:
-+                shallow_refs.extend(r.replace('refs/heads/', '').replace('*', 'ALL') for r in ud.shallow_extra_refs)
-+            if shallow_refs:
-+                tarballname = "%s_%s" % (tarballname, "_".join(sorted(shallow_refs)).replace('/', '.'))
- 
-             fetcher = self.__class__.__name__.lower()
-             ud.shallowtarball = '%sshallow_%s.tar.gz' % (fetcher, tarballname)
-@@ -408,6 +415,19 @@ class Git(FetchMethod):
-         # Map srcrev+depths to revisions
-         shallow_revisions = runfetchcmd("%s rev-parse %s" % (ud.basecmd, " ".join(to_parse)), d, workdir=dest).splitlines()
- 
-+        # Apply extra ref wildcards
-+        all_refs = runfetchcmd('%s for-each-ref "--format=%%(refname)"' % ud.basecmd,
-+                               d, workdir=dest).splitlines()
-+        for r in ud.shallow_extra_refs:
-+            if not ud.bareclone:
-+                r = r.replace('refs/heads/', 'refs/remotes/origin/')
+-        submodules = self.uses_submodules(ud, d, ud.clonedir)
+-        if submodules:
+-            self.update_submodules(ud, d)
++        if not ud.shallow or ud.localpath != ud.fullshallow:
++            submodules = self.uses_submodules(ud, d, ud.clonedir)
++            if submodules:
++                self.update_submodules(ud, d)
 +
-+            if '*' in r:
-+                matches = filter(lambda a: fnmatch.fnmatchcase(a, r), all_refs)
-+                shallow_branches.extend(matches)
-+            else:
-+                shallow_branches.append(r)
++    def clone_shallow_local(self, ud, dest, d):
++        super(GitSM, self).clone_shallow_local(ud, dest, d)
 +
-         # Make the repository shallow
-         shallow_cmd = ['git', 'make-shallow', '-s']
-         for b in shallow_branches:
++        runfetchcmd('cp -fpPRH "%s/modules" "%s/"' % (ud.clonedir, os.path.join(dest, '.git')), d)
+ 
+     def unpack(self, ud, destdir, d):
+         Git.unpack(self, ud, destdir, d)
+-        
+-        submodules = self.uses_submodules(ud, d, ud.destdir)
+-        if submodules:
++
++        if self.uses_submodules(ud, d, ud.destdir):
+             runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d, workdir=ud.destdir)
+             runfetchcmd(ud.basecmd + " submodule update --init --recursive", d, workdir=ud.destdir)
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 0b0116b4..3e2ce530 100644
+index 3e2ce530..2a9019b0 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -1293,6 +1293,48 @@ class GitShallowTest(FetcherTest):
-         with self.assertRaises(bb.fetch2.FetchError):
-             self.fetch()
+@@ -1027,12 +1027,14 @@ class GitShallowTest(FetcherTest):
+             cwd = self.gitdir
+         return bb.process.run(cmd, cwd=cwd)[0]
  
-+    def test_shallow_extra_refs(self):
+-    def add_empty_file(self, path, msg=None):
++    def add_empty_file(self, path, cwd=None, msg=None):
+         if msg is None:
+             msg = path
+-        open(os.path.join(self.srcdir, path), 'w').close()
+-        self.git(['add', path], self.srcdir)
+-        self.git(['commit', '-m', msg, path], self.srcdir)
++        if cwd is None:
++            cwd = self.srcdir
++        open(os.path.join(cwd, path), 'w').close()
++        self.git(['add', path], cwd)
++        self.git(['commit', '-m', msg, path], cwd)
+ 
+     def fetch(self, uri=None):
+         if uri is None:
+@@ -1211,6 +1213,27 @@ class GitShallowTest(FetcherTest):
+         self.assertRefs(['master', 'origin/master'])
+         self.assertRevCount(1)
+ 
++    def test_shallow_submodules(self):
 +        self.add_empty_file('a')
 +        self.add_empty_file('b')
-+        self.git('branch a_branch', cwd=self.srcdir)
-+        self.assertRefs(['master', 'a_branch'], cwd=self.srcdir)
-+        self.assertRevCount(2, cwd=self.srcdir)
 +
-+        self.d.setVar('BB_GIT_SHALLOW_EXTRA_REFS', 'refs/heads/a_branch')
-+        self.fetch_shallow()
++        smdir = os.path.join(self.tempdir, 'gitsubmodule')
++        bb.utils.mkdirhier(smdir)
++        self.git('init', cwd=smdir)
++        self.add_empty_file('asub', cwd=smdir)
 +
-+        self.assertRefs(['master', 'origin/master', 'origin/a_branch'])
++        self.git('submodule init', cwd=self.srcdir)
++        self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
++        self.git('submodule update', cwd=self.srcdir)
++        self.git('commit -m submodule -a', cwd=self.srcdir)
++
++        uri = 'gitsm://%s;protocol=file;subdir=${S}' % self.srcdir
++        fetcher, ud = self.fetch_shallow(uri)
++
 +        self.assertRevCount(1)
++        assert './.git/modules/' in bb.process.run('tar -tzf %s' % os.path.join(self.dldir, ud.mirrortarballs[0]))[0]
++        assert os.listdir(os.path.join(self.gitdir, 'gitsubmodule'))
 +
-+    def test_shallow_extra_refs_wildcard(self):
-+        self.add_empty_file('a')
-+        self.add_empty_file('b')
-+        self.git('branch a_branch', cwd=self.srcdir)
-+        self.git('tag v1.0', cwd=self.srcdir)
-+        self.assertRefs(['master', 'a_branch', 'v1.0'], cwd=self.srcdir)
-+        self.assertRevCount(2, cwd=self.srcdir)
-+
-+        self.d.setVar('BB_GIT_SHALLOW_EXTRA_REFS', 'refs/tags/*')
-+        self.fetch_shallow()
-+
-+        self.assertRefs(['master', 'origin/master', 'v1.0'])
-+        self.assertRevCount(1)
-+
-+    def test_shallow_missing_extra_refs(self):
-+        self.add_empty_file('a')
-+        self.add_empty_file('b')
-+
-+        self.d.setVar('BB_GIT_SHALLOW_EXTRA_REFS', 'refs/heads/foo')
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            self.fetch()
-+
-+    def test_shallow_missing_extra_refs_wildcard(self):
-+        self.add_empty_file('a')
-+        self.add_empty_file('b')
-+
-+        self.d.setVar('BB_GIT_SHALLOW_EXTRA_REFS', 'refs/tags/*')
-+        self.fetch()
-+
-     if os.environ.get("BB_SKIP_NETTESTS") == "yes":
-         print("Unset BB_SKIP_NETTESTS to run network tests")
-     else:
+     def test_shallow_multi_one_uri(self):
+         # Create initial git repo
+         self.add_empty_file('a')
 -- 
 2.11.1
 
