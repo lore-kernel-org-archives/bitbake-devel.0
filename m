@@ -1,41 +1,46 @@
-Return-Path: <prvs=63054136f5=michael.davis@essvote.com>
-X-Greylist: delayed 901 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 12 May 2017 21:07:08 UTC
-Received: from mail1.essvote.com (mail1.essvote.com [66.37.226.19])
-	by mail.openembedded.org (Postfix) with ESMTP id 37D3671A3A
+Return-Path: <kergoth@gmail.com>
+Received: from mail-pg0-f65.google.com (mail-pg0-f65.google.com [74.125.83.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 23B4860766
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 May 2017 21:07:08 +0000 (UTC)
-X-AuditID: 0a000213-dcfff7000000261c-bf-5916207552b4
-Received: from ESS-EX01.essvote.corp.local (Unknown_Domain [172.16.110.40])
-	by mail1.essvote.com (Symantec Messaging Gateway) with SMTP id
-	8A.10.09756.57026195; Fri, 12 May 2017 15:52:08 -0500 (CDT)
-Received: from ESS-EX01.essvote.corp.local ([::1]) by
-	ESS-EX01.essvote.corp.local ([::1]) with mapi id 14.03.0301.000;
-	Fri, 12 May 2017 15:52:05 -0500
-From: "Davis, Michael" <michael.davis@essvote.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel][PATCH] lib/bb/fetch2: Fix npm tarball fetch
-Thread-Index: AQHSy2GcTLr4Jd/JeEy2u45yt+GfHQ==
-Date: Fri, 12 May 2017 20:52:04 +0000
-Message-ID: <20170512205203.20459-1-michael.davis@essvote.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.1.20.66]
-MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsWyRiBPQ7dCQSzSYMdEaYvrR0MdGD3ObVzB
-	GMAYxW2TlFhSFpyZnqdvl8CdcXz6H6aC2ewVD7YuZWxgXMvaxcjJISFgIjG39T57FyMXh5DA
-	CUaJjkvN7CAJIYFZjBKXZvmB2GwCRhLnrm9iBLFFBIIl1q3qYQKxmQUMJN5t3gg2SFjARWL3
-	zRXMEDWeEkd65zFB2HoSx5f+B+tlEVCVeLFjIVg9r4CdRMPF+2A2o4CYxPdTa6BmikvcejKf
-	CeI4AYkle84zQ9iiEi8f/4M6Wk5i3buTUPV6EjemTmGDsLUlli18zQwxX1Di5MwnLBMYhWch
-	GTsLScssJC2zkLQsYGRZxSiYm5iZY6iXWlxcll+Sqpecn7uJERjaXAxMwjsY50yxPcQowMGo
-	xMN7YaNopBBrYllxZe4hRmkOFiVx3mcrmSOFBNITS1KzU1MLUovii0pzUosPMTJxcB5ilODg
-	khIpTs1LSS1KLC3JiAfFUHwxMIqkGhivngn391uky9VrISbsYJTzK1zlkIKNwI3UZVOUQnY8
-	u2kYKN947XjZvg26L8UEb+xyy+mftizeYaLorMuL7gm5suzOmC1SVf7V47PmB57SaX6TT6/Y
-	N41PWqBEo6fT08T7830noch9+89xZj/rTT9jut9H5tm9oosN569cdmeWO9VVfP7uJGklluKM
-	REMt5qLiRABNgJARaQIAAA==
-Subject: [PATCH] lib/bb/fetch2: Fix npm tarball fetch
+	Fri, 12 May 2017 21:46:39 +0000 (UTC)
+Received: by mail-pg0-f65.google.com with SMTP id u187so8978198pgb.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 12 May 2017 14:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id;
+	bh=AEYYV2S0ByON9AfH7QMEHpxHvFzoAtE9WF/yUolbhWk=;
+	b=POKCrW/JaN9gWpfVGImq9vpx60KBajKNKm2QV0bDufNFb1u1KQbHz5T3HLYuy8HVKU
+	HGaWITfPKvUBCAwE4JjJpDf5HF3lKK9f5vIjlnYOB1oHnaO4wpxAO+fQyAH1P6Bog6su
+	sKCBQUO8pfp74ACNk7QUzPxB6Jb1iv+803Y4dMXjD7DoKwItyJwqZ2vyCIZ+H65TY4tt
+	ogUWbKsFlQ+QSmeZbgWJeAdwrvA6tYhpwSdhLyef0dIku3bjSnGD/7fTrLhy6sCtrzkU
+	XCCk/2EzSBOGjbhvv7I+zNBUkjwSrgLYzS2iCZvlThS5+dj9t2lqWyPKf/5TpXREqtsY
+	WseA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=AEYYV2S0ByON9AfH7QMEHpxHvFzoAtE9WF/yUolbhWk=;
+	b=GtoK0acP2wJuytzYoGuGDXsV3RoM+TCyl/saQilOObjEpe/aXECEHIGEt9XWi0qG7/
+	uCy1KDjDp9HOf19mvaJ2ygQli6dF+n4x0DzSswCDwtdrpFxluUYQD/N83BfFldROF7Yy
+	HvYsDe6PBJerFM4+GcwlmWt8bxu9SXCNR5/85EU4G9cWNFXRPzmtf3bj9eE5C1hEFX1i
+	B6+8zliWSRvc/IrvpDl9cR/2MeFCoXo9/f5MoLG0BdizVknIIP+TN/HYioMiunbpTWpK
+	i1Ig+t1KY3LxOe22KEzG5tn6q5j3QQLA2IFEsqqNpMR7RF5/ExCewzA6a+weGNzfRJVJ
+	Yerg==
+X-Gm-Message-State: AODbwcArT2EehFffW8aDNZjQKJgkVltiY6pIByRaNpQy/v92q/S+GorV
+	uOT37S398Jh9SlNfmPA=
+X-Received: by 10.84.143.36 with SMTP id 33mr8349075ply.45.1494625600897;
+	Fri, 12 May 2017 14:46:40 -0700 (PDT)
+Received: from svr-pkl-eng-07.mgc.mentorg.com ([110.93.212.98])
+	by smtp.gmail.com with ESMTPSA id
+	v63sm1244051pfi.133.2017.05.12.14.46.38
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 12 May 2017 14:46:39 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sat, 13 May 2017 02:46:25 +0500
+Message-Id: <cover.1494623828.git.chris_larson@mentor.com>
+X-Mailer: git-send-email 2.11.1
+Subject: [PATCH 0/8] Add support for shallow mirror tarballs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,34 +53,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 May 2017 21:07:09 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 12 May 2017 21:46:40 -0000
 
-Tarballs generated by enabling mirror tarballs could not be found by the
-fetch for the npm.  This fixes setting the path variable in decode url
-so they can be matched.
+The latest incarnation of the support for git shallow mirror tarballs. Updated
+with ud.mirrortarball removed, fixes for gitsm and gitannex, more granular
+commits to ease review, and unit tests added. Please let me know what you
+think. Thanks.
 
-Signed-off-by: Michael Davis <michael.davis@essvote.com>
----
- lib/bb/fetch2/__init__.py | 2 ++
- 1 file changed, 2 insertions(+)
+The following changes since commit 21d963149b5d97452420230a252101115b708d85:
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 136fc29..117c890 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -393,6 +393,8 @@ def decodeurl(url):
-                     raise MalformedUrl(url, "The URL: '%s' is invalid: par=
-ameter %s does not specify a value (missing '=3D')" % (url, s))
-                 s1, s2 =3D s.split('=3D')
-                 p[s1] =3D s2
-+                if type =3D=3D 'npm' and s1 =3D=3D 'name':
-+                    path =3D '/' + s2
-=20
-     return type, host, urllib.parse.unquote(path), user, pswd, p
-=20
---=20
-2.9.3
+  toaster: move release lookup from morty to pyro (2017-04-20 07:59:30 +0100)
+
+are available in the git repository at:
+
+  git@github.com:kergoth/bitbake.git shallow
+
+for you to fetch changes up to b4ca8fa8422818f7d09fbb1988bc189d2a8e7b52:
+
+  fetch/git: add support for removing arbitrary revs for shallow (2017-05-13 01:22:30 +0500)
+
+----------------------------------------------------------------
+Christopher Larson (8):
+      fetch: support multiple mirror tarball filenames
+      git-make-shallow: add script to make a git repo shallow
+      fetch/git: add support for shallow mirror tarballs
+      fetch/git: support per-branch/per-url depths for shallow
+      fetch/git: add support for keeping extra refs for shallow
+      fetch/gitsm: add support for shallow mirror tarballs
+      fetch/gitannex: add support for shallow mirror tarballs
+      fetch/git: add support for removing arbitrary revs for shallow
+
+ bin/git-make-shallow      | 165 +++++++++++++
+ lib/bb/fetch2/__init__.py |  72 +++---
+ lib/bb/fetch2/git.py      | 189 +++++++++++++--
+ lib/bb/fetch2/gitannex.py |  23 +-
+ lib/bb/fetch2/gitsm.py    |  17 +-
+ lib/bb/fetch2/hg.py       |   5 +-
+ lib/bb/fetch2/npm.py      |   7 +-
+ lib/bb/tests/fetch.py     | 603 ++++++++++++++++++++++++++++++++++++++++++++++
+ 8 files changed, 1017 insertions(+), 64 deletions(-)
+ create mode 100755 bin/git-make-shallow
+
+-- 
+2.11.1
+
 
