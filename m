@@ -1,35 +1,41 @@
-Return-Path: <gary@mlbassoc.com>
-X-Greylist: delayed 307 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 12 May 2017 15:29:19 UTC
-Received: from mail.analogue-micro.com (mail.analogue-micro.com
-	[217.144.149.242])
-	by mail.openembedded.org (Postfix) with ESMTP id B31A671DEE
+Return-Path: <prvs=63054136f5=michael.davis@essvote.com>
+X-Greylist: delayed 901 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 12 May 2017 21:07:08 UTC
+Received: from mail1.essvote.com (mail1.essvote.com [66.37.226.19])
+	by mail.openembedded.org (Postfix) with ESMTP id 37D3671A3A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 May 2017 15:29:19 +0000 (UTC)
-Received: by mail.analogue-micro.com (Postfix, from userid 999)
-	id 5925068A019; Fri, 12 May 2017 16:24:12 +0100 (BST)
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
-	loki.analogue-micro-ltd.com
-X-Spam-Level: *
-X-Spam-Status: No, score=1.7 required=5.0 tests=ALL_TRUSTED,BAYES_20,
-	DNS_FROM_AHBL_RHSBL autolearn=no version=3.3.2
-Received: from zeus.mlbassoc.com (unknown [10.8.0.2])
-	by mail.analogue-micro.com (Postfix) with ESMTP id C0A5D68A019;
-	Fri, 12 May 2017 16:24:11 +0100 (BST)
-Received: from [127.0.0.1] (localhost.localdomain [127.0.0.1])
-	by zeus.mlbassoc.com (Postfix) with ESMTP id 3D1CC6740223;
-	Fri, 12 May 2017 17:24:11 +0200 (CEST)
-To: bitbake-devel@lists.openembedded.org
-References: <1494577570-6677-1-git-send-email-richard.purdie@linuxfoundation.org>
-	<6210109a-1d23-e245-00df-a70594eabb0b@windriver.com>
-From: Gary Thomas <gary@mlbassoc.com>
-Message-ID: <3dee6b52-5067-fc06-9e2d-a1db5bb5d90b@mlbassoc.com>
-Date: Fri, 12 May 2017 17:24:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.8.0
+	Fri, 12 May 2017 21:07:08 +0000 (UTC)
+X-AuditID: 0a000213-dcfff7000000261c-bf-5916207552b4
+Received: from ESS-EX01.essvote.corp.local (Unknown_Domain [172.16.110.40])
+	by mail1.essvote.com (Symantec Messaging Gateway) with SMTP id
+	8A.10.09756.57026195; Fri, 12 May 2017 15:52:08 -0500 (CDT)
+Received: from ESS-EX01.essvote.corp.local ([::1]) by
+	ESS-EX01.essvote.corp.local ([::1]) with mapi id 14.03.0301.000;
+	Fri, 12 May 2017 15:52:05 -0500
+From: "Davis, Michael" <michael.davis@essvote.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel][PATCH] lib/bb/fetch2: Fix npm tarball fetch
+Thread-Index: AQHSy2GcTLr4Jd/JeEy2u45yt+GfHQ==
+Date: Fri, 12 May 2017 20:52:04 +0000
+Message-ID: <20170512205203.20459-1-michael.davis@essvote.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.1.20.66]
 MIME-Version: 1.0
-In-Reply-To: <6210109a-1d23-e245-00df-a70594eabb0b@windriver.com>
-Subject: Re: [PATCH] data_smart: Don't cache/process capitalised overrides
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsWyRiBPQ7dCQSzSYMdEaYvrR0MdGD3ObVzB
+	GMAYxW2TlFhSFpyZnqdvl8CdcXz6H6aC2ewVD7YuZWxgXMvaxcjJISFgIjG39T57FyMXh5DA
+	CUaJjkvN7CAJIYFZjBKXZvmB2GwCRhLnrm9iBLFFBIIl1q3qYQKxmQUMJN5t3gg2SFjARWL3
+	zRXMEDWeEkd65zFB2HoSx5f+B+tlEVCVeLFjIVg9r4CdRMPF+2A2o4CYxPdTa6BmikvcejKf
+	CeI4AYkle84zQ9iiEi8f/4M6Wk5i3buTUPV6EjemTmGDsLUlli18zQwxX1Di5MwnLBMYhWch
+	GTsLScssJC2zkLQsYGRZxSiYm5iZY6iXWlxcll+Sqpecn7uJERjaXAxMwjsY50yxPcQowMGo
+	xMN7YaNopBBrYllxZe4hRmkOFiVx3mcrmSOFBNITS1KzU1MLUovii0pzUosPMTJxcB5ilODg
+	khIpTs1LSS1KLC3JiAfFUHwxMIqkGhivngn391uky9VrISbsYJTzK1zlkIKNwI3UZVOUQnY8
+	u2kYKN947XjZvg26L8UEb+xyy+mftizeYaLorMuL7gm5suzOmC1SVf7V47PmB57SaX6TT6/Y
+	N41PWqBEo6fT08T7830noch9+89xZj/rTT9jut9H5tm9oosN569cdmeWO9VVfP7uJGklluKM
+	REMt5qLiRABNgJARaQIAAA==
+Subject: [PATCH] lib/bb/fetch2: Fix npm tarball fetch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,57 +48,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 May 2017 15:29:21 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 12 May 2017 21:07:09 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-On 2017-05-12 15:54, Mark Hatle wrote:
-> On 5/12/17 3:26 AM, Richard Purdie wrote:
->> Bitbake now only processes overrides which are lowercase since
->> this allows variables like SRC_URI not to pollute the cache.
->>
->> There was a corner case where XXX_append_SomeThing was still being
->> processed (yet XXX_append_SomeThing_SomeOtherThing would not be).
->>
->> This patch ensures we're consistent and only process lowercase
->> _append/_prepend and _remove operators too.
->
-> I just realized a ramification of the previous and this change.  It prevents
-> recipe/package names with uppercase characters in them since overrides will no
-> longer be processed (like pn-....).
+Tarballs generated by enabling mirror tarballs could not be found by the
+fetch for the npm.  This fixes setting the path variable in decode url
+so they can be matched.
 
-Did recipe/package names *ever* work with uppercase letters?  Certainly not for me!
+Signed-off-by: Michael Davis <michael.davis@essvote.com>
+---
+ lib/bb/fetch2/__init__.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
->
-> This is something that probably should be documented.  "Don't use uppercase!"
->
-> --Mark
->
->> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->> ---
->>  lib/bb/data_smart.py | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
->> index 7dc1c68..7b09af5 100644
->> --- a/lib/bb/data_smart.py
->> +++ b/lib/bb/data_smart.py
->> @@ -39,7 +39,7 @@ from bb.COW  import COWDictBase
->>  logger = logging.getLogger("BitBake.Data")
->>
->>  __setvar_keyword__ = ["_append", "_prepend", "_remove"]
->> -__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend|_remove)(_(?P<add>.*))?$')
->> +__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend|_remove)(_(?P<add>[^A-Z]*))?$')
->>  __expand_var_regexp__ = re.compile(r"\${[^{}@\n\t :]+}")
->>  __expand_python_regexp__ = re.compile(r"\${@.+?}")
->>
->>
->
-
-
--- 
-------------------------------------------------------------
-Gary Thomas                 |  Consulting for the
-MLB Associates              |    Embedded world
-------------------------------------------------------------
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 136fc29..117c890 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -393,6 +393,8 @@ def decodeurl(url):
+                     raise MalformedUrl(url, "The URL: '%s' is invalid: par=
+ameter %s does not specify a value (missing '=3D')" % (url, s))
+                 s1, s2 =3D s.split('=3D')
+                 p[s1] =3D s2
++                if type =3D=3D 'npm' and s1 =3D=3D 'name':
++                    path =3D '/' + s2
+=20
+     return type, host, urllib.parse.unquote(path), user, pswd, p
+=20
+--=20
+2.9.3
 
