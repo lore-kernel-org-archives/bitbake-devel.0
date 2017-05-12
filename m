@@ -1,53 +1,52 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pf0-f195.google.com (mail-pf0-f195.google.com
-	[209.85.192.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 3FCE777D19
+Received: from mail-pg0-f45.google.com (mail-pg0-f45.google.com [74.125.83.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 58C6F77D11
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 May 2017 21:46:42 +0000 (UTC)
-Received: by mail-pf0-f195.google.com with SMTP id u26so8301879pfd.2
+	Fri, 12 May 2017 21:46:46 +0000 (UTC)
+Received: by mail-pg0-f45.google.com with SMTP id x64so16283313pgd.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 May 2017 14:46:44 -0700 (PDT)
+	Fri, 12 May 2017 14:46:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=QLJWpa9+VqKyd/Twm+5IzKOaaBULbmvRacx8VkjsQ88=;
-	b=nzG3fSR1o/zSZsvxfNo7m9jE2M0X+74+rxNBihmf5CgPlnuHrhCc0X9MtP5sFeV0VO
-	iT1jBtrAOjNCE0gjjdT0sSBSWksd+lkyU+HNON6LRZoktHdoOs9fLwCGPDkMNR7AvVxl
-	PinrugeVVsssf6TK2eeIdAk4b7pWarPF+z4SXmlXDO5yNiQqwy1mrWy2hDRaSMtZ/5hS
-	SLUFpyIjdJ2C5ri4zWyo9zEPUHOrWaBoeOjz9rz3lnNrqPd8WwSRIQro0m+7XZznZ5La
-	yyiDU3ItjK8VtCgbV7EWtT3ZczBUYz95R0uHBgd9gj2A/p8zAo8S5Ylz1CknxaNPR/rR
-	T0pg==
+	bh=HYh28nm7wtfQU7JGdncmWk1jk6fBGBmFgaqlIyOH1iE=;
+	b=iNNB8PL8LIOCeepMPI40d64pEU0jsYtY9NFJywE5ehVQgjyr485AoEp62TVg9eOuYk
+	q17Od612ZY0KBl5jaoPzbr4G98U+F+Ah0Uhapr4+7idpNpUArYDM/HODMJRo28qBXMQb
+	Iwsh5aq9xIW1jHBVM0y8Q9pPVqN4t6msuHR3YvhrDBjwJtteBck8UZoXvHc8yuugbs8T
+	XsYpZFjcrVaq12jf6bxLo3kI0guaBxbPlyrGbj8hsutnaX2OrPXp8WLGHk0BHfS8BKnE
+	691xVJ2PnbTQ1brc4ZIJo7c74/K57GUTsW7EFz58XS8g3ZIpZlT6k5MtMOH17reB9k6B
+	yBxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=QLJWpa9+VqKyd/Twm+5IzKOaaBULbmvRacx8VkjsQ88=;
-	b=lEyqzcQy1wbI4mdpQR12FplFnQc8OPSgf/mbFTV3Urw4/BSmQu5I07/c+vAwFEUXQp
-	r2eHou10OCJV7QQh6RVV0hsaBOISNmNwqPMPHemDVOHomDirOR/t+InswQgmu2BNwTt2
-	eIXLtGzhwlH349oyN3iaAE0hJYfwApdZAWVBJkzzEfIBpUkslfwC8XzEP1JD3ZRue5gd
-	at/ZHXKnmLa3cnN2p1Lv1aQXZBCUKAwNgeBArRNxlqKAl3pfXH2kbS2MTnJwRYVWeRHe
-	yE5ema2JXJVvBA2CKJYP7F2KJ67hg1Q2u5kBQkAtdkWjOi5m0zMVLgpDFShEnDaUB5c2
-	6XDA==
-X-Gm-Message-State: AODbwcCDctykUgdStnZF3AIJY1qLiiKiAZMUxgtErtb3BKT8JdZegHJi
-	9l/f57cZQckbNQ==
-X-Received: by 10.84.222.136 with SMTP id x8mr8636120pls.50.1494625604221;
-	Fri, 12 May 2017 14:46:44 -0700 (PDT)
+	bh=HYh28nm7wtfQU7JGdncmWk1jk6fBGBmFgaqlIyOH1iE=;
+	b=YvEKgciuR6oExHq75II7RW487PiB+OrZVPnekkQhi9StwkbdpZM0wt2XFfKUQ2mxZf
+	ldJzcF1j17TRaI0P/U8A+Tua1Cr39dzIpMlBU3B8J7u5ZwWq5OW7dEIpYzgPnJTgZa+h
+	4XS0eFvFiB+MtX+rI3limKfo3fofoz4rKGspE+E4UithwsKUTF08Gf09yMw8+KSatMPR
+	P5v1UsgjnE4IDJ2bf0kSUqf49uP+1st6xFazf3MkIBFEsI04br0knrwFr5XEEnACf1na
+	Zw3XfVKDsX4icFCrTHcfVcvNX0Kh2O18VdkItSZ5KxRzOzLABBygdKJangwm4SfNuztg
+	fSyw==
+X-Gm-Message-State: AODbwcAoOdXzxFriswY7EPgJVfoLCm+BvAS/IaSJSA/AjMdjChw3p1sQ
+	txCf1Cho7TVwOg==
+X-Received: by 10.99.60.81 with SMTP id i17mr6533068pgn.183.1494625607317;
+	Fri, 12 May 2017 14:46:47 -0700 (PDT)
 Received: from svr-pkl-eng-07.mgc.mentorg.com ([110.93.212.98])
 	by smtp.gmail.com with ESMTPSA id
-	v63sm1244051pfi.133.2017.05.12.14.46.41
+	v63sm1244051pfi.133.2017.05.12.14.46.44
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 12 May 2017 14:46:42 -0700 (PDT)
+	Fri, 12 May 2017 14:46:46 -0700 (PDT)
 From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 13 May 2017 02:46:26 +0500
-Message-Id: <e045a84d2856d22fd92c9533df331ed17b83d37f.1494623828.git.chris_larson@mentor.com>
+Date: Sat, 13 May 2017 02:46:27 +0500
+Message-Id: <c3f2c1773900f6f0282d72861802d540cf59018f.1494623828.git.chris_larson@mentor.com>
 X-Mailer: git-send-email 2.11.1
 In-Reply-To: <cover.1494623828.git.chris_larson@mentor.com>
 References: <cover.1494623828.git.chris_larson@mentor.com>
 In-Reply-To: <cover.1494623828.git.chris_larson@mentor.com>
 References: <cover.1494623828.git.chris_larson@mentor.com>
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH 1/8] fetch: support multiple mirror tarball filenames
+Subject: [PATCH 2/8] git-make-shallow: add script to make a git repo shallow
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,201 +59,349 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 May 2017 21:46:43 -0000
+X-List-Received-Date: Fri, 12 May 2017 21:46:46 -0000
 
-Remove ud.mirrortarball in favor of ud.mirrortarballs. Each tarball will be
-attempted, in order, and the first available will be used. This is needed for
-git shallow mirror tarball support, as we want to be able to use either
-a shallow or full mirror tarball.
+This script will be used by the git fetcher to create shallow mirror tarballs.
+
+    usage: git-make-shallow [-h] [--ref REF] [--shrink] REVISION [REVISION ...]
+
+    Remove the history of the specified revisions, then optionally filter the
+    available refs to those specified.
+
+    positional arguments:
+      REVISION           a git revision/commit
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      --ref REF, -r REF  remove all but the specified refs (cumulative)
+      --shrink, -s       shrink the git repository by repacking and pruning
+
+While git does provide the ability to clone at a specific depth, and fetch all
+remote refs at a particular depth, the depth is across all branches/tags, and
+doesn't provide the flexibility we need, hence this script.
+
+Refs (branches+tags) can be filtered, as the process of history removal scales
+up rapidly with the number of refs. Even the existing `git fetch --depth=` is
+extremely slow on an upstream kernel repository with all the branches and tags
+kept.
+
+This uses the same underlying mechanism to implement the history removal which
+git itself uses (.git/shallow), and the results, when configured similarly, are
+in line with the results git itself produces with `fetch --depth`.
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 ---
- lib/bb/fetch2/__init__.py | 72 ++++++++++++++++++++++++-----------------------
- lib/bb/fetch2/git.py      |  5 ++--
- lib/bb/fetch2/hg.py       |  5 ++--
- lib/bb/fetch2/npm.py      |  7 +++--
- 4 files changed, 47 insertions(+), 42 deletions(-)
+ bin/git-make-shallow  | 165 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ lib/bb/tests/fetch.py | 127 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 292 insertions(+)
+ create mode 100755 bin/git-make-shallow
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 136fc29c..35902988 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -425,7 +425,7 @@ def encodeurl(decoded):
- 
-     return url
- 
--def uri_replace(ud, uri_find, uri_replace, replacements, d):
-+def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
-     if not ud.url or not uri_find or not uri_replace:
-         logger.error("uri_replace: passed an undefined value, not replacing")
-         return None
-@@ -464,9 +464,9 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d):
-             if loc == 2:
-                 # Handle path manipulations
-                 basename = None
--                if uri_decoded[0] != uri_replace_decoded[0] and ud.mirrortarball:
-+                if uri_decoded[0] != uri_replace_decoded[0] and mirrortarball:
-                     # If the source and destination url types differ, must be a mirrortarball mapping
--                    basename = os.path.basename(ud.mirrortarball)
-+                    basename = os.path.basename(mirrortarball)
-                     # Kill parameters, they make no sense for mirror tarballs
-                     uri_decoded[5] = {}
-                 elif ud.localpath and ud.method.supports_checksum(ud):
-@@ -892,45 +892,47 @@ def build_mirroruris(origud, mirrors, ld):
-     replacements["BASENAME"] = origud.path.split("/")[-1]
-     replacements["MIRRORNAME"] = origud.host.replace(':','.') + origud.path.replace('/', '.').replace('*', '.')
- 
--    def adduri(ud, uris, uds, mirrors):
-+    def adduri(ud, uris, uds, mirrors, tarballs):
-         for line in mirrors:
-             try:
-                 (find, replace) = line
-             except ValueError:
-                 continue
--            newuri = uri_replace(ud, find, replace, replacements, ld)
--            if not newuri or newuri in uris or newuri == origud.url:
--                continue
- 
--            if not trusted_network(ld, newuri):
--                logger.debug(1, "Mirror %s not in the list of trusted networks, skipping" %  (newuri))
--                continue
-+            for tarball in tarballs:
-+                newuri = uri_replace(ud, find, replace, replacements, ld, tarball)
-+                if not newuri or newuri in uris or newuri == origud.url:
-+                    continue
- 
--            # Create a local copy of the mirrors minus the current line
--            # this will prevent us from recursively processing the same line
--            # as well as indirect recursion A -> B -> C -> A
--            localmirrors = list(mirrors)
--            localmirrors.remove(line)
-+                if not trusted_network(ld, newuri):
-+                    logger.debug(1, "Mirror %s not in the list of trusted networks, skipping" %  (newuri))
-+                    continue
+diff --git a/bin/git-make-shallow b/bin/git-make-shallow
+new file mode 100755
+index 00000000..296d3a3d
+--- /dev/null
++++ b/bin/git-make-shallow
+@@ -0,0 +1,165 @@
++#!/usr/bin/env python3
++"""git-make-shallow: make the current git repository shallow
 +
-+                # Create a local copy of the mirrors minus the current line
-+                # this will prevent us from recursively processing the same line
-+                # as well as indirect recursion A -> B -> C -> A
-+                localmirrors = list(mirrors)
-+                localmirrors.remove(line)
- 
--            try:
--                newud = FetchData(newuri, ld)
--                newud.setup_localpath(ld)
--            except bb.fetch2.BBFetchException as e:
--                logger.debug(1, "Mirror fetch failure for url %s (original url: %s)" % (newuri, origud.url))
--                logger.debug(1, str(e))
-                 try:
--                    # setup_localpath of file:// urls may fail, we should still see 
--                    # if mirrors of the url exist
--                    adduri(newud, uris, uds, localmirrors)
--                except UnboundLocalError:
--                    pass
--                continue   
--            uris.append(newuri)
--            uds.append(newud)
-+                    newud = FetchData(newuri, ld)
-+                    newud.setup_localpath(ld)
-+                except bb.fetch2.BBFetchException as e:
-+                    logger.debug(1, "Mirror fetch failure for url %s (original url: %s)" % (newuri, origud.url))
-+                    logger.debug(1, str(e))
-+                    try:
-+                        # setup_localpath of file:// urls may fail, we should still see 
-+                        # if mirrors of the url exist
-+                        adduri(newud, uris, uds, localmirrors, tarballs)
-+                    except UnboundLocalError:
-+                        pass
-+                    continue
-+                uris.append(newuri)
-+                uds.append(newud)
- 
--            adduri(newud, uris, uds, localmirrors)
-+                adduri(newud, uris, uds, localmirrors, tarballs)
- 
--    adduri(origud, uris, uds, mirrors)
-+    adduri(origud, uris, uds, mirrors, origud.mirrortarballs or [None])
- 
-     return uris, uds
- 
-@@ -975,8 +977,8 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-         # We may be obtaining a mirror tarball which needs further processing by the real fetcher
-         # If that tarball is a local file:// we need to provide a symlink to it
-         dldir = ld.getVar("DL_DIR")
--        if origud.mirrortarball and os.path.basename(ud.localpath) == os.path.basename(origud.mirrortarball) \
--                and os.path.basename(ud.localpath) != os.path.basename(origud.localpath):
++Remove the history of the specified revisions, then optionally filter the
++available refs to those specified.
++"""
 +
-+        if origud.mirrortarballs and os.path.basename(ud.localpath) in origud.mirrortarballs and os.path.basename(ud.localpath) != os.path.basename(origud.localpath):
-             # Create donestamp in old format to avoid triggering a re-download
-             if ud.donestamp:
-                 bb.utils.mkdirhier(os.path.dirname(ud.donestamp))
-@@ -993,7 +995,7 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-                     pass
-             if not verify_donestamp(origud, ld) or origud.method.need_update(origud, ld):
-                 origud.method.download(origud, ld)
--                if hasattr(origud.method,"build_mirror_data"):
-+                if hasattr(origud.method, "build_mirror_data"):
-                     origud.method.build_mirror_data(origud, ld)
-             return origud.localpath
-         # Otherwise the result is a local file:// and we symlink to it
-@@ -1190,7 +1192,7 @@ class FetchData(object):
-         self.localfile = ""
-         self.localpath = None
-         self.lockfile = None
--        self.mirrortarball = None
-+        self.mirrortarballs = []
-         self.basename = None
-         self.basepath = None
-         (self.type, self.host, self.path, self.user, self.pswd, self.parm) = decodeurl(d.expand(url))
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 2550bde8..01d4bbdc 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -205,8 +205,9 @@ class Git(FetchMethod):
-         if ud.rebaseable:
-             for name in ud.names:
-                 gitsrcname = gitsrcname + '_' + ud.revisions[name]
--        ud.mirrortarball = 'git2_%s.tar.gz' % gitsrcname
--        ud.fullmirror = os.path.join(d.getVar("DL_DIR"), ud.mirrortarball)
-+        mirrortarball = 'git2_%s.tar.gz' % gitsrcname
-+        ud.fullmirror = os.path.join(d.getVar("DL_DIR"), mirrortarball)
-+        ud.mirrortarballs = [mirrortarball]
-         gitdir = d.getVar("GITDIR") or (d.getVar("DL_DIR") + "/git2/")
-         ud.clonedir = os.path.join(gitdir, gitsrcname)
++import argparse
++import collections
++import errno
++import itertools
++import os
++import subprocess
++import sys
++
++version = 1.0
++
++
++def main():
++    if sys.version_info < (3, 4, 0):
++        sys.exit('Python 3.4 or greater is required')
++
++    git_dir = check_output(['git', 'rev-parse', '--git-dir']).rstrip()
++    shallow_file = os.path.join(git_dir, 'shallow')
++    if os.path.exists(shallow_file):
++        try:
++            check_output(['git', 'fetch', '--unshallow'])
++        except subprocess.CalledProcessError:
++            try:
++                os.unlink(shallow_file)
++            except OSError as exc:
++                if exc.errno != errno.ENOENT:
++                    raise
++
++    args = process_args()
++    revs = check_output(['git', 'rev-list'] + args.revisions).splitlines()
++
++    make_shallow(shallow_file, args.revisions, args.refs)
++
++    ref_revs = check_output(['git', 'rev-list'] + args.refs).splitlines()
++    remaining_history = set(revs) & set(ref_revs)
++    for rev in remaining_history:
++        if check_output(['git', 'rev-parse', '{}^@'.format(rev)]):
++            sys.exit('Error: %s was not made shallow' % rev)
++
++    filter_refs(args.refs)
++
++    if args.shrink:
++        shrink_repo(git_dir)
++        subprocess.check_call(['git', 'fsck', '--unreachable'])
++
++
++def process_args():
++    # TODO: add argument to automatically keep local-only refs, since they
++    # can't be easily restored with a git fetch.
++    parser = argparse.ArgumentParser(description='Remove the history of the specified revisions, then optionally filter the available refs to those specified.')
++    parser.add_argument('--ref', '-r', metavar='REF', action='append', dest='refs', help='remove all but the specified refs (cumulative)')
++    parser.add_argument('--shrink', '-s', action='store_true', help='shrink the git repository by repacking and pruning')
++    parser.add_argument('revisions', metavar='REVISION', nargs='+', help='a git revision/commit')
++    if len(sys.argv) < 2:
++        parser.print_help()
++        sys.exit(2)
++
++    args = parser.parse_args()
++
++    if args.refs:
++        args.refs = check_output(['git', 'rev-parse', '--symbolic-full-name'] + args.refs).splitlines()
++    else:
++        args.refs = get_all_refs(lambda r, t, tt: t == 'commit' or tt == 'commit')
++
++    args.refs = list(filter(lambda r: not r.endswith('/HEAD'), args.refs))
++    args.revisions = check_output(['git', 'rev-parse'] + ['%s^{}' % i for i in args.revisions]).splitlines()
++    return args
++
++
++def check_output(cmd, input=None):
++    return subprocess.check_output(cmd, universal_newlines=True, input=input)
++
++
++def make_shallow(shallow_file, revisions, refs):
++    """Remove the history of the specified revisions."""
++    for rev in follow_history_intersections(revisions, refs):
++        print("Processing %s" % rev)
++        with open(shallow_file, 'a') as f:
++            f.write(rev + '\n')
++
++
++def get_all_refs(ref_filter=None):
++    """Return all the existing refs in this repository, optionally filtering the refs."""
++    ref_output = check_output(['git', 'for-each-ref', '--format=%(refname)\t%(objecttype)\t%(*objecttype)'])
++    ref_split = [tuple(iter_extend(l.rsplit('\t'), 3)) for l in ref_output.splitlines()]
++    if ref_filter:
++        ref_split = (e for e in ref_split if ref_filter(*e))
++    refs = [r[0] for r in ref_split]
++    return refs
++
++
++def iter_extend(iterable, length, obj=None):
++    """Ensure that iterable is the specified length by extending with obj."""
++    return itertools.islice(itertools.chain(iterable, itertools.repeat(obj)), length)
++
++
++def filter_refs(refs):
++    """Remove all but the specified refs from the git repository."""
++    all_refs = get_all_refs()
++    to_remove = set(all_refs) - set(refs)
++    if to_remove:
++        check_output(['xargs', '-0', '-n', '1', 'git', 'update-ref', '-d', '--no-deref'],
++                     input=''.join(l + '\0' for l in to_remove))
++
++
++def follow_history_intersections(revisions, refs):
++    """Determine all the points where the history of the specified revisions intersects the specified refs."""
++    queue = collections.deque(revisions)
++    seen = set()
++
++    for rev in iter_except(queue.popleft, IndexError):
++        if rev in seen:
++            continue
++
++        parents = check_output(['git', 'rev-parse', '%s^@' % rev]).splitlines()
++
++        yield rev
++        seen.add(rev)
++
++        if not parents:
++            continue
++
++        check_refs = check_output(['git', 'merge-base', '--independent'] + sorted(refs)).splitlines()
++        for parent in parents:
++            for ref in check_refs:
++                print("Checking %s vs %s" % (parent, ref))
++                try:
++                    merge_base = check_output(['git', 'merge-base', parent, ref]).rstrip()
++                except subprocess.CalledProcessError:
++                    continue
++                else:
++                    queue.append(merge_base)
++
++
++def iter_except(func, exception, start=None):
++    """Yield a function repeatedly until it raises an exception."""
++    try:
++        if start is not None:
++            yield start()
++        while True:
++            yield func()
++    except exception:
++        pass
++
++
++def shrink_repo(git_dir):
++    """Shrink the newly shallow repository, removing the unreachable objects."""
++    subprocess.check_call(['git', 'reflog', 'expire', '--expire-unreachable=now', '--all'])
++    subprocess.check_call(['git', 'repack', '-ad'])
++    try:
++        os.unlink(os.path.join(git_dir, 'objects', 'info', 'alternates'))
++    except OSError as exc:
++        if exc.errno != errno.ENOENT:
++            raise
++    subprocess.check_call(['git', 'prune', '--expire', 'now'])
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 0fd2c021..510071d2 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -852,3 +852,130 @@ class FetchCheckStatusTest(FetcherTest):
+                 self.assertTrue(ret, msg="URI %s, can't check status" % (u))
  
-diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index b5f26860..d0857e63 100644
---- a/lib/bb/fetch2/hg.py
-+++ b/lib/bb/fetch2/hg.py
-@@ -76,8 +76,9 @@ class Hg(FetchMethod):
-         # Create paths to mercurial checkouts
-         hgsrcname = '%s_%s_%s' % (ud.module.replace('/', '.'), \
-                             ud.host, ud.path.replace('/', '.'))
--        ud.mirrortarball = 'hg_%s.tar.gz' % hgsrcname
--        ud.fullmirror = os.path.join(d.getVar("DL_DIR"), ud.mirrortarball)
-+        mirrortarball = 'hg_%s.tar.gz' % hgsrcname
-+        ud.fullmirror = os.path.join(d.getVar("DL_DIR"), mirrortarball)
-+        ud.mirrortarballs = [mirrortarball]
- 
-         hgdir = d.getVar("HGDIR") or (d.getVar("DL_DIR") + "/hg/")
-         ud.pkgdir = os.path.join(hgdir, hgsrcname)
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 73a75fe9..5f799724 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -91,9 +91,10 @@ class Npm(FetchMethod):
-         ud.prefixdir = prefixdir
- 
-         ud.write_tarballs = ((d.getVar("BB_GENERATE_MIRROR_TARBALLS") or "0") != "0")
--        ud.mirrortarball = 'npm_%s-%s.tar.xz' % (ud.pkgname, ud.version)
--        ud.mirrortarball = ud.mirrortarball.replace('/', '-')
--        ud.fullmirror = os.path.join(d.getVar("DL_DIR"), ud.mirrortarball)
-+        mirrortarball = 'npm_%s-%s.tar.xz' % (ud.pkgname, ud.version)
-+        mirrortarball = ud.mirrortarball.replace('/', '-')
-+        ud.fullmirror = os.path.join(d.getVar("DL_DIR"), mirrortarball)
-+        ud.mirrortarballs = [mirrortarball]
- 
-     def need_update(self, ud, d):
-         if os.path.exists(ud.localpath):
+             connection_cache.close_connections()
++
++
++class GitMakeShallowTest(FetcherTest):
++    bitbake_dir = os.path.join(os.path.dirname(os.path.join(__file__)), '..', '..', '..')
++    make_shallow_path = os.path.join(bitbake_dir, 'bin', 'git-make-shallow')
++
++    def setUp(self):
++        FetcherTest.setUp(self)
++        self.gitdir = os.path.join(self.tempdir, 'gitshallow')
++        bb.utils.mkdirhier(self.gitdir)
++        bb.process.run('git init', cwd=self.gitdir)
++
++    def assertRefs(self, expected_refs):
++        actual_refs = self.git(['for-each-ref', '--format=%(refname)']).splitlines()
++        full_expected = self.git(['rev-parse', '--symbolic-full-name'] + expected_refs).splitlines()
++        self.assertEqual(sorted(full_expected), sorted(actual_refs))
++
++    def assertRevCount(self, expected_count, args=None):
++        if args is None:
++            args = ['HEAD']
++        revs = self.git(['rev-list'] + args)
++        actual_count = len(revs.splitlines())
++        self.assertEqual(expected_count, actual_count, msg='Object count `%d` is not the expected `%d`' % (actual_count, expected_count))
++
++    def git(self, cmd):
++        if isinstance(cmd, str):
++            cmd = 'git ' + cmd
++        else:
++            cmd = ['git'] + cmd
++        return bb.process.run(cmd, cwd=self.gitdir)[0]
++
++    def make_shallow(self, args=None):
++        if args is None:
++            args = ['HEAD']
++        return bb.process.run([self.make_shallow_path] + args, cwd=self.gitdir)
++
++    def add_empty_file(self, path, msg=None):
++        if msg is None:
++            msg = path
++        open(os.path.join(self.gitdir, path), 'w').close()
++        self.git(['add', path])
++        self.git(['commit', '-m', msg, path])
++
++    def test_make_shallow_single_branch_no_merge(self):
++        self.add_empty_file('a')
++        self.add_empty_file('b')
++        self.assertRevCount(2)
++        self.make_shallow()
++        self.assertRevCount(1)
++
++    def test_make_shallow_single_branch_one_merge(self):
++        self.add_empty_file('a')
++        self.add_empty_file('b')
++        self.git('checkout -b a_branch')
++        self.add_empty_file('c')
++        self.git('checkout master')
++        self.add_empty_file('d')
++        self.git('merge --no-ff --no-edit a_branch')
++        self.git('branch -d a_branch')
++        self.add_empty_file('e')
++        self.assertRevCount(6)
++        self.make_shallow(['HEAD~2'])
++        self.assertRevCount(5)
++
++    def test_make_shallow_at_merge(self):
++        self.add_empty_file('a')
++        self.git('checkout -b a_branch')
++        self.add_empty_file('b')
++        self.git('checkout master')
++        self.git('merge --no-ff --no-edit a_branch')
++        self.git('branch -d a_branch')
++        self.assertRevCount(3)
++        self.make_shallow()
++        self.assertRevCount(1)
++
++    def test_make_shallow_annotated_tag(self):
++        self.add_empty_file('a')
++        self.add_empty_file('b')
++        self.git('tag -a -m a_tag a_tag')
++        self.assertRevCount(2)
++        self.make_shallow(['a_tag'])
++        self.assertRevCount(1)
++
++    def test_make_shallow_multi_ref(self):
++        self.add_empty_file('a')
++        self.add_empty_file('b')
++        self.git('checkout -b a_branch')
++        self.add_empty_file('c')
++        self.git('checkout master')
++        self.add_empty_file('d')
++        self.git('checkout -b a_branch_2')
++        self.add_empty_file('a_tag')
++        self.git('tag a_tag')
++        self.git('checkout master')
++        self.git('branch -D a_branch_2')
++        self.add_empty_file('e')
++        self.assertRevCount(6, ['--all'])
++        self.make_shallow()
++        self.assertRevCount(5, ['--all'])
++
++    def test_make_shallow_multi_ref_trim(self):
++        self.add_empty_file('a')
++        self.git('checkout -b a_branch')
++        self.add_empty_file('c')
++        self.git('checkout master')
++        self.assertRevCount(1)
++        self.assertRevCount(2, ['--all'])
++        self.assertRefs(['master', 'a_branch'])
++        self.make_shallow(['-r', 'master', 'HEAD'])
++        self.assertRevCount(1, ['--all'])
++        self.assertRefs(['master'])
++
++    def test_make_shallow_noop(self):
++        self.add_empty_file('a')
++        self.assertRevCount(1)
++        self.make_shallow()
++        self.assertRevCount(1)
++
++    if os.environ.get("BB_SKIP_NETTESTS") == "yes":
++        print("Unset BB_SKIP_NETTESTS to run network tests")
++    else:
++        def test_make_shallow_bitbake(self):
++            self.git('remote add origin https://github.com/openembedded/bitbake')
++            self.git('fetch --tags origin')
++            orig_revs = len(self.git('rev-list --all').splitlines())
++            self.make_shallow(['refs/tags/1.10.0'])
++            self.assertRevCount(orig_revs - 1746, ['--all'])
 -- 
 2.11.1
 
