@@ -1,27 +1,34 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 9284077F55
+Return-Path: <prvs=0312be7c04=alan.levy@plextek.com>
+Received: from mailgate.plextek.co.uk (mailgate.plextek.co.uk [62.254.222.163])
+	by mail.openembedded.org (Postfix) with ESMTP id 8F84277F4E
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 19 May 2017 09:48:32 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v4J9mVXu001959
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Fri, 19 May 2017 10:48:32 +0100
-Message-ID: <1495187311.27342.149.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alan Levy <alan.levy@plextek.com>, "bitbake-devel@lists.openembedded.org"
+	Fri, 19 May 2017 09:57:49 +0000 (UTC)
+Received: from plextek-exch1.plextek.lan ([10.10.0.152]:8905)
+	by mailgate.plextek.co.uk with esmtps (TLSv1:AES256-SHA:256)
+	(Exim 4.82_1-5b7a7c0-XX) (envelope-from <alan.levy@plextek.com>)
+	id 1dBefL-0003b8-3C; Fri, 19 May 2017 10:57:48 +0100
+Received: from PLEXTEK-EXCH1.plextek.lan (10.10.0.152) by
+	PLEXTEK-EXCH1.plextek.lan (10.10.0.152) with Microsoft SMTP Server
+	(TLS) id 15.0.847.32; Fri, 19 May 2017 10:57:41 +0100
+Received: from PLEXTEK-EXCH1.plextek.lan ([fe80::f852:2da9:3543:6c2f]) by
+	PLEXTEK-EXCH1.plextek.lan ([fe80::f852:2da9:3543:6c2f%18]) with mapi id
+	15.00.0847.030; Fri, 19 May 2017 10:57:41 +0100
+From: Alan Levy <alan.levy@plextek.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Date: Fri, 19 May 2017 10:48:31 +0100
-In-Reply-To: <76e10e401a174bdca9f6a65acafbff5e@PLEXTEK-EXCH1.plextek.lan>
+Thread-Topic: [bitbake-devel] Problem using Subversion in Pyro
+Thread-Index: AdLP4VEXB/+GGF2XTGCDVOUoQEsY6QAm1/WAAAIiq2A=
+Date: Fri, 19 May 2017 09:57:40 +0000
+Message-ID: <ef364375f4c24847ae8d5b64b1905700@PLEXTEK-EXCH1.plextek.lan>
 References: <76e10e401a174bdca9f6a65acafbff5e@PLEXTEK-EXCH1.plextek.lan>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
-Mime-Version: 1.0
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
-	(dan.rpsys.net [192.168.3.1]);
-	Fri, 19 May 2017 10:48:33 +0100 (BST)
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
+	<1495187311.27342.149.camel@linuxfoundation.org>
+In-Reply-To: <1495187311.27342.149.camel@linuxfoundation.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.10.12.154]
+MIME-Version: 1.0
 Subject: Re: Problem using Subversion in Pyro
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -35,37 +42,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 May 2017 09:48:34 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 19 May 2017 09:57:50 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Thu, 2017-05-18 at 14:22 +0000, Alan Levy wrote:
-> --limit 1 --no-auth-cache ! http://server/path/my_module/ failed with
-> exit code 127, output:
-> /usr/bin/env: 'svn': No such file or directory
->  
-> If I comment out the line containing SRCPV, all is well. Digging into
-> the code it appears that svn is missing from ${HOSTTOOLS} in
-> bitbake.conf.
-
-I can understand how we end up in this situation.
-
-In general, subversion-native is built before the recipe's do_fetch so
-things work.
-
-When you use SRCREV = "${AUTOREV}", it needs subversion at parse time
-and its obviously not built it. You therefore need to use the host
-version. You can enable that with:
-
-HOSTTOOLS_append = " svn"
-
-in your config. I'm not sure I see any way around that. We don't really
-want to require subversion in general, its only needed if you're using
-autorev svn recipes.
-
-Obviously we could do with improving the failure messages though...
-
-Cheers,
-
-Richard
+UmljaGFyZCwNCg0KSSBjYW4gc2VlIHRoYXQgeW91IGRvbid0IHdhbnQgdG8gZm9yY2UgdGhlIGhv
+c3Qgc3lzdGVtIHRvIHN1cHBvcnQgc3VidmVyc2lvbiBhbmQgSSBjb25jdXIgdGhhdCB0aGUgcmVz
+dWx0aW5nIGVycm9yIG1lc3NhZ2UgaXMgdW5oZWxwZnVsLg0KDQpIb3dldmVyIHVuZGVyIE1vcnR5
+IHRoaXMgd29ya2VkIGp1c3QgZmluZSBzbyBQeXJvIGJyZWFrcyBleGlzdGluZyByZWNpcGVzIGlu
+IGEgd2F5IHRoYXQncyB2ZXJ5IGhhcmQgdG8gdW5kZXJzdGFuZCwgZXZlbiBpZiB0aGUgc29sdXRp
+b24gaXMgZWFzeSBvbmNlIHlvdSBrbm93IGhvdy4gIEkgd291bGQgc3VnZ2VzdCB0aGF0IGFzIHdl
+bGwgYXMgcHJvdmlkaW5nIGEgaGVscGZ1bCBlcnJvciBtZXNzYWdlIHRoZSBkb2N1bWVudGF0aW9u
+IHNob3VsZCBhbHNvIGV4cGxhaW4gd2hhdCdzIGdvaW5nIG9uIGFuZCBob3cgdG8gZml4IGl0Lg0K
+DQpSZWdhcmRzDQoNCkFsYW4NCg0KQUxBTiBMRVZZLCBMZWFkIENvbnN1bHRhbnQsIEVtYmVkZGVk
+IFN5c3RlbXMNCg0KUGxleHRlayBDb25zdWx0aW5nLCBUaGUgUGxleHRlayBCdWlsZGluZywgTG9u
+ZG9uIFJvYWQsIEdyZWF0IENoZXN0ZXJmb3JkLCBTYWZmcm9uIFdhbGRlbiwgQ0IxMCAxTlksIFVL
+DQpUOiArNDQgKDApIDE3OTkgNTMzMjAwICAgIEU6IGFsYW4ubGV2eUBwbGV4dGVrLmNvbSAgVzog
+d3d3LnBsZXh0ZWsuY29tDQoNCg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9t
+OiBSaWNoYXJkIFB1cmRpZSBbbWFpbHRvOnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5v
+cmddIA0KU2VudDogMTkgTWF5IDIwMTcgMTA6NDkNClRvOiBBbGFuIExldnk7IGJpdGJha2UtZGV2
+ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBQ
+cm9ibGVtIHVzaW5nIFN1YnZlcnNpb24gaW4gUHlybw0KDQpPbiBUaHUsIDIwMTctMDUtMTggYXQg
+MTQ6MjIgKzAwMDAsIEFsYW4gTGV2eSB3cm90ZToNCj4gLS1saW1pdCAxIC0tbm8tYXV0aC1jYWNo
+ZSAhIGh0dHA6Ly9zZXJ2ZXIvcGF0aC9teV9tb2R1bGUvIGZhaWxlZCB3aXRoIA0KPiBleGl0IGNv
+ZGUgMTI3LCBvdXRwdXQ6DQo+IC91c3IvYmluL2VudjogJ3N2bic6IE5vIHN1Y2ggZmlsZSBvciBk
+aXJlY3RvcnkNCj4gwqANCj4gSWYgSSBjb21tZW50IG91dCB0aGUgbGluZSBjb250YWluaW5nIFNS
+Q1BWLCBhbGwgaXMgd2VsbC4gRGlnZ2luZyBpbnRvIA0KPiB0aGUgY29kZSBpdCBhcHBlYXJzIHRo
+YXQgc3ZuIGlzIG1pc3NpbmcgZnJvbSAke0hPU1RUT09MU30gaW4gDQo+IGJpdGJha2UuY29uZi4N
+Cg0KSSBjYW4gdW5kZXJzdGFuZCBob3cgd2UgZW5kIHVwIGluIHRoaXMgc2l0dWF0aW9uLg0KDQpJ
+biBnZW5lcmFsLCBzdWJ2ZXJzaW9uLW5hdGl2ZSBpcyBidWlsdCBiZWZvcmUgdGhlIHJlY2lwZSdz
+IGRvX2ZldGNoIHNvIHRoaW5ncyB3b3JrLg0KDQpXaGVuIHlvdSB1c2UgU1JDUkVWID0gIiR7QVVU
+T1JFVn0iLCBpdCBuZWVkcyBzdWJ2ZXJzaW9uIGF0IHBhcnNlIHRpbWUgYW5kIGl0cyBvYnZpb3Vz
+bHkgbm90IGJ1aWx0IGl0LiBZb3UgdGhlcmVmb3JlIG5lZWQgdG8gdXNlIHRoZSBob3N0IHZlcnNp
+b24uIFlvdSBjYW4gZW5hYmxlIHRoYXQgd2l0aDoNCg0KSE9TVFRPT0xTX2FwcGVuZCA9ICIgc3Zu
+Ig0KDQppbiB5b3VyIGNvbmZpZy4gSSdtIG5vdCBzdXJlIEkgc2VlIGFueSB3YXkgYXJvdW5kIHRo
+YXQuIFdlIGRvbid0IHJlYWxseSB3YW50IHRvIHJlcXVpcmUgc3VidmVyc2lvbiBpbiBnZW5lcmFs
+LCBpdHMgb25seSBuZWVkZWQgaWYgeW91J3JlIHVzaW5nIGF1dG9yZXYgc3ZuIHJlY2lwZXMuDQoN
+Ck9idmlvdXNseSB3ZSBjb3VsZCBkbyB3aXRoIGltcHJvdmluZyB0aGUgZmFpbHVyZSBtZXNzYWdl
+cyB0aG91Z2guLi4NCg0KQ2hlZXJzLA0KDQpSaWNoYXJkDQo=
 
