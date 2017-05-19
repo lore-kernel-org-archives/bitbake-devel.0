@@ -1,51 +1,28 @@
-Return-Path: <andy.voltz@timesys.com>
-Received: from mail-qk0-f172.google.com (mail-qk0-f172.google.com
-	[209.85.220.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 4793D7807E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 9284077F55
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 May 2017 16:09:15 +0000 (UTC)
-Received: by mail-qk0-f172.google.com with SMTP id k74so40031678qke.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 May 2017 09:09:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=timesys-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=OW5md6xx7HdZh3tBvtICqhkfleXucUgGei9uFOVocgE=;
-	b=FoEj92Kce/QjFfoLLYNR15Z8589CFlrfD7AlMiMFulsrp8rKdzvhlYw8q4EUFinCNN
-	fQhjcxL2iYHvCQPYGvarYjFn72cu/onfh5O4XcBh/6B6YpPAmi9NJbcojqQ9fqcoWmrD
-	3P58SahkeGPDzxLw6zchbCYFyj6Q8ucn938QII8g4r8LjzhvdtDvT/sqY6j95gmb6hMC
-	evKA9mZK7RfFMFV70aPN+8IetgBAbxL50DBlZuh589FnpZ6eJE/bY4EQjzV4jqg1M51P
-	MopTVNNkpk6/CgC6Fd3mcWxT7/WMVeSOqNKbbP3GaQa5YEz+0dXJCAhfLOSR9za+tc6/
-	9xHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=OW5md6xx7HdZh3tBvtICqhkfleXucUgGei9uFOVocgE=;
-	b=GbOseyJ/8VYv9Cr3QTX21fPobp91iPz2G65asjfE0HOGbBVBEEkYoyE6af33GSfCes
-	CTF0djBUI9wX0FHORMEOnmRIBto+ayZuU1Fcr9kATexs6rlb9YcjiTR4+8fsG5xnxG6D
-	UVaTBTs3HLd/051xcaIZGTZh1Yti12gjM7SniheaFzkBUYp8GM15qCUiH5yeytpkZdT7
-	0zB5mfwxbdi6sxYNb+ynAeU7fy9vdkqmOmwiQRePyFIdsv9DE/8664SUHu4vbke0LFMM
-	gYaO8VuEGkPPRPSZPCrMM+jT15WCRWxlJRkoEDE0FzlI7wibZHnP7s0zWqK3iUbI7++H
-	d2ng==
-X-Gm-Message-State: AODbwcCC+gyVFPpFWekgpq6Ru6W5hAUSNNUv9IHzccZr+aDD95MuBn6T
-	Ruo+Vrg+q8iwVSTS
-X-Received: by 10.55.165.196 with SMTP id o187mr4426545qke.88.1495123756817;
-	Thu, 18 May 2017 09:09:16 -0700 (PDT)
-Received: from smarf.timesys.com
-	(96-94-100-129-static.hfc.comcastbusiness.net. [96.94.100.129])
-	by smtp.gmail.com with ESMTPSA id
-	d200sm3917151qkg.50.2017.05.18.09.09.15
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 18 May 2017 09:09:15 -0700 (PDT)
-From: Andy Voltz <andy.voltz@timesys.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 May 2017 12:09:11 -0400
-Message-Id: <1495123751-14886-3-git-send-email-andy.voltz@timesys.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1495123751-14886-1-git-send-email-andy.voltz@timesys.com>
-References: <1495123751-14886-1-git-send-email-andy.voltz@timesys.com>
-Subject: [PATCH 2/2] cooker: fix undefined dep in generatePkgDepTreeData
+	Fri, 19 May 2017 09:48:32 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v4J9mVXu001959
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Fri, 19 May 2017 10:48:32 +0100
+Message-ID: <1495187311.27342.149.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alan Levy <alan.levy@plextek.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Fri, 19 May 2017 10:48:31 +0100
+In-Reply-To: <76e10e401a174bdca9f6a65acafbff5e@PLEXTEK-EXCH1.plextek.lan>
+References: <76e10e401a174bdca9f6a65acafbff5e@PLEXTEK-EXCH1.plextek.lan>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
+Mime-Version: 1.0
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
+	(dan.rpsys.net [192.168.3.1]);
+	Fri, 19 May 2017 10:48:33 +0100 (BST)
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: Re: Problem using Subversion in Pyro
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,37 +35,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 18 May 2017 16:09:16 -0000
+X-List-Received-Date: Fri, 19 May 2017 09:48:34 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-The loop for populating the depends of the tree data should use dep
-instead of item.
+On Thu, 2017-05-18 at 14:22 +0000, Alan Levy wrote:
+> --limit 1 --no-auth-cache ! http://server/path/my_module/ failed with
+> exit code 127, output:
+> /usr/bin/env: 'svn': No such file or directory
+>  
+> If I comment out the line containing SRCPV, all is well. Digging into
+> the code it appears that svn is missing from ${HOSTTOOLS} in
+> bitbake.conf.
 
-Signed-off-by: Andy Voltz <andy.voltz@timesys.com>
----
- lib/bb/cooker.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I can understand how we end up in this situation.
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index bc8574a..8846690 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -905,13 +905,13 @@ class BBCooker:
-                 seen_fns.append(taskfn)
- 
-                 depend_tree["depends"][pn] = []
--                for item in taskdata[mc].depids[taskfn]:
-+                for dep in taskdata[mc].depids[taskfn]:
-                     pn_provider = ""
-                     if dep in taskdata[mc].build_targets and taskdata[mc].build_targets[dep]:
-                         fn_provider = taskdata[mc].build_targets[dep][0]
-                         pn_provider = self.recipecaches[mc].pkg_fn[fn_provider]
-                     else:
--                        pn_provider = item
-+                        pn_provider = dep
-                     pn_provider = self.add_mc_prefix(mc, pn_provider)
-                     depend_tree["depends"][pn].append(pn_provider)
- 
--- 
-2.1.4
+In general, subversion-native is built before the recipe's do_fetch so
+things work.
 
+When you use SRCREV = "${AUTOREV}", it needs subversion at parse time
+and its obviously not built it. You therefore need to use the host
+version. You can enable that with:
+
+HOSTTOOLS_append = " svn"
+
+in your config. I'm not sure I see any way around that. We don't really
+want to require subversion in general, its only needed if you're using
+autorev svn recipes.
+
+Obviously we could do with improving the failure messages though...
+
+Cheers,
+
+Richard
 
