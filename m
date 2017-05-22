@@ -1,38 +1,47 @@
-Return-Path: <prvs=0312be7c04=alan.levy@plextek.com>
-Received: from mailgate.plextek.co.uk (mailgate.plextek.co.uk [62.254.222.163])
-	by mail.openembedded.org (Postfix) with ESMTP id 5746B77F2C
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-io0-f171.google.com (mail-io0-f171.google.com
+	[209.85.223.171])
+	by mail.openembedded.org (Postfix) with ESMTP id 7286E71D86
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 19 May 2017 12:44:25 +0000 (UTC)
-Received: from plextek-exch1.plextek.lan ([10.10.0.152]:17212)
-	by mailgate.plextek.co.uk with esmtps (TLSv1:AES256-SHA:256)
-	(Exim 4.82_1-5b7a7c0-XX) (envelope-from <alan.levy@plextek.com>)
-	id 1dBhGZ-00040t-0R; Fri, 19 May 2017 13:44:23 +0100
-Received: from PLEXTEK-EXCH1.plextek.lan (10.10.0.152) by
-	PLEXTEK-EXCH1.plextek.lan (10.10.0.152) with Microsoft SMTP Server
-	(TLS) id 15.0.847.32; Fri, 19 May 2017 13:44:22 +0100
-Received: from PLEXTEK-EXCH1.plextek.lan ([fe80::f852:2da9:3543:6c2f]) by
-	PLEXTEK-EXCH1.plextek.lan ([fe80::f852:2da9:3543:6c2f%18]) with mapi id
-	15.00.0847.030; Fri, 19 May 2017 13:44:22 +0100
-From: Alan Levy <alan.levy@plextek.com>
-To: Alexander Kanavin <alexander.kanavin@linux.intel.com>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] Problem using Subversion in Pyro
-Thread-Index: AdLP4VEXB/+GGF2XTGCDVOUoQEsY6QAm1/WAAAIiq2D///THAP//xefA
-Date: Fri, 19 May 2017 12:44:21 +0000
-Message-ID: <1501a694c3424e3198d31e65d0611b5a@PLEXTEK-EXCH1.plextek.lan>
-References: <76e10e401a174bdca9f6a65acafbff5e@PLEXTEK-EXCH1.plextek.lan>
-	<1495187311.27342.149.camel@linuxfoundation.org>
-	<ef364375f4c24847ae8d5b64b1905700@PLEXTEK-EXCH1.plextek.lan>
-	<225ccc08-9962-d92a-309a-dd9c14417928@linux.intel.com>
-In-Reply-To: <225ccc08-9962-d92a-309a-dd9c14417928@linux.intel.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.10.12.154]
-MIME-Version: 1.0
-Subject: Re: Problem using Subversion in Pyro
+	Mon, 22 May 2017 10:50:28 +0000 (UTC)
+Received: by mail-io0-f171.google.com with SMTP id f102so78096445ioi.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 22 May 2017 03:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:cc:subject:date:message-id;
+	bh=5DSwWEpBHqx+64ATq2Wbi00P3CI2ggM5YmzhawpOMxI=;
+	b=voXhYYJOWIYaPYtWNoYPkKz7vmyQLHWuB86CazE58SGf2bdALCkf133HkhQ7fIXstZ
+	pvIeKc9KLY45P2Ho8wneKgUD85Z4P1ekE1zfG/fbha4Z4gG5iUdF6+vaQ8J1Uk0QGxr+
+	oxOlXk9sZInUH0v35UyJp5Jr+DjyGrx9QUDA8dvt0kqrJY66Mi8h7eGXUJB5cHyU3WGa
+	BlNvGiGdt1zqlPFQgGB3BaftyYC8HDucZLyxCmD8oWzttGwbc7n8uTp2Bcdx33HSxqOX
+	WHp7QJtXHUs4mcilq/v6DqTZgOosWg+JHRmXrnoqxjSmnXFT/Z372v0UW96AtM1+GG5U
+	sbjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=5DSwWEpBHqx+64ATq2Wbi00P3CI2ggM5YmzhawpOMxI=;
+	b=OkOgelKuwq4j6rkaxTPxccLoKZgJyvezjRl3A6ZtKmVUuy+sGAI8UDTtcwo1k4tt23
+	/I7xxvNNRV1038Dmi6ZAXSfR83AYVcXdkmGkVETamIjjPlnXoD5va2kG/3kbZrEdyURl
+	wDUf0yvv/EjM6x6HNOlau0Yp9ZmlGYOdZBTmkT3GMXKK+WRUHnimTpl4h4pg81ZZwn0K
+	w3HAAkostp2mvfnoiwfKeVpeLBFvJO4V9WE0H8I4HF8p8FqB7ni4qBzjvxx3gSj/BMBY
+	CapO9B2XL8GGLSCHtTh6V16RgziYWTnFsl1Kq/TSWJYkfRheB0usxgLqzPfqwAokOmbJ
+	cn1A==
+X-Gm-Message-State: AODbwcC0xl0/cBKzArkS+FhwWkc9E/xASRoiitV132LeAzL/7rlXNWZl
+	gzE/zzjFKE0xdLwv
+X-Received: by 10.107.157.206 with SMTP id g197mr21304243ioe.119.1495450229637;
+	Mon, 22 May 2017 03:50:29 -0700 (PDT)
+Received: from pohly-desktop.fritz.box (p57A568EA.dip0.t-ipconnect.de.
+	[87.165.104.234]) by smtp.gmail.com with ESMTPSA id
+	y64sm1142112itb.31.2017.05.22.03.50.27
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 22 May 2017 03:50:28 -0700 (PDT)
+From: Patrick Ohly <patrick.ohly@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 22 May 2017 12:50:20 +0200
+Message-Id: <cf231a157650f22c55ce6861ce824b74b245af55.1495450175.git-series.patrick.ohly@intel.com>
+X-Mailer: git-send-email 2.11.0
+Subject: [PATCH] cooker.py: allow dangling bbappends if explicitly whitelisted
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,32 +54,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 May 2017 12:44:26 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Mon, 22 May 2017 10:50:30 -0000
 
-T0ssIEkgaGF2ZSBhbiBpZGVhIGhvdyB0byBkbyBpdCBjbGVhbmx5IGFuZCBlbGVnYW50bHkgd2l0
-aG91dCBicmVha2luZyB0aGUgZXhpc3Rpbmcgc2NoZW1lIGJ1dCBpdCdsbCB0YWtlIHRpbWUgSSBo
-YXZlbid0IGdvdCByaWdodCBub3cgc28gaXQgbWF5IGJlIGEgd2hpbGUuDQoNCkFsYW4NCg0KQUxB
-TiBMRVZZLCBMZWFkIENvbnN1bHRhbnQsIEVtYmVkZGVkIFN5c3RlbXMNCg0KUGxleHRlayBDb25z
-dWx0aW5nLCBUaGUgUGxleHRlayBCdWlsZGluZywgTG9uZG9uIFJvYWQsIEdyZWF0IENoZXN0ZXJm
-b3JkLCBTYWZmcm9uIFdhbGRlbiwgQ0IxMCAxTlksIFVLDQpUOiArNDQgKDApIDE3OTkgNTMzMjAw
-ICAgIEU6IGFsYW4ubGV2eUBwbGV4dGVrLmNvbSAgVzogd3d3LnBsZXh0ZWsuY29tDQoNCg0KDQoN
-Ci0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBBbGV4YW5kZXIgS2FuYXZpbiBbbWFp
-bHRvOmFsZXhhbmRlci5rYW5hdmluQGxpbnV4LmludGVsLmNvbV0gDQpTZW50OiAxOSBNYXkgMjAx
-NyAxMToxMA0KVG86IEFsYW4gTGV2eTsgUmljaGFyZCBQdXJkaWU7IGJpdGJha2UtZGV2ZWxAbGlz
-dHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBQcm9ibGVt
-IHVzaW5nIFN1YnZlcnNpb24gaW4gUHlybw0KDQpPbiAwNS8xOS8yMDE3IDEyOjU3IFBNLCBBbGFu
-IExldnkgd3JvdGU6DQoNCj4gSSBjYW4gc2VlIHRoYXQgeW91IGRvbid0IHdhbnQgdG8gZm9yY2Ug
-dGhlIGhvc3Qgc3lzdGVtIHRvIHN1cHBvcnQgDQo+IHN1YnZlcnNpb24gYW5kIEkgY29uY3VyIHRo
-YXQgdGhlIHJlc3VsdGluZyBlcnJvciBtZXNzYWdlIGlzIHVuaGVscGZ1bC4NCj4NCj4gSG93ZXZl
-ciB1bmRlciBNb3J0eSB0aGlzIHdvcmtlZCBqdXN0IGZpbmUgc28gUHlybyBicmVha3MgZXhpc3Rp
-bmcgDQo+IHJlY2lwZXMgaW4gYSB3YXkgdGhhdCdzIHZlcnkgaGFyZCB0byB1bmRlcnN0YW5kLCBl
-dmVuIGlmIHRoZSBzb2x1dGlvbiANCj4gaXMgZWFzeSBvbmNlIHlvdSBrbm93IGhvdy4gIEkgd291
-bGQgc3VnZ2VzdCB0aGF0IGFzIHdlbGwgYXMgcHJvdmlkaW5nIA0KPiBhIGhlbHBmdWwgZXJyb3Ig
-bWVzc2FnZSB0aGUgZG9jdW1lbnRhdGlvbiBzaG91bGQgYWxzbyBleHBsYWluIHdoYXQncyANCj4g
-Z29pbmcgb24gYW5kIGhvdyB0byBmaXggaXQuDQoNCkFsYW4sIG1heSBJIHN1Z2dlc3QgdGhhdCB5
-b3Ugd3JpdGUgdGhlIG5lY2Vzc2FyeSBwYXRjaGVzIGZvciB0aGlzIGFuZCBzZW5kIHRoZW0gaW4/
-DQoNClRoYW5rcywNCkFsZXgNCg==
+Having a .bbappend without corresponding .bb file triggers an error or
+at least warning, depending on the global BB_DANGLINGAPPENDS_WARNONLY.
+
+Some layers (for example, meta-freescale) avoid that message by only
+adding .bbappends to the BBFILES when the layers they apply to are
+present. Others (like intel-iot-refkit) avoid such .bbappends by
+falling back to global assignments with _pn-<recipe> as override. Both
+is complicated.
+
+Now the warning code checks BBAPPENDS_DANGLING_WHITELIST and ignores
+all bbappends which match a file pattern in that list. This is an
+easier way to have bbappends which may or may not apply to an
+existing recipe.
+
+Example usage:
+
+  # We have recipes-* directories, add to BBFILES
+  BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
+	${LAYERDIR}/optional-bbappends/recipes-*/*/*.bbappend \
+	${LAYERDIR}/recipes-*/*/*.bbappend"
+
+  # Several of our *.bbappends might be for layers that are not
+  # guaranteed to be present. Don't warn or even error out because
+  # of those.
+  BBAPPENDS_DANGLING_WHITELIST += "${LAYERDIR}/optional-bbappends/recipes-*/*/*.bbappend"
+
+Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
+---
+ lib/bb/cooker.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index bc8574a..687fbfd 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -45,6 +45,7 @@ import pyinotify
+ import json
+ import pickle
+ import codecs
++import fnmatch
+ 
+ logger      = logging.getLogger("BitBake")
+ collectlog  = logging.getLogger("BitBake.Collection")
+@@ -1008,8 +1009,11 @@ class BBCooker:
+             applied_appends.extend(self.collection.get_file_appends(fn))
+ 
+         appends_without_recipes = []
++        appends_whitelist = (self.data.getVar("BBAPPENDS_DANGLING_WHITELIST") or "").split()
++        bb.note('Whitelist: %s' % appends_whitelist)
+         for _, appendfn in self.collection.bbappends:
+-            if not appendfn in applied_appends:
++            if not appendfn in applied_appends and \
++               not any(map(lambda whitelist_entry: fnmatch.fnmatch(appendfn, whitelist_entry), appends_whitelist)):
+                 appends_without_recipes.append(appendfn)
+ 
+         if appends_without_recipes:
+
+base-commit: 362f6044fcaafe51ab4377af8f2606165b112717
+-- 
+git-series 0.9.1
 
