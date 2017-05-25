@@ -1,49 +1,56 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-oi0-f49.google.com (mail-oi0-f49.google.com
-	[209.85.218.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 0891778139
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
+	[209.85.223.172])
+	by mail.openembedded.org (Postfix) with ESMTP id C01BB78169
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 May 2017 16:43:37 +0000 (UTC)
-Received: by mail-oi0-f49.google.com with SMTP id w10so287655671oif.0
+	Thu, 25 May 2017 20:01:57 +0000 (UTC)
+Received: by mail-io0-f172.google.com with SMTP id o12so143764956iod.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 May 2017 09:43:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=56Dq+AaGGls1xvIaT83ahEE+9HM8E1XElYFHD9DYqmI=;
-	b=Y6tAAjckgTKrQ/b9sGYsHvS8FMTQcBJoEoXUwAOUnOrfZcy3B6j/KOzMzDStB3/65F
-	jOGqLwIztKukJ8hHOsdulWBtN7PhYsQzlcQFgP8uj7mCk1Gp3ODVjmrHQgbjwwJyiIWB
-	Q6RQTY5lSaoXcOPOvIvpKymf/zMbxE0qXruQ2JTmrDoOM45Sy+jeLWAuq4VBZr/DAfaT
-	Y6nCAaK7erLXppWSEZOdShT5nicAiQcBCIgtz1mmtBmLZ0Y8XSZvQyZG5ICMiynWH3MF
-	oY1RuOKGlBqs2jLlL8qGhstBUqynxKlgA6GpmhcoiO7RRbCG0gM/RE6m7/ofijDzLoKg
-	B2KQ==
+	Thu, 25 May 2017 13:01:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=message-id:subject:from:to:cc:date:in-reply-to:references
+	:organization:mime-version:content-transfer-encoding;
+	bh=lLQjA5EoZRJMSqSiySUpSuTfb6dn67oHwMmTcUkYduk=;
+	b=Z0oHeV7r7SqPn2ISOEnwYrDtZKd5nKKhpBjKkasTFSRxdEa0aI9QzmpqhhDqmB2YVF
+	WB69ZngkCHltBo6NKqwxjCmTN7Vg0iQEmAYdJKXAuZzJg7exwQiHHbX44lbv/93vZj/Z
+	H0o8whYYuST3eUoFt4zhSDb+j3O356S9bKIiOddmjN9BkOLEAGpwAsfZX7isFYwvlXSx
+	GrLCj92OZ3Tj89gZC0pNktqlTYttnqyiGL7/38djRS839j9OrmSPYMXI/kryY23jtpxf
+	KzQMH8TLudWULVMfdcjA0GehDqA8NDRhEXOHPpBs4CIFyaiEaTYHMeLMvbTL2yPWkAV1
+	daMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=56Dq+AaGGls1xvIaT83ahEE+9HM8E1XElYFHD9DYqmI=;
-	b=qLyr/imWQcHMHwD8N2m4oL82I+48xoSNABU6UkmXtNXzfOmUXlCaaGRH3E/FVuINr9
-	Eh9HyAjl0drrxriYB5xlLBzavgKY9vh7yOOTmsjt6SlZ72nvRGU4uDFzeXhdGYo7fm/H
-	kjbbCT17IY+mOUiQZlmNEU1udI7U/9mjknZvuBv7MoBOxrcNUietgNM/PLrXJG6Fieo9
-	dmQz3cqNXqRIBCJnbsaYPCN7gXme33hh1nhIVTclLLsChAOFey25H/rv4tTOARM21INS
-	14D4qbbTy2Vs/iKeMeuJNhxk4GFZaK1EhLtcCn3WFYFe4HXrtAcDg+rfueZ1nnfxmH4j
-	ec2w==
-X-Gm-Message-State: AODbwcBU2znJtDC0kEvjku3hE84GvaSXYaT/U3dll/i72yICD5AGiSiU
-	/7QPaAVskqWOrdhKOq3RPxIfPRDaiCWq
-X-Received: by 10.157.41.72 with SMTP id d66mr7117751otb.124.1495730618808;
-	Thu, 25 May 2017 09:43:38 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.157.30.226 with HTTP; Thu, 25 May 2017 09:43:18 -0700 (PDT)
-In-Reply-To: <1495729973.25229.33.camel@linuxfoundation.org>
-References: <cover.1494623828.git.chris_larson@mentor.com>
-	<CABcZANnuX6SLn21vO8xUz65U1oyzJ2_kgGEW6cE359R-NY+M9Q@mail.gmail.com>
-	<1495729973.25229.33.camel@linuxfoundation.org>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Thu, 25 May 2017 09:43:18 -0700
-Message-ID: <CABcZAN=GxuXCVuz2F0nESeXYTrV3UfLWqpRr=cRekj2g211+PA@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+	:references:organization:mime-version:content-transfer-encoding;
+	bh=lLQjA5EoZRJMSqSiySUpSuTfb6dn67oHwMmTcUkYduk=;
+	b=lH27duB1kuSrULHZGWSD2BAPbdMULt6NiXv0aAf7fFkERXsr0gxy36RdPYcy8shzmD
+	9vLGPo4TEp3j+DkUWJRKYaum1LK8FtqBtBSztI7QY5gZOvHVi3rJVVzC6dYbInuvXGbt
+	t/agoTnoR8nGB2Ah7W41CXIX8ycUQWRjZ9y8p+x92u3QzfYe8GceTUJwA97RaiSUJGN0
+	zIjuiIq+dLNPyvRYpI/dJv/kc2gQnKz5ahHSj95WMgwGKNzGvs1eNXlr+V568Z7iNp7N
+	c+HFvbB6vsGYQWuijOny1ItLC04vsslPJWht0ikUCYMdcHjwDK7EB+4S7ntvpQGPP82f
+	VqvA==
+X-Gm-Message-State: AODbwcCYFJoGl7EenkIsJ2K5wvNzneSK/vwjBwP/UPjoDjNzbCpJi3Lr
+	HgmnDRLdXRAYVdEjpjs=
+X-Received: by 10.107.33.136 with SMTP id h130mr39103881ioh.57.1495742518478; 
+	Thu, 25 May 2017 13:01:58 -0700 (PDT)
+Received: from pohly-mobl1 (p57A56C57.dip0.t-ipconnect.de. [87.165.108.87])
+	by smtp.gmail.com with ESMTPSA id
+	e186sm3343632itc.21.2017.05.25.13.01.56
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 25 May 2017 13:01:57 -0700 (PDT)
+Message-ID: <1495742514.16923.97.camel@intel.com>
+From: Patrick Ohly <patrick.ohly@intel.com>
+To: Christopher Larson <kergoth@gmail.com>
+Date: Thu, 25 May 2017 22:01:54 +0200
+In-Reply-To: <CABcZAN=d7BHGOM9602pfbA4N6chDB8b8RDKB4xo6fhCChDx0Rg@mail.gmail.com>
+References: <cf231a157650f22c55ce6861ce824b74b245af55.1495450175.git-series.patrick.ohly@intel.com>
+	<CABcZAN=d7BHGOM9602pfbA4N6chDB8b8RDKB4xo6fhCChDx0Rg@mail.gmail.com>
+Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
+X-Mailer: Evolution 3.12.9-1+b1 
+Mime-Version: 1.0
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 0/8] Add support for shallow mirror tarballs
+Subject: Re: [PATCH] cooker.py: allow dangling bbappends if explicitly whitelisted
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,76 +63,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 May 2017 16:43:38 -0000
-Content-Type: multipart/alternative; boundary="94eb2c04326c36c39a05505becd8"
-
---94eb2c04326c36c39a05505becd8
+X-List-Received-Date: Thu, 25 May 2017 20:01:57 -0000
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 25, 2017 at 9:32 AM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+On Thu, 2017-05-25 at 08:50 -0700, Christopher Larson wrote:
+> 
+> On Mon, May 22, 2017 at 3:50 AM, Patrick Ohly <patrick.ohly@intel.com>
+> wrote:
+>         Having a .bbappend without corresponding .bb file triggers an
+>         error or
+>         at least warning, depending on the global
+>         BB_DANGLINGAPPENDS_WARNONLY.
+>         
+>         Some layers (for example, meta-freescale) avoid that message
+>         by only
+>         adding .bbappends to the BBFILES when the layers they apply to
+>         are
+>         present. Others (like intel-iot-refkit) avoid such .bbappends
+>         by
+>         falling back to global assignments with _pn-<recipe> as
+>         override. Both
+>         is complicated.
+>         
+>         Now the warning code checks BBAPPENDS_DANGLING_WHITELIST and
+>         ignores
+>         all bbappends which match a file pattern in that list. This is
+>         an
+>         easier way to have bbappends which may or may not apply to an
+>         existing recipe.
+> 
+> IMHO this makes it too easy to miss legitimate problems. By adding
+> them only when the layers are present, you ensure that if that layer
+> removes the recipe you’re appending, you’ll immediately know it. This
+> hides such actual problems by suppressing for all optional appends
+> across the board.
 
-> On Thu, 2017-05-25 at 08:42 -0700, Christopher Larson wrote:
-> >
-> > On Fri, May 12, 2017 at 2:46 PM, Christopher Larson <kergoth@gmail.co
-> > m> wrote:
-> > > The latest incarnation of the support for git shallow mirror
-> > > tarballs. Updated
-> > > with ud.mirrortarball removed, fixes for gitsm and gitannex, more
-> > > granular
-> > > commits to ease review, and unit tests added. Please let me know
-> > > what you
-> > > think. Thanks.
-> > >
-> > Any feedback on this, or are folks still fighting fires related to
-> > the release?
->
-> I'm travelling, lets aim to discuss this with a view to merging next
-> week [remind me if I forget please].
+I understand that it is a double-edged sword. It's meant for layer
+maintainers who know what they are doing. If a layer maintainer prefers
+to be warned about missing recipes, they can simply ignore the whitelist
+feature. Layer maintainers who use it need to ensure that they have
+tests in place which will fail when the bbappend is no longer used.
 
-
-Understood, thanks!
 -- 
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
+Best Regards, Patrick Ohly
 
---94eb2c04326c36c39a05505becd8
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The content of this message is my personal opinion only and although
+I am an employee of Intel, the statements I make here in no way
+represent Intel's position on the issue, nor am I authorized to speak
+on behalf of Intel on this matter.
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Thu, May 25, 2017 at 9:32 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hr=
-ef=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.=
-purdie@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
-ft:1ex"><span class=3D"">On Thu, 2017-05-25 at 08:42 -0700, Christopher Lar=
-son wrote:<br>
-&gt;<br>
-&gt; On Fri, May 12, 2017 at 2:46 PM, Christopher Larson &lt;<a href=3D"mai=
-lto:kergoth@gmail.co">kergoth@gmail.co</a><br>
-&gt; m&gt; wrote:<br>
-&gt; &gt; The latest incarnation of the support for git shallow mirror<br>
-&gt; &gt; tarballs. Updated<br>
-&gt; &gt; with ud.mirrortarball removed, fixes for gitsm and gitannex, more=
-<br>
-&gt; &gt; granular<br>
-&gt; &gt; commits to ease review, and unit tests added. Please let me know<=
-br>
-&gt; &gt; what you<br>
-&gt; &gt; think. Thanks.<br>
-&gt; &gt;<br>
-&gt; Any feedback on this, or are folks still fighting fires related to<br>
-&gt; the release?<br>
-<br>
-</span>I&#39;m travelling, lets aim to discuss this with a view to merging =
-next<br>
-week [remind me if I forget please].</blockquote></div><br>Understood, than=
-ks!<br>-- <br><div class=3D"gmail_signature" data-smartmail=3D"gmail_signat=
-ure"><div dir=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kergoth a=
-t gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior So=
-ftware Engineer, Mentor Graphics</div></div></div></div>
-</div></div>
 
---94eb2c04326c36c39a05505becd8--
+
+
