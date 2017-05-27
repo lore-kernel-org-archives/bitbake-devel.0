@@ -1,57 +1,24 @@
-Return-Path: <patrick.ohly@intel.com>
-Received: from mail-it0-f52.google.com (mail-it0-f52.google.com
-	[209.85.214.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 56695782A9
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 9855B78184
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 May 2017 13:56:39 +0000 (UTC)
-Received: by mail-it0-f52.google.com with SMTP id g126so9282418ith.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 May 2017 06:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:organization:mime-version:content-transfer-encoding;
-	bh=9VuAzdMgq5z+tAveWbEMo/NqsepI/DPUFLvHB9d0L2k=;
-	b=hxznBXTGg+ZWoAu6m03lscci/vx1sg8njHzZROkZgXvPID5jofbyTavkwNzrEFwNxY
-	/HUtJL6/C58DTF39dKxVLcFiXPv1Vj0B9ekuAfvWqu8MzVcefVrGGKQxWZov3+Po2Z6o
-	/k8gC/fHMyIE44T/nNBfsPURZf/HYnsxlWsU5iAE9VAh9hA2sFAo5qkY/BpL9DyeOl6z
-	mrfifUovW9lqvOry1CRXX535c1wrhu+EsVyWvln6yUn18aRNA+q9gnD7uRAi6pSTX1uk
-	3zzE5nRgiV8HnDMZDvcvQAyprZckOfl3QwaJTSMt5FDIwKR/NS84Y2Ckt2DMP67i8+Is
-	058w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:organization:mime-version:content-transfer-encoding;
-	bh=9VuAzdMgq5z+tAveWbEMo/NqsepI/DPUFLvHB9d0L2k=;
-	b=ilNhAo1X60Vh4ifWQz1B2LFfJvaXXtiz75QeVa0798ZUC2XQNWsH0r/jxM2Koz7skr
-	7PetZ1/FfgQEuZffVKV1iFMX80Zeg6z/xBXU35Sad/ZO7ASbU6wF/pfdUESyN95kLh1U
-	RhxZR/a/sIE7Ll2UgOKtAibNxuzOBxxf5dNbDm7vpojauDdJyBNmF+2Gqul7YIg6Dydt
-	p0phGQJPjeoUzpGXwPG/nPI4GaD2ZNAwbkI1OwiiIwb0SjMC1ULkSm+rg1ZrBLYFhXEF
-	ZVLonv1tBjmTUQQM4X6gRymPuMDarwHFX/f6mBN49xo4WnYixcvUq0V66XJDARr8jlEc
-	qb7Q==
-X-Gm-Message-State: AODbwcAdfdEeNC4ydIP0tPgHxedDhXRKxk3E+bPMayGGNGFItunyi/Ye
-	I4n15dNXMhkYIM5u
-X-Received: by 10.36.23.22 with SMTP id 22mr19698492ith.78.1495807000960;
-	Fri, 26 May 2017 06:56:40 -0700 (PDT)
-Received: from pohly-mobl1 (p5DE8F704.dip0.t-ipconnect.de. [93.232.247.4])
-	by smtp.gmail.com with ESMTPSA id
-	k79sm4425030itk.26.2017.05.26.06.56.39
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 26 May 2017 06:56:39 -0700 (PDT)
-Message-ID: <1495806997.16923.124.camel@intel.com>
-From: Patrick Ohly <patrick.ohly@intel.com>
-To: Christopher Larson <kergoth@gmail.com>
-Date: Fri, 26 May 2017 15:56:37 +0200
-In-Reply-To: <1495742514.16923.97.camel@intel.com>
-References: <cf231a157650f22c55ce6861ce824b74b245af55.1495450175.git-series.patrick.ohly@intel.com>
-	<CABcZAN=d7BHGOM9602pfbA4N6chDB8b8RDKB4xo6fhCChDx0Rg@mail.gmail.com>
-	<1495742514.16923.97.camel@intel.com>
-Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
-X-Mailer: Evolution 3.12.9-1+b1 
-Mime-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] cooker.py: allow dangling bbappends if explicitly whitelisted
+	Sat, 27 May 2017 10:21:50 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v4RALmEb018743
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Sat, 27 May 2017 03:21:48 -0700 (PDT)
+Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.294.0;
+	Sat, 27 May 2017 03:21:48 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Sat, 27 May 2017 03:21:48 -0700
+Message-ID: <20170527102148.15448-1-liezhi.yang@windriver.com>
+X-Mailer: git-send-email 2.10.2
+MIME-Version: 1.0
+Cc: paul.eggleton@linux.intel.com
+Subject: [PATCH] bb/tinfoil.py: import bb.msg
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,63 +31,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 26 May 2017 13:56:40 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Sat, 27 May 2017 10:21:50 -0000
+Content-Type: text/plain
 
-On Thu, 2017-05-25 at 22:01 +0200, Patrick Ohly wrote:
-> On Thu, 2017-05-25 at 08:50 -0700, Christopher Larson wrote:
-> > 
-> > On Mon, May 22, 2017 at 3:50 AM, Patrick Ohly <patrick.ohly@intel.com>
-> > wrote:
-> >         Having a .bbappend without corresponding .bb file triggers an
-> >         error or
-> >         at least warning, depending on the global
-> >         BB_DANGLINGAPPENDS_WARNONLY.
-> >         
-> >         Some layers (for example, meta-freescale) avoid that message
-> >         by only
-> >         adding .bbappends to the BBFILES when the layers they apply to
-> >         are
-> >         present. Others (like intel-iot-refkit) avoid such .bbappends
-> >         by
-> >         falling back to global assignments with _pn-<recipe> as
-> >         override. Both
-> >         is complicated.
-> >         
-> >         Now the warning code checks BBAPPENDS_DANGLING_WHITELIST and
-> >         ignores
-> >         all bbappends which match a file pattern in that list. This is
-> >         an
-> >         easier way to have bbappends which may or may not apply to an
-> >         existing recipe.
-> > 
-> > IMHO this makes it too easy to miss legitimate problems. By adding
-> > them only when the layers are present, you ensure that if that layer
-> > removes the recipe you’re appending, you’ll immediately know it. This
-> > hides such actual problems by suppressing for all optional appends
-> > across the board.
-> 
-> I understand that it is a double-edged sword. It's meant for layer
-> maintainers who know what they are doing. If a layer maintainer prefers
-> to be warned about missing recipes, they can simply ignore the whitelist
-> feature. Layer maintainers who use it need to ensure that they have
-> tests in place which will fail when the bbappend is no longer used.
+It uses bb.msg without import it, so there might be errors like:
+AttributeError: 'module' object has no attribute 'logger_create'
 
-Also note that the alternative solution currently used by layers like
-meta-freescale is brittle (depends on ordering of entries in
-bblayers.conf). This is not just a theoretic problem; there's currently
-a mail thread on the Yocto mailing list ("dynamic-layers") where someone
-had the order wrong and had to spend time on debugging the problem.
+We can't reproduce the problem everytime, I think that it depends on the order.
 
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ lib/bb/tinfoil.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 928333a..a0d8a16 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -33,6 +33,7 @@ import bb.remotedata
+ from bb.cookerdata import CookerConfiguration, ConfigParameters
+ from bb.main import setup_bitbake, BitBakeConfigParameters, BBMainException
+ import bb.fetch2
++import bb.msg
+ 
+ 
+ # We need this in order to shut down the connection to the bitbake server,
 -- 
-Best Regards, Patrick Ohly
-
-The content of this message is my personal opinion only and although
-I am an employee of Intel, the statements I make here in no way
-represent Intel's position on the issue, nor am I authorized to speak
-on behalf of Intel on this matter.
-
-
+2.10.2
 
 
