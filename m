@@ -1,24 +1,22 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 9855B78184
+Return-Path: <rebecca.swee.fun.chang@intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 1DC7960123
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 27 May 2017 10:21:50 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v4RALmEb018743
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Sat, 27 May 2017 03:21:48 -0700 (PDT)
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.294.0;
-	Sat, 27 May 2017 03:21:48 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sat, 27 May 2017 03:21:48 -0700
-Message-ID: <20170527102148.15448-1-liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.10.2
-MIME-Version: 1.0
-Cc: paul.eggleton@linux.intel.com
-Subject: [PATCH] bb/tinfoil.py: import bb.msg
+	Mon, 29 May 2017 00:43:40 +0000 (UTC)
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+	by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	28 May 2017 17:43:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.38,412,1491289200"; d="scan'208";a="108120552"
+Received: from rebeccas.png.intel.com ([172.30.199.118])
+	by fmsmga006.fm.intel.com with ESMTP; 28 May 2017 17:43:39 -0700
+From: Chang Rebecca Swee Fun <rebecca.swee.fun.chang@intel.com>
+To: Bitbake dev Mailing List <bitbake-devel@lists.openembedded.org>
+Date: Mon, 29 May 2017 08:44:05 +0800
+Message-Id: <1496018646-92426-1-git-send-email-rebecca.swee.fun.chang@intel.com>
+X-Mailer: git-send-email 2.7.4
+Cc: Phoong Stanley Cheong Kwan <stanley.cheong.kwan.phoong@intel.com>
+Subject: [PATCHv2] bitbake-layers: check layer dependencies before adding
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,32 +29,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 27 May 2017 10:21:50 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 29 May 2017 00:43:41 -0000
 
-It uses bb.msg without import it, so there might be errors like:
-AttributeError: 'module' object has no attribute 'logger_create'
+Change log on v2 patch:
+- Remove line "return 1", because bb.fatal raises an exception, hence
+  return 1 is not needed.
 
-We can't reproduce the problem everytime, I think that it depends on the order.
+Regards,
+Rebecca
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- lib/bb/tinfoil.py | 1 +
- 1 file changed, 1 insertion(+)
+Chang Rebecca Swee Fun (1):
+  bitbake-layers: check layer dependencies before adding
 
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 928333a..a0d8a16 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -33,6 +33,7 @@ import bb.remotedata
- from bb.cookerdata import CookerConfiguration, ConfigParameters
- from bb.main import setup_bitbake, BitBakeConfigParameters, BBMainException
- import bb.fetch2
-+import bb.msg
- 
- 
- # We need this in order to shut down the connection to the bitbake server,
+ bin/bitbake-layers     |  1 +
+ lib/bblayers/action.py | 26 ++++++++++++++++++++++----
+ 2 files changed, 23 insertions(+), 4 deletions(-)
+
 -- 
-2.10.2
+2.7.4
 
 
