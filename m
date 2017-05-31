@@ -1,47 +1,21 @@
-Return-Path: <ola.x.nilsson@axis.com>
-Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
-	by mail.openembedded.org (Postfix) with ESMTP id 351C77804E
+Return-Path: <jair.de.jesus.gonzalez.plascencia@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id D979A60767
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 May 2017 08:46:48 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bes.se.axis.com (Postfix) with ESMTP id D22DD2E1C1
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 May 2017 10:46:49 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id S7gpIqSmLrt5 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 May 2017 10:46:49 +0200 (CEST)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bes.se.axis.com (Postfix) with ESMTPS id 193152E084
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 May 2017 10:46:49 +0200 (CEST)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 05FBD1E0AB
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 May 2017 10:46:49 +0200 (CEST)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EE1FE1E0A9
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 May 2017 10:46:48 +0200 (CEST)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-	by boulder03.se.axis.com (Postfix) with ESMTP
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 May 2017 10:46:48 +0200 (CEST)
-Received: from lnxolani1.se.axis.com (lnxolani1.se.axis.com [10.88.130.9])
-	by seth.se.axis.com (Postfix) with ESMTP id E24D22271
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 May 2017 10:46:48 +0200 (CEST)
-Received: by lnxolani1.se.axis.com (Postfix, from userid 20853)
-	id DD538409BA; Wed, 31 May 2017 10:46:48 +0200 (CEST)
-From: Ola x Nilsson <ola.x.nilsson@axis.com>
+	Wed, 31 May 2017 21:26:27 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	31 May 2017 14:26:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.39,276,1493708400"; d="scan'208";a="94079712"
+Received: from jairdeje-mobl1.zpn.intel.com ([10.219.4.146])
+	by orsmga002.jf.intel.com with ESMTP; 31 May 2017 14:26:27 -0700
+From: Jair Gonzalez <jair.de.jesus.gonzalez.plascencia@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 31 May 2017 10:46:48 +0200
-Message-Id: <20170531084648.2495-1-olani@axis.com>
-X-Mailer: git-send-email 2.11.0
-X-TM-AS-GCONF: 00
-Subject: [PATCH v3] ConfHandler: Require whitespace between export and variable name
+Date: Wed, 31 May 2017 16:26:00 -0500
+Message-Id: <cover.1496259855.git.jair.de.jesus.gonzalez.plascencia@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [selftest][PATCH V4 0/3] QA: create unit tests for event module
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,62 +28,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 31 May 2017 08:46:49 -0000
+X-List-Received-Date: Wed, 31 May 2017 21:26:29 -0000
 
-Signed-off-by: Ola x Nilsson <olani@axis.com>
----
- lib/bb/parse/parse_py/ConfHandler.py |  2 +-
- lib/bb/tests/parse.py                | 23 ++++++++++++++++++++++-
- 2 files changed, 23 insertions(+), 2 deletions(-)
+Changed in V4:
+  -Rebased branch to master.
+  -Improved comments for addded clarity on enable/disable threadlock test cases
+   (bb.tests.event).
 
-diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
-index f7d0cf74..bf7e9859 100644
---- a/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/lib/bb/parse/parse_py/ConfHandler.py
-@@ -32,7 +32,7 @@ from bb.parse import ParseError, resolve_file, ast, logger, handle
- 
- __config_regexp__  = re.compile( r"""
-     ^
--    (?P<exp>export\s*)?
-+    (?P<exp>export\s+)?
-     (?P<var>[a-zA-Z0-9\-_+.${}/~]+?)
-     (\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?
- 
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index ab6ca903..8f16ba4f 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -83,7 +83,28 @@ unset B[flag]
-         self.assertEqual(d.getVar("A"), None)
-         self.assertEqual(d.getVarFlag("A","flag"), None)
-         self.assertEqual(d.getVar("B"), "2")
--        
-+
-+    exporttest = """
-+A = "a"
-+export B = "b"
-+export C
-+exportD = "d"
-+"""
-+
-+    def test_parse_exports(self):
-+        f = self.parsehelper(self.exporttest)
-+        d = bb.parse.handle(f.name, self.d)['']
-+        self.assertEqual(d.getVar("A"), "a")
-+        self.assertIsNone(d.getVarFlag("A", "export"))
-+        self.assertEqual(d.getVar("B"), "b")
-+        self.assertEqual(d.getVarFlag("B", "export"), 1)
-+        self.assertIsNone(d.getVar("C"))
-+        self.assertEqual(d.getVarFlag("C", "export"), 1)
-+        self.assertIsNone(d.getVar("D"))
-+        self.assertIsNone(d.getVarFlag("D", "export"))
-+        self.assertEqual(d.getVar("exportD"), "d")
-+        self.assertIsNone(d.getVarFlag("exportD", "export"))
-+
- 
-     overridetest = """
- RRECOMMENDS_${PN} = "a"
+Changed in V3:
+  Changed patches to be relative to bitbake devel tree.
+
+Changed in V2:
+  On bb.tests.event:
+    - Fixed copyright typo.
+    - Added assertions for event types in event handler calls.
+    - Changed sleep calls on test_enable_threadlock and
+      test_disable_threadlock to the order of seconds to prevent an overlap
+      offset because a thread scheduler's delay. Improved both tests by
+      testing the event type and call order differentiating events coming
+      from each worker thread.
+  On bb.event:
+    - Added commit to upgrade the remove method on bb.event class by
+      updating the event mapping after a class event handler is removed.
+      This fix is necessary for bitbake-selftest to pass
+      test_change_handler_event_mapping.
+
+[YOCTO #10368]
+
+The following changes since commit bd063fa288b49b6e3ea77982d0ccc46610feb1ad:
+
+  tune-mips32*.inc: use consistent comments across all three .inc files (2017-05-30 10:15:20 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib jairglez/bbevents4
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=jairglez/bbevents4
+
+Jair Gonzalez (3):
+  bitbake: tests: create unit tests for event module
+  bitbake: selftest: add bb.tests.event to bitbake-selftest
+  bitbake: event: remove mapping for deleted event handlers
+
+ bin/bitbake-selftest  |   1 +
+ lib/bb/event.py       |   6 +-
+ lib/bb/tests/event.py | 377 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 383 insertions(+), 1 deletion(-)
+ create mode 100644 lib/bb/tests/event.py
+
 -- 
-2.11.0
+2.7.4
 
 
