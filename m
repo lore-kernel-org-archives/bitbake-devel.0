@@ -1,27 +1,51 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 2C32E7017D
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Jun 2017 02:52:13 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v512qE0D023422
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK);
-	Wed, 31 May 2017 19:52:14 -0700
-Received: from [128.224.162.160] (128.224.162.160) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.294.0;
-	Wed, 31 May 2017 19:52:13 -0700
-To: <bitbake-devel@lists.openembedded.org>
-References: <20170527102148.15448-1-liezhi.yang@windriver.com>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <6220507b-08b6-5631-e7c2-140448b928b9@windriver.com>
-Date: Thu, 1 Jun 2017 10:52:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-	Thunderbird/45.2.0
+Return-Path: <prvs=31872cab3=Mikko.Rapeli@bmw.de>
+X-Greylist: delayed 648 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 01 Jun 2017 16:07:42 UTC
+Received: from esa7.bmw.c3s2.iphmx.com (esa7.bmw.c3s2.iphmx.com
+	[68.232.133.109])
+	by mail.openembedded.org (Postfix) with ESMTP id 5EF9A77E13;
+	Thu,  1 Jun 2017 16:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
+	t=1496333265; x=1527869265;
+	h=from:to:cc:subject:date:message-id:in-reply-to:
+	content-id:content-transfer-encoding:mime-version;
+	bh=FdGVAmM2Ip4mCdN67ig66GkKRGQHerFL7J4XAV4RPkA=;
+	b=Z0y+GChE9U+9fvw8iGsWlpDMan4fgAofj+TGw7irBL2jCKnR8sc5jAH0
+	mJyMhbsom6+so+Q7CPdRPm6hDeg4PgtvgPRHJz5/D8A7vzjCbipDAyUj+
+	MBfHFMt+orwGNNvpO7LGu3aLV6c5z2hutOC609QsjZo/GQD8DG59Qh/fF 8=;
+Received: from esagw2.bmwgroup.com (HELO esagw2.muc) ([160.46.252.38]) by
+	esa7.bmw.c3s2.iphmx.com with ESMTP/TLS; 01 Jun 2017 17:56:55 +0200
+Received: from esabb4.muc ([160.50.100.33])  by esagw2.muc with ESMTP/TLS;
+	01 Jun 2017 17:56:55 +0200
+Received: from smucm10l.bmwgroup.net (HELO smucm10l.europe.bmw.corp)
+	([160.48.96.48])
+	by esabb4.muc with ESMTP/TLS; 01 Jun 2017 17:56:55 +0200
+Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
+	smucm10l.europe.bmw.corp
+	(160.48.96.48) with Microsoft SMTP Server (TLS;
+	Thu, 1 Jun 2017 17:56:54 +0200
+Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
+	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1263.000;
+	Thu, 1 Jun 2017 17:56:54 +0200
+From: <Mikko.Rapeli@bmw.de>
+To: <bitbake-devel@lists.openembedded.org>, <poky@yoctoproject.org>
+Thread-Topic: [PATCH 1/3 v2] bitbake: Fix return value checks from
+	subprocess.call()'s
+Thread-Index: AQHS2u+wph96K9fdEUKsm2aUv77QVA==
+Date: Thu, 1 Jun 2017 15:56:54 +0000
+Message-ID: <20170601155654.hmrqbm7zmru2667w@hiutale>
+In-Reply-To: <1496332394-6615-1-git-send-email-mikko.rapeli@bmw.de>
+	<1496332293-23469-1-git-send-email-mikko.rapeli@bmw.de>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [192.168.44.101]
 MIME-Version: 1.0
-In-Reply-To: <20170527102148.15448-1-liezhi.yang@windriver.com>
-Cc: paul.eggleton@linux.intel.com
-Subject: Re: [PATCH] bb/tinfoil.py: import bb.msg
+Cc: openembedded-core@lists.openembedded.org
+Subject: Re: [PATCH 1/3 v2] bitbake: Fix return value checks from subprocess.call()'s
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,43 +58,14 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Jun 2017 02:52:14 -0000
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 01 Jun 2017 16:07:44 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E44E5004C8731A4D822FC1B6FA374938@bmwmail.corp>
+Content-Transfer-Encoding: quoted-printable
 
+Hmm, do I need to rebase the patches from yocto to upstream
+bitbake and meta-poky git trees?
 
-
-On 05/27/2017 06:21 PM, Robert Yang wrote:
-> It uses bb.msg without import it, so there might be errors like:
-> AttributeError: 'module' object has no attribute 'logger_create'
->
-> We can't reproduce the problem everytime, I think that it depends on the order.
-
-Sorry, please drop this patch, I just figured out the reason.
-
-The logger_create() was added to bb.msg two months ago, so if I import an
-older bb.msg, and then switch bitbake to a new branch and use tinfoil.py,
-the error will happen (my code error in layerindex caused this).
-
-// Robert
-
->
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
->  lib/bb/tinfoil.py | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-> index 928333a..a0d8a16 100644
-> --- a/lib/bb/tinfoil.py
-> +++ b/lib/bb/tinfoil.py
-> @@ -33,6 +33,7 @@ import bb.remotedata
->  from bb.cookerdata import CookerConfiguration, ConfigParameters
->  from bb.main import setup_bitbake, BitBakeConfigParameters, BBMainException
->  import bb.fetch2
-> +import bb.msg
->
->
->  # We need this in order to shut down the connection to the bitbake server,
->
+-Mikko=
 
