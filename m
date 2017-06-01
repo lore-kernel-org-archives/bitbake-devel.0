@@ -1,51 +1,34 @@
-Return-Path: <prvs=31872cab3=Mikko.Rapeli@bmw.de>
-X-Greylist: delayed 648 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 01 Jun 2017 16:07:42 UTC
-Received: from esa7.bmw.c3s2.iphmx.com (esa7.bmw.c3s2.iphmx.com
-	[68.232.133.109])
-	by mail.openembedded.org (Postfix) with ESMTP id 5EF9A77E13;
-	Thu,  1 Jun 2017 16:07:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-	t=1496333265; x=1527869265;
-	h=from:to:cc:subject:date:message-id:in-reply-to:
-	content-id:content-transfer-encoding:mime-version;
-	bh=FdGVAmM2Ip4mCdN67ig66GkKRGQHerFL7J4XAV4RPkA=;
-	b=Z0y+GChE9U+9fvw8iGsWlpDMan4fgAofj+TGw7irBL2jCKnR8sc5jAH0
-	mJyMhbsom6+so+Q7CPdRPm6hDeg4PgtvgPRHJz5/D8A7vzjCbipDAyUj+
-	MBfHFMt+orwGNNvpO7LGu3aLV6c5z2hutOC609QsjZo/GQD8DG59Qh/fF 8=;
-Received: from esagw2.bmwgroup.com (HELO esagw2.muc) ([160.46.252.38]) by
-	esa7.bmw.c3s2.iphmx.com with ESMTP/TLS; 01 Jun 2017 17:56:55 +0200
-Received: from esabb4.muc ([160.50.100.33])  by esagw2.muc with ESMTP/TLS;
-	01 Jun 2017 17:56:55 +0200
-Received: from smucm10l.bmwgroup.net (HELO smucm10l.europe.bmw.corp)
-	([160.48.96.48])
-	by esabb4.muc with ESMTP/TLS; 01 Jun 2017 17:56:55 +0200
-Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
-	smucm10l.europe.bmw.corp
-	(160.48.96.48) with Microsoft SMTP Server (TLS;
-	Thu, 1 Jun 2017 17:56:54 +0200
-Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
-	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1263.000;
-	Thu, 1 Jun 2017 17:56:54 +0200
-From: <Mikko.Rapeli@bmw.de>
-To: <bitbake-devel@lists.openembedded.org>, <poky@yoctoproject.org>
-Thread-Topic: [PATCH 1/3 v2] bitbake: Fix return value checks from
-	subprocess.call()'s
-Thread-Index: AQHS2u+wph96K9fdEUKsm2aUv77QVA==
-Date: Thu, 1 Jun 2017 15:56:54 +0000
-Message-ID: <20170601155654.hmrqbm7zmru2667w@hiutale>
-In-Reply-To: <1496332394-6615-1-git-send-email-mikko.rapeli@bmw.de>
-	<1496332293-23469-1-git-send-email-mikko.rapeli@bmw.de>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [192.168.44.101]
-MIME-Version: 1.0
+Return-Path: <mcfrisk@kapsi.fi>
+X-Greylist: delayed 2397 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 01 Jun 2017 16:31:44 UTC
+Received: from mail.kapsi.fi (mail.kapsi.fi [217.30.184.167])
+	by mail.openembedded.org (Postfix) with ESMTP id 0FAC677D3C
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  1 Jun 2017 16:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+	s=20161220; 
+	h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From;
+	bh=G30OZuPID3dmsHyiK6QcnxgoLWwlmcRv1x8ug/xufiI=; 
+	b=LL7Ick5x34jomu+WwrX4re/KNMgaQEkejl74uP4Z6XFeyWPFcqR1wU1KtxR8O37l30oeZ66HKREHiGF+kxJP9rTilVCtDNiEgiy4+NemJE0NrtgzGhwecq1w+EuQWAMxGiYtOF/VKXkCGiN8yNzM2FPV/91hI6obh2KXtWpW74aum5k/KSxuvDDpnQ8EYxezugP85/xblz4aLoTxNIbDQ8OqyaYEgOJCa3dPClghRm6Ixd/H42ufWXIenyeCD5F7S02MihVd8gXTsXsiuToN+yF9GsyZ9WGUFd8ePBrqkc3NgEUHN3YeKo4rWCMDxjIkIT/W2Xwriy+TJ7yPS+qEWg==;
+Received: from lakka.kapsi.fi ([2001:1bc8:1004::1] ident=Debian-exim)
+	by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.84_2) (envelope-from <mcfrisk@kapsi.fi>)
+	id 1dGSO0-0005IM-Ug; Thu, 01 Jun 2017 18:51:44 +0300
+Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.84_2)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1dGSO0-0006WI-TE; Thu, 01 Jun 2017 18:51:44 +0300
+From: Mikko Rapeli <mikko.rapeli@bmw.de>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  1 Jun 2017 18:51:33 +0300
+Message-Id: <1496332293-23469-1-git-send-email-mikko.rapeli@bmw.de>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <20170601125029.wli6reydiovo7xjk@hiutale>
+References: <20170601125029.wli6reydiovo7xjk@hiutale>
+X-SA-Exim-Connect-IP: 2001:1bc8:1004::1
+X-SA-Exim-Mail-From: mcfrisk@kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Cc: openembedded-core@lists.openembedded.org
-Subject: Re: [PATCH 1/3 v2] bitbake: Fix return value checks from subprocess.call()'s
+Subject: [PATCH 1/3 v2] bitbake: Fix return value checks from subprocess.call()'s
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,14 +41,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Jun 2017 16:07:44 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E44E5004C8731A4D822FC1B6FA374938@bmwmail.corp>
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 01 Jun 2017 16:31:45 -0000
 
-Hmm, do I need to rebase the patches from yocto to upstream
-bitbake and meta-poky git trees?
+Python function subprocess.call() returns the return value of the
+executed process. If return values are not checked, errors may
+go unnoticed and bad things can happen.
 
--Mikko=
+Change all callers of subprocess.call() which do not check for
+the return value to use subprocess.check_call() which raises
+CalledProcessError if the subprocess returns with non-zero value.
+
+https://docs.python.org/2/library/subprocess.html#using-the-subprocess-module
+
+All users of the function were found with:
+
+$ git grep "subprocess\.call" | \
+  egrep -v 'if.*subprocess\.call|=\ +subprocess\.call|return.*subprocess\.call'
+
+Tested similar patch on top of yocto jethro. Only compile tested
+core-image-minimal on poky master branch.
+
+Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
+---
+ bitbake/lib/bb/ui/ncurses.py | 2 +-
+ bitbake/lib/bb/utils.py      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+v2:
+split patches to bitbake, meta and scripts
+
+v1:
+http://lists.openembedded.org/pipermail/openembedded-core/2017-May/136901.html
+
+diff --git a/bitbake/lib/bb/ui/ncurses.py b/bitbake/lib/bb/ui/ncurses.py
+index d81e413..ca845a3 100644
+--- a/bitbake/lib/bb/ui/ncurses.py
++++ b/bitbake/lib/bb/ui/ncurses.py
+@@ -297,7 +297,7 @@ class NCursesUI:
+ #                            bb.error("log data follows (%s)" % logfile)
+ #                            number_of_lines = data.getVar("BBINCLUDELOGS_LINES", d)
+ #                            if number_of_lines:
+-#                                subprocess.call('tail -n%s %s' % (number_of_lines, logfile), shell=True)
++#                                subprocess.check_call('tail -n%s %s' % (number_of_lines, logfile), shell=True)
+ #                            else:
+ #                                f = open(logfile, "r")
+ #                                while True:
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 077fddc..6a44db5 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -680,7 +680,7 @@ def remove(path, recurse=False):
+             if _check_unsafe_delete_path(path):
+                 raise Exception('bb.utils.remove: called with dangerous path "%s" and recurse=True, refusing to delete!' % path)
+         # shutil.rmtree(name) would be ideal but its too slow
+-        subprocess.call(['rm', '-rf'] + glob.glob(path))
++        subprocess.check_call(['rm', '-rf'] + glob.glob(path))
+         return
+     for name in glob.glob(path):
+         try:
+-- 
+1.9.1
+
 
