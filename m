@@ -1,49 +1,50 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-oi0-f67.google.com (mail-oi0-f67.google.com
-	[209.85.218.67])
-	by mail.openembedded.org (Postfix) with ESMTP id D832077E8A
+Received: from mail-oi0-f47.google.com (mail-oi0-f47.google.com
+	[209.85.218.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 5348571994
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  2 Jun 2017 13:42:42 +0000 (UTC)
-Received: by mail-oi0-f67.google.com with SMTP id f206so2085734oig.2
+	Fri,  2 Jun 2017 13:59:23 +0000 (UTC)
+Received: by mail-oi0-f47.google.com with SMTP id l18so92938567oig.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Jun 2017 06:42:44 -0700 (PDT)
+	Fri, 02 Jun 2017 06:59:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=a5WaROob4Ia+68Xliq4RJuR+OXa+0iQmQ4JZ/yhYOTc=;
-	b=HCLxbePiL5s4TegAae75Rh70oS8NH7OqSSfRJWgWTayjGiNrXcWMnRbvPr5gOr0j+H
-	BFqf/VT1AZFN2z63D9bjqhWrru60voXoBlSOpfV3GtHXKr5IVnB4RKtx45ysERFcwCAX
-	CeQDba7RLwqcoB1MqyEzZGqO+iM8hKfFtpZP8163ETk+4TuvG61TDCKJ+orTV0bxX4Ax
-	ykd4AzcNghUGsYoKORCy8luh/U5JsJEsuCemCEfnhz3X9D1KuysLcqwo7TutQYrGwc4h
-	nZIFx4wu+b4Peev/z7iTnMOX6UylFxPw7yNkBmxB8aNOI3I7kqUdneQUaNWVm2/ClvpE
-	hTTA==
+	:cc; bh=1Rz67muuRJ5jRKpSisYYiudzlVMblfbsa+vW273PwwI=;
+	b=fJPk6DeGPjFa8QTUtqTZ+WDoY01n2y9JrHpumoBCrHsU6a32EE/06EGZjqRBFXQdKr
+	ZfYAmvqydsL+0Sy6OJG1WvjeuNj7OBpz3vcokVS5qCb0G09OT4OcVGJ5L4TxDofVSQCn
+	L39gAigi2B2UIm53E7/RyqvqQiJc1cJ+XoO/nvkiMa6m2NsJJXaiqG6t7p7mnaGHbj33
+	CNUMQ1weRQanPaQ+ZFo0WBDrVZIQ0fAW+9hnzcdmUIIs1Ggk+Q/Nh9LZ1q4Vzm1qVKJD
+	VySKir6G+/gw00gKor0cdXexYPogpeALm56lOeAHVmim/+U7wzUPuxQEoWceNCb+kpWW
+	QQXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
 	:message-id:subject:to:cc;
-	bh=a5WaROob4Ia+68Xliq4RJuR+OXa+0iQmQ4JZ/yhYOTc=;
-	b=rrjTSnE95Z0rrYsbZ5G02hMUzUlu31n6QRAB0WmNtvgnBq8rNJF1CtBngEGpQjdmCe
-	ALWiOfwZ+uzDxw3HwG/++0KF7pAclNVdfVmQnQRFhz801hMDxJkfvvEhHvKdRhsUO09U
-	7zY7LZ0RWCaLYfQ864tYDA3wGu09w8qgmKLDgDucVEWZCxcgU55wjuLowNFsc90YO/Er
-	0cEZxnkxFyUclv/xEl9gJX29BG2qVwCtQ1SYWy5l851hYRNPiivy9rRP0p36SzNeqsQY
-	kQCcG1Z8K0Vf0MrVR1y4LjOjJ/EDEfMWe1PFPxx60caIt+CBKEu2pw9Xj/RzBqTNgQqE
-	OwCg==
-X-Gm-Message-State: AODbwcD/2tn0iA55Nv2zD4ks6zfp3N8d6pqypw5qexyleQq4gpPJQ3ER
-	lvQ0yGXF/nP4ghjK4VKCTn/PD/Y1mg==
-X-Received: by 10.202.62.70 with SMTP id l67mr4404794oia.46.1496410963594;
-	Fri, 02 Jun 2017 06:42:43 -0700 (PDT)
+	bh=1Rz67muuRJ5jRKpSisYYiudzlVMblfbsa+vW273PwwI=;
+	b=FarWD7sKJSvQBFnt7w4p0Qwx61oU77mectFlThFEiTVgiKLG+8QwzZGIWEr9CsReZq
+	bLIl9WXufUSrWRg9a4s9qcbYsYPXwezSYra1d+oX5e1Siy2k/MgzjF3A8W2QOqtx9IGl
+	+FkGt4sGjsoj5/qx1ADwRWMT4iLBXsHniOwqSYj7W4DLJ1RZCJwiv4C240rfTaK+xf+2
+	fROpWIc1FjXzfdPsTORLOjCYkYZJtJZCfPawGJqcvP3P3PrOvl8vHDbYZCS3h+zWt0S8
+	Eg2q7xioBXrEiVORhCzGZz0TdimBEhMvGf7OumLgVhS1uNxoVb6BwJH4TZJsYPj8bKKe
+	Z3mg==
+X-Gm-Message-State: AODbwcDg0oxP0vZ/NDAKecH1ijkpmJnATbbOqFsRzNv+S0fr9z5XClTZ
+	HzsI+JL1EhuwXWR6AJdKMdDovq/09g==
+X-Received: by 10.157.31.76 with SMTP id x12mr4229805otx.65.1496411965147;
+	Fri, 02 Jun 2017 06:59:25 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 10.157.30.226 with HTTP; Fri, 2 Jun 2017 06:42:23 -0700 (PDT)
-In-Reply-To: <3febe667-f723-9497-2797-8421a58997ae@windriver.com>
-References: <cf231a157650f22c55ce6861ce824b74b245af55.1495450175.git-series.patrick.ohly@intel.com>
-	<1496408295.6630.95.camel@linuxfoundation.org>
-	<3febe667-f723-9497-2797-8421a58997ae@windriver.com>
+Received: by 10.157.30.226 with HTTP; Fri, 2 Jun 2017 06:59:04 -0700 (PDT)
+In-Reply-To: <1496398059.6630.89.camel@linuxfoundation.org>
+References: <cover.1494623828.git.chris_larson@mentor.com>
+	<c3f2c1773900f6f0282d72861802d540cf59018f.1494623828.git.chris_larson@mentor.com>
+	<1496398059.6630.89.camel@linuxfoundation.org>
 From: Christopher Larson <kergoth@gmail.com>
-Date: Fri, 2 Jun 2017 06:42:23 -0700
-Message-ID: <CABcZANn5cdC7aGJSJt_Q9ExLYk+PDLT1kn+esSdSHeUrM0LdwQ@mail.gmail.com>
-To: Mark Hatle <mark.hatle@windriver.com>
-Cc: "bitbake-devel@lists.openembedded.org"
+Date: Fri, 2 Jun 2017 06:59:04 -0700
+Message-ID: <CABcZAN=f3+Rb442BtCUTv+HizFWV8fkjWWc20q4D-ejUcdHgLg@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: Scott Rifenbark <srifenbark@gmail.com>,
+	"bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] cooker.py: allow dangling bbappends if explicitly whitelisted
+Subject: Re: [PATCH 2/8] git-make-shallow: add script to make a git repo shallow
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,166 +57,161 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Jun 2017 13:42:43 -0000
-Content-Type: multipart/alternative; boundary="001a113ce09aec55510550fa5328"
+X-List-Received-Date: Fri, 02 Jun 2017 13:59:24 -0000
+Content-Type: multipart/alternative; boundary="001a113d0f369ed1f40550fa8f89"
 
---001a113ce09aec55510550fa5328
+--001a113d0f369ed1f40550fa8f89
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 2, 2017 at 6:26 AM, Mark Hatle <mark.hatle@windriver.com> wrote:
+On Fri, Jun 2, 2017 at 3:07 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-> On 6/2/17 7:58 AM, Richard Purdie wrote:
-> > On Mon, 2017-05-22 at 12:50 +0200, Patrick Ohly wrote:
-> >> Having a .bbappend without corresponding .bb file triggers an error
-> >> or
-> >> at least warning, depending on the global
-> >> BB_DANGLINGAPPENDS_WARNONLY.
-> >>
-> >> Some layers (for example, meta-freescale) avoid that message by only
-> >> adding .bbappends to the BBFILES when the layers they apply to are
-> >> present. Others (like intel-iot-refkit) avoid such .bbappends by
-> >> falling back to global assignments with _pn-<recipe> as override.
-> >> Both
-> >> is complicated.
-> >>
-> >> Now the warning code checks BBAPPENDS_DANGLING_WHITELIST and ignores
-> >> all bbappends which match a file pattern in that list. This is an
-> >> easier way to have bbappends which may or may not apply to an
-> >> existing recipe.
-> >>
-> >> Example usage:
-> >>
-> >>   # We have recipes-* directories, add to BBFILES
-> >>   BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
-> >>      ${LAYERDIR}/optional-bbappends/recipes-*/*/*.bbappend \
-> >>      ${LAYERDIR}/recipes-*/*/*.bbappend"
-> >>
-> >>   # Several of our *.bbappends might be for layers that are not
-> >>   # guaranteed to be present. Don't warn or even error out because
-> >>   # of those.
-> >>   BBAPPENDS_DANGLING_WHITELIST += "${LAYERDIR}/optional-
-> >> bbappends/recipes-*/*/*.bbappend"
-> >
-> > I've been giving this some thought. The freescale layer approach does
-> > have ordering issues which I don't like. Equally, Chris' comment about
-> > this is also a valid concern. Experience suggests saying the layer
-> > maintainer needs to be careful doesn't work in practise.
-> >
-> > I'm wondering if there is a hybrid solution if we extend this syntax a
-> > little, e.g.:
-> >
-> > BBFILES_DYNAMIC += "\
-> >     XXXX:${LAYERDIR}/optional-bbappends-XXX/recipes-*/*/*.bbappend
-> >     YYYY:${LAYERDIR}/optional-bbappends-YYY/recipes-*/*/*.bbappend
-> > "
-> >
-> > so that the code only applies these BBFILES entries if the layer named
-> > in the first parameter is present?
-> >
-> > This would happen at the end of parsing so ordering becomes a moot
-> > point. The direction you stack BBFILES_DYANMIC in would determin
-> > bbappend application order.
-> >
-> > How does that sound to people?
+> Sorry about the delay in getting to this. In general the series looks
+> great.
 >
-> That sounds reasonable to me, and has a precedent in the package_dynamic
-> as well.
+
+Thanks for taking the time to review this, I appreciate it. I know you have
+a lot on your plate, and anything invasive in the fetcher is risky and not
+particularly fun.
 
 
-Agreed.
--- 
+> One minor thing that bothers me a bit is the name of this
+> script. If git itself ever creates something similar it may cause us
+> issues. I wondered if we wanted to namespace this more closely to
+> bitbake?
+>
+> I'm leaning towards merging this and then perhaps tweaking the naming.
+>
+
+That would be fine with me, I=E2=80=99m not particularly attached to the na=
+me. I
+only  named it this way because it=E2=80=99s of use outside of bitbake as w=
+ell, but
+I can see your namespace concern.
+
+The other thing I'd really like to see is the documentation collected
+> out the commit messages and sent to Scott Rifenbark (cc'd) as a summary
+> of the changes so he can update the manual, particularly the section on
+> the git fetcher. If you could review it once Scott has done that, that
+> would be awesome :).
+>
+
+I can do that. I might still have a more monolithic description in one of
+the previous branches, I only broke it up this way to ease review and
+reduce confusion.
+
+I do have my worries about how much complexity this adds to the git
+> fetcher but I guess its inevitable and at least we have the tests
+> (thanks!).
+>
+
+Believe me, I have the same concerns. The fetcher is quite complex as it
+is, but I don=E2=80=99t see any other way to solve this particular issue,
+unfortunately. I split out git-make-shallow for this reason, to try to pare
+down the changes to the fetcher itself, though of course that just
+relocates the complexity rather than removing it :) I=E2=80=99d love to hea=
+r any
+ideas on how to simplify things, or solve this in a different way, as
+unfortunately I=E2=80=99m completely out of ideas. I do think this solves a=
+ problem
+that we should solve, though.
+
+In the back of my mind there is another way I've been wondering about
+> assisting fetches, namely a "common reference repo" which urls may name
+> (e.g. git://xxx;refrepo=3Dlinux-kernel). If this was specified, any clone
+> would happen into the reference name as a subset namespace before a
+> clone by reference into the main repo name. With kernels, this would
+> mean one core repo and then all the subset kernels would clone by
+> reference from it. That should mean all kernels would share a common
+> repo so once you have one things should all be fast. Obviously shallow
+> clones solve a different problem in some ways but there is overlap.
+>
+
+I like that idea as an additional improvement. As you say, similar but
+slightly different, as shallow helps reduce what sources need to be shipped
+/ distributed on and downloaded from a mirror, whereas refrepo is more
+about reducing duplication amongst multiple recipes.
+--=20
 Christopher Larson
 kergoth at gmail dot com
 Founder - BitBake, OpenEmbedded, OpenZaurus
 Senior Software Engineer, Mentor Graphics
 
---001a113ce09aec55510550fa5328
+--001a113d0f369ed1f40550fa8f89
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Fri, Jun 2, 2017 at 6:26 AM, Mark Hatle <span dir=3D"ltr">&lt;<a href=3D=
-"mailto:mark.hatle@windriver.com" target=3D"_blank">mark.hatle@windriver.co=
-m</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margi=
-n:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div class=3D"HOE=
-nZb adM"><div class=3D"">On 6/2/17 7:58 AM, Richard Purdie wrote:<br>
-&gt; On Mon, 2017-05-22 at 12:50 +0200, Patrick Ohly wrote:<br>
-&gt;&gt; Having a .bbappend without corresponding .bb file triggers an erro=
-r<br>
-&gt;&gt; or<br>
-&gt;&gt; at least warning, depending on the global<br>
-&gt;&gt; BB_DANGLINGAPPENDS_WARNONLY.<br>
-&gt;&gt;<br>
-&gt;&gt; Some layers (for example, meta-freescale) avoid that message by on=
-ly<br>
-&gt;&gt; adding .bbappends to the BBFILES when the layers they apply to are=
+On Fri, Jun 2, 2017 at 3:07 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hre=
+f=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.p=
+urdie@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gma=
+il_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-lef=
+t:1ex"><div id=3D":ov" class=3D"a3s aXjCH m15c684664ea89bf5">Sorry about th=
+e delay in getting to this. In general the series looks<br>
+great.</div></blockquote><div><br></div><div>Thanks for taking the time to =
+review this, I appreciate it. I know you have a lot on your plate, and anyt=
+hing invasive in the fetcher is risky and not particularly fun.</div><div>=
+=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bo=
+rder-left:1px #ccc solid;padding-left:1ex"><div id=3D":ov" class=3D"a3s aXj=
+CH m15c684664ea89bf5">One minor thing that bothers me a bit is the name of =
+this<br>
+script. If git itself ever creates something similar it may cause us<br>
+issues. I wondered if we wanted to namespace this more closely to<br>
+bitbake?<br>
 <br>
-&gt;&gt; present. Others (like intel-iot-refkit) avoid such .bbappends by<b=
+I&#39;m leaning towards merging this and then perhaps tweaking the naming.<=
+br></div></blockquote><div><br></div><div>That would be fine with me, I=E2=
+=80=99m not particularly attached to the name. I only =C2=A0named it this w=
+ay because it=E2=80=99s of use outside of bitbake as well, but I can see yo=
+ur namespace concern.</div><div><br></div><blockquote class=3D"gmail_quote"=
+ style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><d=
+iv id=3D":ov" class=3D"a3s aXjCH m15c684664ea89bf5">
+The other thing I&#39;d really like to see is the documentation collected<b=
 r>
-&gt;&gt; falling back to global assignments with _pn-&lt;recipe&gt; as over=
-ride.<br>
-&gt;&gt; Both<br>
-&gt;&gt; is complicated.<br>
-&gt;&gt;<br>
-&gt;&gt; Now the warning code checks BBAPPENDS_DANGLING_WHITELIST and ignor=
-es<br>
-&gt;&gt; all bbappends which match a file pattern in that list. This is an<=
-br>
-&gt;&gt; easier way to have bbappends which may or may not apply to an<br>
-&gt;&gt; existing recipe.<br>
-&gt;&gt;<br>
-&gt;&gt; Example usage:<br>
-&gt;&gt;<br>
-&gt;&gt;=C2=A0 =C2=A0# We have recipes-* directories, add to BBFILES<br>
-&gt;&gt;=C2=A0 =C2=A0BBFILES +=3D &quot;${LAYERDIR}/recipes-*/*/*.bb \<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0 ${LAYERDIR}/optional-<wbr>bbappends/recipes-*/=
-*/*.<wbr>bbappend \<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0 ${LAYERDIR}/recipes-*/*/*.<wbr>bbappend&quot;<=
-br>
-&gt;&gt;<br>
-&gt;&gt;=C2=A0 =C2=A0# Several of our *.bbappends might be for layers that =
-are not<br>
-&gt;&gt;=C2=A0 =C2=A0# guaranteed to be present. Don&#39;t warn or even err=
-or out because<br>
-&gt;&gt;=C2=A0 =C2=A0# of those.<br>
-&gt;&gt;=C2=A0 =C2=A0BBAPPENDS_DANGLING_WHITELIST +=3D &quot;${LAYERDIR}/op=
-tional-<br>
-&gt;&gt; bbappends/recipes-*/*/*.<wbr>bbappend&quot;<br>
-&gt;<br>
-&gt; I&#39;ve been giving this some thought. The freescale layer approach d=
-oes<br>
-&gt; have ordering issues which I don&#39;t like. Equally, Chris&#39; comme=
-nt about<br>
-&gt; this is also a valid concern. Experience suggests saying the layer<br>
-&gt; maintainer needs to be careful doesn&#39;t work in practise.<br>
-&gt;<br>
-&gt; I&#39;m wondering if there is a hybrid solution if we extend this synt=
-ax a<br>
-&gt; little, e.g.:<br>
-&gt;<br>
-&gt; BBFILES_DYNAMIC +=3D &quot;\<br>
-&gt;=C2=A0 =C2=A0 =C2=A0XXXX:${LAYERDIR}/optional-<wbr>bbappends-XXX/recipe=
-s-*/*/*.<wbr>bbappend<br>
-&gt;=C2=A0 =C2=A0 =C2=A0YYYY:${LAYERDIR}/optional-<wbr>bbappends-YYY/recipe=
-s-*/*/*.<wbr>bbappend<br>
-&gt; &quot;<br>
-&gt;<br>
-&gt; so that the code only applies these BBFILES entries if the layer named=
+out the commit messages and sent to Scott Rifenbark (cc&#39;d) as a summary=
 <br>
-&gt; in the first parameter is present?<br>
-&gt;<br>
-&gt; This would happen at the end of parsing so ordering becomes a moot<br>
-&gt; point. The direction you stack BBFILES_DYANMIC in would determin<br>
-&gt; bbappend application order.<br>
-&gt;<br>
-&gt; How does that sound to people?<br>
-<br>
-</div></div>That sounds reasonable to me, and has a precedent in the packag=
-e_dynamic as well.</blockquote></div><br>Agreed.<br>-- <br><div class=3D"gm=
-ail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><div><di=
-v dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>Founder - B=
-itBake, OpenEmbedded, OpenZaurus<br>Senior Software Engineer, Mentor Graphi=
-cs</div></div></div></div>
+of the changes so he can update the manual, particularly the section on<br>
+the git fetcher. If you could review it once Scott has done that, that<br>
+would be awesome :).<br></div></blockquote><div><br></div><div>I can do tha=
+t. I might still have a more monolithic description in one of the previous =
+branches, I only broke it up this way to ease review and reduce confusion.<=
+/div><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0=
+ .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":ov" class=3D=
+"a3s aXjCH m15c684664ea89bf5">
+I do have my worries about how much complexity this adds to the git<br>
+fetcher but I guess its inevitable and at least we have the tests<br>
+(thanks!).<br></div></blockquote><div><br></div><div>Believe me, I have the=
+ same concerns. The fetcher is quite complex as it is, but I don=E2=80=99t =
+see any other way to solve this particular issue, unfortunately. I split ou=
+t git-make-shallow for this reason, to try to pare down the changes to the =
+fetcher itself, though of course that just relocates the complexity rather =
+than removing it :) I=E2=80=99d love to hear any ideas on how to simplify t=
+hings, or solve this in a different way, as unfortunately I=E2=80=99m compl=
+etely out of ideas. I do think this solves a problem that we should solve, =
+though.</div><div><br></div><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":ov" =
+class=3D"a3s aXjCH m15c684664ea89bf5">
+In the back of my mind there is another way I&#39;ve been wondering about<b=
+r>
+assisting fetches, namely a &quot;common reference repo&quot; which urls ma=
+y name<br>
+(e.g. git://xxx;refrepo=3Dlinux-<wbr>kernel). If this was specified, any cl=
+one<br>
+would happen into the reference name as a subset namespace before a<br>
+clone by reference into the main repo name. With kernels, this would<br>
+mean one core repo and then all the subset kernels would clone by<br>
+reference from it. That should mean all kernels would share a common<br>
+repo so once you have one things should all be fast. Obviously shallow<br>
+clones solve a different problem in some ways but there is overlap.</div></=
+blockquote></div><br>I like that idea as an additional improvement. As you =
+say, similar but slightly different, as shallow helps reduce what sources n=
+eed to be shipped / distributed on and downloaded from a mirror, whereas re=
+frepo is more about reducing duplication amongst multiple recipes.<br>-- <b=
+r><div class=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div di=
+r=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot =
+com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior Software Engin=
+eer, Mentor Graphics</div></div></div></div>
 </div></div>
 
---001a113ce09aec55510550fa5328--
+--001a113d0f369ed1f40550fa8f89--
