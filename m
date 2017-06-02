@@ -1,50 +1,55 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-oi0-f47.google.com (mail-oi0-f47.google.com
-	[209.85.218.47])
-	by mail.openembedded.org (Postfix) with ESMTP id 5348571994
+Return-Path: <patrick.ohly@intel.com>
+Received: from mail-it0-f46.google.com (mail-it0-f46.google.com
+	[209.85.214.46])
+	by mail.openembedded.org (Postfix) with ESMTP id 52C6D71BF9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  2 Jun 2017 13:59:23 +0000 (UTC)
-Received: by mail-oi0-f47.google.com with SMTP id l18so92938567oig.2
+	Fri,  2 Jun 2017 16:14:56 +0000 (UTC)
+Received: by mail-it0-f46.google.com with SMTP id m47so10887905iti.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Jun 2017 06:59:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=1Rz67muuRJ5jRKpSisYYiudzlVMblfbsa+vW273PwwI=;
-	b=fJPk6DeGPjFa8QTUtqTZ+WDoY01n2y9JrHpumoBCrHsU6a32EE/06EGZjqRBFXQdKr
-	ZfYAmvqydsL+0Sy6OJG1WvjeuNj7OBpz3vcokVS5qCb0G09OT4OcVGJ5L4TxDofVSQCn
-	L39gAigi2B2UIm53E7/RyqvqQiJc1cJ+XoO/nvkiMa6m2NsJJXaiqG6t7p7mnaGHbj33
-	CNUMQ1weRQanPaQ+ZFo0WBDrVZIQ0fAW+9hnzcdmUIIs1Ggk+Q/Nh9LZ1q4Vzm1qVKJD
-	VySKir6G+/gw00gKor0cdXexYPogpeALm56lOeAHVmim/+U7wzUPuxQEoWceNCb+kpWW
-	QQXQ==
+	Fri, 02 Jun 2017 09:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=message-id:subject:from:to:cc:date:in-reply-to:references
+	:organization:mime-version:content-transfer-encoding;
+	bh=m8hA/apRbWdDoby6byEq1fp+6HqeYa/a4AAGX4GDboQ=;
+	b=QatCv19WxHIv2QZ7AZsN02TFDESH6Buds7oWKjNVt49mso4CtpYNTOSRVL8v2NTgww
+	ciibB+NjWiM2d4+i32vl2EXjdkxuBbyE7oNcG9q6ei2UuQX7haLLYleLDxup4jbOGz+m
+	WCOvywRFDC44+zU2ZPVB/aK8WtaGwomNLKAJvhlW+VAPlbruz9KGGsTxp/aX3HSVRr5v
+	dXnxO5oajpLBzkh1S/Lwdw8n1VXfauLLFNXi41mwrMKX+9O2XNZPCJok9pkXX5iAbkD7
+	X0CHT52/0s39kGR6pBeE7OpHxLx8hBJhtpsA9F1JODJP+Tu0R3AxsTPwMIHexgBuBa4a
+	SuYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=1Rz67muuRJ5jRKpSisYYiudzlVMblfbsa+vW273PwwI=;
-	b=FarWD7sKJSvQBFnt7w4p0Qwx61oU77mectFlThFEiTVgiKLG+8QwzZGIWEr9CsReZq
-	bLIl9WXufUSrWRg9a4s9qcbYsYPXwezSYra1d+oX5e1Siy2k/MgzjF3A8W2QOqtx9IGl
-	+FkGt4sGjsoj5/qx1ADwRWMT4iLBXsHniOwqSYj7W4DLJ1RZCJwiv4C240rfTaK+xf+2
-	fROpWIc1FjXzfdPsTORLOjCYkYZJtJZCfPawGJqcvP3P3PrOvl8vHDbYZCS3h+zWt0S8
-	Eg2q7xioBXrEiVORhCzGZz0TdimBEhMvGf7OumLgVhS1uNxoVb6BwJH4TZJsYPj8bKKe
-	Z3mg==
-X-Gm-Message-State: AODbwcDg0oxP0vZ/NDAKecH1ijkpmJnATbbOqFsRzNv+S0fr9z5XClTZ
-	HzsI+JL1EhuwXWR6AJdKMdDovq/09g==
-X-Received: by 10.157.31.76 with SMTP id x12mr4229805otx.65.1496411965147;
-	Fri, 02 Jun 2017 06:59:25 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.157.30.226 with HTTP; Fri, 2 Jun 2017 06:59:04 -0700 (PDT)
-In-Reply-To: <1496398059.6630.89.camel@linuxfoundation.org>
-References: <cover.1494623828.git.chris_larson@mentor.com>
-	<c3f2c1773900f6f0282d72861802d540cf59018f.1494623828.git.chris_larson@mentor.com>
-	<1496398059.6630.89.camel@linuxfoundation.org>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Fri, 2 Jun 2017 06:59:04 -0700
-Message-ID: <CABcZAN=f3+Rb442BtCUTv+HizFWV8fkjWWc20q4D-ejUcdHgLg@mail.gmail.com>
+	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+	:references:organization:mime-version:content-transfer-encoding;
+	bh=m8hA/apRbWdDoby6byEq1fp+6HqeYa/a4AAGX4GDboQ=;
+	b=mPI5PpVW3Mi+nkKXLC64MNz39F9swjJF4mZ4wStwT3nvl4gjDD+ZEPCOqRE50+wXqt
+	KOiF7YYumJnsR5jUI5COnkuAfwRGgxO9d+eSn2vhZfLCdNhbN/PqY2pP+hdZxcqXlxoQ
+	AYShl4tzMKYH/nawOWSqYEUtMnV8GWNwbPLNojJAhwl2y5k1tg7Aib6VsIOH2eN3Q7zC
+	Kb7PeCVOSl35bUWOLz93ML0Wa4FUvD2ejGrVlWZtQEkcdi2IiH6b4T8T4Xn++aV4ZwqN
+	+KXSbmN64mEh3tN8iQuaYBsoACv3NDZd3y7XviSkJ/5ozGr6E1fQSeCe6cLjyH/ndjfu
+	19BQ==
+X-Gm-Message-State: AODbwcCl41LFVNlZMwOMp6/3Fu+J/JDWGpYfCaOpfyZZUuRGuKmLEJ7x
+	vXv+oEofwOOdHGHZ
+X-Received: by 10.107.20.213 with SMTP id 204mr8356008iou.226.1496420097250;
+	Fri, 02 Jun 2017 09:14:57 -0700 (PDT)
+Received: from pohly-mobl1 (p5DE8E6B0.dip0.t-ipconnect.de. [93.232.230.176])
+	by smtp.gmail.com with ESMTPSA id
+	b18sm10458937ioa.16.2017.06.02.09.14.55
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 02 Jun 2017 09:14:56 -0700 (PDT)
+Message-ID: <1496420093.30163.27.camel@intel.com>
+From: Patrick Ohly <patrick.ohly@intel.com>
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: Scott Rifenbark <srifenbark@gmail.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 2/8] git-make-shallow: add script to make a git repo shallow
+Date: Fri, 02 Jun 2017 18:14:53 +0200
+In-Reply-To: <1496408295.6630.95.camel@linuxfoundation.org>
+References: <cf231a157650f22c55ce6861ce824b74b245af55.1495450175.git-series.patrick.ohly@intel.com>
+	<1496408295.6630.95.camel@linuxfoundation.org>
+Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
+X-Mailer: Evolution 3.12.9-1+b1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] cooker.py: allow dangling bbappends if explicitly whitelisted
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,161 +62,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Jun 2017 13:59:24 -0000
-Content-Type: multipart/alternative; boundary="001a113d0f369ed1f40550fa8f89"
-
---001a113d0f369ed1f40550fa8f89
+X-List-Received-Date: Fri, 02 Jun 2017 16:14:56 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 2, 2017 at 3:07 AM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> Sorry about the delay in getting to this. In general the series looks
-> great.
+On Fri, 2017-06-02 at 13:58 +0100, Richard Purdie wrote:
+> On Mon, 2017-05-22 at 12:50 +0200, Patrick Ohly wrote:
+> > Having a .bbappend without corresponding .bb file triggers an error
+> > or
+> > at least warning, depending on the global
+> > BB_DANGLINGAPPENDS_WARNONLY.
+> > 
+> > Some layers (for example, meta-freescale) avoid that message by only
+> > adding .bbappends to the BBFILES when the layers they apply to are
+> > present. Others (like intel-iot-refkit) avoid such .bbappends by
+> > falling back to global assignments with _pn-<recipe> as override.
+> > Both
+> > is complicated.
+> > 
+> > Now the warning code checks BBAPPENDS_DANGLING_WHITELIST and ignores
+> > all bbappends which match a file pattern in that list. This is an
+> > easier way to have bbappends which may or may not apply to an
+> > existing recipe.
+> > 
+> > Example usage:
+> > 
+> >   # We have recipes-* directories, add to BBFILES
+> >   BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
+> > 	${LAYERDIR}/optional-bbappends/recipes-*/*/*.bbappend \
+> > 	${LAYERDIR}/recipes-*/*/*.bbappend"
+> > 
+> >   # Several of our *.bbappends might be for layers that are not
+> >   # guaranteed to be present. Don't warn or even error out because
+> >   # of those.
+> >   BBAPPENDS_DANGLING_WHITELIST += "${LAYERDIR}/optional-
+> > bbappends/recipes-*/*/*.bbappend"
+> 
+> I've been giving this some thought. The freescale layer approach does
+> have ordering issues which I don't like. Equally, Chris' comment about
+> this is also a valid concern. Experience suggests saying the layer
+> maintainer needs to be careful doesn't work in practise.
+> 
+> I'm wondering if there is a hybrid solution if we extend this syntax a
+> little, e.g.:
+> 
+> BBFILES_DYNAMIC += "\
+>     XXXX:${LAYERDIR}/optional-bbappends-XXX/recipes-*/*/*.bbappend
+>     YYYY:${LAYERDIR}/optional-bbappends-YYY/recipes-*/*/*.bbappend
+> "
+> 
+> so that the code only applies these BBFILES entries if the layer named
+> in the first parameter is present?
 >
+> This would happen at the end of parsing so ordering becomes a moot
+> point. The direction you stack BBFILES_DYANMIC in would determin
+> bbappend application order.
 
-Thanks for taking the time to review this, I appreciate it. I know you have
-a lot on your plate, and anything invasive in the fetcher is risky and not
-particularly fun.
+While the usecase above was for .bbappends, would the same also make
+sense for .bb files, and would that change the implementation? Perhaps
+not.
+
+The use case would be a .bb which depends on something in a layer which
+may or may not be present. It's a bit harder, though, because it's not
+always as clear as for the .bbappend case where something comes from
+that a recipe depends on.
+
+-- 
+Best Regards, Patrick Ohly
+
+The content of this message is my personal opinion only and although
+I am an employee of Intel, the statements I make here in no way
+represent Intel's position on the issue, nor am I authorized to speak
+on behalf of Intel on this matter.
 
 
-> One minor thing that bothers me a bit is the name of this
-> script. If git itself ever creates something similar it may cause us
-> issues. I wondered if we wanted to namespace this more closely to
-> bitbake?
->
-> I'm leaning towards merging this and then perhaps tweaking the naming.
->
 
-That would be fine with me, I=E2=80=99m not particularly attached to the na=
-me. I
-only  named it this way because it=E2=80=99s of use outside of bitbake as w=
-ell, but
-I can see your namespace concern.
 
-The other thing I'd really like to see is the documentation collected
-> out the commit messages and sent to Scott Rifenbark (cc'd) as a summary
-> of the changes so he can update the manual, particularly the section on
-> the git fetcher. If you could review it once Scott has done that, that
-> would be awesome :).
->
-
-I can do that. I might still have a more monolithic description in one of
-the previous branches, I only broke it up this way to ease review and
-reduce confusion.
-
-I do have my worries about how much complexity this adds to the git
-> fetcher but I guess its inevitable and at least we have the tests
-> (thanks!).
->
-
-Believe me, I have the same concerns. The fetcher is quite complex as it
-is, but I don=E2=80=99t see any other way to solve this particular issue,
-unfortunately. I split out git-make-shallow for this reason, to try to pare
-down the changes to the fetcher itself, though of course that just
-relocates the complexity rather than removing it :) I=E2=80=99d love to hea=
-r any
-ideas on how to simplify things, or solve this in a different way, as
-unfortunately I=E2=80=99m completely out of ideas. I do think this solves a=
- problem
-that we should solve, though.
-
-In the back of my mind there is another way I've been wondering about
-> assisting fetches, namely a "common reference repo" which urls may name
-> (e.g. git://xxx;refrepo=3Dlinux-kernel). If this was specified, any clone
-> would happen into the reference name as a subset namespace before a
-> clone by reference into the main repo name. With kernels, this would
-> mean one core repo and then all the subset kernels would clone by
-> reference from it. That should mean all kernels would share a common
-> repo so once you have one things should all be fast. Obviously shallow
-> clones solve a different problem in some ways but there is overlap.
->
-
-I like that idea as an additional improvement. As you say, similar but
-slightly different, as shallow helps reduce what sources need to be shipped
-/ distributed on and downloaded from a mirror, whereas refrepo is more
-about reducing duplication amongst multiple recipes.
---=20
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
-
---001a113d0f369ed1f40550fa8f89
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Fri, Jun 2, 2017 at 3:07 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.p=
-urdie@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gma=
-il_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-lef=
-t:1ex"><div id=3D":ov" class=3D"a3s aXjCH m15c684664ea89bf5">Sorry about th=
-e delay in getting to this. In general the series looks<br>
-great.</div></blockquote><div><br></div><div>Thanks for taking the time to =
-review this, I appreciate it. I know you have a lot on your plate, and anyt=
-hing invasive in the fetcher is risky and not particularly fun.</div><div>=
-=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bo=
-rder-left:1px #ccc solid;padding-left:1ex"><div id=3D":ov" class=3D"a3s aXj=
-CH m15c684664ea89bf5">One minor thing that bothers me a bit is the name of =
-this<br>
-script. If git itself ever creates something similar it may cause us<br>
-issues. I wondered if we wanted to namespace this more closely to<br>
-bitbake?<br>
-<br>
-I&#39;m leaning towards merging this and then perhaps tweaking the naming.<=
-br></div></blockquote><div><br></div><div>That would be fine with me, I=E2=
-=80=99m not particularly attached to the name. I only =C2=A0named it this w=
-ay because it=E2=80=99s of use outside of bitbake as well, but I can see yo=
-ur namespace concern.</div><div><br></div><blockquote class=3D"gmail_quote"=
- style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><d=
-iv id=3D":ov" class=3D"a3s aXjCH m15c684664ea89bf5">
-The other thing I&#39;d really like to see is the documentation collected<b=
-r>
-out the commit messages and sent to Scott Rifenbark (cc&#39;d) as a summary=
-<br>
-of the changes so he can update the manual, particularly the section on<br>
-the git fetcher. If you could review it once Scott has done that, that<br>
-would be awesome :).<br></div></blockquote><div><br></div><div>I can do tha=
-t. I might still have a more monolithic description in one of the previous =
-branches, I only broke it up this way to ease review and reduce confusion.<=
-/div><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0=
- .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":ov" class=3D=
-"a3s aXjCH m15c684664ea89bf5">
-I do have my worries about how much complexity this adds to the git<br>
-fetcher but I guess its inevitable and at least we have the tests<br>
-(thanks!).<br></div></blockquote><div><br></div><div>Believe me, I have the=
- same concerns. The fetcher is quite complex as it is, but I don=E2=80=99t =
-see any other way to solve this particular issue, unfortunately. I split ou=
-t git-make-shallow for this reason, to try to pare down the changes to the =
-fetcher itself, though of course that just relocates the complexity rather =
-than removing it :) I=E2=80=99d love to hear any ideas on how to simplify t=
-hings, or solve this in a different way, as unfortunately I=E2=80=99m compl=
-etely out of ideas. I do think this solves a problem that we should solve, =
-though.</div><div><br></div><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":ov" =
-class=3D"a3s aXjCH m15c684664ea89bf5">
-In the back of my mind there is another way I&#39;ve been wondering about<b=
-r>
-assisting fetches, namely a &quot;common reference repo&quot; which urls ma=
-y name<br>
-(e.g. git://xxx;refrepo=3Dlinux-<wbr>kernel). If this was specified, any cl=
-one<br>
-would happen into the reference name as a subset namespace before a<br>
-clone by reference into the main repo name. With kernels, this would<br>
-mean one core repo and then all the subset kernels would clone by<br>
-reference from it. That should mean all kernels would share a common<br>
-repo so once you have one things should all be fast. Obviously shallow<br>
-clones solve a different problem in some ways but there is overlap.</div></=
-blockquote></div><br>I like that idea as an additional improvement. As you =
-say, similar but slightly different, as shallow helps reduce what sources n=
-eed to be shipped / distributed on and downloaded from a mirror, whereas re=
-frepo is more about reducing duplication amongst multiple recipes.<br>-- <b=
-r><div class=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div di=
-r=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot =
-com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior Software Engin=
-eer, Mentor Graphics</div></div></div></div>
-</div></div>
-
---001a113d0f369ed1f40550fa8f89--
