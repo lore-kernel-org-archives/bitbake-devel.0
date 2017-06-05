@@ -1,20 +1,22 @@
 Return-Path: <rebecca.swee.fun.chang@intel.com>
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 2131B776F4
+	by mail.openembedded.org (Postfix) with ESMTP id 3D26C7782F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Jun 2017 08:43:32 +0000 (UTC)
+	Mon,  5 Jun 2017 08:43:37 +0000 (UTC)
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
 	by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	05 Jun 2017 01:43:32 -0700
+	05 Jun 2017 01:43:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.39,300,1493708400"; d="scan'208";a="110947196"
+X-IronPort-AV: E=Sophos;i="5.39,300,1493708400"; d="scan'208";a="110947234"
 Received: from rebeccas.png.intel.com ([172.30.199.118])
-	by fmsmga006.fm.intel.com with ESMTP; 05 Jun 2017 01:43:32 -0700
+	by fmsmga006.fm.intel.com with ESMTP; 05 Jun 2017 01:43:38 -0700
 From: Chang Rebecca Swee Fun <rebecca.swee.fun.chang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Jun 2017 16:43:54 +0800
-Message-Id: <1496652235-125329-1-git-send-email-rebecca.swee.fun.chang@intel.com>
+Date: Mon,  5 Jun 2017 16:43:55 +0800
+Message-Id: <1496652235-125329-2-git-send-email-rebecca.swee.fun.chang@intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1496652235-125329-1-git-send-email-rebecca.swee.fun.chang@intel.com>
+References: <1496652235-125329-1-git-send-email-rebecca.swee.fun.chang@intel.com>
 Subject: [PATCHv3] bitbake-layers: check layer dependencies before adding
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -28,34 +30,83 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Jun 2017 08:43:35 -0000
+X-List-Received-Date: Mon, 05 Jun 2017 08:43:37 -0000
 
-Change log on v3 patch:
-- Use "-F" for force add argument flags.
-- This is because "-f" was already been use by oe-selftest
-  causing argument flags overridden and failed oe-selftest.
+In the original implementation, "bitbake-layers add-layers <layer>"
+succeeded without error checking. This will further introduce
+failures in recipe parsing only when "bitbake" command is executed.
+Adding a meta layer without its dependency layer(s) should failed
+and exit the process gracefully.
 
-Tested on the failed test cases, now they are passing.
-2017-06-05 16:01:20 - test_bitbakelayers_flatten (oeqa.selftest.bblayers.BitbakeLayers) ... ok
-2017-06-05 16:01:35 - test_bitbakelayers_showappends (oeqa.selftest.bblayers.BitbakeLayers) ... ok
+Added extra argument "-F" to force add a layer without checking
+layer dependency.
 
-Failed logs on v2 patch:
-https://autobuilder.yocto.io/builders/nightly-oe-selftest/builds/320/steps/Running%20oe-selftest/logs/stdio
+[YOCTO #10913]
 
-Change log on v2 patch:
-- Remove line "return 1", because bb.fatal raises an exception, hence
-  return 1 is not needed.
-
-Regards,
-Rebecca
-
-Chang Rebecca Swee Fun (1):
-  bitbake-layers: check layer dependencies before adding
-
+Signed-off-by: Phoong Stanley Cheong Kwan <stanley.cheong.kwan.phoong@intel.com>
+Signed-off-by: Chang Rebecca Swee Fun <rebecca.swee.fun.chang@intel.com>
+---
  bitbake/bin/bitbake-layers     |  1 +
  bitbake/lib/bblayers/action.py | 26 ++++++++++++++++++++++----
  2 files changed, 23 insertions(+), 4 deletions(-)
 
+diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
+index 2b05d28..04e6bec 100755
+--- a/bitbake/bin/bitbake-layers
++++ b/bitbake/bin/bitbake-layers
+@@ -43,6 +43,7 @@ def main():
+         add_help=False)
+     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
+     parser.add_argument('-q', '--quiet', help='Print only errors', action='store_true')
++    parser.add_argument('-F', '--force', help='Force add without recipe parse verification', action='store_true')
+     parser.add_argument('--color', choices=['auto', 'always', 'never'], default='auto', help='Colorize output (where %(metavar)s is %(choices)s)', metavar='COLOR')
+ 
+     global_args, unparsed_args = parser.parse_known_args()
+diff --git a/bitbake/lib/bblayers/action.py b/bitbake/lib/bblayers/action.py
+index cf94704..b1326e5 100644
+--- a/bitbake/lib/bblayers/action.py
++++ b/bitbake/lib/bblayers/action.py
+@@ -1,7 +1,9 @@
+ import fnmatch
+ import logging
+ import os
++import shutil
+ import sys
++import tempfile
+ 
+ import bb.utils
+ 
+@@ -32,10 +34,26 @@ class ActionPlugin(LayerPlugin):
+             sys.stderr.write("Unable to find bblayers.conf\n")
+             return 1
+ 
+-        notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdir, None)
+-        if notadded:
+-            for item in notadded:
+-                sys.stderr.write("Specified layer %s is already in BBLAYERS\n" % item)
++        # Back up bblayers.conf to tempdir before we add layers
++        tempdir = tempfile.mkdtemp()
++        backup = tempdir + "/bblayers.conf.bak"
++        shutil.copy2(bblayers_conf, backup)
++
++        try:
++            notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdir, None)
++            if not (args.force or notadded):
++                try:
++                    self.tinfoil.parseRecipes()
++                except bb.tinfoil.TinfoilUIException:
++                    # Restore the back up copy of bblayers.conf
++                    shutil.copy2(backup, bblayers_conf)
++                    bb.fatal("Parse failure with the specified layer added")
++                else:
++                    for item in notadded:
++                        sys.stderr.write("Specified layer %s is already in BBLAYERS\n" % item)
++        finally:
++            # Remove the back up copy of bblayers.conf
++            shutil.rmtree(tempdir)
+ 
+     def do_remove_layer(self, args):
+         """Remove a layer from bblayers.conf."""
 -- 
 2.7.4
 
