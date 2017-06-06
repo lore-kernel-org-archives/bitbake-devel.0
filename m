@@ -1,23 +1,46 @@
-Return-Path: <rebecca.swee.fun.chang@intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 3D26C7782F
+Return-Path: <liu.ming50@gmail.com>
+Received: from mail-wm0-f65.google.com (mail-wm0-f65.google.com [74.125.82.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 66CA7780FA
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Jun 2017 08:43:37 +0000 (UTC)
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-	by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	05 Jun 2017 01:43:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.39,300,1493708400"; d="scan'208";a="110947234"
-Received: from rebeccas.png.intel.com ([172.30.199.118])
-	by fmsmga006.fm.intel.com with ESMTP; 05 Jun 2017 01:43:38 -0700
-From: Chang Rebecca Swee Fun <rebecca.swee.fun.chang@intel.com>
+	Tue,  6 Jun 2017 03:28:02 +0000 (UTC)
+Received: by mail-wm0-f65.google.com with SMTP id x3so5518172wme.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 05 Jun 2017 20:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=9Y/ZYH3fxPbsas3Hn1FA4+MnGkEMp9BXUB23EkdmjYo=;
+	b=cN3f+1B+IoISMWbil/D5YJIjESTVzNtBgjyS3h6whnPNOayY5dzWZDDUd2VWUqc+iU
+	P3Tqyr1gDsi/itQ0LTuBLiKWZfgqcxqpHQkfdminFu65aC87pZFneuQ0NGL1TfmaoGzs
+	aFCRbaT9j0z3Z1ZGKIlIxxuQa0J71kLLQYBDjLY3k1PvRtd0QkDmOTM7IDbpXbLQ3K5B
+	g326YRViBPJRuLpN1lR7Bs4EZMFgfpFiTAHyAR1a7HBul4TqI/3sTXtqUT/d1GN7K4/1
+	7uG1U2G/iZfyuI1vLMkxT+MkR4JWcJk8NpLX5W3N8AdR0UPNl2u0uvPMDmpfR3dOBsSg
+	FIRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=9Y/ZYH3fxPbsas3Hn1FA4+MnGkEMp9BXUB23EkdmjYo=;
+	b=IPzEVTs4JOyi8aa/YcQ8CoGAn09j+mtuM2dlueZKBcA7wNEGHzuyWKF6mx0wSdfdm3
+	Uq71JadilDXgNavxVWsc4iXT+6BDqmmhMxQT9WMRk13c/z/ic+cChOoTYABWsZh/7t4w
+	0vOxP4tL4bu+hyLd1OM7rolJHwfApuJroBwLEztmEAm4rCquYB/uvRBFtL1zjmZpf4Iw
+	VJB1ozKw3pDC1my/MK3JnywnLkAfM8cCyw6TRYxkQtE8smHRzGGlH16I00fkq0jHLvSB
+	j7WwzGH83NrnpifHpfCsRkk+Wv9zSsgtyzhJf9Ea8r8YljIZLId/Byp6vICTJYW/BmOq
+	Iilw==
+X-Gm-Message-State: AODbwcCws7EhEoFQxaY3Rry2NUxbOGfgbmEQTBoHsc+ertLU7knlIY9+
+	2MANL5sm55abNfZ+
+X-Received: by 10.80.139.145 with SMTP id m17mr13943045edm.121.1496719683826; 
+	Mon, 05 Jun 2017 20:28:03 -0700 (PDT)
+Received: from peterliu-Precision-M4800.emea.group.atlascopco.com
+	([106.119.199.183]) by smtp.gmail.com with ESMTPSA id
+	n55sm12323590edd.65.2017.06.05.20.28.01
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 05 Jun 2017 20:28:03 -0700 (PDT)
+From: liu.ming50@gmail.com
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Jun 2017 16:43:55 +0800
-Message-Id: <1496652235-125329-2-git-send-email-rebecca.swee.fun.chang@intel.com>
+Date: Tue,  6 Jun 2017 05:27:52 +0200
+Message-Id: <1496719672-5773-1-git-send-email-liu.ming50@gmail.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1496652235-125329-1-git-send-email-rebecca.swee.fun.chang@intel.com>
-References: <1496652235-125329-1-git-send-email-rebecca.swee.fun.chang@intel.com>
-Subject: [PATCHv3] bitbake-layers: check layer dependencies before adding
+Cc: Ming Liu <peter.x.liu@external.atlascopco.com>
+Subject: [PATCH] bitbake-user-manual-metadata.xml: fix a typo
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,83 +53,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Jun 2017 08:43:37 -0000
+X-List-Received-Date: Tue, 06 Jun 2017 03:28:05 -0000
 
-In the original implementation, "bitbake-layers add-layers <layer>"
-succeeded without error checking. This will further introduce
-failures in recipe parsing only when "bitbake" command is executed.
-Adding a meta layer without its dependency layer(s) should failed
-and exit the process gracefully.
+From: Ming Liu <peter.x.liu@external.atlascopco.com>
 
-Added extra argument "-F" to force add a layer without checking
-layer dependency.
+'buildCompleted' should be 'BuildCompleted'.
 
-[YOCTO #10913]
-
-Signed-off-by: Phoong Stanley Cheong Kwan <stanley.cheong.kwan.phoong@intel.com>
-Signed-off-by: Chang Rebecca Swee Fun <rebecca.swee.fun.chang@intel.com>
+Signed-off-by: Ming Liu <peter.x.liu@external.atlascopco.com>
 ---
- bitbake/bin/bitbake-layers     |  1 +
- bitbake/lib/bblayers/action.py | 26 ++++++++++++++++++++++----
- 2 files changed, 23 insertions(+), 4 deletions(-)
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
-index 2b05d28..04e6bec 100755
---- a/bitbake/bin/bitbake-layers
-+++ b/bitbake/bin/bitbake-layers
-@@ -43,6 +43,7 @@ def main():
-         add_help=False)
-     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
-     parser.add_argument('-q', '--quiet', help='Print only errors', action='store_true')
-+    parser.add_argument('-F', '--force', help='Force add without recipe parse verification', action='store_true')
-     parser.add_argument('--color', choices=['auto', 'always', 'never'], default='auto', help='Colorize output (where %(metavar)s is %(choices)s)', metavar='COLOR')
- 
-     global_args, unparsed_args = parser.parse_known_args()
-diff --git a/bitbake/lib/bblayers/action.py b/bitbake/lib/bblayers/action.py
-index cf94704..b1326e5 100644
---- a/bitbake/lib/bblayers/action.py
-+++ b/bitbake/lib/bblayers/action.py
-@@ -1,7 +1,9 @@
- import fnmatch
- import logging
- import os
-+import shutil
- import sys
-+import tempfile
- 
- import bb.utils
- 
-@@ -32,10 +34,26 @@ class ActionPlugin(LayerPlugin):
-             sys.stderr.write("Unable to find bblayers.conf\n")
-             return 1
- 
--        notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdir, None)
--        if notadded:
--            for item in notadded:
--                sys.stderr.write("Specified layer %s is already in BBLAYERS\n" % item)
-+        # Back up bblayers.conf to tempdir before we add layers
-+        tempdir = tempfile.mkdtemp()
-+        backup = tempdir + "/bblayers.conf.bak"
-+        shutil.copy2(bblayers_conf, backup)
-+
-+        try:
-+            notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdir, None)
-+            if not (args.force or notadded):
-+                try:
-+                    self.tinfoil.parseRecipes()
-+                except bb.tinfoil.TinfoilUIException:
-+                    # Restore the back up copy of bblayers.conf
-+                    shutil.copy2(backup, bblayers_conf)
-+                    bb.fatal("Parse failure with the specified layer added")
-+                else:
-+                    for item in notadded:
-+                        sys.stderr.write("Specified layer %s is already in BBLAYERS\n" % item)
-+        finally:
-+            # Remove the back up copy of bblayers.conf
-+            shutil.rmtree(tempdir)
- 
-     def do_remove_layer(self, args):
-         """Remove a layer from bblayers.conf."""
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+index b32fa33..999d295 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+@@ -2030,7 +2030,7 @@
+             before any tasks are executed so would be in the global
+             configuration datastore namespace.
+             No recipe-specific metadata exists in that namespace.
+-            The "BuildStarted" and "buildCompleted" events also run in
++            The "BuildStarted" and "BuildCompleted" events also run in
+             the main cooker/server process rather than any worker context.
+             Thus, any changes made to the datastore would be seen by other
+             cooker/server events within the current build but not seen
 -- 
 2.7.4
 
