@@ -1,50 +1,27 @@
-Return-Path: <patrick.ohly@intel.com>
-Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
-	[209.85.223.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 9EEDD7198A
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 4599A77EFE
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Jun 2017 09:03:29 +0000 (UTC)
-Received: by mail-io0-f172.google.com with SMTP id b184so4196556ioe.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 07 Jun 2017 02:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=K/+BAfJmqMOwkrT5ic0+KObYBaUW6J1urA0kaoJHWuU=;
-	b=NzPr376B2WUdwEjC+frJIY2HRToTnZ6KXbzUubNmNnri5x6gFcVeqiJVW9ZNomXXAg
-	bNxlVMgzLzl/5uaDKuPoqHRvMZ2eRsJjKCaAghhu5rW8Ak9D9bmY/oSxxYwJ2J4gE/q4
-	vJfrqC1yXrDE69mSiWpRssShKmqIC50AOHaJpuNxsHQ4f7jV70ql4u1SFhCQK1rZO4kI
-	OgrBqb0KvH3912xVdhIe2lN5fDMJmCvJ7QELOhtRyOVYnnQN9Ni2hYB/0JaWc6NiW47I
-	h8w33eguFoI5CsN6DXYmv9IFyUEoaMMCyMAS/SS9d1X7fp7WpihO0Rxc40HmBYZ1FR6O
-	Cwig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=K/+BAfJmqMOwkrT5ic0+KObYBaUW6J1urA0kaoJHWuU=;
-	b=Ch3ze5wL2g2xVGM9z7w3mjnWnbtpIoPD+sapF9z24oFV1sNlABcfkUQy9dAR9+dESk
-	Rm9OiIorVdriUJlQQ2z8sp30fxLuRPCQ3AVnEbnZDuVUcM/JloIbL1yluZZh4ruVeBcK
-	WICct/SfOEr7LXMAOW7wcaRwPIt6A5V7q/cEU5i4jKNZEOMwCImFAsSpUDwd3EdtIGy/
-	AjQ+E3LCKruAHUffaHQdgYBOrrZISK0ZsJg5kqJVTs0JCm/QhYFeaEUngWCuLZAkWWfv
-	K9LIyg0/uMDmgBGoLaf/XWGpE3S74X24d/hT8mxnEjN/bAJmUF8FeAG4yA1QFfEfWxKX
-	fHRw==
-X-Gm-Message-State: AODbwcC6cqrazRbdMU1y+deH5O+WbHBVNVG/os3J0NlMWgB5rqkjxZ86
-	y0mRhB+YnF9JdlvwaBA=
-X-Received: by 10.107.32.197 with SMTP id g188mr8135342iog.146.1496826210587; 
-	Wed, 07 Jun 2017 02:03:30 -0700 (PDT)
-Received: from pohly-desktop.fritz.box (p5DE8FFF1.dip0.t-ipconnect.de.
-	[93.232.255.241])
-	by smtp.gmail.com with ESMTPSA id h63sm834326itd.10.2017.06.07.02.03.28
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 07 Jun 2017 02:03:29 -0700 (PDT)
-From: Patrick Ohly <patrick.ohly@intel.com>
+	Wed,  7 Jun 2017 12:38:13 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v57CcCMu014264
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Wed, 7 Jun 2017 13:38:13 +0100
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1dIaE0-0000ks-Qj; Wed, 07 Jun 2017 13:38:12 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 Jun 2017 11:03:18 +0200
-Message-Id: <cf2bf9a0b0d9380025f61c7e7a39e6e19b46a7a1.1496826075.git-series.patrick.ohly@intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <1496408295.6630.95.camel@linuxfoundation.org>
-References: <1496408295.6630.95.camel@linuxfoundation.org>
-Subject: [PATCH] cookerdata: Add support for BBFILES_DYNAMIC
+Date: Wed,  7 Jun 2017 13:38:11 +0100
+Message-Id: <1496839091-2864-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
+	(dan.rpsys.net [192.168.3.1]);
+	Wed, 07 Jun 2017 13:38:14 +0100 (BST)
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: [PATCH] cookerdata: Implement LAYERSERIES_COMPAT and LAYERSERIES_CORENAMES
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,65 +34,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Jun 2017 09:03:32 -0000
+X-List-Received-Date: Wed, 07 Jun 2017 12:38:14 -0000
 
-BBFILES_DYNAMIC can be used to activate content only when some other
-layers are present. The other layers are identified by the collections
-that they define.
+Currently, someone trying a master branch of any given layer may
+or may not find it works with the version of OE-Core that they
+have picked.
 
-The main use case is to avoid .bbappends without the corresponding .bb
-file in layers that want to modify other layers via .bbappends without
-introducing a hard dependency on those other layers. .bb files could
-also be handled via BBFILES_DYNAMIC.
+This patchset introduces LAYERSERIES_CORENAMES and
+LAYERSERIES_COMPAT_<layername> with the intention of allowing layers
+to indicate which versions of the core project they're compatible with.
 
-Entries in BBFILES_DYNAMIC must have the form <collection
-name>:<filename pattern>. Example usage:
- BBFILES_DYNAMIC += " \
-     clang-layer:${LAYERDIR}/bbappends/meta-clang/*/*/*.bbappend \
-     core:${LAYERDIR}/bbappends/openembedded-core/meta/*/*/*.bbappend \
- "
+In general the master branch will use the next release codename as
+the value of LAYERSERIES_CORENAMES, meaning that the waterfall model
+of layer releases is supported with layers updating their
+LAYERSERIES_COMPAT_ values as they branch for release.
 
-Parsing is aborted when invalid entries are found with an error
-message like this:
+Both variables support multiple strings and a given layer is accepted
+if there is overlap of any one value. This means a layer can be compatible
+with multiple core versions.
 
- ERROR: BBFILES_DYNAMIC entries must be of the form <collection name>:<filename pattern>, not:
-     /work/my-layer/bbappends/meta-security-isafw/*/*/*.bbappend
-     /work/my-layer/bbappends/openembedded-core/meta/*/*/*.bbappend
+Setting LAYERSERIES_COMPAT_ will be required by the Yocto Project
+Compatible v2 standard but the system will not error if its not set at this
+point.
 
-Based on a patch by Richard Purdie.
+This should make it clear when a given layer is unmaintained and untested
+with new releaes of OE-Core, a common user pain point.
 
-Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cookerdata.py | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ lib/bb/cookerdata.py | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 722d860..aa96f54 100644
+index aa96f54..256e4f3 100644
 --- a/lib/bb/cookerdata.py
 +++ b/lib/bb/cookerdata.py
-@@ -346,6 +346,20 @@ class CookerDataBuilder(object):
-             data.delVar('LAYERDIR_RE')
-             data.delVar('LAYERDIR')
+@@ -360,6 +360,13 @@ class CookerDataBuilder(object):
+             if invalid:
+                 bb.fatal("BBFILES_DYNAMIC entries must be of the form <collection name>:<filename pattern>, not:\n    %s" % "\n    ".join(invalid))
  
-+            bbfiles_dynamic = (data.getVar('BBFILES_DYNAMIC') or "").split()
-+            collections = (data.getVar('BBFILE_COLLECTIONS') or "").split()
-+            invalid = []
-+            for entry in bbfiles_dynamic:
-+                parts = entry.split(":", 1)
-+                if len(parts) != 2:
-+                    invalid.append(entry)
-+                    continue
-+                l, f = parts
-+                if l in collections:
-+                    data.appendVar("BBFILES", " " + f)
-+            if invalid:
-+                bb.fatal("BBFILES_DYNAMIC entries must be of the form <collection name>:<filename pattern>, not:\n    %s" % "\n    ".join(invalid))
++            layerseries = set((data.getVar("LAYERSERIES_CORENAMES") or "").split())
++            for c in collections:
++                compat = set((data.getVar("LAYERSERIES_COMPAT_%s" % c) or "").split())
++                if compat and not (compat & layerseries):
++                    bb.fatal("Layer %s is not compatible with the core layer which only supports these series: %s (layer is compatible with %s)"
++                              % (c, " ".join(layerseries), " ".join(compat)))
 +
          if not data.getVar("BBPATH"):
              msg = "The BBPATH variable is not set"
              if not layerconf:
-
-base-commit: 705ab252e631903e6d2e46202b419a9e8adcd861
 -- 
-git-series 0.9.1
+2.7.4
+
 
