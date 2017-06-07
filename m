@@ -1,22 +1,24 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id A4FF6719B8
+	by mail.openembedded.org (Postfix) with ESMTP id A5EF578151
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed,  7 Jun 2017 19:04:59 +0000 (UTC)
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
 	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	07 Jun 2017 12:05:00 -0700
+	07 Jun 2017 12:05:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.39,311,1493708400"; d="scan'208";a="865610498"
+X-IronPort-AV: E=Sophos;i="5.39,311,1493708400"; d="scan'208";a="865610503"
 Received: from nippert-mobl.ger.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.252.38.12])
-	by FMSMGA003.fm.intel.com with ESMTP; 07 Jun 2017 12:04:59 -0700
+	by FMSMGA003.fm.intel.com with ESMTP; 07 Jun 2017 12:05:00 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 Jun 2017 21:04:15 +0200
-Message-Id: <cover.1496862217.git.paul.eggleton@linux.intel.com>
+Date: Wed,  7 Jun 2017 21:04:16 +0200
+Message-Id: <17a9d9b7ac782a82ebe518ba724b7f531c111ca3.1496862217.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.9.4
-Subject: [PATCH 0/2] Tinfoil log duplication fixes
+In-Reply-To: <cover.1496862217.git.paul.eggleton@linux.intel.com>
+References: <cover.1496862217.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 1/2] tinfoil: fix duplication of log messages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,25 +33,51 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 07 Jun 2017 19:05:01 -0000
 
-The following changes since commit 705ab252e631903e6d2e46202b419a9e8adcd861:
+Adding an additional logger in setup_bitbake() interacts poorly with the
+logger we have added by default in tinfoil's constructor, with the
+result that messages may be doubled or even tripled in tinfoil-using
+scripts. Disable adding this one when calling setup_bitbake() from
+tinfoil to avoid this problem.
 
-  bitbake-layers: check layer dependencies before adding (2017-06-05 13:33:14 +0100)
+Part of the fix for [YOCTO #11275].
 
-are available in the git repository at:
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ lib/bb/main.py    | 4 ++--
+ lib/bb/tinfoil.py | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-  git://git.yoctoproject.org/poky-contrib paule/bb-tinfoil-logging
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-tinfoil-logging
-
-Paul Eggleton (2):
-  tinfoil: fix duplication of log messages
-  knotty: prevent extra logger from being enabled for tinfoil
-
- lib/bb/main.py      | 4 ++--
- lib/bb/msg.py       | 7 +++++++
- lib/bb/tinfoil.py   | 3 ++-
- lib/bb/ui/knotty.py | 5 +++--
- 4 files changed, 14 insertions(+), 5 deletions(-)
-
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 8c948c2..29e3911 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -477,10 +477,10 @@ def bitbake_main(configParams, configuration):
+ 
+     return 1
+ 
+-def setup_bitbake(configParams, configuration, extrafeatures=None):
++def setup_bitbake(configParams, configuration, extrafeatures=None, setup_logging=True):
+     # Ensure logging messages get sent to the UI as events
+     handler = bb.event.LogHandler()
+-    if not configParams.status_only:
++    if setup_logging and not configParams.status_only:
+         # In status only mode there are no logs and no UI
+         logger.addHandler(handler)
+ 
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 563c0c4..fb0da62 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -245,7 +245,8 @@ class Tinfoil:
+ 
+         server, self.server_connection, ui_module = setup_bitbake(config_params,
+                             cookerconfig,
+-                            extrafeatures)
++                            extrafeatures,
++                            setup_logging=False)
+ 
+         self.ui_module = ui_module
+ 
 -- 
 2.9.4
 
