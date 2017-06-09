@@ -1,42 +1,22 @@
-Return-Path: <florian.doersch@iis.fraunhofer.de>
-X-Greylist: delayed 378 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 09 Jun 2017 10:40:05 UTC
-Received: from mx-relay12-hz1.antispameurope.com
-	(mx-relay12-hz1.antispameurope.com [94.100.132.212])
-	by mail.openembedded.org (Postfix) with ESMTP id C57B271AEB
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id A719078293
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Jun 2017 10:40:05 +0000 (UTC)
-Received: from mailgw1.iis.fraunhofer.de ([153.96.172.4]) by
-	mx-relay12-hz1.antispameurope.com; Fri, 09 Jun 2017 12:33:44 +0200
-Received: from mail.iis.fraunhofer.de (mail03.iis.fhg.de [153.96.171.212])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mailgw1.iis.fraunhofer.de (Postfix) with ESMTPS id EDE642400082
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Jun 2017 12:33:43 +0200 (CEST)
-Received: from [10.12.71.18] (153.96.171.210) by mail03.iis.fhg.de
-	(2001:638:a0a:1111:314f:f22c:4a37:b25a) with Microsoft SMTP Server
-	(TLS) id 15.0.1263.5; Fri, 9 Jun 2017 12:33:43 +0200
-To: <bitbake-devel@lists.openembedded.org>
-From: Florian Doersch <florian.doersch@iis.fraunhofer.de>
-Message-ID: <593A7987.1060001@iis.fraunhofer.de>
-Date: Fri, 9 Jun 2017 12:33:43 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
-	Thunderbird/38.3.0
-MIME-Version: 1.0
-X-Originating-IP: [153.96.171.210]
-X-ClientProxiedBy: mail01.iis.fhg.de (2001:638:a0a:1111:fd91:8c2a:e4a5:e74e)
-	To mail03.iis.fhg.de (2001:638:a0a:1111:314f:f22c:4a37:b25a)
-X-cloud-security-sender: florian.doersch@iis.fraunhofer.de
-X-cloud-security-recipient: bitbake-devel@lists.openembedded.org
-X-cloud-security-crypt: load encryption module
-X-cloud-security-Virusscan: CLEAN
-X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on
-	mx-relay12-hz1.antispameurope.com with 16B85820059
-X-cloud-security-connect: mailgw1.iis.fraunhofer.de[153.96.172.4], TLS=1,
-	IP=153.96.172.4
-X-cloud-security: scantime:.1568
-Subject: Bitbake and Git LFS
+	Fri,  9 Jun 2017 13:35:27 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	09 Jun 2017 06:35:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.39,317,1493708400"; d="scan'208";a="1180388527"
+Received: from therfet-mobl.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.41.2])
+	by fmsmga002.fm.intel.com with ESMTP; 09 Jun 2017 06:35:23 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  9 Jun 2017 15:34:42 +0200
+Message-Id: <cover.1497014984.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.4
+Subject: [PATCH 0/4] BitBake memory-resident mode fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,40 +29,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 09 Jun 2017 10:40:06 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 09 Jun 2017 13:35:27 -0000
 
-Hi,
+Three fixes for memres and one optimisation that I noticed while working
+on these.
 
-I am currently using Bitbake via Yocto.
+The following changes since commit 705ab252e631903e6d2e46202b419a9e8adcd861:
 
-Since we use git lfs to store larger binary blobs in our git 
-repositories, I ran into a problem building these repositories in bitbake.
+  bitbake-layers: check layer dependencies before adding (2017-06-05 13:33:14 +0100)
 
-I did some research and finally found a solution. I had to run "git lfs 
-fetch --all" after "git clone --mirror", so an addition clone from the 
-mirror has all necessary lfs objects available.
+are available in the git repository at:
 
-I've created a small patch (without any checks if git lfs is available 
-or used, so theres still work to do)
+  git://git.yoctoproject.org/poky-contrib paule/bb-memres-fixes
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-memres-fixes
 
---- poky/bitbake/lib/bb/fetch2/git.py.orig	2017-06-09 09:33:24.044338249 
-+0200
-+++ poky/bitbake/lib/bb/fetch2/git.py	2017-06-09 10:11:13.000000000 +0200
-@@ -201,6 +201,7 @@
-              if ud.proto.lower() != 'file':
-                  bb.fetch2.check_network_access(d, clone_cmd)
-              runfetchcmd(clone_cmd, d)
-+            runfetchcmd("git -C %s lfs fetch --all" % ud.clonedir, d)
+Paul Eggleton (4):
+  cookerdata: fix variable history not showing in bitbake -e with memres
+  cooker: fix file changes not triggering task re-execution with memres
+  cooker: set config valid flags in initConfigurationData()
+  cooker: add BB_CMDLINE to enable access to UI command line with memres
 
-          os.chdir(ud.clonedir)
-          # Update the checkout if needed
+ lib/bb/command.py    |  3 ++-
+ lib/bb/cooker.py     | 29 +++++++++++++++++++++--------
+ lib/bb/cookerdata.py |  4 ++--
+ 3 files changed, 25 insertions(+), 11 deletions(-)
 
-You can freely use it if helpful.
+-- 
+2.9.4
 
-Is there already an "official solution for that kind of problem?
-
-Best Regards
-Florian
 
