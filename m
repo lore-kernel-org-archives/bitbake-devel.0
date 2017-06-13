@@ -1,25 +1,51 @@
-Return-Path: <juro.bystricky@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id B1F71782BE
+Return-Path: <kergoth@gmail.com>
+Received: from mail-ot0-f180.google.com (mail-ot0-f180.google.com
+	[74.125.82.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 1E185782FC
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Jun 2017 17:12:05 +0000 (UTC)
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	12 Jun 2017 10:12:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.39,334,1493708400"; d="scan'208";a="97170514"
-Received: from juro-precision-t5610.jf.intel.com ([10.7.198.53])
-	by orsmga004.jf.intel.com with ESMTP; 12 Jun 2017 10:12:06 -0700
-From: Juro Bystricky <juro.bystricky@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 12 Jun 2017 10:12:04 -0700
-Message-Id: <1497287524-5406-2-git-send-email-juro.bystricky@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1497287524-5406-1-git-send-email-juro.bystricky@intel.com>
+	Tue, 13 Jun 2017 15:46:35 +0000 (UTC)
+Received: by mail-ot0-f180.google.com with SMTP id t31so90965408ota.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 13 Jun 2017 08:46:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=qSpfHpQ167Wv55yfsebX04248MQGYOPbZ9DkJQK6UFY=;
+	b=BY+G3LrpEpt7E/e5YCHJEimYfK6a0MbXY2rS1PiKvj2RQQOq3Eiasymn7Pq2exBv2I
+	ePXgxyAXoCBaUP/qMUmtOwsah+7yMj67zyKOQWihLNX5jNFwLy1C2kJX6oBm+i1JCPMF
+	IKcmGjvyKF6tpyV2PfhmiYMntMRuZrPZfwNzvNWNyyVTmjwrj/D9FbhsCkXCckdl0Ah/
+	KBMJprgbT7EtYE2KkHcIw5nuPnToxi5IDBZNbSU1kK+Pn1suvyPy7jQTw/ofp0kUutYP
+	NQ3ry6Tto2RW1PpCWXdZadTw3lhxBb0J5xbASXhdRZIjNGDTeWFJT0IRED681/FriRJt
+	2pFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=qSpfHpQ167Wv55yfsebX04248MQGYOPbZ9DkJQK6UFY=;
+	b=fHjBD3MfYfF+8sjYlfgaMueAkY3BZdSmMKHOh1NYcmRA2N7YJbTQh9zYu/AJ8BRBLP
+	e4tGlJ4Pd2tb5FPSvoBLbKV2Zk/76w01WOr2ZK7rtRPcwu4suZUA8MKLq7w65B6OBy/g
+	54wYuqY5rxz7x75Ght7hVUaEER9WGu0d9RTMfsykzVy0ur2o8ImOSbetx7SA7oZRJoGq
+	KKMQPNGb8flRYYb+4UlTD1gVeu0gIV7tpKSLWFNnLbvSUCTku3Jjz/1mSUlMc/QItgkP
+	iWmbPfX8sB4tdkFwJ8k1LuJESmMcgS5mzeSYk9msEEcvFS7dMG0t2xtEoTde/4lwjAmZ
+	Ag9Q==
+X-Gm-Message-State: AKS2vOxWMKMmjUZllNbUK9Tfagq5ZPCoKWKMEzs8Qi5FHXs/UoORzZA6
+	EKJhTS3uK8Cir9GfBNi2Db0d54VLbg==
+X-Received: by 10.157.4.239 with SMTP id 102mr368540otm.65.1497368796797; Tue,
+	13 Jun 2017 08:46:36 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.157.30.230 with HTTP; Tue, 13 Jun 2017 08:46:16 -0700 (PDT)
+In-Reply-To: <1497287524-5406-2-git-send-email-juro.bystricky@intel.com>
 References: <1497287524-5406-1-git-send-email-juro.bystricky@intel.com>
-Cc: richard.purdie@intel.com, jurobystricky@hotmail.com,
-	paul.eggleton@linux.intel.com
-Subject: [PATCH 1/1] bitbake:process: flush stderr/stdout to log
+	<1497287524-5406-2-git-send-email-juro.bystricky@intel.com>
+From: Christopher Larson <kergoth@gmail.com>
+Date: Tue, 13 Jun 2017 08:46:16 -0700
+Message-ID: <CABcZANnXvtwQB499_GZGb1R7TEPiezuHhQLdb+Yfyn+od4eehA@mail.gmail.com>
+To: Juro Bystricky <juro.bystricky@intel.com>
+Cc: "Purdie, Richard" <richard.purdie@intel.com>,
+	Juro Bystricky <jurobystricky@hotmail.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	"paul.eggleton@linux.intel.com" <paul.eggleton@linux.intel.com>
+Subject: Re: [PATCH 1/1] bitbake:process: flush stderr/stdout to log
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,118 +58,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 12 Jun 2017 17:12:05 -0000
+X-List-Received-Date: Tue, 13 Jun 2017 15:46:36 -0000
+Content-Type: multipart/alternative; boundary="94eb2c09deea3b21020551d957d4"
 
-When a process terminates, some messages may still remain in stdout or
-stderr and do not make it into the log file.
-In addition, the messages that do make it to the log file may end up in
-the log file in incorrect order.
-This patch flushes all messages into the log file after the
-process terminates. Some additional log flushing is also needed
-to keep the various messages showing up in the log file in proper order.
+--94eb2c09deea3b21020551d957d4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[YOCTO#10785]
+On Mon, Jun 12, 2017 at 10:12 AM, Juro Bystricky <juro.bystricky@intel.com>
+wrote:
 
-Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
----
- bitbake/lib/bb/process.py | 81 +++++++++++++++++++++++++----------------------
- 1 file changed, 44 insertions(+), 37 deletions(-)
+> -    finally:
+> -        log.flush()
+> -
+> -    readextras([fobj for fobj, _ in extrafiles])
+> +            read_all_pipes(log, rin, outdata, errdata)
+> +
+> +        # Pocess closed, drain all pipes...
+> +        read_all_pipes(log, rin, outdata, errdata)
+> +    finally:
+> +        log.flush
+>
 
-diff --git a/bitbake/lib/bb/process.py b/bitbake/lib/bb/process.py
-index a4a5599..93149c0 100644
---- a/bitbake/lib/bb/process.py
-+++ b/bitbake/lib/bb/process.py
-@@ -94,45 +94,52 @@ def _logged_communicate(pipe, log, input, extrafiles):
-                 if data is not None:
-                     func(data)
- 
-+    def read_all_pipes(log, rin, outdata, errdata):
-+        rlist = rin
-+        stdoutbuf = b""
-+        stderrbuf = b""
-+
-+        try:
-+            r,w,e = select.select (rlist, [], [], 1)
-+        except OSError as e:
-+            if e.errno != errno.EINTR:
-+                raise
-+
-+        readextras(r)
-+
-+        if pipe.stdout in r:
-+            data = stdoutbuf + pipe.stdout.read()
-+            if data is not None and len(data) > 0:
-+                try:
-+                    data = data.decode("utf-8")
-+                    outdata.append(data)
-+                    log.write(data)
-+                    log.flush()
-+                    stdoutbuf = b""
-+                except UnicodeDecodeError:
-+                    stdoutbuf = data
-+
-+        if pipe.stderr in r:
-+            data = stderrbuf + pipe.stderr.read()
-+            if data is not None and len(data) > 0:
-+                try:
-+                    data = data.decode("utf-8")
-+                    errdata.append(data)
-+                    log.write(data)
-+                    log.flush()
-+                    stderrbuf = b""
-+                except UnicodeDecodeError:
-+                    stderrbuf = data
-+
-     try:
-+        # Read all pipes while the process is open
-         while pipe.poll() is None:
--            rlist = rin
--            stdoutbuf = b""
--            stderrbuf = b""
--            try:
--                r,w,e = select.select (rlist, [], [], 1)
--            except OSError as e:
--                if e.errno != errno.EINTR:
--                    raise
--
--            if pipe.stdout in r:
--                data = stdoutbuf + pipe.stdout.read()
--                if data is not None and len(data) > 0:
--                    try:
--                        data = data.decode("utf-8")
--                        outdata.append(data)
--                        log.write(data)
--                        stdoutbuf = b""
--                    except UnicodeDecodeError:
--                        stdoutbuf = data
--
--            if pipe.stderr in r:
--                data = stderrbuf + pipe.stderr.read()
--                if data is not None and len(data) > 0:
--                    try:
--                        data = data.decode("utf-8")
--                        errdata.append(data)
--                        log.write(data)
--                        stderrbuf = b""
--                    except UnicodeDecodeError:
--                        stderrbuf = data
--
--            readextras(r)
--
--    finally:    
--        log.flush()
--
--    readextras([fobj for fobj, _ in extrafiles])
-+            read_all_pipes(log, rin, outdata, errdata)
-+
-+        # Pocess closed, drain all pipes...
-+        read_all_pipes(log, rin, outdata, errdata)
-+    finally:
-+        log.flush
- 
-     if pipe.stdout is not None:
-         pipe.stdout.close()
--- 
-2.7.4
+You forgot a (), so you aren=E2=80=99t actually running flush here.
+--=20
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
 
+--94eb2c09deea3b21020551d957d4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Mon, Jun 12, 2017 at 10:12 AM, Juro Bystricky <span dir=3D"ltr">&lt;<a h=
+ref=3D"mailto:juro.bystricky@intel.com" target=3D"_blank">juro.bystricky@in=
+tel.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D=
+"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D"=
+:25s" class=3D"a3s aXjCH m15c9d4ad91752e18">-=C2=A0 =C2=A0 finally:<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 log.flush()<br>
+-<br>
+-=C2=A0 =C2=A0 readextras([fobj for fobj, _ in extrafiles])<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 read_all_pipes(log, rin, outdata=
+, errdata)<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Pocess closed, drain all pipes...<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 read_all_pipes(log, rin, outdata, errdata)<br>
++=C2=A0 =C2=A0 finally:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 log.flush</div></blockquote></div><br>You forg=
+ot a (), so you aren=E2=80=99t actually running flush here.<br>-- <br><div =
+class=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"lt=
+r"><div><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>=
+Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior Software Engineer, Me=
+ntor Graphics</div></div></div></div>
+</div></div>
+
+--94eb2c09deea3b21020551d957d4--
