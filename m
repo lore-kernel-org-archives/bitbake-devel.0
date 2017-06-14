@@ -1,22 +1,22 @@
-Return-Path: <juro.bystricky@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 4288C6E5FB
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 6844C782EF
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Jun 2017 00:46:45 +0000 (UTC)
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	13 Jun 2017 17:46:45 -0700
+	Wed, 14 Jun 2017 10:10:50 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	14 Jun 2017 03:10:51 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.39,339,1493708400"; d="scan'208";a="97689172"
-Received: from juro-precision-t5610.jf.intel.com ([10.7.198.53])
-	by orsmga004.jf.intel.com with ESMTP; 13 Jun 2017 17:46:45 -0700
-From: Juro Bystricky <juro.bystricky@intel.com>
+X-IronPort-AV: E=Sophos;i="5.39,340,1493708400"; d="scan'208";a="867840901"
+Received: from petrova-mobl12.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.48.250])
+	by FMSMGA003.fm.intel.com with ESMTP; 14 Jun 2017 03:10:50 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 13 Jun 2017 17:46:43 -0700
-Message-Id: <1497401203-32395-1-git-send-email-juro.bystricky@intel.com>
-X-Mailer: git-send-email 2.7.4
-Cc: jurobystricky@hotmail.com
-Subject: [PATCH] bitbake: runqueue: multiconfig fix
+Date: Wed, 14 Jun 2017 12:10:23 +0200
+Message-Id: <cover.1497434991.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.4
+Subject: [PATCH 0/2] A couple more memres fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,30 +29,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Jun 2017 00:46:46 -0000
+X-List-Received-Date: Wed, 14 Jun 2017 10:10:51 -0000
 
-Differentiate between fn and taskfn in "execute".
-This was somehow missed in "fakeroot" handling.
+The following changes since commit 8d0a76f5a595dddf16b7268bae2c00ef5f568316:
 
-Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
----
- bitbake/lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  ConfHandler.py: allow require or include with multiple parameters (2017-06-12 15:28:25 +0100)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 7d2ff81..21520d3 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1932,7 +1932,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                         self.rq.state = runQueueFailed
-                         self.stats.taskFailed()
-                         return True
--                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-+                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-                 self.rq.fakeworker[mc].process.stdin.flush()
-             else:
-                 self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/bb-memres-fixes2
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-memres-fixes2
+
+Paul Eggleton (2):
+  cooker: fix always loading cache on every UI start with memres
+  cooker: ensure graceful exit after exception during BuildCompleted handler
+
+ lib/bb/cooker.py | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
 -- 
-2.7.4
+2.9.4
 
 
