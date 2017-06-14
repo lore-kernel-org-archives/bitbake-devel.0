@@ -1,24 +1,20 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id DD872782EF
+Return-Path: <joshua.g.lock@linux.intel.com>
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 92FA2782A4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Jun 2017 10:10:51 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	14 Jun 2017 03:10:53 -0700
+	Wed, 14 Jun 2017 19:30:28 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga105.fm.intel.com with ESMTP; 14 Jun 2017 12:30:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.39,340,1493708400"; d="scan'208";a="867840908"
-Received: from petrova-mobl12.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.48.250])
-	by FMSMGA003.fm.intel.com with ESMTP; 14 Jun 2017 03:10:52 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.39,341,1493708400"; d="scan'208";a="1141318018"
+Received: from jlock-mobl1.ger.corp.intel.com ([10.252.8.228])
+	by orsmga001.jf.intel.com with ESMTP; 14 Jun 2017 12:30:28 -0700
+From: Joshua Lock <joshua.g.lock@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Jun 2017 12:10:25 +0200
-Message-Id: <be5e5d97538e3ab7e946ed144c24674e2d62c4b8.1497434991.git.paul.eggleton@linux.intel.com>
+Date: Wed, 14 Jun 2017 20:30:22 +0100
+Message-Id: <20170614193022.7163-1-joshua.g.lock@intel.com>
 X-Mailer: git-send-email 2.9.4
-In-Reply-To: <cover.1497434991.git.paul.eggleton@linux.intel.com>
-References: <cover.1497434991.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] cooker: ensure graceful exit after exception during BuildCompleted handler
+Subject: [PATCH] fetch: fix handling of files with incorrect checksums from a premirror
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,37 +27,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Jun 2017 10:10:52 -0000
+X-List-Received-Date: Wed, 14 Jun 2017 19:30:29 -0000
 
-If an event handler for bb.event.BuildCompleted fails, we still need to
-call finishAsyncCommand() or else BitBake will just exit immediately
-without showing any error summary, or worse in the case of memory
-resident mode BitBake will hang and if you Ctrl+C to break out, the
-command won't be marked as finished which means that no further commands
-will be able to be executed until the server is manually restarted.
+Ensure that when an item fetched from a premirror has an invalid checksum the
+fetcher falls back to the usual logic of trying the upstream and any configured
+mirrors.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Joshua Lock <joshua.g.lock@intel.com>
 ---
- lib/bb/cooker.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/__init__.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 6a1b649..479dc5a 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1361,8 +1361,10 @@ class BBCooker:
-                 return False
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 1f63a04..ec65216 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1621,6 +1621,15 @@ class Fetch(object):
+                     logger.debug(1, "Trying PREMIRRORS")
+                     mirrors = mirror_from_string(self.d.getVar('PREMIRRORS'))
+                     localpath = try_mirrors(self, self.d, ud, mirrors, False)
++                    if localpath:
++                        try:
++                            # early checksum verification so that if the checksum of the premirror
++                            # contents mismatch the fetcher can still try upstream and mirrors
++                            update_stamp(ud, self.d)
++                        except ChecksumError as e:
++                            logger.warning("Checksum failure encountered with premirror download of %s - will attempt other sources." % u)
++                            logger.debug(1, str(e))
++                            localpath = ""
  
-             if not retval:
--                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, targets, failures, interrupted), self.data)
--                self.command.finishAsyncCommand(msg)
-+                try:
-+                    bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, targets, failures, interrupted), self.data)
-+                finally:
-+                    self.command.finishAsyncCommand(msg)
-                 return False
-             if retval is True:
-                 return True
+                 if premirroronly:
+                     self.d.setVar("BB_NO_NETWORK", "1")
 -- 
 2.9.4
 
