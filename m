@@ -1,27 +1,25 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 80B4478372
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 1789277E8A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 15 Jun 2017 04:57:16 +0000 (UTC)
+	Thu, 15 Jun 2017 05:00:07 +0000 (UTC)
 Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
 	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v5F4vItb009533
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v5F509G9004456
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Jun 2017 21:57:18 -0700
+	Wed, 14 Jun 2017 22:00:09 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.200.76) by
 	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.294.0; Wed, 14 Jun 2017 21:57:17 -0700
+	(TLS) id 14.3.294.0; Wed, 14 Jun 2017 22:00:08 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 14 Jun 2017 21:48:31 -0700
-Message-ID: <5928932b2d58b36c666451ef6a39feb7f9634834.1497501996.git.David.Reyna@windriver.com>
+Date: Wed, 14 Jun 2017 21:51:22 -0700
+Message-ID: <cover.1497502167.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1497501996.git.David.Reyna@windriver.com>
-References: <cover.1497501996.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.200.76]
-Subject: [PATCH 1/1] toaster: fail on layers with sub-layer
+Subject: [PATCH 0/1] toaster: update mockevent
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,72 +32,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Jun 2017 04:57:19 -0000
+X-List-Received-Date: Thu, 15 Jun 2017 05:00:08 -0000
 Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-For layers directories with sub-layers (for example meta-intel),
-Toaster breaks when trying to exact match a dependency event for
-that sub-layer against the top level layer directory paths.
+The internal MockEvent needs the new 'getMessage' method so that
+it can continue to stand in for LogRecord events.
 
-Given that top the level layer directory paths are unique, adding
-a test to see if the dependency path is a subset of a top level
-path is also unique.
+The following changes since commit 6964efddd31c479386d1643c1025bc102710392f:
 
-Also, since a warning was issued the processing should not fail
-on the assert but instead should continue and gather the recipes
-and tasks.
+  bitbake: cooker: ensure graceful exit after exception during BuildCompleted handler (2017-06-14 14:54:25 +0100)
 
-[YOCTO #11149]
+are available in the git repository at:
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
- lib/bb/ui/buildinfohelper.py | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/mockevent_11440
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/mockevent_11440
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 46be5a5..3f8d63d 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -981,6 +981,7 @@ class BuildInfoHelper(object):
-             pathRE = pathRE[:-1]
- 
-         p = re.compile(pathRE)
-+        path=re.sub(r'[$^]',r'',pathRE)
-         # Heuristics: we always match recipe to the deepest layer path in
-         # the discovered layers
-         for lvo in sorted(self.orm_wrapper.layer_version_objects,
-@@ -990,12 +991,16 @@ class BuildInfoHelper(object):
-             if lvo.layer.local_source_dir:
-                 if p.fullmatch(os.path.abspath(lvo.layer.local_source_dir)):
-                     return lvo
-+            if 0 == path.find(lvo.local_path):
-+                # sub-layer path inside existing layer
-+                return lvo
- 
-         # if we get here, we didn't read layers correctly;
-         # dump whatever information we have on the error log
-         logger.warning("Could not match layer dependency for path %s : %s",
-                        pathRE,
-                        self.orm_wrapper.layer_version_objects)
-+        return None
- 
-     def _get_layer_version_for_path(self, path):
-         self._ensure_build()
-@@ -1396,9 +1401,9 @@ class BuildInfoHelper(object):
-             for lv in event._depgraph['layer-priorities']:
-                 (_, path, _, priority) = lv
-                 layer_version_obj = self._get_layer_version_for_dependency(path)
--                assert layer_version_obj is not None
--                layer_version_obj.priority = priority
--                layer_version_obj.save()
-+                if layer_version_obj:
-+                    layer_version_obj.priority = priority
-+                    layer_version_obj.save()
- 
-         # save recipe information
-         self.internal_state['recipes'] = {}
+David Reyna (1):
+  toaster: add getMessage to MockEvent
+
+ lib/bb/ui/buildinfohelper.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
 -- 
 1.9.1
 
