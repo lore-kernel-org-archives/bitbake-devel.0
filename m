@@ -1,27 +1,25 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 20B8D78375
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id A75CB77E8A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 15 Jun 2017 04:49:42 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v5F4nhUs003958
+	Thu, 15 Jun 2017 04:53:52 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v5F4rsfJ015415
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Jun 2017 21:49:44 -0700 (PDT)
+	Wed, 14 Jun 2017 21:53:54 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.200.76) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.294.0; Wed, 14 Jun 2017 21:49:43 -0700
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
+	(TLS) id 14.3.294.0; Wed, 14 Jun 2017 21:53:53 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 14 Jun 2017 21:40:56 -0700
-Message-ID: <85d081ada9e3d605a1d285219fb513821ff64bb6.1497501449.git.David.Reyna@windriver.com>
+Date: Wed, 14 Jun 2017 21:45:07 -0700
+Message-ID: <cover.1497501754.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1497501449.git.David.Reyna@windriver.com>
-References: <cover.1497501449.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.200.76]
-Subject: [PATCH 1/1] toaster: add ID's to navigation links
+Subject: [PATCH 0/1] toaster: add UI element ids for testing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,54 +32,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Jun 2017 04:49:43 -0000
+X-List-Received-Date: Thu, 15 Jun 2017 04:53:57 -0000
 Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-Add IDs to the navigation bar links "All builds", "All projects",
-and "Documentation. This will support test automation.
+Add more IDs to support test automation (the build page menu 
+lines, for example "Tasks", "Recipes", "Time", "CPU Time", 
+"Disk I/O", and so forth.
 
-[YOCTO #11335]
+The following changes since commit 6964efddd31c479386d1643c1025bc102710392f:
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
- lib/toaster/toastergui/templates/base.html | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+  bitbake: cooker: ensure graceful exit after exception during BuildCompleted handler (2017-06-14 14:54:25 +0100)
 
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index 496dd6e..11c6f91 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -100,7 +100,8 @@
-         <div class="collapse navbar-collapse" id="global-nav">
-             <ul class="nav navbar-nav">
-             {% if request.resolver_match.url_name != 'landing' and request.resolver_match.url_name != 'newproject' %}
--              <li {% if request.resolver_match.url_name == 'all-builds' %}
-+              <li id="navbar-all-builds"
-+              {% if request.resolver_match.url_name == 'all-builds' %}
-               class="active"
-               {% endif %}>
-               <a href="{% url 'all-builds' %}">
-@@ -108,7 +109,8 @@
-                 All builds
-               </a>
-               </li>
--              <li {% if request.resolver_match.url_name == 'all-projects'  %}
-+              <li id="navbar-all-projects"
-+              {% if request.resolver_match.url_name == 'all-projects'  %}
-               class="active"
-               {% endif %}>
-               <a href="{% url 'all-projects' %}">
-@@ -117,7 +119,7 @@
-               </a>
-               </li>
-             {% endif %}
--              <li>
-+              <li id="navbar-docs">
-               <a target="_blank" href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html">
-                 <i class="glyphicon glyphicon-book"></i>
-                 Documentation
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/build_menu_ids_11337
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/build_menu_ids_11337
+
+David Reyna (1):
+  toaster: add ID's to build menu links
+
+ lib/toaster/toastergui/templates/basebuildpage.html | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
 -- 
 1.9.1
 
