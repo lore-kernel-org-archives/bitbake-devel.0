@@ -1,47 +1,56 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-qk0-f174.google.com (mail-qk0-f174.google.com
-	[209.85.220.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 4528F60102
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id B57796006E
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Jun 2017 10:05:50 +0000 (UTC)
-Received: by mail-qk0-f174.google.com with SMTP id d14so53385155qkb.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Jun 2017 03:05:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=Leo9pk94Hu5X+T4G0E5zz0pb/efSusKkMVs7XrNwba4=;
-	b=uY1x5bkcn1onOX5XE/xvK/4RlmEWp2oZ7o8GzZ40zxLLKU16t9pApqYQVwZhOmtBLu
-	y3cuEsdcr3OZEO5E/9/IildzpG5KZMwvVHmdFo/hKA38z2JL28L3AXJ61i/5QVPzUxmN
-	ESU6u8VcC4Q6mtIpoO02VIdmbfF29CHCAiWiCbQMzkrkQ7LRS4dOqblOD1yVNhXW8Sd7
-	2gSZ/QDLR8oHlTd9nS7WuHPa88RdvtehMFcU4ZW6VPewjfIBpfhLhLnuKpTTLUtaiWv7
-	GKCZQ3e4kMdbHsYStLoM68HEpTQ1XsEWrY+WenBq2wxmjoeR1eaw4kiw+1J4apTTAvy1
-	nVBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=Leo9pk94Hu5X+T4G0E5zz0pb/efSusKkMVs7XrNwba4=;
-	b=CVYCjgxkiT14bdSu6VrcQ92tUwWMs2y9glTpzmWNVkqqi6AUifNSwTtjB/QZ5fuCOG
-	PzbHhdPxEPxunE87WfZHFCg0ftZVeLJw5DVg6SHD17L1I4rSGjKhWXEIAqbOQajaX4FB
-	TS5Q8MctDdqvHVQhfCUCXeurcIO9DwRwiT8BniFeRKHKvdzuoDPXid1Zp5E50jDpS0Xy
-	pvJqY7jV3CaJNgvEhI9R2cTcDujPdLXcOH83bSXbBnuOgGR1PnWLGNPhaZt6076PZDX1
-	hcK1R0B8rREiZvWNupJE1xNGRxkMjLnH46gAfoXLFEGt40cHDrHTQEkT6pJlAn3YIzHK
-	w5Zw==
-X-Gm-Message-State: AKS2vOwlrRlNZlgsh4ZDC8UI3YaycqWAoyWtOYRsTKUhJfJMOziGEifF
-	6eL9l4koKCQTkvC/WhJNoIV7Qmn1+xhT
-X-Received: by 10.55.140.193 with SMTP id o184mr33614826qkd.127.1497953152227; 
-	Tue, 20 Jun 2017 03:05:52 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.140.35.103 with HTTP; Tue, 20 Jun 2017 03:05:31 -0700 (PDT)
-In-Reply-To: <1497934470-12092-1-git-send-email-garbados@gmail.com>
+	Tue, 20 Jun 2017 13:39:35 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id 3AF092E3F2;
+	Tue, 20 Jun 2017 15:39:36 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id czjQHvcIrYEt; Tue, 20 Jun 2017 15:39:35 +0200 (CEST)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bes.se.axis.com (Postfix) with ESMTPS id 2A83F2E3D0;
+	Tue, 20 Jun 2017 15:39:35 +0200 (CEST)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 081681E082;
+	Tue, 20 Jun 2017 15:39:35 +0200 (CEST)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F0C971E080;
+	Tue, 20 Jun 2017 15:39:34 +0200 (CEST)
+Received: from thoth.se.axis.com (unknown [10.0.2.173])
+	by boulder03.se.axis.com (Postfix) with ESMTP;
+	Tue, 20 Jun 2017 15:39:34 +0200 (CEST)
+Received: from XBOX03.axis.com (xbox03.axis.com [10.0.5.17])
+	by thoth.se.axis.com (Postfix) with ESMTP id E560916F9;
+	Tue, 20 Jun 2017 15:39:34 +0200 (CEST)
+Received: from XBOX02.axis.com (10.0.5.16) by XBOX03.axis.com (10.0.5.17) with
+	Microsoft SMTP Server (TLS) id 15.0.1210.3;
+	Tue, 20 Jun 2017 15:39:34 +0200
+Received: from XBOX02.axis.com ([fe80::d00f:cb52:1b56:20d]) by XBOX02.axis.com
+	([fe80::d00f:cb52:1b56:20d%21]) with mapi id 15.00.1210.000;
+	Tue, 20 Jun 2017 15:39:34 +0200
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: "Burton, Ross" <ross.burton@intel.com>, Diana Thayer <garbados@gmail.com>
+Thread-Topic: [bitbake-devel] [PATCH] bitbake : Paginate 'bitbake -e' using
+	less.
+Thread-Index: AQHS6azTUxm988U910um551pa8wSqqItvQsQ
+Date: Tue, 20 Jun 2017 13:39:34 +0000
+Message-ID: <f4460c4f34ab4bfd9e888f8bd82981c4@XBOX02.axis.com>
 References: <1497934470-12092-1-git-send-email-garbados@gmail.com>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Tue, 20 Jun 2017 11:05:31 +0100
-Message-ID: <CAJTo0LYy-VBcrqnx4k2uF5nETq2bhf75vdpMvxZ7mKrU1du93g@mail.gmail.com>
-To: Diana Thayer <garbados@gmail.com>
+	<CAJTo0LYy-VBcrqnx4k2uF5nETq2bhf75vdpMvxZ7mKrU1du93g@mail.gmail.com>
+In-Reply-To: <CAJTo0LYy-VBcrqnx4k2uF5nETq2bhf75vdpMvxZ7mKrU1du93g@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake : Paginate 'bitbake -e' using less.
+Subject: Re: [PATCH] bitbake : Paginate 'bitbake -e' using	less.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,44 +63,151 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Jun 2017 10:05:51 -0000
-Content-Type: multipart/alternative; boundary="001a114f0ce88770520552616503"
+X-List-Received-Date: Tue, 20 Jun 2017 13:39:36 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_f4460c4f34ab4bfd9e888f8bd82981c4XBOX02axiscom_"
 
---001a114f0ce88770520552616503
-Content-Type: text/plain; charset="UTF-8"
+--_000_f4460c4f34ab4bfd9e888f8bd82981c4XBOX02axiscom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On 20 June 2017 at 05:54, Diana Thayer <garbados@gmail.com> wrote:
+QmFzaWNhbGx5LCB0aGlzIGNoYW5nZSBuZWVkcyB0byBiZSBhd2FyZSBvZiB0aGUgZGVzdGluYXRp
+b24gZm9yIHRoZSBvdXRwdXQuIElmIGl0IGlzIGEgdHR5LCB0aGVuIGl0IGlzIGZpbmUgdG8gb3V0
+cHV0IHRvIGEgdmlld2VyIHN1Y2ggYXMgbGVzcywgYnV0IG90aGVyd2lzZSBpdCBzaG91bGQgZ28g
+dG8gc3Rkb3V0IGFzIGJlZm9yZS4gVGhpcyBzaG91bGQgb2YgY291cnNlIG5vdCBiZSBoYXJkY29k
+ZWQsIGJ1dCB1c2UgZW52aXJvbm1lbnQgdmFyaWFibGVzLCBlLmcuLCAkT0VfUEFHRVIgfHwgJFBB
+R0VSIHx8IGxlc3MgKGluc3BpcmVkIGJ5IGdpdF9wYWdlcigpIGluIHRoZSBnaXQgc291cmNlKS4g
+WW91IHNob3VsZCBhbHNvIG5vdCBleHBlY3QgdGhhdCBldmVyeW9uZSB3YW50cyB0aGUgb3B0aW9u
+cyB5b3UgaGF2ZSB1c2VkIGZvciBsZXNzLiBMb29raW5nIGFnYWluIGF0IGhvdyBnaXQgaGFuZGxl
+cyB0aGlzLCB0aGV5IHVzZSDigJxMRVNTPUZSWCA8Y29tbWFuZD7igJ0gaWYgdGhlICRMRVNTIGVu
+dmlyb25tZW50IHZhcmlhYmxlIGlzIG5vdCBzZXQsIGFuZCBkb2VzIG5vdCBtb2RpZnkgaXQgaWYg
+aXQgaXMgc2V0LiBZb3UgYWxzbyB3YW50IHRvIGFkZCBvcHRpb25zIHN1Y2ggYXMgLS1wYWdpbmF0
+ZSBhbmQgLS1uby1wYWdlciAoeWV0IGFnYWluIGluc3BpcmVkIGJ5IGdpdCkgdG8gYml0YmFrZS4N
+Cg0KQWxsIGluIGFsbCwgbG9vayBhdCBhbmQgYmUgaW5zcGlyZWQgYnkgaG93IGdpdCBoYW5kbGVz
+IHBhZ2VycywgdGhleSBoYXZlIHRoaXMgcHJldHR5IHdlbGwgY292ZXJlZC4NCg0KLy9QZXRlcg0K
+DQpGcm9tOiBiaXRiYWtlLWRldmVsLWJvdW5jZXNAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyBbbWFp
+bHRvOmJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3JnXSBPbiBCZWhh
+bGYgT2YgQnVydG9uLCBSb3NzDQpTZW50OiBkZW4gMjAganVuaSAyMDE3IDEyOjA2DQpUbzogRGlh
+bmEgVGhheWVyIDxnYXJiYWRvc0BnbWFpbC5jb20+DQpDYzogYml0YmFrZS1kZXZlbCA8Yml0YmFr
+ZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPg0KU3ViamVjdDogUmU6IFtiaXRiYWtlLWRl
+dmVsXSBbUEFUQ0hdIGJpdGJha2UgOiBQYWdpbmF0ZSAnYml0YmFrZSAtZScgdXNpbmcgbGVzcy4N
+Cg0KDQpPbiAyMCBKdW5lIDIwMTcgYXQgMDU6NTQsIERpYW5hIFRoYXllciA8Z2FyYmFkb3NAZ21h
+aWwuY29tPG1haWx0bzpnYXJiYWRvc0BnbWFpbC5jb20+PiB3cm90ZToNCisgICAgICAgIHBhZ2Vy
+ID0gc3VicHJvY2Vzcy5Qb3BlbihbJ2xlc3MnLCAnLUYnLCAnLVInLCAnLVMnLCAnLVgnLCAnLUsn
+XSwNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGRpbj1zdWJwcm9jZXNzLlBJ
+UEUsDQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3Rkb3V0PXN5cy5zdGRvdXQs
+DQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5pdmVyc2FsX25ld2xpbmVzPVRy
+dWUpDQoNCldoYXQgaWYgSSdtIHBpcGluZyBiaXRiYWtlIC1lIHRob3VnaCBncmVwIG9yIGludG8g
+YSBmaWxlIGFscmVhZHk/DQoNClJvc3MNCg==
 
-> +        pager = subprocess.Popen(['less', '-F', '-R', '-S', '-X', '-K'],
-> +                                 stdin=subprocess.PIPE,
-> +                                 stdout=sys.stdout,
-> +                                 universal_newlines=True)
->
+--_000_f4460c4f34ab4bfd9e888f8bd82981c4XBOX02axiscom_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-What if I'm piping bitbake -e though grep or into a file already?
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9
+DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglj
+b2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
+Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpw
+dXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1z
+b25vcm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCglt
+c28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0KCW1zby1tYXJnaW4t
+Ym90dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNpemU6MTIuMHB0Ow0K
+CWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcgUm9tYW4iLHNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE4
+DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJp
+IixzYW5zLXNlcmlmOw0KCWNvbG9yOiM5NDM2MzQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZv
+bnQtc3R5bGU6bm9ybWFsOw0KCXRleHQtZGVjb3JhdGlvbjpub25lIG5vbmU7fQ0KLk1zb0NocERl
+ZmF1bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7DQoJZm9udC1mYW1pbHk6IkNhbGli
+cmkiLHNhbnMtc2VyaWY7DQoJbXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVM7fQ0KQHBhZ2UgV29y
+ZFNlY3Rpb24xDQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0Ow0KCW1hcmdpbjo3Mi4wcHQgNzIuMHB0
+IDcyLjBwdCA3Mi4wcHQ7fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9
+DQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2
+OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYg
+Z3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAg
+djpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZd
+LS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJTViIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+
+DQo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+bGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0Nh
+bGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdl
+OkVOLVVTIj5CYXNpY2FsbHksIHRoaXMgY2hhbmdlIG5lZWRzIHRvIGJlIGF3YXJlIG9mIHRoZSBk
+ZXN0aW5hdGlvbiBmb3IgdGhlIG91dHB1dC4gSWYgaXQgaXMgYSB0dHksIHRoZW4gaXQgaXMgZmlu
+ZSB0byBvdXRwdXQNCiB0byBhIHZpZXdlciBzdWNoIGFzIGxlc3MsIGJ1dCBvdGhlcndpc2UgaXQg
+c2hvdWxkIGdvIHRvIHN0ZG91dCBhcyBiZWZvcmUuIFRoaXMgc2hvdWxkIG9mIGNvdXJzZSBub3Qg
+YmUgaGFyZGNvZGVkLCBidXQgdXNlIGVudmlyb25tZW50IHZhcmlhYmxlcywgZS5nLiwgJE9FX1BB
+R0VSIHx8ICRQQUdFUiB8fCBsZXNzIChpbnNwaXJlZCBieSBnaXRfcGFnZXIoKSBpbiB0aGUgZ2l0
+IHNvdXJjZSkuIFlvdSBzaG91bGQgYWxzbyBub3QgZXhwZWN0IHRoYXQNCiBldmVyeW9uZSB3YW50
+cyB0aGUgb3B0aW9ucyB5b3UgaGF2ZSB1c2VkIGZvciBsZXNzLiBMb29raW5nIGFnYWluIGF0IGhv
+dyBnaXQgaGFuZGxlcyB0aGlzLCB0aGV5IHVzZSDigJxMRVNTPUZSWCAmbHQ7Y29tbWFuZCZndDvi
+gJ0gaWYgdGhlICRMRVNTIGVudmlyb25tZW50IHZhcmlhYmxlIGlzIG5vdCBzZXQsIGFuZCBkb2Vz
+IG5vdCBtb2RpZnkgaXQgaWYgaXQgaXMgc2V0LiBZb3UgYWxzbyB3YW50IHRvIGFkZCBvcHRpb25z
+IHN1Y2ggYXMgLS1wYWdpbmF0ZSBhbmQgLS1uby1wYWdlcg0KICh5ZXQgYWdhaW4gaW5zcGlyZWQg
+YnkgZ2l0KSB0byBiaXRiYWtlLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZh
+bWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Izk0MzYzNDttc28tZmFy
+ZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0
+O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojOTQzNjM0
+O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5BbGwgaW4gYWxsLCBsb29rIGF0IGFuZCBiZSBp
+bnNwaXJlZCBieSBob3cgZ2l0IGhhbmRsZXMgcGFnZXJzLCB0aGV5IGhhdmUgdGhpcyBwcmV0dHkg
+d2VsbCBjb3ZlcmVkLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTom
+cXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1s
+YW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQt
+ZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojOTQzNjM0O21zby1m
+YXJlYXN0LWxhbmd1YWdlOkVOLVVTIj4vL1BldGVyPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6MTEu
+MHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojOTQz
+NjM0O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48
+L3A+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0
+O3BhZGRpbmc6MGNtIDBjbSAwY20gNC4wcHQiPg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRlcjpu
+b25lO2JvcmRlci10b3A6c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBjbSAwY20g
+MGNtIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0i
+Zm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2Vy
+aWYiPkZyb206PC9zcGFuPjwvYj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTox
+MS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj4gYml0YmFr
+ZS1kZXZlbC1ib3VuY2VzQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcgW21haWx0bzpiaXRiYWtlLWRl
+dmVsLWJvdW5jZXNAbGlzdHMub3BlbmVtYmVkZGVkLm9yZ10NCjxiPk9uIEJlaGFsZiBPZiA8L2I+
+QnVydG9uLCBSb3NzPGJyPg0KPGI+U2VudDo8L2I+IGRlbiAyMCBqdW5pIDIwMTcgMTI6MDY8YnI+
+DQo8Yj5Ubzo8L2I+IERpYW5hIFRoYXllciAmbHQ7Z2FyYmFkb3NAZ21haWwuY29tJmd0Ozxicj4N
+CjxiPkNjOjwvYj4gYml0YmFrZS1kZXZlbCAmbHQ7Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1i
+ZWRkZWQub3JnJmd0Ozxicj4NCjxiPlN1YmplY3Q6PC9iPiBSZTogW2JpdGJha2UtZGV2ZWxdIFtQ
+QVRDSF0gYml0YmFrZSA6IFBhZ2luYXRlICdiaXRiYWtlIC1lJyB1c2luZyBsZXNzLjxvOnA+PC9v
+OnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpw
+PiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86
+cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+T24gMjAgSnVu
+ZSAyMDE3IGF0IDA1OjU0LCBEaWFuYSBUaGF5ZXIgJmx0OzxhIGhyZWY9Im1haWx0bzpnYXJiYWRv
+c0BnbWFpbC5jb20iIHRhcmdldD0iX2JsYW5rIj5nYXJiYWRvc0BnbWFpbC5jb208L2E+Jmd0OyB3
+cm90ZTo8bzpwPjwvbzpwPjwvcD4NCjxibG9ja3F1b3RlIHN0eWxlPSJib3JkZXI6bm9uZTtib3Jk
+ZXItbGVmdDpzb2xpZCAjQ0NDQ0NDIDEuMHB0O3BhZGRpbmc6MGNtIDBjbSAwY20gNi4wcHQ7bWFy
+Z2luLWxlZnQ6NC44cHQ7bWFyZ2luLXJpZ2h0OjBjbSI+DQo8ZGl2IGlkPSI6OW91Ij4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPiYjNDM7Jm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IHBhZ2VyID0g
+c3VicHJvY2Vzcy5Qb3BlbihbJ2xlc3MnLCAnLUYnLCAnLVInLCAnLVMnLCAnLVgnLCAnLUsnXSw8
+YnI+DQomIzQzOyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
+OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
+ICZuYnNwOyAmbmJzcDtzdGRpbj1zdWJwcm9jZXNzLlBJUEUsPGJyPg0KJiM0MzsmbmJzcDsgJm5i
+c3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJz
+cDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7c3Rkb3V0
+PXN5cy5zdGRvdXQsPGJyPg0KJiM0MzsmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
+ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsg
+Jm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7dW5pdmVyc2FsX25ld2xpbmVzPVRydWUpPG86cD48
+L286cD48L3A+DQo8L2Rpdj4NCjwvYmxvY2txdW90ZT4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PGJyPg0KV2hhdCBpZiBJJ20gcGlwaW5nIGJpdGJha2UgLWUgdGhvdWdoIGdyZXAgb3Ig
+aW50byBhIGZpbGUgYWxyZWFkeT88bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+Um9zczxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwv
+ZGl2Pg0KPC9kaXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
 
-Ross
-
---001a114f0ce88770520552616503
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On 20 June 2017 at 05:54, Diana Thayer <span dir=3D"ltr">&lt;<a href=3D"mai=
-lto:garbados@gmail.com" target=3D"_blank">garbados@gmail.com</a>&gt;</span>=
- wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bor=
-der-left:1px #ccc solid;padding-left:1ex"><div id=3D":9ou" class=3D"a3s aXj=
-CH m15cc3dafa83f5ef0">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 pager =3D subprocess.Pop=
-en([&#39;less&#39;, &#39;-F&#39;, &#39;-R&#39;, &#39;-S&#39;, &#39;-X&#39;,=
- &#39;-K&#39;],<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0stdin=3Dsubprocess.PIPE,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0stdout=3Dsys.stdout,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0universal_newlines=3DTrue)<br>=
-</div></blockquote></div><br>What if I&#39;m piping bitbake -e though grep =
-or into a file already?</div><div class=3D"gmail_extra"><br></div><div clas=
-s=3D"gmail_extra">Ross</div></div>
-
---001a114f0ce88770520552616503--
+--_000_f4460c4f34ab4bfd9e888f8bd82981c4XBOX02axiscom_--
