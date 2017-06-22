@@ -1,48 +1,45 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wr0-f171.google.com (mail-wr0-f171.google.com
-	[209.85.128.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 09FE877D2A
+Return-Path: <msm-oss@mcclintock.net>
+Received: from mail-pf0-f196.google.com (mail-pf0-f196.google.com
+	[209.85.192.196])
+	by mail.openembedded.org (Postfix) with ESMTP id 0FB8771996
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Jun 2017 18:47:36 +0000 (UTC)
-Received: by mail-wr0-f171.google.com with SMTP id r103so102946146wrb.0
+	Thu, 22 Jun 2017 21:10:24 +0000 (UTC)
+Received: by mail-pf0-f196.google.com with SMTP id s66so4636403pfs.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Jun 2017 11:47:38 -0700 (PDT)
+	Thu, 22 Jun 2017 14:10:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=/6I6kCQigZJ8HmgEtZSoHW60U3W2UWjDb9LJVWqkpKA=;
-	b=P8mQ16iClLLxKuhYiauiXIyLD/aSf8X1iSooN8vg2X+0wnYzwkKOr19ep/4j3IVtvO
-	ot20bDOZNNcJ9Al46V1XavSv/q7GL71JJPQjnovlwMpqm/4+f5oPGsB+0V8D1KhEPQAf
-	r5AqEgbWn99m1Zs8smAKvGg2zXdidouGIVpHdIGdnQ6FfRrAKWwBhCxMl12TdpcMpXw4
-	3HW4ab6ZsMNMycLdinBQCuvUKKKVM6IEbFaAvo+xdzMgHhvXdPZS66z40rgwv5razQHu
-	D1htX8Fp9dhRnNAXGpMWaLKqnPqTDJ/taFIBkv2/CI//45qPcohx2+aFYv4/pm4kyarS
-	UZ0g==
+	d=mcclintock.net; s=google;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=H5PoMj5rxuCTaOAkxb9x7ggA1lOUWRH7brOXo/iX/vQ=;
+	b=ZRfK36UL/SWNFQMq0O7YRhlpuaKSr+cfOvLcIemr1sxrW7kOG/HLjUrgKOVYnPCTOk
+	0SQK5P7kXt5MoP8jPc5YTYsdBRwToz1WyQnX+UId2u2r/fZ2no1/i4GcwHWQoavn6v9Q
+	/JgzlUHneN/STVaIdkZr+Hfo+uW0I7J8AAqEM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=/6I6kCQigZJ8HmgEtZSoHW60U3W2UWjDb9LJVWqkpKA=;
-	b=IRUCvizwMZizhUXhehC6pPHn/8SRLIRmNiZrzXAAx4abT3dI6gQN1DNVJW1TqP5Yb+
-	SCNEL3pEQfVMOHEvBX7Up1T3xHol48n92rpX8E6E7g+RrznyRo31jhHksbB/H57h2ChB
-	qh5OEUjwv0AYpUgBZx7CqQhBLhpTxzboGKrmz2Q0HUjPQAcAs2Tf8QxpwcJ9MYQJ5gPb
-	hADHeXFjtjTC/6E5VGjG+iQuu1nLC7lga/kso1rChyZrNSlvvdg61FcCVH9AhvDB8fEM
-	G3dzlwVnW9DxBpg7Ymyi9c9irOLROMRG4tbHElL/ZJktFogDvSJ45le5CgYJcaUNS7sN
-	AZng==
-X-Gm-Message-State: AKS2vOxV3/HL/aG9aMSm3JiLJZH/A6h1jCiruAEkJbeHd9ozWDxQmeHx
-	4VqwxI0vVSAQe2u++S8=
-X-Received: by 10.223.164.220 with SMTP id h28mr23446796wrb.24.1497984457362; 
-	Tue, 20 Jun 2017 11:47:37 -0700 (PDT)
-Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
-	by smtp.gmail.com with ESMTPSA id
-	u80sm16076503wrb.1.2017.06.20.11.47.36
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 20 Jun 2017 11:47:36 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Jun 2017 19:47:34 +0100
-Message-Id: <20170620184734.15746-1-ross.burton@intel.com>
-X-Mailer: git-send-email 2.11.0
-Subject: [PATCH] bitbake/cache: don't insert PN into PACKAGES
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=H5PoMj5rxuCTaOAkxb9x7ggA1lOUWRH7brOXo/iX/vQ=;
+	b=NEbjtd4V9sUTvuVZUIv4QU1VhyHGCl4kRa51DFhref250/052UblR/RI3lcEUoGTU4
+	LdS83RqRoaBMumCRBeReEpbZsdkAJBaqc2syaOsovUT1sH3riu+OH5haoT0crKMuI6dl
+	DKYU0vZzfFtQ25nCPmUqpdSoadWYbJi1KLgkl8GCzYQQjKWLY1fPUDCK9bEWfgxf4Zku
+	R4lJ+XUMQPjZ4IOsCuB5V5HG2xdbn6jWSIAzDWhRBIVHumNHxwC+b5S+tGJo6T0NR4IL
+	ytXJINqG/PEeiBb15H+f4bRT11rc9hr4mNnpkbzA9dM2crkPjYo7gpKO1Z8qVizgjRF2
+	hlnA==
+X-Gm-Message-State: AKS2vOxXc2rAo9Muxhf3X+yPCQDkJhJ9qP4rXe2QtVyoMpOLITzNS88M
+	ogFamjwnBJkFuXLkP7Y0d4p2unrvv/NQ
+X-Received: by 10.84.195.129 with SMTP id j1mr5180830pld.191.1498165826231;
+	Thu, 22 Jun 2017 14:10:26 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.100.130.73 with HTTP; Thu, 22 Jun 2017 14:10:05 -0700 (PDT)
+In-Reply-To: <1496408567-18673-1-git-send-email-richard.purdie@linuxfoundation.org>
+References: <1496408567-18673-1-git-send-email-richard.purdie@linuxfoundation.org>
+From: Matthew McClintock <msm-oss@mcclintock.net>
+Date: Thu, 22 Jun 2017 16:10:05 -0500
+Message-ID: <CAEsOVNfCAwNkq=dnBWgX=0XXbP7510GRx4Ga=EbYf5yr34vdGw@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] siggen: Make calc_taskhash match get_taskhash for file checksums
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,49 +52,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Jun 2017 18:47:37 -0000
+X-List-Received-Date: Thu, 22 Jun 2017 21:10:25 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-The cache code currently inserts PN into the package list if it isn't already
-present.  Whilst this ensures that the package list contains something which is
-important for native recipes that don't set PACKAGES, it causes confusing
-behaviour where a normal recipe doesn't have PN in PACKAGES: for example adding
-dhcp to IMAGE_INSTALL will parse successfully but fail at rootfs time as the
-dhcp recipe doesn't generate a dhcp package.
+Seeing this issue on some older (err, really olderrrr) versions of
+bitbake. How far back could we backport?
 
-Solve this by only adding PN to the cache's package list if the package list is
-empty.  This results in the package list for recipes such as DHCP being correct,
-but native recipes continue to have just PN in the list as before.
+-M
 
-[ YOCTO #5533 ]
-
-Signed-off-by: Ross Burton <ross.burton@intel.com>
----
- bitbake/lib/bb/cache.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index e7eeb4f5054..514399269a9 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -107,7 +107,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
- 
-         self.pn = self.getvar('PN', metadata)
-         self.packages = self.listvar('PACKAGES', metadata)
--        if not self.pn in self.packages:
-+        if not self.packages:
-             self.packages.append(self.pn)
- 
-         self.basetaskhashes = self.taskvar('BB_BASEHASH', self.tasks, metadata)
-@@ -217,7 +217,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
-             cachedata.packages_dynamic[package].append(fn)
- 
-         # Build hash of runtime depends and recommends
--        for package in self.packages + [self.pn]:
-+        for package in self.packages:
-             cachedata.rundeps[fn][package] = list(self.rdepends) + self.rdepends_pkg[package]
-             cachedata.runrecs[fn][package] = list(self.rrecommends) + self.rrecommends_pkg[package]
- 
--- 
-2.11.0
-
+On Fri, Jun 2, 2017 at 8:02 AM, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> The code in these two functions is meant to be equivlanet in behaviour
+> but isn't. Add in code to ensure files that don't exist are handled
+> consistently by both functions. Users did report being able to generate
+> tracebacks otherwise.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/siggen.py | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+> index 169756e..f71190a 100644
+> --- a/lib/bb/siggen.py
+> +++ b/lib/bb/siggen.py
+> @@ -667,7 +667,8 @@ def calc_taskhash(sigdata):
+>          data = data + sigdata['runtaskhashes'][dep]
+>
+>      for c in sigdata['file_checksum_values']:
+> -        data = data + c[1]
+> +        if c[1]:
+> +            data = data + c[1]
+>
+>      if 'taint' in sigdata:
+>          if 'nostamp:' in sigdata['taint']:
+> --
+> 2.7.4
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
