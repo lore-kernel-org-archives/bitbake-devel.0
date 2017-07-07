@@ -1,27 +1,29 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 7775A71ABC
+	by mail.openembedded.org (Postfix) with ESMTP id 0B50177E9D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Jul 2017 14:48:57 +0000 (UTC)
+	Fri,  7 Jul 2017 14:48:58 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v67Emu5h006261
+	v67EmwxL006266
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Fri, 7 Jul 2017 15:48:57 +0100
+	verify=NOT); Fri, 7 Jul 2017 15:48:59 +0100
 Received: from richard by hex with local (Exim 4.86_2)
 	(envelope-from <richard@rpsys.net>)
-	id 1dTUYy-0007bM-M8; Fri, 07 Jul 2017 15:48:56 +0100
+	id 1dTUZ0-0007bR-1G; Fri, 07 Jul 2017 15:48:58 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  7 Jul 2017 15:48:54 +0100
-Message-Id: <1499438935-29179-1-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Fri,  7 Jul 2017 15:48:55 +0100
+Message-Id: <1499438935-29179-2-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1499438935-29179-1-git-send-email-richard.purdie@linuxfoundation.org>
+References: <1499438935-29179-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
 	(dan.rpsys.net [192.168.3.1]);
-	Fri, 07 Jul 2017 15:48:57 +0100 (BST)
+	Fri, 07 Jul 2017 15:48:59 +0100 (BST)
 X-Virus-Scanned: clamav-milter 0.99.2 at dan
 X-Virus-Status: Clean
-Subject: [PATCH 1/2] event: Queue offline events for the UI
+Subject: [PATCH 2/2] server/xmlrpc: Add Heartbeat event support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,73 +38,70 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 07 Jul 2017 14:48:59 -0000
 
-Messages printed when no UI is connected (e.g. memres) are currently lost.
-Use the existing queue mechanism to queue these until a UI attaches, then
-replay them. This isn't ideal but better than the current situation of
-losing them entirely.
+When heartbeat event support was added it was only added to process.py. Add
+it to server/xmlrpc too. There is duplicated code however since we're likely
+to combine the server abstractions soon its not worth worrying about now.
+
+This ensures the backends have the same event support.
+
+[YOCTO #10741]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/event.py          | 11 ++++++++++-
- lib/bb/server/process.py |  2 +-
- lib/bb/server/xmlrpc.py  |  2 +-
- 3 files changed, 12 insertions(+), 3 deletions(-)
+ lib/bb/server/xmlrpc.py | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 1462382..d5c5ef3 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -212,6 +212,12 @@ def fire(event, d):
-     if worker_fire:
-         worker_fire(event, d)
-     else:
-+        # If messages have been queued up, clear the queue
-+        global _uiready, ui_queue
-+        if _uiready and ui_queue:
-+            for queue_event in ui_queue:
-+                fire_ui_handlers(queue_event, d)
-+            ui_queue = []
-         fire_ui_handlers(event, d)
- 
- def fire_from_worker(event, d):
-@@ -291,7 +297,10 @@ def register_UIHhandler(handler, mainui=False):
-     _ui_logfilters[_ui_handler_seq] = UIEventFilter(level, debug_domains)
-     return _ui_handler_seq
- 
--def unregister_UIHhandler(handlerNum):
-+def unregister_UIHhandler(handlerNum, mainui=False):
-+    if mainui:
-+        global _uiready
-+        _uiready = False
-     if handlerNum in _ui_handlers:
-         del _ui_handlers[handlerNum]
-     return
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 9ca2b69..f8d6767 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -137,7 +137,7 @@ class ProcessServer(Process, BaseImplServer):
-                 logger.exception('Running command %s', command)
- 
-         self.event_queue.close()
--        bb.event.unregister_UIHhandler(self.event_handle.value)
-+        bb.event.unregister_UIHhandler(self.event_handle.value, True)
-         self.command_channel.close()
-         self.cooker.shutdown(True)
-         self.quitout.close()
 diff --git a/lib/bb/server/xmlrpc.py b/lib/bb/server/xmlrpc.py
-index a06007f..d0f5a6d 100644
+index d0f5a6d..1a475e0 100644
 --- a/lib/bb/server/xmlrpc.py
 +++ b/lib/bb/server/xmlrpc.py
-@@ -125,7 +125,7 @@ class BitBakeServerCommands():
-         """
-         Unregister a remote UI Event Handler
-         """
--        return bb.event.unregister_UIHhandler(handlerNum)
-+        return bb.event.unregister_UIHhandler(handlerNum, True)
+@@ -227,6 +227,8 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+         self.idle_timeout = idle_timeout
+         if idle_timeout:
+             self.register_idle_function(self.handle_idle_timeout, self)
++        self.heartbeat_seconds = 1 # default, BB_HEARTBEAT_EVENT will be checked once we have a datastore.
++        self.next_heartbeat = time.time()
  
-     def runCommand(self, command):
-         """
+     def addcooker(self, cooker):
+         BaseImplServer.addcooker(self, cooker)
+@@ -250,6 +252,15 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+         return []
+ 
+     def serve_forever(self):
++        heartbeat_event = self.cooker.data.getVar('BB_HEARTBEAT_EVENT')
++        if heartbeat_event:
++            try:
++                self.heartbeat_seconds = float(heartbeat_event)
++            except:
++                # Throwing an exception here causes bitbake to hang.
++                # Just warn about the invalid setting and continue
++                bb.warn('Ignoring invalid BB_HEARTBEAT_EVENT=%s, must be a float specifying seconds.' % heartbeat_event)
++
+         # Start the actual XMLRPC server
+         bb.cooker.server_main(self.cooker, self._serve_forever)
+ 
+@@ -297,6 +308,21 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
+                 # we ignore interrupted calls
+                 pass
+ 
++            # Create new heartbeat event?
++            now = time.time()
++            if now >= self.next_heartbeat:
++                # We might have missed heartbeats. Just trigger once in
++                # that case and continue after the usual delay.
++                self.next_heartbeat += self.heartbeat_seconds
++                if self.next_heartbeat <= now:
++                    self.next_heartbeat = now + self.heartbeat_seconds
++                heartbeat = bb.event.HeartbeatEvent(now)
++                bb.event.fire(heartbeat, self.cooker.data)
++            if nextsleep and now + nextsleep > self.next_heartbeat:
++                # Shorten timeout so that we we wake up in time for
++                # the heartbeat.
++                nextsleep = self.next_heartbeat - now
++
+         # Tell idle functions we're exiting
+         for function, data in list(self._idlefuns.items()):
+             try:
 -- 
 2.7.4
 
