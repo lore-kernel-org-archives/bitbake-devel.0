@@ -1,26 +1,25 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id E825977FFE
+Return-Path: <david.reyna@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 5B35B7807C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 11 Jul 2017 10:27:50 +0000 (UTC)
+	Tue, 11 Jul 2017 22:04:35 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v6BARq2F021101
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v6BM4aCO024558
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 11 Jul 2017 03:27:52 -0700
-Received: from ala-blade48.wrs.com (147.11.105.68) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.294.0;
-	Tue, 11 Jul 2017 03:27:51 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
+	Tue, 11 Jul 2017 15:04:37 -0700 (PDT)
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.294.0; Tue, 11 Jul 2017 15:04:36 -0700
+From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 11 Jul 2017 03:27:48 -0700
-Message-ID: <63def8487986a40105a2a8acdba4e411662ba28a.1499768495.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1499768495.git.liezhi.yang@windriver.com>
-References: <cover.1499768495.git.liezhi.yang@windriver.com>
+Date: Tue, 11 Jul 2017 14:55:49 -0700
+Message-ID: <cover.1499809423.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Subject: [RFC PATCH 3/3] bitbake: uihelper.py: check event.pid is present
+X-Originating-IP: [147.11.157.78]
+Subject: [PATCH 0/3] toaster: cummulative 11072017 patch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,90 +32,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Jul 2017 10:27:51 -0000
+X-List-Received-Date: Tue, 11 Jul 2017 22:04:36 -0000
 Content-Type: text/plain
 
-Fixed:
-$ . ../poky/oe-init-build-env-memres .
-$ bitbake world
-In another terminal:
-$ . ../poky/oe-init-build-env-memres .
-Run the following command and Ctrl-C several times:
-$ bitbake --observe-only
-Traceback (most recent call last):
-  File "/buildarea/lyang1/poky/bitbake/lib/bb/ui/knotty.py", line 441, in main
-    helper.eventHandler(event)
-  File "/buildarea/lyang1/poky/bitbake/lib/bb/ui/uihelper.py", line 42, in eventHandler
-    del self.running_tasks[event.pid]
-KeyError: 43646
+From: David Reyna <David.Reyna@windriver.com>
 
-This was becase the ui maybe connected at any time, so the event.pid may not be
-present.
+This cumulative patch has the following fixes:
+	9971  Toaster does not report progress while setscene tasks are running
+	11727 trim build target input 
+	11744 set clone progress default to off	
 
-[YOCTO #11781]
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/ui/uihelper.py | 41 ++++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 19 deletions(-)
+The following changes since commit 1501ab0c6ea7ed7a2565b8fdf95a6ade81c3b2f7:
 
-diff --git a/bitbake/lib/bb/ui/uihelper.py b/bitbake/lib/bb/ui/uihelper.py
-index 113fcedeaf1..307c87e149c 100644
---- a/bitbake/lib/bb/ui/uihelper.py
-+++ b/bitbake/lib/bb/ui/uihelper.py
-@@ -38,29 +38,32 @@ class BBUIHelper:
-                 self.running_tasks[event.pid] = { 'title' : "%s %s" % (event._package, event._task), 'starttime' : time.time() }
-             self.running_pids.append(event.pid)
-             self.needUpdate = True
--        elif isinstance(event, bb.build.TaskSucceeded):
--            del self.running_tasks[event.pid]
--            self.running_pids.remove(event.pid)
--            self.needUpdate = True
--        elif isinstance(event, bb.build.TaskFailedSilent):
--            del self.running_tasks[event.pid]
--            self.running_pids.remove(event.pid)
--            # Don't add to the failed tasks list since this is e.g. a setscene task failure
--            self.needUpdate = True
--        elif isinstance(event, bb.build.TaskFailed):
--            del self.running_tasks[event.pid]
--            self.running_pids.remove(event.pid)
--            self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
--            self.needUpdate = True
-+        # The ui maybe connected at any time, so make sure that the
-+        # event.pid is already in self.running_tasks.
-+        elif getattr(event, 'pid', 'none_pid') in self.running_tasks:
-+            if isinstance(event, bb.build.TaskSucceeded):
-+                del self.running_tasks[event.pid]
-+                self.running_pids.remove(event.pid)
-+                self.needUpdate = True
-+            elif isinstance(event, bb.build.TaskFailedSilent):
-+                del self.running_tasks[event.pid]
-+                self.running_pids.remove(event.pid)
-+                # Don't add to the failed tasks list since this is e.g. a setscene task failure
-+                self.needUpdate = True
-+            elif isinstance(event, bb.build.TaskFailed):
-+                del self.running_tasks[event.pid]
-+                self.running_pids.remove(event.pid)
-+                self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
-+                self.needUpdate = True
-+            elif isinstance(event, bb.build.TaskProgress):
-+                if event.pid > 0:
-+                    self.running_tasks[event.pid]['progress'] = event.progress
-+                    self.running_tasks[event.pid]['rate'] = event.rate
-+                    self.needUpdate = True
-         elif isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
-             self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
-             self.tasknumber_total = event.stats.total
-             self.needUpdate = True
--        elif isinstance(event, bb.build.TaskProgress):
--            if event.pid > 0:
--                self.running_tasks[event.pid]['progress'] = event.progress
--                self.running_tasks[event.pid]['rate'] = event.rate
--                self.needUpdate = True
- 
-     def getTasks(self):
-         self.needUpdate = False
+  libiconv: remove 0001-Fix-link-error-when-compiling-with-gcc-O0.patch (2017-07-11 15:57:08 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/cummulative_110717_patch
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/cummulative_110717_patch
+
+David Reyna (3):
+  toaster: include setscene in task progress
+  toaster: set clone progress default to off
+  toaster: trim build target input
+
+ lib/toaster/orm/migrations/0016_clone_progress.py |  4 ++--
+ lib/toaster/orm/models.py                         | 11 ++++++-----
+ lib/toaster/toastergui/static/js/projecttopbar.js |  4 ++--
+ 3 files changed, 10 insertions(+), 9 deletions(-)
+
 -- 
-2.11.0
+1.9.1
 
 
