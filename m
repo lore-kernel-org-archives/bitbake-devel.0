@@ -1,27 +1,29 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 87C0D781F2
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id B22C378195
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 11 Jul 2017 22:04:48 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v6BM4nnu005872
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 11 Jul 2017 15:04:49 -0700
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.294.0; Tue, 11 Jul 2017 15:04:48 -0700
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 11 Jul 2017 14:56:10 -0700
-Message-ID: <b3f416485f0690019ef4fec86a9949e4524e9903.1499809423.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1499809423.git.David.Reyna@windriver.com>
-References: <cover.1499809423.git.David.Reyna@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 3/3] toaster: trim build target input
+	Tue, 11 Jul 2017 22:56:40 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v6BMuchg005866
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Tue, 11 Jul 2017 23:56:40 +0100
+Message-ID: <1499813798.30311.101.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 11 Jul 2017 23:56:38 +0100
+In-Reply-To: <868892a60e4f6888b29455b40de5b16d6cc7ec9c.1499768495.git.liezhi.yang@windriver.com>
+References: <cover.1499768495.git.liezhi.yang@windriver.com>
+	<868892a60e4f6888b29455b40de5b16d6cc7ec9c.1499768495.git.liezhi.yang@windriver.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
+	(dan.rpsys.net [192.168.3.1]);
+	Tue, 11 Jul 2017 23:56:40 +0100 (BST)
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: Re: [RFC PATCH 1/3] bitbake: knotty.py: add MonitorDiskEvent and RecipeTaskPreProcess
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,43 +36,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Jul 2017 22:04:48 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 11 Jul 2017 22:56:41 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-From: David Reyna <David.Reyna@windriver.com>
+On Tue, 2017-07-11 at 03:27 -0700, Robert Yang wrote:
+> Sometimes, we may see the errors:
+> $ bitbake --observe-only
+> ERROR: Unknown event: <bb.event.MonitorDiskEvent object at
+> 0x7fbd2e0a8438>
+> ERROR: Unknown event: <bb.event.RecipeTaskPreProcess object at
+> 0x7fdc6b7e7b00>
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/ui/knotty.py | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/bitbake/lib/bb/ui/knotty.py
+> b/bitbake/lib/bb/ui/knotty.py
+> index 11afb3e7441..71ec168fa6c 100644
+> --- a/bitbake/lib/bb/ui/knotty.py
+> +++ b/bitbake/lib/bb/ui/knotty.py
+> @@ -667,11 +667,13 @@ def main(server, eventHandler, params, tf =
+> TerminalFilter):
+>                                    bb.event.MultiConfigParsed,
+>                                    bb.event.RecipeParsed,
+>                                    bb.event.RecipePreFinalise,
+> +                                  bb.event.RecipeTaskPreProcess,
+>                                    bb.runqueue.runQueueEvent,
+>                                    bb.event.OperationStarted,
+>                                    bb.event.OperationCompleted,
+>                                    bb.event.OperationProgress,
+>                                    bb.event.DiskFull,
+> +                                  bb.event.MonitorDiskEvent,
+>                                    bb.event.HeartbeatEvent,
+>                                    bb.build.TaskProgress)):
+>                  continue
 
-Trim the entered built target value so that Toaster is not
-confused with no real targets nor a ghost second target.
+Do you know why we don't either always see these or always don't see
+them? I'm a bit worried there may be a deeper issue lurking here. Are
+those events part of the event mask being set?
 
-[YOCTO #11727]
+For reference, I've been looking at the server abstraction in bitbake
+and am close to rewriting a large part of bb.server.* and bb.main with
+a view to simplifying the code structure and making things easier to
+understand.
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
- lib/toaster/toastergui/static/js/projecttopbar.js | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I've noticed I see some new events with my change, equally I think its
+an event mask issue with my new code...
 
-diff --git a/lib/toaster/toastergui/static/js/projecttopbar.js b/lib/toaster/toastergui/static/js/projecttopbar.js
-index 92ab2d6..69220aa 100644
---- a/lib/toaster/toastergui/static/js/projecttopbar.js
-+++ b/lib/toaster/toastergui/static/js/projecttopbar.js
-@@ -73,14 +73,14 @@ function projectTopBarInit(ctx) {
- 
-   newBuildTargetBuildBtn.click(function (e) {
-     e.preventDefault();
--    if (!newBuildTargetInput.val()) {
-+    if (!newBuildTargetInput.val().trim()) {
-       return;
-     }
-     /* We use the value of the input field so as to maintain any command also
-      * added e.g. core-image-minimal:clean and because we can build targets
-      * that toaster doesn't yet know about
-      */
--    selectedTarget = { name: newBuildTargetInput.val() };
-+    selectedTarget = { name: newBuildTargetInput.val().trim() };
- 
-     /* Fire off the build */
-     libtoaster.startABuild(null, selectedTarget.name,
--- 
-1.9.1
+I pushed my changes onto http://git.yoctoproject.org/cgit.cgi/poky-cont
+rib/commit/?h=rpurdie/wip-
+rss2&id=7d970e7b9f5499f5fcdb0e73246f106844ecf09b
+however I am well aware things don't work properly yet and its full of
+debug. When finished I should be able to delete server/__init__.py and
+server/xmlrpc.py.
+
+Cheers,
+
+Richard
+
 
 
