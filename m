@@ -1,47 +1,22 @@
-Return-Path: <patrick.ohly@intel.com>
-Received: from mail-oi0-f48.google.com (mail-oi0-f48.google.com
-	[209.85.218.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 6CCFC77BE0
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	by mail.openembedded.org (Postfix) with ESMTP id 41E5777BE4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Jul 2017 13:25:15 +0000 (UTC)
-Received: by mail-oi0-f48.google.com with SMTP id 191so117475728oii.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Jul 2017 06:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=47LhJ2lkM5y7lRXBRMg1g/wS9gfrvyMV4cVQWBGconA=;
-	b=iCOoH/231brt8o4nuTbUlTNCWBoBBOxCf2Ge+I8t3hbP9PtsZEirgnyjTdkHlTU/1/
-	JP/BjOI+y1c//3rvhxK2PKmWSjukDDYnh6qv67wF+Kpyn9CzkQE0rB8p2hd1i+gE53Nh
-	whM2JHG1vMZ7r3bJntVDYPi6lje7munK/WCHHnKqCqFTPQLctFWbvgKEDcIfIKj71ssF
-	03VlL3L7I1UdlH157wvGaJC6cQkh5mWUmByvmHqhNAB9ie4zVzwGctnwInx2RTnngPZr
-	yQpyw+cnM7380Q1QwqcW/fJpos2+gBwTobnEzSlndKe56UzdWMdPuXVpsL8n/jLzb9Fh
-	pJVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=47LhJ2lkM5y7lRXBRMg1g/wS9gfrvyMV4cVQWBGconA=;
-	b=VQRYKB5084SRN16uX19URjb0ByGnfpd4CL27qcf+T5/zg36Ym9koHeF84lyYWnCsgP
-	ofrHHClk+rVn/ilwmSXW40pf9hCEUIBq0VGNtlXr8YfDY/jS78uk9XLz34NFtmLFJ3Pi
-	2cVsP84JaqgO9LsULj4REmMBu2KlFbC3WCgZRswTDhEtMoHrj0KT3xVFIpt9ryIUkHF+
-	mWQjUMrA5JQrriLL1rpz/LS5exqSBPgqh+YU8QgLPhgyW2cTN4v0yfgJ/5bQFcQgbcw7
-	UIgL1hOhIZw1clXoNwbkUJZx0Ii0Qi3lxRazsI3xgz4EWaZ1tLFBfgtC1BNXdGYDQstH
-	S2mg==
-X-Gm-Message-State: AIVw113qkrdMI0Ze0jJYOdOmyV8C3e5lAH4bjAK4xC04IWC1hnmhm4hl
-	CAMK7sqJEezXCCFlzlU=
-X-Received: by 10.202.96.139 with SMTP id u133mr8201276oib.159.1500297916916; 
-	Mon, 17 Jul 2017 06:25:16 -0700 (PDT)
-Received: from pohly-desktop.fritz.box (p5DE8FBAD.dip0.t-ipconnect.de.
-	[93.232.251.173]) by smtp.gmail.com with ESMTPSA id
-	n189sm19115329oih.0.2017.07.17.06.25.14
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 17 Jul 2017 06:25:15 -0700 (PDT)
-From: Patrick Ohly <patrick.ohly@intel.com>
+	Mon, 17 Jul 2017 21:36:49 +0000 (UTC)
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+	by orsmga105.jf.intel.com with ESMTP; 17 Jul 2017 14:36:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.40,375,1496127600"; d="scan'208";a="109044897"
+Received: from unknown (HELO alimonb-mobl1.zpn.intel.com) ([10.219.128.142])
+	by orsmga004.jf.intel.com with ESMTP; 17 Jul 2017 14:36:50 -0700
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 17 Jul 2017 15:25:10 +0200
-Message-Id: <ee5feb9953bd03e475beb6cff356afd8251d95e0.1500297842.git-series.patrick.ohly@intel.com>
+Date: Mon, 17 Jul 2017 16:37:23 -0500
+Message-Id: <20170717213724.25808-1-anibal.limon@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
-Subject: [PATCH] fetch2/wget.py: improve error handling during sstate check
+MIME-Version: 1.0
+Cc: paul.eggleton@linux.intel.com
+Subject: [PATCH 1/2] bb/server/process: Handle EINTR on idle_commands select
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,74 +29,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Jul 2017 13:25:16 -0000
+X-List-Received-Date: Mon, 17 Jul 2017 21:36:50 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-When the sstate is accessed via HTTP, the existence check can fail due
-to network issues, in which case bitbake silently continues without
-sstate.
+If a signal is sent like SIGWINCH the select could be interrupted
+so ignore the InterruptError like in XMLRPC server [1].
 
-One such network issue is an HTTP server like Python's own SimpleHTTP
-which closes the TCP connection despite an explicit "Keep-Alive" in
-the HTTP request header. The server does that without a "close" in the
-HTTP response header, so the socket remains in the connection cache,
-leading to "urlopen failed: <urlopen error [Errno 9] Bad file
-descriptor>" (only visible in "bitbake -D -D" output) when trying to
-use the cached connection again.
+[1]
+http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/server/xmlrpc.py#n307
 
-The connection might also get closed for other reasons (proxy,
-timeouts, etc.), so this is something that the client should be able
-to handle.
-
-This is achieved by checking for the error, removing the bad
-connection, and letting the check_status() method try again with a new
-connection. It is necessary to let the second attempt fail
-permanently, because bad proxy setups have been observed to also lead
-to such broken connections. In that case, we need to abort for real
-after trying twice, otherwise a build would just hang forever.
-
-[YOCTO #11782]
-
-Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 ---
- lib/bb/fetch2/wget.py | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ lib/bb/server/process.py | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index ae0ffa8..208ee9b 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -30,6 +30,7 @@ import tempfile
- import subprocess
- import os
- import logging
-+import errno
- import bb
- import bb.progress
- import urllib.request, urllib.parse, urllib.error
-@@ -206,8 +207,21 @@ class Wget(FetchMethod):
-                     h.request(req.get_method(), req.selector, req.data, headers)
-                 except socket.error as err: # XXX what error?
-                     # Don't close connection when cache is enabled.
-+                    # Instead, try to detect connections that are no longer
-+                    # usable (for example, closed unexpectedly) and remove
-+                    # them from the cache.
-                     if fetch.connection_cache is None:
-                         h.close()
-+                    elif isinstance(err, OSError) and err.errno == errno.EBADF:
-+                        # This happens when the server closes the connection despite the Keep-Alive.
-+                        # Apparently urllib then uses the file descriptor, expecting it to be
-+                        # connected, when in reality the connection is already gone.
-+                        # We let the request fail and expect it to be
-+                        # tried once more ("try_again" in check_status()),
-+                        # with the dead connection removed from the cache.
-+                        # If it still fails, we give up, which can happend for bad
-+                        # HTTP proxy settings.
-+                        fetch.connection_cache.remove_connection(h.host, h.port)
-                     raise urllib.error.URLError(err)
-                 else:
-                     try:
-
-base-commit: 4a14b44b3e4fad3a3e5e53461aa8ba9929a515b8
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index f8d67678..a8ba4681 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -186,7 +186,12 @@ class ProcessServer(Process, BaseImplServer):
+             nextsleep = self.next_heartbeat - now
+ 
+         if nextsleep is not None:
+-            select.select(fds,[],[],nextsleep)
++            try:
++                select.select(fds,[],[],nextsleep)
++            except InterruptedError:
++                # ignore EINTR error, nextsleep only used for wait
++                # certain time
++                pass
+ 
+     def runCommand(self, command):
+         """
 -- 
-git-series 0.9.1
+2.11.0
+
 
