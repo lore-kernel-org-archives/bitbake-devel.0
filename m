@@ -1,35 +1,22 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id D51AC77A63
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id A0C75781F2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Jul 2017 22:02:59 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v6IM2wfj015415
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Tue, 18 Jul 2017 23:02:59 +0100
-Message-ID: <1500415378.22282.22.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Jul 2017 23:02:58 +0100
-In-Reply-To: <de6e4eb7-a4ea-5d4f-77ac-e8f2035f8f45@windriver.com>
-References: <cover.1499768495.git.liezhi.yang@windriver.com>
-	<868892a60e4f6888b29455b40de5b16d6cc7ec9c.1499768495.git.liezhi.yang@windriver.com>
-	<1499813798.30311.101.camel@linuxfoundation.org>
-	<3e7d971c-6183-487d-9a68-56b9e7212f5c@windriver.com>
-	<1499974474.30311.134.camel@linuxfoundation.org>
-	<1d8d85a1-1d6f-cd49-dc0a-d0d6bf6c3193@windriver.com>
-	<a49aec94-1145-c020-4d90-c42095f9a386@windriver.com>
-	<de6e4eb7-a4ea-5d4f-77ac-e8f2035f8f45@windriver.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
-	(dan.rpsys.net [192.168.3.1]);
-	Tue, 18 Jul 2017 23:02:59 +0100 (BST)
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: Re: [RFC PATCH 1/3] bitbake: knotty.py: add MonitorDiskEvent and RecipeTaskPreProcess
+	Wed, 19 Jul 2017 09:56:41 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	19 Jul 2017 02:56:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.40,380,1496127600"; d="scan'208";a="880410376"
+Received: from gsena-mobl.amr.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.48.213])
+	by FMSMGA003.fm.intel.com with ESMTP; 19 Jul 2017 02:56:42 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 19 Jul 2017 11:55:59 +0200
+Message-Id: <cover.1500458081.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.4
+Subject: [PATCH 00/12] Tinfoil enhancements / fetch fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,39 +29,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Jul 2017 22:03:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 19 Jul 2017 09:56:41 -0000
 
-Hi Robert,
+Some enhancements to tinfoil around improving OE's devtool / recipetool
+fetch code, as well as general enhancements to the API.
 
-Thanks for these. I've queued some of this, I fixed some things
-differently and I have a request for some tweaks please! :)
 
-For: http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rbt/ma
-ster-next-memres&id=1d7df2f917cbcfa5f21c437ba2f0cc656e256eaa could you
-please leave pid in the lockfile. We are going to likely need an easier
-way to find the server in future so I'd like to have that there.
+The following changes since commit 6683338598ce97278f188fbcd780c3e3754e5b9a:
 
-With oe-init-build-env-memres, I'm simply planning to delete this. If
-someone wants to start a standalone server over xmlrpc, they still can
-but going forward most people will just set BB_SERVER_TIMEOUT=X. We can
-therefore drop that script (patch queued).
+  fetch2: fix indentation (2017-07-18 22:38:30 +0100)
 
-For: http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rbt/ma
-ster-next-memres&id=78333885f4117e4586336c7aff6b5a9e3a6378b8
-could you rename the "server_only" parameter in ProcessServer to
-stay_resident please?
+are available in the git repository at:
 
-I've queued everything in bitbake master-next, I can't update poky
-master-next at the moment as a build is in progress.
+  git://git.yoctoproject.org/poky-contrib paule/tinfoil-fixes-bb3
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/tinfoil-fixes-bb3
 
-I'm hopeful the patches are becoming more stable now, not sure how many
-of your other issues remain if we remove the memres init script and use
-BB_SERVER_TIMEOUT as the preferred way to enable memres?
+Paul Eggleton (12):
+  tinfoil: add internal mode to build_file() function
+  tinfoil: add a parse_recipes() function
+  tinfoil: set a flag when recipes have been parsed
+  lib/bb/event: refactor printing events
+  lib/bb/ui/uihelper: indicate to caller of eventHandler() if events handled
+  knotty: make it possible to use termfilter without either console
+  tinfoil: add functionality for running full builds
+  tinfoil: enable access to additional cached items
+  tinfoil: add simple API for getting cached recipe information
+  tinfoil: add more doc comments
+  fetch2: allow hiding checksum warning
+  fetch2: fire an event when there are missing checksums
 
-Cheers,
+ bin/bitbake-layers        |   2 +-
+ lib/bb/command.py         |  43 ++++-
+ lib/bb/cooker.py          |  34 ++--
+ lib/bb/event.py           |  32 ++++
+ lib/bb/fetch2/__init__.py |  16 ++
+ lib/bb/runqueue.py        |   6 +
+ lib/bb/tinfoil.py         | 389 +++++++++++++++++++++++++++++++++++++++++++++-
+ lib/bb/ui/knotty.py       |  43 ++---
+ lib/bb/ui/ncurses.py      |   2 +-
+ lib/bb/ui/taskexp.py      |  20 +--
+ lib/bb/ui/toasterui.py    |  25 +--
+ lib/bb/ui/uihelper.py     |   3 +
+ 12 files changed, 525 insertions(+), 90 deletions(-)
 
-Richard
+-- 
+2.9.4
 
 
