@@ -1,45 +1,44 @@
 Return-Path: <viditha@mpconsultants.org>
-Received: from mail-ua0-f173.google.com (mail-ua0-f173.google.com
-	[209.85.217.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 18D7B78277
+Received: from mail-ua0-f177.google.com (mail-ua0-f177.google.com
+	[209.85.217.177])
+	by mail.openembedded.org (Postfix) with ESMTP id B5D1D78277
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Jul 2017 15:40:23 +0000 (UTC)
-Received: by mail-ua0-f173.google.com with SMTP id d29so72182254uai.2
+	Mon, 24 Jul 2017 15:41:51 +0000 (UTC)
+Received: by mail-ua0-f177.google.com with SMTP id w45so81696395uac.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Jul 2017 08:40:25 -0700 (PDT)
+	Mon, 24 Jul 2017 08:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=mpconsultants.org; s=google;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=bI4CohEP82Ng3q9dgG6QZD0uPPWjd3s6bWszhR8Jkzs=;
-	b=PMy6ck9Wy6TLwDkXt1hWh6WKi+AQpaXVw4QCQzDrFXemTH5oEuq+6c/yPjhdSTQ25G
-	XXLJR5No6NDO0Mrx7TyzQM2H+J/wOtS6Suc0DvKCs352RVJCU8T6G6trRozCKfVEEkUI
-	ZkXBDvEjFsv6OHyxtM0FmZK25l61aN/3o+5ug=
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to; 
+	bh=bom+qEkblNfLRH8bOWqaYBynPB95VDvK/VZV4vVfsTE=;
+	b=IjWoBkuptkYgTbaZovH7hwHi1g8AumYI/HukDAl/jGa9TiKE4Zb8kkAjdB2oFXX4d1
+	2VDNe/bFp2NZsO2M5XWYMQ2GF4GkXA9BTSuHg/n0QN2HI2UEUUlcqLHrrYF8nRxdmfjB
+	lJExoIIwFQkEBa4pVlkoCsNSA2KJqY0TJSijI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=bI4CohEP82Ng3q9dgG6QZD0uPPWjd3s6bWszhR8Jkzs=;
-	b=iU5DxaYQ0GAIdF+lEufIwWUvCy09xPoSLUJBCHsXI5fjkhfP2gfb712VFrAbI2gjSy
-	2lOG1IQVhf7x2ULYFw9jjSAKAw3vk5QqVgEVPTzYcHDQZw+VVu8a4alcm6yBC8e0bB+q
-	F3ys7jzykmeBAWbiUSQtHOOw12yW9Jzuywvvbmhoc5Vpr04CLj3fJAhWe2o6rr2AasWw
-	BjY9QEqMRg31KQ2WRAxmLEkqc3RznYT5Km7lnvCQYcO87V0h0aJNPOuFuocJAqC3OiPb
-	Naag6zvOE+IgY8pB4KIa3UuwcURuMDcfof2uQkxfIO9P8/KqzfxD52K9sf8AwUks1fCC
-	N4Zw==
-X-Gm-Message-State: AIVw1127kAIZ4Lto3HkNU4idvbJHjue4mxPuN+FvKMJoDBo9p2GkX5Dl
-	Y0+Kq5Sx1L6u5LtUHNtMsvbXZqjj7MZk
-X-Received: by 10.31.179.19 with SMTP id c19mr7196767vkf.140.1500910825140;
-	Mon, 24 Jul 2017 08:40:25 -0700 (PDT)
+	:message-id:subject:to;
+	bh=bom+qEkblNfLRH8bOWqaYBynPB95VDvK/VZV4vVfsTE=;
+	b=aFPH6NLwAnFqAC8JDpyQ3x+0OisnYu9F2SbjqNQ5o72A6DM+NLduH6VYOYwBJDGXjG
+	zIppmmAlZaXF+H0EJFZpymt//VIZoJe7VOCNThdbNXRZQYsy6l5Lf4Q3frLj9WNEiYQL
+	YvmryEzX6OUq7sJv6JXoZFfhza8p7YPVrxyjJtcrTrrNWcztMp+lGnkZZ88odJeJ5N02
+	P7c8pkL8u6bYk/AoLZMI/clgkVAaHDi7LjNjdOIk1tkzxan8Ge7IVvc/uGkW7aBIRt4N
+	O6KEnIUZgtkDAdbsJ1e0XCCksyE07LadY4y0lYt+giOUoQLLQ+GM9iMJFzfXOHFRTXTU
+	1naw==
+X-Gm-Message-State: AIVw113hWfeAwyndTzKUWLIBDJRl54gpNyMQ+GThhUDW4090/zAFWHue
+	8y8QHje6sqo+qfHxOJIPokwh63y95jL72us=
+X-Received: by 10.31.168.143 with SMTP id r137mr3510345vke.50.1500910912481;
+	Mon, 24 Jul 2017 08:41:52 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 10.176.78.159 with HTTP; Mon, 24 Jul 2017 08:40:24 -0700 (PDT)
+Received: by 10.176.78.159 with HTTP; Mon, 24 Jul 2017 08:41:52 -0700 (PDT)
 In-Reply-To: <CAMKF1sqB1EBkqWYSGFfvr9=wpZhGYFtLTV7Z+VtdCSjfPr+rkw@mail.gmail.com>
 References: <CAGCkR7pSFetC-P4unXU_nyGG9pQj8WrEWUQvwmewQe2aKWdZtQ@mail.gmail.com>
 	<CAJ86T=VSTa2h9FBvkXnwRb9S5ZfBs89n_qg+1kOKtww94rS1Jw@mail.gmail.com>
 	<CAMKF1sqB1EBkqWYSGFfvr9=wpZhGYFtLTV7Z+VtdCSjfPr+rkw@mail.gmail.com>
 From: Viditha Murahari <viditha@mpconsultants.org>
-Date: Mon, 24 Jul 2017 10:40:24 -0500
-Message-ID: <CAGCkR7rgMGyfUcNVfh+orG63DeD3CBXuy1cXTyy8qQjXYSkK=g@mail.gmail.com>
-To: Khem Raj <raj.khem@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 24 Jul 2017 10:41:52 -0500
+Message-ID: <CAGCkR7r=ver4B7j+hzhw2mA_USS_iXDBC7WQFewKQ3SWJgHukw@mail.gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: need help to write a recipe to link a static library to my application
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -53,10 +52,10 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Jul 2017 15:40:24 -0000
-Content-Type: multipart/alternative; boundary="001a114358e892ac9405551208f5"
+X-List-Received-Date: Mon, 24 Jul 2017 15:41:52 -0000
+Content-Type: multipart/alternative; boundary="001a1142783ac742c20555120d79"
 
---001a114358e892ac9405551208f5
+--001a1142783ac742c20555120d79
 Content-Type: text/plain; charset="UTF-8"
 
 Hello Khem Raj,
@@ -66,27 +65,29 @@ command looks
 
 do_compile() {
         arm-poky-linux-gnueabi-gcc  -march=armv7ve -mfpu=neon
- -mfloat-abi=hard -mcpu=cortex-a7
---sysroot=/home/jeesu/viditha/imx6ul-evk-audio/build/tmp/sysroots/imx6ulevk
- -I/home/jeesu/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1/include
+ -mfloat-abi=hard -mcpu=cortex-a7 --sysroot=/home/jeesu/viditha/
+imx6ul-evk-audio/build/tmp/sysroots/imx6ulevk  -I/home/jeesu/viditha/imx6ul-
+evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1/include
 -DPJ_AUTOCONF=1 -DPJ_IS_BIG_ENDIAN=0 -DPJ_IS_LITTLE_ENDIAN=1 -O2 -pipe -g
--feliminate-unused-debug-types
--fdebug-prefix-map=/home/jeesu/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1=/usr/src/debug/rttapp/1.0-r1
--fdebug-prefix-map=/home/jeesu/viditha/imx6ul-evk-audio/build/tmp/sysroots/x86_64-linux=
+-feliminate-unused-debug-types -fdebug-prefix-map=/home/
+jeesu/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-
+gnueabi/rttapp/1.0-r1=/usr/src/debug/rttapp/1.0-r1 -fdebug-prefix-map=/home/
+jeesu/viditha/imx6ul-evk-audio/build/tmp/sysroots/x86_64-linux=
 -fdebug-prefix-map=/home/jeesu/viditha/imx6ul-evk-audio/build/tmp/sysroots/imx6ulevk=
- -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed
--L/home/jeesu/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1/lib
+ -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -L/home/jeesu/viditha/imx6ul-
+evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1/lib
 -lpjsua2-arm-poky-linux-gnueabi -lstdc++ -lpjsua-arm-poky-linux-gnueabi -lm
 -lrt -lpthread -lasound rttapp.c -o rttapp
 }
 
 and i tried
 
-ls
-/home/jeesu/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1/lib
+ls /home/jeesu/viditha/imx6ul-evk-audio/build/tmp/work/
+cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1/lib
 
-jeesu@MPCLinux:~/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1/lib$
-ls
+jeesu@MPCLinux:~/viditha/imx6ul-evk-audio/build/tmp/
+work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r1/lib$ ls
+
 
 libg7221codec-arm-poky-linux-gnueabi.a
 libgsmcodec-arm-poky-linux-gnueabi.a
@@ -110,10 +111,6 @@ pkgconfig
 
 It looks like -L in my compile command is pointing to the right location
 for my libraries. So im not clear what im missing. Please help.
-
-
-
-
 
 On Fri, Jul 21, 2017 at 7:25 PM, Khem Raj <raj.khem@gmail.com> wrote:
 
@@ -199,62 +196,69 @@ On Fri, Jul 21, 2017 at 7:25 PM, Khem Raj <raj.khem@gmail.com> wrote:
 >>
 >
 
---001a114358e892ac9405551208f5
+--001a1142783ac742c20555120d79
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Hello Khem Raj,<div><br></div><div>I did a bitbake -e -c c=
-ompile -f rttapp =C2=A0, and this is how my =C2=A0do_c0mpile command looks<=
-/div><div><br></div><div><div>do_compile() {</div><div>=C2=A0 =C2=A0 =C2=A0=
- =C2=A0 arm-poky-linux-gnueabi-gcc =C2=A0-march=3Darmv7ve -mfpu=3Dneon =C2=
-=A0-mfloat-abi=3Dhard -mcpu=3Dcortex-a7 --sysroot=3D/home/jeesu/viditha/imx=
-6ul-evk-audio/build/tmp/sysroots/imx6ulevk =C2=A0-I/home/jeesu/viditha/imx6=
-ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/rttapp/1.0-r=
-1/include -DPJ_AUTOCONF=3D1 -DPJ_IS_BIG_ENDIAN=3D0 -DPJ_IS_LITTLE_ENDIAN=3D=
-1 -O2 -pipe -g -feliminate-unused-debug-types -fdebug-prefix-map=3D/home/je=
-esu/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnue=
-abi/rttapp/1.0-r1=3D/usr/src/debug/rttapp/1.0-r1 -fdebug-prefix-map=3D/home=
-/jeesu/viditha/imx6ul-evk-audio/build/tmp/sysroots/x86_64-linux=3D -fdebug-=
-prefix-map=3D/home/jeesu/viditha/imx6ul-evk-audio/build/tmp/sysroots/imx6ul=
-evk=3D =C2=A0-Wl,-O1 -Wl,--hash-style=3Dgnu -Wl,--as-needed -L/home/jeesu/v=
-iditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnueabi/r=
-ttapp/1.0-r1/lib -lpjsua2-arm-poky-linux-gnueabi -lstdc++ -lpjsua-arm-poky-=
-linux-gnueabi -lm -lrt -lpthread -lasound rttapp.c -o rttapp</div><div>}</d=
-iv></div><div><br></div><div>and i tried =C2=A0</div><div><br></div><div>ls=
- /home/jeesu/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-l=
-inux-gnueabi/rttapp/1.0-r1/lib</div><div><br></div><div><div>jeesu@MPCLinux=
-:~/viditha/imx6ul-evk-audio/build/tmp/work/cortexa7hf-neon-poky-linux-gnuea=
-bi/rttapp/1.0-r1/lib$ ls =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+<div dir=3D"ltr"><span style=3D"font-size:12.8px">Hello Khem Raj,</span><di=
+v style=3D"font-size:12.8px"><br></div><div style=3D"font-size:12.8px">I di=
+d a bitbake -e -c compile -f rttapp =C2=A0, and this is how my =C2=A0do_c0m=
+pile command looks</div><div style=3D"font-size:12.8px"><br></div><div styl=
+e=3D"font-size:12.8px"><div>do_compile() {</div><div>=C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 arm-poky-linux-gnueabi-gcc =C2=A0-march=3Darmv7ve -mfpu=3Dneon =C2=
+=A0-mfloat-abi=3Dhard -mcpu=3Dcortex-a7 --sysroot=3D/home/jeesu/viditha/<wb=
+r>imx6ul-evk-audio/build/tmp/<wbr>sysroots/imx6ulevk =C2=A0-I/home/jeesu/vi=
+ditha/imx6ul-<wbr>evk-audio/build/tmp/work/<wbr>cortexa7hf-neon-poky-linux-=
+<wbr>gnueabi/rttapp/1.0-r1/include -DPJ_AUTOCONF=3D1 -DPJ_IS_BIG_ENDIAN=3D0=
+ -DPJ_IS_LITTLE_ENDIAN=3D1 -O2 -pipe -g -feliminate-unused-debug-types -fde=
+bug-prefix-map=3D/home/<wbr>jeesu/viditha/imx6ul-evk-<wbr>audio/build/tmp/w=
+ork/<wbr>cortexa7hf-neon-poky-linux-<wbr>gnueabi/rttapp/1.0-r1=3D/usr/<wbr>=
+src/debug/rttapp/1.0-r1 -fdebug-prefix-map=3D/home/<wbr>jeesu/viditha/imx6u=
+l-evk-<wbr>audio/build/tmp/sysroots/x86_<wbr>64-linux=3D -fdebug-prefix-map=
+=3D/home/<wbr>jeesu/viditha/imx6ul-evk-<wbr>audio/build/tmp/sysroots/<wbr>i=
+mx6ulevk=3D =C2=A0-Wl,-O1 -Wl,--hash-style=3Dgnu -Wl,--as-needed -L/home/je=
+esu/viditha/imx6ul-<wbr>evk-audio/build/tmp/work/<wbr>cortexa7hf-neon-poky-=
+linux-<wbr>gnueabi/rttapp/1.0-r1/lib -lpjsua2-arm-poky-linux-<wbr>gnueabi -=
+lstdc++ -lpjsua-arm-poky-linux-gnueabi -lm -lrt -lpthread -lasound rttapp.c=
+ -o rttapp</div><div>}</div></div><div style=3D"font-size:12.8px"><br></div=
+><div style=3D"font-size:12.8px">and i tried =C2=A0</div><div style=3D"font=
+-size:12.8px"><br></div><div style=3D"font-size:12.8px">ls /home/jeesu/vidi=
+tha/imx6ul-<wbr>evk-audio/build/tmp/work/<wbr>cortexa7hf-neon-poky-linux-<w=
+br>gnueabi/rttapp/1.0-r1/lib</div><div style=3D"font-size:12.8px"><br></div=
+><div style=3D"font-size:12.8px"><div>jeesu@MPCLinux:~/viditha/<wbr>imx6ul-=
+evk-audio/build/tmp/<wbr>work/cortexa7hf-neon-poky-<wbr>linux-gnueabi/rttap=
+p/1.0-r1/<wbr>lib$ ls =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0</div><div>libg7221c=
-odec-arm-poky-linux-gnueabi.a</div><div>libgsmcodec-arm-poky-linux-gnueabi.=
-a</div><div>libilbccodec-arm-poky-linux-gnueabi.a</div><div>libpj-arm-poky-=
-linux-gnueabi.a</div><div>libpjlib-util-arm-poky-linux-gnueabi.a</div><div>=
-libpjmedia-arm-poky-linux-gnueabi.a</div><div>libpjmedia-audiodev-arm-poky-=
-linux-gnueabi.a</div><div>libpjmedia-codec-arm-poky-linux-gnueabi.a</div><d=
-iv>libpjmedia-videodev-arm-poky-linux-gnueabi.a</div><div>libpjnath-arm-pok=
-y-linux-gnueabi.a</div><div>libpjsip-arm-poky-linux-gnueabi.a</div><div>lib=
-pjsip-simple-arm-poky-linux-gnueabi.a</div><div>libpjsip-ua-arm-poky-linux-=
-gnueabi.a</div><div>libpjsua2-arm-poky-linux-gnueabi.a</div><div>libpjsua-a=
-rm-poky-linux-gnueabi.a</div><div>libresample-arm-poky-linux-gnueabi.a</div=
-><div>libspeex-arm-poky-linux-gnueabi.a</div><div>libsrtp-arm-poky-linux-gn=
-ueabi.a</div><div>pkgconfig</div></div><div><br></div><div>It looks like -L=
- in my compile command is pointing to the right location for my libraries. =
-So im not clear what im missing. Please help.</div><div><br></div><div><br>=
-</div><div><br></div><div><br></div></div><div class=3D"gmail_extra"><br><d=
-iv class=3D"gmail_quote">On Fri, Jul 21, 2017 at 7:25 PM, Khem Raj <span di=
-r=3D"ltr">&lt;<a href=3D"mailto:raj.khem@gmail.com" target=3D"_blank">raj.k=
-hem@gmail.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div>=
-<br><div class=3D"gmail_quote"><div><div class=3D"h5"><div dir=3D"auto">On =
-Fri, Jul 21, 2017 at 6:43 PM Andre McCurdy &lt;<a href=3D"mailto:armccurdy@=
-gmail.com" target=3D"_blank">armccurdy@gmail.com</a>&gt; wrote:<br></div><b=
-lockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px =
-#ccc solid;padding-left:1ex">On Fri, Jul 21, 2017 at 12:11 PM, Viditha Mura=
-hari<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0</div><div>libg7221code=
+c-arm-poky-linux-<wbr>gnueabi.a</div><div>libgsmcodec-arm-poky-linux-<wbr>g=
+nueabi.a</div><div>libilbccodec-arm-poky-linux-<wbr>gnueabi.a</div><div>lib=
+pj-arm-poky-linux-gnueabi.a</div><div>libpjlib-util-arm-poky-linux-<wbr>gnu=
+eabi.a</div><div>libpjmedia-arm-poky-linux-<wbr>gnueabi.a</div><div>libpjme=
+dia-audiodev-arm-poky-<wbr>linux-gnueabi.a</div><div>libpjmedia-codec-arm-p=
+oky-<wbr>linux-gnueabi.a</div><div>libpjmedia-videodev-arm-poky-<wbr>linux-=
+gnueabi.a</div><div>libpjnath-arm-poky-linux-<wbr>gnueabi.a</div><div>libpj=
+sip-arm-poky-linux-<wbr>gnueabi.a</div><div>libpjsip-simple-arm-poky-<wbr>l=
+inux-gnueabi.a</div><div>libpjsip-ua-arm-poky-linux-<wbr>gnueabi.a</div><di=
+v>libpjsua2-arm-poky-linux-<wbr>gnueabi.a</div><div>libpjsua-arm-poky-linux=
+-<wbr>gnueabi.a</div><div>libresample-arm-poky-linux-<wbr>gnueabi.a</div><d=
+iv>libspeex-arm-poky-linux-<wbr>gnueabi.a</div><div>libsrtp-arm-poky-linux-=
+<wbr>gnueabi.a</div><div>pkgconfig</div></div><div style=3D"font-size:12.8p=
+x"><br></div><div style=3D"font-size:12.8px">It looks like -L in my compile=
+ command is pointing to the right location for my libraries. So im not clea=
+r what im missing. Please help.</div></div><div class=3D"gmail_extra"><br><=
+div class=3D"gmail_quote">On Fri, Jul 21, 2017 at 7:25 PM, Khem Raj <span d=
+ir=3D"ltr">&lt;<a href=3D"mailto:raj.khem@gmail.com" target=3D"_blank">raj.=
+khem@gmail.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div=
+><br><div class=3D"gmail_quote"><div><div class=3D"h5"><div dir=3D"auto">On=
+ Fri, Jul 21, 2017 at 6:43 PM Andre McCurdy &lt;<a href=3D"mailto:armccurdy=
+@gmail.com" target=3D"_blank">armccurdy@gmail.com</a>&gt; wrote:<br></div><=
+blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px=
+ #ccc solid;padding-left:1ex">On Fri, Jul 21, 2017 at 12:11 PM, Viditha Mur=
+ahari<br>
 &lt;<a href=3D"mailto:viditha@mpconsultants.org" target=3D"_blank">viditha@=
 mpconsultants.org</a>&gt; wrote:<br>
 &gt; I&#39;m new to yocto and bitbake and I&#39;m building a voip applicati=
@@ -343,4 +347,4 @@ an/listinfo/bitbake-devel</a><br>
 </blockquote></span></div></div>
 </blockquote></div><br></div>
 
---001a114358e892ac9405551208f5--
+--001a1142783ac742c20555120d79--
