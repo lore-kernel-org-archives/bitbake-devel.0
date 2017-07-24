@@ -1,48 +1,47 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
-	by mail.openembedded.org (Postfix) with ESMTP id D7C7A782E1
+Return-Path: <kergoth@gmail.com>
+Received: from mail-qk0-f179.google.com (mail-qk0-f179.google.com
+	[209.85.220.179])
+	by mail.openembedded.org (Postfix) with ESMTP id D2A3E71AC1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Jul 2017 21:04:14 +0000 (UTC)
-Received: by mail-wm0-f51.google.com with SMTP id l81so22129652wmg.1
+	Mon, 24 Jul 2017 21:43:57 +0000 (UTC)
+Received: by mail-qk0-f179.google.com with SMTP id k2so20894572qkf.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Jul 2017 14:04:16 -0700 (PDT)
+	Mon, 24 Jul 2017 14:43:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=gaRI7apT1n3FtgX1cEgvey/YNAVeUavGMf3rkm6mZjc=;
-	b=j1PGha36aUJuJ7+/w2GoscXQJobv0P/JDBSnRu/wKbAOjmmWqTprbNrr6+vki4Aslp
-	n4CCtG02YKgql/bu4aE3/P4bWEQF3RPJ2oCmwsL+7xpkOSe/kJnMFImVq8qZCL/Acw/T
-	CEXFXBaELQrDOg4bS+2ipHaQspgw2wbgvn+Pc/7NnwTcA+RGudPIyu04NAZfz/FrMqi5
-	Jq4a4Z/zK9cjrQs71AErKOv1xaWPui64/r+ydSzqnkDeK1fq/tcfm+yxKK+8E4oO0x5O
-	jx0MWmF+QNAvd6KXEuT4VXX/o4c8i0A8mj0z+AF2wHCGQDu9hDCdZSJa+M3r5j+5iU7H
-	tgNA==
+	:cc; bh=NKMRxcALq+QJjsI0+yKaEWMRMTiJesFsVgJTUPTAgnM=;
+	b=RXMNM6998jH+SzZDDe84WywgYoVo6noCEeAsSapzW0Uf7nMUvlz5SEJYLpEXs2l+bm
+	LO4BWtlstDSiG/9jtzHxRBxBeoQ7CgsaV28GM+nK37IgcyL9dZfHe1uIrDoXrwUU/v28
+	S0aHK+8V58wfCu0n2zQFBOt+muMw6VodxHClSsrC/wk6keOWRH4J14Fp9JaJRxsXg0fP
+	rMF5fyMWP5jJZ46nh/S53+4xpwiVJGwiQFype6rUrNf6gOhXLBU/t2U0NLpwiLGJ/w8O
+	KwnPHu8Z5cUs5N1tiaNcxjNZtDD+ruQZ7RIy60vRNGwx6YjhDjJ3gsz1T2nprTgadM0l
+	CYzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
 	:message-id:subject:to:cc;
-	bh=gaRI7apT1n3FtgX1cEgvey/YNAVeUavGMf3rkm6mZjc=;
-	b=QcSJz1deX4kp6UbhqoPLU7CS2sH9hKMoS3i3DbBoJwjlfLyugc6H9QkzuxKFFQbVTi
-	hECV9kEgziTs2zVQDay+k8IVjoGwqcPruECNy18scfnAlEK9+jVZF0Ff/VmW5NeG/raQ
-	9TczryD3r01jFRtXEzJZNbDs1LXAyLMkF2+H/8BJTIeZF333Fky+5gloY2Ot12o6uJX6
-	FIAxRTIzwfFBdCAoLNLmk3/tbCVmS59QuARuYgmboCLMSo/kHf3kPSwRmL/3CwpBFvEL
-	N0O64dvv5Ak+HYY778mrlxgC1DF2rDc1ClenF1ug5S262TnP4Zxs9AlDIRgjERs5w5tz
-	OgNg==
-X-Gm-Message-State: AIVw110YI9fkskuHPDDXZX83rN0NXDo5CwgbPBqyI9ZKI/10AqPLcD3E
-	qPLB1oBdesjcvMGz+YXRkgmIzB49og==
-X-Received: by 10.28.37.193 with SMTP id l184mr6267420wml.24.1500930255671;
-	Mon, 24 Jul 2017 14:04:15 -0700 (PDT)
+	bh=NKMRxcALq+QJjsI0+yKaEWMRMTiJesFsVgJTUPTAgnM=;
+	b=qo0pFxa2tuEfCXWzVrMXNVdWUHNQ+x35p4yir4Cud01JSHhdjOg2MS1z0Oi6PGn6jy
+	WIdf4W4Gr4PM+zVKaSzn/PBRO2yB31JZcpXwehun5t8jB6aNnuGUbTg11HuP5t56cvpa
+	TjxoEBeKGa5xL8ok0TSY1NVfR2EbwSYaQbV7J5+a1omBYLCQHx6qtFDdw3GY4ko7cOfp
+	Zsc0uXEEzjUAQzvikPuTFGHWk09CHYgrCis3k5nEPERmOpPwxnARmOoQFoTWzLeyJKjU
+	XLrmOogEHoqIoX5EqP5rKKtj6viYsng2bNfvVANbLXif6TTOIB7OfDaKqi8NpsD7htVu
+	407A==
+X-Gm-Message-State: AIVw111FvqofZWKhWYHxWwlb3JFJ+LGYi54saRPDUJUvVhRq0HghJfsb
+	J96d26qWByqb76P2s1nrrBNys/npOQ==
+X-Received: by 10.55.22.166 with SMTP id 38mr22653192qkw.131.1500932638617;
+	Mon, 24 Jul 2017 14:43:58 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 10.223.175.16 with HTTP; Mon, 24 Jul 2017 14:04:15 -0700 (PDT)
-In-Reply-To: <1464702613.3814.2.camel@linuxfoundation.org>
-References: <1464700684-24169-1-git-send-email-fabien.proriolpatch@kazoe.org>
-	<1464702613.3814.2.camel@linuxfoundation.org>
-From: Andre McCurdy <armccurdy@gmail.com>
-Date: Mon, 24 Jul 2017 14:04:15 -0700
-Message-ID: <CAJ86T=Vp41R2c-XboBxv0NRK5FdFhpOE4WE8GpE8rOfbuXCJPA@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: Fabien Proriol <fabien.proriol@jdsu.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	fabien.proriolpatch@kazoe.org
-Subject: Re: [PATCH] bb.fetch.git: add a way to avoid git protocol, and force http or https mirrors
+Received: by 10.140.32.6 with HTTP; Mon, 24 Jul 2017 14:43:38 -0700 (PDT)
+In-Reply-To: <1454516982-3788-1-git-send-email-eu@felipetonello.com>
+References: <1454516982-3788-1-git-send-email-eu@felipetonello.com>
+From: Christopher Larson <kergoth@gmail.com>
+Date: Mon, 24 Jul 2017 14:43:38 -0700
+Message-ID: <CABcZAN=UWAbmzv7C5AOk93=O5gi5kfOprtWNWt37BOb50U-HXw@mail.gmail.com>
+To: "Felipe F. Tonello" <eu@felipetonello.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] fetch2/gitsm: Fix when repository change submodules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,56 +54,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Jul 2017 21:04:15 -0000
+X-List-Received-Date: Mon, 24 Jul 2017 21:43:58 -0000
+Content-Type: multipart/alternative; boundary="001a11496cb8c1b6550555171c49"
+
+--001a11496cb8c1b6550555171c49
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 31, 2016 at 6:50 AM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> On Tue, 2016-05-31 at 15:18 +0200, fabien.proriolpatch@kazoe.org wrote:
->> From: Fabien Proriol <fabien.proriol@jdsu.com>
->>
->> This patch add the possibility to bitbake to avoid git protocol to
->> fetch sources.
->> This is usefull in some network with firewall blocking git port.
->>
->> When BB_GIT_PROTOCOL_FIREWALL is set, the PROTOCOL_MIRRORS table is
->> used to find the new protocol (http or https) and the new host (if
->> different) to used.
->>
->> BB_GIT_PROTOCOL_FIREWALL can also contains a list of host accepted.
->> This is usefull for exemple, if we use local git repository inside
->> the network.
->>
->> Exemple usage:
->>     # Avoid all git protocol
->>     BB_GIT_PROTOCOL_FIREWALL = "1"
->>
->>     # Avoid git protocol, except for srv1 and srv2 in local network
->>     BB_GIT_PROTOCOL_FIREWALL = "srv1.mydomain.com;srv2.mydomain.com"
+On Wed, Feb 3, 2016 at 9:29 AM, Felipe F. Tonello <eu@felipetonello.com>
+wrote:
+
+> This fix a problem when checking out a commit that changes the submodules
+> previously checkout.
 >
-> Why not use the more generic MIRRORS and PREMIRRORS for this? If they
-> can't support this, we likely should figure out a way to make them work
-> for it rather than adding new fetcher specific variables.
-
-Sorry for resurrecting such an old thread, but I'm wondering if
-there's been any more work on an upstreamable solution?
-
-The problem being that recipes which define SRC_URI to git://* with
-protocol=git (or with protocol unspecified, since git is the default)
-fail during fetching for users working behind a firewall which blocks
-the native git protocol.
-
-Although MIRRORS and PREMIRRORS allow mapping from one host to another
-there's no support for mapping one git fetch protocol to another and
-it looks like extending the MIRRORS syntax to support that would be a
-non-trivial change...
-
-> Cheers,
+> Example:
+> Recipe uses branch A and then it updates to use branch B, but branch B ha=
+s
+> different submodules dependencies then what branch A previously had.
 >
-> Richard
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+> Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
+>
 
+This completely broke the gitsm fetcher behavior. It no longer uses the
+previously fetched submodules from DL_DIR at all, instead the submodule
+update is re-cloning them from upstream in do_unpack, violating our
+conventions. Git checkout isn=E2=80=99t going to magically copy the existin=
+g
+fetched submodules from DL_DIR.
+--=20
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
+
+--001a11496cb8c1b6550555171c49
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">On Wed, Feb 3, 2016 at 9:29 AM, Felipe F. Tonello <span di=
+r=3D"ltr">&lt;<a href=3D"mailto:eu@felipetonello.com" target=3D"_blank">eu@=
+felipetonello.com</a>&gt;</span> wrote:<br><div class=3D"gmail_extra"><div =
+class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
+ 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">This fix a problem whe=
+n checking out a commit that changes the submodules<br>
+previously checkout.<br>
+<br>
+Example:<br>
+Recipe uses branch A and then it updates to use branch B, but branch B has<=
+br>
+different submodules dependencies then what branch A previously had.<br>
+<br>
+Signed-off-by: Felipe F. Tonello &lt;<a href=3D"mailto:eu@felipetonello.com=
+">eu@felipetonello.com</a>&gt;<br></blockquote><div><br></div><div>This com=
+pletely broke the gitsm fetcher behavior. It no longer uses the previously =
+fetched submodules from DL_DIR at all, instead the submodule update is re-c=
+loning them from upstream in do_unpack, violating our conventions. Git chec=
+kout isn=E2=80=99t going to magically copy the existing fetched submodules =
+from DL_DIR.</div></div>-- <br><div class=3D"gmail_signature" data-smartmai=
+l=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christopher La=
+rson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZa=
+urus<br>Senior Software Engineer, Mentor Graphics</div></div></div></div>
+</div></div>
+
+--001a11496cb8c1b6550555171c49--
