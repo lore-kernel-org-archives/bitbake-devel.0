@@ -1,35 +1,48 @@
-Return-Path: <t_dufff@yahoo.ca>
-Received: from sonic309-16.consmr.mail.bf2.yahoo.com
-	(sonic309-16.consmr.mail.bf2.yahoo.com [74.6.129.126])
-	by mail.openembedded.org (Postfix) with ESMTP id 67A59782E1
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id D7C7A782E1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Jul 2017 20:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048;
-	t=1500929882; bh=O0CzQv2sTDFetXn9nOH32MhJTCtePt5szwIo0PxClDw=;
-	h=Date:From:Reply-To:To:Subject:References:From:Subject;
-	b=D0KZuowRb1QVyCCX9K970LmLBWMOWL7OQMNq0eYpbgMWEt8VcX4Cj8wwzx5SOfUZjobkZ0X93COUOrGYKPPpuPzMqIY4MEh7sOU3CAFT2+1/eglU/r0t277hvoc8wzokkkZPezZA6WeA4oSgLdHO6SwgMtsSX2KJWAdzrRphJKB3UIIVYgBAui32y9SjFTfMgqFtQSO2eHu6lxzHUJm+U25abAovoR7ugkD2/jsE5ihYClFgO6YdkIST3iS/+TxkF3voNc1Hk6LP2GlUGH4yhHyUhNCxH4lV16nVndxfRDAM5Y5kCd7ylzKqlkucYi1Ut/2yTmiKOMCOf555E9dgzA==
-X-YMail-OSG: btpvOQcVM1kZFPx.1RYr9r3EMkx9U2Jt6pv4QN3QbhzJbmj0M7kNDxvWp7iHz3z
-	z3oITWHdP8lQ6ukOfTCqem0sLb8vPcpP8ui7GpewODo_7yNrO5sbZr6hWpIeYlU2fuUNvzB_qfvG
-	wk80GercHFp5VOlWqQ_.9tokRWbRMdAbQFgYGqevKnsnvtQ_Em2XIoi2PTMt9B8jR86E.fYQ5Hax
-	BNAZHJSP6mARAhuW1bcJP4f_pqjcesbLEyUHLvJtr2SBd3O8JDFpXSscKKXj3NMDB7wTgBzkFNZR
-	6E2ksRQF4erby6gL6Uxds25RR4fZL2DUb3Yblw21oNEUrPYVL4j.1PtF28wf6z9QlWulcinwAQg4
-	lakd94i4P1oZ9R.vKDBVliLzsJoy3kgLj0zXNBAaXTD3sZv89_elK.tBjvMmAtAcFqpkSQ95MBF6
-	c7zUWhHuWVwk4X0tH4iySasuYl_pHBSe678wbHPlE_0DiHA3mnIkwS5HpwsxlH3zVyf_5BRQGZig
-	A_01nBV3ucQPJ7EYoZ6zYb5HCPuikcvCdzA--
-Received: from sonic.gate.mail.ne1.yahoo.com by
-	sonic309.consmr.mail.bf2.yahoo.com with HTTP;
-	Mon, 24 Jul 2017 20:58:02 +0000
-Date: Mon, 24 Jul 2017 20:57:59 +0000 (UTC)
-From: kris duff <t_dufff@yahoo.ca>
-Reply-To: kris duff <t_dufff@yahoo.ca>
-To: Bitbake-devel <bitbake-devel@lists.openembedded.org>
-Message-ID: <1586964508.4210312.1500929879478@mail.yahoo.com>
+	Mon, 24 Jul 2017 21:04:14 +0000 (UTC)
+Received: by mail-wm0-f51.google.com with SMTP id l81so22129652wmg.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 24 Jul 2017 14:04:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=gaRI7apT1n3FtgX1cEgvey/YNAVeUavGMf3rkm6mZjc=;
+	b=j1PGha36aUJuJ7+/w2GoscXQJobv0P/JDBSnRu/wKbAOjmmWqTprbNrr6+vki4Aslp
+	n4CCtG02YKgql/bu4aE3/P4bWEQF3RPJ2oCmwsL+7xpkOSe/kJnMFImVq8qZCL/Acw/T
+	CEXFXBaELQrDOg4bS+2ipHaQspgw2wbgvn+Pc/7NnwTcA+RGudPIyu04NAZfz/FrMqi5
+	Jq4a4Z/zK9cjrQs71AErKOv1xaWPui64/r+ydSzqnkDeK1fq/tcfm+yxKK+8E4oO0x5O
+	jx0MWmF+QNAvd6KXEuT4VXX/o4c8i0A8mj0z+AF2wHCGQDu9hDCdZSJa+M3r5j+5iU7H
+	tgNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=gaRI7apT1n3FtgX1cEgvey/YNAVeUavGMf3rkm6mZjc=;
+	b=QcSJz1deX4kp6UbhqoPLU7CS2sH9hKMoS3i3DbBoJwjlfLyugc6H9QkzuxKFFQbVTi
+	hECV9kEgziTs2zVQDay+k8IVjoGwqcPruECNy18scfnAlEK9+jVZF0Ff/VmW5NeG/raQ
+	9TczryD3r01jFRtXEzJZNbDs1LXAyLMkF2+H/8BJTIeZF333Fky+5gloY2Ot12o6uJX6
+	FIAxRTIzwfFBdCAoLNLmk3/tbCVmS59QuARuYgmboCLMSo/kHf3kPSwRmL/3CwpBFvEL
+	N0O64dvv5Ak+HYY778mrlxgC1DF2rDc1ClenF1ug5S262TnP4Zxs9AlDIRgjERs5w5tz
+	OgNg==
+X-Gm-Message-State: AIVw110YI9fkskuHPDDXZX83rN0NXDo5CwgbPBqyI9ZKI/10AqPLcD3E
+	qPLB1oBdesjcvMGz+YXRkgmIzB49og==
+X-Received: by 10.28.37.193 with SMTP id l184mr6267420wml.24.1500930255671;
+	Mon, 24 Jul 2017 14:04:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586964508.4210312.1500929879478.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.10121 YahooMailNeo Mozilla/5.0 (Windows NT 6.1; Win64;
-	x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115
-	Safari/537.36
-Subject: korgoth : php + postgresql = ERROR: php-5.6.23-r0 do_configure: This autoconf log indicates errors, it looked at host include and/or library paths while determining system capabilities.
+Received: by 10.223.175.16 with HTTP; Mon, 24 Jul 2017 14:04:15 -0700 (PDT)
+In-Reply-To: <1464702613.3814.2.camel@linuxfoundation.org>
+References: <1464700684-24169-1-git-send-email-fabien.proriolpatch@kazoe.org>
+	<1464702613.3814.2.camel@linuxfoundation.org>
+From: Andre McCurdy <armccurdy@gmail.com>
+Date: Mon, 24 Jul 2017 14:04:15 -0700
+Message-ID: <CAJ86T=Vp41R2c-XboBxv0NRK5FdFhpOE4WE8GpE8rOfbuXCJPA@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: Fabien Proriol <fabien.proriol@jdsu.com>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	fabien.proriolpatch@kazoe.org
+Subject: Re: [PATCH] bb.fetch.git: add a way to avoid git protocol, and force http or https mirrors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,96 +55,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Jul 2017 20:58:01 -0000
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_4210311_1860078380.1500929879475"
+X-List-Received-Date: Mon, 24 Jul 2017 21:04:15 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-------=_Part_4210311_1860078380.1500929879475
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 31, 2016 at 6:50 AM, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> On Tue, 2016-05-31 at 15:18 +0200, fabien.proriolpatch@kazoe.org wrote:
+>> From: Fabien Proriol <fabien.proriol@jdsu.com>
+>>
+>> This patch add the possibility to bitbake to avoid git protocol to
+>> fetch sources.
+>> This is usefull in some network with firewall blocking git port.
+>>
+>> When BB_GIT_PROTOCOL_FIREWALL is set, the PROTOCOL_MIRRORS table is
+>> used to find the new protocol (http or https) and the new host (if
+>> different) to used.
+>>
+>> BB_GIT_PROTOCOL_FIREWALL can also contains a list of host accepted.
+>> This is usefull for exemple, if we use local git repository inside
+>> the network.
+>>
+>> Exemple usage:
+>>     # Avoid all git protocol
+>>     BB_GIT_PROTOCOL_FIREWALL = "1"
+>>
+>>     # Avoid git protocol, except for srv1 and srv2 in local network
+>>     BB_GIT_PROTOCOL_FIREWALL = "srv1.mydomain.com;srv2.mydomain.com"
+>
+> Why not use the more generic MIRRORS and PREMIRRORS for this? If they
+> can't support this, we likely should figure out a way to make them work
+> for it rather than adding new fetcher specific variables.
 
-Hi,
-I am trying to install PHP with postgresql in my image.
-I newly upgraded my image from dizzy to korgoth. I never have been sucessfu=
-ll porting php + postgresql on my last image.
-So support postgresql and not mariadb, I have created a php_5.6.23.bbappend=
-. The content of that file is below.
-PACKAGECONFIG +=3D "pgsql"
-bitbake return this error :
-ERROR: php-5.6.23-r0 do_configure: This autoconf log indicates errors, it l=
-ooked at host include and/or library paths while determining system capabil=
-ities.Rerun configure task after fixing this.ERROR: php-5.6.23-r0 do_config=
-ure: Function failed: do_qa_configureERROR: Logfile of failure stored in: /=
-home/krogoth/build/tmp/work/core2-64-poky-linux/php/5.6.23-r0/temp/log.do_c=
-onfigure.1851ERROR: Task 791 (/home/krogoth/poky/meta-openembedded/meta-oe/=
-recipes-devtools/php/php_5.6.23.bb, do_configure) failed with exit code '1'
+Sorry for resurrecting such an old thread, but I'm wondering if
+there's been any more work on an upstreamable solution?
 
-In config.log from the build directory, I can see the following error that =
-trigger insane.bbclass :
-warning: library search path "/usr/lib/x86_64-linux-gnu" is unsafe for cros=
-s-compilation
+The problem being that recipes which define SRC_URI to git://* with
+protocol=git (or with protocol unspecified, since git is the default)
+fail during fetching for users working behind a firewall which blocks
+the native git protocol.
 
-and looking for the configure line : I can see this : -L/usr/lib/x86_64-lin=
-ux-gnu
-I is very bad, but what can I do to understand where come from that -L ? =
-=C2=A0If I don't include packageconfig pgsql it works well for mariadb.
-Any hints ?
-Thank you a lot
-Kris
+Although MIRRORS and PREMIRRORS allow mapping from one host to another
+there's no support for mapping one git fetch protocol to another and
+it looks like extending the MIRRORS syntax to support that would be a
+non-trivial change...
 
-------=_Part_4210311_1860078380.1500929879475
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> Cheers,
+>
+> Richard
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
-<html><head></head><body><div style=3D"color:#000; background-color:#fff; f=
-ont-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font=
--size:16px"><div id=3D"yui_3_16_0_ym19_1_1500929372499_15856">Hi,</div><div=
- id=3D"yui_3_16_0_ym19_1_1500929372499_15856"><br></div><div id=3D"yui_3_16=
-_0_ym19_1_1500929372499_15856">I am trying to install PHP with postgresql i=
-n my image.</div><div id=3D"yui_3_16_0_ym19_1_1500929372499_15856"><br></di=
-v><div id=3D"yui_3_16_0_ym19_1_1500929372499_15856" dir=3D"ltr">I newly upg=
-raded my image from dizzy to korgoth. I never have been sucessfull porting =
-php + postgresql on my last image.</div><div id=3D"yui_3_16_0_ym19_1_150092=
-9372499_15856" dir=3D"ltr"><br></div><div id=3D"yui_3_16_0_ym19_1_150092937=
-2499_15856" dir=3D"ltr">So support postgresql and not mariadb, I have creat=
-ed a php_5.6.23.bbappend. The content of that file is below.</div><div id=
-=3D"yui_3_16_0_ym19_1_1500929372499_15856" dir=3D"ltr"><br></div><div id=3D=
-"yui_3_16_0_ym19_1_1500929372499_15856" dir=3D"ltr">PACKAGECONFIG +=3D "pgs=
-ql"</div><div id=3D"yui_3_16_0_ym19_1_1500929372499_15856" dir=3D"ltr"><br>=
-</div><div id=3D"yui_3_16_0_ym19_1_1500929372499_15856" dir=3D"ltr">bitbake=
- return this error :</div><div id=3D"yui_3_16_0_ym19_1_1500929372499_15856"=
- dir=3D"ltr"><br></div><div dir=3D"ltr" id=3D"yui_3_16_0_ym19_1_15009293724=
-99_25557">ERROR: php-5.6.23-r0 do_configure: This autoconf log indicates er=
-rors, it looked at host include and/or library paths while determining syst=
-em capabilities.</div><div dir=3D"ltr" id=3D"yui_3_16_0_ym19_1_150092937249=
-9_25558">Rerun configure task after fixing this.</div><div dir=3D"ltr" id=
-=3D"yui_3_16_0_ym19_1_1500929372499_25559">ERROR: php-5.6.23-r0 do_configur=
-e: Function failed: do_qa_configure</div><div dir=3D"ltr" id=3D"yui_3_16_0_=
-ym19_1_1500929372499_25560">ERROR: Logfile of failure stored in: /home/krog=
-oth/build/tmp/work/core2-64-poky-linux/php/5.6.23-r0/temp/log.do_configure.=
-1851</div><div dir=3D"ltr" id=3D"yui_3_16_0_ym19_1_1500929372499_25561">ERR=
-OR: Task 791 (/home/krogoth/poky/meta-openembedded/meta-oe/recipes-devtools=
-/php/php_5.6.23.bb, do_configure) failed with exit code '1'</div><div dir=
-=3D"ltr" id=3D"yui_3_16_0_ym19_1_1500929372499_25562"><br id=3D"yui_3_16_0_=
-ym19_1_1500929372499_25563"></div><div id=3D"yui_3_16_0_ym19_1_150092937249=
-9_15856" dir=3D"ltr"><br></div><div id=3D"yui_3_16_0_ym19_1_1500929372499_1=
-5856" dir=3D"ltr">In config.log from the build directory, I can see the fol=
-lowing error that trigger insane.bbclass :</div><div id=3D"yui_3_16_0_ym19_=
-1_1500929372499_15856" dir=3D"ltr"><br></div><div id=3D"yui_3_16_0_ym19_1_1=
-500929372499_15856" dir=3D"ltr">warning: library search path "/usr/lib/x86_=
-64-linux-gnu" is unsafe for cross-compilation<br></div><div id=3D"yui_3_16_=
-0_ym19_1_1500929372499_15856" dir=3D"ltr"><br></div><div id=3D"yui_3_16_0_y=
-m19_1_1500929372499_15856" dir=3D"ltr">and looking for the configure line :=
- I can see this : -L/usr/lib/x86_64-linux-gnu</div><div id=3D"yui_3_16_0_ym=
-19_1_1500929372499_15856" dir=3D"ltr"><br></div><div id=3D"yui_3_16_0_ym19_=
-1_1500929372499_15856" dir=3D"ltr">I is very bad, but what can I do to unde=
-rstand where come from that -L ? &nbsp;If I don't include packageconfig pgs=
-ql it works well for mariadb.</div><div id=3D"yui_3_16_0_ym19_1_15009293724=
-99_15856" dir=3D"ltr"><br></div><div id=3D"yui_3_16_0_ym19_1_1500929372499_=
-15856" dir=3D"ltr">Any hints ?</div><div id=3D"yui_3_16_0_ym19_1_1500929372=
-499_15856" dir=3D"ltr"><br></div><div id=3D"yui_3_16_0_ym19_1_1500929372499=
-_15856" dir=3D"ltr">Thank you a lot</div><div id=3D"yui_3_16_0_ym19_1_15009=
-29372499_15856" dir=3D"ltr"><br></div><div id=3D"yui_3_16_0_ym19_1_15009293=
-72499_15856" dir=3D"ltr">Kris</div></div></body></html>
-
-------=_Part_4210311_1860078380.1500929879475--
