@@ -1,48 +1,32 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wr0-f180.google.com (mail-wr0-f180.google.com
-	[209.85.128.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 159EF7197B
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 43F31781F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Jul 2017 10:17:39 +0000 (UTC)
-Received: by mail-wr0-f180.google.com with SMTP id y43so116893412wrd.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Jul 2017 03:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=ZOqRsPmu7Xmao6aN8YQ0BeVtKd4eExTemqS3ogiMmKM=;
-	b=QpZFYW3T2RGGC3SN0fzGx73Mbdp8NRYoViLguy9XFi452qQAP3ERp083v2rhU17GsZ
-	xuRrGZOXaxXZOEVaQ19WsHy51eEc0+d3eh7RhW1MPFC0GFhpopd4gHzNTViukiPsIoPb
-	HNnvdlN9vafqgXLxXGMiQLmd4YspC2Xqy+JBtpBJcGhERZoSY/G5Y8lh+7su6SgDCkyw
-	tmldBMUbUrdio/WW7QdiUv2QWdzUSRh+oceD92iOdUyypklJW6iuy+kI9/OIYrxbsfUH
-	e1DT9eoCOKFExUlYsrxMlCpZy2eHNZ2H9FW4Lu6/p/tt4mO8djPhyDqs1Tsx6XlgWzbB
-	Tc0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=ZOqRsPmu7Xmao6aN8YQ0BeVtKd4eExTemqS3ogiMmKM=;
-	b=IU+fbGollGa4ghpbLNFPb9TpwYrDsGnP+lt3MCwQ1jdkS5qn5h+V36esTJGd0lB2xD
-	wF3gsWVYMILKtrIPXZGrCUfmGVcgexyjZDUeQ79Olfq3et9G1FAsL6qxvgqqm2auSZVq
-	zX7S/8M06KQdnGAjXixghmhMxLW7lztfz1p9t1qXYR1OSqBTJrXX6VKFCSBvN8z0yVB0
-	rATVJmRONoLUnxbHrUFEnrMoCYE+Ok1L5sU13L5+WTPljnXXSfcePmAffInP5sB8HZ02
-	uqc85XVRL9Jfl/xh4eT7GMd7ljP1sSwABJRHlhX9M0BpKhnjSU08G2CRJGSwGXiiyi9N
-	15FQ==
-X-Gm-Message-State: AIVw113oJwh4erzZm6OTMVLc/3B7vznbmuXvxe+++B2cjLc8YC9DY9kq
-	/+G1OB2sLX3q41y+Pj4=
-X-Received: by 10.223.164.208 with SMTP id h16mr9160288wrb.100.1500977860378; 
-	Tue, 25 Jul 2017 03:17:40 -0700 (PDT)
-Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
-	by smtp.gmail.com with ESMTPSA id
-	r128sm9562481wmb.27.2017.07.25.03.17.39
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 25 Jul 2017 03:17:39 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 25 Jul 2017 11:17:36 +0100
-Message-Id: <20170725101736.2247-1-ross.burton@intel.com>
-X-Mailer: git-send-email 2.11.0
-Subject: [PATCH] fetch/wget: mitigate a wget race condition when listing FTP directories
+	Tue, 25 Jul 2017 14:44:01 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v6PEhuFs011052
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 25 Jul 2017 07:43:56 -0700 (PDT)
+Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.294.0;
+	Tue, 25 Jul 2017 07:43:55 -0700
+To: Andre McCurdy <armccurdy@gmail.com>, Richard Purdie
+	<richard.purdie@linuxfoundation.org>
+References: <1464700684-24169-1-git-send-email-fabien.proriolpatch@kazoe.org>
+	<1464702613.3814.2.camel@linuxfoundation.org>
+	<CAJ86T=Vp41R2c-XboBxv0NRK5FdFhpOE4WE8GpE8rOfbuXCJPA@mail.gmail.com>
+From: Mark Hatle <mark.hatle@windriver.com>
+Organization: Wind River Systems
+Message-ID: <dbd9a8df-5baa-d4de-ca19-722843d3b3ea@windriver.com>
+Date: Tue, 25 Jul 2017 09:43:54 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+	Gecko/20100101 Thunderbird/52.2.1
+MIME-Version: 1.0
+In-Reply-To: <CAJ86T=Vp41R2c-XboBxv0NRK5FdFhpOE4WE8GpE8rOfbuXCJPA@mail.gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Fabien Proriol <fabien.proriol@jdsu.com>, fabien.proriolpatch@kazoe.org
+Subject: Re: [PATCH] bb.fetch.git: add a way to avoid git protocol, and force http or https mirrors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,76 +39,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 25 Jul 2017 10:17:40 -0000
+X-List-Received-Date: Tue, 25 Jul 2017 14:44:02 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-When wget is fetching a listing for a directory over FTP it writes to a
-temporary file called .listing in the current directory.  If there are many such
-operations happening in parallel - for example during 'bitbake world -c
-checkpkg' - then up to BB_NUMBER_THREADS instances of wget will be racing to
-write to, read, and delete the same file.
+On 7/24/17 4:04 PM, Andre McCurdy wrote:
+> On Tue, May 31, 2016 at 6:50 AM, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+>> On Tue, 2016-05-31 at 15:18 +0200, fabien.proriolpatch@kazoe.org wrote:
+>>> From: Fabien Proriol <fabien.proriol@jdsu.com>
+>>>
+>>> This patch add the possibility to bitbake to avoid git protocol to
+>>> fetch sources.
+>>> This is usefull in some network with firewall blocking git port.
+>>>
+>>> When BB_GIT_PROTOCOL_FIREWALL is set, the PROTOCOL_MIRRORS table is
+>>> used to find the new protocol (http or https) and the new host (if
+>>> different) to used.
+>>>
+>>> BB_GIT_PROTOCOL_FIREWALL can also contains a list of host accepted.
+>>> This is usefull for exemple, if we use local git repository inside
+>>> the network.
+>>>
+>>> Exemple usage:
+>>>     # Avoid all git protocol
+>>>     BB_GIT_PROTOCOL_FIREWALL = "1"
+>>>
+>>>     # Avoid git protocol, except for srv1 and srv2 in local network
+>>>     BB_GIT_PROTOCOL_FIREWALL = "srv1.mydomain.com;srv2.mydomain.com"
+>>
+>> Why not use the more generic MIRRORS and PREMIRRORS for this? If they
+>> can't support this, we likely should figure out a way to make them work
+>> for it rather than adding new fetcher specific variables.
+> 
+> Sorry for resurrecting such an old thread, but I'm wondering if
+> there's been any more work on an upstreamable solution?
+> 
+> The problem being that recipes which define SRC_URI to git://* with
+> protocol=git (or with protocol unspecified, since git is the default)
+> fail during fetching for users working behind a firewall which blocks
+> the native git protocol.
+> 
+> Although MIRRORS and PREMIRRORS allow mapping from one host to another
+> there's no support for mapping one git fetch protocol to another and
+> it looks like extending the MIRRORS syntax to support that would be a
+> non-trivial change...
 
-This results in various failures such as the file disappearing before wget has
-processed it or the file changing contents, which causes checkpkg to randomly
-fail.
+Won't the following work:
 
-Mitigate the race condition by creating a temporary directory to run wget in
-when doing directory listings.
+PREMIRRORS_append = " \
+     git://.*/.* git://HOST/PATH;protocol=https \n \
+     git://.*/.* git://HOST/PATH;protocol=http \n \
+"
 
-[ YOCTO #11828 ]
+Note: I've not actually tried the above, but I expect it will work.  We do
+something similar to provide local (on-disk) git caches using:
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
----
- bitbake/lib/bb/fetch2/wget.py | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+git://.*/.* git://${LAYERDIR}/git/MIRRORNAME;protocol=file
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 208ee9bdd69..8ee9769d39b 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -90,13 +90,13 @@ class Wget(FetchMethod):
- 
-         self.basecmd = d.getVar("FETCHCMD_wget") or "/usr/bin/env wget -t 2 -T 30 --passive-ftp --no-check-certificate"
- 
--    def _runwget(self, ud, d, command, quiet):
-+    def _runwget(self, ud, d, command, quiet, workdir=None):
- 
-         progresshandler = WgetProgressHandler(d)
- 
-         logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
-         bb.fetch2.check_network_access(d, command, ud.url)
--        runfetchcmd(command + ' --progress=dot -v', d, quiet, log=progresshandler)
-+        runfetchcmd(command + ' --progress=dot -v', d, quiet, log=progresshandler, workdir=workdir)
- 
-     def download(self, ud, d):
-         """Fetch urls"""
-@@ -422,17 +422,16 @@ class Wget(FetchMethod):
-         Run fetch checkstatus to get directory information
-         """
-         f = tempfile.NamedTemporaryFile()
-+        with tempfile.TemporaryDirectory(prefix="wget-index-") as workdir, tempfile.NamedTemporaryFile(dir=workdir, prefix="wget-listing-") as f:
-+            agent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12"
-+            fetchcmd = self.basecmd
-+            fetchcmd += " -O " + f.name + " --user-agent='" + agent + "' '" + uri + "'"
-+            try:
-+                self._runwget(ud, d, fetchcmd, True, workdir=workdir)
-+                fetchresult = f.read()
-+            except bb.fetch2.BBFetchException:
-+                fetchresult = ""
- 
--        agent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12"
--        fetchcmd = self.basecmd
--        fetchcmd += " -O " + f.name + " --user-agent='" + agent + "' '" + uri + "'"
--        try:
--            self._runwget(ud, d, fetchcmd, True)
--            fetchresult = f.read()
--        except bb.fetch2.BBFetchException:
--            fetchresult = ""
--
--        f.close()
-         return fetchresult
- 
-     def _check_latest_version(self, url, package, package_regex, current_version, ud, d):
--- 
-2.11.0
+--Mark
+
+>> Cheers,
+>>
+>> Richard
+>> --
+>> _______________________________________________
+>> bitbake-devel mailing list
+>> bitbake-devel@lists.openembedded.org
+>> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
 
