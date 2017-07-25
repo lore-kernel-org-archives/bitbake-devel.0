@@ -1,46 +1,33 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-pf0-f178.google.com (mail-pf0-f178.google.com
-	[209.85.192.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 2006A71E4B
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id ECD7F6FFD8
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Jul 2017 21:30:06 +0000 (UTC)
-Received: by mail-pf0-f178.google.com with SMTP id q85so62998984pfq.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Jul 2017 14:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=glMi0tDdwYjVJjLRO9bgec8xhayda6D7aJAXmer3jgU=;
-	b=oPIiZn+KbVfYRyNkBLemqTpRIAVWtZkbhfLQ4nYkfknl1BBmGVSo6oqSLHu+TAnn1E
-	pwTsW8Fr966dYjS5Aw3TTH2X/q9lTgr/oI1O9maSXoi/GibntBpmn+VSwZLalTjV+2Ii
-	INeKijLuzis9a3cVlTC6bwUulehxa98W+ImsfmGRVaMhhnIz/rgQD67oqR55g7bfz0rT
-	Nqdf0+OhGFpyyHdz0fF24jlyKxm5b863616O7geaofowdO2F8YdV8aMycz+Y+cm0bbFH
-	c6XzijyKoudrv7+oN+nfN8Z2lFQ7uR5798AMTDgRrkp4cF3E6wjKhIjGpsydiL+4WsMU
-	Mt+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=glMi0tDdwYjVJjLRO9bgec8xhayda6D7aJAXmer3jgU=;
-	b=WzEXIdlXwIz5A1vG7MFBfwnwenB5szeLn7+W3XMalW+IaeTjPtYdbwdIE+lkOj/7xa
-	SsAyCDUnjGTcoFLVjouZOLREdPkFBOa/hl6e59Qc6G5Mpv8opr2dm5AHSHwi81iv4euA
-	zwL+J9GYcGP5+uvJlgvZfaQg+8ZDFwNHyX1gxNEXBzlJ1S6g/HBjV2ZH8ZzdmATi/e1O
-	ft2I2Zjvm7VUSDVIaTNvfF20Zb2HJV0z15aiHCG/AQD0oE467++MhwflsjYzE2yjRONy
-	1vbllzSAskdIVJdRs1IbK1t9gBgdKahJxYbZmtTIbBgtFjy8UNZQ1FATrXP+6KhxNE4V
-	6WbQ==
-X-Gm-Message-State: AIVw110525I6vRuM+AoZqklby0xvGMh3T9snBeULtekwULqhTBGi/AgC
-	5jcM9eInU35Bn86A
-X-Received: by 10.84.131.78 with SMTP id 72mr22738680pld.43.1501018208068;
-	Tue, 25 Jul 2017 14:30:08 -0700 (PDT)
-Received: from e6520.cablelabs.com ([4.16.80.121])
-	by smtp.gmail.com with ESMTPSA id
-	u26sm9916560pfi.140.2017.07.25.14.30.06
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 25 Jul 2017 14:30:07 -0700 (PDT)
-From: Andre McCurdy <armccurdy@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 25 Jul 2017 14:30:01 -0700
-Message-Id: <1501018201-26197-1-git-send-email-armccurdy@gmail.com>
-X-Mailer: git-send-email 1.9.1
-Subject: [PATCH] fetch2/__init__.py: replace stray logger.warn() with logger.warning()
+	Tue, 25 Jul 2017 22:19:29 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v6PMJLNa014923
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Tue, 25 Jul 2017 23:19:22 +0100
+Message-ID: <1501021161.22282.138.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Andre McCurdy <armccurdy@gmail.com>, Mark Hatle <mark.hatle@windriver.com>
+Date: Tue, 25 Jul 2017 23:19:21 +0100
+In-Reply-To: <CAJ86T=UW4gzF_CVhVMFdRCJsm3Nc6ETB9Acj=CUDzv96yUDg+g@mail.gmail.com>
+References: <1464700684-24169-1-git-send-email-fabien.proriolpatch@kazoe.org>
+	<1464702613.3814.2.camel@linuxfoundation.org>
+	<CAJ86T=Vp41R2c-XboBxv0NRK5FdFhpOE4WE8GpE8rOfbuXCJPA@mail.gmail.com>
+	<dbd9a8df-5baa-d4de-ca19-722843d3b3ea@windriver.com>
+	<CAJ86T=UW4gzF_CVhVMFdRCJsm3Nc6ETB9Acj=CUDzv96yUDg+g@mail.gmail.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
+	(dan.rpsys.net [192.168.3.1]);
+	Tue, 25 Jul 2017 23:19:23 +0100 (BST)
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Fabien Proriol <fabien.proriol@jdsu.com>, fabien.proriolpatch@kazoe.org
+Subject: Re: [PATCH] bb.fetch.git: add a way to avoid git protocol, and force http or https mirrors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,34 +40,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 25 Jul 2017 21:30:07 -0000
+X-List-Received-Date: Tue, 25 Jul 2017 22:19:30 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Update stray usage of deprecated logger.warn(), which was introduced
-to fetch2/__init__.py after all other instances had been replaced by
-logger.warning():
+On Tue, 2017-07-25 at 12:30 -0700, Andre McCurdy wrote:
+> On Tue, Jul 25, 2017 at 7:43 AM, Mark Hatle <mark.hatle@windriver.com
+> > wrote:
+> > Won't the following work:
+> > 
+> > PREMIRRORS_append = " \
+> >      git://.*/.* git://HOST/PATH;protocol=https \n \
+> >      git://.*/.* git://HOST/PATH;protocol=http \n \
+> > "
+> Thanks! Yes, that does work. It's the first time I've ever seen HOST
+> or PATH being used as mirror replacement patterns. Useful to know.
+> 
+> Would a patch adding something similar to the default MIRRORS (ie try
+> http[s] as a fallback if the git protocol fails) be acceptable in
+> upstream oe-core?
 
-  http://git.openembedded.org/bitbake/commit/?id=5a53e7d7b017769a6eb0f0a6335735a1fe51a5ec
-  http://git.openembedded.org/bitbake/commit/?id=676a5f592e8507e81b8f748d58acfea7572f8796
+Yes, I'd take such a patch. I'd love to have this better documented.
 
-Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
----
- lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cheers,
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 74ba37f..a78279c 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1033,7 +1033,7 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
- 
-     except IOError as e:
-         if e.errno in [os.errno.ESTALE]:
--            logger.warn("Stale Error Observed %s." % ud.url)
-+            logger.warning("Stale Error Observed %s." % ud.url)
-             return False
-         raise
- 
--- 
-1.9.1
-
+Richard
 
