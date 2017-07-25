@@ -1,48 +1,48 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-qk0-f169.google.com (mail-qk0-f169.google.com
-	[209.85.220.169])
-	by mail.openembedded.org (Postfix) with ESMTP id 5CB84782FD
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wr0-f180.google.com (mail-wr0-f180.google.com
+	[209.85.128.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 159EF7197B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Jul 2017 21:54:58 +0000 (UTC)
-Received: by mail-qk0-f169.google.com with SMTP id g6so63057766qkf.5
+	Tue, 25 Jul 2017 10:17:39 +0000 (UTC)
+Received: by mail-wr0-f180.google.com with SMTP id y43so116893412wrd.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Jul 2017 14:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=42mNLHi7uB5lzQJhJc9oX7GAIN8FS6Ds/lMvR/BF12U=;
-	b=trbhAPPbC0LKeR/ezCVGAM+fdMT8K8S4p/zwjDnoUPlUcOkUx/1lG5sdSo5hvuhl5R
-	BV/LGrgecQq18eSFrNBJUvED8zJezQ4NmoIp0U/9e++KA88wp1hGpLB4nXOzZuj5xQdG
-	KS+7aOkstnDtxddVOrih7LKzg9BBAWTIFy0koFUFGCw+9zF0N4r5/QI9zy0Bdkzsfeew
-	5BD9BtpSFViMoBSnPQd7k4b1CCkrNb5fH/IByKXLkKvLC9+QCp1TKx6ZaKyj6hpK8agc
-	2sMqTsE44WJUcmAMTkDRm0D+4LKPgRq+lx3NW0i5fybTxQQgkt5uD7XWKe0bBIPI+2TT
-	zAfg==
+	Tue, 25 Jul 2017 03:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=ZOqRsPmu7Xmao6aN8YQ0BeVtKd4eExTemqS3ogiMmKM=;
+	b=QpZFYW3T2RGGC3SN0fzGx73Mbdp8NRYoViLguy9XFi452qQAP3ERp083v2rhU17GsZ
+	xuRrGZOXaxXZOEVaQ19WsHy51eEc0+d3eh7RhW1MPFC0GFhpopd4gHzNTViukiPsIoPb
+	HNnvdlN9vafqgXLxXGMiQLmd4YspC2Xqy+JBtpBJcGhERZoSY/G5Y8lh+7su6SgDCkyw
+	tmldBMUbUrdio/WW7QdiUv2QWdzUSRh+oceD92iOdUyypklJW6iuy+kI9/OIYrxbsfUH
+	e1DT9eoCOKFExUlYsrxMlCpZy2eHNZ2H9FW4Lu6/p/tt4mO8djPhyDqs1Tsx6XlgWzbB
+	Tc0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=42mNLHi7uB5lzQJhJc9oX7GAIN8FS6Ds/lMvR/BF12U=;
-	b=pfeEaPry0aE6B/YliiFerjtAGoTLHAdRz9X1v/eK2R0F/vg+49QbhfUl/H9zHF5GSr
-	r6EBh0KMDBZn94ssOEVtbbi9VlFFKYvhKv3bGXU/88gtNfR0kj2+iy0XylTZftE1t/z6
-	xU8/dMlfQtD2752O3Q0pRa4wdNznFr3x3ApdWw9KIqSFiZYOnJPXpqrWyV3tVKh/cJ1z
-	jqwdFAgMYjgoxuSKlRe4g26R0CLZSZyhZLosSWew34DGgg+0SAxu228GaxizFQLcYNqQ
-	4kgeX8dbjR1YKTXB72jGajyvYWJ+OpIfjG+hSHxBmZtVXobVBaNaDVLoTygCBas/1Zjx
-	Y5LQ==
-X-Gm-Message-State: AIVw1129qwMhl1CHMDrkZVVboz7pInlSMxwNG1xplqMkkqHgIAxareVF
-	2GdtKgmXwIHM6VGT5WYscuQ2Wtuubg==
-X-Received: by 10.55.22.166 with SMTP id 38mr22684896qkw.131.1500933300298;
-	Mon, 24 Jul 2017 14:55:00 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.140.32.6 with HTTP; Mon, 24 Jul 2017 14:54:39 -0700 (PDT)
-In-Reply-To: <CABcZAN=UWAbmzv7C5AOk93=O5gi5kfOprtWNWt37BOb50U-HXw@mail.gmail.com>
-References: <1454516982-3788-1-git-send-email-eu@felipetonello.com>
-	<CABcZAN=UWAbmzv7C5AOk93=O5gi5kfOprtWNWt37BOb50U-HXw@mail.gmail.com>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Mon, 24 Jul 2017 14:54:39 -0700
-Message-ID: <CABcZANnjQTPrp71dxtv3GKTyTeNPG8-S+b2jk02NfOYz0MCk1Q@mail.gmail.com>
-To: "Felipe F. Tonello" <eu@felipetonello.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] fetch2/gitsm: Fix when repository change submodules
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=ZOqRsPmu7Xmao6aN8YQ0BeVtKd4eExTemqS3ogiMmKM=;
+	b=IU+fbGollGa4ghpbLNFPb9TpwYrDsGnP+lt3MCwQ1jdkS5qn5h+V36esTJGd0lB2xD
+	wF3gsWVYMILKtrIPXZGrCUfmGVcgexyjZDUeQ79Olfq3et9G1FAsL6qxvgqqm2auSZVq
+	zX7S/8M06KQdnGAjXixghmhMxLW7lztfz1p9t1qXYR1OSqBTJrXX6VKFCSBvN8z0yVB0
+	rATVJmRONoLUnxbHrUFEnrMoCYE+Ok1L5sU13L5+WTPljnXXSfcePmAffInP5sB8HZ02
+	uqc85XVRL9Jfl/xh4eT7GMd7ljP1sSwABJRHlhX9M0BpKhnjSU08G2CRJGSwGXiiyi9N
+	15FQ==
+X-Gm-Message-State: AIVw113oJwh4erzZm6OTMVLc/3B7vznbmuXvxe+++B2cjLc8YC9DY9kq
+	/+G1OB2sLX3q41y+Pj4=
+X-Received: by 10.223.164.208 with SMTP id h16mr9160288wrb.100.1500977860378; 
+	Tue, 25 Jul 2017 03:17:40 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id
+	r128sm9562481wmb.27.2017.07.25.03.17.39
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 25 Jul 2017 03:17:39 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 25 Jul 2017 11:17:36 +0100
+Message-Id: <20170725101736.2247-1-ross.burton@intel.com>
+X-Mailer: git-send-email 2.11.0
+Subject: [PATCH] fetch/wget: mitigate a wget race condition when listing FTP directories
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,95 +55,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Jul 2017 21:54:59 -0000
-Content-Type: multipart/alternative; boundary="001a11496cb83228a005551744c3"
+X-List-Received-Date: Tue, 25 Jul 2017 10:17:40 -0000
 
---001a11496cb83228a005551744c3
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+When wget is fetching a listing for a directory over FTP it writes to a
+temporary file called .listing in the current directory.  If there are many such
+operations happening in parallel - for example during 'bitbake world -c
+checkpkg' - then up to BB_NUMBER_THREADS instances of wget will be racing to
+write to, read, and delete the same file.
 
-On Mon, Jul 24, 2017 at 2:43 PM, Christopher Larson <kergoth@gmail.com>
-wrote:
+This results in various failures such as the file disappearing before wget has
+processed it or the file changing contents, which causes checkpkg to randomly
+fail.
 
-> On Wed, Feb 3, 2016 at 9:29 AM, Felipe F. Tonello <eu@felipetonello.com>
-> wrote:
->
->> This fix a problem when checking out a commit that changes the submodule=
-s
->> previously checkout.
->>
->> Example:
->> Recipe uses branch A and then it updates to use branch B, but branch B h=
-as
->> different submodules dependencies then what branch A previously had.
->>
->> Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
->>
->
-> This completely broke the gitsm fetcher behavior. It no longer uses the
-> previously fetched submodules from DL_DIR at all, instead the submodule
-> update is re-cloning them from upstream in do_unpack, violating our
-> conventions. Git checkout isn=E2=80=99t going to magically copy the exist=
-ing
-> fetched submodules from DL_DIR.
->
+Mitigate the race condition by creating a temporary directory to run wget in
+when doing directory listings.
 
-Apologies for the harsh tone here, but clearly we should fix this
-differently. https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D11830 has
-been opened for this. It=E2=80=99ll be difficult to add a good unit test to=
- catch
-this problem without using either a VM or containers to physically cut
-network connectivity. I=E2=80=99m going to propose a future bitbake enhance=
-ment to
-use namespaces to prevent network connectivity from non-fetch tasks.
---=20
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
+[ YOCTO #11828 ]
 
---001a11496cb83228a005551744c3
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/fetch2/wget.py | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Mon, Jul 24, 2017 at 2:43 PM, Christopher Larson <span dir=3D"ltr">&=
-lt;<a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com=
-</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin=
-:0px 0px 0px 0.8ex;border-left-width:1px;border-left-style:solid;border-lef=
-t-color:rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><span class=3D"=
-gmail-">On Wed, Feb 3, 2016 at 9:29 AM, Felipe F. Tonello <span dir=3D"ltr"=
->&lt;<a href=3D"mailto:eu@felipetonello.com" target=3D"_blank">eu@felipeton=
-ello.com</a>&gt;</span> wrote:<br></span><div class=3D"gmail_extra"><div cl=
-ass=3D"gmail_quote"><span class=3D"gmail-"><blockquote class=3D"gmail_quote=
-" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-style=
-:solid;border-left-color:rgb(204,204,204);padding-left:1ex">This fix a prob=
-lem when checking out a commit that changes the submodules<br>
-previously checkout.<br>
-<br>
-Example:<br>
-Recipe uses branch A and then it updates to use branch B, but branch B has<=
-br>
-different submodules dependencies then what branch A previously had.<br>
-<br>
-Signed-off-by: Felipe F. Tonello &lt;<a href=3D"mailto:eu@felipetonello.com=
-" target=3D"_blank">eu@felipetonello.com</a>&gt;<br></blockquote><div><br><=
-/div></span><div>This completely broke the gitsm fetcher behavior. It no lo=
-nger uses the previously fetched submodules from DL_DIR at all, instead the=
- submodule update is re-cloning them from upstream in do_unpack, violating =
-our conventions. Git checkout isn=E2=80=99t going to magically copy the exi=
-sting fetched submodules from DL_DIR.</div></div></div></div></blockquote><=
-div><br></div><div>Apologies for the harsh tone here, but clearly we should=
- fix this differently.=C2=A0<a href=3D"https://bugzilla.yoctoproject.org/sh=
-ow_bug.cgi?id=3D11830">https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D=
-11830</a>=C2=A0has been opened for this. It=E2=80=99ll be difficult to add =
-a good unit test to catch this problem without using either a VM or contain=
-ers to physically cut network connectivity. I=E2=80=99m going to propose a =
-future bitbake enhancement to use namespaces to prevent network connectivit=
-y from non-fetch tasks.</div></div>-- <br><div class=3D"gmail_signature"><d=
-iv dir=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kergoth at gmail=
- dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior Software =
-Engineer, Mentor Graphics</div></div></div></div>
-</div></div>
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 208ee9bdd69..8ee9769d39b 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -90,13 +90,13 @@ class Wget(FetchMethod):
+ 
+         self.basecmd = d.getVar("FETCHCMD_wget") or "/usr/bin/env wget -t 2 -T 30 --passive-ftp --no-check-certificate"
+ 
+-    def _runwget(self, ud, d, command, quiet):
++    def _runwget(self, ud, d, command, quiet, workdir=None):
+ 
+         progresshandler = WgetProgressHandler(d)
+ 
+         logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
+         bb.fetch2.check_network_access(d, command, ud.url)
+-        runfetchcmd(command + ' --progress=dot -v', d, quiet, log=progresshandler)
++        runfetchcmd(command + ' --progress=dot -v', d, quiet, log=progresshandler, workdir=workdir)
+ 
+     def download(self, ud, d):
+         """Fetch urls"""
+@@ -422,17 +422,16 @@ class Wget(FetchMethod):
+         Run fetch checkstatus to get directory information
+         """
+         f = tempfile.NamedTemporaryFile()
++        with tempfile.TemporaryDirectory(prefix="wget-index-") as workdir, tempfile.NamedTemporaryFile(dir=workdir, prefix="wget-listing-") as f:
++            agent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12"
++            fetchcmd = self.basecmd
++            fetchcmd += " -O " + f.name + " --user-agent='" + agent + "' '" + uri + "'"
++            try:
++                self._runwget(ud, d, fetchcmd, True, workdir=workdir)
++                fetchresult = f.read()
++            except bb.fetch2.BBFetchException:
++                fetchresult = ""
+ 
+-        agent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12"
+-        fetchcmd = self.basecmd
+-        fetchcmd += " -O " + f.name + " --user-agent='" + agent + "' '" + uri + "'"
+-        try:
+-            self._runwget(ud, d, fetchcmd, True)
+-            fetchresult = f.read()
+-        except bb.fetch2.BBFetchException:
+-            fetchresult = ""
+-
+-        f.close()
+         return fetchresult
+ 
+     def _check_latest_version(self, url, package, package_regex, current_version, ud, d):
+-- 
+2.11.0
 
---001a11496cb83228a005551744c3--
+
