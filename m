@@ -1,26 +1,22 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id A1DA578195
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id DFD8378072
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Jul 2017 15:22:33 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v6QFMYLv029785
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Jul 2017 08:22:34 -0700 (PDT)
-Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.294.0;
-	Wed, 26 Jul 2017 08:22:34 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 26 Jul 2017 10:20:35 -0500
-Message-ID: <1501082435-118885-2-git-send-email-mark.hatle@windriver.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1501082435-118885-1-git-send-email-mark.hatle@windriver.com>
-References: <1501082435-118885-1-git-send-email-mark.hatle@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 2/2] lib/fetch2/__init__.py: Fix unpack comment
+	Thu, 27 Jul 2017 12:52:10 +0000 (UTC)
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	27 Jul 2017 05:52:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.40,419,1496127600"; d="scan'208";a="131949807"
+Received: from nippert-mobl.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.43.119])
+	by fmsmga005.fm.intel.com with ESMTP; 27 Jul 2017 05:52:10 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 27 Jul 2017 14:51:48 +0200
+Message-Id: <cover.1501159861.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.4
+Subject: [PATCH 0/1] bitbake-diffsigs: fix regression after recent server changes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,28 +29,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 26 Jul 2017 15:22:33 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 27 Jul 2017 12:52:11 -0000
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
----
- lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The following changes since commit 1b14f115a9e929e29e91e8ac70826a3fe7259961:
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index a78279c..bd23533 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1738,7 +1738,7 @@ class Fetch(object):
- 
-     def unpack(self, root, urls=None):
-         """
--        Check all urls exist upstream
-+        Unpack urls to root
-         """
- 
-         if not urls:
+  fetch2/__init__.py: replace stray logger.warn() with logger.warning() (2017-07-25 23:14:07 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/bb-diffsigs-server-fix
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-diffsigs-server-fix
+
+Paul Eggleton (1):
+  bitbake-diffsigs: fix regression after recent server changes
+
+ bin/bitbake-diffsigs | 35 ++++++++++++++++++++++++++++-------
+ lib/bb/command.py    | 11 +++++++++++
+ lib/bb/event.py      |  8 ++++++++
+ 3 files changed, 47 insertions(+), 7 deletions(-)
+
 -- 
-1.8.3.1
+2.9.4
 
 
