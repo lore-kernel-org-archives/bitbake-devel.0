@@ -1,26 +1,26 @@
 Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 97439780A1
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 1D3ED780A1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Jul 2017 15:39:19 +0000 (UTC)
+	Fri, 28 Jul 2017 15:39:20 +0000 (UTC)
 Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
 	[147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v6SFdKNU025082
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Fri, 28 Jul 2017 08:39:20 -0700 (PDT)
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v6SFdLhD008332
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK);
+	Fri, 28 Jul 2017 08:39:21 -0700
 Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
 	(147.11.189.41) with Microsoft SMTP Server id 14.3.294.0;
-	Fri, 28 Jul 2017 08:39:21 -0700
+	Fri, 28 Jul 2017 08:39:22 -0700
 From: Mark Hatle <mark.hatle@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 28 Jul 2017 10:37:19 -0500
-Message-ID: <1501256242-37784-3-git-send-email-mark.hatle@windriver.com>
+Date: Fri, 28 Jul 2017 10:37:20 -0500
+Message-ID: <1501256242-37784-4-git-send-email-mark.hatle@windriver.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1501256242-37784-1-git-send-email-mark.hatle@windriver.com>
 References: <1501256242-37784-1-git-send-email-mark.hatle@windriver.com>
 MIME-Version: 1.0
 Cc: toaster@yoctoproject.org
-Subject: [PATCH 2/5] bitbake-selftest: Add layers module tests
+Subject: [PATCH 3/5] lib/bblayers: Add support for the new layer modules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,604 +33,689 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Jul 2017 15:39:19 -0000
+X-List-Received-Date: Fri, 28 Jul 2017 15:39:20 -0000
 Content-Type: text/plain
-
-The tests cover both the layers/layerindex and the layers/manager.
-
-Both sets of tests included network connection components.  They honor the
-BB_SKIP_NETTESTS='yes' if networking is not available, to prevent test
-failures.
-
-Tests Implemented:
- layers/layerindex:
-  - Branch, LayerItem, LayerBranch, LayerDependency, Recipe, Machine and
-    Distro objects
-  - LayerIndex setup using the layers.openembedded.org restapi
-  - LayerIndex storing and retrieving from a file
-  - LayerIndex verify dependency resolution ordering
-
- layers/manager:
-  - manager basic functionality
-  - manager and fetch2 plugin setup/fetch/unpack of a remote repository
-  - fetch2 plugin generating a list of downloaded layers
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 ---
- bin/bitbake-selftest           |   5 +-
- lib/layers/tests/__init__.py   |   0
- lib/layers/tests/layerindex.py | 372 +++++++++++++++++++++++++++++++++++++++++
- lib/layers/tests/manager.py    | 155 +++++++++++++++++
- 4 files changed, 531 insertions(+), 1 deletion(-)
- create mode 100644 lib/layers/tests/__init__.py
- create mode 100644 lib/layers/tests/layerindex.py
- create mode 100644 lib/layers/tests/manager.py
+ lib/bblayers/layerindex.py        | 313 +++++++++++---------------------------
+ lib/layers/layerindex/__init__.py |  28 +++-
+ lib/layers/layerindex/cooker.py   |   2 +-
+ lib/layers/layerindex/restapi.py  |  95 +++++++-----
+ lib/layers/manager/__init__.py    |  59 ++++---
+ 5 files changed, 210 insertions(+), 287 deletions(-)
 
-diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
-index afe1603..9ad42ab 100755
---- a/bin/bitbake-selftest
-+++ b/bin/bitbake-selftest
-@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'lib
- import unittest
- try:
-     import bb
-+    import layers
- except RuntimeError as exc:
-     sys.exit(str(exc))
+diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
+index 506c110..d1dac0b 100644
+--- a/lib/bblayers/layerindex.py
++++ b/lib/bblayers/layerindex.py
+@@ -1,10 +1,10 @@
++import layers.manager
++import layers.layerindex
++
+ import argparse
+-import http.client
+-import json
+ import logging
+ import os
+ import subprocess
+-import urllib.parse
  
-@@ -31,7 +32,9 @@ tests = ["bb.tests.codeparser",
-          "bb.tests.event",
-          "bb.tests.fetch",
-          "bb.tests.parse",
--         "bb.tests.utils"]
-+         "bb.tests.utils",
-+         "layers.tests.layerindex",
-+         "layers.tests.manager"]
+ from bblayers.action import ActionPlugin
  
- for t in tests:
-     t = '.'.join(t.split('.')[:3])
-diff --git a/lib/layers/tests/__init__.py b/lib/layers/tests/__init__.py
-new file mode 100644
-index 0000000..e69de29
-diff --git a/lib/layers/tests/layerindex.py b/lib/layers/tests/layerindex.py
-new file mode 100644
-index 0000000..c01bdb3
---- /dev/null
-+++ b/lib/layers/tests/layerindex.py
-@@ -0,0 +1,372 @@
-+# Copyright (C) 2017 Wind River Systems, Inc.
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-+# See the GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License
-+# along with this program; if not, write to the Free Software
-+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+@@ -21,235 +21,108 @@ class LayerIndexPlugin(ActionPlugin):
+     This class inherits ActionPlugin to get do_add_layer.
+     """
+ 
+-    def get_json_data(self, apiurl):
+-        proxy_settings = os.environ.get("http_proxy", None)
+-        conn = None
+-        _parsedurl = urllib.parse.urlparse(apiurl)
+-        path = _parsedurl.path
+-        query = _parsedurl.query
+-
+-        def parse_url(url):
+-            parsedurl = urllib.parse.urlparse(url)
+-            if parsedurl.netloc[0] == '[':
+-                host, port = parsedurl.netloc[1:].split(']', 1)
+-                if ':' in port:
+-                    port = port.rsplit(':', 1)[1]
+-                else:
+-                    port = None
+-            else:
+-                if parsedurl.netloc.count(':') == 1:
+-                    (host, port) = parsedurl.netloc.split(":")
+-                else:
+-                    host = parsedurl.netloc
+-                    port = None
+-            return (host, 80 if port is None else int(port))
+-
+-        if proxy_settings is None:
+-            host, port = parse_url(apiurl)
+-            conn = http.client.HTTPConnection(host, port)
+-            conn.request("GET", path + "?" + query)
+-        else:
+-            host, port = parse_url(proxy_settings)
+-            conn = http.client.HTTPConnection(host, port)
+-            conn.request("GET", apiurl)
+-
+-        r = conn.getresponse()
+-        if r.status != 200:
+-            raise Exception("Failed to read " + path + ": %d %s" % (r.status, r.reason))
+-        return json.loads(r.read().decode())
+-
+-    def get_layer_deps(self, layername, layeritems, layerbranches, layerdependencies, branchnum, selfname=False):
+-        def layeritems_info_id(items_name, layeritems):
+-            litems_id = None
+-            for li in layeritems:
+-                if li['name'] == items_name:
+-                    litems_id = li['id']
+-                    break
+-            return litems_id
+-
+-        def layerbranches_info(items_id, layerbranches):
+-            lbranch = {}
+-            for lb in layerbranches:
+-                if lb['layer'] == items_id and lb['branch'] == branchnum:
+-                    lbranch['id'] = lb['id']
+-                    lbranch['vcs_subdir'] = lb['vcs_subdir']
+-                    break
+-            return lbranch
+-
+-        def layerdependencies_info(lb_id, layerdependencies):
+-            ld_deps = []
+-            for ld in layerdependencies:
+-                if ld['layerbranch'] == lb_id and not ld['dependency'] in ld_deps:
+-                    ld_deps.append(ld['dependency'])
+-            if not ld_deps:
+-                logger.error("The dependency of layerDependencies is not found.")
+-            return ld_deps
+-
+-        def layeritems_info_name_subdir(items_id, layeritems):
+-            litems = {}
+-            for li in layeritems:
+-                if li['id'] == items_id:
+-                    litems['vcs_url'] = li['vcs_url']
+-                    litems['name'] = li['name']
+-                    break
+-            return litems
+-
+-        if selfname:
+-            selfid = layeritems_info_id(layername, layeritems)
+-            lbinfo = layerbranches_info(selfid, layerbranches)
+-            if lbinfo:
+-                selfsubdir = lbinfo['vcs_subdir']
+-            else:
+-                logger.error("%s is not found in the specified branch" % layername)
+-                return
+-            selfurl = layeritems_info_name_subdir(selfid, layeritems)['vcs_url']
+-            if selfurl:
+-                return selfurl, selfsubdir
+-            else:
+-                logger.error("Cannot get layer %s git repo and subdir" % layername)
+-                return
+-        ldict = {}
+-        itemsid = layeritems_info_id(layername, layeritems)
+-        if not itemsid:
+-            return layername, None
+-        lbid = layerbranches_info(itemsid, layerbranches)
+-        if lbid:
+-            lbid = layerbranches_info(itemsid, layerbranches)['id']
+-        else:
+-            logger.error("%s is not found in the specified branch" % layername)
+-            return None, None
+-        for dependency in layerdependencies_info(lbid, layerdependencies):
+-            lname = layeritems_info_name_subdir(dependency, layeritems)['name']
+-            lurl = layeritems_info_name_subdir(dependency, layeritems)['vcs_url']
+-            lsubdir = layerbranches_info(dependency, layerbranches)['vcs_subdir']
+-            ldict[lname] = lurl, lsubdir
+-        return None, ldict
+-
+-    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer):
+-        layername = self.get_layer_name(url)
+-        if os.path.splitext(layername)[1] == '.git':
+-            layername = os.path.splitext(layername)[0]
+-        repodir = os.path.join(fetchdir, layername)
+-        layerdir = os.path.join(repodir, subdir)
+-        if not os.path.exists(repodir):
+-            if fetch_layer:
+-                result = subprocess.call('git clone %s %s' % (url, repodir), shell = True)
+-                if result:
+-                    logger.error("Failed to download %s" % url)
+-                    return None, None
+-                else:
+-                    return layername, layerdir
+-            else:
+-                logger.plain("Repository %s needs to be fetched" % url)
+-                return layername, layerdir
+-        elif os.path.exists(layerdir):
+-            return layername, layerdir
+-        else:
+-            logger.error("%s is not in %s" % (url, subdir))
+-        return None, None
+-
+     def do_layerindex_fetch(self, args):
+         """Fetches a layer from a layer index along with its dependent layers, and adds them to conf/bblayers.conf.
+ """
+-        apiurl = self.tinfoil.config_data.getVar('BBLAYERS_LAYERINDEX_URL')
+-        if not apiurl:
 +
-+import unittest
-+import tempfile
-+import os
-+import bb
++        def _construct_url(baseurl, branch):
++            if baseurl[-1] != '/':
++                baseurl += '/'
++            baseurl += "api/"
++            baseurl += ";type=restapi"
 +
-+from layers import layerindex
++            if branch:
++                baseurl += ";branch=%s" % branch
 +
-+import logging
++            return baseurl
 +
-+class LayersTest(unittest.TestCase):
 +
-+    def setUp(self):
-+        self.origdir = os.getcwd()
-+        self.d = bb.data.init()
-+        self.tempdir = tempfile.mkdtemp()
-+        self.dldir = os.path.join(self.tempdir, "download")
-+        os.mkdir(self.dldir)
-+        self.d.setVar("DL_DIR", self.dldir)
-+        self.unpackdir = os.path.join(self.tempdir, "unpacked")
-+        os.mkdir(self.unpackdir)
-+        persistdir = os.path.join(self.tempdir, "persistdata")
-+        self.d.setVar("PERSISTENT_DIR", persistdir)
-+        self.logger = logging.getLogger("BitBake")
++        # General URL to use based on standard setting
++        indexurl = self.tinfoil.config_data.getVar('BBLAYERS_LAYERINDEX_URL')
 +
-+    def tearDown(self):
-+        os.chdir(self.origdir)
-+        if os.environ.get("BB_TMPDIR_NOCLEAN") == "yes":
-+            print("Not cleaning up %s. Please remove manually." % self.tempdir)
-+        else:
-+            bb.utils.prunedir(self.tempdir)
++        if not indexurl:
+             logger.error("Cannot get BBLAYERS_LAYERINDEX_URL")
+             return 1
+-        else:
+-            if apiurl[-1] != '/':
+-                apiurl += '/'
+-            apiurl += "api/"
+-        apilinks = self.get_json_data(apiurl)
+-        branches = self.get_json_data(apilinks['branches'])
+-
+-        branchnum = 0
+-        for branch in branches:
+-            if branch['name'] == args.branch:
+-                branchnum = branch['id']
+-                break
+-        if branchnum == 0:
+-            validbranches = ', '.join([branch['name'] for branch in branches])
+-            logger.error('Invalid layer branch name "%s". Valid branches: %s' % (args.branch, validbranches))
 +
-+class LayerObjectTest(LayersTest):
-+    def setUp(self):
-+        from layers.layerindex import Branch, LayerItem, LayerBranch, LayerDependency, Recipe, Machine, Distro
++        layerManager = layers.manager.LayerManager(self.tinfoil.config_data, self.tinfoil.cooker)
 +
-+        LayersTest.setUp(self)
++        remoteIndex = layers.layerindex.LayerIndex(self.tinfoil.config_data)
 +
-+        self.index = {}
++        # Set the default...
++        branch = self.tinfoil.config_data.getVar('LAYERSERIES_CORENAMES') or 'master'
++        if args.branch:
++            branch = args.branch
 +
-+        branchId = 0
-+        layerItemId = 0
-+        layerBranchId = 0
-+        layerDependencyId = 0
-+        recipeId = 0
-+        machineId = 0
-+        distroId = 0
++        logger.debug(1, 'Trying branch %s' % branch)
++        try:
++            remoteIndex.load_layerindex(_construct_url(indexurl, branch))
++        except Exception:
++            if branch == args.branch:
++                logger.error('Branch %s is not available' % branch)
++                return 1
++            logger.debug(1, 'Falling back to branch master')
++            remoteIndex.load_layerindex(_construct_url(indexurl, 'master'), reload=True)
 +
-+        self.index['branches'] = {}
-+        self.index['layerItems'] = {}
-+        self.index['layerBranches'] = {}
-+        self.index['layerDependencies'] = {}
-+        self.index['recipes'] = {}
-+        self.index['machines'] = {}
-+        self.index['distros'] = {}
++        if remoteIndex.is_empty():
+             return 1
+ 
+-        ignore_layers = []
+-        for collection in self.tinfoil.config_data.getVar('BBFILE_COLLECTIONS').split():
+-            lname = self.tinfoil.config_data.getVar('BBLAYERS_LAYERINDEX_NAME_%s' % collection)
+-            if lname:
+-                ignore_layers.append(lname)
++        # If we want the display to include already downloaded
++        # keep the following line, otherwise comment out.
++        cookerIndex = layers.layerindex.LayerIndex(self.tinfoil.config_data)
++        cookerIndex.load_layerindex('file://local;type=cooker', load='layerDependencies')
 +
-+        branchId += 1
-+        self.index['branches'][branchId] = Branch(self.index, None)
-+        self.index['branches'][branchId].define_data(branchId,
-+                                        'test_branch', 'bb_test_branch')
++        lIndex = cookerIndex + remoteIndex
+ 
++        ignore_layers = []
+         if args.ignore:
+             ignore_layers.extend(args.ignore.split(','))
+ 
+-        layeritems = self.get_json_data(apilinks['layerItems'])
+-        layerbranches = self.get_json_data(apilinks['layerBranches'])
+-        layerdependencies = self.get_json_data(apilinks['layerDependencies'])
+-        invaluenames = []
+-        repourls = {}
+-        printlayers = []
+-
+-        def query_dependencies(layers, layeritems, layerbranches, layerdependencies, branchnum):
+-            depslayer = []
+-            for layername in layers:
+-                invaluename, layerdict = self.get_layer_deps(layername, layeritems, layerbranches, layerdependencies, branchnum)
+-                if layerdict:
+-                    repourls[layername] = self.get_layer_deps(layername, layeritems, layerbranches, layerdependencies, branchnum, selfname=True)
+-                    for layer in layerdict:
+-                        if not layer in ignore_layers:
+-                            depslayer.append(layer)
+-                        printlayers.append((layername, layer, layerdict[layer][0], layerdict[layer][1]))
+-                        if not layer in ignore_layers and not layer in repourls:
+-                            repourls[layer] = (layerdict[layer][0], layerdict[layer][1])
+-                if invaluename and not invaluename in invaluenames:
+-                    invaluenames.append(invaluename)
+-            return depslayer
+-
+-        depslayers = query_dependencies(args.layername, layeritems, layerbranches, layerdependencies, branchnum)
+-        while depslayers:
+-            depslayer = query_dependencies(depslayers, layeritems, layerbranches, layerdependencies, branchnum)
+-            depslayers = depslayer
+-        if invaluenames:
+-            for invaluename in invaluenames:
++        layernames = ' '.join(args.layername)
++        (dependencies, invalidnames) = lIndex.get_dependencies(names=layernames, ignores=ignore_layers)
 +
-+        layerItemId +=1
-+        self.index['layerItems'][layerItemId] = LayerItem(self.index, None)
-+        self.index['layerItems'][layerItemId].define_data(layerItemId, 'test_layerItem',
-+                                        vcs_url='git://git_test_url/test_layerItem')
++        if invalidnames:
++            for invaluename in invalidnames:
+                 logger.error('Layer "%s" not found in layer index' % invaluename)
+             return 1
+-        logger.plain("%s  %s  %s  %s" % ("Layer".ljust(19), "Required by".ljust(19), "Git repository".ljust(54), "Subdirectory"))
+-        logger.plain('=' * 115)
+-        for layername in args.layername:
+-            layerurl = repourls[layername]
+-            logger.plain("%s %s %s %s" % (layername.ljust(20), '-'.ljust(20), layerurl[0].ljust(55), layerurl[1]))
+-        printedlayers = []
+-        for layer, dependency, gitrepo, subdirectory in printlayers:
+-            if dependency in printedlayers:
+-                continue
+-            logger.plain("%s %s %s %s" % (dependency.ljust(20), layer.ljust(20), gitrepo.ljust(55), subdirectory))
+-            printedlayers.append(dependency)
+-
+-        if repourls:
+-            fetchdir = self.tinfoil.config_data.getVar('BBLAYERS_FETCH_DIR')
+-            if not fetchdir:
+-                logger.error("Cannot get BBLAYERS_FETCH_DIR")
+-                return 1
+-            if not os.path.exists(fetchdir):
+-                os.makedirs(fetchdir)
+-            addlayers = []
+-            for repourl, subdir in repourls.values():
+-                name, layerdir = self.get_fetch_layer(fetchdir, repourl, subdir, not args.show_only)
+-                if not name:
+-                    # Error already shown
+-                    return 1
+-                addlayers.append((subdir, name, layerdir))
+-        if not args.show_only:
+-            for subdir, name, layerdir in set(addlayers):
+-                if os.path.exists(layerdir):
+-                    if subdir:
+-                        logger.plain("Adding layer \"%s\" to conf/bblayers.conf" % subdir)
+-                    else:
+-                        logger.plain("Adding layer \"%s\" to conf/bblayers.conf" % name)
+-                    localargs = argparse.Namespace()
+-                    localargs.layerdir = layerdir
+-                    self.do_add_layer(localargs)
++        logger.plain("%s  %s  %s" % ("Layer".ljust(49), "Git repository (branch)".ljust(54), "Subdirectory"))
++        logger.plain('=' * 125)
 +
-+        layerBranchId +=1
-+        self.index['layerBranches'][layerBranchId] = LayerBranch(self.index, None)
-+        self.index['layerBranches'][layerBranchId].define_data(layerBranchId,
-+                                        'test_collection', '99', layerItemId,
-+                                        branchId)
++        for deplayerbranch in dependencies:
++            layerBranch = dependencies[deplayerbranch][0]
 +
-+        recipeId += 1
-+        self.index['recipes'][recipeId] = Recipe(self.index, None)
-+        self.index['recipes'][recipeId].define_data(recipeId, 'test_git.bb',
-+                                        'recipes-test', 'test', 'git',
-+                                        layerBranchId)
++            # This is the local content, uncomment to hide local
++            # layers from the display.
++            #if layerBranch.index['CONFIG']['TYPE'] == 'cooker':
++            #    continue
 +
-+        machineId += 1
-+        self.index['machines'][machineId] = Machine(self.index, None)
-+        self.index['machines'][machineId].define_data(machineId,
-+                                        'test_machine', 'test_machine',
-+                                        layerBranchId)
++            layerDeps = dependencies[deplayerbranch][1:]
 +
-+        distroId += 1
-+        self.index['distros'][distroId] = Distro(self.index, None)
-+        self.index['distros'][distroId].define_data(distroId,
-+                                        'test_distro', 'test_distro',
-+                                        layerBranchId)
++            requiredby = []
++            recommendedby = []
++            for dep in layerDeps:
++                if dep.is_required():
++                    requiredby.append(dep.get_layer().get_name())
+                 else:
+-                    break
++                    recommendedby.append(dep.get_layer().get_name())
 +
-+        layerItemId +=1
-+        self.index['layerItems'][layerItemId] = LayerItem(self.index, None)
-+        self.index['layerItems'][layerItemId].define_data(layerItemId, 'test_layerItem 2',
-+                                        vcs_url='git://git_test_url/test_layerItem')
++            logger.plain('%s %s %s' % (("%s:%s:%s" %
++                                  (layerBranch.index['CONFIG']['DESCRIPTION'],
++                                  layerBranch.get_branch().get_name(),
++                                  layerBranch.get_layer().get_name())).ljust(50),
++                                  ("%s (%s)" % (layerBranch.get_layer().get_vcs_url(),
++                                  layerBranch.get_actual_branch())).ljust(55),
++                                  layerBranch.get_vcs_subdir()
++                                               ))
++            if requiredby:
++                logger.plain('  required by: %s' % ' '.join(requiredby))
++            if recommendedby:
++                logger.plain('  recommended by: %s' % ' '.join(recommendedby))
 +
-+        layerBranchId +=1
-+        self.index['layerBranches'][layerBranchId] = LayerBranch(self.index, None)
-+        self.index['layerBranches'][layerBranchId].define_data(layerBranchId,
-+                                        'test_collection_2', '72', layerItemId,
-+                                        branchId, actual_branch='some_other_branch')
++        if args.show_only != True:
++            layerManager.setup(dependencies)
++            layerManager.fetch()
++            layerManager.unpack()
++            layerManager.update_bblayers()
+ 
+     def do_layerindex_show_depends(self, args):
+         """Find layer dependencies from layer index.
+@@ -261,10 +134,10 @@ class LayerIndexPlugin(ActionPlugin):
+     def register_commands(self, sp):
+         parser_layerindex_fetch = self.add_command(sp, 'layerindex-fetch', self.do_layerindex_fetch)
+         parser_layerindex_fetch.add_argument('-n', '--show-only', help='show dependencies and do nothing else', action='store_true')
+-        parser_layerindex_fetch.add_argument('-b', '--branch', help='branch name to fetch (default %(default)s)', default='master')
++        parser_layerindex_fetch.add_argument('-b', '--branch', help='branch name to fetch (default %(default)s)')
+         parser_layerindex_fetch.add_argument('-i', '--ignore', help='assume the specified layers do not need to be fetched/added (separate multiple layers with commas, no spaces)', metavar='LAYER')
+         parser_layerindex_fetch.add_argument('layername', nargs='+', help='layer to fetch')
+ 
+         parser_layerindex_show_depends = self.add_command(sp, 'layerindex-show-depends', self.do_layerindex_show_depends)
+-        parser_layerindex_show_depends.add_argument('-b', '--branch', help='branch name to fetch (default %(default)s)', default='master')
++        parser_layerindex_show_depends.add_argument('-b', '--branch', help='branch name to fetch (default %(default)s)')
+         parser_layerindex_show_depends.add_argument('layername', nargs='+', help='layer to query')
+diff --git a/lib/layers/layerindex/__init__.py b/lib/layers/layerindex/__init__.py
+index 0c7c483..beb7df9 100644
+--- a/lib/layers/layerindex/__init__.py
++++ b/lib/layers/layerindex/__init__.py
+@@ -407,7 +407,7 @@ invalid is just a list of dependencies that were not found.
+ 
+         if names:
+             for name in names.split():
+-                if name in ignores:
++                if ignores and name in ignores:
+                     continue
+ 
+                 # Since we don't have a branch, we have to just find the first
+@@ -441,7 +441,7 @@ invalid is just a list of dependencies that were not found.
+         for layerBranch in layerBranches:
+             name = layerBranch.get_layer().get_name()
+             # Do we ignore it?
+-            if name in ignores:
++            if ignores and name in ignores:
+                 continue
+ 
+             if 'layerDependencies_layerBranchId' not in layerBranch.index:
+@@ -469,7 +469,7 @@ invalid is just a list of dependencies that were not found.
+                             depLayerBranch = rdepLayerBranch
+ 
+                     # Is this dependency on the list to be ignored?
+-                    if depLayerBranch.get_layer().get_name() in ignores:
++                    if ignores and depLayerBranch.get_layer().get_name() in ignores:
+                         continue
+ 
+                     # Previously found dependencies have been processed, as
+@@ -823,7 +823,19 @@ class LayerDependency(LayerIndexItem_LayerBranch):
+             branchId = self.get_layerbranch().get_branch_id()
+             layerBranch = self.index['layerBranches_layerId_branchId']["%s:%s" % (layerId, branchId)]
+         except KeyError:
+-            logger.error('Unable to find layerBranches_layerId_branchId in index')
++            logger.warning('Unable to find layerBranches_layerId_branchId in index')
 +
-+        layerDependencyId += 1
-+        self.index['layerDependencies'][layerDependencyId] = LayerDependency(self.index, None)
-+        self.index['layerDependencies'][layerDependencyId].define_data(layerDependencyId,
-+                                        layerBranchId, 1)
-+
-+        layerDependencyId += 1
-+        self.index['layerDependencies'][layerDependencyId] = LayerDependency(self.index, None)
-+        self.index['layerDependencies'][layerDependencyId].define_data(layerDependencyId,
-+                                        layerBranchId, 1, required=False)
-+
-+    def test_branch(self):
-+        branch = self.index['branches'][1]
-+        self.assertEqual(branch.get_id(), 1)
-+        self.assertEqual(branch.get_name(), 'test_branch')
-+        self.assertEqual(branch.get_short_description(), 'test_branch')
-+        self.assertEqual(branch.get_bitbake_branch(), 'bb_test_branch')
-+
-+    def test_layerItem(self):
-+        layerItem = self.index['layerItems'][1]
-+        self.assertEqual(layerItem.get_id(), 1)
-+        self.assertEqual(layerItem.get_name(), 'test_layerItem')
-+        self.assertEqual(layerItem.get_summary(), 'test_layerItem')
-+        self.assertEqual(layerItem.get_description(), 'test_layerItem')
-+        self.assertEqual(layerItem.get_vcs_url(), 'git://git_test_url/test_layerItem')
-+        self.assertEqual(layerItem.get_vcs_web_url(), None)
-+        self.assertEqual(layerItem.get_vcs_web_tree_base_url(), None)
-+        self.assertEqual(layerItem.get_vcs_web_file_base_url(), None)
-+        self.assertTrue(layerItem.get_updated() != None)
-+
-+        layerItem = self.index['layerItems'][2]
-+        self.assertEqual(layerItem.get_id(), 2)
-+        self.assertEqual(layerItem.get_name(), 'test_layerItem 2')
-+        self.assertEqual(layerItem.get_summary(), 'test_layerItem 2')
-+        self.assertEqual(layerItem.get_description(), 'test_layerItem 2')
-+        self.assertEqual(layerItem.get_vcs_url(), 'git://git_test_url/test_layerItem')
-+        self.assertEqual(layerItem.get_vcs_web_url(), None)
-+        self.assertEqual(layerItem.get_vcs_web_tree_base_url(), None)
-+        self.assertEqual(layerItem.get_vcs_web_file_base_url(), None)
-+        self.assertTrue(layerItem.get_updated() != None)
-+
-+    def test_layerBranch(self):
-+        layerBranch = self.index['layerBranches'][1]
-+        self.assertEqual(layerBranch.get_id(), 1)
-+        self.assertEqual(layerBranch.get_collection(), 'test_collection')
-+        self.assertEqual(layerBranch.get_version(), '99')
-+        self.assertEqual(layerBranch.get_vcs_subdir(), '')
-+        self.assertEqual(layerBranch.get_actual_branch(), 'test_branch')
-+        self.assertTrue(layerBranch.get_updated() != None)
-+        self.assertEqual(layerBranch.get_layer_id(), 1)
-+        self.assertEqual(layerBranch.get_branch_id(), 1)
-+        self.assertEqual(layerBranch.get_layer(), self.index['layerItems'][1])
-+        self.assertEqual(layerBranch.get_branch(), self.index['branches'][1])
-+
-+        layerBranch = self.index['layerBranches'][2]
-+        self.assertEqual(layerBranch.get_id(), 2)
-+        self.assertEqual(layerBranch.get_collection(), 'test_collection_2')
-+        self.assertEqual(layerBranch.get_version(), '72')
-+        self.assertEqual(layerBranch.get_vcs_subdir(), '')
-+        self.assertEqual(layerBranch.get_actual_branch(), 'some_other_branch')
-+        self.assertTrue(layerBranch.get_updated() != None)
-+        self.assertEqual(layerBranch.get_layer_id(), 2)
-+        self.assertEqual(layerBranch.get_branch_id(), 1)
-+        self.assertEqual(layerBranch.get_layer(), self.index['layerItems'][2])
-+        self.assertEqual(layerBranch.get_branch(), self.index['branches'][1])
-+
-+    def test_layerDependency(self):
-+        layerDependency = self.index['layerDependencies'][1]
-+        self.assertEqual(layerDependency.get_id(), 1)
-+        self.assertEqual(layerDependency.get_layerbranch_id(), 2)
-+        self.assertEqual(layerDependency.get_layerbranch(), self.index['layerBranches'][2])
-+        self.assertEqual(layerDependency.get_layer_id(), 2)
-+        self.assertEqual(layerDependency.get_layer(), self.index['layerItems'][2])
-+        self.assertTrue(layerDependency.is_required())
-+        self.assertEqual(layerDependency.get_dependency_id(), 1)
-+        self.assertEqual(layerDependency.get_dependency_layer(), self.index['layerItems'][1])
-+        self.assertEqual(layerDependency.get_dependency_layerBranch(), self.index['layerBranches'][1])
-+
-+        # Previous check used the fall back method.. now use the faster method
-+        # Create quick lookup layerBranches_layerId_branchId table
-+        if 'layerBranches' in self.index:
-+            # Create associated quick lookup indexes
-+            self.index['layerBranches_layerId_branchId'] = {}
++            # We don't have a quick lookup index, doing it the slower way...
++            layerId = self.get_dependency_id()
++            branchId = self.get_layerbranch().get_branch_id()
 +            for layerBranchId in self.index['layerBranches']:
-+                obj = self.index['layerBranches'][layerBranchId]
-+                self.index['layerBranches_layerId_branchId']["%s:%s" % (obj.get_layer_id(), obj.get_branch_id())] = obj
-+
-+        layerDependency = self.index['layerDependencies'][2]
-+        self.assertEqual(layerDependency.get_id(), 2)
-+        self.assertEqual(layerDependency.get_layerbranch_id(), 2)
-+        self.assertEqual(layerDependency.get_layerbranch(), self.index['layerBranches'][2])
-+        self.assertEqual(layerDependency.get_layer_id(), 2)
-+        self.assertEqual(layerDependency.get_layer(), self.index['layerItems'][2])
-+        self.assertFalse(layerDependency.is_required())
-+        self.assertEqual(layerDependency.get_dependency_id(), 1)
-+        self.assertEqual(layerDependency.get_dependency_layer(), self.index['layerItems'][1])
-+        self.assertEqual(layerDependency.get_dependency_layerBranch(), self.index['layerBranches'][1])
-+
-+    def test_recipe(self):
-+        recipe = self.index['recipes'][1]
-+        self.assertEqual(recipe.get_id(), 1)
-+        self.assertEqual(recipe.get_layerbranch_id(), 1)
-+        self.assertEqual(recipe.get_layerbranch(), self.index['layerBranches'][1])
-+        self.assertEqual(recipe.get_layer_id(), 1)
-+        self.assertEqual(recipe.get_layer(), self.index['layerItems'][1])
-+        self.assertEqual(recipe.get_filename(), 'test_git.bb')
-+        self.assertEqual(recipe.get_filepath(), 'recipes-test')
-+        self.assertEqual(recipe.get_fullpath(), 'recipes-test/test_git.bb')
-+        self.assertEqual(recipe.get_summary(), "")
-+        self.assertEqual(recipe.get_description(), "")
-+        self.assertEqual(recipe.get_section(), "")
-+        self.assertEqual(recipe.get_pn(), 'test')
-+        self.assertEqual(recipe.get_pv(), 'git')
-+        self.assertEqual(recipe.get_license(), "")
-+        self.assertEqual(recipe.get_homepage(), "")
-+        self.assertEqual(recipe.get_bugtracker(), "")
-+        self.assertEqual(recipe.get_provides(), "")
-+        self.assertTrue(recipe.get_updated() != None)
-+        self.assertEqual(recipe.get_inherits(), "")
-+
-+    def test_machine(self):
-+        machine = self.index['machines'][1]
-+        self.assertEqual(machine.get_id(), 1)
-+        self.assertEqual(machine.get_layerbranch_id(), 1)
-+        self.assertEqual(machine.get_layerbranch(), self.index['layerBranches'][1])
-+        self.assertEqual(machine.get_layer_id(), 1)
-+        self.assertEqual(machine.get_layer(), self.index['layerItems'][1])
-+        self.assertEqual(machine.get_name(), 'test_machine')
-+        self.assertEqual(machine.get_description(), 'test_machine')
-+        self.assertTrue(machine.get_updated() != None)
-+
-+    def test_distro(self):
-+        distro = self.index['distros'][1]
-+        self.assertEqual(distro.get_id(), 1)
-+        self.assertEqual(distro.get_layerbranch_id(), 1)
-+        self.assertEqual(distro.get_layerbranch(), self.index['layerBranches'][1])
-+        self.assertEqual(distro.get_layer_id(), 1)
-+        self.assertEqual(distro.get_layer(), self.index['layerItems'][1])
-+        self.assertEqual(distro.get_name(), 'test_distro')
-+        self.assertEqual(distro.get_description(), 'test_distro')
-+        self.assertTrue(distro.get_updated() != None)
-+
-+
-+class LayerIndexWebRestApiTest(LayersTest):
-+
-+    if os.environ.get("BB_SKIP_NETTESTS") == "yes":
-+        print("Unset BB_SKIP_NETTESTS to run network tests")
-+    else:
-+        def setUp(self):
-+            LayersTest.setUp(self)
-+            self.lindex = layerindex.LayerIndex(self.d)
-+            self.lindex.load_layerindex('http://layers.openembedded.org/layerindex/api/;type=restapi;branch=morty', load='layerDependencies')
-+
-+        def test_layerindex_is_empty(self):
-+            self.assertFalse(self.lindex.is_empty())
-+
-+        def test_layerindex_store_file(self):
-+            self.lindex.store_layerindex('file://%s/file.json;type=restapi' % self.tempdir, self.lindex.lindex[0])
-+
-+            self.assertTrue(os.path.isfile('%s/file.json' % self.tempdir))
-+
-+            reload = layerindex.LayerIndex(self.d)
-+            reload.load_layerindex('file://%s/file.json;type=restapi' % self.tempdir)
-+
-+            self.assertFalse(reload.is_empty())
-+
-+            # Calculate layerItems in original index that should NOT be in reload
-+            layerItemNames = []
-+            for itemId in self.lindex.lindex[0]['layerItems']:
-+                layerItemNames.append(self.lindex.lindex[0]['layerItems'][itemId].get_name())
-+
-+            for layerBranchId in self.lindex.lindex[0]['layerBranches']:
-+                layerItemNames.remove(self.lindex.lindex[0]['layerBranches'][layerBranchId].get_layer().get_name())
-+
-+            for itemId in reload.lindex[0]['layerItems']:
-+                self.assertFalse(reload.lindex[0]['layerItems'][itemId].get_name() in layerItemNames)
-+
-+            # Compare the original to what we wrote...
-+            for type in self.lindex.lindex[0]:
-+                if type == 'apilinks' or \
-+                   type == 'layerItems' or \
-+                   type in self.lindex.lindex[0]['CONFIG']['local']:
-+                    continue
-+                for id in self.lindex.lindex[0][type]:
-+                    self.logger.debug(1, "type %s" % (type))
-+
-+                    self.assertTrue(id in reload.lindex[0][type])
-+
-+                    self.logger.debug(1, "%s ? %s" % (self.lindex.lindex[0][type][id], reload.lindex[0][type][id]))
-+
-+                    self.assertEqual(self.lindex.lindex[0][type][id], reload.lindex[0][type][id])
-+
-+        def test_layerindex_store_split(self):
-+            self.lindex.store_layerindex('file://%s;type=restapi' % self.tempdir, self.lindex.lindex[0])
-+
-+            reload = layerindex.LayerIndex(self.d)
-+            reload.load_layerindex('file://%s;type=restapi' % self.tempdir)
-+
-+            self.assertFalse(reload.is_empty())
-+
-+            for type in self.lindex.lindex[0]:
-+                if type == 'apilinks' or \
-+                   type == 'layerItems' or \
-+                   type in self.lindex.lindex[0]['CONFIG']['local']:
-+                    continue
-+                for id in self.lindex.lindex[0][type]:
-+                    self.logger.debug(1, "type %s" % (type))
-+
-+                    self.assertTrue(id in reload.lindex[0][type])
-+
-+                    self.logger.debug(1, "%s ? %s" % (self.lindex.lindex[0][type][id], reload.lindex[0][type][id]))
-+
-+                    self.assertEqual(self.lindex.lindex[0][type][id], reload.lindex[0][type][id])
-+
-+        def test_dependency_resolution(self):
-+            # Verify depth first searching...
-+            (dependencies, invalidnames) = self.lindex.get_dependencies(names='meta-python')
-+
-+            first = True
-+            for deplayerbranch in dependencies:
-+                layerBranch = dependencies[deplayerbranch][0]
-+                layerDeps = dependencies[deplayerbranch][1:]
-+
-+                if not first:
-+                    continue
-+
-+                first = False
-+
-+                # Top of the deps should be openembedded-core, since everything depends on it.
-+                self.assertEquals(layerBranch.get_layer().get_name(), "openembedded-core")
-+
-+                # meta-python should cause an openembedded-core dependency, if not assert!
-+                for dep in layerDeps:
-+                    if dep.get_layer().get_name() == 'meta-python':
-+                        break
-+                else:
-+                    self.assetTrue(False)
-+
-+                # Only check the first element...
-+                break
++                layerBranch = self.index['layerBranches'][layerBranchId]
++                if layerBranch.get_layer_id() == layerId and \
++                   layerBranch.get_branch_id() == branchId:
++                    break
 +            else:
-+                if first:
-+                    # Empty list, this is bad.
-+                    self.assertTrue(False)
-+
-+                # Last dep should be the requested item
-+                layerBranch = dependencies[deplayerbranch][0]
-+                self.assertEquals(layerBranch.get_layer().get_name(), "meta-python")
-+
-+        def test_find_collection(self):
-+            result = self.lindex.find_collection('core')
-+
-+            self.assertTrue(result != None)
-+
-+        def test_get_layerbranch(self):
-+            result = self.lindex.get_layerbranch('openembedded-core')
-+
-+            self.assertTrue(result != None)
-diff --git a/lib/layers/tests/manager.py b/lib/layers/tests/manager.py
-new file mode 100644
-index 0000000..ccdc44a
---- /dev/null
-+++ b/lib/layers/tests/manager.py
-@@ -0,0 +1,155 @@
-+# Copyright (C) 2017 Wind River Systems, Inc.
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-+# See the GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License
-+# along with this program; if not, write to the Free Software
-+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-+
-+import unittest
-+import tempfile
-+import os
-+import bb
-+
-+from layers import manager
-+
-+import logging
-+
-+class LayersTest(unittest.TestCase):
-+
-+    def setUp(self):
-+        self.origdir = os.getcwd()
-+        self.d = bb.data.init()
-+        self.tempdir = tempfile.mkdtemp()
-+        self.dldir = os.path.join(self.tempdir, "download")
-+        os.mkdir(self.dldir)
-+        self.d.setVar("DL_DIR", self.dldir)
-+        self.unpackdir = os.path.join(self.tempdir, "unpacked")
-+        self.d.setVar("BBLAYERS_FETCH_DIR", self.unpackdir)
-+        os.mkdir(self.unpackdir)
-+        persistdir = os.path.join(self.tempdir, "persistdata")
-+        self.d.setVar("PERSISTENT_DIR", persistdir)
-+        self.logger = logging.getLogger("BitBake")
-+        self.d.setVar('BBLAYERS', '')
-+
-+    def tearDown(self):
-+        os.chdir(self.origdir)
-+        if os.environ.get("BB_TMPDIR_NOCLEAN") == "yes":
-+            print("Not cleaning up %s. Please remove manually." % self.tempdir)
-+        else:
-+            bb.utils.prunedir(self.tempdir)
-+
-+class LayerManagerTest(LayersTest):
-+    def setUp(self):
-+        LayersTest.setUp(self)
-+
-+        self.manager = manager.LayerManager(self.d, None)
-+
-+    def test_get_bitbake_info(self):
-+        (bb_remote, bb_branch, bb_rev, bb_path) = self.manager.get_bitbake_info()
-+
-+        self.assertTrue("://" in bb_remote)
-+
-+        us = os.path.dirname(__file__) # bitbake/lib/layers/tests
-+        us = os.path.dirname(us)       # bitbake/lib/layers
-+        us = os.path.dirname(us)       # bitbake/lib
-+        us = os.path.dirname(us)       # bitbake
-+
-+        self.assertEqual(bb_path, us)
-+
-+    def test_load_bblayers(self):
-+
-+        self.d.setVar('LAYERSERIES_CORENAMES', 'under_test')
-+
-+        self.d.setVar('BBFILE_COLLECTIONS', 'test1')
-+        self.d.appendVar('BBFILE_COLLECTIONS', ' test2')
-+        self.d.appendVar('BBFILE_COLLECTIONS', ' test3')
-+
-+        self.d.setVar('BBLAYERS', '%s/test1_layer %s/test2_layer %s/test3_layer'
-+                              % (self.tempdir, self.tempdir, self.tempdir))
-+
-+        self.d.setVar('BBLAYERS_LAYERINDEX_NAME_test1', 'oe-test-layer')
-+
-+        self.d.setVar('LAYERVERSION_test1', '1')
-+        self.d.setVar('LAYERVERSION_test2', '2')
-+        self.d.setVar('LAYERVERSION_test3', '3')
-+
-+        index = self.manager.load_bblayers()
-+
-+        self.assertEqual(index['branches'][1].get_name(), 'under_test')
-+
-+        layerBranch = index['layerBranches'][1]
-+        self.assertEqual(layerBranch.get_collection(), 'test1')
-+        self.assertEqual(layerBranch.get_version(), '1')
-+        self.assertEqual(layerBranch.get_layer().get_name(), 'oe-test-layer')
-+
-+        layerBranch = index['layerBranches'][2]
-+        self.assertEqual(layerBranch.get_collection(), 'test2')
-+        self.assertEqual(layerBranch.get_version(), '2')
-+        self.assertEqual(layerBranch.get_layer().get_name(), 'test2')
-+
-+        layerBranch = index['layerBranches'][3]
-+        self.assertEqual(layerBranch.get_collection(), 'test3')
-+        self.assertEqual(layerBranch.get_version(), '3')
-+        self.assertEqual(layerBranch.get_layer().get_name(), 'test3')
-+
-+    def test_clone_directory(self):
-+        self.assertEqual(self.manager.get_clone_directory('git://foo/foobar'),
-+                         os.path.join(self.unpackdir, 'foobar'))
-+
-+    if os.environ.get("BB_SKIP_NETTESTS") == "yes":
-+        print("Unset BB_SKIP_NETTESTS to run network tests")
-+    else:
-+        def test_fetch2(self):
-+            from collections import OrderedDict
-+
-+            from layers.layerindex import Branch, LayerItem, LayerBranch
-+
-+            branchId = 0
-+            layerItemId = 0
-+            layerBranchId = 0
-+
-+            index = {}
-+            index['branches'] = {}
-+            index['layerItems'] = {}
-+            index['layerBranches'] = {}
-+
-+            branchId += 1
-+            index['branches'][branchId] = Branch(index, None)
-+            index['branches'][branchId].define_data(branchId,
-+                                        'master', 'master')
-+
-+            layerItemId +=1
-+            index['layerItems'][layerItemId] = LayerItem(index, None)
-+            index['layerItems'][layerItemId].define_data(layerItemId, 'meta-gplv2',
-+                                        vcs_url='git://git.yoctoproject.org/meta-gplv2')
-+
-+            layerBranchId +=1
-+            index['layerBranches'][layerBranchId] = LayerBranch(index, None)
-+            index['layerBranches'][layerBranchId].define_data(layerBranchId,
-+                                        'gplv2', '1', layerItemId, branchId)
++                logger.error("LayerBranch not found layerId %s -- BranchId %s" % (layerId, branchId))
++                layerBranch = None
+         except IndexError:
+             logger.error("LayerBranch not found layerId %s -- BranchId %s" % (layerId, branchId))
+ 
+@@ -832,10 +844,10 @@ class LayerDependency(LayerIndexItem_LayerBranch):
+ 
+ class Recipe(LayerIndexItem_LayerBranch):
+     def define_data(self, id,
+-                    filename, filepath, pn, pv,
+-                    summary, description, section, license,
+-                    homepage, bugtracker, provides, bbclassextend,
+-                    inherits, blacklisted, layerbranch, updated=None):
++                    filename, filepath, pn, pv, layerbranch,
++                    summary="", description="", section="", license="",
++                    homepage="", bugtracker="", provides="", bbclassextend="",
++                    inherits="", blacklisted="", updated=None):
+         self.data = {}
+         self.data['id'] = id
+         self.data['filename'] = filename
+diff --git a/lib/layers/layerindex/cooker.py b/lib/layers/layerindex/cooker.py
+index 229f668..76a8739 100644
+--- a/lib/layers/layerindex/cooker.py
++++ b/lib/layers/layerindex/cooker.py
+@@ -125,7 +125,7 @@ class CookerPlugin(IndexPlugin):
+                 if deps:
+                     layerDependencyId = add_dependency(layerDependencyId, lindex, deps, False)
+ 
+-        # Need to load recipes here
++        # Need to load recipes here (requires cooker access)
+         recipeId = 0
+         if False and 'recipes' in load.split():  ## TODO NOT IMPLEMENTED
+             lindex['recipes'] = {}
+diff --git a/lib/layers/layerindex/restapi.py b/lib/layers/layerindex/restapi.py
+index d6d29a4..4a2e9d9 100644
+--- a/lib/layers/layerindex/restapi.py
++++ b/lib/layers/layerindex/restapi.py
+@@ -90,7 +90,8 @@ class RestApiPlugin(IndexPlugin):
+ 
+         def load_cache(path, lindex, branches=None):
+             logger.debug(1, 'Loading json file %s' % path)
+-            pindex = json.load(open(path, 'rt', encoding='utf-8'))
++            with open(path, 'rt', encoding='utf-8') as f:
++                pindex = json.load(f)
+ 
+             # Filter the branches on loaded files...
+             newpBranch = []
+@@ -267,47 +268,72 @@ class RestApiPlugin(IndexPlugin):
+         if ud.type != 'file':
+             raise NotImplementedError('Writing to anything but a file url is not implemented: %s' % ud.url)
+ 
+-        # Write out to a single file, we have to sort the entries as we write
+-        if not os.path.isdir(ud.path):
+-            pindex = {}
+-            for entry in lindex:
+-                # Check for either locally added item or apilinks to ignore
+-                if entry in lindex['CONFIG']['local'] or \
+-                   entry == 'apilinks':
+-                    continue
+-                pindex[entry] = []
+-                for objId in lindex[entry]:
+-                    pindex[entry].append(lindex[entry][objId].data)
+-
+-            bb.debug(1, 'Writing index to %s' % ud.path)
+-            json.dump(layers.layerindex.sort_entry(pindex), open(ud.path, 'wt'), indent=4)
+-            return
+-
+-        # Write out to a directory one file per layerBranch
+         try:
+             layerBranches = lindex['layerBranches']
+         except KeyError:
+             logger.error('No layerBranches to write.')
+             return
+ 
+-        for layerBranchId in layerBranches:
+-            pindex = {}
+ 
+-            def filter_item(layerBranchId, objects):
+-                filtered = []
+-                for obj in lindex[objects]:
++        def filter_item(layerBranchId, objects):
++            filtered = []
++            for obj in lindex[objects]:
++                try:
++                    if lindex[objects][obj].get_layerbranch_id() == layerBranchId:
++                       filtered.append(lindex[objects][obj].data)
++                except AttributeError:
++                    logger.debug(1, 'No obj.get_layerbranch_id(): %s' % objects)
++                    # No simple filter method, just include it...
+                     try:
+-                        if lindex[objects][obj].get_layerbranch_id() == layerBranchId:
+-                            filtered.append(lindex[objects][obj].data)
++                        filtered.append(lindex[objects][obj].data)
+                     except AttributeError:
+-                        logger.debug(1, 'No obj.get_layerbranch_id(): %s' % objects)
+-                        # No simple filter method, just include it...
+-                        try:
+-                            filtered.append(lindex[objects][obj].data)
+-                        except AttributeError:
+-                            logger.debug(1, 'No obj.data: %s %s' % (objects, type(obj)))
+-                            filtered.append(obj)
+-                return filtered
++                        logger.debug(1, 'No obj.data: %s %s' % (objects, type(obj)))
++                        filtered.append(obj)
++            return filtered
 +
 +
-+            dependencies = OrderedDict()
-+            layerBranch = index['layerBranches'][layerBranchId]
-+            dependencies[layerBranch.get_layer().get_name()] = [layerBranch]
++        # Write out to a single file.
++        # Filter out unnecessary items, then sort as we write for determinism
++        if not os.path.isdir(ud.path):
++            pindex = {}
 +
-+            self.d.setVar('BBLAYERS_FETCHER_TYPE', 'fetch2')
-+            self.manager.setup(dependencies)
-+            self.manager.fetch()
-+            self.manager.unpack()
++            pindex['branches'] = []
++            pindex['layerItems'] = []
++            pindex['layerBranches'] = []
 +
-+            fetchplugin = self.manager.get_plugin(self.manager.index_fetcher)
-+            newlayers = fetchplugin.get_new_layers()
++            for layerBranchId in layerBranches:
++                if layerBranches[layerBranchId].get_branch().data not in pindex['branches']:
++                    pindex['branches'].append(layerBranches[layerBranchId].get_branch().data)
 +
-+            self.assertFalse(not newlayers)
++                if layerBranches[layerBranchId].get_layer().data not in pindex['layerItems']:
++                    pindex['layerItems'].append(layerBranches[layerBranchId].get_layer().data)
 +
-+            self.assertTrue(os.path.isdir(newlayers[0]))
-+            self.assertTrue(os.path.isfile(os.path.join(newlayers[0],'conf/layer.conf')))
++                if layerBranches[layerBranchId].data not in pindex['layerBranches']:
++                    pindex['layerBranches'].append(layerBranches[layerBranchId].data)
++
++                for entry in lindex:
++                    # Skip local items, apilinks and items already processed
++                    if entry in lindex['CONFIG']['local'] or \
++                       entry == 'apilinks' or \
++                       entry == 'branches' or \
++                       entry == 'layerBranches' or \
++                       entry == 'layerItems':
++                        continue
++                    if entry not in pindex:
++                        pindex[entry] = []
++                    pindex[entry].extend(filter_item(layerBranchId, entry))
++
++            bb.debug(1, 'Writing index to %s' % ud.path)
++            with open(ud.path, 'wt') as f:
++                json.dump(layers.layerindex.sort_entry(pindex), f, indent=4)
++            return
++
++
++        # Write out to a directory one file per layerBranch
++        # Prepare all layer related items, to create a minimal file.
++        # We have to sort the entries as we write so they are deterministic
++        for layerBranchId in layerBranches:
++            pindex = {}
+ 
+             for entry in lindex:
+                 # Skip local items, apilinks and items already processed
+@@ -345,4 +371,5 @@ class RestApiPlugin(IndexPlugin):
+             fpath = os.path.join(ud.path, fname)
+ 
+             bb.debug(1, 'Writing index to %s' % fpath + '.json')
+-            json.dump(layers.layerindex.sort_entry(pindex), open(fpath + '.json', 'wt'), indent=4)
++            with open(fpath + '.json', 'wt') as f:
++                json.dump(layers.layerindex.sort_entry(pindex), f, indent=4)
+diff --git a/lib/layers/manager/__init__.py b/lib/layers/manager/__init__.py
+index 3145924..f0ef646 100644
+--- a/lib/layers/manager/__init__.py
++++ b/lib/layers/manager/__init__.py
+@@ -28,6 +28,9 @@ class LayerManager():
+         _set_manager(self)
+ 
+         self.data = d
++        # Cooker isn't currently used by this module, but may be referenced
++        # by other layer modules or plugins.  This is a single convienent
++        # place to define it.
+         self.cooker = cooker
+ 
+         self.local_index = None  # What is in the bblayers.conf
+@@ -86,12 +89,6 @@ class LayerManager():
+ 
+         default_branches = d.getVar('LAYERSERIES_CORENAMES') or "HEAD"
+ 
+-        collections = d.getVar('BBFILE_COLLECTIONS')
+-        layerconfs = d.varhistory.get_variable_items_files('BBFILE_COLLECTIONS', d)
+-        bbfile_collections = {layer: os.path.dirname(os.path.dirname(path)) for layer, path in layerconfs.items()}
+-
+-        bblayers = d.getVar('BBLAYERS').split()
+-
+         index = {}
+ 
+         branchId = 0
+@@ -103,6 +100,16 @@ class LayerManager():
+         layerBranchId = 0
+         index['layerBranches'] = {}
+ 
++        bblayers = d.getVar('BBLAYERS').split()
++
++        if not bblayers:
++            # It's blank!  Nothing to process...
++            return index
++
++        collections = d.getVar('BBFILE_COLLECTIONS')
++        layerconfs = d.varhistory.get_variable_items_files('BBFILE_COLLECTIONS', d)
++        bbfile_collections = {layer: os.path.dirname(os.path.dirname(path)) for layer, path in layerconfs.items()}
++
+         (_, bb_branch, _, _) = self.get_bitbake_info()
+ 
+         for branch in default_branches.split():
+@@ -111,27 +118,31 @@ class LayerManager():
+             index['branches'][branchId].define_data(branchId, branch, bb_branch)
+ 
+         for entry in collections.split():
+-            layername = d.getVar('BBLAYERS_LAYERINDEX_NAME_%s' % entry) or os.path.basename(bbfile_collections[entry])
++            layerpath = entry
++            if entry in bbfile_collections:
++                layerpath = bbfile_collections[entry]
+ 
+-            layerpath = bbfile_collections[entry]
+-            layersubdir = ""
++            layername = d.getVar('BBLAYERS_LAYERINDEX_NAME_%s' % entry) or os.path.basename(layerpath)
++            layerversion = d.getVar('LAYERVERSION_%s' % entry) or ""
++            layerurl = _handle_git_remote(layerpath)
+ 
+-            layerbasepath = self._run_command('git rev-parse --show-toplevel', layerpath, default=layerpath)
+-            if os.path.abspath(layerpath) != os.path.abspath(layerbasepath):
+-                layersubdir = os.path.abspath(layerpath)[len(layerbasepath) + 1:]
++            layersubdir = ""
++            layerrev = "<unknown>"
++            layerbranch = "<unknown>"
+ 
+-            layerversion = d.getVar('LAYERVERSION_%s' % entry) or ""
++            if os.path.isdir(layerpath):
++                layerbasepath = self._run_command('git rev-parse --show-toplevel', layerpath, default=layerpath)
++                if os.path.abspath(layerpath) != os.path.abspath(layerbasepath):
++                    layersubdir = os.path.abspath(layerpath)[len(layerbasepath) + 1:]
+ 
+-            layerbranch = self._run_command('git rev-parse --abbrev-ref HEAD', layerpath, default="<unknown>")
+-            layerrev = self._run_command('git rev-parse HEAD', layerpath, default="<unknown>")
++                layerbranch = self._run_command('git rev-parse --abbrev-ref HEAD', layerpath, default="<unknown>")
++                layerrev = self._run_command('git rev-parse HEAD', layerpath, default="<unknown>")
+ 
+-            for remotes in self._run_command('git remote -v', layerpath, default="").split("\n"):
+-                remote = remotes.split("\t")[1].split(" ")[0]
+-                if "(fetch)" == remotes.split("\t")[1].split(" ")[1]:
+-                    layerurl = _handle_git_remote(remote)
+-                    break
+-                else:
+-                    layerurl = _handle_git_remote(layerpath)
++                for remotes in self._run_command('git remote -v', layerpath, default="").split("\n"):
++                    remote = remotes.split("\t")[1].split(" ")[0]
++                    if "(fetch)" == remotes.split("\t")[1].split(" ")[1]:
++                        layerurl = _handle_git_remote(remote)
++                        break
+ 
+             layerItemId += 1
+             index['layerItems'][layerItemId] = layers.layerindex.LayerItem(index, None)
+@@ -141,7 +152,7 @@ class LayerManager():
+                 layerBranchId += 1
+                 index['layerBranches'][layerBranchId] = layers.layerindex.LayerBranch(index, None)
+                 index['layerBranches'][layerBranchId].define_data(layerBranchId, entry, layerversion, layerItemId, branchId,
+-                                               vcs_subdir=layersubdir, vcs_last_rev= layerrev, actual_branch=layerbranch)
++                                               vcs_subdir=layersubdir, vcs_last_rev=layerrev, actual_branch=layerbranch)
+ 
+         return index
+ 
+@@ -150,7 +161,7 @@ class LayerManager():
+ 
+     # You are not allowed to have two of the same url, but different branches
+     def get_clone_directory(self, url):
+-        baseDir = get_clone_base_directory()
++        baseDir = self.get_clone_base_directory()
+         if not baseDir:
+             return None
+         repo = os.path.basename(url)
 -- 
 1.8.3.1
 
