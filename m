@@ -1,27 +1,24 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id B16C7784E4
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 5928F7852E
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Jul 2017 15:23:06 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v6SFN4lB008854
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Fri, 28 Jul 2017 16:23:06 +0100
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1db76W-0006By-Sv; Fri, 28 Jul 2017 16:23:04 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 28 Jul 2017 16:23:03 +0100
-Message-Id: <1501255383-23763-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
-	(dan.rpsys.net [192.168.3.1]);
-	Fri, 28 Jul 2017 16:23:06 +0100 (BST)
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: [PATCH] main: Always return 0 for bitbake --kill-server
+	Fri, 28 Jul 2017 15:39:17 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v6SFdIiI008329
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK);
+	Fri, 28 Jul 2017 08:39:18 -0700
+Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.294.0;
+	Fri, 28 Jul 2017 08:39:18 -0700
+From: Mark Hatle <mark.hatle@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 28 Jul 2017 10:37:17 -0500
+Message-ID: <1501256242-37784-1-git-send-email-mark.hatle@windriver.com>
+X-Mailer: git-send-email 1.8.3.1
+MIME-Version: 1.0
+Cc: toaster@yoctoproject.org
+Subject: [PATCH 0/5] Implement a new remote layer module
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,43 +31,113 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Jul 2017 15:23:08 -0000
+X-List-Received-Date: Fri, 28 Jul 2017 15:39:17 -0000
+Content-Type: text/plain
 
-If the server isn't running return 0 as to do otherwise complicates
-scripts which do cleanup of bitbake servers which would potentially
-be memory resident.
+The code for this work is available at:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/main.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+git://git.openembedde.org/poky-contrib  mgh/bitbake-setup
 
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 5ca3485..431f6f4 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -277,7 +277,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
- 
-         parser.add_option("-m", "--kill-server", action="store_true",
-                           dest="kill_server", default=False,
--                          help="Terminate the bitbake server.")
-+                          help="Terminate any running bitbake server.")
- 
-         parser.add_option("", "--observe-only", action="store_true",
-                           dest="observe_only", default=False,
-@@ -370,8 +370,10 @@ def bitbake_main(configParams, configuration):
-     server_connection, ui_module = setup_bitbake(configParams, configuration)
-     # No server connection
-     if server_connection is None:
--        if configParams.status_only or configParams.kill_server:
-+        if configParams.status_only:
-             return 1
-+        if configParams.kill_server:
-+            return 0
- 
-     if not configParams.server_only:
-         if configParams.status_only:
+
+A new module 'layers' is being added to bitbake.  This module contains
+two parts that work together.  A 'layerindex' piece and a 'manager' piece.
+
+The layerindex piece is designed to connect to layerindex content, such as
+layers.openembedded.org, pull down layerindex information and provide basic
+functionality for using the index.  It is capable of managing information
+from multiple layerindex sources and resolving dependencies across indexes.
+
+The connection to the external items is handled through plugins.  This permits
+us to implement both a restapi format (connect to the web), but also an
+internal 'cooker' implementation.  The cooker implementation will allow us to
+create a mini-layerindex from the currently parsed system contents.
+
+The internal data representation always uses the web style restapi, but is
+wrapped with a number of layerindex provided object classes.
+
+The layerindex provides object classes for each exported layerindex item, such
+as Branch, LayerItem, LayerBranches, LayerDependency, etc...  Each of these
+objects contain various accessor functions that simply return the data or
+further process the data to make it easier to access related objects.  For
+example a LayerBranch object refers to both a Branch-Id and a LayerItem-Id.
+There are accessor functions designed to return back the Branch or LayerItem
+without the user needing to know how to process the data structures.
+
+
+The manager provides connection information to get to cooker instances for
+some plugins, such as the layerindex's cooker plugin.  It also can interpret
+the basic BBLAYERS and COLLECTIONS information to determine what the user
+already has.  (The layerindex cooker plugin relies on this behavior.)
+
+However, it's primary purpose is to manage downloads of layers, based on
+layerindex generated dependency information.  This download mechanism also
+uses a plugin architecture.  Currently only a 'fetch2' plugin has been
+implemented. (I expect in the future additional plugins for 'git-repo', and
+others to be implemented as needed.)
+
+The download portion of the manager takes a 4 step approach:
+  * setup(dependencies) - takes a dependency list of what to download/install
+  * fetch() - fetch the layers
+  * unpack() - unpack the fetched layers
+  * update_bblayers() - update bblayers based on the previous activities
+
+
+The code includes a set of bitbake-selftests for the described functionality.
+Some items are not testable, such as the cooker integration, as cooker is not
+available and the test data may be too limited to be useful.
+
+The bitbake-layers has been updated to use these new modules for the
+layerindex-fetch and layerindex-show-depends information.
+
+The 'lsupdate.py' for the toaster has also been updated to use this item.
+However, the longer term expectation is Toaster will be modified to no longer
+handle an internal 'snapshot' of the layer index, but will use this new
+functionality instead of process layer information.  That work will begin once
+these items have been reviewed and agreed upon by the community.
+
+Once toaster has been updated, the intention is to create a new
+'bitbake-setup' program, that will have similar functionality to the
+'wr-lx-setup' project on github (https://github.com/Wind-River/wr-lx-setup).
+
+
+Mark Hatle (4):
+  lib/layers: Initial layer and layer index implementeation
+  bitbake-selftest: Add layers module tests
+  lib/bblayers: Add support for the new layer modules
+  toaster/orm/management/commands/lsupdates.py: Use new layerindex
+    module
+
+Paul Eggleton (1):
+  bitbake-layers: disable parsing for layerindex commands
+
+ bin/bitbake-selftest                             |   5 +-
+ lib/bblayers/layerindex.py                       | 317 +++-----
+ lib/layers/__init__.py                           |   0
+ lib/layers/layerindex/__init__.py                | 974 +++++++++++++++++++++++
+ lib/layers/layerindex/common.py                  | 146 ++++
+ lib/layers/layerindex/cooker.py                  | 223 ++++++
+ lib/layers/layerindex/restapi.py                 | 375 +++++++++
+ lib/layers/manager/__init__.py                   | 253 ++++++
+ lib/layers/manager/common.py                     |  60 ++
+ lib/layers/manager/fetch2.py                     | 210 +++++
+ lib/layers/tests/__init__.py                     |   0
+ lib/layers/tests/layerindex.py                   | 372 +++++++++
+ lib/layers/tests/manager.py                      | 155 ++++
+ lib/toaster/orm/management/commands/lsupdates.py | 215 ++---
+ 14 files changed, 2954 insertions(+), 351 deletions(-)
+ create mode 100644 lib/layers/__init__.py
+ create mode 100644 lib/layers/layerindex/__init__.py
+ create mode 100644 lib/layers/layerindex/common.py
+ create mode 100644 lib/layers/layerindex/cooker.py
+ create mode 100644 lib/layers/layerindex/restapi.py
+ create mode 100644 lib/layers/manager/__init__.py
+ create mode 100644 lib/layers/manager/common.py
+ create mode 100644 lib/layers/manager/fetch2.py
+ create mode 100644 lib/layers/tests/__init__.py
+ create mode 100644 lib/layers/tests/layerindex.py
+ create mode 100644 lib/layers/tests/manager.py
+
 -- 
-2.7.4
+1.8.3.1
 
 
