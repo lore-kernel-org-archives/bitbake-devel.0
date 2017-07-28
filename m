@@ -1,20 +1,20 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 0106E784CB
+	by mail.openembedded.org (Postfix) with ESMTP id EF954784B0
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 28 Jul 2017 14:55:32 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v6SEtUiU005842
+	v6SEtUlp005841
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
 	verify=NOT); Fri, 28 Jul 2017 15:55:31 +0100
 Received: from richard by hex with local (Exim 4.86_2)
 	(envelope-from <richard@rpsys.net>)
-	id 1db6fq-0005cG-U9; Fri, 28 Jul 2017 15:55:30 +0100
+	id 1db6fq-0005cB-TU; Fri, 28 Jul 2017 15:55:30 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 28 Jul 2017 15:55:29 +0100
-Message-Id: <1501253729-21511-7-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Fri, 28 Jul 2017 15:55:28 +0100
+Message-Id: <1501253729-21511-6-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1501253729-21511-1-git-send-email-richard.purdie@linuxfoundation.org>
 References: <1501253729-21511-1-git-send-email-richard.purdie@linuxfoundation.org>
@@ -23,7 +23,7 @@ X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
 	Fri, 28 Jul 2017 15:55:32 +0100 (BST)
 X-Virus-Scanned: clamav-milter 0.99.2 at dan
 X-Virus-Status: Clean
-Subject: [PATCH 7/7] process: Clean up server communication timeout errors
+Subject: [PATCH 6/7] process: Don't leak open pipes upon reconnection
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,53 +38,54 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 28 Jul 2017 14:55:33 -0000
 
-This timeout path was commonly hit due to errors starting the server. Now we
-have a better way to handle that, the retry logic can be improved and cleaned
-up. This patch:
-
-* Makes the timeout 5s rather than intervals of 1s with a message. Paul
-  noted some commands can take around 1s to run on a server which has just
-  been started on a loaded system.
-* Allows a broke connection to exit immediately rather than retrying something
-  which will never work.
-* Drops the Ctrl+C masking, we shouldn't need that anymore and any issues
-  would be better handled in other ways.
-
-This should make things clearer and less confusing for users and is much cleaner
-code too.
+If we reconnect to the server, stop leaking pipes and clean up
+after ourselves.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+ lib/bb/server/process.py | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index e2db480..60ef190 100644
+index b9bde46..e2db480 100644
 --- a/lib/bb/server/process.py
 +++ b/lib/bb/server/process.py
-@@ -303,19 +303,10 @@ class ServerCommunicator():
-         self.recv = recv
+@@ -420,7 +420,11 @@ def connectProcessServer(sockname, featureset):
+     finally:
+         os.chdir(cwd)
  
-     def runCommand(self, command):
--
-         self.connection.send(command)
--        while True:
--            # don't let the user ctrl-c while we're waiting for a response
--            try:
--                for idx in range(0,4): # 0, 1, 2, 3
--                    if self.recv.poll(1):
--                        return self.recv.get()
--                    else:
--                        bb.note("Timeout while attempting to communicate with bitbake server, retrying...")
--                raise ProcessTimeout("Gave up; Too many tries: timeout while attempting to communicate with bitbake server")
--            except KeyboardInterrupt:
--                pass
-+        if not self.recv.poll(5):
-+            raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server")
-+        return self.recv.get()
++    readfd = writefd = readfd1 = writefd1 = readfd2 = writefd2 = None
++    eq = command_chan_recv = command_chan = None
++
+     try:
++
+         # Send an fd for the remote to write events to
+         readfd, writefd = os.pipe()
+         eq = BBUIEventQueue(readfd)
+@@ -435,9 +439,22 @@ def connectProcessServer(sockname, featureset):
  
-     def updateFeatureSet(self, featureset):
-         _, error = self.runCommand(["setFeatures", featureset])
+         server_connection = BitBakeProcessServerConnection(command_chan, command_chan_recv, eq, sock)
+ 
++        # Close the ends of the pipes we won't use
++        for i in [writefd, readfd1, writefd2]:
++            os.close(i)
++
+         server_connection.connection.updateFeatureSet(featureset)
+ 
+-    except:
++    except (Exception, SystemExit) as e:
++        if command_chan_recv:
++            command_chan_recv.close()
++        if command_chan:
++            command_chan.close()
++        for i in [writefd, readfd1, writefd2]:
++            try:
++                os.close(i)
++            except OSError:
++                pass
+         sock.close()
+         raise
+ 
 -- 
 2.7.4
 
