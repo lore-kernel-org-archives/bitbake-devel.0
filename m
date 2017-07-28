@@ -1,29 +1,27 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id F3574784C4
+	by mail.openembedded.org (Postfix) with ESMTP id B16C7784E4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Jul 2017 14:55:32 +0000 (UTC)
+	Fri, 28 Jul 2017 15:23:06 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v6SEtUOC005839
+	v6SFN4lB008854
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Fri, 28 Jul 2017 15:55:31 +0100
+	verify=NOT); Fri, 28 Jul 2017 16:23:06 +0100
 Received: from richard by hex with local (Exim 4.86_2)
 	(envelope-from <richard@rpsys.net>)
-	id 1db6fq-0005c1-SS; Fri, 28 Jul 2017 15:55:30 +0100
+	id 1db76W-0006By-Sv; Fri, 28 Jul 2017 16:23:04 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 28 Jul 2017 15:55:26 +0100
-Message-Id: <1501253729-21511-4-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Fri, 28 Jul 2017 16:23:03 +0100
+Message-Id: <1501255383-23763-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1501253729-21511-1-git-send-email-richard.purdie@linuxfoundation.org>
-References: <1501253729-21511-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
 	(dan.rpsys.net [192.168.3.1]);
-	Fri, 28 Jul 2017 15:55:32 +0100 (BST)
+	Fri, 28 Jul 2017 16:23:06 +0100 (BST)
 X-Virus-Scanned: clamav-milter 0.99.2 at dan
 X-Virus-Status: Clean
-Subject: [PATCH 4/7] process: Move socket keep alive into BitBakeProcessServerConnection
+Subject: [PATCH] main: Always return 0 for bitbake --kill-server
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,52 +34,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Jul 2017 14:55:33 -0000
+X-List-Received-Date: Fri, 28 Jul 2017 15:23:08 -0000
 
-This cleans up the socket keep alive into better class structured code
-and adds cleanup of the open file descriptors upon shutdown.
+If the server isn't running return 0 as to do otherwise complicates
+scripts which do cleanup of bitbake servers which would potentially
+be memory resident.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ lib/bb/main.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 3d9077f..fb96804 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -336,12 +336,16 @@ class ServerCommunicator():
-         return
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 5ca3485..431f6f4 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -277,7 +277,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
  
- class BitBakeProcessServerConnection(object):
--    def __init__(self, ui_channel, recv, eq):
-+    def __init__(self, ui_channel, recv, eq, sock):
-         self.connection = ServerCommunicator(ui_channel, recv)
-         self.events = eq
-+        # Save sock so it doesn't get gc'd for the life of our connection
-+        self.socket_connection = sock
+         parser.add_option("-m", "--kill-server", action="store_true",
+                           dest="kill_server", default=False,
+-                          help="Terminate the bitbake server.")
++                          help="Terminate any running bitbake server.")
  
-     def terminate(self):
-         self.socket_connection.close()
-+        self.connection.connection.close()
-+        self.connection.recv.close()
-         return
+         parser.add_option("", "--observe-only", action="store_true",
+                           dest="observe_only", default=False,
+@@ -370,8 +370,10 @@ def bitbake_main(configParams, configuration):
+     server_connection, ui_module = setup_bitbake(configParams, configuration)
+     # No server connection
+     if server_connection is None:
+-        if configParams.status_only or configParams.kill_server:
++        if configParams.status_only:
+             return 1
++        if configParams.kill_server:
++            return 0
  
- class BitBakeServer(object):
-@@ -413,12 +417,10 @@ def connectProcessServer(sockname, featureset):
- 
-         sendfds(sock, [writefd, readfd1, writefd2])
- 
--        server_connection = BitBakeProcessServerConnection(command_chan, command_chan_recv, eq)
-+        server_connection = BitBakeProcessServerConnection(command_chan, command_chan_recv, eq, sock)
- 
-         server_connection.connection.updateFeatureSet(featureset)
- 
--        # Save sock so it doesn't get gc'd for the life of our connection
--        server_connection.socket_connection = sock
-     except:
-         sock.close()
-         raise
+     if not configParams.server_only:
+         if configParams.status_only:
 -- 
 2.7.4
 
