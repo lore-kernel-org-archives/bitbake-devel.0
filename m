@@ -1,47 +1,25 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-io0-f196.google.com (mail-io0-f196.google.com
-	[209.85.223.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 2358A71AE6
+Return-Path: <david.reyna@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id BB0B77859E
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Jul 2017 19:47:56 +0000 (UTC)
-Received: by mail-io0-f196.google.com with SMTP id m88so10852140iod.1
+	Sat, 29 Jul 2017 00:22:34 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v6T0MZAN026736
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Jul 2017 12:47:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=KiA1T+nIDowSiI3DVdt4YdkHxTnFjG4Loc1UXWpa7oQ=;
-	b=oJTCphbsgzcaJej9Ar0CsUdDh8u8Qsc57jjFddFIifdMvLDcNUIqNUH/7+tbfoj2jN
-	/Sw6LN1OSaxIAfeQra3wYmJ7gAvj+5X39uzfvJZGGEbEdrq56+XJ8K4i4JvLEFl5hpDH
-	3J82yenLbUk17FjV+QJ+/6RietghIEEC7dX5jvILWo4wopERPY8es0deUaqrgW/n0tYc
-	VcKv7laSL2+kGmYv5PoA/7BiJJgMFJpsy9u2Bpgs3dnoNl5klmA7iUKWMXBQlspYYlRg
-	T1+myDy1PiZeR4xWsx+zSvUoxrkrHsPdttKcBQq57AJzhZhplB9/zmktquvZUpqhT5J+
-	kO1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=KiA1T+nIDowSiI3DVdt4YdkHxTnFjG4Loc1UXWpa7oQ=;
-	b=kuPstobOaxVQm43hcxZtrIiqvvR0G4dUYrz1yyFX6k98XSptXt3Tjvg3Ah3M5HFIXB
-	fMvrnolarsqqNnxEUTPM/RirFN7x/vka9Xqn4MGVblQDHeVzlQhOc4FtIbjGGOktvksr
-	+fHNkhqEzJLUT5FxGHPJrNLlIOL2UzH/h442+3jXoPkbA/xHclTrTBGQbeIFSCiXxILq
-	rBxWuADrjdEHFHhY0n/432tMY9YG6Ke+17VklqP476aQmnNidWkouwnHbJb5Nz4r7JrC
-	uwC0azUwHXEPAvxu0WUm0f3kEkR0hj5pRwo/T3P/omdP7GS3BonSpb9g0CkYK7PotM8T
-	DA1w==
-X-Gm-Message-State: AIVw112E266yx8/x2OXEVe+qx+IhAvoBTweYyJhEPTapLVK5FRst6t9a
-	YWLtEQAWvR46gC6R0uM=
-X-Received: by 10.107.181.210 with SMTP id e201mr6082621iof.61.1501271277252; 
-	Fri, 28 Jul 2017 12:47:57 -0700 (PDT)
-Received: from onyx.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
-	by smtp.gmail.com with ESMTPSA id
-	q81sm2536109itb.28.2017.07.28.12.47.55
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 28 Jul 2017 12:47:55 -0700 (PDT)
-From: Christopher Larson <kergoth@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 28 Jul 2017 13:47:53 -0600
-Message-Id: <1501271273-20944-1-git-send-email-kergoth@gmail.com>
-X-Mailer: git-send-email 2.7.4
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH] tests/fetch: fix GitShallowTest.test_bitbake
+	Fri, 28 Jul 2017 17:22:35 -0700 (PDT)
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.294.0; Fri, 28 Jul 2017 17:22:35 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 28 Jul 2017 17:14:03 -0700
+Message-ID: <cover.1501286515.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+X-Originating-IP: [147.11.157.78]
+Subject: [PATCH 0/2] toaster: cummulative 28072017 patch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,37 +32,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Jul 2017 19:47:56 -0000
+X-List-Received-Date: Sat, 29 Jul 2017 00:22:34 -0000
+Content-Type: text/plain
 
-From: Christopher Larson <chris_larson@mentor.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-`git fetch --tags` seems to interact badly with `mirror=fetch`, resulting in
-the regular branches not being fetched, so drop the unnecessary `--tags`. This
-fixes this unit test failure: `bb.fetch2.FetchError: Fetcher failure: Unable
-to resolve 'master' in upstream git repository in git ls-remote output for
-/tmp/tmp4ag_mgmn/gitsource`
 
-[YOCTO #11698]
+WARNING: there is one new file added with this patch:
+  create mode 100644 bitbake/lib/toaster/toastergui/templates/health.html
 
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>
----
- lib/bb/tests/fetch.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+* IMPORTANT: This fixes the fatal regressions to Toaster from xmlrpc changes in bitbake.
+This also addresses a new race condition that Toaster suddenly started hitting where 
+the 'bitbake.lock' existed but was not populated with the server info for period of time
+(~ second).
+  toaster: move to new bitbake xmlrpc default
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 343ae8f..faa5c74 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1440,7 +1440,7 @@ class GitShallowTest(FetcherTest):
-         def test_bitbake(self):
-             self.git('remote add --mirror=fetch origin git://github.com/openembedded/bitbake', cwd=self.srcdir)
-             self.git('config core.bare true', cwd=self.srcdir)
--            self.git('fetch --tags', cwd=self.srcdir)
-+            self.git('fetch', cwd=self.srcdir)
- 
-             self.d.setVar('BB_GIT_SHALLOW_DEPTH', '0')
-             # Note that the 1.10.0 tag is annotated, so this also tests
+* This provides a health ping URL, plus adds a JSON API for fetching 
+Toaster status for multi-instance Toaster aggregators
+  toaster: enable remote HTTP API for status aggregation
+
+
+The following changes since commit 3c1c4ceaa470957fe5633d65215f165a38d61be7:
+
+  yocto-project-qs, ref-manual: Upgraded tar to 1.27 from 1.24 (2017-07-27 23:00:23 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/cummulative_280717_patch
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/cummulative_280717_patch
+
+David Reyna (2):
+  toaster: enable remote HTTP API for status aggregation
+  toaster: move to new bitbake xmlrpc default
+
+ lib/toaster/bldcontrol/bbcontroller.py          |  4 +-
+ lib/toaster/bldcontrol/localhostbecontroller.py | 19 ++++--
+ lib/toaster/orm/models.py                       |  2 +-
+ lib/toaster/toastergui/templates/health.html    |  6 ++
+ lib/toaster/toastergui/urls.py                  |  7 +-
+ lib/toaster/toastergui/views.py                 | 86 ++++++++++++++++++++++++-
+ lib/toaster/toastermain/urls.py                 |  5 +-
+ 7 files changed, 118 insertions(+), 11 deletions(-)
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/health.html
+
 -- 
-2.7.4
+1.9.1
 
 
