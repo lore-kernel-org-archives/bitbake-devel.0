@@ -1,27 +1,48 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 56C18785A3
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wr0-f176.google.com (mail-wr0-f176.google.com
+	[209.85.128.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 67E3D601A5
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 29 Jul 2017 00:22:45 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v6T0MkVq026742
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Sat, 29 Jul 2017 17:23:35 +0000 (UTC)
+Received: by mail-wr0-f176.google.com with SMTP id k71so111379762wrc.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Jul 2017 17:22:47 -0700 (PDT)
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.294.0; Fri, 28 Jul 2017 17:22:46 -0700
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 28 Jul 2017 17:14:14 -0700
-Message-ID: <5f1d922a5ab0ad617a5ae645a0c99500c5326087.1501286516.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1501286515.git.David.Reyna@windriver.com>
-References: <cover.1501286515.git.David.Reyna@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 2/2] toaster: move to new bitbake xmlrpc default
+	Sat, 29 Jul 2017 10:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=Znj/SExElS17JoFWzq0V0679nNkzRgnjFnNXeYstEK8=;
+	b=J6aekmkwm7X2U9F6GnFoV/juDWaLO4A2uwdJhhxNTCUm1b7djEHG1EcDDIlzoXbV61
+	t8XxCqJUlOAKHxuCFxJrMJjL2EvEs1M0u48Cumo4UBrcLKpsGhYkyx+/1wvtVEtzAxiF
+	RyX5s2az6xZR+DaFxtR+4x1yPaRbwT7Faec8g3EAgbohRWWjTXNEiKoEqU/t1ELr4nYk
+	28B3UaEO9pzaoQ61Z300dv2EdKLY2YSj+ntYKjDglbMiFabcmh6G1YO4YpzK7oSQ7TVZ
+	+Kr5BTNlstK4+0BGoY9Y1H0xTitL/PbFnaajCR7aT2+EvXs6yxFBzYio+klTLD6YEHjM
+	9tqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=Znj/SExElS17JoFWzq0V0679nNkzRgnjFnNXeYstEK8=;
+	b=sRmTXZsdsLtVfD5LWh5WHJd5+g4Excs8PxS+0umir4DgaGpemYLaX94/go9i+dS5ez
+	C7Me9+VB3Khi2Pq7YRV8ltoG3ZqpjTNbkDSjMKLVTwt9cOPnNobDSlexGkZWnc5QaaPJ
+	jtWreDJwJ97t/2GMAChwW0XZBwKALy+Xhrt2y02sTyM3QOyvPdGyE5nB/N1BVX8UKbxF
+	QU5p3Hd0774s/u9JfQ8NqSGBZuOSvGMDyYCXywxvQ4JiwSQLD0jlpf4Khj/6RR/hv6EW
+	6E2c5j8ewVYfjEHQosjBD60ruRlm0hdMouTrbf2JzVbB4IAr0IzLjcfcvABHU2+550Fq
+	Wclw==
+X-Gm-Message-State: AIVw112ZmUtgPpx+kpBKW2Smc3eTZ3CNim1/Svnkc8dPtEDhKkriB7Kk
+	RJ+d3kNDB5KmZROJf0A=
+X-Received: by 10.223.169.203 with SMTP id b69mr3819757wrd.80.1501349016748;
+	Sat, 29 Jul 2017 10:23:36 -0700 (PDT)
+Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id
+	v41sm9501117wrc.65.2017.07.29.10.23.35
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sat, 29 Jul 2017 10:23:35 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sat, 29 Jul 2017 18:23:33 +0100
+Message-Id: <20170729172333.12918-1-ross.burton@intel.com>
+X-Mailer: git-send-email 2.11.0
+Subject: [PATCH] wget: fix FusionForge workaround
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,116 +55,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 29 Jul 2017 00:22:45 -0000
-Content-Type: text/plain
+X-List-Received-Date: Sat, 29 Jul 2017 17:23:36 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+My previous assertion about FusionForge appears to have been wrong, or
+FusionForge has changed behaviour, or both.
 
-The bitbake option "-t SERVERTYPE" was deprecated and can be
-removed since the desired XMLRPC listener now the default.
+FusionForge now mandates that downloads have the Accept header set, despite that
+header being optional, and returns a 406 Not Acceptable error if it isn't set.
+As we were pretending that 406 was actually 405 (Moved) and tried to handle it as a
+redirect this results in an infinite loop until Python kills the recursion.
 
-The bitbake server port cannot be "-1" anymore and must be
-explicitly passed.
+Delete the handling of 406 as 405, and pass Accept: */* in the headers.
 
-There is a race condition for the bblock file to not only
-be created but to actually be populated, so a delay test loop
-is required (usually only one pass).
-
-The 'xmlrpcclient' is now the class that allows Toaster to for
-example kill builds.
-
-The events for populating the recipe parsing now either show only
-the final result or are skipped entiredly, so the progress
-calculator needs to be changed to not block on the parsing phase.
-
-[YOCTO #11851]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- lib/toaster/bldcontrol/bbcontroller.py          |  4 ++--
- lib/toaster/bldcontrol/localhostbecontroller.py | 19 +++++++++++++++----
- lib/toaster/orm/models.py                       |  2 +-
- 3 files changed, 18 insertions(+), 7 deletions(-)
+ bitbake/lib/bb/fetch2/wget.py | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
-index 912f67b..5195600 100644
---- a/lib/toaster/bldcontrol/bbcontroller.py
-+++ b/lib/toaster/bldcontrol/bbcontroller.py
-@@ -37,8 +37,8 @@ class BitbakeController(object):
-     """
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 8ee9769d39b..7c49c2b1282 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -283,11 +283,6 @@ class Wget(FetchMethod):
+             """
+             http_error_403 = http_error_405
  
-     def __init__(self, be):
--        import bb.server.xmlrpc
--        self.connection = bb.server.xmlrpc._create_server(be.bbaddress,
-+        import bb.server.xmlrpcclient
-+        self.connection = bb.server.xmlrpcclient._create_server(be.bbaddress,
-                                                           int(be.bbport))[0]
+-            """
+-            Some servers (e.g. FusionForge) returns 406 Not Acceptable when they
+-            actually mean 405 Method Not Allowed.
+-            """
+-            http_error_406 = http_error_405
  
-     def _runCommand(self, command):
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index 2916246..6142f7e 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -24,6 +24,7 @@ import os
- import sys
- import re
- import shutil
-+import time
- from django.db import transaction
- from django.db.models import Q
- from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget, BRBitbake
-@@ -331,12 +332,22 @@ class LocalhostBEController(BuildEnvironmentController):
-         bitbake = os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitbake')
-         toasterlayers = os.path.join(builddir,"conf/toaster-bblayers.conf")
-         self._shellcmd('bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s --read %s '
--                       '--server-only -t xmlrpc -B 0.0.0.0:0\"' % (oe_init,
-+                       '--server-only -B 0.0.0.0:0\"' % (oe_init,
-                        builddir, bitbake, confpath, toasterlayers), self.be.sourcedir)
- 
-         # read port number from bitbake.lock
-         self.be.bbport = ""
-         bblock = os.path.join(builddir, 'bitbake.lock')
-+        # allow 10 seconds for bb lock file to appear but also be populated
-+        for lock_check in range(10):
-+            if not os.path.exists(bblock):
-+                logger.debug("localhostbecontroller: waiting for bblock file to appear")
-+                time.sleep(1)
-+                continue
-+            if 10 < os.stat(bblock).st_size:
-+                break
-+            logger.debug("localhostbecontroller: waiting for bblock content to appear")
-+            time.sleep(1)
-         with open(bblock) as fplock:
-             for line in fplock:
-                 if ":" in line:
-@@ -365,10 +376,10 @@ class LocalhostBEController(BuildEnvironmentController):
-         log = os.path.join(builddir, 'toaster_ui.log')
-         local_bitbake = os.path.join(os.path.dirname(os.getenv('BBBASEDIR')),
-                                      'bitbake')
--        self._shellcmd(['bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:-1" '
-+        self._shellcmd(['bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:%s" '
-                         '%s %s -u toasterui --token="" >>%s 2>&1;'
--                        'BITBAKE_UI="knotty" BBSERVER=0.0.0.0:-1 %s -m)&\"' \
--                        % (brbe, local_bitbake, bbtargets, log, bitbake)],
-+                        'BITBAKE_UI="knotty" BBSERVER=0.0.0.0:%s %s -m)&\"' \
-+                        % (brbe, self.be.bbport, local_bitbake, bbtargets, log, self.be.bbport, bitbake)],
-                         builddir, nowait=True)
- 
-         logger.debug('localhostbecontroller: Build launched, exiting. '
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 05cc5a8..7aaebed 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -451,7 +451,7 @@ class Build(models.Model):
-     recipes_to_parse = models.IntegerField(default=1)
- 
-     # number of recipes parsed so far for this build
--    recipes_parsed = models.IntegerField(default=0)
-+    recipes_parsed = models.IntegerField(default=1)
- 
-     # number of repos to clone for this build
-     repos_to_clone = models.IntegerField(default=1)
+         class FixedHTTPRedirectHandler(urllib.request.HTTPRedirectHandler):
+             """
+@@ -316,7 +311,9 @@ class Wget(FetchMethod):
+             uri = ud.url.split(";")[0]
+             r = urllib.request.Request(uri)
+             r.get_method = lambda: "HEAD"
+-
++            # Some servers (FusionForge, as used on Alioth) require that the
++            # optional Accept header is set.
++            r.add_header("Accept", "*/*")
+             def add_basic_auth(login_str, request):
+                 '''Adds Basic auth to http request, pass in login:password as string'''
+                 import base64
 -- 
-1.9.1
+2.11.0
 
 
