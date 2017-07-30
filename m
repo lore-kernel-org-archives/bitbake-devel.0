@@ -1,48 +1,27 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wr0-f176.google.com (mail-wr0-f176.google.com
-	[209.85.128.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 67E3D601A5
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 4CE5778327
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 29 Jul 2017 17:23:35 +0000 (UTC)
-Received: by mail-wr0-f176.google.com with SMTP id k71so111379762wrc.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 29 Jul 2017 10:23:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=Znj/SExElS17JoFWzq0V0679nNkzRgnjFnNXeYstEK8=;
-	b=J6aekmkwm7X2U9F6GnFoV/juDWaLO4A2uwdJhhxNTCUm1b7djEHG1EcDDIlzoXbV61
-	t8XxCqJUlOAKHxuCFxJrMJjL2EvEs1M0u48Cumo4UBrcLKpsGhYkyx+/1wvtVEtzAxiF
-	RyX5s2az6xZR+DaFxtR+4x1yPaRbwT7Faec8g3EAgbohRWWjTXNEiKoEqU/t1ELr4nYk
-	28B3UaEO9pzaoQ61Z300dv2EdKLY2YSj+ntYKjDglbMiFabcmh6G1YO4YpzK7oSQ7TVZ
-	+Kr5BTNlstK4+0BGoY9Y1H0xTitL/PbFnaajCR7aT2+EvXs6yxFBzYio+klTLD6YEHjM
-	9tqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=Znj/SExElS17JoFWzq0V0679nNkzRgnjFnNXeYstEK8=;
-	b=sRmTXZsdsLtVfD5LWh5WHJd5+g4Excs8PxS+0umir4DgaGpemYLaX94/go9i+dS5ez
-	C7Me9+VB3Khi2Pq7YRV8ltoG3ZqpjTNbkDSjMKLVTwt9cOPnNobDSlexGkZWnc5QaaPJ
-	jtWreDJwJ97t/2GMAChwW0XZBwKALy+Xhrt2y02sTyM3QOyvPdGyE5nB/N1BVX8UKbxF
-	QU5p3Hd0774s/u9JfQ8NqSGBZuOSvGMDyYCXywxvQ4JiwSQLD0jlpf4Khj/6RR/hv6EW
-	6E2c5j8ewVYfjEHQosjBD60ruRlm0hdMouTrbf2JzVbB4IAr0IzLjcfcvABHU2+550Fq
-	Wclw==
-X-Gm-Message-State: AIVw112ZmUtgPpx+kpBKW2Smc3eTZ3CNim1/Svnkc8dPtEDhKkriB7Kk
-	RJ+d3kNDB5KmZROJf0A=
-X-Received: by 10.223.169.203 with SMTP id b69mr3819757wrd.80.1501349016748;
-	Sat, 29 Jul 2017 10:23:36 -0700 (PDT)
-Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
-	by smtp.gmail.com with ESMTPSA id
-	v41sm9501117wrc.65.2017.07.29.10.23.35
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Sat, 29 Jul 2017 10:23:35 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
+	Sun, 30 Jul 2017 15:18:13 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v6UFICqu022575
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Sun, 30 Jul 2017 16:18:13 +0100
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1dbpyt-0001Xc-W9; Sun, 30 Jul 2017 16:18:11 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 29 Jul 2017 18:23:33 +0100
-Message-Id: <20170729172333.12918-1-ross.burton@intel.com>
-X-Mailer: git-send-email 2.11.0
-Subject: [PATCH] wget: fix FusionForge workaround
+Date: Sun, 30 Jul 2017 16:18:09 +0100
+Message-Id: <1501427889-5886-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
+	(dan.rpsys.net [192.168.3.1]);
+	Sun, 30 Jul 2017 16:18:13 +0100 (BST)
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: [PATCH] runqueue: Tweak debug message to make it more readable/diffable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,51 +34,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 29 Jul 2017 17:23:36 -0000
+X-List-Received-Date: Sun, 30 Jul 2017 15:18:14 -0000
 
-My previous assertion about FusionForge appears to have been wrong, or
-FusionForge has changed behaviour, or both.
+Having this as one huge long line isn't easy to manipulate, split it into
+multiple lines for ease of debugging issues.
 
-FusionForge now mandates that downloads have the Accept header set, despite that
-header being optional, and returns a 406 Not Acceptable error if it isn't set.
-As we were pretending that 406 was actually 405 (Moved) and tried to handle it as a
-redirect this results in an infinite loop until Python kills the recursion.
-
-Delete the handling of 406 as 405, and pass Accept: */* in the headers.
-
-Signed-off-by: Ross Burton <ross.burton@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/fetch2/wget.py | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ lib/bb/runqueue.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 8ee9769d39b..7c49c2b1282 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -283,11 +283,6 @@ class Wget(FetchMethod):
-             """
-             http_error_403 = http_error_405
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 7dd964d..e1a15af 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2372,7 +2372,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         self.rq.scenequeue_covered = self.scenequeue_covered
+         self.rq.scenequeue_notcovered = self.scenequeue_notcovered
  
--            """
--            Some servers (e.g. FusionForge) returns 406 Not Acceptable when they
--            actually mean 405 Method Not Allowed.
--            """
--            http_error_406 = http_error_405
+-        logger.debug(1, 'We can skip tasks %s', sorted(self.rq.scenequeue_covered))
++        logger.debug(1, 'We can skip tasks %s', "\n".join(sorted(self.rq.scenequeue_covered)))
  
-         class FixedHTTPRedirectHandler(urllib.request.HTTPRedirectHandler):
-             """
-@@ -316,7 +311,9 @@ class Wget(FetchMethod):
-             uri = ud.url.split(";")[0]
-             r = urllib.request.Request(uri)
-             r.get_method = lambda: "HEAD"
--
-+            # Some servers (FusionForge, as used on Alioth) require that the
-+            # optional Accept header is set.
-+            r.add_header("Accept", "*/*")
-             def add_basic_auth(login_str, request):
-                 '''Adds Basic auth to http request, pass in login:password as string'''
-                 import base64
+         self.rq.state = runQueueRunInit
+ 
 -- 
-2.11.0
+2.7.4
 
 
