@@ -1,27 +1,30 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 91FB960762
+Return-Path: <mcfrisk@kapsi.fi>
+X-Greylist: delayed 1156 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 02 Aug 2017 10:07:17 UTC
+Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
+	by mail.openembedded.org (Postfix) with ESMTP id 42B2B780B4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Aug 2017 10:31:17 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v71AVGpb000391
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Tue, 1 Aug 2017 11:31:17 +0100
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1dcUSK-0000AP-Ov; Tue, 01 Aug 2017 11:31:16 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Wed,  2 Aug 2017 10:07:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+	s=20161220; h=Message-Id:Date:Subject:Cc:To:From;
+	bh=O8z2WvQjux1uCFX8l40RGR34MT89GJzlz+Uzdxg5REs=; 
+	b=0/m3gYWzaqFbzdmqZSi62f4xYPYZzgpB/qKkKwiy/tZfeNW7XJQl66UGa9ebYUpFq/VSaLa/L2vcxC/Vzq2QH8ZV7M94WGx6Q7Q8VqmymjmfGsc6i7D6mka0fpt9c/34IydpIjmvsV5Cs1641DdtcUhnDKWq8dL2y818iKgfSHMud7a9Wo0f5XCGydjasgFUUMPf/+AhryUsY2hw4VgrNz6i0zvdHjvlM90pzZwI22Q9l/c2x6xTG1JsPELil2QsbSQ1VwjJs0CnHWkezvtTl7X/7ZN2bovrLP8eFnqiDSCLHsYNYfspjYTekfPXW5riGvHpMi/U9+Kj80utvHULpA==;
+Received: from lakka.kapsi.fi ([2001:1bc8:1004::1] ident=Debian-exim)
+	by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.84_2) (envelope-from <mcfrisk@kapsi.fi>)
+	id 1dcqFz-0003Gy-HB; Wed, 02 Aug 2017 12:47:59 +0300
+Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.84_2)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1dcqFz-0000Iu-F4; Wed, 02 Aug 2017 12:47:59 +0300
+From: Mikko Rapeli <mikko.rapeli@bmw.de>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  1 Aug 2017 11:31:15 +0100
-Message-Id: <1501583475-598-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
-	(dan.rpsys.net [192.168.3.1]);
-	Tue, 01 Aug 2017 11:31:17 +0100 (BST)
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: [PATCH] cooker: Ensure all tasks are shown in task dependency tree
+Date: Wed,  2 Aug 2017 12:47:44 +0300
+Message-Id: <1501667264-32012-1-git-send-email-mikko.rapeli@bmw.de>
+X-Mailer: git-send-email 2.1.4
+X-SA-Exim-Connect-IP: 2001:1bc8:1004::1
+X-SA-Exim-Mail-From: mcfrisk@kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+Subject: [PATCH] fetch2/git.py: try to handle local clone failures by pruning branches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,40 +37,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 01 Aug 2017 10:31:19 -0000
+X-List-Received-Date: Wed, 02 Aug 2017 10:07:18 -0000
 
-"bitbake -g m4-native -c do_unpack" doesn't list any dependencies in
-task-depends.dot. This is because no header describing the task was
-added unless a task has dependencies. Tweak the code to fix this.
+Switching bitbake build environment from Ubuntu 14.04 to 16.04 brought
+up this incompatibility between download cache data generated with
+git 1.9.x.
 
-[YOCTO #10893]
+In git 1.9.x from Ubuntu 14.04 local cloning succeeds even if source tree
+has non-existing remote branches, which have been deleted in upstream git
+tree.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+In git 2.7.x from Ubuntu 16.04 cloning fails with an error:
+
+downloads/git2$ git clone sourceware.org.git.glibc.git/ /tmp/
+Cloning into '/tmp'...
+done.
+fatal: cannot process 'refs/remotes/origin/hjl/memcpy' and 'refs/remotes/origin/hjl/memcpy/dpdk/master' at the same time
+fatal: The remote end hung up unexpectedly
+
+Work around this by pruning non-existing remote branches from the git
+tree in download cache if cloning failed, and then try the local clone
+again.
+
+Another workaround is to do those steps manually for every download cache,
+but that does not scale in large distributed build environments.
+
+Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
 ---
- lib/bb/cooker.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/bb/fetch2/git.py | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 1a5e003..81027db 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -678,12 +678,12 @@ class BBCooker:
-                     depend_tree["pn"][pn][ei] = vars(self.recipecaches[mc])[ei][taskfn]
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 534c93d..d25c16e 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -472,7 +472,17 @@ class Git(FetchMethod):
+             bb.utils.mkdirhier(destdir)
+             runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
+         else:
+-            runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
++            try:
++                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
++            except bb.fetch2.FetchError:
++                # try to recover by pruning deleted remote branches which
++                # make cloning local git tree fail in git 2.7.x but not in
++                # git 1.9.x
++                try:
++                    runfetchcmd("%s -C %s remote prune origin" % (ud.basecmd, ud.clonedir), d)
++                except bb.fetch2.FetchError:
++                    pass
++                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
  
- 
-+            dotname = "%s.%s" % (pn, bb.runqueue.taskname_from_tid(tid))
-+            if not dotname in depend_tree["tdepends"]:
-+                depend_tree["tdepends"][dotname] = []
-             for dep in rq.rqdata.runtaskentries[tid].depends:
-                 (depmc, depfn, deptaskname, deptaskfn) = bb.runqueue.split_tid_mcfn(dep)
-                 deppn = self.recipecaches[mc].pkg_fn[deptaskfn]
--                dotname = "%s.%s" % (pn, bb.runqueue.taskname_from_tid(tid))
--                if not dotname in depend_tree["tdepends"]:
--                    depend_tree["tdepends"][dotname] = []
-                 depend_tree["tdepends"][dotname].append("%s.%s" % (deppn, bb.runqueue.taskname_from_tid(dep)))
-             if taskfn not in seen_fns:
-                 seen_fns.append(taskfn)
+         repourl = self._get_repo_url(ud)
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, repourl), d, workdir=destdir)
 -- 
-2.7.4
+1.9.1
 
 
