@@ -1,30 +1,47 @@
-Return-Path: <mcfrisk@kapsi.fi>
-X-Greylist: delayed 1156 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 02 Aug 2017 10:07:17 UTC
-Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
-	by mail.openembedded.org (Postfix) with ESMTP id 42B2B780B4
+Return-Path: <ross.burton@intel.com>
+Received: from mail-it0-f43.google.com (mail-it0-f43.google.com
+	[209.85.214.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 94E5A78211
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Aug 2017 10:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-	s=20161220; h=Message-Id:Date:Subject:Cc:To:From;
-	bh=O8z2WvQjux1uCFX8l40RGR34MT89GJzlz+Uzdxg5REs=; 
-	b=0/m3gYWzaqFbzdmqZSi62f4xYPYZzgpB/qKkKwiy/tZfeNW7XJQl66UGa9ebYUpFq/VSaLa/L2vcxC/Vzq2QH8ZV7M94WGx6Q7Q8VqmymjmfGsc6i7D6mka0fpt9c/34IydpIjmvsV5Cs1641DdtcUhnDKWq8dL2y818iKgfSHMud7a9Wo0f5XCGydjasgFUUMPf/+AhryUsY2hw4VgrNz6i0zvdHjvlM90pzZwI22Q9l/c2x6xTG1JsPELil2QsbSQ1VwjJs0CnHWkezvtTl7X/7ZN2bovrLP8eFnqiDSCLHsYNYfspjYTekfPXW5riGvHpMi/U9+Kj80utvHULpA==;
-Received: from lakka.kapsi.fi ([2001:1bc8:1004::1] ident=Debian-exim)
-	by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	(Exim 4.84_2) (envelope-from <mcfrisk@kapsi.fi>)
-	id 1dcqFz-0003Gy-HB; Wed, 02 Aug 2017 12:47:59 +0300
-Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.84_2)
-	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1dcqFz-0000Iu-F4; Wed, 02 Aug 2017 12:47:59 +0300
-From: Mikko Rapeli <mikko.rapeli@bmw.de>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Aug 2017 12:47:44 +0300
-Message-Id: <1501667264-32012-1-git-send-email-mikko.rapeli@bmw.de>
-X-Mailer: git-send-email 2.1.4
-X-SA-Exim-Connect-IP: 2001:1bc8:1004::1
-X-SA-Exim-Mail-From: mcfrisk@kapsi.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
-Subject: [PATCH] fetch2/git.py: try to handle local clone failures by pruning branches
+	Wed,  2 Aug 2017 11:32:51 +0000 (UTC)
+Received: by mail-it0-f43.google.com with SMTP id v127so23118681itd.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 02 Aug 2017 04:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=FJ0GpMWyk/Z9ufGNAl4wfEY1X7fjve0bTOvWm/nmsDE=;
+	b=KRBbTE096TYvgiM2Ahm3G+pag2QSA65KlX4TO5EkwqHhdPig/GSPxxvCaZdYeOWbDH
+	N4RPEmCV7siaYO4C01RnlRTsE4lklfwptH5HkgJHZ5mOjYNK3oCAyJQYSSQ2vQXs3Kpi
+	C3txHgvCrZ0f8yLu2EhC5CbNX8BFUZNxSCMMz9y1I6TcXZTTc2/nBP1WcskVvD3MOp2t
+	kok9nxGY2JtHuXKQ5yYe6Y7/tzR02zGm7qjeCPSaLsWT+St89a/RPg+xqMSgeedSiNOt
+	o7xIbefvNq2uPUs93l1nl2UyZ40REcMgEGW43wW3LjpXboY8NpdsjwlCAd6xpl4CiL9T
+	YlWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=FJ0GpMWyk/Z9ufGNAl4wfEY1X7fjve0bTOvWm/nmsDE=;
+	b=MEq1nCJcwhlVyOFTKfvqr+m/i9ZcZ3p3dEDUAqYq2bCIFtqV7AKh1R3XFGJXcJolAj
+	djA8CKCpPkm/SWrhGQE6ZBN2ZdqnBio7SL4usubS+M943trIIBFUkf292XmKfbEAjFr6
+	XWJcRTvCThVaa9TFwQ3GF/zRRk9POM093yg8id+pq9PP6aWUvXCMi+qKLNprksycUwti
+	vOmKYkH83BBKlww7u7Xrx3RNzZaAlQ3bOHtulbUjfkAhUqtsOzCYdFcMOwLU8JMAXUAK
+	Iza3mwj52sDBmR8QH/evgS+cfbMabTDVbdmjqPxBb3BSLR0/nmz4BrvL7exhgJ7rQqMF
+	fbqA==
+X-Gm-Message-State: AIVw113cxt8XnIhNezjN+hNC6EL890byOnjhNmgE4R64ip/1Sk6caFvp
+	8+rOF/DCtgKkZHC2xxZxO+uKjzOkeQ7x
+X-Received: by 10.36.154.67 with SMTP id l64mr5008367ite.87.1501673572744;
+	Wed, 02 Aug 2017 04:32:52 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.107.135.234 with HTTP; Wed, 2 Aug 2017 04:32:31 -0700 (PDT)
+In-Reply-To: <1501667264-32012-1-git-send-email-mikko.rapeli@bmw.de>
+References: <1501667264-32012-1-git-send-email-mikko.rapeli@bmw.de>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Wed, 2 Aug 2017 12:32:31 +0100
+Message-ID: <CAJTo0LawBBCPg73-fuEXoe354MiacxdM37mZQqRrc0izCQt0Jw@mail.gmail.com>
+To: Mikko Rapeli <mikko.rapeli@bmw.de>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] fetch2/git.py: try to handle local clone failures by pruning branches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,60 +54,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 02 Aug 2017 10:07:18 -0000
+X-List-Received-Date: Wed, 02 Aug 2017 11:32:51 -0000
+Content-Type: multipart/alternative; boundary="94eb2c11489edf56850555c39fca"
 
-Switching bitbake build environment from Ubuntu 14.04 to 16.04 brought
-up this incompatibility between download cache data generated with
-git 1.9.x.
+--94eb2c11489edf56850555c39fca
+Content-Type: text/plain; charset="UTF-8"
 
-In git 1.9.x from Ubuntu 14.04 local cloning succeeds even if source tree
-has non-existing remote branches, which have been deleted in upstream git
-tree.
+On 2 August 2017 at 10:47, Mikko Rapeli <mikko.rapeli@bmw.de> wrote:
 
-In git 2.7.x from Ubuntu 16.04 cloning fails with an error:
+> +            except bb.fetch2.FetchError:
+> +                # try to recover by pruning deleted remote branches which
+> +                # make cloning local git tree fail in git 2.7.x but not in
+> +                # git 1.9.x
+> +                try:
+> +                    runfetchcmd("%s -C %s remote prune origin" %
+> (ud.basecmd, ud.clonedir), d)
+> +                except bb.fetch2.FetchError:
+> +                    pass
+>
 
-downloads/git2$ git clone sourceware.org.git.glibc.git/ /tmp/
-Cloning into '/tmp'...
-done.
-fatal: cannot process 'refs/remotes/origin/hjl/memcpy' and 'refs/remotes/origin/hjl/memcpy/dpdk/master' at the same time
-fatal: The remote end hung up unexpectedly
+Would it be best to simplify the logic by aways pruning before fetching?
+Prune doesn't take a long time, and it will keep the size of the mirror
+down.
 
-Work around this by pruning non-existing remote branches from the git
-tree in download cache if cloning failed, and then try the local clone
-again.
+Ross
 
-Another workaround is to do those steps manually for every download cache,
-but that does not scale in large distributed build environments.
+--94eb2c11489edf56850555c39fca
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
----
- lib/bb/fetch2/git.py | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+<div dir=3D"ltr">On 2 August 2017 at 10:47, Mikko Rapeli <span dir=3D"ltr">=
+&lt;<a href=3D"mailto:mikko.rapeli@bmw.de" target=3D"_blank">mikko.rapeli@b=
+mw.de</a>&gt;</span> wrote:<div class=3D"gmail_extra"><div class=3D"gmail_q=
+uote"><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-l=
+eft:1px #ccc solid;padding-left:1ex">
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 except bb.fetch2.FetchError:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # try to recover b=
+y pruning deleted remote branches which<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # make cloning loc=
+al git tree fail in git 2.7.x but not in<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # git 1.9.x<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 try:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 runf=
+etchcmd(&quot;%s -C %s remote prune origin&quot; % (ud.basecmd, ud.clonedir=
+), d)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 except bb.fetch2.F=
+etchError:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pass=
+<br></blockquote><div><br></div><div>Would it be best to simplify the logic=
+ by aways pruning before fetching?=C2=A0 Prune doesn&#39;t take a long time=
+, and it will keep the size of the mirror down.</div><div><br></div><div>Ro=
+ss=C2=A0</div></div></div></div>
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 534c93d..d25c16e 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -472,7 +472,17 @@ class Git(FetchMethod):
-             bb.utils.mkdirhier(destdir)
-             runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
-         else:
--            runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
-+            try:
-+                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
-+            except bb.fetch2.FetchError:
-+                # try to recover by pruning deleted remote branches which
-+                # make cloning local git tree fail in git 2.7.x but not in
-+                # git 1.9.x
-+                try:
-+                    runfetchcmd("%s -C %s remote prune origin" % (ud.basecmd, ud.clonedir), d)
-+                except bb.fetch2.FetchError:
-+                    pass
-+                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
- 
-         repourl = self._get_repo_url(ud)
-         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, repourl), d, workdir=destdir)
--- 
-1.9.1
-
-
+--94eb2c11489edf56850555c39fca--
