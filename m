@@ -1,26 +1,22 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 965BE71DCF
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 2ECC260107
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  4 Aug 2017 03:17:26 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v743HSEZ032163
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK);
-	Thu, 3 Aug 2017 20:17:28 -0700
-Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.361.1;
-	Thu, 3 Aug 2017 20:17:27 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 3 Aug 2017 22:15:32 -0500
-Message-ID: <1501816532-89236-6-git-send-email-mark.hatle@windriver.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1501816532-89236-1-git-send-email-mark.hatle@windriver.com>
-References: <1501816532-89236-1-git-send-email-mark.hatle@windriver.com>
-MIME-Version: 1.0
-Cc: toaster@yoctoproject.org
-Subject: [PATCH 5/5] bitbake-layers: disable parsing for layerindex commands
+	Mon,  7 Aug 2017 09:59:56 +0000 (UTC)
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	07 Aug 2017 02:59:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.41,337,1498546800"; d="scan'208";a="134560541"
+Received: from peggleto-mobl1.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.43.222])
+	by orsmga005.jf.intel.com with ESMTP; 07 Aug 2017 02:59:57 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  7 Aug 2017 11:59:32 +0200
+Message-Id: <cover.1502099961.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.4
+Subject: [PATCH 0/1] Revert "tinfoil: fix duplication of log messages"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,38 +29,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Aug 2017 03:17:26 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 07 Aug 2017 09:59:57 -0000
 
-These don't need to access recipe information, so let's not waste the
-user's time parsing all recipes.
+The following changes since commit 76c4f2c20216719736766e8ae7d089ccd061b71b:
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
----
- lib/bblayers/layerindex.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+  daemonize: Always print any remaning UI events at exit (2017-08-03 11:11:35 +0100)
 
-diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index f5c4cca..6eef67d 100644
---- a/lib/bblayers/layerindex.py
-+++ b/lib/bblayers/layerindex.py
-@@ -132,12 +132,12 @@ class LayerIndexPlugin(ActionPlugin):
-         self.do_layerindex_fetch(args)
- 
-     def register_commands(self, sp):
--        parser_layerindex_fetch = self.add_command(sp, 'layerindex-fetch', self.do_layerindex_fetch)
-+        parser_layerindex_fetch = self.add_command(sp, 'layerindex-fetch', self.do_layerindex_fetch, parserecipes=False)
-         parser_layerindex_fetch.add_argument('-n', '--show-only', help='show dependencies and do nothing else', action='store_true')
-         parser_layerindex_fetch.add_argument('-b', '--branch', help='branch name to fetch')
-         parser_layerindex_fetch.add_argument('-i', '--ignore', help='assume the specified layers do not need to be fetched/added (separate multiple layers with commas, no spaces)', metavar='LAYER')
-         parser_layerindex_fetch.add_argument('layername', nargs='+', help='layer to fetch')
- 
--        parser_layerindex_show_depends = self.add_command(sp, 'layerindex-show-depends', self.do_layerindex_show_depends)
-+        parser_layerindex_show_depends = self.add_command(sp, 'layerindex-show-depends', self.do_layerindex_show_depends, parserecipes=False)
-         parser_layerindex_show_depends.add_argument('-b', '--branch', help='branch name to fetch')
-         parser_layerindex_show_depends.add_argument('layername', nargs='+', help='layer to query')
+are available in the git repository at:
+
+  git://git.openembedded.org/bitbake-contrib paule/bb-tinfoil-logging2
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=paule/bb-tinfoil-logging2
+
+Paul Eggleton (1):
+  Revert "tinfoil: fix duplication of log messages"
+
+ lib/bb/main.py    | 4 ++--
+ lib/bb/tinfoil.py | 3 +--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
 -- 
-1.8.3.1
+2.9.4
 
 
