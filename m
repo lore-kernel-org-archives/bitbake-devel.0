@@ -1,26 +1,29 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id EEE7171996
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id C4AB96AC37
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  8 Aug 2017 09:12:15 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v789CHVr024755
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 8 Aug 2017 02:12:17 -0700 (PDT)
-Received: from ala-blade48.wrs.com (147.11.105.68) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.361.1;
-	Tue, 8 Aug 2017 02:12:16 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 8 Aug 2017 02:12:09 -0700
-Message-ID: <53074458ae150fc7544b02f5c3e37ff49257cb27.1502183410.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1502183410.git.liezhi.yang@windriver.com>
+	Tue,  8 Aug 2017 12:14:35 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v78CEYe8014506
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Tue, 8 Aug 2017 13:14:35 +0100
+Message-ID: <1502194474.18633.245.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 08 Aug 2017 13:14:34 +0100
+In-Reply-To: <c75315a4930a447c156f55e1ce80f4354e1507e6.1502183410.git.liezhi.yang@windriver.com>
 References: <cover.1502183410.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [WIP][RFC PATCH 5/5] bitbake: main: make observe-only work without --bind
+	<c75315a4930a447c156f55e1ce80f4354e1507e6.1502183410.git.liezhi.yang@windriver.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
+	(dan.rpsys.net [192.168.3.1]);
+	Tue, 08 Aug 2017 13:14:35 +0100 (BST)
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: Re: [WIP][RFC PATCH 2/5] bitbake: main: add log handler when status-only
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,56 +36,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Aug 2017 09:12:16 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 08 Aug 2017 12:14:36 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-The bitbake --server-only can work without --bind, so --observe-only should also
-can work without --bind or --remote-server.
+On Tue, 2017-08-08 at 02:12 -0700, Robert Yang wrote:
+> The ui is not a must for logger, and use logger when status-only is
+> very good
+> for debugging.
+> 
+> e.g.:
+> $ bitbake --status
+> NOTE: bitbake server is not running.
+> 
+> $ bitbake --server-only -B localhost:-1
+> $ bitbake --status
+> NOTE: Reconnecting to bitbake server...
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/main.py | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+> index 62f9e1eacf1..fb082e7e0f3 100755
+> --- a/bitbake/lib/bb/main.py
+> +++ b/bitbake/lib/bb/main.py
+> @@ -397,9 +397,7 @@ def bitbake_main(configParams, configuration):
+>  def setup_bitbake(configParams, configuration, extrafeatures=None,
+> setup_logging=True):
+>      # Ensure logging messages get sent to the UI as events
+>      handler = bb.event.LogHandler()
+> -    if setup_logging and not configParams.status_only:
+> -        # In status only mode there are no logs and no UI
+> -        logger.addHandler(handler)
+> +    logger.addHandler(handler)
+>  
+>      # Clear away any spurious environment variables while we stoke
+> up the cooker
+>      cleanedvars = bb.utils.clean_environment()
 
-And also allow the connection all the time, otherwise --observe-only doesn't
-work.
+The patch doesn't seem to apply, there is no setup_logging parameter on
+master?
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/main.py           | 4 ----
- bitbake/lib/bb/server/process.py | 8 ++------
- 2 files changed, 2 insertions(+), 10 deletions(-)
+Cheers,
 
-diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-index 57b4d7688d9..4477d9c5998 100755
---- a/bitbake/lib/bb/main.py
-+++ b/bitbake/lib/bb/main.py
-@@ -357,10 +357,6 @@ def bitbake_main(configParams, configuration):
-                                   ("the BBSERVER environment variable" if "BBSERVER" in os.environ \
-                                    else "the '--remote-server' option"))
- 
--    if configParams.observe_only and not (configParams.remote_server or configParams.bind):
--        raise BBMainException("FATAL: '--observe-only' can only be used by UI clients "
--                              "connecting to a server.\n")
--
-     if "BBDEBUG" in os.environ:
-         level = int(os.environ["BBDEBUG"])
-         if level > configuration.debug:
-diff --git a/bitbake/lib/bb/server/process.py b/bitbake/lib/bb/server/process.py
-index 338c44835e1..7f81996246e 100644
---- a/bitbake/lib/bb/server/process.py
-+++ b/bitbake/lib/bb/server/process.py
-@@ -137,12 +137,8 @@ class ProcessServer(multiprocessing.Process):
-         while not self.quit:
-             if self.sock in ready:
-                 self.controllersock, address = self.sock.accept()
--                if self.haveui:
--                    print("Dropping connection attempt as we have a UI %s" % (str(ready)))
--                    self.controllersock.close()
--                else:
--                    print("Accepting %s" % (str(ready)))
--                    fds.append(self.controllersock)
-+                print("Accepting %s" % (str(ready)))
-+                fds.append(self.controllersock)
-             if self.controllersock in ready:
-                 try:
-                     print("Connecting Client")
--- 
-2.11.0
-
+Richard
 
