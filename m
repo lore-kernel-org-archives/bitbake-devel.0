@@ -1,27 +1,29 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id AA4F577D0C
+	by mail.openembedded.org (Postfix) with ESMTP id 7C92177D0C
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed,  9 Aug 2017 09:56:21 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v799uJq9003524
+	v799uLt7003529
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Wed, 9 Aug 2017 10:56:20 +0100
+	verify=NOT); Wed, 9 Aug 2017 10:56:22 +0100
 Received: from richard by hex with local (Exim 4.86_2)
 	(envelope-from <richard@rpsys.net>)
-	id 1dfNit-00049S-Rh; Wed, 09 Aug 2017 10:56:19 +0100
+	id 1dfNiv-00049X-B2; Wed, 09 Aug 2017 10:56:21 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Aug 2017 10:56:16 +0100
-Message-Id: <1502272577-15918-1-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Wed,  9 Aug 2017 10:56:17 +0100
+Message-Id: <1502272577-15918-2-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1502272577-15918-1-git-send-email-richard.purdie@linuxfoundation.org>
+References: <1502272577-15918-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
 	(dan.rpsys.net [192.168.3.1]);
-	Wed, 09 Aug 2017 10:56:21 +0100 (BST)
+	Wed, 09 Aug 2017 10:56:22 +0100 (BST)
 X-Virus-Scanned: clamav-milter 0.99.2 at dan
 X-Virus-Status: Clean
-Subject: [PATCH 1/2] cooker/siggen: Reset siggen when reparsing
+Subject: [PATCH 2/2] server/process: Ensure we don't loop on client EOFError
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,46 +36,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Aug 2017 09:56:22 -0000
+X-List-Received-Date: Wed, 09 Aug 2017 09:56:23 -0000
 
-If we don't do this, we get basehash mismatch errors occurring from the reparse
-which would then set bitbake's error exit code.
+The server currently crashes if we hit an EOFError due to controllersock
+still being in ready and the continue meaning ready isn't re-evaluated.
+Setting the value to False can mean the shutdown code doesn't handle the
+situation cleanly.
 
-This for example would cause oe-selftest -r bbtests.BitbakeTests.test_bbappend_order
-to fail with a non-zero BB_SERVER_TIMEOUT.
+Clear ready to avoid the crash/loop instead and handle any OSError whilst
+we're in here.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py | 1 +
- lib/bb/siggen.py | 3 +++
- 2 files changed, 4 insertions(+)
+ lib/bb/server/process.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 81027db..3740c61 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1468,6 +1468,7 @@ class BBCooker:
-             self.updateCacheSync()
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 338c448..ee8b14e 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -164,7 +164,7 @@ class ProcessServer(multiprocessing.Process):
  
-         if self.state != state.parsing and not self.parsecache_valid:
-+            bb.parse.siggen.reset(self.data)
-             self.parseConfiguration ()
-             if CookerFeatures.SEND_SANITYEVENTS in self.featureset:
-                 for mc in self.multiconfigs:
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index f71190a..4380760 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -94,6 +94,9 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         else:
-             self.checksum_cache = None
+                     self.haveui = True
  
-+    def reset(self, data):
-+        self.__init__(data)
-+
-     def init_rundepcheck(self, data):
-         self.taskwhitelist = data.getVar("BB_HASHTASK_WHITELIST") or None
-         if self.taskwhitelist:
+-                except EOFError:
++                except (EOFError, OSError):
+                     print("Disconnecting Client")
+                     fds.remove(self.controllersock)
+                     fds.remove(self.command_channel)
+@@ -190,7 +190,7 @@ class ProcessServer(multiprocessing.Process):
+                     command = self.command_channel.get()
+                 except EOFError:
+                     # Client connection shutting down
+-                    self.command_channel = False
++                    ready = []
+                     continue
+                 if command[0] == "terminateServer":
+                     self.quit = True
 -- 
 2.7.4
 
