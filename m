@@ -1,29 +1,27 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 41E5777DC8
+	by mail.openembedded.org (Postfix) with ESMTP id 4856A77DCC
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed,  9 Aug 2017 22:48:57 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v79MmuCd031944
+	v79MmteK031943
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
 	verify=NOT); Wed, 9 Aug 2017 23:48:57 +0100
 Received: from richard by hex with local (Exim 4.86_2)
 	(envelope-from <richard@rpsys.net>)
-	id 1dfZmZ-0007SC-W5; Wed, 09 Aug 2017 23:48:55 +0100
+	id 1dfZmZ-0007S9-Vd; Wed, 09 Aug 2017 23:48:55 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Aug 2017 23:48:53 +0100
-Message-Id: <1502318935-28608-2-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Wed,  9 Aug 2017 23:48:52 +0100
+Message-Id: <1502318935-28608-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1502318935-28608-1-git-send-email-richard.purdie@linuxfoundation.org>
-References: <1502318935-28608-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
 	(dan.rpsys.net [192.168.3.1]);
 	Wed, 09 Aug 2017 23:48:57 +0100 (BST)
 X-Virus-Scanned: clamav-milter 0.99.2 at dan
 X-Virus-Status: Clean
-Subject: [PATCH 2/4] cooker: Ensure we handle inotify before running the next command
+Subject: [PATCH 1/4] cooker: Track directories searched for bbappend/bb files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,77 +36,85 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 09 Aug 2017 22:48:58 -0000
 
-The inotify watch events are handled "at idle" which could in theory mean
-a command could run before any preceeding inotify events have been processed.
-This leads to a theoretical race window where those events may have a
-signficicant effect on the command.
+Some of the directories searched by BBFILES are not currently being added
+to the inotify watch list. This can mean that added append files are not
+noticed leading to misleading metadata results when using
+BB_SERVER_TIMEOUT != 0.
 
-Add a mechanism to allow us to ensure all pending events are processed before
-running commands.
+We use glob to expand the BBFILES references and without writing our own
+implentation, figuring out the directories it searches is hard. We use
+some horrible hacks here to intecept the listdir calls, I'm open
+to better ways to handle this but this does ensure we have the right
+watches set.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/command.py |  2 ++
- lib/bb/cooker.py  | 17 ++++++++++-------
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ lib/bb/cooker.py | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index c44c7a6..a923245 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -78,6 +78,7 @@ class Command:
-                 if not hasattr(command_method, 'readonly') or False == getattr(command_method, 'readonly'):
-                     return None, "Not able to execute not readonly commands in readonly mode"
-             try:
-+                self.cooker.process_inotify_updates()
-                 if getattr(command_method, 'needconfig', False):
-                     self.cooker.updateCacheSync()
-                 result = command_method(self, commandline)
-@@ -98,6 +99,7 @@ class Command:
- 
-     def runAsyncCommand(self):
-         try:
-+            self.cooker.process_inotify_updates()
-             if self.cooker.state in (bb.cooker.state.error, bb.cooker.state.shutdown, bb.cooker.state.forceshutdown):
-                 # updateCache will trigger a shutdown of the parser
-                 # and then raise BBHandledException triggering an exit
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index ea4df26..77b7f3d 100644
+index 3740c61..ea4df26 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -205,15 +205,11 @@ class BBCooker:
+@@ -1192,7 +1192,7 @@ class BBCooker:
+             bf = os.path.abspath(bf)
  
-         self.inotify_modified_files = []
- 
--        def _process_inotify_updates(server, notifier_list, abort):
--            for n in notifier_list:
--                if n.check_events(timeout=0):
--                    # read notified events and enqeue them
--                    n.read_events()
--                    n.process_events()
-+        def _process_inotify_updates(server, cooker, abort):
-+            cooker.process_inotify_updates()
-             return 1.0
- 
--        self.configuration.server_register_idlecallback(_process_inotify_updates, [self.confignotifier, self.notifier])
-+        self.configuration.server_register_idlecallback(_process_inotify_updates, self)
- 
-         # TOSTOP must not be set or our children will hang when they output
+         self.collection = CookerCollectFiles(self.bbfile_config_priorities)
+-        filelist, masked = self.collection.collect_bbfiles(self.data, self.data)
++        filelist, masked, searchdirs = self.collection.collect_bbfiles(self.data, self.data)
          try:
-@@ -241,6 +237,13 @@ class BBCooker:
-             os.write(readypipe, b"ready")
-             os.close(readypipe)
+             os.stat(bf)
+             bf = os.path.abspath(bf)
+@@ -1482,7 +1482,11 @@ class BBCooker:
+                     self.recipecaches[mc].ignored_dependencies.add(dep)
  
-+    def process_inotify_updates(self):
-+        for n in [self.confignotifier, self.notifier]:
-+            if n.check_events(timeout=0):
-+                # read notified events and enqeue them
-+                n.read_events()
-+                n.process_events()
+             self.collection = CookerCollectFiles(self.bbfile_config_priorities)
+-            (filelist, masked) = self.collection.collect_bbfiles(self.data, self.data)
++            (filelist, masked, searchdirs) = self.collection.collect_bbfiles(self.data, self.data)
 +
-     def config_notifications(self, event):
-         if event.maskname == "IN_Q_OVERFLOW":
-             bb.warn("inotify event queue overflowed, invalidating caches.")
++            # Add inotify watches for directories searched for bb/bbappend files
++            for dirent in searchdirs:
++                self.add_filewatch([[dirent]])
+ 
+             self.parser = CookerParser(self, filelist, masked)
+             self.parsecache_valid = True
+@@ -1654,6 +1658,18 @@ class CookerCollectFiles(object):
+             collectlog.error("no recipe files to build, check your BBPATH and BBFILES?")
+             bb.event.fire(CookerExit(), eventdata)
+ 
++        # We need to track where we look so that we can add inotify watches. There
++        # is no nice way to do this, this is horrid. We intercept the os.listdir()
++        # calls while we run glob().
++        origlistdir = os.listdir
++        searchdirs = []
++
++        def ourlistdir(d):
++            searchdirs.append(d)
++            return origlistdir(d)
++
++        os.listdir = ourlistdir
++
+         # Can't use set here as order is important
+         newfiles = []
+         for f in files:
+@@ -1671,6 +1687,8 @@ class CookerCollectFiles(object):
+                     if g not in newfiles:
+                         newfiles.append(g)
+ 
++        os.listdir = origlistdir
++
+         bbmask = config.getVar('BBMASK')
+ 
+         if bbmask:
+@@ -1729,7 +1747,7 @@ class CookerCollectFiles(object):
+                 topfile = bbfile_seen[base]
+                 self.overlayed[topfile].append(f)
+ 
+-        return (bbfiles, masked)
++        return (bbfiles, masked, searchdirs)
+ 
+     def get_file_appends(self, fn):
+         """
 -- 
 2.7.4
 
