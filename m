@@ -1,20 +1,20 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 45CD477D1A
+	by mail.openembedded.org (Postfix) with ESMTP id 41E5777DC8
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed,  9 Aug 2017 22:48:57 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v79Mmuas031945
+	v79MmuCd031944
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
 	verify=NOT); Wed, 9 Aug 2017 23:48:57 +0100
 Received: from richard by hex with local (Exim 4.86_2)
 	(envelope-from <richard@rpsys.net>)
-	id 1dfZma-0007SH-0T; Wed, 09 Aug 2017 23:48:56 +0100
+	id 1dfZmZ-0007SC-W5; Wed, 09 Aug 2017 23:48:55 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Aug 2017 23:48:54 +0100
-Message-Id: <1502318935-28608-3-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Wed,  9 Aug 2017 23:48:53 +0100
+Message-Id: <1502318935-28608-2-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1502318935-28608-1-git-send-email-richard.purdie@linuxfoundation.org>
 References: <1502318935-28608-1-git-send-email-richard.purdie@linuxfoundation.org>
@@ -23,7 +23,7 @@ X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
 	Wed, 09 Aug 2017 23:48:57 +0100 (BST)
 X-Virus-Scanned: clamav-milter 0.99.2 at dan
 X-Virus-Status: Clean
-Subject: [PATCH 3/4] cooker: Improve inotify overflow handling
+Subject: [PATCH 2/4] cooker: Ensure we handle inotify before running the next command
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,62 +38,77 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 09 Aug 2017 22:48:58 -0000
 
-Add a proper function for clearing the mtime cache. Clean up the inotify
-event overflow case to err on the side of caution and clear any potentially
-now out of sync caches.
+The inotify watch events are handled "at idle" which could in theory mean
+a command could run before any preceeding inotify events have been processed.
+This leads to a theoretical race window where those events may have a
+signficicant effect on the command.
+
+Add a mechanism to allow us to ensure all pending events are processed before
+running commands.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py         | 5 ++++-
- lib/bb/parse/__init__.py | 4 ++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ lib/bb/command.py |  2 ++
+ lib/bb/cooker.py  | 17 ++++++++++-------
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index c44c7a6..a923245 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -78,6 +78,7 @@ class Command:
+                 if not hasattr(command_method, 'readonly') or False == getattr(command_method, 'readonly'):
+                     return None, "Not able to execute not readonly commands in readonly mode"
+             try:
++                self.cooker.process_inotify_updates()
+                 if getattr(command_method, 'needconfig', False):
+                     self.cooker.updateCacheSync()
+                 result = command_method(self, commandline)
+@@ -98,6 +99,7 @@ class Command:
+ 
+     def runAsyncCommand(self):
+         try:
++            self.cooker.process_inotify_updates()
+             if self.cooker.state in (bb.cooker.state.error, bb.cooker.state.shutdown, bb.cooker.state.forceshutdown):
+                 # updateCache will trigger a shutdown of the parser
+                 # and then raise BBHandledException triggering an exit
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 77b7f3d..b3d6cd9 100644
+index ea4df26..77b7f3d 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -189,7 +189,7 @@ class BBCooker:
+@@ -205,15 +205,11 @@ class BBCooker:
  
-         # If being called by something like tinfoil, we need to clean cached data
-         # which may now be invalid
--        bb.parse.__mtime_cache = {}
-+        bb.parse.clear_cache()
-         bb.parse.BBHandler.cached_statements = {}
+         self.inotify_modified_files = []
  
-         self.ui_cmdline = None
-@@ -247,7 +247,9 @@ class BBCooker:
+-        def _process_inotify_updates(server, notifier_list, abort):
+-            for n in notifier_list:
+-                if n.check_events(timeout=0):
+-                    # read notified events and enqeue them
+-                    n.read_events()
+-                    n.process_events()
++        def _process_inotify_updates(server, cooker, abort):
++            cooker.process_inotify_updates()
+             return 1.0
+ 
+-        self.configuration.server_register_idlecallback(_process_inotify_updates, [self.confignotifier, self.notifier])
++        self.configuration.server_register_idlecallback(_process_inotify_updates, self)
+ 
+         # TOSTOP must not be set or our children will hang when they output
+         try:
+@@ -241,6 +237,13 @@ class BBCooker:
+             os.write(readypipe, b"ready")
+             os.close(readypipe)
+ 
++    def process_inotify_updates(self):
++        for n in [self.confignotifier, self.notifier]:
++            if n.check_events(timeout=0):
++                # read notified events and enqeue them
++                n.read_events()
++                n.process_events()
++
      def config_notifications(self, event):
          if event.maskname == "IN_Q_OVERFLOW":
              bb.warn("inotify event queue overflowed, invalidating caches.")
-+            self.parsecache_valid = False
-             self.baseconfig_valid = False
-+            bb.parse.clear_cache()
-             return
-         if not event.pathname in self.configwatcher.bbwatchedfiles:
-             return
-@@ -259,6 +261,7 @@ class BBCooker:
-         if event.maskname == "IN_Q_OVERFLOW":
-             bb.warn("inotify event queue overflowed, invalidating caches.")
-             self.parsecache_valid = False
-+            bb.parse.clear_cache()
-             return
-         if not event.pathname in self.inotify_modified_files:
-             self.inotify_modified_files.append(event.pathname)
-diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
-index a2952ec..2fc4002 100644
---- a/lib/bb/parse/__init__.py
-+++ b/lib/bb/parse/__init__.py
-@@ -84,6 +84,10 @@ def update_cache(f):
-         logger.debug(1, "Updating mtime cache for %s" % f)
-         update_mtime(f)
- 
-+def clear_cache():
-+    global __mtime_cache
-+    __mtime_cache = {}
-+
- def mark_dependency(d, f):
-     if f.startswith('./'):
-         f = "%s/%s" % (os.getcwd(), f[2:])
 -- 
 2.7.4
 
