@@ -1,27 +1,24 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 0855678425
+Return-Path: <jussi.kukkonen@intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 295427841B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 Aug 2017 10:27:31 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v7EARVx5025671
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Mon, 14 Aug 2017 11:27:32 +0100
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1dhCap-0001QP-7h; Mon, 14 Aug 2017 11:27:31 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Thu, 17 Aug 2017 10:15:11 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	17 Aug 2017 03:14:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.41,387,1498546800"; d="scan'208";a="1183805474"
+Received: from linux.intel.com ([10.54.29.200])
+	by fmsmga001.fm.intel.com with ESMTP; 17 Aug 2017 03:14:58 -0700
+Received: from theory.fi.intel.com (theory.fi.intel.com [10.237.72.53])
+	by linux.intel.com (Postfix) with ESMTP id C24E458061A;
+	Thu, 17 Aug 2017 03:14:57 -0700 (PDT)
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 14 Aug 2017 11:27:30 +0100
-Message-Id: <1502706450-5439-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
-	(dan.rpsys.net [192.168.3.1]);
-	Mon, 14 Aug 2017 11:27:32 +0100 (BST)
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: [PATCH] process: Improve client disconnects
+Date: Thu, 17 Aug 2017 13:14:54 +0300
+Message-Id: <1502964894-40713-1-git-send-email-jussi.kukkonen@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] bitbake: ui: Sort 'Dependent tasks' in taskexp
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,81 +31,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 14 Aug 2017 10:27:32 -0000
+X-List-Received-Date: Thu, 17 Aug 2017 10:15:14 -0000
 
-There have been cases where the server could loop indefinitely and incorrectly
-handle client disconnects. In the EOFError case, ensure a full disconnect
-happens in the alternative disconnect path to avoid this.
+The underlying model is already sorted for use in the other view,
+add a sorting model for the 'Dependent Tasks' view.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 ---
- lib/bb/server/process.py | 38 +++++++++++++++++++++++---------------
- 1 file changed, 23 insertions(+), 15 deletions(-)
+ bitbake/lib/bb/ui/taskexp.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index ee8b14e..a7a6fbf 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -134,6 +134,26 @@ class ProcessServer(multiprocessing.Process):
-         if self.xmlrpc:
-             fds.append(self.xmlrpc)
-         print("Entering server connection loop")
-+
-+        def disconnect_client(self, fds):
-+            if not self.haveui:
-+                return
-+            print("Disconnecting Client")
-+            fds.remove(self.controllersock)
-+            fds.remove(self.command_channel)
-+            bb.event.unregister_UIHhandler(self.event_handle, True)
-+            self.command_channel_reply.writer.close()
-+            self.event_writer.writer.close()
-+            del self.event_writer
-+            self.controllersock.close()
-+            self.controllersock = False
-+            self.haveui = False
-+            self.lastui = time.time()
-+            self.cooker.clientComplete()
-+            if self.timeout is None:
-+                print("No timeout, exiting.")
-+                self.quit = True
-+
-         while not self.quit:
-             if self.sock in ready:
-                 self.controllersock, address = self.sock.accept()
-@@ -165,21 +185,8 @@ class ProcessServer(multiprocessing.Process):
-                     self.haveui = True
+diff --git a/bitbake/lib/bb/ui/taskexp.py b/bitbake/lib/bb/ui/taskexp.py
+index 0d0f9f5..0e8e9d4 100644
+--- a/bitbake/lib/bb/ui/taskexp.py
++++ b/bitbake/lib/bb/ui/taskexp.py
+@@ -63,7 +63,9 @@ class PackageReverseDepView(Gtk.TreeView):
+         self.current = None
+         self.filter_model = model.filter_new()
+         self.filter_model.set_visible_func(self._filter)
+-        self.set_model(self.filter_model)
++        self.sort_model = self.filter_model.sort_new_with_model()
++        self.sort_model.set_sort_column_id(COL_DEP_PARENT, Gtk.SortType.ASCENDING)
++        self.set_model(self.sort_model)
+         self.append_column(Gtk.TreeViewColumn(label, Gtk.CellRendererText(), text=COL_DEP_PARENT))
  
-                 except (EOFError, OSError):
--                    print("Disconnecting Client")
--                    fds.remove(self.controllersock)
--                    fds.remove(self.command_channel)
--                    bb.event.unregister_UIHhandler(self.event_handle, True)
--                    self.command_channel_reply.writer.close()
--                    self.event_writer.writer.close()
--                    del self.event_writer
--                    self.controllersock.close()
--                    self.controllersock = False
--                    self.haveui = False
--                    self.lastui = time.time()
--                    self.cooker.clientComplete()
--                    if self.timeout is None:
--                        print("No timeout, exiting.")
--                        self.quit = True
-+                    disconnect_client(self, fds)
-+
-             if not self.timeout == -1.0 and not self.haveui and self.lastui and self.timeout and \
-                     (self.lastui + self.timeout) < time.time():
-                 print("Server timeout, exiting.")
-@@ -191,6 +198,7 @@ class ProcessServer(multiprocessing.Process):
-                 except EOFError:
-                     # Client connection shutting down
-                     ready = []
-+                    disconnect_client(self, fds)
-                     continue
-                 if command[0] == "terminateServer":
-                     self.quit = True
+     def _filter(self, model, iter, data):
 -- 
-2.7.4
+2.1.4
 
 
