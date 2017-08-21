@@ -1,49 +1,51 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-wr0-f194.google.com (mail-wr0-f194.google.com
-	[209.85.128.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 5072078202
+Received: from mail-ua0-f180.google.com (mail-ua0-f180.google.com
+	[209.85.217.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 835657828F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Aug 2017 16:37:50 +0000 (UTC)
-Received: by mail-wr0-f194.google.com with SMTP id p8so15887371wrf.2
+	Mon, 21 Aug 2017 16:45:55 +0000 (UTC)
+Received: by mail-ua0-f180.google.com with SMTP id n29so24797255uai.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Aug 2017 09:37:52 -0700 (PDT)
+	Mon, 21 Aug 2017 09:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=7oAFyj99KlEZVUs8XcuHdx9+Au6XdNrUqZZfzIi5Ss0=;
-	b=jhxCm3XIH2gSe2Cl5arrKHP/1Hqvz98WP8783hAO2K3hCt5K9uKdxG0Lxfhfabtt9k
-	NH1wYBEUdP+4P0vdnfLBBgKbYS2dDIAeGq595h8Pm3uVOodUfx9gOsbhSMKqWTuRYz4U
-	qJwB8KawBGgeXX3O1NsCiAvgw5xVlbcGrCsiKkKb2exrB7Qf++QcPO4VVfgD9SSXU7xX
-	lUKo+7K62TVc83jmDxwZxkIrwQOjjcKNj79hIfh22yGNv/733LuHx+j9VCaS62R79XVY
-	wTXLPhlIGqepqLB2UPhK48+Y91eIF403r+B1BOKDq963aQh9hNBuNt0qopU8xP2V4mtW
-	3Kxg==
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc;
+	bh=yIhwH6D3Z18McRVuohy1Fvg8KuLUzZjJIGTgmsjV6Z8=;
+	b=MEcdy6z6OEEWxnrTqDyIKNR9NU3d/wkVwNCzvDMcbdyDs6E1US01GD2TidemVKBW4V
+	k1oTEx2zxefL/xEh03LndlrhQlv2QF5H4zsf9ZD7Xk8DBqGgvlu7B7syb4gAOHoSQieL
+	8XKOc817tPzoiq0rrD9fecELuro+PucOJO13Bce4apBgSjVTKqvsWsZ1QXA7RKWCLsve
+	pT6/Pt3noa17NZdypVm3OsPKsIJ5urTlrTXYvhaJPUKDOzzvQkOisz3w0TsjGa0ZVT13
+	QyMKvKskSKg7/IT9i/Er40nT02rAGdhCqA2v5Aq4ua3DNl7i+zwIW646Sd81NEtQvjLh
+	9lig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=7oAFyj99KlEZVUs8XcuHdx9+Au6XdNrUqZZfzIi5Ss0=;
-	b=TBU7qVGyuvR9anQV+IQLaaySEow+od+AQ1E9uWt+4Rf8qdQ2kPD5qQGxRGA1Vqb3Zh
-	fVEOrQd71n2mm/Zl2PGdOuUVPScho6TSZC5ZSkcn/z2M3chOCUvd4+567MiWL3DH/mjl
-	cEsmp/6YnX5Tls4BAimaievv2T1ZkREc1dTM76zFL5/IMWniz+9gD7Qef1SAjQ3wbAGn
-	xYFB6ibCV8RIDnMU+K+e7HsX5FcnNgSTZGRNT0Od4DLqqk9CYf0ewxLGbbU0wdopf67B
-	jDIILAwB+VRw+2zOGnoYH0f7K6oaqvasiam6f9q9am+oRar4QM4X3ppaok78W2qdNc21
-	ADQA==
-X-Gm-Message-State: AHYfb5gLMJ/31dnW7wA4wZDjvoIhyswMchlI3NHN9bpM6Tu1pAjNCOy/
-	speMHNDAv4UoKELr78g=
-X-Received: by 10.28.138.83 with SMTP id m80mr270915wmd.47.1503333471823;
-	Mon, 21 Aug 2017 09:37:51 -0700 (PDT)
-Received: from svr-pkl-eng-07.mgc.mentorg.com ([110.93.212.98])
-	by smtp.gmail.com with ESMTPSA id 62sm9933965wrb.12.2017.08.21.09.37.49
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 21 Aug 2017 09:37:50 -0700 (PDT)
-From: Christopher Larson <kergoth@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 21 Aug 2017 21:37:41 +0500
-Message-Id: <20170821163741.28301-2-kergoth@gmail.com>
-X-Mailer: git-send-email 2.11.1
-In-Reply-To: <20170821163741.28301-1-kergoth@gmail.com>
+	h=x-gm-message-state:mime-version:sender:in-reply-to:references:from
+	:date:message-id:subject:to:cc;
+	bh=yIhwH6D3Z18McRVuohy1Fvg8KuLUzZjJIGTgmsjV6Z8=;
+	b=jlBFmgjbS9+RWszTuFjmqXaLsaYmHz7rhMUPYhv+pYBj56p5wlV0e6VvGhXnnXUAjK
+	cWY8Rhu966fV4XVfEH/nqlJRML5LgKRp5gOEh6buZkgW5pzThZyyjhi4SSleSXIeIWSx
+	bVEWXcAGkiXyijaIUnKt+P6cQyyWwBz2TOiVXFTVZFwKxaSu9ajexUXlekrkedg8ICqz
+	hz+7HRcxVvLXxLPPB/RJupr9wWBEZn2bFi8rUmb2ZpMMK6RD/1fzNKyKpcGon2eZ+RZO
+	sp0mIpd7o89UYR/yObPajW/YVhj85s4luaXFkZze8pFLYQnhweYnIC4mDFK+yScIWRcG
+	uf5A==
+X-Gm-Message-State: AHYfb5ivMF19O/ZCkcgVnnehoQfgG3SH0wumQPBxw9hBma2zcRnbgbnf
+	ooRKlORHm7/Q07lfg/I4vPI+PA+CumGa
+X-Received: by 10.159.33.97 with SMTP id 88mr11874897uab.5.1503333957064; Mon,
+	21 Aug 2017 09:45:57 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.176.16.12 with HTTP; Mon, 21 Aug 2017 09:45:36 -0700 (PDT)
+In-Reply-To: <20170821163741.28301-2-kergoth@gmail.com>
 References: <20170821163741.28301-1-kergoth@gmail.com>
+	<20170821163741.28301-2-kergoth@gmail.com>
+From: Christopher Larson <chris_larson@mentor.com>
+Date: Mon, 21 Aug 2017 09:45:36 -0700
+X-Google-Sender-Auth: wXGQReVX3w6wDXiNY_lehEoBEdw
+Message-ID: <CABcZANm7gGjDbwWJbLTXYn_zSM6G9phHfgxA3Tp78CDVwzT9Og@mail.gmail.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH 2/2] Revert "fetch2/gitsm: Fix when repository change submodules"
+Subject: Re: [PATCH 2/2] Revert "fetch2/gitsm: Fix when repository change submodules"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,34 +58,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Aug 2017 16:37:51 -0000
+X-List-Received-Date: Mon, 21 Aug 2017 16:45:56 -0000
+Content-Type: multipart/alternative; boundary="94eb2c0b321a7d60b305574636b4"
 
-From: Christopher Larson <chris_larson@mentor.com>
+--94eb2c0b321a7d60b305574636b4
+Content-Type: text/plain; charset="UTF-8"
 
-This reverts commit 12f6c0651af8bd5d6efb751690571cf2fcd3eeb0.
+On Mon, Aug 21, 2017 at 9:37 AM, Christopher Larson <kergoth@gmail.com>
+wrote:
 
-This commit caused the gitsm fetcher to download submodules from upstream in
-do_unpack, rather than using the previously fetched submodules from DL_DIR.
+> From: Christopher Larson <chris_larson@mentor.com>
+>
+> This reverts commit 12f6c0651af8bd5d6efb751690571cf2fcd3eeb0.
+>
+> This commit caused the gitsm fetcher to download submodules from upstream
+> in
+> do_unpack, rather than using the previously fetched submodules from DL_DIR.
+>
+> [YOCTO #11830]
+>
+> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 
-[YOCTO #11830]
 
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>
----
- lib/bb/fetch2/gitsm.py | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index 0aff1008..167b77a1 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -131,5 +131,6 @@ class GitSM(Git):
-         Git.unpack(self, ud, destdir, d)
- 
-         if self.uses_submodules(ud, d, ud.destdir):
-+            runfetchcmd('cp -fpPRH "%s/modules" "%s/"' % (ud.clonedir, os.path.join(ud.destdir, '.git')), d)
-             runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d, workdir=ud.destdir)
-             runfetchcmd(ud.basecmd + " submodule update --init --recursive", d, workdir=ud.destdir)
+Hold off on this for the moment, looks like it broke use of gitshallow.
+Fixing now.
 -- 
-2.11.1
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
 
+--94eb2c0b321a7d60b305574636b4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On Mon, Aug 21, 2017 at 9:37 AM, Christopher Larson <span dir=3D"ltr">&=
+lt;<a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com=
+</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin=
+:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">From: Christopher =
+Larson &lt;<a href=3D"mailto:chris_larson@mentor.com">chris_larson@mentor.c=
+om</a>&gt;<br>
+<br>
+This reverts commit 12f6c0651af8bd5d6efb751690571c<wbr>f2fcd3eeb0.<br>
+<br>
+This commit caused the gitsm fetcher to download submodules from upstream i=
+n<br>
+do_unpack, rather than using the previously fetched submodules from DL_DIR.=
+<br>
+<br>
+[YOCTO #11830]<br>
+<br>
+Signed-off-by: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor=
+.com">chris_larson@mentor.com</a>&gt;</blockquote><div><br></div><div>Hold =
+off on this for the moment, looks like it broke use of gitshallow. Fixing n=
+ow.</div></div>-- <br><div class=3D"gmail_signature" data-smartmail=3D"gmai=
+l_signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><div><div dir=3D"ltr"><=
+div>Christopher Larson<br>kergoth at gmail dot com<br>Founder - BitBake, Op=
+enEmbedded, OpenZaurus<br>Senior Software Engineer, Mentor Graphics</div></=
+div></div></div></div></div></div>
+</div></div>
+
+--94eb2c0b321a7d60b305574636b4--
