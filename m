@@ -1,27 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id A46B978271
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 52B9578273
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Aug 2017 01:10:11 +0000 (UTC)
+	Mon, 21 Aug 2017 01:10:12 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v7L1ADmk031552
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v7L1ADls010918
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 20 Aug 2017 18:10:13 -0700
+	Sun, 20 Aug 2017 18:10:14 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Sun, 20 Aug 2017 18:10:12 -0700
+	(TLS) id 14.3.361.1; Sun, 20 Aug 2017 18:10:13 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 20 Aug 2017 18:01:48 -0700
-Message-ID: <69930c5907ba050d9ae47569525cf130017dc6d3.1503276918.git.David.Reyna@windriver.com>
+Date: Sun, 20 Aug 2017 18:01:49 -0700
+Message-ID: <5e2efbd0b97077e55be7029baa717e3bd387572a.1503276918.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1503276918.git.David.Reyna@windriver.com>
 References: <cover.1503276918.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 1/2] toaster: custom image updates and original creation
+Subject: [PATCH 2/2] Toaster: custom start and stop actions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,189 +34,161 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Aug 2017 01:10:11 -0000
+X-List-Received-Date: Mon, 21 Aug 2017 01:10:13 -0000
 Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-When Toaster removes a package from a custom image, it must
-also always remove the advised reverse-dependent recipes.
-Similarly, when adding a package it must always add its advised
-the packages it depends on. This code must be un-indented so
-that it applies to all respective added or removed packages.
+Toaster needs the ability to allow custom extensions to execute when
+Toaster is started and stopped. Toaster will look for a custom
+extension script in the fixtures directory and execute any applicable
+hooks.
 
-Toaster normally waits until a new custom image is built before
-creating the custom layer and the recipe. However, an intermediate
-different build can fail because the recipe has already been added
-to the project, so the image's default recipe must be created
-when the image is created.
-
-[YOCTO #11915]
+[YOCTO #11938]
 
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/orm/models.py     |  2 +-
- lib/toaster/toastergui/api.py | 98 +++++++++++++++++++++++++++----------------
- 2 files changed, 62 insertions(+), 38 deletions(-)
+ bin/toaster                                        | 22 +++++++++-
+ .../orm/fixtures/custom_toaster_append.sh_sample   | 49 ++++++++++++++++++++++
+ 2 files changed, 69 insertions(+), 2 deletions(-)
+ create mode 100755 bitbake/lib/toaster/orm/fixtures/custom_toaster_append.sh_sample
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 7aaebed..3a7dff8 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -1658,7 +1658,7 @@ class CustomImageRecipe(Recipe):
+diff --git a/bin/toaster b/bin/toaster
+index c2e33fe..762451d 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -24,6 +24,14 @@ Usage: source toaster start|stop [webport=<address:port>] [noweb]
+         [webport] Set the development server (default: localhost:8000)
+ "
  
-     def get_base_recipe_file(self):
-         """Get the base recipe file path if it exists on the file system"""
--        path_schema_one = "%s/%s" % (self.base_recipe.layer_version.dirpath,
-+        path_schema_one = "%s/%s" % (self.base_recipe.layer_version.local_path,
-                                      self.base_recipe.file_path)
- 
-         path_schema_two = self.base_recipe.file_path
-diff --git a/lib/toaster/toastergui/api.py b/lib/toaster/toastergui/api.py
-index 88d6aa7..cb8f0f3 100644
---- a/lib/toaster/toastergui/api.py
-+++ b/lib/toaster/toastergui/api.py
-@@ -18,6 +18,7 @@
- 
- # Please run flake8 on this file before sending patches
- 
-+import os
- import re
- import logging
- import json
-@@ -28,7 +29,7 @@ from orm.models import LayerVersionDependency, LayerSource, ProjectLayer
- from orm.models import Recipe, CustomImageRecipe, CustomImagePackage
- from orm.models import Layer, Target, Package, Package_Dependency
- from orm.models import ProjectVariable
--from bldcontrol.models import BuildRequest
-+from bldcontrol.models import BuildRequest, BuildEnvironment
- from bldcontrol import bbcontroller
- 
- from django.http import HttpResponse, JsonResponse
-@@ -509,6 +510,27 @@ class XhrCustomRecipe(View):
-                                    (tpackage.package.name, e))
-                     pass
- 
-+        # pre-create layer directory structure, so that other builds
-+        # are not blocked by this new recipe dependecy
-+        # NOTE: this is parallel code to 'localhostbecontroller.py'
-+        be = BuildEnvironment.objects.all()[0]
-+        layerpath = os.path.join(be.builddir,
-+                                 CustomImageRecipe.LAYER_NAME)
-+        for name in ("conf", "recipes"):
-+            path = os.path.join(layerpath, name)
-+            if not os.path.isdir(path):
-+                os.makedirs(path)
-+        # pre-create layer.conf
-+        config = os.path.join(layerpath, "conf", "layer.conf")
-+        if not os.path.isfile(config):
-+            with open(config, "w") as conf:
-+                conf.write('BBPATH .= ":${LAYERDIR}"\nBBFILES += "${LAYERDIR}/recipes/*.bb"\n')
-+        # pre-create new image's recipe file
-+        recipe_path = os.path.join(layerpath, "recipes", "%s.bb" %
-+                                   recipe.name)
-+        with open(recipe_path, "w") as recipef:
-+            recipef.write(recipe.generate_recipe_file_contents())
++custom_extention()
++{
++    custom_extension=$BBBASEDIR/lib/toaster/orm/fixtures/custom_toaster_append.sh
++    if [ -f $custom_extension ] ; then
++        $custom_extension $*
++    fi
++}
 +
-         return JsonResponse(
-             {"error": "ok",
-              "packages": recipe.get_all_packages().count(),
-@@ -752,7 +774,6 @@ class XhrCustomRecipePackages(View):
-                 return error_response("Package %s not found in excludes"
-                                       " but was in included list" %
-                                       package.name)
+ databaseCheck()
+ {
+     retval=0
+@@ -50,6 +58,11 @@ databaseCheck()
+ webserverKillAll()
+ {
+     local pidfile
++    if [ -f ${BUILDDIR}/.toastermain.pid ] ; then
++        custom_extention web_stop_postpend
++    else
++        custom_extention noweb_stop_postpend
++    fi
+     for pidfile in ${BUILDDIR}/.toastermain.pid ${BUILDDIR}/.runbuilds.pid; do
+         if [ -f ${pidfile} ]; then
+             pid=`cat ${pidfile}`
+@@ -89,6 +102,7 @@ webserverStartAll()
+     else
+         echo "Toaster development webserver started at http://$ADDR_PORT"
+         echo -e "\nYou can now run 'bitbake <target>' on the command line and monitor your build in Toaster.\nYou can also use a Toaster project to configure and run a build.\n"
++        custom_extention web_start_postpend $ADDR_PORT
+     fi
+ 
+     return $retval
+@@ -168,7 +182,6 @@ fi
+ unset OE_ROOT
+ 
+ 
 -
-         else:
-             recipe.appends_set.add(package)
-             # Make sure that package is not in the excludes set
-@@ -760,26 +781,27 @@ class XhrCustomRecipePackages(View):
-                 recipe.excludes_set.remove(package)
-             except:
-                 pass
--            # Add the dependencies we think will be added to the recipe
--            # as a result of appending this package.
--            # TODO this should recurse down the entire deps tree
--            for dep in package.package_dependencies_source.all_depends():
-+
-+        # Add the dependencies we think will be added to the recipe
-+        # as a result of appending this package.
-+        # TODO this should recurse down the entire deps tree
-+        for dep in package.package_dependencies_source.all_depends():
-+            try:
-+                cust_package = CustomImagePackage.objects.get(
-+                    name=dep.depends_on.name)
-+
-+                recipe.includes_set.add(cust_package)
-                 try:
--                    cust_package = CustomImagePackage.objects.get(
--                        name=dep.depends_on.name)
--
--                    recipe.includes_set.add(cust_package)
--                    try:
--                        # When adding the pre-requisite package, make
--                        # sure it's not in the excluded list from a
--                        # prior removal.
--                        recipe.excludes_set.remove(cust_package)
--                    except package.DoesNotExist:
--                        # Don't care if the package had never been excluded
--                        pass
--                except:
--                    logger.warning("Could not add package's suggested"
--                                   "dependencies to the list")
-+                    # When adding the pre-requisite package, make
-+                    # sure it's not in the excluded list from a
-+                    # prior removal.
-+                    recipe.excludes_set.remove(cust_package)
-+                except package.DoesNotExist:
-+                    # Don't care if the package had never been excluded
-+                    pass
-+            except:
-+                logger.warning("Could not add package's suggested"
-+                               "dependencies to the list")
-         return JsonResponse({"error": "ok"})
+ WEBSERVER=1
+ ADDR_PORT="localhost:8000"
+ unset CMD
+@@ -241,6 +254,7 @@ fi
+ echo "The system will $CMD."
  
-     def delete(self, request, *args, **kwargs):
-@@ -797,22 +819,24 @@ class XhrCustomRecipePackages(View):
-                 recipe.excludes_set.add(package)
-             else:
-                 recipe.appends_set.remove(package)
--                all_current_packages = recipe.get_all_packages()
--
--                reverse_deps_dictlist = self._get_all_dependents(
--                    package.pk,
--                    all_current_packages)
--
--                ids = [entry['pk'] for entry in reverse_deps_dictlist]
--                reverse_deps = CustomImagePackage.objects.filter(id__in=ids)
--                for r in reverse_deps:
--                    try:
--                        if r.id in included_packages:
--                            recipe.excludes_set.add(r)
--                        else:
--                            recipe.appends_set.remove(r)
--                    except:
--                        pass
-+
-+            # remove dependencies as well
-+            all_current_packages = recipe.get_all_packages()
-+
-+            reverse_deps_dictlist = self._get_all_dependents(
-+                package.pk,
-+                all_current_packages)
-+
-+            ids = [entry['pk'] for entry in reverse_deps_dictlist]
-+            reverse_deps = CustomImagePackage.objects.filter(id__in=ids)
-+            for r in reverse_deps:
-+                try:
-+                    if r.id in included_packages:
-+                        recipe.excludes_set.add(r)
-+                    else:
-+                        recipe.appends_set.remove(r)
-+                except:
-+                    pass
+ # Execute the commands
++custom_extention toaster_prepend $CMD $ADDR_PORT
  
-             return JsonResponse({"error": "ok"})
-         except CustomImageRecipe.DoesNotExist:
+ case $CMD in
+     start )
+@@ -262,9 +276,10 @@ case $CMD in
+             if [ ! -f "$TOASTER_DIR/toaster.sqlite" ] ; then
+                 if ! databaseCheck; then
+                     echo "Failed ${CMD}."
+-                  return 4
++                    return 4
+                 fi
+             fi
++            custom_extention noweb_start_postpend $ADDR_PORT
+         fi
+         if [ $WEBSERVER -gt 0 ] && ! webserverStartAll; then
+             echo "Failed ${CMD}."
+@@ -278,6 +293,7 @@ case $CMD in
+         # set fail safe stop system on terminal exit
+         trap stop_system SIGHUP
+         echo "Successful ${CMD}."
++        custom_extention toaster_postpend $CMD $ADDR_PORT
+         return 0
+     ;;
+     stop )
+@@ -285,3 +301,5 @@ case $CMD in
+         echo "Successful ${CMD}."
+     ;;
+ esac
++custom_extention toaster_postpend $CMD $ADDR_PORT
++
+diff --git a/lib/toaster/orm/fixtures/custom_toaster_append.sh_sample b/lib/toaster/orm/fixtures/custom_toaster_append.sh_sample
+new file mode 100755
+index 0000000..8c4e163
+--- /dev/null
++++ b/lib/toaster/orm/fixtures/custom_toaster_append.sh_sample
+@@ -0,0 +1,49 @@
++#!/bin/bash
++
++# Copyright (C) 2017 Intel Corp.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
++# See the GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
++
++# This is sample software. Rename it to 'custom_toaster_append.sh' and
++# enable the respective custom sections.
++
++verbose=0
++if [ $verbose -ne 0 ] ; then
++    echo "custom_toaster_append.sh:$*"
++fi
++
++if [ "toaster_prepend" = "$1" ] ; then
++    echo "Add custom actions here when Toaster script is started"
++fi
++
++if [ "web_start_postpend" = "$1" ] ; then
++    echo "Add custom actions here after Toaster web service is started"
++fi
++
++if [ "web_stop_postpend" = "$1" ] ; then
++    echo "Add custom actions here after Toaster web service is stopped"
++fi
++
++if [ "noweb_start_postpend" = "$1" ] ; then
++    echo "Add custom actions here after Toaster (no web) service is started"
++fi
++
++if [ "noweb_stop_postpend" = "$1" ] ; then
++    echo "Add custom actions here after Toaster (no web) service is stopped"
++fi
++
++if [ "toaster_postpend" = "$1" ] ; then
++    echo "Add custom actions here after Toaster script is done"
++fi
++
 -- 
 1.9.1
 
