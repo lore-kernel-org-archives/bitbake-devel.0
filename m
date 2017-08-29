@@ -1,48 +1,57 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-wm0-f46.google.com (mail-wm0-f46.google.com [74.125.82.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 977127848B
+Return-Path: <peter.kjellerstedt@axis.com>
+X-Greylist: delayed 353 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 29 Aug 2017 20:38:57 UTC
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 807ED78304
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Aug 2017 22:11:01 +0000 (UTC)
-Received: by mail-wm0-f46.google.com with SMTP id b189so1398443wmd.0
+	Tue, 29 Aug 2017 20:38:57 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 5D3801843C
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Aug 2017 15:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=knI1JOpAKBcp5pbc52/IGtXpqdKtS3Dp8BpzsqQUR4k=;
-	b=A0+r7Wab/yOCoTf9en+OmlT3pCkl5sBP8OdaCLtUnTAvNw8wFZzQDRzBe/CbINQv18
-	esf31XSnu9HDvi0vaTKxgMLJYqghAwmhw6bTAomNKWbRCYq5lj903g5zSUDTFGc3i0hB
-	zYSpRn+LCVwOoTpECJ69hc/SDy4p7Jc+ZgSCejqskakDJolUUb6eG54L96nW/QyqUpw/
-	0eL/P1U3HGgrEQUvdvhSzufmyc7p5S2AJNMi+jnm5lfaV4PPp0QP1NMm2VytRpNCXfRx
-	qwZJ2DUqjp3zwbFsMplOMkgyUlDRgLA5ze3IqvIIHUkUT0FI8aLSlRiIqV0kru/XeB6a
-	0w4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=knI1JOpAKBcp5pbc52/IGtXpqdKtS3Dp8BpzsqQUR4k=;
-	b=s16yw220/gpYZE0BDo8Cx3bZ2kq1n24ZQLau1umHTxe095lbPCZVCR2mMyF8VpnPS0
-	TpxvnbGHcpZnoqH8TWBv5rQxvD02k4DLvVDwPg8eVWlxB352AxPQyxgTwmWUYel/61DM
-	Z/sJeFNNmYqo9YUPC2Zx52oQ/JGaoilGwD+cqR/oFcdzQIHaBE81fkTHMFcEi+YfAaTa
-	y3PSgrFJrK5mPfKs2bLUZevoD9Bs+y1tVRU+jTjbzYdXv3JyaFtsOWzHX65QXoQ6Hksw
-	RvBOgKnHlPJFXX3qV58EF1II0v0bPkiAtU1rSMjwoOyeSZ13bBQlbN+brYZe5/7qOwVI
-	WL2Q==
-X-Gm-Message-State: AHYfb5gL5mOX/79wtwE2S2gBFiupfJsymjhncD9aJTxTEHUlBv8XWm3n
-	ua80iBYOpLsWdK7tS4KsXbSvHB5fmQ==
-X-Received: by 10.28.182.7 with SMTP id g7mr373997wmf.66.1503699062611; Fri,
-	25 Aug 2017 15:11:02 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.223.169.70 with HTTP; Fri, 25 Aug 2017 15:11:02 -0700 (PDT)
-In-Reply-To: <3770d520be40403793f4021194082856@SGPMBX1024.APAC.bosch.com>
-References: <3770d520be40403793f4021194082856@SGPMBX1024.APAC.bosch.com>
-From: Andre McCurdy <armccurdy@gmail.com>
-Date: Fri, 25 Aug 2017 15:11:02 -0700
-Message-ID: <CAJ86T=WOAXeYV6iSsUaTBs8oHy6RV_zjg6reTn3P_m=y7BqSLQ@mail.gmail.com>
-To: "GUAN Ben (ST-FIR/ENG1-Zhu)" <Ben.Guan@cn.bosch.com>
-Cc: "Jonas Mark \(ST-FIR/ENG1\)" <Mark.Jonas@de.bosch.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: How to detect change on a repo manifest.git and rebuild the recipe with "repo://"
+	Tue, 29 Aug 2017 22:33:05 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id 43JGcFyPlbuV for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Aug 2017 22:33:04 +0200 (CEST)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id 8FA0D1842D
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Aug 2017 22:33:04 +0200 (CEST)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D2091E094
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Aug 2017 22:33:04 +0200 (CEST)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 70C391E096
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Aug 2017 22:33:04 +0200 (CEST)
+Received: from thoth.se.axis.com (unknown [10.0.2.173])
+	by boulder03.se.axis.com (Postfix) with ESMTP
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Aug 2017 22:33:04 +0200 (CEST)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by thoth.se.axis.com (Postfix) with ESMTP id 6508731F5
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Aug 2017 22:33:04 +0200 (CEST)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id v7TKX34D021353
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Aug 2017 22:33:03 +0200
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id v7TKX3wf021351
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 29 Aug 2017 22:33:03 +0200
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 29 Aug 2017 22:33:01 +0200
+Message-Id: <4a22ea6326cc4d5bd7ecc119fa8230f262ccbdc4.1504038736.git.pkj@axis.com>
+X-Mailer: git-send-email 2.12.0
+In-Reply-To: <cover.1504038736.git.pkj@axis.com>
+References: <cover.1504038736.git.pkj@axis.com>
+X-TM-AS-GCONF: 00
+Subject: [PATCH 1/1] fetch2: Allow Fetch.download() to warn instead of error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,54 +64,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Aug 2017 22:11:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 29 Aug 2017 20:38:58 -0000
 
-On Thu, Aug 24, 2017 at 7:06 PM, GUAN Ben (ST-FIR/ENG1-Zhu)
-<Ben.Guan@cn.bosch.com> wrote:
-> The source code of my SW consist of multiple components from different
-> repository, which is managed by a repo manifest repository. So I want to =
-use
-> =E2=80=9Crepo://=E2=80=9D for the repo manifest repository instead of mul=
-tiple =E2=80=9Cgit://=E2=80=9D to
-> include all repositories in the SRC_URI.
->
-> I add the following to MyRecipe_git.bb:
-> ```
-> SRC_URI =3D =E2=80=9Crepo://git@<MY_HOST>/manifest.git;protocol=3Dssh;bra=
-nch=3Dmaster=E2=80=9D
->
-> Now I can build my recipe with Yocto, but there is an issue:  When there =
-is
-> any change required in the repositories of my application, I will change =
-the
-> code and update the tags in default.xml of manifest.git. I want Yocto cou=
-ld
-> detect this change, fetch the change, them rebuild the recipe.
->
-> With =E2=80=9Cgit://=E2=80=9D, it is easy to achieve via setting =E2=80=
-=9C${AUTOREV}=E2=80=9D to =E2=80=9CSRCREV=E2=80=9D.
-> But the fetch2.repo doesn=E2=80=99t support SRCREV. I have go through the=
- existing
-> recipe within meta-oe and oe-core, no recipe is using =E2=80=9Crepo://=E2=
-=80=9D.
->
-> Does anybody have experience about it and help? Thank you in advance.
+Under some situations it can be allowed for Fetch.download() to fail
+to fetch a file without causing bitbake to fail. By adding
+only_warn=True as argument to Fetch.download(), it will call
+logger.warning() instead of logger.error() and thus not cause build
+failures.
 
-Right, the repo fetcher doesn't support SRCREV. It's not even clear
-how a repo manifest could map to a SRCREV, since the manifest could
-define an arbitrary combination of fixed revisions and/or branches for
-an arbitrary number of git repos.
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-You could perhaps append a call to "repo sync" to the do_patch etc
-task in your recipe but it would certainly be a hack and you would run
-into dependency problems (do_patch might not be re-run and without a
-SRCREV bitbake wouldn't know if/when the code had changed and
-therefore if/when to re-run dependent tasks).
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 3eb0e4d211..58f65ada84 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -1608,9 +1608,10 @@ class Fetch(object):
+ 
+         return local
+ 
+-    def download(self, urls=None):
++    def download(self, urls=None, only_warn=False):
+         """
+-        Fetch all urls
++        Fetch all urls. In case only_warn is True, a failure to fetch a url
++        will only result in a warning message, rather than an error message.
+         """
+         if not urls:
+             urls = self.urls
+@@ -1688,19 +1689,28 @@ class Fetch(object):
+ 
+                 if not localpath or ((not os.path.exists(localpath)) and localpath.find("*") == -1):
+                     if firsterr:
+-                        logger.error(str(firsterr))
++                        if only_warn:
++                            logger.warning(str(firsterr))
++                        else:
++                            logger.error(str(firsterr))
+                     raise FetchError("Unable to fetch URL from any source.", u)
+ 
+                 update_stamp(ud, self.d)
+ 
+             except IOError as e:
+                 if e.errno in [os.errno.ESTALE]:
+-                    logger.error("Stale Error Observed %s." % u)
++                    if only_warn:
++                        logger.warning("Stale Error Observed %s." % u)
++                    else:
++                        logger.error("Stale Error Observed %s." % u)
+                     raise ChecksumError("Stale Error Detected")
+ 
+             except BBFetchException as e:
+                 if isinstance(e, ChecksumError):
+-                    logger.error("Checksum failure fetching %s" % u)
++                    if only_warn:
++                        logger.warning("Checksum failure fetching %s" % u)
++                    else:
++                        logger.error("Checksum failure fetching %s" % u)
+                 raise
+ 
+             finally:
+-- 
+2.12.0
 
-As you have discovered by looking oe-core and meta-oe, the repo
-fetcher isn't used much. The preferred solution for recipes which need
-to fetch from multiple git repos is to include multiple git://
-references in SRC_URI.
 
