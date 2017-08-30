@@ -1,38 +1,27 @@
-Return-Path: <o.mandel@menlosystems.com>
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
-	by mail.openembedded.org (Postfix) with ESMTP id BC5027832A
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 81CC4782F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Aug 2017 12:40:04 +0000 (UTC)
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-	by mail-out.m-online.net (Postfix) with ESMTP id 3xj4pY0dP4z1qrN9
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Aug 2017 14:40:04 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-	by mail.m-online.net (Postfix) with ESMTP id 3xj4pX6Plxz3hjJp
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Aug 2017 14:40:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
-	port 10024)
-	with ESMTP id AczZdekgU370 for <bitbake-devel@lists.openembedded.org>; 
-	Wed, 30 Aug 2017 14:40:04 +0200 (CEST)
-X-Auth-Info: VeW6JuBoWeNWf+d3tNIWhIkmH6BlZoKucEbkrxAGC1sn1yL9sKdIBYmf3VnOPw51
-Received: from [10.0.0.72] (host-141-40-253-38.customer.izb-online.de
-	[141.40.253.38])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.mnet-online.de (Postfix) with ESMTPSA
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Aug 2017 14:40:04 +0200 (CEST)
+	Wed, 30 Aug 2017 13:07:58 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v7UD7vSS012427
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Wed, 30 Aug 2017 14:07:58 +0100
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1dn2ir-0006dM-D1; Wed, 30 Aug 2017 14:07:57 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-From: Olaf Mandel <o.mandel@menlosystems.com>
-Message-ID: <adcc19b8-8834-cfe9-cb26-9a463ce42f43@menlosystems.com>
-Date: Wed, 30 Aug 2017 14:38:58 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
-	Thunderbird/52.3.0
-MIME-Version: 1.0
-Subject: Question on toaster bringup
+Date: Wed, 30 Aug 2017 14:07:56 +0100
+Message-Id: <1504098476-25461-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
+	(dan.rpsys.net [192.168.3.1]);
+	Wed, 30 Aug 2017 14:07:58 +0100 (BST)
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: [PATCH] command: Fix some bugs identified by BB_SERVER_TIMEOUT
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,48 +34,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 30 Aug 2017 12:40:05 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 30 Aug 2017 13:08:00 -0000
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+The 'needconfig' flag was meant to be the default as most commands do need
+it and the "False" cases were the exception. The code was written backwards
+with a default False value. Invert this to match the intent, resulting in
+the config being reparsed if metadata has changed.
 
-Hello,
+Also ensure the second level configuration is parsed for the getLayerPriorities
+command as otherwise it can return stale info.
 
-I want to initialize toaster from fixtures alone, if possible. It should
-only provide a "local" release (no network dependency at all). Here I
-ran into two to three problems:
+With these changes:
 
-* the oe-core.xml fixture adds three releases. Is it possible to
-remove/delete objects in the custom.xml fixture that I do not want?
-Currently I am working around that by just configuring out the line
-call_command("loaddata", "oe-core") in checksettings.py.
+BB_SERVER_TIMEOUT=100 oe-selftest -r bblayers.BitbakeLayers.test_bitbakelayers_add_remove
 
-* the custom.xml fixture needs to reside in the
-bitbake/lib/toaster/orm/fixtures directory to be found. How can I search
-at other places? Setting an environment variable FIXTURE_DIRS didn't
-seem to help.
+passes instead of fails.
 
-* minor point: would it make sense to detect if
-call_command("lsupdates") is needed? One does not need that for a purely
-local release and I have it commented out.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/command.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thank you for your time,
-Olaf
-- -- 
-Olaf Mandel
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index a923245..0d0354c 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -79,7 +79,7 @@ class Command:
+                     return None, "Not able to execute not readonly commands in readonly mode"
+             try:
+                 self.cooker.process_inotify_updates()
+-                if getattr(command_method, 'needconfig', False):
++                if getattr(command_method, 'needconfig', True):
+                     self.cooker.updateCacheSync()
+                 result = command_method(self, commandline)
+             except CommandError as exc:
+@@ -283,6 +283,7 @@ class CommandsSync:
+     parseConfiguration.needconfig = False
+ 
+     def getLayerPriorities(self, command, params):
++        command.cooker.parseConfiguration()
+         ret = []
+         # regex objects cannot be marshalled by xmlrpc
+         for collection, pattern, regex, pri in command.cooker.bbfile_config_priorities:
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJZprHhAAoJEFS9nbRiUh3/YeEIAIWvZIb0gECYO+mTrcZu+7w7
-Zmtg2ZcYM2BWwthzJl4aA48vVjwYOpY74oQnByorEJh6yjSob/GqAFgPKbNGVF+a
-zH1BCkzao7oAdYtY5naYfYyaD5iDvStl/pfxCoxujh7wC9k7o11gBXO2HIp4U/Ww
-8kiNlDpjI2dOciuanYB9hluOtwJ+pBJsuFhktTRKn3f7hSkPq1Q/C+L8dJEBc9sl
-JyQ5yNdEhXhrvCPT1wyJtxnHiAXIK/nQrXb0uEFzLv1ENxgCiGVxY6GsHm7KSXf/
-I53I+m5kWiBozgo5bXPfj6W0se/v7EsU30kOCilUCAf6bl65LS2EyqVndTJCHZ4=
-=GW/i
------END PGP SIGNATURE-----
 
