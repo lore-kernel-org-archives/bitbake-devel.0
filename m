@@ -1,23 +1,22 @@
-Return-Path: <caio.oliveira@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id B6CF378273
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 21AB978304
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Aug 2017 22:35:51 +0000 (UTC)
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	30 Aug 2017 15:35:52 -0700
+	Wed, 30 Aug 2017 23:31:19 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	30 Aug 2017 16:31:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.41,450,1498546800"; d="scan'208";a="143871098"
-Received: from cmdeoliv-mobl2.jf.intel.com (HELO
-	cmdeoliv-mobl2.amr.corp.intel.com) ([10.24.8.241])
-	by orsmga005.jf.intel.com with ESMTP; 30 Aug 2017 15:35:52 -0700
-Date: Wed, 30 Aug 2017 15:35:52 -0700
-From: Caio Marcelo de Oliveira Filho <caio.oliveira@intel.com>
+X-IronPort-AV: E=Sophos;i="5.41,450,1498546800"; d="scan'208";a="1189995032"
+Received: from ekooi-mobl5.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.141.249])
+	by fmsmga001.fm.intel.com with ESMTP; 30 Aug 2017 16:31:18 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Message-ID: <20170830223552.GA14312@cmdeoliv-mobl2.amr.corp.intel.com>
-MIME-Version: 1.0
-User-Agent: Mutt/1.8.3 (2017-05-23)
-Subject: [PATCH] siggen: Add reset to SignatureGenerator
+Date: Thu, 31 Aug 2017 11:30:42 +1200
+Message-Id: <cover.1504135776.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.5
+Subject: [PATCH 0/5] tinfoil/other fixes for devtool/recipetool
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,34 +29,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 30 Aug 2017 22:35:51 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Wed, 30 Aug 2017 23:31:20 -0000
 
-Fix failure after commit "cooker/siggen: Reset siggen when reparsing"
-(e4c6ca9440f63761560b49bbe12654441f54687e) when executing without
-specifying a BB_SIGNATURE_HANDLER.
+Some changes in aid of fixing issues with OE's devtool and recipetool.
 
-Signed-off-by: Caio Marcelo de Oliveira Filho <caio.oliveira@intel.com>
----
- lib/bb/siggen.py | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 4380760..7521a3a 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -69,6 +69,9 @@ class SignatureGenerator(object):
-     def set_taskdata(self, data):
-         self.runtaskdeps, self.taskhash, self.file_checksum_values, self.taints, self.basehash = data
- 
-+    def reset(self, data):
-+        return
-+
- class SignatureGeneratorBasic(SignatureGenerator):
-     """
-     """
+The following changes since commit 8a60106c6f7d586c793b965c5e9460b6016fab15:
+
+  main: Attempt to gain bitbake.lock rather than just waiting (2017-08-24 11:19:41 +0100)
+
+are available in the git repository at:
+
+  git://git.openembedded.org/bitbake-contrib paule/tinfoil-fixes-bb4
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=paule/tinfoil-fixes-bb4
+
+Paul Eggleton (5):
+  tinfoil: fix log message doubling when config_only=False
+  tinfoil: ensure log lines get printed when tasks fail
+  tinfoil: ensure variable history tracking works when parsing a recipe
+  cooker: ensure we can run buildFileInternal() after cache is populated
+  fetch2/npm: add noverify parameter to skip lockdown/shrinkwrap
+
+ lib/bb/cooker.py     |  8 ++++----
+ lib/bb/fetch2/npm.py | 41 +++++++++++++++++++++--------------------
+ lib/bb/tinfoil.py    | 47 ++++++++++++++++++++++++++++++++++++-----------
+ lib/bb/ui/knotty.py  | 50 +++++++++++++++++++++++++++-----------------------
+ 4 files changed, 88 insertions(+), 58 deletions(-)
+
 -- 
-2.9.4
+2.9.5
 
 
