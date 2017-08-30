@@ -1,24 +1,38 @@
-Return-Path: <markus.megerlin@megerlin.de>
-X-Greylist: delayed 450 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 14 Aug 2017 07:53:40 UTC
-Received: from smtp.megerlin.de (megerlin.de [85.214.221.78])
-	by mail.openembedded.org (Postfix) with ESMTP id 2FC31783BA
+Return-Path: <o.mandel@menlosystems.com>
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 5EEE978357
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 Aug 2017 07:53:40 +0000 (UTC)
-Received: from [192.168.2.102] (p5DC7CAC6.dip0.t-ipconnect.de [93.199.202.198])
-	by smtp.megerlin.de (Postfix) with ESMTPSA id 6CAE35520D56;
-	Mon, 14 Aug 2017 09:46:10 +0200 (CEST)
-To: bitbake-devel@lists.openembedded.org
-From: Markus Megerlin <markus.megerlin@megerlin.de>
-Message-ID: <b2504527-5a5d-bedb-7f1f-8e0ad5ac0864@megerlin.de>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
-	Thunderbird/52.2.1
+	Wed, 30 Aug 2017 16:10:10 +0000 (UTC)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 3xj9Sy73s5z1qw7C;
+	Wed, 30 Aug 2017 18:10:10 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+	by mail.m-online.net (Postfix) with ESMTP id 3xj9Sy6F8Cz3hhTP;
+	Wed, 30 Aug 2017 18:10:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
+	port 10024)
+	with ESMTP id QpLEXPAqzO5J; Wed, 30 Aug 2017 18:10:08 +0200 (CEST)
+X-Auth-Info: MjxVkuTTmiUOZYhta+V06kZWXi3Tuzuxn+xFZ7MZ+3sXAa3GhVFVL6YCtoKzAc0X
+Received: from [10.0.0.72] (host-141-40-253-38.customer.izb-online.de
+	[141.40.253.38])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Wed, 30 Aug 2017 18:10:08 +0200 (CEST)
+To: "Reyna, David" <david.reyna@windriver.com>, toaster@yoctoproject.org
+References: <adcc19b8-8834-cfe9-cb26-9a463ce42f43@menlosystems.com>
+	<5E53D14CE4667A45B9A06760DE5D13D0CF7815B7@ALA-MBC.corp.ad.wrs.com>
+From: Olaf Mandel <o.mandel@menlosystems.com>
+Message-ID: <9637f775-87c7-7986-51f3-6aa1ab870eb2@menlosystems.com>
+Date: Wed, 30 Aug 2017 18:08:56 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+	Thunderbird/52.3.0
 MIME-Version: 1.0
-X-PPP-Message-ID: <20170814074610.11702.19493@h2007878.stratoserver.net>
-X-PPP-Vhost: megerlin.de
+In-Reply-To: <5E53D14CE4667A45B9A06760DE5D13D0CF7815B7@ALA-MBC.corp.ad.wrs.com>
 X-Mailman-Approved-At: Fri, 01 Sep 2017 15:25:32 +0000
-Cc: =?UTF-8?Q?Andreas_Kr=c3=bcger?= <andreas.krueger.extern@innogy.com>
-Subject: Can't get bitbake running
+Subject: Re: Question on toaster bringup
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,154 +45,128 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-Date: Mon, 14 Aug 2017 07:53:41 -0000
-X-Original-Date: Mon, 14 Aug 2017 09:46:10 +0200
-X-List-Received-Date: Mon, 14 Aug 2017 07:53:41 -0000
+X-List-Received-Date: Wed, 30 Aug 2017 16:10:11 -0000
+X-Groupsio-MsgNum: 8937
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="MrGmPdsgsoWcI6J83VK50gKQrJOgNAghG"
+
+--MrGmPdsgsoWcI6J83VK50gKQrJOgNAghG
+Content-Type: multipart/mixed; boundary="wknK6j0BOlV6MdqLeqfwLRIWH26G6suxu";
+ protected-headers="v1"
+From: Olaf Mandel <o.mandel@menlosystems.com>
+To: "Reyna, David" <david.reyna@windriver.com>, toaster@yoctoproject.org
+Message-ID: <9637f775-87c7-7986-51f3-6aa1ab870eb2@menlosystems.com>
+Subject: Re: [bitbake-devel] Question on toaster bringup
+References: <adcc19b8-8834-cfe9-cb26-9a463ce42f43@menlosystems.com>
+ <5E53D14CE4667A45B9A06760DE5D13D0CF7815B7@ALA-MBC.corp.ad.wrs.com>
+In-Reply-To: <5E53D14CE4667A45B9A06760DE5D13D0CF7815B7@ALA-MBC.corp.ad.wrs.com>
+
+--wknK6j0BOlV6MdqLeqfwLRIWH26G6suxu
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
 
-Dear Madams and Sirs,
+Hi,
 
-I try to get bitbake running for several days. I tried the following
-versions:
+Am 30.08.2017 um 16:51 schrieb Reyna, David:
+> [Am 30.08.2017 um 14:38 schrieb Olaf Mandel:]
+>> I want to initialize toaster from fixtures alone, if possible. It shou=
+ld
+>> only provide a "local" release (no network dependency at all). Here I
+>> ran into two to three problems:
+>>=20
+> Thank you for using Toaster! There is a Toaster team [...]
 
-- 1.26
+I obviously posted to the wrong forum, sorry: this should be the last
+email there.
 
-- 1.17
+> [...] and we have a meeting each week, for which I am the lead and the =
+Toaster maintainer. I will forward you the link (it is in about 10 minute=
+s :-)
 
-- 1.16
+Thanks, but I missed it. Probably would not have had much to contribute,
+anyway.
 
-And last I also tried to checkout the branch 1.34 and use it. But this
-attempt failed, too.
+>> * the oe-core.xml fixture adds three releases. Is it possible to
+>> remove/delete objects in the custom.xml fixture that I do not want?
+>> Currently I am working around that by just configuring out the line
+>> call_command("loaddata", "oe-core") in checksettings.py.
+>>=20
+> 1) See 11957 for a resolution for your question. The fixtures are stric=
+tly additive, so 11957 provides the way to disable the default fixtures.
 
-On Version 1.26 I get the following error message:
+Thank you. Just for anyone else who got as confused as me: the commit-id
+got rewritten from 254e2debe5705f4fe34307378a8c1457e4327d1c to
+ac29d4a9078494544a2627d8b6b021096b49cb34 (at the moment).
 
-Traceback (most recent call last):
-  File "/home/megerlin/Tools/bitbake-1.26.0/bin/bitbake", line 31, in
-<module>
-    import bb
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/__init__.py", line
-77, in <module>
-    from bb import fetch2 as fetch
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/fetch2/__init__.py",
-line 1660, in <module>
-    from . import wget
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/fetch2/wget.py", line
-40, in <module>
-    from   bs4 import BeautifulSoup
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bs4/__init__.py", line
-30, in <module>
-    from .builder import builder_registry, ParserRejectedMarkup
-  File
-"/home/megerlin/Tools/bitbake-1.26.0/lib/bs4/builder/__init__.py", line
-311, in <module>
-    from . import _html5lib
-  File
-"/home/megerlin/Tools/bitbake-1.26.0/lib/bs4/builder/_html5lib.py", line
-57, in <module>
-    class TreeBuilderForHtml5lib(html5lib.treebuilders._base.TreeBuilder)=
-:
-AttributeError: 'module' object has no attribute '_base'
-/home/megerlin/Tools/bitbake-1.26.0/lib/bb/event.py:111: RuntimeWarning:
-Parent module 'bb' not found while handling absolute import
-  from bb.msg import BBLogFormatter
-Error in atexit._run_exitfuncs:
-Traceback (most recent call last):
-  File "/usr/lib/python2.7/atexit.py", line 24, in _run_exitfuncs
-    func(*targs, **kargs)
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/event.py", line 111,
-in print_ui_queue
-    from bb.msg import BBLogFormatter
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/__init__.py", line
-77, in <module>
-    from bb import fetch2 as fetch
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/fetch2/__init__.py",
-line 39, in <module>
-    from bb import data
-ImportError: cannot import name data
-Error in sys.exitfunc:
-Traceback (most recent call last):
-  File "/usr/lib/python2.7/atexit.py", line 24, in _run_exitfuncs
-    func(*targs, **kargs)
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/event.py", line 111,
-in print_ui_queue
-    from bb.msg import BBLogFormatter
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/__init__.py", line
-77, in <module>
-    from bb import fetch2 as fetch
-  File "/home/megerlin/Tools/bitbake-1.26.0/lib/bb/fetch2/__init__.py",
-line 39, in <module>
-    from bb import data
-ImportError: cannot import name data
+One question for that: where does ToasterSetting get an object with
+name=3D=3D'CUSTOM_XML_ONLY' from? Does this require editing the settings.=
+xml
+file?
 
-But as I looked for the "data" file in the "bb" package I could find it,
-where I did expect it. So I have no idea what the problem might be.
+>> * the custom.xml fixture needs to reside in the
+>> bitbake/lib/toaster/orm/fixtures directory to be found. How can I sear=
+ch
+>> at other places? Setting an environment variable FIXTURE_DIRS didn't
+>> seem to help.
+>>=20
+> 2) Yes, create and enhancement request and we can address that. It is t=
+oo late for enhancements for YP-2.4 but we can look at that for 2.5.
+>=20
+Request number is #12007. Thank you for considering it.
 
-In version 1.17, as well as in version 1.16 there is another error occuri=
-ng:
+>> * minor point: would it make sense to detect if
+>> call_command("lsupdates") is needed? One does not need that for a pure=
+ly
+>> local release and I have it commented out.
+>>=20
+> 3) Ideally you would provide your own Layer Index server so that you ca=
+n get the full power of the interface. We can certainly look at alternati=
+ves for your reduced use case.
+>=20
+I guess I could. But even without it, I can still build. The only
+inconveniences I see are:
 
-[...]
+* machine is not selectable / detectable
+* recipes / images are only known after they were build once
+* because of above, need to put the image recipes into the custom.xml
+fixture to allow building them
+* links to recipe files are dead
 
-ERROR: Execution of event handler 'sstate_eventhandler' failed
-Traceback (most recent call last):
-  File "sstate_eventhandler(e)", line 6, in
-sstate_eventhandler(e=3D<bb.event.RecipeParsed object at 0x7f8facf37f90>)=
+I can live with all of the above, so I will probably not set up a local
+layer index.
 
-TypeError: 'NoneType' object has no attribute '__getitem__'
-[...]
-
-Summary: There were 67 ERROR messages shown, returning a non-zero exit co=
-de.
-ERROR: Execution of event handler 'sstate_eventhandler' failed
-Traceback (most recent call last):
-  File "sstate_eventhandler(e)", line 6, in sstate_eventhandler
-TypeError: 'NoneType' object has no attribute '__getitem__'
+Thank you,
+Olaf
+--=20
+Olaf Mandel
+phone: +49-89-189166-185
+fax:   +49-89-189166-111
+Menlo Systems GmbH
+Am Klopferspitz 19a, D-82152 Martinsried
+Amtsgericht M=C3=BCnchen HRB 138145
+Gesch=C3=A4ftsf=C3=BChrung: Dr Michael Mei, Dr Ronald Holzwarth
+USt-IdNr. DE217772017, St.-Nr. 14316170324
 
 
-On the git tag 1.34 I get the following error:
+--wknK6j0BOlV6MdqLeqfwLRIWH26G6suxu--
 
-NOTE: Starting bitbake server...
-ERROR: Unable to start bitbake server
-ERROR: Last 10 lines of server log
-/home/megerlin/Projekte/Innogy/GW_Firmware/fsl-community-bsp/build/bitbak=
-e-cookerdaemon.log:
-  File "/home/megerlin/Tools/bitbake-1.34/lib/bb/cooker.py", line 357,
-in initConfigurationData
-    self.databuilder.parseBaseConfiguration()
-  File "/home/megerlin/Tools/bitbake-1.34/lib/bb/cookerdata.py", line
-323, in parseBaseConfiguration
-    raise bb.BBHandledException
-bb.BBHandledException
-NOTE: Starting bitbake server...
-ERROR: Error in compiling python function in
-/home/megerlin/Projekte/Innogy/GW_Firmware/fsl-community-bsp/sources/poky=
-/meta/classes/terminal.bbclass,
-line 13:
+--MrGmPdsgsoWcI6J83VK50gKQrJOgNAghG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-The code lines resulting in this error were:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-SyntaxError: invalid token (terminal.bbclass, line 30)
+iQEcBAEBCAAGBQJZpuMdAAoJEFS9nbRiUh3/aZAIAK+N29UVX//NnNttOdIoNvHk
+u22i6yS13Z1OBh0+cXJiyXUrFN2KWNbUwl0ZZhuu05q27ADN+kW9x43pVlemU+Q+
+fy//PlSPyOf4RD0BCv9+5E0Hdqmg/FYtz3NIDVXhOHIzvLyPPvYVzw8zqLYWKWZE
+T0ZkaVQtrQuJd0OTOdQcLUqQDWQBA7YS9rxoUz8nv5mxqU6d/zRxLkug6G1cq2Su
+thVCcYdYCvy5Z0mEcq9J2fGyY47RWnWUQO7jEickjIBZwI1ZGyzsxbizgTuYyhbS
+9JxW9ktUU29lGKNZsasqUorrl7kqrkzy2SVQgZMbH16XFpbutt6JwVtYd0XInRY=
+=p8oA
+-----END PGP SIGNATURE-----
 
-
-I'm using a Ubuntu 17.04. The python version installed are:
-
-python --version
-Python 2.7.13
-
-python3 --version
-Python 3.5.3
-
-Maybe you know one of the errors and could help me to solve it.
-
-Best Regards,
-
-Markus Megerlin
-
---
-Markus Megerlin                      Tel: +49 231 22 39 0810
-Eichenmarkweg 28                     Fax: +49 231 22 39 0811
-44267 Dortmund                       Email: markus.megerlin@megerlin.de
-
-
-
+--MrGmPdsgsoWcI6J83VK50gKQrJOgNAghG--
