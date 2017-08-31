@@ -1,24 +1,32 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 9CD3278395
+Return-Path: <david.reyna@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 6A5447826E
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Aug 2017 23:31:37 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	30 Aug 2017 16:31:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.41,450,1498546800"; d="scan'208";a="1189995081"
-Received: from ekooi-mobl5.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.141.249])
-	by fmsmga001.fm.intel.com with ESMTP; 30 Aug 2017 16:31:36 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 31 Aug 2017 11:30:47 +1200
-Message-Id: <f52340ba90b5b001be9b86a0a29a2f230b942cfe.1504135776.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <cover.1504135776.git.paul.eggleton@linux.intel.com>
-References: <cover.1504135776.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 5/5] fetch2/npm: add noverify parameter to skip lockdown/shrinkwrap
+	Thu, 31 Aug 2017 02:12:39 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v7V2CeNP011794
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 30 Aug 2017 19:12:41 -0700 (PDT)
+Received: from ALA-MBC.corp.ad.wrs.com ([169.254.1.180]) by
+	ALA-HCB.corp.ad.wrs.com ([147.11.189.41]) with mapi id 14.03.0361.001;
+	Wed, 30 Aug 2017 19:12:40 -0700
+From: "Reyna, David" <david.reyna@windriver.com>
+To: Olaf Mandel <o.mandel@menlosystems.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH] toaster: make debug output more readable
+Thread-Index: AQHTIYwsm50zfNVQFk2C/DK6w4516aKdtbzA
+Date: Thu, 31 Aug 2017 02:12:39 +0000
+Message-ID: <5E53D14CE4667A45B9A06760DE5D13D0CF78219E@ALA-MBC.corp.ad.wrs.com>
+References: <20170830122438.30191-1-o.mandel@menlosystems.com>
+In-Reply-To: <20170830122438.30191-1-o.mandel@menlosystems.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [128.224.21.153]
+MIME-Version: 1.0
+Subject: Re: [PATCH] toaster: make debug output more readable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,75 +39,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 30 Aug 2017 23:31:37 -0000
+X-List-Received-Date: Thu, 31 Aug 2017 02:12:40 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-When fetching source for the first time within scripts such as
-OpenEmbedded's recipetool, we don't want to be showing warnings about
-NPM_SHRINKWRAP or NPM_LOCKDOWN not being set since there's no way we
-could have set them in advance. Previously we were using
-ud.ignore_checksums to suppress these but since we are now using a more
-standard task-based path to fetch the source, we need to disable these
-through the metadata. Look for a "noverify" parameter set on the npm URL
-and skip the checks if it is set to "1".
+Hi Olaf,
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+I have looked at both of your patches, and I think that they are both usefu=
+l and consistent with Toaster, thank you!
+
+They do not however have a Bugzilla reference, and they are missing the nor=
+mal patch header. I propose that I go ahead and (a) create those Bugzilla e=
+ntries for you and (b) submit them together with other pending Toaster fixe=
+s using the standard bitbake-dev patch submission, together with my additio=
+nal sign-off.
+
+Created:
+	Bug 12014 - debug message during build lists layers missing separators
+	Bug 12015 - set default pokydirname if no external layers
+
+Thanks!
+David
+Toaster maintainer
+
+
+-----Original Message-----
+From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
+unces@lists.openembedded.org] On Behalf Of Olaf Mandel
+Sent: Wednesday, August 30, 2017 5:25 AM
+To: bitbake-devel@lists.openembedded.org
+Cc: Olaf Mandel
+Subject: [bitbake-devel] [PATCH] toaster: make debug output more readable
+
+One of the debug-messages during build contains a list of all layers,
+but without spaces or other separators between them. Use pformat
+instead.
+
+Signed-off-by: Olaf Mandel <o.mandel@menlosystems.com>
 ---
- lib/bb/fetch2/npm.py | 41 +++++++++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
+ lib/toaster/bldcontrol/localhostbecontroller.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index f2e7983..b5f148c 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -263,26 +263,27 @@ class Npm(FetchMethod):
-             runfetchcmd("tar -xJf %s" % (ud.fullmirror), d, workdir=dest)
-             return
- 
--        shwrf = d.getVar('NPM_SHRINKWRAP')
--        logger.debug(2, "NPM shrinkwrap file is %s" % shwrf)
--        if shwrf:
--            try:
--                with open(shwrf) as datafile:
--                    shrinkobj = json.load(datafile)
--            except Exception as e:
--                raise FetchError('Error loading NPM_SHRINKWRAP file "%s" for %s: %s' % (shwrf, ud.pkgname, str(e)))
--        elif not ud.ignore_checksums:
--            logger.warning('Missing shrinkwrap file in NPM_SHRINKWRAP for %s, this will lead to unreliable builds!' % ud.pkgname)
--        lckdf = d.getVar('NPM_LOCKDOWN')
--        logger.debug(2, "NPM lockdown file is %s" % lckdf)
--        if lckdf:
--            try:
--                with open(lckdf) as datafile:
--                    lockdown = json.load(datafile)
--            except Exception as e:
--                raise FetchError('Error loading NPM_LOCKDOWN file "%s" for %s: %s' % (lckdf, ud.pkgname, str(e)))
--        elif not ud.ignore_checksums:
--            logger.warning('Missing lockdown file in NPM_LOCKDOWN for %s, this will lead to unreproducible builds!' % ud.pkgname)
-+        if ud.parm.get("noverify", None) != '1':
-+            shwrf = d.getVar('NPM_SHRINKWRAP')
-+            logger.debug(2, "NPM shrinkwrap file is %s" % shwrf)
-+            if shwrf:
-+                try:
-+                    with open(shwrf) as datafile:
-+                        shrinkobj = json.load(datafile)
-+                except Exception as e:
-+                    raise FetchError('Error loading NPM_SHRINKWRAP file "%s" for %s: %s' % (shwrf, ud.pkgname, str(e)))
-+            elif not ud.ignore_checksums:
-+                logger.warning('Missing shrinkwrap file in NPM_SHRINKWRAP for %s, this will lead to unreliable builds!' % ud.pkgname)
-+            lckdf = d.getVar('NPM_LOCKDOWN')
-+            logger.debug(2, "NPM lockdown file is %s" % lckdf)
-+            if lckdf:
-+                try:
-+                    with open(lckdf) as datafile:
-+                        lockdown = json.load(datafile)
-+                except Exception as e:
-+                    raise FetchError('Error loading NPM_LOCKDOWN file "%s" for %s: %s' % (lckdf, ud.pkgname, str(e)))
-+            elif not ud.ignore_checksums:
-+                logger.warning('Missing lockdown file in NPM_LOCKDOWN for %s, this will lead to unreproducible builds!' % ud.pkgname)
- 
-         if ('name' not in shrinkobj):
-             self._getdependencies(ud.pkgname, jsondepobj, ud.version, d, ud)
--- 
-2.9.5
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/=
+bldcontrol/localhostbecontroller.py
+index 358cce4d..12071029 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -221,7 +221,7 @@ class LocalhostBEController(BuildEnvironmentController)=
+:
+                 continue  # not a custom recipe, skip
+=20
+         layerlist.extend(nongitlayerlist)
+-        logger.debug("\n\nset layers gives this list \n %s" % ''.join(laye=
+rlist))
++        logger.debug("\n\nset layers gives this list %s" % pformat(layerli=
+st))
+         self.islayerset =3D True
+         return layerlist
+=20
+--=20
+2.11.0
 
+--=20
+_______________________________________________
+bitbake-devel mailing list
+bitbake-devel@lists.openembedded.org
+http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
