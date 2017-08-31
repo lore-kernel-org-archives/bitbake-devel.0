@@ -1,27 +1,29 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 57B937841C
+	by mail.openembedded.org (Postfix) with ESMTP id 5C02F7842D
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 31 Aug 2017 16:38:42 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v7VGcfnf028718
+	v7VGcfCU028725
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
 	verify=NOT); Thu, 31 Aug 2017 17:38:42 +0100
 Received: from richard by hex with local (Exim 4.86_2)
 	(envelope-from <richard@rpsys.net>)
-	id 1dnSUL-0003FI-6I; Thu, 31 Aug 2017 17:38:41 +0100
+	id 1dnSUL-0003Fp-Ag; Thu, 31 Aug 2017 17:38:41 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 31 Aug 2017 17:38:31 +0100
-Message-Id: <1504197520-12428-1-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Thu, 31 Aug 2017 17:38:38 +0100
+Message-Id: <1504197520-12428-8-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1504197520-12428-1-git-send-email-richard.purdie@linuxfoundation.org>
+References: <1504197520-12428-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.11
 	(dan.rpsys.net [192.168.3.1]);
 	Thu, 31 Aug 2017 17:38:42 +0100 (BST)
 X-Virus-Scanned: clamav-milter 0.99.2 at dan
 X-Virus-Status: Clean
-Subject: [PATCH 01/10] prserv/cooker: Drop unused param
+Subject: [PATCH 08/10] prserv/serv: Send sentinel to stop handler thread
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,40 +38,37 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 31 Aug 2017 16:38:46 -0000
 
-Drop pointless unused function parameter.
+Shutdown from SIGTERM currently has to wait for the handler thread to timeout.
+Add a sentinel value which triggers it to loop and allows for a quick exit.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py   | 2 +-
- lib/prserv/serv.py | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ lib/prserv/serv.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index db034b9..2ee349e 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1576,7 +1576,7 @@ class BBCooker:
-         return
- 
-     def post_serve(self):
--        prserv.serv.auto_shutdown(self.data)
-+        prserv.serv.auto_shutdown()
-         bb.event.fire(CookerExit(), self.data)
- 
- 
 diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index 3145689..306f0a3 100644
+index a2da072..6be78c8 100644
 --- a/lib/prserv/serv.py
 +++ b/lib/prserv/serv.py
-@@ -478,7 +478,7 @@ def auto_start(d):
-         logger.critical("PRservice %s:%d not available" % (host, port))
-         raise PRServiceConfigError
+@@ -84,6 +84,8 @@ class PRServer(SimpleXMLRPCServer):
+             except queue.Empty:
+                 self.table.sync_if_dirty()
+                 continue
++            if request is None:
++                continue
+             try:
+                 self.finish_request(request, client_address)
+                 self.shutdown_request(request)
+@@ -103,7 +105,8 @@ class PRServer(SimpleXMLRPCServer):
+     def sigterm_handler(self, signum, stack):
+         if self.table:
+             self.table.sync()
+-        self.quit=True
++        self.quit()
++        self.requestqueue.put((None, None))
  
--def auto_shutdown(d=None):
-+def auto_shutdown():
-     global singleton
-     if singleton:
-         host, port = singleton.getinfo()
+     def process_request(self, request, client_address):
+         self.requestqueue.put((request, client_address))
 -- 
 2.7.4
 
