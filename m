@@ -1,27 +1,22 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 17C57780C8
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id AA8746FFD7
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  4 Sep 2017 04:10:40 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v844Agjo020231
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 3 Sep 2017 21:10:42 -0700 (PDT)
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Sun, 3 Sep 2017 21:10:41 -0700
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 3 Sep 2017 21:02:23 -0700
-Message-ID: <9dd81ceabfaa9a115f9fde3df555ddab57eb3a44.1504496902.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1504496902.git.David.Reyna@windriver.com>
-References: <cover.1504496902.git.David.Reyna@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 3/3] toaster: edit column list not sorted
+	Mon,  4 Sep 2017 09:03:51 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	04 Sep 2017 02:03:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.41,474,1498546800"; d="scan'208";a="1191290657"
+Received: from nabmajid-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.129.136])
+	by fmsmga001.fm.intel.com with ESMTP; 04 Sep 2017 02:03:48 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  4 Sep 2017 21:03:10 +1200
+Message-Id: <cover.1504515728.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.9.5
+Subject: [PATCH 0/2] A couple of signature fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,54 +29,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 04 Sep 2017 04:10:41 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 04 Sep 2017 09:03:51 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+A fix for taskhash mismatch errors seen with BB_SERVER_TIMEOUT set as
+well as a cleanup patch for siggen.py.
 
-The list of columns in the many 'Edit Columns' pop-ups became unsorted
-with the 'Toaster Table' implementation. These entries need to be
-gathered and sorted in the column processing.
 
-[YOCTO #12004]
+The following changes since commit 7234f33a7eb38ad51a8345f6689bc26e29f29f92:
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
- lib/toaster/toastergui/static/js/table.js | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+  cooker: Ensure parseConfiguration clears parsecache_valid (2017-09-01 16:59:35 +0100)
 
-diff --git a/lib/toaster/toastergui/static/js/table.js b/lib/toaster/toastergui/static/js/table.js
-index 1bbc8d1..abcb5ca 100644
---- a/lib/toaster/toastergui/static/js/table.js
-+++ b/lib/toaster/toastergui/static/js/table.js
-@@ -202,6 +202,7 @@ function tableInit(ctx){
-     }
- 
-     /* Add table header and column toggle menu */
-+    var column_edit_entries = [];
-     for (var i in tableData.columns){
-       var col = tableData.columns[i];
-       if (col.displayable === false) {
-@@ -293,9 +294,17 @@ function tableInit(ctx){
-         defaultHiddenCols.push(col.field_name);
-       }
- 
--      editColMenu.append(toggler);
-+      /* Gather the Edit Column entries */
-+      column_edit_entries.push({'title':col.title,'html':toggler});
-+
-     } /* End for each column */
- 
-+    /* Append the sorted Edit Column toggler entries */
-+    column_edit_entries.sort(function(a,b) {return (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);} );
-+    for (var col in column_edit_entries){
-+      editColMenu.append(column_edit_entries[col].html);
-+    }
-+
-     tableChromeDone = true;
-   }
- 
+are available in the git repository at:
+
+  git://git.openembedded.org/bitbake-contrib paule/sigfixes
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=paule/sigfixes
+
+Paul Eggleton (2):
+  cooker: clear extra config settings and remote datastores on client
+    disconnect
+  siggen: move reset() definition to base SignatureGenerator class
+
+ lib/bb/command.py | 3 +++
+ lib/bb/cooker.py  | 2 ++
+ lib/bb/siggen.py  | 6 ++----
+ 3 files changed, 7 insertions(+), 4 deletions(-)
+
 -- 
-1.9.1
+2.9.5
 
 
