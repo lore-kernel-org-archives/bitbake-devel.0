@@ -1,49 +1,51 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-ua0-f193.google.com (mail-ua0-f193.google.com
-	[209.85.217.193])
-	by mail.openembedded.org (Postfix) with ESMTP id 7323377BE4
+Return-Path: <prvs=415dbfde3=Mikko.Rapeli@bmw.de>
+Received: from esa1.bmw.c3s2.iphmx.com (esa1.bmw.c3s2.iphmx.com
+	[68.232.133.201])
+	by mail.openembedded.org (Postfix) with ESMTP id 8167B71D97
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Sep 2017 15:24:33 +0000 (UTC)
-Received: by mail-ua0-f193.google.com with SMTP id c27so2302599uah.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 06 Sep 2017 08:24:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=AEKynBZBkgYlP3f9YrSHlfouzeRLimIWmqAh9R9dyLg=;
-	b=e+LJOvGOsfTmQqxG8FDu/j6kHgX2FlvNbPyDCD7Y7z5OY06xYY0h5CP4fCdT1b/He8
-	5Nfzwj4I1b4krMEN0y7+o0Qz6tZxtddnFn9zJRTJf1rHdAXtrX4DkKRUmqsUCjGz3c9L
-	px4cYyG5Iow5HC0s2qYtJjA7lVYSfWHTFr9m7gAmsZkDvT9bpt5NVhe/s2IqdZ9rE9ug
-	BHv1X82Miav1cLvQ+BOHPxRBjE2UPRZEFu/eGhp0G452WNtcCoyI6WkeYLvsvoA/ObBp
-	iPlJVxMS4xTiYNXzIolA5X9oFrpYXZ53RGVFTUabHUzy8YNqHwV1FMEIh1gRbhG+SnHi
-	OItQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=AEKynBZBkgYlP3f9YrSHlfouzeRLimIWmqAh9R9dyLg=;
-	b=QQSgkTS5JpK1ppBzSYBFSkt6hb2vGOKZFacsmqK2CMkxlS48xaaHwqTHI+zMfmI86P
-	D0wEgkC4L2x23c1foCAJ06oZpCCN7dr1WvwLrgAX9j4wRpVKxUWwxcBT+5JR4H1Hk26Q
-	5YtapeYntAB5SCCkykizOjFhpuGEc341KWGO1gotiuDZ3A7qgTQKPdefzkdJbeiNi0+6
-	Q9YDSh4edAl3xCwQTYW8xvUNH8qkLQ+r4wcdVGzKH9UM77spux2nT55V8761L0fNjIay
-	hPrXj9Dmw39Intg2TiFuvB8afO4MYGUyOHsttvstxat8cONUICkLEGD7p1NBpLpxfZOS
-	2YKA==
-X-Gm-Message-State: AHPjjUhtdfNHhZnsePRYqm2Vplnw2JmjXap/gF6qGaOo8YSMrTewd67A
-	qogar5KN5yjolWkp4CooZCatWFMHHQ==
-X-Google-Smtp-Source: ADKCNb4cksuqV2u4ulwW7SHP3nXV3jmV69kdHkWOPoG4F7Nueoml157FioPICia1h6wRGmm2jWToySi+ob9N46Fxm44=
-X-Received: by 10.159.33.2 with SMTP id 2mr1592598uab.68.1504711474556; Wed,
-	06 Sep 2017 08:24:34 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.176.18.67 with HTTP; Wed, 6 Sep 2017 08:24:14 -0700 (PDT)
-In-Reply-To: <1504701210-10424-2-git-send-email-mikko.rapeli@bmw.de>
+	Wed,  6 Sep 2017 15:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
+	t=1504712717; x=1536248717;
+	h=from:to:cc:subject:date:message-id:references:
+	in-reply-to:content-id:content-transfer-encoding: mime-version;
+	bh=CirPQ2doDwVk9fZ/0IIwkHmB7RMnSIjNyZfWkfRdPeg=;
+	b=bETJc/cAwB1Asvt66POfLitpLBINPpTJ4jRFUVFzLM9ur9N08tiLwD4W
+	fcsIoP+Uqd+vuDtJ/WvlWYJx7u/jP+MSHzub3hEI3Cwh2UHgMG/zapGE/
+	0ePkEZ9HbSm7yosPYRd1zSjEAKu8o9O/DM0VsSK1SKFnqn6PDBE0gtxsl Y=;
+Received: from esagw6.bmwgroup.com (HELO esagw6.muc) ([160.46.252.49]) by
+	esa1.bmw.c3s2.iphmx.com with ESMTP/TLS; 06 Sep 2017 17:45:12 +0200
+Received: from esabb2.muc ([160.50.100.34])  by esagw6.muc with ESMTP/TLS;
+	06 Sep 2017 17:45:11 +0200
+Received: from smucm10l.bmwgroup.net (HELO smucm10l.europe.bmw.corp)
+	([160.48.96.48])
+	by esabb2.muc with ESMTP/TLS; 06 Sep 2017 17:45:11 +0200
+Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
+	smucm10l.europe.bmw.corp
+	(160.48.96.48) with Microsoft SMTP Server (TLS;
+	Wed, 6 Sep 2017 17:45:11 +0200
+Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
+	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1320.000;
+	Wed, 6 Sep 2017 17:45:11 +0200
+From: <Mikko.Rapeli@bmw.de>
+To: <kergoth@gmail.com>
+Thread-Topic: [bitbake-devel] [PATCH v2 1/2] gitsm.py: use download cache for
+	git submodules too
+Thread-Index: AQHTJwxe1tycDe9d+USF90Df9S22P6Kn15CAgAAHCQA=
+Date: Wed, 6 Sep 2017 15:45:11 +0000
+Message-ID: <20170906154506.sgehw2rtjdjhl5dk@hiutale>
 References: <1504701210-10424-1-git-send-email-mikko.rapeli@bmw.de>
-	<1504701210-10424-2-git-send-email-mikko.rapeli@bmw.de>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Wed, 6 Sep 2017 08:24:14 -0700
-Message-ID: <CABcZANnvs4pZ5Ziuh3zNJjy1vbO4mk14+VNyOw_XaQnN+E0YFQ@mail.gmail.com>
-To: Mikko Rapeli <mikko.rapeli@bmw.de>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH v2 2/2] gitsm.py: support BB_NO_NETWORK during do_unpack
+	<CABcZANk9n=tSdGFuWzJRJa8GRWBxLGFvugP_3vFW2HUVC7+=kA@mail.gmail.com>
+In-Reply-To: <CABcZANk9n=tSdGFuWzJRJa8GRWBxLGFvugP_3vFW2HUVC7+=kA@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [192.168.44.101]
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH v2 1/2] gitsm.py: use download cache for git submodules too
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,61 +58,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Sep 2017 15:24:33 -0000
-Content-Type: multipart/alternative; boundary="001a114fefceee354b055886f063"
+X-List-Received-Date: Wed, 06 Sep 2017 15:45:16 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <769E8B151DDF80478B1670E4FC404B82@bmwmail.corp>
+Content-Transfer-Encoding: base64
 
---001a114fefceee354b055886f063
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+SGksDQoNCk9uIFdlZCwgU2VwIDA2LCAyMDE3IGF0IDA4OjE5OjU1QU0gLTA3MDAsIENocmlzdG9w
+aGVyIExhcnNvbiB3cm90ZToNCj4gT24gV2VkLCBTZXAgNiwgMjAxNyBhdCA1OjMzIEFNLCBNaWtr
+byBSYXBlbGkgPG1pa2tvLnJhcGVsaUBibXcuZGU+IHdyb3RlOg0KPiANCj4gPiBDdXJyZW50bHkg
+ZG93bmxvYWQgY2FjaGVzIGZvciByZWNpcGVzIHVzaW5nIGdpdHNtIGFyZSBmaWxsZWQgYWxzbyB3
+aXRoDQo+ID4gdGhlIHN1Ym1vZHVsZSByZXBvc2l0b3JpZXMgYnV0IHdoZW4gdGhlIGdpdCBzdWJt
+b2R1bGUgdHJlZSBpcyByZXVzZWQgZnJvbQ0KPiA+IGNhY2hlLCBvbmx5IHRoZSBiYXNlIHJlcG9z
+aXRvcnkgaXMgY2xvbmVkLiBBZnRlciBhIHNvdXJjZSBVUkwgcmV3cml0ZSwNCj4gPiAnZ2l0IHN1
+Ym1vZHVsZSB1cGRhdGUgLS1pbml0IC0tcmVjdXJzaXZlJyBpcyBjYWxsZWQgaW4gdGhlIHRyZWUN
+Cj4gPiB3aGljaCBkb3dubG9hZHMgdGhlIG5lZWRlZCBzdWJtb2R1bGVzIGZyb20gdXBzdHJlYW0g
+VVJMJ3MuDQo+ID4gVGhpcyB3YXN0ZXMgYmFuZHdpZHRoIHNpbmNlIGRvd25sb2FkIGNhY2hlIGFs
+cmVhZHkgaGFkIHRoZSBuZWVkZWQNCj4gPiBjb21taXRzIGZvciB0aGUgc3VibW9kdWxlIHJlcG9z
+aXRvcmllcy4NCj4gPg0KPiA+IFdpdGggdGhpcyBjaGFuZ2UsIGFsc28gdGhlIHN1Ym1vZHVsZSBy
+ZXBvc2l0b3JpZXMgYXJlIGNvcGllZCB0byB0aGUNCj4gPiB3b3JrIHNwYWNlIGZyb20gZG93bmxv
+YWQgY2FjaGUgYW5kIHRoZSBkb3dubG9hZCBmcm9tIHVwc3RyZWFtIGNhbg0KPiA+IGJlIGF2b2lk
+ZWQuIFVzaW5nIHBsYWluICdjcCAtYScgc2luY2UgZ2l0IGNsb25pbmcgZG9lc24ndCB3b3JrIGZv
+ciB0aGUNCj4gPiBzdWJtb2R1bGUgZGlyZWN0b3JpZXMuDQo+ID4NCj4gDQo+IFRoaXMgYmVoYXZp
+b3IgaXMgYm90aCBhbHJlYWR5IHRyYWNrZWQgYnkgYSB5b2N0byBidWcsIGFuZCBibGluZGx5IGNv
+cHlpbmcNCj4gd2lsbCByZXN1bHQgaW4gYnJlYWthZ2Ugd2hlbiB0aGUgYnJhbmNoIGNoYW5nZXMg
+aW4gc3VjaCBhIHdheSB0aGF0IHRoZQ0KPiBzdWJtb2R1bGVzIGNoYW5nZS4gSSBhbHJlYWR5IHN1
+Ym1pdHRlZCBhbiBlcXVpdmFsZW50IHBhdGNoIGEgd2VlayBvciB0d28NCj4gYWdvIGFuZCB0aGVu
+IGRlY2lkZWQgYWdhaW5zdCBpdHMgaW5jbHVzaW9uLCBhcyBpdCBqdXN0IHJ1bnMgaW50byBvdGhl
+cg0KPiBmYWlsdXJlcywgc3BlY2lmaWNhbGx5IHRoZXJlIHdhcyBhbiBvZS1zZWxmdGVzdCB0aGF0
+IGZhaWxzIGlmIHlvdSBoYWQNCj4gcHJldmlvdXNseSBmZXRjaGVkIGEgZGlmZmVyZW50IGJyYW5j
+aCBvZiB0aGUgc291cmNlcyBpbiBxdWVzdGlvbiwgYXMgdGhlDQo+IHVwc3RyZWFtIHVybCBvZiBv
+bmUgb2YgdGhlIHN1Ym1vZHVsZXMgY2hhbmdlcyBiZXR3ZWVuIGJyYW5jaGVzLCBhbmQgd2UNCj4g
+ZG9u4oCZdCByZS1mZXRjaCBleGlzdGluZyBzdWJtb2R1bGVzIHdoZW4gdGhlaXIgdXJscyBjaGFu
+Z2UuIFdlIGRlZmluaXRlbHkNCj4gbmVlZCB0byBmaXggdGhpcywgYnV0IHRoaXMgZml4ZXMgb25l
+IHByb2JsZW0gYW5kIGludHJvZHVjZXMgb3RoZXJzLg0KDQpJbiBzaG9ydDogZ2l0IHN1Ym1vZHVs
+ZXMgc3Vjay4NCg0KZ2l0IGV4cG9zZXMgYWxsIHRoaXMgeXVja3luZXNzIHRvIHVzZXJzIHdobyBh
+cmUgY29uZnVzZWQgdG9vIGlmIHRoZWlyIGxvY2FsDQpzdWJtb2R1bGUgcmVwb3NpdG9yaWVzIHN0
+b3Agd29ya2luZyBiZXR3ZWVuIGNvbW1pdHMuDQoNCj4gU2VlIGh0dHBzOi8vYnVnemlsbGEueW9j
+dG9wcm9qZWN0Lm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTE4MzAgYW5kDQo+IGh0dHBzOi8vYnVnemls
+bGEueW9jdG9wcm9qZWN0Lm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTE4MzEgZm9yIHJlZmVyZW5jZS4N
+Cg0KT2suIEknbGwgdXNlIG15IHBhdGNoIGZvciBub3cgdW50aWwgc29tZXRoaW5nIGJldHRlciBj
+b21lcyBhbG9uZw0Kd2hpY2ggYXZvaWRzIGNsb25pbmcgdGVucyBvZiByZXBvc2l0b3JpZXMgb24g
+ZXZlcnkgYnVpbGQuDQoNCkFzIGZvciB0ZXN0aW5nLCBpdCdzIHBvc3NpYmxlIHRvIHNldHVwIGZh
+a2UgaHR0cF9wcm94eSBlbnZpcm9ubWVudCB2YXJpYWJsZQ0KYW5kIGJyZWFrIGUuZy4gaHR0cCBj
+b25uZWN0aW9ucyB0byBnaXRodWIuY29tLCBvciBpbiBjb250YWluZXJzIHRvIGJyZWFrDQpETlMg
+cmVzb2x1dGlvbiB1c2luZyAvZXRjL2hvc3RzIG9yIGFsbCBuZXR3b3JrIGNvbm5lY3Rpdml0eS4N
+Cg0KVGhhbmtzIGZvciBwdXNoaW5nIHRvIGZpeCB0aGlzIGlzc3VlLg0KDQotTWlra28=
 
-On Wed, Sep 6, 2017 at 5:33 AM, Mikko Rapeli <mikko.rapeli@bmw.de> wrote:
-
-> 'git submodule update --init -recursive' will clone remote repositories
-> if local tree does not have the referenced commits. Add --no-fetch
-> to git submodule update if BB_NO_NETWORK is defined and only local
-> download caches should be used.
->
-> Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
->
-
-If we=E2=80=99re unpacking, there=E2=80=99s no reason to be contacting anyt=
-hing remote
-regardless of the value of BB_NO_NETWORK. We should be passing =E2=80=94no-=
-fetch
-all the time. We also need to be running a submodule sync to update any
-changes urls in the submodule remotes, but there are other issues to be
-resolved beyond that.
---=20
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
-
---001a114fefceee354b055886f063
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">On Wed, Sep 6, 2017 at 5:33 AM, Mikko Rapeli <span dir=3D"=
-ltr">&lt;<a href=3D"mailto:mikko.rapeli@bmw.de" target=3D"_blank">mikko.rap=
-eli@bmw.de</a>&gt;</span> wrote:<br><div class=3D"gmail_extra"><div class=
-=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8=
-ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">&#39;git s=
-ubmodule update --init -recursive&#39; will clone remote repositories<br>
-if local tree does not have the referenced commits. Add --no-fetch<br>
-to git submodule update if BB_NO_NETWORK is defined and only local<br>
-download caches should be used.<br>
-<br>
-Signed-off-by: Mikko Rapeli &lt;<a href=3D"mailto:mikko.rapeli@bmw.de">mikk=
-o.rapeli@bmw.de</a>&gt;<br></span></blockquote><div><br></div><div>If we=E2=
-=80=99re unpacking, there=E2=80=99s no reason to be contacting anything rem=
-ote regardless of the value of BB_NO_NETWORK. We should be passing =E2=80=
-=94no-fetch all the time. We also need to be running a submodule sync to up=
-date any changes urls in the submodule remotes, but there are other issues =
-to be resolved beyond that.</div></div>-- <br><div class=3D"gmail_signature=
-" data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr"=
->Christopher Larson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenE=
-mbedded, OpenZaurus<br>Senior Software Engineer, Mentor Graphics</div></div=
-></div></div>
-</div></div>
-
---001a114fefceee354b055886f063--
