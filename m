@@ -1,52 +1,50 @@
-Return-Path: <prvs=415dbfde3=Mikko.Rapeli@bmw.de>
-Received: from esa3.bmw.c3s2.iphmx.com (esa3.bmw.c3s2.iphmx.com
-	[68.232.133.150])
-	by mail.openembedded.org (Postfix) with ESMTP id D361771D97
+Return-Path: <kergoth@gmail.com>
+Received: from mail-vk0-f67.google.com (mail-vk0-f67.google.com
+	[209.85.213.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 6EFE771D97
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Sep 2017 15:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-	t=1504712857; x=1536248857;
-	h=from:to:cc:subject:date:message-id:references:
-	in-reply-to:content-id:content-transfer-encoding: mime-version;
-	bh=sNwBYcqnSXmrW4nlIEaFypNlv6MwqjZ5AJqaLWJsJYE=;
-	b=IJnBzYbcxejm7WmuiyvdBvquELrMwuf7WWDBYFx/kXJVYoEKjnBXhvmo
-	m7OREU4f2tnnJ7V6yWBzwRCqW3QN6IVVObnylcMnQHGn+RIPOCv5q/fTM
-	a8S18LM/7pp6oSz4NZDxcvKLBXFkKhihQ4JuJGhk3nzMh+yzJv0T5H8Vc o=;
-Received: from esagw2.bmwgroup.com (HELO esagw2.muc) ([160.46.252.38]) by
-	esa3.bmw.c3s2.iphmx.com with ESMTP/TLS; 06 Sep 2017 17:47:35 +0200
-Received: from esabb3.muc ([160.50.100.30])  by esagw2.muc with ESMTP/TLS;
-	06 Sep 2017 17:47:35 +0200
-Received: from smucm10j.bmwgroup.net (HELO smucm10j.europe.bmw.corp)
-	([160.48.96.46])
-	by esabb3.muc with ESMTP/TLS; 06 Sep 2017 17:47:35 +0200
-Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
-	smucm10j.europe.bmw.corp
-	(160.48.96.46) with Microsoft SMTP Server (TLS;
-	Wed, 6 Sep 2017 17:47:34 +0200
-Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
-	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1320.000;
-	Wed, 6 Sep 2017 17:47:34 +0200
-From: <Mikko.Rapeli@bmw.de>
-To: <kergoth@gmail.com>
-Thread-Topic: [bitbake-devel] [PATCH v2 2/2] gitsm.py: support BB_NO_NETWORK
-	during do_unpack
-Thread-Index: AQHTJwxiYwJLU+ClSE2tjwTzRY8twKKn2MQAgAAGf4A=
-Date: Wed, 6 Sep 2017 15:47:34 +0000
-Message-ID: <20170906154729.hz4z5od5nc2g62ul@hiutale>
-References: <1504701210-10424-1-git-send-email-mikko.rapeli@bmw.de>
-	<1504701210-10424-2-git-send-email-mikko.rapeli@bmw.de>
-	<CABcZANnvs4pZ5Ziuh3zNJjy1vbO4mk14+VNyOw_XaQnN+E0YFQ@mail.gmail.com>
-In-Reply-To: <CABcZANnvs4pZ5Ziuh3zNJjy1vbO4mk14+VNyOw_XaQnN+E0YFQ@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [192.168.44.101]
+	Wed,  6 Sep 2017 15:50:00 +0000 (UTC)
+Received: by mail-vk0-f67.google.com with SMTP id j189so2000135vka.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 06 Sep 2017 08:50:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=J63Ubrc6249GfOhvgZjgmeBCpSfy/3eZU7TGgPpHsCo=;
+	b=gaJK+NtXSY/ySkLe19GLGRscT5y9n0gDV5CO+lK1nZw5NXwHOR06SD1t5jpv7yP9m9
+	OK4Pz/aa/jb1uNzCiQvd3RgwwN5Q5YBJ0Srff1Ct80l1x+1JePgfzDan+0ygw4DUD47I
+	XqEvbIA583fNRA7sC4Qzpj0fuuoG/FjoiAhXBpWaT0uIeiDgWToYVkKZmWNx59p0ElPx
+	u5+zmncvRUiQl03I6HQozDNxNRbpdPvliMTmYC6MKSVAhYh86qncsEZ3PVrujahlFj0X
+	PgaIjUMo9Nkxx/GF/b7uinN+jjoa916Zdz0CQe0fSxW94S/QJS7c9D10CGUDaebrHJuk
+	3/CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=J63Ubrc6249GfOhvgZjgmeBCpSfy/3eZU7TGgPpHsCo=;
+	b=rXWUZgZfrhXnrthUsnWIWfD8+pnRzLG4W7LkqZv+zGgcEgpQ9uBEjOczdDXA8rRl1G
+	CaDPlsOGRQEs6nNwV22aUYKcTPVdxTeq1/92s/VX47e/QVoKYx2M109PYyQTai6ZdH6t
+	8KWimJS7RR2j4QvSyfmDWWEspDodliM8AlqoGA7d7ArsyMAMoM50TxlaoCoB30If6Owj
+	hMSex7u79Y7NkG/dD4JpwfcdA1cOWaZWYjPkTppLqP/0D9tPTvRnnr7WY/w+ay0OsIbU
+	y0uRzSWtfFrBNrXyeI0T0b7SvLpzEBnE5wjHNzHnScTEz8320NQGePgJ5TYH+ICmLLT7
+	Mqcw==
+X-Gm-Message-State: AHPjjUhzNKKbnpXGIbgv9ghpKrOBPvnmKqMaL6jE5xGR8vdUP8efETPB
+	JVJ4KOR8/boq9BWpsdwUdp8QSPcz2g==
+X-Google-Smtp-Source: ADKCNb7buZNqDp07O/gu3V9OjNEYnldVp7h5ZpX/pN9biUZ8J56+LeZRIVZAzb72SRTilAOqmmoRqA8qwY2wCV6z8E4=
+X-Received: by 10.31.227.70 with SMTP id a67mr1600005vkh.17.1504713002196;
+	Wed, 06 Sep 2017 08:50:02 -0700 (PDT)
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH v2 2/2] gitsm.py: support BB_NO_NETWORK during do_unpack
+Received: by 10.176.18.67 with HTTP; Wed, 6 Sep 2017 08:49:41 -0700 (PDT)
+In-Reply-To: <20170906154506.sgehw2rtjdjhl5dk@hiutale>
+References: <1504701210-10424-1-git-send-email-mikko.rapeli@bmw.de>
+	<CABcZANk9n=tSdGFuWzJRJa8GRWBxLGFvugP_3vFW2HUVC7+=kA@mail.gmail.com>
+	<20170906154506.sgehw2rtjdjhl5dk@hiutale>
+From: Christopher Larson <kergoth@gmail.com>
+Date: Wed, 6 Sep 2017 08:49:41 -0700
+Message-ID: <CABcZANnnzoeyFSBRVkfKmvYEgVtHD+gTJUwzjpmBhjp_ZWDUHw@mail.gmail.com>
+To: Mikko Rapeli <Mikko.Rapeli@bmw.de>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH v2 1/2] gitsm.py: use download cache for git submodules too
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,30 +57,181 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Sep 2017 15:47:35 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9AE04A6B92408043B89773AF02DAB8C4@bmwmail.corp>
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Wed, 06 Sep 2017 15:50:01 -0000
+Content-Type: multipart/alternative; boundary="001a114da5f8fc23fe0558874bc4"
 
-T24gV2VkLCBTZXAgMDYsIDIwMTcgYXQgMDg6MjQ6MTRBTSAtMDcwMCwgQ2hyaXN0b3BoZXIgTGFy
-c29uIHdyb3RlOg0KPiBPbiBXZWQsIFNlcCA2LCAyMDE3IGF0IDU6MzMgQU0sIE1pa2tvIFJhcGVs
-aSA8bWlra28ucmFwZWxpQGJtdy5kZT4gd3JvdGU6DQo+IA0KPiA+ICdnaXQgc3VibW9kdWxlIHVw
-ZGF0ZSAtLWluaXQgLXJlY3Vyc2l2ZScgd2lsbCBjbG9uZSByZW1vdGUgcmVwb3NpdG9yaWVzDQo+
-ID4gaWYgbG9jYWwgdHJlZSBkb2VzIG5vdCBoYXZlIHRoZSByZWZlcmVuY2VkIGNvbW1pdHMuIEFk
-ZCAtLW5vLWZldGNoDQo+ID4gdG8gZ2l0IHN1Ym1vZHVsZSB1cGRhdGUgaWYgQkJfTk9fTkVUV09S
-SyBpcyBkZWZpbmVkIGFuZCBvbmx5IGxvY2FsDQo+ID4gZG93bmxvYWQgY2FjaGVzIHNob3VsZCBi
-ZSB1c2VkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWlra28gUmFwZWxpIDxtaWtrby5yYXBl
-bGlAYm13LmRlPg0KPiA+DQo+IA0KPiBJZiB3ZeKAmXJlIHVucGFja2luZywgdGhlcmXigJlzIG5v
-IHJlYXNvbiB0byBiZSBjb250YWN0aW5nIGFueXRoaW5nIHJlbW90ZQ0KPiByZWdhcmRsZXNzIG9m
-IHRoZSB2YWx1ZSBvZiBCQl9OT19ORVRXT1JLLiBXZSBzaG91bGQgYmUgcGFzc2luZyDigJRuby1m
-ZXRjaA0KPiBhbGwgdGhlIHRpbWUuIFdlIGFsc28gbmVlZCB0byBiZSBydW5uaW5nIGEgc3VibW9k
-dWxlIHN5bmMgdG8gdXBkYXRlIGFueQ0KPiBjaGFuZ2VzIHVybHMgaW4gdGhlIHN1Ym1vZHVsZSBy
-ZW1vdGVzLCBidXQgdGhlcmUgYXJlIG90aGVyIGlzc3VlcyB0byBiZQ0KPiByZXNvbHZlZCBiZXlv
-bmQgdGhhdC4NCg0KWWVzLCBJIHRob3VnaHQgYWJvdXQgdGhpcyBidXQgZGVjaWRlZCBub3QgdG8g
-Y2hhbmdlIGN1cnJlbnQgYmVoYXZpb3IuDQpTaG91bGQgaGF2ZSBtZW50aW9uZWQgdGhhdCBpbiB0
-aGUgY29tbWl0IG1lc3NhZ2UuDQoNCkkgY2FuIHNlbmQgYSBuZXcgdmVyc2lvbiB3aGVyZSAtLW5v
-LWZldGNoIGlzIHRoZSBkZWZhdWx0IGJ1dCBpdCBtaWdodCBicmVhaw0KaW4gc29tZSBzZXR1cHMs
-IGVzcGVjaWFsbHkgd2hlbiB0aGUgRExfRElSIGNhY2hlIGlzIG5vdCB1c2VkIGZvciBzdWJtb2R1
-bGVzLi4uDQoNCi1NaWtrbw==
+--001a114da5f8fc23fe0558874bc4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Sep 6, 2017 at 8:45 AM, <Mikko.Rapeli@bmw.de> wrote:
+
+> Hi,
+>
+> On Wed, Sep 06, 2017 at 08:19:55AM -0700, Christopher Larson wrote:
+> > On Wed, Sep 6, 2017 at 5:33 AM, Mikko Rapeli <mikko.rapeli@bmw.de>
+> wrote:
+> >
+> > > Currently download caches for recipes using gitsm are filled also wit=
+h
+> > > the submodule repositories but when the git submodule tree is reused
+> from
+> > > cache, only the base repository is cloned. After a source URL rewrite=
+,
+> > > 'git submodule update --init --recursive' is called in the tree
+> > > which downloads the needed submodules from upstream URL's.
+> > > This wastes bandwidth since download cache already had the needed
+> > > commits for the submodule repositories.
+> > >
+> > > With this change, also the submodule repositories are copied to the
+> > > work space from download cache and the download from upstream can
+> > > be avoided. Using plain 'cp -a' since git cloning doesn't work for th=
+e
+> > > submodule directories.
+> > >
+> >
+> > This behavior is both already tracked by a yocto bug, and blindly copyi=
+ng
+> > will result in breakage when the branch changes in such a way that the
+> > submodules change. I already submitted an equivalent patch a week or tw=
+o
+> > ago and then decided against its inclusion, as it just runs into other
+> > failures, specifically there was an oe-selftest that fails if you had
+> > previously fetched a different branch of the sources in question, as th=
+e
+> > upstream url of one of the submodules changes between branches, and we
+> > don=E2=80=99t re-fetch existing submodules when their urls change. We d=
+efinitely
+> > need to fix this, but this fixes one problem and introduces others.
+>
+> In short: git submodules suck.
+>
+> git exposes all this yuckyness to users who are confused too if their loc=
+al
+> submodule repositories stop working between commits.
+>
+
+Yeah, submodules are a mess all around, for a number of reasons, but most
+of the alternatives have their own idiosyncrasies :)
+
+
+> > See https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D11830 and
+> > https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D11831 for reference=
+.
+>
+> Ok. I'll use my patch for now until something better comes along
+> which avoids cloning tens of repositories on every build.
+>
+> As for testing, it's possible to setup fake http_proxy environment variab=
+le
+> and break e.g. http connections to github.com, or in containers to break
+> DNS resolution using /etc/hosts or all network connectivity.
+>
+> Thanks for pushing to fix this issue.
+>
+
+No problem. Thinking about it again, I=E2=80=99d support merging your patch=
+es as a
+workaround for now. It introduces other issues, but those other issues are
+likely more minor than re-fetching everything in do_unpack. So we can merge
+this and use it until the rewritten fetcher gets merged.
+--=20
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
+
+--001a114da5f8fc23fe0558874bc4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On Wed, Sep 6, 2017 at 8:45 AM,  <span dir=3D"ltr">&lt;<a href=3D"mailt=
+o:Mikko.Rapeli@bmw.de" target=3D"_blank">Mikko.Rapeli@bmw.de</a>&gt;</span>=
+ wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bor=
+der-left:1px #ccc solid;padding-left:1ex">Hi,<br>
+<span class=3D""><br>
+On Wed, Sep 06, 2017 at 08:19:55AM -0700, Christopher Larson wrote:<br>
+&gt; On Wed, Sep 6, 2017 at 5:33 AM, Mikko Rapeli &lt;<a href=3D"mailto:mik=
+ko.rapeli@bmw.de">mikko.rapeli@bmw.de</a>&gt; wrote:<br>
+&gt;<br>
+&gt; &gt; Currently download caches for recipes using gitsm are filled also=
+ with<br>
+&gt; &gt; the submodule repositories but when the git submodule tree is reu=
+sed from<br>
+&gt; &gt; cache, only the base repository is cloned. After a source URL rew=
+rite,<br>
+&gt; &gt; &#39;git submodule update --init --recursive&#39; is called in th=
+e tree<br>
+&gt; &gt; which downloads the needed submodules from upstream URL&#39;s.<br=
+>
+&gt; &gt; This wastes bandwidth since download cache already had the needed=
+<br>
+&gt; &gt; commits for the submodule repositories.<br>
+&gt; &gt;<br>
+&gt; &gt; With this change, also the submodule repositories are copied to t=
+he<br>
+&gt; &gt; work space from download cache and the download from upstream can=
+<br>
+&gt; &gt; be avoided. Using plain &#39;cp -a&#39; since git cloning doesn&#=
+39;t work for the<br>
+&gt; &gt; submodule directories.<br>
+&gt; &gt;<br>
+&gt;<br>
+&gt; This behavior is both already tracked by a yocto bug, and blindly copy=
+ing<br>
+&gt; will result in breakage when the branch changes in such a way that the=
+<br>
+&gt; submodules change. I already submitted an equivalent patch a week or t=
+wo<br>
+&gt; ago and then decided against its inclusion, as it just runs into other=
+<br>
+&gt; failures, specifically there was an oe-selftest that fails if you had<=
+br>
+&gt; previously fetched a different branch of the sources in question, as t=
+he<br>
+&gt; upstream url of one of the submodules changes between branches, and we=
+<br>
+&gt; don=E2=80=99t re-fetch existing submodules when their urls change. We =
+definitely<br>
+&gt; need to fix this, but this fixes one problem and introduces others.<br=
+>
+<br>
+</span>In short: git submodules suck.<br>
+<br>
+git exposes all this yuckyness to users who are confused too if their local=
+<br>
+submodule repositories stop working between commits.<br></blockquote><div><=
+br></div><div>Yeah, submodules are a mess all around, for a number of reaso=
+ns, but most of the alternatives have their own idiosyncrasies :)</div><div=
+>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;b=
+order-left:1px #ccc solid;padding-left:1ex"><span class=3D"">
+&gt; See <a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D118=
+30" rel=3D"noreferrer" target=3D"_blank">https://bugzilla.yoctoproject.<wbr=
+>org/show_bug.cgi?id=3D11830</a> and<br>
+&gt; <a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D11831" =
+rel=3D"noreferrer" target=3D"_blank">https://bugzilla.yoctoproject.<wbr>org=
+/show_bug.cgi?id=3D11831</a> for reference.<br>
+<br>
+</span>Ok. I&#39;ll use my patch for now until something better comes along=
+<br>
+which avoids cloning tens of repositories on every build.<br>
+<br>
+As for testing, it&#39;s possible to setup fake http_proxy environment vari=
+able<br>
+and break e.g. http connections to <a href=3D"http://github.com" rel=3D"nor=
+eferrer" target=3D"_blank">github.com</a>, or in containers to break<br>
+DNS resolution using /etc/hosts or all network connectivity.<br>
+<br>
+Thanks for pushing to fix this issue.<br></blockquote><div><br></div><div>N=
+o problem. Thinking about it again, I=E2=80=99d support merging your patche=
+s as a workaround for now. It introduces other issues, but those other issu=
+es are likely more minor than re-fetching everything in do_unpack. So we ca=
+n merge this and use it until the rewritten fetcher gets merged.=C2=A0</div=
+></div>-- <br><div class=3D"gmail_signature" data-smartmail=3D"gmail_signat=
+ure"><div dir=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kergoth a=
+t gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior So=
+ftware Engineer, Mentor Graphics</div></div></div></div>
+</div></div>
+
+--001a114da5f8fc23fe0558874bc4--
