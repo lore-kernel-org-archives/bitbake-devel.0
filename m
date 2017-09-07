@@ -1,54 +1,48 @@
-Return-Path: <prvs=415dbfde3=Mikko.Rapeli@bmw.de>
-Received: from esa2.bmw.c3s2.iphmx.com (esa2.bmw.c3s2.iphmx.com
-	[68.232.133.169])
-	by mail.openembedded.org (Postfix) with ESMTP id 772F271D97
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-wr0-f194.google.com (mail-wr0-f194.google.com
+	[209.85.128.194])
+	by mail.openembedded.org (Postfix) with ESMTP id C5F4D6FFFE
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Sep 2017 16:16:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-	t=1504714565; x=1536250565;
-	h=from:to:cc:subject:date:message-id:references:
-	in-reply-to:content-id:content-transfer-encoding: mime-version;
-	bh=TEZ5m5v/a/6uzdelROM/3EfWQ/m3YT/sqSqenLucQa8=;
-	b=fpiAMhEazLDWayF+upJvAOk3uxkHJ+6v/ILGXXY87olEvNfJjk1Hmxkn
-	BLvo13fzp4H2jjvmG6JnKoUZUGNIIxcXe5h+LbyKAVT81J5sqwawj0fO0
-	MiDQDNYf0BuUuz0VFbPPY5snKVB4cHvBE5uQMPPnk2S6of8Z8K8wkCu7I E=;
-Received: from esagw6.bmwgroup.com (HELO esagw6.muc) ([160.46.252.49]) by
-	esa2.bmw.c3s2.iphmx.com with ESMTP/TLS; 06 Sep 2017 18:16:03 +0200
-Received: from esabb3.muc ([160.50.100.30])  by esagw6.muc with ESMTP/TLS;
-	06 Sep 2017 18:16:03 +0200
-Received: from smucm10k.bmwgroup.net (HELO smucm10k.europe.bmw.corp)
-	([160.48.96.47])
-	by esabb3.muc with ESMTP/TLS; 06 Sep 2017 18:16:03 +0200
-Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
-	smucm10k.europe.bmw.corp
-	(160.48.96.47) with Microsoft SMTP Server (TLS;
-	Wed, 6 Sep 2017 18:16:02 +0200
-Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
-	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1320.000;
-	Wed, 6 Sep 2017 18:16:02 +0200
-From: <Mikko.Rapeli@bmw.de>
-To: <mark.hatle@windriver.com>
-Thread-Topic: [bitbake-devel] [PATCH v2 2/2] gitsm.py: support BB_NO_NETWORK
-	during do_unpack
-Thread-Index: AQHTJwxiYwJLU+ClSE2tjwTzRY8twKKn2MQAgAAGf4CAAAGQAIAABmoA
-Date: Wed, 6 Sep 2017 16:16:02 +0000
-Message-ID: <20170906161602.5bqda6gbuduf2aht@hiutale>
-References: <1504701210-10424-1-git-send-email-mikko.rapeli@bmw.de>
-	<1504701210-10424-2-git-send-email-mikko.rapeli@bmw.de>
-	<CABcZANnvs4pZ5Ziuh3zNJjy1vbO4mk14+VNyOw_XaQnN+E0YFQ@mail.gmail.com>
-	<20170906154729.hz4z5od5nc2g62ul@hiutale>
-	<5d06b973-f7ca-f900-fa95-8afcbb789e95@windriver.com>
-In-Reply-To: <5d06b973-f7ca-f900-fa95-8afcbb789e95@windriver.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [192.168.44.101]
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH v2 2/2] gitsm.py: support BB_NO_NETWORK during do_unpack
+	Thu,  7 Sep 2017 09:13:51 +0000 (UTC)
+Received: by mail-wr0-f194.google.com with SMTP id n64so735833wrb.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 07 Sep 2017 02:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=KTam5z1Fa+fGIQn3FXN3eLZQbCPRhCKUSpDeqj7ljNQ=;
+	b=kTTCPjOz9nFjCPfjJjIxVC0umQ2QLzb4EA8UchyDlfZlJiGFa10mURDr01eTZSTDgz
+	eVSgc8pN2hoOGNyKmDTYb98n4wbAvC3Kc2yezAhYZSEuzKNFxIfyaQdtrP5NEKJAHprj
+	vREiT2jheNeAcSpY/1+v5MLXxe+9iPs/Rsal4HhgEAXwslcf9YVvYwoSmXgx6EY9aQo8
+	CtpXJ/NEwhUtfZDECPb3sjb+rdRYN5deN5Z+lZs1BfsOC4Jnxdm0EqW0/6M+/md6v0pT
+	jSEO3NUibIDPAghtQUt6TPR2x6DlQibpP64Da4Elxow3LoyZ0Bg+9MidQ3EozamrSOXO
+	nCmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=KTam5z1Fa+fGIQn3FXN3eLZQbCPRhCKUSpDeqj7ljNQ=;
+	b=kVMxppfUE1uYJyug0BUPVvXInZUW+FRQcmDpEf/bMGWTpSlm9E8+eAZNeqMb97tTP6
+	K/SrPFUbetdMGebm+Afu2n09gp5Lq/IkLX94Nq3b1tfGfT799rldvWW47YG/P2xsh6oJ
+	XOGTBnFbbjLdNf1VfcGCXyC6tsNEY7JhV1UbQDzyhUMj+G6kqbwACfec8n2xpUbA6pfY
+	eTqT9tXzYh06RipetrJqUYMgTrvnZfaeN4W0b+RDIRQb/d/tLSupBA3Z1OIV7b5L3lw+
+	QYh+OKjsAFtb3xX44qSUsUPPkSVt0bs7VQnPiVdlGilYuCBAGV3Kz8DRiZ/F753+sH2h
+	Qctg==
+X-Gm-Message-State: AHPjjUgWt/X+x3C9Hr9n39Zh38zRI2dyCKWPaacCzpukkiCJ8jEDNIWl
+	fq7dEq3RSRB4672/
+X-Google-Smtp-Source: ADKCNb7zBAVnB+NQAtv49Nhb3UyknAkfKo03kIhaWx/IbhXIs01qMUWlFTmd1ZVdlH9/mrPWz5MbtQ==
+X-Received: by 10.223.164.206 with SMTP id h14mr1309808wrb.25.1504775632242;
+	Thu, 07 Sep 2017 02:13:52 -0700 (PDT)
+Received: from localhost ([217.30.68.212])
+	by smtp.gmail.com with ESMTPSA id b85sm147974wme.14.2017.09.07.02.13.51
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 07 Sep 2017 02:13:51 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  7 Sep 2017 11:15:55 +0200
+Message-Id: <20170907091555.5596-1-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 2.14.1
+Cc: Andre Rosa <andre.rosa@lge.com>
+Subject: [PATCH] Replace deprecated git branch parameter "--set-upstream"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,56 +55,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Sep 2017 16:16:04 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C9BE1F361AF4B74BBE82DC445F2839F3@bmwmail.corp>
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Thu, 07 Sep 2017 09:13:52 -0000
 
-T24gV2VkLCBTZXAgMDYsIDIwMTcgYXQgMTA6NTM6MDRBTSAtMDUwMCwgTWFyayBIYXRsZSB3cm90
-ZToNCj4gT24gOS82LzE3IDEwOjQ3IEFNLCBNaWtrby5SYXBlbGlAYm13LmRlIHdyb3RlOg0KPiA+
-IE9uIFdlZCwgU2VwIDA2LCAyMDE3IGF0IDA4OjI0OjE0QU0gLTA3MDAsIENocmlzdG9waGVyIExh
-cnNvbiB3cm90ZToNCj4gPj4gT24gV2VkLCBTZXAgNiwgMjAxNyBhdCA1OjMzIEFNLCBNaWtrbyBS
-YXBlbGkgPG1pa2tvLnJhcGVsaUBibXcuZGU+IHdyb3RlOg0KPiA+Pg0KPiA+Pj4gJ2dpdCBzdWJt
-b2R1bGUgdXBkYXRlIC0taW5pdCAtcmVjdXJzaXZlJyB3aWxsIGNsb25lIHJlbW90ZSByZXBvc2l0
-b3JpZXMNCj4gPj4+IGlmIGxvY2FsIHRyZWUgZG9lcyBub3QgaGF2ZSB0aGUgcmVmZXJlbmNlZCBj
-b21taXRzLiBBZGQgLS1uby1mZXRjaA0KPiA+Pj4gdG8gZ2l0IHN1Ym1vZHVsZSB1cGRhdGUgaWYg
-QkJfTk9fTkVUV09SSyBpcyBkZWZpbmVkIGFuZCBvbmx5IGxvY2FsDQo+ID4+PiBkb3dubG9hZCBj
-YWNoZXMgc2hvdWxkIGJlIHVzZWQuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogTWlra28g
-UmFwZWxpIDxtaWtrby5yYXBlbGlAYm13LmRlPg0KPiA+Pj4NCj4gPj4NCj4gPj4gSWYgd2XigJly
-ZSB1bnBhY2tpbmcsIHRoZXJl4oCZcyBubyByZWFzb24gdG8gYmUgY29udGFjdGluZyBhbnl0aGlu
-ZyByZW1vdGUNCj4gPj4gcmVnYXJkbGVzcyBvZiB0aGUgdmFsdWUgb2YgQkJfTk9fTkVUV09SSy4g
-V2Ugc2hvdWxkIGJlIHBhc3Npbmcg4oCUbm8tZmV0Y2gNCj4gPj4gYWxsIHRoZSB0aW1lLiBXZSBh
-bHNvIG5lZWQgdG8gYmUgcnVubmluZyBhIHN1Ym1vZHVsZSBzeW5jIHRvIHVwZGF0ZSBhbnkNCj4g
-Pj4gY2hhbmdlcyB1cmxzIGluIHRoZSBzdWJtb2R1bGUgcmVtb3RlcywgYnV0IHRoZXJlIGFyZSBv
-dGhlciBpc3N1ZXMgdG8gYmUNCj4gPj4gcmVzb2x2ZWQgYmV5b25kIHRoYXQuDQo+ID4gDQo+ID4g
-WWVzLCBJIHRob3VnaHQgYWJvdXQgdGhpcyBidXQgZGVjaWRlZCBub3QgdG8gY2hhbmdlIGN1cnJl
-bnQgYmVoYXZpb3IuDQo+ID4gU2hvdWxkIGhhdmUgbWVudGlvbmVkIHRoYXQgaW4gdGhlIGNvbW1p
-dCBtZXNzYWdlLg0KPiA+IA0KPiA+IEkgY2FuIHNlbmQgYSBuZXcgdmVyc2lvbiB3aGVyZSAtLW5v
-LWZldGNoIGlzIHRoZSBkZWZhdWx0IGJ1dCBpdCBtaWdodCBicmVhaw0KPiA+IGluIHNvbWUgc2V0
-dXBzLCBlc3BlY2lhbGx5IHdoZW4gdGhlIERMX0RJUiBjYWNoZSBpcyBub3QgdXNlZCBmb3Igc3Vi
-bW9kdWxlcy4uLg0KPiANCj4gKHdpdGhvdXQgdHJ1ZWx5IHVuZGVyc3RhbmRpbmcgdGhlIHJhbWlm
-aWNhdGlvbnMpLCBJIHdvdWxkIHByZWZlciB0aGUgc3lzdGVtIHRvDQo+IGZhaWwgd2l0aCBhbiBl
-cnJvciB0aGVuIGF0dGVtcHQgdG8gY29udGFjdCBhIG5ldHdvcmsgcmVzb3VyY2VzIGlmIEJCX05P
-X05FVFdPUksNCj4gaXMgc2V0Lg0KDQpZZXMsIHRoYXQgaXMgY2xlYXIuIFRoZSBjb21tZW50IGZy
-b20gQ2hyaXN0b3BoZXIgd2FzIGFib3V0IHVzaW5nIC0tbm8tZmV0Y2gNCmJ5IGRlZmF1bHQgaW4g
-ZG9fdW5wYWNrIGFsc28gZm9yIGJ1aWxkcyB3aXRoIG5ldHdvcmsgY29ubmVjdGl2aXR5Lg0KDQpU
-aGlzIGNvdWxkIHdvcmsgZm9yIGZyZXNoIGNsb25lcyBvZiB0aGUgc291cmNlIHRyZWUgd2hpY2gg
-Y2FsbCBkb3dubG9hZA0KLT4gdXBkYXRlX3N1Ym1vZHVsZXMgLT4gImdpdCBzdWJtb2R1bGUgdXBk
-YXRlIC0taW5pdCAtLXJlY3Vyc2l2ZSIuIFRoZW4gdGhlDQp0cmVlIHdvdWxkIGJlIGNvcGllZCB0
-byBETF9ESVIgY2FjaGUuDQoNCkEgc3Vic2VxdWVudCB1cGRhdGUgdG8gdGhlIHJlY2lwZSB3b3Vs
-ZCBleHRyYWN0IHRoZSByZXBvIGZyb20gRExfRElSIGFuZA0KY2FsbCB1bnBhY2sgd2hpY2ggd291
-bGQgY2FsbCBvbmx5ICJnaXQgc3VibW9kdWxlIHVwZGF0ZSAtLW5vLWZldGNoIC0taW5pdA0KLS1y
-ZWN1cnNpdmUiLg0KDQpUaGlzIHdvdWxkIHdvcmsgaWYgYW55IHJlY2lwZSBjaGFuZ2VzIHdoaWNo
-IHVwZGF0ZSB0aGUgY29tbWl0IGhhcyBhbHNvIGNhbGwNCmZldGNoIG9uIHRoZSBiYXNlIHJlcG8g
-KGJpdGJha2UvbGliL2JiL2ZldGNoMi9naXQucHkgPykgYW5kIGRvd25sb2FkDQpmcm9tIGdpdHNt
-LnB5IHdoaWNoIHdvdWxkIGNhbGwgdXBkYXRlX3N1Ym1vZHVsZXMgLT4NCiJnaXQgc3VibW9kdWxl
-IHVwZGF0ZSAtLWluaXQgLS1yZWN1cnNpdmUiLg0KDQpEaWQgSSBtaXNzIHNvbWV0aGluZz8gQXJl
-IHRoZXJlIHNvbWUgdGVzdHMgZm9yIGdpdHNtLnB5IGFscmVhZHk/DQoNCj4gQW4gZXJyb3IgKHdp
-dGggYSByZXNvbHV0aW9uIG9mIHNvbWVob3cgZ2V0dGluZyB0aGUgaXRlbSBsb2NhbCBlaXRoZXIg
-aW4gdGhlDQo+IERMX0RJUiBvciBhIGZpbGU6Ly8gbWlycm9yIHNlZW1zIGxpa2UgdGhlIGJlc3Qg
-YWx0ZXJuYXRpdmUgZm9yIGEgdXNlciB3aG8gbmVlZHMNCj4gdG8gcHJldmVudCBuZXR3b3JrIGFj
-Y2Vzcy4NCg0KQW5kIHRoaXMgaXMgd2hlcmUgdGhlIGRlcGVuZGVuY3kgdG8gdXNpbmcgRExfRElS
-IGNhY2hlIGZvciBnaXQgc3VibW9kdWxlcw0KYW5kIGZpcnN0IHBhdGNoIGluIHRoZSBzZXJpZXMg
-YmVjb21lcyBpbnRvIHBsYXkuLi4NCg0KLU1pa2tv
+From: Andre Rosa <andre.rosa@lge.com>
+
+Since 2017-08-17 (git version 2.14.1.473.g3ec7d702a) using deprecated
+git branch parameter "--set-upstream" causes a fetcher error. Replace
+it by "--set-upstream-to".
+
+https://git.kernel.org/pub/scm/git/git.git/commit/?id=52668846ea2d41ffbd87cda7cb8e492dea9f2c4d
+says, it's deprecated since 2012-08-30 so hopefully all still supported
+host distributions have new enough git to support "--set-upstream-to".
+
+ERROR: PACKAGE do_unpack: Fetcher failure: ...;
+git -c core.fsyncobjectfiles=0 branch --set-upstream master origin/master failed with exit code 128, output:
+fatal: the '--set-upstream' option is no longer supported. Please use '--track' or '--set-upstream-to' instead.
+
+ERROR: PACKAGE do_unpack: Function failed: base_do_unpack
+
+Signed-off-by: Andre Rosa <andre.rosa@lge.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ lib/bb/fetch2/git.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 534c93d3..5ef8cd69 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -485,7 +485,7 @@ class Git(FetchMethod):
+                 branchname =  ud.branches[ud.names[0]]
+                 runfetchcmd("%s checkout -B %s %s" % (ud.basecmd, branchname, \
+                             ud.revisions[ud.names[0]]), d, workdir=destdir)
+-                runfetchcmd("%s branch --set-upstream %s origin/%s" % (ud.basecmd, branchname, \
++                runfetchcmd("%s branch %s --set-upstream-to origin/%s" % (ud.basecmd, branchname, \
+                             branchname), d, workdir=destdir)
+             else:
+                 runfetchcmd("%s checkout %s" % (ud.basecmd, ud.revisions[ud.names[0]]), d, workdir=destdir)
+-- 
+2.14.1
+
 
