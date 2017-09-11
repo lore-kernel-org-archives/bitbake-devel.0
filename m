@@ -1,27 +1,24 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 61A3578152
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 65EFD78485
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  8 Sep 2017 04:59:36 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id v884xcaR013634
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 7 Sep 2017 21:59:38 -0700 (PDT)
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Thu, 7 Sep 2017 21:59:35 -0700
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 7 Sep 2017 21:50:48 -0700
-Message-ID: <5937043b649c48d50228cbc0b85dbd4bd8e5d79d.1504845976.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1504845976.git.David.Reyna@windriver.com>
-References: <cover.1504845976.git.David.Reyna@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 2/2] toaster: update pyro to rocko as stable release
+	Mon, 11 Sep 2017 22:26:08 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v8BMQ7Wm002607
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Mon, 11 Sep 2017 23:26:08 +0100
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1drX9b-0007Aa-N0; Mon, 11 Sep 2017 23:26:07 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 11 Sep 2017 23:26:06 +0100
+Message-Id: <1505168766-27521-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: [PATCH] process/cooker: Improve readypipe handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,114 +31,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Sep 2017 04:59:37 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 11 Sep 2017 22:26:09 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+Issues in start are not being correctly detected by the current readypipe
+code. Change it to use specific "ready" or "fail" messages to correctly
+determine the correct failure mode and avoid bitbake seeming to hang
+(it does currently timeout eventually).
 
-Update the Toaster stable release selection to 'Rocko' and
-the bitbake version to '1.36'.
+[YOCTO #12062]
 
-[YOCTO #12037]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/toaster/orm/fixtures/oe-core.xml | 12 ++++++------
- lib/toaster/orm/fixtures/poky.xml    | 18 +++++++++---------
- 2 files changed, 15 insertions(+), 15 deletions(-)
+ lib/bb/cooker.py         |  6 +-----
+ lib/bb/server/process.py | 17 +++++++++++++----
+ 2 files changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/lib/toaster/orm/fixtures/oe-core.xml b/lib/toaster/orm/fixtures/oe-core.xml
-index 66c3595..00720c3 100644
---- a/lib/toaster/orm/fixtures/oe-core.xml
-+++ b/lib/toaster/orm/fixtures/oe-core.xml
-@@ -8,9 +8,9 @@
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 7d040dc..8fe36eb 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -165,7 +165,7 @@ class BBCooker:
+     Manages one bitbake build run
+     """
  
-   <!-- Bitbake versions which correspond to the metadata release -->
-   <object model="orm.bitbakeversion" pk="1">
--    <field type="CharField" name="name">pyro</field>
-+    <field type="CharField" name="name">rocko</field>
-     <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
--    <field type="CharField" name="branch">1.34</field>
-+    <field type="CharField" name="branch">1.36</field>
-   </object>
-   <object model="orm.bitbakeversion" pk="2">
-     <field type="CharField" name="name">HEAD</field>
-@@ -25,11 +25,11 @@
+-    def __init__(self, configuration, featureSet=None, readypipe=None):
++    def __init__(self, configuration, featureSet=None):
+         self.recipecaches = None
+         self.skiplist = {}
+         self.featureset = CookerFeatures()
+@@ -233,10 +233,6 @@ class BBCooker:
+         # Let SIGHUP exit as SIGTERM
+         signal.signal(signal.SIGHUP, self.sigterm_exception)
  
-   <!-- Releases available -->
-   <object model="orm.release" pk="1">
--    <field type="CharField" name="name">pyro</field>
--    <field type="CharField" name="description">Openembedded Pyro</field>
-+    <field type="CharField" name="name">rocko</field>
-+    <field type="CharField" name="description">Openembedded Rocko</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
--    <field type="CharField" name="branch_name">pyro</field>
--    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"http://cgit.openembedded.org/openembedded-core/log/?h=pyro\"&gt;OpenEmbedded Pyro&lt;/a&gt; branch.</field>
-+    <field type="CharField" name="branch_name">rocko</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"http://cgit.openembedded.org/openembedded-core/log/?h=rocko\"&gt;OpenEmbedded Rocko&lt;/a&gt; branch.</field>
-   </object>
-   <object model="orm.release" pk="2">
-     <field type="CharField" name="name">local</field>
-diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
-index 7827aac..2f39d77 100644
---- a/lib/toaster/orm/fixtures/poky.xml
-+++ b/lib/toaster/orm/fixtures/poky.xml
-@@ -8,9 +8,9 @@
+-        if readypipe:
+-            os.write(readypipe, b"ready")
+-            os.close(readypipe)
+-
+     def process_inotify_updates(self):
+         for n in [self.confignotifier, self.notifier]:
+             if n.check_events(timeout=0):
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 5c7dfae..6a12f01 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -388,8 +388,10 @@ class BitBakeServer(object):
+         self.bitbake_lock.close()
  
-   <!-- Bitbake versions which correspond to the metadata release -->
-   <object model="orm.bitbakeversion" pk="1">
--    <field type="CharField" name="name">pyro</field>
-+    <field type="CharField" name="name">rocko</field>
-     <field type="CharField" name="giturl">git://git.yoctoproject.org/poky</field>
--    <field type="CharField" name="branch">pyro</field>
-+    <field type="CharField" name="branch">rocko</field>
-     <field type="CharField" name="dirpath">bitbake</field>
-   </object>
-   <object model="orm.bitbakeversion" pk="2">
-@@ -29,11 +29,11 @@
- 
-   <!-- Releases available -->
-   <object model="orm.release" pk="1">
--    <field type="CharField" name="name">pyro</field>
--    <field type="CharField" name="description">Yocto Project 2.3 "Pyro"</field>
-+    <field type="CharField" name="name">rocko</field>
-+    <field type="CharField" name="description">Yocto Project 2.4 "Rocko"</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
--    <field type="CharField" name="branch_name">pyro</field>
--    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="http://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=pyro"&gt;Yocto Project Pyro branch&lt;/a&gt;.</field>
-+    <field type="CharField" name="branch_name">rocko</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="http://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=rocko"&gt;Yocto Project Rocko branch&lt;/a&gt;.</field>
-   </object>
-   <object model="orm.release" pk="2">
-     <field type="CharField" name="name">local</field>
-@@ -105,7 +105,7 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
--    <field type="CharField" name="branch">pyro</field>
-+    <field type="CharField" name="branch">rocko</field>
-     <field type="CharField" name="dirpath">meta</field>
-   </object>
-   <object model="orm.layer_version" pk="2">
-@@ -136,7 +136,7 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
--    <field type="CharField" name="branch">pyro</field>
-+    <field type="CharField" name="branch">rocko</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
-   <object model="orm.layer_version" pk="5">
-@@ -167,7 +167,7 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
--    <field type="CharField" name="branch">pyro</field>
-+    <field type="CharField" name="branch">rocko</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
-   <object model="orm.layer_version" pk="8">
+         ready = ConnectionReader(self.readypipe)
+-        r = ready.wait(30)
+-        if not r:
++        r = ready.poll(30)
++        if r:
++            r = ready.get()
++        if not r or r != "ready":
+             ready.close()
+             bb.error("Unable to start bitbake server")
+             if os.path.exists(logfile):
+@@ -404,8 +406,15 @@ class BitBakeServer(object):
+         print("Starting bitbake server pid %d" % os.getpid())
+         server = ProcessServer(self.bitbake_lock, self.sock, self.sockname)
+         self.configuration.setServerRegIdleCallback(server.register_idle_function)
+-
+-        self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset, self.readypipein)
++        writer = ConnectionWriter(self.readypipein)
++        try:
++            self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset)
++            writer.send("ready")
++        except:
++            writer.send("fail")
++            raise
++        finally:
++            os.close(self.readypipein)
+         server.cooker = self.cooker
+         server.server_timeout = self.configuration.server_timeout
+         server.xmlrpcinterface = self.configuration.xmlrpcinterface
 -- 
-1.9.1
+2.7.4
 
 
