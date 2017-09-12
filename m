@@ -1,21 +1,23 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-	by mail.openembedded.org (Postfix) with ESMTP id 33A70783F1
+	by mail.openembedded.org (Postfix) with ESMTP id 03063783FF
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Sep 2017 10:11:11 +0000 (UTC)
+	Tue, 12 Sep 2017 10:11:26 +0000 (UTC)
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-	by orsmga104.jf.intel.com with ESMTP; 12 Sep 2017 03:11:13 -0700
+	by orsmga104.jf.intel.com with ESMTP; 12 Sep 2017 03:11:16 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.42,382,1500966000"; d="scan'208";a="127916103"
+X-IronPort-AV: E=Sophos;i="5.42,382,1500966000"; d="scan'208";a="127916113"
 Received: from nrahulx-mobl.gar.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.249.73.25])
-	by orsmga004.jf.intel.com with ESMTP; 12 Sep 2017 03:11:10 -0700
+	by orsmga004.jf.intel.com with ESMTP; 12 Sep 2017 03:11:14 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Sep 2017 22:10:33 +1200
-Message-Id: <cover.1505210965.git.paul.eggleton@linux.intel.com>
+Date: Tue, 12 Sep 2017 22:10:34 +1200
+Message-Id: <2d7f1ec85c8242b1348597e7963b962efe562070.1505210965.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.9.5
-Subject: [PATCH 0/1] command: Add command to invalidate parse cache
+In-Reply-To: <cover.1505210965.git.paul.eggleton@linux.intel.com>
+References: <cover.1505210965.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 1/1] command: Add command to invalidate parse cache
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,27 +30,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Sep 2017 10:11:12 -0000
+X-List-Received-Date: Tue, 12 Sep 2017 10:11:27 -0000
 
-This is required by the OE-Core patch I'm about to send to fix
-devtool's lack of handling dependencies during source extraction.
+If we make a change to the metadata within a tinfoil-using script
+and then attempt to run tasks using build_targets(), the change won't
+get noticed. Add an explicit command that will set the internal flag to
+force reloading the cache and thus pick up the changes. This will be
+used in OE by the devtool source extraction rework.
 
+Part of the fix for [YOCTO #11198].
 
-The following changes since commit ed3aab90dbf9b6efefd9eb66d81123cb94d3c7da:
-
-  toaster: update pyro to rocko as stable release (2017-09-11 11:00:11 +0100)
-
-are available in the git repository at:
-
-  git://git.openembedded.org/bitbake-contrib paule/parsecache-invalidate
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=paule/parsecache-invalidate
-
-Paul Eggleton (1):
-  command: Add command to invalidate parse cache
-
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
  lib/bb/command.py | 3 +++
  1 file changed, 3 insertions(+)
 
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 6c966e3..c3717ab 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -574,6 +574,9 @@ class CommandsSync:
+         return DataStoreConnectionHandle(idx)
+     parseRecipeFile.readonly = True
+ 
++    def invalidateParseCache(self, command, params):
++        command.cooker.parsecache_valid = False
++
+ class CommandsAsync:
+     """
+     A class of asynchronous commands
 -- 
 2.9.5
 
