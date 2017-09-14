@@ -1,24 +1,25 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 0F12F782FE
+Return-Path: <david.reyna@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 77E056003C
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Sep 2017 04:10:47 +0000 (UTC)
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	13 Sep 2017 21:10:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.42,390,1500966000"; d="scan'208";a="128563971"
-Received: from babarret-mobl1.amr.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.249.71.243])
-	by orsmga004.jf.intel.com with ESMTP; 13 Sep 2017 21:10:46 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 14 Sep 2017 16:09:42 +1200
-Message-Id: <9123c287db12b826cea69f8270f3635efd205a0c.1505361992.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <cover.1505361992.git.paul.eggleton@linux.intel.com>
-References: <cover.1505361992.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] cooker: ensure monkey-patching in collect_bbfiles() gets undone on error
+	Fri, 15 Sep 2017 00:06:20 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v8F06LgM029885
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 14 Sep 2017 17:06:21 -0700 (PDT)
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.361.1; Thu, 14 Sep 2017 17:06:20 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 14 Sep 2017 16:58:07 -0700
+Message-ID: <cover.1505433280.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+X-Originating-IP: [147.11.157.78]
+Subject: [PATCH 0/2] toaster: cummulative 14092017 patch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,70 +32,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Sep 2017 04:10:47 -0000
+X-List-Received-Date: Fri, 15 Sep 2017 00:06:20 -0000
+Content-Type: text/plain
 
-In collect_bbfiles() we're monkey-patching os.listdir in order to find
-which directories to watch, and then undoing that when we're finished -
-however if an exception occurred for any reason there was nothing to
-ensure the latter occurred. This may not have caused any issues, but as
-this kind of thing really ought to be secured using try...finally just
-in case, so do that.
+From: David Reyna <David.Reyna@windriver.com>
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/cooker.py | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 6de04fc..73a2fef 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1695,25 +1695,25 @@ class CookerCollectFiles(object):
-             return origlistdir(d)
- 
-         os.listdir = ourlistdir
--
--        # Can't use set here as order is important
--        newfiles = []
--        for f in files:
--            if os.path.isdir(f):
--                dirfiles = self.find_bbfiles(f)
--                for g in dirfiles:
--                    if g not in newfiles:
--                        newfiles.append(g)
--            else:
--                globbed = glob.glob(f)
--                if not globbed and os.path.exists(f):
--                    globbed = [f]
--                # glob gives files in order on disk. Sort to be deterministic.
--                for g in sorted(globbed):
--                    if g not in newfiles:
--                        newfiles.append(g)
--
--        os.listdir = origlistdir
-+        try:
-+            # Can't use set here as order is important
-+            newfiles = []
-+            for f in files:
-+                if os.path.isdir(f):
-+                    dirfiles = self.find_bbfiles(f)
-+                    for g in dirfiles:
-+                        if g not in newfiles:
-+                            newfiles.append(g)
-+                else:
-+                    globbed = glob.glob(f)
-+                    if not globbed and os.path.exists(f):
-+                        globbed = [f]
-+                    # glob gives files in order on disk. Sort to be deterministic.
-+                    for g in sorted(globbed):
-+                        if g not in newfiles:
-+                            newfiles.append(g)
-+        finally:
-+            os.listdir = origlistdir
- 
-         bbmask = config.getVar('BBMASK')
- 
+This patch set fixes larger and small issues with importing layers into Toaster. There are no new files.
+
+
+The following changes since commit abea8ec5063998e0e2b822be7704c0d14569df0e:
+
+  meta-yocto: Restructure and tidy up READMEs (2017-09-14 13:36:22 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/cummulative_140917_patch
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/cummulative_140917_patch
+
+David Reyna (2):
+  toaster: reserve HEAD from imported layers
+  toaster: allow dots in user path names
+
+ lib/toaster/toastergui/api.py                     |  6 +++---
+ lib/toaster/toastergui/static/js/importlayer.js   | 19 +++++++++++++++----
+ lib/toaster/toastergui/templates/importlayer.html |  4 ++--
+ lib/toaster/toastergui/templates/projectconf.html |  8 ++++----
+ 4 files changed, 24 insertions(+), 13 deletions(-)
+
 -- 
-2.9.5
+1.9.1
 
 
