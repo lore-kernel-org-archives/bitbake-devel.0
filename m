@@ -1,27 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 1646178633
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 94E4F78633
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Sep 2017 00:06:28 +0000 (UTC)
+	Fri, 15 Sep 2017 00:06:29 +0000 (UTC)
 Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
 	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id v8F06TlT014132
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v8F06UZ6029891
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Sep 2017 17:06:30 -0700
+	Thu, 14 Sep 2017 17:06:30 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
 	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Thu, 14 Sep 2017 17:06:29 -0700
+	(TLS) id 14.3.361.1; Thu, 14 Sep 2017 17:06:30 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 14 Sep 2017 16:58:15 -0700
-Message-ID: <cd949a2a16832f6f94e620c965d7b71b88908f8a.1505433280.git.David.Reyna@windriver.com>
+Date: Thu, 14 Sep 2017 16:58:16 -0700
+Message-ID: <57e0ee2bb50db3b3f1024603c6d3e49fd7be16f7.1505433280.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1505433280.git.David.Reyna@windriver.com>
 References: <cover.1505433280.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 1/2] toaster: reserve HEAD from imported layers
+Subject: [PATCH 2/2] toaster: allow dots in user path names
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,98 +39,84 @@ Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-The HEAD reference in Toaster layers are reserved for the
-"Local Yocto Project" layers, stored at the top directory.
-Imported layers are not allowed to use this since they are
-managed differently - for example the 'remotes' will collide.
+The dot '.' character should be allowed in the user paths for
+local non-git layers, DL_DIR, and SSTATE_DIR.
 
-Fix the add layer handler to not drop the data fields when it
-is a git repo.
-
-Explicitly inform the user when an internal Toaster error is
-returned via AJAX, so that they know why clicking the layer add
-button did not do anything.
-
-[YOCTO #9924]
+[YOCTO #10650]
 
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/toastergui/api.py                     |  6 +++---
- lib/toaster/toastergui/static/js/importlayer.js   | 17 ++++++++++++++---
- lib/toaster/toastergui/templates/importlayer.html |  2 +-
- 3 files changed, 18 insertions(+), 7 deletions(-)
+ lib/toaster/toastergui/static/js/importlayer.js   | 2 +-
+ lib/toaster/toastergui/templates/importlayer.html | 2 +-
+ lib/toaster/toastergui/templates/projectconf.html | 8 ++++----
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/lib/toaster/toastergui/api.py b/lib/toaster/toastergui/api.py
-index cb8f0f3..ab6ba69 100644
---- a/lib/toaster/toastergui/api.py
-+++ b/lib/toaster/toastergui/api.py
-@@ -293,14 +293,14 @@ class XhrLayer(View):
-                 layer_source=LayerSource.TYPE_IMPORTED)
- 
-             # Local layer
--            if 'local_source_dir' in layer_data:
-+            if ('local_source_dir' in layer_data) and layer.local_source_dir:
-                 layer.local_source_dir = layer_data['local_source_dir']
-             # git layer
-             elif 'vcs_url' in layer_data:
-                 layer.vcs_url = layer_data['vcs_url']
-                 layer_version.dirpath = layer_data['dir_path']
--                layer_version.commit = layer_data['get_ref']
--                layer_version.branch = layer_data['get_ref']
-+                layer_version.commit = layer_data['git_ref']
-+                layer_version.branch = layer_data['git_ref']
- 
-             layer.save()
-             layer_version.save()
 diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
-index b3f094e..59652b9 100644
+index 59652b9..2964839 100644
 --- a/lib/toaster/toastergui/static/js/importlayer.js
 +++ b/lib/toaster/toastergui/static/js/importlayer.js
-@@ -176,6 +176,8 @@ function importLayerPageInit (ctx) {
-           success: function (data) {
-             if (data.error != "ok") {
-               console.log(data.error);
-+              /* let the user know why nothing happened */
-+              alert(data.error)
-             } else {
-               createImportedNotification(data);
-               window.location.replace(libtoaster.ctx.projectPageUrl);
-@@ -244,9 +246,18 @@ function importLayerPageInit (ctx) {
-         enable_import_btn(true);
-       }
+@@ -418,7 +418,7 @@ function importLayerPageInit (ctx) {
+       var input = $(this);
+       var reBeginWithSlash = /^\//;
+       var reCheckVariable = /^\$/;
+-      var re = /([ <>\\|":\.%\?\*]+)/;
++      var re = /([ <>\\|":%\?\*]+)/;
  
--      if ($("#git-repo-radio").prop("checked") &&
--          vcsURLInput.val().length > 0 && gitRefInput.val().length > 0) {
--        enable_import_btn(true);
-+      if ($("#git-repo-radio").prop("checked")) {
-+        if (gitRefInput.val().length > 0 &&
-+            gitRefInput.val() == 'HEAD') {
-+          $('#invalid-layer-revision-hint').show();
-+          $('#layer-revision-ctrl').addClass('has-error');
-+          enable_import_btn(false);
-+        } else if (vcsURLInput.val().length > 0 &&
-+                   gitRefInput.val().length > 0) {
-+          $('#invalid-layer-revision-hint').hide();
-+          $('#layer-revision-ctrl').removeClass('has-error');
-+          enable_import_btn(true);
-+        }
-       }
-     }
- 
+       var invalidDir = re.test(input.val());
+       var invalidSlash = reBeginWithSlash.test(input.val());
 diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
-index afbeb94..7e5253e 100644
+index 7e5253e..97d52c7 100644
 --- a/lib/toaster/toastergui/templates/importlayer.html
 +++ b/lib/toaster/toastergui/templates/importlayer.html
-@@ -115,8 +115,8 @@
-         </label>
-         <span style="display: block">
-         <input type="text" class="form-control" id="layer-git-ref" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead" required>
--        <span class="help-inline" style="display:none;" id="invalid-layer-revision-hint"></span>
-         </span>
-+        <span class="help-block has-error" style="display:none;" id="invalid-layer-revision-hint">The "HEAD" branch is reserved (only allowed for the "Local Yocto Project" layers)</span>
+@@ -126,7 +126,7 @@
+         <label for="local-dir-path" class="control-label">Enter the absolute path to the layer directory</label>
+         <input type="text" class="form-control" id="local-dir-path" required/>
+         <p class="help-block" id="hintError-dir-path-starts-with-slash" style="display:none;">The absolute path must start with "/".</p>
+-        <p class="help-block" id="hintError-dir-path" style="display:none;">The directory path cannot include spaces or any of these characters: . \ ? % * : | " " &lt; &gt;</p>
++        <p class="help-block" id="hintError-dir-path" style="display:none;">The directory path cannot include spaces or any of these characters: \ ? % * : | " " &lt; &gt;</p>
        </div>
      </fieldset>
  
+diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
+index 0e9712b..933c588 100644
+--- a/lib/toaster/toastergui/templates/projectconf.html
++++ b/lib/toaster/toastergui/templates/projectconf.html
+@@ -41,7 +41,7 @@
+       </div>
+       <button id="apply-change-dl_dir" class="btn btn-default" type="button">Save</button>
+       <button id="cancel-change-dl_dir" type="button" class="btn btn-link">Cancel</button>
+-      <p class="help-block" id="hintError-dl_dir" style="display:none;">The directory path cannot include spaces or any of these characters: . \ ? % * : | " " &lt; &gt;</p>
++      <p class="help-block" id="hintError-dl_dir" style="display:none;">The directory path cannot include spaces or any of these characters: \ ? % * : | " " &lt; &gt;</p>
+       <p class="help-block" id="hintError-initialChar-dl_dir" style="display:none;">The directory path should either start with a /, e.g. /home/toaster/downloads; or with a variable, e.g. ${TOPDIR}/downloads.</p>
+     </form>
+     </dd>
+@@ -151,7 +151,7 @@
+       </div>
+       <button id="apply-change-sstate_dir" class="btn btn-default" type="button">Save</button>
+       <button id="cancel-change-sstate_dir" type="button" class="btn btn-link">Cancel</button>
+-      <p class="help-block" id="hintError-sstate_dir" style="display:none;">The directory path cannot include spaces or any of these characters: . \ ? % * : | " " &lt; &gt;</p>
++      <p class="help-block" id="hintError-sstate_dir" style="display:none;">The directory path cannot include spaces or any of these characters: \ ? % * : | " " &lt; &gt;</p>
+       <p class="help-block" id="hintError-initialChar-sstate_dir" style="display:none;">The directory path should either start with a /, e.g. /home/toaster/sstate-cache; or with a variable, e.g. ${TOPDIR}/sstate-cache.</p>
+     </form>
+     </dd>
+@@ -594,7 +594,7 @@ $(document).ready(function() {
+       var input = $(this);
+       var reBeginWithSlash = /^\//;
+       var reCheckVariable = /^\$/;
+-      var re = /([ <>\\|":\.%\?\*]+)/;
++      var re = /([ <>\\|":%\?\*]+)/;
+       var invalidDir = re.test(input.val());
+       var invalidSlash = reBeginWithSlash.test(input.val());
+       var invalidVar = reCheckVariable.test(input.val());
+@@ -961,7 +961,7 @@ $(document).ready(function() {
+       var input = $(this);
+       var reBeginWithSlash = /^\//;
+       var reCheckVariable = /^\$/;
+-      var re = /([ <>\\|":\.%\?\*]+)/;
++      var re = /([ <>\\|":%\?\*]+)/;
+       var invalidDir = re.test(input.val());
+       var invalidSlash = reBeginWithSlash.test(input.val());
+       var invalidVar = reCheckVariable.test(input.val());
 -- 
 1.9.1
 
