@@ -1,27 +1,30 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 94E4F78633
+Return-Path: <AMardegan@luxoft.com>
+X-Greylist: delayed 320 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 21 Sep 2017 14:39:13 UTC
+Received: from ORO-EDGE-03.luxoft.com (oro-edge-03.luxoft.com [109.166.244.23])
+	by mail.openembedded.org (Postfix) with ESMTP id D747E781F6
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Sep 2017 00:06:29 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id v8F06UZ6029891
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Sep 2017 17:06:30 -0700 (PDT)
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Thu, 14 Sep 2017 17:06:30 -0700
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 14 Sep 2017 16:58:16 -0700
-Message-ID: <57e0ee2bb50db3b3f1024603c6d3e49fd7be16f7.1505433280.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1505433280.git.David.Reyna@windriver.com>
-References: <cover.1505433280.git.David.Reyna@windriver.com>
+	Thu, 21 Sep 2017 14:39:13 +0000 (UTC)
+Received: from ORO-HYBRID-01.luxoft.com (172.30.115.193) by
+	oro-edge-03.luxoft.com (172.30.19.23) with Microsoft SMTP Server (TLS)
+	id 14.3.319.2; Thu, 21 Sep 2017 17:33:52 +0300
+Received: from ORO-MBOX-01.luxoft.com ([fe80::387f:bf07:869c:b95e]) by
+	oro-hybrid-01.luxoft.com ([fe80::94b2:3f2:b715:23bd%11]) with mapi id
+	14.03.0319.002; Thu, 21 Sep 2017 17:33:53 +0300
+From: "Mardegan, Alberto" <AMardegan@luxoft.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [PATCH] bitbake: lib/bb/utils: fix movefile() copy to dir
+	fallback
+Thread-Index: AQHTMualWqbw1hN1wkO98MPWNpNRdw==
+Date: Thu, 21 Sep 2017 14:33:52 +0000
+Message-ID: <1506004425-11151-1-git-send-email-amardegan@luxoft.com>
+Accept-Language: it-IT, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.31.240.120]
 MIME-Version: 1.0
-X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 2/2] toaster: allow dots in user path names
+Subject: [PATCH] bitbake: lib/bb/utils: fix movefile() copy to dir fallback
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,90 +37,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Sep 2017 00:06:29 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 21 Sep 2017 14:39:14 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-From: David Reyna <David.Reyna@windriver.com>
+When the destination is a directory, building the the destination file
+path is always needed.  That's because even if the copy fallback is
+taken, it's always followed by a rename.
 
-The dot '.' character should be allowed in the user paths for
-local non-git layers, DL_DIR, and SSTATE_DIR.
-
-[YOCTO #10650]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Alberto Mardegan <amardegan@luxoft.com>
 ---
- lib/toaster/toastergui/static/js/importlayer.js   | 2 +-
- lib/toaster/toastergui/templates/importlayer.html | 2 +-
- lib/toaster/toastergui/templates/projectconf.html | 8 ++++----
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ bitbake/lib/bb/utils.py | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
-index 59652b9..2964839 100644
---- a/lib/toaster/toastergui/static/js/importlayer.js
-+++ b/lib/toaster/toastergui/static/js/importlayer.js
-@@ -418,7 +418,7 @@ function importLayerPageInit (ctx) {
-       var input = $(this);
-       var reBeginWithSlash = /^\//;
-       var reCheckVariable = /^\$/;
--      var re = /([ <>\\|":\.%\?\*]+)/;
-+      var re = /([ <>\\|":%\?\*]+)/;
- 
-       var invalidDir = re.test(input.val());
-       var invalidSlash = reBeginWithSlash.test(input.val());
-diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
-index 7e5253e..97d52c7 100644
---- a/lib/toaster/toastergui/templates/importlayer.html
-+++ b/lib/toaster/toastergui/templates/importlayer.html
-@@ -126,7 +126,7 @@
-         <label for="local-dir-path" class="control-label">Enter the absolute path to the layer directory</label>
-         <input type="text" class="form-control" id="local-dir-path" required/>
-         <p class="help-block" id="hintError-dir-path-starts-with-slash" style="display:none;">The absolute path must start with "/".</p>
--        <p class="help-block" id="hintError-dir-path" style="display:none;">The directory path cannot include spaces or any of these characters: . \ ? % * : | " " &lt; &gt;</p>
-+        <p class="help-block" id="hintError-dir-path" style="display:none;">The directory path cannot include spaces or any of these characters: \ ? % * : | " " &lt; &gt;</p>
-       </div>
-     </fieldset>
- 
-diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
-index 0e9712b..933c588 100644
---- a/lib/toaster/toastergui/templates/projectconf.html
-+++ b/lib/toaster/toastergui/templates/projectconf.html
-@@ -41,7 +41,7 @@
-       </div>
-       <button id="apply-change-dl_dir" class="btn btn-default" type="button">Save</button>
-       <button id="cancel-change-dl_dir" type="button" class="btn btn-link">Cancel</button>
--      <p class="help-block" id="hintError-dl_dir" style="display:none;">The directory path cannot include spaces or any of these characters: . \ ? % * : | " " &lt; &gt;</p>
-+      <p class="help-block" id="hintError-dl_dir" style="display:none;">The directory path cannot include spaces or any of these characters: \ ? % * : | " " &lt; &gt;</p>
-       <p class="help-block" id="hintError-initialChar-dl_dir" style="display:none;">The directory path should either start with a /, e.g. /home/toaster/downloads; or with a variable, e.g. ${TOPDIR}/downloads.</p>
-     </form>
-     </dd>
-@@ -151,7 +151,7 @@
-       </div>
-       <button id="apply-change-sstate_dir" class="btn btn-default" type="button">Save</button>
-       <button id="cancel-change-sstate_dir" type="button" class="btn btn-link">Cancel</button>
--      <p class="help-block" id="hintError-sstate_dir" style="display:none;">The directory path cannot include spaces or any of these characters: . \ ? % * : | " " &lt; &gt;</p>
-+      <p class="help-block" id="hintError-sstate_dir" style="display:none;">The directory path cannot include spaces or any of these characters: \ ? % * : | " " &lt; &gt;</p>
-       <p class="help-block" id="hintError-initialChar-sstate_dir" style="display:none;">The directory path should either start with a /, e.g. /home/toaster/sstate-cache; or with a variable, e.g. ${TOPDIR}/sstate-cache.</p>
-     </form>
-     </dd>
-@@ -594,7 +594,7 @@ $(document).ready(function() {
-       var input = $(this);
-       var reBeginWithSlash = /^\//;
-       var reCheckVariable = /^\$/;
--      var re = /([ <>\\|":\.%\?\*]+)/;
-+      var re = /([ <>\\|":%\?\*]+)/;
-       var invalidDir = re.test(input.val());
-       var invalidSlash = reBeginWithSlash.test(input.val());
-       var invalidVar = reCheckVariable.test(input.val());
-@@ -961,7 +961,7 @@ $(document).ready(function() {
-       var input = $(this);
-       var reBeginWithSlash = /^\//;
-       var reCheckVariable = /^\$/;
--      var re = /([ <>\\|":\.%\?\*]+)/;
-+      var re = /([ <>\\|":%\?\*]+)/;
-       var invalidDir = re.test(input.val());
-       var invalidSlash = reBeginWithSlash.test(input.val());
-       var invalidVar = reCheckVariable.test(input.val());
--- 
-1.9.1
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 8550af3..c540b49 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -771,13 +771,14 @@ def movefile(src, dest, newmtime =3D None, sstat =3D =
+None):
+             return None
 
+     renamefailed =3D 1
++    # os.rename needs to know the dest path ending with file name
++    # so append the file name to a path only if it's a dir specified
++    srcfname =3D os.path.basename(src)
++    destpath =3D os.path.join(dest, srcfname) if os.path.isdir(dest) \
++                else dest
++
+     if sstat[stat.ST_DEV] =3D=3D dstat[stat.ST_DEV]:
+         try:
+-            # os.rename needs to know the dest path ending with file name
+-            # so append the file name to a path only if it's a dir specifi=
+ed
+-            srcfname =3D os.path.basename(src)
+-            destpath =3D os.path.join(dest, srcfname) if os.path.isdir(des=
+t) \
+-                        else dest
+             os.rename(src, destpath)
+             renamefailed =3D 0
+         except Exception as e:
+@@ -791,8 +792,8 @@ def movefile(src, dest, newmtime =3D None, sstat =3D No=
+ne):
+         didcopy =3D 0
+         if stat.S_ISREG(sstat[stat.ST_MODE]):
+             try: # For safety copy then move it over.
+-                shutil.copyfile(src, dest + "#new")
+-                os.rename(dest + "#new", dest)
++                shutil.copyfile(src, destpath + "#new")
++                os.rename(destpath + "#new", destpath)
+                 didcopy =3D 1
+             except Exception as e:
+                 print('movefile: copy', src, '->', dest, 'failed.', e)
+@@ -813,9 +814,9 @@ def movefile(src, dest, newmtime =3D None, sstat =3D No=
+ne):
+             return None
+
+     if newmtime:
+-        os.utime(dest, (newmtime, newmtime))
++        os.utime(destpath, (newmtime, newmtime))
+     else:
+-        os.utime(dest, (sstat[stat.ST_ATIME], sstat[stat.ST_MTIME]))
++        os.utime(destpath, (sstat[stat.ST_ATIME], sstat[stat.ST_MTIME]))
+         newmtime =3D sstat[stat.ST_MTIME]
+     return newmtime
+
+--
+2.7.4
+
+________________________________
+
+This e-mail and any attachment(s) are intended only for the recipient(s) na=
+med above and others who have been specifically authorized to receive them.=
+ They may contain confidential information. If you are not the intended rec=
+ipient, please do not read this email or its attachment(s). Furthermore, yo=
+u are hereby notified that any dissemination, distribution or copying of th=
+is e-mail and any attachment(s) is strictly prohibited. If you have receive=
+d this e-mail in error, please immediately notify the sender by replying to=
+ this e-mail and then delete this e-mail and any attachment(s) or copies th=
+ereof from your system. Thank you.
 
