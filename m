@@ -1,24 +1,21 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id B261D783FF
+Return-Path: <leonardo.sandoval.gonzalez@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 2C66B71957
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Sep 2017 16:22:09 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	v8MGM8O7023445
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Fri, 22 Sep 2017 17:22:09 +0100
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1dvQiO-0001B9-5x; Fri, 22 Sep 2017 17:22:08 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Mon,  2 Oct 2017 15:38:53 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	02 Oct 2017 08:38:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.42,470,1500966000"; d="scan'208";a="1226094805"
+Received: from yctb05.ostc.intel.com ([10.54.69.59])
+	by fmsmga002.fm.intel.com with ESMTP; 02 Oct 2017 08:38:54 -0700
+From: leonardo.sandoval.gonzalez@linux.intel.com
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 22 Sep 2017 17:22:06 +0100
-Message-Id: <1506097326-4493-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: [PATCH] server/process: Increase runCommand timeout
+Date: Mon,  2 Oct 2017 08:38:47 -0700
+Message-Id: <20171002153849.24922-1-leonardo.sandoval.gonzalez@linux.intel.com>
+X-Mailer: git-send-email 2.12.3
+Subject: [PATCH 1/3] bitbake-user-manual/bitbake-user-manual: remove YP as build system
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,33 +28,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Sep 2017 16:22:10 -0000
+X-List-Received-Date: Mon, 02 Oct 2017 15:38:54 -0000
 
-We were seeing cases where we could hit the 5s timeout on large/fast machines
-running many different tasks at once. Increase this to 30s since the main
-connection timeout path should no longer hit this slow path.
+From: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
 
-[YOCTO #12116]
+YP is not a build system, so it can not be used as build system example.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
 ---
- lib/bb/server/process.py | 2 +-
+ doc/bitbake-user-manual/bitbake-user-manual-intro.xml | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 29f87cd..3d31355 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -324,7 +324,7 @@ class ServerCommunicator():
- 
-     def runCommand(self, command):
-         self.connection.send(command)
--        if not self.recv.poll(5):
-+        if not self.recv.poll(30):
-             raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server")
-         return self.recv.get()
- 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
+index ca7f7246..08d9afdf 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
+@@ -440,7 +440,7 @@
+                     Build Checkout:</emphasis>
+                     A final possibility for getting a copy of BitBake is that it
+                     already comes with your checkout of a larger Bitbake-based build
+-                    system, such as Poky or Yocto Project.
++                    system, such as Poky.
+                     Rather than manually checking out individual layers and
+                     gluing them together yourself, you can check
+                     out an entire build system.
 -- 
-2.7.4
+2.12.3
 
 
