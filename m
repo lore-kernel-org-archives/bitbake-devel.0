@@ -1,21 +1,23 @@
 Return-Path: <leonardo.sandoval.gonzalez@linux.intel.com>
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 2C66B71957
+	by mail.openembedded.org (Postfix) with ESMTP id 4573377527
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  2 Oct 2017 15:38:53 +0000 (UTC)
+	Mon,  2 Oct 2017 15:38:54 +0000 (UTC)
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
 	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	02 Oct 2017 08:38:54 -0700
+	02 Oct 2017 08:38:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.42,470,1500966000"; d="scan'208";a="1226094805"
+X-IronPort-AV: E=Sophos;i="5.42,470,1500966000"; d="scan'208";a="1226094807"
 Received: from yctb05.ostc.intel.com ([10.54.69.59])
 	by fmsmga002.fm.intel.com with ESMTP; 02 Oct 2017 08:38:54 -0700
 From: leonardo.sandoval.gonzalez@linux.intel.com
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  2 Oct 2017 08:38:47 -0700
-Message-Id: <20171002153849.24922-1-leonardo.sandoval.gonzalez@linux.intel.com>
+Date: Mon,  2 Oct 2017 08:38:48 -0700
+Message-Id: <20171002153849.24922-2-leonardo.sandoval.gonzalez@linux.intel.com>
 X-Mailer: git-send-email 2.12.3
-Subject: [PATCH 1/3] bitbake-user-manual/bitbake-user-manual: remove YP as build system
+In-Reply-To: <20171002153849.24922-1-leonardo.sandoval.gonzalez@linux.intel.com>
+References: <20171002153849.24922-1-leonardo.sandoval.gonzalez@linux.intel.com>
+Subject: [PATCH 2/3] bitbake-user-manual-metadata: include a space on a append example
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,26 +34,27 @@ X-List-Received-Date: Mon, 02 Oct 2017 15:38:54 -0000
 
 From: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
 
-YP is not a build system, so it can not be used as build system example.
+By definition, the override operator "_append" does not include a space,
+so include it.
 
 Signed-off-by: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-intro.xml | 2 +-
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-index ca7f7246..08d9afdf 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-@@ -440,7 +440,7 @@
-                     Build Checkout:</emphasis>
-                     A final possibility for getting a copy of BitBake is that it
-                     already comes with your checkout of a larger Bitbake-based build
--                    system, such as Poky or Yocto Project.
-+                    system, such as Poky.
-                     Rather than manually checking out individual layers and
-                     gluing them together yourself, you can check
-                     out an entire build system.
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+index b37da10a..0cfa53d0 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+@@ -669,7 +669,7 @@
+                         <literallayout class='monospaced'>
+      DEPENDS = "glibc ncurses"
+      OVERRIDES = "machine:local"
+-     DEPENDS_append_machine = "libmad"
++     DEPENDS_append_machine = " libmad"
+                         </literallayout>
+                         In this example, <filename>DEPENDS</filename> becomes
+                         "glibc ncurses libmad".
 -- 
 2.12.3
 
