@@ -1,23 +1,48 @@
-Return-Path: <leonardo.sandoval.gonzalez@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 30D7778260
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-wm0-f66.google.com (mail-wm0-f66.google.com [74.125.82.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 0B0A178264
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  6 Oct 2017 15:11:08 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	06 Oct 2017 08:10:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.42,484,1500966000"; d="scan'208";a="1203024178"
-Received: from yctb05.ostc.intel.com ([10.54.69.59])
-	by fmsmga001.fm.intel.com with ESMTP; 06 Oct 2017 08:10:48 -0700
-From: leonardo.sandoval.gonzalez@linux.intel.com
-To: bitbake-devel@lists.openembedded.org
-Date: Fri,  6 Oct 2017 08:10:43 -0700
-Message-Id: <20171006151043.55075-3-leonardo.sandoval.gonzalez@linux.intel.com>
-X-Mailer: git-send-email 2.12.3
-In-Reply-To: <20171006151043.55075-1-leonardo.sandoval.gonzalez@linux.intel.com>
-References: <20171006151043.55075-1-leonardo.sandoval.gonzalez@linux.intel.com>
-Subject: [PATCH v2 3/3] README: new readme file including main aspects of the project
+	Fri,  6 Oct 2017 20:37:19 +0000 (UTC)
+Received: by mail-wm0-f66.google.com with SMTP id b189so9681485wmd.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 06 Oct 2017 13:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=UdMI6+sPq5+zKJvcXBcQZ8L0TpVf3wVztjd1ONB1e3I=;
+	b=fFKIXmNb6BSp0n/F784bD2yECVwAleQLV4mPqoPljFqIloksSTN70ETAP1qVKAnITZ
+	KbOvx+esvw9lSMz91+IqkKYD9HDfsxXtXM6ldBEuVepHvH9hdF7w9ZVR3Thv9CTAEo65
+	NFgNyIdJdfYVuQQ0LDEEuYm5wjP8TZm+GtH4ZwIhVF1FEUq3ABaGQdEol3Glr4+7UUTG
+	rK/r3QYfSJ2Njx6daXI3Bx+Ei19WdE7ABbrnABrVd8YB/2oN1mBQ3en7Zm/Vh5nd5Vv0
+	FwaYYZnxkTTuXcUKcWdKnJ7SU5QNwJpX6FIx5qek/qkFum3TU065G2+cOtSWWNPGkWSX
+	Pxag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=UdMI6+sPq5+zKJvcXBcQZ8L0TpVf3wVztjd1ONB1e3I=;
+	b=RYFBw9JT8e3Is5R0KD6msgNcf1IsxjTaSFBbAMdyRcgmdqpevQcSjB6av43pz5+NCl
+	6bUaJISH64JjrDDbuB7kPMtSyT5qgNeM526WUyUkLQG2n9h/CuOgy4+E7WEXcZehbAL8
+	VduN3FHmQfzpNacivGzWferXERcPkbnXy591syeeRYzZLPDEI0kkyXO9NX8GbGq9Po1h
+	zmxmRm1oo7S///frLrAV03GGrvPJWfQ6GEXg164kOB6H2VnKCogcD3cyHBbOqc4QUmkI
+	ygsIMKOegbTnNNCvY7k3659OpZ/ROToCBSfNMBo5+f8BsPnlUlHkGSooih1IYbmobtG7
+	xGfQ==
+X-Gm-Message-State: AMCzsaWOhBsB+v99nOsH8ojhRXHhntPXi5Djq9gTRgGCxWvIvSFMWVYV
+	5DWrJ447FHe4JGNs6csfeoGi0z404nGIrgRvLjs=
+X-Google-Smtp-Source: AOwi7QC3oI4N/EmEynR9Ct8WIpCdKv3Vbld+YmR4bYMTzDtMRG+SBk9ZnpxcGOhWk0pRHb0Jxty5YFdcX+y1SoR68po=
+X-Received: by 10.28.54.89 with SMTP id d86mr2643870wma.101.1507322240634;
+	Fri, 06 Oct 2017 13:37:20 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.223.166.19 with HTTP; Fri, 6 Oct 2017 13:37:20 -0700 (PDT)
+In-Reply-To: <CAOtT3B52FFNZHsx+7GQwtLp0qoWvZ3C5AxU4tVYm5cPnAZC3Zg@mail.gmail.com>
+References: <1474957465-27791-1-git-send-email-mounesh.sutar@gmail.com>
+	<CAOtT3B52FFNZHsx+7GQwtLp0qoWvZ3C5AxU4tVYm5cPnAZC3Zg@mail.gmail.com>
+From: Andre McCurdy <armccurdy@gmail.com>
+Date: Fri, 6 Oct 2017 13:37:20 -0700
+Message-ID: <CAJ86T=XWPVANsJmSW2aPCWKQOEB_r84E-08HTirHSjxQVPxmkQ@mail.gmail.com>
+To: Mounesh Sutar <mounesh.sutar@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Mounesh Sutar <mounesh_sutar@mentor.com>
+Subject: Re: [PATCH] bitbake warning fix: No bb files matched BBFILE_PATTERN_packageName
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,61 +55,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Oct 2017 15:11:08 -0000
+X-List-Received-Date: Fri, 06 Oct 2017 20:37:20 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-From: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
+> On Tue, Sep 27, 2016 at 11:54 AM, Mounesh Sutar <mounesh.sutar@gmail.com>
+>>
+>> bitbake is parsing all recipe files, against layers BBFILE_PATTERN for
+>> warning message display.
+>> In case of sublayer with lower/equal priority, then all sublayer's
+>> patterns are not being
+>> considered for pattern match. While checking recipe file against matching
+>> pattern,
+>> the first matching pattern is accepted and added to matched list, while
+>> remaning PATTERNs are
+>> not being considered. With this, the recipes are being neglected from
+>> PATTERN match.
+>> This fix let's parser run through all the layers PATTERNs and on matching
+>> added to match list.
+>>
+>> Upstream-Status: Submitted [bitbake-devel@lists.openembedded.org]
+>>
+>> Signed-off-by: Mounesh Sutar <mounesh_sutar@mentor.com>
+>> ---
+>>  bitbake/lib/bb/cooker.py |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+>> index 4df8881..5fde995 100644
+>> --- a/bitbake/lib/bb/cooker.py
+>> +++ b/bitbake/lib/bb/cooker.py
+>> @@ -1705,7 +1705,7 @@ class CookerCollectFiles(object):
+>>                  if matched != None:
+>>                      if not regex in matched:
+>>                          matched.add(regex)
+>> -                return pri
+>> +                        return pri
+>>          return 0
+>>
+>>      def get_bbfiles(self):
+>> --
 
-Includes brief description of the project, pointers to website, documentation,
-mailing list and source code.
+Resurrecting an old thread as it's been pointed out to me that this
+patch fixes the issue I raised a while ago on the oe-core list:
 
-Signed-off-by: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
----
- README | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 README
+  http://lists.openembedded.org/pipermail/openembedded-core/2016-July/123466.html
 
-diff --git a/README b/README
-new file mode 100644
-index 00000000..479c3765
---- /dev/null
-+++ b/README
-@@ -0,0 +1,35 @@
-+Bitbake
-+=======
-+
-+BitBake is a generic task execution engine that allows shell and Python tasks to be run
-+efficiently and in parallel while working within complex inter-task dependency constraints.
-+One of BitBake's main users, OpenEmbedded, takes this core and builds embedded Linux software
-+stacks using a task-oriented approach.
-+
-+For information about Bitbake, see the OpenEmbedded website:
-+    http://www.openembedded.org/
-+
-+Bitbake plain documentation can be found under the doc directory or its integrated
-+html version at the Yocto Project website:
-+    http://yoctoproject.org/documentation
-+
-+Contributing
-+------------
-+
-+Please refer to
-+http://www.openembedded.org/wiki/How_to_submit_a_patch_to_OpenEmbedded
-+for guidelines on how to submit patches, just note that the latter documentation is intended
-+for OpenEmbedded (and its core) not bitbake patches (bitbake-devel@lists.openembedded.org)
-+but in general main guidelines apply. Once the commit(s) have been created, the way to send
-+the patch is through git-send-email. For example, to send the last commit (HEAD) on current
-+branch, type:
-+
-+    git send-email -M -1 --to bitbake-devel@lists.openembedded.org
-+
-+Mailing list:
-+
-+    http://lists.openembedded.org/mailman/listinfo/bitbake-devel
-+
-+Source code:
-+
-+    http://git.openembedded.org/bitbake/
--- 
-2.12.3
-
+Are there any problems or concerns with this change?
 
