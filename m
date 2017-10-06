@@ -1,24 +1,31 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 21A03719B7
+Return-Path: <AMardegan@luxoft.com>
+Received: from ORO-EDGE-01.luxoft.com (oro-edge-01.luxoft.com [109.166.244.21])
+	by mail.openembedded.org (Postfix) with ESMTP id CA5FC6FFFE
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 Oct 2017 23:07:33 +0000 (UTC)
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	05 Oct 2017 16:07:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.42,482,1500966000"; d="scan'208";a="157294810"
-Received: from pnaidu-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.147.41])
-	by orsmga005.jf.intel.com with ESMTP; 05 Oct 2017 16:07:32 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri,  6 Oct 2017 12:06:54 +1300
-Message-Id: <68417f805b782bb5e35ce413542b85898149fdbc.1507244747.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <cover.1507244747.git.paul.eggleton@linux.intel.com>
+	Fri,  6 Oct 2017 06:13:06 +0000 (UTC)
+Received: from ORO-HUBT-01.luxoft.com (172.30.115.41) by
+	oro-edge-01.luxoft.com (172.30.19.21) with Microsoft SMTP Server (TLS)
+	id 14.3.319.2; Fri, 6 Oct 2017 09:13:04 +0300
+Received: from ORO-MBOX-01.luxoft.com ([fe80::387f:bf07:869c:b95e]) by
+	ORO-HUBT-01.luxoft.com ([::1]) with mapi id 14.03.0319.002;
+	Fri, 6 Oct 2017 09:13:05 +0300
+From: "Mardegan, Alberto" <AMardegan@luxoft.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 1/1] toaster: build missing
+	toaster.conf settings
+Thread-Index: AQHTPmosWlSx0yeQa06oEcNAdXii6A==
+Date: Fri, 6 Oct 2017 06:13:05 +0000
+Message-ID: <ac9effab-dfa2-1204-8613-e2a25e90dd5e@luxoft.com>
 References: <cover.1507244747.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] toaster: build missing toaster.conf settings
+	<68417f805b782bb5e35ce413542b85898149fdbc.1507244747.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <68417f805b782bb5e35ce413542b85898149fdbc.1507244747.git.paul.eggleton@linux.intel.com>
+Accept-Language: it-IT, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.21.44.132]
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/1] toaster: build missing toaster.conf settings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,43 +38,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Oct 2017 23:07:34 -0000
+X-List-Received-Date: Fri, 06 Oct 2017 06:13:07 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <54B89D4394AE5A4A9DE63841CBE8F72B@luxoft.com>
+Content-Transfer-Encoding: base64
 
-From: David Reyna <David.Reyna@windriver.com>
-
-The bitbake server changed such that the Toaster custom settings from
-'toaster.conf' and 'toaster-bblayers.conf' that were set when
-the '--server-only' mode was started were lost when the subsequent build
-request happened, resulting in builds missing all custom changes.
-
-This patch asserts those environment settings in both server calls.
-
-[YOCTO #12194]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/toaster/bldcontrol/localhostbecontroller.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index a2ca95b..83cb703 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -381,9 +381,10 @@ class LocalhostBEController(BuildEnvironmentController):
-         local_bitbake = os.path.join(os.path.dirname(os.getenv('BBBASEDIR')),
-                                      'bitbake')
-         self._shellcmd(['bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:%s" '
--                        '%s %s -u toasterui --token="" >>%s 2>&1;'
-+                        '%s %s -u toasterui  --read %s --read %s --token="" >>%s 2>&1;'
-                         'BITBAKE_UI="knotty" BBSERVER=0.0.0.0:%s %s -m)&\"' \
--                        % (brbe, self.be.bbport, local_bitbake, bbtargets, log, self.be.bbport, bitbake)],
-+                        % (brbe, self.be.bbport, local_bitbake, bbtargets, confpath, toasterlayers, log,
-+                        self.be.bbport, bitbake,)],
-                         builddir, nowait=True)
- 
-         logger.debug('localhostbecontroller: Build launched, exiting. '
--- 
-2.9.5
-
+SGksDQoNCj4gZGlmZiAtLWdpdCBhL2xpYi90b2FzdGVyL2JsZGNvbnRyb2wvbG9jYWxob3N0YmVj
+b250cm9sbGVyLnB5IGIvbGliL3RvYXN0ZXIvYmxkY29udHJvbC9sb2NhbGhvc3RiZWNvbnRyb2xs
+ZXIucHkNCj4gaW5kZXggYTJjYTk1Yi4uODNjYjcwMyAxMDA2NDQNCj4gLS0tIGEvbGliL3RvYXN0
+ZXIvYmxkY29udHJvbC9sb2NhbGhvc3RiZWNvbnRyb2xsZXIucHkNCj4gKysrIGIvbGliL3RvYXN0
+ZXIvYmxkY29udHJvbC9sb2NhbGhvc3RiZWNvbnRyb2xsZXIucHkNCj4gQEAgLTM4MSw5ICszODEs
+MTAgQEAgY2xhc3MgTG9jYWxob3N0QkVDb250cm9sbGVyKEJ1aWxkRW52aXJvbm1lbnRDb250cm9s
+bGVyKToNCj4gICAgICAgICAgbG9jYWxfYml0YmFrZSA9IG9zLnBhdGguam9pbihvcy5wYXRoLmRp
+cm5hbWUob3MuZ2V0ZW52KCdCQkJBU0VESVInKSksDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgJ2JpdGJha2UnKQ0KPiAgICAgICAgICBzZWxmLl9zaGVsbGNtZChbJ2Jh
+c2ggLWMgXCIoVE9BU1RFUl9CUkJFPSIlcyIgQkJTRVJWRVI9IjAuMC4wLjA6JXMiICcNCj4gLSAg
+ICAgICAgICAgICAgICAgICAgICAgICclcyAlcyAtdSB0b2FzdGVydWkgLS10b2tlbj0iIiA+PiVz
+IDI+JjE7Jw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgJyVzICVzIC11IHRvYXN0ZXJ1aSAg
+LS1yZWFkICVzIC0tcmVhZCAlcyAtLXRva2VuPSIiID4+JXMgMj4mMTsnDQo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAnQklUQkFLRV9VST0ia25vdHR5IiBCQlNFUlZFUj0wLjAuMC4wOiVzICVz
+IC1tKSZcIicgXA0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgJSAoYnJiZSwgc2VsZi5iZS5i
+YnBvcnQsIGxvY2FsX2JpdGJha2UsIGJidGFyZ2V0cywgbG9nLCBzZWxmLmJlLmJicG9ydCwgYml0
+YmFrZSldLA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgJSAoYnJiZSwgc2VsZi5iZS5iYnBv
+cnQsIGxvY2FsX2JpdGJha2UsIGJidGFyZ2V0cywgY29uZnBhdGgsIHRvYXN0ZXJsYXllcnMsIGxv
+ZywNCg0KYmV0dGVyIGFkZCBxdW90ZXMgYXJvdW5kIHRoZSAlcyBpbiB0aGUgLS1yZWFkIHBhcmFt
+ZXRlcnMsIGFzIHRoZXNlIHBhdGhzDQptaWdodCBjb250YWluIHNwYWNlcy4NCg0KQ2lhbywNCiAg
+QWxiZXJ0bw0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpUaGlzIGUtbWFp
+bCBhbmQgYW55IGF0dGFjaG1lbnQocykgYXJlIGludGVuZGVkIG9ubHkgZm9yIHRoZSByZWNpcGll
+bnQocykgbmFtZWQgYWJvdmUgYW5kIG90aGVycyB3aG8gaGF2ZSBiZWVuIHNwZWNpZmljYWxseSBh
+dXRob3JpemVkIHRvIHJlY2VpdmUgdGhlbS4gVGhleSBtYXkgY29udGFpbiBjb25maWRlbnRpYWwg
+aW5mb3JtYXRpb24uIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHBsZWFz
+ZSBkbyBub3QgcmVhZCB0aGlzIGVtYWlsIG9yIGl0cyBhdHRhY2htZW50KHMpLiBGdXJ0aGVybW9y
+ZSwgeW91IGFyZSBoZXJlYnkgbm90aWZpZWQgdGhhdCBhbnkgZGlzc2VtaW5hdGlvbiwgZGlzdHJp
+YnV0aW9uIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50KHMpIGlz
+IHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGlu
+IGVycm9yLCBwbGVhc2UgaW1tZWRpYXRlbHkgbm90aWZ5IHRoZSBzZW5kZXIgYnkgcmVwbHlpbmcg
+dG8gdGhpcyBlLW1haWwgYW5kIHRoZW4gZGVsZXRlIHRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNo
+bWVudChzKSBvciBjb3BpZXMgdGhlcmVvZiBmcm9tIHlvdXIgc3lzdGVtLiBUaGFuayB5b3UuDQo=
 
