@@ -1,23 +1,24 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 06BA478312
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 6D478782FC
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Oct 2017 03:32:53 +0000 (UTC)
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-	by fmsmga105.fm.intel.com with ESMTP; 18 Oct 2017 20:32:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.43,399,1503385200"; d="scan'208";a="164336123"
-Received: from klee4-mobl2.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.255.148.108])
-	by fmsmga005.fm.intel.com with ESMTP; 18 Oct 2017 20:32:53 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Sat, 21 Oct 2017 12:06:44 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	v9LC6hVV002801
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Sat, 21 Oct 2017 13:06:44 +0100
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1e5sY6-0001Ft-UW; Sat, 21 Oct 2017 13:06:42 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 19 Oct 2017 16:32:21 +1300
-Message-Id: <0ee582a4068cf1d54d247d8da274f933055bc700.1508383917.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <cover.1508383917.git.paul.eggleton@linux.intel.com>
-References: <cover.1508383917.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] cooker: fix watching directories with Python 3.6+
+Date: Sat, 21 Oct 2017 13:06:39 +0100
+Message-Id: <1508587599-4787-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: [PATCH] main: Give a user readable error if we can't locate topdir
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,69 +31,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Oct 2017 03:32:54 -0000
+X-List-Received-Date: Sat, 21 Oct 2017 12:06:44 -0000
 
-In Python 3.6, glob.glob() was reimplemented to use os.scandir() (which
-itself appeared in Python 3.5), thus our monkey patching of os.listdir()
-here was no longer effective. The end result was not only that bitbake
-wouldn't notice added recipes or bbappends with BB_SERVER_TIMEOUT set
-when being run with Python 3.6 (the shipped Python version on Fedora 26
-and some other distribution versions), it also broke devtool modify,
-devtool upgrade and devtool extract since they rely on the ability to
-create a bbappend on the fly and have bitbake pick it up.
+Currently if you run bitbake in an invalid directory, the user experience
+is poor:
 
-To fix it, do the same monkey patching for os.scandir(), which needs to
-be conditional upon that actually existing since we have to support
-Python 3.4 that doesn't have it. Long term we should probably look for a
-better way to handle this that doesn't involve monkey patching Python
-library code.
+birbake/lib/bb/main.py", line 427, in setup_bitbake
+    topdir, lock = lockBitbake()
+  File "./bitbake/lib/bb/main.py", line 494, in lockBitbake
+    lockfile = topdir + "/bitbake.lock"
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'str'
 
-Fixes [YOCTO #12185].
+This ensures we exit straight away with a better error message.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+[YOCTO #12163]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ lib/bb/main.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 73a2fef..c7fdd72 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1686,15 +1686,23 @@ class CookerCollectFiles(object):
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index a488c3d..7711b29 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -47,6 +47,9 @@ logger = logging.getLogger("BitBake")
+ class BBMainException(Exception):
+     pass
  
-         # We need to track where we look so that we can add inotify watches. There
-         # is no nice way to do this, this is horrid. We intercept the os.listdir()
--        # calls while we run glob().
-+        # (or os.scandir() for python 3.6+) calls while we run glob().
-         origlistdir = os.listdir
-+        if hasattr(os, 'scandir'):
-+            origscandir = os.scandir
-         searchdirs = []
- 
-         def ourlistdir(d):
-             searchdirs.append(d)
-             return origlistdir(d)
- 
-+        def ourscandir(d):
-+            searchdirs.append(d)
-+            return origscandir(d)
++class BBMainFatal(bb.BBHandledException):
++    pass
 +
-         os.listdir = ourlistdir
-+        if hasattr(os, 'scandir'):
-+            os.scandir = ourscandir
-         try:
-             # Can't use set here as order is important
-             newfiles = []
-@@ -1714,6 +1722,8 @@ class CookerCollectFiles(object):
-                             newfiles.append(g)
-         finally:
-             os.listdir = origlistdir
-+            if hasattr(os, 'scandir'):
-+                os.scandir = origscandir
+ def present_options(optionlist):
+     if len(optionlist) > 1:
+         return ' or '.join([', '.join(optionlist[:-1]), optionlist[-1]])
+@@ -461,6 +464,8 @@ def setup_bitbake(configParams, configuration, extrafeatures=None):
  
-         bbmask = config.getVar('BBMASK')
+                 if server_connection or configParams.server_only:
+                     break
++            except BBMainFatal:
++                raise
+             except (Exception, bb.server.process.ProcessTimeout) as e:
+                 if not retries:
+                     raise
+@@ -491,6 +496,9 @@ def setup_bitbake(configParams, configuration, extrafeatures=None):
+ 
+ def lockBitbake():
+     topdir = bb.cookerdata.findTopdir()
++    if not topdir:
++        bb.error("Unable to find conf/bblayers.conf or conf/bitbake.conf. BBAPTH is unset and/or not in a build directory?")
++        raise BBMainFatal
+     lockfile = topdir + "/bitbake.lock"
+     return topdir, bb.utils.lockfile(lockfile, False, False)
  
 -- 
-2.9.5
+2.7.4
 
 
