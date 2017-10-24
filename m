@@ -1,53 +1,53 @@
 Return-Path: <andr2000@gmail.com>
-Received: from mail-lf0-f68.google.com (mail-lf0-f68.google.com
-	[209.85.215.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 211B46093B
+Received: from mail-lf0-f65.google.com (mail-lf0-f65.google.com
+	[209.85.215.65])
+	by mail.openembedded.org (Postfix) with ESMTP id A9B1071974
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Oct 2017 11:35:50 +0000 (UTC)
-Received: by mail-lf0-f68.google.com with SMTP id p184so23560707lfe.12
+	Tue, 24 Oct 2017 11:35:52 +0000 (UTC)
+Received: by mail-lf0-f65.google.com with SMTP id a2so1522169lfh.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Oct 2017 04:35:52 -0700 (PDT)
+	Tue, 24 Oct 2017 04:35:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=ULquoSWLd81vbINWi46tULf0aQOZh85X8eAv65fhrXA=;
-	b=cJIsaJGQWmLxEmW7V16GEGU/F6+W9G2yrJJ4/NHdQ2PtOc8JQCeIAykRfgsFSN1Fan
-	Xu7s/c2lxdntg/HFMvkQQZNtUR7bC1PpVQy0Jlt4QJasClsY8V8NmTVcMljI11nugzAc
-	8G+YnRgslK/qbnrGtr4Uo+Dd8t3mz+fSnGPzJMWORGdUm8Oodl0KbIozDMQ8pmBxc/Bk
-	cLxKwmzgVo5GVOV++CYJXMiZz5h3SfomK3puLcJ88+LJuaB1D///rlwiMJigMZ8QP8KR
-	3S99Hy7LCHPgoJp9uDvBz4leLlFjjUtv7gG6nE8nAHwd4A5ek2mMMtPPO7vwqEYsGJNL
-	Cakw==
+	bh=4UWAwH/oSnQoNIQHcPeIH84UGfTzhd4FI8hrnmUJdRQ=;
+	b=hzRxZqrHnVpo8KMEDBSHzSYQ92OGSNxYY9cWMyXPR6ExWlfMySewsigdaJgbmJCnij
+	8V0KhqbPcyqY6YQAaf+jtEQ3MDF4SLWSq3PifTutRlFPoC0Cerbp4++p6O4c0VbABIXP
+	QQ9pJLT23v6Z3qE5I6iXgWQMNuXFZAFEGgWPodkQ4OBSk/GR/BDAk/CftJZ4c+kQPMWb
+	pYey9DsG21WOLQ3TYxO5UaIc8hGE++hxKOA0xyH2EWoj/SHn/JuOTy854SkMge+G6j+Y
+	YE65GJpKMcpYVBE8VW2NvXHE8dtxggrzT9pOZQUY66OneYnME6/8voohPwd2Tg+oBxyI
+	FOEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=ULquoSWLd81vbINWi46tULf0aQOZh85X8eAv65fhrXA=;
-	b=avJwiNN21ztMjVg7M8+5qIXa5ztuJocGErMz4+hSOlV+kdButdpr5A16yxKhVZjn8b
-	apuCM5EeHiovdWAWbo3/5tOgm8mGd0e8HsVI74zFa7WZ5Y+EiT+FgmraelhpMLep4/FQ
-	A12/1HKESbkKTmZ9Up6F038OPYqtrZ5H6A3ZM1CA3F5iwaT1wQ3NgEeQ/RcsTUMFKqMX
-	83TijMgFycYXOvUYzVZp2tEt/d/NdEsMbeceUzSd00ZmJoY15WZrZHcNRlSwyBrbcimK
-	Dg4LPlFRrdOnHYdFtkGWEqUsF+Ds9LoYMJ5MwCSmnwOq95vYwmFRNRDJlHhWeb0XEtsP
-	OKUg==
-X-Gm-Message-State: AMCzsaUAH3si5j7jv/F7fsGttLL4MeM8PIiqh+liqOYZVsIRbcqgURBh
-	VMHqnAys/JWn8mbJ4/2R66lLPQ==
-X-Google-Smtp-Source: ABhQp+QmHBxelnFFfK/wz8u2kuv+u7zTCjknAPxvGLmnjpOS15+HpasFdvsn4Un4tAfHARG1h8w7aQ==
-X-Received: by 10.25.67.30 with SMTP id q30mr5311741lfa.118.1508844951367;
-	Tue, 24 Oct 2017 04:35:51 -0700 (PDT)
+	bh=4UWAwH/oSnQoNIQHcPeIH84UGfTzhd4FI8hrnmUJdRQ=;
+	b=YgWq6niQDYFeI7okDZ9wH0zAvumspq0Twu8fQ20lFc5eCVLsAWqwvMpSINLN4ySf0j
+	WGPHwg8Uk/rPjL6s2u6wh81lchYO+OKmphM46zgtaeZN6zJ74sQ1xLnWNE8jeAV8RlFy
+	2V8uKalg0N8pgi1m94nsST4f1PrLvoK7bD0CLod40610S0AtOUOfincEZ72769nVXRXK
+	5dwN2UwxrdRuD9jsLKgFtl+XAhlStzBEXtVAZ3qnPR1xQ0ctnAj+xRTDECb7S49c1mYE
+	8v2x9fMl3hZa+Npc5mb+JWyUz7uOM5j6uz3g/TLhHT9IwPMBHq97crnK0Ts5v5FkKMS2
+	7k7Q==
+X-Gm-Message-State: AMCzsaXjLLD8mGnEhBupzq+Ihd2yOMlu+qIjtCD2OvxT5AwyvyRd3GKx
+	cSp53YzTR47kJCObFk2OSZtlgA==
+X-Google-Smtp-Source: ABhQp+TXZVvPW0DJKtin4jV0Bd8R8WEdVLFd3YwSXI91VWP/lKV8K9Kbc99sGV4hMwyk9wPmh9931g==
+X-Received: by 10.25.151.206 with SMTP id z197mr5341337lfd.3.1508844952790;
+	Tue, 24 Oct 2017 04:35:52 -0700 (PDT)
 Received: from a2k-HP-ProDesk-600-G2-SFF.kyiv.epam.com
 	(ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
-	by smtp.gmail.com with ESMTPSA id h82sm18166lfb.21.2017.10.24.04.35.50
+	by smtp.gmail.com with ESMTPSA id h82sm18166lfb.21.2017.10.24.04.35.51
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 24 Oct 2017 04:35:50 -0700 (PDT)
+	Tue, 24 Oct 2017 04:35:51 -0700 (PDT)
 From: Oleksandr Andrushchenko <andr2000@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Oct 2017 14:35:41 +0300
-Message-Id: <1508844944-5761-2-git-send-email-andr2000@gmail.com>
+Date: Tue, 24 Oct 2017 14:35:42 +0300
+Message-Id: <1508844944-5761-3-git-send-email-andr2000@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1508844944-5761-1-git-send-email-andr2000@gmail.com>
 References: <1508844944-5761-1-git-send-email-andr2000@gmail.com>
 X-Mailman-Approved-At: Fri, 27 Oct 2017 14:42:08 +0000
 Cc: andr2000@gmail.com,
 	Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Subject: [PATCH 1/4] fetch2/repo: Fix missing logger import in repo fetcher
+Subject: [PATCH 2/4] fetch2/repo: Always check if branch is correct
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,33 +60,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 24 Oct 2017 11:35:51 -0000
+X-List-Received-Date: Tue, 24 Oct 2017 11:35:52 -0000
 
 From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-After cleaning deprecated API usage repo fetcher is missing
-logger as it was indirectly imported via deprecated bb.data.
-Fix this by importing logger directly.
-
-Fixes: 9752fd1c10b8 ("fetch2: don't use deprecated bb.data APIs")
+Current implementation doesn't pay attention if
+the same repository is used for manifest, but different
+branch, e.g. existing cached repository is not checked
+if the branch is correct. Fix this by always running
+repo init/sync.
 
 Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 ---
- lib/bb/fetch2/repo.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/fetch2/repo.py | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
-index 1be91cc698e3..c22d9b5578eb 100644
+index c22d9b5578eb..861437dd22b2 100644
 --- a/lib/bb/fetch2/repo.py
 +++ b/lib/bb/fetch2/repo.py
-@@ -27,6 +27,7 @@ import os
- import bb
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import runfetchcmd
-+from   bb.fetch2 import logger
+@@ -71,9 +71,8 @@ class Repo(FetchMethod):
  
- class Repo(FetchMethod):
-     """Class to fetch a module or modules from repo (git) repositories"""
+         repodir = os.path.join(codir, "repo")
+         bb.utils.mkdirhier(repodir)
+-        if not os.path.exists(os.path.join(repodir, ".repo")):
+-            bb.fetch2.check_network_access(d, "repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), ud.url)
+-            runfetchcmd("repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=repodir)
++        bb.fetch2.check_network_access(d, "repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), ud.url)
++        runfetchcmd("repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=repodir)
+ 
+         bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
+         runfetchcmd("repo sync", d, workdir=repodir)
 -- 
 2.7.4
 
