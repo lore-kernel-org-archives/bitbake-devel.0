@@ -1,53 +1,47 @@
-Return-Path: <andr2000@gmail.com>
-Received: from mail-lf0-f68.google.com (mail-lf0-f68.google.com
-	[209.85.215.68])
-	by mail.openembedded.org (Postfix) with ESMTP id C79376093B
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-pf0-f180.google.com (mail-pf0-f180.google.com
+	[209.85.192.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 1A55271AD6
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Oct 2017 11:35:54 +0000 (UTC)
-Received: by mail-lf0-f68.google.com with SMTP id p184so23560926lfe.12
+	Sat, 28 Oct 2017 08:30:14 +0000 (UTC)
+Received: by mail-pf0-f180.google.com with SMTP id b6so6651374pfh.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Oct 2017 04:35:56 -0700 (PDT)
+	Sat, 28 Oct 2017 01:30:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=QOLYmrqFaPsfdeVGAXB+PAAwb4CwjHWoUBRJQpO452o=;
-	b=DNd/Im5CquJuuCg3LBQuG753DAFGvKWIpdITF7IMIzi7fbNVnVNnaiYdgptSVe7cbB
-	dZpMyGfKPdmAc3afqrs7wSS/l4WpZ0thp7jETYf3FffoXOhHB//Hm89TS4XHTKuZIZeD
-	PxtWne8j9AHLyQmvH9iHfnuTMp6QqyHhMCHO3Qk3V4S0qT0X539BB5eClisIh0w1fjm7
-	lTrr1lv98N08zBz+4HS2YefNTCnbSXqbuaN9XVQtLGpKPdlXtetPk3KzFJEL5YY6NYkY
-	3KH9juB/UnXdjb/CQGtQk0riErUQsJJG5NKOl0GzembLF5Yd/nM3zRBF1rHted51OCNj
-	wHPg==
+	h=from:to:cc:subject:date:message-id;
+	bh=lnJKR/t1Gew5uPKe7Oi9GblTVlQHePBTT3esLDSNZUM=;
+	b=l+rx7/Qz0lmSH6pyZn0Un+K2WPoTVWYeX37Cam+LH+euJOL/ELKTDptlXLxP4Ked8X
+	3V5gEKI+4pHFlyqRaT3GLutX2Fx6fXZhehnN+ROKHheTgcQJmhCLIqcxcP4hvdmUkW1B
+	3bEFU2ga1jyYuJ0GeIcZrUW6Bu3h/AGRLqAcNqEcDztZ7fGLG8/CMcCxNxjf2CN+rXcC
+	kujf3Lj2zoRsLw2qicTm0Za7JVZIwi7xXOvXRPf5AUkIa8h+b+XJJFNsdqwa8ZZ7tEdc
+	01CJXe7VEP4vxeHPjgGnsJqfjv6WYfFb9WEi0Su6Jj6GoKSZMJc6zwxvtW3ZyrsnwrAg
+	Af6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=QOLYmrqFaPsfdeVGAXB+PAAwb4CwjHWoUBRJQpO452o=;
-	b=C5+PyZtrrMpXbzPMcdEcJCl4mLhH+wHmhGGJBtzRbgdImmzSFE0O+Md0vRgR8c31Wn
-	ZgpD/Z9Gb+nv4zh6F19GBC6dRzSO1ca7hcjMPTCq8hPRDEtaH9HQAZq6SiwPVlt1KZMq
-	wTdRB/q0FOQW1QBX8GUuP+PTdOKy6+xhfZv2A5JIzpz91/mhuYN8MAPw7wMSHM3LUyJ0
-	ZXCa3ibsWFbq1zYVEZyiagghjn380/yQQDGGqLlhkynii0Eb0SRdqWllZE/kHch/DO3K
-	kM2Cn1Pu0EJEVvCPRgRD9Js//NouwlttmL7lBP1E/0qvULxjMsfoCc9MwzwC24LRpI4n
-	Qs8g==
-X-Gm-Message-State: AMCzsaUUW/OY3+6VDgbaro6QgaJDjcJRNzwNOK2RI/KcJUrhEceilLSe
-	XTzL73vM99j4Qi0dckgB/kbbWw==
-X-Google-Smtp-Source: ABhQp+QWzbllTOLTaV9Hk1JoVVQ4tI7kA0PJj4XppO2VHSdelCdUj/bPyyeGxyhhbE7yg2SdTNR7JQ==
-X-Received: by 10.46.16.218 with SMTP id 87mr7493607ljq.115.1508844955601;
-	Tue, 24 Oct 2017 04:35:55 -0700 (PDT)
-Received: from a2k-HP-ProDesk-600-G2-SFF.kyiv.epam.com
-	(ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
-	by smtp.gmail.com with ESMTPSA id h82sm18166lfb.21.2017.10.24.04.35.54
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 24 Oct 2017 04:35:54 -0700 (PDT)
-From: Oleksandr Andrushchenko <andr2000@gmail.com>
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=lnJKR/t1Gew5uPKe7Oi9GblTVlQHePBTT3esLDSNZUM=;
+	b=AlFJ5iHs8e77CmRUDcSz+9dw7jyPnO+vjKdMDMhINMPqroQyEqPMNm23rHjsfxf+hw
+	tDjf587MN3qzJTS3DkFDULG233IdoPUsl/+Pszj+R7Isrm8Ne6U/JuqaQJfmaJiE4r4w
+	EnwzJkOIRgrOTOLV9NX7Ig1J5rD8z8KHUkpkhKM7KwuHbkgBpLz4gZHG9LiiekBbVsPL
+	cceceecq3p7MHGiRPZLxcpJzKpNwNkhlFC/uhzqSxAfnL1MX805sO/jcWYBcOCmP32Dv
+	iPGQh4jeP7dYBnT4LrvMet9X3O8MGNIxRyE/6NwLWOr+0o8N0slLg0FP6huzE75axplZ
+	Rx9g==
+X-Gm-Message-State: AMCzsaU/hytBhkyIjtEIyZkSRt/RBez+jYhN833y/SgvjBnCS3WN6E2V
+	NWOfOyyMFyQiYV/Sayp2Nh7U3w==
+X-Google-Smtp-Source: ABhQp+Qs8pRqWoaO6FYtbngnYPwwyCf/YtbUR/OWDFUB7/xzOG2MPH23I7UnLJ7TAd6QAvQdhJLOEA==
+X-Received: by 10.159.249.9 with SMTP id bf9mr2413238plb.383.1509179415942;
+	Sat, 28 Oct 2017 01:30:15 -0700 (PDT)
+Received: from localhost.localdomain ([2601:646:8882:b8c::231f])
+	by smtp.gmail.com with ESMTPSA id
+	c1sm17953632pfa.12.2017.10.28.01.30.14
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sat, 28 Oct 2017 01:30:15 -0700 (PDT)
+From: Khem Raj <raj.khem@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Oct 2017 14:35:44 +0300
-Message-Id: <1508844944-5761-5-git-send-email-andr2000@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1508844944-5761-1-git-send-email-andr2000@gmail.com>
-References: <1508844944-5761-1-git-send-email-andr2000@gmail.com>
-X-Mailman-Approved-At: Fri, 27 Oct 2017 14:42:08 +0000
-Cc: andr2000@gmail.com,
-	Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Subject: [PATCH 4/4] fetch2/repo: Use multiple jobs to fetch and sync
+Date: Sat, 28 Oct 2017 01:29:56 -0700
+Message-Id: <20171028082956.13020-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.14.3
+Subject: [1.36][PATCH] bitbake: Update version to 1.36.0 for stable release
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,59 +54,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 24 Oct 2017 11:35:55 -0000
+X-List-Received-Date: Sat, 28 Oct 2017 08:30:15 -0000
 
-From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-
-Google repo supports "--jobs" parameter, so one can
-speed up the process of fetching and syncing. According to
-https://groups.google.com/a/chromium.org/forum/#!topic/chromium-os-dev/ny3nkgE9AE8
-it is even more gets to speed if used separately for
-network jobs and "local" ones.
-Use BB_NUMBER_THREADS to run parallel repo sync.
-
-Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- lib/bb/fetch2/repo.py | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ bin/bitbake        | 2 +-
+ lib/bb/__init__.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
-index 3c28fe04ab1e..08331acd6706 100644
---- a/lib/bb/fetch2/repo.py
-+++ b/lib/bb/fetch2/repo.py
-@@ -57,6 +57,13 @@ class Repo(FetchMethod):
-         ud.codir = os.path.join(repodir, gitsrcname, ud.manifest)
-         ud.repodir = os.path.join(ud.codir, "repo")
+diff --git a/bin/bitbake b/bin/bitbake
+index daedd647..558e32d7 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -38,7 +38,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
+ if sys.getfilesystemencoding() != "utf-8":
+     sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
  
-+    def sync(self, ud, d):
-+        # repo can separate the "network" sync (the git fetch part, network bound)
-+        # from the local sync (the git rebase part, compute & i/o bound).
-+        num_jobs = d.getVar("BB_NUMBER_THREADS", True) or "1"
-+        runfetchcmd("repo sync -c -n -j%s" % num_jobs, d, workdir=ud.repodir)
-+        runfetchcmd("repo sync -c -l -j%s" % num_jobs, d, workdir=ud.repodir)
-+
-     def download(self, ud, d):
-         """Fetch url"""
+-__version__ = "1.35.0"
++__version__ = "1.36.0"
  
-@@ -74,7 +81,7 @@ class Repo(FetchMethod):
-         runfetchcmd("repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=ud.repodir)
+ if __name__ == "__main__":
+     if __version__ != bb.__version__:
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 45559b99..52688315 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -21,7 +21,7 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
-         bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
--        runfetchcmd("repo sync", d, workdir=ud.repodir)
-+        self.sync(ud, d)
+-__version__ = "1.35.0"
++__version__ = "1.36.0"
  
-         scmdata = ud.parm.get("scmdata", "")
-         if scmdata == "keep":
-@@ -88,7 +95,7 @@ class Repo(FetchMethod):
-     def unpack(self, ud, destdir, d):
-         FetchMethod.unpack(self, ud, destdir, d)
-         bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
--        runfetchcmd("repo sync", d, workdir=ud.repodir)
-+        self.sync(ud, d)
- 
-     def supports_srcrev(self):
-         return False
+ import sys
+ if sys.version_info < (3, 4, 0):
 -- 
-2.7.4
+2.14.3
 
 
