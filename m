@@ -1,47 +1,50 @@
 Return-Path: <Javier.Viguera@digi.com>
 Received: from mail1.bemta12.messagelabs.com (mail1.bemta12.messagelabs.com
-	[216.82.251.3])
-	by mail.openembedded.org (Postfix) with ESMTP id 0D60B6FFFE
+	[216.82.251.6])
+	by mail.openembedded.org (Postfix) with ESMTP id AA6327838B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Nov 2017 11:40:23 +0000 (UTC)
-Received: from [216.82.251.44] by server-3.bemta-12.messagelabs.com id
-	15/5B-02038-9A55CF95; Fri, 03 Nov 2017 11:40:25 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeJIrShJLcpLzFFi42Jx8l0noLsy9E+
-	kwbIPjBbXj4Y6MHqc27iCMYAxijUzLym/IoE1Y2pXC3PBc76KndeOMzYwTuPpYuTiEBJYySjR
-	M+MHE4SzjlHizdZNQA4nB5uAnsTkS0+YQWwRAS2JntNv2UBsYQF/idUrPoLFWQRUJCa9mcMIY
-	vMK2EgsnveFBcSWEJCXWPx9JxtEXFDi5MwnYHFmAQmJgy9egPUKAfUeXHqZEaZ+0+az7BMYeW
-	YhaZmFpGUBI9MqRo3i1KKy1CJdEwu9pKLM9IyS3MTMHF1DQyO93NTi4sT01JzEpGK95PzcTYz
-	AMKlnYGDcwfhpf/QhRkkOJiVRXs+QP5FCfEn5KZUZicUZ8UWlOanFhxhlODiUJHj5gGEnJFiU
-	mp5akZaZAwxYmLQEB4+SCO8HkFbe4oLE3OLMdIjUKUZjjo6bd/8wcTyb+bqBWYglLz8vVUqc9
-	xFIqQBIaUZpHtwgWCRdYpSVEuZlZGBgEOIpSC3KzSxBlX/FKM7BqCTMuwdkCk9mXgncvldApz
-	ABnTKbA+yUkkSElFQDY+WNGefDbeXuC52fLlqyYfeB0nvLuWYs17s1y6xfcuWk9ADB6dJCseb
-	LJ8mfzLir9SfsfNsOL9dTx7fdrCpIkxLraGhakT7RUYZ3yZX3804lr7f3mhXMKhK+X654rcTH
-	ExN7ChLFFEpWTQnn4ur+XvpEZY/3p/fK//ZJ/lIwXuDWZu33w7UhXomlOCPRUIu5qDgRANuEx
-	fqfAgAA
+	Fri,  3 Nov 2017 11:40:54 +0000 (UTC)
+Received: from [216.82.249.147] by server-6.bemta-12.messagelabs.com id
+	CD/A2-02224-7C55CF95; Fri, 03 Nov 2017 11:40:55 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRWlGSWpSXmKPExsXi5LtOQPdY6J9
+	Ig9NvVSyuHw11YPQ4t3EFYwBjFGtmXlJ+RQJrxrY5vWwFz/kq3t3fz9zAOI2ni5GLQ0hgFaPE
+	/Vt32CCc1YwSK6YuYYRw1jFKTNi3j6mLkZODTUBPYvKlJ8wgtoiAlkTP6bdAHRwcwgL+Ej/eq
+	4CEWQRUJK52HWEDsXkFbCRWrXnCAmJLCMhLLP6+EyouKHFyJkScWUBC4uCLF2AjhYB6Dy69zA
+	hTv2nzWfYJjLyzkLTMQtKygJFpFaN6cWpRWWqRrpFeUlFmekZJbmJmjq6hoZFebmpxcWJ6ak5
+	iUrFecn7uJkZg8DAAwQ7GtjnOhxglOZiURHk9Q/5ECvEl5adUZiQWZ8QXleakFh9ilOHgUJLg
+	XQCSEyxKTU+tSMvMAYYxTFqCg0dJhNcSJM1bXJCYW5yZDpE6xWjM0XHz7h8mjmczXzcwC7Hk5
+	eelSonzxoKUCoCUZpTmwQ2CxdclRlkpYV5GoNOEeApSi3IzS1DlXzGKczAqCfPuAZnCk5lXAr
+	fvFdApTECnzOYAO6UkESEl1cC4eu2W+zv0jYOvv4vzrp99W+DLnslPHFk/djGuL+jrEp8+i+V
+	u5LuF4vMkZ39s+RBoJ77x4sLGLJ6bxh1qb1X/2L971HN05ftHLRKLFC9slzKxXSl4cv4iIdbl
+	uwzLjl/iSZt04L1Y/H2DHHMT9/SmF8Hz3h3qYItTnn1DY9sL17edc5lbo7zVlFiKMxINtZiLi
+	hMBMHe++KoCAAA=
 X-Env-Sender: Javier.Viguera@digi.com
-X-Msg-Ref: server-13.tower-200.messagelabs.com!1509709224!38597245!1
+X-Msg-Ref: server-10.tower-29.messagelabs.com!1509709253!46725883!2
 X-Originating-IP: [66.77.174.16]
 X-StarScan-Received: 
 X-StarScan-Version: 9.4.45; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 20885 invoked from network); 3 Nov 2017 11:40:24 -0000
+Received: (qmail 11862 invoked from network); 3 Nov 2017 11:40:54 -0000
 Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
-	by server-13.tower-200.messagelabs.com with SMTP;
-	3 Nov 2017 11:40:24 -0000
-Received: from DOR-SMS-XCH01.digi.com (10.49.8.99) by MCL-VMS-XCH01.digi.com
+	by server-10.tower-29.messagelabs.com with SMTP;
+	3 Nov 2017 11:40:54 -0000
+Received: from MTK-SMS-XCH02.digi.com (10.10.8.196) by MCL-VMS-XCH01.digi.com
 	(10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.361.1;
-	Fri, 3 Nov 2017 06:40:22 -0500
+	Fri, 3 Nov 2017 06:40:53 -0500
+Received: from DOR-SMS-XCH01.digi.com (10.49.8.99) by MTK-SMS-XCH02.digi.com
+	(10.10.8.196) with Microsoft SMTP Server (TLS) id 14.3.361.1;
+	Fri, 3 Nov 2017 06:40:52 -0500
 Received: from log-cln-jviguera.digi.com (10.101.2.54) by
 	dor-sms-xch01.digi.com (10.49.8.99) with Microsoft SMTP Server (TLS) id
-	14.3.361.1; Fri, 3 Nov 2017 12:40:20 +0100
+	14.3.361.1; Fri, 3 Nov 2017 12:40:50 +0100
 From: Javier Viguera <javier.viguera@digi.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 3 Nov 2017 12:40:14 +0100
-Message-ID: <20171103114014.25478-1-javier.viguera@digi.com>
+Date: Fri, 3 Nov 2017 12:40:44 +0100
+Message-ID: <20171103114044.25545-1-javier.viguera@digi.com>
 X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
 X-Originating-IP: [10.101.2.54]
-Subject: [1.28][PATCH] Replace deprecated git branch parameter "--set-upstream"
+Subject: [1.30][PATCH] Replace deprecated git branch parameter "--set-upstream"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,7 +57,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Nov 2017 11:40:24 -0000
+X-List-Received-Date: Fri, 03 Nov 2017 11:40:54 -0000
 Content-Type: text/plain
 
 From: Andre Rosa <andre.rosa@lge.com>
@@ -83,10 +86,10 @@ Signed-off-by: Javier Viguera <javier.viguera@digi.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 9bd87ad25cc3..5ac7e9ad4106 100644
+index 526668bc23c6..c226887a74ac 100644
 --- a/lib/bb/fetch2/git.py
 +++ b/lib/bb/fetch2/git.py
-@@ -289,7 +289,7 @@ class Git(FetchMethod):
+@@ -274,7 +274,7 @@ class Git(FetchMethod):
                  branchname =  ud.branches[ud.names[0]]
                  runfetchcmd("%s checkout -B %s %s" % (ud.basecmd, branchname, \
                              ud.revisions[ud.names[0]]), d)
