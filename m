@@ -1,27 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 3898478443
+	by mail.openembedded.org (Postfix) with ESMTP id D28D978479
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  7 Nov 2017 13:45:33 +0000 (UTC)
+	Tue,  7 Nov 2017 14:43:32 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	vA7DjURH013907
+	vA7EhVuo018147
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Tue, 7 Nov 2017 13:45:31 GMT
-Message-ID: <1510062330.3952.8.camel@linuxfoundation.org>
+	verify=NOT); Tue, 7 Nov 2017 14:43:32 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1eC56B-00040N-DZ; Tue, 07 Nov 2017 14:43:31 +0000
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Oleksandr Andrushchenko <andr2000@gmail.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 07 Nov 2017 13:45:30 +0000
-In-Reply-To: <1508844944-5761-4-git-send-email-andr2000@gmail.com>
-References: <1508844944-5761-1-git-send-email-andr2000@gmail.com>
-	<1508844944-5761-4-git-send-email-andr2000@gmail.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  7 Nov 2017 14:43:24 +0000
+Message-Id: <1510065804-15357-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
 X-Virus-Scanned: clamav-milter 0.99.2 at dan
 X-Virus-Status: Clean
-Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Subject: Re: [PATCH 3/4] fetch2/repo: Make fetcher always sync on unpack
+Subject: [PATCH] tests/fetch: Add ftp test url
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,24 +31,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Nov 2017 13:45:34 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 07 Nov 2017 14:43:33 -0000
 
-On Tue, 2017-10-24 at 14:35 +0300, Oleksandr Andrushchenko wrote:
-> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-> 
-> Currently if repo has fetched the repository and
-> cached it to a tar file it never runs repo sync again,
-> thus making the build use potentially outdated repo.
-> Fix this by implementing unpack functionality which runs
-> repo sync.
+Add in a tets ftp url so we ensure ftp urls contnue to work after the loss
+of the ftp.gnu.org ones.
 
-This sounds incorrect to me. The unpack task is not meant to touch the
-network at all, all network access should be done in the fetch
-function.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/fetch.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-Cheers,
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index b07bf00..7d7c5d7 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -837,6 +837,7 @@ class FetchCheckStatusTest(FetcherTest):
+                       "https://yoctoproject.org/documentation",
+                       "http://downloads.yoctoproject.org/releases/opkg/opkg-0.1.7.tar.gz",
+                       "http://downloads.yoctoproject.org/releases/opkg/opkg-0.3.0.tar.gz",
++                      "ftp://sourceware.org/pub/libffi/libffi-1.20.tar.gz",
+                       "http://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz",
+                       "https://ftp.gnu.org/gnu/chess/gnuchess-5.08.tar.gz",
+                       "https://ftp.gnu.org/gnu/gmp/gmp-4.0.tar.gz",
+-- 
+2.7.4
 
-Richard
 
