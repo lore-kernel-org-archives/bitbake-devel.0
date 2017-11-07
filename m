@@ -1,48 +1,48 @@
 Return-Path: <ross.burton@intel.com>
-Received: from mail-wm0-f67.google.com (mail-wm0-f67.google.com [74.125.82.67])
-	by mail.openembedded.org (Postfix) with ESMTP id DBA8078450
+Received: from mail-wm0-f68.google.com (mail-wm0-f68.google.com [74.125.82.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 1867365CC7
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  7 Nov 2017 10:33:04 +0000 (UTC)
-Received: by mail-wm0-f67.google.com with SMTP id z3so2706505wme.5
+	Tue,  7 Nov 2017 11:09:21 +0000 (UTC)
+Received: by mail-wm0-f68.google.com with SMTP id y80so2876121wmd.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 07 Nov 2017 02:33:06 -0800 (PST)
+	Tue, 07 Nov 2017 03:09:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:subject:date:message-id;
-	bh=O7V6s0kN13Dra64cynFZrk1IHMk+3oUACML7jwCTfcU=;
-	b=XSlglfI8NP0aNkd8tFeM33t6EJGO4PvUrBujNUohdYDHid/pHhmzPpmoSQjADWSIsY
-	6SkPK90euTQLX8PFPAE60oJ7fdVVBBIi8xCdRjHejOOG8DHNKcYNN73jI6XIirEXd9k2
-	BolL33ZwksRkpprckzQdeTFNwlB3qxRy+lxswIYJ+bqPQaJ5B6VysB6rPrjx17+IzrMP
-	lI3I6sY37UqGJWXz3Gj75iZnTsWboftJfMZSHBak3nUX6s42HQPdAnRACJhiuCF9AZI3
-	+XFPor2XmPQrTaDhAZHxaojBKArOqlEF9s50Jzwck38iHCySwQ32oK17uPleg9AoaSzg
-	t4mQ==
+	bh=0OkKokS0GhDc4wQUKQ5MmU1h4zVO+qTxG8IvpCjXR8Y=;
+	b=TU1fmQqnhJizSjJ36YZkOGMDm+XgHoL6FKydkp/A3FCEoXA6yvhbA1D5+JzCt0JVcu
+	4s7acEonTAn61eSKhQLwt+L8zeFRhINtjiQdGpM5eFDrLSxMIHXjqCtryLcy3AdfhQ8q
+	dyDrWlD6oPUxewo/nPj1H7aep0s/cdY870YQOBWC1tDYn1q2etziFQllKy41YjbQ/i5T
+	r4C8i1SF2YIBRMeBQ6l2t+q4duMdJmdTvUv7ZnqKSfgEPvSAOEukRA5dZm3Eve7lJlzx
+	DV2PQbPO6L4tqcL3tL+LnhBStszqKIUrxCjtXmGGZc31umiWtvMWf4Bj09oaB0u27DI6
+	U94g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=O7V6s0kN13Dra64cynFZrk1IHMk+3oUACML7jwCTfcU=;
-	b=fWzgbF5rRdGlObez7LruLdo/epCLmTaeaUGYmJAg2pW42WVzEXBLROxX8ZWrPq4Ayg
-	feC0yNjm/hMXLcPA1W78+zF6lZEkiXGC4HO/NJK/wh7fdw5bZD45QksK4D2q7Il7X/Jl
-	w6ox6/yadUM0Rd9KdoAnRvMXAQdwmnZdEI4OrQPqSKvfk3NWhIXFQAwPUiJbwmgWdD1w
-	Or3MKyKyrQ3Kp6Nvj782AmDJjRJLOcANcOSFc3ZDsggvpqo8VNX8R/PG7jR90qb2GHBQ
-	Og7eULbigCOHtetrc/sING5WWoGrQmdOPl0cgZXnwnasj8z2Q6S6Zl4vXgetquKYf+Zc
-	WiIQ==
-X-Gm-Message-State: AJaThX769IAtsIWUwlEYwAzdYwtChB4823+zIUUeOhALPbcvuzZUlr+B
-	scZOk2XoNQVRo2wPEfENNGwHNsLM
-X-Google-Smtp-Source: ABhQp+RqpASAzmWNFoViAmupHBt4iaFsdM4yEZqnBF2lhjF4xSm2buR728M2JaAVfoGoizViJ0O0Rw==
-X-Received: by 10.28.113.71 with SMTP id m68mr1126783wmc.1.1510050785312;
-	Tue, 07 Nov 2017 02:33:05 -0800 (PST)
+	bh=0OkKokS0GhDc4wQUKQ5MmU1h4zVO+qTxG8IvpCjXR8Y=;
+	b=fzjRwwTQu3MYKq7gz6LtByYFFBeDZhloGUm1L8FajFt/qfCl3DDCiJd7L0IdBa+M5I
+	gJaKNnWxFbcS+fIZJ1u8K1Eu9wCp4iCClAJWV4gyg78Sa+meQCawhpDslh/T675s0jjS
+	qAO1G3h5Q4BOUE3Q+TRTlHbJL0N1IV2BkM8TrEsyYYsaqAQJDpQ+kKKXYmrKWJ24iQgG
+	gGC4+ILc3Q2O5ZS/fybFA+RFMOFcBsk5NxJNO+gCK8prRDwhJEU4aKi+jWDAfCZrwCSS
+	0MjnzgX9bzEyS0YQeECGg0c7X/EL+jqcKzg4PyEdzyUFoaybTG2H0dYjaJapdlQf1Rqm
+	WcZA==
+X-Gm-Message-State: AJaThX6LOXD1OpBA2h3x1EHdfYOFpu819Imal4vgtCPQkLMyPNX7zTpo
+	Z15jl3UqBfZSQT1lY1x5m7OupL65
+X-Google-Smtp-Source: ABhQp+RqMPP2RMX1/OjKrjQvuiYrAQaShTBtpwbxQduf8WgdXeIlWfJ9WGd21tT3XKrJygGTbn1ifw==
+X-Received: by 10.28.175.73 with SMTP id y70mr1227002wme.21.1510052962519;
+	Tue, 07 Nov 2017 03:09:22 -0800 (PST)
 Received: from flashheart.burtonini.com (home.burtonini.com. [81.2.106.35])
 	by smtp.gmail.com with ESMTPSA id
-	c143sm11914321wmd.0.2017.11.07.02.33.04
+	143sm2737743wmj.35.2017.11.07.03.09.21
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 07 Nov 2017 02:33:04 -0800 (PST)
+	Tue, 07 Nov 2017 03:09:21 -0800 (PST)
 From: Ross Burton <ross.burton@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  7 Nov 2017 10:33:02 +0000
-Message-Id: <20171107103302.9511-1-ross.burton@intel.com>
+Date: Tue,  7 Nov 2017 11:09:19 +0000
+Message-Id: <20171107110919.9680-1-ross.burton@intel.com>
 X-Mailer: git-send-email 2.11.0
-Subject: [PATCH] bitbake: be more explicit when warning about locale choice
+Subject: [PATCH] tests/fetch: use subtests in the wget tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,45 +55,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Nov 2017 10:33:05 -0000
+X-List-Received-Date: Tue, 07 Nov 2017 11:09:22 -0000
+
+As we test multiple URLs in this these tests and one failing abandons the test,
+use subtests so all URLs are tested. This should help us identify patterns in
+the failing URLs.
 
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- bitbake/bin/bitbake        | 2 +-
- bitbake/bin/bitbake-worker | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/tests/fetch.py | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
-index 431bb4b676e..95e41096859 100755
---- a/bitbake/bin/bitbake
-+++ b/bitbake/bin/bitbake
-@@ -36,7 +36,7 @@ from bb import cookerdata
- from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index f1799a7eff3..b07bf00470f 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -848,10 +848,11 @@ class FetchCheckStatusTest(FetcherTest):
+     def test_wget_checkstatus(self):
+         fetch = bb.fetch2.Fetch(self.test_wget_uris, self.d)
+         for u in self.test_wget_uris:
+-            ud = fetch.ud[u]
+-            m = ud.method
+-            ret = m.checkstatus(fetch, ud, self.d)
+-            self.assertTrue(ret, msg="URI %s, can't check status" % (u))
++            with self.subTest(url=u):
++                ud = fetch.ud[u]
++                m = ud.method
++                ret = m.checkstatus(fetch, ud, self.d)
++                self.assertTrue(ret, msg="URI %s, can't check status" % (u))
  
- if sys.getfilesystemencoding() != "utf-8":
--    sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
-+    sys.exit("Please use a locale setting which supports UTF-8 (such as LANG=en_US.UTF-8).\nPython can't change the filesystem locale after loading so we need a UTF-8 when Python starts or things won't work.")
+     @skipIfNoNetwork()
+     def test_wget_checkstatus_connection_cache(self):
+@@ -862,10 +863,11 @@ class FetchCheckStatusTest(FetcherTest):
+                     connection_cache = connection_cache)
  
- __version__ = "1.37.0"
+         for u in self.test_wget_uris:
+-            ud = fetch.ud[u]
+-            m = ud.method
+-            ret = m.checkstatus(fetch, ud, self.d)
+-            self.assertTrue(ret, msg="URI %s, can't check status" % (u))
++            with self.subTest(url=u):
++                ud = fetch.ud[u]
++                m = ud.method
++                ret = m.checkstatus(fetch, ud, self.d)
++                self.assertTrue(ret, msg="URI %s, can't check status" % (u))
  
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index ee2d6224a59..e925054b7f9 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -17,7 +17,7 @@ from multiprocessing import Lock
- from threading import Thread
+         connection_cache.close_connections()
  
- if sys.getfilesystemencoding() != "utf-8":
--    sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
-+    sys.exit("Please use a locale setting which supports UTF-8 (such as LANG=en_US.UTF-8).\nPython can't change the filesystem locale after loading so we need a UTF-8 when Python starts or things won't work.")
- 
- # Users shouldn't be running this code directly
- if len(sys.argv) != 2 or not sys.argv[1].startswith("decafbad"):
-@@ -499,4 +499,3 @@ worker_thread.join()
- 
- workerlog_write("exitting")
- sys.exit(0)
--
 -- 
 2.11.0
 
