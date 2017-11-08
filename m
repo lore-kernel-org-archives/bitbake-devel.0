@@ -1,24 +1,24 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	by mail.openembedded.org (Postfix) with ESMTP id 6B1497849C
+	by mail.openembedded.org (Postfix) with ESMTP id ECB28784A0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Nov 2017 02:17:58 +0000 (UTC)
+	Wed,  8 Nov 2017 02:18:01 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga105.jf.intel.com with ESMTP; 07 Nov 2017 18:18:00 -0800
+	by orsmga105.jf.intel.com with ESMTP; 07 Nov 2017 18:18:03 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.44,361,1505804400"; 
-   d="scan'208";a="4848734"
+   d="scan'208";a="4848773"
 Received: from tkdhir-mobl2.gar.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.249.68.14])
-	by orsmga002.jf.intel.com with ESMTP; 07 Nov 2017 18:17:57 -0800
+	by orsmga002.jf.intel.com with ESMTP; 07 Nov 2017 18:18:01 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  8 Nov 2017 15:17:07 +1300
-Message-Id: <622ac7b14aa743912bda5f6ab1f30aa904ef51d0.1510107342.git.paul.eggleton@linux.intel.com>
+Date: Wed,  8 Nov 2017 15:17:08 +1300
+Message-Id: <6791df64f4c46baca11aabaae197d036b21220fc.1510107342.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <cover.1510107342.git.paul.eggleton@linux.intel.com>
 References: <cover.1510107342.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/3] bitbake-layers: remove-layer: support removing multiple layers at a time
+Subject: [PATCH 3/3] bitbake-layers: show-recipes: fix help to mention -i supports multiple classes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,60 +31,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Nov 2017 02:17:58 -0000
+X-List-Received-Date: Wed, 08 Nov 2017 02:18:02 -0000
 
-If you can add multiple layers at once, it stands to reason that you
-should also be able to remove more than one at a time.
+The -i option supports more than one class, but the help didn't mention
+that.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bblayers/action.py | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ lib/bblayers/query.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
-index a421380..aa575d1 100644
---- a/lib/bblayers/action.py
-+++ b/lib/bblayers/action.py
-@@ -58,19 +58,22 @@ class ActionPlugin(LayerPlugin):
-             shutil.rmtree(tempdir)
+diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
+index efd22cb..9294dfa 100644
+--- a/lib/bblayers/query.py
++++ b/lib/bblayers/query.py
+@@ -490,7 +490,7 @@ NOTE: .bbappend files can impact the dependencies.
+         parser_show_recipes = self.add_command(sp, 'show-recipes', self.do_show_recipes)
+         parser_show_recipes.add_argument('-f', '--filenames', help='instead of the default formatting, list filenames of higher priority recipes with the ones they overlay indented underneath', action='store_true')
+         parser_show_recipes.add_argument('-m', '--multiple', help='only list where multiple recipes (in the same layer or different layers) exist for the same recipe name', action='store_true')
+-        parser_show_recipes.add_argument('-i', '--inherits', help='only list recipes that inherit the named class', metavar='CLASS', default='')
++        parser_show_recipes.add_argument('-i', '--inherits', help='only list recipes that inherit the named class(es) - separate multiple classes using , (without spaces)', metavar='CLASS', default='')
+         parser_show_recipes.add_argument('pnspec', nargs='*', help='optional recipe name specification (wildcards allowed, enclose in quotes to avoid shell expansion)')
  
-     def do_remove_layer(self, args):
--        """Remove a layer from bblayers.conf."""
-+        """Remove one or more layers from bblayers.conf."""
-         bblayers_conf = os.path.join('conf', 'bblayers.conf')
-         if not os.path.exists(bblayers_conf):
-             sys.stderr.write("Unable to find bblayers.conf\n")
-             return 1
- 
--        if args.layerdir.startswith('*'):
--            layerdir = args.layerdir
--        elif not '/' in args.layerdir:
--            layerdir = '*/%s' % args.layerdir
--        else:
--            layerdir = os.path.abspath(args.layerdir)
--        (_, notremoved) = bb.utils.edit_bblayers_conf(bblayers_conf, None, layerdir)
-+        layerdirs = []
-+        for item in args.layerdir:
-+            if item.startswith('*'):
-+                layerdir = item
-+            elif not '/' in item:
-+                layerdir = '*/%s' % item
-+            else:
-+                layerdir = os.path.abspath(item)
-+            layerdirs.append(layerdir)
-+        (_, notremoved) = bb.utils.edit_bblayers_conf(bblayers_conf, None, layerdirs)
-         if notremoved:
-             for item in notremoved:
-                 sys.stderr.write("No layers matching %s found in BBLAYERS\n" % item)
-@@ -245,7 +248,7 @@ build results (as the layer priority order has effectively changed).
-         parser_add_layer.add_argument('layerdir', nargs='+', help='Layer directory/directories to add')
- 
-         parser_remove_layer = self.add_command(sp, 'remove-layer', self.do_remove_layer, parserecipes=False)
--        parser_remove_layer.add_argument('layerdir', help='Layer directory to remove (wildcards allowed, enclose in quotes to avoid shell expansion)')
-+        parser_remove_layer.add_argument('layerdir', nargs='+', help='Layer directory/directories to remove (wildcards allowed, enclose in quotes to avoid shell expansion)')
-         parser_remove_layer.set_defaults(func=self.do_remove_layer)
- 
-         parser_flatten = self.add_command(sp, 'flatten', self.do_flatten)
+         parser_show_appends = self.add_command(sp, 'show-appends', self.do_show_appends)
 -- 
 2.9.5
 
