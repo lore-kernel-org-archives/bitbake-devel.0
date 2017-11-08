@@ -1,23 +1,45 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	by mail.openembedded.org (Postfix) with ESMTP id B706D7849C
+Return-Path: <ngompa13@gmail.com>
+Received: from mail-qt0-f196.google.com (mail-qt0-f196.google.com
+	[209.85.216.196])
+	by mail.openembedded.org (Postfix) with ESMTP id 0A30671CB3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Nov 2017 02:20:58 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga105.fm.intel.com with ESMTP; 07 Nov 2017 18:21:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.44,361,1505804400"; d="scan'208";a="1241188846"
-Received: from tkdhir-mobl2.gar.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.249.68.14])
-	by fmsmga002.fm.intel.com with ESMTP; 07 Nov 2017 18:20:44 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Wed,  8 Nov 2017 11:58:48 +0000 (UTC)
+Received: by mail-qt0-f196.google.com with SMTP id h4so2913767qtk.8
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 08 Nov 2017 03:58:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:from:date:message-id:subject:to
+	:content-transfer-encoding;
+	bh=PtDjqyXwhvclRzgIYrTIKj0o8OvGf30FhZC6NQdajjo=;
+	b=n+HP9jcoziknUoF+aoFk27Q19GmHmbUBNfyJEuvvdeCIZC6B3sePDaSGCFfTrCsvVr
+	tD6JloeJ+jiPmUl+Y6CUtd6IQvTYWkCurv8x4xuddYYPdjoFBjIuViJmX9V3pNfDbtBY
+	aWcHuOIXV5XkrZGgelcwdTKEfXpMQ31HGgkX7oGf+8nkChEYPdB2t5iiScsIxXaV6XAP
+	YvF/QcRqbrU4nlZ5KLt8Ucbb3R5/i1LbD8VvPKfrEtyYbrtpN97yHnCS2r1JxA1pXYTL
+	RU8VdwDlWZ37ZenEDcZhHaiOdVE0AAW3YgvwsZzXA0oDH0xDRBMcxuYrig2XpQ/E4fZG
+	SYmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+	:content-transfer-encoding;
+	bh=PtDjqyXwhvclRzgIYrTIKj0o8OvGf30FhZC6NQdajjo=;
+	b=mRe4WLH49fyE7mCh1pK+UohDQTn+iGtxesMR7LinZx3pDKCtrq0QNas9nAftx/NzJe
+	vnrTu058+NoriLuqp0JpodNSr43N7uRVwh+eNmMlAv0SQnOa5KbbK95T/fN9g97B+jWd
+	VwzU2n+PLKmpFYuSzLEBMvTjiN+zKxNdHAmZ6DzTaHUWMVc2TWJPD/e7ZprxprRfeDCw
+	Xf8HEiCCDSMntcVOamw9dfyEBdyrl7lyPAfr751yH2i9n55NFpdzXjiFypbosRzAaCI5
+	BcdwkR1+4LAMpIITM0AjHypac9yjsOT02hm0BbUv36v4KXY7edEpEmqaEv77orYWBw99
+	EdcA==
+X-Gm-Message-State: AJaThX6z/dGsbzC2ORqI5xfiNVWGrVTF6NpNfDf2rduPeu+9UfvUYYl0
+	5ismkrQ2yG2Vu4uoTB3j3hgxEfE+weatcfBZjGsxRM46
+X-Google-Smtp-Source: ABhQp+S+QLupa348vu76xEU+WWn1Xc4J+PkO85bTGMCLwaD3WHsRsyBBotw3qELGb36dEe9h75qmUBmkL/TizsSkO5A=
+X-Received: by 10.200.56.52 with SMTP id q49mr320798qtb.309.1510142329517;
+	Wed, 08 Nov 2017 03:58:49 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.237.41.130 with HTTP; Wed, 8 Nov 2017 03:58:08 -0800 (PST)
+From: Neal Gompa <ngompa13@gmail.com>
+Date: Wed, 8 Nov 2017 06:58:08 -0500
+Message-ID: <CAEg-Je9okCK9dEaV9Ytk6SvyzcCT=LeViP5o53F7B4oL+eR0vw@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  8 Nov 2017 15:20:28 +1300
-Message-Id: <813f7322afacdf9c124aabbef99dffff157e3966.1510107572.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <cover.1510107572.git.paul.eggleton@linux.intel.com>
-References: <cover.1510107572.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] cooker: fix typo in bitbake -g message
+Subject: Releases of BitBake to package for Fedora?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,29 +52,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Nov 2017 02:20:58 -0000
+X-List-Received-Date: Wed, 08 Nov 2017 11:58:49 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Flatened -> flattened.
+Hey all,
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/cooker.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm looking reintroduce BitBake into Fedora, but it seems like there
+hasn't been releases in two years. I also cannot identify anywhere
+that provides tarballs of BitBake to package.
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index c7fdd72..28717f4 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -885,7 +885,7 @@ class BBCooker:
-                         continue
-                     f.write('"%s" -> "%s"\n' % (pn, dep))
-             f.write("}\n")
--        logger.info("Flatened recipe dependencies saved to 'recipe-depends.dot'")
-+        logger.info("Flattened recipe dependencies saved to 'recipe-depends.dot'")
- 
-     def show_appends_with_no_recipes(self):
-         # Determine which bbappends haven't been applied
--- 
-2.9.5
+The Fedora package previously referenced snapshot tarballs generated
+by tagged releases in OE Git, but there haven't been new tagged
+releases in two years.
 
+I'd previously asked this on oe-core ML and was redirected to
+bitbake-devel, so apologies to cross-list subs. But it was also
+pointed out there that apparently BitBake has moved to a model where
+they don't have stable points of releases, which seems rather odd for
+a tool that is used by more than OpenEmbedded.
+
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
 
