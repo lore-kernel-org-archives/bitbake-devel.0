@@ -1,50 +1,39 @@
-Return-Path: <freesilicon@gmail.com>
+Return-Path: <andre.draszik@gmail.com>
 Received: from mail-wm0-f67.google.com (mail-wm0-f67.google.com [74.125.82.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 2856C78686
+	by mail.openembedded.org (Postfix) with ESMTP id DCD7D786E9
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Nov 2017 15:25:11 +0000 (UTC)
-Received: by mail-wm0-f67.google.com with SMTP id z3so5783029wme.3
+	Thu, 16 Nov 2017 09:21:45 +0000 (UTC)
+Received: by mail-wm0-f67.google.com with SMTP id 70so1083481wmf.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Nov 2017 07:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=nqtqLS+P33tQMGvQMfRLvdLkBATrigZgScQCUq2s4B4=;
-	b=Dt8U2Yn6fAxgqmBytZJRiedrQuhTeQFMsBEfFXkIGw9AG64p+ZaZiJWIIOY121AfzR
-	7frrv3ulKCoyMLk9/bBkgtVFHp3DAPqFX/D2xOxI4IrrQIv1WRIyZ1X2zpeItEya6+2Z
-	6djwlbfFTqManqK6U1PBr9Ji63bU9vGV+Svx9qDpHfsY1Jheg/LYsEBzxuqL1p6xWScv
-	2r3qjk7vnksRfobDxRlRS1Ey5iU/tv3zea5e8UtrUODsDeTLxqlJcgDEQ9QLb2o2Y5lr
-	br4nUv4I/Ra6cywBaxpowQTYuYEr3CBUQapCcNyPlhPffwE2hF5QVme2wGuSOHDdgFVV
-	/A7A==
+	Thu, 16 Nov 2017 01:21:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=nqtqLS+P33tQMGvQMfRLvdLkBATrigZgScQCUq2s4B4=;
-	b=VIT/aWBZntwh/X/YrguOWA4m995e/j3/tR5vtVU4PvPgulaCV6kPU0c8KoI4XKf7cg
-	FtzQ5IywYmCFKkZHFByhXSolNTnR7X2jTkQBNDc8Fp+mTxLA1wCg3QRpwAEMNxthtMew
-	iL/P6uu+hRZurnrBwigeevl8fk6sip2DUucXnLi5/i6WrT+b2i7B3fJgTp9kXuefjbyw
-	Qujz+VRR8nbYFvQFj5ppaIwCg26/m1+YgIobHqIaadzIOzZLhJxmD4EcDHVOt/8aEWgz
-	ah3USmtUO7rg8onHj8j3XSVub54aBPWuI6lEHM0VrAkCo0cy5vy41NWKEFszYTUFqxNh
-	LICg==
-X-Gm-Message-State: AJaThX5q5K737/ytQn5Kmfrk87hK2UykeENzMVvOehsVAoeBj3gCx6WS
-	4tqyM1bKS+xEbLoSJVCsCYhPcxzK
-X-Google-Smtp-Source: AGs4zMY13Lmsyok3+DS1ojJ+xWEi/jiQA7QQcMkFAOI+k5Ima9vftPi4CIGq+3aIawY0JDg4QqlGdg==
-X-Received: by 10.28.155.18 with SMTP id d18mr6860730wme.107.1510586712418;
-	Mon, 13 Nov 2017 07:25:12 -0800 (PST)
-Received: from crde-port-20.cahors.local ([185.47.80.46])
-	by smtp.gmail.com with ESMTPSA id
-	l16sm20192454wma.19.2017.11.13.07.25.11
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 13 Nov 2017 07:25:11 -0800 (PST)
-From: David Vincent <freesilicon@gmail.com>
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=9+ezVjgMzZEiPQT0M2x1P+zpIcpbcJ1YXs7N+sugJ4c=;
+	b=DbYFxYkgTxIW6xoLYZ0vQdeIPn58H9/TiHTW38NC2wXWx9aginAi5KZbP89w+9Nl/u
+	A/4wwmr2TIBOSx7SrSTjgwGUat0j3mupv5+zsHhziYmx6325eDQRoNZkDKgwAJbvPga5
+	rA8RoNrqdmHfOSSonvY2t76Nj6ikU1u6GmTY/zkd495nK6LzPrCwjZXwwc7XdRWvhkFp
+	IZHzzxosFP1YutQB4YAPgwpX3M7PqhKxJ31rWQnX0XSbHfOKDtlWEhzBWgTYeKYbehze
+	izx1C5Hm6t15habWSxHbM8P4H62UREMqx3b96ehq6Ee6F1b5MnEFY4LT2libVeIIm/q1
+	7e+A==
+X-Gm-Message-State: AJaThX67FbRoOWGqBbw8cqk3v3/P43nIJ+x9WpD0wL+1Kn7g7XIQ4du8
+	M9mJO9MPwvxYcaIsGzW32+pIBrni
+X-Google-Smtp-Source: AGs4zMYtUszByjRq+ZjI4Q9y5FCjKvus5FXH79AQI6Dae99zDEjjf2Uaz/ICJPJekU1Jrq93h1fvNA==
+X-Received: by 10.80.208.10 with SMTP id j10mr1787737edf.194.1510824106337;
+	Thu, 16 Nov 2017 01:21:46 -0800 (PST)
+Received: from tfsielt31850.garage.tyco.com ([77.107.218.170])
+	by smtp.gmail.com with ESMTPSA id a7sm899859edd.19.2017.11.16.01.21.45
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 16 Nov 2017 01:21:45 -0800 (PST)
+From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 13 Nov 2017 16:24:04 +0100
-Message-Id: <20171113152404.21785-3-freesilicon@gmail.com>
-X-Mailer: git-send-email 2.13.6
-In-Reply-To: <20171113152404.21785-1-freesilicon@gmail.com>
-References: <20171113151617.20905-1-freesilicon@gmail.com>
-	<20171113152404.21785-1-freesilicon@gmail.com>
-Subject: [PATCH v3 2/2] bitbake-user-manual: update git fetcher
+Date: Thu, 16 Nov 2017 09:21:44 +0000
+Message-Id: <20171116092144.17649-1-git@andred.net>
+X-Mailer: git-send-email 2.15.0.rc1
+MIME-Version: 1.0
+Subject: [master][PATCH] fetch2: fix unpack of .txz files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,76 +46,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 13 Nov 2017 15:25:12 -0000
+X-List-Received-Date: Thu, 16 Nov 2017 09:21:46 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Add precisions for the multiple branches support in git fetcher. This
-support was documented in source code but not in documentation, so
-include it.
+.txz is the same as .tar.xz, and can be found in the wild.
 
-Signed-off-by: David Vincent <freesilicon@gmail.com>
+Signed-off-by: André Draszik <git@andred.net>
 ---
- .../bitbake-user-manual-fetching.xml               | 34 ++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-index c721e86e..353e9a3c 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-@@ -565,8 +565,26 @@
-                     <listitem><para><emphasis>"branch":</emphasis>
-                         The branch(es) of the Git tree to clone.
-                         If unset, this is assumed to be "master".
--                        The number of branch parameters much match the number of
--                        name parameters.
-+                        This option also supports multiple branch fetching, with
-+                        branches separated by commas.
-+                        <note>
-+                            <title>Note</title>
-+                            <para>
-+                                In multiple branches case, the name option must
-+                                have the same number of names to match the
-+                                branches, which is used to specify the
-+                                <link linkend="var-SRCREV"><filename>SRCREV</filename></link>
-+                                for the branch.
-+                            </para>
-+
-+                            <para>
-+                                After checkout, all branches will be created
-+                                with their tip pointing to the corresponding
-+                                <filename>SRCREV</filename>. In particular, the
-+                                current checked out branch will be the first
-+                                provided in the list.
-+                            </para>
-+                        </note>
-                         </para></listitem>
-                     <listitem><para><emphasis>"rev":</emphasis>
-                         The revision to use for the checkout.
-@@ -589,12 +607,24 @@
-                         By default, the path is <filename>git/</filename>.
-                         </para></listitem>
-                 </itemizedlist>
-+            </para>
-+
-+            <para>
-                 Here are some example URLs:
-                 <literallayout class='monospaced'>
-      SRC_URI = "git://git.oe.handhelds.org/git/vip.git;tag=version-1"
-      SRC_URI = "git://git.oe.handhelds.org/git/vip.git;protocol=http"
-                 </literallayout>
-             </para>
-+
-+            <para>
-+                Here is an example URL using multiple branches:
-+                <literallayout class='monospaced'>
-+     SRC_URI = "git://git.oe.handhelds.org/git/vip.git;name=master,feature;branch=master,features/feature1"
-+     SRCREV_master = "ad8b1d659ddd2699ebf7d50ef9de8940b157bfc2"
-+     SRCREV_feature = "06c0dbdcba374ca7f92a53d69292d6bb7bc9b0f3"
-+                </literallayout>
-+            </para>
-         </section>
- 
-         <section id='gitsm-fetcher'>
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index f70f1b51..cb94bf60 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1424,7 +1424,7 @@ class FetchMethod(object):
+                 cmd = 'gzip -dc %s > %s' % (file, efile)
+             elif file.endswith('.bz2'):
+                 cmd = 'bzip2 -dc %s > %s' % (file, efile)
+-            elif file.endswith('.tar.xz'):
++            elif file.endswith('.txz') or file.endswith('.tar.xz'):
+                 cmd = 'xz -dc %s | tar x --no-same-owner -f -' % file
+             elif file.endswith('.xz'):
+                 cmd = 'xz -dc %s > %s' % (file, efile)
 -- 
-2.13.6
+2.15.0.rc1
 
 
