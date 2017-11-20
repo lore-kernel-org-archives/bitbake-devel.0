@@ -1,28 +1,25 @@
-Return-Path: <leonardo.sandoval.gonzalez@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 8F17B782A4
+Return-Path: <david.reyna@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 22C4478434
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Nov 2017 17:47:51 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	16 Nov 2017 09:47:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.44,404,1505804400"; d="scan'208";a="1244963658"
-Received: from $_hostname.zpn.intel.com (HELO lsandov1-mobl2.zpn.intel.com)
-	([10.219.128.134])
-	by fmsmga002.fm.intel.com with ESMTP; 16 Nov 2017 09:47:51 -0800
-Date: Thu, 16 Nov 2017 11:57:06 -0600
-From: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
-To: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-Message-ID: <20171116115706.39139642@lsandov1-mobl2.zpn.intel.com>
-In-Reply-To: <5803d6c4-ad5d-fb29-7e1f-1e89907a5ead@digitalendoscopy.de>
-References: <20171116141541.5533-1-v.vogelhuber@digitalendoscopy.de>
-	<20171116111928.17c27c0b@lsandov1-mobl2.zpn.intel.com>
-	<5803d6c4-ad5d-fb29-7e1f-1e89907a5ead@digitalendoscopy.de>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+	Mon, 20 Nov 2017 22:31:15 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id vAKMVG12025386
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 20 Nov 2017 14:31:16 -0800
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
+	(TLS) id 14.3.361.1; Mon, 20 Nov 2017 14:31:16 -0800
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 20 Nov 2017 14:23:28 -0800
+Message-ID: <cover.1511216528.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] Fix mercurial fetching (hosttools need hd for latest revision autoinc, fix username and password usage and setting moddir needed by setup_revisions)
+X-Originating-IP: [147.11.157.78]
+Subject: [PATCH 0/6] toaster: cummulative 11202017 patch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,144 +32,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 Nov 2017 17:47:51 -0000
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 20 Nov 2017 22:31:16 -0000
+Content-Type: text/plain
 
-On Thu, 16 Nov 2017 18:28:16 +0100
-Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de> wrote:
+From: David Reyna <David.Reyna@windriver.com>
 
-> Sorry this was my first patch sent with git send-mail. Seems like I had 
-> to learn how to properly compose an email out of it.
-> 
+1) This patch is intended for both YP-2.4.1 and master. If I need to submit this differently, 
+please let me know.
 
-no problem.
+2) This patch contains the following:
+    * 12363: this is a Medium+ defect to fix broken master Toaster builds to Rocko projects
+    * 12316,12315: these resolve issues from the ELCE-Prague BoF meeting
+    * 12192,12204,12193: these resolve forward going issues
 
-> Regarding the patch:
-> I just tried updating my existing yocto toolchain to rocko and our 
-> recipes using mercurial repositories failed during parsing. We're using 
-> a Mercurial repository for our internal stuff and also the AUTOREV 
-> feature. So during parsing the revision in the recipes the call to 
-> /usr/bin/env hg failed because it is not part of the HOSTTOOLS. As it 
-> seems like bitbake is now replacing the PATH environment variable a 
-> mercurial installation on the host system is not found anymore. I saw 
-> that there seem to be some automatic dependency check which results in a 
-> dependency to mercurial-native, but as far as I analyzed it, this comes 
-> too late for the revision parsing as mercurial has to be available 
-> already for that case. That's why I added hg to HOSTTOOLS_NONFATAL which 
-> results in the automatic creation of a symbol link in the HOSTTOOLS_DIR 
-> which solves the problem.
-> The second thing is that the setup_revisions call will access ud.moddir 
-> which is not yet set in the current implementation. That's why I moved 
-> it to the lines below ud.basecmd where ud.moddir has been set already.
-> And the third thing is that username and password were not taken into 
-> account during unpack. Thats why I added it.
-> 
+3) There are no new files
 
-you are introducing changes in two areas/projects (bitbake and oe-core) so you need to split this patch in at least 2. bitbake/* changes go to this mailing list and meta/* changes to openembedded-core@
+The following changes since commit 4ed19ac8c19afd56d445d84e02b622cb056b8359:
 
-I let the experts comment on your code changes
+  poky: Switch to post release name/version (2017-11-14 17:26:58 +0000)
 
+are available in the git repository at:
 
-> Kind regards
->     Volker
-> 
-> On 16.11.2017 18:19, Leonardo Sandoval wrote:
-> > 
-> > subject should be shorter answering the 'what this patch does' and the description the 'why this is needed'
-> > 
-> > 
-> > On Thu, 16 Nov 2017 15:15:41 +0100
-> > Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de> wrote:
-> >   
-> >> Signed-off-by: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-> >> ---
-> >>   bitbake/lib/bb/fetch2/hg.py | 27 +++++++++++++++++----------
-> >>   meta/conf/bitbake.conf      |  2 ++
-> >>   2 files changed, 19 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-> >> index d0857e63f7..04620f3722 100644
-> >> --- a/bitbake/lib/bb/fetch2/hg.py
-> >> +++ b/bitbake/lib/bb/fetch2/hg.py
-> >> @@ -66,13 +66,6 @@ class Hg(FetchMethod):
-> >>           else:
-> >>               ud.proto = "hg"
-> >>   
-> >> -        ud.setup_revisions(d)
-> >> -
-> >> -        if 'rev' in ud.parm:
-> >> -            ud.revision = ud.parm['rev']
-> >> -        elif not ud.revision:
-> >> -            ud.revision = self.latest_revision(ud, d)
-> >> -
-> >>           # Create paths to mercurial checkouts
-> >>           hgsrcname = '%s_%s_%s' % (ud.module.replace('/', '.'), \
-> >>                               ud.host, ud.path.replace('/', '.'))
-> >> @@ -86,6 +79,13 @@ class Hg(FetchMethod):
-> >>           ud.localfile = ud.moddir
-> >>           ud.basecmd = d.getVar("FETCHCMD_hg") or "/usr/bin/env hg"
-> >>   
-> >> +        ud.setup_revisions(d)
-> >> +
-> >> +        if 'rev' in ud.parm:
-> >> +            ud.revision = ud.parm['rev']
-> >> +        elif not ud.revision:
-> >> +            ud.revision = self.latest_revision(ud, d)
-> >> +
-> >>           ud.write_tarballs = d.getVar("BB_GENERATE_MIRROR_TARBALLS")
-> >>   
-> >>       def need_update(self, ud, d):
-> >> @@ -151,7 +151,7 @@ class Hg(FetchMethod):
-> >>                   cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" pull" % (ud.basecmd, ud.user, ud.pswd, proto)
-> >>               else:
-> >>                   cmd = "%s pull" % (ud.basecmd)
-> >> -        elif command == "update":
-> >> +        elif command == "update" or command == "up":
-> >>               if ud.user and ud.pswd:
-> >>                   cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" update -C %s" % (ud.basecmd, ud.user, ud.pswd, proto, " ".join(options))
-> >>               else:
-> >> @@ -259,12 +259,19 @@ class Hg(FetchMethod):
-> >>   
-> >>           scmdata = ud.parm.get("scmdata", "")
-> >>           if scmdata != "nokeep":
-> >> +            proto = ud.parm.get('protocol', 'http')
-> >>               if not os.access(os.path.join(codir, '.hg'), os.R_OK):
-> >>                   logger.debug(2, "Unpack: creating new hg repository in '" + codir + "'")
-> >>                   runfetchcmd("%s init %s" % (ud.basecmd, codir), d)
-> >>               logger.debug(2, "Unpack: updating source in '" + codir + "'")
-> >> -            runfetchcmd("%s pull %s" % (ud.basecmd, ud.moddir), d, workdir=codir)
-> >> -            runfetchcmd("%s up -C %s" % (ud.basecmd, revflag), d, workdir=codir)
-> >> +            if ud.user and ud.pswd:
-> >> +                runfetchcmd("%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" pull %s" % (ud.basecmd, ud.user, ud.pswd, proto, ud.moddir), d, workdir=codir)
-> >> +            else:
-> >> +                runfetchcmd("%s pull %s" % (ud.basecmd, ud.moddir), d, workdir=codir)
-> >> +            if ud.user and ud.pswd:
-> >> +                runfetchcmd("%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" up -C %s" % (ud.basecmd, ud.user, ud.pswd, proto, revflag), d, workdir=codir)
-> >> +            else:
-> >> +                runfetchcmd("%s up -C %s" % (ud.basecmd, revflag), d, workdir=codir)
-> >>           else:
-> >>               logger.debug(2, "Unpack: extracting source to '" + codir + "'")
-> >>               runfetchcmd("%s archive -t files %s %s" % (ud.basecmd, revflag, codir), d, workdir=ud.moddir)
-> >> diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
-> >> index 9696273acc..9ec527228b 100644
-> >> --- a/meta/conf/bitbake.conf
-> >> +++ b/meta/conf/bitbake.conf
-> >> @@ -494,6 +494,8 @@ HOSTTOOLS_NONFATAL += "join nl size yes zcat"
-> >>   
-> >>   # Used by bzr fetcher
-> >>   HOSTTOOLS_NONFATAL += "bzr"
-> >> +# Used by hg fetcher
-> >> +HOSTTOOLS_NONFATAL += "hg"
-> >>   
-> >>   CCACHE ??= ""
-> >>   # ccache < 3.1.10 will create CCACHE_DIR on startup even if disabled, and
-> >> -- 
-> >> 2.11.0
-> >>
-> >> -- 
-> >> _______________________________________________
-> >> bitbake-devel mailing list
-> >> bitbake-devel@lists.openembedded.org
-> >> http://lists.openembedded.org/mailman/listinfo/bitbake-devel  
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/cummulative_112017_patch
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/cummulative_112017_patch
+
+David Reyna (6):
+  toaster: unset BBPATH before starting bbserver for backwards
+    compatibility
+  toaster: update Toaster for Django 1.11
+  toaster: some recipe events do not include packages
+  toaster: enable custom env support for shell calls
+  toaster: landing page show cmdline capture
+  toaster: add 'nobuild' option to Toaster
+
+ bin/toaster                                     | 19 +++++---
+ lib/bb/ui/buildinfohelper.py                    |  6 ++-
+ lib/toaster/bldcollector/urls.py                |  2 +-
+ lib/toaster/bldcontrol/localhostbecontroller.py | 44 +++++++++++-------
+ lib/toaster/toastergui/templates/base.html      |  4 ++
+ lib/toaster/toastergui/templates/landing.html   | 10 ++++-
+ lib/toaster/toastergui/urls.py                  |  2 +-
+ lib/toaster/toastergui/views.py                 | 59 +++++++++++++++----------
+ lib/toaster/toastergui/widgets.py               |  4 ++
+ lib/toaster/toastermain/settings.py             |  2 +-
+ lib/toaster/toastermain/urls.py                 |  2 +-
+ toaster-requirements.txt                        |  2 +-
+ 12 files changed, 103 insertions(+), 53 deletions(-)
+
+-- 
+1.9.1
+
 
