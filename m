@@ -1,27 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 73BCA78698
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id B4013786AC
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Nov 2017 22:31:24 +0000 (UTC)
+	Mon, 20 Nov 2017 22:31:25 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id vAKMVPBx014767
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id vAKMVRt5011120
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Nov 2017 14:31:25 -0800 (PST)
+	Mon, 20 Nov 2017 14:31:27 -0800 (PST)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Mon, 20 Nov 2017 14:31:24 -0800
+	(TLS) id 14.3.361.1; Mon, 20 Nov 2017 14:31:26 -0800
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 20 Nov 2017 14:23:33 -0800
-Message-ID: <228e1cc3ec2b5ce0d30e70da50f0327a4d6a872c.1511216528.git.David.Reyna@windriver.com>
+Date: Mon, 20 Nov 2017 14:23:37 -0800
+Message-ID: <2a782fcf3a0c0026cceaa85289b4259717b0c895.1511216528.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1511216528.git.David.Reyna@windriver.com>
 References: <cover.1511216528.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 1/6] toaster: unset BBPATH before starting bbserver for backwards compatibility
+Subject: [PATCH 5/6] toaster: landing page show cmdline capture
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,84 +34,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Nov 2017 22:31:25 -0000
+X-List-Received-Date: Mon, 20 Nov 2017 22:31:26 -0000
 Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-The latest build enviroment script is now setting BBPATH. This breaks
-building previous releases from a master-based Toaster, because with this
-newly inherited BBPATH value the 'bitbake.lock' file ends up in the
-Toaster build directory instead of the project's build directory.
+The Toaster initial landing page needs to show that it still has
+the command line build capture support in addition to the new
+project support.
 
-Toaster should always clear BBPATH so that the bbserver's environment
-is clean (enough).
-
-[YOCTO #12363]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+[YOCTO #12316]
 ---
- lib/toaster/bldcontrol/localhostbecontroller.py | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ lib/toaster/toastergui/templates/landing.html | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index 83cb703..23b2792 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -332,15 +332,18 @@ class LocalhostBEController(BuildEnvironmentController):
-                 conf.write('%s="%s"\n' % (var.name, var.value))
-             conf.write('INHERIT+="toaster buildhistory"')
+diff --git a/lib/toaster/toastergui/templates/landing.html b/lib/toaster/toastergui/templates/landing.html
+index 4986632..cf7516d 100644
+--- a/lib/toaster/toastergui/templates/landing.html
++++ b/lib/toaster/toastergui/templates/landing.html
+@@ -14,10 +14,16 @@
  
-+        # clean the Toaster to build environment
-+        env_clean = 'unset BBPATH;' # clean BBPATH for <= YP-2.4.0
+               <p>A web interface to <a href="http://www.openembedded.org">OpenEmbedded</a> and <a href="http://www.yoctoproject.org/tools-resources/projects/bitbake">BitBake</a>, the <a href="http://www.yoctoproject.org">Yocto Project</a> build system.</p>
+ 
++		          <p class="top-air">
++		            <a class="btn btn-info btn-lg" href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html#toaster-manual-setup-and-use">
++			            Toaster is ready to capture your command line builds
++		            </a>
++		          </p>
 +
-         # run bitbake server from the clone
-         bitbake = os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitbake')
-         toasterlayers = os.path.join(builddir,"conf/toaster-bblayers.conf")
--        self._shellcmd('bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s --read %s '
--                       '--server-only -B 0.0.0.0:0\"' % (oe_init,
-+        self._shellcmd('%s bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s --read %s '
-+                       '--server-only -B 0.0.0.0:0\"' % (env_clean, oe_init,
-                        builddir, bitbake, confpath, toasterlayers), self.be.sourcedir)
- 
-         # read port number from bitbake.lock
--        self.be.bbport = ""
-+        self.be.bbport = -1
-         bblock = os.path.join(builddir, 'bitbake.lock')
-         # allow 10 seconds for bb lock file to appear but also be populated
-         for lock_check in range(10):
-@@ -352,6 +355,9 @@ class LocalhostBEController(BuildEnvironmentController):
-                 break
-             logger.debug("localhostbecontroller: waiting for bblock content to appear")
-             time.sleep(1)
-+        else:
-+            raise BuildSetupException("Cannot find bitbake server lock file '%s'. Aborting." % bblock)
-+
-         with open(bblock) as fplock:
-             for line in fplock:
-                 if ":" in line:
-@@ -359,7 +365,7 @@ class LocalhostBEController(BuildEnvironmentController):
-                     logger.debug("localhostbecontroller: bitbake port %s", self.be.bbport)
-                     break
- 
--        if not self.be.bbport:
-+        if -1 == self.be.bbport:
-             raise BuildSetupException("localhostbecontroller: can't read bitbake port from %s" % bblock)
- 
-         self.be.bbaddress = "localhost"
-@@ -380,10 +386,10 @@ class LocalhostBEController(BuildEnvironmentController):
-         log = os.path.join(builddir, 'toaster_ui.log')
-         local_bitbake = os.path.join(os.path.dirname(os.getenv('BBBASEDIR')),
-                                      'bitbake')
--        self._shellcmd(['bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:%s" '
-+        self._shellcmd(['%s bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:%s" '
-                         '%s %s -u toasterui  --read %s --read %s --token="" >>%s 2>&1;'
-                         'BITBAKE_UI="knotty" BBSERVER=0.0.0.0:%s %s -m)&\"' \
--                        % (brbe, self.be.bbport, local_bitbake, bbtargets, confpath, toasterlayers, log,
-+                        % (env_clean, brbe, self.be.bbport, local_bitbake, bbtargets, confpath, toasterlayers, log,
-                         self.be.bbport, bitbake,)],
-                         builddir, nowait=True)
- 
+ 		          {% if lvs_nos %}
+ 		            <p class="top-air">
+ 		              <a class="btn btn-primary btn-lg" href="{% url 'newproject' %}">
+-			              To start building, create your first Toaster project
++			              Create your first Toaster project to run manage builds
+ 		              </a>
+ 		            </p>
+ 		          {% else %}
 -- 
 1.9.1
 
