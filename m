@@ -1,27 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 437DA78589
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id EFAC578577
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Nov 2017 09:03:12 +0000 (UTC)
+	Thu, 30 Nov 2017 09:03:13 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id vAU93Ejq028354
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id vAU93FAK009515
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Nov 2017 01:03:14 -0800 (PST)
+	Thu, 30 Nov 2017 01:03:15 -0800
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Thu, 30 Nov 2017 01:03:13 -0800
+	(TLS) id 14.3.361.1; Thu, 30 Nov 2017 01:03:14 -0800
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 30 Nov 2017 00:55:25 -0800
-Message-ID: <24e8b7620d5f80d3952f81d86d4742a763a57677.1512030424.git.David.Reyna@windriver.com>
+Date: Thu, 30 Nov 2017 00:55:27 -0800
+Message-ID: <40d8de288429dacc7e78f4e2fbb1f6d36b5466ce.1512030424.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1512030424.git.David.Reyna@windriver.com>
 References: <cover.1512030424.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.78]
-Subject: [PATCH V2 3/6] toaster: some recipe events do not include packages
+Subject: [PATCH V2 5/6] toaster: landing page show cmdline capture
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,38 +34,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Nov 2017 09:03:13 -0000
+X-List-Received-Date: Thu, 30 Nov 2017 09:03:14 -0000
 Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-Allow for "SinglePackageInfo" events that do not include package data,
-for example OPKGN equal 'lib32-*' or 'lib64-*'.
+The Toaster initial landing page needs to show that it still has
+the command line build capture support in addition to the new
+project support.
 
-[YOCTO #12204]
+[YOCTO #12316]
 
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/bb/ui/buildinfohelper.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/toaster/toastergui/templates/landing.html | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index e451c63..524a5b0 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -719,7 +719,11 @@ class ORMWrapper(object):
+diff --git a/lib/toaster/toastergui/templates/landing.html b/lib/toaster/toastergui/templates/landing.html
+index 4986632..cf7516d 100644
+--- a/lib/toaster/toastergui/templates/landing.html
++++ b/lib/toaster/toastergui/templates/landing.html
+@@ -14,10 +14,16 @@
  
-     def save_build_package_information(self, build_obj, package_info, recipes,
-                                        built_package):
--       # assert isinstance(build_obj, Build)
-+        # assert isinstance(build_obj, Build)
+               <p>A web interface to <a href="http://www.openembedded.org">OpenEmbedded</a> and <a href="http://www.yoctoproject.org/tools-resources/projects/bitbake">BitBake</a>, the <a href="http://www.yoctoproject.org">Yocto Project</a> build system.</p>
+ 
++		          <p class="top-air">
++		            <a class="btn btn-info btn-lg" href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html#toaster-manual-setup-and-use">
++			            Toaster is ready to capture your command line builds
++		            </a>
++		          </p>
 +
-+        if not 'PN' in package_info.keys():
-+            # no package data to save (e.g. 'OPKGN'="lib64-*"|"lib32-*")
-+            return None
- 
-         # create and save the object
-         pname = package_info['PKG']
+ 		          {% if lvs_nos %}
+ 		            <p class="top-air">
+ 		              <a class="btn btn-primary btn-lg" href="{% url 'newproject' %}">
+-			              To start building, create your first Toaster project
++			              Create your first Toaster project to run manage builds
+ 		              </a>
+ 		            </p>
+ 		          {% else %}
 -- 
 1.9.1
 
