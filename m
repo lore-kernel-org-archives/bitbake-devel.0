@@ -1,43 +1,25 @@
-Return-Path: <msm-oss@mcclintock.net>
-Received: from mail-pg0-f48.google.com (mail-pg0-f48.google.com [74.125.83.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 358B071A8C
+Return-Path: <david.reyna@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 0FB3B7852A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 29 Nov 2017 22:34:58 +0000 (UTC)
-Received: by mail-pg0-f48.google.com with SMTP id k134so2141122pga.3
+	Thu, 30 Nov 2017 09:03:01 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id vAU932Lp028321
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 29 Nov 2017 14:34:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mcclintock.net; s=google; h=from:to:subject:date:message-id;
-	bh=51e8YXzNRxckHY2UDRI7h26Dsliw+dLrXCwpUpIdZxU=;
-	b=Cf21yyY8hN4XvKiaJvI/V4YN9OkJ66YvYPTJQfvDwt77rm3ISVLI1pLFRujQ+xR/qq
-	FFUrY3PkTdynN3ClDE8yDiO8DtqdMra3kcoJIGDMyj80jGjoCgj7WqZ/Azg9+gZPNkDX
-	C+sN+NXPGcX7E+IhApS3+zxDHp7q6dnvjz/hc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=51e8YXzNRxckHY2UDRI7h26Dsliw+dLrXCwpUpIdZxU=;
-	b=Gz6u63bl6F60h5R22f5Es03cNvxFSM3vQo2AjyE1FECaIDTa/GZQaxvDZchdEqPAjV
-	N8GAplm1660W/DOH+Fv3bMrjRUPNchRZKFZqobDjJ2m8rUty1PhsrZ1SeoFieIoLSN7l
-	FilWIjAVrGQrOJ8JcymoAnsnUhJlNPbB8S/KfnUdjw2E4PXl2fdwwlj/1wwL++uHxIao
-	5csoNE8L9Q1kgxgkD0ejHx5ibrvq6E09A4tCQsMEGGB2afsOSjI9QSa4nEVvu2uAy2if
-	r/pvahjFtYIJLPOcpH26PaQDnaDpJ9yom3z7LWIm+L6jA4jStbsxtJWo2Y40tsb53bb8
-	BeZg==
-X-Gm-Message-State: AJaThX4dPPksMhCljtIiEYd2lJWwCVpq3QG+ANbmagqUuXuH5LslCcBr
-	/wCW45C0XAlJVrrLg3HHKODYOOUg
-X-Google-Smtp-Source: AGs4zMb6teRTQIeKUUJg3alui4xj0eMK6RBy8e6Xc8Mx2rio7B9fLMgG/fF5tGH+ohsv/l0wm/DyoQ==
-X-Received: by 10.101.72.132 with SMTP id n4mr397432pgs.288.1511994899200;
-	Wed, 29 Nov 2017 14:34:59 -0800 (PST)
-Received: from c4.lgirdk.com ([4.16.80.118]) by smtp.gmail.com with ESMTPSA id
-	u6sm5107888pfk.126.2017.11.29.14.34.58
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 29 Nov 2017 14:34:58 -0800 (PST)
-From: Matthew McClintock <msm-oss@mcclintock.net>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 29 Nov 2017 14:34:56 -0800
-Message-Id: <20171129223456.13875-1-msm-oss@mcclintock.net>
-X-Mailer: git-send-email 2.14.1
-Subject: [1.32][PATCH] bitbake-layers: fix layerindex-fetch for Python 3
+	Thu, 30 Nov 2017 01:03:03 -0800 (PST)
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
+	(TLS) id 14.3.361.1; Thu, 30 Nov 2017 01:03:02 -0800
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 30 Nov 2017 00:55:18 -0800
+Message-ID: <cover.1512030424.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+X-Originating-IP: [147.11.157.78]
+Subject: [PATCH V2 0/6] toaster: cummulative 11202017 patch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,34 +32,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Nov 2017 22:34:58 -0000
+X-List-Received-Date: Thu, 30 Nov 2017 09:03:02 -0000
+Content-Type: text/plain
 
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-The data we read from an HTTPConnection comes in the form of bytes, but
-we need it as a string, so in Python 3 we need to decode it (missed in
-the Python 3 migration).
+V2: This patch set adds the missing author signoffs
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bblayers/layerindex.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+1) This patch is intended for both YP-2.4.1 and master. 
 
-diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index 10ad718e..f53a47fc 100644
---- a/lib/bblayers/layerindex.py
-+++ b/lib/bblayers/layerindex.py
-@@ -56,7 +56,7 @@ class LayerIndexPlugin(ActionPlugin):
-         r = conn.getresponse()
-         if r.status != 200:
-             raise Exception("Failed to read " + path + ": %d %s" % (r.status, r.reason))
--        return json.loads(r.read())
-+        return json.loads(r.read().decode())
- 
-     def get_layer_deps(self, layername, layeritems, layerbranches, layerdependencies, branchnum, selfname=False):
-         def layeritems_info_id(items_name, layeritems):
+Upon guidance from Joshua, I will send the Pyro 2.4.1 patch set subsequently.
+
+2) This patch contains the following:
+    * 12363: this is a Medium+ defect to fix broken master Toaster builds to Rocko projects
+    * 12316,12315: these resolve issues from the ELCE-Prague BoF meeting
+    * 12192,12204,12193: these resolve forward going issues
+
+3) There are no new files
+
+
+The following changes since commit 4ed19ac8c19afd56d445d84e02b622cb056b8359:
+
+  poky: Switch to post release name/version (2017-11-14 17:26:58 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/cummulative_112017_patch
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/cummulative_112017_patch
+
+David Reyna (6):
+  toaster: unset BBPATH before starting bbserver for backwards
+    compatibility
+  toaster: update Toaster for Django 1.11
+  toaster: some recipe events do not include packages
+  toaster: enable custom env support for shell calls
+  toaster: landing page show cmdline capture
+  toaster: add 'nobuild' option to Toaster
+
+ bin/toaster                                     | 19 +++++---
+ lib/bb/ui/buildinfohelper.py                    |  6 ++-
+ lib/toaster/bldcollector/urls.py                |  2 +-
+ lib/toaster/bldcontrol/localhostbecontroller.py | 44 +++++++++++-------
+ lib/toaster/toastergui/templates/base.html      |  4 ++
+ lib/toaster/toastergui/templates/landing.html   | 10 ++++-
+ lib/toaster/toastergui/urls.py                  |  2 +-
+ lib/toaster/toastergui/views.py                 | 59 +++++++++++++++----------
+ lib/toaster/toastergui/widgets.py               |  4 ++
+ lib/toaster/toastermain/settings.py             |  2 +-
+ lib/toaster/toastermain/urls.py                 |  2 +-
+ toaster-requirements.txt                        |  2 +-
+ 12 files changed, 103 insertions(+), 53 deletions(-)
+
 -- 
-2.14.1
+1.9.1
 
 
