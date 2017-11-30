@@ -1,27 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id EC15678560
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id BA17778560
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Nov 2017 09:03:11 +0000 (UTC)
+	Thu, 30 Nov 2017 09:03:12 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id vAU93CeV024555
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id vAU93DbA009512
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Nov 2017 01:03:13 -0800 (PST)
+	Thu, 30 Nov 2017 01:03:13 -0800
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
 	(TLS) id 14.3.361.1; Thu, 30 Nov 2017 01:03:12 -0800
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 30 Nov 2017 00:55:23 -0800
-Message-ID: <fffb37808989e26ecac81ba43c653f238910f8f5.1512030424.git.David.Reyna@windriver.com>
+Date: Thu, 30 Nov 2017 00:55:24 -0800
+Message-ID: <e0d2ed2f79a7c475fccd2f4f788e8feccd2156bc.1512030424.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1512030424.git.David.Reyna@windriver.com>
 References: <cover.1512030424.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.78]
-Subject: [PATCH V2 1/6] toaster: unset BBPATH before starting bbserver for backwards compatibility
+Subject: [PATCH V2 2/6] toaster: update Toaster for Django 1.11
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,79 +39,94 @@ Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-The latest build enviroment script is now setting BBPATH. This breaks
-building previous releases from a master-based Toaster, because with this
-newly inherited BBPATH value the 'bitbake.lock' file ends up in the
-Toaster build directory instead of the project's build directory.
+Toaster needs to accomodate API changes in Django 1.11.
 
-Toaster should always clear BBPATH so that the bbserver's environment
-is clean (enough).
-
-[YOCTO #12363]
+[YOCTO #12192]
 
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/bldcontrol/localhostbecontroller.py | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ lib/toaster/bldcollector/urls.py    | 2 +-
+ lib/toaster/toastergui/urls.py      | 2 +-
+ lib/toaster/toastergui/views.py     | 2 +-
+ lib/toaster/toastermain/settings.py | 2 +-
+ lib/toaster/toastermain/urls.py     | 2 +-
+ toaster-requirements.txt            | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index 83cb703..23b2792 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -332,15 +332,18 @@ class LocalhostBEController(BuildEnvironmentController):
-                 conf.write('%s="%s"\n' % (var.name, var.value))
-             conf.write('INHERIT+="toaster buildhistory"')
+diff --git a/lib/toaster/bldcollector/urls.py b/lib/toaster/bldcollector/urls.py
+index 076afdb..888175d 100644
+--- a/lib/toaster/bldcollector/urls.py
++++ b/lib/toaster/bldcollector/urls.py
+@@ -17,7 +17,7 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
-+        # clean the Toaster to build environment
-+        env_clean = 'unset BBPATH;' # clean BBPATH for <= YP-2.4.0
-+
-         # run bitbake server from the clone
-         bitbake = os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitbake')
-         toasterlayers = os.path.join(builddir,"conf/toaster-bblayers.conf")
--        self._shellcmd('bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s --read %s '
--                       '--server-only -B 0.0.0.0:0\"' % (oe_init,
-+        self._shellcmd('%s bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s --read %s '
-+                       '--server-only -B 0.0.0.0:0\"' % (env_clean, oe_init,
-                        builddir, bitbake, confpath, toasterlayers), self.be.sourcedir)
  
-         # read port number from bitbake.lock
--        self.be.bbport = ""
-+        self.be.bbport = -1
-         bblock = os.path.join(builddir, 'bitbake.lock')
-         # allow 10 seconds for bb lock file to appear but also be populated
-         for lock_check in range(10):
-@@ -352,6 +355,9 @@ class LocalhostBEController(BuildEnvironmentController):
+-from django.conf.urls import patterns, include, url
++from djaV2 ngo.conf.urls import include, url
+ 
+ import bldcollector.views
+ 
+diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
+index 3ad5566..e07b0ef 100644
+--- a/lib/toaster/toastergui/urls.py
++++ b/lib/toaster/toastergui/urls.py
+@@ -16,7 +16,7 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+-from django.conf.urls import patterns, include, url
++from django.conf.urls import include, url
+ from django.views.generic import RedirectView, TemplateView
+ 
+ from django.http import HttpResponseBadRequest
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 334bb4a..209b07d 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -277,7 +277,7 @@ def _validate_input(field_input, model):
+             return None, invalid + str(field_input_list)
+ 
+         V2 # Check we are looking for a valid field
+-        valid_fields = model._meta.get_all_field_names()
++        valid_fields = [f.name for f in model._meta.get_fields()]
+         for field in field_input_list[0].split(AND_VALUE_SEPARATOR):
+             if True in [field.startswith(x) for x in valid_fields]:
                  break
-             logger.debug("localhostbecontroller: waiting for bblock content to appear")
-             time.sleep(1)
-+        else:
-+            raise BuildSetupException("Cannot find bitbake server lock file '%s'. Aborting." % bblock)
-+
-         with open(bblock) as fplock:
-             for line in fplock:
-                 if ":" in line:
-@@ -359,7 +365,7 @@ class LocalhostBEController(BuildEnvironmentController):
-                     logger.debug("localhostbecontroller: bitbake port %s", self.be.bbport)
-                     break
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index 54ab31f..13541d3 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -186,7 +186,7 @@ TEMPLATES = [
+                 'django.template.context_processors.tz',
+                 'django.contrib.messages.context_processors.messages',
+                 # Custom
+-                'django.core.context_processors.request',
++                'django.template.context_processors.request',
+                 'toastergui.views.managedcontextprocessor',
  
--        if not self.be.bbport:
-+        if -1 == self.be.bbport:
-             raise BuildSetupException("localhostbecontroller: can't read bitbake port from %s" % bblock)
+             ],
+diff --git a/lib/toaster/toastermain/urls.py b/lib/toaster/toastermain/urls.py
+index 6750bdf..e2fb0ae 100644
+--- a/lib/toaster/toastermain/urls.py
++++ b/lib/toaster/toastermain/urls.py
+@@ -19,7 +19,7 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
-         self.be.bbaddress = "localhost"
-@@ -380,10 +386,10 @@ class LocalhostBEController(BuildEnvironmentController):
-         log = os.path.join(builddir, 'toaster_ui.log')
-         local_bitbake = os.path.join(os.path.dirname(os.getenv('BBBASEDIR')),
-                                      'bitbake')
--        self._shellcmd(['bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:%s" '
-+        self._shellcmd(['%s bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:%s" '
-                         '%s %s -u toasterui  --read %s --read %s --token="" >>%s 2>&1;'
-                         'BITBAKE_UI="knotty" BBSERVER=0.0.0.0:%s %s -m)&\"' \
--                        % (brbe, self.be.bbport, local_bitbake, bbtargets, confpath, toasterlayers, log,
-+                        % (env_clean, brbe, self.be.bbport, local_bitbake, bbtargets, confpath, toasterlayers, log,
-                         self.be.bbport, bitbake,)],
-                         builddir, nowait=True)
- 
+-from django.conf.urls import patterns, include, url
++from django.conf.urls import include, url
+ from django.views.generic import RedirectView, TemplateView
+ from django.views.decorators.cache import never_cache
+ import bldcollector.views
+diff --git a/toaster-requirements.txt b/toaster-requirements.txt
+index 3f47650..c0ec368 100644
+--- a/toaster-requirements.txt
++++ b/toaster-requirements.txt
+@@ -1,3 +1,3 @@
+-Django>1.8,<1.9.9
++Django>1.8,<1.11.9
+ beautifulsoup4>=4.4.0
+ pytz
 -- 
 1.9.1
 
