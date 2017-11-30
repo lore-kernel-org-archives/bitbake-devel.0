@@ -1,25 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 0FB3B7852A
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id EC15678560
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Nov 2017 09:03:01 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id vAU932Lp028321
+	Thu, 30 Nov 2017 09:03:11 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id vAU93CeV024555
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Nov 2017 01:03:03 -0800 (PST)
+	Thu, 30 Nov 2017 01:03:13 -0800 (PST)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Thu, 30 Nov 2017 01:03:02 -0800
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.361.1; Thu, 30 Nov 2017 01:03:12 -0800
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 30 Nov 2017 00:55:18 -0800
-Message-ID: <cover.1512030424.git.David.Reyna@windriver.com>
+Date: Thu, 30 Nov 2017 00:55:23 -0800
+Message-ID: <fffb37808989e26ecac81ba43c653f238910f8f5.1512030424.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1512030424.git.David.Reyna@windriver.com>
+References: <cover.1512030424.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.78]
-Subject: [PATCH V2 0/6] toaster: cummulative 11202017 patch
+Subject: [PATCH V2 1/6] toaster: unset BBPATH before starting bbserver for backwards compatibility
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,57 +34,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Nov 2017 09:03:02 -0000
+X-List-Received-Date: Thu, 30 Nov 2017 09:03:12 -0000
 Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-V2: This patch set adds the missing author signoffs
+The latest build enviroment script is now setting BBPATH. This breaks
+building previous releases from a master-based Toaster, because with this
+newly inherited BBPATH value the 'bitbake.lock' file ends up in the
+Toaster build directory instead of the project's build directory.
 
-1) This patch is intended for both YP-2.4.1 and master. 
+Toaster should always clear BBPATH so that the bbserver's environment
+is clean (enough).
 
-Upon guidance from Joshua, I will send the Pyro 2.4.1 patch set subsequently.
+[YOCTO #12363]
 
-2) This patch contains the following:
-    * 12363: this is a Medium+ defect to fix broken master Toaster builds to Rocko projects
-    * 12316,12315: these resolve issues from the ELCE-Prague BoF meeting
-    * 12192,12204,12193: these resolve forward going issues
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
+---
+ lib/toaster/bldcontrol/localhostbecontroller.py | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-3) There are no new files
-
-
-The following changes since commit 4ed19ac8c19afd56d445d84e02b622cb056b8359:
-
-  poky: Switch to post release name/version (2017-11-14 17:26:58 +0000)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/cummulative_112017_patch
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/cummulative_112017_patch
-
-David Reyna (6):
-  toaster: unset BBPATH before starting bbserver for backwards
-    compatibility
-  toaster: update Toaster for Django 1.11
-  toaster: some recipe events do not include packages
-  toaster: enable custom env support for shell calls
-  toaster: landing page show cmdline capture
-  toaster: add 'nobuild' option to Toaster
-
- bin/toaster                                     | 19 +++++---
- lib/bb/ui/buildinfohelper.py                    |  6 ++-
- lib/toaster/bldcollector/urls.py                |  2 +-
- lib/toaster/bldcontrol/localhostbecontroller.py | 44 +++++++++++-------
- lib/toaster/toastergui/templates/base.html      |  4 ++
- lib/toaster/toastergui/templates/landing.html   | 10 ++++-
- lib/toaster/toastergui/urls.py                  |  2 +-
- lib/toaster/toastergui/views.py                 | 59 +++++++++++++++----------
- lib/toaster/toastergui/widgets.py               |  4 ++
- lib/toaster/toastermain/settings.py             |  2 +-
- lib/toaster/toastermain/urls.py                 |  2 +-
- toaster-requirements.txt                        |  2 +-
- 12 files changed, 103 insertions(+), 53 deletions(-)
-
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 83cb703..23b2792 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -332,15 +332,18 @@ class LocalhostBEController(BuildEnvironmentController):
+                 conf.write('%s="%s"\n' % (var.name, var.value))
+             conf.write('INHERIT+="toaster buildhistory"')
+ 
++        # clean the Toaster to build environment
++        env_clean = 'unset BBPATH;' # clean BBPATH for <= YP-2.4.0
++
+         # run bitbake server from the clone
+         bitbake = os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitbake')
+         toasterlayers = os.path.join(builddir,"conf/toaster-bblayers.conf")
+-        self._shellcmd('bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s --read %s '
+-                       '--server-only -B 0.0.0.0:0\"' % (oe_init,
++        self._shellcmd('%s bash -c \"source %s %s; BITBAKE_UI="knotty" %s --read %s --read %s '
++                       '--server-only -B 0.0.0.0:0\"' % (env_clean, oe_init,
+                        builddir, bitbake, confpath, toasterlayers), self.be.sourcedir)
+ 
+         # read port number from bitbake.lock
+-        self.be.bbport = ""
++        self.be.bbport = -1
+         bblock = os.path.join(builddir, 'bitbake.lock')
+         # allow 10 seconds for bb lock file to appear but also be populated
+         for lock_check in range(10):
+@@ -352,6 +355,9 @@ class LocalhostBEController(BuildEnvironmentController):
+                 break
+             logger.debug("localhostbecontroller: waiting for bblock content to appear")
+             time.sleep(1)
++        else:
++            raise BuildSetupException("Cannot find bitbake server lock file '%s'. Aborting." % bblock)
++
+         with open(bblock) as fplock:
+             for line in fplock:
+                 if ":" in line:
+@@ -359,7 +365,7 @@ class LocalhostBEController(BuildEnvironmentController):
+                     logger.debug("localhostbecontroller: bitbake port %s", self.be.bbport)
+                     break
+ 
+-        if not self.be.bbport:
++        if -1 == self.be.bbport:
+             raise BuildSetupException("localhostbecontroller: can't read bitbake port from %s" % bblock)
+ 
+         self.be.bbaddress = "localhost"
+@@ -380,10 +386,10 @@ class LocalhostBEController(BuildEnvironmentController):
+         log = os.path.join(builddir, 'toaster_ui.log')
+         local_bitbake = os.path.join(os.path.dirname(os.getenv('BBBASEDIR')),
+                                      'bitbake')
+-        self._shellcmd(['bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:%s" '
++        self._shellcmd(['%s bash -c \"(TOASTER_BRBE="%s" BBSERVER="0.0.0.0:%s" '
+                         '%s %s -u toasterui  --read %s --read %s --token="" >>%s 2>&1;'
+                         'BITBAKE_UI="knotty" BBSERVER=0.0.0.0:%s %s -m)&\"' \
+-                        % (brbe, self.be.bbport, local_bitbake, bbtargets, confpath, toasterlayers, log,
++                        % (env_clean, brbe, self.be.bbport, local_bitbake, bbtargets, confpath, toasterlayers, log,
+                         self.be.bbport, bitbake,)],
+                         builddir, nowait=True)
+ 
 -- 
 1.9.1
 
