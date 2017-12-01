@@ -1,27 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 3C7F97872E
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 4E78B78733
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Dec 2017 23:37:59 +0000 (UTC)
+	Fri,  1 Dec 2017 23:37:58 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id vB1Nc0uE016322
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id vB1Nc0tm022337
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 1 Dec 2017 15:38:00 -0800 (PST)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Fri, 1 Dec 2017 15:38:00 -0800
+	(TLS) id 14.3.361.1; Fri, 1 Dec 2017 15:37:59 -0800
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 1 Dec 2017 15:30:14 -0800
-Message-ID: <a835929e4fc7196c80d9ba097e91893f20d38409.1512170660.git.David.Reyna@windriver.com>
+Date: Fri, 1 Dec 2017 15:30:13 -0800
+Message-ID: <2e828bcdcd888c3bf83222462584fbe46e057864.1512170660.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1512170660.git.David.Reyna@windriver.com>
 References: <cover.1512170660.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.78]
-Subject: [rocko][PATCH 3/6] toaster: some recipe events do not include packages
+Subject: [rocko][PATCH 2/6] toaster: update Toaster for Django 1.11
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,33 +39,94 @@ Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-Allow for "SinglePackageInfo" events that do not include package data,
-for example OPKGN equal 'lib32-*' or 'lib64-*'.
+Toaster needs to accomodate API changes in Django 1.11.
 
-[YOCTO #12204]
+[YOCTO #12192]
 
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/bb/ui/buildinfohelper.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/toaster/bldcollector/urls.py    | 2 +-
+ lib/toaster/toastergui/urls.py      | 2 +-
+ lib/toaster/toastergui/views.py     | 2 +-
+ lib/toaster/toastermain/settings.py | 2 +-
+ lib/toaster/toastermain/urls.py     | 2 +-
+ toaster-requirements.txt            | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index e451c63..524a5b0 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -719,7 +719,11 @@ class ORMWrapper(object):
+diff --git a/lib/toaster/bldcollector/urls.py b/lib/toaster/bldcollector/urls.py
+index 076afdb..888175d 100644
+--- a/lib/toaster/bldcollector/urls.py
++++ b/lib/toaster/bldcollector/urls.py
+@@ -17,7 +17,7 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
-     def save_build_package_information(self, build_obj, package_info, recipes,
-                                        built_package):
--       # assert isinstance(build_obj, Build)
-+        # assert isinstance(build_obj, Build)
-+
-+        if not 'PN' in package_info.keys():
-+            # no package data to save (e.g. 'OPKGN'="lib64-*"|"lib32-*")
-+            return None
  
-         # create and save the object
-         pname = package_info['PKG']
+-from django.conf.urls import patterns, include, url
++from django.conf.urls import include, url
+ 
+ import bldcollector.views
+ 
+diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
+index 3ad5566..e07b0ef 100644
+--- a/lib/toaster/toastergui/urls.py
++++ b/lib/toaster/toastergui/urls.py
+@@ -16,7 +16,7 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+-from django.conf.urls import patterns, include, url
++from django.conf.urls import include, url
+ from django.views.generic import RedirectView, TemplateView
+ 
+ from django.http import HttpResponseBadRequest
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 334bb4a..209b07d 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -277,7 +277,7 @@ def _validate_input(field_input, model):
+             return None, invalid + str(field_input_list)
+ 
+         # Check we are looking for a valid field
+-        valid_fields = model._meta.get_all_field_names()
++        valid_fields = [f.name for f in model._meta.get_fields()]
+         for field in field_input_list[0].split(AND_VALUE_SEPARATOR):
+             if True in [field.startswith(x) for x in valid_fields]:
+                 break
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index 54ab31f..13541d3 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -186,7 +186,7 @@ TEMPLATES = [
+                 'django.template.context_processors.tz',
+                 'django.contrib.messages.context_processors.messages',
+                 # Custom
+-                'django.core.context_processors.request',
++                'django.template.context_processors.request',
+                 'toastergui.views.managedcontextprocessor',
+ 
+             ],
+diff --git a/lib/toaster/toastermain/urls.py b/lib/toaster/toastermain/urls.py
+index 6750bdf..e2fb0ae 100644
+--- a/lib/toaster/toastermain/urls.py
++++ b/lib/toaster/toastermain/urls.py
+@@ -19,7 +19,7 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+-from django.conf.urls import patterns, include, url
++from django.conf.urls import include, url
+ from django.views.generic import RedirectView, TemplateView
+ from django.views.decorators.cache import never_cache
+ import bldcollector.views
+diff --git a/toaster-requirements.txt b/toaster-requirements.txt
+index 3f47650..c0ec368 100644
+--- a/toaster-requirements.txt
++++ b/toaster-requirements.txt
+@@ -1,3 +1,3 @@
+-Django>1.8,<1.9.9
++Django>1.8,<1.11.9
+ beautifulsoup4>=4.4.0
+ pytz
 -- 
 1.9.1
 
