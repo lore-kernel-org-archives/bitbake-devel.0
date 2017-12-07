@@ -1,27 +1,52 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id A9FDF78725
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 535E37822A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Dec 2017 23:38:01 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id vB1Nc3bX016325
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Thu,  7 Dec 2017 14:44:01 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 1C07618462
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 1 Dec 2017 15:38:03 -0800 (PST)
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Fri, 1 Dec 2017 15:38:02 -0800
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 1 Dec 2017 15:30:17 -0800
-Message-ID: <78e4a7cdc8f4cb633ee89918c060033dffebde0a.1512170660.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1512170660.git.David.Reyna@windriver.com>
-References: <cover.1512170660.git.David.Reyna@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [147.11.157.78]
-Subject: [rocko][PATCH 6/6] toaster: add 'nobuild' option to Toaster
+	Thu,  7 Dec 2017 15:38:34 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id BBne0gQKJgD9 for <bitbake-devel@lists.openembedded.org>;
+	Thu,  7 Dec 2017 15:38:33 +0100 (CET)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id 8B0661845C
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  7 Dec 2017 15:38:33 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 773ED1E08F
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  7 Dec 2017 15:38:33 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6C52B1E089
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  7 Dec 2017 15:38:33 +0100 (CET)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder03.se.axis.com (Postfix) with ESMTP
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  7 Dec 2017 15:38:33 +0100 (CET)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by seth.se.axis.com (Postfix) with ESMTP id 607AF2E4
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  7 Dec 2017 15:38:33 +0100 (CET)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id vB7EcXSU020908
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 7 Dec 2017 15:38:33 +0100
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id vB7EcXKi020907
+	for bitbake-devel@lists.openembedded.org; Thu, 7 Dec 2017 15:38:33 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  7 Dec 2017 15:38:30 +0100
+Message-Id: <20171207143832.20865-1-pkj@axis.com>
+X-Mailer: git-send-email 2.12.0
+X-TM-AS-GCONF: 00
+Subject: [PATCH 1/2] gstreamer1.0.inc: Define a PACKAGECONFIG for examples
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,385 +59,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Dec 2017 23:38:01 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 07 Dec 2017 14:44:01 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+This makes it consistent with, e.g., debug, that can be
+enabled/disabled using a PACKAGECONFIG.
 
-Add a 'nobuild' option for starting Toaster without the project
-and hosted builds support. This allows a Toaster host to provide
-local build statistics without opening the host to external users
-building projects.
-
-[YOCTO #12315]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- bin/toaster                                   | 19 ++++++---
- lib/toaster/toastergui/templates/base.html    |  4 ++
- lib/toaster/toastergui/templates/landing.html |  2 +
- lib/toaster/toastergui/views.py               | 57 ++++++++++++++++-----------
- lib/toaster/toastergui/widgets.py             |  4 ++
- 5 files changed, 58 insertions(+), 28 deletions(-)
+ meta/recipes-multimedia/gstreamer/gstreamer1.0.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bin/toaster b/bin/toaster
-index 762451d..4036f0a 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -18,9 +18,10 @@
- # along with this program. If not, see http://www.gnu.org/licenses/.
+diff --git a/meta/recipes-multimedia/gstreamer/gstreamer1.0.inc b/meta/recipes-multimedia/gstreamer/gstreamer1.0.inc
+index 329193486d..a3a8207229 100644
+--- a/meta/recipes-multimedia/gstreamer/gstreamer1.0.inc
++++ b/meta/recipes-multimedia/gstreamer/gstreamer1.0.inc
+@@ -21,6 +21,7 @@ SRC_URI_append = " \
+ PACKAGECONFIG ??= ""
  
- HELP="
--Usage: source toaster start|stop [webport=<address:port>] [noweb]
-+Usage: source toaster start|stop [webport=<address:port>] [noweb] [nobuild]
-     Optional arguments:
--        [noweb] Setup the environment for building with toaster but don't start the development server
-+        [nobuild] Setup the environment for capturing builds with toaster but disable managed builds
-+        [noweb] Setup the environment for capturing builds with toaster but don't start the web server
-         [webport] Set the development server (default: localhost:8000)
+ PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
++PACKAGECONFIG[examples] = "--enable-examples,--disable-examples"
+ PACKAGECONFIG[tests] = "--enable-tests,--disable-tests"
+ PACKAGECONFIG[valgrind] = "--enable-valgrind,--disable-valgrind,valgrind,"
+ PACKAGECONFIG[gst-tracer-hooks] = "--enable-gst-tracer-hooks,--disable-gst-tracer-hooks,"
+@@ -29,7 +30,6 @@ PACKAGECONFIG[dw] = "--with-dw,--without-dw,elfutils"
+ 
+ EXTRA_OECONF = " \
+     --disable-dependency-tracking \
+-    --disable-examples \
  "
  
-@@ -183,6 +184,7 @@ unset OE_ROOT
- 
- 
- WEBSERVER=1
-+export TOASTER_BUILDSERVER=1
- ADDR_PORT="localhost:8000"
- unset CMD
- for param in $*; do
-@@ -190,6 +192,9 @@ for param in $*; do
-     noweb )
-             WEBSERVER=0
-     ;;
-+    nobuild )
-+            TOASTER_BUILDSERVER=0
-+    ;;
-     start )
-             CMD=$param
-     ;;
-@@ -286,9 +291,13 @@ case $CMD in
-             return 4
-         fi
-         export BITBAKE_UI='toasterui'
--        $MANAGE runbuilds \
--           </dev/null >>${BUILDDIR}/toaster_runbuilds.log 2>&1 \
--           & echo $! >${BUILDDIR}/.runbuilds.pid
-+        if [ $TOASTER_BUILDSERVER -eq 1 ] ; then
-+            $MANAGE runbuilds \
-+               </dev/null >>${BUILDDIR}/toaster_runbuilds.log 2>&1 \
-+               & echo $! >${BUILDDIR}/.runbuilds.pid
-+        else
-+            echo "Toaster build server not started."
-+        fi
- 
-         # set fail safe stop system on terminal exit
-         trap stop_system SIGHUP
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index edbd110..4f72064 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -110,6 +110,7 @@
-                 All builds
-               </a>
-               </li>
-+              {% if project_enable %}
-               <li id="navbar-all-projects"
-               {% if request.resolver_match.url_name == 'all-projects'  %}
-               class="active"
-@@ -119,6 +120,7 @@
-                 All projects
-               </a>
-               </li>
-+              {% endif %}
-             {% endif %}
-               <li id="navbar-docs">
-               <a target="_blank" href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html">
-@@ -127,7 +129,9 @@
-               </a>
-               </li>
-             </ul>
-+            {% if project_enable %}
-             <a class="btn btn-default navbar-btn navbar-right" id="new-project-button" href="{% url 'newproject' %}">New project</a>
-+            {% endif %}
-           </div>
-       </div>
-     </nav>
-diff --git a/lib/toaster/toastergui/templates/landing.html b/lib/toaster/toastergui/templates/landing.html
-index cf7516d..70c7359 100644
---- a/lib/toaster/toastergui/templates/landing.html
-+++ b/lib/toaster/toastergui/templates/landing.html
-@@ -21,11 +21,13 @@
- 		          </p>
- 
- 		          {% if lvs_nos %}
-+                    {% if project_enable %}
- 		            <p class="top-air">
- 		              <a class="btn btn-primary btn-lg" href="{% url 'newproject' %}">
- 			              Create your first Toaster project to run manage builds
- 		              </a>
- 		            </p>
-+                    {% endif %}
- 		          {% else %}
-                 <div class="alert alert-info lead top-air">
-                   Toaster has no layer information. Without layer information, you cannot run builds. To generate layer information you can:
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 209b07d..34ed2b2 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -49,6 +49,8 @@ import logging
- 
- logger = logging.getLogger("toaster")
- 
-+# Project creation and managed build enable
-+project_enable = ('1' == os.environ.get('TOASTER_BUILDSERVER'))
- 
- class MimeTypeFinder(object):
-     # setting this to False enables additional non-standard mimetypes
-@@ -65,6 +67,12 @@ class MimeTypeFinder(object):
-             guessed_type = 'application/octet-stream'
-         return guessed_type
- 
-+# single point to add global values into the context before rendering
-+def toaster_render(request, page, context):
-+    context['project_enable'] = project_enable
-+    return render(request, page, context)
-+
-+
- # all new sessions should come through the landing page;
- # determine in which mode we are running in, and redirect appropriately
- def landing(request):
-@@ -86,7 +94,7 @@ def landing(request):
- 
-     context = {'lvs_nos' : Layer_Version.objects.all().count()}
- 
--    return render(request, 'landing.html', context)
-+    return toaster_render(request, 'landing.html', context)
- 
- def objtojson(obj):
-     from django.db.models.query import QuerySet
-@@ -519,7 +527,7 @@ def builddashboard( request, build_id ):
-             'packagecount'    : packageCount,
-             'logmessages'     : logmessages,
-     }
--    return render( request, template, context )
-+    return toaster_render( request, template, context )
- 
- 
- 
-@@ -591,7 +599,7 @@ def task( request, build_id, task_id ):
-             build__completed_on__lt=task_object.build.completed_on).exclude(
-             order__isnull=True).exclude(outcome=Task.OUTCOME_NA).order_by('-build__completed_on')
- 
--    return render( request, template, context )
-+    return toaster_render( request, template, context )
- 
- def recipe(request, build_id, recipe_id, active_tab="1"):
-     template = "recipe.html"
-@@ -618,7 +626,7 @@ def recipe(request, build_id, recipe_id, active_tab="1"):
-             'package_count' : package_count,
-             'tab_states' : tab_states,
-     }
--    return render(request, template, context)
-+    return toaster_render(request, template, context)
- 
- def recipe_packages(request, build_id, recipe_id):
-     template = "recipe_packages.html"
-@@ -663,7 +671,7 @@ def recipe_packages(request, build_id, recipe_id):
-                 },
-            ]
-        }
--    response = render(request, template, context)
-+    response = toaster_render(request, template, context)
-     _set_parameters_values(pagesize, orderby, request)
-     return response
- 
-@@ -785,7 +793,7 @@ def dirinfo(request, build_id, target_id, file_path=None):
-                 'dir_list': dir_list,
-                 'file_path': file_path,
-               }
--    return render(request, template, context)
-+    return toaster_render(request, template, context)
- 
- def _find_task_dep(task_object):
-     tdeps = Task_Dependency.objects.filter(task=task_object).filter(depends_on__order__gt=0)
-@@ -837,7 +845,7 @@ def configuration(request, build_id):
-                     'build': build,
-                     'project': build.project,
-                     'targets': Target.objects.filter(build=build_id)})
--    return render(request, template, context)
-+    return toaster_render(request, template, context)
- 
- 
- def configvars(request, build_id):
-@@ -926,7 +934,7 @@ def configvars(request, build_id):
-                 ],
-             }
- 
--    response = render(request, template, context)
-+    response = toaster_render(request, template, context)
-     _set_parameters_values(pagesize, orderby, request)
-     return response
- 
-@@ -939,7 +947,7 @@ def bfile(request, build_id, package_id):
-         'project': build.project,
-         'objects' : files
-     }
--    return render(request, template, context)
-+    return toaster_render(request, template, context)
- 
- 
- # A set of dependency types valid for both included and built package views
-@@ -1092,7 +1100,7 @@ def package_built_detail(request, build_id, package_id):
-     if paths.all().count() < 2:
-         context['disable_sort'] = True;
- 
--    response = render(request, template, context)
-+    response = toaster_render(request, template, context)
-     _set_parameters_values(pagesize, orderby, request)
-     return response
- 
-@@ -1111,7 +1119,7 @@ def package_built_dependencies(request, build_id, package_id):
-             'other_deps' :   dependencies['other_deps'],
-             'dependency_count' : _get_package_dependency_count(package, -1,  False)
-     }
--    return render(request, template, context)
-+    return toaster_render(request, template, context)
- 
- 
- def package_included_detail(request, build_id, target_id, package_id):
-@@ -1157,7 +1165,7 @@ def package_included_detail(request, build_id, target_id, package_id):
-     }
-     if paths.all().count() < 2:
-         context['disable_sort'] = True
--    response = render(request, template, context)
-+    response = toaster_render(request, template, context)
-     _set_parameters_values(pagesize, orderby, request)
-     return response
- 
-@@ -1181,7 +1189,7 @@ def package_included_dependencies(request, build_id, target_id, package_id):
-             'reverse_count' : _get_package_reverse_dep_count(package, target_id),
-             'dependency_count' : _get_package_dependency_count(package, target_id, True)
-     }
--    return render(request, template, context)
-+    return toaster_render(request, template, context)
- 
- def package_included_reverse_dependencies(request, build_id, target_id, package_id):
-     template = "package_included_reverse_dependencies.html"
-@@ -1232,7 +1240,7 @@ def package_included_reverse_dependencies(request, build_id, target_id, package_
-     }
-     if objects.all().count() < 2:
-         context['disable_sort'] = True
--    response = render(request, template, context)
-+    response = toaster_render(request, template, context)
-     _set_parameters_values(pagesize, orderby, request)
-     return response
- 
-@@ -1365,6 +1373,9 @@ if True:
- 
-     # new project
-     def newproject(request):
-+        if not project_enable:
-+            return redirect( landing )
-+
-         template = "newproject.html"
-         context = {
-             'email': request.user.email if request.user.is_authenticated() else '',
-@@ -1379,7 +1390,7 @@ if True:
- 
-         if request.method == "GET":
-             # render new project page
--            return render(request, template, context)
-+            return toaster_render(request, template, context)
-         elif request.method == "POST":
-             mandatory_fields = ['projectname', 'ptype']
-             try:
-@@ -1419,7 +1430,7 @@ if True:
-                     context['alert'] = "Your chosen username is already used"
-                 else:
-                     context['alert'] = str(e)
--                return render(request, template, context)
-+                return toaster_render(request, template, context)
- 
-         raise Exception("Invalid HTTP method for this page")
- 
-@@ -1427,7 +1438,7 @@ if True:
-     def project(request, pid):
-         project = Project.objects.get(pk=pid)
-         context = {"project": project}
--        return render(request, "project.html", context)
-+        return toaster_render(request, "project.html", context)
- 
-     def jsunittests(request):
-         """ Provides a page for the js unit tests """
-@@ -1453,7 +1464,7 @@ if True:
-                                               name="MACHINE",
-                                               value="qemux86")
-         context = {'project': new_project}
--        return render(request, "js-unit-tests.html", context)
-+        return toaster_render(request, "js-unit-tests.html", context)
- 
-     from django.views.decorators.csrf import csrf_exempt
-     @csrf_exempt
-@@ -1588,7 +1599,7 @@ if True:
-         context = {
-             'project': Project.objects.get(id=pid),
-         }
--        return render(request, template, context)
-+        return toaster_render(request, template, context)
- 
-     def layerdetails(request, pid, layerid):
-         project = Project.objects.get(pk=pid)
-@@ -1617,7 +1628,7 @@ if True:
-             'projectlayers': list(project_layers)
-         }
- 
--        return render(request, 'layerdetails.html', context)
-+        return toaster_render(request, 'layerdetails.html', context)
- 
- 
-     def get_project_configvars_context():
-@@ -1707,7 +1718,7 @@ if True:
-         except (ProjectVariable.DoesNotExist, BuildEnvironment.DoesNotExist):
-             pass
- 
--        return render(request, "projectconf.html", context)
-+        return toaster_render(request, "projectconf.html", context)
- 
-     def _file_names_for_artifact(build, artifact_type, artifact_id):
-         """
-@@ -1774,7 +1785,7 @@ if True:
- 
-                 return response
-             else:
--                return render(request, "unavailable_artifact.html")
-+                return toaster_render(request, "unavailable_artifact.html")
-         except (ObjectDoesNotExist, IOError):
--            return render(request, "unavailable_artifact.html")
-+            return toaster_render(request, "unavailable_artifact.html")
- 
-diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
-index 67c1ff9..a1792d9 100644
---- a/lib/toaster/toastergui/widgets.py
-+++ b/lib/toaster/toastergui/widgets.py
-@@ -41,6 +41,7 @@ import types
- import json
- import collections
- import re
-+import os
- 
- from toastergui.tablefilter import TableFilterMap
- 
-@@ -86,6 +87,9 @@ class ToasterTable(TemplateView):
-         context['table_name'] = type(self).__name__.lower()
-         context['empty_state'] = self.empty_state
- 
-+        # global variables
-+        context['project_enable'] = ('1' == os.environ.get('TOASTER_BUILDSERVER'))
-+
-         return context
- 
-     def get(self, request, *args, **kwargs):
+ CACHED_CONFIGUREVARS += "ac_cv_header_valgrind_valgrind_h=no"
 -- 
-1.9.1
+2.12.0
 
 
