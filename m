@@ -1,62 +1,32 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 1AB0B785AD
+Return-Path: <jair.de.jesus.gonzalez.plascencia@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 1FBF677E4D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Dec 2017 14:49:14 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 05D44180FF
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Dec 2017 15:49:16 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id M_z4MZi_mHYk for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Dec 2017 15:49:15 +0100 (CET)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bastet.se.axis.com (Postfix) with ESMTPS id 0AE0C1844C
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Dec 2017 15:49:15 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DB4E31E095
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Dec 2017 15:49:14 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CFF351E089
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Dec 2017 15:49:14 +0100 (CET)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
-	by boulder03.se.axis.com (Postfix) with ESMTP
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Dec 2017 15:49:14 +0100 (CET)
-Received: from XBOX01.axis.com (xbox01.axis.com [10.0.5.15])
-	by thoth.se.axis.com (Postfix) with ESMTP id C41632A65
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Dec 2017 15:49:14 +0100 (CET)
-Received: from XBOX02.axis.com (10.0.5.16) by XBOX01.axis.com (10.0.5.15) with
-	Microsoft SMTP Server (TLS) id 15.0.1263.5;
-	Thu, 7 Dec 2017 15:49:14 +0100
-Received: from XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776]) by
-	XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776%21]) with mapi id
-	15.00.1263.000; Thu, 7 Dec 2017 15:49:14 +0100
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 1/2] gstreamer1.0.inc: Define a
-	PACKAGECONFIG for examples
-Thread-Index: AQHTb2nZgl9C5cSKCkmGtw/70biG2aM39RNA
-Date: Thu, 7 Dec 2017 14:49:14 +0000
-Message-ID: <bbf9bb3cfc3345c6b0b60de389f78791@XBOX02.axis.com>
-References: <20171207143832.20865-1-pkj@axis.com>
-In-Reply-To: <20171207143832.20865-1-pkj@axis.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
+	Fri,  8 Dec 2017 21:24:21 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	08 Dec 2017 13:24:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.45,379,1508828400"; 
+   d="scan'208";a="1079151"
+Received: from jairdeje-mobl3.amr.corp.intel.com (HELO jairdejeMOBL3)
+	([10.218.162.94])
+	by fmsmga008.fm.intel.com with ESMTP; 08 Dec 2017 13:24:22 -0800
+From: "Jair Gonzalez" <jair.de.jesus.gonzalez.plascencia@linux.intel.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 8 Dec 2017 15:24:22 -0600
+Message-ID: <005001d3706a$ea82c7c0$bf885740$@linux.intel.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-Subject: Re: [PATCH 1/2] gstreamer1.0.inc: Define a	PACKAGECONFIG for examples
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AdNwaseOAORpUOTDTYScJXsmughprA==
+x-ctpclassification: CTP_IC
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiN2IwNzBhYWMtMGRlNS00NzAyLWJhNjItYTY3YTQ0YjBlNTQ0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX0lDIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE2LjUuOS4zIiwiVHJ1c3RlZExhYmVsSGFzaCI6InVNWWlHekw1bWlpSHU4WjRSNnl2SWlxSzJGTld5QUt1YTdtd0VIZERpUHM9In0=
+dlp-product: dlpe-windows
+dlp-version: 11.0.0.116
+dlp-reaction: no-action
+Subject: Re: [selftest][PATCH V1 0/5] QA: Extend unit tests for event module
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -69,62 +39,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Dec 2017 14:49:15 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 08 Dec 2017 21:24:22 -0000
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-us
 
-Please disregard this patch and the other GStreamer patch in this=20
-series. They were apparently around when I used 0* to gather the=20
-patch I intended to send.
+Hello,
 
-//Peter
+Have you been able to review this series of patches? It's being tracked on
+bug 10773.
+
+Please let me know if you have any doubts or comments about it.
+
+Regards,
+Jair Gonzalez
 
 > -----Original Message-----
-> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
-> devel-bounces@lists.openembedded.org] On Behalf Of Peter Kjellerstedt
-> Sent: den 7 december 2017 15:39
+> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-
+> bounces@lists.openembedded.org] On Behalf Of Jair Gonzalez
+> Sent: Thursday, August 17, 2017 3:41 PM
 > To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH 1/2] gstreamer1.0.inc: Define a
-> PACKAGECONFIG for examples
->=20
-> This makes it consistent with, e.g., debug, that can be
-> enabled/disabled using a PACKAGECONFIG.
->=20
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> ---
->  meta/recipes-multimedia/gstreamer/gstreamer1.0.inc | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/meta/recipes-multimedia/gstreamer/gstreamer1.0.inc
-> b/meta/recipes-multimedia/gstreamer/gstreamer1.0.inc
-> index 329193486d..a3a8207229 100644
-> --- a/meta/recipes-multimedia/gstreamer/gstreamer1.0.inc
-> +++ b/meta/recipes-multimedia/gstreamer/gstreamer1.0.inc
-> @@ -21,6 +21,7 @@ SRC_URI_append =3D " \
->  PACKAGECONFIG ??=3D ""
->=20
->  PACKAGECONFIG[debug] =3D "--enable-debug,--disable-debug"
-> +PACKAGECONFIG[examples] =3D "--enable-examples,--disable-examples"
->  PACKAGECONFIG[tests] =3D "--enable-tests,--disable-tests"
->  PACKAGECONFIG[valgrind] =3D "--enable-valgrind,--disable-
-> valgrind,valgrind,"
->  PACKAGECONFIG[gst-tracer-hooks] =3D "--enable-gst-tracer-hooks,--
-> disable-gst-tracer-hooks,"
-> @@ -29,7 +30,6 @@ PACKAGECONFIG[dw] =3D "--with-dw,--without-dw,elfutils"
->=20
->  EXTRA_OECONF =3D " \
->      --disable-dependency-tracking \
-> -    --disable-examples \
->  "
->=20
->  CACHED_CONFIGUREVARS +=3D "ac_cv_header_valgrind_valgrind_h=3Dno"
+> Subject: [bitbake-devel] [selftest][PATCH V1 0/5] QA: Extend unit tests
+for event
+> module
+> 
+> Included on V1:
+> 
+>   This patch-set extends the unit test module for bitbake event
+>   including increased coverage for event filtering features and
+>   testing of public interfaces of event and helper classes. It
+>   also includes two small fixes for issues found during the unit
+>   test development.
+> 
+> [YOCTO #10773]
+> 
+> The following changes since commit
+> 6016ec177af2406cacfeb3276dfcb8bfc3df8fce:
+> 
+>   poky.conf: Enable vulkan by default (2017-08-16 00:04:39 +0100)
+> 
+> are available in the git repository at:
+> 
+>   git://git.yoctoproject.org/poky-contrib jairglez/bbevent_extended
+>   http://git.yoctoproject.org/cgit.cgi/poky-
+> contrib/log/?h=jairglez/bbevent_extended
+> 
+> Jair Gonzalez (5):
+>   bitbake: tests: Include tests for event filtering features
+>   bitbake: tests: Add test for bb.event.worker_fire
+>   bitbake: tests: Remove empty assignments from event tests
+>   bitbake: tests: Initialize data attribute on BuildBase event
+>   bitbake: tests: Add event classes test class
+> 
+>  lib/bb/event.py       |   1 +
+>  lib/bb/tests/event.py | 646
+> +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 634 insertions(+), 13 deletions(-)
+> 
 > --
-> 2.12.0
->=20
+> 2.7.4
+> 
 > --
 > _______________________________________________
 > bitbake-devel mailing list
 > bitbake-devel@lists.openembedded.org
 > http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+
 
