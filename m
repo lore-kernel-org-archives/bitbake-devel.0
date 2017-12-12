@@ -1,20 +1,20 @@
 Return-Path: <henning.schild@siemens.com>
-Received: from david.siemens.de (david.siemens.de [192.35.17.14])
-	by mail.openembedded.org (Postfix) with ESMTP id 51C447824F
+Received: from thoth.sbs.de (thoth.sbs.de [192.35.17.2])
+	by mail.openembedded.org (Postfix) with ESMTP id 56C6C78864
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Dec 2017 15:13:12 +0000 (UTC)
+	Tue, 12 Dec 2017 15:14:32 +0000 (UTC)
 Received: from mail2.siemens.de (mail2.siemens.de [139.25.208.11])
-	by david.siemens.de (8.15.2/8.15.2) with ESMTPS id vBCEni1V031076
+	by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id vBCFEXTG018121
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK); 
-	Tue, 12 Dec 2017 15:49:44 +0100
+	Tue, 12 Dec 2017 16:14:33 +0100
 Received: from mmd1pvb1c.ad001.siemens.net (md1pvb1c.ad001.siemens.net
 	[139.25.68.40] (may be forged))
-	by mail2.siemens.de (8.15.2/8.15.2) with ESMTP id vBCEnhEi023352;
-	Tue, 12 Dec 2017 15:49:43 +0100
-Date: Tue, 12 Dec 2017 15:49:43 +0100
+	by mail2.siemens.de (8.15.2/8.15.2) with ESMTP id vBCFEXHi019348;
+	Tue, 12 Dec 2017 16:14:33 +0100
+Date: Tue, 12 Dec 2017 16:14:32 +0100
 From: Henning Schild <henning.schild@siemens.com>
 To: <bitbake-devel@lists.openembedded.org>
-Message-ID: <20171212154943.55b0e2eb@mmd1pvb1c.ad001.siemens.net>
+Message-ID: <20171212161432.555f8508@mmd1pvb1c.ad001.siemens.net>
 In-Reply-To: <20171212144443.30618-1-henning.schild@siemens.com>
 References: <20171212144443.30618-1-henning.schild@siemens.com>
 X-Mailer: Claws Mail 3.15.0-dirty (GTK+ 2.24.31; x86_64-pc-linux-gnu)
@@ -34,25 +34,9 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Dec 2017 15:13:13 -0000
+X-List-Received-Date: Tue, 12 Dec 2017 15:14:33 -0000
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-
-We actually ran into that issue on a build system called Isar.
-
-https://github.com/ilbers/isar
-
-This build system executes some tasks in a chroot. In this chroot a
-"shared" clone will not work because it expects its "alternate" to be
-at the very same location it was outside the chroot. We considered
-several hacks in Isar
-- patching the alternates before and after chroot
-- mounting the "alternate" to the exact location in chroot
-None of this is really nice, so we decided to try and do something
-about it upstream.
-
-regards,
-Henning
 
 Am Tue, 12 Dec 2017 15:44:43 +0100
 schrieb Henning Schild <henning.schild@siemens.com>:
@@ -115,6 +99,11 @@ schrieb Henning Schild <henning.schild@siemens.com>:
 > +        cloneflags = "-n"
 > +        if not ud.noshared:
 > +            cloneflags += " -s"
+
+Rebase-mistake, forgot the "ud." before cloneflags. v2 is on the way
+
+Henning
+
 >          if ud.bareclone:
 >              ud.cloneflags += " --mirror"
 >  
