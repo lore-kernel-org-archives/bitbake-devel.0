@@ -1,24 +1,28 @@
 Return-Path: <henning.schild@siemens.com>
-Received: from thoth.sbs.de (thoth.sbs.de [192.35.17.2])
-	by mail.openembedded.org (Postfix) with ESMTP id 0CEB378852
+X-Greylist: delayed 1342 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 12 Dec 2017 15:12:05 UTC
+Received: from goliath.siemens.de (goliath.siemens.de [192.35.17.28])
+	by mail.openembedded.org (Postfix) with ESMTP id 3CC0A7824F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Dec 2017 14:44:45 +0000 (UTC)
+	Tue, 12 Dec 2017 15:12:05 +0000 (UTC)
 Received: from mail1.siemens.de (mail1.siemens.de [139.23.33.14])
-	by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id vBCEijQG025162
+	by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id vBCFC5b7028585
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK); 
-	Tue, 12 Dec 2017 15:44:45 +0100
+	Tue, 12 Dec 2017 16:12:05 +0100
 Received: from md1pvb1c.ad001.siemens.net (md1pvb1c.ad001.siemens.net
 	[139.25.68.40] (may be forged))
-	by mail1.siemens.de (8.15.2/8.15.2) with ESMTP id vBCEij6e019369;
-	Tue, 12 Dec 2017 15:44:45 +0100
+	by mail1.siemens.de (8.15.2/8.15.2) with ESMTP id vBCFC574032566;
+	Tue, 12 Dec 2017 16:12:05 +0100
 From: Henning Schild <henning.schild@siemens.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Dec 2017 15:44:43 +0100
-Message-Id: <20171212144443.30618-1-henning.schild@siemens.com>
+Date: Tue, 12 Dec 2017 16:12:03 +0100
+Message-Id: <20171212151203.31408-1-henning.schild@siemens.com>
 X-Mailer: git-send-email 2.13.6
+In-Reply-To: <20171212144443.30618-1-henning.schild@siemens.com>
+References: <20171212144443.30618-1-henning.schild@siemens.com>
 X-Mailman-Approved-At: Sun, 17 Dec 2017 14:25:43 +0000
 Cc: Henning Schild <henning.schild@siemens.com>, isar-users@googlegroups.com
-Subject: [PATCH] fetch/git: add support for disabling shared clones on unpack
+Subject: [PATCH v2] fetch/git: add support for disabling shared clones on unpack
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,7 +35,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Dec 2017 14:44:46 -0000
+X-List-Received-Date: Tue, 12 Dec 2017 15:12:06 -0000
 
 By default the unpacker will create a "shared" clone when cloning from
 the DL_DIR to the WORKDIR. This patch introduces an option to control
@@ -52,7 +56,7 @@ Signed-off-by: Henning Schild <henning.schild@siemens.com>
  1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 5ef8cd69..30b88c83 100644
+index 5ef8cd69..7b7f02b2 100644
 --- a/lib/bb/fetch2/git.py
 +++ b/lib/bb/fetch2/git.py
 @@ -53,6 +53,13 @@ Supported SRC_URI options are:
@@ -83,9 +87,9 @@ index 5ef8cd69..30b88c83 100644
              raise bb.fetch2.ParameterError("The number of name and branch parameters is not balanced", ud.url)
  
 -        ud.cloneflags = "-s -n"
-+        cloneflags = "-n"
++        ud.cloneflags = "-n"
 +        if not ud.noshared:
-+            cloneflags += " -s"
++            ud.cloneflags += " -s"
          if ud.bareclone:
              ud.cloneflags += " --mirror"
  
