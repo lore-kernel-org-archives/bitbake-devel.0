@@ -1,51 +1,26 @@
-Return-Path: <freesilicon@gmail.com>
-Received: from mail-wm0-f67.google.com (mail-wm0-f67.google.com [74.125.82.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 730E770057
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 5105171BF0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Dec 2017 10:29:31 +0000 (UTC)
-Received: by mail-wm0-f67.google.com with SMTP id g75so28304479wme.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Dec 2017 02:29:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=6/4+0k5o6HAgXiFgKcGGlYLQMZ/pGHMuRJz+Kq3vF30=;
-	b=Edlfm1yRrwjGEN/VAua4W76Uqc/AHRsBnoP8rGmysQVjTwucGB8K2heXRTqV6Q45aJ
-	NqfU+32ETyvF7fHxh6f8cVEEO9Ylm8y37ks8OGtJC/+tkji/joicfyQMl25b6ueH5WPE
-	M/9hRuCin0nh9Q22nIxobzh3rKTuTfPCXAkCPETNtkRmiFc4WuX7P8xbrvtaGy5goigs
-	4Ec/Nx819j6OcX6TdFbTbMviGomk5MItp9ntMaaGoO4lBLqEFkauY5MNt+4fz4/7Am6R
-	tcKtDemjD8gggPRMvJOCHi5OkOUWC/QVhpaAf7MnwqVAKBe2FSFU/iV2A3kd3uZ+FyLE
-	OEYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=6/4+0k5o6HAgXiFgKcGGlYLQMZ/pGHMuRJz+Kq3vF30=;
-	b=uHeL7DP5ZVXmzpJAljsMFc4T9ft5S46I6njmJ9oLHz92eyjgQSqgkTiukqbJHwxa21
-	vR5LRgJKHXLrF2oEsMSmwnYvmPolNb3fzvbLVCGAUgf4xKieWOwRqYVk5fRNEmPJnxp/
-	tYbZIYbuP1bTU2bw/r0cB2BK5AF55Plq7PKFjbQcj/iFpZ6XpR+H3XAMkSMol7fZv72D
-	YuZ2JgQhGQfHYirFALGs1h9aEGPJAJ+/qmJ805N1XVH6bKyKjJarPlyaKFiJp4virFsb
-	eRFVjqLoihx9PQu559r6ap0I06vOg2MmSP1i0oo8yLc3PMhQvLiEghcGFyXSk/8Hx12O
-	eMOg==
-X-Gm-Message-State: AKGB3mKimJEEs1Odg3QsfyjtG5NSLE/TklPyro2HDbAboms8tliAzk3J
-	87jquPOIx20LzYRVl7qCM5pzD/2/
-X-Google-Smtp-Source: ACJfBotN0oVb8a6QcsgAAdDrXUYmrdrb9l9Yg5MHnYwAketlm0x6GPokJZAjsrqMQ+PbmbT5Zu/6yw==
-X-Received: by 10.28.158.212 with SMTP id h203mr12807223wme.157.1513592972053; 
-	Mon, 18 Dec 2017 02:29:32 -0800 (PST)
-Received: from crde-port-20.cahors.local ([185.47.80.46])
-	by smtp.gmail.com with ESMTPSA id i71sm2846716wmd.1.2017.12.18.02.29.31
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 18 Dec 2017 02:29:31 -0800 (PST)
-From: David Vincent <freesilicon@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 18 Dec 2017 11:29:29 +0100
-Message-ID: <1577998.KcEGUiIB0f@crde-port-20.cahors.local>
-In-Reply-To: <20171113152404.21785-1-freesilicon@gmail.com>
-References: <20171113151617.20905-1-freesilicon@gmail.com>
-	<20171113152404.21785-1-freesilicon@gmail.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/2] fetch/git: fix per-branch unpacking
+	Mon, 18 Dec 2017 15:08:06 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	vBIF86UE009895
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Mon, 18 Dec 2017 15:08:07 GMT
+Message-ID: <1513609686.16507.44.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: David Reyna <david.reyna@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Mon, 18 Dec 2017 15:08:06 +0000
+In-Reply-To: <e0d2ed2f79a7c475fccd2f4f788e8feccd2156bc.1512030424.git.David.Reyna@windriver.com>
+References: <cover.1512030424.git.David.Reyna@windriver.com>
+	<e0d2ed2f79a7c475fccd2f4f788e8feccd2156bc.1512030424.git.David.Reyna@windriver.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: Re: [PATCH V2 2/6] toaster: update Toaster for Django 1.11
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,33 +33,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Dec 2017 10:29:31 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Mon, 18 Dec 2017 15:08:07 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Ping ?
+On Thu, 2017-11-30 at 00:55 -0800, David Reyna wrote:
+> --- a/lib/toaster/toastergui/views.py
+> +++ b/lib/toaster/toastergui/views.py
+> @@ -277,7 +277,7 @@ def _validate_input(field_input, model):
+>              return None, invalid + str(field_input_list)
+>  
+>          V2 # Check we are looking for a valid field
+> -        valid_fields = model._meta.get_all_field_names()
+> +        valid_fields = [f.name for f in model._meta.get_fields()]
+>          for field in field_input_list[0].split(AND_VALUE_SEPARATOR):
+>              if True in [field.startswith(x) for x in valid_fields]:
+>                  break
 
-On lundi 13 novembre 2017 16:24:02 CET David Vincent wrote:
-> Create branches for each user-supplied name when running checkout and
-> set start point of branch to the resolved revision.
-> Also, update documentation to better describe this functionality.
-> 
-> Changes in v2:
->   - clarify commit message
->   - update documentation
-> 
-> Changes in v3:
->   - rebase on current master
-> 
-> David Vincent (2):
->   fetch/git: fix per-branch unpacking
->   bitbake-user-manual: update git fetcher
-> 
->  .../bitbake-user-manual-fetching.xml               | 34
-> ++++++++++++++++++++-- lib/bb/fetch2/git.py                               |
-> 12 ++++----
->  lib/bb/tests/fetch.py                              | 28 ++++++++++++++++++
->  3 files changed, 67 insertions(+), 7 deletions(-)
+Sorry about the delay with these. Somehow there is a "V2" in the patch
+that caused it to fail to apply. I've fixed that up manually and
+applied it.
 
+Cheers,
 
+Richard
 
