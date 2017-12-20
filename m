@@ -1,24 +1,23 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id E587F71A70
+Return-Path: <henning.schild@siemens.com>
+Received: from goliath.siemens.de (goliath.siemens.de [192.35.17.28])
+	by mail.openembedded.org (Postfix) with ESMTP id A0CD67848D
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Dec 2017 12:47:22 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	vBJClLoC013839
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Tue, 19 Dec 2017 12:47:22 GMT
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1eRHIn-0004ZJ-74; Tue, 19 Dec 2017 12:47:21 +0000
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Wed, 20 Dec 2017 16:42:15 +0000 (UTC)
+Received: from mail1.siemens.de (mail1.siemens.de [139.23.33.14])
+	by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id vBKGgF2H025405
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK); 
+	Wed, 20 Dec 2017 17:42:15 +0100
+Received: from md1pvb1c.ad001.siemens.net (md1pvb1c.ad001.siemens.net
+	[139.25.68.40] (may be forged))
+	by mail1.siemens.de (8.15.2/8.15.2) with ESMTP id vBKGgFvu018461;
+	Wed, 20 Dec 2017 17:42:15 +0100
+From: Henning Schild <henning.schild@siemens.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 19 Dec 2017 12:47:20 +0000
-Message-Id: <1513687640-17523-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: [PATCH] build.py: Don't return dependencies for tasks which don't exist
+Date: Wed, 20 Dec 2017 17:42:09 +0100
+Message-Id: <20171220164209.9609-1-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.13.6
+Cc: isar-users@googlegroups.com
+Subject: [PATCH] fetch/git: add support for disabling shared clones on unpack
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,35 +30,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Dec 2017 12:47:23 -0000
+X-List-Received-Date: Wed, 20 Dec 2017 16:42:16 -0000
 
-If for example you deltask do_build but it has recrdeps set, its confusing
-to have that list returned when the task no longer exists (same would apply
-to deps too  if it was set after the deltask).
+By default the unpacker will create a "shared" clone when cloning from
+the DL_DIR to the WORKDIR. This patch introduces an option to control
+that behaviour. Probably something that hardly anyone would want to do.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Imagine some recipe steps are executed in a namespace that is different
+from the one your downloader and unpacker ran in. (chroot) Because a
+"shared" clone has an absolute reference to its "alternate" you now
+have to make that "alternate" visible in that new namespace (chroot) at
+the exact place.
+
+With this patch you can unpack "noshared" and get a stand-alone copy.
+This copy will also work if the "alternate" is not visible or existant.
+
+Signed-off-by: Henning Schild <henning.schild@siemens.com>
 ---
- lib/bb/build.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+ lib/bb/fetch2/git.py | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 0d0100a..4631abd 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -872,6 +872,12 @@ def preceedtask(task, with_recrdeptasks, d):
-     that this may lead to the task itself being listed.
-     """
-     preceed = set()
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 5ef8cd69..7b7f02b2 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -53,6 +53,13 @@ Supported SRC_URI options are:
+    For local git:// urls to use the current branch HEAD as the revision for use with
+    AUTOREV. Implies nobranch.
+ 
++- noshared
++   When unpacking do not clone with the parameter "--shared". This option will
++   allow the unpacked copy to work stand-alone i.e. if your recipe runs in a
++   chroot where the "alternate" can not be found. Setting this will increase
++   the unpack-time and the disk-usage.
++   The default is "0", set noshared=1 if needed.
 +
-+    # Ignore tasks which don't exist
-+    tasks = d.getVar('__BBTASKS', False)
-+    if task not in tasks:
-+        return preceed
+ """
+ 
+ #Copyright (C) 2005 Richard Purdie
+@@ -159,6 +166,8 @@ class Git(FetchMethod):
+ 
+         ud.nobranch = ud.parm.get("nobranch","0") == "1"
+ 
++        ud.noshared = ud.parm.get("noshared","0") == "1"
 +
-     preceed.update(d.getVarFlag(task, 'deps') or [])
-     if with_recrdeptasks:
-         recrdeptask = d.getVarFlag(task, 'recrdeptask')
+         # usehead implies nobranch
+         ud.usehead = ud.parm.get("usehead","0") == "1"
+         if ud.usehead:
+@@ -176,7 +185,9 @@ class Git(FetchMethod):
+         if len(branches) != len(ud.names):
+             raise bb.fetch2.ParameterError("The number of name and branch parameters is not balanced", ud.url)
+ 
+-        ud.cloneflags = "-s -n"
++        ud.cloneflags = "-n"
++        if not ud.noshared:
++            ud.cloneflags += " -s"
+         if ud.bareclone:
+             ud.cloneflags += " --mirror"
+ 
 -- 
-2.7.4
+2.13.6
 
 
