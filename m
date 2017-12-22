@@ -1,26 +1,36 @@
-Return-Path: <henning.schild@siemens.com>
-Received: from goliath.siemens.de (goliath.siemens.de [192.35.17.28])
-	by mail.openembedded.org (Postfix) with ESMTP id 4730A7848D
+Return-Path: <david.reyna@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id E7A45787C8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Dec 2017 16:45:38 +0000 (UTC)
-Received: from mail3.siemens.de (mail3.siemens.de [139.25.208.14])
-	by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id vBKGjdt5032584
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK); 
-	Wed, 20 Dec 2017 17:45:39 +0100
-Received: from mmd1pvb1c.ad001.siemens.net (md1pvb1c.ad001.siemens.net
-	[139.25.68.40] (may be forged))
-	by mail3.siemens.de (8.15.2/8.15.2) with ESMTP id vBKGjdP4004150;
-	Wed, 20 Dec 2017 17:45:39 +0100
-Date: Wed, 20 Dec 2017 17:45:38 +0100
-From: Henning Schild <henning.schild@siemens.com>
-To: <bitbake-devel@lists.openembedded.org>
-Message-ID: <20171220174538.441d517f@mmd1pvb1c.ad001.siemens.net>
-In-Reply-To: <20171220164209.9609-1-henning.schild@siemens.com>
-References: <20171220164209.9609-1-henning.schild@siemens.com>
-X-Mailer: Claws Mail 3.15.0-dirty (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+	Fri, 22 Dec 2017 06:32:15 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id vBM6WF27027851
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK);
+	Thu, 21 Dec 2017 22:32:15 -0800
+Received: from ALA-MBC.corp.ad.wrs.com ([169.254.1.62]) by
+	ALA-HCB.corp.ad.wrs.com ([147.11.189.41]) with mapi id 14.03.0361.001;
+	Thu, 21 Dec 2017 22:32:14 -0800
+From: "Reyna, David" <david.reyna@windriver.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH V2 2/6] toaster: update Toaster for
+	Django 1.11
+Thread-Index: AQHTeBIHfa26CTMfUEeh0qf7cCgvTaNO66Fg
+Date: Fri, 22 Dec 2017 06:32:14 +0000
+Message-ID: <5E53D14CE4667A45B9A06760DE5D13D0D8B60071@ALA-MBC.corp.ad.wrs.com>
+References: <cover.1512030424.git.David.Reyna@windriver.com>
+	<e0d2ed2f79a7c475fccd2f4f788e8feccd2156bc.1512030424.git.David.Reyna@windriver.com>
+	<1513609686.16507.44.camel@linuxfoundation.org>
+In-Reply-To: <1513609686.16507.44.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [147.11.117.207]
 MIME-Version: 1.0
-Cc: isar-users@googlegroups.com
-Subject: Re: [PATCH] fetch/git: add support for disabling shared clones on unpack
+Cc: "YEOH, EE PENG" <ee.peng.yeoh@intel.com>
+Subject: Re: [PATCH V2 2/6] toaster: update Toaster for Django 1.11
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,89 +43,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Dec 2017 16:45:39 -0000
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 22 Dec 2017 06:32:16 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-We actually ran into that issue on a build system called Isar.
-
-https://github.com/ilbers/isar
-
-This build system executes some tasks in a chroot. In this chroot a
-"shared" clone will not work because it expects its "alternate" to be
-at the very same location it was outside the chroot. We considered
-several hacks in Isar
-- patching the alternates before and after chroot
-- mounting the "alternate" to the exact location in chroot
-None of this is really nice, so we decided to try and do something
-about it upstream.
-
-regards,
-Henning
-
-Am Wed, 20 Dec 2017 17:42:09 +0100
-schrieb Henning Schild <henning.schild@siemens.com>:
-
-> By default the unpacker will create a "shared" clone when cloning from
-> the DL_DIR to the WORKDIR. This patch introduces an option to control
-> that behaviour. Probably something that hardly anyone would want to
-> do.
-> 
-> Imagine some recipe steps are executed in a namespace that is
-> different from the one your downloader and unpacker ran in. (chroot)
-> Because a "shared" clone has an absolute reference to its "alternate"
-> you now have to make that "alternate" visible in that new namespace
-> (chroot) at the exact place.
-> 
-> With this patch you can unpack "noshared" and get a stand-alone copy.
-> This copy will also work if the "alternate" is not visible or
-> existant.
-> 
-> Signed-off-by: Henning Schild <henning.schild@siemens.com>
-> ---
->  lib/bb/fetch2/git.py | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index 5ef8cd69..7b7f02b2 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -53,6 +53,13 @@ Supported SRC_URI options are:
->     For local git:// urls to use the current branch HEAD as the
-> revision for use with AUTOREV. Implies nobranch.
->  
-> +- noshared
-> +   When unpacking do not clone with the parameter "--shared". This
-> option will
-> +   allow the unpacked copy to work stand-alone i.e. if your recipe
-> runs in a
-> +   chroot where the "alternate" can not be found. Setting this will
-> increase
-> +   the unpack-time and the disk-usage.
-> +   The default is "0", set noshared=1 if needed.
-> +
->  """
->  
->  #Copyright (C) 2005 Richard Purdie
-> @@ -159,6 +166,8 @@ class Git(FetchMethod):
->  
->          ud.nobranch = ud.parm.get("nobranch","0") == "1"
->  
-> +        ud.noshared = ud.parm.get("noshared","0") == "1"
-> +
->          # usehead implies nobranch
->          ud.usehead = ud.parm.get("usehead","0") == "1"
->          if ud.usehead:
-> @@ -176,7 +185,9 @@ class Git(FetchMethod):
->          if len(branches) != len(ud.names):
->              raise bb.fetch2.ParameterError("The number of name and
-> branch parameters is not balanced", ud.url) 
-> -        ud.cloneflags = "-s -n"
-> +        ud.cloneflags = "-n"
-> +        if not ud.noshared:
-> +            ud.cloneflags += " -s"
->          if ud.bareclone:
->              ud.cloneflags += " --mirror"
->  
-
+SGkgUmljaGFyZCwNCg0KPiBTb21laG93IHRoZXJlIGlzIGEgIlYyIiBpbiB0aGUgcGF0Y2ggdGhh
+dCBjYXVzZWQgaXQgdG8gZmFpbCB0byBhcHBseS4NCg0KT3VjaC4gDQoNCk5vdCBvbmx5IHRoYXQs
+IHNvbWVob3cgdGhhdCBzYW1lICJWMiIgZ2xpdGNoIHJ1aW5lZCBteSAiUEFUQ0ggVjIgMi82IiBm
+aWxlLCB3aGljaCBicmVha3MgVG9hc3RlciBvbiBzdGFydHVwIGZvciBtYXN0ZXIuIEkgd2lsbCBz
+ZW5kIGEgZml4LXVwIHBhdGNoLg0KDQpUaG9zZSBlcnJvcnMgYXJlIG5vdCBpbiB0aGUgcGFyYWxs
+ZWwgcGF0Y2ggc2V0IHRoYXQgd2FzIGZvciAicm9ja28iLCBzbyBhdCBsZWFzdCB0aGF0IHdhcyBu
+b3QgcnVpbmVkLg0KDQotIERhdmlkDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9t
+OiBSaWNoYXJkIFB1cmRpZSBbbWFpbHRvOnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5v
+cmddIA0KU2VudDogTW9uZGF5LCBEZWNlbWJlciAxOCwgMjAxNyA3OjA4IEFNDQpUbzogUmV5bmEs
+IERhdmlkOyBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNClN1YmplY3Q6IFJl
+OiBbYml0YmFrZS1kZXZlbF0gW1BBVENIIFYyIDIvNl0gdG9hc3RlcjogdXBkYXRlIFRvYXN0ZXIg
+Zm9yIERqYW5nbyAxLjExDQoNCk9uIFRodSwgMjAxNy0xMS0zMCBhdCAwMDo1NSAtMDgwMCwgRGF2
+aWQgUmV5bmEgd3JvdGU6DQo+IC0tLSBhL2xpYi90b2FzdGVyL3RvYXN0ZXJndWkvdmlld3MucHkN
+Cj4gKysrIGIvbGliL3RvYXN0ZXIvdG9hc3Rlcmd1aS92aWV3cy5weQ0KPiBAQCAtMjc3LDcgKzI3
+Nyw3IEBAIGRlZiBfdmFsaWRhdGVfaW5wdXQoZmllbGRfaW5wdXQsIG1vZGVsKToNCj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gTm9uZSwgaW52YWxpZCArIHN0cihmaWVsZF9pbnB1
+dF9saXN0KQ0KPiDCoA0KPiDCoMKgwqDCoMKgwqDCoMKgwqBWMiAjIENoZWNrIHdlIGFyZSBsb29r
+aW5nIGZvciBhIHZhbGlkIGZpZWxkDQo+IC3CoMKgwqDCoMKgwqDCoMKgdmFsaWRfZmllbGRzID0g
+bW9kZWwuX21ldGEuZ2V0X2FsbF9maWVsZF9uYW1lcygpDQo+ICvCoMKgwqDCoMKgwqDCoMKgdmFs
+aWRfZmllbGRzID0gW2YubmFtZSBmb3IgZiBpbiBtb2RlbC5fbWV0YS5nZXRfZmllbGRzKCldDQo+
+IMKgwqDCoMKgwqDCoMKgwqDCoGZvciBmaWVsZCBpbiBmaWVsZF9pbnB1dF9saXN0WzBdLnNwbGl0
+KEFORF9WQUxVRV9TRVBBUkFUT1IpOg0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmIFRy
+dWUgaW4gW2ZpZWxkLnN0YXJ0c3dpdGgoeCkgZm9yIHggaW4gdmFsaWRfZmllbGRzXToNCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJyZWFrDQoNClNvcnJ5IGFib3V0IHRoZSBk
+ZWxheSB3aXRoIHRoZXNlLiBTb21laG93IHRoZXJlIGlzIGEgIlYyIiBpbiB0aGUgcGF0Y2ggdGhh
+dCBjYXVzZWQgaXQgdG8gZmFpbCB0byBhcHBseS4gSSd2ZSBmaXhlZCB0aGF0IHVwIG1hbnVhbGx5
+IGFuZCBhcHBsaWVkIGl0Lg0KDQpDaGVlcnMsDQoNClJpY2hhcmQNCg==
 
