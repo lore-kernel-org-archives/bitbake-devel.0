@@ -1,27 +1,24 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 6A89D7198A
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id A42787884F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  2 Jan 2018 16:06:14 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w02G6Gfw022819
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 2 Jan 2018 08:06:16 -0800 (PST)
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.78) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.361.1; Tue, 2 Jan 2018 08:06:15 -0800
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 2 Jan 2018 07:59:49 -0800
-Message-ID: <f148ed841b2075e7d7590c2dbf2ec083f5ec7198.1514703701.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1514703701.git.David.Reyna@windriver.com>
-References: <cover.1514703701.git.David.Reyna@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [147.11.157.78]
-Subject: [PATCH 1/1] toaster: corrupted patch for bldcollector URL file
+	Sun,  7 Jan 2018 12:06:04 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	w07C61Tg014494
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Sun, 7 Jan 2018 12:06:02 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1eY9iD-000776-3J; Sun, 07 Jan 2018 12:06:01 +0000
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun,  7 Jan 2018 12:05:58 +0000
+Message-Id: <1515326759-27305-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: [PATCH 1/2] tests/fetch: Allow bit/bitbake-selftest to function correctly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,35 +31,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Jan 2018 16:06:14 -0000
-Content-Type: text/plain
+X-List-Received-Date: Sun, 07 Jan 2018 12:06:06 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+Without this the paths to git-make-shallow are incorrect and cause test
+failures if bitbake isn't executed from cwd or PATH.
 
-Fix a fatal error introduced by a corrupted patch file
-submission.
-
-[YOCTO #12459]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/toaster/bldcollector/urls.py | 2 +-
+ lib/bb/tests/fetch.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/bldcollector/urls.py b/lib/toaster/bldcollector/urls.py
-index ed379bf..888175d 100644
---- a/lib/toaster/bldcollector/urls.py
-+++ b/lib/toaster/bldcollector/urls.py
-@@ -17,7 +17,7 @@
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 7d7c5d7..11698f2 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -874,7 +874,7 @@ class FetchCheckStatusTest(FetcherTest):
  
  
--from djaV2 ngo.conf.urls import include, url
-+from django.conf.urls import include, url
+ class GitMakeShallowTest(FetcherTest):
+-    bitbake_dir = os.path.join(os.path.dirname(os.path.join(__file__)), '..', '..', '..')
++    bitbake_dir = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), '..', '..', '..')
+     make_shallow_path = os.path.join(bitbake_dir, 'bin', 'git-make-shallow')
  
- import bldcollector.views
- 
+     def setUp(self):
 -- 
-1.9.1
+2.7.4
 
 
