@@ -1,28 +1,49 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 2486378257
+Return-Path: <davis.roman84@gmail.com>
+Received: from mail-qt0-f195.google.com (mail-qt0-f195.google.com
+	[209.85.216.195])
+	by mail.openembedded.org (Postfix) with ESMTP id B7CC278825
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 22 Jan 2018 22:08:38 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	w0MM8Wbq014770
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Mon, 22 Jan 2018 22:08:33 GMT
-Message-ID: <1516658912.24502.119.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>, Amanda Brindle
-	<amanda.r.brindle@intel.com>
-Date: Mon, 22 Jan 2018 22:08:32 +0000
-In-Reply-To: <6192920.y9QKLpEl5j@peggleto-mobl.ger.corp.intel.com>
-References: <cover.1516394932.git.amanda.r.brindle@intel.com>
-	<57f40b8b016e6f9e4539d919d323dd6b6d75c31a.1516394932.git.amanda.r.brindle@intel.com>
-	<6192920.y9QKLpEl5j@peggleto-mobl.ger.corp.intel.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] tinfoil.py: Check if BUILDDIR exists
+	Thu, 11 Jan 2018 04:55:22 +0000 (UTC)
+Received: by mail-qt0-f195.google.com with SMTP id u10so411446qtg.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 10 Jan 2018 20:55:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=3XWmAdKZpWhdYOjI0cUqTtQnxfwA21ItnZqvaqf8n7I=;
+	b=T6wxKOl8te6qw+eJ2s/OGWmi6/M1uO7WRCeY3W1nAP2R+DERMf+AbwIo5cHu5CQzID
+	YzQJ/2AeOaAVff2NDG6Ee23px9BHJIiC6LCgz4rlAHzWq/13x3FXNQgvitK3YHtyPfTX
+	yy3tlzUmVRI6bDTC5newNp/3pNavxD3tTnken4fjVBKnBzTyLiI6kESVe1C3BVi7x2zt
+	H2ovDr6QXk1QhndqW67bh4kLKPgcikBfuHRqLp2Uzme27WCULrhFMVAXlwLPy/Nu2l4a
+	LL3TpfYpsfuFVn0986P1p/S1ZlmknmAQupfVZNQlqSrvFpIGlDsL2wi3Fhb2Siy6Rn2o
+	4EIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=3XWmAdKZpWhdYOjI0cUqTtQnxfwA21ItnZqvaqf8n7I=;
+	b=APUAFGo7ccgmY06ii2rqSoyX5xMoHpF43oYFx4EcYexHSi0uzmTLZEwKBCo/vu7d7A
+	9Jj714kR++lbq0fMvTfFzb78gc6f9OMQwTwvt/qTEsZSD2ipjHtPabfoHcWg09xKtje0
+	8FxKwVhWmeXXvFlzhcfdmDsWbln9uNxMFeWtB5vy2k6LWpbTRJUjDW4l1W/rW1t6wf/D
+	kCR521K30DXEHgfSSs095LoD5bxdHRCULv1YsFpBDN9cugKrLsAHecra8sT9hM0ae/mM
+	o5FHQXqc8+c63akBPmXPtYX/AtjZRCexmtwG7UY5PhkmePdU9V7M7LKAgzUise2rZ3/m
+	uIbA==
+X-Gm-Message-State: AKwxytffWoeeTovL6RYo3U/96efwvqKynGfu8Io7TsNb7PuRREErbmB2
+	oA9IBpAkI4aBro/92ur/tXv6NB5qVVLoQFmsqMY=
+X-Google-Smtp-Source: ACJfBotY74SWrl7fTiLdb7GDXB4bagPJoQPxbcDcyZ1Wlr01f9uBt4elsExPTiwZRm67toxqogYwxiP3EEVCoP9qixk=
+X-Received: by 10.237.61.175 with SMTP id i44mr4581425qtf.89.1515646523494;
+	Wed, 10 Jan 2018 20:55:23 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.233.239.137 with HTTP; Wed, 10 Jan 2018 20:55:23 -0800 (PST)
+In-Reply-To: <CACfi_Z1iHtpMLTNnQO=FPpFVu+ZYaXrRLVSk6HkrrsSbt+CBkA@mail.gmail.com>
+References: <CACfi_Z1iHtpMLTNnQO=FPpFVu+ZYaXrRLVSk6HkrrsSbt+CBkA@mail.gmail.com>
+From: Davis Roman <davis.roman84@gmail.com>
+Date: Wed, 10 Jan 2018 23:55:23 -0500
+Message-ID: <CACfi_Z1-wtH0iVO6Q3vg2Q661tWSHF1ZFQuGU_QVyCtijxW58Q@mail.gmail.com>
+To: poky@yoctoproject.org
+X-Mailman-Approved-At: Mon, 22 Jan 2018 22:09:11 +0000
+Cc: yocto@yoctoproject.org, bitbake-devel@lists.openembedded.org,
+	yocto-bsp@yoctoproject.org
+Subject: How to make the os-release package work with local walltime instead of GMT?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,42 +56,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 22 Jan 2018 22:08:39 -0000
+X-List-Received-Date: Thu, 11 Jan 2018 04:55:23 -0000
+Content-Type: multipart/alternative; boundary="001a11401982a3548d056278f48b"
+
+--001a11401982a3548d056278f48b
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 
-On Tue, 2018-01-23 at 09:02 +1300, Paul Eggleton wrote:
-> Hi Amanda,
-> 
-> On Saturday, 20 January 2018 9:53:13 AM NZDT Amanda Brindle wrote:
-> > 
-> > +        basepath = os.environ.get('BUILDDIR')
-> > +        if not basepath:
-> > +            print("Tinfoil can only be run after initialising the
-> > build
-> > environment (e.g. by using oe-init-build-env)")
-> > +            sys.exit(1)
-> > +
-> We should be raising an exception here - tinfoil is utility code, it
-> shouldn't 
-> be calling sys.exit(). Additionally, bitbake shouldn't be referring
-> to 
-> oe-init-build-env, that's something from OpenEmbedded; even
-> mentioning Tinfoil 
-> isn't going to be much use to the user. I would simply raise a
-> custom 
-> exception class with the message "Build environment not initialised"
-> or 
-> similar, and if tinfoil-using want to catch that exception and
-> produce a more 
-> friendly message they can fairly easily do so.
+Hello,
 
-This was also triggering on the autobuilder tests so something isn't
-quite right here:
+I'm trying to fullfill a requirement which states that I must have a file
+in my root filesystem which has the timestamp of when the rootfs was
+generated for traceability purposes.
 
-https://autobuilder.yocto.io/builders/nightly-x86-64/builds/744/steps/Running%20ESDK%20Sanity%20Tests/logs/stdio
+I've included the os-release package into my image recipe.
 
-Cheers,
+However, when I cat /etc/os-release, I notice that the BUILD_ID variable
+does not reflect the actually time that my build took place.
 
-Richard
+Upon further inspection, I noticed in the os-release recipe that BUILD_ID
+is based on the DATETIME variable.
 
+Drilling down further, I noticed that DATETIME is defined
+in ./meta/conf/bitbake.conf
+
+    DATE := "${@time.strftime('%Y%m%d',time.gmtime())}"
+    TIME := "${@time.strftime('%H%M%S',time.gmtime())}"
+    DATETIME = "${DATE}${TIME}"
+
+So it appears to me that DATETIME is based on gmttime.
+
+Instead, I would like this to be based on wall time.
+
+Any suggestions on how to do this?
+
+Thank you,
+
+Davis
+
+--001a11401982a3548d056278f48b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr"><div>Hello,</d=
+iv><div><br></div><div>I&#39;m trying to fullfill a requirement which state=
+s that I must have a file in my root filesystem which has the timestamp of =
+when the rootfs was generated for traceability purposes.</div><div><br></di=
+v><div>I&#39;ve included the os-release package into my image recipe.<br></=
+div><div><br></div><div>However, when I cat /etc/os-release, I notice that =
+the BUILD_ID variable does not reflect the actually time that my build took=
+ place.</div><div><br></div><div>Upon further inspection, I noticed in the =
+os-release recipe that BUILD_ID is based on the DATETIME variable.</div><di=
+v><br></div><div>Drilling down further, I noticed that DATETIME is defined =
+in=C2=A0./meta/conf/bitbake.conf</div><div><br></div><div><div>=C2=A0 =C2=
+=A0 DATE :=3D &quot;${@time.strftime(&#39;%Y%m%d&#39;,<wbr>time.gmtime())}&=
+quot;</div><div>=C2=A0 =C2=A0 TIME :=3D &quot;${@time.strftime(&#39;%H%M%S&=
+#39;,<wbr>time.gmtime())}&quot;</div><div>=C2=A0 =C2=A0 DATETIME =3D &quot;=
+${DATE}${TIME}&quot;</div></div><div><br></div><div>So it appears to me tha=
+t DATETIME is based on gmttime.=C2=A0</div><div><br></div><div>Instead, I w=
+ould like this to be based on wall time.</div><div><br></div><div>Any sugge=
+stions on how to do this?</div><div><br></div><div>Thank you,</div><div><br=
+></div><div>Davis</div></div>
+</div><br></div>
+
+--001a11401982a3548d056278f48b--
