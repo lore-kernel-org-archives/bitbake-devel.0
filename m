@@ -1,26 +1,29 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id B6A6B78778
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id AEF7478555
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 19 Jan 2018 11:16:50 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	w0JBGn8m011749
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Fri, 19 Jan 2018 11:16:50 GMT
-Message-ID: <1516360609.24502.18.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Fri, 19 Jan 2018 11:16:49 +0000
-In-Reply-To: <9a21e82b35b935826dd28413684f0918c00f9eb0.1516265726.git.liezhi.yang@windriver.com>
-References: <cover.1516265726.git.liezhi.yang@windriver.com>
-	<9a21e82b35b935826dd28413684f0918c00f9eb0.1516265726.git.liezhi.yang@windriver.com>
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: Re: [PATCH 2/2] parse: don't add attempted files to dependencies
+	Mon, 22 Jan 2018 20:02:36 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	22 Jan 2018 12:02:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.46,398,1511856000"; d="scan'208";a="25421819"
+Received: from cdsouzax-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.249.64.40])
+	by orsmga001.jf.intel.com with ESMTP; 22 Jan 2018 12:02:34 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Amanda Brindle <amanda.r.brindle@intel.com>
+Date: Tue, 23 Jan 2018 09:02:30 +1300
+Message-ID: <6192920.y9QKLpEl5j@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+In-Reply-To: <57f40b8b016e6f9e4539d919d323dd6b6d75c31a.1516394932.git.amanda.r.brindle@intel.com>
+References: <cover.1516394932.git.amanda.r.brindle@intel.com>
+	<57f40b8b016e6f9e4539d919d323dd6b6d75c31a.1516394932.git.amanda.r.brindle@intel.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] tinfoil.py: Check if BUILDDIR exists
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,45 +36,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 Jan 2018 11:16:51 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 22 Jan 2018 20:02:36 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 2018-01-18 at 16:57 +0800, Robert Yang wrote:
-> The attempts are the files that it tries to search but don't exist,
-> it searches the file in BBPATH until find it, so the attempts might
-> be very long when there are many layers, which causes bb_cache.dat
-> very big (I have 54 layers, the bb_cache.dat can be 119M, and even
-> much bigger depends on the order of BBLAYERS).
-> 
-> Here is the testing data of 54 layers before and after the patch.
-> 
->                     Before          After
-> Parsing time        33s             9s
-> Loading time        30s             5s
-> Cache size          119M            20M
-> 
-> The time and size can be more or less depends on the order of
-> BBLAYERS before the patch.
-> 
-> I checked the code, but didn't find why we need the attempts as
-> dependencies, the one that I can think of is the file doesn't exist
-> when parsing, and added to the attempts location after parsing, but
-> the parseBaseConfiguration() can detect and handle this well (and
-> will cause reparse in such a case), so I think that we can safely
-> remove them from dependencies since they have side effects.
+Hi Amanda,
 
-If you have a memory resident bitbake you need to know which files to
-watch for with inotify. If a file is created somewhere which would have
-been parsed had it existed when we originally parsed, we need to
-invalidate the cache and reparse. This needs to happen for the metadata
-itself, not just the base configuration.
+On Saturday, 20 January 2018 9:53:13 AM NZDT Amanda Brindle wrote:
+> +        basepath = os.environ.get('BUILDDIR')
+> +        if not basepath:
+> +            print("Tinfoil can only be run after initialising the build
+> environment (e.g. by using oe-init-build-env)")
+> +            sys.exit(1)
+> +
 
-I therefore strongly suspect we do need these unfortunately. There may
-be some ways we can condense the dependency information though to
-reduce the cache load times.
+We should be raising an exception here - tinfoil is utility code, it shouldn't 
+be calling sys.exit(). Additionally, bitbake shouldn't be referring to 
+oe-init-build-env, that's something from OpenEmbedded; even mentioning Tinfoil 
+isn't going to be much use to the user. I would simply raise a custom 
+exception class with the message "Build environment not initialised" or 
+similar, and if tinfoil-using want to catch that exception and produce a more 
+friendly message they can fairly easily do so.
 
 Cheers,
+Paul
 
-Richard
+
+-- 
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
