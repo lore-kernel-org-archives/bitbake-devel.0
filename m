@@ -1,26 +1,37 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8A1EA786C4
+Return-Path: <nicolac76@yahoo.fr>
+Received: from sonic307-54.consmr.mail.ir2.yahoo.com
+	(sonic307-54.consmr.mail.ir2.yahoo.com [87.248.110.31])
+	by mail.openembedded.org (Postfix) with ESMTP id 89D7B71AB4
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 28 Jan 2018 11:21:52 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	w0SBLoRX025257
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Sun, 28 Jan 2018 11:21:51 GMT
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1efl1y-0002bN-Ae; Sun, 28 Jan 2018 11:21:50 +0000
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Fri, 26 Jan 2018 10:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.fr; s=s2048;
+	t=1516961145; bh=LxNUmjijfLH7zDIlnYbIjAr+CudKxon9v+xe2IhipQE=;
+	h=From:To:Cc:Subject:Date:From:Subject;
+	b=orSt8SzdFOB3jwqQSCN7y/trdbV9Wr3NIvW9GS8XxTkxPuOTK+pCy/Zieo+QisC5PYPtxLMeZ0Y1VZimMDV6SwtIWM+BwqxJZIWrsYaqOcueRGRtHQo5N9+WsXF76H93A1Pj/Bj86Y/ZaSwc4MNZuYMcmgCqARVkPEZCDkvRZC+xShFJGImuQoqFe/Xpl1Xn4E1QwPxyr9Ju+CRti0zd9OSAkvZPxbXStgAVXo/P1lT53Oke6idll2kDYPMEGsttgv5kDZMg3eWriGBFz/iGwMEs6fePC3N5CSsysgnkHrtoSMQkWeCu0d5h/FC7Iph5cWAWn/e9sGNHMU88rSEXTg==
+X-YMail-OSG: 1Tx_fjMVM1kP22x17ly4lpp5EpQZcpRzhZdfd62.rjF9dKwJqFrkGorRnGVVkAE
+	B1aK7HR73BkH_6eOLl3hsNiyVEhD4ZiNi.g1TTtgAvcbJCRFQy24Cr57iKKW1IVmhN9qHtxZ6BGA
+	yx7_67NY64XdLoI53QPeeLIhjOEVNqARQJ6pfis5a_j07mcnjSzT1rQ.kwn8ifQIP0o3v2x0rIRR
+	PjFIExUIKfSWxPtkO2NY.9I9Odqn.gBezxEziXvZIQxOqQlHh62AAnMhfxeFEyVLXwj_0WxpAcd9
+	dvePr25Dxbjk0jjqene.JLxLVQWWmLU1uz6rJJI6TgC24HK_EvmEpz.Hfu5hlyZJsXmz7OCFVhtU
+	BLFuvE1twvJUJw_rUBsjvYfJIgUve5Pqli5kcclQEjTQJo9IDRWcERFOEEnSKETA_AHOBjvXtoal
+	CUeqohrBUsb8K8I7F1itrkme5rK3hDRctHaMPugXlxYljDYdWAcMA1atatK9AizIg6di0FD7BO0p
+	Z875in4Mm4sc2MgVqWAFEcSHviXY-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+	sonic307.consmr.mail.ir2.yahoo.com with HTTP;
+	Fri, 26 Jan 2018 10:05:45 +0000
+Received: from smtpgate105.mail.ir2.yahoo.com (EHLO Achlys.localdomain.com)
+	([217.146.188.189])
+	by smtp404.mail.ir2.yahoo.com (JAMES SMTP Server ) with ESMTPA ID
+	3aa7bfc279f9436fca1dce2ebfba1e94; 
+	Fri, 26 Jan 2018 10:05:43 +0000 (UTC)
+From: Nicolas Cornu <nicolac76@yahoo.fr>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 28 Jan 2018 11:21:48 +0000
-Message-Id: <1517138508-9957-2-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1517138508-9957-1-git-send-email-richard.purdie@linuxfoundation.org>
-References: <1517138508-9957-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: [PATCH 2/2] fetch/git: Add pack-refs command to mirror handling code
+Date: Fri, 26 Jan 2018 11:05:36 +0100
+Message-Id: <20180126100536.29450-1-nicolac76@yahoo.fr>
+X-Mailer: git-send-email 2.14.3
+X-Mailman-Approved-At: Sun, 28 Jan 2018 13:49:37 +0000
+Cc: Nicolas Cornu <nicolac76@yahoo.fr>
+Subject: [PATCH] bitbake-user-manual: Addeds support for the repo Fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,33 +44,96 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 28 Jan 2018 11:21:53 -0000
+X-List-Received-Date: Fri, 26 Jan 2018 10:05:44 -0000
 
-We've noticed issues on our infrastucture iterating over the many
-tag/branch/head reference files that some git repositories may contain.
+Added a new repo Fetcher section in the same spirit as the existing
+sections for other supported fetchers.  Changes included the new section,
+removal of the bulleted item that mentioned this fetcher as an
+"additional" fetcher, and the creation of a new variable in the glossary
+named REPODIR.
 
-By issuing the pack-refs command, we move these all to a single file
-which speeds up operations with the mirror repos in the downloads
-directory in general.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Nicolas Cornu <nicolac76@yahoo.fr>
 ---
- lib/bb/fetch2/git.py | 1 +
- 1 file changed, 1 insertion(+)
+ .../bitbake-user-manual-fetching.xml               | 37 ++++++++++++++++++++--
+ .../bitbake-user-manual-ref-variables.xml          |  9 ++++++
+ 2 files changed, 43 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 5ef8cd6..d34ea1d 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -363,6 +363,7 @@ class Git(FetchMethod):
-             progresshandler = GitProgressHandler(d)
-             runfetchcmd(fetch_cmd, d, log=progresshandler, workdir=ud.clonedir)
-             runfetchcmd("%s prune-packed" % ud.basecmd, d, workdir=ud.clonedir)
-+            runfetchcmd("%s pack-refs --all" % ud.basecmd, d, workdir=ud.clonedir)
-             runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d, workdir=ud.clonedir)
-             try:
-                 os.unlink(ud.fullmirror)
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
+index c721e86e..0787f884 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
+@@ -777,6 +777,40 @@
+             </para>
+         </section>
+ 
++        <section id='repo-fetcher'>
++            <title>Repo Fetcher (<filename>repo://</filename>)</title>
++
++            <para>
++                This fetcher submodule fetches code from google-repo
++                source control system.
++                The fetcher work by initiating and syncing sources of the
++                repo into
++                <link linkend='var-REPODIR'><filename>REPODIR</filename></link>,
++                which is usually
++                <filename><link linkend='var-DL_DIR'>DL_DIR</link>/repo</filename>.
++            </para>
++
++            <para>
++                This fetcher support the following parameters:
++                <itemizedlist>
++                    <listitem><para><emphasis>"protocol":</emphasis>
++                        Protocol to fetch the repo manifest (default: git).
++                        </para></listitem>
++                    <listitem><para><emphasis>"branch":</emphasis>
++                        Branch or tag of repository to get (default: master).
++                        </para></listitem>
++                    <listitem><para><emphasis>"manifest":</emphasis>
++                        Name of the manifest file (default: default.xml).
++                        </para></listitem>
++                </itemizedlist>
++                Some example URLs are as follows:
++                <literallayout class='monospaced'>
++    SRC_URI = "repo://REPOROOT;protocol=git;branch=some_branch;manifest=my_manifest.xml"
++    SRC_URI = "repo://REPOROOT;protocol=file;branch=some_branch;manifest=my_manifest.xml"
++                </literallayout>
++            </para>
++        </section>
++
+         <section id='other-fetchers'>
+             <title>Other Fetchers</title>
+ 
+@@ -795,9 +829,6 @@
+                     <listitem><para>
+                         Secure Shell (<filename>ssh://</filename>)
+                         </para></listitem>
+-                    <listitem><para>
+-                        Repo (<filename>repo://</filename>)
+-                        </para></listitem>
+                     <listitem><para>
+                         OSC (<filename>osc://</filename>)
+                         </para></listitem>
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+index d89e123e..88bec480 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+@@ -2089,6 +2089,15 @@
+             </glossdef>
+         </glossentry>
+ 
++        <glossentry id='var-REPODIR'><glossterm>REPODIR</glossterm>
++            <glossdef>
++                <para>
++                    The directory in which a local copy of a google-repo
++                    directory is stored when it is synced.
++                </para>
++            </glossdef>
++        </glossentry>
++
+         <glossentry id='var-RPROVIDES'><glossterm>RPROVIDES</glossterm>
+             <glossdef>
+                 <para>
 -- 
-2.7.4
+2.14.3
 
 
