@@ -1,37 +1,43 @@
-Return-Path: <nicolac76@yahoo.fr>
-Received: from sonic307-54.consmr.mail.ir2.yahoo.com
-	(sonic307-54.consmr.mail.ir2.yahoo.com [87.248.110.31])
-	by mail.openembedded.org (Postfix) with ESMTP id 89D7B71AB4
+Return-Path: <dushyantkumars94@gmail.com>
+Received: from mail-wm0-f53.google.com (mail-wm0-f53.google.com [74.125.82.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 9D72677E87
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Jan 2018 10:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.fr; s=s2048;
-	t=1516961145; bh=LxNUmjijfLH7zDIlnYbIjAr+CudKxon9v+xe2IhipQE=;
-	h=From:To:Cc:Subject:Date:From:Subject;
-	b=orSt8SzdFOB3jwqQSCN7y/trdbV9Wr3NIvW9GS8XxTkxPuOTK+pCy/Zieo+QisC5PYPtxLMeZ0Y1VZimMDV6SwtIWM+BwqxJZIWrsYaqOcueRGRtHQo5N9+WsXF76H93A1Pj/Bj86Y/ZaSwc4MNZuYMcmgCqARVkPEZCDkvRZC+xShFJGImuQoqFe/Xpl1Xn4E1QwPxyr9Ju+CRti0zd9OSAkvZPxbXStgAVXo/P1lT53Oke6idll2kDYPMEGsttgv5kDZMg3eWriGBFz/iGwMEs6fePC3N5CSsysgnkHrtoSMQkWeCu0d5h/FC7Iph5cWAWn/e9sGNHMU88rSEXTg==
-X-YMail-OSG: 1Tx_fjMVM1kP22x17ly4lpp5EpQZcpRzhZdfd62.rjF9dKwJqFrkGorRnGVVkAE
-	B1aK7HR73BkH_6eOLl3hsNiyVEhD4ZiNi.g1TTtgAvcbJCRFQy24Cr57iKKW1IVmhN9qHtxZ6BGA
-	yx7_67NY64XdLoI53QPeeLIhjOEVNqARQJ6pfis5a_j07mcnjSzT1rQ.kwn8ifQIP0o3v2x0rIRR
-	PjFIExUIKfSWxPtkO2NY.9I9Odqn.gBezxEziXvZIQxOqQlHh62AAnMhfxeFEyVLXwj_0WxpAcd9
-	dvePr25Dxbjk0jjqene.JLxLVQWWmLU1uz6rJJI6TgC24HK_EvmEpz.Hfu5hlyZJsXmz7OCFVhtU
-	BLFuvE1twvJUJw_rUBsjvYfJIgUve5Pqli5kcclQEjTQJo9IDRWcERFOEEnSKETA_AHOBjvXtoal
-	CUeqohrBUsb8K8I7F1itrkme5rK3hDRctHaMPugXlxYljDYdWAcMA1atatK9AizIg6di0FD7BO0p
-	Z875in4Mm4sc2MgVqWAFEcSHviXY-
-Received: from sonic.gate.mail.ne1.yahoo.com by
-	sonic307.consmr.mail.ir2.yahoo.com with HTTP;
-	Fri, 26 Jan 2018 10:05:45 +0000
-Received: from smtpgate105.mail.ir2.yahoo.com (EHLO Achlys.localdomain.com)
-	([217.146.188.189])
-	by smtp404.mail.ir2.yahoo.com (JAMES SMTP Server ) with ESMTPA ID
-	3aa7bfc279f9436fca1dce2ebfba1e94; 
-	Fri, 26 Jan 2018 10:05:43 +0000 (UTC)
-From: Nicolas Cornu <nicolac76@yahoo.fr>
+	Sun, 28 Jan 2018 08:41:10 +0000 (UTC)
+Received: by mail-wm0-f53.google.com with SMTP id f3so28181740wmc.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 28 Jan 2018 00:41:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=J6k5LiU++Qf2XZozPxwGyvwX5VWkiRcSUYppbP2FLNs=;
+	b=YxJhs69+X8Tx45+4uCufkJTgjfOELHNm1oy0r9H3XlGPFSTwSBMFkuPZZUFY/PUfNK
+	/GZ4igfxBMdER3L9qWv4+OVf3HwXvj4NMysxkjCjAjQI2Vt/Rs0Sct0jNsIx7MOkYtnh
+	+oUo64FY/FTOH/NEMnC2nL0V+sz4Zr7BV6/yveEbGx9cdLiCWlnq3q4+19ILcozJwh2N
+	CD/JbfP2wcSzltJaWPajRgQDzlfTh3JWS84Wrp1SX0mrfRUuepR2ZIjIbfIqxzqKIQW/
+	HleHXuApYLH8BvuAUNkJbXoK1Vg9RVFYoe/cLoBYi+nrKkVByhWUphwiRoXaQ2oPZCX1
+	PZTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=J6k5LiU++Qf2XZozPxwGyvwX5VWkiRcSUYppbP2FLNs=;
+	b=kr/f4XxUCyrxugk7okL8L/6JuNzXAF0QseBiPOUKnVxY4nvfYAmwwJRPHpUVT/ZKEU
+	IO006VuPFbd5lDpOT9T2WXYr4SxVDEz3/hvHDx2sEVMsx5Gv51Z+Cwfz+sw2q4O7l6Co
+	cjyJNpOmMX7E+o/LclgoJcljUafPlvs99cUgRPfA807/0C6Ds74cSnbjWtMeHgFJr5lY
+	EiQ7q4lSTqv7WJAe1Lx5EtP7CLnpq7ouol03q2t9pM9I4UiOVIvjHtMyirC7dmV/vJRO
+	BOK0D4UDQ8iIvacyOo/avGvsUAsnQwYx7fcFlmAoIWswntrclINJa33BeJsVmknKqH03
+	H7Qg==
+X-Gm-Message-State: AKwxytd9DJ0Uikx8cVTZsMBeXHBeGJSob16VhG0vNPlNf5cl5KNF5mLg
+	xaleAmzus9RqPbgmAIBZRmdvaw07BqEmljxZkpobkg==
+X-Google-Smtp-Source: AH8x2278xmG3zOszOngs8tUlCTioGJKAIT12skZ7M8rwLIr+5ZNo+dxw1+yFDPKZU1F/oGA2g+W4YlXScKwr/PXITYA=
+X-Received: by 10.80.203.2 with SMTP id g2mr40844340edi.4.1517128870568; Sun,
+	28 Jan 2018 00:41:10 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.80.194.10 with HTTP; Sun, 28 Jan 2018 00:41:10 -0800 (PST)
+From: DUSHYANT KUMAR Singh <dushyantkumars94@gmail.com>
+Date: Sun, 28 Jan 2018 14:11:10 +0530
+Message-ID: <CAFrFSW7+XYeZG9DzB1JyVgsg0gEYbFU7HQ+j0L44=jTnG2m0gA@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 26 Jan 2018 11:05:36 +0100
-Message-Id: <20180126100536.29450-1-nicolac76@yahoo.fr>
-X-Mailer: git-send-email 2.14.3
 X-Mailman-Approved-At: Sun, 28 Jan 2018 13:49:37 +0000
-Cc: Nicolas Cornu <nicolac76@yahoo.fr>
-Subject: [PATCH] bitbake-user-manual: Addeds support for the repo Fetcher
+Subject: Regarding the bitbake tool
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,96 +50,89 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 26 Jan 2018 10:05:44 -0000
+X-List-Received-Date: Sun, 28 Jan 2018 08:41:10 -0000
+Content-Type: multipart/alternative; boundary="f40304394f7868a7ec0563d217d0"
 
-Added a new repo Fetcher section in the same spirit as the existing
-sections for other supported fetchers.  Changes included the new section,
-removal of the bulleted item that mentioned this fetcher as an
-"additional" fetcher, and the creation of a new variable in the glossary
-named REPODIR.
+--f40304394f7868a7ec0563d217d0
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Nicolas Cornu <nicolac76@yahoo.fr>
----
- .../bitbake-user-manual-fetching.xml               | 37 ++++++++++++++++++++--
- .../bitbake-user-manual-ref-variables.xml          |  9 ++++++
- 2 files changed, 43 insertions(+), 3 deletions(-)
+Hi All,
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-index c721e86e..0787f884 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-@@ -777,6 +777,40 @@
-             </para>
-         </section>
- 
-+        <section id='repo-fetcher'>
-+            <title>Repo Fetcher (<filename>repo://</filename>)</title>
-+
-+            <para>
-+                This fetcher submodule fetches code from google-repo
-+                source control system.
-+                The fetcher work by initiating and syncing sources of the
-+                repo into
-+                <link linkend='var-REPODIR'><filename>REPODIR</filename></link>,
-+                which is usually
-+                <filename><link linkend='var-DL_DIR'>DL_DIR</link>/repo</filename>.
-+            </para>
-+
-+            <para>
-+                This fetcher support the following parameters:
-+                <itemizedlist>
-+                    <listitem><para><emphasis>"protocol":</emphasis>
-+                        Protocol to fetch the repo manifest (default: git).
-+                        </para></listitem>
-+                    <listitem><para><emphasis>"branch":</emphasis>
-+                        Branch or tag of repository to get (default: master).
-+                        </para></listitem>
-+                    <listitem><para><emphasis>"manifest":</emphasis>
-+                        Name of the manifest file (default: default.xml).
-+                        </para></listitem>
-+                </itemizedlist>
-+                Some example URLs are as follows:
-+                <literallayout class='monospaced'>
-+    SRC_URI = "repo://REPOROOT;protocol=git;branch=some_branch;manifest=my_manifest.xml"
-+    SRC_URI = "repo://REPOROOT;protocol=file;branch=some_branch;manifest=my_manifest.xml"
-+                </literallayout>
-+            </para>
-+        </section>
-+
-         <section id='other-fetchers'>
-             <title>Other Fetchers</title>
- 
-@@ -795,9 +829,6 @@
-                     <listitem><para>
-                         Secure Shell (<filename>ssh://</filename>)
-                         </para></listitem>
--                    <listitem><para>
--                        Repo (<filename>repo://</filename>)
--                        </para></listitem>
-                     <listitem><para>
-                         OSC (<filename>osc://</filename>)
-                         </para></listitem>
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
-index d89e123e..88bec480 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
-@@ -2089,6 +2089,15 @@
-             </glossdef>
-         </glossentry>
- 
-+        <glossentry id='var-REPODIR'><glossterm>REPODIR</glossterm>
-+            <glossdef>
-+                <para>
-+                    The directory in which a local copy of a google-repo
-+                    directory is stored when it is synced.
-+                </para>
-+            </glossdef>
-+        </glossentry>
-+
-         <glossentry id='var-RPROVIDES'><glossterm>RPROVIDES</glossterm>
-             <glossdef>
-                 <para>
--- 
-2.14.3
+I am trying to build the yocto project for ubuntu 16.04. I am following the
+Yocto Project Quick Start Guide. The steps I followed and the output I got
+are :
+
+$ sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib \
+     build-essential chrpath socat cpio python python3 python3-pip
+python3-pexpect \
+     xz-utils debianutils iputils-ping libsdl1.2-dev xterm
 
 
+
+$ git clone git://git.yoctoproject.org/poky
+
+
+$ cd ~/poky
+$ git checkout -b rocko origin/rocko
+
+
+$ source oe-init-build-env     ---   as a root user and I directly
+moved to build
+directory
+
+
+
+$ bitbake core-image-sato      ----   as a root user but I got the error as
+
+ERROR:  OE-core's config sanity checker detected a potential misconfiguration.
+    Either fix the cause of this error or at your own risk disable the checker
+(see sanity.conf).Following is the list of potential problems / advisories:
+
+    Do not use Bitbake as root.
+
+
+Then I again tried the whole procedure with bitbake command as normal user but I
+
+got that bitbake: command not found
+
+
+
+Please give me some hints regarding this so that I can solve this issue.
+
+Thank You
+
+With Regards
+
+Dushyant Kumar Singh
+
+--f40304394f7868a7ec0563d217d0
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi All,<br><br></div>I am trying to build the yocto p=
+roject for ubuntu 16.04. I am following the Yocto Project Quick Start Guide=
+. The steps I followed and the output I got are :<br><br><pre class=3D"gmai=
+l-literallayout">$ sudo apt-get install gawk wget git-core diffstat unzip t=
+exinfo gcc-multilib \
+     build-essential chrpath socat cpio python python3 python3-pip python3-=
+pexpect \
+     xz-utils debianutils iputils-ping libsdl1.2-dev xterm<br><br><br><br>$=
+ git clone git://<a href=3D"http://git.yoctoproject.org/poky">git.yoctoproj=
+ect.org/poky</a><br><br><br>$ cd ~/poky
+$ git checkout -b rocko origin/rocko<br><br><br>$ source oe-init-build-env =
+    ---   as a root user and I directly moved to build <br>directory<br><br=
+><br><br>$ bitbake core-image-sato      ----   as a root user but I got the=
+ error as <br><br>ERROR:  OE-core&#39;s config sanity checker detected a po=
+tential misconfiguration.<br>    Either fix the cause of this error or at y=
+our own risk disable the checker <br>(see sanity.conf).Following is the lis=
+t of potential problems / advisories:<br><br>    Do not use Bitbake as root=
+.<br><br><br></pre><pre class=3D"gmail-literallayout">Then I again tried th=
+e whole procedure with bitbake command as normal user but I<br></pre><pre c=
+lass=3D"gmail-literallayout">got that bitbake: command not found<br><br><br=
+><br></pre><pre class=3D"gmail-literallayout">Please give me some hints reg=
+arding this so that I can solve this issue.<br><br></pre><pre class=3D"gmai=
+l-literallayout">Thank You<br><br></pre><pre class=3D"gmail-literallayout">=
+With Regards<br></pre><pre class=3D"gmail-literallayout">Dushyant Kumar Sin=
+gh<br></pre></div>
+
+--f40304394f7868a7ec0563d217d0--
