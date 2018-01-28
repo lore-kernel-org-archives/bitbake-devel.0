@@ -1,27 +1,24 @@
-Return-Path: <amanda.r.brindle@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 02B5577FC9
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 88ED971BE5
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 19 Jan 2018 20:55:35 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	19 Jan 2018 12:55:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.46,382,1511856000"; d="scan'208";a="27906207"
-Received: from arbrindl-dev.jf.intel.com ([10.7.199.57])
-	by orsmga002.jf.intel.com with ESMTP; 19 Jan 2018 12:55:28 -0800
-From: Amanda Brindle <amanda.r.brindle@intel.com>
+	Sun, 28 Jan 2018 11:21:52 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	w0SBLng6025256
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Sun, 28 Jan 2018 11:21:51 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1efl1x-0002bI-QW; Sun, 28 Jan 2018 11:21:49 +0000
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 19 Jan 2018 12:53:13 -0800
-Message-Id: <57f40b8b016e6f9e4539d919d323dd6b6d75c31a.1516394932.git.amanda.r.brindle@intel.com>
+Date: Sun, 28 Jan 2018 11:21:47 +0000
+Message-Id: <1517138508-9957-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1516394932.git.amanda.r.brindle@intel.com>
-References: <cover.1516394932.git.amanda.r.brindle@intel.com>
-X-Mailman-Approved-At: Mon, 22 Jan 2018 22:09:11 +0000
-Cc: paul.eggleton@linux.intel.com
-Subject: [PATCH 1/1] tinfoil.py: Check if BUILDDIR exists
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: [PATCH 1/2] cooker: Sort task graph (dot) file output
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,37 +31,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 Jan 2018 20:55:36 -0000
+X-List-Received-Date: Sun, 28 Jan 2018 11:21:52 -0000
 
-Check if BUILDDIR exists in order to deterimine if a tinfoil using
-script is running without having called oe-init-build-env (or similar).
-If not, instruct user to initialise the build environment, and then
-error out immediately. Before, tinfoil would hang for 30s before
-erroring out.
+This means two different graph files can easily be compared, currently
+you'd have to sort them as the output is randomized.
 
-Fixes [YOCTO #12096]
-
-Signed-off-by: Amanda Brindle <amanda.r.brindle@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/tinfoil.py | 5 +++++
- 1 file changed, 5 insertions(+)
+ lib/bb/cooker.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/bitbake/lib/bb/tinfoil.py b/bitbake/lib/bb/tinfoil.py
-index 368264f..e156b47 100644
---- a/bitbake/lib/bb/tinfoil.py
-+++ b/bitbake/lib/bb/tinfoil.py
-@@ -372,6 +372,11 @@ class Tinfoil:
-         """
-         self.quiet = quiet
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 28717f4..cd365f7 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -856,12 +856,12 @@ class BBCooker:
  
-+        basepath = os.environ.get('BUILDDIR')
-+        if not basepath:
-+            print("Tinfoil can only be run after initialising the build environment (e.g. by using oe-init-build-env)")
-+            sys.exit(1)
-+
-         if self.tracking:
-             extrafeatures = [bb.cooker.CookerFeatures.BASEDATASTORE_TRACKING]
-         else:
+         with open('task-depends.dot', 'w') as f:
+             f.write("digraph depends {\n")
+-            for task in depgraph["tdepends"]:
++            for task in sorted(depgraph["tdepends"]):
+                 (pn, taskname) = task.rsplit(".", 1)
+                 fn = depgraph["pn"][pn]["filename"]
+                 version = depgraph["pn"][pn]["version"]
+                 f.write('"%s.%s" [label="%s %s\\n%s\\n%s"]\n' % (pn, taskname, pn, taskname, version, fn))
+-                for dep in depgraph["tdepends"][task]:
++                for dep in sorted(depgraph["tdepends"][task]):
+                     f.write('"%s" -> "%s"\n' % (task, dep))
+             f.write("}\n")
+         logger.info("Task dependencies saved to 'task-depends.dot'")
+@@ -869,18 +869,18 @@ class BBCooker:
+         with open('recipe-depends.dot', 'w') as f:
+             f.write("digraph depends {\n")
+             pndeps = {}
+-            for task in depgraph["tdepends"]:
++            for task in sorted(depgraph["tdepends"]):
+                 (pn, taskname) = task.rsplit(".", 1)
+                 if pn not in pndeps:
+                     pndeps[pn] = set()
+-                for dep in depgraph["tdepends"][task]:
++                for dep in sorted(depgraph["tdepends"][task]):
+                     (deppn, deptaskname) = dep.rsplit(".", 1)
+                     pndeps[pn].add(deppn)
+-            for pn in pndeps:
++            for pn in sorted(pndeps):
+                 fn = depgraph["pn"][pn]["filename"]
+                 version = depgraph["pn"][pn]["version"]
+                 f.write('"%s" [label="%s\\n%s\\n%s"]\n' % (pn, pn, version, fn))
+-                for dep in pndeps[pn]:
++                for dep in sorted(pndeps[pn]):
+                     if dep == pn:
+                         continue
+                     f.write('"%s" -> "%s"\n' % (pn, dep))
 -- 
 2.7.4
 
