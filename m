@@ -1,29 +1,56 @@
-Return-Path: <alexander.kanavin@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 8E64A786C0
+Return-Path: <tobias.hagelborn@axis.com>
+X-Greylist: delayed 558 seconds by postgrey-1.34 at layers.openembedded.org;
+	Mon, 29 Jan 2018 15:09:27 UTC
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 2DA55605C3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Jan 2018 07:14:53 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-	by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	28 Jan 2018 23:14:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.46,429,1511856000"; d="scan'208";a="13714640"
-Received: from kanavin-desktop.fi.intel.com (HELO [10.237.68.161])
-	([10.237.68.161])
-	by fmsmga007.fm.intel.com with ESMTP; 28 Jan 2018 23:14:53 -0800
-To: DUSHYANT KUMAR Singh <dushyantkumars94@gmail.com>,
-	bitbake-devel@lists.openembedded.org
-References: <CAFrFSW7+XYeZG9DzB1JyVgsg0gEYbFU7HQ+j0L44=jTnG2m0gA@mail.gmail.com>
-From: Alexander Kanavin <alexander.kanavin@linux.intel.com>
-Message-ID: <df2b2c31-ac22-e479-0c5f-c5230ef07dd2@linux.intel.com>
-Date: Mon, 29 Jan 2018 09:09:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
-	Thunderbird/52.4.0
+	Mon, 29 Jan 2018 15:09:27 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 6BD8E1843D
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 29 Jan 2018 16:00:13 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id WKsWRAAJUN7m for <bitbake-devel@lists.openembedded.org>;
+	Mon, 29 Jan 2018 16:00:12 +0100 (CET)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id C4F791829F
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 29 Jan 2018 16:00:12 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B306D1E077
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 29 Jan 2018 16:00:12 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A7D861E074
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 29 Jan 2018 16:00:12 +0100 (CET)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder03.se.axis.com (Postfix) with ESMTP
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 29 Jan 2018 16:00:12 +0100 (CET)
+Received: from XBOX02.axis.com (xbox02.axis.com [10.0.5.16])
+	by seth.se.axis.com (Postfix) with ESMTP id 9BEFA3178
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 29 Jan 2018 16:00:12 +0100 (CET)
+Received: from lnxtobiasha.se.axis.com (10.0.5.60) by XBOX02.axis.com
+	(10.0.5.16) with Microsoft SMTP Server (TLS) id 15.0.1263.5;
+	Mon, 29 Jan 2018 16:00:11 +0100
+From: Tobias Hagelborn <tobias.hagelborn@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 29 Jan 2018 15:59:52 +0100
+Message-ID: <1517237992-4829-2-git-send-email-tobiasha@axis.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1517237992-4829-1-git-send-email-tobiasha@axis.com>
+References: <1517237992-4829-1-git-send-email-tobiasha@axis.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFrFSW7+XYeZG9DzB1JyVgsg0gEYbFU7HQ+j0L44=jTnG2m0gA@mail.gmail.com>
-Subject: Re: Regarding the bitbake tool
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: XBOX03.axis.com (10.0.5.17) To XBOX02.axis.com (10.0.5.16)
+X-TM-AS-GCONF: 00
+Cc: Tobias Hagelborn <tobiasha@axis.com>
+Subject: [PATCH] utils.py: Support cross device move into existing directory
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,20 +63,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Jan 2018 07:14:53 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 29 Jan 2018 15:09:28 -0000
+Content-Type: text/plain
 
-On 01/28/2018 10:41 AM, DUSHYANT KUMAR Singh wrote:
+movefile fails copying files cross-device into existing target
+directory.
 
-> Please give me some hints regarding this so that I can solve this issue.
+Using copy instead of copyfile in this case.
 
-Do not do software development as a root user, it's unsafe. Create a 
-normal user and use root only for things that require root.
+Signed-off-by: Tobias Hagelborn <tobiasha@axis.com>
+---
+ bitbake/lib/bb/utils.py | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-In this case, simply repeat the quickstart guide steps as a regular user
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index c540b49..6769ed6 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -791,9 +791,8 @@ def movefile(src, dest, newmtime = None, sstat = None):
+     if renamefailed:
+         didcopy = 0
+         if stat.S_ISREG(sstat[stat.ST_MODE]):
+-            try: # For safety copy then move it over.
+-                shutil.copyfile(src, destpath + "#new")
+-                os.rename(destpath + "#new", destpath)
++            try:
++                shutil.copy(src, dest)
+                 didcopy = 1
+             except Exception as e:
+                 print('movefile: copy', src, '->', dest, 'failed.', e)
+-- 
+2.1.4
 
-
-Alex
 
