@@ -1,26 +1,28 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 7BE6478846
+Return-Path: <henning.schild@siemens.com>
+Received: from thoth.sbs.de (thoth.sbs.de [192.35.17.2])
+	by mail.openembedded.org (Postfix) with ESMTP id 3ED6C78837
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Jan 2018 12:10:12 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	w0UCABbP029016
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Tue, 30 Jan 2018 12:10:12 GMT
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1egUjr-0006hC-HD; Tue, 30 Jan 2018 12:10:11 +0000
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 30 Jan 2018 12:10:10 +0000
-Message-Id: <1517314210-25684-4-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1517314210-25684-1-git-send-email-richard.purdie@linuxfoundation.org>
-References: <1517314210-25684-1-git-send-email-richard.purdie@linuxfoundation.org>
-X-Virus-Scanned: clamav-milter 0.99.2 at dan
-X-Virus-Status: Clean
-Subject: [PATCH 4/4] runqueue: Rewrite and optimize recrdepends handling
+	Tue, 30 Jan 2018 12:17:47 +0000 (UTC)
+Received: from mail3.siemens.de (mail3.siemens.de [139.25.208.14])
+	by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id w0UCHl8j007741
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK); 
+	Tue, 30 Jan 2018 13:17:47 +0100
+Received: from mmd1pvb1c.ad001.siemens.net (md1pvb1c.ad001.siemens.net
+	[139.25.68.40] (may be forged))
+	by mail3.siemens.de (8.15.2/8.15.2) with ESMTP id w0UCHl4u027799;
+	Tue, 30 Jan 2018 13:17:47 +0100
+Date: Tue, 30 Jan 2018 13:18:05 +0100
+From: Henning Schild <henning.schild@siemens.com>
+To: <bitbake-devel@lists.openembedded.org>, Richard Purdie
+	<richard.purdie@linuxfoundation.org>
+Message-ID: <20180130131805.4725ccf3@mmd1pvb1c.ad001.siemens.net>
+In-Reply-To: <20171220174538.441d517f@mmd1pvb1c.ad001.siemens.net>
+References: <20171220164209.9609-1-henning.schild@siemens.com>
+	<20171220174538.441d517f@mmd1pvb1c.ad001.siemens.net>
+X-Mailer: Claws Mail 3.15.0-dirty (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Cc: isar-users@googlegroups.com
+Subject: Re: [PATCH] fetch/git: add support for disabling shared clones on unpack
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,195 +35,98 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 30 Jan 2018 12:10:14 -0000
+X-List-Received-Date: Tue, 30 Jan 2018 12:17:48 -0000
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This is a performance sensitive piece of code and the shear number
-of recursive loops is causing a significant and unscalable performance
-pain point.
+Bump! Could i please get a review on this patch?
 
-This change moves to a two step approach, firstly generating a list of recursive
-dependencies for any task, then applying this to the recursive tasks, iterating
-over things until no further dependencies are added.
+regards,
+Henning
 
-It was noticed an optimisation is possible and the list of recursive tasks need not
-contain the taskname, only the base task id. This allows a significant performance
-improvement and limits the size of the resursive task lists, improving speed.
+Am Wed, 20 Dec 2017 17:45:38 +0100
+schrieb Henning Schild <henning.schild@siemens.com>:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/runqueue.py | 134 +++++++++++++++++++++++++++++++++--------------------
- 1 file changed, 83 insertions(+), 51 deletions(-)
-
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index bbfe9ee..d7acfab 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -74,9 +74,6 @@ def build_tid(mc, fn, taskname):
-         return "multiconfig:" + mc + ":" + fn + ":" + taskname
-     return fn + ":" + taskname
- 
--def tid_replacetask(tid, taskname):
--    return tid.rsplit(":", 1)[0] + ":" + taskname
--
- class RunQueueStats:
-     """
-     Holds statistics on the tasks handled by the associated runQueue
-@@ -670,71 +667,106 @@ class RunQueueData:
-                             recursiveitasks[tid].append(newdep)
- 
-                 self.runtaskentries[tid].depends = depends
-+                # Remove all self references
-+                self.runtaskentries[tid].depends.discard(tid)
- 
-         #self.dump_data()
- 
-+        self.init_progress_reporter.next_stage()
-+
-         # Resolve recursive 'recrdeptask' dependencies (Part B)
-         #
-         # e.g. do_sometask[recrdeptask] = "do_someothertask"
-         # (makes sure sometask runs after someothertask of all DEPENDS, RDEPENDS and intertask dependencies, recursively)
-         # We need to do this separately since we need all of runtaskentries[*].depends to be complete before this is processed
--        self.init_progress_reporter.next_stage()
--        extradeps = True
-+
-+        # Generating/interating recursive lists of dependencies is painful and potentially slow
-+        # Precompute recursive task dependencies here by:
-+        #     a) create a temp list of reverse dependencies (revdeps)
-+        #     b) walk up the ends of the chains (when a given task no longer has dependencies i.e. len(deps) == 0)
-+        #     c) combine the total list of dependencies in cumulativedeps
-+        #     d) optimise by pre-truncating 'task' off the items in cumulativedeps (keeps items in sets lower)
-+
-+
-+        revdeps = {}
-+        deps = {}
-+        cumulativedeps = {}
-+        for tid in self.runtaskentries:
-+            deps[tid] = set(self.runtaskentries[tid].depends)
-+            revdeps[tid] = set()
-+            cumulativedeps[tid] = set()
-+        # Generate a temp list of reverse dependencies
-+        for tid in self.runtaskentries:
-+            for dep in self.runtaskentries[tid].depends:
-+                revdeps[dep].add(tid)
-+        # Find the dependency chain endpoints
-+        endpoints = set()
-+        for tid in self.runtaskentries:
-+            if len(deps[tid]) == 0:
-+                endpoints.add(tid)
-+        # Iterate the chains collating dependencies
-+        while endpoints:
-+            next = set()
-+            for tid in endpoints:
-+                for dep in revdeps[tid]:
-+                    cumulativedeps[dep].add(fn_from_tid(tid))
-+                    cumulativedeps[dep].update(cumulativedeps[tid])
-+                    if tid in deps[dep]:
-+                        deps[dep].remove(tid)
-+                    if len(deps[dep]) == 0:
-+                        next.add(dep)
-+            endpoints = next
-+        #for tid in deps:
-+        #    if len(deps[tid]) != 0:
-+        #        bb.warn("Sanity test failure, dependencies left for %s (%s)" % (tid, deps[tid]))
-+
-         # Loop here since recrdeptasks can depend upon other recrdeptasks and we have to
-         # resolve these recursively until we aren't adding any further extra dependencies
-+        extradeps = True
-         while extradeps:
--            extradeps = {}
--
--            for taskcounter, tid in enumerate(recursivetasks):
--                extradeps[tid] = set()
--
-+            extradeps = 0
-+            for tid in recursivetasks:
-                 tasknames = recursivetasks[tid]
--                seendeps = set()
--                seenbasedeps = set()
--
--                def generate_recdeps(t):
--                    newdeps = set()
--                    basetid = fn_from_tid(t)
--                    if basetid not in seenbasedeps:
--                        for taskname in tasknames:
--                            newtid = tid_replacetask(t, taskname)
--                            if newtid in self.runtaskentries and newtid not in seendeps:
--                                newdeps.add(newtid)
--                                extradeps[tid].add(newtid)
--                        seenbasedeps.add(basetid)
--                    seendeps.add(t)
--                    newdeps.add(t)
--                    for i in newdeps:
--                        if i not in self.runtaskentries:
--                            # Not all recipes might have the recrdeptask task as a task
--                            continue
--                        for n in self.runtaskentries[i].depends:
--                            if n not in seendeps:
--                                 generate_recdeps(n)
--                generate_recdeps(tid)
- 
-+                totaldeps = set(self.runtaskentries[tid].depends)
-                 if tid in recursiveitasks:
-+                    totaldeps.update(recursiveitasks[tid])
-                     for dep in recursiveitasks[tid]:
--                        generate_recdeps(dep)
-+                        if dep not in self.runtaskentries:
-+                            continue
-+                        totaldeps.update(self.runtaskentries[dep].depends)
- 
--            for tid in self.runtaskentries:
--                # Add in extra dependencies
--                if tid in extradeps:
--                     extradeps[tid].difference_update(self.runtaskentries[tid].depends)
--                     self.runtaskentries[tid].depends.update(extradeps[tid])
--                     # Remove circular references so that do_a[recrdeptask] = "do_a do_b" can work
--                     self.runtaskentries[tid].depends.difference_update(recursivetasksselfref)
--                     extradeps[tid].difference_update(recursivetasksselfref)
--                     if not len(extradeps[tid]):
--                         del extradeps[tid]
--                     if tid not in recursivetasks:
--                        bb.warn(tid)
--                # Remove all self references
--                if tid in self.runtaskentries[tid].depends:
--                    logger.debug(2, "Task %s contains self reference!", tid)
--                    self.runtaskentries[tid].depends.remove(tid)
-+                deps = set()
-+                for dep in totaldeps:
-+                    if dep in cumulativedeps:
-+                        deps.update(cumulativedeps[dep])
-+
-+                for t in deps:
-+                    for taskname in tasknames:
-+                        newtid = t + ":" + taskname
-+                        if newtid == tid:
-+                            continue
-+                        if newtid in self.runtaskentries and newtid not in self.runtaskentries[tid].depends:
-+                            extradeps += 1
-+                            self.runtaskentries[tid].depends.add(newtid)
- 
--            bb.debug(1, "Added %s recursive dependencies in this loop" % len(extradeps))
-+                # Handle recursive tasks which depend upon other recursive tasks
-+                deps = set()
-+                for dep in self.runtaskentries[tid].depends.intersection(recursivetasks):
-+                    deps.update(self.runtaskentries[dep].depends.difference(self.runtaskentries[tid].depends))
-+                for newtid in deps:
-+                    for taskname in tasknames:
-+                        if not newtid.endswith(":" + taskname):
-+                            continue
-+                        if newtid in self.runtaskentries:
-+                            extradeps += 1
-+                            self.runtaskentries[tid].depends.add(newtid)
-+
-+            bb.debug(1, "Added %s recursive dependencies in this loop" % extradeps)
-+
-+        # Remove recrdeptask circular references so that do_a[recrdeptask] = "do_a do_b" can work
-+        for tid in self.runtaskentries:
-+            self.runtaskentries[tid].depends.difference_update(recursivetasksselfref)
- 
-         self.init_progress_reporter.next_stage()
- 
--- 
-2.7.4
+> We actually ran into that issue on a build system called Isar.
+> 
+> https://github.com/ilbers/isar
+> 
+> This build system executes some tasks in a chroot. In this chroot a
+> "shared" clone will not work because it expects its "alternate" to be
+> at the very same location it was outside the chroot. We considered
+> several hacks in Isar
+> - patching the alternates before and after chroot
+> - mounting the "alternate" to the exact location in chroot
+> None of this is really nice, so we decided to try and do something
+> about it upstream.
+> 
+> regards,
+> Henning
+> 
+> Am Wed, 20 Dec 2017 17:42:09 +0100
+> schrieb Henning Schild <henning.schild@siemens.com>:
+> 
+> > By default the unpacker will create a "shared" clone when cloning
+> > from the DL_DIR to the WORKDIR. This patch introduces an option to
+> > control that behaviour. Probably something that hardly anyone would
+> > want to do.
+> > 
+> > Imagine some recipe steps are executed in a namespace that is
+> > different from the one your downloader and unpacker ran in. (chroot)
+> > Because a "shared" clone has an absolute reference to its
+> > "alternate" you now have to make that "alternate" visible in that
+> > new namespace (chroot) at the exact place.
+> > 
+> > With this patch you can unpack "noshared" and get a stand-alone
+> > copy. This copy will also work if the "alternate" is not visible or
+> > existant.
+> > 
+> > Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> > ---
+> >  lib/bb/fetch2/git.py | 13 ++++++++++++-
+> >  1 file changed, 12 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> > index 5ef8cd69..7b7f02b2 100644
+> > --- a/lib/bb/fetch2/git.py
+> > +++ b/lib/bb/fetch2/git.py
+> > @@ -53,6 +53,13 @@ Supported SRC_URI options are:
+> >     For local git:// urls to use the current branch HEAD as the
+> > revision for use with AUTOREV. Implies nobranch.
+> >  
+> > +- noshared
+> > +   When unpacking do not clone with the parameter "--shared". This
+> > option will
+> > +   allow the unpacked copy to work stand-alone i.e. if your recipe
+> > runs in a
+> > +   chroot where the "alternate" can not be found. Setting this will
+> > increase
+> > +   the unpack-time and the disk-usage.
+> > +   The default is "0", set noshared=1 if needed.
+> > +
+> >  """
+> >  
+> >  #Copyright (C) 2005 Richard Purdie
+> > @@ -159,6 +166,8 @@ class Git(FetchMethod):
+> >  
+> >          ud.nobranch = ud.parm.get("nobranch","0") == "1"
+> >  
+> > +        ud.noshared = ud.parm.get("noshared","0") == "1"
+> > +
+> >          # usehead implies nobranch
+> >          ud.usehead = ud.parm.get("usehead","0") == "1"
+> >          if ud.usehead:
+> > @@ -176,7 +185,9 @@ class Git(FetchMethod):
+> >          if len(branches) != len(ud.names):
+> >              raise bb.fetch2.ParameterError("The number of name and
+> > branch parameters is not balanced", ud.url) 
+> > -        ud.cloneflags = "-s -n"
+> > +        ud.cloneflags = "-n"
+> > +        if not ud.noshared:
+> > +            ud.cloneflags += " -s"
+> >          if ud.bareclone:
+> >              ud.cloneflags += " --mirror"
+> >    
+> 
 
 
