@@ -1,54 +1,49 @@
-Return-Path: <tobias.hagelborn@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id EB0C7786DD
+Return-Path: <nathan@nathanrossi.com>
+Received: from mail-pg0-f67.google.com (mail-pg0-f67.google.com [74.125.83.67])
+	by mail.openembedded.org (Postfix) with ESMTP id EA05D7874D
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 13:12:36 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 2487D1870B
+	Wed, 31 Jan 2018 15:07:36 +0000 (UTC)
+Received: by mail-pg0-f67.google.com with SMTP id s9so10255381pgq.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 14:12:37 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id wLf7BeNByKCD for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 14:12:35 +0100 (CET)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-	by bastet.se.axis.com (Postfix) with ESMTPS id B3DD118708
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 14:12:35 +0100 (CET)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9FCF21A0BE
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 14:12:35 +0100 (CET)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 951651A0BD
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 14:12:35 +0100 (CET)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-	by boulder02.se.axis.com (Postfix) with ESMTP
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 14:12:35 +0100 (CET)
-Received: from XBOX02.axis.com (xbox02.axis.com [10.0.5.16])
-	by seth.se.axis.com (Postfix) with ESMTP id 892C022E7
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 14:12:35 +0100 (CET)
-Received: from [10.94.62.1] (10.0.5.60) by XBOX02.axis.com (10.0.5.16) with
-	Microsoft SMTP Server (TLS) id 15.0.1263.5;
-	Wed, 31 Jan 2018 14:12:35 +0100
-To: <bitbake-devel@lists.openembedded.org>
-References: <1517237992-4829-1-git-send-email-tobiasha@axis.com>
-From: Tobias Hagelborn <tobias.hagelborn@axis.com>
-Message-ID: <9102f27f-e424-4b6a-908b-fa43fb346cb4@axis.com>
-Date: Wed, 31 Jan 2018 14:12:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
-	Thunderbird/52.5.2
+	Wed, 31 Jan 2018 07:07:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=nathanrossi.com; s=google;
+	h=date:message-id:from:to:cc:subject:mime-version
+	:content-transfer-encoding;
+	bh=MarguXmhPdxorVSmkaBl/PwHCaWeYkihphXYoNVEg7A=;
+	b=SsncKkOBueMasntVwRfDmx8c+nzJ0DLbGK+/b0GOJIOV0BhDVp6b54cwEG65eq4wtT
+	DHvSrS12vi3qZ0n1boXZPMXBz6mh41TBUdo/DlO9ErwKA7nGTvbaZVGexWMX3ge4KInP
+	9VkTayRPBWjxcuFqQKGhJ1LT3tSqrp20Cr3A8icMuWP3s4cjFspOXqm1BJ0uII8pM9HI
+	3+PulCODfancUNXYnRc7/dPyX1toBY65cFr4ndrNvJTEF8k5T3IWHLOTJe0pDEBOuoRc
+	SotuHUWfak4do1HALMfxrrZghTJy+oeQe/59MhkJ9SC7op9Vt5HmCyDHHbQJOlKgPPP0
+	tVxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:date:message-id:from:to:cc:subject:mime-version
+	:content-transfer-encoding;
+	bh=MarguXmhPdxorVSmkaBl/PwHCaWeYkihphXYoNVEg7A=;
+	b=o7wU2F5ojA/vwfK8nba6smKMzXDXXM45R3Y8z75V6vWokZUPlhSTienymGLy0WgFxq
+	BUlUCIa3dexTcdFG98nHHNeQ51JjSX3VmDo0VX6KZPxrKX6aooXD8QQgz3O654CZliR/
+	Md7bI4ewXTDG2QDDE26us0NJaxG2ISnvCUF5YpAgDIonHMqtavbCbZcYpP/ze75SE3J+
+	byGHuVcl7ESbW4JQjLg0RgQ+gxuKOUQUFr/RSgLCDp3Zpn9s+odMyKtGtpOHBbwd8QWy
+	x/u/R1G5e4yGpnq0uu6LP5bthTUEeONIIyKlHPt73wLepu5rf5AAFm9tdRY/e5RSD7rx
+	AGNw==
+X-Gm-Message-State: AKwxytfHGUWQvIAJRX2vVskXdrujuDZvLs2ukyLlJXd3WukOolOV6f5C
+	uZfWcPz6cDKE+wTpSNx2OzUOoRKT/W0=
+X-Google-Smtp-Source: AH8x226J7wo+6TjInKD2Nrk0kgqHqDIJZWmUHhHbKOfr38zwuff0HLYwUTcrvizgZCjB1Ku3yFMwqw==
+X-Received: by 2002:a17:902:7841:: with SMTP id
+	e1-v6mr9108883pln.130.1517411257820; 
+	Wed, 31 Jan 2018 07:07:37 -0800 (PST)
+Received: from [127.0.1.1] ([101.163.12.83]) by smtp.gmail.com with ESMTPSA id
+	q73sm9134691pfl.37.2018.01.31.07.07.35
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 31 Jan 2018 07:07:37 -0800 (PST)
+Date: Thu, 01 Feb 2018 01:07:28 +1000
+Message-Id: <20180131150728.20962-1-nathan@nathanrossi.com>
+From: Nathan Rossi <nathan@nathanrossi.com>
+To: bitbake-devel@lists.openembedded.org
 MIME-Version: 1.0
-In-Reply-To: <1517237992-4829-1-git-send-email-tobiasha@axis.com>
-X-Originating-IP: [10.0.5.60]
-X-ClientProxiedBy: XBOX03.axis.com (10.0.5.17) To XBOX02.axis.com (10.0.5.16)
-X-TM-AS-GCONF: 00
-Subject: Re: [PATCH] bb.utils.movefiles: Support cross device move into existing directory
+Subject: [PATCH] fetch2: Handle missing donestamp file when content is valid
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,30 +56,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 31 Jan 2018 13:12:37 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+X-List-Received-Date: Wed, 31 Jan 2018 15:07:37 -0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 01/29/2018 03:59 PM, Tobias Hagelborn wrote:
-> This was a fully reproducable issue with populate_sdk using a setup of:
-> * Ubuntu 16 LTS / Linux kernel 4.4
-> * Docker 17 / storage-driver: overlay2 (overlayfs) (resulting in cross device copy)
-> * Our firmware image
-> 
-> Tobias Hagelborn (1):
->    utils.py: Support cross device move into existing directory
-> 
->   bitbake/lib/bb/utils.py | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
+In order to allow users to manually populate the download directory with
+valid content change the assumption that missing the donestamp file
+means unfetched content.
 
-Disregard this one. I missed that is is already fixed.
+This allows users to populate the download dir without needing to create
+dummy .done files such that a user does not need a PREMIRROR when using
+BB_NO_NETWORK to provide valid content files in the download directory.
 
-commit e4dae6320506db320d236c6b45f14f15a7c71c17
-Author: Mardegan, Alberto <AMardegan@luxoft.com>
-Date:   Thu Sep 21 14:33:52 2017 +0000
+Signed-off-by: Nathan Rossi <nathan@nathanrossi.com>
+---
+ lib/bb/fetch2/__init__.py | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 6bd040493e..7f290bb930 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -643,16 +643,13 @@ def verify_donestamp(ud, d, origud=None):
+     if not ud.needdonestamp or (origud and not origud.needdonestamp):
+         return True
+ 
+-    if not os.path.exists(ud.donestamp):
+-        return False
+-
+     if (not ud.method.supports_checksum(ud) or
+         (origud and not origud.method.supports_checksum(origud))):
+-        # done stamp exists, checksums not supported; assume the local file is
+-        # current
+-        return True
++        # if done stamp exists and checksums not supported; assume the local
++        # file is current
++        return os.path.exists(ud.donestamp)
+ 
+-    if not os.path.exists(ud.localpath):
++    if not os.path.exists(ud.localpath) and os.path.exists(ud.donestamp):
+         # done stamp exists, but the downloaded file does not; the done stamp
+         # must be incorrect, re-trigger the download
+         bb.utils.remove(ud.donestamp)
+@@ -662,7 +659,7 @@ def verify_donestamp(ud, d, origud=None):
+     # Only re-use the precomputed checksums if the donestamp is newer than the
+     # file. Do not rely on the mtime of directories, though. If ud.localpath is
+     # a directory, there will probably not be any checksums anyway.
+-    if (os.path.isdir(ud.localpath) or
++    if os.path.exists(ud.donestamp) and (os.path.isdir(ud.localpath) or
+             os.path.getmtime(ud.localpath) < os.path.getmtime(ud.donestamp)):
+         try:
+             with open(ud.donestamp, "rb") as cachefile:
+-- 
+2.15.1
 
-//Tobias
 
