@@ -1,26 +1,26 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 213067875C
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 60AC378711
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Feb 2018 15:15:10 +0000 (UTC)
+	Thu,  1 Feb 2018 15:15:17 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w11FFCI0021110
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w11FFFhY020326
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 1 Feb 2018 07:15:12 -0800 (PST)
+	Thu, 1 Feb 2018 07:15:18 -0800
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.361.1; Thu, 1 Feb 2018 07:15:11 -0800
+	14.3.361.1; Thu, 1 Feb 2018 07:15:13 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 1 Feb 2018 23:15:27 +0800
-Message-ID: <d3b070a54511d9396249dd771a78599f00e6d1cc.1517497731.git.liezhi.yang@windriver.com>
+Date: Thu, 1 Feb 2018 23:15:28 +0800
+Message-ID: <83c30f41462e2f78738b61f7beaf32411949fd7a.1517497731.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1517497731.git.liezhi.yang@windriver.com>
 References: <cover.1517497731.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 6/8] bitbake: parse: fixes for resolve_file()
+Subject: [PATCH 7/8] bitbake: cooker: fix event notifications
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,62 +33,119 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Feb 2018 15:15:11 -0000
+X-List-Received-Date: Thu, 01 Feb 2018 15:15:17 -0000
 Content-Type: text/plain
 
-The resolve_file() calls mark_dependency(), so the one which calls
-resolve_file() doesn't need call mark_dependency() again.
+There are two kinds of events:
+* directory
+  We always need handle the event since we don't know what inside the
+  directory, for example:
+  $ bitbake --server-only -T -1
+  $ bitbake -p
+  $ mkdir ${TOPDIR}/classes
+  $ cp /path/to/base.bbclass classes
+
+  The "${TOPDIR}/classes" is a new directory, the event only reports that the
+  directory is created, we don't know there is a base.bbclass unless the parser
+  runs.
+
+* file:
+  Use bb.parse.supports() to check whether bitbake supports it or not.
+
+And now the bbwatchedfiles is not needed anymore.
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/parse/__init__.py             | 3 ++-
- bitbake/lib/bb/parse/parse_py/BBHandler.py   | 3 ---
- bitbake/lib/bb/parse/parse_py/ConfHandler.py | 3 ---
- 3 files changed, 2 insertions(+), 7 deletions(-)
+ bitbake/lib/bb/cooker.py | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
-index 2fc4002..5397d57 100644
---- a/bitbake/lib/bb/parse/__init__.py
-+++ b/bitbake/lib/bb/parse/__init__.py
-@@ -134,8 +134,9 @@ def resolve_file(fn, d):
-         if not newfn:
-             raise IOError(errno.ENOENT, "file %s not found in %s" % (fn, bbpath))
-         fn = newfn
-+    else:
-+        mark_dependency(d, fn)
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 3f113ae..ffda225 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -177,14 +177,12 @@ class BBCooker:
  
--    mark_dependency(d, fn)
-     if not os.path.isfile(fn):
-         raise IOError(errno.ENOENT, "file %s not found" % fn)
+         self.configwatcher = pyinotify.WatchManager()
+         self.configwatcher.bbseen = []
+-        self.configwatcher.bbwatchedfiles = []
+         self.confignotifier = pyinotify.Notifier(self.configwatcher, self.config_notifications)
+         self.watchmask = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_CREATE | pyinotify.IN_DELETE | \
+                          pyinotify.IN_DELETE_SELF | pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF | \
+                          pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
+         self.watcher = pyinotify.WatchManager()
+         self.watcher.bbseen = []
+-        self.watcher.bbwatchedfiles = []
+         self.notifier = pyinotify.Notifier(self.watcher, self.notifications)
  
-diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-index f89ad24..e5039e3 100644
---- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-@@ -131,9 +131,6 @@ def handle(fn, d, include):
+         # If being called by something like tinfoil, we need to clean cached data
+@@ -247,10 +245,15 @@ class BBCooker:
+             self.baseconfig_valid = False
+             bb.parse.clear_cache()
+             return
+-        if not event.pathname in self.configwatcher.bbwatchedfiles:
+-            return
+-        if not event.pathname in self.inotify_modified_files:
+-            self.inotify_modified_files.append(event.pathname)
++
++        # Check whether it is a supported type when it is a file
++        if not event.dir:
++            if not bb.parse.supports(event.pathname, data):
++                return
++            if not event.pathname in self.inotify_modified_files:
++                self.inotify_modified_files.append(event.pathname)
++
++        bb.debug(1, "Get config inotify event: %s" % event)
+         self.baseconfig_valid = False
  
-     abs_fn = resolve_file(fn, d)
+     def notifications(self, event):
+@@ -259,18 +262,21 @@ class BBCooker:
+             self.parsecache_valid = False
+             bb.parse.clear_cache()
+             return
+-        if event.pathname.endswith("bitbake-cookerdaemon.log") \
+-                or event.pathname.endswith("bitbake.lock"):
+-            return
+-        if not event.pathname in self.inotify_modified_files:
+-            self.inotify_modified_files.append(event.pathname)
++
++        # Check whether it is a supported type when it is a file
++        if not event.dir:
++            if not bb.parse.supports(event.pathname, data):
++                return
++            if not event.pathname in self.inotify_modified_files:
++                self.inotify_modified_files.append(event.pathname)
++
++        bb.debug(1, "Get inotify event: %s" % event)
+         self.parsecache_valid = False
  
--    if include:
--        bb.parse.mark_dependency(d, abs_fn)
--
-     # actual loading
-     statements = get_statements(fn, abs_fn, base_name)
- 
-diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index 97aa130..9d3ebe1 100644
---- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-@@ -134,9 +134,6 @@ def handle(fn, data, include):
-     abs_fn = resolve_file(fn, data)
-     f = open(abs_fn, 'r')
- 
--    if include:
--        bb.parse.mark_dependency(data, abs_fn)
--
-     statements = ast.StatementGroup()
-     lineno = 0
-     while True:
+     def add_filewatch(self, deps, watcher=None, dirs=False):
+         if not watcher:
+             watcher = self.watcher
+         for i in deps:
+-            watcher.bbwatchedfiles.append(i[0])
+             if dirs:
+                 f = i[0]
+             else:
+@@ -278,19 +284,15 @@ class BBCooker:
+             if f in watcher.bbseen:
+                 continue
+             watcher.bbseen.append(f)
+-            watchtarget = None
+             while True:
+                 # We try and add watches for files that don't exist but if they did, would influence
+                 # the parser. The parent directory of these files may not exist, in which case we need
+                 # to watch any parent that does exist for changes.
+                 try:
+                     watcher.add_watch(f, self.watchmask, quiet=False)
+-                    if watchtarget:
+-                        watcher.bbwatchedfiles.append(watchtarget)
+                     break
+                 except pyinotify.WatchManagerError as e:
+                     if 'ENOENT' in str(e):
+-                        watchtarget = f
+                         f = os.path.dirname(f)
+                         if f in watcher.bbseen:
+                             break
 -- 
 2.7.4
 
