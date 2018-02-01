@@ -1,49 +1,29 @@
-Return-Path: <nathan@nathanrossi.com>
-Received: from mail-pg0-f67.google.com (mail-pg0-f67.google.com [74.125.83.67])
-	by mail.openembedded.org (Postfix) with ESMTP id EA05D7874D
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 5FCCA78432
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 15:07:36 +0000 (UTC)
-Received: by mail-pg0-f67.google.com with SMTP id s9so10255381pgq.13
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Jan 2018 07:07:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=nathanrossi.com; s=google;
-	h=date:message-id:from:to:cc:subject:mime-version
-	:content-transfer-encoding;
-	bh=MarguXmhPdxorVSmkaBl/PwHCaWeYkihphXYoNVEg7A=;
-	b=SsncKkOBueMasntVwRfDmx8c+nzJ0DLbGK+/b0GOJIOV0BhDVp6b54cwEG65eq4wtT
-	DHvSrS12vi3qZ0n1boXZPMXBz6mh41TBUdo/DlO9ErwKA7nGTvbaZVGexWMX3ge4KInP
-	9VkTayRPBWjxcuFqQKGhJ1LT3tSqrp20Cr3A8icMuWP3s4cjFspOXqm1BJ0uII8pM9HI
-	3+PulCODfancUNXYnRc7/dPyX1toBY65cFr4ndrNvJTEF8k5T3IWHLOTJe0pDEBOuoRc
-	SotuHUWfak4do1HALMfxrrZghTJy+oeQe/59MhkJ9SC7op9Vt5HmCyDHHbQJOlKgPPP0
-	tVxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:date:message-id:from:to:cc:subject:mime-version
-	:content-transfer-encoding;
-	bh=MarguXmhPdxorVSmkaBl/PwHCaWeYkihphXYoNVEg7A=;
-	b=o7wU2F5ojA/vwfK8nba6smKMzXDXXM45R3Y8z75V6vWokZUPlhSTienymGLy0WgFxq
-	BUlUCIa3dexTcdFG98nHHNeQ51JjSX3VmDo0VX6KZPxrKX6aooXD8QQgz3O654CZliR/
-	Md7bI4ewXTDG2QDDE26us0NJaxG2ISnvCUF5YpAgDIonHMqtavbCbZcYpP/ze75SE3J+
-	byGHuVcl7ESbW4JQjLg0RgQ+gxuKOUQUFr/RSgLCDp3Zpn9s+odMyKtGtpOHBbwd8QWy
-	x/u/R1G5e4yGpnq0uu6LP5bthTUEeONIIyKlHPt73wLepu5rf5AAFm9tdRY/e5RSD7rx
-	AGNw==
-X-Gm-Message-State: AKwxytfHGUWQvIAJRX2vVskXdrujuDZvLs2ukyLlJXd3WukOolOV6f5C
-	uZfWcPz6cDKE+wTpSNx2OzUOoRKT/W0=
-X-Google-Smtp-Source: AH8x226J7wo+6TjInKD2Nrk0kgqHqDIJZWmUHhHbKOfr38zwuff0HLYwUTcrvizgZCjB1Ku3yFMwqw==
-X-Received: by 2002:a17:902:7841:: with SMTP id
-	e1-v6mr9108883pln.130.1517411257820; 
-	Wed, 31 Jan 2018 07:07:37 -0800 (PST)
-Received: from [127.0.1.1] ([101.163.12.83]) by smtp.gmail.com with ESMTPSA id
-	q73sm9134691pfl.37.2018.01.31.07.07.35
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 31 Jan 2018 07:07:37 -0800 (PST)
-Date: Thu, 01 Feb 2018 01:07:28 +1000
-Message-Id: <20180131150728.20962-1-nathan@nathanrossi.com>
-From: Nathan Rossi <nathan@nathanrossi.com>
-To: bitbake-devel@lists.openembedded.org
+	Thu,  1 Feb 2018 11:53:36 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w11BrbJB019214
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 1 Feb 2018 03:53:37 -0800 (PST)
+Received: from localhost.localdomain (128.224.163.240) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.361.1; Thu, 1 Feb 2018 03:53:36 -0800
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	<bitbake-devel@lists.openembedded.org>
+References: <cover.1516265726.git.liezhi.yang@windriver.com>
+	<9a21e82b35b935826dd28413684f0918c00f9eb0.1516265726.git.liezhi.yang@windriver.com>
+	<1516360609.24502.18.camel@linuxfoundation.org>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <16625df3-2491-66ac-985f-00edff18a7d7@windriver.com>
+Date: Thu, 1 Feb 2018 19:53:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+	Thunderbird/52.5.0
 MIME-Version: 1.0
-Subject: [PATCH] fetch2: Handle missing donestamp file when content is valid
+In-Reply-To: <1516360609.24502.18.camel@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] parse: don't add attempted files to dependencies
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,58 +36,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 31 Jan 2018 15:07:37 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 01 Feb 2018 11:53:37 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-In order to allow users to manually populate the download directory with
-valid content change the assumption that missing the donestamp file
-means unfetched content.
+Hi RP,
 
-This allows users to populate the download dir without needing to create
-dummy .done files such that a user does not need a PREMIRROR when using
-BB_NO_NETWORK to provide valid content files in the download directory.
+On 01/19/2018 07:16 PM, Richard Purdie wrote:
+> On Thu, 2018-01-18 at 16:57 +0800, Robert Yang wrote:
+>> The attempts are the files that it tries to search but don't exist,
+>> it searches the file in BBPATH until find it, so the attempts might
+>> be very long when there are many layers, which causes bb_cache.dat
+>> very big (I have 54 layers, the bb_cache.dat can be 119M, and even
+>> much bigger depends on the order of BBLAYERS).
+>>
+>> Here is the testing data of 54 layers before and after the patch.
+>>
+>>                      Before          After
+>> Parsing time        33s             9s
+>> Loading time        30s             5s
+>> Cache size          119M            20M
+>>
+>> The time and size can be more or less depends on the order of
+>> BBLAYERS before the patch.
+>>
+>> I checked the code, but didn't find why we need the attempts as
+>> dependencies, the one that I can think of is the file doesn't exist
+>> when parsing, and added to the attempts location after parsing, but
+>> the parseBaseConfiguration() can detect and handle this well (and
+>> will cause reparse in such a case), so I think that we can safely
+>> remove them from dependencies since they have side effects.
+> 
+> If you have a memory resident bitbake you need to know which files to
+> watch for with inotify. If a file is created somewhere which would have
+> been parsed had it existed when we originally parsed, we need to
+> invalidate the cache and reparse. This needs to happen for the metadata
+> itself, not just the base configuration.
+> 
+> I therefore strongly suspect we do need these unfortunately. There may
+> be some ways we can condense the dependency information though to
+> reduce the cache load times.
 
-Signed-off-by: Nathan Rossi <nathan@nathanrossi.com>
----
- lib/bb/fetch2/__init__.py | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+Yes, you're right, after a lot of investigations, I found that the bottle
+neck is add_info() calls add_filewatch(), and add_filewatch runs too many
+loops inside, but most of them are not needed, I've reduced the size
+passed to add_filewatch(), which makes us save a lot of parse time,
+but the size of bb_cache.dat can't be reduced since it needs save
+all the attempted files. It seems that we can't get rid of
+that for memory resident bitbake, but I think that it's fine since parsing
+time is reduced. I will send the patches after more testing.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 6bd040493e..7f290bb930 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -643,16 +643,13 @@ def verify_donestamp(ud, d, origud=None):
-     if not ud.needdonestamp or (origud and not origud.needdonestamp):
-         return True
- 
--    if not os.path.exists(ud.donestamp):
--        return False
--
-     if (not ud.method.supports_checksum(ud) or
-         (origud and not origud.method.supports_checksum(origud))):
--        # done stamp exists, checksums not supported; assume the local file is
--        # current
--        return True
-+        # if done stamp exists and checksums not supported; assume the local
-+        # file is current
-+        return os.path.exists(ud.donestamp)
- 
--    if not os.path.exists(ud.localpath):
-+    if not os.path.exists(ud.localpath) and os.path.exists(ud.donestamp):
-         # done stamp exists, but the downloaded file does not; the done stamp
-         # must be incorrect, re-trigger the download
-         bb.utils.remove(ud.donestamp)
-@@ -662,7 +659,7 @@ def verify_donestamp(ud, d, origud=None):
-     # Only re-use the precomputed checksums if the donestamp is newer than the
-     # file. Do not rely on the mtime of directories, though. If ud.localpath is
-     # a directory, there will probably not be any checksums anyway.
--    if (os.path.isdir(ud.localpath) or
-+    if os.path.exists(ud.donestamp) and (os.path.isdir(ud.localpath) or
-             os.path.getmtime(ud.localpath) < os.path.getmtime(ud.donestamp)):
-         try:
-             with open(ud.donestamp, "rb") as cachefile:
--- 
-2.15.1
+// Robert
 
+> 
+> Cheers,
+> 
+> Richard
+> 
 
