@@ -1,24 +1,22 @@
 Return-Path: <andrej.valek@siemens.com>
-X-Greylist: delayed 453 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 01 Feb 2018 15:54:35 UTC
-Received: from goliath.siemens.de (goliath.siemens.de [192.35.17.28])
-	by mail.openembedded.org (Postfix) with ESMTP id CB03E786D2
+Received: from david.siemens.de (david.siemens.de [192.35.17.14])
+	by mail.openembedded.org (Postfix) with ESMTP id 40CE378825
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Feb 2018 15:54:35 +0000 (UTC)
+	Thu,  1 Feb 2018 16:06:14 +0000 (UTC)
 Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-	by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id w11FsZMR013818
+	by david.siemens.de (8.15.2/8.15.2) with ESMTPS id w11Fl33L005613
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 1 Feb 2018 16:54:35 +0100
+	Thu, 1 Feb 2018 16:47:03 +0100
 Received: from [192.168.253.100] (sk1d124c.siemens.sk [163.242.57.217])
-	by mail1.sbs.de (8.15.2/8.15.2) with ESMTPS id w11FsYNc025878
+	by mail1.sbs.de (8.15.2/8.15.2) with ESMTPS id w11Fl2OT005019
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 1 Feb 2018 16:54:35 +0100
+	Thu, 1 Feb 2018 16:47:02 +0100
 To: bitbake-devel@lists.openembedded.org
 From: Andrej Valek <andrej.valek@siemens.com>
-Message-ID: <a1ac7309-f1b9-6788-2973-4115f8283911@siemens.com>
-Date: Thu, 1 Feb 2018 16:54:34 +0100
+Message-ID: <54c4f060-bfe9-f8f7-c141-c80f1aef1705@siemens.com>
+Date: Thu, 1 Feb 2018 16:47:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
 	Thunderbird/52.5.2
 MIME-Version: 1.0
@@ -35,10 +33,10 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Feb 2018 15:54:36 -0000
+X-List-Received-Date: Thu, 01 Feb 2018 16:06:15 -0000
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi all,
 
