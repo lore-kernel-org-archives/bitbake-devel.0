@@ -1,26 +1,26 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 31A2F7871D
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id D0A7478733
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Feb 2018 15:14:59 +0000 (UTC)
+	Thu,  1 Feb 2018 15:15:00 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w11FF1AJ024866
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w11FF288021107
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 1 Feb 2018 07:15:01 -0800 (PST)
+	Thu, 1 Feb 2018 07:15:02 -0800 (PST)
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.361.1; Thu, 1 Feb 2018 07:15:00 -0800
+	14.3.361.1; Thu, 1 Feb 2018 07:15:01 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 1 Feb 2018 23:15:23 +0800
-Message-ID: <a81f9d5903350f2852919ba2d47d9be82b159732.1517497731.git.liezhi.yang@windriver.com>
+Date: Thu, 1 Feb 2018 23:15:24 +0800
+Message-ID: <7eb5625a77c9545119a6f43b82c7680c9019cf4f.1517497731.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1517497731.git.liezhi.yang@windriver.com>
 References: <cover.1517497731.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/8] bitbake: cooker: fix for BBFILE_PATTERN matches bbappend
+Subject: [PATCH 3/8] bitbake: cooker: don't stop file notifier when cooker is shutdown
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,58 +36,52 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Thu, 01 Feb 2018 15:15:00 -0000
 Content-Type: text/plain
 
-The old code couldn't handle nestled layers correctly, e.g.:
-parent_layer/sub_layer/foo.bb
+It should be live/exited with server rather than cooker, fixed:
+$ bitbake --server-only -T -1
+Set MACHINE = "qemux86" in conf/local.conf
+$ bitbake quilt
+Set MACHINE = "qemuppc" in conf/local.conf
+$ bitbake quilt
+[snip]
+ERROR: When reparsing /workspace1/lyang1/poky/meta/recipes-connectivity/openssl/openssl_1.0.2m.bb.do_package, the basehash value changed from c216f7f4fdd3cf4a0b10b975a636426c to d5a8e9431ab261381752d7a64c7b2fa9. The metadata is not deterministic and this needs to be fixed.
+[snip]
 
-Note there are two layers, parent_layer and sub_layer.
-And in parent_layer/conf/layer.conf:
-BBFILE_PATTERN_parent_layer = ""^${LAYERDIR}/"
-
-This setting is incorrect since it also matches parent_layer/sub_layer/foo.bb,
-so it warns that no files matched sub_layer, this is the expected behavior, but
-it doesn't warn when there is a parent_layer/sub_layer/bar.bbappend, this was
-incorrect since the bbappend is also matched by BBFILE_PATTERN_parent_layer, it
-should warn and let the user fix the problem. Check the bbappend in already
-"matched set" before return it as matched by "unmatched set" can fix the problem.
+This is because the server doesn't know local.conf is changed since the
+notifiers are stopped, so it doesn't reparse, and then we would get the errors,
+let the notifiers live/exited with server can fix the problem.
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/cooker.py | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/cooker.py         | 2 --
+ bitbake/lib/bb/server/process.py | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index f0dab97..f991c8f 100644
+index f991c8f..af482f9 100644
 --- a/bitbake/lib/bb/cooker.py
 +++ b/bitbake/lib/bb/cooker.py
-@@ -1808,21 +1808,25 @@ class CookerCollectFiles(object):
-             realfn, cls, mc = bb.cache.virtualfn2realfn(p)
-             priorities[p] = self.calc_bbfile_priority(realfn, matched)
+@@ -1604,8 +1604,6 @@ class BBCooker:
  
--        # Don't show the warning if the BBFILE_PATTERN did match .bbappend files
-         unmatched = set()
-         for _, _, regex, pri in self.bbfile_config_priorities:
-             if not regex in matched:
-                 unmatched.add(regex)
+         if self.parser:
+             self.parser.shutdown(clean=not force, force=force)
+-        self.notifier.stop()
+-        self.confignotifier.stop()
  
--        def findmatch(regex):
-+        # Don't show the warning if the BBFILE_PATTERN did match .bbappend files
-+        def find_bbappend_match(regex):
-             for b in self.bbappends:
-                 (bbfile, append) = b
-                 if regex.match(append):
-+                    # If the bbappend is matched by already "matched set", return False
-+                    for matched_regex in matched:
-+                        if matched_regex.match(append):
-+                            return False
-                     return True
-             return False
+     def finishcommand(self):
+         self.state = state.initial
+diff --git a/bitbake/lib/bb/server/process.py b/bitbake/lib/bb/server/process.py
+index 3d31355..828159e 100644
+--- a/bitbake/lib/bb/server/process.py
++++ b/bitbake/lib/bb/server/process.py
+@@ -223,6 +223,8 @@ class ProcessServer(multiprocessing.Process):
  
-         for unmatch in unmatched.copy():
--            if findmatch(unmatch):
-+            if find_bbappend_match(unmatch):
-                 unmatched.remove(unmatch)
+         try: 
+             self.cooker.shutdown(True)
++            self.cooker.notifier.stop()
++            self.cooker.confignotifier.stop()
+         except:
+             pass
  
-         for collection, pattern, regex, _ in self.bbfile_config_priorities:
 -- 
 2.7.4
 
