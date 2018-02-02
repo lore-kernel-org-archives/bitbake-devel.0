@@ -1,51 +1,47 @@
-Return-Path: <nathan@nathanrossi.com>
-Received: from mail-pl0-f65.google.com (mail-pl0-f65.google.com
-	[209.85.160.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 374BE78816
+Return-Path: <zboszor@pr.hu>
+X-Greylist: delayed 729 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 02 Feb 2018 17:20:27 UTC
+Received: from mail7.pr.hu (mail7.pr.hu [87.242.0.7])
+	by mail.openembedded.org (Postfix) with ESMTP id 3CD58782F6
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  2 Feb 2018 14:04:36 +0000 (UTC)
-Received: by mail-pl0-f65.google.com with SMTP id j19so6262428pll.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Feb 2018 06:04:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=nathanrossi.com; s=google;
-	h=date:message-id:from:to:cc:subject:mime-version
-	:content-transfer-encoding;
-	bh=86MLOWc9sA5aUkqCOC/eiZ+ykN4EyJ0kNpJe+U3FQFs=;
-	b=a2E0UIgvo950I5fQTr7EeFqmuGdnBu/fkVbHEA/iE477YfWsfbAht8Hc0W2L164q/Z
-	WCAfkhCxRZSNrlV5eg8nCZa+jlF1wVKsmcNp1mYcZFGV7xX+UwvWIMGTWC2+NftxWDCu
-	Qzb+LbJjej1Y6Ez5KcMltgzqQTz+vv7y+fNSVmbVneJW4mxzVUKbqSXQjhAzUDGsww1X
-	Ysk8OvLH/g1Q2XVKhVasodppZO1bqxKlCmL2d2jA49fqV1KmgsWs+SNxKkUfmpNkSiN2
-	R2IK9qvmBr00tixxRysp/UO4YYhCPwCv2vnHhCiUxzRDV9q20fTtIMCQLtwfV4xZfin6
-	xX6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:date:message-id:from:to:cc:subject:mime-version
-	:content-transfer-encoding;
-	bh=86MLOWc9sA5aUkqCOC/eiZ+ykN4EyJ0kNpJe+U3FQFs=;
-	b=JHYD7R0ikmsxrfE8xhl1Gh5/XnUfBC03wi/4SCDw8pVVu3WGRKTmF+PEDylXUYF6O7
-	f7xBhpwLG+t87d9OA/Jz1rjjSaVuOU0aPBhMF7U+1T3XyhD+TU7xEPI91M+V7ZKI2J+5
-	60SKyF9Xcw4Oe8iy+q1wNXtrWNO3mJN+R2vPnzvZ0Oh5poIRCk/gTWcKPtjsU/CP37zD
-	/y+djMH67/JIry5Ph//KQIl7nu/rcP6umvv2vN6MGKEhi160n+hdEERkh2vDcXwM4chb
-	wXY+xKvk1nLeV0RNqG4bfpVGOCBgPmrRNPbtP7xq3R4S/LSNxHhSBHyXtDy9tLVSdieb
-	Pl3A==
-X-Gm-Message-State: AKwxyteVhCBeXT2K1hJa6jYeRwVMzjhiGtymEhAW4Xh0NfgfcnjZ+Bfx
-	N7gRyuZVvwsKdamAplEem/wCKn+VuaQ=
-X-Google-Smtp-Source: AH8x224YG0+ykJvna9ueVlM6jpMUDcQRSDLKDI0Hh1jN3WiAMiT/gXWiBDdqh7HnqlrYj14EBvFN8g==
-X-Received: by 2002:a17:902:6e88:: with SMTP id
-	v8-v6mr35614632plk.374.1517580278255; 
-	Fri, 02 Feb 2018 06:04:38 -0800 (PST)
-Received: from [127.0.1.1] (CPE-101-163-12-83.lnse6.cha.bigpond.net.au.
-	[101.163.12.83]) by smtp.gmail.com with ESMTPSA id
-	65sm4570070pfm.152.2018.02.02.06.04.36
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 02 Feb 2018 06:04:37 -0800 (PST)
-Date: Sat, 03 Feb 2018 00:04:30 +1000
-Message-Id: <20180202140430.3503-1-nathan@nathanrossi.com>
-From: Nathan Rossi <nathan@nathanrossi.com>
+	Fri,  2 Feb 2018 17:20:27 +0000 (UTC)
+Received: from [2a02:808:3:101::5] (helo=mail.pr.hu)
+	by frontdoor.pr.hu with esmtps
+	(TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim 4.89)
+	(envelope-from <zboszor@pr.hu>) id 1ehep3-0003Rw-8E
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 02 Feb 2018 18:08:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=pr.hu;
+	s=pr20170203;
+	h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+	Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=jmDWbCzy3Hs/bZ1h0+NVY4wv+96FYJFYI4HETcddxpI=;
+	b=WqeskkgHzRtNB9iRnpAZ2RfHF8
+	+TWE6lWGL4N7ZYttwwzlGlk1RKwIdj/nCXu23uF5GmXi2jYXzQQag1nG8BsX3wnOanSrAVz5VDjVU
+	EP1orvLLdS2Mls0m2Swf6xXGaKxmzOJIsmhP7EAYgNxWs8ocNUcaMg09znXQlg64+s2lNJuOQxUQl
+	90LYlQIPSSXEMayLNIeFsv+JMRoOCPSWzLPasQ5lZ1Nu6XK0WMEaZtsBgeKx2WkzHzaHbwQ4kr14w
+	/15GTGnuWJO5WrvcgSliCrmH3CqnC6+OyvT4d3YKqqrYJoFFXfC61ULteQlSL9kJ3K23QlOfUwhzR
+	tm5zZv+w==;
+Received: from host-87-242-32-111.prtelecom.hu ([87.242.32.111]
+	helo=s002.sicom.com)
+	by mail.pr.hu with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.89) (envelope-from <zboszor@pr.hu>) id 1eheow-0007bv-Iq
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 02 Feb 2018 18:08:16 +0100
 To: bitbake-devel@lists.openembedded.org
+From: =?UTF-8?B?QsO2c3rDtnJtw6lueWkgWm9sdMOhbg==?= <zboszor@pr.hu>
+Message-ID: <6c003a37-1455-4a3c-4b67-9a212cda5292@pr.hu>
+Date: Fri, 2 Feb 2018 18:08:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+	Thunderbird/52.5.2
 MIME-Version: 1.0
-Subject: [PATCH] fetch/git: Use 'git-make-shallow' from bin directory
+X-Spam-Score: 0.5 (/)
+X-Scan-Signature: 9c5e05eb7b369c1b31c27083e129340a
+X-Spam-Tracer: backend.mail.pr.hu 0.5 20180202170816Z
+Subject: Bitbake npm fetcher goes into infinite loop
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,70 +54,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Feb 2018 14:04:37 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 02 Feb 2018 17:20:28 -0000
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-Move the code that existed in tests/fetch.py for determining the path to
-'git-make-shallow' into the git module and reference it.
+Hi,
 
-This ensures that 'git-make-shallow' is always available and the desired
-version regardless of the path variable or whether git exposes the
-command.
+I have found a node module (cli-color) whose dependencies
+seem to contain a circular dependency among themselves
+and the do_fetch phase goes into an infinite loop:
 
-Signed-off-by: Nathan Rossi <nathan@nathanrossi.com>
----
- lib/bb/fetch2/git.py  | 5 ++++-
- lib/bb/tests/fetch.py | 5 +----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+...
+DEBUG: Calling getdeps on d
+DEBUG: Running export PATH="..."; export HOME="/home/zboszormenyi"; npm view d@'1' --json 
+--registry http://registry.npmjs.org/
+DEBUG: Calling getdeps on es5-ext
+DEBUG: Running export PATH="..."; export HOME="/home/zboszormenyi"; npm view 
+es5-ext@'^0.10.9' --json --registry http://registry.npmjs.org/
+DEBUG: Calling getdeps on es6-symbol
+DEBUG: Running export PATH="..."; export HOME="/home/zboszormenyi"; npm view 
+es6-symbol@'~3.1.1' --json --registry http://registry.npmjs.org/
+DEBUG: Calling getdeps on d
+...
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index d34ea1de29..35e0db56cf 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -125,6 +125,9 @@ class GitProgressHandler(bb.progress.LineFilterProgressHandler):
- 
- 
- class Git(FetchMethod):
-+    bitbake_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), '..', '..', '..'))
-+    make_shallow_path = os.path.join(bitbake_dir, 'bin', 'git-make-shallow')
-+
-     """Class to fetch a module or modules from git repositories"""
-     def init(self, d):
-         pass
-@@ -446,7 +449,7 @@ class Git(FetchMethod):
-                 shallow_branches.append(r)
- 
-         # Make the repository shallow
--        shallow_cmd = ['git', 'make-shallow', '-s']
-+        shallow_cmd = [self.make_shallow_path, '-s']
-         for b in shallow_branches:
-             shallow_cmd.append('-r')
-             shallow_cmd.append(b)
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 7051a54b42..d711c77d35 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -978,9 +978,6 @@ class FetchCheckStatusTest(FetcherTest):
- 
- 
- class GitMakeShallowTest(FetcherTest):
--    bitbake_dir = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), '..', '..', '..')
--    make_shallow_path = os.path.join(bitbake_dir, 'bin', 'git-make-shallow')
--
-     def setUp(self):
-         FetcherTest.setUp(self)
-         self.gitdir = os.path.join(self.tempdir, 'gitshallow')
-@@ -1009,7 +1006,7 @@ class GitMakeShallowTest(FetcherTest):
-     def make_shallow(self, args=None):
-         if args is None:
-             args = ['HEAD']
--        return bb.process.run([self.make_shallow_path] + args, cwd=self.gitdir)
-+        return bb.process.run([bb.fetch2.git.Git.make_shallow_path] + args, cwd=self.gitdir)
- 
-     def add_empty_file(self, path, msg=None):
-         if msg is None:
--- 
-2.15.1
+I am using Yocto 2.4 that reports using Bitbake 1.36:
+BB_VERSION           = "1.36.0"
 
+I am happy to test patches that fix this.
+
+Thanks in advance,
+Zoltán Böszörményi
 
