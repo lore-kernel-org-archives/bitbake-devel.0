@@ -1,26 +1,26 @@
-Return-Path: <andrej.valek@siemens.com>
-Received: from david.siemens.de (david.siemens.de [192.35.17.14])
-	by mail.openembedded.org (Postfix) with ESMTP id 40CE378825
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id BE8E67881D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Feb 2018 16:06:14 +0000 (UTC)
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-	by david.siemens.de (8.15.2/8.15.2) with ESMTPS id w11Fl33L005613
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 1 Feb 2018 16:47:03 +0100
-Received: from [192.168.253.100] (sk1d124c.siemens.sk [163.242.57.217])
-	by mail1.sbs.de (8.15.2/8.15.2) with ESMTPS id w11Fl2OT005019
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 1 Feb 2018 16:47:02 +0100
-To: bitbake-devel@lists.openembedded.org
-From: Andrej Valek <andrej.valek@siemens.com>
-Message-ID: <54c4f060-bfe9-f8f7-c141-c80f1aef1705@siemens.com>
-Date: Thu, 1 Feb 2018 16:47:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
-	Thunderbird/52.5.2
-MIME-Version: 1.0
-Subject: http AUTOREV feature
+	Fri,  2 Feb 2018 11:19:16 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	w12BJFtN003857
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Fri, 2 Feb 2018 11:19:16 GMT
+Message-ID: <1517570355.3090.58.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Fri, 02 Feb 2018 11:19:15 +0000
+In-Reply-To: <83c30f41462e2f78738b61f7beaf32411949fd7a.1517497731.git.liezhi.yang@windriver.com>
+References: <cover.1517497731.git.liezhi.yang@windriver.com>
+	<83c30f41462e2f78738b61f7beaf32411949fd7a.1517497731.git.liezhi.yang@windriver.com>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+X-Virus-Scanned: clamav-milter 0.99.2 at dan
+X-Virus-Status: Clean
+Subject: Re: [PATCH 7/8] bitbake: cooker: fix event notifications
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,39 +33,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Feb 2018 16:06:15 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-List-Received-Date: Fri, 02 Feb 2018 11:19:17 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+On Thu, 2018-02-01 at 23:15 +0800, Robert Yang wrote:
+> There are two kinds of events:
+> * directory
+>   We always need handle the event since we don't know what inside the
+>   directory, for example:
+>   $ bitbake --server-only -T -1
+>   $ bitbake -p
+>   $ mkdir ${TOPDIR}/classes
+>   $ cp /path/to/base.bbclass classes
+> 
+>   The "${TOPDIR}/classes" is a new directory, the event only reports
+> that the
+>   directory is created, we don't know there is a base.bbclass unless
+> the parser
+>   runs.
+> 
+> * file:
+>   Use bb.parse.supports() to check whether bitbake supports it or
+> not.
+> 
+> And now the bbwatchedfiles is not needed anymore.
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/cooker.py | 34 ++++++++++++++++++----------------
+>  1 file changed, 18 insertions(+), 16 deletions(-)
 
-I would like to ask You a question about AUTOREV feature request.
+I'm not sure you can do this. For example, bitbake itself doesn't
+know/care about *.patch files, however if one is referenced in a
+SRC_URI and ends up on the watch list, would this change break a patch
+file changing causing task checksums to change?
 
-I would like to have the same AUTOREV feature for http/s, ftp file
-downloading like in git/svn. This feature will download new files even
-if a recipe wasn't changed.
+Its looking like we need better tests for some of this code too :/.
 
-I have made some tests in bbclass, how could be working.
+Cheers,
 
-for uri in d.getVar('SRC_URI', True).split():
-   (scheme, _ , path) = bb.fetch.decodeurl(uri)[:3]
+Richard
 
-   if scheme in ("http", "https", "ftp"):
-   # get remote file timestamp
-      try:
-         resp = urlopen(uri, timeout=5)
-         timestamp = resp.info().getheaders("Last-Modified")[0]
-      except Exception as e:
-         bb.warn("Error gettig timestamp for %s (%s)" % (uri, e))
-
-This stuff just downloads header data (not the whole file). From the
-header parses last modification timestamp. This timestamp will be
-converted into md5sum and appended set into AUTOREV variable like
-"+httpXXXXX".
-
-What do you think about it? Would be this kind of feature acceptable?
-
-Regards,
-Andrej
 
