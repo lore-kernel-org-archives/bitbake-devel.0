@@ -1,26 +1,41 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 0D0D260017
+Return-Path: <nicolas.dechesne@linaro.org>
+Received: from mail-qt0-f179.google.com (mail-qt0-f179.google.com
+	[209.85.216.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 70D296E5CB
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Feb 2018 08:01:16 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w1781HgW015990
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	Wed,  7 Feb 2018 15:04:54 +0000 (UTC)
+Received: by mail-qt0-f179.google.com with SMTP id g14so2021335qti.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 7 Feb 2018 00:01:17 -0800
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.361.1; Wed, 7 Feb 2018 00:01:11 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 7 Feb 2018 16:01:59 +0800
-Message-ID: <74b27cc930eecdc050e2da35135ba788e7f1f9b0.1517990305.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1517990305.git.liezhi.yang@windriver.com>
-References: <cover.1517990305.git.liezhi.yang@windriver.com>
+	Wed, 07 Feb 2018 07:04:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linaro.org; s=google;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=89gsmRjtQOOv0+GICRsbOlDkqsTaGBl/4zIDsFaaGmM=;
+	b=YIvj8lR85BFIC4LzgULodRnpLvmsnvkdoSOi2q4MQNldw+D1xTdfothyPO5TDL9yiy
+	L96wbgpDzu34cSf4fjNyRA415rkdIQlo5MEHNWTM8o2IJ2WWIUSsqu2+9CRoYLUebs3d
+	9sLFGzmkYNzZIK6XF7pLHPl8kuSJaU5LLIRQs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=89gsmRjtQOOv0+GICRsbOlDkqsTaGBl/4zIDsFaaGmM=;
+	b=GiGnGAwXVDPF7ADyXZo7zR7hcNccSlFKNYAmhAC8HwtbZmgqK+6ni6L5BzotoWKlRK
+	S2ErWlis20xrdCwMUOuGip/PRX18AXrj8FGdXR+8FeYgkd2bj+7g5jYAjcYvS882UFqY
+	Eqw6RdVleAAK+sHPOEO858L/Lt+ekvcMMAyYbX+q8Fbn814NnM3XpTkDyM5AVRntYVSO
+	UpWU50OFnPpnwV2mAwsPIq/swxVj9UkbwRY7Z7Ux6WpKnVVFEHf6NkK400s+TiUZx52y
+	YxZ5fRqo83dkesI1XOcgzsHs2YnCaVTL8mF0QMfcKOWpGEm1mMjWJhNmSAJvARb1+wfA
+	po7g==
+X-Gm-Message-State: APf1xPB78du1/j1S5EFiME/AL+K4a8eAOfwvTmigIV5Tk+z10OjDYIdK
+	Ng+NB/DM0cgE/1fR4I5kJCKKICMXoJFUA3CnSRdmR2nvYbo=
+X-Google-Smtp-Source: AH8x227O1As8/KNyTO4LlvAXPPcPEcr6VkYOeahqasvaEuOrFWb2C0q37BqWPWi3QpAjwai7qQjgd7CDKzKHlCvel38=
+X-Received: by 10.237.45.1 with SMTP id h1mr9800812qtd.34.1518015895297; Wed,
+	07 Feb 2018 07:04:55 -0800 (PST)
 MIME-Version: 1.0
-Subject: [PATCH 1/1] contrib/dump_cache.py: make it can dump everything
+Received: by 10.140.102.243 with HTTP; Wed, 7 Feb 2018 07:04:34 -0800 (PST)
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Date: Wed, 7 Feb 2018 16:04:34 +0100
+Message-ID: <CAP71WjygD3eM2fhhU5JG6Kn3_y=mH1fzy+aVrQFKtp+ED_yoog@mail.gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	Ryan Harkin <ryan.harkin@linaro.org>
+Subject: git fetcher and github pull requests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,154 +48,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Feb 2018 08:01:17 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 07 Feb 2018 15:04:55 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-Have a simple tool to dump bb_cache.dat is useful for investigating and
-studying bitbake cache. The old contrib/dump_cache.py can dump pn, pv and
-packages for it, now enhance it dump everything.
+hi there,
 
-Here is the usage:
-$ /path/to/dump_cache.py --help
-usage: dump_cache.py [-h] [-r RECIPE] [-m MEMBERS] [-s] cachefile
+we've been debugging an issue these days on our builder which ended up
+ do_fetch failing with
 
-bb_cache.dat's dumper
+LANG=C git -c core.fsyncobjectfiles=0 fetch -f --prune --progress
+git://github.com/OP-TEE/optee_test.git refs/*:refs/* failed with exit
+code 128, output:
+error: Could not read 48e440f5f8d033e1ace6e41f424ecf6e6d96e5f2
+error: Could not read 019a8db54beb29388e1108831d2e2dc135c1cd73
 
-positional arguments:
-  cachefile             specify bb_cache.dat
+It happens that these refs correspond to pull requests done on github
+which existed at some point, but have been updated with newer commits,
+and won't exist anymore.
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -r RECIPE, --recipe RECIPE
-                        specify the recipe, default: all recipes
-  -m MEMBERS, --members MEMBERS
-                        specify the member, use comma as separator for
-                        multiple ones, default: all members
-  -s, --skip            skip skipped recipes
+the bitbake fetcher seems to be greedy and fetches refs/* which ends
+up fetching pull request when fetching from github, e.g. in my
+workspace:
 
-Use dump_cache.py --help to get help
+in $DL_DIR/git2/
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/contrib/dump_cache.py | 85 ++++++++++++++++++++++++++-----------------
- 1 file changed, 51 insertions(+), 34 deletions(-)
+github.com.docker.containerd.git/refs/pull/66
+github.com.docker.containerd.git/refs/pull/459
+github.com.docker.containerd.git/refs/pull/551
+github.com.docker.containerd.git/refs/pull/321
+github.com.docker.containerd.git/refs/pull/60
+github.com.docker.containerd.git/refs/pull/523
+github.com.docker.containerd.git/refs/pull/40
+github.com.docker.containerd.git/refs/pull/561
 
-diff --git a/bitbake/contrib/dump_cache.py b/bitbake/contrib/dump_cache.py
-index f4d4c1b..8963ca4 100755
---- a/bitbake/contrib/dump_cache.py
-+++ b/bitbake/contrib/dump_cache.py
-@@ -2,7 +2,7 @@
- # ex:ts=4:sw=4:sts=4:et
- # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
--# Copyright (C) 2012 Wind River Systems, Inc.
-+# Copyright (C) 2012, 2018 Wind River Systems, Inc.
- #
- # This program is free software; you can redistribute it and/or modify
- # it under the terms of the GNU General Public License version 2 as
-@@ -18,51 +18,68 @@
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
- #
--# This is used for dumping the bb_cache.dat, the output format is:
--# recipe_path PN PV PACKAGES
-+# Used for dumping the bb_cache.dat
- #
- import os
- import sys
--import warnings
-+import argparse
- 
- # For importing bb.cache
- sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '../lib'))
- from bb.cache import CoreRecipeInfo
- 
--import pickle as pickle
-+import pickle
- 
--def main(argv=None):
--    """
--    Get the mapping for the target recipe.
--    """
--    if len(argv) != 1:
--        print("Error, need one argument!", file=sys.stderr)
--        return 2
-+class DumpCache(object):
-+    def __init__(self):
-+        parser = argparse.ArgumentParser(
-+            description="bb_cache.dat's dumper",
-+            epilog="Use %(prog)s --help to get help")
-+        parser.add_argument("-r", "--recipe",
-+            help="specify the recipe, default: all recipes", action="store")
-+        parser.add_argument("-m", "--members",
-+            help = "specify the member, use comma as separator for multiple ones, default: all members", action="store", default="")
-+        parser.add_argument("-s", "--skip",
-+            help = "skip skipped recipes", action="store_true")
-+        parser.add_argument("cachefile",
-+            help = "specify bb_cache.dat", nargs = 1, action="store", default="")
- 
--    cachefile = argv[0]
-+        self.args = parser.parse_args()
- 
--    with open(cachefile, "rb") as cachefile:
--        pickled = pickle.Unpickler(cachefile)
--        while cachefile:
--            try:
--                key = pickled.load()
--                val = pickled.load()
--            except Exception:
--                break
--            if isinstance(val, CoreRecipeInfo) and (not val.skipped):
--                pn = val.pn
--                # Filter out the native recipes.
--                if key.startswith('virtual:native:') or pn.endswith("-native"):
--                    continue
-+    def main(self):
-+        with open(self.args.cachefile[0], "rb") as cachefile:
-+            pickled = pickle.Unpickler(cachefile)
-+            while True:
-+                try:
-+                    key = pickled.load()
-+                    val = pickled.load()
-+                except Exception:
-+                    break
-+                if isinstance(val, CoreRecipeInfo):
-+                    pn = val.pn
- 
--                # 1.0 is the default version for a no PV recipe.
--                if "pv" in val.__dict__:
--                    pv = val.pv
--                else:
--                    pv = "1.0"
-+                    if self.args.recipe and self.args.recipe != pn:
-+                        continue
- 
--                print("%s %s %s %s" % (key, pn, pv, ' '.join(val.packages)))
-+                    if self.args.skip and val.skipped:
-+                        continue
- 
--if __name__ == "__main__":
--    sys.exit(main(sys.argv[1:]))
-+                    if self.args.members:
-+                        out = key
-+                        for member in self.args.members.split(','):
-+                            out += ": %s" % val.__dict__.get(member)
-+                        print("%s" % out)
-+                    else:
-+                        print("%s: %s" % (key, val.__dict__))
-+                elif not self.args.recipe:
-+                    print("%s %s" % (key, val))
- 
-+if __name__ == "__main__":
-+    try:
-+        dump = DumpCache()
-+        ret = dump.main()
-+    except Exception as esc:
-+        ret = 1
-+        import traceback
-+        traceback.print_exc()
-+    sys.exit(ret)
--- 
-2.7.4
+It looks inefficient to fetch and store on each builder pull requests.
+I understand this is just because how PR are implemented in github,
+but github is quite central, so many we should/could do something
+about it?
 
+Beyond the inefficiencies, we now are seeing unrelated build issues as well.
+
+What do you think? Should we try to avoid fetching refs/pull/* from
+github? or is it our git fetch command that needs to be improve to
+work in this situation?
+
+thanks
+nico
 
