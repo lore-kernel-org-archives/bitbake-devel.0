@@ -1,28 +1,29 @@
-Return-Path: <amanda.r.brindle@intel.com>
-X-Greylist: delayed 575 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 07 Feb 2018 18:40:09 UTC
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	by mail.openembedded.org (Postfix) with ESMTP id DEF8671ABD
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 89B7378558
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Feb 2018 18:40:09 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	07 Feb 2018 10:30:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.46,473,1511856000"; d="scan'208";a="32903898"
-Received: from arbrindl-dev.jf.intel.com ([10.7.199.57])
-	by orsmga002.jf.intel.com with ESMTP; 07 Feb 2018 10:30:36 -0800
-From: Amanda Brindle <amanda.r.brindle@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 Feb 2018 10:27:20 -0800
-Message-Id: <a8fb20029bbcde6c221210242b853b96e592f84a.1517873329.git.amanda.r.brindle@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1517873329.git.amanda.r.brindle@intel.com>
-References: <cover.1517873329.git.amanda.r.brindle@intel.com>
-Cc: stephano.cetola@intel.com
-Subject: [PATCH v2 1/1] tinfoil.py: Check if BUILDDIR or .devtoolbase exists
+	Thu,  8 Feb 2018 04:17:50 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w184Hod2022980
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 7 Feb 2018 20:17:50 -0800 (PST)
+Received: from localhost.corp.ad.wrs.com (128.224.163.240) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.3.361.1; Wed, 7 Feb 2018 20:17:43 -0800
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	<bitbake-devel@lists.openembedded.org>
+References: <cover.1517497731.git.liezhi.yang@windriver.com>
+	<48f4881a33e65e2162ca1df077982561058f040c.1517497731.git.liezhi.yang@windriver.com>
+	<1517823574.3090.79.camel@linuxfoundation.org>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <9da1f8e4-f56b-f88e-00cb-b97327b195c8@windriver.com>
+Date: Thu, 8 Feb 2018 12:18:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+	Thunderbird/52.6.0
+MIME-Version: 1.0
+In-Reply-To: <1517823574.3090.79.camel@linuxfoundation.org>
+Subject: Re: [PATCH 4/8] bitbake: cooker: don't preserve BB_CONSOLELOG
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,57 +36,109 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Feb 2018 18:40:10 -0000
+X-List-Received-Date: Thu, 08 Feb 2018 04:17:50 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-Check if either BUILDDIR or .devtoolbase exists in order to deterimine
-if a tinfoil using script is running without having called oe-init-build-env
-(or similar). If not, raise an exception that a tinfoil using application
-can catch to produce an error message. Before, tinfoil would hang for 30s
-before erroring out.
+Hi RP,
 
-Fixes [YOCTO #12096]
+On 02/05/2018 05:39 PM, Richard Purdie wrote:
+> On Thu, 2018-02-01 at 23:15 +0800, Robert Yang wrote:
+>> Fixed:
+>> $ bitbake --server-only -T -1
+>> Set MACHINE = "qemux86" in conf/local.conf
+>> $ bitbake quilt
+>> Set MACHINE = "qemuppc" in conf/local.conf
+>> $ bitbake quilt
+>>
+>> The log still goes into tmp/log/cooker/qemux86 in the second run,
+>> this is
+>> incorrect (should be tmp/log/cooker/qemuppc). I checked the code, the
+>> ui
+>> initializes it every time when it starts, so let it use the up-to-
+>> date
+>> one rather than old one.
+>>
+>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>> ---
+>>   bitbake/lib/bb/cooker.py | 8 --------
+>>   1 file changed, 8 deletions(-)
+> 
+> This effectively reverts:
+> 
+> http://git.yoctoproject.org/cgit.cgi/poky/commit/bitbake/lib/bb/cooker.py?id=3ebf7617d6c869f798807792918e1030b3ab66de
+> 
+> Sadly I didn't put a bug number in that commit message but I do
+> remember there being a good reason to do this.
+> 
+> I think the problem is a "UI" can run multiple commands with reset
+> events within that command stream and it would only have one console
+> log. I also believe there may have been issues where toaster would have
+> been unable to find the logs if they kept moving around.
 
-Signed-off-by: Amanda Brindle <amanda.r.brindle@intel.com>
----
- bitbake/lib/bb/tinfoil.py | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+I've found the bug:
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=8411
 
-diff --git a/bitbake/lib/bb/tinfoil.py b/bitbake/lib/bb/tinfoil.py
-index 368264f..013e7f6 100644
---- a/bitbake/lib/bb/tinfoil.py
-+++ b/bitbake/lib/bb/tinfoil.py
-@@ -54,6 +54,9 @@ class TinfoilUIException(Exception):
- class TinfoilCommandFailed(Exception):
-     """Exception raised when run_command fails"""
- 
-+class TinfoilBuildEnvironmentException(Exception):
-+    """Exception raised when build environment is not initialised"""
-+
- class TinfoilDataStoreConnector:
-     """Connector object used to enable access to datastore objects via tinfoil"""
- 
-@@ -372,6 +375,20 @@ class Tinfoil:
-         """
-         self.quiet = quiet
- 
-+        fixed_setup = False
-+        basepath = os.path.dirname(os.path.abspath(__file__))
-+        pth = basepath
-+        while pth != '' and pth != os.sep:
-+            if os.path.exists(os.path.join(pth, '.devtoolbase')):
-+                fixed_setup = True
-+                basepath = pth
-+                break
-+            pth = os.path.dirname(pth)
-+        if not fixed_setup:
-+            basepath = os.environ.get('BUILDDIR')
-+            if not basepath:
-+                raise TinfoilBuildEnvironmentException('Build environment not initialised')
-+
-         if self.tracking:
-             extrafeatures = [bb.cooker.CookerFeatures.BASEDATASTORE_TRACKING]
-         else:
--- 
-2.7.4
+I think that it has been fixed by:
 
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=8373
+
+http://git.yoctoproject.org/cgit/cgit.cgi/poky/commit/?id=a0791c19db7d5b33ce7a4e3614a574ad4a319a84
+
+I've tried the following commands with my patch:
+$ . /workspace1/lyang1/poky/bitbake/bin/toaster start noweb
+$ MACHINE=qemuppc bitbake quilt-native
+
+The log is tmp/log/cooker/qemuppc/build_20180208_120722.942.log
+
+$ MACHINE=qemux86 bitbake quilt-native
+
+The log is tmp/log/cooker/qemux86/build_20180208_121605.382.log
+
+And the log contents are correct.
+
+So I think that we don't need preserve BB_CONSOLELOG anymore.
+
+// Robert
+
+> 
+> The console log handling probably needs more thought as there are
+> clearly multiple issues here. We may want to move it out of a directory
+> which is machine specific?
+> 
+> Cheers,
+> 
+> Richard
+> 
+>> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+>> index af482f9..3f113ae 100644
+>> --- a/bitbake/lib/bb/cooker.py
+>> +++ b/bitbake/lib/bb/cooker.py
+>> @@ -326,11 +326,6 @@ class BBCooker:
+>>           self.state = state.initial
+>>           self.caches_array = []
+>>   
+>> -        # Need to preserve BB_CONSOLELOG over resets
+>> -        consolelog = None
+>> -        if hasattr(self, "data"):
+>> -            consolelog = self.data.getVar("BB_CONSOLELOG")
+>> -
+>>           if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
+>>               self.enableDataTracking()
+>>   
+>> @@ -358,9 +353,6 @@ class BBCooker:
+>>           self.data_hash = self.databuilder.data_hash
+>>           self.extraconfigdata = {}
+>>   
+>> -        if consolelog:
+>> -            self.data.setVar("BB_CONSOLELOG", consolelog)
+>> -
+>>           self.data.setVar('BB_CMDLINE', self.ui_cmdline)
+>>   
+>>           #
+>> -- 
+>> 2.7.4
+>>
+> 
 
