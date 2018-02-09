@@ -1,27 +1,24 @@
-Return-Path: <andrej.valek@siemens.com>
-Received: from david.siemens.de (david.siemens.de [192.35.17.14])
-	by mail.openembedded.org (Postfix) with ESMTP id BC24971BB9
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 020F871D97
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  8 Feb 2018 10:21:13 +0000 (UTC)
-Received: from mail3.siemens.de (mail3.siemens.de [139.25.208.14])
-	by david.siemens.de (8.15.2/8.15.2) with ESMTPS id w18ALDue019451
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 8 Feb 2018 11:21:14 +0100
-Received: from dev.sbt.siemens.com (sk1d124c.siemens.sk [163.242.57.217])
-	by mail3.siemens.de (8.15.2/8.15.2) with ESMTP id w18ALDQ3007057;
-	Thu, 8 Feb 2018 11:21:13 +0100
-Received: from dev.sbt.siemens.com (localhost [127.0.0.1])
-	by dev.sbt.siemens.com (Postfix) with ESMTP id A5DBDCDBD8;
-	Thu,  8 Feb 2018 11:21:13 +0100 (CET)
-From: Andrej Valek <andrej.valek@siemens.com>
+	Fri,  9 Feb 2018 09:54:15 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	w199sESp002306
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Fri, 9 Feb 2018 09:54:15 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1ek5Nm-0005YC-3K; Fri, 09 Feb 2018 09:54:14 +0000
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  8 Feb 2018 11:20:57 +0100
-Message-Id: <1518085257-20782-1-git-send-email-andrej.valek@siemens.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <54c4f060-bfe9-f8f7-c141-c80f1aef1705@siemens.com>
-References: <54c4f060-bfe9-f8f7-c141-c80f1aef1705@siemens.com>
-Subject: [PATCH] feat(wget_autorev): add autorev feature for wget
+Date: Fri,  9 Feb 2018 09:54:12 +0000
+Message-Id: <1518170052-21298-1-git-send-email-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: clamav-milter 0.99.3 at dan
+X-Virus-Status: Clean
+Subject: [PATCH] main/runqueue: Rework runall task and add runonly option
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,105 +31,151 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 08 Feb 2018 10:21:14 -0000
+X-List-Received-Date: Fri, 09 Feb 2018 09:54:16 -0000
 
-Hello everybody,
+The runall commandline option was confusing people. There are in fact two
+different behaviours people may want.
 
-I was trying to make first working get_srcrev function implementation.
-But I have foundded some problems. When some recipe has multiple entries
-in SRC_URI with svn/git/http and also SRCREV is set. Fetch method just
-loops over entries and try to recognize them. The problem is that, SRCREV
-is set, but it's has to be matching only with the svn. So urldata_init is
-going to create the revision, even if SRCREV is not valid.
+a) For a given target (or set of targets) look through the task graph and
+run task X only if its present and would have been built.
 
-This stuff needs to be also enabled in meta/classes/base.bbclass .
+b) For a given target (or set of targets) look through the task graph and
+run task X if any recipe in the taskgraph has such a target even if it wasn't
+in the original task graph.
 
-Could someone help me with this problem and bring this feature upstream?
+I've decided to interpret the existing "runall" option as b), even if right
+now if behaves like a). For a), which is a valid use case, this patch adds
+a "runonly" option.
 
-Thank you,
-Andrej
+With both behaviours present, I'm hoping we can then kill off the "fetchall",
+"checkuriall" and other tasks from OE metadata and replace them with this
+option. This would significantly speed up task graph processing.
 
+(Deleting the checkuriall and fetchall tasks takes "bitbake core-image-sato -g"
+from 22s to 8s).
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/wget.py | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ lib/bb/cookerdata.py |  3 ++-
+ lib/bb/main.py       |  8 ++++++--
+ lib/bb/runqueue.py   | 49 ++++++++++++++++++++++++++++++++++++++-----------
+ 3 files changed, 46 insertions(+), 14 deletions(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 8f505b6..5b5af84 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -34,6 +34,7 @@ import errno
- import bb
- import bb.progress
- import urllib.request, urllib.parse, urllib.error
-+import hashlib
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import FetchError
- from   bb.fetch2 import logger
-@@ -90,6 +91,11 @@ class Wget(FetchMethod):
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index fab47c7..c67f012 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -143,7 +143,8 @@ class CookerConfiguration(object):
+         self.writeeventlog = False
+         self.server_only = False
+         self.limited_deps = False
+-        self.runall = None
++        self.runall = []
++        self.runonly = []
  
-         self.basecmd = d.getVar("FETCHCMD_wget") or "/usr/bin/env wget -t 2 -T 30 --passive-ftp --no-check-certificate"
+         self.env = {}
  
-+        # setup revision if it is enabled
-+        srcrev = d.getVar("SRCREV")
-+        if srcrev and srcrev != "INVALID":
-+            ud.setup_revisons(d)
-+
-     def _runwget(self, ud, d, command, quiet, workdir=None):
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 7711b29..f4474e4 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -292,8 +292,12 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+                           help="Writes the event log of the build to a bitbake event json file. "
+                                "Use '' (empty string) to assign the name automatically.")
  
-         progresshandler = WgetProgressHandler(d)
-@@ -98,6 +104,15 @@ class Wget(FetchMethod):
-         bb.fetch2.check_network_access(d, command, ud.url)
-         runfetchcmd(command + ' --progress=dot -v', d, quiet, log=progresshandler, workdir=workdir)
+-        parser.add_option("", "--runall", action="store", dest="runall",
+-                          help="Run the specified task for all build targets and their dependencies.")
++        parser.add_option("", "--runall", action="append", dest="runall",
++                          help="Run the specified task for any recipe in the taskgraph of the specified target (even if it wouldn't otherwise have run).")
++
++        parser.add_option("", "--runonly", action="append", dest="runonly",
++                          help="Run only the specified task within the taskgraph of the specified targets (and any task dependencies those tasks may have).")
++
  
-+    def supports_srcrev(self):
-+        return True
-+
-+    def _revision_key(self, ud, d, name):
-+        """
-+        Return a unique key for the url
-+        """
-+        return ud.type + ":" + ud.localfile
-+
-     def download(self, ud, d):
-         """Fetch urls"""
+         options, targets = parser.parse_args(argv)
  
-@@ -579,6 +594,35 @@ class Wget(FetchMethod):
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index d7acfab..48df013 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -841,30 +841,57 @@ class RunQueueData:
+         #
+         # Once all active tasks are marked, prune the ones we don't need.
  
-         return package_custom_regex_comp
+-        delcount = 0
++        delcount = {}
+         for tid in list(self.runtaskentries.keys()):
+             if tid not in runq_build:
++                delcount[tid] = self.runtaskentries[tid]
+                 del self.runtaskentries[tid]
+-                delcount += 1
  
-+    def _latest_revision(self, ud, d, name):
-+        """
-+        Return the latest upstream revision number
-+        """
-+        fetchcmd = self.basecmd
-+        # redirect stderr to stdout instead of writing into file
-+        fetchcmd += " --server-response --spider " + ud.url.split(";")[0] + " 2>&1"
-+        revision = ""
+-        self.init_progress_reporter.next_stage()
++        # Handle --runall
++        if self.cooker.configuration.runall:
++            # re-run the mark_active and then drop unused tasks from new list
++            runq_build = {}
 +
-+        try:
-+            bb.fetch2.check_network_access(d, fetchcmd)
-+            output = runfetchcmd(fetchcmd, d, False)
-+            # get modified timestamp
-+            output = re.search(r'(Last-Modified:\ )(.*)', output).group(2)
-+            revision =  hashlib.md5(output).hexdigest()
-+        except Exception as e:
-+            bb.warn("Error gettig timestamp %s" % e)
++            for task in self.cooker.configuration.runall:
++                runall_tids = set()
++                for tid in list(self.runtaskentries):
++                    wanttid = fn_from_tid(tid) + ":do_%s" % task
++                    if wanttid in delcount:
++                        self.runtaskentries[wanttid] = delcount[wanttid]
++                    if wanttid in self.runtaskentries:
++                        runall_tids.add(wanttid)
 +
-+        return revision
++                for tid in list(runall_tids):
++                    mark_active(tid,1)
 +
-+    def sortable_revision(self, ud, d, name):
-+        """
-+        Return a sortable revision number which in our case is the revision number
-+        """
-+        return False, self._build_revision(ud, d)
++            for tid in list(self.runtaskentries.keys()):
++                if tid not in runq_build:
++                    delcount[tid] = self.runtaskentries[tid]
++                    del self.runtaskentries[tid]
+ 
+-        if self.cooker.configuration.runall is not None:
+-            runall = "do_%s" % self.cooker.configuration.runall
+-            runall_tids = { k: v for k, v in self.runtaskentries.items() if taskname_from_tid(k) == runall }
++            if len(self.runtaskentries) == 0:
++                bb.msg.fatal("RunQueue", "Could not find any tasks with the tasknames %s to run within the recipes of the taskgraphs of the targets %s" % (str(self.cooker.configuration.runall), str(self.targets)))
+ 
++        self.init_progress_reporter.next_stage()
 +
-+    def _build_revision(self, ud, d):
-+        return ud.revision
++        # Handle runonly
++        if self.cooker.configuration.runonly:
+             # re-run the mark_active and then drop unused tasks from new list
+             runq_build = {}
+-            for tid in list(runall_tids):
+-                mark_active(tid,1)
 +
-     def latest_versionstring(self, ud, d):
-         """
-         Manipulate the URL and try to obtain the latest package version
++            for task in self.cooker.configuration.runonly:
++                runonly_tids = { k: v for k, v in self.runtaskentries.items() if taskname_from_tid(k) == "do_%s" % task }
++
++                for tid in list(runonly_tids):
++                    mark_active(tid,1)
+ 
+             for tid in list(self.runtaskentries.keys()):
+                 if tid not in runq_build:
++                    delcount[tid] = self.runtaskentries[tid]
+                     del self.runtaskentries[tid]
+-                    delcount += 1
+ 
+             if len(self.runtaskentries) == 0:
+-                bb.msg.fatal("RunQueue", "No remaining tasks to run for build target %s with runall %s" % (target, runall))
++                bb.msg.fatal("RunQueue", "Could not find any tasks with the tasknames %s to run within the taskgraphs of the targets %s" % (str(self.cooker.configuration.runonly), str(self.targets)))
+ 
+         #
+         # Step D - Sanity checks and computation
+@@ -877,7 +904,7 @@ class RunQueueData:
+             else:
+                 bb.msg.fatal("RunQueue", "No active tasks and not in --continue mode?! Please report this bug.")
+ 
+-        logger.verbose("Pruned %s inactive tasks, %s left", delcount, len(self.runtaskentries))
++        logger.verbose("Pruned %s inactive tasks, %s left", len(delcount), len(self.runtaskentries))
+ 
+         logger.verbose("Assign Weightings")
+ 
 -- 
-2.1.4
+2.7.4
 
 
