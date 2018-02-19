@@ -1,44 +1,43 @@
-Return-Path: <zboszor@pr.hu>
-Received: from mail7.pr.hu (mail7.pr.hu [87.242.0.7])
-	by mail.openembedded.org (Postfix) with ESMTP id 87E216FFD8
+Return-Path: <A.Baumfalk@astro-kom.de>
+Received: from mailrelay-out1.netcologne.de (mailrelay-out1.netcologne.de
+	[81.173.193.131])
+	by mail.openembedded.org (Postfix) with ESMTP id 025856007A
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 Feb 2018 08:55:59 +0000 (UTC)
-Received: from [2a02:808:3:101::5] (helo=mail.pr.hu)
-	by frontdoor.pr.hu with esmtps
-	(TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim 4.89)
-	(envelope-from <zboszor@pr.hu>)
-	id 1enhEu-0002OU-KF; Mon, 19 Feb 2018 09:56:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=pr.hu;
-	s=pr20170203; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3S9xaxHvw6HzK/FqjPw8St3EsiWs+eNwgORTnoXBjs4=;
-	b=TVbTUVPeO1Vz6xHf/A6l1uZAu0
-	wt9UeEJdUaSMjqt22T0bsGk6M/w6M7eE/T/xXj6odthV27fWFBI6wrCXt5kM30UAsvQ8HtiOaruMg
-	SO/WMHdgR03loeaV8gnIUnkt5pIp4irqfNqiQqjGiEnsGD61hrOl592x2snCUE1keiAr8k7FHrJpb
-	39Kwyf88YqShswb+PsnWH8YVLO6gTKjn2agGzcDYAVb31SUEZkVRD3UxKWhsEWVwVhKvjjptRzI3T
-	yxVr3BvlQN3qL0fTUJ8ieve3Q+m242BMh0VTML6bWssQixhzGYY24vZlgzOtYx79TH2GuhMWFr0jI
-	f55wifMg==;
-Received: from host-87-242-32-111.prtelecom.hu ([87.242.32.111]
-	helo=s002.sicom.com)
-	by mail.pr.hu with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	(Exim 4.89) (envelope-from <zboszor@pr.hu>)
-	id 1enhEq-000707-Co; Mon, 19 Feb 2018 09:55:58 +0100
-To: mpvader <mvader@victronenergy.com>, bitbake-devel@lists.openembedded.org
-References: <1518388275-4589-1-git-send-email-mvader@victronenergy.com>
-From: =?UTF-8?B?QsO2c3rDtnJtw6lueWkgWm9sdMOhbg==?= <zboszor@pr.hu>
-Message-ID: <82bcf115-965e-60fb-ed35-a116cabce937@pr.hu>
-Date: Mon, 19 Feb 2018 09:55:53 +0100
+	Mon, 19 Feb 2018 09:46:57 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mailrelay-out1.netcologne.de (Postfix) with ESMTP id 8D19210AFFB
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 19 Feb 2018 10:46:58 +0100 (CET)
+Received: from [213.196.222.82] (helo=mailrelay-out1.netcologne.de)
+	by localhost with ESMTP (eXpurgate 4.3.1)
+	(envelope-from <A.Baumfalk@astro-kom.de>)
+	id 5a8a9d12-5654-7f0000012729-7f0000019165-1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 19 Feb 2018 10:46:58 +0100
+Received: from ASTRO-EX1.Bensberg.de (unknown [213.196.222.82])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailrelay-out1.netcologne.de (Postfix) with ESMTPS
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 19 Feb 2018 10:46:58 +0100 (CET)
+Received: from [192.168.8.2] (192.168.100.114) by ASTRO-EX1.Bensberg.de
+	(192.168.100.26) with Microsoft SMTP Server (TLS) id 15.0.775.38;
+	Mon, 19 Feb 2018 10:46:58 +0100
+From: Arno Baumfalk <a.baumfalk@astro-kom.de>
+To: <bitbake-devel@lists.openembedded.org>
+References: <a2f951c8-72a9-49a8-362b-a176577f351a@astro-kom.de>
+Message-ID: <0892eb5f-5b52-0e09-6bde-84fa8bda55f1@astro-kom.de>
+Date: Mon, 19 Feb 2018 10:46:57 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
 	Thunderbird/52.6.0
 MIME-Version: 1.0
-In-Reply-To: <1518388275-4589-1-git-send-email-mvader@victronenergy.com>
-X-Spam-Score: 0.5 (/)
-X-Scan-Signature: 58ab21d751055c5f434a9dd5a96062a4
-X-Spam-Tracer: backend.mail.pr.hu 0.5 20180219085558Z
-Subject: Re: [PATCH] fetch2/npm: fix parsing multiple matching packages
+In-Reply-To: <a2f951c8-72a9-49a8-362b-a176577f351a@astro-kom.de>
+X-Originating-IP: [192.168.100.114]
+X-ClientProxiedBy: ASTRO-EX1.Bensberg.de (192.168.100.26) To
+	ASTRO-EX1.Bensberg.de (192.168.100.26)
+X-purgate-ID: 153929::1519033618-00005654-73A52267/0/0
+X-purgate: clean
+Subject: Re: exception in checksum.py
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,88 +50,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Feb 2018 08:55:59 -0000
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Language: en-US
+X-List-Received-Date: Mon, 19 Feb 2018 09:46:58 -0000
+Content-Type: multipart/alternative;
+	boundary="------------CBF03BC7784A21A3C61C5552"
+Content-Language: de-DE
+
+--------------CBF03BC7784A21A3C61C5552
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+I'd like to add two more things:
+
+1) For all recipes which use the custom gitsmlocal fetcher AND have at 
+least one additional local file in the SOURCE_URI, such as:
+SRC_URI = "gitsmlocal://foo \
+file://file1 \
+file://file2 \
+file://file3"
+a warning is issued for each of the local files:
+/path/to/recipe/foo/foo_1.0.bb: Unable to get checksum for foo SRC_URI 
+entry foo_file: file1 could not be found
+/path/to/recipe/foo/foo_1.0.bb: Unable to get checksum for foo SRC_URI 
+entry foo_file: file2 could not be found
+/path/to/recipe/foo/foo_1.0.bb: Unable to get checksum for foo SRC_URI 
+entry foo_file: file3 could not be found
+
+ From debugging the code I figured, that bitbake seems to expect this 
+file in the yocto-download cache, but it is not there. Instead, I found 
+file1.done, file2.done and file3.done in the download cache.
+
+I am not sure if this is somehow related to the original problem, but I 
+thought I should mention it here just in case.
+
+2) I tried to debug the bitbake run using the python debugger. I 
+debugged on the krogroth branch, where described problem occured for the 
+first time. I was analyzing the difference between the git fetcher and 
+my custom fetcher. What I found was, that my fetcher was not properly 
+initialized (urldata_init was not called) until the exception was thrown 
+while the git fetcher was.
+I tried to find out where the init call came from and found, that for 
+the git fetcher the function "get_srcrev" was called, while for my 
+custom fetcher it was not. This is where a Fetch object is initilalized 
+which in turn calls the urldata_init function.
+Maybe this helps to find the root cause of my problem?
+
+
+Arno
+
+--------------CBF03BC7784A21A3C61C5552
+Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-2018-02-11 23:31 keltez�ssel, mpvader �rta:
-> Replace the self-implemented parser with loading the complete json and then
-> taking the last element from it.
-> 
-> This fixes an error fetching the lex-parser package, as a dependency of, for
-> example, jison. Reproduce the error with this command:
-> 
-> devtool add "npm://registry.npmjs.org;name=jison;version=0.4.18"
-> 
-> _parse_view() didn't properly parse the npm view result [1], resulting in
-> an Exception in the subsequent json.loads() function:
-> Exception: ValueError: Extra data: line 57 column 4 - line 296 column 2 (char 5874 - 29698)
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <p>Hi,<br>
+    </p>
+    I'd like to add two more things:<br>
+    <br>
+    1) For all recipes which use the custom gitsmlocal fetcher AND have
+    at least one additional local file in the SOURCE_URI, such as:<br>
+    SRC_URI = "gitsmlocal://foo \<br>
+                <a class="moz-txt-link-freetext">file://file1</a> \<br>
+                <a class="moz-txt-link-freetext">file://file2</a> \<br>
+                <a class="moz-txt-link-freetext">file://file3</a>"<br>
+    a warning is issued for each of the local files: <br>
+    /path/to/recipe/foo/foo_1.0.bb: Unable to get checksum for foo
+    SRC_URI entry foo_file: file1 could not be found<br>
+    /path/to/recipe/foo/foo_1.0.bb: Unable to get checksum for foo
+    SRC_URI entry foo_file: file2 could not be found<br>
+    /path/to/recipe/foo/foo_1.0.bb: Unable to get checksum for foo
+    SRC_URI entry foo_file: file3 could not be found<br>
+    <br>
+    From debugging the code I figured, that bitbake seems to expect this
+    file in the yocto-download cache, but it is not there. Instead, I
+    found file1.done, file2.done and file3.done in the download cache.<br>
+    <br>
+    I am not sure if this is somehow related to the original problem,
+    but I thought I should mention it here just in case.<br>
+    <br>
+    2) I tried to debug the bitbake run using the python debugger. I
+    debugged on the krogroth branch, where described problem occured for
+    the first time. I was analyzing the difference between the git
+    fetcher and my custom fetcher. What I found was, that my fetcher was
+    not properly initialized (urldata_init was not called) until the
+    exception was thrown while the git fetcher was.<br>
+    I tried to find out where the init call came from and found, that
+    for the git fetcher the function "get_srcrev" was called, while for
+    my custom fetcher it was not. This is where a Fetch object is
+    initilalized which in turn calls the urldata_init function.<br>
+    Maybe this helps to find the root cause of my problem?<br>
+    <br>
+    <br>
+    Arno<br>
+  </body>
+</html>
 
-I can confirm this problem exists in Bitbake 1.36 and goes away with the patch.
-
-Also tested the patch for the handful of node module recipes
-I have and they still build properly.
-
-> 
-> [1] npm view lex-parser@'0.1.x' --json --registry http://registry.npmjs.org
-> 
-> Signed-off-by: mpvader <mvader@victronenergy.com>
-
-Tested-by: Zolt�n B�sz�rm�nyi <zboszor@pr.hu>
-
-> ---
->   lib/bb/fetch2/npm.py | 29 ++++++++---------------------
->   1 file changed, 8 insertions(+), 21 deletions(-)
-> 
-> diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-> index b5f148c..e257355 100644
-> --- a/lib/bb/fetch2/npm.py
-> +++ b/lib/bb/fetch2/npm.py
-> @@ -146,25 +146,6 @@ class Npm(FetchMethod):
->   
->           self._unpackdep(ud, ud.pkgname, workobj, unpackdir, dldir, d)
->   
-> -    def _parse_view(self, output):
-> -        '''
-> -        Parse the output of npm view --json; the last JSON result
-> -        is assumed to be the one that we're interested in.
-> -        '''
-> -        pdata = None
-> -        outdeps = {}
-> -        datalines = []
-> -        bracelevel = 0
-> -        for line in output.splitlines():
-> -            if bracelevel:
-> -                datalines.append(line)
-> -            elif '{' in line:
-> -                datalines = []
-> -                datalines.append(line)
-> -            bracelevel = bracelevel + line.count('{') - line.count('}')
-> -        if datalines:
-> -            pdata = json.loads('\n'.join(datalines))
-> -        return pdata
->   
->       def _getdependencies(self, pkg, data, version, d, ud, optional=False, fetchedlist=None):
->           if fetchedlist is None:
-> @@ -175,9 +156,15 @@ class Npm(FetchMethod):
->           logger.debug(2, "Calling getdeps on %s" % pkg)
->           fetchcmd = "npm view %s --json --registry %s" % (pkgfullname, ud.registry)
->           output = runfetchcmd(fetchcmd, d, True)
-> -        pdata = self._parse_view(output)
-> -        if not pdata:
-> +        if not output:
->               raise FetchError("The command '%s' returned no output" % fetchcmd)
-> +        pdata = json.loads(output)
-> +
-> +        # npm registry will return multiple dicts in a list when there is more than one matching
-> +        # version. Take the last one.
-> +        if isinstance(pdata, list):
-> +            pdata = pdata[-1]
-> +
->           if optional:
->               pkg_os = pdata.get('os', None)
->               if pkg_os:
-> 
-
-
+--------------CBF03BC7784A21A3C61C5552--
