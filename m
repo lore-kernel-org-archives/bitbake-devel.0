@@ -1,48 +1,50 @@
 Return-Path: <pbarker@toganlabs.com>
-Received: from mail-wm0-f41.google.com (mail-wm0-f41.google.com [74.125.82.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 85E946FF0E
+Received: from mail-wr0-f175.google.com (mail-wr0-f175.google.com
+	[209.85.128.175])
+	by mail.openembedded.org (Postfix) with ESMTP id 250DE786FA
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 25 Feb 2018 22:17:50 +0000 (UTC)
-Received: by mail-wm0-f41.google.com with SMTP id z81so13980845wmb.4
+	Sun, 25 Feb 2018 22:20:58 +0000 (UTC)
+Received: by mail-wr0-f175.google.com with SMTP id s5so19315727wra.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 25 Feb 2018 14:17:51 -0800 (PST)
+	Sun, 25 Feb 2018 14:21:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=toganlabs-com.20150623.gappssmtp.com; s=20150623;
 	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
 	:cc:content-transfer-encoding;
-	bh=Dmxosibc8cSEUE9/+4lg1yiH0PsJXsfj3TXBEWFicS4=;
-	b=U5/PhJYxE9kKOUJlKdxSLKC/1CTAAHu7zNl7sCT72NQGQFEzYMs5wlI0t+ecncZaum
-	0tzSriSSi0pitua6q2k514BC5C46xx6WqyxPDFGxzMmJ26opss5iSXy7OUmVNkv7Gidc
-	ZA6OcfBSwfzB5uOtwRLW5GOs0YpM421H5GpjTmTuQLRIfX9BCNoM9rrAvxmOqgDLzHyT
-	bboD3iVsCNgw+iuDDfU9TvZFr/f0rgI8poEDRTNoTHPOvtJf7bv1jbijTtI5yb0Nu5rn
-	1hZh9Wx2h/0/CmMfTfFhuYdArHQbIKVZr+ag3iqN5jTMIAUFNt0ykmMlCOAEtyHb6d0b
-	csRA==
+	bh=sj2SD1OfSWECF30x5SYkammd+k5WLtIVPUHSQ3msLk8=;
+	b=zLKUGKsTG7+yJs8vvAWgXB1WB4TwvvGhaHepulVLelv2mqD7Tz14AGgQ1wDh/Bo1/w
+	zgWM7p3pSKAhSNCg68DACFxdN67l9pgnnIHToVfv+gISGdIB2mIXMrI9zHUj7nh8k2eq
+	CAEswiXfEuc6ucW9/rJSOKiRnT3YMqGEl81pD65qmrgEPvjaO+QkVQqMUOGLBIR9Y/Cp
+	/OwQcPJnLKK3JKPMWt/crVcBZotHWJV+1yo7jCvcxPsg4qHeqcj7+09lM8ZU7/JRqch/
+	Nz/ale0FbhVQ0R6PJTwK0LbEs2+dHe2Wvwxdtx9Pf3YBff5EA6MA95CfJjuyquIIrkkL
+	T9vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
 	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=Dmxosibc8cSEUE9/+4lg1yiH0PsJXsfj3TXBEWFicS4=;
-	b=A2fmzreEqsofWkuL5zcs3dgJ2UHV82Dj5w45l+t0XdKy43aGsIy5sKa/VowM6yV8bF
-	dSQR/DnfE2jKa6fzwaFcnGsJl5llEN9LtJiHanzYmN26jMxZMN6ZPfATIy0CYuP8d/+K
-	J8Znui3palqLfbF0K7v75FAQqewUlTCEqfGW154jqQLPn1K1nv7giwpn2AfC3cP9ol3D
-	OQToekyvd7cbqiA2RiAdVNZsf0EzxMf1FJebYPCxJKala/ozGsxZNO3HgsErSdMroxr0
-	CiMUal5XcBlYgvo474k+Q7gmOe+auqioEekETkZzKR6oeS0R04aBCx+wX1jieD4FU9pk
-	WBsA==
-X-Gm-Message-State: APf1xPAALZzuZ7o3GQ29JkFKlSd8qroCkwr8CpiUBhVEtuRt3xX5kCt6
-	raExt2KJuBBDsRrtAdjDEDS8ekqc+9wylBINekREPQ==
-X-Google-Smtp-Source: AG47ELsnG9PmyyHTViKSsfl7e9et4vn694Q9Z2IZ3TkmPcPnRSiodlI8H5aFm5J/Vo/9Yr5hatyNmy0JkrYkBuZLTEk=
-X-Received: by 10.28.37.5 with SMTP id l5mr6394747wml.127.1519597071173; Sun,
-	25 Feb 2018 14:17:51 -0800 (PST)
+	bh=sj2SD1OfSWECF30x5SYkammd+k5WLtIVPUHSQ3msLk8=;
+	b=iVbWjpOEL/rbpx8WRvlWEuDqKXlp5yUrKaSnB43pLoJnKiEIwTjOVLgYyzICOGpACw
+	ZSOsGgw9+BlMuzVha3MLTiORGo1miO1P2HuhBRisUQj7nv/JHYXWiBCND9HMJoTiYMum
+	ApiMwxREY0KJNP8Mz9bBSRhA7uTsJSyiMNtibyHdMD1iCL8uPCaUcje3EmMjEo0b+Wfr
+	+9ndJb8Sg1mF4CO5f/SxJSrrP33rCtvwnXpbj1YlHkDfbL9ONABzaHvHUs7U1wnEwwTq
+	8dxS2EG4kSQFWOEomLX5AQ3pyU6ph6Ou+kUrgA2SiOlKFr9IkqtHKUEcbbGqRc3Ezt4n
+	3dpQ==
+X-Gm-Message-State: APf1xPCiUV90ycrJaTfB7m5ibHEZZfKkBvAeLZIUfKiE63r0S+oPU37Q
+	/71JljR4Fkr7+b117Q406JNcBA12572rB7FrkwVyT5X1O70=
+X-Google-Smtp-Source: AH8x226GZj8OuE5ZVqFjnNta2X5l90fHhe5mQznyyu4xntcyZyRPbF1CwMytnnfS7tnNqKSqSk2UT8dp2sa9nR56jnU=
+X-Received: by 10.223.165.67 with SMTP id j3mr8032016wrb.111.1519597259794;
+	Sun, 25 Feb 2018 14:20:59 -0800 (PST)
 MIME-Version: 1.0
-Received: by 10.223.153.48 with HTTP; Sun, 25 Feb 2018 14:17:50 -0800 (PST)
-In-Reply-To: <1519596717.24236.384.camel@linuxfoundation.org>
+Received: by 10.223.153.48 with HTTP; Sun, 25 Feb 2018 14:20:59 -0800 (PST)
+In-Reply-To: <CAPyrkgxDenV61oP1CZLFSFueqM3NXo2BOptNgSFTDnRHpm62iQ@mail.gmail.com>
 References: <1517314210-25684-1-git-send-email-richard.purdie@linuxfoundation.org>
 	<1517314210-25684-4-git-send-email-richard.purdie@linuxfoundation.org>
 	<CAPyrkgwKMnb7OchXGr8OE3f_NK90ehxphS1HzGpOYjuyaKemhQ@mail.gmail.com>
 	<1519596717.24236.384.camel@linuxfoundation.org>
+	<CAPyrkgxDenV61oP1CZLFSFueqM3NXo2BOptNgSFTDnRHpm62iQ@mail.gmail.com>
 From: Paul Barker <pbarker@toganlabs.com>
-Date: Sun, 25 Feb 2018 22:17:50 +0000
-Message-ID: <CAPyrkgxDenV61oP1CZLFSFueqM3NXo2BOptNgSFTDnRHpm62iQ@mail.gmail.com>
+Date: Sun, 25 Feb 2018 22:20:59 +0000
+Message-ID: <CAPyrkgzzasujqZ1D5pABM+vudjjaM=4wdVuseFNB8u0OHVdMCA@mail.gmail.com>
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH 4/4] runqueue: Rewrite and optimize recrdepends handling
@@ -58,40 +60,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 25 Feb 2018 22:17:50 -0000
+X-List-Received-Date: Sun, 25 Feb 2018 22:20:59 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 25, 2018 at 10:11 PM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> On Sun, 2018-02-25 at 19:25 +0000, Paul Barker wrote:
->> I've been having build failures recently which I've tracked down to
->> this commit in bitbake via git bisect.
+On Sun, Feb 25, 2018 at 10:17 PM, Paul Barker <pbarker@toganlabs.com> wrote=
+:
+> On Sun, Feb 25, 2018 at 10:11 PM, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+>> On Sun, 2018-02-25 at 19:25 +0000, Paul Barker wrote:
+>>> I've been having build failures recently which I've tracked down to
+>>> this commit in bitbake via git bisect.
+>>>
+>>> I have an image recipe, oryx-image, and a publish recipe,
+>>> oryx-publish. In oryx-publish I have a do_publish task that copies
+>>> files out of "tmp/deploy/images/*" to their final places and so it
+>>> needs to run after the tasks in oryx-image that create the relevant
+>>> files. So I've explicitly added oryx-image:do_build to
+>>> do_publish[depends].
 >>
->> I have an image recipe, oryx-image, and a publish recipe,
->> oryx-publish. In oryx-publish I have a do_publish task that copies
->> files out of "tmp/deploy/images/*" to their final places and so it
->> needs to run after the tasks in oryx-image that create the relevant
->> files. So I've explicitly added oryx-image:do_build to
->> do_publish[depends].
+>> Is do_publish added before do_build?
+>> Does oryx-publish inherit any of the image/meta classes?
+>>
+>> I suspect I need to better understand the problem as you've described
+>> what you think the problem is but not what problem you're seeing...
+>>
 >
-> Is do_publish added before do_build?
-> Does oryx-publish inherit any of the image/meta classes?
+> The recipe is here:
+> https://gitlab.com/oryx/meta-oryx/blob/master/recipes-core/publish/oryx-p=
+ublish.bb.
+> ORYX_SYSTEM_PROFILE_PUBLISH_DEPENDS expands to "oryx-image:do_build".
 >
-> I suspect I need to better understand the problem as you've described
-> what you think the problem is but not what problem you're seeing...
+> The problem I'm seeing is that the files don't exist in
+> "tmp/deploy/images/*" when do_publish runs. Investigation via "bitbake
+> -g" shows that the dependency on "oryx-image:do_build" has been
+> dropped from do_publish:
 >
 
-The recipe is here:
-https://gitlab.com/oryx/meta-oryx/blob/master/recipes-core/publish/oryx-pub=
-lish.bb.
-ORYX_SYSTEM_PROFILE_PUBLISH_DEPENDS expands to "oryx-image:do_build".
+Somehow trying to paste resulted in the email being sent.... stupid gmail!
 
 The problem I'm seeing is that the files don't exist in
 "tmp/deploy/images/*" when do_publish runs. Investigation via "bitbake
 -g" shows that the dependency on "oryx-image:do_build" has been
 dropped from do_publish:
 
+"oryx-publish.do_publish" [label=3D"oryx-publish
+do_publish\n:1.0-r0\n/home/pbarker/oryx/meta-oryx/recipes-core/publish/oryx=
+-publish.bb"]
+"oryx-publish.do_publish" -> "image-json-file.do_build"
+
+Commenting out the following lines in lib/bb/runqueue.py seems to
+improve things for me but I know this is just a hack:
+
+        for tid in self.runtaskentries:
+            self.runtaskentries[tid].depends.difference_update(recursivetas=
+ksselfref)
+
+With those commented out, the dependencies are correct for do_publish:
+
+"oryx-publish.do_publish" [label=3D"oryx-publish
+do_publish\n:1.0-r0\n/home/pbarker/oryx/meta-oryx/recipes-core/publish/oryx=
+-publish.bb"]
+"oryx-publish.do_publish" -> "image-json-file.do_build"
+"oryx-publish.do_publish" -> "oryx-image.do_build"
+
+Cheers,
 
 --=20
 Paul Barker
