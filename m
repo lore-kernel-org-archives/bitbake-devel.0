@@ -1,26 +1,24 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 5B00B787F1
+Return-Path: <richard@rpsys.net>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 8E10D60797
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Feb 2018 07:24:00 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w1R7O1fC001134
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Feb 2018 23:24:01 -0800 (PST)
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.361.1; Mon, 26 Feb 2018 23:23:36 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 27 Feb 2018 15:28:11 +0800
-Message-ID: <10d189cbf100ba12608228a5cf50b4a209c9b7e6.1519716375.git.liezhi.yang@windriver.com>
+	Tue, 27 Feb 2018 21:48:33 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	w1RLmX6u013078
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Tue, 27 Feb 2018 21:48:34 GMT
+Received: from richard by hex with local (Exim 4.86_2)
+	(envelope-from <richard@rpsys.net>)
+	id 1eqn6u-0006X4-WC; Tue, 27 Feb 2018 21:48:32 +0000
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 27 Feb 2018 21:48:32 +0000
+Message-Id: <1519768112-25072-1-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1519716375.git.liezhi.yang@windriver.com>
-References: <cover.1519716375.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 3/3] bitbake: cooker: improve inotify handling
+X-Virus-Scanned: clamav-milter 0.99.3 at dan
+X-Virus-Status: Clean
+Subject: [PATCH] runqueue: Ensure only recursive task dependencies are pruned
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,129 +31,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Feb 2018 07:24:00 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 27 Feb 2018 21:48:35 -0000
 
-Each recipe calls bb_cache.add_info() and it calls add_filewatch() for every
-depend file (not only existed files, but also non-exsited/attempted ones),
-which caused the parsing and loading very slow. The watchers are global, so we
-can only pass new depend files to add_filewatch() to improve the performance.
+If a standalone tasks adds a dependency on X:do_build, the code in runqueue would
+currently remove it if that do_build was part of an image recipe which uses
+recrdeptask on do_build.
 
-Here is the testing of 54 layers before and after the patch.
+Such individual tasks shouldn't do this, therefore tweak the recursive reference code
+to only process recurseive tasks, not all tasks.
 
-              Parsing       Loading
-Before        35s           33s
-Now           11s           9s
-
-24 seconds are saved for parsing, and 24s are saved for loading.
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/cache.py  |  9 ++++++---
- bitbake/lib/bb/cooker.py | 24 +++++++++++++++---------
- 2 files changed, 21 insertions(+), 12 deletions(-)
+ lib/bb/runqueue.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 168a77a..7d65939 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -713,12 +713,15 @@ class Cache(NoCache):
-     def mtime(cachefile):
-         return bb.parse.cached_mtime_noerror(cachefile)
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 48df013..f2e52cf 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -765,7 +765,7 @@ class RunQueueData:
+             bb.debug(1, "Added %s recursive dependencies in this loop" % extradeps)
  
--    def add_info(self, filename, info_array, cacheData, parsed=None, watcher=None):
-+    def add_info(self, filename, info_array, cacheData, parsed=None, watcher=None, watch_manager=None):
-         if isinstance(info_array[0], CoreRecipeInfo) and (not info_array[0].skipped):
-             cacheData.add_from_recipeinfo(filename, info_array)
+         # Remove recrdeptask circular references so that do_a[recrdeptask] = "do_a do_b" can work
+-        for tid in self.runtaskentries:
++        for tid in recursivetasksselfref:
+             self.runtaskentries[tid].depends.difference_update(recursivetasksselfref)
  
--            if watcher:
--                watcher(info_array[0].file_depends)
-+            if watcher and watch_manager:
-+                deps_set = set()
-+                for deps in info_array[0].file_depends:
-+                    deps_set.add(deps[0])
-+                watcher(deps_set - watch_manager.bbseen)
- 
-         if not self.has_cache:
-             return
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index ffda225..cd98ba0 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -176,13 +176,13 @@ class BBCooker:
-         self.configuration = configuration
- 
-         self.configwatcher = pyinotify.WatchManager()
--        self.configwatcher.bbseen = []
-+        self.configwatcher.bbseen = set()
-         self.confignotifier = pyinotify.Notifier(self.configwatcher, self.config_notifications)
-         self.watchmask = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_CREATE | pyinotify.IN_DELETE | \
-                          pyinotify.IN_DELETE_SELF | pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF | \
-                          pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
-         self.watcher = pyinotify.WatchManager()
--        self.watcher.bbseen = []
-+        self.watcher.bbseen = set()
-         self.notifier = pyinotify.Notifier(self.watcher, self.notifications)
- 
-         # If being called by something like tinfoil, we need to clean cached data
-@@ -278,12 +278,14 @@ class BBCooker:
-             watcher = self.watcher
-         for i in deps:
-             if dirs:
--                f = i[0]
-+                f = i
-             else:
--                f = os.path.dirname(i[0])
-+                f = os.path.dirname(i)
-             if f in watcher.bbseen:
-                 continue
--            watcher.bbseen.append(f)
-+            # Add both files and directories to to bbseen
-+            watcher.bbseen.add(f)
-+            watcher.bbseen.add(i)
-             while True:
-                 # We try and add watches for files that don't exist but if they did, would influence
-                 # the parser. The parent directory of these files may not exist, in which case we need
-@@ -296,7 +298,7 @@ class BBCooker:
-                         f = os.path.dirname(f)
-                         if f in watcher.bbseen:
-                             break
--                        watcher.bbseen.append(f)
-+                        watcher.bbseen.add(f)
-                         continue
-                     if 'ENOSPC' in str(e):
-                         providerlog.error("No space left on device or exceeds fs.inotify.max_user_watches?")
-@@ -367,7 +369,10 @@ class BBCooker:
-             self.disableDataTracking()
- 
-         self.data.renameVar("__depends", "__base_depends")
--        self.add_filewatch(self.data.getVar("__base_depends", False), self.configwatcher)
-+        deps_set = set()
-+        for deps in self.data.getVar("__base_depends", False):
-+            deps_set.add(deps[0])
-+        self.add_filewatch(deps_set, self.configwatcher)
- 
-         self.baseconfig_valid = True
-         self.parsecache_valid = False
-@@ -1510,7 +1515,7 @@ class BBCooker:
- 
-             # Add inotify watches for directories searched for bb/bbappend files
-             for dirent in searchdirs:
--                self.add_filewatch([[dirent]], dirs=True)
-+                self.add_filewatch([dirent], dirs=True)
- 
-             self.parser = CookerParser(self, filelist, masked)
-             self.parsecache_valid = True
-@@ -2144,7 +2149,8 @@ class CookerParser(object):
-                 self.cooker.skiplist[virtualfn] = SkippedPackage(info_array[0])
-             (fn, cls, mc) = bb.cache.virtualfn2realfn(virtualfn)
-             self.bb_cache.add_info(virtualfn, info_array, self.cooker.recipecaches[mc],
--                                        parsed=parsed, watcher = self.cooker.add_filewatch)
-+                                        parsed=parsed, watcher=self.cooker.add_filewatch,
-+                                        watch_manager=self.cooker.watcher)
-         return True
- 
-     def reparse(self, filename):
+         self.init_progress_reporter.next_stage()
 -- 
 2.7.4
 
