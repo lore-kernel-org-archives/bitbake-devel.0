@@ -1,24 +1,26 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 0825E77629
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 6C9CF77629
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Feb 2018 07:23:56 +0000 (UTC)
+	Tue, 27 Feb 2018 07:23:57 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w1R7Nv6H001058
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w1R7Nw4W011603
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Feb 2018 23:23:57 -0800 (PST)
+	Mon, 26 Feb 2018 23:23:58 -0800 (PST)
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.361.1; Mon, 26 Feb 2018 23:23:31 -0800
+	14.3.361.1; Mon, 26 Feb 2018 23:23:33 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 27 Feb 2018 15:28:08 +0800
-Message-ID: <cover.1519716375.git.liezhi.yang@windriver.com>
+Date: Tue, 27 Feb 2018 15:28:09 +0800
+Message-ID: <f909a91f9795300a24d76013bfeb019024df6b88.1519716375.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1519716375.git.liezhi.yang@windriver.com>
+References: <cover.1519716375.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [resend][PATCH 0/3 V2] cooker: fixes event notifications
+Subject: [PATCH 1/3] bitbake: cooker: don't preserve BB_CONSOLELOG
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,31 +36,49 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Tue, 27 Feb 2018 07:23:57 -0000
 Content-Type: text/plain
 
-Hi RP,
+Fixed:
+$ bitbake --server-only -T -1
+Set MACHINE = "qemux86" in conf/local.conf
+$ bitbake quilt
+Set MACHINE = "qemuppc" in conf/local.conf
+$ bitbake quilt
 
-I think that I've answered your questions' in V1, do you have any comments on
-these patches, please ?
+The log still goes into tmp/log/cooker/qemux86 in the second run, this is
+incorrect (should be tmp/log/cooker/qemuppc). I checked the code, the ui
+initializes it every time when it starts, so let it use the up-to-date
+one rather than old one.
 
-// Robert
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bitbake/lib/bb/cooker.py | 8 --------
+ 1 file changed, 8 deletions(-)
 
-The following changes since commit 1b7a9d4f63d07d61d53daac12da275e8ef2feb24:
-
-  buildhistory-diff: honour report_all flag (2018-02-24 10:35:59 +0000)
-
-are available in the git repository at:
-
-  git://git.pokylinux.org/poky-contrib rbt/cooker
-  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/cooker
-
-Robert Yang (3):
-  bitbake: cooker: don't preserve BB_CONSOLELOG
-  bitbake: cooker: fix event notifications
-  bitbake: cooker: improve inotify handling
-
- bitbake/lib/bb/cache.py  |  9 ++++---
- bitbake/lib/bb/cooker.py | 66 ++++++++++++++++++++++++------------------------
- 2 files changed, 39 insertions(+), 36 deletions(-)
-
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index af482f9..3f113ae 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -326,11 +326,6 @@ class BBCooker:
+         self.state = state.initial
+         self.caches_array = []
+ 
+-        # Need to preserve BB_CONSOLELOG over resets
+-        consolelog = None
+-        if hasattr(self, "data"):
+-            consolelog = self.data.getVar("BB_CONSOLELOG")
+-
+         if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
+             self.enableDataTracking()
+ 
+@@ -358,9 +353,6 @@ class BBCooker:
+         self.data_hash = self.databuilder.data_hash
+         self.extraconfigdata = {}
+ 
+-        if consolelog:
+-            self.data.setVar("BB_CONSOLELOG", consolelog)
+-
+         self.data.setVar('BB_CMDLINE', self.ui_cmdline)
+ 
+         #
 -- 
 2.7.4
 
