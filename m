@@ -1,46 +1,35 @@
-Return-Path: <daniel.gomez@silicon-gears.com>
-X-Greylist: delayed 501 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 28 Feb 2018 18:48:56 UTC
-Received: from relay4.cloudcontrol.es (relay4.cloudcontrol.es [93.90.30.99])
-	by mail.openembedded.org (Postfix) with ESMTP id 2C829788DA
+Return-Path: <pn@denx.de>
+X-Greylist: delayed 393 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 02 Mar 2018 11:36:02 UTC
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+	by mail.openembedded.org (Postfix) with ESMTP id 84B867851A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Feb 2018 18:48:56 +0000 (UTC)
-Received: from relay.cloudcontrol.es (unknown [93.90.30.95])
-	by relay4.cloudcontrol.es (Postfix) with ESMTP id 08655D7E5C
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Feb 2018 19:40:33 +0100 (CET)
-Received: from Twenty.silicon-gears.com
-	(96.red-81-47-169.staticip.rima-tde.net [81.47.169.96])
-	by relay.cloudcontrol.es (Postfix) with ESMTP id 05284D72A3
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Feb 2018 19:40:31 +0100 (CET)
-Received: from Twenty.silicon-gears.com (10.20.0.101) by
-	Twenty.silicon-gears.com (10.20.0.101) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
-	15.1.1034.26; Wed, 28 Feb 2018 19:40:31 +0100
-Received: from Twenty.silicon-gears.com ([fe80::997d:ba46:67c2:3dd1]) by
-	Twenty.silicon-gears.com ([fe80::997d:ba46:67c2:3dd1%17]) with mapi id
-	15.01.1034.026; Wed, 28 Feb 2018 19:40:31 +0100
-From: =?iso-8859-1?Q?Daniel_G=F3mez_Cruces?= <daniel.gomez@silicon-gears.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: devtool workspace creation problem
-Thread-Index: AQHTsMELJIbA+K+kbECeqWZ1NRmQhg==
-Date: Wed, 28 Feb 2018 18:40:31 +0000
-Message-ID: <b9a59fcf839f436a9ec20c45321c576a@silicon-gears.com>
-Accept-Language: en-US, es-ES
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.200.199.3]
+	Fri,  2 Mar 2018 11:36:02 +0000 (UTC)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 3zt6gl4P6fz1r5JV;
+	Fri,  2 Mar 2018 12:36:03 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+	by mail.m-online.net (Postfix) with ESMTP id 3zt6gl42gwz1qqkM;
+	Fri,  2 Mar 2018 12:36:03 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
+	port 10024)
+	with ESMTP id 5js3QZZcR_eT; Fri,  2 Mar 2018 12:36:01 +0100 (CET)
+X-Auth-Info: Aa/+c1J9XZ3AeZji8iChbjxR9OqC93X6PezNbNWJ//E=
+Received: from antares.denx.de (unknown [62.91.23.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Fri,  2 Mar 2018 12:36:01 +0100 (CET)
+To: bitbake-devel@lists.openembedded.org, yocto@yoctoproject.org
+From: Parthiban Nallathambi <pn@denx.de>
+Message-ID: <69aee4a6-ed3b-bbb3-7896-818a8904a98e@denx.de>
+Date: Fri, 2 Mar 2018 12:36:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+	Thunderbird/52.6.0
 MIME-Version: 1.0
-X-ProcessControl-SpamMailControl-Information: Por favor,
-	contacte con el administrador
-X-ProcessControl-SpamMailControl-ID: 05284D72A3.A36EA
-X-ProcessControl-SpamMailControl: Not scanned: please contact your Internet
-	E-Mail Service Provider for details
-X-ProcessControl-SpamMailControl-From: daniel.gomez@silicon-gears.com
-X-Spam-Status: No
-Subject: devtool workspace creation problem
+Subject: [yocto] Add custom user to custom group in bitbake recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,97 +42,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 28 Feb 2018 18:48:56 -0000
+X-List-Received-Date: Fri, 02 Mar 2018 11:36:02 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi,
+Hello All,
 
-I'm working with yocto (krogoth) and I'm having some problems with devtool =
-while I'm doing my custom kernel recipe based on linux-yocto.inc
+I have created a custom group e.g "grp1" in my application recipe say 
+"app.bb".
 
-The problem is that .config file is not found when devtool command is creat=
-ing the workspace for the custom kernel recipe and it is not able to find t=
-he .config because it has already moved it from TMP directory to the worksp=
-ace directory.
+GROUPADD_PARAM_${PN} = "grp1"
 
-So, I created a simple patch that only checks if .config still exists but w=
-hat I would like to know is if I have something missing in my kernel recipe=
- that is provoking this problem or it is a problem of the script.
+I am trying to add my custom user e.g: "user1" to this group "grp1" in 
+"space.bb".
 
+USERADD_PARAM_${PN} = "-d ${localstatedir}/lib/space/ -s /bin/false -G 
+grp1 -U user1"
+
+The useradd command failed: "useradd: group 'grp1' does not exist". I 
+have also tried adding DEPENDS_${PN} = "app" in space.bb, but it doesn't 
+help.
+
+How can I add my custom user to my custom group in bitbake recipe?
+
+Question in Stackoverflow: 
+https://stackoverflow.com/questions/49068076/yocto-add-custom-user-to-custom-group
+
+-- 
 Thanks,
-Daniel
+Parthiban Nallathambi
 
-
-From ce66d072ee26678f774630a0a8f6f4e69794177f Mon Sep 17 00:00:00 2001
-From: Daniel Gomez <daniel.gomez@silicon-gears.com>
-Date: Wed, 28 Feb 2018 19:35:05 +0100
-Subject: [PATCH] From ce66d072ee26678f774630a0a8f6f4e69794177f Mon Sep 17 0=
-0:00:00 2001
-From: Daniel Gomez <daniel.gomez@silicon-gears.com>
-Date: Wed, 28 Feb 2018 19:35:05 +0100
-Subject: [PATCH] Check kconfig when devtool is generating workspace
-
-Signed-off-by: Daniel Gomez <daniel.gomez@silicon-gears.com>
----
- scripts/lib/devtool/standard.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/lib/devtool/standard.py b/scripts/lib/devtool/standard=
-.py
-index 77a82d5..7e41bd2 100644
---- a/scripts/lib/devtool/standard.py
-+++ b/scripts/lib/devtool/standard.py
-@@ -634,7 +634,9 @@ def _extract_source(srctree, keep_temp, devbranch, sync=
-, d):
-=20
-         if kconfig:
-             logger.info('Copying kernel config to srctree')
--            shutil.copy2(kconfig, srctree)
-+            if os.path.exists(kconfig):
-+                logger.info('Kernel config file does not exist anymore')
-+                shutil.copy2(kconfig, srctree)
-=20
-     finally:
-         bb.logger.setLevel(origlevel)
---=20
-2.7.4
-
-
-
-Signed-off-by: Daniel Gomez <daniel.gomez@silicon-gears.com>
----
- scripts/lib/devtool/standard.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/lib/devtool/standard.py b/scripts/lib/devtool/standard=
-.py
-index 77a82d5..7e41bd2 100644
---- a/scripts/lib/devtool/standard.py
-+++ b/scripts/lib/devtool/standard.py
-@@ -634,7 +634,9 @@ def _extract_source(srctree, keep_temp, devbranch, sync=
-, d):
-=20
-         if kconfig:
-             logger.info('Copying kernel config to srctree')
--            shutil.copy2(kconfig, srctree)
-+            if os.path.exists(kconfig):
-+                logger.info('Kernel config file does not exist anymore')
-+                shutil.copy2(kconfig, srctree)
-=20
-     finally:
-         bb.logger.setLevel(origlevel)
---=20
-2.7.4
-
-
-
-
-
-
-
-
-
-=A0=A0=A0 =
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
 
