@@ -1,24 +1,24 @@
-Return-Path: <richard@rpsys.net>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 99E8178A94
+Return-Path: <amanda.r.brindle@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 78E6C78A8B
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  3 Mar 2018 23:31:04 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	w23NV3nA008263
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Sat, 3 Mar 2018 23:31:04 GMT
-Received: from richard by hex with local (Exim 4.86_2)
-	(envelope-from <richard@rpsys.net>)
-	id 1esGcI-0004ZF-WE; Sat, 03 Mar 2018 23:31:02 +0000
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Mon,  5 Mar 2018 19:16:25 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	05 Mar 2018 11:16:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.47,428,1515484800"; d="scan'208";a="205674788"
+Received: from arbrindl-dev.jf.intel.com ([10.7.199.57])
+	by orsmga005.jf.intel.com with ESMTP; 05 Mar 2018 11:16:27 -0800
+From: Amanda Brindle <amanda.r.brindle@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat,  3 Mar 2018 23:31:01 +0000
-Message-Id: <1520119861-17519-1-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Mon,  5 Mar 2018 11:11:42 -0800
+Message-Id: <cover.1520274722.git.amanda.r.brindle@intel.com>
 X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: clamav-milter 0.99.3 at dan
-X-Virus-Status: Clean
-Subject: [PATCH] cooker: Fix environment double key expansion issue
+Cc: stephano.cetola@intel.com
+Subject: [PATCH V3 0/1] utils.py: Add option for explode_dep_versions2 to return unsorted
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,41 +31,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 03 Mar 2018 23:31:05 -0000
+X-List-Received-Date: Mon, 05 Mar 2018 19:16:26 -0000
 
-The base configuration needs key expansion and anon python execution,
-the parsed configurations do not. Fix this consistently, its been
-broken and causing double key expansion for a while, only relised
-when we started double anonymous python exeution too.
+Changes since V2:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Changed variable name in explode_dep_versions2 from unsorted to sort in order to avoid double negative logic.
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index d1df711..1fda40d 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -516,6 +516,8 @@ class BBCooker:
-             fn = runlist[0][3]
-         else:
-             envdata = self.data
-+            data.expandKeys(envdata)
-+            parse.ast.runAnonFuncs(envdata)
- 
-         if fn:
-             try:
-@@ -530,9 +532,6 @@ class BBCooker:
-             self.data.inchistory.emit(env)
-             logger.plain(env.getvalue())
- 
--        data.expandKeys(envdata)
--        parse.ast.runAnonFuncs(envdata)
--
-         # emit variables and shell functions
-         with closing(StringIO()) as env:
-             data.emit_env(env, envdata, True)
+Also made the variable a keyword-only argument for readability.
+
+The following changes since commit 44ea6ded0e8e73f5258ce55bd1b851e24243b76a:
+
+  bitbake: bitbake-user-manual: Commented out Placeholder Paragraph (2018-02-06 18:10:35 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib abrindle/buildhistory-diff4
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=abrindle/buildhistory-diff4
+
+Amanda Brindle (1):
+  utils.py: Add option for explode_dep_versions2 to return unsorted
+
+ lib/bb/utils.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
 -- 
 2.7.4
 
