@@ -1,48 +1,40 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wm0-f65.google.com (mail-wm0-f65.google.com [74.125.82.65])
-	by mail.openembedded.org (Postfix) with ESMTP id F341478412
+Return-Path: <pascal.bach@siemens.com>
+X-Greylist: delayed 692 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 09 Mar 2018 09:52:53 UTC
+Received: from david.siemens.de (david.siemens.de [192.35.17.14])
+	by mail.openembedded.org (Postfix) with ESMTP id 944DE788F8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Mar 2018 17:35:41 +0000 (UTC)
-Received: by mail-wm0-f65.google.com with SMTP id h21so6352892wmd.1
+	Fri,  9 Mar 2018 09:52:52 +0000 (UTC)
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+	by david.siemens.de (8.15.2/8.15.2) with ESMTPS id w299fL3v007746
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 07 Mar 2018 09:35:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=IjBP2MwfHmwemd48k3lLLNnOymHOqrl6zaSUkOScExM=;
-	b=scGKKq06bmw8KVuIOIUJidG3ha4Ih1NsU0LG8Zu558zJ+2ESpjatXG++QQHZMa9V0p
-	5qEMPh7ZTlHCzjS0qzS8z8+KcDX+2GMZjN41ni5NPrEiP4Eo2EyunIcs6whoHsCCg3of
-	TslPxQQdOyWYTGR9B4Y1D1ANOLRBkBCGyNm4VxL32KY+DpKiBDopzju4kgoPLHjiPwjq
-	Z+x1VCdwsmrOhF8Sz+SJyMQv6h3W6worSSa04xtvdO/2T3SF86slbjq7DXFI78f9vxwW
-	/MNALjkbslZarhMiNq7c4w0HnHrXA9n3kZu6AWikFjqwEdeNUAb6PyrW9eDQt9Um5FKw
-	eUiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=IjBP2MwfHmwemd48k3lLLNnOymHOqrl6zaSUkOScExM=;
-	b=X8Mkiurkd/LEgDROMvf8kRRiFE5lRzxI8jwQxFxCRRfwrKmTDAViMKQW61SyXYdfkN
-	TG3F7DA0/IYEofJPXiJEGZYooSF5PrEKowev/qdvLqi/mwI4Mcd7VOhHmjI0UOL+8IUV
-	e3BLe4zqCq53NOx4QkB4GqoikH1+DPlT1o96h8wcmSRBQaHhOhf7HRG4jYC1U9mHOD16
-	MwqRdAGb7Jn7+zRoFNRqoaMePNnqmII65zAtbOlpZUAqOGNgqGrgYItgIOTZztbOPct9
-	+NKnHfV+x1iPgvWzTWPFmMlo8xnB+mU3LpjFuKrXHbZkjO3z4318jGBrj0BPgiUHuhoq
-	sKHA==
-X-Gm-Message-State: AElRT7ERN+Kqit08751SociSxlPMvPxBVkSAbPGDkhi9wb43/0Spumbg
-	UMnE/2C8OYtG8YylwftmxX1pZqdl
-X-Google-Smtp-Source: AG47ELtKERQzWrA/IAtVRBi6R0TqBEVsFXW0+SUoDT8onYtBbgvVZwBndz5pZFO3VRMU7+oREeSpRA==
-X-Received: by 10.28.228.131 with SMTP id b125mr14316056wmh.153.1520444142333; 
-	Wed, 07 Mar 2018 09:35:42 -0800 (PST)
-Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
-	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
-	31sm14894410wrr.59.2018.03.07.09.35.41
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 07 Mar 2018 09:35:41 -0800 (PST)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 Mar 2018 17:35:38 +0000
-Message-Id: <20180307173538.14911-1-ross.burton@intel.com>
-X-Mailer: git-send-email 2.11.0
-Subject: [PATCH] data: show value in -e when unexported
+	Fri, 9 Mar 2018 10:41:21 +0100
+Received: from DEFTHW99ERHMSX.ww902.siemens.net
+	(defthw99erhmsx.ww902.siemens.net [139.22.70.133])
+	by mail1.sbs.de (8.15.2/8.15.2) with ESMTPS id w299evcV032214
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 9 Mar 2018 10:41:21 +0100
+Received: from DEFTHW99ERTMSX.ww902.siemens.net (139.22.70.200) by
+	DEFTHW99ERHMSX.ww902.siemens.net (139.22.70.133) with Microsoft SMTP
+	Server (TLS) id 14.3.361.1; Fri, 9 Mar 2018 10:40:58 +0100
+Received: from DEFTHW99EH4MSX.ww902.siemens.net ([169.254.2.118]) by
+	DEFTHW99ERTMSX.ww902.siemens.net ([139.22.70.200]) with mapi id
+	14.03.0361.001; Fri, 9 Mar 2018 10:40:57 +0100
+From: "Bach, Pascal" <pascal.bach@siemens.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: Issue with bitbake fetch/unpack when using MIRRORS rewrite
+Thread-Index: AdO3ipHaekI1Ua6UTPqze+w0jLH5dw==
+Date: Fri, 9 Mar 2018 09:40:56 +0000
+Message-ID: <355BE46A91031048906B695426A8D8E617342693@DEFTHW99EH4MSX.ww902.siemens.net>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [139.22.70.44]
+MIME-Version: 1.0
+Subject: Issue with bitbake fetch/unpack when using MIRRORS rewrite
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,56 +47,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Mar 2018 17:35:42 -0000
+X-List-Received-Date: Fri, 09 Mar 2018 09:52:54 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-When a value has been unexported it still has a value, so write it out in a
-comment to keep the output shell-like.
+Hello Everyone
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
----
- bitbake/lib/bb/data.py | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+I finally got to pin down an issue that I occasionally observed in the past=
+:
 
-diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-index 80a7879cb66..62fef18c40d 100644
---- a/bitbake/lib/bb/data.py
-+++ b/bitbake/lib/bb/data.py
-@@ -156,10 +156,6 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
- 
-     varExpanded = d.expand(var)
- 
--    if unexport:
--        o.write('unset %s\n' % varExpanded)
--        return False
--
-     if val is None:
-         return False
- 
-@@ -178,15 +174,19 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-         o.write("%s() {\n%s\n}\n" % (varExpanded, val))
-         return 1
- 
--    if export:
--        o.write('export ')
--
-     # if we're going to output this within doublequotes,
-     # to a shell, we need to escape the quotes in the var
-     alter = re.sub('"', '\\"', val)
-     alter = re.sub('\n', ' \\\n', alter)
-     alter = re.sub('\\$', '\\\\$', alter)
--    o.write('%s="%s"\n' % (varExpanded, alter))
-+
-+    if unexport:
-+        o.write('unset %s # "%s"\n' % (varExpanded, alter))
-+    elif export:
-+        o.write('export %s="%s"\n' % (varExpanded, alter))
-+    else:
-+        o.write('%s="%s"\n' % (varExpanded, alter))
-+
-     return False
- 
- def emit_env(o=sys.__stdout__, d = init(), all=False):
--- 
-2.11.0
+When using the git fetcher with shallow tarballs (BB_GIT_SHALLOW,BB_GIT_SHA=
+LLOW_DEPTH) experience the following issues during the do_unpack task:
 
+ERROR: pseudo-native-1.9.0+gitAUTOINC+d7c31a25e4-r0 do_unpack: Fetcher fail=
+ure: [...]
+tar (child): /home/projects/ccp3-labs/oe/build/../../../downloads2/gitshall=
+ow_git.yoctoproject.org.pseudo_d7c31a2-1_master.tar.gz: Cannot open: No suc=
+h file or directory
+tar (child): Error is not recoverable: exiting now
+tar: Child returned status 2
+tar: Error is not recoverable: exiting now
+
+The issue is that the do_unpack is trying to find the following file in the=
+ downloads directory:
+downloads2/gitshallow_git.yoctoproject.org.pseudo_d7c31a2-1_master.tar.gz
+
+However this file doesn't exist, instead the following file was created by =
+the fetch task:
+downloads2/gitshallow_git.yoctoproject.org.git.pseudo_d7c31a2-1_master.tar.=
+gz
+
+After some digging I suspect that the following rewrite rule is causing the=
+ issue:
+MIRRORS +=3D "git://git.yoctoproject.org/.*                               g=
+it://git.yoctoproject.org/git/PATH;protocol=3Dhttps \n"
+
+The line exists because we don't have access to git.yoctoproject.org via th=
+e git protocol. So we use the above rule to make access work via HTTPS.
+However due to the way the Yocto git server is structured the rewrite cause=
+s the URL path to change from / to /git which causes the additional .git in=
+ the
+resulting tarball, which then makes the unpack task look for the wrong file=
+.
+
+I think the proper behavior would be to always name the tarball after the o=
+riginal SRC_URI not the rewritten one.
+
+BTW: I was able to reproduce the issue with the shallow git tarballs but I =
+think it also applies to normal git tarballs and possibly other fetchers.
+
+The issue still exists with bitbake 1.37.0 on Poky master.
+
+Regards
+Pascal
 
