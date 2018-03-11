@@ -1,32 +1,26 @@
-Return-Path: <stephano.cetola@linux.intel.com>
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	by mail.openembedded.org (Postfix) with ESMTP id 69DF1788F6
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 4B1CE78916
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Mar 2018 21:49:11 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	09 Mar 2018 13:49:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.47,447,1515484800"; d="scan'208";a="40676490"
-Received: from linux.intel.com ([10.54.29.200])
-	by orsmga002.jf.intel.com with ESMTP; 09 Mar 2018 13:49:13 -0800
-Received: from scetola-mac01.jf.intel.com (unknown [10.54.74.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 35CB758046C
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Mar 2018 13:49:13 -0800 (PST)
-To: "bitbake-devel@lists.openembedded.org"
+	Sun, 11 Mar 2018 13:36:47 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
+	w2BDaiKn012399
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NOT); Sun, 11 Mar 2018 13:36:47 GMT
+Message-ID: <1520775403.10851.182.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Bach, Pascal" <pascal.bach@siemens.com>,
+	"bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-From: Stephano Cetola <stephano.cetola@linux.intel.com>
-Message-ID: <348fcb7c-d3df-eae8-0787-7238a77ac51f@linux.intel.com>
-Date: Fri, 9 Mar 2018 13:49:13 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
-	Gecko/20100101 Thunderbird/52.6.0
-MIME-Version: 1.0
-Subject: New Release Number 2.99 in Bugzilla
+Date: Sun, 11 Mar 2018 06:36:43 -0700
+In-Reply-To: <355BE46A91031048906B695426A8D8E617342693@DEFTHW99EH4MSX.ww902.siemens.net>
+References: <355BE46A91031048906B695426A8D8E617342693@DEFTHW99EH4MSX.ww902.siemens.net>
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+X-Virus-Scanned: clamav-milter 0.99.3 at dan
+X-Virus-Status: Clean
+Subject: Re: Issue with bitbake fetch/unpack when using MIRRORS rewrite
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,46 +33,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 09 Mar 2018 21:49:12 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-List-Received-Date: Sun, 11 Mar 2018 13:36:48 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-Please excuse the cross posting here. This information is pertinent to
-anyone submitting bugs to the Yocto project Bugzilla, so I want to reach
-as large an audience as is appropriate.
+On Fri, 2018-03-09 at 09:40 +0000, Bach, Pascal wrote:
+> Hello Everyone
+> 
+> I finally got to pin down an issue that I occasionally observed in
+> the past:
+> 
+> When using the git fetcher with shallow tarballs
+> (BB_GIT_SHALLOW,BB_GIT_SHALLOW_DEPTH) experience the following issues
+> during the do_unpack task:
+> 
+> ERROR: pseudo-native-1.9.0+gitAUTOINC+d7c31a25e4-r0 do_unpack:
+> Fetcher failure: [...]
+> tar (child): /home/projects/ccp3-
+> labs/oe/build/../../../downloads2/gitshallow_git.yoctoproject.org.pse
+> udo_d7c31a2-1_master.tar.gz: Cannot open: No such file or directory
+> tar (child): Error is not recoverable: exiting now
+> tar: Child returned status 2
+> tar: Error is not recoverable: exiting now
+> 
+> The issue is that the do_unpack is trying to find the following file
+> in the downloads directory:
+> downloads2/gitshallow_git.yoctoproject.org.pseudo_d7c31a2-
+> 1_master.tar.gz
+> 
+> However this file doesn't exist, instead the following file was
+> created by the fetch task:
+> downloads2/gitshallow_git.yoctoproject.org.git.pseudo_d7c31a2-
+> 1_master.tar.gz
+> 
+> After some digging I suspect that the following rewrite rule is
+> causing the issue:
+> MIRRORS +=
+> "git://git.yoctoproject.org/.*                               git://gi
+> t.yoctoproject.org/git/PATH;protocol=https \n"
+> 
+> The line exists because we don't have access to git.yoctoproject.org
+> via the git protocol. So we use the above rule to make access work
+> via HTTPS.
+> However due to the way the Yocto git server is structured the rewrite
+> causes the URL path to change from / to /git which causes the
+> additional .git in the
+> resulting tarball, which then makes the unpack task look for the
+> wrong file.
+> 
+> I think the proper behavior would be to always name the tarball after
+> the original SRC_URI not the rewritten one.
+> 
+> BTW: I was able to reproduce the issue with the shallow git tarballs
+> but I think it also applies to normal git tarballs and possibly other
+> fetchers.
+> 
+> The issue still exists with bitbake 1.37.0 on Poky master.
 
-The Yocto Project team is moving to a new release planning process and I
-want to provide an overview as there will be some things I need from
-those of you making changes and adding things to Bugzilla.
+I do think there are likely problems in this area.
 
-Overview:
-We are moving to a “Pull” process for planning rather than a “Push”
-process.  What this means is that we will start with an empty 2.6
-release bucket and pull bugs and enhancements in that map to our top
-priorities rather than push things out of a giant bucket.  We are hoping
-this will help us start 2.6 with a very clear idea as to what we will
-focus on and be much less overwhelming than pushing a giant snowball
-through each release.
+This gets tricky as one mirror tarball could in theory match against
+multiple different parent urls. I'm therefore torn on whether it should
+use the "parent" naming for the tarball, or create a chain of symlinks
+back to the high level name. 
 
-How does this effect you?
-If you are pushing bugs/enhancements to the next release or adding new
-bugs/enhancements for the next release you need to be aware of the
-following:
+Its something I'd have to sit and look at a bit further and understand
+what the code is doing. I know when Chris added the shallow code, he
+did add multiple mirror tarball support so it could be related to that
+too...
 
--We have a M+ Future status that holds items that are important and need
-to be addressed soon.  This bucket is pretty big.
--We have moved all 2.6 features and bugs to a 2.99 release.  This bucket
-is a temporary hold for the items that didn’t make it into 2.5 and are
-at the very top of our list for review to pull in.  We don’t want them
-to get lost in the M+ Future bucket.  Once 2.6 planning is complete,
-this 2.99 bucket will be empty and removed.
--If you are adding new bugs and enhancements that you believe should be
-slotted for 2.6, please enter them as 2.99.
--If you are pushing anything from 2.5 to 2.6, please enter it as 2.99.
+Just thinking out loud, you could have a "full" mirror tarball as well
+as a shallow one too so it does get quite complex. Which corner cases
+we care about is a tricky one too.
 
-Please let me know if you have any questions about this.
+Did you have a fix to propose?
 
-Thanks,
-Stephano
+With the fetcher, I do ask when we make changes, we do add unit tests
+so that we can protect use cases going forward.
+
+Cheers,
+
+Richard
+
+
+
 
