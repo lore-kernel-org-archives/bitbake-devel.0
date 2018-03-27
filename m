@@ -1,33 +1,50 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id A18D1785B8
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-it0-f43.google.com (mail-it0-f43.google.com
+	[209.85.214.43])
+	by mail.openembedded.org (Postfix) with ESMTP id D5B4F7855C
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Mar 2018 06:46:10 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w2Q6kBoE023693
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Tue, 27 Mar 2018 18:35:31 +0000 (UTC)
+Received: by mail-it0-f43.google.com with SMTP id p67-v6so450676itc.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 25 Mar 2018 23:46:11 -0700 (PDT)
-Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.201]) by
-	ALA-HCA.corp.ad.wrs.com ([147.11.189.40]) with mapi id 14.03.0361.001;
-	Sun, 25 Mar 2018 23:46:11 -0700
-From: "Reyna, David" <david.reyna@windriver.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 2/2] Toaster: fix shutdown and extra
-	threads
-Thread-Index: AQHTpuK/XOKudaV2NE+M6/3BDq7sVqPiTnUA
-Date: Mon, 26 Mar 2018 06:46:11 +0000
-Message-ID: <5E53D14CE4667A45B9A06760DE5D13D0F37F5CB7@ALA-MBD.corp.ad.wrs.com>
-References: <cover.1518754951.git.David.Reyna@windriver.com>
-	<1db9c3b241a7371239ecb7a3bbf5a84868cdd7ef.1518754951.git.David.Reyna@windriver.com>
-In-Reply-To: <1db9c3b241a7371239ecb7a3bbf5a84868cdd7ef.1518754951.git.David.Reyna@windriver.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [147.11.117.93]
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] Toaster: fix shutdown and extra threads
+	Tue, 27 Mar 2018 11:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id;
+	bh=pU3a0+jdnWgCRjk810OQ3Cswpo5G/z5S6Rpweb6leoQ=;
+	b=FlSTc5DzEy915UFBFWsGHYUd2LzoKjaS0hBT+fNj+0zr4gaDIA+oQMaoGCIUOVpY5U
+	JsmvHEdA7Yd0vTcnQyqteQQYZey0YCpLd1CTeAhO2oaTQdlXDflSfTGyLoJCfIMZswzm
+	Uixj+AvwisPwxHXWbYGK72d+t05DRCyqSJYryeNgEL05PKfqw9Q5uEs8YHehiuvWAI6F
+	AouWV4H1F73fdWo8Rb4fbXxAJhaSI37xRlPdfZwtgoHCOmdkjjiRwrz2NiLdZ6PGnsuo
+	8xSwFkCczXd8SIy9YcLh9evC7JohFWKdjOSOm+7fFmCOuvIj4sHlswcD3hVqgurZJqh7
+	tZYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=pU3a0+jdnWgCRjk810OQ3Cswpo5G/z5S6Rpweb6leoQ=;
+	b=FthDOyTMPdXkw1oe9k8hVtwo0xA3DXTTSGQ0oh6/FWdx0ueGpVEb4gnx8OtV3eqBt9
+	mf5tDiCuMuKIiM5sPqLRaly1fMeFxyF3u09vNKdzsaOUXYCFvjG3y046qGau1eS/9wnD
+	UyLzuZAGLlJDMaqkb4K++etZ/EXVNRQF2v74Vn/7DitkNMDso7cJCuNRuB6hHVGngip7
+	QaF3eK4bFzT9Bjy+h9FmTAGMzgeAOoUVjHpO5U1PglkGiHyomu9fj1VYIFyiowiZElTS
+	z/oY6UCx9ILR0tb22D90H4HgGenjxl81DJ8O/tgaqWBxVHlZ28++/KAVs6C2qvpVOrgv
+	N/yA==
+X-Gm-Message-State: ALQs6tCMGBUaHJGmqghxb05wK8hXSelaPSGM8SM/sRW3MKdnO5k2w/1R
+	lRRt8AR/VL2dp2Q+HupZ0qni3BQ6
+X-Google-Smtp-Source: AIpwx4+UbrGEKQNT3etqemeJAUbZnbiM2sYM+A0XR+KSiCotyGCp5vY3p5bUQQwMxhmwiABz2cfJRA==
+X-Received: by 2002:a24:3d4f:: with SMTP id
+	n76-v6mr371738itn.147.1522175732846; 
+	Tue, 27 Mar 2018 11:35:32 -0700 (PDT)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.googlemail.com with ESMTPSA id
+	p142-v6sm1465070itb.24.2018.03.27.11.35.32
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Tue, 27 Mar 2018 11:35:32 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 27 Mar 2018 13:34:26 -0500
+Message-Id: <20180327183427.13983-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.14.3
+Subject: [RFC] Respect force flag in runall and runonly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,62 +57,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 26 Mar 2018 06:46:10 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 27 Mar 2018 18:35:32 -0000
 
+Implements the ability to run bitbake commands like:
 
+ $ bitbake -f --runall fetch core-image-mimimal
+ $ bitbake -f --runonly fetch core-image-minimal
 
------Original Message-----
-From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
-unces@lists.openembedded.org] On Behalf Of David Reyna
-Sent: Thursday, February 15, 2018 8:26 PM
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake-devel] [PATCH 2/2] Toaster: fix shutdown and extra thread=
-s
+which will invalidate the stamps for all affected tasks forcing them to
+run even if they have already.
 
-From: David Reyna <David.Reyna@windriver.com>
+I've found this useful in a few circumstances. Most recently, I was
+attempting to do A/B performance comparison of so package QA checks, so
+it was pretty easy to figure out the impact of various QA checks with:
 
-Fix typo in shutdown code to kill threads when "kill -0" is not enough.
-Use the '--noreload' flag for 'runserver' so that there are no extra and un=
-accounted threads.
+ $ time bitbake -f --runall package_qa core-image-minimal
 
-[YOCTO #12555]
+Additionally, I currently do a number of actions like this (because we
+don't have runall):
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
- bin/toaster | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ $ bitbake -g <image>
+ $ xargs -a pn-buildlist bitbake -f -c <action>
 
-diff --git a/bin/toaster b/bin/toaster
-index 4036f0a..ed365ee 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -68,7 +68,7 @@ webserverKillAll()
-         if [ -f ${pidfile} ]; then
-             pid=3D`cat ${pidfile}`
-             while kill -0 $pid 2>/dev/null; do
--                kill -SIGTERM -$pid 2>/dev/null
-+                kill -SIGTERM $pid 2>/dev/null
-                 sleep 1
-             done
-             rm  ${pidfile}
-@@ -91,7 +91,7 @@ webserverStartAll()
-=20
-     echo "Starting webserver..."
-=20
--    $MANAGE runserver "$ADDR_PORT" \
-+    $MANAGE runserver --noreload "$ADDR_PORT" \
-            </dev/null >>${BUILDDIR}/toaster_web.log 2>&1 \
-            & echo $! >${BUILDDIR}/.toastermain.pid
-=20
---
-2.7.4
+And I would like to replace them with
 
---
-_______________________________________________
-bitbake-devel mailing list
-bitbake-devel@lists.openembedded.org
-http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+ $ bitbake -f --runall <action> <image>
+
+Is this something that is even necessary/wanted?
+
 
