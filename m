@@ -1,62 +1,48 @@
-Return-Path: <ola.x.nilsson@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id EA4F47841B
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f67.google.com (mail-wm0-f67.google.com [74.125.82.67])
+	by mail.openembedded.org (Postfix) with ESMTP id D5EEB78449
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Mar 2018 09:41:56 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id D8BDC183B8
+	Wed, 28 Mar 2018 09:54:17 +0000 (UTC)
+Received: by mail-wm0-f67.google.com with SMTP id x82so4048095wmg.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Mar 2018 11:41:54 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id Zw0No1SU4xAY for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Mar 2018 11:41:53 +0200 (CEST)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-	by bastet.se.axis.com (Postfix) with ESMTPS id 9C968182C5
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Mar 2018 11:41:53 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E4241A06D
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Mar 2018 11:41:53 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 634B71A065
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Mar 2018 11:41:53 +0200 (CEST)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
-	by boulder02.se.axis.com (Postfix) with ESMTP
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Mar 2018 11:41:53 +0200 (CEST)
-Received: from XBOX03.axis.com (xbox03.axis.com [10.0.5.17])
-	by thoth.se.axis.com (Postfix) with ESMTP id 576C03093
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Mar 2018 11:41:53 +0200 (CEST)
-Received: from XBOX04.axis.com (10.0.5.18) by XBOX03.axis.com (10.0.5.17) with
-	Microsoft SMTP Server (TLS) id 15.0.1263.5;
-	Wed, 28 Mar 2018 11:41:53 +0200
-Received: from XBOX04.axis.com ([fe80::6c88:230d:cafd:2f2a]) by
-	XBOX04.axis.com ([fe80::6c88:230d:cafd:2f2a%22]) with mapi id
-	15.00.1263.000; Wed, 28 Mar 2018 11:41:53 +0200
-From: Ola x Nilsson <ola.x.nilsson@axis.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PULL] *** Fix build issue with html5lib in
-	bitbake	1.26/1.28 ***
-Thread-Index: AQHTxhDcEfzwTi6RzEaPg6tcet7AP6PlZZmI
-Date: Wed, 28 Mar 2018 09:41:52 +0000
-Message-ID: <1522230112838.18244@axis.com>
-References: <cover.1522085586.git.soemoe.a@gmail.com>
-In-Reply-To: <cover.1522085586.git.soemoe.a@gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-Subject: Re: [PULL] *** Fix build issue with html5lib in bitbake	1.26/1.28 ***
+	Wed, 28 Mar 2018 02:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=lP2rXniwLgdSMkyWDq8DsnfQ/aOLRsbskGvOhKwIIQc=;
+	b=dTUzpTFpgexKhURgTz5b8dVFrn3ZGMpbKN8xalT1azgMsJAbIQPCpO8nppIIg984SB
+	d8kr9EP79Tu4rwm27FQb0Z8VV/DDcLDaoLkeiCTKcvt0lfqpofU+jxmGGXReSngcp0tE
+	Hc/l0MaU+aavgUlmGADAGNdK+TJfu3UbBKiovy18tdetrOzExi3xI+Z76lXkLounf335
+	QqlwCoCXr4MI/eLxwhkIw0XufNudtw9dd5Z9FNjvkYMr/0/YV2vc2xO94aZln5DZtDaH
+	js9s5wX/wmxDuAnL9Kt6zf1oRp7YOo+5anZCiXz50H1PGoGog3j9Owkp6X02MCO7LiSJ
+	rh/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=lP2rXniwLgdSMkyWDq8DsnfQ/aOLRsbskGvOhKwIIQc=;
+	b=E/671dsKqqu66rw0g7psckt4meYxQaJ9NW/1ZDUoPWf32t+RsERBCPS5hAD9gNPJWU
+	zM/0TUiQ3blSo9OnUrM1Qtwh1r1pjGd+NrRigibx9XG1FE1wRNPFlPgFpntDs7jKYLAC
+	wVfxbPy8iijRpXIwNrIR61FZB82QPDrQtlqfPLmYKAUpQFUP14EShHESJpzM2zBUgx51
+	GZIUI3JVTw5cPTisEOx4EDetzBF9lxNlbiIgsMqA/HlLLfWQw/HY2z7rr+GaN+DmTtNh
+	Nxf0p34Hy844YpC+4EFeLq2MPuN/Q/ZAK0OTIlx6x+8ikm0pZ0LHspKL5i7QB1DKnMvh
+	MQoQ==
+X-Gm-Message-State: AElRT7HF2Q9uvmd1pz9ef8g7aTNrFCKg3Ay0+L48Qba18Ofu7O1hYaYK
+	J/pv1TLzJglTsvjl+ncgcLquJ4iO
+X-Google-Smtp-Source: AIpwx48jQ+01CFugeiFjfuqs1Y90MyIFiC1EgFhkuUJMGUmqP/wqJtju7W7RV1McfkgLamShvr0FsQ==
+X-Received: by 10.28.71.155 with SMTP id m27mr2183612wmi.126.1522230858025;
+	Wed, 28 Mar 2018 02:54:18 -0700 (PDT)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id m9sm3351496wrf.13.2018.03.28.02.54.16
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 28 Mar 2018 02:54:17 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 28 Mar 2018 10:54:12 +0100
+Message-Id: <20180328095413.32013-1-ross.burton@intel.com>
+X-Mailer: git-send-email 2.11.0
+Subject: [PATCH 1/2] tests/fetch: state which upstream failed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -69,69 +55,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 28 Mar 2018 09:41:57 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 28 Mar 2018 09:54:18 -0000
 
-This has already been fixed on a few branches with =0A=
-=0A=
-bitbake: lib/bs4: Fix imports from html5lib >=3D 0.9999999/1.0b8=0A=
-=0A=
-It might be better to backport that where needed.=0A=
-=0A=
--- =0A=
-Ola Nilsson=0A=
-________________________________________=0A=
-From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-bounces@l=
-ists.openembedded.org> on behalf of Soemoe Aung <soemoe.a@gmail.com>=0A=
-Sent: Tuesday, March 27, 2018 23:15=0A=
-To: bitbake-devel@lists.openembedded.org=0A=
-Subject: [bitbake-devel] [PULL] *** Fix build issue with html5lib in bitbak=
-e    1.26/1.28 ***=0A=
-=0A=
-When I was running yocto-poky on the fido and jethro branches, I was gettin=
-g build errors caused by the included html5lib in bitbake. It seems like a =
-class is being called incorrectly there. I noticed the issue is resolved in=
- the krogoth branch and the html5lib is indeed different there.=0A=
-=0A=
-yocto-poky fido includes bitbake version 1.26 and jethro includes bitbake v=
-ersion 1.28. Looking at the bitbake source repo for these versions confirms=
- that these files are the same. yocto-poky krogoth, which has the issue fix=
-ed, uses bitbake 1.30, which also has the issue fixed in the bitbake repo.=
-=0A=
-=0A=
-I originally created this patch in the yocto-poky contrib repo and was dire=
-cted to send it to bitbake instead. Can someone here take a look at this an=
-d accept the changes into the 1.26 and 1.28 branches? Can you also send the=
-se changes upstream to the yocto-poky fido and jethro branches?=0A=
-=0A=
-Let me know if you need any changes here, like creating this patch from the=
- bitbake repo directly instead of indirectly through yocto-poky.=0A=
-=0A=
-The following changes since commit ea6d21066a7cce2fef08ad66287170c5995bb1e2=
-:=0A=
-=0A=
-  bitbake: bitbake-user-manual: Fixed porno hack for hello world example (2=
-018-01-17 22:32:46 +0000)=0A=
-=0A=
-are available in the Git repository at:=0A=
-=0A=
-  git://push.yoctoproject.org/poky-contrib saung/bitbake-html5lib=0A=
-=0A=
-Soemoe Aung (2):=0A=
-  fix build error in included html5lib in bitbake=0A=
-  fix html5lib fix to be the same as in the krogoth branch=0A=
-=0A=
- bitbake/lib/bs4/builder/_html5lib.py | 17 ++++++++++++-----=0A=
- 1 file changed, 12 insertions(+), 5 deletions(-)=0A=
-=0A=
---=0A=
-2.17.0.rc0.231.g781580f067-goog=0A=
-=0A=
---=0A=
-_______________________________________________=0A=
-bitbake-devel mailing list=0A=
-bitbake-devel@lists.openembedded.org=0A=
-http://lists.openembedded.org/mailman/listinfo/bitbake-devel=0A=
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/tests/fetch.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index d711c77d358..74859f9d302 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -913,7 +913,7 @@ class FetchLatestVersionTest(FetcherTest):
+             ud = bb.fetch2.FetchData(k[1], self.d)
+             pupver= ud.method.latest_versionstring(ud, self.d)
+             verstring = pupver[0]
+-            self.assertTrue(verstring, msg="Could not find upstream version")
++            self.assertTrue(verstring, msg="Could not find upstream version for %s" % k[0])
+             r = bb.utils.vercmp_string(v, verstring)
+             self.assertTrue(r == -1 or r == 0, msg="Package %s, version: %s <= %s" % (k[0], v, verstring))
+ 
+@@ -926,7 +926,7 @@ class FetchLatestVersionTest(FetcherTest):
+             ud = bb.fetch2.FetchData(k[1], self.d)
+             pupver = ud.method.latest_versionstring(ud, self.d)
+             verstring = pupver[0]
+-            self.assertTrue(verstring, msg="Could not find upstream version")
++            self.assertTrue(verstring, msg="Could not find upstream version for %s" % k[0])
+             r = bb.utils.vercmp_string(v, verstring)
+             self.assertTrue(r == -1 or r == 0, msg="Package %s, version: %s <= %s" % (k[0], v, verstring))
+ 
+-- 
+2.11.0
+
 
