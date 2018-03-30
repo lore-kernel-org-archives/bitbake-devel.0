@@ -1,57 +1,50 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 7B9D965D48
+Return-Path: <soemoe.a@gmail.com>
+Received: from mail-io0-f193.google.com (mail-io0-f193.google.com
+	[209.85.223.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 47E3771E10
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Mar 2018 17:43:10 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 802BF1830A;
-	Thu, 29 Mar 2018 19:43:11 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id lX8rZAbHJ9ae; Thu, 29 Mar 2018 19:43:10 +0200 (CEST)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-	by bastet.se.axis.com (Postfix) with ESMTPS id EB8F018431;
-	Thu, 29 Mar 2018 19:43:09 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D9A131A335;
-	Thu, 29 Mar 2018 19:43:09 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C4AB71A2ED;
-	Thu, 29 Mar 2018 19:43:09 +0200 (CEST)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-	by boulder02.se.axis.com (Postfix) with ESMTP;
-	Thu, 29 Mar 2018 19:43:09 +0200 (CEST)
-Received: from XBOX03.axis.com (xbox03.axis.com [10.0.5.17])
-	by seth.se.axis.com (Postfix) with ESMTP id B896518BC;
-	Thu, 29 Mar 2018 19:43:09 +0200 (CEST)
-Received: from XBOX02.axis.com (10.0.5.16) by XBOX03.axis.com (10.0.5.17) with
-	Microsoft SMTP Server (TLS) id 15.0.1263.5;
-	Thu, 29 Mar 2018 19:43:09 +0200
-Received: from XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776]) by
-	XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776%21]) with mapi id
-	15.00.1263.000; Thu, 29 Mar 2018 19:43:09 +0200
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Soemoe Aung <soemoe.a@gmail.com>, Ola x Nilsson <olani@axis.com>
-Thread-Topic: [bitbake-devel] [PULL] *** Fix build issue with html5lib in
-	bitbake 1.26/1.28 ***
-Thread-Index: AQHTxrR/5uj3JouIkUWXxewze7WKnqPnetCg
-Date: Thu, 29 Mar 2018 17:43:09 +0000
-Message-ID: <de8d9c1dbc15412fbe62871ca826e78e@XBOX02.axis.com>
+	Fri, 30 Mar 2018 15:46:47 +0000 (UTC)
+Received: by mail-io0-f193.google.com with SMTP id d5so11430239iob.9
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 30 Mar 2018 08:46:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=6e8oq3cz46o6LfYPGPj47LkTgaREPFM4xZClp8OmQR0=;
+	b=uQd75bEPE5ec2NC01ru5xb4xWlFK+AfPonJcfX1eFAT1YCm2cIWEgGqoO6/Xkzd/x4
+	FzzdEFkhZoiodWfJhAtU1iacBeK+HgyZAe3ze7F76XMqv4Uzp6L+tjDuRqDJSPFF7B5M
+	sgjB2KMxyDAea5STlWYFNpY79wfAurD5FuGp0J+JidELjTfmLq+z/A8Kar20OWErrLLG
+	QLkrrGcPh1Z123yTiWOUtCZzoJxzbFJXwBUdFKYVAlP6ao3Wtn2VJdbKqrWEklXFOoSc
+	/RGBiSMfTvYeAYTAa1C0DVKhoCi1QF3PAomXLhuV/Jq0IowAUiwCj0F7i8CxgRE2Rckb
+	z0Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=6e8oq3cz46o6LfYPGPj47LkTgaREPFM4xZClp8OmQR0=;
+	b=opbuXZMzC95FdPf3/ngXXpkhn/R8SuAvgZilf3YTwqF9SpXz5jqyxQjLpBe6RwMslQ
+	1eP3ZRmqsq8x7wdTJ7wZckZWXvOIRpIA5Pxn6OnXHAQ/qLfdKkDSNYXFxFaQvL09wddR
+	95NxuK7pAZY5eDVwBPXwIPbI+KeUDo5DZv23MJ1R8iSaFWaSQJwMnRBRE4cRbYkBmA9y
+	7AE3BGgJgKUrwB+l3W9zo1s9qAhtE58aWQa1dAtPnOhwi2ic+9g8x+VjUJPCtlaEkPIU
+	oiNLOXPfblbe9/oxbJPt9QtE38oKRJx071CzS0QmK28DAz+W+ro+uAUogpMno64W2w8c
+	HA5g==
+X-Gm-Message-State: AElRT7G0cPIEkuqzdO/PAunjcU/NSQA1sN8i1DAgKXlYeBS0fO7rilUb
+	IsySYbUzVxU2twz8BPAchBcDW5m1n5xRDuYD3ZU=
+X-Google-Smtp-Source: AG47ELs/neblZ5Ml99IFi5LBGkQ4cjZYk7f83AiWHhoUtHpzUXOtLgU2817jhrPh2ghN6smB9IN+L8LmGzgBe+ij5bs=
+X-Received: by 10.107.169.81 with SMTP id s78mr55258938ioe.83.1522424808492;
+	Fri, 30 Mar 2018 08:46:48 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.2.56.65 with HTTP; Fri, 30 Mar 2018 08:46:28 -0700 (PDT)
+In-Reply-To: <de8d9c1dbc15412fbe62871ca826e78e@XBOX02.axis.com>
 References: <cover.1522085586.git.soemoe.a@gmail.com>
 	<1522230112838.18244@axis.com>
 	<CAPTBsuX3NZmgqqE4bGTQ29k=yp7F6Z_Anwawue=W+3ab1fG3Og@mail.gmail.com>
-In-Reply-To: <CAPTBsuX3NZmgqqE4bGTQ29k=yp7F6Z_Anwawue=W+3ab1fG3Og@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
+	<de8d9c1dbc15412fbe62871ca826e78e@XBOX02.axis.com>
+From: Soemoe Aung <soemoe.a@gmail.com>
+Date: Fri, 30 Mar 2018 08:46:28 -0700
+Message-ID: <CAPTBsuW-gUOLj=u0FwJdj0Ti-ejECRupwLhBpOOKXbW_nzzApQ@mail.gmail.com>
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
+	<bitbake-devel@lists.openembedded.org>, Ola x Nilsson <olani@axis.com>
 Subject: Re: [PULL] *** Fix build issue with html5lib in bitbake 1.26/1.28 ***
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -65,254 +58,335 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Mar 2018 17:43:11 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_de8d9c1dbc15412fbe62871ca826e78eXBOX02axiscom_"
+X-List-Received-Date: Fri, 30 Mar 2018 15:46:48 -0000
+Content-Type: multipart/alternative; boundary="001a114271cee8556a0568a325a4"
 
---_000_de8d9c1dbc15412fbe62871ca826e78eXBOX02axiscom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+--001a114271cee8556a0568a325a4
+Content-Type: text/plain; charset="UTF-8"
 
-T25lIHdheSB0byBjcmVhdGUgYW5kIHNlbmQgdGhlIHBhdGNoIGlzOg0KDQpnaXQgY2hlcnJ5LXBp
-Y2sgMTY3OTE4OGY5YzU1YzYxNWNhZTc4MGYyYjVlNjg1MmRlYTljZjJlYyAjIEFzc3VtaW5nIHlv
-dSBhcmUgaW4gdGhlIGJpdGJha2UgcmVwb3NpdG9yeSwgbm90IHBva3kNCmdpdCBjb21taXQgLS1h
-bWVuZCAgIyBUbyBhZGQgeW91ciBTaWduZWQtb2ZmLWJ5IGZvb3Rlcg0KZ2l0IGZvcm1hdC1wYXRj
-aCAtLXN1YmplY3QtcHJlZml4PSdqZXRocm9dW1BBVENIJyAnSEVBRF4uLkhFQUQnDQpnaXQgc2Vu
-ZC1lbWFpbCAtLXRvPW9wZW5lbWJlZGRlZC1jb3JlQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcgLS1j
-b25maXJtPWFsd2F5cyAtLW5vLWNoYWluLXJlcGx5LXRvIC0tc3VwcHJlc3MtY2M9YWxsIDAwMCoN
-Cg0KLy9QZXRlcg0KDQpGcm9tOiBiaXRiYWtlLWRldmVsLWJvdW5jZXNAbGlzdHMub3BlbmVtYmVk
-ZGVkLm9yZyBbbWFpbHRvOmJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQu
-b3JnXSBPbiBCZWhhbGYgT2YgU29lbW9lIEF1bmcNClNlbnQ6IGRlbiAyOCBtYXJzIDIwMTggMTg6
-NDcNClRvOiBPbGEgeCBOaWxzc29uIDxPbGEueC5OaWxzc29uQGF4aXMuY29tPg0KQ2M6IGJpdGJh
-a2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtlLWRl
-dmVsXSBbUFVMTF0gKioqIEZpeCBidWlsZCBpc3N1ZSB3aXRoIGh0bWw1bGliIGluIGJpdGJha2Ug
-MS4yNi8xLjI4ICoqKg0KDQpZZXMsIHRoYXQncyBlc3NlbnRpYWxseSB3aGF0IEknbSBhc2tpbmcg
-Zm9yLiBTb3JyeSBpZiB0aGF0IHdhc24ndCBjbGVhci4gVGhhdCBmaXggaXMgaW4gYml0YmFrZSAx
-LjMwIGJ1dCBzZWVtcyB0byBiZSBuZWVkZWQgaW4gMS4yNiBhbmQgMS4yOCBhcyB3ZWxsLiBNeSBj
-aGFuZ2UgbGl0ZXJhbGx5IHRvb2sgdGhlIGh0bWw1bGliIGZpbGUgZnJvbSAxLjMwIGFuZCBjb3Bp
-ZWQgaXQgdG8gdGhlIGZpbGUgaW4gMS4yNiBhbmQgc3VibWl0dGVkIGl0IGFzIGEgcGF0Y2guIEFw
-b2xvZ2llcyBpZiB0aGlzIHdhcyB0aGUgd3Jvbmcgd2F5IHRvIGdvIGFib3V0IHRoaXMuDQoNCldo
-YXQgYXJlIHRoZSBzdGVwcyB0byBiYWNrcG9ydCB0aGlzIGNoYW5nZSB0byAxLjI2IGFuZCAxLjI4
-IChhbmQgYWxzbyB0byBzZW5kIHRoZXNlIGNoYW5nZXMgdXBzdHJlYW0gdG8geW9jdG8tcG9reSk/
-IElzIHRoZXJlIGFueXRoaW5nIEkgbmVlZCB0byBkbz8NCg0KT24gV2VkLCBNYXIgMjgsIDIwMTgg
-YXQgMjo0MSBBTSwgT2xhIHggTmlsc3NvbiA8b2xhLngubmlsc3NvbkBheGlzLmNvbTxtYWlsdG86
-b2xhLngubmlsc3NvbkBheGlzLmNvbT4+IHdyb3RlOg0KVGhpcyBoYXMgYWxyZWFkeSBiZWVuIGZp
-eGVkIG9uIGEgZmV3IGJyYW5jaGVzIHdpdGgNCg0KYml0YmFrZTogbGliL2JzNDogRml4IGltcG9y
-dHMgZnJvbSBodG1sNWxpYiA+PSAwLjk5OTk5OTkvMS4wYjgNCg0KSXQgbWlnaHQgYmUgYmV0dGVy
-IHRvIGJhY2twb3J0IHRoYXQgd2hlcmUgbmVlZGVkLg0KDQotLQ0KT2xhIE5pbHNzb24NCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCkZyb206IGJpdGJha2UtZGV2ZWwt
-Ym91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3JnPG1haWx0bzpiaXRiYWtlLWRldmVsLWJvdW5j
-ZXNAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4gPGJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5v
-cGVuZW1iZWRkZWQub3JnPG1haWx0bzpiaXRiYWtlLWRldmVsLWJvdW5jZXNAbGlzdHMub3BlbmVt
-YmVkZGVkLm9yZz4+IG9uIGJlaGFsZiBvZiBTb2Vtb2UgQXVuZyA8c29lbW9lLmFAZ21haWwuY29t
-PG1haWx0bzpzb2Vtb2UuYUBnbWFpbC5jb20+Pg0KU2VudDogVHVlc2RheSwgTWFyY2ggMjcsIDIw
-MTggMjM6MTUNClRvOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8bWFpbHRv
-OmJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4NClN1YmplY3Q6IFtiaXRiYWtl
-LWRldmVsXSBbUFVMTF0gKioqIEZpeCBidWlsZCBpc3N1ZSB3aXRoIGh0bWw1bGliIGluIGJpdGJh
-a2UgICAgMS4yNi8xLjI4ICoqKg0KDQpXaGVuIEkgd2FzIHJ1bm5pbmcgeW9jdG8tcG9reSBvbiB0
-aGUgZmlkbyBhbmQgamV0aHJvIGJyYW5jaGVzLCBJIHdhcyBnZXR0aW5nIGJ1aWxkIGVycm9ycyBj
-YXVzZWQgYnkgdGhlIGluY2x1ZGVkIGh0bWw1bGliIGluIGJpdGJha2UuIEl0IHNlZW1zIGxpa2Ug
-YSBjbGFzcyBpcyBiZWluZyBjYWxsZWQgaW5jb3JyZWN0bHkgdGhlcmUuIEkgbm90aWNlZCB0aGUg
-aXNzdWUgaXMgcmVzb2x2ZWQgaW4gdGhlIGtyb2dvdGggYnJhbmNoIGFuZCB0aGUgaHRtbDVsaWIg
-aXMgaW5kZWVkIGRpZmZlcmVudCB0aGVyZS4NCg0KeW9jdG8tcG9reSBmaWRvIGluY2x1ZGVzIGJp
-dGJha2UgdmVyc2lvbiAxLjI2IGFuZCBqZXRocm8gaW5jbHVkZXMgYml0YmFrZSB2ZXJzaW9uIDEu
-MjguIExvb2tpbmcgYXQgdGhlIGJpdGJha2Ugc291cmNlIHJlcG8gZm9yIHRoZXNlIHZlcnNpb25z
-IGNvbmZpcm1zIHRoYXQgdGhlc2UgZmlsZXMgYXJlIHRoZSBzYW1lLiB5b2N0by1wb2t5IGtyb2dv
-dGgsIHdoaWNoIGhhcyB0aGUgaXNzdWUgZml4ZWQsIHVzZXMgYml0YmFrZSAxLjMwLCB3aGljaCBh
-bHNvIGhhcyB0aGUgaXNzdWUgZml4ZWQgaW4gdGhlIGJpdGJha2UgcmVwby4NCg0KSSBvcmlnaW5h
-bGx5IGNyZWF0ZWQgdGhpcyBwYXRjaCBpbiB0aGUgeW9jdG8tcG9reSBjb250cmliIHJlcG8gYW5k
-IHdhcyBkaXJlY3RlZCB0byBzZW5kIGl0IHRvIGJpdGJha2UgaW5zdGVhZC4gQ2FuIHNvbWVvbmUg
-aGVyZSB0YWtlIGEgbG9vayBhdCB0aGlzIGFuZCBhY2NlcHQgdGhlIGNoYW5nZXMgaW50byB0aGUg
-MS4yNiBhbmQgMS4yOCBicmFuY2hlcz8gQ2FuIHlvdSBhbHNvIHNlbmQgdGhlc2UgY2hhbmdlcyB1
-cHN0cmVhbSB0byB0aGUgeW9jdG8tcG9reSBmaWRvIGFuZCBqZXRocm8gYnJhbmNoZXM/DQoNCkxl
-dCBtZSBrbm93IGlmIHlvdSBuZWVkIGFueSBjaGFuZ2VzIGhlcmUsIGxpa2UgY3JlYXRpbmcgdGhp
-cyBwYXRjaCBmcm9tIHRoZSBiaXRiYWtlIHJlcG8gZGlyZWN0bHkgaW5zdGVhZCBvZiBpbmRpcmVj
-dGx5IHRocm91Z2ggeW9jdG8tcG9reS4NCg0KVGhlIGZvbGxvd2luZyBjaGFuZ2VzIHNpbmNlIGNv
-bW1pdCBlYTZkMjEwNjZhN2NjZTJmZWYwOGFkNjYyODcxNzBjNTk5NWJiMWUyOg0KDQogIGJpdGJh
-a2U6IGJpdGJha2UtdXNlci1tYW51YWw6IEZpeGVkIHBvcm5vIGhhY2sgZm9yIGhlbGxvIHdvcmxk
-IGV4YW1wbGUgKDIwMTgtMDEtMTcgMjI6MzI6NDYgKzAwMDApDQoNCmFyZSBhdmFpbGFibGUgaW4g
-dGhlIEdpdCByZXBvc2l0b3J5IGF0Og0KDQogIGdpdDovL3B1c2gueW9jdG9wcm9qZWN0Lm9yZy9w
-b2t5LWNvbnRyaWI8aHR0cDovL3B1c2gueW9jdG9wcm9qZWN0Lm9yZy9wb2t5LWNvbnRyaWI+IHNh
-dW5nL2JpdGJha2UtaHRtbDVsaWINCg0KU29lbW9lIEF1bmcgKDIpOg0KICBmaXggYnVpbGQgZXJy
-b3IgaW4gaW5jbHVkZWQgaHRtbDVsaWIgaW4gYml0YmFrZQ0KICBmaXggaHRtbDVsaWIgZml4IHRv
-IGJlIHRoZSBzYW1lIGFzIGluIHRoZSBrcm9nb3RoIGJyYW5jaA0KDQogYml0YmFrZS9saWIvYnM0
-L2J1aWxkZXIvX2h0bWw1bGliLnB5IHwgMTcgKysrKysrKysrKysrLS0tLS0NCiAxIGZpbGUgY2hh
-bmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCg0KLS0NCjIuMTcuMC5yYzAu
-MjMxLmc3ODE1ODBmMDY3LWdvb2cNCi0tDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXw0KYml0YmFrZS1kZXZlbCBtYWlsaW5nIGxpc3QNCmJpdGJha2UtZGV2
-ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzxtYWlsdG86Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVu
-ZW1iZWRkZWQub3JnPg0KaHR0cDovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9iaXRiYWtlLWRldmVsDQotLQ0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18NCmJpdGJha2UtZGV2ZWwgbWFpbGluZyBsaXN0DQpiaXRiYWtlLWRldmVs
-QGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8bWFpbHRvOmJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVt
-YmVkZGVkLm9yZz4NCmh0dHA6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vYml0YmFrZS1kZXZlbA0KDQo=
+Just saw that Richard Purdie backported Daniel Lublin's original commit to
+1.26 and 1.28 (edd90cd858da5da564e9849ebc0849a8a8173d4f
+<http://git.openembedded.org/bitbake/commit/?h=1.26&id=edd90cd858da5da564e9849ebc0849a8a8173d4f>
+and 0d80cacb2b84ee059cee3caf8a5968033b9ce3c5
+<http://git.openembedded.org/bitbake/commit/?h=1.28&id=0d80cacb2b84ee059cee3caf8a5968033b9ce3c5>).
+I noticed it was pushed upstream to yocto-poky fido and jethro as well. I
+did a fresh checkout of yocto-poky fido and jethro and got both to build
+past that error out of the box. Thanks to Richard and Daniel and everyone
+else!
 
---_000_de8d9c1dbc15412fbe62871ca826e78eXBOX02axiscom_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+On Thu, Mar 29, 2018 at 10:43 AM, Peter Kjellerstedt <
+peter.kjellerstedt@axis.com> wrote:
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpDb25zb2xhczsNCglwYW5vc2UtMToyIDEx
-IDYgOSAyIDIgNCAzIDIgNDt9DQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLw0KcC5Nc29Ob3JtYWws
-IGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbA0KCXttYXJnaW46MGNtOw0KCW1hcmdpbi1ib3R0
-b206LjAwMDFwdDsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixz
-YW5zLXNlcmlmO30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsNCgl7bXNvLXN0eWxlLXByaW9y
-aXR5Ojk5Ow0KCWNvbG9yOmJsdWU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQphOnZp
-c2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5
-Ow0KCWNvbG9yOnB1cnBsZTsNCgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30NCnAubXNvbm9y
-bWFsMCwgbGkubXNvbm9ybWFsMCwgZGl2Lm1zb25vcm1hbDANCgl7bXNvLXN0eWxlLW5hbWU6bXNv
-bm9ybWFsOw0KCW1zby1tYXJnaW4tdG9wLWFsdDphdXRvOw0KCW1hcmdpbi1yaWdodDowY207DQoJ
-bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG87DQoJbWFyZ2luLWxlZnQ6MGNtOw0KCWZvbnQtc2l6
-ZToxMS4wcHQ7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQ0Kc3Bhbi5ob2Vu
-emINCgl7bXNvLXN0eWxlLW5hbWU6aG9lbnpiO30NCnNwYW4uRW1haWxTdHlsZTE5DQoJe21zby1z
-dHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNl
-cmlmOw0KCWNvbG9yOiM5NDM2MzQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZvbnQtc3R5bGU6
-bm9ybWFsOw0KCXRleHQtZGVjb3JhdGlvbjpub25lIG5vbmU7fQ0KLk1zb0NocERlZmF1bHQNCgl7
-bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMt
-c2VyaWY7DQoJbXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVM7fQ0KQHBhZ2UgV29yZFNlY3Rpb24x
-DQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0Ow0KCW1hcmdpbjo3Mi4wcHQgNzIuMHB0IDcyLjBwdCA3
-Mi4wcHQ7fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0
-eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRp
-dCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5
-XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVk
-aXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8L2hl
-YWQ+DQo8Ym9keSBsYW5nPSJTViIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+DQo8ZGl2IGNs
-YXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4t
-VVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5PbmUg
-d2F5IHRvIGNyZWF0ZSBhbmQgc2VuZCB0aGUgcGF0Y2ggaXM6PG86cD48L286cD48L3NwYW4+PC9w
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjoj
-OTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bh
-bj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZv
-bnQtZmFtaWx5OkNvbnNvbGFzO2NvbG9yOiM5NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4t
-VVMiPmdpdCBjaGVycnktcGljayAxNjc5MTg4ZjljNTVjNjE1Y2FlNzgwZjJiNWU2ODUyZGVhOWNm
-MmVjICMgQXNzdW1pbmcgeW91IGFyZSBpbiB0aGUgYml0YmFrZSByZXBvc2l0b3J5LCBub3QgcG9r
-eTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9
-IkVOLVVTIiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXM7Y29sb3I6Izk0MzYzNDttc28tZmFy
-ZWFzdC1sYW5ndWFnZTpFTi1VUyI+Z2l0IGNvbW1pdCAtLWFtZW5kICZuYnNwOyMgVG8gYWRkIHlv
-dXIgU2lnbmVkLW9mZi1ieSBmb290ZXI8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtZmFtaWx5OkNvbnNvbGFz
-O2NvbG9yOiM5NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPmdpdCBmb3JtYXQtcGF0
-Y2ggLS1zdWJqZWN0LXByZWZpeD0namV0aHJvXVtQQVRDSCcgJ0hFQUReLi5IRUFEJzxvOnA+PC9v
-OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBz
-dHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXM7Y29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5n
-dWFnZTpFTi1VUyI+Z2l0IHNlbmQtZW1haWwgLS10bz1vcGVuZW1iZWRkZWQtY29yZUBsaXN0cy5v
-cGVuZW1iZWRkZWQub3JnIC0tY29uZmlybT1hbHdheXMgLS1uby1jaGFpbi1yZXBseS10byAtLXN1
-cHByZXNzLWNjPWFsbCAwMDAqPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0
-LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2MzQ7bXNvLWZh
-cmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPi8vUGV0ZXI8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2MzQ7
-bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4N
-CjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkIGJsdWUgMS41cHQ7cGFk
-ZGluZzowY20gMGNtIDBjbSA0LjBwdCI+DQo8ZGl2Pg0KPGRpdiBzdHlsZT0iYm9yZGVyOm5vbmU7
-Ym9yZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEuMHB0O3BhZGRpbmc6My4wcHQgMGNtIDBjbSAwY20i
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gbGFuZz0iRU4tVVMiPkZyb206PC9zcGFu
-PjwvYj48c3BhbiBsYW5nPSJFTi1VUyI+IGJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVu
-ZW1iZWRkZWQub3JnIFttYWlsdG86Yml0YmFrZS1kZXZlbC1ib3VuY2VzQGxpc3RzLm9wZW5lbWJl
-ZGRlZC5vcmddDQo8Yj5PbiBCZWhhbGYgT2YgPC9iPlNvZW1vZSBBdW5nPGJyPg0KPGI+U2VudDo8
-L2I+IGRlbiAyOCBtYXJzIDIwMTggMTg6NDc8YnI+DQo8Yj5Ubzo8L2I+IE9sYSB4IE5pbHNzb24g
-Jmx0O09sYS54Lk5pbHNzb25AYXhpcy5jb20mZ3Q7PGJyPg0KPGI+Q2M6PC9iPiBiaXRiYWtlLWRl
-dmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8YnI+DQo8Yj5TdWJqZWN0OjwvYj4gUmU6IFtiaXRi
-YWtlLWRldmVsXSBbUFVMTF0gKioqIEZpeCBidWlsZCBpc3N1ZSB3aXRoIGh0bWw1bGliIGluIGJp
-dGJha2UgMS4yNi8xLjI4ICoqKjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj5ZZXMsIHRoYXQncyBlc3NlbnRpYWxseSB3aGF0IEknbSBhc2tpbmcg
-Zm9yLiBTb3JyeSBpZiB0aGF0IHdhc24ndCBjbGVhci4gVGhhdCBmaXggaXMgaW4gYml0YmFrZSAx
-LjMwIGJ1dCBzZWVtcyB0byBiZSBuZWVkZWQgaW4gMS4yNiBhbmQgMS4yOCBhcyB3ZWxsLiBNeSBj
-aGFuZ2UgbGl0ZXJhbGx5IHRvb2sgdGhlIGh0bWw1bGliIGZpbGUgZnJvbSAxLjMwIGFuZCBjb3Bp
-ZWQgaXQgdG8gdGhlIGZpbGUgaW4gMS4yNg0KIGFuZCBzdWJtaXR0ZWQgaXQgYXMgYSBwYXRjaC4g
-QXBvbG9naWVzIGlmIHRoaXMgd2FzIHRoZSB3cm9uZyB3YXkgdG8gZ28gYWJvdXQgdGhpcy48bzpw
-PjwvbzpwPjwvcD4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpw
-PjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPldoYXQgYXJlIHRoZSBz
-dGVwcyB0byBiYWNrcG9ydCB0aGlzIGNoYW5nZSB0byAxLjI2IGFuZCAxLjI4IChhbmQgYWxzbyB0
-byBzZW5kIHRoZXNlIGNoYW5nZXMgdXBzdHJlYW0gdG8geW9jdG8tcG9reSk/IElzIHRoZXJlIGFu
-eXRoaW5nIEkgbmVlZCB0byBkbz88bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8ZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+T24gV2VkLCBNYXIgMjgsIDIwMTggYXQgMjo0MSBBTSwgT2xhIHgg
-Tmlsc3NvbiAmbHQ7PGEgaHJlZj0ibWFpbHRvOm9sYS54Lm5pbHNzb25AYXhpcy5jb20iIHRhcmdl
-dD0iX2JsYW5rIj5vbGEueC5uaWxzc29uQGF4aXMuY29tPC9hPiZndDsgd3JvdGU6PG86cD48L286
-cD48L3A+DQo8YmxvY2txdW90ZSBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29saWQg
-I0NDQ0NDQyAxLjBwdDtwYWRkaW5nOjBjbSAwY20gMGNtIDYuMHB0O21hcmdpbi1sZWZ0OjQuOHB0
-O21hcmdpbi1yaWdodDowY20iPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhpcyBoYXMgYWxyZWFk
-eSBiZWVuIGZpeGVkIG9uIGEgZmV3IGJyYW5jaGVzIHdpdGg8YnI+DQo8YnI+DQpiaXRiYWtlOiBs
-aWIvYnM0OiBGaXggaW1wb3J0cyBmcm9tIGh0bWw1bGliICZndDs9IDAuOTk5OTk5OS8xLjBiODxi
-cj4NCjxicj4NCkl0IG1pZ2h0IGJlIGJldHRlciB0byBiYWNrcG9ydCB0aGF0IHdoZXJlIG5lZWRl
-ZC48YnI+DQo8YnI+DQotLTxicj4NCk9sYSBOaWxzc29uPGJyPg0KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXzxicj4NCkZyb206IDxhIGhyZWY9Im1haWx0bzpiaXRiYWtl
-LWRldmVsLWJvdW5jZXNAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyI+Yml0YmFrZS1kZXZlbC1ib3Vu
-Y2VzQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8L2E+ICZsdDs8YSBocmVmPSJtYWlsdG86Yml0YmFr
-ZS1kZXZlbC1ib3VuY2VzQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmciPmJpdGJha2UtZGV2ZWwtYm91
-bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3JnPC9hPiZndDsgb24gYmVoYWxmIG9mIFNvZW1vZSBB
-dW5nICZsdDs8YSBocmVmPSJtYWlsdG86c29lbW9lLmFAZ21haWwuY29tIj5zb2Vtb2UuYUBnbWFp
-bC5jb208L2E+Jmd0Ozxicj4NClNlbnQ6IFR1ZXNkYXksIE1hcmNoIDI3LCAyMDE4IDIzOjE1PGJy
-Pg0KVG86IDxhIGhyZWY9Im1haWx0bzpiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5v
-cmciPmJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzwvYT48YnI+DQpTdWJqZWN0
-OiBbYml0YmFrZS1kZXZlbF0gW1BVTExdICoqKiBGaXggYnVpbGQgaXNzdWUgd2l0aCBodG1sNWxp
-YiBpbiBiaXRiYWtlJm5ic3A7ICZuYnNwOyAxLjI2LzEuMjggKioqPG86cD48L286cD48L3A+DQo8
-ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEy
-LjBwdCI+PGJyPg0KV2hlbiBJIHdhcyBydW5uaW5nIHlvY3RvLXBva3kgb24gdGhlIGZpZG8gYW5k
-IGpldGhybyBicmFuY2hlcywgSSB3YXMgZ2V0dGluZyBidWlsZCBlcnJvcnMgY2F1c2VkIGJ5IHRo
-ZSBpbmNsdWRlZCBodG1sNWxpYiBpbiBiaXRiYWtlLiBJdCBzZWVtcyBsaWtlIGEgY2xhc3MgaXMg
-YmVpbmcgY2FsbGVkIGluY29ycmVjdGx5IHRoZXJlLiBJIG5vdGljZWQgdGhlIGlzc3VlIGlzIHJl
-c29sdmVkIGluIHRoZSBrcm9nb3RoIGJyYW5jaCBhbmQgdGhlIGh0bWw1bGliDQogaXMgaW5kZWVk
-IGRpZmZlcmVudCB0aGVyZS48YnI+DQo8YnI+DQp5b2N0by1wb2t5IGZpZG8gaW5jbHVkZXMgYml0
-YmFrZSB2ZXJzaW9uIDEuMjYgYW5kIGpldGhybyBpbmNsdWRlcyBiaXRiYWtlIHZlcnNpb24gMS4y
-OC4gTG9va2luZyBhdCB0aGUgYml0YmFrZSBzb3VyY2UgcmVwbyBmb3IgdGhlc2UgdmVyc2lvbnMg
-Y29uZmlybXMgdGhhdCB0aGVzZSBmaWxlcyBhcmUgdGhlIHNhbWUuIHlvY3RvLXBva3kga3JvZ290
-aCwgd2hpY2ggaGFzIHRoZSBpc3N1ZSBmaXhlZCwgdXNlcyBiaXRiYWtlIDEuMzAsIHdoaWNoIGFs
-c28NCiBoYXMgdGhlIGlzc3VlIGZpeGVkIGluIHRoZSBiaXRiYWtlIHJlcG8uPGJyPg0KPGJyPg0K
-SSBvcmlnaW5hbGx5IGNyZWF0ZWQgdGhpcyBwYXRjaCBpbiB0aGUgeW9jdG8tcG9reSBjb250cmli
-IHJlcG8gYW5kIHdhcyBkaXJlY3RlZCB0byBzZW5kIGl0IHRvIGJpdGJha2UgaW5zdGVhZC4gQ2Fu
-IHNvbWVvbmUgaGVyZSB0YWtlIGEgbG9vayBhdCB0aGlzIGFuZCBhY2NlcHQgdGhlIGNoYW5nZXMg
-aW50byB0aGUgMS4yNiBhbmQgMS4yOCBicmFuY2hlcz8gQ2FuIHlvdSBhbHNvIHNlbmQgdGhlc2Ug
-Y2hhbmdlcyB1cHN0cmVhbSB0byB0aGUgeW9jdG8tcG9reQ0KIGZpZG8gYW5kIGpldGhybyBicmFu
-Y2hlcz88YnI+DQo8YnI+DQpMZXQgbWUga25vdyBpZiB5b3UgbmVlZCBhbnkgY2hhbmdlcyBoZXJl
-LCBsaWtlIGNyZWF0aW5nIHRoaXMgcGF0Y2ggZnJvbSB0aGUgYml0YmFrZSByZXBvIGRpcmVjdGx5
-IGluc3RlYWQgb2YgaW5kaXJlY3RseSB0aHJvdWdoIHlvY3RvLXBva3kuPGJyPg0KPGJyPg0KVGhl
-IGZvbGxvd2luZyBjaGFuZ2VzIHNpbmNlIGNvbW1pdCBlYTZkMjEwNjZhN2NjZTJmZWYwOGFkNjYy
-ODcxNzBjNTk5NWJiMWUyOjxicj4NCjxicj4NCiZuYnNwOyBiaXRiYWtlOiBiaXRiYWtlLXVzZXIt
-bWFudWFsOiBGaXhlZCBwb3JubyBoYWNrIGZvciBoZWxsbyB3b3JsZCBleGFtcGxlICgyMDE4LTAx
-LTE3IDIyOjMyOjQ2ICYjNDM7MDAwMCk8YnI+DQo8YnI+DQphcmUgYXZhaWxhYmxlIGluIHRoZSBH
-aXQgcmVwb3NpdG9yeSBhdDo8YnI+DQo8YnI+DQombmJzcDsgZ2l0Oi8vPGEgaHJlZj0iaHR0cDov
-L3B1c2gueW9jdG9wcm9qZWN0Lm9yZy9wb2t5LWNvbnRyaWIiIHRhcmdldD0iX2JsYW5rIj5wdXNo
-LnlvY3RvcHJvamVjdC5vcmcvcG9reS1jb250cmliPC9hPiBzYXVuZy9iaXRiYWtlLWh0bWw1bGli
-PGJyPg0KPGJyPg0KU29lbW9lIEF1bmcgKDIpOjxicj4NCiZuYnNwOyBmaXggYnVpbGQgZXJyb3Ig
-aW4gaW5jbHVkZWQgaHRtbDVsaWIgaW4gYml0YmFrZTxicj4NCiZuYnNwOyBmaXggaHRtbDVsaWIg
-Zml4IHRvIGJlIHRoZSBzYW1lIGFzIGluIHRoZSBrcm9nb3RoIGJyYW5jaDxicj4NCjxicj4NCiZu
-YnNwO2JpdGJha2UvbGliL2JzNC9idWlsZGVyL19odG1sNWxpYi5weSB8IDE3ICYjNDM7JiM0Mzsm
-IzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOy0tLS0tPGJy
-Pg0KJm5ic3A7MSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoJiM0MzspLCA1IGRlbGV0aW9u
-cygtKTxicj4NCjxicj4NCi0tPGJyPg0KMi4xNy4wLnJjMC4yMzEuZzc4MTU4MGYwNjctZ29vZzxv
-OnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPi0tPGJy
-Pg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188YnI+DQpi
-aXRiYWtlLWRldmVsIG1haWxpbmcgbGlzdDxicj4NCjxhIGhyZWY9Im1haWx0bzpiaXRiYWtlLWRl
-dmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmciPmJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVk
-ZGVkLm9yZzwvYT48YnI+DQo8YSBocmVmPSJodHRwOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2JpdGJha2UtZGV2ZWwiIHRhcmdldD0iX2JsYW5rIj5odHRwOi8vbGlz
-dHMub3BlbmVtYmVkZGVkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2JpdGJha2UtZGV2ZWw8L2E+PGJy
-Pg0KPHNwYW4gY2xhc3M9ImhvZW56YiI+PHNwYW4gc3R5bGU9ImNvbG9yOiM4ODg4ODgiPi0tPC9z
-cGFuPjwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6Izg4ODg4OCI+PGJyPg0KPHNwYW4gY2xhc3M9
-ImhvZW56YiI+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188
-L3NwYW4+PGJyPg0KPHNwYW4gY2xhc3M9ImhvZW56YiI+Yml0YmFrZS1kZXZlbCBtYWlsaW5nIGxp
-c3Q8L3NwYW4+PGJyPg0KPHNwYW4gY2xhc3M9ImhvZW56YiI+PGEgaHJlZj0ibWFpbHRvOmJpdGJh
-a2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyI+Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVu
-ZW1iZWRkZWQub3JnPC9hPjwvc3Bhbj48YnI+DQo8c3BhbiBjbGFzcz0iaG9lbnpiIj48YSBocmVm
-PSJodHRwOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2JpdGJha2Ut
-ZGV2ZWwiIHRhcmdldD0iX2JsYW5rIj5odHRwOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2JpdGJha2UtZGV2ZWw8L2E+PC9zcGFuPjwvc3Bhbj48bzpwPjwvbzpwPjwv
-cD4NCjwvYmxvY2txdW90ZT4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJz
-cDs8L286cD48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
+> One way to create and send the patch is:
+>
+>
+>
+> git cherry-pick 1679188f9c55c615cae780f2b5e6852dea9cf2ec # Assuming you
+> are in the bitbake repository, not poky
+>
+> git commit --amend  # To add your Signed-off-by footer
+>
+> git format-patch --subject-prefix='jethro][PATCH' 'HEAD^..HEAD'
+>
+> git send-email --to=openembedded-core@lists.openembedded.org
+> --confirm=always --no-chain-reply-to --suppress-cc=all 000*
+>
+>
+>
+> //Peter
+>
+>
+>
+> *From:* bitbake-devel-bounces@lists.openembedded.org [mailto:
+> bitbake-devel-bounces@lists.openembedded.org] *On Behalf Of *Soemoe Aung
+> *Sent:* den 28 mars 2018 18:47
+> *To:* Ola x Nilsson <Ola.x.Nilsson@axis.com>
+> *Cc:* bitbake-devel@lists.openembedded.org
+> *Subject:* Re: [bitbake-devel] [PULL] *** Fix build issue with html5lib
+> in bitbake 1.26/1.28 ***
+>
+>
+>
+> Yes, that's essentially what I'm asking for. Sorry if that wasn't clear.
+> That fix is in bitbake 1.30 but seems to be needed in 1.26 and 1.28 as
+> well. My change literally took the html5lib file from 1.30 and copied it to
+> the file in 1.26 and submitted it as a patch. Apologies if this was the
+> wrong way to go about this.
+>
+>
+>
+> What are the steps to backport this change to 1.26 and 1.28 (and also to
+> send these changes upstream to yocto-poky)? Is there anything I need to do?
+>
+>
+>
+> On Wed, Mar 28, 2018 at 2:41 AM, Ola x Nilsson <ola.x.nilsson@axis.com>
+> wrote:
+>
+> This has already been fixed on a few branches with
+>
+> bitbake: lib/bs4: Fix imports from html5lib >= 0.9999999/1.0b8
+>
+> It might be better to backport that where needed.
+>
+> --
+> Ola Nilsson
+> ________________________________________
+> From: bitbake-devel-bounces@lists.openembedded.org <
+> bitbake-devel-bounces@lists.openembedded.org> on behalf of Soemoe Aung <
+> soemoe.a@gmail.com>
+> Sent: Tuesday, March 27, 2018 23:15
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PULL] *** Fix build issue with html5lib in
+> bitbake    1.26/1.28 ***
+>
+>
+> When I was running yocto-poky on the fido and jethro branches, I was
+> getting build errors caused by the included html5lib in bitbake. It seems
+> like a class is being called incorrectly there. I noticed the issue is
+> resolved in the krogoth branch and the html5lib is indeed different there.
+>
+> yocto-poky fido includes bitbake version 1.26 and jethro includes bitbake
+> version 1.28. Looking at the bitbake source repo for these versions
+> confirms that these files are the same. yocto-poky krogoth, which has the
+> issue fixed, uses bitbake 1.30, which also has the issue fixed in the
+> bitbake repo.
+>
+> I originally created this patch in the yocto-poky contrib repo and was
+> directed to send it to bitbake instead. Can someone here take a look at
+> this and accept the changes into the 1.26 and 1.28 branches? Can you also
+> send these changes upstream to the yocto-poky fido and jethro branches?
+>
+> Let me know if you need any changes here, like creating this patch from
+> the bitbake repo directly instead of indirectly through yocto-poky.
+>
+> The following changes since commit ea6d21066a7cce2fef08ad66287170
+> c5995bb1e2:
+>
+>   bitbake: bitbake-user-manual: Fixed porno hack for hello world example
+> (2018-01-17 22:32:46 +0000)
+>
+> are available in the Git repository at:
+>
+>   git://push.yoctoproject.org/poky-contrib saung/bitbake-html5lib
+>
+> Soemoe Aung (2):
+>   fix build error in included html5lib in bitbake
+>   fix html5lib fix to be the same as in the krogoth branch
+>
+>  bitbake/lib/bs4/builder/_html5lib.py | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+>
+> --
+> 2.17.0.rc0.231.g781580f067-goog
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
+>
+>
 
---_000_de8d9c1dbc15412fbe62871ca826e78eXBOX02axiscom_--
+--001a114271cee8556a0568a325a4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Just saw that Richard Purdie backported Daniel Lublin&#39;=
+s original commit to 1.26 and 1.28 (<a href=3D"http://git.openembedded.org/=
+bitbake/commit/?h=3D1.26&amp;id=3Dedd90cd858da5da564e9849ebc0849a8a8173d4f"=
+ target=3D"_blank">edd90cd858da5da564e9849ebc084<wbr>9a8a8173d4f</a> and=C2=
+=A0<a href=3D"http://git.openembedded.org/bitbake/commit/?h=3D1.28&amp;id=
+=3D0d80cacb2b84ee059cee3caf8a5968033b9ce3c5" target=3D"_blank">0d80cacb2b84=
+ee059cee3caf8a<wbr>5968033b9ce3c5</a>). I noticed it was pushed upstream to=
+ yocto-poky fido and jethro as well. I did a fresh checkout of yocto-poky f=
+ido and jethro and got both to build past that error out of the box. Thanks=
+ to Richard and Daniel and everyone else!</div><div class=3D"gmail_extra"><=
+br><div class=3D"gmail_quote">On Thu, Mar 29, 2018 at 10:43 AM, Peter Kjell=
+erstedt <span dir=3D"ltr">&lt;<a href=3D"mailto:peter.kjellerstedt@axis.com=
+" target=3D"_blank">peter.kjellerstedt@axis.com</a>&gt;</span> wrote:<br><b=
+lockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px =
+#ccc solid;padding-left:1ex">
+
+
+
+
+
+<div lang=3D"SV" link=3D"blue" vlink=3D"purple">
+<div class=3D"m_-7694966196785305973WordSection1">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634">One way=
+ to create and send the patch is:<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634"><u></u>=
+=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:Consolas;c=
+olor:#943634">git cherry-pick 1679188f9c55c615cae780f2b5e685<wbr>2dea9cf2ec=
+ # Assuming you are in the bitbake repository, not poky<u></u><u></u></span=
+></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:Consolas;c=
+olor:#943634">git commit --amend =C2=A0# To add your Signed-off-by footer<u=
+></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:Consolas;c=
+olor:#943634">git format-patch --subject-prefix=3D&#39;jethro][<wbr>PATCH&#=
+39; &#39;HEAD^..HEAD&#39;<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:Consolas;c=
+olor:#943634">git send-email --to=3D<a href=3D"mailto:openembedded-core@lis=
+ts.openembedded.org" target=3D"_blank">openembedded-core@lists.<wbr>openemb=
+edded.org</a> --confirm=3Dalways --no-chain-reply-to --suppress-cc=3Dall 00=
+0*<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634"><u></u>=
+=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634">//Peter=
+<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634"><u></u>=
+=C2=A0<u></u></span></p>
+<div style=3D"border:none;border-left:solid blue 1.5pt;padding:0cm 0cm 0cm =
+4.0pt">
+<div>
+<div style=3D"border:none;border-top:solid #e1e1e1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US">From:</span></b><span lang=
+=3D"EN-US"> <a href=3D"mailto:bitbake-devel-bounces@lists.openembedded.org"=
+ target=3D"_blank">bitbake-devel-bounces@lists.<wbr>openembedded.org</a> [m=
+ailto:<a href=3D"mailto:bitbake-devel-bounces@lists.openembedded.org" targe=
+t=3D"_blank">bitbake-devel-bounces@<wbr>lists.openembedded.org</a>]
+<b>On Behalf Of </b>Soemoe Aung<br>
+<b>Sent:</b> den 28 mars 2018 18:47<br>
+<b>To:</b> Ola x Nilsson &lt;<a href=3D"mailto:Ola.x.Nilsson@axis.com" targ=
+et=3D"_blank">Ola.x.Nilsson@axis.com</a>&gt;<br>
+<b>Cc:</b> <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=
+=3D"_blank">bitbake-devel@lists.<wbr>openembedded.org</a><br>
+<b>Subject:</b> Re: [bitbake-devel] [PULL] *** Fix build issue with html5li=
+b in bitbake 1.26/1.28 ***<u></u><u></u></span></p>
+</div>
+</div><div><div class=3D"h5">
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+<div>
+<p class=3D"MsoNormal">Yes, that&#39;s essentially what I&#39;m asking for.=
+ Sorry if that wasn&#39;t clear. That fix is in bitbake 1.30 but seems to b=
+e needed in 1.26 and 1.28 as well. My change literally took the html5lib fi=
+le from 1.30 and copied it to the file in 1.26
+ and submitted it as a patch. Apologies if this was the wrong way to go abo=
+ut this.<u></u><u></u></p>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">What are the steps to backport this change to 1.26 a=
+nd 1.28 (and also to send these changes upstream to yocto-poky)? Is there a=
+nything I need to do?<u></u><u></u></p>
+</div>
+</div>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+<div>
+<p class=3D"MsoNormal">On Wed, Mar 28, 2018 at 2:41 AM, Ola x Nilsson &lt;<=
+a href=3D"mailto:ola.x.nilsson@axis.com" target=3D"_blank">ola.x.nilsson@ax=
+is.com</a>&gt; wrote:<u></u><u></u></p>
+<blockquote style=3D"border:none;border-left:solid #cccccc 1.0pt;padding:0c=
+m 0cm 0cm 6.0pt;margin-left:4.8pt;margin-right:0cm">
+<p class=3D"MsoNormal">This has already been fixed on a few branches with<b=
+r>
+<br>
+bitbake: lib/bs4: Fix imports from html5lib &gt;=3D 0.9999999/1.0b8<br>
+<br>
+It might be better to backport that where needed.<br>
+<br>
+--<br>
+Ola Nilsson<br>
+______________________________<wbr>__________<br>
+From: <a href=3D"mailto:bitbake-devel-bounces@lists.openembedded.org" targe=
+t=3D"_blank">bitbake-devel-bounces@lists.<wbr>openembedded.org</a> &lt;<a h=
+ref=3D"mailto:bitbake-devel-bounces@lists.openembedded.org" target=3D"_blan=
+k">bitbake-devel-bounces@lists.<wbr>openembedded.org</a>&gt; on behalf of S=
+oemoe Aung &lt;<a href=3D"mailto:soemoe.a@gmail.com" target=3D"_blank">soem=
+oe.a@gmail.com</a>&gt;<br>
+Sent: Tuesday, March 27, 2018 23:15<br>
+To: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blan=
+k">bitbake-devel@lists.<wbr>openembedded.org</a><br>
+Subject: [bitbake-devel] [PULL] *** Fix build issue with html5lib in bitbak=
+e=C2=A0 =C2=A0 1.26/1.28 ***<u></u><u></u></p>
+<div>
+<div>
+<p class=3D"MsoNormal" style=3D"margin-bottom:12.0pt"><br>
+When I was running yocto-poky on the fido and jethro branches, I was gettin=
+g build errors caused by the included html5lib in bitbake. It seems like a =
+class is being called incorrectly there. I noticed the issue is resolved in=
+ the krogoth branch and the html5lib
+ is indeed different there.<br>
+<br>
+yocto-poky fido includes bitbake version 1.26 and jethro includes bitbake v=
+ersion 1.28. Looking at the bitbake source repo for these versions confirms=
+ that these files are the same. yocto-poky krogoth, which has the issue fix=
+ed, uses bitbake 1.30, which also
+ has the issue fixed in the bitbake repo.<br>
+<br>
+I originally created this patch in the yocto-poky contrib repo and was dire=
+cted to send it to bitbake instead. Can someone here take a look at this an=
+d accept the changes into the 1.26 and 1.28 branches? Can you also send the=
+se changes upstream to the yocto-poky
+ fido and jethro branches?<br>
+<br>
+Let me know if you need any changes here, like creating this patch from the=
+ bitbake repo directly instead of indirectly through yocto-poky.<br>
+<br>
+The following changes since commit ea6d21066a7cce2fef08ad66287170<wbr>c5995=
+bb1e2:<br>
+<br>
+=C2=A0 bitbake: bitbake-user-manual: Fixed porno hack for hello world examp=
+le (2018-01-17 22:32:46 +0000)<br>
+<br>
+are available in the Git repository at:<br>
+<br>
+=C2=A0 git://<a href=3D"http://push.yoctoproject.org/poky-contrib" target=
+=3D"_blank">push.yoctoproject.org/<wbr>poky-contrib</a> saung/bitbake-html5=
+lib<br>
+<br>
+Soemoe Aung (2):<br>
+=C2=A0 fix build error in included html5lib in bitbake<br>
+=C2=A0 fix html5lib fix to be the same as in the krogoth branch<br>
+<br>
+=C2=A0bitbake/lib/bs4/builder/_<wbr>html5lib.py | 17 ++++++++++++-----<br>
+=C2=A01 file changed, 12 insertions(+), 5 deletions(-)<br>
+<br>
+--<br>
+2.17.0.rc0.231.g781580f067-<wbr>goog<u></u><u></u></p>
+</div>
+</div>
+<p class=3D"MsoNormal">--<br>
+______________________________<wbr>_________________<br>
+bitbake-devel mailing list<br>
+<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
+itbake-devel@lists.<wbr>openembedded.org</a><br>
+<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" ta=
+rget=3D"_blank">http://lists.openembedded.org/<wbr>mailman/listinfo/bitbake=
+-devel</a><br>
+<span class=3D"m_-7694966196785305973hoenzb"><span style=3D"color:#888888">=
+--</span></span><span style=3D"color:#888888"><br>
+<span class=3D"m_-7694966196785305973hoenzb">______________________________=
+<wbr>_________________</span><br>
+<span class=3D"m_-7694966196785305973hoenzb">bitbake-devel mailing list</sp=
+an><br>
+<span class=3D"m_-7694966196785305973hoenzb"><a href=3D"mailto:bitbake-deve=
+l@lists.openembedded.org" target=3D"_blank">bitbake-devel@lists.<wbr>openem=
+bedded.org</a></span><br>
+<span class=3D"m_-7694966196785305973hoenzb"><a href=3D"http://lists.openem=
+bedded.org/mailman/listinfo/bitbake-devel" target=3D"_blank">http://lists.o=
+penembedded.org/<wbr>mailman/listinfo/bitbake-devel</a></span></span><u></u=
+><u></u></p>
+</blockquote>
+</div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+</div></div></div>
+</div>
+</div>
+
+</blockquote></div><br></div>
+
+--001a114271cee8556a0568a325a4--
