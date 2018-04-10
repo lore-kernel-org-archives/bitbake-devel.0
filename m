@@ -1,56 +1,53 @@
-Return-Path: <anonumiko@gmail.com>
-Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
-	by mail.openembedded.org (Postfix) with ESMTP id BB373750A0
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id C96E3747F6
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  8 Apr 2018 08:28:23 +0000 (UTC)
-Received: by mail-wm0-f52.google.com with SMTP id b127so11229641wmf.5
+	Tue, 10 Apr 2018 14:45:00 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 4E1FD18460
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 08 Apr 2018 01:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=sender:from:subject:to:cc:references:message-id:date:user-agent
-	:mime-version:in-reply-to:content-language:content-transfer-encoding;
-	bh=TjHss5wzXUC+iMA3bnWgRKl7S8U/E6F6R/9P3M18jEo=;
-	b=KrVJ+fRVKSQN91G38ez5xKwNs0EbePReOoKsTmqfww0c3BGdQe/u2WA8gtbG1zo+AE
-	VKJ5C2DMQqxAhs5YxlOeTpWYackvYCBqhi6TTKm/ihbX9k6qMGU0VDlxDRPVUqQ53EdY
-	EoOEtIPmJkeDWFfd4L0qLNQtCAid1FImUyPG563FIxjFA0xAO52vniSsLRooKn4eIyLF
-	sp/Q5gRK9JRqn+jCAi4MkxxTyzmIHfTdG4KbB6dWG97UUp7nN8cthj+d+9RxeJCLk+Co
-	MeGddrH2BbIcdPwMKn7jS4HLqeSs0igK5/zyc4faETLM8iGHhU+jNV/KL5GbFYAVzOOm
-	CGOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
-	:date:user-agent:mime-version:in-reply-to:content-language
-	:content-transfer-encoding;
-	bh=TjHss5wzXUC+iMA3bnWgRKl7S8U/E6F6R/9P3M18jEo=;
-	b=o+w5z/8rA/eLLvEEmxPNIK2OcqWr+RF/tILmWWiCgmQCumZiYoIJvsyiIn7hMsMzUs
-	gY/5e+/QScpLwCQBcssFJZLmB92SbkLDuGFvFFE0E4hLPKCgXZdebLfy6zbM6PRZCSkf
-	fht3bLkTZaqTDfIQnbeH1d3lac2kilbyn+l+ZtFgNl+7O/UCd8IFSe3PZnl35coTuhnK
-	p9cmAwFHP7L46HCaKBznbgtW5AKgxA0azgtPZGyBU6O7HFIi5gGyQjRG3Y/EQC6Iw+3j
-	j5/3tpiiVfveRH8kVaF3Lzl6phHfu2CT4K3XegVsmbemz56Eae3/GhKD8n7d1Da2G9sR
-	KrfA==
-X-Gm-Message-State: ALQs6tB5U/gZQ7rzT4wBqfxt45F9wOUMJ9fG+KEkfudej/6Q0v3o9Cpu
-	KcP/ZTWcymGf/rYKPGmTepJVa6hb
-X-Google-Smtp-Source: AIpwx4/tZ2/vlOsIs93mscqsaN0z77IBjJZq1RvHsIoM352cYiG7z0GLyDYWfh37f/Ps7s6xrGYW0Q==
-X-Received: by 10.46.16.130 with SMTP id 2mr19932415ljq.119.1523176103785;
-	Sun, 08 Apr 2018 01:28:23 -0700 (PDT)
-Received: from [82.181.15.94] (82-181-15-94.bb.dnainternet.fi. [82.181.15.94])
-	by smtp.gmail.com with ESMTPSA id
-	p22sm2371907ljg.39.2018.04.08.01.28.22
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Sun, 08 Apr 2018 01:28:22 -0700 (PDT)
-Sender: anonumiko <anonumiko@gmail.com>
-From: Niko Mauno <niko.mauno@iki.fi>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <20180323092821.106187-1-niko.mauno@iki.fi>
-	<1522828576.11431.280.camel@linuxfoundation.org>
-Message-ID: <c42b3365-9ca6-cfc3-a233-e89f45c64f5c@iki.fi>
-Date: Sun, 8 Apr 2018 11:28:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
-	Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <1522828576.11431.280.camel@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bitbake: fetch2/svn: Add tarsnapshots parameter
+	Tue, 10 Apr 2018 16:45:00 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id TnoTAiQERFeq for <bitbake-devel@lists.openembedded.org>;
+	Tue, 10 Apr 2018 16:44:58 +0200 (CEST)
+Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
+	by bastet.se.axis.com (Postfix) with ESMTPS id BEB86184C9
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 10 Apr 2018 16:44:58 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A6A431A072
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 10 Apr 2018 16:44:58 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9B6F41A069
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 10 Apr 2018 16:44:58 +0200 (CEST)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder02.se.axis.com (Postfix) with ESMTP
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 10 Apr 2018 16:44:58 +0200 (CEST)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by seth.se.axis.com (Postfix) with ESMTP id 900972D6B
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 10 Apr 2018 16:44:58 +0200 (CEST)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id w3AEiroY008644
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 10 Apr 2018 16:44:53 +0200
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id w3AEirwi008643
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 10 Apr 2018 16:44:53 +0200
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 10 Apr 2018 16:44:51 +0200
+Message-Id: <20180410144451.8539-1-pkj@axis.com>
+X-Mailer: git-send-email 2.12.0
+X-TM-AS-GCONF: 00
+Subject: [PATCH] lib/bb/utils: prevent movefile from changing dest dir permissions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,41 +60,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 08 Apr 2018 08:28:24 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 10 Apr 2018 14:45:01 -0000
 
-On 04/04/2018 10:56 AM, Richard Purdie wrote:
-> On Fri, 2018-03-23 at 11:28 +0200, Niko Mauno wrote:
->> By adding 'tarsnapshots=currentonly' option to svn-specific component
->> in
->> SRC_URI, associated subversion repository module's existing tarball
->> snapshots are removed from DL_DIR, before creating a new one.
->>
->> This provides a means to avoid downloads directory becoming congested
->> with a subversion repository module's tarball snapshots, which may
->> occur
->> for example during circumstances where source code residing in a
->> subversion repository is subject to long-term development work, and
->> recipe used in continuous integration builds has SRCREV set to
->> AUTOREV.
->>
->> Signed-off-by: Niko Mauno <niko.mauno@iki.fi>
-> 
-> This model does't really work as if multiple things share the downloads
-> directory there is a race window between the old tarballs being removed
-> and the new one being created. The downloads and sstate directories are
-> commonly shared between builds so we need to be mindful of this.
-> 
-> Cheers,
-> 
-> Richard
-> 
+From: Mattias Hansson <mattias.hansson@axis.com>
 
-Thank You for pointing this out.
+Prevent movefile from falsely setting the source file's owner and
+permissions on the destination directory instead of the destination
+file when moving between devices.
 
-As an observation related to using a shared downloads directory, it currently seems to already be subject to races when subversion is used - for example in a situation where two (or more) builds perform a temporally overlapping do_fetch for same recipe but with differing SRCREVs, and tarballs for respective SRCREVs have not been created yet.
+This bug caused the last file moved into a directory to dictate the
+directory's owner and permissions.
 
-In such cases error seems to occur because several distinct actors are trying to 'svn update' or 'svn checkout' in same directory at same time, resulting in a bitbake error for all build instances (typically involving a "working copy locked" error message).
+Signed-off-by: Mattias Hansson <mattias.hansson@axis.com>
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ bitbake/lib/bb/utils.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 8b739d7849..378e699e0c 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -807,8 +807,8 @@ def movefile(src, dest, newmtime = None, sstat = None):
+                 return None # failure
+         try:
+             if didcopy:
+-                os.lchown(dest, sstat[stat.ST_UID], sstat[stat.ST_GID])
+-                os.chmod(dest, stat.S_IMODE(sstat[stat.ST_MODE])) # Sticky is reset on chown
++                os.lchown(destpath, sstat[stat.ST_UID], sstat[stat.ST_GID])
++                os.chmod(destpath, stat.S_IMODE(sstat[stat.ST_MODE])) # Sticky is reset on chown
+                 os.unlink(src)
+         except Exception as e:
+             print("movefile: Failed to chown/chmod/unlink", dest, e)
+-- 
+2.12.0
+
 
