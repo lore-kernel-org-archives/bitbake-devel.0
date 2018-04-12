@@ -1,35 +1,52 @@
-Return-Path: <jdebski@enigma.com.pl>
-X-Greylist: delayed 473 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 12 Apr 2018 09:52:54 UTC
-Received: from mail.enigma.com.pl (mail.enigma.com.pl [91.198.145.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 35D696612D
+Return-Path: <prvs=633f497cc=Mikko.Rapeli@bmw.de>
+X-Greylist: delayed 591 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 12 Apr 2018 10:26:04 UTC
+Received: from esa1.bmw.c3s2.iphmx.com (esa1.bmw.c3s2.iphmx.com
+	[68.232.133.201])
+	by mail.openembedded.org (Postfix) with ESMTP id 5FC97746C7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Apr 2018 09:52:54 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.enigma.com.pl (Postfix) with ESMTP id 6839B17163C9A5
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Apr 2018 11:45:01 +0200 (CEST)
-Received: from mail.enigma.com.pl ([127.0.0.1])
-	by localhost (mail.enigma.com.pl [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id FPeJuCopzVsz; Thu, 12 Apr 2018 11:45:00 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.enigma.com.pl (Postfix) with ESMTP id 6530717163C9A3;
-	Thu, 12 Apr 2018 11:45:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mail.enigma.com.pl
-Received: from mail.enigma.com.pl ([127.0.0.1])
-	by localhost (mail.enigma.com.pl [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 1PLEXEw8widl; Thu, 12 Apr 2018 11:45:00 +0200 (CEST)
-Received: from jdebski-black.enigma.com.pl (unknown [10.14.1.110])
-	by mail.enigma.com.pl (Postfix) with ESMTPSA id 46FCE17163C9A2;
-	Thu, 12 Apr 2018 11:45:00 +0200 (CEST)
-From: =?UTF-8?q?Jakub=20D=C4=99bski?= <jdebski@enigma.com.pl>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 12 Apr 2018 11:44:53 +0200
-Message-Id: <1523526293-14340-1-git-send-email-jdebski@enigma.com.pl>
-X-Mailer: git-send-email 2.7.4
+	Thu, 12 Apr 2018 10:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
+	t=1523528768; x=1555064768;
+	h=from:to:cc:subject:date:message-id:references:
+	in-reply-to:content-id:content-transfer-encoding: mime-version;
+	bh=Qi6y+BtivfLrVPqZ8uK8SWpSBWaQZYkT16K+F+d7UFY=;
+	b=MBcZHa4aDaPabAS1YULS4a0gQQDTiVsSnfTBzF6G+ONZ0v62eWPwWitU
+	upJmYOYrl9XzrxYHUy2SMXeUxF31utQH/oQ1TvSFmjyD6V/3kiiYKXDTP
+	n3cTjSek/sme3fOd0G8N09q9xOJV2IeGSsDCic/TnIL6LFoT7Ur0OAwHJ 4=;
+Received: from esagw2.bmwgroup.com (HELO esagw2.muc) ([160.46.252.38]) by
+	esa1.bmw.c3s2.iphmx.com with ESMTP/TLS; 12 Apr 2018 12:16:14 +0200
+Received: from esabb6.muc ([160.50.100.50])  by esagw2.muc with ESMTP/TLS;
+	12 Apr 2018 12:16:13 +0200
+Received: from smucm10j.bmwgroup.net (HELO smucm10j.europe.bmw.corp)
+	([160.48.96.46])
+	by esabb6.muc with ESMTP/TLS; 12 Apr 2018 12:16:13 +0200
+Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
+	smucm10j.europe.bmw.corp
+	(160.48.96.46) with Microsoft SMTP Server (TLS;
+	Thu, 12 Apr 2018 12:16:13 +0200
+Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
+	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1347.000;
+	Thu, 12 Apr 2018 12:16:13 +0200
+From: <Mikko.Rapeli@bmw.de>
+To: <jdebski@enigma.com.pl>
+Thread-Topic: [bitbake-devel] [PATCH] fetch2/git.py: Added handling of the
+	user's password in url
+Thread-Index: AQHT0kdIZiIda1X5FUSkbv9u2CUdKw==
+Date: Thu, 12 Apr 2018 10:16:13 +0000
+Message-ID: <20180412101612.GJ7593@hiutale>
+References: <1523526293-14340-1-git-send-email-jdebski@enigma.com.pl>
+In-Reply-To: <1523526293-14340-1-git-send-email-jdebski@enigma.com.pl>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [192.168.221.36]
 MIME-Version: 1.0
-Cc: =?UTF-8?q?Jakub=20D=C4=99bski?= <jdebski@enigma.com.pl>
-Subject: [PATCH] fetch2/git.py: Added handling of the user's password in url
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] fetch2/git.py: Added handling of the user's password in url
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,40 +59,18 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Apr 2018 09:52:54 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 12 Apr 2018 10:26:05 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CD0899994E99F946A98E11BD95F3831A@bmwmail.corp>
+Content-Transfer-Encoding: base64
 
-Fetching source code from private repository (using https or http) fails
-because password passed in url (git://user:pass@domain) is ignored.
-
-Signed-off-by: Jakub D=C4=99bski <jdebski@enigma.com.pl>
----
- lib/bb/fetch2/git.py | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 3de83be..6600e19 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -527,10 +527,13 @@ class Git(FetchMethod):
-         Return the repository URL
-         """
-         if ud.user:
--            username =3D ud.user + '@'
-+            if ud.pswd:
-+                userinfo =3D ud.user + ':' + ud.pswd '@'
-+            else:
-+                userinfo =3D ud.user + '@'
-         else:
--            username =3D ""
--        return "%s://%s%s%s" % (ud.proto, username, ud.host, ud.path)
-+            userinfo =3D ""
-+        return "%s://%s%s%s" % (ud.proto, userinfo, ud.host, ud.path)
-=20
-     def _revision_key(self, ud, d, name):
-         """
---=20
-2.7.4
-
+T24gVGh1LCBBcHIgMTIsIDIwMTggYXQgMTE6NDQ6NTNBTSArMDIwMCwgSmFrdWIgRMSZYnNraSB3
+cm90ZToNCj4gRmV0Y2hpbmcgc291cmNlIGNvZGUgZnJvbSBwcml2YXRlIHJlcG9zaXRvcnkgKHVz
+aW5nIGh0dHBzIG9yIGh0dHApIGZhaWxzDQo+IGJlY2F1c2UgcGFzc3dvcmQgcGFzc2VkIGluIHVy
+bCAoZ2l0Oi8vdXNlcjpwYXNzQGRvbWFpbikgaXMgaWdub3JlZC4NCg0KTWF5YmUgdGhpcyBpcyBi
+eSBkZXNpZ24gdG8gcHJldmVudCBjcmVkZW50aWFscyBsZWFraW5nIGludG8gYml0YmFrZQ0KcmVj
+aXBlcy4NCg0KQWx0ZXJuYXRpdmUgaXMgdG8gc2V0IHRoZSB1c2VybmFtZXMsIHBhc3N3b3JkcyBl
+dGMgaW4gZS5nLiB+Ly5uZXRyYw0KYW5kIH4vLnNzaC9jb25maWcgZmlsZXMgd2hpY2ggaGF2ZSB0
+aGUgc2FtZSBlZmZlY3QuDQoNCi1NaWtrbw==
 
