@@ -1,43 +1,56 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-wr0-f171.google.com (mail-wr0-f171.google.com
-	[209.85.128.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 3A8567459B
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-pf0-f170.google.com (mail-pf0-f170.google.com
+	[209.85.192.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 29785745E9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 Apr 2018 09:38:49 +0000 (UTC)
-Received: by mail-wr0-f171.google.com with SMTP id f7so759075wrh.6
+	Sat, 14 Apr 2018 00:36:58 +0000 (UTC)
+Received: by mail-pf0-f170.google.com with SMTP id y66so7206532pfi.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 Apr 2018 02:38:51 -0700 (PDT)
+	Fri, 13 Apr 2018 17:37:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=QW6B1B8r5Bdv9lqi61+kS50a8frAc3KvHGm6XfSLWOQ=;
-	b=RJ05MCf0e4j1fZRWBcR6cu8/xlHZqgtfpJWPYhBargfyarWVlO2XcQXbqHLuZXT9rD
-	Y/z1CPVqpAbahFCfSyq4LviylW/LKVZUuJz5er/0JdREGJuUWcipQy0phw6CZC6Zg3K3
-	Q83TFV6bTQ3iRiBePgeXisn1ggpnYBcEscQdOKO+3KggT6htUKwRWIFSCrNcCEh8bEiU
-	zp/DcvkEYMSx5DMInnfrnlsVsqkRx+9/Y7xXm3rIhsQKmF6I7JNHol9RoDwZ0ML68zqt
-	GVhrcW2GbH2j51gtnSqU+nWeJfXWDoFYHALqVbq9ffRVDL/XeZSd48kQiOl30xQws5Ty
-	TyQA==
+	h=subject:to:references:from:organization:message-id:date:user-agent
+	:mime-version:in-reply-to:content-language:content-transfer-encoding;
+	bh=dXG1MKfAJdE1QBbEq8Le5OX6fvAgzVXCFFer+DCf+dY=;
+	b=X1qbpkNKKO6J+P9asxVPiS9tIg3U+h/i8pje9OVNO5tBlLl1MLtzt4Boey633uSfWc
+	SEoig0pDHsrr+aYecVWmy+JPQY/nO6jknb8HWweTxwgaaF21dGN7j2/BjP34d7kTGFnh
+	2hqwbG/Ih/8EetSadwLCyL8u61HmLVOByTG97XXTjFWh8SJVONYyqo5p/ZYFnfqBKEd3
+	zquw5IgR4shYIPgyPN7x37fcHRPEzec/CjjtJ90eI8kU5R/pyKd/ClMiWrkWrXXk+Cjy
+	4Ma2QVV9nzitAC4j+xdSFzhaqilgoiNZFXSdZJImaZz1uVlqaWI+3B0eRnMhxuCTPARb
+	eNng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=QW6B1B8r5Bdv9lqi61+kS50a8frAc3KvHGm6XfSLWOQ=;
-	b=tdDPewLspdHZD24dUaAaufMgAJiwaJ+fRV1qAUix0nmJzp74ElIFr7dcRy9HCX3rB7
-	Q1HKeKdYIea3vwjt1Dxt+Q2FS94et2zdr7NnsFTeV9VFq0pT1ONlgp8ZbyC3AfdT+Lz6
-	L7oTuQAI3kIaFYVEbnPu4ba//KSipD9rWKGLWhyZR4hw4e8mRUx/hTHpn5JkOmy9K/AE
-	5bgYTYeogjnNgcUBDVSHZHopqhqa2kf/3fUyGUy4siw4g0hRh6vLeydsgdj0x6gmE/Im
-	QoJ/SC80flfOmv7Jl1dF9P3/GfRtAZGt6H/CMpwVhjF8DXk/12bUTNVwgVLYiE2N0b1p
-	7YTg==
-X-Gm-Message-State: ALQs6tBCbIOE/LeAONwZghi8lm/K2B/yJjkmbr5P83kMYtgfyvJyAeol
-	jxeNc+5Lk6iZjSEuItSqpukBNHRP/r6wcpyTD7t9bw==
-X-Google-Smtp-Source: AIpwx4+MDHZzOTqOxOWyq3Ynj+9dYhPlnmgdu1j+1TYkwPUQUQUwzyCfKMocEGB/g7DE+UBTLqmhF1PUacLuo4QDfg8=
-X-Received: by 10.223.219.10 with SMTP id s10mr3050623wri.241.1523612330498;
-	Fri, 13 Apr 2018 02:38:50 -0700 (PDT)
+	h=x-gm-message-state:subject:to:references:from:organization
+	:message-id:date:user-agent:mime-version:in-reply-to
+	:content-language:content-transfer-encoding;
+	bh=dXG1MKfAJdE1QBbEq8Le5OX6fvAgzVXCFFer+DCf+dY=;
+	b=M7nQnRTrfWlfUjcv/NkU14mHbz6mbGPPAHvfaAxoyDy9r7NgvVlGx7nvQtuPshWLwr
+	VIcZGReYemfpPjbAqovCoKu60gj148afCBwbdCzsr3ixpnLuPIg6vIHq5axga+QnOWtZ
+	ATOOSIzTAcBvZF+CTLcaI6Ix2EZfJvM2Zu6gcoECaMBsfWkkgcX8pDzICoFObUEPA0Ph
+	xyhjy3a5s0a4xsxUjj85ZBPphq5vDlUVui4GuAiXXNMUNzoXRvhCUZavbm69NPYfsTGo
+	OOaoCxZJl1VcsIM2c7PuXL0/4umPEJRvhNLRi2yZySkodAODDCekXRVrjonO92glm7rx
+	3wDA==
+X-Gm-Message-State: ALQs6tBzYoOiNFFORmjZ1Ix6NbNedbh4S3n7XVM1TFXwGs+VNnyw0jTW
+	5U4gDHMXAFjgyzRDIk0+VOV2A/pL
+X-Google-Smtp-Source: AIpwx49oGS6pt8Vx+UdHoQBjr0iKDb4ZgJGQmZFRFZDg6oEvpn//kXSc11HDtUnhWp2hFrALmYh3Tg==
+X-Received: by 10.98.102.65 with SMTP id a62mr13423271pfc.68.1523666219600;
+	Fri, 13 Apr 2018 17:36:59 -0700 (PDT)
+Received: from hermes.local ([2601:646:8880:466c:4caf:c486:61ac:d2f7])
+	by smtp.gmail.com with ESMTPSA id
+	x137sm13754292pfd.162.2018.04.13.17.36.58
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 13 Apr 2018 17:36:58 -0700 (PDT)
+To: =?UTF-8?Q?Jakub_D=c4=99bski?= <jdebski@enigma.com.pl>,
+	bitbake-devel@lists.openembedded.org
+References: <1523526293-14340-1-git-send-email-jdebski@enigma.com.pl>
+From: Khem Raj <raj.khem@gmail.com>
+Organization: HIMVIS LLC
+Message-ID: <b80568f3-fe78-f92a-7213-dfc64424ff41@gmail.com>
+Date: Fri, 13 Apr 2018 17:36:58 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+	Gecko/20100101 Thunderbird/60.0
 MIME-Version: 1.0
-Received: by 10.28.126.12 with HTTP; Fri, 13 Apr 2018 02:38:49 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Fri, 13 Apr 2018 11:38:49 +0200
-Message-ID: <CA+chaQdpV7yaPr6bw3nTg7S9FjyRcEyuXL3c1_bdHWHtdad4-Q@mail.gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: clearcase and npm fetch2 modules depending on python3-distutils
+In-Reply-To: <1523526293-14340-1-git-send-email-jdebski@enigma.com.pl>
+Subject: Re: [PATCH] fetch2/git.py: Added handling of the user's password in url
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,63 +63,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Apr 2018 09:38:50 -0000
-Content-Type: multipart/alternative; boundary="883d24f249c4bc1f130569b7a341"
+X-List-Received-Date: Sat, 14 Apr 2018 00:36:59 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
---883d24f249c4bc1f130569b7a341
-Content-Type: text/plain; charset="UTF-8"
 
-Hi,
 
-this is just a FYI, but these 2 fetches are using spawn from distutils:
+On 4/12/18 2:44 AM, Jakub Dębski wrote:
+> Fetching source code from private repository (using https or http) fails
+> because password passed in url (git://user:pass@domain) is ignored.
+> 
 
-lib/bb/fetch2/clearcase.py:from   distutils import spawn
-lib/bb/fetch2/npm.py:from   distutils import spawn
+this is a security issue since SRC_URIs get into the package metadata
+infact a patch to detect this case and warn/error about it will be 
+better. You might want to use .netrc to specify the credentials.
 
-and with latest Ubuntu 18.08 in minimalistic docker container I got
-following error after rebuilding the container today:
+> Signed-off-by: Jakub Dębski <jdebski@enigma.com.pl>
+> ---
+>   lib/bb/fetch2/git.py | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index 3de83be..6600e19 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -527,10 +527,13 @@ class Git(FetchMethod):
+>           Return the repository URL
+>           """
+>           if ud.user:
+> -            username = ud.user + '@'
+> +            if ud.pswd:
+> +                userinfo = ud.user + ':' + ud.pswd '@'
+> +            else:
+> +                userinfo = ud.user + '@'
+>           else:
+> -            username = ""
+> -        return "%s://%s%s%s" % (ud.proto, username, ud.host, ud.path)
+> +            userinfo = ""
+> +        return "%s://%s%s%s" % (ud.proto, userinfo, ud.host, ud.path)
+>   
+>       def _revision_key(self, ud, d, name):
+>           """
+> 
 
-$ bitbake zlib
-Traceback (most recent call last):
-  File "/OE/build/oe-core/bitbake/bin/bitbake", line 31, in <module>
-    import bb
-  File "/OE/build/oe-core/bitbake/lib/bb/__init__.py", line 79, in <module>
-    from bb import fetch2 as fetch
-  File "/OE/build/oe-core/bitbake/lib/bb/fetch2/__init__.py", line 1855, in
-<module>
-    from . import clearcase
-  File "/OE/build/oe-core/bitbake/lib/bb/fetch2/clearcase.py", line 72, in
-<module>
-    from   distutils import spawn
-ImportError: cannot import name 'spawn'
-
-it's caused by python3-distutils missing in the container, something lost
-the dependency on it, so it isn't installed by default anymore, you need to
-add it to your Dockerfile or whatever you're using.
-
---883d24f249c4bc1f130569b7a341
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Hi,</div><div><br></div><div>this is just a FYI, but =
-these 2 fetches are using spawn from distutils:</div><div><br></div><div>li=
-b/bb/fetch2/clearcase.py:from=C2=A0 =C2=A0distutils import spawn</div><div>=
-lib/bb/fetch2/npm.py:from=C2=A0 =C2=A0distutils import spawn</div><div><br>=
-</div><div>and with latest Ubuntu 18.08 in minimalistic docker container I =
-got following error after rebuilding the container today:</div><div><br></d=
-iv><div><div>$ bitbake zlib</div><div>Traceback (most recent call last):</d=
-iv><div>=C2=A0 File &quot;/OE/build/oe-core/bitbake/bin/bitbake&quot;, line=
- 31, in &lt;module&gt;</div><div>=C2=A0 =C2=A0 import bb</div><div>=C2=A0 F=
-ile &quot;/OE/build/oe-core/bitbake/lib/bb/__init__.py&quot;, line 79, in &=
-lt;module&gt;</div><div>=C2=A0 =C2=A0 from bb import fetch2 as fetch</div><=
-div>=C2=A0 File &quot;/OE/build/oe-core/bitbake/lib/bb/fetch2/__init__.py&q=
-uot;, line 1855, in &lt;module&gt;</div><div>=C2=A0 =C2=A0 from . import cl=
-earcase</div><div>=C2=A0 File &quot;/OE/build/oe-core/bitbake/lib/bb/fetch2=
-/clearcase.py&quot;, line 72, in &lt;module&gt;</div><div>=C2=A0 =C2=A0 fro=
-m=C2=A0 =C2=A0distutils import spawn</div><div>ImportError: cannot import n=
-ame &#39;spawn&#39;</div></div><div><br></div><div>it&#39;s caused by=C2=A0=
-python3-distutils missing in the container, something lost the dependency o=
-n it, so it isn&#39;t installed by default anymore, you need to add it to y=
-our Dockerfile or whatever you&#39;re using.</div><div><br></div></div>
-
---883d24f249c4bc1f130569b7a341--
