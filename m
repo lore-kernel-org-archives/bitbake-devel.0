@@ -1,49 +1,62 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-pg0-f53.google.com (mail-pg0-f53.google.com [74.125.83.53])
-	by mail.openembedded.org (Postfix) with ESMTP id 56B396E5CB
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id DAF5160103
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Apr 2018 20:02:29 +0000 (UTC)
-Received: by mail-pg0-f53.google.com with SMTP id t12so1353010pgp.13
+	Wed, 18 Apr 2018 22:54:40 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 5439418450
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Apr 2018 13:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=Y8vYdZLL8dFsRmtPz5y/3UuzOFStPEHLUEHpl22lwto=;
-	b=EdJXQCYSjz0C2rn8wnYsUtovt6ZeXmCq87fYAKlBcHXs7QfLbvLuSNYoH8bPsXhyne
-	eaIedF3jMFVWsOSm9MzJ+qN8JMYyiH65CGFHH/llJMOpmZkpMS6EFJnTDWF6V34PQOLI
-	5kp5r5UyiNJ+PbjC830kraRU0ozuAFQA/lNwkxBuh7rtiMHkLMEyE34YP5+aBGuL+Nka
-	ctY7Zu7y2RSHWwUooQVrVl75kH7RLYs0muAgHg8LZUUoGA6PICk60J3Z2+c6+QWWCOv9
-	DJ4y6gvo0HR1wQXb8WVHw3anrmDFp42VLJRpL9LGDa/b3MekGiFX0xBSL496wl3e3yq1
-	AgKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=Y8vYdZLL8dFsRmtPz5y/3UuzOFStPEHLUEHpl22lwto=;
-	b=tMXa4YmzNSNs+iyr/UEeCVCqt0eIOGH8hlrC3tQqlM2d+mCdmPRHLlSSrGY5/3B+bb
-	cwpnT0uTILJ05ZkqowiXoZxzuTg6VUoZStVjScbkwTt7RPcOO5tPjWJru/NuunDrCHVL
-	asDT2wQCIRxDkQD+2/W3/Friybqf3BNMW5IrWnaHLv+LOZ/zpdUR/oTgdkVMd1vOt0Vb
-	gEts667HaE6vxMO4IHReiyT9DxcmAWvVWB6aJVJL477S+fytnfb9hmcoEl8VOdmfhByD
-	K9AYS/hT3kVrkmZnfuCY14J2iotgilhUdAr42/bBs0WrIw/bV/dlwjzdRRf3J4rS/07j
-	Z1DA==
-X-Gm-Message-State: ALQs6tCjV2mGSTkMYhiXW89HkfThHzVieNLiESKalSQG04r3UGpwXN8/
-	e6cE7N46NpGyAzGn+vwsdGVATl78dhFmnrFsM00=
-X-Google-Smtp-Source: AIpwx48OtEMi50o0UoEWyM1S0kQub5iLVVLf6AtCdzljk6L2i/mVa8YXw6jYD4XtrZbO57+hPqGVez2MS2yRUdFz00I=
-X-Received: by 10.99.98.69 with SMTP id w66mr2763095pgb.55.1524081750866; Wed,
-	18 Apr 2018 13:02:30 -0700 (PDT)
+	Thu, 19 Apr 2018 00:54:41 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id ZpRbAuh-pUtC for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Apr 2018 00:54:40 +0200 (CEST)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id 664681842A
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Apr 2018 00:54:40 +0200 (CEST)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4C4941E081
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Apr 2018 00:54:40 +0200 (CEST)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D2D61E080
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Apr 2018 00:54:40 +0200 (CEST)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+	by boulder03.se.axis.com (Postfix) with ESMTP
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Apr 2018 00:54:40 +0200 (CEST)
+Received: from XBOX04.axis.com (xbox04.axis.com [10.0.5.18])
+	by seth.se.axis.com (Postfix) with ESMTP id 30C5E1798
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Apr 2018 00:54:40 +0200 (CEST)
+Received: from XBOX02.axis.com (10.0.5.16) by XBOX04.axis.com (10.0.5.18) with
+	Microsoft SMTP Server (TLS) id 15.0.1263.5;
+	Thu, 19 Apr 2018 00:54:39 +0200
+Received: from XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776]) by
+	XBOX02.axis.com ([fe80::50c3:4d2f:4507:7776%21]) with mapi id
+	15.00.1263.000; Thu, 19 Apr 2018 00:54:39 +0200
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH] lib/bb/utils: prevent movefile from
+	changing dest dir permissions
+Thread-Index: AQHT0NqGmX8Lv6CQCUy3c32ovfYzCaQHLnSg
+Date: Wed, 18 Apr 2018 22:54:39 +0000
+Message-ID: <2546e2aa64f34330895c465a45232889@XBOX02.axis.com>
+References: <20180410144451.8539-1-pkj@axis.com>
+In-Reply-To: <20180410144451.8539-1-pkj@axis.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-Received: by 10.236.190.8 with HTTP; Wed, 18 Apr 2018 13:02:00 -0700 (PDT)
-In-Reply-To: <1503144441.3803647.1523538756955.JavaMail.zimbra@enigma.com.pl>
-References: <1523526293-14340-1-git-send-email-jdebski@enigma.com.pl>
-	<20180412101612.GJ7593@hiutale>
-	<1503144441.3803647.1523538756955.JavaMail.zimbra@enigma.com.pl>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 18 Apr 2018 13:02:00 -0700
-Message-ID: <CAMKF1sp=t4LM4qdCKu-9qVq14ih1Rx_mxK_=ThbD5QCq5RGFrQ@mail.gmail.com>
-To: =?UTF-8?Q?Jakub_D=C4=99bski?= <jakub.debski@enigma.com.pl>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] fetch2/git.py: Added handling of the user's password in url
+X-TM-AS-GCONF: 00
+Subject: Re: [PATCH] lib/bb/utils: prevent movefile from	changing dest dir permissions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,23 +69,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Apr 2018 20:02:30 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 18 Apr 2018 22:54:41 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 12, 2018 at 6:12 AM, Jakub D=C4=99bski
-<jakub.debski@enigma.com.pl> wrote:
->> Maybe this is by design to prevent credentials leaking into bitbake
->> recipes.
->>
->> Alternative is to set the usernames, passwords etc in e.g. ~/.netrc
->> and ~/.ssh/config files which have the same effect.
->>
->> -Mikko
->
-> Certainly, credentials could be set in other ways, but there is some
-> inconsistency with other fetchers (e.g. perforce, wget, hg) which
-> use password from SRC_URI.
+Any chance of this making it into Sumo?
 
-that merits an entry in bugzilla
+//Peter
+
+> -----Original Message-----
+> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
+> devel-bounces@lists.openembedded.org] On Behalf Of Peter Kjellerstedt
+> Sent: den 10 april 2018 16:45
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH] lib/bb/utils: prevent movefile from
+> changing dest dir permissions
+>=20
+> From: Mattias Hansson <mattias.hansson@axis.com>
+>=20
+> Prevent movefile from falsely setting the source file's owner and
+> permissions on the destination directory instead of the destination
+> file when moving between devices.
+>=20
+> This bug caused the last file moved into a directory to dictate the
+> directory's owner and permissions.
+>=20
+> Signed-off-by: Mattias Hansson <mattias.hansson@axis.com>
+> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> ---
+>  bitbake/lib/bb/utils.py | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+> index 8b739d7849..378e699e0c 100644
+> --- a/bitbake/lib/bb/utils.py
+> +++ b/bitbake/lib/bb/utils.py
+> @@ -807,8 +807,8 @@ def movefile(src, dest, newmtime =3D None, sstat =3D
+> None):
+>                  return None # failure
+>          try:
+>              if didcopy:
+> -                os.lchown(dest, sstat[stat.ST_UID],
+> sstat[stat.ST_GID])
+> -                os.chmod(dest, stat.S_IMODE(sstat[stat.ST_MODE])) #
+> Sticky is reset on chown
+> +                os.lchown(destpath, sstat[stat.ST_UID],
+> sstat[stat.ST_GID])
+> +                os.chmod(destpath, stat.S_IMODE(sstat[stat.ST_MODE]))
+> # Sticky is reset on chown
+>                  os.unlink(src)
+>          except Exception as e:
+>              print("movefile: Failed to chown/chmod/unlink", dest, e)
+> --
+> 2.12.0
+>=20
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
