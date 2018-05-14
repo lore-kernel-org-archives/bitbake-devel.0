@@ -1,25 +1,26 @@
 Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id A219678412
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id BC9DB78441
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 May 2018 14:22:08 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w4EEM9la017544
+	Mon, 14 May 2018 14:22:17 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w4EELrLw023821
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 May 2018 07:22:09 -0700 (PDT)
+	Mon, 14 May 2018 07:22:08 -0700
 Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
 	(147.11.189.41) with Microsoft SMTP Server id 14.3.361.1;
-	Mon, 14 May 2018 07:22:08 -0700
+	Mon, 14 May 2018 07:21:42 -0700
 From: Mark Hatle <mark.hatle@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 14 May 2018 10:21:39 -0400
-Message-ID: <20180514142139.165484-3-mark.hatle@windriver.com>
+Date: Mon, 14 May 2018 10:21:38 -0400
+Message-ID: <20180514142139.165484-2-mark.hatle@windriver.com>
 X-Mailer: git-send-email 2.16.0.rc2
 In-Reply-To: <20180514142139.165484-1-mark.hatle@windriver.com>
 References: <20180514142139.165484-1-mark.hatle@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/2] runqueue.py: Initial implementation of per task process limits
+Subject: [PATCH 1/2] runqueue.py: Minor cleanup for RunQueueStats and users
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,74 +33,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 14 May 2018 14:22:08 -0000
+X-List-Received-Date: Mon, 14 May 2018 14:22:17 -0000
 Content-Type: text/plain
 
-On high core machines, in do_fetch, it is possible to DDoS your own machine.
-A method to limit any arbitrary task type to a certain number of simultaneous
-threads is needed.  (Similar to how BB_NUMBER_THREADS works in the general
-case.)  The format of this new limitation is:
+The RunQueueStats:taskCompleted and RunQueueStats:taskSkipped can take
+multiple arguments.  However, nowehere in bitbake are multiple arguments used.
+Change this to match the behavior of the other APIs where it needs to be
+called once for each task.
 
-    do_fetch[number_threads] = "2"
-
-This should be set globally.  If it is set in individual recipes it could
-result in unpredictable behavior.
-
-Note: a value for number_threads > BB_NUMBER_THREADS will have no effect.
+Additionally, these two functions were usually called in tandem, however in
+the wrong order.  It really doesn't matter as there is no specific preemption
+point between the calls.  But the taskSkipped should be called first to
+increment the 'active' count, and then taskCompleted called to decrement it.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 ---
- lib/bb/runqueue.py | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ lib/bb/runqueue.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index a937a0b..2d9e18d 100644
+index f2e52cf..a937a0b 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -134,6 +134,7 @@ class RunQueueScheduler(object):
-         self.prio_map = [self.rqdata.runtaskentries.keys()]
+@@ -94,13 +94,13 @@ class RunQueueStats:
+         self.active = self.active - 1
+         self.failed = self.failed + 1
  
-         self.buildable = []
-+        self.skip_maxthread = {}
-         self.stamps = {}
-         for tid in self.rqdata.runtaskentries:
-             (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
-@@ -150,8 +151,25 @@ class RunQueueScheduler(object):
-         self.buildable = [x for x in self.buildable if x not in self.rq.runq_running]
-         if not self.buildable:
-             return None
-+
-+        # Filter out tasks that have a max number of threads that have been exceeded
-+        skip_buildable = {}
-+        for running in self.rq.runq_running.difference(self.rq.runq_complete):
-+            rtaskname = taskname_from_tid(running)
-+            if rtaskname not in self.skip_maxthread:
-+                self.skip_maxthread[rtaskname] = self.rq.cfgData.getVarFlag(rtaskname, "number_threads")
-+            if not self.skip_maxthread[rtaskname]:
-+                continue
-+            if rtaskname in skip_buildable:
-+                skip_buildable[rtaskname] += 1
-+            else:
-+                skip_buildable[rtaskname] = 1
-+
-         if len(self.buildable) == 1:
-             tid = self.buildable[0]
-+            taskname = taskname_from_tid(tid)
-+            if taskname in skip_buildable and skip_buildable[taskname] >= int(self.skip_maxthread[taskname]):
-+                return None
-             stamp = self.stamps[tid]
-             if stamp not in self.rq.build_stamps.values():
-                 return tid
-@@ -164,6 +182,9 @@ class RunQueueScheduler(object):
-         best = None
-         bestprio = None
-         for tid in self.buildable:
-+            taskname = taskname_from_tid(tid)
-+            if taskname in skip_buildable and skip_buildable[taskname] >= int(self.skip_maxthread[taskname]):
-+                continue
-             prio = self.rev_prio_map[tid]
-             if bestprio is None or bestprio > prio:
-                 stamp = self.stamps[tid]
+-    def taskCompleted(self, number = 1):
+-        self.active = self.active - number
+-        self.completed = self.completed + number
++    def taskCompleted(self):
++        self.active = self.active - 1
++        self.completed = self.completed + 1
+ 
+-    def taskSkipped(self, number = 1):
+-        self.active = self.active + number
+-        self.skipped = self.skipped + number
++    def taskSkipped(self):
++        self.active = self.active + 1
++        self.skipped = self.skipped + 1
+ 
+     def taskActive(self):
+         self.active = self.active + 1
+@@ -1896,8 +1896,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
+         self.setbuildable(task)
+         bb.event.fire(runQueueTaskSkipped(task, self.stats, self.rq, reason), self.cfgData)
+         self.task_completeoutright(task)
+-        self.stats.taskCompleted()
+         self.stats.taskSkipped()
++        self.stats.taskCompleted()
+ 
+     def execute(self):
+         """
+@@ -2342,8 +2342,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+     def task_failoutright(self, task):
+         self.runq_running.add(task)
+         self.runq_buildable.add(task)
+-        self.stats.taskCompleted()
+         self.stats.taskSkipped()
++        self.stats.taskCompleted()
+         self.scenequeue_notcovered.add(task)
+         self.scenequeue_updatecounters(task, True)
+ 
+@@ -2351,8 +2351,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         self.runq_running.add(task)
+         self.runq_buildable.add(task)
+         self.task_completeoutright(task)
+-        self.stats.taskCompleted()
+         self.stats.taskSkipped()
++        self.stats.taskCompleted()
+ 
+     def execute(self):
+         """
 -- 
 1.8.3.1
 
