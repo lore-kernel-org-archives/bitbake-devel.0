@@ -1,36 +1,23 @@
-Return-Path: <damien.riegel@savoirfairelinux.com>
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id C34AE6FFD8;
-	Mon, 28 May 2018 15:02:02 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id EB0F89C191C;
-	Mon, 28 May 2018 11:02:02 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10032)
-	with ESMTP id 91K5Qf_xRv4o; Mon, 28 May 2018 11:02:02 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 352AD9C1C7E;
-	Mon, 28 May 2018 11:02:02 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10026)
-	with ESMTP id b-jPhDPKeizj; Mon, 28 May 2018 11:02:02 -0400 (EDT)
-Received: from workotop.localdomain (unknown [192.168.50.174])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 0B8E39C191C;
-	Mon, 28 May 2018 11:02:02 -0400 (EDT)
-Date: Mon, 28 May 2018 11:01:58 -0400
-From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-To: bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Message-ID: <20180528150158.ckk4bfq324i346tu@workotop.localdomain>
-References: <20180526122238.mlsunfugwsvtha36@workotop.localdomain>
+Return-Path: <david.reyna@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 5715260777
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 May 2018 03:31:50 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w4T3VoFB020711
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Mon, 28 May 2018 20:31:50 -0700 (PDT)
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.217) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
+	(TLS) id 14.3.361.1; Mon, 28 May 2018 20:31:50 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 28 May 2018 20:26:49 -0700
+Message-ID: <cover.1527564213.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <20180526122238.mlsunfugwsvtha36@workotop.localdomain>
-User-Agent: NeoMutt/20180512
-Subject: Re: Generating extensible SDK fails because of missing LAYERSERIES_CORENAMES
+X-Originating-IP: [147.11.157.217]
+Subject: [PATCH 0/2] toaster: broken custom.xml and threads patch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,70 +30,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 28 May 2018 15:02:03 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Tue, 29 May 2018 03:31:51 -0000
+Content-Type: text/plain
 
+From: David Reyna <David.Reyna@windriver.com>
 
-On Sat, May 26, 2018 at 08:22:39AM -0400, Damien Riegel wrote:
-> Hi,
-> 
-> 
-> When generating the extended SDK, my setup fails with the following
-> error:
-> 
->   ERROR: Failed to generate filtered task list for extensible SDK:
->   ERROR: bitbake failed:
->   ERROR: Unable to start bitbake server
-> 
-> I digged into the issue and found out why bitbake doesn't
-> start.
-> 
-> bitbake thinks layers are incompatible because they define
-> LAYERSERIES_COMPAT but LAYERSERIES_CORENAMES is not set. So this check
-> in cookerdata.py fails [1].
-> 
-> The reason this check fails is that the core `meta` layer is not listed
-> in the generated BBLAYERS, because it's treated in a special way in
-> populate_sdk_ext.bbclass [2]. So as this layer is not listed in
-> BBLAYERS, the compatibility check fails and bitbake cannot start.
-> 
-> 
-> Shouldn't `meta` simply be added to BBLAYERS as any other layer? If not,
-> what is the proper way to solve my bug?
+The Toaster for Rocko is broken on HEAD. There are two patches that made it into master and Sumo, but missed Rocko.
 
-I think it got confused because the `meta` layer is contained in a
-folder named `meta` as well.
+The first patch fixes an error that breaks the initialization of Toaster.
+The second patches fixes a change in behaviour for Django that creates an extra thread that blocks Toaster from shutting down.
 
-I managed to go further in my build with the following snippet:
+The following changes since commit 7e7ee662f5dea4d090293045f7498093322802cc:
 
---- a/meta/classes/populate_sdk_ext.bbclass
-+++ b/meta/classes/populate_sdk_ext.bbclass
-@@ -207,7 +207,7 @@ python copy_buildsystem () {
-     sdkbblayers = []
-     corebase = os.path.basename(d.getVar('COREBASE'))
-     for layer in layers_copied:
--        if corebase == os.path.basename(layer):
-+        if corebase == layer:
-             conf_bbpath = os.path.join('layers', layer, 'bitbake')
-         else:
-             sdkbblayers.append(layer)
+  build-appliance-image: Update to rocko head revision (2018-05-23 17:46:34 +0100)
 
-> 
-> [1] https://github.com/openembedded/bitbake/blob/master/lib/bb/cookerdata.py#L397
-> [2] https://github.com/openembedded/openembedded-core/blob/master/meta/classes/populate_sdk_ext.bbclass#L208
-> 
-> Thank you,
-> -- 
-> Damien
-> -- 
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/broken_customxml_threads_12751_patch
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/broken_customxml_threads_12751_patch
+
+David Reyna (2):
+  bitbake: toaster: do not fail on optional 'custom.xml' file
+  bitbake: Toaster: fix shutdown and extra threads
+
+ bin/toaster                                                 | 4 ++--
+ lib/toaster/bldcontrol/management/commands/checksettings.py | 5 ++++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
 -- 
-Damien Riegel 
-Free Software Consultant
-Tel: +1 514 276 5468 (ext: 355)
+1.9.1
+
 
