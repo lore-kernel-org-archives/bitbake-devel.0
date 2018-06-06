@@ -1,48 +1,50 @@
 Return-Path: <matt.hoosier@gmail.com>
-Received: from mail-it0-f47.google.com (mail-it0-f47.google.com
-	[209.85.214.47])
-	by mail.openembedded.org (Postfix) with ESMTP id BDC407714D
+Received: from mail-yb0-f196.google.com (mail-yb0-f196.google.com
+	[209.85.213.196])
+	by mail.openembedded.org (Postfix) with ESMTP id 85C03770E3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Jun 2018 16:56:02 +0000 (UTC)
-Received: by mail-it0-f47.google.com with SMTP id l6-v6so8959735iti.2
+	Wed,  6 Jun 2018 17:01:16 +0000 (UTC)
+Received: by mail-yb0-f196.google.com with SMTP id w3-v6so2214735ybq.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 06 Jun 2018 09:56:04 -0700 (PDT)
+	Wed, 06 Jun 2018 10:01:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=ZV9Gg19Ql5rz+QVMOVg0bwe8+3stGUbF8hqEs5GA9Gc=;
-	b=rVS/bXf1pmeGMR8fs2WTBFi6GTYMMqlQsZOFmu179bBVSWmUqKTGg2i+DYzjlwDeYk
-	JKyw7rPLHeKNXxji+wxXgFr3/i22NQwAF5BQ9VnY0eDQ7kCI/wWTOjE+2Y394dciCxKV
-	WyhS3+Of/43Paue1sAvXnC64+NrXznRoRkU5nKLBxOH/P0RqDY7V/+cjl+zsQkVnMNOL
-	WYI02md8l6zdn0qlhgXkMMSOjnRBcTi9OjURZsUnY3ipzHZQYyRxR6OGcY7+Cm0WfGQg
-	bR4jcqIAC0uvP5vukjmuh9vmorO+CCNRDdLeZ0Qm7jY7JM9CBanLMgLQWvBuc8JFi18f
-	//pw==
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=iNMWvU2dPLfLLPJWzyk0+OH2RypvHVFCOu8Yn2YiROk=;
+	b=SHPliomE1eHywDsopZhZQcStL5q1OcsnHhyTbXC2hq6co5+H7WAh2al/DAT/VR0J3y
+	RGesDG+rhmoesO8e63QEf3ZJI01niUV+ZbZSV+uFEgFBUyrqur8btsJLNEIXI4Mm1ICn
+	xEBTlRkPhpriUvfRCD4hSLfE7ylvVg8N8crMWkXDi2H5DaBHwQsxfIoybqVgZ88tO2ZL
+	0L/JaXGvLTbdIj6qI+c8TJ0MwRj+4JZDbCOigf3Itqqlz7/2JNaLOzQNqrY0C1oS3Ado
+	Yklo7sJtc+IVYCIZeGtHW6xZBDb7L5ppo9Hvv36hDniDQpKCHh9mS7pqaOhC6RagChDR
+	Op6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=ZV9Gg19Ql5rz+QVMOVg0bwe8+3stGUbF8hqEs5GA9Gc=;
-	b=SRPbF302BOWnnxW3yr/Ts1cCe8+8ERJI2bSZG4orKelxN95yGLvi5gB1uT34+dKDDV
-	OHks4PydrNMVmC86o/jncNWzG72xDe9GC05XUHTLtPGvAxO+jZCL3P2M/iiTNRbDjef9
-	9lakE8ZvyhNPzr59sJ7gMMeJ0S93U/yb+42aWKR0R2PuKYPY8dSjSxJjea8YOKMed3Fc
-	EPAEdt/fHZiaQylU0DD2iqSyNaSJ3JIuQKU/rMXv887GJTc76RuyQbF5HVA9MwWpXuf/
-	MFbyoL/uS8Xpcg/TENWtbPI5TH8VqS/L1f7NtcNuc7MD8OSbS1hvejzYBwk1+ly6NjJU
-	6zqA==
-X-Gm-Message-State: APt69E1D32Q2dxN/Lf46RLwQumjsbdVSqG1HREvWTKDlyx8vYJTtWwyy
-	qbhniKwrpjeChpr6tqP92lqVaBap
-X-Google-Smtp-Source: ADUXVKJYzPOwilZ9ZPoZl6RzPVvPzgBZO/Vs8tuJT8Fz6zXkX4SCxA4TW3yQGe3OnYcjERy4RP8h0w==
-X-Received: by 2002:a24:70d0:: with SMTP id
-	f199-v6mr3470888itc.2.1528304163394; 
-	Wed, 06 Jun 2018 09:56:03 -0700 (PDT)
-Received: from localhost.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id
-	y20-v6sm4631918iod.39.2018.06.06.09.56.02
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Wed, 06 Jun 2018 09:56:02 -0700 (PDT)
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=iNMWvU2dPLfLLPJWzyk0+OH2RypvHVFCOu8Yn2YiROk=;
+	b=R0HL5woWDuKzXzu6LOV1zb3V6EGkyfOGPtypu+f1oTMdhI/MIgDlN8MCgrSswvzVNU
+	ztOO8pXUfiZIAs86IKly7hPZYIgic8TkZfRa92+mtfYDG6djyZSP2CT3mi11TdYQimfq
+	2jMbAU4ep4O0hbuVZIYqxCA+R7P1Pe2y4xMnCqFKFHBZYhJhqKHiRZVI1tzH/FNOehWV
+	zD5vwsBuBL46+WdjSVD5+pLLnt09rWtVm3CvpL7fZqDULGx2DrpGkKZdDdNkMxcr6qZZ
+	8pErSJkVMOPi5ZO67MpkU+S40EdekUHY169/W+EBlJe9w42Al046m60uRGxjAXs2CunD
+	VyAA==
+X-Gm-Message-State: APt69E0tffqR/MsrdzapuGFKfUcg2NPtzQoki9YEtyiILs9gksnthCuu
+	7uB9xU4wU4AMUs4kabgd1OMmh9iwELWx8SLCA60=
+X-Google-Smtp-Source: ADUXVKLXCw7YUvB/ZsjknBj1vdfFHoYXju6OwuQCFOsRUpNmGCmeJbDgbggNRvX9sKtvvn3b5PQnjiIxTCZf39SKX1c=
+X-Received: by 2002:a25:bad2:: with SMTP id
+	a18-v6mr1864481ybk.181.1528304477221; 
+	Wed, 06 Jun 2018 10:01:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20180525134537.27659-1-matt.hoosier@gmail.com>
+	<03bb3ecd46e56bc21799d56f723bc01d966230c8.camel@linuxfoundation.org>
+	<CAJgxT3_8t-OKSuAvY_NJKWoiAXfs_YuTmB9S6K-MV9QBYJhh_g@mail.gmail.com>
+	<f6d6f5fa735580808180883de3eed143c10d6002.camel@linuxfoundation.org>
+In-Reply-To: <f6d6f5fa735580808180883de3eed143c10d6002.camel@linuxfoundation.org>
 From: Matt Hoosier <matt.hoosier@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  6 Jun 2018 11:55:54 -0500
-Message-Id: <20180606165554.15111-1-matt.hoosier@gmail.com>
-X-Mailer: git-send-email 2.17.0
-Subject: [PATCH v6] fetch/gitsm: avoid live submodule fetching during unpack()
+Date: Wed, 6 Jun 2018 12:00:40 -0500
+Message-ID: <CAJgxT39m+ex8F+mjaq5+zzxps7DaPO=iUu=1PO=U3SW-NWp5_Q@mail.gmail.com>
+To: richard.purdie@linuxfoundation.org
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH v5] fetch/gitsm: avoid live submodule fetching during unpack()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,137 +57,144 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jun 2018 16:56:03 -0000
+X-List-Received-Date: Wed, 06 Jun 2018 17:01:16 -0000
+Content-Type: multipart/alternative; boundary="000000000000793a57056dfc1dd9"
 
-Although the submodules' histories have been fetched during the
-do_fetch() phase, the mechanics used to clone the workdir copy
-of the repo haven't been transferring the actual .git/modules
-directory from the repo fetched into downloads/ during the
-fetch task.
+--000000000000793a57056dfc1dd9
+Content-Type: text/plain; charset="UTF-8"
 
-Fix that, and for good measure also explicitly tell Git to avoid
-hitting the network during do_unpack() of the submodules.
+On Wed, Jun 6, 2018 at 9:03 AM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-[YOCTO #12739]
-
-Signed-off-by: Matt Hoosier <matt.hoosier@gmail.com>
----
- lib/bb/fetch2/gitsm.py | 83 ++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 75 insertions(+), 8 deletions(-)
-
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index 0aff1008..86773094 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -98,7 +98,7 @@ class GitSM(Git):
-                         for line in lines:
-                             f.write(line)
- 
--    def update_submodules(self, ud, d):
-+    def update_submodules(self, ud, d, allow_network):
-         # We have to convert bare -> full repo, do the submodule bit, then convert back
-         tmpclonedir = ud.clonedir + ".tmp"
-         gitdir = tmpclonedir + os.sep + ".git"
-@@ -108,11 +108,46 @@ class GitSM(Git):
-         runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*true/bare = false/'", d)
-         runfetchcmd(ud.basecmd + " reset --hard", d, workdir=tmpclonedir)
-         runfetchcmd(ud.basecmd + " checkout -f " + ud.revisions[ud.names[0]], d, workdir=tmpclonedir)
--        runfetchcmd(ud.basecmd + " submodule update --init --recursive", d, workdir=tmpclonedir)
--        self._set_relative_paths(tmpclonedir)
--        runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*false/bare = true/'", d, workdir=tmpclonedir)
--        os.rename(gitdir, ud.clonedir,)
--        bb.utils.remove(tmpclonedir, True)
-+
-+        try:
-+            if allow_network:
-+                fetch_flags = ""
-+            else:
-+                fetch_flags = "--no-fetch"
-+
-+            # The 'git submodule sync' sandwiched between two successive 'git submodule update' commands is
-+            # intentional. See the notes on the similar construction in download() for an explanation.
-+            runfetchcmd("%(basecmd)s submodule update --init --recursive %(fetch_flags)s || (%(basecmd)s submodule sync --recursive && %(basecmd)s submodule update --init --recursive %(fetch_flags)s)" % {'basecmd': ud.basecmd, 'fetch_flags' : fetch_flags}, d, workdir=tmpclonedir)
-+        except bb.fetch.FetchError:
-+            if allow_network:
-+                raise
-+            else:
-+                # This method was called as a probe to see whether the submodule history
-+                # is complete enough to allow the current working copy to have its
-+                # modules filled in. It's not, so swallow up the exception and report
-+                # the negative result.
-+                return False
-+        finally:
-+            self._set_relative_paths(tmpclonedir)
-+            runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*false/bare = true/'", d, workdir=tmpclonedir)
-+            os.rename(gitdir, ud.clonedir,)
-+            bb.utils.remove(tmpclonedir, True)
-+
-+        return True
-+
-+    def need_update(self, ud, d):
-+        main_repo_needs_update = Git.need_update(self, ud, d)
-+
-+        # First check that the main repository has enough history fetched. If it doesn't, then we don't
-+        # even have the .gitmodules and gitlinks for the submodules to attempt asking whether the
-+        # submodules' histories are recent enough.
-+        if main_repo_needs_update:
-+            return True
-+
-+        # Now check that the submodule histories are new enough. The git-submodule command doesn't have
-+        # any clean interface for doing this aside from just attempting the checkout (with network
-+        # fetched disabled).
-+        return not self.update_submodules(ud, d, allow_network=False)
- 
-     def download(self, ud, d):
-         Git.download(self, ud, d)
-@@ -120,7 +155,7 @@ class GitSM(Git):
-         if not ud.shallow or ud.localpath != ud.fullshallow:
-             submodules = self.uses_submodules(ud, d, ud.clonedir)
-             if submodules:
--                self.update_submodules(ud, d)
-+                self.update_submodules(ud, d, allow_network=True)
- 
-     def clone_shallow_local(self, ud, dest, d):
-         super(GitSM, self).clone_shallow_local(ud, dest, d)
-@@ -132,4 +167,36 @@ class GitSM(Git):
- 
-         if self.uses_submodules(ud, d, ud.destdir):
-             runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d, workdir=ud.destdir)
--            runfetchcmd(ud.basecmd + " submodule update --init --recursive", d, workdir=ud.destdir)
-+
-+            # Copy over the submodules' fetched histories too.
-+            if ud.bareclone:
-+                repo_conf = ud.destdir
-+            else:
-+                repo_conf = os.path.join(ud.destdir, '.git')
-+
-+            if os.path.exists(ud.clonedir):
-+                # This is not a copy unpacked from a shallow mirror clone. So
-+                # the manual intervention to populate the .git/modules done
-+                # in clone_shallow_local() won't have been done yet.
-+                runfetchcmd("cp -fpPRH %s %s" % (os.path.join(ud.clonedir, 'modules'), repo_conf), d)
-+                fetch_flags = "--no-fetch"
-+            elif os.path.exists(os.path.join(repo_conf, 'modules')):
-+                # Unpacked from a shallow mirror clone. Manual population of
-+                # .git/modules is already done.
-+                fetch_flags = "--no-fetch"
-+            else:
-+                # This isn't fatal; git-submodule will just fetch it
-+                # during do_unpack().
-+                fetch_flags = ""
-+                bb.error("submodule history not retrieved during do_fetch()")
-+
-+            # Careful not to hit the network during unpacking; all history should already
-+            # be fetched.
-+            #
-+            # The repeated attempts to do the submodule initialization sandwiched around a sync to
-+            # install the correct remote URLs into the submodules' .git/config metadata are deliberate.
-+            # Bad remote URLs are leftover in the modules' .git/config files from the unpack of bare
-+            # clone tarballs and an initial 'git submodule update' is necessary to prod them back to
-+            # enough life so that the 'git submodule sync' realizes the existing module .git/config
-+            # files exist to be updated.
-+            runfetchcmd("%(basecmd)s submodule update --init --recursive %(fetch_flags)s || (%(basecmd)s submodule sync --recursive && %(basecmd)s submodule update --init --recursive %(fetch_flags)s)" % {'basecmd': ud.basecmd, 'fetch_flags': fetch_flags}, d, workdir=ud.destdir)
--- 
-2.17.0
+> On Wed, 2018-06-06 at 08:36 -0500, Matt Hoosier wrote:
+> > Okay, I'll see what's going on with that.
 
 
+I've posted an updated copy at
+http://lists.openembedded.org/pipermail/bitbake-devel/2018-June/009365.html
+that address the usage of the submodule commands that were too new for
+CentOS. Fortunately, their usage was basically unnecessary -- I just
+deleted them outright.
+
+
+> I'm still interested to
+> > know if there's a listing of all the various automated regimens that
+> > are used as CI before accepting Bitbake/Poky patches -- I don't want
+> > to keep wasting the maintainers' time with failures that I could have
+> > uncovered independently.
+>
+> The test matrix is basically encoded into:
+>
+>
+> http://git.yoctoproject.org/cgit.cgi/yocto-autobuilder-helper/tree/config.json
+>
+> run across the various autobuilder workers on https://autobuilder.yocto
+> .io/buildslaves, i.e. centos7, debian8, debian9, fedora26, fedora27,
+> opensuse423, opensuse tumbleweed, ubuntu 1604 and ubuntu 1704
+>
+> I'm not sure its reasonable to expect everyone to test across all those
+> combinations!
+>
+
+Okay, I agree. :)
+
+I think I've managed to test at the new and old ends of each of the major
+distro families there, so I'll be content let the autobuilder sniff out any
+more corner cases.
+
+
+>
+> > Any comments on the aims and overall technique of this change? So far
+> > all I've really gotten back are copy/pastes of automated builder
+> > failures.
+>
+> I strongly believe we should only have network access in do_fetch and
+> that our source mirroring should be functional and I therefore very
+> much support what the patch is doing and appreciate this getting fixed.
+>
+> Sorry for the terse nature of the replies, we're just seeing a lot of
+> patches which are breaking the regression tests and its hard to root
+> cause them back to the underlying patches and help people debug them.
+>
+> I do appreciate the help in getting this issue fixed as it will be a
+> good improvement to the fetcher.
+>
+> Cheers,
+>
+> Richard
+>
+
+Sounds great; thanks, Richard.
+
+--000000000000793a57056dfc1dd9
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr">On Wed, Jun 6,=
+ 2018 at 9:03 AM Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxf=
+oundation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><=
+blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
+eft:1px solid rgb(204,204,204);padding-left:1ex">On Wed, 2018-06-06 at 08:3=
+6 -0500, Matt Hoosier wrote:<br>
+&gt; Okay, I&#39;ll see what&#39;s going on with that.</blockquote><div><br=
+></div><div>I&#39;ve posted an updated copy at=C2=A0<a href=3D"http://lists=
+.openembedded.org/pipermail/bitbake-devel/2018-June/009365.html">http://lis=
+ts.openembedded.org/pipermail/bitbake-devel/2018-June/009365.html</a> that =
+address the usage of the submodule commands that were too new for CentOS. F=
+ortunately, their usage was basically unnecessary -- I just deleted them ou=
+tright.</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"ma=
+rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
+1ex">I&#39;m still interested to<br>
+&gt; know if there&#39;s a listing of all the various automated regimens th=
+at<br>
+&gt; are used as CI before accepting Bitbake/Poky patches -- I don&#39;t wa=
+nt<br>
+&gt; to keep wasting the maintainers&#39; time with failures that I could h=
+ave<br>
+&gt; uncovered independently.<br>
+<br>
+The test matrix is basically encoded into:<br>
+<br>
+<a href=3D"http://git.yoctoproject.org/cgit.cgi/yocto-autobuilder-helper/tr=
+ee/config.json" rel=3D"noreferrer" target=3D"_blank">http://git.yoctoprojec=
+t.org/cgit.cgi/yocto-autobuilder-helper/tree/config.json</a><br>
+<br>
+run across the various autobuilder workers on <a href=3D"https://autobuilde=
+r.yocto" rel=3D"noreferrer" target=3D"_blank">https://autobuilder.yocto</a>=
+<br>
+.io/buildslaves, i.e. centos7, debian8, debian9, fedora26, fedora27,<br>
+opensuse423, opensuse tumbleweed, ubuntu 1604 and ubuntu 1704<br>
+<br>
+I&#39;m not sure its reasonable to expect everyone to test across all those=
+<br>
+combinations!<br></blockquote><div><br></div><div>Okay, I agree. :)</div><d=
+iv><br></div><div>I think I&#39;ve managed to test at the new and old ends =
+of each of the major distro families there, so I&#39;ll be content let the =
+autobuilder sniff out any more corner cases.</div><div>=C2=A0</div><blockqu=
+ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px=
+ solid rgb(204,204,204);padding-left:1ex">
+<br>
+&gt; Any comments on the aims and overall technique of this change? So far<=
+br>
+&gt; all I&#39;ve really gotten back are copy/pastes of automated builder<b=
+r>
+&gt; failures.<br>
+<br>
+I strongly believe we should only have network access in do_fetch and<br>
+that our source mirroring should be functional and I therefore very<br>
+much support what the patch is doing and appreciate this getting fixed.<br>
+<br>
+Sorry for the terse nature of the replies, we&#39;re just seeing a lot of<b=
+r>
+patches which are breaking the regression tests and its hard to root<br>
+cause them back to the underlying patches and help people debug them.<br>
+<br>
+I do appreciate the help in getting this issue fixed as it will be a<br>
+good improvement to the fetcher.<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br></blockquote><div><br></div><div>Sounds great; thanks, Richard.<=
+/div></div></div>
+
+--000000000000793a57056dfc1dd9--
