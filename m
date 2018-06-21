@@ -1,32 +1,41 @@
-Return-Path: <n.merinov@inango-systems.com>
-X-Greylist: delayed 358 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 18 Jun 2018 06:35:02 UTC
-Received: from main-1.inango.com (main-1.inango-systems.com [5.189.174.2])
-	by mail.openembedded.org (Postfix) with ESMTP id 74902744DB
+Return-Path: <nicolac76@yahoo.fr>
+Received: from sonic302-19.consmr.mail.ir2.yahoo.com
+	(sonic302-19.consmr.mail.ir2.yahoo.com [87.248.110.82])
+	by mail.openembedded.org (Postfix) with ESMTP id 35517786D4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jun 2018 06:35:02 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by main-1.inango.com (Postfix) with ESMTP id 5A3DD45767D
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jun 2018 09:29:05 +0300 (IDT)
-X-Virus-Scanned: Debian amavisd-new at mail.inango-systems.com
-Received: from main-1.inango.com ([127.0.0.1])
-	by localhost (main-1.inango.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id M1eusZTqeKyr; Mon, 18 Jun 2018 09:29:02 +0300 (IDT)
-Received: from [192.168.73.123] (unknown [194.60.247.123])
-	by main-1.inango.com (Postfix) with ESMTPSA id C6233455E93;
-	Mon, 18 Jun 2018 09:29:01 +0300 (IDT)
+	Thu, 21 Jun 2018 06:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.fr; s=s2048;
+	t=1529564386; bh=fr4p+q81fDp8mB2T4Th5aOSdcpprDqLya5XemY31ZDA=;
+	h=From:To:Cc:Subject:Date:From:Subject;
+	b=qkUvBmSEZI9OFX8Vnl/x8VXb2NJZEjAMapu9cPh8fP/MWGRJOMFn4SfXpd38OQynWWXR6DTFGY+8KNTb5x8xBYvlMqGFg1GvhbKLSIVGZVl7oC3jqvWmCMKyfGAAFN3lfrDqJo3kKIR6cwcvbJTr8E0QVd/iujuZN5L4gddYrKMA6Le/0gB87Hlx5vN9GiwaUpWtDi0FQBDISHoaDN+JTdsgCZFaFXhLrqlPVE+N1ia10MhRgfeZTQgbP2KSetkLcVmyrKe9cNubpyxbGLs9p1O+/hDxwQDoSonaBcZJznBX55AvNA+AGtj5/RE3O5dmuSB+JQ2DY/RmgxW7FfZStg==
+X-YMail-OSG: fFx9cHsVM1nNv6M8HBfY6_HX_lZn9PG9XeodFDJpX477Q.mLXTZkBdH6ODCywJO
+	sEIkpLQxNlpRa.oVBSRAsG_QP9o7VgWA1LDxAwCIbVZfAgRUDEJeYzC4CWNxxa9qlrfp1U3wFWww
+	izo0NqnxAbOXuSW_kyi8FbdMWPDy9TJnq.j1SWjYDnCNHG4_aeYSksRbWP9oQHxxlriFMNaS7X61
+	R6VP5q9nyasVWILMNwU6CmMaRUXH7RBPRr4kVTYBqw.Xjze2CEuyCv_fjtXVKOLvzGYL0_FcocjP
+	Oxo56xFrmkuKuMY_jbbEHtGM7W0yy7EX.aFs6NMlH.bmbBveRR6NdrDZ3IAVDMAn3.p58xFJSnXJ
+	_9zn0yZJFfrnK9yN_.1Th9q7W66jcbYK4dWIyh_szJOG8T5npCDgf51LqL42q_bpT6P6Z9D6K6U9
+	pEVMCgjZ34Tob79p12yByEYjuBv2I2id8qGslddYAWIw9rdllGLOemN8YDPw8.g0dxC.7MGgYTOO
+	CF.6B5.ZmsoUr8qjikGxapWkSNc9uklK0clMJtv9sLCcLZu_U62kEUH69sWozPj0Qjad6IujfmQ2
+	zSh4g4ju6bUF5BaiEWeOPc3pyghaekT3_Pv70c0BRNwFrRYwhF5vjAJ5W0kpH_3Hjo7E4_cRFzkt
+	Yd4I0u8Xx9XO.ZZ_NdzA69malr9eZUcoQqgIEZJyXFtlowmM3DxmthmnyRF1NNWqZOYuhP7N2R8V
+	Na9a8OWZtrTyiqts09Zjith0r35T3fWTwXbPeWlkPr8f.3Ml87X25Cx0Ek0XBmAMEJV4xlPumo.5
+	kDipokzGPUODkwq.gqyMmAjcJbAl9TB0EvhPWkaer1CecOUyS2XZp6RWam4cRzg0xGNTyZP9zEGk
+	2KsadhrAa0PrEZEd3Iee6zQBYePZe.Rv1arFOCtmotSBmSbisESC1DAFiETztP5NDHb_b6ty_zQ-
+	-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+	sonic302.consmr.mail.ir2.yahoo.com with HTTP;
+	Thu, 21 Jun 2018 06:59:46 +0000
+Received: from 80.245.18.66 (EHLO Achlys.localdomain.com) ([80.245.18.66])
+	by smtp404.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID
+	7547638d565dbf196e7b468ecabeb544; 
+	Thu, 21 Jun 2018 06:59:42 +0000 (UTC)
+From: Nicolas Cornu <nicolac76@yahoo.fr>
 To: bitbake-devel@lists.openembedded.org
-References: <20180513144849.6526-1-n.merinov@inango-systems.com>
-From: Nikolai Merinov <n.merinov@inango-systems.com>
-Organization: Inango-SW LTD
-Message-ID: <dc319812-8dba-159d-9a51-a97ee607b834@inango-systems.com>
-Date: Mon, 18 Jun 2018 11:29:05 +0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101
-	Thunderbird/57.0
-MIME-Version: 1.0
-In-Reply-To: <20180513144849.6526-1-n.merinov@inango-systems.com>
-Subject: Re: [PATCH] fetch2: Use correct check in parameter handling in uri_replace()
+Date: Thu, 21 Jun 2018 08:59:36 +0200
+Message-Id: <20180621065936.31333-1-nicolac76@yahoo.fr>
+X-Mailer: git-send-email 2.17.1
+Cc: Vivien Henriet <v.henriet@overkiz.com>
+Subject: [PATCH] python: fix gcc 8 alignement error.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,206 +48,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Jun 2018 06:35:02 -0000
-X-Groupsio-MsgNum: 9351
-Content-Type: multipart/alternative;
-	boundary="------------20F3260D48578299BD4DD648"
-Content-Language: en-US
+X-List-Received-Date: Thu, 21 Jun 2018 06:59:46 -0000
 
---------------20F3260D48578299BD4DD648
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Vivien Henriet <v.henriet@overkiz.com>
 
-Hello,
+https://bugs.python.org/issue33374
 
-Any review on this?
-
-Regards,
-Nikolai
-
-On 5/13/18 7:48 PM, Nikolai Merinov wrote:
-> If uri_find contain parameters then original URI parameters should
-> be checked against parameters from uri_find instead of parameters
-> from uri_replace.
-> ---
->   lib/bb/fetch2/__init__.py | 4 ++--
->   lib/bb/tests/fetch.py     | 2 ++
->   2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index 72d6092d..829f1903 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -452,8 +452,8 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
->               # Handle URL parameters
->               if i:
->                   # Any specified URL parameters must match
-> -                for k in uri_replace_decoded[loc]:
-> -                    if uri_decoded[loc][k] != uri_replace_decoded[loc][k]:
-> +                for k in uri_find_decoded[loc]:
-> +                    if uri_decoded[loc][k] != uri_find_decoded[loc][k]:
->                           return None
->               # Overwrite any specified replacement parameters
->               for k in uri_replace_decoded[loc]:
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index 74859f9d..66a9ddb5 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -402,6 +402,8 @@ class MirrorUriTest(FetcherTest):
->               : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
->           ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/MIRRORNAME;protocol=http")
->               : "git://somewhere.org/somedir/git.invalid.infradead.org.foo.mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
-> +        ("git://someserver.org/bitbake;tag=1234567890123456789012345678901234567890;branch=master", "git://someserver.org/bitbake;branch=master", "git://git.openembedded.org/bitbake;protocol=http")
-> +            : "git://git.openembedded.org/bitbake;tag=1234567890123456789012345678901234567890;branch=master;protocol=http",
->   
->           #Renaming files doesn't work
->           #("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz") : "http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz"
--- 
-<http://inango.com>
-Nikolai Merinov
-Team Leader, 3rd Party Group
-n.merinov@inango-systems.com
-T +7 343 298 0147 C +7 912 229 2564
-inango.com <http://inango.com>Inango on LinkedIn <https://www.linkedin.com/company/inango>
-
---------------20F3260D48578299BD4DD648
-Content-Type: multipart/related;
- boundary="------------0B1BFA8A7A45AC0C158AFC08"
-
---------------0B1BFA8A7A45AC0C158AFC08
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <p>Hello,</p>
-    <p>Any review on this?</p>
-    <p>Regards,<br>
-      Nikolai<br>
-    </p>
-    <div class="moz-cite-prefix">On 5/13/18 7:48 PM, Nikolai Merinov
-      wrote:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:20180513144849.6526-1-n.merinov@inango-systems.com">
-      <pre class="moz-quote-pre" wrap="">If uri_find contain parameters then original URI parameters should
-be checked against parameters from uri_find instead of parameters
-from uri_replace.
+Change-Id: I2c573447bbe79098317409a8168393f9eb58644c
 ---
- lib/bb/fetch2/__init__.py | 4 ++--
- lib/bb/tests/fetch.py     | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+This patch is not here to be merged, but to have review on it.
+The problem that this patch try to fix is that if your google-repo got 150 projects, and you want to build each with
+a specific recipe, sources vill be copied each time.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 72d6092d..829f1903 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -452,8 +452,8 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
-             # Handle URL parameters
-             if i:
-                 # Any specified URL parameters must match
--                for k in uri_replace_decoded[loc]:
--                    if uri_decoded[loc][k] != uri_replace_decoded[loc][k]:
-+                for k in uri_find_decoded[loc]:
-+                    if uri_decoded[loc][k] != uri_find_decoded[loc][k]:
-                         return None
-             # Overwrite any specified replacement parameters
-             for k in uri_replace_decoded[loc]:
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 74859f9d..66a9ddb5 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -402,6 +402,8 @@ class MirrorUriTest(FetcherTest):
-             : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
-         ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/MIRRORNAME;protocol=http") 
-             : "git://somewhere.org/somedir/git.invalid.infradead.org.foo.mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
-+        ("git://someserver.org/bitbake;tag=1234567890123456789012345678901234567890;branch=master", "git://someserver.org/bitbake;branch=master", "git://git.openembedded.org/bitbake;protocol=http")
-+            : "git://git.openembedded.org/bitbake;tag=1234567890123456789012345678901234567890;branch=master;protocol=http",
+ .../fix-generate-posix-vars-crash.patch       | 62 +++++++++++++++++++
+ .../python/python-native_2.7.12.bb            |  1 +
+ 2 files changed, 63 insertions(+)
+ create mode 100644 meta/recipes-devtools/python/python-native/fix-generate-posix-vars-crash.patch
+
+diff --git a/meta/recipes-devtools/python/python-native/fix-generate-posix-vars-crash.patch b/meta/recipes-devtools/python/python-native/fix-generate-posix-vars-crash.patch
+new file mode 100644
+index 0000000000..277d822744
+--- /dev/null
++++ b/meta/recipes-devtools/python/python-native/fix-generate-posix-vars-crash.patch
+@@ -0,0 +1,62 @@
++From 0b91f8a668201fc58fa732b8acc496caedfdbae0 Mon Sep 17 00:00:00 2001
++From: Florian Weimer <fw@deneb.enyo.de>
++Date: Sun, 29 Apr 2018 12:18:33 -0700
++Subject: [PATCH] Indicate that _PyGC_Head is only 8-byte aligned. (closes
++ bpo-33374)
++
++By spec, the "long double" in _PyGC_Head requires the union to always be 16-byte
++aligned. However, obmalloc only yields 8-byte alignment. Compilers including GCC
++8 are starting to use alignment information to do store-merging. So, the "long
++double" needs to be changed to a simple "double" as was long ago done in Python
++3 by e348c8d154cf6342c79d627ebfe89dfe9de23817. For 2.7, we need to add some
++dummy padding to make sure _PyGC_Head stays the same size.
++---
++ Include/objimpl.h                                       | 17 ++++++++++++++++-
++ .../2018-04-29-12-07-00.bpo-33374.-xegL6.rst            |  3 +++
++ 2 files changed, 19 insertions(+), 1 deletion(-)
++ create mode 100644 Misc/NEWS.d/next/Core and Builtins/2018-04-29-12-07-00.bpo-33374.-xegL6.rst
++
++diff --git a/Include/objimpl.h b/Include/objimpl.h
++index 5f2868332955..cbf6bc3f8763 100644
++--- a/Include/objimpl.h
+++++ b/Include/objimpl.h
++@@ -248,6 +248,20 @@ PyAPI_FUNC(PyVarObject *) _PyObject_GC_Resize(PyVarObject *, Py_ssize_t);
++ /* for source compatibility with 2.2 */
++ #define _PyObject_GC_Del PyObject_GC_Del
++ 
+++/*
+++ * Former over-aligned definition of PyGC_Head, used to compute the size of the
+++ * padding for the new version below.
+++ */
+++union _gc_head;
+++union _gc_head_old {
+++    struct {
+++        union _gc_head_old *gc_next;
+++        union _gc_head_old *gc_prev;
+++        Py_ssize_t gc_refs;
+++    } gc;
+++    long double dummy;
+++};
+++
++ /* GC information is stored BEFORE the object structure. */
++ typedef union _gc_head {
++     struct {
++@@ -255,7 +269,8 @@ typedef union _gc_head {
++         union _gc_head *gc_prev;
++         Py_ssize_t gc_refs;
++     } gc;
++-    long double dummy;  /* force worst-case alignment */
+++    double dummy; /* Force at least 8-byte alignment. */
+++    char dummy_padding[sizeof(union _gc_head_old)];
++ } PyGC_Head;
++ 
++ extern PyGC_Head *_PyGC_generation0;
++diff --git a/Misc/NEWS.d/next/Core and Builtins/2018-04-29-12-07-00.bpo-33374.-xegL6.rst b/Misc/NEWS.d/next/Core and Builtins/2018-04-29-12-07-00.bpo-33374.-xegL6.rst
++new file mode 100644
++index 000000000000..9ec1a605c8f2
++--- /dev/null
+++++ b/Misc/NEWS.d/next/Core and Builtins/2018-04-29-12-07-00.bpo-33374.-xegL6.rst	
++@@ -0,0 +1,3 @@
+++Tweak the definition of PyGC_Head, so compilers do not believe it is always
+++16-byte aligned on x86. This prevents crashes with more aggressive
+++optimizations present in GCC 8.
+diff --git a/meta/recipes-devtools/python/python-native_2.7.12.bb b/meta/recipes-devtools/python/python-native_2.7.12.bb
+index de83cbd76a..adb23637ae 100644
+--- a/meta/recipes-devtools/python/python-native_2.7.12.bb
++++ b/meta/recipes-devtools/python/python-native_2.7.12.bb
+@@ -17,6 +17,7 @@ SRC_URI += "\
+             file://builddir.patch \
+             file://parallel-makeinst-create-bindir.patch \
+             file://revert_use_of_sysconfigdata.patch \
++            file://fix-generate-posix-vars-crash.patch \
+            "
  
-         #Renaming files doesn't work
-         #(<a class="moz-txt-link-rfc2396E" href="http://somewhere.org/somedir1/somefile_1.2.3.tar.gz">"http://somewhere.org/somedir1/somefile_1.2.3.tar.gz"</a>, <a class="moz-txt-link-rfc2396E" href="http://somewhere.org/somedir1/somefile_1.2.3.tar.gz">"http://somewhere.org/somedir1/somefile_1.2.3.tar.gz"</a>, <a class="moz-txt-link-rfc2396E" href="http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz">"http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz"</a>) : <a class="moz-txt-link-rfc2396E" href="http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz">"http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz"</a>
-</pre>
-    </blockquote>
-    <div class="moz-signature">-- <br>
-      <div style="margin-bottom: 7px; font-family: sans-serif;"> <a
-          href="http://inango.com"> <img
-            src="cid:part1.F39CC919.5FB96E25@inango-systems.com"> </a>
-      </div>
-      <div style="color: #333333; padding-left:13px; font-family:
-        sans-serif; font-size: 13px; line-height: 14px; ">
-        <div style="font-weight: bold;">Nikolai Merinov</div>
-        <div>Team Leader, 3rd Party Group</div>
-        <div style="font-size: 11px;"><a class="moz-txt-link-abbreviated" href="mailto:n.merinov@inango-systems.com">n.merinov@inango-systems.com</a></div>
-        <div style="font-size: 11px; line-height: 15px;
-          padding-left:5px">T +7 343 298 0147 C +7 912 229 2564</div>
-      </div>
-      <div style="margin-left: 13px; font-family: sans-serif; font-size:
-        11px; line-height: 14px;">
-        <span><a href="http://inango.com" style="text-decoration: none;
-            color: #F48B00; font-weight: bold; margin-right: 5px;">inango.com</a></span><a
-          href="https://www.linkedin.com/company/inango"><img
-            src="cid:part4.FC4E8D4B.C61D8B2A@inango-systems.com"
-            alt="Inango on LinkedIn" style="vertical-align: top;"></a>
-      </div>
-    </div>
-  </body>
-</html>
+ S = "${WORKDIR}/Python-${PV}"
+-- 
+2.17.1
 
---------------0B1BFA8A7A45AC0C158AFC08
-Content-Type: image/png;
- name="ecenobkadjnjjdlh.png"
-Content-Transfer-Encoding: base64
-Content-ID: <part1.F39CC919.5FB96E25@inango-systems.com>
-Content-Disposition: inline;
- filename="ecenobkadjnjjdlh.png"
 
-iVBORw0KGgoAAAANSUhEUgAAAI4AAAA2CAMAAAAmulEiAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAGNQTFRFHR0bKiooODg3R0dFVVVT
-Y2NicXFwf39+jo6NnJybqqqpuLi3xsbG1NTU4+Pi8fHx9IsA9ZIP9Zkf9qAv96g/969P+LZf+b1v
-+cV/+syP+9Of/Nuv/OK//enP/vDf/vjv////O48IWgAAA6JJREFUWMPNmGF7oyoQhQ+CiApC2202
-Mbl6/v+v3A9RRKPNuk9vDZ/62DPwMgwzQ8CXGhj/uPYvhcP2xXC6l8Lh+bVw2v9eCqf/JEnepi/X
-I3F4vpHsLyPdte0Pxel/TUfWn393xx4WeW7JE0l2x8AscPqP0/t7z+506g4O5dvlRt5CCOH9OJjU
-O9fT51sIIYTTa1x0diGEEMLni+D07yGEED5ur4DTnz9+hxDC++1yavujcc6fV/L29vZxIdkdxTPg
-tKf7CX2OpeJI77TnIVy6y1AqDsRpz11a1Ptjb9Y1SXqXWEnHYa21zaOZtdauzreud9Za69f0bm4w
-KxJsqQr2J5KqIGkVAADZbOmmyIbPxbTCF3pvBn1uSSq18h9ZreLcCHVvU6HoNZAbWxsJ5JOmEoAs
-jCkkIFzc1qbeZUBubGUkUJCYVqzFZCDdCg4JdW9TobxEPuy+AopIA+SDc62CaKLdht6JSS+hE5xk
-JieHna3itB2hDComloMfvICZnC3jsl/odao3EcciMaCG8Fs4PBOZ0EzVw7olVBq4kKPdhl7P9D4T
-ESebPEiSCvkmTtvhThuPeVw3T7eURMKGvgFm96zGaFEhmy3cCLgtHN4wZ4/rZvPpE5xVfQk9nz8b
-LeR8X2QBvYnDePjDEIPQmNkdTnBW9Qr1clEMbhPLDATxFc78u8JaEjMJzqoeWCQ/OwirNBeMjnPb
-ONlzHKcx4azrH3zQDBYGZjldDruNo7ZxXG0KpTIAasJZ1y8/RzfmsI+uNvtxfCnvhUDlxvKfcdT3
-4HgJ5FUsh09xHgP2O3G8hPKrF139XSjXMXbKJY5GvRdHLy7EM5zNi14u8hRJuT+UxTwLumc4xVYa
-tMureM9hO3FijRor2BMctygSVUwNYhk8JfL9OGo95W+GvpqdrhfRolhY+AzVfhyxXhA3cZpFgzGG
-MhsxD6sCGXfjZKmLnXiaBskKUE3sI5P2q0x6SbIC7H4cgyzGghWiiRd5O4vXApDGmCIDTFrcNESZ
-FL+K+3G8hDCOpK81hKOENNWTohIbdO3mtbYAZOVIW2ZjZ7g7K2uMQ3vSCdyVX9U40ltr3WOtHV8e
-U9OM3S+zpsyVUnnpx4eS32Nt59yuNEqZqll/Z33/MGaJk//1b4P/xyt3UbT0Y636SRw1b4mbZRP7
-wzjz7ML8sQH6URwvEx6v53A/j0MvAV03JJ0REDWPxUkzVSwXB+KQTamVUkqXzfOLyJcafwDne07J
-Qv7f1QAAAABJRU5ErkJggg==
-
---------------0B1BFA8A7A45AC0C158AFC08
-Content-Type: image/png;
- name="ipblnieilfjhndhp.png"
-Content-Transfer-Encoding: base64
-Content-ID: <part4.FC4E8D4B.C61D8B2A@inango-systems.com>
-Content-Disposition: inline;
- filename="ipblnieilfjhndhp.png"
-
-iVBORw0KGgoAAAANSUhEUgAAADgAAAAQCAIAAADMGysSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAj9JREFUeNrUlk9u2lAQxgvKFi4Q
-k33tLFiaHABzAHD2gQtADoC9SyJhFlFXOE23AfYpuQDsEb6AnQMUDkB/ZRrL4RmMlEo0I3gaxm/e
-++abPya3Xq+/fAbJHRGo43SDYLF/j64bjuMeE+jDg++6ziE7n55GlUolj2bbdT6LxbvgOp32aDTc
-5ZzqkikciBdEoi+XSzFWq1ahUMj0PeE7m82Snsh0Oh2PR5PJT8uqFYtF1U11OUSiKBLHWIDoeX3Y
-7fe9bKCqQHWv51EfqSj/oaxWK8uqvr5GmTvzqVZySppct4siWYZj1lqtulUPkNpqNXnEGkUhBWMY
-X/mgCN+cwKOzMw2LWiqnp5pt26ZporfbnXq9gcKKvlUP6YxyR5xcUS4vG/Lo+roD38lSfnmZcOjj
-4w+4gSGxUzngHg7HoBTCsKgXlUoamKSWUDah/vmpaSXTrMSX7mRUFU4ZDHzRw/BvpqAclJtB487n
-c0HZ7TpCDHf7/kBQEsnz84S+2X8L+Ij24qIC90k6djKqSrPZUus1CAJWEtdo2DD3ht7Z2oD4/nfD
-MDhEAtvdbaFEq7ZpPnHoYvom6hGpXSUMwRyFCw4xwijcQyrzr1wux9xz9555t5WrfV2fZII7DqR5
-ufwFUEbj/f03MXpeT9oZeiDy9vYGHWrPz/WPzIf8B+cLU5D6A8rd3Q3h0cWrjaBItdBP6NLgV1dN
-tWtJYBiGMrzjN6qk97941zPhM4f89iv0KALfup5dDOyR6s99lr95vwUYAPJDV32BeqY/AAAAAElF
-TkSuQmCC
-
---------------0B1BFA8A7A45AC0C158AFC08--
-
---------------20F3260D48578299BD4DD648--
