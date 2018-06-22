@@ -1,41 +1,56 @@
-Return-Path: <nicolac76@yahoo.fr>
-Received: from sonic302-19.consmr.mail.ir2.yahoo.com
-	(sonic302-19.consmr.mail.ir2.yahoo.com [87.248.110.82])
-	by mail.openembedded.org (Postfix) with ESMTP id CA55378741
+Return-Path: <furkantokac34@gmail.com>
+Received: from mail-wr0-f194.google.com (mail-wr0-f194.google.com
+	[209.85.128.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 3E629786B5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jun 2018 07:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.fr; s=s2048;
-	t=1529565208; bh=dZGQt6EvAuguuAJ4U0rsJ65imQ8LgMaih/4pipKyO4s=;
-	h=From:To:Cc:Subject:Date:From:Subject;
-	b=ksBgFXxxZ7GSRlkaX+v6N3AgoRIuZtTHkqQscZY0jwKxTR8WFi37eNdIekZZYOdDStguTdlgMynVpOMYIgtA1AeRirRS5qWodWy0fcUmEeeWqxEktYrg06MPbTOtjKgxZZ1rubETt5Dby66e3+wVFUvaxjl2txgPxyu0QnR080NOY4lkRpgedoltsvPgVJEl2I3H+t9ZDgTlkBgmC7c87XF59ql4ATvxo1Lwg1O+3+8ZE/qTE5hXeRymrIuWWWb4NrK//BaQhjtXkNbCD9cYexUqGrSwam1Y4P1xLlUdN/jSsXpg/chlfGJd2odZz5JK9ArSuPwZtVzOpk9dCK9u9A==
-X-YMail-OSG: HBu2E1cVM1ketoyWnnrf5dia8WGhTYxEb6R45O7JZjxaL_7VoSo8O27rPQcL.HW
-	WprnCMfnfwIAd1SQoRsUmC53gTtitloV0eEqU0B4TOMgkwTxSpmJs1Mzjz8s1gSUVnkUuyaabK01
-	1QGD17ATlp.qmxvqCZbDPMzy_YKCi4hyBOc4MseFgZ6J17yc48Ucv_UT9EyL_nbXVSTNlRWch7Hv
-	MU9.toCZLaBWLnajcxN8rsYrroBYKpxfB9iD1cJmvx8p0Cutkmo65J009x8SZltbYG_tQ8PQP04a
-	S6VEp7Kri8F_qKKk3dEvL.JgaXVqIHKf7w5ZiNtSH.v1YMAtvkgURdENCzE8YbkCzOJFYGgTVWSd
-	DELACf9Ah3I1Z1cqLf_ymb2x.cfllEu6PsYrb9jAd.hz9jxb1TCg22T7CGJbXXwYtW7Ngdajx3ca
-	1RO.hkkHSLhKcR2w5HTOdLnkRWXCNoTmLWZyP5QYD4oX1Ugk4LEqXl.KzBT4iPUwB3zbrE80yqfH
-	KSpq.NYxPhLg.ObwSoswpwGN5Qtvjpp3fcCwgCeJUTg1LCako9bL2iRL_4jH4MLDee4a87jsdTDZ
-	Mt0X5v9Pv2Qq44fesMfrC0J4PafkBhSmCdocjNbjiEfW4UXVafd.GFdqra7dq2kYSg2WdVuTyLBE
-	4jA0EbulCY648pQUdJeKb_c8eHmww695SDN1Z4HWvFoQ9jcd5K3r01qFJ_QDdjLznVOip1lqe.o_
-	ntW5YFMFHqWKRiCbLPZsgBuOu2VyCE2sbR9nPCAtTVuwSQOUpRn9AW1taNUdpXpkQy2xc1_sDO9P
-	Ch167IfAV.oKtz1tHS7U85TEPAVlya43GGHdwPnhKaMkFWPplLVIjm.2wVeshvqSkok7qRx6jOkh
-	CIBBTBu5s433_mnX09A5pSXrYvW61s9xnEHuD.UrQgaekJhyAkBIQnBrRB1eqplaX1NlS15M6fGD
-	ALe17GgBwQnlf7ASTt_U-
-Received: from sonic.gate.mail.ne1.yahoo.com by
-	sonic302.consmr.mail.ir2.yahoo.com with HTTP;
-	Thu, 21 Jun 2018 07:13:28 +0000
-Received: from 80.245.18.66 (EHLO Achlys.localdomain.com) ([80.245.18.66])
-	by smtp403.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID
-	58ab1fde4e7aedb035adb3c164b436de; 
-	Thu, 21 Jun 2018 07:13:24 +0000 (UTC)
-From: Nicolas Cornu <nicolac76@yahoo.fr>
+	Fri, 22 Jun 2018 11:07:48 +0000 (UTC)
+Received: by mail-wr0-f194.google.com with SMTP id w10-v6so6300118wrk.9
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 22 Jun 2018 04:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=subject:to:references:from:message-id:date:user-agent:mime-version
+	:in-reply-to:content-transfer-encoding:content-language;
+	bh=lbGL/eciomS1D/FqufZQPpzlGiHBVEZ4MIv4eRSEARo=;
+	b=qrvqnNzAh3S6GhGJ23zVpPG0WJospvbQaSziNBImPExd5OwF7DK9mthOIB6pz5n6F1
+	55MH7tokmMwz/dPW0QzSXhHBt80iaUOI/sVgvupqWnd57Itbfmyi6i+1S3bDYRKbZ5zO
+	9CBdyvcw4sykU86dOO0kqASa60jhfLHCR2xfz3FwesTn6b38GFFlW3eHai8bzTu2tcQ/
+	ZOHM6N2mwPEjTHDKLDpVggWbtAj2ydUmMv6mEflESHwTDXV9kOi+pJCk/bANQ+Sw0Hit
+	YEXSdFtfZprHVoAQWCz9NyrozHoeEI9GwKJxTWIR+miVIFTdu6NGfJaHcbxrk3dLV3Eh
+	eseA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:subject:to:references:from:message-id:date
+	:user-agent:mime-version:in-reply-to:content-transfer-encoding
+	:content-language;
+	bh=lbGL/eciomS1D/FqufZQPpzlGiHBVEZ4MIv4eRSEARo=;
+	b=D7yxfAls/fe2Ov9i2d8xr+kMPo/yvKoDhtbrVSJSjJIudJYY8IqOpRESLzO/fEGTww
+	cyqgvkA/XYBCNLKUenLUiIWzn6jOohGnat7PM6YttGO0tQd4/lcaX/ARwaO5g+54209d
+	h5vdVgduXhTkh3fBfnja2VyYzC8WP6zzKDkWmeQphR3linoCFhYIqOGAvLvqiLwTHRh5
+	FiU8AxU948x4qnU4lhRXX2T4yeeaC6hAQ43rIkgEP4DPKKYLdjzzV2sv7HNYWUSmLPG9
+	dbmOcN5s8gO26qLNYkbFRRNuN0BGE2FjP1NpE+4XXVxmsuesSa15MCKYT2cI/HSgTYzN
+	YVAQ==
+X-Gm-Message-State: APt69E1VjVEsB57q06/tGSSnwBp1YZDEDOXbpptoWN8OPywgcla86Qct
+	qCOBdzWp4bR4fE+diVzhpkp5FgNc
+X-Google-Smtp-Source: AAOMgpcETg6OdAnQqRNxM2D19uEl7UTSGNdpCLOkleO/zos7LrFS1n0YmG578oPwXruH0TGT7kKk3A==
+X-Received: by 2002:adf:8854:: with SMTP id
+	e20-v6mr1310583wre.30.1529665668801; 
+	Fri, 22 Jun 2018 04:07:48 -0700 (PDT)
+Received: from [10.69.3.47] ([212.175.35.16]) by smtp.gmail.com with ESMTPSA id
+	l67-v6sm1806194wmb.22.2018.06.22.04.07.47
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 22 Jun 2018 04:07:48 -0700 (PDT)
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Jun 2018 09:13:12 +0200
-Message-Id: <20180621071312.1182-1-nicolac76@yahoo.fr>
-X-Mailer: git-send-email 2.17.1
-Cc: Nicolas Cornu <n.cornu@overkiz.com>
-Subject: [PATCH] fetch2/repo.py: improve unpack to copy only asked project.
+References: <20180621065936.31333-1-nicolac76@yahoo.fr>
+	<89f00166-e4d7-c942-e475-31423e54c9e0@yahoo.fr>
+From: Furkan Tokac <furkantokac34@gmail.com>
+Message-ID: <fb369254-81a7-db2c-e497-f8b37581678f@gmail.com>
+Date: Fri, 22 Jun 2018 14:07:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.0
+MIME-Version: 1.0
+In-Reply-To: <89f00166-e4d7-c942-e475-31423e54c9e0@yahoo.fr>
+Subject: Re: [PATCH] python: fix gcc 8 alignement error.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,47 +63,13 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jun 2018 07:13:28 -0000
+X-List-Received-Date: Fri, 22 Jun 2018 11:07:48 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-From: Nicolas Cornu <n.cornu@overkiz.com>
+We're human beings, we do mistakes :)
 
-Today this fetcher copy the whole repo projects in each sub-project.
----
-This patch is not here to be merged, but to have review on it.
-The problem that this patch try to fix is that if your google-repo got 150 projects, and you want to build each with
-a specific recipe, sources will be copied each time.
- lib/bb/fetch2/repo.py | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
-index 8c7e8185..a01a548d 100644
---- a/lib/bb/fetch2/repo.py
-+++ b/lib/bb/fetch2/repo.py
-@@ -89,6 +89,23 @@ class Repo(FetchMethod):
-         # Create a cache
-         runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, os.path.join(".", "*") ), d, workdir=codir)
- 
-+    def unpack(self, ud, destdir, d):
-+        """unpack the project from repo source directories"""
-+
-+        repodir = d.getVar("REPODIR") or (d.getVar("DL_DIR") + "/repo")
-+        gitsrcname = "%s%s" % (ud.host, ud.path.replace("/", "."))
-+        codir = os.path.join(repodir, gitsrcname, ud.manifest)
-+        repodir = os.path.join(codir, "repo")
-+
-+        # With this command I get the full path to the project in the "repo" download dir.
-+        full_path_to_download = runfetchcmd("%s list --path-only --fullpath %s" % ("repo", d.getVar("PN")), d, workdir=repodir)
-+
-+        # I do this or git clone say the directory is not empty.
-+        runfetchcmd("rm -rf %s" % d.getVar("S"), d, workdir=destdir)
-+
-+        # Is it ok, here to use "S" directly? I see no fetcher do that.
-+        runfetchcmd("git clone %s %s" % (full_path_to_download.strip(), d.getVar("S")), d, workdir=destdir)
-+
-     def supports_srcrev(self):
-         return False
- 
--- 
-2.17.1
-
+On 6/21/18 10:11 AM, Nicolas Cornu via bitbake-devel wrote:
+> Ignore this thread please. It's a terrible mistake from me.
 
