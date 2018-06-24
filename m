@@ -1,56 +1,53 @@
-Return-Path: <furkantokac34@gmail.com>
-Received: from mail-wr0-f194.google.com (mail-wr0-f194.google.com
-	[209.85.128.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E629786B5
+Return-Path: <rpjday@crashcourse.ca>
+X-Greylist: delayed 1375 seconds by postgrey-1.34 at layers.openembedded.org;
+	Sun, 24 Jun 2018 18:39:19 UTC
+Received: from cpanel4.indieserve.net (cpanel4.indieserve.net [199.212.143.9])
+	by mail.openembedded.org (Postfix) with ESMTP id 0B07771C54
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Jun 2018 11:07:48 +0000 (UTC)
-Received: by mail-wr0-f194.google.com with SMTP id w10-v6so6300118wrk.9
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Jun 2018 04:07:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=subject:to:references:from:message-id:date:user-agent:mime-version
-	:in-reply-to:content-transfer-encoding:content-language;
-	bh=lbGL/eciomS1D/FqufZQPpzlGiHBVEZ4MIv4eRSEARo=;
-	b=qrvqnNzAh3S6GhGJ23zVpPG0WJospvbQaSziNBImPExd5OwF7DK9mthOIB6pz5n6F1
-	55MH7tokmMwz/dPW0QzSXhHBt80iaUOI/sVgvupqWnd57Itbfmyi6i+1S3bDYRKbZ5zO
-	9CBdyvcw4sykU86dOO0kqASa60jhfLHCR2xfz3FwesTn6b38GFFlW3eHai8bzTu2tcQ/
-	ZOHM6N2mwPEjTHDKLDpVggWbtAj2ydUmMv6mEflESHwTDXV9kOi+pJCk/bANQ+Sw0Hit
-	YEXSdFtfZprHVoAQWCz9NyrozHoeEI9GwKJxTWIR+miVIFTdu6NGfJaHcbxrk3dLV3Eh
-	eseA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:subject:to:references:from:message-id:date
-	:user-agent:mime-version:in-reply-to:content-transfer-encoding
-	:content-language;
-	bh=lbGL/eciomS1D/FqufZQPpzlGiHBVEZ4MIv4eRSEARo=;
-	b=D7yxfAls/fe2Ov9i2d8xr+kMPo/yvKoDhtbrVSJSjJIudJYY8IqOpRESLzO/fEGTww
-	cyqgvkA/XYBCNLKUenLUiIWzn6jOohGnat7PM6YttGO0tQd4/lcaX/ARwaO5g+54209d
-	h5vdVgduXhTkh3fBfnja2VyYzC8WP6zzKDkWmeQphR3linoCFhYIqOGAvLvqiLwTHRh5
-	FiU8AxU948x4qnU4lhRXX2T4yeeaC6hAQ43rIkgEP4DPKKYLdjzzV2sv7HNYWUSmLPG9
-	dbmOcN5s8gO26qLNYkbFRRNuN0BGE2FjP1NpE+4XXVxmsuesSa15MCKYT2cI/HSgTYzN
-	YVAQ==
-X-Gm-Message-State: APt69E1VjVEsB57q06/tGSSnwBp1YZDEDOXbpptoWN8OPywgcla86Qct
-	qCOBdzWp4bR4fE+diVzhpkp5FgNc
-X-Google-Smtp-Source: AAOMgpcETg6OdAnQqRNxM2D19uEl7UTSGNdpCLOkleO/zos7LrFS1n0YmG578oPwXruH0TGT7kKk3A==
-X-Received: by 2002:adf:8854:: with SMTP id
-	e20-v6mr1310583wre.30.1529665668801; 
-	Fri, 22 Jun 2018 04:07:48 -0700 (PDT)
-Received: from [10.69.3.47] ([212.175.35.16]) by smtp.gmail.com with ESMTPSA id
-	l67-v6sm1806194wmb.22.2018.06.22.04.07.47
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 22 Jun 2018 04:07:48 -0700 (PDT)
-To: bitbake-devel@lists.openembedded.org
-References: <20180621065936.31333-1-nicolac76@yahoo.fr>
-	<89f00166-e4d7-c942-e475-31423e54c9e0@yahoo.fr>
-From: Furkan Tokac <furkantokac34@gmail.com>
-Message-ID: <fb369254-81a7-db2c-e497-f8b37581678f@gmail.com>
-Date: Fri, 22 Jun 2018 14:07:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-	Thunderbird/60.0
+	Sun, 24 Jun 2018 18:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crashcourse.ca; s=default;
+	h=Content-Type:MIME-Version:Message-ID:Subject:
+	To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bbfyxvQ314Uxxb4aj0bGpnRAuyM/4VXIm0sh++F9mdQ=;
+	b=ase9c9iTbLW592+LP0LaMr0/fU
+	xvZEFZ9bTp3zGbtTJQEm2mXU3ZHN9J8N96Oesuo51i4o8w54+t9q/buWRynckClfNzl2w1MCeuOkV
+	zyQaHt88uD3YZO4KOgrEiPDlRilD6xMvcdZJwX0EHmazLYNb6pB7Xk26fBfdRA6PT818+4WIGZ9H5
+	8GJEFO0MlmwtXQipnWLKJY1Y5KDQXtn9uJZ8gNxkaakXfIdP9UnbEKk6yFJIpMhqOAo8wWMgbvch+
+	8vkWqSpfBWJTo7kuIZALYxzKm9bUfqQP9X7SWfF3xkpk0ComTwB1ugpfBK3h/zHsrBG/d8fSG20u/
+	fEk6WfOA==;
+Received: from cpef81d0f814063-cmf81d0f814060.cpe.net.cable.rogers.com
+	([174.114.57.56]:46668 helo=localhost.localdomain)
+	by cpanel4.indieserve.net with esmtpsa
+	(TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256) (Exim 4.91)
+	(envelope-from <rpjday@crashcourse.ca>) id 1fX9Yk-006PFa-K3
+	for bitbake-devel@lists.openembedded.org;
+	Sun, 24 Jun 2018 14:16:23 -0400
+Date: Sun, 24 Jun 2018 14:16:21 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@localhost.localdomain
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.LFD.2.21.1806241413250.29780@localhost.localdomain>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <89f00166-e4d7-c942-e475-31423e54c9e0@yahoo.fr>
-Subject: Re: [PATCH] python: fix gcc 8 alignement error.
+X-OutGoing-Spam-Status: No, score=-0.2
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel4.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel4.indieserve.net: authenticated_id:
+	rpjday+crashcourse.ca/only user confirmed/virtual account not
+	confirmed
+X-Authenticated-Sender: cpanel4.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: is there a replacement for "bitbake -c fetchall"?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,13 +60,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Jun 2018 11:07:48 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-List-Received-Date: Sun, 24 Jun 2018 18:39:20 -0000
+Content-Type: text/plain; charset=US-ASCII
 
-We're human beings, we do mistakes :)
 
-On 6/21/18 10:11 AM, Nicolas Cornu via bitbake-devel wrote:
-> Ignore this thread please. It's a terrible mistake from me.
+  haven't messed with OE/YP for a few months, just now noticed that
+the "fetchall" task has been removed, is there something equivalent
+since i found that useful for grabbing everything i would need later,
+and updating my local source mirror in the process.
+
+rday
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                  http://crashcourse.ca/dokuwiki
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
