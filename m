@@ -1,53 +1,50 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from cpanel4.indieserve.net (cpanel4.indieserve.net [199.212.143.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 6958871A8D
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-ua0-f169.google.com (mail-ua0-f169.google.com
+	[209.85.217.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 82C647450D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Jun 2018 21:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:References:
-	Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hu7dENnHnOxd4uhOZb9k4xoBS3f7EHTRrg8S+n0q3+g=;
-	b=JyQJx1TWCdPHIrPbdk8e+OyBH
-	AeleXIT0mLqgFRW4gvzmtpH46qjIRrt0lqZ5UK2UIBojSH1x90kkPpBeEL0fOu1EKmREka0HsHCcM
-	LWB0xpPPY9TC8nGTL7Zu5SnKuUMmPa58Io0Lr7TC0/F06K8JTkBqvklp6hrBVT3YDtZ4BoXAM2ZJk
-	pRkIrp7Eyc9HuVqeFjtK6Hmj7zE14T69SyTmaWAjtc0t0tWR4uE/c0UypDkoHaXJRTXVtA7bEuMjs
-	R6Yb4gzovYfOVBL3vUTh4GVbqkvNtfghdrj1LTh0NyeXSoBYwZyGQkU2FOB45GDwRiAVfQbrXKXCj
-	2jZ15K83Q==;
-Received: from cpef81d0f814063-cmf81d0f814060.cpe.net.cable.rogers.com
-	([174.114.57.56]:58972 helo=localhost.localdomain)
-	by cpanel4.indieserve.net with esmtpsa
-	(TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256) (Exim 4.91)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1fXYxS-00DFsm-Nk; Mon, 25 Jun 2018 17:23:35 -0400
-Date: Mon, 25 Jun 2018 17:23:33 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost.localdomain
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-In-Reply-To: <d4a5354857cd444eacd0acfff9e5e556@XBOX02.axis.com>
-Message-ID: <alpine.LFD.2.21.1806251722200.12801@localhost.localdomain>
-References: <alpine.LFD.2.21.1806241413250.29780@localhost.localdomain>
-	<d4a5354857cd444eacd0acfff9e5e556@XBOX02.axis.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+	Tue, 26 Jun 2018 04:09:12 +0000 (UTC)
+Received: by mail-ua0-f169.google.com with SMTP id r18-v6so4052890ual.13
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Jun 2018 21:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=L/ddwzyZazd4eFCdeHO4pLILsn2i7JCVIjpqGLUa1ZE=;
+	b=cd53EB4gXDQeOgsHqLAz6Yd2tVTPNaWtVUwg8UDcKFRYcTbBESOagvk0aj65ks00/q
+	K5Msx908CglKGjhbf6OfLZRu69mpVCHKY8LtrXyILYmEMIT1TTJ7p+VFSwzuAnhIaXLf
+	FRSQz9L+00O0U/GbeJ5HsBkvhlQ1EhEBdz7gRetiBcSsnD1rP++jHGGBFtFecQwSqzHi
+	plxHdlSqPn+jC1L7fMAvpTnaGUVcrXl0FBP/pfr/3K8W869Xhk326SIOok4qKxoVVclD
+	FbyhRReXGiSnUaGd5ZC2AWIUDW7Cw6XbmC2tCT67vDxQjKd+qFUgllIqEKji3PUEME40
+	aQCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=L/ddwzyZazd4eFCdeHO4pLILsn2i7JCVIjpqGLUa1ZE=;
+	b=UvsZVE7eVoT30cNs7eA6ft/HR7G59w/yL7pIxjMJwPXuztA27fx240le9fqt/dxKwb
+	j0+uAzOR6rfMhPIfdG4m6Ga3ik86WKPI2RWQQjb1T0YW89/+dSdE+2IcNuDu9ZznUk2H
+	cWepph+69Dan5wrxjsgvug7LIBy8vTWcs+7pXry7uLkxTqRvoDA/E+xEtkfeLhRYj8v2
+	yK8zvEBzP5h//C+slglgpjB7Wr8JU2Wie/v8SISeC4lss9KYM1g6+WmUH5nyN/4rndr/
+	iIpPNkOxCzQM2FbUmJMHj+01ENYfYlivwb17kjDEAPcAiiDdS5AvrSvlUf3LjsH8TpLQ
+	Hi3Q==
+X-Gm-Message-State: APt69E11PiMx4VxS2E5saEEWzjC9eyqOfg3rL4NL9Fjwbn0cKxULsGPG
+	Cabf3xXYlOQVGs7dBy1mwVNahrSIqugsqv1LcnY=
+X-Google-Smtp-Source: ADUXVKJkDsUtyfdUYPpTmoWLTfpCzEOVD0N/htFK6UbrxgTRh6a+TGEXV7OC5CYRMZ0DwLvt77o4zDsQl5npzEXTgXY=
+X-Received: by 2002:ab0:4045:: with SMTP id
+	h63-v6mr9646680uad.66.1529986153432; 
+	Mon, 25 Jun 2018 21:09:13 -0700 (PDT)
 MIME-Version: 1.0
-X-OutGoing-Spam-Status: No, score=-1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel4.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel4.indieserve.net: authenticated_id:
-	rpjday+crashcourse.ca/only user confirmed/virtual account not
-	confirmed
-X-Authenticated-Sender: cpanel4.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: is there a replacement for "bitbake -c fetchall"?
+Received: by 2002:ab0:28a:0:0:0:0:0 with HTTP;
+	Mon, 25 Jun 2018 21:09:13 -0700 (PDT)
+In-Reply-To: <20180620061320.6846-1-nicolac76@yahoo.fr>
+References: <20180620061320.6846-1-nicolac76@yahoo.fr>
+From: Andre McCurdy <armccurdy@gmail.com>
+Date: Mon, 25 Jun 2018 21:09:13 -0700
+Message-ID: <CAJ86T=WnwFJuhqhnKq+nKRh_1Awe91LoUAPBLv2tROGEXxs8RA@mail.gmail.com>
+To: Nicolas Cornu <nicolac76@yahoo.fr>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Nicolas Cornu <n.cornu@overkiz.com>
+Subject: Re: [PATCH] fetch2/repo.py: improve unpack to copy only asked project.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,33 +57,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Jun 2018 21:23:37 -0000
-Content-Type: text/plain; charset=US-ASCII
+X-List-Received-Date: Tue, 26 Jun 2018 04:09:12 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 25 Jun 2018, Peter Kjellerstedt wrote:
-
-> > -----Original Message-----
-> > From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
-> > devel-bounces@lists.openembedded.org] On Behalf Of Robert P. J. Day
-> > Sent: den 24 juni 2018 20:16
-> > To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-> > Subject: [bitbake-devel] is there a replacement for "bitbake -c
-> > fetchall"?
-> >
-> >   haven't messed with OE/YP for a few months, just now noticed that
-> > the "fetchall" task has been removed, is there something equivalent
-> > since i found that useful for grabbing everything i would need later,
-> > and updating my local source mirror in the process.
-> >
-> > rday
+On Tue, Jun 19, 2018 at 11:13 PM, Nicolas Cornu via bitbake-devel
+<bitbake-devel@lists.openembedded.org> wrote:
+> From: Nicolas Cornu <n.cornu@overkiz.com>
 >
-> It has been replaced with a generic --runall option to bitbake, see:
+> Today this fetcher copy the whole repo projects in each sub-project.
+> ---
+> This patch is not here to be merged, but to have review on it.
+> The problem is that if your google-repo got 150 projects, and you want to build each with a specific recipe, sources
+> will be copied for each.
+
+If your manifest contains 150 repos but you want to fetch and build
+them individually then perhaps it's better not to use the repo fetcher
+all?
+
+You could either just put the git URIs directly into your recipes or
+(if your manifest changes frequently and you don't want the recipes to
+get out of sync) perhaps write a script to process the output of "repo
+manifest" and auto generate a .conf file containing the git based
+SRC_URI definitions which your recipes can include.
+
+>  lib/bb/fetch2/repo.py | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 >
-> https://www.yoctoproject.org/docs/latest/ref-manual/ref-manual.html#migration-2.5-bitbake-changes
-
-  ah, i will test this later, but there was a significant difference
-between the earlier tasks "fetch" and "fetchall", this suggests that
---runall=fetch is equivalent to the earlier fetchall, is that correct?
-
-rday
+> diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
+> index 8c7e8185..a01a548d 100644
+> --- a/lib/bb/fetch2/repo.py
+> +++ b/lib/bb/fetch2/repo.py
+> @@ -89,6 +89,23 @@ class Repo(FetchMethod):
+>          # Create a cache
+>          runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, os.path.join(".", "*") ), d, workdir=codir)
+>
+> +    def unpack(self, ud, destdir, d):
+> +        """unpack the project from repo source directories"""
+> +
+> +        repodir = d.getVar("REPODIR") or (d.getVar("DL_DIR") + "/repo")
+> +        gitsrcname = "%s%s" % (ud.host, ud.path.replace("/", "."))
+> +        codir = os.path.join(repodir, gitsrcname, ud.manifest)
+> +        repodir = os.path.join(codir, "repo")
+> +
+> +        # With this command I get the full path to the project in the "repo" download dir.
+> +        full_path_to_download = runfetchcmd("%s list --path-only --fullpath %s" % ("repo", d.getVar("PN")), d, workdir=repodir)
+> +
+> +        # I do this or git clone say the directory is not empty.
+> +        runfetchcmd("rm -rf %s" % d.getVar("S"), d, workdir=destdir)
+> +
+> +        # Is it ok, here to use "S" directly? I see no fetcher do that.
+> +        runfetchcmd("git clone %s %s" % (full_path_to_download.strip(), d.getVar("S")), d, workdir=destdir)
+> +
+>      def supports_srcrev(self):
+>          return False
+>
+> --
+> 2.17.1
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
