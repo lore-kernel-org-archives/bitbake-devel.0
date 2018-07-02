@@ -1,25 +1,45 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 9ACF2788EB
+Return-Path: <Jef.Driesen@niko.eu>
+Received: from relay08.secure-mail.be (relay08.secure-mail.be [195.13.7.11])
+	by mail.openembedded.org (Postfix) with ESMTP id C5B4078965
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  2 Jul 2018 10:57:01 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	w62Av0Y3006155
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Mon, 2 Jul 2018 11:57:02 +0100
-Message-ID: <241c1a75e52fc5e8b88218f15ba5eb6a0c28eac8.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jef.Driesen@niko.eu, bitbake-devel@lists.openembedded.org
-Date: Mon, 02 Jul 2018 11:57:00 +0100
-In-Reply-To: <FAB9E48578194042BE5C63B8BE47610339DDDBB4@MBX.NIKO.LAN>
+	Mon,  2 Jul 2018 13:34:43 +0000 (UTC)
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AnAQCEKTpb/7lOx1RcGgEBAQEBAgEBA?=
+	=?us-ascii?q?QEIAQEBAYJ1KipigScKi3OMPIIHlSSBegsjCAGEQAKDMiE0GAECAQECAQECAWw?=
+	=?us-ascii?q?cDII1IoJgAQU6TwIBCBgKFBAyJQEBBAESCIMZggADAQqpV4hJgS4JAYdZgQqCF?=
+	=?us-ascii?q?YQegxgEGIFGAiqDBoIkAodHQJE/BwKGBopXhAyICYozh1SBQTiBUnODNgmDLAE?=
+	=?us-ascii?q?Ih1aFPm8BeQEBj0UBgRkBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2AnAQCEKTpb/7lOx1RcGgEBAQEBAgEBAQEIAQEBAYJ1Kip?=
+	=?us-ascii?q?igScKi3OMPIIHlSSBegsjCAGEQAKDMiE0GAECAQECAQECAWwcDII1IoJgAQU6T?=
+	=?us-ascii?q?wIBCBgKFBAyJQEBBAESCIMZggADAQqpV4hJgS4JAYdZgQqCFYQegxgEGIFGAiq?=
+	=?us-ascii?q?DBoIkAodHQJE/BwKGBopXhAyICYozh1SBQTiBUnODNgmDLAEIh1aFPm8BeQEBj?=
+	=?us-ascii?q?0UBgRkBAQ?=
+Received: from edge.nikogroup.be ([84.199.78.185])
+	by relay08.secure-mail.be with ESMTP; 02 Jul 2018 15:34:44 +0200
+Received: from HUB.NIKO.LAN (172.22.10.201) by EDGE.nikogroup.be
+	(192.168.22.31) with Microsoft SMTP Server (TLS) id 14.3.389.1;
+	Mon, 2 Jul 2018 15:35:38 +0200
+Received: from MBX.NIKO.LAN ([::1]) by HUB.NIKO.LAN ([::1]) with mapi id
+	14.03.0389.001; Mon, 2 Jul 2018 15:34:43 +0200
+From: <Jef.Driesen@niko.eu>
+To: <richard.purdie@linuxfoundation.org>,
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] pseudo interfering with git fetcher?
+Thread-Index: AdQR0uTHwFwZZOBAT6GLxsUtv6PFvQ==
+Date: Mon, 2 Jul 2018 13:34:42 +0000
+Message-ID: <FAB9E48578194042BE5C63B8BE47610339DDDC77@MBX.NIKO.LAN>
 References: <FAB9E48578194042BE5C63B8BE47610339DD77AC@MBX.NIKO.LAN>
 	<5a7291cc2b09594f618088148ea31d18354f157a.camel@linuxfoundation.org>
 	<FAB9E48578194042BE5C63B8BE47610339DDDBB4@MBX.NIKO.LAN>
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.99.4 at dan
-X-Virus-Status: Clean
+	<241c1a75e52fc5e8b88218f15ba5eb6a0c28eac8.camel@linuxfoundation.org>
+Accept-Language: en-US, nl-BE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.10.222]
+x-endpointsecurity-0xde81-ev: v:6.6.2.49, d:out, a:y, w:t, t:0,
+	sv:1530523394, ts:1530538483
+x-exclaimer-md-config: ea9a6d46-d5fe-4ddc-9ba9-49fab8e88ad4
+MIME-Version: 1.0
 Subject: Re: pseudo interfering with git fetcher?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -33,31 +53,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 02 Jul 2018 10:57:02 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 02 Jul 2018 13:34:44 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2018-07-02 at 10:15 +0000, Jef.Driesen@niko.eu wrote:
-> On 07/02/2018 11:33 AM, Richard Purdie wrote:
-> > On Mon, 2018-07-02 at 07:04 +0000, Jef.Driesen@niko.eu wrote:
-> > > I'm occasionally experiencing problems when fetching code from
-> > > git
-> > > repositories over ssh. The error is always this one:
-> > 
-> > Which version of bitbake are you using?
-> > 
-> > I think this change may help you:
-> > 
-> > http://git.yoctoproject.org/cgit.cgi/poky/commit/bitbake?id=205cfd7
-> > 02190026e64eed9cae27c05ff62d1637e
-> 
-> We are using pyro (and about to upgrade to rocko). But it looks like
-> that commit is only available in later versions (sumo).
+On 07/02/2018 12:57 PM, Richard Purdie wrote:
+> On Mon, 2018-07-02 at 10:15 +0000, Jef.Driesen@niko.eu wrote:
+>> On 07/02/2018 11:33 AM, Richard Purdie wrote:
+>>> On Mon, 2018-07-02 at 07:04 +0000, Jef.Driesen@niko.eu wrote:
+>>>> I'm occasionally experiencing problems when fetching code from
+>>>> git
+>>>> repositories over ssh. The error is always this one:
+>>>
+>>> Which version of bitbake are you using?
+>>>
+>>> I think this change may help you:
+>>>
+>>> http://git.yoctoproject.org/cgit.cgi/poky/commit/bitbake?id=3D205cfd7
+>>> 02190026e64eed9cae27c05ff62d1637e
+>>
+>> We are using pyro (and about to upgrade to rocko). But it looks like
+>> that commit is only available in later versions (sumo).
+>
+> It should cherry-pick easily enough but I just backported it to
+> rocko/pyro since we should fix this there and be consistent.
 
-It should cherry-pick easily enough but I just backported it to
-rocko/pyro since we should fix this there and be consistent.
+Thanks for the quick fix. Much appreciated!
 
-Cheers,
+Jef
+Disclaimer
 
-Richard
+This e-mail and its attachments is intended only for the person(s) or entit=
+y to which it is addressed. If you receive this e-mail by mistake, please d=
+elete this e-mail from your system and destroy all copies of it. It may con=
+tain confidential and/or privileged information. You should not copy it or =
+use it for any purpose nor disclose its contents to any person unless allow=
+ed by a written document between the sender and the addressee.
 
