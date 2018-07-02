@@ -1,50 +1,43 @@
-Return-Path: <liu.ming50@gmail.com>
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com
-	[209.85.208.175])
-	by mail.openembedded.org (Postfix) with ESMTP id C092F75441
+Return-Path: <Jef.Driesen@niko.eu>
+X-Greylist: delayed 586 seconds by postgrey-1.34 at layers.openembedded.org;
+	Mon, 02 Jul 2018 07:14:18 UTC
+Received: from relay08.secure-mail.be (relay08.secure-mail.be [195.13.7.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 2DF8D76046
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Jun 2018 15:43:27 +0000 (UTC)
-Received: by mail-lj1-f175.google.com with SMTP id t21-v6so7674052lji.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Jun 2018 08:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=LXRORVKtr+wLPyE0GG/sT+3hYaEbnNFp/v2reS938yw=;
-	b=p52tDULhEaX5UDI2TL4NKCjd8D+iI8+gBz/Fudce6oXh2hQfWy/c4QVwX0199r9B4v
-	6vythxn0n8EAMFdTQeX6aqFi97+05cosQxRnPzRlXy4oGr+vPysOJtDmHMZlY02hcpNQ
-	mgIphrcCAnoKeSb4WZb9zgsrxoI1JxTtkjr0amOO02L30oiKHtJ4TaUwduYgXJ0iRN3L
-	RCGLVetoCf/oT+tcpLG9PisPQQb2Y4MrbwkLAkzk6nys63+zdVg1tBAZAkhEINj4ibnk
-	5nXYzQJyAua0k5EBkAbP5OSr+xp5pgy6kkRqH65kENIW8VvtC5Ix8GkJFLRMxJiPbFb+
-	ZRFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=LXRORVKtr+wLPyE0GG/sT+3hYaEbnNFp/v2reS938yw=;
-	b=QQ5v4XnWcP/6/0aSNacEAB5qX5JguPo3inkrrnBjnnOjhFmW9TswNUVIPzcU/w3FDs
-	wXqF5N9k+qe/ZD4H6mg9VuR9OEDNuLyFQgvz+K68ssJ3r4c4hDeLG/uhjwN+UHeY/d4X
-	m8EaJPxb+Up51ZPFov5GoZJoU1bosB0seYtoM12RmY7/oBdFeQZfukboa9g5jkvmL/Co
-	Yqp3nrISZjUXHhG0RkYXInu6beV7/E/SmqU7AzXWmogZ0yui2j04CN6XkU67vveQ5hIe
-	Ggn5pJSkmZH1EwlGnQkEKEczyUMYRUKV8AYNuGl+4i4OG0zDwj96qYoOaWt5U8QH0vFp
-	ZbUA==
-X-Gm-Message-State: APt69E3H21njgrrDoH6n040kZmOCgTHirTOp4TwKNqmwod/LKWG+4QeN
-	Qbss5Rya9K3O4VL/DZVO9FbA5FUI
-X-Google-Smtp-Source: AAOMgpeaShTyuNEqj1fRorixk8qg34QueNbKsXfQZGs63lsZbjUj5A8cxHvr40DLdlfI1wAahau24Q==
-X-Received: by 2002:a2e:99c7:: with SMTP id
-	l7-v6mr11190832ljj.148.1530287008199; 
-	Fri, 29 Jun 2018 08:43:28 -0700 (PDT)
-Received: from peterliu-Precision-M4800.emea.group.atlascopco.com
-	(m77-218-244-21.cust.tele2.se. [77.218.244.21])
-	by smtp.gmail.com with ESMTPSA id
-	f81-v6sm1781592lfe.6.2018.06.29.08.43.26
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 29 Jun 2018 08:43:27 -0700 (PDT)
-From: liu.ming50@gmail.com
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 29 Jun 2018 17:43:23 +0200
-Message-Id: <1530287003-28208-1-git-send-email-liu.ming50@gmail.com>
-X-Mailer: git-send-email 2.7.4
-Cc: Ming Liu <liu.ming50@gmail.com>
-Subject: [PATCH] runqueue.py: fix a multiconfig issue
+	Mon,  2 Jul 2018 07:14:17 +0000 (UTC)
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2BdAwCczTlb/7lOx1RTCR0BAQUBCwGCd?=
+	=?us-ascii?q?SYuVA6BJwqLc4w7lyuBegsbEAGBS4J1AoMnITQYAQIBAQIBAQIBbBwMgjUigw1?=
+	=?us-ascii?q?kASomMCYBBAoRBoMTggADAakEM4hIgR8PCQGHWYEKghWBD4dDHBQYFYMbgiQCh?=
+	=?us-ascii?q?0cRhh+LTwcCg1qBWFSCZIdzQ4NJgmqFH487gkyBQTgmgSxzgzYJghgaijaDYW9?=
+	=?us-ascii?q?6AQGOJoEfAYEZAQE?=
+X-IPAS-Result: =?us-ascii?q?A2BdAwCczTlb/7lOx1RTCR0BAQUBCwGCdSYuVA6BJwqLc4w?=
+	=?us-ascii?q?7lyuBegsbEAGBS4J1AoMnITQYAQIBAQIBAQIBbBwMgjUigw1kASomMCYBBAoRB?=
+	=?us-ascii?q?oMTggADAakEM4hIgR8PCQGHWYEKghWBD4dDHBQYFYMbgiQCh0cRhh+LTwcCg1q?=
+	=?us-ascii?q?BWFSCZIdzQ4NJgmqFH487gkyBQTgmgSxzgzYJghgaijaDYW96AQGOJoEfAYEZA?=
+	=?us-ascii?q?QE?=
+Received: from edge.nikogroup.be ([84.199.78.185])
+	by relay08.secure-mail.be with ESMTP; 02 Jul 2018 09:04:32 +0200
+Received: from HUB.NIKO.LAN (172.22.10.201) by EDGE.nikogroup.be
+	(192.168.22.31) with Microsoft SMTP Server (TLS) id 14.3.389.1;
+	Mon, 2 Jul 2018 09:05:26 +0200
+Received: from MBX.NIKO.LAN ([::1]) by HUB.NIKO.LAN ([::1]) with mapi id
+	14.03.0389.001; Mon, 2 Jul 2018 09:04:32 +0200
+From: <Jef.Driesen@niko.eu>
+To: <bitbake-devel@lists.openembedded.org>
+Thread-Topic: pseudo interfering with git fetcher?
+Thread-Index: AdQR0uTHwFwZZOBAT6GLxsUtv6PFvQ==
+Date: Mon, 2 Jul 2018 07:04:31 +0000
+Message-ID: <FAB9E48578194042BE5C63B8BE47610339DD77AC@MBX.NIKO.LAN>
+Accept-Language: en-US, nl-BE
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.10.222]
+x-endpointsecurity-0xde81-ev: v:6.6.2.49, d:out, a:y, w:t, t:31,
+	sv:1530506892, ts:1530515072
+x-exclaimer-md-config: ea9a6d46-d5fe-4ddc-9ba9-49fab8e88ad4
+MIME-Version: 1.0
+Subject: pseudo interfering with git fetcher?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,42 +50,267 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 Jun 2018 15:43:29 -0000
+X-List-Received-Date: Mon, 02 Jul 2018 07:14:18 -0000
+X-Groupsio-MsgNum: 9365
+Content-Language: en-US
+Content-Type: multipart/mixed;
+	boundary="_003_FAB9E48578194042BE5C63B8BE47610339DD77ACMBXNIKOLAN_"
 
-From: Ming Liu <liu.ming50@gmail.com>
+--_003_FAB9E48578194042BE5C63B8BE47610339DD77ACMBXNIKOLAN_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-The file_name parameter passed to bb.parse.siggen.invalidate_task
-should be a virtual file name instead of a real file name, or else you
-will encounter a following error, for instance, when you run:
+Hi,
 
-$ bitbake nativesdk-lzip -c unpack -f
+I'm occasionally experiencing problems when fetching code from git
+repositories over ssh. The error is always this one:
 
-the error arise:
-| ERROR: An uncaught exception occurred in runqueue
-| if file_name:
-|    > taintfn = d.stamp[file_name] + '.' + task + '.taint'
-| else:
-| KeyError: 'virtual:nativesdk:/opt/poky/meta/recipes-extended/lzip/lzip_1.19.bb'
+bb.fetch2.FetchError: Fetcher failure: Fetch command export
+DBUS_SESSION_BUS_ADDRESS=3D"unix:abstract=3D/tmp/dbus-1YNmotxj3i"; export
+SSH_AUTH_SOCK=3D"/run/user/1000/keyring/ssh"; export
+PATH=3D"/home/jgo/develop/yocto/build/tmp/sysroots-uninative/x86_64-linux/u=
+sr/bin:/home/jgo/develop/yocto/scripts:/home/jgo/develop/yocto/build/tmp/wo=
+rk/armv7ahf-neon-poky-linux-gnueabi/project/fetcheravoidrecurse-r0/recipe-s=
+ysroot-native/usr/bin/arm-poky-linux-gnueabi:/home/jgo/develop/yocto/build/=
+tmp/work/armv7ahf-neon-poky-linux-gnueabi/project/fetcheravoidrecurse-r0/re=
+cipe-sysroot/usr/bin/crossscripts:/home/jgo/develop/yocto/build/tmp/work/ar=
+mv7ahf-neon-poky-linux-gnueabi/project/fetcheravoidrecurse-r0/recipe-sysroo=
+t-native/usr/sbin:/home/jgo/develop/yocto/build/tmp/work/armv7ahf-neon-poky=
+-linux-gnueabi/project/fetcheravoidrecurse-r0/recipe-sysroot-native/usr/bin=
+:/home/jgo/develop/yocto/build/tmp/work/armv7ahf-neon-poky-linux-gnueabi/pr=
+oject/fetcheravoidrecurse-r0/recipe-sysroot-native/sbin:/home/jgo/develop/y=
+octo/build/tmp/work/armv7ahf-neon-poky-linux-gnueabi/project/fetcheravoidre=
+curse-r0/recipe-sysroot-native/bin:/home/jgo/develop/yocto/bitbake/bin:/hom=
+e/jgo/develop/yocto/build/tmp/hosttools";
+export HOME=3D"/home/jgo"; git -c core.fsyncobjectfiles=3D0 ls-remote
+ssh://git@server:port/sw/project.git  failed with exit code 128, output:
+Could not create directory '/home/root/.ssh'.
+Host key verification failed.
+fatal: Could not read from remote repository.
+Please make sure you have the correct access rights
+and the repository exists.
 
-Signed-off-by: Ming Liu <liu.ming50@gmail.com>
----
- lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It appears that for some reason ssh believes it's running as root. But
+that's certainly not the case. It's running as a regular user, and hence
+accessing /home/root/.ssh fails. In order to find out what's wrong, I
+replaced ssh with a script that logs its environment and then executes
+the real ssh binary in verbose mode.
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 2d9e18d..0a4d155 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1093,7 +1093,7 @@ class RunQueueData:
-                     bb.debug(1, "Task %s is marked nostamp, cannot invalidate this task" % taskname)
-             else:
-                 logger.verbose("Invalidate task %s, %s", taskname, fn)
--                bb.parse.siggen.invalidate_task(taskname, self.dataCaches[mc], fn)
-+                bb.parse.siggen.invalidate_task(taskname, self.dataCaches[mc], taskfn)
- 
-         self.init_progress_reporter.next_stage()
- 
--- 
-2.7.4
+I've attached two such example logs. One from a successful attempt
+(ssh.good.log), and one from a failed attempt (ssh.bad.log). The main
+difference between the two appears to be that in the bad one, ssh is
+being executed under 'pseudo'.
 
+I have absolutely no idea why ssh is sometimes run under pseudo.
 
+Jef
+Disclaimer
+
+This e-mail and its attachments is intended only for the person(s) or entit=
+y to which it is addressed. If you receive this e-mail by mistake, please d=
+elete this e-mail from your system and destroy all copies of it. It may con=
+tain confidential and/or privileged information. You should not copy it or =
+use it for any purpose nor disclose its contents to any person unless allow=
+ed by a written document between the sender and the addressee.
+
+--_003_FAB9E48578194042BE5C63B8BE47610339DD77ACMBXNIKOLAN_
+Content-Type: text/x-log; name="ssh.bad.log"
+Content-Description: ssh.bad.log
+Content-Disposition: attachment; filename="ssh.bad.log"; size=5168;
+	creation-date="Mon, 02 Jul 2018 07:04:19 GMT";
+	modification-date="Mon, 02 Jul 2018 07:04:19 GMT"
+Content-Transfer-Encoding: base64
+
+L2hvbWUvamdvL2RldmVsb3AveW9jdG8vYnVpbGQvdG1wL2hvc3R0b29scy9zc2ggLXAgUE9SVCBn
+aXRAU0VSVkVSIGdpdC11cGxvYWQtcGFjayAnL3N3L1BST0pFQ1QuZ2l0JwpMRF9MSUJSQVJZX1BB
+VEg9L2hvbWUvamdvL2RldmVsb3AveW9jdG8vYnVpbGQvdG1wL3N5c3Jvb3RzLWNvbXBvbmVudHMv
+eDg2XzY0L3BzZXVkby1uYXRpdmUvdXNyL2xpYi9wc2V1ZG8vbGliOi9ob21lL2pnby9kZXZlbG9w
+L3lvY3RvL2J1aWxkL3RtcC9zeXNyb290cy1jb21wb25lbnRzL3g4Nl82NC9wc2V1ZG8tbmF0aXZl
+L3Vzci9saWIvcHNldWRvL2xpYjY0CkxEX1BSRUxPQUQ9bGlicHNldWRvLnNvClBTRVVET19QUkVG
+SVg9L2hvbWUvamdvL2RldmVsb3AveW9jdG8vYnVpbGQvdG1wL3N5c3Jvb3RzLWNvbXBvbmVudHMv
+eDg2XzY0L3BzZXVkby1uYXRpdmUvdXNyClVTRVI9amdvClBTRVVET19MT0NBTFNUQVRFRElSPS9o
+b21lL2pnby9kZXZlbG9wL3lvY3RvL2J1aWxkL3RtcC93b3JrL2FybXY3YWhmLW5lb24tcG9reS1s
+aW51eC1nbnVlYWJpL1BST0pFQ1QvMS4wK2dpdEFVVE9JTkMrZmU2MjBlZTNhNS1yMC9wc2V1ZG8v
+ClBTRVVET19QQVNTV0Q9L2hvbWUvamdvL2RldmVsb3AveW9jdG8vYnVpbGQvdG1wL3dvcmsvYXJt
+djdhaGYtbmVvbi1wb2t5LWxpbnV4LWdudWVhYmkvUFJPSkVDVC8xLjArZ2l0QVVUT0lOQytmZTYy
+MGVlM2E1LXIwL3JlY2lwZS1zeXNyb290Oi9ob21lL2pnby9kZXZlbG9wL3lvY3RvL2J1aWxkL3Rt
+cC9zeXNyb290cy1jb21wb25lbnRzL3g4Nl82NC9wc2V1ZG8tbmF0aXZlClZFTkRPUj1uaWtvCkJC
+X0VOVl9FWFRSQVdISVRFPUFMTF9QUk9YWSBCQlBBVEhfRVhUUkEgQkJfTk9fTkVUV09SSyBCQl9O
+VU1CRVJfVEhSRUFEUyBCQl9TRVRTQ0VORV9FTkZPUkNFIEJCX1NSQ1JFVl9QT0xJQ1kgRElTVFJP
+IEZUUFNfUFJPWFkgRlRQX1BST1hZIEdJVF9QUk9YWV9DT01NQU5EIEhUVFBTX1BST1hZIEhUVFBf
+UFJPWFkgTUFDSElORSBOT19QUk9YWSBQQVJBTExFTF9NQUtFIFNDUkVFTkRJUiBTREtNQUNISU5F
+IFNPQ0tTNV9QQVNTV0QgU09DS1M1X1VTRVIgU1NIX0FHRU5UX1BJRCBTU0hfQVVUSF9TT0NLIFNU
+QU1QU19ESVIgVENMSUJDIFRDTU9ERSBhbGxfcHJveHkgZnRwX3Byb3h5IGZ0cHNfcHJveHkgaHR0
+cF9wcm94eSBodHRwc19wcm94eSBub19wcm94eSAgRlBfUFJPSkVDVFMgRlBfRklSTVdBUkUgRlBf
+VEhJUkRQQVJUWSBNQUNISU5FIFZFTkRPUiBZT0NUT19IT01FIEdOVVBHSE9NRSBCVUlMRF9OVU1C
+RVIKSE9NRT0vaG9tZS9qZ28KREJVU19TRVNTSU9OX0JVU19BRERSRVNTPXVuaXg6YWJzdHJhY3Q9
+L3RtcC9kYnVzLTFZTm1vdHhqM2kKUFNFVURPX0RFQlVHPQpQU0VVRE9fTElCRElSPS9ob21lL2pn
+by9kZXZlbG9wL3lvY3RvL2J1aWxkL3RtcC9zeXNyb290cy1jb21wb25lbnRzL3g4Nl82NC9wc2V1
+ZG8tbmF0aXZlL3Vzci9saWIvcHNldWRvL2xpYgpMT0dOQU1FPWpnbwpQU0VVRE9fTk9TWU1MSU5L
+RVhQPTEKTUFDSElORT1lbXBlcm9yClBTRVVET19CSU5ESVI9L2hvbWUvamdvL2RldmVsb3AveW9j
+dG8vYnVpbGQvdG1wL3N5c3Jvb3RzLWNvbXBvbmVudHMveDg2XzY0L3BzZXVkby1uYXRpdmUvdXNy
+L2JpbgpURVJNPXh0ZXJtLTI1NmNvbG9yCkZQX0ZJUk1XQVJFPS9ob21lL2pnby9kZXZlbG9wL2Vt
+YmVkZGVkL2Zpcm13YXJlClBTRVVET19PUFRTPQpQQVRIPS91c3IvbGliL2dpdC1jb3JlOi9ob21l
+L2pnby9kZXZlbG9wL3lvY3RvL2J1aWxkL3RtcC9zeXNyb290cy11bmluYXRpdmUveDg2XzY0LWxp
+bnV4L3Vzci9iaW46L2hvbWUvamdvL2RldmVsb3AveW9jdG8vc2NyaXB0czovaG9tZS9qZ28vZGV2
+ZWxvcC95b2N0by9idWlsZC90bXAvd29yay9hcm12N2FoZi1uZW9uLXBva3ktbGludXgtZ251ZWFi
+aS9QUk9KRUNUL2ZldGNoZXJhdm9pZHJlY3Vyc2UtcjAvcmVjaXBlLXN5c3Jvb3QtbmF0aXZlL3Vz
+ci9iaW4vYXJtLXBva3ktbGludXgtZ251ZWFiaTovaG9tZS9qZ28vZGV2ZWxvcC95b2N0by9idWls
+ZC90bXAvd29yay9hcm12N2FoZi1uZW9uLXBva3ktbGludXgtZ251ZWFiaS9QUk9KRUNUL2ZldGNo
+ZXJhdm9pZHJlY3Vyc2UtcjAvcmVjaXBlLXN5c3Jvb3QvdXNyL2Jpbi9jcm9zc3NjcmlwdHM6L2hv
+bWUvamdvL2RldmVsb3AveW9jdG8vYnVpbGQvdG1wL3dvcmsvYXJtdjdhaGYtbmVvbi1wb2t5LWxp
+bnV4LWdudWVhYmkvUFJPSkVDVC9mZXRjaGVyYXZvaWRyZWN1cnNlLXIwL3JlY2lwZS1zeXNyb290
+LW5hdGl2ZS91c3Ivc2JpbjovaG9tZS9qZ28vZGV2ZWxvcC95b2N0by9idWlsZC90bXAvd29yay9h
+cm12N2FoZi1uZW9uLXBva3ktbGludXgtZ251ZWFiaS9QUk9KRUNUL2ZldGNoZXJhdm9pZHJlY3Vy
+c2UtcjAvcmVjaXBlLXN5c3Jvb3QtbmF0aXZlL3Vzci9iaW46L2hvbWUvamdvL2RldmVsb3AveW9j
+dG8vYnVpbGQvdG1wL3dvcmsvYXJtdjdhaGYtbmVvbi1wb2t5LWxpbnV4LWdudWVhYmkvUFJPSkVD
+VC9mZXRjaGVyYXZvaWRyZWN1cnNlLXIwL3JlY2lwZS1zeXNyb290LW5hdGl2ZS9zYmluOi9ob21l
+L2pnby9kZXZlbG9wL3lvY3RvL2J1aWxkL3RtcC93b3JrL2FybXY3YWhmLW5lb24tcG9reS1saW51
+eC1nbnVlYWJpL1BST0pFQ1QvZmV0Y2hlcmF2b2lkcmVjdXJzZS1yMC9yZWNpcGUtc3lzcm9vdC1u
+YXRpdmUvYmluOi9ob21lL2pnby9kZXZlbG9wL3lvY3RvL2JpdGJha2UvYmluOi9ob21lL2pnby9k
+ZXZlbG9wL3lvY3RvL2J1aWxkL3RtcC9ob3N0dG9vbHMKR05VUEdIT01FPS9ob21lL2pnby9kZXZl
+bG9wL2VtYmVkZGVkL2FwcGxpY2F0aW9ucy9mcG0vZ251cGcKU1NIX0FVVEhfU09DSz0vcnVuL3Vz
+ZXIvMTAwMC9rZXlyaW5nL3NzaApTSEVMTD0vYmluL2Jhc2gKUFNFVURPX0RJU0FCTEVEPTAKWU9D
+VE9fSE9NRT0vaG9tZS9qZ28vZGV2ZWxvcC95b2N0bwpMQ19BTEw9ZW5fVVMuVVRGLTgKRlBfUFJP
+SkVDVFM9L2hvbWUvamdvL2RldmVsb3AvZW1iZWRkZWQvYXBwbGljYXRpb25zClBXRD0vaG9tZS9q
+Z28vZGV2ZWxvcC95b2N0bwpGUF9USElSRFBBUlRZPS9ob21lL2pnby9kZXZlbG9wL2VtYmVkZGVk
+L3RoaXJkcGFydHkKCgpPcGVuU1NIXzcuMnAyIFVidW50dS00dWJ1bnR1Mi40LCBPcGVuU1NMIDEu
+MC4yZyAgMSBNYXIgMjAxNgpkZWJ1ZzE6IFJlYWRpbmcgY29uZmlndXJhdGlvbiBkYXRhIC9ldGMv
+c3NoL3NzaF9jb25maWcKZGVidWcxOiAvZXRjL3NzaC9zc2hfY29uZmlnIGxpbmUgMTk6IEFwcGx5
+aW5nIG9wdGlvbnMgZm9yICoKZGVidWcxOiBDb25uZWN0aW5nIHRvIFNFUlZFUiBbSVBBRERSRVNT
+XSBwb3J0IFBPUlQuCmRlYnVnMTogQ29ubmVjdGlvbiBlc3RhYmxpc2hlZC4KZGVidWcxOiBwZXJt
+YW5lbnRseV9zZXRfdWlkOiAwLzAKZGVidWcxOiBTRUxpbnV4IHN1cHBvcnQgZGlzYWJsZWQKQ291
+bGQgbm90IGNyZWF0ZSBkaXJlY3RvcnkgJy9ob21lL3Jvb3QvLnNzaCcuCmRlYnVnMToga2V5X2xv
+YWRfcHVibGljOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5CmRlYnVnMTogaWRlbnRpdHkgZmls
+ZSAvaG9tZS9yb290Ly5zc2gvaWRfcnNhIHR5cGUgLTEKZGVidWcxOiBrZXlfbG9hZF9wdWJsaWM6
+IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkKZGVidWcxOiBpZGVudGl0eSBmaWxlIC9ob21lL3Jv
+b3QvLnNzaC9pZF9yc2EtY2VydCB0eXBlIC0xCmRlYnVnMToga2V5X2xvYWRfcHVibGljOiBObyBz
+dWNoIGZpbGUgb3IgZGlyZWN0b3J5CmRlYnVnMTogaWRlbnRpdHkgZmlsZSAvaG9tZS9yb290Ly5z
+c2gvaWRfZHNhIHR5cGUgLTEKZGVidWcxOiBrZXlfbG9hZF9wdWJsaWM6IE5vIHN1Y2ggZmlsZSBv
+ciBkaXJlY3RvcnkKZGVidWcxOiBpZGVudGl0eSBmaWxlIC9ob21lL3Jvb3QvLnNzaC9pZF9kc2Et
+Y2VydCB0eXBlIC0xCmRlYnVnMToga2V5X2xvYWRfcHVibGljOiBObyBzdWNoIGZpbGUgb3IgZGly
+ZWN0b3J5CmRlYnVnMTogaWRlbnRpdHkgZmlsZSAvaG9tZS9yb290Ly5zc2gvaWRfZWNkc2EgdHlw
+ZSAtMQpkZWJ1ZzE6IGtleV9sb2FkX3B1YmxpYzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQpk
+ZWJ1ZzE6IGlkZW50aXR5IGZpbGUgL2hvbWUvcm9vdC8uc3NoL2lkX2VjZHNhLWNlcnQgdHlwZSAt
+MQpkZWJ1ZzE6IGtleV9sb2FkX3B1YmxpYzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQpkZWJ1
+ZzE6IGlkZW50aXR5IGZpbGUgL2hvbWUvcm9vdC8uc3NoL2lkX2VkMjU1MTkgdHlwZSAtMQpkZWJ1
+ZzE6IGtleV9sb2FkX3B1YmxpYzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQpkZWJ1ZzE6IGlk
+ZW50aXR5IGZpbGUgL2hvbWUvcm9vdC8uc3NoL2lkX2VkMjU1MTktY2VydCB0eXBlIC0xCmRlYnVn
+MTogRW5hYmxpbmcgY29tcGF0aWJpbGl0eSBtb2RlIGZvciBwcm90b2NvbCAyLjAKZGVidWcxOiBM
+b2NhbCB2ZXJzaW9uIHN0cmluZyBTU0gtMi4wLU9wZW5TU0hfNy4ycDIgVWJ1bnR1LTR1YnVudHUy
+LjQKZGVidWcxOiBSZW1vdGUgcHJvdG9jb2wgdmVyc2lvbiAyLjAsIHJlbW90ZSBzb2Z0d2FyZSB2
+ZXJzaW9uIFNTSEQtVU5LTk9XTgpkZWJ1ZzE6IG5vIG1hdGNoOiBTU0hELVVOS05PV04KZGVidWcx
+OiBBdXRoZW50aWNhdGluZyB0byBTRVJWRVI6UE9SVCBhcyAnZ2l0JwpkZWJ1ZzE6IFNTSDJfTVNH
+X0tFWElOSVQgc2VudApkZWJ1ZzE6IFNTSDJfTVNHX0tFWElOSVQgcmVjZWl2ZWQKZGVidWcxOiBr
+ZXg6IGFsZ29yaXRobTogZWNkaC1zaGEyLW5pc3RwMjU2CmRlYnVnMToga2V4OiBob3N0IGtleSBh
+bGdvcml0aG06IHNzaC1yc2EKZGVidWcxOiBrZXg6IHNlcnZlci0+Y2xpZW50IGNpcGhlcjogYWVz
+MTI4LWN0ciBNQUM6IGhtYWMtc2hhMi0yNTYgY29tcHJlc3Npb246IG5vbmUKZGVidWcxOiBrZXg6
+IGNsaWVudC0+c2VydmVyIGNpcGhlcjogYWVzMTI4LWN0ciBNQUM6IGhtYWMtc2hhMi0yNTYgY29t
+cHJlc3Npb246IG5vbmUKZGVidWcxOiBzZW5kaW5nIFNTSDJfTVNHX0tFWF9FQ0RIX0lOSVQKZGVi
+dWcxOiBleHBlY3RpbmcgU1NIMl9NU0dfS0VYX0VDREhfUkVQTFkKZGVidWcxOiBTZXJ2ZXIgaG9z
+dCBrZXk6IHNzaC1yc2EgU0hBMjU2Oitpa0lKUHBZSUtUUFMzVWZiNURnQTB5Z00xaHpWZVFrblpv
+V1NoS2tKK28KZGVidWcxOiBjaGVja2luZyB3aXRob3V0IHBvcnQgaWRlbnRpZmllcgpkZWJ1ZzE6
+IHJlYWRfcGFzc3BocmFzZTogY2FuJ3Qgb3BlbiAvZGV2L3R0eTogTm8gc3VjaCBkZXZpY2Ugb3Ig
+YWRkcmVzcwpIb3N0IGtleSB2ZXJpZmljYXRpb24gZmFpbGVkLgo=
+
+--_003_FAB9E48578194042BE5C63B8BE47610339DD77ACMBXNIKOLAN_
+Content-Type: text/x-log; name="ssh.good.log"
+Content-Description: ssh.good.log
+Content-Disposition: attachment; filename="ssh.good.log"; size=5177;
+	creation-date="Mon, 02 Jul 2018 07:04:23 GMT";
+	modification-date="Mon, 02 Jul 2018 07:04:23 GMT"
+Content-Transfer-Encoding: base64
+
+L2hvbWUvamdvL2RldmVsb3AveW9jdG8vYnVpbGQvdG1wL2hvc3R0b29scy9zc2ggLXAgUE9SVCBn
+aXRAU0VSVkVSIGdpdC11cGxvYWQtcGFjayAnL3N3L1BST0pFQ1QuZ2l0JwpVU0VSPWpnbwpWRU5E
+T1I9bmlrbwpCQl9FTlZfRVhUUkFXSElURT1BTExfUFJPWFkgQkJQQVRIX0VYVFJBIEJCX05PX05F
+VFdPUksgQkJfTlVNQkVSX1RIUkVBRFMgQkJfU0VUU0NFTkVfRU5GT1JDRSBCQl9TUkNSRVZfUE9M
+SUNZIERJU1RSTyBGVFBTX1BST1hZIEZUUF9QUk9YWSBHSVRfUFJPWFlfQ09NTUFORCBIVFRQU19Q
+Uk9YWSBIVFRQX1BST1hZIE1BQ0hJTkUgTk9fUFJPWFkgUEFSQUxMRUxfTUFLRSBTQ1JFRU5ESVIg
+U0RLTUFDSElORSBTT0NLUzVfUEFTU1dEIFNPQ0tTNV9VU0VSIFNTSF9BR0VOVF9QSUQgU1NIX0FV
+VEhfU09DSyBTVEFNUFNfRElSIFRDTElCQyBUQ01PREUgYWxsX3Byb3h5IGZ0cF9wcm94eSBmdHBz
+X3Byb3h5IGh0dHBfcHJveHkgaHR0cHNfcHJveHkgbm9fcHJveHkgIEZQX1BST0pFQ1RTIEZQX0ZJ
+Uk1XQVJFIEZQX1RISVJEUEFSVFkgTUFDSElORSBWRU5ET1IgWU9DVE9fSE9NRSBHTlVQR0hPTUUg
+QlVJTERfTlVNQkVSCkhPTUU9L2hvbWUvamdvCkRCVVNfU0VTU0lPTl9CVVNfQUREUkVTUz11bml4
+OmFic3RyYWN0PS90bXAvZGJ1cy0xWU5tb3R4ajNpCkxPR05BTUU9amdvCk1BQ0hJTkU9ZW1wZXJv
+cgpURVJNPXh0ZXJtLTI1NmNvbG9yCkZQX0ZJUk1XQVJFPS9ob21lL2pnby9kZXZlbG9wL2VtYmVk
+ZGVkL2Zpcm13YXJlClBBVEg9L3Vzci9saWIvZ2l0LWNvcmU6L2hvbWUvamdvL2RldmVsb3AveW9j
+dG8vYnVpbGQvdG1wL3N5c3Jvb3RzLXVuaW5hdGl2ZS94ODZfNjQtbGludXgvdXNyL2JpbjovaG9t
+ZS9qZ28vZGV2ZWxvcC95b2N0by9zY3JpcHRzOi9ob21lL2pnby9kZXZlbG9wL3lvY3RvL2J1aWxk
+L3RtcC93b3JrL2FybXY3YWhmLW5lb24tcG9reS1saW51eC1nbnVlYWJpL1BST0pFQ1QvZmV0Y2hl
+cmF2b2lkcmVjdXJzZS1yMC9yZWNpcGUtc3lzcm9vdC1uYXRpdmUvdXNyL2Jpbi9hcm0tcG9reS1s
+aW51eC1nbnVlYWJpOi9ob21lL2pnby9kZXZlbG9wL3lvY3RvL2J1aWxkL3RtcC93b3JrL2FybXY3
+YWhmLW5lb24tcG9reS1saW51eC1nbnVlYWJpL1BST0pFQ1QvZmV0Y2hlcmF2b2lkcmVjdXJzZS1y
+MC9yZWNpcGUtc3lzcm9vdC91c3IvYmluL2Nyb3Nzc2NyaXB0czovaG9tZS9qZ28vZGV2ZWxvcC95
+b2N0by9idWlsZC90bXAvd29yay9hcm12N2FoZi1uZW9uLXBva3ktbGludXgtZ251ZWFiaS9QUk9K
+RUNUL2ZldGNoZXJhdm9pZHJlY3Vyc2UtcjAvcmVjaXBlLXN5c3Jvb3QtbmF0aXZlL3Vzci9zYmlu
+Oi9ob21lL2pnby9kZXZlbG9wL3lvY3RvL2J1aWxkL3RtcC93b3JrL2FybXY3YWhmLW5lb24tcG9r
+eS1saW51eC1nbnVlYWJpL1BST0pFQ1QvZmV0Y2hlcmF2b2lkcmVjdXJzZS1yMC9yZWNpcGUtc3lz
+cm9vdC1uYXRpdmUvdXNyL2JpbjovaG9tZS9qZ28vZGV2ZWxvcC95b2N0by9idWlsZC90bXAvd29y
+ay9hcm12N2FoZi1uZW9uLXBva3ktbGludXgtZ251ZWFiaS9QUk9KRUNUL2ZldGNoZXJhdm9pZHJl
+Y3Vyc2UtcjAvcmVjaXBlLXN5c3Jvb3QtbmF0aXZlL3NiaW46L2hvbWUvamdvL2RldmVsb3AveW9j
+dG8vYnVpbGQvdG1wL3dvcmsvYXJtdjdhaGYtbmVvbi1wb2t5LWxpbnV4LWdudWVhYmkvUFJPSkVD
+VC9mZXRjaGVyYXZvaWRyZWN1cnNlLXIwL3JlY2lwZS1zeXNyb290LW5hdGl2ZS9iaW46L2hvbWUv
+amdvL2RldmVsb3AveW9jdG8vYml0YmFrZS9iaW46L2hvbWUvamdvL2RldmVsb3AveW9jdG8vYnVp
+bGQvdG1wL2hvc3R0b29scwpHTlVQR0hPTUU9L2hvbWUvamdvL2RldmVsb3AvZW1iZWRkZWQvYXBw
+bGljYXRpb25zL2ZwbS9nbnVwZwpTU0hfQVVUSF9TT0NLPS9ydW4vdXNlci8xMDAwL2tleXJpbmcv
+c3NoClNIRUxMPS9iaW4vYmFzaApZT0NUT19IT01FPS9ob21lL2pnby9kZXZlbG9wL3lvY3RvClBX
+RD0vaG9tZS9qZ28vZGV2ZWxvcC95b2N0bwpGUF9QUk9KRUNUUz0vaG9tZS9qZ28vZGV2ZWxvcC9l
+bWJlZGRlZC9hcHBsaWNhdGlvbnMKTENfQUxMPWVuX1VTLlVURi04CkZQX1RISVJEUEFSVFk9L2hv
+bWUvamdvL2RldmVsb3AvZW1iZWRkZWQvdGhpcmRwYXJ0eQoKCk9wZW5TU0hfNy4ycDIgVWJ1bnR1
+LTR1YnVudHUyLjQsIE9wZW5TU0wgMS4wLjJnICAxIE1hciAyMDE2CmRlYnVnMTogUmVhZGluZyBj
+b25maWd1cmF0aW9uIGRhdGEgL2hvbWUvamdvLy5zc2gvY29uZmlnCmRlYnVnMTogUmVhZGluZyBj
+b25maWd1cmF0aW9uIGRhdGEgL2V0Yy9zc2gvc3NoX2NvbmZpZwpkZWJ1ZzE6IC9ldGMvc3NoL3Nz
+aF9jb25maWcgbGluZSAxOTogQXBwbHlpbmcgb3B0aW9ucyBmb3IgKgpkZWJ1ZzE6IENvbm5lY3Rp
+bmcgdG8gU0VSVkVSIFtJUEFERFJFU1NdIHBvcnQgUE9SVC4KZGVidWcxOiBDb25uZWN0aW9uIGVz
+dGFibGlzaGVkLgpkZWJ1ZzE6IGlkZW50aXR5IGZpbGUgL2hvbWUvamdvLy5zc2gvaWRfcnNhIHR5
+cGUgMQpkZWJ1ZzE6IGtleV9sb2FkX3B1YmxpYzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQpk
+ZWJ1ZzE6IGlkZW50aXR5IGZpbGUgL2hvbWUvamdvLy5zc2gvaWRfcnNhLWNlcnQgdHlwZSAtMQpk
+ZWJ1ZzE6IGtleV9sb2FkX3B1YmxpYzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQpkZWJ1ZzE6
+IGlkZW50aXR5IGZpbGUgL2hvbWUvamdvLy5zc2gvaWRfZHNhIHR5cGUgLTEKZGVidWcxOiBrZXlf
+bG9hZF9wdWJsaWM6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkKZGVidWcxOiBpZGVudGl0eSBm
+aWxlIC9ob21lL2pnby8uc3NoL2lkX2RzYS1jZXJ0IHR5cGUgLTEKZGVidWcxOiBrZXlfbG9hZF9w
+dWJsaWM6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkKZGVidWcxOiBpZGVudGl0eSBmaWxlIC9o
+b21lL2pnby8uc3NoL2lkX2VjZHNhIHR5cGUgLTEKZGVidWcxOiBrZXlfbG9hZF9wdWJsaWM6IE5v
+IHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkKZGVidWcxOiBpZGVudGl0eSBmaWxlIC9ob21lL2pnby8u
+c3NoL2lkX2VjZHNhLWNlcnQgdHlwZSAtMQpkZWJ1ZzE6IGtleV9sb2FkX3B1YmxpYzogTm8gc3Vj
+aCBmaWxlIG9yIGRpcmVjdG9yeQpkZWJ1ZzE6IGlkZW50aXR5IGZpbGUgL2hvbWUvamdvLy5zc2gv
+aWRfZWQyNTUxOSB0eXBlIC0xCmRlYnVnMToga2V5X2xvYWRfcHVibGljOiBObyBzdWNoIGZpbGUg
+b3IgZGlyZWN0b3J5CmRlYnVnMTogaWRlbnRpdHkgZmlsZSAvaG9tZS9qZ28vLnNzaC9pZF9lZDI1
+NTE5LWNlcnQgdHlwZSAtMQpkZWJ1ZzE6IEVuYWJsaW5nIGNvbXBhdGliaWxpdHkgbW9kZSBmb3Ig
+cHJvdG9jb2wgMi4wCmRlYnVnMTogTG9jYWwgdmVyc2lvbiBzdHJpbmcgU1NILTIuMC1PcGVuU1NI
+XzcuMnAyIFVidW50dS00dWJ1bnR1Mi40CmRlYnVnMTogUmVtb3RlIHByb3RvY29sIHZlcnNpb24g
+Mi4wLCByZW1vdGUgc29mdHdhcmUgdmVyc2lvbiBTU0hELVVOS05PV04KZGVidWcxOiBubyBtYXRj
+aDogU1NIRC1VTktOT1dOCmRlYnVnMTogQXV0aGVudGljYXRpbmcgdG8gU0VSVkVSOlBPUlQgYXMg
+J2dpdCcKZGVidWcxOiBTU0gyX01TR19LRVhJTklUIHNlbnQKZGVidWcxOiBTU0gyX01TR19LRVhJ
+TklUIHJlY2VpdmVkCmRlYnVnMToga2V4OiBhbGdvcml0aG06IGVjZGgtc2hhMi1uaXN0cDI1Ngpk
+ZWJ1ZzE6IGtleDogaG9zdCBrZXkgYWxnb3JpdGhtOiBzc2gtcnNhCmRlYnVnMToga2V4OiBzZXJ2
+ZXItPmNsaWVudCBjaXBoZXI6IGFlczEyOC1jdHIgTUFDOiBobWFjLXNoYTItMjU2IGNvbXByZXNz
+aW9uOiBub25lCmRlYnVnMToga2V4OiBjbGllbnQtPnNlcnZlciBjaXBoZXI6IGFlczEyOC1jdHIg
+TUFDOiBobWFjLXNoYTItMjU2IGNvbXByZXNzaW9uOiBub25lCmRlYnVnMTogc2VuZGluZyBTU0gy
+X01TR19LRVhfRUNESF9JTklUCmRlYnVnMTogZXhwZWN0aW5nIFNTSDJfTVNHX0tFWF9FQ0RIX1JF
+UExZCmRlYnVnMTogU2VydmVyIGhvc3Qga2V5OiBzc2gtcnNhIFNIQTI1NjoraWtJSlBwWUlLVFBT
+M1VmYjVEZ0EweWdNMWh6VmVRa25ab1dTaEtrSitvCmRlYnVnMTogSG9zdCAnW1NFUlZFUl06UE9S
+VCcgaXMga25vd24gYW5kIG1hdGNoZXMgdGhlIFJTQSBob3N0IGtleS4KZGVidWcxOiBGb3VuZCBr
+ZXkgaW4gL2hvbWUvamdvLy5zc2gva25vd25faG9zdHM6MQpkZWJ1ZzE6IHJla2V5IGFmdGVyIDQy
+OTQ5NjcyOTYgYmxvY2tzCmRlYnVnMTogU1NIMl9NU0dfTkVXS0VZUyBzZW50CmRlYnVnMTogZXhw
+ZWN0aW5nIFNTSDJfTVNHX05FV0tFWVMKZGVidWcxOiByZWtleSBhZnRlciA0Mjk0OTY3Mjk2IGJs
+b2NrcwpkZWJ1ZzE6IFNTSDJfTVNHX05FV0tFWVMgcmVjZWl2ZWQKZGVidWcxOiBTU0gyX01TR19T
+RVJWSUNFX0FDQ0VQVCByZWNlaXZlZApkZWJ1ZzE6IEF1dGhlbnRpY2F0aW9ucyB0aGF0IGNhbiBj
+b250aW51ZTogcHVibGlja2V5CmRlYnVnMTogTmV4dCBhdXRoZW50aWNhdGlvbiBtZXRob2Q6IHB1
+YmxpY2tleQpkZWJ1ZzE6IE9mZmVyaW5nIFJTQSBwdWJsaWMga2V5OiAvaG9tZS9qZ28vLnNzaC9p
+ZF9yc2EKZGVidWcxOiBTZXJ2ZXIgYWNjZXB0cyBrZXk6IHBrYWxnIHNzaC1yc2EgYmxlbiAyNzkK
+ZGVidWcxOiBBdXRoZW50aWNhdGlvbiBzdWNjZWVkZWQgKHB1YmxpY2tleSkuCkF1dGhlbnRpY2F0
+ZWQgdG8gU0VSVkVSIChbSVBBRERSRVNTXTpQT1JUKS4KZGVidWcxOiBjaGFubmVsIDA6IG5ldyBb
+Y2xpZW50LXNlc3Npb25dCmRlYnVnMTogRW50ZXJpbmcgaW50ZXJhY3RpdmUgc2Vzc2lvbi4KZGVi
+dWcxOiBwbGVkZ2U6IG5ldHdvcmsKZGVidWcxOiBTZW5kaW5nIGVudmlyb25tZW50LgpkZWJ1ZzE6
+IFNlbmRpbmcgZW52IExDX0FMTCA9IGVuX1VTLlVURi04CmRlYnVnMTogU2VuZGluZyBjb21tYW5k
+OiBnaXQtdXBsb2FkLXBhY2sgJy9zdy9QUk9KRUNULmdpdCcKZGVidWcxOiBjbGllbnRfaW5wdXRf
+Y2hhbm5lbF9yZXE6IGNoYW5uZWwgMCBydHlwZSBleGl0LXN0YXR1cyByZXBseSAwCmRlYnVnMTog
+Y2hhbm5lbCAwOiBmcmVlOiBjbGllbnQtc2Vzc2lvbiwgbmNoYW5uZWxzIDEKZGVidWcxOiBmZCAw
+IGNsZWFyaW5nIE9fTk9OQkxPQ0sKZGVidWcxOiBmZCAxIGNsZWFyaW5nIE9fTk9OQkxPQ0sKZGVi
+dWcxOiBmZCAyIGNsZWFyaW5nIE9fTk9OQkxPQ0sKVHJhbnNmZXJyZWQ6IHNlbnQgMjc3NiwgcmVj
+ZWl2ZWQgMjc5MiBieXRlcywgaW4gMC4yIHNlY29uZHMKQnl0ZXMgcGVyIHNlY29uZDogc2VudCAx
+NTE4NS4xLCByZWNlaXZlZCAxNTI3Mi42CmRlYnVnMTogRXhpdCBzdGF0dXMgMAo=
+
+--_003_FAB9E48578194042BE5C63B8BE47610339DD77ACMBXNIKOLAN_--
