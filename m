@@ -1,107 +1,108 @@
 Return-Path: <urs.fassler@bbv.ch>
-X-Greylist: delayed 25154 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 03 Jul 2018 11:02:14 UTC
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-	(mail-db5eur01on0072.outbound.protection.outlook.com [104.47.2.72])
-	by mail.openembedded.org (Postfix) with ESMTP id 911A6786EF
+X-Greylist: delayed 49686 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 03 Jul 2018 22:50:44 UTC
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+	(mail-eopbgr70058.outbound.protection.outlook.com [40.107.7.58])
+	by mail.openembedded.org (Postfix) with ESMTP id 97548788E3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  3 Jul 2018 11:02:14 +0000 (UTC)
+	Tue,  3 Jul 2018 22:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=bbvSoftwareServices.onmicrosoft.com; s=selector1-bbv-ch;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=ZRX8S0d0gDc9ihYy2gDU62TfyEgIK9j1lGBOU2o0gLY=;
-	b=DBiyl7HL5/jqROwL1ICpyooHfjauA6mTBnkuzq1K/Fwuys3eXUUcunuZOHrESLomGuAg883PB9adhbIrWokIkvg4fawHh29/hjRqPJ5q64B7Z34Ay2DWX+opg+u+l+TLNkx8Z7do+pv6I4cLgjmor2zsyxLDeJKYh1hagjfuHto=
+	bh=fEOgcJjOeDazvghGGhr2h1AJo2NI0ZsUXhjavZ8W2qA=;
+	b=ilJs3szt3Vc9cwGE7lLgZOAUTrdAIcpFvKB+xfCkAXLml7aCaVX2YBdb+stYxYSPpzUDts29nA1S8YkIBulqX87auvC/YEeUASR2TahmWLGw4UFtyqSv4tGEs5wUAs6NeS25kypPF8VATLLcyp0CSc7cSlKtjd2iz/WERULT1XI=
 Authentication-Results: spf=none (sender IP is )
 	smtp.mailfrom=urs.fassler@bbv.ch; 
 Received: from talon (83.173.245.202) by
-	AM0PR03MB3827.eurprd03.prod.outlook.com (2603:10a6:208:6e::28) with
+	AM6PR03MB3829.eurprd03.prod.outlook.com (2603:10a6:20b:24::16) with
 	Microsoft SMTP Server (version=TLS1_2,
 	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.906.20; Mon, 2 Jul 2018 12:29:17 +0000
-Message-ID: <1530534554.2962.7.camel@bbv.ch>
+	15.20.930.18; Tue, 3 Jul 2018 13:59:18 +0000
+Message-ID: <1530626355.2962.12.camel@bbv.ch>
 From: Urs =?ISO-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 02 Jul 2018 14:29:14 +0200
-In-Reply-To: <1520775403.10851.182.camel@linuxfoundation.org>
+To: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org
+Date: Tue, 03 Jul 2018 15:59:15 +0200
+In-Reply-To: <1530534554.2962.7.camel@bbv.ch>
 References: <355BE46A91031048906B695426A8D8E617342693@DEFTHW99EH4MSX.ww902.siemens.net>
 	<1520775403.10851.182.camel@linuxfoundation.org>
+	<1530534554.2962.7.camel@bbv.ch>
 X-Mailer: Evolution 3.22.6-1+deb9u1 
 Mime-Version: 1.0
 X-Originating-IP: [83.173.245.202]
-X-ClientProxiedBy: VI1PR0802CA0031.eurprd08.prod.outlook.com
-	(2603:10a6:800:a9::17) To AM0PR03MB3827.eurprd03.prod.outlook.com
-	(2603:10a6:208:6e::28)
+X-ClientProxiedBy: VI1PR03CA0052.eurprd03.prod.outlook.com
+	(2603:10a6:803:50::23) To AM6PR03MB3829.eurprd03.prod.outlook.com
+	(2603:10a6:20b:24::16)
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a44c449d-c6df-4492-0195-08d5e0176e0a
+X-MS-Office365-Filtering-Correlation-Id: a0b35669-1fbe-43f0-93e4-08d5e0ed2be3
 X-Microsoft-Antispam: UriScan:; BCL:0; PCL:0;
 	RULEID:(7020095)(4652040)(8989117)(5600053)(711020)(4534165)(4627221)(201703031133081)(201702281549075)(8990107)(2017052603328)(7153060)(7193020);
-	SRVR:AM0PR03MB3827; 
-X-Microsoft-Exchange-Diagnostics: 1; AM0PR03MB3827;
-	3:L6SvR6H1ZCvJdLjon4TycxC6lOd8XZsq/lFqtA4vtgx6gVgHs6j7U/01vSp96fLhoL8XQNmp+QIejui1vtELVTdwnGZIoE8oH9gTR/m2EOeF7JEk4msd5ICA5BzQykh/1ceTFAsGbWCh7HKH2D+/cRyV6RvObzuDSlHbneFf1MBxje7H0OyG4aCfRb3dlbKVf8N2dq2J1xOChaT/qh20WIi5MfOV+hCyECbtID8zJZ6KwvTFHIuNGirXniA5mSUo;
-	25:0SB/wsN1nIroOONam+DrXObma5NIdUhoMfq1Cq5wZ81RF9mAYivO6bWqumT5fHJrBM2j5yLReyvKI7uv2RY148UpW6CPCBJ/mqzTZ63RT6suTk/V3yLNZTjeMtWoeMICwawCgW2CXM6mYg66lfLK1H/XeqX9Ho8vPxz7dCIPF3mdBS+o7s5Ssxp09M2qNaol9jlTeqcFmqw0IyDtpBvbKq7YMl9yL0985V5rH2/aXBlMiDzRTPMuuO4+zD9Ai+cM+K6w6V5snX5Z3DqeKgzYMN0YdIoX1avOhZSdHtL4d+LwmGMZ447g5WW5PA7znMEjjUipi9uZdeJpjNec3VGW/g==;
-	31:MOGBh8kDCD+p68Sv/eU2D3irpC0YZNB+6cv3bbuTXgHHuf26zOzJH+sSQRRmq7va59V9XOr9xgNWWgAHOkMeVqwKg7GoKd8jUgc6NehcQQJl59eA+Ym6UFMRLNdGXm3GhUeCiz21SuqcjM4ZAOegP2wy7C6vkViY5VG5o5+7/SUQ2qz0x/wjivrZB+zz2MYSXvtinwFGhbHaQ1+LtNpmCBhMYuVOLrQs2i+7VngSAUE=
-X-MS-TrafficTypeDiagnostic: AM0PR03MB3827:
-X-Microsoft-Antispam-PRVS: <AM0PR03MB38274746CF7335C2624874B48F430@AM0PR03MB3827.eurprd03.prod.outlook.com>
+	SRVR:AM6PR03MB3829; 
+X-Microsoft-Exchange-Diagnostics: 1; AM6PR03MB3829;
+	3:u6fMwgMeUaotQdHFx2LUtjtVAekSL2iqrlDaYCyVn5somuhjxcthR+Sy/v86AUR9e3J8s20cRvXCfWFgH62gyeNUmV8+O8yGWt10Aq9uIrJQu0xKQP/oKTuHv2vBkxX0PvM1I3XcgcoYq7fUFFBp5n8jZNO4rNE4zb/xPeTftg60ZxMyTS/3gOd2aXTZvbWrcCdB6yyVIfcyG9IaFMxPdD37lVsyxRMRReaXCEFmW71z/oYMJ34OsGVjQcB/jBtA;
+	25:BLyUJznQRygoLiQii750BbYfujJfxd0GWz1rUMeCJRnJ3PkQUY/cgQuljtxy/fC1pyBwgfWag4UY7IItRPx8ndK0JDl7U08GjK7ZAS6xlOU3TKEsq7cE9sWMPVsDHy/e2dXJmeKnFZs1whvckCxI0nUri2dF9pRDidCavg1PBmhwwrKjZlufqe6ELFAq7DsQCXQ1Fr9J+a57a5Wfr65caRJIhQ6yAQoXJCz9JnKT33lHIqpdgyDkbC15pS/SxiY1NAi0RKy1MgGKHUOh/8P4hHwy/r2xc9Oazi3gBwqRG4pNybBpNxr3oE791wFvLfV2vMucdeVTE6Z56EKZ1f+cJA==;
+	31:ZM3G3dj+mvD6utKs9FPX9KmU7dw761+cjjBtBtsE8MOvqbeF0HtN8uM15sT36n2jjQecpNZ1b3OSPmzmF6KuTABpjHvCjPSrFbJfJanfmckz3G2zqwK8bh/R0hTd06ppOkYiZo8ZoN/JA5J8cA7Pk7JOtDNlxGmHK+dTyBWaDg2XKFPrUflZxEcwDlAt5hSOtFqJSsF+SkSrUE52heAujIoOgLeZonssYFW8/Wet8hU=
+X-MS-TrafficTypeDiagnostic: AM6PR03MB3829:|AM6PR03MB3829:
+X-Microsoft-Antispam-PRVS: <AM6PR03MB3829BE01806DDEA5FC4E627C8F420@AM6PR03MB3829.eurprd03.prod.outlook.com>
 X-Exchange-Antispam-Report-Test: UriScan:(158342451672863)(5213294742642);
 X-MS-Exchange-SenderADCheck: 1
 X-Exchange-Antispam-Report-CFA-Test: BCL:0; PCL:0;
-	RULEID:(8211001083)(6040522)(2401047)(5005006)(8121501046)(93006095)(93001095)(10201501046)(3002001)(3231254)(944501410)(52105095)(149027)(150027)(6041310)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123560045)(20161123564045)(20161123562045)(20161123558120)(6072148)(201708071742011)(7699016);
-	SRVR:AM0PR03MB3827; BCL:0; PCL:0; RULEID:; SRVR:AM0PR03MB3827; 
-X-Microsoft-Exchange-Diagnostics: 1; AM0PR03MB3827;
-	4:rVs3X92ZCGBovSIvZHCMQDUFO58dxa7GZ6VWclPzRbDuA0xBMUwb1VkVZwDfI8mBEpXvfZirSgVVBqihq0DGHpgwNxm37p5+z6vtwX/I19lJLncDjuxohNvWTr6NytHE85esNYdo/OwCvGOXmAmNwCIPg2JyFKK1xrUoci0l7W1pxNo8lflq3Tc3YF+tvI0kHJOS67tNQBrr04UZR5Sww+99YIxvSwG/mEY38IfvIjo52X0shzMgynVNr/GZpVN7fYwZfLW65DEOSD0K11HuLdSRXMHcDFnqlGoDC/iBz/DeXF9R3BDt3sccyipD7Co8uO3uaHR4TFnCImuOETGT++JKZFhBWE347qWV9FJe/oM=
-X-Forefront-PRVS: 07215D0470
+	RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(10201501046)(3002001)(93006095)(93001095)(3231254)(944501410)(52105095)(149027)(150027)(6041310)(20161123560045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123564045)(20161123558120)(20161123562045)(6072148)(201708071742011)(7699016);
+	SRVR:AM6PR03MB3829; BCL:0; PCL:0; RULEID:; SRVR:AM6PR03MB3829; 
+X-Microsoft-Exchange-Diagnostics: 1; AM6PR03MB3829;
+	4:DJVpLfsTyos5TIcsV9WCvHnNrzxkZ6wWmkhuxV1WtbjFLeH7MsO80Ctj1CtJEC/JUVJ3s1ZYjPMWKXCblBwmP8xRtfPfM//jXSTBOlOq8reZI9LwUIrYkW7vP5VmfkvK4o1Z67jbyxpeQJKSu6eTNB9uG+gUqDKPFjLoAvWHsfVPpM/5DvjybbC/5DexPZUrOXYx0YMyRak90sslQY6vzTjiKdnYelzrvG801E25KDFOZlhLRi51/fW5oXfF6CwYRt1kpad8tZ1wP+hsr4v47/qeY2KkFlMKg4AKn1XCC4NGZIhqrJFVr1tOw25JPZrOrLvLgk6Q7xPnyBJ+9l0oABNuslunxbjz52eyZGz/QKM=
+X-Forefront-PRVS: 0722981D2A
 X-Forefront-Antispam-Report: SFV:NSPM;
-	SFS:(10009020)(376002)(39840400004)(346002)(136003)(396003)(366004)(199004)(189003)(53754006)(36756003)(2361001)(6916009)(74482002)(50466002)(6666003)(230700001)(305945005)(6116002)(3846002)(2906002)(7736002)(229853002)(103116003)(81166006)(8936002)(50226002)(81156014)(68736007)(8676002)(5660300001)(76176011)(2616005)(446003)(66066001)(26005)(478600001)(2351001)(11346002)(53936002)(33896004)(956004)(97736004)(105586002)(186003)(23676004)(86362001)(52116002)(386003)(47776003)(25786009)(106356001)(6496006)(6486002)(5820100001)(486006)(6246003)(16526019)(14444005)(476003)(316002)(99106002);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:AM0PR03MB3827; H:talon; FPR:;
+	SFS:(10009020)(39840400004)(396003)(376002)(346002)(136003)(366004)(199004)(189003)(53754006)(74482002)(47776003)(25786009)(4326008)(3846002)(6116002)(478600001)(6246003)(53936002)(229853002)(6666003)(66066001)(5820100001)(86362001)(14444005)(97736004)(8676002)(81156014)(81166006)(305945005)(7736002)(8936002)(2616005)(476003)(446003)(956004)(76176011)(486006)(11346002)(6496006)(23676004)(5660300001)(16526019)(186003)(386003)(52116002)(33896004)(26005)(50466002)(316002)(68736007)(106356001)(6486002)(50226002)(2906002)(2870700001)(36756003)(103116003)(105586002)(99106002);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:AM6PR03MB3829; H:talon; FPR:;
 	SPF:None; LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
 Received-SPF: None (protection.outlook.com: bbv.ch does not designate
 	permitted sender hosts)
-X-Microsoft-Exchange-Diagnostics: =?utf-8?B?MTtBTTBQUjAzTUIzODI3OzIzOllRaEk2bk5PMWM2bG5NOFpDNTJXMGg3ZlZq?=
-	=?utf-8?B?akN5Z1A5eDhEMTMxTWM2Rjc1S0xtUGtPbnlBZ21IaHJOa2ljNWp5OUJxcUN0?=
-	=?utf-8?B?d0M1aHBnWWxqdXRnd1cyWE41UVZJaVM2OS9mZU5mdW5DSStNdFEzWVJtbnVZ?=
-	=?utf-8?B?RFRJS1U0bys5aTAwaVRMeEpDWFk1NC9IbjdsVTgvNm1teGd2czArQzRoUTEv?=
-	=?utf-8?B?NnV4YndiNU16akNnYkVadkx2V0xOaXRwWWkzQWZJSnVObUE1TVNYTGozUmZW?=
-	=?utf-8?B?N0NBM0NaNXFIb3RjOWMwUkg4N2FvcjBHVG1rT3JPRlRJYlRmVmlHaUFKRUt0?=
-	=?utf-8?B?UkRkOXVDd2lwbDZUNmh5K0JaN00rMEtHRzNHWmlQdWRzRWZuYlhDUjZsQThu?=
-	=?utf-8?B?c3pLWUt1b2NvYjMyazJzcjJyYWNvQmh3emFkbFh0ZFZyOTNvd0taZ2lYYS9X?=
-	=?utf-8?B?aEFkTlpScGt4T3M5TFlYVjVoTzhxU2htMk4wT2dVZzI3Y3lLcEY4Z3ZRVERX?=
-	=?utf-8?B?czVCTmpRNTBLM3ZqWEczQXBsanFzaXVFRjVyQVMwNkhTN0ZQR0k2MFYxbDdG?=
-	=?utf-8?B?UEhIQURKcTlkU0tFL3l5WXJFS2pxa3Jwd2hpbzhGT3lnWFBUZ3poYnZTT0Vs?=
-	=?utf-8?B?V0pFY1czTEtCS1pDUDl5R2lNS3hzVCtib0hlbS9UZnZvdytpTnJZY3A4Qk1S?=
-	=?utf-8?B?N1hyY1JQZU05aWxPNHhPS3d2U2ptaWhmWExZTG1MQjNESldBZlJwOWZqcDFh?=
-	=?utf-8?B?a2pXNVpvNWdTNHFUcFhEM2F3Y01UZjhhWVVkODVvRU1OenY0alJad2hnalVJ?=
-	=?utf-8?B?cTRkdTNtZkxTcmdQTk4vUXJBZWdITWRLRG9EbnZUZVhRc3Q2UjQrdmJhY0Fl?=
-	=?utf-8?B?M3JkMzhkTHBjZ3ZxbkpzbzBPcFJXSFQ3SFU4YVJZOVlHU1RsakFGZFdBcWJY?=
-	=?utf-8?B?bEZyT1dNY0F0OU9qL3BsbjRENXhpcFlreDFDRDBpVWZ4eSttYjZINCtoRjBx?=
-	=?utf-8?B?MDF0MDZJcldPZC9TeWkveWdWcEFHbk9Hb3NDenM3WW5zVnY2RlA4MmFpZjBU?=
-	=?utf-8?B?S090Q3llc2pmblZnaHBaTFBzUzlNVzNHWTZhVTBhM1ZsamJqN2w3NEd2K25l?=
-	=?utf-8?B?TTArdnlyU1NxY1hBU3lwUlFiakxhcG1ybnZXQW9KKzk0enNsdWVJQTNSUDd2?=
-	=?utf-8?B?K3FrTnk1cFdyS1V3UmhXNnU2bTI3ek9lWlJycnZWVWxhNHVydXpkelBjaytK?=
-	=?utf-8?B?bkNkaTNoalgvRjlyWnY3ZjREREFuQzFKSURqcE80Nm5UQ2RHK3RxdDhBWjgy?=
-	=?utf-8?B?SXlYUW53Uk4rVE93amtWcFBvOXpkNFhHamFMYXBYeCsrZ0I3d3BVQis2V1o2?=
-	=?utf-8?B?WnkzeGxNMk1CVGM0VDJGMCtPSHlibURkU1RoakE4Z1VNVFBGMzBYeVpKM2NU?=
-	=?utf-8?B?Sjg0eWR1cnNaZGVxYmZLcnozbGs5SUdQOVB0dVp6UU13ckRNeDBJczhEd1dw?=
-	=?utf-8?B?YVM1T2VPQlJvZ1BXWFFlVk9RRmJJWFRzTWF3TjJYbWJkTGl0bUk4Umc2QW8y?=
-	=?utf-8?B?dFBEcExqaHNHR3NmWUdZdDZMNHhuSjJQczA4V3B3aGFOdVo2cXJRUDUrRzFR?=
-	=?utf-8?B?MjNIS2lzSnVBbWtwVVdxY3h4aVBQWUxwb0ZNdnZ4V1YrdUxiQXRFTTB0YUIx?=
-	=?utf-8?B?Vmw3bnFIR0xJMS9IMlpCRTErbVJaQW14d1FBSmNhRXBQMWw5NmZ5VFFYcTNz?=
-	=?utf-8?B?S1k5bVBWQURYYVIwbndDa2MxZWFVOHJnZ0IzTlJqY1dIaXpNclFVN0Z4enc1?=
-	=?utf-8?Q?/5Gfk+nEG1w1l?=
-X-Microsoft-Antispam-Message-Info: zvBYTREryDVEJfYCDtZtvgwACQU6120bSmNuju7NQBpsEdBThxr9ci2yQ/KNGnjfzvTEzBLOQp6L4ZiRw1hxUxy3LJmpa9NU2oaw0oJ6kTYWRewSLOGuqLrBrMQiugXCsnwZt5ldyf4oUcTs3q+LbRwDxuw5BkU1xE6wM4+DDw6oaH3GncImgRbEX5hGXU9icHQQT6obEoZbBbcpYvdJE+Pt4mwu/T3JOLejyDq68nOR8XitU/fKQJx5lb2Iyp7tY/7holHJSuG35+p4vGlGNcDK1Grgieb+CuAQW3XZyZSIsRXs9lEPReJ11W4oaEOP1cmU+6iG4e++lWc20YxPbAIRELQ9yyMY/9nQlO8vjZ8=
-X-Microsoft-Exchange-Diagnostics: 1; AM0PR03MB3827;
-	6:wWuJIha+3iQM0emRdV5X3PL4MrkKAdxCyii3RU9f5HEN9il9LaXoWFIlq3wwkFqh+Eo2pV1fdaeDpW/nHFyhrv3nfLLUEqKyXyxSQVR0uN4j4k/msWL3a0gXmQR+dzZjq4KWdGbwHifROKoHhasEKc9t8SH7l4X8sjeRx91rf3D0pQbwdh3keiEEfKuU+I2rmsRlVFRlU7BOyfRms5v5FYJapeoJOoa/Nyc0yg4MGVaCOVw5DSq5AnMmqtSGCnV+Tsgjc/q/xny5esO6sBC8bvExYbwDtIRF6VOmzPEooNBLSJ9IGfvVZFrV3osIrqc/ldxNCRcMHlMbgEeVQjc0tiH+PHJg4STSn4Km0PL8PYs6t2WjF4MMtkp6FXcv3wmgXGPhU4KBFFQgkdyfs+tNpvNX4T0OVzPJyzQpxjO05DQEn+thLMN/fm257YbQ02rqNXjt/Oofq9CHaH/FvN0+zw==;
-	5:ol+oW4D6eKVttTTY2zUpVb/vjBL9hH/GSjjnVHuGYlXw2LcmQLuFcLuRX6SOU+psLEoIdufmzVR++cB37oIdIzw+BhVqI1TiRIDxn+SA4nAVpWLqkPTHDDivGhvuH5lSZLIP86L40GFRV82IGjQ9lFVemVlDb1DgKDCFcTN5ea4=;
-	24:AA4XWATA4ZBh2d+bejxn8LxOgTyMlucV0M99mvfJagSOAXwTjPf9NQ/ldNEzLgp3jW5+eG4pLjZ8CoBOt91IzvqsrH/odXXliT4ORtIzMVA=
+X-Microsoft-Exchange-Diagnostics: =?utf-8?B?MTtBTTZQUjAzTUIzODI5OzIzOnBldGFuSmRzSUpEQVQwVDFTQ1NXVXQ0SHkz?=
+	=?utf-8?B?WlNEcUxaenczNGxjeDJlNTVFeGpxY1c2ZXJWTUc4ZEc5RU5NbWoraFBxQVFu?=
+	=?utf-8?B?SE1scytvdzR4dG1saDRJWUpwWDh1bXZ1aGVlQjVDaTRmaGhpODhZanlwSHFD?=
+	=?utf-8?B?aVhGM3dWaXVycW53YS94dHdYZmJkMldqcUtKZUdnRVV1TjVMNHcrWG9MbXBN?=
+	=?utf-8?B?MURGYjZsR1JLMmdMUVdrU2Y2Z2J2bE91WXVEeXA4R3BGVThmd3VLTHhWQUcx?=
+	=?utf-8?B?VHkvc3lOb1d0UVhIUm1QZW9BMFhpL2pmYkxJVGFYaTY2QXlNY0JXNEtuQ2VL?=
+	=?utf-8?B?OW1DTlkwM1Q4ZmZlODFuRkFyTWlzaHprMjJjTXQ0Ukl4Y29aQ1JnZGdNenhU?=
+	=?utf-8?B?cFozRjhQU2NjZkFpQUI1TUdhZWFwZGpjOEtmYlFhd0pmVklOd0lkUStlYldG?=
+	=?utf-8?B?amVVdmVpRGwvZVc4WUd1Ti8zOXl5R2EzTTUrNVdING8zcWM2aUoxZWFjSHBs?=
+	=?utf-8?B?OWU2YXI2SW5XWXRQUGdxUGZwV0FLOGIvcEJnYkxNNjdEVDhrUlFnd3l3bGRQ?=
+	=?utf-8?B?L0ZPT0dQa3dVUGUzc2hNbTlUbThTVUQyeUJXUVQwMTlEWjNrN2NEL3Zwcy85?=
+	=?utf-8?B?REg3dzJWajZuK1FIcDhGbEU5Nk1EdlB1R1N1RHZOMzRkY0ZYblM5YlAyWER5?=
+	=?utf-8?B?NzhCaGY4cDZpMmNUdFE2aUJJVGlqRDBCOVNtTFcxZG5pUFdmV1VsMUVKUEpX?=
+	=?utf-8?B?dnNhVzVYVWcxUDdJU2N5LzhENjFtaC84a200bmxxZy85TXB0VmE2S05td1Na?=
+	=?utf-8?B?RUIraDU5dUd6MkxoR2Q2cC9vbXdXdXllV3JWTTEwNERoZ0RBSmJlOG1vYU5u?=
+	=?utf-8?B?MkZzLytpRytDNG0xR09CZ08rcUNnOXVLOVJjRVE2S1FGNnlwdlRjTy9neFNW?=
+	=?utf-8?B?MmVCY09yQnVOV001c0J3NXVZWDFIR0FYTHA5Z0MrNFpKdjlkQUU3cURNd1Fs?=
+	=?utf-8?B?YU1OK0lOOFp0TXR5ZG13bDdDcHdwckZsdDRRR2lJK280QkxpWHZ5YUh1V0xm?=
+	=?utf-8?B?RWo0S2tjOWY1S1k2Q2FpbExZdHQ2QkVRRHhOSnREcTNMRVFkZmNvam9OUnl6?=
+	=?utf-8?B?emR2R3BPQ3Rpak4ySmhlUnlRMkd3MUMrdTlvYjl5TU9yRXU2cjR3M2cyODd4?=
+	=?utf-8?B?QlVuc1lNSWNhajk2RlpoV1VVT29DQVg5SW94TDZpOUt5RVNqRnNzemVxdkc4?=
+	=?utf-8?B?ZXRLSDEyVEZqT1UvMW1SeEkvcWZQYytYczFXY0czQnlXeWY3b3F0a3k5azAv?=
+	=?utf-8?B?UUpFQnFjRzFuMTBKa0hoczJvcmZhdXFSWTFDTFVjN3FIZnNvQlcvenJFZU9i?=
+	=?utf-8?B?a0pSZkJCcXNDWDk5bVNtQmU2TmU3WWo4NzlQNDhXcmlDb2t3NDFiVmN1dlBR?=
+	=?utf-8?B?VEtTM1VzYUkwbVFGREdvY09xRURhOTVsc1pMNzJQNWxzTS96SDJrb3h3YWh2?=
+	=?utf-8?B?Y2s5Ym96SEgxc3lqcGM5QmszTGZpYnlKNkhpT05MdHhzRTRNMEV5ZG5QQ2lD?=
+	=?utf-8?B?amhMSDJyZW1WS3pUaHpGblFHKzZJczRYbmF3NmtNYXpGaDFCMVEyOTJJOEFm?=
+	=?utf-8?B?dWpzZ1F6YVJsSllRNVJYTXh1eENtWERvalByYXFLRUdLZUZvOFl4WWx3UWJH?=
+	=?utf-8?B?d2o0a2ZNMk1tQnRiZk1LcEpPMjVvbW8xWnFWQUpxeitYRFNIdkV4WXc4UDdN?=
+	=?utf-8?Q?GJn3aNoPYzBdi3GnpAwOAg+yEvv2LZodG3sxI=3D?=
+X-Microsoft-Antispam-Message-Info: Yi1tuPZb57OTP3N2vFbi+pNj21btE7+ktQOiBd2mmS7hLfAuwmiV0OjpItyoTeiNt/ySVNaKm0NeKZswWWKmlAV8QHLruaWK7W1HZnlUk2NuksKwMmhMR7W2mJmo0zmNDt62tgT+99zzkZHALWgoe+aMIbXHQHdPkK6isWQmtWAZ09SZkGwPV2BHHAVLAVBj9R3FDdkxO386DVdKlixWJcp+wwVLRejqBIC3wtVeUrByuU4LNdITNFbEk2x2etYifPXGDpgphz2xL8VjVFVk+glEFDa5ApZnL8jeictvjoh6Piz0LdsooOfApILUgP98TQt1jujy0dDmd1sxuNq7jx2JiEaLLyTkT+HQ+53/y/Y=
+X-Microsoft-Exchange-Diagnostics: 1; AM6PR03MB3829;
+	6:T37HA0m5Z1shItNC8j1x3ulf3yeCgVUBwczXl2EKYQjQxYF3NCWTg7iEYTd9zdU5qKyoE74419cjGL2+ukMbgKWKs7ZWDEws4XqReJp+AZkvV45XRZVk3BIK7MkW1YErt77mWX6F8qzp3iYBI8lG5s1UF9FfnCOsehaSfq1Eetxf5C1Jm3hhLdKbYKeRrQZsOnGCfXC7DmGB+pyaQ7oc/1E8JP2FGGISVC+wgkE2V0vPE1IzHqCUSmC+a7ZhWJffF+VDNoIUtqh933pp2AaXwgWPLMm3H0EVyZMfpDNVoIfXuK1UmJ1OjMyKruiPkNLp1MG3Z7UjG/aDuX6c5cj/e5zj5OucRHtDd6HVBppPkFzXVhqzaESE1o147yhAecYPfG3GeEEJ3z9wiLRHuYbh3rRKVitZPb4GzDRI1i5gtHU+So0z7lxL+7o2fGnPbu9UGN1WqNz3lO+NANxX6O+zzQ==;
+	5:aErRJHXHcZWmLSTceqjoq86gfveZ2AAi65TchIPtkbzTuxqfpnj/4Mh1z1pVF72o9Vijef1jThJsHAgyL/lM/Cyg68cTzSSPZudHO9DRqiHfu/aRgKppQLBT/cYuGc+B6tSMefV7VjwwbG6KNxp3tl4CJZnqoQrQycODMsDm0OA=;
+	24:pDDKF68Wu1Hdxv47dsxE+b82s+XQHyPAtYqJNNRmn6Lv3EDc2k3YrViXaXrH+MBGevfQgvOckBELxUU00a7A2/7q5SzRMCSG/zVZhlGz3uU=
 SpamDiagnosticOutput: 1:99
 SpamDiagnosticMetadata: NSPM
-X-Microsoft-Exchange-Diagnostics: 1; AM0PR03MB3827;
-	7:gsOoDWVFIub+WZWK7+9JQU7IO4QLMzAblnH1ph12aCbV+oT1QfdJ4FyMp9k3FFBFgWU6csIV014zPALvcSEpchPNqOoXGIpsd/hHR48MDbAG9nDFUqyHf8Vj4j7Iem+dDVHriG5I9paj1weFfdzFQye0xr9Tnw2VlDL5i6SavCdVEplG5NU69tvVMthYaWXPR2GfRUntjlOuGO8Pn9nyofE+ud8teOSeAqjZiOJ8YuQldtLo9YRfmEMP3C9QmsrG
-X-OriginatorOrg: bbv.ch
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2018 12:29:17.6249 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a44c449d-c6df-4492-0195-08d5e0176e0a
+X-Microsoft-Exchange-Diagnostics: 1; AM6PR03MB3829;
+	7:aS0ws0ty6maW0LFnYiS6RGnvPBVChoYeFUMqAXmcDmazjJHrQ2FYblW+U0MyLtIsAebzE1cJUZdyqEORRC8GITa0UfDu61GxvGmxO6gr/YL5TH6psRQ5GoBTsJFKDwUzsC7sSza2NMW4F6ns8rA6Bi+gm4uZb1pVhfkIHLh9zBHWDIso/+zXCFBdc91XVNWDn5TOWFhtcwdTgrRWcO94txORgGnMKZjCDRgsdl+WeeImkFfGfFdi4XMNQKANLNa9;
+	23:8kU977ZBkbGF6XCTYOUYg/OxPeUVEA92Pwm52Z924MgGYCFf92E9EdhfGvsKpAThgpvNpD94Ud8+s2r3sIRGUgYjzEb0T/UnDF09nsTxZEfqCJ3JDolATOCa5u7uQlDHCcDWYfeFut2zSaqcAQKluQ==
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2018 13:59:18.7136 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0b35669-1fbe-43f0-93e4-08d5e0ed2be3
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 279985bd-2077-4d9d-9797-42238cfc06e2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR03MB3827
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR03MB3829
+X-OriginatorOrg: bbv.ch
 Subject: Re: Issue with bitbake fetch/unpack when using MIRRORS rewrite
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -115,109 +116,134 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 03 Jul 2018 11:02:15 -0000
+X-List-Received-Date: Tue, 03 Jul 2018 22:50:45 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2018-03-11 at 06:36 -0700, richard.purdiea wrote:
-> On Fri, 2018-03-09 at 09:40 +0000, Bach, Pascal wrote:
-> > Hello Everyone
+On Mon, 2018-07-02 at 14:29 +0200, Urs Fässler wrote:
+> On Sun, 2018-03-11 at 06:36 -0700, richard.purdiea wrote:
+> > On Fri, 2018-03-09 at 09:40 +0000, Bach, Pascal wrote:
+> > > Hello Everyone
+> > > 
+> > > I finally got to pin down an issue that I occasionally observed
+> > > in
+> > > the past:
+> > > 
+> > > When using the git fetcher with shallow tarballs
+> > > (BB_GIT_SHALLOW,BB_GIT_SHALLOW_DEPTH) experience the following
+> > > issues
+> > > during the do_unpack task:
+> > > 
+> > > ERROR: pseudo-native-1.9.0+gitAUTOINC+d7c31a25e4-r0 do_unpack:
+> > > Fetcher failure: [...]
+> > > tar (child): /home/projects/ccp3-
+> > > labs/oe/build/../../../downloads2/gitshallow_git.yoctoproject.org
+> > > .p
+> > > se
+> > > udo_d7c31a2-1_master.tar.gz: Cannot open: No such file or
+> > > directory
+> > > tar (child): Error is not recoverable: exiting now
+> > > tar: Child returned status 2
+> > > tar: Error is not recoverable: exiting now
+> > > 
+> > > The issue is that the do_unpack is trying to find the following
+> > > file
+> > > in the downloads directory:
+> > > downloads2/gitshallow_git.yoctoproject.org.pseudo_d7c31a2-
+> > > 1_master.tar.gz
+> > > 
+> > > However this file doesn't exist, instead the following file was
+> > > created by the fetch task:
+> > > downloads2/gitshallow_git.yoctoproject.org.git.pseudo_d7c31a2-
+> > > 1_master.tar.gz
+> > > 
+> > > After some digging I suspect that the following rewrite rule is
+> > > causing the issue:
+> > > MIRRORS +=
+> > > "git://git.yoctoproject.org/.*???????????????????????????????git:
+> > > //
+> > > gi
+> > > t.yoctoproject.org/git/PATH;protocol=https \n"
+> > > 
+> > > The line exists because we don't have access to
+> > > git.yoctoproject.org
+> > > via the git protocol. So we use the above rule to make access
+> > > work
+> > > via HTTPS.
+> > > However due to the way the Yocto git server is structured the
+> > > rewrite
+> > > causes the URL path to change from / to /git which causes the
+> > > additional .git in the
+> > > resulting tarball, which then makes the unpack task look for the
+> > > wrong file.
+> > > 
+> > > I think the proper behavior would be to always name the tarball
+> > > after
+> > > the original SRC_URI not the rewritten one.
+> > > 
+> > > BTW: I was able to reproduce the issue with the shallow git
+> > > tarballs
+> > > but I think it also applies to normal git tarballs and possibly
+> > > other
+> > > fetchers.
+> > > 
+> > > The issue still exists with bitbake 1.37.0 on Poky master.
 > > 
-> > I finally got to pin down an issue that I occasionally observed in
-> > the past:
+> > I do think there are likely problems in this area.
 > > 
-> > When using the git fetcher with shallow tarballs
-> > (BB_GIT_SHALLOW,BB_GIT_SHALLOW_DEPTH) experience the following
-> > issues
-> > during the do_unpack task:
+> > This gets tricky as one mirror tarball could in theory match
+> > against
+> > multiple different parent urls. I'm therefore torn on whether it
+> > should
+> > use the "parent" naming for the tarball, or create a chain of
+> > symlinks
+> > back to the high level name.?
 > > 
-> > ERROR: pseudo-native-1.9.0+gitAUTOINC+d7c31a25e4-r0 do_unpack:
-> > Fetcher failure: [...]
-> > tar (child): /home/projects/ccp3-
-> > labs/oe/build/../../../downloads2/gitshallow_git.yoctoproject.org.p
-> > se
-> > udo_d7c31a2-1_master.tar.gz: Cannot open: No such file or directory
-> > tar (child): Error is not recoverable: exiting now
-> > tar: Child returned status 2
-> > tar: Error is not recoverable: exiting now
+> > Its something I'd have to sit and look at a bit further and
+> > understand
+> > what the code is doing. I know when Chris added the shallow code,
+> > he
+> > did add multiple mirror tarball support so it could be related to
+> > that
+> > too...
 > > 
-> > The issue is that the do_unpack is trying to find the following
-> > file
-> > in the downloads directory:
-> > downloads2/gitshallow_git.yoctoproject.org.pseudo_d7c31a2-
-> > 1_master.tar.gz
+> > Just thinking out loud, you could have a "full" mirror tarball as
+> > well
+> > as a shallow one too so it does get quite complex. Which corner
+> > cases
+> > we care about is a tricky one too.
 > > 
-> > However this file doesn't exist, instead the following file was
-> > created by the fetch task:
-> > downloads2/gitshallow_git.yoctoproject.org.git.pseudo_d7c31a2-
-> > 1_master.tar.gz
+> > Did you have a fix to propose?
 > > 
-> > After some digging I suspect that the following rewrite rule is
-> > causing the issue:
-> > MIRRORS +=
-> > "git://git.yoctoproject.org/.*???????????????????????????????git://
-> > gi
-> > t.yoctoproject.org/git/PATH;protocol=https \n"
+> > With the fetcher, I do ask when we make changes, we do add unit
+> > tests
+> > so that we can protect use cases going forward.
 > > 
-> > The line exists because we don't have access to
-> > git.yoctoproject.org
-> > via the git protocol. So we use the above rule to make access work
-> > via HTTPS.
-> > However due to the way the Yocto git server is structured the
-> > rewrite
-> > causes the URL path to change from / to /git which causes the
-> > additional .git in the
-> > resulting tarball, which then makes the unpack task look for the
-> > wrong file.
+> > Cheers,
 > > 
-> > I think the proper behavior would be to always name the tarball
-> > after
-> > the original SRC_URI not the rewritten one.
-> > 
-> > BTW: I was able to reproduce the issue with the shallow git
-> > tarballs
-> > but I think it also applies to normal git tarballs and possibly
-> > other
-> > fetchers.
-> > 
-> > The issue still exists with bitbake 1.37.0 on Poky master.
+> > Richard
 > 
-> I do think there are likely problems in this area.
+> Hi all,
+> I got the task to fix this issue.
+> Can you explain where do you see the other problems and tricky
+> situations you mentioned, maybe with an example?
 > 
-> This gets tricky as one mirror tarball could in theory match against
-> multiple different parent urls. I'm therefore torn on whether it
-> should
-> use the "parent" naming for the tarball, or create a chain of
-> symlinks
-> back to the high level name.?
-> 
-> Its something I'd have to sit and look at a bit further and
-> understand
-> what the code is doing. I know when Chris added the shallow code, he
-> did add multiple mirror tarball support so it could be related to
-> that
-> too...
-> 
-> Just thinking out loud, you could have a "full" mirror tarball as
-> well
-> as a shallow one too so it does get quite complex. Which corner cases
-> we care about is a tricky one too.
-> 
-> Did you have a fix to propose?
-> 
-> With the fetcher, I do ask when we make changes, we do add unit tests
-> so that we can protect use cases going forward.
-> 
-> Cheers,
-> 
-> Richard
+> Regards
+> Urs
 
-Hi all,
-I got the task to fix this issue.
-Can you explain where do you see the other problems and tricky
-situations you mentioned, maybe with an example?
+I investigated the problem and saw that the download/pack task uses the
+mirrored url to create the local filename while the unpack task uses
+the original url to create the local filename.
 
-Regards
-Urs
+As I understand the code the link between the filename from
+download/pack and the filename from unpack is missing. It seems to work
+because they are usually the same.
+
+I don't have the full picture to decide what solution is best. But from
+my understanding, it should be ok to use the parent/original url. It
+could match against multiple urls, but they should contain the same
+version of the data. In the git case, this is secured by the commit
+hash in the filename of the tarball.
+But I like to hear your opinion.
 
 
