@@ -1,99 +1,101 @@
 Return-Path: <Rasmus.Villemoes@prevas.se>
 Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-	(mail-db5eur01on0107.outbound.protection.outlook.com [104.47.2.107])
-	by mail.openembedded.org (Postfix) with ESMTP id 4864974922
+	(mail-db5eur01on0094.outbound.protection.outlook.com [104.47.2.94])
+	by mail.openembedded.org (Postfix) with ESMTP id 0CE986B6EA
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Jul 2018 17:37:52 +0000 (UTC)
+	Tue, 10 Jul 2018 21:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=prevasonline.onmicrosoft.com; s=selector1-prevas-se;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=w6B1Kd6LC/y3a0+ANunlCK8ocYVoQyKtOzxOXchCh0U=;
-	b=tohzQ7s7VLcqQMgU+9Q7DbsWmJrPyzmj3wgQOFc5kZ/A6/dw8mnXJf5W7a5udNHCka7Fpjjces7wicCgr+IAMnzxkF5TGleAhAIDUCmX1ryD1/jYia3HE2TRHJ5BH2Z9FJJBvZO8w6/B+stMs0byZ0NG3TqWV+/DuByKek6yD4M=
+	bh=aRJlnNZZoa8jVIYJDU4pWPtfdxXWCoX4imN7Gyx8WTI=;
+	b=SDgrjQHo3FBqNkip///v5fvuRBV7+AZyTqleKBbcY41kkNQlc43ytXcT1GfAWnxyTVL04ujEnKfT95GWFofxo1dpt440QiLFBWnpqo/tJ8CONF9Nn6jirrnoFoEXxw3QIhuQF1O7KYiyioZsimfquEBCrgTW3XDRpysLxkKmsTg=
 Authentication-Results: spf=none (sender IP is )
 	smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
 Received: from prevas-ravi.prevas.se (81.216.59.226) by
-	VI1PR1001MB1342.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:e5::11) with
+	AM4PR1001MB1332.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:200:98::22) with
 	Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.952.17;
-	Tue, 10 Jul 2018 12:03:46 +0000
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.930.21;
+	Tue, 10 Jul 2018 14:06:24 +0000
 From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 10 Jul 2018 14:03:34 +0200
-Message-Id: <20180710120334.9609-1-rasmus.villemoes@prevas.dk>
+Date: Tue, 10 Jul 2018 16:06:12 +0200
+Message-Id: <20180710140612.26245-2-rasmus.villemoes@prevas.dk>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20180710140612.26245-1-rasmus.villemoes@prevas.dk>
+References: <20180710140612.26245-1-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
 X-Originating-IP: [81.216.59.226]
-X-ClientProxiedBy: MRXP264CA0038.FRAP264.PROD.OUTLOOK.COM
-	(2603:10a6:500:14::26) To VI1PR1001MB1342.EURPRD10.PROD.OUTLOOK.COM
-	(2603:10a6:800:e5::11)
+X-ClientProxiedBy: AM0PR06CA0025.eurprd06.prod.outlook.com
+	(2603:10a6:208:ab::38) To AM4PR1001MB1332.EURPRD10.PROD.OUTLOOK.COM
+	(2603:10a6:200:98::22)
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dd3c6393-1ec1-4e35-8e2c-08d5e65d3098
+X-MS-Office365-Filtering-Correlation-Id: be8d6373-2f05-427a-3844-08d5e66e5250
 X-Microsoft-Antispam: UriScan:; BCL:0; PCL:0;
-	RULEID:(7020095)(4652040)(8989117)(4534165)(4627221)(201703031133081)(201702281549075)(8990107)(5600053)(711020)(2017052603328)(7153060)(7193020);
-	SRVR:VI1PR1001MB1342; 
-X-Microsoft-Exchange-Diagnostics: 1; VI1PR1001MB1342;
-	3:xicvWYMcygCu11aISUihaYrGKeZpdamGvHoPpPe0ZYEvNwUJPXAwZk+T6xgj4zLnA5RJb6EAw7sZ7COVOFWnomqWQNghuNrKSQOiBc66uWEmtoxaJxpHVrd3fosd4zLx+Z/VkPz6dixHm/0kiI8NfolnTNALBMWAu2Rf698MKxF9C+rgK7nlxCqchFUkGDHFSTqLrSiWP469Hm2I+XHFLoDuaXeOfDDS8kvB3Uh3yyg86mq1Ab7+OViuRcNsJxMM;
-	25:R1JmkrwrabyyggXELRBpC+oitnH63xxhLXUXJROi3ewBlUvDeNIABxoXUJJPW21ytuLxBXV5TIgQqm1uH6lgGx5E3GGmc6Bj6hQljeL2hgGV58UjkPBfkj8SbN2cM/LhdXWNOxdrERmn2TttdwK7MiBzgfdS2odEMbJgbLQNDWgUZIpthAd8BTlCfGafNUk1BI+AjHEvnnj4M2cwk67VWEy8gbgFCe0wT+y74Yhnta/hgfE9XIvRJ3ASfSqgV8fkJ40Rj0mVN6vMrp8PrzmlFqMPg50nqVLNJ7YF8MmnO7ZU7VBvpBXh9DItfD5aRwKXdQqSMdJsbHC+E7sUdgRtHg==;
-	31:itc5pvYl85rBdyI9X0robBr8qTRAUV6ok7Id5Z98wrijWZYntq7hD2SgBL3haCkorlY0b4i9pwF49Ah/w8yN6b+h5z3jgfdYV1N2+/lTU7VrLTmys6ojloVBDKvXWGgRChTGG3E2Fgb+w7GRNVLPPz6foLxx/TR0tpbG/46MSBxltfIH5cDh66rZsoh6eb/w3OapH+COBRgZE6eSI7DWD2Ubs3rGGPIUcjh+Z3LHuhU=
-X-MS-TrafficTypeDiagnostic: VI1PR1001MB1342:
-X-Microsoft-Antispam-PRVS: <VI1PR1001MB1342DF11F5E0942B9A62BE468A5B0@VI1PR1001MB1342.EURPRD10.PROD.OUTLOOK.COM>
+	RULEID:(7020095)(4652040)(8989117)(5600053)(711020)(4534165)(4627221)(201703031133081)(201702281549075)(8990107)(2017052603328)(7153060)(7193020);
+	SRVR:AM4PR1001MB1332; 
+X-Microsoft-Exchange-Diagnostics: 1; AM4PR1001MB1332;
+	3:0A+XiA2pUN8dXPK6qLej/m5yXvcUcBOC48P4M5H1LmWWQK0Wib4sU25tbtGVOe7zZpnKYZsS13r/AdfNtgECJvnvpdMPN9pwKbqlbDro2om3asaVMsMKwmcoFyS2o8Ogoqm6ReyZCNFTBC1zd1yxIVFZuOx80uA4kveSKbHcJLDBjNMEwJibo2t8EbnGm9x89/0CcZU2hA1nb2BFe+hN1kUPOfXcu5+c0zB0yTZ/jLEIeA38oBzfrVB2MzpyvvvX;
+	25:dy1lbiEfvl5K2xUtCdKr+nASIU3LPpNmk8wjIY5HAjysO5uptwGdc2dbVXiUPtg6K+QqKpmHxSM632HGJCkysBHOOQiOq2ZJ0eV8OFF4YRbmzZg9yefvU2RaO+/9hic/EZidIZOVm40KLww7A5qBeTeVPsOPd/VVAo92w2V+pfxwkumbgpPsvUHyJW61X6/tOdUYBdefcE0x+CYxsMHu3fom5MSIte4sFz6PVaLqcQry0OA0kul3gVCN5OCa7Pgau20Qu2D9gN7nJXRnkr1uluwMxcH4td3wR+7ZSXYFQNWEJn3CcpSHexPpA0PZgD6JFRoUGActf9c8Ko+iyIdNzg==;
+	31:gqazG+VQcplSVnBYdz3OCq8O5hYIBwiQaItfQWFsh7sonDrnHoaB7iC3wlfIpKV/OgBadjVt73JzVCr2tsecEfXlS14uUFyKAY2v6PevplEG+6HpkZcUG+27zjdQ/ePbbJw2J7ZOFLUL582P1rh61zei9ZnrYKDz2DHB4IHu8fvnczrGuoyEo9FTHP8jOC0J9TkvPNA2RLMfqVVbjqmymUqclxMzj9KOm4+GQm9ef9Q=
+X-MS-TrafficTypeDiagnostic: AM4PR1001MB1332:
+X-Microsoft-Antispam-PRVS: <AM4PR1001MB133273668C679571E21560898A5B0@AM4PR1001MB1332.EURPRD10.PROD.OUTLOOK.COM>
 X-Exchange-Antispam-Report-Test: UriScan:;
 X-MS-Exchange-SenderADCheck: 1
 X-Exchange-Antispam-Report-CFA-Test: BCL:0; PCL:0;
-	RULEID:(6040522)(2401047)(8121501046)(5005006)(10201501046)(3231311)(944501410)(52105095)(93006095)(3002001)(149027)(150027)(6041310)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123560045)(20161123562045)(20161123564045)(20161123558120)(6072148)(201708071742011)(7699016);
-	SRVR:VI1PR1001MB1342; BCL:0; PCL:0; RULEID:;
-	SRVR:VI1PR1001MB1342; 
-X-Microsoft-Exchange-Diagnostics: 1; VI1PR1001MB1342;
-	4:AWCsErVUYoAYQf7hGwJjokprsqFrd4ogudlOuHDl/ni2BVkeSptiDAljizxxPpyoHyXR0kindtj3RmLarq3k+XJrTNikBOJI/iUjJ6porhe6dfn2i2oCYcGdWAFXY9gYvBiu1lAPObDoWSx/MM0jtFFFk95TuiaWiPuyT8ECueBMSlxdwKLarikCOOHoBJ9bH8qldO6QsRMRzPyU9LrItgkqXLml/duRTC2x+5X3GUk6Ghtyrj+Pkf1oFcY+YLug1mn297CJHu0R7DctaKna/Q==
+	RULEID:(6040522)(2401047)(5005006)(8121501046)(93006095)(3231311)(944501410)(52105095)(3002001)(10201501046)(149027)(150027)(6041310)(20161123558120)(20161123564045)(20161123562045)(20161123560045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(6072148)(201708071742011)(7699016);
+	SRVR:AM4PR1001MB1332; BCL:0; PCL:0; RULEID:;
+	SRVR:AM4PR1001MB1332; 
+X-Microsoft-Exchange-Diagnostics: 1; AM4PR1001MB1332;
+	4:p+TFlPLYjPkpFya0/8o2/a93dryjwIZ5gvkbt3Z+HDy7YbkQqpcGGu1rUNs8Tgv54VvEQkkBy5MOgFO1OOZOQmrKYHQUKaYu5jOuzAnwZs2L9a2KQlsI0HzCfOkndQ9v3wqwI3ccAW1c6cPuxSJMidmYDpl40yfywvC+W4ubrp2a7koereYKepNCLPjlCBxMy9asH2ChcaoTNItODIbyM68v3332oF8sc3JqXdU9RYQMbiBr5976d3q2oy9LUa6mNEk42DjxaKQUK3RqT/OTQw==
 X-Forefront-PRVS: 0729050452
 X-Forefront-Antispam-Report: SFV:NSPM;
-	SFS:(10019020)(376002)(39850400004)(366004)(346002)(396003)(136003)(199004)(189003)(6916009)(1857600001)(5660300001)(6666003)(14444005)(105586002)(2351001)(53416004)(956004)(74482002)(2616005)(107886003)(53936002)(69596002)(186003)(16526019)(6512007)(36756003)(316002)(6506007)(386003)(2361001)(50466002)(26005)(106356001)(16586007)(52116002)(51416003)(6486002)(7736002)(50226002)(72206003)(8976002)(8936002)(3846002)(48376002)(486006)(476003)(66066001)(305945005)(6116002)(42882007)(25786009)(1076002)(4326008)(44832011)(97736004)(8676002)(81156014)(68736007)(2906002)(81166006)(478600001)(47776003);
-	DIR:OUT; SFP:1102; SCL:1; SRVR:VI1PR1001MB1342;
+	SFS:(10019020)(366004)(39850400004)(136003)(396003)(376002)(346002)(189003)(199004)(53416004)(50466002)(48376002)(69596002)(44832011)(6666003)(6916009)(5660300001)(6116002)(36756003)(3846002)(2361001)(956004)(476003)(74482002)(47776003)(66066001)(2616005)(11346002)(2351001)(97736004)(486006)(1076002)(25786009)(305945005)(6506007)(386003)(4326008)(26005)(105586002)(186003)(6486002)(42882007)(16526019)(8976002)(16586007)(107886003)(72206003)(52116002)(51416003)(76176011)(68736007)(81156014)(446003)(53936002)(81166006)(2906002)(8676002)(50226002)(14444005)(316002)(106356001)(6512007)(7736002)(8936002)(478600001);
+	DIR:OUT; SFP:1102; SCL:1; SRVR:AM4PR1001MB1332;
 	H:prevas-ravi.prevas.se; FPR:; SPF:None; LANG:en;
-	PTR:InfoNoRecords; A:1; MX:1; 
+	PTR:InfoNoRecords; MX:1; A:1; 
 Received-SPF: None (protection.outlook.com: prevas.se does not designate
 	permitted sender hosts)
-X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1; VI1PR1001MB1342;
-	23:QfgNTzdGT8lvgQlozC6bwKi4rvdnFInWfOSRMbt?=
-	=?us-ascii?Q?FjsybiNbd4Oj9u3L8BQQ7NQGv2l3nKUDO/LBpJHXW3Qk5q8xlsfLe96zwQhP?=
-	=?us-ascii?Q?cTejXbFtl0YIXj5jUCSNxaPwyfukc8CfmSsutYU3QZ9Mwp/bDUt0nnzanLMG?=
-	=?us-ascii?Q?irm1f/SdwqNlzRLquOcoxFx6eg6amkq9vJhLGXzvRgqNybYvuR6bHgbVq6wv?=
-	=?us-ascii?Q?gir2rrTKJMQzjV+RUQi72P6aQJ9aA2sX7i2q3bRV/ZD7AEUK6GBCfXrEwHGj?=
-	=?us-ascii?Q?sl0nVqipY2fdw9NmPDgvSBsIE/peycrr4DrQlsmYsmaaGp276zzpN/b54qRU?=
-	=?us-ascii?Q?BpMrh87kvMIs2skYyzgdLBPJjo6Cjownl8Ytr/2hYGLHGFuBkAUhq9zL4FMj?=
-	=?us-ascii?Q?nSkXIpjvnhmZu0WL+jMgc/gru3pZKi3FxP1lEfJ26Pr75CNZBXOdwH/UWuXc?=
-	=?us-ascii?Q?9wKeF0MqHEj5p/fL1wmDw+xuOoDdSBvzi2tSculLuB9uXkp/+ehF+GJdkLoY?=
-	=?us-ascii?Q?PoX9rpPyhowzn4Oe/dwFop1OgTnQEIIh2UvrEokfjdZWbi/Rlh9x5M1YpUMR?=
-	=?us-ascii?Q?rSsnqwjE71l9UYwLve9ixLmIeh8PXoY+Oz+8MIoOomx+6ihBlvz04XdPwWyU?=
-	=?us-ascii?Q?i5+WWrY77K/xIRWCue9WLS8u47+MGL9UVc3u3+QzDTxlIYtHV8ihl2hwxtn+?=
-	=?us-ascii?Q?n/6Pf0kB2b/Wp8JBLihBzKfagrDGuNKOLVWxKhdZ4oTlVo+vlPggs1ifHwgV?=
-	=?us-ascii?Q?M8KWlBot4iWT3HtDgOmvIC3BLKEjMM+hf6LXdKxpGpxh4M+LGqQac+I93sCx?=
-	=?us-ascii?Q?P/HBgE/yyoFlUBxrkTj1j0uz+HTreZuvpmxFTD3rJ8qJLi3yeGI8EzsIRoCi?=
-	=?us-ascii?Q?VG2MIMftv12udGH5gJNVDlQnoYDfey3zjrx4tQm+hcs2LmcYd3WHNd7P6J4v?=
-	=?us-ascii?Q?ngAuBKCf+1y7KXFP8uQT3jrLwrOQ6nJoQWwXulaePvmrewdzsGviJyXEI4Sl?=
-	=?us-ascii?Q?btTBmBnzPceKAo9T6Y93cw1xRNW8XHzlQurCNFhbLIwMyeji9CmvNQulaWTU?=
-	=?us-ascii?Q?S+iPo+x8wl2FNml6XlcpVvnIJqoMFk92+CCmskec0UwE0lUGg7PPBW+LI2Nx?=
-	=?us-ascii?Q?YOwJxDoCGqPRgjROAv+TERSbGRffF1S8tzP0oaEFhxYvm7xs8sqLB8d7HWIJ?=
-	=?us-ascii?Q?51ucRysRTqcRepHaWXGmnae0pakXlVPlnG1ErrXhBKZiO+5eStBMCT4KXfnE?=
-	=?us-ascii?Q?y0SkAv1CG82o3JExiCRmmmpMm3dXEHlz0MCiZypV5UltRNnM8ekvKJJizknf?=
-	=?us-ascii?Q?noEb4UWBjYpOSHD1r9uR8/zKltag4cKZTrO1vE6a633GpJ4jskSt4fkJ5abL?=
-	=?us-ascii?Q?dmD3gjA=3D=3D?=
-X-Microsoft-Antispam-Message-Info: IJBtJWrdnoc8Py7rCNdCoWeD8ZSLqED8bCzEyd6Wurx5fP4Pnnsn8qcSTu6EOqjGKpgFzOdfhRuhFt1Tn14LE6m5TA/CM9XQxpQBM2KnvQuhIXW7PCgGzyESvALtBipqtPuabRJatbsty6ww5hS7TEAV29nnkMP2sBJa6fEnHM4AgAzjOy6iFfcKqKjlYYZj1wOHuH0lxyXlrKa1plJip4Ez0xuCsAKDSvcfyee0607CGx4Epa8grl55j/IAVkVfZHDd6GUWNj0psstQJeqyH+9akiukrHIsf6ck1/HvrZOcdL9AIAoMavMBuDY1GrWUsa/kNZw5OsvLvNMi9RBAbuwFITA/CRg4CJa3eH5VyQA=
-X-Microsoft-Exchange-Diagnostics: 1; VI1PR1001MB1342;
-	6:pdolISoA5K472XapVVj++dZLyy818dZGy62jPnDeI3KMjVXv0xoVe3fGZHryRxtc/kHFms9AsjAxMVeCWz/zXhAIijjyx87UgidYJ1B/f67jA0BnsEQPHhYF18x5U+HK2eJLqtZ0WBBlEZG0fGli9mRUJmX/zpvSdJfk1Q0ywyyWjhgckNov79pGdu2M+5o+6hS0gB/YgdFn7FezUsyMbGdgIYAfjZBxpMDnQDuS6T2g3Y/ox0sFBpsAScpXHnmC8L3XNrtdyu3MWVbf+2UH6nGs/z3Ww+k11v8BeSQF1nmkDb4ZlErV9KgYiSYDP20T0ZB/yE2qKlgOtEheE3lx4KJZBMwGdeAbiAXNTCA5ULH7tgrzVvcOLrjJMsegOMbSRHF5a9zzwqVzSuwZlOyj4Y6nDH46wUKvdTr0uLI3JiQDPdvsYGGPe0o9U7/8TyrG7KQvlbi9qfdK7hJMKqVuYw==;
-	5:GdUKVfY5iMdx0fwV9KqFtEm1+PIkUGUc7SAvRMQY2vSJ5WZuoPA0Yz9pZQJKaXOB449cmZ/fj1lc2jV1qd1Y3nMfrzbqc7M0BNR8pHgzsr+QsOcds46pQeo6s7K+pblpRI2E+aV/F57bG3G805jlpWPJ/c2mvGyuNw7BIEW+YzY=;
-	24:pYrBhw0Gmk4Vppr2gkD5sjnGR1tO23YjEx3yHVtJ5Vk7BGqwOGYtVE3Rcf95pxwPKhpYjNwYfWWge7XX7dnIix/fi01S8fgNmIXar+/s6KQ=
+X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1; AM4PR1001MB1332;
+	23:/XmwYIKGz/O6bTysMiKNA9Ic0GuXs8a6XauVbvh?=
+	=?us-ascii?Q?jq9syKFdUPXKHBavaIa3D6MwqdXUEt93/QW0o2vrx2cKCiGdAl5wmDmvrFvB?=
+	=?us-ascii?Q?qMBmmmaGoXoEJUek5cWT/nOKHcly0viUe3Bf0wqEnBbJktNOkIaNDhPqf7CI?=
+	=?us-ascii?Q?s+Y8iuwFBPxlRL0v0Atsi/nVixn4vQMKufx0WBa94vdX9nC1rZtXFV3D+a9L?=
+	=?us-ascii?Q?+mfMHtkIL+Rzo8WGXZSiheYZLpr0WzE8B0DxTXPqyFcPSC/LLDLrW1A9vGC7?=
+	=?us-ascii?Q?hAkZ/lFjf4+5nFzmo07EFflkNEX8ez7ygwjRohImhxkNltwFIFzixPhLGuze?=
+	=?us-ascii?Q?dwxRqjAlmhl2Xe0MPgIecnXg2P6ctvMc37mYpRpUD38rgpdnMjANQC1JLoa7?=
+	=?us-ascii?Q?IWfu/Yh+MJLay53QEsdRbpyyEdqHECMhGXE6VFsiP//q7aT/KGmyePSGnumY?=
+	=?us-ascii?Q?jL1mg0UOSxsSZz57V5CHda/41HICAzvqHKehTCmOZjpsQzN2xyFv1v6lbYhy?=
+	=?us-ascii?Q?Uhdg0M2g3oMC7/TY6UmU+fmdt+sYXCNUZx98Mz+TANeVCc4l6u+GTRRswirp?=
+	=?us-ascii?Q?8uNV4XXnHa+RL3Q7z26J8QF0Z3sieu4NvmmStqvzfC6xKjxnE20O8IOMymgA?=
+	=?us-ascii?Q?JWNF1diQa68mrjdfhq4NkNOsF5W3gYAVXKGTZW2YuKGnEJswZY5initmZjBa?=
+	=?us-ascii?Q?h9TwRyYYNbWZp3Tlkbxaex4vXJQjj2vkFAdzPxWhuUT4rfbHwwc32JtZqiAA?=
+	=?us-ascii?Q?iwtZoUhfx/hcs4kV7bUQRaNyrKUQxSj3miGEouakWaHzBeaX3V2ncBBORUzW?=
+	=?us-ascii?Q?EgKKAymujr1UtdrkF1lvTdjhtSwYbmLtpCAwJg9SyOu1DzOL07/WEM5MpWQ1?=
+	=?us-ascii?Q?VNJud+DdeR/361NYd7a7exZ9GWNeXBvnd6R169RVyFRd0Wa/7qxwkgCHqBRx?=
+	=?us-ascii?Q?hkx/P3Sdbtt1B2AEDWN12G+IPQQKqRBMaohvLOsFIRcT9bOOI3M4pXNaoTu9?=
+	=?us-ascii?Q?e35k721YLZJDlWoXAHiE7ZQ0cgNPaVARtPjF5dX/h0bxWmxCmKMnEziU51fT?=
+	=?us-ascii?Q?IJnhKxht6/eTb/Ay1dPU4i18+aRKc0EX+ONpmpOfr2bn2iN575WvjE6ctP8j?=
+	=?us-ascii?Q?3w9E0iPMEc+Nbl2NvvFUVHdVzGC0TAQOnz6Ly0EhsJq+7J0FS+SO4hIcjNGf?=
+	=?us-ascii?Q?gwt5FVv8Jz3xnmBLUyoqkKyDyBcAbkcPbwtDevZ3zdR6EG+prZjRwTHMgvUo?=
+	=?us-ascii?Q?0zawS2AQ8EKyybh80zaN8gtBR6nk70m/D6uwujKHZ1oIzKAjfEHFCQ/Ll2Xm?=
+	=?us-ascii?Q?5qvIyVnd5mm2IXCh4rpa/q0jltIuBkeBIEsaa7vuB3lAal0FiU33lsW6Btt5?=
+	=?us-ascii?Q?snFxhIcG1NvA7yjv1nZTnSwvu/p8dtrnqeXUXKVIJiHCiuma4?=
+X-Microsoft-Antispam-Message-Info: z1AU6TocicfddR9eU+pyvwUrV03eWoJSr2Iv4r8IiBtkpUJY9rpw5C8PdkAPT+ttFRKmfhcaDAIIPjgUKeF7y/9T65PAcXYedNpFjDxIB34FTcpTYcVjTF4a9Tyavs6PaklbSUns98eW7fnndUpzuCht6NH8J7Rp7reuS6JMlOnLz/6dEKkpYPQOPa/G6CpRRjvpR4PbPTtFBLmsOJdSkzh9JME+acSI9fXkNPsiHdUgF98bAN7pBDFw8jT0wOcReOj/+ktzdsRMzAsWJg22edyKQ3OOlIY1nIJtvOmmabgdQDDXu/cNZnZGlRxuDwhnJEElyL5Oj3tgqFICHWwdAH4qa45+mP5Qhcn6BdMH+E0=
+X-Microsoft-Exchange-Diagnostics: 1; AM4PR1001MB1332;
+	6:bo12ulmpyv0IoFSbzWqPIOYtzINGG0P3lF01zq/YMVkJIdkL65Pa/+RVQD5kGIOesfc7aXt8gm6b24AIMPnV5XPgTQxFI3epkeQAzGJ7/Q94xGhL5nt7aKcO7a5ifUI98vrdNExf3RqPJpubxe0T+ZK7flPR0+KrKOEf7wjQeS1P8vxw/DnBrxqp3MkCa+8HA6VkCE7gIcWlZF6nXBVD2V1xahfsHpHKkoT7jOkFwpGnWQ3Yjvy6BLeUZxdo5NH1XHWG5iowd9kja7DJanm8hKOBUNCqFx4qmPjsN3wIWRkFD/YnRf+gMVh59wbtYMAWvoVoNJSaQUOSr9hn3Dq6Zg2a8dk6/5kI/KEtWmlMZO7tlPf4iMpVIc11mc8CHySQ2MdcTnAdhg53cXucMPu1xDVLaMzW54wjE8a6TaOtjDBK892t+af9xs+aeOTQNag9hAJEI02+mmZGDq1AiRHlxA==;
+	5:Y1+W59cuKN9QL3hAEis6Lbb/65opvyz+yTQJjmYskxabI+rgCWvAa8252g2oiICVoiv4CE0LLTSIo+ckbykv0T+L5uPzqUjatl9BUKbPuGqfPxZtLs9E3268yKO1lAUTUyTgVjxK7BWIhBWgBzvIU7D94V0VQHgp5bGg6XLVark=;
+	24:3grEHGotHe08HqNPV3jE31vYNcaqdFyg1U+J8t1my6MeDq3xLfK4KVEi1I1teEbqIiErrKDjVsPOdXY91GA3sRz7iWS8sDA8r9OJP0ppsSo=
 SpamDiagnosticOutput: 1:99
 SpamDiagnosticMetadata: NSPM
-X-Microsoft-Exchange-Diagnostics: 1; VI1PR1001MB1342;
-	7:m52hexsb8KBDf/ZD4jR421nhui/tYyA0zpvHtW+StoqdcYyJsaiG7P1GjkfxzzFvv1y9r/wGg2UbuXVIC7gedSwNy0rmW6QjIo/5whvwuKFJrYOvcJSNPT/8gnpqxmwg78Z4QISVcFTME8YSLSiAMArtEMSJRDLHiqlxaUrJjyTn2Bb+874bxs+goYt6/n4TFdWHm/dWLyk3+EWvuJh1AD2BJgTYOMsLBB5gZRzMBWpCfNU49pj8TqrC4VtsR+Eq
+X-Microsoft-Exchange-Diagnostics: 1; AM4PR1001MB1332;
+	7:nTG+tsM+78lkTbnSN+CFm40XMxZRgR750XBPK/epTlRJ+2ACVKi8SyKs9r48vVi5cEPdVPt56LgSCh/Whoo91wYlGNzYeVt6OS3+I6MtDWYp9zfqgZ5XDzBGepATYaSJjcsNp6aSEFUuAJbWGMda4y18DAjiWvtE6JhJJ1SrhGc2g92R7Sr7PAQiEhu7yeDZAxyeKKG5tTjnZEaHkZddqTD7znHP5gyjdfB6G7xbrbCGJzPjI+QD4f2UVOwENggW
 X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2018 12:03:46.1121 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd3c6393-1ec1-4e35-8e2c-08d5e65d3098
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2018 14:06:24.2841 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: be8d6373-2f05-427a-3844-08d5e66e5250
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR1001MB1342
-Subject: [PATCH] bb/utils.py: add break_hardlinks helper
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR1001MB1332
+Subject: [PATCH 2/2] bb/utils.py: implement (md5, sha1, sha256)_file in terms of hash_file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -106,62 +108,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Jul 2018 17:37:53 -0000
+X-List-Received-Date: Tue, 10 Jul 2018 21:37:27 -0000
 Content-Type: text/plain
 
-bb.utils.copyfile is called in a few places with identical src and dst
-in order to create an st_nlinks==1 version of the file. That that even
-works relies on an implementation detail of copyfile (namely, that it
-creates a temporary file and then does a rename). Moreover, it's a waste
-of time if the file already has st_nlinks==1.
-
-So create a helper that optimizes away the copy in the st_nlinks==1
-case. Of course, this helper relies on the same implementation detail,
-but that's now contained within bb.utils itself.
-
-To test that we do at least sometimes hit the no-copy path, I tested
-locally with
-
-     if sstat[stat.ST_NLINK] == 1:
-+        bb.note("Woohoo, 2*%d bytes I/O avoided" % sstat[stat.ST_SIZE])
-         return True
-
-(and the obvious places in oe-core patched), and the do_package log files
-are indeed filled with woohoo notes.
+Testing on the largest tarball in my downloads dir (linux-4.15.7.tar.xz)
+shows that this is ~twice as fast for md5 and ~35% faster for sha256.
 
 Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 ---
- lib/bb/utils.py | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ lib/bb/utils.py | 21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
 diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 378e699e..9115b854 100644
+index cb7a6fa2..ef7fc932 100644
 --- a/lib/bb/utils.py
 +++ b/lib/bb/utils.py
-@@ -901,6 +901,23 @@ def copyfile(src, dest, newmtime = None, sstat = None):
-         newmtime = sstat[stat.ST_MTIME]
-     return newmtime
- 
-+def break_hardlinks(src, sstat = None):
-+    """
-+    Ensures src is the only hardlink to this file.  Other hardlinks,
-+    if any, are not affected (other than in their st_nlink value, of
-+    course).  Returns true on success and false on failure.
-+
-+    """
-+    try:
-+        if not sstat:
-+            sstat = os.lstat(src)
-+    except Exception as e:
-+        logger.warning("break_hardlinks: stat of %s failed (%s)" % (src, e))
-+        return False
-+    if sstat[stat.ST_NLINK] == 1:
-+        return True
-+    return copyfile(src, src, sstat=sstat)
-+
- def which(path, item, direction = 0, history = False, executable=False):
+@@ -547,12 +547,7 @@ def md5_file(filename):
+     Return the hex string representation of the MD5 checksum of filename.
      """
-     Locate `item` in the list of paths `path` (colon separated string like $PATH).
+     import hashlib
+-    m = hashlib.md5()
+-
+-    with open(filename, "rb") as f:
+-        for line in f:
+-            m.update(line)
+-    return m.hexdigest()
++    return hash_file(hashlib.md5(), filename).hexdigest()
+ 
+ def sha256_file(filename):
+     """
+@@ -560,24 +555,14 @@ def sha256_file(filename):
+     filename.
+     """
+     import hashlib
+-
+-    s = hashlib.sha256()
+-    with open(filename, "rb") as f:
+-        for line in f:
+-            s.update(line)
+-    return s.hexdigest()
++    return hash_file(hashlib.sha256(), filename).hexdigest()
+ 
+ def sha1_file(filename):
+     """
+     Return the hex string representation of the SHA1 checksum of the filename
+     """
+     import hashlib
+-
+-    s = hashlib.sha1()
+-    with open(filename, "rb") as f:
+-        for line in f:
+-            s.update(line)
+-    return s.hexdigest()
++    return hash_file(hashlib.sha1(), filename).hexdigest()
+ 
+ def preserved_envvars_exported():
+     """Variables which are taken from the environment and placed in and exported
 -- 
 2.16.4
 
