@@ -1,26 +1,51 @@
 Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 8FE0675051
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 2A4AE7871B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jul 2018 20:34:28 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w6CKYJif016519
+	Thu, 12 Jul 2018 21:07:06 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w6CL778G005837
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jul 2018 13:34:19 -0700
-Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.399.0;
-	Thu, 12 Jul 2018 13:34:19 -0700
+	Thu, 12 Jul 2018 14:07:08 -0700 (PDT)
+Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.399.0;
+	Thu, 12 Jul 2018 14:07:07 -0700
 From: Mark Hatle <mark.hatle@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 12 Jul 2018 16:34:13 -0400
-Message-ID: <20180712203413.118578-6-mark.hatle@windriver.com>
-X-Mailer: git-send-email 2.16.0.rc2
-In-Reply-To: <20180712203413.118578-1-mark.hatle@windriver.com>
 References: <20180712203413.118578-1-mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	xsBNBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAHNJU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT7CwHcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrs7ATQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABwsBfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <cdb1b25d-9448-a43c-d345-7af3a5674a58@windriver.com>
+Date: Thu, 12 Jul 2018 16:07:06 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:52.0)
+	Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Subject: [PATCH 5/5] toaster/orm/management/commands/lsupdates.py: Use new layerindexlib module
+In-Reply-To: <20180712203413.118578-1-mark.hatle@windriver.com>
+Subject: Re: [PATCH 0/5] Add a standard module for accessing the layerindex
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,368 +58,123 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Jul 2018 20:34:28 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 12 Jul 2018 21:07:07 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Change lsupdates.py to use the new layerindexlib module to load the data from
-the public layer index.  It still does all of the manual parsing.  This
-is intended to be a stop gap until the toaster can use the module itself to
-manage the data.
+On 7/12/18 3:34 PM, Mark Hatle wrote:
+> In order to simply existing components, and add support to create some
+> new functionaly -- we need a common apporach for access the layerindex.
+> 
+> The class supports loading multilib layerindexes, but right now that
+> functionality is not being used by either bitbake-layers or the toaster.
+> 
+> There are a few 'TODO' items that remain in the code.  These are related
+> to either un-implemented, but planned functionality or to display stuff
+> in bitbake-layers.  I'm hoping that part of this review can discuss the
+> TODO items.
 
-Everything else is functionally equivalent to the prior version.
+FYI 2/5 is a bit large, and is held up in list moderation.  I've posted all of
+the patches to:
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
----
- lib/toaster/orm/management/commands/lsupdates.py | 215 +++++++++--------------
- 1 file changed, 86 insertions(+), 129 deletions(-)
+http://git.openembedded.org/bitbake-contrib/log/?h=mgh/bitbake-layerindex
 
-diff --git a/lib/toaster/orm/management/commands/lsupdates.py b/lib/toaster/orm/management/commands/lsupdates.py
-index efc6b3a..50b6505 100644
---- a/lib/toaster/orm/management/commands/lsupdates.py
-+++ b/lib/toaster/orm/management/commands/lsupdates.py
-@@ -29,7 +29,6 @@ from orm.models import ToasterSetting
- import os
- import sys
- 
--import json
- import logging
- import threading
- import time
-@@ -37,6 +36,10 @@ logger = logging.getLogger("toaster")
- 
- DEFAULT_LAYERINDEX_SERVER = "http://layers.openembedded.org/layerindex/api/"
- 
-+# load Bitbake components
-+path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-+sys.path.insert(0, path)
-+
- 
- class Spinner(threading.Thread):
-     """ A simple progress spinner to indicate download/parsing is happening"""
-@@ -86,45 +89,6 @@ class Command(BaseCommand):
-             self.apiurl = ToasterSetting.objects.get(name = 'CUSTOM_LAYERINDEX_SERVER').value
- 
-         assert self.apiurl is not None
--        try:
--            from urllib.request import urlopen, URLError
--            from urllib.parse import urlparse
--        except ImportError:
--            from urllib2 import urlopen, URLError
--            from urlparse import urlparse
--
--        proxy_settings = os.environ.get("http_proxy", None)
--
--        def _get_json_response(apiurl=None):
--            if None == apiurl:
--                apiurl=self.apiurl
--            http_progress = Spinner()
--            http_progress.start()
--
--            _parsedurl = urlparse(apiurl)
--            path = _parsedurl.path
--
--            # logger.debug("Fetching %s", apiurl)
--            try:
--                res = urlopen(apiurl)
--            except URLError as e:
--                raise Exception("Failed to read %s: %s" % (path, e.reason))
--
--            parsed = json.loads(res.read().decode('utf-8'))
--
--            http_progress.stop()
--            return parsed
--
--        # verify we can get the basic api
--        try:
--            apilinks = _get_json_response()
--        except Exception as e:
--            import traceback
--            if proxy_settings is not None:
--                logger.info("EE: Using proxy %s" % proxy_settings)
--            logger.warning("EE: could not connect to %s, skipping update:"
--                           "%s\n%s" % (self.apiurl, e, traceback.format_exc()))
--            return
- 
-         # update branches; only those that we already have names listed in the
-         # Releases table
-@@ -133,112 +97,117 @@ class Command(BaseCommand):
-         if len(whitelist_branch_names) == 0:
-             raise Exception("Failed to make list of branches to fetch")
- 
-+        self.apiurl += ";branch=%s" % ','.join(whitelist_branch_names)
-+
-+        http_progress = Spinner()
-+
-         logger.info("Fetching metadata releases for %s",
-                     " ".join(whitelist_branch_names))
- 
--        branches_info = _get_json_response(apilinks['branches'] +
--                                           "?filter=name:%s"
--                                           % "OR".join(whitelist_branch_names))
-+
-+        import layerindexlib
-+
-+        layerindex = layerindexlib.LayerIndex(None)
-+
-+        http_progress.start()
-+        layerindex.load_layerindex(self.apiurl)
-+        http_progress.stop()
-+
-+        # We know we're only processing one entry, so we reference it here
-+        # (this is cheating...)
-+        lindex = layerindex.lindex[0]
- 
-         # Map the layer index branches to toaster releases
-         li_branch_id_to_toaster_release = {}
- 
--        total = len(branches_info)
--        for i, branch in enumerate(branches_info):
--            li_branch_id_to_toaster_release[branch['id']] = \
--                    Release.objects.get(name=branch['name'])
-+        logger.info("Processing branches")
-+
-+        total = len(lindex['branches'])
-+        for i, branchId in enumerate(lindex['branches']):
-+            li_branch_id_to_toaster_release[branchId] = \
-+                    Release.objects.get(name=lindex['branches'][branchId].get_name())
-             self.mini_progress("Releases", i, total)
- 
-         # keep a track of the layerindex (li) id mappings so that
-         # layer_versions can be created for these layers later on
-         li_layer_id_to_toaster_layer_id = {}
- 
--        logger.info("Fetching layers")
--
--        layers_info = _get_json_response(apilinks['layerItems'])
-+        logger.info("Processing layers")
- 
--        total = len(layers_info)
--        for i, li in enumerate(layers_info):
-+        total = len(lindex['layerItems'])
-+        for i, liId in enumerate(lindex['layerItems']):
-             try:
--                l, created = Layer.objects.get_or_create(name=li['name'])
--                l.up_date = li['updated']
--                l.summary = li['summary']
--                l.description = li['description']
-+                l, created = Layer.objects.get_or_create(name=lindex['layerItems'][liId].get_name())
-+                l.up_date = lindex['layerItems'][liId].get_updated()
-+                l.summary = lindex['layerItems'][liId].get_summary()
-+                l.description = lindex['layerItems'][liId].get_description()
- 
-                 if created:
-                     # predefined layers in the fixtures (for example poky.xml)
-                     # always preempt the Layer Index for these values
--                    l.vcs_url = li['vcs_url']
--                    l.vcs_web_url = li['vcs_web_url']
--                    l.vcs_web_tree_base_url = li['vcs_web_tree_base_url']
--                    l.vcs_web_file_base_url = li['vcs_web_file_base_url']
-+                    l.vcs_url = lindex['layerItems'][liId].get_vcs_url()
-+                    l.vcs_web_url = lindex['layerItems'][liId].get_vcs_web_url()
-+                    l.vcs_web_tree_base_url = lindex['layerItems'][liId].get_vcs_web_tree_base_url()
-+                    l.vcs_web_file_base_url = lindex['layerItems'][liId].get_vcs_web_file_base_url()
-                 l.save()
-             except Layer.MultipleObjectsReturned:
-                 logger.info("Skipped %s as we found multiple layers and "
-                             "don't know which to update" %
-                             li['name'])
- 
--            li_layer_id_to_toaster_layer_id[li['id']] = l.pk
-+            li_layer_id_to_toaster_layer_id[liId] = l.pk
- 
-             self.mini_progress("layers", i, total)
- 
-         # update layer_versions
--        logger.info("Fetching layer versions")
--        layerbranches_info = _get_json_response(
--            apilinks['layerBranches'] + "?filter=branch__name:%s" %
--            "OR".join(whitelist_branch_names))
-+        logger.info("Processing layer branches")
- 
-         # Map Layer index layer_branch object id to
-         # layer_version toaster object id
-         li_layer_branch_id_to_toaster_lv_id = {}
- 
--        total = len(layerbranches_info)
--        for i, lbi in enumerate(layerbranches_info):
-+        total = len(lindex['layerBranches'])
-+        for i, lbiId in enumerate(lindex['layerBranches']):
-             # release as defined by toaster map to layerindex branch
--            release = li_branch_id_to_toaster_release[lbi['branch']]
-+            release = li_branch_id_to_toaster_release[lindex['layerBranches'][lbiId].get_branch_id()]
- 
-             try:
-                 lv, created = Layer_Version.objects.get_or_create(
-                     layer=Layer.objects.get(
--                        pk=li_layer_id_to_toaster_layer_id[lbi['layer']]),
-+                        pk=li_layer_id_to_toaster_layer_id[lindex['layerBranches'][lbiId].get_layer_id()]),
-                     release=release
-                 )
-             except KeyError:
-                 logger.warning(
-                     "No such layerindex layer referenced by layerbranch %d" %
--                    lbi['layer'])
-+                    lindex['layerBranches'][lbiId].get_layer_id())
-                 continue
- 
-             if created:
--                lv.release = li_branch_id_to_toaster_release[lbi['branch']]
--                lv.up_date = lbi['updated']
--                lv.commit = lbi['actual_branch']
--                lv.dirpath = lbi['vcs_subdir']
-+                lv.release = li_branch_id_to_toaster_release[lindex['layerBranches'][lbiId].get_branch_id()]
-+                lv.up_date = lindex['layerBranches'][lbiId].get_updated()
-+                lv.commit = lindex['layerBranches'][lbiId].get_actual_branch()
-+                lv.dirpath = lindex['layerBranches'][lbiId].get_vcs_subdir()
-                 lv.save()
- 
--            li_layer_branch_id_to_toaster_lv_id[lbi['id']] =\
-+            li_layer_branch_id_to_toaster_lv_id[lindex['layerBranches'][lbiId].get_id()] =\
-                 lv.pk
-             self.mini_progress("layer versions", i, total)
- 
--        logger.info("Fetching layer version dependencies")
--        # update layer dependencies
--        layerdependencies_info = _get_json_response(
--            apilinks['layerDependencies'] +
--            "?filter=layerbranch__branch__name:%s" %
--            "OR".join(whitelist_branch_names))
-+        logger.info("Processing layer dependencies")
- 
-         dependlist = {}
--        for ldi in layerdependencies_info:
-+        for ldiId in lindex['layerDependencies']:
-             try:
-                 lv = Layer_Version.objects.get(
--                    pk=li_layer_branch_id_to_toaster_lv_id[ldi['layerbranch']])
-+                    pk=li_layer_branch_id_to_toaster_lv_id[lindex['layerDependencies'][ldiId].get_layerbranch_id()])
-             except Layer_Version.DoesNotExist as e:
-                 continue
- 
-             if lv not in dependlist:
-                 dependlist[lv] = []
-             try:
--                layer_id = li_layer_id_to_toaster_layer_id[ldi['dependency']]
-+                layer_id = li_layer_id_to_toaster_layer_id[lindex['layerDependencies'][ldiId].get_dependency_id()]
- 
-                 dependlist[lv].append(
-                     Layer_Version.objects.get(layer__pk=layer_id,
-@@ -247,7 +216,7 @@ class Command(BaseCommand):
-             except Layer_Version.DoesNotExist:
-                 logger.warning("Cannot find layer version (ls:%s),"
-                                "up_id:%s lv:%s" %
--                               (self, ldi['dependency'], lv))
-+                               (self, lindex['layerDependencies'][ldiId].get_dependency_id(), lv))
- 
-         total = len(dependlist)
-         for i, lv in enumerate(dependlist):
-@@ -258,73 +227,61 @@ class Command(BaseCommand):
-             self.mini_progress("Layer version dependencies", i, total)
- 
-         # update Distros
--        logger.info("Fetching distro information")
--        distros_info = _get_json_response(
--            apilinks['distros'] + "?filter=layerbranch__branch__name:%s" %
--            "OR".join(whitelist_branch_names))
-+        logger.info("Processing distro information")
- 
--        total = len(distros_info)
--        for i, di in enumerate(distros_info):
-+        total = len(lindex['distros'])
-+        for i, diId in enumerate(lindex['distros']):
-             distro, created = Distro.objects.get_or_create(
--                name=di['name'],
-+                name=lindex['distros'][diId].get_name(),
-                 layer_version=Layer_Version.objects.get(
--                    pk=li_layer_branch_id_to_toaster_lv_id[di['layerbranch']]))
--            distro.up_date = di['updated']
--            distro.name = di['name']
--            distro.description = di['description']
-+                    pk=li_layer_branch_id_to_toaster_lv_id[lindex['distros'][diId].get_layerbranch_id()]))
-+            distro.up_date = lindex['distros'][diId].get_updated()
-+            distro.name = lindex['distros'][diId].get_name()
-+            distro.description = lindex['distros'][diId].get_description()
-             distro.save()
-             self.mini_progress("distros", i, total)
- 
-         # update machines
--        logger.info("Fetching machine information")
--        machines_info = _get_json_response(
--            apilinks['machines'] + "?filter=layerbranch__branch__name:%s" %
--            "OR".join(whitelist_branch_names))
-+        logger.info("Processing machine information")
- 
--        total = len(machines_info)
--        for i, mi in enumerate(machines_info):
-+        total = len(lindex['machines'])
-+        for i, miId in enumerate(lindex['machines']):
-             mo, created = Machine.objects.get_or_create(
--                name=mi['name'],
-+                name=lindex['machines'][miId].get_name(),
-                 layer_version=Layer_Version.objects.get(
--                    pk=li_layer_branch_id_to_toaster_lv_id[mi['layerbranch']]))
--            mo.up_date = mi['updated']
--            mo.name = mi['name']
--            mo.description = mi['description']
-+                    pk=li_layer_branch_id_to_toaster_lv_id[lindex['machines'][miId].get_layerbranch_id()]))
-+            mo.up_date = lindex['machines'][miId].get_updated()
-+            mo.name = lindex['machines'][miId].get_name()
-+            mo.description = lindex['machines'][miId].get_description()
-             mo.save()
-             self.mini_progress("machines", i, total)
- 
-         # update recipes; paginate by layer version / layer branch
--        logger.info("Fetching recipe information")
--        recipes_info = _get_json_response(
--            apilinks['recipes'] + "?filter=layerbranch__branch__name:%s" %
--            "OR".join(whitelist_branch_names))
-+        logger.info("Processing recipe information")
- 
--        total = len(recipes_info)
--        for i, ri in enumerate(recipes_info):
-+        total = len(lindex['recipes'])
-+        for i, riId in enumerate(lindex['recipes']):
-             try:
--                lv_id = li_layer_branch_id_to_toaster_lv_id[ri['layerbranch']]
-+                lv_id = li_layer_branch_id_to_toaster_lv_id[lindex['recipes'][riId].get_layerbranch_id()]
-                 lv = Layer_Version.objects.get(pk=lv_id)
- 
-                 ro, created = Recipe.objects.get_or_create(
-                     layer_version=lv,
--                    name=ri['pn']
-+                    name=lindex['recipes'][riId].get_pn()
-                 )
- 
-                 ro.layer_version = lv
--                ro.up_date = ri['updated']
--                ro.name = ri['pn']
--                ro.version = ri['pv']
--                ro.summary = ri['summary']
--                ro.description = ri['description']
--                ro.section = ri['section']
--                ro.license = ri['license']
--                ro.homepage = ri['homepage']
--                ro.bugtracker = ri['bugtracker']
--                ro.file_path = ri['filepath'] + "/" + ri['filename']
--                if 'inherits' in ri:
--                    ro.is_image = 'image' in ri['inherits'].split()
--                else:  # workaround for old style layer index
--                    ro.is_image = "-image-" in ri['pn']
-+                ro.up_date = lindex['recipes'][riId].get_updated()
-+                ro.name = lindex['recipes'][riId].get_pn()
-+                ro.version = lindex['recipes'][riId].get_pv()
-+                ro.summary = lindex['recipes'][riId].get_summary()
-+                ro.description = lindex['recipes'][riId].get_description()
-+                ro.section = lindex['recipes'][riId].get_section()
-+                ro.license = lindex['recipes'][riId].get_license()
-+                ro.homepage = lindex['recipes'][riId].get_homepage()
-+                ro.bugtracker = lindex['recipes'][riId].get_bugtracker()
-+                ro.file_path = lindex['recipes'][riId].get_filepath() + "/" + lindex['recipes'][riId].get_filename()
-+                ro.is_image = 'image' in lindex['recipes'][riId].get_inherits().split()
-                 ro.save()
-             except Exception as e:
-                 logger.warning("Failed saving recipe %s", e)
--- 
-1.8.3.1
+
+The bitbake-layers layerindex-fetch display has changed.  For the example of:
+
+$ bitbake-layers layerindex-fetch meta-python
+
+Originally it would have produced:
+
+Layer                Required by          Git repository
+                 Subdirectory
+===================================================================================================================
+meta-python          -
+git://git.openembedded.org/meta-openembedded            meta-python
+meta-oe              meta-python
+git://git.openembedded.org/meta-openembedded            meta-oe
+openembedded-core    meta-python
+git://git.openembedded.org/openembedded-core            meta
+Adding layer "meta-python" (.../oe-core/meta-openembedded/meta-python) to
+conf/bblayers.conf
+Adding layer "meta-oe" (.../oe-core/meta-openembedded/meta-oe) to conf/bblayers.conf
+
+With the new code, the output now looks like:
+
+Layer                                              Git repository (branch)
+                          Subdirectory
+=============================================================================================================================
+local:sumo:openembedded-core
+git://github.com/openembedded/openembedded-core (master) meta
+  required by: meta-python meta-oe
+layers.openembedded.org:sumo:meta-oe
+git://git.openembedded.org/meta-openembedded (sumo)     meta-oe
+  required by: meta-python
+layers.openembedded.org:sumo:meta-python
+git://git.openembedded.org/meta-openembedded (sumo)     meta-python
+Adding layer "meta-oe"
+(/home/mhatle/git/oss/openembedded-core/meta-openembedded/meta-oe) to
+conf/bblayers.conf
+Adding layer "meta-python"
+(/home/mhatle/git/oss/openembedded-core/meta-openembedded/meta-python) to
+conf/bblayers.conf
+
+You will see that the order changed... the requested layer(s) will not be last
+instead of first.  And the requirements have been moved to the following line.
+This was made to accommodate the 'layer' information changing.  The format there
+is the '<index>:<index branch>:<layer>'
+
+But as you can see the behavior is functionally equivalent, even though the
+order has changed.
+
+--Mark
+
+> 
+> Mark Hatle (5):
+>   bblayers/layerindex.py: Fix addition of layers
+>   layerindexlib: Initial layer index processing module implementation
+>   bblayers/layerindex.py: Switch to use the new layerindexlib class
+>   bitbake-layers: disable parsing for layerindex commands
+>   toaster/orm/management/commands/lsupdates.py: Use new layerindexlib
+>     module
+> 
+>  bin/bitbake-selftest                               |   6 +-
+>  lib/bblayers/layerindex.py                         | 302 +++----
+>  lib/layerindexlib/README                           |  28 +
+>  lib/layerindexlib/__init__.py                      | 974 +++++++++++++++++++++
+>  lib/layerindexlib/common.py                        | 161 ++++
+>  lib/layerindexlib/cooker.py                        | 338 +++++++
+>  lib/layerindexlib/restapi.py                       | 375 ++++++++
+>  lib/layerindexlib/tests/__init__.py                |   0
+>  lib/layerindexlib/tests/common.py                  |  37 +
+>  lib/layerindexlib/tests/cooker.py                  | 125 +++
+>  lib/layerindexlib/tests/layerindex.py              | 233 +++++
+>  lib/layerindexlib/tests/restapi.py                 | 170 ++++
+>  lib/layerindexlib/tests/testdata/README            |  11 +
+>  .../tests/testdata/build/conf/bblayers.conf        |  15 +
+>  .../tests/testdata/layer1/conf/layer.conf          |  17 +
+>  .../tests/testdata/layer2/conf/layer.conf          |  20 +
+>  .../tests/testdata/layer3/conf/layer.conf          |  19 +
+>  .../tests/testdata/layer4/conf/layer.conf          |  22 +
+>  lib/toaster/orm/management/commands/lsupdates.py   | 215 ++---
+>  19 files changed, 2751 insertions(+), 317 deletions(-)
+>  create mode 100644 lib/layerindexlib/README
+>  create mode 100644 lib/layerindexlib/__init__.py
+>  create mode 100644 lib/layerindexlib/common.py
+>  create mode 100644 lib/layerindexlib/cooker.py
+>  create mode 100644 lib/layerindexlib/restapi.py
+>  create mode 100644 lib/layerindexlib/tests/__init__.py
+>  create mode 100644 lib/layerindexlib/tests/common.py
+>  create mode 100644 lib/layerindexlib/tests/cooker.py
+>  create mode 100644 lib/layerindexlib/tests/layerindex.py
+>  create mode 100644 lib/layerindexlib/tests/restapi.py
+>  create mode 100644 lib/layerindexlib/tests/testdata/README
+>  create mode 100644 lib/layerindexlib/tests/testdata/build/conf/bblayers.conf
+>  create mode 100644 lib/layerindexlib/tests/testdata/layer1/conf/layer.conf
+>  create mode 100644 lib/layerindexlib/tests/testdata/layer2/conf/layer.conf
+>  create mode 100644 lib/layerindexlib/tests/testdata/layer3/conf/layer.conf
+>  create mode 100644 lib/layerindexlib/tests/testdata/layer4/conf/layer.conf
+> 
 
 
