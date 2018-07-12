@@ -1,51 +1,54 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 2A4AE7871B
+Return-Path: <clay@montgomery1.com>
+X-Greylist: delayed 2386 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 12 Jul 2018 23:32:55 UTC
+Received: from gproxy10-pub.mail.unifiedlayer.com
+	(gproxy10-pub.mail.unifiedlayer.com [69.89.20.226])
+	by mail.openembedded.org (Postfix) with ESMTP id B292074534
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jul 2018 21:07:06 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w6CL778G005837
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Thu, 12 Jul 2018 23:32:55 +0000 (UTC)
+Received: from cmgw13.unifiedlayer.com (unknown [10.9.0.13])
+	by gproxy10.mail.unifiedlayer.com (Postfix) with ESMTP id EEE43140E05
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jul 2018 14:07:08 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.399.0;
-	Thu, 12 Jul 2018 14:07:07 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-References: <20180712203413.118578-1-mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	xsBNBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAHNJU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT7CwHcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrs7ATQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABwsBfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <cdb1b25d-9448-a43c-d345-7af3a5674a58@windriver.com>
-Date: Thu, 12 Jul 2018 16:07:06 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:52.0)
-	Gecko/20100101 Thunderbird/52.9.1
+	Thu, 12 Jul 2018 16:26:05 -0600 (MDT)
+Received: from box858.bluehost.com ([69.195.124.58]) by cmsmtp with ESMTP
+	id dk2Hf7iWiYe1jdk2HfNF89; Thu, 12 Jul 2018 16:26:05 -0600
+X-Authority-Reason: nr=8
+Received: from cpe-97-99-239-0.tx.res.rr.com ([97.99.239.0]:51713
+	helo=[192.168.0.21]) by box858.bluehost.com with esmtpsa
+	(TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim 4.91)
+	(envelope-from <clay@montgomery1.com>)
+	id 1fdk2H-0001xM-Ie; Thu, 12 Jul 2018 16:26:05 -0600
+To: Khem Raj <raj.khem@gmail.com>, bitbake-devel@lists.openembedded.org
+References: <5B477CE2.2040602@montgomery1.com>
+	<5cd8d33e-435c-a6ad-9b0a-bd64a23c0fd7@gmail.com>
+From: "Clay D. Montgomery" <clay@montgomery1.com>
+Organization: Montgomery One
+Message-ID: <5B47D583.9020001@montgomery1.com>
+Date: Thu, 12 Jul 2018 17:26:11 -0500
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+	Thunderbird/38.0.1
 MIME-Version: 1.0
-In-Reply-To: <20180712203413.118578-1-mark.hatle@windriver.com>
-Subject: Re: [PATCH 0/5] Add a standard module for accessing the layerindex
+In-Reply-To: <5cd8d33e-435c-a6ad-9b0a-bd64a23c0fd7@gmail.com>
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box858.bluehost.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - montgomery1.com
+X-BWhitelist: no
+X-Source-IP: 97.99.239.0
+X-Source-L: No
+X-Exim-ID: 1fdk2H-0001xM-Ie
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cpe-97-99-239-0.tx.res.rr.com ([192.168.0.21])
+	[97.99.239.0]:51713
+X-Source-Auth: clay@montgomery1.com
+X-Email-Count: 2
+X-Source-Cap: bW9udGdvcjA7bW9udGdvcjA7Ym94ODU4LmJsdWVob3N0LmNvbQ==
+X-Local-Domain: yes
+Subject: Re: Can't start menuconfig with Bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,123 +61,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Jul 2018 21:07:07 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+X-List-Received-Date: Thu, 12 Jul 2018 23:32:55 -0000
+X-Groupsio-MsgNum: 9393
+Content-Type: multipart/mixed; boundary="------------080303060408060706050306"
+
+--------------080303060408060706050306
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 7/12/18 3:34 PM, Mark Hatle wrote:
-> In order to simply existing components, and add support to create some
-> new functionaly -- we need a common apporach for access the layerindex.
-> 
-> The class supports loading multilib layerindexes, but right now that
-> functionality is not being used by either bitbake-layers or the toaster.
-> 
-> There are a few 'TODO' items that remain in the code.  These are related
-> to either un-implemented, but planned functionality or to display stuff
-> in bitbake-layers.  I'm hoping that part of this review can discuss the
-> TODO items.
+Raj,
 
-FYI 2/5 is a bit large, and is held up in list moderation.  I've posted all of
-the patches to:
+    Installing ncurses-dev did resolve the problem. Thank you!
 
-http://git.openembedded.org/bitbake-contrib/log/?h=mgh/bitbake-layerindex
+Regards, Clay
 
 
-The bitbake-layers layerindex-fetch display has changed.  For the example of:
-
-$ bitbake-layers layerindex-fetch meta-python
-
-Originally it would have produced:
-
-Layer                Required by          Git repository
-                 Subdirectory
-===================================================================================================================
-meta-python          -
-git://git.openembedded.org/meta-openembedded            meta-python
-meta-oe              meta-python
-git://git.openembedded.org/meta-openembedded            meta-oe
-openembedded-core    meta-python
-git://git.openembedded.org/openembedded-core            meta
-Adding layer "meta-python" (.../oe-core/meta-openembedded/meta-python) to
-conf/bblayers.conf
-Adding layer "meta-oe" (.../oe-core/meta-openembedded/meta-oe) to conf/bblayers.conf
-
-With the new code, the output now looks like:
-
-Layer                                              Git repository (branch)
-                          Subdirectory
-=============================================================================================================================
-local:sumo:openembedded-core
-git://github.com/openembedded/openembedded-core (master) meta
-  required by: meta-python meta-oe
-layers.openembedded.org:sumo:meta-oe
-git://git.openembedded.org/meta-openembedded (sumo)     meta-oe
-  required by: meta-python
-layers.openembedded.org:sumo:meta-python
-git://git.openembedded.org/meta-openembedded (sumo)     meta-python
-Adding layer "meta-oe"
-(/home/mhatle/git/oss/openembedded-core/meta-openembedded/meta-oe) to
-conf/bblayers.conf
-Adding layer "meta-python"
-(/home/mhatle/git/oss/openembedded-core/meta-openembedded/meta-python) to
-conf/bblayers.conf
-
-You will see that the order changed... the requested layer(s) will not be last
-instead of first.  And the requirements have been moved to the following line.
-This was made to accommodate the 'layer' information changing.  The format there
-is the '<index>:<index branch>:<layer>'
-
-But as you can see the behavior is functionally equivalent, even though the
-order has changed.
-
---Mark
-
-> 
-> Mark Hatle (5):
->   bblayers/layerindex.py: Fix addition of layers
->   layerindexlib: Initial layer index processing module implementation
->   bblayers/layerindex.py: Switch to use the new layerindexlib class
->   bitbake-layers: disable parsing for layerindex commands
->   toaster/orm/management/commands/lsupdates.py: Use new layerindexlib
->     module
-> 
->  bin/bitbake-selftest                               |   6 +-
->  lib/bblayers/layerindex.py                         | 302 +++----
->  lib/layerindexlib/README                           |  28 +
->  lib/layerindexlib/__init__.py                      | 974 +++++++++++++++++++++
->  lib/layerindexlib/common.py                        | 161 ++++
->  lib/layerindexlib/cooker.py                        | 338 +++++++
->  lib/layerindexlib/restapi.py                       | 375 ++++++++
->  lib/layerindexlib/tests/__init__.py                |   0
->  lib/layerindexlib/tests/common.py                  |  37 +
->  lib/layerindexlib/tests/cooker.py                  | 125 +++
->  lib/layerindexlib/tests/layerindex.py              | 233 +++++
->  lib/layerindexlib/tests/restapi.py                 | 170 ++++
->  lib/layerindexlib/tests/testdata/README            |  11 +
->  .../tests/testdata/build/conf/bblayers.conf        |  15 +
->  .../tests/testdata/layer1/conf/layer.conf          |  17 +
->  .../tests/testdata/layer2/conf/layer.conf          |  20 +
->  .../tests/testdata/layer3/conf/layer.conf          |  19 +
->  .../tests/testdata/layer4/conf/layer.conf          |  22 +
->  lib/toaster/orm/management/commands/lsupdates.py   | 215 ++---
->  19 files changed, 2751 insertions(+), 317 deletions(-)
->  create mode 100644 lib/layerindexlib/README
->  create mode 100644 lib/layerindexlib/__init__.py
->  create mode 100644 lib/layerindexlib/common.py
->  create mode 100644 lib/layerindexlib/cooker.py
->  create mode 100644 lib/layerindexlib/restapi.py
->  create mode 100644 lib/layerindexlib/tests/__init__.py
->  create mode 100644 lib/layerindexlib/tests/common.py
->  create mode 100644 lib/layerindexlib/tests/cooker.py
->  create mode 100644 lib/layerindexlib/tests/layerindex.py
->  create mode 100644 lib/layerindexlib/tests/restapi.py
->  create mode 100644 lib/layerindexlib/tests/testdata/README
->  create mode 100644 lib/layerindexlib/tests/testdata/build/conf/bblayers.conf
->  create mode 100644 lib/layerindexlib/tests/testdata/layer1/conf/layer.conf
->  create mode 100644 lib/layerindexlib/tests/testdata/layer2/conf/layer.conf
->  create mode 100644 lib/layerindexlib/tests/testdata/layer3/conf/layer.conf
->  create mode 100644 lib/layerindexlib/tests/testdata/layer4/conf/layer.conf
-> 
+On 7/12/2018 12:11 PM, Khem Raj wrote:
+> On 7/12/18 10:08 AM, Clay D. Montgomery wrote:
+>> Hello,
+>>
+>>     I am having a basic problem with trying to use Bitbake to run
+>> menuconfig.
+>> Bitbake otherwise works fine for me. I have done many large builds of
+>> Yocto.
+>>
+>>   I am running on a Ubuntu 14.04 32-bit system which is up to date, but
+>> the RAM is limited to 4 GB.
+>> I have pasted a sample of the errors I get below.  I shortened this
+>> considerably.
+>>
+>> I would appreciate any advice on how to resolve this.
+>>
+>> Thanks, Clay Montgomery
+>>
+>>
+>>
+>> bitbake -c menuconfig virtual/kernel
+>>
+>>
+>>    GEN     ./Makefile
+>>    HOSTLD  scripts/kconfig/mconf
+>> scripts/kconfig/mconf.o: In function `show_help':
+>> mconf.c:(.text+0x927): undefined reference to `stdscr'
+>> scripts/kconfig/lxdialog/checklist.o: In function `print_arrows':
+>> checklist.c:(.text+0x31): undefined reference to `wmove'
+>> checklist.c:(.text+0x4e): undefined reference to `acs_map'
+>> checklist.c:(.text+0x5a): undefined reference to `waddch'
+>> util.c:(.text+0x1826): undefined reference to `keypad'
+>> util.c:(.text+0x182e): undefined reference to `wgetch'
+>> util.c:(.text+0x1838): undefined reference to `wgetch'
+>> menubox.c:(.text+0x11db): undefined reference to `acs_map'
+>> menubox.c:(.text+0x11eb): undefined reference to `waddch'
+>> menubox.c:(.text+0x1278): undefined reference to `scrollok'
+>> scripts/kconfig/lxdialog/menubox.o: In function `do_print_item':
+>> menubox.c:(.text+0x1ab): undefined reference to `wrefresh'
+>> scripts/kconfig/lxdialog/menubox.o: In function `print_buttons':
+>> menubox.c:(.text+0x356): undefined reference to `wrefresh'
+>> scripts/kconfig/lxdialog/menubox.o: In function `print_arrows.constprop.0':
+>> menubox.c:(.text+0x478): undefined reference to `wrefresh'
+>> collect2: error: ld returned 1 exit status
+>> make[3]: *** [scripts/kconfig/mconf] Error 1
+>> make[2]: *** [menuconfig] Error 2
+>> make[1]: *** [sub-make] Error 2
+>> make: *** [__sub-make] Error 2
+>> Command failed.
+>> Press any key to continue...
+>>
+>>
+> it means its missing ncurses library and development headers on your
+> build host. this task should generally depend on ncurses-native as here
+>
+> meta/classes/cml1.bbclass:do_menuconfig[depends] +=
+> "ncurses-native:do_populate_sysroot"
+>
+> I don't know why this is not working in your case. May be another
+> workaround is to just install ncurses-dev on your build host.
+>
 
 
+
+--------------080303060408060706050306
+Content-Type: text/x-vcard; charset=utf-8;
+ name="clay.vcf"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="clay.vcf"
+
+begin:vcard
+fn:Clay D. Montgomery
+n:Montgomery;Clay
+org:Montgomery One
+adr:;;;;Texas;;USA
+email;internet:clay@montgomery1.com
+title:Freelance Software Developer
+tel;cell:580-490-6676
+x-mozilla-html:TRUE
+url:http://montgomery1.com/contact/
+version:2.1
+end:vcard
+
+
+--------------080303060408060706050306--
