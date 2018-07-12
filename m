@@ -1,29 +1,52 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id D478574C39
+Return-Path: <clay@montgomery1.com>
+X-Greylist: delayed 1993 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 12 Jul 2018 16:41:10 UTC
+Received: from gproxy8-pub.mail.unifiedlayer.com
+	(gproxy8-pub.mail.unifiedlayer.com [67.222.33.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 9E14176060
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jul 2018 10:50:48 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-	by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	12 Jul 2018 03:50:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.51,342,1526367600"; d="scan'208";a="54484732"
-Received: from wgerner-mobl2.ger.corp.intel.com (HELO localhost.localdomain)
-	([10.252.50.188])
-	by fmsmga008.fm.intel.com with ESMTP; 12 Jul 2018 03:50:48 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: developer_agl@xtev.cn
-Date: Thu, 12 Jul 2018 12:50:47 +0200
-Message-ID: <1993940.Xc2Spn7Ep9@localhost.localdomain>
-Organization: Intel Corporation
-In-Reply-To: <009001d419c9$35c39cc0$a14ad640$@xtev.cn>
-References: <008601d419c8$61a20a30$24e61e90$@xtev.cn>
-	<009001d419c9$35c39cc0$a14ad640$@xtev.cn>
+	Thu, 12 Jul 2018 16:41:10 +0000 (UTC)
+Received: from cmgw13.unifiedlayer.com (unknown [10.9.0.13])
+	by gproxy8.mail.unifiedlayer.com (Postfix) with ESMTP id 6BC331AB0D4
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 12 Jul 2018 10:07:56 -0600 (MDT)
+Received: from box858.bluehost.com ([69.195.124.58]) by cmsmtp with ESMTP
+	id de8Kfz15TYe1jde8KfIQ7i; Thu, 12 Jul 2018 10:07:56 -0600
+X-Authority-Reason: nr=8
+Received: from cpe-97-99-239-0.tx.res.rr.com ([97.99.239.0]:50488
+	helo=[192.168.0.21]) by box858.bluehost.com with esmtpsa
+	(TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim 4.91)
+	(envelope-from <clay@montgomery1.com>) id 1fde8K-000OrE-36
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 12 Jul 2018 10:07:56 -0600
+To: bitbake-devel@lists.openembedded.org
+From: "Clay D. Montgomery" <clay@montgomery1.com>
+Organization: Montgomery One
+Message-ID: <5B477CE2.2040602@montgomery1.com>
+Date: Thu, 12 Jul 2018 11:08:02 -0500
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+	Thunderbird/38.0.1
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: =?UTF-8?B?UmU6IOi9rOWPkTogQWJvdXQgYml0YmFrZSB0YXNrcw==?=
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box858.bluehost.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - montgomery1.com
+X-BWhitelist: no
+X-Source-IP: 97.99.239.0
+X-Source-L: No
+X-Exim-ID: 1fde8K-000OrE-36
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cpe-97-99-239-0.tx.res.rr.com ([192.168.0.21])
+	[97.99.239.0]:50488
+X-Source-Auth: clay@montgomery1.com
+X-Email-Count: 1
+X-Source-Cap: bW9udGdvcjA7bW9udGdvcjA7Ym94ODU4LmJsdWVob3N0LmNvbQ==
+X-Local-Domain: yes
+Subject: Can't start menuconfig with Bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,46 +59,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Jul 2018 10:50:49 -0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Thu, 12 Jul 2018 16:41:10 -0000
+X-Groupsio-MsgNum: 9385
+Content-Type: multipart/mixed; boundary="------------090800080904010002070401"
 
-On Thursday, 12 July 2018 12:15:07 PM CEST developer_agl@xtev.cn wrote:
-> I=E2=80=99m new to bitbake. And I have some questions about bitbake tasks=
- mechanism
-> and inherit mechanism. If a xxx.bb recipe content like this :
->=20
-> ##start
->=20
-> DESCRIPTION =3D =E2=80=9Dxxxxxxxxx=E2=80=9D
->=20
-> XXX_XXXX =3D =E2=80=9C${XXXXXXXX}=E2=80=9D
->=20
-> inherit some_guys
->=20
-> ##end
->=20
-> And Bitbake User Manual said that =E2=80=98The minimally required class f=
-or BitBake
-> is the classes/base.bbclass file. The base class is implicitly inherited =
-by
-> every recipe.=E2=80=99 So which .bbclass should be parsed first, some_guy=
-s.bbclass
-> or base.bbclass? I=E2=80=99m really confused about that.
+--------------090800080904010002070401
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Effectively, base.bbclass will be parsed first, then the lines in the recip=
-e=20
-up to inherit some_guys, then some_guys.bbclass, and then the lines in the=
-=20
-recipe that follow (in this case just a comment).
+Hello,
 
-Cheers,
-Paul
+    I am having a basic problem with trying to use Bitbake to run 
+menuconfig.
+Bitbake otherwise works fine for me. I have done many large builds of Yocto.
 
-=2D-=20
+  I am running on a Ubuntu 14.04 32-bit system which is up to date, but 
+the RAM is limited to 4 GB.
+I have pasted a sample of the errors I get below.  I shortened this 
+considerably.
 
-Paul Eggleton
-Intel Open Source Technology Centre
+I would appreciate any advice on how to resolve this.
+
+Thanks, Clay Montgomery
 
 
 
+bitbake -c menuconfig virtual/kernel
+
+
+   GEN     ./Makefile
+   HOSTLD  scripts/kconfig/mconf
+scripts/kconfig/mconf.o: In function `show_help':
+mconf.c:(.text+0x927): undefined reference to `stdscr'
+scripts/kconfig/lxdialog/checklist.o: In function `print_arrows':
+checklist.c:(.text+0x31): undefined reference to `wmove'
+checklist.c:(.text+0x4e): undefined reference to `acs_map'
+checklist.c:(.text+0x5a): undefined reference to `waddch'
+util.c:(.text+0x1826): undefined reference to `keypad'
+util.c:(.text+0x182e): undefined reference to `wgetch'
+util.c:(.text+0x1838): undefined reference to `wgetch'
+menubox.c:(.text+0x11db): undefined reference to `acs_map'
+menubox.c:(.text+0x11eb): undefined reference to `waddch'
+menubox.c:(.text+0x1278): undefined reference to `scrollok'
+scripts/kconfig/lxdialog/menubox.o: In function `do_print_item':
+menubox.c:(.text+0x1ab): undefined reference to `wrefresh'
+scripts/kconfig/lxdialog/menubox.o: In function `print_buttons':
+menubox.c:(.text+0x356): undefined reference to `wrefresh'
+scripts/kconfig/lxdialog/menubox.o: In function `print_arrows.constprop.0':
+menubox.c:(.text+0x478): undefined reference to `wrefresh'
+collect2: error: ld returned 1 exit status
+make[3]: *** [scripts/kconfig/mconf] Error 1
+make[2]: *** [menuconfig] Error 2
+make[1]: *** [sub-make] Error 2
+make: *** [__sub-make] Error 2
+Command failed.
+Press any key to continue...
+
+
+--------------090800080904010002070401
+Content-Type: text/x-vcard; charset=utf-8;
+ name="clay.vcf"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="clay.vcf"
+
+begin:vcard
+fn:Clay D. Montgomery
+n:Montgomery;Clay
+org:Montgomery One
+adr:;;;;Texas;;USA
+email;internet:clay@montgomery1.com
+title:Freelance Software Developer
+tel;cell:580-490-6676
+x-mozilla-html:TRUE
+url:http://montgomery1.com/contact/
+version:2.1
+end:vcard
+
+
+--------------090800080904010002070401--
