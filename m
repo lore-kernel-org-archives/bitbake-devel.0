@@ -1,51 +1,51 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it0-f53.google.com (mail-it0-f53.google.com
-	[209.85.214.53])
-	by mail.openembedded.org (Postfix) with ESMTP id 0D6A9788DF;
-	Mon, 16 Jul 2018 20:38:09 +0000 (UTC)
-Received: by mail-it0-f53.google.com with SMTP id w16-v6so22836683ita.0;
-	Mon, 16 Jul 2018 13:38:11 -0700 (PDT)
+Received: from mail-io0-f181.google.com (mail-io0-f181.google.com
+	[209.85.223.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 32520788DF;
+	Mon, 16 Jul 2018 20:38:11 +0000 (UTC)
+Received: by mail-io0-f181.google.com with SMTP id g11-v6so5789574ioq.9;
+	Mon, 16 Jul 2018 13:38:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=4M9KOKZbYXmBE3o1ClfKv7tzhN/EsfzIu2qk6nxZBGk=;
-	b=V+ihcsPASoz1IL9vkDqiXqlwnxujMbi7W1SHJQXl7Lrd2jtmBk7vRFPPSR6srbnHcV
-	lsR03nF7hJZBhpKgq8lz7fWPhlcS1tWpBDS63NpF03jFPTTOPII1VINBPMswVHesvqK/
-	oZctoqZxUWLxbnBQLSGoSHoeAC/wP9qMnFe1Z659y2ilHuNKp6iBziaOHXprDUP4LfCQ
-	sIr3Gr6wiMzvaqssxFmYVu21NyfgPMoW+fblGpZlSehUUOIj2LdOxvPCVitS5Un1gRgv
-	1P4K50EkycHfQM6aPdAXE+yQ/2V4g314K4Qwwd1sDeP5uiwDoW7kt98oZd0AdDCbdSr2
-	CD9A==
+	bh=b40Zgh0phzPHA0/L5IyVZBz80Y63IBJTfomJ1dQDWtc=;
+	b=t1vzqfAYoxYrYZbjULPduviPAbjoFLkLvNgBk9p9BrDjsEf0pj4n05ePyxeRFAxcgl
+	Q6MIVemot5BmSGIz4nA2V9ZtVQdGyvSb67WHS1CBXn+rV5XAKSb4p6Yh8q0yH/FpZpEo
+	//9dSa5XHR6IMesICC+9H7xb77Io9rzKiZqjSNL2lzTSX4oNRXXxqTTxcun9ZwLP1TyM
+	iVIn9qtWeo9voSQ+LeUOkMiNgjBqAFkKQNbPNHFcC0Pw1Nm6LDN2Nk/WTZCV0ICztnwN
+	ZRDXOII94z4g0r1H/ripokDFia0Hrpr4hWUvDqLf6j6K7VjcaEv/xwAFMN+xxZm/y2R5
+	NHew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=4M9KOKZbYXmBE3o1ClfKv7tzhN/EsfzIu2qk6nxZBGk=;
-	b=A8zFPp1zUyc6YHQMbtcyU/WWz//yFFG6gQNigl/6EEsq2OYhc/emcuc4rxnHmGKvSt
-	0lXUBfuTXD/8BtLcQtdoQO/Kwxo97ZT46BmM5KKyP0KsIL1teR80qMdXSl157AoeTrnL
-	lqxBNu7RLVUiEwi8xYzaPLmpw5y4rlkZjXbhQ6t0EHIWUqeS2DdeL4h+yoNqJser36Te
-	Hj72YiI5RwLRtRZ6Mcvz9tInhboA3rHgpcA6gbqVwRZ7v6TruSvW5ivMRWhL6ZvEEf+e
-	pSTwNhYJ5XpQX5TeSnmXS8nYq/asjL3qQMVT3sq0hV5a3rdCeMZ+VttzzZerujZW7z8K
-	rpWw==
-X-Gm-Message-State: AOUpUlHF2uGtSdWv2ixZxePdyJ1uLY0jWv0XpOkFPZJ+PxOw7+OWjzfe
-	DML+yOuDZKjCxiQ+HK2M+0vOIdq1
-X-Google-Smtp-Source: AAOMgpf+FhJzp6tk7w5yvfAkUxGah4/qJrztgSaFVS3omjOs7k7txhJChWsRaIN6hU2utiofUykAwg==
-X-Received: by 2002:a24:e1c5:: with SMTP id
-	n188-v6mr13212810ith.89.1531773490892; 
-	Mon, 16 Jul 2018 13:38:10 -0700 (PDT)
+	bh=b40Zgh0phzPHA0/L5IyVZBz80Y63IBJTfomJ1dQDWtc=;
+	b=axMV3CeCER9pmV9evR0iilVJYeI5lstiLoWh9tFUPzGabduOYJdksOzsW8r2tITb4I
+	N4yUMNuT2lRodiWTekzvUnqwpFMtAjE5g/hHmra0iQswfyW3ZwQEYOcGwh9K+H917qtn
+	pOjaqSx8LLsXRPCIg6zrl6Kwen4lY1yz7o/JKt4WXI4emBM95kA88kierTdKaFn/AuEa
+	qZG3DkX+jWDSOsCSl6/BWkYzHEAxAewuTAecEt/uvAYDjiLy+hzi7u71DskAT5mnhuRz
+	4IBnkSeKaYT8wLs1zcrBy/W3LcZaZY2FpJt3AfoOC/XPn5peFLAklGzrhXBZxuf+Borr
+	9Qzg==
+X-Gm-Message-State: AOUpUlHRJ2XHM084SKE1Rt/Geudeu0/ZwmaZmJf3l2OLQ2wzDz5cdoCk
+	inx0K2J2qpHuKjT+Q2vP4BdtN4A4
+X-Google-Smtp-Source: AAOMgpcWrUbCtmXQz+Ixw3Y55P7jb2C1xO+J7Yug+8jBOJW6tCrWI/aWg8frqgLmoFW2OnbrSG6L5w==
+X-Received: by 2002:a6b:7312:: with SMTP id
+	e18-v6mr16672613ioh.57.1531773491904; 
+	Mon, 16 Jul 2018 13:38:11 -0700 (PDT)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
 	r199-v6sm8988222itb.8.2018.07.16.13.38.10
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 16 Jul 2018 13:38:10 -0700 (PDT)
+	Mon, 16 Jul 2018 13:38:11 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org,
 	openembedded-core@lists.openembedded.org
-Date: Mon, 16 Jul 2018 15:37:27 -0500
-Message-Id: <20180716203728.23078-9-JPEWhacker@gmail.com>
+Date: Mon, 16 Jul 2018 15:37:28 -0500
+Message-Id: <20180716203728.23078-10-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20180716203728.23078-1-JPEWhacker@gmail.com>
 References: <20180716203728.23078-1-JPEWhacker@gmail.com>
-Subject: [RFC 8/9] hashserver: Add initial reference server
+Subject: [RFC 9/9] sstate: Implement hash equivalence sstate
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,284 +58,385 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Jul 2018 20:38:10 -0000
+X-List-Received-Date: Mon, 16 Jul 2018 20:38:11 -0000
 
-Adds an initial reference implementation of the hash server.
+Converts sstate so that it can use a hash equivalence server to
+determine if a task really needs to be rebuilt, or if it can be restored
+from a different (equivalent) sstate object.
 
-NOTE: This is my first dive into HTTP & REST technologies. Feedback is
-appreciated. Also, I don't think it will be necessary for this reference
-implementation to live in bitbake, and it can be moved to it's own
-independent project if necessary?
+The dependency IDs are cached persistently using persist_data. This has
+a number of advantages:
+ 1) Dependency IDs can be cached between invocations of bitbake to
+    prevent needing to contact the server every time (which is slow)
+ 2) The value of each tasks dependency ID can easily be synchronized
+    between different threads, which will be useful if bitbake is
+    updated to do on the fly task re-hashing.
 
-Also, this server has some concurrency issues that I haven't tracked
-down and will occasionally fail to record a new POST'd task with an
-error indicating the database is locked. Based on some reading, I
-believe this is because the server is using a sqlite backend, and it
-would go away with a more production worthy backend. Anyway, it is good
-enough for some preliminary testing.
-
-Starting the server is simple and only requires pipenv to be installed:
-
- $ pipenv shell
- $ ./app.py
+NOTE: No attempt whatsoever was made to implement any sort of
+authentication to the server. Is this something that anyone cares about?
+Do we imagine having a "public" server that maintains equivalencies, and
+if so does it need some mechanism to authenticate the users that post
+tasks to it? If so, does anyone have any ideas as to an acceptable
+authentication mechanism?
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/contrib/hashserver/.gitignore |   2 +
- bitbake/contrib/hashserver/Pipfile    |  15 ++
- bitbake/contrib/hashserver/app.py     | 212 ++++++++++++++++++++++++++
- 3 files changed, 229 insertions(+)
- create mode 100644 bitbake/contrib/hashserver/.gitignore
- create mode 100644 bitbake/contrib/hashserver/Pipfile
- create mode 100755 bitbake/contrib/hashserver/app.py
+ meta/classes/sstate.bbclass | 100 ++++++++++++++++++++--
+ meta/conf/bitbake.conf      |   4 +-
+ meta/lib/oe/sstatesig.py    | 166 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 261 insertions(+), 9 deletions(-)
 
-diff --git a/bitbake/contrib/hashserver/.gitignore b/bitbake/contrib/hashserver/.gitignore
-new file mode 100644
-index 00000000000..030640a2b21
---- /dev/null
-+++ b/bitbake/contrib/hashserver/.gitignore
-@@ -0,0 +1,2 @@
-+hashes.db
-+Pipfile.lock
-diff --git a/bitbake/contrib/hashserver/Pipfile b/bitbake/contrib/hashserver/Pipfile
-new file mode 100644
-index 00000000000..29cfb41a907
---- /dev/null
-+++ b/bitbake/contrib/hashserver/Pipfile
-@@ -0,0 +1,15 @@
-+[[source]]
-+url = "https://pypi.org/simple"
-+verify_ssl = true
-+name = "pypi"
+diff --git a/meta/classes/sstate.bbclass b/meta/classes/sstate.bbclass
+index b11f56b799b..a5be4d93317 100644
+--- a/meta/classes/sstate.bbclass
++++ b/meta/classes/sstate.bbclass
+@@ -11,7 +11,7 @@ def generate_sstatefn(spec, hash, d):
+ SSTATE_PKGARCH    = "${PACKAGE_ARCH}"
+ SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
+ SSTATE_SWSPEC     = "sstate:${PN}::${PV}:${PR}::${SSTATE_VERSION}:"
+-SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_TASKHASH'), d)}"
++SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_DEPID'), d)}"
+ SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
+ SSTATE_EXTRAPATH   = ""
+ SSTATE_EXTRAPATHWILDCARD = ""
+@@ -75,6 +75,23 @@ SSTATE_SIG_PASSPHRASE ?= ""
+ # Whether to verify the GnUPG signatures when extracting sstate archives
+ SSTATE_VERIFY_SIG ?= "0"
+ 
++SSTATE_HASHEQUIV_METHOD ?= "OEOuthashBasic"
++SSTATE_HASHEQUIV_METHOD[doc] = "The function used to calculate the output hash \
++    for a task, which in turn is used to determine equivalency. \
++    "
 +
-+[packages]
-+flask = "*"
-+flask-sqlalchemy = "*"
-+marshmallow-sqlalchemy = "*"
-+flask-marshmallow = "*"
++SSTATE_HASHEQUIV_SERVER ?= ""
++SSTATE_HASHEQUIV_SERVER[doc] = "The hash equivalence sever. For example, \
++    'http://192.168.0.1:5000'. Do not include a trailing slash \
++    "
 +
-+[dev-packages]
++SSTATE_HASHEQUIV_REPORT_TASKDATA ?= "0"
++SSTATE_HASHEQUIV_REPORT_TASKDATA[doc] = "Report additional useful data to the \
++    hash equivalency server, such as PN, PV, taskname, etc. This information \
++    is very useful for developers looking at task data, but may leak sensitive \
++    data if the equivalence server is public. \
++    "
 +
-+[requires]
-+python_version = "3.6"
-diff --git a/bitbake/contrib/hashserver/app.py b/bitbake/contrib/hashserver/app.py
-new file mode 100755
-index 00000000000..4fd2070fe92
---- /dev/null
-+++ b/bitbake/contrib/hashserver/app.py
-@@ -0,0 +1,212 @@
-+#! /usr/bin/env python3
-+#
-+# BitBake Hash Server Reference Implementation
-+#
-+# Copyright (C) 2018 Garmin International
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ python () {
+     if bb.data.inherits_class('native', d):
+         d.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH', False))
+@@ -626,7 +643,7 @@ def sstate_package(ss, d):
+         return
+ 
+     for f in (d.getVar('SSTATECREATEFUNCS') or '').split() + \
+-             ['sstate_create_package', 'sstate_sign_package'] + \
++             ['sstate_report_depid', 'sstate_create_package', 'sstate_sign_package'] + \
+              (d.getVar('SSTATEPOSTCREATEFUNCS') or '').split():
+         # All hooks should run in SSTATE_BUILDDIR.
+         bb.build.exec_func(f, d, (sstatebuild,))
+@@ -743,6 +760,73 @@ python sstate_sign_package () {
+                            d.getVar('SSTATE_SIG_PASSPHRASE'), armor=False)
+ }
+ 
++def OEOuthashBasic(path, sigfile, task, d):
++    import hashlib
++    import stat
 +
-+from flask import Flask, request, jsonify
-+from flask_sqlalchemy import SQLAlchemy
-+from flask_marshmallow import Marshmallow
-+from sqlalchemy import desc, case, func
-+import sqlalchemy
-+import sqlite3
-+import hashlib
-+import datetime
++    def update_hash(s):
++        s = s.encode('utf-8')
++        h.update(s)
++        if sigfile:
++            sigfile.write(s)
 +
-+app = Flask(__name__)
-+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hashes.db'
-+app.config['SQLALCHEMY_TIMEOUT'] = 15
++    h = hashlib.sha1()
++    prev_dir = os.getcwd()
 +
-+# Order matters: Initialize SQLAlchemy before Marshmallow
-+db = SQLAlchemy(app)
-+ma = Marshmallow(app)
++    try:
++        os.chdir(path)
 +
-+@sqlalchemy.event.listens_for(sqlalchemy.engine.Engine, "connect")
-+def set_sqlite_pragma(dbapi_connection, connection_record):
-+    cursor = dbapi_connection.cursor()
-+    cursor.execute("PRAGMA journal_mode=WAL")
-+    cursor.close()
++        update_hash("OEOuthashBasic\n")
 +
-+class TaskModel(db.Model):
-+    __tablename__ = 'tasks'
++        # It is only currently useful to get equivalent hashes for things that
++        # can be restored from sstate. Since the sstate object is named using
++        # SSTATE_PKGSPEC and the task name, those should be included in the
++        # output hash calculation.
++        update_hash("SSTATE_PKGSPEC=%s\n" % d.getVar('SSTATE_PKGSPEC'))
++        update_hash("task=%s\n" % task)
 +
-+    id = db.Column(db.Integer, primary_key=True)
-+    taskhash = db.Column(db.String(), nullable=False)
-+    method = db.Column(db.String(), nullable=False)
-+    outhash = db.Column(db.String(), nullable=False)
-+    depid = db.Column(db.String(), nullable=False)
-+    owner = db.Column(db.String())
-+    created = db.Column(db.DateTime)
-+    PN = db.Column(db.String())
-+    PV = db.Column(db.String())
-+    PR = db.Column(db.String())
-+    task = db.Column(db.String())
-+    outhash_siginfo = db.Column(db.Text())
++        for root, dirs, files in os.walk('.', topdown=True):
++            # Sort directories and files to ensure consistent ordering
++            dirs.sort()
++            files.sort()
 +
-+    __table_args__ = (
-+            db.UniqueConstraint('taskhash', 'method', 'outhash', name='unique_task'),
-+            # Make an index on taskhash and method for fast lookup
-+            db.Index('lookup_index', 'taskhash', 'method'),
-+            )
++            for f in files:
++                path = os.path.join(root, f)
++                s = os.lstat(path)
 +
-+    def __init__(self, taskhash, method, outhash, depid, owner=None):
-+        self.taskhash = taskhash
-+        self.method = method
-+        self.outhash = outhash
-+        self.depid = depid
-+        self.owner = owner
-+        self.created = datetime.datetime.utcnow()
-+        self.task = None
-+        self.outhash_siginfo = None
++                # Hash file path
++                update_hash(path + '\n')
 +
-+schemas = {}
++                # Hash file mode
++                update_hash("\tmode=0x%x\n" % stat.S_IMODE(s.st_mode))
++                update_hash("\ttype=0x%x\n" % stat.S_IFMT(s.st_mode))
 +
-+class TaskFullSchema(ma.ModelSchema):
-+    class Meta:
-+        model = TaskModel
++                if stat.S_ISBLK(s.st_mode) or stat.S_ISBLK(s.st_mode):
++                    # Hash device major and minor
++                    update_hash("\tdev=%d,%d\n" % (os.major(s.st_rdev), os.minor(s.st_rdev)))
++                elif stat.S_ISLNK(s.st_mode):
++                    # Hash symbolic link
++                    update_hash("\tsymlink=%s\n" % os.readlink(path))
++                else:
++                    fh = hashlib.sha1()
++                    # Hash file contents
++                    with open(path, 'rb') as d:
++                        for chunk in iter(lambda: d.read(4096), b""):
++                            fh.update(chunk)
++                    update_hash("\tdigest=%s\n" % fh.hexdigest())
++    finally:
++        os.chdir(prev_dir)
 +
-+task_full_schema = TaskFullSchema()
-+tasks_full_schema = TaskFullSchema(many=True)
-+schemas['full'] = tasks_full_schema
++    return h.hexdigest()
 +
-+class TaskSchema(ma.ModelSchema):
-+    class Meta:
-+        fields = ('id', 'taskhash', 'method', 'outhash', 'depid', 'owner', 'created', 'PN', 'PV', 'PR', 'task')
++python sstate_report_depid() {
++    report_depid = getattr(bb.parse.siggen, 'report_depid', None)
 +
-+task_schema = TaskSchema()
-+tasks_schema = TaskSchema(many=True)
-+schemas['default'] = tasks_schema
++    if report_depid:
++        ss = sstate_state_fromvars(d)
++        report_depid(os.getcwd(), ss['task'], d)
++}
 +
-+class DepIDSchema(ma.ModelSchema):
-+    class Meta:
-+        fields = ('taskhash', 'method', 'depid')
+ #
+ # Shell function to decompress and prepare a package for installation
+ # Will be run from within SSTATE_INSTDIR.
+@@ -789,7 +873,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d, siginfo=
+ 
+         spec, extrapath, tname = getpathcomponents(task, d)
+ 
+-        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + extension)
++        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_depid[task], d) + "_" + tname + extension)
+ 
+         if os.path.exists(sstatefile):
+             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
+@@ -851,7 +935,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d, siginfo=
+             if task in ret:
+                 continue
+             spec, extrapath, tname = getpathcomponents(task, d)
+-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + extension)
++            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_depid[task], d) + "_" + tname + extension)
+             tasklist.append((task, sstatefile))
+ 
+         if tasklist:
+@@ -877,12 +961,12 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d, siginfo=
+         evdata = {'missed': [], 'found': []};
+         for task in missed:
+             spec, extrapath, tname = getpathcomponents(task, d)
+-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz")
+-            evdata['missed'].append( (sq_fn[task], sq_task[task], sq_hash[task], sstatefile ) )
++            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_depid[task], d) + "_" + tname + ".tgz")
++            evdata['missed'].append( (sq_fn[task], sq_task[task], sq_depid[task], sstatefile ) )
+         for task in ret:
+             spec, extrapath, tname = getpathcomponents(task, d)
+-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz")
+-            evdata['found'].append( (sq_fn[task], sq_task[task], sq_hash[task], sstatefile ) )
++            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_depid[task], d) + "_" + tname + ".tgz")
++            evdata['found'].append( (sq_fn[task], sq_task[task], sq_depid[task], sstatefile ) )
+         bb.event.fire(bb.event.MetadataEvent("MissedSstate", evdata), d)
+ 
+     if hasattr(bb.parse.siggen, "checkhashes"):
+diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
+index 8f738545995..47f258569f2 100644
+--- a/meta/conf/bitbake.conf
++++ b/meta/conf/bitbake.conf
+@@ -865,7 +865,9 @@ BB_HASHBASE_WHITELIST ?= "TMPDIR FILE PATH PWD BB_TASKHASH BBPATH BBSERVER DL_DI
+     STAMPS_DIR PRSERV_DUMPDIR PRSERV_DUMPFILE PRSERV_LOCKDOWN PARALLEL_MAKE \
+     CCACHE_DIR EXTERNAL_TOOLCHAIN CCACHE CCACHE_NOHASHDIR LICENSE_PATH SDKPKGSUFFIX \
+     WARN_QA ERROR_QA WORKDIR STAMPCLEAN PKGDATA_DIR BUILD_ARCH SSTATE_PKGARCH \
+-    BB_WORKERCONTEXT BB_LIMITEDDEPS extend_recipe_sysroot DEPLOY_DIR"
++    BB_WORKERCONTEXT BB_LIMITEDDEPS BB_DEPID extend_recipe_sysroot DEPLOY_DIR \
++    SSTATE_HASHEQUIV_METHOD SSTATE_HASHEQUIV_SERVER SSTATE_HASHEQUIV_REPORT_TASKDATA \
++    SSTATE_HASHEQUIV_OWNER"
+ BB_HASHCONFIG_WHITELIST ?= "${BB_HASHBASE_WHITELIST} DATE TIME SSH_AGENT_PID \
+     SSH_AUTH_SOCK PSEUDO_BUILD BB_ENV_EXTRAWHITE DISABLE_SANITY_CHECKS \
+     PARALLEL_MAKE BB_NUMBER_THREADS BB_ORIGENV BB_INVALIDCONF BBINCLUDED \
+diff --git a/meta/lib/oe/sstatesig.py b/meta/lib/oe/sstatesig.py
+index 5dcc2f5cd6d..727baa95970 100644
+--- a/meta/lib/oe/sstatesig.py
++++ b/meta/lib/oe/sstatesig.py
+@@ -256,10 +256,176 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
+         if error_msgs:
+             bb.fatal("\n".join(error_msgs))
+ 
++class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHash):
++    name = "OEEquivHash"
 +
-+depid_schema = DepIDSchema()
-+depids_schema = DepIDSchema(many=True)
-+schemas['depid'] = depids_schema
++    def init_rundepcheck(self, data):
++        super().init_rundepcheck(data)
++        self.server = data.getVar('SSTATE_HASHEQUIV_SERVER')
++        self.method = data.getVar('SSTATE_HASHEQUIV_METHOD')
++        self.depids = bb.persist_data.persist('SSTATESIG_DEPID_CACHE_v1_' + self.method, data)
 +
-+def get_tasks_schema():
-+    return schemas.get(request.args.get('output', 'default'), tasks_schema)
++    def get_taskdata(self):
++        return (self.server, self.method) + super().get_taskdata()
 +
-+def get_count_column(column, min_count):
-+    count_column = func.count(column).label('count')
-+    query = (db.session.query(TaskModel)
-+            .with_entities(column, count_column)
-+            .group_by(column))
++    def set_taskdata(self, data):
++        self.server, self.method = data[:2]
++        super().set_taskdata(data[2:])
 +
-+    if min_count > 1:
-+        query = query.having(count_column >= min_count)
++    def __get_depid_key(self, task):
++        return '%s:%s' % (task, self.taskhash[task])
 +
-+    col_name = column.name
++    def get_stampfile_hash(self, task):
++        if task in self.taskhash:
++            # If a depid is reported, use it as the stampfile hash. This
++            # ensures that if a task won't be re-run if the taskhash changes,
++            # but it would result in the same output hash
++            depid = self.depids.get(self.__get_depid_key(task))
++            if depid is not None:
++                return depid
 +
-+    result = [{'count': data.count, col_name: getattr(data, col_name)} for data in query.all()]
++        return super().get_stampfile_hash(task)
 +
-+    return jsonify(result)
++    def get_depid(self, task):
++        import urllib
++        import json
 +
-+def filter_query_from_request(query, request):
-+    for key in request.args:
-+        if hasattr(TaskModel, key):
-+            vals = request.args.getlist(key)
-+            query = (query
-+                    .filter(getattr(TaskModel, key).in_(vals))
-+                    .order_by(TaskModel.created.asc()))
-+    return query
++        taskhash = self.taskhash[task]
 +
-+@app.route("/v1/count/outhashes", methods=["GET"])
-+def outhashes():
-+    return get_count_column(TaskModel.outhash, int(request.args.get('min', 1)))
++        # TODO: The key only *needs* to be the taskhash, the task is just
++        # convenient
++        key = self.__get_depid_key(task)
 +
-+@app.route("/v1/count/taskhashes", methods=["GET"])
-+def taskhashes():
-+    return get_count_column(TaskModel.taskhash, int(request.args.get('min', 1)))
++        # TODO: This cache can grow unbounded. It probably only needs to keep
++        # for each task
++        depid = self.depids.get(key)
++        if depid is not None:
++            return depid
 +
-+@app.route("/v1/equivalent", methods=["GET", "POST"])
-+def equivalent():
-+    if request.method == 'GET':
-+        task = (db.session.query(TaskModel)
-+            .filter(TaskModel.method == request.args['method'])
-+            .filter(TaskModel.taskhash == request.args['taskhash'])
-+            .order_by(
-+                # If there are multiple matching task hashes, return the oldest
-+                # one
-+                TaskModel.created.asc())
-+            .limit(1)
-+            .one_or_none())
++        # In the absence of being able to discover a dependency ID from the
++        # server, make it be equivalent to the taskhash. The dependency ID only
++        # really needs to be a unique string (not even necessarily a hash), but
++        # making it match the taskhash has a few advantages:
++        #
++        # 1) All of the sstate code that assumes hashes can be the same
++        # 2) It provides maximal compatibility with builders that don't use
++        #    an equivalency server
++        # 3) The value is easy for multiple independent builders to derive the
++        #    same depid from the same input. This means that if the independent
++        #    builders find the same taskhash, but it isn't reported to the server,
++        #    there is a better chance that they will agree on the dependency ID.
++        depid = taskhash
 +
-+        return depid_schema.jsonify(task)
++        try:
++            url = '%s/v1/equivalent?%s' % (self.server,
++                    urllib.parse.urlencode({'method': self.method, 'taskhash': self.taskhash[task]}))
 +
-+    # TODO: Handle authentication
++            request = urllib.request.Request(url)
++            response = urllib.request.urlopen(request)
++            data = response.read()
 +
-+    data = request.get_json()
-+    # TODO handle when data is None. Currently breaks
++            json_data = json.loads(data)
 +
-+    # Find an appropriate task.
-+    new_task = (db.session.query(TaskModel)
-+            .filter(
-+                # The output hash and method must match exactly
-+                TaskModel.method == data['method'],
-+                TaskModel.outhash == data['outhash'])
-+            .order_by(
-+                # If there is a matching taskhash, it will be sorted first, and
-+                # thus the only row returned.
-+                case([(TaskModel.taskhash == data['taskhash'], 1)], else_=2))
-+            .order_by(
-+                # Sort by date, oldest first. This only really matters if there
-+                # isn't an exact match on the taskhash
-+                TaskModel.created.asc())
-+            # Only return one row
-+            .limit(1)
-+            .one_or_none())
++            if json_data:
++                depid = json_data['depid']
++                # Dependency ID equal to the taskhash is not very interesting,
++                # so it is reported it at debug level 2. If they differ, that
++                # is much more interesting, so it is reported at debug level 1
++                bb.debug((1, 2)[depid == taskhash], 'Found depid %s in place of %s for %s from %s' % (depid, taskhash, task, self.server))
++            else:
++                bb.debug(2, 'No reported dependency ID for %s:%s from %s' % (task, taskhash, self.server))
++        except urllib.error.URLError as e:
++            bb.warn('Failure contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
++        except (KeyError, json.JSONDecodeError) as e:
++            bb.warn('Poorly formatted response from %s: %s' % (self.server, str(e)))
 +
-+    # If no task was found that exactly matches this taskhash, create a new one
-+    if not new_task or new_task.taskhash != data['taskhash']:
-+        # Capture the dependency ID. If a matching task was found, then change
-+        # this tasks dependency ID to match.
-+        depid = data['depid']
-+        if new_task:
-+            depid = new_task.depid
++        self.depids[key] = depid
++        return depid
 +
-+        new_task = TaskModel(data['taskhash'], data['method'], data['outhash'], depid)
-+        db.session.add(new_task)
++    def report_depid(self, path, task, d):
++        import urllib
++        import json
++        import tempfile
++        import base64
 +
-+    if new_task.taskhash == data['taskhash']:
-+        # Add or update optional attributes
-+        for o in ('outhash_siginfo', 'owner', 'task', 'PN', 'PV', 'PR'):
-+            v = getattr(new_task, o, None)
-+            if v is None:
-+                setattr(new_task, o, data.get(o, None))
++        taskhash = d.getVar('BB_TASKHASH')
++        depid = d.getVar('BB_DEPID')
++        report_taskdata = d.getVar('SSTATE_HASHEQUIV_REPORT_TASKDATA') == '1'
++        tempdir = d.getVar('T')
++        fn = d.getVar('BB_FILENAME')
++        key = fn + '.do_' + task + ':' + taskhash
 +
-+    db.session.commit()
++        # Sanity checks
++        cache_depid = self.depids.get(key)
++        if cache_depid is None:
++            bb.fatal('%s not in depid cache. Please report this error' % key)
 +
-+    return depid_schema.jsonify(new_task)
++        if cache_depid != depid:
++            bb.fatal("Cache depid %s doesn't match BB_DEPID %s" % (cache_depid, depid))
 +
-+# TODO: Handle errors. Currently, everything is a 500 error
-+@app.route("/v1/tasks", methods=["GET"])
-+def tasks():
-+    query = db.session.query(TaskModel)
-+    query = filter_query_from_request(query, request)
-+    return get_tasks_schema().jsonify(query.all())
++        sigfile = None
++        sigfile_name = "depsig.do_%s.%d" % (task, os.getpid())
++        sigfile_link = "depsig.do_%s" % task
 +
-+@app.route("/v1/tasks/overridden", methods=["GET"])
-+def overridden():
-+    query = db.session.query(TaskModel).filter(TaskModel.depid != TaskModel.taskhash)
-+    query = filter_query_from_request(query, request)
-+    return get_tasks_schema().jsonify(query.all())
++        try:
++            call = self.method + '(path, sigfile, task, d)'
++            sigfile = open(os.path.join(tempdir, sigfile_name), 'w+b')
++            locs = {'path': path, 'sigfile': sigfile, 'task': task, 'd': d}
 +
-+if __name__ == '__main__':
-+    db.create_all()
-+    app.run(debug=True)
++            outhash = bb.utils.better_eval(call, locs)
 +
++            try:
++                url = '%s/v1/equivalent' % self.server
++                task_data = {
++                    'taskhash': taskhash,
++                    'method': self.method,
++                    'outhash': outhash,
++                    'depid': depid,
++                    'owner': d.getVar('SSTATE_HASHEQUIV_OWNER')
++                    }
++
++                if report_taskdata:
++                    sigfile.seek(0)
++
++                    task_data['PN'] = d.getVar('PN')
++                    task_data['PV'] = d.getVar('PV')
++                    task_data['PR'] = d.getVar('PR')
++                    task_data['task'] = task
++                    task_data['outhash_siginfo'] = sigfile.read().decode('utf-8')
++
++                headers = {'content-type': 'application/json'}
++
++                request = urllib.request.Request(url, json.dumps(task_data).encode('utf-8'), headers)
++                response = urllib.request.urlopen(request)
++                data = response.read()
++
++                json_data = json.loads(data)
++                new_depid = json_data['depid']
++
++                if new_depid != depid:
++                    bb.debug(1, 'Task %s depid changed %s -> %s by server %s' % (taskhash, depid, new_depid, self.server))
++                else:
++                    bb.debug(1, 'Reported task %s as depid %s to %s' % (taskhash, depid, self.server))
++            except urllib.error.URLError as e:
++                bb.warn('Failure contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
++            except (KeyError, json.JSONDecodeError) as e:
++                bb.warn('Poorly formatted response from %s: %s' % (self.server, str(e)))
++        finally:
++            if sigfile:
++                sigfile.close()
++
++                sigfile_link_path = os.path.join(tempdir, sigfile_link)
++                bb.utils.remove(sigfile_link_path)
++
++                try:
++                    os.symlink(sigfile_name, sigfile_link_path)
++                except OSError:
++                    pass
+ 
+ # Insert these classes into siggen's namespace so it can see and select them
+ bb.siggen.SignatureGeneratorOEBasic = SignatureGeneratorOEBasic
+ bb.siggen.SignatureGeneratorOEBasicHash = SignatureGeneratorOEBasicHash
++bb.siggen.SignatureGeneratorOEEquivHash = SignatureGeneratorOEEquivHash
+ 
+ 
+ def find_siginfo(pn, taskname, taskhashlist, d):
 -- 
 2.17.1
 
