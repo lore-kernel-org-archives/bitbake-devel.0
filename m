@@ -1,51 +1,51 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it0-f52.google.com (mail-it0-f52.google.com
-	[209.85.214.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 7BE427600F;
-	Mon, 16 Jul 2018 20:38:04 +0000 (UTC)
-Received: by mail-it0-f52.google.com with SMTP id j185-v6so23459794ite.1;
-	Mon, 16 Jul 2018 13:38:05 -0700 (PDT)
+Received: from mail-io0-f195.google.com (mail-io0-f195.google.com
+	[209.85.223.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 89B427545B;
+	Mon, 16 Jul 2018 20:38:05 +0000 (UTC)
+Received: by mail-io0-f195.google.com with SMTP id y10-v6so24291580ioa.10;
+	Mon, 16 Jul 2018 13:38:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=MydlIxSrp7HT1rcgirWLTUptf+mmxeyU62XxWN9Q4kk=;
-	b=iHPpAKvSlrAHkhPL0MctbBvQGuzXksfXqBUpq85bLGCDH//PEgjGVPZf3y3eRwH+GU
-	TooqGBpkyFvU3eqvKkUZAk/yLIr7gM0rsWRMSiGZZ4ITDirtC3nTcrvBnl0ZX4/w1UaP
-	DFG7yE8lxy1tesBRBNiSb6xru5iOKTDkyZF17tZExUYTQrZki+GiKZXbs/QB9nFL2egb
-	3UhHRNFvygf5RAgy5Wi36pULGRBizCg3dI0SEUOXvAsgg9VvsczeAwomd468r8ig8B3M
-	9ZCNJSOqC0+hrD/iW1aCMH5BalB5fHIYTXYPXZC3E+W3ZdEHgWpBU3OpubknmV/uP3Aq
-	IyFQ==
+	bh=r5tzJR3AdMNs1Fk8Hi0XLPArEyCuDD8JhFBuAuh0c6A=;
+	b=DNL+TCneU9r61xfJju4iMhP1bUdmdIxiBspcj9bAhaYfEanwkmKaQUw3z2CqRaBVZ4
+	pWNAAOBKmMEjq5rrs8GkIXLnvgEtAxRUOTbEoOWPA/6+acyzogXZdgV7nVB8luF/hDxq
+	DomnF0lrWFprwGmmCtjHyfXG15RbLXocNnJeqZT2wMh6O9+BFduXTLBcgC11qyL/7pFm
+	QrARofXj/HaFnSC6ITNhvozPBPQoKdydQr1UAezM7SdDuD0UMQ2rHTJx3RS92lyNehXB
+	0fN90HQ92IqRQM0jrwnTJCaQ7YqhQEwFxPMyFbRoUiyqAC6x4xyJ+mC3siUydgyD/CUn
+	VlKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=MydlIxSrp7HT1rcgirWLTUptf+mmxeyU62XxWN9Q4kk=;
-	b=o/J8LBwklDds4Dg8Qy1TOgjcdMlATv/lzVEiA4yKEPTW+HLTNJA76pGZjnrIFW3A0u
-	iB0uFGDFI/mHrv1Ak+fwAzt4QbbePXhWiZ9fiBr80RNLKAmlB+fL3aJLi+Sgq1iEym7A
-	a8uRTtq4YZ6P5KaKErwolb0HajLLyn+0VazuPUoU54UZAV6dRTxOecz8U58a0VqKGk8T
-	csXEUB6+zwD8WlTImggu9flzK5JOGw/NqzZTibYX7Fmou25L99rLYAh8ffU3QLUXM5wx
-	TDOMtU/eagTtODj3FXKb0dtc6eVo+GjhrTvrFGVDbmjD1bHz99hM1RIvtmALJ2N8tz28
-	JHQw==
-X-Gm-Message-State: AOUpUlEWzFzdJMKH+AnVVLyQy4wVRJZzPpYJAZagWOBBD8Gu33B/R3pE
-	Ls0UKHNajxpZVVUMw8jjhbAzvGOW
-X-Google-Smtp-Source: AAOMgpcpiRsB23Qw0JDCLCJTVAhFtxKavul6EdRuj0j7px1e8BYgR1p29m2uD06GRiaQZTCCenxCKg==
-X-Received: by 2002:a02:8895:: with SMTP id
-	n21-v6mr15590244jaj.21.1531773485344; 
-	Mon, 16 Jul 2018 13:38:05 -0700 (PDT)
+	bh=r5tzJR3AdMNs1Fk8Hi0XLPArEyCuDD8JhFBuAuh0c6A=;
+	b=Wu84tDlFYR/pyYXCsfrHf5AjpeKFX2l04iW3dxFoLsi5mhmqSCfAyzl0RdGJ16hMWy
+	yqFjtWGXqhzLMQzziV7O1wIkXAZqcU+SgpVGXN/UW8+L8lVJ13bXANmpDXPuRKfh6WIc
+	UOtsBMFC14VEldMyqbUPvbqXRCjvBgz+eKFUUPISo3l0xna/xV4dxGNGrSPwPAVd2fk8
+	FbAGtbD6OO3DghJtq2i9wGN4W7a7U6x1COqKHc18KD/7ISo+lBqUQL0cGUESu+9vdBfl
+	2EyHN5MHMGILgP9pXVriEoRIyhgAV4J2hOz+gl5V94jH3nbgLgCQWfOYMNtE2nPTcEoI
+	R8fw==
+X-Gm-Message-State: AOUpUlEG1y+eBZ2EaqhRXX4dJ8w9v3R2ptp1FzEEX9z3JUZj+9zXmFTZ
+	+AXR8MDjSXgKW1wRf/QrEjIpJOTr
+X-Google-Smtp-Source: AAOMgpdNq2GjpM1zMIgFuI+96fAHjk90PXzwCBAX5J9bC2zRpLd2hEu9ug8PmOojaRVE2wjRVI5Yrg==
+X-Received: by 2002:a6b:870e:: with SMTP id
+	j14-v6mr16187978iod.208.1531773486383; 
+	Mon, 16 Jul 2018 13:38:06 -0700 (PDT)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	r199-v6sm8988222itb.8.2018.07.16.13.38.04
+	r199-v6sm8988222itb.8.2018.07.16.13.38.05
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 16 Jul 2018 13:38:04 -0700 (PDT)
+	Mon, 16 Jul 2018 13:38:05 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org,
 	openembedded-core@lists.openembedded.org
-Date: Mon, 16 Jul 2018 15:37:20 -0500
-Message-Id: <20180716203728.23078-2-JPEWhacker@gmail.com>
+Date: Mon, 16 Jul 2018 15:37:21 -0500
+Message-Id: <20180716203728.23078-3-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20180716203728.23078-1-JPEWhacker@gmail.com>
 References: <20180716203728.23078-1-JPEWhacker@gmail.com>
-Subject: [RFC 1/9] bitbake-worker: Pass taskhash as runtask parameter
+Subject: [RFC 2/9] siggen: Split out stampfile hash fetch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,115 +58,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Jul 2018 20:38:04 -0000
+X-List-Received-Date: Mon, 16 Jul 2018 20:38:05 -0000
 
-Pass the task hash as a parameter to the 'runtask' message instead of
-passing the entire dictionary of hashes when the worker is setup. This
-is possible less efficient, but prevents the worker taskhashes from
-being out of sync with the runqueue in the event that the taskhashes in
-the runqueue change.
+The mechanism used to get the hash for a stamp file is split out so that
+it can be overridden by derived classes
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/bin/bitbake-worker |  8 ++++----
- bitbake/lib/bb/runqueue.py | 15 ++++++---------
- 2 files changed, 10 insertions(+), 13 deletions(-)
+ bitbake/lib/bb/siggen.py | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index e925054b7f9..cd687e6e433 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -136,7 +136,7 @@ def sigterm_handler(signum, frame):
-     os.killpg(0, signal.SIGTERM)
-     sys.exit()
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index ab228e4148e..d2dfcbc3fdb 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -331,6 +331,13 @@ class SignatureGeneratorBasic(SignatureGenerator):
+ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
+     name = "basichash"
  
--def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, appends, taskdepdata, extraconfigdata, quieterrors=False, dry_run_exec=False):
-+def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskhash, appends, taskdepdata, extraconfigdata, quieterrors=False, dry_run_exec=False):
-     # We need to setup the environment BEFORE the fork, since
-     # a fork() or exec*() activates PSEUDO...
++    def get_stampfile_hash(self, task):
++        if task in self.taskhash:
++            return self.taskhash[task]
++
++        # If task is not in basehash, then error
++        return self.basehash[task]
++
+     def stampfile(self, stampbase, fn, taskname, extrainfo, clean=False):
+         if taskname != "do_setscene" and taskname.endswith("_setscene"):
+             k = fn + "." + taskname[:-9]
+@@ -338,11 +345,9 @@ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
+             k = fn + "." + taskname
+         if clean:
+             h = "*"
+-        elif k in self.taskhash:
+-            h = self.taskhash[k]
+         else:
+-            # If k is not in basehash, then error
+-            h = self.basehash[k]
++            h = self.get_stampfile_hash(k)
++
+         return ("%s.%s.%s.%s" % (stampbase, taskname, h, extrainfo)).rstrip('.')
  
-@@ -234,7 +234,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
-                 ret = 0
- 
-                 the_data = bb_cache.loadDataFull(fn, appends)
--                the_data.setVar('BB_TASKHASH', workerdata["runq_hash"][task])
-+                the_data.setVar('BB_TASKHASH', taskhash)
- 
-                 bb.utils.set_process_name("%s:%s" % (the_data.getVar("PN"), taskname.replace("do_", "")))
- 
-@@ -425,10 +425,10 @@ class BitbakeWorker(object):
-         sys.exit(0)
- 
-     def handle_runtask(self, data):
--        fn, task, taskname, quieterrors, appends, taskdepdata, dry_run_exec = pickle.loads(data)
-+        fn, task, taskname, taskhash, quieterrors, appends, taskdepdata, dry_run_exec = pickle.loads(data)
-         workerlog_write("Handling runtask %s %s %s\n" % (task, fn, taskname))
- 
--        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.databuilder, self.workerdata, fn, task, taskname, appends, taskdepdata, self.extraconfigdata, quieterrors, dry_run_exec)
-+        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.databuilder, self.workerdata, fn, task, taskname, taskhash, appends, taskdepdata, self.extraconfigdata, quieterrors, dry_run_exec)
- 
-         self.build_pids[pid] = task
-         self.build_pipes[pid] = runQueueWorkerPipe(pipein, pipeout)
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index ba9bebebcfe..f655614d1ce 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1207,17 +1207,12 @@ class RunQueue:
-         bb.utils.nonblockingfd(worker.stdout)
-         workerpipe = runQueuePipe(worker.stdout, None, self.cfgData, self, rqexec)
- 
--        runqhash = {}
--        for tid in self.rqdata.runtaskentries:
--            runqhash[tid] = self.rqdata.runtaskentries[tid].hash
--
-         workerdata = {
-             "taskdeps" : self.rqdata.dataCaches[mc].task_deps,
-             "fakerootenv" : self.rqdata.dataCaches[mc].fakerootenv,
-             "fakerootdirs" : self.rqdata.dataCaches[mc].fakerootdirs,
-             "fakerootnoenv" : self.rqdata.dataCaches[mc].fakerootnoenv,
-             "sigdata" : bb.parse.siggen.get_taskdata(),
--            "runq_hash" : runqhash,
-             "logdefaultdebug" : bb.msg.loggerDefaultDebugLevel,
-             "logdefaultverbose" : bb.msg.loggerDefaultVerbose,
-             "logdefaultverboselogs" : bb.msg.loggerVerboseLogs,
-@@ -2008,6 +2003,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-             taskdepdata = self.build_taskdepdata(task)
- 
-             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
-+            taskhash = self.rqdata.get_task_hash(task)
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not (self.cooker.configuration.dry_run or self.rqdata.setscene_enforce):
-                 if not mc in self.rq.fakeworker:
-                     try:
-@@ -2017,10 +2013,10 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                         self.rq.state = runQueueFailed
-                         self.stats.taskFailed()
-                         return True
--                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-+                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-                 self.rq.fakeworker[mc].process.stdin.flush()
-             else:
--                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-+                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-                 self.rq.worker[mc].process.stdin.flush()
- 
-             self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn, noextra=True)
-@@ -2428,13 +2424,14 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             taskdepdata = self.build_taskdepdata(task)
- 
-             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
-+            taskhash = self.rqdata.get_task_hash(task)
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
-                 if not mc in self.rq.fakeworker:
-                     self.rq.start_fakeworker(self, mc)
--                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-+                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-                 self.rq.fakeworker[mc].process.stdin.flush()
-             else:
--                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-+                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-                 self.rq.worker[mc].process.stdin.flush()
- 
-             self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn, noextra=True)
+     def stampcleanmask(self, stampbase, fn, taskname, extrainfo):
 -- 
 2.17.1
 
