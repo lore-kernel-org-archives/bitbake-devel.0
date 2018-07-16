@@ -1,51 +1,51 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io0-f195.google.com (mail-io0-f195.google.com
-	[209.85.223.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 89B427545B;
-	Mon, 16 Jul 2018 20:38:05 +0000 (UTC)
-Received: by mail-io0-f195.google.com with SMTP id y10-v6so24291580ioa.10;
+Received: from mail-io0-f174.google.com (mail-io0-f174.google.com
+	[209.85.223.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 313F47883C;
+	Mon, 16 Jul 2018 20:38:06 +0000 (UTC)
+Received: by mail-io0-f174.google.com with SMTP id g11-v6so5789358ioq.9;
 	Mon, 16 Jul 2018 13:38:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=r5tzJR3AdMNs1Fk8Hi0XLPArEyCuDD8JhFBuAuh0c6A=;
-	b=DNL+TCneU9r61xfJju4iMhP1bUdmdIxiBspcj9bAhaYfEanwkmKaQUw3z2CqRaBVZ4
-	pWNAAOBKmMEjq5rrs8GkIXLnvgEtAxRUOTbEoOWPA/6+acyzogXZdgV7nVB8luF/hDxq
-	DomnF0lrWFprwGmmCtjHyfXG15RbLXocNnJeqZT2wMh6O9+BFduXTLBcgC11qyL/7pFm
-	QrARofXj/HaFnSC6ITNhvozPBPQoKdydQr1UAezM7SdDuD0UMQ2rHTJx3RS92lyNehXB
-	0fN90HQ92IqRQM0jrwnTJCaQ7YqhQEwFxPMyFbRoUiyqAC6x4xyJ+mC3siUydgyD/CUn
-	VlKQ==
+	bh=NHU22ETBVf463UgMPi7qMCL06nuVW78XN54Bv67QoO0=;
+	b=CGuq/8jCMnvkT1aKKuUbLpKNh7ru9M4wrCmsgLM+QMN5zwjv/TWkjcCkNJ1Nnc59bb
+	tGQdzxaR20y7MX/AEOqzDJuHLz4O6xjx8BU9oMBQrXBtSsXi/PznzSOCIMzFf9Zg13og
+	GrA5Xs+XZxThKYAgMQUIu7Wcc/EOzxvPF2qtCr5kxvl/TEdefNUHAuqNZHUQIs+8nohA
+	SxP0bYPWCfZaY4ar96nhvWAMVfH06OR1OaC/QteZFBrEAEcu9t8qdJZrNPh4++hRaaaj
+	Lsnodh5w0XSmjUOms2+b6UhKnGbeZCFzAWjdP+W1o07X+BQCMutBCkHDpxmRa4f3n4wX
+	MqzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=r5tzJR3AdMNs1Fk8Hi0XLPArEyCuDD8JhFBuAuh0c6A=;
-	b=Wu84tDlFYR/pyYXCsfrHf5AjpeKFX2l04iW3dxFoLsi5mhmqSCfAyzl0RdGJ16hMWy
-	yqFjtWGXqhzLMQzziV7O1wIkXAZqcU+SgpVGXN/UW8+L8lVJ13bXANmpDXPuRKfh6WIc
-	UOtsBMFC14VEldMyqbUPvbqXRCjvBgz+eKFUUPISo3l0xna/xV4dxGNGrSPwPAVd2fk8
-	FbAGtbD6OO3DghJtq2i9wGN4W7a7U6x1COqKHc18KD/7ISo+lBqUQL0cGUESu+9vdBfl
-	2EyHN5MHMGILgP9pXVriEoRIyhgAV4J2hOz+gl5V94jH3nbgLgCQWfOYMNtE2nPTcEoI
-	R8fw==
-X-Gm-Message-State: AOUpUlEG1y+eBZ2EaqhRXX4dJ8w9v3R2ptp1FzEEX9z3JUZj+9zXmFTZ
-	+AXR8MDjSXgKW1wRf/QrEjIpJOTr
-X-Google-Smtp-Source: AAOMgpdNq2GjpM1zMIgFuI+96fAHjk90PXzwCBAX5J9bC2zRpLd2hEu9ug8PmOojaRVE2wjRVI5Yrg==
-X-Received: by 2002:a6b:870e:: with SMTP id
-	j14-v6mr16187978iod.208.1531773486383; 
-	Mon, 16 Jul 2018 13:38:06 -0700 (PDT)
+	bh=NHU22ETBVf463UgMPi7qMCL06nuVW78XN54Bv67QoO0=;
+	b=I1cr94LCq35rrrojNjq2n9uy+z3L9NHBEhRVhTyTTRnOKEvbTmhJPFbAJnJqf2ApHQ
+	lFFV2QZf6ecUrKt8szmRFvjWaP3VKToCgZtmIrseGfraTzCW49UfHsYIiQIAyKfQekjT
+	/KGIaLTr02MA5LmCFtesXV+2/HHlESLtrPGsgnXF6deKBfiAucv1Xwzd4NxetfOCwZmd
+	iUaSDj7Jb/YTIBNQq1C9TLpNNVQ4lFWlexAS13m2CaQw1srsYbGZH+We781XKKr+obkS
+	iDjYOlPBmHVPv8RShb+Y0Z4FoBEWZqIqLVniwfN0Ao7pLvvKC5rkuUJwRccLrY30DRjo
+	/dmg==
+X-Gm-Message-State: AOUpUlFmlVaB92TiQq7Rfp4ctJIzxWsfX+yF9i4tgaI2F0IJ+VtmfE7Y
+	yQbwk0BAVzDghX+3NL8VBckjOLCp
+X-Google-Smtp-Source: AAOMgpfQC3eJ5QlaW7SWJDkUfm1HBGVlquNh57H4OxnzmL7kCFFab5fSbMrLZQdVcIaIvueFnF49uQ==
+X-Received: by 2002:a6b:450c:: with SMTP id
+	s12-v6mr13955906ioa.273.1531773487094; 
+	Mon, 16 Jul 2018 13:38:07 -0700 (PDT)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	r199-v6sm8988222itb.8.2018.07.16.13.38.05
+	r199-v6sm8988222itb.8.2018.07.16.13.38.06
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 16 Jul 2018 13:38:05 -0700 (PDT)
+	Mon, 16 Jul 2018 13:38:06 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org,
 	openembedded-core@lists.openembedded.org
-Date: Mon, 16 Jul 2018 15:37:21 -0500
-Message-Id: <20180716203728.23078-3-JPEWhacker@gmail.com>
+Date: Mon, 16 Jul 2018 15:37:22 -0500
+Message-Id: <20180716203728.23078-4-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20180716203728.23078-1-JPEWhacker@gmail.com>
 References: <20180716203728.23078-1-JPEWhacker@gmail.com>
-Subject: [RFC 2/9] siggen: Split out stampfile hash fetch
+Subject: [RFC 3/9] siggen: Split out task depend ID
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,48 +58,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Jul 2018 20:38:05 -0000
+X-List-Received-Date: Mon, 16 Jul 2018 20:38:06 -0000
 
-The mechanism used to get the hash for a stamp file is split out so that
-it can be overridden by derived classes
+Abstracts the function to get the dependency ID for a task so it can
+return something other that the taskhash
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/siggen.py | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/siggen.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index ab228e4148e..d2dfcbc3fdb 100644
+index d2dfcbc3fdb..0b1393e21d5 100644
 --- a/bitbake/lib/bb/siggen.py
 +++ b/bitbake/lib/bb/siggen.py
-@@ -331,6 +331,13 @@ class SignatureGeneratorBasic(SignatureGenerator):
- class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
-     name = "basichash"
+@@ -41,6 +41,9 @@ class SignatureGenerator(object):
+     def finalise(self, fn, d, varient):
+         return
  
-+    def get_stampfile_hash(self, task):
-+        if task in self.taskhash:
-+            return self.taskhash[task]
++    def get_depid(self, task):
++        return self.taskhash[task]
 +
-+        # If task is not in basehash, then error
-+        return self.basehash[task]
-+
-     def stampfile(self, stampbase, fn, taskname, extrainfo, clean=False):
-         if taskname != "do_setscene" and taskname.endswith("_setscene"):
-             k = fn + "." + taskname[:-9]
-@@ -338,11 +345,9 @@ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
-             k = fn + "." + taskname
-         if clean:
-             h = "*"
--        elif k in self.taskhash:
--            h = self.taskhash[k]
-         else:
--            # If k is not in basehash, then error
--            h = self.basehash[k]
-+            h = self.get_stampfile_hash(k)
-+
-         return ("%s.%s.%s.%s" % (stampbase, taskname, h, extrainfo)).rstrip('.')
+     def get_taskhash(self, fn, task, deps, dataCache):
+         return "0"
  
-     def stampcleanmask(self, stampbase, fn, taskname, extrainfo):
+@@ -206,7 +209,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+                 continue
+             if dep not in self.taskhash:
+                 bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
+-            data = data + self.taskhash[dep]
++            data = data + self.get_depid(dep)
+             self.runtaskdeps[k].append(dep)
+ 
+         if task in dataCache.file_checksums[fn]:
+@@ -281,7 +284,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+             data['file_checksum_values'] = [(os.path.basename(f), cs) for f,cs in self.file_checksum_values[k]]
+             data['runtaskhashes'] = {}
+             for dep in data['runtaskdeps']:
+-                data['runtaskhashes'][dep] = self.taskhash[dep]
++                data['runtaskhashes'][dep] = self.get_depid(dep)
+             data['taskhash'] = self.taskhash[k]
+ 
+         taint = self.read_taint(fn, task, referencestamp)
 -- 
 2.17.1
 
