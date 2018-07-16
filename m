@@ -1,51 +1,51 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it0-f65.google.com (mail-it0-f65.google.com
-	[209.85.214.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 69A2B754B4;
-	Mon, 16 Jul 2018 20:38:08 +0000 (UTC)
-Received: by mail-it0-f65.google.com with SMTP id s7-v6so22802051itb.4;
-	Mon, 16 Jul 2018 13:38:09 -0700 (PDT)
+Received: from mail-io0-f182.google.com (mail-io0-f182.google.com
+	[209.85.223.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 5EA0F7885E;
+	Mon, 16 Jul 2018 20:38:09 +0000 (UTC)
+Received: by mail-io0-f182.google.com with SMTP id q4-v6so39122144iob.2;
+	Mon, 16 Jul 2018 13:38:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=AJ3Vtv2nzIv2k9zSMZxW30sDdac2tE+UQoVo+f3Jr7A=;
-	b=Kg2SlDjKS3LYYtuIcW5YGyGdT2lI6QeSkvSlcQ48aKXi7LQFwW5gTsfGUuSb/+kM5H
-	UqqN5whM+Cvp976Pxcmu9HLSbTmwzzKwYKnhnD79U8Dk7F715Rr9lZUu6CKtv1WyoTfY
-	5SisWcNGI+kVOCgi1ZvJbCEj20/awwkf73QQgnqEzbdYlsgS44jwB502f7v0cqKlMqUb
-	6zoaQV6osP+WUaE0+ZCTFlq/CFalZ3/F6IPeU9MMfGvjJDxTnwIhPeJ52IB2PDkDjfxE
-	WyD8ve3Aj+7tF2gmJ/d/YOZWwNiPBu91ey0vbtymVNYg+NtGykmZnG5l2UkFIY4S/nw9
-	RjJw==
+	bh=QST87woGd/8rnWj9USG1ZgQQZZlG5VrD8W7zJ6WCS0k=;
+	b=J1Gfq2WPz86YMDOBWBsZKoUVeFV8nq49hMcpkbpITxJsuVkk37hhAMk8aenhK45NRA
+	JEzLL/YnsczcL2IjIOOIwBljLunWO1fcDG5F2C3Nm2f11Udu3bJPgriBYU2BcoTjGx5F
+	VTuzNLOcWKmk8QuWq9SeHzEfHH63LT6dg168m534NfvdPgXRGcS1H4Qe32V2qGrPEjNr
+	R2Lv6fV6jlLiG+UdeqmZR5ag/DXa5/stqEz+iECduZj8u6g2pXhKWDwPWmurzUXP9thR
+	VETPxEe70Q/sqXzSIBHvAPn9LBfFq/SmLmKVUWY3fp+4Zl+eFzzWi1h/XElD2IfRdmk3
+	Ah0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=AJ3Vtv2nzIv2k9zSMZxW30sDdac2tE+UQoVo+f3Jr7A=;
-	b=RaNy9XGq8jaBSweXIb20G+QTcy8MRtffp8W00hVcS0QNcx3AxIZ7aW0SPniYarLDBW
-	JM3T2oA9sQT1HN7Or7O5/axyHd0z4qghP0oYJytszaZuiPjtP56uUE1WFhQHfD7VvEN7
-	za7aTL8QDWYfDvh2RiR2sMQDj51uHhF3lM95zZYcclyzk0XxD/Wda8wMNvL0AkCb63hM
-	zXfxojLWa6rGQauY78Se2n7QljoXqBC000Eyc23cMdP/eh0q80AoYmntiOb88ZbjmtSA
-	8fVLKQLjRwQ2x03DxsFFRa+KA1/Z9X7rW0ULMALG3c87HJC5/iXUcsGb4TR2nIatctCU
-	FlIg==
-X-Gm-Message-State: AOUpUlENI9B31oVmUfvvvRuo+I+hBqMUur/omGmAlZ0lksBTJFUec35L
-	Lpx8eje5eVED1awqSOf8/TpScf61
-X-Google-Smtp-Source: AAOMgpeWW8pC4aXU5XMYaFS3DjSh0OnmhNNKQR0dENUGoRG393JNAZkYxVUb9hsSH0WWAz1XNeAvOw==
-X-Received: by 2002:a24:624f:: with SMTP id
-	d76-v6mr13826185itc.78.1531773489377; 
-	Mon, 16 Jul 2018 13:38:09 -0700 (PDT)
+	bh=QST87woGd/8rnWj9USG1ZgQQZZlG5VrD8W7zJ6WCS0k=;
+	b=rS/Klp0QLq2xx0C+ZlZKue7pZDR0IVDI//ymfO25OO2nxDJUqZJYJdO3Xwfr4Qtcjk
+	JJXvXHC5KVfx0RmpX65jzqH0w5KUCdY/tPNjsgBcnXoul9IodzpFnKMh4ua09EvjNh07
+	t5WHF7HObeR88KS5L2eMVqW2YPWbVzYQJWr4pyQqaC9W+Tk22ZfACDgx5vv/IZDYEuRR
+	0uZ31Sk87j6mD9BjnNURrfOevPBpZAI1t+pnzszNy37Y77f3ffMLMQ5v0UIP8D6mjDXB
+	/LRvgyYlf+PCjYRRtIzm8HvldYsKKXpU7P/SjuaEur2MvtHkOoB1QnK7RyWfJ8l6/CyM
+	cX/w==
+X-Gm-Message-State: AOUpUlGvuUpljuvUjaQEsHSZjXDHHRUntzQzNt7HqHHTdhQsyMXKmDza
+	xjXJLUCoc/QmtEW8i0iYm/BLMPaY
+X-Google-Smtp-Source: AAOMgpcPs5vfu7YDFI2mrLz4+QoafRVX/31cw9ZBStztiki3ZGeFbt2gIYN67GDjFBkbXFjXphqAVw==
+X-Received: by 2002:a6b:b983:: with SMTP id
+	j125-v6mr39165392iof.43.1531773490234; 
+	Mon, 16 Jul 2018 13:38:10 -0700 (PDT)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	r199-v6sm8988222itb.8.2018.07.16.13.38.08
+	r199-v6sm8988222itb.8.2018.07.16.13.38.09
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 16 Jul 2018 13:38:08 -0700 (PDT)
+	Mon, 16 Jul 2018 13:38:09 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org,
 	openembedded-core@lists.openembedded.org
-Date: Mon, 16 Jul 2018 15:37:25 -0500
-Message-Id: <20180716203728.23078-7-JPEWhacker@gmail.com>
+Date: Mon, 16 Jul 2018 15:37:26 -0500
+Message-Id: <20180716203728.23078-8-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20180716203728.23078-1-JPEWhacker@gmail.com>
 References: <20180716203728.23078-1-JPEWhacker@gmail.com>
-Subject: [RFC 6/9] runqueue: Pass dependency ID to hash validate
+Subject: [RFC 7/9] classes/sstate: Handle depid in hash check
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,75 +58,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Jul 2018 20:38:08 -0000
+X-List-Received-Date: Mon, 16 Jul 2018 20:38:09 -0000
 
-If the dependency ID is being used to track task dependencies, the hash
-validation function needs to know about it in order to properly validate
-the hash.
-
-TODO: This currently isn't going to be backward compatible with older
-hashvalidate functions. Is that necessary, and if so are there any
-suggestions for a good approach?
+Handles the argument that passes task dependency IDs in the hash check
+function, as it is now required by bitbake
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/runqueue.py | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ meta/classes/sstate.bbclass | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 5922431bbe1..82dce426bd1 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1531,6 +1531,7 @@ class RunQueue:
-         valid = []
-         sq_hash = []
-         sq_hashfn = []
-+        sq_depid = []
-         sq_fn = []
-         sq_taskname = []
-         sq_task = []
-@@ -1549,15 +1550,16 @@ class RunQueue:
-             sq_fn.append(fn)
-             sq_hashfn.append(self.rqdata.dataCaches[mc].hashfn[taskfn])
-             sq_hash.append(self.rqdata.runtaskentries[tid].hash)
-+            sq_depid.append(self.rqdata.runtaskentries[tid].depid)
-             sq_taskname.append(taskname)
-             sq_task.append(tid)
--        locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
-+        locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "sq_depid" : sq_depid, "d" : self.cooker.data }
-         try:
--            call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=True)"
-+            call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d, siginfo=True)"
-             valid = bb.utils.better_eval(call, locs)
-         # Handle version with no siginfo parameter
-         except TypeError:
--            call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
-+            call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d)"
-             valid = bb.utils.better_eval(call, locs)
-         for v in valid:
-             valid_new.add(sq_task[v])
-@@ -2269,6 +2271,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         if self.rq.hashvalidate:
-             sq_hash = []
-             sq_hashfn = []
-+            sq_depid = []
-             sq_fn = []
-             sq_taskname = []
-             sq_task = []
-@@ -2300,10 +2303,11 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                 sq_fn.append(fn)
-                 sq_hashfn.append(self.rqdata.dataCaches[mc].hashfn[taskfn])
-                 sq_hash.append(self.rqdata.runtaskentries[tid].hash)
-+                sq_depid.append(self.rqdata.runtaskentries[tid].depid)
-                 sq_taskname.append(taskname)
-                 sq_task.append(tid)
--            call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
--            locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
-+            call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d)"
-+            locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "sq_depid": sq_depid, "d" : self.cooker.data }
-             valid = bb.utils.better_eval(call, locs)
+diff --git a/meta/classes/sstate.bbclass b/meta/classes/sstate.bbclass
+index 5a0722567a5..b11f56b799b 100644
+--- a/meta/classes/sstate.bbclass
++++ b/meta/classes/sstate.bbclass
+@@ -759,7 +759,7 @@ sstate_unpack_package () {
  
-             valid_new = stamppresent
+ BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
+ 
+-def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
++def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d, siginfo=False):
+ 
+     ret = []
+     missed = []
 -- 
 2.17.1
 
