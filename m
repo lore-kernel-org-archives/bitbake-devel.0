@@ -1,56 +1,54 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it0-f66.google.com (mail-it0-f66.google.com
-	[209.85.214.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 2B9AA78A09;
-	Tue, 17 Jul 2018 13:44:41 +0000 (UTC)
-Received: by mail-it0-f66.google.com with SMTP id p4-v6so1865243itf.2;
-	Tue, 17 Jul 2018 06:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:message-id:subject:to:date:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=w45jwih7LSvwqGYmXtTASA1keYt8hiZLaocI9mhdxM8=;
-	b=lW99gvxe6/YoIcye50Dxxq7GOfFdW/1tbOlcGJ5Z5hmkKpW0OVeoWv3Usg07woSRjk
-	Z9EPAmjjWhspGmKoIhv66EO78Qv2ps4NJAUr/U7f0lrVtnas8teZc3DHaHi8f6kTX0lj
-	RlDApiQdXPM4yFF+wO2MR3wbFKfuHAeEUOi14NQGXlutago/gCnLYle9NpeN+2nCNOtn
-	kKfch8IegQQXjFJfol/oobzv6RrjGEW63i2XSXGPOay/EHduuEzy2LnpXrpjFObzt5hc
-	FzNVS6GYxnNhnnerpHIMOcvB5Wwyt0Qtz/caEFnuW7WXRNLmx3U4BCX5ehT9Imc3DcTZ
-	L4Pg==
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+	[209.85.221.48])
+	by mail.openembedded.org (Postfix) with ESMTP id A394A7546E
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 17 Jul 2018 14:00:48 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id c4-v6so1367806wrs.12
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 17 Jul 2018 07:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:cc:date:in-reply-to:references
+	:mime-version:content-transfer-encoding;
+	bh=0cHY6YSTqu1cwa6mXndOvyBZa4wU7ksqVFByHIYtS5E=;
+	b=dB24I4GQ/K/InVz0z5P2SC3bOVTkBxayIgdfXB4pIMPZPK0bsUFXLIa/2axS26AvLM
+	WK+0LDTayxRW7SHvoRewL1j+3QcwgrMYEEtMtli7lOGP0Xpxe5oHbqxe5rFATot+gxZe
+	aFT8KTqAZRunWHDcmrdqLSKoQxLuyeWhGGeyo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:message-id:subject:to:date:in-reply-to
+	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=w45jwih7LSvwqGYmXtTASA1keYt8hiZLaocI9mhdxM8=;
-	b=FHkiTwnl9EcvYuR0MRhNpVED6JxA4UDa+YsDqSEJpv3pdYoFgdR+vq9C+veqC0B1h5
-	zCAEAJdQK3Yk1okxkiLzbyKQmPAIjmH8I5kNo0UTruFnPJMyXer43mN55EPGb8/g4cil
-	K1Zg2r8jLLiZWYEpnTLvNuUtVM11gMACt5VmNNHy04mDLoyKiGUuE1ukvW7nMoBwnqlV
-	7Eve+KM5g5QBTFs//bbx8Ce5zzAFVpGv3i2XWvTk047ctjOhpCyfi+mJ6j9xlr7zKISA
-	iNa5TaIZy88XNqRNAapsh+XB2+mZTZlC7z+sBFDzV+cXpwlUeNVD7NZlHjBVBI/ztV3N
-	zWUg==
-X-Gm-Message-State: AOUpUlGuQTZULWSDUWlCRx+0yPQHesBVPg+YqD1CuxRwKJ362BcaOMrT
-	dVb7URY5tJd5oTBzA8qfm90=
-X-Google-Smtp-Source: AAOMgpcfrJtLKPjPMMj63p3PyvioyKc0COrWpHeRoIQnqsJg0iQ78x6TOJh1xV6pyiAtA4/I4i5kWA==
-X-Received: by 2002:a02:952a:: with SMTP id
-	y39-v6mr1567279jah.60.1531835082086; 
-	Tue, 17 Jul 2018 06:44:42 -0700 (PDT)
-Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-	by smtp.googlemail.com with ESMTPSA id
-	69-v6sm471889itk.3.2018.07.17.06.44.41
+	bh=0cHY6YSTqu1cwa6mXndOvyBZa4wU7ksqVFByHIYtS5E=;
+	b=iqZ8YuOPiqB2Jkae1Wz12FPF195lV1bs6IJn06vb7LhX5SCdGUHMMutAfT4a9EB1KN
+	koR2p8pgVuZRUzdmbaQUm9ulKKSNXr6qRSNruJyq8Vz4qgRkUcP/47wb1mqILX3Bau+c
+	UJuGjsnn7OrdzSRsAvYZfQrbQRkfVotJTZTUkCWq+KDYSuRbqqh9r8lZgwntIo+mDwoI
+	NMq9CyrBsxICYO0o9R9OGv6tZPoamilyn2m7JslBqToF8uwsJpMSYdbC5I1/gLJUOvNN
+	3PGZruCZ/rN/yTNwpYYXlTFrEIL1Ym/PW6ODDH7OBj4Tqvc9lAYUJ5aWe708DH65Y4ED
+	puKw==
+X-Gm-Message-State: AOUpUlED58u14EZhdOCJiy3CH32N4FXH2l4AWwMHMOLF5MJIowwg5hU4
+	+ozMWjdbnxtAROWK5ZbmoaDEtQ==
+X-Google-Smtp-Source: AAOMgpdedpdBQLjKWsuD4CRqVGGnAbB/M1AzxpW5OTpBmEf2fb3HoEmQbdPSY0bKkFhMt+ArD2sJkw==
+X-Received: by 2002:adf:f8c7:: with SMTP id
+	f7-v6mr1472096wrq.237.1531836049138; 
+	Tue, 17 Jul 2018 07:00:49 -0700 (PDT)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	f18-v6sm1626454wrt.64.2018.07.17.07.00.47
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 17 Jul 2018 06:44:41 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-Message-ID: <69eb1757755a0700789c6d8bb78e8c2a8ea68a0a.camel@gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Date: Tue, 17 Jul 2018 08:44:40 -0500
-In-Reply-To: <c90e84ccea269649256438f026bf97cfeb794800.camel@linuxfoundation.org>
-References: <20180716203728.23078-1-JPEWhacker@gmail.com>
-	<20180716203728.23078-9-JPEWhacker@gmail.com>
-	<c90e84ccea269649256438f026bf97cfeb794800.camel@linuxfoundation.org>
-X-Mailer: Evolution 3.28.3 (3.28.3-1.fc28) 
+	Tue, 17 Jul 2018 07:00:48 -0700 (PDT)
+Message-ID: <8afc9bc960e469d4e243e7512a0285c2dd36a584.camel@linuxfoundation.org>
+From: richard.purdie@linuxfoundation.org
+To: Urs =?ISO-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 17 Jul 2018 15:00:46 +0100
+In-Reply-To: <1531834769.2962.38.camel@bbv.ch>
+References: <1531826153.2962.36.camel@bbv.ch>
+	<27b7bf4b1cd46e051b3c9c9e109ecacf6f238336.camel@linuxfoundation.org>
+	<1531834769.2962.38.camel@bbv.ch>
+X-Mailer: Evolution 3.28.1-2 
 Mime-Version: 1.0
-Subject: Re: [RFC 8/9] hashserver: Add initial reference server
+Subject: Re: Issue with bitbake fetch/unpack when using MIRRORS rewrite
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,101 +61,127 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 17 Jul 2018 13:44:41 -0000
+X-List-Received-Date: Tue, 17 Jul 2018 14:00:49 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2018-07-17 at 13:11 +0100, Richard Purdie wrote:
-> On Mon, 2018-07-16 at 15:37 -0500, Joshua Watt wrote:
-> > Adds an initial reference implementation of the hash server.
+On Tue, 2018-07-17 at 15:39 +0200, Urs Fässler wrote:
+> You can reproduce the problem with a current (rocko) Yocto. Add the
+> following lines in local.conf:
+>   BB_GIT_SHALLOW = "1"
+>   BB_GENERATE_MIRROR_TARBALLS = "1"
+>   PREMIRRORS += "git://git.yoctoproject.org/.*
+> git://git.yoctoproject.org/git/PATH;protocol=https \n"
+> 
+> and execute
+>   bitbake fstests -c unpack
+> 
+> You should get something like:
+>   tar -xzf
+> .../build/downloads/gitshallow_git.yoctoproject.org.fstests_e5939ff-
+> 1_master.tar.gz failed with exit code 2, output:
+>   tar (child):
+> .../build/downloads/gitshallow_git.yoctoproject.org.fstests_e5939ff-
+> 1_master.tar.gz: Cannot open: No such file or directory
+> 
+> What happens is that the download step generates the tarball:
+>   gitshallow_git.yoctoproject.org.git.fstests_e5939ff-1_master.tar.gz
+> but the unpack step expects the tarball:
+>   gitshallow_git.yoctoproject.org.fstests_e5939ff-1_master.tar.gz
+> 
+> The difference in the tarball names come from the different url used
+> in the recipe and when rewritten according to PREMIRRORS.
+
+Is this just a problem with shallow clones or with git recipes in
+general and the above was just a simple/fast example?
+
+> The symlink solution would add a symlink from
+> gitshallow_git.yoctoproject.org.fstests_e5939ff-1_master.tar.gz to
+> gitshallow_git.yoctoproject.org.git.fstests_e5939ff-1_master.tar.gz.
+>
+> The recipe-url solution would name the tarball
+> gitshallow_git.yoctoproject.org.fstests_e5939ff-1_master.tar.gz.
+>
+> > > Now the question is which solution we should implement. For us,
+> > > it
+> > > is
+> > > the second one (tarball naming after recipe-url). It comes with
+> > > the
+> > > downside that the one mentioned test fails and has to be removed.
+> > > In
+> > > a
+> > > real scenario this results in downloading a repository twice and
+> > > having
+> > > 2 tarballs with the same content. But I expect this to be
+> > > unlikely
+> > > in
+> > > a
+> > > real world scenario.
+> > > 
+> > > A third solution may be that we add a link between the download
+> > > and
+> > > unpack task. But this would be the most intrusive solution for
+> > > Bitbake.
 > > 
-> > NOTE: This is my first dive into HTTP & REST technologies. Feedback
-> > is
-> > appreciated. Also, I don't think it will be necessary for this
-> > reference
-> > implementation to live in bitbake, and it can be moved to it's own
-> > independent project if necessary?
-> > 
-> > Also, this server has some concurrency issues that I haven't
-> > tracked
-> > down and will occasionally fail to record a new POST'd task with an
-> > error indicating the database is locked. Based on some reading, I
-> > believe this is because the server is using a sqlite backend, and
-> > it
-> > would go away with a more production worthy backend. Anyway, it is
-> > good
-> > enough for some preliminary testing.
-> > 
-> > Starting the server is simple and only requires pipenv to be
-> > installed:
-> > 
-> >  $ pipenv shell
-> >  $ ./app.py
+> > I'm more than a little concerned about the symlink comment since
+> > the
+> > fetcher assumes that symlinks work in other places too.
 > 
-> I need to spend some time digesting this series but this patch did
-> make
-> me a little sad.
+> Sorry for concerning you. I think it is no issue. We generate the
+> tarballs and archive them on a system without symlinks. Then we get
+> the tarballs over http with the help of a premirror rule. We do it as
+> described in the Bitbake manual chapter "The Download (Fetch)". I
+> expect this to be a fairly common use case.
 > 
-> I'm hoping we can make the hash equivalence server something people
-> use
-> easily and perhaps part of bitbake. The dependencies you've used in
-> this code mean it has a significantly higher "barrier to use" than
-> most
-> of our other code though :(
-
-Ah, I didn't realize there was desire to have it actually be part of
-bitbake... That would change the strategy considerably.
-
-I think that is a worth while discussion to have. I obviously wasn't
-thinking the server would be part of bitbake, I was more thinking it
-would probably be an independent project (I even have a name picked out
-already ;), so I'm curious what thoughts there are on the advantages
-and disadvantages of doing that.
-
-> On the one hand I can understand people wanting to use dependencies
-> and
-> new technology. On the other, keeping things simple also has
-> advantages.
-
-Sure. Pipenv makes it pretty easy to pull in a lot of shiny modules
-that you don't necessarily need, and I may have gone a little
-overboard. I do have some justification for *most* of the things I
-brought in besides just "it looked cool". We can dig into them deeper.
-
-However, pipenv (or python virtual environments) are designed to amke
-these types of decisions easier, so I think that the discussion about
-what dependencies we do or don't want should probably start there (i.e.
-do we allow pipenv or not?). Basically, it's much easier to pull in the
-dependencies you need (and even fix versions for production use) with
-pipenv. This of course doesn't mean you can be careless about what you
-pull in, but it makes you a lot more independent from the host setup.
-
+> Another rationale for the recipe-url solution is that the mirrors are
+> used when the server from the recipe-url is not available. When we
+> generate a tarball, it would be strange that the name of it depends
+> on some local conditions (closed ports, local mirror rewrite rules,
+> ...) rather than the recipe.
+> This probably invalidates my argument that the symlink solution is
+> nice since it has the same method for naming as the git clone naming.
+> This are 2 quite different use cases.
 > 
-> Even the minimum python version is potentially problematic, we don't
-> even have working recipes for python 3.6!
-
-Oh right! Pipenv defaults to the version of Python you have installed.
-I'm pretty sure you can relax the restriction to just "python 3", but I
-forgot to do so before I pushed the patch.
-
+> > Also, do you have any new test cases to add which illustrate it?
 > 
-> I appreciate its a reference and means we can test the rest of the
-> code
->  so its good but we may need a different implementation of this
-> ultimately.
+> I have a test but it is a bit tricky since there are 2 issues. The
+> one you see (as mentioned above with Yocto) is actually not the real
+> problem but an issue that is only seen in this scenario.
 
-I think perhaps my use of the term "reference implementation" was too
-strong. "Example implementation for testing", or "toy implementation"
-might be more inline with my intention. 
+Could we have separate test cases for the two issues?
+
+> Since I am now quite sure that the solution where we use the recipe-
+> url for the tarball name is the correct one, I like to reformulate my
+> Question: Do you see a reason why it is a bad solution?
+> 
+> If you don't see a problem I will implements this behavior. The
+> failing test will be replaced with other tests that capture the new
+> behavior.
+
+For better/worse, the current fetcher behaviour with mirrors was to use
+symlinks to represent the path its resolved through. We use them in a
+variety of cirumstances such as when referencing local file:// mirrors
+we can't write to.
+
+My instinct is therefore to have all the fetchers behave the same way
+with regard to how DL_DIR works. Having consistency is important and
+multiple code paths with different behaviour has caused us problems in
+the past.
+
+At the back of my mind there is some thinking that the symlink approach
+does protect us against some potential data duplication in the
+downloads directory but I'm out of time to work through that thought
+right now.
+
+Can you confirm if the normal git fetcher has the issue or its just
+shallow clones as that is probably important?
+
+I'd be interested to see your alternative patches too if you have them.
+
+Cheers,
+
+Richard
 
 
-Thanks,
-Joshua Watt
 
-> 
-> 
-> Cheers,
-> 
-> Richard
-> 
 
