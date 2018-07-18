@@ -1,30 +1,33 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 5D79E72EA5
+Return-Path: <pn@denx.de>
+X-Greylist: delayed 420 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 18 Jul 2018 09:10:55 UTC
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+	by mail.openembedded.org (Postfix) with ESMTP id 760B178862
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Jul 2018 07:03:11 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	18 Jul 2018 00:03:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.51,369,1526367600"; d="scan'208";a="73297872"
-Received: from yanbeibe-mobl2.ger.corp.intel.com (HELO localhost.localdomain)
-	([10.249.33.35])
-	by fmsmga001.fm.intel.com with ESMTP; 18 Jul 2018 00:03:11 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Mark Hatle <mark.hatle@windriver.com>
-Date: Wed, 18 Jul 2018 09:03:10 +0200
-Message-ID: <9175757.rJd2U26s3Q@localhost.localdomain>
-Organization: Intel Corporation
-In-Reply-To: <0caa3638-b5fa-d18a-1776-2ca510f18173@windriver.com>
-References: <20180712203413.118578-1-mark.hatle@windriver.com>
-	<2844607.YnhVh9u1Q8@localhost.localdomain>
-	<0caa3638-b5fa-d18a-1776-2ca510f18173@windriver.com>
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/5] Add a standard module for accessing the layerindex
+	Wed, 18 Jul 2018 09:10:55 +0000 (UTC)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 41VrmX0Z9tz1qxQT;
+	Wed, 18 Jul 2018 11:03:56 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+	by mail.m-online.net (Postfix) with ESMTP id 41VrmX0RrTz1vB6c;
+	Wed, 18 Jul 2018 11:03:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
+	port 10024)
+	with ESMTP id Tj4ndzSeeWE6; Wed, 18 Jul 2018 11:03:55 +0200 (CEST)
+X-Auth-Info: IR/0hoZNoSLUnU4RcPT5Gz6PDmyr0CmRIQHMpDVN5oM=
+Received: from xpert.denx.de (unknown [62.91.23.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Wed, 18 Jul 2018 11:03:55 +0200 (CEST)
+From: Parthiban Nallathambi <pn@denx.de>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 18 Jul 2018 11:03:39 +0200
+Message-Id: <20180718090339.3914-1-pn@denx.de>
+X-Mailer: git-send-email 2.14.4
+Subject: [PATCH] bitbake: fetch2/npm.py: Allow shrinkwrap resolved relative URL which startswith 'http' (e.g http-proxy)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,92 +40,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Jul 2018 07:03:11 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Wed, 18 Jul 2018 09:10:55 -0000
 
-On Tuesday, 17 July 2018 10:56:14 PM CEST Mark Hatle wrote:
-> > 2) I feel like the ;type= stuff is an unnecessary complication. Can we not 
-> > just treat http URLs as being restapi and local:// (or something similarly 
-> > simple) as being the local configuration? The plugins could simply have a 
-> > function that returns True if it can handle the URL, as we do in bb.fetch2, 
-> > and we take the first one that returns True or error out if none do.
-> 
-> Behind the scenes the issue is that I expect there to be different plugins that
-> allow data manipulation in similar ways, but with different processing.  I was
-> afraid of overriding the URI part, thus added the type field instead.
-> 
-> If we can come up with a proper format for this, then I think we could drop the
-> typing..  but what I've come up with so far is that we need:
-> 
-> Cooker - data from the local cooker instance
+shrinkwrap resolved relative URL can start with http. For example,
+"resolved: http-proxy/-/http-proxy-${PV}.tgz" is still relative URL
+to npm registry, but starts with http.
 
-local:// ?
+Current if statement compares the startswith 'resolved' to 'http',
+which makes impossible to use npm download. Condtional comparison
+now strictly checks for "http://" and "https://"
 
-> restapi-web - knowledge of how to load and parse layerindex-web data
+Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+---
+ bitbake/lib/bb/fetch2/npm.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-http:// or https:// surely?
-
-> restapi-file - a json formatted file with all of the data.. (Note: in this case,
-> it can be one or more files, but everything has to be loaded together)
-
-file:// ?
-
-If the desire was to also allow downloading json files over http/https you could make
-the decision after a quick query or simply check if the URL ends in .json.
-
-> (the web and file stuff are co-mingled right now, maybe that is a mistake...
-> they were put together since for 'offline' work, the web should be able to use a
-> cached file...)
-> 
-> Looking at toaster, I could see the need for a 'database' way to store and load
-> it... but I'm not sure that is a good longer term idea.
-
-Toaster uses the Django ORM to access the database, so you wouldn't be
-connecting to the database directly; you could make it accessible via a simple
-scheme such as toaster://.
-
-> > 5) I'd like to see the data classes (e.g. Recipe) have actual python 
-> > properties on top of the getter functions, and the rest of the code should 
-> > then use the properties. recipe.pn is a bit neater than recipe.get_pn() 
-> > particularly as the former mirrors usage within the layer index code itself as 
-> > well as tinfoil's TinfoilRecipeInfo (although TinfoilRecipeInfo doesn't 
-> > actually use properties - it probably should - but the usage syntax is the key 
-> > bit).
-> 
-> I'm not sure I understand.
-> 
-> You mean something like:
-> 
-> class Recipe(LayerIndexItem_LayerBranch):
->     ...
-> 
->     self.pn = value
-> 
-> so you can do recipe.pn vs recipe.pn() or get_pn()?
-> 
-> The reason it's setup the way it is, is to preserve the data in the same format
-> as the layerindex itself.  This allows someone to just dump the recipe.data
-> directly, and everything stays in format.   Does python have a way to return
-> processed data without it looking like a function call, i.e. with the ()?
-> 
-> Is this what __getattr()__ is for?
-
-It's one way of implementing it, but the much cleaner way is to use python's 
-built-in support for properties:
-
-  https://www.programiz.com/python-programming/property
-
-The underlying data storage doesn't have to change, your getter function can
-still read the values in whatever way it wants to.
-
-Cheers,
-Paul
-
+diff --git a/bitbake/lib/bb/fetch2/npm.py b/bitbake/lib/bb/fetch2/npm.py
+index ba7fa43a82..5e7fc2f769 100644
+--- a/bitbake/lib/bb/fetch2/npm.py
++++ b/bitbake/lib/bb/fetch2/npm.py
+@@ -234,7 +234,7 @@ class Npm(FetchMethod):
+                         self._getshrinkeddependencies(obj, data['dependencies'][obj], data['dependencies'][obj]['version'], d, ud, lockdown, manifest, False)
+                         return
+         outputurl = "invalid"
+-        if ('resolved' not in data) or (not data['resolved'].startswith('http')):
++        if ('resolved' not in data) or (not data['resolved'].startswith('http://')) or (not data['resolved'].startswith('https://')):
+             # will be the case for ${PN}
+             fetchcmd = "npm view %s@%s dist.tarball --registry %s" % (pkg, version, ud.registry)
+             logger.debug(2, "Found this matching URL: %s" % str(fetchcmd))
 -- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
-
+2.14.4
 
 
