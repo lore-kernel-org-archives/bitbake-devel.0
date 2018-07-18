@@ -1,38 +1,35 @@
 Return-Path: <pn@denx.de>
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 1E4A078741
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
+	by mail.openembedded.org (Postfix) with ESMTP id F3F4E789B2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Jul 2018 14:03:37 +0000 (UTC)
+	Wed, 18 Jul 2018 14:14:17 +0000 (UTC)
 Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-	by mail-out.m-online.net (Postfix) with ESMTP id 41VzQL1Qv1z1r5jJ;
-	Wed, 18 Jul 2018 16:03:37 +0200 (CEST)
+	by mail-out.m-online.net (Postfix) with ESMTP id 41Vzff1kR0z1r3kM;
+	Wed, 18 Jul 2018 16:14:18 +0200 (CEST)
 Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-	by mail.m-online.net (Postfix) with ESMTP id 41VzQK5qwCz1vB6k;
-	Wed, 18 Jul 2018 16:03:37 +0200 (CEST)
+	by mail.m-online.net (Postfix) with ESMTP id 41Vzff1Ggnz1vB6k;
+	Wed, 18 Jul 2018 16:14:18 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at mnet-online.de
 Received: from mail.mnet-online.de ([192.168.8.182])
 	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
 	port 10024)
-	with ESMTP id YNhO2qIHu6Ex; Wed, 18 Jul 2018 16:03:37 +0200 (CEST)
-X-Auth-Info: 1lG3z57g20WW549yO0bPmYdTgamgwHus03evbwXQfIU=
-Received: from antares.denx.de (unknown [62.91.23.180])
+	with ESMTP id MzUVletBldnc; Wed, 18 Jul 2018 16:14:17 +0200 (CEST)
+X-Auth-Info: 5cwWRSWgX3yn4XT3oWmJ7Jv7osdLY71DGqnSQKIS730=
+Received: from xpert.denx.de (unknown [62.91.23.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mail.mnet-online.de (Postfix) with ESMTPSA;
-	Wed, 18 Jul 2018 16:03:36 +0200 (CEST)
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-References: <20180718090339.3914-1-pn@denx.de>
-	<eb5d94efdf114065ba04e8aa536256b3@XBOX02.axis.com>
+	Wed, 18 Jul 2018 16:14:17 +0200 (CEST)
 From: Parthiban Nallathambi <pn@denx.de>
-Message-ID: <05b7fac8-2663-4032-ebc3-30f08ef46a3e@denx.de>
-Date: Wed, 18 Jul 2018 16:03:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
-	Thunderbird/52.8.0
-MIME-Version: 1.0
-In-Reply-To: <eb5d94efdf114065ba04e8aa536256b3@XBOX02.axis.com>
-Subject: Re: [PATCH] bitbake: fetch2/npm.py: Allow shrinkwrap resolved relative URL which startswith 'http' (e.g http-proxy)
+To: peter.kjellerstedt@axis.com,
+	bitbake-devel@lists.openembedded.org
+Date: Wed, 18 Jul 2018 16:14:01 +0200
+Message-Id: <20180718141401.2690758-1-pn@denx.de>
+X-Mailer: git-send-email 2.14.4
+In-Reply-To: <05b7fac8-2663-4032-ebc3-30f08ef46a3e@denx.de>
+References: <05b7fac8-2663-4032-ebc3-30f08ef46a3e@denx.de>
+Cc: wd@denx.de, sbabic@denx.de
+Subject: [PATCH] bitbake: fetch2/npm.py: Allow shrinkwrap resolved relative URL which startswith 'http' (e.g http-proxy)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,72 +42,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Jul 2018 14:03:38 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 18 Jul 2018 14:14:18 -0000
 
-Hello Peter,
+shrinkwrap resolved relative URL can start with http. For example,
+"resolved: http-proxy/-/http-proxy-${PV}.tgz" is still relative URL
+to npm registry, but starts with http.
 
-On 07/18/2018 04:01 PM, Peter Kjellerstedt wrote:
->> -----Original Message-----
->> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
->> devel-bounces@lists.openembedded.org] On Behalf Of Parthiban
->> Nallathambi
->> Sent: den 18 juli 2018 11:04
->> To: bitbake-devel@lists.openembedded.org
->> Subject: [bitbake-devel] [PATCH] bitbake: fetch2/npm.py: Allow
->> shrinkwrap resolved relative URL which startswith 'http' (e.g http-
->> proxy)
->>
->> shrinkwrap resolved relative URL can start with http. For example,
->> "resolved: http-proxy/-/http-proxy-${PV}.tgz" is still relative URL
->> to npm registry, but starts with http.
->>
->> Current if statement compares the startswith 'resolved' to 'http',
->> which makes impossible to use npm download. Condtional comparison
->> now strictly checks for "http://" and "https://"
->>
->> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
->> ---
->>   bitbake/lib/bb/fetch2/npm.py | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/bitbake/lib/bb/fetch2/npm.py b/bitbake/lib/bb/fetch2/npm.py
->> index ba7fa43a82..5e7fc2f769 100644
->> --- a/bitbake/lib/bb/fetch2/npm.py
->> +++ b/bitbake/lib/bb/fetch2/npm.py
->> @@ -234,7 +234,7 @@ class Npm(FetchMethod):
->>                           self._getshrinkeddependencies(obj, data['dependencies'][obj], data['dependencies'][obj]['version'], d, ud, lockdown, manifest, False)
->>                           return
->>           outputurl = "invalid"
->> -        if ('resolved' not in data) or (not data['resolved'].startswith('http')):
->> +        if ('resolved' not in data) or (not data['resolved'].startswith('http://')) or (not data['resolved'].startswith('https://')):
-> 
-> That is wrong (the above will always evaluate to true as long as
-> 'resolved' exists in data since both expressions testing the prefix
-> obviously cannot be false at the same time). The correct expression
-> should be:
-> 
->          if ('resolved' not in data) or (not data['resolved'].startswith('http://') and not data['resolved'].startswith('https://')):
+Current if statement compares the startswith 'resolved' to 'http',
+which makes impossible to use npm download. Condtional comparison
+now strictly checks for "http://" and "https://"
 
-Thanks for pointing. I missed it. I will update and send the v2.
+Changelog since v1:
+- Use the proper conditional statement to avoid always success
 
-> 
->>               # will be the case for ${PN}
->>               fetchcmd = "npm view %s@%s dist.tarball --registry %s" % (pkg, version, ud.registry)
->>               logger.debug(2, "Found this matching URL: %s" % str(fetchcmd))
->> --
->> 2.14.4
-> 
-> //Peter
-> 
+Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+---
+ bitbake/lib/bb/fetch2/npm.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/bitbake/lib/bb/fetch2/npm.py b/bitbake/lib/bb/fetch2/npm.py
+index 408dfc3d03..65bf5a3644 100644
+--- a/bitbake/lib/bb/fetch2/npm.py
++++ b/bitbake/lib/bb/fetch2/npm.py
+@@ -226,7 +226,7 @@ class Npm(FetchMethod):
+                         self._getshrinkeddependencies(obj, data['dependencies'][obj], data['dependencies'][obj]['version'], d, ud, lockdown, manifest, False)
+                         return
+         outputurl = "invalid"
+-        if ('resolved' not in data) or (not data['resolved'].startswith('http')):
++        if ('resolved' not in data) or (not data['resolved'].startswith('http://') and not data['resolved'].startswith('https://')):
+             # will be the case for ${PN}
+             fetchcmd = "npm view %s@%s dist.tarball --registry %s" % (pkg, version, ud.registry)
+             logger.debug(2, "Found this matching URL: %s" % str(fetchcmd))
 -- 
-Thanks,
-Parthiban Nallathambi
+2.14.4
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
 
