@@ -1,44 +1,50 @@
-Return-Path: <sherif.e.mousa@gmail.com>
-Received: from mail-oi0-f51.google.com (mail-oi0-f51.google.com
-	[209.85.218.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 11496789ED
+Return-Path: <ross.burton@intel.com>
+Received: from mail-oi0-f52.google.com (mail-oi0-f52.google.com
+	[209.85.218.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 1035271B99
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Jul 2018 13:57:15 +0000 (UTC)
-Received: by mail-oi0-f51.google.com with SMTP id d189-v6so2161101oib.6
+	Thu, 19 Jul 2018 22:24:48 +0000 (UTC)
+Received: by mail-oi0-f52.google.com with SMTP id n21-v6so2423451oig.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Jul 2018 06:57:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=ZnSDjvh995NIZewFh+4YuySxV1lCKM/zE/EPogis7iM=;
-	b=HB73fsLOhl73CpLPUGoOn8hgiJ5c1shBzXD30vylkJBQ4hH6TuDQXG7YX4bjUzXQLr
-	JDeVoRhTOeIsHy1J9QWWMNvwISTkVs7lR7cWS89fQcqA40V6dwDaNsFEo86uZ9SIPdje
-	8eLOy4M9sKfg5wD85gwPmtiOVqan0Q8jEVYeN82K7F/z2desLKeD0cGZQIvH6mzO00BU
-	ClGP5RXJlDVadl6u2GAYXXwnt7THU/gqr7XPAP1/MgztkTG23Bey4Ye2TY576XchJqEI
-	72JrLbi65bfVKLWPKVTaj6BMKapbFNc55ONWCPq3RzLtro0avELS9ImiNWF2XVeTuASC
-	JBkA==
+	Thu, 19 Jul 2018 15:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc; bh=B1+dQCaValw1ozS6OLNjNULCbuqK0wnVHaXql7++1jU=;
+	b=uyvyydXijRTk3XwCtBA/F2V7+LQW7NWfBLodC2T+tvCSIAj/OVg4nNFKsQhOh/APSY
+	b1i4aGMtkBERfULn4EekW9s0PbTkYYTAjYSMcvwaplCUevmSNOi+9pZ/iwGqDZY3KE3z
+	I75oNU0v2pmGaECCh0ntMhfB6AfLbM06x+FJfk340G6zyIx53fnap1ml/dzdfZmopssM
+	q3yRcPF8i5nSS7UoxVCvTzLRgCkksLwAZUl+Q04BCF4ZzbNq6cf2Tw+TZroo+NcW7EPP
+	x6BRSBE0kmT/s75LzD9n6vWMHxcRvTIHAT+6/nDLyTr/sdiTF02NcRAr+3qiF8J4co0z
+	pkQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=ZnSDjvh995NIZewFh+4YuySxV1lCKM/zE/EPogis7iM=;
-	b=HuyJFwZwnV3YH2QueElPKQq2Pycw1OOjThxzBGeKcE1PxJGUiJ3OjZq+lZ0Rpo+44N
-	cmtCFnTo0e0aWaSdojOEEMMpY9PuB4A5t/gQr1QAOu6l/DEo/Mr+2/jddcMMGf2vFbI9
-	Wl2NCaASZkukU3XDYGs5Ltn50unmpacV06APWBYn9e46zLMOs7Y+po0PnT+9W5dSz2px
-	EnQXEPAmFG92/ybQ+mZHaTb4fhYBfcqFAP3GeFtP5VX32XArtVqdSXhdkiaaypXVlp3F
-	7yao//eKiQXkheLRdUCOTEjGr7vAKS8FW1NGfR5YAcD3rFcIOs1Uqnb5gHCD0eCz+a/w
-	l0iw==
-X-Gm-Message-State: AOUpUlEjTaPUszfVOCPUIyRhK9wXelJMCIml7oUVlV1fF4D0oky2wlnE
-	7p8zq/451t5kYAiF7Wf+0qWI/aztfKHKPhEJy9bM9ClA
-X-Google-Smtp-Source: AAOMgpfvPpVPfOj8NvQ5LF6K8MlMINmRcqcJE9EJ9BMSJhcfy4ajfb8gQ9sUsb/3RQS25sy11AyF9+3eujhth6zTYOQ=
-X-Received: by 2002:aca:190d:: with SMTP id
-	l13-v6mr1897040oii.216.1531835836556; 
-	Tue, 17 Jul 2018 06:57:16 -0700 (PDT)
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc;
+	bh=B1+dQCaValw1ozS6OLNjNULCbuqK0wnVHaXql7++1jU=;
+	b=ms/WeitIVjRTRrZmTrSBwET30cjyZfcvVLyifHZBd1/t3hAHg11JUlnJ0QZW4/9/Cp
+	yUGBWP/xguoaqgyNJGubmHI3b0aQnP8Wrq8pBW3r/wLd7Q624mYdcRfms/m0oTT5Tei9
+	OpfKindndDMx/nyxyFwFm7c8XZKhUrvTvZmin8zpqWob3T+XaS1PCSC+HMX112NrJkfU
+	3/uYUQ+uRuOs8vxUlocTJaAqJ6C4UGUlS5/lpdWUmubbfcNNR8fgx1mCBFNtgIp/9mav
+	NrGHw/23+IxU/3XKw8y+u0lhbvMGCx/tF3zWheZKL3fD6/pbjjVycXpD9faCAJms+XF/
+	tafA==
+X-Gm-Message-State: AOUpUlHJvpnM3OdiM87orsIt0ZV+5aUI3L1inE9z1XfHRPlr+D55WZ2H
+	TTLzjtFD5frspCWwSEEznp2fEZ1UkrP5kr0Fd9ovtw==
+X-Google-Smtp-Source: AAOMgpcWqo3YFT0PqnJTyPT6R+44o1EHTM+dYoShbDRgjusniPRAo5sCLx6liBfemPfKTdWVSQdSimjvzmfrHcoScO8=
+X-Received: by 2002:aca:5f56:: with SMTP id
+	t83-v6mr13513946oib.115.1532039090038; 
+	Thu, 19 Jul 2018 15:24:50 -0700 (PDT)
 MIME-Version: 1.0
-From: Sherif Mousa <sherif.e.mousa@gmail.com>
-Date: Tue, 17 Jul 2018 13:56:04 +0000
-Message-ID: <CAMqo94KK+Rjr-2O03PPPw0gWm1suj5JFYHW9xbguYfo9H16Ahg@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-X-Mailman-Approved-At: Thu, 19 Jul 2018 22:01:22 +0000
-Subject: Implement function to be executed before ending each bitbake session
+Received: by 2002:ac9:6845:0:0:0:0:0 with HTTP; Thu, 19 Jul 2018 15:24:29
+	-0700 (PDT)
+In-Reply-To: <CAMqo94KK+Rjr-2O03PPPw0gWm1suj5JFYHW9xbguYfo9H16Ahg@mail.gmail.com>
+References: <CAMqo94KK+Rjr-2O03PPPw0gWm1suj5JFYHW9xbguYfo9H16Ahg@mail.gmail.com>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Thu, 19 Jul 2018 23:24:29 +0100
+Message-ID: <CAJTo0LZTbKqmyJuMQOmyJgkGhysdq_7efHNxqm=OxVf-OnnmOQ@mail.gmail.com>
+To: Sherif Mousa <sherif.e.mousa@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: Implement function to be executed before ending each bitbake session
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,34 +57,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 17 Jul 2018 13:57:16 -0000
-Content-Type: multipart/alternative; boundary="000000000000e46bf705713252ba"
-
---000000000000e46bf705713252ba
+X-List-Received-Date: Thu, 19 Jul 2018 22:24:49 -0000
 Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Wasn't this discussed on IRC last week?
 
-Is it possible to setup a function to be executed at the end of each
-bitbake-session execution, just before calling sys.exit(ret) , but without
-patching the original bitbake script "poky/bitbake/bin/bitbake" ?
-Is there a way to do this from a recipe (event handler, ....) ?
+Yes, the BuildComplete event.
+https://github.com/rossburton/meta-ross/blob/master/classes/timer.bbclass
+is a small example.
 
-Regards,
-Sherif
+Ross
 
---000000000000e46bf705713252ba
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 17 July 2018 at 14:56, Sherif Mousa <sherif.e.mousa@gmail.com> wrote:
+> Hi,
+>
+> Is it possible to setup a function to be executed at the end of each
+> bitbake-session execution, just before calling sys.exit(ret) , but without
+> patching the original bitbake script "poky/bitbake/bin/bitbake" ?
+> Is there a way to do this from a recipe (event handler, ....) ?
+>
+> Regards,
+> Sherif
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
 
-<div dir=3D"ltr">Hi,<div><br></div><div>Is it possible to setup a function =
-to be executed at the end of each bitbake-session execution, just before ca=
-lling sys.exit(ret) , but without patching the original bitbake script &quo=
-t;poky/bitbake/bin/bitbake&quot; ?</div><div>Is there a way to do this from=
- a recipe (event handler, ....) ?<br clear=3D"all"><div><div dir=3D"ltr" cl=
-ass=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><div><div di=
-r=3D"ltr"><div><div dir=3D"ltr"><div><div dir=3D"ltr"><br></div><div dir=3D=
-"ltr">Regards,<br>Sherif<br></div></div></div></div></div></div></div></div=
-></div></div></div></div></div>
-
---000000000000e46bf705713252ba--
