@@ -1,25 +1,25 @@
 Return-Path: <urs.fassler@bbv.ch>
 Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-	(mail-db5eur01on0086.outbound.protection.outlook.com [104.47.2.86])
-	by mail.openembedded.org (Postfix) with ESMTP id 8DBA6751FE
+	(mail-db5eur01on0057.outbound.protection.outlook.com [104.47.2.57])
+	by mail.openembedded.org (Postfix) with ESMTP id E1C7074F4B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Jul 2018 20:17:04 +0000 (UTC)
+	Mon, 23 Jul 2018 20:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=bbvSoftwareServices.onmicrosoft.com; s=selector1-bbv-ch;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=ZceUAdSqA1RupeszdEDfbtKr1vKL6+HscRFU913icuY=;
-	b=D2Bo4qxp171sw71JFbPEKaBQhmus8Pm33MVK1rF3JYSCCHH4BRCGulfYim1SgrlSdjfQOwzoyBxEkvSxyPZYRg8t/m+KW1ErN6gNlayydnBBDHCC8pJ+893w/ENvnmRDhfWM5TX1wGyddZmvoeV37DWEFht1l67vNBPUolApMSU=
+	bh=FBIPDIrY+EsBk2lwmQ1NHCy4Mi4Bpbknk9VJObjV7Ac=;
+	b=sSjUhtkWNHIJMEylcuEHWF7PlCZFOpH9BAih9/fq9xcSsf7YZEHwcss28aekHxh8ZdVLE5+XfYrzMOKe6vucA57R5uoxdjSxmnnnKMGTBk2XRCKQYfGAWGWv6/rnilnfvrKPwkR/CmFP0VNy31F2Op6ry7QICr2IC+AOrlg/KTI=
 Authentication-Results: spf=none (sender IP is )
 	smtp.mailfrom=urs.fassler@bbv.ch; 
 Received: from talon.bbv.intern (83.173.245.202) by
 	AM0PR03MB3827.eurprd03.prod.outlook.com (2603:10a6:208:6e::28) with
 	Microsoft SMTP Server (version=TLS1_2,
 	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.973.21; Mon, 23 Jul 2018 15:43:44 +0000
+	15.20.973.21; Mon, 23 Jul 2018 15:43:45 +0000
 From: =?UTF-8?q?Urs=20F=C3=A4ssler?= <urs.fassler@bbv.ch>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 23 Jul 2018 17:42:57 +0200
-Message-Id: <20180723154259.9076-8-urs.fassler@bbv.ch>
+Date: Mon, 23 Jul 2018 17:42:59 +0200
+Message-Id: <20180723154259.9076-10-urs.fassler@bbv.ch>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20180723154259.9076-1-urs.fassler@bbv.ch>
 References: <20180723154259.9076-1-urs.fassler@bbv.ch>
@@ -29,75 +29,74 @@ X-ClientProxiedBy: CWLP265CA0143.GBRP265.PROD.OUTLOOK.COM
 	(2603:10a6:401:53::35) To AM0PR03MB3827.eurprd03.prod.outlook.com
 	(2603:10a6:208:6e::28)
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3af6249b-fea5-4588-4b12-08d5f0b312d8
+X-MS-Office365-Filtering-Correlation-Id: 9eafe932-9932-4bf0-e0a9-08d5f0b3138f
 X-Microsoft-Antispam: BCL:0; PCL:0;
 	RULEID:(7020095)(4652040)(8989117)(5600073)(711020)(4534165)(4627221)(201703031133081)(201702281549075)(8990107)(2017052603328)(7153060)(7193020);
 	SRVR:AM0PR03MB3827; 
 X-Microsoft-Exchange-Diagnostics: 1; AM0PR03MB3827;
-	3:z/YLFNhaLdWIZkrLp30zDuNEmaJExs0R2ubCpF+gTsWnRXLtvHRF+5yCNdkN6Dqh2d2Tg58FAXhAnuhppEp9S9zlXj+v/LvMAc2Y2IMnf/YxWHLYPu8ztlR7NSl1KQhzU1x4VIqUQ0v+L02kP2ad70XzjZyBUN2MjY69cLMZ/JTWBOQk1Wc4T9+M2hDdxiNyyGFEcehAJIDLzyBOu5Oz90LSaVOFKACWre1v7fUTkiT3pq3s0d5HibXEGnP3YqMB;
-	25:spaqlUAkZPQs+HnFRLtxRj5Xj3fIvHq7syt6f4MgHBNSFf5efkRTAtl8UvAYiJrGzscDTiz8s6JMMuqXtk0IgS0K1N+pL9vspkUu9jmOUu0zJ+JfAtkETtkUjSOtTwNqoaOUDOP6SStZrtZeveXgeTjhx3zK/weTSennnR9gUytaApprvAkTv33S9Ae699Tc9pDn/Go0fhuBqrHfhK1KL/hmedMYJaTb7amX6n9Pj45L1/8cL+5zKWYTW/x4q592CiRawO8Mzo8KEXS9OyhBvhar5nuEpcJXrJtTq+M5zm/73izWrs1d1N76H9ESegI85xThO7Twkxr28xuWzlzwcA==;
-	31:vmIgu3wPo0mPaaCDYvq54PrjjnS60ROYKp4QxzzWhViy02YhchGdHYRymqpTvvwo9ThdKntrj0si9lAkYlAFyX9oYSkFf+65VQ2hKC2AZbHunB8exJN87otLEfbl9Qkj1OeqQzjEWkvomBtBN3K8x4RMb3fo0+sZvneYFd/ogiYOgF4o6GoQDUc/2nTI4LoAuXISkGqZxHLJXVuoRh7h3iDlX/OjtlGsRIL8N0UU4vY=
+	3:2eRgpiFLmwn4X1wbbnQzwX2FwA5OoJf/RitMwVYX8suvWaQpA3rxKCuu0K4wfI3xkfP++K/MVmPSPc1AenJvkxI2cgBPY/JxDF8srGtz6TAsmhzJXQbXKgp94Yh7ym0U61fmLOnBBE2EKiBGrq/cYTVyii1d0YbncK6QBzzQfuPL+BlnjXwbxHI5MkEsTnUwrFs50/egRWqkHAom5Qy+Zkh7J1+qR5Eh/Eb6Xgvk8vcbuIaZjCwmKNhPktQjEJBn;
+	25:QjV+Q0a+ls8UR5MeLpJdWn1tS7O1tqVEV7eDy4rjMoEPqfqrH19gYP1qesl0u1BTEUevOhLCl0eMlWDxQPY2QspFtsG3g14ARxmVfQLTgEXUfcpexyi559+nPtUH5uUCxYOimw5l80l2hhHfVXnyaASHUW15ES8vuiV/OJgkyO1F6v5+ZogLNvlPUdNt0W1v+0URxRjC2xsrAaqALXfxrXwJosgkb/OhTuKJrlJvSToVLCtIGOLoivZ4vm6Qi35tgabxoMrD2EJ6Uic9QzBuaDiq1nmsYr4gB5C+hzC3c01oIx9Tf1YK7MgrXOBw6C6assYgmPTPBvhK+VNbMpWDVw==;
+	31:c/hv3Y79WrDaWrrW44k9a8aN8FU3Xbig24+DABq03N9ilZaEPZoJMVpinQPwwLLolnM+5LKklGTm9ZfV+GY//7dyjLaCECgv3gF1a9Nb+0XHQzBoKRyhjIr6EhXkjNdgrIxf2TmUqc4TEZrTuqQ7b5MiNTMtcMvSYyA1snYtxDaJ5vXJmpiBU0repKff9hpe9vr8d9TJ3wibFYftxsxgb2S2aZV+Sz06LciQaBh9ZhQ=
 X-MS-TrafficTypeDiagnostic: AM0PR03MB3827:
-X-Microsoft-Antispam-PRVS: <AM0PR03MB382719EBA4019D3FA9900F208F560@AM0PR03MB3827.eurprd03.prod.outlook.com>
-X-Exchange-Antispam-Report-Test: UriScan:(181554191321653)(126837547833334)(33711482430040); 
+X-Microsoft-Antispam-PRVS: <AM0PR03MB382705DA1D39E9AF807500B08F560@AM0PR03MB3827.eurprd03.prod.outlook.com>
+X-Exchange-Antispam-Report-Test: UriScan:(181554191321653)(166708455590820)(126837547833334)(33711482430040);
 X-MS-Exchange-SenderADCheck: 1
 X-Exchange-Antispam-Report-CFA-Test: BCL:0; PCL:0;
 	RULEID:(8211001083)(6040522)(2401047)(5005006)(8121501046)(3002001)(10201501046)(93006095)(93001095)(3231311)(944501410)(52105095)(149027)(150027)(6041310)(20161123562045)(20161123558120)(20161123564045)(20161123560045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(6072148)(201708071742011)(7699016);
 	SRVR:AM0PR03MB3827; BCL:0; PCL:0; RULEID:; SRVR:AM0PR03MB3827; 
 X-Microsoft-Exchange-Diagnostics: 1; AM0PR03MB3827;
-	4:/ER/SuQdERXmIhUakCzamwxymrwiGVkRo9cnzdhyU1ITQbL3yAJZXUZ/YRct2o4Y1B7qbuaNX42msUlg76QSq9vdkmBgqpUQfQa9Cck+Kc5B7/JkbntNq3j1ZBQNL3yv+uBQoRTGkjYojPtuffUb7GZaVNncSOQgwUQhMpXxVfdqqNxKZ/nq2SMw3C4n5AX7kBWiD3uKipCIsK6w9pbcfIWSCmdmZrJxXFKVR9RflGz1MJlkvQNCjVMdpW1Nv5X5eNxaKT7SJAlyJg3zqwIJ7XhE46Tpv+erSl/4IDS52vfCSe97bFSd7Jrc6Jb/ZZFBy9Hc9IlpMbznfqExr14rksEjM08UHYeD8bZULzVUqcRcNGOEFkjm8A4o2lUqdyn7
+	4:IlOrE/g3qO8Wdr3Y1/zaGNhrYZ58GitxLZSlBNUWO10Xkkj3caiQ4lZ4oJ/FV/bg/vSfgwwi4hY/ibWvgMD1xgSzew10j78Qcc5QKtmeCRWFCzHq8gzMGky5IaE754LzADtiG7mPq47saolhArCuahBwClKb+RuWw/xgevxbUDiG1I8+Oy4fE3idUyL0/GuowsbcGDJ9eaQfBsjGZhb4URqF3buHbXh69oNrdQ1SMPMlmz0UOr7Xpcur4P92QEaz7OHMAPsJ7MKo/evCidyIZKWJIABf3VbEt6nlQ/uZM80cCvahimLpKN2X9SCAT1NM97kAWyU1XHGSM9TqXY0P7L/9hUfz6Srg0FDW4lD1IbwELpZHz0kSvA2PpeNyOzjNB/6y8MHUFNX+gEO2qHwoGqTyPO7kZK/Vu/YBjK/ZEMM=
 X-Forefront-PRVS: 0742443479
 X-Forefront-Antispam-Report: SFV:NSPM;
-	SFS:(10009020)(396003)(376002)(346002)(39840400004)(366004)(136003)(199004)(189003)(68736007)(956004)(2616005)(50226002)(6486002)(86362001)(316002)(5660300001)(476003)(486006)(305945005)(2906002)(6666003)(6916009)(50466002)(8676002)(8936002)(54906003)(2870700001)(52116002)(81156014)(23676004)(7736002)(575784001)(81166006)(16526019)(186003)(11346002)(446003)(14444005)(26005)(76176011)(386003)(6512007)(6506007)(3846002)(6116002)(74482002)(478600001)(97736004)(53936002)(4326008)(36756003)(1076002)(47776003)(2351001)(66066001)(106356001)(105586002)(33896004)(25786009)(19627235002)(2361001);
+	SFS:(10009020)(396003)(376002)(346002)(39840400004)(366004)(136003)(199004)(189003)(68736007)(956004)(2616005)(50226002)(6486002)(86362001)(316002)(5660300001)(476003)(486006)(305945005)(2906002)(6666003)(6916009)(50466002)(8676002)(8936002)(54906003)(2870700001)(52116002)(81156014)(23676004)(7736002)(575784001)(81166006)(16526019)(186003)(11346002)(446003)(14444005)(26005)(76176011)(386003)(6512007)(6506007)(3846002)(6116002)(74482002)(478600001)(97736004)(53936002)(4326008)(36756003)(1076002)(47776003)(2351001)(66066001)(106356001)(105586002)(33896004)(25786009)(2361001);
 	DIR:OUT; SFP:1101; SCL:1; SRVR:AM0PR03MB3827; H:talon.bbv.intern;
 	FPR:; SPF:None; LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
 Received-SPF: None (protection.outlook.com: bbv.ch does not designate
 	permitted sender hosts)
-X-Microsoft-Exchange-Diagnostics: =?utf-8?B?MTtBTTBQUjAzTUIzODI3OzIzOkxmU2Y3emJIZjhLUjFVbC8xODh0YXI3VVFM?=
-	=?utf-8?B?OHQyM3Ixb0JrSnoxNXJVN21vK1BYYVZsQ0xHMmk1SVM2YTZkaFZaR3N0VVZG?=
-	=?utf-8?B?Ullaa1I3d3o0dmR2ZHZwTjRWejk2c2gvQVZRdzVsRlNqWjJxeENoU2NKWGdQ?=
-	=?utf-8?B?THhzRkNCS0pNRU1YUWRTMDNsRzZOSStZVVRVbHl5V1N3Zjh6bDBFV0FoK1lr?=
-	=?utf-8?B?V0p6d2tEdWdZMlh6YmwweGJUYlNtcVkvbVhvMnVpWVdqZCtxSTFCOEprb3lY?=
-	=?utf-8?B?MS9ldmVac1FGRWgvZmNPOFh0U0lTWUhnaHFvUU92K2Q1MWtLV3BUcFNaUzVy?=
-	=?utf-8?B?MlRnU1lZblRXZkdicU1GWmpBQ0tNT05BbGxSb0llb28yS2JIN0xZWDB0NUl5?=
-	=?utf-8?B?STd6RTV3SzZZemhqQS9tSmVuaEFGQW5YeXNES2EvRUF2ZU9DQUw4SnVZZ3BZ?=
-	=?utf-8?B?d3ZRWkpod1ArNEZuQVBmd3MvdXM0d0Q5Nk5ETEloVmJqM1dxU21RUkFNWXQv?=
-	=?utf-8?B?NHRUWkRoQSt6cG9uT0QrZVBNNFBadG13L3ZzSmEra2Z5Y2R0R3FFUDhhUzVm?=
-	=?utf-8?B?VE1rNjB5dFlRTlFtNkV4VlBMeHlQL2haZjNWVmhLeW5BVzFwY2tvSjJTbkp4?=
-	=?utf-8?B?Mll0dk9tUWdVUjlDVlNRSUxaVVZjMWw4aUhicHVacmFSNkNqSkp1N2xVc2h4?=
-	=?utf-8?B?aWJqY050ZlpCU2g0K240WFV1VTdrMVlkSC9WUkFxWEg1UWJlZEc3dldBODN4?=
-	=?utf-8?B?QzJPdmJhYU5UTDRpT0pnZlc1TVJDNWdmdk9kQ3JlRHFqa1ozMWlDSzhZekJQ?=
-	=?utf-8?B?andhR3BxZmZRaGRGU3RUTHBwVStrZ1FWalBKVExkWmEydVo3MmlOaEhyUjlw?=
-	=?utf-8?B?aUZGMngxUThrMGtBbGlrb1FlbkZKYzN1NGVYdTFhYWh5M0pDOHJpK2hqQU1r?=
-	=?utf-8?B?T3ZJSGhqWWVqOCtNazNwWDNIT3JSRVpoczVZTHVtN1FMV0JBRmt5cXlVUVFN?=
-	=?utf-8?B?c2Vwc1dwMFBITVFwVGRrNjJSUnlXc1UzLzhyWkZUUkhwVW1SNWFZSmlqREww?=
-	=?utf-8?B?eFRKelpWVkE3cTd6dHUzRjB1QmxPSGExSnArbEZWVjdMd1lwSUUwbkNXWnB0?=
-	=?utf-8?B?UFBWaHdQMU5LZEJ2RkdFQm4wUGRGOFhMTWpDNUVPV3lGT3lmQ3E3UlBkblAr?=
-	=?utf-8?B?Qkk3Mko2bHo1V3FROFdzaFVOdzV0Nlc1T3lpTUVlRlZ3UUNtLzBLVTArajRE?=
-	=?utf-8?B?R3JFTlU1UWhDQ1JzWDJtaXBBQkM2WGJKWE1Hd2xqNVkvdHdBYThza0FqTkRU?=
-	=?utf-8?B?QUMwWjQzb2RKUUw5S0gxK3o5ZnlRVDhHRlpwV2dxVVVkTWNKNDdVVEZoSXph?=
-	=?utf-8?B?M2lvMHhnWlVla0NHYzF4eHNKZk45b3pHZm9lMVNUYlUyQkZCRnFEd2ZWUXRC?=
-	=?utf-8?B?Y3Npek12YlBCZ21laUFGVWU5QWF6VDU1Y0F6ZHdPdFp3bzd5OEVETmt6VHYw?=
-	=?utf-8?B?TDBReGdiVjJGdFRTZG5oSmM4TEtiNTM4OURLbVB0bEtRU25xWlFLc2dGbE1N?=
-	=?utf-8?B?WWg4M291OTg0K3Qxb1ZRNnUrNDdydVRpNWhJQ21QeTA3eW9IamZyZitQYytQ?=
-	=?utf-8?B?bi95aVlCYjZ3Mi92OW9UU2tkZE10M2RqT1FBYlArK1UvZ1NKRmhKa0VSaXZ4?=
-	=?utf-8?B?eFgyekpJVFZNazJjai9HaHVWalViYzdtSUdMWGllT28xVWhLanBKbWppbGVR?=
-	=?utf-8?B?dEJBY2lhTGVFejdXRmlXTlZFVisrcjUyb3BWV2tsOVJxQ1c3czhVdUVjbDNB?=
-	=?utf-8?Q?bQ4j2YdYfV/qW?=
-X-Microsoft-Antispam-Message-Info: Ri8PWvt/olJqelKquMvYoxN5m7z16mQuqInE//8ZB8C0w0FcnBOqqAIuMseJiOmB8nQpaaQFp69ECWiAM+mm5YSmRqzc2yb8ytqxEXbGcDuhwEScA8uG84Sl7Rmzu+LF3YXj257UaDLzJvp8PnFpRhO5aNQOVoo82R7OFP20AwkpownKofvicONXW4j5rxVdZB/KjR0046K6XGBa8sgVKHjXyNiVjkDoqcOrc4DESVyRFLALPTjPGfU/RIiQYNWWuzSDCQ22kF0LwzLh2XNoUbXfbwMOEkCpLzsoTU5pdv5d4y0nqQsqyBc3kcfIzJdlQtQlIdrptZ4j+0X61qte9h0ME6WlMX50KmoN2lrhwyM=
+X-Microsoft-Exchange-Diagnostics: =?utf-8?B?MTtBTTBQUjAzTUIzODI3OzIzOklKMGx6aGwza0Rxa1htMEdiNFMyczU4Mnkz?=
+	=?utf-8?B?SE83ZVd6Y3duRk9FanZtSVJhb28vMU53N0JJUXZzZk5GdkRBSjRrSlM5Q085?=
+	=?utf-8?B?VTA5bkJNS2JPL3dKRTF2VTZrV1YyWUNET2RmQmpZR3VRODJDZVZrMWtpYzlW?=
+	=?utf-8?B?bGU1bFE1WUZDWGNnL3hhcWlvaHNtaDFuV1ozOWZtQTE0QWg1NmpRZU1NWjRo?=
+	=?utf-8?B?VG9HRGRWQ2FBTXcwaEdjcVNGVWU4K3V1eHdsY0h3NmxjY1NVQVc1b1lxMERM?=
+	=?utf-8?B?TTNXN3A5WVRQQjhJcXB2YTkvR2RqYXg2RDB5QzVTenUyVUh5WUdiZlVlMk1n?=
+	=?utf-8?B?OUxpcHNyTDdqcFljQ251VU9UYmRqZ3FYeFVPa3REdTRYQWhENmMwQjAvNHZo?=
+	=?utf-8?B?UFF4RnVnZnBsMWhVYlVaUzJHQlQzWjBheUNZL3ZLSkFWVUtHaFJmbVF4RTJt?=
+	=?utf-8?B?dW5mY0tlclJVYmQ4L3gwTnhCanVGUW91MDgzeVVEK0dIeGV6UjNvbjdubTZ2?=
+	=?utf-8?B?ek5SUHFXaXNLOGlLdE80bVozcEFld2oySXhaK2F0bitWdGYrOVljQ3ZVeFFo?=
+	=?utf-8?B?MUtMb2pVbmU3T1ZSMEVWdlZGZWxNZFZLckpSZTkzQUJHaUZjM1BIL1JwbXBp?=
+	=?utf-8?B?RnNWMGxOZUxqbHpxSzlybTRMYnYzZzNWeStBbXJzUTdoQzFHeVU1VmUvd3BB?=
+	=?utf-8?B?ckFZaFlFQXNaY1lqUXF6R2xwT0JKa0hlTG56ZElWc3ZPSlNYY1dtK0VwNEJM?=
+	=?utf-8?B?RVdTS3N6SG10RUc5VG5YSUpEWVZTWUh3VEd3T3FDUXQrQU91U24xbk5WNmJW?=
+	=?utf-8?B?UllxcG5DcVFpSzVrMkhPU0lVVEFYZUdFWnR6MVdrTytmRlY4UkIyVHBNOWEv?=
+	=?utf-8?B?U0dyMCtJR2xnWlZxRkQ2YktXVlJZTHQ0VFdWb0dLUUFJWjBHVzI4RDBudmFZ?=
+	=?utf-8?B?MjRYdU1rdFppNHNIbXo5QlBTU1VZRjl4aCt0eFVTaEdZVkRKV1FUamJCZXBX?=
+	=?utf-8?B?cm93UmtOdUZoUUYwWDllcGUyYUNXZDc1cWZLUXN3UWFvY2wyQlV3QmpXTnJM?=
+	=?utf-8?B?OStvMERoRElXUGlSWEYva2ZLUU1haXNPU3pZWXdLRkpGR1NxN3dDZXdwU2p6?=
+	=?utf-8?B?R1V2MWN3Q0Y0ejVmTnJXWHhtUG5DaXlHampLZG92UDU1QzVGc3g1SU9ZbHQx?=
+	=?utf-8?B?TUpvMjcrOTNKMk1talkyVHBVbktEajMvYnluT25mWHU3R2hEZTJUSHJ6UldU?=
+	=?utf-8?B?RWs2bkdoQnNqbVdmOG1IZ21xcXAzU3JVdmplY0I2VmVtQ050V2FMOWNFeTVZ?=
+	=?utf-8?B?dzc5bGhtb1JGWmhwNFNReS9leE1DeE42Z0ozQzBFeThWT2ZSb0RSR1JVcE5H?=
+	=?utf-8?B?OEt6Z0p1SkVjL0NEN25TWlEweEx4bjJBTmRLeEtYbXhhNER4ZjhZbC9jaVpp?=
+	=?utf-8?B?WnUxVWhYZ3ZvY3kzTDNJdElmck5Jd1lGUDZIZk13VCtCZFRxWDE5RExZUUVW?=
+	=?utf-8?B?R2tkL08vcTlJNmxTckdMcC9ONVZ6WWJrM1pxbzEwRC83MXhiNVhBSlh2TEdD?=
+	=?utf-8?B?WG5SU2t0RzdTVDhzUlI2Y3lXeXdleWsyWDhBQjZFemFHbTNVTTJXWUtaSHU0?=
+	=?utf-8?B?Z1k4YUw0RllMQWxMYmdkdFVtMUR6d3JkcFZXWnBrdUxQbXRLUGhxVUtyb2dk?=
+	=?utf-8?B?QjY0a1I1UEdkWlUxeHN1L0hEcTZGaXdsbytwUkxlV2NETEFpWWFXY25xZE9X?=
+	=?utf-8?Q?T2iNRNwoS+Yya4NPcHuigkqBZMT3J8Y87SK1E=3D?=
+X-Microsoft-Antispam-Message-Info: FNKU4htXdb5gztSlsm2QZI8ZADiCKaW+CyyRxbdWVD3YqsMz7egiKkszT9rIIaEAAhGMvvtnxcEixgHbx06/01pYt32vk7zmJlatlW0ijpZjFYIJiFpMZlqkpiC/p+WXqNKmxVIerjJiG0diOehvL1HfB3LVYmsfiEWvgzaNoaePSJaT97cyjL3A+UL7hVYrnodCXItsvraRjsvzUWIlRvzidJDy5/geJz4KrHvS/4sexbgGxExQ7A0uSRky7LH63c5cZbY9uUZXbvZYq3IKnEXFkNhzs1EDOnmwj4RCS/l8uYp3wh9oL0ae51+YCjldn0g9y6eDkmg2otRR8Yaqo+WpQVXHS1Xdh/wP6FxWd0M=
 X-Microsoft-Exchange-Diagnostics: 1; AM0PR03MB3827;
-	6:Moh+zEVESgQXUD5p/tvy6mYRS45s5rlI55YBz5G6LibWvOgQSaO9TI3BfwHOljsYVrwZM/DcZexjSggQIoThqN+O/fekVQNZJtce7uf21qH0E0OE359HVE35xnJ6sAVrR3vY7zxDrnmFl7T23vvh1zT0rj8PqLU9Ofj2MWbdOe8D+AxmglUmukTGghZ2NKTq4vAsnN+xw56Gn9/s50aQGpT6Zu/UtG5E7GilMWs7JfGQeYHGzQSZi8Fgd3TqnoK5CFDz7minvlOhXO4NA/8K32KFoJN09SSmuZ7m93Aqm6+yyo2ltpmiV7pbPHuHCMvqk9QXINZsI2bkY3FgurXxjnKMUgx5fJyJ4eZ0wj1d5bWrFJKQkwdkyIfMtVG5ZvniazoF4oCWPvkIXSFrSBkHMYxt7sAcR/WWD8XTNFwNnvj/Q28Nqzqmoq2u96O5gydMU5aqIR8RMxbqJxRUjtdfMA==;
-	5:dVeZpScrtNwAK0NNtgZGfb4D2ppvCGl2YPi6tXzMsEFjaZpZrF95ayhS3rkx2FfE0GWCf3mK8TOVNCUWoPGKE59QJYKUm8xNgc7DX6Vf1GoOIt4Fu6oKPhfdFGRne0h/WWUOPBPVocyUEd/P2RVy2ezH57aXyHkHj6yYbe21JAQ=;
-	7:C4hYU2doxxpoYQmi1TY2Mn/ufMI7AABxsz3g4BP9PcTZR3IJm8xq0yY9CMIqxtkoYCM4fE3BVSt+JgIjFy+awtjevLNgJmpRgGgQiHTl+gSt/AfdichPj2UwvjUCZ8k+ZZEsKJr/GKhn6VcFmvYvbUJjP+3QNJ/hR7g5HcyLyDCGlGq+oXgzo8GAKhLaYb96V+wDelb3sQ6TPJssf1adgLsY0+r5KWepmRML7Gw94w+H4TyKJaMaMpYrgHp1I2NH
+	6:UE49C5Nhaq0s31zL3Zxfza/QMz2KRH/eb+L0f67rEDmB+KZBRkkjvUeF/fOy80Z5fbFX2sm/9Vuz1RgshwqIjodGEMi3gaWBPUs1oUW0YDrPohUNorGbCNR3ZsJb5pCz67VbID7S/+Vs21V2GcGFeNuBK1NxOgKSp6mmp/Vozc+TrVri3OpZ/QtMj7gYjZQuswHJseQzlR0nBYPevR7Zxi2H4I3czCuJnR4sU2BfOAy6+722aMRVG4PktnRYGJm/piOtdtPp//vkDhoj79WyhKdTtLafi1pSqF9xggbqPYJcXWfYjr0mJFhfRK3IHW0o6PJ42HyZFWUtDjZMk9uRjHmgs6A22h5tR9Ua0kNXxPeTZDdipY//RFqYm8McZhts9kQedx/DL4E61d1REXQXlMrKkkzyPf0i/3qbc/kIqvVCnKela75KFQ0PJAvZYwIH1Sa17dYYdstKCUrOM1Gajg==;
+	5:KzNEZjljQD7ak7gtZdiGdbFS5w0U17VNf37v+EuMhOAn+MYkCYEZ5n70zQnslEI7eUgJlQGWNHwPf8/yCfZMjQzaQh6MaoZJChvpJD7w9I5AsrjOs4NEDCvTO/jUQZ1LwOUAbaP2ANca/i8Suf2xf9rCwxQUHtTtnVeBaFAE5Fk=;
+	7:diPYiaKXpgoPQ6t7Uk2372o/SjyeBBW3B+MMX03/xcBfnirqEkho5UIv41W1zEFuXsbsiT7lD05tIPuzOmhPtYRwT5Mc3Pi87JQJTDLuiaIGLPF4VRO5ErBsft+hrxrtE2zPX51S0421wKIe8k4x0nLBd3KKBviXnLBdDWzn/64/kSvmuJyCv5YyjCqrIQEkEiSEuQuSoR7YcLPrqm847YiAdGTUVdtF/6jhV8u4kES96ZbzTmwBgE25LpLrulH4
 SpamDiagnosticOutput: 1:99
 SpamDiagnosticMetadata: NSPM
 X-OriginatorOrg: bbv.ch
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2018 15:43:44.6582 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3af6249b-fea5-4588-4b12-08d5f0b312d8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2018 15:43:45.8614 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9eafe932-9932-4bf0-e0a9-08d5f0b3138f
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 279985bd-2077-4d9d-9797-42238cfc06e2
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR03MB3827
-Subject: [PATCH 7/9] fetch2: provide original url in addition to the mirrored url to FetchData.__init__ and FetchMethod.urldata_init
+Subject: [PATCH 9/9] fetch2/git: name the shallow tarball according to the url specified in the recipe rather than the mirrored url
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -110,304 +109,117 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Jul 2018 20:17:05 -0000
+X-List-Received-Date: Mon, 23 Jul 2018 20:18:05 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When a mirror rewrite rule is used, it can happen that the downloaded
-file is named differently depending on the used mirror. In preparation
-to a consistent naming, we provide the original url to the fetcher.
+Unpacking a git shallow tarball does not work when using mirror rewrite
+rules that alter the path of the remote url. With this patch we always
+use to remote url from the recipe to generate the local shallow tarball
+name.
 
 Signed-off-by: Urs Fässler <urs.fassler@bbv.ch>
 Signed-off-by: Pascal Bach <pascal.bach@siemens.com>
 ---
- lib/bb/fetch2/__init__.py  | 12 +++++++-----
- lib/bb/fetch2/bzr.py       |  2 +-
- lib/bb/fetch2/clearcase.py |  2 +-
- lib/bb/fetch2/cvs.py       |  2 +-
- lib/bb/fetch2/git.py       |  2 +-
- lib/bb/fetch2/gitannex.py  |  4 ++--
- lib/bb/fetch2/hg.py        |  2 +-
- lib/bb/fetch2/local.py     |  2 +-
- lib/bb/fetch2/npm.py       |  2 +-
- lib/bb/fetch2/osc.py       |  2 +-
- lib/bb/fetch2/perforce.py  |  2 +-
- lib/bb/fetch2/repo.py      |  2 +-
- lib/bb/fetch2/s3.py        |  2 +-
- lib/bb/fetch2/sftp.py      |  2 +-
- lib/bb/fetch2/ssh.py       |  2 +-
- lib/bb/fetch2/svn.py       |  2 +-
- lib/bb/fetch2/wget.py      |  2 +-
- 17 files changed, 24 insertions(+), 22 deletions(-)
+ lib/bb/fetch2/git.py  |  7 +++++--
+ lib/bb/tests/fetch.py | 26 ++++++++++++++++++++------
+ 2 files changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index c8653d62..61009e43 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -932,7 +932,7 @@ def build_mirroruris(origud, mirrors, ld):
-                 localmirrors.remove(line)
- 
-                 try:
--                    newud = FetchData(newuri, ld)
-+                    newud = FetchData(newuri, ld, origud.url)
-                     newud.setup_localpath(ld)
-                 except bb.fetch2.BBFetchException as e:
-                     logger.debug(1, "Mirror fetch failure for url %s (original url: %s)" % (newuri, origud.url))
-@@ -1202,7 +1202,7 @@ class FetchData(object):
-     """
-     A class which represents the fetcher state for a given URI.
-     """
--    def __init__(self, url, d, localonly = False):
-+    def __init__(self, url, d, original_url = None, localonly = False):
-         # localpath is the location of a downloaded result. If not set, the file is local.
-         self.donestamp = None
-         self.needdonestamp = True
-@@ -1213,6 +1213,8 @@ class FetchData(object):
-         self.basename = None
-         self.basepath = None
-         (self.type, self.host, self.path, self.user, self.pswd, self.parm) = decodeurl(d.expand(url))
-+        if not original_url:
-+            original_url = url
-         self.date = self.getSRCDate(d)
-         self.url = url
-         if not self.user and "user" in self.parm:
-@@ -1259,7 +1261,7 @@ class FetchData(object):
-             logger.warning('Consider updating %s recipe to use "protocol" not "proto" in SRC_URI.', d.getVar('PN'))
-             self.parm["protocol"] = self.parm.get("proto", None)
- 
--        self.method.urldata_init(self, d)
-+        self.method.urldata_init(self, d, original_url)
- 
-         if "localpath" in self.parm:
-             # if user sets localpath for file, use it instead.
-@@ -1348,7 +1350,7 @@ class FetchMethod(object):
- 
-         return True
- 
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         init method specific variable within url data
-         """
-@@ -1594,7 +1596,7 @@ class Fetch(object):
-         for url in urls:
-             if url not in self.ud:
-                 try:
--                    self.ud[url] = FetchData(url, d, localonly)
-+                    self.ud[url] = FetchData(url, d, localonly = localonly)
-                 except NonLocalMethod:
-                     if localonly:
-                         self.ud[url] = None
-diff --git a/lib/bb/fetch2/bzr.py b/lib/bb/fetch2/bzr.py
-index 658502f9..4be73320 100644
---- a/lib/bb/fetch2/bzr.py
-+++ b/lib/bb/fetch2/bzr.py
-@@ -36,7 +36,7 @@ class Bzr(FetchMethod):
-     def supports(self, ud, d):
-         return ud.type in ['bzr']
- 
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         init bzr specific variable within url data
-         """
-diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
-index 3a6573d0..ef1db138 100644
---- a/lib/bb/fetch2/clearcase.py
-+++ b/lib/bb/fetch2/clearcase.py
-@@ -84,7 +84,7 @@ class ClearCase(FetchMethod):
-     def debug(self, msg):
-         logger.debug(1, "ClearCase: %s", msg)
- 
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         init ClearCase specific variable within url data
-         """
-diff --git a/lib/bb/fetch2/cvs.py b/lib/bb/fetch2/cvs.py
-index 0e0a3196..7c5296fb 100644
---- a/lib/bb/fetch2/cvs.py
-+++ b/lib/bb/fetch2/cvs.py
-@@ -42,7 +42,7 @@ class Cvs(FetchMethod):
-         """
-         return ud.type in ['cvs']
- 
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         if not "module" in ud.parm:
-             raise MissingParameterError("module", ud.url)
-         ud.module = ud.parm["module"]
 diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 13b9b9d8..7f7951f7 100644
+index f9e31d2b..c1fec614 100644
 --- a/lib/bb/fetch2/git.py
 +++ b/lib/bb/fetch2/git.py
-@@ -141,7 +141,7 @@ class Git(FetchMethod):
-     def supports_checksum(self, urldata):
-         return False
+@@ -79,7 +79,7 @@ import subprocess
+ import tempfile
+ import bb
+ import bb.progress
+-from   bb.fetch2 import FetchMethod
++from   bb.fetch2 import FetchMethod, decodeurl
+ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         init git specific variable within url data
-         so that the git method like latest_revision() can work
-diff --git a/lib/bb/fetch2/gitannex.py b/lib/bb/fetch2/gitannex.py
-index a9b69caa..187e6b2e 100644
---- a/lib/bb/fetch2/gitannex.py
-+++ b/lib/bb/fetch2/gitannex.py
-@@ -33,8 +33,8 @@ class GitANNEX(Git):
-         """
-         return ud.type in ['gitannex']
- 
--    def urldata_init(self, ud, d):
--        super(GitANNEX, self).urldata_init(ud, d)
-+    def urldata_init(self, ud, d, original_url):
-+        super(GitANNEX, self).urldata_init(ud, d, original_url)
+@@ -259,7 +259,10 @@ class Git(FetchMethod):
+         ud.fullmirror = os.path.join(dl_dir, mirrortarball)
+         ud.mirrortarballs = [mirrortarball]
          if ud.shallow:
-             ud.shallow_extra_refs += ['refs/heads/git-annex', 'refs/heads/synced/*']
+-            tarballname = gitsrcname
++            _, original_host, original_path, _, _, _ = decodeurl(d.expand(original_url))
++            tarballname = self.__build_git_source_name(original_host, original_path, ud.rebaseable, ud.names,
++                                                       ud.revisions)
++
+             if ud.bareclone:
+                 tarballname = "%s_bare" % tarballname
  
-diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index 936d0431..5fe08e80 100644
---- a/lib/bb/fetch2/hg.py
-+++ b/lib/bb/fetch2/hg.py
-@@ -50,7 +50,7 @@ class Hg(FetchMethod):
-         """ 
-         return False
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index fedc3b73..6b7df874 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -522,7 +522,6 @@ class GitShallowTarballNamingTest(FetcherTest):
+         self.__recipe_url = "git://git.openembedded.org/bitbake"
+         self.__recipe_tarball = "gitshallow_git.openembedded.org.bitbake_82ea737-1_master.tar.gz"
+         self.__mirror_url = "git://github.com/openembedded/bitbake.git"
+-        self.__mirror_tarball = "gitshallow_github.com.openembedded.bitbake.git_82ea737-1_master.tar.gz"
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         init hg specific variable within url data
-         """
-diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
-index a114ac12..9e1b918c 100644
---- a/lib/bb/fetch2/local.py
-+++ b/lib/bb/fetch2/local.py
-@@ -39,7 +39,7 @@ class Local(FetchMethod):
-         """
-         return urldata.type in ['file']
+         self.d.setVar('BB_GIT_SHALLOW', '1')
+         self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', '1')
+@@ -532,7 +531,7 @@ class GitShallowTarballNamingTest(FetcherTest):
+         self.d.setVar("PREMIRRORS", self.__recipe_url + " " + self.__mirror_url + " \n")
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         # We don't set localfile as for this fetcher the file is already local!
-         ud.decodedurl = urllib.parse.unquote(ud.url.split("://")[1].split(";")[0])
-         ud.basename = os.path.basename(ud.decodedurl)
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 408dfc3d..cab792d4 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -60,7 +60,7 @@ class Npm(FetchMethod):
-         bb.utils.remove(ud.pkgdatadir, True)
-         bb.utils.remove(ud.fullmirror, False)
+     @skipIfNoNetwork()
+-    def test_that_the_tarball_is_named_after_recipe_url_when_no_mirroring_is_used(self):
++    def test_that_the_recipe_tarball_is_created_when_no_mirroring_is_used(self):
+         fetcher = bb.fetch.Fetch([self.__recipe_url], self.d)
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         init NPM specific variable within url data
-         """
-diff --git a/lib/bb/fetch2/osc.py b/lib/bb/fetch2/osc.py
-index 6c60456b..18dd6047 100644
---- a/lib/bb/fetch2/osc.py
-+++ b/lib/bb/fetch2/osc.py
-@@ -25,7 +25,7 @@ class Osc(FetchMethod):
-         """
-         return ud.type in ['osc']
+         fetcher.download()
+@@ -541,17 +540,17 @@ class GitShallowTarballNamingTest(FetcherTest):
+         self.assertIn(self.__recipe_tarball, dir)
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         if not "module" in ud.parm:
-             raise MissingParameterError('module', ud.url)
+     @skipIfNoNetwork()
+-    def test_that_the_mirror_tarball_is_created_when_mirroring_is_used(self):
++    def test_that_the_recipe_tarball_is_created_when_mirroring_is_used(self):
+         self.__setup_mirror_rewrite()
+         fetcher = bb.fetch.Fetch([self.__recipe_url], self.d)
  
-diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
-index 903a8e61..3a15754a 100644
---- a/lib/bb/fetch2/perforce.py
-+++ b/lib/bb/fetch2/perforce.py
-@@ -37,7 +37,7 @@ class Perforce(FetchMethod):
-         """ Check to see if a given url can be fetched with perforce. """
-         return ud.type in ['p4']
+         fetcher.download()
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         Initialize perforce specific variables within url data.  If P4CONFIG is
-         provided by the env, use it.  If P4PORT is specified by the recipe, use
-diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
-index 8c7e8185..c56df7e1 100644
---- a/lib/bb/fetch2/repo.py
-+++ b/lib/bb/fetch2/repo.py
-@@ -37,7 +37,7 @@ class Repo(FetchMethod):
-         """
-         return ud.type in ["repo"]
+         dir = os.listdir(self.dldir)
+-        self.assertIn(self.__mirror_tarball, dir)
++        self.assertIn(self.__recipe_tarball, dir)
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         We don"t care about the git rev of the manifests repository, but
-         we do care about the manifest to use.  The default is "default".
-diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
-index 16292886..e00f7072 100644
---- a/lib/bb/fetch2/s3.py
-+++ b/lib/bb/fetch2/s3.py
-@@ -47,7 +47,7 @@ class S3(FetchMethod):
-     def recommends_checksum(self, urldata):
-         return True
+     @skipIfNoNetwork()
+-    def test_that_the_mirror_tarball_still_exists_when_mirroring_is_used_and_the_mirrored_tarball_already_exists(self):
++    def test_that_the_recipe_tarball_is_created_when_mirroring_is_used_and_the_mirrored_tarball_already_exists(self):
+         self.__setup_mirror_rewrite()
+         fetcher = bb.fetch.Fetch([self.__mirror_url], self.d)
+         fetcher.download()
+@@ -562,7 +561,7 @@ class GitShallowTarballNamingTest(FetcherTest):
+         fetcher.download()
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         if 'downloadfilename' in ud.parm:
-             ud.basename = ud.parm['downloadfilename']
-         else:
-diff --git a/lib/bb/fetch2/sftp.py b/lib/bb/fetch2/sftp.py
-index 81884a6a..f68cbca1 100644
---- a/lib/bb/fetch2/sftp.py
-+++ b/lib/bb/fetch2/sftp.py
-@@ -78,7 +78,7 @@ class SFTP(FetchMethod):
-     def recommends_checksum(self, urldata):
-         return True
+         dir = os.listdir(self.dldir)
+-        self.assertIn(self.__mirror_tarball, dir)
++        self.assertIn(self.__recipe_tarball, dir)
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         if 'protocol' in ud.parm and ud.parm['protocol'] == 'git':
-             raise bb.fetch2.ParameterError(
-                 "Invalid protocol - if you wish to fetch from a " +
-diff --git a/lib/bb/fetch2/ssh.py b/lib/bb/fetch2/ssh.py
-index 6047ee41..4f9e0853 100644
---- a/lib/bb/fetch2/ssh.py
-+++ b/lib/bb/fetch2/ssh.py
-@@ -77,7 +77,7 @@ class SSH(FetchMethod):
-     def supports_checksum(self, urldata):
-         return False
  
--    def urldata_init(self, urldata, d):
-+    def urldata_init(self, urldata, d, original_url):
-         if 'protocol' in urldata.parm and urldata.parm['protocol'] == 'git':
-             raise bb.fetch2.ParameterError(
-                 "Invalid protocol - if you wish to fetch from a git " +
-diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
-index ed70bcf8..be0e9eeb 100644
---- a/lib/bb/fetch2/svn.py
-+++ b/lib/bb/fetch2/svn.py
-@@ -42,7 +42,7 @@ class Svn(FetchMethod):
-         """
-         return ud.type in ['svn']
+ class FetcherLocalTest(FetcherTest):
+@@ -1705,3 +1704,18 @@ class GitShallowTest(FetcherTest):
  
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         """
-         init svn specific variable within url data
-         """
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 8f505b6d..bd2a0c6b 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -74,7 +74,7 @@ class Wget(FetchMethod):
-     def recommends_checksum(self, urldata):
-         return True
- 
--    def urldata_init(self, ud, d):
-+    def urldata_init(self, ud, d, original_url):
-         if 'protocol' in ud.parm:
-             if ud.parm['protocol'] == 'git':
-                 raise bb.fetch2.ParameterError("Invalid protocol - if you wish to fetch from a git repository using http, you need to instead use the git:// prefix with protocol=http", ud.url)
+         dir = os.listdir(self.unpackdir + "/git/")
+         self.assertIn("fstests.doap", dir)
++
++    @skipIfNoNetwork()
++    def test_that_unpack_uses_the_git_shallow_tarball_when_using_mirror_rewrite_rules_and_the_git_clone_does_not_exist(self):
++        self.d.setVar('SRCREV', 'e5939ff608b95cdd4d0ab0e1935781ab9a276ac0')
++        self.d.setVar('BB_GIT_SHALLOW', '1')
++        self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', '1')
++        self.d.setVar('PREMIRRORS', 'git://git.yoctoproject.org/.* git://git.yoctoproject.org/git/PATH;protocol=https \n')
++        fetcher = bb.fetch.Fetch(["git://git.yoctoproject.org/fstests"], self.d)
++        fetcher.download()
++        bb.utils.remove(self.dldir + '/git2', recurse=True)
++
++        fetcher.unpack(self.unpackdir)
++
++        dir = os.listdir(self.unpackdir + "/git/")
++        self.assertIn("fstests.doap", dir)
 -- 
 2.18.0
 
