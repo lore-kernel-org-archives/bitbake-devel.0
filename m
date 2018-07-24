@@ -1,23 +1,25 @@
 Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 12A6175260
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id A7B2D75260
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Jul 2018 02:29:15 +0000 (UTC)
+	Tue, 24 Jul 2018 02:29:16 +0000 (UTC)
 Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w6O2TGTO006412
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w6O2THwe024629
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 23 Jul 2018 19:29:17 -0700 (PDT)
 Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
 	(147.11.189.41) with Microsoft SMTP Server id 14.3.399.0;
-	Mon, 23 Jul 2018 19:29:16 -0700
+	Mon, 23 Jul 2018 19:29:17 -0700
 From: Mark Hatle <mark.hatle@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 23 Jul 2018 22:29:09 -0400
-Message-ID: <20180724022914.185634-1-mark.hatle@windriver.com>
+Date: Mon, 23 Jul 2018 22:29:10 -0400
+Message-ID: <20180724022914.185634-2-mark.hatle@windriver.com>
 X-Mailer: git-send-email 2.16.0.rc2
+In-Reply-To: <20180724022914.185634-1-mark.hatle@windriver.com>
+References: <20180724022914.185634-1-mark.hatle@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 0/5 v2] Add a standard module for accessing the layerindex
+Subject: [PATCH 1/5 v2] bblayers/layerindex.py: Fix addition of layers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,103 +35,65 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Tue, 24 Jul 2018 02:29:16 -0000
 Content-Type: text/plain
 
-Changes available at:
-git://git.openembedded.org/bitbake-contrib bitbake-layerindex
+When a layer is added it needs to be in a list, otherwise the system will
+error such as:
 
-v2:
-Refactored the module to address Paul E's concerns:
+    Specified layer directory / doesn't contain a conf/layer.conf file
 
-* Treat LAYERSERIES_CORENAMES as a list of supported branches
+Additionally, instead of calling the add layer function over and over, it
+is better to add all of the new content in one command.  Otherwise the
+order is important as the system now checks if the layer can be added.  For
+instance, trying to add meta-python:
 
-* Remove type= stuff in plugins, now iterate through plugins until one
-  of them accepts the data
+   Layer                Required by          Git repository                                          Subdirectory
+   ===================================================================================================================
+   meta-python          -                    git://git.openembedded.org/meta-openembedded            meta-python
+   meta-oe              meta-python          git://git.openembedded.org/meta-openembedded            meta-oe
+   openembedded-core    meta-python          git://git.openembedded.org/openembedded-core            meta
+   Adding layer "meta-python" (.../oe-core/meta-openembedded/meta-python) to conf/bblayers.conf
+   ERROR: Layer 'meta-python' depends on layer 'openembedded-layer', but this layer is not enabled in your configuration
 
-* Fix incorrect exceptions, add additional exceptions as necessary
+The system would try to add meta-python before the dependent meta-oe.  Adding
+them both at the same time resolves this issue.
 
-* Replace space separated lists with python lists.. (Few minor excptions,
-  documented why where still necessary.)
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+---
+ lib/bblayers/layerindex.py | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-* Refactor item and object classes:
-  - Each LayerIndexItem now uses both decorators and properties to manage
-    access to the private data
-  - New LayerIndexObj class to handle a -single- layerindex, the main
-    module now is a list of LayerIndexObjs
-
-* Lots of variable name changes and cleanups
-
-* Removed dummy API to implement a json query
-
-* General refactoring to accomplish the above
-
-* bitbake-layers layerindex-*
-  - Now checks the cooker first, if the layer is already present skips
-    going to the network
-
-Selftest passes.
-bitbake-layers layerindex-fetch and layerindex-show-depends pass
-
-Note: as before the toaster change needs additional verication then
-      what I'm current able to provide.  But it -should- work as patched.
-
-
-V1:
-In order to simply existing components, and add support to create some
-new functionaly -- we need a common apporach for access the layerindex.
-
-The class supports loading multilib layerindexes, but right now that
-functionality is not being used by either bitbake-layers or the toaster.
-
-There are a few 'TODO' items that remain in the code.  These are related
-to either un-implemented, but planned functionality or to display stuff
-in bitbake-layers.  I'm hoping that part of this review can discuss the
-TODO items.
-
-
-Mark Hatle (5):
-  bblayers/layerindex.py: Fix addition of layers
-  layerindexlib: Initial layer index processing module implementation
-  bblayers/layerindex.py: Switch to use the new layerindexlib class
-  bitbake-layers: disable parsing for layerindex commands
-  toaster/orm/management/commands/lsupdates.py: Use new layerindexlib
-    module
-
- bin/bitbake-selftest                               |    6 +-
- lib/bblayers/layerindex.py                         |  323 ++---
- lib/layerindexlib/README                           |   28 +
- lib/layerindexlib/__init__.py                      | 1364 ++++++++++++++++++++
- lib/layerindexlib/cooker.py                        |  341 +++++
- lib/layerindexlib/plugin.py                        |   60 +
- lib/layerindexlib/restapi.py                       |  398 ++++++
- lib/layerindexlib/tests/__init__.py                |    0
- lib/layerindexlib/tests/common.py                  |   43 +
- lib/layerindexlib/tests/cooker.py                  |  123 ++
- lib/layerindexlib/tests/layerindexobj.py           |  226 ++++
- lib/layerindexlib/tests/restapi.py                 |  174 +++
- lib/layerindexlib/tests/testdata/README            |   11 +
- .../tests/testdata/build/conf/bblayers.conf        |   15 +
- .../tests/testdata/layer1/conf/layer.conf          |   17 +
- .../tests/testdata/layer2/conf/layer.conf          |   20 +
- .../tests/testdata/layer3/conf/layer.conf          |   19 +
- .../tests/testdata/layer4/conf/layer.conf          |   22 +
- lib/toaster/orm/management/commands/lsupdates.py   |  216 ++--
- 19 files changed, 3083 insertions(+), 323 deletions(-)
- create mode 100644 lib/layerindexlib/README
- create mode 100644 lib/layerindexlib/__init__.py
- create mode 100644 lib/layerindexlib/cooker.py
- create mode 100644 lib/layerindexlib/plugin.py
- create mode 100644 lib/layerindexlib/restapi.py
- create mode 100644 lib/layerindexlib/tests/__init__.py
- create mode 100644 lib/layerindexlib/tests/common.py
- create mode 100644 lib/layerindexlib/tests/cooker.py
- create mode 100644 lib/layerindexlib/tests/layerindexobj.py
- create mode 100644 lib/layerindexlib/tests/restapi.py
- create mode 100644 lib/layerindexlib/tests/testdata/README
- create mode 100644 lib/layerindexlib/tests/testdata/build/conf/bblayers.conf
- create mode 100644 lib/layerindexlib/tests/testdata/layer1/conf/layer.conf
- create mode 100644 lib/layerindexlib/tests/testdata/layer2/conf/layer.conf
- create mode 100644 lib/layerindexlib/tests/testdata/layer3/conf/layer.conf
- create mode 100644 lib/layerindexlib/tests/testdata/layer4/conf/layer.conf
-
+diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
+index 9af385d..53c858d 100644
+--- a/lib/bblayers/layerindex.py
++++ b/lib/bblayers/layerindex.py
+@@ -239,19 +239,22 @@ class LayerIndexPlugin(ActionPlugin):
+                     return 1
+                 addlayers.append((subdir, name, layerdir))
+         if not args.show_only:
++            localargs = argparse.Namespace()
++            localargs.layerdir = []
++            localargs.force = args.force
+             for subdir, name, layerdir in set(addlayers):
+                 if os.path.exists(layerdir):
+                     if subdir:
+-                        logger.plain("Adding layer \"%s\" to conf/bblayers.conf" % subdir)
++                        logger.plain("Adding layer \"%s\" (%s) to conf/bblayers.conf" % (subdir, layerdir))
+                     else:
+-                        logger.plain("Adding layer \"%s\" to conf/bblayers.conf" % name)
+-                    localargs = argparse.Namespace()
+-                    localargs.layerdir = layerdir
+-                    localargs.force = args.force
+-                    self.do_add_layer(localargs)
++                        logger.plain("Adding layer \"%s\" (%s) to conf/bblayers.conf" % (name, layerdir))
++                    localargs.layerdir.append(layerdir)
+                 else:
+                     break
+ 
++            if localargs.layerdir:
++                self.do_add_layer(localargs)
++
+     def do_layerindex_show_depends(self, args):
+         """Find layer dependencies from layer index.
+ """
 -- 
 1.8.3.1
 
