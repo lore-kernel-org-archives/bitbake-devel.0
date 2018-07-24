@@ -1,25 +1,23 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 345A060064
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 12A6175260
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Jul 2018 22:00:19 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	w6NM0G0s006501
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Mon, 23 Jul 2018 23:00:17 +0100
-Message-ID: <3bace14d7cbf7d350b146849d6f9eefc00fe9733.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Urs =?ISO-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>,
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 23 Jul 2018 23:00:15 +0100
-In-Reply-To: <20180723154259.9076-1-urs.fassler@bbv.ch>
-References: <20180723154259.9076-1-urs.fassler@bbv.ch>
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.99.4 at dan
-X-Virus-Status: Clean
-Subject: Re: [PATCH 0/9] Always use the url specified in the recipe as a base for the git shallow tarball naming
+	Tue, 24 Jul 2018 02:29:15 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w6O2TGTO006412
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 Jul 2018 19:29:17 -0700 (PDT)
+Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.399.0;
+	Mon, 23 Jul 2018 19:29:16 -0700
+From: Mark Hatle <mark.hatle@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 23 Jul 2018 22:29:09 -0400
+Message-ID: <20180724022914.185634-1-mark.hatle@windriver.com>
+X-Mailer: git-send-email 2.16.0.rc2
+MIME-Version: 1.0
+Subject: [PATCH 0/5 v2] Add a standard module for accessing the layerindex
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,45 +30,107 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Jul 2018 22:00:20 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 24 Jul 2018 02:29:16 -0000
+Content-Type: text/plain
 
-On Mon, 2018-07-23 at 17:42 +0200, Urs Fässler wrote:
-> The existing behavior was to use the url where the repository was
-> cloned from.
-> It happened that the tarball was not found when a mirror rewrite rule
-> was active.
-> 
-> We now use the url specified in the recipe to name the shallow
-> tarball. It fixes that the tarball is not found under certain
-> conditions. In addition, the naming is independent of network/server
-> failure and the mapping of the name is easier to understand.
+Changes available at:
+git://git.openembedded.org/bitbake-contrib bitbake-layerindex
 
-I'm not sure why but throughout this patch series you've used function
-names and variables prefixed with "__". We don't do this with any of
-our other code so it seems out of keeping with the rest of the coding
-style.
+v2:
+Refactored the module to address Paul E's concerns:
 
-With regard to the function "__has_up_to_date_clonedir" you added, its
-very unclear why some checks would go in that function and some checks
-would go in the other. The commit description helps understand it a bit
-more but that doesn't help the function naming or someone looking at
-the code in future.
+* Treat LAYERSERIES_CORENAMES as a list of supported branches
 
-Finally, I'm still not convinced that passing around the original url
-and forcing the original url naming into any mirroring code is the
-right solution to the problem. I said that at the start and looking at
-this code change, I'm still not convinced this is right. Part of the
-reason I continue to believe that is you just added a N*N testing
-problem to the fetcher where the fetchers now behave differently
-depending on two urls passed in rather than just one :(.
+* Remove type= stuff in plugins, now iterate through plugins until one
+  of them accepts the data
 
-Cheers,
+* Fix incorrect exceptions, add additional exceptions as necessary
 
-Richard
+* Replace space separated lists with python lists.. (Few minor excptions,
+  documented why where still necessary.)
+
+* Refactor item and object classes:
+  - Each LayerIndexItem now uses both decorators and properties to manage
+    access to the private data
+  - New LayerIndexObj class to handle a -single- layerindex, the main
+    module now is a list of LayerIndexObjs
+
+* Lots of variable name changes and cleanups
+
+* Removed dummy API to implement a json query
+
+* General refactoring to accomplish the above
+
+* bitbake-layers layerindex-*
+  - Now checks the cooker first, if the layer is already present skips
+    going to the network
+
+Selftest passes.
+bitbake-layers layerindex-fetch and layerindex-show-depends pass
+
+Note: as before the toaster change needs additional verication then
+      what I'm current able to provide.  But it -should- work as patched.
 
 
+V1:
+In order to simply existing components, and add support to create some
+new functionaly -- we need a common apporach for access the layerindex.
 
+The class supports loading multilib layerindexes, but right now that
+functionality is not being used by either bitbake-layers or the toaster.
+
+There are a few 'TODO' items that remain in the code.  These are related
+to either un-implemented, but planned functionality or to display stuff
+in bitbake-layers.  I'm hoping that part of this review can discuss the
+TODO items.
+
+
+Mark Hatle (5):
+  bblayers/layerindex.py: Fix addition of layers
+  layerindexlib: Initial layer index processing module implementation
+  bblayers/layerindex.py: Switch to use the new layerindexlib class
+  bitbake-layers: disable parsing for layerindex commands
+  toaster/orm/management/commands/lsupdates.py: Use new layerindexlib
+    module
+
+ bin/bitbake-selftest                               |    6 +-
+ lib/bblayers/layerindex.py                         |  323 ++---
+ lib/layerindexlib/README                           |   28 +
+ lib/layerindexlib/__init__.py                      | 1364 ++++++++++++++++++++
+ lib/layerindexlib/cooker.py                        |  341 +++++
+ lib/layerindexlib/plugin.py                        |   60 +
+ lib/layerindexlib/restapi.py                       |  398 ++++++
+ lib/layerindexlib/tests/__init__.py                |    0
+ lib/layerindexlib/tests/common.py                  |   43 +
+ lib/layerindexlib/tests/cooker.py                  |  123 ++
+ lib/layerindexlib/tests/layerindexobj.py           |  226 ++++
+ lib/layerindexlib/tests/restapi.py                 |  174 +++
+ lib/layerindexlib/tests/testdata/README            |   11 +
+ .../tests/testdata/build/conf/bblayers.conf        |   15 +
+ .../tests/testdata/layer1/conf/layer.conf          |   17 +
+ .../tests/testdata/layer2/conf/layer.conf          |   20 +
+ .../tests/testdata/layer3/conf/layer.conf          |   19 +
+ .../tests/testdata/layer4/conf/layer.conf          |   22 +
+ lib/toaster/orm/management/commands/lsupdates.py   |  216 ++--
+ 19 files changed, 3083 insertions(+), 323 deletions(-)
+ create mode 100644 lib/layerindexlib/README
+ create mode 100644 lib/layerindexlib/__init__.py
+ create mode 100644 lib/layerindexlib/cooker.py
+ create mode 100644 lib/layerindexlib/plugin.py
+ create mode 100644 lib/layerindexlib/restapi.py
+ create mode 100644 lib/layerindexlib/tests/__init__.py
+ create mode 100644 lib/layerindexlib/tests/common.py
+ create mode 100644 lib/layerindexlib/tests/cooker.py
+ create mode 100644 lib/layerindexlib/tests/layerindexobj.py
+ create mode 100644 lib/layerindexlib/tests/restapi.py
+ create mode 100644 lib/layerindexlib/tests/testdata/README
+ create mode 100644 lib/layerindexlib/tests/testdata/build/conf/bblayers.conf
+ create mode 100644 lib/layerindexlib/tests/testdata/layer1/conf/layer.conf
+ create mode 100644 lib/layerindexlib/tests/testdata/layer2/conf/layer.conf
+ create mode 100644 lib/layerindexlib/tests/testdata/layer3/conf/layer.conf
+ create mode 100644 lib/layerindexlib/tests/testdata/layer4/conf/layer.conf
+
+-- 
+1.8.3.1
 
 
