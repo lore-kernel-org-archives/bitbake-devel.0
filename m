@@ -1,26 +1,50 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 5C6406086F
+Return-Path: <changhyeok.bae@gmail.com>
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com
+	[209.85.215.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 7D8E478B17
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 25 Jul 2018 21:58:34 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-3) with ESMTPSA id
-	w6PLwX8q013394
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Wed, 25 Jul 2018 22:58:34 +0100
-Message-ID: <18ef0e1f0af7576bbdc5841c8eaa064bc865e0ff.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Matt Hoosier <matt.hoosier@gmail.com>, yocto@yoctoproject.org
-Date: Wed, 25 Jul 2018 22:58:33 +0100
-In-Reply-To: <CAJgxT3-Jrr2baQz8Y6c_VzNf0Jn6qSEfgNbDYu7xGN4g1PRT=A@mail.gmail.com>
-References: <CAJgxT3_QyunmpzGW69j27sR_BFvvhisQVtG+-uGnMxhsO8mCLg@mail.gmail.com>
-	<CAJgxT3-Jrr2baQz8Y6c_VzNf0Jn6qSEfgNbDYu7xGN4g1PRT=A@mail.gmail.com>
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.99.4 at dan
-X-Virus-Status: Clean
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [yocto] Ordering of anonymous Python functions and task signature calculations
+	Thu, 26 Jul 2018 00:03:10 +0000 (UTC)
+Received: by mail-pg1-f193.google.com with SMTP id r5-v6so6329251pgv.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 25 Jul 2018 17:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=N/Ja/sbR6EfvTTdwiA/T0t0h1fJX3gkKtDMY+BGTIOg=;
+	b=UNiK8ImKbgf+ZAQ6Pf/yADRBDrXysOzzDw7knokNafCUPQnrE7vlAuNh3WOC230y2G
+	bMUFO7pM+YGEeE696kdqI60n7Amnt+XxW9o/bm8tu1glklVyUE7XnwDrPrYA45bV2d1X
+	yc2BKfsDjhntCdc4F8cHp9iTrFA5hjJJvjVQmANnMmfdmI5furKF+HW+rxNQ0aY4uiKC
+	JJi8+Y7UpN0hqYQVsq3bTtw7GbSLWPEnVkO1xT7nfVcyMlmurTW2zFeCBhDa7xhJCy1B
+	M0/iNcGk4wYmHPKK/wdoYNseZF+tC95jl3xR2x3MXAC12cqarJcnZB1Byx8zbuXG5sXM
+	3efw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=N/Ja/sbR6EfvTTdwiA/T0t0h1fJX3gkKtDMY+BGTIOg=;
+	b=hejjoJMVgbCVqP91oGGreu1ngCN6dAYGOfLj94+42R+BInbpbKUaZtkFxbyjlIF2Xr
+	JVVjH3ZqPG4/Uwxb6cNMSrS4cFAghJkH6UU950WvDzE/z1/dx3xGW3G0+BOAKb6X69XO
+	RZrYauCtP7/rrLgui7+OSRzy+81waXpAwQIH77r7ZToHEgpk7IzOrts8RdJjjut4/b42
+	UejFykAkhjcyvafFMI0AF+qawuYg6J1Bx4BPJ8Ml3q1YpSywNMvZu6vx/MXoxFdtiwMI
+	xvuhMuAI53gBmJlCMDOFnHqtEkUK6hLCRwae1PhB732pDg+E1rbAF5TZp8OfDrENPWWf
+	F/FQ==
+X-Gm-Message-State: AOUpUlGmpiycFDUW83PKMB3DpvsUZanzhfzqDgdCo19NECV/AW+gCrgE
+	pvG02UY5eYg3GyXVjLZmGLy0MkqS
+X-Google-Smtp-Source: AAOMgpchDdaKTef0t0+eT4zcTLrHHwJpPveAnrjPjihcNATjlGxg04rAceRhp4uK0MfrPsy325fYqA==
+X-Received: by 2002:a63:5204:: with SMTP id
+	g4-v6mr22780289pgb.274.1532563391532; 
+	Wed, 25 Jul 2018 17:03:11 -0700 (PDT)
+Received: from ip-172-31-26-116.ap-northeast-2.compute.internal
+	(ec2-52-79-39-246.ap-northeast-2.compute.amazonaws.com.
+	[52.79.39.246]) by smtp.gmail.com with ESMTPSA id
+	j72-v6sm24170775pge.19.2018.07.25.17.03.09
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 25 Jul 2018 17:03:11 -0700 (PDT)
+From: Changhyeok Bae <changhyeok.bae@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 26 Jul 2018 00:03:05 +0000
+Message-Id: <1532563385-1913-1-git-send-email-changhyeok.bae@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Cc: Changhyeok Bae <changhyeok.bae@gmail.com>
+Subject: [PATCH][1.32] fetch2: fix import error for Python 3.6.5
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,102 +57,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 25 Jul 2018 21:58:35 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 26 Jul 2018 00:03:10 -0000
 
-On Wed, 2018-07-25 at 08:47 -0500, Matt Hoosier wrote:
-> Quite a while ago I wrote the following message:
-> On Tue, Jan 24, 2017 at 11:55 AM Matt Hoosier <matt.hoosier@gmail.com
-> > wrote:
-> > In order to support a use-case that embeds information about the
-> > Git revision of Yocto itself that was used to make a build, I would
-> > like to run some arbitrary Python code and dump the results (Git
-> > SHA1's, tag names, etc) into a Bitbake variable.
-> > 
-> > The idea is that the variable would get consumed in a do_install()
-> > task to populate some cookie-crumb file in the package payload.
-> > 
-> > Something like:
-> > 
-> >   DEPENDS = "git-native"
-> > 
-> >   python () {
-> >     # This pseudocode isn't strictly functional for invoking Git,
-> > but you get the idea
-> >     d.setVar('GIT_INFO', subprocess.Popen(['git', 'rev-list',
-> > ...]).communicate().stdout)
-> >   }
-> > 
-> >   do_install () {
-> >     install -d ${D}/etc
-> >     echo "${GIT_INFO}" > ${D}/etc/git-info.txt
-> >   }
-> > 
-> > This all works on a fresh run, but Bitbake appears not to be
-> > evaluating the anonymous Python function on each execution. This
-> > leads it to have out-of-date information about the Git working copy
-> > when global state changes but happens not to impact the particular
-> > recipe holding this logic.
-> > 
-> > 
-> 
-> The replies given at the time were very helpful in letting me
-> accomplish my immediate goals, but I never really did get to the
-> bottom of the real question:
->  
-> > Is there any trick available to cause the Python function to
-> > execute (and hence update the value of ${GIT_INFO} each Bitbake
-> > execution so that the up-to-the-moment contents of it filter into
-> > the calculation of the signature for do_install()? Or am I just
-> > trying a wrong-headed approach and doing something illegitimate? 
-> > 
-> 
-> Some build systems I know of [1] that are based on hashes rather than
-> timestamps have a way that you can inform the task execution engine
-> to always poison the inputs to a certain task's up-to-dateness check.
-> Is there anything in Bitbake that would allow a declaration to force
-> such-and-such variable in a recipe always to be re-evaluated:
-> 
->   EXTERNALLY_INFLUENCED_VARIABLE = "${@int(random.random() * 10)}"
->   do_install[vardepsalwaysdirty] = " EXTERNALLY_INFLUENCED_VARIABLE "
-> 
->   do_install() {
->     echo '${ EXTERNALLY_INFLUENCED_VARIABLE }' > ${D}/etc/stuff.txt
->   }
-> 
-> Don't read too much into the example calling random() here. That's
-> not really what I want to do; the point is just that the variable's
-> value (though deterministic) isn't computed strictly from Bitbake
-> metadata. So I'm searching for a way to get the value of
-> EXTERNALLY_INFLUENCED_VARIABLE to be re-computed each time Bitbake
-> starts. If the computed value ends up matching what was seen on the
-> last execution, then any dependent tasks wouldn't need re-run.
-> 
-> Any ideas?
-> 
-> [1] I'm thinking particularly of Waf's hash-based task graph, which
-> supports annotations that can be used to always cause a task to be
-> re-run even if all the inputs feeding into it appear up-to-date.
+From: Tzu Hsiang Lin <t9360341@ntut.org.tw>
 
-From a bitbake perspective there are two things you need to ensure
-here, that the recipe gets reparsed at every execution and that the
-task dependency exists. You have the dependency above and that is the
-easier piece to fix.
+When running bitbake command with Python 3.6.5 always result in
+import error causing by the change of distutils module.
+This patch replaces the method to search executable in PATH by
+"/usr/bin/env <command>".
 
-If the recipe is reparsed, the anon python reruns and the task hash
-recalculated.
+Signed-off-by: Tzu Hsiang Lin <t9360341@ntut.org.tw>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Changhyeok Bae <changhyeok.bae@gmail.com>
+---
+ lib/bb/fetch2/clearcase.py | 3 +--
+ lib/bb/fetch2/npm.py       | 1 -
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-If a recipe sets BB_DONT_CACHE, it will be reparsed upon each run and
-the hashes will dynamically change as you want. BB_SRCREV_POLICY !=
-"cache" uses that behind the scenes so that it can dynamically update
-srcrevs.
-
-Hope that helps...
-
-Cheers,
-
-Richard
-
+diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
+index 70e280a..b0b5eff 100644
+--- a/lib/bb/fetch2/clearcase.py
++++ b/lib/bb/fetch2/clearcase.py
+@@ -70,7 +70,6 @@ from   bb.fetch2 import FetchMethod
+ from   bb.fetch2 import FetchError
+ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
+-from   distutils import spawn
+ 
+ class ClearCase(FetchMethod):
+     """Class to fetch urls via 'clearcase'"""
+@@ -108,7 +107,7 @@ class ClearCase(FetchMethod):
+         else:
+             ud.module = ""
+ 
+-        ud.basecmd = d.getVar("FETCHCMD_ccrc", True) or spawn.find_executable("cleartool") or spawn.find_executable("rcleartool")
++        ud.basecmd = d.getVar("FETCHCMD_ccrc") or "/usr/bin/env cleartool || rcleartool"
+ 
+         if data.getVar("SRCREV", d, True) == "INVALID":
+           raise FetchError("Set a valid SRCREV for the clearcase fetcher in your recipe, e.g. SRCREV = \"/main/LATEST\" or any other label of your choice.")
+diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+index 699ae72..7ccaba9 100644
+--- a/lib/bb/fetch2/npm.py
++++ b/lib/bb/fetch2/npm.py
+@@ -33,7 +33,6 @@ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
+ from   bb.fetch2 import UnpackError
+ from   bb.fetch2 import ParameterError
+-from   distutils import spawn
+ 
+ def subprocess_setup():
+     # Python installs a SIGPIPE handler by default. This is usually not what
+-- 
+2.7.4
 
 
