@@ -1,76 +1,48 @@
-Return-Path: <harini@bruviti.com>
-X-Greylist: delayed 16323 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 25 Jul 2018 14:38:25 UTC
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com
-	(mail-bl2nam02on0124.outbound.protection.outlook.com [104.47.38.124])
-	by mail.openembedded.org (Postfix) with ESMTP id DF00460110
+Return-Path: <matt.hoosier@gmail.com>
+Received: from mail-yw0-f194.google.com (mail-yw0-f194.google.com
+	[209.85.161.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 76F0778C0C
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 25 Jul 2018 14:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=NETORG158912.onmicrosoft.com; s=selector1-bruviti-com;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=GDWOimIi8GDOFo0p4Vb3qB6uC/MyXC/R1BL76eIFg68=;
-	b=VvZtG2HjGCwPzA45zo1sNx543IgIEEunY8jKLJoOyaO9kskuVKhRsAJOu+SDwoJPXqB3jNeLgLm1mezCNKikEcuIYOAeOnYrEBnqQIV2S3bKjCuNvusnYHwWlqyCHldF4dHdv7TUPCoplzk4yGEW7Alnp+mHFEt2pTrs5fJMJ6M=
-Received: from CY1PR04MB2170.namprd04.prod.outlook.com (10.167.8.24) by
-	CY1PR04MB2170.namprd04.prod.outlook.com (10.167.8.24) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.973.21; Wed, 25 Jul 2018 10:06:20 +0000
-Received: from CY1PR04MB2170.namprd04.prod.outlook.com
-	([fe80::5094:36c6:d1ea:cff3]) by
-	CY1PR04MB2170.namprd04.prod.outlook.com
-	([fe80::5094:36c6:d1ea:cff3%11]) with mapi id 15.20.0973.022;
-	Wed, 25 Jul 2018 10:06:20 +0000
-From: Harini Srowa <harini@bruviti.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: Building scipy with yocto 2.2
-Thread-Index: AQHUI/nucv/7Ydaow02UxzFnJ+eHBQ==
-Date: Wed, 25 Jul 2018 10:06:20 +0000
-Message-ID: <CY1PR04MB2170674BB2E79C39F14DB4EAC7540@CY1PR04MB2170.namprd04.prod.outlook.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=harini@bruviti.com; 
-x-originating-ip: [120.138.126.55]
-x-ms-publictraffictype: Email
-x-microsoft-exchange-diagnostics: 1; CY1PR04MB2170;
-	6:WmJk9ujtTz+wn3h1qghNSOx6Ar8d6T9qpvpy7T1ObgPCfAXgHjp4KKTOVeH3R6RU0Tp7Z2t+NzouZjour6ZgK70qe1DmnmFc6HWdpHos2ClRq4QgUlUXFr8CnBy+MknPlhBOYVn1NpHhlXb67Qjpj66aiFY/CUwrASGO1Cz2dsQhJjgD/YVUHc0qZrX//LKavAZgSj9PQC32AD6naUODqe5CuxP+TxbjoBxP5QCQor3hTkEpkLdIl3iDZoXjAeAtemmuOR3rDYnfPTWcuBWFamT/SYFYxnNIAIm0cSYH462hW0I1MhBirmOWgU9sZ1vo+FrQVDY/vD7mSuR8uWk/fsVeHwiJnX/v3W2iOo+oAfNElSQjZ/Oyqs2vUmVs1Om43UO0dSTsoE86481HFHaiZ2QL2fbvcxcEqKjkXw/MukgYlI+lzU7X7z5StvWlgPGg19jzA22wWV2GfxPIdYmzGw==;
-	5:6viOgP/Ato34RDfQp5fmhSes4O+wEqZAG50XkbktvaoOvn+k/VV56OgdfCRJpueVLdqiJG0uFa7Cmxa/zmfJFWCK6FtZp0r3xVOV3nfLL1kHHmqDMV3HusQ5o8rhFs6Ib8LxIz0iNJRFZPhL3SYeRlG9F3my9SsqtMCxe1+wlIo=;
-	7:If6c+rW1Nxaep9zyC2zrsmxwL2UGwLv4Vtnpz6zNQx9oUxi+6nD90mfBgzBt/GyauQWAjfQvCHplzXeNL2g38OOVjLwvYe/QDcwZbfjxI2Ro//IOmaFWZDgt3U/L/jeedWU55YevDqHqN9w6VJfZBoacKB+gI13ZJA9aK4sE9mrY/M31Xx3RtHt6ZS33qh8IzLvQRDne/IoSQe7H0BuyaRQLMw3bGHjf+7R1SRw5fudZRPOUZu5BiAkqmTX6m2XK
-x-ms-exchange-antispam-srfa-diagnostics: SOS;
-x-ms-office365-filtering-correlation-id: eac77fea-6de8-47cd-fa12-08d5f21644e9
-x-microsoft-antispam: BCL:0; PCL:0;
-	RULEID:(7020095)(4652040)(7021125)(8989117)(4534165)(7022125)(4603075)(4627221)(201702281549075)(8990107)(7048125)(7024125)(7027125)(7028125)(7023125)(5600073)(711020)(2017052603328)(7153060)(7193020);
-	SRVR:CY1PR04MB2170; 
-x-ms-traffictypediagnostic: CY1PR04MB2170:
-x-microsoft-antispam-prvs: <CY1PR04MB21704DA5F5597821EA6FF594C7540@CY1PR04MB2170.namprd04.prod.outlook.com>
-x-exchange-antispam-report-test: UriScan:(48706222282353)(251646265452963);
-x-ms-exchange-senderadcheck: 1
-x-exchange-antispam-report-cfa-test: BCL:0; PCL:0;
-	RULEID:(6040522)(2401047)(5005006)(8121501046)(3002001)(10201501046)(93006095)(93001095)(3231311)(944501410)(52105095)(149027)(150027)(6041310)(20161123562045)(20161123560045)(20161123564045)(20161123558120)(2016111802025)(6072148)(6043046)(201708071742011)(7699016);
-	SRVR:CY1PR04MB2170; BCL:0; PCL:0; RULEID:; SRVR:CY1PR04MB2170; 
-x-forefront-prvs: 0744CFB5E8
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10019020)(396003)(346002)(376002)(39830400003)(366004)(136003)(199004)(189003)(478600001)(256004)(97736004)(86362001)(575784001)(2906002)(102836004)(106356001)(6506007)(105586002)(8936002)(66066001)(14454004)(2900100001)(81156014)(486006)(81166006)(26005)(19627405001)(8676002)(53336002)(33656002)(186003)(6916009)(53936002)(68736007)(7696005)(25786009)(5660300001)(2351001)(5250100002)(2501003)(6606003)(476003)(6116002)(3846002)(55016002)(6306002)(74316002)(54896002)(9686003)(6436002)(5640700003)(7736002)(316002)(99286004);
-	DIR:OUT; SFP:1102; SCL:1; SRVR:CY1PR04MB2170;
-	H:CY1PR04MB2170.namprd04.prod.outlook.com; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
-received-spf: None (protection.outlook.com: bruviti.com does not designate
-	permitted sender hosts)
-x-microsoft-antispam-message-info: Ovc9CmhyGWR/z+nXzln//TdWES6d2gldX9W673iJylVjxj0fVmx7ob9QR9i+kJk5HvB2Py/YZZo5vA8JYwy0PkzmHSp2qkuIHEauDvMyQ9yj93y/Rize2FvcZzt8c08v5aC/GeCc5Dv1q3M/Kt8q/0CtUIcMhWsyYcSNiHj3tLgaLxcGdLIp1wsORMlI+Ll+bPd0oiHfwhUEKwg7Au3j/dpYfZgR1HIZ3eSneqcSRMW5P917NBp4Sf0Dc9+I17ztWWP9tJH9Myx6l1r9AXJ5AeHeRhffzOF03E9Acv5aBPrB1/4cZnuMB1KaJjhvicX8mQX5fEvmeCanIWgG1193HCBgWCEt02ExcSSG16ldJIs=
-spamdiagnosticoutput: 1:99
-spamdiagnosticmetadata: NSPM
+	Thu, 26 Jul 2018 14:23:26 +0000 (UTC)
+Received: by mail-yw0-f194.google.com with SMTP id l189-v6so627567ywb.10
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 26 Jul 2018 07:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=hgDw4GIkwEYglRkz3TPBdHOxPHdvFdhUlLrknmlf1EA=;
+	b=VM6wrkMPXrJwg5OSPSjTC4PDC4DiwwosIXcU5MOK5oIdJUEdVkrb3szoAZYRwhBbhH
+	R+fsKGgtzLtjU6/jekdFLr4moC3cQuSY+EQb5EdzDQDBP8GkDdugwbM/IWpjg291N00I
+	IE1kqv2Ocs3FPTKt7GpSbuBzetgoxUt1/MQsybG5Jv7+fMY84uBVSEEdijmZSxGVmihv
+	+7bpTFDP7QfakjCUUsz2POmzTFF1f6wA3A6MhRfT20kPNnlVtHzVAr1pTggmhoxEJcdj
+	h2Sgrd3iIQqqNITj3I2lb37e1eYW/ehBPNamJluki1PPNwndtIYxcbUZ/Aa+QQ4cgRB7
+	zXIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=hgDw4GIkwEYglRkz3TPBdHOxPHdvFdhUlLrknmlf1EA=;
+	b=anqEK8HJzd8TRrtp7f57vJ+li/hdVrsYCsFB9AwNxygnr7SedZqG4kqf0tzYvxUPmD
+	y4aqUd3cHqyU4GUG6N96DLQpXheTKXv8UU48Zn+FuqrjRBlt2IINOjdvHERBw4ajDExR
+	9G6KuH6iK6W3qLDBRNFpoGVGuzIlAPUCtMKqQdG0OxZQ7bg1nZaRjUHr0tYXAMvdaOjd
+	3FZq2FMQdzk8koiTCV8o/D+pvclUdof9M/wxdISkOq9GnFa6RqeUGfOAG/eaLsxvsHyM
+	gbXaMLCH+sFYg5sItWiJZ5TQGGhF62J4OVzKivm5yqkWZLuyaQfGgbG0/Dmp4AUmOjRB
+	JO7w==
+X-Gm-Message-State: AOUpUlGS0t0sCr4KRE6DFyxPq7S1pN1vx/51pPC5q7NfqFnTlaESsuQi
+	Ck5BQbhU5yrUTyOvIeb3cVDg6OK+6CeCzWLJkoA=
+X-Google-Smtp-Source: AAOMgpdxhLiwkS8+80C8Rwpxvn1kki7CPKvf4osK89PWYhD+MLqF92LgCUzBBxTiBnfzInmLQH9+gUX7PnICtLiXxtw=
+X-Received: by 2002:a81:b54:: with SMTP id 81-v6mr1063311ywl.363.1532615007167;
+	Thu, 26 Jul 2018 07:23:27 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: bruviti.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eac77fea-6de8-47cd-fa12-08d5f21644e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2018 10:06:20.0448 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a4996efc-c84c-4fc0-bfac-cc63cda7da45
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR04MB2170
-X-Mailman-Approved-At: Thu, 26 Jul 2018 12:51:55 +0000
-Subject: Building scipy with yocto 2.2
+References: <CAJgxT3_QyunmpzGW69j27sR_BFvvhisQVtG+-uGnMxhsO8mCLg@mail.gmail.com>
+	<CAJgxT3-Jrr2baQz8Y6c_VzNf0Jn6qSEfgNbDYu7xGN4g1PRT=A@mail.gmail.com>
+	<18ef0e1f0af7576bbdc5841c8eaa064bc865e0ff.camel@linuxfoundation.org>
+In-Reply-To: <18ef0e1f0af7576bbdc5841c8eaa064bc865e0ff.camel@linuxfoundation.org>
+From: Matt Hoosier <matt.hoosier@gmail.com>
+Date: Thu, 26 Jul 2018 09:22:51 -0500
+Message-ID: <CAJgxT3_kmGREWd_0kuULP-NMCd1U39YbT+c9YAeZ+=aikK0aWA@mail.gmail.com>
+To: richard.purdie@linuxfoundation.org
+Cc: yocto@yoctoproject.org, bitbake-devel@lists.openembedded.org
+Subject: Re: [yocto] Ordering of anonymous Python functions and task signature calculations
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -83,130 +55,306 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 25 Jul 2018 14:38:26 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_CY1PR04MB2170674BB2E79C39F14DB4EAC7540CY1PR04MB2170namp_"
+X-List-Received-Date: Thu, 26 Jul 2018 14:23:26 -0000
+Content-Type: multipart/alternative; boundary="0000000000001468e10571e7bda7"
 
---_000_CY1PR04MB2170674BB2E79C39F14DB4EAC7540CY1PR04MB2170namp_
-Content-Type: text/plain; charset="iso-8859-1"
+--0000000000001468e10571e7bda7
+Content-Type: text/plain; charset="UTF-8"
+
+Thanks for the reply.
+
+On Wed, Jul 25, 2018 at 4:58 PM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> On Wed, 2018-07-25 at 08:47 -0500, Matt Hoosier wrote:
+> > Quite a while ago I wrote the following message:
+> > On Tue, Jan 24, 2017 at 11:55 AM Matt Hoosier <matt.hoosier@gmail.com
+> > > wrote:
+> > > In order to support a use-case that embeds information about the
+> > > Git revision of Yocto itself that was used to make a build, I would
+> > > like to run some arbitrary Python code and dump the results (Git
+> > > SHA1's, tag names, etc) into a Bitbake variable.
+> > >
+> > > The idea is that the variable would get consumed in a do_install()
+> > > task to populate some cookie-crumb file in the package payload.
+> > >
+> > > Something like:
+> > >
+> > >   DEPENDS = "git-native"
+> > >
+> > >   python () {
+> > >     # This pseudocode isn't strictly functional for invoking Git,
+> > > but you get the idea
+> > >     d.setVar('GIT_INFO', subprocess.Popen(['git', 'rev-list',
+> > > ...]).communicate().stdout)
+> > >   }
+> > >
+> > >   do_install () {
+> > >     install -d ${D}/etc
+> > >     echo "${GIT_INFO}" > ${D}/etc/git-info.txt
+> > >   }
+> > >
+> > > This all works on a fresh run, but Bitbake appears not to be
+> > > evaluating the anonymous Python function on each execution. This
+> > > leads it to have out-of-date information about the Git working copy
+> > > when global state changes but happens not to impact the particular
+> > > recipe holding this logic.
+> > >
+> > >
+> >
+> > The replies given at the time were very helpful in letting me
+> > accomplish my immediate goals, but I never really did get to the
+> > bottom of the real question:
+> >
+> > > Is there any trick available to cause the Python function to
+> > > execute (and hence update the value of ${GIT_INFO} each Bitbake
+> > > execution so that the up-to-the-moment contents of it filter into
+> > > the calculation of the signature for do_install()? Or am I just
+> > > trying a wrong-headed approach and doing something illegitimate?
+> > >
+> >
+> > Some build systems I know of [1] that are based on hashes rather than
+> > timestamps have a way that you can inform the task execution engine
+> > to always poison the inputs to a certain task's up-to-dateness check.
+> > Is there anything in Bitbake that would allow a declaration to force
+> > such-and-such variable in a recipe always to be re-evaluated:
+> >
+> >   EXTERNALLY_INFLUENCED_VARIABLE = "${@int(random.random() * 10)}"
+> >   do_install[vardepsalwaysdirty] = " EXTERNALLY_INFLUENCED_VARIABLE "
+> >
+> >   do_install() {
+> >     echo '${ EXTERNALLY_INFLUENCED_VARIABLE }' > ${D}/etc/stuff.txt
+> >   }
+> >
+> > Don't read too much into the example calling random() here. That's
+> > not really what I want to do; the point is just that the variable's
+> > value (though deterministic) isn't computed strictly from Bitbake
+> > metadata. So I'm searching for a way to get the value of
+> > EXTERNALLY_INFLUENCED_VARIABLE to be re-computed each time Bitbake
+> > starts. If the computed value ends up matching what was seen on the
+> > last execution, then any dependent tasks wouldn't need re-run.
+> >
+> > Any ideas?
+> >
+> > [1] I'm thinking particularly of Waf's hash-based task graph, which
+> > supports annotations that can be used to always cause a task to be
+> > re-run even if all the inputs feeding into it appear up-to-date.
+>
+> From a bitbake perspective there are two things you need to ensure
+> here, that the recipe gets reparsed at every execution
+
+
+Your advice about BB_DONT_CACHE does cause reparsing to get triggered. I
+can see that in logs.
+
+
+> and that the
+> task dependency exists. You have the dependency above and that is the
+> easier piece to fix.
+>
+
+But this part I'm not seeing. The variable's value is always recalculated
+(sometimes more than once during a Bitbake run, but that's okay because
+it's idempotent), but the task only re-executes if the payload of the .bb
+file itself has changed. The blurb I wrote above:
+
+  do_install[vardepsalwaysdirty] = " EXTERNALLY_INFLUENCED_VARIABLE "
+
+is just some nonsense syntax I wrote there to illustrate my point. I don't
+think there's any var flag called "vardepsalwaysdirty". Did you have this
+line in mind when you were saying that I'd already gotten the task made
+dependent on the variable? Or were you just noting that the syntactic use
+of the variable inside of the task should engage the normal hash-based
+task-dependency calculation logic?
+
+
+>
+> If the recipe is reparsed, the anon python reruns and the task hash
+> recalculated.
+>
+
+Is there anything extra I need to do to cause the reparsed variable's hash
+to cascade to the task?
+
+
+>
+> If a recipe sets BB_DONT_CACHE, it will be reparsed upon each run and
+> the hashes will dynamically change as you want. BB_SRCREV_POLICY !=
+> "cache" uses that behind the scenes so that it can dynamically update
+> srcrevs.
+>
+> Hope that helps...
+>
+> Cheers,
+>
+> Richard
+>
+>
+
+Thanks! -Matt
+
+--0000000000001468e10571e7bda7
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-
-Has anyone tried building python-scipy with yocto 2.2. Our bitbake file loo=
-ks like this:
-
-SUMMARY =3D "Scientific Library for Python"
-SECTION =3D "devel/python"
-HOMEPAGE =3D "https://pypi.python.org/pypi/scipy"
-
-LICENSE =3D "BSD-3-Clause"
-LIC_FILES_CHKSUM =3D "file://LICENSE.txt;md5=3Dd0db8f4148a3d5534cfb93be78f9=
-287c"
-
-PYPI_PACKAGE=3D"scipy"
-
-SRC_URI[md5sum] =3D "53fa34bd3733a9a4216842b6000f7316"
-SRC_URI[sha256sum] =3D "87ea1f11a0e9ec08c264dc64551d501fa307289460705f6fccd=
-84cbfc7926d10"
-
-inherit pypi setuptools distutils
-
-RDEPENDS_${PN} +=3D "python-core python-numpy-native python-distutils"
-DEPENDS +=3D "python-numpy-native"
-
-RDEPENDS_${PN}_class-native +=3D ""
-BBCLASSEXTEND =3D "native nativesdk"
-
-do_compile_prepend_class-target() {
-    ${STAGING_BINDIR_NATIVE}/python-native/python setup.py build
-}
-
-Bitbake compiles the python-scipy half way and then it is not able locate l=
-apack/blas resources.
-My build machine is x86_64 and I am building it for arm architecture 64 bit=
-.
-
-Let me know if anyone has come across such situation.
-
-Thanks and regards,
-Harini
-
-
---_000_CY1PR04MB2170674BB2E79C39F14DB4EAC7540CY1PR04MB2170namp_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
-1">
-<style type=3D"text/css" style=3D"display:none;"><!-- P {margin-top:0;margi=
-n-bottom:0;} --></style>
-</head>
-<body dir=3D"ltr">
-<div id=3D"divtagdefaultwrapper" style=3D"font-size:12pt;color:#000000;font=
--family:Calibri,Helvetica,sans-serif;" dir=3D"ltr">
-<p style=3D"margin-top:0;margin-bottom:0"><span style=3D"font-size: 10pt;">=
-Hi,</span></p>
-<p style=3D"margin-top:0;margin-bottom:0"><span style=3D"font-size: 10pt;">=
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div>Thanks for the reply.</div=
+><div dir=3D"ltr"><br></div><div dir=3D"ltr">On Wed, Jul 25, 2018 at 4:58 P=
+M Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">=
+richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote clas=
+s=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pad=
+ding-left:1ex">On Wed, 2018-07-25 at 08:47 -0500, Matt Hoosier wrote:<br>
+&gt; Quite a while ago I wrote the following message:<br>
+&gt; On Tue, Jan 24, 2017 at 11:55 AM Matt Hoosier &lt;<a href=3D"mailto:ma=
+tt.hoosier@gmail.com" target=3D"_blank">matt.hoosier@gmail.com</a><br>
+&gt; &gt; wrote:<br>
+&gt; &gt; In order to support a use-case that embeds information about the<=
+br>
+&gt; &gt; Git revision of Yocto itself that was used to make a build, I wou=
+ld<br>
+&gt; &gt; like to run some arbitrary Python code and dump the results (Git<=
+br>
+&gt; &gt; SHA1&#39;s, tag names, etc) into a Bitbake variable.<br>
+&gt; &gt; <br>
+&gt; &gt; The idea is that the variable would get consumed in a do_install(=
+)<br>
+&gt; &gt; task to populate some cookie-crumb file in the package payload.<b=
+r>
+&gt; &gt; <br>
+&gt; &gt; Something like:<br>
+&gt; &gt; <br>
+&gt; &gt;=C2=A0 =C2=A0DEPENDS =3D &quot;git-native&quot;<br>
+&gt; &gt; <br>
+&gt; &gt;=C2=A0 =C2=A0python () {<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0# This pseudocode isn&#39;t strictly functiona=
+l for invoking Git,<br>
+&gt; &gt; but you get the idea<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0d.setVar(&#39;GIT_INFO&#39;, subprocess.Popen(=
+[&#39;git&#39;, &#39;rev-list&#39;,<br>
+&gt; &gt; ...]).communicate().stdout)<br>
+&gt; &gt;=C2=A0 =C2=A0}<br>
+&gt; &gt; <br>
+&gt; &gt;=C2=A0 =C2=A0do_install () {<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0install -d ${D}/etc<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0echo &quot;${GIT_INFO}&quot; &gt; ${D}/etc/git=
+-info.txt<br>
+&gt; &gt;=C2=A0 =C2=A0}<br>
+&gt; &gt; <br>
+&gt; &gt; This all works on a fresh run, but Bitbake appears not to be<br>
+&gt; &gt; evaluating the anonymous Python function on each execution. This<=
+br>
+&gt; &gt; leads it to have out-of-date information about the Git working co=
+py<br>
+&gt; &gt; when global state changes but happens not to impact the particula=
+r<br>
+&gt; &gt; recipe holding this logic.<br>
+&gt; &gt; <br>
+&gt; &gt; <br>
+&gt; <br>
+&gt; The replies given at the time were very helpful in letting me<br>
+&gt; accomplish my immediate goals, but I never really did get to the<br>
+&gt; bottom of the real question:<br>
+&gt;=C2=A0 <br>
+&gt; &gt; Is there any trick available to cause the Python function to<br>
+&gt; &gt; execute (and hence update the value of ${GIT_INFO} each Bitbake<b=
+r>
+&gt; &gt; execution so that the up-to-the-moment contents of it filter into=
 <br>
-</span></p>
-<p style=3D"margin-top:0;margin-bottom:0"><span style=3D"font-size: 10pt;">=
-Has anyone tried building python-scipy with yocto 2.2. Our bitbake file loo=
-ks like this:</span></p>
-<p style=3D"margin-top:0;margin-bottom:0"><span style=3D"font-size: 10pt;">=
-</p>
-<div><br>
-</div>
-<div>SUMMARY =3D &quot;Scientific Library for Python&quot;<br>
-SECTION =3D &quot;devel/python&quot;<br>
-HOMEPAGE =3D &quot;https://pypi.python.org/pypi/scipy&quot;<br>
+&gt; &gt; the calculation of the signature for do_install()? Or am I just<b=
+r>
+&gt; &gt; trying a wrong-headed approach and doing something illegitimate? =
 <br>
-LICENSE =3D &quot;BSD-3-Clause&quot;<br>
-LIC_FILES_CHKSUM =3D &quot;file://LICENSE.txt;md5=3Dd0db8f4148a3d5534cfb93b=
-e78f9287c&quot;<br>
+&gt; &gt; <br>
+&gt; <br>
+&gt; Some build systems I know of [1] that are based on hashes rather than<=
+br>
+&gt; timestamps have a way that you can inform the task execution engine<br=
+>
+&gt; to always poison the inputs to a certain task&#39;s up-to-dateness che=
+ck.<br>
+&gt; Is there anything in Bitbake that would allow a declaration to force<b=
+r>
+&gt; such-and-such variable in a recipe always to be re-evaluated:<br>
+&gt; <br>
+&gt;=C2=A0 =C2=A0EXTERNALLY_INFLUENCED_VARIABLE =3D &quot;${@int(random.ran=
+dom() * 10)}&quot;<br>
+&gt;=C2=A0 =C2=A0do_install[vardepsalwaysdirty] =3D &quot; EXTERNALLY_INFLU=
+ENCED_VARIABLE &quot;<br>
+&gt; <br>
+&gt;=C2=A0 =C2=A0do_install() {<br>
+&gt;=C2=A0 =C2=A0 =C2=A0echo &#39;${ EXTERNALLY_INFLUENCED_VARIABLE }&#39; =
+&gt; ${D}/etc/stuff.txt<br>
+&gt;=C2=A0 =C2=A0}<br>
+&gt; <br>
+&gt; Don&#39;t read too much into the example calling random() here. That&#=
+39;s<br>
+&gt; not really what I want to do; the point is just that the variable&#39;=
+s<br>
+&gt; value (though deterministic) isn&#39;t computed strictly from Bitbake<=
+br>
+&gt; metadata. So I&#39;m searching for a way to get the value of<br>
+&gt; EXTERNALLY_INFLUENCED_VARIABLE to be re-computed each time Bitbake<br>
+&gt; starts. If the computed value ends up matching what was seen on the<br=
+>
+&gt; last execution, then any dependent tasks wouldn&#39;t need re-run.<br>
+&gt; <br>
+&gt; Any ideas?<br>
+&gt; <br>
+&gt; [1] I&#39;m thinking particularly of Waf&#39;s hash-based task graph, =
+which<br>
+&gt; supports annotations that can be used to always cause a task to be<br>
+&gt; re-run even if all the inputs feeding into it appear up-to-date.<br>
 <br>
-PYPI_PACKAGE=3D&quot;scipy&quot;<br>
+From a bitbake perspective there are two things you need to ensure<br>
+here, that the recipe gets reparsed at every execution</blockquote><div><br=
+></div><div>Your advice about BB_DONT_CACHE does cause reparsing to get tri=
+ggered. I can see that in logs.</div><div>=C2=A0</div><blockquote class=3D"=
+gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-=
+left:1ex"> and that the<br>
+task dependency exists. You have the dependency above and that is the<br>
+easier piece to fix.<br></blockquote><div><br></div><div>But this part I&#3=
+9;m not seeing. The variable&#39;s value is always recalculated (sometimes =
+more than once during a Bitbake run, but that&#39;s okay because it&#39;s i=
+dempotent), but the task only re-executes if the payload of the .bb file it=
+self has changed. The blurb I wrote above:</div><div><br></div><div>=C2=A0=
+=C2=A0<span style=3D"font-size:small;background-color:rgb(255,255,255);text=
+-decoration-style:initial;text-decoration-color:initial;float:none;display:=
+inline">do_install[vardepsalwaysdirty] =3D &quot;<span>=C2=A0</span></span>=
+<span style=3D"font-size:small;text-decoration-style:initial;text-decoratio=
+n-color:initial;background-color:rgb(255,255,255);float:none;display:inline=
+">EXTERNALLY_INFLUENCED_VARIABLE</span><span style=3D"font-size:small;backg=
+round-color:rgb(255,255,255);text-decoration-style:initial;text-decoration-=
+color:initial;float:none;display:inline"><span>=C2=A0</span>&quot;</span></=
+div><div><span style=3D"font-size:small;background-color:rgb(255,255,255);t=
+ext-decoration-style:initial;text-decoration-color:initial;float:none;displ=
+ay:inline"><br></span></div><div><span style=3D"font-size:small;background-=
+color:rgb(255,255,255);text-decoration-style:initial;text-decoration-color:=
+initial;float:none;display:inline">is just some nonsense syntax I wrote the=
+re to illustrate my point. I don&#39;t think there&#39;s any var flag calle=
+d &quot;vardepsalwaysdirty&quot;. Did you have this line in mind when you w=
+ere saying that I&#39;d already gotten the task made dependent on the varia=
+ble? Or were you just noting that the syntactic use of the variable inside =
+of the task should engage the normal hash-based task-dependency calculation=
+ logic?</span></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" styl=
+e=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
 <br>
-SRC_URI[md5sum] =3D &quot;53fa34bd3733a9a4216842b6000f7316&quot;<br>
-SRC_URI[sha256sum] =3D &quot;87ea1f11a0e9ec08c264dc64551d501fa307289460705f=
-6fccd84cbfc7926d10&quot;<br>
+If the recipe is reparsed, the anon python reruns and the task hash<br>
+recalculated.<br></blockquote><div><br></div><div>Is there anything extra I=
+ need to do to cause the reparsed variable&#39;s hash to cascade to the tas=
+k?</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:=
+0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
 <br>
-inherit pypi setuptools distutils<br>
+If a recipe sets BB_DONT_CACHE, it will be reparsed upon each run and<br>
+the hashes will dynamically change as you want. BB_SRCREV_POLICY !=3D<br>
+&quot;cache&quot; uses that behind the scenes so that it can dynamically up=
+date<br>
+srcrevs.<br>
 <br>
-RDEPENDS_${PN} &#43;=3D &quot;python-core python-numpy-native python-distut=
-ils&quot;<br>
-DEPENDS &#43;=3D &quot;python-numpy-native&quot;<br>
+Hope that helps...<br>
 <br>
-RDEPENDS_${PN}_class-native &#43;=3D &quot;&quot;<br>
-BBCLASSEXTEND =3D &quot;native nativesdk&quot;<br>
+Cheers,<br>
 <br>
-do_compile_prepend_class-target() {<br>
-&nbsp;&nbsp;&nbsp; ${STAGING_BINDIR_NATIVE}/python-native/python setup.py b=
-uild<br>
-}<br>
-</div>
-<div><br>
-</div>
-<div>Bitbake compiles the python-scipy half way and then it is not able loc=
-ate lapack/blas resources.<br>
-My build machine is x86_64 and I am building it for arm architecture 64 bit=
-.</div>
-<div><br>
-</div>
-<div>Let me know if anyone has come across such situation.</div>
-<div><br>
-</div>
-<div>Thanks and regards,</div>
-<div>Harini<br>
-</div>
-</span><br>
-<p></p>
-</div>
-</body>
-</html>
+Richard<br>
+<br></blockquote><div><br></div><div><br></div><div>Thanks! -Matt=C2=A0</di=
+v></div></div>
 
---_000_CY1PR04MB2170674BB2E79C39F14DB4EAC7540CY1PR04MB2170namp_--
+--0000000000001468e10571e7bda7--
