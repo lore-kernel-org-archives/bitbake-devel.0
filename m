@@ -1,45 +1,34 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm0-f67.google.com (mail-wm0-f67.google.com [74.125.82.67])
-	by mail.openembedded.org (Postfix) with ESMTP id DDA446E650
+Return-Path: <developer_agl@xtev.cn>
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+	by mail.openembedded.org (Postfix) with ESMTP id 0656578DD3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  7 Aug 2018 14:48:52 +0000 (UTC)
-Received: by mail-wm0-f67.google.com with SMTP id q8-v6so18539102wmq.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 07 Aug 2018 07:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id;
-	bh=tuIRS6pkau5odRqKxGhpy/Xxce6s5T8fr59GhnRgkFQ=;
-	b=WUF09ODTf0Sv86L2t5L2eoeRjlI5o5cBoZkgH5jTJ12zOGtHcdOXk30qxCxirAp4Lu
-	c0KxRPrAVmSQGbxmOvPyh9wXy84GDbMJX+nviQb8+PbJ7Ybl91V6CPwgWIgBhWrHp6gt
-	XF/LqfFWo+/pM5gLwmgf3mHQBhd0tqeDyKGJc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=tuIRS6pkau5odRqKxGhpy/Xxce6s5T8fr59GhnRgkFQ=;
-	b=SY0hqdtk6o29QQc/SFKdzp6ma5j1cAjueczQA45xXjhrO65+Yqraqpi8fkXbXB5mtx
-	okhg3IHTrOM5QegRR9eAWvJ9z9KDIvoHJrFYVnWMMqbBv33gLHwwhhsT52fSypNxOB3a
-	jecv1g1JabqSUyIRgKXQhWFaRJPOKsnM8KD8+tgKdq6JJS9EmIjVuWD/fK6VUYNS/F7v
-	sscFYHToopi0Z3zgOs0yL1WZMvJ0kb3fFtKW9ptpuxrxfBV+8S4ipEQOe4hJBH7lUWEB
-	/90eKucVAKXX58OJ8Fi2Coo2O2YvP82E13fExfLiX/OMh/zm0CrYOkzYaw/TNXP59Izw
-	7n/w==
-X-Gm-Message-State: AOUpUlH+huFsqvYlbqA4ejrAlysN92/vgY1/HyfhS8UhcawkPHx2aYMh
-	0LwEebTqKn4UD+GYKljSwLDLuYW2zhA=
-X-Google-Smtp-Source: AA+uWPz88cgVXxhMJnPIODCSNDdXMt5eBfzA7pfYboJlniHxZdct6MeZz2IfehCiMM/JuDkIDWeyiw==
-X-Received: by 2002:a1c:3:: with SMTP id 3-v6mr1767362wma.99.1533653333314;
-	Tue, 07 Aug 2018 07:48:53 -0700 (PDT)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	s124-v6sm2356515wmf.47.2018.08.07.07.48.52
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 07 Aug 2018 07:48:52 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue,  7 Aug 2018 15:48:51 +0100
-Message-Id: <20180807144851.26127-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.17.1
-Subject: [PATCH] runqueue: Allow the hash validate function to have an idea of build completion
+	Wed,  8 Aug 2018 10:18:39 +0000 (UTC)
+X-QQ-GoodBg: 2
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: Me8Xob1wlXKv6TAagXplHTPSwwwwB9kagXgExr8DM9bLIIJ6fcvph2uTHrqET
+	0ruL8XCfFoiKSY/MC4ZjrEMW45wM7raceFrt+ofyjrLENX0dNtKgaeiXQR2r8wB/C2dZBko
+	olE66ndjCuz9fqACeLzaunz10RfkKq7MWaZksd/OWVHt6xOJCxB4+bXOYvO/SwYkeWvKEuq
+	Rpn+hD1UzhQW2NSKI2vY8mk5+rThyYedGDZe+KaNB0YTbmsaJIVzvBmdFNDglWmcRDN5Qhv
+	R51BtZ9w0d65H5Jb9d+lC6eHA=
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 106.39.160.21
+X-QQ-STYLE: 
+X-QQ-mid: bizmailvip87t1533723512t51341
+From: "=?utf-8?B?U2l0ZWNo?=" <developer_agl@xtev.cn>
+To: "=?utf-8?B?Yml0YmFrZS1kZXZlbA==?=" <bitbake-devel@lists.openembedded.org>
+Mime-Version: 1.0
+Date: Wed, 8 Aug 2018 18:18:32 +0800
+X-Priority: 3
+Message-ID: <tencent_07BA7069715BCA2F3B76E48D@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1]) by smtp.qq.com (ESMTP) with SMTP
+	id ; Wed, 08 Aug 2018 18:18:33 +0800 (CST)
+Feedback-ID: bizmailvip:xtev.cn:qybgforeign:qybgforeign1
+X-QQ-Bgrelay: 1
+Subject: WARNING: XXXXXX do_fetch: Failed to fetch URL http://xxxxxxx.tar.xz, attempting MIRRORS if available
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,42 +41,120 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Aug 2018 14:48:53 -0000
+X-List-Received-Date: Wed, 08 Aug 2018 10:18:40 -0000
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_5B6AC378_0B535C68_3758F169"
+Content-Transfer-Encoding: 8Bit
 
-There is an oversight in the current hash validation API in that the
-function can't know how many setscene tasks already completed. Rather
-than trying to add additional parameters to the function, causing
-incompatibilities, store the value in the datastore.
+------=_NextPart_5B6AC378_0B535C68_3758F169
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-This is useful to allow build status reporting to the user for
-figures on sstate reusage and build completion.
+SGksDQpXaGVuIEkgYnVpbGQgbXkgeW9jdG8gcHJvamVjdCwgSSBvZnRlbiBnZXQgYSAgc2Ft
+ZSB3YXJuaW5nIGxpa2UgdGhpcyA6IA0KDQoNCg0KIFdBUk5JTkc6IHF1aWx0LW5hdGl2ZS0w
+LjY1LXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9kb3dubG9hZC5z
+YXZhbm5haC5nbnUub3JnL3JlbGVhc2VzL3F1aWx0L3F1aWx0LTAuNjUudGFyLmd6LCBhdHRl
+bXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlDQpXQVJOSU5HOiBhdHRyLW5hdGl2ZS0yLjQu
+NDctcjAgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwgaHR0cDovL2Rvd25sb2FkLnNh
+dmFubmFoLmdudS5vcmcvcmVsZWFzZXMvYXR0ci9hdHRyLTIuNC40Ny5zcmMudGFyLmd6LCBh
+dHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlDQpXQVJOSU5HOiBmbGV4LW5hdGl2ZS0y
+LjYuMC1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWRz
+LnNvdXJjZWZvcmdlLm5ldC9mbGV4L2ZsZXgtMi42LjAudGFyLmJ6MiwgYXR0ZW1wdGluZyBN
+SVJST1JTIGlmIGF2YWlsYWJsZQ0KV0FSTklORzogeHotbmF0aXZlLTUuMi4zLXIwIGRvX2Zl
+dGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly90dWthYW5pLm9yZy94ei94ei01LjIu
+My50YXIuZ3osIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCldBUk5JTkc6IHV0
+aWwtbGludXgtbmF0aXZlLTIuMzAtcjAgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwg
+aHR0cDovL2Nkbi5rZXJuZWwub3JnL3B1Yi9saW51eC91dGlscy91dGlsLWxpbnV4L3YyLjMw
+L3V0aWwtbGludXgtMi4zMC50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFi
+bGUNCldBUk5JTkc6IHB5dGhvbjMtbmF0aXZlLTMuNS4zLXIxLjAgZG9fZmV0Y2g6IEZhaWxl
+ZCB0byBmZXRjaCBVUkwgaHR0cDovL3d3dy5weXRob24ub3JnL2Z0cC9weXRob24vMy41LjMv
+UHl0aG9uLTMuNS4zLnRhci54eiwgYXR0ZW1wdGluZyBNSVJST1JTIGlmIGF2YWlsYWJsZQ0K
+V0FSTklORzogcG9wdC1uYXRpdmUtMS4xNi1yMyBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNo
+IFVSTCBodHRwOi8vcnBtNS5vcmcvZmlsZXMvcG9wdC9wb3B0LTEuMTYudGFyLmd6LCBhdHRl
+bXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlDQpXQVJOSU5HOiBsaWJwbmctbmF0aXZlLTEu
+Ni4zMS1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWRz
+LnNvdXJjZWZvcmdlLm5ldC9wcm9qZWN0L2xpYnBuZy9saWJwbmcxNi8xLjYuMzEvbGlicG5n
+LTEuNi4zMS50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCldBUk5J
+Tkc6IHNoYWRvdy00LjIuMS1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRw
+Oi8vcGtnLXNoYWRvdy5hbGlvdGguZGViaWFuLm9yZy9yZWxlYXNlcy9zaGFkb3ctNC4yLjEu
+dGFyLnh6LCBhdHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlDQpXQVJOSU5HOiBhY2wt
+Mi4yLjUyLXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9kb3dubG9h
+ZC5zYXZhbm5haC5nbnUub3JnL3JlbGVhc2VzL2FjbC9hY2wtMi4yLjUyLnNyYy50YXIuZ3os
+IGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCldBUk5JTkc6IGxpbnV4LWxpYmMt
+aGVhZGVycy00LjEyLXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9j
+ZG4ua2VybmVsLm9yZy9wdWIvbGludXgva2VybmVsL3Y0LngvbGludXgtNC4xMi50YXIueHos
+IGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCldBUk5JTkc6IGZyZWV0eXBlLTIu
+OC1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWRzLnNv
+dXJjZWZvcmdlLm5ldC9mcmVldHlwZS9mcmVldHlwZS0yLjgudGFyLmJ6MiwgYXR0ZW1wdGlu
+ZyBNSVJST1JTIGlmIGF2YWlsYWJsZQ0KV0FSTklORzogY3VybC1uYXRpdmUtNy41OC4wLXIw
+IGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9jdXJsLmhheHguc2UvZG93
+bmxvYWQvY3VybC03LjU4LjAudGFyLmJ6MiwgYXR0ZW1wdGluZyBNSVJST1JTIGlmIGF2YWls
+YWJsZQ0KV0FSTklORzogcGVybC1uYXRpdmUtNS4yNC4xLXIwIGRvX2ZldGNoOiBGYWlsZWQg
+dG8gZmV0Y2ggVVJMIGh0dHA6Ly93d3cuY3Bhbi5vcmcvc3JjLzUuMC9wZXJsLTUuMjQuMS50
+YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCg0KDQpBbmQgdGhlbiwg
+YnVpbGQgZmFpbGVkLCBhY3R1YWxseSwgdGhlIHRhcmdldCBmaWxlIGlzIGFjY2Vzc2FibGUs
+ICBtYXliZSBteSBuZXQgY29ubmVjdCBpcyB0byBsb3cuIFNvIG15IG9wZXJhdGlvbiBpcyB0
+aGF0IHJlbW92ZSAke1RNUERJUn0gYW5kIHJlYnVpbGQgdGhlIHByb2plY3QgYnkgdXNpbmcg
+JGJpdGJha2UgPHRhcmdldD4gY29tbWFuZC4gQnV0IHRoYXQncyByZWFsbHkgY29zdCB0byBt
+dWNoIHRpbWUuIERvZXMgYW55IGZyaWVuZCBoYXZlIG90aGVyIG1ldGhvZHMgb3IgZ29vZCBh
+ZHZpY2VzPw0KDQoNClRoYW5rcw==
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/runqueue.py | 5 +++++
- 1 file changed, 5 insertions(+)
+------=_NextPart_5B6AC378_0B535C68_3758F169
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index a43c9983a1..400709c160 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2314,10 +2314,15 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                 sq_hash.append(self.rqdata.runtaskentries[tid].hash)
-                 sq_taskname.append(taskname)
-                 sq_task.append(tid)
-+
-+            self.cooker.data.setVar("BB_SETSCENE_STAMPCURRENT_COUNT", len(stamppresent))
-+
-             call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
-             locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
-             valid = bb.utils.better_eval(call, locs)
- 
-+            self.cooker.data.delVar("BB_SETSCENE_STAMPCURRENT_COUNT")
-+
-             valid_new = stamppresent
-             for v in valid:
-                 valid_new.append(sq_task[v])
--- 
-2.17.1
+PGRpdj5IaSw8L2Rpdj48ZGl2PldoZW4gSSBidWlsZCBteSB5b2N0byBwcm9qZWN0LCBJIG9m
+dGVuIGdldCBhJm5ic3A7IHNhbWUgd2FybmluZyBsaWtlIHRoaXMgOiA8YnI+PC9kaXY+PGRp
+dj48YnI+PC9kaXY+DQpXQVJOSU5HOiBxdWlsdC1uYXRpdmUtMC42NS1yMCBkb19mZXRjaDog
+RmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWQuc2F2YW5uYWguZ251Lm9yZy9y
+ZWxlYXNlcy9xdWlsdC9xdWlsdC0wLjY1LnRhci5neiwgYXR0ZW1wdGluZyBNSVJST1JTIGlm
+IGF2YWlsYWJsZTxicj5XQVJOSU5HOiBhdHRyLW5hdGl2ZS0yLjQuNDctcjAgZG9fZmV0Y2g6
+IEZhaWxlZCB0byBmZXRjaCBVUkwgaHR0cDovL2Rvd25sb2FkLnNhdmFubmFoLmdudS5vcmcv
+cmVsZWFzZXMvYXR0ci9hdHRyLTIuNC40Ny5zcmMudGFyLmd6LCBhdHRlbXB0aW5nIE1JUlJP
+UlMgaWYgYXZhaWxhYmxlPGJyPldBUk5JTkc6IGZsZXgtbmF0aXZlLTIuNi4wLXIwIGRvX2Zl
+dGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9kb3dubG9hZHMuc291cmNlZm9yZ2Uu
+bmV0L2ZsZXgvZmxleC0yLjYuMC50YXIuYnoyLCBhdHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZh
+aWxhYmxlPGJyPldBUk5JTkc6IHh6LW5hdGl2ZS01LjIuMy1yMCBkb19mZXRjaDogRmFpbGVk
+IHRvIGZldGNoIFVSTCBodHRwOi8vdHVrYWFuaS5vcmcveHoveHotNS4yLjMudGFyLmd6LCBh
+dHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlPGJyPldBUk5JTkc6IHV0aWwtbGludXgt
+bmF0aXZlLTIuMzAtcjAgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwgaHR0cDovL2Nk
+bi5rZXJuZWwub3JnL3B1Yi9saW51eC91dGlscy91dGlsLWxpbnV4L3YyLjMwL3V0aWwtbGlu
+dXgtMi4zMC50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+V0FS
+TklORzogcHl0aG9uMy1uYXRpdmUtMy41LjMtcjEuMCBkb19mZXRjaDogRmFpbGVkIHRvIGZl
+dGNoIFVSTCBodHRwOi8vd3d3LnB5dGhvbi5vcmcvZnRwL3B5dGhvbi8zLjUuMy9QeXRob24t
+My41LjMudGFyLnh6LCBhdHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlPGJyPldBUk5J
+Tkc6IHBvcHQtbmF0aXZlLTEuMTYtcjMgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwg
+aHR0cDovL3JwbTUub3JnL2ZpbGVzL3BvcHQvcG9wdC0xLjE2LnRhci5neiwgYXR0ZW1wdGlu
+ZyBNSVJST1JTIGlmIGF2YWlsYWJsZTxicj5XQVJOSU5HOiBsaWJwbmctbmF0aXZlLTEuNi4z
+MS1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWRzLnNv
+dXJjZWZvcmdlLm5ldC9wcm9qZWN0L2xpYnBuZy9saWJwbmcxNi8xLjYuMzEvbGlicG5nLTEu
+Ni4zMS50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+V0FSTklO
+Rzogc2hhZG93LTQuMi4xLXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6
+Ly9wa2ctc2hhZG93LmFsaW90aC5kZWJpYW4ub3JnL3JlbGVhc2VzL3NoYWRvdy00LjIuMS50
+YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+V0FSTklORzogYWNs
+LTIuMi41Mi1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxv
+YWQuc2F2YW5uYWguZ251Lm9yZy9yZWxlYXNlcy9hY2wvYWNsLTIuMi41Mi5zcmMudGFyLmd6
+LCBhdHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlPGJyPldBUk5JTkc6IGxpbnV4LWxp
+YmMtaGVhZGVycy00LjEyLXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6
+Ly9jZG4ua2VybmVsLm9yZy9wdWIvbGludXgva2VybmVsL3Y0LngvbGludXgtNC4xMi50YXIu
+eHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+V0FSTklORzogZnJlZXR5
+cGUtMi44LXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9kb3dubG9h
+ZHMuc291cmNlZm9yZ2UubmV0L2ZyZWV0eXBlL2ZyZWV0eXBlLTIuOC50YXIuYnoyLCBhdHRl
+bXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlPGJyPldBUk5JTkc6IGN1cmwtbmF0aXZlLTcu
+NTguMC1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vY3VybC5oYXh4
+LnNlL2Rvd25sb2FkL2N1cmwtNy41OC4wLnRhci5iejIsIGF0dGVtcHRpbmcgTUlSUk9SUyBp
+ZiBhdmFpbGFibGU8YnI+V0FSTklORzogcGVybC1uYXRpdmUtNS4yNC4xLXIwIGRvX2ZldGNo
+OiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly93d3cuY3Bhbi5vcmcvc3JjLzUuMC9wZXJs
+LTUuMjQuMS50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+PGRp
+dj48YnI+PC9kaXY+PGRpdj5BbmQgdGhlbiwgYnVpbGQgZmFpbGVkLCBhY3R1YWxseSwgdGhl
+IHRhcmdldCBmaWxlIGlzIGFjY2Vzc2FibGUsJm5ic3A7IG1heWJlIG15IG5ldCBjb25uZWN0
+IGlzIHRvIGxvdy4gU28gbXkgb3BlcmF0aW9uIGlzIHRoYXQgcmVtb3ZlICR7VE1QRElSfSBh
+bmQgcmVidWlsZCB0aGUgcHJvamVjdCBieSB1c2luZyAkYml0YmFrZSAmbHQ7dGFyZ2V0Jmd0
+OyBjb21tYW5kLiBCdXQgdGhhdCdzIHJlYWxseSBjb3N0IHRvIG11Y2ggdGltZS4gRG9lcyBh
+bnkgZnJpZW5kIGhhdmUgb3RoZXIgbWV0aG9kcyBvciBnb29kIGFkdmljZXM/PC9kaXY+PGRp
+dj48YnI+PC9kaXY+PGRpdj5UaGFua3M8YnI+PC9kaXY+PGRpdj48aW5jbHVkZXRhaWw+PCEt
+LTwhW2VuZGlmXS0tPjwvaW5jbHVkZXRhaWw+PC9kaXY+
 
-
+------=_NextPart_5B6AC378_0B535C68_3758F169--
