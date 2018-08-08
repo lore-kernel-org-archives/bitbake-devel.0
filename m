@@ -1,34 +1,28 @@
-Return-Path: <developer_agl@xtev.cn>
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-	by mail.openembedded.org (Postfix) with ESMTP id 0656578DD3
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 01C5278D2D
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Aug 2018 10:18:39 +0000 (UTC)
-X-QQ-GoodBg: 2
-X-QQ-SSF: 00400000000000F0
-X-QQ-FEAT: Me8Xob1wlXKv6TAagXplHTPSwwwwB9kagXgExr8DM9bLIIJ6fcvph2uTHrqET
-	0ruL8XCfFoiKSY/MC4ZjrEMW45wM7raceFrt+ofyjrLENX0dNtKgaeiXQR2r8wB/C2dZBko
-	olE66ndjCuz9fqACeLzaunz10RfkKq7MWaZksd/OWVHt6xOJCxB4+bXOYvO/SwYkeWvKEuq
-	Rpn+hD1UzhQW2NSKI2vY8mk5+rThyYedGDZe+KaNB0YTbmsaJIVzvBmdFNDglWmcRDN5Qhv
-	R51BtZ9w0d65H5Jb9d+lC6eHA=
-X-QQ-BUSINESS-ORIGIN: 2
-X-Originating-IP: 106.39.160.21
-X-QQ-STYLE: 
-X-QQ-mid: bizmailvip87t1533723512t51341
-From: "=?utf-8?B?U2l0ZWNo?=" <developer_agl@xtev.cn>
-To: "=?utf-8?B?Yml0YmFrZS1kZXZlbA==?=" <bitbake-devel@lists.openembedded.org>
-Mime-Version: 1.0
-Date: Wed, 8 Aug 2018 18:18:32 +0800
-X-Priority: 3
-Message-ID: <tencent_07BA7069715BCA2F3B76E48D@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1]) by smtp.qq.com (ESMTP) with SMTP
-	id ; Wed, 08 Aug 2018 18:18:33 +0800 (CST)
-Feedback-ID: bizmailvip:xtev.cn:qybgforeign:qybgforeign1
-X-QQ-Bgrelay: 1
-Subject: WARNING: XXXXXX do_fetch: Failed to fetch URL http://xxxxxxx.tar.xz, attempting MIRRORS if available
+	Wed,  8 Aug 2018 14:16:56 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	08 Aug 2018 07:16:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.51,457,1526367600"; d="scan'208";a="253023975"
+Received: from aqachmar-mobl.ger.corp.intel.com (HELO localhost.localdomain)
+	([10.252.50.207])
+	by fmsmga006.fm.intel.com with ESMTP; 08 Aug 2018 07:16:54 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Sitech <developer_agl@xtev.cn>
+Date: Wed, 08 Aug 2018 16:16:53 +0200
+Message-ID: <12396499.WEjbQBgyTF@localhost.localdomain>
+Organization: Intel Corporation
+In-Reply-To: <tencent_07BA7069715BCA2F3B76E48D@qq.com>
+References: <tencent_07BA7069715BCA2F3B76E48D@qq.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: WARNING: XXXXXX do_fetch: Failed to fetch URL http://xxxxxxx.tar.xz, attempting MIRRORS if available
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,120 +35,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Aug 2018 10:18:40 -0000
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_5B6AC378_0B535C68_3758F169"
-Content-Transfer-Encoding: 8Bit
+X-List-Received-Date: Wed, 08 Aug 2018 14:16:57 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-------=_NextPart_5B6AC378_0B535C68_3758F169
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+On Wednesday, 8 August 2018 12:18:32 PM CEST Sitech wrote:
+> When I build my yocto project, I often get a  same warning like this : 
+> 
+>  WARNING: quilt-native-0.65-r0 do_fetch: Failed to fetch URL http://download.savannah.gnu.org/releases/quilt/quilt-0.65.tar.gz, attempting MIRRORS if available
+> WARNING: attr-native-2.4.47-r0 do_fetch: Failed to fetch URL http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz, attempting MIRRORS if available
+> WARNING: flex-native-2.6.0-r0 do_fetch: Failed to fetch URL http://downloads.sourceforge.net/flex/flex-2.6.0.tar.bz2, attempting MIRRORS if available
+> WARNING: xz-native-5.2.3-r0 do_fetch: Failed to fetch URL http://tukaani.org/xz/xz-5.2.3.tar.gz, attempting MIRRORS if available
+> WARNING: util-linux-native-2.30-r0 do_fetch: Failed to fetch URL http://cdn.kernel.org/pub/linux/utils/util-linux/v2.30/util-linux-2.30.tar.xz, attempting MIRRORS if available
+> WARNING: python3-native-3.5.3-r1.0 do_fetch: Failed to fetch URL http://www.python.org/ftp/python/3.5.3/Python-3.5.3.tar.xz, attempting MIRRORS if available
+> WARNING: popt-native-1.16-r3 do_fetch: Failed to fetch URL http://rpm5.org/files/popt/popt-1.16.tar.gz, attempting MIRRORS if available
+> WARNING: libpng-native-1.6.31-r0 do_fetch: Failed to fetch URL http://downloads.sourceforge.net/project/libpng/libpng16/1.6.31/libpng-1.6.31.tar.xz, attempting MIRRORS if available
+> WARNING: shadow-4.2.1-r0 do_fetch: Failed to fetch URL http://pkg-shadow.alioth.debian.org/releases/shadow-4.2.1.tar.xz, attempting MIRRORS if available
+> WARNING: acl-2.2.52-r0 do_fetch: Failed to fetch URL http://download.savannah.gnu.org/releases/acl/acl-2.2.52.src.tar.gz, attempting MIRRORS if available
+> WARNING: linux-libc-headers-4.12-r0 do_fetch: Failed to fetch URL http://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.12.tar.xz, attempting MIRRORS if available
+> WARNING: freetype-2.8-r0 do_fetch: Failed to fetch URL http://downloads.sourceforge.net/freetype/freetype-2.8.tar.bz2, attempting MIRRORS if available
+> WARNING: curl-native-7.58.0-r0 do_fetch: Failed to fetch URL http://curl.haxx.se/download/curl-7.58.0.tar.bz2, attempting MIRRORS if available
+> WARNING: perl-native-5.24.1-r0 do_fetch: Failed to fetch URL http://www.cpan.org/src/5.0/perl-5.24.1.tar.xz, attempting MIRRORS if available
+> 
+> 
+> And then, build failed, actually, the target file is accessable,  maybe my
+> net connect is to low. So my operation is that remove ${TMPDIR} and rebuild 
+> the project by using $bitbake <target> command. But that's really cost to
+> much time. Does any friend have other methods or good advices?
 
-SGksDQpXaGVuIEkgYnVpbGQgbXkgeW9jdG8gcHJvamVjdCwgSSBvZnRlbiBnZXQgYSAgc2Ft
-ZSB3YXJuaW5nIGxpa2UgdGhpcyA6IA0KDQoNCg0KIFdBUk5JTkc6IHF1aWx0LW5hdGl2ZS0w
-LjY1LXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9kb3dubG9hZC5z
-YXZhbm5haC5nbnUub3JnL3JlbGVhc2VzL3F1aWx0L3F1aWx0LTAuNjUudGFyLmd6LCBhdHRl
-bXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlDQpXQVJOSU5HOiBhdHRyLW5hdGl2ZS0yLjQu
-NDctcjAgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwgaHR0cDovL2Rvd25sb2FkLnNh
-dmFubmFoLmdudS5vcmcvcmVsZWFzZXMvYXR0ci9hdHRyLTIuNC40Ny5zcmMudGFyLmd6LCBh
-dHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlDQpXQVJOSU5HOiBmbGV4LW5hdGl2ZS0y
-LjYuMC1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWRz
-LnNvdXJjZWZvcmdlLm5ldC9mbGV4L2ZsZXgtMi42LjAudGFyLmJ6MiwgYXR0ZW1wdGluZyBN
-SVJST1JTIGlmIGF2YWlsYWJsZQ0KV0FSTklORzogeHotbmF0aXZlLTUuMi4zLXIwIGRvX2Zl
-dGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly90dWthYW5pLm9yZy94ei94ei01LjIu
-My50YXIuZ3osIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCldBUk5JTkc6IHV0
-aWwtbGludXgtbmF0aXZlLTIuMzAtcjAgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwg
-aHR0cDovL2Nkbi5rZXJuZWwub3JnL3B1Yi9saW51eC91dGlscy91dGlsLWxpbnV4L3YyLjMw
-L3V0aWwtbGludXgtMi4zMC50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFi
-bGUNCldBUk5JTkc6IHB5dGhvbjMtbmF0aXZlLTMuNS4zLXIxLjAgZG9fZmV0Y2g6IEZhaWxl
-ZCB0byBmZXRjaCBVUkwgaHR0cDovL3d3dy5weXRob24ub3JnL2Z0cC9weXRob24vMy41LjMv
-UHl0aG9uLTMuNS4zLnRhci54eiwgYXR0ZW1wdGluZyBNSVJST1JTIGlmIGF2YWlsYWJsZQ0K
-V0FSTklORzogcG9wdC1uYXRpdmUtMS4xNi1yMyBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNo
-IFVSTCBodHRwOi8vcnBtNS5vcmcvZmlsZXMvcG9wdC9wb3B0LTEuMTYudGFyLmd6LCBhdHRl
-bXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlDQpXQVJOSU5HOiBsaWJwbmctbmF0aXZlLTEu
-Ni4zMS1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWRz
-LnNvdXJjZWZvcmdlLm5ldC9wcm9qZWN0L2xpYnBuZy9saWJwbmcxNi8xLjYuMzEvbGlicG5n
-LTEuNi4zMS50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCldBUk5J
-Tkc6IHNoYWRvdy00LjIuMS1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRw
-Oi8vcGtnLXNoYWRvdy5hbGlvdGguZGViaWFuLm9yZy9yZWxlYXNlcy9zaGFkb3ctNC4yLjEu
-dGFyLnh6LCBhdHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlDQpXQVJOSU5HOiBhY2wt
-Mi4yLjUyLXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9kb3dubG9h
-ZC5zYXZhbm5haC5nbnUub3JnL3JlbGVhc2VzL2FjbC9hY2wtMi4yLjUyLnNyYy50YXIuZ3os
-IGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCldBUk5JTkc6IGxpbnV4LWxpYmMt
-aGVhZGVycy00LjEyLXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9j
-ZG4ua2VybmVsLm9yZy9wdWIvbGludXgva2VybmVsL3Y0LngvbGludXgtNC4xMi50YXIueHos
-IGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCldBUk5JTkc6IGZyZWV0eXBlLTIu
-OC1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWRzLnNv
-dXJjZWZvcmdlLm5ldC9mcmVldHlwZS9mcmVldHlwZS0yLjgudGFyLmJ6MiwgYXR0ZW1wdGlu
-ZyBNSVJST1JTIGlmIGF2YWlsYWJsZQ0KV0FSTklORzogY3VybC1uYXRpdmUtNy41OC4wLXIw
-IGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9jdXJsLmhheHguc2UvZG93
-bmxvYWQvY3VybC03LjU4LjAudGFyLmJ6MiwgYXR0ZW1wdGluZyBNSVJST1JTIGlmIGF2YWls
-YWJsZQ0KV0FSTklORzogcGVybC1uYXRpdmUtNS4yNC4xLXIwIGRvX2ZldGNoOiBGYWlsZWQg
-dG8gZmV0Y2ggVVJMIGh0dHA6Ly93d3cuY3Bhbi5vcmcvc3JjLzUuMC9wZXJsLTUuMjQuMS50
-YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCg0KDQpBbmQgdGhlbiwg
-YnVpbGQgZmFpbGVkLCBhY3R1YWxseSwgdGhlIHRhcmdldCBmaWxlIGlzIGFjY2Vzc2FibGUs
-ICBtYXliZSBteSBuZXQgY29ubmVjdCBpcyB0byBsb3cuIFNvIG15IG9wZXJhdGlvbiBpcyB0
-aGF0IHJlbW92ZSAke1RNUERJUn0gYW5kIHJlYnVpbGQgdGhlIHByb2plY3QgYnkgdXNpbmcg
-JGJpdGJha2UgPHRhcmdldD4gY29tbWFuZC4gQnV0IHRoYXQncyByZWFsbHkgY29zdCB0byBt
-dWNoIHRpbWUuIERvZXMgYW55IGZyaWVuZCBoYXZlIG90aGVyIG1ldGhvZHMgb3IgZ29vZCBh
-ZHZpY2VzPw0KDQoNClRoYW5rcw==
+What you pasted above are just warnings - there's no need to delete anything.
+If the failures are purely fetch failures and they are intermittent, you should just
+be able to re-run the build and it will attempt to download the files again.
 
-------=_NextPart_5B6AC378_0B535C68_3758F169
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+Cheers,
+Paul
 
-PGRpdj5IaSw8L2Rpdj48ZGl2PldoZW4gSSBidWlsZCBteSB5b2N0byBwcm9qZWN0LCBJIG9m
-dGVuIGdldCBhJm5ic3A7IHNhbWUgd2FybmluZyBsaWtlIHRoaXMgOiA8YnI+PC9kaXY+PGRp
-dj48YnI+PC9kaXY+DQpXQVJOSU5HOiBxdWlsdC1uYXRpdmUtMC42NS1yMCBkb19mZXRjaDog
-RmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWQuc2F2YW5uYWguZ251Lm9yZy9y
-ZWxlYXNlcy9xdWlsdC9xdWlsdC0wLjY1LnRhci5neiwgYXR0ZW1wdGluZyBNSVJST1JTIGlm
-IGF2YWlsYWJsZTxicj5XQVJOSU5HOiBhdHRyLW5hdGl2ZS0yLjQuNDctcjAgZG9fZmV0Y2g6
-IEZhaWxlZCB0byBmZXRjaCBVUkwgaHR0cDovL2Rvd25sb2FkLnNhdmFubmFoLmdudS5vcmcv
-cmVsZWFzZXMvYXR0ci9hdHRyLTIuNC40Ny5zcmMudGFyLmd6LCBhdHRlbXB0aW5nIE1JUlJP
-UlMgaWYgYXZhaWxhYmxlPGJyPldBUk5JTkc6IGZsZXgtbmF0aXZlLTIuNi4wLXIwIGRvX2Zl
-dGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9kb3dubG9hZHMuc291cmNlZm9yZ2Uu
-bmV0L2ZsZXgvZmxleC0yLjYuMC50YXIuYnoyLCBhdHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZh
-aWxhYmxlPGJyPldBUk5JTkc6IHh6LW5hdGl2ZS01LjIuMy1yMCBkb19mZXRjaDogRmFpbGVk
-IHRvIGZldGNoIFVSTCBodHRwOi8vdHVrYWFuaS5vcmcveHoveHotNS4yLjMudGFyLmd6LCBh
-dHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlPGJyPldBUk5JTkc6IHV0aWwtbGludXgt
-bmF0aXZlLTIuMzAtcjAgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwgaHR0cDovL2Nk
-bi5rZXJuZWwub3JnL3B1Yi9saW51eC91dGlscy91dGlsLWxpbnV4L3YyLjMwL3V0aWwtbGlu
-dXgtMi4zMC50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+V0FS
-TklORzogcHl0aG9uMy1uYXRpdmUtMy41LjMtcjEuMCBkb19mZXRjaDogRmFpbGVkIHRvIGZl
-dGNoIFVSTCBodHRwOi8vd3d3LnB5dGhvbi5vcmcvZnRwL3B5dGhvbi8zLjUuMy9QeXRob24t
-My41LjMudGFyLnh6LCBhdHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlPGJyPldBUk5J
-Tkc6IHBvcHQtbmF0aXZlLTEuMTYtcjMgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwg
-aHR0cDovL3JwbTUub3JnL2ZpbGVzL3BvcHQvcG9wdC0xLjE2LnRhci5neiwgYXR0ZW1wdGlu
-ZyBNSVJST1JTIGlmIGF2YWlsYWJsZTxicj5XQVJOSU5HOiBsaWJwbmctbmF0aXZlLTEuNi4z
-MS1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxvYWRzLnNv
-dXJjZWZvcmdlLm5ldC9wcm9qZWN0L2xpYnBuZy9saWJwbmcxNi8xLjYuMzEvbGlicG5nLTEu
-Ni4zMS50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+V0FSTklO
-Rzogc2hhZG93LTQuMi4xLXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6
-Ly9wa2ctc2hhZG93LmFsaW90aC5kZWJpYW4ub3JnL3JlbGVhc2VzL3NoYWRvdy00LjIuMS50
-YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+V0FSTklORzogYWNs
-LTIuMi41Mi1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vZG93bmxv
-YWQuc2F2YW5uYWguZ251Lm9yZy9yZWxlYXNlcy9hY2wvYWNsLTIuMi41Mi5zcmMudGFyLmd6
-LCBhdHRlbXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlPGJyPldBUk5JTkc6IGxpbnV4LWxp
-YmMtaGVhZGVycy00LjEyLXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6
-Ly9jZG4ua2VybmVsLm9yZy9wdWIvbGludXgva2VybmVsL3Y0LngvbGludXgtNC4xMi50YXIu
-eHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+V0FSTklORzogZnJlZXR5
-cGUtMi44LXIwIGRvX2ZldGNoOiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly9kb3dubG9h
-ZHMuc291cmNlZm9yZ2UubmV0L2ZyZWV0eXBlL2ZyZWV0eXBlLTIuOC50YXIuYnoyLCBhdHRl
-bXB0aW5nIE1JUlJPUlMgaWYgYXZhaWxhYmxlPGJyPldBUk5JTkc6IGN1cmwtbmF0aXZlLTcu
-NTguMC1yMCBkb19mZXRjaDogRmFpbGVkIHRvIGZldGNoIFVSTCBodHRwOi8vY3VybC5oYXh4
-LnNlL2Rvd25sb2FkL2N1cmwtNy41OC4wLnRhci5iejIsIGF0dGVtcHRpbmcgTUlSUk9SUyBp
-ZiBhdmFpbGFibGU8YnI+V0FSTklORzogcGVybC1uYXRpdmUtNS4yNC4xLXIwIGRvX2ZldGNo
-OiBGYWlsZWQgdG8gZmV0Y2ggVVJMIGh0dHA6Ly93d3cuY3Bhbi5vcmcvc3JjLzUuMC9wZXJs
-LTUuMjQuMS50YXIueHosIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGU8YnI+PGRp
-dj48YnI+PC9kaXY+PGRpdj5BbmQgdGhlbiwgYnVpbGQgZmFpbGVkLCBhY3R1YWxseSwgdGhl
-IHRhcmdldCBmaWxlIGlzIGFjY2Vzc2FibGUsJm5ic3A7IG1heWJlIG15IG5ldCBjb25uZWN0
-IGlzIHRvIGxvdy4gU28gbXkgb3BlcmF0aW9uIGlzIHRoYXQgcmVtb3ZlICR7VE1QRElSfSBh
-bmQgcmVidWlsZCB0aGUgcHJvamVjdCBieSB1c2luZyAkYml0YmFrZSAmbHQ7dGFyZ2V0Jmd0
-OyBjb21tYW5kLiBCdXQgdGhhdCdzIHJlYWxseSBjb3N0IHRvIG11Y2ggdGltZS4gRG9lcyBh
-bnkgZnJpZW5kIGhhdmUgb3RoZXIgbWV0aG9kcyBvciBnb29kIGFkdmljZXM/PC9kaXY+PGRp
-dj48YnI+PC9kaXY+PGRpdj5UaGFua3M8YnI+PC9kaXY+PGRpdj48aW5jbHVkZXRhaWw+PCEt
-LTwhW2VuZGlmXS0tPjwvaW5jbHVkZXRhaWw+PC9kaXY+
+-- 
 
-------=_NextPart_5B6AC378_0B535C68_3758F169--
+Paul Eggleton
+Intel Open Source Technology Centre
+
+
+
