@@ -1,52 +1,52 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io0-f182.google.com (mail-io0-f182.google.com
-	[209.85.223.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 62C8078EA8;
+Received: from mail-it0-f48.google.com (mail-it0-f48.google.com
+	[209.85.214.48])
+	by mail.openembedded.org (Postfix) with ESMTP id E753578EB4;
 	Thu,  9 Aug 2018 22:10:51 +0000 (UTC)
-Received: by mail-io0-f182.google.com with SMTP id m4-v6so5046562iop.3;
-	Thu, 09 Aug 2018 15:10:52 -0700 (PDT)
+Received: by mail-it0-f48.google.com with SMTP id v71-v6so147795itb.3;
+	Thu, 09 Aug 2018 15:10:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=ekTCd2mda7zjlCst19KHQplvfLxG8x3MKf8o+DJFOqw=;
-	b=GCfOEaR3lmfXeEHiLqVGgRwQF1XRFx2/8fntfo0P4VtY+XMwBO7pVBnEM+xuxLs9LO
-	oPsWYhlW4APAapmgP7P88ftGzDAU5mXgLxVcGv6Bbxo5hO8B2NMWQDb5zMyGxH5KwPmd
-	GD3IX8oVvopJsaEYnlONI3pncGbSIeNbeIb7dMxOY1Vm2vqTQTofqs/iNNTwuCFzlSLb
-	89Bx/8VkPKnFg4WZyozuOdLXbs3ux/w/qXauDUBrgzutnxgyCTF7CuFgv0AIiELKem2s
-	IQCeWDLYW/rpiAE13vo3Ssjhs4FC/63i5oxPITxa00aY45fsGRlFD/dCVt+Z6SyrNm8Z
-	1/4A==
+	bh=IKroHTo+VyfX10aQZ6AUj+NxrNafNmybQR2kbhPTES8=;
+	b=S77tbPuq+RN+LAkE6VPUg0FN60mclr+h/zw7Ll5cBzOkDRNt6ffVluyknE8j/4HtJz
+	lZ9nRc2FcCpQ5Y7EuXkc/AyZR09li+ccoXDwYsOZXqp/blIw7Mra0XFpSKbvH+4gHdAV
+	JtuY1oaLI5wPiBM/RK22ZGOJoWgyfSCp6jbnXhCUXcuLnKw6u8bpch6Ph9IGs+qJhaQR
+	FV/mylV3+/Z0+eDgGv5RsXcdWE3q6mRuMj3nQECWLgome38tjA/DaLCdYTkXVK0cxwX+
+	/HBs2lpF8G4H1iFJ7WF98ObuieoSlqTfRHDc+w3sZKwQb7tjjsmkCv1afzs5W4dS+64l
+	/+kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=ekTCd2mda7zjlCst19KHQplvfLxG8x3MKf8o+DJFOqw=;
-	b=Xq5O20KKvwbTDozXw1NnX1RlBUmpwzfZxxX6Q118MgF22OsMHh1uKkGsUeM9rC4HFe
-	o7Sd9nVoLER/JW9vRQLQUdwzOZZ3cTFrYFGx+tsmjeeAULaWgCVzuHu5ZYNWK6nSGApt
-	Ls8neb/HG507r5U4s/ClRcXUouiA0Z8qicE34oCDo/9DKZDI5JtLB48ZhGyp0dMpsmh6
-	ru5Mr2qQ6SjZxSynn0ShfBOfEuG2YCfzsfLecmvjlg2hT/KU9NvI4820ICmYHAFozSZ+
-	wnwNxNnigjiSBkws/R1b5/8GiheV9rg5XvqilPG37Ga9Co65ylPQ2EeEid5qeslr8aBf
-	S1OA==
-X-Gm-Message-State: AOUpUlEHzkCtp6XfIxrY09EquWcyex3Jd8WA7x/cH0tJorPfEintWbjO
-	tWwZfvUCSrAKGchUtNVYC+AZmm3/
-X-Google-Smtp-Source: AA+uWPznBBRiaXuQPB7sJv2VendER9bm8F2n5dvFb7yds96+XDxxe3vXMUx1l8wnFGnJhxuYDcFxjg==
-X-Received: by 2002:a6b:b496:: with SMTP id
-	d144-v6mr3198902iof.26.1533852652298; 
-	Thu, 09 Aug 2018 15:10:52 -0700 (PDT)
+	bh=IKroHTo+VyfX10aQZ6AUj+NxrNafNmybQR2kbhPTES8=;
+	b=XwD/w4LXv4xQ/2hCK834T8rgcIMEg3765FzxatGwrPlCTWyo4C4XJ0DwtB5hoxokyq
+	F7nbb9Aq/D1GWYMWaKvOYa3385iaWGAbum/vmY8IclBUBDwgeSNUSaF+Sw7qb9cxtxt1
+	99ZU17sK+E0kb0JYSXrxPNjxqGrSFk5RlqhSm5m7CFNPaeRGFMkNchCR8EHD62S4A6fi
+	cHUMRtjy8nvS70s+nKEY/yvxvvdgTOH5via+dycL6Ms4/A2IW3pdUquh1HByXnPyumI6
+	LXv37mzmMK66baw/Y0zeiHFz1uONLXEXb3EblTwQSRAy1gkWDaHt60HKlQ96jJD1b2rS
+	IyNw==
+X-Gm-Message-State: AOUpUlEugB38SG1TOVt+mv5HPNVuowdsrOhIgvRulo/laizTSnw2Qg5U
+	Qb+jMtqsWJlKKF8qd18CLFpKhvEi
+X-Google-Smtp-Source: AA+uWPx5nJdyk23CU/NFFoUjPnrkfFBXVJSWRGDKm8OftLylJ7KBt1WQw4mbsju1q/KK3GfWEdQkAg==
+X-Received: by 2002:a02:4c9b:: with SMTP id
+	q27-v6mr3413951jad.38.1533852653000; 
+	Thu, 09 Aug 2018 15:10:53 -0700 (PDT)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	z3-v6sm4404573ioz.85.2018.08.09.15.10.51
+	z3-v6sm4404573ioz.85.2018.08.09.15.10.52
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Thu, 09 Aug 2018 15:10:51 -0700 (PDT)
+	Thu, 09 Aug 2018 15:10:52 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org,
 	openembedded-core@lists.openembedded.org
-Date: Thu,  9 Aug 2018 17:08:34 -0500
-Message-Id: <20180809220840.26697-11-JPEWhacker@gmail.com>
+Date: Thu,  9 Aug 2018 17:08:35 -0500
+Message-Id: <20180809220840.26697-12-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20180809220840.26697-1-JPEWhacker@gmail.com>
 References: <20180716203728.23078-1-JPEWhacker@gmail.com>
 	<20180809220840.26697-1-JPEWhacker@gmail.com>
-Subject: [RFC v2 10/16] bitbake: siggen: Split out task depend ID
+Subject: [RFC v2 11/16] bitbake: runqueue: Track task dependency ID
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,48 +59,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Aug 2018 22:10:51 -0000
+X-List-Received-Date: Thu, 09 Aug 2018 22:10:52 -0000
 
-Abstracts the function to get the dependency ID for a task so it can
-return something other that the taskhash
+Requests the task dependency ID from siggen and tracks it
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/siggen.py | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/runqueue.py | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 7fa5b35337d..4ef175edbbf 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -41,6 +41,9 @@ class SignatureGenerator(object):
-     def finalise(self, fn, d, varient):
-         return
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index b173cc0a951..3ae12d8e69f 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -346,6 +346,7 @@ class RunTaskEntry(object):
+         self.depends = set()
+         self.revdeps = set()
+         self.hash = None
++        self.depid = None
+         self.task = None
+         self.weight = 1
  
-+    def get_depid(self, task):
-+        return self.taskhash[task]
+@@ -385,6 +386,9 @@ class RunQueueData:
+     def get_task_hash(self, tid):
+         return self.runtaskentries[tid].hash
+ 
++    def get_task_depid(self, tid):
++        return self.runtaskentries[tid].depid
 +
-     def get_taskhash(self, fn, task, deps, dataCache):
-         return "0"
+     def get_user_idstring(self, tid, task_name_suffix = ""):
+         return tid + task_name_suffix
  
-@@ -215,7 +218,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-                 continue
-             if dep not in self.taskhash:
-                 bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
--            data = data + self.taskhash[dep]
-+            data = data + self.get_depid(dep)
-             self.runtaskdeps[k].append(dep)
+@@ -1150,18 +1154,21 @@ class RunQueueData:
+                 if len(self.runtaskentries[tid].depends - dealtwith) == 0:
+                     dealtwith.add(tid)
+                     todeal.remove(tid)
+-                    procdep = []
+-                    for dep in self.runtaskentries[tid].depends:
+-                        procdep.append(fn_from_tid(dep) + "." + taskname_from_tid(dep))
+-                    (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
+-                    self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(taskfn, taskname, procdep, self.dataCaches[mc])
+-                    task = self.runtaskentries[tid].task
++                    self.prepare_task_hash(tid)
  
-         if task in dataCache.file_checksums[fn]:
-@@ -290,7 +293,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             data['file_checksum_values'] = [(os.path.basename(f), cs) for f,cs in self.file_checksum_values[k]]
-             data['runtaskhashes'] = {}
-             for dep in data['runtaskdeps']:
--                data['runtaskhashes'][dep] = self.taskhash[dep]
-+                data['runtaskhashes'][dep] = self.get_depid(dep)
-             data['taskhash'] = self.taskhash[k]
+         bb.parse.siggen.writeout_file_checksum_cache()
  
-         taint = self.read_taint(fn, task, referencestamp)
+         #self.dump_data()
+         return len(self.runtaskentries)
+ 
++    def prepare_task_hash(self, tid):
++        procdep = []
++        for dep in self.runtaskentries[tid].depends:
++            procdep.append(fn_from_tid(dep) + "." + taskname_from_tid(dep))
++        (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
++        self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(taskfn, taskname, procdep, self.dataCaches[mc])
++        self.runtaskentries[tid].depid = bb.parse.siggen.get_depid(fn + "." + taskname)
++
+     def dump_data(self):
+         """
+         Dump some debug information on the internal data structures
+@@ -2075,7 +2082,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                 deps = self.rqdata.runtaskentries[revdep].depends
+                 provides = self.rqdata.dataCaches[mc].fn_provides[taskfn]
+                 taskhash = self.rqdata.runtaskentries[revdep].hash
+-                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
++                depid = self.rqdata.runtaskentries[revdep].depid
++                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash, depid]
+                 for revdep2 in deps:
+                     if revdep2 not in taskdepdata:
+                         additional.append(revdep2)
+@@ -2517,7 +2525,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                 deps = getsetscenedeps(revdep)
+                 provides = self.rqdata.dataCaches[mc].fn_provides[taskfn]
+                 taskhash = self.rqdata.runtaskentries[revdep].hash
+-                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
++                depid = self.rqdata.runtaskentries[revdep].depid
++                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash, depid]
+                 for revdep2 in deps:
+                     if revdep2 not in taskdepdata:
+                         additional.append(revdep2)
 -- 
 2.17.1
 
