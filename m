@@ -1,51 +1,52 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io0-f171.google.com (mail-io0-f171.google.com
-	[209.85.223.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 09FFE78C13;
-	Thu,  9 Aug 2018 22:10:43 +0000 (UTC)
-Received: by mail-io0-f171.google.com with SMTP id q4-v6so6076717iob.8;
+Received: from mail-io0-f179.google.com (mail-io0-f179.google.com
+	[209.85.223.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 4C12278E7A;
+	Thu,  9 Aug 2018 22:10:44 +0000 (UTC)
+Received: by mail-io0-f179.google.com with SMTP id i18-v6so6055936ioj.13;
 	Thu, 09 Aug 2018 15:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=XvwW1eVger3vC1tM9nHMp00nDn84/gHv1C5AfIovrR4=;
-	b=WaQG6hBy5jFXqNM0zUHG0/LTyLgcyDmyGrrRqaIYKcVVy2edmeOoqZ7f8SCAGgu2hy
-	W3wMqIY5ibq6dNG0e470eszn7tc50x3ayIFGOKWVZC24vdhwyFrGPfX//fsCjD6nRt2d
-	KXVjIeweczZ3asZhXeF0qX+8Ml9k3YSS2F27qk/3zdh5EpiGapcctnl0td7mVHvCl04B
-	nzPoqwcEGTDrR8ErBjCRmqRVnTagQ2p2NeYqaFMHu2yCbCC5VSKKuLZBpkFr2N5DhRPL
-	lWE/FNWuR2IVs3SLbVRXor/sU+Ap4Zj3YRYeIxVDKbczkxvtRWomQAPK+/BargqZNNCJ
-	wM6w==
+	bh=tBoTfaq+rjTNagEu7VVLyoz+rhZoWJHqTFZDI+HX1W4=;
+	b=cLT81uGEmpJtp5KqM3jg1uffW4Q+XpqiOue7TX4kLt1NFckc4FJWhAcFOzWnTPdE/1
+	je3X8hrKjTktOwOex7Sm8yBBpDLSXenKkFzD/LGAg/3wlVqfMe83Wfxtbk7AKFoHCjnj
+	JwY3Zg7ZI0jsDWBRg/CrBZagPm2xrHzrIoJmmVtdw0ROa/qtKPIKVkF1jHFCyw5Yh/YZ
+	xhNK7gWHem0vc4Q6lohnZTIDTnogX0qLXlniogfJteZAHQIwpzsJZg0ABNCi4lunTemw
+	q1uGFtmw0GJAGaIhy0SxTdf7APieIOQ4Z8x69SOzvDrjbmg+idUvQZe7F8s4MFJXi1MW
+	+k9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=XvwW1eVger3vC1tM9nHMp00nDn84/gHv1C5AfIovrR4=;
-	b=NCYcpYSgg364h34RAStdNrS507u7+fAUs8G19gceUyBhYxE2LB3XARycFoSld8G3y9
-	eQqozqjSM55WmHOu+nlxb2NVdV23JVpn9/zGYPdWToR1gUsEgfgYDXnGsiA5XHb/rv98
-	XB6PBgVBj0tgcZ7E+h7+if62vVoxqMo6EXETt8bp7yjb0GczBLRn+zxGm8nzEjA0Yage
-	LVbE01pgf/kJUsnLufTO84oJCwKa+Fp0CDXlYzq+iha5/3JQedbvkbsh9YCoQh+7EPJI
-	L2I8/2vupGQcJ/T+v8bMj3AE2rkTdt1geYOb9PDp1qE/xwt8y23RbKxMYWdrh5BS5HOz
-	QSoQ==
-X-Gm-Message-State: AOUpUlFrZYssxMht98w43Q6k/si/N/SGzlJ1kOOURxQJwBjiQYMOKzsE
-	7G4/zVDW//VboLWng+safyHwB2GD
-X-Google-Smtp-Source: AA+uWPwlAzv9lqi6+F4FAeG2/JIJaSh8+mcpXgsa4bu1N0VjcBoPZOcG4fy+VQcjMlii/ACo6uiW6w==
-X-Received: by 2002:a5e:9b14:: with SMTP id
-	j20-v6mr3472721iok.193.1533852644612; 
-	Thu, 09 Aug 2018 15:10:44 -0700 (PDT)
+	bh=tBoTfaq+rjTNagEu7VVLyoz+rhZoWJHqTFZDI+HX1W4=;
+	b=Ba2WNNPmxQfIs689b7rw973jJQEEt9+Y67vtUhn8g0pHALyJhR7ToH/Ut5Q7chHHyh
+	eZSKLWq/YM8dImMMzbCnvE/dMf675nA6KzpXeekSwk7qj/hIX74WPPuw/2eGT5FzrJDi
+	UGvMHK7UG2uxMOxGBjJhUj5T3vV0S6Aupwz/J+aZdv9l1MjWjSMaP0qli95O1NLw3t5n
+	2lAUsupVmG5lMTBnVRuz0bZWFPPPRVOCa2J9Gx6mvJw6vOMTZTAW5AnNyG83Z8GoEMq5
+	PY68y0kirVCRgajg4OgZo9IzsVN8Fv0ygjOUfdger6VDvOBFb7urNL3T8X35HXY3DI91
+	CW0Q==
+X-Gm-Message-State: AOUpUlHCZWL9ADDNfQeStTbVVHPcb4O5Cxmpc5KuN+1I1Y9pRAcssfB2
+	FDNO5G0vni4VcsYgG5jWCh1ocwYm
+X-Google-Smtp-Source: AA+uWPxfQDdHYAjmvvIO30/yxeLpefhyhqpLGBq0UAsJHncLkhneRsjKawk/HWQ5bXSPaT3JHWDkpg==
+X-Received: by 2002:a6b:310d:: with SMTP id
+	j13-v6mr3438027ioa.250.1533852645187; 
+	Thu, 09 Aug 2018 15:10:45 -0700 (PDT)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	z3-v6sm4404573ioz.85.2018.08.09.15.10.43
+	z3-v6sm4404573ioz.85.2018.08.09.15.10.44
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
 	Thu, 09 Aug 2018 15:10:44 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org,
 	openembedded-core@lists.openembedded.org
-Date: Thu,  9 Aug 2018 17:08:24 -0500
-Message-Id: <20180809220840.26697-1-JPEWhacker@gmail.com>
+Date: Thu,  9 Aug 2018 17:08:25 -0500
+Message-Id: <20180809220840.26697-2-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20180716203728.23078-1-JPEWhacker@gmail.com>
+In-Reply-To: <20180809220840.26697-1-JPEWhacker@gmail.com>
 References: <20180716203728.23078-1-JPEWhacker@gmail.com>
-Subject: [RFC v2 00/16] Hash Equivalency Server
+	<20180809220840.26697-1-JPEWhacker@gmail.com>
+Subject: [RFC v2 01/16] bitbake: fork: Add os.fork() wrappers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,108 +61,106 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 09 Aug 2018 22:10:44 -0000
 
-These patches are a first pass at implementing a hash equivalence server
-in bitbake & OE.
+Adds a compatibility wrapper around os.fork() that backports the ability
+to register fork event handlers (os.register_at_fork()) from Python 3.7
 
-Apologies for cross-posting this to both the bitbake-devel and
-openembedded-devel; this work necessarily intertwines both places, and
-it is really necessary to look at both parts to get an idea of what is
-going on. For convenience, the bitbake patches are listed first,
-followed by the oe-core patches.
-
-The basic premise is that any given task no longer hashes a dependent
-task's taskhash to determine it's own taskhash, but instead hashes the
-dependent task's "dependency ID" (which doesn't strictly need to be a
-hash, but is for consistency. We can have the discussion as to whether
-this should be called a "dependency hash" if anyone wants). This allows
-multiple taskhashes to map to the same dependency ID, meaning that
-trivial changes to a recipe that would change the taskhash don't
-necessarily need to change the dependency ID, and thus don't need to
-cause downstream tasks to be rebuilt (with caveats, see below).
-
-In the absence of any interaction by the user, the dependency ID for a
-task is just that task's taskhash, which effectively maintains the
-current behavior. However, if the user enables the "OEEquivHash"
-signature generator, they can direct it to look at a hash equivalency
-server (of which a reference implementation is provided). The sstate
-code will provide the server with an output hash that it calculates, and
-the server will record all tasks with the same output hash as
-"equivalent" and report the same dependency ID for them when requested.
-When initializing tasks, bitbake can ask the server about the dependency
-ID for new tasks it has never seen before and potentially skip
-rebuilding, or restore the task from an equivalent sstate file. To
-facilitate restoring tasks from sstate, sstate objects are now named
-based on the tasks dependency ID instead of the taskhash (which, again
-has no effect if the server is in use).
-
-This patchset doesn't make any attempt to dynamically update task
-dependency IDs after bitbake initializes the tasks, and as such there
-are some cases where this isn't accelerating the build as much as it
-possibly could. I think it will be possible to add support for this, but
-this preliminary support needs to come first.
-
-Some patches have additional NOTEs that indicate places where I wasn't
-sure what to do.
-
-You can also see these patches (and my first attempts at dynamic task
-re-hashing) on the "jpew/hash-equivalence" branch in poky-contrib.
-
-As always, thanks for your feedback and time
-
-VERSION 2:
-
-At the core, this patch does the same thing as V1 with some very minor
-tweaks. The main things that have changed are:
- 1) Per request, the Hash Equivalence Server reference implementation is
-    now based entirely on built in Python modules and requires no
-    external libraries. It also has a wrapper script to launch it
-    (bitbake-hashserv) and unittests.
- 2) There is a major rework of persist_data in bitbake. I think these
-    patches could be submitted independently, but I doubt anyone is
-    clamoring for them. The general gist of them is that there were a
-    lot of strange edge cases that I found when using persist_data as an
-    IPC mechanism between the main bitbake process and the
-    bitbake-worker processes. I went ahead and added extensive unit
-    tests for this as well.
-
-Joshua Watt (16):
-  bitbake: fork: Add os.fork() wrappers
-  bitbake: persist_data: Fix leaking cursors causing deadlock
-  bitbake: persist_data: Add key constraints
-  bitbake: persist_data: Enable Write Ahead Log
-  bitbake: persist_data: Disable enable_shared_cache
-  bitbake: persist_data: Close databases across fork
-  bitbake: tests/persist_data: Add tests
-  bitbake: bitbake-worker: Pass taskhash as runtask parameter
-  bitbake: siggen: Split out stampfile hash fetch
-  bitbake: siggen: Split out task depend ID
-  bitbake: runqueue: Track task dependency ID
-  bitbake: runqueue: Pass dependency ID to task
-  bitbake: runqueue: Pass dependency ID to hash validate
-  classes/sstate: Handle depid in hash check
-  bitbake: hashserv: Add hash equivalence reference server
-  sstate: Implement hash equivalence sstate
-
- bitbake/bin/bitbake-hashserv         |  67 ++++++++
- bitbake/bin/bitbake-selftest         |   3 +
- bitbake/bin/bitbake-worker           |  11 +-
- bitbake/lib/bb/fork.py               |  71 ++++++++
- bitbake/lib/bb/persist_data.py       | 239 ++++++++++++++++++++-------
- bitbake/lib/bb/runqueue.py           |  56 ++++---
- bitbake/lib/bb/siggen.py             |  20 ++-
- bitbake/lib/bb/tests/persist_data.py | 188 +++++++++++++++++++++
- bitbake/lib/hashserv/__init__.py     | 152 +++++++++++++++++
- bitbake/lib/hashserv/tests.py        | 141 ++++++++++++++++
- meta/classes/sstate.bbclass          | 102 +++++++++++-
- meta/conf/bitbake.conf               |   4 +-
- meta/lib/oe/sstatesig.py             | 166 +++++++++++++++++++
- 13 files changed, 1117 insertions(+), 103 deletions(-)
- create mode 100755 bitbake/bin/bitbake-hashserv
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/bin/bitbake-worker |  2 +-
+ bitbake/lib/bb/fork.py     | 71 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+), 1 deletion(-)
  create mode 100644 bitbake/lib/bb/fork.py
- create mode 100644 bitbake/lib/bb/tests/persist_data.py
- create mode 100644 bitbake/lib/hashserv/__init__.py
- create mode 100644 bitbake/lib/hashserv/tests.py
 
+diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+index e925054b7f9..baa1a84e6dd 100755
+--- a/bitbake/bin/bitbake-worker
++++ b/bitbake/bin/bitbake-worker
+@@ -181,7 +181,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
+         pipein, pipeout = os.pipe()
+         pipein = os.fdopen(pipein, 'rb', 4096)
+         pipeout = os.fdopen(pipeout, 'wb', 0)
+-        pid = os.fork()
++        pid = bb.fork.fork()
+     except OSError as e:
+         logger.critical("fork failed: %d (%s)" % (e.errno, e.strerror))
+         sys.exit(1)
+diff --git a/bitbake/lib/bb/fork.py b/bitbake/lib/bb/fork.py
+new file mode 100644
+index 00000000000..5ac5aba1832
+--- /dev/null
++++ b/bitbake/lib/bb/fork.py
+@@ -0,0 +1,71 @@
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# Copyright (C) 2018 Garmin Ltd.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++"""
++Python wrappers for os.fork() that allow the insertion of callbacks for fork events.
++This is designed to exacmimic os.register_at_fork() available in Python 3.7 with the
++intent that it can be removed when that version becomes standard
++"""
++
++import sys
++import os
++
++before_calls = []
++after_in_parent_calls = []
++after_in_child_calls = []
++
++def _do_calls(l, reverse=False):
++    # Make a copy in case the list is modified in the callback
++    copy = l[:]
++    if reverse:
++        copy = reversed(copy)
++
++    for f in copy:
++        # All exception in calls are ignored
++        try:
++            f()
++        except:
++            pass
++
++def fork():
++    if sys.hexversion >= 0x030700F0:
++        return os.fork()
++
++    _do_calls(before_calls, reverse=True)
++
++    ret = os.fork()
++    if ret == 0:
++        _do_calls(after_in_child_calls)
++    else:
++        _do_calls(after_in_parent_calls)
++    return ret
++
++def register_at_fork(*, before=None, after_in_parent=None, after_in_child=None):
++    if sys.hexversion >= 0x030700F0:
++        os.register_at_fork(before=before, after_in_parent=after_in_parent, after_in_child=after_in_child)
++        return
++
++    if before is not None:
++        before_calls.append(before)
++
++    if after_in_parent is not None:
++        after_in_parent_calls.append(after_in_parent)
++
++    if after_in_child is not None:
++        after_in_child_calls.append(after_in_child)
++
 -- 
 2.17.1
 
