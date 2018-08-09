@@ -1,51 +1,52 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io0-f175.google.com (mail-io0-f175.google.com
-	[209.85.223.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 35E7A78E86;
+Received: from mail-it0-f52.google.com (mail-it0-f52.google.com
+	[209.85.214.52])
+	by mail.openembedded.org (Postfix) with ESMTP id EF68878C13;
 	Thu,  9 Aug 2018 22:10:48 +0000 (UTC)
-Received: by mail-io0-f175.google.com with SMTP id l7-v6so2238058iok.6;
-	Thu, 09 Aug 2018 15:10:49 -0700 (PDT)
+Received: by mail-it0-f52.google.com with SMTP id h23-v6so130487ita.5;
+	Thu, 09 Aug 2018 15:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=9GnhHa5MXnlOuLF1kOB/CzFCqRrPstWtTlBmGn4zeiQ=;
-	b=c2DjGd6k96wirrwA+rmDf0G22VI8W4TOLDagcgdFlt9K+u9YpIIhdzgARoEir8ybD5
-	howhHiwmZatnes2t/kSPVgJ1hi1w5LPJvvNfIkPFrvo5QtrAdpdJrZKrpevGEPALz3Rh
-	pqj5rgyjs0xF+VnjF1n+GnxXf5qZHcbtgFODjqEiEZL1DVczq92Hj1ZFOqZoKqRfzBye
-	BEswsPeg+F0U4rv1W2FpVZDWhF+KFOKH7GtWT7kAX5UCjUXxzkmVlbeRfl0xpjZHJ0W/
-	xpV2Q9wfWDzMsAq8W/zq5Gw61Mbs7oW2YLTq8N5zNZ24JXVMbL17oazrdrt92XcFwHMs
-	dWIQ==
+	bh=L+pXkdTOTGVRE4kbEuiqBROymCn2tPKOp+2fwSM12A4=;
+	b=nZPUkywYS9fTplMxRbMh4yvfr89izf54ePNCUZg/d0nlU2g4R+WhC7qRetxjbZwmqN
+	f+hJ8EzquNM1Uzxlq/w0XQqb1rboi/K7O+aNJhxpGnaAl1XPeohIT+6rhwF8485WfnIB
+	3+d9MlWtFVCW4VdT0igqx+HQnEJnTwL1VP2CqPk9npeNYe4QzapeMKjtL4EiarYGsdor
+	6kVESOFNgvnhJ5q+L9sc7R7dq3O7dOozN32dJR+3z2aJAyTLWthPtA+khXVla4Wqp/NN
+	xLWoNGYP/9bGOHsHfoUmtU6oq/oBChK2h/egRyMZcBm0IE/k+KPt6yD1GFnbQEuqxg9w
+	/1Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=9GnhHa5MXnlOuLF1kOB/CzFCqRrPstWtTlBmGn4zeiQ=;
-	b=JoM2M/6JW4E0PfMBR3js9o8fWf7NUL4A5AHANcA3ysu3k/3m3XAEIgv9xVrE6pzD/5
-	VkapKddEahP3w03rDgM03v8JapJvh3ZChzjgnhj6R27XQf9bNjyBSaZc9LFBmn9qcCsA
-	K7MTucv8x2KG7p78ERXchD0RiEr7SeFOxdst6yUes25+1Stj5jILE/BiYA6ORieHFcEo
-	PT3ibKHBBsewCxejiXiwsvWt2nWeTtyWQqKWJwY91QmiftDtCyq/XLTMPGus7zRoqvsA
-	t4Yen/f/6IXgv9BzkeWrsqNjUKhq18ap0upq/H6U0xwsK+jkWTGnoUjMWNZk48XtptAu
-	JKrQ==
-X-Gm-Message-State: AOUpUlFSiCWSFXtap5G4viNXQAVRyBEruPTHg5sTfgPY+YhAhYdWh8kg
-	rncIpgYrwflrmISnel7w8JZ4MfsM
-X-Google-Smtp-Source: AA+uWPxmozncLgnx4fe2Y3XpOpou6Z2KYm3V4Vu9vRWsQ3Psknub58mMqdMaP1Lzq6FKNO+k6IvrxQ==
-X-Received: by 2002:a6b:7208:: with SMTP id n8-v6mr2822305ioc.82.1533852649097;
+	bh=L+pXkdTOTGVRE4kbEuiqBROymCn2tPKOp+2fwSM12A4=;
+	b=L9VEKboNMRrR5Hk+ct+ZJNkYIF6eIUI0YELV8QVIjLPn51QmyL2cW8/tvF4WuPbrMS
+	BWdLa9lxEoqlFY+W3b59a/ntrfwmayxvqCTGDXWbFM22qgIATfsQvi2T6Y+OhaBv+ktN
+	N32GDrmb24wRebKL5a055jkUb/2TXyUtcO/hE45h010H7V18hXd6O4cmg+M4I5p6W7Tj
+	vsFY7d95qSt6WS9WALvtdN6wHuI8v2cQr7/wvm94wnoEuVub3q/7A6l6NVR5/jDntCTe
+	4qpzymLMBA87R3CTOS1hUmatWPAuLvLlzUrv79UQgpaj4Bqf6ZE5CQS94LT7gbtPhZTJ
+	1CZQ==
+X-Gm-Message-State: AOUpUlG5rJw3I+/Z1l6o+mYgIowKfgCOblj+kw0RdFMgWiNtFmBraJ/y
+	N36TL5bKxTd3I76vOXjH+pcOlpre
+X-Google-Smtp-Source: AA+uWPzAwCkoRCKOu3G2F170ZuOKTiPfKgk8ihNGH8cTy4cm5uWLkDmXuRt+kJbgrWPkhCwQkZ16aw==
+X-Received: by 2002:a02:8c3c:: with SMTP id
+	l57-v6mr3547030jak.57.1533852649862; 
 	Thu, 09 Aug 2018 15:10:49 -0700 (PDT)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	z3-v6sm4404573ioz.85.2018.08.09.15.10.48
+	z3-v6sm4404573ioz.85.2018.08.09.15.10.49
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Thu, 09 Aug 2018 15:10:48 -0700 (PDT)
+	Thu, 09 Aug 2018 15:10:49 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org,
 	openembedded-core@lists.openembedded.org
-Date: Thu,  9 Aug 2018 17:08:30 -0500
-Message-Id: <20180809220840.26697-7-JPEWhacker@gmail.com>
+Date: Thu,  9 Aug 2018 17:08:31 -0500
+Message-Id: <20180809220840.26697-8-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20180809220840.26697-1-JPEWhacker@gmail.com>
 References: <20180716203728.23078-1-JPEWhacker@gmail.com>
 	<20180809220840.26697-1-JPEWhacker@gmail.com>
-Subject: [RFC v2 06/16] bitbake: persist_data: Close databases across fork
+Subject: [RFC v2 07/16] bitbake: tests/persist_data: Add tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,105 +59,223 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Aug 2018 22:10:48 -0000
+X-List-Received-Date: Thu, 09 Aug 2018 22:10:49 -0000
 
-sqlite gets really angry if a database is closed across a fork() call,
-and will give all sorts of messages ranging from I/O errors to database
-corruption errors. To deal with this, close all database connections
-before forking, and reopen them (lazily) on the other side.
+Adds a test suite for testing the persistent data cache
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/persist_data.py | 44 +++++++++++++++++++++++++++++++---
- 1 file changed, 41 insertions(+), 3 deletions(-)
+ bitbake/bin/bitbake-selftest         |   1 +
+ bitbake/lib/bb/tests/persist_data.py | 188 +++++++++++++++++++++++++++
+ 2 files changed, 189 insertions(+)
+ create mode 100644 bitbake/lib/bb/tests/persist_data.py
 
-diff --git a/bitbake/lib/bb/persist_data.py b/bitbake/lib/bb/persist_data.py
-index f0d3ce665d9..6bd3924ffb3 100644
---- a/bitbake/lib/bb/persist_data.py
-+++ b/bitbake/lib/bb/persist_data.py
-@@ -30,6 +30,8 @@ from bb.compat import total_ordering
- from collections import Mapping
- import sqlite3
- import contextlib
+diff --git a/bitbake/bin/bitbake-selftest b/bitbake/bin/bitbake-selftest
+index 7564de304c8..06a1c9a78dd 100755
+--- a/bitbake/bin/bitbake-selftest
++++ b/bitbake/bin/bitbake-selftest
+@@ -32,6 +32,7 @@ tests = ["bb.tests.codeparser",
+          "bb.tests.event",
+          "bb.tests.fetch",
+          "bb.tests.parse",
++         "bb.tests.persist_data",
+          "bb.tests.utils",
+          "layerindexlib.tests.layerindexobj",
+          "layerindexlib.tests.restapi",
+diff --git a/bitbake/lib/bb/tests/persist_data.py b/bitbake/lib/bb/tests/persist_data.py
+new file mode 100644
+index 00000000000..055f1d9ce47
+--- /dev/null
++++ b/bitbake/lib/bb/tests/persist_data.py
+@@ -0,0 +1,188 @@
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# BitBake Test for lib/bb/persist_data/
++#
++# Copyright (C) 2018 Garmin Ltd.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++import unittest
++import bb.data
++import bb.persist_data
 +import bb.fork
-+import weakref
- 
- sqlversion = sqlite3.sqlite_version_info
- if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
-@@ -38,6 +40,28 @@ if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
- 
- logger = logging.getLogger("BitBake.PersistData")
- 
-+# Carrying an open database connection across a fork() confuses sqlite and
-+# results in fun errors like 'database disk image is malformed'.
-+# To remedy this, close all connections before forking, then they will be
-+# (lazily) reopen them on the other side. This will cause a lot of problems if
-+# there are threads running and trying to access the database at the same time,
-+# but if you are mixing threads and fork() you have no one to blame but
-+# yourself. If that is discovered to be a problem in the future, some sort of
-+# per-table reader-writer lock could be used to block the fork() until all
-+# pending transactions complete
-+sql_table_weakrefs = []
-+def _fork_before_handler():
-+    for ref in sql_table_weakrefs:
-+        t = ref()
-+        if t is not None and t.connection is not None:
-+            t.connection.close()
-+            t.connection = None
++import tempfile
++import threading
 +
-+bb.fork.register_at_fork(before=_fork_before_handler)
++class PersistDataTest(unittest.TestCase):
++    def _create_data(self):
++        return bb.persist_data.persist('TEST_PERSIST_DATA', self.d)
 +
-+def _remove_table_weakref(ref):
-+    sql_table_weakrefs.remove(ref)
++    def setUp(self):
++        self.d = bb.data.init()
++        self.tempdir = tempfile.TemporaryDirectory()
++        self.d['PERSISTENT_DIR'] = self.tempdir.name
++        self.data = self._create_data()
++        self.items = {
++                'A1': '1',
++                'B1': '2',
++                'C2': '3'
++                }
++        self.stress_count = 10000
++        self.thread_count = 5
 +
- @total_ordering
- class SQLTable(collections.MutableMapping):
-     class _Decorators(object):
-@@ -48,6 +72,10 @@ class SQLTable(collections.MutableMapping):
-             exception occurs.
-             """
-             def wrap_func(self, *args, **kwargs):
-+                # Reconnect if necessary
-+                if self.connection is None:
-+                    self.reconnect()
++        for k,v in self.items.items():
++            self.data[k] = v
 +
-                 count = 0
-                 while True:
-                     try:
-@@ -55,8 +83,7 @@ class SQLTable(collections.MutableMapping):
-                     except sqlite3.OperationalError as exc:
-                         if 'is locked' in str(exc) and count < 500:
-                             count = count + 1
--                            self.connection.close()
--                            self.connection = connect(self.cachefile)
-+                            self.reconnect()
-                             continue
-                         raise
-             return wrap_func
-@@ -90,6 +117,11 @@ class SQLTable(collections.MutableMapping):
- 
-         self._execute_single("CREATE TABLE IF NOT EXISTS %s(key TEXT PRIMARY KEY NOT NULL, value TEXT);" % table)
- 
-+    def reconnect(self):
-+        if self.connection is not None:
-+            self.connection.close()
-+        self.connection = connect(self.cachefile)
++    def tearDown(self):
++        self.tempdir.cleanup()
 +
-     @_Decorators.retry
-     @_Decorators.transaction
-     def _execute_single(self, cursor, *query):
-@@ -292,4 +324,10 @@ def persist(domain, d):
- 
-     bb.utils.mkdirhier(cachedir)
-     cachefile = os.path.join(cachedir, "bb_persist_data.sqlite3")
--    return SQLTable(cachefile, domain)
-+    t = SQLTable(cachefile, domain)
++    def _iter_helper(self, seen, iterator):
++        with iter(iterator):
++            for v in iterator:
++                self.assertTrue(v in seen)
++                seen.remove(v)
++        self.assertEqual(len(seen), 0, '%s not seen' % seen)
 +
-+    # Add a weak reference to the table list. The weak reference will not keep
-+    # the object alive by itself, so it prevents circular reference counts
-+    sql_table_weakrefs.append(weakref.ref(t, _remove_table_weakref))
++    def test_get(self):
++        for k, v in self.items.items():
++            self.assertEqual(self.data[k], v)
 +
-+    return t
++        self.assertIsNone(self.data.get('D'))
++        with self.assertRaises(KeyError):
++            self.data['D']
++
++    def test_set(self):
++        for k, v in self.items.items():
++            self.data[k] += '-foo'
++
++        for k, v in self.items.items():
++            self.assertEqual(self.data[k], v + '-foo')
++
++    def test_delete(self):
++        self.data['D'] = '4'
++        self.assertEqual(self.data['D'], '4')
++        del self.data['D']
++        self.assertIsNone(self.data.get('D'))
++        with self.assertRaises(KeyError):
++            self.data['D']
++
++    def test_contains(self):
++        for k in self.items:
++            self.assertTrue(k in self.data)
++            self.assertTrue(self.data.has_key(k))
++        self.assertFalse('NotFound' in self.data)
++        self.assertFalse(self.data.has_key('NotFound'))
++
++    def test_len(self):
++        self.assertEqual(len(self.data), len(self.items))
++
++    def test_iter(self):
++        self._iter_helper(set(self.items.keys()), self.data)
++
++    def test_itervalues(self):
++        self._iter_helper(set(self.items.values()), self.data.itervalues())
++
++    def test_iteritems(self):
++        self._iter_helper(set(self.items.items()), self.data.iteritems())
++
++    def test_get_by_pattern(self):
++        self._iter_helper({'1', '2'}, self.data.get_by_pattern('_1'))
++
++    def _stress_read(self, data):
++        for i in range(self.stress_count):
++            for k in self.items:
++                data[k]
++
++    def _stress_write(self, data):
++        for i in range(self.stress_count):
++            for k, v in self.items.items():
++                data[k] = v + str(i)
++
++    def _validate_stress(self):
++        for k, v in self.items.items():
++            self.assertEqual(self.data[k], v + str(self.stress_count - 1))
++
++    def test_stress(self):
++        self._stress_read(self.data)
++        self._stress_write(self.data)
++        self._validate_stress()
++
++    def test_stress_threads(self):
++        def read_thread():
++            data = self._create_data()
++            self._stress_read(data)
++
++        def write_thread():
++            data = self._create_data()
++            self._stress_write(data)
++
++        threads = []
++        for i in range(self.thread_count):
++            threads.append(threading.Thread(target=read_thread))
++            threads.append(threading.Thread(target=write_thread))
++
++        for t in threads:
++            t.start()
++        self._stress_read(self.data)
++        for t in threads:
++            t.join()
++        self._validate_stress()
++
++    def test_stress_fork(self):
++        children = []
++        for i in range(self.thread_count):
++            # Create a writer
++            pid = bb.fork.fork()
++            if pid == 0:
++                try:
++                    self._stress_write(self.data)
++                except:
++                    os._exit(1)
++                else:
++                    os._exit(0)
++            else:
++                children.append(pid)
++
++            # Create a reader
++            pid = bb.fork.fork()
++            if pid == 0:
++                try:
++                    self._stress_read(self.data)
++                except:
++                    os._exit(1)
++                else:
++                    os._exit(0)
++            else:
++                children.append(pid)
++
++        self._stress_read(self.data)
++
++        for pid in children:
++            while True:
++                try:
++                    (_, status) = os.waitpid(pid, 0)
++                    break
++                # Python < 3.5 will raise this if waitpid() is interrupted
++                except InterruptedError:
++                    pass
++                except:
++                    raise
++
++            self.assertTrue(os.WIFEXITED(status), "PID %d did not exit normally" % pid)
++            self.assertEqual(os.WEXITSTATUS(status), 0, "PID %d exited with code %d" % (pid, os.WEXITSTATUS(status)))
++
++        self._validate_stress()
++
 -- 
 2.17.1
 
