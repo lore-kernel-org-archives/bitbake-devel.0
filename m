@@ -1,51 +1,52 @@
-Return-Path: <schnitzeltony@gmail.com>
-Received: from mail-oi0-f68.google.com (mail-oi0-f68.google.com
-	[209.85.218.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 70F8378CA3
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-ua1-f68.google.com (mail-ua1-f68.google.com
+	[209.85.222.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 422046FFA1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Aug 2018 21:30:38 +0000 (UTC)
-Received: by mail-oi0-f68.google.com with SMTP id v8-v6so29908634oie.5
+	Mon, 13 Aug 2018 22:37:10 +0000 (UTC)
+Received: by mail-ua1-f68.google.com with SMTP id y10-v6so11070759uao.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 13 Aug 2018 14:30:39 -0700 (PDT)
+	Mon, 13 Aug 2018 15:37:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
 	:cc:content-transfer-encoding;
-	bh=9so99LnywDY0DNJ1VtqUz6evN7n/ktGnRQf2X8xaFuc=;
-	b=VW8u4xdg88+6IOzxxnDK/YCyJ0ufLzdjREgxLt+RClt3B+ibcBzdKP0ecWOu46sOss
-	lhxWXGR5XLw2+GZ7GzvPUzY07n9vSIvukqg1tlxurWye0LzRtc4AZmoGzFYRNuLEMcm1
-	053q3duDxQ76P/TFYGDitLnEvHanNTMpzEIic4VsdAotjO7no5e+khOzG8Mr08QM4clE
-	I82H2xBQfTBs64EDIwY/Vin1VkOCanfl9QwkgzviDL+ZykmfuftCMro040AFgBv9sLF2
-	cBONEb6jfMbvnOvaEfBTrDt+Ln1W5hDhEAvcdurDLgJuqkJ9Ovos63w17qUyyKl8FyAT
-	K+ug==
+	bh=bJG6VUMQG+CvTJLhMXSNafWkCHnbhB03c3lTgZZRYmo=;
+	b=hH2RzhFozqjEnerHrjZfeDTtG0igWnc6r7U0SGw5kcjaeGeimyrlkv5ki48TAfMjOZ
+	h6QGyjKAFPd6fqhCCzSVYh8JGi9uiHM+pAwBpgwGRPa28YLojhb48f5IApWnDER4sOEM
+	qoom6nhDYAe7xQpDcgUX8uv3/ij1pQrEqkL8cPrag811VQQDn9TBOVF0TLsEo64E5tsJ
+	istVU1k0JalqaDXRhfq1xPfGmVAKsr43/5S10e/wEqMMmx8B8qT0DXOtVDJtB4MqOuAD
+	pSCzghYS4jsL2y89Qu0pNCZOPRc3vG71mpSx1Q6tRaSUH9Ka11NggyoOSRs/PtA96Thi
+	Afkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
 	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=9so99LnywDY0DNJ1VtqUz6evN7n/ktGnRQf2X8xaFuc=;
-	b=E2yQNypNG7+dQPxXF1OqotDEYZTwGdH0zVbII7rTSYxucQtWS1Wh1hAodW7kyNDrG5
-	MdPb+V6oQaQDBy3rbWD/3I8x2aNYQPxwCoaGjU777dANifaEljBzkdsx5ItRWQ9mEYUm
-	APXnjwFko0RliSjoPdtQFZOaTuPUzKWK+rOkY70Ew2XgZ7INSaKT4CmIQxoqqt1CPUgc
-	oqU8bmZFLaAPu8RRyT+xbdSzi7UM3i/2rRwy+JD/agbhF72uuMxOp+IzeM/y6qV9i37A
-	litCWwYdVfNQKn9JDCefMu1lQ1w/jf54Q5Qyu3xWHuCEUn48P8uSBlwcvq8IQVTYKrrF
-	aJCw==
-X-Gm-Message-State: AOUpUlHzVbJThE6O77HsCAfoGUHBgxC8lB3IRa/h+6pGHMToSKQlrhSL
-	sUhywYflLmKa32gBpK1pDx2LkulggF78OSwMbOE=
-X-Google-Smtp-Source: AA+uWPxbtNR40PyFtzkm1TL3XzMr2G6FG1+3MJ3lm9DiifaTBDQOIgoipa2oDGuKvYdQSEA8wG4lfi/rnBLPUsJVzLA=
-X-Received: by 2002:aca:ab11:: with SMTP id
-	u17-v6mr18328573oie.53.1534195839379; 
-	Mon, 13 Aug 2018 14:30:39 -0700 (PDT)
+	bh=bJG6VUMQG+CvTJLhMXSNafWkCHnbhB03c3lTgZZRYmo=;
+	b=EhylZKYlzcXkGZPh1cjIwPdlpkXcDsDnNNrSxOjMcDideoJCRuy2ZuU+HtizF+UvyV
+	j2+tPoka+PGFRSA6e2PwtLYmGvU9fFBXu2DRHEnQzihaV0ayHI2bd9ZyDDVVW0hmNf0o
+	InrxHwTzKTq1O7kNDwdavvlV/5MjnAKFtPLK8RJdmkofDIibw1rdeBgMiicIA6Z/s4iJ
+	XEnS+mWyZYONzx7irbpsv2Bn1WZMIAmmZTuostm27vJs8inlDR1SfsK6cDfe5gO8eUNr
+	mxmLCr/y/YD3j8NAJNS8wRcwCnAVS56Zp1SliwJXH88MJYYd52sUIGVsus33cnxnso79
+	LwBQ==
+X-Gm-Message-State: AOUpUlG5vDO1l4nDPa/MuPrOsIccUyLdC5MjZwpZheuvEB4pfhfM/aEJ
+	hjPwI8RsztaFghUTNcwGkPDLaPridbRBFWm4cz4=
+X-Google-Smtp-Source: AA+uWPwtI/HiWb0LgeHDX+IGM/fzhHagP0d+QVHns4rXhD3uwZgnYiT7cc5DDCOZFzbrHQ+qvhCqPfAUl6Bhe6KUxng=
+X-Received: by 2002:a1f:b3d5:: with SMTP id
+	c204-v6mr12175103vkf.37.1534199831029; 
+	Mon, 13 Aug 2018 15:37:11 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ac9:590c:0:0:0:0:0 with HTTP; Mon, 13 Aug 2018 14:30:38
+Received: by 2002:a9f:2523:0:0:0:0:0 with HTTP; Mon, 13 Aug 2018 15:37:10
 	-0700 (PDT)
-In-Reply-To: <CANNYZj-3OQ7gPEop3OcDL5bnv3x9Q=DmEFCYi4-K7B3Xqp5v0Q@mail.gmail.com>
+In-Reply-To: <CALbNGRSUXV_HGSLNb4Uc=w_nZSLA_zL-da5+q-1jGgqqGdJKbw@mail.gmail.com>
 References: <20180813210445.32496-1-schnitzeltony@gmail.com>
 	<20180813210445.32496-3-schnitzeltony@gmail.com>
 	<CANNYZj-3OQ7gPEop3OcDL5bnv3x9Q=DmEFCYi4-K7B3Xqp5v0Q@mail.gmail.com>
-From: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@gmail.com>
-Date: Mon, 13 Aug 2018 23:30:38 +0200
-Message-ID: <CALbNGRSUXV_HGSLNb4Uc=w_nZSLA_zL-da5+q-1jGgqqGdJKbw@mail.gmail.com>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
+	<CALbNGRSUXV_HGSLNb4Uc=w_nZSLA_zL-da5+q-1jGgqqGdJKbw@mail.gmail.com>
+From: Andre McCurdy <armccurdy@gmail.com>
+Date: Mon, 13 Aug 2018 15:37:10 -0700
+Message-ID: <CAJ86T=WJgaefsob77U57fQMkH=fZ+DK4srKN+PESUyYmSfKKmw@mail.gmail.com>
+To: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH 2/2] runqueue: Introduce load balanced task spawning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -59,26 +60,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 13 Aug 2018 21:30:38 -0000
+X-List-Received-Date: Mon, 13 Aug 2018 22:37:10 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 13, 2018 at 11:20 PM, Alexander Kanavin
-<alex.kanavin@gmail.com> wrote:
-> 2018-08-13 23:04 GMT+02:00 Andreas M=C3=BCller <schnitzeltony@gmail.com>:
->> To get most out of build host, bitbake now detects if the CPU workload i=
-s low.
->> If so, additional tasks are spawned. Maximum 'dynamic' tasks are set by
->> BB_NUMBER_THREADS_LOW_CPU.
+On Mon, Aug 13, 2018 at 2:30 PM, Andreas M=C3=BCller <schnitzeltony@gmail.c=
+om> wrote:
+> On Mon, Aug 13, 2018 at 11:20 PM, Alexander Kanavin
+> <alex.kanavin@gmail.com> wrote:
+>> 2018-08-13 23:04 GMT+02:00 Andreas M=C3=BCller <schnitzeltony@gmail.com>=
+:
+>>> To get most out of build host, bitbake now detects if the CPU workload =
+is low.
+>>> If so, additional tasks are spawned. Maximum 'dynamic' tasks are set by
+>>> BB_NUMBER_THREADS_LOW_CPU.
+>>
+>> So the best improvement is going from 114.5 minutes to 113.5 minutes?
+>> I don't think it's worth the trouble. Maybe it's time to invest in 16
+>> (or even 32!) core amd threadripper? :)
+>>
+> Indeed - but I have to wait till next holiday to assemble such kind of ma=
+chine.
 >
-> So the best improvement is going from 114.5 minutes to 113.5 minutes?
-> I don't think it's worth the trouble. Maybe it's time to invest in 16
-> (or even 32!) core amd threadripper? :)
->
-Indeed - but I have to wait till next holiday to assemble such kind of mach=
-ine.
+> I still can't believe the results are that disappointing...
 
-I still can't believe the results are that disappointing...
+I wonder if you've experimented with the opposite approach, ie
+spawning fewer tasks when CPU load is very high? If a single
+do_compile task can fully load all CPUs, not running other tasks in
+parallel with it (especially another do_compile) might give some
+benefit?
 
-Andreas
+Dynamically boosting and dynamically lowering BB_NUMBER_THREADS based
+on overall CPU load both seem like logical things to do.
 
