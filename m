@@ -1,57 +1,53 @@
-Return-Path: <schnitzeltony@gmail.com>
-Received: from mail-oi0-f66.google.com (mail-oi0-f66.google.com
-	[209.85.218.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 8AC6878FB9
+Return-Path: <alex.kanavin@gmail.com>
+Received: from mail-oi0-f65.google.com (mail-oi0-f65.google.com
+	[209.85.218.65])
+	by mail.openembedded.org (Postfix) with ESMTP id B1DCA78FD9
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Aug 2018 10:43:29 +0000 (UTC)
-Received: by mail-oi0-f66.google.com with SMTP id w126-v6so32666590oie.7
+	Tue, 14 Aug 2018 11:03:49 +0000 (UTC)
+Received: by mail-oi0-f65.google.com with SMTP id s198-v6so32755619oih.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Aug 2018 03:43:30 -0700 (PDT)
+	Tue, 14 Aug 2018 04:03:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=ES0EM9bjZtLRAvc9gS/zLF7kSnqAAinNs+h60/YSO2w=;
-	b=RYONbusqbvQ+h8sBqAiX7zNk/+DtpWjSWNocFyK6i/+uQEziTtGu9pmPAVUoVzRG2z
-	d9wp9WNOEWODeSHESUkqykd4aySFEo4YQTx/FMx5iDbP+PAPtR4PfqK4zaKzWmqSJf0S
-	DRK8hBxg88vhdfn1wtR2LFTuU6ov9YHfiICGdnF/vjlR5JEt9fcrLjc2tW4GZzrBidi9
-	NzDE09WIf7nB1GTPlabxwCF+ePYlTETjybTDPr0/8XzO9ga5VI1OrZkmlYQ55KIqR0FN
-	97RNhIMB7PWkWjOHphtoTIthAwlO0gepWadZvI2O/x1EAAfh7RiSgxdrMUyDhhxDkTOo
-	tytw==
+	:cc; bh=p0TH/fVpaOXHRCO/e2zt3xb6Qa/1eephkNku3AzvdwY=;
+	b=d1bdNA4XFsn6FZERdppeBLsTVAW4W8VVnLj2LX8kX4NLf3xfvP5QRZxH5KfKiIkouJ
+	EyLYJrrRYy3RT7s7iqUOo3X8lc8Ds7Lor6ybhvrl6Vp0Z/AKEKTs9DH2/DO9A93Q8TAw
+	EuEJ/IEdxIrps4tqqRVs208HbON+Vuf34LwyGQMZPwtygiQsHuExijtG5wjkqWwaIU8Z
+	Giu03uKr7rOkHU4BEw5X0IrxCeOUJ6hQgtr9v2x39wzUqdajXq7xgPSP+uMUKkj2zQsf
+	TEC7BomrMD2l3Xk20jPmmsf8AhxeMCa+2k4oIEZF0PEZYlsFUi8GonmT2ZtHZ/vH9WH/
+	e/KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=ES0EM9bjZtLRAvc9gS/zLF7kSnqAAinNs+h60/YSO2w=;
-	b=Ajo65Ti2+87Rthd8EIncoZLtJG1WtxUJjklwSq0U7OgfVbDpisSK8eTc6W8mWU0hYx
-	yUCbf0dq7DM3nfMwJ1hHyoSubN13XUCxwHLXUCEchBCC5jcuCTEXzFB+tt5F6ZtamzjM
-	b+q5HhTSHx4LhcGjfAQevKd37PUk/HqqFEvtgmDAPLuTS2cS9Usp4aiMC1lliCU7UbM3
-	r8Tjdxs/O885R2WaTnV64FNur0/TenVbeu5Z1z/FkV+u7YRY6nmDZ9pyu53LK+UCsGuH
-	AtGEogFOgK5MZ1mNCBKboYUMQlEPkA2GqFdPMdJQbetdAbezjCisVDKyRsMuqWKxNbYR
-	djlg==
-X-Gm-Message-State: AOUpUlENI76sU6+LJkU+Qd27wavP+LY2oAu221o8SgqQsWHeous5CtY0
-	CyabnCkjIwuCZ+7zNcluFRb1n1HpyI2WOL6hWhY=
-X-Google-Smtp-Source: AA+uWPy2Yhn3G7TZ3VN24NPIvn5FCQwJjvuv68x1mkrZ7Swyorde7fi77WmQOUQcZzCdgaQh52ezsBFBmwr3EQ6o1uI=
-X-Received: by 2002:aca:5841:: with SMTP id
-	m62-v6mr23409192oib.346.1534243410627; 
-	Tue, 14 Aug 2018 03:43:30 -0700 (PDT)
+	:message-id:subject:to:cc;
+	bh=p0TH/fVpaOXHRCO/e2zt3xb6Qa/1eephkNku3AzvdwY=;
+	b=SqeiDyykPxlyoeDXyXGlEsJt2YWw5X9DEVZilGCoIr8Y1SIT4Ze/uQsFBRUTJG9wnL
+	LgMcTC03VxQudoBknp82UPv3eXKzyKE7BdYBiXc9u8R5uJCAO2/voF3uEAO2CvXE3QMq
+	Xw1IlOBKPUemarBjmTX3R2AevWQuYIrtg8dBoiDtzdRhM4JpZ0nIZBXdK3DQykKIYqPk
+	OroRXvM54IOp7kfpz1HMulV4CiNMkKcK2hzBwq2EJ9Vryv4lDLdbQ50RkWEEvkfQvn3O
+	ubje1j4bpyRzyo/qW2mxLB3zwYe3C6SvjDWbDTKquQ0nfXzqpyCtEY17RSWiluVAH1h5
+	v0jw==
+X-Gm-Message-State: AOUpUlGdVNQB9M5Oo48V/Wlox3yLvMrm9s/xYKcHvW815fdFN1D+C9vB
+	Fj3z4yIQUy2mfTlATe22XuDbCuDDcezc5HrvVck=
+X-Google-Smtp-Source: AA+uWPzo84xPvZkVvN74LrwQKeXW3tVulcWSMWCHIXblANethLl+NvwEUyD/DxiZMa68/V94PZ+nJMMbtUVWVZ9a55w=
+X-Received: by 2002:aca:5754:: with SMTP id
+	l81-v6mr23618126oib.100.1534244630747; 
+	Tue, 14 Aug 2018 04:03:50 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ac9:590c:0:0:0:0:0 with HTTP; Tue, 14 Aug 2018 03:43:29
+Received: by 2002:a4a:90c5:0:0:0:0:0 with HTTP; Tue, 14 Aug 2018 04:03:50
 	-0700 (PDT)
-In-Reply-To: <75dc7178b6204b0d898f136ab9cceeb4@XBOX02.axis.com>
+In-Reply-To: <98d2737cbf96633abe4ff3bdacd40582f6e83262.camel@linuxfoundation.org>
 References: <20180813210445.32496-1-schnitzeltony@gmail.com>
 	<20180813210445.32496-3-schnitzeltony@gmail.com>
 	<CANNYZj-3OQ7gPEop3OcDL5bnv3x9Q=DmEFCYi4-K7B3Xqp5v0Q@mail.gmail.com>
 	<20180814011119.GA1391@jama> <20180814063203.GJ8291@hiutale>
 	<CANNYZj-b4D5FOc-S2_EbLYvpzdM4u4H8DeJP3JUbmeJJAsAcWA@mail.gmail.com>
 	<98d2737cbf96633abe4ff3bdacd40582f6e83262.camel@linuxfoundation.org>
-	<8ac13026f3f66ce8a652d760162bb4cf74e13ebd.camel@linuxfoundation.org>
-	<75dc7178b6204b0d898f136ab9cceeb4@XBOX02.axis.com>
-From: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@gmail.com>
-Date: Tue, 14 Aug 2018 12:43:29 +0200
-Message-ID: <CALbNGRR0tEuAJaTFKNu_N9+v6D900vE8FFr25DtB9JjZGdTOiQ@mail.gmail.com>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 14 Aug 2018 13:03:50 +0200
+Message-ID: <CANNYZj-WM349ZX_j99upQ6JbopcMs_pA0G_6N7hHRbo-Yo2xoA@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH 2/2] runqueue: Introduce load balanced task spawning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -65,63 +61,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Aug 2018 10:43:29 -0000
+X-List-Received-Date: Tue, 14 Aug 2018 11:03:49 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 14, 2018 at 12:28 PM, Peter Kjellerstedt
-<peter.kjellerstedt@axis.com> wrote:
->> -----Original Message-----
->> From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
->> bounces@lists.openembedded.org> On Behalf Of Richard Purdie
->> Sent: den 14 augusti 2018 11:45
->> To: Alexander Kanavin <alex.kanavin@gmail.com>; Mikko.Rapeli@bmw.de;
->> Andreas M=C3=BCller <schnitzeltony@gmail.com>; Martin Jansa
->> <martin.jansa@gmail.com>
->> Cc: bitbake-devel@lists.openembedded.org
->> Subject: Re: [bitbake-devel] [PATCH 2/2] runqueue: Introduce load
->> balanced task spawning
->>
->> On Tue, 2018-08-14 at 10:43 +0100, Richard Purdie wrote:
->> > On Tue, 2018-08-14 at 10:07 +0200, Alexander Kanavin wrote:
->> > > 2018-08-14 8:32 GMT+02:00  <Mikko.Rapeli@bmw.de>:
->> > > > Just my 2 =E2=82=AC cents to the discussion:
->> > > >
->> > > > we had to limit number of threads because heavy C++ projects
->> > > > were using all of RAM and causing heavy swapping. Single g++
->> > > > processes were eating up to 20 gigabytes of physical ram.
->> > > > It's not just the CPU which is the limiting factor to
->> > > > parallel task execution.
->> > >
->> > > I do believe some kind of clever dynamic limiter would be
->> > > useful here. Obviously it's an absurd situation when on a 32
->> > > core processor there are 32 do_compile c++ tasks, each running
->> > > 32 instances of g++ - which is the default configuration. On
->> > > the other hand running things like do_configure or do_install
->> > > should happen in parallel. I like Andre's idea, but it should
->> > > also watch the available RAM.
->> >
->> > If people want to play, I did experiment with "proper" thread
->> > pooling:
->> >
->> > http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=3Drpurdie/=
-wipqueue4&id=3Dd66a327fb6189db5de8bc489859235dcba306237
->>
->> More recent version of the patch:
->>
->> http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=3Drpurdie/wi=
-pqueue7&id=3D236ca8be128ba7a4edb9fb2c9e512d181679eee8
->>
->> Cheers,
->>
->> Richard
+2018-08-14 11:43 GMT+02:00 Richard Purdie <richard.purdie@linuxfoundation.org>:
+> If people want to play, I did experiment with "proper" thread pooling:
 >
-> Even though make is the prevalent tool used to build code, we have
-> to consider others such as cmake and meson... Any idea if their
-> parallelism can be controlled in some similar way?
+> http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rpurdie/wipqueue4&id=d66a327fb6189db5de8bc489859235dcba306237
 >
-BTW: do_package_ipk is also a CPU eater these days although these task
-do not last as long as compile.
+> This implements a make job server within bitbake, then connects make to
+> it. The net result is that you can then put a limit on the number of
+> processes across all tasks.
+>
+> I seem to remember there were some bugs with it and not all are listed
+> in the commit message, I don't remember what the other issues were...
 
-Andreas
+Both make and ninja have -l option:
+
+      -l [load], --load-average[=load]
+            Specifies  that  no  new  jobs (commands) should be
+started if there are others jobs running and the load average is at
+least load (a floating-point number).  With no argument, removes a
+            previous load limit.
+
+       -l N   do not start new jobs if the load average is greater than N
+
+Maybe that could be appended to PARALLEL_MAKE, which is far less
+invasive than any other approach?
+
+Alex
 
