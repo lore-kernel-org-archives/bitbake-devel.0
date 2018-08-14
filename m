@@ -1,52 +1,52 @@
-Return-Path: <schnitzeltony@gmail.com>
-Received: from mail-oi0-f65.google.com (mail-oi0-f65.google.com
-	[209.85.218.65])
-	by mail.openembedded.org (Postfix) with ESMTP id ED59C74583
+Return-Path: <alex.kanavin@gmail.com>
+Received: from mail-oi0-f66.google.com (mail-oi0-f66.google.com
+	[209.85.218.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 5E1CB74576
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Aug 2018 07:57:10 +0000 (UTC)
-Received: by mail-oi0-f65.google.com with SMTP id s198-v6so31975149oih.11
+	Tue, 14 Aug 2018 08:07:43 +0000 (UTC)
+Received: by mail-oi0-f66.google.com with SMTP id j205-v6so32068062oib.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Aug 2018 00:57:12 -0700 (PDT)
+	Tue, 14 Aug 2018 01:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
 	:cc:content-transfer-encoding;
-	bh=oOEY+WjsWdeqBvkDP8wYY3p67vQ9vGesQK6b0+aIZeU=;
-	b=cdzKSPgyVBHUA/ZT6QLqZkBUiwrBwZCJQ6oZeKXnSCcw3Wt8qGknHGTefHnu9QSvJk
-	zhNfBvlvzX9OzD+j7Y1Jkjp5tcitEIYnSxhhkPGFWyPLL5CpbhFGcGUS9b26yn+YrLox
-	0URa8iaIKEiMfgt0LatVb8521MguWUuJT4xxRZDgpKncC+yhAppwRodkiUbTxIsl2mZN
-	XgvsOjYNSFvxaPBSqE48QedGJ/+dPjrMztoXiY0YZETKX7BHZ7WRaNjmO3NYOUpEgMoE
-	S2VWsq2+2I7Mp6hH/Vbt8m6nyQbuEbG4r6Il9YdgMfadQLezRk1zy5I6W58OdO/MC1xK
-	69Fg==
+	bh=IQgG61XIrEHeqHR6bitUqXnMpnrGOU9iKKBGWMa6nLM=;
+	b=I5RwBLo0IMy/hAlxiVdHcmeGHvwzwH+OMurP9IRajDmerilwFhNbsVA7q8DS4V9ZvU
+	dNB5XXGaRP6LIuHbu72jKYdWj28zZeBs9Nxtf5F5Fh9+1oMrLauzEq2zyHk1HtBP1g9c
+	BHGhptIxMVJ+mfVO0OBmyyE09ncYpZljqzY5qURX6RacwDPfC16RG8j/pKXm/lavW+me
+	2Fcu2+M1HyHMrEUqQiB6Gh02IKsDu5bOFp8i6SY0sV8EdxWSPSlMzxl4PK+YaDP2RPv+
+	+dxLidHBWuzlJUEF7jh0TDNdGVBWwSi2W8EDywYSIgd7mV6PXrJcNUKykBW/SX4xruPG
+	+Jpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
 	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=oOEY+WjsWdeqBvkDP8wYY3p67vQ9vGesQK6b0+aIZeU=;
-	b=kuYSd/i2IDT1MRfwU4cr6FgNwBzMMCwZKS4Kr4qi+s8mDbDmn00gN55ADv+0YSa0HF
-	h02jgHWh8Dk5SMaDrk2mrYtwiS0i79YPjqaaubjhe1GVXJ4H2d2/OhyCe2/as+24zY4I
-	kkbdT1P9kkxrgavyUqrOBJBJJ1VwVRn6RNvvUtQ5BXMrTt1xT4lDtJHZG3DYvs8gWV6y
-	c2J7lu62TSXU2AJSWah3ci50VUUXuK+FRMbOkseH/D/m4yPGe7OMlgTgnfdpD0np2d2B
-	3YjexB4jg7iAeW7Hw4vqNwWprBqpTiru9cRcR2Y1SZ96RSee48++4SYYxhN3tfFdYhlI
-	WQow==
-X-Gm-Message-State: AOUpUlGn5fayddhBZmLUf3aEbzD2VwrNHgryVo8tWUb/N+JDl4mUkBHl
-	K+AxukCgi9uGldDT7SRXguB7qo1aSZedeqBXKBQ=
-X-Google-Smtp-Source: AA+uWPzLlsZdBAuxor+R1Df/KSzyeb5EjySql2N/ZPMZQkBPg6XBQCl9onPLIK9hnom97iV28TXBD6oTUzmJGOk7ZeE=
-X-Received: by 2002:aca:c00a:: with SMTP id
-	q10-v6mr22893220oif.4.1534233431912; 
-	Tue, 14 Aug 2018 00:57:11 -0700 (PDT)
+	bh=IQgG61XIrEHeqHR6bitUqXnMpnrGOU9iKKBGWMa6nLM=;
+	b=KFuET+cJH1NwcYKh+2ruYJqBkM6d0rjGlIyBbvh3OhHgmIOTh6lraP2wAzdamCUf0R
+	befzrcYsY8tvDsxA9Jre7P5fZFUsAcd1NCaRrTk3BEc4VEDsXvrjwBeNxIiAt8EfF2zh
+	q72Pm2Dk9KAwsDL1ZnAbdwLfQAPS/5iJTpkLPnKRN6Ji0X4YRVAQPNjub+t+s1AeWqzn
+	mYnpvSOvYttl90Mu3Ly9DBasygexIqPH9zXyKXWS9VBVjHDUt7xzRfhB8mmCDPCUpBHV
+	hapOzaExu80Y+EEeUhYq3qUEj8y3tcddjFFeprewt6ebEUeSfkA2dhfMPF+lsi+83MxY
+	eRLw==
+X-Gm-Message-State: AOUpUlHMuymDcPhtX/VDvSA9KNAJuvJ277CzU28tQOpxLURqlVkTp+QK
+	KBnE5mfr6xklZGzWkh0RFYOCUJWQOonIB6pd3Tc=
+X-Google-Smtp-Source: AA+uWPwiHTJQei/byGcEYBZj0MIyYdBCpcSEU3tB+ui+xGpeTtKCTiq6hiC7tJ8TeWAkgSzoK/fx2NJHsV5rqJ9esNU=
+X-Received: by 2002:aca:3e03:: with SMTP id
+	l3-v6mr19706728oia.54.1534234064377; 
+	Tue, 14 Aug 2018 01:07:44 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ac9:590c:0:0:0:0:0 with HTTP; Tue, 14 Aug 2018 00:57:11
+Received: by 2002:a4a:90c5:0:0:0:0:0 with HTTP; Tue, 14 Aug 2018 01:07:43
 	-0700 (PDT)
 In-Reply-To: <20180814063203.GJ8291@hiutale>
 References: <20180813210445.32496-1-schnitzeltony@gmail.com>
 	<20180813210445.32496-3-schnitzeltony@gmail.com>
 	<CANNYZj-3OQ7gPEop3OcDL5bnv3x9Q=DmEFCYi4-K7B3Xqp5v0Q@mail.gmail.com>
 	<20180814011119.GA1391@jama> <20180814063203.GJ8291@hiutale>
-From: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@gmail.com>
-Date: Tue, 14 Aug 2018 09:57:11 +0200
-Message-ID: <CALbNGRShtP9VAd9_vN-PrOAxXfSXJ0SGEzsSSC6_8CjSZrOxng@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 14 Aug 2018 10:07:43 +0200
+Message-ID: <CANNYZj-b4D5FOc-S2_EbLYvpzdM4u4H8DeJP3JUbmeJJAsAcWA@mail.gmail.com>
 To: Mikko.Rapeli@bmw.de
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH 2/2] runqueue: Introduce load balanced task spawning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -60,27 +60,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Aug 2018 07:57:11 -0000
+X-List-Received-Date: Tue, 14 Aug 2018 08:07:43 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 14, 2018 at 8:32 AM,  <Mikko.Rapeli@bmw.de> wrote:
+2018-08-14 8:32 GMT+02:00  <Mikko.Rapeli@bmw.de>:
 > Just my 2 =E2=82=AC cents to the discussion:
 >
 > we had to limit number of threads because heavy C++ projects were using
 > all of RAM and causing heavy swapping. Single g++ processes were eating
 > up to 20 gigabytes of physical ram. It's not just the CPU which is the
 > limiting factor to parallel task execution.
->
-LOL: My first approach was to extra-spawn in case memory occupied is
-less than 50%. That solution performed really bad. I think adding
-tasks on a CPU performing already with ~100% just cause overhead
-reducing overall performance. I think the target for best performance
-is running CPU with 100% with as few tasks as possible.
 
-Again: Major problem with this solution is that a low workload caused
-by CPU waiting for hard-disk or resuming from spawns additional tasks.
-That is totally wrong.
+I do believe some kind of clever dynamic limiter would be useful here.
+Obviously it's an absurd situation when on a 32 core processor there
+are 32 do_compile c++ tasks, each running 32 instances of g++ - which
+is the default configuration. On the other hand running things like
+do_configure or do_install should happen in parallel. I like Andre's
+idea, but it should also watch the available RAM.
 
-Andreas
+Alex
 
