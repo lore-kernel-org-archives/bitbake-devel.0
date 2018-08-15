@@ -1,52 +1,55 @@
-Return-Path: <schnitzeltony@gmail.com>
-Received: from mail-oi0-f66.google.com (mail-oi0-f66.google.com
-	[209.85.218.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 20A3E78F61
+Return-Path: <alex.kanavin@gmail.com>
+Received: from mail-oi0-f67.google.com (mail-oi0-f67.google.com
+	[209.85.218.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 5A55A79163
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Aug 2018 08:43:54 +0000 (UTC)
-Received: by mail-oi0-f66.google.com with SMTP id v8-v6so806693oie.5
+	Wed, 15 Aug 2018 12:43:36 +0000 (UTC)
+Received: by mail-oi0-f67.google.com with SMTP id d189-v6so1662382oib.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Aug 2018 01:43:56 -0700 (PDT)
+	Wed, 15 Aug 2018 05:43:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=GXNG5GmQHJVQRIkO7xR8vgLHlMsvUAgB3VclTTZAy54=;
-	b=PsxTI9kt7z2mHspJlplvUtC8aD/EuN2arDP5gNOLXwPMSUewttpV2nfQRVRZOl3XNk
-	ZU4RKsstIoXO4gXEgWAu/e1IVfPgCPJGv5TzcNbj8SGWY6o+FvcOsDg6joHYknnNGabn
-	dUgIHffvV2Mh+4QSj8XftSArtPw03c6nSRdPQ6x+eRVTvNhzs732PEI1UI6zwhMU9icB
-	S/gPR3VqLHvkuXpE4ld7wVYoq0vvaVB5PHdVvEIg5vKoeWfpKMW6htkuhzfyUkZB0WPG
-	8aFAk6wbIuQAP8jhRkBMxhflRJAQknvKg5W7/cNf9KCfng7WQuu+EKMKQyRZU12RqBIu
-	XZuQ==
+	:cc; bh=c/RnXXYFu4F7Emq+M1rBJ8MBjduHgYfF/0DaSKPBcR0=;
+	b=dO3vhEcCGLO7JT3ceOhRmclI7vYCpWOQMtoOXgcQ9yzHaw74Zk4N8qsCo1GUevSQ04
+	FdNwGhycAPXad11I9PkFiw0QeMVCMeQ50Yefpy6LlP18sHLoSqXmj3X7K1D7rWPXUNEH
+	8rIB6vR3Bpx0IV2qUK/SUEtqN3IjKyXESABdFxq8NTKGr74yQPqcUpJIfELwktVbiEq1
+	boDDnG+ReY9ewKYTh3gOIISd/7xmwqcdcfenM8uRH6ZIz9fVAZxiRcXZeiXVXYJLU7WO
+	2Darfv+KdytJfAhOSFv6wY6XLp8faRmlkWC4VCY2mYb3GcMl/JPyIJiLe8QRNNi9fJ2q
+	nFKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=GXNG5GmQHJVQRIkO7xR8vgLHlMsvUAgB3VclTTZAy54=;
-	b=L3YocVnsqiKtGxy1nrE40p8AASXGKQom8KknDdlla/g28Mu+/XapXGEaeT43U9MfVB
-	QUWP1Ie7LUdpssw5rJTuHcDkHRwZIyKT+jrSivx9bM7o/WjXVSTMi/26MiCWtq/h1wmL
-	uZyyjZOEqHVDrIJQOZ8ExkkObPra/x6ax5KgL7lL6sTv+sz0xThfgcROlzDS4hHLMNHU
-	R+AoDPcO9J3GhWlZ59QJdcz7C71GbWEtQnkerWEZ2/VFtH+vV8oJ8qB7Q4aI0Xw8oX7D
-	CIObpjqxkI/J3jEf7xTZSVulYvLawIbMWPMlOHxyCljDxSRTqLMGwoS4ceYRoKWpHETe
-	LxHw==
-X-Gm-Message-State: AOUpUlEVu62LGY56V11dNsmPKP2b6JSIkMpFTGes9+fJkrpvR31FpoHh
-	8IAQq4falJEjP0R0eQdmcegKdvE7o2xxm5UY/n8=
-X-Google-Smtp-Source: AA+uWPwuYNonRTnpfG6XTBkQRPEkEZuHPN2q3odEdB2ZMAZKhVrbXE/lvwriymSrNWN6ebp5RB79uYKlbxdPOd4zQLI=
-X-Received: by 2002:aca:4fd1:: with SMTP id
-	d200-v6mr27701621oib.224.1534322635930; 
-	Wed, 15 Aug 2018 01:43:55 -0700 (PDT)
+	:message-id:subject:to:cc;
+	bh=c/RnXXYFu4F7Emq+M1rBJ8MBjduHgYfF/0DaSKPBcR0=;
+	b=k5dYLmOncnJRbP0Bwg8MRBH9D4DYcw5txgiagCllg79g3YLRuyvf9JFji5Mkv9GL4F
+	qJfknqpx6gYvFfkSkYjF0sQ4DoZOn8H71qoqBqCtFw21sOpQgRdSr+T3zvBzMzsapOUg
+	jijZvivWSxGNIy8wyEd2o+00QcrAgHn7qAiTXehnpEt8w3kBz8txI+JnCyCvfYxKl8eT
+	6EjVvGnOvz6SoJMpYIfd5lmYwLeU+TK1VMQuTiCdL0JH+wPfMcH3ASLgT7oVoZD80Jrn
+	K+SXBjq/1KOTTdho9IskEx6mRfugN13RGl7up5IVoXJgr+MScfiTmNc0+BIrIhHAid+m
+	o4PQ==
+X-Gm-Message-State: AOUpUlGRIC2RWZmkI60RIru/vBrC1pF74GKnh4s9QB4VBOksGpUh1m0z
+	iwQ4hn8Fp7Ov0oniiSKB2BI/lFt9+z1LIHbhZxw=
+X-Google-Smtp-Source: AA+uWPx6ppvGXttQyJ+IvjfmxQKS+G2Kpi5cUTOR/hsCvCric/gr296n3Ry4GWObwS97v1RCunKPIkxkWLvHZSTk8HQ=
+X-Received: by 2002:aca:5754:: with SMTP id
+	l81-v6mr28700119oib.100.1534337017320; 
+	Wed, 15 Aug 2018 05:43:37 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ac9:590c:0:0:0:0:0 with HTTP; Wed, 15 Aug 2018 01:43:55
+Received: by 2002:a4a:90c5:0:0:0:0:0 with HTTP; Wed, 15 Aug 2018 05:43:36
 	-0700 (PDT)
-In-Reply-To: <6f9b4884358d08f5e4e35ebd9b683218ef0e40f0.camel@linuxfoundation.org>
+In-Reply-To: <CANNYZj-WM349ZX_j99upQ6JbopcMs_pA0G_6N7hHRbo-Yo2xoA@mail.gmail.com>
 References: <20180813210445.32496-1-schnitzeltony@gmail.com>
-	<20180813210445.32496-2-schnitzeltony@gmail.com>
-	<6f9b4884358d08f5e4e35ebd9b683218ef0e40f0.camel@linuxfoundation.org>
-From: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@gmail.com>
-Date: Wed, 15 Aug 2018 10:43:55 +0200
-Message-ID: <CALbNGRTq-9LUPa2hTYdU7Gtp6+vrFK8YD9O_XTMaofRVtQSN8Q@mail.gmail.com>
+	<20180813210445.32496-3-schnitzeltony@gmail.com>
+	<CANNYZj-3OQ7gPEop3OcDL5bnv3x9Q=DmEFCYi4-K7B3Xqp5v0Q@mail.gmail.com>
+	<20180814011119.GA1391@jama> <20180814063203.GJ8291@hiutale>
+	<CANNYZj-b4D5FOc-S2_EbLYvpzdM4u4H8DeJP3JUbmeJJAsAcWA@mail.gmail.com>
+	<98d2737cbf96633abe4ff3bdacd40582f6e83262.camel@linuxfoundation.org>
+	<CANNYZj-WM349ZX_j99upQ6JbopcMs_pA0G_6N7hHRbo-Yo2xoA@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 15 Aug 2018 14:43:36 +0200
+Message-ID: <CANNYZj9usAVLe7guhH7h3XjXsvRjL+M8VnjM0cgFx3q-H0sqEA@mail.gmail.com>
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 1/2] runqueue: Move decision if a task can be started to one common place
+Subject: Re: [PATCH 2/2] runqueue: Introduce load balanced task spawning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,27 +62,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 Aug 2018 08:43:55 -0000
+X-List-Received-Date: Wed, 15 Aug 2018 12:43:36 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 15, 2018 at 10:37 AM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> On Mon, 2018-08-13 at 23:04 +0200, Andreas M=C3=BCller wrote:
->> Signed-off-by: Andreas M=C3=BCller <schnitzeltony@gmail.com>
->> ---
->>  lib/bb/runqueue.py | 12 ++++++++----
->>  1 file changed, 8 insertions(+), 4 deletions(-)
+2018-08-14 13:03 GMT+02:00 Alexander Kanavin <alex.kanavin@gmail.com>:
+> Both make and ninja have -l option:
 >
-> I don't think it makes sense to take 2/2 as the gains don't seem worth
-> the complexity.
-Agreed: Meanwhile I found that importing psutils seems to break wic.
-> 1/2 is a good improvement to the code and makes
-> experimentation easier so I'll likely take that though.
-Thanks
+>       -l [load], --load-average[=load]
+>             Specifies  that  no  new  jobs (commands) should be
+> started if there are others jobs running and the load average is at
+> least load (a floating-point number).  With no argument, removes a
+>             previous load limit.
 >
-> Cheers,
+>        -l N   do not start new jobs if the load average is greater than N
 >
-> Richard
-Andreas
+> Maybe that could be appended to PARALLEL_MAKE, which is far less
+> invasive than any other approach?
+
+I've done some tests, and yes -l does help. We currently have a nasty
+quadratic growth rate with cpu cores as input, which hits especially
+badly when the amount of cores is high, and a lot of long, heavy (e.g.
+c++) do_compile tasks run at once. This potentially means n*n compiler
+instances, where n is how many cpu cores are available. '-l' option
+does neatly limit that to a constant amount of compilers per core.
+
+However, this does not solve the other resource problem: running out
+of available RAM and going into swap thrashing. Neither make nor ninja
+can currently watch the RAM, even though it is not complicated:
+>>> import psutil
+>>> psutil.virtual_memory()
+svmem(total=16536903680, available=7968600064, percent=51.8,
+used=16347615232, free=189288448, active=11750494208,
+inactive=2882383872, buffers=3158528000, cached=4620783616)
+
+I think we should teach both to do that, and then replace a static
+'number of jobs' limit in PARALLEL_MAKE with limits on CPU load and
+RAM usage.
+
+Alex
 
