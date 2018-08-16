@@ -1,53 +1,54 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com
-	[209.85.221.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 01FD579298
+Received: from mail-wm0-f66.google.com (mail-wm0-f66.google.com [74.125.82.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 7E65078F2A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Aug 2018 08:57:32 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id e7-v6so3421970wrs.9
+	Thu, 16 Aug 2018 09:02:18 +0000 (UTC)
+Received: by mail-wm0-f66.google.com with SMTP id c14-v6so3713580wmb.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Aug 2018 01:57:34 -0700 (PDT)
+	Thu, 16 Aug 2018 02:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=message-id:subject:from:to:date:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=99mD0JRRZowH+loKADIA+az4lr/6Y1DXnJc/KqDpHNQ=;
-	b=Bsk6i6SWm1c24vRksyHukq+CfR8hKqJCJX6Bo8h8bIeKlGJdZc6u96xiK7ZtE4983J
-	vm6WM1/LHFv9qochigrUP8yAgPFQbU4azrJH0eMI0sj7wIQetuKr6Hwe54Txxh2ZsZ3j
-	nIYv98B7+LIN8+I1ZcVBLC4c+ZbLCNF48ulZ8=
+	bh=ZHmSN9mjft15x6N2fztgNrklZpBDabXG+Cl90De/uSs=;
+	b=I3X1U1OK09+Q6cqqsqdQ7mjoChmlkAvZA34wV1uaCREozxHtG5Kj8+tjsAPMSNhUFp
+	NU0Ie9i7suySy1/cJQRlxWCTfaZCaaFFHlahnkEAYlLGfB+hB+3O7SO+TbgJPxUNnPEV
+	Y+2E9HQXByJ98QjcEQ0Nls6BoaTuMT1m6j1sw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=99mD0JRRZowH+loKADIA+az4lr/6Y1DXnJc/KqDpHNQ=;
-	b=pF+3kchtn/IOhvavdgiHPgQ+1kw21UNfiO25UHD+ytKFjrCVYhD4le45zXYn/Rbw+I
-	2MbqKwpzhcsP98hzs/DkWsFciYyz5dLHwMcrzF8s3vkQasWREhOcv5zZcPCam9tx2H5m
-	FBQptZFHRKaeSFtsID3ZsKN52lurRQiskEtVpighMpnqzechHfC2BAobiS5SSOd7t0a+
-	WSqV/Uzpxux+5w5YZTNfyBHmFpxytc51F8kt+xgiJpt1BUh/AjchGlSf6i1+SRtVCjjK
-	yKu+JKybyIql2My523JP7G8a42259LMoWD3Ex7LUwQucgpQ4ushiUqRuqVJ6e8+HOCHr
-	fh9Q==
-X-Gm-Message-State: AOUpUlH514NSMlb4QrLAdHuz948IpEhzfZmtZBUzT34qeqMwU0+tRYJ6
-	jpmHvHRhbzY7fLUMi2s5pq9Z5g==
-X-Google-Smtp-Source: AA+uWPxjAoqTAw2R57eabfas61NMIVxnuyxUcNo4pEdH1dKnDemUdetIY1KX23/uD/rKOHOAHi6GQQ==
-X-Received: by 2002:adf:f28c:: with SMTP id
-	k12-v6mr18732663wro.263.1534409853715; 
-	Thu, 16 Aug 2018 01:57:33 -0700 (PDT)
+	bh=ZHmSN9mjft15x6N2fztgNrklZpBDabXG+Cl90De/uSs=;
+	b=kEIXpCQ8VKkZI5Qee664CFCyVAmyKaILWMS9N5o6ZVMslu3gOA73Pd+o86DlnsqKvI
+	9/ytvgCE9DMO2g0tSLCl4z+zwFImEz9PKGJWj0vUHnXHlSpRq2OA3gA3iypTz+kxk/hj
+	ce0n6FHpo8HSG359s3b/RSX3mz+AHN8l7owSDW3X9qJVLZ8JXxSXytlfAHZ4j3ndZqkL
+	bzwH+qefS06z7vclNuNDqHuKrUzy0kTJdZZXUpQ1+DzGuKhZvnTOSpj9jSFAgyyUvzep
+	TRcwRXW8oC8RlRzGr7wxXSR0OSnMt4sTVGlREmz9bqS/GsGicAneNinsiT3dJ+35fOTw
+	OLow==
+X-Gm-Message-State: AOUpUlHhm7xyTISYuq597w72r9H1J6ca2JZv2+11P3lle3h5tkpv0+Qv
+	HBbRYMhYXnohO+Y96f5ufLVnMAGZ2nU=
+X-Google-Smtp-Source: AA+uWPwxbxLarCQZSmNDQBh0FueBeiOCGwWYWReAK/tMonSiBxUMKVOv2z17j7iyc4qr/eWsKVp6UQ==
+X-Received: by 2002:a1c:5dd4:: with SMTP id
+	r203-v6mr15774762wmb.29.1534410139231; 
+	Thu, 16 Aug 2018 02:02:19 -0700 (PDT)
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	y18-v6sm24654755wrh.85.2018.08.16.01.57.32
+	n8-v6sm18101360wrt.56.2018.08.16.02.02.17
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Thu, 16 Aug 2018 01:57:32 -0700 (PDT)
-Message-ID: <51d27f87c9fb766697826c8969166e44d4f87cbf.camel@linuxfoundation.org>
+	Thu, 16 Aug 2018 02:02:18 -0700 (PDT)
+Message-ID: <38f67bbdeb35dbb4685177b75e8fde29f119f8f0.camel@linuxfoundation.org>
 From: richard.purdie@linuxfoundation.org
 To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
 	bitbake-devel@lists.openembedded.org
-Date: Thu, 16 Aug 2018 09:57:29 +0100
-In-Reply-To: <1fd3956c-d7c9-445a-b8ad-6770998801d3@prevas.dk>
-References: <08a61d76-d0b7-ce93-180c-5c4eab3ee150@prevas.dk>
-	<1fd3956c-d7c9-445a-b8ad-6770998801d3@prevas.dk>
+Date: Thu, 16 Aug 2018 10:02:17 +0100
+In-Reply-To: <b2fac879-03f3-03f6-4746-382f319ae37b@prevas.dk>
+References: <20180710120334.9609-1-rasmus.villemoes@prevas.dk>
+	<52a52d2a-3f64-812b-2582-2808abaa78b5@prevas.dk>
+	<62b7406a8c5edf06dccdc39acf2a5c5741e5d09e.camel@linuxfoundation.org>
+	<b2fac879-03f3-03f6-4746-382f319ae37b@prevas.dk>
 X-Mailer: Evolution 3.28.1-2 
 Mime-Version: 1.0
-Subject: Re: commit 6c3281a14 / set_context broken?
+Subject: Re: [PATCH] bb/utils.py: add break_hardlinks helper
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,28 +61,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 Aug 2018 08:57:33 -0000
+X-List-Received-Date: Thu, 16 Aug 2018 09:02:18 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2018-08-16 at 10:40 +0200, Rasmus Villemoes wrote:
-> On 2018-07-10 11:31, Rasmus Villemoes wrote:
-> > AFAICT, set_context in lib/bb/utils.py doesn't actually set the
-> > module-global _context variable, but just assigns to function-local
-> > variable by the same name. Hence it is effectively a no-op.
+On Thu, 2018-08-16 at 10:57 +0200, Rasmus Villemoes wrote:
+> On 2018-08-16 10:52, richard.purdie@linuxfoundation.org wrote:
+> > On Thu, 2018-08-16 at 10:38 +0200, Rasmus Villemoes wrote:
+> > > On 2018-07-10 14:03, Rasmus Villemoes wrote:
 > > 
-> > The python fix would be to add a "global _context" declaration, but
-> > since things have apparently worked for 5 years, perhaps one can
-> > simply
-> > delete set_context and remove the calls?
+> > Merged, sorry about the delay. Was there a corresponding OE-Core
+> > patch?
 > 
-> Ping.
+> No, I didn't think I could send such patches before this landed in
+> bitbake (since any automated test would just flag those as breaking
+> everything). What's the normal/proper way to handle such
+> dependencies?
+> On my end, I've just been running with the patches applied to the
+> combined repo.
 
-I just had a quick look at the code and you're right, there is a bug
-there. It might explain some of the issues with memory resident bitbake
-and things not being quite reset properly at times. With it just
-covering os/bb/time, it probably isn't a huge deal but I'd prefer to
-fix the code as the API is meant to be generic.
+We normally bump the bitbake version, then have OE-Core depend on the
+new bitbake version. Sending the patches is ok as long as you mention
+the dependency clearly. 
+
+We prefer to not have version dependency changes but sometimes it can't
+be avoided...
+
+> > Also, for new API like this we might want to consider adding some
+> > tests
+> > to bitbake-selftest...
+> 
+> I'll look into that.
+
+Thanks!
 
 Cheers,
 
