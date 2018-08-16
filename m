@@ -1,58 +1,24 @@
-Return-Path: <alex.kanavin@gmail.com>
-Received: from mail-oi0-f65.google.com (mail-oi0-f65.google.com
-	[209.85.218.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 51D147912A
+Return-Path: <david.reyna@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 56D0979248
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Aug 2018 16:26:22 +0000 (UTC)
-Received: by mail-oi0-f65.google.com with SMTP id d189-v6so2900629oib.6
+	Thu, 16 Aug 2018 01:07:23 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w7G17ODj019461
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Aug 2018 09:26:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=AQyG16g3sSii0dfVCF/omMTCAvVZ83ze9v4stpkQsbk=;
-	b=eIbfLxmbXHOiResu+NoZ2z4w2NejS9HaPPpPl7oRy7WnQcsTXBYYVJXaQCuT0gCmrY
-	WA+r/azad/iy22MaTiukvkxzaXk5fJhW0J1/Qjp/iUX0xkuhdITQ7E9oXae2FHxlFXus
-	slQSHsCVvIWFFwp7CJ+ekryKNvRISc/Ue16K3P+j7ThwgkZeAbwbwcsW+vaZ885kMq9H
-	eOoSdsFcZHU/zPiPlUM4EAiT2N7BxSAAxXKXou0Z9AOXN4WfNP1oBcT8gcE83ymXDQqG
-	10nvomfCNak8WXlVp12ea+ce6vK7KY5WR8HcfJveEA/N5bxn6RQzdC2giyiqPrsz/gF4
-	GfNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=AQyG16g3sSii0dfVCF/omMTCAvVZ83ze9v4stpkQsbk=;
-	b=gFnvCZDbxZb8dZo+nRNV68aWsD9B0g5mOpsNqo/Wg9R9dEXca/O0KDLUOivLmZvA2g
-	tLF0DAO2OyqbC8tnKNBUb+z3cJl/zGponE7iJn7uB1NLrGrc/p9txHN2CZ2hCXYPWzWw
-	PEkds0PnjgbG5F8Ad4XizmORIozm3meqE9vY+2K4V99WQzI4FSeMbVH71ZAU+iiRxejl
-	u+KUdZtgjyaupVxJoq1e+vx+5W4juNLpiJ8FSWZlujhaIuDCh3Xaze6oPG+7Slcc7mar
-	1HIqhG94N4J5SxPgAD7MtC/Dhk74Z2ACVdlglAvDPdVBRTR1oebmBfYbtq5+U+3axi2z
-	wqoA==
-X-Gm-Message-State: AOUpUlFzI0zFBwePBQ73KFuM0siicOUEAa98wjsgZE2YZymbqZJAG7Ay
-	BUnQc0TkMG0lP/9B+VwWPo509jLdgB/f7iVLuKg=
-X-Google-Smtp-Source: AA+uWPzr8O4fOkBOUEAjoqNgqUth68sbbVjQRAQSoUrXWdhJNhzS5HrhcTyym+KFy6+v9xAt684OrLQ/qpmbfSoeqKg=
-X-Received: by 2002:aca:560d:: with SMTP id
-	k13-v6mr26274032oib.190.1534350383278; 
-	Wed, 15 Aug 2018 09:26:23 -0700 (PDT)
+	Wed, 15 Aug 2018 18:07:24 -0700 (PDT)
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.217) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
+	(TLS) id 14.3.399.0; Wed, 15 Aug 2018 18:07:23 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 15 Aug 2018 18:03:55 -0700
+Message-ID: <cover.1534381261.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Received: by 2002:a4a:90c5:0:0:0:0:0 with HTTP; Wed, 15 Aug 2018 09:26:22
-	-0700 (PDT)
-In-Reply-To: <CALbNGRS7aavRtSSpj-JMKo6mTnWL7OGp+_Tnsjk3BLb=ooDHCA@mail.gmail.com>
-References: <20180813210445.32496-1-schnitzeltony@gmail.com>
-	<20180813210445.32496-3-schnitzeltony@gmail.com>
-	<CANNYZj-3OQ7gPEop3OcDL5bnv3x9Q=DmEFCYi4-K7B3Xqp5v0Q@mail.gmail.com>
-	<20180814011119.GA1391@jama> <20180814063203.GJ8291@hiutale>
-	<CANNYZj-b4D5FOc-S2_EbLYvpzdM4u4H8DeJP3JUbmeJJAsAcWA@mail.gmail.com>
-	<98d2737cbf96633abe4ff3bdacd40582f6e83262.camel@linuxfoundation.org>
-	<CANNYZj-WM349ZX_j99upQ6JbopcMs_pA0G_6N7hHRbo-Yo2xoA@mail.gmail.com>
-	<CANNYZj9usAVLe7guhH7h3XjXsvRjL+M8VnjM0cgFx3q-H0sqEA@mail.gmail.com>
-	<CALbNGRS7aavRtSSpj-JMKo6mTnWL7OGp+_Tnsjk3BLb=ooDHCA@mail.gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 15 Aug 2018 18:26:22 +0200
-Message-ID: <CANNYZj_7gr7m8TYqMmevHMnSLfoS5kZi7AVf3ziGn+uDRBD9wg@mail.gmail.com>
-To: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 2/2] runqueue: Introduce load balanced task spawning
+X-Originating-IP: [147.11.157.217]
+Subject: [PATCH 0/1] toaster: project_specific_12785 enhancement set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -65,23 +31,128 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 Aug 2018 16:26:22 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 16 Aug 2018 01:07:23 -0000
+Content-Type: text/plain
 
-2018-08-15 17:01 GMT+02:00 Andreas M=C3=BCller <schnitzeltony@gmail.com>:
-> 2. Quadratic explosion: I think it you should reduce number of
-> parallel bitbake threads. From what I have seen: When running heavy
-> compiles with -j =3D number-of-cores it takes only 2-3 do_compiles to
-> have CPU load at constant ~100%. I think this should be independent of
-> number of cores. Try 4-5 parallel bitbake threads - I bet that speeds
-> up your builds and reduces swap floods.
+From: David Reyna <David.Reyna@windriver.com>
 
-What about the situations where bitbake is mostly busy with other
-things than do_compile, or when do_compile takes only a small fraction
-of the recipes build time? Particularly do_configure can be
-notoriously slow and single-threaded, so I do want to run those with
-all available cores.
+1) This is a large set of enhancements and fixes. 
 
-Alex
+I have posted it as one patch because (a) the changes are tightly
+interwoven, (b) they have been debugged and tested together, and
+(c) I want to conserve people's time.
+
+2) This work was driven by two things:
+
+  (a) The opportunity to use Toaster as the YP configuration tool for third-party GUIs. 
+
+Wind River is in the process of open sourcing its Eclipse plug-ins for
+application and project development. The those plug-ins currently work 
+with Wind River Workbench and Intel System Studio, and we are in the 
+process of open sourcing them to Eclipse.org for all users.
+
+  (b) Comments from the YP Birds-of-a-Feather meeting at ELCE Prague. 
+
+There were several comments made about limitations with Toaster. Those
+needs aligned nicely with my personal goals with Toaster and especially
+the requirements of the above opportunity.
+
+3) Here is a summary of the included content:
+
+The primary driving enhancement:
+
+*  Bug 12785 - Support Project Specific configuration for external
+   tools (e.g. ISS, Eclipse)
+
+  -  Isolated project-specific configuration page (full Toaster context
+     hidden)
+  -  Support for new project, reconfigure existing project, and import
+     existing command line project
+  -  Ability to define variables (e.g. image recipe) and pass them back
+     to external GUI
+  -  Ability to execute the cloning phase, so that external GUI receive
+     a buildable project
+  -  Ability to call back to the external GUI when updates are completed
+     and ready
+  -  Compatibility of above projects with the normal full Toaster interface
+  -  Ability to pass to a 'complete' or 'cancel' web page so that the
+     external GUI can immediately stop that Toaster instance, and not
+     leave dangling servers nor edit sessions open
+
+Here are the supporting enhancements, where at least the
+back end is implemented:
+
+*  Bug 12821 - Make Toaster conf changes compatible with command line usage
+*  Bug 12822 - Support importing user changes to conf files into Toaster
+*  Bug 12823 - Support importing user build directories into Toaster
+*  Bug 12824 - Scan imported layers for content so that they are
+               immediately available
+*  Bug 12825 - show layer clone item in progress bar
+
+Here are defects fixed:
+
+*  Bug 12817 - builddelete.py requires explicit 'add_arguments'
+*  Bug 12818 - Remove orphaned imported layers when project is deleted
+*  Bug 12819 - build using selected bitbake env, not Toaster's env
+*  Bug 12820 - Toaster randomizes the layer order in toaster_bblayers.conf
+*  Bug 12826 - fix imported layer management
+---
+
+The following changes since commit 63a4ff7cf5f7d1671ab85800bc2212dd9cd9748d:
+
+  bitbake: checksum: sanity check path when recursively checksumming (2018-08-14 16:32:48 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/toaster/project_specific_12785
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/project_specific_12785
+
+David Reyna (1):
+  Toaster: Implement the project-specific feature and releated
+    enhancements and defects.
+
+ lib/toaster/bldcontrol/localhostbecontroller.py    | 172 ++++--
+ .../bldcontrol/management/commands/runbuilds.py    |   2 +-
+ .../orm/migrations/0018_project_specific.py        |  28 +
+ lib/toaster/orm/models.py                          |  61 ++-
+ lib/toaster/toastergui/api.py                      | 168 +++++-
+ lib/toaster/toastergui/static/js/layerBtn.js       |  12 +
+ lib/toaster/toastergui/static/js/libtoaster.js     | 105 ++++
+ lib/toaster/toastergui/static/js/mrbsection.js     |   4 +-
+ lib/toaster/toastergui/static/js/projecttopbar.js  |  22 +
+ lib/toaster/toastergui/tables.py                   |   4 +
+ .../toastergui/templates/base_specific.html        | 128 +++++
+ .../templates/baseprojectspecificpage.html         |  48 ++
+ .../templates/generic-toastertable-page.html       |   2 +-
+ lib/toaster/toastergui/templates/importlayer.html  |   4 +-
+ .../toastergui/templates/landing_specific.html     |  50 ++
+ lib/toaster/toastergui/templates/layerdetails.html |   3 +-
+ lib/toaster/toastergui/templates/mrb_section.html  |   2 +-
+ .../toastergui/templates/newcustomimage.html       |   4 +-
+ .../toastergui/templates/newproject_specific.html  |  95 ++++
+ lib/toaster/toastergui/templates/project.html      |   7 +-
+ .../toastergui/templates/project_specific.html     | 162 ++++++
+ .../templates/project_specific_topbar.html         |  80 +++
+ lib/toaster/toastergui/templates/projectconf.html  |   7 +-
+ .../toastergui/templates/recipe_add_btn.html       |  23 +
+ lib/toaster/toastergui/urls.py                     |  13 +
+ lib/toaster/toastergui/views.py                    | 151 ++++++
+ lib/toaster/toastergui/widgets.py                  |   6 +
+ .../toastermain/management/commands/builddelete.py |   6 +-
+ .../toastermain/management/commands/buildimport.py | 586 +++++++++++++++++++++
+ 29 files changed, 1900 insertions(+), 55 deletions(-)
+ create mode 100644 bitbake/lib/toaster/orm/migrations/0018_project_specific.py
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/base_specific.html
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/baseprojectspecificpage.html
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/landing_specific.html
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/newproject_specific.html
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/project_specific.html
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/project_specific_topbar.html
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/recipe_add_btn.html
+ mode change 100755 => 100644 bitbake/lib/toaster/toastergui/views.py
+ create mode 100644 bitbake/lib/toaster/toastermain/management/commands/buildimport.py
+
+-- 
+1.9.1
+
 
