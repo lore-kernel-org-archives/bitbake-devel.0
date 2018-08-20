@@ -1,26 +1,47 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id ACE067900B
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-qk0-f174.google.com (mail-qk0-f174.google.com
+	[209.85.220.174])
+	by mail.openembedded.org (Postfix) with ESMTP id A370078FFA
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Aug 2018 08:34:16 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w7K8YEuM010493
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 20 Aug 2018 01:34:15 -0700 (PDT)
-Received: from localhost.corp.ad.wrs.com (128.224.162.161) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
-	14.3.399.0; Mon, 20 Aug 2018 01:34:14 -0700
-To: "Slaev, Ivan" <Ivan.Slaev@harman.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-References: <be55ff135cbc4483ab4483660d5a0870@HIMDWSMB03.ad.harman.com>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <0c871f0a-d068-9870-c932-a55ea1514aa6@windriver.com>
-Date: Mon, 20 Aug 2018 16:37:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
-	Thunderbird/52.9.1
+	Mon, 20 Aug 2018 16:40:59 +0000 (UTC)
+Received: by mail-qk0-f174.google.com with SMTP id z78-v6so9054344qka.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 20 Aug 2018 09:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc:content-transfer-encoding;
+	bh=kI4Y9jHrsxBmJz8ZGVhXHBSqd1oe7+wG0I3sH2YprE8=;
+	b=pFQoFzpLFEZIkVhgBlpzS50GaU/H2cH0rOCCp0U77BfSAWUSMYSXnHG0OGNrA8xrsE
+	KQrNOfjvPmZ4KtDMvgpolbCjY9R8gCKNKkuLO3b6vxIAOviV9iJwWKdq1ZDcN+pZxLlU
+	/urPeMSpGEFFybeJ14e8sOv+fec5BYsq8Wb4g/XEuAzy+YA5HA3EuwQc/oqbnbyjPe+a
+	gv2IYvirgsK4yOAZj18zDqKrYMcFNQbHoGNOBn9Yc0S4M3+ZnlDaovqlkMHqZEHKgp7s
+	+k6kELIFqGMVJrGeaq/RGw3Kww9h56sgNM44Fm68NbDCCURWx8rTzI6HgChQjajiyIIS
+	sBhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc:content-transfer-encoding;
+	bh=kI4Y9jHrsxBmJz8ZGVhXHBSqd1oe7+wG0I3sH2YprE8=;
+	b=iCTcZUi6lcoKAZijiXqmq4Q3FQA5txBw7aNoLD/I5csnibXxd4TqMlxwJEWyPw+mBt
+	JLlDjjR8odHtOOlfE4+7229URWSwFfBorJSDHsRgH9fBc8IlQ5Rlb6eUTOPERWoaYZmP
+	2BqsB09QaJXN0JihuUKeQRcTax5Vl02U41RjKzwm1IqLMObaUlr1JB1z+gyLw+1gT/6J
+	YYOyQCjQiEqMWWq+RnHcAhqjsDihGHWMl2GzGhDsqggcI7sPi7vT0hkhhOOIqcmD+IHF
+	DDJ/5N9VBnKY76IIfLZbgnyrc1xntwAiHHAqb/UV4O/nzwPDIf2bq0pV05kgXfZiIwso
+	pLUQ==
+X-Gm-Message-State: AOUpUlEZBqU06jywxK4HPnM1FUSTG9kFCXpkacoTdFyKPSUDP9GDDZ65
+	WbAOKlh/9csYfwxi/QPqaEIsk8uIrApBrCqlBi5eoA==
+X-Google-Smtp-Source: AA+uWPy+z2Ox6NJ7efwqkMaWf4HwCUyo6QkESUpkeh4vD6xRhCxY2+zmv6Y66kqedicx7MRXbIUUInVAlRew53HPAC8=
+X-Received: by 2002:a37:4a94:: with SMTP id
+	x142-v6mr41264588qka.110.1534783260319; 
+	Mon, 20 Aug 2018 09:41:00 -0700 (PDT)
 MIME-Version: 1.0
+References: <be55ff135cbc4483ab4483660d5a0870@HIMDWSMB03.ad.harman.com>
 In-Reply-To: <be55ff135cbc4483ab4483660d5a0870@HIMDWSMB03.ad.harman.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 20 Aug 2018 09:40:33 -0700
+Message-ID: <CAMKF1sooMOTKT8x8K6Bx8rDQ4PhtgHhTyAL_=8YtH9k=+uuBUA@mail.gmail.com>
+To: Ivan.Slaev@harman.com
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: mistake in chapter 2.1
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -34,44 +55,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Aug 2018 08:34:16 -0000
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 20 Aug 2018 16:41:00 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 08/17/2018 07:55 PM, Slaev, Ivan wrote:
+On Mon, Aug 20, 2018 at 1:14 AM Slaev, Ivan <Ivan.Slaev@harman.com> wrote:
+>
 > Dear bitbake-devel (community) :),
-> 
-> While I was reading the 2.1 chapter of bitbake manual, I thing I found a mistake in:
-> 
-> The |layer.conf| files are used to construct key variables such as |BBPATH| 
-> <https://www.yoctoproject.org/docs/2.4/bitbake-user-manual/bitbake-user-manual.html#var-BBPATH> 
-> and |BBFILES| 
-> <https://www.yoctoproject.org/docs/2.4/bitbake-user-manual/bitbake-user-manual.html#var-BBFILES>. 
-> |BBPATH| is used to search for configuration and class files under the |conf| 
-> and |classes| directories, respectively. |BBFILES| is used to locate both recipe 
-> and recipe append files (|.bb| and |.bbappend|). If there is no |bblayers.conf| 
-> file, it is assumed the user has set the |BBPATH| and |BBFILES| directly in the 
-> environment.
-> 
-> In my opinion the last sentence should be: If there is no |layer.conf| file, it 
-> is assumed the user has set the |BBPATH| and |BBFILES| directly in the environment.
-
-I think no, layer.conf is a must for a layer, otherwise, you would get error
-when parsing. The bblayers.conf is <build_dir>/conf/bblayers.conf, which is
-used in build directory.
-
-// Robert
-
-> 
+>
+> While I was reading the 2.1 chapter of bitbake manual, I thing I found a =
+mistake in:
+>
+> The layer.conf files are used to construct key variables such as BBPATH a=
+nd BBFILES. BBPATH is used to search for configuration and class files unde=
+r the conf and classes directories, respectively. BBFILES is used to locate=
+ both recipe and recipe append files (.bb and .bbappend). If there is no bb=
+layers.conf file, it is assumed the user has set the BBPATH and BBFILES dir=
+ectly in the environment.
+>
+> In my opinion the last sentence should be: If there is no layer.conf file=
+, it is assumed the user has set the BBPATH and BBFILES directly in the env=
+ironment.
+>
 > Please check my statement as I could be wrong about it.
-> 
+>
+
+layer.conf file is used to define many variables along with BBPATH and
+BBFLIES which are interesting in context for bblayers.conf file, and
+its rightly mentioned in last sentence as well but I see that there is
+a bit of disconnect here probably  where reader can get confused
+between layer.conf and bblayer.conf, it could be
+improved, maybe adding a sentence about what bblayers.conf does before
+the last sentence above to put some context could be better.
+
 > Kind regards!
-> 
+>
 > Ivan Slaev
-> 
-> 
-> 
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
