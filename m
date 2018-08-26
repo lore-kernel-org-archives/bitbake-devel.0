@@ -1,27 +1,26 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id CCD3D79357
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 6A1B079357
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 26 Aug 2018 22:36:54 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w7QMau0I012892
+	Sun, 26 Aug 2018 22:36:55 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w7QMau9v029565
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 26 Aug 2018 15:36:56 -0700
+	Sun, 26 Aug 2018 15:36:56 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.217) by
 	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.408.0; Sun, 26 Aug 2018 15:36:55 -0700
+	(TLS) id 14.3.408.0; Sun, 26 Aug 2018 15:36:56 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 26 Aug 2018 15:33:27 -0700
-Message-ID: <dfb7dad9231261600d65adf4edf75908c3eda0ea.1535322629.git.David.Reyna@windriver.com>
+Date: Sun, 26 Aug 2018 15:33:28 -0700
+Message-ID: <e4e30ab9166ad669e547b355d0432e7bf4952fa7.1535322629.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1535322629.git.David.Reyna@windriver.com>
 References: <cover.1535322629.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.217]
-Subject: [PATCH 4/9] toaster/widgets.py: avoid divide by zero issues
+Subject: [PATCH 5/9] toastergui/newproject.html: fix release divs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,51 +38,40 @@ Content-Type: text/plain
 
 From: Awais Belal <awais_belal@mentor.com>
 
-There can be cases where the variables being used
-to divide in build percentage expressions can be
-zero. For example, a setup consisting of only local
-repos will have repos_to_clone=0 and will generate
-a divide by zero scenario.
-Fix this by checking the divisor in such cases.
+The release drop down divs are not being closed
+appropriately, which showed adverse reactions on
+the UI that aligned the "Create project" button
+with the left edge of the screen without any
+margins. This fixes these divs which in turn
+aligns the button appropriately.
 
 [YOCTO #12891]
 
 Signed-off-by: Awais Belal <awais_belal@mentor.com>
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/toastergui/widgets.py | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ lib/toaster/toastergui/templates/newproject.html | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
-index 88dff8a..db5c3aa 100644
---- a/lib/toaster/toastergui/widgets.py
-+++ b/lib/toaster/toastergui/widgets.py
-@@ -515,13 +515,18 @@ class MostRecentBuildsView(View):
-                 buildrequest_id = build_obj.buildrequest.pk
-             build['buildrequest_id'] = buildrequest_id
- 
--            build['recipes_parsed_percentage'] = \
--                int((build_obj.recipes_parsed /
--                     build_obj.recipes_to_parse) * 100)
--
--            build['repos_cloned_percentage'] = \
--                int((build_obj.repos_cloned /
--                     build_obj.repos_to_clone) * 100)
-+            if build_obj.recipes_to_parse > 0:
-+                build['recipes_parsed_percentage'] = \
-+                    int((build_obj.recipes_parsed /
-+                         build_obj.recipes_to_parse) * 100)
-+            else:
-+                build['recipes_parsed_percentage'] = 0
-+            if build_obj.repos_to_clone > 0:
-+                build['repos_cloned_percentage'] = \
-+                    int((build_obj.repos_cloned /
-+                         build_obj.repos_to_clone) * 100)
-+            else:
-+                build['repos_cloned_percentage'] = 0
- 
-             build['progress_item'] = build_obj.progress_item
- 
+diff --git a/lib/toaster/toastergui/templates/newproject.html b/lib/toaster/toastergui/templates/newproject.html
+index acb614e..bd03bb5 100644
+--- a/lib/toaster/toastergui/templates/newproject.html
++++ b/lib/toaster/toastergui/templates/newproject.html
+@@ -54,12 +54,12 @@
+                     <span class="help-block">{{release.helptext|safe}}</span>
+                   </div>
+                 {% endfor %}
++                </div>
++              </div>
+             {% else %}
+               <input type="hidden" name="projectversion" value="{{releases.0.id}}"/>
+             {% endif %}
+                 </div>
+-              </div>
+-            </fieldset>
+         {% endif %}
+             <div class="top-air">
+               <input type="submit" id="create-project-button" class="btn btn-primary btn-lg" value="Create project"/>
 -- 
 1.9.1
 
