@@ -1,27 +1,26 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id D4B1C79377
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 4E38779396
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 26 Aug 2018 22:36:56 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w7QMavqF012895
+	Sun, 26 Aug 2018 22:36:57 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w7QMaww5029568
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 26 Aug 2018 15:36:58 -0700
+	Sun, 26 Aug 2018 15:36:58 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.217) by
 	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.408.0; Sun, 26 Aug 2018 15:36:57 -0700
+	(TLS) id 14.3.408.0; Sun, 26 Aug 2018 15:36:58 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 26 Aug 2018 15:33:30 -0700
-Message-ID: <61af8138e0a5d1252294555f31c62348832aab34.1535322629.git.David.Reyna@windriver.com>
+Date: Sun, 26 Aug 2018 15:33:31 -0700
+Message-ID: <0612ce28717d921a927d2702c0a232400d4ff0d0.1535322629.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1535322629.git.David.Reyna@windriver.com>
 References: <cover.1535322629.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.217]
-Subject: [PATCH 7/9] toaster/models.py: allow local paths for custom recipe's base
+Subject: [PATCH 8/9] toaster/layerdetails.js: don't hide local layer info
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,44 +38,35 @@ Content-Type: text/plain
 
 From: Awais Belal <awais_belal@mentor.com>
 
-In a case where the layer source is local only and the recipe
-is not yet built, we can search for the path with layer's
-local_source_dir, and if available that should be used rather
-than just skipping the scenario.
+The local layer info (provided through custom fixtures) should
+not be hidden. It is better to handle it in the same manner
+as an imported layer, otherwise the layer path and dependency
+info is not shown. The layer editing fields are handled in the
+html side of things appropriately so this does not harm that
+implementation.
 
 [YOCTO #12891]
 
 Signed-off-by: Awais Belal <awais_belal@mentor.com>
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/orm/models.py | 7 +++++++
- 1 file changed, 7 insertions(+)
+ lib/toaster/toastergui/static/js/layerdetails.js | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 306c4fa..be0bda5 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -1712,6 +1712,9 @@ class CustomImageRecipe(Recipe):
- 
-         path_schema_two = self.base_recipe.file_path
- 
-+        path_schema_three = "%s/%s" % (self.base_recipe.layer_version.layer.local_source_dir,
-+                                     self.base_recipe.file_path)
-+
-         if os.path.exists(path_schema_one):
-             return path_schema_one
- 
-@@ -1719,6 +1722,10 @@ class CustomImageRecipe(Recipe):
-         if os.path.exists(path_schema_two):
-             return path_schema_two
- 
-+        # Or a local path if all layers are local
-+        if os.path.exists(path_schema_three):
-+            return path_schema_three
-+
-         return None
- 
-     def generate_recipe_file_contents(self):
+diff --git a/lib/toaster/toastergui/static/js/layerdetails.js b/lib/toaster/toastergui/static/js/layerdetails.js
+index 9ead393..933b65b 100644
+--- a/lib/toaster/toastergui/static/js/layerdetails.js
++++ b/lib/toaster/toastergui/static/js/layerdetails.js
+@@ -359,7 +359,8 @@ function layerDetailsPageInit (ctx) {
+     if ($(this).is("dt")) {
+       var dd = $(this).next("dd");
+       if (!dd.children("form:visible")|| !dd.find(".current-value").html()){
+-        if (ctx.layerVersion.layer_source == ctx.layerSourceTypes.TYPE_IMPORTED){
++        if (ctx.layerVersion.layer_source == ctx.layerSourceTypes.TYPE_IMPORTED ||
++            ctx.layerVersion.layer_source == ctx.layerSourceTypes.TYPE_LOCAL) {
+         /* There's no current value and the layer is editable
+          * so show the "Not set" and hide the delete icon
+          */
 -- 
 1.9.1
 
