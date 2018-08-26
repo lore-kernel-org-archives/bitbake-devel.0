@@ -1,26 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 5ACF47937E
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id CCD3D79357
 	for <bitbake-devel@lists.openembedded.org>;
 	Sun, 26 Aug 2018 22:36:54 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w7QMatq5024340
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w7QMau0I012892
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 26 Aug 2018 15:36:55 -0700 (PDT)
+	Sun, 26 Aug 2018 15:36:56 -0700
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.217) by
 	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.408.0; Sun, 26 Aug 2018 15:36:54 -0700
+	(TLS) id 14.3.408.0; Sun, 26 Aug 2018 15:36:55 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 26 Aug 2018 15:33:26 -0700
-Message-ID: <a14be03ccc93cdd07e7e437c2e2ba66838ddffec.1535322629.git.David.Reyna@windriver.com>
+Date: Sun, 26 Aug 2018 15:33:27 -0700
+Message-ID: <dfb7dad9231261600d65adf4edf75908c3eda0ea.1535322629.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1535322629.git.David.Reyna@windriver.com>
 References: <cover.1535322629.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.217]
-Subject: [PATCH 3/9] toaster: allow TOASTER_DIR to be overridden from cmdline
+Subject: [PATCH 4/9] toaster/widgets.py: avoid divide by zero issues
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,73 +34,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 26 Aug 2018 22:36:54 -0000
+X-List-Received-Date: Sun, 26 Aug 2018 22:36:55 -0000
 Content-Type: text/plain
 
 From: Awais Belal <awais_belal@mentor.com>
 
-TOASTER_DIR is used for higher level toaster artifacts
-such the SQL DB and creating toaster internal build
-directories for projects. Prior to this change it was
-evaluated as `dirname $BUILDDIR` and user had no control
-over it. This change allows to override this variable
-from the command line for more flexibility. The variable
-defaults to its original setting if the optional argument
-is not passed.
+There can be cases where the variables being used
+to divide in build percentage expressions can be
+zero. For example, a setup consisting of only local
+repos will have repos_to_clone=0 and will generate
+a divide by zero scenario.
+Fix this by checking the divisor in such cases.
 
 [YOCTO #12891]
 
 Signed-off-by: Awais Belal <awais_belal@mentor.com>
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- bin/toaster | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ lib/toaster/toastergui/widgets.py | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/bin/toaster b/bin/toaster
-index ed365ee..9fffbc6 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -18,11 +18,12 @@
- # along with this program. If not, see http://www.gnu.org/licenses/.
+diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
+index 88dff8a..db5c3aa 100644
+--- a/lib/toaster/toastergui/widgets.py
++++ b/lib/toaster/toastergui/widgets.py
+@@ -515,13 +515,18 @@ class MostRecentBuildsView(View):
+                 buildrequest_id = build_obj.buildrequest.pk
+             build['buildrequest_id'] = buildrequest_id
  
- HELP="
--Usage: source toaster start|stop [webport=<address:port>] [noweb] [nobuild]
-+Usage: source toaster start|stop [webport=<address:port>] [noweb] [nobuild] [toasterdir]
-     Optional arguments:
-         [nobuild] Setup the environment for capturing builds with toaster but disable managed builds
-         [noweb] Setup the environment for capturing builds with toaster but don't start the web server
-         [webport] Set the development server (default: localhost:8000)
-+        [toasterdir] Set absolute path to be used as TOASTER_DIR (default: BUILDDIR/../)
- "
+-            build['recipes_parsed_percentage'] = \
+-                int((build_obj.recipes_parsed /
+-                     build_obj.recipes_to_parse) * 100)
+-
+-            build['repos_cloned_percentage'] = \
+-                int((build_obj.repos_cloned /
+-                     build_obj.repos_to_clone) * 100)
++            if build_obj.recipes_to_parse > 0:
++                build['recipes_parsed_percentage'] = \
++                    int((build_obj.recipes_parsed /
++                         build_obj.recipes_to_parse) * 100)
++            else:
++                build['recipes_parsed_percentage'] = 0
++            if build_obj.repos_to_clone > 0:
++                build['repos_cloned_percentage'] = \
++                    int((build_obj.repos_cloned /
++                         build_obj.repos_to_clone) * 100)
++            else:
++                build['repos_cloned_percentage'] = 0
  
- custom_extention()
-@@ -186,6 +187,7 @@ unset OE_ROOT
- WEBSERVER=1
- export TOASTER_BUILDSERVER=1
- ADDR_PORT="localhost:8000"
-+TOASTERDIR=`dirname $BUILDDIR`
- unset CMD
- for param in $*; do
-     case $param in
-@@ -211,6 +213,9 @@ for param in $*; do
-                 ADDR_PORT="localhost:$PORT"
-             fi
-     ;;
-+    toasterdir=*)
-+            TOASTERDIR="${param#*=}"
-+    ;;
-     --help)
-             echo "$HELP"
-             return 0
-@@ -241,7 +246,7 @@ fi
- # 2) the build dir (in build)
- # 3) the sqlite db if that is being used.
- # 4) pid's we need to clean up on exit/shutdown
--export TOASTER_DIR=`dirname $BUILDDIR`
-+export TOASTER_DIR=$TOASTERDIR
- export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE TOASTER_DIR"
+             build['progress_item'] = build_obj.progress_item
  
- # Determine the action. If specified by arguments, fine, if not, toggle it
 -- 
 1.9.1
 
