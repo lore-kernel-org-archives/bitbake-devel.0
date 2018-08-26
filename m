@@ -1,26 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 9F92C795B4
+Return-Path: <david.reyna@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id B0541746D3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Aug 2018 06:57:33 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-10) with ESMTPSA id
-	w7O6vVE2005269
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Fri, 24 Aug 2018 07:57:32 +0100
-Message-ID: <e6d788b6c5cc824bb8cf98f2d8bb66b6a1b7a367.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, Joshua Watt
-	<jpewhacker@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Fri, 24 Aug 2018 07:57:31 +0100
-In-Reply-To: <c18b7f96-8809-0224-b419-2fff12994680@prevas.dk>
-References: <20180821140416.10764-1-JPEWhacker@gmail.com>
-	<c18b7f96-8809-0224-b419-2fff12994680@prevas.dk>
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.100.1 at dan
-X-Virus-Status: Clean
-Subject: Re: [PATCH] daemonize: Flush stdio on exit
+	Sun, 26 Aug 2018 22:36:44 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w7QMaioI029549
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Sun, 26 Aug 2018 15:36:44 -0700 (PDT)
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.217) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.408.0; Sun, 26 Aug 2018 15:36:43 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Sun, 26 Aug 2018 15:33:22 -0700
+Message-ID: <cover.1535322629.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+X-Originating-IP: [147.11.157.217]
+Cc: Awais Belal <awais.belal@mentor.com>
+Subject: [PATCH 0/9] toaster: cummulative patch Aug 28 2018
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,82 +31,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Aug 2018 06:57:34 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 26 Aug 2018 22:36:44 -0000
+Content-Type: text/plain
 
-On Wed, 2018-08-22 at 15:33 +0200, Rasmus Villemoes wrote:
-> On 2018-08-21 16:04, Joshua Watt wrote:
-> > In spite of a comment suggesting otherwise, os._exit() does not
-> > flush
-> > buffered output from file descriptors before exiting the process
-> > like
-> > os.exit() does. This means that any un-flushed output is lost in
-> > the
-> > daemon process, in particular the traceback from any thrown
-> > exceptions,
-> > making debugging exceptions in the daemon quite difficult.
-> > 
-> > The solution is to flush stdout and stderr before exiting.
-> > 
-> > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> > ---
-> >  bitbake/lib/bb/daemonize.py | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/bitbake/lib/bb/daemonize.py
-> > b/bitbake/lib/bb/daemonize.py
-> > index 8300d1d0f0f..bf16793468e 100644
-> > --- a/bitbake/lib/bb/daemonize.py
-> > +++ b/bitbake/lib/bb/daemonize.py
-> > @@ -49,8 +49,8 @@ def createDaemon(function, logfile):
-> >              # exit() or _exit()?
-> >              # _exit is like exit(), but it doesn't call any
-> > functions registered
-> >              # with atexit (and on_exit) or any registered signal
-> > handlers.  It also
-> > -            # closes any open file descriptors.  Using exit() may
-> > cause all stdio
-> > -            # streams to be flushed twice and any temporary files
-> > may be unexpectedly
-> > +            # closes any open file descriptors, but doesn't flush
-> > any buffered output.
-> > +            # Using exit() may cause all any temporary files to be
-> > unexpectedly
-> >              # removed.  It's therefore recommended that child
-> > branches of a fork()
-> >              # and the parent branch(es) of a daemon use _exit().
-> >              os._exit(0)
-> > @@ -79,4 +79,9 @@ def createDaemon(function, logfile):
-> >          traceback.print_exc()
-> >      finally:
-> >          bb.event.print_ui_queue()
-> > +        # os._exit() doesn't flush open files like os.exit() does.
-> > Manually flush
-> > +        # stdout and stderr so that any logging output will be
-> > seen, particularly
-> > +        # exception tracebacks.
-> > +        sys.stdout.flush()
-> > +        sys.stderr.flush()
-> >          os._exit(0)
-> > 
-> 
-> Well, that's of course better than not getting the output, but
-> there's then the issue of double printing: The intermediate child
-> does _exit(), but the grandparent may have had stuff in the stdio
-> buffers before the very first fork(), and that content would be
-> inherited down to the grandchild. So I think you should (also)
-> explicitly flush stdout and stderr before the first fork().
+From: David Reyna <David.Reyna@windriver.com>
 
-You're correct, we should do that. I was thinking we did flush things
-before forking but looking at the code I'm thinking of the fork() call
-in bitbake-worker, not the one in daemonize.py.
+---
+This cumulative enhancement patch includes the following, to support
+flexibility and usability for Toaster.
 
-I'd happily take a patch if someone wants to work one up!
+* 12891 - "Allow flexible value for TOASTERDIR plus custom fixture support"
 
-Cheers,
+  This supports the flexibility of having the Toaster base directory (used
+  got the database and project build directories) to be specified by the user.
+  It also allows for flexibility in the location of bitbake to be within one
+  the specified local layers instead of being in the default fixed location.
 
-Richard
+* 12902 - "Enable project import and merged Toaster settings"
 
+  This optionally enables Toaster and command line compatibility, where
+  the Toaster settings are saved in the normal "local.conf" and
+  "bblayers.conf" in a well defined and contained append structure.
+  It also supports importing and detaching existing command line build
+  projects, where importing a project inherits the existing project
+  settings.
+---
+
+
+The following changes since commit 87d3a9685dd9613e4f6718031d4ebd9344b01c47:
+
+  bitbake: parse/ast: ensure saved event handlers really do get restored (2018-08-24 07:53:14 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/toaster/import_builds_12902
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/cummulative_082618
+
+Awais Belal (8):
+  toaster: allow pokydirname to be evaluated when all layers are local
+  toaster: use a more flexible way to find bitbake
+  toaster: allow TOASTER_DIR to be overridden from cmdline
+  toaster/widgets.py: avoid divide by zero issues
+  toastergui/newproject.html: fix release divs
+  toaster/checksettings: allow CUSTOM_XML_ONLY setting through env
+  toaster/models.py: allow local paths for custom recipe's base
+  toaster/layerdetails.js: don't hide local layer info
+
+David Reyna (1):
+  toaster: enable project import and merged Toaster settings
+
+ bin/toaster                                        |  9 +++-
+ lib/toaster/bldcontrol/localhostbecontroller.py    | 39 ++++++++++++---
+ .../management/commands/checksettings.py           |  3 +-
+ lib/toaster/orm/models.py                          |  7 +++
+ lib/toaster/toastergui/static/js/layerdetails.js   |  3 +-
+ lib/toaster/toastergui/templates/newproject.html   | 57 +++++++++++-----------
+ lib/toaster/toastergui/views.py                    | 22 ++++++---
+ lib/toaster/toastergui/widgets.py                  | 19 +++++---
+ .../toastermain/management/commands/buildimport.py |  7 +--
+ 9 files changed, 107 insertions(+), 59 deletions(-)
+
+-- 
+1.9.1
 
 
