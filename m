@@ -1,48 +1,47 @@
-Return-Path: <ptsneves@gmail.com>
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com
-	[209.85.208.179])
-	by mail.openembedded.org (Postfix) with ESMTP id DB03D78F12
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
+	[209.85.221.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 043BE74F9D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Aug 2018 19:39:13 +0000 (UTC)
-Received: by mail-lj1-f179.google.com with SMTP id v26-v6so125609ljj.3
+	Wed, 29 Aug 2018 09:43:15 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id a108-v6so4139301wrc.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Aug 2018 12:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=4Hgtgd+7zMI4XOk8QEWa6HO01qhZzf474JVx0l9cmpQ=;
-	b=fHiXeep+oKDKiXB306m7OXci9+lX130hJY+gu98VtJEsesEqH85EJkmicZ1ubfdnfX
-	KJeNIR+gNkmlRmSBrSMq9lOMxCuzBcxqYAaBuvrWv3NEVC7bwJ02RksBHmLRgSzapaY3
-	F1wC5rOFhM7G4eSJTSVbK+RsTETbgyiKKH+KrjZI0Y33L873ptasqQYnS7BY2AexhYMd
-	Ql20LfpS2VUgYfXpqn1yoh2g3Ija/aXD0Fq2qkKtJ4PhwdV4ORSQad+A8gvnMTIzh9Gz
-	BfbFicB4QIg64PggBfjRR0AW29DqtiFZnpR48HLVPU72axvRUHz8J8H85Dy3svWx8XdK
-	cRmg==
+	Wed, 29 Aug 2018 02:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id;
+	bh=rwYzsLLJpo0U6jPgPEgWqY4r2sG/G3Bes7PJPnkxRlo=;
+	b=UzftJX4sXpMNet0vE6dCqBxCsZkkLZ83is3mBXYeSmNv5Utp0AKTKPrRQTKsA+IMj3
+	4hFzoMfk4Sp2Td44b0CYCe1930nU3ztV2O+VuUakewYzpP2p7JgZnx0AZ+7q+HCfIIei
+	EjhHFIe4TUwgbb6vyYjovOdmvwqeSgw3q0hhk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=4Hgtgd+7zMI4XOk8QEWa6HO01qhZzf474JVx0l9cmpQ=;
-	b=L1af28gLwtCY4oAp6hyQcz3Ibzied3a7/o3aKmoXBiD7bwSN9mQV7ivLk6MYet+BGy
-	ve+VUqTaO0Vl/9RHh4nARtGkVRsffAnbt7Kx+khPtmtFVGbvAbwAF5GGGhS48sc4qwok
-	JM/8Gr7erfemSM/JSlSm8+EX7KN2nfhDgsABK4A6jpETKDi3HM7yh7M72APNF51X6hpt
-	zARBfKOovIE8Q5/2oShkcgChMYj0YFK4eK3ZIgwl2KdwU/sAi2wjQUCyAReS7QIVunH5
-	jzqUBi7FCxICZXWIe++cm3KLF/Wd0UrZZ970S0sxIRAna0GlH2fPxmpnU0uQHePignwC
-	ZhVw==
-X-Gm-Message-State: APzg51CkLd/zkS0FY0XAz2JUhH7vIZm3E+P6Txqr/sfTB2y07MdNT7HN
-	mGzYLRbjf2WpjkXIIEtUe2HiM9k=
-X-Google-Smtp-Source: ANB0VdYR9QEkcJfLt3txqHQ15ZtuYXxN0mMl08lX0VOaDsyxXYvxThI9nUfqdmbYdf/QbUH8K7wGJA==
-X-Received: by 2002:a2e:54b:: with SMTP id
-	72-v6mr10161002ljf.152.1535398754279; 
-	Mon, 27 Aug 2018 12:39:14 -0700 (PDT)
-Received: from pneves-XPS-15-9550.home (dynamic-78-8-57-113.ssp.dialog.net.pl.
-	[78.8.57.113]) by smtp.gmail.com with ESMTPSA id
-	y68-v6sm13460lfd.66.2018.08.27.12.39.13
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 27 Aug 2018 12:39:13 -0700 (PDT)
-From: Paulo Neves <ptsneves@gmail.com>
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=rwYzsLLJpo0U6jPgPEgWqY4r2sG/G3Bes7PJPnkxRlo=;
+	b=HbxYykIOWu1T7RRm2d8tru94H7Dm6Tj0hTiMeIlPpfsm1G+0QumoyT1gZ+05vR5lW5
+	dwLmt8HvWGzCVBCDvdV9bA/icpI5FOQehGs7trWcLpTzh0g86GRd6x/UtXTVgqkx0xwY
+	5q5zio8hMV/3dEMJpuG6/WMPZE2FYzUX+4z0+heR5VvLPRVCq3UbkoyMSsktb1DYJo73
+	1KScV2YcXa0t5wGOrJ0fBWm7Jya0g6WkMPhx2qXioasljY66A+4Q0I63p91Dv68TuGi8
+	4mrhVMSkl5GiKn01LZCmL2T2eXbW7vI6J8XD5ZPNKVDsxY0DaO4crcBJil3ERufHh3jR
+	QidA==
+X-Gm-Message-State: APzg51C4RWiz3wBEA8m2nDtM7wTWE/K2NIpWFkFVAf5P4f12fJtQl298
+	xsKJUs0opr7H0BHAaY4/rJXk91xi3ZE=
+X-Google-Smtp-Source: ANB0VdYprTvgh1gUzRu+SYU7Dl+m7o57JYTw0p8SRlE9HARR1BTkR90+r9Dq6os7fWnejf6ven70vQ==
+X-Received: by 2002:adf:e44e:: with SMTP id
+	t14-v6mr3641645wrm.96.1535535796443; 
+	Wed, 29 Aug 2018 02:43:16 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	34-v6sm5718156wra.20.2018.08.29.02.43.13
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 29 Aug 2018 02:43:15 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 27 Aug 2018 21:38:59 +0200
-Message-Id: <1535398739-17159-1-git-send-email-ptsneves@gmail.com>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH] fetcher: Fixed remote removal not throwing exception.
+Date: Wed, 29 Aug 2018 10:43:11 +0100
+Message-Id: <20180829094311.20766-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] tests/fetch: Update gnome.org urls after upstream changes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,57 +54,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Aug 2018 19:39:14 -0000
+X-List-Received-Date: Wed, 29 Aug 2018 09:43:16 -0000
 
-Before this fix it is assumed that the removal of the
-remote can only fail because there is not remote to remove. This
-is a false assumption. Example error which would be ignored:
-
-git -c core.fsyncobjectfiles=0 remote rm origin failed with exit code 1, output:
-Note: A branch outside the refs/remotes/ hierarchy was not removed;
-to delete it, use:
-  git branch -d master
-error: could not lock config file config
-error: Could not remove config section 'remote.origin'
-
-Due to the masking of this error a stranger error will be
-presented to the user, because this time we do not mask the
-exception:
-
-git -c core.fsyncobjectfiles=0 remote add --mirror=fetch origin https://github.com/ptsneves/tl-wn722.git failed with exit code 128, output:
-fatal: remote origin already exists.
-
-The most likely reason that the remote cannot be removed nor
-modified is that the DL_DIR/git2 does not have permissions
-compatible with the user running bitbake.
-
-This commit fixes:
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=12728
-
-Signed-off-by: Paulo Neves <ptsneves@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/fetch2/git.py | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ lib/bb/tests/fetch.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 612aac4..35da14d 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -353,10 +353,9 @@ class Git(FetchMethod):
-                 break
- 
-         if needupdate:
--            try: 
--                runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=ud.clonedir)
--            except bb.fetch2.FetchError:
--                logger.debug(1, "No Origin")
-+            output = runfetchcmd("%s remote" % ud.basecmd, d, quiet=True, workdir=ud.clonedir)
-+            if "origin" in output:
-+              runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=ud.clonedir)
- 
-             runfetchcmd("%s remote add --mirror=fetch origin %s" % (ud.basecmd, repourl), d, workdir=ud.clonedir)
-             fetch_cmd = "LANG=C %s fetch -f --prune --progress %s refs/*:refs/*" % (ud.basecmd, repourl)
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 4af0ac550c..e1c856f117 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -867,12 +867,12 @@ class FetchLatestVersionTest(FetcherTest):
+         ("dtc", "git://git.qemu.org/dtc.git", "65cc4d2748a2c2e6f27f1cf39e07a5dbabd80ebf", "")
+             : "1.4.0",
+         # combination version pattern
+-        ("sysprof", "git://git.gnome.org/sysprof", "cd44ee6644c3641507fb53b8a2a69137f2971219", "")
++        ("sysprof", "git://gitlab.gnome.org/GNOME/sysprof;protocol=https", "cd44ee6644c3641507fb53b8a2a69137f2971219", "")
+             : "1.2.0",
+         ("u-boot-mkimage", "git://git.denx.de/u-boot.git;branch=master;protocol=git", "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c", "")
+             : "2014.01",
+         # version pattern "yyyymmdd"
+-        ("mobile-broadband-provider-info", "git://git.gnome.org/mobile-broadband-provider-info", "4ed19e11c2975105b71b956440acdb25d46a347d", "")
++        ("mobile-broadband-provider-info", "git://gitlab.gnome.org/GNOME/mobile-broadband-provider-info;protocol=https", "4ed19e11c2975105b71b956440acdb25d46a347d", "")
+             : "20120614",
+         # packages with a valid UPSTREAM_CHECK_GITTAGREGEX
+         ("xf86-video-omap", "git://anongit.freedesktop.org/xorg/driver/xf86-video-omap", "ae0394e687f1a77e966cf72f895da91840dffb8f", "(?P<pver>(\d+\.(\d\.?)*))")
 -- 
-2.7.4
+2.17.1
 
 
