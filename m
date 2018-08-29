@@ -1,47 +1,23 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-oi0-f53.google.com (mail-oi0-f53.google.com
-	[209.85.218.53])
-	by mail.openembedded.org (Postfix) with ESMTP id 5B951771B8
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 922CB79152
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 29 Aug 2018 13:44:46 +0000 (UTC)
-Received: by mail-oi0-f53.google.com with SMTP id t68-v6so9147470oie.12
+	Wed, 29 Aug 2018 14:52:17 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w7TEqIg6029558
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 29 Aug 2018 06:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=hGzmzTp8+UZv4NvIt5mBDI8KnXTYxm4vEjzzsNP4p7I=;
-	b=AJDcElhRT++g9zH1ZqtIWsKClraQMvv2AgOe5sNdQOBx34jPf+diyG1f8XET2umve0
-	sCgoVKpaFzRN/FepptcxFLTv2s8GFFuKsgCWT7sNJq34e/O3fcCdaAtTtOU23d0WshhG
-	J/zZjtUCVZLoxeT1zsX4OHVctPzxwpXnll45xdObF9fzTAiy1qJzfvZUa30R7EkiSMhJ
-	ViGzPbV5w7/1VLydA/zXqwDK3/XH8z0DvoNzQCdBGBBSlDkV7IJ84Mh5kHSuT3RDnpsI
-	+ZL2wsSNhGbSChYTBofMFVbuj228SExqxCuij+Kq9Zedxon+zYVR/1+l2DBsIyUnHJN0
-	s5Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=hGzmzTp8+UZv4NvIt5mBDI8KnXTYxm4vEjzzsNP4p7I=;
-	b=Y0IALRyvtZH6teebOqCAGSsomoGZcGhGDC/rFDqK6HK5EEeFcAyy1rkUeAxjfjzlMf
-	OpU2RThEaqkf1pZq4qxdunz1i+GhkSRQjvMFRTiWcAzzydIjOcW1STlhYG7PM7lgC+3Q
-	W3gQnIwZD61cgOdkyLHqw3VSP4NorPDJqASfHzRwHZRJ3VwRrHghjon2ERyhcCg4E6qn
-	bL1JoB1sZf5vyECn8GFoEgTgIDy3XAAp/r+/aCKqHtmdZUHnVFkvMNcKaytQmVvM0mcZ
-	mGvalCoLOylP3r73UbmuueTVHDHh7jMfr9YjfDLo1zKS38WtwqiwqDxZ/0HUEM2+3SV6
-	GtIw==
-X-Gm-Message-State: APzg51AD+RA2XEPuXNfFZPVxbDNdqTHdbstk4O5c0UaY5LHDkl4gnLtF
-	KtAUUybgc4vj8LIHPTAosu2Q+Y/FQr5L5afaNOo=
-X-Google-Smtp-Source: ANB0VdZnIm+dwye+XsCxnRqIb5GYX4RECQbxPwky3NaYz+LcqkSwTgRIAaRgfb8y9R5GXT7QrZzLnmbI2sG+4HEuWZc=
-X-Received: by 2002:aca:bdc4:: with SMTP id
-	n187-v6mr2641673oif.3.1535550287249; 
-	Wed, 29 Aug 2018 06:44:47 -0700 (PDT)
+	Wed, 29 Aug 2018 07:52:18 -0700 (PDT)
+Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.408.0;
+	Wed, 29 Aug 2018 07:52:17 -0700
+From: Mark Hatle <mark.hatle@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 29 Aug 2018 10:52:17 -0400
+Message-ID: <20180829145217.88222-1-mark.hatle@windriver.com>
+X-Mailer: git-send-email 2.16.0.rc2
 MIME-Version: 1.0
-References: <1535398739-17159-1-git-send-email-ptsneves@gmail.com>
-In-Reply-To: <1535398739-17159-1-git-send-email-ptsneves@gmail.com>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Wed, 29 Aug 2018 06:44:34 -0700
-Message-ID: <CABcZANmpqFtGm3s6ULcFgz8kTo1YjB259FaN1exExnnGAK8+Gw@mail.gmail.com>
-To: ptsneves@gmail.com
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] fetcher: Fixed remote removal not throwing exception.
+Subject: [PATCH] cooker.py: Fix incorrect bb files matched warning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,184 +30,148 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Aug 2018 13:44:46 -0000
-Content-Type: multipart/alternative; boundary="0000000000006809de05749329ce"
+X-List-Received-Date: Wed, 29 Aug 2018 14:52:17 -0000
+Content-Type: text/plain
 
---0000000000006809de05749329ce
-Content-Type: text/plain; charset="UTF-8"
+In the case of a sublayer of an existing layer, where the sublayer and
+main layer share a path, the system may not match the paths properly resulting
+in:
 
-This will try to rm origin even if there's an 'originfoo' remote, as you
-don't check for an exact match on a line, but a general substring search.
-Unlikely, I admit, but we should still work as correctly as possible, I
-think.
+    No bb files matched BBFILE_PATTERN_sublayer '^/path/main/sublayer'
 
-On Mon, Aug 27, 2018 at 12:39 PM Paulo Neves <ptsneves@gmail.com> wrote:
+because it has already matched the main layer.
 
-> Before this fix it is assumed that the removal of the
-> remote can only fail because there is not remote to remove. This
-> is a false assumption. Example error which would be ignored:
->
-> git -c core.fsyncobjectfiles=0 remote rm origin failed with exit code 1,
-> output:
-> Note: A branch outside the refs/remotes/ hierarchy was not removed;
-> to delete it, use:
->   git branch -d master
-> error: could not lock config file config
-> error: Could not remove config section 'remote.origin'
->
-> Due to the masking of this error a stranger error will be
-> presented to the user, because this time we do not mask the
-> exception:
->
-> git -c core.fsyncobjectfiles=0 remote add --mirror=fetch origin
-> https://github.com/ptsneves/tl-wn722.git failed with exit code 128,
-> output:
-> fatal: remote origin already exists.
->
-> The most likely reason that the remote cannot be removed nor
-> modified is that the DL_DIR/git2 does not have permissions
-> compatible with the user running bitbake.
->
-> This commit fixes:
-> https://bugzilla.yoctoproject.org/show_bug.cgi?id=12728
->
-> Signed-off-by: Paulo Neves <ptsneves@gmail.com>
-> ---
->  bitbake/lib/bb/fetch2/git.py | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> index 612aac4..35da14d 100644
-> --- a/bitbake/lib/bb/fetch2/git.py
-> +++ b/bitbake/lib/bb/fetch2/git.py
-> @@ -353,10 +353,9 @@ class Git(FetchMethod):
->                  break
->
->          if needupdate:
-> -            try:
-> -                runfetchcmd("%s remote rm origin" % ud.basecmd, d,
-> workdir=ud.clonedir)
-> -            except bb.fetch2.FetchError:
-> -                logger.debug(1, "No Origin")
-> +            output = runfetchcmd("%s remote" % ud.basecmd, d, quiet=True,
-> workdir=ud.clonedir)
-> +            if "origin" in output:
-> +              runfetchcmd("%s remote rm origin" % ud.basecmd, d,
-> workdir=ud.clonedir)
->
->              runfetchcmd("%s remote add --mirror=fetch origin %s" %
-> (ud.basecmd, repourl), d, workdir=ud.clonedir)
->              fetch_cmd = "LANG=C %s fetch -f --prune --progress %s
-> refs/*:refs/*" % (ud.basecmd, repourl)
-> --
-> 2.7.4
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
+Fix this issue by sorting the collection items based on the pattern, using
+longest to shortest.  Obviously regex wildcards could still be an issue
+but these are typically not used, so this simply fix should work in the
+existing cases.
 
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+---
+ bin/bitbake-selftest   |  1 +
+ lib/bb/cooker.py       |  5 ++-
+ lib/bb/tests/cooker.py | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 88 insertions(+), 1 deletion(-)
+ create mode 100644 lib/bb/tests/cooker.py
 
+diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
+index 7564de3..cfa7ac5 100755
+--- a/bin/bitbake-selftest
++++ b/bin/bitbake-selftest
+@@ -27,6 +27,7 @@ except RuntimeError as exc:
+     sys.exit(str(exc))
+ 
+ tests = ["bb.tests.codeparser",
++         "bb.tests.cooker",
+          "bb.tests.cow",
+          "bb.tests.data",
+          "bb.tests.event",
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 946ba9c..d7e90f2 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1661,7 +1661,10 @@ class CookerExit(bb.event.Event):
+ class CookerCollectFiles(object):
+     def __init__(self, priorities):
+         self.bbappends = []
+-        self.bbfile_config_priorities = priorities
++        # Priorities is a list of tupples, with the second element as the pattern.
++        # We need to sort the list with the longest pattern first, and so on to
++        # the shortest.  This allows nested layers to be properly evaluated.
++        self.bbfile_config_priorities = sorted(priorities, key=lambda tup: tup[1], reverse=True)
+ 
+     def calc_bbfile_priority( self, filename, matched = None ):
+         for _, _, regex, pri in self.bbfile_config_priorities:
+diff --git a/lib/bb/tests/cooker.py b/lib/bb/tests/cooker.py
+new file mode 100644
+index 0000000..2b44236
+--- /dev/null
++++ b/lib/bb/tests/cooker.py
+@@ -0,0 +1,83 @@
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# BitBake Tests for cooker.py
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++import unittest
++import tempfile
++import os
++import bb, bb.cooker
++import re
++import logging
++
++# Cooker tests
++class CookerTest(unittest.TestCase):
++    def setUp(self):
++        # At least one variable needs to be set
++        self.d = bb.data.init()
++        topdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "testdata/cooker")
++        self.d.setVar('TOPDIR', topdir)
++
++    def test_CookerCollectFiles_sublayers(self):
++        '''Test that a sublayer of an existing layer does not trigger
++           No bb files matched ...'''
++
++        def append_collection(topdir, path, d):
++            collection = path.split('/')[-1]
++            pattern = "^" + topdir + "/" + path + "/"
++            regex = re.compile(pattern)
++            priority = 5
++
++            d.setVar('BBFILE_COLLECTIONS', (d.getVar('BBFILE_COLLECTIONS') or "") + " " + collection)
++            d.setVar('BBFILE_PATTERN_%s' % (collection), pattern)
++            d.setVar('BBFILE_PRIORITY_%s' % (collection), priority)
++
++            return (collection, pattern, regex, priority)
++
++        topdir = self.d.getVar("TOPDIR")
++
++        # Priorities: list of (collection, pattern, regex, priority)
++        bbfile_config_priorities = []
++        # Order is important for this test, shortest to longest is typical failure case
++        bbfile_config_priorities.append( append_collection(topdir, 'first', self.d) )
++        bbfile_config_priorities.append( append_collection(topdir, 'second', self.d) )
++        bbfile_config_priorities.append( append_collection(topdir, 'second/third', self.d) )
++
++        pkgfns = [ topdir + '/first/recipes/sample1_1.0.bb',
++                   topdir + '/second/recipes/sample2_1.0.bb',
++                   topdir + '/second/third/recipes/sample3_1.0.bb' ]
++
++        class LogHandler(logging.Handler):
++            def __init__(self):
++                logging.Handler.__init__(self)
++                self.logdata = []
++
++            def emit(self, record):
++                self.logdata.append(record.getMessage())
++
++        # Move cooker to use my special logging
++        logger = bb.cooker.logger
++        log_handler = LogHandler()
++        logger.addHandler(log_handler)
++        collection = bb.cooker.CookerCollectFiles(bbfile_config_priorities)
++        collection.collection_priorities(pkgfns, self.d)
++        logger.removeHandler(log_handler)
++
++        # Should be empty (no generated messages)
++        expected = []
++
++        self.assertEqual(log_handler.logdata, expected)
 -- 
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
+1.8.3.1
 
---0000000000006809de05749329ce
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">This will try to rm origin even if there&#39;s an &#39;ori=
-ginfoo&#39; remote, as you don&#39;t check for an exact match on a line, bu=
-t a general substring search. Unlikely, I admit, but we should still work a=
-s correctly as possible, I think.<br></div><br><div class=3D"gmail_quote"><=
-div dir=3D"ltr">On Mon, Aug 27, 2018 at 12:39 PM Paulo Neves &lt;<a href=3D=
-"mailto:ptsneves@gmail.com">ptsneves@gmail.com</a>&gt; wrote:<br></div><blo=
-ckquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #c=
-cc solid;padding-left:1ex">Before this fix it is assumed that the removal o=
-f the<br>
-remote can only fail because there is not remote to remove. This<br>
-is a false assumption. Example error which would be ignored:<br>
-<br>
-git -c core.fsyncobjectfiles=3D0 remote rm origin failed with exit code 1, =
-output:<br>
-Note: A branch outside the refs/remotes/ hierarchy was not removed;<br>
-to delete it, use:<br>
-=C2=A0 git branch -d master<br>
-error: could not lock config file config<br>
-error: Could not remove config section &#39;remote.origin&#39;<br>
-<br>
-Due to the masking of this error a stranger error will be<br>
-presented to the user, because this time we do not mask the<br>
-exception:<br>
-<br>
-git -c core.fsyncobjectfiles=3D0 remote add --mirror=3Dfetch origin <a href=
-=3D"https://github.com/ptsneves/tl-wn722.git" rel=3D"noreferrer" target=3D"=
-_blank">https://github.com/ptsneves/tl-wn722.git</a> failed with exit code =
-128, output:<br>
-fatal: remote origin already exists.<br>
-<br>
-The most likely reason that the remote cannot be removed nor<br>
-modified is that the DL_DIR/git2 does not have permissions<br>
-compatible with the user running bitbake.<br>
-<br>
-This commit fixes:<br>
-<a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D12728" rel=
-=3D"noreferrer" target=3D"_blank">https://bugzilla.yoctoproject.org/show_bu=
-g.cgi?id=3D12728</a><br>
-<br>
-Signed-off-by: Paulo Neves &lt;<a href=3D"mailto:ptsneves@gmail.com" target=
-=3D"_blank">ptsneves@gmail.com</a>&gt;<br>
----<br>
-=C2=A0bitbake/lib/bb/fetch2/git.py | 7 +++----<br>
-=C2=A01 file changed, 3 insertions(+), 4 deletions(-)<br>
-<br>
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py<br=
->
-index 612aac4..35da14d 100644<br>
---- a/bitbake/lib/bb/fetch2/git.py<br>
-+++ b/bitbake/lib/bb/fetch2/git.py<br>
-@@ -353,10 +353,9 @@ class Git(FetchMethod):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if needupdate:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 try: <br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 runfetchcmd(&quot;=
-%s remote rm origin&quot; % ud.basecmd, d, workdir=3Dud.clonedir)<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 except bb.fetch2.FetchError:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 logger.debug(1, &q=
-uot;No Origin&quot;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 output =3D runfetchcmd(&quot;%s =
-remote&quot; % ud.basecmd, d, quiet=3DTrue, workdir=3Dud.clonedir)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if &quot;origin&quot; in output:=
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 runfetchcmd(&quot;%s remo=
-te rm origin&quot; % ud.basecmd, d, workdir=3Dud.clonedir)<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0runfetchcmd(&quot;%s remote=
- add --mirror=3Dfetch origin %s&quot; % (ud.basecmd, repourl), d, workdir=
-=3Dud.clonedir)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fetch_cmd =3D &quot;LANG=3D=
-C %s fetch -f --prune --progress %s refs/*:refs/*&quot; % (ud.basecmd, repo=
-url)<br>
--- <br>
-2.7.4<br>
-<br>
--- <br>
-_______________________________________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
-itbake-devel@lists.openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
-stinfo/bitbake-devel</a><br>
-</blockquote></div><br clear=3D"all"><br>-- <br><div dir=3D"ltr" class=3D"g=
-mail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><div><d=
-iv dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>Founder - =
-BitBake, OpenEmbedded, OpenZaurus<br>Senior Software Engineer, Mentor Graph=
-ics</div></div></div></div>
-
---0000000000006809de05749329ce--
