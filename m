@@ -1,50 +1,83 @@
-Return-Path: <alex.kanavin@gmail.com>
-Received: from mail-oi0-f65.google.com (mail-oi0-f65.google.com
-	[209.85.218.65])
-	by mail.openembedded.org (Postfix) with ESMTP id D14DF79503
+Return-Path: <abdelhakim.ais@outlook.com>
+X-Greylist: delayed 28746 seconds by postgrey-1.34 at layers.openembedded.org;
+	Sat, 01 Sep 2018 19:55:11 UTC
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com
+	(mail-oln040092066065.outbound.protection.outlook.com [40.92.66.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 79DC360291
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  1 Sep 2018 19:33:28 +0000 (UTC)
-Received: by mail-oi0-f65.google.com with SMTP id p84-v6so27413950oic.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 01 Sep 2018 12:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=T53DJam2MmB0ZfpKzc/xTY3a5sORk7l9OdtxMXcVF98=;
-	b=OZSBA5WdceDc2k5mZ5g7m5jWiWrXK1GT024iuSi6Fhy+SDNaZmvN6pwIEuRUmovVip
-	6lrUD6ZJ5ZaD7M3jlK6H5w8Ycmk9sR4HrmNQRLBV1SJY+ZvELjtGI6CCh6XA+ACVXKg3
-	cnE8MxLFhAAzL1+3jzxnQBs0KtbbnFKQFYHejbGVYZC2atXH4FNO8To7D8YJiPeEkAfi
-	77a6PtzSVWUydt0MbZNW5wjqSVQiU/6kp3P8nxvWhKfPDhLVETXee817dLxnxXcOzOr4
-	gI/JVm2y6ab8xkhfzMly8V+POevEDmOOAdO0lVKZXMWauaPBoySd1OwVx5DPOPgyNaC8
-	qkeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=T53DJam2MmB0ZfpKzc/xTY3a5sORk7l9OdtxMXcVF98=;
-	b=O5h+oQTNcqKDk4PFpiuyYbNH69NLWkOc7FqYsDkpmgZrpfDPBlVLfToMLjg9O7Wx5Y
-	LbnE6vBC5uZwcQ8asTTdndGM7ebUfz8YRO8PmLKHVItHAOaKKTM4No3f1+pyOoOVZhBw
-	9xnAit/kfvR2j/8o9y69ioCdy/F++Wy8VfUJg4c8iSLwmoRF45Xnv8WX+pyI9ZJkhgnp
-	IStjwf12djlA3kS69Da08A/Ha/ahy2iE1u+JzdbewCbPOtfc3DjWtsLUvwrDBjADWmaN
-	69ohCyABn3l94rIWGGNCen0VhbmxDCl5VVJZHVdaVr/N4fQmFP3PDRxKQ8YlY6qQEirX
-	sSAw==
-X-Gm-Message-State: APzg51DmGzjZ0xjhd1AeSDR1zqPtIxKi9Ps1qgT8Pa/UIyjxeEN3EJe9
-	ThGPHVe3HCAHrEw/cMNnHXqyZXPPq0JMZCODTcU=
-X-Google-Smtp-Source: ANB0VdZlPgYbgDihhEb/KE4jQFjG7447ZpLTqZKJKX7ZkOzn8SwM/XlwJ6CAtUc9iZJx7ooHLqZ1v506qBglNqY7mgE=
-X-Received: by 2002:aca:edd8:: with SMTP id
-	l207-v6mr13525316oih.65.1535830409723; 
-	Sat, 01 Sep 2018 12:33:29 -0700 (PDT)
+	Sat,  1 Sep 2018 19:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+	s=selector1;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=xLh0fQfGogQPEDA0B4ypOIpNrYP4a+fgfG2iB6XVYHg=;
+	b=mC904v0rbF/n1TEhUmIiaJgdRvxup52efPL56Jg1LgfqP5xZkxdta5xKbyqFLAohUKXkL3TTHLq4XlJvJnO2A0/XGey8xAG7rgRz5m+g+Cu4iWAC/cC4931KaYqQkhvsPNraX4p13LFYRNaPPb4O4mI8UWbf6iTlNEILt+lYSaBY3jiHzVMBvJNNN3NjtiICESDCajldFeKEpmmUwBVbplUGVPbrKM2PRGosqXPVOK1s7QJayvm6dJ2m8w7+0I/VaaiD9Y7LmSvegZbSp7FIu7CPtdilTR3qQL6JZg05E29Xs8iVYUT7C+L+ZN954VY36THgHVt5riyrxiCqcqzg7Q==
+Received: from VE1EUR01FT005.eop-EUR01.prod.protection.outlook.com
+	(10.152.2.59) by VE1EUR01HT115.eop-EUR01.prod.protection.outlook.com
+	(10.152.3.44) with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.20.1101.10;
+	Sat, 1 Sep 2018 11:23:12 +0000
+Received: from DB6PR0701MB2646.eurprd07.prod.outlook.com (10.152.2.51) by
+	VE1EUR01FT005.mail.protection.outlook.com (10.152.2.142) with Microsoft
+	SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+	15.20.1101.10 via Frontend Transport; Sat, 1 Sep 2018 11:23:12 +0000
+Received: from DB6PR0701MB2646.eurprd07.prod.outlook.com
+	([fe80::958:f335:38d9:fab0]) by
+	DB6PR0701MB2646.eurprd07.prod.outlook.com
+	([fe80::958:f335:38d9:fab0%9]) with mapi id 15.20.1122.009;
+	Sat, 1 Sep 2018 11:23:11 +0000
+From: abdelhakim ais <abdelhakim.ais@outlook.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: recipe for pandoraFMS agent
+Thread-Index: AQHUQeYqL9hldq3b7EOv39YtlMILfg==
+Date: Sat, 1 Sep 2018 11:23:11 +0000
+Message-ID: <DB6PR0701MB264656F995EF801C39E66BE5810E0@DB6PR0701MB2646.eurprd07.prod.outlook.com>
+Accept-Language: fr-FR, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0102CA0046.eurprd01.prod.exchangelabs.com
+	(2603:10a6:7:7d::23) To DB6PR0701MB2646.eurprd07.prod.outlook.com
+	(2603:10a6:4:22::22)
+x-incomingtopheadermarker: OriginalChecksum:5C38F0F06AA1B1342048B3619388E8C1C3A8C23B408372F4CEB9D01440C77826;
+	UpperCasedChecksum:15FCB3704CF486C93828C48CEF04EB7E38BDFB0D84CCDEF25682042F18BCF027;
+	SizeAsReceived:7310; Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn: [2Q3+wWTCshS77y7WVgpkZaZ5UVTCncmo]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1; VE1EUR01HT115;
+	6:bw3x4JURy8R6IJV7lKRo57BBQAoHiA9X4c6lbLwmhHfcQhmP711vba05mqs3OMoXQXZ/lDNsFIgSt+xXoK/UXmqtbaW8IyjYpvoNAndrmwgrWEevAZgOMKLMwSPR94RxDv0samL870ElWrIsKQ/XSfmvUaVbE0cKgVPoMth4CCpBMQ4sB8DLkfwBBjMrPTVqngIEoM7UlKktkoiW5A23Qes7I55UpeqQjUWP/4cE3AYAcPlmhsGtjQmt9dnPNK9zsXz4qD1nsws/cWQyzIXfFfyAt7JRNaXVATFqEoIZ5IBw1vGpUNSdTBSD6GwSrsfvu2feEwvrBVhEY8mIMf7z5EHSL8YY9jqqZ7qLu2QDuAfzd8KviCfGE9+/ZsLACttZ2LBAb1C+54dmMH2EEzMApbduS4HHupBNC9X8OE5X9U97ylOVLp0vzjJtevhTOV1fw6QSxwrLIyHamBnkOIZLew==;
+	5:MgIXKKPvxyiroeZHSvgdnSsdGUGp7Z9KYCDlEaBfZV7nbK0ZaFjzw9bVR502Ugw5ouADu5cOODCzv7XMHJ2Z2j2TVgNmtZVx72Rumh4/G2m8BqFgeab9SN/nfyN/xr4Hfk+Nzh5I1OHII42vwSbH0jAklsciW9uiRAQnvcaoOBg=;
+	7:W0L3cIJMJ7MOcw22u5eCDpaqspzy84YE5KDIZKc5V8hyyXulR1zlyBNAqNDE9EUCMtXf/g2g0MwFtb5zKJ/En/oD4t9NMLgm6bSGfrS+tXOJstudFGT+KpNDp8wq+u+g1WCJxay/tmAjuqCGYdfy+nHn8US7y1nJqWGjq87K0vQPF4gWJpIzKtvngwfmCYncEvn4Qj/4tHJNx82eG1XW2jZacaXfEDwuseRhqrISr5nU8gv8zy+SY2omGrp4la8Y
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0; PCL:0;
+	RULEID:(7020095)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031324274)(2017031323274)(2017031322404)(1603101475)(1601125500)(1701031045);
+	SRVR:VE1EUR01HT115; 
+x-ms-traffictypediagnostic: VE1EUR01HT115:
+x-exchange-antispam-report-cfa-test: BCL:0; PCL:0; RULEID:(4566010)(82015058);
+	SRVR:VE1EUR01HT115; BCL:0; PCL:0; RULEID:; SRVR:VE1EUR01HT115; 
+x-forefront-prvs: 0782EC617F
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(7070007)(199004)(189003)(53754006)(25786009)(81156014)(33656002)(102836004)(2351001)(68736007)(20460500001)(6436002)(55016002)(6346003)(5640700003)(8936002)(82202002)(7696005)(99286004)(3480700004)(386003)(5250100002)(87572001)(97736004)(26005)(86152003)(106356001)(6916009)(86362001)(2900100001)(486006)(5660300001)(56003)(2501003)(476003)(105586002)(256004)(14454004)(305945005)(426003)(104016004)(8676002)(74316002);
+	DIR:OUT; SFP:1901; SCL:1; SRVR:VE1EUR01HT115;
+	H:DB6PR0701MB2646.eurprd07.prod.outlook.com; FPR:; SPF:None;
+	PTR:InfoNoRecords; A:1; MX:1; 
+received-spf: None (protection.outlook.com: outlook.com does not designate
+	permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=abdelhakim.ais@outlook.com; 
+x-microsoft-antispam-message-info: 0/NpXQqhuzV6iu7r34zg1/F1JDA3ThsHIvwhVbMONlUc5X6YyzNyefj0w3F1kft/WpwCbv9kZ6NdQw8Xn75LbU9hexBZReA8n2EoAvz3UZvGnkjRgfxufQvt9C7T1HQ2vd+lNSeKbYufauIx0TtdDUxwmSFmMRnY5uvrrc33shV6zfAjtqEYK1X+xZIfNFBDSy+AEuPM26C/6UtYoU9v0utcQtLDTaZM8zkm8Fj/ti8=
 MIME-Version: 1.0
-Received: by 2002:a4a:1847:0:0:0:0:0 with HTTP;
-	Sat, 1 Sep 2018 12:33:29 -0700 (PDT)
-In-Reply-To: <20180901133644.1577-1-lukaszgardon555@gmail.com>
-References: <20180901133644.1577-1-lukaszgardon555@gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Sat, 1 Sep 2018 21:33:29 +0200
-Message-ID: <CANNYZj9-ybLPr=kNLEGFgdPG1U_kNJEEVzCw_5FiYUPYVVQQYw@mail.gmail.com>
-To: =?UTF-8?B?xYF1a2FzeiBHYXJkb8WE?= <lukaszgardon555@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [] Add files supporting bash completion for bitbake tools
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: d4d70346-2c10-4f39-8c00-e767963926d9
+X-MS-Exchange-CrossTenant-Network-Message-Id: e09942dd-8acb-4d27-1cba-08d60ffd4cfa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: d4d70346-2c10-4f39-8c00-e767963926d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2018 11:23:11.6637 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT115
+Subject: recipe for pandoraFMS agent
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,740 +90,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 01 Sep 2018 19:33:29 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Sat, 01 Sep 2018 19:55:12 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <50F087D8C5576842A2576A98248C4B6F@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 
-The right upstream destination for this is almost certainly
-https://github.com/scop/bash-completion
-
-Alex
-
-2018-09-01 15:36 GMT+02:00 =C5=81ukasz Gardo=C5=84 <lukaszgardon555@gmail.c=
-om>:
-> Repository with more details:
-> https://github.com/lukaszgard/bitbake-completion
->
-> Signed-off-by: =C5=81ukasz Gardo=C5=84 <lukaszgardon555@gmail.com>
-> ---
->  contrib/completion/bash/bitbake_completion    | 108 ++++++++++
->  .../bash/bitbake_diffsigs_completion          |  86 ++++++++
->  .../bash/bitbake_dumpsig_completion           |  89 +++++++++
->  .../completion/bash/bitbake_layers_completion | 188 ++++++++++++++++++
->  .../completion/bash/bitbake_prserv_completion |  76 +++++++
->  .../bash/bitbake_selftest_completion          |  34 ++++
->  6 files changed, 581 insertions(+)
->  create mode 100644 contrib/completion/bash/bitbake_completion
->  create mode 100644 contrib/completion/bash/bitbake_diffsigs_completion
->  create mode 100644 contrib/completion/bash/bitbake_dumpsig_completion
->  create mode 100644 contrib/completion/bash/bitbake_layers_completion
->  create mode 100644 contrib/completion/bash/bitbake_prserv_completion
->  create mode 100644 contrib/completion/bash/bitbake_selftest_completion
->
-> diff --git a/contrib/completion/bash/bitbake_completion b/contrib/complet=
-ion/bash/bitbake_completion
-> new file mode 100644
-> index 00000000..23cadf6e
-> --- /dev/null
-> +++ b/contrib/completion/bash/bitbake_completion
-> @@ -0,0 +1,108 @@
-> +#!bash
-> +# Bash completion support for bitbake 1.39.1 release.
-> +#
-> +# Copyright (C) 2014 Sergio Prado <sergio.prado@e-labworks.com>
-> +# Copyright (C) 2018 Lukasz Gardon <lukasz.gardon@gmail.com>
-> +#
-> +# Distributed under the MIT License (MIT)
-> +#
-> +
-> +_bitbake()
-> +{
-> +    local cur prev opts_short opts_long tasks recipes ui
-> +    local bb_layers_conf bb_layers_md5 bb_recipes
-> +
-> +    COMPREPLY=3D()
-> +
-> +    cur=3D"${COMP_WORDS[COMP_CWORD]}"
-> +    prev=3D"${COMP_WORDS[COMP_CWORD-1]}"
-> +
-> +    opts_short=3D"-h -b -k -f -c -C -r -R -v -D -q -n -S -p -s -e -g -I =
-\
-> +                -l -P -u -B -T -m -w"
-> +
-> +    opts_long=3D"--version --help --buildfile=3D --continue --force --cm=
-d=3D \
-> +               --clear-stamp=3D --read=3D --postread=3D --verbose --debu=
-g --quiet \
-> +               --dry-run --dump-signatures=3D --parse-only --show-versio=
-ns \
-> +               --environment --graphviz --ignore-deps=3D --log-domains=
-=3D --profile \
-> +               --ui=3D --token=3D --revisions-changed --server-only --bi=
-nd=3D \
-> +               --idle-timeout=3D --no-setscene --setscene-only --remote-=
-server=3D \
-> +               --kill-server --observe-only --status-only --write-log=3D=
- --runall=3D \
-> +               --runonly=3D"
-> +
-> +    tasks=3D"build compile compile_ptest_base configure configure_ptest_=
-base deploy \
-> +           distrodata fetch image image_complete install install_ptest_b=
-ase package \
-> +           package_qa package_write_deb package_write_ipk package_write_=
-rpm package_write_tar \
-> +           packagedata patch populate_lic populate_sdk populate_sysroot =
-prepare_recipe_sysroot \
-> +           rm_work rm_work_all unpack checkpkg checkuri clean cleanall c=
-leansstate devpyshell \
-> +           devshell listtasks package_index bootimg bundle_initramfs roo=
-tfs testimage \
-> +           testimage_auto compile_kernelmodules diffconfig kernel_checko=
-ut kernel_configcheck \
-> +           kernel_configme kernel_menuconfig kernel_metadata menuconfig =
-savedefconfig shared_workdir \
-> +           sizecheck strip validate_branches spdx"
-> +
-> +    ui=3D"knotty ncurses taskexp"
-> +
-> +    if [[ "$prev" =3D=3D "=3D" ]]; then
-> +        prev=3D"${COMP_WORDS[COMP_CWORD - 2]}"
-> +    elif [[ "$cur" =3D=3D "=3D" ]]; then
-> +        cur=3D""
-> +    fi
-> +
-> +    conf_files=3D$(find . -maxdepth 1 -name "*.conf" -type f -printf '%P=
-\n')
-> +
-> +    case "$prev" in
-> +        "-c"|"--cmd"|"-C"|"--clear-stamp"|"--ignore-deps"|"--runall"|"--=
-runonly")
-> +            COMPREPLY=3D( $(compgen -W "${tasks}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +        "-r"|"--read"|"-R"|"--postread")
-> +            COMPREPLY=3D( $(compgen -W "${conf_files}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +        "-u"|"--ui")
-> +            COMPREPLY=3D( $(compgen -W "${ui}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +
-> +    case "$cur" in
-> +        "--"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_long}" -- ${cur}) )
-> +            if [[ ${#COMPREPLY[@]} =3D=3D 1 && ${COMPREPLY[0]} =3D=3D "-=
--"*"=3D" ]] ; then
-> +                compopt -o nospace
-> +            fi
-> +            return 0
-> +        ;;
-> +        "-"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_short}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +
-> +    bb_layers_conf=3D"conf/bblayers.conf"
-> +    bb_layers_md5=3D".bb_layers_conf.md5"
-> +    bb_recipes=3D".bb_recipes"
-> +
-> +    _parse_recipes () {
-> +        bitbake -s | sed -e '0,/^=3D.*/d' -e '/^\s*$/d' -e '/^Summary:/d=
-' | awk '{print $1}' > $bb_recipes
-> +    }
-> +
-> +    if [ ! -e $bb_layers_conf ]; then
-> +        return 0
-> +    fi
-> +
-> +    if [ "$prev" =3D "bitbake" -a "$cur" =3D "" ]; then
-> +        _parse_recipes
-> +    fi
-> +
-> +    md5sum --quiet --status -c $bb_layers_md5 2>/dev/null
-> +    if [ $? !=3D 0 -o ! -e $bb_recipes ]; then
-> +         md5sum $bb_layers_conf > $bb_layers_md5
-> +         _parse_recipes
-> +    fi
-> +
-> +    recipes=3D$(cat $bb_recipes)
-> +
-> +    COMPREPLY=3D( $(compgen -W "${recipes}" -- ${cur}) )
-> +    return 0
-> +}
-> +complete -F _bitbake bitbake
-> \ No newline at end of file
-> diff --git a/contrib/completion/bash/bitbake_diffsigs_completion b/contri=
-b/completion/bash/bitbake_diffsigs_completion
-> new file mode 100644
-> index 00000000..cbf2c5f1
-> --- /dev/null
-> +++ b/contrib/completion/bash/bitbake_diffsigs_completion
-> @@ -0,0 +1,86 @@
-> +#!bash
-> +# Bash completion support for bitbake-diffsigs tool,
-> +# compatible with Bitbake 1.39.1.
-> +#
-> +# Copyright (C) 2018 Lukasz Gardon <lukasz.gardon@gmail.com>
-> +#
-> +# Distributed under the MIT License (MIT)
-> +#
-> +
-> +_bitbake_diffsigs()
-> +{
-> +    local cur prev opts_short opts_long tasks colors
-> +    local bb_layers_conf bb_layers_md5 bb_recipes
-> +
-> +    COMPREPLY=3D()
-> +
-> +    cur=3D"${COMP_WORDS[COMP_CWORD]}"
-> +    prev=3D"${COMP_WORDS[COMP_CWORD-1]}"
-> +
-> +    opts_short=3D"-h -d -t -s"
-> +
-> +    opts_long=3D"--help --debug --color --task --signature"
-> +
-> +    tasks=3D"build compile compile_ptest_base configure configure_ptest_=
-base deploy \
-> +           distrodata fetch image image_complete install install_ptest_b=
-ase package \
-> +           package_qa package_write_deb package_write_ipk package_write_=
-rpm package_write_tar \
-> +           packagedata patch populate_lic populate_sdk populate_sysroot =
-prepare_recipe_sysroot \
-> +           rm_work rm_work_all unpack checkpkg checkuri clean cleanall c=
-leansstate devpyshell \
-> +           devshell listtasks package_index bootimg bundle_initramfs roo=
-tfs testimage \
-> +           testimage_auto compile_kernelmodules diffconfig kernel_checko=
-ut kernel_configcheck \
-> +           kernel_configme kernel_menuconfig kernel_metadata menuconfig =
-savedefconfig shared_workdir \
-> +           sizecheck strip validate_branches spdx"
-> +
-> +    colors=3D"auto always never"
-> +
-> +    case "$cur" in
-> +        "--"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_long}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +        "-"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_short}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +
-> +    bb_layers_conf=3D"conf/bblayers.conf"
-> +    bb_layers_md5=3D".bb_layers_conf.md5"
-> +    bb_recipes=3D".bb_recipes"
-> +
-> +    _parse_recipes () {
-> +        bitbake -s | sed -e '0,/^=3D.*/d' -e '/^\s*$/d' -e '/^Summary:/d=
-' | awk '{print $1}' > $bb_recipes
-> +    }
-> +
-> +    if [ ! -e $bb_layers_conf ]; then
-> +        return 0
-> +    fi
-> +
-> +    if [ "$prev" =3D "bitbake" -a "$cur" =3D "" ]; then
-> +           _parse_recipes
-> +    fi
-> +
-> +    md5sum --quiet --status -c $bb_layers_md5 2>/dev/null
-> +    if [ $? !=3D 0 -o ! -e $bb_recipes ]; then
-> +        md5sum $bb_layers_conf > $bb_layers_md5
-> +        _parse_recipes
-> +    fi
-> +
-> +    recipes=3D$(cat $bb_recipes)
-> +
-> +    case "$prev" in
-> +        "-c"|"--color")
-> +            COMPREPLY=3D( $(compgen -W "${colors}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +        "-t"|"--task")
-> +          COMPREPLY=3D( $(compgen -W "${recipes}" -- ${cur}) )
-> +          return 0
-> +    esac
-> +
-> +    if [[ ${COMP_WORDS[COMP_CWORD -2]} =3D=3D "-t" ]] || [[ ${COMP_WORDS=
-[COMP_CWORD -2]} =3D=3D "--task" ]]; then
-> +        COMPREPLY=3D( $(compgen -W "${tasks}" -- ${cur}) )
-> +           return 0
-> +    fi
-> +}
-> +complete -F _bitbake_diffsigs bitbake-diffsigs
-> \ No newline at end of file
-> diff --git a/contrib/completion/bash/bitbake_dumpsig_completion b/contrib=
-/completion/bash/bitbake_dumpsig_completion
-> new file mode 100644
-> index 00000000..95eb2394
-> --- /dev/null
-> +++ b/contrib/completion/bash/bitbake_dumpsig_completion
-> @@ -0,0 +1,89 @@
-> +#!bash
-> +# Bash completion support for bitbake-dumpsig tool,
-> +# compatible with Bitbake 1.39.1.
-> +#
-> +# Copyright (C) 2018 Lukasz Gardon <lukasz.gardon@gmail.com>
-> +#
-> +# Distributed under the MIT License (MIT)
-> +#
-> +
-> +_bitbake_dumpsig()
-> +{
-> +    local cur prev opts_short opts_long tasks
-> +    local bb_layers_conf bb_layers_md5 bb_recipes
-> +
-> +    COMPREPLY=3D()
-> +
-> +    cur=3D"${COMP_WORDS[COMP_CWORD]}"
-> +    prev=3D"${COMP_WORDS[COMP_CWORD-1]}"
-> +
-> +    opts_short=3D"-h -d -t"
-> +
-> +    opts_long=3D"--help --debug --task=3D"
-> +
-> +    tasks=3D"build compile compile_ptest_base configure configure_ptest_=
-base deploy \
-> +           distrodata fetch image image_complete install install_ptest_b=
-ase package \
-> +           package_qa package_write_deb package_write_ipk package_write_=
-rpm package_write_tar \
-> +           packagedata patch populate_lic populate_sdk populate_sysroot =
-prepare_recipe_sysroot \
-> +           rm_work rm_work_all unpack checkpkg checkuri clean cleanall c=
-leansstate devpyshell \
-> +           devshell listtasks package_index bootimg bundle_initramfs roo=
-tfs testimage \
-> +           testimage_auto compile_kernelmodules diffconfig kernel_checko=
-ut kernel_configcheck \
-> +           kernel_configme kernel_menuconfig kernel_metadata menuconfig =
-savedefconfig shared_workdir \
-> +           sizecheck strip validate_branches spdx"
-> +
-> +    if [[ "$prev" =3D=3D "=3D" ]]; then
-> +        prev=3D"${COMP_WORDS[COMP_CWORD - 2]}"
-> +    elif [[ "$cur" =3D=3D "=3D" ]]; then
-> +        cur=3D""
-> +    fi
-> +
-> +    case "$cur" in
-> +        "--"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_long}" -- ${cur}) )
-> +            if [[ ${#COMPREPLY[@]} =3D=3D 1 && ${COMPREPLY[0]} =3D=3D "-=
--"*"=3D" ]] ; then
-> +                compopt -o nospace
-> +            fi
-> +            return 0
-> +        ;;
-> +        "-"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_short}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +
-> +    bb_layers_conf=3D"conf/bblayers.conf"
-> +    bb_layers_md5=3D".bb_layers_conf.md5"
-> +    bb_recipes=3D".bb_recipes"
-> +
-> +    _parse_recipes () {
-> +        bitbake -s | sed -e '0,/^=3D.*/d' -e '/^\s*$/d' -e '/^Summary:/d=
-' | awk '{print $1}' > $bb_recipes
-> +    }
-> +
-> +    if [ ! -e $bb_layers_conf ]; then
-> +        return 0
-> +    fi
-> +
-> +    if [ "$prev" =3D "bitbake" -a "$cur" =3D "" ]; then
-> +           _parse_recipes
-> +    fi
-> +
-> +    md5sum --quiet --status -c $bb_layers_md5 2>/dev/null
-> +    if [ $? !=3D 0 -o ! -e $bb_recipes ]; then
-> +        md5sum $bb_layers_conf > $bb_layers_md5
-> +        _parse_recipes
-> +    fi
-> +
-> +    recipes=3D$(cat $bb_recipes)
-> +
-> +    case "$prev" in
-> +        "-t"|"--task")
-> +           COMPREPLY=3D( $(compgen -W "${recipes}" -- ${cur}) )
-> +           return 0
-> +    esac
-> +
-> +    if [[ ${COMP_WORDS[COMP_CWORD -2]} =3D~ "-t" ]] || [[ ${COMP_WORDS[C=
-OMP_CWORD -3]} =3D=3D "--task" ]]; then
-> +        COMPREPLY=3D( $(compgen -W "${tasks}" -- ${cur}) )
-> +           return 0
-> +    fi
-> +}
-> +complete -F _bitbake_dumpsig bitbake-dumpsig
-> \ No newline at end of file
-> diff --git a/contrib/completion/bash/bitbake_layers_completion b/contrib/=
-completion/bash/bitbake_layers_completion
-> new file mode 100644
-> index 00000000..37ca8afb
-> --- /dev/null
-> +++ b/contrib/completion/bash/bitbake_layers_completion
-> @@ -0,0 +1,188 @@
-> +#!bash
-> +# Bash completion support for bitbake-layers tool,
-> +# compatible with Bitbake 1.39.1.
-> +#
-> +# Copyright (C) 2018 Lukasz Gardon <lukasz.gardon@gmail.com>
-> +#
-> +# Distributed under the MIT License (MIT)
-> +#
-> +
-> +_bitbake_layers()
-> +{
-> +    local cur prev opts_short opts_long subcommands colors
-> +    local opts_long_add_layer opts_short_add_layer opts_long_show_overla=
-yed
-> +    local opts_short_show_overlayed opts_long_show_recipes opts_short_sh=
-ow_recipes
-> +    local opts_long_show_cross_depends opts_short_show_cross_depends
-> +    local opts_long_show_layerindex_fetch opts_short_show_layerindex_fet=
-ch
-> +    local opts_long_show_layerindex_show_depends opts_short_show_layerin=
-dex_show_depends
-> +    local opts_long_show_create_layer opts_short_show_create_layer bb_cl=
-ass_files classes
-> +
-> +    COMPREPLY=3D()
-> +
-> +    cur=3D"${COMP_WORDS[COMP_CWORD]}"
-> +    prev=3D"${COMP_WORDS[COMP_CWORD-1]}"
-> +
-> +    opts_short=3D"-d -q -F -h"
-> +
-> +    opts_long=3D"--debug --quiet --force --color --help"
-> +
-> +    subcommands=3D"layerindex-fetch layerindex-show-depends add-layer \
-> +                    remove-layer flatten show-layers show-overlayed \
-> +                        show-recipes show-appends show-cross-depends \
-> +                        create-layer"
-> +
-> +    colors=3D"auto always never"
-> +
-> +    opts_long_show_overlayed=3D"--help --filenames --same-version"
-> +    opts_short_show_overlayed=3D"-h -f -s"
-> +
-> +    opts_long_show_recipes=3D"--help --filenames --multiple --inherits"
-> +    opts_short_show_recipes=3D"-h -f -m -i"
-> +
-> +    opts_long_show_layerindex_fetch=3D"--help --show-only --branch --ign=
-ore"
-> +    opts_short_show_layerindex_fetch=3D"-h -n -b -i"
-> +
-> +    opts_long_add_layer=3D"--help --priority --example-recipe-name --exa=
-mple-recipe-version"
-> +    opts_short_add_layer=3D"-h"
-> +
-> +    opts_long_show_cross_depends=3D"--help --filenames --ignore"
-> +    opts_short_show_cross_depends=3D"-h -f -i"
-> +
-> +    opts_long_show_layerindex_show_depends=3D"--help --branch"
-> +    opts_short_show_layerindex_show_depends=3D"-h -b"
-> +
-> +    opts_long_show_create_layer=3D"--help --priority --example-recipe-na=
-me --example-recipe-version"
-> +    opts_short_show_create_layer=3D"-h -p -e -v"
-> +
-> +    bb_class_files=3D".bb_class_files"
-> +
-> +    _get_classes() {
-> +        find $BBPATH/../meta*/classes/ -name *.bbclass -exec basename {}=
- \; | sed 's/.bbclass//' > $bb_class_files
-> +    }
-> +
-> +    if [[ "${COMP_WORDS[@]}" =3D~ show-recipes ]] ; then
-> +        if [[ "$prev" =3D=3D "--inherits" ]] || [[ "$prev" =3D=3D "-i" ]=
-]; then
-> +            _get_classes
-> +            classes=3D$(cat $bb_class_files)
-> +            COMPREPLY=3D( $(compgen -W "${classes}" -- ${cur}) )
-> +            return 0
-> +        fi
-> +    fi
-> +
-> +    if [[ "${COMP_WORDS[1]}" =3D~ show-layers|show-appends|remove-layer|=
-flatten ]]; then
-> +        case "$cur" in
-> +            "--"*)
-> +                COMPREPLY=3D( $(compgen -W "--help" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +            "-"*)
-> +                COMPREPLY=3D( $(compgen -W "-h" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +        esac
-> +    elif [[ "${COMP_WORDS[1]}" =3D=3D "add-layer" ]]; then
-> +        case "$cur" in
-> +            "--"*|"")
-> +                COMPREPLY=3D( $(compgen -W "${opts_long_add_layer}" -- $=
-{cur}) )
-> +                return 0
-> +            ;;
-> +            "-"*)
-> +                COMPREPLY=3D( $(compgen -W "${opts_short_add_layer}" -- =
-${cur}) )
-> +                return 0
-> +            ;;
-> +        esac
-> +    elif [[ "${COMP_WORDS[1]}" =3D=3D "show-overlayed" ]]; then
-> +        case "$cur" in
-> +            "--"*|"")
-> +                COMPREPLY=3D( $(compgen -W "${opts_long_show_overlayed}"=
- -- ${cur}) )
-> +                return 0
-> +            ;;
-> +            "-"*)
-> +                COMPREPLY=3D( $(compgen -W "${opts_short_show_overlayed}=
-" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +        esac
-> +    elif [[ "${COMP_WORDS[1]}" =3D=3D "show-recipes" ]]; then
-> +        case "$cur" in
-> +            "--"*|"")
-> +                COMPREPLY=3D( $(compgen -W "${opts_long_show_recipes}" -=
-- ${cur}) )
-> +                return 0
-> +            ;;
-> +            "-"*)
-> +                COMPREPLY=3D( $(compgen -W "${opts_short_show_recipes}" =
--- ${cur}) )
-> +                return 0
-> +            ;;
-> +        esac
-> +    elif [[ "${COMP_WORDS[1]}" =3D=3D "show-cross-depends" ]]; then
-> +        case "$cur" in
-> +            "--"*|"")
-> +                COMPREPLY=3D( $(compgen -W "${opts_long_show_cross_depen=
-ds}" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +            "-"*)
-> +                COMPREPLY=3D( $(compgen -W "${opts_short_show_cross_depe=
-nds}" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +        esac
-> +    elif [[ "${COMP_WORDS[1]}" =3D=3D "layerindex-fetch" ]]; then
-> +        case "$cur" in
-> +            "--"*|"")
-> +                COMPREPLY=3D( $(compgen -W "${opts_long_show_layerindex_=
-fetch}" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +            "-"*)
-> +                COMPREPLY=3D( $(compgen -W "${opts_short_show_layerindex=
-_fetch}" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +        esac
-> +    elif [[ "${COMP_WORDS[1]}" =3D=3D "layerindex-show-depends" ]]; then
-> +        case "$cur" in
-> +            "--"*|"")
-> +                COMPREPLY=3D( $(compgen -W "${opts_long_show_layerindex_=
-show_depends}" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +            "-"*)
-> +                COMPREPLY=3D( $(compgen -W "${opts_short_show_layerindex=
-_show_depends}" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +        esac
-> +    elif [[ "${COMP_WORDS[1]}" =3D=3D "create-layer" ]]; then
-> +        case "$cur" in
-> +            "--"*|"")
-> +                COMPREPLY=3D( $(compgen -W "${opts_long_show_create_laye=
-r}" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +            "-"*)
-> +                COMPREPLY=3D( $(compgen -W "${opts_short_show_create_lay=
-er}" -- ${cur}) )
-> +                return 0
-> +            ;;
-> +        esac
-> +    fi
-> +
-> +    case "$prev" in
-> +        "-c"|"--color")
-> +            COMPREPLY=3D( $(compgen -W "${colors}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +
-> +    case "$cur" in
-> +        "--"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_long}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +        "-"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_short}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +
-> +    if [[ ${prev} =3D=3D "bitbake-layers" ]]; then
-> +        COMPREPLY=3D( $(compgen -W "${subcommands}" -- ${cur}) )
-> +        return 0
-> +    elif [[ ! ${subcommands} =3D~ [[:space:]]${cur}[[:space:]] ]]; then
-> +        COMPREPLY=3D( $(compgen -W "${subcommands}" -- ${cur}) )
-> +        return 0
-> +    fi
-> +}
-> +complete -F _bitbake_layers bitbake-layers
-> \ No newline at end of file
-> diff --git a/contrib/completion/bash/bitbake_prserv_completion b/contrib/=
-completion/bash/bitbake_prserv_completion
-> new file mode 100644
-> index 00000000..3bca1197
-> --- /dev/null
-> +++ b/contrib/completion/bash/bitbake_prserv_completion
-> @@ -0,0 +1,76 @@
-> +#!bash
-> +# Bash completion support for bitbake-prserv tool,
-> +# compatible with Bitbake 1.39.1.
-> +#
-> +# Copyright (C) 2018 Lukasz Gardon <lukasz.gardon@gmail.com>
-> +#
-> +# Distributed under the MIT License (MIT)
-> +#
-> +
-> +_bitbake_prserv()
-> +{
-> +    local cur prev opts_short opts_long subcommands file_default log_def=
-ault log_levels
-> +
-> +    COMPREPLY=3D()
-> +
-> +    cur=3D"${COMP_WORDS[COMP_CWORD]}"
-> +    prev=3D"${COMP_WORDS[COMP_CWORD-1]}"
-> +
-> +    opts_short=3D"-h -f -l"
-> +
-> +    opts_long=3D"--version --help --file=3D --log=3D --loglevel=3D --sta=
-rt \
-> +                  --stop --host=3D --port=3D"
-> +
-> +    subcommands=3D"layerindex-fetch layerindex-show-depends add-layer \
-> +                    remove-layer flatten show-layers show-overlayed \
-> +                        show-recipes show-appends show-cross-depends \
-> +                        create-layer"
-> +
-> +    file_default=3D"prserv.sqlite3"
-> +    log_default=3D"prserv.log"
-> +    log_levels=3D"CRITICAL ERROR WARNING INFO DEBUG"
-> +
-> +    if [[ "$prev" =3D=3D "=3D" ]]; then
-> +        prev=3D"${COMP_WORDS[COMP_CWORD -2]}"
-> +    elif [[ "$cur" =3D=3D "=3D" ]]; then
-> +        cur=3D""
-> +    fi
-> +
-> +    case "$prev" in
-> +        "-f"|"--file")
-> +            COMPREPLY=3D( $(compgen -W "${file_default}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +        "-l"|"--log")
-> +            COMPREPLY=3D( $(compgen -W "${log_default}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +        "--loglevel")
-> +            COMPREPLY=3D( $(compgen -W "${log_levels}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +
-> +    case "$cur" in
-> +        "--"*|"")
-> +            COMPREPLY=3D( $(compgen -W "${opts_long}" -- ${cur}) )
-> +            if [[ ${#COMPREPLY[@]} =3D=3D 1 && ${COMPREPLY[0]} =3D=3D "-=
--"*"=3D" ]] ; then
-> +                compopt -o nospace
-> +            fi
-> +            return 0
-> +        ;;
-> +        "-"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_short}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +
-> +    if [[ ${prev} =3D=3D "bitbake-layers" ]]; then
-> +        COMPREPLY=3D( $(compgen -W "${subcommands}" -- ${cur}) )
-> +        return 0
-> +    elif [[ ! ${subcommands} =3D~ [[:space:]]${cur}[[:space:]] ]]; then
-> +        COMPREPLY=3D( $(compgen -W "${subcommands}" -- ${cur}) )
-> +        return 0
-> +    fi
-> +}
-> +complete -F _bitbake_prserv bitbake-prserv
-> \ No newline at end of file
-> diff --git a/contrib/completion/bash/bitbake_selftest_completion b/contri=
-b/completion/bash/bitbake_selftest_completion
-> new file mode 100644
-> index 00000000..8b6bf641
-> --- /dev/null
-> +++ b/contrib/completion/bash/bitbake_selftest_completion
-> @@ -0,0 +1,34 @@
-> +#!bash
-> +# Bash completion support for bitbake-selftest tool,
-> +# compatible with Bitbake version 1.39.1.
-> +#
-> +# Copyright (C) 2018 Lukasz Gardon <lukasz.gardon@gmail.com>
-> +#
-> +# Distributed under the MIT License (MIT)
-> +#
-> +
-> +_bitbake_selftest()
-> +{
-> +    local cur prev opts_short opts_long
-> +
-> +    COMPREPLY=3D()
-> +
-> +    cur=3D"${COMP_WORDS[COMP_CWORD]}"
-> +    prev=3D"${COMP_WORDS[COMP_CWORD-1]}"
-> +
-> +    opts_short=3D"-h -v -q -f -c"
-> +
-> +    opts_long=3D"--help --verbose --quiet --locals --failfast --catch"
-> +
-> +    case "$cur" in
-> +        "--"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_long}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +        "-"*)
-> +            COMPREPLY=3D( $(compgen -W "${opts_short}" -- ${cur}) )
-> +            return 0
-> +        ;;
-> +    esac
-> +}
-> +complete -F _bitbake_selftest bitbake-selftest
-> \ No newline at end of file
-> --
-> 2.18.0
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+SGVsbG8gZXZlcnlvbmUNCg0KYXQgdGhpcyBtb21lbnQgaSdtIHdvcmtpbmcgb24gcHJvamVjdCB0
+byBjcmVhdGUgYSBjdXN0b20gc3lzdGVtIGZvciBteSANClJhc3BiZXJyeSBQSSBpIGdlbmVyYXRl
+ZCBhIGNvcmUtaW1hZ2UtbWluaW1hbCB3aXRoIHN5c3RlbWQgbm93IGkgd291bGQgDQpsaWtlIHRv
+IGludGVncmF0ZSBwYW5kb3JhRk1TIGFnZW50IHRvIG1vbml0b3IgdGhlIHJlc3NvdXJjZXMgb2Yg
+dGhlIA0KcmFzcGJlcnJ5IHBpDQoNCmkgdXNlZCBwYW5kb3JhZm1zLnRhci5neiBkb253bG9hZGVk
+IGZyb20gcGFuZG9yYWZtcy5vcmcNCg0KaSB0cmllZCB0aGlzIHJlY2lwZXMgYnV0IGl0IGRvZXNu
+J3Qgd29yaw0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLQ0KDQpMSUNFTlNFID0gIkNMT1NFRCINCkxJQ19GSUxFU19DSEtTVU0gPSAiIg0KDQpQ
+QUNLQUdFX0FSQ0ggPSAiJHtNQUNISU5FX0FSQ0h9Ig0KDQojU1JDX1VSSSA9IA0KImZpbGU6Ly9o
+b21lL3VzZXJzL3N5cy13b3Jrc2FwY2UvcG9reS9tZXRhLW1vbml0b3JpbmcvcmVjaXBlcy1wYW5k
+b3JhZm1zL3BhbmRvcmEvZmlsZXMvcGFuZG9yYWZtcy50YXIuZ3oiIA0KDQpTUkNfVVJJID0iZmls
+ZTovL3BhbmRvcmFmbXMudGFyLmd6IFwNCiDCoMKgwqDCoMKgwqDCoMKgwqAgZmlsZTovL3BhbmRv
+cmFfYWdlbnRfZGFlbW9uLnNlcnZpY2UiDQoNClMgPSAiJHtXT1JLRElSfS91bml4Ig0KDQpSREVQ
+RU5EU18ke1BOfSArPSAiYmFzaCBwZXJsIg0KDQoNCg0KDQpGSUxFU18ke1BOfSArPSAiL3Vzci9z
+aGFyZSBcDQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC91c3IvYmluIFwNCiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgL3Zhci9sb2cgXA0KIMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCAvZXRjL3N5c3RlbWQvIFwNCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgL29wdCBcDQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC90bXAgXA0KIMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiDQoNCmZha2Vyb290IGRvX2luc3RhbGwgKCkg
+ew0KIMKgwqDCoMKgwqDCoMKgICMgSW5zdGFsbCBwYW5kb3JhZm1zX2FnZW50IHRvIHJvb3Rmcw0K
+IMKgwqDCoMKgwqDCoMKgIC4vcGFuZG9yYV9hZ2VudF9pbnN0YWxsZXIgLS1pbnN0YWxsICR7RH0N
+CiDCoMKgwqDCoMKgwqDCoCBpbnN0YWxsIC1tIDA3NTUgJHtTfS9wYW5kb3JhX2FnZW50X2RhZW1v
+bi5zZXJ2aWNlIA0KJHtEfSR7c3lzY29uZmRpcn0vc3lzdGVtZC9wYW5kb3JhLw0KfQ0KDQotLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tDQoNCmkgbmVlZCB5b3VyIGhlbHAgcGxlYXNlIGNvdWxkIHNvbWVvbmUgdGVs
+bCBtZSB3aGF0IGkgZGlkIHdyb25nIHRoYW5rIHlvdQ0KDQoNCg0K
 
