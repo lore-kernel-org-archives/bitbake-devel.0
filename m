@@ -1,44 +1,24 @@
-Return-Path: <salahuddinash@gmail.com>
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com
-	[209.85.221.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 1DBCA74573
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 44E6774AF1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  3 Sep 2018 11:48:22 +0000 (UTC)
-Received: by mail-wr1-f54.google.com with SMTP id 20-v6so312288wrb.12
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 03 Sep 2018 04:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=CfcuuQfD/yR97ZYiwTP3f4bsK46eA0oCwAK6OUkTD64=;
-	b=FXmSExoqy5dujgOTjyV6rYcZgZwBMzb4bYLTPkHmvO7C+J6D8AMUwoi/Bvkz9pyqjz
-	zoze9c54KMA3GahyqMh2ykzaFh2felhqm/5sw4/gO2RIMe/WDpcnX+eRjGqdO3FK+azc
-	hu79roNAyl3Pr56I/mK8CqUpysQirMgMJ3nMnyWiBYsgqaNNKZ22w2THFse2pvGnrs0Q
-	jfHAOQ+CZFDiVRZaxbGC2i7neryND0182lpuyrl/YDi1ZPxFdVAfkwPPNlVGkd8onBw8
-	W+2N3XPfP99u8BYjt/dQgXBuQwfVcNEfXC/JUk9M1zQYNTDYuxlU4CfqcJzVZcNz89pO
-	Vkww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=CfcuuQfD/yR97ZYiwTP3f4bsK46eA0oCwAK6OUkTD64=;
-	b=PbRIH1n+fQ4Ia7iTpLlVFyBjCQxNoFDz1Ryfw392dwdj4Z/E04qhesizKTLZGBRVH1
-	dUpXBxiP6n7bX9qR2PWj4LlxPFoSFNNsVOwyiH8lKuhRfFHcL4tchlYbessxVZSDZivI
-	xNp1EyH4Ng/ugtVfXzwVREkx57gvTWCmu2rvRvQOdSzQEsQoG8BmuKXKWveu/nefVaOD
-	pEnfXuxIXWiF5IACV2M5Unv3xOAYQUEylYDTedFFz02NcLghir11kCtTaRxCb1grGKjx
-	xgfQ99KjJSpbf2ysbOEC8aFanz9Ej37Z9O9hnV53xe+RxQx9ailfdO7sB/+nZc3RgP8b
-	bSsQ==
-X-Gm-Message-State: APzg51DMZplquopngx7ucSVACiLP7uro2nM85M5niazTrbkVwoZV95u+
-	L1cLg9b2JLottRBAe4Uajz/lWZ/90ZeY7PXlOC47WIOp
-X-Google-Smtp-Source: ANB0VdYe6FobXNOHh9wH08WgWKOWBWv6XR8dZQ5L8JWB4QPOyOuvaFAApTqgH6vTgPS9NRsbs+TiSNOxKIgnlw5HFO4=
-X-Received: by 2002:adf:ce06:: with SMTP id
-	p6-v6mr19975116wrn.118.1535975303532; 
-	Mon, 03 Sep 2018 04:48:23 -0700 (PDT)
-MIME-Version: 1.0
-From: Salaheldin Ahmed <salahuddinash@gmail.com>
-Date: Mon, 3 Sep 2018 13:48:11 +0200
-Message-ID: <CAFCTZorDwp4OMHVAH5O13GObC6K5O700hzxV-0DjvBYPpPtZrQ@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-X-Mailman-Approved-At: Tue, 04 Sep 2018 12:08:08 +0000
-Subject: Run bitbake with progress bar in terminal (Ubuntu 16.04)
+	Tue,  4 Sep 2018 12:15:55 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-10) with ESMTPSA id
+	w84CFsYh027713
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NOT); Tue, 4 Sep 2018 13:15:56 +0100
+Message-ID: <2ba43936a9d6d2a1baac49c419cdc5c86cbbdbf1.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Jan Kiszka <jan.kiszka@siemens.com>, bitbake-devel@lists.openembedded.org
+Date: Tue, 04 Sep 2018 13:15:54 +0100
+In-Reply-To: <192b8cc1-4ea9-1cd7-5a3f-f4c150868a0e@siemens.com>
+References: <192b8cc1-4ea9-1cd7-5a3f-f4c150868a0e@siemens.com>
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+X-Virus-Scanned: clamav-milter 0.100.1 at dan
+X-Virus-Status: Clean
+Subject: Re: [PATCH] process: Flush server stdout/stderr before reporting failure
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,45 +31,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 03 Sep 2018 11:48:23 -0000
-Content-Type: multipart/alternative; boundary="00000000000059d4230574f61e52"
-
---00000000000059d4230574f61e52
+X-List-Received-Date: Tue, 04 Sep 2018 12:15:56 -0000
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi everyone,
+On Sun, 2018-09-02 at 10:43 +0200, Jan Kiszka wrote:
+> We need to print exceptions and flush output channels before telling
+> the
+> client that the server failed. Otherwise the daemon log file may
+> still
+> be empty when the client opens it for printing.
+> 
+> This fixes error reporting when the output is redirected to a pipe,
+> e.g.
+> "bitbake target | cat" with a syntax error in a recipes or config
+> file.
+> That's specifically annoying when bitbake is under the control of a
+> frontend process such as kas.
 
-I'm new to bitbake and Yocto Project. I tried to run bitbake to create one
-image but it takes too long (around 3 hours till not and yet not finished).
-I thought having a progress bar to see how much of the process is finished
-is a very useful thing.
-I found a couple of links where such progress bar is implemented but never
-described how to use it for a newbie. Here is one of these links
-https://github.com/openembedded/bitbake/blob/master/lib/progressbar/progressbar.py
-As far as I saw (by running bitbake -h), there is no option to run bitbake
-with progress bar.
-Could someone tell me how to run bitbake with progress bar enabled in
-terminal?
+Hi,
 
+Could you check if this was already fixed by:
 
-Thanks
+http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=cbe2d3cb0af6c7a5cd368e7dc489960a13648bd0
 
---00000000000059d4230574f61e52
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+?
 
-<div dir=3D"ltr"><div dir=3D"ltr"><div>Hi everyone, <br></div><div><br></di=
-v><div>I&#39;m new to bitbake and Yocto Project. I tried to run bitbake to =
-create one image but it takes too long (around 3 hours till not and yet not=
- finished). <br></div><div>I thought having a progress bar to see how much =
-of the process is finished is a very useful thing.</div><div>I found a coup=
-le of links where such progress bar is implemented but never described how =
-to use it for a newbie. Here is one of these links <a href=3D"https://githu=
-b.com/openembedded/bitbake/blob/master/lib/progressbar/progressbar.py">http=
-s://github.com/openembedded/bitbake/blob/master/lib/progressbar/progressbar=
-.py</a> <br></div><div>As far as I saw (by running bitbake -h), there is no=
- option to run bitbake with progress bar.</div><div>Could someone tell me h=
-ow to run bitbake with progress bar enabled in terminal?</div><div><br></di=
-v><div><br></div><div>Thanks<br></div></div></div>
+I really want to get these flushes as close to the source of the
+problems as we can.
 
---00000000000059d4230574f61e52--
+Cheers,
+
+Richard
+
