@@ -1,19 +1,20 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 44E6774AF1
+	by mail.openembedded.org (Postfix) with ESMTP id 7D38C78D5B
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  4 Sep 2018 12:15:55 +0000 (UTC)
+	Tue,  4 Sep 2018 12:34:32 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-10) with ESMTPSA id
-	w84CFsYh027713
+	w84CYUaI028889
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Tue, 4 Sep 2018 13:15:56 +0100
-Message-ID: <2ba43936a9d6d2a1baac49c419cdc5c86cbbdbf1.camel@linuxfoundation.org>
+	verify=NOT); Tue, 4 Sep 2018 13:34:31 +0100
+Message-ID: <f22cc8eccc5b47a29c87de3b6ad9193d22f486b6.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Jan Kiszka <jan.kiszka@siemens.com>, bitbake-devel@lists.openembedded.org
-Date: Tue, 04 Sep 2018 13:15:54 +0100
-In-Reply-To: <192b8cc1-4ea9-1cd7-5a3f-f4c150868a0e@siemens.com>
+Date: Tue, 04 Sep 2018 13:34:29 +0100
+In-Reply-To: <2ba43936a9d6d2a1baac49c419cdc5c86cbbdbf1.camel@linuxfoundation.org>
 References: <192b8cc1-4ea9-1cd7-5a3f-f4c150868a0e@siemens.com>
+	<2ba43936a9d6d2a1baac49c419cdc5c86cbbdbf1.camel@linuxfoundation.org>
 X-Mailer: Evolution 3.28.1-2 
 Mime-Version: 1.0
 X-Virus-Scanned: clamav-milter 0.100.1 at dan
@@ -31,34 +32,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Sep 2018 12:15:56 -0000
+X-List-Received-Date: Tue, 04 Sep 2018 12:34:33 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Sun, 2018-09-02 at 10:43 +0200, Jan Kiszka wrote:
-> We need to print exceptions and flush output channels before telling
-> the
-> client that the server failed. Otherwise the daemon log file may
-> still
-> be empty when the client opens it for printing.
+On Tue, 2018-09-04 at 13:15 +0100, Richard Purdie wrote:
+> On Sun, 2018-09-02 at 10:43 +0200, Jan Kiszka wrote:
+> > We need to print exceptions and flush output channels before
+> > telling
+> > the
+> > client that the server failed. Otherwise the daemon log file may
+> > still
+> > be empty when the client opens it for printing.
+> > 
+> > This fixes error reporting when the output is redirected to a pipe,
+> > e.g.
+> > "bitbake target | cat" with a syntax error in a recipes or config
+> > file.
+> > That's specifically annoying when bitbake is under the control of a
+> > frontend process such as kas.
 > 
-> This fixes error reporting when the output is redirected to a pipe,
-> e.g.
-> "bitbake target | cat" with a syntax error in a recipes or config
-> file.
-> That's specifically annoying when bitbake is under the control of a
-> frontend process such as kas.
+> Hi,
+> 
+> Could you check if this was already fixed by:
+> 
+> http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=cbe2d3cb0af6c7a5
+> cd368e7dc489960a13648bd0
+> 
+> ?
+> 
+> I really want to get these flushes as close to the source of the
+> problems as we can.
 
-Hi,
+Looking at the code further, I suspect we should simply be doing:
 
-Could you check if this was already fixed by:
+        writer = ConnectionWriter(self.readypipein)
+        self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset)
+        writer.send("ready")
+        os.close(self.readypipein)
+        server.cooker = self.cooker
 
-http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=cbe2d3cb0af6c7a5cd368e7dc489960a13648bd0
-
-?
-
-I really want to get these flushes as close to the source of the
-problems as we can.
+with no exception handling. The ready pipe would then get closed by the
+os._exit() in daemonize which is after the flush. It simplifies the
+code as an added bonus...
 
 Cheers,
 
