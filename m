@@ -1,52 +1,45 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm0-f44.google.com (mail-wm0-f44.google.com [74.125.82.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 8A01074E47
+Received: from mail-wm0-f65.google.com (mail-wm0-f65.google.com [74.125.82.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 7724B74743
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  5 Sep 2018 00:14:46 +0000 (UTC)
-Received: by mail-wm0-f44.google.com with SMTP id f21-v6so6114655wmc.5
+	Wed,  5 Sep 2018 17:01:11 +0000 (UTC)
+Received: by mail-wm0-f65.google.com with SMTP id c14-v6so8720664wmb.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 04 Sep 2018 17:14:47 -0700 (PDT)
+	Wed, 05 Sep 2018 10:01:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=SJPnA3FIWOz+Fx6VpqGEHp8nqz20UTCA0t3n+DFOSgc=;
-	b=g5PhTx9qXHv0fJnZ0ALT7Nz+Cv1tYQE05XwFkzvHi3QmsbY41MXrySZbVn9eQlZIDP
-	8fJnoVsYQPhsPAqSjE6R6+iG7TSUFgA8L/9TbHT1IZati6d5ZIlB1rPmNf24VacmwG3T
-	KHTmv2f0tJvFEarlb+KZhUo4vdHQp9qo5vcwI=
+	h=from:to:subject:date:message-id;
+	bh=UACxCR9C5MWwdp4dBmJTgE5JRcVrlgHykRvwFF8nIxA=;
+	b=WDljaTYrcVjh+r/hcoeATiaQ17fj3bK5yHZGSQd4J8MPCK1pAnjcoJENHRuWfsn6cy
+	QL4gdyqrMk2+eht4jtJlG9TkEXa7rW0CHuGSPUPsVskyRubzGAAB33imOt7jknNra77p
+	9bIPo8pKn1J3zetzEcW99/1o20s3fEixD2BXo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=SJPnA3FIWOz+Fx6VpqGEHp8nqz20UTCA0t3n+DFOSgc=;
-	b=ievYEF9967k0HgtAcAwWzohD7St0a5aHZhBfWmYMDRGEnAE4gHVsWPoIQA/GsKB5gi
-	U7oFOWfj3zSreGBLPt/DBoZltzyfFfyXN45R3NNFlSSoUpyUVuY99K2t3BopOfr3ronh
-	trdHKVjJcEADt+w6WBqvFIrHnXk1kO5o+3CZBSjLK7D2mQRYs2OPbB5pNb0kC7CHrCml
-	UOH9gphMVYFuNQ2up9rGLEIxeLYLTmyzGw8hg+fL85BwqQXrqhUsDBO5UX6kY3c4/ICa
-	9GkRGhLXlybOmO+9GB1d3TBYy56OTzOyL7lODD8LE2PA+BDLkdsH4ibR0V9hA+eDuckf
-	ummw==
-X-Gm-Message-State: APzg51CfeK+O5lkx1JjduQTuP3QV7VnA3NEwcx4kUvI3wEkQrnnGok5B
-	/Qk4d7ctTqKBWGUuOjwiVhrTGA==
-X-Google-Smtp-Source: ANB0VdYZ2UVkA1WypfQrTfbE/ZMmXQseEEfXI8vHcp/4oFhFXWgvduvKlLwNy4QCA2IgsMhx4dDkCQ==
-X-Received: by 2002:a1c:7301:: with SMTP id d1-v6mr9092582wmb.34.1536106487143;
-	Tue, 04 Sep 2018 17:14:47 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=UACxCR9C5MWwdp4dBmJTgE5JRcVrlgHykRvwFF8nIxA=;
+	b=C3W0EJqb7EHejEhZaXi0hu46vGIKS1S2xXkA1GYtXmvZh4QApzCvarHdnb3xrKPLzi
+	uEH3embxyus6XIq5bedBHHwDv+Q2gjh8Zz68twbbE+BAikJIS7RNccktRbi7uKhPPZnc
+	qiDlmh51oSbQvd5RcvBk+N/AlWDDsK1OV4/Qx0z+3mtdvHST08QADz5NQv9upGSj0l1B
+	1HmBXMeQeK/PzlAas/ZJuuXW+2NYeB3vQxzKHeWezr2OdbuNtf237w4pCBvdIuU+KoKy
+	zi+JBJN+SG/x8erxdTpT1ENp/oV53bITRgLjJ6+Jqe/fOFtGFmiXOzyIGvsmkxUeECOP
+	0UyQ==
+X-Gm-Message-State: APzg51DyH3s2AxftLTAdkg3GaGw2wdVxn6Hd2GPQkinSUyKhOUUDGdWS
+	e5kMnyirt5NGg6RBXr4GqVD/0NYaMk8=
+X-Google-Smtp-Source: ANB0VdZqM0yb/f9SWP4nX+V0hUt5IrGnhjZeL/EYcHJyI8h4zTwfTtR5QiipH6BDvRsm67pW1u0qwQ==
+X-Received: by 2002:a1c:9808:: with SMTP id a8-v6mr764910wme.62.1536166871877; 
+	Wed, 05 Sep 2018 10:01:11 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	a9-v6sm430312wmf.28.2018.09.04.17.14.45
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 04 Sep 2018 17:14:46 -0700 (PDT)
-Message-ID: <6b0aad97f792be57f477f2d38ab8f10c9ee16dbc.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: Jan Kiszka <jan.kiszka@siemens.com>, bitbake-devel@lists.openembedded.org
-Date: Wed, 05 Sep 2018 01:14:44 +0100
-In-Reply-To: <66fb849c-41d7-650a-046c-bc09e76fd594@siemens.com>
-References: <192b8cc1-4ea9-1cd7-5a3f-f4c150868a0e@siemens.com>
-	<2ba43936a9d6d2a1baac49c419cdc5c86cbbdbf1.camel@linuxfoundation.org>
-	<f22cc8eccc5b47a29c87de3b6ad9193d22f486b6.camel@linuxfoundation.org>
-	<66fb849c-41d7-650a-046c-bc09e76fd594@siemens.com>
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Subject: Re: [PATCH] process: Flush server stdout/stderr before reporting failure
+	y10-v6sm2895611wrl.87.2018.09.05.10.01.10
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 05 Sep 2018 10:01:10 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  5 Sep 2018 18:01:09 +0100
+Message-Id: <20180905170109.31505-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] server/process: Various server startup logging fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,54 +52,130 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 05 Sep 2018 00:14:47 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 05 Sep 2018 17:01:11 -0000
 
-On Tue, 2018-09-04 at 15:09 +0200, Jan Kiszka wrote:
-> Looks similar on first glance, but it only partly helps with
-> exceptions. 
-> We get from
-> 
-> $ bitbake | cat
-> ERROR: Unable to start bitbake server
-> 
-> to
-> 
-> $ bitbake | cat
-> ERROR: Unable to start bitbake server
-> ERROR: Server log for this session (/work/build/bitbake-
-> cookerdaemon.log):
-> --- Starting bitbake server pid 149 at 2018-09-04 13:02:15.144583 ---
-> 
-> while it should have
-> 
-> $ bitbake
-> ERROR: Unable to start bitbake server
-> ERROR: Last 10 lines of server log for this session 
-> (/work/build/bitbake-cookerdaemon.log):
-> Traceback (most recent call last):
->    File "/work/isar/bitbake/lib/bb/daemonize.py", line 77, in
-> createDaemon
->      function()
->    File "/work/isar/bitbake/lib/bb/server/process.py", line 433, in 
-> _startServer
->      self.cooker = bb.cooker.BBCooker(self.configuration,
-> self.featureset)
->    File "/work/isar/bitbake/lib/bb/cooker.py", line 178, in __init__
->      self.configwatcher = pyinotify.WatchManager()
->    File "/work/isar/bitbake/lib/pyinotify.py", line 1764, in __init__
->      raise OSError(err % self._inotify_wrapper.str_errno())
-> OSError: Cannot initialize new instance of inotify, Errno=Too many
-> open 
-> files (EMFILE)
+There were various problems in the server startup loggin:
 
-The more I looked into this the more problems I found. I've put this in
-for some testing which should address the issues:
+a) stdout/stderr were not being flushed before forking which could potentially
+   duplicate output
 
-http://git.yoctoproject.org/cgit.cgi/poky/commit/?h=master-next&id=dae574dd680f4f9db0b1447266742fa127963842
+b) there were separate buffers for stdout/stderr leading to confusing logs
+   where the entries could be reordered. This was particularly confusing
+   due to the separator the logs use to idendify new messages
 
-Cheers,
+c) an fd wasn't being closed during server startup meaning if the
+   server failed to start, the closed fd wasn't detected as it was held
+   open by the other reference
 
-Richard
+d) If the pipe was detected as being closed, the code incorrectly retried
+   server startup
+
+e) The event code would remap stdout/stderr without flushing them, leading
+   to lose log messages
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/daemonize.py      | 12 +++++++++---
+ lib/bb/event.py          |  3 +++
+ lib/bb/server/process.py | 20 ++++++++++----------
+ 3 files changed, 22 insertions(+), 13 deletions(-)
+
+diff --git a/lib/bb/daemonize.py b/lib/bb/daemonize.py
+index bf16793468..613fb35536 100644
+--- a/lib/bb/daemonize.py
++++ b/lib/bb/daemonize.py
+@@ -16,6 +16,10 @@ def createDaemon(function, logfile):
+     background as a daemon, returning control to the caller.
+     """
+ 
++    # Ensure stdout/stderror are flushed before forking to avoid duplicate output
++    sys.stdout.flush()
++    sys.stderr.flush()
++
+     try:
+         # Fork a child process so the parent can exit.  This returns control to
+         # the command-line or shell.  It also guarantees that the child will not
+@@ -66,12 +70,14 @@ def createDaemon(function, logfile):
+ 
+     try:
+         so = open(logfile, 'a+')
+-        se = so
+         os.dup2(so.fileno(), sys.stdout.fileno())
+-        os.dup2(se.fileno(), sys.stderr.fileno())
++        os.dup2(so.fileno(), sys.stderr.fileno())
+     except io.UnsupportedOperation:
+         sys.stdout = open(logfile, 'a+')
+-        sys.stderr = sys.stdout
++
++    # Have stdout and stderr be the same so log output matches chronologically
++    # and there aren't two seperate buffers
++    sys.stderr = sys.stdout
+ 
+     try:
+         function()
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index c0ec605209..5b1b094a80 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -141,6 +141,9 @@ def print_ui_queue():
+     logger = logging.getLogger("BitBake")
+     if not _uiready:
+         from bb.msg import BBLogFormatter
++        # Flush any existing buffered content
++        sys.stdout.flush()
++        sys.stderr.flush()
+         stdout = logging.StreamHandler(sys.stdout)
+         stderr = logging.StreamHandler(sys.stderr)
+         formatter = BBLogFormatter("%(levelname)s: %(message)s")
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 9e5e709f04..38b923fe2d 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -395,11 +395,16 @@ class BitBakeServer(object):
+         bb.daemonize.createDaemon(self._startServer, logfile)
+         self.sock.close()
+         self.bitbake_lock.close()
++        os.close(self.readypipein)
+ 
+         ready = ConnectionReader(self.readypipe)
+         r = ready.poll(30)
+         if r:
+-            r = ready.get()
++            try:
++                r = ready.get()
++            except EOFError:
++                # Trap the child exitting/closing the pipe and error out
++                r = None
+         if not r or r != "ready":
+             ready.close()
+             bb.error("Unable to start bitbake server")
+@@ -425,21 +430,16 @@ class BitBakeServer(object):
+                         bb.error("Server log for this session (%s):\n%s" % (logfile, "".join(lines)))
+             raise SystemExit(1)
+         ready.close()
+-        os.close(self.readypipein)
+ 
+     def _startServer(self):
+         print(self.start_log_format % (os.getpid(), datetime.datetime.now().strftime(self.start_log_datetime_format)))
+         server = ProcessServer(self.bitbake_lock, self.sock, self.sockname)
+         self.configuration.setServerRegIdleCallback(server.register_idle_function)
++        os.close(self.readypipe)
+         writer = ConnectionWriter(self.readypipein)
+-        try:
+-            self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset)
+-            writer.send("ready")
+-        except:
+-            writer.send("fail")
+-            raise
+-        finally:
+-            os.close(self.readypipein)
++        self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset)
++        writer.send("ready")
++        writer.close()
+         server.cooker = self.cooker
+         server.server_timeout = self.configuration.server_timeout
+         server.xmlrpcinterface = self.configuration.xmlrpcinterface
+-- 
+2.17.1
+
 
