@@ -1,25 +1,26 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id A1E3471C54
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 8022971C54
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Sep 2018 05:29:59 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w865TvfX025680
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 5 Sep 2018 22:29:58 -0700
+	Thu,  6 Sep 2018 05:30:07 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w865U8bM015916
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 5 Sep 2018 22:30:08 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.217) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.408.0; Wed, 5 Sep 2018 22:29:51 -0700
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.408.0; Wed, 5 Sep 2018 22:30:08 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 5 Sep 2018 22:26:33 -0700
-Message-ID: <cover.1536210899.git.David.Reyna@windriver.com>
+Date: Wed, 5 Sep 2018 22:26:40 -0700
+Message-ID: <c9942e5a127eeed017f39a334a7976cd370e8d60.1536210899.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1536210899.git.David.Reyna@windriver.com>
+References: <cover.1536210899.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.157.217]
-Cc: Awais Belal <awais.belal@mentor.com>
-Subject: [SUMO][PATCH 0/9] toaster: SUMO cummulative patch Aug 28 2018
+Subject: [PATCH 1/9] toaster: allow pokydirname to be evaluated when all layers are local
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,62 +33,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Sep 2018 05:29:59 -0000
+X-List-Received-Date: Thu, 06 Sep 2018 05:30:07 -0000
 Content-Type: text/plain
 
-From: David Reyna <David.Reyna@windriver.com>
+From: Awais Belal <awais_belal@mentor.com>
 
+Toaster depends on pokydirname for identifying the location of
+the oe-init-build-env script (and there might be other purposes
+in the future). The problem with current approach is that it
+only checks/sets the variable with git based repos, whereas
+toaster provides mechanisms to allow having layers that are all
+locally available. The evaluation of the variable fails in such
+scenarios, so use a more flexible mechanism in this case and
+try to locate poky in the local layers as well, if not already
+set.
 
-This cumulative enhancement patch includes the following, to support
-flexibility and usability for Toaster.
+[YOCTO #12891]
 
-* 12891 - "Allow flexible value for TOASTERDIR plus custom fixture support"
+Signed-off-by: Awais Belal <awais.belal@mentor.com>
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
+---
+ lib/toaster/bldcontrol/localhostbecontroller.py | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-  This supports the flexibility of having the Toaster base directory (used
-  got the database and project build directories) to be specified by the user.
-  It also allows for flexibility in the location of bitbake to be within one
-  the specified local layers instead of being in the default fixed location.
-
-* bitbake: toaster: Fix comparison in recipe template
-
-  This helps prevent a page failure for certain circumstances, and is well
-  worth porting back to Sumo.
-
-- David
-
-
-The following changes since commit 45ef387cc54a0584807e05a952e1e4681ec4c664:
-
-  bitbake: checksum: sanity check path when recursively checksumming (2018-08-29 15:23:51 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/sumo_cummulative_082618
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/sumo_cummulative_082618
-
-Awais Belal (8):
-  toaster: allow pokydirname to be evaluated when all layers are local
-  toaster: use a more flexible way to find bitbake
-  bitbake: toaster: allow TOASTER_DIR to be overridden from cmdline
-  toaster/widgets.py: avoid divide by zero issues
-  toastergui/newproject.html: fix release divs
-  toaster/checksettings: allow CUSTOM_XML_ONLY setting through env
-  toaster/models.py: allow local paths for custom recipe's base
-  toaster/layerdetails.js: don't hide local layer info
-
-Karsten Strand (1):
-  bitbake: toaster: Fix comparison in recipe template
-
- bin/toaster                                        |  9 +++++--
- lib/toaster/bldcontrol/localhostbecontroller.py    | 31 +++++++++++++++++++---
- .../management/commands/checksettings.py           |  3 ++-
- lib/toaster/orm/models.py                          |  7 +++++
- lib/toaster/toastergui/static/js/layerdetails.js   |  3 ++-
- lib/toaster/toastergui/templates/newproject.html   |  4 +--
- lib/toaster/toastergui/templates/recipe.html       |  2 +-
- lib/toaster/toastergui/widgets.py                  | 19 ++++++++-----
- 8 files changed, 61 insertions(+), 17 deletions(-)
-
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 16c7c80..f960a38 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -217,9 +217,21 @@ class LocalhostBEController(BuildEnvironmentController):
+         self.setCloneStatus(bitbake,'complete',clone_total,clone_count)
+         logger.debug("localhostbecontroller: current layer list %s " % pformat(layerlist))
+ 
+-        if self.pokydirname is None and os.path.exists(os.path.join(self.be.sourcedir, "oe-init-build-env")):
+-            logger.debug("localhostbecontroller: selected poky dir name %s" % self.be.sourcedir)
+-            self.pokydirname = self.be.sourcedir
++        # Resolve self.pokydirname if not resolved yet, consider the scenario
++        # where all layers are local, that's the else clause
++        if self.pokydirname is None:
++            if os.path.exists(os.path.join(self.be.sourcedir, "oe-init-build-env")):
++                logger.debug("localhostbecontroller: selected poky dir name %s" % self.be.sourcedir)
++                self.pokydirname = self.be.sourcedir
++            else:
++                # Alternatively, scan local layers for relative "oe-init-build-env" location
++                for layer in layers:
++                    if os.path.exists(os.path.join(layer.layer_version.layer.local_source_dir,"..","oe-init-build-env")):
++                        logger.debug("localhostbecontroller, setting pokydirname to %s" % (layer.layer_version.layer.local_source_dir))
++                        self.pokydirname = os.path.join(layer.layer_version.layer.local_source_dir,"..")
++                        break
++                else:
++                    logger.error("pokydirname is not set, you will run into trouble!")
+ 
+         # 5. create custom layer and add custom recipes to it
+         for target in targets:
 -- 
 1.9.1
 
