@@ -1,53 +1,29 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-oi0-f49.google.com (mail-oi0-f49.google.com
-	[209.85.218.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 443CD7965F
+Return-Path: <jan.kiszka@siemens.com>
+Received: from goliath.siemens.de (goliath.siemens.de [192.35.17.28])
+	by mail.openembedded.org (Postfix) with ESMTP id 5790B797A4
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Sep 2018 13:26:20 +0000 (UTC)
-Received: by mail-oi0-f49.google.com with SMTP id c190-v6so20422948oig.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 06 Sep 2018 06:26:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc; bh=wp7kAHvSunNJlHNWGkdw/BkMezRG6jc7cik6yvCz+Dk=;
-	b=dvDbgaGzOyXHQNtB+IPTidBCO1ajKN3VE471BICOfl/Dg7Vbd31kuTxjAE77rAQweK
-	xPIFWjMtUHstRqIgK/wEqGAtXkibMkQxfbobZkrBAaIK+65/YWkzZVvuI/za15z4PPU/
-	xuC122VkAJX4rJAcPu3jGEw3XLUPlXw0zJSbi49GHastQNZUJPoaoC7H++prtxxl8CVU
-	ZIWoVkHUOMUdr8muGDcDQ7FGcOLdL2G8S5lhRi9QMiPAAJ1B85E7imEOuGNey6kNXgX1
-	arfPb1S/oUytbn1HjFBrZr8u/aNNVGaUAlT7YbrDTFynY6mC5pl/bpZ6eRoy/4xfSYaJ
-	NqGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc;
-	bh=wp7kAHvSunNJlHNWGkdw/BkMezRG6jc7cik6yvCz+Dk=;
-	b=mUJ63QBV3KBt+STSYMiUwKI01ksHpusPyAapjFwGl6KO2e+8B0VIAKSroXq8ELegeD
-	8HdOlRbbYwC8N0CcwTbPbxhFVJiOer3zouI0h9rZjqLIKIu57Ur/cDGNv6GHov4vup4h
-	6SPf8uy3t7prk5enkjBaPdNNVesF+P5NENRnNngMUhm+I0bPD+EhA9wTk0ADil4VtYGw
-	Y6M1hrB9VBMeHzjwkIRQlRdB+wIOHlXYVo2ipNYQQ0SjRkQCsnr2n+gWsOeK3UwKMIW+
-	vqHhNnrzeLsVS3mH2wq0DMxllNT83Ulw3nv85luNZDsdm22SBQeQwq3kpE4o83rq+V0l
-	j0qA==
-X-Gm-Message-State: APzg51AA5nNiQ15Trhzu3uM7SXy2nz23D50bCCYQnpt6UxWgt0v57VEb
-	C05js724/8QVO7/qG+GGLAymXttwzWzzqTkY0xQkUA==
-X-Google-Smtp-Source: ANB0VdY56APP4ptq4XuFRd36RVw2TEfOMs8P24miHs+NtWXHq+CubVTJM1TMzHbglTmgiB4TWjJ1eXHOl7HbG1Xj36o=
-X-Received: by 2002:aca:55cd:: with SMTP id
-	j196-v6mr2742058oib.202.1536240382093; 
-	Thu, 06 Sep 2018 06:26:22 -0700 (PDT)
+	Fri,  7 Sep 2018 09:48:17 +0000 (UTC)
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+	by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id w879mG39004466
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK); 
+	Fri, 7 Sep 2018 11:48:16 +0200
+Received: from [167.87.129.4] ([167.87.129.4])
+	by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id w879mDXb021712;
+	Fri, 7 Sep 2018 11:48:15 +0200
+To: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org
+References: <192b8cc1-4ea9-1cd7-5a3f-f4c150868a0e@siemens.com>
+	<2ba43936a9d6d2a1baac49c419cdc5c86cbbdbf1.camel@linuxfoundation.org>
+	<f22cc8eccc5b47a29c87de3b6ad9193d22f486b6.camel@linuxfoundation.org>
+	<66fb849c-41d7-650a-046c-bc09e76fd594@siemens.com>
+	<6b0aad97f792be57f477f2d38ab8f10c9ee16dbc.camel@linuxfoundation.org>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <6e52b650-48c1-63a6-f7e2-3d25fc026c2b@siemens.com>
+Date: Fri, 7 Sep 2018 11:48:13 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+	Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
-Received: by 2002:ac9:385d:0:0:0:0:0 with HTTP;
-	Thu, 6 Sep 2018 06:26:01 -0700 (PDT)
-In-Reply-To: <1163b5cc67194ac6a07dc945f55a6670@XBOX02.axis.com>
-References: <CAFCTZorDwp4OMHVAH5O13GObC6K5O700hzxV-0DjvBYPpPtZrQ@mail.gmail.com>
-	<1163b5cc67194ac6a07dc945f55a6670@XBOX02.axis.com>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Thu, 6 Sep 2018 14:26:01 +0100
-Message-ID: <CAJTo0LYbNUs48uOYMc9te9Bts6zVTGKPaagTiH9voCcf=FbHEw@mail.gmail.com>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: Salaheldin Ahmed <salahuddinash@gmail.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: Run bitbake with progress bar in terminal (Ubuntu 16.04)
+In-Reply-To: <6b0aad97f792be57f477f2d38ab8f10c9ee16dbc.camel@linuxfoundation.org>
+Subject: Re: [PATCH] process: Flush server stdout/stderr before reporting failure
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,30 +36,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Sep 2018 13:26:21 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Fri, 07 Sep 2018 09:48:17 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-On 4 September 2018 at 17:43, Peter Kjellerstedt
-<peter.kjellerstedt@axis.com> wrote:
-> Bitbake already has very good support for displaying progress bars when
-> building in a terminal (and uses it by default). You need to provide more
-> information about what you have and what you are building:
+On 2018-09-05 02:14, richard.purdie@linuxfoundation.org wrote:
+> On Tue, 2018-09-04 at 15:09 +0200, Jan Kiszka wrote:
+>> Looks similar on first glance, but it only partly helps with
+>> exceptions.
+>> We get from
+>>
+>> $ bitbake | cat
+>> ERROR: Unable to start bitbake server
+>>
+>> to
+>>
+>> $ bitbake | cat
+>> ERROR: Unable to start bitbake server
+>> ERROR: Server log for this session (/work/build/bitbake-
+>> cookerdaemon.log):
+>> --- Starting bitbake server pid 149 at 2018-09-04 13:02:15.144583 ---
+>>
+>> while it should have
+>>
+>> $ bitbake
+>> ERROR: Unable to start bitbake server
+>> ERROR: Last 10 lines of server log for this session
+>> (/work/build/bitbake-cookerdaemon.log):
+>> Traceback (most recent call last):
+>>     File "/work/isar/bitbake/lib/bb/daemonize.py", line 77, in
+>> createDaemon
+>>       function()
+>>     File "/work/isar/bitbake/lib/bb/server/process.py", line 433, in
+>> _startServer
+>>       self.cooker = bb.cooker.BBCooker(self.configuration,
+>> self.featureset)
+>>     File "/work/isar/bitbake/lib/bb/cooker.py", line 178, in __init__
+>>       self.configwatcher = pyinotify.WatchManager()
+>>     File "/work/isar/bitbake/lib/pyinotify.py", line 1764, in __init__
+>>       raise OSError(err % self._inotify_wrapper.str_errno())
+>> OSError: Cannot initialize new instance of inotify, Errno=Too many
+>> open
+>> files (EMFILE)
+> 
+> The more I looked into this the more problems I found. I've put this in
+> for some testing which should address the issues:
+> 
+> http://git.yoctoproject.org/cgit.cgi/poky/commit/?h=master-next&id=dae574dd680f4f9db0b1447266742fa127963842
+> 
 
-Just to make this clear, this is what my bitbake is showing me right now:
+Yep, it does here as well!
 
-Currently  5 running tasks (3397 of 3770)  90%
-|#####################################################################
-       |
-0: python3-3.5.5-r1.0 do_compile - 408s (pid 13805)
-1: linux-intel-4.14.66+gitAUTOINC+5c089e91b3_dd6a8b48d4-r0 do_deploy -
-48s (pid 7249)
-2: linux-intel-4.14.66+gitAUTOINC+5c089e91b3_dd6a8b48d4-r0
-do_package_write_ipk - 48s (pid 7253)
-3: linux-intel-4.14.66+gitAUTOINC+5c089e91b3_dd6a8b48d4-r0
-do_package_write_rpm - 48s (pid 7255)
-4: glib-2.0-1_2.58.0-r0 do_install - 17s (pid 31839)
+Thanks,
+Jan
 
-The first line is, as should be obvious, a progress bar.
-
-Ross
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
 
