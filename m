@@ -1,29 +1,70 @@
-Return-Path: <jan.kiszka@siemens.com>
-Received: from goliath.siemens.de (goliath.siemens.de [192.35.17.28])
-	by mail.openembedded.org (Postfix) with ESMTP id 5790B797A4
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com
+	[209.85.221.46])
+	by mail.openembedded.org (Postfix) with ESMTP id B851E74C97
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Sep 2018 09:48:17 +0000 (UTC)
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-	by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id w879mG39004466
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK); 
-	Fri, 7 Sep 2018 11:48:16 +0200
-Received: from [167.87.129.4] ([167.87.129.4])
-	by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id w879mDXb021712;
-	Fri, 7 Sep 2018 11:48:15 +0200
-To: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org
-References: <192b8cc1-4ea9-1cd7-5a3f-f4c150868a0e@siemens.com>
-	<2ba43936a9d6d2a1baac49c419cdc5c86cbbdbf1.camel@linuxfoundation.org>
-	<f22cc8eccc5b47a29c87de3b6ad9193d22f486b6.camel@linuxfoundation.org>
-	<66fb849c-41d7-650a-046c-bc09e76fd594@siemens.com>
-	<6b0aad97f792be57f477f2d38ab8f10c9ee16dbc.camel@linuxfoundation.org>
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <6e52b650-48c1-63a6-f7e2-3d25fc026c2b@siemens.com>
-Date: Fri, 7 Sep 2018 11:48:13 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
-	Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
-MIME-Version: 1.0
-In-Reply-To: <6b0aad97f792be57f477f2d38ab8f10c9ee16dbc.camel@linuxfoundation.org>
-Subject: Re: [PATCH] process: Flush server stdout/stderr before reporting failure
+	Fri,  7 Sep 2018 11:46:24 +0000 (UTC)
+Received: by mail-wr1-f46.google.com with SMTP id s14-v6so5690256wrw.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 07 Sep 2018 04:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:cc:date:in-reply-to:references
+	:mime-version:content-transfer-encoding;
+	bh=+XttyB44+PM8mzmYutqK7dKba0GBtk7cy2QtYdPtMTI=;
+	b=Cmpp7AavxRISeFcUnupC7w403wlxh6trzqLjGOePilmBvCrNmMGS5hDsTR4cgSfAHs
+	HIy/oG6lGFR4BbQCOGwMjBqYfN7/zLA5HcsDIGv1S9k2JFMO7T09mJM9AUR6qs2o1RZP
+	CUtiR/oUBNW7knOh7Zdi9880re8Q6Wo9KsYdw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=+XttyB44+PM8mzmYutqK7dKba0GBtk7cy2QtYdPtMTI=;
+	b=sDt64qwiyzuHxHrkHpJ0JLne2FxB6KmdbUEcphzwZBRVwGFBdHaSgKWF9aE2tMdL8X
+	8+guKi6MQVLeRyVHuKW/d6OuVXXq0qcM58GhGdnbTHuRJBk+PuSuez87VCagr9y/2guM
+	Z4z9fnYzhBvoH+jDlEXlH72nNgMz4UHbJ7IIL8cpNOLeh6kL9DqO/69egptol6pygk2C
+	JMlX80Eihr/EBsZWPkQDCZQOiKVjQvxKNEzsX+jaazdwV9y6QQD/R3AVGrZR6r+38TX1
+	zMrEwtdpz8iKESwCGz1Pt0gm+j61UbMsflo5DOyf8f8aGVR/3x0kQ1pxoxVPq4QJg/DO
+	V0Uw==
+X-Gm-Message-State: APzg51AlM5jGbq/2Appt7tS87GOjo3jjPQuT0KISVY9/LSbqezx0DyOC
+	sMH+Teths8Jb/xa/GHBHvvReiQ==
+X-Google-Smtp-Source: ANB0VdbheGXFXazpAT+ZTWlyZY8RPj1tatOewVFGLSnlXR+6G/0qdBByIhOX3+jdYDQHSrRQCWutag==
+X-Received: by 2002:a5d:6150:: with SMTP id
+	y16-v6mr6058748wrt.141.1536320785365; 
+	Fri, 07 Sep 2018 04:46:25 -0700 (PDT)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	l16-v6sm4950844wmc.38.2018.09.07.04.46.23
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Fri, 07 Sep 2018 04:46:24 -0700 (PDT)
+Message-ID: <2b44d47767cd66fc0840e90bd173ee32abe573bd.camel@linuxfoundation.org>
+From: richard.purdie@linuxfoundation.org
+To: =?UTF-8?Q?=C5=81ukasz_Gardo=C5=84?= <lukaszgardon555@gmail.com>, 
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Fri, 07 Sep 2018 12:46:22 +0100
+In-Reply-To: <CAHTiZf+DyebwL3N9y15RgvJZKnTx4Bh+XhqEo8FVxg5w_C=L7w@mail.gmail.com>
+References: <20180901133644.1577-1-lukaszgardon555@gmail.com>
+	<CANNYZj9-ybLPr=kNLEGFgdPG1U_kNJEEVzCw_5FiYUPYVVQQYw@mail.gmail.com>
+	<94B3180E-9326-43AC-9780-39A3E2D9F850@gmail.com>
+	<CANNYZj9UY7rrTySn-ctmd0u+OGnneB+p_nH=OvXe35L+JB-Zzg@mail.gmail.com>
+	<1577859A-5F16-4E3F-8C23-1ECB099AB770@gmail.com>
+	<7679349B-ECD4-4895-BE9D-052E4674408C@gmail.com>
+	<CC13D61A-9A15-4BD7-B8F8-531EC354D62A@gmail.com>
+	<26d9005d53f6bbde44236b6bb44098045af0b9eb.camel@linuxfoundation.org>
+	<D234347A-BA5D-4001-9F81-2E1D393CCB25@gmail.com>
+	<6CD09F44-529F-4395-8342-5C295F7B2BFD@gmail.com>
+	<CABr9L5DzAv5RtZZv3HBHTO3fuKrQWeazT1WZ4czYL1kpKzyhSg@mail.gmail.com>
+	<7ed5a587326097169c70965e34e0a690f0d549e5.camel@linuxfoundation.org>
+	<CABr9L5Cfa5Z-gQTOZeMwJ0jV-r91XboZAaT8oM0HW5Rn4mcy2A@mail.gmail.com>
+	<645d033f38db0a4389002c2c42ef8f83aa619045.camel@linuxfoundation.org>
+	<CAHTiZf+x-vUPHTmR=yYFcSday9v4Pw0J88oz3HvzN9cuTKenTw@mail.gmail.com>
+	<560fd234a8e60cc339d58db20b0c684564df6da7.camel@linuxfoundation.org>
+	<CAHTiZf+DyebwL3N9y15RgvJZKnTx4Bh+XhqEo8FVxg5w_C=L7w@mail.gmail.com>
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Cc: ville.skytta@iki.fi
+Subject: Re: Add files supporting bash completion for bitbake tools
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,62 +77,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Sep 2018 09:48:17 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 07 Sep 2018 11:46:25 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On 2018-09-05 02:14, richard.purdie@linuxfoundation.org wrote:
-> On Tue, 2018-09-04 at 15:09 +0200, Jan Kiszka wrote:
->> Looks similar on first glance, but it only partly helps with
->> exceptions.
->> We get from
->>
->> $ bitbake | cat
->> ERROR: Unable to start bitbake server
->>
->> to
->>
->> $ bitbake | cat
->> ERROR: Unable to start bitbake server
->> ERROR: Server log for this session (/work/build/bitbake-
->> cookerdaemon.log):
->> --- Starting bitbake server pid 149 at 2018-09-04 13:02:15.144583 ---
->>
->> while it should have
->>
->> $ bitbake
->> ERROR: Unable to start bitbake server
->> ERROR: Last 10 lines of server log for this session
->> (/work/build/bitbake-cookerdaemon.log):
->> Traceback (most recent call last):
->>     File "/work/isar/bitbake/lib/bb/daemonize.py", line 77, in
->> createDaemon
->>       function()
->>     File "/work/isar/bitbake/lib/bb/server/process.py", line 433, in
->> _startServer
->>       self.cooker = bb.cooker.BBCooker(self.configuration,
->> self.featureset)
->>     File "/work/isar/bitbake/lib/bb/cooker.py", line 178, in __init__
->>       self.configwatcher = pyinotify.WatchManager()
->>     File "/work/isar/bitbake/lib/pyinotify.py", line 1764, in __init__
->>       raise OSError(err % self._inotify_wrapper.str_errno())
->> OSError: Cannot initialize new instance of inotify, Errno=Too many
->> open
->> files (EMFILE)
+On Fri, 2018-09-07 at 12:38 +0200, Łukasz Gardoń wrote:
+> Indeed, poky repository is combined with using combo layer tool, I
+> forger about this fact. 
 > 
-> The more I looked into this the more problems I found. I've put this in
-> for some testing which should address the issues:
+> So how fell can I prepare a change with adding completion files for
+> BitBake into bitbake repository (just storing those files under
+> contrib dir). And also prepare a change for oe-core also with adding
+> complete files under contrib dir (e.g for devtool) and adapt env
+> scripts.
 > 
-> http://git.yoctoproject.org/cgit.cgi/poky/commit/?h=master-next&id=dae574dd680f4f9db0b1447266742fa127963842
-> 
+> I am volunteering my self for keeping update these files if this is
+> possible.
 
-Yep, it does here as well!
+I guess I'm ok in principle to do something like this and happy to have
+a maintainer. I did look at the patches and I don't think they're
+acceptable in their current form though.
 
-Thanks,
-Jan
+The list of tasks is hardcoded whilst in reality different recipes have
+different tasks and the available tasks is metadata defined. I do not
+want to see a hardcoded list of tasks. The expression to obtain recipe
+data is also rather ugly.
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Ultimately our plan is to have bitbake be memory resident so there is
+no real parsing overhead for queries. If that were the case we'd be
+able to get correct recipe/task information from bitbake.
+
+So in principle, I'm open to the idea but we likely need memory
+resident bitbake and a helper to pull the info you need for correct
+completion data directly from bitbake rather than guessing.
+
+Cheers,
+
+Richard
 
