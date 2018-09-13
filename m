@@ -1,26 +1,37 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 166A779652
+Return-Path: <Awais_Belal@mentor.com>
+X-Greylist: delayed 912 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 13 Sep 2018 09:50:51 UTC
+Received: from relay1.mentorg.com (relay1.mentorg.com [192.94.38.131])
+	by mail.openembedded.org (Postfix) with ESMTP id B58687989F
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Sep 2018 08:27:49 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w8C8RUor020627
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Sep 2018 01:27:41 -0700
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.408.0; Wed, 12 Sep 2018 01:27:19 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 12 Sep 2018 16:38:16 +0800
-Message-ID: <7bb7a9d6566a2849e67073843a650800935f09db.1536741423.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1536741423.git.liezhi.yang@windriver.com>
-References: <cover.1536741423.git.liezhi.yang@windriver.com>
+	Thu, 13 Sep 2018 09:50:51 +0000 (UTC)
+Received: from nat-ies.mentorg.com ([192.94.31.2]
+	helo=svr-ies-mbx-01.mgc.mentorg.com)
+	by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+	id 1g0O2G-00031V-NV from Awais_Belal@mentor.com 
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 13 Sep 2018 02:35:40 -0700
+Received: from SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) by
+	svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) with Microsoft SMTP
+	Server (TLS) id 15.0.1320.4; Thu, 13 Sep 2018 10:35:37 +0100
+Received: from SVR-IES-MBX-03.mgc.mentorg.com ([fe80::1072:fb6e:87f1:ed17]) by
+	SVR-IES-MBX-03.mgc.mentorg.com ([fe80::1072:fb6e:87f1:ed17%22]) with
+	mapi id 15.00.1320.000; Thu, 13 Sep 2018 10:35:37 +0100
+From: "Belal, Awais" <Awais_Belal@mentor.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path
+	resolution
+Thread-Index: AQHUS0UdM8G0xVWi7EeQqAsalTR7hA==
+Date: Thu, 13 Sep 2018 09:35:37 +0000
+Message-ID: <1536831336527.93802@mentor.com>
+Accept-Language: en-US, en-IE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [192.94.31.225]
 MIME-Version: 1.0
-Subject: [PATCH 1/1] dump_cache.py: move it to oe-core/scripts
+Subject: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path resolution
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,111 +44,162 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 12 Sep 2018 08:27:50 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 13 Sep 2018 09:50:51 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_153683133652793802mentorcom_"
 
-Move it to oe-core can make it's easier to use, e.g., we don't need use
-/path/to/bitbake/contrib/dump_cache.py to run it, just use dump_cache.py after
-the build is initialized.
+--_000_153683133652793802mentorcom_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+From b736703a9d3f3c33e2e83ecd5e61dbddd5793cc8 Mon Sep 17 00:00:00 2001
+From: Awais Belal <awais_belal@mentor.com>
+Date: Thu, 13 Sep 2018 14:12:18 +0500
+Subject: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path res=
+olution
+
+
+15340edce23e63b060c75114d508e1f76757239c introduced a way which
+allowed bitbake to be found from the PATH variable when directory
+structures different from poky are used. This just drops a leftover
+which made the earlier implementation meaningless by reassigning
+the path relative to oe-core/meta.
+
+
+Signed-off-by: Awais Belal <awais_belal@mentor.com>
 ---
- bitbake/contrib/dump_cache.py | 85 -------------------------------------------
- 1 file changed, 85 deletions(-)
- delete mode 100755 bitbake/contrib/dump_cache.py
+ lib/toaster/bldcontrol/localhostbecontroller.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/contrib/dump_cache.py b/bitbake/contrib/dump_cache.py
-deleted file mode 100755
-index 8963ca4..0000000
---- a/bitbake/contrib/dump_cache.py
-+++ /dev/null
-@@ -1,85 +0,0 @@
--#!/usr/bin/env python3
--# ex:ts=4:sw=4:sts=4:et
--# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
--#
--# Copyright (C) 2012, 2018 Wind River Systems, Inc.
--#
--# This program is free software; you can redistribute it and/or modify
--# it under the terms of the GNU General Public License version 2 as
--# published by the Free Software Foundation.
--#
--# This program is distributed in the hope that it will be useful,
--# but WITHOUT ANY WARRANTY; without even the implied warranty of
--# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--# GNU General Public License for more details.
--#
--# You should have received a copy of the GNU General Public License along
--# with this program; if not, write to the Free Software Foundation, Inc.,
--# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
--
--#
--# Used for dumping the bb_cache.dat
--#
--import os
--import sys
--import argparse
--
--# For importing bb.cache
--sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '../lib'))
--from bb.cache import CoreRecipeInfo
--
--import pickle
--
--class DumpCache(object):
--    def __init__(self):
--        parser = argparse.ArgumentParser(
--            description="bb_cache.dat's dumper",
--            epilog="Use %(prog)s --help to get help")
--        parser.add_argument("-r", "--recipe",
--            help="specify the recipe, default: all recipes", action="store")
--        parser.add_argument("-m", "--members",
--            help = "specify the member, use comma as separator for multiple ones, default: all members", action="store", default="")
--        parser.add_argument("-s", "--skip",
--            help = "skip skipped recipes", action="store_true")
--        parser.add_argument("cachefile",
--            help = "specify bb_cache.dat", nargs = 1, action="store", default="")
--
--        self.args = parser.parse_args()
--
--    def main(self):
--        with open(self.args.cachefile[0], "rb") as cachefile:
--            pickled = pickle.Unpickler(cachefile)
--            while True:
--                try:
--                    key = pickled.load()
--                    val = pickled.load()
--                except Exception:
--                    break
--                if isinstance(val, CoreRecipeInfo):
--                    pn = val.pn
--
--                    if self.args.recipe and self.args.recipe != pn:
--                        continue
--
--                    if self.args.skip and val.skipped:
--                        continue
--
--                    if self.args.members:
--                        out = key
--                        for member in self.args.members.split(','):
--                            out += ": %s" % val.__dict__.get(member)
--                        print("%s" % out)
--                    else:
--                        print("%s: %s" % (key, val.__dict__))
--                elif not self.args.recipe:
--                    print("%s %s" % (key, val))
--
--if __name__ == "__main__":
--    try:
--        dump = DumpCache()
--        ret = dump.main()
--    except Exception as esc:
--        ret = 1
--        import traceback
--        traceback.print_exc()
--    sys.exit(ret)
--- 
+
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/=
+bldcontrol/localhostbecontroller.py
+index 3850334..63b4187 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -360,12 +360,12 @@ class LocalhostBEController(BuildEnvironmentControlle=
+r):
+             for path in os.environ["PATH"].split(os.pathsep):
+                 if os.path.exists(os.path.join(path, 'bitbake')):
+                     bitbake =3D os.path.join(path, 'bitbake')
++                    logger.info("Found Bitbake at: %s" % path)
+                     break
+             else:
+                 logger.error("Looks like Bitbake is not available, please =
+fix your environment")
+
+         # run bitbake server from the clone
+-        bitbake =3D os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitb=
+ake')
+         toasterlayers =3D os.path.join(builddir,"conf/toaster-bblayers.con=
+f")
+         self._shellcmd('%s bash -c \"source %s %s; BITBAKE_UI=3D"knotty" %=
+s --read %s --read %s '
+                        '--server-only -B 0.0.0.0:0\"' % (env_clean, oe_ini=
+t,
+--
 2.7.4
 
 
+
+BR,
+Awais
+
+--_000_153683133652793802mentorcom_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none"><!--P{margin-top:0;margin-b=
+ottom:0;} p=0A=
+	{margin-top:0;=0A=
+	margin-bottom:0}--></style>
+</head>
+<body dir=3D"ltr" style=3D"font-size:10pt;color:#000000;background-color:#F=
+FFFFF;font-family:Tahoma,Geneva,sans-serif;">
+<p>From b736703a9d3f3c33e2e83ecd5e61dbddd5793cc8 Mon Sep 17 00:00:00 2001<b=
+r>
+From: Awais Belal &lt;awais_belal@mentor.com&gt;<br>
+Date: Thu, 13 Sep 2018 14:12:18 &#43;0500<br>
+Subject: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path res=
+olution<br>
+</p>
+<p><br>
+</p>
+<p>15340edce23e63b060c75114d508e1f76757239c introduced a way which<br>
+allowed bitbake to be found from the PATH variable when directory<br>
+structures different from poky are used. This just drops a leftover<br>
+which made the earlier implementation meaningless by reassigning<br>
+the path relative to oe-core/meta.<br>
+</p>
+<p><br>
+</p>
+<p>Signed-off-by: Awais Belal &lt;awais_belal@mentor.com&gt;<br>
+---<br>
+&nbsp;lib/toaster/bldcontrol/localhostbecontroller.py | 2 &#43;-<br>
+&nbsp;1 file changed, 1 insertion(&#43;), 1 deletion(-)<br>
+</p>
+<p><br>
+</p>
+<p>diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toast=
+er/bldcontrol/localhostbecontroller.py<br>
+index 3850334..63b4187 100644<br>
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py<br>
+&#43;&#43;&#43; b/lib/toaster/bldcontrol/localhostbecontroller.py<br>
+@@ -360,12 &#43;360,12 @@ class LocalhostBEController(BuildEnvironmentContr=
+oller):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fo=
+r path in os.environ[&quot;PATH&quot;].split(os.pathsep):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; if os.path.exists(os.path.join(path, 'bitbake')):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bitbake =3D os.path.join(path=
+, 'bitbake')<br>
+&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.info(&quot;Found Bitbak=
+e at: %s&quot; % path)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; el=
+se:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; logger.error(&quot;Looks like Bitbake is not availabl=
+e, please fix your environment&quot;)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # run bitbake server from =
+the clone<br>
+-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bitbake =3D os.path.join(self.p=
+okydirname, 'bitbake', 'bin', 'bitbake')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; toasterlayers =3D os.path.=
+join(builddir,&quot;conf/toaster-bblayers.conf&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self._shellcmd('%s bash -c=
+ \&quot;source %s %s; BITBAKE_UI=3D&quot;knotty&quot; %s --read %s --read %=
+s '<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '--server-o=
+nly -B 0.0.0.0:0\&quot;' % (env_clean, oe_init,<br>
+--<br>
+2.7.4<br>
+<br>
+</p>
+<p><br>
+</p>
+<div id=3D"Signature">
+<div style=3D"font-family:Tahoma; font-size:13px"><font face=3D"Tahoma"></f=
+ont>
+<div style=3D"font-size:13px">
+<div><font size=3D"2" face=3D"Tahoma"><span lang=3D"en-US">
+<div style=3D"margin:0">BR,</div>
+<div style=3D"margin:0"><i>Awais</i></div>
+</span></font></div>
+</div>
+<font face=3D"Tahoma"></font></div>
+</div>
+</body>
+</html>
+
+--_000_153683133652793802mentorcom_--
