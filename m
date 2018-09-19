@@ -1,32 +1,49 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id B671474E47
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 2B95274551
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 14 Sep 2018 07:18:11 +0000 (UTC)
+	Wed, 19 Sep 2018 16:25:49 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w8E7ICwL004664
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w8JGPocp029500
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Fri, 14 Sep 2018 00:18:12 -0700 (PDT)
-Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.79]) by
-	ALA-HCA.corp.ad.wrs.com ([147.11.189.40]) with mapi id 14.03.0415.000;
-	Fri, 14 Sep 2018 00:18:11 -0700
-From: "Reyna, David" <david.reyna@windriver.com>
-To: "Belal, Awais" <Awais_Belal@mentor.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [sumo][PATCH] toaster: localhostbecontroller:
-	fix bitbake path resolution
-Thread-Index: AQHUS0UdM8G0xVWi7EeQqAsalTR7hKTvXz/w
-Date: Fri, 14 Sep 2018 07:18:10 +0000
-Message-ID: <5E53D14CE4667A45B9A06760DE5D13D0F3AC15D6@ALA-MBD.corp.ad.wrs.com>
-References: <1536831336527.93802@mentor.com>
-In-Reply-To: <1536831336527.93802@mentor.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [147.11.117.84]
+	Wed, 19 Sep 2018 09:25:50 -0700 (PDT)
+Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
+	Wed, 19 Sep 2018 09:25:49 -0700
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>, Matt Hoosier
+	<matt.hoosier@gmail.com>
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	xsBNBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAHNJU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT7CwHcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrs7ATQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABwsBfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <63dcdf42-1ccc-1016-e540-807115c57f2d@windriver.com>
+Date: Wed, 19 Sep 2018 11:25:49 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:52.0)
+	Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Subject: Re: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path resolution
+Subject: Issues w/ gitsm fetcher and BB_NO_NETWORK
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,279 +56,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Sep 2018 07:18:11 -0000
+X-List-Received-Date: Wed, 19 Sep 2018 16:25:50 -0000
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_5E53D14CE4667A45B9A06760DE5D13D0F3AC15D6ALAMBDcorpadwrs_"
+Content-Transfer-Encoding: 8bit
 
---_000_5E53D14CE4667A45B9A06760DE5D13D0F3AC15D6ALAMBDcorpadwrs_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+I've been struggling for the past few days with gitsm, and have finally thrown
+in the towel.
 
-Hi all,
+What is happening is that I am trying to use the 'ostree' recipe (not really
+important), but that uses the gitsm fetcher against:
 
-I recommend this for both Sumo and for master as well, so that they stay in=
- sync.
+gitsm://github.com/ostreedev/ostree.git;branch=master
 
-The cherry-pick should be clean between the two branches.
+On a fetch the system correctly pulls down the 'ostree.git' from a local mirror
+I have setup.  However, it then moves to the step of configuring the submodules
+and fetching them, and goes out to the network and ALWAYS pulls them from the
+network.
 
-- David
+My mirror is setup using:
 
-From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
-unces@lists.openembedded.org] On Behalf Of Belal, Awais
-Sent: Thursday, September 13, 2018 2:36 AM
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake-devel] [sumo][PATCH] toaster: localhostbecontroller: fix =
-bitbake path resolution
+PREMIRRORS_append = " \
+     gitsm://.*/.* gitsm://${LAYERDIR}/git/MIRRORNAME;protocol=file \n \
+"
 
+(my mirrors are simply local cloned bare repositories)
 
-From b736703a9d3f3c33e2e83ecd5e61dbddd5793cc8 Mon Sep 17 00:00:00 2001
-From: Awais Belal <awais_belal@mentor.com>
-Date: Thu, 13 Sep 2018 14:12:18 +0500
-Subject: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path res=
-olution
+If I modify my /etc/hosts files to point github/gitlab to 127.0.0.1, I can
+easily trigger the faults:
 
+ERROR: ostree-2018.7+gitAUTOINC+4148918655-r0 do_unpack: Fetcher failure: Fetch
+command export PSEUDO_DISABLED=1; ... git -c core.fsyncobjectfiles=0 submodule
+update --init --recursive || (git -c core.fsyncobjectfiles=0 submodule sync
+--recursive && git -c core.fsyncobjectfiles=0 submodule update --init
+--recursive) failed with exit code 1, output:
+Submodule 'bsdiff' (https://github.com/mendsley/bsdiff) registered for path 'bsdiff'
+Submodule 'libglnx' (https://gitlab.gnome.org/GNOME/libglnx.git) registered for
+path 'libglnx'
+Cloning into 'bsdiff'...
+Synchronizing submodule url for 'bsdiff'
+Synchronizing submodule url for 'libglnx'
+Cloning into 'bsdiff'...
 
-
-15340edce23e63b060c75114d508e1f76757239c introduced a way which
-allowed bitbake to be found from the PATH variable when directory
-structures different from poky are used. This just drops a leftover
-which made the earlier implementation meaningless by reassigning
-the path relative to oe-core/meta.
-
-
-
-Signed-off-by: Awais Belal <awais_belal@mentor.com>
----
- lib/toaster/bldcontrol/localhostbecontroller.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-
-
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/=
-bldcontrol/localhostbecontroller.py
-index 3850334..63b4187 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -360,12 +360,12 @@ class LocalhostBEController(BuildEnvironmentControlle=
-r):
-             for path in os.environ["PATH"].split(os.pathsep):
-                 if os.path.exists(os.path.join(path, 'bitbake')):
-                     bitbake =3D os.path.join(path, 'bitbake')
-+                    logger.info("Found Bitbake at: %s" % path)
-                     break
-             else:
-                 logger.error("Looks like Bitbake is not available, please =
-fix your environment")
-
-         # run bitbake server from the clone
--        bitbake =3D os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitb=
-ake')
-         toasterlayers =3D os.path.join(builddir,"conf/toaster-bblayers.con=
-f")
-         self._shellcmd('%s bash -c \"source %s %s; BITBAKE_UI=3D"knotty" %=
-s --read %s --read %s '
-                        '--server-only -B 0.0.0.0:0\"' % (env_clean, oe_ini=
-t,
---
-2.7.4
+fatal: unable to access 'https://github.com/mendsley/bsdiff/': Failed connect to
+github.com:443; Connection refused
+Clone of 'https://github.com/mendsley/bsdiff' into submodule path 'bsdiff' failed
+fatal: unable to access 'https://github.com/mendsley/bsdiff/': Failed connect to
+github.com:443; Connection refused
+Clone of 'https://github.com/mendsley/bsdiff' into submodule path 'bsdiff' failed
 
 
-BR,
-Awais
+I've tried a number of things, but so far I'm just not understanding how to
+proceed.  I assume at some point the references to the modules really need to
+refer to an alternative location and be fetched in, but I'm not sure that any of
+the existing interfaces would allow that.
 
---_000_5E53D14CE4667A45B9A06760DE5D13D0F3AC15D6ALAMBDcorpadwrs_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Any suggestions how to proceed?
 
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:"Times New Roman","serif";}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-p
-	{mso-style-priority:99;
-	margin:0in;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:"Times New Roman","serif";}
-span.EmailStyle18
-	{mso-style-type:personal-reply;
-	font-family:"Calibri","sans-serif";
-	color:#1F497D;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-size:10.0pt;}
-@page WordSection1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body bgcolor=3D"white" lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D">Hi all,
-<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D">I recommend this for both=
- Sumo and for master as well, so that they stay in sync.<o:p></o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D">The cherry-pick should be=
- clean between the two branches.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D">- David<o:p></o:p></span>=
-</p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<div>
-<div style=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0in =
-0in 0in">
-<p class=3D"MsoNormal"><b><span style=3D"font-size:10.0pt;font-family:&quot=
-;Tahoma&quot;,&quot;sans-serif&quot;">From:</span></b><span style=3D"font-s=
-ize:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> bitbake-=
-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bounces@lists.op=
-enembedded.org]
-<b>On Behalf Of </b>Belal, Awais<br>
-<b>Sent:</b> Thursday, September 13, 2018 2:36 AM<br>
-<b>To:</b> bitbake-devel@lists.openembedded.org<br>
-<b>Subject:</b> [bitbake-devel] [sumo][PATCH] toaster: localhostbecontrolle=
-r: fix bitbake path resolution<o:p></o:p></span></p>
-</div>
-</div>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p><span style=3D"font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;san=
-s-serif&quot;;color:black">From b736703a9d3f3c33e2e83ecd5e61dbddd5793cc8 Mo=
-n Sep 17 00:00:00 2001<br>
-From: Awais Belal &lt;awais_belal@mentor.com&gt;<br>
-Date: Thu, 13 Sep 2018 14:12:18 &#43;0500<br>
-Subject: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path res=
-olution<o:p></o:p></span></p>
-<p><span style=3D"font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;san=
-s-serif&quot;;color:black"><o:p>&nbsp;</o:p></span></p>
-<p><span style=3D"font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;san=
-s-serif&quot;;color:black">15340edce23e63b060c75114d508e1f76757239c introdu=
-ced a way which<br>
-allowed bitbake to be found from the PATH variable when directory<br>
-structures different from poky are used. This just drops a leftover<br>
-which made the earlier implementation meaningless by reassigning<br>
-the path relative to oe-core/meta.<o:p></o:p></span></p>
-<p><span style=3D"font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;san=
-s-serif&quot;;color:black"><o:p>&nbsp;</o:p></span></p>
-<p><span style=3D"font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;san=
-s-serif&quot;;color:black">Signed-off-by: Awais Belal &lt;awais_belal@mento=
-r.com&gt;<br>
----<br>
-&nbsp;lib/toaster/bldcontrol/localhostbecontroller.py | 2 &#43;-<br>
-&nbsp;1 file changed, 1 insertion(&#43;), 1 deletion(-)<o:p></o:p></span></=
-p>
-<p><span style=3D"font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;san=
-s-serif&quot;;color:black"><o:p>&nbsp;</o:p></span></p>
-<p style=3D"margin-bottom:12.0pt"><span style=3D"font-size:10.0pt;font-fami=
-ly:&quot;Tahoma&quot;,&quot;sans-serif&quot;;color:black">diff --git a/lib/=
-toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localh=
-ostbecontroller.py<br>
-index 3850334..63b4187 100644<br>
---- a/lib/toaster/bldcontrol/localhostbecontroller.py<br>
-&#43;&#43;&#43; b/lib/toaster/bldcontrol/localhostbecontroller.py<br>
-@@ -360,12 &#43;360,12 @@ class LocalhostBEController(BuildEnvironmentContr=
-oller):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fo=
-r path in os.environ[&quot;PATH&quot;].split(os.pathsep):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp; if os.path.exists(os.path.join(path, 'bitbake')):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bitbake =3D os.path.join(path=
-, 'bitbake')<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.info(&quot;Found Bitbak=
-e at: %s&quot; % path)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; el=
-se:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp; logger.error(&quot;Looks like Bitbake is not availabl=
-e, please fix your environment&quot;)<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # run bitbake server from =
-the clone<br>
--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bitbake =3D os.path.join(self.p=
-okydirname, 'bitbake', 'bin', 'bitbake')<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; toasterlayers =3D os.path.=
-join(builddir,&quot;conf/toaster-bblayers.conf&quot;)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self._shellcmd('%s bash -c=
- \&quot;source %s %s; BITBAKE_UI=3D&quot;knotty&quot; %s --read %s --read %=
-s '<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '--server-o=
-nly -B 0.0.0.0:0\&quot;' % (env_clean, oe_init,<br>
---<br>
-2.7.4<o:p></o:p></span></p>
-<p><span style=3D"font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;san=
-s-serif&quot;;color:black"><o:p>&nbsp;</o:p></span></p>
-<div id=3D"Signature">
-<div>
-<div>
-<div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:10.0pt;font-family:&quot;Ta=
-homa&quot;,&quot;sans-serif&quot;;color:black">BR,<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><i><span style=3D"font-size:10.0pt;font-family:&quot=
-;Tahoma&quot;,&quot;sans-serif&quot;;color:black">Awais</span></i><span sty=
-le=3D"font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot=
-;;color:black"><o:p></o:p></span></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</body>
-</html>
+--Mark
 
---_000_5E53D14CE4667A45B9A06760DE5D13D0F3AC15D6ALAMBDcorpadwrs_--
