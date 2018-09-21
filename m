@@ -1,51 +1,39 @@
-Return-Path: <prvs=795b04f21=Mikko.Rapeli@bmw.de>
-X-Greylist: delayed 610 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 21 Sep 2018 07:12:34 UTC
-Received: from esa3.bmw.c3s2.iphmx.com (esa3.bmw.c3s2.iphmx.com
-	[68.232.133.150])
-	by mail.openembedded.org (Postfix) with ESMTP id 1B593744DB
+Return-Path: <pn@denx.de>
+X-Greylist: delayed 534 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 21 Sep 2018 12:23:01 UTC
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 43570798B4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 21 Sep 2018 07:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-	t=1537513958; x=1569049958;
-	h=from:to:cc:subject:date:message-id:references:
-	in-reply-to:content-id:content-transfer-encoding: mime-version;
-	bh=zZ8Uc/7R055mzl7/8skCxNIDRRx+0PANpvNuQGZEhMg=;
-	b=H3tDh+evVDLZywFt47RUwR6f48ub2dNyPsAs+fjIr9aJ0IW61X0ZOp8S
-	hSnx3W2MO1oJPm41xaOkKPgghAg5FmN0W61gryaYTNAg7ctJlpLw/N6MJ
-	ELibzVJQWsCd4lQZ3XbPsA8ZF+iftjjI8NVVTdai4xczLrxLyZhfkVVq1 0=;
-Received: from esagw2.bmwgroup.com (HELO esagw2.muc) ([160.46.252.38]) by
-	esa3.bmw.c3s2.iphmx.com with ESMTP/TLS; 21 Sep 2018 09:02:23 +0200
-Received: from esabb5.muc ([160.50.100.47])  by esagw2.muc with ESMTP/TLS;
-	21 Sep 2018 09:02:21 +0200
-Received: from smucm10j.bmwgroup.net (HELO smucm10j.europe.bmw.corp)
-	([160.48.96.46])
-	by esabb5.muc with ESMTP/TLS; 21 Sep 2018 09:02:21 +0200
-Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
-	smucm10j.europe.bmw.corp
-	(160.48.96.46) with Microsoft SMTP Server (TLS;
-	Fri, 21 Sep 2018 09:02:20 +0200
-Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
-	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1367.000;
-	Fri, 21 Sep 2018 09:02:20 +0200
-From: <Mikko.Rapeli@bmw.de>
-To: <mark.hatle@windriver.com>
-Thread-Topic: [bitbake-devel] [PATCH] Fix gitsm networking and mirroring
-Thread-Index: AQHUUUDB8lJjVlJRBUW02oKX8oNt7KT6LgsA
-Date: Fri, 21 Sep 2018 07:02:20 +0000
-Message-ID: <20180921070220.GR9430@hiutale>
-References: <20180921001815.18248-1-mark.hatle@windriver.com>
-In-Reply-To: <20180921001815.18248-1-mark.hatle@windriver.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [192.168.221.37]
+	Fri, 21 Sep 2018 12:23:01 +0000 (UTC)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 42Gsvz6YRdz1qtPS;
+	Fri, 21 Sep 2018 14:14:07 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+	by mail.m-online.net (Postfix) with ESMTP id 42Gsvz1wtgz1qrWX;
+	Fri, 21 Sep 2018 14:14:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
+	port 10024)
+	with ESMTP id wKoZBDaPyHFv; Fri, 21 Sep 2018 14:14:06 +0200 (CEST)
+X-Auth-Info: xtzUX24KBRAufvKmRdRUZXoBWLFptuwrofZZYuuNF0k=
+Received: from antares.denx.de (unknown [62.91.23.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Fri, 21 Sep 2018 14:14:06 +0200 (CEST)
+To: peter.kjellerstedt@axis.com, bitbake-devel@lists.openembedded.org
+References: <05b7fac8-2663-4032-ebc3-30f08ef46a3e@denx.de>
+	<20180718141401.2690758-1-pn@denx.de>
+From: Parthiban Nallathambi <pn@denx.de>
+Message-ID: <790d60a0-ed89-453b-fc91-2c5ac888f99c@denx.de>
+Date: Fri, 21 Sep 2018 14:14:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+	Thunderbird/52.9.1
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] Fix gitsm networking and mirroring
+In-Reply-To: <20180718141401.2690758-1-pn@denx.de>
+Cc: wd@denx.de, sbabic@denx.de
+Subject: Re: [PATCH] bitbake: fetch2/npm.py: Allow shrinkwrap resolved relative URL which startswith 'http' (e.g http-proxy)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,30 +46,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 21 Sep 2018 07:12:35 -0000
+X-List-Received-Date: Fri, 21 Sep 2018 12:23:01 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D441087E841A5742A451393EF063A31B@bmwmail.corp>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Looks good from what I understand of the patch, but I have a question about
-git/gitsm fetchers:
+Ping on this patch!
 
-Is it possible that two recipes end up modifying the same file e.g. via
-hard links when they use git submodules and share one of the repositories?
+On 07/18/2018 04:14 PM, Parthiban Nallathambi wrote:
+> shrinkwrap resolved relative URL can start with http. For example,
+> "resolved: http-proxy/-/http-proxy-${PV}.tgz" is still relative URL
+> to npm registry, but starts with http.
+> 
+> Current if statement compares the startswith 'resolved' to 'http',
+> which makes impossible to use npm download. Condtional comparison
+> now strictly checks for "http://" and "https://"
+> 
+> Changelog since v1:
+> - Use the proper conditional statement to avoid always success
+> 
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> ---
+>   bitbake/lib/bb/fetch2/npm.py | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/npm.py b/bitbake/lib/bb/fetch2/npm.py
+> index 408dfc3d03..65bf5a3644 100644
+> --- a/bitbake/lib/bb/fetch2/npm.py
+> +++ b/bitbake/lib/bb/fetch2/npm.py
+> @@ -226,7 +226,7 @@ class Npm(FetchMethod):
+>                           self._getshrinkeddependencies(obj, data['dependencies'][obj], data['dependencies'][obj]['version'], d, ud, lockdown, manifest, False)
+>                           return
+>           outputurl = "invalid"
+> -        if ('resolved' not in data) or (not data['resolved'].startswith('http')):
+> +        if ('resolved' not in data) or (not data['resolved'].startswith('http://') and not data['resolved'].startswith('https://')):
+>               # will be the case for ${PN}
+>               fetchcmd = "npm view %s@%s dist.tarball --registry %s" % (pkg, version, ud.registry)
+>               logger.debug(2, "Found this matching URL: %s" % str(fetchcmd))
+> 
 
-I'm seeing very odd build failures on sumo and it looks like
-recipes are either mixing up files in their sysroots or seeing each others
-patches on top of the shared git submodule tree. These happen when building
-the whole system and rebuilding affected recipes alone makes the problem
-go away.
-
-With svn fetcher we see the same, but that's one of the problems we knew ab=
-out
-from past. svn fetcher does not lock the download cached tree correctly
-and if multiple recipes use the same repo, one of them can see the repo
-in an inconsistent state and fail with various errors. Our workaround
-is to switch to http/s fetcher instead.
-
--Mikko=
+-- 
+Thanks,
+Parthiban N
 
