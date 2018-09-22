@@ -1,53 +1,46 @@
-Return-Path: <prvs=795b04f21=Mikko.Rapeli@bmw.de>
-Received: from esa1.bmw.c3s2.iphmx.com (esa1.bmw.c3s2.iphmx.com
-	[68.232.133.201])
-	by mail.openembedded.org (Postfix) with ESMTP id 60528798D8
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-it1-f180.google.com (mail-it1-f180.google.com
+	[209.85.166.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 89BD8747A2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 21 Sep 2018 15:09:50 +0000 (UTC)
+	Sat, 22 Sep 2018 03:20:03 +0000 (UTC)
+Received: by mail-it1-f180.google.com with SMTP id h1-v6so4329094itj.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 21 Sep 2018 20:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-	t=1537542592; x=1569078592;
-	h=from:to:cc:subject:date:message-id:references:
-	in-reply-to:content-id:content-transfer-encoding: mime-version;
-	bh=MwmS9qL8NDNiSvQqVylQ96tl0/b6D0yVnBvpRXuzd2M=;
-	b=ZKq9gBE4eDSs+zsy0oMJ4+3bRH9gny0AT39fDcG3prgEGTEklJOUP7HV
-	Y5F/ivtCyuurRe476V/7NNjF9LHeb/OUEXQ39SwauL7LP9xE5I0buoPu1
-	wIyv6gnxRXtz1+FBYFdGJ5M6see/JKTd4oxBDnFNovog2mtvjYjROt8YD I=;
-Received: from esagw1.bmwgroup.com (HELO esagw1.muc) ([160.46.252.34]) by
-	esa1.bmw.c3s2.iphmx.com with ESMTP/TLS; 21 Sep 2018 17:09:51 +0200
-Received: from esabb1.muc ([160.50.100.31])  by esagw1.muc with ESMTP/TLS;
-	21 Sep 2018 17:09:50 +0200
-Received: from smucm10j.bmwgroup.net (HELO smucm10j.europe.bmw.corp)
-	([160.48.96.46])
-	by esabb1.muc with ESMTP/TLS; 21 Sep 2018 17:09:50 +0200
-Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
-	smucm10j.europe.bmw.corp
-	(160.48.96.46) with Microsoft SMTP Server (TLS;
-	Fri, 21 Sep 2018 17:09:50 +0200
-Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
-	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1367.000;
-	Fri, 21 Sep 2018 17:09:50 +0200
-From: <Mikko.Rapeli@bmw.de>
-To: <mark.hatle@windriver.com>
-Thread-Topic: [bitbake-devel] [PATCH] Fix gitsm networking and mirroring
-Thread-Index: AQHUUUDB8lJjVlJRBUW02oKX8oNt7KT6LgsAgAB13ACAAAMxAIAADd4AgAABSIA=
-Date: Fri, 21 Sep 2018 15:09:50 +0000
-Message-ID: <20180921150949.GZ9430@hiutale>
-References: <20180921001815.18248-1-mark.hatle@windriver.com>
-	<20180921070220.GR9430@hiutale>
-	<d4b42aa4-2b09-4272-c0da-790cefb1a98d@windriver.com>
-	<20180921141536.GY9430@hiutale>
-	<70880d62-9114-26fd-ab35-3a32cf8706cb@windriver.com>
-In-Reply-To: <70880d62-9114-26fd-ab35-3a32cf8706cb@windriver.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [192.168.221.39]
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] Fix gitsm networking and mirroring
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id;
+	bh=tTqTDBHLdcGHFtx0t7OaSjXniedWqA7Fm+fKu9k47tc=;
+	b=JmaGuwIzLSAwg+HkmqqLg+Z/S6OmkDj9ujDrT9Zn62TXblEm0tlPJC/qi2EtpIjgwZ
+	KTDpQYHcx0L8jRVpdV3+qQof8yxwKKxRq+kvM9rBJD4laJ67Cp055/C/ZgLqE349EPXa
+	RIT6wzk4HlqMJGDjcrVwkQJJWcVN3/2TFyoIY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=tTqTDBHLdcGHFtx0t7OaSjXniedWqA7Fm+fKu9k47tc=;
+	b=TKSRPgr6gM4NEhQehTTo/KfQSX+pvd9u3qba3xSUDbV14AQ3ZESzBnuhmyQbRhy7Wa
+	YGxyrCx/ta3qO6aE90Dfe0Vk4IddnSRm5gAHQVThi6ybz8H4VGZPddJbvHzbU6N83fMI
+	1t/Njv6EMNzIMcG8SHRILbyNJhQALj9vD5Y6XAmrRZoKJ/nD844cRYNpYX1QbfR1oPGy
+	4vYZLSEe5QCrdHKkbABu5ZNN225ZhDYHzEfdKfuEk66Q0Cft1TR2gJA/m1Ng1xmEgUwQ
+	E7j7IuFLMfAlIC1asC72q5nzFYFUVhC+t1/mjTLeF3G89RK6kRa9wft43U/PFH26U41V
+	Dj0A==
+X-Gm-Message-State: ABuFfogs7hLUGpUMxjunNeUM3MalVPAH7liMro0DbjshiklQZymVE2Cq
+	fAn0Mgo/EszsfnQj+MIQMf5k/5QCTBHbrQ==
+X-Google-Smtp-Source: ACcGV63ggeTYaKy1pksi7kMvGpIXYn0ViHj82BlIv+nJn5wobsrN+9U8QTmUH4rZk++dEZoOfxMxVg==
+X-Received: by 2002:a24:2848:: with SMTP id h69-v6mr370389ith.63.1537586404072;
+	Fri, 21 Sep 2018 20:20:04 -0700 (PDT)
+Received: from hex.int.rpsys.net ([209.82.80.116])
+	by smtp.gmail.com with ESMTPSA id
+	b195-v6sm3226232itc.42.2018.09.21.20.20.02
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 21 Sep 2018 20:20:02 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 21 Sep 2018 20:20:00 -0700
+Message-Id: <20180922032001.19553-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH 1/2] COW: Fix StopIteration warning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,20 +53,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 21 Sep 2018 15:09:50 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <EDDE35F18AFFD5408ED7B9049A690F91@bmwmail.corp>
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Sat, 22 Sep 2018 03:20:03 -0000
 
-On Fri, Sep 21, 2018 at 10:05:14AM -0500, Mark Hatle wrote:
-> I looked through my code.  There is an iteration step that happens in the
-> unpack.  If the module being asked for (in a given revision) is not prese=
-nt it
-> will raise an exception.  This should prevent the 'wrong things' at least=
-.
+Fix the warning:
 
-Thanks! Looking forward to this patch in sumo branch too...
+WARNING: lib/bb/data_smart.py:235: DeprecationWarning: generator 'COWDictMeta.iter' raised StopIteration
+  for k, v in self.variables.iteritems():
 
--Mikko=
+by using return from the generator, not raising StopIteration.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/COW.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/bb/COW.py b/lib/bb/COW.py
+index bec6208096..7817473ab8 100644
+--- a/lib/bb/COW.py
++++ b/lib/bb/COW.py
+@@ -150,7 +150,7 @@ class COWDictMeta(COWMeta):
+                 yield value
+             if type == "items":
+                 yield (key, value)
+-        raise StopIteration()
++        return
+ 
+     def iterkeys(cls):
+         return cls.iter("keys")
+-- 
+2.17.1
+
 
