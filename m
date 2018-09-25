@@ -1,42 +1,23 @@
-Return-Path: <prvs=8806058be4=adrian.ratiu@ni.com>
-Received: from mx0b-00010702.pphosted.com (mx0a-00010702.pphosted.com
-	[148.163.156.75])
-	by mail.openembedded.org (Postfix) with ESMTP id 48DDF7307F;
-	Tue, 25 Sep 2018 12:32:30 +0000 (UTC)
-Received: from pps.filterd (m0098780.ppops.net [127.0.0.1])
-	by mx0a-00010702.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id
-	w8PCVFWA008939; Tue, 25 Sep 2018 07:32:30 -0500
-Received: from ni.com (skprod3.natinst.com [130.164.80.24])
-	by mx0a-00010702.pphosted.com with ESMTP id 2mnmeggwqx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Tue, 25 Sep 2018 07:32:30 -0500
-Received: from us-aus-exch2.ni.corp.natinst.com
-	(us-aus-exch2.ni.corp.natinst.com [130.164.68.12])
-	by us-aus-skprod3.natinst.com (8.16.0.22/8.16.0.22) with ESMTPS id
-	w8PCWSne007659
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Tue, 25 Sep 2018 07:32:28 -0500
-Received: from us-aus-exch4.ni.corp.natinst.com (130.164.68.14) by
-	us-aus-exch2.ni.corp.natinst.com (130.164.68.12) with Microsoft SMTP
-	Server (TLS) id 15.0.1395.4; Tue, 25 Sep 2018 07:32:28 -0500
-Received: from us-aus-exhub2.ni.corp.natinst.com (130.164.68.32) by
-	us-aus-exch4.ni.corp.natinst.com (130.164.68.14) with Microsoft SMTP
-	Server (TLS) id 15.0.1395.4; Tue, 25 Sep 2018 07:32:28 -0500
-Received: from ionel-work.natinst.com (130.164.49.7) by
-	us-aus-exhub2.ni.corp.natinst.com (130.164.68.32) with Microsoft SMTP
-	Server
-	id 15.0.1395.4 via Frontend Transport; Tue, 25 Sep 2018 07:32:27 -0500
-From: Ioan-Adrian Ratiu <adrian.ratiu@ni.com>
-To: <bitbake-devel@lists.openembedded.org>,
-	<openembedded-core@lists.openembedded.org>
-Date: Tue, 25 Sep 2018 15:34:19 +0300
-Message-ID: <20180925123419.8176-1-adrian.ratiu@ni.com>
-X-Mailer: git-send-email 2.19.0
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 23E7378D34
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 25 Sep 2018 15:07:10 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w8PF7Alk021813
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 25 Sep 2018 08:07:11 -0700 (PDT)
+Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.408.0;
+	Tue, 25 Sep 2018 08:07:09 -0700
+From: Mark Hatle <mark.hatle@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 25 Sep 2018 11:07:05 -0400
+Message-ID: <20180925150708.2983-1-mark.hatle@windriver.com>
+X-Mailer: git-send-email 2.16.0.rc2
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:, ,
-	definitions=2018-09-25_07:, , signatures=0
-X-Proofpoint-Spam-Reason: safe
-Subject: [OE-core][PATCH] utils: lockfile: Fix infinite loop
+Subject: [PATCH 0/3] Fix bitbake-selftest failures
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,51 +30,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 25 Sep 2018 12:32:30 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 25 Sep 2018 15:07:10 -0000
 Content-Type: text/plain
 
-A nasty corner case leads to a hang when utils.lockfile is called from
-oe-core's package-manager:deploy_dir_lock (in turn called from
-rootfs:_create further up the call stack) with "name" owned by root
-and the user running bitbake has no write access.
+The original purpose of this work is to fix the Yocto Project bug 12928.
 
-Because this code runs under pseudo, the UID and EUID of the bitbake
-worker process are 0, so the os.access(dirname, os.W_OK) returns True
-i.e. it thinks the path is writable when in fact it's not writable.
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=12928
 
-Only later when trying to open the file an Exception it thrown because
-the OS prohibits writing, but the Exception is ignored and the open is
-retried leading to an infinite loop.
+During that work it was noticed that parse.py was running chdir without
+restoring the original path.  Also the layerindexlib cooker test was
+using __file__ without fully sanitizing it, so due to the prior issue
+it could fail to load the test-case data.
 
-So this fix is to not ignore the "Permission Denied" exception.
+The patch set is availabe on bitbake-contrib on the mgh/12928 branch.
 
-An alternative fix would be to replace the os.access() call with an
-try: open() except() at the beginning of the function.
+Mark Hatle (3):
+  lib/bb/tests/parse.py: Test case was changing chdir
+  lib/layerindexlib/tests/cooker.py: Fix topdir to use an absolute
+    (real) path
+  lib/layerindexlib/tests/restapi.py: Fix test cases when
+    BB_SKIP_NETTETS=yes
 
-Signed-off-by: Ioan-Adrian Ratiu <adrian.ratiu@ni.com>
----
- lib/bb/utils.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/bb/tests/parse.py              |   4 +
+ lib/layerindexlib/tests/cooker.py  |   2 +-
+ lib/layerindexlib/tests/restapi.py | 164 ++++++++++++++++++++-----------------
+ 3 files changed, 92 insertions(+), 78 deletions(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 56894f13..73b6cb42 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -497,7 +497,11 @@ def lockfile(name, shared=False, retry=True, block=False):
-                 if statinfo.st_ino == statinfo2.st_ino:
-                     return lf
-             lf.close()
--        except Exception:
-+        except OSError as e:
-+            if e.errno == errno.EACCES:
-+                logger.error("Unable to acquire lock '%s', %s",
-+                             e.strerror, name)
-+                sys.exit(1)
-             try:
-                 lf.close()
-             except Exception:
 -- 
-2.19.0
+1.8.3.1
 
 
