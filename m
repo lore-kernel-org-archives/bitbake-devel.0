@@ -1,25 +1,39 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id D292A601D4
+Return-Path: <Awais_Belal@mentor.com>
+Received: from relay1.mentorg.com (relay1.mentorg.com [192.94.38.131])
+	by mail.openembedded.org (Postfix) with ESMTP id 653E8745AD
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Sep 2018 17:15:26 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w8PHFSNr022997
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Sep 2018 10:15:28 -0700 (PDT)
-Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.408.0;
-	Tue, 25 Sep 2018 10:15:27 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 25 Sep 2018 13:15:25 -0400
-Message-ID: <20180925171525.30692-2-mark.hatle@windriver.com>
-X-Mailer: git-send-email 2.16.0.rc2
-In-Reply-To: <20180925171525.30692-1-mark.hatle@windriver.com>
-References: <20180925171525.30692-1-mark.hatle@windriver.com>
+	Thu, 27 Sep 2018 07:54:14 +0000 (UTC)
+Received: from nat-ies.mentorg.com ([192.94.31.2]
+	helo=svr-ies-mbx-01.mgc.mentorg.com)
+	by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+	id 1g5R7m-0000Ss-3i from Awais_Belal@mentor.com ;
+	Thu, 27 Sep 2018 00:54:14 -0700
+Received: from SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) by
+	svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) with Microsoft SMTP
+	Server (TLS) id 15.0.1320.4; Thu, 27 Sep 2018 08:54:10 +0100
+Received: from SVR-IES-MBX-03.mgc.mentorg.com ([fe80::1072:fb6e:87f1:ed17]) by
+	SVR-IES-MBX-03.mgc.mentorg.com ([fe80::1072:fb6e:87f1:ed17%22]) with
+	mapi id 15.00.1320.000; Thu, 27 Sep 2018 08:54:10 +0100
+From: "Belal, Awais" <Awais_Belal@mentor.com>
+To: "Reyna, David" <david.reyna@windriver.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [sumo][PATCH] toaster: localhostbecontroller:
+	fix bitbake path resolution
+Thread-Index: AQHUS0UdM8G0xVWi7EeQqAsalTR7hKTvXz/wgAl59yqACvwpbQ==
+Date: Thu, 27 Sep 2018 07:54:10 +0000
+Message-ID: <1538034849901.46023@mentor.com>
+References: <1536831336527.93802@mentor.com>,
+	<5E53D14CE4667A45B9A06760DE5D13D0F3AC15D6@ALA-MBD.corp.ad.wrs.com>,
+	<1537430385445.98207@mentor.com>
+In-Reply-To: <1537430385445.98207@mentor.com>
+Accept-Language: en-US, en-IE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [137.202.0.90]
 MIME-Version: 1.0
-Subject: [PATCH v2] fetch2/gitsm.py: Rework the git submodule fetcher
+Subject: Re: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path resolution
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,384 +46,347 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 25 Sep 2018 17:15:26 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 27 Sep 2018 07:54:14 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_153803484990146023mentorcom_"
 
-The prior fetcher did not know how to work with MIRRORS, and did not
-honor BB_NO_NETWORK and similar.
+--_000_153803484990146023mentorcom_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-The new fetcher approach recursively calls 'gitsm' download on each
-submodule detected.  This ensures that it will go throug the
-standard download process.
+>> I recommend this for both Sumo and for master as well, so that they stay=
+ in sync.
 
-Each downloaded submodule is then 'attached' to the original download in
-the 'modules' directory.  This mimics the behavior of:
+Any thoughts here?
 
-    git submodule init
 
-but there is no chance it will contact the network without permission.
 
-It then corrects upstream reference URIs.
+BR,
+Awais
+________________________________
+From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-bounces@l=
+ists.openembedded.org> on behalf of Belal, Awais
+Sent: Thursday, September 20, 2018 12:59 PM
+To: Reyna, David; bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [sumo][PATCH] toaster: localhostbecontroller: =
+fix bitbake path resolution
 
-The unpack steps simply copies the items from the downloads to the destdir.
-Once copied the submodules are connected and we then run:
 
-    git submodule update
+ping!
 
-According to the git documentation, git submodule init can and will modify
-the project configuration and may connect to the network.  Doing the
-work manually prevents this.  (This manual process is allowed based
-on my reading of the documentation.)
 
-See: https://git-scm.com/book/en/v2/Git-Tools-Submodules
+BR,
+Awais
+________________________________
+From: Reyna, David <david.reyna@windriver.com>
+Sent: Friday, September 14, 2018 12:18 PM
+To: Belal, Awais; bitbake-devel@lists.openembedded.org
+Cc: akuster (akuster@mvista.com)
+Subject: RE: [bitbake-devel] [sumo][PATCH] toaster: localhostbecontroller: =
+fix bitbake path resolution
 
-The small change to the existing test is due to this new code always assuming
-the code is from a remote system, and not a 'local' repository.  If this
-assumption proves to be incorrect -- code will need to be added to deal
-with local repositories without an upstream URI.
+Hi all,
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+I recommend this for both Sumo and for master as well, so that they stay in=
+ sync.
+
+The cherry-pick should be clean between the two branches.
+
+- David
+
+From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
+unces@lists.openembedded.org] On Behalf Of Belal, Awais
+Sent: Thursday, September 13, 2018 2:36 AM
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake-devel] [sumo][PATCH] toaster: localhostbecontroller: fix =
+bitbake path resolution
+
+
+From b736703a9d3f3c33e2e83ecd5e61dbddd5793cc8 Mon Sep 17 00:00:00 2001
+From: Awais Belal <awais_belal@mentor.com>
+Date: Thu, 13 Sep 2018 14:12:18 +0500
+Subject: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path res=
+olution
+
+
+
+15340edce23e63b060c75114d508e1f76757239c introduced a way which
+allowed bitbake to be found from the PATH variable when directory
+structures different from poky are used. This just drops a leftover
+which made the earlier implementation meaningless by reassigning
+the path relative to oe-core/meta.
+
+
+
+Signed-off-by: Awais Belal <awais_belal@mentor.com>
 ---
- lib/bb/fetch2/gitsm.py | 279 +++++++++++++++++++++++++++----------------------
- lib/bb/tests/fetch.py  |   3 +
- 2 files changed, 159 insertions(+), 123 deletions(-)
-
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index 8677309..51f8d0e 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -34,6 +34,8 @@ import bb
- from   bb.fetch2.git import Git
- from   bb.fetch2 import runfetchcmd
- from   bb.fetch2 import logger
-+from   bb.fetch2 import Fetch
-+from   bb.fetch2 import BBFetchException
- 
- class GitSM(Git):
-     def supports(self, ud, d):
-@@ -42,96 +44,66 @@ class GitSM(Git):
-         """
-         return ud.type in ['gitsm']
- 
--    def uses_submodules(self, ud, d, wd):
-+    def update_submodules(self, ud, d):
-+        submodules = []
-+        paths = {}
-+        uris = {}
-+        local_paths = {}
-+
-         for name in ud.names:
-             try:
--                runfetchcmd("%s show %s:.gitmodules" % (ud.basecmd, ud.revisions[name]), d, quiet=True, workdir=wd)
--                return True
--            except bb.fetch.FetchError:
--                pass
--        return False
-+                gitmodules = runfetchcmd("%s show %s:.gitmodules" % (ud.basecmd, ud.revisions[name]), d, quiet=True, workdir=ud.clonedir)
-+            except:
-+                # No submodules to update
-+                continue
- 
--    def _set_relative_paths(self, repopath):
--        """
--        Fix submodule paths to be relative instead of absolute,
--        so that when we move the repo it doesn't break
--        (In Git 1.7.10+ this is done automatically)
--        """
--        submodules = []
--        with open(os.path.join(repopath, '.gitmodules'), 'r') as f:
--            for line in f.readlines():
-+            module = ""
-+            for line in gitmodules.splitlines():
-                 if line.startswith('[submodule'):
--                    submodules.append(line.split('"')[1])
-+                    module = line.split('"')[1]
-+                    submodules.append(module)
-+                elif module and line.strip().startswith('path'):
-+                    path = line.split('=')[1].strip()
-+                    paths[module] = path
-+                elif module and line.strip().startswith('url'):
-+                    url = line.split('=')[1].strip()
-+                    uris[module] = url
- 
-         for module in submodules:
--            repo_conf = os.path.join(repopath, module, '.git')
--            if os.path.exists(repo_conf):
--                with open(repo_conf, 'r') as f:
--                    lines = f.readlines()
--                newpath = ''
--                for i, line in enumerate(lines):
--                    if line.startswith('gitdir:'):
--                        oldpath = line.split(': ')[-1].rstrip()
--                        if oldpath.startswith('/'):
--                            newpath = '../' * (module.count('/') + 1) + '.git/modules/' + module
--                            lines[i] = 'gitdir: %s\n' % newpath
--                            break
--                if newpath:
--                    with open(repo_conf, 'w') as f:
--                        for line in lines:
--                            f.write(line)
--
--            repo_conf2 = os.path.join(repopath, '.git', 'modules', module, 'config')
--            if os.path.exists(repo_conf2):
--                with open(repo_conf2, 'r') as f:
--                    lines = f.readlines()
--                newpath = ''
--                for i, line in enumerate(lines):
--                    if line.lstrip().startswith('worktree = '):
--                        oldpath = line.split(' = ')[-1].rstrip()
--                        if oldpath.startswith('/'):
--                            newpath = '../' * (module.count('/') + 3) + module
--                            lines[i] = '\tworktree = %s\n' % newpath
--                            break
--                if newpath:
--                    with open(repo_conf2, 'w') as f:
--                        for line in lines:
--                            f.write(line)
--
--    def update_submodules(self, ud, d, allow_network):
--        # We have to convert bare -> full repo, do the submodule bit, then convert back
--        tmpclonedir = ud.clonedir + ".tmp"
--        gitdir = tmpclonedir + os.sep + ".git"
--        bb.utils.remove(tmpclonedir, True)
--        os.mkdir(tmpclonedir)
--        os.rename(ud.clonedir, gitdir)
--        runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*true/bare = false/'", d)
--        runfetchcmd(ud.basecmd + " reset --hard", d, workdir=tmpclonedir)
--        runfetchcmd(ud.basecmd + " checkout -f " + ud.revisions[ud.names[0]], d, workdir=tmpclonedir)
--
--        try:
--            if allow_network:
--                fetch_flags = ""
--            else:
--                fetch_flags = "--no-fetch"
--
--            # The 'git submodule sync' sandwiched between two successive 'git submodule update' commands is
--            # intentional. See the notes on the similar construction in download() for an explanation.
--            runfetchcmd("%(basecmd)s submodule update --init --recursive %(fetch_flags)s || (%(basecmd)s submodule sync --recursive && %(basecmd)s submodule update --init --recursive %(fetch_flags)s)" % {'basecmd': ud.basecmd, 'fetch_flags' : fetch_flags}, d, workdir=tmpclonedir)
--        except bb.fetch.FetchError:
--            if allow_network:
--                raise
--            else:
--                # This method was called as a probe to see whether the submodule history
--                # is complete enough to allow the current working copy to have its
--                # modules filled in. It's not, so swallow up the exception and report
--                # the negative result.
--                return False
--        finally:
--            self._set_relative_paths(tmpclonedir)
--            runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*false/bare = true/'", d, workdir=tmpclonedir)
--            os.rename(gitdir, ud.clonedir,)
--            bb.utils.remove(tmpclonedir, True)
-+            module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], paths[module]), d, quiet=True, workdir=ud.clonedir)
-+            module_hash = module_hash.split()[2]
-+
-+            # Build new SRC_URI
-+            proto = uris[module].split(':', 1)[0]
-+            url = uris[module].replace('%s:' % proto, 'gitsm:', 1)
-+            url += ';protocol=%s' % proto
-+            url += ";name=%s" % module
-+            url += ";qbareclone=1;nocheckout=1"
-+
-+            ld = d.createCopy()
-+            # Not necessary to set SRC_URI, since we're passing the URI to
-+            # Fetch.
-+            #ld.setVar('SRC_URI', url)
-+            ld.setVar('SRCREV_%s' % module, module_hash)
-+
-+            # Workaround for issues with SRCPV/SRCREV_FORMAT errors
-+            # error refer to 'multiple' repositories.  Only the repository
-+            # in the original SRC_URI actually matters...
-+            ld.setVar('SRCPV', d.getVar('SRCPV'))
-+            ld.setVar('SRCREV_FORMAT', module)
-+
-+            newfetch = Fetch([url], ld, cache=False)
-+            newfetch.download()
-+            local_paths[module] = newfetch.localpath(url)
-+
-+            # Correct the submodule references to the local download version...
-+            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_paths[module]}, d, workdir=ud.clonedir)
-+            try:
-+                os.mkdir(os.path.join(ud.clonedir, 'modules'))
-+            except OSError:
-+                pass
-+            if not os.path.exists(os.path.join(ud.clonedir, 'modules', paths[module])):
-+                os.symlink(local_paths[module], os.path.join(ud.clonedir, 'modules', paths[module]))
- 
-         return True
- 
-@@ -147,56 +119,117 @@ class GitSM(Git):
-         # Now check that the submodule histories are new enough. The git-submodule command doesn't have
-         # any clean interface for doing this aside from just attempting the checkout (with network
-         # fetched disabled).
--        return not self.update_submodules(ud, d, allow_network=False)
-+        return not self.update_submodules(ud, d)
- 
-     def download(self, ud, d):
-         Git.download(self, ud, d)
- 
-         if not ud.shallow or ud.localpath != ud.fullshallow:
--            submodules = self.uses_submodules(ud, d, ud.clonedir)
--            if submodules:
--                self.update_submodules(ud, d, allow_network=True)
-+            self.update_submodules(ud, d)
-+
-+    def copy_submodules(self, submodules, ud, destdir, d):
-+        if ud.bareclone:
-+            repo_conf = destdir
-+        else:
-+            repo_conf = os.path.join(destdir, '.git')
-+
-+        if submodules and not os.path.exists(os.path.join(repo_conf, 'modules')):
-+            os.mkdir(os.path.join(repo_conf, 'modules'))
-+
-+        for module in submodules:
-+            srcpath = os.path.join(ud.clonedir, 'modules', module)
-+            modpath = os.path.join(repo_conf, 'modules', module)
-+
-+            if os.path.exists(srcpath):
-+                if os.path.exists(os.path.join(srcpath, '.git')):
-+                    srcpath = os.path.join(srcpath, '.git')
-+
-+                target = modpath
-+                if os.path.exists(modpath):
-+                    target = os.path.dirname(modpath)
-+
-+                runfetchcmd("cp -fpLR %s %s" % (srcpath, target), d)
-+            elif os.path.exists(modpath):
-+                # Module already exists, likely unpacked from a shallow mirror clone
-+                pass
-+            else:
-+                # This is fatal, as we do NOT want git-submodule to hit the network
-+                raise bb.fetch2.FetchError('Submodule %s does not exist in %s or %s.' % (module, srcpath, modpath))
- 
-     def clone_shallow_local(self, ud, dest, d):
-         super(GitSM, self).clone_shallow_local(ud, dest, d)
- 
--        runfetchcmd('cp -fpPRH "%s/modules" "%s/"' % (ud.clonedir, os.path.join(dest, '.git')), d)
-+        # Copy over the submodules' fetched histories too.
-+        repo_conf = os.path.join(dest, '.git')
-+
-+        submodules = []
-+        for name in ud.names:
-+            try:
-+                gitmodules = runfetchcmd("%s show %s:.gitmodules" % (ud.basecmd, ud.revision), d, quiet=True, workdir=dest)
-+            except:
-+                # No submodules to update
-+                continue
-+
-+            for line in gitmodules.splitlines():
-+                if line.startswith('[submodule'):
-+                    module = line.split('"')[1]
-+                    submodules.append(module)
-+
-+        self.copy_submodules(submodules, ud, dest, d)
- 
-     def unpack(self, ud, destdir, d):
-         Git.unpack(self, ud, destdir, d)
- 
--        if self.uses_submodules(ud, d, ud.destdir):
--            runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d, workdir=ud.destdir)
-+        # Copy over the submodules' fetched histories too.
-+        if ud.bareclone:
-+            repo_conf = ud.destdir
-+        else:
-+            repo_conf = os.path.join(ud.destdir, '.git')
- 
--            # Copy over the submodules' fetched histories too.
--            if ud.bareclone:
--                repo_conf = ud.destdir
--            else:
--                repo_conf = os.path.join(ud.destdir, '.git')
--
--            if os.path.exists(ud.clonedir):
--                # This is not a copy unpacked from a shallow mirror clone. So
--                # the manual intervention to populate the .git/modules done
--                # in clone_shallow_local() won't have been done yet.
--                runfetchcmd("cp -fpPRH %s %s" % (os.path.join(ud.clonedir, 'modules'), repo_conf), d)
--                fetch_flags = "--no-fetch"
--            elif os.path.exists(os.path.join(repo_conf, 'modules')):
--                # Unpacked from a shallow mirror clone. Manual population of
--                # .git/modules is already done.
--                fetch_flags = "--no-fetch"
--            else:
--                # This isn't fatal; git-submodule will just fetch it
--                # during do_unpack().
--                fetch_flags = ""
--                bb.error("submodule history not retrieved during do_fetch()")
--
--            # Careful not to hit the network during unpacking; all history should already
--            # be fetched.
--            #
--            # The repeated attempts to do the submodule initialization sandwiched around a sync to
--            # install the correct remote URLs into the submodules' .git/config metadata are deliberate.
--            # Bad remote URLs are leftover in the modules' .git/config files from the unpack of bare
--            # clone tarballs and an initial 'git submodule update' is necessary to prod them back to
--            # enough life so that the 'git submodule sync' realizes the existing module .git/config
--            # files exist to be updated.
--            runfetchcmd("%(basecmd)s submodule update --init --recursive %(fetch_flags)s || (%(basecmd)s submodule sync --recursive && %(basecmd)s submodule update --init --recursive %(fetch_flags)s)" % {'basecmd': ud.basecmd, 'fetch_flags': fetch_flags}, d, workdir=ud.destdir)
-+        submodules = []
-+        paths = {}
-+        uris = {}
-+        local_paths = {}
-+        for name in ud.names:
-+            try:
-+                gitmodules = runfetchcmd("%s show HEAD:.gitmodules" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
-+            except:
-+                # No submodules to update
-+                continue
-+
-+            module = ""
-+            for line in gitmodules.splitlines():
-+                if line.startswith('[submodule'):
-+                    module = line.split('"')[1]
-+                    submodules.append(module)
-+                elif module and line.strip().startswith('path'):
-+                    path = line.split('=')[1].strip()
-+                    paths[module] = path
-+                elif module and line.strip().startswith('url'):
-+                    url = line.split('=')[1].strip()
-+                    uris[module] = url
-+
-+        self.copy_submodules(submodules, ud, ud.destdir, d)
-+
-+        for module in submodules:
-+            srcpath = os.path.join(ud.clonedir, 'modules', module)
-+            modpath = os.path.join(repo_conf, 'modules', module)
-+
-+            # Determine (from the submodule) the correct url to reference
-+            try:
-+                output = runfetchcmd("%(basecmd)s config remote.origin.url" % {'basecmd': ud.basecmd}, d, workdir=modpath)
-+            except bb.fetch2.FetchError as e:
-+                # No remote url defined in this submodule
-+                continue
-+
-+            local_paths[module] = output
-+
-+            # Setup the local URL properly (like git submodule init or sync would do...)
-+            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_paths[module]}, d, workdir=ud.destdir)
-+
-+            # Ensure the submodule repository is NOT set to bare, since we're checking it out...
-+            runfetchcmd("%s config core.bare false" % (ud.basecmd), d, quiet=True, workdir=modpath)
-+
-+        if submodules:
-+            # Run submodule update, this sets up the directories -- without touching the config
-+            runfetchcmd("%s submodule update --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index e1c856f..9c5601a 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1344,6 +1344,9 @@ class GitShallowTest(FetcherTest):
-         smdir = os.path.join(self.tempdir, 'gitsubmodule')
-         bb.utils.mkdirhier(smdir)
-         self.git('init', cwd=smdir)
-+        # Make this look like it was cloned from a remote...
-+        self.git('config --add remote.origin.url "%s"' % smdir, cwd=smdir)
-+        self.git('config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"', cwd=smdir)
-         self.add_empty_file('asub', cwd=smdir)
- 
-         self.git('submodule init', cwd=self.srcdir)
--- 
-1.8.3.1
+ lib/toaster/bldcontrol/localhostbecontroller.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
+
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/=
+bldcontrol/localhostbecontroller.py
+index 3850334..63b4187 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -360,12 +360,12 @@ class LocalhostBEController(BuildEnvironmentControlle=
+r):
+             for path in os.environ["PATH"].split(os.pathsep):
+                 if os.path.exists(os.path.join(path, 'bitbake')):
+                     bitbake =3D os.path.join(path, 'bitbake')
++                    logger.info("Found Bitbake at: %s" % path)
+                     break
+             else:
+                 logger.error("Looks like Bitbake is not available, please =
+fix your environment")
+
+         # run bitbake server from the clone
+-        bitbake =3D os.path.join(self.pokydirname, 'bitbake', 'bin', 'bitb=
+ake')
+         toasterlayers =3D os.path.join(builddir,"conf/toaster-bblayers.con=
+f")
+         self._shellcmd('%s bash -c \"source %s %s; BITBAKE_UI=3D"knotty" %=
+s --read %s --read %s '
+                        '--server-only -B 0.0.0.0:0\"' % (env_clean, oe_ini=
+t,
+--
+2.7.4
+
+
+BR,
+Awais
+
+--_000_153803484990146023mentorcom_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none"><!--P{margin-top:0;margin-b=
+ottom:0;} p=0A=
+	{margin-top:0;=0A=
+	margin-bottom:0}=0A=
+@font-face=0A=
+	{font-family:Calibri}=0A=
+@font-face=0A=
+	{font-family:Tahoma}=0A=
+p.MsoNormal, li.MsoNormal, div.MsoNormal=0A=
+	{margin:0in;=0A=
+	margin-bottom:.0001pt;=0A=
+	font-size:12.0pt;=0A=
+	font-family:"Times New Roman","serif"}=0A=
+a:link, span.MsoHyperlink=0A=
+	{color:blue;=0A=
+	text-decoration:underline}=0A=
+a:visited, span.MsoHyperlinkFollowed=0A=
+	{color:purple;=0A=
+	text-decoration:underline}=0A=
+span.EmailStyle18=0A=
+	{font-family:"Calibri","sans-serif";=0A=
+	color:#1F497D}=0A=
+.MsoChpDefault=0A=
+	{font-size:10.0pt}=0A=
+@page WordSection1=0A=
+	{margin:1.0in 1.0in 1.0in 1.0in}--></style>
+</head>
+<body dir=3D"ltr" style=3D"font-size:10pt;color:#000000;background-color:#F=
+FFFFF;font-family:Tahoma,Geneva,sans-serif;">
+<p>&gt;&gt;<span style=3D"font-size:11.0pt; font-family:&quot;Calibri&quot;=
+,&quot;sans-serif&quot;; color:#1F497D">&nbsp;I recommend this for both Sum=
+o and for master as well, so that they stay in sync.</span><br>
+</p>
+<p>Any thoughts here?<br>
+</p>
+<p><br>
+</p>
+<p><br>
+</p>
+<div id=3D"Signature">
+<div style=3D"font-family:Tahoma; font-size:13px"><font face=3D"Tahoma"></f=
+ont>
+<div style=3D"font-size:13px">
+<div><font size=3D"2" face=3D"Tahoma"><span lang=3D"en-US">
+<div style=3D"margin:0">BR,</div>
+<div style=3D"margin:0"><i>Awais</i></div>
+</span></font></div>
+</div>
+<font face=3D"Tahoma"></font></div>
+</div>
+<div dir=3D"ltr" style=3D"font-size:10pt; color:#000000; background-color:#=
+FFFFFF; font-family:Tahoma,Geneva,sans-serif">
+<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
+<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font style=3D"font-size:11pt" face=
+=3D"Calibri, sans-serif" color=3D"#000000"><b>From:</b> bitbake-devel-bounc=
+es@lists.openembedded.org &lt;bitbake-devel-bounces@lists.openembedded.org&=
+gt; on behalf of Belal, Awais<br>
+<b>Sent:</b> Thursday, September 20, 2018 12:59 PM<br>
+<b>To:</b> Reyna, David; bitbake-devel@lists.openembedded.org<br>
+<b>Subject:</b> Re: [bitbake-devel] [sumo][PATCH] toaster: localhostbecontr=
+oller: fix bitbake path resolution</font>
+<div>&nbsp;</div>
+</div>
+<div>
+<p>ping!<br>
+</p>
+<p><br>
+</p>
+<div id=3D"Signature">
+<div style=3D"font-family:Tahoma; font-size:13px"><font face=3D"Tahoma"></f=
+ont>
+<div style=3D"font-size:13px">
+<div><font size=3D"2" face=3D"Tahoma"><span lang=3D"en-US">
+<div style=3D"margin:0">BR,</div>
+<div style=3D"margin:0"><i>Awais</i></div>
+</span></font></div>
+</div>
+<font face=3D"Tahoma"></font></div>
+</div>
+<div style=3D"color:rgb(33,33,33)">
+<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
+<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font style=3D"font-size:11pt" face=
+=3D"Calibri, sans-serif" color=3D"#000000"><b>From:</b> Reyna, David &lt;da=
+vid.reyna@windriver.com&gt;<br>
+<b>Sent:</b> Friday, September 14, 2018 12:18 PM<br>
+<b>To:</b> Belal, Awais; bitbake-devel@lists.openembedded.org<br>
+<b>Cc:</b> akuster (akuster@mvista.com)<br>
+<b>Subject:</b> RE: [bitbake-devel] [sumo][PATCH] toaster: localhostbecontr=
+oller: fix bitbake path resolution</font>
+<div>&nbsp;</div>
+</div>
+<div>
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt; font-family:&quot;C=
+alibri&quot;,&quot;sans-serif&quot;; color:#1F497D">Hi all,
+</span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt; font-family:&quot;C=
+alibri&quot;,&quot;sans-serif&quot;; color:#1F497D">&nbsp;</span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt; font-family:&quot;C=
+alibri&quot;,&quot;sans-serif&quot;; color:#1F497D">I recommend this for bo=
+th Sumo and for master as well, so that they stay in sync.</span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt; font-family:&quot;C=
+alibri&quot;,&quot;sans-serif&quot;; color:#1F497D">&nbsp;</span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt; font-family:&quot;C=
+alibri&quot;,&quot;sans-serif&quot;; color:#1F497D">The cherry-pick should =
+be clean between the two branches.</span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt; font-family:&quot;C=
+alibri&quot;,&quot;sans-serif&quot;; color:#1F497D">&nbsp;</span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt; font-family:&quot;C=
+alibri&quot;,&quot;sans-serif&quot;; color:#1F497D">- David</span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt; font-family:&quot;C=
+alibri&quot;,&quot;sans-serif&quot;; color:#1F497D">&nbsp;</span></p>
+<div>
+<div style=3D"border:none; border-top:solid #B5C4DF 1.0pt; padding:3.0pt 0i=
+n 0in 0in">
+<p class=3D"MsoNormal"><b><span style=3D"font-size:10.0pt; font-family:&quo=
+t;Tahoma&quot;,&quot;sans-serif&quot;">From:</span></b><span style=3D"font-=
+size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> bitbak=
+e-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bounces@lists.=
+openembedded.org]
+<b>On Behalf Of </b>Belal, Awais<br>
+<b>Sent:</b> Thursday, September 13, 2018 2:36 AM<br>
+<b>To:</b> bitbake-devel@lists.openembedded.org<br>
+<b>Subject:</b> [bitbake-devel] [sumo][PATCH] toaster: localhostbecontrolle=
+r: fix bitbake path resolution</span></p>
+</div>
+</div>
+<p class=3D"MsoNormal">&nbsp;</p>
+<p><span style=3D"font-size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sa=
+ns-serif&quot;; color:black">From b736703a9d3f3c33e2e83ecd5e61dbddd5793cc8 =
+Mon Sep 17 00:00:00 2001<br>
+From: Awais Belal &lt;awais_belal@mentor.com&gt;<br>
+Date: Thu, 13 Sep 2018 14:12:18 &#43;0500<br>
+Subject: [sumo][PATCH] toaster: localhostbecontroller: fix bitbake path res=
+olution</span></p>
+<p><span style=3D"font-size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sa=
+ns-serif&quot;; color:black">&nbsp;</span></p>
+<p><span style=3D"font-size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sa=
+ns-serif&quot;; color:black">15340edce23e63b060c75114d508e1f76757239c intro=
+duced a way which<br>
+allowed bitbake to be found from the PATH variable when directory<br>
+structures different from poky are used. This just drops a leftover<br>
+which made the earlier implementation meaningless by reassigning<br>
+the path relative to oe-core/meta.</span></p>
+<p><span style=3D"font-size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sa=
+ns-serif&quot;; color:black">&nbsp;</span></p>
+<p><span style=3D"font-size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sa=
+ns-serif&quot;; color:black">Signed-off-by: Awais Belal &lt;awais_belal@men=
+tor.com&gt;<br>
+---<br>
+&nbsp;lib/toaster/bldcontrol/localhostbecontroller.py | 2 &#43;-<br>
+&nbsp;1 file changed, 1 insertion(&#43;), 1 deletion(-)</span></p>
+<p><span style=3D"font-size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sa=
+ns-serif&quot;; color:black">&nbsp;</span></p>
+<p style=3D"margin-bottom:12.0pt"><span style=3D"font-size:10.0pt; font-fam=
+ily:&quot;Tahoma&quot;,&quot;sans-serif&quot;; color:black">diff --git a/li=
+b/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/loca=
+lhostbecontroller.py<br>
+index 3850334..63b4187 100644<br>
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py<br>
+&#43;&#43;&#43; b/lib/toaster/bldcontrol/localhostbecontroller.py<br>
+@@ -360,12 &#43;360,12 @@ class LocalhostBEController(BuildEnvironmentContr=
+oller):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fo=
+r path in os.environ[&quot;PATH&quot;].split(os.pathsep):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; if os.path.exists(os.path.join(path, 'bitbake')):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bitbake =3D os.path.join(path=
+, 'bitbake')<br>
+&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.info(&quot;Found Bitbak=
+e at: %s&quot; % path)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; el=
+se:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; logger.error(&quot;Looks like Bitbake is not availabl=
+e, please fix your environment&quot;)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # run bitbake server from =
+the clone<br>
+-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bitbake =3D os.path.join(self.p=
+okydirname, 'bitbake', 'bin', 'bitbake')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; toasterlayers =3D os.path.=
+join(builddir,&quot;conf/toaster-bblayers.conf&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self._shellcmd('%s bash -c=
+ \&quot;source %s %s; BITBAKE_UI=3D&quot;knotty&quot; %s --read %s --read %=
+s '<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '--server-o=
+nly -B 0.0.0.0:0\&quot;' % (env_clean, oe_init,<br>
+--<br>
+2.7.4</span></p>
+<p><span style=3D"font-size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sa=
+ns-serif&quot;; color:black">&nbsp;</span></p>
+<div id=3D"Signature">
+<div>
+<div>
+<div>
+<div>
+<p class=3D"MsoNormal"><span style=3D"font-size:10.0pt; font-family:&quot;T=
+ahoma&quot;,&quot;sans-serif&quot;; color:black">BR,</span></p>
+</div>
+<div>
+<p class=3D"MsoNormal"><i><span style=3D"font-size:10.0pt; font-family:&quo=
+t;Tahoma&quot;,&quot;sans-serif&quot;; color:black">Awais</span></i><span s=
+tyle=3D"font-size:10.0pt; font-family:&quot;Tahoma&quot;,&quot;sans-serif&q=
+uot;; color:black"></span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
+
+--_000_153803484990146023mentorcom_--
