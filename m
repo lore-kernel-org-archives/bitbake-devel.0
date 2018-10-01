@@ -1,56 +1,101 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 9E96A7A194
+Return-Path: <laurent.bonnans@here.com>
+X-Greylist: delayed 861 seconds by postgrey-1.34 at layers.openembedded.org;
+	Mon, 01 Oct 2018 15:06:55 UTC
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+	(mail-db5eur01on0097.outbound.protection.outlook.com [104.47.2.97])
+	by mail.openembedded.org (Postfix) with ESMTP id 4021A745F1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  1 Oct 2018 13:34:26 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w91DY4JN028424
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 1 Oct 2018 06:34:04 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
-	Mon, 1 Oct 2018 06:34:03 -0700
-To: Jens Rehsack | External Miltenyi Biotec <jensr@external.miltenyibiotec.de>
-References: <E7ABEDBFC1D25948BA30B74A3925A78C6093F6A6@MgeExchMbx1.miltenyibiotec.de>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	xsBNBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAHNJU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT7CwHcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrs7ATQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABwsBfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <340666ae-b209-335d-69e7-641b31dc14a0@windriver.com>
-Date: Mon, 1 Oct 2018 08:34:02 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
-	Gecko/20100101 Thunderbird/52.9.1
+	Mon,  1 Oct 2018 15:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmcs.onmicrosoft.com; 
+	s=selector1-here-com;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=g2ZZH6cmMxbGGgN8ZDItzAMEM24FWzpQQpYq7jM0S3s=;
+	b=UvQrvePKniCAspPMlK3EuKYxjMiOUcMVRS+JtMKlmEU+NONEqngkqIjEkzMuCRsvxiX3fsvotH5ZeHMDnJv+g/wNkzAShXzY/g862I7E25xOIRGRbkHpNeCNKumYpV8TgPvnrq3Pjc1lXtWN1EVcz1/pwDA7j5Y8VkBlxRwhf4c=
+Authentication-Results: spf=none (sender IP is )
+	smtp.mailfrom=laurent.bonnans@here.com; 
+Received: from herelb.internal.advancedtelematic.com (87.191.159.149) by
+	AM5PR04MB3283.eurprd04.prod.outlook.com (2603:10a6:206:d::26) with
+	Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.1185.22; Mon, 1 Oct 2018 14:52:45 +0000
+From: Laurent Bonnans <laurent.bonnans@here.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  1 Oct 2018 16:52:14 +0200
+Message-Id: <20181001145214.19329-3-laurent.bonnans@here.com>
+X-Mailer: git-send-email 2.19.0
+In-Reply-To: <20181001145214.19329-1-laurent.bonnans@here.com>
+References: <20181001145214.19329-1-laurent.bonnans@here.com>
 MIME-Version: 1.0
-In-Reply-To: <E7ABEDBFC1D25948BA30B74A3925A78C6093F6A6@MgeExchMbx1.miltenyibiotec.de>
-Cc: Volker Mink <VolkerMi@miltenyibiotec.de>,
-	Burghard Bode | External Miltenyi Biotec
-	<burghardb@external.miltenyibiotec.de>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	"rehsack@gmail.com" <rehsack@gmail.com>
-Subject: Re: gitsm Fetcher update
+X-Originating-IP: [87.191.159.149]
+X-ClientProxiedBy: HE1PR09CA0080.eurprd09.prod.outlook.com
+	(2603:10a6:7:3d::24) To AM5PR04MB3283.eurprd04.prod.outlook.com
+	(2603:10a6:206:d::26)
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4bc7fc91-ac75-472f-86ba-08d627ad8c25
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam: BCL:0; PCL:0;
+	RULEID:(7020095)(4652040)(8989299)(4534165)(4627221)(201703031133081)(201702281549075)(8990200)(5600074)(711020)(4618075)(2017052603328)(7153060)(7193020);
+	SRVR:AM5PR04MB3283; 
+X-Microsoft-Exchange-Diagnostics: 1; AM5PR04MB3283;
+	3:S1I6Unh7GEKvJadqqmAKZ6o+R83jmirdmulB0Er/VTBTjLbjXNOE2nQ/fZRuqzkHQHrCTWcgnjjBjtUoeEVb8yWKysaW8idS0SncozJoT+NyEA05j2l5kE0svwKzNhR457o3FROYhCLGH5I1KBRKUr+MMeMre/pIWcc7YD+J9KV05dWRd7Qty7tWgXIQKeYjPAFfCCaPFqVZHKH1+BgqAtRHRdwUIK8CccpuCrlDIgcWQXhG5y2Cbo++yLrun4A9;
+	25:4sVraroj5y/lCaOo1zLwFBME7lMA411sWEX5C2JkMbfHxMe3JqxArzcFFyaHBRUDYOevraNoiPBYLKzOVhJDPra7+JC09xyw5kYJKhyGrPvFXEdoeRU19Vot/4BVbuwo6fU1iVIwLeIXKOwIx+VRwFClddtpt8bzer+9uBvri4TbjJXkQqQFqF72d+8u8QTxd42SnCTkXAemnnRx3ycj4J8uBSLd8MKg+rQ7leUPup0cFZ9EFYy3/XBBbngcKFbI8kp2hIdZhOyzVFIOO32MxdliTRLdsO/hqLaWuYAehHcvWWthwMjXUegaHyGEt6FLbEAeHu0Jj+wT9uXKA/kuzQ==;
+	31:LgIjYal3GIMRoXRrfLCFzNLSKofDZU6IGO7SEwvO6dxhocfXIkn1FeMWy3ox+iKz3j8ZsaQrA6GBhKhA9GoKscid4FsQpbVYy/74/hI49fFrCwLzi8y17M37lsl3NavdjERJ1k+ET+rIDIRyYacNKnuK+f3UeIrHkJkMkJ46Z1AnYMT/F0/tp3szv6EaOx6E3fNwuK64uYQKO7cuQK0fswVAmgKo1q69mJp5jLAf2uw=
+X-MS-TrafficTypeDiagnostic: AM5PR04MB3283:
+X-Microsoft-Exchange-Diagnostics: 1; AM5PR04MB3283;
+	20:Lgju9LAW1t8dxL8VDvUH/dSwpChKHZXy0RWXF3Jcb6q/GVDAEkugnaw9vhYyc/Z4PtGn9ae7nen2A5aWkL6ha37/FvNF4YAI58t4FTL5gzme5Qnu43R1mOMFeQbWULF2v8oJSdaIdk2iig3uBJhpPrJBXD6j3Kkmc/c1W/QT4GEe/iAWZe7DGnqwVRANM0HGR77QQv5RnEgVY6bLOnponFPtWTSs2DwZHIWaCcZE/cuSB+DgrabHbTz2M8tMvXfVppcHLzrqlAntOH0A8ssgxV/2KUnm/j6FtI1OQlkUlHh7qdd0GCzmRoQtQ2mUIIlyARbTH3hK4UoCsTIRkCTRjFZ75oxR1d06xRzTF0XQvXyuhpRImH2CXx28iYON8I8anM/QuybcILfYO9XbndnFK3D301px5GDBjaRqXW67P+Fxh5sFNXOOjFRoXbZxS3Ryk0uhMdcxtFGbjAK/S5felHwDM6JtW0s+LfLcAEto85gw59VY9qDfHaIWZta3GRHB;
+	4:QRsnVgDtZUA8ZakYSMElgsLUrxTqMMg4TMtq/bHcsAC444UwTK7kHVtr8U48iOl9yLKoCdn1ZxJio33RYlVmga6G8dDfJi8XtdfmnnVxLeXKk0u+5Ks2qXYWIpz7zj+8xn4djfJ8qF9UoBwuakUvYPqpVnMKYAwrg3zr38hj3/8wORdN55p8cAE6JYQK8xSxSt8Ht789eNAohp8EK2gi6CqsfqPG9O9+qzdnMJaGOP/AtnFar0VVhlbjcR4LdX+enlPn30bxbqnespAIKkPSxOoNgOR0uChlOoLMCT2pgerHTxnlcF788YmglcuBS1RK
+X-Microsoft-Antispam-PRVS: <AM5PR04MB3283CA7DC18686BEEBBDDEE285EF0@AM5PR04MB3283.eurprd04.prod.outlook.com>
+X-Exchange-Antispam-Report-Test: UriScan:(87047540314649);
+X-MS-Exchange-SenderADCheck: 1
+X-Exchange-Antispam-Report-CFA-Test: BCL:0; PCL:0;
+	RULEID:(8211001083)(6040522)(2401047)(5005006)(8121501046)(3231355)(944501410)(52105095)(93006095)(93001095)(10201501046)(3002001)(6055026)(149066)(150057)(6041310)(20161123564045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123562045)(20161123558120)(20161123560045)(201708071742011)(7699051);
+	SRVR:AM5PR04MB3283; BCL:0; PCL:0; RULEID:; SRVR:AM5PR04MB3283; 
+X-Forefront-PRVS: 0812095267
+X-Forefront-Antispam-Report: SFV:NSPM;
+	SFS:(10019020)(39860400002)(396003)(366004)(346002)(136003)(376002)(199004)(189003)(7736002)(76176011)(2870700001)(52116002)(86362001)(68736007)(2361001)(486006)(2906002)(6116002)(3846002)(6506007)(386003)(51416003)(50466002)(48376002)(446003)(105586002)(11346002)(106356001)(6512007)(2616005)(6916009)(66066001)(1076002)(956004)(47776003)(44832011)(5660300001)(476003)(2351001)(316002)(34290500001)(107886003)(53936002)(25786009)(6486002)(305945005)(186003)(26005)(97736004)(50226002)(81156014)(81166006)(16526019)(4326008)(478600001)(8936002)(8676002)(14444005)(36756003)(6666003);
+	DIR:OUT; SFP:1102; SCL:1; SRVR:AM5PR04MB3283;
+	H:herelb.internal.advancedtelematic.com; FPR:; SPF:None; LANG:en;
+	PTR:InfoNoRecords; A:1; MX:1; 
+Received-SPF: None (protection.outlook.com: here.com does not designate
+	permitted sender hosts)
+X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1; AM5PR04MB3283;
+	23:IVilkl+OUhSh+fIziyvrcQ2Q7FT2OeyPTOPvpQ5rD?=
+	=?us-ascii?Q?Fv/Y2Qo2EYTuaVKLTNJXJMaPvUqKKQL815nBJYHPkAHzZgEXj+LVVUZboMsm?=
+	=?us-ascii?Q?N6UtGbmxIMPB98hIsDK8Pbn7L86PtoBTjjXcrbTFA/8d5VVgLdqFaBghE049?=
+	=?us-ascii?Q?MY8bMiUqPW43pVo9vg5SxZcPpWFRbzQ5EXPcJ4HzhgCGjCFPf3RIdj4YxztB?=
+	=?us-ascii?Q?OCwwSKiBvviXM2kSBo6mNNMYg/O50gc5kD6E3tZ7rVkq5dhSxhR//VLESVJu?=
+	=?us-ascii?Q?SCvrZeqA4fNgSIhDcTzCOjICyUyju1+AI3vUVzYGYvYEfn5TZ7iXIxbB07Hw?=
+	=?us-ascii?Q?qHrXv3wj4qvsEMTI4zMe5GZ1lBlnSQF+bSBYmsdn31zcnOXRa7kgLkKnM+zq?=
+	=?us-ascii?Q?o6Cguxak6M8KaLoaLN2PUt79wF7JFpgiQUo4q/UcE5nr+qdUfb077RKvS4m7?=
+	=?us-ascii?Q?/rHSuAaxyVIOXVCuTw1NWQZ56Gsdsq26m/DjV6Zte6L77r8PKPnuxKAPC5v4?=
+	=?us-ascii?Q?+56j/K0cI4h6tF8MiDxUT3RGl38tZkqkdNGIhV7ac4rieUQBl0EcavtPVESO?=
+	=?us-ascii?Q?vqn2ndzOZ4IMtBaftMTn2tGhJd5pf0ExbvZ7DiQjZK2l1RvBdis3dXXwbMeI?=
+	=?us-ascii?Q?mp5Bw01FuAX8XPeHlGpiG35j5kAAzQ57Ib0QoVf9WMVZKycXbsyxd/4eOwB+?=
+	=?us-ascii?Q?TOzanXs0Qw3JSsStrKaUDZ2MRU3yNjMESIkzwklw8WlN/bON8xyThn5SGvo2?=
+	=?us-ascii?Q?+wE8Ios3hgr0Xdehz4fQwDKOCLwblvsEJnqycNaoOiikAd6caMP6tHZsMYxA?=
+	=?us-ascii?Q?kLYC5lVO5pPeg4aR4kYFcyba8px8VncdtXgHobvuZA3RnGbyByolhGdN/DP5?=
+	=?us-ascii?Q?Wm6+POhTI9k8SBogXTZpqXCqdRNAMRIBjQKzWNVzy2AiKq1nU0PjtmF6WR4v?=
+	=?us-ascii?Q?GGEPcwzt/VI1U9Szv1wbcjGZnvn+QqbxhPFYN9THC5v+8m53lm/oddkrTsWw?=
+	=?us-ascii?Q?Nle6u46AVvnOrbScHKlQKATAjEBW27yNEs7Djj21CkeMh6P/YoWHFxW4H2ik?=
+	=?us-ascii?Q?4K8ZTRIN9O1jFN89iDNQT5aLyGzUATiPyOnnZpZpeM46huENBNWdi9ey+N1v?=
+	=?us-ascii?Q?aemxlmYHkY7n8vWY8g6SwTiTmSxtp9MLJ/cA78wQUTPjkJwUq/dNo12ZTgso?=
+	=?us-ascii?Q?u6mKvWZzKkt+/S8n7ILRO3r6EQW0c05xnC2MVkOaFfp7P0alm8bVGM2ENmYf?=
+	=?us-ascii?Q?KSESGP5rm7itIfL3m4f7oH/w2nOw6MkJXUYlhaPtxVgfhXjh6Nt65d2l+foR?=
+	=?us-ascii?Q?9WkgrVpakNZl3pDpRa5P3U=3D?=
+X-Microsoft-Antispam-Message-Info: 0oH9MjjAI3zlziAp6a2i+ISDIf/hd2NqpDZQKLBAFelP2m5VpTVJbMx0CL7iKnfkRDdcJ2wsQU5W+GjxPuhCzpqL8940woiPNp1hx9uWZOXZARQ+aR9jjgfuTqCCCGiWIfT35+/jsx5TyjV7NWQv0B3vTXznk1VEmADZOTkNytzYnrSZDZStkuKG3tm2m5BrqPylOxf5RnDqs1bZQ5BJKT7JFhSF8l2tigD0js9tHtGXe+pmgcF3hqth2LxkVoFrIfTe3KXDXTaIUaFp5xibpnZFTcj6TjnUFLhrlrIGFAJ3S2tW6zCGlMXzVDdsKbAC4qS1NMmEtuTmPdMLgZItIiJTsX0YdbmmvKnI26y0jlc=
+X-Microsoft-Exchange-Diagnostics: 1; AM5PR04MB3283;
+	6:TVu7w/mUPI5pqRLiGaIRewFk3/ANsPQNjVmqCma3I0GZw5PmGsw657U0/L2RtcPDYCnPnbqkIwMaLHU8GEeFoo8P0+uJxLIQoPtwE4BZHAd+KzKxmOxCPEuuVGc3U3tqRtpirNlriok3lal4WuPOFQwueDMcBV/oXXA1Ewf63FFWhTXWidlt+2arrETvZEoczolbpyQXiarFQ6OMTHJmPREIVLTZtsieroZYxOXcaHnFvF9L6sQy17ZK46HkTmhvAopwfxTrdKxKqV3I+nIZ9G7bQAeXHp7DydC3vvdWXXQpL5NrlCHJ8qZDK9ivXrPBjOV/a0gL8KMbY39yic7xzKnywa9Czb2M6uGNcKU6HXZ2oDWm+TfodL5DLQqjweRG4ONJsDHpDzN1zdFLUUd7RixYP41BV+rDgGiFJyztuX3n21lNXTofMD8WB3zYahtkIaMNogvW0GKGIsJrW88NtA==;
+	5:4MKqdz8c1NY0Eg/gATJi3xJ5JwKqGa1mYpSPSdg319BGJCVMZNtc7hp4GFNBTpa3WaujNwW44zyJYy6IUbosnAQAxr9COKu3eA+zEn8oPzwPcDjhacA0ZFYvyw18lnplpGX/0eryurDqMaEunZ0by1i0PSUbx3enj1PslGz0lbA=;
+	7:s2/cxsiorUBdAJ6VuC7jy6NgePjjc07uZBzh4XnRJKO6i4gtXPaaPRSxmBGqCy2eSAyhbcF9GAL1j4Fh0rf0xbBHLZaG2qFNkwkiNWPYLKWdbr+ha3qVKjylI74lHRMJvWHzgfKOGr7QZWKAyxVDBDpiF04FLR3zIsTkyA7pXOpVKVudmrUOOQ2ABW4r1iXgNx1XDq7ZCU7BY9CVJxgijMLfyj6U6nxCPRKccJNXR2k6LsmBT6kgujZdARaBIm+o
+SpamDiagnosticOutput: 1:99
+SpamDiagnosticMetadata: NSPM
+X-OriginatorOrg: here.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2018 14:52:45.0366 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bc7fc91-ac75-472f-86ba-08d627ad8c25
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 6d4034cd-7225-4f72-b853-91feaea64919
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3283
+Subject: [PATCH 3/3] fetch2/gitsm: checkout submodules recursively
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,133 +108,125 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 01 Oct 2018 13:34:26 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Mon, 01 Oct 2018 15:06:55 -0000
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-T24gMTAvMS8xOCAzOjUyIEFNLCBKZW5zIFJlaHNhY2sgfCBFeHRlcm5hbCBNaWx0ZW55aSBC
-aW90ZWMgd3JvdGU6DQo+IEhpIE1hcmssDQo+IA0KPiBhZnRlciB5b3VyIGxhc3QgdXBkYXRl
-IHRvIGdpdHNtIGZldGNoZXIsIGl0IHNlZW1zIGl0IGNhbm5vdCBoYW5kbGUgc3VibW9kdWxl
-cyBub3QgdXNpbmcgdGhlIG1hc3RlciBicmFuY2ggY29ycmVjdGx5Og0KDQpJJ20gbm90IHN1
-cmUgSSB1bmRlcnN0YW5kIGJlbG93IHdoYXQgaXMgZ29pbmcgd3JvbmcuDQoNCkRvZXMgaXQg
-bm90IGNoZWNrb3V0IHRoZSBwcmltYXJ5IHJlcG9zaXRvcnkgaW4gdGhlIGNvcnJlY3QgYnJh
-bmNoLCBvciBkb2VzIHRoaXMNCmdldCBjaGVja2VkIG91dCAtLSBhbmQgaXQncyB0aGUgc3Vi
-bW9kdWxlcyB0aGF0IGdldCAnY29uZnVzZWQnIGJldHdlZW4gdGhlDQpwb2ludGVkIHRvIGNv
-bW1pdCBhbmQgdGhlIGJyYW5jaGVzPw0KDQpUaGUgc3lzdGVtIHJlY3Vyc2l2ZWx5IHByb2Nl
-c3NlcyB0aGUgZ2l0IHN1Ym1vZHVsZXMsIHdoaWxlIGludGVycm9nYXRpbmcgaXQncw0Kd2F5
-IHRocm91Z2ggdGhlIHN5c3RlbS4gIElmIHRoZSBmYWlsdXJlIGlzIG9uIGEgc3VibW9kZSAo
-bm90IHRoZSBtYWluDQpyZXBvc2l0b3J5KSBpdCB3b3VsZCBiZSBzb21ldGhpbmcgaW4gdGhp
-cyBibG9jay4uLg0KDQpodHRwOi8vZ2l0Lm9wZW5lbWJlZGRlZC5vcmcvYml0YmFrZS90cmVl
-L2xpYi9iYi9mZXRjaDIvZ2l0c20ucHkNCg0KNDcgLSAxMDgNCg0KTG9va2luZyBhdCB0aGUg
-Y29kZSwgbGluZSA4MS4NCg0KICAgICAgICAgICAgIyBCdWlsZCBuZXcgU1JDX1VSSQ0KICAg
-ICAgICAgICAgcHJvdG8gPSB1cmlzW21vZHVsZV0uc3BsaXQoJzonLCAxKVswXQ0KICAgICAg
-ICAgICAgdXJsID0gdXJpc1ttb2R1bGVdLnJlcGxhY2UoJyVzOicgJSBwcm90bywgJ2dpdHNt
-OicsIDEpDQogICAgICAgICAgICB1cmwgKz0gJztwcm90b2NvbD0lcycgJSBwcm90bw0KICAg
-ICAgICAgICAgdXJsICs9ICI7bmFtZT0lcyIgJSBtb2R1bGUNCiAgICAgICAgICAgIHVybCAr
-PSAiO3FiYXJlY2xvbmU9MTtub2NoZWNrb3V0PTEiDQoNCg0KSXQgbG9va3MgbGlrZSBhICdx
-JyBhY2NpZGVudGFsbHkgbWFkZSBpdCBpbnRvIHRoZSBwYXRjaC4gIENhbiB5b3UgcmVtb3Zl
-IHRoaXMNCmFuZCB0cnkgaXQ/ICAgVGhpcyBpcyB3aGVyZSB0aGUgc3lzdGVtIGNvbnN0cnVj
-dHMgU1JDX1VSSSBmb3IgdGhlIHJlY3Vyc2l2ZQ0KKHN1Ym1vZHVsZSkgZG93bmxvYWQuICBU
-aGUgbmV4dCBibG9jayBkZWZpbmVzIHRoZSBTUkNSRVYgYW5kIHJlbGF0ZWQgaXRlbXMgYW5k
-DQpyZS1jYWxscyBmZXRjaC4NCg0KTm93aGVyZSBpbiB0aGVyZSBkbyB3ZSBjYWxsIG9yIHNl
-dCBhbnl0aGluZyByZWxhdGVkIHRvIHRoZSBicmFuY2hlcy4gIE1heWJlDQoibm9icmFuY2g9
-MSIgbmVlZHMgdG8gYmUgYWRkZWQgdG8gdGhlIGdlbmVyYXRlZCBTUkNfVVJJPw0KDQpJZiB5
-b3UgY2FuIGdpdmUgbWUgYSByZWNpcGUgdGhhdCB1c2VkIHRvIHdvcmsgdGhyb3VnaCAnZG9f
-dW5wYWNrJywgdGhlbiBJIHNob3VsZA0KYmUgYWJsZSB0byBhdHRlbXB0IHRvIHJlcGxpY2F0
-ZSBpdCBsb2NhbGx5IGFuZCB3b3JrIHRocm91Z2ggdGhlIHByb2JsZW1zIGlmIHRoZQ0KYWJv
-dmUgaXNuJ3QgZW5vdWdoIG9mIGEgcGxhY2UgdG8gbG9vay4NCg0KKEl0IGFsc28gc2hvd3Mg
-YSBtaXNzaW5nIHRlc3QgY2FzZSwgb25lIHRoYXQgd2UgbmVlZCB0byBhZGQgLS0gb25jZSB3
-ZQ0KdW5kZXJzdGFuZCB3aGF0IHBhcnQgYW5kIHdoeSBpdCdzIGZhaWxpbmcuKQ0KDQotLU1h
-cmsNCg0KPiAtLS0gQkVHSU4gSU5JVElBTCBFUlJPUg0KPiBXQVJOSU5HOiBhdXRvbWFjcy11
-aS1naXQtcjAgZG9fZmV0Y2g6IEZhaWxlZCB0byBmZXRjaCBVUkwgZ2l0c206Ly9tZ2VnaXQu
-bWlsdGVueWliaW90ZWMuZGU6Nzk5OS91bXNhL2F1dG9tYWNzLXVpLmdpdDtwcm90b2NvbD1z
-c2g7YnJhbmNoPWRldmVsb3A7cmV2PWZkZGIyNmEzM2QzZjk0OWQwODYzY2ZmYzUzMDYxNDZh
-YjhlNWE5YTgsIGF0dGVtcHRpbmcgTUlSUk9SUyBpZiBhdmFpbGFibGUNCj4gRVJST1I6IGF1
-dG9tYWNzLXVpLWdpdC1yMCBkb19mZXRjaDogRmV0Y2hlciBmYWlsdXJlIGZvciBVUkw6ICdn
-aXRzbTovL2dpdEBtZ2VnaXQubWlsdGVueWliaW90ZWMuZGU6Nzk5OS9jcHNtL2NtYWtlLW1v
-ZHVsZXMuZ2l0O3Byb3RvY29sPXNzaDtuYW1lPWNtYWtlL21vZHVsZXM7cWJhcmVjbG9uZT0x
-O25vY2hlY2tvdXQ9MScuIFVuYWJsZSB0byBmZXRjaCBVUkwgZnJvbSBhbnkgc291cmNlLg0K
-PiBFUlJPUjogYXV0b21hY3MtdWktZ2l0LXIwIGRvX2ZldGNoOiBGZXRjaGVyIGZhaWx1cmUg
-Zm9yIFVSTDogJ2dpdHNtOi8vbWdlZ2l0Lm1pbHRlbnlpYmlvdGVjLmRlOjc5OTkvdW1zYS9h
-dXRvbWFjcy11aS5naXQ7cHJvdG9jb2w9c3NoO2JyYW5jaD1kZXZlbG9wO3Jldj1mZGRiMjZh
-MzNkM2Y5NDlkMDg2M2NmZmM1MzA2MTQ2YWI4ZTVhOWE4Jy4gVW5hYmxlIHRvIGZldGNoIFVS
-TCBmcm9tIGFueSBzb3VyY2UuDQo+IEVSUk9SOiBhdXRvbWFjcy11aS1naXQtcjAgZG9fZmV0
-Y2g6IEZ1bmN0aW9uIGZhaWxlZDogYmFzZV9kb19mZXRjaA0KPiBFUlJPUjogTG9nZmlsZSBv
-ZiBmYWlsdXJlIHN0b3JlZCBpbjogL2hvbWUvc25vL2dwdy1jb21tdW5pdHktYnNwL21vcHMt
-eW9jdG8tcGxhdGZvcm0vdG1wL3dvcmsvY29yZTItNjQtcG9reS1saW51eC9hdXRvbWFjcy11
-aS9naXQtcjAvdGVtcC9sb2cuZG9fZmV0Y2guNTQ1Mg0KPiBFUlJPUjogVGFzayAoL2hvbWUv
-c25vL2dwdy1jb21tdW5pdHktYnNwL3NvdXJjZXMvbWV0YS1taWx0ZW55aS9yZWNpcGVzLXVp
-L2F1dG9tYWNzLXVpL2F1dG9tYWNzLXVpX2dpdC5iYjpkb19mZXRjaCkgZmFpbGVkIHdpdGgg
-ZXhpdCBjb2RlICcxJw0KPiANCj4gREVCVUc6IFJ1bm5pbmcgZXhwb3J0IFBTRVVET19ESVNB
-QkxFRD0xOyBleHBvcnQgR0lUX1BST1hZX0NPTU1BTkQ9Im9lLWdpdC1wcm94eSI7IGV4cG9y
-dCBOT19QUk9YWT0iKi5taWx0ZW55aWJpb3RlYy5kZSwqLm1pbHRlbnlpYmlvdGVjLmNvbSI7
-IGV4cG9ydCBodHRwc19wcm94eT0iaHR0cDovL3Byb3h5Mjo4MDgwLyI7IGV4cG9ydCBodHRw
-X3Byb3h5PSJodHRwOi8vcHJveHkyOjgwODAvIjsgZXhwb3J0IFBBVEg9Ii9ob21lL3Nuby9n
-cHctY29tbXVuaXR5LWJzcC9tb3BzLXlvY3RvLXBsYXRmb3JtL3RtcC9zeXNyb290cy11bmlu
-YXRpdmUveDg2XzY0LWxpbnV4L3Vzci9iaW46L2hvbWUvc25vL2dwdy1jb21tdW5pdHktYnNw
-L3NvdXJjZXMvcG9reS9zY3JpcHRzOi9ob21lL3Nuby9ncHctY29tbXVuaXR5LWJzcC9tb3Bz
-LXlvY3RvLXBsYXRmb3JtL3RtcC93b3JrL2NvcmUyLTY0LXBva3ktbGludXgvYXV0b21hY3Mt
-dWkvZ2l0LXIwL3JlY2lwZS1zeXNyb290LW5hdGl2ZS91c3IvYmluL3g4Nl82NC1wb2t5LWxp
-bnV4Oi9ob21lL3Nuby9ncHctY29tbXVuaXR5LWJzcC9tb3BzLXlvY3RvLXBsYXRmb3JtL3Rt
-cC93b3JrL2NvcmUyLTY0LXBva3ktbGludXgvYXV0b21hY3MtdWkvZ2l0LXIwL3JlY2lwZS1z
-eXNyb290L29wdC9taWx0ZW55aS9iaW4vY3Jvc3NzY3JpcHRzOi9ob21lL3Nuby9ncHctY29t
-bXVuaXR5LWJzcC9tb3BzLXlvY3RvLXBsYXRmb3JtL3RtcC93b3JrL2NvcmUyLTY0LXBva3kt
-bGludXgvYXV0b21hY3MtdWkvZ2l0LXIwL3JlY2lwZS1zeXNyb290LW5hdGl2ZS91c3Ivc2Jp
-bjovaG9tZS9zbm8vZ3B3LWNvbW11bml0eS1ic3AvbW9wcy15b2N0by1wbGF0Zm9ybS90bXAv
-d29yay9jb3JlMi02NC1wb2t5LWxpbnV4L2F1dG9tYWNzLXVpL2dpdC1yMC9yZWNpcGUtc3lz
-cm9vdC1uYXRpdmUvdXNyL2JpbjovaG9tZS9zbm8vZ3B3LWNvbW11bml0eS1ic3AvbW9wcy15
-b2N0by1wbGF0Zm9ybS90bXAvd29yay9jb3JlMi02NC1wb2t5LWxpbnV4L2F1dG9tYWNzLXVp
-L2dpdC1yMC9yZWNpcGUtc3lzcm9vdC1uYXRpdmUvc2JpbjovaG9tZS9zbm8vZ3B3LWNvbW11
-bml0eS1ic3AvbW9wcy15b2N0by1wbGF0Zm9ybS90bXAvd29yay9jb3JlMi02NC1wb2t5LWxp
-bnV4L2F1dG9tYWNzLXVpL2dpdC1yMC9yZWNpcGUtc3lzcm9vdC1uYXRpdmUvYmluOi9ob21l
-L3Nuby9ncHctY29tbXVuaXR5LWJzcC9zb3VyY2VzL3Bva3kvYml0YmFrZS9iaW46L2hvbWUv
-c25vL2dwdy1jb21tdW5pdHktYnNwL21vcHMteW9jdG8tcGxhdGZvcm0vdG1wL2hvc3R0b29s
-cyI7IGV4cG9ydCBIT01FPSIvaG9tZS9zbm8iOyBnaXQgLWMgY29yZS5mc3luY29iamVjdGZp
-bGVzPTAgYnJhbmNoIC0tY29udGFpbnMgYzZjMDUyNjAzZTJlM2VhMzM0YzVhNzFlMzU4NDg1
-NWM1NTM1OTk1ZiAtLWxpc3QgbWFzdGVyIDI+IC9kZXYvbnVsbCB8IHdjIC1sDQo+IC0tLSBF
-TkQgSU5JVElBTCBFUlJPUg0KPiANCj4gSSBjbG9uZWQgdGhlIGFwcHJvcHJpYXRlIHByb2pl
-Y3QgbG9jYWxseSB0byBzZWUgd2hhdCdzIGdvaW5nIG9uOg0KPiANCj4gc25vQHlvY3RvcG9j
-On4vcHJqL2F1dG9tYWNzLXVpL2NtYWtlL21vZHVsZXMkIGdpdCAtYyBjb3JlLmZzeW5jb2Jq
-ZWN0ZmlsZXM9MCBicmFuY2ggLS1jb250YWlucyBjNmMwNTI2MDNlMmUzZWEzMzRjNWE3MWUz
-NTg0ODU1YzU1MzU5OTVmIC0tbGlzdA0KPiAqIChIRUFEIGRldGFjaGVkIGF0IGM2YzA1MjYp
-DQo+ICAgZGV2ZWxvcA0KPiBzbm9AeW9jdG9wb2M6fi9wcmovYXV0b21hY3MtdWkvY21ha2Uv
-bW9kdWxlcyQgZ2l0IC1jIGNvcmUuZnN5bmNvYmplY3RmaWxlcz0wIGJyYW5jaCAtLWNvbnRh
-aW5zIGM2YzA1MjYwM2UyZTNlYTMzNGM1YTcxZTM1ODQ4NTVjNTUzNTk5NWYgLS1saXN0IG1h
-c3Rlcg0KPiBzbm9AeW9jdG9wb2M6fi9wcmovYXV0b21hY3MtdWkvY21ha2UvbW9kdWxlcyQN
-Cj4gDQo+IFRoZSBJIHRyaWVkIHRvIHJldmVyc2UgZW5naW5lZXIgdGhlIGdpdHNtIGZldGNo
-ZXIgYW5kIGFkZGVkOg0KPiANCj4gcG9reSQgZ2l0IGRpZmYNCj4gZGlmZiAtLWdpdCBhL2Jp
-dGJha2UvbGliL2JiL2ZldGNoMi9naXRzbS5weSBiL2JpdGJha2UvbGliL2JiL2ZldGNoMi9n
-aXRzbS5weQ0KPiBpbmRleCA1MWY4ZDBlNjhjLi4yMjFhZjkzNGMzIDEwMDY0NA0KPiAtLS0g
-YS9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvZ2l0c20ucHkNCj4gKysrIGIvYml0YmFrZS9saWIv
-YmIvZmV0Y2gyL2dpdHNtLnB5DQo+IEBAIC03OSw2ICs3OSw3IEBAIGNsYXNzIEdpdFNNKEdp
-dCk6DQo+ICAgICAgICAgICAgICB1cmwgKz0gJztwcm90b2NvbD0lcycgJSBwcm90bw0KPiAg
-ICAgICAgICAgICAgdXJsICs9ICI7bmFtZT0lcyIgJSBtb2R1bGUNCj4gICAgICAgICAgICAg
-IHVybCArPSAiO3FiYXJlY2xvbmU9MTtub2NoZWNrb3V0PTEiDQo+ICsgICAgICAgICAgICB1
-cmwgKz0gIjtub2JyYW5jaD0xIg0KPiANCj4gICAgICAgICAgICAgIGxkID0gZC5jcmVhdGVD
-b3B5KCkNCj4gICAgICAgICAgICAgICMgTm90IG5lY2Vzc2FyeSB0byBzZXQgU1JDX1VSSSwg
-c2luY2Ugd2UncmUgcGFzc2luZyB0aGUgVVJJIHRvDQo+IA0KPiB3aGljaCByZXN1bHRzIGlu
-dG8gDQo+IA0KPiAtLS0gQkVHSU4gRk9MTE9XIFVQIEVSUk9SDQo+IEVSUk9SOiBhdXRvbWFj
-cy11aS1naXQtcjAgZG9fdW5wYWNrOiBGZXRjaGVyIGZhaWx1cmU6IFN1Ym1vZHVsZSBjbWFr
-ZS9tb2R1bGVzIGRvZXMgbm90IGV4aXN0IGluIC9ob21lL3Nuby9ncHctY29tbXVuaXR5LWJz
-cC9tb3BzLXlvY3RvLXBsYXRmb3JtL2Rvd25sb2Fkcy9naXQyL21nZWdpdC5taWx0ZW55aWJp
-b3RlYy5kZS43OTk5LnVtc2EuYXV0b21hY3MtdWkuZ2l0L21vZHVsZXMvY21ha2UvbW9kdWxl
-cyBvciAvaG9tZS9zbm8vZ3B3LWNvbW11bml0eS1ic3AvbW9wcy15b2N0by1wbGF0Zm9ybS90
-bXAvd29yay9jb3JlMi02NC1wb2t5LWxpbnV4L2F1dG9tYWNzLXVpL2dpdC1yMC9naXQvLmdp
-dC9tb2R1bGVzL2NtYWtlL21vZHVsZXMuDQo+IEVSUk9SOiBhdXRvbWFjcy11aS1naXQtcjAg
-ZG9fdW5wYWNrOiBGdW5jdGlvbiBmYWlsZWQ6IGJhc2VfZG9fdW5wYWNrDQo+IEVSUk9SOiBM
-b2dmaWxlIG9mIGZhaWx1cmUgc3RvcmVkIGluOiAvaG9tZS9zbm8vZ3B3LWNvbW11bml0eS1i
-c3AvbW9wcy15b2N0by1wbGF0Zm9ybS90bXAvd29yay9jb3JlMi02NC1wb2t5LWxpbnV4L2F1
-dG9tYWNzLXVpL2dpdC1yMC90ZW1wL2xvZy5kb191bnBhY2suNjU1MQ0KPiBFUlJPUjogVGFz
-ayAoL2hvbWUvc25vL2dwdy1jb21tdW5pdHktYnNwL3NvdXJjZXMvbWV0YS1taWx0ZW55aS9y
-ZWNpcGVzLXVpL2F1dG9tYWNzLXVpL2F1dG9tYWNzLXVpX2dpdC5iYjpkb191bnBhY2spIGZh
-aWxlZCB3aXRoIGV4aXQgY29kZSAnMScNCj4gLS0tIEVORCBGT0xMT1cgVVAgRVJST1INCj4g
-DQo+IGJlY2F1c2UgaXQgdXNlcyB0aGUgc3VibW9kdWxlIG5hbWVzIGFzIGFyY2hpdmUgbmFt
-ZToNCj4gDQo+ICQgdGFyIHh6ZiBkb3dubG9hZHMvZ2l0Ml9tZ2VnaXQubWlsdGVueWliaW90
-ZWMuZGUuNzk5OS48VEFCPg0KPiBnaXQyX21nZWdpdC5taWx0ZW55aWJpb3RlYy5kZS43OTk5
-LmNwc20uY21ha2UtbW9kdWxlcy5naXQudGFyLmd6DQo+IGdpdDJfbWdlZ2l0Lm1pbHRlbnlp
-YmlvdGVjLmRlLjc5OTkuY3BzbS5tY3MtbGliLmdpdC50YXIuZ3oNCj4gZ2l0Ml9tZ2VnaXQu
-bWlsdGVueWliaW90ZWMuZGUuNzk5OS51bXNhLmNvcmVydC5naXQudGFyLmd6DQo+IGdpdDJf
-bWdlZ2l0Lm1pbHRlbnlpYmlvdGVjLmRlLjc5OTkudW1zYS5wcm90b3MuZ2l0LnRhci5neg0K
-PiANCj4gQ2hlZXJzLA0KPiBKZW5zDQo+IA0KDQo=
+The new fetcher did not run 'git submodule update' recursively.
+
+Signed-off-by: Laurent Bonnans <laurent.bonnans@here.com>
+---
+ lib/bb/fetch2/gitsm.py | 68 +++++++++++++++++++++++-------------------
+ 1 file changed, 38 insertions(+), 30 deletions(-)
+
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index fd5089c0..4d3805a1 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -44,6 +44,22 @@ class GitSM(Git):
+         """
+         return ud.type in ['gitsm']
+ 
++    @staticmethod
++    def parse_gitmodules(gitmodules):
++        modules = {}
++        module = ""
++        for line in gitmodules.splitlines():
++            if line.startswith('[submodule'):
++                module = line.split('"')[1]
++                modules[module] = {}
++            elif module and line.strip().startswith('path'):
++                path = line.split('=')[1].strip()
++                modules[module]['path'] = path
++            elif module and line.strip().startswith('url'):
++                url = line.split('=')[1].strip()
++                modules[module]['url'] = url
++        return modules
++
+     def update_submodules(self, ud, d):
+         submodules = []
+         paths = {}
+@@ -57,17 +73,10 @@ class GitSM(Git):
+                 # No submodules to update
+                 continue
+ 
+-            module = ""
+-            for line in gitmodules.splitlines():
+-                if line.startswith('[submodule'):
+-                    module = line.split('"')[1]
+-                    submodules.append(module)
+-                elif module and line.strip().startswith('path'):
+-                    path = line.split('=')[1].strip()
+-                    paths[module] = path
+-                elif module and line.strip().startswith('url'):
+-                    url = line.split('=')[1].strip()
+-                    uris[module] = url
++            for m, md in self.parse_gitmodules(gitmodules).items():
++                submodules.append(m)
++                paths[m] = md['path']
++                uris[m] = md['url']
+ 
+         for module in submodules:
+             module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], paths[module]), d, quiet=True, workdir=ud.clonedir)
+@@ -173,10 +182,7 @@ class GitSM(Git):
+                 # No submodules to update
+                 continue
+ 
+-            for line in gitmodules.splitlines():
+-                if line.startswith('[submodule'):
+-                    module = line.split('"')[1]
+-                    submodules.append(module)
++            submodules = list(self.parse_gitmodules(gitmodules).keys())
+ 
+         self.copy_submodules(submodules, ud, dest, d)
+ 
+@@ -200,23 +206,25 @@ class GitSM(Git):
+                 # No submodules to update
+                 continue
+ 
+-            module = ""
+-            for line in gitmodules.splitlines():
+-                if line.startswith('[submodule'):
+-                    module = line.split('"')[1]
+-                    submodules.append(module)
+-                elif module and line.strip().startswith('path'):
+-                    path = line.split('=')[1].strip()
+-                    paths[module] = path
+-                elif module and line.strip().startswith('url'):
+-                    url = line.split('=')[1].strip()
+-                    uris[module] = url
++            for m, md in self.parse_gitmodules(gitmodules).items():
++                submodules.append(m)
++                paths[m] = md['path']
++                uris[m] = md['url']
+ 
+         self.copy_submodules(submodules, ud, ud.destdir, d)
+ 
+-        for module in submodules:
+-            srcpath = os.path.join(ud.clonedir, 'modules', module)
+-            modpath = os.path.join(repo_conf, 'modules', module)
++        submodules_queue = [(module, os.path.join(repo_conf, 'modules', module)) for module in submodules]
++        while len(submodules_queue) != 0:
++            module, modpath = submodules_queue.pop()
++
++            # add submodule children recursively
++            try:
++                gitmodules = runfetchcmd("%s show HEAD:.gitmodules" % (ud.basecmd), d, quiet=True, workdir=modpath)
++                for m, md in self.parse_gitmodules(gitmodules).items():
++                    submodules_queue.append([m, os.path.join(modpath, 'modules', m)])
++            except:
++                # no children
++                pass
+ 
+             # Determine (from the submodule) the correct url to reference
+             try:
+@@ -235,4 +243,4 @@ class GitSM(Git):
+ 
+         if submodules:
+             # Run submodule update, this sets up the directories -- without touching the config
+-            runfetchcmd("%s submodule update --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
++            runfetchcmd("%s submodule update --recursive --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
+-- 
+2.19.0
+
 
