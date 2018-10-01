@@ -1,101 +1,59 @@
-Return-Path: <laurent.bonnans@here.com>
-X-Greylist: delayed 861 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 01 Oct 2018 15:06:55 UTC
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-	(mail-db5eur01on0097.outbound.protection.outlook.com [104.47.2.97])
-	by mail.openembedded.org (Postfix) with ESMTP id 4021A745F1
+Return-Path: <rehsack@gmail.com>
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com
+	[209.85.221.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 8037760190
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  1 Oct 2018 15:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmcs.onmicrosoft.com; 
-	s=selector1-here-com;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=g2ZZH6cmMxbGGgN8ZDItzAMEM24FWzpQQpYq7jM0S3s=;
-	b=UvQrvePKniCAspPMlK3EuKYxjMiOUcMVRS+JtMKlmEU+NONEqngkqIjEkzMuCRsvxiX3fsvotH5ZeHMDnJv+g/wNkzAShXzY/g862I7E25xOIRGRbkHpNeCNKumYpV8TgPvnrq3Pjc1lXtWN1EVcz1/pwDA7j5Y8VkBlxRwhf4c=
-Authentication-Results: spf=none (sender IP is )
-	smtp.mailfrom=laurent.bonnans@here.com; 
-Received: from herelb.internal.advancedtelematic.com (87.191.159.149) by
-	AM5PR04MB3283.eurprd04.prod.outlook.com (2603:10a6:206:d::26) with
-	Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.1185.22; Mon, 1 Oct 2018 14:52:45 +0000
-From: Laurent Bonnans <laurent.bonnans@here.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  1 Oct 2018 16:52:14 +0200
-Message-Id: <20181001145214.19329-3-laurent.bonnans@here.com>
-X-Mailer: git-send-email 2.19.0
-In-Reply-To: <20181001145214.19329-1-laurent.bonnans@here.com>
-References: <20181001145214.19329-1-laurent.bonnans@here.com>
-MIME-Version: 1.0
-X-Originating-IP: [87.191.159.149]
-X-ClientProxiedBy: HE1PR09CA0080.eurprd09.prod.outlook.com
-	(2603:10a6:7:3d::24) To AM5PR04MB3283.eurprd04.prod.outlook.com
-	(2603:10a6:206:d::26)
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4bc7fc91-ac75-472f-86ba-08d627ad8c25
-X-MS-Office365-Filtering-HT: Tenant
-X-Microsoft-Antispam: BCL:0; PCL:0;
-	RULEID:(7020095)(4652040)(8989299)(4534165)(4627221)(201703031133081)(201702281549075)(8990200)(5600074)(711020)(4618075)(2017052603328)(7153060)(7193020);
-	SRVR:AM5PR04MB3283; 
-X-Microsoft-Exchange-Diagnostics: 1; AM5PR04MB3283;
-	3:S1I6Unh7GEKvJadqqmAKZ6o+R83jmirdmulB0Er/VTBTjLbjXNOE2nQ/fZRuqzkHQHrCTWcgnjjBjtUoeEVb8yWKysaW8idS0SncozJoT+NyEA05j2l5kE0svwKzNhR457o3FROYhCLGH5I1KBRKUr+MMeMre/pIWcc7YD+J9KV05dWRd7Qty7tWgXIQKeYjPAFfCCaPFqVZHKH1+BgqAtRHRdwUIK8CccpuCrlDIgcWQXhG5y2Cbo++yLrun4A9;
-	25:4sVraroj5y/lCaOo1zLwFBME7lMA411sWEX5C2JkMbfHxMe3JqxArzcFFyaHBRUDYOevraNoiPBYLKzOVhJDPra7+JC09xyw5kYJKhyGrPvFXEdoeRU19Vot/4BVbuwo6fU1iVIwLeIXKOwIx+VRwFClddtpt8bzer+9uBvri4TbjJXkQqQFqF72d+8u8QTxd42SnCTkXAemnnRx3ycj4J8uBSLd8MKg+rQ7leUPup0cFZ9EFYy3/XBBbngcKFbI8kp2hIdZhOyzVFIOO32MxdliTRLdsO/hqLaWuYAehHcvWWthwMjXUegaHyGEt6FLbEAeHu0Jj+wT9uXKA/kuzQ==;
-	31:LgIjYal3GIMRoXRrfLCFzNLSKofDZU6IGO7SEwvO6dxhocfXIkn1FeMWy3ox+iKz3j8ZsaQrA6GBhKhA9GoKscid4FsQpbVYy/74/hI49fFrCwLzi8y17M37lsl3NavdjERJ1k+ET+rIDIRyYacNKnuK+f3UeIrHkJkMkJ46Z1AnYMT/F0/tp3szv6EaOx6E3fNwuK64uYQKO7cuQK0fswVAmgKo1q69mJp5jLAf2uw=
-X-MS-TrafficTypeDiagnostic: AM5PR04MB3283:
-X-Microsoft-Exchange-Diagnostics: 1; AM5PR04MB3283;
-	20:Lgju9LAW1t8dxL8VDvUH/dSwpChKHZXy0RWXF3Jcb6q/GVDAEkugnaw9vhYyc/Z4PtGn9ae7nen2A5aWkL6ha37/FvNF4YAI58t4FTL5gzme5Qnu43R1mOMFeQbWULF2v8oJSdaIdk2iig3uBJhpPrJBXD6j3Kkmc/c1W/QT4GEe/iAWZe7DGnqwVRANM0HGR77QQv5RnEgVY6bLOnponFPtWTSs2DwZHIWaCcZE/cuSB+DgrabHbTz2M8tMvXfVppcHLzrqlAntOH0A8ssgxV/2KUnm/j6FtI1OQlkUlHh7qdd0GCzmRoQtQ2mUIIlyARbTH3hK4UoCsTIRkCTRjFZ75oxR1d06xRzTF0XQvXyuhpRImH2CXx28iYON8I8anM/QuybcILfYO9XbndnFK3D301px5GDBjaRqXW67P+Fxh5sFNXOOjFRoXbZxS3Ryk0uhMdcxtFGbjAK/S5felHwDM6JtW0s+LfLcAEto85gw59VY9qDfHaIWZta3GRHB;
-	4:QRsnVgDtZUA8ZakYSMElgsLUrxTqMMg4TMtq/bHcsAC444UwTK7kHVtr8U48iOl9yLKoCdn1ZxJio33RYlVmga6G8dDfJi8XtdfmnnVxLeXKk0u+5Ks2qXYWIpz7zj+8xn4djfJ8qF9UoBwuakUvYPqpVnMKYAwrg3zr38hj3/8wORdN55p8cAE6JYQK8xSxSt8Ht789eNAohp8EK2gi6CqsfqPG9O9+qzdnMJaGOP/AtnFar0VVhlbjcR4LdX+enlPn30bxbqnespAIKkPSxOoNgOR0uChlOoLMCT2pgerHTxnlcF788YmglcuBS1RK
-X-Microsoft-Antispam-PRVS: <AM5PR04MB3283CA7DC18686BEEBBDDEE285EF0@AM5PR04MB3283.eurprd04.prod.outlook.com>
-X-Exchange-Antispam-Report-Test: UriScan:(87047540314649);
-X-MS-Exchange-SenderADCheck: 1
-X-Exchange-Antispam-Report-CFA-Test: BCL:0; PCL:0;
-	RULEID:(8211001083)(6040522)(2401047)(5005006)(8121501046)(3231355)(944501410)(52105095)(93006095)(93001095)(10201501046)(3002001)(6055026)(149066)(150057)(6041310)(20161123564045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123562045)(20161123558120)(20161123560045)(201708071742011)(7699051);
-	SRVR:AM5PR04MB3283; BCL:0; PCL:0; RULEID:; SRVR:AM5PR04MB3283; 
-X-Forefront-PRVS: 0812095267
-X-Forefront-Antispam-Report: SFV:NSPM;
-	SFS:(10019020)(39860400002)(396003)(366004)(346002)(136003)(376002)(199004)(189003)(7736002)(76176011)(2870700001)(52116002)(86362001)(68736007)(2361001)(486006)(2906002)(6116002)(3846002)(6506007)(386003)(51416003)(50466002)(48376002)(446003)(105586002)(11346002)(106356001)(6512007)(2616005)(6916009)(66066001)(1076002)(956004)(47776003)(44832011)(5660300001)(476003)(2351001)(316002)(34290500001)(107886003)(53936002)(25786009)(6486002)(305945005)(186003)(26005)(97736004)(50226002)(81156014)(81166006)(16526019)(4326008)(478600001)(8936002)(8676002)(14444005)(36756003)(6666003);
-	DIR:OUT; SFP:1102; SCL:1; SRVR:AM5PR04MB3283;
-	H:herelb.internal.advancedtelematic.com; FPR:; SPF:None; LANG:en;
-	PTR:InfoNoRecords; A:1; MX:1; 
-Received-SPF: None (protection.outlook.com: here.com does not designate
-	permitted sender hosts)
-X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1; AM5PR04MB3283;
-	23:IVilkl+OUhSh+fIziyvrcQ2Q7FT2OeyPTOPvpQ5rD?=
-	=?us-ascii?Q?Fv/Y2Qo2EYTuaVKLTNJXJMaPvUqKKQL815nBJYHPkAHzZgEXj+LVVUZboMsm?=
-	=?us-ascii?Q?N6UtGbmxIMPB98hIsDK8Pbn7L86PtoBTjjXcrbTFA/8d5VVgLdqFaBghE049?=
-	=?us-ascii?Q?MY8bMiUqPW43pVo9vg5SxZcPpWFRbzQ5EXPcJ4HzhgCGjCFPf3RIdj4YxztB?=
-	=?us-ascii?Q?OCwwSKiBvviXM2kSBo6mNNMYg/O50gc5kD6E3tZ7rVkq5dhSxhR//VLESVJu?=
-	=?us-ascii?Q?SCvrZeqA4fNgSIhDcTzCOjICyUyju1+AI3vUVzYGYvYEfn5TZ7iXIxbB07Hw?=
-	=?us-ascii?Q?qHrXv3wj4qvsEMTI4zMe5GZ1lBlnSQF+bSBYmsdn31zcnOXRa7kgLkKnM+zq?=
-	=?us-ascii?Q?o6Cguxak6M8KaLoaLN2PUt79wF7JFpgiQUo4q/UcE5nr+qdUfb077RKvS4m7?=
-	=?us-ascii?Q?/rHSuAaxyVIOXVCuTw1NWQZ56Gsdsq26m/DjV6Zte6L77r8PKPnuxKAPC5v4?=
-	=?us-ascii?Q?+56j/K0cI4h6tF8MiDxUT3RGl38tZkqkdNGIhV7ac4rieUQBl0EcavtPVESO?=
-	=?us-ascii?Q?vqn2ndzOZ4IMtBaftMTn2tGhJd5pf0ExbvZ7DiQjZK2l1RvBdis3dXXwbMeI?=
-	=?us-ascii?Q?mp5Bw01FuAX8XPeHlGpiG35j5kAAzQ57Ib0QoVf9WMVZKycXbsyxd/4eOwB+?=
-	=?us-ascii?Q?TOzanXs0Qw3JSsStrKaUDZ2MRU3yNjMESIkzwklw8WlN/bON8xyThn5SGvo2?=
-	=?us-ascii?Q?+wE8Ios3hgr0Xdehz4fQwDKOCLwblvsEJnqycNaoOiikAd6caMP6tHZsMYxA?=
-	=?us-ascii?Q?kLYC5lVO5pPeg4aR4kYFcyba8px8VncdtXgHobvuZA3RnGbyByolhGdN/DP5?=
-	=?us-ascii?Q?Wm6+POhTI9k8SBogXTZpqXCqdRNAMRIBjQKzWNVzy2AiKq1nU0PjtmF6WR4v?=
-	=?us-ascii?Q?GGEPcwzt/VI1U9Szv1wbcjGZnvn+QqbxhPFYN9THC5v+8m53lm/oddkrTsWw?=
-	=?us-ascii?Q?Nle6u46AVvnOrbScHKlQKATAjEBW27yNEs7Djj21CkeMh6P/YoWHFxW4H2ik?=
-	=?us-ascii?Q?4K8ZTRIN9O1jFN89iDNQT5aLyGzUATiPyOnnZpZpeM46huENBNWdi9ey+N1v?=
-	=?us-ascii?Q?aemxlmYHkY7n8vWY8g6SwTiTmSxtp9MLJ/cA78wQUTPjkJwUq/dNo12ZTgso?=
-	=?us-ascii?Q?u6mKvWZzKkt+/S8n7ILRO3r6EQW0c05xnC2MVkOaFfp7P0alm8bVGM2ENmYf?=
-	=?us-ascii?Q?KSESGP5rm7itIfL3m4f7oH/w2nOw6MkJXUYlhaPtxVgfhXjh6Nt65d2l+foR?=
-	=?us-ascii?Q?9WkgrVpakNZl3pDpRa5P3U=3D?=
-X-Microsoft-Antispam-Message-Info: 0oH9MjjAI3zlziAp6a2i+ISDIf/hd2NqpDZQKLBAFelP2m5VpTVJbMx0CL7iKnfkRDdcJ2wsQU5W+GjxPuhCzpqL8940woiPNp1hx9uWZOXZARQ+aR9jjgfuTqCCCGiWIfT35+/jsx5TyjV7NWQv0B3vTXznk1VEmADZOTkNytzYnrSZDZStkuKG3tm2m5BrqPylOxf5RnDqs1bZQ5BJKT7JFhSF8l2tigD0js9tHtGXe+pmgcF3hqth2LxkVoFrIfTe3KXDXTaIUaFp5xibpnZFTcj6TjnUFLhrlrIGFAJ3S2tW6zCGlMXzVDdsKbAC4qS1NMmEtuTmPdMLgZItIiJTsX0YdbmmvKnI26y0jlc=
-X-Microsoft-Exchange-Diagnostics: 1; AM5PR04MB3283;
-	6:TVu7w/mUPI5pqRLiGaIRewFk3/ANsPQNjVmqCma3I0GZw5PmGsw657U0/L2RtcPDYCnPnbqkIwMaLHU8GEeFoo8P0+uJxLIQoPtwE4BZHAd+KzKxmOxCPEuuVGc3U3tqRtpirNlriok3lal4WuPOFQwueDMcBV/oXXA1Ewf63FFWhTXWidlt+2arrETvZEoczolbpyQXiarFQ6OMTHJmPREIVLTZtsieroZYxOXcaHnFvF9L6sQy17ZK46HkTmhvAopwfxTrdKxKqV3I+nIZ9G7bQAeXHp7DydC3vvdWXXQpL5NrlCHJ8qZDK9ivXrPBjOV/a0gL8KMbY39yic7xzKnywa9Czb2M6uGNcKU6HXZ2oDWm+TfodL5DLQqjweRG4ONJsDHpDzN1zdFLUUd7RixYP41BV+rDgGiFJyztuX3n21lNXTofMD8WB3zYahtkIaMNogvW0GKGIsJrW88NtA==;
-	5:4MKqdz8c1NY0Eg/gATJi3xJ5JwKqGa1mYpSPSdg319BGJCVMZNtc7hp4GFNBTpa3WaujNwW44zyJYy6IUbosnAQAxr9COKu3eA+zEn8oPzwPcDjhacA0ZFYvyw18lnplpGX/0eryurDqMaEunZ0by1i0PSUbx3enj1PslGz0lbA=;
-	7:s2/cxsiorUBdAJ6VuC7jy6NgePjjc07uZBzh4XnRJKO6i4gtXPaaPRSxmBGqCy2eSAyhbcF9GAL1j4Fh0rf0xbBHLZaG2qFNkwkiNWPYLKWdbr+ha3qVKjylI74lHRMJvWHzgfKOGr7QZWKAyxVDBDpiF04FLR3zIsTkyA7pXOpVKVudmrUOOQ2ABW4r1iXgNx1XDq7ZCU7BY9CVJxgijMLfyj6U6nxCPRKccJNXR2k6LsmBT6kgujZdARaBIm+o
-SpamDiagnosticOutput: 1:99
-SpamDiagnosticMetadata: NSPM
-X-OriginatorOrg: here.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2018 14:52:45.0366 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bc7fc91-ac75-472f-86ba-08d627ad8c25
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6d4034cd-7225-4f72-b853-91feaea64919
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3283
-Subject: [PATCH 3/3] fetch2/gitsm: checkout submodules recursively
+	Mon,  1 Oct 2018 17:18:21 +0000 (UTC)
+Received: by mail-wr1-f43.google.com with SMTP id z4-v6so13476985wrb.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 01 Oct 2018 10:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+	:references; bh=0ewtGjf+eaioNkgcAskg0zETuHd0m9FsEXnjuoEbjmA=;
+	b=ChFb71XGVks2fHlrQCg1cRU4OhJ9bHJwCnS5C/ZU0h76/F339dRjovzD9Qli75/lXP
+	LWDbaQjsxhKNgtW4Con/WvDp4TElshs1DN/7PAMHidF2F/vhNEegj677ewwZwnold/iY
+	4/aqwkvOXMB9g1L8dp1vFNXTzOG7+38DgBvCvCu/vF+RK/yIX8bjzJgOJbUu/HFM73VA
+	wTPuBX9PN82HQHwu0crGoo+dOH0UI1zT4I3HRvXvHvOj9Fxfophd2e5dpeUzCWmi2Gvd
+	MxipjAIjbT1dJuyh6Zawz5zHBVNhce++DzHuzP31/c7ig7cfnUFww8QllyQCGmyVve1f
+	vB0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:message-id:mime-version:subject:date
+	:in-reply-to:cc:to:references;
+	bh=0ewtGjf+eaioNkgcAskg0zETuHd0m9FsEXnjuoEbjmA=;
+	b=jURaMbsr9bT6hfB2LfvmsV3vkHch/F1HT+v6NeEUE9Z5bIGbF2uIRzqjzxt7UQcC1N
+	VGL4OkXuhYiwi9K/mtxdhWrHv403OsMsDY6PRANm99bpS+j3152ooafLy8heFRAdVD86
+	WGu2Kbq8VOGFgmeMryXAikn/h8EV1zAMpObb7MkMk0TSBvSwedF8XNVKrsa6f2/4udhx
+	nNNHTlLHfqg83TR1gPy5PDuHJZdsrwJQywz0rGIzYhWbbgMNkA2/MoXdl8OoBo8l6ID7
+	U3aeZuz9nqTlzzNseylVvE2d00NLR7Ana7GPKYpyOzvb1xzWaTrqQrFvH7yNXXVMAoqb
+	Z2Dg==
+X-Gm-Message-State: ABuFfogP4vB8Jv5JWJWKeA9YapdZ/EwkTMKEHnHWXewy5x9/OLyGb4tm
+	ZGITD5JKBkgdLuIS8Y7p5gI=
+X-Google-Smtp-Source: ACcGV6366WpSZXC0ibrCI6gDLE0G8tk5qbY6qCCNnhMswAy8tZV8jVCBi7/fdN/Zovs8vOB6iZeqKw==
+X-Received: by 2002:adf:b2d7:: with SMTP id
+	g81-v6mr8181186wrd.48.1538414302082; 
+	Mon, 01 Oct 2018 10:18:22 -0700 (PDT)
+Received: from ernie.muppets.liwing.de (b2b-78-94-80-58.unitymedia.biz.
+	[78.94.80.58]) by smtp.gmail.com with ESMTPSA id
+	l125-v6sm12869609wmb.1.2018.10.01.10.18.20
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 01 Oct 2018 10:18:21 -0700 (PDT)
+From: Jens Rehsack <rehsack@gmail.com>
+Message-Id: <DD5B4CCF-37DA-43D8-8148-1F4E3F2E3BF2@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Date: Mon, 1 Oct 2018 19:18:19 +0200
+In-Reply-To: <340666ae-b209-335d-69e7-641b31dc14a0@windriver.com>
+To: Mark Hatle <mark.hatle@windriver.com>
+References: <E7ABEDBFC1D25948BA30B74A3925A78C6093F6A6@MgeExchMbx1.miltenyibiotec.de>
+	<340666ae-b209-335d-69e7-641b31dc14a0@windriver.com>
+X-Mailer: Apple Mail (2.3445.9.1)
+Cc: Volker Mink <VolkerMi@miltenyibiotec.de>,
+	Burghard Bode | External Miltenyi Biotec
+	<burghardb@external.miltenyibiotec.de>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	Jens Rehsack | External Miltenyi Biotec <jensr@external.miltenyibiotec.de>
+Subject: Re: gitsm Fetcher update
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -108,125 +66,445 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 01 Oct 2018 15:06:55 -0000
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-List-Received-Date: Mon, 01 Oct 2018 17:18:21 -0000
+X-Groupsio-MsgNum: 9628
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_B1D8F9D4-5160-467D-B23F-63308CC54AE9";
+	protocol="application/pgp-signature"; micalg=pgp-sha512
 
-The new fetcher did not run 'git submodule update' recursively.
+--Apple-Mail=_B1D8F9D4-5160-467D-B23F-63308CC54AE9
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_7BAE5128-03C4-437A-AA8A-C56A3D7C8515"
 
-Signed-off-by: Laurent Bonnans <laurent.bonnans@here.com>
----
- lib/bb/fetch2/gitsm.py | 68 +++++++++++++++++++++++-------------------
- 1 file changed, 38 insertions(+), 30 deletions(-)
-
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index fd5089c0..4d3805a1 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -44,6 +44,22 @@ class GitSM(Git):
-         """
-         return ud.type in ['gitsm']
- 
-+    @staticmethod
-+    def parse_gitmodules(gitmodules):
-+        modules = {}
-+        module = ""
-+        for line in gitmodules.splitlines():
-+            if line.startswith('[submodule'):
-+                module = line.split('"')[1]
-+                modules[module] = {}
-+            elif module and line.strip().startswith('path'):
-+                path = line.split('=')[1].strip()
-+                modules[module]['path'] = path
-+            elif module and line.strip().startswith('url'):
-+                url = line.split('=')[1].strip()
-+                modules[module]['url'] = url
-+        return modules
-+
-     def update_submodules(self, ud, d):
-         submodules = []
-         paths = {}
-@@ -57,17 +73,10 @@ class GitSM(Git):
-                 # No submodules to update
-                 continue
- 
--            module = ""
--            for line in gitmodules.splitlines():
--                if line.startswith('[submodule'):
--                    module = line.split('"')[1]
--                    submodules.append(module)
--                elif module and line.strip().startswith('path'):
--                    path = line.split('=')[1].strip()
--                    paths[module] = path
--                elif module and line.strip().startswith('url'):
--                    url = line.split('=')[1].strip()
--                    uris[module] = url
-+            for m, md in self.parse_gitmodules(gitmodules).items():
-+                submodules.append(m)
-+                paths[m] = md['path']
-+                uris[m] = md['url']
- 
-         for module in submodules:
-             module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], paths[module]), d, quiet=True, workdir=ud.clonedir)
-@@ -173,10 +182,7 @@ class GitSM(Git):
-                 # No submodules to update
-                 continue
- 
--            for line in gitmodules.splitlines():
--                if line.startswith('[submodule'):
--                    module = line.split('"')[1]
--                    submodules.append(module)
-+            submodules = list(self.parse_gitmodules(gitmodules).keys())
- 
-         self.copy_submodules(submodules, ud, dest, d)
- 
-@@ -200,23 +206,25 @@ class GitSM(Git):
-                 # No submodules to update
-                 continue
- 
--            module = ""
--            for line in gitmodules.splitlines():
--                if line.startswith('[submodule'):
--                    module = line.split('"')[1]
--                    submodules.append(module)
--                elif module and line.strip().startswith('path'):
--                    path = line.split('=')[1].strip()
--                    paths[module] = path
--                elif module and line.strip().startswith('url'):
--                    url = line.split('=')[1].strip()
--                    uris[module] = url
-+            for m, md in self.parse_gitmodules(gitmodules).items():
-+                submodules.append(m)
-+                paths[m] = md['path']
-+                uris[m] = md['url']
- 
-         self.copy_submodules(submodules, ud, ud.destdir, d)
- 
--        for module in submodules:
--            srcpath = os.path.join(ud.clonedir, 'modules', module)
--            modpath = os.path.join(repo_conf, 'modules', module)
-+        submodules_queue = [(module, os.path.join(repo_conf, 'modules', module)) for module in submodules]
-+        while len(submodules_queue) != 0:
-+            module, modpath = submodules_queue.pop()
-+
-+            # add submodule children recursively
-+            try:
-+                gitmodules = runfetchcmd("%s show HEAD:.gitmodules" % (ud.basecmd), d, quiet=True, workdir=modpath)
-+                for m, md in self.parse_gitmodules(gitmodules).items():
-+                    submodules_queue.append([m, os.path.join(modpath, 'modules', m)])
-+            except:
-+                # no children
-+                pass
- 
-             # Determine (from the submodule) the correct url to reference
-             try:
-@@ -235,4 +243,4 @@ class GitSM(Git):
- 
-         if submodules:
-             # Run submodule update, this sets up the directories -- without touching the config
--            runfetchcmd("%s submodule update --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
-+            runfetchcmd("%s submodule update --recursive --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
--- 
-2.19.0
+--Apple-Mail=_7BAE5128-03C4-437A-AA8A-C56A3D7C8515
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
 
+
+> Am 01.10.2018 um 15:34 schrieb Mark Hatle <mark.hatle@windriver.com>:
+>=20
+> On 10/1/18 3:52 AM, Jens Rehsack | External Miltenyi Biotec wrote:
+>> Hi Mark,
+>>=20
+>> after your last update to gitsm fetcher, it seems it cannot handle =
+submodules not using the master branch correctly:
+>=20
+> I'm not sure I understand below what is going wrong.
+>=20
+> Does it not checkout the primary repository in the correct branch, or =
+does this
+> get checked out -- and it's the submodules that get 'confused' between =
+the
+> pointed to commit and the branches?
+
+The primary repository is - as far as I can see from the logs - checked =
+out correctly.
+It just tries to apply the branch 'master' to the submodule. The primary =
+repository has
+the branch 'develop' - what makes me a bit curios.
+
+> The system recursively processes the git submodules, while =
+interrogating it's
+> way through the system.  If the failure is on a submode (not the main
+> repository) it would be something in this block...
+>=20
+> http://git.openembedded.org/bitbake/tree/lib/bb/fetch2/gitsm.py
+>=20
+> 47 - 108
+>=20
+> Looking at the code, line 81.
+>=20
+>            # Build new SRC_URI
+>            proto =3D uris[module].split(':', 1)[0]
+>            url =3D uris[module].replace('%s:' % proto, 'gitsm:', 1)
+>            url +=3D ';protocol=3D%s' % proto
+>            url +=3D ";name=3D%s" % module
+>            url +=3D ";qbareclone=3D1;nocheckout=3D1"
+>=20
+>=20
+> It looks like a 'q' accidentally made it into the patch.  Can you =
+remove this
+> and try it?   This is where the system constructs SRC_URI for the =
+recursive
+> (submodule) download.  The next block defines the SRCREV and related =
+items and
+> re-calls fetch.
+
+Will do tomorrow when I'm back in company and report back.
+
+> Nowhere in there do we call or set anything related to the branches.  =
+Maybe
+> "nobranch=3D1" needs to be added to the generated SRC_URI?
+
+I tried that and this ended up in wrong names for the archive files =
+created
+for the download cache (see below).
+
+> If you can give me a recipe that used to work through 'do_unpack', =
+then I should
+> be able to attempt to replicate it locally and work through the =
+problems if the
+> above isn't enough of a place to look.
+
+Unfortunately we have only proprietary recipes using that. I can try =
+create
+one for a perl module I maintain, if you like.
+You will need meta-cpan for that - can you confirm that meta-cpan works
+for you in general (https://github.com/meta-cpan =
+<https://github.com/meta-cpan>)?
+
+> (It also shows a missing test case, one that we need to add -- once we
+> understand what part and why it's failing.)
+>=20
+> --Mark
+
+Best regards,
+Jens
+
+>> --- BEGIN INITIAL ERROR
+>> WARNING: automacs-ui-git-r0 do_fetch: Failed to fetch URL =
+gitsm://mgegit.miltenyibiotec.de:7999/umsa/automacs-ui.git;protocol=3Dssh;=
+branch=3Ddevelop;rev=3Dfddb26a33d3f949d0863cffc5306146ab8e5a9a8, =
+attempting MIRRORS if available
+>> ERROR: automacs-ui-git-r0 do_fetch: Fetcher failure for URL: =
+'gitsm://git@mgegit.miltenyibiotec.de:7999/cpsm/cmake-modules.git;protocol=
+=3Dssh;name=3Dcmake/modules;qbareclone=3D1;nocheckout=3D1'. Unable to =
+fetch URL from any source.
+>> ERROR: automacs-ui-git-r0 do_fetch: Fetcher failure for URL: =
+'gitsm://mgegit.miltenyibiotec.de:7999/umsa/automacs-ui.git;protocol=3Dssh=
+;branch=3Ddevelop;rev=3Dfddb26a33d3f949d0863cffc5306146ab8e5a9a8'. =
+Unable to fetch URL from any source.
+>> ERROR: automacs-ui-git-r0 do_fetch: Function failed: base_do_fetch
+>> ERROR: Logfile of failure stored in: =
+/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-lin=
+ux/automacs-ui/git-r0/temp/log.do_fetch.5452
+>> ERROR: Task =
+(/home/sno/gpw-community-bsp/sources/meta-miltenyi/recipes-ui/automacs-ui/=
+automacs-ui_git.bb:do_fetch) failed with exit code '1'
+>>=20
+>> DEBUG: Running export PSEUDO_DISABLED=3D1; export =
+GIT_PROXY_COMMAND=3D"oe-git-proxy"; export =
+NO_PROXY=3D"*.miltenyibiotec.de,*.miltenyibiotec.com"; export =
+https_proxy=3D"http://proxy2:8080/"; export =
+http_proxy=3D"http://proxy2:8080/"; export =
+PATH=3D"/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/sysroots-unina=
+tive/x86_64-linux/usr/bin:/home/sno/gpw-community-bsp/sources/poky/scripts=
+:/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-li=
+nux/automacs-ui/git-r0/recipe-sysroot-native/usr/bin/x86_64-poky-linux:/ho=
+me/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-linux/=
+automacs-ui/git-r0/recipe-sysroot/opt/miltenyi/bin/crossscripts:/home/sno/=
+gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-linux/automac=
+s-ui/git-r0/recipe-sysroot-native/usr/sbin:/home/sno/gpw-community-bsp/mop=
+s-yocto-platform/tmp/work/core2-64-poky-linux/automacs-ui/git-r0/recipe-sy=
+sroot-native/usr/bin:/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/w=
+ork/core2-64-poky-linux/automacs-ui/git-r0/recipe-sysroot-native/sbin:/hom=
+e/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-linux/a=
+utomacs-ui/git-r0/recipe-sysroot-native/bin:/home/sno/gpw-community-bsp/so=
+urces/poky/bitbake/bin:/home/sno/gpw-community-bsp/mops-yocto-platform/tmp=
+/hosttools"; export HOME=3D"/home/sno"; git -c core.fsyncobjectfiles=3D0 =
+branch --contains c6c052603e2e3ea334c5a71e3584855c5535995f --list master =
+2> /dev/null | wc -l
+>> --- END INITIAL ERROR
+>>=20
+>> I cloned the appropriate project locally to see what's going on:
+>>=20
+>> sno@yoctopoc:~/prj/automacs-ui/cmake/modules$ git -c =
+core.fsyncobjectfiles=3D0 branch --contains =
+c6c052603e2e3ea334c5a71e3584855c5535995f --list
+>> * (HEAD detached at c6c0526)
+>>  develop
+>> sno@yoctopoc:~/prj/automacs-ui/cmake/modules$ git -c =
+core.fsyncobjectfiles=3D0 branch --contains =
+c6c052603e2e3ea334c5a71e3584855c5535995f --list master
+>> sno@yoctopoc:~/prj/automacs-ui/cmake/modules$
+>>=20
+>> The I tried to reverse engineer the gitsm fetcher and added:
+>>=20
+>> poky$ git diff
+>> diff --git a/bitbake/lib/bb/fetch2/gitsm.py =
+b/bitbake/lib/bb/fetch2/gitsm.py
+>> index 51f8d0e68c..221af934c3 100644
+>> --- a/bitbake/lib/bb/fetch2/gitsm.py
+>> +++ b/bitbake/lib/bb/fetch2/gitsm.py
+>> @@ -79,6 +79,7 @@ class GitSM(Git):
+>>             url +=3D ';protocol=3D%s' % proto
+>>             url +=3D ";name=3D%s" % module
+>>             url +=3D ";qbareclone=3D1;nocheckout=3D1"
+>> +            url +=3D ";nobranch=3D1"
+>>=20
+>>             ld =3D d.createCopy()
+>>             # Not necessary to set SRC_URI, since we're passing the =
+URI to
+>>=20
+>> which results into
+>>=20
+>> --- BEGIN FOLLOW UP ERROR
+>> ERROR: automacs-ui-git-r0 do_unpack: Fetcher failure: Submodule =
+cmake/modules does not exist in =
+/home/sno/gpw-community-bsp/mops-yocto-platform/downloads/git2/mgegit.milt=
+enyibiotec.de.7999.umsa.automacs-ui.git/modules/cmake/modules or =
+/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-lin=
+ux/automacs-ui/git-r0/git/.git/modules/cmake/modules.
+>> ERROR: automacs-ui-git-r0 do_unpack: Function failed: base_do_unpack
+>> ERROR: Logfile of failure stored in: =
+/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-lin=
+ux/automacs-ui/git-r0/temp/log.do_unpack.6551
+>> ERROR: Task =
+(/home/sno/gpw-community-bsp/sources/meta-miltenyi/recipes-ui/automacs-ui/=
+automacs-ui_git.bb:do_unpack) failed with exit code '1'
+>> --- END FOLLOW UP ERROR
+>>=20
+>> because it uses the submodule names as archive name:
+>>=20
+>> $ tar xzf downloads/git2_mgegit.miltenyibiotec.de.7999.<TAB>
+>> git2_mgegit.miltenyibiotec.de.7999.cpsm.cmake-modules.git.tar.gz
+>> git2_mgegit.miltenyibiotec.de.7999.cpsm.mcs-lib.git.tar.gz
+>> git2_mgegit.miltenyibiotec.de.7999.umsa.corert.git.tar.gz
+>> git2_mgegit.miltenyibiotec.de.7999.umsa.protos.git.tar.gz
+>>=20
+>> Cheers,
+>> Jens
+>>=20
+>=20
+
+--
+Jens Rehsack - rehsack@gmail.com
+
+
+--Apple-Mail=_7BAE5128-03C4-437A-AA8A-C56A3D7C8515
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3Dus-ascii"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;" class=3D""><br =
+class=3D""><div><br class=3D""><blockquote type=3D"cite" class=3D""><div =
+class=3D"">Am 01.10.2018 um 15:34 schrieb Mark Hatle &lt;<a =
+href=3D"mailto:mark.hatle@windriver.com" =
+class=3D"">mark.hatle@windriver.com</a>&gt;:</div><br =
+class=3D"Apple-interchange-newline"><div class=3D""><div class=3D"">On =
+10/1/18 3:52 AM, Jens Rehsack | External Miltenyi Biotec wrote:<br =
+class=3D""><blockquote type=3D"cite" class=3D"">Hi Mark,<br class=3D""><br=
+ class=3D"">after your last update to gitsm fetcher, it seems it cannot =
+handle submodules not using the master branch correctly:<br =
+class=3D""></blockquote><br class=3D"">I'm not sure I understand below =
+what is going wrong.<br class=3D""><br class=3D"">Does it not checkout =
+the primary repository in the correct branch, or does this<br =
+class=3D"">get checked out -- and it's the submodules that get =
+'confused' between the<br class=3D"">pointed to commit and the =
+branches?<br class=3D""></div></div></blockquote><div><br =
+class=3D""></div><div>The primary repository is - as far as I can see =
+from the logs - checked out correctly.</div><div>It just tries to apply =
+the branch 'master' to the submodule. The primary repository =
+has</div><div>the branch 'develop' - what makes me a bit =
+curios.</div><br class=3D""><blockquote type=3D"cite" class=3D""><div =
+class=3D""><div class=3D"">The system recursively processes the git =
+submodules, while interrogating it's<br class=3D"">way through the =
+system. &nbsp;If the failure is on a submode (not the main<br =
+class=3D"">repository) it would be something in this block...<br =
+class=3D""><br class=3D""><a =
+href=3D"http://git.openembedded.org/bitbake/tree/lib/bb/fetch2/gitsm.py" =
+class=3D"">http://git.openembedded.org/bitbake/tree/lib/bb/fetch2/gitsm.py=
+</a><br class=3D""><br class=3D"">47 - 108<br class=3D""><br =
+class=3D"">Looking at the code, line 81.<br class=3D""><br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# =
+Build new SRC_URI<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proto =
+=3D uris[module].split(':', 1)[0]<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url =3D =
+uris[module].replace('%s:' % proto, 'gitsm:', 1)<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url +=3D=
+ ';protocol=3D%s' % proto<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url +=3D=
+ ";name=3D%s" % module<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url +=3D=
+ ";qbareclone=3D1;nocheckout=3D1"<br class=3D""><br class=3D""><br =
+class=3D"">It looks like a 'q' accidentally made it into the patch. =
+&nbsp;Can you remove this<br class=3D"">and try it? &nbsp;&nbsp;This is =
+where the system constructs SRC_URI for the recursive<br =
+class=3D"">(submodule) download. &nbsp;The next block defines the SRCREV =
+and related items and<br class=3D"">re-calls fetch.<br =
+class=3D""></div></div></blockquote><div><br class=3D""></div><div>Will =
+do tomorrow when I'm back in company and report back.</div><br =
+class=3D""><blockquote type=3D"cite" class=3D""><div class=3D""><div =
+class=3D"">Nowhere in there do we call or set anything related to the =
+branches. &nbsp;Maybe<br class=3D"">"nobranch=3D1" needs to be added to =
+the generated SRC_URI?<br class=3D""></div></div></blockquote><div><br =
+class=3D""></div><div>I tried that and this ended up in wrong names for =
+the archive files created</div><div>for the download cache (see =
+below).</div><br class=3D""><blockquote type=3D"cite" class=3D""><div =
+class=3D""><div class=3D"">If you can give me a recipe that used to work =
+through 'do_unpack', then I should<br class=3D"">be able to attempt to =
+replicate it locally and work through the problems if the<br =
+class=3D"">above isn't enough of a place to look.<br =
+class=3D""></div></div></blockquote><div><br =
+class=3D""></div><div>Unfortunately we have only proprietary recipes =
+using that. I can try create</div><div>one for a perl module I maintain, =
+if you like.</div><div>You will need meta-cpan for that - can you =
+confirm that meta-cpan works</div><div>for you in general (<a =
+href=3D"https://github.com/meta-cpan" =
+class=3D"">https://github.com/meta-cpan</a>)?</div><br =
+class=3D""><blockquote type=3D"cite" class=3D""><div class=3D""><div =
+class=3D"">(It also shows a missing test case, one that we need to add =
+-- once we<br class=3D"">understand what part and why it's failing.)<br =
+class=3D""><br class=3D"">--Mark<br =
+class=3D""></div></div></blockquote><div><br class=3D""></div><div>Best =
+regards,</div><div>Jens</div><br class=3D""><blockquote type=3D"cite" =
+class=3D""><div class=3D""><div class=3D""><blockquote type=3D"cite" =
+class=3D"">--- BEGIN INITIAL ERROR<br class=3D"">WARNING: =
+automacs-ui-git-r0 do_fetch: Failed to fetch URL <a =
+href=3D"gitsm://mgegit.miltenyibiotec.de:7999/umsa/automacs-ui.git;protoco=
+l=3Dssh;branch=3Ddevelop;rev=3Dfddb26a33d3f949d0863cffc5306146ab8e5a9a8" =
+class=3D"">gitsm://mgegit.miltenyibiotec.de:7999/umsa/automacs-ui.git;prot=
+ocol=3Dssh;branch=3Ddevelop;rev=3Dfddb26a33d3f949d0863cffc5306146ab8e5a9a8=
+</a>, attempting MIRRORS if available<br class=3D"">ERROR: =
+automacs-ui-git-r0 do_fetch: Fetcher failure for URL: '<a =
+href=3D"gitsm://git@mgegit.miltenyibiotec.de:7999/cpsm/cmake-modules.git;p=
+rotocol=3Dssh;name=3Dcmake/modules;qbareclone=3D1;nocheckout=3D1" =
+class=3D"">gitsm://git@mgegit.miltenyibiotec.de:7999/cpsm/cmake-modules.gi=
+t;protocol=3Dssh;name=3Dcmake/modules;qbareclone=3D1;nocheckout=3D1</a>'. =
+Unable to fetch URL from any source.<br class=3D"">ERROR: =
+automacs-ui-git-r0 do_fetch: Fetcher failure for URL: '<a =
+href=3D"gitsm://mgegit.miltenyibiotec.de:7999/umsa/automacs-ui.git;protoco=
+l=3Dssh;branch=3Ddevelop;rev=3Dfddb26a33d3f949d0863cffc5306146ab8e5a9a8" =
+class=3D"">gitsm://mgegit.miltenyibiotec.de:7999/umsa/automacs-ui.git;prot=
+ocol=3Dssh;branch=3Ddevelop;rev=3Dfddb26a33d3f949d0863cffc5306146ab8e5a9a8=
+</a>'. Unable to fetch URL from any source.<br class=3D"">ERROR: =
+automacs-ui-git-r0 do_fetch: Function failed: base_do_fetch<br =
+class=3D"">ERROR: Logfile of failure stored in: =
+/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-lin=
+ux/automacs-ui/git-r0/temp/log.do_fetch.5452<br class=3D"">ERROR: Task =
+(/home/sno/gpw-community-bsp/sources/meta-miltenyi/recipes-ui/automacs-ui/=
+automacs-ui_git.bb:do_fetch) failed with exit code '1'<br class=3D""><br =
+class=3D"">DEBUG: Running export PSEUDO_DISABLED=3D1; export =
+GIT_PROXY_COMMAND=3D"oe-git-proxy"; export NO_PROXY=3D"*.<a =
+href=3D"http://miltenyibiotec.de" class=3D"">miltenyibiotec.de</a>,*.<a =
+href=3D"http://miltenyibiotec.com" class=3D"">miltenyibiotec.com</a>"; =
+export https_proxy=3D"<a href=3D"http://proxy2:8080/" =
+class=3D"">http://proxy2:8080/</a>"; export http_proxy=3D"<a =
+href=3D"http://proxy2:8080/" class=3D"">http://proxy2:8080/</a>"; export =
+PATH=3D"/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/sysroots-unina=
+tive/x86_64-linux/usr/bin:/home/sno/gpw-community-bsp/sources/poky/scripts=
+:/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-li=
+nux/automacs-ui/git-r0/recipe-sysroot-native/usr/bin/x86_64-poky-linux:/ho=
+me/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-linux/=
+automacs-ui/git-r0/recipe-sysroot/opt/miltenyi/bin/crossscripts:/home/sno/=
+gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-linux/automac=
+s-ui/git-r0/recipe-sysroot-native/usr/sbin:/home/sno/gpw-community-bsp/mop=
+s-yocto-platform/tmp/work/core2-64-poky-linux/automacs-ui/git-r0/recipe-sy=
+sroot-native/usr/bin:/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/w=
+ork/core2-64-poky-linux/automacs-ui/git-r0/recipe-sysroot-native/sbin:/hom=
+e/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-linux/a=
+utomacs-ui/git-r0/recipe-sysroot-native/bin:/home/sno/gpw-community-bsp/so=
+urces/poky/bitbake/bin:/home/sno/gpw-community-bsp/mops-yocto-platform/tmp=
+/hosttools"; export HOME=3D"/home/sno"; git -c core.fsyncobjectfiles=3D0 =
+branch --contains c6c052603e2e3ea334c5a71e3584855c5535995f --list master =
+2&gt; /dev/null | wc -l<br class=3D"">--- END INITIAL ERROR<br =
+class=3D""><br class=3D"">I cloned the appropriate project locally to =
+see what's going on:<br class=3D""><br =
+class=3D"">sno@yoctopoc:~/prj/automacs-ui/cmake/modules$ git -c =
+core.fsyncobjectfiles=3D0 branch --contains =
+c6c052603e2e3ea334c5a71e3584855c5535995f --list<br class=3D"">* (HEAD =
+detached at c6c0526)<br class=3D""> &nbsp;develop<br =
+class=3D"">sno@yoctopoc:~/prj/automacs-ui/cmake/modules$ git -c =
+core.fsyncobjectfiles=3D0 branch --contains =
+c6c052603e2e3ea334c5a71e3584855c5535995f --list master<br =
+class=3D"">sno@yoctopoc:~/prj/automacs-ui/cmake/modules$<br class=3D""><br=
+ class=3D"">The I tried to reverse engineer the gitsm fetcher and =
+added:<br class=3D""><br class=3D"">poky$ git diff<br class=3D"">diff =
+--git a/bitbake/lib/bb/fetch2/gitsm.py =
+b/bitbake/lib/bb/fetch2/gitsm.py<br class=3D"">index =
+51f8d0e68c..221af934c3 100644<br class=3D"">--- =
+a/bitbake/lib/bb/fetch2/gitsm.py<br class=3D"">+++ =
+b/bitbake/lib/bb/fetch2/gitsm.py<br class=3D"">@@ -79,6 +79,7 @@ class =
+GitSM(Git):<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ur=
+l +=3D ';protocol=3D%s' % proto<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ur=
+l +=3D ";name=3D%s" % module<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ur=
+l +=3D ";qbareclone=3D1;nocheckout=3D1"<br class=3D"">+ =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url +=3D=
+ ";nobranch=3D1"<br class=3D""><br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ld=
+ =3D d.createCopy()<br class=3D""> =
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# =
+Not necessary to set SRC_URI, since we're passing the URI to<br =
+class=3D""><br class=3D"">which results into <br class=3D""><br =
+class=3D"">--- BEGIN FOLLOW UP ERROR<br class=3D"">ERROR: =
+automacs-ui-git-r0 do_unpack: Fetcher failure: Submodule cmake/modules =
+does not exist in =
+/home/sno/gpw-community-bsp/mops-yocto-platform/downloads/git2/<a =
+href=3D"http://mgegit.miltenyibiotec.de" =
+class=3D"">mgegit.miltenyibiotec.de</a>.7999.umsa.automacs-ui.git/modules/=
+cmake/modules or =
+/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-lin=
+ux/automacs-ui/git-r0/git/.git/modules/cmake/modules.<br class=3D"">ERROR:=
+ automacs-ui-git-r0 do_unpack: Function failed: base_do_unpack<br =
+class=3D"">ERROR: Logfile of failure stored in: =
+/home/sno/gpw-community-bsp/mops-yocto-platform/tmp/work/core2-64-poky-lin=
+ux/automacs-ui/git-r0/temp/log.do_unpack.6551<br class=3D"">ERROR: Task =
+(/home/sno/gpw-community-bsp/sources/meta-miltenyi/recipes-ui/automacs-ui/=
+automacs-ui_git.bb:do_unpack) failed with exit code '1'<br class=3D"">--- =
+END FOLLOW UP ERROR<br class=3D""><br class=3D"">because it uses the =
+submodule names as archive name:<br class=3D""><br class=3D"">$ tar xzf =
+downloads/<a href=3D"http://git2_mgegit.miltenyibiotec.de" =
+class=3D"">git2_mgegit.miltenyibiotec.de</a>.7999.&lt;TAB&gt;<br =
+class=3D""><a href=3D"http://git2_mgegit.miltenyibiotec.de" =
+class=3D"">git2_mgegit.miltenyibiotec.de</a>.7999.cpsm.cmake-modules.git.t=
+ar.gz<br class=3D""><a href=3D"http://git2_mgegit.miltenyibiotec.de" =
+class=3D"">git2_mgegit.miltenyibiotec.de</a>.7999.cpsm.mcs-lib.git.tar.gz<=
+br class=3D""><a href=3D"http://git2_mgegit.miltenyibiotec.de" =
+class=3D"">git2_mgegit.miltenyibiotec.de</a>.7999.umsa.corert.git.tar.gz<b=
+r class=3D""><a href=3D"http://git2_mgegit.miltenyibiotec.de" =
+class=3D"">git2_mgegit.miltenyibiotec.de</a>.7999.umsa.protos.git.tar.gz<b=
+r class=3D""><br class=3D"">Cheers,<br class=3D"">Jens<br class=3D""><br =
+class=3D""></blockquote><br class=3D""></div></div></blockquote></div><br =
+class=3D""><div class=3D"">
+<div style=3D"color: rgb(0, 0, 0); letter-spacing: normal; orphans: =
+auto; text-align: start; text-indent: 0px; text-transform: none; =
+white-space: normal; widows: auto; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px; word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
+class=3D""><div style=3D"color: rgb(0, 0, 0); letter-spacing: normal; =
+orphans: auto; text-align: start; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: auto; word-spacing: 0px; =
+-webkit-text-stroke-width: 0px; word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
+class=3D""><div class=3D"">--&nbsp;</div><div class=3D"">Jens Rehsack - =
+<a href=3D"mailto:rehsack@gmail.com" =
+class=3D"">rehsack@gmail.com</a></div></div></div>
+</div>
+<br class=3D""></body></html>=
+
+--Apple-Mail=_7BAE5128-03C4-437A-AA8A-C56A3D7C8515--
+
+--Apple-Mail=_B1D8F9D4-5160-467D-B23F-63308CC54AE9
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEGutaqWUYV+tvC/mCRJmWrtzlCp0FAluyVtsACgkQRJmWrtzl
+Cp0ZzhAAsGQ6bIN1jnkreFbCGVPQW8TFKzjZLdy4rfWAETS5Y5aoCTfwjCx9YYYJ
+4wMCFHS4DZdp4/kTnz3lGtl1xWGecootHhrW9ij1pxQZN4g7tP1QYQmnN1zuwkI+
+eRtCtuuGq9uwV4bxmQTdoJuhGtwz4v4hQY5iIzw7vJ7++oS2sGDZ3iEh13SRdbsJ
+iLwNKcj8Xz7qUKE+U8u6xQUZRg1AOxKWmct9gH6mJhiP0Er6hnmloflWHWvR3vTb
+E6bUcMn3P68ys8UjjI7arf7VDT3naJIh1tlBljDg9tm3yKAFXCeixT7Al6ZJUl+T
+CYCTW32x+brtho9QR6k0MAUQOpSAnjhaDyqL/2bjKQISedE4xXn/8xCWJowaFJPP
+jJymB+SPvS3Pa8D+oPhnGmrzypZ8HCRB1xQ6O9VKKKzvR3V7XaiMC24JetFNf6BO
+K/CGmO+QRLvTJygez4AdbfX/Y/Nr8k3PDrZePs/t9ZpL0PBXvnao1WZ7bFnGxJN6
+UPVC+BCeplqSw2/l2maWkjxBahcOHS6Ljda68TZoCOYa63dix3LGkt9zJlAQZybP
+mbwa33zeM3meIz14QF547Ub0mNMd3ipd3ubfF4o5ppV+ZwG4zU0uJ4FKFB/fwrLN
+uB5G+GUVQICG/PWdRnuvqWnTl5qfkJcV4RLvUB3lU9SM0VIMThE=
+=aiQL
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_B1D8F9D4-5160-467D-B23F-63308CC54AE9--
