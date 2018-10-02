@@ -1,23 +1,26 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id BCCFE795DA
+Return-Path: <fw@javox-solutions.com>
+X-Greylist: delayed 883 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 02 Oct 2018 16:39:27 UTC
+Received: from smtprelay04.ispgateway.de (smtprelay04.ispgateway.de
+	[80.67.31.27])
+	by mail.openembedded.org (Postfix) with ESMTP id 606F87943C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  2 Oct 2018 01:37:20 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w921bL1f003148
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 1 Oct 2018 18:37:21 -0700 (PDT)
-Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.408.0;
-	Mon, 1 Oct 2018 18:37:20 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 1 Oct 2018 21:37:19 -0400
-Message-ID: <20181002013719.97783-1-mark.hatle@windriver.com>
-X-Mailer: git-send-email 2.16.0.rc2
+	Tue,  2 Oct 2018 16:39:27 +0000 (UTC)
+Received: from [89.0.32.146] (helo=[192.168.178.95])
+	by smtprelay04.ispgateway.de with esmtpsa
+	(TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim 4.90_1)
+	(envelope-from <fw@javox-solutions.com>)
+	id 1g7NTX-0003AT-K6; Tue, 02 Oct 2018 18:24:43 +0200
+To: bitbake-devel@lists.openembedded.org
+From: Florian Wickert <fw@javox-solutions.com>
+Organization: Javox Solutions GmbH
+Message-ID: <fa53fd11-b621-63ae-a1a6-bf2a4803a796@javox-solutions.com>
+Date: Tue, 2 Oct 2018 18:24:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.0
 MIME-Version: 1.0
-Subject: [PATCH] bitbake-worker: Add DryRun event
+X-Df-Sender: ZndAamF2b3gtc29sdXRpb25zLmNvbQ==
+Subject: gitsm fetcher does not work anymore
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,46 +33,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Oct 2018 01:37:20 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 02 Oct 2018 16:39:27 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US-large
 
-There may be actions that a user wants to take, but the information is
-only available during task execution.  Using the DryRun event you can prevent
-the actual task execution, but get access to the associated data stores.
+Hi all,
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
----
- bin/bitbake-worker | 2 ++
- lib/bb/event.py    | 5 +++++
- 2 files changed, 7 insertions(+)
+relative URL schemes (e.g. submodules in 
+https://github.com/xiph/Icecast-libshout) or SSH URLs (e.g. 
+git@github.com:user/example.git) are not parsed correctly since the 
+rework done in 5cd00e3e53819f3c10d1733480077ce9f3cc2ca8.
+The SSH scheme is required for private repos on github because https 
+doesn't work with SSH keys.
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index e925054b..e27fe7ac 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -268,6 +268,8 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
-                 os._exit(1)
-             try:
-                 if dry_run:
-+                    localdata = bb.build._task_data(fn, taskname, the_data)
-+                    bb.event.fire(bb.event.DryRun(), localdata)
-                     return 0
-                 return bb.build.exec_task(fn, taskname, the_data, cfg.profile)
-             except:
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 5b1b094a..c03541a1 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -832,3 +832,8 @@ class FindSigInfoResult(Event):
-     def __init__(self, result):
-         Event.__init__(self)
-         self.result = result
-+
-+class DryRun(Event):
-+    """
-+    Event to fire during a dry run
-+    """
+Regards,
+Florian
+
 -- 
-2.16.0.rc2
+Florian Wickert, M.Sc.
+Javox Solutions GmbH
+Gallierstr. 33, 52074 Aachen
+Germany
+
+Phone: +49 241 99034569
+Web:www.javox-solutions.com
 
 
