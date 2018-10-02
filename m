@@ -1,16 +1,15 @@
 Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 1307F746A6
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id ABA94746A6
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  2 Oct 2018 17:15:16 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w92HEccs029748
+	Tue,  2 Oct 2018 17:15:48 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id w92HFjbv021383
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 2 Oct 2018 10:14:48 -0700
+	Tue, 2 Oct 2018 10:15:45 -0700 (PDT)
 Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
-	Tue, 2 Oct 2018 10:14:27 -0700
+	Tue, 2 Oct 2018 10:15:45 -0700
 To: Florian Wickert <fw@javox-solutions.com>,
 	<bitbake-devel@lists.openembedded.org>
 References: <fa53fd11-b621-63ae-a1a6-bf2a4803a796@javox-solutions.com>
@@ -40,8 +39,8 @@ Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
 	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
 	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
 Organization: Wind River Systems
-Message-ID: <8d43b616-bc80-ea15-3d44-396a53c74392@windriver.com>
-Date: Tue, 2 Oct 2018 12:14:26 -0500
+Message-ID: <a13ae361-ae55-0ece-88bb-245b3f0f2d59@windriver.com>
+Date: Tue, 2 Oct 2018 12:15:44 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
 	Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
@@ -59,7 +58,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Oct 2018 17:15:17 -0000
+X-List-Received-Date: Tue, 02 Oct 2018 17:15:48 -0000
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,20 +68,24 @@ On 10/2/18 11:24 AM, Florian Wickert wrote:
 > 
 > relative URL schemes (e.g. submodules in 
 > https://github.com/xiph/Icecast-libshout) or SSH URLs (e.g. 
-> git@github.com:user/example.git) are not parsed correctly since the 
 
-git@github.com:user/example.git that is not a valid URL.
+URIs in question are of the format:
 
-ssh://git@github.com/user/example.git would be.
+[submodule "m4"]
+	path = m4
+	url = ../icecast-m4.git
+[submodule "src/common"]
+	path = src/common
+	url = ../icecast-common.git
 
-Is this an issue where it's specified inside of the git repository as a non-url
-string?  If so, we'll have to learn how to recognize that and convert it
-'somehow' to something that can be recognized as a URL.
+While I'm somewhat surprised this is valid, this should be something we can resolve.
 
-(Does the git fetcher support ssh uris?)
+(yes I intentionally replied to the two concerns with different emails, as I see
+them as different problems.)
 
 --Mark
 
+> git@github.com:user/example.git) are not parsed correctly since the 
 > rework done in 5cd00e3e53819f3c10d1733480077ce9f3cc2ca8.
 > The SSH scheme is required for private repos on github because https 
 > doesn't work with SSH keys.
