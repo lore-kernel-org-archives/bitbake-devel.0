@@ -1,24 +1,27 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id EC10C74AFA
+	by mail.openembedded.org (Postfix) with ESMTP id BD23A75264
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Oct 2018 08:57:15 +0000 (UTC)
+	Thu,  4 Oct 2018 09:12:17 +0000 (UTC)
 Received: from hex ([192.168.3.34]) (authenticated bits=0)
 	by dan.rpsys.net (8.15.2/8.15.2/Debian-10) with ESMTPSA id
-	w948vEjo005817
+	w949CDj5007389
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Thu, 4 Oct 2018 09:57:15 +0100
-Message-ID: <675086deaafea11489a53cdb9dc693d16a0f50d4.camel@linuxfoundation.org>
+	verify=NOT); Thu, 4 Oct 2018 10:12:15 +0100
+Message-ID: <32e34671e86114fcff1d18ea5acfe610a2a049ac.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Mark Hatle <mark.hatle@windriver.com>, bitbake-devel@lists.openembedded.org
-Date: Thu, 04 Oct 2018 09:57:14 +0100
-In-Reply-To: <20181002013719.97783-1-mark.hatle@windriver.com>
-References: <20181002013719.97783-1-mark.hatle@windriver.com>
+To: Urs =?ISO-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Thu, 04 Oct 2018 10:12:13 +0100
+In-Reply-To: <20181003120346.3523-6-urs.fassler@bbv.ch>
+References: <20181003120346.3523-1-urs.fassler@bbv.ch>
+	<20181003120346.3523-6-urs.fassler@bbv.ch>
 X-Mailer: Evolution 3.28.1-2 
 Mime-Version: 1.0
 X-Virus-Scanned: clamav-milter 0.100.1 at dan
 X-Virus-Status: Clean
-Subject: Re: [PATCH] bitbake-worker: Add DryRun event
+Subject: Re: [PATCH 5/7] fetch2/git: prevent access to non-existing clonedir
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,65 +34,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Oct 2018 08:57:16 -0000
+X-List-Received-Date: Thu, 04 Oct 2018 09:12:18 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2018-10-01 at 21:37 -0400, Mark Hatle wrote:
-> There may be actions that a user wants to take, but the information
-> is only available during task execution.  Using the DryRun event you
-> can prevent the actual task execution, but get access to the
-> associated data stores.
+On Wed, 2018-10-03 at 12:04 +0000, Urs Fässler wrote:
+> A user friendly error is throw when neither the clonedir nor
+> fullshallow exist. Without the check, a difficult to interpret error
+> is throw from within the fetch command.
 > 
-> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+> Signed-off-by: Urs Fässler <urs.fassler@bbv.ch>
+> Signed-off-by: Pascal Bach <pascal.bach@siemens.com>
 > ---
->  bin/bitbake-worker | 2 ++
->  lib/bb/event.py    | 5 +++++
->  2 files changed, 7 insertions(+)
+>  lib/bb/fetch2/git.py  |  4 +++-
+>  lib/bb/tests/fetch.py | 13 +++++++++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
 > 
-> diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-> index e925054b..e27fe7ac 100755
-> --- a/bin/bitbake-worker
-> +++ b/bin/bitbake-worker
-> @@ -268,6 +268,8 @@ def fork_off_task(cfg, data, databuilder,
-> workerdata, fn, task, taskname, append
->                  os._exit(1)
->              try:
->                  if dry_run:
-> +                    localdata = bb.build._task_data(fn, taskname,
-> the_data)
-> +                    bb.event.fire(bb.event.DryRun(), localdata)
->                      return 0
->                  return bb.build.exec_task(fn, taskname, the_data,
-> cfg.profile)
->              except:
-> diff --git a/lib/bb/event.py b/lib/bb/event.py
-> index 5b1b094a..c03541a1 100644
-> --- a/lib/bb/event.py
-> +++ b/lib/bb/event.py
-> @@ -832,3 +832,8 @@ class FindSigInfoResult(Event):
->      def __init__(self, result):
->          Event.__init__(self)
->          self.result = result
-> +
-> +class DryRun(Event):
-> +    """
-> +    Event to fire during a dry run
-> +    """
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index f13a25f9..fbd30011 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -479,8 +479,10 @@ class Git(FetchMethod):
+>          if ud.shallow and os.path.exists(ud.fullshallow) and self.clonedir_need_update(ud, d):
+>              bb.utils.mkdirhier(destdir)
+>              runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
+> -        else:
+> +        elif not self.clonedir_need_update(ud, d):
+>              runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
+> +        else:
+> +            bb.fatal("no up to date source found")
 
-I think we can add something like this but the DryRun event should
-really be in build.py and subclass TaskBase, called something like
-TaskDryRun?
+I appreciate there are other places the fetcher code calls bb.fatal()
+but this is problematic.
 
-I'm hoping that doesn't upset some of the other code that looks at
-TaskBase events but its certainly logically where the dryrun event
-belongs.
+The intent is to make the fetcher code a library which other code call
+call into and this is already how OE treats it. Python libraries should
+raise exceptions on errors and allow the parent code to handle it, not
+raise SystemExit() exceptions.
 
-We may want to pass dry_run into exec_task as a parameter and put this
-code at the top of exec_task to make things cleaner across the files?
+Is there some other way we can raise a decent error even if means
+adding a new exception (which can subclass one of the other fetch
+exceptions)?
 
 Cheers,
 
 Richard
-
 
