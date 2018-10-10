@@ -1,58 +1,87 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id E95BE79BB0
+Return-Path: <Edmund.Nadolski@microsoft.com>
+X-Greylist: delayed 15489 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 11 Oct 2018 00:50:23 UTC
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com
+	(mail-by2nam01on0129.outbound.protection.outlook.com [104.47.34.129])
+	by mail.openembedded.org (Postfix) with ESMTP id 60C5879A16
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Oct 2018 14:51:43 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w9CEoJKi032754
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Fri, 12 Oct 2018 07:50:40 -0700
-Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
-	Fri, 12 Oct 2018 07:50:11 -0700
-To: Stefan Agner <stefan@agner.ch>, "Bonnans, Laurent"
-	<laurent.bonnans@here.com>
-References: <bfa936254124b13689c89dcee2a4e427@agner.ch>
-	<69b4b130-96b1-cea3-f4ec-b22e9777397b@here.com>
-	<c84e653d352a71888547e5dd1ac06d5b@agner.ch>
-	<4184b6d1-6531-5011-4087-61bf5e0fc761@windriver.com>
-	<bbea5568-6173-516a-51e6-842a367f8375@here.com>
-	<cee8c886da40cfe78d2e440c995fc5f3@agner.ch>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	xsBNBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAHNJU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT7CwHcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrs7ATQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABwsBfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <3d35695a-93ea-75ed-41e5-76b2a4738082@windriver.com>
-Date: Fri, 12 Oct 2018 09:50:10 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
-	Gecko/20100101 Thunderbird/52.9.1
+	Thu, 11 Oct 2018 00:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+	s=selector1;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=feQ1f5YKcYIx61HCk+JlIHR/b254AAvaNGw+Yf6wDL4=;
+	b=XItBNBzenb8KrIHva7V1rnshjSFxh7czyW9uB4heshAUPSBFHFE5GMLNzTzDLi4rjRIutaPFyN6pjQn5uE/0GcWKv8lp8krMsNsUUzJL2DeTBmrdJhwI1ZApsMpWgmGIeGEIfHitKr6/BpRoQ8w6c9JtmRTTPnyp5RtIRrTt8fw=
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com (52.132.128.16) by
+	DM5PR2101MB0808.namprd21.prod.outlook.com (10.167.110.156) with
+	Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.1228.6; Wed, 10 Oct 2018 20:16:25 +0000
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com
+	([fe80::75f7:82ad:3336:8ac2]) by
+	DM5PR2101MB1047.namprd21.prod.outlook.com
+	([fe80::75f7:82ad:3336:8ac2%3]) with mapi id 15.20.1228.011;
+	Wed, 10 Oct 2018 20:16:24 +0000
+From: Edmund Nadolski <Edmund.Nadolski@microsoft.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: git repo directory naming?
+Thread-Index: AdRg1G96iupX0c1uRvi1/O6w5DKxLw==
+Date: Wed, 10 Oct 2018 20:16:24 +0000
+Message-ID: <DM5PR2101MB1047F9ECE058FEAB420714AEE5E00@DM5PR2101MB1047.namprd21.prod.outlook.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+	MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+	MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=ednadols@microsoft.com;
+	MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2018-10-10T20:16:23.2026509Z;
+	MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+	MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft
+	Azure Information Protection;
+	MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic;
+	Sensitivity=General
+x-originating-ip: [2001:4898:80e8:f:949e:763:8d7e:3b42]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1; DM5PR2101MB0808;
+	6:hopaljn8/G8TZC3OEeWGBLNpy8VC0Dt1G9OwUzXB46/KEy+wv8xawKTRu5x2S44doFnJPkMB8FWU8D0rF6DqqdU1bw5vPTAFf1dOtxB1nx2KmN4lC6/HwQF5omqz9tMBsjadZKRywa1RMmBDzMVRrQdDOmRHKrHKhOfFfc1Pxu/dK34QxD3oM+gMIVrgIvw1f1hl2E6qI0VBZcNVyUgBHxm2/RKcpdl9VGCXcIJJjzi4D9q4YevveQ7fINPOm4JYwLAI+3DpvkXi4vMZgy2j+5DGzdPyPFrF1D1kA4VwuruUZQOkL1qqxazM3jMKxtbAnTvFthJdc5pn8qC+T0VLyCkXiCQMMRUMA89RK+yE+et2Hrzx5bYHu979PLtTKL7e5iKBGJA0Pu+V6Co3jbxBNvDnGfcV9OedTIX8Nbh4yiDl7APK7cXcQ+LZk4eQJ/igK8znJbTEAP58GdfppFiWBg==;
+	5:ZmcOeXozVL9IZ8RCbUgReN6hsCMl2PlbBwPgo4BuHR3fWzwHfQdwMLYnbqLpeOJzklegEwFFDsaezf4KTGI4TFZGJQO2q1n5ZbXuGLLK+dVr749EdOZgBBnq2UJWgC0t8n1avm5korX1byRZrRb27nDJieM4YDAw4cLutFv60vs=;
+	7:9cqhBYlHNYV7+/6SYvUHrJCpfP1XTy2rAJWKNKfPvdyaa5GF/+pqxSExPqpjMn76RyMXu5JkaG1rXa22VaBlAIU1cdn20QEvm/HV2F0pqTs05U+dpyM2lyGgsCdkLVAqUIr3CdLwPx5c5iGQ/LQjJLll14NwYgif81+eRi1kqeHIkXKX7+7J4YBiRhirfU7lNoK/OWysahXLqWaCioxGgBTpzXr93F0Tu2imxvKQEw4hS5JvmbAF6zVwWliIjlXf
+x-ms-exchange-antispam-srfa-diagnostics: SOS;
+x-ms-office365-filtering-correlation-id: 88150736-8609-4f8b-1104-08d62eed40df
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0; PCL:0;
+	RULEID:(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600074)(711020)(4618075)(2017052603328)(7193020);
+	SRVR:DM5PR2101MB0808; 
+x-ms-traffictypediagnostic: DM5PR2101MB0808:
+x-microsoft-antispam-prvs: <DM5PR2101MB08081CEBE9F6A7CAEC5852B3E5E00@DM5PR2101MB0808.namprd21.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:(788757137089);
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0; PCL:0;
+	RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(93006095)(93001095)(10201501046)(3002001)(3231355)(944501410)(52105095)(2018427008)(6055026)(149066)(150057)(6041310)(20161123560045)(20161123564045)(20161123558120)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123562045)(201708071742011)(7699051)(76991055);
+	SRVR:DM5PR2101MB0808; BCL:0; PCL:0; RULEID:;
+	SRVR:DM5PR2101MB0808; 
+x-forefront-prvs: 08213D42D3
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10019020)(396003)(136003)(366004)(346002)(376002)(39860400002)(199004)(189003)(6346003)(33656002)(186003)(14444005)(3480700004)(74316002)(22452003)(102836004)(2900100001)(8936002)(14454004)(478600001)(256004)(55016002)(7696005)(53936002)(8676002)(81156014)(99286004)(25786009)(5640700003)(81166006)(8990500004)(71190400001)(71200400001)(6436002)(72206003)(305945005)(97736004)(2906002)(486006)(6506007)(2501003)(46003)(476003)(5250100002)(2351001)(105586002)(106356001)(316002)(5660300001)(10090500001)(86362001)(68736007)(9686003)(10290500003)(6116002)(7736002)(86612001)(6916009);
+	DIR:OUT; SFP:1102; SCL:1; SRVR:DM5PR2101MB0808;
+	H:DM5PR2101MB1047.namprd21.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+	permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=Edmund.Nadolski@microsoft.com; 
+x-microsoft-antispam-message-info: o0HkHkSRMUIjjyufTJiEUcg/TrVU4DRc89vyssf8chqdzeha6WZ6dgS8YsFkeLSWnqCdzFk7tV2HC6s+TtmVvWcCBfn81KJp5N6HhUM62KTvi1lrcSDwJOo+Agp/aF5CIF2p4JkzNgpHofcrug2pFnnZ0Uwb2GajRohb3Jq7v63pitlCO/InOX3CHEBQSPOSp51y2psQenAez0dK8syCXJwPRtOZc6OzDw6Q0SyBrdrKo20xG+iwfwDZelORMUQP5luwDhH8IbLxPmhRfoDvIKT7ASRqg06xjtPlcCA6puQ9+KD4bZb6pd55ZHTOcn6zvBQVL8LFpWXbK7fGFwuqHH5T4C5yIOrA1nnY745e8CE=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
 MIME-Version: 1.0
-In-Reply-To: <cee8c886da40cfe78d2e440c995fc5f3@agner.ch>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: git submodule fetcher regression
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88150736-8609-4f8b-1104-08d62eed40df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2018 20:16:24.9080 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0808
+X-Mailman-Approved-At: Sun, 14 Oct 2018 22:42:08 +0000
+Subject: git repo directory naming?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -65,122 +94,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Oct 2018 14:51:44 -0000
-Content-Type: text/plain; charset="utf-8"
+X-List-Received-Date: Thu, 11 Oct 2018 00:50:24 -0000
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/12/18 8:50 AM, Stefan Agner wrote:
-> Hi Mark, Hi Laurent,
-> 
-> On 05.10.2018 10:38, Bonnans, Laurent wrote:
->> Hello Stefan,
->>
->>
->> On 10/04/2018 06:58 PM, Mark Hatle wrote:
->>> On 10/4/18 11:45 AM, Stefan Agner wrote:
->>>> I guess you refer to:
->>>> fetch2/gitsm: checkout submodules recursively
->>>> fetch2/gitsm: handle submodules nested inside subdirs
->>>>
->>>> WARNING: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Failed to fetch URL gitsm://github.com/cajun-rat/HdrHistogram_c;protocol=https;name=third_party/HdrHistogram_c;bareclone=1;nocheckout=1, attempting MIRRORS if available
->>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure: Unable to find revision 0b778a98c90ce55285cb1cb6fe50e2b25dfd57ae in branch master even from upstream
->>>> WARNING: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Failed to fetch URL gitsm://github.com/advancedtelematic/aktualizr;branch=master, attempting MIRRORS if available
->>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure for URL: 'gitsm://github.com/cajun-rat/HdrHistogram_c;protocol=https;name=third_party/HdrHistogram_c;bareclone=1;nocheckout=1'. Unable to fetch URL from any source.
->>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure for URL: 'gitsm://github.com/advancedtelematic/aktualizr;branch=master'. Unable to fetch URL from any source.
->>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Function failed: base_do_fetch
->>>> ERROR: Logfile of failure stored in: /home/ags/oe/build-colibri-imx7/tmp-tordy/work/armv7at2hf-neon-lmp-linux-gnueabi/aktualizr/1.0+gitAUTOINC+a94a15e31f-7/temp/log.do_fetch.41673
->>>> ERROR: Task (/home/ags/oe/build-colibri-imx7/conf/../../layers/meta-updater/recipes-sota/aktualizr/aktualizr_git.bb:do_fetch) failed with exit code '1'
->>>>
->>>> (I am using meta-updater c4902394cc6673b07ad5ee87570e02afbdf7b022 and bitbake master-next as of now)
->>>>
->>>> I did use -c cleanall before, which hopefully should be sufficient?
->> This should be solved in meta-updater 
->> 8a44c8a26966d0cb9b57ea1ef4c6f25c2a944dd8 and beyond. I believe it's the 
->> same issue reported by Jens Rehsack on Oct 1.
->> We had a simple workaround in this case, so we did not investigate the 
->> core bitbake issue at that time.
->>> If you are still having issues from master-next (bitbake), can you distill down
->>> a reproducer recipe?
->>>
->>> All it takes is a minimal recipe with a SRC_URI line that used to work for you
->>> through the do_unpack stage.  (I don't care about anything after do_unpack...)
->>>
->>> typical reproducer may look like YP Bug 12941:
->>>
->>> SUMMARY  = "Library to access Blu-Ray disk"
->>> SECTION = "misc"
->>> HOMEPAGE = "http://videolan.org"
->>> LICENSE = "GPLv2"
->>> LIC_FILES_CHKSUM="file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
->>>
->>> DEPENDS = "libxml2"
->>>
->>> SRC_URI = "gitsm://git.videolan.org/libbluray.git"
->>>
->>> SRCREV = "${AUTOREV}"
->>>
->>>
->>> --Mark
->>>
->>>
->> Hello Mark, here is a short reproducer (aktualizr.bb)
->>
->>
->> SUMMARY = "Aktualizr SOTA Client"
->> DESCRIPTION = "SOTA Client application written in C++"
->> HOMEPAGE = "https://github.com/advancedtelematic/aktualizr"
->> SECTION = "base"
->> LICENSE = "MPL-2.0"
->> LIC_FILES_CHKSUM = 
->> "file://${S}/LICENSE;md5=9741c346eef56131163e13b9db1241b3"
->>
->> PV = "1.0+git${SRCPV}"
->>
->> SRC_URI = " \
->>    gitsm://github.com/advancedtelematic/aktualizr;branch=${BRANCH} \
->>    "
->> SRCREV = "79246b930a1b5b6f956b69f74f1f0c62060061df"
->> BRANCH ?= "master"
->>
->>
->> Then, `aktualizr -c unpack` fails with the same error Stefan described.
->>
->> The root cause is this submodule declaration:
->>
->> [submodule "third_party/HdrHistogram_c"]
->>      path = third_party/HdrHistogram_c
->>      url = https://github.com/cajun-rat/HdrHistogram_c
->>
->> Which is set to the commit 0b778a98c90ce55285cb1cb6fe50e2b25dfd57ae, 
->> current HEAD of the branch `fix-const-cast` but not merged in 
->> cajun-rat's master.
->>
->> Please let me know if you need more details.
->>
->>
->> Also, while investigating these issues, I noticed that `cleanall` now 
->> does not remove the fetched submodules like it would be expected. So, 
->> running `fetch` again only download the main project and will reuse 
->> cached submodules repositories if up to date.
-> 
-> Any update on this?
+Hello list,
 
-I don't have an immediate solution for the clear issue.  I'm hoping someone else
-might have an idea there.
+(I'm new to bitbake/yocto so this is my first question.)
 
-Since there repository is up-to-date (it has the commit id of what the submodule
-wants) it should be safe for most users, unless they truly need to refetch for
-another reason.
+In bitbake/lib/bb/fetch2/git.py I notice that bitbake uses the following to=
+ generate a git repo directory name from a url:
 
-I'd consider this a low priority issue, but definitely a bug.
+gitsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.=
+').replace('*', '.'))
 
---Mark
+Are there any ways (env vars?) that allow a git url to be mapped/translated=
+ to a different gitsrcname?  Specifically, I am thinking of a case of a lon=
+g url but the repo name length is limited to e.g. 64 characters.  Or is git=
+srcname always per the above replacements?
 
-> Still the case in bitbake master-next...
-> 
-> --
-> Stefan
-> 
+TIA,
+Ed
+
 
 
