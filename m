@@ -1,76 +1,37 @@
-Return-Path: <TOl@hms.se>
-X-Greylist: delayed 24295 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 12 Oct 2018 05:08:15 UTC
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com
-	(mail-eopbgr20074.outbound.protection.outlook.com [40.107.2.74])
-	by mail.openembedded.org (Postfix) with ESMTP id 0F1A56079E
+Return-Path: <stefan@agner.ch>
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+	by mail.openembedded.org (Postfix) with ESMTP id 5BDBF79BA2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Oct 2018 05:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hms.se; s=selector2;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=vSiv74ZjI8eV33I8z9ShvJISYfLEgLyBL6iguW7JAak=;
-	b=zGlUQ+PSTFNiD9+6ATTKuUJZ3X0XIS5Qzubsd5ovgOwkJvJgi4ouKW4+wccS1Qs5DqUJKEVipBZ0FWj872CimJmTokNz6HDNujYugatyn6tLYEw5uh4wah5tGZ0RxalqFcv40boHMGqeV4OarJ5eQCP6YabKP6lEV7T9r5Zw8c0=
-Received: from HE1PR1001MB1052.EURPRD10.PROD.OUTLOOK.COM (10.168.130.11) by
-	HE1PR1001MB1049.EURPRD10.PROD.OUTLOOK.COM (10.168.130.8) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.1228.21; Thu, 11 Oct 2018 13:50:25 +0000
-Received: from HE1PR1001MB1052.EURPRD10.PROD.OUTLOOK.COM
-	([fe80::80b5:60fe:8a6b:8c68]) by
-	HE1PR1001MB1052.EURPRD10.PROD.OUTLOOK.COM
-	([fe80::80b5:60fe:8a6b:8c68%10]) with mapi id 15.20.1228.020;
-	Thu, 11 Oct 2018 13:50:25 +0000
-From: Tobias Olausson <TOl@hms.se>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [PATCH] taskexp: add focused search bar
-Thread-Index: AQHUYWj9ra3rrgwhCEeysWTJHwpr7g==
-Date: Thu, 11 Oct 2018 13:50:25 +0000
-Message-ID: <HE1PR1001MB105271915A687C4730AAA357C3E10@HE1PR1001MB1052.EURPRD10.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=TOl@hms.se; 
-x-originating-ip: [88.131.56.168]
-x-ms-publictraffictype: Email
-x-microsoft-exchange-diagnostics: 1; HE1PR1001MB1049;
-	6:VAh6KeS116kuvCEoSoACcXL+nUPCbbnw9LxHcgUdPGZO4w/j5+qAtBQDBXbE4g92GlcIjSBwf5XcgRGQQS0uDSZ1jetbwwzktwQJlMN0vKNN32DFOSvZ0G9JIphrWeGtmDBxvFQyY72f093ACfmMzZu7md6B3fJZoUjx26oJTbKVg/3ql2aflXs7XuyyfmiprSfScQ90vhkQdvPwfPw3zbwHOwHQxgue8XdyfK+3XrtwFKNOQMkzG6LnQDZPYfbvyvgyVfLKJQ0XFWXriYUliWZ3EQTwszrfrUGZjT8f1JNPMn+dyF1LQaTKcotEzTWYmkipseI7fd5Rfj4/4sO0xutyxhqcpfmCzhAsgDQHenXNu+aYhRRoO081Y3zk9kT/PgTWlaqboAJYLwqMfw1PyJ10il/jeTSJEt1hKA2iULVaq0bwbJuWGVhrMI/hupXsOuskCGhGnlLvirENx9CGlg==;
-	5:1oowAJHpZneeKsTppv1KeFyw43owk7oc7t0QxIZqJ42Hh2/I+fxGxZk2t2t/vkYMz8wDXcX/hvoW60j/fRID6nPwOe0/x28jzg4neQhHsUKnGaw3jeCgAc08cIzJql/4H11p2xLyDfd88s7WLCTcFpCVXooLqeTpOHfBT37f3Rg=;
-	7:FXOXhIVXCAkUzn9QXk8AKXtGRyGnFU3l5mOWlXAtOuWf6pPNcL2DcUqacB/mtmeR3DWINjhnw4DYxdHRK0PqAO4M0kQc5qjWuy5/w+8YetCxKHI7mLocPL5Wki3jQ0Fl4b1xNlN6gpX616aRGqYPtfZCUp0I2OKuDtKu6Hob/swoBvR9OdgmHLSV6jfGYod4bZhoI8g9s/S7/7Wl5/Tt8anxpTB687LObdlv+M44ajW7z+/XKWrt1tSl5m0+Wngn
-x-ms-exchange-antispam-srfa-diagnostics: SOS;
-x-ms-office365-filtering-correlation-id: dd586332-c98a-4f3a-7581-08d62f807f34
-x-microsoft-antispam: BCL:0; PCL:0;
-	RULEID:(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600074)(711020)(2017052603328)(7153060)(7193020);
-	SRVR:HE1PR1001MB1049; 
-X-MS-TrafficTypeDiagnostic: HE1PR1001MB1049:|HE1PR1001MB1049:
-x-microsoft-antispam-prvs: <HE1PR1001MB1049B9473E6364BE3F849E30C3E10@HE1PR1001MB1049.EURPRD10.PROD.OUTLOOK.COM>
-x-exchange-antispam-report-test: UriScan:(21532816269658);
-x-ms-exchange-senderadcheck: 1
-x-exchange-antispam-report-cfa-test: BCL:0; PCL:0;
-	RULEID:(6040522)(2401047)(5005006)(8121501046)(93006095)(93001095)(10201501046)(3002001)(3231355)(944501410)(52105095)(149066)(150057)(6041310)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123560045)(20161123558120)(20161123562045)(20161123564045)(201708071742011)(7699051);
-	SRVR:HE1PR1001MB1049; BCL:0; PCL:0; RULEID:;
-	SRVR:HE1PR1001MB1049; 
-x-forefront-prvs: 08220FA8D6
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(366004)(346002)(396003)(39850400004)(136003)(376002)(199004)(189003)(1857600001)(26005)(316002)(186003)(6916009)(74482002)(72206003)(3846002)(6116002)(8936002)(6506007)(14444005)(478600001)(256004)(53546011)(86362001)(486006)(14454004)(476003)(97736004)(5640700003)(99286004)(53936002)(55016002)(6436002)(305945005)(25786009)(7696005)(5250100002)(102836004)(71200400001)(71190400001)(2501003)(9686003)(33656002)(74316002)(5660300001)(2900100001)(81156014)(81166006)(8676002)(106356001)(7736002)(105586002)(66066001)(68736007)(2906002)(2351001)(42262002);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:HE1PR1001MB1049;
-	H:HE1PR1001MB1052.EURPRD10.PROD.OUTLOOK.COM; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
-received-spf: None (protection.outlook.com: hms.se does not designate
-	permitted sender hosts)
-x-microsoft-antispam-message-info: D/g8uo8AMS0sI56yCZPUwWSlBm3PnGaNYuxC9hsojVHHkwqlx+XeDT3kBIb5Pf32FLucU4/9vUcI6mWeRcB4Xt9A3+m7DtKDC0meLhtatCt+9ibuzYbHK8gTkqBzeqpdhe/LGyhytGbufUTRP4lgJgstzsbLdAoULOpUs2TebuHMjXBDJ8ZxNrkm5XodSeKRL+4BMdTdCHg9vXMX1xTGraq5s+n5KYKCDhv5eHHjE1iTgSx3ABYFhQBWpkgXHNnb6zVGbL/1Fv64MkM8opumLLTtpN1MKKYOO/CrIj5cyPsbEdjB5lbZqsZIJj9+/XRh2aVVV1f1/fXvnT83zU1QgqjzJLwe3m7ztUN9dg7GYTY=
-spamdiagnosticoutput: 1:99
-spamdiagnosticmetadata: NSPM
+	Fri, 12 Oct 2018 13:50:08 +0000 (UTC)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id C44A25C1BA9;
+	Fri, 12 Oct 2018 15:50:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1539352207;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	content-transfer-encoding:content-transfer-encoding:
+	in-reply-to:in-reply-to:references:references;
+	bh=O4ifxOXvoEfdF2rlggUblweQqO7UCRbnbcgtlnfGyDs=;
+	b=dwGizxJ1VNgxUCyYStouQfu3fRWggVv8+ALv/HPxmq2fzw1dZ1bNqkjmDoTocf16scFFie
+	evdMY7GC3Ns1udznF75oXomf8ZPzNV5nJMj9e+WxL/mhFzHKt+FlWKETUu8ndZvSiAPMZ8
+	S5U8IV0BX15YVmzEiEmHhNZqkSCDn2I=
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd586332-c98a-4f3a-7581-08d62f807f34
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2018 13:50:25.4596 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5c7c1590-4488-4e42-bc9c-15218f8ac994
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR1001MB1049
-X-Microsoft-Exchange-Diagnostics: 1; HE1PR1001MB1049;
-	23:WzzAgJqLnHOYFMrz5Map8ZvE0klef8R/1jMmBzYXM/ZlCUJzml6O49k7OiUk5bypiczLY+/oK8dXR+hrmM0IaB811qmcUuzf+3QR4dnqhR+3zCXeLk19OVIeaxoZcJmUQllni/5aaoFIla4QqmgdcA==
-X-OriginatorOrg: hms.se
-Subject: [PATCH] taskexp: add focused search bar
+Date: Fri, 12 Oct 2018 15:50:07 +0200
+From: Stefan Agner <stefan@agner.ch>
+To: "Bonnans, Laurent" <laurent.bonnans@here.com>, Mark Hatle
+	<mark.hatle@windriver.com>
+In-Reply-To: <bbea5568-6173-516a-51e6-842a367f8375@here.com>
+References: <bfa936254124b13689c89dcee2a4e427@agner.ch>
+	<69b4b130-96b1-cea3-f4ec-b22e9777397b@here.com>
+	<c84e653d352a71888547e5dd1ac06d5b@agner.ch>
+	<4184b6d1-6531-5011-4087-61bf5e0fc761@windriver.com>
+	<bbea5568-6173-516a-51e6-842a367f8375@here.com>
+Message-ID: <cee8c886da40cfe78d2e440c995fc5f3@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: git submodule fetcher regression
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -83,56 +44,107 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Oct 2018 05:08:16 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 12 Oct 2018 13:50:08 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From 4f5f83161fcb7bd4e3d6b46ac13fa10ba5d50091 Mon Sep 17 00:00:00 2001
-From: Tobias Olausson <tol@hms.se>
-Date: Thu, 11 Oct 2018 15:29:49 +0200
-Subject: [PATCH] taskexp: add focused search bar
+Hi Mark, Hi Laurent,
 
-Searching in the task explorer requires one to focus the task list. A
-readily visible and focused search bar makes searching intuitive.
+On 05.10.2018 10:38, Bonnans, Laurent wrote:
+> Hello Stefan,
+> 
+> 
+> On 10/04/2018 06:58 PM, Mark Hatle wrote:
+>> On 10/4/18 11:45 AM, Stefan Agner wrote:
+>>> I guess you refer to:
+>>> fetch2/gitsm: checkout submodules recursively
+>>> fetch2/gitsm: handle submodules nested inside subdirs
+>>>
+>>> WARNING: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Failed to fetch URL gitsm://github.com/cajun-rat/HdrHistogram_c;protocol=https;name=third_party/HdrHistogram_c;bareclone=1;nocheckout=1, attempting MIRRORS if available
+>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure: Unable to find revision 0b778a98c90ce55285cb1cb6fe50e2b25dfd57ae in branch master even from upstream
+>>> WARNING: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Failed to fetch URL gitsm://github.com/advancedtelematic/aktualizr;branch=master, attempting MIRRORS if available
+>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure for URL: 'gitsm://github.com/cajun-rat/HdrHistogram_c;protocol=https;name=third_party/HdrHistogram_c;bareclone=1;nocheckout=1'. Unable to fetch URL from any source.
+>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure for URL: 'gitsm://github.com/advancedtelematic/aktualizr;branch=master'. Unable to fetch URL from any source.
+>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Function failed: base_do_fetch
+>>> ERROR: Logfile of failure stored in: /home/ags/oe/build-colibri-imx7/tmp-tordy/work/armv7at2hf-neon-lmp-linux-gnueabi/aktualizr/1.0+gitAUTOINC+a94a15e31f-7/temp/log.do_fetch.41673
+>>> ERROR: Task (/home/ags/oe/build-colibri-imx7/conf/../../layers/meta-updater/recipes-sota/aktualizr/aktualizr_git.bb:do_fetch) failed with exit code '1'
+>>>
+>>> (I am using meta-updater c4902394cc6673b07ad5ee87570e02afbdf7b022 and bitbake master-next as of now)
+>>>
+>>> I did use -c cleanall before, which hopefully should be sufficient?
+> This should be solved in meta-updater 
+> 8a44c8a26966d0cb9b57ea1ef4c6f25c2a944dd8 and beyond. I believe it's the 
+> same issue reported by Jens Rehsack on Oct 1.
+> We had a simple workaround in this case, so we did not investigate the 
+> core bitbake issue at that time.
+>> If you are still having issues from master-next (bitbake), can you distill down
+>> a reproducer recipe?
+>>
+>> All it takes is a minimal recipe with a SRC_URI line that used to work for you
+>> through the do_unpack stage.  (I don't care about anything after do_unpack...)
+>>
+>> typical reproducer may look like YP Bug 12941:
+>>
+>> SUMMARY  = "Library to access Blu-Ray disk"
+>> SECTION = "misc"
+>> HOMEPAGE = "http://videolan.org"
+>> LICENSE = "GPLv2"
+>> LIC_FILES_CHKSUM="file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
+>>
+>> DEPENDS = "libxml2"
+>>
+>> SRC_URI = "gitsm://git.videolan.org/libbluray.git"
+>>
+>> SRCREV = "${AUTOREV}"
+>>
+>>
+>> --Mark
+>>
+>>
+> Hello Mark, here is a short reproducer (aktualizr.bb)
+> 
+> 
+> SUMMARY = "Aktualizr SOTA Client"
+> DESCRIPTION = "SOTA Client application written in C++"
+> HOMEPAGE = "https://github.com/advancedtelematic/aktualizr"
+> SECTION = "base"
+> LICENSE = "MPL-2.0"
+> LIC_FILES_CHKSUM = 
+> "file://${S}/LICENSE;md5=9741c346eef56131163e13b9db1241b3"
+> 
+> PV = "1.0+git${SRCPV}"
+> 
+> SRC_URI = " \
+>    gitsm://github.com/advancedtelematic/aktualizr;branch=${BRANCH} \
+>    "
+> SRCREV = "79246b930a1b5b6f956b69f74f1f0c62060061df"
+> BRANCH ?= "master"
+> 
+> 
+> Then, `aktualizr -c unpack` fails with the same error Stefan described.
+> 
+> The root cause is this submodule declaration:
+> 
+> [submodule "third_party/HdrHistogram_c"]
+>      path = third_party/HdrHistogram_c
+>      url = https://github.com/cajun-rat/HdrHistogram_c
+> 
+> Which is set to the commit 0b778a98c90ce55285cb1cb6fe50e2b25dfd57ae, 
+> current HEAD of the branch `fix-const-cast` but not merged in 
+> cajun-rat's master.
+> 
+> Please let me know if you need more details.
+> 
+> 
+> Also, while investigating these issues, I noticed that `cleanall` now 
+> does not remove the fetched submodules like it would be expected. So, 
+> running `fetch` again only download the main project and will reuse 
+> cached submodules repositories if up to date.
 
-Signed-off-by: Tobias Olausson <tol@hms.se>
----
- lib/bb/ui/taskexp.py | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Any update on this?
 
-diff --git a/lib/bb/ui/taskexp.py b/lib/bb/ui/taskexp.py
-index 0e8e9d4c..8305d70f 100644
---- a/lib/bb/ui/taskexp.py
-+++ b/lib/bb/ui/taskexp.py
-@@ -103,9 +103,16 @@ class DepExplorer(Gtk.Window):
-         self.pkg_treeview.get_selection().connect("changed", self.on_curso=
-r_changed)
-         column =3D Gtk.TreeViewColumn("Package", Gtk.CellRendererText(), t=
-ext=3DCOL_PKG_NAME)
-         self.pkg_treeview.append_column(column)
--        pane.add1(scrolled)
-         scrolled.add(self.pkg_treeview)
-=20
-+        self.search_entry =3D Gtk.SearchEntry.new()
-+        self.pkg_treeview.set_search_entry(self.search_entry)
-+
-+        left_panel =3D Gtk.VPaned()
-+        left_panel.add(self.search_entry)
-+        left_panel.add(scrolled)
-+        pane.add1(left_panel)
-+
-         box =3D Gtk.VBox(homogeneous=3DTrue, spacing=3D4)
-=20
-         # Task Depends
-@@ -129,6 +136,7 @@ class DepExplorer(Gtk.Window):
-         pane.add2(box)
-=20
-         self.show_all()
-+        self.search_entry.grab_focus()
-=20
-     def on_package_activated(self, treeview, path, column, data_col):
-         model =3D treeview.get_model()
---=20
-2.17.1
+Still the case in bitbake master-next...
+
+--
+Stefan
 
