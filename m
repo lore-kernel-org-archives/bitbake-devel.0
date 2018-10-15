@@ -1,27 +1,38 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 19B4C79AA5
+Return-Path: <stefan@agner.ch>
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+	by mail.openembedded.org (Postfix) with ESMTP id 87AB179357
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Oct 2018 07:17:56 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id w9F7HbqI018255
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Oct 2018 00:17:48 -0700
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.157.217) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.408.0; Mon, 15 Oct 2018 00:17:27 -0700
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 15 Oct 2018 00:14:17 -0700
-Message-ID: <c663a32fd81f500aa371ab0469d3b885e8ee0cce.1539558338.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1539558338.git.David.Reyna@windriver.com>
-References: <cover.1539558338.git.David.Reyna@windriver.com>
+	Mon, 15 Oct 2018 11:44:14 +0000 (UTC)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id 34AB05C1F84;
+	Mon, 15 Oct 2018 13:44:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1539603854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	content-transfer-encoding:content-transfer-encoding:
+	in-reply-to:in-reply-to:references:references;
+	bh=vPL77QgoAycx1IopqrTl0p/dwph6Blwh5kiThh05kGU=;
+	b=iKZPUMs92Dl40BLHq0gIl8cfzEJC0BN9eS/itxKJTUZBRo7lak22XoAdC8U4zVTsDX+hXs
+	Qa5YClYZO/ZpsAvAnLZtfUi0Xs0ms+PnWG3nolskE5/UYjyrmr46tyRdSHBwJ2o/I/y3Vg
+	dasw7GZgqQTXh0n8fPImrP3ekIxCk2w=
 MIME-Version: 1.0
-X-Originating-IP: [147.11.157.217]
-Subject: [PATCH 1/3] toaster: bad link for distro conf file
+Date: Mon, 15 Oct 2018 13:44:12 +0200
+From: Stefan Agner <stefan@agner.ch>
+To: Mark Hatle <mark.hatle@windriver.com>
+In-Reply-To: <3d35695a-93ea-75ed-41e5-76b2a4738082@windriver.com>
+References: <bfa936254124b13689c89dcee2a4e427@agner.ch>
+	<69b4b130-96b1-cea3-f4ec-b22e9777397b@here.com>
+	<c84e653d352a71888547e5dd1ac06d5b@agner.ch>
+	<4184b6d1-6531-5011-4087-61bf5e0fc761@windriver.com>
+	<bbea5568-6173-516a-51e6-842a367f8375@here.com>
+	<cee8c886da40cfe78d2e440c995fc5f3@agner.ch>
+	<3d35695a-93ea-75ed-41e5-76b2a4738082@windriver.com>
+Message-ID: <a3949ab8722e3391af9717676009a7f1@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: git submodule fetcher regression
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,58 +45,130 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Oct 2018 07:18:02 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 15 Oct 2018 11:44:15 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: David Reyna <David.Reyna@windriver.com>
+On 12.10.2018 16:50, Mark Hatle wrote:
+> On 10/12/18 8:50 AM, Stefan Agner wrote:
+>> Hi Mark, Hi Laurent,
+>>
+>> On 05.10.2018 10:38, Bonnans, Laurent wrote:
+>>> Hello Stefan,
+>>>
+>>>
+>>> On 10/04/2018 06:58 PM, Mark Hatle wrote:
+>>>> On 10/4/18 11:45 AM, Stefan Agner wrote:
+>>>>> I guess you refer to:
+>>>>> fetch2/gitsm: checkout submodules recursively
+>>>>> fetch2/gitsm: handle submodules nested inside subdirs
+>>>>>
+>>>>> WARNING: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Failed to fetch URL gitsm://github.com/cajun-rat/HdrHistogram_c;protocol=https;name=third_party/HdrHistogram_c;bareclone=1;nocheckout=1, attempting MIRRORS if available
+>>>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure: Unable to find revision 0b778a98c90ce55285cb1cb6fe50e2b25dfd57ae in branch master even from upstream
+>>>>> WARNING: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Failed to fetch URL gitsm://github.com/advancedtelematic/aktualizr;branch=master, attempting MIRRORS if available
+>>>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure for URL: 'gitsm://github.com/cajun-rat/HdrHistogram_c;protocol=https;name=third_party/HdrHistogram_c;bareclone=1;nocheckout=1'. Unable to fetch URL from any source.
+>>>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Fetcher failure for URL: 'gitsm://github.com/advancedtelematic/aktualizr;branch=master'. Unable to fetch URL from any source.
+>>>>> ERROR: aktualizr-1.0+gitAUTOINC+a94a15e31f-7 do_fetch: Function failed: base_do_fetch
+>>>>> ERROR: Logfile of failure stored in: /home/ags/oe/build-colibri-imx7/tmp-tordy/work/armv7at2hf-neon-lmp-linux-gnueabi/aktualizr/1.0+gitAUTOINC+a94a15e31f-7/temp/log.do_fetch.41673
+>>>>> ERROR: Task (/home/ags/oe/build-colibri-imx7/conf/../../layers/meta-updater/recipes-sota/aktualizr/aktualizr_git.bb:do_fetch) failed with exit code '1'
+>>>>>
+>>>>> (I am using meta-updater c4902394cc6673b07ad5ee87570e02afbdf7b022 and bitbake master-next as of now)
+>>>>>
+>>>>> I did use -c cleanall before, which hopefully should be sufficient?
+>>> This should be solved in meta-updater
+>>> 8a44c8a26966d0cb9b57ea1ef4c6f25c2a944dd8 and beyond. I believe it's the
+>>> same issue reported by Jens Rehsack on Oct 1.
+>>> We had a simple workaround in this case, so we did not investigate the
+>>> core bitbake issue at that time.
+>>>> If you are still having issues from master-next (bitbake), can you distill down
+>>>> a reproducer recipe?
+>>>>
+>>>> All it takes is a minimal recipe with a SRC_URI line that used to work for you
+>>>> through the do_unpack stage.  (I don't care about anything after do_unpack...)
+>>>>
+>>>> typical reproducer may look like YP Bug 12941:
+>>>>
+>>>> SUMMARY  = "Library to access Blu-Ray disk"
+>>>> SECTION = "misc"
+>>>> HOMEPAGE = "http://videolan.org"
+>>>> LICENSE = "GPLv2"
+>>>> LIC_FILES_CHKSUM="file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
+>>>>
+>>>> DEPENDS = "libxml2"
+>>>>
+>>>> SRC_URI = "gitsm://git.videolan.org/libbluray.git"
+>>>>
+>>>> SRCREV = "${AUTOREV}"
+>>>>
+>>>>
+>>>> --Mark
+>>>>
+>>>>
+>>> Hello Mark, here is a short reproducer (aktualizr.bb)
+>>>
+>>>
+>>> SUMMARY = "Aktualizr SOTA Client"
+>>> DESCRIPTION = "SOTA Client application written in C++"
+>>> HOMEPAGE = "https://github.com/advancedtelematic/aktualizr"
+>>> SECTION = "base"
+>>> LICENSE = "MPL-2.0"
+>>> LIC_FILES_CHKSUM =
+>>> "file://${S}/LICENSE;md5=9741c346eef56131163e13b9db1241b3"
+>>>
+>>> PV = "1.0+git${SRCPV}"
+>>>
+>>> SRC_URI = " \
+>>>    gitsm://github.com/advancedtelematic/aktualizr;branch=${BRANCH} \
+>>>    "
+>>> SRCREV = "79246b930a1b5b6f956b69f74f1f0c62060061df"
+>>> BRANCH ?= "master"
+>>>
+>>>
+>>> Then, `aktualizr -c unpack` fails with the same error Stefan described.
+>>>
+>>> The root cause is this submodule declaration:
+>>>
+>>> [submodule "third_party/HdrHistogram_c"]
+>>>      path = third_party/HdrHistogram_c
+>>>      url = https://github.com/cajun-rat/HdrHistogram_c
+>>>
+>>> Which is set to the commit 0b778a98c90ce55285cb1cb6fe50e2b25dfd57ae,
+>>> current HEAD of the branch `fix-const-cast` but not merged in
+>>> cajun-rat's master.
+>>>
+>>> Please let me know if you need more details.
+>>>
+>>>
+>>> Also, while investigating these issues, I noticed that `cleanall` now
+>>> does not remove the fetched submodules like it would be expected. So,
+>>> running `fetch` again only download the main project and will reuse
+>>> cached submodules repositories if up to date.
+>>
+>> Any update on this?
+> 
+> I don't have an immediate solution for the clear issue.  I'm hoping someone else
+> might have an idea there.
 
-The distro source path link is missing "conf/distro/", and the
-display is using the machine link instead of the distro link.
+Sorry, I meant the issue above, where fetching fails...
 
-[YOCTO #12957]
+Fetching that hash used to work before the gitsm rework, so this is a
+regression...
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
- lib/toaster/orm/models.py        | 2 +-
- lib/toaster/toastergui/tables.py | 8 +++-----
- 2 files changed, 4 insertions(+), 6 deletions(-)
+--
+Stefan
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 849c22e..7720290 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -1877,7 +1877,7 @@ class Distro(models.Model):
-     description = models.CharField(max_length=255)
- 
-     def get_vcs_distro_file_link_url(self):
--        path = self.name+'.conf'
-+        path = 'conf/distro/%s.conf' % self.name
-         return self.layer_version.get_vcs_file_link_url(path)
- 
-     def __unicode__(self):
-diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index 03bd2ae..9ff756b 100644
---- a/lib/toaster/toastergui/tables.py
-+++ b/lib/toaster/toastergui/tables.py
-@@ -1615,14 +1615,12 @@ class DistrosTable(ToasterTable):
-                         hidden=True,
-                         field_name="layer_version__get_vcs_reference")
- 
--        wrtemplate_file_template = '''<code>conf/machine/{{data.name}}.conf</code>
--        <a href="{{data.get_vcs_machine_file_link_url}}" target="_blank"><span class="glyphicon glyphicon-new-window"></i></a>'''
--
-+        distro_file_template = '''<code>conf/distro/{{data.name}}.conf</code>
-+        {% if 'None' not in data.get_vcs_distro_file_link_url %}<a href="{{data.get_vcs_distro_file_link_url}}" target="_blank"><span class="glyphicon glyphicon-new-window"></i></a>{% endif %}'''
-         self.add_column(title="Distro file",
-                         hidden=True,
-                         static_data_name="templatefile",
--                        static_data_template=wrtemplate_file_template)
--
-+                        static_data_template=distro_file_template)
- 
-         self.add_column(title="Select",
-                         help_text="Sets the selected distro to the project",
--- 
-1.9.1
-
+> 
+> Since there repository is up-to-date (it has the commit id of what the submodule
+> wants) it should be safe for most users, unless they truly need to refetch for
+> another reason.
+> 
+> I'd consider this a low priority issue, but definitely a bug.
+> 
+> --Mark
+> 
+>> Still the case in bitbake master-next...
+>>
+>> --
+>> Stefan
+>>
 
