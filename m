@@ -1,47 +1,50 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
-	[209.85.128.65])
-	by mail.openembedded.org (Postfix) with ESMTP id D98CE745D1
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
+	[209.85.221.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 0D7D879A5C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 16 Oct 2018 19:27:12 +0000 (UTC)
-Received: by mail-wm1-f65.google.com with SMTP id 189-v6so23610702wmw.2
+	Tue, 16 Oct 2018 19:27:14 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id 63-v6so26854782wra.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 16 Oct 2018 12:27:14 -0700 (PDT)
+	Tue, 16 Oct 2018 12:27:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id;
-	bh=cuGDT/n0afxx8FJ7suP4hfkpLsmKzxshtj6JeRyJ/uA=;
-	b=h51pHjIEbraG3HgTh8pLSKywYXyRspnQndWnNygNdOWbXwci3gV1PGC4FxH235hpo5
-	CidotvjlBUZDGd9fPA95G/72RxW9nVIne5WRDGQfOr7ARv+tJuj9tQu9rXmIw+0+BQt7
-	uLBM6DGZh71gLxCVyRSHrjxzgiVST6MvcwNOw=
+	h=from:to:subject:date:message-id:in-reply-to:references;
+	bh=idgWi58WCFa4KiH+KNvR76LcCYtci4+sRIHwXd99bzA=;
+	b=REmFiMupBmnXF7o13EMP+2VuB9xP5TshQ7iAq+kpHxgUQMZAkKN9OKmIUIfc/mOzhs
+	9jbf79IVE9D0D0jyfqjXMf9623LFnLK7bSdnETl07cRuE2joPnSZ4hwQgwp9hWfvwySc
+	xi3dQSk1H5/ZI9kfs8wDqKeAxDfHGTPAqMhnM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=cuGDT/n0afxx8FJ7suP4hfkpLsmKzxshtj6JeRyJ/uA=;
-	b=k60OJ4K4FME2ePr969h7knOCKFW//9lxBgClP4eFxzqOTVfroTRE6TxSW5NjFisd4L
-	mVRMgDgAk3kfSc92D1r/3PAZuIqLOIyaajg5L/0yvjEwvqpHudiry3yjXRcdWOxTr5l1
-	f2azk5nsFzD9cU+RT9jbe6yt9WqZk+ioNNVRTW5b0YgMX4AgQsBkkVyrQjvPkS7xEKe5
-	NOATxds/rsodX3H4Sc0Nd3L4ruig+Jme5dq2tSRL2pxRvJSqHltS1ErUz7iXSPk729Z2
-	mVarHIkSXEWAWsYiZ6V6aKG7nzpsNk0PrcQengbzAuzgWFcY1qmTP6YLDedH0eiA0k1W
-	ZvUA==
-X-Gm-Message-State: ABuFfoh38RvGUFEF/p3R3MjOkWBSNTy6vZJLct0cVF9uogkUbFSGMo/X
-	TP3PZKjX7ODJRtr0cff4sW7oqvXpomo=
-X-Google-Smtp-Source: ACcGV61KWmAkw7m5zulnGT1ekcGJSGEv5BjVgNZSTZPXEodwNFuaPHWE1Oqpv9O5jRXREvuPyHhLyA==
-X-Received: by 2002:a1c:ae15:: with SMTP id
-	x21-v6mr17307105wme.73.1539718033143; 
-	Tue, 16 Oct 2018 12:27:13 -0700 (PDT)
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references;
+	bh=idgWi58WCFa4KiH+KNvR76LcCYtci4+sRIHwXd99bzA=;
+	b=mrO8F29bZopLj0s9ChmyaFiZEFTwt1qtH674HrymmUw0R3M67ZZjhZLnc6cm3On6Ok
+	enr12VNuIWrXuOczRtTBarQLeLQVDUct7dPuLg5KoNd6TZCbROVnnVOcRVLkj4JVcKS3
+	O18AnJFhvhD5Hwl4LI3SLWuM+ZvflrhOzO3XNJfrfz+KIgTHIO9vEihfPgqUH3SHTlcl
+	YCB98amVNYZ8jfgC4IPID8N907QnCdkaLyNGVLaA3GjTgs4wo+cxlrsWLB+Pi0T6TECT
+	3LQ1OSBix41FzZcE/fnnRMsmE7TlkBSIptJIhFgUBV/Yce29ZtPpuB8nNboTpPn3x2BJ
+	1K2g==
+X-Gm-Message-State: ABuFfoipZmt3RazYl1BexiPbTqmqqKoGojcnWTyzlEbRI6abyUh5jBgW
+	p+7pZUgHk2fiIpZ0hdK2K47Bf5/40IQ=
+X-Google-Smtp-Source: ACcGV61+oNpzAHnYU8Nfa7mqFR/OL+lcuGx+SAOEb8aQ6yL+vDUNFl+njp5O9wjeykYIAeoB+L4YtA==
+X-Received: by 2002:adf:fc0b:: with SMTP id
+	i11-v6mr21691384wrr.9.1539718035243; 
+	Tue, 16 Oct 2018 12:27:15 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	j2-v6sm11979148wrw.29.2018.10.16.12.27.11
+	j2-v6sm11979148wrw.29.2018.10.16.12.27.13
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 16 Oct 2018 12:27:12 -0700 (PDT)
+	Tue, 16 Oct 2018 12:27:14 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 16 Oct 2018 20:27:07 +0100
-Message-Id: <20181016192709.15771-1-richard.purdie@linuxfoundation.org>
+Date: Tue, 16 Oct 2018 20:27:08 +0100
+Message-Id: <20181016192709.15771-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.17.1
-Subject: [PATCH 1/3] data_smart: Preserve history when renaming variables
+In-Reply-To: <20181016192709.15771-1-richard.purdie@linuxfoundation.org>
+References: <20181016192709.15771-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/3] data: Fix whitespace on _remove operations
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,49 +57,126 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 16 Oct 2018 19:27:13 -0000
+X-List-Received-Date: Tue, 16 Oct 2018 19:27:15 -0000
 
-Currently when a variable is renamed, all the variable history is lost.
-This makes it hard for users to understand/debug where values came from.
+We have some slightly odd behaviours with the current implementation of
+_remove operations. For example:
 
-Improve the code so that history is preserved across renamed variables.
+TEST = " A B"
+TEST_remove = "C"
 
-(Expanded variable key names are a special case of variable renaming)
+would trigger TEST to become "A B" even thought it doesn't contain "C".
+
+In particular, this means that an inactive remove operator added in a
+bbappend could change the task checksum which is not desireable.
+
+Fix the operation to preserve whitespace, adding new tests to make this
+explict and test further corner cases. Also update the manual to match.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/data_smart.py | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../bitbake-user-manual-metadata.xml          |  6 +++---
+ lib/bb/data_smart.py                          |  5 +++--
+ lib/bb/tests/data.py                          | 20 +++++++++++++++----
+ 3 files changed, 22 insertions(+), 9 deletions(-)
 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+index bc08c814d1..fc55ef6483 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+@@ -342,7 +342,7 @@
+ 
+             <para>
+                 When you use this syntax, BitBake expects one or more strings.
+-                Surrounding spaces are removed as well.
++                Surrounding spaces and spacing are preserved.
+                 Here is an example:
+                 <literallayout class='monospaced'>
+      FOO = "123 456 789 123456 123 456 123 456"
+@@ -352,8 +352,8 @@
+      FOO2_remove = "abc def"
+                 </literallayout>
+                 The variable <filename>FOO</filename> becomes
+-                "789 123456" and <filename>FOO2</filename> becomes
+-                "ghi abcdef".
++                "  789 123456    " and <filename>FOO2</filename> becomes
++                "  ghi abcdef    ".
+             </para>
+ 
+             <para>
 diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 7b09af5cf1..4434142a02 100644
+index 4434142a02..0a8488ca1b 100644
 --- a/lib/bb/data_smart.py
 +++ b/lib/bb/data_smart.py
-@@ -267,6 +267,16 @@ class VariableHistory(object):
-             return
-         self.variables[var].append(loginfo.copy())
+@@ -42,6 +42,7 @@ __setvar_keyword__ = ["_append", "_prepend", "_remove"]
+ __setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend|_remove)(_(?P<add>[^A-Z]*))?$')
+ __expand_var_regexp__ = re.compile(r"\${[^{}@\n\t :]+}")
+ __expand_python_regexp__ = re.compile(r"\${@.+?}")
++__whitespace_split__ = re.compile('(\s)')
  
-+    def rename_variable_hist(self, oldvar, newvar):
-+        if not self.dataroot._tracking:
-+            return
-+        if oldvar not in self.variables:
-+            return
-+        if newvar not in self.variables:
-+            self.variables[newvar] = []
-+        for i in self.variables[oldvar]:
-+            self.variables[newvar].append(i.copy())
+ def infer_caller_details(loginfo, parent = False, varval = True):
+     """Save the caller the trouble of specifying everything."""
+@@ -818,8 +819,8 @@ class DataSmart(MutableMapping):
+ 
+             if removes:
+                 filtered = filter(lambda v: v not in removes,
+-                                  value.split())
+-                value = " ".join(filtered)
++                                  __whitespace_split__.split(value))
++                value = "".join(filtered)
+                 if expand and var in self.expand_cache:
+                     # We need to ensure the expand cache has the correct value
+                     # flag == "_content" here
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index a4a9dd30fb..8279115e03 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -281,7 +281,7 @@ class TestConcatOverride(unittest.TestCase):
+     def test_remove(self):
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+         self.d.setVar("TEST_remove", "val")
+-        self.assertEqual(self.d.getVar("TEST"), "bar")
++        self.assertEqual(self.d.getVar("TEST"), " bar")
+ 
+     def test_remove_cleared(self):
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+@@ -300,7 +300,7 @@ class TestConcatOverride(unittest.TestCase):
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+         self.d.setVar("TEST_remove", "val")
+         self.d.setVar("TEST_TEST", "${TEST} ${TEST}")
+-        self.assertEqual(self.d.getVar("TEST_TEST"), "bar bar")
++        self.assertEqual(self.d.getVar("TEST_TEST"), " bar  bar")
+ 
+     def test_empty_remove(self):
+         self.d.setVar("TEST", "")
+@@ -311,13 +311,25 @@ class TestConcatOverride(unittest.TestCase):
+         self.d.setVar("BAR", "Z")
+         self.d.setVar("TEST", "${BAR}/X Y")
+         self.d.setVar("TEST_remove", "${BAR}/X")
+-        self.assertEqual(self.d.getVar("TEST"), "Y")
++        self.assertEqual(self.d.getVar("TEST"), " Y")
+ 
+     def test_remove_expansion_items(self):
+         self.d.setVar("TEST", "A B C D")
+         self.d.setVar("BAR", "B D")
+         self.d.setVar("TEST_remove", "${BAR}")
+-        self.assertEqual(self.d.getVar("TEST"), "A C")
++        self.assertEqual(self.d.getVar("TEST"), "A  C ")
 +
-     def variable(self, var):
-         remote_connector = self.dataroot.getVar('_remote_data', False)
-         if remote_connector:
-@@ -619,6 +629,7 @@ class DataSmart(MutableMapping):
++    def test_remove_preserve_whitespace(self):
++        # When the removal isn't active, the original value should be preserved
++        self.d.setVar("TEST", " A B")
++        self.d.setVar("TEST_remove", "C")
++        self.assertEqual(self.d.getVar("TEST"), " A B")
++
++    def test_remove_preserve_whitespace2(self):
++        # When the removal is active preserve the whitespace
++        self.d.setVar("TEST", " A B")
++        self.d.setVar("TEST_remove", "B")
++        self.assertEqual(self.d.getVar("TEST"), " A ")
  
-         val = self.getVar(key, 0, parsing=True)
-         if val is not None:
-+            self.varhistory.rename_variable_hist(key, newkey)
-             loginfo['variable'] = newkey
-             loginfo['op'] = 'rename from %s' % key
-             loginfo['detail'] = val
+ class TestOverrides(unittest.TestCase):
+     def setUp(self):
 -- 
 2.17.1
 
