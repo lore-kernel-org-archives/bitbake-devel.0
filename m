@@ -1,49 +1,50 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
 	[209.85.221.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 6D2CB79BF0
+	by mail.openembedded.org (Postfix) with ESMTP id 6C5B879BEA
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Oct 2018 09:22:54 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id e4-v6so32828241wrs.0
+	Thu, 18 Oct 2018 09:22:55 +0000 (UTC)
+Received: by mail-wr1-f66.google.com with SMTP id l6-v6so32414704wrt.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Oct 2018 02:22:55 -0700 (PDT)
+	Thu, 18 Oct 2018 02:22:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=LyooG4yvhpkR+qRrKh4Dr4R0aQCkMKG5QdxP0rmlGJI=;
-	b=gZLrHSvxfEEvI+VZZ0NmCMdWsAuYTNpjIuaMEsWie52KuO5XNewhIoUJ44Ow+yZtZ5
-	nHsihgbWkspuWTPxjqP1NWxrjyWToMtsV91z5A0pEEs3iP91/rYS3BbXhAOsGAk2MUlo
-	vNatMIuofKPwrDutI/PP2aiI6Fv2NjvnOJ1mk=
+	bh=UZC2z8nDQfjITfAWOIsOvCPNreTf4x4ro831T+vMI1k=;
+	b=YXRJtZ8gyBUb+vRyVDug9zgUP4FM2rzu41Bv4EkXlYeHprYLm0NKDQ6OY5OLQ27Pu8
+	lDUAlKchc/SgtyWVYm3Rmj6P/wwfLwY9eSdQLqlLHKn7WW8/lnSECToXS/uFCDg4qVop
+	1EF3uuxmhCf+G8gqo5Zj0zBA5gglu8FdFxhDE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=LyooG4yvhpkR+qRrKh4Dr4R0aQCkMKG5QdxP0rmlGJI=;
-	b=Y2LpjSKEbiI5zoo93ttLTjSXilHdTFg6w9oe3UkX2XhJLiSFX6EgOIxbnQtVKxN32e
-	gflFXl16vXe+7J53dxVbcEz3vbZ0IGlaLouzFlagFjeE0Gz51hF7ciqsB7CXidtSNHWH
-	w0MzB3TkPFRa77w+NWYMG/Dd85P9tWy5j1jH0iZ6c/p3qr1Fe6YfUhFVktTE/vNZmBv1
-	4OsYo0AY4KAwgv1sRzz3JpI1rK+H0dbaXR6qBGYNq1wA7Y9JiVT0CDS2KdoCcGbXscVE
-	XUhF8lBQosouGKZzBmCAsZ2kcPNvzkGX9GT7aHWBqrycTctHY44s5k88KPsgSpmXgpur
-	y5+w==
-X-Gm-Message-State: AGRZ1gKryc98KNT0iNgBuRv/8FIHVL7N297wRBFueiitaQrr1+E6fBFu
-	98QtSMe9dQE2OmaxBk3lXP+zcyIh2w0=
-X-Google-Smtp-Source: AJdET5d3gd51ypabSXT+SgsA2D8aU+gCFX/k0Kd3xFFEOS7TutP6KNhqN7qQ0uaGN4fs2ceLpXPy+g==
-X-Received: by 2002:a5d:62c2:: with SMTP id o2-v6mr1023792wrv.27.1539854574577;
-	Thu, 18 Oct 2018 02:22:54 -0700 (PDT)
+	bh=UZC2z8nDQfjITfAWOIsOvCPNreTf4x4ro831T+vMI1k=;
+	b=CQwwep3DHk+xtz7IhoAfsKfsVElO9WY7+b7hlIymf6jkKOglqRYVmuhoMPPn/ckAw+
+	BFrhcTn1Ra/QNZ6YfNlyM1wsBHhJDP1bHudOaxXURkYVETaDg4J3lctPsUDEsVI3FqJb
+	mFUk76Md+xgXi+FJ1/pgkXMLUvsoereBmXMrU91/d31fILqKRilydrIoLfS3pFKwN3ll
+	20E4rn9oKmDnqvUELjcdxh3OPfbnU31O1l4xwpz8MyIYlwekred8EdCjA2xiFBZfK1pM
+	8ZD1PAf8TlQ26MXFhHrvFf3Hr2t8nABg4JL6HoutedBYSzdr7t0LPgb4CEUqzKL0V5R5
+	4z9w==
+X-Gm-Message-State: ABuFfoiBTkyAHSzu6+jskN0eEXeeSoA91h60b+rArxV9QuNI2QuCCVy/
+	XcfL7zUYtgGg05UmJp3mnIYuoI0GWA4=
+X-Google-Smtp-Source: ACcGV60UDOSQqXYTuUajbPXgrqxUx0Z7TudZTB+2HFDrBEqJnuXojegCyo6tsnGS9kR3iyzgHr9W0w==
+X-Received: by 2002:adf:c989:: with SMTP id
+	f9-v6mr27503024wrh.148.1539854575759; 
+	Thu, 18 Oct 2018 02:22:55 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	x17-v6sm17666494wrs.84.2018.10.18.02.22.53
+	x17-v6sm17666494wrs.84.2018.10.18.02.22.54
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 18 Oct 2018 02:22:53 -0700 (PDT)
+	Thu, 18 Oct 2018 02:22:54 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 Oct 2018 10:22:45 +0100
-Message-Id: <20181018092246.1445-6-richard.purdie@linuxfoundation.org>
+Date: Thu, 18 Oct 2018 10:22:46 +0100
+Message-Id: <20181018092246.1445-7-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20181018092246.1445-1-richard.purdie@linuxfoundation.org>
 References: <20181018092246.1445-1-richard.purdie@linuxfoundation.org>
-Subject: [PATCH 6/7] data/siggen: Extract task hash generation code into a function
+Subject: [PATCH 7/7] test/data: Add new tests for task checksum changing/not changing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,124 +57,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 18 Oct 2018 09:22:54 -0000
+X-List-Received-Date: Thu, 18 Oct 2018 09:22:55 -0000
 
-By creating a standalone function, we can add better functional testing
-of this code.
+This adds some basic tests for task checksums to ensure that the
+checksums:
+
+* change when variables change
+* change when active _remove operators are present
+* don't change when the _remove operators are not active
+* change when an active contains() expression is present
+* dont' change a contains() expression isn't active
+
+There is a lot of other functionality which should be added to this
+test but its a start.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/data.py   | 38 ++++++++++++++++++++++++++++++++++++++
- lib/bb/siggen.py | 37 ++++---------------------------------
- 2 files changed, 42 insertions(+), 33 deletions(-)
+ lib/bb/tests/data.py | 48 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index fde4cba6bb..d66d98cc8b 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -38,6 +38,7 @@ the speed is more critical here.
- # Based on functions from the base bb module, Copyright 2003 Holger Schurig
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index 8279115e03..9ac78e3683 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -455,6 +455,54 @@ class Contains(unittest.TestCase):
+         self.assertFalse(bb.utils.contains_any("SOMEFLAG", "x y z", True, False, self.d))
  
- import sys, os, re
-+import hashlib
- if sys.argv[0][-5:] == "pydoc":
-     path = os.path.dirname(os.path.dirname(sys.argv[1]))
- else:
-@@ -405,6 +406,43 @@ def generate_dependencies(d):
-         #print "For %s: %s" % (task, str(deps[task]))
-     return tasklist, deps, values
  
-+def generate_dependency_hash(tasklist, gendeps, lookupcache, whitelist, fn):
-+    taskdeps = {}
-+    basehash = {}
++class TaskHash(unittest.TestCase):
++    def test_taskhashes(self):
++        def gettask_bashhash(taskname, d):
++            tasklist, gendeps, lookupcache = bb.data.generate_dependencies(d)
++            taskdeps, basehash = bb.data.generate_dependency_hash(tasklist, gendeps, lookupcache, set(), "somefile")
++            bb.warn(str(lookupcache))
++            return basehash["somefile." + taskname]
 +
-+    for task in tasklist:
-+        data = lookupcache[task]
++        d = bb.data.init()
++        d.setVar("__BBTASKS", ["mytask"])
++        d.setVar("__exportlist", [])
++        d.setVar("mytask", "${MYCOMMAND}")
++        d.setVar("MYCOMMAND", "${VAR}; foo; bar; exit 0")
++        d.setVar("VAR", "val")
++        orighash = gettask_bashhash("mytask", d)
 +
-+        if data is None:
-+            bb.error("Task %s from %s seems to be empty?!" % (task, fn))
-+            data = ''
++        # Changing a variable should change the hash
++        d.setVar("VAR", "val2")
++        nexthash = gettask_bashhash("mytask", d)
++        self.assertNotEqual(orighash, nexthash)
 +
-+        gendeps[task] -= whitelist
-+        newdeps = gendeps[task]
-+        seen = set()
-+        while newdeps:
-+            nextdeps = newdeps
-+            seen |= nextdeps
-+            newdeps = set()
-+            for dep in nextdeps:
-+                if dep in whitelist:
-+                    continue
-+                gendeps[dep] -= whitelist
-+                newdeps |= gendeps[dep]
-+            newdeps -= seen
++        d.setVar("VAR", "val")
++        # Adding an inactive removal shouldn't change the hash
++        d.setVar("BAR", "notbar")
++        d.setVar("MYCOMMAND_remove", "${BAR}")
++        nexthash = gettask_bashhash("mytask", d)
++        self.assertEqual(orighash, nexthash)
 +
-+        alldeps = sorted(seen)
-+        for dep in alldeps:
-+            data = data + dep
-+            var = lookupcache[dep]
-+            if var is not None:
-+                data = data + str(var)
-+        k = fn + "." + task
-+        basehash[k] = hashlib.md5(data.encode("utf-8")).hexdigest()
-+        taskdeps[task] = alldeps
++        # Adding an active removal should change the hash
++        d.setVar("BAR", "bar;")
++        nexthash = gettask_bashhash("mytask", d)
++        self.assertNotEqual(orighash, nexthash)
 +
-+    return taskdeps, basehash
++        # Setup an inactive contains()
++        d.setVar("VAR", "${@bb.utils.contains('VAR2', 'A', 'val', '', d)}")
++        orighash = gettask_bashhash("mytask", d)
 +
- def inherits_class(klass, d):
-     val = d.getVar('__inherit_cache', False) or []
-     needle = os.path.join('classes', '%s.bbclass' % klass)
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index e9bb51d736..03c824ec38 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -110,42 +110,13 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         ignore_mismatch = ((d.getVar("BB_HASH_IGNORE_MISMATCH") or '') == '1')
-         tasklist, gendeps, lookupcache = bb.data.generate_dependencies(d)
++        # Activate the contains() and the hash should change
++        d.setVar("VAR2", "A")
++        nexthash = gettask_bashhash("mytask", d)
++        self.assertNotEqual(orighash, nexthash)
++
++        # The contains should be inactive but even though VAR2 has a
++        # different value the hash should match the original
++        d.setVar("VAR2", "B")
++        nexthash = gettask_bashhash("mytask", d)
++        self.assertEqual(orighash, nexthash)
++
+ class Serialize(unittest.TestCase):
  
--        taskdeps = {}
--        basehash = {}
-+        taskdeps, basehash = bb.data.generate_dependency_hash(tasklist, gendeps, lookupcache, self.basewhitelist, fn)
- 
-         for task in tasklist:
--            data = lookupcache[task]
--
--            if data is None:
--                bb.error("Task %s from %s seems to be empty?!" % (task, fn))
--                data = ''
--
--            gendeps[task] -= self.basewhitelist
--            newdeps = gendeps[task]
--            seen = set()
--            while newdeps:
--                nextdeps = newdeps
--                seen |= nextdeps
--                newdeps = set()
--                for dep in nextdeps:
--                    if dep in self.basewhitelist:
--                        continue
--                    gendeps[dep] -= self.basewhitelist
--                    newdeps |= gendeps[dep]
--                newdeps -= seen
--
--            alldeps = sorted(seen)
--            for dep in alldeps:
--                data = data + dep
--                var = lookupcache[dep]
--                if var is not None:
--                    data = data + str(var)
--            datahash = hashlib.md5(data.encode("utf-8")).hexdigest()
-             k = fn + "." + task
--            if not ignore_mismatch and k in self.basehash and self.basehash[k] != datahash:
--                bb.error("When reparsing %s, the basehash value changed from %s to %s. The metadata is not deterministic and this needs to be fixed." % (k, self.basehash[k], datahash))
--            self.basehash[k] = datahash
--            taskdeps[task] = alldeps
-+            if not ignore_mismatch and k in self.basehash and self.basehash[k] != basehash[k]:
-+                bb.error("When reparsing %s, the basehash value changed from %s to %s. The metadata is not deterministic and this needs to be fixed." % (k, self.basehash[k], basehash[k]))
-+            self.basehash[k] = basehash[k]
- 
-         self.taskdeps[fn] = taskdeps
-         self.gendeps[fn] = gendeps
+     def test_serialize(self):
 -- 
 2.17.1
 
