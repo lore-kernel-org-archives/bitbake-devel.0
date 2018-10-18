@@ -1,49 +1,50 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com
-	[209.85.221.53])
-	by mail.openembedded.org (Postfix) with ESMTP id 2477F79C03
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+	[209.85.221.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 557D279B13
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Oct 2018 09:22:51 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id 63-v6so32777746wra.11
+	Thu, 18 Oct 2018 09:22:53 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id y16so32833060wrw.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Oct 2018 02:22:53 -0700 (PDT)
+	Thu, 18 Oct 2018 02:22:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=aZdXim9WY2qauDEG5jf13ypgwNYXftzXsEEzxkjE+5M=;
-	b=TDCwHBuODtQJ/wCCFRmi67NPOtwgA0n6so8k4Cczy9Kg4rFjhFkHHz6jT8hPPbyac0
-	t0IayM0096Eeqfiy78C1jFUjEXBFnX2VDUgWsC1VmobIlk5Ghh6mRW9R6Abu2h5nE4DO
-	kOgadNg6hynassRQ//4nI5r1BSusHrvruJV7Y=
+	bh=TXIFJiDjHfBv+VjvwXfyiY1IkLyuAGNDYUxZBo8Pu2w=;
+	b=eEyO/dbvZyGRQyfc3DPoH4K0B0gy9LVxJAIwThjtKU/4jksNkLSKaw8GJTthmTen24
+	CpOXYyZsDkdBpm5+SOBrVopAXYPBN1YmNp1bAUziOCVnovkW2IGcq+xi3GKM/hQrndtb
+	REqjQHsVPsY0zfkL85ctORTU/fzAEAMVgT2m0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=aZdXim9WY2qauDEG5jf13ypgwNYXftzXsEEzxkjE+5M=;
-	b=M7K0mb1jD4dx3TaQ627Oxv/QsU7narYk/pQ2i2A+fzKYJFh5oPbVkWii04ru85f8a/
-	D2t2tn8ff9Gdamby8HAbpGTOkSQuKtSmRvHFinFhDutnnxqanOIxWA3bKF0SiN7kGxiO
-	NOeVHEpIKFeULOA4X3bimnw93c2Vbcp7mj+XGmyi/RKvd8Gtx00iiYZBm/HfHuirVvKE
-	ZEi0KuZO4eLvJ/g6QjPwRsea/jLPsFzKEj3LNZSgtdKCGshhwiRPQNIWsZfv9g1VQAgx
-	10GSKqJ3W8UZViTFL/7QmGYe5CQsVy8M0NRiLmfI8IVyMOx3Awz+RZg/orV9YhtbWaF9
-	gUag==
-X-Gm-Message-State: ABuFfoiP2E+GJXtn27UOPCiH+tQUfgi82R6+Ygox/lGbFNwLWPupS1ce
-	Z+qTLenXq3BgQMLOfsKendnciHTzak4=
-X-Google-Smtp-Source: ACcGV60DqgU8biDR8/ElHmuj9az5VvWm7olci1mHe831KPE/TcyvOsq/SHy728A1Gm11D4CynAEIGQ==
-X-Received: by 2002:adf:ff46:: with SMTP id u6-v6mr5807672wrs.7.1539854572161; 
-	Thu, 18 Oct 2018 02:22:52 -0700 (PDT)
+	bh=TXIFJiDjHfBv+VjvwXfyiY1IkLyuAGNDYUxZBo8Pu2w=;
+	b=hI0E5xLs9q/rSA26Nzycmda7NLTv9nc3g9gOHRiJFM7Q/8YBxfzsIXjmUZMDwGiyLB
+	EBLBJ1Lz5CSlhhPKAwqlB4lvZehY6hWC46YXUNa9b4c7FJm+Aej1SBcVKqAOsBbHZKkf
+	HEIk5BTjhWAUvdMTsVDtI5r4lkuZ1vcV9HJ6jrp9FhvBD5jIGWQsLfNSa/TxeWpfm8vH
+	78MV0sxjBxAVfhV2obLp3ihhxjE/TavdoCbgt86dMvIQZVUYSAislUAewcQZzsLeU6wC
+	SQZQDgQdczbuisFEe5u/1w2dm42LLOk65wsJBKCIWQcprtEytFrf+5mgihSSeiZZbC/1
+	mUdQ==
+X-Gm-Message-State: ABuFfojryWQhRo13II7BlpiBVBYli3qwDj73BzblRWsDPonC/ETrWMoY
+	xXZkm0xWn4nK2mmgg1qxN+uDUdjJJk8=
+X-Google-Smtp-Source: ACcGV634wHVTcfVepBA60Zsgl86lfOwFo5qHx24NERRpQEugJabYbcAs/jSznmeTNLxn5GG0fgd1BA==
+X-Received: by 2002:adf:8103:: with SMTP id
+	3-v6mr26928592wrm.106.1539854573369; 
+	Thu, 18 Oct 2018 02:22:53 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	x17-v6sm17666494wrs.84.2018.10.18.02.22.50
+	x17-v6sm17666494wrs.84.2018.10.18.02.22.52
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 18 Oct 2018 02:22:51 -0700 (PDT)
+	Thu, 18 Oct 2018 02:22:52 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 Oct 2018 10:22:43 +0100
-Message-Id: <20181018092246.1445-4-richard.purdie@linuxfoundation.org>
+Date: Thu, 18 Oct 2018 10:22:44 +0100
+Message-Id: <20181018092246.1445-5-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20181018092246.1445-1-richard.purdie@linuxfoundation.org>
 References: <20181018092246.1445-1-richard.purdie@linuxfoundation.org>
-Subject: [PATCH 4/7] data/data_smart: Allow getVarFlag to return the variable parser object
+Subject: [PATCH 5/7] bitbake: data: Ensure task checksums account for remove data
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,108 +57,114 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 18 Oct 2018 09:22:52 -0000
+X-List-Received-Date: Thu, 18 Oct 2018 09:22:53 -0000
+
+Currently remove operations are not being accounted for in the task
+checksums. This is a fairly serious oversight and needs to be fixed.
+
+To do so, we need internal data from getVarFlag combined with the
+expanded variable data so that only "active" remove operators are
+accounted for in the task checksum. We can get this from the new
+optional removes attribute in the returned parser object.
+
+The code can then use the data on active remove operators to account
+for the removals in task checksum but only when the removal is active.
+
+We have to be careful here not to reference any expanded data since this
+may for example contain build paths. This means we can only map back
+and reference the unsplit (and hence unexpanded) remove string which may
+expand to multiple removal values.
+
+[YOCTO #12913]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/data.py       | 11 +++++------
- lib/bb/data_smart.py | 18 +++++++++++++-----
- 2 files changed, 18 insertions(+), 11 deletions(-)
+ lib/bb/data.py       | 12 ++++++++++++
+ lib/bb/data_smart.py | 27 ++++++++++++++++++---------
+ 2 files changed, 30 insertions(+), 9 deletions(-)
 
 diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 80a7879cb6..e2700077c3 100644
+index e2700077c3..fde4cba6bb 100644
 --- a/lib/bb/data.py
 +++ b/lib/bb/data.py
-@@ -283,14 +283,12 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
-     try:
-         if key[-1] == ']':
-             vf = key[:-1].split('[')
--            value = d.getVarFlag(vf[0], vf[1], False)
--            parser = d.expandWithRefs(value, key)
-+            value, parser = d.getVarFlag(vf[0], vf[1], False, retparser=True)
-             deps |= parser.references
-             deps = deps | (keys & parser.execs)
-             return deps, value
-         varflags = d.getVarFlags(key, ["vardeps", "vardepvalue", "vardepsexclude", "exports", "postfuncs", "prefuncs", "lineno", "filename"]) or {}
-         vardeps = varflags.get("vardeps")
--        value = d.getVarFlag(key, "_content", False)
- 
-         def handle_contains(value, contains, d):
-             newvalue = ""
-@@ -310,9 +308,10 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
+@@ -307,6 +307,14 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
+                 return newvalue
              return value + newvalue
  
++        def handle_remove(value, deps, removes, d):
++            for r in sorted(removes):
++                r2 = d.expandWithRefs(r, None)
++                value += "\n_remove of %s" % r
++                deps |= r2.references
++                deps = deps | (keys & r2.execs)
++            return value
++
          if "vardepvalue" in varflags:
--           value = varflags.get("vardepvalue")
-+            value = varflags.get("vardepvalue")
+             value = varflags.get("vardepvalue")
          elif varflags.get("func"):
-             if varflags.get("python"):
-+                value = d.getVarFlag(key, "_content", False)
-                 parser = bb.codeparser.PythonParser(key, logger)
-                 if value and "\t" in value:
-                     logger.warning("Variable %s contains tabs, please remove these (%s)" % (key, d.getVar("FILE")))
-@@ -321,7 +320,7 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
-                 deps = deps | (keys & parser.execs)
-                 value = handle_contains(value, parser.contains, d)
-             else:
--                parsedvar = d.expandWithRefs(value, key)
-+                value, parsedvar = d.getVarFlag(key, "_content", False, retparser=True)
-                 parser = bb.codeparser.ShellParser(key, logger)
-                 parser.parse_shell(parsedvar.value)
-                 deps = deps | shelldeps
-@@ -337,7 +336,7 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
-             if "exports" in varflags:
-                 deps = deps | set(varflags["exports"].split())
-         else:
--            parser = d.expandWithRefs(value, key)
-+            value, parser = d.getVarFlag(key, "_content", False, retparser=True)
+@@ -327,6 +335,8 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
+                 deps = deps | parsedvar.references
+                 deps = deps | (keys & parser.execs) | (keys & parsedvar.execs)
+                 value = handle_contains(value, parsedvar.contains, d)
++                if hasattr(parsedvar, "removes"):
++                    value = handle_remove(value, deps, parsedvar.removes, d)
+             if vardeps is None:
+                 parser.log.flush()
+             if "prefuncs" in varflags:
+@@ -340,6 +350,8 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
              deps |= parser.references
              deps = deps | (keys & parser.execs)
              value = handle_contains(value, parser.contains, d)
++            if hasattr(parser, "removes"):
++                value = handle_remove(value, deps, parser.removes, d)
+ 
+         if "vardepvalueexclude" in varflags:
+             exclude = varflags.get("vardepvalueexclude")
 diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index ecc71bd644..4ad0567c9a 100644
+index 4ad0567c9a..8c4c6a9a32 100644
 --- a/lib/bb/data_smart.py
 +++ b/lib/bb/data_smart.py
-@@ -722,7 +722,7 @@ class DataSmart(MutableMapping):
-                 self.dict["__exportlist"]["_content"] = set()
-             self.dict["__exportlist"]["_content"].add(var)
- 
--    def getVarFlag(self, var, flag, expand=True, noweakdefault=False, parsing=False):
-+    def getVarFlag(self, var, flag, expand=True, noweakdefault=False, parsing=False, retparser=False):
-         if flag == "_content":
-             cachename = var
-         else:
-@@ -798,9 +798,11 @@ class DataSmart(MutableMapping):
-                 if match:
-                     value = r + value
- 
-+        parser = None
-+        if expand or retparser:
-+            parser = self.expandWithRefs(value, cachename)
-         if expand:
--            self.expand_cache[cachename] = self.expandWithRefs(value, cachename)
--            value = self.expand_cache[cachename].value
-+            value = parser.value
+@@ -805,7 +805,7 @@ class DataSmart(MutableMapping):
+             value = parser.value
  
          if value and flag == "_content" and local_var is not None and "_remove" in local_var and not parsing:
-             removes = []
-@@ -818,8 +820,14 @@ class DataSmart(MutableMapping):
-                 filtered = filter(lambda v: v not in removes,
-                                   __whitespace_split__.split(value))
-                 value = "".join(filtered)
--                if expand and cachename in self.expand_cache:
--                    self.expand_cache[cachename].value = value
-+                if parser:
-+                    parser.value = value
+-            removes = []
++            removes = {}
+             self.need_overrides()
+             for (r, o) in local_var["_remove"]:
+                 match = True
+@@ -814,14 +814,23 @@ class DataSmart(MutableMapping):
+                         if not o2 in self.overrides:
+                             match = False                            
+                 if match:
+-                    removes.extend(self.expand(r).split())
+-
+-            if removes:
+-                filtered = filter(lambda v: v not in removes,
+-                                  __whitespace_split__.split(value))
+-                value = "".join(filtered)
+-                if parser:
+-                    parser.value = value
++                    removes[r] = self.expand(r).split()
 +
-+        if parser:
-+            self.expand_cache[cachename] = parser
-+
-+        if retparser:
-+            return value, parser
++            if removes and parser:
++                parser.removes = set()
++                val = ""
++                for v in __whitespace_split__.split(parser.value):
++                    skip = False
++                    for r in removes:
++                        if v in removes[r]:
++                            parser.removes.add(r)
++                            skip = True
++                    if skip:
++                        continue
++                    val = val + v
++                parser.value = val
++                if expand:
++                    value = parser.value
  
-         return value
- 
+         if parser:
+             self.expand_cache[cachename] = parser
 -- 
 2.17.1
 
