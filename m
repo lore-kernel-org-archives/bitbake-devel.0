@@ -1,24 +1,23 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 04A4979C05
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 076AE79D50
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 31 Oct 2018 07:52:46 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-10) with ESMTPSA id
-	w9V7qk0W025554
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Wed, 31 Oct 2018 07:52:47 GMT
-Message-ID: <a744bfa29698aa5d63dbd4c6725dd3035ea88773.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joe Slater <joe.slater@windriver.com>, bitbake-devel@lists.openembedded.org
-Date: Wed, 31 Oct 2018 07:52:46 +0000
-In-Reply-To: <20181030233304.214025-1-joe.slater@windriver.com>
-References: <20181030233304.214025-1-joe.slater@windriver.com>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.100.1 at dan
-X-Virus-Status: Clean
-Subject: Re: [oe-core][PATCH 1/1] cooker.py: no bb.fatal() for pr server
+	Wed, 31 Oct 2018 19:21:44 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id w9VJLk7v000282
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 31 Oct 2018 12:21:46 -0700 (PDT)
+Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.408.0;
+	Wed, 31 Oct 2018 12:21:45 -0700
+From: Mark Hatle <mark.hatle@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 31 Oct 2018 15:21:42 -0400
+Message-ID: <20181031192144.35366-1-mark.hatle@windriver.com>
+X-Mailer: git-send-email 2.16.0.rc2
+MIME-Version: 1.0
+Subject: [PATCH 0/2] Fix gitsm issues
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,35 +30,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 31 Oct 2018 07:52:47 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 31 Oct 2018 19:21:45 -0000
+Content-Type: text/plain
 
-On Tue, 2018-10-30 at 16:33 -0700, Joe Slater wrote:
-> Calls to bb.fatal() will block at this point of initialization.
-> 
-> Signed-off-by: Joe Slater <joe.slater@windriver.com>
-> ---
->  lib/bb/cooker.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-> index 71a0eba..2a3721b 100644
-> --- a/lib/bb/cooker.py
-> +++ b/lib/bb/cooker.py
-> @@ -383,7 +383,8 @@ class BBCooker:
->          try:
->              self.prhost = prserv.serv.auto_start(self.data)
->          except prserv.serv.PRServiceConfigError as e:
-> -            bb.fatal("Unable to start PR Server, exitting")
-> +            logger.error("Unable to start PR Server.  Continuing anyway...")
-> +            self.prhost = None
->  
+Two issues here:
 
-Shouldn't we fix the blocking?
+1) Fix an issue where the submodule commit may not be on a branch of the
+same name as the SRC_URI entry.
 
-Cheers,
+2) Recursive submodules may not properly unpacked 
 
-Richard
+
+Mark Hatle (2):
+  fetch2/gitsm.py: Disable branch checking on submodules
+  fetch2/gitsm.py: Fix the references when the module and path are
+    different
+
+ lib/bb/fetch2/gitsm.py | 71 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 35 insertions(+), 36 deletions(-)
+
+-- 
+1.8.3.1
 
 
