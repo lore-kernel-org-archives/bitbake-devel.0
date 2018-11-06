@@ -1,28 +1,47 @@
-Return-Path: <mac@mcrowe.com>
-X-Greylist: delayed 451 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 05 Nov 2018 14:36:44 UTC
-Received: from avasout02.plus.net (avasout02.plus.net [212.159.14.17])
-	by mail.openembedded.org (Postfix) with ESMTP id 5FED474616
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+	[209.85.221.45])
+	by mail.openembedded.org (Postfix) with ESMTP id B33E779EFC
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Nov 2018 14:36:43 +0000 (UTC)
-Received: from deneb ([80.229.24.9]) by smtp with ESMTP
-	id JfsPgkLO1x6b6JfsQgugyR; Mon, 05 Nov 2018 14:29:14 +0000
-X-CM-Score: 0.00
-X-CNFS-Analysis: v=2.3 cv=T4GiscCQ c=1 sm=1 tr=0
-	a=E/9URZZQ5L3bK/voZ0g0HQ==:117 a=E/9URZZQ5L3bK/voZ0g0HQ==:17
-	a=JHtHm7312UAA:10 a=-An2I_7KAAAA:8 a=RdiZSxg3kNzwlYJAG-gA:9
-	a=Sq34B_EcNBM9_nrAYB9S:22
-Received: from mac by deneb with local (Exim 4.89)
-	(envelope-from <mac@mcrowe.com>)
-	id 1gJfsO-0002mW-2r; Mon, 05 Nov 2018 14:29:12 +0000
-From: Mike Crowe <mac@mcrowe.com>
+	Tue,  6 Nov 2018 14:41:55 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id z16-v6so13810861wrv.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 06 Nov 2018 06:41:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id;
+	bh=9tIiV3h6zr14tsev2UOwyFgd114u+MsNJi9z8X6rWL0=;
+	b=WiZS7IrgypMUl4LAGQUUyVAVR8dhUtkpK/nZL6yaA2OB3+tZKvDnM16hPjvwSJIMpz
+	Z3busBBoE1s9+RevZ4tWntjQyTo7CP2LKDhvUYQXN50JHedA1srAXVQSO7UytHbwpR2/
+	TQuwsy/rjq3E18vHEdZ6xQWwAJ9MtvKlW7KE0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=9tIiV3h6zr14tsev2UOwyFgd114u+MsNJi9z8X6rWL0=;
+	b=TCVSzfq8NhNnhHJV/I1p4S7fwoQ49+0d6geTNU+O4LYZabUiQeA6T4IObf6ctA2K+j
+	L4uoOAnXmElf0SL6igKzwsPat40v62d78AJ1QBQtO9VntLvoDTlHEpk2hy/MCulkrYkl
+	mtgADTQ9wFOy9VCVbOVV/b3mVCCr2l7b7B9GwOGWhvZ0VHDhB2Q7hicwb6EKfSdu/+Vk
+	EcnUc9IRyx/Zkcd7IJO2eOqQQlmfCHG6JEyCso8ynSRcIvL9DxYXQ8nWwyUaelDPJkyj
+	NQqHqFHFNbdwuvXIPK6GQSpHgtdcpv0eLsRojiE5+cDmCIAEE1Msky4EYwcXuKl9Se5M
+	+qEg==
+X-Gm-Message-State: AGRZ1gJ9zYarLx423C8qhbfrB82jS7mkSZiq24WN1Hia8HoMavNNg+wL
+	L7mf8d0kAT0x3uKfeIRt+Tkf/9uAgPc=
+X-Google-Smtp-Source: AJdET5fLom2HWWrRhNSXG5yCCglMgOUo/xDp7PUH+N0uJk1vgXMspLpjIpDO5uj2pHb+gQ0y40WuDQ==
+X-Received: by 2002:adf:d090:: with SMTP id
+	y16-v6mr14270317wrh.314.1541515315665; 
+	Tue, 06 Nov 2018 06:41:55 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	x18-v6sm2235970wme.42.2018.11.06.06.41.54
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 06 Nov 2018 06:41:55 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Nov 2018 14:29:05 +0000
-Message-Id: <20181105142905.22709-1-mac@mcrowe.com>
-X-Mailer: git-send-email 2.11.0
-X-CMAE-Envelope: MS4wfJSnVcmiWITQHq7Ik1qRjWL/xpbsmbpyO1u9UGBRItTXPcr6O9J8hN/SAsWB6fCk2LUue4eLzWoYXVl0xx0eyU4JhG4LYg4RC3W9lRcwVya+VwQ7VJIv
-	3yzLsVFLgNvMCLv3LMtjxPfArWdXKrTmee94WjQHJfJmgVhOEQxk51qA
-Subject: [PATCH] siggen: Correct format argument substitution
+Date: Tue,  6 Nov 2018 14:41:53 +0000
+Message-Id: <20181106144153.20480-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] server/process: Fix unclosed socket warnings upon server connection refused
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,30 +54,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Nov 2018 14:36:44 -0000
+X-List-Received-Date: Tue, 06 Nov 2018 14:41:56 -0000
 
-Use % operator to ensure that the dependency is substituted into the error
-message correctly.
+Extend the server error handling to avoid:
 
-Signed-off-by: Mike Crowe <mac@mcrowe.com>
+Reconnecting to bitbake server...
+NOTE: Retrying server connection... (Traceback (most recent call last):
+  File "/home/pokybuild/yocto-worker/nightly-oe-selftest/build/bitbake/lib/bb/main.py", line 464, in setup_bitbake
+    server_connection = bb.server.process.connectProcessServer(sockname, featureset)
+  File "/home/pokybuild/yocto-worker/nightly-oe-selftest/build/bitbake/lib/bb/server/process.py", line 457, in connectProcessServer
+    sock.connect(os.path.basename(sockname))
+ConnectionRefusedError: [Errno 111] Connection refused
+)
+WARNING: /home/pokybuild/yocto-worker/nightly-oe-selftest/build/bitbake/lib/bb/main.py:481: ResourceWarning: unclosed <socket.socket fd=20, family=AddressFamily.AF_UNIX, type=SocketKind.SOCK_STREAM, proto=0>
+  logger.info("Retrying server connection... (%s)" % traceback.format_exc())
+
+NOTE: Starting bitbake server...
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/siggen.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/server/process.py | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 03c824ec..c619b596 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -185,7 +185,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             if not self.rundep_check(fn, recipename, task, dep, depname, dataCache):
-                 continue
-             if dep not in self.taskhash:
--                bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
-+                bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?" % dep)
-             data = data + self.taskhash[dep]
-             self.runtaskdeps[k].append(dep)
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 38b923fe2d..ed930c61f4 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -453,15 +453,14 @@ def connectProcessServer(sockname, featureset):
+     cwd = os.getcwd()
  
+     try:
+-        os.chdir(os.path.dirname(sockname))
+-        sock.connect(os.path.basename(sockname))
+-    finally:
+-        os.chdir(cwd)
+-
+-    readfd = writefd = readfd1 = writefd1 = readfd2 = writefd2 = None
+-    eq = command_chan_recv = command_chan = None
++        try:
++            os.chdir(os.path.dirname(sockname))
++            sock.connect(os.path.basename(sockname))
++        finally:
++            os.chdir(cwd)
+ 
+-    try:
++        readfd = writefd = readfd1 = writefd1 = readfd2 = writefd2 = None
++        eq = command_chan_recv = command_chan = None
+ 
+         # Send an fd for the remote to write events to
+         readfd, writefd = os.pipe()
 -- 
-2.11.0
+2.17.1
 
 
