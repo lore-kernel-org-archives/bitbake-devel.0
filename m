@@ -1,52 +1,55 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
-	[209.85.128.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 892156C0B0
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id E274A6C29F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 13 Nov 2018 23:13:33 +0000 (UTC)
-Received: by mail-wm1-f66.google.com with SMTP id f1-v6so12211302wmg.1
+	Wed, 14 Nov 2018 01:10:20 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 135691849C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 13 Nov 2018 15:13:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=T8/ov44sjq9PeMpYNapte3rcRa3JG2zh3VYK0Ev/2E8=;
-	b=LLWtmAfgOS8cWhBLvYPRvzQzTPaLr9/R4NdN5HiJs8fdQ4rdIgsjBt7F0Jkh2vitnJ
-	xsthwkfOa2YYR8qH0ahX8Oi9v5BnmeolU3k2cbG8uz/j+r2wv1TtsXMc5PwRup6CwPun
-	LUXS2BAoTMKwGrJnAAFO0DiP7RQuskupQmjcc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=T8/ov44sjq9PeMpYNapte3rcRa3JG2zh3VYK0Ev/2E8=;
-	b=YzXkjBgr4Pg5rcGZslBDbXZWcUsA8N3IohGrJIV/QbFcZfUgAbmzNY5OQBLLyWvUdD
-	RPSWJR9OZyN5wtM0/rxD8ZJq34spKQis1th+iWetLFWNszBlZ5frGQva9c8W4KMFbsCc
-	WVIJ+R26VSVgdx/82euEWulHJdfq/uUcdytzxdoHIY7FIsDJYVTjDfXJioD2/5CMQkvP
-	LfqgKJHOLO8/pAlqFLxBrAE/UrCQPGe8znwbJZo9ixwAuwTka9C4qsBjT0j8s27+zGAw
-	vCAbFD/ePej9w86m462CZbeom4RWI12nT+MlfIblbXzWKEdP8mnlp3QokY6R9snRJB1l
-	2cdw==
-X-Gm-Message-State: AGRZ1gKmlEzrVW/swqpRP3fhVn/UoJMSZ+TAB290jrV+YOabkJpT9jQN
-	SkL5fTuqSqvJ67R1puzPsp6iUg==
-X-Google-Smtp-Source: AJdET5c/qGY7OI72HZI3g2jVNWR2jublnKz7/+3fMOar7i5YrLukj8lsJD/hNM0172scr57CDL3dGg==
-X-Received: by 2002:a1c:c911:: with SMTP id
-	f17-v6mr4964192wmb.41.1542150814289; 
-	Tue, 13 Nov 2018 15:13:34 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	y190-v6sm7533167wmd.41.2018.11.13.15.13.32
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 13 Nov 2018 15:13:33 -0800 (PST)
-Message-ID: <de2b8c792e0f012f62aeb990bc8bdb0066b56ac4.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: akuster808 <akuster808@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Tue, 13 Nov 2018 23:13:30 +0000
-In-Reply-To: <2a132f70-529e-cb9b-d028-de4707fe2c95@gmail.com>
-References: <20181113225942.17780-1-richard.purdie@linuxfoundation.org>
-	<2a132f70-529e-cb9b-d028-de4707fe2c95@gmail.com>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Subject: Re: [PATCH 1/2] utils: Avoid warnings about deprecated imp module
+	Wed, 14 Nov 2018 02:10:21 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id gkloM8Im-WIk for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Nov 2018 02:10:20 +0100 (CET)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+	by bastet.se.axis.com (Postfix) with ESMTPS id 67FF618441
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Nov 2018 02:10:20 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 528F41E07D
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Nov 2018 02:10:20 +0100 (CET)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 476761E07C
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Nov 2018 02:10:20 +0100 (CET)
+Received: from thoth.se.axis.com (unknown [10.0.2.173])
+	by boulder03.se.axis.com (Postfix) with ESMTP
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Nov 2018 02:10:20 +0100 (CET)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by thoth.se.axis.com (Postfix) with ESMTP id 3B4E12D50
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Nov 2018 02:10:20 +0100 (CET)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id wAE1AKid000934
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Nov 2018 02:10:20 +0100
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id wAE1AKGI000933
+	for bitbake-devel@lists.openembedded.org;
+	Wed, 14 Nov 2018 02:10:20 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 14 Nov 2018 02:10:19 +0100
+Message-Id: <20181114011019.878-2-pkj@axis.com>
+X-Mailer: git-send-email 2.12.0
+In-Reply-To: <20181114011019.878-1-pkj@axis.com>
+References: <20181114011019.878-1-pkj@axis.com>
+X-TM-AS-GCONF: 00
+Subject: [PATCH 2/2] bitbake-dumpsig: Change to use argparse
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,31 +62,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Nov 2018 23:13:34 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 14 Nov 2018 01:10:22 -0000
 
-On Tue, 2018-11-13 at 15:11 -0800, akuster808 wrote:
-> On 11/13/18 2:59 PM, Richard Purdie wrote:
-> > The imp module is deprecated, port the code over to use importlib.
-> > 
-> > bitbake/lib/bb/utils.py:30: DeprecationWarning: the imp module is
-> > deprecated in favour of importlib; see the module's documentation
-> > for alternative uses
-> >   import imp
-> 
-> so host side? Thud and Sumo backport?
+This corresponds to commit 7f130e0b for bitbake-diffsigs.
 
-Yes, but I think the patch crashes and burns on python34 as I clearly
-didn't understand the docs correctly as I thought this was 3.4 safe.
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ bitbake/bin/bitbake-dumpsig | 35 ++++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
-So more investigation/work needed...
-
-We hide most of these warnings anyway, I just decided we should really
-fix some of them before 3.7+ bites us.
-
-Cheers,
-
-Richard
+diff --git a/bitbake/bin/bitbake-dumpsig b/bitbake/bin/bitbake-dumpsig
+index 40e08e0439..50e5717ace 100755
+--- a/bitbake/bin/bitbake-dumpsig
++++ b/bitbake/bin/bitbake-dumpsig
+@@ -22,7 +22,7 @@
+ import os
+ import sys
+ import warnings
+-import optparse
++import argparse
+ import logging
+ import pickle
+ 
+@@ -73,21 +73,22 @@ def find_siginfo_task(bbhandler, pn, taskname):
+ 
+     return latestfiles[0]
+ 
+-parser = optparse.OptionParser(
+-    description = "Dumps siginfo/sigdata files written out by BitBake",
+-    usage = """
+-  %prog -t recipename taskname
+-  %prog sigdatafile""")
++parser = argparse.ArgumentParser(
++    description="Dump siginfo/sigdata files written out by BitBake")
+ 
+-parser.add_option("-D", "--debug",
+-        help = "enable debug",
+-        action = "store_true", dest="debug", default = False)
++parser.add_argument('-d', '--debug',
++                    help='Enable debug output',
++                    action='store_true')
+ 
+-parser.add_option("-t", "--task",
+-        help = "find the signature data file for the specified task",
+-        action="store", dest="taskargs", nargs=2, metavar='recipename taskname')
++parser.add_argument("-t", "--task",
++        help="find the signature data file for the last run of the specified task",
++        action="store", dest="taskargs", nargs=2, metavar=('recipename', 'taskname'))
+ 
+-options, args = parser.parse_args(sys.argv)
++parser.add_argument("sigdatafile",
++        help="Signature file to dump. Not used when using -t/--task.",
++        action="store", nargs='?')
++
++options = parser.parse_args()
+ 
+ if options.debug:
+     logger.setLevel(logging.DEBUG)
+@@ -97,11 +98,11 @@ if options.taskargs:
+     tinfoil.prepare(config_only = True)
+     file = find_siginfo_task(tinfoil, options.taskargs[0], options.taskargs[1])
+     logger.debug("Signature file: %s" % file)
+-elif len(args) == 1:
+-    parser.print_help()
+-    sys.exit(0)
++elif options.sigdatafile:
++    file = options.sigdatafile
+ else:
+-    file = args[1]
++    parser.print_help()
++    sys.exit(1)
+ 
+ try:
+     output = bb.siggen.dump_sigfile(file)
+-- 
+2.12.0
 
 
