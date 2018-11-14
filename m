@@ -1,26 +1,25 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id D220E6C17F
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 563A66C17F
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Nov 2018 09:35:22 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id wAE9Z2VJ015234
+	Wed, 14 Nov 2018 09:35:38 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id wAE9ZdH2004610
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Nov 2018 01:35:13 -0800
+	Wed, 14 Nov 2018 01:35:39 -0800 (PST)
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.408.0; Wed, 14 Nov 2018 01:34:52 -0800
+	14.3.408.0; Wed, 14 Nov 2018 01:35:38 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 14 Nov 2018 17:46:37 +0800
-Message-ID: <56c65a88041679ad0b1783a2cb1fd65e2bbbe41f.1542188647.git.liezhi.yang@windriver.com>
+Date: Wed, 14 Nov 2018 17:46:41 +0800
+Message-ID: <756af795985c9bedd5b65ce3a4cc18f2937e2094.1542188647.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1542188647.git.liezhi.yang@windriver.com>
 References: <cover.1542188647.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/6] bitbake: parse/ast: fix line number for anonymous function
+Subject: [PATCH 6/6] bitbake: BBHandler: Fix __python_func_regexp__ for comment lines
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,65 +32,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Nov 2018 09:35:23 -0000
+X-List-Received-Date: Wed, 14 Nov 2018 09:35:38 -0000
 Content-Type: text/plain
 
 Fixed:
-- Define an error anonymous function in base.bbclass:
-  15
-  16 python() {
-  17     Compile error
-  18 }
+- Add a comment in base.bbclass:
+  def oe_import(d):
+      import sys
+  # Comment
+      bbpath = d.getVar("BBPATH").split(":")
+  [snip]
+
+  Note, '# Comment' is started with '#', it is legal in python's syntax
+  (though maybe not a good style), but bitbake reported errors:
 
   $ bitbake -p
-  ERROR: Error in compiling python function in /buildarea1/lyang1/poky/meta/classes/base.bbclass, line 18:
+  ERROR: ParseError at /path/to/base.bbclass:20: unparsed line: '    bbpath = d.getVar("BBPATH").split(":")'
 
-  The code lines resulting in this error were:
-       0001:def __anon_18__buildarea1_lyang1_poky_meta_classes_base_bbclass(d):
-   *** 0002:    Compile error
-       0003:
-  SyntaxError: invalid syntax (base.bbclass, line 18)
+  This error report would mislead people, the real problem is that '# Comment'
+  is not supported, but it reports the next line, this may make it hard to debug
+  the code are complicated.
 
-  The lineno should be 17, but it reported 18, this would mislead people a lot
-  when there more lines.
-
-- Now fix it to:
-  ERROR: Error in compiling python function in /buildarea1/lyang1/poky/meta/classes/base.bbclass, line 17:
-
-  The code lines resulting in this error were:
-       0001:def __anon_18__buildarea1_lyang1_poky_meta_classes_base_bbclass(d):
-   *** 0002:    Compile error
-       0003:
-  SyntaxError: invalid syntax (base.bbclass, line 17)
-
-This is because the anonymous function is constructed by:
-text = "def %s(d):\n" % (funcname) + text
-
-The len(self.body) doesn't include the "def " line, the length of the function
-should be "len(self.body) + 1", so we need pass "self.lineno - (len(self.body) + 1)"
-which is the same as 'self.lineno - len(self.body) - 1' to
-bb.methodpool.insert_method() as we already had done to named function. Otherwise, the
-lineno is wrong, and would cause other problems such as report which line is
-wrong, but the line is not what we want since it reports incorrect line.
+We can make __python_func_regexp__ handle '^#' to fix the problem, since it
+already can handle blank line "^$" in a python function, so it would be pretty
+safe to handle "^#" as well.
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/parse/ast.py | 2 +-
+ bitbake/lib/bb/parse/parse_py/BBHandler.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/parse/ast.py b/bitbake/lib/bb/parse/ast.py
-index 9d20c32..6d7c80b 100644
---- a/bitbake/lib/bb/parse/ast.py
-+++ b/bitbake/lib/bb/parse/ast.py
-@@ -178,7 +178,7 @@ class MethodNode(AstNode):
-             funcname = ("__anon_%s_%s" % (self.lineno, self.filename.translate(MethodNode.tr_tbl)))
-             self.python = True
-             text = "def %s(d):\n" % (funcname) + text
--            bb.methodpool.insert_method(funcname, text, self.filename, self.lineno - len(self.body))
-+            bb.methodpool.insert_method(funcname, text, self.filename, self.lineno - len(self.body) - 1)
-             anonfuncs = data.getVar('__BBANONFUNCS', False) or []
-             anonfuncs.append(funcname)
-             data.setVar('__BBANONFUNCS', anonfuncs)
+diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+index e5039e3..01fc47e 100644
+--- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+@@ -45,7 +45,7 @@ __addtask_regexp__       = re.compile("addtask\s+(?P<func>\w+)\s*((before\s*(?P<
+ __deltask_regexp__       = re.compile("deltask\s+(?P<func>\w+)")
+ __addhandler_regexp__    = re.compile( r"addhandler\s+(.+)" )
+ __def_regexp__           = re.compile( r"def\s+(\w+).*:" )
+-__python_func_regexp__   = re.compile( r"(\s+.*)|(^$)" )
++__python_func_regexp__   = re.compile( r"(\s+.*)|(^$)|(^#)" )
+ 
+ __infunc__ = []
+ __inpython__ = False
 -- 
 2.7.4
 
