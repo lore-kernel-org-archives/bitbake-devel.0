@@ -1,26 +1,49 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 47EC66C68A
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
+	[209.85.221.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 85D336C670
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Nov 2018 10:56:58 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id wANAucS0029016
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Fri, 23 Nov 2018 15:01:25 +0000 (UTC)
+Received: by mail-wr1-f66.google.com with SMTP id x10so12636913wrs.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Nov 2018 02:56:49 -0800
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.408.0; Fri, 23 Nov 2018 02:56:28 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 23 Nov 2018 19:13:44 +0800
-Message-ID: <0d508b2904f8d2d1419ca34caac67d1f58cd720c.1542971536.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1542971536.git.liezhi.yang@windriver.com>
-References: <cover.1542971536.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake: BBHandler: Check tab indentation for python code
+	Fri, 23 Nov 2018 07:01:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=RPJQUAb11/AefQdaESqbzDflIumF+/gg0uxU9Mp9+Rs=;
+	b=pZPiCNEQMZ6GE6ttZFav0PrC7oEkYUTh1g5IX1GuuoJ7+dPUB853DCVLx5orJRWVr+
+	meKzNvVgVa3t+yFTpl+mETAbuDPL1iJPtX7TJiEFa3PY5DwkKWRf6yKZ7AxD/nIc3ruJ
+	C55FWxpCAOC4QBpzRPpe2BNFCdvv74nJPa7iks+JUMbO37myiud2pPrgxZLg813rN7M4
+	5xdKch2VTrEVp8S5fxRFUcn9stfGnp/korYBhfuQrjLrQHHnP0lSCxSt0szKkWiv7uNk
+	iehVbXuakMVavSDm9H7yf65/WTev+Io5ASf+7hn1PzaxuTLZVNjXYHCDnGH1mVIxudzQ
+	hWdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=RPJQUAb11/AefQdaESqbzDflIumF+/gg0uxU9Mp9+Rs=;
+	b=Mpj0INY5tOje/ld9zVBkaB49B6UJ9EKBwWS9j5T3IXKTaIPvV8+oasQLQrKqBk659b
+	Ci9NpGoZx3hJKceSAV1qGWIJxQl5eYaIuibbAwoxN5v7HHNG/iIcpmroDEay4PdNdDxP
+	LGtrqBjYozf919g4d8DFbiWAjE/TuDtmIWqY1mu7SN90+iRmNNHifGjFmiC5zyJtnYsB
+	k6lVpi0nYPQLwgExqR3w9v/RcHfxRxxVdzaYpiCe5r8P0HoWGdExdy1w8cdlhNw3y/Qa
+	J1TBtZXgPVYeXjlk932NNESkoiS2LsWjk8o7YU727ekpJmco54fHsZrFp0ol7XuF0xLW
+	9tOg==
+X-Gm-Message-State: AA+aEWY5JA7x+AZl3xdmQq2jqzzz70ab1hl6w1C0IzMr6NlChTftQa0l
+	pZV6atZ5g5oYbU0uXGs4Z77H76Ml5YE=
+X-Google-Smtp-Source: AFSGD/V9rnskIsP/uTwMY1+fOCSbSj+bMEF3sIpWGl9860+55FTT1+wvYrmPGDkgpfBJzMXbgL2ihw==
+X-Received: by 2002:adf:9521:: with SMTP id 30mr13661763wrs.192.1542985285900; 
+	Fri, 23 Nov 2018 07:01:25 -0800 (PST)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
+	n15sm25204205wrt.21.2018.11.23.07.01.24
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 23 Nov 2018 07:01:25 -0800 (PST)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 23 Nov 2018 15:01:21 +0000
+Message-Id: <20181123150122.23585-1-ross.burton@intel.com>
+X-Mailer: git-send-email 2.11.0
+Subject: [PATCH 1/2] layerindex: don't use shell=True when cloning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,69 +56,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Nov 2018 10:56:58 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 23 Nov 2018 15:01:25 -0000
 
-The previous check was in data.py which only can check code like "python
-funcname()" in the dependency chain, but there are 3 kinds of python functions:
-  - python()
-  - def py_funcname()
-  - python funcname()
-
-Add the checking to BBHandler to check and warn for all of them.
-
-The warning looks like:
-WARNING: /path/to/recipes-core/busybox/busybox_1.29.2.bb: python should use 4 spaces indentation, but found tabs in busybox.inc, line 75
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- bitbake/lib/bb/data.py                     |  2 --
- bitbake/lib/bb/parse/parse_py/BBHandler.py | 11 +++++++++++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ bitbake/lib/bblayers/layerindex.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-index d66d98c..6bcfcf4 100644
---- a/bitbake/lib/bb/data.py
-+++ b/bitbake/lib/bb/data.py
-@@ -322,8 +322,6 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
-             if varflags.get("python"):
-                 value = d.getVarFlag(key, "_content", False)
-                 parser = bb.codeparser.PythonParser(key, logger)
--                if value and "\t" in value:
--                    logger.warning("Variable %s contains tabs, please remove these (%s)" % (key, d.getVar("FILE")))
-                 parser.parse_python(value, filename=varflags.get("filename"), lineno=varflags.get("lineno"))
-                 deps = deps | parser.references
-                 deps = deps | (keys & parser.execs)
-diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-index 01fc47e..f3bf4aa 100644
---- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-@@ -46,6 +46,7 @@ __deltask_regexp__       = re.compile("deltask\s+(?P<func>\w+)")
- __addhandler_regexp__    = re.compile( r"addhandler\s+(.+)" )
- __def_regexp__           = re.compile( r"def\s+(\w+).*:" )
- __python_func_regexp__   = re.compile( r"(\s+.*)|(^$)|(^#)" )
-+__python_tab_regexp__    = re.compile(" *\t")
- 
- __infunc__ = []
- __inpython__ = False
-@@ -160,6 +161,16 @@ def handle(fn, d, include):
- 
- def feeder(lineno, s, fn, root, statements, eof=False):
-     global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __def_regexp__, __python_func_regexp__, __inpython__, __infunc__, __body__, bb, __residue__, __classname__
-+
-+    # Check tabs in python functions:
-+    # - def py_funcname(): covered by __inpython__
-+    # - python(): covered by '__anonymous' == __infunc__[0]
-+    # - python funcname(): covered by __infunc__[3]
-+    if __inpython__ or (__infunc__ and ('__anonymous' == __infunc__[0] or __infunc__[3])):
-+        tab = __python_tab_regexp__.match(s)
-+        if tab:
-+            bb.warn('python should use 4 spaces indentation, but found tabs in %s, line %s' % (root, lineno))
-+
-     if __infunc__:
-         if s == '}':
-             __body__.append('')
+diff --git a/bitbake/lib/bblayers/layerindex.py b/bitbake/lib/bblayers/layerindex.py
+index 9f02a9da2ef..b2ff2268ea6 100644
+--- a/bitbake/lib/bblayers/layerindex.py
++++ b/bitbake/lib/bblayers/layerindex.py
+@@ -28,7 +28,7 @@ class LayerIndexPlugin(ActionPlugin):
+         layerdir = os.path.join(repodir, subdir)
+         if not os.path.exists(repodir):
+             if fetch_layer:
+-                result = subprocess.call('git clone %s %s' % (url, repodir), shell = True)
++                result = subprocess.call(['git', 'clone', url, repodir])
+                 if result:
+                     logger.error("Failed to download %s" % url)
+                     return None, None, None
 -- 
-2.7.4
+2.11.0
 
 
