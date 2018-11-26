@@ -1,80 +1,43 @@
-Return-Path: <jdasilva@ciena.com>
-X-Greylist: delayed 154523 seconds by postgrey-1.34 at layers.openembedded.org;
-	Sat, 24 Nov 2018 03:37:18 UTC
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com
-	(mail-eopbgr750043.outbound.protection.outlook.com [40.107.75.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 8F2D779B67
+Return-Path: <kumar.ugesh003@yahoo.com>
+Received: from sonic305-19.consmr.mail.sg3.yahoo.com
+	(sonic305-19.consmr.mail.sg3.yahoo.com [106.10.241.82])
+	by mail.openembedded.org (Postfix) with ESMTP id E81F16C63A
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 24 Nov 2018 03:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=cienacorp.onmicrosoft.com; s=selector1-ciena-com;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=OtYxO7H/NrzqdV5T+B4yYhy6Ff422vYt6lOE7VB9ZEI=;
-	b=TrwhQ3BcwITjZn6JK7RoGGYigHlGNQDMxBdfphyX+a7wJZRgFTj0B0930x4GJwSMn6M5zBzZCtWV23ojGhJjMMqAQINXleFWzIXCyR5+0i4Vzd/5/OIOsN65JdCUiqFjwc7kn6gDX+uYfFAHV3AHpbRlp7KyASLDviczBGAWGSo=
-Received: from BN1PR0401MB1060.namprd04.prod.outlook.com (10.160.79.21) by
-	BN1PR0401MB0929.namprd04.prod.outlook.com (10.160.78.22) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.1339.26; Fri, 23 Nov 2018 23:03:36 +0000
-Received: from BN1PR0401MB1060.namprd04.prod.outlook.com
-	([fe80::85b5:1aaa:a797:bcb4]) by
-	BN1PR0401MB1060.namprd04.prod.outlook.com
-	([fe80::85b5:1aaa:a797:bcb4%4]) with mapi id 15.20.1361.016;
-	Fri, 23 Nov 2018 23:03:36 +0000
-From: "da Silva Filho, Josias Inacio" <jdasilva@ciena.com>
-To: Robert Yang <liezhi.yang@windriver.com>
-Thread-Topic: [**EXTERNAL**] Re: [bitbake-devel] Sumo to Thud migration: Fetch
-	failure from gitsm.py
-Thread-Index: AdSCeGxGQeNgnFnkSUmdvkivwo5rPgAnyQWAABmdP2A=
-Date: Fri, 23 Nov 2018 23:03:35 +0000
-Message-ID: <BN1PR0401MB10601D5F83AF548351B1B594DBD40@BN1PR0401MB1060.namprd04.prod.outlook.com>
-References: <BY2PR0401MB1062E20E143B0318E7B03B9DDBDB0@BY2PR0401MB1062.namprd04.prod.outlook.com>
-	<2ca14555-de68-244a-7b86-459ae916a08f@windriver.com>
-In-Reply-To: <2ca14555-de68-244a-7b86-459ae916a08f@windriver.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=jdasilva@ciena.com; 
-x-originating-ip: [66.48.12.176]
-x-ms-publictraffictype: Email
-x-microsoft-exchange-diagnostics: 1; BN1PR0401MB0929;
-	6:qq45D6PejzcCINeEiWca8AoqTBKVVy6LSRtvFxwBxRmKl9qzAU7t3acgC6CZGwT7Nz06SymSAcdAryaSBhjKHU8I0zsZadmd09XIYI0ruRDHEkF+6t12udMy91U1y1bPzS1xyreoB8U/RjcMSY7rVZcdYbyyYWHzTU751k3Vk51OYDFfGHG71WqHoNv+iMnRTzsL39CjVmGpZcafjFchoBiWFxoSyD788nl83F0n+wEBtVZkBXbVIUw+j26omv4kMONw9AGQMqFqRhaEahIphR3mN7I6kSWvCQrJDN33EGjZ5745MUD/LhaBYYADtwRJ+IntOGzNqcu1F9ncGobg6oDubsjq2XOSke9vQwJxkLvKQs9Af8t3OBE80moO/VOiXErwi4y7dRA0C8dq3r2btoj+3oyOIzlSFknl4neCAWuhm7J7ANQIGsgEUMf0PxSv2tvSvftE4f0XG85BsZpr1ng+D4an0SbFRJKXiefvq1c=;
-	5:mmKrcMLYnCcBusykDWXL0LF49OCm2PevVaA0st35bWhTivFS6dGKnby5wYZpu8xFs2G4E3F3+bxt/fJra9yrdhsjk3EsGh7yqCP+8IsDMIAWucNUdMOzc+di1c/bzGKB3NKaAdvgT+xris7+a95XuKvWe1Y/zuTtxzy+rCee3/A=;
-	7:ZsbIYZjQjmAxokbgpqpZYOdeBynIDzOY+nhWCjrI06tuPBHf94eGTV8JzjffzGOXSYd546JDA6GNY076E4s0BAtZRVY+4tejZBaeVCccv3IJwEvCuLdD04u9BT8OkhL7u9W2FiJwP/vxfkxh17ZxlQ==
-x-ms-exchange-antispam-srfa-diagnostics: SOS;
-x-ms-office365-filtering-correlation-id: c40d9414-c989-4316-7582-08d65197e62b
-x-microsoft-antispam: BCL:0; PCL:0;
-	RULEID:(2390098)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600074)(711020)(2017052603328)(7153060)(7193020);
-	SRVR:BN1PR0401MB0929; 
-x-ms-traffictypediagnostic: BN1PR0401MB0929:
-x-microsoft-antispam-prvs: <BN1PR0401MB09296C4404D3082CE8B5A079DBD40@BN1PR0401MB0929.namprd04.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-exchange-antispam-report-cfa-test: BCL:0; PCL:0;
-	RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(10201501046)(3231442)(944501410)(4982022)(52105112)(3002001)(93006095)(93001095)(148016)(149066)(150057)(6041310)(20161123564045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123562045)(20161123558120)(20161123560045)(201708071742011)(7699051)(76991095);
-	SRVR:BN1PR0401MB0929; BCL:0; PCL:0; RULEID:;
-	SRVR:BN1PR0401MB0929; 
-x-forefront-prvs: 086597191B
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(366004)(396003)(376002)(136003)(346002)(39860400002)(199004)(189003)(13464003)(53546011)(3846002)(26005)(81156014)(66066001)(33656002)(97736004)(54906003)(229853002)(8936002)(81166006)(6116002)(9686003)(105586002)(7736002)(14454004)(99286004)(53936002)(5660300001)(186003)(305945005)(316002)(11346002)(74316002)(256004)(14444005)(25786009)(71190400001)(486006)(6916009)(476003)(446003)(71200400001)(106356001)(4326008)(2906002)(76176011)(8676002)(6246003)(68736007)(575784001)(6306002)(478600001)(102836004)(6506007)(7696005)(55016002)(6436002)(86362001)(966005);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:BN1PR0401MB0929;
-	H:BN1PR0401MB1060.namprd04.prod.outlook.com; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
-received-spf: None (protection.outlook.com: ciena.com does not designate
-	permitted sender hosts)
-x-microsoft-antispam-message-info: t7dH8Lvcr5//ten/ZzN/Lg9tckeUvAMJ8Rczpx2i5DaQJFgne0RiaVwOYiYzs9tXr0dUbeIx8sQBTdm5I+2Nxggc4tJMHIOSSAi8uXs0/IrZwHSVTGpWypDxWBQTVBX1UyjlVDcqeQgYyeHV6WHjHguU3ph0H0q79p80L6PdT2WRikPV9mYQdZXDOW4W2Sf4oc8AKlhLY9tTvXhAEsxjvWhnjdiPGW/p0weUF/tHy8cpad2T+gUQZEgqcnCOz+6B2m9mT8/uaQyxfKijm/C52dH57yuF2MrL0/ncKycsmWeWMGGylcr99xQHomfDxhlBB4C64xzwj8kkkR2/ZhNdI3odiKjKkew0nG/tvYKcLz8=
-spamdiagnosticoutput: 1:99
-spamdiagnosticmetadata: NSPM
+	Mon, 26 Nov 2018 07:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+	t=1543217797; bh=uTcch5i8s39Jg1j2IfCZCgEeeSoolkichXvNv4+F5qk=;
+	h=Date:From:Reply-To:To:Cc:Subject:References:From:Subject;
+	b=cGP25ywTijV2OW0XM9qQ1BBBd3ZMb0+TlL4nUANrXAOLm8WQMrjIrv4z1RZ17pg4teNe87N+8po77KBmUMCX+hKX/PcPDaeB/DWIMkcR8VtAXGOBBlvYolR8+kJ5IR+CxVHQaxgHd00OEhvNbccu+nrpLxOQrJjZXQslgNaLars7tOFbywSJztkZ3OAIwYla1MUenfbM9/LwzIxPA98blVpKbiKAOB+PjTYgBqeplH0Rj/rdTDOcbwF34iNGNeRU2weIM0+7Z4uxzRuXCRXnZCNRSS1Lb+w+lQAqxumxnoD2kvpvwIHWwu6eLcPl1y22QqE4xBRwGgelAcfMKKBkCg==
+X-YMail-OSG: .TPKdsYVM1khEbwkAmSAHaFYJWvkDI67jNUmQFIXPMxpUBmvtl5zm0Os3DR1WxO
+	jo5V13rUAlMISLM3BcQgug8IFldHDwOxJ7ToqiCzpHaIiZ91K0Lo8lN5dXEFRaLCfWnUsW7gbWKG
+	PlzlK1Qn0jRiJR77WaH3o3lsFAloDu8SQmZHmtANJY9p9p0TLhzjJcipxKTOyRrlcuiY9EOzO87L
+	Wp3m1oItW4to9VTVG0VLvmR7MPMfyFYwVrAD1yGxFlLydo93Q9Alio8txq8ycZl5zrihW04L79KR
+	58pHu9Idoo53TDn6KACtGs46nPIbXee2rXBXaHt08txRZgAOIZmDipY9lCeWKgvOM.LCdGuKuQw4
+	HP_3P8Y8PMkL8aLhiKeSMkGciJRYxZJkL9Oy7_YH6T26xJ3xz3EJZvSNErUgZQk.RyEIupPbEy27
+	m0RZ7qkAluBdelTP0n4NYQdscHE8IFK2z9gnIP04uVOQg4pUfdHdbr3qoz6hfavwvJAXzcNhEcsb
+	4dihYfszVzqhm3xwnuM61HPecVFw3MB_qgCDCe_xpCoizGLUDtoATKWDO_ty3ch8F4r4qWyAj1e8
+	Pwg9EDTByj.Rks5uZT7SvWK7Pey.Sao69_Q6w9hk6LaRCzDsC1aAr7UIuWnCZL8RZ8Z4t5L2kTGM
+	iqCTJUOWUYvE.tkiSr1BwRRiJwTaGlrxUBaJkQYaTfx3Kxl3bi2paqXAHlSiCpMM4KkPX4D65eAq
+	b1q8A.ZWEu4YWhZsiXwNakro5MQ7D1dYibD9okNq.yJU1q4LxnGUuhNFGsvYsLPxylK0YJJSz5F_
+	0xZ4eSaHZay586reuvyJdzTQOM6rwe.w.Z_xnqYvw9J8wGYB2MofUzJSC2qlIs6w8R8psHnjm9dL
+	d.PDZOGfutLZgAjSlfxnqrSuxCCAyFC_6kKoa9UxV0R6_mo6RLdIlOq2h45cT1qzZydo.zQqsrON
+	KP1_RONaoqjfFMwCn16jhntj1BqYwHFWtCXy8uxc61wuDryb38fBJAJXrQXTH.EvlFYJWAU0knJ1
+	oESM01jowX.LwiJpezl2pa8CLpJlxAevZIA--
+Received: from sonic.gate.mail.ne1.yahoo.com by
+	sonic305.consmr.mail.sg3.yahoo.com with HTTP;
+	Mon, 26 Nov 2018 07:36:37 +0000
+Date: Mon, 26 Nov 2018 07:36:33 +0000 (UTC)
+From: Ugesh Reddy <kumar.ugesh003@yahoo.com>
+Reply-To: "kumar.ugesh003@yahoo.com" <kumar.ugesh003@yahoo.com>
+To: Bitbake-devel <bitbake-devel@lists.openembedded.org>
+Message-ID: <119490492.5831423.1543217793985@mail.yahoo.com>
 MIME-Version: 1.0
-X-OriginatorOrg: ciena.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c40d9414-c989-4316-7582-08d65197e62b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Nov 2018 23:03:36.0523 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 457a2b01-0019-42ba-a449-45f99e96b60a
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN1PR0401MB0929
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [**EXTERNAL**] Re: Sumo to Thud migration: Fetch failure from gitsm.py
+References: <119490492.5831423.1543217793985.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.12729 YahooMailAndroidMobile YMobile/1.0
+	(com.yahoo.mobile.client.android.mail/5.34.0; Android/8.1.0;
+	OPM1.171019.011; beryllium; Xiaomi; POCO F1; 5.71; 2116x1080; )
+Cc: "Ugesh Munirajulu \(RBEI\\/ECG-EP3\)" <ugesh.munirajulu@in.bosch.com>
+Subject: Copying the files to sysroot
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -87,104 +50,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 24 Nov 2018 03:37:19 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
+X-List-Received-Date: Mon, 26 Nov 2018 07:36:38 -0000
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_5831422_277298323.1543217793983"
+
+------=_Part_5831422_277298323.1543217793983
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Robert,
+Hello All,
 
-I had a look at those two commits before, also tried reverting them but got=
- the same error.
+I have the yocto bsp for iMx8 eval board and compiled it successfully. I ha=
+ve introduced the new custom layer and written .bb file for my recipe and t=
+he component is compiled successfully and want to install the my include in=
+ sysroot/usr/include/component at the end. I don't have the clue how to do =
+that . Could you please some one guide me.
 
-I reverted a few other changes in gitsm.py for testing, but the error only =
-went away once I reverted this one:
+=C2=A0
 
-commit 5cd00e3e53819f3c10d1733480077ce9f3cc2ca8
-Author: Mark Hatle <mark.hatle@windriver.com>
-Date:   Tue Sep 25 13:15:25 2018 -0400
+I want the below to be achieved from .bb files.
 
-    bitbake: fetch2/gitsm.py: Rework the git submodule fetcher
+1. I want to copy the header includes to sysroot/usr/include/component
 
-
-
-
------Original Message-----
-From: Robert Yang <liezhi.yang@windriver.com>=20
-Sent: Friday, November 23, 2018 5:31 AM
-To: da Silva Filho, Josias Inacio <jdasilva@ciena.com>
-Cc: bitbake-devel@lists.openembedded.org; Mark Hatle <mark.hatle@windriver.=
-com>
-Subject: [**EXTERNAL**] Re: [bitbake-devel] Sumo to Thud migration: Fetch f=
-ailure from gitsm.py
-
-Hi,
-
-Please refer to the following 2 commits in bitbake which may help:
-
-commit a042179a784bab6a6f4bd5d63db80c1c02624b1c
-Author: Mark Hatle <mark.hatle@windriver.com>
-Date:   Wed Oct 31 15:21:44 2018 -0400
-
-     bitbake: fetch2/gitsm.py: Fix the references when the module and path =
-are different
-
-commit a28637abbceb05b52a6e38ab2340d3da9d0b1b37
-Author: Mark Hatle <mark.hatle@windriver.com>
-Date:   Wed Oct 31 15:21:43 2018 -0400
-
-     bitbake: fetch2/gitsm.py: Disable branch checking on submodules
+2. Another recipe shall be able to refer the header from sysroot/usr/includ=
+e/component
 
 
-// Robert
 
-On 11/22/18 11:31 PM, da Silva Filho, Josias Inacio wrote:
-> Hi folks,
->=20
-> I'm working on migrating my environment from Sumo to Thud. After=20
-> fixing a few quirks, it seems the fetch is failing for my foo.bb which us=
-es gitsm.
->=20
-> *.gitmodules content in foo repo:*
->=20
-> [submodule "common-lib"]
->=20
->  =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 path =3D common-lib
->=20
->  =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 url =3D ssh://git@<url_to_=
-common-lib>/common-lib.git
->=20
-> *foo.bb:*
->=20
-> SRC_URI=3D"gitsm://git@b<url_to_foo>.git;protocol=3Dssh;branch=3Dmaster"
->=20
-> SRCREV=3D"f55fae9dc9b476f8ed193f15e2d5cd6747777451"
->=20
-> Digging inside gitsm.py it looks like module_hash is not being set=20
-> correctly
-> (empty) and that causes the issue:
->=20
-> http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/fet
-> ch2/gitsm.py#n87
->=20
-> I added the following right after line 87, so I could dump the=20
-> variables content. This is how I confirmed module_hash is empty:
->=20
-> *raise bb.fetch2.FetchError('module: %s, submodules: %s, module_hash:=20
-> %s,
-> basecmd: %s, revisions: %s, paths: %s, clonedir: %s ' % ( module,=20
-> submodules, module_hash, ud.basecmd, ud.revisions[name],=20
-> paths[module], ud.clonedir))*
->=20
-> And the output:
->=20
-> ERROR: Fetcher failure: module: common-lib, submodules:=20
-> ['common-lib'],
-> *module_hash*: , basecmd: git -c core.fsyncobjectfiles=3D0, revisions:=20
-> f55fae9dc9b476f8ed193f15e2d5cd6747777451, paths: common-lib, clonedir:=20
-> /localdata/yocto/downloads/git2/<foo's path>.git
->=20
-> Any ideas why module_hash is not being set correctly?
->=20
->=20
 
+Regards,
+
+Ugesh
+
+------=_Part_5831422_277298323.1543217793983
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div id=3D"ymail_android_signature">Hello All,</div><div id=3D"yMail_cursor=
+ElementTracker_1543217671697"><br></div><div id=3D"yMail_cursorElementTrack=
+er_1543217672288"><p style=3D"margin: 0px; padding: 0px; border: 0px; font-=
+size: 15px; font-family: arial, helvetica, &quot;helvetica neue&quot;, verd=
+ana, sans-serif; vertical-align: baseline; overflow-wrap: break-word; color=
+: rgb(81, 98, 111); background-color: rgb(255, 255, 255);" id=3D"yMail_curs=
+orElementTracker_1543217680825">I have the yocto bsp for iMx8 eval board an=
+d compiled it successfully. I have introduced the new custom layer and writ=
+ten .bb file for my recipe and the component is compiled successfully and w=
+ant to install the my include in sysroot/usr/include/component at the end. =
+I don't have the clue how to do that . Could you please some one guide me.<=
+/p><p style=3D"margin: 0px; padding: 0px; border: 0px; font-size: 15px; fon=
+t-family: arial, helvetica, &quot;helvetica neue&quot;, verdana, sans-serif=
+; vertical-align: baseline; overflow-wrap: break-word; color: rgb(81, 98, 1=
+11); background-color: rgb(255, 255, 255); min-height: 8pt;">&nbsp;</p><p s=
+tyle=3D"margin: 0px; padding: 0px; border: 0px; font-size: 15px; font-famil=
+y: arial, helvetica, &quot;helvetica neue&quot;, verdana, sans-serif; verti=
+cal-align: baseline; overflow-wrap: break-word; color: rgb(81, 98, 111); ba=
+ckground-color: rgb(255, 255, 255);">I want the below to be achieved from .=
+bb files.</p><p style=3D"margin: 0px; padding: 0px; border: 0px; font-size:=
+ 15px; font-family: arial, helvetica, &quot;helvetica neue&quot;, verdana, =
+sans-serif; vertical-align: baseline; overflow-wrap: break-word; color: rgb=
+(81, 98, 111); background-color: rgb(255, 255, 255);">1. I want to copy the=
+ header includes to sysroot/usr/include/component</p><p style=3D"margin: 0p=
+x; padding: 0px; border: 0px; font-size: 15px; font-family: arial, helvetic=
+a, &quot;helvetica neue&quot;, verdana, sans-serif; vertical-align: baselin=
+e; overflow-wrap: break-word; color: rgb(81, 98, 111); background-color: rg=
+b(255, 255, 255);" id=3D"yMail_cursorElementTracker_1543217678730">2. Anoth=
+er recipe shall be able to refer the header from sysroot/usr/include/compon=
+ent</p><p style=3D"margin: 0px; padding: 0px; border: 0px; font-size: 15px;=
+ font-family: arial, helvetica, &quot;helvetica neue&quot;, verdana, sans-s=
+erif; vertical-align: baseline; overflow-wrap: break-word; color: rgb(81, 9=
+8, 111); background-color: rgb(255, 255, 255);" id=3D"yMail_cursorElementTr=
+acker_1543217689960"><br></p><p style=3D"margin: 0px; padding: 0px; border:=
+ 0px; font-size: 15px; font-family: arial, helvetica, &quot;helvetica neue&=
+quot;, verdana, sans-serif; vertical-align: baseline; overflow-wrap: break-=
+word; color: rgb(81, 98, 111); background-color: rgb(255, 255, 255);" id=3D=
+"yMail_cursorElementTracker_1543217690540">Regards,</p><p style=3D"margin: =
+0px; padding: 0px; border: 0px; font-size: 15px; font-family: arial, helvet=
+ica, &quot;helvetica neue&quot;, verdana, sans-serif; vertical-align: basel=
+ine; overflow-wrap: break-word; color: rgb(81, 98, 111); background-color: =
+rgb(255, 255, 255);" id=3D"yMail_cursorElementTracker_1543217696559">Ugesh<=
+/p></div>
+
+------=_Part_5831422_277298323.1543217793983--
