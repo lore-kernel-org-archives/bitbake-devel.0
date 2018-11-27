@@ -1,85 +1,33 @@
-Return-Path: <Ugesh.Munirajulu@in.bosch.com>
-X-Greylist: delayed 451 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 26 Nov 2018 12:12:36 UTC
-Received: from de-deferred1.bosch-org.com (de-deferred1.bosch-org.com
-	[139.15.180.216])
-	by mail.openembedded.org (Postfix) with ESMTP id EE7C06C0C7
+Return-Path: <Awais_Belal@mentor.com>
+Received: from relay1.mentorg.com (relay1.mentorg.com [192.94.38.131])
+	by mail.openembedded.org (Postfix) with ESMTP id 83F4B6BF43
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Nov 2018 12:12:36 +0000 (UTC)
-Received: from de-out1.bosch-org.com (unknown [139.15.180.215])
-	by si0vms0224.rbdmz01.com (Postfix) with ESMTPS id 433Qb61dFCz73p
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Nov 2018 13:05:06 +0100 (CET)
-Received: from si0vm1948.rbesz01.com (unknown [139.15.230.188])
-	by fe0vms0187.rbdmz01.com (Postfix) with ESMTPS id 433Qb40gCmz1XLDRC;
-	Mon, 26 Nov 2018 13:05:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=in.bosch.com;
-	s=2015-01-21; t=1543233904;
-	bh=654NYLRSkQUDtur0u3A7AYmndOf/wgIZZHugDuZz5N4=; l=10;
-	h=From:From:Reply-To:Sender;
-	b=JP/xU7aTIhBmwWreA9HyRoNYM8uVq6NTSWV2aNzruGApbdbUy/Rny+9S9r2be6F/a
-	T0iqT7Yj9bwj48sGNoS98IKids01P4TYkR7quchnE2DakUnDWjXKstj3cDN0cYAF0+
-	BV38SKEPLupZf4DxlFpK9mAJxzXWRUnliGxO1RJg=
-Received: from si0vm02576.rbesz01.com (unknown [10.58.172.176])
-	by si0vm1948.rbesz01.com (Postfix) with ESMTPS id 433Qb40Hyfz2nT;
-	Mon, 26 Nov 2018 13:05:04 +0100 (CET)
-X-AuditID: 0a3aad0d-8d9ff70000007633-40-5bfbe16f4917
-Received: from fe0vm1651.rbesz01.com ( [10.58.173.29])
-	(using TLS with cipher AES128-SHA (128/128 bits))
-	(Client did not present a certificate)
-	by si0vm02576.rbesz01.com (SMG Outbound) with SMTP id
-	B0.C8.30259.F61EBFB5; Mon, 26 Nov 2018 13:05:03 +0100 (CET)
-Received: from FE-MBX2048.de.bosch.com (fe-mbx2048.de.bosch.com [10.3.231.58])
-	by fe0vm1651.rbesz01.com (Postfix) with ESMTPS id 433Qb356RXz10J6t; 
-	Mon, 26 Nov 2018 13:05:03 +0100 (CET)
-Received: from SGPMBX2029.APAC.bosch.com (10.187.56.85) by
-	FE-MBX2048.de.bosch.com (10.3.231.58) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.1.1591.10; Mon, 26 Nov 2018 13:05:03 +0100
-Received: from SGPMBX2031.APAC.bosch.com (10.187.56.92) by
-	SGPMBX2029.APAC.bosch.com (10.187.56.85) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.1.1591.10; Mon, 26 Nov 2018 20:05:01 +0800
-Received: from SGPMBX2031.APAC.bosch.com ([fe80::e146:ee47:f7be:fe93]) by
-	SGPMBX2031.APAC.bosch.com ([fe80::e146:ee47:f7be:fe93%2]) with mapi id
-	15.01.1591.008; Mon, 26 Nov 2018 20:05:01 +0800
-From: "Ugesh Munirajulu (RBEI/ECG-EP3)" <Ugesh.Munirajulu@in.bosch.com>
-To: Awais Belal <awais_belal@mentor.com>, "kumar.ugesh003@yahoo.com"
-	<kumar.ugesh003@yahoo.com>, Bitbake-devel
+	Tue, 27 Nov 2018 06:05:07 +0000 (UTC)
+Received: from nat-ies.mentorg.com ([192.94.31.2]
+	helo=SVR-IES-MBX-03.mgc.mentorg.com)
+	by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+	id 1gRWUc-0004US-1I from Awais_Belal@mentor.com ;
+	Mon, 26 Nov 2018 22:05:06 -0800
+Received: from [137.202.156.92] (137.202.0.90) by
+	SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) with Microsoft SMTP
+	Server (TLS) id 15.0.1320.4; Tue, 27 Nov 2018 06:05:01 +0000
+To: "Ugesh Munirajulu (RBEI/ECG-EP3)" <Ugesh.Munirajulu@in.bosch.com>,
+	"kumar.ugesh003@yahoo.com" <kumar.ugesh003@yahoo.com>, Bitbake-devel
 	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] Copying the files to sysroot
-Thread-Index: AQHUhVrGnMwpeEA8wUKJdcZWQBZN6qVhbBsAgACHPcA=
-Date: Mon, 26 Nov 2018 12:05:01 +0000
-Message-ID: <0039a6a94bda4b92a055a70222f1ba33@in.bosch.com>
 References: <119490492.5831423.1543217793985.ref@mail.yahoo.com>
 	<119490492.5831423.1543217793985@mail.yahoo.com>
 	<5a9fde61-7134-2abf-4eae-18bb9ba4b8cb@mentor.com>
-In-Reply-To: <5a9fde61-7134-2abf-4eae-18bb9ba4b8cb@mentor.com>
-Accept-Language: en-US, en-SG
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.187.56.219]
+	<0039a6a94bda4b92a055a70222f1ba33@in.bosch.com>
+From: Awais Belal <awais_belal@mentor.com>
+Message-ID: <8872afb6-e079-7464-1e65-800729bb2d67@mentor.com>
+Date: Tue, 27 Nov 2018 11:05:00 +0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+	Thunderbird/52.9.1
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA21TbUxTZxTm7S3tpePqbaHl2IHKdSTiohY3PgR1H3/GfpiYmWXL+DHbcaWN
-	tCW9pQP3YctgHxCDsAG1OKxdg7A4lC0dApXGDhfXONSM8SWsdAM3cUNNYRtj1N32gu2P/Tl5
-	3uec5zznnJuLY5JbuBzX6Iy0QacspQQivij/i7Tt+sBykaJ6Niuv7ngNL2/0yst5F+7U857F
-	Coe6O1Bh/2IVKrTZvuEdwF4T7SmmSzUm2rBz3yGR2h+wCsquDKKKOVez0Iw6PagWJeBAPg0W
-	/0p8GEvID3gweP8Yh90IFr4la5GIxQ8QPDjTzuMeCwj+Hu/AuMcgguDX30daCcgXINjfLQjj
-	ZPIkgque4jBOIneDy3eDtcBZPh/GW8RcST4ELsxGpHwyA9w/LmNhTJAFEKzrWzU7i+C0uSdS
-	lEDug8WuocioiEwDx3gjP4wxMgUmZk7zuHVIcLqvYxyWwp1fQvEcTodzy/dX61WwWDUs4MzE
-	8N3JGf4JJLPFtLLFlNliymzsChiZCef7dnIl6fBJXUDI4a1Qc+pTYSxvR8LPkYzRKExaxa7s
-	3JwdBhXNHFVk7XhDr/0ScR+UuIiG/jzsRSSOqEQi88ZykSReaWIqtV6UjfMoKdFQy1LrVPri
-	SrWSUb9uKC+lGUpOoLi4OEnSI5opV2k1DKPR67wIcIxKJvY7WR1RrKw8Shv0nMyLHsf5VArx
-	cLu2SEKWKI30EZouow1r2QIcp4B4fpoVig10CV1xWFNqXEtTaZynLDYTa8vDE7zoKTyR9cbD
-	LQimTKllNCWr8g2cXLLGRqU+pMRD9octGD4QfN/KRuuHbPw5EucjcfjaR1ZMwtfpdbQ8hRgJ
-	dyfDfdTlukfzyVOJxkY2IY1JRD3m0BhiL5xEyMPiRPavik4GRI0zwK68SkZFu5yshrQQML9i
-	gIXFq3y43N8bD84T9wQw2fCXAMy2FiGE/jU/BtYhTyI0nZkkYPhS6zpYunRzPSxZZ9bDb2On
-	xOBw+SQw5nZI2S5OKfhDASkMd9XL4OOmezJo6mxNBU/vD6kw1rGSCk2W1o3Qdm5yIzg7+zbB
-	7zVLmyDYfDcdrDffo8Dj6qRgpPr4Fpi/XP0EePxtGXPs1Xns1UcaIlc3Ko3/c/VVNrqc3Iz2
-	zi39OpWj/QefOranoG1UXOGfLXfoDtRvME0cOTg9OqH4yS50pY877f7bK8/xero1KS+FXs21
-	dRHvOKZ9wi3vFl63CLOfqbqb/9Wbvc1/dG9ro5+0pGUONOz1qdp3X2tPduf0DOTmv3IRTd36
-	bKG/0vziobdm95+3bzVt3vw2nXG7iuIzamXWNszAKP8D7sYjbO4EAAA=
-X-Mailman-Approved-At: Mon, 26 Nov 2018 19:35:48 +0000
+In-Reply-To: <0039a6a94bda4b92a055a70222f1ba33@in.bosch.com>
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
+	SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3)
 Subject: Re: Copying the files to sysroot
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -93,339 +41,591 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 26 Nov 2018 12:12:37 -0000
-Content-Language: en-US
+X-List-Received-Date: Tue, 27 Nov 2018 06:05:07 -0000
 Content-Type: multipart/alternative;
-	boundary="_000_0039a6a94bda4b92a055a70222f1ba33inboschcom_"
+	boundary="------------F949F5A7865FF18F255AD1A9"
+Content-Language: en-US
 
---_000_0039a6a94bda4b92a055a70222f1ba33inboschcom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+--------------F949F5A7865FF18F255AD1A9
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-SGVsbG8gQXdhbHMsDQoNCklmLCBJIGFtIGNvcnJlY3QgdGhlICR7RH0gcG9pbnRzIHRvICR7V09S
-S0RJUn0vaW1hZ2UNCldoZXJlIGlzIHRoZSAke2luY2x1ZGVkaXJ9IHBvaW50cyB0b28/IGJ5IGRl
-ZmF1bHQgaXQgaXMgL3Vzci8gYnkgR05VIGl0c2VsZi4gaXMgaXQgc29tZXdoZXJlIHJlZGVmaW5l
-ZD8NCg0KUGxlYXNlIGZpbmQgdGhlIG15IC5iYiBmaWxlDQoNCkRFU0NSSVBUSU9OID0gIkZpcnN0
-IEFwcGxpY2F0aW9uIg0KU0VDVElPTiA9ICJNeUxheWVyIg0KTElDRU5TRSA9ICJNSVQiDQpMSUNf
-RklMRVNfQ0hLU1VNID0gImZpbGU6Ly8ke0NPTU1PTl9MSUNFTlNFX0RJUn0vTUlUO21kNT0wODM1
-YWRlNjk4ZTBiY2Y4NTA2ZWNkYTJmN2I0ZjMwMiINCiNMSUNfRklMRVNfQ0hLU1VNID0gImZpbGU6
-Ly9MSUNFTlNFO21kNT1jMDA5MzMxMzllNzk0MDE5Y2Q1NTVjMjg0OGRlM2QxOSINClBSID0gInIw
-Ig0KU1JDX1VSSSA9ICJmaWxlOi8vY29tcG9uZW50LTAuMS50YXIuZ3oiDQoNClMgPSAiJHtXT1JL
-RElSfS9yZWNpcGVzLWNvbXBvbmVudC0wLjEvIg0KDQpkb19pbnN0YWxsX2FwcGVuZCgpIHsNCiAg
-ICAgICAgICBpZiBbICEgLWUgJChpbmNsdWRlZGlyKS9jb21wb25lbnRpbmNsdWRlcyBdOyB0aGVu
-DQogICAgICAgICAgICAgICAgICAgIGluc3RhbGwgLWQgJHtEfSR7aW5jbHVkZWRpcn0vY29tcG9u
-ZW50aW5jbHVkZXM7DQogICAgICAgICAgZmkNCiAgICAgICAgICBpbnN0YWxsIC1tIDY0NCAke1N9
-L2luYy8qLmggJHtEfSR7aW5jbHVkZWRpcn0vY29tcG9uZW50aW5jbHVkZXMNCn0NCmluaGVyaXQg
-YXV0b3Rvb2xzIHBrZ2NvbmZpZw0KaW5oZXJpdCBnZXR0ZXh0DQoNCmxvY2FsLmNvbmY6DQoNCkFD
-SElORSA/Pz0gJ2lteDhtcWV2aycNCkRJU1RSTyA/PSAnZnNsLWlteC13YXlsYW5kJw0KUEFDS0FH
-RV9DTEFTU0VTID89ICJwYWNrYWdlX3JwbSINCkVYVFJBX0lNQUdFX0ZFQVRVUkVTID89ICJkZWJ1
-Zy10d2Vha3MiDQpVU0VSX0NMQVNTRVMgPz0gImJ1aWxkc3RhdHMgaW1hZ2UtbWtsaWJzIGltYWdl
-LXByZWxpbmsiDQpQQVRDSFJFU09MVkUgPSAibm9vcCINCkJCX0RJU0tNT05fRElSUyA/Pz0gIlwN
-CiAgICBTVE9QVEFTS1MsJHtUTVBESVJ9LDFHLDEwMEsgXA0KICAgIFNUT1BUQVNLUywke0RMX0RJ
-Un0sMUcsMTAwSyBcDQogICAgU1RPUFRBU0tTLCR7U1NUQVRFX0RJUn0sMUcsMTAwSyBcDQogICAg
-U1RPUFRBU0tTLC90bXAsMTAwTSwxMDBLIFwNCiAgICBBQk9SVCwke1RNUERJUn0sMTAwTSwxSyBc
-DQogICAgQUJPUlQsJHtETF9ESVJ9LDEwME0sMUsgXA0KICAgIEFCT1JULCR7U1NUQVRFX0RJUn0s
-MTAwTSwxSyBcDQogICAgQUJPUlQsL3RtcCwxME0sMUsiDQpQQUNLQUdFQ09ORklHX2FwcGVuZF9w
-bi1xZW11LW5hdGl2ZSA9ICIgc2RsIg0KUEFDS0FHRUNPTkZJR19hcHBlbmRfcG4tbmF0aXZlc2Rr
-LXFlbXUgPSAiIHNkbCINCkNPTkZfVkVSU0lPTiA9ICIxIg0KDQpETF9ESVIgPz0gIiR7QlNQRElS
-fS9kb3dubG9hZHMvIg0KQUNDRVBUX0ZTTF9FVUxBID0gIjEiDQoNCldpdGggdGhlIGFib3ZlIGNv
-bmZpZ3VyYXRpb24gdGhlIGZpbGVzIGFyZSBub3QgY29waWVkIHRvIHN5c3Jvb3QvdXNyL2luY2x1
-ZGUvY29tcG9uZW50aW5jbHVkZXMuDQoNCkJlc3QgcmVnYXJkcywNCg0KTXVuaXJhanVsdSBVZ2Vz
-aA0KUkJFSS9FQ0ctRVAzDQoNClRlbC4gKzkxIDQyMiA2NzYtNDcxMA0KDQpGcm9tOiBBd2FpcyBC
-ZWxhbCA8YXdhaXNfYmVsYWxAbWVudG9yLmNvbT4NClNlbnQ6IE1vbmRheSwgTm92ZW1iZXIgMjYs
-IDIwMTggNToyMiBQTQ0KVG86IGt1bWFyLnVnZXNoMDAzQHlhaG9vLmNvbTsgQml0YmFrZS1kZXZl
-bCA8Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPg0KQ2M6IFVnZXNoIE11bmly
-YWp1bHUgKFJCRUkvRUNHLUVQMykgPFVnZXNoLk11bmlyYWp1bHVAaW4uYm9zY2guY29tPg0KU3Vi
-amVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBDb3B5aW5nIHRoZSBmaWxlcyB0byBzeXNyb290DQoN
-Cg0KSGkgVWdlc2gsDQoNCj4+IDEuIEkgd2FudCB0byBjb3B5IHRoZSBoZWFkZXIgaW5jbHVkZXMg
-dG8gc3lzcm9vdC91c3IvaW5jbHVkZS9jb21wb25lbnQNCg0KU2ltcGx5IGluc3RhbGwgdGhlIGhl
-YWRlciBmaWxlcyB0byAke0R9JHtpbmNsdWRlZGlyfS9jb21wb25lbnQgYXQgdGhlIGVuZCBvZiB5
-b3VyIDFzdCByZWNpcGUncyBkb19pbnN0YWxsLg0KDQplLmcuDQoNCm1rZGlyIC1wICR7RH0ke2lu
-Y2x1ZGVkaXJ9L2NvbXBvbmVudA0KDQppbnN0YWxsIC1tIDA2NDQgPEhFQURFUl9MT0NBVElPTj4v
-PGhlYWRlcj4uaCAke0R9JHtpbmNsdWRlZGlyfS9jb21wb25lbnQvDQoNCj4+IDIuIEFub3RoZXIg
-cmVjaXBlIHNoYWxsIGJlIGFibGUgdG8gcmVmZXIgdGhlIGhlYWRlciBmcm9tIHN5c3Jvb3QvdXNy
-L2luY2x1ZGUvY29tcG9uZW50DQoNCkFkZCB5b3VyIDFzdCByZWNpcGUncyBwYWNrYWdlIG5hbWUg
-aW4gdGhlIERFUEVORFMgb2YgdGhlIHJlY2lwZSB3aGVyZSB5b3Ugd2FudCB0byB1dGlsaXplIHRo
-ZXNlIGhlYWRlcnMuDQoNCkJSLA0KDQpBd2Fpcw0KT24gMjYvMTEvMTggMTI6MzYsIFVnZXNoIFJl
-ZGR5IHZpYSBiaXRiYWtlLWRldmVsIHdyb3RlOg0KSGVsbG8gQWxsLA0KDQoNCkkgaGF2ZSB0aGUg
-eW9jdG8gYnNwIGZvciBpTXg4IGV2YWwgYm9hcmQgYW5kIGNvbXBpbGVkIGl0IHN1Y2Nlc3NmdWxs
-eS4gSSBoYXZlIGludHJvZHVjZWQgdGhlIG5ldyBjdXN0b20gbGF5ZXIgYW5kIHdyaXR0ZW4gLmJi
-IGZpbGUgZm9yIG15IHJlY2lwZSBhbmQgdGhlIGNvbXBvbmVudCBpcyBjb21waWxlZCBzdWNjZXNz
-ZnVsbHkgYW5kIHdhbnQgdG8gaW5zdGFsbCB0aGUgbXkgaW5jbHVkZSBpbiBzeXNyb290L3Vzci9p
-bmNsdWRlL2NvbXBvbmVudCBhdCB0aGUgZW5kLiBJIGRvbid0IGhhdmUgdGhlIGNsdWUgaG93IHRv
-IGRvIHRoYXQgLiBDb3VsZCB5b3UgcGxlYXNlIHNvbWUgb25lIGd1aWRlIG1lLg0KDQoNCg0KSSB3
-YW50IHRoZSBiZWxvdyB0byBiZSBhY2hpZXZlZCBmcm9tIC5iYiBmaWxlcy4NCg0KMS4gSSB3YW50
-IHRvIGNvcHkgdGhlIGhlYWRlciBpbmNsdWRlcyB0byBzeXNyb290L3Vzci9pbmNsdWRlL2NvbXBv
-bmVudA0KDQoyLiBBbm90aGVyIHJlY2lwZSBzaGFsbCBiZSBhYmxlIHRvIHJlZmVyIHRoZSBoZWFk
-ZXIgZnJvbSBzeXNyb290L3Vzci9pbmNsdWRlL2NvbXBvbmVudA0KDQoNCg0KUmVnYXJkcywNCg0K
-VWdlc2gNCg0KDQoNCg==
+Hi Ugesh,
 
---_000_0039a6a94bda4b92a055a70222f1ba33inboschcom_
+ >> Where is the ${includedir} points too? by default it is /usr/ by GNU 
+itself. is it somewhere redefined?
+
+The includedir points to /usr/include under the ${D} which is 
+${WORKDIR}/image. To be precise the includedir is directly set to 
+${exec_prefix}/include where exec_prefix is usually set to /usr
+
+ >> if [ ! -e $(includedir)/componentincludes ]; then
+
+this if looks incorrect to me. It should probably be
+
+if [ ! -e ${D}${includedir}/componentincludes ]; then
+
+Please also move your inherit lines just below SRC_URI as keeping 
+inheritance on top of everything is a good practice and would avoid some 
+issues. Once you make these changes please rerun bitbake for this .bb 
+file and then look at ${WORKDIR}/temp/log.do_install. The sysroot will 
+not be populated with these headers unless one of the recipes DEPENDS on 
+this first recipe. Also, in current implementation every recipe has its 
+own sysroot components under ${WORKDIR}/recipe-sysroot/. So you need to 
+look in <2nd-recipe-workdir>/recipe-sysroot/
+
+BR,
+Awais
+
+On 26/11/18 17:05, Ugesh Munirajulu (RBEI/ECG-EP3) wrote:
+>
+> Hello Awals,
+>
+> If, I am correct the ${D} points to ${WORKDIR}/image
+>
+> Where is the ${includedir} points too? by default it is /usr/ by GNU 
+> itself. is it somewhere redefined?
+>
+> Please find the my .bb file
+>
+> DESCRIPTION = "First Application"
+>
+> SECTION = "MyLayer"
+>
+> LICENSE = "MIT"
+>
+> LIC_FILES_CHKSUM = 
+> "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+>
+> #LIC_FILES_CHKSUM = "file://LICENSE;md5=c00933139e794019cd555c2848de3d19"
+>
+> PR = "r0"
+>
+> SRC_URI = "file://component-0.1.tar.gz"
+>
+> S = "${WORKDIR}/recipes-component-0.1/"
+>
+> do_install_append() {
+>
+> if [ ! -e $(includedir)/componentincludes ]; then
+>
+> install -d ${D}${includedir}/componentincludes;
+>
+> fi
+>
+> install -m 644 ${S}/inc/*.h ${D}${includedir}/componentincludes
+>
+> }
+>
+> inherit autotools pkgconfig
+>
+> inherit gettext
+>
+> _local.conf:_
+>
+> __
+>
+> _ACHINE ??= 'imx8mqevk'_
+>
+> _DISTRO ?= 'fsl-imx-wayland'_
+>
+> _PACKAGE_CLASSES ?= "package_rpm"_
+>
+> _EXTRA_IMAGE_FEATURES ?= "debug-tweaks"_
+>
+> _USER_CLASSES ?= "buildstats image-mklibs image-prelink"_
+>
+> _PATCHRESOLVE = "noop"_
+>
+> _BB_DISKMON_DIRS ??= "\_
+>
+> _STOPTASKS,${TMPDIR},1G,100K \_
+>
+> _STOPTASKS,${DL_DIR},1G,100K \_
+>
+> _STOPTASKS,${SSTATE_DIR},1G,100K \_
+>
+> _STOPTASKS,/tmp,100M,100K \_
+>
+> _ABORT,${TMPDIR},100M,1K \_
+>
+> _ABORT,${DL_DIR},100M,1K \_
+>
+> _ABORT,${SSTATE_DIR},100M,1K \_
+>
+> _ABORT,/tmp,10M,1K"_
+>
+> _PACKAGECONFIG_append_pn-qemu-native = " sdl"_
+>
+> _PACKAGECONFIG_append_pn-nativesdk-qemu = " sdl"_
+>
+> _CONF_VERSION = "1"_
+>
+> __
+>
+> _DL_DIR ?= "${BSPDIR}/downloads/"_
+>
+> _ACCEPT_FSL_EULA = "1"_
+>
+> With the above configuration the files are not copied to 
+> sysroot/usr/include/componentincludes.
+>
+> Best regards,
+>
+> *Munirajulu Ugesh
+> RBEI/ECG-EP3
+> *
+> Tel. +91 422 676-4710
+>
+> *From:*Awais Belal <awais_belal@mentor.com>
+> *Sent:* Monday, November 26, 2018 5:22 PM
+> *To:* kumar.ugesh003@yahoo.com; Bitbake-devel 
+> <bitbake-devel@lists.openembedded.org>
+> *Cc:* Ugesh Munirajulu (RBEI/ECG-EP3) <Ugesh.Munirajulu@in.bosch.com>
+> *Subject:* Re: [bitbake-devel] Copying the files to sysroot
+>
+> Hi Ugesh,
+>
+> >> 1. I want to copy the header includes to sysroot/usr/include/component
+>
+> Simply install the header files to ${D}${includedir}/component at the 
+> end of your 1st recipe's do_install.
+>
+> e.g.
+>
+> mkdir -p ${D}${includedir}/component
+>
+> install -m 0644 <HEADER_LOCATION>/<header>.h ${D}${includedir}/component/
+>
+> >> 2. Another recipe shall be able to refer the header from 
+> sysroot/usr/include/component
+>
+> Add your 1st recipe's package name in the DEPENDS of the recipe where 
+> you want to utilize these headers.
+>
+> BR,
+> Awais
+>
+> On 26/11/18 12:36, Ugesh Reddy via bitbake-devel wrote:
+>
+>     Hello All,
+>
+>     I have the yocto bsp for iMx8 eval board and compiled it
+>     successfully. I have introduced the new custom layer and written
+>     .bb file for my recipe and the component is compiled successfully
+>     and want to install the my include in
+>     sysroot/usr/include/component at the end. I don't have the clue
+>     how to do that . Could you please some one guide me.
+>
+>     I want the below to be achieved from .bb files.
+>
+>     1. I want to copy the header includes to sysroot/usr/include/component
+>
+>     2. Another recipe shall be able to refer the header from
+>     sysroot/usr/include/component
+>
+>     Regards,
+>
+>     Ugesh
+>
+>
+>
+
+
+--------------F949F5A7865FF18F255AD1A9
 Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpDb25zb2xhczsNCglwYW5vc2UtMToyIDEx
-IDYgOSAyIDIgNCAzIDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OlRhaG9tYTsNCglw
-YW5vc2UtMToyIDExIDYgNCAzIDUgNCA0IDIgNDt9DQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLw0K
-cC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbA0KCXttYXJnaW46MGluOw0K
-CW1hcmdpbi1ib3R0b206LjAwMDFwdDsNCglmb250LXNpemU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5
-OiJUaW1lcyBOZXcgUm9tYW4iLHNlcmlmOw0KCWNvbG9yOmJsYWNrO30NCmE6bGluaywgc3Bhbi5N
-c29IeXBlcmxpbmsNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOiMwNTYzQzE7DQoJ
-dGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5r
-Rm9sbG93ZWQNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOiM5NTRGNzI7DQoJdGV4
-dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglt
-c28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGluOw0KCW1zby1tYXJnaW4t
-Ym90dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBpbjsNCglmb250LXNpemU6MTIuMHB0Ow0K
-CWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcgUm9tYW4iLHNlcmlmOw0KCWNvbG9yOmJsYWNrO30NCnBy
-ZQ0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJbXNvLXN0eWxlLWxpbms6IkhUTUwgUHJlZm9y
-bWF0dGVkIENoYXIiOw0KCW1hcmdpbjowaW47DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0KCWZv
-bnQtc2l6ZToxMC4wcHQ7DQoJZm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3IjsNCgljb2xvcjpibGFj
-azt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25vcm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1z
-dHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4t
-cmlnaHQ6MGluOw0KCW1zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBp
-bjsNCglmb250LXNpemU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcgUm9tYW4iLHNl
-cmlmOw0KCWNvbG9yOmJsYWNrO30NCnNwYW4uSFRNTFByZWZvcm1hdHRlZENoYXINCgl7bXNvLXN0
-eWxlLW5hbWU6IkhUTUwgUHJlZm9ybWF0dGVkIENoYXIiOw0KCW1zby1zdHlsZS1wcmlvcml0eTo5
-OTsNCgltc28tc3R5bGUtbGluazoiSFRNTCBQcmVmb3JtYXR0ZWQiOw0KCWZvbnQtZmFtaWx5OiJD
-b25zb2xhcyIsc2VyaWY7DQoJY29sb3I6YmxhY2s7fQ0Kc3Bhbi5FbWFpbFN0eWxlMjENCgl7bXNv
-LXN0eWxlLXR5cGU6cGVyc29uYWwtcmVwbHk7DQoJZm9udC1mYW1pbHk6IkFyaWFsIixzYW5zLXNl
-cmlmOw0KCWNvbG9yOndpbmRvd3RleHQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZvbnQtc3R5
-bGU6bm9ybWFsO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5
-Ow0KCWZvbnQtc2l6ZToxMC4wcHQ7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6OC41aW4g
-MTEuMGluOw0KCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9DQpkaXYuV29yZFNlY3Rp
-b24xDQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDld
-Pjx4bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0K
-PC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91
-dCB2OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGJnY29sb3I9Indo
-aXRlIiBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPg0KPGRpdiBj
-bGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
-b250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+SGVsbG8gQXdhbHMsPG86
-cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
-bnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj48bzpwPiZuYnNwOzwvbzpw
-Pjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPklmLCBJIGFtIGNvcnJlY3QgdGhlICR7
-RH0gcG9pbnRzIHRvICR7V09SS0RJUn0vaW1hZ2U8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1
-b3Q7LHNhbnMtc2VyaWYiPldoZXJlIGlzIHRoZSAke2luY2x1ZGVkaXJ9IHBvaW50cyB0b28/IGJ5
-IGRlZmF1bHQgaXQgaXMgL3Vzci8gYnkgR05VIGl0c2VsZi4gaXMgaXQgc29tZXdoZXJlIHJlZGVm
-aW5lZD88bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBz
-dHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+Jm5i
-c3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
-b250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+UGxlYXNlIGZpbmQgdGhl
-IG15IC5iYiBmaWxlDQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+REVTQ1JJ
-UFRJT04gPSAmcXVvdDtGaXJzdCBBcHBsaWNhdGlvbiZxdW90OzxvOnA+PC9vOnA+PC9zcGFuPjwv
-cD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtU
-YWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+U0VDVElPTiA9ICZxdW90O015TGF5ZXImcXVvdDs8bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9u
-dC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPkxJQ0VOU0UgPSAmcXVvdDtN
-SVQmcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPkxJQ19G
-SUxFU19DSEtTVU0gPSAmcXVvdDtmaWxlOi8vJHtDT01NT05fTElDRU5TRV9ESVJ9L01JVDttZDU9
-MDgzNWFkZTY5OGUwYmNmODUwNmVjZGEyZjdiNGYzMDImcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48
-L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7
-VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPiNMSUNfRklMRVNfQ0hLU1VNID0gJnF1b3Q7ZmlsZTov
-L0xJQ0VOU0U7bWQ1PWMwMDkzMzEzOWU3OTQwMTljZDU1NWMyODQ4ZGUzZDE5JnF1b3Q7PG86cD48
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj5QUiA9ICZxdW90O3IwJnF1b3Q7
-PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
-ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj5TUkNfVVJJID0gJnF1
-b3Q7ZmlsZTovL2NvbXBvbmVudC0wLjEudGFyLmd6JnF1b3Q7PG86cD48L286cD48L3NwYW4+PC9w
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1Rh
-aG9tYSZxdW90OyxzYW5zLXNlcmlmIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1
-b3Q7LHNhbnMtc2VyaWYiPlMgPSAmcXVvdDske1dPUktESVJ9L3JlY2lwZXMtY29tcG9uZW50LTAu
-MS8mcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+
-Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+ZG9faW5zdGFsbF9h
-cHBlbmQoKSB7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7DQo8bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9u
-dC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBpZiBbICEgLWUgJChpbmNsdWRl
-ZGlyKS9jb21wb25lbnRpbmNsdWRlcyBdOyB0aGVuDQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21h
-JnF1b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyBpbnN0YWxsIC1kICR7RH0ke2luY2x1ZGVkaXJ9L2NvbXBvbmVu
-dGluY2x1ZGVzOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxz
-cGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGZpPG86
-cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
-bnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj4mbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgaW5zdGFsbCAtbSA2NDQgJHtT
-fS9pbmMvKi5oICR7RH0ke2luY2x1ZGVkaXJ9L2NvbXBvbmVudGluY2x1ZGVzPG86cD48L286cD48
-L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5
-OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj59PG86cD48L286cD48L3NwYW4+PC9wPg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9t
-YSZxdW90OyxzYW5zLXNlcmlmIj5pbmhlcml0IGF1dG90b29scyBwa2djb25maWc8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPmluaGVyaXQgZ2V0dGV4dDxvOnA+PC9v
-OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZh
-bWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8L286cD48L3Nw
-YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5
-OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj5sb2NhbC5jb25mOjxvOnA+PC9vOnA+PC9z
-cGFuPjwvdT48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48dT48c3BhbiBzdHlsZT0iZm9udC1m
-YW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+PHNwYW4gc3R5bGU9InRl
-eHQtZGVjb3JhdGlvbjpub25lIj4mbmJzcDs8L3NwYW4+PC9vOnA+PC9zcGFuPjwvdT48L3A+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48dT48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFo
-b21hJnF1b3Q7LHNhbnMtc2VyaWYiPkFDSElORSA/Pz0gJ2lteDhtcWV2ayc8bzpwPjwvbzpwPjwv
-c3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj5ESVNUUk8gPz0gJ2ZzbC1pbXgt
-d2F5bGFuZCc8bzpwPjwvbzpwPjwvc3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHU+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlm
-Ij5QQUNLQUdFX0NMQVNTRVMgPz0gJnF1b3Q7cGFja2FnZV9ycG0mcXVvdDs8bzpwPjwvbzpwPjwv
-c3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj5FWFRSQV9JTUFHRV9GRUFUVVJF
-UyA/PSAmcXVvdDtkZWJ1Zy10d2Vha3MmcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48L3U+PC9wPg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1Rh
-aG9tYSZxdW90OyxzYW5zLXNlcmlmIj5VU0VSX0NMQVNTRVMgPz0gJnF1b3Q7YnVpbGRzdGF0cyBp
-bWFnZS1ta2xpYnMgaW1hZ2UtcHJlbGluayZxdW90OzxvOnA+PC9vOnA+PC9zcGFuPjwvdT48L3A+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48dT48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7
-VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPlBBVENIUkVTT0xWRSA9ICZxdW90O25vb3AmcXVvdDs8
-bzpwPjwvbzpwPjwvc3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4g
-c3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj5CQl9ESVNL
-TU9OX0RJUlMgPz89ICZxdW90O1w8bzpwPjwvbzpwPjwvc3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PHU+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90
-OyxzYW5zLXNlcmlmIj4mbmJzcDsmbmJzcDsmbmJzcDsgU1RPUFRBU0tTLCR7VE1QRElSfSwxRywx
-MDBLIFw8bzpwPjwvbzpwPjwvc3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+
-PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj4m
-bmJzcDsmbmJzcDsmbmJzcDsgU1RPUFRBU0tTLCR7RExfRElSfSwxRywxMDBLIFw8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4gc3R5bGU9ImZv
-bnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj4mbmJzcDsmbmJzcDsmbmJz
-cDsgU1RPUFRBU0tTLCR7U1NUQVRFX0RJUn0sMUcsMTAwSyBcPG86cD48L286cD48L3NwYW4+PC91
-PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjx1PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTom
-cXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IFNUT1BUQVNL
-UywvdG1wLDEwME0sMTAwSyBcPG86cD48L286cD48L3NwYW4+PC91PjwvcD4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjx1PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDss
-c2Fucy1zZXJpZiI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IEFCT1JULCR7VE1QRElSfSwxMDBNLDFLIFw8
-bzpwPjwvbzpwPjwvc3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4g
-c3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj4mbmJzcDsm
-bmJzcDsmbmJzcDsgQUJPUlQsJHtETF9ESVJ9LDEwME0sMUsgXDxvOnA+PC9vOnA+PC9zcGFuPjwv
-dT48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48dT48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6
-JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOyZuYnNwOyZuYnNwOyBBQk9SVCwk
-e1NTVEFURV9ESVJ9LDEwME0sMUsgXDxvOnA+PC9vOnA+PC9zcGFuPjwvdT48L3A+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48dT48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1
-b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOyZuYnNwOyZuYnNwOyBBQk9SVCwvdG1wLDEwTSwxSyZxdW90
-OzxvOnA+PC9vOnA+PC9zcGFuPjwvdT48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48dT48c3Bh
-biBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPlBBQ0tB
-R0VDT05GSUdfYXBwZW5kX3BuLXFlbXUtbmF0aXZlID0gJnF1b3Q7IHNkbCZxdW90OzxvOnA+PC9v
-OnA+PC9zcGFuPjwvdT48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48dT48c3BhbiBzdHlsZT0i
-Zm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPlBBQ0tBR0VDT05GSUdf
-YXBwZW5kX3BuLW5hdGl2ZXNkay1xZW11ID0gJnF1b3Q7IHNkbCZxdW90OzxvOnA+PC9vOnA+PC9z
-cGFuPjwvdT48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48dT48c3BhbiBzdHlsZT0iZm9udC1m
-YW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPkNPTkZfVkVSU0lPTiA9ICZxdW90
-OzEmcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHU+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlm
-Ij48bzpwPjxzcGFuIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246bm9uZSI+Jm5ic3A7PC9zcGFuPjwv
-bzpwPjwvc3Bhbj48L3U+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4gc3R5bGU9
-ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj5ETF9ESVIgPz0gJnF1
-b3Q7JHtCU1BESVJ9L2Rvd25sb2Fkcy8mcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48L3U+PC9wPg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHU+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1Rh
-aG9tYSZxdW90OyxzYW5zLXNlcmlmIj5BQ0NFUFRfRlNMX0VVTEEgPSAmcXVvdDsxJnF1b3Q7PG86
-cD48L286cD48L3NwYW4+PC91PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj5XaXRoIHRoZSBhYm92ZSBjb25m
-aWd1cmF0aW9uIHRoZSBmaWxlcyBhcmUgbm90IGNvcGllZCB0byBzeXNyb290L3Vzci9pbmNsdWRl
-L2NvbXBvbmVudGluY2x1ZGVzLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0Fy
-aWFsJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6d2luZG93dGV4dCI+PG86cD4mbmJzcDs8L286cD48
-L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
-MC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+QmVzdCByZWdh
-cmRzLA0KPGJyPg0KPGJyPg0KPGI+TXVuaXJhanVsdSBVZ2VzaDxicj4NClJCRUkvRUNHLUVQMzxi
-cj4NCjwvYj48YnI+DQpUZWwuICYjNDM7OTEgNDIyIDY3Ni00NzEwIDwvc3Bhbj48c3BhbiBzdHls
-ZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2Vy
-aWYiPjxicj4NCjxicj4NCjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250
-LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOndpbmRvd3RleHQiPjxv
-OnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxkaXY+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3Jk
-ZXItdG9wOnNvbGlkICNFMUUxRTEgMS4wcHQ7cGFkZGluZzozLjBwdCAwaW4gMGluIDBpbiI+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48Yj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250
-LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6d2luZG93dGV4dCI+
-RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5
-OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjp3aW5kb3d0ZXh0Ij4gQXdhaXMg
-QmVsYWwgJmx0O2F3YWlzX2JlbGFsQG1lbnRvci5jb20mZ3Q7DQo8YnI+DQo8Yj5TZW50OjwvYj4g
-TW9uZGF5LCBOb3ZlbWJlciAyNiwgMjAxOCA1OjIyIFBNPGJyPg0KPGI+VG86PC9iPiBrdW1hci51
-Z2VzaDAwM0B5YWhvby5jb207IEJpdGJha2UtZGV2ZWwgJmx0O2JpdGJha2UtZGV2ZWxAbGlzdHMu
-b3BlbmVtYmVkZGVkLm9yZyZndDs8YnI+DQo8Yj5DYzo8L2I+IFVnZXNoIE11bmlyYWp1bHUgKFJC
-RUkvRUNHLUVQMykgJmx0O1VnZXNoLk11bmlyYWp1bHVAaW4uYm9zY2guY29tJmd0Ozxicj4NCjxi
-PlN1YmplY3Q6PC9iPiBSZTogW2JpdGJha2UtZGV2ZWxdIENvcHlpbmcgdGhlIGZpbGVzIHRvIHN5
-c3Jvb3Q8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8cD48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2VyaWYiPkhpIFVnZXNoLDwvc3Bhbj48bzpwPjwv
-bzpwPjwvcD4NCjxwPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDss
-c2Fucy1zZXJpZiI+Jmd0OyZndDsgMS4gSSB3YW50IHRvIGNvcHkgdGhlIGhlYWRlciBpbmNsdWRl
-cyB0byBzeXNyb290L3Vzci9pbmNsdWRlL2NvbXBvbmVudDwvc3Bhbj48bzpwPjwvbzpwPjwvcD4N
-CjxwPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJp
-ZiI+U2ltcGx5IGluc3RhbGwgdGhlIGhlYWRlciBmaWxlcyB0byAke0R9JHtpbmNsdWRlZGlyfS9j
-b21wb25lbnQgYXQgdGhlIGVuZCBvZiB5b3VyIDFzdCByZWNpcGUncyBkb19pbnN0YWxsLjwvc3Bh
-bj48bzpwPjwvbzpwPjwvcD4NCjxwPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUYWhv
-bWEmcXVvdDssc2Fucy1zZXJpZiI+ZS5nLjwvc3Bhbj48bzpwPjwvbzpwPjwvcD4NCjxwPjxzcGFu
-IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZiI+bWtkaXIg
-PC9zcGFuPi1wICR7RH0ke2luY2x1ZGVkaXJ9L2NvbXBvbmVudDxvOnA+PC9vOnA+PC9wPg0KPHA+
-aW5zdGFsbCAtbSAwNjQ0ICZsdDtIRUFERVJfTE9DQVRJT04mZ3Q7LyZsdDtoZWFkZXImZ3Q7Lmgg
-JHtEfSR7aW5jbHVkZWRpcn0vY29tcG9uZW50LzxvOnA+PC9vOnA+PC9wPg0KPHA+Jmd0OyZndDsg
-Mi4gQW5vdGhlciByZWNpcGUgc2hhbGwgYmUgYWJsZSB0byByZWZlciB0aGUgaGVhZGVyIGZyb20g
-c3lzcm9vdC91c3IvaW5jbHVkZS9jb21wb25lbnQ8bzpwPjwvbzpwPjwvcD4NCjxwPkFkZCB5b3Vy
-IDFzdCByZWNpcGUncyBwYWNrYWdlIG5hbWUgaW4gdGhlIERFUEVORFMgb2YgdGhlIHJlY2lwZSB3
-aGVyZSB5b3Ugd2FudCB0byB1dGlsaXplIHRoZXNlIGhlYWRlcnMuPG86cD48L286cD48L3A+DQo8
-cHJlPkJSLDxvOnA+PC9vOnA+PC9wcmU+DQo8cHJlPkF3YWlzPG86cD48L286cD48L3ByZT4NCjxk
-aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5PbiAyNi8xMS8xOCAxMjozNiwgVWdlc2ggUmVkZHkg
-dmlhIGJpdGJha2UtZGV2ZWwgd3JvdGU6PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxibG9ja3F1
-b3RlIHN0eWxlPSJtYXJnaW4tdG9wOjUuMHB0O21hcmdpbi1ib3R0b206NS4wcHQiPg0KPGRpdiBp
-ZD0ieW1haWxfYW5kcm9pZF9zaWduYXR1cmUiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGVsbG8g
-QWxsLDxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2IGlkPSJ5TWFpbF9jdXJzb3JFbGVtZW50
-VHJhY2tlcl8xNTQzMjE3NjcxNjk3Ij4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7
-PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2IGlkPSJ5TWFpbF9jdXJzb3JFbGVtZW50VHJhY2tlcl8x
-NTQzMjE3NjcyMjg4Ij4NCjxwIHN0eWxlPSJtYXJnaW46MGluO21hcmdpbi1ib3R0b206LjAwMDFw
-dDtiYWNrZ3JvdW5kOndoaXRlIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjVwdDtjb2xvcjoj
-NTE2MjZGIj5JIGhhdmUgdGhlIHlvY3RvIGJzcCBmb3IgaU14OCBldmFsIGJvYXJkIGFuZCBjb21w
-aWxlZCBpdCBzdWNjZXNzZnVsbHkuIEkgaGF2ZSBpbnRyb2R1Y2VkIHRoZSBuZXcgY3VzdG9tIGxh
-eWVyIGFuZCB3cml0dGVuIC5iYiBmaWxlIGZvciBteSByZWNpcGUgYW5kIHRoZQ0KIGNvbXBvbmVu
-dCBpcyBjb21waWxlZCBzdWNjZXNzZnVsbHkgYW5kIHdhbnQgdG8gaW5zdGFsbCB0aGUgbXkgaW5j
-bHVkZSBpbiBzeXNyb290L3Vzci9pbmNsdWRlL2NvbXBvbmVudCBhdCB0aGUgZW5kLiBJIGRvbid0
-IGhhdmUgdGhlIGNsdWUgaG93IHRvIGRvIHRoYXQgLiBDb3VsZCB5b3UgcGxlYXNlIHNvbWUgb25l
-IGd1aWRlIG1lLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIHN0eWxlPSJtYXJnaW46MGluO21h
-cmdpbi1ib3R0b206LjAwMDFwdDtiYWNrZ3JvdW5kOndoaXRlO2JyZWFrLXdvcmQ7bWluLWhlaWdo
-dDogOHB0Ij4NCjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuNXB0O2NvbG9yOiM1MTYyNkYiPiZu
-YnNwOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIHN0eWxlPSJtYXJnaW46MGluO21hcmdpbi1i
-b3R0b206LjAwMDFwdDtiYWNrZ3JvdW5kOndoaXRlO2JyZWFrLXdvcmQiPjxzcGFuIHN0eWxlPSJm
-b250LXNpemU6MTEuNXB0O2NvbG9yOiM1MTYyNkYiPkkgd2FudCB0aGUgYmVsb3cgdG8gYmUgYWNo
-aWV2ZWQgZnJvbSAuYmIgZmlsZXMuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgc3R5bGU9Im1h
-cmdpbjowaW47bWFyZ2luLWJvdHRvbTouMDAwMXB0O2JhY2tncm91bmQ6d2hpdGU7YnJlYWstd29y
-ZCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS41cHQ7Y29sb3I6IzUxNjI2RiI+MS4gSSB3YW50
-IHRvIGNvcHkgdGhlIGhlYWRlciBpbmNsdWRlcyB0byBzeXNyb290L3Vzci9pbmNsdWRlL2NvbXBv
-bmVudDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIHN0eWxlPSJtYXJnaW46MGluO21hcmdpbi1i
-b3R0b206LjAwMDFwdDtiYWNrZ3JvdW5kOndoaXRlO2JyZWFrLXdvcmQiIGlkPSJ5TWFpbF9jdXJz
-b3JFbGVtZW50VHJhY2tlcl8xNTQzMjE3Njc4NzMwIj4NCjxzcGFuIHN0eWxlPSJmb250LXNpemU6
-MTEuNXB0O2NvbG9yOiM1MTYyNkYiPjIuIEFub3RoZXIgcmVjaXBlIHNoYWxsIGJlIGFibGUgdG8g
-cmVmZXIgdGhlIGhlYWRlciBmcm9tIHN5c3Jvb3QvdXNyL2luY2x1ZGUvY29tcG9uZW50PG86cD48
-L286cD48L3NwYW4+PC9wPg0KPHAgc3R5bGU9Im1hcmdpbjowaW47bWFyZ2luLWJvdHRvbTouMDAw
-MXB0O2JhY2tncm91bmQ6d2hpdGU7YnJlYWstd29yZCIgaWQ9InlNYWlsX2N1cnNvckVsZW1lbnRU
-cmFja2VyXzE1NDMyMTc2ODk5NjAiPg0KPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS41cHQ7Y29s
-b3I6IzUxNjI2RiI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgc3R5bGU9Im1hcmdp
-bjowaW47bWFyZ2luLWJvdHRvbTouMDAwMXB0O2JhY2tncm91bmQ6d2hpdGU7YnJlYWstd29yZCIg
-aWQ9InlNYWlsX2N1cnNvckVsZW1lbnRUcmFja2VyXzE1NDMyMTc2OTA1NDAiPg0KPHNwYW4gc3R5
-bGU9ImZvbnQtc2l6ZToxMS41cHQ7Y29sb3I6IzUxNjI2RiI+UmVnYXJkcyw8bzpwPjwvbzpwPjwv
-c3Bhbj48L3A+DQo8cCBzdHlsZT0ibWFyZ2luOjBpbjttYXJnaW4tYm90dG9tOi4wMDAxcHQ7YmFj
-a2dyb3VuZDp3aGl0ZTticmVhay13b3JkIiBpZD0ieU1haWxfY3Vyc29yRWxlbWVudFRyYWNrZXJf
-MTU0MzIxNzY5NjU1OSI+DQo8c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjVwdDtjb2xvcjojNTE2
-MjZGIj5VZ2VzaDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+PGJyPg0KPGJyPg0KPG86cD48L286cD48L3A+DQo8L2Jsb2NrcXVvdGU+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9o
-dG1sPg0K
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <p>Hi Ugesh,</p>
+    <p>&gt;&gt; <span style="font-family:&quot;Tahoma&quot;,sans-serif">Where
+        is the ${includedir} points too? by default it is /usr/ by GNU
+        itself. is it somewhere redefined?</span></p>
+    <p><span style="font-family:&quot;Tahoma&quot;,sans-serif">The
+        includedir points to /usr/include under the ${D} which is
+        ${WORKDIR}/image. To be precise the includedir is directly set
+        to ${exec_prefix}/include where exec_prefix is usually set to
+        /usr<br>
+      </span></p>
+    <p>&gt;&gt; <span style="font-family:&quot;Tahoma&quot;,sans-serif">if
+        [ ! -e $(includedir)/componentincludes ]; then <br>
+      </span></p>
+    <p><span style="font-family:&quot;Tahoma&quot;,sans-serif">this if
+        looks incorrect to me. It should probably be</span></p>
+    <p><span style="font-family:&quot;Tahoma&quot;,sans-serif"><span
+          style="font-family:&quot;Tahoma&quot;,sans-serif">if [ ! -e
+          ${D}${includedir}/componentincludes ]; then</span></span></p>
+    <p><span style="font-family:&quot;Tahoma&quot;,sans-serif"><span
+          style="font-family:&quot;Tahoma&quot;,sans-serif">Please also
+          move your inherit lines just below SRC_URI as keeping
+          inheritance on top of everything is a good practice and would
+          avoid some issues. Once you make these changes please rerun
+          bitbake for this .bb file and then look at ${WORKDIR}/temp/log.do_install.
+          The sysroot will not be populated with these headers unless
+          one of the recipes DEPENDS on this first recipe. Also, in
+          current implementation every recipe has its own sysroot
+          components under ${WORKDIR}/recipe-sysroot/. So you need to
+          look in &lt;2nd-recipe-workdir&gt;/recipe-sysroot/<br>
+        </span></span></p>
+    <pre class="moz-signature" cols="72">BR,
+Awais</pre>
+    <div class="moz-cite-prefix">On 26/11/18 17:05, Ugesh Munirajulu
+      (RBEI/ECG-EP3) wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:0039a6a94bda4b92a055a70222f1ba33@in.bosch.com">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="Generator" content="Microsoft Word 15 (filtered
+        medium)">
+      <style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;
+	color:black;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+p
+	{mso-style-priority:99;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;
+	color:black;}
+pre
+	{mso-style-priority:99;
+	mso-style-link:"HTML Preformatted Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	color:black;}
+p.msonormal0, li.msonormal0, div.msonormal0
+	{mso-style-name:msonormal;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;
+	color:black;}
+span.HTMLPreformattedChar
+	{mso-style-name:"HTML Preformatted Char";
+	mso-style-priority:99;
+	mso-style-link:"HTML Preformatted";
+	font-family:"Consolas",serif;
+	color:black;}
+span.EmailStyle21
+	{mso-style-type:personal-reply;
+	font-family:"Arial",sans-serif;
+	color:windowtext;
+	font-weight:normal;
+	font-style:normal;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext="edit" spidmax="1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext="edit">
+<o:idmap v:ext="edit" data="1" />
+</o:shapelayout></xml><![endif]-->
+      <div class="WordSection1">
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">Hello
+            Awals,<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p> </o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">If, I am
+            correct the ${D} points to ${WORKDIR}/image<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">Where is
+            the ${includedir} points too? by default it is /usr/ by GNU
+            itself. is it somewhere redefined?<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p> </o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">Please
+            find the my .bb file
+            <o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p> </o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">DESCRIPTION
+            = "First Application"<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">SECTION =
+            "MyLayer"<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">LICENSE =
+            "MIT"<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">LIC_FILES_CHKSUM
+            =
+            <a class="moz-txt-link-rfc2396E" href="file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302">"file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"</a><o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">#LIC_FILES_CHKSUM
+            = <a class="moz-txt-link-rfc2396E" href="file://LICENSE;md5=c00933139e794019cd555c2848de3d19">"file://LICENSE;md5=c00933139e794019cd555c2848de3d19"</a><o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">PR = "r0"<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">SRC_URI =
+            <a class="moz-txt-link-rfc2396E" href="file://component-0.1.tar.gz">"file://component-0.1.tar.gz"</a><o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p> </o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">S =
+            "${WORKDIR}/recipes-component-0.1/"<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p> </o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">do_install_append()
+            {       
+            <o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">         
+            if [ ! -e $(includedir)/componentincludes ]; then
+            <o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">                   
+            install -d ${D}${includedir}/componentincludes;<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">         
+            fi<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">         
+            install -m 644 ${S}/inc/*.h
+            ${D}${includedir}/componentincludes<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">}<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">inherit
+            autotools pkgconfig<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">inherit
+            gettext<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p> </o:p></span></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">local.conf:<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p><span
+                  style="text-decoration:none"> </span></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">ACHINE
+              ??= 'imx8mqevk'<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">DISTRO
+              ?= 'fsl-imx-wayland'<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">PACKAGE_CLASSES
+              ?= "package_rpm"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">EXTRA_IMAGE_FEATURES
+              ?= "debug-tweaks"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">USER_CLASSES
+              ?= "buildstats image-mklibs image-prelink"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">PATCHRESOLVE
+              = "noop"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">BB_DISKMON_DIRS
+              ??= "\<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">   
+              STOPTASKS,${TMPDIR},1G,100K \<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">   
+              STOPTASKS,${DL_DIR},1G,100K \<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">   
+              STOPTASKS,${SSTATE_DIR},1G,100K \<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">   
+              STOPTASKS,/tmp,100M,100K \<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">   
+              ABORT,${TMPDIR},100M,1K \<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">   
+              ABORT,${DL_DIR},100M,1K \<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">   
+              ABORT,${SSTATE_DIR},100M,1K \<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">   
+              ABORT,/tmp,10M,1K"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">PACKAGECONFIG_append_pn-qemu-native
+              = " sdl"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">PACKAGECONFIG_append_pn-nativesdk-qemu
+              = " sdl"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">CONF_VERSION
+              = "1"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p><span
+                  style="text-decoration:none"> </span></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">DL_DIR
+              ?= "${BSPDIR}/downloads/"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><u><span
+              style="font-family:&quot;Tahoma&quot;,sans-serif">ACCEPT_FSL_EULA
+              = "1"<o:p></o:p></span></u></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif"><o:p> </o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-family:&quot;Tahoma&quot;,sans-serif">With the
+            above configuration the files are not copied to
+            sysroot/usr/include/componentincludes.<o:p></o:p></span></p>
+        <p class="MsoNormal"><span
+style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif;color:windowtext"><o:p> </o:p></span></p>
+        <p class="MsoNormal"><span
+            style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif">Best
+            regards,
+            <br>
+            <br>
+            <b>Munirajulu Ugesh<br>
+              RBEI/ECG-EP3<br>
+            </b><br>
+            Tel. +91 422 676-4710 </span><span
+            style="font-size:8.0pt;font-family:&quot;Arial&quot;,sans-serif"><br>
+            <br>
+          </span><span
+style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif;color:windowtext"><o:p></o:p></span></p>
+        <div>
+          <div style="border:none;border-top:solid #E1E1E1
+            1.0pt;padding:3.0pt 0in 0in 0in">
+            <p class="MsoNormal"><b><span
+style="font-size:11.0pt;font-family:&quot;Calibri&quot;,sans-serif;color:windowtext">From:</span></b><span
+style="font-size:11.0pt;font-family:&quot;Calibri&quot;,sans-serif;color:windowtext">
+                Awais Belal <a class="moz-txt-link-rfc2396E" href="mailto:awais_belal@mentor.com">&lt;awais_belal@mentor.com&gt;</a>
+                <br>
+                <b>Sent:</b> Monday, November 26, 2018 5:22 PM<br>
+                <b>To:</b> <a class="moz-txt-link-abbreviated" href="mailto:kumar.ugesh003@yahoo.com">kumar.ugesh003@yahoo.com</a>; Bitbake-devel
+                <a class="moz-txt-link-rfc2396E" href="mailto:bitbake-devel@lists.openembedded.org">&lt;bitbake-devel@lists.openembedded.org&gt;</a><br>
+                <b>Cc:</b> Ugesh Munirajulu (RBEI/ECG-EP3)
+                <a class="moz-txt-link-rfc2396E" href="mailto:Ugesh.Munirajulu@in.bosch.com">&lt;Ugesh.Munirajulu@in.bosch.com&gt;</a><br>
+                <b>Subject:</b> Re: [bitbake-devel] Copying the files to
+                sysroot<o:p></o:p></span></p>
+          </div>
+        </div>
+        <p class="MsoNormal"><o:p> </o:p></p>
+        <p><span style="font-family:&quot;Tahoma&quot;,sans-serif">Hi
+            Ugesh,</span><o:p></o:p></p>
+        <p><span style="font-family:&quot;Tahoma&quot;,sans-serif">&gt;&gt;
+            1. I want to copy the header includes to
+            sysroot/usr/include/component</span><o:p></o:p></p>
+        <p><span style="font-family:&quot;Tahoma&quot;,sans-serif">Simply
+            install the header files to ${D}${includedir}/component at
+            the end of your 1st recipe's do_install.</span><o:p></o:p></p>
+        <p><span style="font-family:&quot;Tahoma&quot;,sans-serif">e.g.</span><o:p></o:p></p>
+        <p><span style="font-family:&quot;Tahoma&quot;,sans-serif">mkdir
+          </span>-p ${D}${includedir}/component<o:p></o:p></p>
+        <p>install -m 0644 &lt;HEADER_LOCATION&gt;/&lt;header&gt;.h
+          ${D}${includedir}/component/<o:p></o:p></p>
+        <p>&gt;&gt; 2. Another recipe shall be able to refer the header
+          from sysroot/usr/include/component<o:p></o:p></p>
+        <p>Add your 1st recipe's package name in the DEPENDS of the
+          recipe where you want to utilize these headers.<o:p></o:p></p>
+        <pre>BR,<o:p></o:p></pre>
+        <pre>Awais<o:p></o:p></pre>
+        <div>
+          <p class="MsoNormal">On 26/11/18 12:36, Ugesh Reddy via
+            bitbake-devel wrote:<o:p></o:p></p>
+        </div>
+        <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+          <div id="ymail_android_signature">
+            <p class="MsoNormal">Hello All,<o:p></o:p></p>
+          </div>
+          <div id="yMail_cursorElementTracker_1543217671697">
+            <p class="MsoNormal"><o:p> </o:p></p>
+          </div>
+          <div id="yMail_cursorElementTracker_1543217672288">
+            <p style="margin:0in;margin-bottom:.0001pt;background:white"><span
+                style="font-size:11.5pt;color:#51626F">I have the yocto
+                bsp for iMx8 eval board and compiled it successfully. I
+                have introduced the new custom layer and written .bb
+                file for my recipe and the component is compiled
+                successfully and want to install the my include in
+                sysroot/usr/include/component at the end. I don't have
+                the clue how to do that . Could you please some one
+                guide me.<o:p></o:p></span></p>
+            <p
+style="margin:0in;margin-bottom:.0001pt;background:white;break-word;min-height:
+              8pt">
+              <span style="font-size:11.5pt;color:#51626F"> <o:p></o:p></span></p>
+            <p
+              style="margin:0in;margin-bottom:.0001pt;background:white;break-word"><span
+                style="font-size:11.5pt;color:#51626F">I want the below
+                to be achieved from .bb files.<o:p></o:p></span></p>
+            <p
+              style="margin:0in;margin-bottom:.0001pt;background:white;break-word"><span
+                style="font-size:11.5pt;color:#51626F">1. I want to copy
+                the header includes to sysroot/usr/include/component<o:p></o:p></span></p>
+            <p
+              style="margin:0in;margin-bottom:.0001pt;background:white;break-word"
+              id="yMail_cursorElementTracker_1543217678730">
+              <span style="font-size:11.5pt;color:#51626F">2. Another
+                recipe shall be able to refer the header from
+                sysroot/usr/include/component<o:p></o:p></span></p>
+            <p
+              style="margin:0in;margin-bottom:.0001pt;background:white;break-word"
+              id="yMail_cursorElementTracker_1543217689960">
+              <span style="font-size:11.5pt;color:#51626F"><o:p> </o:p></span></p>
+            <p
+              style="margin:0in;margin-bottom:.0001pt;background:white;break-word"
+              id="yMail_cursorElementTracker_1543217690540">
+              <span style="font-size:11.5pt;color:#51626F">Regards,<o:p></o:p></span></p>
+            <p
+              style="margin:0in;margin-bottom:.0001pt;background:white;break-word"
+              id="yMail_cursorElementTracker_1543217696559">
+              <span style="font-size:11.5pt;color:#51626F">Ugesh<o:p></o:p></span></p>
+          </div>
+          <p class="MsoNormal"><br>
+            <br>
+            <o:p></o:p></p>
+        </blockquote>
+        <p class="MsoNormal"><o:p> </o:p></p>
+      </div>
+    </blockquote>
+    <br>
+  </body>
+</html>
 
---_000_0039a6a94bda4b92a055a70222f1ba33inboschcom_--
+--------------F949F5A7865FF18F255AD1A9--
