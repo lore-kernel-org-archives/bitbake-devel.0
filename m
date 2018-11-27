@@ -1,46 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
-	[209.85.221.51])
-	by mail.openembedded.org (Postfix) with ESMTP id A92216C5BE
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
+	[209.85.221.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 1DCB46C5BE
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Nov 2018 22:14:47 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id t3so24312403wrr.3
+	Tue, 27 Nov 2018 22:14:48 +0000 (UTC)
+Received: by mail-wr1-f67.google.com with SMTP id c14so18679699wrr.0
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 27 Nov 2018 14:14:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id;
-	bh=dC91yHSQdF8Z/AunG6+gHa0N9jdDvfsg5W4P+JypIZU=;
-	b=hkVz9TK8SYuswgMWpby39WG5YwbIcK2r5N8vYnzXNS1lrPXJI0TomyP+XLIR8jmx30
-	eXt7xM1M7doxoVV1Uq0qdsji7LwFaeMiv5ogXJFfa6vospuKzVqp9zzwzqucdGwcMXEC
-	Nkw95eDj9AgTTQVlcxS9eYKw5BcFo7dlqFRTw=
+	h=from:to:subject:date:message-id:in-reply-to:references;
+	bh=8sXZLD0xDtzlzuxfNr19xrFUAh5PMqLA4KJUXuolL5k=;
+	b=X+oybOBZHfjML6D4IHO7/rPjwJvzEHY9UJkmT1lQ8oMxHlEGV0HrkKjWjrSUk8M8uJ
+	1ZQEeDILQjiY2P9NptrxV5ehxmMP29i4fbmyKjwut+7Hg222XEZeYv2ujWasjh6dmEyu
+	YzETCEa0cQakphuXv2iKKb9CKDBr5l6KYUdtY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=dC91yHSQdF8Z/AunG6+gHa0N9jdDvfsg5W4P+JypIZU=;
-	b=Lp1i/r6iw5UVHwQbsmg4ctwo/DYntdhWyRkGbsnx25bUQg4jdDBuNBwVESsvqkGTq0
-	Ahxe/YR+LzcrkD9O2ijQYKBuywVzk+hXn1QFGAIJU6VRHTDAlA2UeWYRH/doz1l6SMgZ
-	FQnChg+dGn2sanqZp9e2aKX/N6tRnH0bo+ItSXtdSFpQ/4QnJ4VSF/jXInrtN26anI5x
-	3SGecLNZ0HxDEe2r9rp+RIYqwrHIWrweQjtbtVuwcXhxTvxp2rIbiPV44tepoHGU6EJT
-	jwbmRYjTlfyVkmxJxpu/0/5XIdoCLMXoxEdRB2ti4aW9y1JUygjfgy8ABbhMvR9G/xbg
-	NLMQ==
-X-Gm-Message-State: AA+aEWY8hgANwCLRxsQLBa13jKYLb1UrIVtaNOdaee4JJeMBEQkX7Rni
-	O+6d3ns3HHwBMIr5JpCJNlXUQRP+6+o=
-X-Google-Smtp-Source: AFSGD/UbtIVlNROh4JJeqtS6Y8GLZHQY5uuB9Z4/cbJKc6NWF2POHjaYejqpGtxwn5XbBy1W+GdJMg==
-X-Received: by 2002:a5d:4286:: with SMTP id k6mr29129604wrq.225.1543356887661; 
-	Tue, 27 Nov 2018 14:14:47 -0800 (PST)
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references;
+	bh=8sXZLD0xDtzlzuxfNr19xrFUAh5PMqLA4KJUXuolL5k=;
+	b=L/bbJ2scQrt+V9lpQ+tvxjI569HPMlkmEB6cPdVpam4pP5oUxF7Gt0jL00jSUJsG4+
+	aZXGYfk3otenvXJyoQXv2K9CbC7L/tDGBhnS23t9uyLIi/mLIzyI9TupUlVkD8EUrNoW
+	+0JQeHxwTDb4zz8QYb2uByDOjkPT75+4mEmizove4k3ASw71rclewjjGPj8Wf9oJGh1V
+	ZzdTpUA0ypTB9Wmx4yEER+MOBkG77XenQlKC0ArIHxd0dQZtpMAVP1uBgeItoXXzIlE+
+	nTTRktoU5jdGgI9JN31JR0CGJwx729ExMQ1qum75QPdnqI7V19JiPvWz/50sr1Q6jOnf
+	ti7Q==
+X-Gm-Message-State: AA+aEWap4/4DpnpgwenQg16M6TFU2K2lEAqYhTRiTNGg6DmRRZifyoCm
+	780OBTU7aNFlDSyU/lioNMMMw5aRkaA=
+X-Google-Smtp-Source: AFSGD/X5XCKAgNIzMx7x3H3qs8zXZsKd8KQyRpNLcG0xvc4ZlCbNoTSWrhnOtbIDMgMiK90mEK/2WA==
+X-Received: by 2002:a5d:524b:: with SMTP id p11mr27979669wrv.147.1543356888533;
+	Tue, 27 Nov 2018 14:14:48 -0800 (PST)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	p6sm4160084wrx.50.2018.11.27.14.14.46
+	p6sm4160084wrx.50.2018.11.27.14.14.47
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Tue, 27 Nov 2018 14:14:47 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 27 Nov 2018 22:14:44 +0000
-Message-Id: <20181127221446.30899-1-richard.purdie@linuxfoundation.org>
+Date: Tue, 27 Nov 2018 22:14:45 +0000
+Message-Id: <20181127221446.30899-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.17.1
-Subject: [PATCH 1/3] server/process: Show last 60 lines of the log if the server didn't start
+In-Reply-To: <20181127221446.30899-1-richard.purdie@linuxfoundation.org>
+References: <20181127221446.30899-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/3] server/process: Show the last 60 log lines, not the last 10
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,48 +58,29 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 27 Nov 2018 22:14:48 -0000
 
-We're seeing issues where the server doesn't start with no logs as to why. Allow
-the server to print the last 60 log lines just in case this shows us something useful
-about what is failing.
+10 log lines may not capture any full traceback, increase the number of
+lines to 60 which covers most tracebacks.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+ lib/bb/server/process.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 4e0d9c2dbc..38a62fa34e 100644
+index 38a62fa34e..efb4332394 100644
 --- a/lib/bb/server/process.py
 +++ b/lib/bb/server/process.py
-@@ -412,22 +412,28 @@ class BitBakeServer(object):
-                 logstart_re = re.compile(self.start_log_format % ('([0-9]+)', '([0-9-]+ [0-9:.]+)'))
-                 started = False
-                 lines = []
-+                lastlines = []
-                 with open(logfile, "r") as f:
-                     for line in f:
-                         if started:
-                             lines.append(line)
-                         else:
-+                            lastlines.append(line)
-                             res = logstart_re.match(line.rstrip())
-                             if res:
-                                 ldatetime = datetime.datetime.strptime(res.group(2), self.start_log_datetime_format)
-                                 if ldatetime >= startdatetime:
-                                     started = True
-                                     lines.append(line)
-+                        if len(lastlines) > 60:
-+                            lastlines = lastlines[-60:]
+@@ -428,8 +428,8 @@ class BitBakeServer(object):
+                         if len(lastlines) > 60:
+                             lastlines = lastlines[-60:]
                  if lines:
-                     if len(lines) > 10:
-                         bb.error("Last 10 lines of server log for this session (%s):\n%s" % (logfile, "".join(lines[-10:])))
+-                    if len(lines) > 10:
+-                        bb.error("Last 10 lines of server log for this session (%s):\n%s" % (logfile, "".join(lines[-10:])))
++                    if len(lines) > 60:
++                        bb.error("Last 60 lines of server log for this session (%s):\n%s" % (logfile, "".join(lines[-60:])))
                      else:
                          bb.error("Server log for this session (%s):\n%s" % (logfile, "".join(lines)))
-+                elif lastlines:
-+                        bb.error("Server didn't start, last 60 loglines (%s):\n%s" % (logfile, "".join(lastlines)))
-             else:
-                 bb.error("%s doesn't exist" % logfile)
- 
+                 elif lastlines:
 -- 
 2.17.1
 
