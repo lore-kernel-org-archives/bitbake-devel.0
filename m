@@ -1,49 +1,46 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
-	[209.85.221.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 29F986C5BE
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com
+	[209.85.128.42])
+	by mail.openembedded.org (Postfix) with ESMTP id 539D66C566
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Nov 2018 22:14:49 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id p4so24318996wrt.7
+	Wed, 28 Nov 2018 16:31:54 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id y185so4380770wmd.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Nov 2018 14:14:50 -0800 (PST)
+	Wed, 28 Nov 2018 08:31:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=f0q4WgraC8AANFMjD5NGPdlz5mDnv9KgK4iRAKrXwdE=;
-	b=FB+plouGBQXkV/EpIgIXA/1bD7WB26oiXx8NRkU5RV4/HIG7Qw3b3HPFPd0mCwZOrS
-	SL6O0ZkUuu2BGvQruTX7VaRrMoRvSo8OZBGtJYNjgCGxvkCWcSptVAg+AMOMLmwqXvxM
-	w2joXvLfyVXNH2yxBfdh2NhFhBQyJQ13xRkuU=
+	h=from:to:subject:date:message-id;
+	bh=Rd5A517I3hBNIkOwbdp7Yu02n61PNe/PorRSpTlaaGI=;
+	b=LDwUZIK50+MA2huUbkUrJnMnaU21riXGE833YgKfl/Jz6UsM6f6YtyJ9PJvt6aQ+qH
+	jCzy9ondhE/jimQYlaHy0Cxs6/QdmssBNfa7ZQkiW4YYnyFqmqnqk90ZcSoHtVNwBCNU
+	96OhWu2HkykKNXsTXwI+GAaHM2ElvBaoKmoeA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=f0q4WgraC8AANFMjD5NGPdlz5mDnv9KgK4iRAKrXwdE=;
-	b=qqJzK7mxAOBq4GmJXVRxcJSxvLGmdwho/tHeocG8Q+pE+eiLQHt8wpshbXwTW/cg1e
-	7GAoSTJKHReoOiKiu0CWXoyvmYrCqnZpBAQPKeR0x8JlWC7L/oljOYMv3nDmsa+D2f2g
-	ZZr4DlZJDi55MzSzwXC9GoyBuTCrfxs/8npWR0jybQf32zIRj4w24gmLMcGfHRgj1G5v
-	hdcobQQJ4pNhFR4o3ZoyLijzgtmQJEn+nRuGoLPYbjUn7owzdc0lxXY7BS+JWuFAbZx3
-	QT3U79fw2THSpzjiEkiP6P8qmX6oZcAoXsTK71SNBLJL1K1X+Qfr2d97ie8EjbXfHKCR
-	TKdA==
-X-Gm-Message-State: AA+aEWamSyIsyMCuv1zmToqvLLKNIkKIPKiAzYm48m8qVGoHraQXIHat
-	E3DQpTZHvAHyD9PDSsi+QPQ3MSXB1oY=
-X-Google-Smtp-Source: AFSGD/VZ4ly2Cl0zIscp9QQVjkX+TToVEEhRHQqskwImObI42FyYy+QA4TkI2a8+HFvPfG2BfiF6jA==
-X-Received: by 2002:adf:ec11:: with SMTP id x17mr29738653wrn.88.1543356889618; 
-	Tue, 27 Nov 2018 14:14:49 -0800 (PST)
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=Rd5A517I3hBNIkOwbdp7Yu02n61PNe/PorRSpTlaaGI=;
+	b=k68ikiBW8cUAmccPe+IBXE+IGJyKbrVaUtrmu1pMiTK+F7j2+yV/FQjDlSM1ljfS6z
+	ZDc2AoafA+z54F8N5LRZpIB2NOC54n+S+sBZeYYfKPCxgz7HtJeP6OwhGXtRZ7LD8RxG
+	BvvK92S30ffaoKZH73LPOhdkAWuX+aseN6DTPIPGmmEEpCvK8yvfDeed/nYA0HMDUCSf
+	wLcOq8qCdFPtbUKP6ke95BE4GbYZ+aeJ8Hv3mEr0Usaj/ei6VUB9XYhV7Kw+jXkm8NyJ
+	gJno7D9teSNXfSPzykg6wjTTEh9oXMUX91txzmGwx6GKyLAY+4JFPgwJIhLwKZkCQRfb
+	RIJQ==
+X-Gm-Message-State: AA+aEWainYfzzBJz41G977b9JNsyNSc8OOlhNydCOE2Cnt5/QHIU7oIF
+	zH3VqJ6Zjff1+AYHrTDQay0IPQYtBKc=
+X-Google-Smtp-Source: AFSGD/V2Xsddzip33c5T0SsVeaXMYfAm8rzaxvKmUBqC2mECou6mzodMWXmVjgx2otPcHfrjHuXGtA==
+X-Received: by 2002:a1c:7911:: with SMTP id l17mr3156609wme.57.1543422714711; 
+	Wed, 28 Nov 2018 08:31:54 -0800 (PST)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	p6sm4160084wrx.50.2018.11.27.14.14.48
+	z12sm7714456wrh.35.2018.11.28.08.31.53
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 27 Nov 2018 14:14:48 -0800 (PST)
+	Wed, 28 Nov 2018 08:31:53 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 27 Nov 2018 22:14:46 +0000
-Message-Id: <20181127221446.30899-3-richard.purdie@linuxfoundation.org>
+Date: Wed, 28 Nov 2018 16:31:52 +0000
+Message-Id: <20181128163152.16770-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20181127221446.30899-1-richard.purdie@linuxfoundation.org>
-References: <20181127221446.30899-1-richard.purdie@linuxfoundation.org>
-Subject: [PATCH 3/3] fetch2: Avoid warning about incorrect character escaping in regex
+Subject: [PATCH] server/process: Fix ConnectionRefusedError tracebacks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,31 +53,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Nov 2018 22:14:49 -0000
+X-List-Received-Date: Wed, 28 Nov 2018 16:31:54 -0000
 
-Fixes:
+Improve connetion refused error handling:
 
-lib/bb/fetch2/__init__.py:259: DeprecationWarning: invalid escape sequence \w
-  re.compile("^\w+:(?!//)").match(uri):
+NOTE: Retrying server connection...
+NOTE: Reconnecting to bitbake server...
+NOTE: Retrying server connection... (Traceback (most recent call last):
+  File "/home/pokybuild/yocto-worker/oe-selftest-opensuse/build/bitbake/lib/bb/server/process.py", line 471, in connectProcessServer
+    sock.connect(os.path.basename(sockname))
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/pokybuild/yocto-worker/oe-selftest-opensuse/build/bitbake/lib/bb/main.py", line 464, in setup_bitbake
+    server_connection = bb.server.process.connectProcessServer(sockname, featureset)
+  File "/home/pokybuild/yocto-worker/oe-selftest-opensuse/build/bitbake/lib/bb/server/process.py", line 502, in connectProcessServer
+    os.close(i)
+TypeError: an integer is required (got type NoneType)
+)
+WARNING: /home/pokybuild/yocto-worker/oe-selftest-opensuse/build/bitbake/lib/bb/main.py:481: ResourceWarning: unclosed <socket.socket fd=14, family=AddressFamily.AF_UNIX, type=SocketKind.SOCK_STREAM, proto=0>
+  logger.info("Retrying server connection... (%s)" % traceback.format_exc())
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/server/process.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 8d05f0c3d8..709372e16f 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -256,7 +256,7 @@ class URI(object):
- 
-         # Identify if the URI is relative or not
-         if urlp.scheme in self._relative_schemes and \
--           re.compile("^\w+:(?!//)").match(uri):
-+           re.compile(r"^\w+:(?!//)").match(uri):
-             self.relative = True
- 
-         if not self.relative:
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index efb4332394..81617acd96 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -499,7 +499,8 @@ def connectProcessServer(sockname, featureset):
+             command_chan.close()
+         for i in [writefd, readfd1, writefd2]:
+             try:
+-                os.close(i)
++                if i:
++                    os.close(i)
+             except OSError:
+                 pass
+         sock.close()
 -- 
 2.17.1
 
