@@ -1,53 +1,54 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com
-	[209.85.166.53])
-	by mail.openembedded.org (Postfix) with ESMTP id C8D826C5DA;
-	Tue,  4 Dec 2018 03:46:31 +0000 (UTC)
-Received: by mail-io1-f53.google.com with SMTP id m19so12427525ioh.3;
-	Mon, 03 Dec 2018 19:46:33 -0800 (PST)
+Received: from mail-it1-f174.google.com (mail-it1-f174.google.com
+	[209.85.166.174])
+	by mail.openembedded.org (Postfix) with ESMTP id C2E366C5DA;
+	Tue,  4 Dec 2018 03:46:32 +0000 (UTC)
+Received: by mail-it1-f174.google.com with SMTP id i7so13181849iti.2;
+	Mon, 03 Dec 2018 19:46:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding;
-	bh=oe7uC84Wfo2F2+TNaWTi4dfDMJlCigobZmb2GinbKpg=;
-	b=LmtQ76PwRbwk02CIhT2E4EeFYuYbZcQQF3YsObpVDIvuCgc/5lH9QhsyNW928zTuLn
-	YXRarWG188gd2nXyUGHA1DQ/EXPfzNLAwkrhCUNy5cFyg3l3MV4/wY/EumlxXSaNO9hp
-	MTNCVesgbc77rcgUC/IKyHnXuFV22APxKMZ3DwFUG9NPN3BI2BykkbsdAzDisJ5QqHbV
-	1g3BMIf77My13KsGffJ8mAF3jZlQAiD46QRUhzgVSsfQ04QzO2bubhcmEzGAcXeNXjZu
-	AQNgmvykLfyeZmAijflRQoXaX/lV8ugt2RAoA9AyxbSX3PCyn0LYSVbI/mbjps/8Hxzs
-	doUg==
+	bh=67dKCRuoMDH4nMfvwspeQp0VbcR1ybMRGmdS2StrsHs=;
+	b=dqj97us72f/apJr9xnKUrEdQxsgv24ZCT0VpO3yf0Xsp7housUR0yU+KnnrLp9RQkm
+	cpkl31dZ41FaBd3jfw91jvijgOVNaq14XiCuo+9YTXohBcIC+fa5bTG9Kv9dFIUlPE19
+	huLtUg6wcIA9otXKe8+53xZFXFvYnPKVsEeOWgv2AGRWq/6tgJglkbDC+wyjdV23nyPV
+	prn4yKXLMbcqxKUGf/7FE8O6bPE2kp0/3dwMMi5AHtuiq6n6+MiDgtzz93YJn1PurUfM
+	bypTPY1yCX4YaDF3eYcY+etQ9OhDU4Tqk4KgtqCRKPfGxoJhBCeMrPOm4TUDxDFsVPrx
+	gOFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=oe7uC84Wfo2F2+TNaWTi4dfDMJlCigobZmb2GinbKpg=;
-	b=TQ74Vgzi0zm4F9leHr5NQQZ7Ln/gziwlwoAAqrvhurjmg8uX6FUJM+OCIVsWgEnme1
-	k+WL+Prc+/aDDCEIC/SRsZRKThI2sxT0uw1YbX9qaPvqTg9t6UOyk4DUc0F2hntHevmf
-	M3bZ1z1UoiRFcWEUOyuVEI8gkTTboAypmRjyvWUmERCt1jiJAWaimij+p02MKTWkzRlB
-	N+lvFfq8lJ48hRVH6M7eBdpxgtO/02PalC6gdCeVa9TK4iXk6SWVQIC2euZTU01vHstm
-	lb78IH8UxbaQtJ/DMhQEKvWewv+BodmHi+a8qXAkMN2gGqtkY2eVf7lCi7+l1UX5xs+A
-	qCXA==
-X-Gm-Message-State: AA+aEWZZFJRWqwvgXY4me3o876XYN3thXOfwNbT0xA26snT6ZEKoy+qp
-	VZp/WnMjbRPHWzlRtgCZtgFJ4wVvWqw=
-X-Google-Smtp-Source: AFSGD/UYcmFUXjwaEncGsr3xiJuIM/ho+jueumqFB1T0aNY7NSQhL4xwxpH7ihkKX4/W6zWC6sPIZw==
-X-Received: by 2002:a5e:8b05:: with SMTP id g5mr13642845iok.144.1543895192561; 
-	Mon, 03 Dec 2018 19:46:32 -0800 (PST)
+	bh=67dKCRuoMDH4nMfvwspeQp0VbcR1ybMRGmdS2StrsHs=;
+	b=qrQSDdupxrURH6LTp1d9v80jEEEpJlDwxSIbnIXGlAAWRs4G3z0TzSkQ/6e9EfwDM3
+	/H5ceUKFxdblEyp3Owl3cAEYfigxL+idTigbgsI9j6VJaATevQ9psUTBhdbIPhPKWtHS
+	DxYpauLjEe1QO6l0pVGJam/SO0SF8DcOiXSjYYyXHTFbvg0dG3KyXn8JftC7Vl2IdGYu
+	FwLdYzX9GE2LRlS0jSB+X/OhtwQ6D+6Kkztzwpa9YYU4JWRfAv1BOUPDs2krOwQdDBKa
+	ETzGD35kSD4qBRtOBGxXJ66suRr3y4auYRO1IAMFe0KqHV/ywLLLLXpMvDoDBXS3bZax
+	gl3A==
+X-Gm-Message-State: AA+aEWZ75xfZfkgj0W05gDcoS70zwFHXL0KkkpFs8xq1b/UllpZbnd51
+	PZTaYiOKQTOEavW4RWf2NIHtqOkWuFI=
+X-Google-Smtp-Source: AFSGD/WhyI6ukT9UnDdSkL6jSnZaL4Q+th8UMBKCB0E1Cybpj/3BUqmP6Snq9D+OYWOyr7J9DOzuGQ==
+X-Received: by 2002:a24:4483:: with SMTP id
+	o125mr10129367ita.106.1543895193490; 
+	Mon, 03 Dec 2018 19:46:33 -0800 (PST)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	q23sm6216824ioi.66.2018.12.03.19.46.31
+	q23sm6216824ioi.66.2018.12.03.19.46.32
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 03 Dec 2018 19:46:31 -0800 (PST)
+	Mon, 03 Dec 2018 19:46:32 -0800 (PST)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: openembedded-core@lists.openembedded.org,
 	bitbake-devel@lists.openembedded.org
-Date: Mon,  3 Dec 2018 21:42:40 -0600
-Message-Id: <20181204034245.25461-13-JPEWhacker@gmail.com>
+Date: Mon,  3 Dec 2018 21:42:41 -0600
+Message-Id: <20181204034245.25461-14-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20181204034245.25461-1-JPEWhacker@gmail.com>
 References: <20180809220840.26697-1-JPEWhacker@gmail.com>
 	<20181204034245.25461-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-Subject: [OE-core][PATCH v3 12/17] bitbake: runqueue: Pass dependency ID to task
+Subject: [OE-core][PATCH v3 13/17] bitbake: runqueue: Pass dependency ID to hash validate
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,95 +61,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Dec 2018 03:46:32 -0000
+X-List-Received-Date: Tue, 04 Dec 2018 03:46:33 -0000
 Content-Transfer-Encoding: 8bit
 
-The dependency ID is now passed to the task in the BB_DEPID variable
+If the dependency ID is being used to track task dependencies, the hash
+validation function needs to know about it in order to properly validate
+the hash.
+
+TODO: This currently isn't going to be backward compatible with older
+hashvalidate functions. Is that necessary, and if so are there any
+suggestions for a good approach?
 
 [YOCTO #13030]
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/bin/bitbake-worker |  7 ++++---
- bitbake/lib/bb/runqueue.py | 10 ++++++----
- 2 files changed, 10 insertions(+), 7 deletions(-)
+ bitbake/lib/bb/runqueue.py | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index 41ef6d848ac..9650c954359 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -136,7 +136,7 @@ def sigterm_handler(signum, frame):
-     os.killpg(0, signal.SIGTERM)
-     sys.exit()
- 
--def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskhash, appends, taskdepdata, extraconfigdata, quieterrors=False, dry_run_exec=False):
-+def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskhash, depid, appends, taskdepdata, extraconfigdata, quieterrors=False, dry_run_exec=False):
-     # We need to setup the environment BEFORE the fork, since
-     # a fork() or exec*() activates PSEUDO...
- 
-@@ -235,6 +235,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
- 
-                 the_data = bb_cache.loadDataFull(fn, appends)
-                 the_data.setVar('BB_TASKHASH', taskhash)
-+                the_data.setVar('BB_DEPID', depid)
- 
-                 bb.utils.set_process_name("%s:%s" % (the_data.getVar("PN"), taskname.replace("do_", "")))
- 
-@@ -425,10 +426,10 @@ class BitbakeWorker(object):
-         sys.exit(0)
- 
-     def handle_runtask(self, data):
--        fn, task, taskname, taskhash, quieterrors, appends, taskdepdata, dry_run_exec = pickle.loads(data)
-+        fn, task, taskname, taskhash, depid, quieterrors, appends, taskdepdata, dry_run_exec = pickle.loads(data)
-         workerlog_write("Handling runtask %s %s %s\n" % (task, fn, taskname))
- 
--        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.databuilder, self.workerdata, fn, task, taskname, taskhash, appends, taskdepdata, self.extraconfigdata, quieterrors, dry_run_exec)
-+        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.databuilder, self.workerdata, fn, task, taskname, taskhash, depid, appends, taskdepdata, self.extraconfigdata, quieterrors, dry_run_exec)
- 
-         self.build_pids[pid] = task
-         self.build_pipes[pid] = runQueueWorkerPipe(pipein, pipeout)
 diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 32dcd84e175..c5e4573b278 100644
+index c5e4573b278..dd6c0208daf 100644
 --- a/bitbake/lib/bb/runqueue.py
 +++ b/bitbake/lib/bb/runqueue.py
-@@ -2034,6 +2034,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
+@@ -1549,6 +1549,7 @@ class RunQueue:
+         valid = []
+         sq_hash = []
+         sq_hashfn = []
++        sq_depid = []
+         sq_fn = []
+         sq_taskname = []
+         sq_task = []
+@@ -1567,15 +1568,16 @@ class RunQueue:
+             sq_fn.append(fn)
+             sq_hashfn.append(self.rqdata.dataCaches[mc].hashfn[taskfn])
+             sq_hash.append(self.rqdata.runtaskentries[tid].hash)
++            sq_depid.append(self.rqdata.runtaskentries[tid].depid)
+             sq_taskname.append(taskname)
+             sq_task.append(tid)
+-        locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
++        locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "sq_depid" : sq_depid, "d" : self.cooker.data }
+         try:
+-            call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=True)"
++            call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d, siginfo=True)"
+             valid = bb.utils.better_eval(call, locs)
+         # Handle version with no siginfo parameter
+         except TypeError:
+-            call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
++            call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d)"
+             valid = bb.utils.better_eval(call, locs)
+         for v in valid:
+             valid_new.add(sq_task[v])
+@@ -2293,6 +2295,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         if self.rq.hashvalidate:
+             sq_hash = []
+             sq_hashfn = []
++            sq_depid = []
+             sq_fn = []
+             sq_taskname = []
+             sq_task = []
+@@ -2324,13 +2327,14 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                 sq_fn.append(fn)
+                 sq_hashfn.append(self.rqdata.dataCaches[mc].hashfn[taskfn])
+                 sq_hash.append(self.rqdata.runtaskentries[tid].hash)
++                sq_depid.append(self.rqdata.runtaskentries[tid].depid)
+                 sq_taskname.append(taskname)
+                 sq_task.append(tid)
  
-             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
-             taskhash = self.rqdata.get_task_hash(task)
-+            depid = self.rqdata.get_task_depid(task)
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not (self.cooker.configuration.dry_run or self.rqdata.setscene_enforce):
-                 if not mc in self.rq.fakeworker:
-                     try:
-@@ -2043,10 +2044,10 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                         self.rq.state = runQueueFailed
-                         self.stats.taskFailed()
-                         return True
--                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-+                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, depid, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-                 self.rq.fakeworker[mc].process.stdin.flush()
-             else:
--                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-+                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, depid, False, self.cooker.collection.get_file_appends(taskfn), taskdepdata, self.rqdata.setscene_enforce)) + b"</runtask>")
-                 self.rq.worker[mc].process.stdin.flush()
+             self.cooker.data.setVar("BB_SETSCENE_STAMPCURRENT_COUNT", len(stamppresent))
  
-             self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn, noextra=True)
-@@ -2462,13 +2463,14 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+-            call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
+-            locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
++            call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, sq_depid, d)"
++            locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "sq_depid": sq_depid, "d" : self.cooker.data }
+             valid = bb.utils.better_eval(call, locs)
  
-             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
-             taskhash = self.rqdata.get_task_hash(task)
-+            depid = self.rqdata.get_task_depid(task)
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
-                 if not mc in self.rq.fakeworker:
-                     self.rq.start_fakeworker(self, mc)
--                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-+                self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, depid, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-                 self.rq.fakeworker[mc].process.stdin.flush()
-             else:
--                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-+                self.rq.worker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, depid, True, self.cooker.collection.get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-                 self.rq.worker[mc].process.stdin.flush()
- 
-             self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCaches[mc], taskfn, noextra=True)
+             self.cooker.data.delVar("BB_SETSCENE_STAMPCURRENT_COUNT")
 -- 
 2.19.1
 
