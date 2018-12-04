@@ -1,23 +1,25 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 5F13E6BE0C
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 727F66C52C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  4 Dec 2018 01:48:33 +0000 (UTC)
+	Tue,  4 Dec 2018 01:48:56 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id wB41mXVj029022
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id wB41mvNL005905
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 3 Dec 2018 17:48:34 -0800 (PST)
+	Mon, 3 Dec 2018 17:48:57 -0800 (PST)
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.408.0; Mon, 3 Dec 2018 17:48:33 -0800
+	14.3.408.0; Mon, 3 Dec 2018 17:48:57 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 4 Dec 2018 10:05:59 +0800
-Message-ID: <cover.1543889029.git.liezhi.yang@windriver.com>
+Date: Tue, 4 Dec 2018 10:06:01 +0800
+Message-ID: <3388f1e1c1b2a062ab1a2008e80e605f98150edc.1543889029.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1543889029.git.liezhi.yang@windriver.com>
+References: <cover.1543889029.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 0/4] fixes for pysh
+Subject: [PATCH 2/4] pysh/sherrors.py: Remove unused classes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,50 +32,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Dec 2018 01:48:33 -0000
+X-List-Received-Date: Tue, 04 Dec 2018 01:48:56 -0000
 Content-Type: text/plain
 
-Hi RP,
+The only two that we need are ShellSyntaxError and ShellError, others are not
+used, so remove them.
 
-The pysh's code looks a little out of date, and the author declared that pysh
-is no longer maintained:
-http://pysh.sourceforge.net/
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bitbake/lib/bb/pysh/sherrors.py | 26 --------------------------
+ 1 file changed, 26 deletions(-)
 
-These are fixes for it.
-
-// Robert
-
-The following changes since commit 016e3dda2d6acc9b457079d11b5346a5352a431d:
-
-  btrfs-tools: update to 4.19 (2018-12-03 12:20:01 +0000)
-
-are available in the git repository at:
-
-  git://git.pokylinux.org/poky-contrib rbt/pysh
-  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/pysh
-
-Robert Yang (4):
-  pysh: Remove unused modules
-  pysh/sherrors.py: Remove unused classes
-  pysh/pyshlex.py: Set is not importable
-  bitbake: pysh: Improve error handling for shell code
-
- bitbake/lib/bb/codeparser.py          |    5 +-
- bitbake/lib/bb/pysh/builtin.py        |  710 -----------------
- bitbake/lib/bb/pysh/interp.py         | 1367 ---------------------------------
- bitbake/lib/bb/pysh/lsprof.py         |  116 ---
- bitbake/lib/bb/pysh/pysh.py           |  167 ----
- bitbake/lib/bb/pysh/pyshlex.py        |    5 -
- bitbake/lib/bb/pysh/pyshyacc.py       |   17 +-
- bitbake/lib/bb/pysh/sherrors.py       |   26 -
- bitbake/lib/bb/pysh/subprocess_fix.py |   77 --
- 9 files changed, 13 insertions(+), 2477 deletions(-)
- delete mode 100644 bitbake/lib/bb/pysh/builtin.py
- delete mode 100644 bitbake/lib/bb/pysh/interp.py
- delete mode 100644 bitbake/lib/bb/pysh/lsprof.py
- delete mode 100644 bitbake/lib/bb/pysh/pysh.py
- delete mode 100644 bitbake/lib/bb/pysh/subprocess_fix.py
-
+diff --git a/bitbake/lib/bb/pysh/sherrors.py b/bitbake/lib/bb/pysh/sherrors.py
+index 49d0533..3fe8e47 100644
+--- a/bitbake/lib/bb/pysh/sherrors.py
++++ b/bitbake/lib/bb/pysh/sherrors.py
+@@ -13,29 +13,3 @@ class ShellError(Exception):
+ 
+ class ShellSyntaxError(ShellError):
+     pass
+-    
+-class UtilityError(ShellError):
+-    """Raised upon utility syntax error (option or operand error)."""
+-    pass
+-   
+-class ExpansionError(ShellError):
+-    pass
+-     
+-class CommandNotFound(ShellError):
+-    """Specified command was not found."""
+-    pass
+-    
+-class RedirectionError(ShellError):
+-    pass
+-    
+-class VarAssignmentError(ShellError):
+-    """Variable assignment error."""
+-    pass
+-    
+-class ExitSignal(ShellError):
+-    """Exit signal."""
+-    pass
+-    
+-class ReturnSignal(ShellError):
+-    """Exit signal."""
+-    pass
 -- 
 2.7.4
 
