@@ -1,53 +1,53 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io1-f67.google.com (mail-io1-f67.google.com
-	[209.85.166.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 9E9EA6BD11;
-	Tue,  4 Dec 2018 03:46:21 +0000 (UTC)
-Received: by mail-io1-f67.google.com with SMTP id l14so12409586ioj.5;
-	Mon, 03 Dec 2018 19:46:22 -0800 (PST)
+Received: from mail-it1-f194.google.com (mail-it1-f194.google.com
+	[209.85.166.194])
+	by mail.openembedded.org (Postfix) with ESMTP id D79426BD11;
+	Tue,  4 Dec 2018 03:46:22 +0000 (UTC)
+Received: by mail-it1-f194.google.com with SMTP id i145so13147986ita.4;
+	Mon, 03 Dec 2018 19:46:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding;
-	bh=AhJo0w5FJSJDHATla1+ALFEm8rM+NEJamYroVJGqcho=;
-	b=Ihk6vGhxVlG3yHk3mWIcONyqA8Ps8FdXtu5I9UoPFHnqKrAeFFoke9hi81Kf5HUveY
-	pBKDih/oZAOfErQ33EH3uGeuVP4YTkeuJCP0hDV8bN3/DKPWo55nWmf/FA18r1rToOqH
-	BJ8htSlmuvOuh4IKT3WuB34yb4XpzCAclliqWReX8oZh907Ko7Y0g4QSt7XWLfkB8/Lt
-	aHQM9kg3eHooqQJzIJ9jueJ+bNyJgIZjLqS7hnIG/JHEpSXrO0zAbsgw0ecRgDLRFv03
-	+r2cmMZFB8UsE8X3dTOcTwBqscdQyXvAhnRmtuim6ju9/+tYkZF1E+KNS+Nzb0quhsxq
-	A3SQ==
+	bh=oe+BArCn7D2JPY7/qNYTYayN3YyX5k4a0h4fatZL3/0=;
+	b=IdKWS7cIR8YzYT3gkkI3ggqM9cTXaCSby30LzpJlJhpwrX205JYIKZXRYFDzoQtkSD
+	XzhbJyVhFjsI4KmCzPtRMX01pX5jrgsb1n+xYFdsHX3AWbQQNlbFawPcSH0SNWrVuZ6h
+	Q/RMPFFDaR8hTpkLU4hYRYSoeOf6TDN0eG+FA/Ij7j3hPkgSWYQOt45FuUxpKP/lXB46
+	uULDHJCwH+l7JhaStg7M0G/O8VrSf13nD9xV5s73N9U9MPYGZFXgpn3F9KMXggdeh3Jg
+	vDkyKNKvHD/W6ep0J6L63EY4WAnGMA8mySwHdaG3+zeVMW/aqGyU781w6ZStfmnaNKK+
+	32hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=AhJo0w5FJSJDHATla1+ALFEm8rM+NEJamYroVJGqcho=;
-	b=Q+wHIIYWr2KQarauAxkr1RsBfzov9nqzzL8GPfrg0Z2bjCxHkjB4oT1nfDgkpMCWiI
-	TyPn/Z2hZQoVxal7tmBu/KFo7DFTl06O0BUPYlbritbCQgKsX2joeW+1IxSIO2KS6wCb
-	v7gJblowcM8l4A/ZDMiMAPuFasSKXFyIKt1/zMSOdlOCbQmYNe74pWCoSN6gLxoAdygT
-	gJp3tbFvl1niWw65nRM/00kV/zyuRhx90b1M5YRFaXYUmeQVH7DvvdgKHU6tZxdElISt
-	qw1w49oFONLUa2h47vF1GcdLm1Me1/UoS3/LdagYM1bPl/wnoUh084NLXxku2jRPX3yV
-	Zcig==
-X-Gm-Message-State: AA+aEWaFJ0mvgFTkb5xpIwQgEEfvCEUMXqKbTZl6YBFpXwXBfGGGmsSe
-	bN514UsrltUc5SfkvUSCzGQYECBHaoE=
-X-Google-Smtp-Source: AFSGD/VWzcwR3NMSUzLMa+ldIZtu9rgICJ+FpyReyhU/h027XPtyAemiRYaI3xeC0fUpemNYq/+s/Q==
-X-Received: by 2002:a6b:2b07:: with SMTP id r7mr16012202ior.169.1543895182190; 
-	Mon, 03 Dec 2018 19:46:22 -0800 (PST)
+	bh=oe+BArCn7D2JPY7/qNYTYayN3YyX5k4a0h4fatZL3/0=;
+	b=sGubEb5O9xbb4WKdomt80IpPUlUN09TsXecoh7GVJvh+tPrMVmwfoz+D2aUBwOX2ei
+	LsfJrpTJ2ZPua4XmbshiICCNXOv0mV0ttN6VYrw3Q4mS1l3vzlSnQWw2TsLKlO2KKKGj
+	rkr1w7F8hbxDyeJSflWpfAPiMYfGIqOcThMpu7eEebuMQFvXbAUTLTVCgBeVFzkXQa3H
+	eNM0CPCRkMcQ4pLQX8XPehCIDY4HQ12wb9/q/G15CAaaKwNkXpxvpL+Ds5/97HPNrnLm
+	6jtqt0YU6/4jOw0pmGQpYTw18D7ICkJ8eGj6PlwC4/9Fog697cVF4XEHfWYlpvOFjx3J
+	I7SA==
+X-Gm-Message-State: AA+aEWYWyG/uKm3UjsSvobK+gdcuOCWoZ84e2MJ7M3fXEuAUquYZ3eFt
+	dFESr01aiVJQjynN4RcZF+7Ql0P9He0=
+X-Google-Smtp-Source: AFSGD/XMW+NPnuz4PHrje0mMubDuKq2CQ81L+Acyq5CRhaVfMzS8cF/GUjK0gInxO0LkTZksXlRNNg==
+X-Received: by 2002:a24:c8d7:: with SMTP id w206mr436417itf.56.1543895183240; 
+	Mon, 03 Dec 2018 19:46:23 -0800 (PST)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	q23sm6216824ioi.66.2018.12.03.19.46.21
+	q23sm6216824ioi.66.2018.12.03.19.46.22
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 03 Dec 2018 19:46:21 -0800 (PST)
+	Mon, 03 Dec 2018 19:46:22 -0800 (PST)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: openembedded-core@lists.openembedded.org,
 	bitbake-devel@lists.openembedded.org
-Date: Mon,  3 Dec 2018 21:42:29 -0600
-Message-Id: <20181204034245.25461-2-JPEWhacker@gmail.com>
+Date: Mon,  3 Dec 2018 21:42:30 -0600
+Message-Id: <20181204034245.25461-3-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20181204034245.25461-1-JPEWhacker@gmail.com>
 References: <20180809220840.26697-1-JPEWhacker@gmail.com>
 	<20181204034245.25461-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-Subject: [OE-core][PATCH v3 01/17] bitbake: fork: Add os.fork() wrappers
+Subject: [OE-core][PATCH v3 02/17] bitbake: persist_data: Fix leaking cursors causing deadlock
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,113 +60,308 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Dec 2018 03:46:21 -0000
+X-List-Received-Date: Tue, 04 Dec 2018 03:46:23 -0000
 Content-Transfer-Encoding: 8bit
 
-Adds a compatibility wrapper around os.fork() that backports the ability
-to register fork event handlers (os.register_at_fork()) from Python 3.7
+The original implementation of persistent data executed all SQL
+statements via sqlite3.Connection.execute(). Behind the scenes, this
+function created a sqlite3 Cursor object, executed the statement, then
+returned the cursor. However, the implementation did not account for
+this and failed to close the cursor object when it was done. The cursor
+would eventually be closed when the garbage collector got around to
+destroying it. However, sqlite has a limit on the number of cursors that
+can exist at any given time, and once this limit is reached it will
+block a query to wait for a cursor to be destroyed. Under heavy database
+queries, this can result in Python deadlocking with itself, since the
+SQL query will block waiting for a free cursor, but Python can no longer
+run garbage collection (as it is blocked) to free one.
+
+This restructures the SQLTable class to use two decorators to aid in
+performing actions correctly. The first decorator (@retry) wraps a
+member function in the retry logic that automatically restarts the
+function in the event that the database is locked.
+
+The second decorator (@transaction) wraps the function so that it occurs
+in a database transaction, which will automatically COMMIT the changes
+on success and ROLLBACK on failure. This function additionally creates
+an explicit cursor, passes it to the wrapped function, and cleans it up
+when the function is finished.
+
+Note that it is still possible to leak cursors when iterating. This is
+much less frequent, but can still be mitigated by wrapping the iteration
+in a `with` statement:
+
+ with db.iteritems() as it:
+     for (k, v) in it:
+         ...
+
+As a side effect, since most statements are wrapped in a transaction,
+setting the isolation_level when the connection is created is no longer
+necessary.
 
 [YOCTO #13030]
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/bin/bitbake-worker |  2 +-
- bitbake/lib/bb/fork.py     | 73 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+), 1 deletion(-)
- create mode 100644 bitbake/lib/bb/fork.py
+ bitbake/lib/bb/persist_data.py | 188 +++++++++++++++++++++++----------
+ 1 file changed, 135 insertions(+), 53 deletions(-)
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index e925054b7f9..baa1a84e6dd 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -181,7 +181,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
-         pipein, pipeout = os.pipe()
-         pipein = os.fdopen(pipein, 'rb', 4096)
-         pipeout = os.fdopen(pipeout, 'wb', 0)
--        pid = os.fork()
-+        pid = bb.fork.fork()
-     except OSError as e:
-         logger.critical("fork failed: %d (%s)" % (e.errno, e.strerror))
-         sys.exit(1)
-diff --git a/bitbake/lib/bb/fork.py b/bitbake/lib/bb/fork.py
-new file mode 100644
-index 00000000000..2b2b0b73b62
---- /dev/null
-+++ b/bitbake/lib/bb/fork.py
-@@ -0,0 +1,73 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+#
-+# Copyright (C) 2018 Garmin Ltd.
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+#
-+"""
-+Python wrappers for os.fork() that allow the insertion of callbacks for fork events.
-+This is designed to exacmimic os.register_at_fork() available in Python 3.7 with the
-+intent that it can be removed when that version becomes standard
-+"""
+diff --git a/bitbake/lib/bb/persist_data.py b/bitbake/lib/bb/persist_data.py
+index bef7018614d..1a6319f9498 100644
+--- a/bitbake/lib/bb/persist_data.py
++++ b/bitbake/lib/bb/persist_data.py
+@@ -29,6 +29,7 @@ import warnings
+ from bb.compat import total_ordering
+ from collections import Mapping
+ import sqlite3
++import contextlib
+ 
+ sqlversion = sqlite3.sqlite_version_info
+ if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
+@@ -45,75 +46,154 @@ if hasattr(sqlite3, 'enable_shared_cache'):
+ 
+ @total_ordering
+ class SQLTable(collections.MutableMapping):
++    class _Decorators(object):
++        @staticmethod
++        def retry(f):
++            """
++            Decorator that restarts a function if a database locked sqlite
++            exception occurs.
++            """
++            def wrap_func(self, *args, **kwargs):
++                count = 0
++                while True:
++                    try:
++                        return f(self, *args, **kwargs)
++                    except sqlite3.OperationalError as exc:
++                        if 'is locked' in str(exc) and count < 500:
++                            count = count + 1
++                            self.connection.close()
++                            self.connection = connect(self.cachefile)
++                            continue
++                        raise
++            return wrap_func
 +
-+import sys
-+import os
++        @staticmethod
++        def transaction(f):
++            """
++            Decorator that starts a database transaction and creates a database
++            cursor for performing queries. If no exception is thrown, the
++            database results are commited. If an exception occurs, the database
++            is rolled back. In all cases, the cursor is closed after the
++            function ends.
 +
-+before_calls = []
-+after_in_parent_calls = []
-+after_in_child_calls = []
++            Note that the cursor is passed as an extra argument to the function
++            after `self` and before any of the normal arguments
++            """
++            def wrap_func(self, *args, **kwargs):
++                # Context manager will COMMIT the database on success,
++                # or ROLLBACK on an exception
++                with self.connection:
++                    # Automatically close the cursor when done
++                    with contextlib.closing(self.connection.cursor()) as cursor:
++                        return f(self, cursor, *args, **kwargs)
++            return wrap_func
 +
-+def _do_calls(l, reverse=False):
-+    # Make a copy in case the list is modified in the callback
-+    copy = l[:]
-+    if reverse:
-+        copy = reversed(copy)
+     """Object representing a table/domain in the database"""
+     def __init__(self, cachefile, table):
+         self.cachefile = cachefile
+         self.table = table
+-        self.cursor = connect(self.cachefile)
+-
+-        self._execute("CREATE TABLE IF NOT EXISTS %s(key TEXT, value TEXT);"
+-                      % table)
+-
+-    def _execute(self, *query):
+-        """Execute a query, waiting to acquire a lock if necessary"""
+-        count = 0
+-        while True:
+-            try:
+-                return self.cursor.execute(*query)
+-            except sqlite3.OperationalError as exc:
+-                if 'database is locked' in str(exc) and count < 500:
+-                    count = count + 1
++        self.connection = connect(self.cachefile)
 +
-+    for f in copy:
-+        # All exception in calls are ignored
++        self._execute_single("CREATE TABLE IF NOT EXISTS %s(key TEXT, value TEXT);" % table)
++
++    @_Decorators.retry
++    @_Decorators.transaction
++    def _execute_single(self, cursor, *query):
++        """
++        Executes a single query and discards the results. This correctly closes
++        the database cursor when finished
++        """
++        cursor.execute(*query)
++
++    @_Decorators.retry
++    def _row_iter(self, f, *query):
++        """
++        Helper function that returns a row iterator. Each time __next__ is
++        called on the iterator, the provided function is evaluated to determine
++        the return value
++        """
++        class CursorIter(object):
++            def __init__(self, cursor):
++                self.cursor = cursor
++
++            def __iter__(self):
++                return self
++
++            def __next__(self):
++                row = self.cursor.fetchone()
++                if row is None:
+                     self.cursor.close()
+-                    self.cursor = connect(self.cachefile)
+-                    continue
+-                raise
++                    raise StopIteration
++                return f(row)
++
++            def __enter__(self):
++                return self
++
++            def __exit__(self, typ, value, traceback):
++                self.cursor.close()
++                return False
++
++        cursor = self.connection.cursor()
 +        try:
-+            f()
++            cursor.execute(*query)
++            return CursorIter(cursor)
 +        except:
-+            pass
++            cursor.close()
+ 
+     def __enter__(self):
+-        self.cursor.__enter__()
++        self.connection.__enter__()
+         return self
+ 
+     def __exit__(self, *excinfo):
+-        self.cursor.__exit__(*excinfo)
+-
+-    def __getitem__(self, key):
+-        data = self._execute("SELECT * from %s where key=?;" %
+-                             self.table, [key])
+-        for row in data:
++        self.connection.__exit__(*excinfo)
 +
-+def fork():
-+    if sys.hexversion >= 0x030700F0:
-+        return os.fork()
++    @_Decorators.retry
++    @_Decorators.transaction
++    def __getitem__(self, cursor, key):
++        cursor.execute("SELECT * from %s where key=?;" % self.table, [key])
++        row = cursor.fetchone()
++        if row is not None:
+             return row[1]
+         raise KeyError(key)
+ 
+-    def __delitem__(self, key):
++    @_Decorators.retry
++    @_Decorators.transaction
++    def __delitem__(self, cursor, key):
+         if key not in self:
+             raise KeyError(key)
+-        self._execute("DELETE from %s where key=?;" % self.table, [key])
++        cursor.execute("DELETE from %s where key=?;" % self.table, [key])
+ 
+-    def __setitem__(self, key, value):
++    @_Decorators.retry
++    @_Decorators.transaction
++    def __setitem__(self, cursor, key, value):
+         if not isinstance(key, str):
+             raise TypeError('Only string keys are supported')
+         elif not isinstance(value, str):
+             raise TypeError('Only string values are supported')
+ 
+-        data = self._execute("SELECT * from %s where key=?;" %
+-                                   self.table, [key])
+-        exists = len(list(data))
+-        if exists:
+-            self._execute("UPDATE %s SET value=? WHERE key=?;" % self.table,
+-                          [value, key])
++        cursor.execute("SELECT * from %s where key=?;" % self.table, [key])
++        row = cursor.fetchone()
++        if row is not None:
++            cursor.execute("UPDATE %s SET value=? WHERE key=?;" % self.table, [value, key])
+         else:
+-            self._execute("INSERT into %s(key, value) values (?, ?);" %
+-                          self.table, [key, value])
+-
+-    def __contains__(self, key):
+-        return key in set(self)
+-
+-    def __len__(self):
+-        data = self._execute("SELECT COUNT(key) FROM %s;" % self.table)
+-        for row in data:
++            cursor.execute("INSERT into %s(key, value) values (?, ?);" % self.table, [key, value])
 +
-+    _do_calls(before_calls, reverse=True)
++    @_Decorators.retry
++    @_Decorators.transaction
++    def __contains__(self, cursor, key):
++        cursor.execute('SELECT * from %s where key=?;' % self.table, [key])
++        return cursor.fetchone() is not None
 +
-+    ret = os.fork()
-+    if ret == 0:
-+        _do_calls(after_in_child_calls)
-+    else:
-+        _do_calls(after_in_parent_calls)
-+    return ret
-+
-+def register_at_fork(**kwargs):
-+    def add_arg_to_list(name, lst):
-+        if name in kwargs:
-+            arg = kwargs[name]
-+            if not callable(arg):
-+                raise TypeError("'%s' must be callable, not %s" % (name, type(arg)))
-+            lst.append(arg)
-+
-+    if sys.hexversion >= 0x030700F0:
-+        os.register_at_fork(**kwargs)
-+        return
-+
-+    add_arg_to_list('before', before_calls)
-+    add_arg_to_list('after_in_parent', after_in_parent_calls)
-+    add_arg_to_list('after_in_child', after_in_child_calls)
-+
++    @_Decorators.retry
++    @_Decorators.transaction
++    def __len__(self, cursor):
++        cursor.execute("SELECT COUNT(key) FROM %s;" % self.table)
++        row = cursor.fetchone()
++        if row is not None:
+             return row[0]
+ 
+     def __iter__(self):
+-        data = self._execute("SELECT key FROM %s;" % self.table)
+-        return (row[0] for row in data)
++        return self._row_iter(lambda row: row[0], "SELECT key from %s;" % self.table)
+ 
+     def __lt__(self, other):
+         if not isinstance(other, Mapping):
+@@ -122,25 +202,27 @@ class SQLTable(collections.MutableMapping):
+         return len(self) < len(other)
+ 
+     def get_by_pattern(self, pattern):
+-        data = self._execute("SELECT * FROM %s WHERE key LIKE ?;" %
+-                             self.table, [pattern])
+-        return [row[1] for row in data]
++        return self._row_iter(lambda row: row[1], "SELECT * FROM %s WHERE key LIKE ?;" %
++                              self.table, [pattern])
+ 
+     def values(self):
+         return list(self.itervalues())
+ 
+     def itervalues(self):
+-        data = self._execute("SELECT value FROM %s;" % self.table)
+-        return (row[0] for row in data)
++        return self._row_iter(lambda row: row[0], "SELECT value FROM %s;" %
++                              self.table)
+ 
+     def items(self):
+         return list(self.iteritems())
+ 
+     def iteritems(self):
+-        return self._execute("SELECT * FROM %s;" % self.table)
++        return self._row_iter(lambda row: (row[0], row[1]), "SELECT * FROM %s;" %
++                              self.table)
+ 
+-    def clear(self):
+-        self._execute("DELETE FROM %s;" % self.table)
++    @_Decorators.retry
++    @_Decorators.transaction
++    def clear(self, cursor):
++        cursor.execute("DELETE FROM %s;" % self.table)
+ 
+     def has_key(self, key):
+         return key in self
+@@ -195,7 +277,7 @@ class PersistData(object):
+         del self.data[domain][key]
+ 
+ def connect(database):
+-    connection = sqlite3.connect(database, timeout=5, isolation_level=None)
++    connection = sqlite3.connect(database, timeout=5)
+     connection.execute("pragma synchronous = off;")
+     connection.text_factory = str
+     return connection
 -- 
 2.19.1
 
