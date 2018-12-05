@@ -1,51 +1,27 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
-	[209.85.221.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 434EA744DB
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  5 Dec 2018 13:07:08 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id c14so19625724wrr.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 05 Dec 2018 05:07:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=NHsPl1eHFBLsej0jWUqB89bTV1fj0vvSenAhORlK8MQ=;
-	b=ZYopuKEGPGTO2XUv6LHSOP0K6MyBhU3+EEnyslSr26hLstobQ2lSshIGrKTbeowYDl
-	H4q0X5hSYDHLvXyY5cqMJff9ldMeIHGI/bOIrRiKE4SSHdzArGzwbuX9iay19mwSqfcX
-	mMLiXzq2ziGUX2fdQjJfzCyWsap2Vx7XE/Nb4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=NHsPl1eHFBLsej0jWUqB89bTV1fj0vvSenAhORlK8MQ=;
-	b=U4NzVwgrnpQpbxu0hQGjbLQ0eSBGYYdeozDofNXeHmbeh/V6X12ZVMvNJyofi6uzzl
-	aIh+fuh/JcecozAVioF5kK9k/GDrQT6ObZzz1AnbtqlJu13gPy254oO1wrSnS6X1r2nK
-	PNPw/dICD8y5UcHwQA04ZkedtEcVq4+jKhs3KH6QWkzSqKbVedijGilEF9Q8ixXobvPa
-	BFZ3dITIRs8bJI0dvFg1axalv6rsM1gWX1wy7ECvKLTQjk83fa3u2eWDgWj6tN4jeu63
-	Xi9hWhROITF8u4cpOsdXyVJVMpPAg6bbp1NvKNJt1PXc9bzsSpfljhdlJzEhCIwbegCu
-	qn8Q==
-X-Gm-Message-State: AA+aEWbmrN6I/P2kyZ4+UwUR4+5tT4+OQ+RfvzQ1LU4T4cITBKfw/7MZ
-	vE0Bhpl7xb/uYthN108RJXMIl9kcwyY=
-X-Google-Smtp-Source: AFSGD/WnO82fz5WHIyfDvHamfW2M0IwN+gzJ+6BDIlT9ZvunEo+rbWc0htIFzNsS83tm7ZcJ5h8L9Q==
-X-Received: by 2002:adf:e7d0:: with SMTP id e16mr22942685wrn.142.1544015228661;
-	Wed, 05 Dec 2018 05:07:08 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	l197sm11825711wma.44.2018.12.05.05.07.07
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 05 Dec 2018 05:07:07 -0800 (PST)
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 27B1B6BC7E;
+	Wed,  5 Dec 2018 22:50:19 +0000 (UTC)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.15.2/8.15.2/Debian-10) with ESMTPSA id
+	wB5MoI4x012618
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NOT); Wed, 5 Dec 2018 22:50:19 GMT
+Message-ID: <92dc76b3b209f034ebafaf88ae8ff9844475abb9.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  5 Dec 2018 13:07:03 +0000
-Message-Id: <20181205130703.13546-4-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20181205130703.13546-1-richard.purdie@linuxfoundation.org>
-References: <20181205130703.13546-1-richard.purdie@linuxfoundation.org>
-MIME-Version: 1.0
-Subject: [PATCH 4/4] main: Don't use print() directly, use logger
+To: Joshua Watt <jpewhacker@gmail.com>,
+	openembedded-core@lists.openembedded.org,
+	bitbake-devel@lists.openembedded.org
+Date: Wed, 05 Dec 2018 22:50:18 +0000
+In-Reply-To: <20181204034245.25461-11-JPEWhacker@gmail.com>
+References: <20180809220840.26697-1-JPEWhacker@gmail.com>
+	<20181204034245.25461-1-JPEWhacker@gmail.com>
+	<20181204034245.25461-11-JPEWhacker@gmail.com>
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+X-Virus-Scanned: clamav-milter 0.100.2 at dan
+X-Virus-Status: Clean
+Subject: Re: [OE-core][PATCH v3 10/17] bitbake: siggen: Split out task depend ID
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,41 +34,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 05 Dec 2018 13:07:08 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 05 Dec 2018 22:50:20 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Avoid failures like:
+On Mon, 2018-12-03 at 21:42 -0600, Joshua Watt wrote:
+> Abstracts the function to get the dependency ID for a task so it can
+> return something other that the taskhash
+> 
+> [YOCTO #13030]
+> 
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+>  bitbake/lib/bb/siggen.py | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+> index ab6df7603c8..2daca70538a 100644
+> --- a/bitbake/lib/bb/siggen.py
+> +++ b/bitbake/lib/bb/siggen.py
+> @@ -41,6 +41,9 @@ class SignatureGenerator(object):
+>      def finalise(self, fn, d, varient):
+>          return
+>  
+> +    def get_depid(self, task):
+> +        return self.taskhash[task]
+> +
+>      def get_taskhash(self, fn, task, deps, dataCache):
+>          return "0"
 
-2018-12-04 03:30:56,033 - oe-selftest - INFO - ======================================================================
-2018-12-04 03:30:56,033 - oe-selftest - INFO - FAIL: pkgdata.OePkgdataUtilTests.test_find_path (subunit.RemotedTestCase)
-2018-12-04 03:30:56,033 - oe-selftest - INFO - ----------------------------------------------------------------------
-2018-12-04 03:30:56,033 - oe-selftest - INFO - testtools.testresult.real._StringException: Traceback (most recent call last):
-[...]
-AssertionError: 'Previous bitbake instance shutting down?,[77 chars]xist' != 'ERROR: Unable to find any package produci[14 chars]xist'
-- Previous bitbake instance shutting down?, waiting to retry...
-  ERROR: Unable to find any package producing path /not/exist
+I spent a while wondering why we still had "IDs" in the runqueue code
+when I thought I'd removed them all. Once I'd gotten over that I
+somehow thought this related to the task's dependencies and then how
+could it only have one of them?
 
-We need to use the logger so output is correctly handled in such cases.
+I therefore suspect calling this "depid" is going to be confusing and
+we need a better name for it. I'm wondering about taskresid?
+taskresolvid? taskresolvedid? taskreshash?
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/main.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I appreciate why you're calling it an 'ID', hash may be clearer
+thought, not sure...
 
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 732a315404..7dc953da66 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -448,7 +448,7 @@ def setup_bitbake(configParams, configuration, extrafeatures=None):
-                 else:
-                     logger.info("Reconnecting to bitbake server...")
-                     if not os.path.exists(sockname):
--                        print("Previous bitbake instance shutting down?, waiting to retry...")
-+                        logger.info("Previous bitbake instance shutting down?, waiting to retry...")
-                         i = 0
-                         lock = None
-                         # Wait for 5s or until we can get the lock
--- 
-2.19.1
+Cheers,
+
+Richard
+
+
+
+
+
+
+
+
+
 
 
