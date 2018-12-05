@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com
-	[209.85.128.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 06486745C2
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
+	[209.85.221.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 434EA744DB
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  5 Dec 2018 13:07:07 +0000 (UTC)
-Received: by mail-wm1-f45.google.com with SMTP id m22so12858657wml.3
+	Wed,  5 Dec 2018 13:07:08 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id c14so19625724wrr.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 05 Dec 2018 05:07:08 -0800 (PST)
+	Wed, 05 Dec 2018 05:07:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=fmBKzSDQmnqM8ZSRT6D7hepee46ODQRvvfOvxhgDKYY=;
-	b=RcaXOd4J1diHQlYdiGkzZscocKiWh/+FicEcP9xdP8HXyfNOXp4Qwpuekd/oQIL88V
-	E3vUvdy1diqJ2/4sLpySlE8FZazS5aTJRH8n11AMmaSgXzHKy5298IPhcPCBzCeX9dDw
-	crRYpdYCRqs6a4jjcqf3O0C0ND626HsPD37fo=
+	bh=NHsPl1eHFBLsej0jWUqB89bTV1fj0vvSenAhORlK8MQ=;
+	b=ZYopuKEGPGTO2XUv6LHSOP0K6MyBhU3+EEnyslSr26hLstobQ2lSshIGrKTbeowYDl
+	H4q0X5hSYDHLvXyY5cqMJff9ldMeIHGI/bOIrRiKE4SSHdzArGzwbuX9iay19mwSqfcX
+	mMLiXzq2ziGUX2fdQjJfzCyWsap2Vx7XE/Nb4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=fmBKzSDQmnqM8ZSRT6D7hepee46ODQRvvfOvxhgDKYY=;
-	b=sdbDPCE3NMjIC4KatV0OlnxvDlhJpoQKzddbYF4i5Fu80TlcZGCWca1Whi/TJJIQr1
-	rlem7/RtKtLxh8HawF3DL2azNZ/3D2U6fxjSBzm30enR8zF0Cor6PI4RDtVE6J1kqFYY
-	5UKHFDujUTMlP5NYE1OzLRs2lqykX6tndLP07w/ZtSLTseizcrUp7AUoyVjjqkQsF4tX
-	1ZUm5DMBHxd+E/5ZBCyTLgGFlFTvrpSuQwtmrXOUupSfsZya2yYAfPxz9+ucprKFP28F
-	epVieT59gsP4sLk7uGG9pyfTiMLedRTNbTDnfpVjaT0W2Omjydeou4QEfLsMTMKJXFr/
-	r1kw==
-X-Gm-Message-State: AA+aEWYYHNDBkEGnqYDo6k3dKXJqaplooEdWMMYgWMdH7uVy6oj1iyka
-	/ENWrUcOBkAB1RK5gwgvS9I1xqkc3W0=
-X-Google-Smtp-Source: AFSGD/Xq6XjINA2q8q9Bd7kBms+AIAr61z0iv5t3z9twSi2ImCCrCRvsDl+vrwn9UhdWZrWtriZaHQ==
-X-Received: by 2002:a1c:f116:: with SMTP id p22mr16040681wmh.0.1544015227464; 
-	Wed, 05 Dec 2018 05:07:07 -0800 (PST)
+	bh=NHsPl1eHFBLsej0jWUqB89bTV1fj0vvSenAhORlK8MQ=;
+	b=U4NzVwgrnpQpbxu0hQGjbLQ0eSBGYYdeozDofNXeHmbeh/V6X12ZVMvNJyofi6uzzl
+	aIh+fuh/JcecozAVioF5kK9k/GDrQT6ObZzz1AnbtqlJu13gPy254oO1wrSnS6X1r2nK
+	PNPw/dICD8y5UcHwQA04ZkedtEcVq4+jKhs3KH6QWkzSqKbVedijGilEF9Q8ixXobvPa
+	BFZ3dITIRs8bJI0dvFg1axalv6rsM1gWX1wy7ECvKLTQjk83fa3u2eWDgWj6tN4jeu63
+	Xi9hWhROITF8u4cpOsdXyVJVMpPAg6bbp1NvKNJt1PXc9bzsSpfljhdlJzEhCIwbegCu
+	qn8Q==
+X-Gm-Message-State: AA+aEWbmrN6I/P2kyZ4+UwUR4+5tT4+OQ+RfvzQ1LU4T4cITBKfw/7MZ
+	vE0Bhpl7xb/uYthN108RJXMIl9kcwyY=
+X-Google-Smtp-Source: AFSGD/WnO82fz5WHIyfDvHamfW2M0IwN+gzJ+6BDIlT9ZvunEo+rbWc0htIFzNsS83tm7ZcJ5h8L9Q==
+X-Received: by 2002:adf:e7d0:: with SMTP id e16mr22942685wrn.142.1544015228661;
+	Wed, 05 Dec 2018 05:07:08 -0800 (PST)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	l197sm11825711wma.44.2018.12.05.05.07.06
+	l197sm11825711wma.44.2018.12.05.05.07.07
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 05 Dec 2018 05:07:06 -0800 (PST)
+	Wed, 05 Dec 2018 05:07:07 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  5 Dec 2018 13:07:02 +0000
-Message-Id: <20181205130703.13546-3-richard.purdie@linuxfoundation.org>
+Date: Wed,  5 Dec 2018 13:07:03 +0000
+Message-Id: <20181205130703.13546-4-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20181205130703.13546-1-richard.purdie@linuxfoundation.org>
 References: <20181205130703.13546-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 3/4] process: Flush key output to logs
+Subject: [PATCH 4/4] main: Don't use print() directly, use logger
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,33 +61,37 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Wed, 05 Dec 2018 13:07:08 -0000
 Content-Transfer-Encoding: 8bit
 
+Avoid failures like:
+
+2018-12-04 03:30:56,033 - oe-selftest - INFO - ======================================================================
+2018-12-04 03:30:56,033 - oe-selftest - INFO - FAIL: pkgdata.OePkgdataUtilTests.test_find_path (subunit.RemotedTestCase)
+2018-12-04 03:30:56,033 - oe-selftest - INFO - ----------------------------------------------------------------------
+2018-12-04 03:30:56,033 - oe-selftest - INFO - testtools.testresult.real._StringException: Traceback (most recent call last):
+[...]
+AssertionError: 'Previous bitbake instance shutting down?,[77 chars]xist' != 'ERROR: Unable to find any package produci[14 chars]xist'
+- Previous bitbake instance shutting down?, waiting to retry...
+  ERROR: Unable to find any package producing path /not/exist
+
+We need to use the logger so output is correctly handled in such cases.
+
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/bb/main.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index fd1ba47fd5..49973d6670 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -445,6 +445,8 @@ class BitBakeServer(object):
- 
-     def _startServer(self):
-         print(self.start_log_format % (os.getpid(), datetime.datetime.now().strftime(self.start_log_datetime_format)))
-+        sys.stdout.flush()
-+
-         server = ProcessServer(self.bitbake_lock, self.sock, self.sockname)
-         self.configuration.setServerRegIdleCallback(server.register_idle_function)
-         os.close(self.readypipe)
-@@ -456,6 +458,8 @@ class BitBakeServer(object):
-         server.server_timeout = self.configuration.server_timeout
-         server.xmlrpcinterface = self.configuration.xmlrpcinterface
-         print("Started bitbake server pid %d" % os.getpid())
-+        sys.stdout.flush()
-+
-         server.start()
- 
- def connectProcessServer(sockname, featureset):
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 732a315404..7dc953da66 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -448,7 +448,7 @@ def setup_bitbake(configParams, configuration, extrafeatures=None):
+                 else:
+                     logger.info("Reconnecting to bitbake server...")
+                     if not os.path.exists(sockname):
+-                        print("Previous bitbake instance shutting down?, waiting to retry...")
++                        logger.info("Previous bitbake instance shutting down?, waiting to retry...")
+                         i = 0
+                         lock = None
+                         # Wait for 5s or until we can get the lock
 -- 
 2.19.1
 
