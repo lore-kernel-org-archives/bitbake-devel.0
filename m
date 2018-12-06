@@ -1,87 +1,57 @@
-Return-Path: <zzebowa@hotmail.com>
-X-Greylist: delayed 38077 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 06 Dec 2018 05:21:28 UTC
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com
-	(mail-oln040092068100.outbound.protection.outlook.com [40.92.68.100])
-	by mail.openembedded.org (Postfix) with ESMTP id 8CB276B51C
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Dec 2018 05:21:28 +0000 (UTC)
-Received: from AM5EUR02HT073.eop-EUR02.prod.protection.outlook.com
-	(2a01:111:e400:7e1c::290) by
-	HE1EUR02HT079.eop-EUR02.prod.protection.outlook.com
-	(2a01:111:e400:7e1d::371) with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1404.13;
-	Thu, 6 Dec 2018 01:47:19 +0000
-Received: from HE1EUR02HT075.eop-EUR02.prod.protection.outlook.com
-	(2a01:111:e400:7e1d::426) by
-	AM5EUR02HT073.eop-EUR02.prod.protection.outlook.com
-	(2a01:111:e400:7e1c::290) with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1404.13;
-	Wed, 5 Dec 2018 22:47:26 +0000
-Received: from AM5EUR02HT077.eop-EUR02.prod.protection.outlook.com
-	(2a01:111:e400:7e1c::383) by
-	HE1EUR02HT075.eop-EUR02.prod.protection.outlook.com
-	(2a01:111:e400:7e1d::426) with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1404.13;
-	Wed, 5 Dec 2018 19:17:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
-	s=selector1;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=wCJkcOa7ql97UdIpwrLCWP3My2lWb9HIYjQ8c6BsDCU=;
-	b=PVJos7jDqM2YowSL8OrlrHJWyiH0f2SfrSRZPzfIpbpMX5SybTPahVtGiGWgveLHyfCgja+O8dEOx1XhqvuMarbfdlVm0B4y16Y//i5186LIbam762NqCRMwGiA3uJvFTUFhr5VmZNJCSfN+5hDmOcLy0mtbtFzbIX8CDPNUtGnSjvA5Azl6HZi20dhyGFX/q88Q6vlXXlPBRNzQYK/hEabafi73JP0f+OAvfN4MaaqBKbeqIHhnx2jB5v3GjklDliO0dmXnQz+RPz2676jBZuXmvNBxm7WvoCdY8rTO+nOzU6gitwhHxO/l6jR7vdZFeL35q/DQmWYlV+SI9+oS6g==
-Received: from AM5EUR02FT042.eop-EUR02.prod.protection.outlook.com
-	(10.152.8.55) by AM5EUR02HT077.eop-EUR02.prod.protection.outlook.com
-	(10.152.9.127) with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1404.13;
-	Wed, 5 Dec 2018 14:14:19 +0000
-Received: from AM6PR05MB5507.eurprd05.prod.outlook.com (10.152.8.56) by
-	AM5EUR02FT042.mail.protection.outlook.com (10.152.9.106) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.20.1404.13 via Frontend Transport; Wed, 5 Dec 2018 14:14:19 +0000
-Received: from AM6PR05MB5507.eurprd05.prod.outlook.com
-	([fe80::30dc:a7ac:ec4a:ccf9]) by
-	AM6PR05MB5507.eurprd05.prod.outlook.com
-	([fe80::30dc:a7ac:ec4a:ccf9%4]) with mapi id 15.20.1382.020;
-	Wed, 5 Dec 2018 14:14:19 +0000
-From: Matt Sykes <zzebowa@hotmail.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: iso image creation
-Thread-Index: AQHUjKR0fqKnN98Zo0OPW5AbW2iRgQ==
-Date: Wed, 5 Dec 2018 14:14:19 +0000
-Message-ID: <AM6PR05MB550726E165A6FBFA73CEDA96B1A80@AM6PR05MB5507.eurprd05.prod.outlook.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-incomingtopheadermarker: OriginalChecksum:5E5959AD7586B35FE9D44B0ACF403E54FDF85FF5AB2886A1D6865C53EEE6812A;
-	UpperCasedChecksum:B476B1F120D77E73E40948FB7F771A424319D178B2D438342E6941FE67E9A23B;
-	SizeAsReceived:6795; Count:43
-x-tmn: [CjG3wyMw9VAi2C0gj4/ST9E/BceuKsR0]
-x-ms-publictraffictype: Email
-x-microsoft-exchange-diagnostics: 1; AM5EUR02HT077;
-	6:cnlNFNtnpRc/JPuI1RnIjeouKppwb7m5dz9K5H7L1AR1VfVvFXA6JhRIuin2O7txD7mF/UnRV8y7x3ALf00GM7blTGiQWcsBDB1doyZrlsRSI0igy53wikVTWAA4DReiMQrFaFMWcc3kZOZT4p3M6gNI0rh9qBgN9rR5ehyhXiTFMqCAb2WyAyROKo11H5J5yomjjYaijN/rb69HcSaEdr4lT0N0HIL3W/PV3wEr2SQfIR9dxHlMXey9yvCNxq+AQsuJvzZvB6BG2VjJoJPD/gZ5gqOBwc/eCwiJRRvU93edQkmfMQLNUzA7Kbxxpcmkcv87dYrzfuy8j44paR2/PQUlebf070e3jOI9PqwiGeeF6g3gY2UJcBaoZ91bn0DBHm+Pr5iQuaOrOAP6ELyQWIKw9rCkLhf589cfqJYzxklrDUjMAs7a5n/qLiyL2L5rMCbcS+6C2skAFBYnfNp6RQ==;
-	5:wd6kyvW/h099NZ42F8iU7HN8zs3HrbzSv3m1plJqw3P2IOvwq22rAm25fK2pnKnrFvn2xx30yik+6hjZ4C9K2pixyCjvq3ATW2iE5o7HUcwYNKfoudihl5WyGA0wG1wa0ED1HvJkeLoZpWrG4c1MRVWjeK+Ih923ewjtRfjq3Xg=;
-	7:Z3JhJ5cBFhNuqOO2lKHdZTFwAWVazjIbR52xPEfD4WWCQvJnZVm7D9rysLSAFYfwNWLN9wDAHYIVazdEXcWB1MWXMnoEdHM/NJlhr+McahBjrDb6Dv1tdKxhokqyGHmjtchsIoCap7iKduan22rP8w==
-x-incomingheadercount: 43
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0; PCL:0;
-	RULEID:(2390098)(7020095)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031324274)(2017031323274)(2017031322404)(1603101475)(1601125500)(1701031045);
-	SRVR:AM5EUR02HT077; 
-X-MS-TrafficTypeDiagnostic: AM5EUR02HT077:|AM5EUR02HT077:|HE1EUR02HT075:|HE1EUR02HT075:|AM5EUR02HT073:|AM5EUR02HT073:|HE1EUR02HT079:
-x-exchange-antispam-report-cfa-test: BCL:0; PCL:0; RULEID:(4566010)(82015058);
-	SRVR:AM5EUR02HT077; BCL:0; PCL:0; RULEID:; SRVR:AM5EUR02HT077; 
-x-microsoft-antispam-message-info: TDg90l5dH4PSP3Pq4l57hlhdgSBNR4zNLb4h9E8Db+QWKFiuphPpkecMxt6NCFKC
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: b6587b75-6f1a-4db7-b0b6-5cad10ef59a7
-X-MS-Exchange-CrossTenant-Network-Message-Id: 126d73b9-dda1-498a-dabd-08d65abbf2e3
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: b6587b75-6f1a-4db7-b0b6-5cad10ef59a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2018 14:14:19.8956 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5EUR02HT077
-X-OriginatorOrg: hotmail.com
-Subject: iso image creation
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-oi1-f194.google.com (mail-oi1-f194.google.com
+	[209.85.167.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 6DCAF79357;
+	Thu,  6 Dec 2018 14:58:32 +0000 (UTC)
+Received: by mail-oi1-f194.google.com with SMTP id a77so600411oii.5;
+	Thu, 06 Dec 2018 06:58:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:message-id:subject:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=AtVe/OovBXjq3I+UexQ/PW1Ub3m5fCF1TOxNy6g8GaQ=;
+	b=MBeJNmj4JmSWUgVLHSxr7Y4GSz1gFobIEQjwQxyRr4RgU9M64WJCGf/PHnlnfvOUvW
+	rJjXxQgLWu0wtodrNzKYL/HshH2BZw14cOAJWNT1aqELHSoYul3Pty4pciDZtYGWb9dg
+	LY6+MQ0jq8cRGmzavRPMnGgiJLBK2yRamif0Jhm2ISOcX2tD6VETNemPujpARBQ/Fx1e
+	eDMr85J5qfLfn8vxWUiNiUAeQCsUbGzfqCddyi97VMICci4qQ/tiVQKgvopyRSOMDzPb
+	3M3uR8IkyhVt9ojvqx6cWcyijgMODa13jd6K1UlmHg6OyPgclQBgjA8NS+YIV07k2Xpr
+	tAwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:message-id:subject:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=AtVe/OovBXjq3I+UexQ/PW1Ub3m5fCF1TOxNy6g8GaQ=;
+	b=t1FTrP9hC8xqBVNvY19PvCj/XCx+DUQ5+QsKk4Sa8fpEZ4SVwg63rCAocL9TJnGToV
+	41o6Z0m8+6huALbgCIvx4fcCf7hsFTm9ohqXpaqN0zW5PXY8WPku6tPd+Idgmi+UtpEF
+	oFuCWvkC3zGwVoOk5/jJXe0jlIAR/mD++iLzQuww/CPys5kkUSDO8YSBImnqLKtZPOnd
+	FoChawjnRUCPGaGAjE5paWPL+m5nXWLdklIR4ADKK12k4RsbPeO7BgzTvqBaHpZ281qr
+	YnKeP8aVJ5hXxMtp+/xrizi+pq/ONY4yWOMI4q7I1QulaEe/PHw49XSWWQ/74/kGlOcj
+	6REA==
+X-Gm-Message-State: AA+aEWah8cxb3BszkpqPfC+sHaaN1bU6dXTsPJBynTkuohtU7+aeC0DD
+	wa5HhJcGB8j96nc2sdcPxHc=
+X-Google-Smtp-Source: AFSGD/Vr/HkYcV+sHrAD3V4E0jkvX0dvCN++iqHS3fpyNJC21MRqIbzKyigs5Kb/Kd+5auJJ5aipBg==
+X-Received: by 2002:aca:54c4:: with SMTP id
+	i187mr16918634oib.238.1544108312974; 
+	Thu, 06 Dec 2018 06:58:32 -0800 (PST)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.googlemail.com with ESMTPSA id
+	21sm214793oie.24.2018.12.06.06.58.31
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Thu, 06 Dec 2018 06:58:32 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Message-ID: <cb3093ba9816ce9e80cfcf7ccab15ed6e1edb307.camel@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	openembedded-core@lists.openembedded.org,
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 06 Dec 2018 08:58:30 -0600
+In-Reply-To: <92dc76b3b209f034ebafaf88ae8ff9844475abb9.camel@linuxfoundation.org>
+References: <20180809220840.26697-1-JPEWhacker@gmail.com>
+	<20181204034245.25461-1-JPEWhacker@gmail.com>
+	<20181204034245.25461-11-JPEWhacker@gmail.com>
+	<92dc76b3b209f034ebafaf88ae8ff9844475abb9.camel@linuxfoundation.org>
+User-Agent: Evolution 3.30.1 (3.30.1-1.fc29) 
+Mime-Version: 1.0
+Subject: Re: [OE-core][PATCH v3 10/17] bitbake: siggen: Split out task depend ID
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -94,95 +64,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Dec 2018 05:21:29 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_AM6PR05MB550726E165A6FBFA73CEDA96B1A80AM6PR05MB5507eurp_"
+X-List-Received-Date: Thu, 06 Dec 2018 14:58:32 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---_000_AM6PR05MB550726E165A6FBFA73CEDA96B1A80AM6PR05MB5507eurp_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2018-12-05 at 22:50 +0000, Richard Purdie wrote:
+> On Mon, 2018-12-03 at 21:42 -0600, Joshua Watt wrote:
+> > Abstracts the function to get the dependency ID for a task so it
+> > can
+> > return something other that the taskhash
+> > 
+> > [YOCTO #13030]
+> > 
+> > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> > ---
+> >  bitbake/lib/bb/siggen.py | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+> > index ab6df7603c8..2daca70538a 100644
+> > --- a/bitbake/lib/bb/siggen.py
+> > +++ b/bitbake/lib/bb/siggen.py
+> > @@ -41,6 +41,9 @@ class SignatureGenerator(object):
+> >      def finalise(self, fn, d, varient):
+> >          return
+> >  
+> > +    def get_depid(self, task):
+> > +        return self.taskhash[task]
+> > +
+> >      def get_taskhash(self, fn, task, deps, dataCache):
+> >          return "0"
+> 
+> I spent a while wondering why we still had "IDs" in the runqueue code
+> when I thought I'd removed them all. Once I'd gotten over that I
 
-Hi all
+I suppose I'm not familiar enough with bitbake's history to have
+understood that these "IDs" were problematic in the past :)
 
-I am new here, and havent used bitbake much, but have hit a wall trying to =
-get an iso image created.   I can get vmdk images to work, but not iso.
+> somehow thought this related to the task's dependencies and then how
+> could it only have one of them?
+> 
+> I therefore suspect calling this "depid" is going to be confusing and
+> we need a better name for it. I'm wondering about taskresid?
+> taskresolvid? taskresolvedid? taskreshash?
+> 
+> I appreciate why you're calling it an 'ID', hash may be clearer
+> thought, not sure...
 
-I added this to   core-image.bb    IMAGE_FSTYPES =3D "iso tar.bz2 vmdk",  t=
-he build was cleaned with -c clean and rebuilt.
+Ya, I struggled with the naming. There is no reason it has to be a
+hash, so I went with a (probably too generic) "ID"... in practice using
+a hash is reasonable so I don't have a problem using "hash" in the
+name. My runner up names were "dephash" or "taskdephash". I think
+indicating that it is involved in the dependency calculations is
+important, although I can see how it might be some confusion about
+where it is involved. I'm not too keen on the "resolved" names... but
+maybe I'm missing where the are stemming from?
 
-The vmdk images got built but not the iso.
+Another option if you want to go more of the graph theory approach
+might be "taskedgehash", "edgehash", "taskedgeid", "edgeid", etc.
 
-Can anyone point me in the right direction here, I really want to get this =
-working.
+> 
+> Cheers,
+> 
+> Richard
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+-- 
+Joshua Watt <JPEWhacker@gmail.com>
 
-Many thanks
 
-Matt
-
---_000_AM6PR05MB550726E165A6FBFA73CEDA96B1A80AM6PR05MB5507eurp_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
-1">
-<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
-ttom:0;} </style>
-</head>
-<body dir=3D"ltr">
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-Hi all</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-I am new here, and havent used bitbake much, but have hit a wall trying to =
-get an iso image created.&nbsp; &nbsp;I can get vmdk images to work, but no=
-t iso.</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-I added this to&nbsp; &nbsp;core-image.bb&nbsp; &nbsp;&nbsp;IMAGE_FSTYPES =
-=3D &quot;iso tar.bz2 vmdk&quot;,&nbsp; the build was cleaned with -c clean=
- and rebuilt.&nbsp;</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-The vmdk images got built but not the iso.</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-Can anyone point me in the right direction here, I really want to get this =
-working.</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-Many thanks</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);">
-Matt</div>
-</body>
-</html>
-
---_000_AM6PR05MB550726E165A6FBFA73CEDA96B1A80AM6PR05MB5507eurp_--
