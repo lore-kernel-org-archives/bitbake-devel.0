@@ -1,53 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id EE38F6058C
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
+	[209.85.221.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 8227679CFA
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Dec 2018 13:04:10 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id q18so3717589wrx.9
+	Fri,  7 Dec 2018 13:09:24 +0000 (UTC)
+Received: by mail-wr1-f41.google.com with SMTP id p4so3748610wrt.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 07 Dec 2018 05:04:12 -0800 (PST)
+	Fri, 07 Dec 2018 05:09:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=lpZzW2DV4Kd2KNfJLDDrw6tnu1RwOzqwZ+1+lzK2RHY=;
-	b=W2ql9ppQZ/xQrN1GWMnU91H/H9aMtU86zN/wzV3NEm5MHWiVzXX/43pCnfYbJVzFqo
-	FvOAgMcLcHJPQJnJb7ZvgQZvSKEOUhDlpLpGi5N6UcWn5X5lqbQsdpLLUInt04qd/L1I
-	oHI0wok8ps/cqWS2KDvHq7Qkhxfnpd6IOglk0=
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=9QkdgqhmfODH/I/c51KSw/b7R9gTnNJb7ZqVN0h4uCo=;
+	b=Fc6PT53PqWub8UjCG0w8/RNpM85epA8GyS/62f6wOqJy0OeQduKfEZHvtvjr8Bkujw
+	F4KnToKPdjoS2GGu0AUeaa8G6kOpCgpjtRQZqFLXOhGdt30e+7A7ZLiH4mv05ZY2UMz9
+	GT03JHSp8LpcXK+ZUDQPdCTjsqW/wxEq6DfWM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=lpZzW2DV4Kd2KNfJLDDrw6tnu1RwOzqwZ+1+lzK2RHY=;
-	b=hDQ74ENNxqAWTQIjGO7WLYynEhpGuFlAQyLyRCZQDsp+oMkTRo/MJZkh27gHoW9eDF
-	rGfW5SCGHW7XaICXXZo9j8qb+pDQe4HtTB67BQ3XaH+ipYWpI/uJ8dEDppPN3fOtAZ8d
-	2Bv479Wqp6ePrMXeK5GJ5uYhmNDBI/ZbyAx9bTQEmnPTI1llbLVUnfJeZiHJaojVYWmj
-	UW4Gyo7g6Sm91YIJ8UyfeiBG7CctZTvSvCV3IRMT+QZSX2avddK+HetqnRKLOta+tjcw
-	eiZ3bixkLLurZ5Z0VT3Ogi5rEMLTBjelzJoDnemXk2ZqjxOOqj6LZuzNjqi4DHJLAGRB
-	4LAw==
-X-Gm-Message-State: AA+aEWZ9F+kLcmJ29DOxtHagzucgC6jlcWUEdQHKlwADD/07HJKLDs55
-	7xGXC8hgD/7gfDl8Z1b+YoPz0g==
-X-Google-Smtp-Source: AFSGD/VwudRvEzkGHnmhmvVJvqZc0rW7N85dWd9bqwcLTr6aJ34kmKC4jDs6pQ+X8gsjKOUGLf8Dqg==
-X-Received: by 2002:a5d:548d:: with SMTP id h13mr1672389wrv.80.1544187851578; 
-	Fri, 07 Dec 2018 05:04:11 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=9QkdgqhmfODH/I/c51KSw/b7R9gTnNJb7ZqVN0h4uCo=;
+	b=F9mHl2oCMiEBrmPVT8SgfGgVBd5QpKnBf0QA50N5Po781+kFnXryVcFIL/X2OyAOwZ
+	r9GhqmuQQdhpbRuLqdfnkDdRPw1hhl8oMwfI+9Z7rvIyr/+kJ0MDaJFfsbuEUHiBf9NO
+	oQ87g1hievSHdLvBKREjeywHb7IHzbavoCepuYrq2cdPGiUkZT1n+HO1VbfRwKd8qvQw
+	UMObKDWWFgjwx65Zq9RP/bfw09/sCj0uTvaD3t6lNM+w7WyLTfWCZmClQdOuXqLuuPsr
+	SeoJJwY1kOKAk918J7JfQKskM6UBYO4CEit/22atOIwGRhMqTOWLOqRX4E4wSzY0qOt6
+	MwEQ==
+X-Gm-Message-State: AA+aEWbx2a1bq7THiJjaQ7Z1CblNSgXTLaTjDuFw7U//9xP0PAGfHfWT
+	qY47zjUqMeRRQDrcSRoqQM/7PVQQ544=
+X-Google-Smtp-Source: AFSGD/XbIeWN1cwlFvF3HDAPNib4KExphrGNCQJECgm+amECLMwRUeFSAp9zhOWYJ7sTAPFDXQZixA==
+X-Received: by 2002:adf:f703:: with SMTP id r3mr1739835wrp.93.1544188164711;
+	Fri, 07 Dec 2018 05:09:24 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	c129sm2749185wma.48.2018.12.07.05.04.10
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Fri, 07 Dec 2018 05:04:10 -0800 (PST)
-Message-ID: <eb636ddb0503dd0c271d51b3f7de32b23096fe51.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: Joshua Watt <jpewhacker@gmail.com>
-Date: Fri, 07 Dec 2018 13:04:09 +0000
-In-Reply-To: <CAJdd5GbfV4vm9eoCPYxme7s31vvoK-M_jbCPKfzkLWxNH=BT-w@mail.gmail.com>
-References: <20181206185535.12523-1-JPEWhacker@gmail.com>
-	<76873c27c0f7da4f8339b25f009150d7b38d1e72.camel@linuxfoundation.org>
-	<CAJdd5GbfV4vm9eoCPYxme7s31vvoK-M_jbCPKfzkLWxNH=BT-w@mail.gmail.com>
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] Add a variable to pass flags to fakeroot (pseudo)
+	v8sm2535585wrq.53.2018.12.07.05.09.23
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 07 Dec 2018 05:09:24 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  7 Dec 2018 13:09:22 +0000
+Message-Id: <20181207130922.18311-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Subject: [PATCH] fetch2/wget: Fix typo in exception name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,43 +56,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Dec 2018 13:04:11 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 07 Dec 2018 13:09:25 -0000
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2018-12-06 at 21:27 -0600, Joshua Watt wrote:
-> On Thu, Dec 6, 2018 at 4:05 PM Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
-> > On Thu, 2018-12-06 at 12:55 -0600, Joshua Watt wrote:
-> > > It is occasionally useful to pass additional flags to fakeroot
-> > > (pseudo)
-> > > either for debugging or for behavioral system changes. Add a
-> > > variable
-> > > called "FAKEROOTARGS" that can be used for this purpose.
-> > 
-> > Why wouldn't you just append to FAKEROOT/FAKEROOTCMD ?
-> 
-> You can't currently add arguments to FAKEROOTCMD because it is passed
-> as an array member to subprocess.Popen sort of like:
-> 
->  subprocess.Popen([d.getVar('FAKEROOTCMD'), 'blah', 'blah', ...
-> 
-> In order to pass arguments, it would probably have to have split into
-> an array i.e. :
-> 
->  subprocess.Popen(d.getVar('FAKEROOTCMD').split() + ['blah', 'blah',
-> ...
-> 
-> I wasn't sure if that was desirable or if it would break anything, so
-> I went with the lower risk approach of adding a new variables. I can
-> certainly make a change to modify the usage of FAKEROOTCMD as
-> described above and simply append the flags to it if that is
-> preferred.
+This could clearly never have worked but as its in an error path, it doesn't
+get tested/used much.
 
-I'd prefer to fix this to work than add more variables...
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/wget.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-
-Richard
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 8f505b6de9..1237e56098 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -168,7 +168,7 @@ class Wget(FetchMethod):
+                 """
+                 host = req.host
+                 if not host:
+-                    raise urlllib2.URLError('no host given')
++                    raise urllib.error.URLError('no host given')
+ 
+                 h = http_class(host, timeout=req.timeout) # will parse host:port
+                 h.set_debuglevel(self._debuglevel)
+-- 
+2.19.1
 
 
