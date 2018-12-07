@@ -1,26 +1,40 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 884C879585
+Return-Path: <jonathan.yong@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 47C5778A94
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Dec 2018 22:05:48 +0000 (UTC)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-10) with ESMTPSA id
-	wB6M5lmn008242
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NOT); Thu, 6 Dec 2018 22:05:48 GMT
-Message-ID: <7e797d261279179d8544c17ab73af6546ae7bf32.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Mark Hatle <mark.hatle@windriver.com>, Joshua Watt <jpewhacker@gmail.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Thu, 06 Dec 2018 22:05:47 +0000
-In-Reply-To: <8f81fa22-3b5a-09a5-a128-f8d0f6b3fed8@windriver.com>
-References: <20181206185535.12523-1-JPEWhacker@gmail.com>
-	<8f81fa22-3b5a-09a5-a128-f8d0f6b3fed8@windriver.com>
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.100.2 at dan
-X-Virus-Status: Clean
-Subject: Re: [PATCH] Add a variable to pass flags to fakeroot (pseudo)
+	Fri,  7 Dec 2018 00:41:24 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	06 Dec 2018 16:41:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.56,324,1539673200"; d="scan'208";a="107626594"
+Received: from kmsmsx152.gar.corp.intel.com ([172.21.73.87])
+	by fmsmga008.fm.intel.com with ESMTP; 06 Dec 2018 16:41:24 -0800
+Received: from pgsmsx113.gar.corp.intel.com ([169.254.6.24]) by
+	KMSMSX152.gar.corp.intel.com ([169.254.11.13]) with mapi id
+	14.03.0415.000; Fri, 7 Dec 2018 08:36:18 +0800
+From: "Yong, Jonathan" <jonathan.yong@intel.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [PATCH 0/1] document git usehead argument
+Thread-Index: AQHUi5OcJ023uU+wIUmmDrmJ1uYN+qVycmcg
+Date: Fri, 7 Dec 2018 00:36:17 +0000
+Message-ID: <A2839490D87BE64781D1FF17AA14CEC30B488905@pgsmsx113.gar.corp.intel.com>
+References: <20181204053753.44975-1-jonathan.yong@intel.com>
+In-Reply-To: <20181204053753.44975-1-jonathan.yong@intel.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjkwNTFkMTEtMmIyMy00YjZiLWIzNjQtYzc0MmIwMDRkNmI5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieElSNkx5bFdpeFM3OEZKVkNQMkJyWmdxUWZzZ2FRRmQ0czVhc3g1ZUxhMzlVUVNlNFwvOEY3S1VBSWIyMnpwaUgifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.205]
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/1] document git usehead argument
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,30 +47,11 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Dec 2018 22:05:49 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 07 Dec 2018 00:41:24 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2018-12-06 at 13:08 -0600, Mark Hatle wrote:
-> (No objection to this patch......)
-> 
-> Would anyone be interested in a comment that changes aware from
-> 'fakeroot' and
-> to 'pseudo'?
-> 
-> Just curious, as I don't actually think 'fakeroot' would work
-> anymore.  (Ya, I
-> know there would be compatibility issues, but those could likely be
-> addressed by
-> variables and/or 'or' statements.)
-> 
-> Just wondering if that kind of a change/cleanup makes sense or not
-> just thinking of bitbake.
-
-I've wondered but I think it would cause churn for little gain...
-
-Cheers,
-
-Richard
+Ping +1.
 
 
