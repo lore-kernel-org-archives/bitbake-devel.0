@@ -1,46 +1,51 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 8637379CB1
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-it1-f171.google.com (mail-it1-f171.google.com
+	[209.85.166.171])
+	by mail.openembedded.org (Postfix) with ESMTP id CF8CC79C7A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Dec 2018 14:32:41 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id D2D26182DA;
-	Fri,  7 Dec 2018 15:32:41 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id rOlI3U_3Rmzo; Fri,  7 Dec 2018 15:32:40 +0100 (CET)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bastet.se.axis.com (Postfix) with ESMTPS id 6C90B18485;
-	Fri,  7 Dec 2018 15:32:40 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BD1CB1E081;
-	Fri,  7 Dec 2018 15:32:39 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B19CB1E07A;
-	Fri,  7 Dec 2018 15:32:39 +0100 (CET)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
-	by boulder03.se.axis.com (Postfix) with ESMTP;
-	Fri,  7 Dec 2018 15:32:39 +0100 (CET)
-Received: from lnxolofjn.se.axis.com (lnxolofjn.se.axis.com [10.92.17.1])
-	by thoth.se.axis.com (Postfix) with ESMTP id A5B9D2B91;
-	Fri,  7 Dec 2018 15:32:39 +0100 (CET)
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)
-	id 98AF39C4F2; Fri,  7 Dec 2018 15:32:39 +0100 (CET)
-Date: Fri, 7 Dec 2018 15:32:39 +0100
-From: Olof Johansson <olof.johansson@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-ID: <20181207143239.k6dtjdyt7nysf4cw@axis.com>
-Mail-Followup-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	bitbake-devel@lists.openembedded.org
-References: <20181207130922.18311-1-richard.purdie@linuxfoundation.org>
+	Fri,  7 Dec 2018 21:59:32 +0000 (UTC)
+Received: by mail-it1-f171.google.com with SMTP id m8so2576176itk.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 07 Dec 2018 13:59:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=kzjpeGcGPpe7B7H9LAclRLcygU8YvB5ME6tjW9JYMxA=;
+	b=gw7+WrkbqU3rp7X3iUchjwBvJywTGR/LKvG1258vDEceQcSzwDENgGHEfTQg8Qd88e
+	OJMNIUdIqEvlTz8qOG3qzxtl7E2cLYc/DIbksYadeoYldzyUlmYjjnFL20u4+gvgI0sr
+	b2pIMyH3PC/1G52xHQcKO6LvSrQZJvdp1jHceBIr5WuLuumMtwxpJzII4pNLevUrAdFj
+	mf0Lw2TRyYv7X3Q5cD1xQAPOj6CLf+NveVgd1lqsvLViCQa1b/nk+XdAIgAnPGTkt2lD
+	YVRzz6DEygzCfrXcUg0b2ANCfIJmBAd18NwOkJsAj560bYgV0xrn5h6QoHFtzB/Lwcjh
+	UozA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=kzjpeGcGPpe7B7H9LAclRLcygU8YvB5ME6tjW9JYMxA=;
+	b=kKCL/ppk8ssmyb3FBXRAZIakgEVRtSUuWLkPhOwV6r7wKKi5ywluDfqJaQIWClotxb
+	Y/xiihj2GOZLY31xQTKmur3zC5tK6PTjk8XhyLSygOJyg7dVfdFu3SBKYn/75EzdxdUN
+	Za8ushy/HKojqo4Wq2hsyK5X9+98EWvuZ1qA5SPqG7kUmRTd3f88TvKgnqdk/eIcwgkZ
+	1/t5UMGKMLHhx9Uojg8FRIlgaOCWIUBG98T5NAOdSgek6NtyfmPy4vgW75q9u3lVMmI0
+	xW3OgGCAJJxE6mSqzG0heUrrneBvxrdgUgf2Ra/KVNwmd0QMtRl/+UPMRlGyoZ1kDxts
+	8RbA==
+X-Gm-Message-State: AA+aEWbsneUr0NlO6Q383xSpOSyHNe0vf7RLOWNwomYzRF5f9bQcFxsk
+	oNbJr9h9QY4ACzwYnLVABhLtu0bW
+X-Google-Smtp-Source: AFSGD/UNoIX2c05m2IoaeeQXrvVHugGAV/RbDlwSaKJVtMsXat4lUe/OX87AJGKxlT0RsXpu4SnNtQ==
+X-Received: by 2002:a02:781e:: with SMTP id p30mr3525650jac.85.1544219973506; 
+	Fri, 07 Dec 2018 13:59:33 -0800 (PST)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id
+	s15sm1889362ioe.52.2018.12.07.13.59.32
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Fri, 07 Dec 2018 13:59:32 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  7 Dec 2018 15:59:28 -0600
+Message-Id: <20181207215928.11957-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-In-Reply-To: <20181207130922.18311-1-richard.purdie@linuxfoundation.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-TM-AS-GCONF: 00
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] fetch2/wget: Fix typo in exception name
+Subject: [PATCH] bitbake: persist_data: Retry database setup
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,22 +58,186 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Dec 2018 14:32:41 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Fri, 07 Dec 2018 21:59:33 -0000
+Content-Transfer-Encoding: 8bit
 
-On 18-12-07 13:09 +0000, Richard Purdie wrote:
-> This could clearly never have worked but as its in an error path, it doesn't
-> get tested/used much.
+The configuration of the sqlite database can timeout due to locking
+under heavy load and should be subject to the same retry logic as the
+other statements.
 
-For the record, could clearly never have worked *since* the python3 migration.
+[YOCTO #13069]
 
-  commit 0f2c59367a649de5f57acdccfb4f1fdba9cde730
-  Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-  Date:   Thu May 12 08:30:35 2016 +0100
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/persist_data.py | 85 ++++++++++++++++++----------------
+ 1 file changed, 45 insertions(+), 40 deletions(-)
 
-      bitbake: bitbake: Convert to python 3
-
+diff --git a/bitbake/lib/bb/persist_data.py b/bitbake/lib/bb/persist_data.py
+index 29feb78203b..4b37227cfd1 100644
+--- a/bitbake/lib/bb/persist_data.py
++++ b/bitbake/lib/bb/persist_data.py
+@@ -66,27 +66,31 @@ def _remove_table_weakref(ref):
+ class SQLTable(collections.MutableMapping):
+     class _Decorators(object):
+         @staticmethod
+-        def retry(f):
++        def retry(*, reconnect=True):
+             """
+             Decorator that restarts a function if a database locked sqlite
+-            exception occurs.
++            exception occurs. If reconnect is True, the database connection
++            will be closed and reopened each time a failure occurs
+             """
+-            def wrap_func(self, *args, **kwargs):
+-                # Reconnect if necessary
+-                if self.connection is None:
+-                    self.reconnect()
+-
+-                count = 0
+-                while True:
+-                    try:
+-                        return f(self, *args, **kwargs)
+-                    except sqlite3.OperationalError as exc:
+-                        if 'is locked' in str(exc) and count < 500:
+-                            count = count + 1
+-                            self.reconnect()
+-                            continue
+-                        raise
+-            return wrap_func
++            def retry_wrapper(f):
++                def wrap_func(self, *args, **kwargs):
++                    # Reconnect if necessary
++                    if self.connection is None and reconnect:
++                        self.reconnect()
++
++                    count = 0
++                    while True:
++                        try:
++                            return f(self, *args, **kwargs)
++                        except sqlite3.OperationalError as exc:
++                            if 'is locked' in str(exc) and count < 500:
++                                count = count + 1
++                                if reconnect:
++                                    self.reconnect()
++                                continue
++                            raise
++                return wrap_func
++            return retry_wrapper
+ 
+         @staticmethod
+         def transaction(f):
+@@ -113,16 +117,28 @@ class SQLTable(collections.MutableMapping):
+     def __init__(self, cachefile, table):
+         self.cachefile = cachefile
+         self.table = table
+-        self.connection = connect(self.cachefile)
+-
++        self.connection = None
+         self._execute_single("CREATE TABLE IF NOT EXISTS %s(key TEXT PRIMARY KEY NOT NULL, value TEXT);" % table)
+ 
++
++    @_Decorators.retry(reconnect=False)
++    @_Decorators.transaction
++    def _setup_database(self, cursor):
++        cursor.execute("pragma synchronous = off;")
++        # Enable WAL and keep the autocheckpoint length small (the default is
++        # usually 1000). Persistent caches are usually read-mostly, so keeping
++        # this short will keep readers running quickly
++        cursor.execute("pragma journal_mode = WAL;")
++        cursor.execute("pragma wal_autocheckpoint = 100;")
++
+     def reconnect(self):
+         if self.connection is not None:
+             self.connection.close()
+-        self.connection = connect(self.cachefile)
++        self.connection = sqlite3.connect(self.cachefile, timeout=5)
++        self.connection.text_factory = str
++        self._setup_database()
+ 
+-    @_Decorators.retry
++    @_Decorators.retry()
+     @_Decorators.transaction
+     def _execute_single(self, cursor, *query):
+         """
+@@ -131,7 +147,7 @@ class SQLTable(collections.MutableMapping):
+         """
+         cursor.execute(*query)
+ 
+-    @_Decorators.retry
++    @_Decorators.retry()
+     def _row_iter(self, f, *query):
+         """
+         Helper function that returns a row iterator. Each time __next__ is
+@@ -173,7 +189,7 @@ class SQLTable(collections.MutableMapping):
+     def __exit__(self, *excinfo):
+         self.connection.__exit__(*excinfo)
+ 
+-    @_Decorators.retry
++    @_Decorators.retry()
+     @_Decorators.transaction
+     def __getitem__(self, cursor, key):
+         cursor.execute("SELECT * from %s where key=?;" % self.table, [key])
+@@ -182,14 +198,14 @@ class SQLTable(collections.MutableMapping):
+             return row[1]
+         raise KeyError(key)
+ 
+-    @_Decorators.retry
++    @_Decorators.retry()
+     @_Decorators.transaction
+     def __delitem__(self, cursor, key):
+         if key not in self:
+             raise KeyError(key)
+         cursor.execute("DELETE from %s where key=?;" % self.table, [key])
+ 
+-    @_Decorators.retry
++    @_Decorators.retry()
+     @_Decorators.transaction
+     def __setitem__(self, cursor, key, value):
+         if not isinstance(key, str):
+@@ -204,13 +220,13 @@ class SQLTable(collections.MutableMapping):
+         else:
+             cursor.execute("INSERT into %s(key, value) values (?, ?);" % self.table, [key, value])
+ 
+-    @_Decorators.retry
++    @_Decorators.retry()
+     @_Decorators.transaction
+     def __contains__(self, cursor, key):
+         cursor.execute('SELECT * from %s where key=?;' % self.table, [key])
+         return cursor.fetchone() is not None
+ 
+-    @_Decorators.retry
++    @_Decorators.retry()
+     @_Decorators.transaction
+     def __len__(self, cursor):
+         cursor.execute("SELECT COUNT(key) FROM %s;" % self.table)
+@@ -245,7 +261,7 @@ class SQLTable(collections.MutableMapping):
+         return self._row_iter(lambda row: (row[0], row[1]), "SELECT * FROM %s;" %
+                               self.table)
+ 
+-    @_Decorators.retry
++    @_Decorators.retry()
+     @_Decorators.transaction
+     def clear(self, cursor):
+         cursor.execute("DELETE FROM %s;" % self.table)
+@@ -302,17 +318,6 @@ class PersistData(object):
+         """
+         del self.data[domain][key]
+ 
+-def connect(database):
+-    connection = sqlite3.connect(database, timeout=5)
+-    connection.execute("pragma synchronous = off;")
+-    # Enable WAL and keep the autocheckpoint length small (the default is
+-    # usually 1000). Persistent caches are usually read-mostly, so keeping
+-    # this short will keep readers running quickly
+-    connection.execute("pragma journal_mode = WAL;")
+-    connection.execute("pragma wal_autocheckpoint = 100;")
+-    connection.text_factory = str
+-    return connection
+-
+ def persist(domain, d):
+     """Convenience factory for SQLTable objects based upon metadata"""
+     import bb.utils
 -- 
-olofjn
+2.19.2
+
 
