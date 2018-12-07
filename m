@@ -1,49 +1,50 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
-	[209.85.221.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 8227679CFA
+Return-Path: <aaron@assonance.org>
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com
+	[209.85.167.178])
+	by mail.openembedded.org (Postfix) with ESMTP id EA5DA79CBF
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Dec 2018 13:09:24 +0000 (UTC)
-Received: by mail-wr1-f41.google.com with SMTP id p4so3748610wrt.7
+	Fri,  7 Dec 2018 14:03:02 +0000 (UTC)
+Received: by mail-oi1-f178.google.com with SMTP id x23so3439070oix.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 07 Dec 2018 05:09:25 -0800 (PST)
+	Fri, 07 Dec 2018 06:03:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=9QkdgqhmfODH/I/c51KSw/b7R9gTnNJb7ZqVN0h4uCo=;
-	b=Fc6PT53PqWub8UjCG0w8/RNpM85epA8GyS/62f6wOqJy0OeQduKfEZHvtvjr8Bkujw
-	F4KnToKPdjoS2GGu0AUeaa8G6kOpCgpjtRQZqFLXOhGdt30e+7A7ZLiH4mv05ZY2UMz9
-	GT03JHSp8LpcXK+ZUDQPdCTjsqW/wxEq6DfWM=
+	d=assonance-org.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=eas3Zz6XhkpWXQ2u/k7ZguL0F3fUosY7SvMRKOJrfQU=;
+	b=qqMPjovGC0vhrdRntIabHgMlRaNWnidzg8PUf4YfnvUlKlS6piXy5M6cA+AjRg3+UN
+	LXq88lid8+GXoc5ZH3iTu2BvZOTnvZ5ZKLypGU3Q2lfxWJsB5kaIgn6bAO7PHjP3g87S
+	tEFp/U5G1CBijRTP4iEh7hk1zbX9RpWdbT7eLtKtvwQBLlOBwDb8vStri/6EdZkp2eDH
+	4WuzjjjHmCCjdSjRlplUPvF/8/ZOEhCrit0J/BX+0N0FZzfkEC5G3c1j9QUSB/FCubul
+	e3EzDvYF72CCT/hx6YxpGphtVLtaSSevBJpwHtoeVJjfx2g3Y2gsh2c4Ex96pu35gwm5
+	G0qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=9QkdgqhmfODH/I/c51KSw/b7R9gTnNJb7ZqVN0h4uCo=;
-	b=F9mHl2oCMiEBrmPVT8SgfGgVBd5QpKnBf0QA50N5Po781+kFnXryVcFIL/X2OyAOwZ
-	r9GhqmuQQdhpbRuLqdfnkDdRPw1hhl8oMwfI+9Z7rvIyr/+kJ0MDaJFfsbuEUHiBf9NO
-	oQ87g1hievSHdLvBKREjeywHb7IHzbavoCepuYrq2cdPGiUkZT1n+HO1VbfRwKd8qvQw
-	UMObKDWWFgjwx65Zq9RP/bfw09/sCj0uTvaD3t6lNM+w7WyLTfWCZmClQdOuXqLuuPsr
-	SeoJJwY1kOKAk918J7JfQKskM6UBYO4CEit/22atOIwGRhMqTOWLOqRX4E4wSzY0qOt6
-	MwEQ==
-X-Gm-Message-State: AA+aEWbx2a1bq7THiJjaQ7Z1CblNSgXTLaTjDuFw7U//9xP0PAGfHfWT
-	qY47zjUqMeRRQDrcSRoqQM/7PVQQ544=
-X-Google-Smtp-Source: AFSGD/XbIeWN1cwlFvF3HDAPNib4KExphrGNCQJECgm+amECLMwRUeFSAp9zhOWYJ7sTAPFDXQZixA==
-X-Received: by 2002:adf:f703:: with SMTP id r3mr1739835wrp.93.1544188164711;
-	Fri, 07 Dec 2018 05:09:24 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	v8sm2535585wrq.53.2018.12.07.05.09.23
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 07 Dec 2018 05:09:24 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri,  7 Dec 2018 13:09:22 +0000
-Message-Id: <20181207130922.18311-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.19.1
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=eas3Zz6XhkpWXQ2u/k7ZguL0F3fUosY7SvMRKOJrfQU=;
+	b=CIxpDgl8GjcVSp9U6MpjqNY+JD2+EN7bDtvN36rXYGd9CHCw6rJ+bkgbUCHkT9c7a4
+	YQPqcCP0GWis81LnZHezio03aefqnJsTokQbM4rPq7Qr6TxMkKqx/VTJKyBMCqwU3b0q
+	RzyLi60UFv/6nvlZgITSM2JsHWPIO46PU+eDLISR8bSWYq20TapWYhwXVNvNnqawTiWN
+	duZ5NGaL95EPVaZ8bLac/rtdxPRjEhU/lEGFi1nksnnLEJwkm24c7f2eoaXcZZIF+jUS
+	OQAwxuZwpDTN5SRjK6U7WEXxKO+5/wTRXDbmA68dLQMIgTAElwcBGwX05sHr+sxwKFkQ
+	M2NA==
+X-Gm-Message-State: AA+aEWYts0Wt0V3uiM81Kqv5KR+AxlQWpH1vTNWWd8scA21CVR4S1ec7
+	StI1KLzufVJScj1awImSf13dQhzIIzgdUplgbvRHew==
+X-Google-Smtp-Source: AFSGD/V1ExvM3YzS8N+oKArdI6JsQtrqNSZ4vQqKwEmfcj1yjF/sGAOpn0K18z6BB7GC0zBrxB4BA9/0iGVmJnLIR1g=
+X-Received: by 2002:a54:440d:: with SMTP id k13mr1354425oiw.263.1544191379071; 
+	Fri, 07 Dec 2018 06:02:59 -0800 (PST)
 MIME-Version: 1.0
-Subject: [PATCH] fetch2/wget: Fix typo in exception name
+References: <20181206185535.12523-1-JPEWhacker@gmail.com>
+	<76873c27c0f7da4f8339b25f009150d7b38d1e72.camel@linuxfoundation.org>
+	<CAJdd5GbfV4vm9eoCPYxme7s31vvoK-M_jbCPKfzkLWxNH=BT-w@mail.gmail.com>
+	<eb636ddb0503dd0c271d51b3f7de32b23096fe51.camel@linuxfoundation.org>
+In-Reply-To: <eb636ddb0503dd0c271d51b3f7de32b23096fe51.camel@linuxfoundation.org>
+From: Aaron Cohen <aaron@assonance.org>
+Date: Fri, 7 Dec 2018 09:02:48 -0500
+Message-ID: <CAFSZm+h7PdKf0+V=CdBQthJHD-fDW4ysWOH3y8Frr5esF3oqSQ@mail.gmail.com>
+To: richard.purdie@linuxfoundation.org
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] Add a variable to pass flags to fakeroot (pseudo)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,31 +57,121 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Dec 2018 13:09:25 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 07 Dec 2018 14:03:03 -0000
+Content-Type: multipart/alternative; boundary="0000000000009d9132057c6f1283"
 
-This could clearly never have worked but as its in an error path, it doesn't
-get tested/used much.
+--0000000000009d9132057c6f1283
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/wget.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Using split() will break if the path contains a space if that is a concern.
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 8f505b6de9..1237e56098 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -168,7 +168,7 @@ class Wget(FetchMethod):
-                 """
-                 host = req.host
-                 if not host:
--                    raise urlllib2.URLError('no host given')
-+                    raise urllib.error.URLError('no host given')
- 
-                 h = http_class(host, timeout=req.timeout) # will parse host:port
-                 h.set_debuglevel(self._debuglevel)
--- 
-2.19.1
+On Fri, Dec 7, 2018 at 8:04 AM <richard.purdie@linuxfoundation.org> wrote:
 
+> On Thu, 2018-12-06 at 21:27 -0600, Joshua Watt wrote:
+> > On Thu, Dec 6, 2018 at 4:05 PM Richard Purdie
+> > <richard.purdie@linuxfoundation.org> wrote:
+> > > On Thu, 2018-12-06 at 12:55 -0600, Joshua Watt wrote:
+> > > > It is occasionally useful to pass additional flags to fakeroot
+> > > > (pseudo)
+> > > > either for debugging or for behavioral system changes. Add a
+> > > > variable
+> > > > called "FAKEROOTARGS" that can be used for this purpose.
+> > >
+> > > Why wouldn't you just append to FAKEROOT/FAKEROOTCMD ?
+> >
+> > You can't currently add arguments to FAKEROOTCMD because it is passed
+> > as an array member to subprocess.Popen sort of like:
+> >
+> >  subprocess.Popen([d.getVar('FAKEROOTCMD'), 'blah', 'blah', ...
+> >
+> > In order to pass arguments, it would probably have to have split into
+> > an array i.e. :
+> >
+> >  subprocess.Popen(d.getVar('FAKEROOTCMD').split() + ['blah', 'blah',
+> > ...
+> >
+> > I wasn't sure if that was desirable or if it would break anything, so
+> > I went with the lower risk approach of adding a new variables. I can
+> > certainly make a change to modify the usage of FAKEROOTCMD as
+> > described above and simply append the flags to it if that is
+> > preferred.
+>
+> I'd prefer to fix this to work than add more variables...
+>
+> Cheers,
+>
+> Richard
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
 
+--0000000000009d9132057c6f1283
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>Using split() will break if the path contains a space if that is a con=
+cern.<br></div><div><br><div class=3D"gmail_quote"><div dir=3D"ltr">On Fri,=
+ Dec 7, 2018 at 8:04 AM &lt;<a href=3D"mailto:richard.purdie@linuxfoundatio=
+n.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><blockquo=
+te class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc so=
+lid;padding-left:1ex">On Thu, 2018-12-06 at 21:27 -0600, Joshua Watt wrote:=
+<br>
+&gt; On Thu, Dec 6, 2018 at 4:05 PM Richard Purdie<br>
+&gt; &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_b=
+lank">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br>
+&gt; &gt; On Thu, 2018-12-06 at 12:55 -0600, Joshua Watt wrote:<br>
+&gt; &gt; &gt; It is occasionally useful to pass additional flags to fakero=
+ot<br>
+&gt; &gt; &gt; (pseudo)<br>
+&gt; &gt; &gt; either for debugging or for behavioral system changes. Add a=
+<br>
+&gt; &gt; &gt; variable<br>
+&gt; &gt; &gt; called &quot;FAKEROOTARGS&quot; that can be used for this pu=
+rpose.<br>
+&gt; &gt; <br>
+&gt; &gt; Why wouldn&#39;t you just append to FAKEROOT/FAKEROOTCMD ?<br>
+&gt; <br>
+&gt; You can&#39;t currently add arguments to FAKEROOTCMD because it is pas=
+sed<br>
+&gt; as an array member to subprocess.Popen sort of like:<br>
+&gt; <br>
+&gt;=C2=A0 subprocess.Popen([d.getVar(&#39;FAKEROOTCMD&#39;), &#39;blah&#39=
+;, &#39;blah&#39;, ...<br>
+&gt; <br>
+&gt; In order to pass arguments, it would probably have to have split into<=
+br>
+&gt; an array i.e. :<br>
+&gt; <br>
+&gt;=C2=A0 subprocess.Popen(d.getVar(&#39;FAKEROOTCMD&#39;).split() + [&#39=
+;blah&#39;, &#39;blah&#39;,<br>
+&gt; ...<br>
+&gt; <br>
+&gt; I wasn&#39;t sure if that was desirable or if it would break anything,=
+ so<br>
+&gt; I went with the lower risk approach of adding a new variables. I can<b=
+r>
+&gt; certainly make a change to modify the usage of FAKEROOTCMD as<br>
+&gt; described above and simply append the flags to it if that is<br>
+&gt; preferred.<br>
+<br>
+I&#39;d prefer to fix this to work than add more variables...<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+<br>
+-- <br>
+_______________________________________________<br>
+bitbake-devel mailing list<br>
+<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
+itbake-devel@lists.openembedded.org</a><br>
+<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
+l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
+stinfo/bitbake-devel</a><br>
+</blockquote></div></div>
+
+--0000000000009d9132057c6f1283--
