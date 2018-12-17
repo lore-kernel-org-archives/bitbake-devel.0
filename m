@@ -1,49 +1,52 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
-	[209.85.128.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 6E9BC7BDA2
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 1F58C79C81
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Dec 2018 17:16:46 +0000 (UTC)
-Received: by mail-wm1-f65.google.com with SMTP id r24so5223671wmh.0
+	Mon, 17 Dec 2018 17:26:20 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id wBHHPZHC024927
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Dec 2018 09:16:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=YJ3FCrFUa00PtNEyuEj9JaonsBUogxfX1ZLM5Z1knUQ=;
-	b=NGj4LFU0Zc+aWFyGSaYnyx9WynOxYRV2tCb4Ew+sZFQH/8j6VPPwB0oyZreH7pEDP1
-	YEM75oNFD4EZFFlarB5UcCeJ+bGIql9lhrfUBqSOywF1WXXtg7NedVvJQE7CnJrWWVGH
-	KUUb6x2DnHsH8gAYwFNrxMcIv5s6TOoYThZo4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=YJ3FCrFUa00PtNEyuEj9JaonsBUogxfX1ZLM5Z1knUQ=;
-	b=l1/Y8rxEYCFJQoFX+DrDfrbXyb9wgsT+sts4d0fyuaR03ZC+GGC/TqEDWlA4fiPiWI
-	Eej9WZFYwTcTSlKi3GJJDK9mZpAkYhxj80ZTjpHzCowAfN4xCBIK60nPcodYDxBiQ4Df
-	hGJrE4Brr4NR0WnhguzNrL8A9DHAfeEtyaUlVoJJnmhKHo5X71l5sCt9eooqcwgades4
-	8wHkHSsVXMMcCfpeVSoR+ABuZpow3+7UV11zCOoNYcVrtDs0YgymvtzHha268DeulX3u
-	EgQqcI4ZPvov4qrq/iUFIXGcWikfBElHUG36E3qncrZORIDqm23l4kXro9vW5lPfeKKl
-	yj+A==
-X-Gm-Message-State: AA+aEWYFYdRFhW+3C6/IB32HCym8KGKgzKnLZfjRxMHLTsDCbhw/wEmw
-	fc7dpuf+7RfNeR+i60xBuYyBC1mMOyGDHA==
-X-Google-Smtp-Source: AFSGD/XDnBr/HaAoZkak2ND4R5bIcyJxzGBMds2XETTJPb49PMdS1ElFgnVK+1oEHvWfSgOJ/w+5YQ==
-X-Received: by 2002:a7b:cb96:: with SMTP id m22mr12915511wmi.39.1545067006746; 
-	Mon, 17 Dec 2018 09:16:46 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	m21sm205794wmi.43.2018.12.17.09.16.45
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 17 Dec 2018 09:16:46 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 17 Dec 2018 17:16:45 +0000
-Message-Id: <20181217171645.8145-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.19.1
+	Mon, 17 Dec 2018 09:26:11 -0800
+Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
+	Mon, 17 Dec 2018 09:25:53 -0800
+To: <bitbake-devel@lists.openembedded.org>
+References: <VI1PR10MB2287E378DA3E6ADDEB09F8FDECA10@VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM>
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <6b892c12-ecd1-91ac-4f7a-f61d0dc8a0ec@windriver.com>
+Date: Mon, 17 Dec 2018 11:25:52 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.3.3
 MIME-Version: 1.0
-Subject: [PATCH] data/siggen: Switch md5 -> sha256
+In-Reply-To: <VI1PR10MB2287E378DA3E6ADDEB09F8FDECA10@VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM>
+Subject: Re: gitsm: orphaned submodules WAS: Sumo to Thud migration: Fetch failure from gitsm.py
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,75 +59,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Dec 2018 17:16:46 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 17 Dec 2018 17:26:21 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Similarly to the codeparser change, change to sha256 hashes due to worries
-over collisions. The main impact of this change is slightly slower parsing
-time as well as longer sstate file names.
+On 12/14/18 6:37 AM, raphael.lisicki@siemens.com wrote:
+> Hello,
+> 
+> as Josias has already pointed out, the new gitsm fetcher fails if there is a submodule entry in .gitmodules, for which no actual submodule exists.
+> 
+> I created a dummy module that shows the respective issue: https://github.com/ralisi/submodule-test
+> 
+> This repository is shown correctly by github and cloning it with git causes no problem. I think it should be possible to fetch this repository with the gitsm module.
+> To do so, I think the loop iteration at http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/fetch2/gitsm.py#n87 can be skipped if module_hash is indeed an empty string.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/data.py       | 2 +-
- lib/bb/data_smart.py | 2 +-
- lib/bb/siggen.py     | 6 +++---
- 3 files changed, 5 insertions(+), 5 deletions(-)
+So to be clear, you are proposing that is the response is blank, then we simply
+run a 'continue', avoiding any setup/download for this item as there is no
+specific hash to download?
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 6bcfcf46cc..29c2388038 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -436,7 +436,7 @@ def generate_dependency_hash(tasklist, gendeps, lookupcache, whitelist, fn):
-             if var is not None:
-                 data = data + str(var)
-         k = fn + "." + task
--        basehash[k] = hashlib.md5(data.encode("utf-8")).hexdigest()
-+        basehash[k] = hashlib.sha256(data.encode("utf-8")).hexdigest()
-         taskdeps[task] = alldeps
- 
-     return taskdeps, basehash
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index c342adaa0a..1f45cd975d 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -1074,4 +1074,4 @@ class DataSmart(MutableMapping):
-                     data.update({i:value})
- 
-         data_str = str([(k, data[k]) for k in sorted(data.keys())])
--        return hashlib.md5(data_str.encode("utf-8")).hexdigest()
-+        return hashlib.sha256(data_str.encode("utf-8")).hexdigest()
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index ab6df7603c..24697f5bc8 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -213,7 +213,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             self.taints[k] = taint
-             logger.warning("%s is tainted from a forced run" % k)
- 
--        h = hashlib.md5(data.encode("utf-8")).hexdigest()
-+        h = hashlib.sha256(data.encode("utf-8")).hexdigest()
-         self.taskhash[k] = h
-         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
-         return h
-@@ -647,7 +647,7 @@ def calc_basehash(sigdata):
-         if val is not None:
-             basedata = basedata + str(val)
- 
--    return hashlib.md5(basedata.encode("utf-8")).hexdigest()
-+    return hashlib.sha256(basedata.encode("utf-8")).hexdigest()
- 
- def calc_taskhash(sigdata):
-     data = sigdata['basehash']
-@@ -665,7 +665,7 @@ def calc_taskhash(sigdata):
-         else:
-             data = data + sigdata['taint']
- 
--    return hashlib.md5(data.encode("utf-8")).hexdigest()
-+    return hashlib.sha256(data.encode("utf-8")).hexdigest()
- 
- 
- def dump_sigfile(a):
--- 
-2.19.1
+That would be easy enough to implement, likely:
+
+            try:
+                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" %
+(ud.basecmd, ud.revisions[name], paths[module]), d, quiet=True, workdir=ud.clonedir)
+            except ???:
+                module_hash = None
+
+            if not module_hash:
+                continue
+
+            module_hash = module_hash.split()[2]
+
+
+(Not sure if the try/except is needed.. if it is, not sure which exception to
+capture here..)
+
+--Mark
+
+> 
+> Best regards
+> Raphael Lisicki
+> 
 
 
