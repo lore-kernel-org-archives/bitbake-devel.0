@@ -1,52 +1,46 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 1F58C79C81
+Return-Path: <jacob.kroon@gmail.com>
+Received: from mail-io1-f66.google.com (mail-io1-f66.google.com
+	[209.85.166.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 431FB7BF3E
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Dec 2018 17:26:20 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id wBHHPZHC024927
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Mon, 17 Dec 2018 18:48:06 +0000 (UTC)
+Received: by mail-io1-f66.google.com with SMTP id v12so7188193iop.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Dec 2018 09:26:11 -0800
-Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
-	Mon, 17 Dec 2018 09:25:53 -0800
-To: <bitbake-devel@lists.openembedded.org>
-References: <VI1PR10MB2287E378DA3E6ADDEB09F8FDECA10@VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <6b892c12-ecd1-91ac-4f7a-f61d0dc8a0ec@windriver.com>
-Date: Mon, 17 Dec 2018 11:25:52 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.3.3
+	Mon, 17 Dec 2018 10:48:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=DC4KUIRq5UfttlownMagijahOIidMCQlXeYUbpoXeOo=;
+	b=escOu1trI0Kkfhgo4ghSDyLOnezNrmNq83uGhgf6gJ1djFrbI4cWffawI8CcW79WXd
+	nihoGR1Bzb5qpJ3eFmrs9OOWOxjp7jIT6RmABaXh17cj+aUzEvnQN8qLPpb1nvHCSF16
+	sN/Um1936gV8mfN2MxlwWbJh9v4tPtn8WDrN3Tv5ZGFmQSG5Ag7nAf1LpP9We8UvDA3i
+	cufJHF7A8NnlZny1Juj/I72z4CpxWibXIVODnAlg3w8DN+vbJa2adHFqNC54lhtbzVy/
+	K3jxCVx3QZDWa7Hs1P610m5pdxYysfHnwbOsOHJ4eImRKN0yDrflRDlJDOOkfmZJtUJy
+	raLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=DC4KUIRq5UfttlownMagijahOIidMCQlXeYUbpoXeOo=;
+	b=NIbgI2Xy5KFoe5bXZHGBcEju7FkCXIZ9v23GQYtC7Owj6JD2t6StGbdfHfnfF1PfyI
+	Sdyd3CUV1erD97+s4AM+PDzN0WXay89m1rTOOhLEXLcHOky8L9WY9SHnplnsqRvBzwPB
+	1MhPkFizTgwgeLwvf3LZzxqlgpAoW1Q7iNd79TZ/PcUZxrLt7YYODidYzzgQ8niE0cHp
+	vW8aPbhpW1q0jQNwyyExUjfg5Xm7FKrNOb09fDmf8NH04QrRw7DnPgXgkDNAWbLZ5wxy
+	OXBHnKWmpfwIhKCY4BadX1kE//Xxde7i7/rem8TSNGB+ECRP3LC23kJHQr945/rw4xOI
+	kQ+w==
+X-Gm-Message-State: AA+aEWaeqGvVZUwo8AxdY8gOYuz4UhsJXGVgnFUZCF0ENZXloWZXIiOT
+	/noh5KcYmDj2s3gCFgsWoJqjfUZ0l8jBHDmu3ME=
+X-Google-Smtp-Source: AFSGD/VUtoirXbYlF9SnpFaDXK/6kaBNYM03S6ywJOuk2yG5EvW3CseF3gbGczvqGz3euYMXGABBPoMAxY5rfuHIUWs=
+X-Received: by 2002:a5d:8d85:: with SMTP id b5mr12893904ioj.38.1545072488062; 
+	Mon, 17 Dec 2018 10:48:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <VI1PR10MB2287E378DA3E6ADDEB09F8FDECA10@VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM>
-Subject: Re: gitsm: orphaned submodules WAS: Sumo to Thud migration: Fetch failure from gitsm.py
+References: <20181217144006.32015-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20181217144006.32015-1-richard.purdie@linuxfoundation.org>
+From: Jacob Kroon <jacob.kroon@gmail.com>
+Date: Mon, 17 Dec 2018 19:47:56 +0100
+Message-ID: <CAPbeDCk51q9Fz4ZsJ1jZP64aLdZc7YRaWCQVK5=kNSO=xfScrw@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] codeparser: Switch to sha256 from md5
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,47 +53,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Dec 2018 17:26:21 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 17 Dec 2018 18:48:07 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-On 12/14/18 6:37 AM, raphael.lisicki@siemens.com wrote:
-> Hello,
-> 
-> as Josias has already pointed out, the new gitsm fetcher fails if there is a submodule entry in .gitmodules, for which no actual submodule exists.
-> 
-> I created a dummy module that shows the respective issue: https://github.com/ralisi/submodule-test
-> 
-> This repository is shown correctly by github and cloning it with git causes no problem. I think it should be possible to fetch this repository with the gitsm module.
-> To do so, I think the loop iteration at http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/fetch2/gitsm.py#n87 can be skipped if module_hash is indeed an empty string.
+On Mon, Dec 17, 2018 at 3:40 PM Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+>
+> We've reports of hash collision with codeparser. Looking at the way collision
+> problems occur with md5 and the way our function templating works, I can believe
+> we may run into issues.
+>
+> This patch therefore switches to sha256.
+>
+> Performance wise, parse time could appear to rise by 4s in 374s
+>
+> Before:
+>
+> 384329 in 2.966s (md5)
+>
+> After:
+>
+> 349743 in 2.340s (sha256)
+> 34723 in 1.245s (md5)
+>
+> since we still have md5 used elsewhere in the code, something we should look at
+> next (using sha256 everywhere is around 5.3s in total)
+>
+> Unfortunately this does nearly double the size of the codeparser cache file
+> due to the hash size change.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/codeparser.py | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+> index 3f8ac1d5f6..ac995a6a1d 100644
+> --- a/lib/bb/codeparser.py
+> +++ b/lib/bb/codeparser.py
+> @@ -33,7 +33,7 @@ from bb.cache import MultiProcessCache
+>  logger = logging.getLogger('BitBake.CodeParser')
+>
+>  def bbhash(s):
+> -    return hashlib.md5(s.encode("utf-8")).hexdigest()
+> +    return hashlib.sha256(s.encode("utf-8")).hexdigest()
+>
+>  def check_indent(codestr):
+>      """If the code is indented, add a top level piece of code to 'remove' the indentation"""
+> @@ -140,7 +140,7 @@ class CodeParserCache(MultiProcessCache):
+>      # so that an existing cache gets invalidated. Additionally you'll need
+>      # to increment __cache_version__ in cache.py in order to ensure that old
+>      # recipe caches don't trigger "Taskhash mismatch" errors.
+> -    CACHE_VERSION = 10
+> +    CACHE_VERSION = 11
 
-So to be clear, you are proposing that is the response is blank, then we simply
-run a 'continue', avoiding any setup/download for this item as there is no
-specific hash to download?
+The comment above mentions a "__cache_version__" in cache.py. Should
+that be bumped as well ?
 
-That would be easy enough to implement, likely:
-
-            try:
-                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" %
-(ud.basecmd, ud.revisions[name], paths[module]), d, quiet=True, workdir=ud.clonedir)
-            except ???:
-                module_hash = None
-
-            if not module_hash:
-                continue
-
-            module_hash = module_hash.split()[2]
-
-
-(Not sure if the try/except is needed.. if it is, not sure which exception to
-capture here..)
-
---Mark
-
-> 
-> Best regards
-> Raphael Lisicki
-> 
-
+>      def __init__(self):
+>          MultiProcessCache.__init__(self)
+> --
+> 2.19.1
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
