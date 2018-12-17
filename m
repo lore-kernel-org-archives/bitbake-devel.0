@@ -1,49 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id B54C779FD0
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
+	[209.85.128.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 6E9BC7BDA2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Dec 2018 14:40:07 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id p4so12522602wrt.7
+	Mon, 17 Dec 2018 17:16:46 +0000 (UTC)
+Received: by mail-wm1-f65.google.com with SMTP id r24so5223671wmh.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Dec 2018 06:40:09 -0800 (PST)
+	Mon, 17 Dec 2018 09:16:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=If3iSQfwcWlNP88hXdN0v4OIv4AaFmHghUw1LjbIgkE=;
-	b=OKcMpbasL/oBNNZu9TuD9IFnUFv/6qdSOW5QHWaC502O2wA4uiD7mbVhWOh0w8oLTN
-	zWh3KUIhjohCkvap5/WBHMj8DL/uv4yKDcSPFAQshSZtl9D7gSlcAFEcPDybPkP3wV0H
-	Ylc+y7n8LhLl+GrDiuiSQ9+Jx5VNMB9/PpF5o=
+	bh=YJ3FCrFUa00PtNEyuEj9JaonsBUogxfX1ZLM5Z1knUQ=;
+	b=NGj4LFU0Zc+aWFyGSaYnyx9WynOxYRV2tCb4Ew+sZFQH/8j6VPPwB0oyZreH7pEDP1
+	YEM75oNFD4EZFFlarB5UcCeJ+bGIql9lhrfUBqSOywF1WXXtg7NedVvJQE7CnJrWWVGH
+	KUUb6x2DnHsH8gAYwFNrxMcIv5s6TOoYThZo4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=If3iSQfwcWlNP88hXdN0v4OIv4AaFmHghUw1LjbIgkE=;
-	b=NeXYZI1ekDXqLkrl9Cmmu2YcMI+6modv+Uqo0/AWd5NYPzlw2q7DmLOFkp/T0b6pRM
-	DHuELn2bcEYPt4G6k4HzqxsDhrMZDIUcR5AIYFyG0HY+rqByIjfJAwDvnB7jwVQathaL
-	NjcRDI//gW8zmwl3k49n82IjUIIbCE0BtsQbPQrdeQfjpPBsMsiIeV+PiyHoYVDzZRT3
-	lQv+8z1K/AKlBPT2OskDuWapW1X3VzEsR4gkPGqAOxXVAaeyKgY9J9mKhhiFS9mJHCts
-	GQIfuMsLKrZGhOJAmAlhFhynJM7rGiz6N3dAMSkdMqB9b1c+yNJl60qbFnvnaTpEl3bM
-	1inA==
-X-Gm-Message-State: AA+aEWZdAM7xqFFEFw02v3HxQzqEYCYENBSWrPnZ5od/FQ9yBUzwXLS4
-	RvYhCa4Ct9oN/DZyJcDo8FwrsRq1cMhSqg==
-X-Google-Smtp-Source: AFSGD/VJX80LiLcNFQ1K8h8Q5R453J3Gjva/Ue4dnfWbqYdjO8mBULyoHYwidfP+sQurPIOXbUQO6w==
-X-Received: by 2002:adf:d146:: with SMTP id b6mr11007470wri.156.1545057608082; 
-	Mon, 17 Dec 2018 06:40:08 -0800 (PST)
+	bh=YJ3FCrFUa00PtNEyuEj9JaonsBUogxfX1ZLM5Z1knUQ=;
+	b=l1/Y8rxEYCFJQoFX+DrDfrbXyb9wgsT+sts4d0fyuaR03ZC+GGC/TqEDWlA4fiPiWI
+	Eej9WZFYwTcTSlKi3GJJDK9mZpAkYhxj80ZTjpHzCowAfN4xCBIK60nPcodYDxBiQ4Df
+	hGJrE4Brr4NR0WnhguzNrL8A9DHAfeEtyaUlVoJJnmhKHo5X71l5sCt9eooqcwgades4
+	8wHkHSsVXMMcCfpeVSoR+ABuZpow3+7UV11zCOoNYcVrtDs0YgymvtzHha268DeulX3u
+	EgQqcI4ZPvov4qrq/iUFIXGcWikfBElHUG36E3qncrZORIDqm23l4kXro9vW5lPfeKKl
+	yj+A==
+X-Gm-Message-State: AA+aEWYFYdRFhW+3C6/IB32HCym8KGKgzKnLZfjRxMHLTsDCbhw/wEmw
+	fc7dpuf+7RfNeR+i60xBuYyBC1mMOyGDHA==
+X-Google-Smtp-Source: AFSGD/XDnBr/HaAoZkak2ND4R5bIcyJxzGBMds2XETTJPb49PMdS1ElFgnVK+1oEHvWfSgOJ/w+5YQ==
+X-Received: by 2002:a7b:cb96:: with SMTP id m22mr12915511wmi.39.1545067006746; 
+	Mon, 17 Dec 2018 09:16:46 -0800 (PST)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	a12sm331314wrm.45.2018.12.17.06.40.07
+	m21sm205794wmi.43.2018.12.17.09.16.45
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 17 Dec 2018 06:40:07 -0800 (PST)
+	Mon, 17 Dec 2018 09:16:46 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 17 Dec 2018 14:40:06 +0000
-Message-Id: <20181217144006.32015-1-richard.purdie@linuxfoundation.org>
+Date: Mon, 17 Dec 2018 17:16:45 +0000
+Message-Id: <20181217171645.8145-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Subject: [PATCH] codeparser: Switch to sha256 from md5
+Subject: [PATCH] data/siggen: Switch md5 -> sha256
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,59 +56,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Dec 2018 14:40:08 -0000
+X-List-Received-Date: Mon, 17 Dec 2018 17:16:46 -0000
 Content-Transfer-Encoding: 8bit
 
-We've reports of hash collision with codeparser. Looking at the way collision
-problems occur with md5 and the way our function templating works, I can believe
-we may run into issues.
-
-This patch therefore switches to sha256.
-
-Performance wise, parse time could appear to rise by 4s in 374s
-
-Before:
-
-384329 in 2.966s (md5)
-
-After:
-
-349743 in 2.340s (sha256)
-34723 in 1.245s (md5)
-
-since we still have md5 used elsewhere in the code, something we should look at
-next (using sha256 everywhere is around 5.3s in total)
-
-Unfortunately this does nearly double the size of the codeparser cache file
-due to the hash size change.
+Similarly to the codeparser change, change to sha256 hashes due to worries
+over collisions. The main impact of this change is slightly slower parsing
+time as well as longer sstate file names.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/codeparser.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/data.py       | 2 +-
+ lib/bb/data_smart.py | 2 +-
+ lib/bb/siggen.py     | 6 +++---
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 3f8ac1d5f6..ac995a6a1d 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -33,7 +33,7 @@ from bb.cache import MultiProcessCache
- logger = logging.getLogger('BitBake.CodeParser')
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index 6bcfcf46cc..29c2388038 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -436,7 +436,7 @@ def generate_dependency_hash(tasklist, gendeps, lookupcache, whitelist, fn):
+             if var is not None:
+                 data = data + str(var)
+         k = fn + "." + task
+-        basehash[k] = hashlib.md5(data.encode("utf-8")).hexdigest()
++        basehash[k] = hashlib.sha256(data.encode("utf-8")).hexdigest()
+         taskdeps[task] = alldeps
  
- def bbhash(s):
--    return hashlib.md5(s.encode("utf-8")).hexdigest()
-+    return hashlib.sha256(s.encode("utf-8")).hexdigest()
+     return taskdeps, basehash
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index c342adaa0a..1f45cd975d 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -1074,4 +1074,4 @@ class DataSmart(MutableMapping):
+                     data.update({i:value})
  
- def check_indent(codestr):
-     """If the code is indented, add a top level piece of code to 'remove' the indentation"""
-@@ -140,7 +140,7 @@ class CodeParserCache(MultiProcessCache):
-     # so that an existing cache gets invalidated. Additionally you'll need
-     # to increment __cache_version__ in cache.py in order to ensure that old
-     # recipe caches don't trigger "Taskhash mismatch" errors.
--    CACHE_VERSION = 10
-+    CACHE_VERSION = 11
+         data_str = str([(k, data[k]) for k in sorted(data.keys())])
+-        return hashlib.md5(data_str.encode("utf-8")).hexdigest()
++        return hashlib.sha256(data_str.encode("utf-8")).hexdigest()
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index ab6df7603c..24697f5bc8 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -213,7 +213,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+             self.taints[k] = taint
+             logger.warning("%s is tainted from a forced run" % k)
  
-     def __init__(self):
-         MultiProcessCache.__init__(self)
+-        h = hashlib.md5(data.encode("utf-8")).hexdigest()
++        h = hashlib.sha256(data.encode("utf-8")).hexdigest()
+         self.taskhash[k] = h
+         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
+         return h
+@@ -647,7 +647,7 @@ def calc_basehash(sigdata):
+         if val is not None:
+             basedata = basedata + str(val)
+ 
+-    return hashlib.md5(basedata.encode("utf-8")).hexdigest()
++    return hashlib.sha256(basedata.encode("utf-8")).hexdigest()
+ 
+ def calc_taskhash(sigdata):
+     data = sigdata['basehash']
+@@ -665,7 +665,7 @@ def calc_taskhash(sigdata):
+         else:
+             data = data + sigdata['taint']
+ 
+-    return hashlib.md5(data.encode("utf-8")).hexdigest()
++    return hashlib.sha256(data.encode("utf-8")).hexdigest()
+ 
+ 
+ def dump_sigfile(a):
 -- 
 2.19.1
 
