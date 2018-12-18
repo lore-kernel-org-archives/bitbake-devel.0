@@ -1,52 +1,53 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it1-f179.google.com (mail-it1-f179.google.com
-	[209.85.166.179])
-	by mail.openembedded.org (Postfix) with ESMTP id 8B3247C034;
-	Tue, 18 Dec 2018 15:31:22 +0000 (UTC)
-Received: by mail-it1-f179.google.com with SMTP id h65so4775594ith.3;
-	Tue, 18 Dec 2018 07:31:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
+	[209.85.128.65])
+	by mail.openembedded.org (Postfix) with ESMTP id BDECE7BE11
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 18 Dec 2018 16:24:05 +0000 (UTC)
+Received: by mail-wm1-f65.google.com with SMTP id a62so3271687wmh.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 18 Dec 2018 08:24:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
 	:mime-version:content-transfer-encoding;
-	bh=ugPlKwJ8M+KRqfTATVxk05phYi/gUOC99NXc2+6FH7s=;
-	b=E6+k9UHnPFPkbaKoHvZV9pLdHmLypLRrpwY/XroSDfD5dHfYo8P7RRNPWCuk013H4U
-	xRlEqy033fcxDiE8emS9M3CbF+qdpEZPIef8lfL8SXzH+WE2UbpyIGt2amyMYaOvVcJA
-	dh8X9pOFYT2ahpPsYyUhJshHFhrty5P2hdRHLKlmzgeAoLquoEjJUq2D8ezbvIJCab79
-	AZ7UJ1jboLYyBzl47QzQu47+4ya85NdC+qZbZ/Hjj1TRzlTZH9MzUPZ98hyeFmVU3Zis
-	ocPglR2yjskug5U9OKDoKm/lmkC6ZpagYPNzEYtBqKrjRnVERgXUdwo8FKxm8UOfNAFF
-	eFRw==
+	bh=1IR1Pu6uhpPSG4kjTmYqtoBpYtsLe+lCzJQzmHwoUv0=;
+	b=PJdqkfk2MoYII98heCOr3Sbn3SiKvfpWeDpKD2oWPCjCMZUy2WawOEWlyfI3TQF9BD
+	AH0RU8H/qjId0Zj0lIB/nBpCk0xquFan/sGlaKC+xn0zD4gnoHDxZMLKKVRZ52mULbe9
+	1Oan9q+d1pDvBLWUluMMOxiUaukaWbU7wpIzQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=ugPlKwJ8M+KRqfTATVxk05phYi/gUOC99NXc2+6FH7s=;
-	b=ANi+kd+Kq6tIsygdjOWuzGJO0YAr8rMlb81rVJsnov+/qaNskTukHGKJq06KBnR0Uq
-	eXq/YK6ffDGyQjmIaEvB4XW7VzjkG2CRI6j9cWypNZUAgIYp96kr6xiOBYgPKeFmv73h
-	igb2zCc9T05vDe2WtZ0MqxuK4WWId8EeeR096/scbBSu0L+kAjahbaik17tvpRbcpiHw
-	w3iDb+m+DwuALPOMH3hQKyclKFf/xJmNdeklssjrGoaVx+KHoNhhikaIJOtvsBGlehBh
-	FsFc4/mMZzGrMRHojj65TiFfUkaaLpIaXsLnlDy7WSNJXg5trqrzCCx+1uLlW14sn00q
-	R/Qg==
-X-Gm-Message-State: AA+aEWZ2OC1Olm9bnJJGpqKvZPDA7VEGqpDuQqhH9Hl9tzjB9SdfOyR1
-	zF6Wruex2JmeH3F+rNqYhYrf6j25
-X-Google-Smtp-Source: AFSGD/XBACHIT7xa4aILQLr7qtB109RcXazt129/SiK8ou/K/SgtXbbZHjD1K8LLSkrhcRsvWCGBVg==
-X-Received: by 2002:a24:4352:: with SMTP id s79mr3293880itb.43.1545147082931; 
-	Tue, 18 Dec 2018 07:31:22 -0800 (PST)
-Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id 18sm1652072itk.28.2018.12.18.07.31.21
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=1IR1Pu6uhpPSG4kjTmYqtoBpYtsLe+lCzJQzmHwoUv0=;
+	b=hG6CN4uIWzgdy0hWCif09GNtfC7UnouE+jwW7piSjGYXNkGI4Ml7uxOK2x7UEmzmVb
+	+erpWiuP6GGr5CGp1WKfjoImDW/he4QfNOiv9osjCa8K3qnk5EZwpjnmuaZf+/8iVKoP
+	J4yFyFczlTXa6JlSK2YyFJGkgtdThUsYx2lrbgQv7CWGnsDaCgT0qJqxcumzUb5es0zI
+	nhNj0ERYab9GtXBIqYPIQWFVvKrBMnC6fOg/s6DuyTe5UjCoUK3pexii+PxAZxLsNkwD
+	AVlcmH8fd+b3RcRDAb8f2540IzPTwDu73Mj4W1bPxUR4irEpmpqevTnQ//PldFgiWF7x
+	SakQ==
+X-Gm-Message-State: AA+aEWa3AKRoScn9hhlKGNpfallXPqOL32Z9c7dCtrZZDhTR7bmPSeZa
+	sCX5dI+DirIkT2YbTlACMDC+LA==
+X-Google-Smtp-Source: AFSGD/W63nMfVhp+ZzDYiCjhUuihYZtbyVnreW65UqA/XiobQPNUDuCa3o+0s64bMGyee1/7fHqdgQ==
+X-Received: by 2002:a1c:83c8:: with SMTP id f191mr3822830wmd.134.1545150246617;
+	Tue, 18 Dec 2018 08:24:06 -0800 (PST)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id k19sm5052127wre.5.2018.12.18.08.24.05
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 18 Dec 2018 07:31:22 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: openembedded-core@lists.openembedded.org,
+	Tue, 18 Dec 2018 08:24:05 -0800 (PST)
+Message-ID: <2d3ed923953d6bd5747e2ddd510872c4f773c32f.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Joshua Watt <jpewhacker@gmail.com>, 
+	openembedded-core@lists.openembedded.org,
 	bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Dec 2018 09:31:01 -0600
-Message-Id: <20181218153101.9212-11-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20181218153101.9212-1-JPEWhacker@gmail.com>
+Date: Tue, 18 Dec 2018 16:24:04 +0000
+In-Reply-To: <20181218153101.9212-8-JPEWhacker@gmail.com>
 References: <20181204034245.25461-1-JPEWhacker@gmail.com>
 	<20181218153101.9212-1-JPEWhacker@gmail.com>
-MIME-Version: 1.0
-Subject: [OE-core][PATCH v4 10/10] sstate: Implement hash equivalence sstate
+	<20181218153101.9212-8-JPEWhacker@gmail.com>
+User-Agent: Evolution 3.30.2-1 
+Mime-Version: 1.0
+Subject: Re: [OE-core] [PATCH v4 07/10] bitbake: runqueue: Pass unique hash to hash validate
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,383 +60,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Dec 2018 15:31:22 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 18 Dec 2018 16:24:07 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Converts sstate so that it can use a hash equivalence server to
-determine if a task really needs to be rebuilt, or if it can be restored
-from a different (equivalent) sstate object.
+On Tue, 2018-12-18 at 09:30 -0600, Joshua Watt wrote:
+> If the unique hash is being used to track task dependencies, the hash
+> validation function needs to know about it in order to properly validate
+> the hash.
+> 
+> [YOCTO #13030]
+> 
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+>  bitbake/lib/bb/runqueue.py | 38 +++++++++++++++++++++++++++-----------
+>  1 file changed, 27 insertions(+), 11 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+> index de57dcb37b8..161f53c7cb1 100644
+> --- a/bitbake/lib/bb/runqueue.py
+> +++ b/bitbake/lib/bb/runqueue.py
+> @@ -1378,6 +1378,23 @@ class RunQueue:
+>              cache[tid] = iscurrent
+>          return iscurrent
+>  
+> +    def validate_hash(self, *, sq_fn, sq_task, sq_hash, sq_hashfn, siginfo, sq_unihash, d):
+> +        locs = {"sq_fn" : sq_fn, "sq_task" : sq_task, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn,
+> +                "sq_unihash" : sq_unihash, "siginfo" : siginfo, "d" : d}
+> +
+> +        for hashvalidate_args in ("(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=siginfo, sq_unihash=sq_unihash)",
+> +                                  "(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=siginfo)"):
+> +            try:
+> +                call = self.hashvalidate + hashvalidate_args
+> +                return bb.utils.better_eval(call, locs)
+> +            except TypeError:
+> +                continue
+> +
+> +        # If none of the hash validate functions worked, try one more time
+> +        # with the oldest type
+> +        call = self.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, sq_unihash, d)"
+> +        return bb.utils.better_eval(call, locs)
 
-The unique hashes are cached persistently using persist_data. This has
-a number of advantages:
- 1) Unique hashes can be cached between invocations of bitbake to
-    prevent needing to contact the server every time (which is slow)
- 2) The value of each tasks unique hash can easily be synchronized
-    between different threads, which will be useful if bitbake is
-    updated to do on the fly task re-hashing.
 
-[YOCTO #13030]
+I think sq_unihash shouldn't be in this last fallback option. You copy
+and pasted from your updated code rather than the original (pre
+unihash?) You could add (sq_fn, sq_task, sq_hash, sq_hashfn) to the
+args list?
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- meta/classes/sstate.bbclass | 100 +++++++++++++++++++--
- meta/conf/bitbake.conf      |   4 +-
- meta/lib/oe/sstatesig.py    | 167 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 262 insertions(+), 9 deletions(-)
+Cheers,
 
-diff --git a/meta/classes/sstate.bbclass b/meta/classes/sstate.bbclass
-index 41a2f9b7b77..8ffefd68344 100644
---- a/meta/classes/sstate.bbclass
-+++ b/meta/classes/sstate.bbclass
-@@ -11,7 +11,7 @@ def generate_sstatefn(spec, hash, d):
- SSTATE_PKGARCH    = "${PACKAGE_ARCH}"
- SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
- SSTATE_SWSPEC     = "sstate:${PN}::${PV}:${PR}::${SSTATE_VERSION}:"
--SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_TASKHASH'), d)}"
-+SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_UNIHASH'), d)}"
- SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
- SSTATE_EXTRAPATH   = ""
- SSTATE_EXTRAPATHWILDCARD = ""
-@@ -82,6 +82,23 @@ SSTATE_SIG_PASSPHRASE ?= ""
- # Whether to verify the GnUPG signatures when extracting sstate archives
- SSTATE_VERIFY_SIG ?= "0"
- 
-+SSTATE_HASHEQUIV_METHOD ?= "OEOuthashBasic"
-+SSTATE_HASHEQUIV_METHOD[doc] = "The function used to calculate the output hash \
-+    for a task, which in turn is used to determine equivalency. \
-+    "
-+
-+SSTATE_HASHEQUIV_SERVER ?= ""
-+SSTATE_HASHEQUIV_SERVER[doc] = "The hash equivalence sever. For example, \
-+    'http://192.168.0.1:5000'. Do not include a trailing slash \
-+    "
-+
-+SSTATE_HASHEQUIV_REPORT_TASKDATA ?= "0"
-+SSTATE_HASHEQUIV_REPORT_TASKDATA[doc] = "Report additional useful data to the \
-+    hash equivalency server, such as PN, PV, taskname, etc. This information \
-+    is very useful for developers looking at task data, but may leak sensitive \
-+    data if the equivalence server is public. \
-+    "
-+
- python () {
-     if bb.data.inherits_class('native', d):
-         d.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH', False))
-@@ -634,7 +651,7 @@ def sstate_package(ss, d):
-         return
- 
-     for f in (d.getVar('SSTATECREATEFUNCS') or '').split() + \
--             ['sstate_create_package', 'sstate_sign_package'] + \
-+             ['sstate_report_unihash', 'sstate_create_package', 'sstate_sign_package'] + \
-              (d.getVar('SSTATEPOSTCREATEFUNCS') or '').split():
-         # All hooks should run in SSTATE_BUILDDIR.
-         bb.build.exec_func(f, d, (sstatebuild,))
-@@ -758,6 +775,73 @@ python sstate_sign_package () {
-                            d.getVar('SSTATE_SIG_PASSPHRASE'), armor=False)
- }
- 
-+def OEOuthashBasic(path, sigfile, task, d):
-+    import hashlib
-+    import stat
-+
-+    def update_hash(s):
-+        s = s.encode('utf-8')
-+        h.update(s)
-+        if sigfile:
-+            sigfile.write(s)
-+
-+    h = hashlib.sha256()
-+    prev_dir = os.getcwd()
-+
-+    try:
-+        os.chdir(path)
-+
-+        update_hash("OEOuthashBasic\n")
-+
-+        # It is only currently useful to get equivalent hashes for things that
-+        # can be restored from sstate. Since the sstate object is named using
-+        # SSTATE_PKGSPEC and the task name, those should be included in the
-+        # output hash calculation.
-+        update_hash("SSTATE_PKGSPEC=%s\n" % d.getVar('SSTATE_PKGSPEC'))
-+        update_hash("task=%s\n" % task)
-+
-+        for root, dirs, files in os.walk('.', topdown=True):
-+            # Sort directories and files to ensure consistent ordering
-+            dirs.sort()
-+            files.sort()
-+
-+            for f in files:
-+                path = os.path.join(root, f)
-+                s = os.lstat(path)
-+
-+                # Hash file path
-+                update_hash(path + '\n')
-+
-+                # Hash file mode
-+                update_hash("\tmode=0x%x\n" % stat.S_IMODE(s.st_mode))
-+                update_hash("\ttype=0x%x\n" % stat.S_IFMT(s.st_mode))
-+
-+                if stat.S_ISBLK(s.st_mode) or stat.S_ISBLK(s.st_mode):
-+                    # Hash device major and minor
-+                    update_hash("\tdev=%d,%d\n" % (os.major(s.st_rdev), os.minor(s.st_rdev)))
-+                elif stat.S_ISLNK(s.st_mode):
-+                    # Hash symbolic link
-+                    update_hash("\tsymlink=%s\n" % os.readlink(path))
-+                else:
-+                    fh = hashlib.sha256()
-+                    # Hash file contents
-+                    with open(path, 'rb') as d:
-+                        for chunk in iter(lambda: d.read(4096), b""):
-+                            fh.update(chunk)
-+                    update_hash("\tdigest=%s\n" % fh.hexdigest())
-+    finally:
-+        os.chdir(prev_dir)
-+
-+    return h.hexdigest()
-+
-+python sstate_report_unihash() {
-+    report_unihash = getattr(bb.parse.siggen, 'report_unihash', None)
-+
-+    if report_unihash:
-+        ss = sstate_state_fromvars(d)
-+        report_unihash(os.getcwd(), ss['task'], d)
-+}
-+
- #
- # Shell function to decompress and prepare a package for installation
- # Will be run from within SSTATE_INSTDIR.
-@@ -804,7 +888,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *,
- 
-         spec, extrapath, tname = getpathcomponents(task, d)
- 
--        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + extension)
-+        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_unihash[task], d) + "_" + tname + extension)
- 
-         if os.path.exists(sstatefile):
-             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
-@@ -866,7 +950,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *,
-             if task in ret:
-                 continue
-             spec, extrapath, tname = getpathcomponents(task, d)
--            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + extension)
-+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_unihash[task], d) + "_" + tname + extension)
-             tasklist.append((task, sstatefile))
- 
-         if tasklist:
-@@ -892,12 +976,12 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *,
-         evdata = {'missed': [], 'found': []};
-         for task in missed:
-             spec, extrapath, tname = getpathcomponents(task, d)
--            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz")
--            evdata['missed'].append( (sq_fn[task], sq_task[task], sq_hash[task], sstatefile ) )
-+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_unihash[task], d) + "_" + tname + ".tgz")
-+            evdata['missed'].append( (sq_fn[task], sq_task[task], sq_unihash[task], sstatefile ) )
-         for task in ret:
-             spec, extrapath, tname = getpathcomponents(task, d)
--            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz")
--            evdata['found'].append( (sq_fn[task], sq_task[task], sq_hash[task], sstatefile ) )
-+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_unihash[task], d) + "_" + tname + ".tgz")
-+            evdata['found'].append( (sq_fn[task], sq_task[task], sq_unihash[task], sstatefile ) )
-         bb.event.fire(bb.event.MetadataEvent("MissedSstate", evdata), d)
- 
-     # Print some summary statistics about the current task completion and how much sstate
-diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
-index 64800623545..e64ce6a6dab 100644
---- a/meta/conf/bitbake.conf
-+++ b/meta/conf/bitbake.conf
-@@ -867,7 +867,9 @@ BB_HASHBASE_WHITELIST ?= "TMPDIR FILE PATH PWD BB_TASKHASH BBPATH BBSERVER DL_DI
-     STAMPS_DIR PRSERV_DUMPDIR PRSERV_DUMPFILE PRSERV_LOCKDOWN PARALLEL_MAKE \
-     CCACHE_DIR EXTERNAL_TOOLCHAIN CCACHE CCACHE_NOHASHDIR LICENSE_PATH SDKPKGSUFFIX \
-     WARN_QA ERROR_QA WORKDIR STAMPCLEAN PKGDATA_DIR BUILD_ARCH SSTATE_PKGARCH \
--    BB_WORKERCONTEXT BB_LIMITEDDEPS extend_recipe_sysroot DEPLOY_DIR"
-+    BB_WORKERCONTEXT BB_LIMITEDDEPS BB_UNIHASH extend_recipe_sysroot DEPLOY_DIR \
-+    SSTATE_HASHEQUIV_METHOD SSTATE_HASHEQUIV_SERVER SSTATE_HASHEQUIV_REPORT_TASKDATA \
-+    SSTATE_HASHEQUIV_OWNER"
- BB_HASHCONFIG_WHITELIST ?= "${BB_HASHBASE_WHITELIST} DATE TIME SSH_AGENT_PID \
-     SSH_AUTH_SOCK PSEUDO_BUILD BB_ENV_EXTRAWHITE DISABLE_SANITY_CHECKS \
-     PARALLEL_MAKE BB_NUMBER_THREADS BB_ORIGENV BB_INVALIDCONF BBINCLUDED \
-diff --git a/meta/lib/oe/sstatesig.py b/meta/lib/oe/sstatesig.py
-index 18c5a353a2a..503f2452807 100644
---- a/meta/lib/oe/sstatesig.py
-+++ b/meta/lib/oe/sstatesig.py
-@@ -263,10 +263,177 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
-         if error_msgs:
-             bb.fatal("\n".join(error_msgs))
- 
-+class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHash):
-+    name = "OEEquivHash"
-+
-+    def init_rundepcheck(self, data):
-+        super().init_rundepcheck(data)
-+        self.server = data.getVar('SSTATE_HASHEQUIV_SERVER')
-+        self.method = data.getVar('SSTATE_HASHEQUIV_METHOD')
-+        self.unihashes = bb.persist_data.persist('SSTATESIG_UNIHASH_CACHE_v1_' + self.method, data)
-+
-+    def get_taskdata(self):
-+        return (self.server, self.method) + super().get_taskdata()
-+
-+    def set_taskdata(self, data):
-+        self.server, self.method = data[:2]
-+        super().set_taskdata(data[2:])
-+
-+    def __get_task_unihash_key(self, task):
-+        # TODO: The key only *needs* to be the taskhash, the task is just
-+        # convenient
-+        return '%s:%s' % (task, self.taskhash[task])
-+
-+    def get_stampfile_hash(self, task):
-+        if task in self.taskhash:
-+            # If a unique hash is reported, use it as the stampfile hash. This
-+            # ensures that if a task won't be re-run if the taskhash changes,
-+            # but it would result in the same output hash
-+            unihash = self.unihashes.get(self.__get_task_unihash_key(task))
-+            if unihash is not None:
-+                return unihash
-+
-+        return super().get_stampfile_hash(task)
-+
-+    def get_unihash(self, task):
-+        import urllib
-+        import json
-+
-+        taskhash = self.taskhash[task]
-+
-+        key = self.__get_task_unihash_key(task)
-+
-+        # TODO: This cache can grow unbounded. It probably only needs to keep
-+        # for each task
-+        unihash = self.taskhash.get(key)
-+        if unihash is not None:
-+            return unihash
-+
-+        # In the absence of being able to discover a unique hash from the
-+        # server, make it be equivalent to the taskhash. The unique "hash" only
-+        # really needs to be a unique string (not even necessarily a hash), but
-+        # making it match the taskhash has a few advantages:
-+        #
-+        # 1) All of the sstate code that assumes hashes can be the same
-+        # 2) It provides maximal compatibility with builders that don't use
-+        #    an equivalency server
-+        # 3) The value is easy for multiple independent builders to derive the
-+        #    same unique hash from the same input. This means that if the
-+        #    independent builders find the same taskhash, but it isn't reported
-+        #    to the server, there is a better chance that they will agree on
-+        #    the unique hash.
-+        unihash = taskhash
-+
-+        try:
-+            url = '%s/v1/equivalent?%s' % (self.server,
-+                    urllib.parse.urlencode({'method': self.method, 'taskhash': self.taskhash[task]}))
-+
-+            request = urllib.request.Request(url)
-+            response = urllib.request.urlopen(request)
-+            data = response.read().decode('utf-8')
-+
-+            json_data = json.loads(data)
-+
-+            if json_data:
-+                unihash = json_data['unihash']
-+                # A unique hash equal to the taskhash is not very interesting,
-+                # so it is reported it at debug level 2. If they differ, that
-+                # is much more interesting, so it is reported at debug level 1
-+                bb.debug((1, 2)[unihash == taskhash], 'Found unihash %s in place of %s for %s from %s' % (unihash, taskhash, task, self.server))
-+            else:
-+                bb.debug(2, 'No reported unihash for %s:%s from %s' % (task, taskhash, self.server))
-+        except urllib.error.URLError as e:
-+            bb.warn('Failure contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
-+        except (KeyError, json.JSONDecodeError) as e:
-+            bb.warn('Poorly formatted response from %s: %s' % (self.server, str(e)))
-+
-+        self.taskhash[key] = unihash
-+        return unihash
-+
-+    def report_unihash(self, path, task, d):
-+        import urllib
-+        import json
-+        import tempfile
-+        import base64
-+
-+        taskhash = d.getVar('BB_TASKHASH')
-+        unihash = d.getVar('BB_UNIHASH')
-+        report_taskdata = d.getVar('SSTATE_HASHEQUIV_REPORT_TASKDATA') == '1'
-+        tempdir = d.getVar('T')
-+        fn = d.getVar('BB_FILENAME')
-+        key = fn + '.do_' + task + ':' + taskhash
-+
-+        # Sanity checks
-+        cache_unihash = self.taskhash.get(key)
-+        if cache_unihash is None:
-+            bb.fatal('%s not in unihash cache. Please report this error' % key)
-+
-+        if cache_unihash != unihash:
-+            bb.fatal("Cache unihash %s doesn't match BB_UNIHASH %s" % (cache_unihash, unihash))
-+
-+        sigfile = None
-+        sigfile_name = "depsig.do_%s.%d" % (task, os.getpid())
-+        sigfile_link = "depsig.do_%s" % task
-+
-+        try:
-+            call = self.method + '(path, sigfile, task, d)'
-+            sigfile = open(os.path.join(tempdir, sigfile_name), 'w+b')
-+            locs = {'path': path, 'sigfile': sigfile, 'task': task, 'd': d}
-+
-+            outhash = bb.utils.better_eval(call, locs)
-+
-+            try:
-+                url = '%s/v1/equivalent' % self.server
-+                task_data = {
-+                    'taskhash': taskhash,
-+                    'method': self.method,
-+                    'outhash': outhash,
-+                    'unihash': unihash,
-+                    'owner': d.getVar('SSTATE_HASHEQUIV_OWNER')
-+                    }
-+
-+                if report_taskdata:
-+                    sigfile.seek(0)
-+
-+                    task_data['PN'] = d.getVar('PN')
-+                    task_data['PV'] = d.getVar('PV')
-+                    task_data['PR'] = d.getVar('PR')
-+                    task_data['task'] = task
-+                    task_data['outhash_siginfo'] = sigfile.read().decode('utf-8')
-+
-+                headers = {'content-type': 'application/json'}
-+
-+                request = urllib.request.Request(url, json.dumps(task_data).encode('utf-8'), headers)
-+                response = urllib.request.urlopen(request)
-+                data = response.read().decode('utf-8')
-+
-+                json_data = json.loads(data)
-+                new_unihash = json_data['unihash']
-+
-+                if new_unihash != unihash:
-+                    bb.debug(1, 'Task %s unihash changed %s -> %s by server %s' % (taskhash, unihash, new_unihash, self.server))
-+                else:
-+                    bb.debug(1, 'Reported task %s as unihash %s to %s' % (taskhash, unihash, self.server))
-+            except urllib.error.URLError as e:
-+                bb.warn('Failure contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
-+            except (KeyError, json.JSONDecodeError) as e:
-+                bb.warn('Poorly formatted response from %s: %s' % (self.server, str(e)))
-+        finally:
-+            if sigfile:
-+                sigfile.close()
-+
-+                sigfile_link_path = os.path.join(tempdir, sigfile_link)
-+                bb.utils.remove(sigfile_link_path)
-+
-+                try:
-+                    os.symlink(sigfile_name, sigfile_link_path)
-+                except OSError:
-+                    pass
- 
- # Insert these classes into siggen's namespace so it can see and select them
- bb.siggen.SignatureGeneratorOEBasic = SignatureGeneratorOEBasic
- bb.siggen.SignatureGeneratorOEBasicHash = SignatureGeneratorOEBasicHash
-+bb.siggen.SignatureGeneratorOEEquivHash = SignatureGeneratorOEEquivHash
- 
- 
- def find_siginfo(pn, taskname, taskhashlist, d):
--- 
-2.19.2
+Richard
 
 
