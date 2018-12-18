@@ -1,52 +1,52 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it1-f196.google.com (mail-it1-f196.google.com
-	[209.85.166.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 911A97C034;
-	Tue, 18 Dec 2018 15:31:07 +0000 (UTC)
-Received: by mail-it1-f196.google.com with SMTP id i145so4726137ita.4;
-	Tue, 18 Dec 2018 07:31:09 -0800 (PST)
+Received: from mail-it1-f178.google.com (mail-it1-f178.google.com
+	[209.85.166.178])
+	by mail.openembedded.org (Postfix) with ESMTP id 7E1796E47A;
+	Tue, 18 Dec 2018 15:31:09 +0000 (UTC)
+Received: by mail-it1-f178.google.com with SMTP id g85so4728510ita.3;
+	Tue, 18 Dec 2018 07:31:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding;
-	bh=w/LC+cS/gLlBiEhVz8vQ+ZdkbxjwjY7Vl2l/c7zSdfY=;
-	b=c+OSHxkymLC8ufqTh4YMLuQqnZQIVCFdAYVHaOICs761lpKTyWRlHvQyT+1GHELaYu
-	yeywjiJHCQY0SdtP68Xa5IUglFPc63/+1h0bioe/MFZhp66ewC8QiZ3JF0+Ful40gopv
-	4Pu4wam0t+FPucRrFpv7rbXyGXjNLoMpQ1punVz1daW8EQZpZfmZof5+ARK8KlPU+Msr
-	EYz1wTA58LGfM4AF6dWIhBiAB6LqM8D0Vu4jzWKz25nWubpwYDmsYqb4lTQPuR7IGFaw
-	4FPcPsi94I260WPIXFZ9TdTIM8dkmGaDvp/dP9dYfuQ8jQbgZgrdRisrHbDhScA8EKeo
-	BisQ==
+	bh=5ezNzWiUHXgjxfzTF04aQmX69IKPGkPOB+9DByRZcl0=;
+	b=FNNayzgS8bGw66HSFb/msfmDowv97s754mgaa4R+CU9ZWlXijj3YENGcINqFq+YqKD
+	ksZ8ir71n8aQi4zsamFikHBLBlzWRsX0oIa42T6shqbiE/ZxiI4wZZ/JPmcJIU8+RN1x
+	o3mZg+4zLT0CGDjss99zsUTIxEJ9CQWFfYDupcM6srGxnxLmAYcAxDUScHRdBJelkViF
+	fd1xv4kIAL0nxsic4DElCUH6GeGSOuCAYjEPRrTXd2KgDip+JDb+qHJzlDukjAeLBVs9
+	8CAR6nUzb87CqRyO84l7i+Xvr82B7pBA0JSE4oXUM5o4OyQqtrPaBNFo0MIa9ZkLptC5
+	QUyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=w/LC+cS/gLlBiEhVz8vQ+ZdkbxjwjY7Vl2l/c7zSdfY=;
-	b=VWZoO87aGZXJ5Xljyk2Q6YYjrij2bF6B5auzoIFhozkkI4vDG+KbydCTmF394A0CDj
-	5yyYpN5rH/OpSysf+y2fqMcTmQPeunnqJ3qvGsHA5CaEEHuo+eAY2bwaUYcku48Fwfq9
-	9Gcqo8ajrBnLygkM9PiEt9mf/Vr4Z+ZALTWfdglUV7hIesbs0/LeMexEdRu33ym/pOdf
-	bOYvdb5DvLHpW3AnfMQ94oNYe61BczjZyIdsCTUnsNN0TZ3qe8bWqI60tGx5BadK8BaP
-	VvXI8dVChcc8aT8140LgjXtmffiziYSTB9ebTx9i4Jdad81sxDeHiNyo9yDrewcNoRWB
-	sI/A==
-X-Gm-Message-State: AA+aEWYPc0TTGyOSjrHQA0XBhQ7xiI66YSt6lyrPu6uZ1LsRFHt5XXvI
-	hfPjQhir8uBl3sBNy0gzD8tqTVzC
-X-Google-Smtp-Source: AFSGD/V1jzTfZ6asN4BiXM4e9K1yPrcVJxuH4Xogk5wkHet3KiD27dDCrV3qDYQX7GfoHOqVpFsspQ==
-X-Received: by 2002:a24:fdc4:: with SMTP id m187mr3105506ith.75.1545147068031; 
-	Tue, 18 Dec 2018 07:31:08 -0800 (PST)
+	bh=5ezNzWiUHXgjxfzTF04aQmX69IKPGkPOB+9DByRZcl0=;
+	b=AWo4YvKDaDNXk5l8TO6yWMq7i15fcwI2wjXXgQipSPvsEqHyCGWwu4UTDLZ6Ic35q4
+	u4Zc+v/Ods70cLb0p7N1+mSrtlHhB5sgdZ2HsaSEEQt0pk21qH2JBkcGrpzJVl9uLBOM
+	dBO5kQRcvmWS6VctHDrc+qOgoSauypVdUH378aLTK6s0ezTiROUlXXFHqaIbyoMXw9ju
+	wS2guuzMw3TwRME4wggbb2kikj4a2qkYzIhz5yvHCd8r9V5kS5J6GaBmEUdU/hTkJpGp
+	WB2rf3/3Cl58ZjjKnzYawH2xoBcq1eJpNiJ6hH7thco7Zr58UHnn1VgMAOHYbo4TwcIT
+	UVnQ==
+X-Gm-Message-State: AA+aEWas9MY87bhp89qmtM/kI6jR0C3i0lcNEEQDoSnfDs8N4NGEZ3cs
+	E4sDLhOGfzGkZ3s+G2bJT3+4U6Vm
+X-Google-Smtp-Source: AFSGD/WRn/NdASDLLSku2sjo5R1ue8GAYY0C9DPzyloxdDS8FXl4KMG4wkVK6mhdsH4eiuMHtDHWxg==
+X-Received: by 2002:a24:2f08:: with SMTP id j8mr3554266itj.42.1545147069873;
+	Tue, 18 Dec 2018 07:31:09 -0800 (PST)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id 18sm1652072itk.28.2018.12.18.07.31.06
+	by smtp.gmail.com with ESMTPSA id 18sm1652072itk.28.2018.12.18.07.31.08
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 18 Dec 2018 07:31:06 -0800 (PST)
+	Tue, 18 Dec 2018 07:31:08 -0800 (PST)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: openembedded-core@lists.openembedded.org,
 	bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Dec 2018 09:30:52 -0600
-Message-Id: <20181218153101.9212-2-JPEWhacker@gmail.com>
+Date: Tue, 18 Dec 2018 09:30:53 -0600
+Message-Id: <20181218153101.9212-3-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20181218153101.9212-1-JPEWhacker@gmail.com>
 References: <20181204034245.25461-1-JPEWhacker@gmail.com>
 	<20181218153101.9212-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-Subject: [OE-core][PATCH v4 01/10] bitbake: fork: Add os.fork() wrappers
+Subject: [OE-core][PATCH v4 02/10] bitbake: persist_data: Close databases across fork
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,113 +59,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Dec 2018 15:31:08 -0000
+X-List-Received-Date: Tue, 18 Dec 2018 15:31:09 -0000
 Content-Transfer-Encoding: 8bit
 
-Adds a compatibility wrapper around os.fork() that backports the ability
-to register fork event handlers (os.register_at_fork()) from Python 3.7
+sqlite gets really angry if a database is open across a fork() call,
+and will give all sorts of messages ranging from I/O errors to database
+corruption errors. To deal with this, close all database connections
+before forking, and reopen them (lazily) on the other side.
 
 [YOCTO #13030]
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/bin/bitbake-worker |  2 +-
- bitbake/lib/bb/fork.py     | 73 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+), 1 deletion(-)
- create mode 100644 bitbake/lib/bb/fork.py
+ bitbake/lib/bb/persist_data.py | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index cd687e6e433..41ef6d848ac 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -181,7 +181,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
-         pipein, pipeout = os.pipe()
-         pipein = os.fdopen(pipein, 'rb', 4096)
-         pipeout = os.fdopen(pipeout, 'wb', 0)
--        pid = os.fork()
-+        pid = bb.fork.fork()
-     except OSError as e:
-         logger.critical("fork failed: %d (%s)" % (e.errno, e.strerror))
-         sys.exit(1)
-diff --git a/bitbake/lib/bb/fork.py b/bitbake/lib/bb/fork.py
-new file mode 100644
-index 00000000000..2b2b0b73b62
---- /dev/null
-+++ b/bitbake/lib/bb/fork.py
-@@ -0,0 +1,73 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+#
-+# Copyright (C) 2018 Garmin Ltd.
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+#
-+"""
-+Python wrappers for os.fork() that allow the insertion of callbacks for fork events.
-+This is designed to exacmimic os.register_at_fork() available in Python 3.7 with the
-+intent that it can be removed when that version becomes standard
-+"""
+diff --git a/bitbake/lib/bb/persist_data.py b/bitbake/lib/bb/persist_data.py
+index 4468facd18f..27ffb1ddaa4 100644
+--- a/bitbake/lib/bb/persist_data.py
++++ b/bitbake/lib/bb/persist_data.py
+@@ -30,6 +30,8 @@ from bb.compat import total_ordering
+ from collections import Mapping
+ import sqlite3
+ import contextlib
++import bb.fork
++import weakref
+ 
+ sqlversion = sqlite3.sqlite_version_info
+ if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
+@@ -38,6 +40,28 @@ if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
+ 
+ logger = logging.getLogger("BitBake.PersistData")
+ 
++# Carrying an open database connection across a fork() confuses sqlite and
++# results in fun errors like 'database disk image is malformed'.
++# To remedy this, close all connections before forking, then they will be
++# (lazily) reopen them on the other side. This will cause a lot of problems if
++# there are threads running and trying to access the database at the same time,
++# but if you are mixing threads and fork() you have no one to blame but
++# yourself. If that is discovered to be a problem in the future, some sort of
++# per-table reader-writer lock could be used to block the fork() until all
++# pending transactions complete
++sql_table_weakrefs = []
++def _fork_before_handler():
++    for ref in sql_table_weakrefs:
++        t = ref()
++        if t is not None and t.connection is not None:
++            t.connection.close()
++            t.connection = None
 +
-+import sys
-+import os
++bb.fork.register_at_fork(before=_fork_before_handler)
 +
-+before_calls = []
-+after_in_parent_calls = []
-+after_in_child_calls = []
++def _remove_table_weakref(ref):
++    sql_table_weakrefs.remove(ref)
 +
-+def _do_calls(l, reverse=False):
-+    # Make a copy in case the list is modified in the callback
-+    copy = l[:]
-+    if reverse:
-+        copy = reversed(copy)
+ @total_ordering
+ class SQLTable(collections.MutableMapping):
+     class _Decorators(object):
+@@ -305,4 +329,10 @@ def persist(domain, d):
+ 
+     bb.utils.mkdirhier(cachedir)
+     cachefile = os.path.join(cachedir, "bb_persist_data.sqlite3")
+-    return SQLTable(cachefile, domain)
++    t = SQLTable(cachefile, domain)
 +
-+    for f in copy:
-+        # All exception in calls are ignored
-+        try:
-+            f()
-+        except:
-+            pass
++    # Add a weak reference to the table list. The weak reference will not keep
++    # the object alive by itself, so it prevents circular reference counts
++    sql_table_weakrefs.append(weakref.ref(t, _remove_table_weakref))
 +
-+def fork():
-+    if sys.hexversion >= 0x030700F0:
-+        return os.fork()
-+
-+    _do_calls(before_calls, reverse=True)
-+
-+    ret = os.fork()
-+    if ret == 0:
-+        _do_calls(after_in_child_calls)
-+    else:
-+        _do_calls(after_in_parent_calls)
-+    return ret
-+
-+def register_at_fork(**kwargs):
-+    def add_arg_to_list(name, lst):
-+        if name in kwargs:
-+            arg = kwargs[name]
-+            if not callable(arg):
-+                raise TypeError("'%s' must be callable, not %s" % (name, type(arg)))
-+            lst.append(arg)
-+
-+    if sys.hexversion >= 0x030700F0:
-+        os.register_at_fork(**kwargs)
-+        return
-+
-+    add_arg_to_list('before', before_calls)
-+    add_arg_to_list('after_in_parent', after_in_parent_calls)
-+    add_arg_to_list('after_in_child', after_in_child_calls)
-+
++    return t
 -- 
 2.19.2
 
