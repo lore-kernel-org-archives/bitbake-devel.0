@@ -1,61 +1,53 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 3A93160017
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
+	[209.85.221.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 7CBB66BA72
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Dec 2018 21:05:03 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 600EC1833F;
-	Tue, 18 Dec 2018 22:05:04 +0100 (CET)
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id 6SmPiexfhlO9; Tue, 18 Dec 2018 22:05:02 +0100 (CET)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-	by bastet.se.axis.com (Postfix) with ESMTPS id 2151F18495;
-	Tue, 18 Dec 2018 22:05:02 +0100 (CET)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F36421A070;
-	Tue, 18 Dec 2018 22:05:01 +0100 (CET)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E84021A06D;
-	Tue, 18 Dec 2018 22:05:01 +0100 (CET)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
-	by boulder02.se.axis.com (Postfix) with ESMTP;
-	Tue, 18 Dec 2018 22:05:01 +0100 (CET)
-Received: from XBOX01.axis.com (xbox01.axis.com [10.0.5.15])
-	by thoth.se.axis.com (Postfix) with ESMTP id DC4FF3090;
-	Tue, 18 Dec 2018 22:05:01 +0100 (CET)
-Received: from xbox11.axis.com (10.0.5.25) by XBOX01.axis.com (10.0.5.15) with
-	Microsoft SMTP Server (TLS) id 15.0.1365.1;
-	Tue, 18 Dec 2018 22:05:01 +0100
-Received: from XBOX04.axis.com (10.0.5.18) by xbox11.axis.com (10.0.5.25) with
-	Microsoft SMTP Server (TLS) id 15.0.1365.1;
-	Tue, 18 Dec 2018 22:05:01 +0100
-Received: from XBOX04.axis.com ([fe80::210a:724b:68cb:a917]) by
-	XBOX04.axis.com ([fe80::210a:724b:68cb:a917%22]) with mapi id
-	15.00.1365.000; Tue, 18 Dec 2018 22:05:01 +0100
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Tue, 18 Dec 2018 21:16:54 +0000 (UTC)
+Received: by mail-wr1-f68.google.com with SMTP id v13so17375757wrw.5
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 18 Dec 2018 13:16:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=bGkPOrmPr8JUcCkI5I/pjh+vh9dQcgM3h+fwsrjqJe4=;
+	b=TJ9GT5LUYIpSyPkebGcdIkPdSGtRZHmC9EZkj481ZedwoqOS+zOoCwTEKUbDVa7R5n
+	q82DPdVsGy+U1PJ3LRoSVBq3o8WGQbkA1hG2UfS7KKdHR4PtwoYs/VYKkutPsNkR+Ifr
+	QYD0/Pc/iiXM6BWDRDkUCwo0hOZFWv+EZgFgY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=bGkPOrmPr8JUcCkI5I/pjh+vh9dQcgM3h+fwsrjqJe4=;
+	b=hzUos6vuXbefNImxhapX+Elsb/4w6P7/laST8HWlyaEMW8LAmU38s0ZLRS+k0m3JbZ
+	okiP/tYMymrIcpqmaq/jTF6THkkfvim84l0j+ltMptSUn/m39XKzzXudUtqZY9DZ/y64
+	It3GjjrmxEb0DPVl9FCnTX2Im4XruYLmLAVHBAxhzM/2hfQWwBNG33hFxDuYCgTbpYqn
+	gw0OdtdB0HacL1RBtWBQepZ6ohPnCiO0Usp+eXODbfeVX6MLbTji5yG7q85RmyRQbDYI
+	OeFVSBA3qOt4WqeXar88pzSlV6Ql+NTV/qE3mFNo5nVfKeKsRiI27LoS1V8tzW/mhZe7
+	rN7w==
+X-Gm-Message-State: AA+aEWZ/7QiLjr0LUvRf/IjljKSUDP3MRs1ghJPRrz3f/+R+qdA3NMy2
+	1BwXMnwUTEwa2nfhdGYMj+H54Q==
+X-Google-Smtp-Source: AFSGD/U5+WDwPFGsq/97ZOIFF0FsY7VJZ0n4UJcQ+5WkobAs3IWAuQCpHfxWFMSFiFJc2vTaUZnBZw==
+X-Received: by 2002:adf:f703:: with SMTP id r3mr15836969wrp.93.1545167815061; 
+	Tue, 18 Dec 2018 13:16:55 -0800 (PST)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	t70sm4459339wmd.36.2018.12.18.13.16.52
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Tue, 18 Dec 2018 13:16:53 -0800 (PST)
+Message-ID: <eae945fea01f12c8abd559b4988ae34f9e2fe405.camel@linuxfoundation.org>
+From: richard.purdie@linuxfoundation.org
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>, 
 	"bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 2/3] data_smart: Allow numeric characters
-	in	overrides
-Thread-Index: AQHUk7WvxWtdnWml2k+9C69VBfTzvaWE/b0Q
-Date: Tue, 18 Dec 2018 21:05:01 +0000
-Message-ID: <ca187ac1c83d43b282db6b8d66d416a8@XBOX04.axis.com>
+Date: Tue, 18 Dec 2018 21:16:48 +0000
+In-Reply-To: <ca187ac1c83d43b282db6b8d66d416a8@XBOX04.axis.com>
 References: <20181214140219.1553-1-richard.purdie@linuxfoundation.org>
 	<20181214140219.1553-2-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20181214140219.1553-2-richard.purdie@linuxfoundation.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
+	<ca187ac1c83d43b282db6b8d66d416a8@XBOX04.axis.com>
+User-Agent: Evolution 3.30.2-1 
+Mime-Version: 1.0
 Subject: Re: [PATCH 2/3] data_smart: Allow numeric characters in	overrides
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -69,94 +61,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Dec 2018 21:05:04 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 18 Dec 2018 21:16:54 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-> -----Original Message-----
-> From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
-> bounces@lists.openembedded.org> On Behalf Of Richard Purdie
-> Sent: den 14 december 2018 15:02
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH 2/3] data_smart: Allow numeric
-> characters in overrides
->=20
-> We're seeing problems due to the way x86-64 is handled (or not handled)
-> as an override. Relax the containts on overrides from being lowercase
-> to being lowercase or numeric. This fixes problem where MACHINE=3Dqemux86
-> would work but MACHINE=3Dqemux86-64 would fail the same tests.
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/data_smart.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-> index 297a2f45b4..c342adaa0a 100644
-> --- a/lib/bb/data_smart.py
-> +++ b/lib/bb/data_smart.py
-> @@ -43,6 +43,7 @@ __setvar_regexp__ =3D
-> re.compile(r'(?P<base>.*?)(?P<keyword>_append|_prepend|_remo
->  __expand_var_regexp__ =3D re.compile(r"\${[^{}@\n\t :]+}")
->  __expand_python_regexp__ =3D re.compile(r"\${@.+?}")
->  __whitespace_split__ =3D re.compile(r'(\s)')
-> +__override_regexp__ =3D re.compile(r'[a-z0-9]+')
->=20
->  def infer_caller_details(loginfo, parent =3D False, varval =3D True):
->      """Save the caller the trouble of specifying everything."""
-> @@ -597,7 +598,7 @@ class DataSmart(MutableMapping):
->          # aka pay the cookie monster
->          override =3D var[var.rfind('_')+1:]
->          shortvar =3D var[:var.rfind('_')]
-> -        while override and override.islower():
-> +        while override and __override_regexp__.match(override):
->              if shortvar not in self.overridedata:
->                  self.overridedata[shortvar] =3D []
->              if [var, override] not in self.overridedata[shortvar]:
-> --
-> 2.19.1
+On Tue, 2018-12-18 at 21:05 +0000, Peter Kjellerstedt wrote:
+> I do not understand this commit. The commit explanation and the code change 
+> don't match up. The motivation in the commit message is that there was 
+> problems with overrides such as x86-64 containing digits and that the 
+> code should be changed to allow overrides to be lower case and numeric.
+> However, the modified code changes the test from using islower(), which as 
+> far as I can tell only validates the alpha-characters in the string and 
+> ignores all else, to using a regular expression r'[a-z0-9]+', which will 
+> match as long as the first character is a lower case character or a numeric 
+> character (note that there is no $ at the end of the regular expression).
+> 
+> Here are tests with islower(), which correctly validates "x86" and
+> "x86-64" 
+> as lower case overrides, but not "fooBar":
+> 
+> > > > "x86".islower()
+> True
+> > > > "x86-64".islower()
+> True
+> > > > "fooBar".islower()
+> False
+> 
+> Here are the corresponding tests using the r'[a-z0-9]+' regular
+> expression.
+> Note that it only matches "x86" from "x86-64" and "foo" from
+> "fooBar", and 
+> will incorrectly allow "fooBar" as an override:
+> 
+> > > > re.match(r'[a-z0-9]+', "x86")
+> <_sre.SRE_Match object; span=(0, 3), match='x86'>
+> > > > re.match(r'[a-z0-9]+', "x86-64")
+> <_sre.SRE_Match object; span=(0, 3), match='x86'>
+> > > > re.match(r'[a-z0-9]+', "fooBar")
+> <_sre.SRE_Match object; span=(0, 3), match='foo'>
+> 
+> So why change from islower(), which as far as I can tell did the
+> right thing from the beginning?
 
-I do not understand this commit. The commit explanation and the code change=
-=20
-don't match up. The motivation in the commit message is that there was=20
-problems with overrides such as x86-64 containing digits and that the=20
-code should be changed to allow overrides to be lower case and numeric.
-However, the modified code changes the test from using islower(), which as=
-=20
-far as I can tell only validates the alpha-characters in the string and=20
-ignores all else, to using a regular expression r'[a-z0-9]+', which will=20
-match as long as the first character is a lower case character or a numeric=
-=20
-character (note that there is no $ at the end of the regular expression).
+The commit is clearly wrong. The intent of the commit message is
+correct, it doesn't match what that regex actually does :(
 
-Here are tests with islower(), which correctly validates "x86" and "x86-64"=
-=20
-as lower case overrides, but not "fooBar":
+Cheers,
 
->>> "x86".islower()
-True
->>> "x86-64".islower()
-True
->>> "fooBar".islower()
-False
-
-Here are the corresponding tests using the r'[a-z0-9]+' regular expression.
-Note that it only matches "x86" from "x86-64" and "foo" from "fooBar", and=
-=20
-will incorrectly allow "fooBar" as an override:
-
->>> re.match(r'[a-z0-9]+', "x86")
-<_sre.SRE_Match object; span=3D(0, 3), match=3D'x86'>
->>> re.match(r'[a-z0-9]+', "x86-64")
-<_sre.SRE_Match object; span=3D(0, 3), match=3D'x86'>
->>> re.match(r'[a-z0-9]+', "fooBar")
-<_sre.SRE_Match object; span=3D(0, 3), match=3D'foo'>
-
-So why change from islower(), which as far as I can tell did the right thin=
-g=20
-from the beginning?
-
-//Peter
+Richard
 
 
