@@ -1,52 +1,51 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
-	[209.85.128.68])
-	by mail.openembedded.org (Postfix) with ESMTP id E52457BFB5
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Dec 2018 21:33:47 +0000 (UTC)
-Received: by mail-wm1-f68.google.com with SMTP id a62so656011wmh.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Dec 2018 13:33:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=0PMYwDfWBIBDPt9RhRdJkVJUkQr4X6kLssNjQe9Ji3w=;
-	b=I5dindWQeMOghFeO4cfLmcznQHhfepVwZ62AKiEEkPPCJfijsXwshfvOSE0CQEtPdT
-	YgIcGzajgRL3FIMgYmRv6HFdQ8PX9HP1z5M1B5FC2RKikeS/dzaTkByMZ+iz9jTz7jT4
-	7hc5/NgGc4gXmL3JLWOFD38enYeeaxzpvRtCE=
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com
+	[209.85.166.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 1ED126E47A;
+	Tue, 18 Dec 2018 15:31:05 +0000 (UTC)
+Received: by mail-io1-f41.google.com with SMTP id l14so13064169ioj.5;
+	Tue, 18 Dec 2018 07:31:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding;
+	bh=1QB7FdaEp5dUDTDcoAvk9cNoCGLcguI/p8FOugPSkrU=;
+	b=kHYQMtp7NG+LbrlsM0b2/xOIge+xQrXJ+8HV/y7J5EWQ83Q+BGNmz+Und5tPAi9aNN
+	WXpA5SLu9C/mMro3i6asfDz47n2MHaWJI9ZFhs+nXgUU+9Ha/CRlH5roxQ+ttohqlCd+
+	xojDF5tVVPUANjIuDR6+3CwtSslU7Oi9/55gjWSnGggVWHpnfAE0s9CShWNkeiduG32O
+	xGayXGSagNrprNFIvS9wLTmBdRM/NWz2fo6/XzQCp71udvc+1xOQnF9T1xYetOdZh273
+	rEHzpTaMy1zV+dgOTJMwa+6DHnjxIorsRGX2hPDJ7VcRRXU/5VQhPM2wfehVYUWbOXuC
+	I9Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=0PMYwDfWBIBDPt9RhRdJkVJUkQr4X6kLssNjQe9Ji3w=;
-	b=UqgCnw6LTyYWDCAmwNMAL4YzvgYrFE20+qEHhEl0q02oaYX7cJjySV+oXsAF/Q2D2F
-	RO2N8hIhGUCIB7igMvJaBl4pSs6HJkrlANbW4hX4tbj3gDVFTJ2tHtEMfvAA0PwoMEB5
-	3f/ToWU3T8ITwkrVllYRJzv0QZlxaOQPULyrsrko2loW1D5qwpc7X5l+U6XvruZ3PDIF
-	XWvABpUBqGTqT7w3jMeMlReYCl+t1PsqQVaMDAE3Zo3bTAOTTnqls0/qcnamHZdnbwYI
-	R/p5fg4nD5PJubZNlejt+IvuWPcBWxIC13S1jXIEpHhdptL8Pj6FH3iW9CrPBS3gFrwI
-	2MeA==
-X-Gm-Message-State: AA+aEWbKgO8bFwqPNchMY+v30EUV/aygFkGXgHmL+ktQacKN7lzurcAe
-	gEI6sN9Wfa6J90qWSSMu/TprKw==
-X-Google-Smtp-Source: AFSGD/UPhXVNCRmRO140aLCt+iX/EQ1jAiGLCXGH8lw9hpmADJeniZ4rqBURdEwJTfqSLpy3P44dAg==
-X-Received: by 2002:a1c:868a:: with SMTP id i132mr626707wmd.49.1545082428568; 
-	Mon, 17 Dec 2018 13:33:48 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	e142sm648872wmf.46.2018.12.17.13.33.47
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=1QB7FdaEp5dUDTDcoAvk9cNoCGLcguI/p8FOugPSkrU=;
+	b=TgSMhcvkwYkhYhjlC8dEXCSDFecN/6X1GsGos5tmkjkxlJ5AfgimnA2QfwtdLwVBu0
+	ZiFmybMRfbTmnA9hjl0NMI+wv0G1dqzBx7Nnzy41sq5oqV2vSDkRNCAcfeWdPCc9W+qK
+	l3I/3ug1/zC60koeECIx9LwuIKyoEZqcqf+DjW3QiXugRybvp29HiHp7WLj182L4rRsw
+	T9Aa5F6L3lLSZiX6HJDhQ9+Y5qPJEsWm379JydEzTeML5k88UFSMyUlB8kJ8mB/94eKb
+	KqmYETPmmkE8ria+qCbjLvP33hn2vw4ew3OwVC9UEGgZuw1dQeu/2R7bMmCWTSGS7E52
+	bGBw==
+X-Gm-Message-State: AA+aEWaQovbz00aPyPk0RNgubEAIgcx+qf6t1ox63WHWUalPCOmln2Mb
+	dKujgzgv+Lc6JBlfKBAUR5lPlzNw
+X-Google-Smtp-Source: AFSGD/XZ0PlTqRlnvd3xwI9dCwEjlK4nZEt6RFhCB6LEzpH3tEiDhFNtdjAo193OLnmnuKiMLpx37A==
+X-Received: by 2002:a5d:8d04:: with SMTP id p4mr4459807ioj.70.1545147066480;
+	Tue, 18 Dec 2018 07:31:06 -0800 (PST)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id 18sm1652072itk.28.2018.12.18.07.31.04
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 17 Dec 2018 13:33:47 -0800 (PST)
-Message-ID: <94dc7afb9f161df5728b6e3b1af0c9cbef4ce806.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: Jacob Kroon <jacob.kroon@gmail.com>
-Date: Mon, 17 Dec 2018 21:33:46 +0000
-In-Reply-To: <CAPbeDCk51q9Fz4ZsJ1jZP64aLdZc7YRaWCQVK5=kNSO=xfScrw@mail.gmail.com>
-References: <20181217144006.32015-1-richard.purdie@linuxfoundation.org>
-	<CAPbeDCk51q9Fz4ZsJ1jZP64aLdZc7YRaWCQVK5=kNSO=xfScrw@mail.gmail.com>
-User-Agent: Evolution 3.30.2-1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] codeparser: Switch to sha256 from md5
+	Tue, 18 Dec 2018 07:31:04 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: openembedded-core@lists.openembedded.org,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 18 Dec 2018 09:30:51 -0600
+Message-Id: <20181218153101.9212-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20181204034245.25461-1-JPEWhacker@gmail.com>
+References: <20181204034245.25461-1-JPEWhacker@gmail.com>
+MIME-Version: 1.0
+Subject: [OE-core][PATCH v4 00/10] Hash Equivalency Server
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,72 +58,113 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Dec 2018 21:33:48 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 18 Dec 2018 15:31:06 -0000
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2018-12-17 at 19:47 +0100, Jacob Kroon wrote:
-> On Mon, Dec 17, 2018 at 3:40 PM Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
-> > We've reports of hash collision with codeparser. Looking at the way collision
-> > problems occur with md5 and the way our function templating works, I can believe
-> > we may run into issues.
-> > 
-> > This patch therefore switches to sha256.
-> > 
-> > Performance wise, parse time could appear to rise by 4s in 374s
-> > 
-> > Before:
-> > 
-> > 384329 in 2.966s (md5)
-> > 
-> > After:
-> > 
-> > 349743 in 2.340s (sha256)
-> > 34723 in 1.245s (md5)
-> > 
-> > since we still have md5 used elsewhere in the code, something we should look at
-> > next (using sha256 everywhere is around 5.3s in total)
-> > 
-> > Unfortunately this does nearly double the size of the codeparser cache file
-> > due to the hash size change.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > ---
-> >  lib/bb/codeparser.py | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-> > index 3f8ac1d5f6..ac995a6a1d 100644
-> > --- a/lib/bb/codeparser.py
-> > +++ b/lib/bb/codeparser.py
-> > @@ -33,7 +33,7 @@ from bb.cache import MultiProcessCache
-> >  logger = logging.getLogger('BitBake.CodeParser')
-> > 
-> >  def bbhash(s):
-> > -    return hashlib.md5(s.encode("utf-8")).hexdigest()
-> > +    return hashlib.sha256(s.encode("utf-8")).hexdigest()
-> > 
-> >  def check_indent(codestr):
-> >      """If the code is indented, add a top level piece of code to 'remove' the indentation"""
-> > @@ -140,7 +140,7 @@ class CodeParserCache(MultiProcessCache):
-> >      # so that an existing cache gets invalidated. Additionally you'll need
-> >      # to increment __cache_version__ in cache.py in order to ensure that old
-> >      # recipe caches don't trigger "Taskhash mismatch" errors.
-> > -    CACHE_VERSION = 10
-> > +    CACHE_VERSION = 11
-> 
-> The comment above mentions a "__cache_version__" in cache.py. Should
-> that be bumped as well ?
+Apologies for cross-posting this to both the bitbake-devel and
+openembedded-devel; this work necessarily intertwines both places, and
+it is really necessary to look at both parts to get an idea of what is
+going on. For convenience, the bitbake patches are listed first,
+followed by the oe-core patches.
 
-Good question but in this case no. We didn't change anything about the
-form of the data, just the way its represented internally in the cache.
-The other code will see the same results before and after the change so
-it doesn't mean it has to be bumped. It wouldn't hurt either, we just
-don't need to.
+The basic premise is that any given task no longer hashes a dependent
+task's taskhash to determine it's own taskhash, but instead hashes the
+dependent task's "unique hash" (which doesn't strictly need to be a
+hash, but is for consistency.  This allows multiple taskhashes to map to
+the same unique hash, meaning that trivial changes to a recipe that
+would change the taskhash don't necessarily need to change the unique
+hash, and thus don't need to cause downstream tasks to be rebuilt (with
+caveats, see below).
 
-Cheers,
+In the absence of any interaction by the user, the unique hash for a
+task is just that task's taskhash, which effectively maintains the
+current behavior. However, if the user enables the "OEEquivHash"
+signature generator, they can direct it to look at a hash equivalency
+server (of which a reference implementation is provided). The sstate
+code will provide the server with an output hash that it calculates, and
+the server will record all tasks with the same output hash as
+"equivalent" and report the same unique hash for them when requested.
+When initializing tasks, bitbake can ask the server about the unique
+hash for new tasks it has never seen before and potentially skip
+rebuilding, or restore the task from an equivalent sstate file. To
+facilitate restoring tasks from sstate, sstate objects are now named
+based on the tasks unique hash instead of the taskhash (which, again has
+no effect if the server is in use).
 
-Richard
+This patchset doesn't make any attempt to dynamically update task unique
+hash after bitbake initializes the tasks, and as such there are some
+cases where this isn't accelerating the build as much as it possibly
+could. I think it will be possible to add support for this, but this
+preliminary support needs to come first.
+
+You can also see these patches (and my first attempts at dynamic task
+re-hashing) on the "jpew/hash-equivalence" branch in poky-contrib.
+
+As always, thanks for your feedback and time
+
+VERSION 2:
+
+At the core, this patch does the same thing as V1 with some very minor
+tweaks. The main things that have changed are:
+ 1) Per request, the Hash Equivalence Server reference implementation is
+    now based entirely on built in Python modules and requires no
+    external libraries. It also has a wrapper script to launch it
+    (bitbake-hashserv) and unittests.
+ 2) There is a major rework of persist_data in bitbake. I
+    think these patches could be submitted independently, but I doubt
+    anyone is clamoring for them. The general gist of them is that there
+    were a lot of strange edge cases that I found when using
+    persist_data as an IPC mechanism between the main bitbake process
+    and the bitbake-worker processes. I went ahead and added extensive
+    unit tests for this as well.
+
+VERSION 3:
+
+Minor tweak to version 2 that should fix timeout errors seen on the
+autobuilder
+
+VERSION 4:
+
+Based on discussion, the term "dependency ID" was dropped in favor of
+"unique hash" (unihash).
+
+The hash validation checks were updated to properly fallback to the old
+function signatures (that don't pass the unihashes) for compatibility
+with older implementations.
+
+Joshua Watt (10):
+  bitbake: fork: Add os.fork() wrappers
+  bitbake: persist_data: Close databases across fork
+  bitbake: tests/persist_data: Add tests
+  bitbake: siggen: Split out task unique hash
+  bitbake: runqueue: Track task unique hash
+  bitbake: runqueue: Pass unique hash to task
+  bitbake: runqueue: Pass unique hash to hash validate
+  classes/sstate: Handle unihash in hash check
+  bitbake: hashserv: Add hash equivalence reference server
+  sstate: Implement hash equivalence sstate
+
+ bitbake/bin/bitbake-hashserv         |  67 ++++++++++
+ bitbake/bin/bitbake-selftest         |   3 +
+ bitbake/bin/bitbake-worker           |   9 +-
+ bitbake/lib/bb/fork.py               |  73 +++++++++++
+ bitbake/lib/bb/persist_data.py       |  32 ++++-
+ bitbake/lib/bb/runqueue.py           |  73 +++++++----
+ bitbake/lib/bb/siggen.py             |   7 +-
+ bitbake/lib/bb/tests/persist_data.py | 188 +++++++++++++++++++++++++++
+ bitbake/lib/hashserv/__init__.py     | 152 ++++++++++++++++++++++
+ bitbake/lib/hashserv/tests.py        | 141 ++++++++++++++++++++
+ meta/classes/sstate.bbclass          | 102 +++++++++++++--
+ meta/conf/bitbake.conf               |   4 +-
+ meta/lib/oe/sstatesig.py             | 167 ++++++++++++++++++++++++
+ 13 files changed, 978 insertions(+), 40 deletions(-)
+ create mode 100755 bitbake/bin/bitbake-hashserv
+ create mode 100644 bitbake/lib/bb/fork.py
+ create mode 100644 bitbake/lib/bb/tests/persist_data.py
+ create mode 100644 bitbake/lib/hashserv/__init__.py
+ create mode 100644 bitbake/lib/hashserv/tests.py
+
+-- 
+2.19.2
 
 
