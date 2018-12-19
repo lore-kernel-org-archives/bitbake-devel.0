@@ -1,85 +1,64 @@
-Return-Path: <raphael.lisicki@siemens.com>
-X-Greylist: delayed 10734 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 19 Dec 2018 05:53:40 UTC
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com
-	(mail-eopbgr30064.outbound.protection.outlook.com [40.107.3.64])
-	by mail.openembedded.org (Postfix) with ESMTP id 4C42679F02
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 967167BFFC
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Dec 2018 05:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=siemens.onmicrosoft.com; s=selector1-siemens-com;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=URpAdz+a0TKvzb3+NyXwCmcDp7dWyAa1x9m008TjQi0=;
-	b=VArBZv6QF3zQB0UHzwh7rx7aREGwqPOs7QqvqsgU6wM9Bb2MyIUbZgaBPllgWlYNuxxTC9phG7TFGZiWjq9+Bo1h06T5jwtDnbc9HMdfq4OzG12WHW/ZihBFYo0HWlKNrhhjD1fOfGfKYesOdV2d6RCknrLij53ATOrALgIj8S8=
-Received: from DB6PR10MB1607.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:6:39::25) by
-	DB6PR10MB1607.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:6:39::25) with
-	TransportReplication id Version 15.20 (Build 1425.22); Wed, 19 Dec 2018
-	00:21:19 +0000
-Received: from VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM (20.177.62.75) by
-	VI1PR10MB1613.EURPRD10.PROD.OUTLOOK.COM (10.165.191.158) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.1425.18; Tue, 18 Dec 2018 14:13:48 +0000
-Received: from VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM
-	([fe80::d123:4e05:1797:3a0e]) by
-	VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM
-	([fe80::d123:4e05:1797:3a0e%2]) with mapi id 15.20.1425.021;
-	Tue, 18 Dec 2018 14:13:48 +0000
-From: "raphael.lisicki@siemens.com" <raphael.lisicki@siemens.com>
-To: Mark Hatle <mark.hatle@windriver.com>,
+	Wed, 19 Dec 2018 10:55:32 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 2FD0618507;
+	Wed, 19 Dec 2018 11:55:32 +0100 (CET)
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id fYEwTXE8Ve33; Wed, 19 Dec 2018 11:55:29 +0100 (CET)
+Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
+	by bastet.se.axis.com (Postfix) with ESMTPS id D32101844C;
+	Wed, 19 Dec 2018 11:55:29 +0100 (CET)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BEB911A072;
+	Wed, 19 Dec 2018 11:55:29 +0100 (CET)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B30221A06B;
+	Wed, 19 Dec 2018 11:55:29 +0100 (CET)
+Received: from thoth.se.axis.com (unknown [10.0.2.173])
+	by boulder02.se.axis.com (Postfix) with ESMTP;
+	Wed, 19 Dec 2018 11:55:29 +0100 (CET)
+Received: from XBOX04.axis.com (xbox04.axis.com [10.0.5.18])
+	by thoth.se.axis.com (Postfix) with ESMTP id A6E0430A5;
+	Wed, 19 Dec 2018 11:55:29 +0100 (CET)
+Received: from xbox11.axis.com (10.0.5.25) by XBOX04.axis.com (10.0.5.18) with
+	Microsoft SMTP Server (TLS) id 15.0.1365.1;
+	Wed, 19 Dec 2018 11:55:29 +0100
+Received: from XBOX04.axis.com (10.0.5.18) by xbox11.axis.com (10.0.5.25) with
+	Microsoft SMTP Server (TLS) id 15.0.1365.1;
+	Wed, 19 Dec 2018 11:55:29 +0100
+Received: from XBOX04.axis.com ([fe80::210a:724b:68cb:a917]) by
+	XBOX04.axis.com ([fe80::210a:724b:68cb:a917%22]) with mapi id
+	15.00.1365.000; Wed, 19 Dec 2018 11:55:29 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>, 
 	"bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] gitsm: orphaned submodules WAS: Sumo to Thud
-	migration: Fetch failure from gitsm.py
-Thread-Index: AdSTqV0UDYxI9dewTkCcHKa88UwW7gChDIQAACuAZFA=
-Date: Tue, 18 Dec 2018 14:13:48 +0000
-Message-ID: <VI1PR10MB228780ACA5DE9111589D5307ECBD0@VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM>
-References: <VI1PR10MB2287E378DA3E6ADDEB09F8FDECA10@VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM>
-	<6b892c12-ecd1-91ac-4f7a-f61d0dc8a0ec@windriver.com>
-In-Reply-To: <6b892c12-ecd1-91ac-4f7a-f61d0dc8a0ec@windriver.com>
+Thread-Topic: [bitbake-devel] [PATCH 2/3] data_smart: Allow numeric characters
+	in	overrides
+Thread-Index: AQHUk7WvxWtdnWml2k+9C69VBfTzvaWE/b0Q///4DACAAPN7cA==
+Date: Wed, 19 Dec 2018 10:55:29 +0000
+Message-ID: <0963d345ec074cbfac6a7e79ccbb0a9e@XBOX04.axis.com>
+References: <20181214140219.1553-1-richard.purdie@linuxfoundation.org>
+	<20181214140219.1553-2-richard.purdie@linuxfoundation.org>
+	<ca187ac1c83d43b282db6b8d66d416a8@XBOX04.axis.com>
+	<eae945fea01f12c8abd559b4988ae34f9e2fe405.camel@linuxfoundation.org>
+In-Reply-To: <eae945fea01f12c8abd559b4988ae34f9e2fe405.camel@linuxfoundation.org>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-document-confidentiality: Restricted
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=raphael.lisicki@siemens.com; 
-x-originating-ip: [80.146.228.77]
-x-ms-publictraffictype: Email
-x-microsoft-exchange-diagnostics: 1; DB6PR10MB1607;
-	6:r8jMOOHzoumV9Vx9lJfi8mhA9cOikly5LCgaXJBT+5Unj/YrW1WvMRxCvW/FyB7lsKwsoi1LlmQiCT01EtjF71DLFEG+F1cNn00cNlBt+E+1RJp8UVkJWKkJUeREXX00wf4jo1oQxigbAtw3LUX+DBcDgc9jtP5C8QBHBoKAyTn1PLyELLK9EaC4i5DTArH343cOEO7wd2jfirJxCElCAxxVRJM/0/cUZoPm7eZQTrSKDk6tjfXbTD6Rty4ZyXVSqz4Gh8ZOVKmKWA9MfSMuQgMX4NFz640GwZPV/4y7YVIxeyS4M3qJ9NphPPd07+XdNj4QLrKJ8WH+7nTlzC37Ug0j0zMU2Rkg4MF5cdU7QuXgpc1RY96XGaE2BfQc0SP2Sqd7Goq8e81huX/at+kzwPWAu6NlRSHlBfwsShp4D0r0e049J6ruM/+Fd5xB6VREeHrRmhaF30p8R9mKA1cuoA==;
-	5:x8I5MlPllwJP+9NM+vmx+HyvQullMK+CUv/1TcJSUfDZ1llIsHlioLYm2f+YjsA0saB3xRZOwDrjNP0UdsQtgkzMVvCfC9EJwAxdN0fHxmrEVnTA/5fiBpmw8Z/AFQOemUztP6OjKhKDL4haweLNOCkV2Hn7G4/DmNIxp44d87c=;
-	7:NZIJQtZLKoEYyvfD8RUq5AeReOGrly3Ev4W6YZDv9QzbC3aQkxblO6NEYr5jt/oPZ47kcFcUQLsf8iv8O87DB/qyDXtgxp5IgDxOfwOjqAHGiFpgC/B064ZOpFCSO3foQlIE+v4yg7us7/sMGyoqzg==
-x-ms-exchange-antispam-srfa-diagnostics: SOS;
-x-ms-office365-filtering-correlation-id: c68cce2a-2ad3-4b3f-c69d-08d664f30760
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0; PCL:0;
-	RULEID:(2390118)(7020095)(4652040)(8989299)(5600074)(711020)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);
-	SRVR:VI1PR10MB1613; 
-x-ms-traffictypediagnostic: DB6PR10MB1607:
-x-microsoft-antispam-prvs: <DB6PR10MB16073174D3C83DC947543A01ECBE0@DB6PR10MB1607.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-exchange-senderadcheck: 1
-x-exchange-antispam-report-cfa-test: BCL:0; PCL:0;
-	RULEID:(8211001083)(3230021)(999002)(6040522)(2401047)(8121501046)(5005006)(3002001)(10201501046)(93006095)(93001095)(3231475)(944501520)(4982022)(52105112)(6055026)(148016)(149066)(150057)(6041310)(20161123560045)(201703131423095)(201702281529075)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123558120)(20161123564045)(20161123562045)(201708071742011)(7699051)(76991095);
-	SRVR:DB6PR10MB1607; BCL:0; PCL:0; RULEID:; SRVR:DB6PR10MB1607; 
-x-forefront-prvs: 0891BC3F3D
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(396003)(376002)(136003)(366004)(39860400002)(346002)(189003)(199004)(6246003)(14454004)(53936002)(53546011)(229853002)(11346002)(68736007)(99286004)(105586002)(478600001)(8676002)(110136005)(106356001)(446003)(33656002)(3846002)(316002)(55016002)(8936002)(6116002)(966005)(7736002)(256004)(305945005)(6436002)(2906002)(786003)(6306002)(81166006)(9686003)(81156014)(2501003)(74316002)(86362001)(66066001)(76176011)(97736004)(102836004)(186003)(26005)(25786009)(71200400001)(476003)(71190400001)(7696005)(6506007)(5660300001)(486006);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:DB6PR10MB1607;
-	H:VI1PR10MB2287.EURPRD10.PROD.OUTLOOK.COM; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; MX:1; A:1; 
-received-spf: None (protection.outlook.com: siemens.com does not designate
-	permitted sender hosts)
-x-microsoft-antispam-message-info: TdGSj6cyPM4+z1muYStFNTKzUlvBqulYGe6m/CV7LfHJspoevvot8QeqiSzUz3CGhYK2ocHlmYJs3EJCecp0R4nwup3kLmMvmTKyDKc+CFcPSJQGibQWKxKtyDwDyeFrxVOnwK5OBDwqcvz962rF5rUGK76KZrXjqL1mQrwqIDtfK8BNB0M8MM4KoP2TgjoHlK1DR8LqWyWNZQRQx6CFun7LUmZhwkhlanMdQqEnRmclnhTp1IFLK6tdPGvuXOldN2RwDd7epWYGkuWYYLhro6gQ72mJ/e42ByVVHrB0karuG8FUyjw2Le+qwhmKt6Ms
-spamdiagnosticoutput: 1:99
-spamdiagnosticmetadata: NSPM
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c68cce2a-2ad3-4b3f-c69d-08d664f30760
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2018 14:13:48.2476 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR10MB1607
-Subject: Re: gitsm: orphaned submodules WAS: Sumo to Thud migration: Fetch failure from gitsm.py
+X-TM-AS-GCONF: 00
+Subject: Re: [PATCH 2/3] data_smart: Allow numeric characters in	overrides
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -92,70 +71,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Dec 2018 05:53:40 -0000
-Content-Language: de-DE
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 19 Dec 2018 10:55:33 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Hello,
-
->=20
-> On 12/14/18 6:37 AM, raphael.lisicki@siemens.com wrote:
-> > Hello,
-> >
-> > as Josias has already pointed out, the new gitsm fetcher fails if there=
- is a
-> submodule entry in .gitmodules, for which no actual submodule exists.
-> >
-> > I created a dummy module that shows the respective issue:
-> https://github.com/ralisi/submodule-test
-> >
-> > This repository is shown correctly by github and cloning it with git ca=
-uses no
-> problem. I think it should be possible to fetch this repository with the =
-gitsm
-> module.
-> > To do so, I think the loop iteration at
-> http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/fetch2=
-/git
-> sm.py#n87 can be skipped if module_hash is indeed an empty string.
->=20
-> So to be clear, you are proposing that is the response is blank, then we
-> simply
-> run a 'continue', avoiding any setup/download for this item as there is n=
-o
-> specific hash to download?
-
-Exactly.
-
->=20
-> That would be easy enough to implement, likely:
->=20
->             try:
->                 module_hash =3D runfetchcmd("%s ls-tree -z -d %s %s" %
-> (ud.basecmd, ud.revisions[name], paths[module]), d, quiet=3DTrue,
-> workdir=3Dud.clonedir)
->             except ???:
->                 module_hash =3D None
->=20
->             if not module_hash:
->                 continue
->=20
->             module_hash =3D module_hash.split()[2]
->=20
->=20
-> (Not sure if the try/except is needed.. if it is, not sure which exceptio=
-n to
-> capture here..)
-
-As I have not experienced any throws within runfetchcmd, I don't see the ne=
-ed for a try/catch. Apart from that, this is exactly what I had on my mind.
-
->=20
-> --Mark
->=20
-
-Best regards
-Raphael Lisicki
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiByaWNoYXJkLnB1cmRpZUBsaW51
+eGZvdW5kYXRpb24ub3JnDQo+IDxyaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnPg0K
+PiBTZW50OiBkZW4gMTggZGVjZW1iZXIgMjAxOCAyMjoxNw0KPiBUbzogUGV0ZXIgS2plbGxlcnN0
+ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb20+OyBiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0
+cy5vcGVuZW1iZWRkZWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENI
+IDIvM10gZGF0YV9zbWFydDogQWxsb3cgbnVtZXJpYw0KPiBjaGFyYWN0ZXJzIGluIG92ZXJyaWRl
+cw0KPiANCj4gT24gVHVlLCAyMDE4LTEyLTE4IGF0IDIxOjA1ICswMDAwLCBQZXRlciBLamVsbGVy
+c3RlZHQgd3JvdGU6DQo+ID4gSSBkbyBub3QgdW5kZXJzdGFuZCB0aGlzIGNvbW1pdC4gVGhlIGNv
+bW1pdCBleHBsYW5hdGlvbiBhbmQgdGhlIGNvZGUNCj4gY2hhbmdlDQo+ID4gZG9uJ3QgbWF0Y2gg
+dXAuIFRoZSBtb3RpdmF0aW9uIGluIHRoZSBjb21taXQgbWVzc2FnZSBpcyB0aGF0IHRoZXJlDQo+
+IHdhcw0KPiA+IHByb2JsZW1zIHdpdGggb3ZlcnJpZGVzIHN1Y2ggYXMgeDg2LTY0IGNvbnRhaW5p
+bmcgZGlnaXRzIGFuZCB0aGF0IHRoZQ0KPiA+IGNvZGUgc2hvdWxkIGJlIGNoYW5nZWQgdG8gYWxs
+b3cgb3ZlcnJpZGVzIHRvIGJlIGxvd2VyIGNhc2UgYW5kDQo+IG51bWVyaWMuDQo+ID4gSG93ZXZl
+ciwgdGhlIG1vZGlmaWVkIGNvZGUgY2hhbmdlcyB0aGUgdGVzdCBmcm9tIHVzaW5nIGlzbG93ZXIo
+KSwNCj4gd2hpY2ggYXMNCj4gPiBmYXIgYXMgSSBjYW4gdGVsbCBvbmx5IHZhbGlkYXRlcyB0aGUg
+YWxwaGEtY2hhcmFjdGVycyBpbiB0aGUgc3RyaW5nDQo+IGFuZA0KPiA+IGlnbm9yZXMgYWxsIGVs
+c2UsIHRvIHVzaW5nIGEgcmVndWxhciBleHByZXNzaW9uIHInW2EtejAtOV0rJywgd2hpY2gNCj4g
+d2lsbA0KPiA+IG1hdGNoIGFzIGxvbmcgYXMgdGhlIGZpcnN0IGNoYXJhY3RlciBpcyBhIGxvd2Vy
+IGNhc2UgY2hhcmFjdGVyIG9yIGENCj4gbnVtZXJpYw0KPiA+IGNoYXJhY3RlciAobm90ZSB0aGF0
+IHRoZXJlIGlzIG5vICQgYXQgdGhlIGVuZCBvZiB0aGUgcmVndWxhcg0KPiBleHByZXNzaW9uKS4N
+Cj4gPg0KPiA+IEhlcmUgYXJlIHRlc3RzIHdpdGggaXNsb3dlcigpLCB3aGljaCBjb3JyZWN0bHkg
+dmFsaWRhdGVzICJ4ODYiIGFuZA0KPiA+ICJ4ODYtNjQiDQo+ID4gYXMgbG93ZXIgY2FzZSBvdmVy
+cmlkZXMsIGJ1dCBub3QgImZvb0JhciI6DQo+ID4NCj4gPiA+ID4gPiAieDg2Ii5pc2xvd2VyKCkN
+Cj4gPiBUcnVlDQo+ID4gPiA+ID4gIng4Ni02NCIuaXNsb3dlcigpDQo+ID4gVHJ1ZQ0KPiA+ID4g
+PiA+ICJmb29CYXIiLmlzbG93ZXIoKQ0KPiA+IEZhbHNlDQo+ID4NCj4gPiBIZXJlIGFyZSB0aGUg
+Y29ycmVzcG9uZGluZyB0ZXN0cyB1c2luZyB0aGUgcidbYS16MC05XSsnIHJlZ3VsYXINCj4gPiBl
+eHByZXNzaW9uLg0KPiA+IE5vdGUgdGhhdCBpdCBvbmx5IG1hdGNoZXMgIng4NiIgZnJvbSAieDg2
+LTY0IiBhbmQgImZvbyIgZnJvbQ0KPiA+ICJmb29CYXIiLCBhbmQNCj4gPiB3aWxsIGluY29ycmVj
+dGx5IGFsbG93ICJmb29CYXIiIGFzIGFuIG92ZXJyaWRlOg0KPiA+DQo+ID4gPiA+ID4gcmUubWF0
+Y2gocidbYS16MC05XSsnLCAieDg2IikNCj4gPiA8X3NyZS5TUkVfTWF0Y2ggb2JqZWN0OyBzcGFu
+PSgwLCAzKSwgbWF0Y2g9J3g4Nic+DQo+ID4gPiA+ID4gcmUubWF0Y2gocidbYS16MC05XSsnLCAi
+eDg2LTY0IikNCj4gPiA8X3NyZS5TUkVfTWF0Y2ggb2JqZWN0OyBzcGFuPSgwLCAzKSwgbWF0Y2g9
+J3g4Nic+DQo+ID4gPiA+ID4gcmUubWF0Y2gocidbYS16MC05XSsnLCAiZm9vQmFyIikNCj4gPiA8
+X3NyZS5TUkVfTWF0Y2ggb2JqZWN0OyBzcGFuPSgwLCAzKSwgbWF0Y2g9J2Zvbyc+DQo+ID4NCj4g
+PiBTbyB3aHkgY2hhbmdlIGZyb20gaXNsb3dlcigpLCB3aGljaCBhcyBmYXIgYXMgSSBjYW4gdGVs
+bCBkaWQgdGhlDQo+ID4gcmlnaHQgdGhpbmcgZnJvbSB0aGUgYmVnaW5uaW5nPw0KPiANCj4gVGhl
+IGNvbW1pdCBpcyBjbGVhcmx5IHdyb25nLiBUaGUgaW50ZW50IG9mIHRoZSBjb21taXQgbWVzc2Fn
+ZSBpcw0KPiBjb3JyZWN0LCBpdCBkb2Vzbid0IG1hdGNoIHdoYXQgdGhhdCByZWdleCBhY3R1YWxs
+eSBkb2VzIDooDQo+IA0KPiBDaGVlcnMsDQo+IA0KPiBSaWNoYXJkDQoNCkkgZG9uJ3QgdW5kZXJz
+dGFuZCB0aGUgY29tbWl0IG1lc3NhZ2UgZWl0aGVyLiBJdCBzYXlzIHRoYXQgdGhlcmUgYXJlIA0K
+cHJvYmxlbXMgd2l0aCB4ODYtNjQgYmVjYXVzZSBpdCBjb250YWlucyBkaWdpdHMsIGJ1dCB4ODYg
+KHdoaWNoIHRoZSANCmNvbW1pdCBtZXNzYWdlIHNheXMgd29ya3MpIGNvbnRhaW5zIGRpZ2l0cyB0
+b28sIHNvIHRoYXQgY2Fubm90IHJlYWxseSANCmJlIHRoZSBjYXNlLiBJZiBpdCBpcyBhY3R1YWxs
+eSB0aGUgZGFzaCBpbiB4ODYtNjQgdGhhdCBpcyBzdXBwb3NlZGx5IA0KYSBjYXVzZSBvZiBwcm9i
+bGVtcywgdGhlbiBpc2xvd2VyKCkgaWdub3JlcyBib3RoIGRpZ2l0cyBhbmQgbm9uLWFscGhhIA0K
+Y2hhcmFjdGVycyBsaWtlIHRoZSBkYXNoIHNvIHRoYXQgY2Fubm90IHJlYWxseSBiZSBhIHJlYXNv
+biB0byBjaGFuZ2UgDQp0aGUgY29kZSBlaXRoZXIuIEFsbCBpbiBhbGwgSSdtIGNvbmZ1c2VkIGJ5
+IHRoaXMgY29tbWl0IGFuZCB3aGF0IGl0IA0KaXMgdHJ5aW5nIHRvIHNvbHZlLi4uDQoNCi8vUGV0
+ZXINCg0K
 
