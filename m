@@ -1,51 +1,52 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it1-f172.google.com (mail-it1-f172.google.com
-	[209.85.166.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 5DF217BDA6;
-	Wed, 19 Dec 2018 03:10:37 +0000 (UTC)
-Received: by mail-it1-f172.google.com with SMTP id m8so9838723itk.0;
-	Tue, 18 Dec 2018 19:10:38 -0800 (PST)
+Received: from mail-io1-f66.google.com (mail-io1-f66.google.com
+	[209.85.166.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 7F0BA79DBF;
+	Wed, 19 Dec 2018 03:10:38 +0000 (UTC)
+Received: by mail-io1-f66.google.com with SMTP id l14so14473269ioj.5;
+	Tue, 18 Dec 2018 19:10:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding;
-	bh=biIFaBAKa4O/sqAJrJ0C/SpTBpke68D4PDdXNKPePrs=;
-	b=QW2PJJrJF/ylgqpRC5myDIVgqBFPPVg4ARrrz6WLTcbp6B1bPZYJp6FYwBCrtaxRo1
-	yE5sv4fothOGV2XUWdaS1YUcr6aWlVXh0cfZMtQD01f8xrPBXkeQrETscuF3IioHxBi0
-	u2uw/c0+Dt5kk6tVJrGUXhxTaJxVln7b+BIOYBZrEVujb0LvSHXcwzXAVAORwEyIY5XU
-	Hz8+3M3zsxteiDCVpkBgUZoAD5JRXQfkzEfyQ7NuA7PfG/DI35qxa6tcIdGQ1SJuvf6c
-	0apf9mnImOV1hyhuea8+bPbS07Oj9KFqfGbt/8kf0cwhYCFSMJCRH9jJq49jA2ZeLNFa
-	HwDw==
+	bh=qGhjIjb9bWe1yf0CnNAnxMMJFS+0v2tLDFsqgg+1y5c=;
+	b=dWFo0EohBiVI8ii3kpYYidVVb+jBOsZHZrzX1d8rTbzFcLtJvIcZ+nGEwXSoqxdgOr
+	/5Zuggfka7DQI2hj4CHM0zSIezGFTF8TbefHdkQVWUwqlS8tmUZJDeNfFC19CVsXySnD
+	WjK6+IVKmP0y393cOsPY5XWALVcbHzj4Io44vIn8NUZL7p7tXZJuj5SroTuqBOYRWJ9Z
+	icLUY8Y33vewr5esXh9nDTcDtNQoPQj3ZKabqzloWsfcIz60jEMX9LcuLPwwn1UIO/nY
+	VujydrYScpnGmWd+pgvFOXFRp2Nxhe05TNg+1LyPTEXBFbaRtYFTqCu16JXWQpZRNunD
+	s9rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=biIFaBAKa4O/sqAJrJ0C/SpTBpke68D4PDdXNKPePrs=;
-	b=R5M+A1INEriomhQWdOvKZfcL2KqQDtzW2D6B4xLm3ew9kNGfrcemvnLFvG4DpusUIN
-	iAAeQ5RQ3vc+Nag/UGvprft/rOrdS3PLJ/iZnxvWsn/LlST1U+2SjyoKR9OOWhraGWg8
-	pAu4Vt1MbdE+zm+p6q8OQKpkqh4DYtggdNWwfTaLtxa/kc+xO+VOgVL8p+dk8Qu5qsTi
-	91Ydp+V0MRAUN/LNX3u1TJXxs2OXznVHaHjfOHUTagV+526UWK9w8t0XbUhwywuW14NK
-	w+2t0WdFtJZCOuU0WxtXZJZbQbsW1SZj/6FOVH8guYuH4k2xIgA52sEqpSZ4xKbnC06Z
-	B/ug==
-X-Gm-Message-State: AA+aEWYEdVeEILzbyALByxBWim6EqGgN9pYrpxRRTll64ROaqKtJKWsp
-	sjilHWzxyWusMPNi3Wy51b81RRBv
-X-Google-Smtp-Source: AFSGD/UUrdUyvbmMWH/LUp96lo16Q1IuwoUgqt0Vzj4eiSRzRFoBPiFuC/b7QxqEmyyk/rDFEqNERg==
-X-Received: by 2002:a24:d081:: with SMTP id m123mr5166090itg.119.1545189037987;
-	Tue, 18 Dec 2018 19:10:37 -0800 (PST)
+	bh=qGhjIjb9bWe1yf0CnNAnxMMJFS+0v2tLDFsqgg+1y5c=;
+	b=lvUoCQCEacZ2bvN8yGuRViVumdOvNHpzEiJ447AvRmKII20pviCfM+XAvWwc7gUPcC
+	z+vzZKfFCwwdQwLCQIQedjoIMDUznW7Sa3/EwJePGVK5L5S8Dbun0205UBucHXamX4k4
+	bNEQTSKvWdgZK9zAE2HZJ3UAkB/2m7GS+5zJAy9cUGHEubhLS7tZB1v0w2IBPyxzmy0T
+	UViz6ZE4h1e5BYfXbaz/81d61DTSoMUlNxN9ZMVUZyY5v7UiJ3163T13dgB+SXiGFIaJ
+	QeiBaMS8fGpfnuM+vxFQwuBQpT0YNiLY81yEbMScKCgbfJJ5dTuYP05ujCcF/fE2lN+h
+	rFwg==
+X-Gm-Message-State: AA+aEWbNAujBshFLFwr2hPvj5oXGvdQ/VCFfDhf16/NUKVm6WYurlRae
+	SHdEgaOHskdoIWyyu4Ug59Q64acB
+X-Google-Smtp-Source: AFSGD/VJtpX3nW0D3z+86JJryFqNfQnm2WBhy9AF3poyjdM1ND3wppa38JKy33Aw56O+su+HwJvcqQ==
+X-Received: by 2002:a5d:9293:: with SMTP id s19mr102330iom.111.1545189039134; 
+	Tue, 18 Dec 2018 19:10:39 -0800 (PST)
 Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id r63sm2795992ita.2.2018.12.18.19.10.37
+	by smtp.gmail.com with ESMTPSA id r63sm2795992ita.2.2018.12.18.19.10.38
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 18 Dec 2018 19:10:37 -0800 (PST)
+	Tue, 18 Dec 2018 19:10:38 -0800 (PST)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: openembedded-core@lists.openembedded.org,
 	bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Dec 2018 21:10:25 -0600
-Message-Id: <20181219031033.28045-1-JPEWhacker@gmail.com>
+Date: Tue, 18 Dec 2018 21:10:26 -0600
+Message-Id: <20181219031033.28045-2-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20181218153101.9212-1-JPEWhacker@gmail.com>
+In-Reply-To: <20181219031033.28045-1-JPEWhacker@gmail.com>
 References: <20181218153101.9212-1-JPEWhacker@gmail.com>
+	<20181219031033.28045-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-Subject: [OE-core][PATCH v5 0/8] Hash Equivalency Server
+Subject: [OE-core][PATCH v5 1/8] bitbake: tests/persist_data: Add tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,114 +59,180 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Dec 2018 03:10:37 -0000
+X-List-Received-Date: Wed, 19 Dec 2018 03:10:38 -0000
 Content-Transfer-Encoding: 8bit
 
-Apologies for cross-posting this to both the bitbake-devel and
-openembedded-devel; this work necessarily intertwines both places, and
-it is really necessary to look at both parts to get an idea of what is
-going on. For convenience, the bitbake patches are listed first,
-followed by the oe-core patches.
+Adds a test suite for testing the persistent data cache
 
-The basic premise is that any given task no longer hashes a dependent
-task's taskhash to determine it's own taskhash, but instead hashes the
-dependent task's "unique hash" (which doesn't strictly need to be a
-hash, but is for consistency.  This allows multiple taskhashes to map to
-the same unique hash, meaning that trivial changes to a recipe that
-would change the taskhash don't necessarily need to change the unique
-hash, and thus don't need to cause downstream tasks to be rebuilt (with
-caveats, see below).
+[YOCTO #13030]
 
-In the absence of any interaction by the user, the unique hash for a
-task is just that task's taskhash, which effectively maintains the
-current behavior. However, if the user enables the "OEEquivHash"
-signature generator, they can direct it to look at a hash equivalency
-server (of which a reference implementation is provided). The sstate
-code will provide the server with an output hash that it calculates, and
-the server will record all tasks with the same output hash as
-"equivalent" and report the same unique hash for them when requested.
-When initializing tasks, bitbake can ask the server about the unique
-hash for new tasks it has never seen before and potentially skip
-rebuilding, or restore the task from an equivalent sstate file. To
-facilitate restoring tasks from sstate, sstate objects are now named
-based on the tasks unique hash instead of the taskhash (which, again has
-no effect if the server is in use).
-
-This patchset doesn't make any attempt to dynamically update task unique
-hash after bitbake initializes the tasks, and as such there are some
-cases where this isn't accelerating the build as much as it possibly
-could. I think it will be possible to add support for this, but this
-preliminary support needs to come first.
-
-You can also see these patches (and my first attempts at dynamic task
-re-hashing) on the "jpew/hash-equivalence" branch in poky-contrib.
-
-As always, thanks for your feedback and time
-
-VERSION 2:
-
-At the core, this patch does the same thing as V1 with some very minor
-tweaks. The main things that have changed are:
- 1) Per request, the Hash Equivalence Server reference implementation is
-    now based entirely on built in Python modules and requires no
-    external libraries. It also has a wrapper script to launch it
-    (bitbake-hashserv) and unittests.
- 2) There is a major rework of persist_data in bitbake. I
-    think these patches could be submitted independently, but I doubt
-    anyone is clamoring for them. The general gist of them is that there
-    were a lot of strange edge cases that I found when using
-    persist_data as an IPC mechanism between the main bitbake process
-    and the bitbake-worker processes. I went ahead and added extensive
-    unit tests for this as well.
-
-VERSION 3:
-
-Minor tweak to version 2 that should fix timeout errors seen on the
-autobuilder
-
-VERSION 4:
-
-Based on discussion, the term "dependency ID" was dropped in favor of
-"unique hash" (unihash).
-
-The hash validation checks were updated to properly fallback to the old
-function signatures (that don't pass the unihashes) for compatibility
-with older implementations.
-
-VERSION 5:
-
-Removed os.fork() handlers for persist_data. They can be added back if
-actually necessary.
-
-Reworked hash validation slightly based on feedback.
-
-Joshua Watt (8):
-  bitbake: tests/persist_data: Add tests
-  bitbake: siggen: Split out task unique hash
-  bitbake: runqueue: Track task unique hash
-  bitbake: runqueue: Pass unique hash to task
-  bitbake: runqueue: Pass unique hash to hash validate
-  classes/sstate: Handle unihash in hash check
-  bitbake: hashserv: Add hash equivalence reference server
-  sstate: Implement hash equivalence sstate
-
- bitbake/bin/bitbake-hashserv         |  67 +++++++++++
- bitbake/bin/bitbake-selftest         |   3 +
- bitbake/bin/bitbake-worker           |   7 +-
- bitbake/lib/bb/runqueue.py           |  76 ++++++++----
- bitbake/lib/bb/siggen.py             |   7 +-
- bitbake/lib/bb/tests/persist_data.py | 142 +++++++++++++++++++++++
- bitbake/lib/hashserv/__init__.py     | 152 ++++++++++++++++++++++++
- bitbake/lib/hashserv/tests.py        | 141 ++++++++++++++++++++++
- meta/classes/sstate.bbclass          | 102 ++++++++++++++--
- meta/conf/bitbake.conf               |   4 +-
- meta/lib/oe/sstatesig.py             | 167 +++++++++++++++++++++++++++
- 11 files changed, 830 insertions(+), 38 deletions(-)
- create mode 100755 bitbake/bin/bitbake-hashserv
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/bin/bitbake-selftest         |   1 +
+ bitbake/lib/bb/tests/persist_data.py | 142 +++++++++++++++++++++++++++
+ 2 files changed, 143 insertions(+)
  create mode 100644 bitbake/lib/bb/tests/persist_data.py
- create mode 100644 bitbake/lib/hashserv/__init__.py
- create mode 100644 bitbake/lib/hashserv/tests.py
 
+diff --git a/bitbake/bin/bitbake-selftest b/bitbake/bin/bitbake-selftest
+index cfa7ac5391b..c970dcae90c 100755
+--- a/bitbake/bin/bitbake-selftest
++++ b/bitbake/bin/bitbake-selftest
+@@ -33,6 +33,7 @@ tests = ["bb.tests.codeparser",
+          "bb.tests.event",
+          "bb.tests.fetch",
+          "bb.tests.parse",
++         "bb.tests.persist_data",
+          "bb.tests.utils",
+          "layerindexlib.tests.layerindexobj",
+          "layerindexlib.tests.restapi",
+diff --git a/bitbake/lib/bb/tests/persist_data.py b/bitbake/lib/bb/tests/persist_data.py
+new file mode 100644
+index 00000000000..812bcbd7b8b
+--- /dev/null
++++ b/bitbake/lib/bb/tests/persist_data.py
+@@ -0,0 +1,142 @@
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# BitBake Test for lib/bb/persist_data/
++#
++# Copyright (C) 2018 Garmin Ltd.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++import unittest
++import bb.data
++import bb.persist_data
++import tempfile
++import threading
++
++class PersistDataTest(unittest.TestCase):
++    def _create_data(self):
++        return bb.persist_data.persist('TEST_PERSIST_DATA', self.d)
++
++    def setUp(self):
++        self.d = bb.data.init()
++        self.tempdir = tempfile.TemporaryDirectory()
++        self.d['PERSISTENT_DIR'] = self.tempdir.name
++        self.data = self._create_data()
++        self.items = {
++                'A1': '1',
++                'B1': '2',
++                'C2': '3'
++                }
++        self.stress_count = 10000
++        self.thread_count = 5
++
++        for k,v in self.items.items():
++            self.data[k] = v
++
++    def tearDown(self):
++        self.tempdir.cleanup()
++
++    def _iter_helper(self, seen, iterator):
++        with iter(iterator):
++            for v in iterator:
++                self.assertTrue(v in seen)
++                seen.remove(v)
++        self.assertEqual(len(seen), 0, '%s not seen' % seen)
++
++    def test_get(self):
++        for k, v in self.items.items():
++            self.assertEqual(self.data[k], v)
++
++        self.assertIsNone(self.data.get('D'))
++        with self.assertRaises(KeyError):
++            self.data['D']
++
++    def test_set(self):
++        for k, v in self.items.items():
++            self.data[k] += '-foo'
++
++        for k, v in self.items.items():
++            self.assertEqual(self.data[k], v + '-foo')
++
++    def test_delete(self):
++        self.data['D'] = '4'
++        self.assertEqual(self.data['D'], '4')
++        del self.data['D']
++        self.assertIsNone(self.data.get('D'))
++        with self.assertRaises(KeyError):
++            self.data['D']
++
++    def test_contains(self):
++        for k in self.items:
++            self.assertTrue(k in self.data)
++            self.assertTrue(self.data.has_key(k))
++        self.assertFalse('NotFound' in self.data)
++        self.assertFalse(self.data.has_key('NotFound'))
++
++    def test_len(self):
++        self.assertEqual(len(self.data), len(self.items))
++
++    def test_iter(self):
++        self._iter_helper(set(self.items.keys()), self.data)
++
++    def test_itervalues(self):
++        self._iter_helper(set(self.items.values()), self.data.itervalues())
++
++    def test_iteritems(self):
++        self._iter_helper(set(self.items.items()), self.data.iteritems())
++
++    def test_get_by_pattern(self):
++        self._iter_helper({'1', '2'}, self.data.get_by_pattern('_1'))
++
++    def _stress_read(self, data):
++        for i in range(self.stress_count):
++            for k in self.items:
++                data[k]
++
++    def _stress_write(self, data):
++        for i in range(self.stress_count):
++            for k, v in self.items.items():
++                data[k] = v + str(i)
++
++    def _validate_stress(self):
++        for k, v in self.items.items():
++            self.assertEqual(self.data[k], v + str(self.stress_count - 1))
++
++    def test_stress(self):
++        self._stress_read(self.data)
++        self._stress_write(self.data)
++        self._validate_stress()
++
++    def test_stress_threads(self):
++        def read_thread():
++            data = self._create_data()
++            self._stress_read(data)
++
++        def write_thread():
++            data = self._create_data()
++            self._stress_write(data)
++
++        threads = []
++        for i in range(self.thread_count):
++            threads.append(threading.Thread(target=read_thread))
++            threads.append(threading.Thread(target=write_thread))
++
++        for t in threads:
++            t.start()
++        self._stress_read(self.data)
++        for t in threads:
++            t.join()
++        self._validate_stress()
++
 -- 
 2.19.2
 
