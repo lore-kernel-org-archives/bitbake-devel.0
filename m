@@ -1,54 +1,51 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 7CBB66BA72
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Dec 2018 21:16:54 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id v13so17375757wrw.5
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Dec 2018 13:16:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-it1-f172.google.com (mail-it1-f172.google.com
+	[209.85.166.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 5DF217BDA6;
+	Wed, 19 Dec 2018 03:10:37 +0000 (UTC)
+Received: by mail-it1-f172.google.com with SMTP id m8so9838723itk.0;
+	Tue, 18 Dec 2018 19:10:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding;
-	bh=bGkPOrmPr8JUcCkI5I/pjh+vh9dQcgM3h+fwsrjqJe4=;
-	b=TJ9GT5LUYIpSyPkebGcdIkPdSGtRZHmC9EZkj481ZedwoqOS+zOoCwTEKUbDVa7R5n
-	q82DPdVsGy+U1PJ3LRoSVBq3o8WGQbkA1hG2UfS7KKdHR4PtwoYs/VYKkutPsNkR+Ifr
-	QYD0/Pc/iiXM6BWDRDkUCwo0hOZFWv+EZgFgY=
+	bh=biIFaBAKa4O/sqAJrJ0C/SpTBpke68D4PDdXNKPePrs=;
+	b=QW2PJJrJF/ylgqpRC5myDIVgqBFPPVg4ARrrz6WLTcbp6B1bPZYJp6FYwBCrtaxRo1
+	yE5sv4fothOGV2XUWdaS1YUcr6aWlVXh0cfZMtQD01f8xrPBXkeQrETscuF3IioHxBi0
+	u2uw/c0+Dt5kk6tVJrGUXhxTaJxVln7b+BIOYBZrEVujb0LvSHXcwzXAVAORwEyIY5XU
+	Hz8+3M3zsxteiDCVpkBgUZoAD5JRXQfkzEfyQ7NuA7PfG/DI35qxa6tcIdGQ1SJuvf6c
+	0apf9mnImOV1hyhuea8+bPbS07Oj9KFqfGbt/8kf0cwhYCFSMJCRH9jJq49jA2ZeLNFa
+	HwDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=bGkPOrmPr8JUcCkI5I/pjh+vh9dQcgM3h+fwsrjqJe4=;
-	b=hzUos6vuXbefNImxhapX+Elsb/4w6P7/laST8HWlyaEMW8LAmU38s0ZLRS+k0m3JbZ
-	okiP/tYMymrIcpqmaq/jTF6THkkfvim84l0j+ltMptSUn/m39XKzzXudUtqZY9DZ/y64
-	It3GjjrmxEb0DPVl9FCnTX2Im4XruYLmLAVHBAxhzM/2hfQWwBNG33hFxDuYCgTbpYqn
-	gw0OdtdB0HacL1RBtWBQepZ6ohPnCiO0Usp+eXODbfeVX6MLbTji5yG7q85RmyRQbDYI
-	OeFVSBA3qOt4WqeXar88pzSlV6Ql+NTV/qE3mFNo5nVfKeKsRiI27LoS1V8tzW/mhZe7
-	rN7w==
-X-Gm-Message-State: AA+aEWZ/7QiLjr0LUvRf/IjljKSUDP3MRs1ghJPRrz3f/+R+qdA3NMy2
-	1BwXMnwUTEwa2nfhdGYMj+H54Q==
-X-Google-Smtp-Source: AFSGD/U5+WDwPFGsq/97ZOIFF0FsY7VJZ0n4UJcQ+5WkobAs3IWAuQCpHfxWFMSFiFJc2vTaUZnBZw==
-X-Received: by 2002:adf:f703:: with SMTP id r3mr15836969wrp.93.1545167815061; 
-	Tue, 18 Dec 2018 13:16:55 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	t70sm4459339wmd.36.2018.12.18.13.16.52
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=biIFaBAKa4O/sqAJrJ0C/SpTBpke68D4PDdXNKPePrs=;
+	b=R5M+A1INEriomhQWdOvKZfcL2KqQDtzW2D6B4xLm3ew9kNGfrcemvnLFvG4DpusUIN
+	iAAeQ5RQ3vc+Nag/UGvprft/rOrdS3PLJ/iZnxvWsn/LlST1U+2SjyoKR9OOWhraGWg8
+	pAu4Vt1MbdE+zm+p6q8OQKpkqh4DYtggdNWwfTaLtxa/kc+xO+VOgVL8p+dk8Qu5qsTi
+	91Ydp+V0MRAUN/LNX3u1TJXxs2OXznVHaHjfOHUTagV+526UWK9w8t0XbUhwywuW14NK
+	w+2t0WdFtJZCOuU0WxtXZJZbQbsW1SZj/6FOVH8guYuH4k2xIgA52sEqpSZ4xKbnC06Z
+	B/ug==
+X-Gm-Message-State: AA+aEWYEdVeEILzbyALByxBWim6EqGgN9pYrpxRRTll64ROaqKtJKWsp
+	sjilHWzxyWusMPNi3Wy51b81RRBv
+X-Google-Smtp-Source: AFSGD/UUrdUyvbmMWH/LUp96lo16Q1IuwoUgqt0Vzj4eiSRzRFoBPiFuC/b7QxqEmyyk/rDFEqNERg==
+X-Received: by 2002:a24:d081:: with SMTP id m123mr5166090itg.119.1545189037987;
+	Tue, 18 Dec 2018 19:10:37 -0800 (PST)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id r63sm2795992ita.2.2018.12.18.19.10.37
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 18 Dec 2018 13:16:53 -0800 (PST)
-Message-ID: <eae945fea01f12c8abd559b4988ae34f9e2fe405.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Date: Tue, 18 Dec 2018 21:16:48 +0000
-In-Reply-To: <ca187ac1c83d43b282db6b8d66d416a8@XBOX04.axis.com>
-References: <20181214140219.1553-1-richard.purdie@linuxfoundation.org>
-	<20181214140219.1553-2-richard.purdie@linuxfoundation.org>
-	<ca187ac1c83d43b282db6b8d66d416a8@XBOX04.axis.com>
-User-Agent: Evolution 3.30.2-1 
-Mime-Version: 1.0
-Subject: Re: [PATCH 2/3] data_smart: Allow numeric characters in	overrides
+	Tue, 18 Dec 2018 19:10:37 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: openembedded-core@lists.openembedded.org,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 18 Dec 2018 21:10:25 -0600
+Message-Id: <20181219031033.28045-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20181218153101.9212-1-JPEWhacker@gmail.com>
+References: <20181218153101.9212-1-JPEWhacker@gmail.com>
+MIME-Version: 1.0
+Subject: [OE-core][PATCH v5 0/8] Hash Equivalency Server
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,53 +58,115 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Dec 2018 21:16:54 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 19 Dec 2018 03:10:37 -0000
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2018-12-18 at 21:05 +0000, Peter Kjellerstedt wrote:
-> I do not understand this commit. The commit explanation and the code change 
-> don't match up. The motivation in the commit message is that there was 
-> problems with overrides such as x86-64 containing digits and that the 
-> code should be changed to allow overrides to be lower case and numeric.
-> However, the modified code changes the test from using islower(), which as 
-> far as I can tell only validates the alpha-characters in the string and 
-> ignores all else, to using a regular expression r'[a-z0-9]+', which will 
-> match as long as the first character is a lower case character or a numeric 
-> character (note that there is no $ at the end of the regular expression).
-> 
-> Here are tests with islower(), which correctly validates "x86" and
-> "x86-64" 
-> as lower case overrides, but not "fooBar":
-> 
-> > > > "x86".islower()
-> True
-> > > > "x86-64".islower()
-> True
-> > > > "fooBar".islower()
-> False
-> 
-> Here are the corresponding tests using the r'[a-z0-9]+' regular
-> expression.
-> Note that it only matches "x86" from "x86-64" and "foo" from
-> "fooBar", and 
-> will incorrectly allow "fooBar" as an override:
-> 
-> > > > re.match(r'[a-z0-9]+', "x86")
-> <_sre.SRE_Match object; span=(0, 3), match='x86'>
-> > > > re.match(r'[a-z0-9]+', "x86-64")
-> <_sre.SRE_Match object; span=(0, 3), match='x86'>
-> > > > re.match(r'[a-z0-9]+', "fooBar")
-> <_sre.SRE_Match object; span=(0, 3), match='foo'>
-> 
-> So why change from islower(), which as far as I can tell did the
-> right thing from the beginning?
+Apologies for cross-posting this to both the bitbake-devel and
+openembedded-devel; this work necessarily intertwines both places, and
+it is really necessary to look at both parts to get an idea of what is
+going on. For convenience, the bitbake patches are listed first,
+followed by the oe-core patches.
 
-The commit is clearly wrong. The intent of the commit message is
-correct, it doesn't match what that regex actually does :(
+The basic premise is that any given task no longer hashes a dependent
+task's taskhash to determine it's own taskhash, but instead hashes the
+dependent task's "unique hash" (which doesn't strictly need to be a
+hash, but is for consistency.  This allows multiple taskhashes to map to
+the same unique hash, meaning that trivial changes to a recipe that
+would change the taskhash don't necessarily need to change the unique
+hash, and thus don't need to cause downstream tasks to be rebuilt (with
+caveats, see below).
 
-Cheers,
+In the absence of any interaction by the user, the unique hash for a
+task is just that task's taskhash, which effectively maintains the
+current behavior. However, if the user enables the "OEEquivHash"
+signature generator, they can direct it to look at a hash equivalency
+server (of which a reference implementation is provided). The sstate
+code will provide the server with an output hash that it calculates, and
+the server will record all tasks with the same output hash as
+"equivalent" and report the same unique hash for them when requested.
+When initializing tasks, bitbake can ask the server about the unique
+hash for new tasks it has never seen before and potentially skip
+rebuilding, or restore the task from an equivalent sstate file. To
+facilitate restoring tasks from sstate, sstate objects are now named
+based on the tasks unique hash instead of the taskhash (which, again has
+no effect if the server is in use).
 
-Richard
+This patchset doesn't make any attempt to dynamically update task unique
+hash after bitbake initializes the tasks, and as such there are some
+cases where this isn't accelerating the build as much as it possibly
+could. I think it will be possible to add support for this, but this
+preliminary support needs to come first.
+
+You can also see these patches (and my first attempts at dynamic task
+re-hashing) on the "jpew/hash-equivalence" branch in poky-contrib.
+
+As always, thanks for your feedback and time
+
+VERSION 2:
+
+At the core, this patch does the same thing as V1 with some very minor
+tweaks. The main things that have changed are:
+ 1) Per request, the Hash Equivalence Server reference implementation is
+    now based entirely on built in Python modules and requires no
+    external libraries. It also has a wrapper script to launch it
+    (bitbake-hashserv) and unittests.
+ 2) There is a major rework of persist_data in bitbake. I
+    think these patches could be submitted independently, but I doubt
+    anyone is clamoring for them. The general gist of them is that there
+    were a lot of strange edge cases that I found when using
+    persist_data as an IPC mechanism between the main bitbake process
+    and the bitbake-worker processes. I went ahead and added extensive
+    unit tests for this as well.
+
+VERSION 3:
+
+Minor tweak to version 2 that should fix timeout errors seen on the
+autobuilder
+
+VERSION 4:
+
+Based on discussion, the term "dependency ID" was dropped in favor of
+"unique hash" (unihash).
+
+The hash validation checks were updated to properly fallback to the old
+function signatures (that don't pass the unihashes) for compatibility
+with older implementations.
+
+VERSION 5:
+
+Removed os.fork() handlers for persist_data. They can be added back if
+actually necessary.
+
+Reworked hash validation slightly based on feedback.
+
+Joshua Watt (8):
+  bitbake: tests/persist_data: Add tests
+  bitbake: siggen: Split out task unique hash
+  bitbake: runqueue: Track task unique hash
+  bitbake: runqueue: Pass unique hash to task
+  bitbake: runqueue: Pass unique hash to hash validate
+  classes/sstate: Handle unihash in hash check
+  bitbake: hashserv: Add hash equivalence reference server
+  sstate: Implement hash equivalence sstate
+
+ bitbake/bin/bitbake-hashserv         |  67 +++++++++++
+ bitbake/bin/bitbake-selftest         |   3 +
+ bitbake/bin/bitbake-worker           |   7 +-
+ bitbake/lib/bb/runqueue.py           |  76 ++++++++----
+ bitbake/lib/bb/siggen.py             |   7 +-
+ bitbake/lib/bb/tests/persist_data.py | 142 +++++++++++++++++++++++
+ bitbake/lib/hashserv/__init__.py     | 152 ++++++++++++++++++++++++
+ bitbake/lib/hashserv/tests.py        | 141 ++++++++++++++++++++++
+ meta/classes/sstate.bbclass          | 102 ++++++++++++++--
+ meta/conf/bitbake.conf               |   4 +-
+ meta/lib/oe/sstatesig.py             | 167 +++++++++++++++++++++++++++
+ 11 files changed, 830 insertions(+), 38 deletions(-)
+ create mode 100755 bitbake/bin/bitbake-hashserv
+ create mode 100644 bitbake/lib/bb/tests/persist_data.py
+ create mode 100644 bitbake/lib/hashserv/__init__.py
+ create mode 100644 bitbake/lib/hashserv/tests.py
+
+-- 
+2.19.2
 
 
