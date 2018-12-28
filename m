@@ -1,56 +1,129 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id E93556C4E2
+Return-Path: <alejandr@xilinx.com>
+X-Greylist: delayed 28711 seconds by postgrey-1.34 at layers.openembedded.org;
+	Sat, 29 Dec 2018 14:22:25 UTC
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com
+	(mail-eopbgr690079.outbound.protection.outlook.com [40.107.69.79])
+	by mail.openembedded.org (Postfix) with ESMTP id 07F2B6BC85
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Dec 2018 17:37:24 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id ADF7218441;
-	Fri, 28 Dec 2018 18:37:25 +0100 (CET)
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id fCZXX2icmT4F; Fri, 28 Dec 2018 18:37:24 +0100 (CET)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bastet.se.axis.com (Postfix) with ESMTPS id EAD4D183C0;
-	Fri, 28 Dec 2018 18:37:23 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D71681E06C;
-	Fri, 28 Dec 2018 18:37:23 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CB8FB1E066;
-	Fri, 28 Dec 2018 18:37:23 +0100 (CET)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-	by boulder03.se.axis.com (Postfix) with ESMTP;
-	Fri, 28 Dec 2018 18:37:23 +0100 (CET)
-Received: from XBOX04.axis.com (xbox04.axis.com [10.0.5.18])
-	by seth.se.axis.com (Postfix) with ESMTP id BF05C1E84;
-	Fri, 28 Dec 2018 18:37:23 +0100 (CET)
-Received: from XBOX04.axis.com (10.0.5.18) by XBOX04.axis.com (10.0.5.18) with
-	Microsoft SMTP Server (TLS) id 15.0.1365.1;
-	Fri, 28 Dec 2018 18:37:23 +0100
-Received: from XBOX04.axis.com ([fe80::210a:724b:68cb:a917]) by
-	XBOX04.axis.com ([fe80::210a:724b:68cb:a917%22]) with mapi id
-	15.00.1365.000; Fri, 28 Dec 2018 18:37:23 +0100
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 1/2] bitbake-diffsigs: Merge with
-	bitbake-dumpsig
-Thread-Index: AdSe0/xhibk7Zo3vRa+EkjRBkozTAA==
-Date: Fri, 28 Dec 2018 17:37:23 +0000
-Message-ID: <5c78468f443541ccaa18879364866f6b@XBOX04.axis.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
+	Sat, 29 Dec 2018 14:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=Lh1B7eW4gQ8mpSl+83EsOteSYqqcGGoseT9z96LScW4=;
+	b=GQTpcpGPcyFb8zi+EDgiJQH3V6FDeyNuuK/BVSKptv1bEAT7LQxYcFnxHgJpUbznSJVZv3GYU3JeQuLV6qBVo0BMZCGTTfJ8KLKBneTI47M2YJ/gSeOYf6RqkGY59WP71CleyTN9qiWhLWM6OiAco+cc51hTfusK6hLevAi+KNA=
+Received: from SN4PR0201CA0012.namprd02.prod.outlook.com
+	(2603:10b6:803:2b::22) by CY1PR0201MB1899.namprd02.prod.outlook.com
+	(2a01:111:e400:527e::21) with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1471.20;
+	Fri, 28 Dec 2018 20:48:02 +0000
+Received: from CY1NAM02FT051.eop-nam02.prod.protection.outlook.com
+	(2a01:111:f400:7e45::202) by SN4PR0201CA0012.outlook.office365.com
+	(2603:10b6:803:2b::22) with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1471.20 via
+	Frontend Transport; Fri, 28 Dec 2018 20:48:02 +0000
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+	149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+	client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+	CY1NAM02FT051.mail.protection.outlook.com (10.152.74.148) with
+	Microsoft SMTP Server (version=TLS1_0,
+	cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1471.13
+	via Frontend Transport; Fri, 28 Dec 2018 20:48:00 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+	by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+	(envelope-from <alejandro.enedino.hernandez-samaniego@xilinx.com>)
+	id 1gcz32-00049s-Hn for bitbake-devel@lists.openembedded.org;
+	Fri, 28 Dec 2018 12:48:00 -0800
+Received: from [127.0.0.1] (helo=localhost)
+	by xsj-pvapsmtp01 with smtp (Exim 4.63)
+	(envelope-from <alejandro.enedino.hernandez-samaniego@xilinx.com>)
+	id 1gcz2x-0002vY-H4 for bitbake-devel@lists.openembedded.org;
+	Fri, 28 Dec 2018 12:47:55 -0800
+Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
+	by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id
+	wBSKlr9b012811; Fri, 28 Dec 2018 12:47:53 -0800
+Received: from [172.19.2.8] (helo=xsjalejandr50.xilinx.com)
+	by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+	(envelope-from <alejandr@xilinx.com>)
+	id 1gcz2v-0002vR-Az; Fri, 28 Dec 2018 12:47:53 -0800
+From: Alejandro Enedino Hernandez Samaniego
+	<alejandro.enedino.hernandez-samaniego@xilinx.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 28 Dec 2018 12:47:46 -0800
+Message-ID: <1546030066-28660-1-git-send-email-alejandr@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83; IPV:NLI; CTRY:US; EFV:NLI;
+	SFV:NSPM;
+	SFS:(10009020)(396003)(39860400002)(346002)(136003)(376002)(2970300002)(199004)(189003)(36756003)(2906002)(8936002)(5660300001)(2616005)(63266004)(50466002)(106466001)(356004)(36386004)(6666004)(426003)(476003)(336012)(6916009)(316002)(126002)(6346003)(4326008)(186003)(478600001)(7696005)(26005)(8676002)(106002)(77096007)(107886003)(51416003)(16586007)(2351001)(305945005)(9786002)(47776003)(486006)(50226002)(48376002)(81166006)(81156014)(107986001);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY1PR0201MB1899;
+	H:xsj-pvapsmtpgw01; FPR:; SPF:Pass; LANG:en;
+	PTR:unknown-60-83.xilinx.com; A:1; MX:3; 
+X-Microsoft-Exchange-Diagnostics: 1; CY1NAM02FT051;
+	1:bk+SrAalIegtIASpsI27jNvCwHjsP/CBogSUVJSn5tHaJzQ9zmSFpHDFo8gRZWvuGVrVhxanfD7L1JsxGK4yREqJYTQhQpuzZ7vBu/NIBxDVJYV5q9X037Hf2Ml55Hyy
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-Cc: Paul Eggleton <paul.eggleton@linux.intel.com>
-Subject: Re: [PATCH 1/2] bitbake-diffsigs: Merge with bitbake-dumpsig
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 29ef4478-3380-4455-abe0-08d66d05c1b4
+X-Microsoft-Antispam: BCL:0; PCL:0;
+	RULEID:(2390118)(7020095)(4652040)(8989299)(5600109)(711020)(4608076)(4709027)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060);
+	SRVR:CY1PR0201MB1899; 
+X-Microsoft-Exchange-Diagnostics: 1; CY1PR0201MB1899;
+	3:NpkmpmvWlFYADYKD/MkiMhoDXh/8foHldbzys9qXUrjKHF0gd6Vj5vx/THvXAYBEMa68C7Osue18QQ5dMj7bjLPYRZsAmpQdGc6s7cMbzTtXdfSHgKK8AkWQKpbutasX9mb3dLBZUgaKRmpVVpDd8lo1uIVk07jg4170lwsjGmWexZ/IV1gkzzZUofGAuCUI7tzz7ICqzBJLPX+WkUi4NTuh/4QJ1d6Bw2Xm7+MNj0RH4ifEiG9gl5E1r3rAJ4oDHuKmGJxhTT7IGdNkqt6smLwz3dOefeOTwZ1niZUqybISz9XYaeCShwylc+REJkeIvtFWvIOVrAd1BvilijSfYEo1WvdV82awqRmCFF/EBdA=;
+	25:p70odh3W2Qz7lkSRReVXP0qYHomfKD1OjWiBlUUH/50fOO4HZQHINtRQHqXPSP0y5ZkQ11I1qHG9UAs2yTcQ9USocGYhKwpcqMQHaM3fpRBo1Rn3iPvoyavkxt58Y4+xzhZ8AMUKc/hKrW1QwqRXVD01k0uLGgS02mnrwS9bTMTtwa55ZYPwjZtBnZIADZxlkX/VRFb2TQYkXRh5jxoWjzEvmqR4qEmEFEWYCIXPrag4kQr1fhrIDNmh7KKwS5rywSPa+q0ovE2hrH2/lwdMUWQ8k9ziyxgcgQ2u/W0CHd61w9aehO7O81Rg57lBy9M/+AeKZBIukEiVme6fRpnj6QckLtJuG5jnLLScebiX5Xw=
+X-MS-TrafficTypeDiagnostic: CY1PR0201MB1899:
+X-Microsoft-Exchange-Diagnostics: 1; CY1PR0201MB1899;
+	31:NOdgFsi54rM7qWvkoG1aZ+m3DQMGCEEf8+hGlXUVy+9h9mio8Xd0TkEANDT2bD6nkGCJRW4WZelOml3nBLftapcTJxBrph7yt9pPycavmaYTDueaVqe1/KBJrI1I1NqnK1I2b2bp+z5E+NONVLUlFTz+RyMI82/C/b4828y+MCv+Ma4FfirQbxnhJ/CWgvBGqfDGq3UqPSkdnvDNuHia5aSHh1mxPgJPvtsn/4yNulo=;
+	20:bqnlieuXd9elurnW82pLQOCon0diyW7EhzmgdDUve3SN8KbJgFRTl+42r+DDKhw5wtStAbktW8bFj+EnSyBAoFLehtVuyO0PjN/0JI5QrvG0rbEB3JhfGhoyJvEbD0HDPnhb4q8G97L0hkwjYdt0zS4C0tLDtJs72klSuUTedA6H+TqpJ8HEyIBvHJHPhpXqbAtfHlRwZJnPdOoa8tlhI4EPGQ0DnFGyna/VV3V4bZCpQasjeMhKdbULRI+Euc3Ls+qGz1CII0r5OQVsoQX/Qsz3sDuwfrI/cdEf1AJFO3DlQD02jg4bVWJAtQyVW4fOrOUWUndv19T+Xlok009EmvI0MeKsmTqHKuQF3A7O8KriSD4WOB9b6WrM5qGWNyikUVF9c7UFkq7XVPVz0qiJiFk9IrC/qXx5ihpO6zpOejs79Oc6pZuAmuHaNP9V9x5w5JABSGxGjiz074fTBvdw7FKBqkQ1IriXXIynBsvFbdWLuTnnOejm8JyQupFFUzZT
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <CY1PR0201MB18994979AE73879B58B20683ACB70@CY1PR0201MB1899.namprd02.prod.outlook.com>
+X-Exchange-Antispam-Report-CFA-Test: BCL:0; PCL:0;
+	RULEID:(8211001083)(3230021)(908002)(999002)(5005026)(6040522)(8220053)(2401047)(8121501046)(93006095)(93004095)(3231475)(944501520)(52105112)(10201501046)(3002001)(6055026)(6041310)(20161123562045)(20161123564045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123558120)(20161123560045)(201708071742011)(7699051)(76991095);
+	SRVR:CY1PR0201MB1899; BCL:0; PCL:0; RULEID:;
+	SRVR:CY1PR0201MB1899; 
+X-Microsoft-Exchange-Diagnostics: 1; CY1PR0201MB1899;
+	4:CW8FCmcX5M3PsWZ3ktcDXZxw1TD1pFauSXxG/7UMnnMmblo3dxIqx5EyrEXSthvE9W0bpMsuJkSkhD7MSgWj33/e7uHoDEQu43/3kELR4IolZ+yeMQvqUFLosgWIZLGP04HTwhJ3cmjVLCYEVfDekWK1a4ywyR8CxpLTLsy6k4Rx8ePZp6Z3EkhKtARa4EY6Qx0dJ8SAT8I+/rYKamno8D9mrmJl6qSItTbLCl/lr2SJQIKoWiazoJrQF9TZCGW1l2KH2DrTpEX7VgaTPFeQRQ==
+X-Forefront-PRVS: 09007040D4
+X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1; CY1PR0201MB1899;
+	23:1neYNIQV5zf3o3HRqc2EPYKwmdfSKz1n7xZgYJF?=
+	=?us-ascii?Q?jNhjkLSZ0BLq5e5u2tPzLapiTSrsIY0bXrnC5yywyKoD9uL6TVyp/mIsZg+x?=
+	=?us-ascii?Q?1Egs99/4Oa1RY2uvtlwuxNdnCWxA8J9vuRnw1SqUJPrSh5Qq+qFeaWxMNAlm?=
+	=?us-ascii?Q?e6ABIhGt4F1rtf0/zXBvhoQlY9evAkmuOuQPOM4Xnmr2VrOeVGVSPGWTaXWi?=
+	=?us-ascii?Q?EFWvGihhzkfTnGBGBZ93zI86JV4QCITrYF8wMS+YpQtCcFzGInP282tHPpx2?=
+	=?us-ascii?Q?GrZCBxw+C4NT7Th60Ga/E3EyZekRJReOLokP1GMbJvuabtzMU8tOUTSoRZKV?=
+	=?us-ascii?Q?ubwLbsV3xqC8Eijm51fRCRpnmJ6jocRB91ZyE6n+mhzNzNJ2TryMof1Bkw7h?=
+	=?us-ascii?Q?F6pKIDcXPXaoro7qy2GFKIpFiq0s/g2F4WrRDRVzeUZ+lbAk1oeu2u1n7Ii6?=
+	=?us-ascii?Q?/tnrFpQnv/k1xNDmHzntjPNLSOugncyjb3OZnZ6V6NJHPNP42q++1cmdp1Cv?=
+	=?us-ascii?Q?EJ2vkhyPyeIiNP3R97hiIdlwq+6od9MO19iEHg9YBaoSn2SZL8OYreAF+gdT?=
+	=?us-ascii?Q?aRuszvo2dZI2UdlwV9KRITyXdGiXK2vS1phLUjRzJ3URQL5l9/QyKkckaTL3?=
+	=?us-ascii?Q?GcRNMZhCGuwy70Yna4bDacNLZHPM98R7moFAB090IrGvGWQWNcV45QgsmKo3?=
+	=?us-ascii?Q?SR9yJzzowkkKPBSmmRcqBCGZuyYCLBf/xmf9TUZ3V6SJ1+20cv5EksXGC6ji?=
+	=?us-ascii?Q?Lvvh2r6EuHE26vQ2Po+0D393PD8i1n8G12WXbtDksxPjEA5n1DKNY3pBNW4f?=
+	=?us-ascii?Q?LXY9C0OpTCSXsIcj8qZdQ+F3pS8GeM1I3q5fVHXjwDSkWYIl4fMKGfRHV3AI?=
+	=?us-ascii?Q?jM3chA69vj7N2sCY1qfcFfhJw4v0DJ+f5Le8Z2V2iw5/Vdg3WfgLSQYcZTdC?=
+	=?us-ascii?Q?aUg7MuStrsEnR6xJE5f99ZVIk2OgGnMtjPRsMGBT08gBHATQrLA7z/G5JgEk?=
+	=?us-ascii?Q?uE78ouwllUphTomqA5bkieJnWdQDlKg98bSLZn1Y+Fzgk5jCIwaq7Qld8g6+?=
+	=?us-ascii?Q?gsjm4Et0=3D?=
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: k+gPh0ye5JFHtWLNyRjRugwLUdSnMVWykS5XnA2/70FUaaxAJNQW8rW5mme6buD2+XB0fZZJEg5a9KIXV9sK2puzIxbeTEDTY0VdFQFQOh5FMgbfP7bB/2I4yIujogyARe/BtPvGUqs8/AymJp+b8r7zhgJU9DcaJVy/kqczcuOG1pA+W4TJnQlBeSi9MdILvHyCwNRjg/jq8Vtiw3/Jo/lEjhI18EFvO1PUujU1gX7thKYhXYmk0wieoT/1o/49f3+Rm6hRXD6cpSAcX3uRhTm11zxqqeuLCxz0+QZR/h8oY9L0Or3ijG3u2iXbuhfE
+X-Microsoft-Exchange-Diagnostics: 1; CY1PR0201MB1899;
+	6:Eh5ESU47e90Hbcp8Ah0xYfGHvzNC1px63axnNpctc7d5G/9aDiXRepPfttbOPSGAe5DEqUkpO/BQdfXreN7jKlzdhbScRMBlEnOJesu4GWP85rjJWw5VLh4U+gr8EsqC2m/Uh0bzgUNeUVcCPZdobKW3Mataf25AKwshQyGVI/ZDmuI6g5SOSdY04GT1cfNZiJ7RBuClpfp0U2bWM0+7RKbbx6jOn7AuUkv/McyONrK4ntgAvWzOhqRBKHKMBjsJIwUj9/2atyIL9n7MLeiefkSGzD1WBX4c6HKHYUAby22GuWECrpNvI9EPzaFnPRFIYFEPowzInKyQrz6vqFiN/1pKIJLIP62wSyd3QYlMHoK8bzVkdpuBKiruCDPqZ7wOnd3yyDStYC53l+WLbCMuboFYW+448Ps5dCQlS1hMYX+vt9OSj93ZdTtTqy5v/ShEbMeJX7TO53jA+o8KzkdvBg==;
+	5:ZohywMHpXq+AxYJ3UvYy2L1CV1leiGsz/RwBLlihdCLU8pRfaMPokv6aoT+MeEceUHs1HpfiIEYYbrLbbUzWSyZYUxRbVPj7MS5PoGVJ+T9nqFVUWqMb5pMKgxIOyDKBcOlEopuoF7g8ZDm0uVoWR05MOqoEdwnZabRvHKdBmmg=;
+	7:bdHkvMY6eKQlXtIgmRytjIRw6bce+0dSeyHd+nNCNxARxmsz2HEy5aNGDMa1eraFfLgzxOAhEDy39t2A5avFnHWzP2aWurkH3Y+knCDG3z3D5E4bU3WWePfayDXNR7wHOZFG7dZ4MP9y+h7oPofC1w==
+SpamDiagnosticOutput: 1:99
+SpamDiagnosticMetadata: NSPM
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Dec 2018 20:48:00.9892 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29ef4478-3380-4455-abe0-08d66d05c1b4
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;
+	Ip=[149.199.60.83]; Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR0201MB1899
+Subject: [PATCH] cooker: fix indirect multiconfig dependencies
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,437 +136,89 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Dec 2018 17:37:25 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Sat, 29 Dec 2018 14:22:26 -0000
+Content-Type: text/plain
 
-Assuming these are accepted into master, I would also like for them to=20
-be cherry-picked to Thud, to make bitbake-dumpsig work again.
+When an indirect multiconfig dependency exists, such as:
 
-//Peter
+A depends on B, B has a multiconfig dependency to C,and our build
+target is A, the multiconfig dependency to C is not processed on
+time, hence no providers are added for it, causing an exception in
+the runqueue because the dependency does exist in it.
 
-> -----Original Message-----
-> From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
-> bounces@lists.openembedded.org> On Behalf Of Peter Kjellerstedt
-> Sent: den 28 december 2018 18:31
-> To: bitbake-devel@lists.openembedded.org
-> Cc: Paul Eggleton <paul.eggleton@linux.intel.com>
-> Subject: [bitbake-devel] [PATCH 1/2] bitbake-diffsigs: Merge with
-> bitbake-dumpsig
->=20
-> The functionalities of bitbake-diffsigs and bitbake-dumpsig are so
-> similar that they can be merged into one. Add an option --dump to make
-> bitbake-diffsigs dump the last signature data instead of comparing it.
-> Keep bitbake-dumpsig as a symbolic link to bitbake-diffsigs. When it is
-> called as bitbake-dumpsig, it behaves as if --dump was specified.
->=20
-> Also make -D the short option for --debug again (the way it used to be,
-> and still was for bitbake-dumpsig), so that -d can be used as the short
-> option for --dump.
->=20
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> ---
->  bitbake/bin/bitbake-diffsigs | 139 +++++++++++++++++++++++++----------
-> --------
->  bitbake/bin/bitbake-dumpsig  |  95 +----------------------------
->  2 files changed, 82 insertions(+), 152 deletions(-)
->  mode change 100755 =3D> 120000 bitbake/bin/bitbake-dumpsig
->=20
-> diff --git a/bitbake/bin/bitbake-diffsigs b/bitbake/bin/bitbake-
-> diffsigs
-> index 4e6bbddcd8..b0869e1143 100755
-> --- a/bitbake/bin/bitbake-diffsigs
-> +++ b/bitbake/bin/bitbake-diffsigs
-> @@ -1,7 +1,7 @@
->  #!/usr/bin/env python3
->=20
-> -# bitbake-diffsigs
-> -# BitBake task signature data comparison utility
-> +# bitbake-diffsigs / bitbake-dumpsig
-> +# BitBake task signature data dump and comparison utility
->  #
->  # Copyright (C) 2012-2013, 2017 Intel Corporation
->  #
-> @@ -21,7 +21,6 @@
->  import os
->  import sys
->  import warnings
-> -import fnmatch
->  import argparse
->  import logging
->  import pickle
-> @@ -32,7 +31,10 @@ import bb.tinfoil
->  import bb.siggen
->  import bb.msg
->=20
-> -logger =3D bb.msg.logger_create('bitbake-diffsigs')
-> +myname =3D os.path.basename(sys.argv[0])
-> +logger =3D bb.msg.logger_create(myname)
-> +
-> +is_dump =3D myname =3D=3D 'bitbake-dumpsig'
->=20
->  def find_siginfo(tinfoil, pn, taskname, sigs=3DNone):
->      result =3D None
-> @@ -59,8 +61,8 @@ def find_siginfo(tinfoil, pn, taskname, sigs=3DNone):
->          sys.exit(2)
->      return result
->=20
-> -def find_compare_task(bbhandler, pn, taskname, sig1=3DNone, sig2=3DNone,
-> color=3DFalse):
-> -    """ Find the most recent signature files for the specified PN/task
-> and compare them """
-> +def find_siginfo_task(bbhandler, pn, taskname, sig1=3DNone, sig2=3DNone)=
-:
-> +    """ Find the most recent signature files for the specified PN/task
-> """
->=20
->      if not taskname.startswith('do_'):
->          taskname =3D 'do_%s' % taskname
-> @@ -79,73 +81,81 @@ def find_compare_task(bbhandler, pn, taskname,
-> sig1=3DNone, sig2=3DNone, color=3DFalse
->          latestfiles =3D [sigfiles[sig1], sigfiles[sig2]]
->      else:
->          filedates =3D find_siginfo(bbhandler, pn, taskname)
-> -        latestfiles =3D sorted(filedates.keys(), key=3Dlambda f:
-> filedates[f])[-3:]
-> +        latestfiles =3D sorted(filedates.keys(), key=3Dlambda f:
-> filedates[f])[-2:]
->          if not latestfiles:
->              logger.error('No sigdata files found matching %s %s' %
-> (pn, taskname))
->              sys.exit(1)
-> -        elif len(latestfiles) < 2:
-> -            logger.error('Only one matching sigdata file found for the
-> specified task (%s %s)' % (pn, taskname))
-> -            sys.exit(1)
->=20
-> -    # Define recursion callback
-> -    def recursecb(key, hash1, hash2):
-> -        hashes =3D [hash1, hash2]
-> -        hashfiles =3D find_siginfo(bbhandler, key, None, hashes)
-> -
-> -        recout =3D []
-> -        if len(hashfiles) =3D=3D 0:
-> -            recout.append("Unable to find matching sigdata for %s with
-> hashes %s or %s" % (key, hash1, hash2))
-> -        elif not hash1 in hashfiles:
-> -            recout.append("Unable to find matching sigdata for %s with
-> hash %s" % (key, hash1))
-> -        elif not hash2 in hashfiles:
-> -            recout.append("Unable to find matching sigdata for %s with
-> hash %s" % (key, hash2))
-> -        else:
-> -            out2 =3D bb.siggen.compare_sigfiles(hashfiles[hash1],
-> hashfiles[hash2], recursecb, color=3Dcolor)
-> -            for change in out2:
-> -                for line in change.splitlines():
-> -                    recout.append('  ' + line)
-> +    return latestfiles
->=20
-> -        return recout
->=20
-> -    # Recurse into signature comparison
-> -    logger.debug("Signature file (previous): %s" % latestfiles[-2])
-> -    logger.debug("Signature file (latest): %s" % latestfiles[-1])
-> -    output =3D bb.siggen.compare_sigfiles(latestfiles[-2], latestfiles[-
-> 1], recursecb, color=3Dcolor)
-> -    if output:
-> -        print('\n'.join(output))
-> -    sys.exit(0)
-> +# Define recursion callback
-> +def recursecb(key, hash1, hash2):
-> +    hashes =3D [hash1, hash2]
-> +    hashfiles =3D find_siginfo(tinfoil, key, None, hashes)
-> +
-> +    recout =3D []
-> +    if len(hashfiles) =3D=3D 0:
-> +        recout.append("Unable to find matching sigdata for %s with
-> hashes %s or %s" % (key, hash1, hash2))
-> +    elif not hash1 in hashfiles:
-> +        recout.append("Unable to find matching sigdata for %s with
-> hash %s" % (key, hash1))
-> +    elif not hash2 in hashfiles:
-> +        recout.append("Unable to find matching sigdata for %s with
-> hash %s" % (key, hash2))
-> +    else:
-> +        out2 =3D bb.siggen.compare_sigfiles(hashfiles[hash1],
-> hashfiles[hash2], recursecb, color=3Dcolor)
-> +        for change in out2:
-> +            for line in change.splitlines():
-> +                recout.append('  ' + line)
->=20
-> +    return recout
->=20
->=20
->  parser =3D argparse.ArgumentParser(
-> -    description=3D"Compares siginfo/sigdata files written out by
-> BitBake")
-> +    description=3D("Dumps" if is_dump else "Compares") + "
-> siginfo/sigdata files written out by BitBake")
->=20
-> -parser.add_argument('-d', '--debug',
-> +parser.add_argument('-D', '--debug',
->                      help=3D'Enable debug output',
->                      action=3D'store_true')
->=20
-> -parser.add_argument('--color',
-> -        help=3D'Colorize output (where %(metavar)s is %(choices)s)',
-> -        choices=3D['auto', 'always', 'never'], default=3D'auto',
-> metavar=3D'color')
-> +if is_dump:
-> +    parser.add_argument("-t", "--task",
-> +            help=3D"find the signature data file for the last run of the
-> specified task",
-> +            action=3D"store", dest=3D"taskargs", nargs=3D2,
-> metavar=3D('recipename', 'taskname'))
->=20
-> -parser.add_argument("-t", "--task",
-> -        help=3D"find the signature data files for last two runs of the
-> specified task and compare them",
-> -        action=3D"store", dest=3D"taskargs", nargs=3D2,
-> metavar=3D('recipename', 'taskname'))
-> +    parser.add_argument("sigdatafile1",
-> +            help=3D"Signature file to dump. Not used when using -t/--
-> task.",
-> +            action=3D"store", nargs=3D'?', metavar=3D"sigdatafile")
-> +else:
-> +    parser.add_argument('-c', '--color',
-> +            help=3D'Colorize the output (where %(metavar)s is
-> %(choices)s)',
-> +            choices=3D['auto', 'always', 'never'], default=3D'auto',
-> metavar=3D'color')
-> +
-> +    parser.add_argument('-d', '--dump',
-> +            help=3D'Dump the last signature data instead of comparing
-> (equivalent to using bitbake-dumpsig)',
-> +            action=3D'store_true')
->=20
-> -parser.add_argument("-s", "--signature",
-> -        help=3D"With -t/--task, specify the signatures to look for
-> instead of taking the last two",
-> -        action=3D"store", dest=3D"sigargs", nargs=3D2, metavar=3D('froms=
-ig',
-> 'tosig'))
-> +    parser.add_argument("-t", "--task",
-> +            help=3D"find the signature data files for the last two runs
-> of the specified task and compare them",
-> +            action=3D"store", dest=3D"taskargs", nargs=3D2,
-> metavar=3D('recipename', 'taskname'))
->=20
-> -parser.add_argument("sigdatafile1",
-> -        help=3D"First signature file to compare (or signature file to
-> dump, if second not specified). Not used when using -t/--task.",
-> -        action=3D"store", nargs=3D'?')
-> +    parser.add_argument("-s", "--signature",
-> +            help=3D"With -t/--task, specify the signatures to look for
-> instead of taking the last two",
-> +            action=3D"store", dest=3D"sigargs", nargs=3D2,
-> metavar=3D('fromsig', 'tosig'))
->=20
-> -parser.add_argument("sigdatafile2",
-> -        help=3D"Second signature file to compare",
-> -        action=3D"store", nargs=3D'?')
-> +    parser.add_argument("sigdatafile1",
-> +            help=3D"First signature file to compare (or signature file
-> to dump, if second not specified). Not used when using -t/--task.",
-> +            action=3D"store", nargs=3D'?')
->=20
-> +    parser.add_argument("sigdatafile2",
-> +            help=3D"Second signature file to compare",
-> +            action=3D"store", nargs=3D'?')
->=20
->  options =3D parser.parse_args()
-> +if is_dump:
-> +    options.color =3D 'never'
-> +    options.dump =3D True
-> +    options.sigdatafile2 =3D None
-> +    options.sigargs =3D None
->=20
->  if options.debug:
->      logger.setLevel(logging.DEBUG)
-> @@ -155,16 +165,29 @@ color =3D (options.color =3D=3D 'always' or
-> (options.color =3D=3D 'auto' and sys.stdout.is
->  if options.taskargs:
->      with bb.tinfoil.Tinfoil() as tinfoil:
->          tinfoil.prepare(config_only=3DTrue)
-> -        if options.sigargs:
-> -            find_compare_task(tinfoil, options.taskargs[0],
-> options.taskargs[1], options.sigargs[0], options.sigargs[1],
-> color=3Dcolor)
-> +        if not options.dump and options.sigargs:
-> +            files =3D find_siginfo_task(tinfoil, options.taskargs[0],
-> options.taskargs[1], options.sigargs[0], options.sigargs[1])
-> +        else:
-> +            files =3D find_siginfo_task(tinfoil, options.taskargs[0],
-> options.taskargs[1])
-> +
-> +        if options.dump:
-> +            logger.debug("Signature file: %s" % files[-1])
-> +            output =3D bb.siggen.dump_sigfile(files[-1])
->          else:
-> -            find_compare_task(tinfoil, options.taskargs[0],
-> options.taskargs[1], color=3Dcolor)
-> +            if len(files) < 2:
-> +                logger.error('Only one matching sigdata file found for
-> the specified task (%s %s)' % (options.taskargs[0],
-> options.taskargs[1]))
-> +                sys.exit(1)
-> +
-> +            # Recurse into signature comparison
-> +            logger.debug("Signature file (previous): %s" % files[-2])
-> +            logger.debug("Signature file (latest): %s" % files[-1])
-> +            output =3D bb.siggen.compare_sigfiles(files[-2], files[-1],
-> recursecb, color=3Dcolor)
->  else:
->      if options.sigargs:
->          logger.error('-s/--signature can only be used together with -
-> t/--task')
->          sys.exit(1)
->      try:
-> -        if options.sigdatafile1 and options.sigdatafile2:
-> +        if not options.dump and options.sigdatafile1 and
-> options.sigdatafile2:
->              output =3D bb.siggen.compare_sigfiles(options.sigdatafile1,
-> options.sigdatafile2, color=3Dcolor)
->          elif options.sigdatafile1:
->              output =3D bb.siggen.dump_sigfile(options.sigdatafile1)
-> @@ -179,5 +202,5 @@ else:
->          logger.error('Invalid signature data - ensure you are
-> specifying sigdata/siginfo files')
->          sys.exit(1)
->=20
-> -    if output:
-> -        print('\n'.join(output))
-> +if output:
-> +    print('\n'.join(output))
-> diff --git a/bitbake/bin/bitbake-dumpsig b/bitbake/bin/bitbake-dumpsig
-> deleted file mode 100755
-> index 95ebd93546..0000000000
-> --- a/bitbake/bin/bitbake-dumpsig
-> +++ /dev/null
-> @@ -1,94 +0,0 @@
-> -#!/usr/bin/env python3
-> -
-> -# bitbake-dumpsig
-> -# BitBake task signature dump utility
-> -#
-> -# Copyright (C) 2013 Intel Corporation
-> -#
-> -# This program is free software; you can redistribute it and/or modify
-> -# it under the terms of the GNU General Public License version 2 as
-> -# published by the Free Software Foundation.
-> -#
-> -# This program is distributed in the hope that it will be useful,
-> -# but WITHOUT ANY WARRANTY; without even the implied warranty of
-> -# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> -# GNU General Public License for more details.
-> -#
-> -# You should have received a copy of the GNU General Public License
-> along
-> -# with this program; if not, write to the Free Software Foundation,
-> Inc.,
-> -# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-> -
-> -import os
-> -import sys
-> -import warnings
-> -import optparse
-> -import logging
-> -import pickle
-> -
-> -sys.path.insert(0,
-> os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
-> -
-> -import bb.tinfoil
-> -import bb.siggen
-> -import bb.msg
-> -
-> -logger =3D bb.msg.logger_create('bitbake-dumpsig')
-> -
-> -def find_siginfo_task(bbhandler, pn, taskname):
-> -    """ Find the most recent signature file for the specified PN/task
-> """
-> -
-> -    if not hasattr(bb.siggen, 'find_siginfo'):
-> -        logger.error('Metadata does not support finding signature data
-> files')
-> -        sys.exit(1)
-> -
-> -    if not taskname.startswith('do_'):
-> -        taskname =3D 'do_%s' % taskname
-> -
-> -    filedates =3D bb.siggen.find_siginfo(pn, taskname, None,
-> bbhandler.config_data)
-> -    latestfiles =3D sorted(filedates.keys(), key=3Dlambda f:
-> filedates[f])[-1:]
-> -    if not latestfiles:
-> -        logger.error('No sigdata files found matching %s %s' % (pn,
-> taskname))
-> -        sys.exit(1)
-> -
-> -    return latestfiles[0]
-> -
-> -parser =3D optparse.OptionParser(
-> -    description =3D "Dumps siginfo/sigdata files written out by
-> BitBake",
-> -    usage =3D """
-> -  %prog -t recipename taskname
-> -  %prog sigdatafile""")
-> -
-> -parser.add_option("-D", "--debug",
-> -        help =3D "enable debug",
-> -        action =3D "store_true", dest=3D"debug", default =3D False)
-> -
-> -parser.add_option("-t", "--task",
-> -        help =3D "find the signature data file for the specified task",
-> -        action=3D"store", dest=3D"taskargs", nargs=3D2, metavar=3D'recip=
-ename
-> taskname')
-> -
-> -options, args =3D parser.parse_args(sys.argv)
-> -
-> -if options.debug:
-> -    logger.setLevel(logging.DEBUG)
-> -
-> -if options.taskargs:
-> -    tinfoil =3D bb.tinfoil.Tinfoil()
-> -    tinfoil.prepare(config_only =3D True)
-> -    file =3D find_siginfo_task(tinfoil, options.taskargs[0],
-> options.taskargs[1])
-> -    logger.debug("Signature file: %s" % file)
-> -elif len(args) =3D=3D 1:
-> -    parser.print_help()
-> -    sys.exit(0)
-> -else:
-> -    file =3D args[1]
-> -
-> -try:
-> -    output =3D bb.siggen.dump_sigfile(file)
-> -except IOError as e:
-> -    logger.error(str(e))
-> -    sys.exit(1)
-> -except (pickle.UnpicklingError, EOFError):
-> -    logger.error('Invalid signature data - ensure you are specifying a
-> sigdata/siginfo file')
-> -    sys.exit(1)
-> -
-> -if output:
-> -    print('\n'.join(output))
-> diff --git a/bitbake/bin/bitbake-dumpsig b/bitbake/bin/bitbake-dumpsig
-> new file mode 120000
-> index 0000000000..b1e8489b45
-> --- /dev/null
-> +++ b/bitbake/bin/bitbake-dumpsig
-> @@ -0,0 +1 @@
-> +bitbake-diffsigs
-> \ No newline at end of file
-> --
-> 2.12.0
->=20
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+Call add_unresolved() for all available multiconfigs before processing
+providers for multiconfig dependencies, detecting mcdepends on time so
+providers for them can be added correctly.
+
+Signed-off-by: Alejandro Enedino Hernandez Samaniego <alejandr@xilinx.com>
+---
+ lib/bb/cooker.py | 51 +++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 31 insertions(+), 20 deletions(-)
+
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 1897936..db52964 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -639,27 +639,38 @@ class BBCooker:
+             runlist.append([mc, k, ktask, fn])
+             bb.event.fire(bb.event.TreeDataPreparationProgress(current, len(fulltargetlist)), self.data)
+ 
+-        mcdeps = taskdata[mc].get_mcdepends()
++
+         # No need to do check providers if there are no mcdeps or not an mc build
+-        if mcdeps and mc:
+-            # Make sure we can provide the multiconfig dependency
+-            seen = set()
+-            new = True
+-            while new:
+-                new = False
+-                for mc in self.multiconfigs:
+-                    for k in mcdeps:
+-                        if k in seen:
+-                            continue
+-                        l = k.split(':')
+-                        depmc = l[2]
+-                        if depmc not in self.multiconfigs:
+-                            bb.fatal("Multiconfig dependency %s depends on nonexistent mc configuration %s" % (k,depmc))
+-                        else:
+-                            logger.debug(1, "Adding providers for multiconfig dependency %s" % l[3])
+-                            taskdata[depmc].add_provider(localdata[depmc], self.recipecaches[depmc], l[3])
+-                            seen.add(k)
+-                            new = True
++        if mc:
++            # Add unresolved first, so we can get multiconfig indirect dependencies on time
++            for mcavailable in self.multiconfigs:
++                # The first element is empty
++                if mcavailable:
++                    taskdata[mcavailable].add_unresolved(localdata[mcavailable], self.recipecaches[mcavailable])
++
++
++            mcdeps = taskdata[mc].get_mcdepends()
++
++            if mcdeps:
++                # Make sure we can provide the multiconfig dependency
++                seen = set()
++                new = True
++                while new:
++                    new = False
++                    for mc in self.multiconfigs:
++                        for k in mcdeps:
++                            if k in seen:
++                                continue
++                            l = k.split(':')
++                            depmc = l[2]
++                            if depmc not in self.multiconfigs:
++                                bb.fatal("Multiconfig dependency %s depends on nonexistent mc configuration %s" % (k,depmc))
++                            else:
++                                logger.debug(1, "Adding providers for multiconfig dependency %s" % l[3])
++                                taskdata[depmc].add_provider(localdata[depmc], self.recipecaches[depmc], l[3])
++                                seen.add(k)
++                                new = True
++
+         for mc in self.multiconfigs:
+             taskdata[mc].add_unresolved(localdata[mc], self.recipecaches[mc])
+ 
+-- 
+2.7.4
+
 
