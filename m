@@ -1,52 +1,144 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it1-f181.google.com (mail-it1-f181.google.com
-	[209.85.166.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 5F2757BE24;
-	Fri,  4 Jan 2019 16:20:29 +0000 (UTC)
-Received: by mail-it1-f181.google.com with SMTP id c9so2158381itj.1;
-	Fri, 04 Jan 2019 08:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding;
-	bh=lOtDwpxCYL8GX29Ju1rl18WU7DV5M0aZf12Ol+C0m1k=;
-	b=UtfbgaqlJ7MT0d5rlt+P2A7DfFPxf7UNL4PreHlxGbpuPbG/l/feW52KtSVLJTW+7N
-	efEvZUi7prKQw8hBQ6leUF5XsUr+vfPInlp9Lv9mWkCLbQvZ3CxyaKjWKlILVx/FkoMm
-	YYjdFnWjqrM8NKWK4uzy6DZPkqomXRQ+PM7MWLlx5fuJ9pwLaVV9cA8ghxc7KcG8RhFx
-	f1yafByFgTPkvt5JKg5Cc0Aq9rbonujc22rV6Oor8K/RA4WUoqzTlgx+vTyYrM+p9RC6
-	AfiViD91ha3hVQ70jHIsTcieQwA5jjt7p+vRiAZELQLz71XY11ck/QQ1DgyCp2f4WNk9
-	3QZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=lOtDwpxCYL8GX29Ju1rl18WU7DV5M0aZf12Ol+C0m1k=;
-	b=YX49Fjn+lwfZU348sgY/czuKYCk2csXYDiN5OB8LycKspeDIVb8v05LvFjlS+ty/X7
-	Cgv3MjD0bFZ6yKqHh3qqU1l4XdefO/KKXUBRFcPKJizDAKvEWRMpPpWTjrOEfy32ccvt
-	t/4z6Z3g+mHvE4mTet0V5M0MUkHn/I3JZpZ/qdBON+6g1Mc8Q62BXHK8vj4kjByMYxkf
-	qahMC4gUW1Ft2OFlZWD50+ibunlsZ7dwiEOlKMRc9B/EbwTQYa9eL4K0dbqHBm54nteT
-	NSF82gf346Pi4xtoglchSAZmaVX6wvoE8XZ9NvDGkjXxU80Gng72OVtxFGytJxNnsEWb
-	+Z1w==
-X-Gm-Message-State: AJcUukeJxgx4ZR2s3qWDXKMpq8+ecbTLW+SOnhBI1F7tAMEkJykGgAEi
-	y0TIFNTeSImds5atRmT3WWI/hSPW
-X-Google-Smtp-Source: ALg8bN6OiLhG4qxmrCgwCQB864DFB3OtgTyE0t5/NmVqDWIVr37FeITbT3j67qzwMzn9PK+DQLlrKQ==
-X-Received: by 2002:a24:4cd2:: with SMTP id a201mr1277555itb.172.1546618829767;
-	Fri, 04 Jan 2019 08:20:29 -0800 (PST)
-Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id j8sm736702itb.30.2019.01.04.08.20.28
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Fri, 04 Jan 2019 08:20:29 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: openembedded-core@lists.openembedded.org,
-	bitbake-devel@lists.openembedded.org
-Date: Fri,  4 Jan 2019 10:20:15 -0600
-Message-Id: <20190104162015.456-4-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190104162015.456-1-JPEWhacker@gmail.com>
-References: <20190104024217.3316-1-JPEWhacker@gmail.com>
-	<20190104162015.456-1-JPEWhacker@gmail.com>
+Return-Path: <alejandr@xilinx.com>
+X-Greylist: delayed 8283 seconds by postgrey-1.34 at layers.openembedded.org;
+	Sat, 05 Jan 2019 10:23:23 UTC
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com
+	(mail-eopbgr790070.outbound.protection.outlook.com [40.107.79.70])
+	by mail.openembedded.org (Postfix) with ESMTP id 1E4626C494
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat,  5 Jan 2019 10:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=ikxCD+2E0Bp3s4ZgQgKsDQzqSnP5OqE8+7SQqkfP6RM=;
+	b=iDrCqIe71clgIawHFCK00shXX11FdkhNkAV9H9UuHwklMrneHq/9eRElJemdXRAWOlejRCeaVcL41nd145YxbCDu5y8xr0L5TKAvNg41i8YclDOBLTrK38eGR6C+AmiM7n3E/QL1B4aW0Nkaq+o8Y2pcRjhZTTIo3GqCL4HCtK8=
+Received: from CY4PR02CA0035.namprd02.prod.outlook.com (2603:10b6:903:117::21)
+	by DM6PR02MB5227.namprd02.prod.outlook.com (2603:10b6:5:48::12) with
+	Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1495.9;
+	Sat, 5 Jan 2019 07:50:05 +0000
+Received: from CY1NAM02FT013.eop-nam02.prod.protection.outlook.com
+	(2a01:111:f400:7e45::201) by CY4PR02CA0035.outlook.office365.com
+	(2603:10b6:903:117::21) with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1495.6 via
+	Frontend Transport; Sat, 5 Jan 2019 07:50:04 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+	smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+	header.d=none;gmail.com; dmarc=bestguesspass action=none
+	header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+	149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+	client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+	CY1NAM02FT013.mail.protection.outlook.com (10.152.75.162) with
+	Microsoft SMTP Server (version=TLS1_0,
+	cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1471.13
+	via Frontend Transport; Sat, 5 Jan 2019 07:50:03 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:35792
+	helo=xsj-pvapsmtp01) by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+	(envelope-from <alejandro.enedino.hernandez-samaniego@xilinx.com>)
+	id 1gfgiY-0005o6-FB; Fri, 04 Jan 2019 23:50:02 -0800
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
+	by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+	(envelope-from <alejandro.enedino.hernandez-samaniego@xilinx.com>)
+	id 1gfgiT-0005T9-B0; Fri, 04 Jan 2019 23:49:57 -0800
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+	by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id
+	x057nuEN003129; Fri, 4 Jan 2019 23:49:56 -0800
+Received: from [10.23.119.110] by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+	(envelope-from <alejandr@xilinx.com>)
+	id 1gfgiS-0005T6-Ez; Fri, 04 Jan 2019 23:49:56 -0800
+To: Joshua Watt <jpewhacker@gmail.com>,
+	<openembedded-core@lists.openembedded.org>,
+	<bitbake-devel@lists.openembedded.org>
+References: <20181218153101.9212-1-JPEWhacker@gmail.com>
+	<20181219031033.28045-1-JPEWhacker@gmail.com>
+	<20181219031033.28045-4-JPEWhacker@gmail.com>
+From: Alejandro Hernandez <alejandro.enedino.hernandez-samaniego@xilinx.com>
+Message-ID: <d41b6e89-8450-58c9-13fb-6437332f3f20@xilinx.com>
+Date: Fri, 4 Jan 2019 23:49:55 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+	Thunderbird/60.4.0
 MIME-Version: 1.0
-Subject: [OE-core][PATCH v7 3/3] sstate: Implement hash equivalence sstate
+In-Reply-To: <20181219031033.28045-4-JPEWhacker@gmail.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100; IPV:NLI; CTRY:US; EFV:NLI;
+	SFV:NSPM;
+	SFS:(10009020)(346002)(136003)(396003)(39860400002)(376002)(2980300002)(189003)(199004)(8936002)(31686004)(65826007)(5660300001)(6246003)(31696002)(81156014)(81166006)(39060400002)(305945005)(2201001)(8676002)(478600001)(63266004)(2906002)(2870700001)(110136005)(58126008)(106466001)(426003)(50466002)(65956001)(64126003)(316002)(446003)(23676004)(106002)(65806001)(76176011)(229853002)(2486003)(14444005)(36756003)(11346002)(47776003)(9786002)(26005)(186003)(77096007)(53546011)(476003)(356004)(2616005)(486006)(67846002)(336012)(126002)(107986001)(5001870100001);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:DM6PR02MB5227; H:xsj-pvapsmtpgw02;
+	FPR:; SPF:Pass; LANG:en;
+	PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com; MX:1; A:1; 
+X-Microsoft-Exchange-Diagnostics: 1; CY1NAM02FT013;
+	1:UPbyeFBAI2zMmx0HZehwfbJhkOWTJvDmhHE879FcQOA11NtQQeTFbOO/vtXneOs6ESRlmY1YTIc0wdQFsjBkESjU618MB/ESgNQPeOSV3QYGsnzYe1ITrODXPvAxsGf/
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9f2c6603-1fa0-487c-e856-08d672e26774
+X-Microsoft-Antispam: BCL:0; PCL:0;
+	RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600109)(711020)(4608076)(4709027)(2017052603328)(7153060);
+	SRVR:DM6PR02MB5227; 
+X-Microsoft-Exchange-Diagnostics: 1; DM6PR02MB5227;
+	3:dNYkYMQrutOfa+doEi9JhRNStVnvlEu8vrB564NjyfcaZMTC9WXW4rj0YJgKrHkaCbwFXHYSjO+db9BFZaT9lfI9CH5iKy9lWLnsV9XKhjjvEsOLiwdTFEEg8bQZvismJ4h4/249A7Dzelwl6KtrhGB3zZ9mVOYc4MYQaCnoNqlemGGxyf9iuUK+Y5KzKP53mszzVIzQgU9BtDYXeZF0d5d0D38ELydR5gFUjRZVYgyKw/aiTXPy85MeaBQrOXVniOlAPhk7Svz5eCh//7InnJ1TQOuqQ1xUAUrEAiOsJNoG1XJTJBGHJ+N974Ap313OJHEUpT1erCiIAp/2puA76h1OYV5dmtxRPjdpbpgtr9D0WVHuXwRutINc5dEUTs3x;
+	25:kCKPg+mZKKfwY/E+JmgFolIqd1pAZ+J1c66FWdfuxKJCSk/s2sVqhfu+keRp944oZrv9C/mIxEuFFKKIJVNgjF/DTNpqLmOvjhRuRNFqThAySrJnJlLqS5jo8eY8XGgcEHbzob0za7BtNnpVMUexSKCU1Ev7DFqxTF0ODmFi1wzDNfLUe1xw5PRXFyrLXkL5mksESUNMLZ+6SfawOCbv96EoQUgxWhosIjqWSmV7f3tC87+PX2nPRBw4Mc8P8jNE1L+82iWh8CY6BqqZA11D8muxf+atcOkFaRnm134r+OWMWcPHBL9tBLkop3mBIHo/T3Ox8mgXqNfUtSwAv3XV4w==
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5227:
+X-Microsoft-Exchange-Diagnostics: 1; DM6PR02MB5227;
+	31:hl/ccpycAXU/zXERFOthICJ4DKwxYtPFJrDA0XFoDaGqT51JpTFv0FEuCViICGazxniZ0RBo1gxrmtYL4EkTMwX0B9o8aTu8bS3HbAD84PXLi/5K4aFoQIbmQB/ARBCUFOxAUDBrHUYbX+LUD9vipYeiKCqnzc3qCiMu6EvF8rD7PnUHu5AJQ05zhIajR0jcjWeVuR9wJ+YJJ+hMwXull2F+udIN+7Vc/RO6pJ7Nt58=;
+	20:9RA4piz39TGE3qjSElCfmrqmO/tNAROyy2lJat65Qb6nGzc27DDP+hdhQqgRkRMacTT+gsDyQutOL4VKlYBtguu/+vjLX7AxYS9YFfKjsD/TmTN4piAFFEeCAdACo59Zg3GQGfMDiB97wTKiFhKAwhd833OU+ZCxl+XlL2j6umS6lSWuuReut7HIbyQAXUPKhqf3z+jNfyvRgfkXOdr4HrJD6pXmweJIhLSk+8f32KaZ5wuq59prd2lZtvaLabgZhL9JKFWaoUrfPOdd79yNmgi9vF4HPQ8LoLdNWbPpa88cHid3iulgTHqy6c5ex607giCV55Y2GUMCaxGxnd7hQgyja0FqzLoOxOscuwCMYG+e0CJSKlaXLDI5dyiDMMOsW4XSDIu6dz2pAtQ2qciZE499N5xhC2jQ4+shDrlcIURJhN4hST3O23196kF0eegp+pbE2B77TJBcdctB9yDZyymrcWS8RzIGC2XzENYnbh9SpQ1L98+wLsB2RPdvlgC5
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <DM6PR02MB5227CB8D556C51C485EABE07AC8F0@DM6PR02MB5227.namprd02.prod.outlook.com>
+X-Exchange-Antispam-Report-CFA-Test: BCL:0; PCL:0;
+	RULEID:(8211001083)(3230021)(908002)(999002)(5005026)(6040522)(8220060)(2401047)(8121501046)(3002001)(93006095)(93004095)(3231475)(944501520)(52105112)(10201501046)(6055026)(6041310)(20161123560045)(20161123558120)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123564045)(20161123562045)(201708071742011)(7699051)(76991095);
+	SRVR:DM6PR02MB5227; BCL:0; PCL:0; RULEID:; SRVR:DM6PR02MB5227; 
+X-Microsoft-Exchange-Diagnostics: 1; DM6PR02MB5227;
+	4:dp0iLURN1c5aeE1zRx7n7I993e8CGB0KZbr0/qlmwxFmKUcz0l0VVjOfqY1HGgFZO6zpVy6ASd2nzUs8x0VL/crytEGoiD9Unz9FOywbUFF9EWk0x6OY8dG6JqWhtXxDvWpBdK/9dUK02dGiRyeVSOuYeHjqEDOoCAZIK9ZAdXWVMt4K4SrcbQ8beTUW+aFuiDuQKL+0FTcgDL3VHFFnNP3IzIJfl/0h4yfnDTlSKbRgpQGbpK7SZHnILP47O3Hfc+QIDl3JobqulMHhqC51FgLvnI3vJhRlZNO9fXd5x4U=
+X-Forefront-PRVS: 09086FB5C5
+X-Microsoft-Exchange-Diagnostics: =?utf-8?B?MTtETTZQUjAyTUI1MjI3OzIzOjFhQW0rdzlCNUlBVkphRExnSkpvd3dTS2w2?=
+	=?utf-8?B?NjdjRWgyL0RoSnZlbVNKR0xEYlI1T3o2aC9jV2U1eCtvWW1lTUI3VjNuYlVF?=
+	=?utf-8?B?N1U3aHdqZlg2L2JrcXp3cnM4VXNLRUJ0ckgyZkJLbTFBVm52eUNXbGE4eGRr?=
+	=?utf-8?B?U1UzRk8rM1ZyV3RLbnFBaE5ORTc5Rjhac3J4Q01OaWZtSjRTWmZVdytTalVv?=
+	=?utf-8?B?dEMyTmx0RWltUzNjUjdzWU4zN0Y3aHNCT0F1ZjQ5SXBSMlNxalJpTUh2MTg1?=
+	=?utf-8?B?dGlLbVZzeTM3cGQxd0xKTEE2WUwrcFk4UEJNWFRLeDY2VFViZ3F6RlRJNW1p?=
+	=?utf-8?B?RnRndGJDOUxyc1JvSzYwVmNlQVR1ODR3SndJL3FhMWNzZWJtb0g5ZDVlZVBM?=
+	=?utf-8?B?WTN0d0xwbjVZNFdiT3ByYmNGa3RhTENqRXFoWXZmanl0YUN1QTAycERuSGFs?=
+	=?utf-8?B?OVFVTWQ5YUxMK3J1STJVSHpCRDJKMGlkZDFNRGoxczI5NTRZZVhFWVhXMzc3?=
+	=?utf-8?B?aTJoTmRHRnFSa2hEdVRZTWc5bms0cXI2RlRWRkkrRHJFa294b0hUd3hCTUs0?=
+	=?utf-8?B?TlA5ZkdieXM0UnNpVzI0Q0wyUGF1Y1pMdkN1YVp6VmlkQVFRYVN3azRTWFJL?=
+	=?utf-8?B?aWU5a3ZjNnNTSytpcnl1ZVhxVG9KbGRnREthOVY2eGtuNUxrMUxwTnNrNXBw?=
+	=?utf-8?B?RkFKRm1HRVExRnpQQzI0ZW9zT0kxZjVjcVByYVMxREtRMzBuWGpmVVNzZGNL?=
+	=?utf-8?B?VHMvbUROU2ZsQmlILzFabVRsWFVSZjNxbFFKVVBkVnZGRUlsTFYvaHNqSkZs?=
+	=?utf-8?B?cmtDVHR0anZqQ3UvdlB3RU0zcHl3dmtzTDBlSjdJSVNxM1kwRG8yaDY0REJm?=
+	=?utf-8?B?QmQ5MlJMbmtVQUZqQlRCNGl6alJiUjIwVzVuU2xLdjlZVUloSW1OZjd1RmNM?=
+	=?utf-8?B?MHRodkx1N0pmV21iZzRnczUvMmUvMkxaUmMyMEhHeTZZaUt5aHNjZWpYTGxZ?=
+	=?utf-8?B?YnNXOUVjTGlWbEFuTnBxQWVtTVF2UjJQTmZjS2lUWG5LaFQrczlWTzgxWURW?=
+	=?utf-8?B?b09Nbjc5cG9WREMzUk5OT3NRdW9DZ2NEWFk0R2V6alJmTzJVdDNGUXptSVNx?=
+	=?utf-8?B?bDJ1cE5oK1FKQnFxcHdzcUhuSTZwOHAzbEozeU5FVzl2em5iM0FDMktvbkMv?=
+	=?utf-8?B?QzZFamdWem1NQkFNYjcwQXVyYmpIbmwrQThJaEFNaUpPTTZydHBkV1ZlbEVZ?=
+	=?utf-8?B?WHJySnBxRjM3QzhnMm9uTlUvQWtwY1A0dWFkVmFtSnN2QkNSalpCMHJ5d256?=
+	=?utf-8?B?YnYvbFNvM0psTHJ4amtyWTBpWkxvdFZOVndESXpDNDRwMGRHaklscFFYdHRp?=
+	=?utf-8?B?OTl1VGlDYmxCZzRQaUdCWlFnTnp2Wjc0cXd5bTIwcWRReStvLzdwT1pKL2Mz?=
+	=?utf-8?B?NHNldFVxOWZmSmRiaTU2cXF5dSs1cmdwNlhSeGorR3JKNE5HZzM1U0QyQlE3?=
+	=?utf-8?B?UzVzTnBsY3pFSDBWR1I1RmhpZzRjQU5nM0tuU2QwUmtGUHJQOGZSWTZWcVRp?=
+	=?utf-8?B?MFJXTTd1ejhHd3N4RXgzcXZsNmpxTzRZd2dRWEtESWFuZVY0RGJyN2FpZWdx?=
+	=?utf-8?B?WDVIUm5ncU1LVXRIVDNuczNHWWJENGw4YWJJOHNIdG04THkxcFExZkRoblN0?=
+	=?utf-8?Q?W3Da90HaSKk8ylRzg0xESWz4hsrZuEfKf5wZxrN?=
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 1EQuM2hoFefhuPC293mgcr6/OIG67p/6jUE9KweotNPeH2q0R1+B0YbqxZL+rbj2u5vlozocQ70jxnA/OLEnZl5V5eGctYpFB52HMj3hz3Qz+KS+wm61yfAlpsBmb+kBY7aLDkSLmAHTdu8W1B7dusQ9w8f7h1ongRI+hV69vFSCtPVSiWOsiTfjlnfXN18Tuo/JLpmA/zuWrgp1PmgzTD3Ui9uRyxltsmlt070K9dqloNX0GdlAhhIKDN1Yn3HFRWvFmxs7BM/waJsQkv/otziai9OBh+WzsNMXc7NnCLsSJt4nT9HvesP7Q/91Vwn1
+X-Microsoft-Exchange-Diagnostics: 1; DM6PR02MB5227;
+	6:mZl6dpw84pu/vbFVGQ6l3D31hirSGCm6a0o/cvviSdhDggwK/yTGu5QiHD2CrxrAnoneYMoFuwWFpYPnqn8WcIhN7gnlTMjqkGpgCh4qFX5CGSdou/QDeLH1icbdUevwkdQSpUE1hjOw+AhbLVW4+CjlJRZ9brr3seyBCFjIU1aGDVhu1bFqV2BLbQAfcroQSUcMuo4UbdikRvJZGeqDAsHDfANDW10k9X8XX4NOkfnP5v4jEhVW61q64DAo915ePER0ByhpeQ/hWhD6J493P2JUAKZiitc+zjkGrpAYsvXxVr3MR1S5DZKcjTs18yFCE3eRoDjYUcbII2IjWewtjDHt8ptuX8aZ+8ssA6P3/r7OjB2RHXiEvSfuarorxQPzEFc+a14bX4H0kOg3dDJa2Fy2DGk0PxsKoR3Qp9Dc6wWdSRSb/queiLQdsTArwfqC6bNAr1bbqReUaoRULqfUgw==;
+	5:6gSBqDin0WsnZaKDYPkBm8tFNFOhrNo3hOK9fGa+bzvMY0wD+wGGVnMlYUvm9ZXvFnoPtUSeR665P9xz+76Jl1deRqZiBF472jY+qDoHE8onDN9zV0fLC7T8tH2myoiON98i3zgySYA37r/dRMWqZDPJYB9wDY3eOhAar8PgTthlTnJEwm29ARB0oTuYhzGpQCMAJNzlQpC3cmAxaaghGw==;
+	7:86QZARorLufg8nVTXoNhpWDlbSfibcg2u2oiAm1zVUXvVr0QYWNpwUJ76Uzcb2OsHfboa18czgUrwMRqDN+meSJs5lKV5CQ6q6s7b1pUhlL91KORe57KiX6Q6r3J6epGKUj8w5LFBno1b+oU7fg5AQ==
+SpamDiagnosticOutput: 1:99
+SpamDiagnosticMetadata: NSPM
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2019 07:50:03.1362 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f2c6603-1fa0-487c-e856-08d672e26774
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;
+	Ip=[149.199.60.100]; Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5227
+Subject: Re: [OE-core] [PATCH v5 3/8] bitbake: runqueue: Track task unique hash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,395 +151,117 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Jan 2019 16:20:29 -0000
+X-List-Received-Date: Sat, 05 Jan 2019 10:23:24 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 
-Converts sstate so that it can use a hash equivalence server to
-determine if a task really needs to be rebuilt, or if it can be restored
-from a different (equivalent) sstate object.
+Hey Joshua,
 
-The unique hashes are cached persistently using persist_data. This has
-a number of advantages:
- 1) Unique hashes can be cached between invocations of bitbake to
-    prevent needing to contact the server every time (which is slow)
- 2) The value of each tasks unique hash can easily be synchronized
-    between different threads, which will be useful if bitbake is
-    updated to do on the fly task re-hashing.
+This is breaking multiconfig builds with the following error (trimmed), 
+I believe it is not taking into account that the Key could contain 
+"mc:..." if it is a multiconfig build.
 
-[YOCTO #13030]
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- meta/classes/sstate.bbclass | 105 +++++++++++++++++++++--
- meta/conf/bitbake.conf      |   4 +-
- meta/lib/oe/sstatesig.py    | 167 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 267 insertions(+), 9 deletions(-)
+ERROR: Running idle function
+  File "poky/bitbake/lib/bb/runqueue.py", line 1170, in 
+RunQueueData.prepare_task_hash(tid='multiconfig:x86:poky/meta/recipes-support/attr/acl_2.2.52.bb:do_fetch'):
+              self.runtaskentries[tid].hash = 
+bb.parse.siggen.get_taskhash(taskfn, taskname, procdep, self.dataCaches[mc])
+     >        self.runtaskentries[tid].unihash = 
+bb.parse.siggen.get_unihash(fn + "." + taskname)
 
-diff --git a/meta/classes/sstate.bbclass b/meta/classes/sstate.bbclass
-index 59ebc3ab5cc..da0807d6e99 100644
---- a/meta/classes/sstate.bbclass
-+++ b/meta/classes/sstate.bbclass
-@@ -11,7 +11,7 @@ def generate_sstatefn(spec, hash, d):
- SSTATE_PKGARCH    = "${PACKAGE_ARCH}"
- SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
- SSTATE_SWSPEC     = "sstate:${PN}::${PV}:${PR}::${SSTATE_VERSION}:"
--SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_TASKHASH'), d)}"
-+SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_UNIHASH'), d)}"
- SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
- SSTATE_EXTRAPATH   = ""
- SSTATE_EXTRAPATHWILDCARD = ""
-@@ -82,6 +82,23 @@ SSTATE_SIG_PASSPHRASE ?= ""
- # Whether to verify the GnUPG signatures when extracting sstate archives
- SSTATE_VERIFY_SIG ?= "0"
- 
-+SSTATE_HASHEQUIV_METHOD ?= "OEOuthashBasic"
-+SSTATE_HASHEQUIV_METHOD[doc] = "The function used to calculate the output hash \
-+    for a task, which in turn is used to determine equivalency. \
-+    "
-+
-+SSTATE_HASHEQUIV_SERVER ?= ""
-+SSTATE_HASHEQUIV_SERVER[doc] = "The hash equivalence sever. For example, \
-+    'http://192.168.0.1:5000'. Do not include a trailing slash \
-+    "
-+
-+SSTATE_HASHEQUIV_REPORT_TASKDATA ?= "0"
-+SSTATE_HASHEQUIV_REPORT_TASKDATA[doc] = "Report additional useful data to the \
-+    hash equivalency server, such as PN, PV, taskname, etc. This information \
-+    is very useful for developers looking at task data, but may leak sensitive \
-+    data if the equivalence server is public. \
-+    "
-+
- python () {
-     if bb.data.inherits_class('native', d):
-         d.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH', False))
-@@ -640,7 +657,7 @@ def sstate_package(ss, d):
-         return
- 
-     for f in (d.getVar('SSTATECREATEFUNCS') or '').split() + \
--             ['sstate_create_package', 'sstate_sign_package'] + \
-+             ['sstate_report_unihash', 'sstate_create_package', 'sstate_sign_package'] + \
-              (d.getVar('SSTATEPOSTCREATEFUNCS') or '').split():
-         # All hooks should run in SSTATE_BUILDDIR.
-         bb.build.exec_func(f, d, (sstatebuild,))
-@@ -764,6 +781,73 @@ python sstate_sign_package () {
-                            d.getVar('SSTATE_SIG_PASSPHRASE'), armor=False)
- }
- 
-+def OEOuthashBasic(path, sigfile, task, d):
-+    import hashlib
-+    import stat
-+
-+    def update_hash(s):
-+        s = s.encode('utf-8')
-+        h.update(s)
-+        if sigfile:
-+            sigfile.write(s)
-+
-+    h = hashlib.sha256()
-+    prev_dir = os.getcwd()
-+
-+    try:
-+        os.chdir(path)
-+
-+        update_hash("OEOuthashBasic\n")
-+
-+        # It is only currently useful to get equivalent hashes for things that
-+        # can be restored from sstate. Since the sstate object is named using
-+        # SSTATE_PKGSPEC and the task name, those should be included in the
-+        # output hash calculation.
-+        update_hash("SSTATE_PKGSPEC=%s\n" % d.getVar('SSTATE_PKGSPEC'))
-+        update_hash("task=%s\n" % task)
-+
-+        for root, dirs, files in os.walk('.', topdown=True):
-+            # Sort directories and files to ensure consistent ordering
-+            dirs.sort()
-+            files.sort()
-+
-+            for f in files:
-+                path = os.path.join(root, f)
-+                s = os.lstat(path)
-+
-+                # Hash file path
-+                update_hash(path + '\n')
-+
-+                # Hash file mode
-+                update_hash("\tmode=0x%x\n" % stat.S_IMODE(s.st_mode))
-+                update_hash("\ttype=0x%x\n" % stat.S_IFMT(s.st_mode))
-+
-+                if stat.S_ISBLK(s.st_mode) or stat.S_ISBLK(s.st_mode):
-+                    # Hash device major and minor
-+                    update_hash("\tdev=%d,%d\n" % (os.major(s.st_rdev), os.minor(s.st_rdev)))
-+                elif stat.S_ISLNK(s.st_mode):
-+                    # Hash symbolic link
-+                    update_hash("\tsymlink=%s\n" % os.readlink(path))
-+                else:
-+                    fh = hashlib.sha256()
-+                    # Hash file contents
-+                    with open(path, 'rb') as d:
-+                        for chunk in iter(lambda: d.read(4096), b""):
-+                            fh.update(chunk)
-+                    update_hash("\tdigest=%s\n" % fh.hexdigest())
-+    finally:
-+        os.chdir(prev_dir)
-+
-+    return h.hexdigest()
-+
-+python sstate_report_unihash() {
-+    report_unihash = getattr(bb.parse.siggen, 'report_unihash', None)
-+
-+    if report_unihash:
-+        ss = sstate_state_fromvars(d)
-+        report_unihash(os.getcwd(), ss['task'], d)
-+}
-+
- #
- # Shell function to decompress and prepare a package for installation
- # Will be run from within SSTATE_INSTDIR.
-@@ -788,6 +872,11 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *,
-     if siginfo:
-         extension = extension + ".siginfo"
- 
-+    def gethash(task):
-+        if sq_unihash is not None:
-+            return sq_unihash[task]
-+        return sq_hash[task]
-+
-     def getpathcomponents(task, d):
-         # Magic data from BB_HASHFILENAME
-         splithashfn = sq_hashfn[task].split(" ")
-@@ -810,7 +899,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *,
- 
-         spec, extrapath, tname = getpathcomponents(task, d)
- 
--        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + extension)
-+        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, gethash(task), d) + "_" + tname + extension)
- 
-         if os.path.exists(sstatefile):
-             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
-@@ -872,7 +961,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *,
-             if task in ret:
-                 continue
-             spec, extrapath, tname = getpathcomponents(task, d)
--            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + extension)
-+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(task), d) + "_" + tname + extension)
-             tasklist.append((task, sstatefile))
- 
-         if tasklist:
-@@ -898,12 +987,12 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *,
-         evdata = {'missed': [], 'found': []};
-         for task in missed:
-             spec, extrapath, tname = getpathcomponents(task, d)
--            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz")
--            evdata['missed'].append( (sq_fn[task], sq_task[task], sq_hash[task], sstatefile ) )
-+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(task), d) + "_" + tname + ".tgz")
-+            evdata['missed'].append( (sq_fn[task], sq_task[task], gethash(task), sstatefile ) )
-         for task in ret:
-             spec, extrapath, tname = getpathcomponents(task, d)
--            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz")
--            evdata['found'].append( (sq_fn[task], sq_task[task], sq_hash[task], sstatefile ) )
-+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(task), d) + "_" + tname + ".tgz")
-+            evdata['found'].append( (sq_fn[task], sq_task[task], gethash(task), sstatefile ) )
-         bb.event.fire(bb.event.MetadataEvent("MissedSstate", evdata), d)
- 
-     # Print some summary statistics about the current task completion and how much sstate
-diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
-index 64800623545..e64ce6a6dab 100644
---- a/meta/conf/bitbake.conf
-+++ b/meta/conf/bitbake.conf
-@@ -867,7 +867,9 @@ BB_HASHBASE_WHITELIST ?= "TMPDIR FILE PATH PWD BB_TASKHASH BBPATH BBSERVER DL_DI
-     STAMPS_DIR PRSERV_DUMPDIR PRSERV_DUMPFILE PRSERV_LOCKDOWN PARALLEL_MAKE \
-     CCACHE_DIR EXTERNAL_TOOLCHAIN CCACHE CCACHE_NOHASHDIR LICENSE_PATH SDKPKGSUFFIX \
-     WARN_QA ERROR_QA WORKDIR STAMPCLEAN PKGDATA_DIR BUILD_ARCH SSTATE_PKGARCH \
--    BB_WORKERCONTEXT BB_LIMITEDDEPS extend_recipe_sysroot DEPLOY_DIR"
-+    BB_WORKERCONTEXT BB_LIMITEDDEPS BB_UNIHASH extend_recipe_sysroot DEPLOY_DIR \
-+    SSTATE_HASHEQUIV_METHOD SSTATE_HASHEQUIV_SERVER SSTATE_HASHEQUIV_REPORT_TASKDATA \
-+    SSTATE_HASHEQUIV_OWNER"
- BB_HASHCONFIG_WHITELIST ?= "${BB_HASHBASE_WHITELIST} DATE TIME SSH_AGENT_PID \
-     SSH_AUTH_SOCK PSEUDO_BUILD BB_ENV_EXTRAWHITE DISABLE_SANITY_CHECKS \
-     PARALLEL_MAKE BB_NUMBER_THREADS BB_ORIGENV BB_INVALIDCONF BBINCLUDED \
-diff --git a/meta/lib/oe/sstatesig.py b/meta/lib/oe/sstatesig.py
-index 18c5a353a2a..059e165c7ab 100644
---- a/meta/lib/oe/sstatesig.py
-+++ b/meta/lib/oe/sstatesig.py
-@@ -263,10 +263,177 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
-         if error_msgs:
-             bb.fatal("\n".join(error_msgs))
- 
-+class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHash):
-+    name = "OEEquivHash"
-+
-+    def init_rundepcheck(self, data):
-+        super().init_rundepcheck(data)
-+        self.server = data.getVar('SSTATE_HASHEQUIV_SERVER')
-+        self.method = data.getVar('SSTATE_HASHEQUIV_METHOD')
-+        self.unihashes = bb.persist_data.persist('SSTATESIG_UNIHASH_CACHE_v1_' + self.method, data)
-+
-+    def get_taskdata(self):
-+        return (self.server, self.method) + super().get_taskdata()
-+
-+    def set_taskdata(self, data):
-+        self.server, self.method = data[:2]
-+        super().set_taskdata(data[2:])
-+
-+    def __get_task_unihash_key(self, task):
-+        # TODO: The key only *needs* to be the taskhash, the task is just
-+        # convenient
-+        return '%s:%s' % (task, self.taskhash[task])
-+
-+    def get_stampfile_hash(self, task):
-+        if task in self.taskhash:
-+            # If a unique hash is reported, use it as the stampfile hash. This
-+            # ensures that if a task won't be re-run if the taskhash changes,
-+            # but it would result in the same output hash
-+            unihash = self.unihashes.get(self.__get_task_unihash_key(task))
-+            if unihash is not None:
-+                return unihash
-+
-+        return super().get_stampfile_hash(task)
-+
-+    def get_unihash(self, task):
-+        import urllib
-+        import json
-+
-+        taskhash = self.taskhash[task]
-+
-+        key = self.__get_task_unihash_key(task)
-+
-+        # TODO: This cache can grow unbounded. It probably only needs to keep
-+        # for each task
-+        unihash = self.unihashes.get(key)
-+        if unihash is not None:
-+            return unihash
-+
-+        # In the absence of being able to discover a unique hash from the
-+        # server, make it be equivalent to the taskhash. The unique "hash" only
-+        # really needs to be a unique string (not even necessarily a hash), but
-+        # making it match the taskhash has a few advantages:
-+        #
-+        # 1) All of the sstate code that assumes hashes can be the same
-+        # 2) It provides maximal compatibility with builders that don't use
-+        #    an equivalency server
-+        # 3) The value is easy for multiple independent builders to derive the
-+        #    same unique hash from the same input. This means that if the
-+        #    independent builders find the same taskhash, but it isn't reported
-+        #    to the server, there is a better chance that they will agree on
-+        #    the unique hash.
-+        unihash = taskhash
-+
-+        try:
-+            url = '%s/v1/equivalent?%s' % (self.server,
-+                    urllib.parse.urlencode({'method': self.method, 'taskhash': self.taskhash[task]}))
-+
-+            request = urllib.request.Request(url)
-+            response = urllib.request.urlopen(request)
-+            data = response.read().decode('utf-8')
-+
-+            json_data = json.loads(data)
-+
-+            if json_data:
-+                unihash = json_data['unihash']
-+                # A unique hash equal to the taskhash is not very interesting,
-+                # so it is reported it at debug level 2. If they differ, that
-+                # is much more interesting, so it is reported at debug level 1
-+                bb.debug((1, 2)[unihash == taskhash], 'Found unihash %s in place of %s for %s from %s' % (unihash, taskhash, task, self.server))
-+            else:
-+                bb.debug(2, 'No reported unihash for %s:%s from %s' % (task, taskhash, self.server))
-+        except urllib.error.URLError as e:
-+            bb.warn('Failure contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
-+        except (KeyError, json.JSONDecodeError) as e:
-+            bb.warn('Poorly formatted response from %s: %s' % (self.server, str(e)))
-+
-+        self.unihashes[key] = unihash
-+        return unihash
-+
-+    def report_unihash(self, path, task, d):
-+        import urllib
-+        import json
-+        import tempfile
-+        import base64
-+
-+        taskhash = d.getVar('BB_TASKHASH')
-+        unihash = d.getVar('BB_UNIHASH')
-+        report_taskdata = d.getVar('SSTATE_HASHEQUIV_REPORT_TASKDATA') == '1'
-+        tempdir = d.getVar('T')
-+        fn = d.getVar('BB_FILENAME')
-+        key = fn + '.do_' + task + ':' + taskhash
-+
-+        # Sanity checks
-+        cache_unihash = self.unihashes.get(key)
-+        if cache_unihash is None:
-+            bb.fatal('%s not in unihash cache. Please report this error' % key)
-+
-+        if cache_unihash != unihash:
-+            bb.fatal("Cache unihash %s doesn't match BB_UNIHASH %s" % (cache_unihash, unihash))
-+
-+        sigfile = None
-+        sigfile_name = "depsig.do_%s.%d" % (task, os.getpid())
-+        sigfile_link = "depsig.do_%s" % task
-+
-+        try:
-+            call = self.method + '(path, sigfile, task, d)'
-+            sigfile = open(os.path.join(tempdir, sigfile_name), 'w+b')
-+            locs = {'path': path, 'sigfile': sigfile, 'task': task, 'd': d}
-+
-+            outhash = bb.utils.better_eval(call, locs)
-+
-+            try:
-+                url = '%s/v1/equivalent' % self.server
-+                task_data = {
-+                    'taskhash': taskhash,
-+                    'method': self.method,
-+                    'outhash': outhash,
-+                    'unihash': unihash,
-+                    'owner': d.getVar('SSTATE_HASHEQUIV_OWNER')
-+                    }
-+
-+                if report_taskdata:
-+                    sigfile.seek(0)
-+
-+                    task_data['PN'] = d.getVar('PN')
-+                    task_data['PV'] = d.getVar('PV')
-+                    task_data['PR'] = d.getVar('PR')
-+                    task_data['task'] = task
-+                    task_data['outhash_siginfo'] = sigfile.read().decode('utf-8')
-+
-+                headers = {'content-type': 'application/json'}
-+
-+                request = urllib.request.Request(url, json.dumps(task_data).encode('utf-8'), headers)
-+                response = urllib.request.urlopen(request)
-+                data = response.read().decode('utf-8')
-+
-+                json_data = json.loads(data)
-+                new_unihash = json_data['unihash']
-+
-+                if new_unihash != unihash:
-+                    bb.debug(1, 'Task %s unihash changed %s -> %s by server %s' % (taskhash, unihash, new_unihash, self.server))
-+                else:
-+                    bb.debug(1, 'Reported task %s as unihash %s to %s' % (taskhash, unihash, self.server))
-+            except urllib.error.URLError as e:
-+                bb.warn('Failure contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
-+            except (KeyError, json.JSONDecodeError) as e:
-+                bb.warn('Poorly formatted response from %s: %s' % (self.server, str(e)))
-+        finally:
-+            if sigfile:
-+                sigfile.close()
-+
-+                sigfile_link_path = os.path.join(tempdir, sigfile_link)
-+                bb.utils.remove(sigfile_link_path)
-+
-+                try:
-+                    os.symlink(sigfile_name, sigfile_link_path)
-+                except OSError:
-+                    pass
- 
- # Insert these classes into siggen's namespace so it can see and select them
- bb.siggen.SignatureGeneratorOEBasic = SignatureGeneratorOEBasic
- bb.siggen.SignatureGeneratorOEBasicHash = SignatureGeneratorOEBasicHash
-+bb.siggen.SignatureGeneratorOEEquivHash = SignatureGeneratorOEEquivHash
- 
- 
- def find_siginfo(pn, taskname, taskhashlist, d):
--- 
-2.20.1
+   File "poky/bitbake/lib/bb/siggen.py", line 45, in 
+SignatureGeneratorOEBasicHash.get_unihash(task='poky/meta/recipes-support/attr/acl_2.2.52.bb.do_fetch'):
+          def get_unihash(self, task):
+     >        return self.taskhash[task]
 
+KeyError: 'poky/meta/recipes-support/attr/acl_2.2.52.bb.do_fetch'
+
+
+Cheers,
+
+Alejandro
+
+
+On 12/18/2018 7:10 PM, Joshua Watt wrote:
+> Requests the task unique hash from siggen and tracks it
+>
+> [YOCTO #13030]
+>
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+>   bitbake/lib/bb/runqueue.py | 25 +++++++++++++++++--------
+>   1 file changed, 17 insertions(+), 8 deletions(-)
+>
+> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+> index f2b95a9829b..27b188256dd 100644
+> --- a/bitbake/lib/bb/runqueue.py
+> +++ b/bitbake/lib/bb/runqueue.py
+> @@ -346,6 +346,7 @@ class RunTaskEntry(object):
+>           self.depends = set()
+>           self.revdeps = set()
+>           self.hash = None
+> +        self.unihash = None
+>           self.task = None
+>           self.weight = 1
+>   
+> @@ -385,6 +386,9 @@ class RunQueueData:
+>       def get_task_hash(self, tid):
+>           return self.runtaskentries[tid].hash
+>   
+> +    def get_task_unihash(self, tid):
+> +        return self.runtaskentries[tid].unihash
+> +
+>       def get_user_idstring(self, tid, task_name_suffix = ""):
+>           return tid + task_name_suffix
+>   
+> @@ -1150,18 +1154,21 @@ class RunQueueData:
+>                   if len(self.runtaskentries[tid].depends - dealtwith) == 0:
+>                       dealtwith.add(tid)
+>                       todeal.remove(tid)
+> -                    procdep = []
+> -                    for dep in self.runtaskentries[tid].depends:
+> -                        procdep.append(fn_from_tid(dep) + "." + taskname_from_tid(dep))
+> -                    (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
+> -                    self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(taskfn, taskname, procdep, self.dataCaches[mc])
+> -                    task = self.runtaskentries[tid].task
+> +                    self.prepare_task_hash(tid)
+>   
+>           bb.parse.siggen.writeout_file_checksum_cache()
+>   
+>           #self.dump_data()
+>           return len(self.runtaskentries)
+>   
+> +    def prepare_task_hash(self, tid):
+> +        procdep = []
+> +        for dep in self.runtaskentries[tid].depends:
+> +            procdep.append(fn_from_tid(dep) + "." + taskname_from_tid(dep))
+> +        (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
+> +        self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(taskfn, taskname, procdep, self.dataCaches[mc])
+> +        self.runtaskentries[tid].unihash = bb.parse.siggen.get_unihash(fn + "." + taskname)
+> +
+>       def dump_data(self):
+>           """
+>           Dump some debug information on the internal data structures
+> @@ -2081,7 +2088,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
+>                   deps = self.rqdata.runtaskentries[revdep].depends
+>                   provides = self.rqdata.dataCaches[mc].fn_provides[taskfn]
+>                   taskhash = self.rqdata.runtaskentries[revdep].hash
+> -                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
+> +                unihash = self.rqdata.runtaskentries[revdep].unihash
+> +                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash, unihash]
+>                   for revdep2 in deps:
+>                       if revdep2 not in taskdepdata:
+>                           additional.append(revdep2)
+> @@ -2524,7 +2532,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+>                   deps = getsetscenedeps(revdep)
+>                   provides = self.rqdata.dataCaches[mc].fn_provides[taskfn]
+>                   taskhash = self.rqdata.runtaskentries[revdep].hash
+> -                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
+> +                unihash = self.rqdata.runtaskentries[revdep].unihash
+> +                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash, unihash]
+>                   for revdep2 in deps:
+>                       if revdep2 not in taskdepdata:
+>                           additional.append(revdep2)
 
