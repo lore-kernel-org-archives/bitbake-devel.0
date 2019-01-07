@@ -1,52 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
-	[209.85.221.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 2ED1A7BDF5
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
+	[209.85.128.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 620FD6C466
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  7 Jan 2019 14:56:51 +0000 (UTC)
-Received: by mail-wr1-f41.google.com with SMTP id v13so725219wrw.5
+	Mon,  7 Jan 2019 15:55:38 +0000 (UTC)
+Received: by mail-wm1-f66.google.com with SMTP id d15so1348975wmb.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 07 Jan 2019 06:56:53 -0800 (PST)
+	Mon, 07 Jan 2019 07:55:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=bFpjosn8Z3wkk904u2CcTVaTiJuttHcmgwjAm/cpW/k=;
-	b=bDsoNMO1bsr6Ab4r65Uq4f0HP0T6H07UFFPa+TVyROdQ8r62wWW4Jgz97TPyHXeCNk
-	wyYlW8CM28L0JafKI80yZ5TYm+Rj1oCp4e0ojtjmnTWiMvqm/6H27hboZd5L/iLAmdXM
-	fqVuqL0zOgrlmiBiO8Tpk+1wkf2mb7l9Psu7I=
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=uTWs8lN6osqkHsEH7ZdFtXtmcYVmwiA/jXnzG5vgTHs=;
+	b=D1JKAfOAcVQX5SujjV4GvZKSWd7r8cEHnRHCD2mOeOE+BBQcPMrLqPrxc5MxHf3HkX
+	Adf1LdGux2N/blkq2SkGZX+rKO1wveCSyvbxKi1iWMbCnl6353n9Ay+szu2McpXWXCOr
+	Mi0ywpjAD30zOu63goznEXQp2UqJeA495BpbQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=bFpjosn8Z3wkk904u2CcTVaTiJuttHcmgwjAm/cpW/k=;
-	b=cp7yQ1DMyVDlM8HUl/toFZkoszSj5xY/FtYbIjIcWwHAAl/z6XpIrn/v8eXGRafdJw
-	cmi3g/hJHQo7CoRHaXWKXpjcjB8NFqWAA3Imv7AfrXhczE4a4wwFcUcj7uxMz+Y+Z0Ay
-	yDCQTk/VZKplfTC9jpWJ0Ewk54HqoT0cjW/Q+9326KpefjzS0DR9Lw9M8NEKEO61GeXU
-	UGaDjjYAHH+yzEaSo70aO3R2OcrkTSFIBkFZVOdGbHMV+noLq2eTr/cieaNy6UG8vvwv
-	3ZYVoDv4O6kPgUo/wZew0WJYaAmoxTS98YfQfT8KNTmnAGN+ZIHwish1Cf7NqH1pAI7x
-	X4Fw==
-X-Gm-Message-State: AJcUukeU8FpsS92Nj2wgT5gVN/i6oyqmBlfKL0neLhbTFhnfDytBKPJZ
-	nTNLHqBqhYmEkkuJDCFG+3B9ag==
-X-Google-Smtp-Source: ALg8bN5S8Xi6MlOT9UKHPx0hqw7lpvH4KCMUcKj4Bwp5KNtsy7RlCwPUspcA4N/aBcgYUQXyPLY/Cg==
-X-Received: by 2002:adf:e383:: with SMTP id e3mr28911009wrm.31.1546873012693; 
-	Mon, 07 Jan 2019 06:56:52 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=uTWs8lN6osqkHsEH7ZdFtXtmcYVmwiA/jXnzG5vgTHs=;
+	b=TnplS2S7qIq2Cta+JFxlE/slVySq3Kj1trb8qaEIGrAiEbhZ0lG1oUub7TNVDTSGq3
+	v89DY6bXAceTRMglQ6wkee5EvJW+rvCp6HWTYyNhkPVbkDh4clE5IS1bP2paT6V/aT7Y
+	pVZPgngFXpp9GFpe9AxTzZJgTtciz32VZHRty5AYj+ogP+F8yfQWiPedPfX2qcnpQY7Z
+	wnobz75LZGDPPCC8KApSHVhazznHAIypmrOKkbEjdHuK+kDIqR1JbW5FRdZHB8UffIe/
+	MAgCYzt+iPsNCNsr/POle++H2Yei/KdY7fTozKMpIOtqBp6Vd7bC5NuDdkDYcx6P1JUi
+	I8Vw==
+X-Gm-Message-State: AJcUukdbRmZjwzD7KhViW7jcsywqgnMCY8b2E267cXsqIJTWbIbDP/sJ
+	vx5lsydkOAN0C0yqof6tSbBSKweSrDW62w==
+X-Google-Smtp-Source: ALg8bN7mMMxD2P/VTi2FHygWJig5wzTSDSuTVR1riw14hRFewbQeXUW1quVpXwWr4oKYz8KwS5n7Hw==
+X-Received: by 2002:a1c:a401:: with SMTP id n1mr6736765wme.101.1546876538319; 
+	Mon, 07 Jan 2019 07:55:38 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	o16sm63721075wrn.11.2019.01.07.06.56.51
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 07 Jan 2019 06:56:52 -0800 (PST)
-Message-ID: <49a16b88d162e9d3aa3db88deaed47147d914429.camel@linuxfoundation.org>
+	o9sm6400347wmh.3.2019.01.07.07.55.37
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 07 Jan 2019 07:55:37 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Slater, Joseph" <joe.slater@windriver.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Date: Mon, 07 Jan 2019 14:56:51 +0000
-In-Reply-To: <007BD92917A2324FA403BCF9A464CF84F3723F13@ALA-MBD.corp.ad.wrs.com>
-References: <007BD92917A2324FA403BCF9A464CF84F3723F13@ALA-MBD.corp.ad.wrs.com>
-User-Agent: Evolution 3.30.2-1 
-Mime-Version: 1.0
-Subject: Re: /run/user/<id>/bb
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  7 Jan 2019 15:55:33 +0000
+Message-Id: <20190107155536.6062-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Subject: [PATCH 1/4] tests.data: Add underscore+numeric in overrides datastore test
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,23 +56,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 07 Jan 2019 14:56:52 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 07 Jan 2019 15:55:38 -0000
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2019-01-03 at 23:57 +0000, Slater, Joseph wrote:
-> TMPDIR is useful, but named sockets need a "short" pathname, so it it
-> might be nice to have a RUNDIR, or something similar, under
-> /run/user/<id>/bb.  Could this be added?  I would do it if the
-> concept is accepted.
+Add a test for x86_64 in overrides where is was being incorrectly handled.
+There was a previous fix (3a3be518536acc868c7eeb3c1111ad1b321480b7) but
+this ensures we don't regress.
 
-What problem are we solving with this?
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/data.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-I'm guessing problems with memory resident bitbake in envvars but I am
-having to guess! :)
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index db3e2010a9..3c511f214b 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -394,6 +394,15 @@ class TestOverrides(unittest.TestCase):
+         self.d.setVar("OVERRIDES", "foo:bar:some_val")
+         self.assertEqual(self.d.getVar("TEST"), " testvalue5")
+ 
++    # Test an override with _<numeric> in it based on a real world OE issue
++    def test_underscore_override(self):
++        self.d.setVar("TARGET_ARCH", "x86_64")
++        self.d.setVar("PN", "test-${TARGET_ARCH}")
++        self.d.setVar("VERSION", "1")
++        self.d.setVar("VERSION_pn-test-${TARGET_ARCH}", "2")
++        self.d.setVar("OVERRIDES", "pn-${PN}")
++        bb.data.expandKeys(self.d)
++        self.assertEqual(self.d.getVar("VERSION"), "2")
+ 
+ class TestKeyExpansion(unittest.TestCase):
+     def setUp(self):
+-- 
+2.19.1
 
 
