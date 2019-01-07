@@ -1,53 +1,54 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
-	[209.85.128.66])
-	by mail.openembedded.org (Postfix) with ESMTP id ED7967BEE4
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
+	[209.85.128.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 34C0D7BEE4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  7 Jan 2019 17:25:46 +0000 (UTC)
-Received: by mail-wm1-f66.google.com with SMTP id r24so6599118wmh.0
+	Mon,  7 Jan 2019 17:31:28 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id b11so1644800wmj.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 07 Jan 2019 09:25:48 -0800 (PST)
+	Mon, 07 Jan 2019 09:31:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=bRccvz7UQenTnnl5CGToVgxV+YF4XRYyCKTG4FWVhpg=;
-	b=HkzwjJTjA5zma/KaPhe5tMvqdwnIE8m/UhR9FL5G3DnbAbrDc8uPkzXTS0avdGJEwp
-	IwpmpectT9b0KSeciElgmdW4Bqkh4SLPvy8wbtdlApSe2J5gGFlNhMIDj5HvWmT19W4t
-	ZAfFFx91cNfkSsQf7sVggebHga+cEXu5SgxpY=
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=PLXO6T1B9E21ymjuG71liPWGFi+nK2DEGPRCAQru7vc=;
+	b=XH0uYXPa3Rq9bx4H76xNJVhwOzJgTIe5WBC4w5OBWeipPT+X+cV8o2OQAQWaAbros/
+	P6FATepZb6E1rhVRLaSIJWGWcKnOtKE0lbLjel6brLB8XRUDfcQsR+5UIEuBWvK2SQrV
+	Z99EiD8W79XUAA2wKma2E9qxQEzYSm9F+7SgY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
 	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=bRccvz7UQenTnnl5CGToVgxV+YF4XRYyCKTG4FWVhpg=;
-	b=XL/uu/tCBDdPwKmjc/S+3tCJXjp1W5QmM0CKSh2SLveTNpIQERpY8k7xwU3yln/SO6
-	wNM1XYEJDIfwixLHT5uF2bRJkyL24jKKn2aF3rvMjRw6vgEIixHOSP0EwB/PDQWTWJK7
-	lcIAairVns73xawKVpD8iDcZEwFnmQaJ9HVgQ4uaC0h7U7l0YieLfsEUCq2D8d9czQm8
-	kG5UR1wiG7fPh2vU132UPDnAbbDffRG2ZPOAbYYNSb+BgWFhRC59S+qlNBBJGvIHmDNM
-	74hHgIKqIMHgnrVHeGHnMebJBmmLt0TTx3uMXVUMK9nlWalcg3LBibfgA4Qx9q6ritkR
-	b1Ag==
-X-Gm-Message-State: AJcUukdRx6NdzZd9g4b56Rp4BRc1WofYuX1KdXvBn+PBF9Lz9TainL6A
-	wR20yHYFsCFyzacNaNEi6xUmOg==
-X-Google-Smtp-Source: ALg8bN4CCAaOJPFwYXmUvpUVhDKQbfCbPuTC1rxEF0o6wG+s1Tdsk2b/HSaSrS9GltoEibsXUI3ncw==
-X-Received: by 2002:a1c:6a16:: with SMTP id f22mr9526147wmc.25.1546881947501; 
-	Mon, 07 Jan 2019 09:25:47 -0800 (PST)
+	bh=PLXO6T1B9E21ymjuG71liPWGFi+nK2DEGPRCAQru7vc=;
+	b=OtGO/6cDOYDeVjfGrYmCYrd2o3qncI7ybsOMoCldsL0jaQC4eslhQvWefbN8vHoeLf
+	LaSur4swSY4V6Nbpdkxuv8jZwX45oEQrkqYZU+ky4HX61dEA4jzuIZK59Ko9H+TtqHjr
+	rPrIhNTX+8jOvPpUBL7Kv03cMsf6ZRfhYYfr63f56Z+P9EhNecOXn2MVxvQy6K1x6CaZ
+	r7gPPEA+77IUXTthJ5Sq3nnxSklL4AJDvCzP+PoKdPkTg92n5/Ts7wJY/cm/Gfu9XWFQ
+	joHbpc+sEqh4ocb0u3nm04C18zH+KNYAr1qSi1j3s2mE0dsDRI0N8fheA1KZwdhbbWSk
+	58jQ==
+X-Gm-Message-State: AJcUukcMFn6TE0Txep8yA/Sz5F8mkvpi5sp2xUasPlEST+Q6G5leB2vi
+	QgLE3r5e+8fKtfP7liJace+kUA==
+X-Google-Smtp-Source: ALg8bN5IJekQmrWNpLOjxEsr0Eyd81qH78au43EAFEpkP/5rARbcjCoRJOlw7Z+kCU6yzaA/Z3s6Mw==
+X-Received: by 2002:a1c:b14:: with SMTP id 20mr9842048wml.103.1546882288814;
+	Mon, 07 Jan 2019 09:31:28 -0800 (PST)
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	o5sm14064099wmg.25.2019.01.07.09.25.46
+	t4sm18695033wrb.64.2019.01.07.09.31.27
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 07 Jan 2019 09:25:46 -0800 (PST)
-Message-ID: <dcb48164018d247d47ccd5400d47347dfd6bb428.camel@linuxfoundation.org>
+	Mon, 07 Jan 2019 09:31:27 -0800 (PST)
+Message-ID: <d87ce682d2a0e2eda230e8b0e7799f2ec68f46db.camel@linuxfoundation.org>
 From: richard.purdie@linuxfoundation.org
-To: Christopher Larson <kergoth@gmail.com>
-Date: Mon, 07 Jan 2019 17:25:45 +0000
-In-Reply-To: <CABcZANkY0HGOzB2JKZC08=QzRzM_BoVJf0PZ-MrRFcD1XZTMRQ@mail.gmail.com>
-References: <20190107155536.6062-1-richard.purdie@linuxfoundation.org>
-	<20190107155536.6062-3-richard.purdie@linuxfoundation.org>
-	<CABcZANkY0HGOzB2JKZC08=QzRzM_BoVJf0PZ-MrRFcD1XZTMRQ@mail.gmail.com>
+To: Mark Hatle <mark.hatle@windriver.com>, "Slater, Joseph"
+	<joe.slater@windriver.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Mon, 07 Jan 2019 17:31:22 +0000
+In-Reply-To: <d718f0d7-3834-3b42-2fc2-3667ed4e899c@windriver.com>
+References: <007BD92917A2324FA403BCF9A464CF84F3723F13@ALA-MBD.corp.ad.wrs.com>
+	<49a16b88d162e9d3aa3db88deaed47147d914429.camel@linuxfoundation.org>
+	<d718f0d7-3834-3b42-2fc2-3667ed4e899c@windriver.com>
 User-Agent: Evolution 3.30.2-1 
 Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 3/4] cooker: Allow faster exitting from parser threads
+Subject: Re: /run/user/<id>/bb
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,16 +61,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 07 Jan 2019 17:25:47 -0000
+X-List-Received-Date: Mon, 07 Jan 2019 17:31:28 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2019-01-07 at 09:02 -0700, Christopher Larson wrote:
-> Empty is raised when it times out, not just when it’s actually empty,
-> though.
+On Mon, 2019-01-07 at 10:07 -0600, Mark Hatle wrote:
+> On 1/7/19 8:56 AM, Richard Purdie wrote:
+> > On Thu, 2019-01-03 at 23:57 +0000, Slater, Joseph wrote:
+> > > TMPDIR is useful, but named sockets need a "short" pathname, so
+> > > it it
+> > > might be nice to have a RUNDIR, or something similar, under
+> > > /run/user/<id>/bb.  Could this be added?  I would do it if the
+> > > concept is accepted.
+> > 
+> > What problem are we solving with this?
+> > 
+> > I'm guessing problems with memory resident bitbake in envvars but I
+> > am
+> > having to guess! :)
+> 
+> I'm assuming it's a combination of memory resident bitbake, and overall path
+> length in TMPDIR to the sockets.  Sockets have a maximum filesystem path length
+> (107 characters in Linux) that is much shorted then other components in the
+> system (4k or less).
+> 
+> The typical way people work around this is whenever you use a socket
+> you cd to the path of the socket and then open it relative to the
+> current location.
 
-Good point, thanks. I was about to rework it but my next patch removes
-it entirely so I guess I can just drop this intermediate one...
+The code in bitbake already does that as it happens...
+
+> in either the TMPDIR or RUNDIR type configuration, that 'cd ; open'
+> type behavior will still likely be needed.  So I'm not sure if RUNDIR
+> actually fixes anything when it comes to path length issues.  It just
+> moves the socket to a known location, from 'current' path.
+
+I'm hoping Joe can explain the problem rather than us guessing,
+particularly as the code for where I thought the problem may be already
+does a chdir().
 
 Cheers,
 
