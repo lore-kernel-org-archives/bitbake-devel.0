@@ -1,52 +1,56 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 295766BE3A
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+	[209.85.221.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 5051062133
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  8 Jan 2019 19:08:19 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x08J5EUm013390
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 8 Jan 2019 11:05:51 -0800
-Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
-	Tue, 8 Jan 2019 11:05:22 -0800
-To: <bitbake-devel@lists.openembedded.org>
-References: <20190108074737.15427-1-krystian.garlinski@comarch.pl>
-	<CAPm2bJ_ZAmsCU04_sqRL9KL7YELUPj2iMi8_efUNvtnKOgT=nw@mail.gmail.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <edee8347-d357-29b3-c8e3-2f964eeffdb2@windriver.com>
-Date: Tue, 8 Jan 2019 13:05:21 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <CAPm2bJ_ZAmsCU04_sqRL9KL7YELUPj2iMi8_efUNvtnKOgT=nw@mail.gmail.com>
-Subject: Re: [PATCH v2] fetch2/gitsm.py: Change the URI construction logic
+	Tue,  8 Jan 2019 20:03:28 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id p4so5332988wrt.7
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 08 Jan 2019 12:03:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=4Hbjz+2hI7iR5eGS9VxUaSixqXRKY77HM8lTTlb6mpA=;
+	b=dhdC64eaKrcvRLYs8AKj1XIDKqL/Bf2knTNqQLl2nG9KpjGiA0iVDYOg4H22BjIQvg
+	9VqP9mzRORIKs3r2ITFep6WT/UN490AJqShZ63urTtu1vj9DpGYrFqDwA3O984ZRikNZ
+	gxXm49VsDh7qq8eT4OaXAuiejiyT1O8j+jAIA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=4Hbjz+2hI7iR5eGS9VxUaSixqXRKY77HM8lTTlb6mpA=;
+	b=aPkOFrR/DtxyyXttiwKGH87Czliz/mTbEBWMQyKzTBNeor4vI/x6a0EHUtqV2u4une
+	bXa1UyHN/IwjyAptaEJbsqNpMnVQ4CFk2PnyEuxbEQ8fIS7OY4V6clg6gAlRKqYj+ubR
+	jFKqY9kr8jjn13C05H4/koyULaZsConVTJAsR8GS93XdNVakvp8lczobTiVZf2+hCELM
+	t2lOiWpwCuLOfIuVTraN9tHNGXYFfsNpFzsf2Swo6/uYTVaC1b6/T6jsSNP6gMkuvsmX
+	zKwGWWUrNiBmCXyomw4vEI4fgGd0/QklId4lN5mYtrW4xLLiQjVa+x6w4RMuU9GQsbMt
+	Z89A==
+X-Gm-Message-State: AJcUukcfQQ9/M1uqqQ01W53q0/HjyN1zK5C5Xj/Tp2XvOxXyAPT4wWo3
+	svew7sU4nxUbOO73qF07KOjvZxmrhH7I4g==
+X-Google-Smtp-Source: ALg8bN5Gri1PP7pDllowFJk2hrLVP06D75iVpluq1aAGX6odB/MPGEB+Cl5AmHHCW80gVbzCg6sK1A==
+X-Received: by 2002:a5d:5649:: with SMTP id j9mr2438548wrw.256.1546977808920; 
+	Tue, 08 Jan 2019 12:03:28 -0800 (PST)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	o16sm68107612wrn.11.2019.01.08.12.03.27
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Tue, 08 Jan 2019 12:03:28 -0800 (PST)
+Message-ID: <3a6c9b9d4f67d05e2fe7efebe78dc7373030c9dd.camel@linuxfoundation.org>
+From: richard.purdie@linuxfoundation.org
+To: "Slater, Joseph" <joe.slater@windriver.com>, "Hatle, Mark"
+	<mark.hatle@windriver.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Tue, 08 Jan 2019 20:03:27 +0000
+In-Reply-To: <007BD92917A2324FA403BCF9A464CF84F37255A6@ALA-MBD.corp.ad.wrs.com>
+References: <007BD92917A2324FA403BCF9A464CF84F3723F13@ALA-MBD.corp.ad.wrs.com>
+	<49a16b88d162e9d3aa3db88deaed47147d914429.camel@linuxfoundation.org>
+	<d718f0d7-3834-3b42-2fc2-3667ed4e899c@windriver.com>
+	<d87ce682d2a0e2eda230e8b0e7799f2ec68f46db.camel@linuxfoundation.org>
+	<007BD92917A2324FA403BCF9A464CF84F37255A6@ALA-MBD.corp.ad.wrs.com>
+User-Agent: Evolution 3.30.3-1 
+Mime-Version: 1.0
+Subject: Re: /run/user/<id>/bb
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,131 +63,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Jan 2019 19:08:19 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 08 Jan 2019 20:03:28 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The patch here and the other that didn't quite work either are close but not
-completely correct.
+On Mon, 2019-01-07 at 20:48 +0000, Slater, Joseph wrote:
+> Specifically, libassuan, which is used by gpg, puts named sockets
+> under GPG_PATH and that is set by sign_rpm_ext.bbclass to be under
+> TMPDIR, although we could override that.  I think that libassuan
+> computes the absolute pathname to create the socket.  I admit that I
+> did not look very hard at libassuan, but a fix did not seem
+> immediately obvious.
+> 
+> Having a RUNDIR might not be a good idea, though, because it opens
+> the issue of how it gets cleaned up if the user never logs out.
 
-There are apparently three (ssh) formats that git supports:
+That as well as how we differentiate between multiple builds from the
+same user or even different multiconfigs within the same build.
 
-url format - ssh://user:password@host/path
-ssh format - user@host:/path
-(ssh)? format - user@host/path
+I suspect there are safer ways to handle this within TMPDIR even if we
+have to patch things...
 
-Each have a different regex or splitting format required.  I'm working on a
-specific reproducer test case for each of these, and then will work to combine
-or tailor the various patches that have been submitted.  If anyone is aware of
-any other odd formats please let me know and I'll add appropriate test cases for
-those as well.
+Cheers,
 
-I'm guessing it'll be a couple of days for me to work through this, and then I
-ask that people with the problem test this and verify it works in their specific
-case.
-
---Mark
-
-On 1/8/19 10:35 AM, Linus Ziegert wrote:
-> Hello people,
-> 
-> I am working as well on fetch2/gitsm.py. We have a privat repo with submodules
-> but the current gitsm.py does not support ssh.
-> 
-> I tested the patch by Krystian but it did not worked for me. I got the following
-> ERROR:
-> 
->     ERROR: <recipe> do_fetch: The URL:
->     'gitsm:git@github.com/<user>/<submodule_name1>.git;protocol=ssh;name=<submodule_name2>;bareclone=1;nocheckout=1;nobranch=1'
->     is invalid and cannot be interpreted
-> 
-> 
-> The .gitmodules file used looks like this:
-> 
-> [submodule "submodule_name1"]
-> path = submodule_name1
->         url = git@github.com/<user>/<submodule_name1>.git 
-> [submodule "submodule_name2"]
-> path = submodule_name2
->         url = git@github.com/<user>/<submodule_name2>.git 
-> 
-> Attached you find my proposal.
-> 
-> 
-> Am Di., 8. Jan. 2019 um 08:48 Uhr schrieb Krystian Garliński
-> <krystian.garlinski@comarch.pl>:
-> 
->     Git allows to use both the proper URI's and SCP-like short style syntax
->     for the SSH protocol. This commit changes construction logic to detect which
->     one of the two is used in the submodule specification and to build a correct
->     URI out of it.
-> 
->     Signed-off-by: Krystian Garliński <krystian.garlinski@comarch.pl
->     <mailto:krystian.garlinski@comarch.pl>>
->     ---
->      lib/bb/fetch2/gitsm.py | 16 ++++++++++++++--
->      1 file changed, 14 insertions(+), 2 deletions(-)
-> 
->     diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
->     index 35729dbc..95d5f652 100644
->     --- a/lib/bb/fetch2/gitsm.py
->     +++ b/lib/bb/fetch2/gitsm.py
->     @@ -32,6 +32,7 @@ NOTE: Switching a SRC_URI from "git://" to "gitsm://"
->     requires a clean of your r
->      import os
->      import bb
->      import copy
->     +import re
->      from   bb.fetch2.git import Git
->      from   bb.fetch2 import runfetchcmd
->      from   bb.fetch2 import logger
->     @@ -39,6 +40,8 @@ from   bb.fetch2 import Fetch
->      from   bb.fetch2 import BBFetchException
-> 
->      class GitSM(Git):
->     +    scp_regex = re.compile(r'^([a-zA-Z0-9_]+)@([a-zA-Z0-9._-]+):(.+)$')
->     +
->          def supports(self, ud, d):
->              """
->              Check to see if a given url can be fetched with git.
->     @@ -88,8 +91,17 @@ class GitSM(Git):
->                  module_hash = module_hash.split()[2]
-> 
->                  # Build new SRC_URI
->     -            proto = uris[module].split(':', 1)[0]
->     -            url = uris[module].replace('%s:' % proto, 'gitsm:', 1)
->     +            uri = uris[module]
->     +            match = GitSM.scp_regex.match(uri)
->     +
->     +            if match:
->     +                # this URI follows the short SCP-like syntax
->     +                url = 'gitsm://{}@{}/{}'.format(match.group(1),
->     match.group(2), match.group(3))
->     +                proto = 'ssh'
->     +            else:
->     +                proto = uri.split(':', 1)[0]
->     +                url = 'gitsm' + uri[len(proto):]
->     +
->                  url += ';protocol=%s' % proto
->                  url += ";name=%s" % module
->                  url += ";bareclone=1;nocheckout=1;nobranch=1"
->     -- 
->     2.19.1
-> 
->     -- 
->     _______________________________________________
->     bitbake-devel mailing list
->     bitbake-devel@lists.openembedded.org
->     <mailto:bitbake-devel@lists.openembedded.org>
->     http://lists.openembedded.org/mailman/listinfo/bitbake-devel
-> 
-> 
-> 
-> -- 
-> 
-> Cheers, 
-> Linus
-> 
+Richard
 
 
