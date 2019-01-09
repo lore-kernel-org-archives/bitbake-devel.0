@@ -1,49 +1,30 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id E54876C4A5
+Return-Path: <stefan@agner.ch>
+X-Greylist: delayed 549 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 09 Jan 2019 13:57:17 UTC
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+	by mail.openembedded.org (Postfix) with ESMTP id A9AED7BDD4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Jan 2019 01:29:03 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 520AB1849B;
-	Wed,  9 Jan 2019 02:29:04 +0100 (CET)
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id uW8rPvPGR2dI; Wed,  9 Jan 2019 02:29:03 +0100 (CET)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bastet.se.axis.com (Postfix) with ESMTPS id C916A18488;
-	Wed,  9 Jan 2019 02:29:03 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B5CEB1E079;
-	Wed,  9 Jan 2019 02:29:03 +0100 (CET)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA9C91E074;
-	Wed,  9 Jan 2019 02:29:03 +0100 (CET)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
-	by boulder03.se.axis.com (Postfix) with ESMTP;
-	Wed,  9 Jan 2019 02:29:03 +0100 (CET)
-Received: from lnxolofjn.se.axis.com (lnxolofjn.se.axis.com [10.92.17.1])
-	by thoth.se.axis.com (Postfix) with ESMTP id 9E98B218;
-	Wed,  9 Jan 2019 02:29:03 +0100 (CET)
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)
-	id 920239C4F2; Wed,  9 Jan 2019 02:29:03 +0100 (CET)
-Date: Wed, 9 Jan 2019 02:29:03 +0100
-From: Olof Johansson <olof.johansson@axis.com>
-To: Mark Hatle <mark.hatle@windriver.com>, bitbake-devel@lists.openembedded.org
-Message-ID: <20190109012903.e4dfrmnlagpjpapw@axis.com>
-Mail-Followup-To: Mark Hatle <mark.hatle@windriver.com>,
-	bitbake-devel@lists.openembedded.org
-References: <20190108233847.81353-1-mark.hatle@windriver.com>
-	<20190108233847.81353-3-mark.hatle@windriver.com>
-	<20190109011827.4crsftenh2c5pfst@axis.com>
+	Wed,  9 Jan 2019 13:57:17 +0000 (UTC)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id A96355C0170;
+	Wed,  9 Jan 2019 14:48:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1547041688;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	content-transfer-encoding:content-transfer-encoding:in-reply-to:
+	references; bh=nScu+/XjdJt/QgutgwsaejtVp4Amfo/TY15vSPLQs4Q=;
+	b=HtTsuaYILE9wYPL9hSHrSSC3AuOXjAJm4TRwIIrKI/z8VzaKTV70qYVYGreQXMGJWYljg7
+	VC3oAQfCkAeieQ5d90WUTel6Q63tmfnauha5QWq0z2UcNMR7GJYFfqihugWgPDxeKuDi3k
+	cyU3Qia5wy56GFOoP19G1d/s2S047bA=
 MIME-Version: 1.0
-In-Reply-To: <20190109011827.4crsftenh2c5pfst@axis.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-TM-AS-GCONF: 00
-Subject: Re: [PATCH 2/3] gitsm.py: Add support for alternative URL formats from submodule files
+Date: Wed, 09 Jan 2019 14:48:08 +0100
+From: Stefan Agner <stefan@agner.ch>
+To: bitbake-devel@lists.openembedded.org
+Message-ID: <4e90ed7e8eea81f3f8e3abd072aedaca@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
+Subject: gitsm shared DL_DIR and race conditions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,25 +37,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Jan 2019 01:29:04 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Wed, 09 Jan 2019 13:57:17 -0000
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 19-01-09 02:18 +0100, Olof Johansson wrote:
-> The path in an ssh:// uri is absolute, so the relative case must
-> be handled differently. But it's easy, git supports ~ expansion,
-> like:
-> 
->   alice@example.com:foo.git -> ssh://alice@example.com/~/foo.git
+Hi,
 
-Tested some more. This works with git over openssh (possibly only
-against unix systems), but not with github it seems, so this
-wasn't as general of a solution I hoped. Sorry. I think the issue
-is real, but my proposed solution wasn't :(.
+We came across race conditions while fetching a repository using gitsm:
+ERROR: aktualizr-native-1.0+gitAUTOINC+d00d1a04cc-7 do_fetch: Fetcher
+failure: Fetch command export PSEUDO_DISABLED=1; export
+PATH="/workdir/oe/layers/openembedded-core/scripts/native-intercept:/workdir/oe/layers/openembedded-core/scripts:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin/x86_64-linux:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/sbin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/sbin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/bin:/workdir/oe/bitbake/bin:/workdir/oe/tmp/hosttools";
+export HOME="/home/yocto"; git -c core.fsyncobjectfiles=0 config
+submodule.tests/tuf-test-vectors.url
+/workdir/downloads/git2/github.com.advancedtelematic.tuf-test-vectors.
+failed with exit code 255, output:
+error: could not lock config file config: File exists
 
-And, of course, the github ssh remote specifiers all look like
-git@github.com:alice/foo.
+We share the same DL_DIR located on a NFS across multiple builders. We
+are using latest state of the 1.40 branch  (thud) of bitbake.
 
--- 
-olofjn
+It seems that two git config invocations raced in this case. Is there
+locking required in the current gitsm implementation?
+
+--
+Stefan
 
