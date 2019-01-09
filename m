@@ -1,30 +1,50 @@
-Return-Path: <stefan@agner.ch>
-X-Greylist: delayed 549 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 09 Jan 2019 13:57:17 UTC
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
-	by mail.openembedded.org (Postfix) with ESMTP id A9AED7BDD4
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id C20557C03A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Jan 2019 13:57:17 +0000 (UTC)
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-	by mail.kmu-office.ch (Postfix) with ESMTPSA id A96355C0170;
-	Wed,  9 Jan 2019 14:48:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-	t=1547041688;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	content-transfer-encoding:content-transfer-encoding:in-reply-to:
-	references; bh=nScu+/XjdJt/QgutgwsaejtVp4Amfo/TY15vSPLQs4Q=;
-	b=HtTsuaYILE9wYPL9hSHrSSC3AuOXjAJm4TRwIIrKI/z8VzaKTV70qYVYGreQXMGJWYljg7
-	VC3oAQfCkAeieQ5d90WUTel6Q63tmfnauha5QWq0z2UcNMR7GJYFfqihugWgPDxeKuDi3k
-	cyU3Qia5wy56GFOoP19G1d/s2S047bA=
+	Wed,  9 Jan 2019 15:38:56 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x09FcqNq020976
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 9 Jan 2019 07:38:53 -0800 (PST)
+Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
+	Wed, 9 Jan 2019 07:38:52 -0800
+To: Stefan Agner <stefan@agner.ch>, <bitbake-devel@lists.openembedded.org>
+References: <4e90ed7e8eea81f3f8e3abd072aedaca@agner.ch>
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <410903eb-7a0a-964c-9b3a-991a342284ec@windriver.com>
+Date: Wed, 9 Jan 2019 09:38:51 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.4.0
 MIME-Version: 1.0
-Date: Wed, 09 Jan 2019 14:48:08 +0100
-From: Stefan Agner <stefan@agner.ch>
-To: bitbake-devel@lists.openembedded.org
-Message-ID: <4e90ed7e8eea81f3f8e3abd072aedaca@agner.ch>
-X-Sender: stefan@agner.ch
-User-Agent: Roundcube Webmail/1.3.7
-Subject: gitsm shared DL_DIR and race conditions
+In-Reply-To: <4e90ed7e8eea81f3f8e3abd072aedaca@agner.ch>
+Subject: Re: gitsm shared DL_DIR and race conditions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,28 +57,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Jan 2019 13:57:17 -0000
-Content-Type: text/plain; charset=US-ASCII
+X-List-Received-Date: Wed, 09 Jan 2019 15:38:57 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On 1/9/19 7:48 AM, Stefan Agner wrote:
+> Hi,
+> 
+> We came across race conditions while fetching a repository using gitsm:
+> ERROR: aktualizr-native-1.0+gitAUTOINC+d00d1a04cc-7 do_fetch: Fetcher
+> failure: Fetch command export PSEUDO_DISABLED=1; export
+> PATH="/workdir/oe/layers/openembedded-core/scripts/native-intercept:/workdir/oe/layers/openembedded-core/scripts:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin/x86_64-linux:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/sbin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/sbin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/bin:/workdir/oe/bitbake/bin:/workdir/oe/tmp/hosttools";
+> export HOME="/home/yocto"; git -c core.fsyncobjectfiles=0 config
+> submodule.tests/tuf-test-vectors.url
+> /workdir/downloads/git2/github.com.advancedtelematic.tuf-test-vectors.
+> failed with exit code 255, output:
+> error: could not lock config file config: File exists
+> 
+> We share the same DL_DIR located on a NFS across multiple builders. We
+> are using latest state of the 1.40 branch  (thud) of bitbake.
+> 
+> It seems that two git config invocations raced in this case. Is there
+> locking required in the current gitsm implementation?
 
-We came across race conditions while fetching a repository using gitsm:
-ERROR: aktualizr-native-1.0+gitAUTOINC+d00d1a04cc-7 do_fetch: Fetcher
-failure: Fetch command export PSEUDO_DISABLED=1; export
-PATH="/workdir/oe/layers/openembedded-core/scripts/native-intercept:/workdir/oe/layers/openembedded-core/scripts:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin/x86_64-linux:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/sbin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/sbin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/bin:/workdir/oe/bitbake/bin:/workdir/oe/tmp/hosttools";
-export HOME="/home/yocto"; git -c core.fsyncobjectfiles=0 config
-submodule.tests/tuf-test-vectors.url
-/workdir/downloads/git2/github.com.advancedtelematic.tuf-test-vectors.
-failed with exit code 255, output:
-error: could not lock config file config: File exists
+Did not expect git config to have locking issue... but it is showing that two
+fetches appear to have happened together... gitsm uses the regular git fetcher
+for that bit, and then after the fetch is complete updates the config (like git
+submodule init would) to point to downloaded components.  It's this
+configuration step that appears to have failed.
 
-We share the same DL_DIR located on a NFS across multiple builders. We
-are using latest state of the 1.40 branch  (thud) of bitbake.
+It should be fairly trivial to catch this issue and retry.
 
-It seems that two git config invocations raced in this case. Is there
-locking required in the current gitsm implementation?
+--Mark
 
---
-Stefan
+> --
+> Stefan
+> 
+
 
