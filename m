@@ -1,21 +1,20 @@
 Return-Path: <mark.hatle@windriver.com>
 Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 030BA6BCA4
+	by mail.openembedded.org (Postfix) with ESMTP id 2158D79F4C
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Jan 2019 16:34:32 +0000 (UTC)
+	Wed,  9 Jan 2019 16:47:25 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x09GXLQV012690
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x09Gkkur013001
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 9 Jan 2019 08:33:57 -0800
+	Wed, 9 Jan 2019 08:46:57 -0800
 Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
-	Wed, 9 Jan 2019 08:33:39 -0800
-To: <bitbake-devel@lists.openembedded.org>
-References: <20190108233847.81353-1-mark.hatle@windriver.com>
-	<20190108233847.81353-3-mark.hatle@windriver.com>
-	<20190109011827.4crsftenh2c5pfst@axis.com>
-	<20190109012903.e4dfrmnlagpjpapw@axis.com>
+	Wed, 9 Jan 2019 08:46:36 -0800
+To: Stefan Agner <stefan@agner.ch>
+References: <4e90ed7e8eea81f3f8e3abd072aedaca@agner.ch>
+	<410903eb-7a0a-964c-9b3a-991a342284ec@windriver.com>
+	<3585261e3fbb59fbacffbc7339a6f30a@agner.ch>
 From: Mark Hatle <mark.hatle@windriver.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
@@ -42,13 +41,14 @@ Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
 	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
 	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
 Organization: Wind River Systems
-Message-ID: <792e97b5-b19e-9a97-3a30-503f15050b31@windriver.com>
-Date: Wed, 9 Jan 2019 10:33:38 -0600
+Message-ID: <a511c497-e86c-c274-0505-bc3c3242e966@windriver.com>
+Date: Wed, 9 Jan 2019 10:46:35 -0600
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
 	Gecko/20100101 Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190109012903.e4dfrmnlagpjpapw@axis.com>
-Subject: Re: [PATCH 2/3] gitsm.py: Add support for alternative URL formats from submodule files
+In-Reply-To: <3585261e3fbb59fbacffbc7339a6f30a@agner.ch>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: gitsm shared DL_DIR and race conditions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,35 +61,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Jan 2019 16:34:33 -0000
+X-List-Received-Date: Wed, 09 Jan 2019 16:47:26 -0000
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 
-On 1/8/19 7:29 PM, Olof Johansson wrote:
-> On 19-01-09 02:18 +0100, Olof Johansson wrote:
->> The path in an ssh:// uri is absolute, so the relative case must
->> be handled differently. But it's easy, git supports ~ expansion,
->> like:
+On 1/9/19 10:21 AM, Stefan Agner wrote:
+> On 09.01.2019 16:38, Mark Hatle wrote:
+>> On 1/9/19 7:48 AM, Stefan Agner wrote:
+>>> Hi,
+>>>
+>>> We came across race conditions while fetching a repository using gitsm:
+>>> ERROR: aktualizr-native-1.0+gitAUTOINC+d00d1a04cc-7 do_fetch: Fetcher
+>>> failure: Fetch command export PSEUDO_DISABLED=1; export
+>>> PATH="/workdir/oe/layers/openembedded-core/scripts/native-intercept:/workdir/oe/layers/openembedded-core/scripts:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin/x86_64-linux:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/sbin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/usr/bin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/sbin:/workdir/oe/tmp/work/x86_64-linux/aktualizr-native/1.0+gitAUTOINC+d00d1a04cc-7/recipe-sysroot-native/bin:/workdir/oe/bitbake/bin:/workdir/oe/tmp/hosttools";
+>>> export HOME="/home/yocto"; git -c core.fsyncobjectfiles=0 config
+>>> submodule.tests/tuf-test-vectors.url
+>>> /workdir/downloads/git2/github.com.advancedtelematic.tuf-test-vectors.
+>>> failed with exit code 255, output:
+>>> error: could not lock config file config: File exists
+>>>
+>>> We share the same DL_DIR located on a NFS across multiple builders. We
+>>> are using latest state of the 1.40 branch  (thud) of bitbake.
+>>>
+>>> It seems that two git config invocations raced in this case. Is there
+>>> locking required in the current gitsm implementation?
 >>
->>   alice@example.com:foo.git -> ssh://alice@example.com/~/foo.git
+>> Did not expect git config to have locking issue... but it is showing that two
+>> fetches appear to have happened together... gitsm uses the regular git fetcher
+>> for that bit, and then after the fetch is complete updates the config (like git
+>> submodule init would) to point to downloaded components.  It's this
+>> configuration step that appears to have failed.
+>>
+>> It should be fairly trivial to catch this issue and retry.
 > 
-> Tested some more. This works with git over openssh (possibly only
-> against unix systems), but not with github it seems, so this
-> wasn't as general of a solution I hoped. Sorry. I think the issue
-> is real, but my proposed solution wasn't :(.
+> It does not happen often. It happened only once in the last ~100 builds
+> or so...
 > 
-> And, of course, the github ssh remote specifiers all look like
-> git@github.com:alice/foo.
+> Since this is in the CI environment I need to check whether I can jump
+> into that environment.
 > 
+> As far as I can see git holds a lock to write its config file:
+> https://github.com/git/git/blob/master/config.c#L2715
+> 
+> Shouldn't we use a blocking lock on bitbake level to avoid running into
+> the git lock and erroring out?
 
-Unfortunately, this is what I observed as well.  In the specific test cases I
-had replacing it 'as-is' was a better solution.  (test case was specifically
-github, and gitolite based)
-
-The only alternative I can see in this case, is to try one fetch (try/catch) and
-if it fails to try the alternative.  If they both fail, then it becomes a fetch
-failure.
+Any locking that occurs would need to be synchronized between the git and gitsm
+fetchers.  I'm not sure how easy or hard this would be to do.  If we can
+coordinate the locking there, that would be best... but baring that catch and
+retry should be a reasonable alternative as it is highly unlikely that this file
+will be locked for an extended period of time.
 
 --Mark
+
+> --
+> Stefan
+> 
+
 
