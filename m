@@ -1,25 +1,25 @@
 Return-Path: <mark.hatle@windriver.com>
 Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 5160F7C144
+	by mail.openembedded.org (Postfix) with ESMTP id C98E87C154
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 15 Jan 2019 21:34:54 +0000 (UTC)
 Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
 	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x0FLWnbx010207
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x0FLWnc0010207
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
 	Tue, 15 Jan 2019 13:33:45 -0800
 Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
 	(147.11.189.41) with Microsoft SMTP Server id 14.3.408.0;
-	Tue, 15 Jan 2019 13:33:13 -0800
+	Tue, 15 Jan 2019 13:33:43 -0800
 From: Mark Hatle <mark.hatle@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 15 Jan 2019 16:31:36 -0500
-Message-ID: <20190115213137.113956-7-mark.hatle@windriver.com>
+Date: Tue, 15 Jan 2019 16:31:37 -0500
+Message-ID: <20190115213137.113956-8-mark.hatle@windriver.com>
 X-Mailer: git-send-email 2.16.0.rc2
 In-Reply-To: <20190115213137.113956-1-mark.hatle@windriver.com>
 References: <20190115213137.113956-1-mark.hatle@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 6/7] gitsm.py: Rework the shallow fetcher and test case
+Subject: [PATCH 7/7] gitsm.py: Refactor the functions and simplify the class
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,153 +35,371 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Tue, 15 Jan 2019 21:34:59 -0000
 Content-Type: text/plain
 
-A custom shallow submodule is no longer necessary, as the regular git
-fetcher is used and shallow handling works with the same code.
+The update_submodules and unpack_submodules functions were nearly indentical,
+so we made a common function where the different behavior could be passed
+in by the download and unpack users.  The new function is process_submodules.
 
-The only general difference between the regular change is simply declaring a
-clone as shallow, when appropriate.
+Moved the parse_gitmodules function under the new process_submodules, since
+there are no external callers.
 
-This also removes a potential race condition in copying repositories
-vs cloning them.
+Refactor the file relative path processing to the URL translation code.
+We also add a warning to the translation if a relative ssh URL has been
+detected.  Since this can cause a problem.
 
-The gitsm shallow fetcher test was revised to verify that the submodule
-is shallow cloned along with the primary repository.
+In the case of a relative URL that does not work after being translated,
+it should be possible to use the MIRROR functions to manual translate the
+generated relative URL into one that works properly.
 
-The first step of this change was to be sure to clean the gitsubmodule download
-directory, as was previously done with the may gitsource directory.
+Remove 'git config' processing on download contents.  It turns out this is not
+necessary since all of the later components work using the git fetcher.
 
-Additional test components were added to verify commit counts, and an
-obsolete (and likely incorrect) test for the .git/modules directory to be
-empty was also removed.
+Limit the 'git submodule update' call to only when unpacking a non-bare
+repository.  Submodules are always loaded as bare, so this prevents
+intermediate unpacks from being attempted.
+
+Finally, the test cases were updated and the new commit ids in the test
+repository were updates as well.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 ---
- lib/bb/fetch2/gitsm.py | 66 +++-----------------------------------------------
- lib/bb/tests/fetch.py  | 10 +++++++-
- 2 files changed, 13 insertions(+), 63 deletions(-)
+ lib/bb/fetch2/gitsm.py | 232 +++++++++++++++++++------------------------------
+ lib/bb/tests/fetch.py  |  12 ++-
+ 2 files changed, 98 insertions(+), 146 deletions(-)
 
 diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index c172ab1..83571f8 100644
+index 83571f8..86198ee 100644
 --- a/lib/bb/fetch2/gitsm.py
 +++ b/lib/bb/fetch2/gitsm.py
-@@ -150,68 +150,7 @@ class GitSM(Git):
+@@ -45,85 +45,96 @@ class GitSM(Git):
+         """
+         return ud.type in ['gitsm']
  
-     def download(self, ud, d):
-         Git.download(self, ud, d)
+-    @staticmethod
+-    def parse_gitmodules(gitmodules):
+-        modules = {}
+-        module = ""
+-        for line in gitmodules.splitlines():
+-            if line.startswith('[submodule'):
+-                module = line.split('"')[1]
+-                modules[module] = {}
+-            elif module and line.strip().startswith('path'):
+-                path = line.split('=')[1].strip()
+-                modules[module]['path'] = path
+-            elif module and line.strip().startswith('url'):
+-                url = line.split('=')[1].strip()
+-                modules[module]['url'] = url
+-        return modules
 -
--        if not ud.shallow or ud.localpath != ud.fullshallow:
--            self.update_submodules(ud, d)
+-    def update_submodules(self, ud, d):
++    def process_submodules(self, ud, workdir, function, d):
++        """
++        Iterate over all of the submodules in this repository and execute
++        the 'function' for each of them.
++        """
++
+         submodules = []
+         paths = {}
+         revision = {}
+         uris = {}
+-        local_paths = {}
 -
--    def copy_submodules(self, submodules, ud, name, destdir, d):
--        if ud.bareclone:
--            repo_conf = destdir
--        else:
--            repo_conf = os.path.join(destdir, '.git')
--
--        if submodules and not os.path.exists(os.path.join(repo_conf, 'modules')):
--            os.mkdir(os.path.join(repo_conf, 'modules'))
--
--        for module, md in submodules.items():
--            srcpath = os.path.join(ud.clonedir, 'modules', md['path'])
--            modpath = os.path.join(repo_conf, 'modules', md['path'])
--
--            # Check if the module is initialized
++        subrevision = {}
++
++        def parse_gitmodules(gitmodules):
++            modules = {}
++            module = ""
++            for line in gitmodules.splitlines():
++                if line.startswith('[submodule'):
++                    module = line.split('"')[1]
++                    modules[module] = {}
++                elif module and line.strip().startswith('path'):
++                    path = line.split('=')[1].strip()
++                    modules[module]['path'] = path
++                elif module and line.strip().startswith('url'):
++                    url = line.split('=')[1].strip()
++                    modules[module]['url'] = url
++            return modules
++
++        # Collect the defined submodules, and their attributes
+         for name in ud.names:
+             try:
+-                gitmodules = runfetchcmd("%s show %s:.gitmodules" % (ud.basecmd, ud.revisions[name]), d, quiet=True, workdir=ud.clonedir)
++                gitmodules = runfetchcmd("%s show %s:.gitmodules" % (ud.basecmd, ud.revisions[name]), d, quiet=True, workdir=workdir)
+             except:
+                 # No submodules to update
+                 continue
+ 
+-            for m, md in self.parse_gitmodules(gitmodules).items():
++            for m, md in parse_gitmodules(gitmodules).items():
++                try:
++                    module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], md['path']), d, quiet=True, workdir=workdir)
++                except:
++                    # If the command fails, we don't have a valid file to check.  If it doesn't
++                    # fail -- it still might be a failure, see next check...
++                    module_hash = ""
++
++                if not module_hash:
++                    logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", m)
++                    continue
++
+                 submodules.append(m)
+                 paths[m] = md['path']
+                 revision[m] = ud.revisions[name]
+                 uris[m] = md['url']
+-                if uris[m].startswith('..'):
+-                    newud = copy.copy(ud)
+-                    newud.path = os.path.realpath(os.path.join(newud.path, md['url']))
+-                    uris[m] = Git._get_repo_url(self, newud)
++                subrevision[m] = module_hash.split()[2]
+ 
+         for module in submodules:
 -            try:
--                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], md['path']), d, quiet=True, workdir=ud.clonedir)
+-                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, revision[module], paths[module]), d, quiet=True, workdir=ud.clonedir)
 -            except:
 -                # If the command fails, we don't have a valid file to check.  If it doesn't
 -                # fail -- it still might be a failure, see next check...
 -                module_hash = ""
--
++            # Translate the module url into a SRC_URI
+ 
 -            if not module_hash:
 -                logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", module)
 -                continue
 -
--            if os.path.exists(srcpath):
--                if os.path.exists(os.path.join(srcpath, '.git')):
--                    srcpath = os.path.join(srcpath, '.git')
+-            module_hash = module_hash.split()[2]
 -
--                target = modpath
--                if os.path.exists(modpath):
--                    target = os.path.dirname(modpath)
--
--                os.makedirs(os.path.dirname(target), exist_ok=True)
--                runfetchcmd("cp -fpLR %s %s" % (srcpath, target), d)
--            elif os.path.exists(modpath):
--                # Module already exists, likely unpacked from a shallow mirror clone
--                pass
+-            # Build new SRC_URI
+-            if "://" not in uris[module]:
+-                # It's ssh if the format does NOT have "://", but has a ':'
++            if "://" in uris[module]:
++                # Properly formated URL already
++                proto = uris[module].split(':', 1)[0]
++                url = uris[module].replace('%s:' % proto, 'gitsm:', 1)
++            else:
+                 if ":" in uris[module]:
++                    # Most likely an SSH style reference
+                     proto = "ssh"
+                     if ":/" in uris[module]:
++                        # Absolute reference, easy to convert..
+                         url = "gitsm://" + uris[module].replace(':/', '/', 1)
+                     else:
++                        # Relative reference, no way to know if this is right!
++                        logger.warning("Submodule included by %s refers to relative ssh reference %s.  References may fail if not absolute." % (ud.url, uris[module]))
+                         url = "gitsm://" + uris[module].replace(':', '/', 1)
+-                else: # Fall back to 'file' if there is no ':'
++                else:
++                    # This has to be a file reference
+                     proto = "file"
+                     url = "gitsm://" + uris[module]
 -            else:
--                # This is fatal, as we do NOT want git-submodule to hit the network
--                raise bb.fetch2.FetchError('Submodule %s does not exist in %s or %s.' % (module, srcpath, modpath))
+-                proto = uris[module].split(':', 1)[0]
+-                url = uris[module].replace('%s:' % proto, 'gitsm:', 1)
++                    if uris[module].startswith('..'):
++                        # Local on disk relative reference
++                        newud = copy.copy(ud)
++                        newud.path = os.path.realpath(os.path.join(newud.path, md['url']))
++                        url = "gitsm://" + Git._get_repo_url(self, newud)
+ 
+             url += ';protocol=%s' % proto
+             url += ";name=%s" % module
+-            url += ";bareclone=1;nocheckout=1;nobranch=1"
++            url += ";subpath=%s" % paths[module]
+ 
+             ld = d.createCopy()
+             # Not necessary to set SRC_URI, since we're passing the URI to
+             # Fetch.
+             #ld.setVar('SRC_URI', url)
+-            ld.setVar('SRCREV_%s' % module, module_hash)
++            ld.setVar('SRCREV_%s' % module, subrevision[module])
+ 
+             # Workaround for issues with SRCPV/SRCREV_FORMAT errors
+             # error refer to 'multiple' repositories.  Only the repository
+@@ -131,125 +142,58 @@ class GitSM(Git):
+             ld.setVar('SRCPV', d.getVar('SRCPV'))
+             ld.setVar('SRCREV_FORMAT', module)
+ 
+-            newfetch = Fetch([url], ld, cache=False)
+-            newfetch.download()
+-            local_paths[module] = newfetch.localpath(url)
++            function(ud, url, module, paths[module], ld)
+ 
+-            # Correct the submodule references to the local download version...
+-            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_paths[module]}, d, workdir=ud.clonedir)
 -
--    def clone_shallow_local(self, ud, dest, d):
--        super(GitSM, self).clone_shallow_local(ud, dest, d)
+-            symlink_path = os.path.join(ud.clonedir, 'modules', paths[module])
+-            if not os.path.exists(symlink_path):
+-                try:
+-                    os.makedirs(os.path.dirname(symlink_path), exist_ok=True)
+-                except OSError:
+-                    pass
+-                os.symlink(local_paths[module], symlink_path)
 -
--        # Copy over the submodules' fetched histories too.
--        repo_conf = os.path.join(dest, '.git')
+-        return True
++        return submodules != []
+ 
+     def download(self, ud, d):
+-        Git.download(self, ud, d)
+-        self.update_submodules(ud, d)
 -
+-    def unpack_submodules(self, repo_conf, ud, d):
 -        submodules = []
+-        paths = {}
+-        revision = {}
+-        uris = {}
+-        local_paths = {}
+-
 -        for name in ud.names:
 -            try:
--                gitmodules = runfetchcmd("%s show %s:.gitmodules" % (ud.basecmd, ud.revision), d, quiet=True, workdir=dest)
+-                gitmodules = runfetchcmd("%s show %s:.gitmodules" % (ud.basecmd, ud.revisions[name]), d, quiet=True, workdir=ud.destdir)
 -            except:
 -                # No submodules to update
 -                continue
 -
--            submodules = self.parse_gitmodules(gitmodules)
--            self.copy_submodules(submodules, ud, name, dest, d)
-+        self.update_submodules(ud, d)
+-            for m, md in self.parse_gitmodules(gitmodules).items():
+-                submodules.append(m)
+-                paths[m] = md['path']
+-                revision[m] = ud.revisions[name]
+-                uris[m] = md['url']
+-                if uris[m].startswith('..'):
+-                    newud = copy.copy(ud)
+-                    newud.path = os.path.realpath(os.path.join(newud.path, md['url']))
+-                    uris[m] = Git._get_repo_url(self, newud)
++        def download_submodule(ud, url, module, modpath, d):
++            url += ";bareclone=1;nobranch=1"
  
-     def unpack_submodules(self, repo_conf, ud, d):
-         submodules = []
-@@ -294,6 +233,9 @@ class GitSM(Git):
+-        modules_updated = False
++            # Is the following still needed?
++            #url += ";nocheckout=1"
+ 
+-        for module in submodules:
+             try:
+-                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, revision[module], paths[module]), d, quiet=True, workdir=ud.destdir)
+-            except:
+-                # If the command fails, we don't have a valid file to check.  If it doesn't
+-                # fail -- it still might be a failure, see next check...
+-                module_hash = ""
++                newfetch = Fetch([url], d, cache=False)
++                newfetch.download()
++            except Exception as e:
++                logger.error('gitsm: submodule download failed: %s %s' % (type(e).__name__, str(e)))
++                raise
+ 
+-            if not module_hash:
+-                logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", module)
+-                continue
+-
+-            modules_updated = True
++        Git.download(self, ud, d)
++        self.process_submodules(ud, ud.clonedir, download_submodule, d)
+ 
+-            module_hash = module_hash.split()[2]
++    def unpack(self, ud, destdir, d):
++        def unpack_submodules(ud, url, module, modpath, d):
++            url += ";bareclone=1;nobranch=1"
+ 
+-            # Build new SRC_URI
+-            if "://" not in uris[module]:
+-                # It's ssh if the format does NOT have "://", but has a ':'
+-                if ":" in uris[module]:
+-                    proto = "ssh"
+-                    if ":/" in uris[module]:
+-                        url = "gitsm://" + uris[module].replace(':/', '/', 1)
+-                    else:
+-                        url = "gitsm://" + uris[module].replace(':', '/', 1)
+-                else: # Fall back to 'file' if there is no ':'
+-                    proto = "file"
+-                    url = "gitsm://" + uris[module]
++            # Figure out where we clone over the bare submodules...
++            if ud.bareclone:
++                repo_conf = ud.destdir
+             else:
+-                proto = uris[module].split(':', 1)[0]
+-                url = uris[module].replace('%s:' % proto, 'gitsm:', 1)
+-
+-            url += ';protocol=%s' % proto
+-            url += ";name=%s" % module
+-            url += ";bareclone=1;nobranch=1;subpath=%s" % paths[module]
+-
+-            ld = d.createCopy()
+-            # Not necessary to set SRC_URI, since we're passing the URI to
+-            # Fetch.
+-            #ld.setVar('SRC_URI', url)
+-            ld.setVar('SRCREV_%s' % module, module_hash)
++                repo_conf = os.path.join(ud.destdir, '.git')
+ 
+-            # Workaround for issues with SRCPV/SRCREV_FORMAT errors
+-            # error refer to 'multiple' repositories.  Only the repository
+-            # in the original SRC_URI actually matters...
+-            ld.setVar('SRCPV', d.getVar('SRCPV'))
+-            ld.setVar('SRCREV_FORMAT', module)
++            try:
++                newfetch = Fetch([url], d, cache=False)
++                newfetch.unpack(root=os.path.join(repo_conf, 'modules'))
++            except Exception as e:
++                logger.error('gitsm: submodule unpack failed: %s %s' % (type(e).__name__, str(e)))
++                raise
+ 
+-            newfetch = Fetch([url], ld, cache=False)
+-            newfetch.unpack(root=os.path.join(repo_conf, 'modules'))
+-            local_paths[module] = newfetch.localpath(url)
++            newfetch = Fetch([url], d, cache=False)
++            local_path = newfetch.localpath(url)
+ 
              # Correct the submodule references to the local download version...
-             runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_paths[module]}, d, workdir=ud.destdir)
+-            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_paths[module]}, d, workdir=ud.destdir)
++            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_path}, d, workdir=ud.destdir)
  
-+            if ud.shallow:
-+                runfetchcmd("%(basecmd)s config submodule.%(module)s.shallow true" % {'basecmd': ud.basecmd, 'module': module}, d, workdir=ud.destdir)
-+
+             if ud.shallow:
+                 runfetchcmd("%(basecmd)s config submodule.%(module)s.shallow true" % {'basecmd': ud.basecmd, 'module': module}, d, workdir=ud.destdir)
+ 
              # Ensure the submodule repository is NOT set to bare, since we're checking it out...
-             runfetchcmd("%s config core.bare false" % (ud.basecmd), d, quiet=True, workdir=os.path.join(repo_conf, 'modules', paths[module]))
+-            runfetchcmd("%s config core.bare false" % (ud.basecmd), d, quiet=True, workdir=os.path.join(repo_conf, 'modules', paths[module]))
+-
+-        return modules_updated
++            runfetchcmd("%s config core.bare false" % (ud.basecmd), d, quiet=True, workdir=os.path.join(repo_conf, 'modules', modpath))
  
+-    def unpack(self, ud, destdir, d):
+         Git.unpack(self, ud, destdir, d)
+ 
+-        # Copy over the submodules' fetched histories too.
+-        if ud.bareclone:
+-            repo_conf = ud.destdir
+-        else:
+-            repo_conf = os.path.join(ud.destdir, '.git')
+-
+-        if self.unpack_submodules(repo_conf, ud, d):
++        if not ud.bareclone and self.process_submodules(ud, ud.destdir, unpack_submodules, d):
+             # Run submodule update, this sets up the directories -- without touching the config
+             runfetchcmd("%s submodule update --recursive --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 311c701..5fb5d04 100644
+index 5fb5d04..1497a3c 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -1316,6 +1316,7 @@ class GitShallowTest(FetcherTest):
-         # fetch and unpack, from the shallow tarball
-         bb.utils.remove(self.gitdir, recurse=True)
-         bb.utils.remove(ud.clonedir, recurse=True)
-+        bb.utils.remove(ud.clonedir.replace('gitsource', 'gitsubmodule'), recurse=True)
+@@ -894,15 +894,23 @@ class FetcherNetworkTest(FetcherTest):
+     @skipIfNoNetwork()
+     def test_git_submodule(self):
+         # URL with ssh submodules
+-        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=ssh-gitsm-tests;rev=0d3ffc14bce95e8b3a21a0a67bfe4c4a96ba6350"
++        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=ssh-gitsm-tests;rev=f53765f515e0eeca569ed385bb1c89ce008bb058"
+         # Original URL (comment this if you have ssh access to git.yoctoproject.org)
+-        url = "gitsm://git.yoctoproject.org/git-submodule-test;rev=f12e57f2edf0aa534cf1616fa983d165a92b0842"
++        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=132fea6e4dee56b61bcf5721c94e8b2445c6a017"
+         fetcher = bb.fetch.Fetch([url], self.d)
+         fetcher.download()
+         # Previous cwd has been deleted
+         os.chdir(os.path.dirname(self.unpackdir))
+         fetcher.unpack(self.unpackdir)
  
-         # confirm that the unpacked repo is used when no git clone or git
-         # mirror tarball is available
-@@ -1470,6 +1471,7 @@ class GitShallowTest(FetcherTest):
-         self.git('config --add remote.origin.url "%s"' % smdir, cwd=smdir)
-         self.git('config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"', cwd=smdir)
-         self.add_empty_file('asub', cwd=smdir)
-+        self.add_empty_file('bsub', cwd=smdir)
- 
-         self.git('submodule init', cwd=self.srcdir)
-         self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
-@@ -1479,10 +1481,16 @@ class GitShallowTest(FetcherTest):
-         uri = 'gitsm://%s;protocol=file;subdir=${S}' % self.srcdir
-         fetcher, ud = self.fetch_shallow(uri)
- 
-+        # Verify the main repository is shallow
-         self.assertRevCount(1)
--        assert './.git/modules/' in bb.process.run('tar -tzf %s' % os.path.join(self.dldir, ud.mirrortarballs[0]))[0]
++        repo_path = os.path.join(self.tempdir, 'unpacked', 'git')
++        self.assertTrue(os.path.exists(repo_path), msg='Unpacked repository missing')
++        self.assertTrue(os.path.exists(os.path.join(repo_path, 'bitbake')), msg='bitbake submodule missing')
++        self.assertFalse(os.path.exists(os.path.join(repo_path, 'na')), msg='uninitialized submodule present')
 +
-+        # Verify the gitsubmodule directory is present
-         assert os.listdir(os.path.join(self.gitdir, 'gitsubmodule'))
++        # Only when we're running the extended test with a submodule's submodule, can we check this.
++        if os.path.exists(os.path.join(repo_path, 'bitbake-gitsm-test1')):
++            self.assertTrue(os.path.exists(os.path.join(repo_path, 'bitbake-gitsm-test1', 'bitbake')), msg='submodule of submodule missing')
  
-+        # Verify the submodule is also shallow
-+        self.assertRevCount(1, cwd=os.path.join(self.gitdir, 'gitsubmodule'))
-+
-+
-     if any(os.path.exists(os.path.join(p, 'git-annex')) for p in os.environ.get('PATH').split(':')):
-         def test_shallow_annex(self):
-             self.add_empty_file('a')
+ class TrustedNetworksTest(FetcherTest):
+     def test_trusted_network(self):
 -- 
 1.8.3.1
 
