@@ -1,23 +1,25 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 1B4C27C1AB
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 3E77D7C1B5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 16 Jan 2019 06:12:22 +0000 (UTC)
+	Wed, 16 Jan 2019 06:12:46 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x0G6CO3A000645
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x0G6Cld3013687
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 15 Jan 2019 22:12:24 -0800 (PST)
+	Tue, 15 Jan 2019 22:12:47 -0800 (PST)
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.408.0; Tue, 15 Jan 2019 22:12:24 -0800
+	14.3.408.0; Tue, 15 Jan 2019 22:12:46 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 16 Jan 2019 14:30:40 +0800
-Message-ID: <cover.1547620210.git.liezhi.yang@windriver.com>
+Date: Wed, 16 Jan 2019 14:30:42 +0800
+Message-ID: <f556525b04a48e761636dac6f53f4d62ab93fb47.1547620210.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1547620210.git.liezhi.yang@windriver.com>
+References: <cover.1547620210.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 0/2] bb: siggen: 2 fixes
+Subject: [PATCH 2/2] bb: siggen: Print more info when basehash are mis-matched
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,26 +32,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 16 Jan 2019 06:12:23 -0000
+X-List-Received-Date: Wed, 16 Jan 2019 06:12:46 -0000
 Content-Type: text/plain
 
-The following changes since commit 1ee53881eea3a7ca4d4f6a5ca9c4c6e6488d2348:
+This is useful for debugging.
 
-  perl: fix yet another race failure (2019-01-14 17:38:24 +0000)
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bitbake/lib/bb/siggen.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-are available in the git repository at:
-
-  git://git.pokylinux.org/poky-contrib rbt/siggen
-  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/siggen
-
-Robert Yang (2):
-  bb: siggen: Add a prefix for uuid4
-  bb: siggen: Print more info when basehash are mis-matched
-
- bitbake/lib/bb/build.py  | 2 +-
- bitbake/lib/bb/siggen.py | 8 +++++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index a0ca7e1..2d3e4e6 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -119,6 +119,12 @@ class SignatureGeneratorBasic(SignatureGenerator):
+             k = fn + "." + task
+             if not ignore_mismatch and k in self.basehash and self.basehash[k] != basehash[k]:
+                 bb.error("When reparsing %s, the basehash value changed from %s to %s. The metadata is not deterministic and this needs to be fixed." % (k, self.basehash[k], basehash[k]))
++                bb.error("The following commands may help:")
++                cmd = "$ bitbake %s -c%s" % (d.getVar('PN'), task)
++                # Make sure sigdata is dumped before run printdiff
++                bb.error("%s -Snone" % cmd)
++                bb.error("Then:")
++                bb.error("%s -Sprintdiff\n" % cmd)
+             self.basehash[k] = basehash[k]
+ 
+         self.taskdeps[fn] = taskdeps
 -- 
 2.7.4
 
