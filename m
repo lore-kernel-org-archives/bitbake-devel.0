@@ -1,23 +1,23 @@
 Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id CACF579ED5
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id BB56C60273
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Jan 2019 21:21:18 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x0ILKbgJ003364
+	Fri, 18 Jan 2019 23:06:27 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x0IN6RwK013778
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Fri, 18 Jan 2019 13:20:53 -0800
+	Fri, 18 Jan 2019 15:06:27 -0800 (PST)
 Received: from soho-mhatle-m.netgear.com (147.11.118.204) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.408.0; Fri, 18 Jan 2019 13:20:45 -0800
+	14.3.408.0; Fri, 18 Jan 2019 15:06:27 -0800
+From: Mark Hatle <mark.hatle@windriver.com>
 To: Khem Raj <raj.khem@gmail.com>
 References: <20190115213137.113956-1-mark.hatle@windriver.com>
 	<20190115213137.113956-2-mark.hatle@windriver.com>
 	<CAMKF1srg335yq2xUtiLxvGkXMQPsTga-4UepQzFD0dem3RTrKw@mail.gmail.com>
 	<ee28ea34-ed07-47a7-60d2-fdee3473b499@windriver.com>
 	<CAMKF1spW09mU-D4U0DwypHxwwEc5NUb1hAA=o-cZi8kpYd+BVA@mail.gmail.com>
-From: Mark Hatle <mark.hatle@windriver.com>
+	<f3e3d42a-8bfc-f80d-eb84-0965a6c06bd3@windriver.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
 	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
@@ -43,12 +43,12 @@ Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
 	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
 	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
 Organization: Wind River Systems
-Message-ID: <f3e3d42a-8bfc-f80d-eb84-0965a6c06bd3@windriver.com>
-Date: Fri, 18 Jan 2019 15:20:44 -0600
+Message-ID: <3415ddb2-926a-24b3-94ad-beb58febdefa@windriver.com>
+Date: Fri, 18 Jan 2019 17:06:25 -0600
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
 	Gecko/20100101 Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <CAMKF1spW09mU-D4U0DwypHxwwEc5NUb1hAA=o-cZi8kpYd+BVA@mail.gmail.com>
+In-Reply-To: <f3e3d42a-8bfc-f80d-eb84-0965a6c06bd3@windriver.com>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH 1/7] gitsm.py: Fix when a submodule is defined, but not initialized
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -63,159 +63,173 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Jan 2019 21:21:18 -0000
+X-List-Received-Date: Fri, 18 Jan 2019 23:06:27 -0000
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/18/19 12:31 PM, Khem Raj wrote:
-> On Fri, Jan 18, 2019 at 10:08 AM Mark Hatle <mark.hatle@windriver.com> wrote:
->>
->> On 1/18/19 9:07 AM, Khem Raj wrote:
->>>  I am seeing
->>>
->>> http://errors.yoctoproject.org/Errors/Details/217408/
->>> http://errors.yoctoproject.org/Errors/Details/217412/
->>
->> Do you know where these failing recipes are so that I can reproduce it locally?
->>
->> rwmem looks like it might be meta-ti?
->> cli11 looks like something from meta-oe.
->>
-> 
-> yes thats right.
-> http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-support/cli11/cli11_1.6.2.bb?h=master
-> 
-> gitsm version of rwmem is not yes applied in meta-ti so you might have
-> to get it from my staging branch
-> 
-> https://github.com/YoeDistro/meta-ti/commit/3418beda1869882d5f94dc405d2727f09ffe20c4
+I think I have a fix for this.  Can you try the bitbake available from:
 
-The reproducer appears to be that these repositories are 'git' based, but use
-relative submodule locations from the main repository.
+git://git.openembedded.org/bitbake-contrib
 
-So now the gitsm code needs to resolve relative URLs, which is something not
-previously implemented.
+branch mgh/gitsm
+
+The commit that resolves this issue is:
+
+0a7d8bd99a5ba394b00ed35593101b4cd324a58d
 
 --Mark
 
->> --Mark
+On 1/18/19 3:20 PM, Mark Hatle wrote:
+> On 1/18/19 12:31 PM, Khem Raj wrote:
+>> On Fri, Jan 18, 2019 at 10:08 AM Mark Hatle <mark.hatle@windriver.com> wrote:
+>>>
+>>> On 1/18/19 9:07 AM, Khem Raj wrote:
+>>>>  I am seeing
+>>>>
+>>>> http://errors.yoctoproject.org/Errors/Details/217408/
+>>>> http://errors.yoctoproject.org/Errors/Details/217412/
+>>>
+>>> Do you know where these failing recipes are so that I can reproduce it locally?
+>>>
+>>> rwmem looks like it might be meta-ti?
+>>> cli11 looks like something from meta-oe.
+>>>
 >>
->>> On Tue, Jan 15, 2019 at 1:33 PM Mark Hatle <mark.hatle@windriver.com> wrote:
->>>>
->>>> It is possible for a submodule to be defined in the .gitmodules file, but
->>>> never initialized in the repository itself.  This shows itself when searching
->>>> for the defined module hash you will get back a empty value.
->>>>
->>>> Similarly we need to identify and skip defined but not initialized submodules
->>>> during the unpack stages as well.
->>>>
->>>> Thanks to raphael.lisicki@siemens.com for their help is figuring out how
->>>> to resolve this issue.
->>>>
->>>> Additionally a problem was found where, while unlikely, it may be possible
->>>> for the wrong revision to have been searched using ls-tree.  This has been
->>>> resolved in the update_submodules function by keeping the correct revision
->>>> along with the submodule path.
->>>>
->>>> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
->>>> ---
->>>>  lib/bb/fetch2/gitsm.py | 32 ++++++++++++++++++++++++++++----
->>>>  1 file changed, 28 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
->>>> index 35729db..b7959ff 100644
->>>> --- a/lib/bb/fetch2/gitsm.py
->>>> +++ b/lib/bb/fetch2/gitsm.py
->>>> @@ -64,6 +64,7 @@ class GitSM(Git):
->>>>      def update_submodules(self, ud, d):
->>>>          submodules = []
->>>>          paths = {}
->>>> +        revision = {}
->>>>          uris = {}
->>>>          local_paths = {}
->>>>
->>>> @@ -77,6 +78,7 @@ class GitSM(Git):
->>>>              for m, md in self.parse_gitmodules(gitmodules).items():
->>>>                  submodules.append(m)
->>>>                  paths[m] = md['path']
->>>> +                revision[m] = ud.revisions[name]
->>>>                  uris[m] = md['url']
->>>>                  if uris[m].startswith('..'):
->>>>                      newud = copy.copy(ud)
->>>> @@ -84,7 +86,17 @@ class GitSM(Git):
->>>>                      uris[m] = Git._get_repo_url(self, newud)
->>>>
->>>>          for module in submodules:
->>>> -            module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], paths[module]), d, quiet=True, workdir=ud.clonedir)
->>>> +            try:
->>>> +                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, revision[module], paths[module]), d, quiet=True, workdir=ud.clonedir)
->>>> +            except:
->>>> +                # If the command fails, we don't have a valid file to check.  If it doesn't
->>>> +                # fail -- it still might be a failure, see next check...
->>>> +                module_hash = ""
->>>> +
->>>> +            if not module_hash:
->>>> +                logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", module)
->>>> +                continue
->>>> +
->>>>              module_hash = module_hash.split()[2]
->>>>
->>>>              # Build new SRC_URI
->>>> @@ -143,7 +155,7 @@ class GitSM(Git):
->>>>          if not ud.shallow or ud.localpath != ud.fullshallow:
->>>>              self.update_submodules(ud, d)
->>>>
->>>> -    def copy_submodules(self, submodules, ud, destdir, d):
->>>> +    def copy_submodules(self, submodules, ud, name, destdir, d):
->>>>          if ud.bareclone:
->>>>              repo_conf = destdir
->>>>          else:
->>>> @@ -156,6 +168,18 @@ class GitSM(Git):
->>>>              srcpath = os.path.join(ud.clonedir, 'modules', md['path'])
->>>>              modpath = os.path.join(repo_conf, 'modules', md['path'])
->>>>
->>>> +            # Check if the module is initialized
->>>> +            try:
->>>> +                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], md['path']), d, quiet=True, workdir=ud.clonedir)
->>>> +            except:
->>>> +                # If the command fails, we don't have a valid file to check.  If it doesn't
->>>> +                # fail -- it still might be a failure, see next check...
->>>> +                module_hash = ""
->>>> +
->>>> +            if not module_hash:
->>>> +                logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", module)
->>>> +                continue
->>>> +
->>>>              if os.path.exists(srcpath):
->>>>                  if os.path.exists(os.path.join(srcpath, '.git')):
->>>>                      srcpath = os.path.join(srcpath, '.git')
->>>> @@ -188,7 +212,7 @@ class GitSM(Git):
->>>>                  continue
->>>>
->>>>              submodules = self.parse_gitmodules(gitmodules)
->>>> -            self.copy_submodules(submodules, ud, dest, d)
->>>> +            self.copy_submodules(submodules, ud, name, dest, d)
->>>>
->>>>      def unpack(self, ud, destdir, d):
->>>>          Git.unpack(self, ud, destdir, d)
->>>> @@ -211,7 +235,7 @@ class GitSM(Git):
->>>>                  continue
->>>>
->>>>              submodules = self.parse_gitmodules(gitmodules)
->>>> -            self.copy_submodules(submodules, ud, ud.destdir, d)
->>>> +            self.copy_submodules(submodules, ud, name, ud.destdir, d)
->>>>
->>>>              submodules_queue = [(module, os.path.join(repo_conf, 'modules', md['path'])) for module, md in submodules.items()]
->>>>              while len(submodules_queue) != 0:
->>>> --
->>>> 1.8.3.1
->>>>
->>>> --
->>>> _______________________________________________
->>>> bitbake-devel mailing list
->>>> bitbake-devel@lists.openembedded.org
->>>> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>> yes thats right.
+>> http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-support/cli11/cli11_1.6.2.bb?h=master
 >>
+>> gitsm version of rwmem is not yes applied in meta-ti so you might have
+>> to get it from my staging branch
+>>
+>> https://github.com/YoeDistro/meta-ti/commit/3418beda1869882d5f94dc405d2727f09ffe20c4
+> 
+> The reproducer appears to be that these repositories are 'git' based, but use
+> relative submodule locations from the main repository.
+> 
+> So now the gitsm code needs to resolve relative URLs, which is something not
+> previously implemented.
+> 
+> --Mark
+> 
+>>> --Mark
+>>>
+>>>> On Tue, Jan 15, 2019 at 1:33 PM Mark Hatle <mark.hatle@windriver.com> wrote:
+>>>>>
+>>>>> It is possible for a submodule to be defined in the .gitmodules file, but
+>>>>> never initialized in the repository itself.  This shows itself when searching
+>>>>> for the defined module hash you will get back a empty value.
+>>>>>
+>>>>> Similarly we need to identify and skip defined but not initialized submodules
+>>>>> during the unpack stages as well.
+>>>>>
+>>>>> Thanks to raphael.lisicki@siemens.com for their help is figuring out how
+>>>>> to resolve this issue.
+>>>>>
+>>>>> Additionally a problem was found where, while unlikely, it may be possible
+>>>>> for the wrong revision to have been searched using ls-tree.  This has been
+>>>>> resolved in the update_submodules function by keeping the correct revision
+>>>>> along with the submodule path.
+>>>>>
+>>>>> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+>>>>> ---
+>>>>>  lib/bb/fetch2/gitsm.py | 32 ++++++++++++++++++++++++++++----
+>>>>>  1 file changed, 28 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+>>>>> index 35729db..b7959ff 100644
+>>>>> --- a/lib/bb/fetch2/gitsm.py
+>>>>> +++ b/lib/bb/fetch2/gitsm.py
+>>>>> @@ -64,6 +64,7 @@ class GitSM(Git):
+>>>>>      def update_submodules(self, ud, d):
+>>>>>          submodules = []
+>>>>>          paths = {}
+>>>>> +        revision = {}
+>>>>>          uris = {}
+>>>>>          local_paths = {}
+>>>>>
+>>>>> @@ -77,6 +78,7 @@ class GitSM(Git):
+>>>>>              for m, md in self.parse_gitmodules(gitmodules).items():
+>>>>>                  submodules.append(m)
+>>>>>                  paths[m] = md['path']
+>>>>> +                revision[m] = ud.revisions[name]
+>>>>>                  uris[m] = md['url']
+>>>>>                  if uris[m].startswith('..'):
+>>>>>                      newud = copy.copy(ud)
+>>>>> @@ -84,7 +86,17 @@ class GitSM(Git):
+>>>>>                      uris[m] = Git._get_repo_url(self, newud)
+>>>>>
+>>>>>          for module in submodules:
+>>>>> -            module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], paths[module]), d, quiet=True, workdir=ud.clonedir)
+>>>>> +            try:
+>>>>> +                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, revision[module], paths[module]), d, quiet=True, workdir=ud.clonedir)
+>>>>> +            except:
+>>>>> +                # If the command fails, we don't have a valid file to check.  If it doesn't
+>>>>> +                # fail -- it still might be a failure, see next check...
+>>>>> +                module_hash = ""
+>>>>> +
+>>>>> +            if not module_hash:
+>>>>> +                logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", module)
+>>>>> +                continue
+>>>>> +
+>>>>>              module_hash = module_hash.split()[2]
+>>>>>
+>>>>>              # Build new SRC_URI
+>>>>> @@ -143,7 +155,7 @@ class GitSM(Git):
+>>>>>          if not ud.shallow or ud.localpath != ud.fullshallow:
+>>>>>              self.update_submodules(ud, d)
+>>>>>
+>>>>> -    def copy_submodules(self, submodules, ud, destdir, d):
+>>>>> +    def copy_submodules(self, submodules, ud, name, destdir, d):
+>>>>>          if ud.bareclone:
+>>>>>              repo_conf = destdir
+>>>>>          else:
+>>>>> @@ -156,6 +168,18 @@ class GitSM(Git):
+>>>>>              srcpath = os.path.join(ud.clonedir, 'modules', md['path'])
+>>>>>              modpath = os.path.join(repo_conf, 'modules', md['path'])
+>>>>>
+>>>>> +            # Check if the module is initialized
+>>>>> +            try:
+>>>>> +                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], md['path']), d, quiet=True, workdir=ud.clonedir)
+>>>>> +            except:
+>>>>> +                # If the command fails, we don't have a valid file to check.  If it doesn't
+>>>>> +                # fail -- it still might be a failure, see next check...
+>>>>> +                module_hash = ""
+>>>>> +
+>>>>> +            if not module_hash:
+>>>>> +                logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", module)
+>>>>> +                continue
+>>>>> +
+>>>>>              if os.path.exists(srcpath):
+>>>>>                  if os.path.exists(os.path.join(srcpath, '.git')):
+>>>>>                      srcpath = os.path.join(srcpath, '.git')
+>>>>> @@ -188,7 +212,7 @@ class GitSM(Git):
+>>>>>                  continue
+>>>>>
+>>>>>              submodules = self.parse_gitmodules(gitmodules)
+>>>>> -            self.copy_submodules(submodules, ud, dest, d)
+>>>>> +            self.copy_submodules(submodules, ud, name, dest, d)
+>>>>>
+>>>>>      def unpack(self, ud, destdir, d):
+>>>>>          Git.unpack(self, ud, destdir, d)
+>>>>> @@ -211,7 +235,7 @@ class GitSM(Git):
+>>>>>                  continue
+>>>>>
+>>>>>              submodules = self.parse_gitmodules(gitmodules)
+>>>>> -            self.copy_submodules(submodules, ud, ud.destdir, d)
+>>>>> +            self.copy_submodules(submodules, ud, name, ud.destdir, d)
+>>>>>
+>>>>>              submodules_queue = [(module, os.path.join(repo_conf, 'modules', md['path'])) for module, md in submodules.items()]
+>>>>>              while len(submodules_queue) != 0:
+>>>>> --
+>>>>> 1.8.3.1
+>>>>>
+>>>>> --
+>>>>> _______________________________________________
+>>>>> bitbake-devel mailing list
+>>>>> bitbake-devel@lists.openembedded.org
+>>>>> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>>>
+> 
 
 
