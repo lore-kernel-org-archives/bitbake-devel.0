@@ -1,54 +1,46 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 368997C275
+Received: from mail-oi1-f193.google.com (mail-oi1-f193.google.com
+	[209.85.167.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 858317C26B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Jan 2019 16:46:06 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id z5so15805190wrt.11
+	Fri, 18 Jan 2019 16:47:37 +0000 (UTC)
+Received: by mail-oi1-f193.google.com with SMTP id t204so9437362oie.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Jan 2019 08:46:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:in-reply-to:references;
-	bh=jjYvSYqufWqbIMEEYq79c3H43v8l4mhlk8fqy8GLx7s=;
-	b=Wqwp8UY0vk5oib4WvXx1W7bMXIQhMZNYHi6LJOnviE77nEu3r7SkgqRcCCSSWl6Me/
-	BMnyi+dwrANeK8EDeUayC/anAAJK1CpZ0upT2yI+0Qe6CeFM9ep7cGTaXfne6yBN6QIP
-	/CXBV9+21kP/fcrj9F7vzNPfnUJIQWd1wVoaeLx3fg/gf1rkfsGjGbzqFwsbKo8PCl/J
-	FIZELaaWF9piMkuk2JGe+olJQMiwNdf6epEG8kIhPotOTn/bo0Sfv6+SEqMtPdnBtsyv
-	L9KbLStaPDqUx9P29s3wnLaJFqPF4CsMHcxe7l3ms8MhVJv9+h0ocb3PSOPXg0fOgeU9
-	VIKA==
+	Fri, 18 Jan 2019 08:47:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=mentor-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to; 
+	bh=lu+bFBkxLrYFk6p4HssHzSEvKKLQGq5gYn5tV8Cdc0U=;
+	b=MRaB8Mh9GcP5hUBEugpSTiLB0AiPJtXYGjNqxK+bO9smKCUhQzGOy+2VQTyOURB6yk
+	FeQk85WLonrN7ZhxS0+CVti7unJDMRH1eReGgoH/ioe1674KW6pHQM1Nzgh5LXkJADUj
+	8SvV/PTN7Tio4b8Dqh4f4x3GdJVRBff2PzXHTeK5wkOKnN0Uc8zOSCDv5xAUNSYgJKth
+	pqXpUY5xrvGXC9TCv26eWHnDOItiFzJilqxr3XmjrLkv4eV1EjYg5MdU3sUlWGz8tN8b
+	EAzuVB3cIcR9GubM/kyiF/r7isv+EQ5k3N4p4rr6xzFBdR+vNZkk+1gb75qs8KLU3iwH
+	MNeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=jjYvSYqufWqbIMEEYq79c3H43v8l4mhlk8fqy8GLx7s=;
-	b=LTpozu7BOOUFCi3T9y5Ps8fayaozm5ju9cvJiREEsJMJ9LCm6uScvKeUbN2NZBTYYD
-	GHPl4FRDpBKtSYI95khm9UDSKlQme41ReZ6Jsm7FEv4hKKDTXan1H5yJC2lTJ1Fe0EMM
-	qhQWfNjr0suYDZHRPSeA7cEOfJzfyeOtRqHQfFybXC7izRayAlw16pfeX+9qESa+Nc3V
-	IhQqEVCclD06ksyVI3LofV0F9zJNTGG6XxY7uFPaZ9mXZ/0PtukORZ9wZ8D/kSlVMSER
-	AsnnTuutLUmwdqkQChUiUPok7HYwHbxdzP+J26yYiY9vOFqMu3e8C6Yg/Mmv3Z03OicA
-	vAZA==
-X-Gm-Message-State: AJcUukdk0VNaenfOFKlMjOaZoS4zp0fQqGd+fgT6TDCmVVf4PvGfV42G
-	5L+tiW8BmG1toxWqZHDIzWbqd4UD
-X-Google-Smtp-Source: ALg8bN4lFHA0OZewhkrcwpwXwQbmmDViiuWFh8rNL7+bSwdRqDSWaCMJmGXeEn8KEHBoCYIvGDz+IQ==
-X-Received: by 2002:a5d:494a:: with SMTP id r10mr17831742wrs.272.1547829966695;
-	Fri, 18 Jan 2019 08:46:06 -0800 (PST)
-Received: from svr-pkl-eng-07.mgc.mentorg.com ([110.93.212.98])
-	by smtp.gmail.com with ESMTPSA id
-	b7sm78523175wrs.47.2019.01.18.08.46.04
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 18 Jan 2019 08:46:05 -0800 (PST)
-From: Christopher Larson <kergoth@gmail.com>
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to;
+	bh=lu+bFBkxLrYFk6p4HssHzSEvKKLQGq5gYn5tV8Cdc0U=;
+	b=KjdyDFvI7XRkg2s6JkR154uum4sCtKheKOILRgpv9NGUrue5HtfaflxVJ6IdV9uJQH
+	JYqjZ7bdM/O9H4NTkddXNxpPeTfcN1SV9giOU5W3vGygK1YZUqHJOML/s/CuHF6BIVwJ
+	f+r+/wGFo/Y5Kc95MuY8atTxGha5Q3LmdlpWdT0FF5M7zyCneYX3ZD0Ee8exOUE/ohmJ
+	jzxdPLktYVEOhpmzlmG9iSPpZl84TKs16p98Z96mzZcSUXyCw69JaH68HDxwjj6teZJs
+	0ZeqO7kJS0DM+PYUsg+pHlR93hhPx5UDbvey7RM2lPz3Ij5Zn9r4bxnSvT7RNsaBpPyJ
+	ylqA==
+X-Gm-Message-State: AJcUukdpISJYIKi0k9rlvq2YXEUzIrAG8zzINIITrFa7sY9s18CXaeKC
+	x7xuhvW+8ay5ldlwImoEliegVLCbvzKgFvAhBFdHOv9P
+X-Google-Smtp-Source: ALg8bN6YmGUb8n14GBbqUPmW8pd1Nj0FB2Cxboa50o6UFXEgdZTLjmZFYJ3rlg0wGYdSctgY/JuNcHICU05gUpS8N5g=
+X-Received: by 2002:aca:d09:: with SMTP id 9mr498111oin.19.1547830058007; Fri,
+	18 Jan 2019 08:47:38 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1547829050.git.chris_larson@mentor.com>
+In-Reply-To: <cover.1547829050.git.chris_larson@mentor.com>
+From: Christopher Larson <chris_larson@mentor.com>
+Date: Fri, 18 Jan 2019 09:47:26 -0700
+Message-ID: <CABcZAN=X_fjajrhBoo7VBhdyvn1qrAmnHUrzWtgP3Vs07hRgCg@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 18 Jan 2019 21:45:55 +0500
-Message-Id: <9cb64e9781c98f1aaa42571af54655eaf6816583.1547829050.git.chris_larson@mentor.com>
-X-Mailer: git-send-email 2.11.1
-In-Reply-To: <cover.1547829050.git.chris_larson@mentor.com>
-References: <cover.1547829050.git.chris_larson@mentor.com>
-In-Reply-To: <cover.1547829050.git.chris_larson@mentor.com>
-References: <cover.1547829050.git.chris_larson@mentor.com>
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH 2/2] bb.tests.codeparser: add parameter expansion modifiers test
+Subject: Re: [PATCH 0/2] Only try to expand refs to valid variable names
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,40 +53,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Jan 2019 16:46:06 -0000
+X-List-Received-Date: Fri, 18 Jan 2019 16:47:37 -0000
+Content-Type: multipart/alternative; boundary="000000000000c7be5e057fbe44ce"
 
-From: Christopher Larson <chris_larson@mentor.com>
+--000000000000c7be5e057fbe44ce
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We don't want references including shell parameter expansion modifiers
-(i.e. `:-`, `#`, `%%`, etc) to be added to our vardeps, so add a test to
-ensure this.
+On Fri, Jan 18, 2019 at 9:46 AM Christopher Larson <kergoth@gmail.com>
+wrote:
 
-YOCTO #12987
+> From: Christopher Larson <chris_larson@mentor.com>
+>
+> This aligns the behavior of expansion with the recipe parser, only
+> attempting to expand references to valid variable names. This avoids
+> adding references for things like `${foo#${TOPDIR}}` to our vardeps
+> without imposing much additional processing overhead beyond the change
+> to the expansion regexp.
+>
+> YOCTO #12987
+>
 
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>
----
- lib/bb/tests/codeparser.py | 7 +++++++
- 1 file changed, 7 insertions(+)
+There=E2=80=99s no statistically significant performance impact to bitbake =
+-p,
+bitbake-selftest, or my test image builds, only typical run-to-run
+variation.
+--=20
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
 
-diff --git a/lib/bb/tests/codeparser.py b/lib/bb/tests/codeparser.py
-index e30e78c1..3fd76a8f 100644
---- a/lib/bb/tests/codeparser.py
-+++ b/lib/bb/tests/codeparser.py
-@@ -123,6 +123,13 @@ ${D}${libdir}/pkgconfig/*.pc
-         self.parseExpression("sed -i -e 's:IP{:I${:g' $pc")
-         self.assertExecs(set(["sed"]))
- 
-+    def test_parameter_expansion_modifiers(self):
-+        # - and + are also valid modifiers for parameter expansion, but are
-+        # valid characters in bitbake variable names, so are not included here
-+        for i in ('=', ':-', ':=', '?', ':?', ':+', '#', '%', '##', '%%'):
-+            name = "foo%sbar" % i
-+            self.parseExpression("${%s}" % name)
-+            self.assertNotIn(name, self.references)
- 
-     def test_until(self):
-         self.parseExpression("until false; do echo true; done")
--- 
-2.17.1
+--000000000000c7be5e057fbe44ce
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div dir=3D"ltr">On Fri, Jan 18, 2019 at 9:46 AM Christoph=
+er Larson &lt;<a href=3D"mailto:kergoth@gmail.com">kergoth@gmail.com</a>&gt=
+; wrote:<br></div><div class=3D"gmail_quote"><blockquote class=3D"gmail_quo=
+te" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-sty=
+le:solid;border-left-color:rgb(204,204,204);padding-left:1ex">From: Christo=
+pher Larson &lt;<a href=3D"mailto:chris_larson@mentor.com" target=3D"_blank=
+">chris_larson@mentor.com</a>&gt;<br>
+<br>
+This aligns the behavior of expansion with the recipe parser, only<br>
+attempting to expand references to valid variable names. This avoids<br>
+adding references for things like `${foo#${TOPDIR}}` to our vardeps<br>
+without imposing much additional processing overhead beyond the change<br>
+to the expansion regexp.<br>
+<br>
+YOCTO #12987<br></blockquote><div><br></div><div>There=E2=80=99s no statist=
+ically significant performance impact to bitbake -p, bitbake-selftest, or m=
+y test image builds, only typical run-to-run variation.</div></div>-- <br><=
+div dir=3D"ltr" class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D=
+"ltr"><div><div dir=3D"ltr"><div>Christopher Larson<br>kergoth at gmail dot=
+ com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior Software Engi=
+neer, Mentor Graphics</div></div></div></div></div></div></div></div>
 
+--000000000000c7be5e057fbe44ce--
