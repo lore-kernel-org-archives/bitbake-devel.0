@@ -1,17 +1,39 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 1337E6C463
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com
+	[209.85.222.194])
+	by mail.openembedded.org (Postfix) with ESMTP id ED0886093F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jan 2019 20:43:58 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x0MKhN91014722
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 22 Jan 2019 12:43:33 -0800
-Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.408.0;
-	Tue, 22 Jan 2019 12:43:12 -0800
-To: Khem Raj <raj.khem@gmail.com>
+	Wed, 23 Jan 2019 03:36:53 +0000 (UTC)
+Received: by mail-qk1-f194.google.com with SMTP id z18so407781qkj.10
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 22 Jan 2019 19:36:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc:content-transfer-encoding;
+	bh=yOeY/RqCw2qa4ukR4lshnhUfw78jjlR3HVCFyBzH9ko=;
+	b=BQKjRTSyDpsVyHDxKXw9qrK1UIqFFgwifkt52yGNNymLLPqy07mCLeOuPjmg8VDCt5
+	nfRRjoGCR8Hnb9Hh1lhyRbeiwW80hRX6OgMjxIfz7htCAS1l9gDPPd59FGeLfJPnXA9r
+	kw7D7q5B7o2OemEQWonKVzDXXWIezPJh14zk0XFwJh3k3nSWMW93+/rlssUWqAa0r63Q
+	8XLXrhKAXVqGzPprqFl/1i7ZZDmkqKd6wZibUv0MnyIKoiKk/hCCpafdxLxBmOYaBJL/
+	0ZiPFJ6XfAfOH9OwcUZiUMfn07JnwWX97+ne1K3aTctALJPL9gs895H3L/Ch838qbnRI
+	DuSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc:content-transfer-encoding;
+	bh=yOeY/RqCw2qa4ukR4lshnhUfw78jjlR3HVCFyBzH9ko=;
+	b=KWg+9va3Y69mDksmcPIKQucwKJzS5H+nINV/HaRw9Kp1k074/Bx74xMnHCO94/cZKF
+	Krj2on+kjG8HklIlXXy7ZixSy3yCwL3+65V0TivwoSfrW7pOmQBLrKkl1cqCT1wLmrCF
+	XU+MIxjZULRbTFeKjNre7ibtfnTmesmhobHoJXw6OimzFL9bgTldN7QY2SPqQ62jkMDk
+	+isrOyWWHkvwGGnIdkCv7IFafXGziCOZ9fFFIWbPkwGZ500ven13h5czfnDPmQUwgfAM
+	h3RW5s4hJiYY+DGlmAmMgCIriWoiTl2nXt8kZYYSUoGiOz50Wt6cSgZostMX1eVD9lB6
+	0gEA==
+X-Gm-Message-State: AJcUukeNXGeY44mQJtxH9LtGa/XFlAAfOdSL0DOuPDiEHyZzaaFI67l2
+	UYHYTKuBNI0ty66ZmSyu5iXjMqU1x9ONrl7GYAtWrCob
+X-Google-Smtp-Source: ALg8bN76zU+j36OX78IH2tsM7e3JE9AmvVexpQahxOknAtvxH+LaUJW1LgFHPu6JsUtvKFQo9dhpnJSUTF2cptKAbHo=
+X-Received: by 2002:a37:ac05:: with SMTP id e5mr484710qkm.102.1548214614262;
+	Tue, 22 Jan 2019 19:36:54 -0800 (PST)
+MIME-Version: 1.0
 References: <20190115213137.113956-1-mark.hatle@windriver.com>
 	<20190115213137.113956-2-mark.hatle@windriver.com>
 	<CAMKF1srg335yq2xUtiLxvGkXMQPsTga-4UepQzFD0dem3RTrKw@mail.gmail.com>
@@ -21,38 +43,12 @@ References: <20190115213137.113956-1-mark.hatle@windriver.com>
 	<3415ddb2-926a-24b3-94ad-beb58febdefa@windriver.com>
 	<CAMKF1srvEyh-GtbUYUWXbHqsXm7isp8tX-fvTo_cF=9vGU+MNw@mail.gmail.com>
 	<CAMKF1srcUN6k2R-cV2xbw3MzE+Vym8i5_yfCsuFynRhzvEpj2A@mail.gmail.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <c77391b2-1e02-c2b5-e87a-10006d48381e@windriver.com>
-Date: Tue, 22 Jan 2019 14:43:11 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <CAMKF1srcUN6k2R-cV2xbw3MzE+Vym8i5_yfCsuFynRhzvEpj2A@mail.gmail.com>
+	<c77391b2-1e02-c2b5-e87a-10006d48381e@windriver.com>
+In-Reply-To: <c77391b2-1e02-c2b5-e87a-10006d48381e@windriver.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 22 Jan 2019 22:36:27 -0500
+Message-ID: <CAMKF1sorFr0tvBQMJv69gbE52kHz=AGpEk-tr_g+D_bEH5jKmA@mail.gmail.com>
+To: Mark Hatle <mark.hatle@windriver.com>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH 1/7] gitsm.py: Fix when a submodule is defined, but not initialized
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -67,200 +63,283 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Jan 2019 20:43:59 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Wed, 23 Jan 2019 03:36:54 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-U29ycnkgZm9yIHRoZSBkZWxheSBpbiBnZXR0aW5nIGEgZml4IGJhY2sgdG8geW91Li4NCg0K
-U2VlOg0KDQpodHRwOi8vZ2l0Lm9wZW5lbWJlZGRlZC5vcmcvYml0YmFrZS1jb250cmliL2xv
-Zy8/aD1tZ2gvZ2l0c20NCg0KdG9wIHR3byBjb21taXRzIHNob3VsZCByZXNvbHZlIGJvdGgg
-dGhpcyBhbmQgdGhlIENMSTExIGlzc3VlLiAgKEkgYW0gYXNzdW1pbmcNCnRoZSB0aGlyZCBv
-bmUgaXMgdGhlIHNhbWUgcHJvYmxlbS4pDQoNCkNhbiB5b3UgcGxlYXNlIGdpdmUgdGhpcyBh
-IHRyeS4uIGlmIGl0J3Mgd29ya2luZyBub3csIEknbGwgc2VuZCBhIGZvcm1hbCBwdWxsDQpy
-ZXF1ZXN0Lg0KDQotLU1hcmsNCg0KT24gMS8xOS8xOSAxMjo0NCBBTSwgS2hlbSBSYWogd3Jv
-dGU6DQo+IE1hcmsNCj4gDQo+IGFub3RoZXIgcmVncmVzc2lvbg0KPiANCj4gaHR0cDovL2Vy
-cm9ycy55b2N0b3Byb2plY3Qub3JnL0Vycm9ycy9EZXRhaWxzLzIxNzQ1NS8NCj4gDQo+IGh0
-dHA6Ly9jZ2l0Lm9wZW5lbWJlZGRlZC5vcmcvbWV0YS1vcGVuZW1iZWRkZWQvdHJlZS9tZXRh
-LW9lL3JlY2lwZXMtY29yZS9kYnVzL2RidXMtYnJva2VyX2dpdC5iYj9oPW1hc3Rlcg0KPiAN
-Cj4gDQo+IA0KPiBPbiBGcmksIEphbiAxOCwgMjAxOSBhdCA1OjI3IFBNIEtoZW0gUmFqIDxy
-YWoua2hlbUBnbWFpbC5jb20+IHdyb3RlOg0KPj4NCj4+IEkgY2hlcnJ5IHBpY2tlZCB0aGlz
-IGNvbW1pdCBvbiB0b3Agb2YgbWFzdGVyIGFuZCBJIHN0aWxsIHNlZSBmYWlsdXJlIHRvIHVu
-cGFjaw0KPj4NCj4+IEVSUk9SOiBjbGkxMS0xLjYuMitnaXRBVVRPSU5DK2JkNGRjOTExODQt
-cjAgZG9fdW5wYWNrOiBGZXRjaGVyDQo+PiBmYWlsdXJlOiBGZXRjaCBjb21tYW5kIGV4cG9y
-dCBQU0VVRE9fRElTQUJMRUQ9MTsgZXhwb3J0DQo+PiBEQlVTX1NFU1NJT05fQlVTX0FERFJF
-U1M9InVuaXg6cGF0aD0vcnVuL3VzZXIvMTAwMC9idXMiOyBleHBvcnQNCj4+IFNTSF9BR0VO
-VF9QSUQ9IjEyMzUiOyBleHBvcnQgU1NIX0FVVEhfU09DSz0iL3RtcC9zc2gtYWdlbnQuc29j
-ay4xMDAwIjsNCj4+IGV4cG9ydCBQQVRIPSIvbW50L2EveW9lL2J1aWxkL3RtcC9zeXNyb290
-cy11bmluYXRpdmUveDg2XzY0LWxpbnV4L3Vzci9iaW46L21udC9hL3lvZS9zb3VyY2VzL29w
-ZW5lbWJlZGRlZC1jb3JlL3NjcmlwdHM6L21udC9hL3lvZS9idWlsZC90bXAvd29yay9jb3J0
-ZXhhNXQyaGYtbmVvbi12ZnB2NC15b2UtbGludXgtbXVzbGVhYmkvY2xpMTEvMS42LjIrZ2l0
-QVVUT0lOQytiZDRkYzkxMTg0LXIwL3JlY2lwZS1zeXNyb290LW5hdGl2ZS91c3IvYmluL2Fy
-bS15b2UtbGludXgtbXVzbGVhYmk6L21udC9hL3lvZS9idWlsZC90bXAvd29yay9jb3J0ZXhh
-NXQyaGYtbmVvbi12ZnB2NC15b2UtbGludXgtbXVzbGVhYmkvY2xpMTEvMS42LjIrZ2l0QVVU
-T0lOQytiZDRkYzkxMTg0LXIwL3JlY2lwZS1zeXNyb290L3Vzci9iaW4vY3Jvc3NzY3JpcHRz
-Oi9tbnQvYS95b2UvYnVpbGQvdG1wL3dvcmsvY29ydGV4YTV0MmhmLW5lb24tdmZwdjQteW9l
-LWxpbnV4LW11c2xlYWJpL2NsaTExLzEuNi4yK2dpdEFVVE9JTkMrYmQ0ZGM5MTE4NC1yMC9y
-ZWNpcGUtc3lzcm9vdC1uYXRpdmUvdXNyL3NiaW46L21udC9hL3lvZS9idWlsZC90bXAvd29y
-ay9jb3J0ZXhhNXQyaGYtbmVvbi12ZnB2NC15b2UtbGludXgtbXVzbGVhYmkvY2xpMTEvMS42
-LjIrZ2l0QVVUT0lOQytiZDRkYzkxMTg0LXIwL3JlY2lwZS1zeXNyb290LW5hdGl2ZS91c3Iv
-YmluOi9tbnQvYS95b2UvYnVpbGQvdG1wL3dvcmsvY29ydGV4YTV0MmhmLW5lb24tdmZwdjQt
-eW9lLWxpbnV4LW11c2xlYWJpL2NsaTExLzEuNi4yK2dpdEFVVE9JTkMrYmQ0ZGM5MTE4NC1y
-MC9yZWNpcGUtc3lzcm9vdC1uYXRpdmUvc2JpbjovbW50L2EveW9lL2J1aWxkL3RtcC93b3Jr
-L2NvcnRleGE1dDJoZi1uZW9uLXZmcHY0LXlvZS1saW51eC1tdXNsZWFiaS9jbGkxMS8xLjYu
-MitnaXRBVVRPSU5DK2JkNGRjOTExODQtcjAvcmVjaXBlLXN5c3Jvb3QtbmF0aXZlL2Jpbjov
-bW50L2EveW9lL3NvdXJjZXMvYml0YmFrZS9iaW46L21udC9hL3lvZS9idWlsZC90bXAvaG9z
-dHRvb2xzIjsNCj4+IGV4cG9ydCBIT01FPSIvaG9tZS9rcmFqIjsgZ2l0IC1jIGNvcmUuZnN5
-bmNvYmplY3RmaWxlcz0wIGNvbmZpZw0KPj4gY29yZS5iYXJlIGZhbHNlDQo+PiBFUlJPUjog
-Y2xpMTEtMS42LjIrZ2l0QVVUT0lOQytiZDRkYzkxMTg0LXIwIGRvX3VucGFjazogRnVuY3Rp
-b24NCj4+IGZhaWxlZDogYmFzZV9kb191bnBhY2sNCj4+IEVSUk9SOiBMb2dmaWxlIG9mIGZh
-aWx1cmUgc3RvcmVkIGluOg0KPj4gL21udC9hL3lvZS9idWlsZC90bXAvd29yay9jb3J0ZXhh
-NXQyaGYtbmVvbi12ZnB2NC15b2UtbGludXgtbXVzbGVhYmkvY2xpMTEvMS42LjIrZ2l0QVVU
-T0lOQytiZDRkYzkxMTg0LXIwL3RlbXAvbG9nLmRvX3VucGFjay4xMDE3MQ0KPj4gRVJST1I6
-IFRhc2sgKC9tbnQvYS95b2Uvc291cmNlcy9tZXRhLW9wZW5lbWJlZGRlZC9tZXRhLW9lL3Jl
-Y2lwZXMtc3VwcG9ydC9jbGkxMS9jbGkxMV8xLjYuMi5iYjpkb191bnBhY2spDQo+PiBmYWls
-ZWQgd2l0aCBleGl0IGNvZGUgJzEnDQo+Pg0KPj4gTXkgYml0YmFrZSB0cmVlIGlzIGhlcmUN
-Cj4+DQo+PiBodHRwczovL2dpdGh1Yi5jb20vWW9lRGlzdHJvL2JpdGJha2UvY29tbWl0cy95
-b2UvbXV0DQo+Pg0KPj4gT24gRnJpLCBKYW4gMTgsIDIwMTkgYXQgMzowNiBQTSBNYXJrIEhh
-dGxlIDxtYXJrLmhhdGxlQHdpbmRyaXZlci5jb20+IHdyb3RlOg0KPj4+DQo+Pj4gSSB0aGlu
-ayBJIGhhdmUgYSBmaXggZm9yIHRoaXMuICBDYW4geW91IHRyeSB0aGUgYml0YmFrZSBhdmFp
-bGFibGUgZnJvbToNCj4+Pg0KPj4+IGdpdDovL2dpdC5vcGVuZW1iZWRkZWQub3JnL2JpdGJh
-a2UtY29udHJpYg0KPj4+DQo+Pj4gYnJhbmNoIG1naC9naXRzbQ0KPj4+DQo+Pj4gVGhlIGNv
-bW1pdCB0aGF0IHJlc29sdmVzIHRoaXMgaXNzdWUgaXM6DQo+Pj4NCj4+PiAwYTdkOGJkOTlh
-NWJhMzk0YjAwZWQzNTU5MzEwMWI0Y2QzMjRhNThkDQo+Pj4NCj4+PiAtLU1hcmsNCj4+Pg0K
-Pj4+IE9uIDEvMTgvMTkgMzoyMCBQTSwgTWFyayBIYXRsZSB3cm90ZToNCj4+Pj4gT24gMS8x
-OC8xOSAxMjozMSBQTSwgS2hlbSBSYWogd3JvdGU6DQo+Pj4+PiBPbiBGcmksIEphbiAxOCwg
-MjAxOSBhdCAxMDowOCBBTSBNYXJrIEhhdGxlIDxtYXJrLmhhdGxlQHdpbmRyaXZlci5jb20+
-IHdyb3RlOg0KPj4+Pj4+DQo+Pj4+Pj4gT24gMS8xOC8xOSA5OjA3IEFNLCBLaGVtIFJhaiB3
-cm90ZToNCj4+Pj4+Pj4gIEkgYW0gc2VlaW5nDQo+Pj4+Pj4+DQo+Pj4+Pj4+IGh0dHA6Ly9l
-cnJvcnMueW9jdG9wcm9qZWN0Lm9yZy9FcnJvcnMvRGV0YWlscy8yMTc0MDgvDQo+Pj4+Pj4+
-IGh0dHA6Ly9lcnJvcnMueW9jdG9wcm9qZWN0Lm9yZy9FcnJvcnMvRGV0YWlscy8yMTc0MTIv
-DQo+Pj4+Pj4NCj4+Pj4+PiBEbyB5b3Uga25vdyB3aGVyZSB0aGVzZSBmYWlsaW5nIHJlY2lw
-ZXMgYXJlIHNvIHRoYXQgSSBjYW4gcmVwcm9kdWNlIGl0IGxvY2FsbHk/DQo+Pj4+Pj4NCj4+
-Pj4+PiByd21lbSBsb29rcyBsaWtlIGl0IG1pZ2h0IGJlIG1ldGEtdGk/DQo+Pj4+Pj4gY2xp
-MTEgbG9va3MgbGlrZSBzb21ldGhpbmcgZnJvbSBtZXRhLW9lLg0KPj4+Pj4+DQo+Pj4+Pg0K
-Pj4+Pj4geWVzIHRoYXRzIHJpZ2h0Lg0KPj4+Pj4gaHR0cDovL2NnaXQub3BlbmVtYmVkZGVk
-Lm9yZy9tZXRhLW9wZW5lbWJlZGRlZC90cmVlL21ldGEtb2UvcmVjaXBlcy1zdXBwb3J0L2Ns
-aTExL2NsaTExXzEuNi4yLmJiP2g9bWFzdGVyDQo+Pj4+Pg0KPj4+Pj4gZ2l0c20gdmVyc2lv
-biBvZiByd21lbSBpcyBub3QgeWVzIGFwcGxpZWQgaW4gbWV0YS10aSBzbyB5b3UgbWlnaHQg
-aGF2ZQ0KPj4+Pj4gdG8gZ2V0IGl0IGZyb20gbXkgc3RhZ2luZyBicmFuY2gNCj4+Pj4+DQo+
-Pj4+PiBodHRwczovL2dpdGh1Yi5jb20vWW9lRGlzdHJvL21ldGEtdGkvY29tbWl0LzM0MThi
-ZWRhMTg2OTg4MmQ1Zjk0ZGM0MDVkMjcyN2YwOWZmZTIwYzQNCj4+Pj4NCj4+Pj4gVGhlIHJl
-cHJvZHVjZXIgYXBwZWFycyB0byBiZSB0aGF0IHRoZXNlIHJlcG9zaXRvcmllcyBhcmUgJ2dp
-dCcgYmFzZWQsIGJ1dCB1c2UNCj4+Pj4gcmVsYXRpdmUgc3VibW9kdWxlIGxvY2F0aW9ucyBm
-cm9tIHRoZSBtYWluIHJlcG9zaXRvcnkuDQo+Pj4+DQo+Pj4+IFNvIG5vdyB0aGUgZ2l0c20g
-Y29kZSBuZWVkcyB0byByZXNvbHZlIHJlbGF0aXZlIFVSTHMsIHdoaWNoIGlzIHNvbWV0aGlu
-ZyBub3QNCj4+Pj4gcHJldmlvdXNseSBpbXBsZW1lbnRlZC4NCj4+Pj4NCj4+Pj4gLS1NYXJr
-DQo+Pj4+DQo+Pj4+Pj4gLS1NYXJrDQo+Pj4+Pj4NCj4+Pj4+Pj4gT24gVHVlLCBKYW4gMTUs
-IDIwMTkgYXQgMTozMyBQTSBNYXJrIEhhdGxlIDxtYXJrLmhhdGxlQHdpbmRyaXZlci5jb20+
-IHdyb3RlOg0KPj4+Pj4+Pj4NCj4+Pj4+Pj4+IEl0IGlzIHBvc3NpYmxlIGZvciBhIHN1Ym1v
-ZHVsZSB0byBiZSBkZWZpbmVkIGluIHRoZSAuZ2l0bW9kdWxlcyBmaWxlLCBidXQNCj4+Pj4+
-Pj4+IG5ldmVyIGluaXRpYWxpemVkIGluIHRoZSByZXBvc2l0b3J5IGl0c2VsZi4gIFRoaXMg
-c2hvd3MgaXRzZWxmIHdoZW4gc2VhcmNoaW5nDQo+Pj4+Pj4+PiBmb3IgdGhlIGRlZmluZWQg
-bW9kdWxlIGhhc2ggeW91IHdpbGwgZ2V0IGJhY2sgYSBlbXB0eSB2YWx1ZS4NCj4+Pj4+Pj4+
-DQo+Pj4+Pj4+PiBTaW1pbGFybHkgd2UgbmVlZCB0byBpZGVudGlmeSBhbmQgc2tpcCBkZWZp
-bmVkIGJ1dCBub3QgaW5pdGlhbGl6ZWQgc3VibW9kdWxlcw0KPj4+Pj4+Pj4gZHVyaW5nIHRo
-ZSB1bnBhY2sgc3RhZ2VzIGFzIHdlbGwuDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gVGhhbmtzIHRv
-IHJhcGhhZWwubGlzaWNraUBzaWVtZW5zLmNvbSBmb3IgdGhlaXIgaGVscCBpcyBmaWd1cmlu
-ZyBvdXQgaG93DQo+Pj4+Pj4+PiB0byByZXNvbHZlIHRoaXMgaXNzdWUuDQo+Pj4+Pj4+Pg0K
-Pj4+Pj4+Pj4gQWRkaXRpb25hbGx5IGEgcHJvYmxlbSB3YXMgZm91bmQgd2hlcmUsIHdoaWxl
-IHVubGlrZWx5LCBpdCBtYXkgYmUgcG9zc2libGUNCj4+Pj4+Pj4+IGZvciB0aGUgd3Jvbmcg
-cmV2aXNpb24gdG8gaGF2ZSBiZWVuIHNlYXJjaGVkIHVzaW5nIGxzLXRyZWUuICBUaGlzIGhh
-cyBiZWVuDQo+Pj4+Pj4+PiByZXNvbHZlZCBpbiB0aGUgdXBkYXRlX3N1Ym1vZHVsZXMgZnVu
-Y3Rpb24gYnkga2VlcGluZyB0aGUgY29ycmVjdCByZXZpc2lvbg0KPj4+Pj4+Pj4gYWxvbmcg
-d2l0aCB0aGUgc3VibW9kdWxlIHBhdGguDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gU2lnbmVkLW9m
-Zi1ieTogTWFyayBIYXRsZSA8bWFyay5oYXRsZUB3aW5kcml2ZXIuY29tPg0KPj4+Pj4+Pj4g
-LS0tDQo+Pj4+Pj4+PiAgbGliL2JiL2ZldGNoMi9naXRzbS5weSB8IDMyICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKystLS0tDQo+Pj4+Pj4+PiAgMSBmaWxlIGNoYW5nZWQsIDI4IGlu
-c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gZGlmZiAt
-LWdpdCBhL2xpYi9iYi9mZXRjaDIvZ2l0c20ucHkgYi9saWIvYmIvZmV0Y2gyL2dpdHNtLnB5
-DQo+Pj4+Pj4+PiBpbmRleCAzNTcyOWRiLi5iNzk1OWZmIDEwMDY0NA0KPj4+Pj4+Pj4gLS0t
-IGEvbGliL2JiL2ZldGNoMi9naXRzbS5weQ0KPj4+Pj4+Pj4gKysrIGIvbGliL2JiL2ZldGNo
-Mi9naXRzbS5weQ0KPj4+Pj4+Pj4gQEAgLTY0LDYgKzY0LDcgQEAgY2xhc3MgR2l0U00oR2l0
-KToNCj4+Pj4+Pj4+ICAgICAgZGVmIHVwZGF0ZV9zdWJtb2R1bGVzKHNlbGYsIHVkLCBkKToN
-Cj4+Pj4+Pj4+ICAgICAgICAgIHN1Ym1vZHVsZXMgPSBbXQ0KPj4+Pj4+Pj4gICAgICAgICAg
-cGF0aHMgPSB7fQ0KPj4+Pj4+Pj4gKyAgICAgICAgcmV2aXNpb24gPSB7fQ0KPj4+Pj4+Pj4g
-ICAgICAgICAgdXJpcyA9IHt9DQo+Pj4+Pj4+PiAgICAgICAgICBsb2NhbF9wYXRocyA9IHt9
-DQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gQEAgLTc3LDYgKzc4LDcgQEAgY2xhc3MgR2l0U00oR2l0
-KToNCj4+Pj4+Pj4+ICAgICAgICAgICAgICBmb3IgbSwgbWQgaW4gc2VsZi5wYXJzZV9naXRt
-b2R1bGVzKGdpdG1vZHVsZXMpLml0ZW1zKCk6DQo+Pj4+Pj4+PiAgICAgICAgICAgICAgICAg
-IHN1Ym1vZHVsZXMuYXBwZW5kKG0pDQo+Pj4+Pj4+PiAgICAgICAgICAgICAgICAgIHBhdGhz
-W21dID0gbWRbJ3BhdGgnXQ0KPj4+Pj4+Pj4gKyAgICAgICAgICAgICAgICByZXZpc2lvbltt
-XSA9IHVkLnJldmlzaW9uc1tuYW1lXQ0KPj4+Pj4+Pj4gICAgICAgICAgICAgICAgICB1cmlz
-W21dID0gbWRbJ3VybCddDQo+Pj4+Pj4+PiAgICAgICAgICAgICAgICAgIGlmIHVyaXNbbV0u
-c3RhcnRzd2l0aCgnLi4nKToNCj4+Pj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgIG5ld3Vk
-ID0gY29weS5jb3B5KHVkKQ0KPj4+Pj4+Pj4gQEAgLTg0LDcgKzg2LDE3IEBAIGNsYXNzIEdp
-dFNNKEdpdCk6DQo+Pj4+Pj4+PiAgICAgICAgICAgICAgICAgICAgICB1cmlzW21dID0gR2l0
-Ll9nZXRfcmVwb191cmwoc2VsZiwgbmV3dWQpDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gICAgICAg
-ICAgZm9yIG1vZHVsZSBpbiBzdWJtb2R1bGVzOg0KPj4+Pj4+Pj4gLSAgICAgICAgICAgIG1v
-ZHVsZV9oYXNoID0gcnVuZmV0Y2hjbWQoIiVzIGxzLXRyZWUgLXogLWQgJXMgJXMiICUgKHVk
-LmJhc2VjbWQsIHVkLnJldmlzaW9uc1tuYW1lXSwgcGF0aHNbbW9kdWxlXSksIGQsIHF1aWV0
-PVRydWUsIHdvcmtkaXI9dWQuY2xvbmVkaXIpDQo+Pj4+Pj4+PiArICAgICAgICAgICAgdHJ5
-Og0KPj4+Pj4+Pj4gKyAgICAgICAgICAgICAgICBtb2R1bGVfaGFzaCA9IHJ1bmZldGNoY21k
-KCIlcyBscy10cmVlIC16IC1kICVzICVzIiAlICh1ZC5iYXNlY21kLCByZXZpc2lvblttb2R1
-bGVdLCBwYXRoc1ttb2R1bGVdKSwgZCwgcXVpZXQ9VHJ1ZSwgd29ya2Rpcj11ZC5jbG9uZWRp
-cikNCj4+Pj4+Pj4+ICsgICAgICAgICAgICBleGNlcHQ6DQo+Pj4+Pj4+PiArICAgICAgICAg
-ICAgICAgICMgSWYgdGhlIGNvbW1hbmQgZmFpbHMsIHdlIGRvbid0IGhhdmUgYSB2YWxpZCBm
-aWxlIHRvIGNoZWNrLiAgSWYgaXQgZG9lc24ndA0KPj4+Pj4+Pj4gKyAgICAgICAgICAgICAg
-ICAjIGZhaWwgLS0gaXQgc3RpbGwgbWlnaHQgYmUgYSBmYWlsdXJlLCBzZWUgbmV4dCBjaGVj
-ay4uLg0KPj4+Pj4+Pj4gKyAgICAgICAgICAgICAgICBtb2R1bGVfaGFzaCA9ICIiDQo+Pj4+
-Pj4+PiArDQo+Pj4+Pj4+PiArICAgICAgICAgICAgaWYgbm90IG1vZHVsZV9oYXNoOg0KPj4+
-Pj4+Pj4gKyAgICAgICAgICAgICAgICBsb2dnZXIuZGVidWcoMSwgInN1Ym1vZHVsZSAlcyBp
-cyBkZWZpbmVkLCBidXQgaXMgbm90IGluaXRpYWxpemVkIGluIHRoZSByZXBvc2l0b3J5LiBT
-a2lwcGluZyIsIG1vZHVsZSkNCj4+Pj4+Pj4+ICsgICAgICAgICAgICAgICAgY29udGludWUN
-Cj4+Pj4+Pj4+ICsNCj4+Pj4+Pj4+ICAgICAgICAgICAgICBtb2R1bGVfaGFzaCA9IG1vZHVs
-ZV9oYXNoLnNwbGl0KClbMl0NCj4+Pj4+Pj4+DQo+Pj4+Pj4+PiAgICAgICAgICAgICAgIyBC
-dWlsZCBuZXcgU1JDX1VSSQ0KPj4+Pj4+Pj4gQEAgLTE0Myw3ICsxNTUsNyBAQCBjbGFzcyBH
-aXRTTShHaXQpOg0KPj4+Pj4+Pj4gICAgICAgICAgaWYgbm90IHVkLnNoYWxsb3cgb3IgdWQu
-bG9jYWxwYXRoICE9IHVkLmZ1bGxzaGFsbG93Og0KPj4+Pj4+Pj4gICAgICAgICAgICAgIHNl
-bGYudXBkYXRlX3N1Ym1vZHVsZXModWQsIGQpDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gLSAgICBk
-ZWYgY29weV9zdWJtb2R1bGVzKHNlbGYsIHN1Ym1vZHVsZXMsIHVkLCBkZXN0ZGlyLCBkKToN
-Cj4+Pj4+Pj4+ICsgICAgZGVmIGNvcHlfc3VibW9kdWxlcyhzZWxmLCBzdWJtb2R1bGVzLCB1
-ZCwgbmFtZSwgZGVzdGRpciwgZCk6DQo+Pj4+Pj4+PiAgICAgICAgICBpZiB1ZC5iYXJlY2xv
-bmU6DQo+Pj4+Pj4+PiAgICAgICAgICAgICAgcmVwb19jb25mID0gZGVzdGRpcg0KPj4+Pj4+
-Pj4gICAgICAgICAgZWxzZToNCj4+Pj4+Pj4+IEBAIC0xNTYsNiArMTY4LDE4IEBAIGNsYXNz
-IEdpdFNNKEdpdCk6DQo+Pj4+Pj4+PiAgICAgICAgICAgICAgc3JjcGF0aCA9IG9zLnBhdGgu
-am9pbih1ZC5jbG9uZWRpciwgJ21vZHVsZXMnLCBtZFsncGF0aCddKQ0KPj4+Pj4+Pj4gICAg
-ICAgICAgICAgIG1vZHBhdGggPSBvcy5wYXRoLmpvaW4ocmVwb19jb25mLCAnbW9kdWxlcycs
-IG1kWydwYXRoJ10pDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gKyAgICAgICAgICAgICMgQ2hlY2sg
-aWYgdGhlIG1vZHVsZSBpcyBpbml0aWFsaXplZA0KPj4+Pj4+Pj4gKyAgICAgICAgICAgIHRy
-eToNCj4+Pj4+Pj4+ICsgICAgICAgICAgICAgICAgbW9kdWxlX2hhc2ggPSBydW5mZXRjaGNt
-ZCgiJXMgbHMtdHJlZSAteiAtZCAlcyAlcyIgJSAodWQuYmFzZWNtZCwgdWQucmV2aXNpb25z
-W25hbWVdLCBtZFsncGF0aCddKSwgZCwgcXVpZXQ9VHJ1ZSwgd29ya2Rpcj11ZC5jbG9uZWRp
-cikNCj4+Pj4+Pj4+ICsgICAgICAgICAgICBleGNlcHQ6DQo+Pj4+Pj4+PiArICAgICAgICAg
-ICAgICAgICMgSWYgdGhlIGNvbW1hbmQgZmFpbHMsIHdlIGRvbid0IGhhdmUgYSB2YWxpZCBm
-aWxlIHRvIGNoZWNrLiAgSWYgaXQgZG9lc24ndA0KPj4+Pj4+Pj4gKyAgICAgICAgICAgICAg
-ICAjIGZhaWwgLS0gaXQgc3RpbGwgbWlnaHQgYmUgYSBmYWlsdXJlLCBzZWUgbmV4dCBjaGVj
-ay4uLg0KPj4+Pj4+Pj4gKyAgICAgICAgICAgICAgICBtb2R1bGVfaGFzaCA9ICIiDQo+Pj4+
-Pj4+PiArDQo+Pj4+Pj4+PiArICAgICAgICAgICAgaWYgbm90IG1vZHVsZV9oYXNoOg0KPj4+
-Pj4+Pj4gKyAgICAgICAgICAgICAgICBsb2dnZXIuZGVidWcoMSwgInN1Ym1vZHVsZSAlcyBp
-cyBkZWZpbmVkLCBidXQgaXMgbm90IGluaXRpYWxpemVkIGluIHRoZSByZXBvc2l0b3J5LiBT
-a2lwcGluZyIsIG1vZHVsZSkNCj4+Pj4+Pj4+ICsgICAgICAgICAgICAgICAgY29udGludWUN
-Cj4+Pj4+Pj4+ICsNCj4+Pj4+Pj4+ICAgICAgICAgICAgICBpZiBvcy5wYXRoLmV4aXN0cyhz
-cmNwYXRoKToNCj4+Pj4+Pj4+ICAgICAgICAgICAgICAgICAgaWYgb3MucGF0aC5leGlzdHMo
-b3MucGF0aC5qb2luKHNyY3BhdGgsICcuZ2l0JykpOg0KPj4+Pj4+Pj4gICAgICAgICAgICAg
-ICAgICAgICAgc3JjcGF0aCA9IG9zLnBhdGguam9pbihzcmNwYXRoLCAnLmdpdCcpDQo+Pj4+
-Pj4+PiBAQCAtMTg4LDcgKzIxMiw3IEBAIGNsYXNzIEdpdFNNKEdpdCk6DQo+Pj4+Pj4+PiAg
-ICAgICAgICAgICAgICAgIGNvbnRpbnVlDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gICAgICAgICAg
-ICAgIHN1Ym1vZHVsZXMgPSBzZWxmLnBhcnNlX2dpdG1vZHVsZXMoZ2l0bW9kdWxlcykNCj4+
-Pj4+Pj4+IC0gICAgICAgICAgICBzZWxmLmNvcHlfc3VibW9kdWxlcyhzdWJtb2R1bGVzLCB1
-ZCwgZGVzdCwgZCkNCj4+Pj4+Pj4+ICsgICAgICAgICAgICBzZWxmLmNvcHlfc3VibW9kdWxl
-cyhzdWJtb2R1bGVzLCB1ZCwgbmFtZSwgZGVzdCwgZCkNCj4+Pj4+Pj4+DQo+Pj4+Pj4+PiAg
-ICAgIGRlZiB1bnBhY2soc2VsZiwgdWQsIGRlc3RkaXIsIGQpOg0KPj4+Pj4+Pj4gICAgICAg
-ICAgR2l0LnVucGFjayhzZWxmLCB1ZCwgZGVzdGRpciwgZCkNCj4+Pj4+Pj4+IEBAIC0yMTEs
-NyArMjM1LDcgQEAgY2xhc3MgR2l0U00oR2l0KToNCj4+Pj4+Pj4+ICAgICAgICAgICAgICAg
-ICAgY29udGludWUNCj4+Pj4+Pj4+DQo+Pj4+Pj4+PiAgICAgICAgICAgICAgc3VibW9kdWxl
-cyA9IHNlbGYucGFyc2VfZ2l0bW9kdWxlcyhnaXRtb2R1bGVzKQ0KPj4+Pj4+Pj4gLSAgICAg
-ICAgICAgIHNlbGYuY29weV9zdWJtb2R1bGVzKHN1Ym1vZHVsZXMsIHVkLCB1ZC5kZXN0ZGly
-LCBkKQ0KPj4+Pj4+Pj4gKyAgICAgICAgICAgIHNlbGYuY29weV9zdWJtb2R1bGVzKHN1Ym1v
-ZHVsZXMsIHVkLCBuYW1lLCB1ZC5kZXN0ZGlyLCBkKQ0KPj4+Pj4+Pj4NCj4+Pj4+Pj4+ICAg
-ICAgICAgICAgICBzdWJtb2R1bGVzX3F1ZXVlID0gWyhtb2R1bGUsIG9zLnBhdGguam9pbihy
-ZXBvX2NvbmYsICdtb2R1bGVzJywgbWRbJ3BhdGgnXSkpIGZvciBtb2R1bGUsIG1kIGluIHN1
-Ym1vZHVsZXMuaXRlbXMoKV0NCj4+Pj4+Pj4+ICAgICAgICAgICAgICB3aGlsZSBsZW4oc3Vi
-bW9kdWxlc19xdWV1ZSkgIT0gMDoNCj4+Pj4+Pj4+IC0tDQo+Pj4+Pj4+PiAxLjguMy4xDQo+
-Pj4+Pj4+Pg0KPj4+Pj4+Pj4gLS0NCj4+Pj4+Pj4+IF9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fDQo+Pj4+Pj4+PiBiaXRiYWtlLWRldmVsIG1haWxp
-bmcgbGlzdA0KPj4+Pj4+Pj4gYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
-DQo+Pj4+Pj4+PiBodHRwOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2JpdGJha2UtZGV2ZWwNCj4+Pj4+Pg0KPj4+Pg0KPj4+DQoNCg==
+It worked.
+
+On Tue, Jan 22, 2019 at 3:43 PM Mark Hatle <mark.hatle@windriver.com> wrote=
+:
+>
+> Sorry for the delay in getting a fix back to you..
+>
+> See:
+>
+> http://git.openembedded.org/bitbake-contrib/log/?h=3Dmgh/gitsm
+>
+> top two commits should resolve both this and the CLI11 issue.  (I am assu=
+ming
+> the third one is the same problem.)
+>
+> Can you please give this a try.. if it's working now, I'll send a formal =
+pull
+> request.
+>
+> --Mark
+>
+> On 1/19/19 12:44 AM, Khem Raj wrote:
+> > Mark
+> >
+> > another regression
+> >
+> > http://errors.yoctoproject.org/Errors/Details/217455/
+> >
+> > http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-cor=
+e/dbus/dbus-broker_git.bb?h=3Dmaster
+> >
+> >
+> >
+> > On Fri, Jan 18, 2019 at 5:27 PM Khem Raj <raj.khem@gmail.com> wrote:
+> >>
+> >> I cherry picked this commit on top of master and I still see failure t=
+o unpack
+> >>
+> >> ERROR: cli11-1.6.2+gitAUTOINC+bd4dc91184-r0 do_unpack: Fetcher
+> >> failure: Fetch command export PSEUDO_DISABLED=3D1; export
+> >> DBUS_SESSION_BUS_ADDRESS=3D"unix:path=3D/run/user/1000/bus"; export
+> >> SSH_AGENT_PID=3D"1235"; export SSH_AUTH_SOCK=3D"/tmp/ssh-agent.sock.10=
+00";
+> >> export PATH=3D"/mnt/a/yoe/build/tmp/sysroots-uninative/x86_64-linux/us=
+r/bin:/mnt/a/yoe/sources/openembedded-core/scripts:/mnt/a/yoe/build/tmp/wor=
+k/cortexa5t2hf-neon-vfpv4-yoe-linux-musleabi/cli11/1.6.2+gitAUTOINC+bd4dc91=
+184-r0/recipe-sysroot-native/usr/bin/arm-yoe-linux-musleabi:/mnt/a/yoe/buil=
+d/tmp/work/cortexa5t2hf-neon-vfpv4-yoe-linux-musleabi/cli11/1.6.2+gitAUTOIN=
+C+bd4dc91184-r0/recipe-sysroot/usr/bin/crossscripts:/mnt/a/yoe/build/tmp/wo=
+rk/cortexa5t2hf-neon-vfpv4-yoe-linux-musleabi/cli11/1.6.2+gitAUTOINC+bd4dc9=
+1184-r0/recipe-sysroot-native/usr/sbin:/mnt/a/yoe/build/tmp/work/cortexa5t2=
+hf-neon-vfpv4-yoe-linux-musleabi/cli11/1.6.2+gitAUTOINC+bd4dc91184-r0/recip=
+e-sysroot-native/usr/bin:/mnt/a/yoe/build/tmp/work/cortexa5t2hf-neon-vfpv4-=
+yoe-linux-musleabi/cli11/1.6.2+gitAUTOINC+bd4dc91184-r0/recipe-sysroot-nati=
+ve/sbin:/mnt/a/yoe/build/tmp/work/cortexa5t2hf-neon-vfpv4-yoe-linux-musleab=
+i/cli11/1.6.2+gitAUTOINC+bd4dc91184-r0/recipe-sysroot-native/bin:/mnt/a/yoe=
+/sources/bitbake/bin:/mnt/a/yoe/build/tmp/hosttools";
+> >> export HOME=3D"/home/kraj"; git -c core.fsyncobjectfiles=3D0 config
+> >> core.bare false
+> >> ERROR: cli11-1.6.2+gitAUTOINC+bd4dc91184-r0 do_unpack: Function
+> >> failed: base_do_unpack
+> >> ERROR: Logfile of failure stored in:
+> >> /mnt/a/yoe/build/tmp/work/cortexa5t2hf-neon-vfpv4-yoe-linux-musleabi/c=
+li11/1.6.2+gitAUTOINC+bd4dc91184-r0/temp/log.do_unpack.10171
+> >> ERROR: Task (/mnt/a/yoe/sources/meta-openembedded/meta-oe/recipes-supp=
+ort/cli11/cli11_1.6.2.bb:do_unpack)
+> >> failed with exit code '1'
+> >>
+> >> My bitbake tree is here
+> >>
+> >> https://github.com/YoeDistro/bitbake/commits/yoe/mut
+> >>
+> >> On Fri, Jan 18, 2019 at 3:06 PM Mark Hatle <mark.hatle@windriver.com> =
+wrote:
+> >>>
+> >>> I think I have a fix for this.  Can you try the bitbake available fro=
+m:
+> >>>
+> >>> git://git.openembedded.org/bitbake-contrib
+> >>>
+> >>> branch mgh/gitsm
+> >>>
+> >>> The commit that resolves this issue is:
+> >>>
+> >>> 0a7d8bd99a5ba394b00ed35593101b4cd324a58d
+> >>>
+> >>> --Mark
+> >>>
+> >>> On 1/18/19 3:20 PM, Mark Hatle wrote:
+> >>>> On 1/18/19 12:31 PM, Khem Raj wrote:
+> >>>>> On Fri, Jan 18, 2019 at 10:08 AM Mark Hatle <mark.hatle@windriver.c=
+om> wrote:
+> >>>>>>
+> >>>>>> On 1/18/19 9:07 AM, Khem Raj wrote:
+> >>>>>>>  I am seeing
+> >>>>>>>
+> >>>>>>> http://errors.yoctoproject.org/Errors/Details/217408/
+> >>>>>>> http://errors.yoctoproject.org/Errors/Details/217412/
+> >>>>>>
+> >>>>>> Do you know where these failing recipes are so that I can reproduc=
+e it locally?
+> >>>>>>
+> >>>>>> rwmem looks like it might be meta-ti?
+> >>>>>> cli11 looks like something from meta-oe.
+> >>>>>>
+> >>>>>
+> >>>>> yes thats right.
+> >>>>> http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes=
+-support/cli11/cli11_1.6.2.bb?h=3Dmaster
+> >>>>>
+> >>>>> gitsm version of rwmem is not yes applied in meta-ti so you might h=
+ave
+> >>>>> to get it from my staging branch
+> >>>>>
+> >>>>> https://github.com/YoeDistro/meta-ti/commit/3418beda1869882d5f94dc4=
+05d2727f09ffe20c4
+> >>>>
+> >>>> The reproducer appears to be that these repositories are 'git' based=
+, but use
+> >>>> relative submodule locations from the main repository.
+> >>>>
+> >>>> So now the gitsm code needs to resolve relative URLs, which is somet=
+hing not
+> >>>> previously implemented.
+> >>>>
+> >>>> --Mark
+> >>>>
+> >>>>>> --Mark
+> >>>>>>
+> >>>>>>> On Tue, Jan 15, 2019 at 1:33 PM Mark Hatle <mark.hatle@windriver.=
+com> wrote:
+> >>>>>>>>
+> >>>>>>>> It is possible for a submodule to be defined in the .gitmodules =
+file, but
+> >>>>>>>> never initialized in the repository itself.  This shows itself w=
+hen searching
+> >>>>>>>> for the defined module hash you will get back a empty value.
+> >>>>>>>>
+> >>>>>>>> Similarly we need to identify and skip defined but not initializ=
+ed submodules
+> >>>>>>>> during the unpack stages as well.
+> >>>>>>>>
+> >>>>>>>> Thanks to raphael.lisicki@siemens.com for their help is figuring=
+ out how
+> >>>>>>>> to resolve this issue.
+> >>>>>>>>
+> >>>>>>>> Additionally a problem was found where, while unlikely, it may b=
+e possible
+> >>>>>>>> for the wrong revision to have been searched using ls-tree.  Thi=
+s has been
+> >>>>>>>> resolved in the update_submodules function by keeping the correc=
+t revision
+> >>>>>>>> along with the submodule path.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+> >>>>>>>> ---
+> >>>>>>>>  lib/bb/fetch2/gitsm.py | 32 ++++++++++++++++++++++++++++----
+> >>>>>>>>  1 file changed, 28 insertions(+), 4 deletions(-)
+> >>>>>>>>
+> >>>>>>>> diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+> >>>>>>>> index 35729db..b7959ff 100644
+> >>>>>>>> --- a/lib/bb/fetch2/gitsm.py
+> >>>>>>>> +++ b/lib/bb/fetch2/gitsm.py
+> >>>>>>>> @@ -64,6 +64,7 @@ class GitSM(Git):
+> >>>>>>>>      def update_submodules(self, ud, d):
+> >>>>>>>>          submodules =3D []
+> >>>>>>>>          paths =3D {}
+> >>>>>>>> +        revision =3D {}
+> >>>>>>>>          uris =3D {}
+> >>>>>>>>          local_paths =3D {}
+> >>>>>>>>
+> >>>>>>>> @@ -77,6 +78,7 @@ class GitSM(Git):
+> >>>>>>>>              for m, md in self.parse_gitmodules(gitmodules).item=
+s():
+> >>>>>>>>                  submodules.append(m)
+> >>>>>>>>                  paths[m] =3D md['path']
+> >>>>>>>> +                revision[m] =3D ud.revisions[name]
+> >>>>>>>>                  uris[m] =3D md['url']
+> >>>>>>>>                  if uris[m].startswith('..'):
+> >>>>>>>>                      newud =3D copy.copy(ud)
+> >>>>>>>> @@ -84,7 +86,17 @@ class GitSM(Git):
+> >>>>>>>>                      uris[m] =3D Git._get_repo_url(self, newud)
+> >>>>>>>>
+> >>>>>>>>          for module in submodules:
+> >>>>>>>> -            module_hash =3D runfetchcmd("%s ls-tree -z -d %s %s=
+" % (ud.basecmd, ud.revisions[name], paths[module]), d, quiet=3DTrue, workd=
+ir=3Dud.clonedir)
+> >>>>>>>> +            try:
+> >>>>>>>> +                module_hash =3D runfetchcmd("%s ls-tree -z -d %=
+s %s" % (ud.basecmd, revision[module], paths[module]), d, quiet=3DTrue, wor=
+kdir=3Dud.clonedir)
+> >>>>>>>> +            except:
+> >>>>>>>> +                # If the command fails, we don't have a valid f=
+ile to check.  If it doesn't
+> >>>>>>>> +                # fail -- it still might be a failure, see next=
+ check...
+> >>>>>>>> +                module_hash =3D ""
+> >>>>>>>> +
+> >>>>>>>> +            if not module_hash:
+> >>>>>>>> +                logger.debug(1, "submodule %s is defined, but i=
+s not initialized in the repository. Skipping", module)
+> >>>>>>>> +                continue
+> >>>>>>>> +
+> >>>>>>>>              module_hash =3D module_hash.split()[2]
+> >>>>>>>>
+> >>>>>>>>              # Build new SRC_URI
+> >>>>>>>> @@ -143,7 +155,7 @@ class GitSM(Git):
+> >>>>>>>>          if not ud.shallow or ud.localpath !=3D ud.fullshallow:
+> >>>>>>>>              self.update_submodules(ud, d)
+> >>>>>>>>
+> >>>>>>>> -    def copy_submodules(self, submodules, ud, destdir, d):
+> >>>>>>>> +    def copy_submodules(self, submodules, ud, name, destdir, d)=
+:
+> >>>>>>>>          if ud.bareclone:
+> >>>>>>>>              repo_conf =3D destdir
+> >>>>>>>>          else:
+> >>>>>>>> @@ -156,6 +168,18 @@ class GitSM(Git):
+> >>>>>>>>              srcpath =3D os.path.join(ud.clonedir, 'modules', md=
+['path'])
+> >>>>>>>>              modpath =3D os.path.join(repo_conf, 'modules', md['=
+path'])
+> >>>>>>>>
+> >>>>>>>> +            # Check if the module is initialized
+> >>>>>>>> +            try:
+> >>>>>>>> +                module_hash =3D runfetchcmd("%s ls-tree -z -d %=
+s %s" % (ud.basecmd, ud.revisions[name], md['path']), d, quiet=3DTrue, work=
+dir=3Dud.clonedir)
+> >>>>>>>> +            except:
+> >>>>>>>> +                # If the command fails, we don't have a valid f=
+ile to check.  If it doesn't
+> >>>>>>>> +                # fail -- it still might be a failure, see next=
+ check...
+> >>>>>>>> +                module_hash =3D ""
+> >>>>>>>> +
+> >>>>>>>> +            if not module_hash:
+> >>>>>>>> +                logger.debug(1, "submodule %s is defined, but i=
+s not initialized in the repository. Skipping", module)
+> >>>>>>>> +                continue
+> >>>>>>>> +
+> >>>>>>>>              if os.path.exists(srcpath):
+> >>>>>>>>                  if os.path.exists(os.path.join(srcpath, '.git')=
+):
+> >>>>>>>>                      srcpath =3D os.path.join(srcpath, '.git')
+> >>>>>>>> @@ -188,7 +212,7 @@ class GitSM(Git):
+> >>>>>>>>                  continue
+> >>>>>>>>
+> >>>>>>>>              submodules =3D self.parse_gitmodules(gitmodules)
+> >>>>>>>> -            self.copy_submodules(submodules, ud, dest, d)
+> >>>>>>>> +            self.copy_submodules(submodules, ud, name, dest, d)
+> >>>>>>>>
+> >>>>>>>>      def unpack(self, ud, destdir, d):
+> >>>>>>>>          Git.unpack(self, ud, destdir, d)
+> >>>>>>>> @@ -211,7 +235,7 @@ class GitSM(Git):
+> >>>>>>>>                  continue
+> >>>>>>>>
+> >>>>>>>>              submodules =3D self.parse_gitmodules(gitmodules)
+> >>>>>>>> -            self.copy_submodules(submodules, ud, ud.destdir, d)
+> >>>>>>>> +            self.copy_submodules(submodules, ud, name, ud.destd=
+ir, d)
+> >>>>>>>>
+> >>>>>>>>              submodules_queue =3D [(module, os.path.join(repo_co=
+nf, 'modules', md['path'])) for module, md in submodules.items()]
+> >>>>>>>>              while len(submodules_queue) !=3D 0:
+> >>>>>>>> --
+> >>>>>>>> 1.8.3.1
+> >>>>>>>>
+> >>>>>>>> --
+> >>>>>>>> _______________________________________________
+> >>>>>>>> bitbake-devel mailing list
+> >>>>>>>> bitbake-devel@lists.openembedded.org
+> >>>>>>>> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+> >>>>>>
+> >>>>
+> >>>
+>
 
