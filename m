@@ -1,52 +1,50 @@
 Return-Path: <liu.ming50@gmail.com>
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
-	[209.85.128.66])
-	by mail.openembedded.org (Postfix) with ESMTP id E72D17C393
+Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com
+	[209.85.208.196])
+	by mail.openembedded.org (Postfix) with ESMTP id 037887C2AA
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Jan 2019 14:23:14 +0000 (UTC)
-Received: by mail-wm1-f66.google.com with SMTP id p6so6797341wmc.1
+	Fri, 25 Jan 2019 14:41:31 +0000 (UTC)
+Received: by mail-lj1-f196.google.com with SMTP id t18-v6so8575337ljd.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Jan 2019 06:23:16 -0800 (PST)
+	Fri, 25 Jan 2019 06:41:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=3wnD8Ekd3aZiNtdVFpf9oN5aRMze55pfLK8bnXCERSw=;
-	b=IiZpVTwQSKI5Cx1ofncSXHp4YyYekcSTXvgatKYJxmI1pvhGwhaUR0eQuc6koV6ZMz
-	qi79ZkIUVUNCpJchm2sLmIjE1YBHSVl7bCplVOfAOzlkHgO+VQYUFfygCaajHoRnf2NE
-	hVGdQLb6DJW3U24dmi1vLdzCTrfstKIAcXaO0usuVv1x66HfCGMn+gh9AAsoo63ybqkY
-	mkf/SqdL4F1mZbfRQ1iKjVGfdIpLfDfELYsIU+52tnJ1S9u4o8JnB1N1bvStZnVA5Bkd
-	EXBvbxxLRIb1Adq9wPQqd/xRxnxDoHCOZteKV6ohRMYwbwIfMDz/ok4hc0xEzdJ2aQDo
-	ZMyg==
+	h=from:to:cc:subject:date:message-id;
+	bh=rLiO0GJMLUF2u/S8XltJZ8pkdrwEJ8dtflPKmNlvq50=;
+	b=Z5fc7uf5BE3kvI67+OSG924XzBxdzoFtr3qj4n0hRXChCpyAHJ6FSQ9E1sDXddXViq
+	OyOt3wl25zkqUgOvHSXKlwj37Jdgti6xyhrWNBwJEDpcZM1IMUV+sqZnVEQYhP+TSN1m
+	WcsSBtBnVjlba0VPU1oDESV1WKZ/nPId1sR7BjDE5qIz3RJIWjSe3qw/gO4877ssB1i1
+	QR39hFyEsh9Xh29mklXDMtfFGTW0FS0imeykZ62OXOB0pl6+ROgvy5T/vDivZiH0KV1e
+	QJ1RxU7AV9LFdWnqDVtLEkroTap3toZpWoAaib1zhs6AG6/NuXkhyLq8prySHGcV+ztu
+	MsTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=3wnD8Ekd3aZiNtdVFpf9oN5aRMze55pfLK8bnXCERSw=;
-	b=Wj0BDY0MjLa3b1YOR1GbEi7FA95yn6UA9YWqSQDcBca1SBfQ4Hoq7fBEjLr7KzBZ2j
-	02NP4wCiHk2jnJ+kSQH3BYQcsSaLC+X1//biNlddNzcaNfNPYPZkvegVDYUGZCSAcGlu
-	S1WMGKMVaw/HxaAG0SmLAFvKSO0LQEBS69aaeUMPjnui9CwxOkkxchJavui05gxa0t31
-	7bgQY/tDY84zPR/ynZdLHa0NUh1nrlocu8Q4L0QsQNk0OvdCMUZgQknbILdmqpfxERip
-	xWzAf+f/g9B2A628wTmk/KeV96rfuDgnPrCMn7I+/D/y+rmpiq+dRObdOLzCtuQxOjlb
-	yMyw==
-X-Gm-Message-State: AJcUukdOg24/dkEBJrEJj/S1t8Ox5zpVBy/XF9uUmNcBvX/C2AJs50/v
-	Z+QSP2YoenytyOCwn0mUKPBUtzl5FZPfr+a/pSM=
-X-Google-Smtp-Source: ALg8bN7LPXNsEDmqNM6RScCLxCIi5hSDNWz8OfFnKoVoUDDka+OB9H/PfOP9tPbkKbDj+ZkNxSaI7HyfP06UYjq3o8k=
-X-Received: by 2002:a7b:c34c:: with SMTP id l12mr7002229wmj.147.1548426195204; 
-	Fri, 25 Jan 2019 06:23:15 -0800 (PST)
-MIME-Version: 1.0
-References: <1548413847-32550-1-git-send-email-liu.ming50@gmail.com>
-	<18561a9b63079e5dc2d4b4a8b6b12728475b0402.camel@linuxfoundation.org>
-	<CALatG=7YgmkROJpk_6pfZFKGP3=RjoJC_mh3gRsKMF+e=6=aqA@mail.gmail.com>
-	<1dbceb752ca54fcbb32c4c4325272b80670693f4.camel@linuxfoundation.org>
-	<CALatG=5tuk+qOc3D67wFpP=bnPxxyP4r-K=5wD2ieVgMYEhD+Q@mail.gmail.com>
-	<31f945c230acc44677171059ae3aaac8950e20c4.camel@linuxfoundation.org>
-In-Reply-To: <31f945c230acc44677171059ae3aaac8950e20c4.camel@linuxfoundation.org>
-From: Ming Liu <liu.ming50@gmail.com>
-Date: Fri, 25 Jan 2019 15:23:04 +0100
-Message-ID: <CALatG=4Jvs_qtO206uXFmbsP5YyE6XGOLOCX8ceFgZvoGvLHdg@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org,
-	Stefan Agner <stefan.agner@toradex.com>, Luka Pivk <luka.pivk@toradex.com>
-Subject: Re: [PATCH] fetch2/gitsm: fix config file concurrent update race
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=rLiO0GJMLUF2u/S8XltJZ8pkdrwEJ8dtflPKmNlvq50=;
+	b=PpoguDqKEEi7RmpDMjF3yVu/2R6pf5n+3EEYR2QIoOOosUbg3H6MklMxRqmvWDxExv
+	IVnkI9NRvL5b0k2W2nPekKlufNqdqUxgjVnd2yzjh1UU63YmSZAVrFUVbOB6pcPHpG3i
+	pIaPw5CS8tbg6vzGkX7OrmfsO7+1YIPxX9gsG9qWFUQNfqvWpxT4gH3Mym2AfKEqojeY
+	RKIo3givUwbpViCzpoxRbKbnyHsTAO1+5RUiNLtOYrpX3X11EmAe8JTIPFo9mPonnKf3
+	vu/u5SiSlw0SXOMUi+HlmA9qNZ14YYVHXSTY+hZrnGQGMDVoWOmIk0X4qSRUtzv0vQbw
+	H4Yw==
+X-Gm-Message-State: AJcUukdMgOSpi0b2LYcIzy7M2o1yFN0mzjyVcNaDmRsZXt2DL9zN+S1m
+	gE2Hj2bKKZuGjQUacfMLeGFGOAF6LTo=
+X-Google-Smtp-Source: ALg8bN6ixzIeFsTPifkHiQUtQXcwKyfMpU93by5P0axkgbiZzjqKp1nI8fYd8PcndcTpKuiJZgsV0w==
+X-Received: by 2002:a2e:1bc5:: with SMTP id
+	c66-v6mr9662989ljf.96.1548427292259; 
+	Fri, 25 Jan 2019 06:41:32 -0800 (PST)
+Received: from peterliu-Precision-M4800.emea.group.atlascopco.com
+	(m77-218-252-226.cust.tele2.se. [77.218.252.226])
+	by smtp.gmail.com with ESMTPSA id w4sm1481335lfk.83.2019.01.25.06.41.30
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 25 Jan 2019 06:41:31 -0800 (PST)
+From: liu.ming50@gmail.com
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 25 Jan 2019 15:41:27 +0100
+Message-Id: <1548427287-11934-1-git-send-email-liu.ming50@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Cc: luka.pivk@toradex.com, stefan.agner@toradex.com,
+	Ming Liu <liu.ming50@gmail.com>
+Subject: [PATCH V2] fetch2/gitsm: fix config file concurrent update race
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,103 +57,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Jan 2019 14:23:15 -0000
-Content-Type: multipart/alternative; boundary="000000000000537d8505804911cb"
+X-List-Received-Date: Fri, 25 Jan 2019 14:41:32 -0000
 
---000000000000537d8505804911cb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Ming Liu <liu.ming50@gmail.com>
 
-Oops, you are absolutely correct, will send a V2 fixing that.
+A following issue was observed with gitsm:
+| git -c core.fsyncobjectfiles=0 config submodule... failed with exit code 255, output:
+| error: could not lock config file config: File exists
 
-We can continue this discussion on V2.
+Since all git submodules share a config file and Git creates a lock
+file (.git/config.lock) to synchronize access to it, but Git only tries
+exactly once and returns a error if it's already locked. This leads to
+a race condition if there are many 'git config submodule' run in
+different processes.
 
-//Ming Liu
+It could be fixed by introducing a bitbake file lock to protect config
+file from concurrent update from submodules.
 
-Richard Purdie <richard.purdie@linuxfoundation.org>=E4=BA=8E2019=E5=B9=B41=
-=E6=9C=8825=E6=97=A5 =E5=91=A8=E4=BA=9415:10=E5=86=99=E9=81=93=EF=BC=9A
+Reported-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Ming Liu <liu.ming50@gmail.com>
+---
+ lib/bb/fetch2/gitsm.py | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-> On Fri, 2019-01-25 at 14:44 +0100, Ming Liu wrote:
-> > Hi, Richard:
-> >
-> > Involve in Mark.
-> >
-> > Please correct me if I am wrong, but according to the code, seems
-> > these upper level locks could not protect this race condition,
-> > because it's inside the GitSM unpack function, the call chain is:
-> >
-> > Inside GitSM:
-> > ```
-> > def unpack
-> >   -> for module in submodules:
-> >        -> unpack_submodules
-> >             -> runfetchcmd
-> >                  -> bb.process.run
-> >                       -> git config submodule
-> > ```
-> >
-> > since 'git config submodule' run concurrently and try to modify a
-> > same git config file, hence the race might happen, but it's hard to
-> > be reproduced since 'git config submodule' finishes quite quickly.
->
-> for that git config call, workdir=3Dud.destdir so its not in any shared
-> location like DL_DIR but in a recipe's workdir?
->
-> Cheers,
->
-> Richard
->
->
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index f45546b..9465acb 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -183,11 +183,19 @@ class GitSM(Git):
+ 
+             local_path = newfetch.localpath(url)
+ 
+-            # Correct the submodule references to the local download version...
+-            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_path}, d, workdir=ud.destdir)
++            # Protects the config file from concurrent updates by submodules
++            # e.g. 'git config submodule' run in different processes may lead
++            # to a race condition.
++            lf = bb.utils.lockfile(os.path.join(ud.destdir, "gitsm-config.lock"))
+ 
+-            if ud.shallow:
+-                runfetchcmd("%(basecmd)s config submodule.%(module)s.shallow true" % {'basecmd': ud.basecmd, 'module': module}, d, workdir=ud.destdir)
++            try:
++                # Correct the submodule references to the local download version...
++                runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_path}, d, workdir=ud.destdir)
++
++                if ud.shallow:
++                    runfetchcmd("%(basecmd)s config submodule.%(module)s.shallow true" % {'basecmd': ud.basecmd, 'module': module}, d, workdir=ud.destdir)
++            finally:
++                bb.utils.unlockfile(lf)
+ 
+             # Ensure the submodule repository is NOT set to bare, since we're checking it out...
+             try:
+-- 
+2.7.4
 
---000000000000537d8505804911cb
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-<div><div dir=3D"auto">Oops, you are absolutely correct, will send a V2 fix=
-ing that.</div></div><div dir=3D"auto"><br></div><div dir=3D"auto">We can c=
-ontinue this discussion on V2.</div><div dir=3D"auto"><br></div><div dir=3D=
-"auto">//Ming Liu</div><div><br><div class=3D"gmail_quote"><div dir=3D"ltr"=
->Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">r=
-ichard.purdie@linuxfoundation.org</a>&gt;=E4=BA=8E2019=E5=B9=B41=E6=9C=8825=
-=E6=97=A5 =E5=91=A8=E4=BA=9415:10=E5=86=99=E9=81=93=EF=BC=9A<br></div><bloc=
-kquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #cc=
-c solid;padding-left:1ex">On Fri, 2019-01-25 at 14:44 +0100, Ming Liu wrote=
-:<br>
-&gt; Hi, Richard:<br>
-&gt; <br>
-&gt; Involve in Mark.<br>
-&gt; <br>
-&gt; Please correct me if I am wrong, but according to the code, seems<br>
-&gt; these upper level locks could not protect this race condition,<br>
-&gt; because it&#39;s inside the GitSM unpack function, the call chain is:<=
-br>
-&gt; <br>
-&gt; Inside GitSM:<br>
-&gt; ```<br>
-&gt; def unpack<br>
-&gt;=C2=A0 =C2=A0-&gt; for module in submodules:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 -&gt; unpack_submodules <br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0-&gt; runfetchcmd<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -&gt; bb=
-.process.run<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0-&gt; git config submodule<br>
-&gt; ```<br>
-&gt; <br>
-&gt; since &#39;git config submodule&#39; run concurrently and try to modif=
-y a<br>
-&gt; same git config file, hence the race might happen, but it&#39;s hard t=
-o<br>
-&gt; be reproduced since &#39;git config submodule&#39; finishes quite quic=
-kly.<br>
-<br>
-for that git config call, workdir=3Dud.destdir so its not in any shared<br>
-location like DL_DIR but in a recipe&#39;s workdir?<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
-</blockquote></div></div>
-
---000000000000537d8505804911cb--
