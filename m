@@ -1,49 +1,35 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com
-	[209.85.128.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 412B57C3BE
+Return-Path: <stefan@agner.ch>
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+	by mail.openembedded.org (Postfix) with ESMTP id E07E47C3A1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Jan 2019 16:58:58 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id y139so7366821wmc.5
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Jan 2019 08:59:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=o/PijOk1ASKyOnRCGevyvPA8BqbCPrGfwq1AbW0Wkhk=;
-	b=WUTbs6IWi6OUJy9GvKD07qYmq1QNqhQmZs4LR7Nq+BK7TfUN8G4jOoQ13YGGUB4gfX
-	i/isyspAB53XMf8tZSMusvAU8zn2i8x1On2V/3uU4wTvb3bcEI4K0uCODNnu93AE1fhp
-	QF31gWUk3OViFaqgxAywW35JOHmLdgey3msM8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=o/PijOk1ASKyOnRCGevyvPA8BqbCPrGfwq1AbW0Wkhk=;
-	b=AxQdU6/u/PNQv542TDvq1OOjmnDnJxC1WalWcxxW1RlPzgF+BCeGCDghbl3/y1IBeF
-	BKL7BdIoEyXLQk3HF3Cky7Rb/P+u3QEfuzfdSTcwoYyWsFrVzCQf4ONXJAfWNak1BNog
-	bihS7GHAHtcYt1dY6llvzz4aoLSIHw9fVA5pjahuh4ZhwMcEyG43Lysdx+b9ILJtEMZl
-	mbchoTzgCvEWOZSZ+KVDxWfYfNhdCIcB6pZLljXfN4lQn9wnASd1TB+C8jf1N7glcQEp
-	WevJPGd0RtoqYFME1vTQwxLOxigx8zxUTIgLuXac67PQmcwa2UdIx6WX2y+n983Fb8CF
-	eRvQ==
-X-Gm-Message-State: AJcUukfQwfMIukmjR5E1Bm5opWb46min5txjBgulX80vLgYJF6aKVhK5
-	5oXzLfQ2DqytL+zwRIh3ZBIrv5oSvUk=
-X-Google-Smtp-Source: ALg8bN5MWV2IXM6NmSmPn5feZtLnxh9ET08/xLSTgehEMK0iCvQ2UwLAHAk7xo2yR6sy0E1OdbO7hg==
-X-Received: by 2002:a1c:1d81:: with SMTP id d123mr7379682wmd.112.1548435539379;
-	Fri, 25 Jan 2019 08:58:59 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	l14sm206802283wrp.55.2019.01.25.08.58.58
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 25 Jan 2019 08:58:58 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 25 Jan 2019 16:58:57 +0000
-Message-Id: <20190125165857.4627-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.19.1
+	Fri, 25 Jan 2019 19:24:30 +0000 (UTC)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id EB0B75C0258;
+	Fri, 25 Jan 2019 20:24:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1548444270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	content-transfer-encoding:content-transfer-encoding:
+	in-reply-to:in-reply-to:references:references;
+	bh=hae7uL1xbybuWPNQfN7cl2USWvy95WQbZQ11UNCinoE=;
+	b=EVfmweI8et65iu/RaN5RIhAt4Qdnb0NWOpmmlrWgkG0HDvmbnsgKhVnZbfRVjo2yuUQ4Rm
+	irEDwA02vUKjkr3eE09orvEIcVWwMlDWfR+pOaSpcoQv/hozPHVT7ghkjWAiej3Eshhuwc
+	POuI9/8gbX3CK7TGJVUoWi0Nylv5fV0=
 MIME-Version: 1.0
-Subject: [PATCH] package: Add pkg_postinst_ontarget to PACKAGEVARS
+Date: Fri, 25 Jan 2019 20:24:30 +0100
+From: Stefan Agner <stefan@agner.ch>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	mark.hatle@windriver.com
+In-Reply-To: <238483ee79cc017f2b6603d562c26cb18036a037.camel@linuxfoundation.org>
+References: <1548427287-11934-1-git-send-email-liu.ming50@gmail.com>
+	<238483ee79cc017f2b6603d562c26cb18036a037.camel@linuxfoundation.org>
+Message-ID: <7d80c538faadfdc9d2259bc37956835b@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
+Cc: bitbake-devel@lists.openembedded.org, luka.pivk@toradex.com,
+	stefan.agner@toradex.com, liu.ming50@gmail.com
+Subject: Re: [PATCH V2] fetch2/gitsm: fix config file concurrent update race
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,33 +42,105 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Jan 2019 16:58:59 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 25 Jan 2019 19:24:31 -0000
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Changes to pkg_postinst_ontarget were not triggering rebuilds, this fixes
-that.
+On 25.01.2019 16:08, Richard Purdie wrote:
+> On Fri, 2019-01-25 at 15:41 +0100, liu.ming50@gmail.com wrote:
+>> From: Ming Liu <liu.ming50@gmail.com>
+>>
+>> A following issue was observed with gitsm:
+>> > git -c core.fsyncobjectfiles=0 config submodule... failed with exit code 255, output:
+>> > error: could not lock config file config: File exists
+>>
+>> Since all git submodules share a config file and Git creates a lock
+>> file (.git/config.lock) to synchronize access to it, but Git only tries
+>> exactly once and returns a error if it's already locked. This leads to
+>> a race condition if there are many 'git config submodule' run in
+>> different processes.
+>>
+>> It could be fixed by introducing a bitbake file lock to protect config
+>> file from concurrent update from submodules.
+>>
+>> Reported-by: Stefan Agner <stefan.agner@toradex.com>
+>> Signed-off-by: Ming Liu <liu.ming50@gmail.com>
+>> ---
+>>  lib/bb/fetch2/gitsm.py | 16 ++++++++++++----
+>>  1 file changed, 12 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+>> index f45546b..9465acb 100644
+>> --- a/lib/bb/fetch2/gitsm.py
+>> +++ b/lib/bb/fetch2/gitsm.py
+>> @@ -183,11 +183,19 @@ class GitSM(Git):
+>>
+>>              local_path = newfetch.localpath(url)
+>>
+>> -            # Correct the submodule references to the local download version...
+>> -            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_path}, d, workdir=ud.destdir)
+>> +            # Protects the config file from concurrent updates by submodules
+>> +            # e.g. 'git config submodule' run in different processes may lead
+>> +            # to a race condition.
+>> +            lf = bb.utils.lockfile(os.path.join(ud.destdir, "gitsm-config.lock"))
+>>
+>> -            if ud.shallow:
+>> -                runfetchcmd("%(basecmd)s config submodule.%(module)s.shallow true" % {'basecmd': ud.basecmd, 'module': module}, d, workdir=ud.destdir)
+>> +            try:
+>> +                # Correct the submodule references to the local download version...
+>> +                runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_path}, d, workdir=ud.destdir)
+>> +
+>> +                if ud.shallow:
+>> +                    runfetchcmd("%(basecmd)s config submodule.%(module)s.shallow true" % {'basecmd': ud.basecmd, 'module': module}, d, workdir=ud.destdir)
+>> +            finally:
+>> +                bb.utils.unlockfile(lf)
+>>
+>>              # Ensure the submodule repository is NOT set to bare, since we're checking it out...
+>>              try:
+> 
+> I still don't see why this is necessary after Mark's recent changes.
+> These files are in ud.destdir which in OE terms is WORKDIR. Only one
+> fetch happens against WORKDIR at a time? Therefore how is this racing?
 
-[YOCTO #13127]
+The git config race we only observed before the recent changes by Mark.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- meta/classes/package.bbclass | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If those changes have the potential to fix this issue, we should test
+those first and hold on with this patch.
 
-diff --git a/meta/classes/package.bbclass b/meta/classes/package.bbclass
-index 853735f0c64..7dd1b09a874 100644
---- a/meta/classes/package.bbclass
-+++ b/meta/classes/package.bbclass
-@@ -2123,7 +2123,7 @@ python package_depchains() {
- 
- # Since bitbake can't determine which variables are accessed during package
- # iteration, we need to list them here:
--PACKAGEVARS = "FILES RDEPENDS RRECOMMENDS SUMMARY DESCRIPTION RSUGGESTS RPROVIDES RCONFLICTS PKG ALLOW_EMPTY pkg_postinst pkg_postrm INITSCRIPT_NAME INITSCRIPT_PARAMS DEBIAN_NOAUTONAME ALTERNATIVE PKGE PKGV PKGR USERADD_PARAM GROUPADD_PARAM CONFFILES SYSTEMD_SERVICE LICENSE SECTION pkg_preinst pkg_prerm RREPLACES GROUPMEMS_PARAM SYSTEMD_AUTO_ENABLE SKIP_FILEDEPS PRIVATE_LIBS"
-+PACKAGEVARS = "FILES RDEPENDS RRECOMMENDS SUMMARY DESCRIPTION RSUGGESTS RPROVIDES RCONFLICTS PKG ALLOW_EMPTY pkg_postinst pkg_postrm pkg_postinst_ontarget INITSCRIPT_NAME INITSCRIPT_PARAMS DEBIAN_NOAUTONAME ALTERNATIVE PKGE PKGV PKGR USERADD_PARAM GROUPADD_PARAM CONFFILES SYSTEMD_SERVICE LICENSE SECTION pkg_preinst pkg_prerm RREPLACES GROUPMEMS_PARAM SYSTEMD_AUTO_ENABLE SKIP_FILEDEPS PRIVATE_LIBS"
- 
- def gen_packagevar(d):
-     ret = []
--- 
-2.19.1
+> 
+> Have you seen this problem against the current master code?
+
+Master as of yesterday (or Wednesday) was not able to fetch the project
+(aktualizr).
+
+Even with the latest 2 fixes I am not able to build the (very same)
+recipe anymore, it ends up in an error during do_configure, presumably
+due to missing submodules:
+
+                                                              
+| -- Configuring done
+| CMake Error at partial/CMakeLists.txt:116 (add_library):
+|   Cannot find source file:
+|                                                                       
+  
+|     extern/isotp-c/deps/bitfield-c/src/bitfield/8byte.c               
+  
+|                                                                       
+  
+|   Tried extensions .c .C .c++ .cc .cpp .cxx .cu .m .M .mm .h .hh .h++
+.hm
+|   .hpp .hxx .in .txx
+|
+|
+| CMake Error at partial/CMakeLists.txt:116 (add_library):
+|   No SOURCES given to target: isotp
+|
+
+Using c1fcc46e2498 ("bitbake: Fix Deprecated warnings from regexs")
+works fine.
+
+--
+Stefan
+
 
 
