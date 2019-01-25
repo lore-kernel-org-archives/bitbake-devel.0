@@ -1,25 +1,24 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 017C27C33D
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id E95976BB2D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Jan 2019 06:51:01 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x0P6p3RF011362
+	Fri, 25 Jan 2019 09:35:27 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x0P9Z3UJ009478
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Jan 2019 22:51:03 -0800 (PST)
+	Fri, 25 Jan 2019 01:35:18 -0800
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.408.0; Thu, 24 Jan 2019 22:51:02 -0800
+	14.3.408.0; Fri, 25 Jan 2019 01:35:01 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 25 Jan 2019 15:09:29 +0800
-Message-ID: <070002fb5989fd3c629d06ce77d9b33d11982a18.1548400142.git.liezhi.yang@windriver.com>
+Date: Fri, 25 Jan 2019 17:53:28 +0800
+Message-ID: <cover.1548409947.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1548400142.git.liezhi.yang@windriver.com>
-References: <cover.1548400142.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake: cookerdata: Check duplicated BBFILE_COLLECTIONS
+Subject: [PATCH 0/1] bitbake: ConfHandler: Don't strip leading spaces
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,32 +31,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Jan 2019 06:51:02 -0000
+X-List-Received-Date: Fri, 25 Jan 2019 09:35:28 -0000
 Content-Type: text/plain
 
-It shouldn't work when there are duplicated BBFILE_COLLECTIONS.
+The following changes since commit 1979d9162a335b7d4718a6697ca57bfa16237f0e:
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/cookerdata.py | 4 ++++
- 1 file changed, 4 insertions(+)
+  bitbake: gitsmy.py: Fix unpack of submodules of submodules (2019-01-24 17:45:49 +0000)
 
-diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
-index 5df66e6..09412e2 100644
---- a/bitbake/lib/bb/cookerdata.py
-+++ b/bitbake/lib/bb/cookerdata.py
-@@ -391,7 +391,11 @@ class CookerDataBuilder(object):
-                 bb.fatal("BBFILES_DYNAMIC entries must be of the form <collection name>:<filename pattern>, not:\n    %s" % "\n    ".join(invalid))
- 
-             layerseries = set((data.getVar("LAYERSERIES_CORENAMES") or "").split())
-+            collections_tmp = collections[:]
-             for c in collections:
-+                collections_tmp.remove(c)
-+                if c in collections_tmp:
-+                    bb.fatal("Found duplicated BBFILE_COLLECTIONS '%s', check bblayers.conf or layer.conf to fix it." % c)
-                 compat = set((data.getVar("LAYERSERIES_COMPAT_%s" % c) or "").split())
-                 if compat and not (compat & layerseries):
-                     bb.fatal("Layer %s is not compatible with the core layer which only supports these series: %s (layer is compatible with %s)"
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib rbt/conf
+  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/conf
+
+Robert Yang (1):
+  bitbake: ConfHandler: Don't strip leading spaces
+
+ bitbake/lib/bb/parse/parse_py/ConfHandler.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 -- 
 2.7.4
 
