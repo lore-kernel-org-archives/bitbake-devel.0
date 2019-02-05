@@ -1,51 +1,52 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
-	[209.85.221.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 7398C7C2AA
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id D33E77C2AA
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Feb 2019 15:14:19 +0000 (UTC)
-Received: by mail-wr1-f65.google.com with SMTP id z3so4044462wrv.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 05 Feb 2019 07:14:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=sgqAfcfdsll4TrjWktQccYjndUVp8iofntlnLOYYscs=;
-	b=C8kWsnpnbcjllW0Zf5DSLO/7L84fmn1IiOzufKuMamK9nrcQRm1c2bAEUaCo/8XQvJ
-	2IOiAc0BvDBgoRV48WRtSDjaa/7Ro3IxvGtCf8JvTh9NSlG1vlrgc2Jt2Tfnc+nsMV97
-	JKfHYX8FZ2+XcTw6v900dSNUryXY7SZOw10kY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=sgqAfcfdsll4TrjWktQccYjndUVp8iofntlnLOYYscs=;
-	b=Jh9jB14bLmJmEJ/r1wmWQEBXdmMQAiot+Y6LYb2Z1/zsq/gltmkC2pdKsdUnLOeSNP
-	IZp1Pc+CBWfVfDdffE8xjcEQr+Y6H6XzMelL/+VHD/z44WpyCnYSb6ZE8tMQ2oPPI4IX
-	C74W5bHT8ktQN/19r5fDPqr4LxTB2cCtj0IDyqok65aL5cg6mjqS4qwXXHNTT4q2xOrb
-	zGkNd0+WMlKioDSRiRnTDzdStLC/pzBrhYW2vi6FyRszpNjjzIptrpCD11mCWb7DLw7a
-	nQ610UuuO+ooMDqKTj4U/X/zrRL6pvw1TPgFRsJh4+7W2YztfS3Wkq8Yaqy53qjnWpmV
-	I25w==
-X-Gm-Message-State: AHQUAua2YAK7XB5WIs/SDSFEO1A1P9ou+GyRqGP7xO0cQMkt879qrEXx
-	cJCmSX9KxAFgjAd7OtdCk6zIJvV+4w8=
-X-Google-Smtp-Source: AHgI3IZPPCQqLg6Z18SyDW5FEnxFEwad6STv8fN93ESLWfG+0C+75GdHwOQb79a8yvhJv8lRu2Lz8Q==
-X-Received: by 2002:adf:c846:: with SMTP id e6mr3880478wrh.243.1549379660020; 
-	Tue, 05 Feb 2019 07:14:20 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	h135sm18802505wmd.21.2019.02.05.07.14.18
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 05 Feb 2019 07:14:19 -0800 (PST)
-Message-ID: <fe63e0bb8c0a5b572dcb038f5af51bbd29fadc72.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 05 Feb 2019 15:14:18 +0000
-In-Reply-To: <070002fb5989fd3c629d06ce77d9b33d11982a18.1548400142.git.liezhi.yang@windriver.com>
+	Tue,  5 Feb 2019 16:43:50 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x15GhoQg002266
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 5 Feb 2019 08:43:50 -0800 (PST)
+Received: from soho-mhatle-m.local (172.25.36.229) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.435.0;
+	Tue, 5 Feb 2019 08:43:49 -0800
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, Robert Yang
+	<liezhi.yang@windriver.com>, <bitbake-devel@lists.openembedded.org>
 References: <cover.1548400142.git.liezhi.yang@windriver.com>
 	<070002fb5989fd3c629d06ce77d9b33d11982a18.1548400142.git.liezhi.yang@windriver.com>
-User-Agent: Evolution 3.30.4-1 
-Mime-Version: 1.0
+	<fe63e0bb8c0a5b572dcb038f5af51bbd29fadc72.camel@linuxfoundation.org>
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <d6feea78-123c-ba23-1fab-d664f0873a74@windriver.com>
+Date: Tue, 5 Feb 2019 10:43:49 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.5.0
+MIME-Version: 1.0
+In-Reply-To: <fe63e0bb8c0a5b572dcb038f5af51bbd29fadc72.camel@linuxfoundation.org>
 Subject: Re: [PATCH 1/1] bitbake: cookerdata: Check duplicated BBFILE_COLLECTIONS
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -59,28 +60,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Feb 2019 15:14:19 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 05 Feb 2019 16:43:51 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2019-01-25 at 15:09 +0800, Robert Yang wrote:
-> It shouldn't work when there are duplicated BBFILE_COLLECTIONS.
+On 2/5/19 9:14 AM, Richard Purdie wrote:
+> On Fri, 2019-01-25 at 15:09 +0800, Robert Yang wrote:
+>> It shouldn't work when there are duplicated BBFILE_COLLECTIONS.
+>>
+>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>> ---
+>>  bitbake/lib/bb/cookerdata.py | 4 ++++
+>>  1 file changed, 4 insertions(+)
 > 
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
->  bitbake/lib/bb/cookerdata.py | 4 ++++
->  1 file changed, 4 insertions(+)
+> This caused a load of failures on yocto-check-layer:
+> 
+> https://autobuilder.yoctoproject.org/typhoon/#/builders/39/builds/259
+> 
+> We may need to fix that behaviour of that script?
+> 
+> Not sure if this is highlighting a bug or not...
 
-This caused a load of failures on yocto-check-layer:
+I think it is highlighting a bug in the yocto-check-layer.
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/39/builds/259
+I've seen instances in the past where something has failed (or been aborted),
+and the yocto-check-layer didn't cleanup after itself.
 
-We may need to fix that behaviour of that script?
+Due to this, we had various configuration files load multiple times (since the
+layer was loaded multiple times) which caused problems throughout the system.
 
-Not sure if this is highlighting a bug or not...
+The yocto-check-layer needs to somehow verify that it's not added the same layer
+multiple times.
 
-Cheers,
+--Mark
 
-Richard
+> Cheers,
+> 
+> Richard
+> 
 
 
