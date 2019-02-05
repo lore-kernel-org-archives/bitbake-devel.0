@@ -1,27 +1,52 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id F0BBC7C10E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 7398C7C2AA
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Feb 2019 04:15:57 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x154FDEL025552
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Tue,  5 Feb 2019 15:14:19 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id z3so4044462wrv.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 4 Feb 2019 20:15:49 -0800
-Received: from dreyna-Precision-T5600.corp.ad.wrs.com (147.11.200.210) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
-	(TLS) id 14.3.435.0; Mon, 4 Feb 2019 20:15:23 -0800
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 4 Feb 2019 19:40:31 -0800
-Message-ID: <cb53ed19d8999b46fedaaf8ca26646469f3de7e7.1549337711.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1549337711.git.David.Reyna@windriver.com>
-References: <cover.1549337711.git.David.Reyna@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [147.11.200.210]
-Subject: [PATCH 1/1] toaster: correctly register the thud branch
+	Tue, 05 Feb 2019 07:14:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=sgqAfcfdsll4TrjWktQccYjndUVp8iofntlnLOYYscs=;
+	b=C8kWsnpnbcjllW0Zf5DSLO/7L84fmn1IiOzufKuMamK9nrcQRm1c2bAEUaCo/8XQvJ
+	2IOiAc0BvDBgoRV48WRtSDjaa/7Ro3IxvGtCf8JvTh9NSlG1vlrgc2Jt2Tfnc+nsMV97
+	JKfHYX8FZ2+XcTw6v900dSNUryXY7SZOw10kY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=sgqAfcfdsll4TrjWktQccYjndUVp8iofntlnLOYYscs=;
+	b=Jh9jB14bLmJmEJ/r1wmWQEBXdmMQAiot+Y6LYb2Z1/zsq/gltmkC2pdKsdUnLOeSNP
+	IZp1Pc+CBWfVfDdffE8xjcEQr+Y6H6XzMelL/+VHD/z44WpyCnYSb6ZE8tMQ2oPPI4IX
+	C74W5bHT8ktQN/19r5fDPqr4LxTB2cCtj0IDyqok65aL5cg6mjqS4qwXXHNTT4q2xOrb
+	zGkNd0+WMlKioDSRiRnTDzdStLC/pzBrhYW2vi6FyRszpNjjzIptrpCD11mCWb7DLw7a
+	nQ610UuuO+ooMDqKTj4U/X/zrRL6pvw1TPgFRsJh4+7W2YztfS3Wkq8Yaqy53qjnWpmV
+	I25w==
+X-Gm-Message-State: AHQUAua2YAK7XB5WIs/SDSFEO1A1P9ou+GyRqGP7xO0cQMkt879qrEXx
+	cJCmSX9KxAFgjAd7OtdCk6zIJvV+4w8=
+X-Google-Smtp-Source: AHgI3IZPPCQqLg6Z18SyDW5FEnxFEwad6STv8fN93ESLWfG+0C+75GdHwOQb79a8yvhJv8lRu2Lz8Q==
+X-Received: by 2002:adf:c846:: with SMTP id e6mr3880478wrh.243.1549379660020; 
+	Tue, 05 Feb 2019 07:14:20 -0800 (PST)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	h135sm18802505wmd.21.2019.02.05.07.14.18
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Tue, 05 Feb 2019 07:14:19 -0800 (PST)
+Message-ID: <fe63e0bb8c0a5b572dcb038f5af51bbd29fadc72.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 05 Feb 2019 15:14:18 +0000
+In-Reply-To: <070002fb5989fd3c629d06ce77d9b33d11982a18.1548400142.git.liezhi.yang@windriver.com>
+References: <cover.1548400142.git.liezhi.yang@windriver.com>
+	<070002fb5989fd3c629d06ce77d9b33d11982a18.1548400142.git.liezhi.yang@windriver.com>
+User-Agent: Evolution 3.30.4-1 
+Mime-Version: 1.0
+Subject: Re: [PATCH 1/1] bitbake: cookerdata: Check duplicated BBFILE_COLLECTIONS
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,76 +59,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Feb 2019 04:15:58 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 05 Feb 2019 15:14:19 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: David Reyna <David.Reyna@windriver.com>
+On Fri, 2019-01-25 at 15:09 +0800, Robert Yang wrote:
+> It shouldn't work when there are duplicated BBFILE_COLLECTIONS.
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/cookerdata.py | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-There are typos in the fixture files that need to be fixed to correctly
-check out the 'thud' branch.
+This caused a load of failures on yocto-check-layer:
 
-[YOCTO #13064]
+https://autobuilder.yoctoproject.org/typhoon/#/builders/39/builds/259
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
- lib/toaster/orm/fixtures/oe-core.xml | 2 +-
- lib/toaster/orm/fixtures/poky.xml    | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+We may need to fix that behaviour of that script?
 
-diff --git a/lib/toaster/orm/fixtures/oe-core.xml b/lib/toaster/orm/fixtures/oe-core.xml
-index fec93ab..a37c664 100644
---- a/lib/toaster/orm/fixtures/oe-core.xml
-+++ b/lib/toaster/orm/fixtures/oe-core.xml
-@@ -52,7 +52,7 @@
-   </object>
-   <object model="orm.release" pk="4">
-     <field type="CharField" name="name">thud</field>
--    <field type="CharField" name="description">Openembedded Rocko</field>
-+    <field type="CharField" name="description">Openembedded Thud</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-     <field type="CharField" name="branch_name">thud</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"http://cgit.openembedded.org/openembedded-core/log/?h=thud\"&gt;OpenEmbedded Thud&lt;/a&gt; branch.</field>
-diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
-index fb9a771..482efaf 100644
---- a/lib/toaster/orm/fixtures/poky.xml
-+++ b/lib/toaster/orm/fixtures/poky.xml
-@@ -56,7 +56,7 @@
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="http://git.yoctoproject.org/cgit/cgit.cgi/poky/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
-   </object>
-   <object model="orm.release" pk="4">
--    <field type="CharField" name="name">rocko</field>
-+    <field type="CharField" name="name">thud</field>
-     <field type="CharField" name="description">Yocto Project 2.6 "Thud"</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-     <field type="CharField" name="branch_name">thud</field>
-@@ -152,7 +152,7 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
--    <field type="CharField" name="branch">rocko</field>
-+    <field type="CharField" name="branch">thud</field>
-     <field type="CharField" name="dirpath">meta</field>
-   </object>
- 
-@@ -190,7 +190,7 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
--    <field type="CharField" name="branch">rocko</field>
-+    <field type="CharField" name="branch">thud</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
- 
-@@ -228,7 +228,7 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
--    <field type="CharField" name="branch">rocko</field>
-+    <field type="CharField" name="branch">thud</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
- </django-objects>
--- 
-2.7.4
+Not sure if this is highlighting a bug or not...
+
+Cheers,
+
+Richard
 
 
