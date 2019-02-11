@@ -1,47 +1,49 @@
-Return-Path: <alex.kanavin@gmail.com>
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com
-	[209.85.167.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 06CFD6D51A
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
+	[209.85.128.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 3BE8579BA6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Feb 2019 14:13:07 +0000 (UTC)
-Received: by mail-lf1-f49.google.com with SMTP id n23so7858640lfl.4
+	Mon, 11 Feb 2019 17:47:05 +0000 (UTC)
+Received: by mail-wm1-f68.google.com with SMTP id m1so121441wml.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Feb 2019 06:13:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=DIyHQGqaMCDmHgZHpKnrhKgR4nST0d3XkdAb/o0n26A=;
-	b=HL4HHsUuyAZwn3a/nIgRFnliOTDh2gnrar8Co1raVB+hzPkGiwaZ4jxEa/uxJ5P74s
-	F9m15fTzhuwOYoH+dZIIqj5Klqb4oii56rjx17Nc0/bEdAKhSYzR41HoaMQnHBvxZ3FE
-	rIGpd5CguPtxoQkMcuoqlo2ogNACAltWaH99oUtY8Hi7fUjHfnlLSTUD6SfCU8I5a9WX
-	kPBkTRE6n3D8DLqVDsB4X8WREHj36r0nLfgUblr7/Rkch1+G5sYOW5/Q4fc7XrSsAInF
-	6ka9i5v1SKSoX2Z/MA6i1llH65BxOXE3v5A9oyunoMVr803A+YksoYh3G6o9h4czWdHx
-	Ju7w==
+	Mon, 11 Feb 2019 09:47:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=xbrdVT8qnaj8aDaLeSnsqd+MTa5HxiMRyxmepAencGU=;
+	b=X+YM6F8eNdk7Qw2YOAnbL4Z9lNQFQR5A4AvwdP/qT8MqaZp3Un40hcPz4q2PL1s+jW
+	DMsJo4TyGEAI5ZuVeX+Qxw/KATom9BBl3iG6Vs4EnP7NRuRLIV4WIuLfpBYaGcxHbtqL
+	5J73Wop6IXkDrqY65ACx23ESXEg+Yn3bDvAks=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=DIyHQGqaMCDmHgZHpKnrhKgR4nST0d3XkdAb/o0n26A=;
-	b=H3LRklYsZ4UdaeZQ5ldS3qSKpMEfppijNxiBaeSfLlk8PH2BEMhDgTMAfPFh3ZQzEs
-	Zba2ke1oDOHQjMLSvZyCVhkA/3AMqsehvGUm0c5KaaoTor2ZpiuAn6mWoz/DRaAioueg
-	vxiO5TFNH0ibSl5QAMIKrnyiSv7wpsrI8/bJYgY5pnt00TT/2D4onqdE4ySmfs+gLvZp
-	SVKtNf9f2NO2/ko/V5ouKHc4bkXeIogQgcEnSNfysGOxX8qaD3uXVTyJBzTS38sGItZX
-	egLI0ngcae7Wjp6SQ5P227EXZCTRb10tIXK+HtslgS7dEzZNSYVVYA8rWqtJVxVoFUou
-	B0fw==
-X-Gm-Message-State: AHQUAuaa4bwBq/ISECRNYRjNMsCiysCBngxCiMrvAkOqh8SupsB/z7zW
-	FOFMdBn+pCuBrKk6/Rd/j1BWGDTt
-X-Google-Smtp-Source: AHgI3Ib1bDmToZRqU5BT0tk2ZrSu7BoOQKuAWzzTCw+oUvJ0+8ZooLm7PmJyRzDtX1Ygs4wEcZmL3g==
-X-Received: by 2002:a19:a98f:: with SMTP id s137mr23249305lfe.18.1549894388082;
-	Mon, 11 Feb 2019 06:13:08 -0800 (PST)
-Received: from alexander-box.luxoft.com ([62.96.135.139])
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=xbrdVT8qnaj8aDaLeSnsqd+MTa5HxiMRyxmepAencGU=;
+	b=DJztjiSRoXUZpl16u9Yw/LSItrIviCtKKeLQXMyglibr3HjeBdGS5kYde5cv/8v8k3
+	Gu1cqAfMNIWpU+16P8ZWcowRMnQosjAbx7WGUyTHrdv9xlOilEKnKIZUNsec/OR8K7vu
+	7ND7a8FwNce5okjUo0UEcDXt8VFS6cMpQokhywawvCPrypYgdlQXQF/9UmVQZjEsukYt
+	38QRM0HCUbM0H7Lsi/oVOupxEY58SSM1eZI6z9fkzfl0fjZj742LMjVhJhYTHfYleOjc
+	RCri93DhtGCJ1cFzNSN1WNloUUxtalsNJlmenvkfC90NrCWz5AMZpyfLmBVGcb3EvQ/Y
+	KA5Q==
+X-Gm-Message-State: AHQUAubtuQ5StA+7J9+fHDqySIRrMRpWu91EmguAMsSFKwc/pZEAnCkL
+	sP9cI2JIk6F9Ry5F4nP+O8p++H67sxo=
+X-Google-Smtp-Source: AHgI3IZdBMC6DKwbztVVqtb3DKmw/kB4Snm+g+QgxJQU+eKNGD5kcmzjsFSNWv8GMLIETdCw95GVTw==
+X-Received: by 2002:a1c:e10a:: with SMTP id y10mr482358wmg.73.1549907225572;
+	Mon, 11 Feb 2019 09:47:05 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	n19sm2349785lfe.64.2019.02.11.06.13.06
+	l129sm7232345wml.42.2019.02.11.09.47.04
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 11 Feb 2019 06:13:07 -0800 (PST)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
+	Mon, 11 Feb 2019 09:47:04 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 11 Feb 2019 15:13:01 +0100
-Message-Id: <20190211141301.79001-1-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.17.1
-Subject: [PATCH] build.py: add unhandled exception information to the logger when executing python tasks
+Date: Mon, 11 Feb 2019 17:47:03 +0000
+Message-Id: <20190211174703.5874-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Subject: [PATCH] oe-build-perf-report: Fix missing buildstats comparisions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,36 +56,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Feb 2019 14:13:08 -0000
+X-List-Received-Date: Mon, 11 Feb 2019 17:47:05 -0000
+Content-Transfer-Encoding: 8bit
 
-Previously this information was simply discarded, which in some cases
-resulted in generic, unhelpful failures.
+Integers were being compared to strings leading to missing buildstats comparision
+data. Fix this.
 
-With this change the user would see what the exception is, but
-without ugly tracebacks or bulky, irrelevant information from the log file.
-
-Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/build.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/oe-build-perf-report | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 3e2a94edb11..7571421d71b 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -304,9 +304,10 @@ def exec_func_python(func, d, runfile, cwd=None, pythonexception=False):
-         utils.better_exec(comp, {"d": d}, code, "exec_python_func() autogenerated", pythonexception=pythonexception)
-     except (bb.parse.SkipRecipe, bb.build.FuncFailed):
-         raise
--    except:
-+    except Exception as e:
-         if pythonexception:
-             raise
-+        logger.error(str(e))
-         raise FuncFailed(func, None)
-     finally:
-         bb.debug(2, "Python function %s finished" % func)
+diff --git a/scripts/oe-build-perf-report b/scripts/oe-build-perf-report
+index b3c769895e6..af4f0469f6b 100755
+--- a/scripts/oe-build-perf-report
++++ b/scripts/oe-build-perf-report
+@@ -427,8 +427,8 @@ def print_html_report(data, id_comp, buildstats):
+ 
+             # Compare buildstats
+             bs_key = test + '.' + meas
+-            rev = metadata['commit_num']['value']
+-            comp_rev = metadata['commit_num']['value_old']
++            rev = str(metadata['commit_num']['value'])
++            comp_rev = str(metadata['commit_num']['value_old'])
+             if (rev in buildstats and bs_key in buildstats[rev] and
+                     comp_rev in buildstats and bs_key in buildstats[comp_rev]):
+                 new_meas['buildstats'] = BSSummary(buildstats[comp_rev][bs_key],
 -- 
-2.17.1
+2.20.1
 
 
