@@ -1,49 +1,31 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
-	[209.85.128.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 3BE8579BA6
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 21A1A7C405
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Feb 2019 17:47:05 +0000 (UTC)
-Received: by mail-wm1-f68.google.com with SMTP id m1so121441wml.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Feb 2019 09:47:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=xbrdVT8qnaj8aDaLeSnsqd+MTa5HxiMRyxmepAencGU=;
-	b=X+YM6F8eNdk7Qw2YOAnbL4Z9lNQFQR5A4AvwdP/qT8MqaZp3Un40hcPz4q2PL1s+jW
-	DMsJo4TyGEAI5ZuVeX+Qxw/KATom9BBl3iG6Vs4EnP7NRuRLIV4WIuLfpBYaGcxHbtqL
-	5J73Wop6IXkDrqY65ACx23ESXEg+Yn3bDvAks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=xbrdVT8qnaj8aDaLeSnsqd+MTa5HxiMRyxmepAencGU=;
-	b=DJztjiSRoXUZpl16u9Yw/LSItrIviCtKKeLQXMyglibr3HjeBdGS5kYde5cv/8v8k3
-	Gu1cqAfMNIWpU+16P8ZWcowRMnQosjAbx7WGUyTHrdv9xlOilEKnKIZUNsec/OR8K7vu
-	7ND7a8FwNce5okjUo0UEcDXt8VFS6cMpQokhywawvCPrypYgdlQXQF/9UmVQZjEsukYt
-	38QRM0HCUbM0H7Lsi/oVOupxEY58SSM1eZI6z9fkzfl0fjZj742LMjVhJhYTHfYleOjc
-	RCri93DhtGCJ1cFzNSN1WNloUUxtalsNJlmenvkfC90NrCWz5AMZpyfLmBVGcb3EvQ/Y
-	KA5Q==
-X-Gm-Message-State: AHQUAubtuQ5StA+7J9+fHDqySIRrMRpWu91EmguAMsSFKwc/pZEAnCkL
-	sP9cI2JIk6F9Ry5F4nP+O8p++H67sxo=
-X-Google-Smtp-Source: AHgI3IZdBMC6DKwbztVVqtb3DKmw/kB4Snm+g+QgxJQU+eKNGD5kcmzjsFSNWv8GMLIETdCw95GVTw==
-X-Received: by 2002:a1c:e10a:: with SMTP id y10mr482358wmg.73.1549907225572;
-	Mon, 11 Feb 2019 09:47:05 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	l129sm7232345wml.42.2019.02.11.09.47.04
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 11 Feb 2019 09:47:04 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 11 Feb 2019 17:47:03 +0000
-Message-Id: <20190211174703.5874-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+	Tue, 12 Feb 2019 01:58:55 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x1C1wDFS017653
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Mon, 11 Feb 2019 17:58:29 -0800
+Received: from localhost.corp.ad.wrs.com (128.224.163.177) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.435.0; Mon, 11 Feb 2019 17:58:06 -0800
+To: Mark Hatle <mark.hatle@windriver.com>, Richard Purdie
+	<richard.purdie@linuxfoundation.org>,
+	<bitbake-devel@lists.openembedded.org>
+References: <cover.1548400142.git.liezhi.yang@windriver.com>
+	<070002fb5989fd3c629d06ce77d9b33d11982a18.1548400142.git.liezhi.yang@windriver.com>
+	<fe63e0bb8c0a5b572dcb038f5af51bbd29fadc72.camel@linuxfoundation.org>
+	<d6feea78-123c-ba23-1fab-d664f0873a74@windriver.com>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <5508a496-24af-f341-6455-35952d8ae6dd@windriver.com>
+Date: Tue, 12 Feb 2019 10:02:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.4.0
 MIME-Version: 1.0
-Subject: [PATCH] oe-build-perf-report: Fix missing buildstats comparisions
+In-Reply-To: <d6feea78-123c-ba23-1fab-d664f0873a74@windriver.com>
+Subject: Re: [PATCH 1/1] bitbake: cookerdata: Check duplicated BBFILE_COLLECTIONS
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,33 +38,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Feb 2019 17:47:05 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 12 Feb 2019 01:58:55 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Integers were being compared to strings leading to missing buildstats comparision
-data. Fix this.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- scripts/oe-build-perf-report | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/oe-build-perf-report b/scripts/oe-build-perf-report
-index b3c769895e6..af4f0469f6b 100755
---- a/scripts/oe-build-perf-report
-+++ b/scripts/oe-build-perf-report
-@@ -427,8 +427,8 @@ def print_html_report(data, id_comp, buildstats):
- 
-             # Compare buildstats
-             bs_key = test + '.' + meas
--            rev = metadata['commit_num']['value']
--            comp_rev = metadata['commit_num']['value_old']
-+            rev = str(metadata['commit_num']['value'])
-+            comp_rev = str(metadata['commit_num']['value_old'])
-             if (rev in buildstats and bs_key in buildstats[rev] and
-                     comp_rev in buildstats and bs_key in buildstats[comp_rev]):
-                 new_meas['buildstats'] = BSSummary(buildstats[comp_rev][bs_key],
--- 
-2.20.1
+On 2/6/19 12:43 AM, Mark Hatle wrote:
+> On 2/5/19 9:14 AM, Richard Purdie wrote:
+>> On Fri, 2019-01-25 at 15:09 +0800, Robert Yang wrote:
+>>> It shouldn't work when there are duplicated BBFILE_COLLECTIONS.
+>>>
+>>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>>> ---
+>>>   bitbake/lib/bb/cookerdata.py | 4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>
+>> This caused a load of failures on yocto-check-layer:
+>>
+>> https://autobuilder.yoctoproject.org/typhoon/#/builders/39/builds/259
+>>
+>> We may need to fix that behaviour of that script?
+>>
+>> Not sure if this is highlighting a bug or not...
+> 
+> I think it is highlighting a bug in the yocto-check-layer.
+> 
+> I've seen instances in the past where something has failed (or been aborted),
+> and the yocto-check-layer didn't cleanup after itself.
+> 
+> Due to this, we had various configuration files load multiple times (since the
+> layer was loaded multiple times) which caused problems throughout the system.
+> 
+> The yocto-check-layer needs to somehow verify that it's not added the same layer
+> multiple times.
 
+Sorry, I just came back from holiday, I will work on it if it has not been fixed.
+
+// Robert
+
+> 
+> --Mark
+> 
+>> Cheers,
+>>
+>> Richard
+>>
+> 
+> 
 
