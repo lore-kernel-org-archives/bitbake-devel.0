@@ -1,31 +1,53 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 8DDFC7C3DD
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-it1-f181.google.com (mail-it1-f181.google.com
+	[209.85.166.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 73F8D7C612
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Feb 2019 09:59:56 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x1C9xuMB008303
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 12 Feb 2019 01:59:56 -0800 (PST)
-Received: from localhost.corp.ad.wrs.com (128.224.163.177) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.3.435.0; Tue, 12 Feb 2019 01:59:56 -0800
-To: Mark Hatle <mark.hatle@windriver.com>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>,
-	<bitbake-devel@lists.openembedded.org>
-References: <cover.1548400142.git.liezhi.yang@windriver.com>
-	<070002fb5989fd3c629d06ce77d9b33d11982a18.1548400142.git.liezhi.yang@windriver.com>
-	<fe63e0bb8c0a5b572dcb038f5af51bbd29fadc72.camel@linuxfoundation.org>
-	<d6feea78-123c-ba23-1fab-d664f0873a74@windriver.com>
-	<5508a496-24af-f341-6455-35952d8ae6dd@windriver.com>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <fff17600-0407-a690-dc4a-c3861e1e42e7@windriver.com>
-Date: Tue, 12 Feb 2019 18:04:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-	Thunderbird/60.4.0
+	Thu, 14 Feb 2019 21:36:55 +0000 (UTC)
+Received: by mail-it1-f181.google.com with SMTP id x131so17773241itc.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 14 Feb 2019 13:36:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding;
+	bh=kJgIqVSRHdyXnbgqL38kizffN3zASoXG+Ig2v8GlwcA=;
+	b=sQ9fCseFyFuZZAYujZgbISVSkEs3CbtxsKPq2H/NPGi64sOK9u1++Fd4o8ziLNXJRE
+	AzClI3/bVCuRo3km4FtlwSJx8O+xTf7amwsPwtylKRDSy5Nm1tjJ0ZTWBF5CIdg9TL0I
+	EcZ2RZPzsSra48f+cxds9bBLTewXoUXsu6MtZxIiAOkmKnSPLWoRF4gZYCYWGq6QuDwl
+	LLK9eWRVOxRoDvdck7V25FNSp4nprTkgmkZEM2ogtXmNu5BAEqtHiM91y8xPZ9IIW0gK
+	2eNgt4aCGLqV1KyROymzCzhZvV1/rCJ4L1/lA2GbP4YVSa2Aw8vDGZSpqSJRQm9U56GM
+	BzKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=kJgIqVSRHdyXnbgqL38kizffN3zASoXG+Ig2v8GlwcA=;
+	b=EWmYTfgBGHRu3Why5BVih3auHUxPT9x9rc2tpR40rwD8rq2+w3yxAYaEMotGepVmmm
+	AhCVBD65TPHzD5svZPTVpX6XFIOSN1ZJjGjm6cPoRTQ75X8wZMubdZ7Yyd592Ol5OT43
+	x7ChXf0+dqDNSccsFsk9DPHKDHGUx4XwrLkra1cx8FS6SB4GwMIcQRAT+Py0eG7zzdy0
+	G2BMq1KIEWoOFWi73gJzMNa9p9C303t/wMItIrqO+UILFW1MJWTp6lAZlpBdUjkbzD/m
+	pwNvHs1YEheiCyQs8MAn1njg9bD/TMPZVhkXEYfMYQUpB36PpfyyE80/K8zAI0goJ7jy
+	TnJw==
+X-Gm-Message-State: AHQUAuZFZyurBA0fxR/s/sUUWHP5xilN4rZJYmRzth/JPe+upTpGpM89
+	Elr0CZM7GGdUncpulifwfvh3hn84
+X-Google-Smtp-Source: AHgI3IbO/aDz137uYJVO2trbudOmVvGmUl/jNoHXvXhVJbA6Qey1IpUiI2u0/KbwB/vTMpg0RWUdAQ==
+X-Received: by 2002:a24:7b48:: with SMTP id q69mr3491669itc.31.1550180216222; 
+	Thu, 14 Feb 2019 13:36:56 -0800 (PST)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id
+	m186sm1678393ita.2.2019.02.14.13.36.54
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Thu, 14 Feb 2019 13:36:55 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 14 Feb 2019 15:36:45 -0600
+Message-Id: <20190214213645.4892-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190207165603.20306-1-JPEWhacker@gmail.com>
+References: <20190207165603.20306-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5508a496-24af-f341-6455-35952d8ae6dd@windriver.com>
-Subject: Re: [PATCH 1/1] bitbake: cookerdata: Check duplicated BBFILE_COLLECTIONS
+Subject: [PATCH v2] bitbake: Allow arguments in FAKEROOTCMD
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,63 +60,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Feb 2019 09:59:56 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+X-List-Received-Date: Thu, 14 Feb 2019 21:36:55 -0000
 Content-Transfer-Encoding: 8bit
 
+Changes FAKEROOTCMD so that it can accept additional arguments to pass
+to the fakeroot implementation instead of being treated as a simple
+command
 
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/runqueue.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-On 2/12/19 10:02 AM, Robert Yang wrote:
-> 
-> 
-> On 2/6/19 12:43 AM, Mark Hatle wrote:
->> On 2/5/19 9:14 AM, Richard Purdie wrote:
->>> On Fri, 2019-01-25 at 15:09 +0800, Robert Yang wrote:
->>>> It shouldn't work when there are duplicated BBFILE_COLLECTIONS.
->>>>
->>>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->>>> ---
->>>>   bitbake/lib/bb/cookerdata.py | 4 ++++
->>>>   1 file changed, 4 insertions(+)
->>>
->>> This caused a load of failures on yocto-check-layer:
->>>
->>> https://autobuilder.yoctoproject.org/typhoon/#/builders/39/builds/259
->>>
->>> We may need to fix that behaviour of that script?
->>>
->>> Not sure if this is highlighting a bug or not...
->>
->> I think it is highlighting a bug in the yocto-check-layer.
->>
->> I've seen instances in the past where something has failed (or been aborted),
->> and the yocto-check-layer didn't cleanup after itself.
->>
->> Due to this, we had various configuration files load multiple times (since the
->> layer was loaded multiple times) which caused problems throughout the system.
->>
->> The yocto-check-layer needs to somehow verify that it's not added the same layer
->> multiple times.
-> 
-> Sorry, I just came back from holiday, I will work on it if it has not been fixed.
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 6002ccf06a8..9b2e69e543b 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -37,6 +37,7 @@ from bb import monitordisk
+ import subprocess
+ import pickle
+ from multiprocessing import Process
++import shlex
+ 
+ bblogger = logging.getLogger("BitBake")
+ logger = logging.getLogger("BitBake.RunQueue")
+@@ -1221,12 +1222,12 @@ class RunQueue:
+         if fakeroot:
+             magic = magic + "beef"
+             mcdata = self.cooker.databuilder.mcdata[mc]
+-            fakerootcmd = mcdata.getVar("FAKEROOTCMD")
++            fakerootcmd = shlex.split(mcdata.getVar("FAKEROOTCMD"))
+             fakerootenv = (mcdata.getVar("FAKEROOTBASEENV") or "").split()
+             env = os.environ.copy()
+             for key, value in (var.split('=') for var in fakerootenv):
+                 env[key] = value
+-            worker = subprocess.Popen([fakerootcmd, "bitbake-worker", magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE, env=env)
++            worker = subprocess.Popen(fakerootcmd + ["bitbake-worker", magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE, env=env)
+         else:
+             worker = subprocess.Popen(["bitbake-worker", magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+         bb.utils.nonblockingfd(worker.stdout)
+-- 
+2.20.1
 
-I've sent 2 patches in oe-core to fix yocto-check-layer:
-
-http://lists.openembedded.org/pipermail/openembedded-core/2019-February/278919.html
-
-// Robert
-
-> 
-> // Robert
-> 
->>
->> --Mark
->>
->>> Cheers,
->>>
->>> Richard
->>>
->>
->>
 
