@@ -1,53 +1,51 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it1-f181.google.com (mail-it1-f181.google.com
-	[209.85.166.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 73F8D7C612
+Return-Path: <mr.k.zawadzki@gmail.com>
+Received: from mail-lj1-f193.google.com (mail-lj1-f193.google.com
+	[209.85.208.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 6CC2A7C691
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Feb 2019 21:36:55 +0000 (UTC)
-Received: by mail-it1-f181.google.com with SMTP id x131so17773241itc.3
+	Fri, 15 Feb 2019 03:25:50 +0000 (UTC)
+Received: by mail-lj1-f193.google.com with SMTP id j19so6343417ljg.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Feb 2019 13:36:56 -0800 (PST)
+	Thu, 14 Feb 2019 19:25:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding;
-	bh=kJgIqVSRHdyXnbgqL38kizffN3zASoXG+Ig2v8GlwcA=;
-	b=sQ9fCseFyFuZZAYujZgbISVSkEs3CbtxsKPq2H/NPGi64sOK9u1++Fd4o8ziLNXJRE
-	AzClI3/bVCuRo3km4FtlwSJx8O+xTf7amwsPwtylKRDSy5Nm1tjJ0ZTWBF5CIdg9TL0I
-	EcZ2RZPzsSra48f+cxds9bBLTewXoUXsu6MtZxIiAOkmKnSPLWoRF4gZYCYWGq6QuDwl
-	LLK9eWRVOxRoDvdck7V25FNSp4nprTkgmkZEM2ogtXmNu5BAEqtHiM91y8xPZ9IIW0gK
-	2eNgt4aCGLqV1KyROymzCzhZvV1/rCJ4L1/lA2GbP4YVSa2Aw8vDGZSpqSJRQm9U56GM
-	BzKg==
+	h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=9AyqJb0AZC3ngzs787SDZ5YcpcFj+kxaslVbxIB+gYY=;
+	b=Hfqp4GbOcyWn2tnCQFR8LcvQi6Y+DGqFCriyOgRBeLG50U8Ew4LyDWrZCbC7l8Di4Q
+	pjQKjkCgF5SxhWmhp0vFvUib0zbOZWZYxrAa1ynP1fqF8vJ/vOLsou5LF7X0xkRtxDrp
+	wAx5EIIAeB+OjxW6ji5MdpF7xdITMNNRggGAdfxhc3soQaA34PKXf3iqsb2EM7220SGd
+	qudCBatVJRaE+gQNcr4qx1lgWzktVfPQf8mGOgD/IgnpNoi/pprNa7IXAAC/DZHCoVky
+	b/Wh5AbHsgarjDHwHCpTagd7WEUgvBE3Qa8C8IaM3JbGQYjIlYm58KDdJWoh5piFl9kg
+	9xYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=kJgIqVSRHdyXnbgqL38kizffN3zASoXG+Ig2v8GlwcA=;
-	b=EWmYTfgBGHRu3Why5BVih3auHUxPT9x9rc2tpR40rwD8rq2+w3yxAYaEMotGepVmmm
-	AhCVBD65TPHzD5svZPTVpX6XFIOSN1ZJjGjm6cPoRTQ75X8wZMubdZ7Yyd592Ol5OT43
-	x7ChXf0+dqDNSccsFsk9DPHKDHGUx4XwrLkra1cx8FS6SB4GwMIcQRAT+Py0eG7zzdy0
-	G2BMq1KIEWoOFWi73gJzMNa9p9C303t/wMItIrqO+UILFW1MJWTp6lAZlpBdUjkbzD/m
-	pwNvHs1YEheiCyQs8MAn1njg9bD/TMPZVhkXEYfMYQUpB36PpfyyE80/K8zAI0goJ7jy
-	TnJw==
-X-Gm-Message-State: AHQUAuZFZyurBA0fxR/s/sUUWHP5xilN4rZJYmRzth/JPe+upTpGpM89
-	Elr0CZM7GGdUncpulifwfvh3hn84
-X-Google-Smtp-Source: AHgI3IbO/aDz137uYJVO2trbudOmVvGmUl/jNoHXvXhVJbA6Qey1IpUiI2u0/KbwB/vTMpg0RWUdAQ==
-X-Received: by 2002:a24:7b48:: with SMTP id q69mr3491669itc.31.1550180216222; 
-	Thu, 14 Feb 2019 13:36:56 -0800 (PST)
-Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=9AyqJb0AZC3ngzs787SDZ5YcpcFj+kxaslVbxIB+gYY=;
+	b=Xcidz5svFksdmIsnYs20hupDZcwbK7yW5+8r27Sz+Q3RDQUC2S0RcZEGH6H/SEaKW1
+	Gh22Lcu/5puUxfXTh06mt8UO0IrZIMToZC/eLBLYdUlWxDzTpqXfa9eq+GowOxeJz5Oi
+	OeYQhmsMop8MyGgA90Yfg+nKdavbx875ns84CKFzA2yb1jsl14KQrhcMzvQofBzh/tNP
+	MZFAZ2YZmYHU55bsz4gdTM47rtJ+kfKm/yqUqhr0V5lAJ6XzWEb02oyKhDw/ay2UybR5
+	BEFS8w7oBX2vck6XRhu2QSzNn4OOVP1IQ/cxrzfgTB/BIVpGI5ruPAMyLt2bB2+NzZJn
+	Pe+w==
+X-Gm-Message-State: AHQUAuZu6Z+LRCSNnBVB2rSW9yrnkfpWTrDOZQtRT6yJIt8AbYhRtnmJ
+	nJyb7+aqfKoYFdfm0YXy3ZQUCSWq
+X-Google-Smtp-Source: AHgI3IZ925trD1xuNUTjmWeENtBfHzb4bh+bw9hpBHvUXXTn7EJ1nk7/BgXNYneltumFpvy3ZKGCGQ==
+X-Received: by 2002:a2e:8795:: with SMTP id
+	n21-v6mr4663344lji.109.1550201150423; 
+	Thu, 14 Feb 2019 19:25:50 -0800 (PST)
+Received: from localhost.localdomain ([80.68.230.94])
 	by smtp.gmail.com with ESMTPSA id
-	m186sm1678393ita.2.2019.02.14.13.36.54
+	z19-v6sm845225ljz.19.2019.02.14.19.25.49
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Thu, 14 Feb 2019 13:36:55 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+	Thu, 14 Feb 2019 19:25:49 -0800 (PST)
+From: Krzysztof Zawadzki <mr.k.zawadzki@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 14 Feb 2019 15:36:45 -0600
-Message-Id: <20190214213645.4892-1-JPEWhacker@gmail.com>
+Date: Fri, 15 Feb 2019 04:25:39 +0100
+Message-Id: <20190215032539.5297-1-mr.k.zawadzki@gmail.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190207165603.20306-1-JPEWhacker@gmail.com>
-References: <20190207165603.20306-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH v2] bitbake: Allow arguments in FAKEROOTCMD
+Subject: [PATCH] fetch2/svn: adds svn --ignore-externals option
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,45 +58,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Feb 2019 21:36:55 -0000
+X-List-Received-Date: Fri, 15 Feb 2019 03:25:50 -0000
 Content-Transfer-Encoding: 8bit
 
-Changes FAKEROOTCMD so that it can accept additional arguments to pass
-to the fakeroot implementation instead of being treated as a simple
-command
+With this option we can force users to provide all used sources in recipe.
+Without this there is possibility that repositories which are using svn:externals
+ can point to source code from HEAD or to nonexisting repository.
+This can cause attempt to reproduce build after some time impossible.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Krzysztof Zawadzki <mr.k.zawadzki@gmail.com>
 ---
- bitbake/lib/bb/runqueue.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/svn.py | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 6002ccf06a8..9b2e69e543b 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -37,6 +37,7 @@ from bb import monitordisk
- import subprocess
- import pickle
- from multiprocessing import Process
-+import shlex
+diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
+index 9dcf3eb0..f4a07be3 100644
+--- a/lib/bb/fetch2/svn.py
++++ b/lib/bb/fetch2/svn.py
+@@ -97,13 +97,20 @@ class Svn(FetchMethod):
  
- bblogger = logging.getLogger("BitBake")
- logger = logging.getLogger("BitBake.RunQueue")
-@@ -1221,12 +1222,12 @@ class RunQueue:
-         if fakeroot:
-             magic = magic + "beef"
-             mcdata = self.cooker.databuilder.mcdata[mc]
--            fakerootcmd = mcdata.getVar("FAKEROOTCMD")
-+            fakerootcmd = shlex.split(mcdata.getVar("FAKEROOTCMD"))
-             fakerootenv = (mcdata.getVar("FAKEROOTBASEENV") or "").split()
-             env = os.environ.copy()
-             for key, value in (var.split('=') for var in fakerootenv):
-                 env[key] = value
--            worker = subprocess.Popen([fakerootcmd, "bitbake-worker", magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE, env=env)
-+            worker = subprocess.Popen(fakerootcmd + ["bitbake-worker", magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE, env=env)
+         if ud.pswd:
+             options.append("--password %s" % ud.pswd)
+-
++        
+         if command == "info":
+             svncmd = "%s info %s %s://%s/%s/" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module)
+         elif command == "log1":
+             svncmd = "%s log --limit 1 %s %s://%s/%s/" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module)
          else:
-             worker = subprocess.Popen(["bitbake-worker", magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-         bb.utils.nonblockingfd(worker.stdout)
+             suffix = ""
++
++            if "externals" in ud.parm:
++                if ud.parm["externals"] == "ignore":
++                    options.append("--ignore-externals")
++                else:
++                    raise FetchError("Invalid value for 'externals': expected 'ignore'")
++
+             if ud.revision:
+                 options.append("-r %s" % ud.revision)
+                 suffix = "@%s" % (ud.revision)
 -- 
 2.20.1
 
