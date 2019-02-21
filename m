@@ -1,51 +1,52 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com
-	[209.85.221.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 593237CB94
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com
+	[209.85.221.43])
+	by mail.openembedded.org (Postfix) with ESMTP id A6C456BE2A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Feb 2019 21:13:06 +0000 (UTC)
-Received: by mail-wr1-f54.google.com with SMTP id o17so59388wrw.3
+	Thu, 21 Feb 2019 21:16:53 +0000 (UTC)
+Received: by mail-wr1-f43.google.com with SMTP id v13so59218wrw.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Feb 2019 13:13:07 -0800 (PST)
+	Thu, 21 Feb 2019 13:16:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
 	:mime-version:content-transfer-encoding;
-	bh=k5HKpCrUzh3o5PnGaoUqO5+ClGbXrBuyu8HFL4KgzkM=;
-	b=Vwtv8DCIZkG2deQJUswwui4E+d1nQcovGNPSlYAlGrUFCyPBoGBFNIh4byKThmAHVy
-	8vVclpLb000O0YzpntAYyusK7Tuao4Hq+q8moHHNFHeE9HQXOTnW1q9rYXJfcBgdSIl0
-	zIn3b/tDq0oAyRs5B+qfXE2PnQ9LxrLJFXkZ0=
+	bh=NEyBgNlSmV7gQxWU79sLz5bmSifJaeeRRGcFnKjeC74=;
+	b=cnQjM5tt664fczekyP8YZLqwHyhnU7bVQHPnkwKC4weT4kzfpzp+tErZM29UwlvD6E
+	QJf3/5cFc9ncb00i8xcuK8yCdZF6Gwhva7vrhmP8WlQX49Ozw8FdwbmI7uQ308TYHML+
+	Y+SmIqc2mQhMAmOJg2RH+198Cza+Y9JqfhUMw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
 	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=k5HKpCrUzh3o5PnGaoUqO5+ClGbXrBuyu8HFL4KgzkM=;
-	b=miQNM4LHeYhJWXpOfwglsjJDrcWkGSDxH6Am9AmdjHmKddS0XdFRDyGlGEUXakB/mm
-	UoPfmXJjqMzd8stSnRp/BX9onKvV46TWJSOfJEJ60LrJ30E+2X5qTHKJABrIjZCwSRcp
-	IDgmUM1kasyk40qPVMDXy4TwsrKPSfMK8rZkLY2sGlsRzSMhqhS3djUgWRggD6qGy9S9
-	3le6khmT0X6CviPrktV3lAv66PqW40rX+Zot1UeUvCaxoTTRKaRCqbZOXKyErMVANEcD
-	P9CpsFnxHEVCBoqUkObqAQTJvdSlcio/krUr0KSaueCEsQlhSVzdg/aRDNZmTkUiCsxz
-	a3Uw==
-X-Gm-Message-State: AHQUAubpMmb3gB1BUHzxPLAmUq0ur7tCn+AtCrNK7FDWImUqfoJdaKXo
-	S9STDOHgIjyuVMBLQL2Jj3lsUuIsZNU=
-X-Google-Smtp-Source: AHgI3IYLnvrpMqDkexm9caqw+io8EPoU/z6+/LQ4RAx0WKaagpeHnQFE1jUgTZYk6w9jKBdrod5+IQ==
-X-Received: by 2002:adf:ffcf:: with SMTP id x15mr313106wrs.277.1550783587017; 
-	Thu, 21 Feb 2019 13:13:07 -0800 (PST)
+	bh=NEyBgNlSmV7gQxWU79sLz5bmSifJaeeRRGcFnKjeC74=;
+	b=ZMsyZkoXd6miHaOuQcIkbcshGr+kjakQmv55ksAYcSbNyLVoriAbHMt8a5iNUEN+DY
+	+rfXrIvnWor0Ycm4bFIWTaqq1jCiDel+BlOZyqn6FZwW7DMCjlnCbHkeXbKk7iM8k6vM
+	Aaae7Z5t92e6kyZNSKrcIExhKHwwdsbbT4tzznw3DDKqvazvCJuVmQQPQphVs6kTaSQ6
+	4RmSjxjOzVEnGvBK6GfhQXmRLcA1x3SP5MdeaMBD2KxVu7IDjUXR9/Brx+XsmVL+n30N
+	fTfktlmSTQi2peUKlRfThcxBXCjD716k7C/UMf8sJo51OdNBEJwtHucqE5omDqZcrU/T
+	ylyg==
+X-Gm-Message-State: AHQUAuaVFk47vRFewU2i6RO2vvpyk3wbhCTlVrvh76J2UNkCVChDiwo+
+	5KkzAIz0sMJTKg2NEIW++p/+310rgsI=
+X-Google-Smtp-Source: AHgI3IbTyOzB+Vo2hDlD5DH73QDSnmO1eefxjr+tkwpl/hvvCqs10lsRIpGUfWnQz4AnAkrV/yHnig==
+X-Received: by 2002:adf:dcc2:: with SMTP id x2mr398294wrm.72.1550783814246;
+	Thu, 21 Feb 2019 13:16:54 -0800 (PST)
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	132sm25891379wmd.27.2019.02.21.13.13.06
+	m16sm19068666wro.78.2019.02.21.13.16.53
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Thu, 21 Feb 2019 13:13:06 -0800 (PST)
-Message-ID: <429831d9241a7ec21e84523a354c89f9a97263ad.camel@linuxfoundation.org>
+	Thu, 21 Feb 2019 13:16:53 -0800 (PST)
+Message-ID: <e50122b91a10676d4a3e561a8610e6b9128b283c.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Chris Laplante <chris.laplante@agilent.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Feb 2019 21:13:05 +0000
-In-Reply-To: <1538621300-112900-1-git-send-email-chris.laplante@agilent.com>
-References: <1538621300-112900-1-git-send-email-chris.laplante@agilent.com>
+To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, 
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Thu, 21 Feb 2019 21:16:52 +0000
+In-Reply-To: <MW2PR12MB25406C73DC67507911E948168BEA0@MW2PR12MB2540.namprd12.prod.outlook.com>
+References: <MW2PR12MB25406C73DC67507911E948168BEA0@MW2PR12MB2540.namprd12.prod.outlook.com>
 User-Agent: Evolution 3.31.90-1 
 MIME-Version: 1.0
-Subject: Re: [PATCH] build.py: support custom task [progress] handlers
+Subject: Re: Fixing bitbake --revisions-changed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,81 +59,148 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Feb 2019 21:13:06 -0000
+X-List-Received-Date: Thu, 21 Feb 2019 21:16:53 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2018-10-03 at 22:48 -0400, Chris Laplante via bitbake-devel
+On Thu, 2018-10-04 at 15:10 +0000, chris.laplante--- via bitbake-devel
 wrote:
-> To use this mechanism, you need to inject your progress handler (i.e.
-> something derived from bb.progress.ProgressHandler) into
-> __builtins__.
-> Here's one way to do it (from recipe-space):
+> Hi all,
 > 
->     def install_my_progress_handler():
->         from bb.progress import ProgressHandler
+> A while back I wanted to use the --revisions-changed flag of bitbake
+> but found that it was unfortunately broken. In the next week or so I
+> hope to submit a patchset to fix it. There are 3 issues preventing it
+> from working, which I'll detail below. I am not sure how to fix the
+> third issue, so that's why I'm starting this conversation.
 > 
->         class MyProgressHandler(ProgressHandler):
->             pass
+> Please note that to reproduce these results, vanilla Poky isn't
+> enough - none of its recipes use SRCREV = "${AUTOREV}". So you'll
+> either need to add a recipe (or layer with a recipe) that uses it.
 > 
->         if "MyProgressHandler" not in __builtins__:
->             __builtins__["MyProgressHandler"] = MyProgressHandler
 > 
->         return "OK"
+> 1. Bad call to bb.fetch.fetcher_compare_revisions
 > 
->     _INSTALL_MY_PROGRESS_HANDLERS := "${@install_my_progress_handler(
-> )}"
+> The first issue you'll encounter if you try the flag is this
+> exception:
+> 
+>     ERROR: Command execution failed: Traceback (most recent call
+> last):
+>       File "/home/laplante/poky-
+> master/poky/bitbake/lib/bb/command.py", line 116, in runAsyncCommand
+>         commandmethod(self.cmds_async, self, options)
+>       File "/home/laplante/poky-
+> master/poky/bitbake/lib/bb/command.py", line 723, in compareRevisions
+>         if bb.fetch.fetcher_compare_revisions(command.cooker.data):
+>     TypeError: fetcher_compare_revisions() takes 0 positional
+> arguments but 1 was given
+> 
+> BitBake rev 81bc1f20662c39ee8db1da45b1e8c7eb64abacf3 (2016)
+> mistakenly dropped the 'd' parameter of fetcher_compare_revisions.
+> The sole usage of the method (in command.py) still correctly passes
+> it. So the fix here is easy - just add back the 'd' to
+> fetcher_compare_revisions.
+> 
+> 
+> 2. Incorrect handling of bb.command.CommandExit in knotty.py
+> 
+> After you've fixed (1), and if upstream changes are "detected", then
+> compareRevisions (command.py) will call
+> command.finishAsyncCommand(code=1). That method will fire
+> bb.command.CommandExit. Assuming you are using knotty, your bitbake
+> command will hang forever. This is because the knotty CommandExit
+> handler does not set "main.shutdown" (unlike the CommandFinish and
+> CommandCompleted handlers). 
+> 
+> The fix here is simple - the CommandExit handler should set
+> "main.shutdown = 2" to break out of the loop and return its return
+> code. This is in line with how the ncurses UI works (it exits the
+> loop for all three flavors of events).
+> 
+> 
+> 3. bb.fetch2.saved_headrevs is always empty inside
+> fetcher_compare_revisions, because fetcher_init is called twice.
+> 
+> Now we get to the part we're I'm unsure of how to proceed. In (2),
+> "detected" is quoted because as we shall see,
+> fetcher_compare_revisions will always think it detects changes.
+> 
+> I will assume BB_SRCREV_POLICY is set to its default "clear".
+> fetcher_compare_revisions boils down to comparing these two sets of
+> revisions:
+> 
+>     data = bb.persist_data.persist('BB_URI_HEADREVS', d).items()
+>     data2 = bb.fetch2.saved_headrevs
+> 
+> If you instrument the code with some extra logging, you'll find that
+> data2 (and therefore bb.fetch2.saved_headrevs) is always empty. The
+> problem is that fetcher_init gets called twice. I'll reproduce just
+> the first part of the method:
+> 
+>     def fetcher_init(d):
+>         # ...
+>         srcrev_policy = d.getVar('BB_SRCREV_POLICY') or "clear"
+>         if srcrev_policy == "cache":
+>             logger.debug(1, "Keeping SRCREV cache due to cache policy
+> of: %s", srcrev_policy)
+>         elif srcrev_policy == "clear":
+>             logger.debug(1, "Clearing SRCREV cache due to cache
+> policy of: %s", srcrev_policy)
+>             revs = bb.persist_data.persist('BB_URI_HEADREVS', d)
+>             try: 
+>                 bb.fetch2.saved_headrevs = revs.items()
+>             except:
+>                 pass 
+>             revs.clear()
+> 
+> Again, let's assume BB_SRCREV_POLICY is "clear". The first time the
+> method is called (during server startup), bb.fetch2.saved_headrevs is
+> correctly set and BB_URI_HEADREVS is rightfully cleared.
+> 
+> Unfortunately, fetcher_init gets called again later by runCommand
+> (command.py). The sequence of method calls is command.py:runCommand
+> => command.py:updateConfig => cooker.py:updateConfigOpts =>
+> cooker.py:reset => cooker.py:initConfigurationData =>
+> cookerdata.py:parseBaseConfiguration => bb.fetch.fetcher_init. 
+> 
+> In this second invocation, bb.fetch2.saved_headrevs is again set
+> based on BB_URI_HEADREVS. But the first call to fetcher_init cleared
+> BB_URI_HEADREVS... thus bb.fetch2.saved_headrevs ends up empty.
+> 
+> ----
+> 
+> I'd like to hear some feedback on how to fix (3). The "easy"
+> solution, I think, is to do something like this to ensure
+> saved_headrevs doesn't get overwritten:
+> 
+>     if not bb.fetch2.saved_headrevs:
+>         bb.fetch2.saved_headrevs = revs.items()
+> 
+> fetcher_compare_revisions is the only thing that uses saved_headrevs,
+> so this shouldn't break anything. Alternatively, is it better to
+> change it so fetcher_init doesn't get called multiple times? Perhaps
+> it should be split into a fetcher_init and fetcher_reset? 
+> 
+> (Another side question I have is whether we should/could modify
+> fetcher_compare_revisions to work even when BB_SRCREV_POLICY is set
+> to 'cache'. That functionality would seem very useful to me. That's
+> probably a topic for another discussion thread though.)
+> 
+> Looking forward to feedback.
 
-Sorry about the lack of review.
+I'm slightly worried this has been broken for as long and not used. It
+kind of suggests we might not need the functionality.
 
-My concern on this is the fact we have to poke around __builtins__. I
-understand why, I just can't help wonder if there is a better way
-somehow.
+Poking global state into the fetch2 module is fairly horrible and the
+only concern with your fix is that memory resident bitbake wouldn't
+like it and there would be future bugs lurking there for us.
 
-I'm not sure I have a better one, not sure if Chris or others might?
+I can't help feel this code could do with quite an overhaul so rather
+than fixing it, it may be worth reworking it somehow. Unfortunately
+I've lacked time to look into this more, the email is flagged as
+needing attention though...
 
 Cheers,
 
 Richard
-
-
-> To install on a task:
->     do_task[progress] = "custom:MyProgressHandler"
-> 
-> To install on a task and pass extra arguments:
->     do_task[progress] = "custom:MyProgressHandler:my-arg"
-> 
-> Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
-> ---
->  lib/bb/build.py | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/lib/bb/build.py b/lib/bb/build.py
-> index 3e2a94e..2e14572 100644
-> --- a/lib/bb/build.py
-> +++ b/lib/bb/build.py
-> @@ -387,6 +387,14 @@ exit $ret
->          elif progress.startswith('outof:'):
->              # Use specified regex
->              logfile = bb.progress.OutOfProgressHandler(d,
-> regex=progress.split(':', 1)[1], outfile=logfile)
-> +        elif progress.startswith("custom:"):
-> +            # Use a custom progress handler
-> +            parts = progress.split(":", 2)
-> +            _, cls, otherargs = parts[0], parts[1], (parts[2] or
-> None) if parts[2:] else None
-> +            if cls and cls in __builtins__:
-> +                logfile = __builtins__[cls](d, outfile=logfile,
-> otherargs=otherargs)
-> +            else:
-> +                bb.warn('%s: unknown custom progress handler in task
-> progress varflag value "%s", ignoring' % (func, cls))
->          else:
->              bb.warn('%s: invalid task progress varflag value "%s",
-> ignoring' % (func, progress))
->  
-> -- 
-> 2.7.4
-> 
 
 
