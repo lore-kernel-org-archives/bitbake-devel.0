@@ -1,47 +1,49 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com
-	[209.85.167.173])
-	by mail.openembedded.org (Postfix) with ESMTP id D3C967CBB5
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Feb 2019 21:45:54 +0000 (UTC)
-Received: by mail-oi1-f173.google.com with SMTP id s16so94551oih.9
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Feb 2019 13:45:56 -0800 (PST)
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com
+	[209.85.215.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 0F4A07CBA2;
+	Fri, 22 Feb 2019 16:39:06 +0000 (UTC)
+Received: by mail-pg1-f195.google.com with SMTP id h8so858071pgp.6;
+	Fri, 22 Feb 2019 08:39:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=JvTQHiGWorRD/MLpCrY4o+v5IC33tBdFF+266DWNMxM=;
-	b=s9qOqajKHVYUt3g5R0iLvQSDeyaVczt9P+N6Ef0wE1DQPTVuMqPpio6r7gLRxUBqU4
-	EW/WtNwOcAhjU8Gt6hEcOMi4qdiYvuRNBX04k1zlVWNwWwcw5kHRPoAQp7n2GvLNoN4h
-	kbV3ZBKt14WsZF3CI/zs5aMAFjulfTFz+PWU/WgeHytoqCdumOyY+L+sM/WeeGWduEjG
-	JqDGB4jkKyhuijgGLzJb+FA5zr2UicoQQ+rG40xcL8uz/3xb4hUv90NHAuSzcXLYl6U+
-	xON0KYIEaOqzaOiu6XoJcI8H5n6u9pZhkghUcC1K1F/smPhMi0/37hXLFT3AAHebYnFq
-	Bt5g==
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=NgtaIQ98PdIpiaaTCZ/KKyjb5YjmRU5XtEzzaY8xc6I=;
+	b=LOITlh4YJTA5hKweGNKt31y3FPP2JedTM5w7DvVehsK9Q2/RnlwKtQK48RMYrk7a23
+	XAQAejppVQrxaoMTBEFGqZknkM1HExJbARPaojIUsF2HckW3T7vlJ2N+EIReH5Fh6M3a
+	0B2vLTSHeuSF9SoOjxu0KuNLB7P0j+djyX3h4sOfhw5dqCiZniLjue5bVnu3OidTjxMY
+	SaF+oaPSL9aecgXw31+IIAvHC8hzecr4jZn3yH/4zgj/UpNw2QN6rpxUP5oG860NK9uA
+	2RqEHQDyi3elZDfyRSnJX6IoXT01EutSQRUwZI052biVhSqaXEDDd4iulqtlYHCT2Plz
+	Rv8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=JvTQHiGWorRD/MLpCrY4o+v5IC33tBdFF+266DWNMxM=;
-	b=JE4NznCJnwcROd2NB+3mVvVNjZebkDoihcfJyzlz1TrjA0fhussJa3RYkXOwMrblJu
-	lP5e0jBtfLTsCSLDuABmYhtrwGOM1uy4RuwE44Fgzg8oeJc9/bD3UDenyrU4DiGQCQAn
-	mcUIbQMgg9TvuFonKwfKSG3BsRy4JPyTDMzZe0be6D96mf0NG7VOw3z44BrXuxaR+j2/
-	25qervllwhfe5ul/X7pRQNuI5wpokcQw6UvGqAliIhXEc6vNcQgkkdXqwjyikL+IkjpO
-	eiYXegD/4OnWdKY2vjMtYPD0lBSNwNZrVLRaXjR7egf1Eqaigxy6Le4Vng9zIEscnh1a
-	4/SA==
-X-Gm-Message-State: AHQUAuY/xY7Hn3Jq+Io4jFmz+NO7XSeXkFzupEiqG3PUYYSXvGpNSfrQ
-	C2WSzjqrzFplWAdK9/zkLj4xpkaov3FyUgWOFKVfJ0klvIQ=
-X-Google-Smtp-Source: AHgI3Ib8cbs8PGaXZujt7QxIfYLM0agEUbVU80y0w4c1zf9cEga42izNvZ1Bc6Bn8tlQdcYZXhIfdjm+HMM+ujJ4Ndk=
-X-Received: by 2002:aca:acc9:: with SMTP id v192mr447056oie.109.1550785555312; 
-	Thu, 21 Feb 2019 13:45:55 -0800 (PST)
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=NgtaIQ98PdIpiaaTCZ/KKyjb5YjmRU5XtEzzaY8xc6I=;
+	b=c15P+V07iUl4UJ6X/paaHFWC1Pl2KR7oKrgSODdNdb0eBLAFvkD+sa5+gbAgkDEXEK
+	/NBSTXwwqUdTySXTwd7srHbbjBUa32/zNnmu9wMcZNEo7e3zxF6bXKocnr0QYsTn500I
+	dUSQp66yor94yx65JGEhnttq+CWKE4pSOZRSV8YInQBdDWkCbLA7OMFHbuHPuuVr8bCG
+	gSYz+c8nWzKfsVYxe3Bc2AIMzHbZeXnfrqiiB052PzxNTHaFbRo6SRURdYvamxIijWTN
+	tV+Zw7q4AyunfRMwi1uhCk1lop5e69hgBVN3jea/rYG+yLyqzwsWsxfkyAgY7GjMDEFH
+	YeIQ==
+X-Gm-Message-State: AHQUAuZRfcnvW38x31kJOAKeS5ezhiWnkFcuxDsCBuKU5ZylEgIcpe4u
+	SxjyK2ESDhepOXHkd9nXDZw=
+X-Google-Smtp-Source: AHgI3IaZE9Ccgg1s8qdyPSopnOWxsTAJKnjHchtu2TKyHFSRJTcPia9UgQ+TL9XAnR9JHuu0RdrrqQ==
+X-Received: by 2002:a63:5a42:: with SMTP id k2mr838073pgm.333.1550853545797;
+	Fri, 22 Feb 2019 08:39:05 -0800 (PST)
+Received: from akuster-ThinkPad-T460s.mvista.com
+	([2601:202:4180:c33:70ef:357b:adf:5cc4])
+	by smtp.gmail.com with ESMTPSA id c3sm4033730pfg.53.2019.02.22.08.39.04
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 22 Feb 2019 08:39:05 -0800 (PST)
+From: Armin Kuster <akuster808@gmail.com>
+To: akuster808@gmail.com, openembedded-core@lists.openembedded.org,
+	bitbake-devel@lists.openembedded.org
+Date: Fri, 22 Feb 2019 08:37:58 -0800
+Message-Id: <cover.1550853097.git.akuster808@gmail.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1538621300-112900-1-git-send-email-chris.laplante@agilent.com>
-	<429831d9241a7ec21e84523a354c89f9a97263ad.camel@linuxfoundation.org>
-In-Reply-To: <429831d9241a7ec21e84523a354c89f9a97263ad.camel@linuxfoundation.org>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Thu, 21 Feb 2019 14:45:44 -0700
-Message-ID: <CABcZANnnd9BHOHgnxLTU+1u_MMMZqSsUiNisrvxJocceUyEWfg@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] build.py: support custom task [progress] handlers
+Subject: [PATCH 00/64] Sumo-next pull request
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,250 +56,199 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Feb 2019 21:45:55 -0000
-Content-Type: multipart/alternative; boundary="00000000000025b72e05826e66ac"
+X-List-Received-Date: Fri, 22 Feb 2019 16:39:07 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---00000000000025b72e05826e66ac
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Please consider this for Sumo.
 
-This is a great idea, thanks a lot for contribution. As Richard says, I
-think using and hardcoding __builtins__ as the injection point isn=E2=80=99=
-t ideal.
-Ideally I think we'd be able to provide a python module in a layer with the
-progress handler, let OE_IMPORTS import it, and then let bitbake use it as
-is.
+Passed A-full
 
-I think we just need to tweak it to accept the full name with imports, i.e.
-custom:oe.myprogressmodule.MyProgressHandler. Then if you want to inject it
-you can (though I think bb.context is better than __builtins__), or use an
-imported module, whichever is preferred, rather than hardcoding the context=
-.
+The following changes since commit 58e82c451071d0e257da6088cf643e636282084c:
 
-Something like `functools.reduce(lambda x, y: x[y], cls.split("."),
-globals())` might do for resolving the dot-separated name to the class
-object, assuming it=E2=80=99s already been imported.
+  brief-yoctoprojectqs, dev-manual: Updated poky clone examples. (2019-01-16 15:35:54 +0000)
 
-On Thu, Feb 21, 2019 at 2:13 PM Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+are available in the git repository at:
 
-> On Wed, 2018-10-03 at 22:48 -0400, Chris Laplante via bitbake-devel
-> wrote:
-> > To use this mechanism, you need to inject your progress handler (i.e.
-> > something derived from bb.progress.ProgressHandler) into
-> > __builtins__.
-> > Here's one way to do it (from recipe-space):
-> >
-> >     def install_my_progress_handler():
-> >         from bb.progress import ProgressHandler
-> >
-> >         class MyProgressHandler(ProgressHandler):
-> >             pass
-> >
-> >         if "MyProgressHandler" not in __builtins__:
-> >             __builtins__["MyProgressHandler"] =3D MyProgressHandler
-> >
-> >         return "OK"
-> >
-> >     _INSTALL_MY_PROGRESS_HANDLERS :=3D "${@install_my_progress_handler(
-> > )}"
->
-> Sorry about the lack of review.
->
-> My concern on this is the fact we have to poke around __builtins__. I
-> understand why, I just can't help wonder if there is a better way
-> somehow.
->
-> I'm not sure I have a better one, not sure if Chris or others might?
->
-> Cheers,
->
-> Richard
->
->
-> > To install on a task:
-> >     do_task[progress] =3D "custom:MyProgressHandler"
-> >
-> > To install on a task and pass extra arguments:
-> >     do_task[progress] =3D "custom:MyProgressHandler:my-arg"
-> >
-> > Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
-> > ---
-> >  lib/bb/build.py | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/lib/bb/build.py b/lib/bb/build.py
-> > index 3e2a94e..2e14572 100644
-> > --- a/lib/bb/build.py
-> > +++ b/lib/bb/build.py
-> > @@ -387,6 +387,14 @@ exit $ret
-> >          elif progress.startswith('outof:'):
-> >              # Use specified regex
-> >              logfile =3D bb.progress.OutOfProgressHandler(d,
-> > regex=3Dprogress.split(':', 1)[1], outfile=3Dlogfile)
-> > +        elif progress.startswith("custom:"):
-> > +            # Use a custom progress handler
-> > +            parts =3D progress.split(":", 2)
-> > +            _, cls, otherargs =3D parts[0], parts[1], (parts[2] or
-> > None) if parts[2:] else None
-> > +            if cls and cls in __builtins__:
-> > +                logfile =3D __builtins__[cls](d, outfile=3Dlogfile,
-> > otherargs=3Dotherargs)
-> > +            else:
-> > +                bb.warn('%s: unknown custom progress handler in task
-> > progress varflag value "%s", ignoring' % (func, cls))
-> >          else:
-> >              bb.warn('%s: invalid task progress varflag value "%s",
-> > ignoring' % (func, progress))
-> >
-> > --
-> > 2.7.4
-> >
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
+  git://git.yoctoproject.org/poky-contrib stable/sumo-next
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=stable/sumo-next
+
+Alexander Kanavin (2):
+  oeqa: replace Alex Kanavin's @intel email address with a personal one
+  oeqa/runtime/cases/python: use python 3 rather than python 2
+
+Aníbal Limón (1):
+  meta/classes/testimage.bbclass: Only validate IMAGE_FSTYPES when is
+    QEMU
+
+Armin Kuster (4):
+  tzdata: update to 2018g
+  tzcode-native: update to 2018g
+  tzdata/tzcode-native: update to 2018i
+  perl: add testdepends for ssh
+
+Chen Qi (2):
+  package.bbclass: fix python unclosed file ResourceWarning
+  oeqa/runtime/cases/rpm.py: change to use base-passwd-doc
+
+Douglas Royds (1):
+  patch: reproducibility: Fix host umask leakage
+
+Emmanuel Roullit (1):
+  testimage.bbclass: fix qemu_use_kvm handling
+
+Erik Botö (1):
+  testimage: Add possibility to pass parmeters to qemu
+
+Federico Sauter (1):
+  kernel: don't assign the build user/host
+
+Jeremy Puhlman (1):
+  Only add uninative and checksum if inherited uninative class
+
+Jose Perez Carranza (1):
+  runtime/dnf: Add new dnf test cases
+
+Kai Kang (1):
+  testimage.bbclass: remove boot parameter systemd.log_target
+
+Paul Eggleton (2):
+  oe-selftest: devtool: avoid parallel races by using temporary copy of
+    core
+  bitbake: utils: add optional callback to edit_bblayers_conf()
+
+Peter Kjellerstedt (3):
+  bitbake: bitbake-diffsigs: Merge with bitbake-dumpsig
+  bitbake: bitbake-diffsigs: Support recursive deps with signature files
+  oe-selftest: devtool: Support meta being a symbolic link
+
+Richard Purdie (25):
+  busybox: Put klogd/syslogd alternative links in syslog package
+  bitbake: server/process: Make lockfile handling clearer
+  bitbake: server/process: Show the last 60 log lines, not the last 10
+  bitbake: server/process: Show last 60 lines of the log if the server
+    didn't start
+  testimage/testsdk/selftest: Avoid platform.distro_identifier
+    deprecation warnings
+  package: Rework PACKAGELOCK based upon sstate for do_packagedata
+  bitbake: server/process: Increase server startup time delay
+  bitbake: cooker: Add some timing debug messages to the server startup
+  bitbake: server/process: Ensure socket has a timeout set
+  bitbake: process.py: Set socket timeout to 10 seconds
+  bitbake: process: Handle EWOULDBLOCK in socket connect
+  bitbake: process: Rewrite multiple connection handling
+  testimage: Simplfy DEFAULT_TEST_SUITES logic
+  testimage: Further cleanup DEFAULT_TEST_SUITES
+  testimage: Enable autorunning of the package manager testsuites
+  oeqa/runtime/cases: Improve test dependency information
+  oeqa/runtime/cases: Improve dependencies of kernel/gcc/build tests
+  oeqa/utils/buildproject: Only clean files if we've done something
+  oeqa/utils/httpserver: Rework to avoid hangs and improve logging
+  multilib_script: Add support for multilib scripts
+  libtool: Fix problem with libtoolize in multilib installations
+  libtool: Fix patch status tag
+  libtool-cross: Handle ccache sstate 'infection' issues
+  archiver/package_rpm: Fix the worst src.rpm generation race
+  package_rpm/archiver: Apply bandaid to src.rpm creation
+
+Robert Yang (7):
+  bitbake: server/process: print a message when no logfile
+  oeqa/utils/qemurunner: Print output when failed to login
+  oeqa/utils/qemurunner: set timeout to 60s for run_serial
+  oeqa: Fix for QEMU_USE_KVM
+  oeqa: make it work for multiple users
+  runqemu-gen-tapdevs: Allow run --help without sudo
+  oeqa/selftest/runqemu: Enable kvm when QEMU_USE_KVM is set
+
+Ross Burton (7):
+  bitbake: layerindex: don't use shell=True when cloning
+  bitbake: fetch: don't use shell=True when listing ar files
+  runqemu: clean up subprocess usage
+  oeqa/runtime/python: clean up Python test
+  oeqa: rationalise Perl tests
+  cpio: fix crash when appending to archives
+  image_types: use cpio-native to build cpio images
+
+Yeoh Ee Peng (4):
+  scripts/oe-git-archive: fix non-existent key referencing error
+  testimage: Add support for slirp
+  oeqa/qemu & runtime: qemu do not need ip input from external
+  oeqa/runtime/dnf: Make sure test_dnf_install does not skipped
+
+ bitbake/bin/bitbake-diffsigs                       | 143 ++++++++++++---------
+ bitbake/bin/bitbake-dumpsig                        |  95 +-------------
+ bitbake/lib/bb/cooker.py                           |  19 +++
+ bitbake/lib/bb/fetch2/__init__.py                  |   2 +-
+ bitbake/lib/bb/server/process.py                   |  96 +++++++++-----
+ bitbake/lib/bb/utils.py                            |  15 ++-
+ bitbake/lib/bblayers/layerindex.py                 |   2 +-
+ .../lib/oeqa/runtime/cases/dnf_runtime.py          |   2 +-
+ meta/classes/archiver.bbclass                      |   6 +
+ meta/classes/image_types.bbclass                   |   1 +
+ meta/classes/kernel.bbclass                        |   4 +-
+ meta/classes/multilib_script.bbclass               |  32 +++++
+ meta/classes/package.bbclass                       |  26 ++--
+ meta/classes/package_rpm.bbclass                   |   6 +-
+ meta/classes/patch.bbclass                         |   1 +
+ meta/classes/populate_sdk_ext.bbclass              |   5 +-
+ meta/classes/testimage.bbclass                     |  78 +++++------
+ meta/classes/testsdk.bbclass                       |   2 +-
+ meta/lib/oe/types.py                               |  24 ++++
+ meta/lib/oeqa/core/target/qemu.py                  |   5 +-
+ meta/lib/oeqa/files/test.pl                        |   2 -
+ meta/lib/oeqa/runtime/cases/apt.py                 |   2 +-
+ meta/lib/oeqa/runtime/cases/buildcpio.py           |   9 +-
+ meta/lib/oeqa/runtime/cases/buildgalculator.py     |   9 +-
+ meta/lib/oeqa/runtime/cases/buildlzip.py           |  12 +-
+ meta/lib/oeqa/runtime/cases/date.py                |   2 +
+ meta/lib/oeqa/runtime/cases/df.py                  |   2 +
+ meta/lib/oeqa/runtime/cases/dnf.py                 |  48 ++++++-
+ meta/lib/oeqa/runtime/cases/gcc.py                 |  19 ++-
+ meta/lib/oeqa/runtime/cases/kernelmodule.py        |   8 +-
+ meta/lib/oeqa/runtime/cases/opkg.py                |   6 +-
+ meta/lib/oeqa/runtime/cases/perl.py                |  30 +----
+ meta/lib/oeqa/runtime/cases/ptest.py               |   2 +
+ meta/lib/oeqa/runtime/cases/python.py              |  38 +-----
+ meta/lib/oeqa/runtime/cases/rpm.py                 |  55 ++++----
+ meta/lib/oeqa/runtime/cases/scp.py                 |   2 +
+ meta/lib/oeqa/runtime/cases/ssh.py                 |   2 +
+ meta/lib/oeqa/runtime/cases/stap.py                |   6 +-
+ meta/lib/oeqa/runtime/cases/xorg.py                |   2 +
+ meta/lib/oeqa/runtime/context.py                   |   7 +-
+ meta/lib/oeqa/sdk/cases/perl.py                    |  25 +---
+ meta/lib/oeqa/selftest/cases/devtool.py            |  65 ++++++++++
+ meta/lib/oeqa/selftest/cases/distrodata.py         |   4 +-
+ meta/lib/oeqa/selftest/cases/runqemu.py            |   5 +
+ meta/lib/oeqa/selftest/cases/runtime_test.py       |   4 +-
+ meta/lib/oeqa/selftest/cases/signing.py            |   2 +-
+ meta/lib/oeqa/selftest/context.py                  |   3 +-
+ meta/lib/oeqa/targetcontrol.py                     |  12 +-
+ meta/lib/oeqa/utils/buildproject.py                |   5 +
+ meta/lib/oeqa/utils/dump.py                        |   2 +-
+ meta/lib/oeqa/utils/httpserver.py                  |  37 ++++--
+ meta/lib/oeqa/utils/qemurunner.py                  |   3 +-
+ meta/lib/oeqa/utils/qemutinyrunner.py              |   2 +-
+ meta/recipes-core/busybox/busybox.inc              |   5 +-
+ .../libtool/libtool-cross_2.4.6.bb                 |   8 ++
+ .../libtool/libtool/multilib.patch                 |  23 ++++
+ meta/recipes-devtools/libtool/libtool_2.4.6.bb     |   6 +
+ .../cpio-2.12/0001-Fix-segfault-with-append.patch  |  87 +++++++++++++
+ meta/recipes-extended/cpio/cpio_2.12.bb            |   1 +
+ ...code-native_2018f.bb => tzcode-native_2018i.bb} |   8 +-
+ .../tzdata/{tzdata_2018f.bb => tzdata_2018i.bb}    |   4 +-
+ scripts/oe-git-archive                             |  19 ++-
+ scripts/runqemu                                    |  63 +++++----
+ scripts/runqemu-gen-tapdevs                        |  27 ++--
+ 64 files changed, 764 insertions(+), 483 deletions(-)
+ mode change 100755 => 120000 bitbake/bin/bitbake-dumpsig
+ create mode 100644 meta/classes/multilib_script.bbclass
+ delete mode 100644 meta/lib/oeqa/files/test.pl
+ create mode 100644 meta/recipes-devtools/libtool/libtool/multilib.patch
+ create mode 100644 meta/recipes-extended/cpio/cpio-2.12/0001-Fix-segfault-with-append.patch
+ rename meta/recipes-extended/tzcode/{tzcode-native_2018f.bb => tzcode-native_2018i.bb} (70%)
+ rename meta/recipes-extended/tzdata/{tzdata_2018f.bb => tzdata_2018i.bb} (98%)
+
+-- 
+2.7.4
 
 
---=20
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
-
---00000000000025b72e05826e66ac
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr">This is a great idea, thanks a lot for co=
-ntribution. As Richard says, I think using and hardcoding __builtins__ as t=
-he injection point isn=E2=80=99t ideal. Ideally I think we&#39;d be able to=
- provide a python module in a layer with the progress handler, let OE_IMPOR=
-TS import it, and then let bitbake use it as is.<div><br></div><div>I think=
- we just need to tweak it to accept the full name with imports, i.e. custom=
-:oe.myprogressmodule.MyProgressHandler. Then if you want to inject it you c=
-an (though I think bb.context is better than __builtins__), or use an impor=
-ted module, whichever is preferred, rather than hardcoding the context.</di=
-v><div><br></div><div>Something like `<font color=3D"#262626" face=3D"Helve=
-tica Neue"><span style=3D"font-size:12px">functools.reduce(lambda x, y: x[y=
-], cls.split(&quot;.&quot;), globals())` might do for resolving the dot-sep=
-arated name to the class object, assuming it=E2=80=99s already been importe=
-d.</span></font></div></div></div><br><div class=3D"gmail_quote"><div dir=
-=3D"ltr" class=3D"gmail_attr">On Thu, Feb 21, 2019 at 2:13 PM Richard Purdi=
-e &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richard.purdie@=
-linuxfoundation.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quot=
-e" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-styl=
-e:solid;border-left-color:rgb(204,204,204);padding-left:1ex">On Wed, 2018-1=
-0-03 at 22:48 -0400, Chris Laplante via bitbake-devel<br>
-wrote:<br>
-&gt; To use this mechanism, you need to inject your progress handler (i.e.<=
-br>
-&gt; something derived from bb.progress.ProgressHandler) into<br>
-&gt; __builtins__.<br>
-&gt; Here&#39;s one way to do it (from recipe-space):<br>
-&gt; <br>
-&gt;=C2=A0 =C2=A0 =C2=A0def install_my_progress_handler():<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0from bb.progress import ProgressHandl=
-er<br>
-&gt; <br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0class MyProgressHandler(ProgressHandl=
-er):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pass<br>
-&gt; <br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if &quot;MyProgressHandler&quot; not =
-in __builtins__:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0__builtins__[&quot;MyPr=
-ogressHandler&quot;] =3D MyProgressHandler<br>
-&gt; <br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return &quot;OK&quot;<br>
-&gt; <br>
-&gt;=C2=A0 =C2=A0 =C2=A0_INSTALL_MY_PROGRESS_HANDLERS :=3D &quot;${@install=
-_my_progress_handler(<br>
-&gt; )}&quot;<br>
-<br>
-Sorry about the lack of review.<br>
-<br>
-My concern on this is the fact we have to poke around __builtins__. I<br>
-understand why, I just can&#39;t help wonder if there is a better way<br>
-somehow.<br>
-<br>
-I&#39;m not sure I have a better one, not sure if Chris or others might?<br=
->
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
-<br>
-&gt; To install on a task:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0do_task[progress] =3D &quot;custom:MyProgressHandle=
-r&quot;<br>
-&gt; <br>
-&gt; To install on a task and pass extra arguments:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0do_task[progress] =3D &quot;custom:MyProgressHandle=
-r:my-arg&quot;<br>
-&gt; <br>
-&gt; Signed-off-by: Chris Laplante &lt;<a href=3D"mailto:chris.laplante@agi=
-lent.com" target=3D"_blank">chris.laplante@agilent.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 lib/bb/build.py | 8 ++++++++<br>
-&gt;=C2=A0 1 file changed, 8 insertions(+)<br>
-&gt; <br>
-&gt; diff --git a/lib/bb/build.py b/lib/bb/build.py<br>
-&gt; index 3e2a94e..2e14572 100644<br>
-&gt; --- a/lib/bb/build.py<br>
-&gt; +++ b/lib/bb/build.py<br>
-&gt; @@ -387,6 +387,14 @@ exit $ret<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 elif progress.startswith(&#39;outof:=
-&#39;):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # Use specified regex<=
-br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 logfile =3D bb.progres=
-s.OutOfProgressHandler(d,<br>
-&gt; regex=3Dprogress.split(&#39;:&#39;, 1)[1], outfile=3Dlogfile)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 elif progress.startswith(&quot;custom:&qu=
-ot;):<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # Use a custom progress han=
-dler<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 parts =3D progress.split(&q=
-uot;:&quot;, 2)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 _, cls, otherargs =3D parts=
-[0], parts[1], (parts[2] or<br>
-&gt; None) if parts[2:] else None<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if cls and cls in __builtin=
-s__:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 logfile =3D _=
-_builtins__[cls](d, outfile=3Dlogfile,<br>
-&gt; otherargs=3Dotherargs)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&#39;=
-%s: unknown custom progress handler in task<br>
-&gt; progress varflag value &quot;%s&quot;, ignoring&#39; % (func, cls))<br=
->
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&#39;%s: inval=
-id task progress varflag value &quot;%s&quot;,<br>
-&gt; ignoring&#39; % (func, progress))<br>
-&gt;=C2=A0 <br>
-&gt; -- <br>
-&gt; 2.7.4<br>
-&gt; <br>
-<br>
--- <br>
-_______________________________________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
-itbake-devel@lists.openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
-stinfo/bitbake-devel</a><br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christoph=
-er Larson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, O=
-penZaurus<br>Senior Software Engineer, Mentor Graphics</div></div></div></d=
-iv>
-
---00000000000025b72e05826e66ac--
