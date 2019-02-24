@@ -1,51 +1,46 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com
-	[209.85.221.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 637DB7C881
+Return-Path: <alex.kanavin@gmail.com>
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
+	[209.85.221.44])
+	by mail.openembedded.org (Postfix) with ESMTP id D1815602D9
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Feb 2019 10:41:09 +0000 (UTC)
-Received: by mail-wr1-f42.google.com with SMTP id l5so4960432wrw.6
+	Sun, 24 Feb 2019 20:07:38 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id i16so7628553wrs.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Feb 2019 02:41:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=BlMVrrXNtp/YOOc36xDtxW225bCIuZxXd2nLiMbWa3k=;
-	b=SgopqyecZ5tBYuU7YVveJfAAdmQU+kdejIrNpeYxbZTcNOw0WRfepvvaQK3/dAEpOL
-	4hePKooQiWdB9KIpn4H95zUbk3PgZfC1rFetu3uziurEcjOfDNo3mVw/eRZPiPx2YBrQ
-	90j10LP0ziJzQgiu7++NTtvz9gf3eeedlndjQ=
+	Sun, 24 Feb 2019 12:07:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=J8GgbfdylB8zopkQAng63jQZ+mJabcK5gQ+/LNiabeU=;
+	b=Xg7v5MApuceGIudxIkmNN2DRVseZqsKF8aKtzMeMmwuALzQk0Bndf3cQNQFec0Msew
+	YeGY9CB/XpksM2bCYkBb5RW9VKTywJiRiE1xA5QlqEA5zyiwFJM1AsTazN6mWEpKgkID
+	JgsA+UlwYyuBynW9OJV7dUSNaD3WcpJoXW77bSQdscS+1hPP7Bh7ALekNpuuFQJrTm3S
+	9VCwuvG5sxXTvEP5LAc70MXec7rhYcSGhkZOmBjL/XyJX7GWxETHCjpxe7RpJu4MN3ZL
+	JviBr/28pYCu1YBtPn+Odued+4vRx7JBowEQi1LN0KFuKMEuuB4FjRZVpibh2f496+Jq
+	SE+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=BlMVrrXNtp/YOOc36xDtxW225bCIuZxXd2nLiMbWa3k=;
-	b=bbeT2csHlPlfCoZYnnidSTUdOLPJdyDb8uE797lA+wzqUpjZG4IRxTshNDC/899tQF
-	0j/osZraSq/nhU9ADNdnx/iOyy7pfnIcSxdIbAcRW5Y10rPEymXz04ng6BRnjjNr0huU
-	Df4kI7wOGFKochhshDNCQ31CuDrmA7K/UycCuUwoc980tvrbMtDDB9CYLy7uGr/sNPy5
-	yd+gZg9CSGmL6pEfUh118LaL7gzcZd7JISWXBt7Ek+U3t+lDL1HrQjRXPg2NseWsP3/M
-	wG0XRCIDcdPhgw2MyeeVa8PO75PgDwJO6P+KF1YsVsRwoooV7ptpxkGbu1zhJKVmD33Z
-	apng==
-X-Gm-Message-State: AHQUAuaMOUMdMDhZC39OMPPc3Hvd8LLkctJSklG/hfygePCMwc5NCsF9
-	TRNhiFFaJStHLsyhB75ELCGBFCLFXkI=
-X-Google-Smtp-Source: AHgI3IYM12iagoJoJSePJOIHD49jDqHncbsaorYJvcpdrN+L3E7L5rJEp+4neJEkssoUM8BqH6jHfw==
-X-Received: by 2002:a5d:6207:: with SMTP id y7mr5963443wru.60.1550918469811;
-	Sat, 23 Feb 2019 02:41:09 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	p1sm4989664wmi.9.2019.02.23.02.41.08
-	for <bitbake-devel@lists.openembedded.org>
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=J8GgbfdylB8zopkQAng63jQZ+mJabcK5gQ+/LNiabeU=;
+	b=SGp+jYiL8sq3ZWXT/9qbtB9St1DKenJqWKu0QFqn0uhFPdAQaxumXgXfNd9bA+Mmzq
+	NN9JQSKp9pEgiz+xpKu4OondYtyDkIupAYGg7Q8KLWUWInk3YNzuCxlW9HcM97gkCR9n
+	PTaznlfNvF7OeVxq84vHyrTmvMoIXxQlSh5f6gmZ9aj91l7EmWHSP/OYc+EczDbmEuvm
+	9vRoogtucmN5IY7Wd4DLB9FJND0kk7qxdeHeDzhKQY9ppufB0DQacr5Z/fY1YHBzYN3p
+	itjAkvF814zbQTTTm8/ABN1iuSWA22Sm04efc+EmZAPV7dXMSQhY8QITY/lk6quWDgvL
+	pq6g==
+X-Gm-Message-State: AHQUAub/Vh4bTBGq1O2Lyl1l7FsaRu9zAQsDXkNCPrHhYpe5C5z9jczX
+	f0rq38jC53OamJL9b7Y7/HpCVajP
+X-Google-Smtp-Source: AHgI3IYj22QDRnO76Fp07kRV9p67MNb84jxRImy2bGUMMXjcZnS59qrqfLb9maZ76V2rD2D7KaycrA==
+X-Received: by 2002:adf:8224:: with SMTP id 33mr10419183wrb.264.1551038859182; 
+	Sun, 24 Feb 2019 12:07:39 -0800 (PST)
+Received: from alexander-box.luxoft.com ([62.96.135.139])
+	by smtp.gmail.com with ESMTPSA id d9sm9485428wrn.72.2019.02.24.12.07.38
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Sat, 23 Feb 2019 02:41:09 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Sun, 24 Feb 2019 12:07:38 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 23 Feb 2019 10:41:04 +0000
-Message-Id: <20190223104104.11201-3-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190223104104.11201-1-richard.purdie@linuxfoundation.org>
-References: <20190223104104.11201-1-richard.purdie@linuxfoundation.org>
-MIME-Version: 1.0
-Subject: [PATCH 3/3] cooker: Tweak multiconfig dependency resolution
+Date: Sun, 24 Feb 2019 21:07:28 +0100
+Message-Id: <20190224200728.110431-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] bitbake: fix version comparison when one of the versions ends in .
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,92 +53,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 23 Feb 2019 10:41:09 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Sun, 24 Feb 2019 20:07:39 -0000
 
-There were a couple of problems with the multiconfig dependency resolution:
+Previously, this would happen:
 
-- the "if mc" condition triggering this code wasn't correct, it needs
-  to be "if more than one multiconfig" configured
-- after adding providers we need to call add_unresolved again
-  and rebuild mcdeps within the "while new" loop
+======================================================================
+ERROR: test_vercmpstring (bb.tests.utils.VerCmpString)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alexander/development/poky/bitbake/lib/bb/tests/utils.py", line 45, in test_vercmpstring
+    result = bb.utils.vercmp_string('1.', '1.1')
+  File "/home/alexander/development/poky/bitbake/lib/bb/utils.py", line 143, in vercmp_string
+    return vercmp(ta, tb)
+  File "/home/alexander/development/poky/bitbake/lib/bb/utils.py", line 135, in vercmp
+    r = vercmp_part(va, vb)
+  File "/home/alexander/development/poky/bitbake/lib/bb/utils.py", line 124, in vercmp_part
+    elif ca < cb:
+TypeError: '<' not supported between instances of 'NoneType' and 'int'
 
-By fixing these issues we allow various other combinations of multiconfig
-builds to work which previously didn't.
+----------------------------------------------------------------------
 
-[YOCTO #13090]
-[YOCTO #13130]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
- lib/bb/cooker.py | 53 ++++++++++++++++++++++--------------------------
- 1 file changed, 24 insertions(+), 29 deletions(-)
+ bitbake/lib/bb/tests/utils.py | 4 ++++
+ bitbake/lib/bb/utils.py       | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index e6b8d880ae..1982e880ba 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -641,35 +641,30 @@ class BBCooker:
+diff --git a/bitbake/lib/bb/tests/utils.py b/bitbake/lib/bb/tests/utils.py
+index 2f4ccf3c62b..f1cd83a4195 100644
+--- a/bitbake/lib/bb/tests/utils.py
++++ b/bitbake/lib/bb/tests/utils.py
+@@ -42,6 +42,10 @@ class VerCmpString(unittest.TestCase):
+         self.assertTrue(result < 0)
+         result = bb.utils.vercmp_string('1.1', '1.0+1.1-beta1')
+         self.assertTrue(result > 0)
++        result = bb.utils.vercmp_string('1.', '1.1')
++        self.assertTrue(result < 0)
++        result = bb.utils.vercmp_string('1.1', '1.')
++        self.assertTrue(result > 0)
  
- 
-         # No need to do check providers if there are no mcdeps or not an mc build
--        if mc:
--            # Add unresolved first, so we can get multiconfig indirect dependencies on time
--            for mcavailable in self.multiconfigs:
--                # The first element is empty
--                if mcavailable:
--                    taskdata[mcavailable].add_unresolved(localdata[mcavailable], self.recipecaches[mcavailable])
--
--
--            mcdeps = taskdata[mc].get_mcdepends()
--
--            if mcdeps:
--                # Make sure we can provide the multiconfig dependency
--                seen = set()
--                new = True
--                while new:
--                    new = False
--                    for mc in self.multiconfigs:
--                        for k in mcdeps:
--                            if k in seen:
--                                continue
--                            l = k.split(':')
--                            depmc = l[2]
--                            if depmc not in self.multiconfigs:
--                                bb.fatal("Multiconfig dependency %s depends on nonexistent mc configuration %s" % (k,depmc))
--                            else:
--                                logger.debug(1, "Adding providers for multiconfig dependency %s" % l[3])
--                                taskdata[depmc].add_provider(localdata[depmc], self.recipecaches[depmc], l[3])
--                                seen.add(k)
--                                new = True
-+        if len(self.multiconfigs) > 1:
-+            seen = set()
-+            new = True
-+            # Make sure we can provide the multiconfig dependency
-+            while new:
-+                mcdeps = set()
-+                # Add unresolved first, so we can get multiconfig indirect dependencies on time
-+                for mc in self.multiconfigs:
-+                    taskdata[mc].add_unresolved(localdata[mc], self.recipecaches[mc])
-+                    mcdeps |= set(taskdata[mc].get_mcdepends())
-+                new = False
-+                for mc in self.multiconfigs:
-+                    for k in mcdeps:
-+                        if k in seen:
-+                            continue
-+                        l = k.split(':')
-+                        depmc = l[2]
-+                        if depmc not in self.multiconfigs:
-+                            bb.fatal("Multiconfig dependency %s depends on nonexistent mc configuration %s" % (k,depmc))
-+                        else:
-+                            logger.debug(1, "Adding providers for multiconfig dependency %s" % l[3])
-+                            taskdata[depmc].add_provider(localdata[depmc], self.recipecaches[depmc], l[3])
-+                            seen.add(k)
-+                            new = True
- 
-         for mc in self.multiconfigs:
-             taskdata[mc].add_unresolved(localdata[mc], self.recipecaches[mc])
+     def test_explode_dep_versions(self):
+         correctresult = {"foo" : ["= 1.10"]}
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 9cb702dbb7a..b652a6838a2 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -121,6 +121,10 @@ def vercmp_part(a, b):
+             return -1
+         elif oa > ob:
+             return 1
++        elif ca is None:
++            return -1
++        elif cb is None:
++            return 1
+         elif ca < cb:
+             return -1
+         elif ca > cb:
 -- 
-2.20.1
+2.17.1
 
 
