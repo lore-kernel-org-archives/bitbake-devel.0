@@ -1,52 +1,52 @@
-Return-Path: <ricardo.ribalda@gmail.com>
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com
-	[209.85.208.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 773A47CA6A;
-	Tue,  5 Mar 2019 11:21:11 +0000 (UTC)
-Received: by mail-lj1-f196.google.com with SMTP id w6so7253030ljd.7;
-	Tue, 05 Mar 2019 03:21:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=LIz/az2/HkLU3iEOfXwQ19BVV0dVk+MHlYCznh8RR0A=;
-	b=WKF8c8BZcH9Z4aGV8un4M92VDRD/a25rJemvQ7Q/0GRL/2uYJI2eF7Kvgnd+CLJ3GJ
-	C5xBr1IrXEQesWpfle/o/gwNbVz9xMZO009UZZDkCSH/PPMFbah2w/5VDjWAoHodk8aH
-	YYd5qOuAKExzYZIJBhAH9dcnZgZbLQgJdDyhIkhe8OVhK8t94M5wfgvWwG7anlWo//8x
-	P2gd3LdW3aiKFZzAy+5yx4+ipx6NrrKJ5YmEe+AJGft29gdRo8bTH+MCdz+uFH+btVRQ
-	ot2lVwQLAP/jmoYMF+J5ry0VFn1qYiTRL74upjKmLQRgHpTFa+xlJycx+UM3DIhcVgHa
-	HV6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=LIz/az2/HkLU3iEOfXwQ19BVV0dVk+MHlYCznh8RR0A=;
-	b=PlQSQmeEZ2b1Z16K114lFl/50+gqEitdeeN19EiW3sc/EFn0oSBq9IVvoKHa2vXDs5
-	+8hoVCZLIQzydGc2FOGf/NbGYm7Fojdnj7+WGVLRP2UNpOnbyrfGcB25qU+y0OJ2Qjeb
-	hZse6bGPwFmbGleGgci1xsCbLfCB59OwcJGYw8QWbEaJ4/t2qx/bAhBC9rhFES2byjFj
-	JFzmna/LqWD3k8Vg5RcetMe8L81MbKVRG146Nk5TqVgW2Lvnt1LZ4336iHI5F/LBnyrv
-	l1yYNrErkWA5oNg8+BbaXYJZui/FnrBEN2iYrHn3tcw+igUrSJkgg7yQQQ5QZJ4pUeI2
-	MQSw==
-X-Gm-Message-State: APjAAAUa383uMesrkD3SCcldthawHIROH7b9VP6i2XOKQj9Z3IjFjJUs
-	PoMA1J4JOXVFX/rhu1KLKYPC2SkbCbH0C1L8uBBasw==
-X-Google-Smtp-Source: APXvYqy6432tfqCJRyR2coaGA41EXVRINBr0zj/n9gsI2uo+5QR0Gi7JSmysFY67+nd5cG0RIwpU7/FPi89UkUhG0uM=
-X-Received: by 2002:a2e:9b95:: with SMTP id z21mr13260647lji.155.1551784871793;
-	Tue, 05 Mar 2019 03:21:11 -0800 (PST)
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 3F00C7CCE0
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  7 Mar 2019 17:26:15 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x27HQEbJ020033
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 7 Mar 2019 09:26:14 -0800 (PST)
+Received: from soho-mhatle-m.local (172.25.36.233) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.439.0;
+	Thu, 7 Mar 2019 09:26:13 -0800
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, Krzysztof Zawadzki
+	<mr.k.zawadzki@gmail.com>, <bitbake-devel@lists.openembedded.org>
+References: <20190215032539.5297-1-mr.k.zawadzki@gmail.com>
+	<7dd4a96220566dc8d9a1db6a6430aba8bed8b596.camel@linuxfoundation.org>
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <a6cfe2ad-8684-b375-b0f4-b06d04d35fd6@windriver.com>
+Date: Thu, 7 Mar 2019 11:26:12 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.5.3
 MIME-Version: 1.0
-References: <CAPybu_1GLgMMBysaCD0GDiPSmJr6jEqVptzX6+DQmU7ZBOigMA@mail.gmail.com>
-	<CAJTo0LYEFB4GyiyP=JK3vj2vFqzT1tzJiERKqezb9BO3N_K25g@mail.gmail.com>
-	<CAPybu_2fbDkuM_kpX4ZbyPw8B8QfS2FEoCXSg1z7gFvfF=gyBg@mail.gmail.com>
-	<CAJTo0LbXz_d+oNrHxrE2M3nOKeZh0C7-bz76OqHS0_zgkTHk6w@mail.gmail.com>
-	<CAPybu_1hQXii8eaLk2fEhVaE7vbAQFBowBXtCjy+jKoNEYcmcQ@mail.gmail.com>
-	<CAJTo0LYeACMpm83O82qgKju4SB_GrbxWYjc_szuRpt5cXCgi3A@mail.gmail.com>
-In-Reply-To: <CAJTo0LYeACMpm83O82qgKju4SB_GrbxWYjc_szuRpt5cXCgi3A@mail.gmail.com>
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Date: Tue, 5 Mar 2019 12:20:54 +0100
-Message-ID: <CAPybu_3FrO9c4w+2QvgZ+gNh_CvGLvq9BoQps+zcRFqK4dq6FA@mail.gmail.com>
-To: "Burton, Ross" <ross.burton@intel.com>
-X-Mailman-Approved-At: Wed, 06 Mar 2019 08:57:11 +0000
-Cc: Daniel Gomez <daniel@qtec.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	openembedded-core <openembedded-core@lists.openembedded.org>
-Subject: Re: [OE-core] Two recipes providing the same .so... How it should not be done :)
+In-Reply-To: <7dd4a96220566dc8d9a1db6a6430aba8bed8b596.camel@linuxfoundation.org>
+Subject: Re: [PATCH] fetch2/svn: adds svn --ignore-externals option
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,369 +59,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Mar 2019 11:21:12 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Thu, 07 Mar 2019 17:26:15 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Yes, but I want to do it slightly differently
+Ping, anything further happen with this?  (Accepted/rejected/etc)?
 
-Instead of a big package with all the blobs I want to split it in
-something that mimics the current package structure.
-Also I want to run it inside a multiconfig setup.
+I didn't see any discussion after Feb 19th, but I'm still trying to resolve a
+customer's issue that appears to be directly related to this.. but I don't have
+enough SVN knowledge to say if this is good or bad.
 
-Once everything works I want to upstream it to mesa-tegra.
+--Mark
 
-On Tue, Mar 5, 2019 at 12:17 PM Burton, Ross <ross.burton@intel.com> wrote:
->
-> Isn't this something that https://github.com/madisongh/meta-tegra already does?
->
-> Ross
->
-> On Tue, 5 Mar 2019 at 11:10, Ricardo Ribalda Delgado
-> <ricardo.ribalda@gmail.com> wrote:
-> >
-> > This is my approach (which is not more than a horrible hack)
-> >
-> > DESCRIPTION = "Tegra replacements for mesa libraries"
-> > require recipes-bsp/tegra-binaries/tegra-glvnd.inc
-> > RDEPENDS_libgl-mesa = "tegra-lib-common libegl-mesa libxcb-glx
-> > libxxf86vm libxdamage libxcb-xfixes"
-> > RDEPENDS_libegl-mesa = "zlib libxcb-xfixes libxcb-present libdrm
-> > libxshmfence libxcb-sync libglapi expat libxcb-dri2 libgbm libxcb-dri3
-> > libx11 libx11-xcb"
-> > RDEPENDS_libgles2-mesa = "libdrm libglapi"
-> > RDEPENDS_libgles1-mesa = "libdrm libglapi"
-> > RPROVIDES_libgl-mesa += "gl-proprietary libgl"
-> > RPROVIDES_libegl-mesa += "libegl"
-> > RPROVIDES_libgles2-mesa += "libgles2"
-> > RPROVIDES_libgles1-mesa += "libgles1"
-> > PV = "${L4T_RELEASE}"
-> > PE = "5"
-> > PACKAGES = "libgl-mesa libegl-mesa libgles2-mesa libgles1-mesa"
-> > L4T_GLVND_DIR = "${WORKDIR}/Linux_for_Tegra/libglvnd"
-> > L4T_GL_LIBRARIES = "${L4T_GLVND_DIR}/usr/lib/aarch64-linux-gnu/tegra"
-> > L4T_EGL_LIBRARIES = "${L4T_GLVND_DIR}/usr/lib/aarch64-linux-gnu/tegra-egl"
-> > do_unpack_append() {
-> >     bb.build.exec_func("unpack_l4t_tar", d)
-> > }
-> > unpack_l4t_tar() {
-> >     install -d ${L4T_GLVND_DIR}
-> >     tar -C ${L4T_GLVND_DIR} -x -f \
-> >     ${WORKDIR}/Linux_for_Tegra/nv_tegra/nvidia_drivers.tbz2 \
-> >     usr/lib/aarch64-linux-gnu/tegra \
-> >     usr/lib/aarch64-linux-gnu/tegra-egl
-> > }
-> > do_compile[noexec] = "1"
-> > PACKAGEFUNCS_append = " rm_pkgdata_runtime"
-> > rm_pkgdata_runtime() {
-> > rm -rf ${WORKDIR}/pkgdata/runtime/*
-> > rm -rf ${WORKDIR}/pkgdata/shlibs2/*
-> > }
-> > do_install() {
-> >     install -d ${D}${libdir}
-> >     # Install NVIDIA mesa libraries (libglvnd)
-> >     install -m755 ${L4T_GL_LIBRARIES}/libGL.so.1 ${D}${libdir}/libGL.so.1.2.0
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libEGL.so.1 ${D}${libdir}/libEGL.so.1.0.0
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv1_CM.so.1
-> > ${D}${libdir}/libGLESv1_CM.so.1.1.0
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv2.so.2
-> > ${D}${libdir}/libGLESv2.so.2.0.0
-> >     ln -sf libGL.so.1.2.0 ${D}${libdir}/libGL.so.1
-> >     ln -sf libEGL.so.1.0.0 ${D}${libdir}/libEGL.so.1
-> >     ln -sf libGLESv1_CM.so.1.1.0 ${D}${libdir}/libGLESv1_CM.so.1
-> >     ln -sf libGLESv1_CM.so.1.1.0 ${D}${libdir}/libGLESv1_CM.so
-> >     ln -sf libGLESv2.so.2.0.0 ${D}${libdir}/libGLESv2.so.2
-> >     # Install extra NVIDIA libglvnd libraries
-> >     install -m755 ${L4T_GL_LIBRARIES}/libGLX.so.0 ${D}${libdir}/
-> >     install -m755 ${L4T_GL_LIBRARIES}/libGLdispatch.so.0 ${D}${libdir}/
-> >     ln -sf libGLX.so.0 ${D}${libdir}/libGLX.so
-> >     ln -sf libGLdispatch.so.0 ${D}${libdir}/libGLdispatch.so
-> >     # Install extra EGL NVIDIA libraries
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv1_CM_nvidia.so.1 ${D}${libdir}/
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv1_CM.so.1 ${D}${libdir}/
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv2_nvidia.so.2 ${D}${libdir}/
-> >     # Install extra GL NVIDIA libraries
-> >     install -m755 ${L4T_GL_LIBRARIES}/libGLX_nvidia.so.0 ${D}${libdir}/
-> >     # Install libraries dependent on libglvnd libs
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libEGL_nvidia.so.0 ${D}${libdir}/
-> >     install -m755 ${L4T_GL_LIBRARIES}/libnvidia-glsi.so.28.2.1 ${D}${libdir}/
-> >     install -m755 ${L4T_GL_LIBRARIES}/libnvbuf_utils.so.1.0.0 ${D}${libdir}/
-> >     ln -sf libnvbuf_utils.so.1.0.0 ${D}${libdir}/libnvbuf_utils.so.1
-> >     ln -sf libnvbuf_utils.so.1.0.0 ${D}${libdir}/libnvbuf_utils.so
-> >     install -m755 ${L4T_GL_LIBRARIES}/libnvddk_vic.so ${D}${libdir}/
-> >     install -m755 ${L4T_GL_LIBRARIES}/libnvddk_2d_v2.so ${D}${libdir}/
-> >     # nvcamera_daemon and argus_daemon have hard-coded path for this
-> >     install -d ${D}${nonarch_libdir}/aarch64-linux-gnu/tegra-egl
-> >     ln -sf ${libdir}/libEGL.so.1.0.0
-> > ${D}${nonarch_libdir}/aarch64-linux-gnu/tegra-egl/libEGL.so
-> > }
-> > PACKAGE_ARCH = "${MACHINE_ARCH}"
-> > FILES_libgles1-mesa += "\
-> >     ${libdir}/libGLESv1* \
-> > "
-> > FILES_libgles2-mesa += "\
-> >     ${libdir}/libGLESv2* \
-> > "
-> > FILES_libegl-mesa += "\
-> >     ${libdir}/libEGL* \
-> >     ${nonarch_libdir}/aarch64-linux-gnu/tegra-egl/libEGL.so \
-> > "
-> > FILES_libgl-mesa += "\
-> >     ${libdir}/libGL.* \
-> >     ${libdir}/libGLX* \
-> >     ${libdir}/libGLdispatch.so* \
-> >     ${libdir}/libnvidia-glsi.so.28.2.1 \
-> >     ${libdir}/libnvbuf_utils.so* \
-> >     ${libdir}/libnvddk_vic.so  \
-> >     ${libdir}/libnvddk_2d_v2.so \
-> > "
-> > INSANE_SKIP_${PN} = "already-stripped"
-> > INSANE_SKIP_libegl-mesa = "ldflags dev-so"
-> > INSANE_SKIP_libgles1-mesa = "ldflags dev-so"
-> > INSANE_SKIP_libgles2-mesa = "ldflags"
-> > INSANE_SKIP_libgl-mesa = "ldflags dev-so textrel"
-> > PRIVATE_LIBS = "libGL.so.1 libEGL.so.1 libGLESv2.so.2 libGLESv1_CM.so.1"
-> > read_subpackage_metadata () {
-> > }
-> >
-> >
-> > This is as Richard suggested:
-> >
-> > DESCRIPTION = "Tegra replacements for mesa libraries"
-> >
-> > require recipes-bsp/tegra-binaries/tegra-glvnd.inc
-> >
-> > RDEPENDS_libgl-tegra = "tegra-lib-common libegl-tegra libxcb-glx
-> > libxxf86vm libxdamage libxcb-xfixes"
-> > RDEPENDS_libegl-tegra = "zlib libxcb-xfixes libxcb-present libdrm
-> > libxshmfence libxcb-sync libglapi expat libxcb-dri2 libgbm libxcb-dri3
-> > libx11 libx11-xcb"
-> > RDEPENDS_libgles2-tegra = "libdrm libglapi"
-> > RDEPENDS_libgles1-tegra = "libdrm libglapi"
-> >
-> > PV = "${L4T_RELEASE}"
-> > PE = "5"
-> >
-> > PACKAGES = "libgl-tegra libegl-tegra libgles2-tegra libgles1-tegra"
-> >
-> > L4T_GLVND_DIR = "${WORKDIR}/Linux_for_Tegra/libglvnd"
-> > L4T_GL_LIBRARIES = "${L4T_GLVND_DIR}/usr/lib/aarch64-linux-gnu/tegra"
-> > L4T_EGL_LIBRARIES = "${L4T_GLVND_DIR}/usr/lib/aarch64-linux-gnu/tegra-egl"
-> >
-> > do_unpack_append() {
-> >     bb.build.exec_func("unpack_l4t_tar", d)
-> > }
-> >
-> > unpack_l4t_tar() {
-> >     install -d ${L4T_GLVND_DIR}
-> >     tar -C ${L4T_GLVND_DIR} -x -f \
-> >     ${WORKDIR}/Linux_for_Tegra/nv_tegra/nvidia_drivers.tbz2 \
-> >     usr/lib/aarch64-linux-gnu/tegra \
-> >     usr/lib/aarch64-linux-gnu/tegra-egl
-> > }
-> >
-> > do_compile[noexec] = "1"
-> >
-> > do_install() {
-> >     install -d ${D}${libdir}
-> >     # Install NVIDIA mesa libraries (libglvnd)
-> >     install -m755 ${L4T_GL_LIBRARIES}/libGL.so.1 ${D}${libdir}/libGL.so.1.2.0
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libEGL.so.1 ${D}${libdir}/libEGL.so.1.0.0
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv1_CM.so.1
-> > ${D}${libdir}/libGLESv1_CM.so.1.1.0
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv2.so.2
-> > ${D}${libdir}/libGLESv2.so.2.0.0
-> >     ln -sf libGL.so.1.2.0 ${D}${libdir}/libGL.so.1
-> >     ln -sf libEGL.so.1.0.0 ${D}${libdir}/libEGL.so.1
-> >     ln -sf libGLESv1_CM.so.1.1.0 ${D}${libdir}/libGLESv1_CM.so.1
-> >     ln -sf libGLESv1_CM.so.1.1.0 ${D}${libdir}/libGLESv1_CM.so
-> >     ln -sf libGLESv2.so.2.0.0 ${D}${libdir}/libGLESv2.so.2
-> >
-> >     # Install extra NVIDIA libglvnd libraries
-> >     install -m755 ${L4T_GL_LIBRARIES}/libGLX.so.0 ${D}${libdir}/
-> >     install -m755 ${L4T_GL_LIBRARIES}/libGLdispatch.so.0 ${D}${libdir}/
-> >     ln -sf libGLX.so.0 ${D}${libdir}/libGLX.so
-> >     ln -sf libGLdispatch.so.0 ${D}${libdir}/libGLdispatch.so
-> >
-> >     # Install extra EGL NVIDIA libraries
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv1_CM_nvidia.so.1 ${D}${libdir}/
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv1_CM.so.1 ${D}${libdir}/
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libGLESv2_nvidia.so.2 ${D}${libdir}/
-> >
-> >     # Install extra GL NVIDIA libraries
-> >     install -m755 ${L4T_GL_LIBRARIES}/libGLX_nvidia.so.0 ${D}${libdir}/
-> >
-> >     # Install libraries dependent on libglvnd libs
-> >     install -m755 ${L4T_EGL_LIBRARIES}/libEGL_nvidia.so.0 ${D}${libdir}/
-> >
-> >     install -m755 ${L4T_GL_LIBRARIES}/libnvidia-glsi.so.28.2.1 ${D}${libdir}/
-> >
-> >     install -m755 ${L4T_GL_LIBRARIES}/libnvbuf_utils.so.1.0.0 ${D}${libdir}/
-> >     ln -sf libnvbuf_utils.so.1.0.0 ${D}${libdir}/libnvbuf_utils.so.1
-> >     ln -sf libnvbuf_utils.so.1.0.0 ${D}${libdir}/libnvbuf_utils.so
-> >
-> >     install -m755 ${L4T_GL_LIBRARIES}/libnvddk_vic.so ${D}${libdir}/
-> >     install -m755 ${L4T_GL_LIBRARIES}/libnvddk_2d_v2.so ${D}${libdir}/
-> >
-> >     # nvcamera_daemon and argus_daemon have hard-coded path for this
-> >     install -d ${D}${nonarch_libdir}/aarch64-linux-gnu/tegra-egl
-> >     ln -sf ${libdir}/libEGL.so.1.0.0
-> > ${D}${nonarch_libdir}/aarch64-linux-gnu/tegra-egl/libEGL.so
-> > }
-> >
-> > PACKAGE_ARCH = "${MACHINE_ARCH}"
-> >
-> > FILES_libgles1-tegra += "\
-> >     ${libdir}/libGLESv1* \
-> > "
-> >
-> > FILES_libgles2-tegra += "\
-> >     ${libdir}/libGLESv2* \
-> > "
-> >
-> > FILES_libegl-tegra += "\
-> >     ${libdir}/libEGL* \
-> >     ${nonarch_libdir}/aarch64-linux-gnu/tegra-egl/libEGL.so \
-> > "
-> >
-> > FILES_libgl-tegra += "\
-> >     ${libdir}/libGL.* \
-> >     ${libdir}/libGLX* \
-> >     ${libdir}/libGLdispatch.so* \
-> >     ${libdir}/libnvidia-glsi.so.28.2.1 \
-> >     ${libdir}/libnvbuf_utils.so* \
-> >     ${libdir}/libnvddk_vic.so  \
-> >     ${libdir}/libnvddk_2d_v2.so \
-> > "
-> >
-> > INSANE_SKIP_${PN} = "already-stripped"
-> > INSANE_SKIP_libegl-tegra = "ldflags dev-so"
-> > INSANE_SKIP_libgles1-tegra = "ldflags dev-so"
-> > INSANE_SKIP_libgles2-tegra = "ldflags"
-> > INSANE_SKIP_libgl-tegra = "ldflags dev-so textrel"
-> >
-> > RREPLACES_libgl-tegra = "libgl-mesa"
-> > RREPLACES_libegl-tegra = "libegl-mesa"
-> > RREPLACES_libgles1-tegra = "libgles1-mesa"
-> > RREPLACES_libgles2-tegra = "libgles2-mesa"
-> >
-> > RCONFLICTS_libgl-tegra = "libgl-mesa"
-> > RCONFLICTS_libegl-tegra = "libegl-mesa"
-> > RCONFLICTS_libgles1-tegra = "libgles1-mesa"
-> > RCONFLICTS_libgles2-tegra = "libgles2-mesa"
-> >
-> > RPROVIDES_libgl-tegra += "gl-proprietary libgl libgl-mesa"
-> > RPROVIDES_libegl-tegra += "libegl libegl-mesa"
-> > RPROVIDES_libgles2-tegra += "libgles2 libgles2-tegra"
-> > RPROVIDES_libgles1-tegra += "libgles1 libgles1-tegra"
-> >
-> >
-> > PRIVATE_LIBS = "libGL.so.1 libEGL.so.1 libGLESv2.so.2 libGLESv1_CM.so.1"
-> >
-> > On Tue, Mar 5, 2019 at 12:06 PM Burton, Ross <ross.burton@intel.com> wrote:
-> > >
-> > > That is horrible and they should be ashamed.  Can you share the
-> > > complete recipe, as this *should* be a fairly trivial switcharoony.
-> > >
-> > > Ross
-> > >
-> > > On Tue, 5 Mar 2019 at 11:00, Ricardo Ribalda Delgado
-> > > <ricardo.ribalda@gmail.com> wrote:
-> > > >
-> > > > HI Ross
-> > > > On Tue, Mar 5, 2019 at 11:58 AM Burton, Ross <ross.burton@intel.com> wrote:
-> > > > >
-> > > > > Does they literally just provide a libgl.so and no headers, etc?
-> > > >
-> > > > It provides:
-> > > >
-> > > > /usr/lib/libGL.so.1.2.0
-> > > > /usr/lib/libGL.so.1
-> > > >
-> > > >
-> > > > >
-> > > > > Ross
-> > > > >
-> > > > > On Fri, 1 Mar 2019 at 11:29, Ricardo Ribalda Delgado
-> > > > > <ricardo.ribalda@gmail.com> wrote:
-> > > > > >
-> > > > > > Hello
-> > > > > >
-> > > > > > I have a build system that supports some aarch64 machines. For most of
-> > > > > > the them, the only difference is the kernel configuration, kernel
-> > > > > > version.
-> > > > > >
-> > > > > > I am using multiconfig on my build server and the build goes really
-> > > > > > fast thanks to all the shared binaries/artifacts.
-> > > > > >
-> > > > > > But I have a problem adding a new machine. This machine is also
-> > > > > > aarch64, with a special kernel (nothing new here), but in this case
-> > > > > > the vendor provides a binary .so for libgl that is required to get
-> > > > > > hardware acceleation.
-> > > > > >
-> > > > > > I could .bbappend mesa and on the installation part replace libgl with
-> > > > > > the new .so. But then everything that depends on mesa needs to be
-> > > > > > rebuilt for that machine and I could not use multiconfig.
-> > > > > >
-> > > > > > Instead I have created a new recipe: mesa-gl-replace.bb that has the
-> > > > > > file. This breakes completely the design of OE, but works.
-> > > > > >
-> > > > > > Some snipsets of the "magic" to make it work:
-> > > > > >
-> > > > > > #Force that the version is allways higher than the one from mesa:
-> > > > > > PE = "5"
-> > > > > >
-> > > > > > #Rprovide the same as mesa
-> > > > > > RPROVIDES_libgl-mesa += "libgl"
-> > > > > >
-> > > > > > #Do not overwrite pkgdata of mesa
-> > > > > > PACKAGEFUNCS_append = " rm_pkgdata_runtime"
-> > > > > > rm_pkgdata_runtime() {
-> > > > > > rm -rf ${WORKDIR}/pkgdata/runtime/*
-> > > > > > rm -rf ${WORKDIR}/pkgdata/shlibs2/*
-> > > > > > }
-> > > > > >
-> > > > > > #Keep this on machine
-> > > > > > PACKAGE_ARCH = "${MACHINE_ARCH}"
-> > > > > >
-> > > > > > #Make sure we are not saved as providers for libgl
-> > > > > > PRIVATE_LIBS = "libGL.so.1"
-> > > > > >
-> > > > > > #Avoid sanity checks
-> > > > > > read_subpackage_metadata () {
-> > > > > > }
-> > > > > >
-> > > > > >
-> > > > > > If your eyes have not fallen as this point, this means you have a lot
-> > > > > > of tolerance for crappy code, congrats :)
-> > > > > >
-> > > > > > Now the question. Is there a better way to do this?
-> > > > > >
-> > > > > > PS: I already tried and failed with update_alternatives
-> > > > > >
-> > > > > >
-> > > > > > Best regards!
-> > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Ricardo Ribalda
-> > > > > > --
-> > > > > > _______________________________________________
-> > > > > > Openembedded-core mailing list
-> > > > > > Openembedded-core@lists.openembedded.org
-> > > > > > http://lists.openembedded.org/mailman/listinfo/openembedded-core
-> > > >
-> > > >
-> > > >
-> > > > --
-> > > > Ricardo Ribalda
-> >
-> >
-> >
-> > --
-> > Ricardo Ribalda
+On 2/15/19 5:00 PM, Richard Purdie wrote:
+> On Fri, 2019-02-15 at 04:25 +0100, Krzysztof Zawadzki wrote:
+>> With this option we can force users to provide all used sources in
+>> recipe.
+>> Without this there is possibility that repositories which are using
+>> svn:externals
+>>  can point to source code from HEAD or to nonexisting repository.
+>> This can cause attempt to reproduce build after some time impossible.
+>>
+>> Signed-off-by: Krzysztof Zawadzki <mr.k.zawadzki@gmail.com>
+>> ---
+>>  lib/bb/fetch2/svn.py | 9 ++++++++-
+>>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> I'm wondering if this should be the default and is something people
+> have to explicitly opt out of?
+> 
+> Cheers,
+> 
+> Richard
+> 
 
-
-
--- 
-Ricardo Ribalda
 
