@@ -1,47 +1,47 @@
 Return-Path: <scott.murray@konsulko.com>
-Received: from mail-it1-f178.google.com (mail-it1-f178.google.com
-	[209.85.166.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 0D2837BEDF
+Received: from mail-it1-f180.google.com (mail-it1-f180.google.com
+	[209.85.166.180])
+	by mail.openembedded.org (Postfix) with ESMTP id DC2977C671
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Mar 2019 22:42:38 +0000 (UTC)
-Received: by mail-it1-f178.google.com with SMTP id v83so7232969itf.1
+	Tue, 12 Mar 2019 22:42:39 +0000 (UTC)
+Received: by mail-it1-f180.google.com with SMTP id d125so3562077ith.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Mar 2019 15:42:40 -0700 (PDT)
+	Tue, 12 Mar 2019 15:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=DF/ASmKDC9MFVZGu2PPY+XTr40S0lxNXklHmcbvQEQo=;
-	b=Wb2EQZ3i2iyMkqWylTuk3WJIWaNbwTmGfnKOcrNEc94CbUr8W/esz+91Ipay5ZQUFo
-	RhGw6sDLz4pHg0TThsIZ/RTNBhHvC8B3x9FnU7CxPm9wTuWzfYS8vRFz+7tIdsP2A5bR
-	4oP1J6Jju459rMIG/0u5hGtlCv4cGZ8p8pHPs=
+	bh=wiCmy2HDwkb5vafHIfk9Dj5J7moK7AFLgOuJFIi/QS8=;
+	b=eZqviZUUdh+ZNdcUEPJoET35wxuJTw2gPd7hgkj9V5w0KvVqq5VIR/94YrvQ8L8oCw
+	5AYsfxydy/vgm4IiZof43GpbiLk5L/OLgWLW4KpVD+1GCJtEMVDRfi8mtYzY2AWG/MLR
+	9E9uwc7Sm6pQbt1EBIbIyu2K1sFZsLhccSb5Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=DF/ASmKDC9MFVZGu2PPY+XTr40S0lxNXklHmcbvQEQo=;
-	b=dwoOtmZ/uEcxH7MTE+4d7TP3a/oqWPgZpFEXEEh0da7avDw70EEW0/biQ71QN2uMTR
-	Pk9YgR2b28LVn9jgCsJuNEOvq5FP5liYSGNy8z+uL9PvHpXYwNqoLwCteS5uqMWeRefQ
-	ksUA7a0Cuodx5UHybfe0FlYcGRWA3FfhxyuhwPPkTB/M/dEGjnc3WhdhugVm8Gl022aC
-	Yh9skjPXRjX7OK6rdSqxQYBpQPPaUYJepse3tZcF1sDKwiwz93NnufqTR9slToy8aHeg
-	Uw9+6u48l29OaaQLTR3lYacSO4ibLhvbzMvEhUhzfXmAMB+5c55LFSve55bsS2kQAwHr
-	cGFw==
-X-Gm-Message-State: APjAAAXJgUqZf/zjqNgpoceQDj7qWL23/MqsWRsI03JeF65sRAo/0tHj
-	yAYXVc6p+az6ewBnQ3BYHX1ijbAIA98=
-X-Google-Smtp-Source: APXvYqxDSw/fCNmJOvyJjHSevt+Du62Wg9LfKSBYE3PR1EkCnmZkwmzH8wL7QwP/rr+IOVVOcXdQsQ==
-X-Received: by 2002:a02:1783:: with SMTP id 125mr7146421jah.31.1552430559565; 
-	Tue, 12 Mar 2019 15:42:39 -0700 (PDT)
+	bh=wiCmy2HDwkb5vafHIfk9Dj5J7moK7AFLgOuJFIi/QS8=;
+	b=h1kugeXXC6j/qythxfFxJts1x+u3Vb+Xz3d4Ut7ZVBl/+lduz6zueS4gMrR87jxH7R
+	gMqZfBsUgd+TDDFcLF5U1mixMMuyq2RyVRdES89+1uChNBBDyzNdsqIfDnzSGF2YxWAg
+	xtG1ABH/jQFSiSsvElBHnbuDyeZfwi69KwhDq9iL6IyvUc3QMDMcuNqCH5Ro55p3skfc
+	7LjKe0unPEGG/m+0XiYnK+LhtdxkZKi8x6Z6KKVKZxn4MGSfiEyO4ebA0WE1Tr2ecbYn
+	3F8StUqGZBn2yPuObGoSb75Q7i8yEgGtuHImK34W2LEkpQ8WgjRBI1cuzGspg6NdOAxc
+	QoMg==
+X-Gm-Message-State: APjAAAUKC0PN8wE1UIgEJHgyxgsGlZG2u+m1O9r+J1l+9xTjscdDxNA/
+	hByexSmVYtj3lb1IBDnyiCvEh5xfSmU=
+X-Google-Smtp-Source: APXvYqwkjg5sIXhuGc2p5d1t7BvbYZR076wBdA8d9nScBkytL66P5VG35XohX+1EzrCMQoPNNRRVHA==
+X-Received: by 2002:a24:ee8c:: with SMTP id b134mr96078iti.7.1552430560753;
+	Tue, 12 Mar 2019 15:42:40 -0700 (PDT)
 Received: from ghidorah.spiteful.org (69-165-244-87.cable.teksavvy.com.
 	[69.165.244.87])
-	by smtp.gmail.com with ESMTPSA id 25sm2843292iog.83.2019.03.12.15.42.38
+	by smtp.gmail.com with ESMTPSA id 25sm2843292iog.83.2019.03.12.15.42.39
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 12 Mar 2019 15:42:38 -0700 (PDT)
+	Tue, 12 Mar 2019 15:42:40 -0700 (PDT)
 From: Scott Murray <scott.murray@konsulko.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Mar 2019 18:46:18 -0400
-Message-Id: <20190312224627.12667-2-scott.murray@konsulko.com>
+Date: Tue, 12 Mar 2019 18:46:19 -0400
+Message-Id: <20190312224627.12667-3-scott.murray@konsulko.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190312224627.12667-1-scott.murray@konsulko.com>
 References: <20190312224627.12667-1-scott.murray@konsulko.com>
-Subject: [1.40][PATCH 01/10] gitsm.py: Fix when a submodule is defined, but not initialized
+Subject: [1.40][PATCH 02/10] gitsm.py: Add support for alternative URL formats from submodule files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,118 +54,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Mar 2019 22:42:39 -0000
+X-List-Received-Date: Tue, 12 Mar 2019 22:42:40 -0000
 
 From: Mark Hatle <mark.hatle@windriver.com>
 
-It is possible for a submodule to be defined in the .gitmodules file, but
-never initialized in the repository itself.  This shows itself when searching
-for the defined module hash you will get back a empty value.
+The following appear to be the git supported formats:
 
-Similarly we need to identify and skip defined but not initialized submodules
-during the unpack stages as well.
+  proto://user:pass@host/path  (URI format)
+  user@host:path (SSH format)
+  /path or ./path or ../path (local file format)
 
-Thanks to raphael.lisicki@siemens.com for their help is figuring out how
-to resolve this issue.
+We adjust the parsing to find out if we have a URI format or not.
+When we are NOT in URI format, we do our best to determine SSH or
+file format by looking for a ':' in the overall string.  If we find
+a ':' we assume SSH format and adjust accordingly.
 
-Additionally a problem was found where, while unlikely, it may be possible
-for the wrong revision to have been searched using ls-tree.  This has been
-resolved in the update_submodules function by keeping the correct revision
-along with the submodule path.
+Note, in SSH format we simply replace the ':' with a '/' when constructing
+the URL.  However, if the original path was ":/...", we don't want '//' so
+we deal with this corner case as well.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 49e1ff920143dcd4e7f73933d7ab8a84b8ffa1a3)
+(cherry picked from commit dcac05e7dc6b0c5f8e63d36ad105b7eab41f0016)
 Signed-off-by: Scott Murray <scott.murray@konsulko.com>
 ---
- lib/bb/fetch2/gitsm.py | 32 ++++++++++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
+ lib/bb/fetch2/gitsm.py | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index 35729dbc..b7959ff5 100644
+index b7959ff5..dd94186c 100644
 --- a/lib/bb/fetch2/gitsm.py
 +++ b/lib/bb/fetch2/gitsm.py
-@@ -64,6 +64,7 @@ class GitSM(Git):
-     def update_submodules(self, ud, d):
-         submodules = []
-         paths = {}
-+        revision = {}
-         uris = {}
-         local_paths = {}
- 
-@@ -77,6 +78,7 @@ class GitSM(Git):
-             for m, md in self.parse_gitmodules(gitmodules).items():
-                 submodules.append(m)
-                 paths[m] = md['path']
-+                revision[m] = ud.revisions[name]
-                 uris[m] = md['url']
-                 if uris[m].startswith('..'):
-                     newud = copy.copy(ud)
-@@ -84,7 +86,17 @@ class GitSM(Git):
-                     uris[m] = Git._get_repo_url(self, newud)
- 
-         for module in submodules:
--            module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], paths[module]), d, quiet=True, workdir=ud.clonedir)
-+            try:
-+                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, revision[module], paths[module]), d, quiet=True, workdir=ud.clonedir)
-+            except:
-+                # If the command fails, we don't have a valid file to check.  If it doesn't
-+                # fail -- it still might be a failure, see next check...
-+                module_hash = ""
-+
-+            if not module_hash:
-+                logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", module)
-+                continue
-+
+@@ -100,8 +100,21 @@ class GitSM(Git):
              module_hash = module_hash.split()[2]
  
              # Build new SRC_URI
-@@ -143,7 +155,7 @@ class GitSM(Git):
-         if not ud.shallow or ud.localpath != ud.fullshallow:
-             self.update_submodules(ud, d)
- 
--    def copy_submodules(self, submodules, ud, destdir, d):
-+    def copy_submodules(self, submodules, ud, name, destdir, d):
-         if ud.bareclone:
-             repo_conf = destdir
-         else:
-@@ -156,6 +168,18 @@ class GitSM(Git):
-             srcpath = os.path.join(ud.clonedir, 'modules', md['path'])
-             modpath = os.path.join(repo_conf, 'modules', md['path'])
- 
-+            # Check if the module is initialized
-+            try:
-+                module_hash = runfetchcmd("%s ls-tree -z -d %s %s" % (ud.basecmd, ud.revisions[name], md['path']), d, quiet=True, workdir=ud.clonedir)
-+            except:
-+                # If the command fails, we don't have a valid file to check.  If it doesn't
-+                # fail -- it still might be a failure, see next check...
-+                module_hash = ""
+-            proto = uris[module].split(':', 1)[0]
+-            url = uris[module].replace('%s:' % proto, 'gitsm:', 1)
++            if "://" not in uris[module]:
++                # It's ssh if the format does NOT have "://", but has a ':'
++                if ":" in uris[module]:
++                    proto = "ssh"
++                    if ":/" in uris[module]:
++                        url = "gitsm://" + uris[module].replace(':/', '/', 1)
++                    else:
++                        url = "gitsm://" + uris[module].replace(':', '/', 1)
++                else: # Fall back to 'file' if there is no ':'
++                    proto = "file"
++                    url = "gitsm://" + uris[module]
++            else:
++                proto = uris[module].split(':', 1)[0]
++                url = uris[module].replace('%s:' % proto, 'gitsm:', 1)
 +
-+            if not module_hash:
-+                logger.debug(1, "submodule %s is defined, but is not initialized in the repository. Skipping", module)
-+                continue
-+
-             if os.path.exists(srcpath):
-                 if os.path.exists(os.path.join(srcpath, '.git')):
-                     srcpath = os.path.join(srcpath, '.git')
-@@ -188,7 +212,7 @@ class GitSM(Git):
-                 continue
- 
-             submodules = self.parse_gitmodules(gitmodules)
--            self.copy_submodules(submodules, ud, dest, d)
-+            self.copy_submodules(submodules, ud, name, dest, d)
- 
-     def unpack(self, ud, destdir, d):
-         Git.unpack(self, ud, destdir, d)
-@@ -211,7 +235,7 @@ class GitSM(Git):
-                 continue
- 
-             submodules = self.parse_gitmodules(gitmodules)
--            self.copy_submodules(submodules, ud, ud.destdir, d)
-+            self.copy_submodules(submodules, ud, name, ud.destdir, d)
- 
-             submodules_queue = [(module, os.path.join(repo_conf, 'modules', md['path'])) for module, md in submodules.items()]
-             while len(submodules_queue) != 0:
+             url += ';protocol=%s' % proto
+             url += ";name=%s" % module
+             url += ";bareclone=1;nocheckout=1;nobranch=1"
 -- 
 2.17.2
 
