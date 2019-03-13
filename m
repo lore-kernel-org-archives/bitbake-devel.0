@@ -1,51 +1,53 @@
-Return-Path: <luca.boccassi@gmail.com>
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com
-	[209.85.128.53])
-	by mail.openembedded.org (Postfix) with ESMTP id D734C7C699
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 797817C6A0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 13 Mar 2019 20:00:08 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id e16so525641wme.1
+	Wed, 13 Mar 2019 23:19:28 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x2DNJ3I1018091
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 13 Mar 2019 13:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=+621melfWICWkD81vtg8D9mjNs+63pG/uVEjEjCCnQI=;
-	b=FPQzjQWp+4DZMm2Swse4aFHJvi4bDJ2v2pxzyuxQQP4sQZnEfppg6ydamz+q5XQjAO
-	1hhWk7GemTk6/odxNkJaACwaQC6KriXEGby4ezxHJelFwPSE36udg9/Lni2OE26CEWjP
-	u6VQb2BXaDU+sxQKULkXK3/gGrjJ59cn54LVTcLHbzmoUFvdEUx1x22/UDHROKTuFusR
-	8MMOsVeper0g6Z+QPXKofFq69Tz6f4mHb45wvJQm9+WtHiLNMvi1F0U0TlQhpVoweKvx
-	KSABoWMyIqiLSvWgk836Y7YmZmxnTWfKQ0vyMw/ZlMlKaSV0u8A8x9urd4Hv2gHCszX4
-	Ly+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=+621melfWICWkD81vtg8D9mjNs+63pG/uVEjEjCCnQI=;
-	b=dhsOjLmIb9wp/zfu6hAMPbIfT6Gqk1Ch2q/OHYcQZnHT2tjtFxT861SZUZNPYk2ky9
-	aAZX4xRCMCSbZ7PQ0YxWC5a7jim3BJlqbL6hJjMaznMJog5jaO00hRx5pn9pKwcdasXV
-	nrs44dsXHaf2pdMHih2uQD5yMIKwksE25y5VglbZZjLS7S0XyY5tMyqK9bDG75NtQLYc
-	5xrjDY3brZXzh4qZT+DjlFWI2wofjso0PLXXCZk5QM1Yuftk2UXXabFYgdMpzhYMyHYF
-	2baAhageDtDu6GgiH8eTQvqELVf9yHUqmUKa6PQruZFtze1jow6Wu06g1JpanE49ROij
-	3GoA==
-X-Gm-Message-State: APjAAAVK59SU3MeVAnOTnSCrynNA2k9Ke7eKhnAN0Q2jQQ30Ns4Zwrrt
-	hAQumMcYb8C2F3P5pB2ebENvwNtj65Q=
-X-Google-Smtp-Source: APXvYqyNMF+up6dwmQwIqNX+mFiyQJt9THCLu+x48gVMxhoFNBxkcSFhsEEAqccqtG7YDw6mSoArnw==
-X-Received: by 2002:a1c:2543:: with SMTP id l64mr3592777wml.116.1552507208947; 
-	Wed, 13 Mar 2019 13:00:08 -0700 (PDT)
-Received: from localhost ([2a01:4b00:f419:6f00:b00c:66c8:99df:336])
-	by smtp.gmail.com with ESMTPSA id
-	j184sm4671665wma.47.2019.03.13.13.00.07
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Wed, 13 Mar 2019 13:00:08 -0700 (PDT)
-From: luca.boccassi@gmail.com
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 13 Mar 2019 20:00:03 +0000
-Message-Id: <20190313200003.12020-1-luca.boccassi@gmail.com>
-X-Mailer: git-send-email 2.20.1
+	Wed, 13 Mar 2019 16:19:18 -0700
+Received: from soho-mhatle-m.local (172.25.36.233) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.439.0;
+	Wed, 13 Mar 2019 16:19:06 -0700
+To: <bitbake-devel@lists.openembedded.org>
+References: <20190312224627.12667-1-scott.murray@konsulko.com>
+	<8edf457e-e537-9f9d-435a-e8acdcf2c3eb@gmail.com>
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <58e2b543-10de-1c62-86d7-8ba0a09715d8@windriver.com>
+Date: Wed, 13 Mar 2019 18:19:06 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.5.3
 MIME-Version: 1.0
-Cc: Luca Boccassi <luca.boccassi@microsoft.com>
-Subject: [PATCH 1.38] COW: Fix StopIteration warning
+In-Reply-To: <8edf457e-e537-9f9d-435a-e8acdcf2c3eb@gmail.com>
+Subject: Re: [1.40][PATCH 0/10] Backport gitsm fetcher fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,42 +60,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 Mar 2019 20:00:09 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 13 Mar 2019 23:19:28 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+On 3/13/19 2:17 PM, akuster808 wrote:
+> 
+> 
+> On 3/12/19 3:46 PM, Scott Murray wrote:
+>> Backport Mark's git submodule fetcher fixes and a related testcase
+>> change to the 1.40 branch so they can make their way into thud.  All
+>> changes cherry-picked cleanly, and bitbake-selftest passes successfully.
+>> Additional testing has been done with the Automotive Grade Linux (AGL)
+>> build, which requires these fixes to build against poky thud.
+> 
+> Seeing errors on the AB for fedora, ubuntu, centos and debian hosts.
+> 
+> https://errors.yoctoproject.org/Errors/Details/232884/
+> 
+> Have not triaged it yet.
 
-Fix the warning:
+The error reported is not related to the gitsm fetcher.  It looks like this
+failed in some sort of mirror test.
 
-WARNING: lib/bb/data_smart.py:235: DeprecationWarning: generator 'COWDictMeta.iter' raised StopIteration
-  for k, v in self.variables.iteritems():
+--Mark
 
-by using return from the generator, not raising StopIteration.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 407d6e07b09123c12c382b4a92107f002c314b05)
-Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
----
-Backporting this patch to 1.38 fixes running bitbake on Sumo on Debian
-10, which about to become the new Debian stable.
-
- lib/bb/COW.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/bb/COW.py b/lib/bb/COW.py
-index bec62080..7817473a 100644
---- a/lib/bb/COW.py
-+++ b/lib/bb/COW.py
-@@ -150,7 +150,7 @@ class COWDictMeta(COWMeta):
-                 yield value
-             if type == "items":
-                 yield (key, value)
--        raise StopIteration()
-+        return
- 
-     def iterkeys(cls):
-         return cls.iter("keys")
--- 
-2.20.1
+> - armin
+>>
+>> Thanks,
+>>
+>> Scott
+>>
+>>
+> 
+> 
 
 
