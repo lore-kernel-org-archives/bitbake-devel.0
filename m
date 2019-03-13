@@ -1,46 +1,46 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com
-	[209.85.210.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 707CA7C621
+Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com
+	[209.85.215.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 02AAF6C23A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 13 Mar 2019 04:38:34 +0000 (UTC)
-Received: by mail-pf1-f195.google.com with SMTP id v21so454301pfm.12
+	Wed, 13 Mar 2019 19:17:22 +0000 (UTC)
+Received: by mail-pg1-f194.google.com with SMTP id q206so2209611pgq.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Mar 2019 21:38:35 -0700 (PDT)
+	Wed, 13 Mar 2019 12:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=subject:to:references:from:openpgp:autocrypt:message-id:date
 	:user-agent:mime-version:in-reply-to:content-transfer-encoding
 	:content-language;
-	bh=SsjVmn0GCTGSA3NvMFzwqCx5GBfD6GSMDbQZkF5YsJk=;
-	b=f3XeG4dTEDldVTWn8EqkHJ7e+TRIgp67fH6Ry/fLv2H65pw1gof/ekE4b+oZp7J0OH
-	W8al7Z/EG0XGL46G/PdIYfQxooWSnjRF0YmANT91TbImxaNZTPO59CqNxBHNF5/pEdxY
-	cG4c9fvidFdO2gaZbmGCL8+POVdFEyWSxpkKPxsQ5exZByWzoDnFv07JF2DGQHtqQqdz
-	zO5DstNeoTsjYu3b9smv74gtT2+74+qIf7s03AQ5VFf11FTslCCsQ5B37TPdOIc0xGty
-	xKZzIBKs/TZv2wzELXxLsb3EN/M6bfBOL99mEgsuNUBrjB58fwXiUlDr/fl6OAk6QOwh
-	AjxA==
+	bh=OChg0N6OKB3k8oZGu6vaR21QFQm7rKQzs9ClVAN1yqA=;
+	b=JBj/8HJ0b+6ifcNA4aDoiRL1ad8aZ5bG/GJ+Zdq7V4ugEG8+W42pu4Aqh6CrC77oy9
+	wCH5Q9RYh+vlEYda4qFj3rKgoQLih+WxUBZJdi3Pnd53Ota4KnI83wGjK0erIO453CiJ
+	ssru2N9hwFEFpVusiySfHCd9qMuuFvJKaNlAGMwtL6ihWRWrmuflHY/LBMFc2js9gZOY
+	SP0MLcSQ0iVGaxuI1/m5uYkoi68F+XSmnza/Qz9y2K2NhC7Ab/BRLmPFwe4zx5c0jw9P
+	2aAqwRTMqIUGeF5I4F/ltDaaf2qKWtpn98/ItgsLFHL4/MrnPoZnedvdeEFkJVr4TKrR
+	wkGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
 	:message-id:date:user-agent:mime-version:in-reply-to
 	:content-transfer-encoding:content-language;
-	bh=SsjVmn0GCTGSA3NvMFzwqCx5GBfD6GSMDbQZkF5YsJk=;
-	b=oJbU4427iSLnp773N+mcJ+12yk/UYSJfTRCqHpMOKpgsYoUyBsIpZAccKOLLvGUrnz
-	w0PbIK5sJ2qEvlUEy8gqoV4R6FoOZeaPw/xpFbB+nwcMBGV04lE6rwxbxsQb7WwCiZGh
-	CCPaoMUcoZwm7DNYIWH2xrrxgvsMZlmkYNoFix8vuMbxEeCtvSeiRNS7+qfkhQGCUpZb
-	ZLbOG3wh/prJFHP4kesLZTX3rTJJoIHZ4ELA5oXBMtaogsc7KpqjtMZZj7wizpcDr/fI
-	FnWWmmBxkI+EF7ukAUEnmyki8RV6xZm35pSEfn3yCy8uh5z8zpfzh/L7i7uU29CGzlfR
-	D09Q==
-X-Gm-Message-State: APjAAAUJ9g5IlBAi6F881OjEjFrpzXrn5YuO1cTqcks4NBNXRPDJMsf7
-	7ZjnOD3a9TPLfT4BGXy+9PafEn1V
-X-Google-Smtp-Source: APXvYqwIc+9EPrVFbRrYDmi+BcqWR3gukpPXdTdEcU3FkkgtBHyxrQ0lqd5pUC/53ui55/vD56GQIA==
-X-Received: by 2002:a63:cc05:: with SMTP id x5mr38097163pgf.31.1552451915267; 
-	Tue, 12 Mar 2019 21:38:35 -0700 (PDT)
-Received: from ?IPv6:2601:202:4180:c33:9467:e107:53ea:9cc9?
-	([2601:202:4180:c33:9467:e107:53ea:9cc9])
-	by smtp.gmail.com with ESMTPSA id
-	k7sm13285850pgo.60.2019.03.12.21.38.34
+	bh=OChg0N6OKB3k8oZGu6vaR21QFQm7rKQzs9ClVAN1yqA=;
+	b=SGv98CGPe1viJm/JkP0YcQNTVk+Tuw5Km2HY8bNfX7jB+0g9eMi7A6jzmoGZDfQCzZ
+	EDgBrxpmrRZbGLFWFuO1OpHZWlz3ovMn8VjrXqpDw05wXlGGOsuCoW2vxbmCGXf1FGrH
+	1ExAfCp+OdqGeLuWxeUrblruPhvaBZdo+PwiwW7MugYNGkjeAGKP9VQDHyZWHuLawLSe
+	tPi4RuHNdc2K5D3VhOh+uorr9emOVpAOMfb8B/9OTLqki1LdMjH6t91BrR75mT+/JemK
+	8SpfIgRoy0wmWkH5iRl3izzQuzy9vPWg2m/nt/OC2GYSkj74RjGM+wb2U9fMilu49DSd
+	8qYw==
+X-Gm-Message-State: APjAAAX1QLXBD1s0M4gcGVrBz/cOycQjOJEIPeJl6wxKPqckfbYxJrh2
+	lJ/8Wk883Poe51puThX/qmOHtOzl
+X-Google-Smtp-Source: APXvYqygno/VjAGhA79wpLjVxtUZrOG5OXHjUMm+hkkKHsVMmqBPQMQi8rP+OaJ+45A9wN+1rBU0wA==
+X-Received: by 2002:a17:902:45a5:: with SMTP id
+	n34mr10202235pld.127.1552504643634; 
+	Wed, 13 Mar 2019 12:17:23 -0700 (PDT)
+Received: from [192.168.29.242] (c-71-204-143-8.hsd1.ca.comcast.net.
+	[71.204.143.8]) by smtp.gmail.com with ESMTPSA id
+	u18sm27928351pfa.176.2019.03.13.12.17.22
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 12 Mar 2019 21:38:34 -0700 (PDT)
+	Wed, 13 Mar 2019 12:17:23 -0700 (PDT)
 To: Scott Murray <scott.murray@konsulko.com>,
 	bitbake-devel@lists.openembedded.org
 References: <20190312224627.12667-1-scott.murray@konsulko.com>
@@ -89,8 +89,8 @@ Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
 	PNHndk8VBTpzrmOaJxrebNL/W6C8JCmbLM11TAUMmHYi9JDytN8Au78hWpDbIdKwg1LeSxpw
 	ZZD/OqOc0DBvHOpQhzkSrtR1lVlDV/+9E8J1T4uDhrGmZwYV+4xQetypHax8aAHisYbjXdVa
 	8CS2NxU=
-Message-ID: <54289898-998d-5440-38dd-0424a8a30dd5@gmail.com>
-Date: Tue, 12 Mar 2019 21:38:33 -0700
+Message-ID: <8edf457e-e537-9f9d-435a-e8acdcf2c3eb@gmail.com>
+Date: Wed, 13 Mar 2019 12:17:20 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
 	Thunderbird/60.5.1
 MIME-Version: 1.0
@@ -108,9 +108,9 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 Mar 2019 04:38:34 -0000
+X-List-Received-Date: Wed, 13 Mar 2019 19:17:23 -0000
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 
 
@@ -118,12 +118,16 @@ Content-Language: en-US
 On 3/12/19 3:46 PM, Scott Murray wrote:
 > Backport Mark's git submodule fetcher fixes and a related testcase
 > change to the 1.40 branch so they can make their way into thud.  All
-> changes cherry-picked cleanly, and bitbake-selftest passes successfully.
+> changes cherry-picked cleanly, and bitbake-selftest passes successfully=
+=2E
 > Additional testing has been done with the Automotive Grade Linux (AGL)
 > build, which requires these fixes to build against poky thud.
 
-Will take a look.
-many thanks, several folks have asked about this. this saves me time.
+Seeing errors on the AB for fedora, ubuntu, centos and debian hosts.
+
+https://errors.yoctoproject.org/Errors/Details/232884/
+
+Have not triaged it yet.
 
 - armin
 >
@@ -132,5 +136,6 @@ many thanks, several folks have asked about this. this saves me time.
 > Scott
 >
 >
+
 
 
