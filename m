@@ -1,47 +1,101 @@
-Return-Path: <scott.murray@konsulko.com>
-Received: from mail-it1-f194.google.com (mail-it1-f194.google.com
-	[209.85.166.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 3CA387C6D9
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com
+	[209.85.210.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 707CA7C621
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Mar 2019 22:42:48 +0000 (UTC)
-Received: by mail-it1-f194.google.com with SMTP id g17so7212700ita.2
+	Wed, 13 Mar 2019 04:38:34 +0000 (UTC)
+Received: by mail-pf1-f195.google.com with SMTP id v21so454301pfm.12
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Mar 2019 15:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=5FA0X9m2bntjzx99akSKqXN9UcEY9rgmrGe9A+KlY14=;
-	b=XQ4i7PKZGh6aYASWVAA4d3cbncLQc+zpUgPCX0rRm6ecnY5VFhebHl8KgQ6ktcD+U0
-	odVJ4qOc4irPhF0agH1gO8QcSU5qesa2RbUIwtLzygQpuMBkdE63VzQEt61pZcCq+KKi
-	yHazUE5iRs1+eUkfXHb2UvHn4bG+aHpeV6RWc=
+	Tue, 12 Mar 2019 21:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=subject:to:references:from:openpgp:autocrypt:message-id:date
+	:user-agent:mime-version:in-reply-to:content-transfer-encoding
+	:content-language;
+	bh=SsjVmn0GCTGSA3NvMFzwqCx5GBfD6GSMDbQZkF5YsJk=;
+	b=f3XeG4dTEDldVTWn8EqkHJ7e+TRIgp67fH6Ry/fLv2H65pw1gof/ekE4b+oZp7J0OH
+	W8al7Z/EG0XGL46G/PdIYfQxooWSnjRF0YmANT91TbImxaNZTPO59CqNxBHNF5/pEdxY
+	cG4c9fvidFdO2gaZbmGCL8+POVdFEyWSxpkKPxsQ5exZByWzoDnFv07JF2DGQHtqQqdz
+	zO5DstNeoTsjYu3b9smv74gtT2+74+qIf7s03AQ5VFf11FTslCCsQ5B37TPdOIc0xGty
+	xKZzIBKs/TZv2wzELXxLsb3EN/M6bfBOL99mEgsuNUBrjB58fwXiUlDr/fl6OAk6QOwh
+	AjxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=5FA0X9m2bntjzx99akSKqXN9UcEY9rgmrGe9A+KlY14=;
-	b=uTX4vZXTHS/Zy4jtKd5D8xMmt3lqindz4HarvVjO+qOxKr8CosCT+R0cw/8rKJa0cR
-	bgYT0PNbvP7PZ6mSYly3ytZFU/s4ZhNvea7KFe9kZqHa7RulviBF29VdVKbaPVmuRSjW
-	gqu8s5ZsHb7djLmHcywc/3sbxOVWS+yuEu6kY4A17NO15MI2+jzXUBjDUkehHVCsDxQk
-	L+bVsCW3UeOW50JIYh7rI551q7dMcAlub3ZB7gB04J+P+8CBKXNhnryyBdFTFHUWhSG1
-	ERWJ2t65va+ACeMsp3jMBRkspnQZ6Tpp9Pr/TvaRmoNfhPKLUkH1QLTHO3msb809AgBq
-	IyUg==
-X-Gm-Message-State: APjAAAXGg6KRq3XdIc5sdwsgWnsjtQf1ahwv1XnpNmBQubj7vksDbDar
-	cAGc2wxe5FLpA3NpMkkFMiG7oIrm0js=
-X-Google-Smtp-Source: APXvYqzIdamvCCjBrqsLU58BS9AjJJR3hAXsd6T2wZvn/0sl/M/ZXQpkcQj76S9s2Uukhm+gOWf47g==
-X-Received: by 2002:a24:7a4b:: with SMTP id a72mr101148itc.178.1552430569179; 
-	Tue, 12 Mar 2019 15:42:49 -0700 (PDT)
-Received: from ghidorah.spiteful.org (69-165-244-87.cable.teksavvy.com.
-	[69.165.244.87])
-	by smtp.gmail.com with ESMTPSA id 25sm2843292iog.83.2019.03.12.15.42.47
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 12 Mar 2019 15:42:48 -0700 (PDT)
-From: Scott Murray <scott.murray@konsulko.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Mar 2019 18:46:27 -0400
-Message-Id: <20190312224627.12667-11-scott.murray@konsulko.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190312224627.12667-1-scott.murray@konsulko.com>
+	h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
+	:message-id:date:user-agent:mime-version:in-reply-to
+	:content-transfer-encoding:content-language;
+	bh=SsjVmn0GCTGSA3NvMFzwqCx5GBfD6GSMDbQZkF5YsJk=;
+	b=oJbU4427iSLnp773N+mcJ+12yk/UYSJfTRCqHpMOKpgsYoUyBsIpZAccKOLLvGUrnz
+	w0PbIK5sJ2qEvlUEy8gqoV4R6FoOZeaPw/xpFbB+nwcMBGV04lE6rwxbxsQb7WwCiZGh
+	CCPaoMUcoZwm7DNYIWH2xrrxgvsMZlmkYNoFix8vuMbxEeCtvSeiRNS7+qfkhQGCUpZb
+	ZLbOG3wh/prJFHP4kesLZTX3rTJJoIHZ4ELA5oXBMtaogsc7KpqjtMZZj7wizpcDr/fI
+	FnWWmmBxkI+EF7ukAUEnmyki8RV6xZm35pSEfn3yCy8uh5z8zpfzh/L7i7uU29CGzlfR
+	D09Q==
+X-Gm-Message-State: APjAAAUJ9g5IlBAi6F881OjEjFrpzXrn5YuO1cTqcks4NBNXRPDJMsf7
+	7ZjnOD3a9TPLfT4BGXy+9PafEn1V
+X-Google-Smtp-Source: APXvYqwIc+9EPrVFbRrYDmi+BcqWR3gukpPXdTdEcU3FkkgtBHyxrQ0lqd5pUC/53ui55/vD56GQIA==
+X-Received: by 2002:a63:cc05:: with SMTP id x5mr38097163pgf.31.1552451915267; 
+	Tue, 12 Mar 2019 21:38:35 -0700 (PDT)
+Received: from ?IPv6:2601:202:4180:c33:9467:e107:53ea:9cc9?
+	([2601:202:4180:c33:9467:e107:53ea:9cc9])
+	by smtp.gmail.com with ESMTPSA id
+	k7sm13285850pgo.60.2019.03.12.21.38.34
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 12 Mar 2019 21:38:34 -0700 (PDT)
+To: Scott Murray <scott.murray@konsulko.com>,
+	bitbake-devel@lists.openembedded.org
 References: <20190312224627.12667-1-scott.murray@konsulko.com>
-Subject: [1.40][PATCH 10/10] gitsm: The fetcher did not process some recursive submodules properly.
+From: akuster808 <akuster808@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
+	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
+	8CS2NxU=
+Message-ID: <54289898-998d-5440-38dd-0424a8a30dd5@gmail.com>
+Date: Tue, 12 Mar 2019 21:38:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190312224627.12667-1-scott.murray@konsulko.com>
+Subject: Re: [1.40][PATCH 0/10] Backport gitsm fetcher fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,89 +108,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Mar 2019 22:42:48 -0000
+X-List-Received-Date: Wed, 13 Mar 2019 04:38:34 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-From: Mark Hatle <mark.hatle@windriver.com>
 
-Move the submodule processing outside of the if statement to avoid any
-optimizations that may happen.
 
-Update the test cases to include the additional case, and split the other
-test cases into individual tests to make it easier to figure out what
-the failure may be.
+On 3/12/19 3:46 PM, Scott Murray wrote:
+> Backport Mark's git submodule fetcher fixes and a related testcase
+> change to the 1.40 branch so they can make their way into thud.  All
+> changes cherry-picked cleanly, and bitbake-selftest passes successfully.
+> Additional testing has been done with the Automotive Grade Linux (AGL)
+> build, which requires these fixes to build against poky thud.
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 0ec98c01ae50f95c9c74acf53013ac59e0e72b08)
-Signed-off-by: Scott Murray <scott.murray@konsulko.com>
----
- lib/bb/fetch2/gitsm.py |  4 +++-
- lib/bb/tests/fetch.py  | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+), 1 deletion(-)
+Will take a look.
+many thanks, several folks have asked about this. this saves me time.
 
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index f45546b4..b21fed26 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -198,6 +198,8 @@ class GitSM(Git):
- 
-         Git.unpack(self, ud, destdir, d)
- 
--        if not ud.bareclone and self.process_submodules(ud, ud.destdir, unpack_submodules, d):
-+        ret = self.process_submodules(ud, ud.destdir, unpack_submodules, d)
-+
-+        if not ud.bareclone and ret:
-             # Run submodule update, this sets up the directories -- without touching the config
-             runfetchcmd("%s submodule update --recursive --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index e9ad8076..522d2024 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -912,6 +912,7 @@ class FetcherNetworkTest(FetcherTest):
-         if os.path.exists(os.path.join(repo_path, 'bitbake-gitsm-test1')):
-             self.assertTrue(os.path.exists(os.path.join(repo_path, 'bitbake-gitsm-test1', 'bitbake')), msg='submodule of submodule missing')
- 
-+    def test_git_submodule_dbus_broker(self):
-         # The following external repositories have show failures in fetch and unpack operations
-         # We want to avoid regressions!
-         url = "gitsm://github.com/bus1/dbus-broker;protocol=git;rev=fc874afa0992d0c75ec25acb43d344679f0ee7d2"
-@@ -928,16 +929,35 @@ class FetcherNetworkTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/subprojects/c-sundry/config')), msg='Missing submodule config "subprojects/c-sundry"')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/subprojects/c-utf8/config')), msg='Missing submodule config "subprojects/c-utf8"')
- 
-+    def test_git_submodule_CLI11(self):
-         url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=bd4dc911847d0cde7a6b41dfa626a85aab213baf"
-         fetcher = bb.fetch.Fetch([url], self.d)
-         fetcher.download()
-         # Previous cwd has been deleted
-         os.chdir(os.path.dirname(self.unpackdir))
-         fetcher.unpack(self.unpackdir)
-+
-+        repo_path = os.path.join(self.tempdir, 'unpacked', 'git')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/googletest/config')), msg='Missing submodule config "extern/googletest"')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
- 
-+    def test_git_submodule_aktualizr(self):
-+        url = "gitsm://github.com/advancedtelematic/aktualizr;branch=master;protocol=git;rev=d00d1a04cc2366d1a5f143b84b9f507f8bd32c44"
-+        fetcher = bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+        # Previous cwd has been deleted
-+        os.chdir(os.path.dirname(self.unpackdir))
-+        fetcher.unpack(self.unpackdir)
-+
-+        repo_path = os.path.join(self.tempdir, 'unpacked', 'git')
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/partial/extern/isotp-c/config')), msg='Missing submodule config "partial/extern/isotp-c/config"')
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/partial/extern/isotp-c/modules/deps/bitfield-c/config')), msg='Missing submodule config "partial/extern/isotp-c/modules/deps/bitfield-c/config"')
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, 'partial/extern/isotp-c/deps/bitfield-c/.git')), msg="Submodule of submodule isotp-c did not unpack properly")
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/tests/tuf-test-vectors/config')), msg='Missing submodule config "tests/tuf-test-vectors/config"')
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/third_party/googletest/config')), msg='Missing submodule config "third_party/googletest/config"')
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/third_party/HdrHistogram_c/config')), msg='Missing submodule config "third_party/HdrHistogram_c/config"')
-+
- class TrustedNetworksTest(FetcherTest):
-     def test_trusted_network(self):
-         # Ensure trusted_network returns False when the host IS in the list.
--- 
-2.17.2
+- armin
+>
+> Thanks,
+>
+> Scott
+>
+>
 
 
