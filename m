@@ -1,53 +1,51 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 9611D7C4BB
+Return-Path: <scott.murray@konsulko.com>
+Received: from mail-it1-f193.google.com (mail-it1-f193.google.com
+	[209.85.166.193])
+	by mail.openembedded.org (Postfix) with ESMTP id D23366C13D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Mar 2019 14:46:28 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x2EEkTiE011710
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Thu, 14 Mar 2019 15:28:05 +0000 (UTC)
+Received: by mail-it1-f193.google.com with SMTP id k193so5562041ita.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Mar 2019 07:46:29 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.233) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.439.0;
-	Thu, 14 Mar 2019 07:46:28 -0700
-To: Robert Yang <liezhi.yang@windriver.com>,
-	<bitbake-devel@lists.openembedded.org>
-References: <cover.1552555629.git.liezhi.yang@windriver.com>
-	<d73ce5c9d372d09ff28654f55640611fe0b36e3c.1552555629.git.liezhi.yang@windriver.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <339b2a82-b650-0781-7311-71ef931978bd@windriver.com>
-Date: Thu, 14 Mar 2019 09:46:28 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.5.3
+	Thu, 14 Mar 2019 08:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
+	h=date:from:to:cc:subject:in-reply-to:message-id:references
+	:user-agent:mime-version;
+	bh=3HdOdMeCxFBg2GgGFo4On4Y5plpZSNnyi8SN1lF3XFM=;
+	b=gX8BcqYQg/kO5Tt02DmNfDVoV3cfTPPhVpW/Kdzj0J1G5ApyGDnQMX/GdLRNW4Eq1K
+	d/dZqoIOyCxfPb+tVvvl9JxbO1J/e8i0fncp9BLdHWJXal/3ibJ4xiYxztAcVyZABwSJ
+	AQqnbY9FqJt5bOf8BmDL50wjfq+3KEhPZvHW8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+	:references:user-agent:mime-version;
+	bh=3HdOdMeCxFBg2GgGFo4On4Y5plpZSNnyi8SN1lF3XFM=;
+	b=IJF3GWTQUEqFCcRAkbaLDmwliKDXzGqhpM6viBmSIW/D0lwuE4gL/7/hx48V2BFRcp
+	A4/a6EtE1RgvaCM4cinjNaY014DEgLWT3LaZkdmEG0XP5kW12BH0/+L6d2UADLXbi0+5
+	XjckOwHinjmk6z4NA2iGMqEu9hBnfjppau4dSExS1WKlF8FHnovQXWsvAk5ryppl4hAY
+	t07X3cDkJvZ7w2/35w9D5ADe++NAYrV5nZSucOymt4cKA6dt3hTs/qkAcPBVZs8LuS0x
+	qvbFqQPnY1+HwBWpLTqKi23yPnZ6xHy7iwXhsZL3ikAifDCBWWQZnmWY7JlOvPcgcuM3
+	LLwQ==
+X-Gm-Message-State: APjAAAW0gnGH+EUQFKml46fyec3mw3FAUG0WIIgGqcLYs5L8OxGGKSls
+	qVXK5Q1gy9bYJNKdFc99LBH/7w==
+X-Google-Smtp-Source: APXvYqxLC7tvSY0RdBhwTwzWUVobULsie0oIKEoRWKgMtXoRdIxiTJ3Io+GMmOjFzY62VnKyMlQrNA==
+X-Received: by 2002:a24:b24f:: with SMTP id h15mr2222764iti.126.1552577286546; 
+	Thu, 14 Mar 2019 08:28:06 -0700 (PDT)
+Received: from godzilla (69-165-244-87.cable.teksavvy.com. [69.165.244.87])
+	by smtp.gmail.com with ESMTPSA id e5sm1387381ite.28.2019.03.14.08.28.05
+	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+	Thu, 14 Mar 2019 08:28:05 -0700 (PDT)
+Date: Thu, 14 Mar 2019 11:27:51 -0400 (EDT)
+From: Scott Murray <scott.murray@konsulko.com>
+X-X-Sender: scottm@godzilla.spiteful.org
+To: akuster808 <akuster808@gmail.com>
+In-Reply-To: <8edf457e-e537-9f9d-435a-e8acdcf2c3eb@gmail.com>
+Message-ID: <alpine.LFD.2.21.1903141125230.20874@godzilla.spiteful.org>
+References: <20190312224627.12667-1-scott.murray@konsulko.com>
+	<8edf457e-e537-9f9d-435a-e8acdcf2c3eb@gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <d73ce5c9d372d09ff28654f55640611fe0b36e3c.1552555629.git.liezhi.yang@windriver.com>
-Subject: Re: [PATCH 5/5] fetch2: Add gitsm's function process_submodules()
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [1.40][PATCH 0/10] Backport gitsm fetcher fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,70 +58,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Mar 2019 14:46:28 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 14 Mar 2019 15:28:06 -0000
+Content-Type: text/plain; charset=US-ASCII
 
-On 3/14/19 4:28 AM, Robert Yang wrote:
-> So that bbclass can call it as fetcher.process_submodules(), otherwise, the
-> bbclass has to handle submodules itself.
+On Wed, 13 Mar 2019, akuster808 wrote:
 
-Are there any general equivalent to submodules in any other SCM?
+>
+>
+> On 3/12/19 3:46 PM, Scott Murray wrote:
+> > Backport Mark's git submodule fetcher fixes and a related testcase
+> > change to the 1.40 branch so they can make their way into thud.  All
+> > changes cherry-picked cleanly, and bitbake-selftest passes successfully.
+> > Additional testing has been done with the Automotive Grade Linux (AGL)
+> > build, which requires these fixes to build against poky thud.
+>
+> Seeing errors on the AB for fedora, ubuntu, centos and debian hosts.
+>
+> https://errors.yoctoproject.org/Errors/Details/232884/
+>
+> Have not triaged it yet.
 
-I think SVN has something similar, but I'm not sure if it requires special
-fetching or processing activities.  I don't think other SCMs do.
+Looks like git.infradead.org was down?:
 
-Why is this needed, for do_clean/do_cleanall?
+fatal: unable to connect to git.infradead.org:
+git.infradead.org[0: 2607:7c80:54:e::133]: errno=Connection refused
+git.infradead.org[1: 198.137.202.133]: errno=Connection refused
 
-Theoretically it should be up to the fetch implementation itself to walk
-everything and do the clean operation.  (another comment below)
+I can clone mtd-utils here without issue ATM, so perhaps something
+intermittent.
 
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
->  bitbake/lib/bb/fetch2/__init__.py | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-> index 64d7526..78bea1f 100644
-> --- a/bitbake/lib/bb/fetch2/__init__.py
-> +++ b/bitbake/lib/bb/fetch2/__init__.py
-> @@ -1807,6 +1807,31 @@ class Fetch(object):
->              if ud.lockfile:
->                  bb.utils.unlockfile(lf)
->  
-> +    def process_submodules(self, ud, workdir, function, urls=None):
-> +        if not urls:
-> +            urls = self.urls
-> +
-> +        for url in urls:
-> +            if url not in self.ud:
-> +                self.ud[url] = FetchData(url, d)
-> +            ud = self.ud[url]
-> +            ud.setup_localpath(self.d)
-> +
-> +            if not ud.localfile and ud.localpath is None:
-> +                continue
-> +
-> +
-> +            if ud.lockfile:
-> +                lf = bb.utils.lockfile(ud.lockfile)
-> +
-> +            ud.method.process_submodules(ud, workdir, function, self.d)
-
-Since most fetchers won't have this implemented, shouldn't you check if the
-function is available, and if not simply continue (nothing to do)?
-
-> +            if ud.donestamp:
-> +                bb.utils.remove(ud.donestamp)
-> +
-> +            if ud.lockfile:
-> +                bb.utils.unlockfile(lf)
-> +
-> +
->  class FetchConnectionCache(object):
->      """
->          A class which represents an container for socket connections.
-> 
-
+Scott
 
