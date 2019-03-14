@@ -1,25 +1,24 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id EE7A17C6F7
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 26F746B90D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Mar 2019 09:09:10 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x2E99CS1002040
+	Thu, 14 Mar 2019 09:09:17 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x2E98gQ9032345
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Mar 2019 02:09:12 -0700 (PDT)
+	Thu, 14 Mar 2019 02:09:07 -0700
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Thu, 14 Mar 2019 02:09:11 -0700
+	14.3.439.0; Thu, 14 Mar 2019 02:08:59 -0700
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 14 Mar 2019 17:28:18 +0800
-Message-ID: <b3ade2ccda56d3abbe44c5ede950093995f8b536.1552555629.git.liezhi.yang@windriver.com>
+Date: Thu, 14 Mar 2019 17:28:16 +0800
+Message-ID: <cover.1552555629.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1552555629.git.liezhi.yang@windriver.com>
-References: <cover.1552555629.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/5] fetch2: Add get_mirrorname()
+Subject: [PATCH 0/5] fetch2: Fixes for git and gitsm
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,53 +31,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Mar 2019 09:09:12 -0000
+X-List-Received-Date: Thu, 14 Mar 2019 09:09:17 -0000
 Content-Type: text/plain
 
-It can be used by both __init__.py and git.py.
+The following changes since commit 9818acbb00b6f78dbfcc5796ec78bf25f6535288:
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/fetch2/__init__.py | 5 ++++-
- bitbake/lib/bb/fetch2/git.py      | 2 +-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+  meta-yocto-bsp: Add the v5.0 kernel support for all the BSPs (2019-03-11 05:43:49 -0700)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index f112067..5062bb2 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -889,6 +889,9 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None):
- 
-     return output
- 
-+def get_mirrorname(ud):
-+    return ud.host.replace(':','.') + ud.path.replace('/', '.').replace('*', '.')
-+
- def check_network_access(d, info, url):
-     """
-     log remote network access, and error if BB_NO_NETWORK is set or the given
-@@ -910,7 +913,7 @@ def build_mirroruris(origud, mirrors, ld):
-     replacements["HOST"] = origud.host
-     replacements["PATH"] = origud.path
-     replacements["BASENAME"] = origud.path.split("/")[-1]
--    replacements["MIRRORNAME"] = origud.host.replace(':','.') + origud.path.replace('/', '.').replace('*', '.')
-+    replacements["MIRRORNAME"] = get_mirrorname(origud)
- 
-     def adduri(ud, uris, uds, mirrors, tarballs):
-         for line in mirrors:
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index cf8bee7..45d7303 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -248,7 +248,7 @@ class Git(FetchMethod):
-                     ud.unresolvedrev[name] = ud.revisions[name]
-                 ud.revisions[name] = self.latest_revision(ud, d, name)
- 
--        gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.'))
-+        gitsrcname = bb.fetch2.get_mirrorname(ud)
-         if gitsrcname.startswith('.'):
-             gitsrcname = gitsrcname[1:]
- 
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib rbt/fetch2
+  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/fetch2
+
+Robert Yang (5):
+  fetch2/git: Fix clean to remove clonedir
+  fetch2: Add get_mirrorname()
+  fetch2: Print SCMs list when SRCREV_FORMAT is not set
+  fetch2/gitsm: Add clean function
+  fetch2: Add gitsm's function process_submodules()
+
+ bitbake/lib/bb/fetch2/__init__.py | 33 +++++++++++++++++++++++++++++++--
+ bitbake/lib/bb/fetch2/git.py      | 16 ++++++++++++----
+ bitbake/lib/bb/fetch2/gitsm.py    | 15 +++++++++++++--
+ 3 files changed, 56 insertions(+), 8 deletions(-)
+
 -- 
 2.7.4
 
