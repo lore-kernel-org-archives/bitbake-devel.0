@@ -1,22 +1,23 @@
 Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id DD5046058C
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id F15047C77E
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Mar 2019 15:46:00 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x2FFk2fc013314
+	Fri, 15 Mar 2019 15:56:07 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x2FFtCXX015578
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Mar 2019 08:46:02 -0700 (PDT)
+	Fri, 15 Mar 2019 08:55:58 -0700
 Received: from soho-mhatle-m.local (172.25.36.235) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.3.439.0;
-	Fri, 15 Mar 2019 08:46:01 -0700
+	Fri, 15 Mar 2019 08:55:49 -0700
 To: Robert Yang <liezhi.yang@windriver.com>,
 	<bitbake-devel@lists.openembedded.org>
 References: <cover.1552555629.git.liezhi.yang@windriver.com>
-	<8074fc829447468b0f42672f17f31b83d3f3888b.1552555629.git.liezhi.yang@windriver.com>
-	<f1dbdece-5627-16a1-4104-3cd37c5369d8@windriver.com>
-	<645179f8-eeb2-a08b-a7b9-4b680d71a27c@windriver.com>
+	<d73ce5c9d372d09ff28654f55640611fe0b36e3c.1552555629.git.liezhi.yang@windriver.com>
+	<339b2a82-b650-0781-7311-71ef931978bd@windriver.com>
+	<40a095c7-c69e-2b9e-711c-05847227509d@windriver.com>
 From: Mark Hatle <mark.hatle@windriver.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
@@ -43,13 +44,13 @@ Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
 	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
 	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
 Organization: Wind River Systems
-Message-ID: <e4665707-daef-a42c-1b78-2c5e6a9382a0@windriver.com>
-Date: Fri, 15 Mar 2019 10:46:00 -0500
+Message-ID: <d816dd17-fa5c-6480-b82f-96c87d467a33@windriver.com>
+Date: Fri, 15 Mar 2019 10:55:48 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
 	Gecko/20100101 Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <645179f8-eeb2-a08b-a7b9-4b680d71a27c@windriver.com>
-Subject: Re: [PATCH 4/5] fetch2/gitsm: Add clean function
+In-Reply-To: <40a095c7-c69e-2b9e-711c-05847227509d@windriver.com>
+Subject: Re: [PATCH 5/5] fetch2: Add gitsm's function process_submodules()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,82 +63,120 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Mar 2019 15:46:01 -0000
+X-List-Received-Date: Fri, 15 Mar 2019 15:56:08 -0000
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 
-On 3/14/19 9:52 PM, Robert Yang wrote:
+On 3/14/19 10:37 PM, Robert Yang wrote:
 > Hi Mark,
 > 
-> On 3/14/19 10:41 PM, Mark Hatle wrote:
+> On 3/14/19 10:46 PM, Mark Hatle wrote:
 >> On 3/14/19 4:28 AM, Robert Yang wrote:
->>> The git's clean can only remove parent git repo from DL_DIR, but doesn't remove
->>> submodules, this patch fixes the problem.
->>>
+>>> So that bbclass can call it as fetcher.process_submodules(), otherwise, the
+>>> bbclass has to handle submodules itself.
+>>
+>> Are there any general equivalent to submodules in any other SCM?
+>>
+>> I think SVN has something similar, but I'm not sure if it requires special
+>> fetching or processing activities.  I don't think other SCMs do.
+> 
+> Yes, I agree with that.
+> 
+>>
+>> Why is this needed, for do_clean/do_cleanall?
+> 
+> We have an internal bbclass (fetcher_helper.bbclass) to collect all SRC_URI, and
+> add the sources into corresponding download layer. I can get the submodule's
+> SRC_URI in fetcher_helper.bbclass as I had already done, but I think that
+> others (e.g., tinfoil.py) may also have the similar requirements, so I think
+> that we'd better export the API in bitbake/lib/bb/fetch2/__init__.py,
+> then we can use it as:
+> 
+> fetcher = bb.fetch2.Fetch(src_uri, d)
+> fetcher.process_submodules(ud, ud.clonedir, customized_function)
+> 
+> 
+> Otherwise, we have to handle submodules manually as I had done in 
+> fetcher_helper.bbclass.
+> 
+> 
+>>
+>> Theoretically it should be up to the fetch implementation itself to walk
+>> everything and do the clean operation.  (another comment below)
+>>
 >>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 >>> ---
->>>   bitbake/lib/bb/fetch2/gitsm.py | 15 +++++++++++++--
->>>   1 file changed, 13 insertions(+), 2 deletions(-)
+>>>   bitbake/lib/bb/fetch2/__init__.py | 25 +++++++++++++++++++++++++
+>>>   1 file changed, 25 insertions(+)
 >>>
->>> diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py
->>> index b21fed2..bb61093 100644
->>> --- a/bitbake/lib/bb/fetch2/gitsm.py
->>> +++ b/bitbake/lib/bb/fetch2/gitsm.py
->>> @@ -76,8 +76,8 @@ class GitSM(Git):
->>>           for name in ud.names:
->>>               try:
->>>                   gitmodules = runfetchcmd("%s show %s:.gitmodules" % (ud.basecmd, ud.revisions[name]), d, quiet=True, workdir=workdir)
->>> -            except:
->>> -                # No submodules to update
->>> +            except Exception as esc:
->>> +                logger.info("No submodules found: %s" % workdir)
->>
->> We don't want the log message.  git submodules are processed recursively, and
->> the end of the recursion will -always- have 'gitsm' items that have no
->> submodules.  This is also why it was a generic except, because we really don't
->> care WHAT the exception is, only that if one happens -- we know the command
->> failed and to simply ignore it and finish the iteration.
->>
->>                    continue
+>>> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+>>> index 64d7526..78bea1f 100644
+>>> --- a/bitbake/lib/bb/fetch2/__init__.py
+>>> +++ b/bitbake/lib/bb/fetch2/__init__.py
+>>> @@ -1807,6 +1807,31 @@ class Fetch(object):
+>>>               if ud.lockfile:
+>>>                   bb.utils.unlockfile(lf)
 >>>   
->>>               for m, md in parse_gitmodules(gitmodules).items():
->>> @@ -164,6 +164,17 @@ class GitSM(Git):
->>>           Git.download(self, ud, d)
->>>           self.process_submodules(ud, ud.clonedir, download_submodule, d)
->>>   
->>> +    def clean(self, ud, d):
->>> +        def clean_submodule(ud, url, module, modpath, d):
->>> +            try:
->>> +                newfetch = Fetch([url], d, cache=False)
->>> +                newfetch.clean()
->>> +            except Exception as e:
->>> +                logger.warn('gitsm: submodule clean failed: %s %s' % (type(e).__name__, str(e)))
+>>> +    def process_submodules(self, ud, workdir, function, urls=None):
+>>> +        if not urls:
+>>> +            urls = self.urls
 >>> +
->>> +        self.process_submodules(ud, ud.clonedir, clean_submodule, d)
->>> +        Git.clean(self, ud, d)
+>>> +        for url in urls:
+>>> +            if url not in self.ud:
+>>> +                self.ud[url] = FetchData(url, d)
+>>> +            ud = self.ud[url]
+>>> +            ud.setup_localpath(self.d)
 >>> +
+>>> +            if not ud.localfile and ud.localpath is None:
+>>> +                continue
+>>> +
+>>> +
+>>> +            if ud.lockfile:
+>>> +                lf = bb.utils.lockfile(ud.lockfile)
+>>> +
+>>> +            ud.method.process_submodules(ud, workdir, function, self.d)
 >>
->> I don't see 'clean_submodule' implemented in this patch.  The process_submodules
->> will simply call that function, if it's not defined it will error or not do
->> anything if it finds a submodule.
+>> Since most fetchers won't have this implemented, shouldn't you check if the
+>> function is available, and if not simply continue (nothing to do)?
 > 
+> Yes, make sense, fixed it in the pull repo:
 > 
-> The clean_submodule is inside of 'def clean', right under 'def clean':
-> 
-> +    def clean(self, ud, d):
-> +        def clean_submodule(ud, url, module, modpath, d):
+> +    def process_submodules(self, ud, workdir, function, urls=None):
+> +        if not hasattr(ud.method, 'process_submodules'):
+> +            bb.warn('process_submodules() is not implented.')
+> +            return
+> [snip]
 
-Apparently I'm blind.  :)
+I think it's more simple then that.
+
+def process_submodules(self, ud, workdir, function, urls=None):
+    if not hasattr(ud.method, 'process_submodules'):
+        return
+
+Since most things won't have a process_submodules, I don't think we want any
+sort of warning, it should just return if nothing has happened.
+
+As for the question above if it's a good idea or not, I'll leave that to RP.
+I'm not sure either way.
 
 --Mark
 
+> 
 > // Robert
 > 
+> 
 >>
->>>       def unpack(self, ud, destdir, d):
->>>           def unpack_submodules(ud, url, module, modpath, d):
->>>               url += ";bareclone=1;nobranch=1"
+>>> +            if ud.donestamp:
+>>> +                bb.utils.remove(ud.donestamp)
+>>> +
+>>> +            if ud.lockfile:
+>>> +                bb.utils.unlockfile(lf)
+>>> +
+>>> +
+>>>   class FetchConnectionCache(object):
+>>>       """
+>>>           A class which represents an container for socket connections.
 >>>
 >>
 >>
