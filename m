@@ -1,31 +1,47 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 592156D68F
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-vk1-f195.google.com (mail-vk1-f195.google.com
+	[209.85.221.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 647156BA11
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Mar 2019 03:41:55 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x2J3ftWZ001685
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Tue, 19 Mar 2019 06:28:52 +0000 (UTC)
+Received: by mail-vk1-f195.google.com with SMTP id d15so1818539vka.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Mar 2019 20:41:55 -0700 (PDT)
-Received: from [128.224.163.177] (128.224.163.177) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.439.0;
-	Mon, 18 Mar 2019 20:41:54 -0700
-To: Mark Hatle <mark.hatle@windriver.com>,
-	<bitbake-devel@lists.openembedded.org>
-References: <cover.1552555629.git.liezhi.yang@windriver.com>
-	<d73ce5c9d372d09ff28654f55640611fe0b36e3c.1552555629.git.liezhi.yang@windriver.com>
-	<339b2a82-b650-0781-7311-71ef931978bd@windriver.com>
-	<40a095c7-c69e-2b9e-711c-05847227509d@windriver.com>
-	<d816dd17-fa5c-6480-b82f-96c87d467a33@windriver.com>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <95d3c482-e593-50b1-c700-145cf9502ec5@windriver.com>
-Date: Tue, 19 Mar 2019 11:47:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-	Thunderbird/60.5.1
+	Mon, 18 Mar 2019 23:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=aLmsMk/W1P7kiZH/mMRRQOy4leZV1DFUmDG1jDda/uo=;
+	b=GdSAPTtsJvs/iZkkV8r92BftuqdVEo3Oigg9dn/J9yVk4fTne0uTtdP6u4iE235YLc
+	FAHS2MIB+knPOdK1tJm2DbhGzAHufTiRba/ysSNlG1aab9pDiColV211v61LwqaIJ8B/
+	riX1+po5MzP1vb/7+sCpAJbk2dCmXyMwnfAEr3hrBMqW1lsp0vN2zoUr5/0Xrivrkkmd
+	U1yuENTRXqoC8OB3u8D+up6hjmRyV5ujRmEa/VM4haNBP2s/V+2EvgQw8pxGWqXNOEUE
+	FdKKo7ZOXIQyO+h/EiceRsoBaF2z9xHCAAXj8bVzQr5bZbqD7l/DOGPdHGIl/+O7tn8V
+	EgTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=aLmsMk/W1P7kiZH/mMRRQOy4leZV1DFUmDG1jDda/uo=;
+	b=FkW44kBNu4P6apBbS/0VFA0CT1KwRmj6ppV0esLmf9A8MLf9SiW0RXkxkgKmHsEFJ6
+	eE6MZMG5ijEizN6n65VrkpB2yhiFbVicgKT+WiYPWxlSgurZU2jNRZmUscB1qMEEGGWc
+	llrMnQvve+rSKhNhThuKhOVkrXeVB52biybmNBC2ELTP8mRFhtdlJpGHyVFsLC2pOvIo
+	JV1d9R/ZFDaYzcWq5NAwV57aRII7lgjY+BIhIyU5/R/sfihlVgdBkaQw/s74fW5t2U9/
+	7j0UKazHScpyajn5hGaOTwaXyuvXKBnMowUy2EfXDn3x3bHdyJjyNONUZcfhUQkpjGz9
+	bVtg==
+X-Gm-Message-State: APjAAAWynDSAfSm84OCs/XbXbPITPaU/75z7+iBhUPF9AHDSgMQ8PEl4
+	wn5iPAVoiUJlr8JGDtoruCdS8YigoQ8nAfH/aWo=
+X-Google-Smtp-Source: APXvYqxIDskEQdGJtVT448UwWjNzR2Fhyxz9NIsN56zXCVCs500mXxl7dDU1vxVzdr1Ncdj+1k3e1w9prcDCZNR07eY=
+X-Received: by 2002:a1f:a4c4:: with SMTP id n187mr388052vke.77.1552976933080; 
+	Mon, 18 Mar 2019 23:28:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d816dd17-fa5c-6480-b82f-96c87d467a33@windriver.com>
-Subject: Re: [PATCH 5/5] fetch2: Add gitsm's function process_submodules()
+References: <20190318135820.7344-1-stefan.klug@baslerweb.com>
+	<20190318135820.7344-4-stefan.klug@baslerweb.com>
+In-Reply-To: <20190318135820.7344-4-stefan.klug@baslerweb.com>
+From: Andre McCurdy <armccurdy@gmail.com>
+Date: Mon, 18 Mar 2019 23:28:41 -0700
+Message-ID: <CAJ86T=VCGsyMeV+=EOZnhi7yND6sRPJntF=izk4QWa_nRCz_nA@mail.gmail.com>
+To: Stefan Klug <stefan.klug@baslerweb.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 3/3] fetch2/wget: Fix authentication in checkstatus() of the wget fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,131 +54,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Mar 2019 03:41:55 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 19 Mar 2019 06:28:52 -0000
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, Mar 18, 2019 at 7:08 AM Stefan Klug <stefan.klug@baslerweb.com> wrote:
+>
+> I wonder how this used to work for anybody.
 
+No need to wonder when you have access to the git history... :-)
 
-On 3/15/19 11:55 PM, Mark Hatle wrote:
-> On 3/14/19 10:37 PM, Robert Yang wrote:
->> Hi Mark,
->>
->> On 3/14/19 10:46 PM, Mark Hatle wrote:
->>> On 3/14/19 4:28 AM, Robert Yang wrote:
->>>> So that bbclass can call it as fetcher.process_submodules(), otherwise, the
->>>> bbclass has to handle submodules itself.
->>>
->>> Are there any general equivalent to submodules in any other SCM?
->>>
->>> I think SVN has something similar, but I'm not sure if it requires special
->>> fetching or processing activities.  I don't think other SCMs do.
->>
->> Yes, I agree with that.
->>
->>>
->>> Why is this needed, for do_clean/do_cleanall?
->>
->> We have an internal bbclass (fetcher_helper.bbclass) to collect all SRC_URI, and
->> add the sources into corresponding download layer. I can get the submodule's
->> SRC_URI in fetcher_helper.bbclass as I had already done, but I think that
->> others (e.g., tinfoil.py) may also have the similar requirements, so I think
->> that we'd better export the API in bitbake/lib/bb/fetch2/__init__.py,
->> then we can use it as:
->>
->> fetcher = bb.fetch2.Fetch(src_uri, d)
->> fetcher.process_submodules(ud, ud.clonedir, customized_function)
->>
->>
->> Otherwise, we have to handle submodules manually as I had done in
->> fetcher_helper.bbclass.
->>
->>
->>>
->>> Theoretically it should be up to the fetch implementation itself to walk
->>> everything and do the clean operation.  (another comment below)
->>>
->>>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->>>> ---
->>>>    bitbake/lib/bb/fetch2/__init__.py | 25 +++++++++++++++++++++++++
->>>>    1 file changed, 25 insertions(+)
->>>>
->>>> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
->>>> index 64d7526..78bea1f 100644
->>>> --- a/bitbake/lib/bb/fetch2/__init__.py
->>>> +++ b/bitbake/lib/bb/fetch2/__init__.py
->>>> @@ -1807,6 +1807,31 @@ class Fetch(object):
->>>>                if ud.lockfile:
->>>>                    bb.utils.unlockfile(lf)
->>>>    
->>>> +    def process_submodules(self, ud, workdir, function, urls=None):
->>>> +        if not urls:
->>>> +            urls = self.urls
->>>> +
->>>> +        for url in urls:
->>>> +            if url not in self.ud:
->>>> +                self.ud[url] = FetchData(url, d)
->>>> +            ud = self.ud[url]
->>>> +            ud.setup_localpath(self.d)
->>>> +
->>>> +            if not ud.localfile and ud.localpath is None:
->>>> +                continue
->>>> +
->>>> +
->>>> +            if ud.lockfile:
->>>> +                lf = bb.utils.lockfile(ud.lockfile)
->>>> +
->>>> +            ud.method.process_submodules(ud, workdir, function, self.d)
->>>
->>> Since most fetchers won't have this implemented, shouldn't you check if the
->>> function is available, and if not simply continue (nothing to do)?
->>
->> Yes, make sense, fixed it in the pull repo:
->>
->> +    def process_submodules(self, ud, workdir, function, urls=None):
->> +        if not hasattr(ud.method, 'process_submodules'):
->> +            bb.warn('process_submodules() is not implented.')
->> +            return
->> [snip]
-> 
-> I think it's more simple then that.
-> 
-> def process_submodules(self, ud, workdir, function, urls=None):
->      if not hasattr(ud.method, 'process_submodules'):
->          return
-> 
-> Since most things won't have a process_submodules, I don't think we want any
-> sort of warning, it should just return if nothing has happened.
+  http://git.openembedded.org/bitbake/commit/?id=cea8113d14da9e12db80a5b6b5811a47a7dfdeef
 
-Thanks, fixed in the repo.
+It looks like ud.user used to contain both the username and
+password... and when that changed, download() was updated but
+checkstatus() was not:
 
-// Robert
+  http://git.openembedded.org/bitbake/commit/?id=6a917ec99d659e684b15fa8af94c325172676062
 
-> 
-> As for the question above if it's a good idea or not, I'll leave that to RP.
-> I'm not sure either way.
-> 
-> --Mark
-> 
->>
->> // Robert
->>
->>
->>>
->>>> +            if ud.donestamp:
->>>> +                bb.utils.remove(ud.donestamp)
->>>> +
->>>> +            if ud.lockfile:
->>>> +                bb.utils.unlockfile(lf)
->>>> +
->>>> +
->>>>    class FetchConnectionCache(object):
->>>>        """
->>>>            A class which represents an container for socket connections.
->>>>
->>>
->>>
-> 
-> 
+> Signed-off-by: Stefan Klug <stefan.klug@baslerweb.com>
+> ---
+>  lib/bb/fetch2/wget.py | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+> index e2037511..3addb219 100644
+> --- a/lib/bb/fetch2/wget.py
+> +++ b/lib/bb/fetch2/wget.py
+> @@ -322,8 +322,8 @@ class Wget(FetchMethod):
+>                  authheader =  "Basic %s" % encodeuser
+>                  r.add_header("Authorization", authheader)
+>
+> -            if ud.user:
+> -                add_basic_auth(ud.user, r)
+> +            if ud.user and ud.pswd:
+> +                add_basic_auth(ud.user + ':' + ud.pswd, r)
+>
+>              try:
+>                  import netrc, urllib.parse
+> --
+>
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
