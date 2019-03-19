@@ -1,52 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com
-	[209.85.221.50])
-	by mail.openembedded.org (Postfix) with ESMTP id C49717CD7B
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+	[209.85.221.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 2F6F77CD7B
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Mar 2019 15:30:07 +0000 (UTC)
-Received: by mail-wr1-f50.google.com with SMTP id j9so7505597wrn.6
+	Tue, 19 Mar 2019 15:30:09 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id p1so21644319wrs.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Mar 2019 08:30:09 -0700 (PDT)
+	Tue, 19 Mar 2019 08:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=8ucO7Jt9Z9c74tHf80r37CRvDr6M8l+xH7HQ9+MzfBk=;
-	b=gD7/zB+tjA0dMtbajhV918A7ZCHue4PUV6aefFA58bVwGjuuxg/38LvnMMpNSlOZq3
-	glONFlVAbPbii1ZwN7fjuWPVV9Qq7MdXEOQYQO4wNEPGCOvJfpep6qieni0iDvOUFcoK
-	vU4vXKbK03m3zztCz91zihm0xns8XNRipgJJc=
+	bh=/+eVRYcoTw9ul46y+maNFew4tqMedPRaOVyrUKD2JwI=;
+	b=F+W+/BjuQ96Xq1bEYvS4HLDJGxPw/A1faArSbSrODddcvY25xzSc9BajtyYg5e+M8B
+	/+9UHRKTxVA8RyWFOOhwb4SIec/U77uUPU422VFgR2l3jMvvBao3uA5L+prVgHfPMUYZ
+	isDAn95x7MWYXhsbgO/+dfULKTwI8Flj08FZc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=8ucO7Jt9Z9c74tHf80r37CRvDr6M8l+xH7HQ9+MzfBk=;
-	b=k+v5re3NJLlTm2HJBsoJHVB6qXokx5SUSlBT/Kkp9tMjhDQLwysav7tzOlECzF3l05
-	uiSrcBk10jWsrshgp6z9MZGlIcsMJzxDaAgqbI2a8kU5mFsFqRrMaOyy+85i8Z5VKq7B
-	T9fXS/yD+mFP/vhjUY/Ct6uI11PlQVGqhzm2cvXcKjzOVCZvEuHhijc8cimPQVX2E+hS
-	m+D2f+1vcWx9kDUQtiUD7x2amaU5VqVfowj72GIwpZADwAadtzxBbVO3rmCHBBGNmyBp
-	xj8308lB2cqe7ebQReKyd0MSTX3Ge9TU6bYHAiax9hKWdWK8uBtXVTIKPKuMHQP4S9VK
-	PyMw==
-X-Gm-Message-State: APjAAAVitW3OC/9Mk7tqRgM3aJsfb/kbfvhbGUk8Ja0Qp9o3WL97WL8q
-	F4wfb5xbfCm/qyxKCAZgHeA0+xHPHRbCLw==
-X-Google-Smtp-Source: APXvYqxt9yYj2UPu+w5OGlCzkrz2w+d2s9xYpRh5cAoDK8zRkDDVC/2bIlIBhz8qr6nvVNBk7aWbyQ==
-X-Received: by 2002:a05:6000:46:: with SMTP id
-	k6mr17302448wrx.319.1553009408275; 
-	Tue, 19 Mar 2019 08:30:08 -0700 (PDT)
+	bh=/+eVRYcoTw9ul46y+maNFew4tqMedPRaOVyrUKD2JwI=;
+	b=PEmA++kzLwesm9R4Kfc1ZdnRnQlrx07SjzTh+QzMwo7pmu0vv2+GUq9G0ZuCe29Cf4
+	YKNxmjfTf2C0eEcfsF7maPwM44EDpwt8lKz4KRl8EUF4r5QZUFmQH1zp68q4qouk6nJR
+	u4HEZajtqdJPNVJn8ROEjfS9sd8UWHt4/ID5qeyTzMy4ptrqofLzC/vL+uVfI6m3zrFX
+	FAC70MSAaELuFusQP7HhAcAOqzAlqlS5p0ZGt5ogV709rWtB9w1VPcz+0LSG3nb3AROb
+	Ooqusl1Cu/EmSKYz7jaLVfT1ZgIp0R5q6ViC1Mu31Qbp+SZpI0kzczcoBAZNYT3ATTqx
+	xVQw==
+X-Gm-Message-State: APjAAAWR+OtmjwyB6NWmMOwYE6DcL2AziaK4tmhIx1cs5p5uXsYLQynC
+	b0pL2GxE10mZO+TpvKLSDjNe2T9IQ/Fz1A==
+X-Google-Smtp-Source: APXvYqy38l5OtXg7wx+BCzeF5SL2v+epFd3i0NNQKgxIABjWTYvDFS45CId8/ohpiBCM/3ajUbPTDw==
+X-Received: by 2002:a5d:4f91:: with SMTP id d17mr18778207wru.67.1553009409701; 
+	Tue, 19 Mar 2019 08:30:09 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	g8sm14446149wrw.22.2019.03.19.08.30.07
+	g8sm14446149wrw.22.2019.03.19.08.30.08
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 19 Mar 2019 08:30:07 -0700 (PDT)
+	Tue, 19 Mar 2019 08:30:08 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 19 Mar 2019 15:30:01 +0000
-Message-Id: <20190319153002.17984-4-richard.purdie@linuxfoundation.org>
+Date: Tue, 19 Mar 2019 15:30:02 +0000
+Message-Id: <20190319153002.17984-5-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190319153002.17984-1-richard.purdie@linuxfoundation.org>
 References: <20190319153002.17984-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 4/5] fetch2/wget: Remove pointless lambda function
+Subject: [PATCH 5/5] fetch2: Fix undefined variable issues
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,26 +58,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Mar 2019 15:30:08 -0000
+X-List-Received-Date: Tue, 19 Mar 2019 15:30:09 -0000
 Content-Transfer-Encoding: 8bit
+
+Various refactors have left hanging variables, often in debug messages, hence
+why they haven't been spotted. Fix them (pylint spotted the issues).
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/wget.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/__init__.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index f86047a93e..3bb3e3bb0c 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -290,7 +290,7 @@ class Wget(FetchMethod):
-             """
-             def redirect_request(self, req, fp, code, msg, headers, newurl):
-                 newreq = urllib.request.HTTPRedirectHandler.redirect_request(self, req, fp, code, msg, headers, newurl)
--                newreq.get_method = lambda: req.get_method()
-+                newreq.get_method = req.get_method
-                 return newreq
-         exported_proxies = export_proxies(d)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index f112067df5..5c2a1c76c4 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -524,7 +524,7 @@ def fetcher_parse_save():
+ def fetcher_parse_done():
+     _checksum_cache.save_merge()
+ 
+-def fetcher_compare_revisions():
++def fetcher_compare_revisions(d):
+     """
+     Compare the revisions in the persistant cache with current values and
+     return true/false on whether they've changed.
+@@ -1403,7 +1403,7 @@ class FetchMethod(object):
+         Fetch urls
+         Assumes localpath was called first
+         """
+-        raise NoMethodError(url)
++        raise NoMethodError(urldata.url)
+ 
+     def unpack(self, urldata, rootdir, data):
+         iterate = False
+@@ -1547,7 +1547,7 @@ class FetchMethod(object):
+         Check the status of a URL
+         Assumes localpath was called first
+         """
+-        logger.info("URL %s could not be checked for status since no method exists.", url)
++        logger.info("URL %s could not be checked for status since no method exists.", urldata.url)
+         return True
+ 
+     def latest_revision(self, ud, d, name):
+@@ -1555,7 +1555,7 @@ class FetchMethod(object):
+         Look in the cache for the latest revision, if not present ask the SCM.
+         """
+         if not hasattr(self, "_latest_revision"):
+-            raise ParameterError("The fetcher for this URL does not support _latest_revision", url)
++            raise ParameterError("The fetcher for this URL does not support _latest_revision", ud.url)
+ 
+         revs = bb.persist_data.persist('BB_URI_HEADREVS', d)
+         key = self.generate_revision_key(ud, d, name)
+@@ -1786,7 +1786,7 @@ class Fetch(object):
+ 
+         for url in urls:
+             if url not in self.ud:
+-                self.ud[url] = FetchData(url, d)
++                self.ud[url] = FetchData(url, self.d)
+             ud = self.ud[url]
+             ud.setup_localpath(self.d)
  
 -- 
 2.20.1
