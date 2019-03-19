@@ -1,52 +1,31 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
-	[209.85.221.67])
-	by mail.openembedded.org (Postfix) with ESMTP id C58F96D4C6
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 592156D68F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Mar 2019 23:45:45 +0000 (UTC)
-Received: by mail-wr1-f67.google.com with SMTP id s15so3649364wra.12
+	Tue, 19 Mar 2019 03:41:55 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x2J3ftWZ001685
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Mar 2019 16:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=G7WJqEYY/wwELLCt2o3bHT+tJ4lYZJacxf671mS/l/8=;
-	b=aeeWETyRj5vb/tYx/rF6CmwZWkbUpkrTt98KvZ6/Hre5nsZws9JnwustG/1Hgz/KFn
-	KP0SLOJ/gaBrQXGAhcaXLJjNbvNqydZpSQ3GJAdiV+UxR154yj2AXyEa4GEiE9QK0Wr3
-	02VIiy1EgbV8lTxyrIJCGx8uojWgo0x6kc8IE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=G7WJqEYY/wwELLCt2o3bHT+tJ4lYZJacxf671mS/l/8=;
-	b=gqvsu+umJBPL+NTG7sn0N5D1qkQ2ALJhceaXa4Cvyq1nOLrmP4i1RpJPR/Mv1EVaOQ
-	gje/NU/HXNR375WX8eCnSJlG80kjOpY5PTtAlWx5WbkVZVHSuYwqI8VzAS9B2A4Mn3PQ
-	bV5uRBf1+9xVRUQHT4KtbpluANnwBtHZdAOME1sLuvaqHokNOamif+JOFQ/ixGyoytFZ
-	eVQ+5zvjFVn0IWz5urcZlV62ErUkp3fy5Clp9xZtOpvSUm4bsd9dX2ljzK86fKTiV3yI
-	OaXxQWd4bXW2z09pVhzM5+N+uPEloyJqq+tX4X9j2A/ITEQp0p+4kPoOrRSk4LQk3X55
-	qpyA==
-X-Gm-Message-State: APjAAAWDQVSJOWEhCpRPsjYmxC2n6x6KSq/q4MgVK+UbYbuF6/mnWAP9
-	/R4xONkxxaPEldPtGGn3r3k8dg==
-X-Google-Smtp-Source: APXvYqx2sh4+i3wajakg/mkMtDtxUB/sljSfXrQ0sJ/1q+u2dFKyHoXzJQbzOj7uV04Nq0ZohXcgyQ==
-X-Received: by 2002:a5d:574c:: with SMTP id q12mr14880907wrw.50.1552952746663; 
-	Mon, 18 Mar 2019 16:45:46 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	c126sm1240555wma.0.2019.03.18.16.45.45
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Mon, 18 Mar 2019 16:45:46 -0700 (PDT)
-Message-ID: <cf989d646a50e462b36a9f93481a3aba1618e8b4.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Stefan Klug <stefan.klug@baslerweb.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 18 Mar 2019 23:45:45 +0000
-In-Reply-To: <20190318135820.7344-3-stefan.klug@baslerweb.com>
-References: <20190318135820.7344-1-stefan.klug@baslerweb.com>
-	<20190318135820.7344-3-stefan.klug@baslerweb.com>
-User-Agent: Evolution 3.31.90-1 
+	Mon, 18 Mar 2019 20:41:55 -0700 (PDT)
+Received: from [128.224.163.177] (128.224.163.177) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.439.0;
+	Mon, 18 Mar 2019 20:41:54 -0700
+To: Mark Hatle <mark.hatle@windriver.com>,
+	<bitbake-devel@lists.openembedded.org>
+References: <cover.1552555629.git.liezhi.yang@windriver.com>
+	<d73ce5c9d372d09ff28654f55640611fe0b36e3c.1552555629.git.liezhi.yang@windriver.com>
+	<339b2a82-b650-0781-7311-71ef931978bd@windriver.com>
+	<40a095c7-c69e-2b9e-711c-05847227509d@windriver.com>
+	<d816dd17-fa5c-6480-b82f-96c87d467a33@windriver.com>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <95d3c482-e593-50b1-c700-145cf9502ec5@windriver.com>
+Date: Tue, 19 Mar 2019 11:47:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.5.1
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/3] fetch2: Gracefully handle corrupt download-cache tarballs
+In-Reply-To: <d816dd17-fa5c-6480-b82f-96c87d467a33@windriver.com>
+Subject: Re: [PATCH 5/5] fetch2: Add gitsm's function process_submodules()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,50 +38,131 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Mar 2019 23:45:47 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 19 Mar 2019 03:41:55 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2019-03-18 at 14:58 +0100, Stefan Klug wrote:
-> If the fullmirror tarball is corrupt for whatever reason
-> (IMHO there are no checksums on the download cache)
-> a series of nasty events was triggered:
-> - tar left a partially extracted bare git repo there
-> - on the next yocto build, the corrupt bare repo is
->   found and bitbake starts to update that bare repo using git
-> - git fails to detect it as bare repo. Therefore
->   all following git commands ripple up the directory tree,
->   in our case modifying a top level git repo.
+
+
+On 3/15/19 11:55 PM, Mark Hatle wrote:
+> On 3/14/19 10:37 PM, Robert Yang wrote:
+>> Hi Mark,
+>>
+>> On 3/14/19 10:46 PM, Mark Hatle wrote:
+>>> On 3/14/19 4:28 AM, Robert Yang wrote:
+>>>> So that bbclass can call it as fetcher.process_submodules(), otherwise, the
+>>>> bbclass has to handle submodules itself.
+>>>
+>>> Are there any general equivalent to submodules in any other SCM?
+>>>
+>>> I think SVN has something similar, but I'm not sure if it requires special
+>>> fetching or processing activities.  I don't think other SCMs do.
+>>
+>> Yes, I agree with that.
+>>
+>>>
+>>> Why is this needed, for do_clean/do_cleanall?
+>>
+>> We have an internal bbclass (fetcher_helper.bbclass) to collect all SRC_URI, and
+>> add the sources into corresponding download layer. I can get the submodule's
+>> SRC_URI in fetcher_helper.bbclass as I had already done, but I think that
+>> others (e.g., tinfoil.py) may also have the similar requirements, so I think
+>> that we'd better export the API in bitbake/lib/bb/fetch2/__init__.py,
+>> then we can use it as:
+>>
+>> fetcher = bb.fetch2.Fetch(src_uri, d)
+>> fetcher.process_submodules(ud, ud.clonedir, customized_function)
+>>
+>>
+>> Otherwise, we have to handle submodules manually as I had done in
+>> fetcher_helper.bbclass.
+>>
+>>
+>>>
+>>> Theoretically it should be up to the fetch implementation itself to walk
+>>> everything and do the clean operation.  (another comment below)
+>>>
+>>>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>>>> ---
+>>>>    bitbake/lib/bb/fetch2/__init__.py | 25 +++++++++++++++++++++++++
+>>>>    1 file changed, 25 insertions(+)
+>>>>
+>>>> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+>>>> index 64d7526..78bea1f 100644
+>>>> --- a/bitbake/lib/bb/fetch2/__init__.py
+>>>> +++ b/bitbake/lib/bb/fetch2/__init__.py
+>>>> @@ -1807,6 +1807,31 @@ class Fetch(object):
+>>>>                if ud.lockfile:
+>>>>                    bb.utils.unlockfile(lf)
+>>>>    
+>>>> +    def process_submodules(self, ud, workdir, function, urls=None):
+>>>> +        if not urls:
+>>>> +            urls = self.urls
+>>>> +
+>>>> +        for url in urls:
+>>>> +            if url not in self.ud:
+>>>> +                self.ud[url] = FetchData(url, d)
+>>>> +            ud = self.ud[url]
+>>>> +            ud.setup_localpath(self.d)
+>>>> +
+>>>> +            if not ud.localfile and ud.localpath is None:
+>>>> +                continue
+>>>> +
+>>>> +
+>>>> +            if ud.lockfile:
+>>>> +                lf = bb.utils.lockfile(ud.lockfile)
+>>>> +
+>>>> +            ud.method.process_submodules(ud, workdir, function, self.d)
+>>>
+>>> Since most fetchers won't have this implemented, shouldn't you check if the
+>>> function is available, and if not simply continue (nothing to do)?
+>>
+>> Yes, make sense, fixed it in the pull repo:
+>>
+>> +    def process_submodules(self, ud, workdir, function, urls=None):
+>> +        if not hasattr(ud.method, 'process_submodules'):
+>> +            bb.warn('process_submodules() is not implented.')
+>> +            return
+>> [snip]
 > 
-> Signed-off-by: Stefan Klug <stefan.klug@baslerweb.com>
-> ---
->  lib/bb/fetch2/git.py | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> I think it's more simple then that.
 > 
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index 1a8ebe3d..d5f9bbcd 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -334,8 +334,11 @@ class Git(FetchMethod):
->              ud.localpath = ud.fullshallow
->              return
->          elif os.path.exists(ud.fullmirror) and not os.path.exists(ud.clonedir):
-> -            bb.utils.mkdirhier(ud.clonedir)
-> -            runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
-> +            try:
-> +                bb.utils.mkdirhier(ud.clonedir)
-> +                runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir, cleanup=[ud.clonedir])
-> +            except:
-> +                logger.info("Extracting tarball of git repository failed, falling back to clone.")
+> def process_submodules(self, ud, workdir, function, urls=None):
+>      if not hasattr(ud.method, 'process_submodules'):
+>          return
+> 
+> Since most things won't have a process_submodules, I don't think we want any
+> sort of warning, it should just return if nothing has happened.
 
-General "except:" clauses are a world of pain. Can we be more specific
-here?
+Thanks, fixed in the repo.
 
-For an example of what I mean, put a syntax error in the command...
+// Robert
 
-Cheers,
-
-Richard
-
-
+> 
+> As for the question above if it's a good idea or not, I'll leave that to RP.
+> I'm not sure either way.
+> 
+> --Mark
+> 
+>>
+>> // Robert
+>>
+>>
+>>>
+>>>> +            if ud.donestamp:
+>>>> +                bb.utils.remove(ud.donestamp)
+>>>> +
+>>>> +            if ud.lockfile:
+>>>> +                bb.utils.unlockfile(lf)
+>>>> +
+>>>> +
+>>>>    class FetchConnectionCache(object):
+>>>>        """
+>>>>            A class which represents an container for socket connections.
+>>>>
+>>>
+>>>
+> 
+> 
 
