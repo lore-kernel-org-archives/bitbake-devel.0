@@ -1,25 +1,52 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id C78C160102
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
+	[209.85.221.68])
+	by mail.openembedded.org (Postfix) with ESMTP id B064D7CFCE
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Mar 2019 07:00:52 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x2L70rIh008996
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Thu, 21 Mar 2019 23:35:43 +0000 (UTC)
+Received: by mail-wr1-f68.google.com with SMTP id d17so382798wre.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Mar 2019 00:00:54 -0700 (PDT)
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Thu, 21 Mar 2019 00:00:50 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 21 Mar 2019 15:20:21 +0800
-Message-ID: <61fb9e18afc98ecbb558ae3c7fa036938e21aab5.1553152790.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1553152790.git.liezhi.yang@windriver.com>
-References: <cover.1553152790.git.liezhi.yang@windriver.com>
+	Thu, 21 Mar 2019 16:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=EdakJGMQsT38TrLs3qs8+stjB0J6mpEkxSUbRiCb5nI=;
+	b=PTQiSWksZ7NQxfyV7JdNxyN17lBXsr4Zqib4Jm0JymHDhankTi+a8nZ0luQv6srwZ0
+	DbhORKR65KeW/s6n79mYfgc0ujBTkg3MTF2OIUf51NBW13XDefBNS1q3bp5vCpmbkmDS
+	+FXszjiR7H+f6moEgakGB2f0tO8w+X+6a9ocY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=EdakJGMQsT38TrLs3qs8+stjB0J6mpEkxSUbRiCb5nI=;
+	b=jZvObD72RYEiIn29cABdQQRrxUITIm6wwU2nOf0GCvsTtFJagATY+UbpBCw6h5fGKI
+	zu4Ytp2wKyJCprvtdDZsKx3twmF2L0/npfY6EudGeqaQSyuy3bsDsJ2NMRtHZwxhX20g
+	qFOxNh5cOsMSQwfir6c/qf9WRn78sokYt1lFZyfTATqMhAXx/cxrTs5GegiLUw4OMS0C
+	g5KsyHGk6vIoB8iBURbk5Xd0jTJ95q2NwVKgz6IPFVYiLQdYPRmOEOZE3UPwAiCmKa+0
+	hG2k19JmhWd7H2bfhq4pah6es//bC9PjxfmrqEz1VgaQVWv9FEjtWazqXqOa5vM20Jqv
+	KZ4Q==
+X-Gm-Message-State: APjAAAXMb3S0DOrlvjDMrjjq8E1a8AQN/XGIzORCQ4M9yzqvOxPLO2TB
+	dC4PrnKc3qFIPGay36lXsmV3IQ==
+X-Google-Smtp-Source: APXvYqx839bzkIG/4rMIWC2sh1GyzSFqwYlzhmzEggWfGueAyaEnn1GPzKXA/k6e3XhiCCkTc2Iv8Q==
+X-Received: by 2002:a5d:69c7:: with SMTP id s7mr4116200wrw.71.1553211344473;
+	Thu, 21 Mar 2019 16:35:44 -0700 (PDT)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	n19sm4590775wmk.35.2019.03.21.16.35.42
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Thu, 21 Mar 2019 16:35:43 -0700 (PDT)
+Message-ID: <57405634beb17bee8c7cf82af7d8bf672a21ed52.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 21 Mar 2019 23:35:40 +0000
+In-Reply-To: <db5c32f158267831427a769f4db1a4f80125fd92.1553063929.git.liezhi.yang@windriver.com>
+References: <cover.1553063929.git.liezhi.yang@windriver.com>
+	<db5c32f158267831427a769f4db1a4f80125fd92.1553063929.git.liezhi.yang@windriver.com>
+User-Agent: Evolution 3.31.90-1 
 MIME-Version: 1.0
-Subject: [PATCH 1/1] cooker: Fix bbfile_config_priorities when BBFILE_PATTERN is empty
+Subject: Re: [PATCH 2/2] fetch2: Unify BB_FETCH_PREMIRRORONLY
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,40 +59,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Mar 2019 07:00:52 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 21 Mar 2019 23:35:43 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The layer was not in bbfile_config_priorities when BBFILE_PATTERN is empty,
-this caused "bitbake-layers show-layers" can't show these layers, this was
-incorrect since these layer did exist. Add these layer to
-bbfile_config_priorities can fix the problem.
+On Wed, 2019-03-20 at 14:40 +0800, Robert Yang wrote:
+> The fetch2/__init__.py checks whether "BB_FETCH_PREMIRRORONLY" ==
+> "1", but
+> fetch2/git.py and hg.py checks whether it is None, this makes it
+> discontinuous,
+> and BB_FETCH_PREMIRRORONLY = "0" doens't work as expected in the
+> later case,
+> so unify it to the previous one. (As BB_NO_NETWORK does).
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/fetch2/git.py | 2 +-
+>  bitbake/lib/bb/fetch2/hg.py  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/git.py
+> b/bitbake/lib/bb/fetch2/git.py
+> index 1a8ebe3..e021f33 100644
+> --- a/bitbake/lib/bb/fetch2/git.py
+> +++ b/bitbake/lib/bb/fetch2/git.py
+> @@ -318,7 +318,7 @@ class Git(FetchMethod):
+>      def try_premirror(self, ud, d):
+>          # If we don't do this, updating an existing checkout with
+> only premirrors
+>          # is not possible
+> -        if d.getVar("BB_FETCH_PREMIRRORONLY") is not None:
+> +        if d.getVar("BB_FETCH_PREMIRRORONLY") == "1":
+>              return True
+>          if os.path.exists(ud.clonedir):
+>              return False
+> diff --git a/bitbake/lib/bb/fetch2/hg.py
+> b/bitbake/lib/bb/fetch2/hg.py
+> index 936d043..5a3db92 100644
+> --- a/bitbake/lib/bb/fetch2/hg.py
+> +++ b/bitbake/lib/bb/fetch2/hg.py
+> @@ -99,7 +99,7 @@ class Hg(FetchMethod):
+>      def try_premirror(self, ud, d):
+>          # If we don't do this, updating an existing checkout with
+> only premirrors
+>          # is not possible
+> -        if d.getVar("BB_FETCH_PREMIRRORONLY") is not None:
+> +        if d.getVar("BB_FETCH_PREMIRRORONLY") == "1":
+>              return True
+>          if os.path.exists(ud.moddir):
+>              return False
 
-Fixed:
-Add BBFILE_PATTERN_core = "" in oe-core/meta/conf/layer.conf
-$ bitbake show-layers | grep oe-core
+Can we use bb.utils.to_boolean() in all cases to be consistent please?
 
-There was nothing, now the layer is shown
+Cheers,
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/cooker.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Richard
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 1982e88..9ccaa79 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1216,8 +1216,8 @@ class BBCooker:
-                     continue
-                 elif regex == "":
-                     parselog.debug(1, "BBFILE_PATTERN_%s is empty" % c)
-+                    cre = re.compile('^NULL$')
-                     errors = False
--                    continue
-                 else:
-                     try:
-                         cre = re.compile(regex)
--- 
-2.7.4
 
 
