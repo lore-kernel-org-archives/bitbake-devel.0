@@ -1,52 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id B064D7CFCE
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
+	[209.85.221.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 8694E7CFA1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Mar 2019 23:35:43 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id d17so382798wre.10
+	Thu, 21 Mar 2019 23:42:05 +0000 (UTC)
+Received: by mail-wr1-f52.google.com with SMTP id q1so443541wrp.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Mar 2019 16:35:45 -0700 (PDT)
+	Thu, 21 Mar 2019 16:42:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
 	:mime-version:content-transfer-encoding;
-	bh=EdakJGMQsT38TrLs3qs8+stjB0J6mpEkxSUbRiCb5nI=;
-	b=PTQiSWksZ7NQxfyV7JdNxyN17lBXsr4Zqib4Jm0JymHDhankTi+a8nZ0luQv6srwZ0
-	DbhORKR65KeW/s6n79mYfgc0ujBTkg3MTF2OIUf51NBW13XDefBNS1q3bp5vCpmbkmDS
-	+FXszjiR7H+f6moEgakGB2f0tO8w+X+6a9ocY=
+	bh=YnxNRwy+s3zG4IArsoMSrZ5zjx/STHWjKwsA5anPu7s=;
+	b=JMgmramgqBfoSvgXpcJGD1bOOu0hxycHkxOdw5LdvC2ubiva7ZD8jLs+52t/cHM6X0
+	4UytEsiZg4bBDTn5Eb6To5iJgW9mEEeVSdJ83rY7Z9NSr/ZwvvXcDBUV4nXpHIHmEZOJ
+	l3KHvWGPsI9Tq35V9Uxe6uxv14V3UHJqR6Y2g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
 	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=EdakJGMQsT38TrLs3qs8+stjB0J6mpEkxSUbRiCb5nI=;
-	b=jZvObD72RYEiIn29cABdQQRrxUITIm6wwU2nOf0GCvsTtFJagATY+UbpBCw6h5fGKI
-	zu4Ytp2wKyJCprvtdDZsKx3twmF2L0/npfY6EudGeqaQSyuy3bsDsJ2NMRtHZwxhX20g
-	qFOxNh5cOsMSQwfir6c/qf9WRn78sokYt1lFZyfTATqMhAXx/cxrTs5GegiLUw4OMS0C
-	g5KsyHGk6vIoB8iBURbk5Xd0jTJ95q2NwVKgz6IPFVYiLQdYPRmOEOZE3UPwAiCmKa+0
-	hG2k19JmhWd7H2bfhq4pah6es//bC9PjxfmrqEz1VgaQVWv9FEjtWazqXqOa5vM20Jqv
-	KZ4Q==
-X-Gm-Message-State: APjAAAXMb3S0DOrlvjDMrjjq8E1a8AQN/XGIzORCQ4M9yzqvOxPLO2TB
-	dC4PrnKc3qFIPGay36lXsmV3IQ==
-X-Google-Smtp-Source: APXvYqx839bzkIG/4rMIWC2sh1GyzSFqwYlzhmzEggWfGueAyaEnn1GPzKXA/k6e3XhiCCkTc2Iv8Q==
-X-Received: by 2002:a5d:69c7:: with SMTP id s7mr4116200wrw.71.1553211344473;
-	Thu, 21 Mar 2019 16:35:44 -0700 (PDT)
+	bh=YnxNRwy+s3zG4IArsoMSrZ5zjx/STHWjKwsA5anPu7s=;
+	b=Pk3El92hfnB6H/PDQwNJTx/+QqFHrbj3q+GXOJLz/3Z5vW4fhkfarcoU93qi/xzyI8
+	2oTSmUqwCT+bZWbC9XxM9MbVY5mCT56PtZxdYKTWGbGCY+Rl4A0HdFvOIs7Opn0/13eH
+	3LkBrtHN2z0/D2TwmdzFyT0ZV7iZSHPccMlykzgR5c6nTfgxOUb6fbamHqCWgLiV7fT7
+	DEIEh/Y9axQubXyPpUBKbrUlgRX6tJ8aAqPOxFaPbPcfha/enTxtPiNzvW8Y0JKcQr+6
+	ySTOwTN4+w70YHrXAakgRwN8L1AuolBZaOMIQh1LTtW/HMESuSpzRuP8goFR+nINtVL8
+	koxw==
+X-Gm-Message-State: APjAAAU3hPT1vT5YDUsHWtCzeKcozr0vGx8j7rIuVESr6Y8jG2VZVLGT
+	G/IUTEuDodb2BbeRE838c77lLA==
+X-Google-Smtp-Source: APXvYqxWFKAwIr2uzvwHj5M8JJnQiNj+xSy8/TVsP650AtdDblGERVGsLWJeaq8btgU/w4QRm2/AMg==
+X-Received: by 2002:a5d:6b4a:: with SMTP id x10mr4183370wrw.63.1553211726294; 
+	Thu, 21 Mar 2019 16:42:06 -0700 (PDT)
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	n19sm4590775wmk.35.2019.03.21.16.35.42
+	by smtp.gmail.com with ESMTPSA id y1sm7818337wrd.34.2019.03.21.16.42.05
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Thu, 21 Mar 2019 16:35:43 -0700 (PDT)
-Message-ID: <57405634beb17bee8c7cf82af7d8bf672a21ed52.camel@linuxfoundation.org>
+	Thu, 21 Mar 2019 16:42:05 -0700 (PDT)
+Message-ID: <72417715c42b0b3841681387fc85c68f120aa1a2.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Robert Yang <liezhi.yang@windriver.com>, 
 	bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Mar 2019 23:35:40 +0000
-In-Reply-To: <db5c32f158267831427a769f4db1a4f80125fd92.1553063929.git.liezhi.yang@windriver.com>
-References: <cover.1553063929.git.liezhi.yang@windriver.com>
-	<db5c32f158267831427a769f4db1a4f80125fd92.1553063929.git.liezhi.yang@windriver.com>
+Date: Thu, 21 Mar 2019 23:42:04 +0000
+In-Reply-To: <b3ade2ccda56d3abbe44c5ede950093995f8b536.1552555629.git.liezhi.yang@windriver.com>
+References: <cover.1552555629.git.liezhi.yang@windriver.com>
+	<b3ade2ccda56d3abbe44c5ede950093995f8b536.1552555629.git.liezhi.yang@windriver.com>
 User-Agent: Evolution 3.31.90-1 
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] fetch2: Unify BB_FETCH_PREMIRRORONLY
+Subject: Re: [PATCH 2/5] fetch2: Add get_mirrorname()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,61 +58,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Mar 2019 23:35:43 -0000
+X-List-Received-Date: Thu, 21 Mar 2019 23:42:05 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2019-03-20 at 14:40 +0800, Robert Yang wrote:
-> The fetch2/__init__.py checks whether "BB_FETCH_PREMIRRORONLY" ==
-> "1", but
-> fetch2/git.py and hg.py checks whether it is None, this makes it
-> discontinuous,
-> and BB_FETCH_PREMIRRORONLY = "0" doens't work as expected in the
-> later case,
-> so unify it to the previous one. (As BB_NO_NETWORK does).
+On Thu, 2019-03-14 at 17:28 +0800, Robert Yang wrote:
+> It can be used by both __init__.py and git.py.
 > 
 > Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 > ---
->  bitbake/lib/bb/fetch2/git.py | 2 +-
->  bitbake/lib/bb/fetch2/hg.py  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  bitbake/lib/bb/fetch2/__init__.py | 5 ++++-
+>  bitbake/lib/bb/fetch2/git.py      | 2 +-
+>  2 files changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/bitbake/lib/bb/fetch2/git.py
-> b/bitbake/lib/bb/fetch2/git.py
-> index 1a8ebe3..e021f33 100644
+> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+> index f112067..5062bb2 100644
+> --- a/bitbake/lib/bb/fetch2/__init__.py
+> +++ b/bitbake/lib/bb/fetch2/__init__.py
+> @@ -889,6 +889,9 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None):
+>  
+>      return output
+>  
+> +def get_mirrorname(ud):
+> +    return ud.host.replace(':','.') + ud.path.replace('/', '.').replace('*', '.')
+> +
+>  def check_network_access(d, info, url):
+>      """
+>      log remote network access, and error if BB_NO_NETWORK is set or the given
+> @@ -910,7 +913,7 @@ def build_mirroruris(origud, mirrors, ld):
+>      replacements["HOST"] = origud.host
+>      replacements["PATH"] = origud.path
+>      replacements["BASENAME"] = origud.path.split("/")[-1]
+> -    replacements["MIRRORNAME"] = origud.host.replace(':','.') + origud.path.replace('/', '.').replace('*', '.')
+> +    replacements["MIRRORNAME"] = get_mirrorname(origud)
+>  
+>      def adduri(ud, uris, uds, mirrors, tarballs):
+>          for line in mirrors:
+> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+> index cf8bee7..45d7303 100644
 > --- a/bitbake/lib/bb/fetch2/git.py
 > +++ b/bitbake/lib/bb/fetch2/git.py
-> @@ -318,7 +318,7 @@ class Git(FetchMethod):
->      def try_premirror(self, ud, d):
->          # If we don't do this, updating an existing checkout with
-> only premirrors
->          # is not possible
-> -        if d.getVar("BB_FETCH_PREMIRRORONLY") is not None:
-> +        if d.getVar("BB_FETCH_PREMIRRORONLY") == "1":
->              return True
->          if os.path.exists(ud.clonedir):
->              return False
-> diff --git a/bitbake/lib/bb/fetch2/hg.py
-> b/bitbake/lib/bb/fetch2/hg.py
-> index 936d043..5a3db92 100644
-> --- a/bitbake/lib/bb/fetch2/hg.py
-> +++ b/bitbake/lib/bb/fetch2/hg.py
-> @@ -99,7 +99,7 @@ class Hg(FetchMethod):
->      def try_premirror(self, ud, d):
->          # If we don't do this, updating an existing checkout with
-> only premirrors
->          # is not possible
-> -        if d.getVar("BB_FETCH_PREMIRRORONLY") is not None:
-> +        if d.getVar("BB_FETCH_PREMIRRORONLY") == "1":
->              return True
->          if os.path.exists(ud.moddir):
->              return False
+> @@ -248,7 +248,7 @@ class Git(FetchMethod):
+>                      ud.unresolvedrev[name] = ud.revisions[name]
+>                  ud.revisions[name] = self.latest_revision(ud, d, name)
+>  
+> -        gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.'))
+> +        gitsrcname = bb.fetch2.get_mirrorname(ud)
+>          if gitsrcname.startswith('.'):
+>              gitsrcname = gitsrcname[1:]
+>  
 
-Can we use bb.utils.to_boolean() in all cases to be consistent please?
+I think your patch is highlighting a deeper problem here. The mirror
+name is something which the given fetcher module should be decoding and
+this shouldn't handled in __init__.py unless its some kind of default.
+
+We probably need to look more deeply about why git fetcher knowledge is
+being used in the general case and fix that instead...
 
 Cheers,
 
 Richard
-
 
 
