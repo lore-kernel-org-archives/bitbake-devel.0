@@ -1,23 +1,25 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 09B8C60102
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id C78C160102
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Mar 2019 07:00:51 +0000 (UTC)
+	Thu, 21 Mar 2019 07:00:52 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x2L70qev005717
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x2L70rIh008996
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Mar 2019 00:00:52 -0700 (PDT)
+	Thu, 21 Mar 2019 00:00:54 -0700 (PDT)
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Thu, 21 Mar 2019 00:00:49 -0700
+	14.3.439.0; Thu, 21 Mar 2019 00:00:50 -0700
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 21 Mar 2019 15:20:20 +0800
-Message-ID: <cover.1553152790.git.liezhi.yang@windriver.com>
+Date: Thu, 21 Mar 2019 15:20:21 +0800
+Message-ID: <61fb9e18afc98ecbb558ae3c7fa036938e21aab5.1553152790.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1553152790.git.liezhi.yang@windriver.com>
+References: <cover.1553152790.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 0/1] cooker: Fix bbfile_config_priorities when BBFILE_PATTERN is empty
+Subject: [PATCH 1/1] cooker: Fix bbfile_config_priorities when BBFILE_PATTERN is empty
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,21 +35,36 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Thu, 21 Mar 2019 07:00:52 -0000
 Content-Type: text/plain
 
-The following changes since commit 753e2a0ede4449917c75353b57f13bbafe70fac8:
+The layer was not in bbfile_config_priorities when BBFILE_PATTERN is empty,
+this caused "bitbake-layers show-layers" can't show these layers, this was
+incorrect since these layer did exist. Add these layer to
+bbfile_config_priorities can fix the problem.
 
-  build-appliance-image: Update to master head revision (2019-03-19 23:56:29 +0000)
+Fixed:
+Add BBFILE_PATTERN_core = "" in oe-core/meta/conf/layer.conf
+$ bitbake show-layers | grep oe-core
 
-are available in the git repository at:
+There was nothing, now the layer is shown
 
-  git://git.pokylinux.org/poky-contrib rbt/pattern
-  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/pattern
-
-Robert Yang (1):
-  cooker: Fix bbfile_config_priorities when BBFILE_PATTERN is empty
-
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
  bitbake/lib/bb/cooker.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 1982e88..9ccaa79 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1216,8 +1216,8 @@ class BBCooker:
+                     continue
+                 elif regex == "":
+                     parselog.debug(1, "BBFILE_PATTERN_%s is empty" % c)
++                    cre = re.compile('^NULL$')
+                     errors = False
+-                    continue
+                 else:
+                     try:
+                         cre = re.compile(regex)
 -- 
 2.7.4
 
