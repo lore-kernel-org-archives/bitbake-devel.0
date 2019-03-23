@@ -1,43 +1,44 @@
 Return-Path: <martin.jansa@gmail.com>
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
-	[209.85.221.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 3331D7C617
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com
+	[209.85.221.43])
+	by mail.openembedded.org (Postfix) with ESMTP id BB8897C617
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Mar 2019 08:32:20 +0000 (UTC)
-Received: by mail-wr1-f52.google.com with SMTP id t5so4691389wri.7
+	Sat, 23 Mar 2019 08:33:25 +0000 (UTC)
+Received: by mail-wr1-f43.google.com with SMTP id p1so4682789wrs.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Mar 2019 01:32:21 -0700 (PDT)
+	Sat, 23 Mar 2019 01:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=+sTk5zsUTKhyhZI1wt3yOSmSfFZf41KoMKikdbEnK7w=;
-	b=ASAcwGNI7qSnwkgTp27HaFG2nANmnnhUT93j5mkZq2Mre2SsSTQygJCKJVMGUGK0MB
-	Sfoik5Tsy+tN7xGCCsmnSAcKoz7oM+8u9BElkuPF7TxD33XuQP38Rf4zhnZqTY2B6Coz
-	1apMM98MZBXE0yX4de+j2cmOLgNYhupNtWOFVblCMy6U3hj4wELD355+iwIGnK4TomRL
-	7e7IQjjfPaWOlGQwCHTfMeG7oL9k8SxuxjeRRf+buQbGcWF/xAZIEZ3FmJEK/Dxf9ale
-	sDan86SHCX3MWLnDBoycFRjC8n8UrkPyjjcnAldSepllXkkA0jd0e5WDqHJug4W/7tAC
-	6gmA==
+	:cc; bh=U641wcz27jv1GOQOOyO4PujvpUzu6MUC/d7g6elp9vE=;
+	b=oUxVu8/91/wBTssl6xE8ot8YUHPP1ans0M3SCr/AvzvxZDUUbIjqGNCc2BU9jDBQ/q
+	QAh6n7dwOHMvXWx/d6cSHeBgw1kenv8luT5ww/rMxCw3UbNDLVmpKowdD1VDOgQ+EOL4
+	Ho4mbwk2qvHTPZPXMAjqI5iEIYiLlW8n0jTvmgIsAmd1e2KHFS/2i95oi/YHTTWVE/7D
+	gZ7mmKdiDmoyRo41E4gsG2b5JF2TSRV/8DdeaDI6DGuLR4Z4IXZzggdFMw+iHXQ2o0WO
+	5ddBkG4oe+4HeYGrTp3bn9am7G7PAI2vQLxOH1RK6j7naeTeLTvtssFxDwzx3uXRZAV+
+	0NTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
 	:message-id:subject:to:cc;
-	bh=+sTk5zsUTKhyhZI1wt3yOSmSfFZf41KoMKikdbEnK7w=;
-	b=r9rpQtnvt6POZGKzLXGcsaCiOynq68XiHhqUnN8voZKX9qvRsP25r32jiY21yLlpwB
-	Vcg3bcGp4aYC66kXfSwbHtuxuK4V88bONH/o8v8tVpy6/n5tnihBjRzuEjZ2mfvcnJNM
-	0k0ij1UhwWWrvoZQB9ngU0lsHD4FkEeOwNd+kDlW6Ni/TpoXy2BMJcMlu1I9D7NGjo+A
-	nsreI+QIoxOd/RT5SgqCNWNfMXh2nJS+mEgacdaD9ocnATcvxKH+2K4N1VUWr2y1QwGj
-	0CPvrgatKLgx5YxeeXqtgYuijPM5zgqKLU7RFyNUu/mBidTr+r+6o1xhFzmhDbuw3XG3
-	eqVQ==
-X-Gm-Message-State: APjAAAVzcuY7TrLdvAbErpWZVP+6Qn1iZuIeTxb3m5iU7sLONvvErCBL
-	Vzo32mBJqczS1dHtZJgJCLHSrUpZFluK8b+d6bM=
-X-Google-Smtp-Source: APXvYqxzaN0xm30cOrKmu/anQEn370oTwh5M1wyO3nyat7EgBEpK/CTwcWrr0odLC27t9CxWUyEHwy6m9wYh6lvLoJM=
-X-Received: by 2002:adf:f846:: with SMTP id d6mr1163951wrq.53.1553329940900;
-	Sat, 23 Mar 2019 01:32:20 -0700 (PDT)
+	bh=U641wcz27jv1GOQOOyO4PujvpUzu6MUC/d7g6elp9vE=;
+	b=WzJMYvW2cabZk58YAdqJJi7OLnPn37ZFPOX+gWCKSj+3PdXO6eedTnFe5jWYxhAi2H
+	sqBPZK3dXvZTeVrbaqlUDBOrXhua3XBfipqbV8+kqU5oK2TEdUCZHL/NV3b5egEArOLm
+	00arwJQE/3ooRPTXv7jL+JKj/3WzGNOIR5j4KYjPRw9OxflDbgotzlqlWIBM2NaQ4eb6
+	Mcbh2Ckbvr5h4LBqGRSB5s//9qph14qt1SlxQ/4BBUEWn5aij1Ge3gpFVxNdBOFU8Htu
+	Ew4eJkWLKj0qBEkRhrJeeeP1KAi/K0Gygkmp4WbYJ5hALH9EVICXiAwRdl7EOQ/IV/pG
+	0DeA==
+X-Gm-Message-State: APjAAAUj1iXW4g8gbnbqmiyhGTQH9Nd9j1oecdKaHI3ejyBKxrllveYN
+	ll9trtVxDpipXNqGCK2Cut82PXci1LHe9ovguU47prfQ
+X-Google-Smtp-Source: APXvYqwixAZe2gCRS2FlZd+CFnJwzEo3zZDgwxgVeraHzhKcXEtyPFQxSL9nOQs4Jr5lQxlCKuD4PF4LlgKBJU95MMY=
+X-Received: by 2002:a5d:4606:: with SMTP id t6mr9001572wrq.43.1553330006526;
+	Sat, 23 Mar 2019 01:33:26 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.1553306877.git.akuster808@gmail.com>
-In-Reply-To: <cover.1553306877.git.akuster808@gmail.com>
+	<CA+chaQcb_6aOd7Xv6D-yNtMobrU81MBSvw=0uvqjMr1-HzOS3w@mail.gmail.com>
+In-Reply-To: <CA+chaQcb_6aOd7Xv6D-yNtMobrU81MBSvw=0uvqjMr1-HzOS3w@mail.gmail.com>
 From: Martin Jansa <martin.jansa@gmail.com>
-Date: Sat, 23 Mar 2019 09:32:09 +0100
-Message-ID: <CA+chaQcb_6aOd7Xv6D-yNtMobrU81MBSvw=0uvqjMr1-HzOS3w@mail.gmail.com>
+Date: Sat, 23 Mar 2019 09:33:15 +0100
+Message-ID: <CA+chaQcS7kh10qhcJ-XBL=qO7Gj=rj4rovZS1tM5wQ3BARPrWg@mail.gmail.com>
 To: Armin Kuster <akuster808@gmail.com>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH 00/12] Sumo pull request
@@ -53,130 +54,144 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 23 Mar 2019 08:32:20 -0000
-Content-Type: multipart/alternative; boundary="00000000000058af1b0584becf44"
+X-List-Received-Date: Sat, 23 Mar 2019 08:33:25 -0000
+Content-Type: multipart/alternative; boundary="000000000000420f8a0584bed3ca"
 
---00000000000058af1b0584becf44
+--000000000000420f8a0584bed3ca
 Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Nor in:
+http://git.openembedded.org/openembedded-core-contrib/log/?h=stable/sumo-next
 
-is there a reason for not including
-https://patchwork.openembedded.org/patch/159465/
-?
+On Sat, Mar 23, 2019 at 9:32 AM Martin Jansa <martin.jansa@gmail.com> wrote:
 
-It says sumo-next on patchwork, but I don't know which sumo-next it is, I
-don't see it in:
-http://git.openembedded.org/openembedded-core/log/?h=sumo-next
+> Hi,
+>
+> is there a reason for not including
+> https://patchwork.openembedded.org/patch/159465/
+> ?
+>
+> It says sumo-next on patchwork, but I don't know which sumo-next it is, I
+> don't see it in:
+> http://git.openembedded.org/openembedded-core/log/?h=sumo-next
+>
+> On Sat, Mar 23, 2019 at 3:12 AM Armin Kuster <akuster808@gmail.com> wrote:
+>
+>> Please consider this for the next sumo update
+>>
+>> The following changes since commit
+>> 6d56e912fbbaa22830b4da5ab230586a3d15b23e:
+>>
+>>   package_rpm/archiver: Apply bandaid to src.rpm creation (2019-02-25
+>> 22:13:08 +0000)
+>>
+>> are available in the git repository at:
+>>
+>>   git://git.openembedded.org/openembedded-core-contrib stable/sumo-next
+>>
+>> http://cgit.openembedded.org/openembedded-core-contrib/log/?h=stable/sumo-next
+>>
+>> Chen Qi (2):
+>>   systemd: fix CVE-2018-15686
+>>   systemd: fix CVE-2018-15688
+>>
+>> George McCollister (5):
+>>   systemd: fix CVE-2018-15687
+>>   systemd: Security fix CVE-2018-16864
+>>   systemd: Security fix CVE-2018-16865
+>>   systemd: fix CVE-2018-6954
+>>   systemd: fix CVE-2019-6454
+>>
+>> Marcus Cooper (1):
+>>   systemd: Security fix CVE-2018-16866
+>>
+>> Mingli Yu (1):
+>>   logrotate.py: restore /etc/logrotate.d/wtmp
+>>
+>> ROGEZ Matthieu (1):
+>>   systemd: Fix typo in root home variable.
+>>
+>> Richard Purdie (1):
+>>   oeqa/runtime/dnf: Fix test error when static libs are enabled
+>>
+>> Stefan Agner (1):
+>>   run-postinsts: for dpkg/opkg, do not rely on /etc/*-postinsts
+>>
+>>  meta/lib/oeqa/runtime/cases/dnf.py                 |    2 +-
+>>  meta/lib/oeqa/runtime/cases/logrotate.py           |    6 +-
+>>  ...sive-let-s-rework-the-recursive-logic-to-.patch |  252 +++
+>>  ...eserializing-state-always-use-read_line-L.patch |  250 +++
+>>  ...sure-we-have-enough-space-for-the-DHCP6-o.patch |   39 +
+>>  ...n-t-resolve-pathnames-when-traversing-rec.patch |  643 +++++++
+>>  .../systemd/systemd/0002-Make-tmpfiles-safe.patch  | 1828
+>> ++++++++++++++++++++
+>>  ...-not-store-the-iovec-entry-for-process-co.patch |  193 +++
+>>  ...ld-set-a-limit-on-the-number-of-fields-1k.patch |   60 +
+>>  ...ote-set-a-limit-on-the-number-of-fields-i.patch |   79 +
+>>  ...nal-fix-out-of-bounds-read-CVE-2018-16866.patch |   49 +
+>>  .../systemd/systemd/CVE-2019-6454.patch            |  210 +++
+>>  ...e-receive-an-invalid-dbus-message-ignore-.patch |   61 +
+>>  meta/recipes-core/systemd/systemd_237.bb           |   13 +-
+>>  .../run-postinsts/run-postinsts/run-postinsts      |   21 +-
+>>  .../run-postinsts/run-postinsts.service            |    1 -
+>>  16 files changed, 3694 insertions(+), 13 deletions(-)
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0001-chown-recursive-let-s-rework-the-recursive-logic-to-.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0001-core-when-deserializing-state-always-use-read_line-L.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0001-dhcp6-make-sure-we-have-enough-space-for-the-DHCP6-o.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0001-tmpfiles-don-t-resolve-pathnames-when-traversing-rec.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0002-Make-tmpfiles-safe.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0024-journald-do-not-store-the-iovec-entry-for-process-co.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0025-journald-set-a-limit-on-the-number-of-fields-1k.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0026-journal-remote-set-a-limit-on-the-number-of-fields-i.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/0027-journal-fix-out-of-bounds-read-CVE-2018-16866.patch
+>>  create mode 100644 meta/recipes-core/systemd/systemd/CVE-2019-6454.patch
+>>  create mode 100644
+>> meta/recipes-core/systemd/systemd/sd-bus-if-we-receive-an-invalid-dbus-message-ignore-.patch
+>>
+>> --
+>> 2.7.4
+>>
+>> --
+>> _______________________________________________
+>> bitbake-devel mailing list
+>> bitbake-devel@lists.openembedded.org
+>> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>>
+>
 
-On Sat, Mar 23, 2019 at 3:12 AM Armin Kuster <akuster808@gmail.com> wrote:
-
-> Please consider this for the next sumo update
->
-> The following changes since commit
-> 6d56e912fbbaa22830b4da5ab230586a3d15b23e:
->
->   package_rpm/archiver: Apply bandaid to src.rpm creation (2019-02-25
-> 22:13:08 +0000)
->
-> are available in the git repository at:
->
->   git://git.openembedded.org/openembedded-core-contrib stable/sumo-next
->
-> http://cgit.openembedded.org/openembedded-core-contrib/log/?h=stable/sumo-next
->
-> Chen Qi (2):
->   systemd: fix CVE-2018-15686
->   systemd: fix CVE-2018-15688
->
-> George McCollister (5):
->   systemd: fix CVE-2018-15687
->   systemd: Security fix CVE-2018-16864
->   systemd: Security fix CVE-2018-16865
->   systemd: fix CVE-2018-6954
->   systemd: fix CVE-2019-6454
->
-> Marcus Cooper (1):
->   systemd: Security fix CVE-2018-16866
->
-> Mingli Yu (1):
->   logrotate.py: restore /etc/logrotate.d/wtmp
->
-> ROGEZ Matthieu (1):
->   systemd: Fix typo in root home variable.
->
-> Richard Purdie (1):
->   oeqa/runtime/dnf: Fix test error when static libs are enabled
->
-> Stefan Agner (1):
->   run-postinsts: for dpkg/opkg, do not rely on /etc/*-postinsts
->
->  meta/lib/oeqa/runtime/cases/dnf.py                 |    2 +-
->  meta/lib/oeqa/runtime/cases/logrotate.py           |    6 +-
->  ...sive-let-s-rework-the-recursive-logic-to-.patch |  252 +++
->  ...eserializing-state-always-use-read_line-L.patch |  250 +++
->  ...sure-we-have-enough-space-for-the-DHCP6-o.patch |   39 +
->  ...n-t-resolve-pathnames-when-traversing-rec.patch |  643 +++++++
->  .../systemd/systemd/0002-Make-tmpfiles-safe.patch  | 1828
-> ++++++++++++++++++++
->  ...-not-store-the-iovec-entry-for-process-co.patch |  193 +++
->  ...ld-set-a-limit-on-the-number-of-fields-1k.patch |   60 +
->  ...ote-set-a-limit-on-the-number-of-fields-i.patch |   79 +
->  ...nal-fix-out-of-bounds-read-CVE-2018-16866.patch |   49 +
->  .../systemd/systemd/CVE-2019-6454.patch            |  210 +++
->  ...e-receive-an-invalid-dbus-message-ignore-.patch |   61 +
->  meta/recipes-core/systemd/systemd_237.bb           |   13 +-
->  .../run-postinsts/run-postinsts/run-postinsts      |   21 +-
->  .../run-postinsts/run-postinsts.service            |    1 -
->  16 files changed, 3694 insertions(+), 13 deletions(-)
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0001-chown-recursive-let-s-rework-the-recursive-logic-to-.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0001-core-when-deserializing-state-always-use-read_line-L.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0001-dhcp6-make-sure-we-have-enough-space-for-the-DHCP6-o.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0001-tmpfiles-don-t-resolve-pathnames-when-traversing-rec.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0002-Make-tmpfiles-safe.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0024-journald-do-not-store-the-iovec-entry-for-process-co.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0025-journald-set-a-limit-on-the-number-of-fields-1k.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0026-journal-remote-set-a-limit-on-the-number-of-fields-i.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/0027-journal-fix-out-of-bounds-read-CVE-2018-16866.patch
->  create mode 100644 meta/recipes-core/systemd/systemd/CVE-2019-6454.patch
->  create mode 100644
-> meta/recipes-core/systemd/systemd/sd-bus-if-we-receive-an-invalid-dbus-message-ignore-.patch
->
-> --
-> 2.7.4
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
-
---00000000000058af1b0584becf44
+--000000000000420f8a0584bed3ca
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Hi,<div><br></div><div>is there a reason for not including=
-</div><div><a href=3D"https://patchwork.openembedded.org/patch/159465/">htt=
-ps://patchwork.openembedded.org/patch/159465/</a><br></div><div>?</div><div=
-><br></div><div>It says sumo-next on patchwork, but I don&#39;t know which =
-sumo-next it is, I don&#39;t see it in:</div><div><a href=3D"http://git.ope=
-nembedded.org/openembedded-core/log/?h=3Dsumo-next">http://git.openembedded=
-.org/openembedded-core/log/?h=3Dsumo-next</a><br></div></div><br><div class=
-=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Sat, Mar 23, 2019=
- at 3:12 AM Armin Kuster &lt;<a href=3D"mailto:akuster808@gmail.com">akuste=
-r808@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=
-ing-left:1ex">Please consider this for the next sumo update<br>
+<div dir=3D"ltr">Nor in:<div><a href=3D"http://git.openembedded.org/openemb=
+edded-core-contrib/log/?h=3Dstable/sumo-next">http://git.openembedded.org/o=
+penembedded-core-contrib/log/?h=3Dstable/sumo-next</a><br></div></div><br><=
+div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Sat, Mar=
+ 23, 2019 at 9:32 AM Martin Jansa &lt;<a href=3D"mailto:martin.jansa@gmail.=
+com">martin.jansa@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
+204,204);padding-left:1ex"><div dir=3D"ltr">Hi,<div><br></div><div>is there=
+ a reason for not including</div><div><a href=3D"https://patchwork.openembe=
+dded.org/patch/159465/" target=3D"_blank">https://patchwork.openembedded.or=
+g/patch/159465/</a><br></div><div>?</div><div><br></div><div>It says sumo-n=
+ext on patchwork, but I don&#39;t know which sumo-next it is, I don&#39;t s=
+ee it in:</div><div><a href=3D"http://git.openembedded.org/openembedded-cor=
+e/log/?h=3Dsumo-next" target=3D"_blank">http://git.openembedded.org/openemb=
+edded-core/log/?h=3Dsumo-next</a><br></div></div><br><div class=3D"gmail_qu=
+ote"><div dir=3D"ltr" class=3D"gmail_attr">On Sat, Mar 23, 2019 at 3:12 AM =
+Armin Kuster &lt;<a href=3D"mailto:akuster808@gmail.com" target=3D"_blank">=
+akuster808@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quo=
+te" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204=
+);padding-left:1ex">Please consider this for the next sumo update<br>
 <br>
 The following changes since commit 6d56e912fbbaa22830b4da5ab230586a3d15b23e=
 :<br>
@@ -288,5 +303,6 @@ itbake-devel@lists.openembedded.org</a><br>
 l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
 stinfo/bitbake-devel</a><br>
 </blockquote></div>
+</blockquote></div>
 
---00000000000058af1b0584becf44--
+--000000000000420f8a0584bed3ca--
