@@ -1,25 +1,24 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 340416C0ED
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id DAB957D078
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Mar 2019 07:51:51 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x2P7pqnD026289
+	Mon, 25 Mar 2019 07:51:54 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x2P7pZef029977
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Mar 2019 00:51:52 -0700 (PDT)
+	Mon, 25 Mar 2019 00:51:45 -0700
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Mon, 25 Mar 2019 00:51:51 -0700
+	14.3.439.0; Mon, 25 Mar 2019 00:51:24 -0700
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 25 Mar 2019 16:10:58 +0800
-Message-ID: <1a8af9bf38bd4401ca71c076d14e5f74e589f888.1553501143.git.liezhi.yang@windriver.com>
+Date: Mon, 25 Mar 2019 16:10:56 +0800
+Message-ID: <cover.1553501143.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1553501143.git.liezhi.yang@windriver.com>
-References: <cover.1553501143.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/2 v2] fetch2: Use bb.utils.to_boolean() for BB_NO_NETWORK
+Subject: [PATCH 0/2 v2] fetch2: Unify BB_FETCH_PREMIRRORONLY
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,38 +31,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Mar 2019 07:51:51 -0000
+X-List-Received-Date: Mon, 25 Mar 2019 07:51:55 -0000
 Content-Type: text/plain
 
-Make it consistent with BB_FETCH_PREMIRRORONLY.
+* V2
+  - Use bb.utils.to_boolean() for BB_FETCH_PREMIRRORONLY as RP suggested.
+  - Use bb.utils.to_boolean() for BB_NO_NETWORK.
+  - We also need use bb.utils.to_boolean() for oe-core's BB_NO_NETWORK, will
+    fix it later.
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/fetch2/__init__.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+* V1
+  - Initial version
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 6445184..8fecc80 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -898,7 +898,7 @@ def check_network_access(d, info, url):
-     log remote network access, and error if BB_NO_NETWORK is set or the given
-     URI is untrusted
-     """
--    if d.getVar("BB_NO_NETWORK") == "1":
-+    if bb.utils.to_boolean(d.getVar("BB_NO_NETWORK")):
-         raise NetworkAccess(url, info)
-     elif not trusted_network(d, url):
-         raise UntrustedUrl(url, info)
-@@ -1098,7 +1098,7 @@ def trusted_network(d, url):
-     BB_ALLOWED_NETWORKS is set globally or for a specific recipe.
-     Note: modifies SRC_URI & mirrors.
-     """
--    if d.getVar('BB_NO_NETWORK') == "1":
-+    if bb.utils.to_boolean(d.getVar("BB_NO_NETWORK")):
-         return True
- 
-     pkgname = d.expand(d.getVar('PN', False))
+The following changes since commit acc242c7ec20a74e1afcc2420f5e2981e843b0df:
+
+  bitbake: fetch2: Print SCMs list when SRCREV_FORMAT is not set (2019-03-24 17:01:34 +0000)
+
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib rbt/premirror
+  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/premirror
+
+Robert Yang (2):
+  fetch2: Unify BB_FETCH_PREMIRRORONLY
+  fetch2: Use bb.utils.to_boolean() for BB_NO_NETWORK
+
+ bitbake/lib/bb/fetch2/__init__.py | 6 +++---
+ bitbake/lib/bb/fetch2/git.py      | 2 +-
+ bitbake/lib/bb/fetch2/hg.py       | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
 -- 
 2.7.4
 
