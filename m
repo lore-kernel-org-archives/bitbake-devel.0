@@ -1,26 +1,45 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id CEED36C0ED
+Return-Path: <3JxKbXAMKDaIYCMIQQING.EQODKVDCMG-FGXGNNKUVU.QRGPGODGFFGF.QTI@flex--wak.bounces.google.com>
+Received: from mail-qk1-f202.google.com (mail-qk1-f202.google.com
+	[209.85.222.202])
+	by mail.openembedded.org (Postfix) with ESMTP id C6DF86C3A9
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Mar 2019 07:51:59 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x2P7pZeh029977
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Wed, 27 Mar 2019 06:03:18 +0000 (UTC)
+Received: by mail-qk1-f202.google.com with SMTP id v2so13707671qkf.21
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Mar 2019 00:51:51 -0700
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Mon, 25 Mar 2019 00:51:46 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 25 Mar 2019 16:10:57 +0800
-Message-ID: <c7a631be58f181230307ca3d0d211996cf0e368b.1553501143.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1553501143.git.liezhi.yang@windriver.com>
-References: <cover.1553501143.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/2 v2] fetch2: Unify BB_FETCH_PREMIRRORONLY
+	Tue, 26 Mar 2019 23:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=20161025;
+	h=date:message-id:mime-version:subject:from:to:cc;
+	bh=c8vomXit3+EiTiovQCD0pjc/hdV9rUzf9pJMti2JNag=;
+	b=DPY+Ls9msWN5OQhtNkH1N/76EH11Tvy50LIlVpF5HCtqwz2KWr2U/KFPmHCRQM1sHH
+	5Aw6ZIZNyjm5BXe2WYGAd+9WcRLA6U6MZhv3BtRysonOEBk+xaG/Y6BO9Yt7yiDiwYNR
+	n+BEd8gRqWYxydAH22KHN8sL4zIgkYXsRmb8ATpPHqGaFVtfpWuGMuJGH6VHbwaNue1M
+	QxRYJcaRSu6j74h1lLBA68JJf799p2dVSoFmj3Uj/Bp43shPzoMgGzOQJ1+7GTEd+nga
+	TliZrSCqtoyBLq+TiQ0EeA8pLrIR9GoRCl/C4STC/mJG8v6jm0k6w6BZoUTezHFEOq8z
+	JLHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+	bh=c8vomXit3+EiTiovQCD0pjc/hdV9rUzf9pJMti2JNag=;
+	b=I/ymzzIo8kg8mdskUJIbjgv0QwlNXkZlcEGQecC4W/I5ncunbRMitRk22ZAGrMYBMx
+	J3FCE547tJgG668zCbcGbKMF/YumTyRj7rFUbkIPTfh+RWwLU7XXFONIyYAjZF45bj5d
+	fmn1af1hUrJh+ZjUdK8dIKEDxONGmXFVBZTTOZM6ukwDSOn8cj2TpLhV3kbQQWxOacwZ
+	sBIJxCeh8qUwoItvouMAumhlkGRTwbe7In0ZdiceU+W0WWVsCkU9wwU/bc3AOX7j3ijt
+	Sbgvha1Ss5pn9aSne5cMQfxYeFJzhwTd+aC6U9EJ58TaGRzxy8lHavsDPOIMOLF4wv61
+	d7+A==
+X-Gm-Message-State: APjAAAUr6ioDhbuA8otwwCLIKwum0DkFkw/oPAbG89HMVOvUXqgHidc+
+	Eby2TrS+Z73vTQLNzpn82FIN8G8M6UpzKKT3MT0AobYfGfmNpc2BAsNlHh7kqxoTBEs1zMFxNOB
+	zixRxg4FCjte/QTPOc1VSeomar589ZBUyxKu8xSQDRYhjtwM1kVyes+LzvCADG61DhwzVV08o
+X-Google-Smtp-Source: APXvYqzc6xGx6lONil23zinBmF6QmQ63aUkCgEn7NnuWTEB+inRd06zEu2o76/2ElRUpDAMX219ZEXk=
+X-Received: by 2002:ae9:d881:: with SMTP id
+	u123mr13087311qkf.294.1553666599684; 
+	Tue, 26 Mar 2019 23:03:19 -0700 (PDT)
+Date: Tue, 26 Mar 2019 23:03:16 -0700
+Message-Id: <20190327060316.136092-1-wak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0
+From: "William A. Kennington III" <wak@google.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] gitsm: Check all submodules for updates
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,63 +52,109 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Mar 2019 07:51:59 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 27 Mar 2019 06:03:18 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-The fetch2/__init__.py checks whether "BB_FETCH_PREMIRRORONLY" == "1", but
-fetch2/git.py and hg.py checks whether it is None, this makes it discontinuous,
-and BB_FETCH_PREMIRRORONLY = "0" doens't work as expected in the later case,
-so unify it to the previous one. (As BB_NO_NETWORK does).
+Currently, our gitsm fetcher is inheriting the need_update function from
+the git fetcher. This results in our do_fetch checking for updates only
+if the SRCREV is missing from the top-level project.
 
-And also use bb.utils.to_boolean() to make them consistent.
+Unfortunately, this doesn't take into account the dependent SRCREVs
+missing from submodules due to a lack of the submodule existing
+during the first checkout, or arbitrary download cache purges of
+submodule data.
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+The most trivial way to encounter this is to have gitsm fetch a software
+project before and after adding submodules. When it goes to use the
+update that has submodules it will think that it has all of the needed
+revisions since it checked the top-level repo. However none of those
+submodules will exist in the downloads cache since they weren't included
+in the original commit.
+
+Tested:
+    Ran the unit test suite with just the new unit test to make sure it
+    fails repeatedly. Then applied the fix and ran it some more to
+    ensure the fix works.
+
+Signed-off-by: William A. Kennington III <wak@google.com>
 ---
- bitbake/lib/bb/fetch2/__init__.py | 2 +-
- bitbake/lib/bb/fetch2/git.py      | 2 +-
- bitbake/lib/bb/fetch2/hg.py       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ lib/bb/fetch2/gitsm.py | 24 ++++++++++++++++++++++++
+ lib/bb/tests/fetch.py  | 19 +++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 26ad388..6445184 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1642,7 +1642,7 @@ class Fetch(object):
-             urls = self.urls
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index b21fed26..f1ecd170 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -36,6 +36,7 @@ from   bb.fetch2.git import Git
+ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
+ from   bb.fetch2 import Fetch
++from   bb.fetch2 import FetchData
+ from   bb.fetch2 import BBFetchException
  
-         network = self.d.getVar("BB_NO_NETWORK")
--        premirroronly = (self.d.getVar("BB_FETCH_PREMIRRORONLY") == "1")
-+        premirroronly = bb.utils.to_boolean(self.d.getVar("BB_FETCH_PREMIRRORONLY"))
+ class GitSM(Git):
+@@ -147,6 +148,29 @@ class GitSM(Git):
  
-         for u in urls:
-             ud = self.ud[u]
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index cf8bee7..8185bf4 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -318,7 +318,7 @@ class Git(FetchMethod):
-     def try_premirror(self, ud, d):
-         # If we don't do this, updating an existing checkout with only premirrors
-         # is not possible
--        if d.getVar("BB_FETCH_PREMIRRORONLY") is not None:
-+        if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
-             return True
-         if os.path.exists(ud.clonedir):
-             return False
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index 936d043..5a2985e 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -99,7 +99,7 @@ class Hg(FetchMethod):
-     def try_premirror(self, ud, d):
-         # If we don't do this, updating an existing checkout with only premirrors
-         # is not possible
--        if d.getVar("BB_FETCH_PREMIRRORONLY") is not None:
-+        if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
-             return True
-         if os.path.exists(ud.moddir):
-             return False
+         return submodules != []
+ 
++    def need_update(self, ud, d):
++        if Git.need_update(self, ud, d):
++            return True
++        class NeedUpdateException(Exception):
++            pass
++        def need_update_submodule(ud, url, module, modpath, d):
++            url += ";bareclone=1;nobranch=1"
++            lud = FetchData(url, d, False)
++            lud.setup_localpath(d)
++            if lud.lockfile:
++                lf = bb.utils.lockfile(lud.lockfile)
++            try:
++                if lud.method.need_update(lud, d):
++                    raise NeedUpdateException
++            finally:
++                if lud.lockfile:
++                    bb.utils.unlockfile(lf)
++        try:
++            self.process_submodules(ud, ud.clonedir, need_update_submodule, d)
++            return False
++        except NeedUpdateException:
++            return True
++
+     def download(self, ud, d):
+         def download_submodule(ud, url, module, modpath, d):
+             url += ";bareclone=1;nobranch=1"
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 25732627..429998b3 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -942,6 +942,25 @@ class FetcherNetworkTest(FetcherTest):
+         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
+         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
+ 
++    def test_git_submodule_update_CLI11(self):
++        """ Prevent regression on update detection not finding missing submodule, or modules without needed commits """
++        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=cf6a99fa69aaefe477cc52e3ef4a7d2d7fa40714"
++        fetcher = bb.fetch.Fetch([url], self.d)
++        fetcher.download()
++
++        # CLI11 that pulls in a newer nlohmann-json
++        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=49ac989a9527ee9bb496de9ded7b4872c2e0e5ca"
++        fetcher = bb.fetch.Fetch([url], self.d)
++        fetcher.download()
++        # Previous cwd has been deleted
++        os.chdir(os.path.dirname(self.unpackdir))
++        fetcher.unpack(self.unpackdir)
++
++        repo_path = os.path.join(self.tempdir, 'unpacked', 'git')
++        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/googletest/config')), msg='Missing submodule config "extern/googletest"')
++        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
++        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
++
+     def test_git_submodule_aktualizr(self):
+         url = "gitsm://github.com/advancedtelematic/aktualizr;branch=master;protocol=git;rev=d00d1a04cc2366d1a5f143b84b9f507f8bd32c44"
+         fetcher = bb.fetch.Fetch([url], self.d)
 -- 
-2.7.4
+2.21.0
 
 
