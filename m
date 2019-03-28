@@ -1,59 +1,52 @@
-Return-Path: <wak@google.com>
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com
-	[209.85.214.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 446897CFA4
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id CCA547D19E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 Mar 2019 01:59:12 +0000 (UTC)
-Received: by mail-pl1-f196.google.com with SMTP id k2so4186430plt.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Mar 2019 18:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=20161025;
-	h=subject:from:to:cc:references:message-id:date:user-agent
-	:mime-version:in-reply-to:content-transfer-encoding:content-language;
-	bh=ELNRnEaMnzjrvAeao9//ZxFK7BY+KWUMIJpiv/nQRk4=;
-	b=NMdpfF1A6Y88063sO/MtlxKjgYVtZ0BYY9jZCtJmaL2a+ZCMxYt3HCN9Aj34CA3GZV
-	fEa6KbrxhgYXsqXhnCmu9YiCDm8srWXZkI+jVcpRN6bXNeJP16qPe+MXB2JfX53/XGXz
-	4Y4jxvFsFdl6at/d4B8vRoPgvFL3rcq9dwWPRmwuaplLOtBiZ4z2mqArOf1msDDVq7bC
-	Xtbv76z0NJPBxfxZUdc4cYH5zWstlVZdGyKmw7LzPEgAIzqEW2IEQMjj2100mVS+v6oW
-	lrzG8hs6/6I5ze2qpN21P1J0ADwburhzz4cSi4d90/SOty2cUP1Bh+fgAxaU5gHphszq
-	tfCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-	:user-agent:mime-version:in-reply-to:content-transfer-encoding
-	:content-language;
-	bh=ELNRnEaMnzjrvAeao9//ZxFK7BY+KWUMIJpiv/nQRk4=;
-	b=dLswUist/BzOZQGHfXOHBF8xv3VcAK6oT4eioK21mzMyViW2xX9H+ADS39v1NYN2CT
-	rO8Z0xWPt7VKLA0y3q1lC+N4DJ4yfQn5HyK0zBaNA98k+wHrtVNxXU5FuaclvNQtQvwl
-	ZguWsqru3gzPQo72x2Lhv+zr2xa7Pz0ZFY6wr/ZXaOVcZQfGrIM9JKktw50j09ELfQgR
-	6gL04rXOaW7qnuflgCxJSPX9VXggU9PsYVjXtpSUX4nzTJassmr3ptPzv9SSAvQc4IUp
-	x6brvd51TvxMO6kIsnMyLSSeJeWXxCu3+GcvVj3LFagm5ZmadB/fd06/HxVKPAkLEbiu
-	SsUg==
-X-Gm-Message-State: APjAAAV6pMt7p1YIdfVrxXyhYOJ/q5CAune+VJ5qWhL9AVnWRJuKHsyK
-	dEFgq0wnLm74QNnk616jaP0nIwQ623a9jg==
-X-Google-Smtp-Source: APXvYqyigOTOh2DLkkdDkqzpsLrP0LEKYcF43bo/i0hc5GUA8YBicEP94ug9b57xrJdRPM8cvOIbhw==
-X-Received: by 2002:a17:902:9001:: with SMTP id
-	a1mr10128864plp.96.1553738352910; 
-	Wed, 27 Mar 2019 18:59:12 -0700 (PDT)
-Received: from wak-linux.svl.corp.google.com
-	([2620:15c:2c5:3:25d0:d4a1:62af:2759])
-	by smtp.gmail.com with ESMTPSA id
-	138sm47179958pfz.18.2019.03.27.18.59.11
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 27 Mar 2019 18:59:12 -0700 (PDT)
-From: "William A. Kennington III" <wak@google.com>
-To: Mark Hatle <mark.hatle@windriver.com>
+	Thu, 28 Mar 2019 15:15:50 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x2SFF8c4022984
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 28 Mar 2019 08:15:23 -0700
+Received: from soho-mhatle-m.local (172.25.36.230) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.439.0;
+	Thu, 28 Mar 2019 08:15:01 -0700
+To: William Kennington <wak@google.com>
 References: <20190327174042.97926-1-mark.hatle@windriver.com>
 	<20190327174042.97926-2-mark.hatle@windriver.com>
 	<CAPnigKk3_gv8izX0kMqCZKs7ngwH3-bYk7-hW094N-fbHrTSzQ@mail.gmail.com>
-	<CAPnigKnBVSa5rr11xQ3Qs0Gv4uyyTpQKQ0ANS0ezzTrSO=xxSQ@mail.gmail.com>
-	<8c4f14ad-0886-a715-4c81-42b68ff2ae4d@google.com>
-Message-ID: <3e24188e-1f71-24ab-2719-866bd339a66c@google.com>
-Date: Wed, 27 Mar 2019 18:59:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-	Thunderbird/60.5.1
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <4bc8897d-c35a-3b3b-17c3-bdb284ed0afb@windriver.com>
+Date: Thu, 28 Mar 2019 10:15:00 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <8c4f14ad-0886-a715-4c81-42b68ff2ae4d@google.com>
+In-Reply-To: <CAPnigKk3_gv8izX0kMqCZKs7ngwH3-bYk7-hW094N-fbHrTSzQ@mail.gmail.com>
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH 1/1] gitsm: Add need_update method to determine when we are going to a new SRCREV
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -68,44 +61,144 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 Mar 2019 01:59:12 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 28 Mar 2019 15:15:51 -0000
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-One last time, sorrry for the spam. I usually just use git send-email with wrapping options disabled passed to our special sendmail when doing patches and didn't have a proper mail client set up. I tested this against myself and it worked last time so hopefully formatting is fine now.
+On 3/27/19 3:22 PM, William Kennington wrote:
+> I think this looks good in terms of fixing the issue. It might be
+> overly pessimistic in triggering need_update since it doesn't re-use
+> git metadata, so it isn't just looking at the tree for each download.
+> 
+> Out of curiosity, since git does its own locking, is there any harm in
+> not taking the download locks but reading the metadata of the bare git
+> repos? No downloader should ever be purging commits from the tree, so
 
+Unfortunately there is a case here where one recipe (or build with a shared
+download dir) could be doing a clean while you are doing a download.  The read
+of the git information in the middle of this can cause a race.  We restructed
+the code a while back to never do a fetch (or other operation) on a submodule
+(directly) which is why we call the fetcher and it's operations recursively the
+way we do.
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 429998b3..718605e2 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -961,6 +961,26 @@ class FetcherNetworkTest(FetcherTest):
-          self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
-          self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
+The fetch2/__init__.py is what actually takes the locks in most cases BTW.
+need_update is a case that is called by other places, so it doesn't usually take
+any locks..
 
-+    def test_git_submodule_no_update_CLI11(self):
-+        """ Prevent regression on update detection not finding already downloaded commits """
-+        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=da901cca542612a133efcb04e8e78080186991e4"
-+        fetcher = bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+
-+        self.d.setVar("BB_NO_NETWORK", 1)
-+        # CLI11 that pulls in a newer nlohmann-json which we already fetched
-+        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=899100c1619ea1282620604ac9199010e65f907e"
-+        fetcher = bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+        # Previous cwd has been deleted
-+        os.chdir(os.path.dirname(self.unpackdir))
-+        fetcher.unpack(self.unpackdir)
-+
-+        repo_path = os.path.join(self.tempdir, 'unpacked', 'git')
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/googletest/config')), msg='Missing submodule config "extern/googletest"')
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
-+        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
-+
-      def test_git_submodule_aktualizr(self):
-          url = "gitsm://github.com/advancedtelematic/aktualizr;branch=master;protocol=git;rev=d00d1a04cc2366d1a5f143b84b9f507f8bd32c44"
-          fetcher = bb.fetch.Fetch([url], self.d)
+> needs_update would never return a false negative.
+
+It's allowed actually, while not really desired behavior -- adding 'rm_work' to
+the system where multiple shared recipes may use the same component can trigger
+this.  It's more likely when you introduce submodules, since the recipes
+themselves don't know this thing is actually in use -- and it has caused
+problems in the past.
+
+--Mark
+
+> On Wed, Mar 27, 2019 at 10:41 AM Mark Hatle <mark.hatle@windriver.com> wrote:
+>>
+>> If the system had previously fetched a source repository for use by gitsm,
+>> and then the SRCREV was updated and the new commit already existed, the system
+>> would not re-evaluate the submodules and update them accordingly.
+>>
+>> The cause of this issue was that need_update was being used, unmodified, from
+>> the base git fetcher.  It did not have any knowledge, nor did it care if we
+>> were moving commits and needed to re-evaluate what was happening due to this
+>> switch.
+>>
+>> To fix the issue, during the download process we add all processed (by
+>> gitsm) srcrevs to the git config file, as bitbake.srcrev.  This allows us to
+>> use a new need_update function that not only checks if the git commit is
+>> present, but if we have previously processed this commit to ensure all of the
+>> submodule components are also present.
+>>
+>> This approach is used, instead of iterating over the submodules in need_update
+>> to avoid a potential race condition that has affected us in the past.  The
+>> need_update is called only with the parent locking.  Any time we need to dive
+>> into the submodules, we need to lock, and unlock them, at each stage.  This
+>> opens the possibility of errors in either the code, or unintended race
+>> conditions with rm_work.
+>>
+>> This issue was discovered by William A. Kennington III <wak@google.com>.  The
+>> included test case was also written by him, and included unmodified.
+>>
+>> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+>> ---
+>>  lib/bb/fetch2/gitsm.py | 20 ++++++++++++++++++++
+>>  lib/bb/tests/fetch.py  | 19 +++++++++++++++++++
+>>  2 files changed, 39 insertions(+)
+>>
+>> diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+>> index b21fed26..32389130 100644
+>> --- a/lib/bb/fetch2/gitsm.py
+>> +++ b/lib/bb/fetch2/gitsm.py
+>> @@ -147,6 +147,23 @@ class GitSM(Git):
+>>
+>>          return submodules != []
+>>
+>> +    def need_update(self, ud, d):
+>> +        if Git.need_update(self, ud, d):
+>> +            return True
+>> +
+>> +        try:
+>> +            # Check for the nugget dropped by the download operation
+>> +            known_srcrevs = runfetchcmd("%s config --get-all bitbake.srcrev" % \
+>> +                            (ud.basecmd), d, workdir=ud.clonedir)
+>> +
+>> +            if ud.revisions[ud.names[0]] not in known_srcrevs.split():
+>> +                return True
+>> +        except bb.fetch2.FetchError:
+>> +            # No srcrev nuggets, so this is new and needs to be updated
+>> +            return True
+>> +
+>> +        return False
+>> +
+>>      def download(self, ud, d):
+>>          def download_submodule(ud, url, module, modpath, d):
+>>              url += ";bareclone=1;nobranch=1"
+>> @@ -157,6 +174,9 @@ class GitSM(Git):
+>>              try:
+>>                  newfetch = Fetch([url], d, cache=False)
+>>                  newfetch.download()
+>> +                # Drop a nugget to add each of the srcrevs we've fetched (used by need_update)
+>> +                runfetchcmd("%s config --add bitbake.srcrev %s" % \
+>> +                            (ud.basecmd, ud.revisions[ud.names[0]]), d, workdir=ud.clonedir)
+>>              except Exception as e:
+>>                  logger.error('gitsm: submodule download failed: %s %s' % (type(e).__name__, str(e)))
+>>                  raise
+>> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+>> index 25732627..429998b3 100644
+>> --- a/lib/bb/tests/fetch.py
+>> +++ b/lib/bb/tests/fetch.py
+>> @@ -942,6 +942,25 @@ class FetcherNetworkTest(FetcherTest):
+>>          self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
+>>          self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
+>>
+>> +    def test_git_submodule_update_CLI11(self):
+>> +        """ Prevent regression on update detection not finding missing submodule, or modules without needed commits """
+>> +        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=cf6a99fa69aaefe477cc52e3ef4a7d2d7fa40714"
+>> +        fetcher = bb.fetch.Fetch([url], self.d)
+>> +        fetcher.download()
+>> +
+>> +        # CLI11 that pulls in a newer nlohmann-json
+>> +        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=49ac989a9527ee9bb496de9ded7b4872c2e0e5ca"
+>> +        fetcher = bb.fetch.Fetch([url], self.d)
+>> +        fetcher.download()
+>> +        # Previous cwd has been deleted
+>> +        os.chdir(os.path.dirname(self.unpackdir))
+>> +        fetcher.unpack(self.unpackdir)
+>> +
+>> +        repo_path = os.path.join(self.tempdir, 'unpacked', 'git')
+>> +        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/googletest/config')), msg='Missing submodule config "extern/googletest"')
+>> +        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
+>> +        self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
+>> +
+>>      def test_git_submodule_aktualizr(self):
+>>          url = "gitsm://github.com/advancedtelematic/aktualizr;branch=master;protocol=git;rev=d00d1a04cc2366d1a5f143b84b9f507f8bd32c44"
+>>          fetcher = bb.fetch.Fetch([url], self.d)
+>> --
+>> 2.16.0.rc2
+>>
 
 
