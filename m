@@ -1,41 +1,26 @@
-Return-Path: <andre.rosa@lge.com>
-X-Greylist: delayed 1801 seconds by postgrey-1.34 at layers.openembedded.org;
-	Sat, 06 Apr 2019 00:42:25 UTC
-Received: from lgeamrelo11.lge.com (lgeamrelo11.lge.com [156.147.23.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 789017D021
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 1B9CB7D6B5
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  6 Apr 2019 00:42:25 +0000 (UTC)
-Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
-	by 156.147.23.51 with ESMTP; 6 Apr 2019 09:12:24 +0900
-X-Original-SENDERIP: 156.147.1.126
-X-Original-MAILFROM: andre.rosa@lge.com
-Received: from unknown (HELO LGSVL-EXC01.lgsvl.net) (10.195.253.62)
-	by 156.147.1.126 with ESMTP; 6 Apr 2019 09:12:24 +0900
-X-Original-SENDERIP: 10.195.253.62
-X-Original-MAILFROM: andre.rosa@lge.com
-Received: from LGSVL-EXC01.lgsvl.net (10.195.253.62) by LGSVL-EXC01.lgsvl.net
-	(10.195.253.62) with Microsoft SMTP Server (TLS) id 15.0.1044.25;
-	Fri, 5 Apr 2019 17:12:23 -0700
-Received: from LGSVL-EXC01.lgsvl.net ([10.195.253.62]) by
-	LGSVL-EXC01.lgsvl.net ([10.195.253.62]) with mapi id 15.00.1044.021;
-	Fri, 5 Apr 2019 17:12:23 -0700
-From: andre.rosa <andre.rosa@lge.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [PATCH] Make prune_suffix prune a suffix
-Thread-Index: AQHU7AplRBEUC0EzGkWYx+gAFVa1faYuQb9w
-Date: Sat, 6 Apr 2019 00:12:23 +0000
-Message-ID: <8e39484d440c465c840087dd65e1c163@LGSVL-EXC01.lgsvl.net>
-References: <20190405235047.24415-1-andre.rosa@lge.com>
-In-Reply-To: <20190405235047.24415-1-andre.rosa@lge.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.192.223.164]
+	Mon,  8 Apr 2019 08:56:08 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x388u9cX012254
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 8 Apr 2019 01:56:09 -0700 (PDT)
+Received: from localhost.corp.ad.wrs.com (128.224.163.177) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.3.439.0; Mon, 8 Apr 2019 01:56:09 -0700
+To: <bitbake-devel@lists.openembedded.org>
+References: <cover.1547620210.git.liezhi.yang@windriver.com>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <a355fcbb-cc79-ce61-9ed5-7853888c5da1@windriver.com>
+Date: Mon, 8 Apr 2019 16:56:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Mailman-Approved-At: Sun, 07 Apr 2019 22:34:51 +0000
-Subject: [PATCH] Make prune_suffix prune a suffix
+In-Reply-To: <cover.1547620210.git.liezhi.yang@windriver.com>
+Subject: Re: [PATCH 0/2] bb: siggen: 2 fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,34 +33,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 06 Apr 2019 00:42:26 -0000
+X-List-Received-Date: Mon, 08 Apr 2019 08:56:09 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-From: Andre Rosa <andre.rosa@lge.com>
+Ping.
 
-... instead of replacing a substring that could happen more than once and n=
-ot only when it ends with it.
+// Robert
 
-Signed-off-by: Andre Rosa <andre.rosa@lge.com>
-
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py index b652a683..d186b1fa 100=
-644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -722,8 +722,8 @@ def prune_suffix(var, suffixes, d):
-     # See if var ends with any of the suffixes listed and
-     # remove it if found
-     for suffix in suffixes:
--        if var.endswith(suffix):
--            return var.replace(suffix, "")
-+        if suffix and var.endswith(suffix):
-+            return var[:-len(suffix)]
-     return var
-=20
- def mkdirhier(directory):
---
-2.20.1
-
+On 1/16/19 2:30 PM, Robert Yang wrote:
+> The following changes since commit 1ee53881eea3a7ca4d4f6a5ca9c4c6e6488d2348:
+> 
+>    perl: fix yet another race failure (2019-01-14 17:38:24 +0000)
+> 
+> are available in the git repository at:
+> 
+>    git://git.pokylinux.org/poky-contrib rbt/siggen
+>    http://git.pokylinux.org/cgit.cgi//log/?h=rbt/siggen
+> 
+> Robert Yang (2):
+>    bb: siggen: Add a prefix for uuid4
+>    bb: siggen: Print more info when basehash are mis-matched
+> 
+>   bitbake/lib/bb/build.py  | 2 +-
+>   bitbake/lib/bb/siggen.py | 8 +++++++-
+>   2 files changed, 8 insertions(+), 2 deletions(-)
+> 
 
