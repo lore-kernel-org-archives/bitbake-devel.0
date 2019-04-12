@@ -1,50 +1,46 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com
-	[209.85.214.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 1306F7DB4D
+Return-Path: <kergoth@gmail.com>
+Received: from mail-oi1-f193.google.com (mail-oi1-f193.google.com
+	[209.85.167.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 984646D728
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Apr 2019 01:19:59 +0000 (UTC)
-Received: by mail-pl1-f172.google.com with SMTP id w24so4256876plp.2
+	Fri, 12 Apr 2019 02:53:57 +0000 (UTC)
+Received: by mail-oi1-f193.google.com with SMTP id a6so6740552oie.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Apr 2019 18:20:01 -0700 (PDT)
+	Thu, 11 Apr 2019 19:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id;
-	bh=21S4kErCp/SylCWFP3d0cVfxiMCQ7TXfko2QiZW1zog=;
-	b=Ix8Z88pKz0fdMqgJ7CSbmnx2Fp2TqAnl0jx+rbjuOummd/qqy22qufbn/dds99TuX+
-	r41VHEcePNGKCLscOJysnn7uyiGuthsxbokJsLlBNQcHvFMoppTJAtE7t+ykGangLLcO
-	ZjPTxCo7UpDKIHw+8NobKyjqluIUaNl672VJCPEdhwyL9NloBH45hdbVlXg1zhMsRs3z
-	v+xuUGvcsFHGDFSxu7gw6XaA+y8scufWT4V4lFn/zkYyggrV6TVfEs6FrfKafNwcgD0Q
-	umD02U+pt1ZebYRp6zolhF27fnDvBJGfK71vgPdoJLg5If7WcmH2RAWGYEVaTb4EKtOS
-	Libg==
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=h9AESnKTfJyzUg5jjWAR5MjARynF00XfZ5AMIHb98lA=;
+	b=FRcdTNsKV41CXcwPxfYImcR6LjO6PZoKX1bwY8ztXwmd0F3mvF7Gnt99NDAYn7Woan
+	FI0gSj5l99oUZ5ihw0/iwx2GyFYIppENIcvkXYUoZWbnVaFHkId9QJHMrvAwhmIeePHb
+	ZBOKdoYzs/XMddIEB4w0pq5iG+DCRocSteeZwK8+XOToDY7z3u1v5PGopYFXBmK3qjfL
+	qjQVd7UNZDaSt6H+SHigy65j86LDsPTnuO2zFAnKKsJrRUYTVM5wf02YdpXwt0wRbham
+	uxg9lyZNWKZ439bXVe7wujWmAM4HxLLNbHZSgcis6tXH5x0ErjaESyf/VYi0DPBPsHeP
+	Pn0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=21S4kErCp/SylCWFP3d0cVfxiMCQ7TXfko2QiZW1zog=;
-	b=ZEOVcPW+kcJbNq2LcK85jaBYLghXLXVp6xVwHrTMXm/NzqLJ2ZaAZ/BF5WlLCQKBhY
-	gax0F3H3nuESj+smgQgCTUt+TKkjLen44j7z7MzPepSNK5xbZaG8GvOyk/Q2nImEa1vB
-	Ieu/7hyxiVxjaeilXs6S24OKeDZY/LggX33EWTElaP3M+TSOk8ofLNJfYw+kKIOkHjUl
-	ytAJvd/+g4Dk2AeoC7n5rTybipD2zfx9I70wim58qjFS3pBglMVdK1n4Lti55OeE5UdK
-	AjHMo0aOymplQz5h+cF3Omqfun79LdY6/rMgdMkw32kXHixAV/6uEo7JCzxVLHM2TmH4
-	qcVw==
-X-Gm-Message-State: APjAAAWN468bLrSOqmlCwQhjoR6ecvcf0/amtXpPrSIsCPVZiVqE4Rzl
-	nchRy2Ly8KRmK5cwM/GP7h4a1dd6
-X-Google-Smtp-Source: APXvYqzDMuAMsmoTneYEHEYqkqyAfak+jkS9RBCZ8Z1MggOTVz6m8KkcFhBYd6GAGVxmuQmjVMgq/g==
-X-Received: by 2002:a17:902:163:: with SMTP id
-	90mr24832921plb.34.1555032000220; 
-	Thu, 11 Apr 2019 18:20:00 -0700 (PDT)
-Received: from akuster-ThinkPad-T460s.mvista.com
-	([2601:202:4180:c33:918d:ab6e:51fb:1d66])
-	by smtp.gmail.com with ESMTPSA id
-	g64sm93058384pfg.13.2019.04.11.18.19.59
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 11 Apr 2019 18:19:59 -0700 (PDT)
-From: Armin Kuster <akuster808@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 11 Apr 2019 18:19:58 -0700
-Message-Id: <1555031998-3975-1-git-send-email-akuster808@gmail.com>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH]] bitbake: update masters version to some farout version
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=h9AESnKTfJyzUg5jjWAR5MjARynF00XfZ5AMIHb98lA=;
+	b=mhE/GFzOtFtysUPS7JRLiTdMsd/ZdkaUeWM0D0UG4ZuCUDPDuKBptoBHu1EsQNrncc
+	GFJ9Fth6KX0uftx5tZG3Bmm+u4DZ3Oa1TCAH5w7JqhLHjFgyBLayqDi4w0fqMi8K7nY6
+	oCGSJ/+VPnyk78PCy+GkJLPCXF1SBTyjD9jPzSIl0PisFOzvcUjMvrMBSvPlGtAk3BNB
+	NBoK7LT9vGeHvbfSUhW1TBDh30vCiC5/zVQUdyD9cvRFixIRapZjY4N9n52GB4A73UdH
+	GIzQS7yUlVUE3tuNiTnOTltChdqi+4JIQk29knFf8JQhgfU6Tik8FVn6FGx5Pg53uIR9
+	niAg==
+X-Gm-Message-State: APjAAAUpae4YTVUzGkoob7SXFae08O0XPMKoCgQfM7Xy1eKfQoh6aHTR
+	D5oHqpiyrzw9o3dGwLbdPBRYihqvMfBiGHZyeic=
+X-Google-Smtp-Source: APXvYqxfxyjNRJ5OHT5FwIFOjHkI+1zVaVhalQoV0Z80Yx5K2bgOV0TU7/0X/+uckv/pDWULLUnmX7vJvotb8hlw9KU=
+X-Received: by 2002:aca:ad8e:: with SMTP id w136mr8557798oie.109.1555037638477;
+	Thu, 11 Apr 2019 19:53:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <1555031998-3975-1-git-send-email-akuster808@gmail.com>
+In-Reply-To: <1555031998-3975-1-git-send-email-akuster808@gmail.com>
+From: Christopher Larson <kergoth@gmail.com>
+Date: Thu, 11 Apr 2019 19:53:47 -0700
+Message-ID: <CABcZAN=v6z1wYty0EbjVAtAKeR_EQgzRuZcYYXLBOWxh4m=-qw@mail.gmail.com>
+To: Armin Kuster <akuster808@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH]] bitbake: update masters version to some farout version
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,47 +53,147 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Apr 2019 01:20:00 -0000
+X-List-Received-Date: Fri, 12 Apr 2019 02:53:57 -0000
+Content-Type: multipart/alternative; boundary="0000000000000dcc5205864c6aa1"
 
-This is to avoid having master being updated when we branch
-for a new release.
+--0000000000000dcc5205864c6aa1
+Content-Type: text/plain; charset="UTF-8"
 
-Also, master should not be at the same version as the last
-stable release.
+My concern here is a user of an old clone of bitbake master won't trigger
+the oe-core bitbake version checks, it could just silently behave badly, or
+explode instead :)
 
-Signed-off-by: Armin Kuster <akuster808@gmail.com>
----
- bin/bitbake        | 2 +-
- lib/bb/__init__.py | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Thu, Apr 11, 2019 at 6:20 PM Armin Kuster <akuster808@gmail.com> wrote:
 
-diff --git a/bin/bitbake b/bin/bitbake
-index 57dec2a..952c47e 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -38,7 +38,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
- if sys.getfilesystemencoding() != "utf-8":
-     sys.exit("Please use a locale setting which supports UTF-8 (such as LANG=en_US.UTF-8).\nPython can't change the filesystem locale after loading so we need a UTF-8 when Python starts or things won't work.")
- 
--__version__ = "1.40.0"
-+__version__ = "1.99.0"
- 
- if __name__ == "__main__":
-     if __version__ != bb.__version__:
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 4bc47c8..a86197a 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -21,7 +21,7 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
--__version__ = "1.40.0"
-+__version__ = "1.99.0"
- 
- import sys
- if sys.version_info < (3, 4, 0):
+> This is to avoid having master being updated when we branch
+> for a new release.
+>
+> Also, master should not be at the same version as the last
+> stable release.
+>
+> Signed-off-by: Armin Kuster <akuster808@gmail.com>
+> ---
+>  bin/bitbake        | 2 +-
+>  lib/bb/__init__.py | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/bin/bitbake b/bin/bitbake
+> index 57dec2a..952c47e 100755
+> --- a/bin/bitbake
+> +++ b/bin/bitbake
+> @@ -38,7 +38,7 @@ from bb.main import bitbake_main,
+> BitBakeConfigParameters, BBMainException
+>  if sys.getfilesystemencoding() != "utf-8":
+>      sys.exit("Please use a locale setting which supports UTF-8 (such as
+> LANG=en_US.UTF-8).\nPython can't change the filesystem locale after loading
+> so we need a UTF-8 when Python starts or things won't work.")
+>
+> -__version__ = "1.40.0"
+> +__version__ = "1.99.0"
+>
+>  if __name__ == "__main__":
+>      if __version__ != bb.__version__:
+> diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+> index 4bc47c8..a86197a 100644
+> --- a/lib/bb/__init__.py
+> +++ b/lib/bb/__init__.py
+> @@ -21,7 +21,7 @@
+>  # with this program; if not, write to the Free Software Foundation, Inc.,
+>  # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+>
+> -__version__ = "1.40.0"
+> +__version__ = "1.99.0"
+>
+>  import sys
+>  if sys.version_info < (3, 4, 0):
+> --
+> 2.7.4
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
+
+
 -- 
-2.7.4
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
 
+--0000000000000dcc5205864c6aa1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr">My concern here is a user of an old clone of bitbake maste=
+r won&#39;t trigger the oe-core bitbake version checks, it could just silen=
+tly behave badly, or explode instead :)</div><br><div class=3D"gmail_quote"=
+><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Apr 11, 2019 at 6:20 PM Armi=
+n Kuster &lt;<a href=3D"mailto:akuster808@gmail.com">akuster808@gmail.com</=
+a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0p=
+x 0px 0px 0.8ex;border-left-width:1px;border-left-style:solid;border-left-c=
+olor:rgb(204,204,204);padding-left:1ex">This is to avoid having master bein=
+g updated when we branch<br>
+for a new release.<br>
+<br>
+Also, master should not be at the same version as the last<br>
+stable release.<br>
+<br>
+Signed-off-by: Armin Kuster &lt;<a href=3D"mailto:akuster808@gmail.com" tar=
+get=3D"_blank">akuster808@gmail.com</a>&gt;<br>
+---<br>
+=C2=A0bin/bitbake=C2=A0 =C2=A0 =C2=A0 =C2=A0 | 2 +-<br>
+=C2=A0lib/bb/__init__.py | 2 +-<br>
+=C2=A02 files changed, 2 insertions(+), 2 deletions(-)<br>
+<br>
+diff --git a/bin/bitbake b/bin/bitbake<br>
+index 57dec2a..952c47e 100755<br>
+--- a/bin/bitbake<br>
++++ b/bin/bitbake<br>
+@@ -38,7 +38,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters=
+, BBMainException<br>
+=C2=A0if sys.getfilesystemencoding() !=3D &quot;utf-8&quot;:<br>
+=C2=A0 =C2=A0 =C2=A0sys.exit(&quot;Please use a locale setting which suppor=
+ts UTF-8 (such as LANG=3Den_US.UTF-8).\nPython can&#39;t change the filesys=
+tem locale after loading so we need a UTF-8 when Python starts or things wo=
+n&#39;t work.&quot;)<br>
+<br>
+-__version__ =3D &quot;1.40.0&quot;<br>
++__version__ =3D &quot;1.99.0&quot;<br>
+<br>
+=C2=A0if __name__ =3D=3D &quot;__main__&quot;:<br>
+=C2=A0 =C2=A0 =C2=A0if __version__ !=3D bb.__version__:<br>
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py<br>
+index 4bc47c8..a86197a 100644<br>
+--- a/lib/bb/__init__.py<br>
++++ b/lib/bb/__init__.py<br>
+@@ -21,7 +21,7 @@<br>
+=C2=A0# with this program; if not, write to the Free Software Foundation, I=
+nc.,<br>
+=C2=A0# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.<br>
+<br>
+-__version__ =3D &quot;1.40.0&quot;<br>
++__version__ =3D &quot;1.99.0&quot;<br>
+<br>
+=C2=A0import sys<br>
+=C2=A0if sys.version_info &lt; (3, 4, 0):<br>
+-- <br>
+2.7.4<br>
+<br>
+-- <br>
+_______________________________________________<br>
+bitbake-devel mailing list<br>
+<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
+itbake-devel@lists.openembedded.org</a><br>
+<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
+l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
+stinfo/bitbake-devel</a><br>
+</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
+ class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christoph=
+er Larson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, O=
+penZaurus<br>Senior Software Engineer, Mentor Graphics</div></div></div></d=
+iv>
+
+--0000000000000dcc5205864c6aa1--
