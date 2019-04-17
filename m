@@ -1,21 +1,24 @@
-Return-Path: <sk@typedivision.de>
-X-Greylist: delayed 511 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 15 Apr 2019 21:51:22 UTC
-Received: from smtp03.udag.de (smtp03.udag.de [62.146.106.29])
-	by mail.openembedded.org (Postfix) with ESMTP id 665AD7D279
+Return-Path: <david.reyna@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id D9C157D284
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Apr 2019 21:51:22 +0000 (UTC)
-Received: from MyMacBook.fritz.box (x4e369202.dyn.telefonica.de [78.54.146.2])
-	by smtp03.udag.de (Postfix) with ESMTPA id 20951CC7B;
-	Mon, 15 Apr 2019 23:42:50 +0200 (CEST)
-From: sk <sk@typedivision.de>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 15 Apr 2019 23:42:21 +0200
-Message-Id: <20190415214221.68755-1-sk@typedivision.de>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
-X-Mailman-Approved-At: Wed, 17 Apr 2019 09:09:58 +0000
-Cc: Stefan Kral <sk@typedivision.de>
-Subject: [PATCH] Add verbnote to shell log commands
+	Wed, 17 Apr 2019 09:12:50 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x3H9CpU8017074
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 17 Apr 2019 02:12:51 -0700 (PDT)
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.209.92) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
+	(TLS) id 14.3.439.0; Wed, 17 Apr 2019 02:12:51 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 17 Apr 2019 02:10:38 -0700
+Message-ID: <cover.1555492152.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+X-Originating-IP: [147.11.209.92]
+Subject: [PATCH 0/1] toaster: warrior_branch_13287
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,29 +31,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Apr 2019 21:51:22 -0000
+X-List-Received-Date: Wed, 17 Apr 2019 09:12:51 -0000
+Content-Type: text/plain
 
-From: Stefan Kral <sk@typedivision.de>
+From: David Reyna <David.Reyna@windriver.com>
 
-Add the missing bbverbnote fifo cmd for logging from shell.
----
- lib/bb/build.py | 2 ++
- 1 file changed, 2 insertions(+)
+This patch prepares Toaster for the official Warrior release, removing the older Sumo.
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 3e2a94ed..b2208d27 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -407,6 +407,8 @@ exit $ret
-                     bb.plain(value)
-                 elif cmd == 'bbnote':
-                     bb.note(value)
-+                elif cmd == 'bbverbnote':
-+                    bb.verbnote(value)
-                 elif cmd == 'bbwarn':
-                     bb.warn(value)
-                 elif cmd == 'bberror':
+The following changes since commit c23c8ebc7f66a92110bfc9e3c4d633a432d1353b:
+
+  core-image-sato-sdk-ptest: Try and keep image below 4GB limit (2019-04-16 11:10:02 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/warrior_branch_13287
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/warrior_branch_13287
+
+David Reyna (1):
+  toaster: update to Warrior
+
+ lib/toaster/orm/fixtures/oe-core.xml | 12 ++++++------
+ lib/toaster/orm/fixtures/poky.xml    | 18 +++++++++---------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+
 -- 
-2.17.2 (Apple Git-113)
+1.9.1
 
 
