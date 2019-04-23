@@ -1,24 +1,28 @@
 Return-Path: <Liezhi.Yang@windriver.com>
 Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 84AAA79AE7
+	by mail.openembedded.org (Postfix) with ESMTP id 4CFE66BCE7
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Apr 2019 07:45:06 +0000 (UTC)
+	Tue, 23 Apr 2019 07:59:02 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x3N7ikvT024617
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Apr 2019 00:44:57 -0700
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Tue, 23 Apr 2019 00:44:36 -0700
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x3N7r1mp024772
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 23 Apr 2019 00:53:11 -0700
+Received: from localhost.corp.ad.wrs.com (128.224.162.182) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.3.439.0; Tue, 23 Apr 2019 00:52:51 -0700
+To: "Burton, Ross" <ross.burton@intel.com>
+References: <cover.1556005325.git.liezhi.yang@windriver.com>
+	<26bea95ed677fdf7d4c18f80e1e34ffb7c9fa364.1556005325.git.liezhi.yang@windriver.com>
 From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 23 Apr 2019 15:43:58 +0800
-Message-ID: <cover.1556005325.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
+Message-ID: <190b82dc-9ee7-2ea6-6b1a-bf1aecdfaa08@windriver.com>
+Date: Tue, 23 Apr 2019 15:53:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.6.1
 MIME-Version: 1.0
-Subject: [PATCH 0/1] wget.py: Print warning when checkstatus() failed
+In-Reply-To: <26bea95ed677fdf7d4c18f80e1e34ffb7c9fa364.1556005325.git.liezhi.yang@windriver.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] wget.py: Print warning when checkstatus() failed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,25 +35,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 23 Apr 2019 07:45:06 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 23 Apr 2019 07:59:02 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit c23c8ebc7f66a92110bfc9e3c4d633a432d1353b:
+Hi Ross,
 
-  core-image-sato-sdk-ptest: Try and keep image below 4GB limit (2019-04-16 11:10:02 +0100)
+On 4/23/19 3:43 PM, Robert Yang wrote:
+> This makes it easier to debug, for example, when I ran:
+> 
+> $ bitbake-selftest bb.tests.fetch.FetchCheckStatusTest
+> 
+> It said failed:
+> FAIL: test_wget_checkstatus_connection_cache (bb.tests.fetch.FetchCheckStatusTest) (url='ftp://sourceware.org/pub/libffi/libffi-1.20.tar.gz')
+> 
+> But didn't know the reason, this warning message can help me find that
+> something is wrong with my ftp settings (I set a wrong proxy for ftp).
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>   bitbake/lib/bb/fetch2/wget.py | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+> index 3bb3e3b..ffcd40a 100644
+> --- a/bitbake/lib/bb/fetch2/wget.py
+> +++ b/bitbake/lib/bb/fetch2/wget.py
+> @@ -216,7 +216,7 @@ class Wget(FetchMethod):
+>                           # Apparently urllib then uses the file descriptor, expecting it to be
+>                           # connected, when in reality the connection is already gone.
+>                           # We let the request fail and expect it to be
+> -                        # tried once more ("try_again" in check_status()),
+> +                        # tried once more ("try_again" in checkstatus()),
+>                           # with the dead connection removed from the cache.
+>                           # If it still fails, we give up, which can happend for bad
+>                           # HTTP proxy settings.
+> @@ -338,8 +338,7 @@ class Wget(FetchMethod):
+>                   logger.debug(2, "checkstatus: trying again")
+>                   return self.checkstatus(fetch, ud, d, False)
+>               else:
+> -                # debug for now to avoid spamming the logs in e.g. remote sstate searches
+> -                logger.debug(2, "checkstatus() urlopen failed: %s" % e)
 
-are available in the git repository at:
+You added these comments in the past, is the "spamming" still an issue, please?
+Or how can I reproduce it?
 
-  git://git.pokylinux.org/poky-contrib rbt/wget
-  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/wget
+// Robert
 
-Robert Yang (1):
-  wget.py: Print warning when checkstatus() failed
-
- bitbake/lib/bb/fetch2/wget.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
--- 
-2.7.4
-
+> +                logger.warning("checkstatus() urlopen failed: %s" % e)
+>                   return False
+>           return True
+>   
+> 
 
