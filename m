@@ -1,26 +1,49 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id D00D47DA7C
+Return-Path: <enrico.scholz@sigma-chemnitz.de>
+X-Greylist: delayed 715 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 30 Apr 2019 11:32:54 UTC
+Received: from mail.cvg.de (mail.cvg.de [193.158.56.148])
+	by mail.openembedded.org (Postfix) with ESMTP id 224ED7D52B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Apr 2019 08:13:14 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x3T8Cthg011270
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Apr 2019 01:13:06 -0700
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Mon, 29 Apr 2019 01:12:45 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 29 Apr 2019 16:12:00 +0800
-Message-ID: <a8c7d2e3f56778157c889e0a9686668f61f2c333.1556525357.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1556525357.git.liezhi.yang@windriver.com>
-References: <cover.1556525357.git.liezhi.yang@windriver.com>
+	Tue, 30 Apr 2019 11:32:54 +0000 (UTC)
+Received: from mail-mta-0.intern.sigma-chemnitz.de
+	(mail-mta-0.intern.sigma-chemnitz.de [192.168.12.76])
+	by mailout-1.intern.sigma-chemnitz.de (8.14.7/8.14.7) with ESMTP id
+	x3UBKwMU010367
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=OK); Tue, 30 Apr 2019 13:20:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
+	s=v2012061000; t=1556623259;
+	bh=U24svCFMwdUXgAIdUJLfCV7nv/eXipo2RdQrkrPmWek=; l=969;
+	h=From:To:Subject:Date;
+	b=CEQfWnOXfN77TBzzjJZhlFjOcxhCot1wZGjUTvGk3yBIMDvMlkejXammAkEVpU1X/
+	n3CfigqXm7yTtNNDduPlVJk36CZrMYyguxUbovYZSmoOWKJfQpPn2UsA/suDpHNhKw
+	Dhy+BpATNnQLxTB1eRkc/3ENz3iAW29+XyNsV02Q=
+Received: from reddoxx.intern.sigma-chemnitz.de
+	(reddoxx.intern.sigma-chemnitz.de [192.168.0.193])
+	by mail-mta-0.intern.sigma-chemnitz.de (8.14.7/8.14.7) with ESMTP id
+	x3UBKqIi011519; Tue, 30 Apr 2019 13:20:52 +0200
+Received: from mail-msa-0.intern.sigma-chemnitz.de ( [192.168.12.77]) by
+	reddoxx.intern.sigma-chemnitz.de
+	(Reddoxx engine) with SMTP id 4799D9D9320;
+	Tue, 30 Apr 2019 13:20:51 +0200
+Received: from ensc-virt.intern.sigma-chemnitz.de
+	(ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
+	by mail-msa-0.intern.sigma-chemnitz.de (8.14.7/8.14.7) with ESMTP id
+	x3UBKo5N011516
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO); Tue, 30 Apr 2019 13:20:51 +0200
+Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim
+	4.92) (envelope-from <ensc@sigma-chemnitz.de>)
+	id 1hLQoc-00Cr2I-Oi; Tue, 30 Apr 2019 13:20:50 +0200
+From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+To: openembedded-core@lists.openembedded.org,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 30 Apr 2019 13:20:50 +0200
+Message-ID: <lyftpzu4bx.fsf@ensc-virt.intern.sigma-chemnitz.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Subject: [PATCH V2 3/3] bitbake: tests/parse.py: Add testcase for addtask and deltask
+Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Subject: $PWD in terminal.bbclass
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,41 +56,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Apr 2019 08:13:14 -0000
+X-List-Received-Date: Tue, 30 Apr 2019 11:32:55 -0000
 Content-Type: text/plain
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/tests/parse.py | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Hi,
 
-diff --git a/bitbake/lib/bb/tests/parse.py b/bitbake/lib/bb/tests/parse.py
-index 1bc4740..4467d17 100644
---- a/bitbake/lib/bb/tests/parse.py
-+++ b/bitbake/lib/bb/tests/parse.py
-@@ -187,3 +187,21 @@ python () {
-         self.assertEqual(d1.getVar("VAR_var"), "B")
-         self.assertEqual(d2.getVar("VAR_var"), None)
- 
-+    addtask_deltask = """
-+addtask do_patch after do_foo after do_unpack before do_configure before do_compile
-+addtask do_fetch do_patch
-+
-+deltask do_fetch do_patch
-+"""
-+    def test_parse_addtask_deltask(self):
-+        import sys
-+        f = self.parsehelper(self.addtask_deltask)
-+        d = bb.parse.handle(f.name, self.d)['']
-+
-+        stdout = sys.stdout.getvalue()
-+        self.assertTrue("addtask contained multiple 'before' keywords" in stdout)
-+        self.assertTrue("addtask contained multiple 'after' keywords" in stdout)
-+        self.assertTrue('addtask ignored: " do_patch"' in stdout)
-+        self.assertTrue('deltask ignored: " do_patch"' in stdout)
-+        self.assertTrue('dependent task do_foo does not exist' in stdout)
-+
--- 
-2.7.4
+terminal.bbclass exports the original environment before running the
+terminal command.  This environment includes the original $PWD too so
+that the generated script (run.do_terminal) looks like
 
+| #!/usr/bin/env /bin/bash
+| ...
+| export PWD="/srv/projects/.../build"   << the directory with conf/local.conf e.g.
+| ...
+| do_terminal() {
+| exec /bin/bash -c ...
+| }
+
+
+Assigning PWD works like 'cd' and changes the actual path so that
+do_terminal() will be executed from the directory where bitbake has
+been started from.  But usually, the [dirs] directory (e.g. '${B}') is
+expected.
+
+Is this really intented?  Here, this breaks kernel's '-c menuconfig' (at
+least).
+
+A trivial fix would be something like
+
+|    envdata.delVar("PS1")
+|+   envdata.delVar("PWD")
+
+in terminal.bbclass.  But is there any reason to have PWD in ${BB_ORIGENV}
+at all?  imo, there is no reason to keep this variable and it should be
+removed in bitbake already.
+
+
+Enrico
 
