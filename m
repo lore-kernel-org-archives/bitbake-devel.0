@@ -1,50 +1,49 @@
-Return-Path: <jacob.kroon@gmail.com>
-Received: from mail-it1-f195.google.com (mail-it1-f195.google.com
-	[209.85.166.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 457527D717
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
+	[209.85.128.66])
+	by mail.openembedded.org (Postfix) with ESMTP id ABCF57D9AE
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 May 2019 10:51:04 +0000 (UTC)
-Received: by mail-it1-f195.google.com with SMTP id q19so9251544itk.3
+	Wed,  1 May 2019 11:19:00 +0000 (UTC)
+Received: by mail-wm1-f66.google.com with SMTP id n25so6710909wmk.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 01 May 2019 03:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=sEELVfqzWb0TQCtZeJL8ETvdBeTp4af4qLpdwA4SsrM=;
-	b=TPOTjlNJJ6mUCxrYbnT+HpBS8mW4S25ZL+sC8Kj51w8aGoFU3YC47tPoqBxcYeOmi7
-	0IuJUG2OPHNg2qRneadyNa2PYFYz7FQM4xZygoBFAc78I7SYvaMgQfxnhMd4aPl5peLU
-	KOflY+3kS/1vN5vdhN6W3XoEVWFGDrN2UB8IyAB7wiGBQpJiIHhs/CpOkRR/iUJTAqi1
-	Ouc2t0m+t1ee91aFHqKYhjpNafWTmrgKxEgPm3W7LzMK4qpD6fwm+6Cm+656PN1RcUuA
-	hLAV/G1FXTc+csQuTNVAVPSZwvIkBekirSJWW5OkEg9LYfqL8fu38ApE+6xkLYubhCcb
-	ih2g==
+	Wed, 01 May 2019 04:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=12EZxVSbHyW2U0gQ/Iu0aUTQ+Txv3bpj8fhJNycB7kw=;
+	b=W3BeU3Y3WXYfOV4OzFf26G5X4Gdsg+7dMjkYmbFAzAC94xkB6j2J1ZtfMdNzyPMU+4
+	R7jtwvdvQVSE7+HpBbjLiamdU+Ix2bHxrlHtZOrYn2SV5SZXRinzUcIub1KgTTDr67YP
+	HCsGpH3CelaK8As9Neldy9BukrT0G3r4e4Wv8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=sEELVfqzWb0TQCtZeJL8ETvdBeTp4af4qLpdwA4SsrM=;
-	b=fGnTczoeKQeij+x/oltq6phHLLjy6uXAP2K4FIo2mprW1uXLTTOh/PCroCkWmBPjgW
-	G2dcThctL98R01Sc+mDgLkEjW+/zKbrWQnVTYi2ZnM05Np4E+mrHqodaPp8byjAq0wzu
-	G0NondCH6hhYscO4po42Ccaraa53nhH7nkZslhwqu+O7ZtfTnsRGWPp2/rvfyxbjHMXk
-	CgDuCYSFElQ8TSuqzr115Z9YGaMPcs0IG/vmfjC3ZMAQJ8WngAhzzgQL2AmW85bw+R/e
-	btTYaLcyupCkAUvP3XxqASSuUs3g3JPaNe+B7o7gU/eWINn6/eHWb5wPYUL3elRdVMNS
-	gZmA==
-X-Gm-Message-State: APjAAAV97Sry2/O7MsEgIGGYFLXWBsjdHnBeApObKrONIQALJ1oBlG96
-	IUqG6WWrZUQBiIm6j8GPJaOtRwADdF1kKBtym6o=
-X-Google-Smtp-Source: APXvYqyuVhgOkdFap95VGwZwOqE2cEpFV5+pbTCM3PBibEMA48Ji15RnVbHGRs1ETExm0n9d/Q63y6WNZ1evc2rJsrE=
-X-Received: by 2002:a05:660c:2c5:: with SMTP id
-	j5mr7850107itd.154.1556707865137; 
-	Wed, 01 May 2019 03:51:05 -0700 (PDT)
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=12EZxVSbHyW2U0gQ/Iu0aUTQ+Txv3bpj8fhJNycB7kw=;
+	b=Tq+cieomP6G/YjoIbVizZpudjre1BlhMMO3pezAZH7BstAqQwKQMsIYgxsf0O6ofLd
+	DI9Qg8LrUC4f4q+EZWkKZ0KmOhaYfz9JbOspJz+nGEMJqZLXygmC41YQpZ/JJimP0kOt
+	ohXebd68k3LpI/fzX5b5QciWD94fWx6eP6iNCGB0pUeId57MdvD7Un+OfIngq1te3e5C
+	r68Fic2VfaY/w0ybHUndRhxG1vkSGQSjn58aZLgvfnaGuBnPMPEV3aF7HM3nD+La6yLY
+	VpkWq07SwefmtoFu4+zzHoXJMKxFUt1JguiDxQBQSnvg6uiSg4IKO/S+acGC7Q8akso5
+	JIQA==
+X-Gm-Message-State: APjAAAVmSnCM3W7mgmfJ7vs9HOQsIJj5ypHbO/5bdx5UzpNvGqu0CnnW
+	uLn02+TXrnovcAaOK8GEU/zhmPPbDLo=
+X-Google-Smtp-Source: APXvYqzKgRozfJUOVhkczmlSGphNasIG1m3zBubIyXmsbmRH9VcIZRZh3jBqQotoedJ/pugAWxF6cw==
+X-Received: by 2002:a1c:c142:: with SMTP id r63mr6663577wmf.97.1556709541038; 
+	Wed, 01 May 2019 04:19:01 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	j10sm3494597wrb.0.2019.05.01.04.18.59
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 01 May 2019 04:19:00 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  1 May 2019 12:18:54 +0100
+Message-Id: <20190501111859.5699-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <cover.1556186399.git.liezhi.yang@windriver.com>
-	<d37712258af9b6fedb9e1586ace28908bec88391.1556186399.git.liezhi.yang@windriver.com>
-	<9f8a038abf7b7eff75038ccef5f066bfd37e58f5.camel@linuxfoundation.org>
-	<0c45f88f-6056-2fa6-1db1-f7ce413ba0f3@windriver.com>
-In-Reply-To: <0c45f88f-6056-2fa6-1db1-f7ce413ba0f3@windriver.com>
-From: Jacob Kroon <jacob.kroon@gmail.com>
-Date: Wed, 1 May 2019 12:50:53 +0200
-Message-ID: <CAPbeDCnOwvCVx-okYiXU0CXjWLxDGBX7xQc4ij+_iGgd2t-T-w@mail.gmail.com>
-To: Robert Yang <liezhi.yang@windriver.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 2/2] bitbake: build.py: check dependendent task for addtask
+Subject: [PATCH 1/6] knotty: Implement console 'keepalive' output
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,68 +56,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 May 2019 10:51:04 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 01 May 2019 11:19:01 -0000
+Content-Transfer-Encoding: 8bit
 
-Hi,
+CI systems like jenkins and buildbot will timeout applications which haven't had console output
+in some period of time. Add 'keepalive' output to knotty which gives output every 5000s if not
+other output was made and tasks are still running. This reduces some problems encountered
+with our CI testing.
 
-On Fri, Apr 26, 2019 at 4:49 AM Robert Yang <liezhi.yang@windriver.com> wrote:
->
->
->
-> On 4/25/19 6:50 PM, Richard Purdie wrote:
-> > On Thu, 2019-04-25 at 18:01 +0800, Robert Yang wrote:
-> >> The following command is incorrect, but was ignored silently, that may suprise
-> >> users:
-> >>
-> >> addtask task after task_not_existed
-> >>
-> >> This patch can check and warn for it. It would be better to also check "before"
-> >> tasks, but there is no easier way to do it.
-> >>
-> >> [YOCTO #13282]
-> >>
-> >> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> >> ---
-> >>   bitbake/lib/bb/build.py | 3 +++
-> >>   1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-> >> index 7571421..861e9a9 100644
-> >> --- a/bitbake/lib/bb/build.py
-> >> +++ b/bitbake/lib/bb/build.py
-> >> @@ -815,6 +815,9 @@ def add_tasks(tasklist, d):
-> >>           task_deps['parents'][task] = []
-> >>           if 'deps' in flags:
-> >>               for dep in flags['deps']:
-> >> +                # Check and warn for "addtask task after foo" while foo does not exist
-> >> +                if not dep in tasklist:
-> >> +                    bb.warn('%s: dependent task %s does not exist!' % (d.getVar('PN'), dep))
-> >>                   dep = d.expand(dep)
-> >>                   task_deps['parents'][task].append(dep)
-> >
-> > I can't help wonder if this change has races, depending on the order of
-> > the addtask and deltask expressions. Do most layers parse cleanly with
-> > this?
->
-> The bb.build.add_tasks() is only called by ast.py's finalize(), I think that
-> everything should be ready in finalize stage, and there should be no races.
-> I tested this with meta-oe, python perl, selinux and others, didn't see
-> any problems (unless I depended on an invalid task).
->
-> >
-> > At one point bitbake did support "floating" invalid tasks, I can't
-> > remember if we changed that or not though.
->
-> This warning is good for checking typos during development, I think that
-> user can call "bb.build.addtask()" dynamically in a function to fix the warning
-> for floating tasks?
->
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/ui/knotty.py | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-I'm getting a lot of these warnings after removing tmp/ and rebuilding
-my image from sstate cache.
-FWIW I use rm_work.bbclass, and regularly use the
-sstate-cache-management,sh script to prune old cache.
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index f362c23afc..4567c148c8 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -234,6 +234,11 @@ class TerminalFilter(object):
+         else:
+             return "%ds" % (sec)
+ 
++    def keepAlive(self, t):
++        if not self.cuu:
++            print("Bitbake still alive (%ds)" % t)
++            sys.stdout.flush()
++
+     def updateFooter(self):
+         if not self.cuu:
+             return
+@@ -467,11 +472,17 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+     warnings = 0
+     taskfailures = []
+ 
++    printinterval = 5000
++    lastprint = time.time()
++
+     termfilter = tf(main, helper, console, errconsole, format, params.options.quiet)
+     atexit.register(termfilter.finish)
+ 
+     while True:
+         try:
++            if (lastprint + printinterval) <= time.time():
++                termfilter.keepAlive(printinterval)
++                printinterval += 5000
+             event = eventHandler.waitEvent(0)
+             if event is None:
+                 if main.shutdown > 1:
+@@ -500,6 +511,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 continue
+ 
+             if isinstance(event, logging.LogRecord):
++                lastprint = time.time()
++                printinterval = 5000
+                 if event.levelno >= format.ERROR:
+                     errors = errors + 1
+                     return_value = 1
+-- 
+2.20.1
 
-/Jacob
 
