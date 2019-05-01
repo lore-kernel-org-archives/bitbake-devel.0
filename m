@@ -1,58 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com
-	[209.85.128.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 0ED1C7D589
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com
+	[209.85.128.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 331107D574
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 May 2019 19:42:49 +0000 (UTC)
-Received: by mail-wm1-f67.google.com with SMTP id y197so311853wmd.0
+	Wed,  1 May 2019 22:09:02 +0000 (UTC)
+Received: by mail-wm1-f49.google.com with SMTP id q15so30221wmf.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 01 May 2019 12:42:51 -0700 (PDT)
+	Wed, 01 May 2019 15:09:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=6wF26vxKY9b8FUX9cb+LAw1ivHKkNi4zALBazO3wQ80=;
-	b=Pl4blIoysGef8ECvdMzYRZ8GdcLKsye+2ewK3z3t4OYC4Nnr++xtA0VSojOg0uMlQe
-	rJ8BvFrPidYLpIwuJBxVb+nmYH4XDxv+fm0xbUMWazzS3biujnJ+uuBrOHaW0NE99S+I
-	5w0esIV/cqW832OmdiZBbTygAkdJ5Rgjq2ZTY=
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=7Wfku+yJOqmRopumeUtHQ9kJ/i1wiFNusoMihUOnwLM=;
+	b=fzQuMdmofppoC3LTAUDplV4+peBhDI3PKP2LYCfjKNod6ceouk9eE8JNxnL+/8O5rC
+	sZijhTNGUr2dza4qmbDkcMl5ooC+LOFScqjQhBT3NLCEAzHSEJq+9EzOYYEJegAPCaF8
+	nYJiNJGjdVTzs54zJs780FxE3ZIQAO/pJ5KSk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=6wF26vxKY9b8FUX9cb+LAw1ivHKkNi4zALBazO3wQ80=;
-	b=Xgd5ojNBEXy6DtK0CGF4rELe6ldeNVP0+BTKe3bt6gaWuNl4JiS1Q4whi8dHqF0CNe
-	7rZxahQWK5dZn8joOVGpVNMYFe62AISGaqav9hPqXsmGcvtdmPm62svqTeiW6k94De+C
-	PGTtcXgRZ0t4nSlUZhFSYfHRW2FdWi3QXhVbZ3zuuritiD34d59a2Eoqp5kQIqVDOdW+
-	NfEy8qifH81tbTtJIiXzlO/MMMF6KfjmyG97ayTDvVi3k+uOlXtJL2ZZ+20FITCCA2Ju
-	/0lV/OuUxvefHqYGWSP7bszZ64AYbqZJN3caCXJr3difZKtufKltOwQ9RA3DY4ZeLG8K
-	xkUA==
-X-Gm-Message-State: APjAAAV71VZWlpeN3Jh1532nQT9hdnaIryku8+RPp+1pJRCcmyRIFbri
-	qKg35UzdR8rdmtRsTXEQDqUUCA==
-X-Google-Smtp-Source: APXvYqzbCY65udY04r39pky4No/k3rMgW+buZlP71Xm2xVro+j+pN8FDN8JR4RJyPpvzM3ZtMZzj2g==
-X-Received: by 2002:a1c:7514:: with SMTP id o20mr5249655wmc.39.1556739770811; 
-	Wed, 01 May 2019 12:42:50 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=7Wfku+yJOqmRopumeUtHQ9kJ/i1wiFNusoMihUOnwLM=;
+	b=HaSfMv+ERM6Hyg5v1EeBhtpKlWhhQk4Mp/a8lOrMQQxqctN2tbpXTwMTQ+ggzsNzZ8
+	qSsDQS9IFAIUpFrrazCTt/22rHDVNQ+ueyvP/i1XTWuZTVsqk9kzTxVNPI6wAkI8mwmt
+	q+5wmzVihxPFz60IpsBTscS6tcq6mKdHpsZLNmSS1NqLey0RwoteErtJLjm+PxdEmCQb
+	E/KDhNo+Hi4x89eMwaT0mzqI6Ba5AYY0i8KiHLjBRWG9QLQZ2ddiigHCNObkwx42xQW6
+	s2RJ5gBLcdcMKqAzYd8qKb691P2LCfx0P4JBBQsbMali1D+jdyNC+rp1qo+zzOdI+ihk
+	l+BQ==
+X-Gm-Message-State: APjAAAVGO9ujW8g6Pw09uZGyGftGKYUaMQoWbQ76V6Ae57S7E+kr/MH4
+	ZRx3h51toK79WK95bccuyQEBXXYOMpQ=
+X-Google-Smtp-Source: APXvYqxeKXOMRnBRFT6+mQwIdcUkuyj1P5ieKGG6ZbPx4+Gl2ekwaHnogNx9ZNKHUemolS0dyOPYUA==
+X-Received: by 2002:a1c:1f58:: with SMTP id f85mr48625wmf.17.1556748542340;
+	Wed, 01 May 2019 15:09:02 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	d1sm22123082wrb.61.2019.05.01.12.42.49
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Wed, 01 May 2019 12:42:49 -0700 (PDT)
-Message-ID: <4659e72f46cee86b62be445fc267bf2fae4f78b4.camel@linuxfoundation.org>
+	w17sm21862673wra.81.2019.05.01.15.09.00
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 01 May 2019 15:09:01 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Nicolas Dechesne <nicolas.dechesne@linaro.org>, "Burton, Ross"
-	<ross.burton@intel.com>
-Date: Wed, 01 May 2019 20:42:48 +0100
-In-Reply-To: <CAP71WjxDASA04Fz6Fd6ew2FQPZFbtU9gMFJKoUiYVmKUNkbyag@mail.gmail.com>
-References: <cover.1556186399.git.liezhi.yang@windriver.com>
-	<d37712258af9b6fedb9e1586ace28908bec88391.1556186399.git.liezhi.yang@windriver.com>
-	<9f8a038abf7b7eff75038ccef5f066bfd37e58f5.camel@linuxfoundation.org>
-	<0c45f88f-6056-2fa6-1db1-f7ce413ba0f3@windriver.com>
-	<CAPbeDCnOwvCVx-okYiXU0CXjWLxDGBX7xQc4ij+_iGgd2t-T-w@mail.gmail.com>
-	<CAJTo0LapxS3a00e31b9ur32x4XtNPTWUSmw4i=_x9AjbLuECjQ@mail.gmail.com>
-	<CAP71WjxDASA04Fz6Fd6ew2FQPZFbtU9gMFJKoUiYVmKUNkbyag@mail.gmail.com>
-User-Agent: Evolution 3.32.1-2 
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  1 May 2019 23:09:00 +0100
+Message-Id: <20190501220900.26250-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 2/2] bitbake: build.py: check dependendent task for addtask
+Subject: [PATCH] build: Disable warning about dependent tasks for now
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -65,43 +56,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 May 2019 19:42:50 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 01 May 2019 22:09:02 -0000
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2019-05-01 at 18:48 +0200, Nicolas Dechesne wrote:
-> On Wed, May 1, 2019 at 5:30 PM Burton, Ross <ross.burton@intel.com>
-> wrote:
-> > On Wed, 1 May 2019 at 11:51, Jacob Kroon <jacob.kroon@gmail.com>
-> > wrote:
-> > > I'm getting a lot of these warnings after removing tmp/ and
-> > > rebuilding
-> > > my image from sstate cache.
-> > > FWIW I use rm_work.bbclass, and regularly use the
-> > > sstate-cache-management,sh script to prune old cache.
-> > 
-> > There's a patch I hacked up in master-next that shows where these
-> > warnings are coming from.  Yes, this patch produces two warnings
-> > per
-> > recipe with rm_work enabled.
-> 
-> argh... i hit the same issue and came up with the exact same
-> conclusion.. i should have checked the mailing list earlier today ;)
-> 
-> I am getting thousands of warnings like that with rm_work. I had
-> modified bitbake so that it shows the 'task' name like Ross, in ().
+This breaks with rm_work so disable the warning until we find a better
+solution (and change the test accordingly too).
 
-I suspect we're going to need to rethink that patch, and/or perhaps
-rm_work...
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/build.py       | 4 ++--
+ lib/bb/tests/parse.py | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-I did have concerns about it but was assured it was widely tested. We
-also probably need an rm_work test case on the autobuilder (need a bug
-for that so we don't forget?).
-
-Cheers,
-
-Richard
-
-
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 8ad9f5de2a..a228b05ddd 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -818,8 +818,8 @@ def add_tasks(tasklist, d):
+         if 'deps' in flags:
+             for dep in flags['deps']:
+                 # Check and warn for "addtask task after foo" while foo does not exist
+-                if not dep in tasklist:
+-                    bb.warn('%s: dependent task %s for %s does not exist' % (d.getVar('PN'), dep, task))
++                #if not dep in tasklist:
++                #    bb.warn('%s: dependent task %s for %s does not exist' % (d.getVar('PN'), dep, task))
+                 dep = d.expand(dep)
+                 task_deps['parents'][task].append(dep)
+ 
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index aa7adc40f2..747fc35fc2 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -203,5 +203,5 @@ deltask do_fetch do_patch
+         self.assertTrue("addtask contained multiple 'after' keywords" in stdout)
+         self.assertTrue('addtask ignored: " do_patch"' in stdout)
+         self.assertTrue('deltask ignored: " do_patch"' in stdout)
+-        self.assertTrue('dependent task do_foo for do_patch does not exist' in stdout)
++        #self.assertTrue('dependent task do_foo for do_patch does not exist' in stdout)
+ 
+-- 
+2.20.1
 
 
