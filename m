@@ -1,49 +1,52 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com
-	[209.85.128.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 331107D574
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
+	[209.85.128.66])
+	by mail.openembedded.org (Postfix) with ESMTP id A97227D8E9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 May 2019 22:09:02 +0000 (UTC)
-Received: by mail-wm1-f49.google.com with SMTP id q15so30221wmf.3
+	Thu,  2 May 2019 09:11:57 +0000 (UTC)
+Received: by mail-wm1-f66.google.com with SMTP id j13so1733846wmh.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 01 May 2019 15:09:03 -0700 (PDT)
+	Thu, 02 May 2019 02:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=7Wfku+yJOqmRopumeUtHQ9kJ/i1wiFNusoMihUOnwLM=;
-	b=fzQuMdmofppoC3LTAUDplV4+peBhDI3PKP2LYCfjKNod6ceouk9eE8JNxnL+/8O5rC
-	sZijhTNGUr2dza4qmbDkcMl5ooC+LOFScqjQhBT3NLCEAzHSEJq+9EzOYYEJegAPCaF8
-	nYJiNJGjdVTzs54zJs780FxE3ZIQAO/pJ5KSk=
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=xIEQtel5Ok00SgK3NFzXB4kM1aaTZPRc5I3/YqqO3gA=;
+	b=MWTl8s7yre6lVU/ume/OvND7r5Le3ubC263MysreVbT3+HhLm/Vwr+rS3c2cbG+q+J
+	FPq9R1vuO7XXEw6+ANUwc3mlVpm3JSuRpwWYViBaW7C7wD0exaL+51jf2X04wxEEcqNo
+	wwsd4Ph1NBTJPMW8yEG/ngpLRO5VaZBAH1Wl0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=7Wfku+yJOqmRopumeUtHQ9kJ/i1wiFNusoMihUOnwLM=;
-	b=HaSfMv+ERM6Hyg5v1EeBhtpKlWhhQk4Mp/a8lOrMQQxqctN2tbpXTwMTQ+ggzsNzZ8
-	qSsDQS9IFAIUpFrrazCTt/22rHDVNQ+ueyvP/i1XTWuZTVsqk9kzTxVNPI6wAkI8mwmt
-	q+5wmzVihxPFz60IpsBTscS6tcq6mKdHpsZLNmSS1NqLey0RwoteErtJLjm+PxdEmCQb
-	E/KDhNo+Hi4x89eMwaT0mzqI6Ba5AYY0i8KiHLjBRWG9QLQZ2ddiigHCNObkwx42xQW6
-	s2RJ5gBLcdcMKqAzYd8qKb691P2LCfx0P4JBBQsbMali1D+jdyNC+rp1qo+zzOdI+ihk
-	l+BQ==
-X-Gm-Message-State: APjAAAVGO9ujW8g6Pw09uZGyGftGKYUaMQoWbQ76V6Ae57S7E+kr/MH4
-	ZRx3h51toK79WK95bccuyQEBXXYOMpQ=
-X-Google-Smtp-Source: APXvYqxeKXOMRnBRFT6+mQwIdcUkuyj1P5ieKGG6ZbPx4+Gl2ekwaHnogNx9ZNKHUemolS0dyOPYUA==
-X-Received: by 2002:a1c:1f58:: with SMTP id f85mr48625wmf.17.1556748542340;
-	Wed, 01 May 2019 15:09:02 -0700 (PDT)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	w17sm21862673wra.81.2019.05.01.15.09.00
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 01 May 2019 15:09:01 -0700 (PDT)
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=xIEQtel5Ok00SgK3NFzXB4kM1aaTZPRc5I3/YqqO3gA=;
+	b=AeNvs1pNsOuj7U+RpZjorY4kc3URW2KfFWMdmwpVTAVGSJWqfBxsmPizit9dWN1hTh
+	JHJc8Pi8ct7p+zFywx7uQSi0pbXFLupoB+ygNfhT3A06v1mOTlagfYa8IQxgCGbYjMQW
+	lt7JX+JUDBDShTKo9MHI3jIH+/5/KnCcghhKffLgyj8zDPSkia2qlRMRZDnhOEH85bzn
+	1WiNl7/1QI4ztenr/yKo1GG9Z+sfqVUl0X4CM/NfzZtzDxagWxsD5CM7FSPwCyrYkxog
+	Z1j5Il7FMFZODsEPNKHCLXQal8NH8aTJKLnV+hMwk4OHzy5mzuAs5PEwNwuK7Yxz8D71
+	7hSA==
+X-Gm-Message-State: APjAAAVpKKRNZbYLjgW2gktra1K/QELtWmu/N3eA24ub4p1z07MyPoG0
+	R0e9iVy5OIle0k6D+EL3tNmLDfmT1GA=
+X-Google-Smtp-Source: APXvYqwy5XNO3kyWoFFyZtq9SrMhZpdhslbhmNCgP/XeoUsMHj8FUHUCm/9yeNh/Eull551Vyo4hzA==
+X-Received: by 2002:a7b:c087:: with SMTP id r7mr1589036wmh.137.1556788318251; 
+	Thu, 02 May 2019 02:11:58 -0700 (PDT)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id n6sm7826370wmn.48.2019.05.02.02.11.56
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Thu, 02 May 2019 02:11:57 -0700 (PDT)
+Message-ID: <60cd51193b9ddc4614c063e36af9372dbcc6dd60.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 May 2019 23:09:00 +0100
-Message-Id: <20190501220900.26250-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+To: Mark Hatle <mark.hatle@windriver.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 02 May 2019 10:11:55 +0100
+In-Reply-To: <686686b7-76a7-92c8-b21f-4ddf76e24550@windriver.com>
+References: <20190501111859.5699-1-richard.purdie@linuxfoundation.org>
+	<20190501111859.5699-4-richard.purdie@linuxfoundation.org>
+	<686686b7-76a7-92c8-b21f-4ddf76e24550@windriver.com>
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Subject: [PATCH] build: Disable warning about dependent tasks for now
+Subject: Re: [PATCH 4/6] bitbake: Drop duplicate license boilerplace text
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,45 +59,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 May 2019 22:09:02 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 02 May 2019 09:11:57 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This breaks with rm_work so disable the warning until we find a better
-solution (and change the test accordingly too).
+On Wed, 2019-05-01 at 08:44 -0500, Mark Hatle wrote:
+> On 5/1/19 6:18 AM, Richard Purdie wrote:
+> > With the introduction of SPDX-License-Identifier headers, we don't
+> > need a ton
+> > of header boilerplate in every file. Simplify the files and rely on
+> > the top
+> > level for the full licence text.
+> 
+> I've actually been told the opposite by people.  That you still need
+> the boilerplate text for various jurisdiction, as the SPDX-License-
+> Identifier may not meet regional copyright/license requirements.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/build.py       | 4 ++--
- lib/bb/tests/parse.py | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Its good enough for u-boot, its also good enough for SPDX (e.g. 
+https://spdx.org/sites/cpstandard/files/pages/files/using_spdx_license_list_short_identifiers.pdf
+).
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 8ad9f5de2a..a228b05ddd 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -818,8 +818,8 @@ def add_tasks(tasklist, d):
-         if 'deps' in flags:
-             for dep in flags['deps']:
-                 # Check and warn for "addtask task after foo" while foo does not exist
--                if not dep in tasklist:
--                    bb.warn('%s: dependent task %s for %s does not exist' % (d.getVar('PN'), dep, task))
-+                #if not dep in tasklist:
-+                #    bb.warn('%s: dependent task %s for %s does not exist' % (d.getVar('PN'), dep, task))
-                 dep = d.expand(dep)
-                 task_deps['parents'][task].append(dep)
- 
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index aa7adc40f2..747fc35fc2 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -203,5 +203,5 @@ deltask do_fetch do_patch
-         self.assertTrue("addtask contained multiple 'after' keywords" in stdout)
-         self.assertTrue('addtask ignored: " do_patch"' in stdout)
-         self.assertTrue('deltask ignored: " do_patch"' in stdout)
--        self.assertTrue('dependent task do_foo for do_patch does not exist' in stdout)
-+        #self.assertTrue('dependent task do_foo for do_patch does not exist' in stdout)
- 
--- 
-2.20.1
+Can you point at a jurisdiction where its a problem?
+
+We have the top level LICENSE* files and they explicitly reference the
+identifier. The files are a collective, with modern source control and
+release tarballs or package management they work as a unit.
+
+The copyright situation is unchanged as the copyright remains stated in
+each file.
+
+I think the benefits in cleaning this up outweigh potential risk,
+particularly if we move as a wider community to establish this as the
+standard (and it does make sense to me to do and support that).
+
+Cheers,
+
+Richard
+
 
 
