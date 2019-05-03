@@ -1,54 +1,52 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 367116D56C
+Return-Path: <rpjday@crashcourse.ca>
+X-Greylist: delayed 1192 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 03 May 2019 18:47:18 UTC
+Received: from somersetfoodbank.org (cpanel4.indieserve.net [199.212.143.9])
+	by mail.openembedded.org (Postfix) with ESMTP id 515736D548
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  2 May 2019 14:59:19 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x42ExJXu021430
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 2 May 2019 07:59:19 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.439.0;
-	Thu, 2 May 2019 07:59:19 -0700
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	<bitbake-devel@lists.openembedded.org>
-References: <20190501111859.5699-1-richard.purdie@linuxfoundation.org>
-	<20190501111859.5699-4-richard.purdie@linuxfoundation.org>
-	<686686b7-76a7-92c8-b21f-4ddf76e24550@windriver.com>
-	<60cd51193b9ddc4614c063e36af9372dbcc6dd60.camel@linuxfoundation.org>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <d7d1d53d-5f20-a4e6-8acd-793821acc341@windriver.com>
-Date: Thu, 2 May 2019 09:59:17 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.6.1
+	Fri,  3 May 2019 18:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crashcourse.ca; s=default;
+	h=Content-Type:MIME-Version:Message-ID:Subject:
+	To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=VJRbUK8w9Z+DFJtv9fQB+9dgRXOOBarM/h6TyFQc5Q0=;
+	b=ZrE8TiyMXZjD7bLYlQ3/8t00Is
+	8Usr4CbmPqL9N++/5/c+QNcJXaLIDMq60j4mvhttM8sPO2cuJxP2PvzEOjCdQAbgU8mJn3n4eyodA
+	JIGNaShKcaT+GEjvmpXm8uzkCBw5pFUlCFVnYvme7NxxFNy6wd7HMU+jwEoVJNn0lDIWkL9fn/3TM
+	cCaS3/bn02jYh90yHtPs6VVxFgxf08pNJkhWNELEji2dXf6XUV3rLDqjpVFzKYi6xrkrkgs7xpp2d
+	ZI8RBh7mq2eBGjSEVF0X2wRr4utv//2eAud32A1gjZXwljnC3iM5v8Zxc59Z6TByXWW56M2h4qQBB
+	WLJBeiSw==;
+Received: from [72.142.126.219] (port=43290 helo=localhost.localdomain)
+	by cpanel4.indieserve.net with esmtpsa
+	(TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256) (Exim 4.91)
+	(envelope-from <rpjday@crashcourse.ca>) id 1hMcu5-0002kl-LF
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 03 May 2019 14:27:26 -0400
+Date: Fri, 3 May 2019 14:27:25 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@localhost.localdomain
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.LFD.2.21.1905031426110.10665@localhost.localdomain>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <60cd51193b9ddc4614c063e36af9372dbcc6dd60.camel@linuxfoundation.org>
-Subject: Re: [PATCH 4/6] bitbake: Drop duplicate license boilerplace text
+X-OutGoing-Spam-Status: No, score=-0.2
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel4.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel4.indieserve.net: authenticated_id:
+	rpjday+crashcourse.ca/only user confirmed/virtual account not
+	confirmed
+X-Authenticated-Sender: cpanel4.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: [PATCH] help: reword "runall" entries to refer to a TASK
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,48 +59,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 02 May 2019 14:59:19 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 03 May 2019 18:47:19 -0000
+Content-Type: text/plain; charset=US-ASCII
 
-On 5/2/19 4:11 AM, Richard Purdie wrote:
-> On Wed, 2019-05-01 at 08:44 -0500, Mark Hatle wrote:
->> On 5/1/19 6:18 AM, Richard Purdie wrote:
->>> With the introduction of SPDX-License-Identifier headers, we don't
->>> need a ton
->>> of header boilerplate in every file. Simplify the files and rely on
->>> the top
->>> level for the full licence text.
->>
->> I've actually been told the opposite by people.  That you still need
->> the boilerplate text for various jurisdiction, as the SPDX-License-
->> Identifier may not meet regional copyright/license requirements.
-> 
-> Its good enough for u-boot, its also good enough for SPDX (e.g. 
-> https://spdx.org/sites/cpstandard/files/pages/files/using_spdx_license_list_short_identifiers.pdf
-> ).
-> 
-> Can you point at a jurisdiction where its a problem?
+Rewording argument to the word "TASK" should be self-evident.
 
-I do not have that information.  I was just repeating what I've been told in the
-past from various sources, including licensing talks at ELC-E.
+Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
 
-> We have the top level LICENSE* files and they explicitly reference the
-> identifier. The files are a collective, with modern source control and
-> release tarballs or package management they work as a unit.
-> 
-> The copyright situation is unchanged as the copyright remains stated in
-> each file.
-> 
-> I think the benefits in cleaning this up outweigh potential risk,
-> particularly if we move as a wider community to establish this as the
-> standard (and it does make sense to me to do and support that).
-> 
-> Cheers,
-> 
-> Richard
-> 
-> 
+---
 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
+index 02058a6f..74b74bff 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
+@@ -573,10 +573,10 @@
+                              Writes the event log of the build to a bitbake event
+                              json file. Use '' (empty string) to assign the name
+                              automatically.
+-       --runall=RUNALL       Run the specified task for any recipe in the taskgraph
++       --runall=TASK         Run the specified task for any recipe in the taskgraph
+                              of the specified target (even if it wouldn't otherwise
+                              have run).
+-       --runonly=RUNONLY     Run only the specified task within the taskgraph of
++       --runonly=TASK        Run only the specified task within the taskgraph of
+                              the specified targets (and any task dependencies those
+                              tasks may have).
+                 </literallayout>
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                         http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
