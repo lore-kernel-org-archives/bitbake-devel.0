@@ -1,52 +1,50 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
-	[209.85.221.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 76D137DFE4
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com
+	[209.85.210.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 6B6D66C216
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 12 May 2019 08:28:06 +0000 (UTC)
-Received: by mail-wr1-f65.google.com with SMTP id w12so11928303wrp.2
+	Tue, 14 May 2019 04:40:32 +0000 (UTC)
+Received: by mail-pf1-f194.google.com with SMTP id u17so8398059pfn.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 12 May 2019 01:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=ygM9FApa2jfIgVoTTzdGGYvg4cHATaeF+UCHMH1F83k=;
-	b=b9fJ5m4nKJwCKrhmQxbbNkT/w3mb1c9vMKvVz6OGwERg6sOzTxigoRaP0dFVC+buXC
-	kr3eCQjKlTxtybnA+ngGqIOsHM0LqARYdWhNY0EUz/nylxxFU5AmDG9Sq8p+Xagjngm4
-	cIDuRX5glWGUltm684ui09V5gzILsAhlseakE=
+	Mon, 13 May 2019 21:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id;
+	bh=M5fM1RvAJ1evn5U0qgYblCTJBMOxkQ4fJ5QdrfhK4HA=;
+	b=AAE2pya66WCONoHGJHvdqUubSdQUK/G61CYc8Trlu54Y28uMRGx+rgdjyqfOhma8pF
+	9vyWOZbM+mNf2+Ry6KflzdcS4Cb/BLbWuAobrdTj1CgDHDOwYZxkL7dSM5OfehfZEG11
+	ZwL4sUHkbEUGeBnZU02nffe3tQC+wVm0YMD81oPATM6IyM7bilXBzZ8SCTxuGTsEsV4O
+	0jqbUJ7uyutE5MlHYcWxzBGOLMqOAyrbcGYDxhX6Zcu8+4L9Q9e+L6RBpsy8ZYuGSS1b
+	c4oCLM6tOoO88mwhf5QYQDOXynUkLsYyyZtEo+B6BTOBML7kOGLU+X0TUrLRQF2LfjM6
+	O4gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=ygM9FApa2jfIgVoTTzdGGYvg4cHATaeF+UCHMH1F83k=;
-	b=IB9tgRqChB3L5ZCJ0fL7pv6ifDpZ1HYXGueX4vRMZ1+rYaX/WQ+iRta5k6Kgut87cC
-	N6Mfqq61pju26A/0lWUifQoDm7jaT66vu62FIL6J8U/n9tN3FmhvW+72SajPefNr1zlc
-	NktZCweuCg2AmjmWFP3nPB/hEwoeq5Rj6jBIK3cKtWlF7uCulPU4k8FWZDquIHy5xl04
-	hjG0rFNvODc6vxV+lzd49mFx/6QHSfWK9MMQBcvV+xGzOobk6XSMBwafvsFFB33HhWVj
-	h6yoUA1ZGjaGrkIeyFd6PdGJnVuwBwXFU8iCS3y2Mg3pawSGjlMHGhwBTMUUO5WXViHN
-	ct2g==
-X-Gm-Message-State: APjAAAUc0syr8p0WcKQwBf9/19Qz4Cijnr3YOiEtvR9/u52A9x/P8NN4
-	yn4xB0izMoY7NK48AbauhbeFsH5Ej44=
-X-Google-Smtp-Source: APXvYqwzh6i+hC6qJiOZ8vdMAvqJbyD5YUyeYCIuZlgexRdpKdqf8PTgw9yWIUkE3UZ79lzW+WEbzQ==
-X-Received: by 2002:adf:db89:: with SMTP id u9mr14088239wri.190.1557649687222; 
-	Sun, 12 May 2019 01:28:07 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=M5fM1RvAJ1evn5U0qgYblCTJBMOxkQ4fJ5QdrfhK4HA=;
+	b=BD1gJsa3QIZS6eJW5ZfjzRhvhrPPnkBGIiO+hpud8+n04dHl8WMAvmuGNx64pecDVP
+	GlejmqnIB4LnnlaCR/zO5oQ/y7KKLTV/+lpxC06hh3yobfpBQQ6oVdIBqZG/FOOjwSve
+	v6DQ2bcJm2FTMjSYZutjzjoJhqofeeEYYLhK2f61054Yu8PVGCNoHi9eGXN5xQhAFWiD
+	lTeCIqcfyMHSEjh3PvyaefWO16gpr+Aalliw0M3NRiB6hjVkAqYR5E//icm6sD1Nnm4a
+	cKK7icPhWCGrMEJnCce94RE3Xska48aQrIL4YHIHznhuztEJB1Q1QBMvKNLjrnqfbAhS
+	n1xA==
+X-Gm-Message-State: APjAAAW0oUWN0fbhVUjZkP6w4knfksiJzPw0EfC7Lv6ZoYjt269LnALU
+	xNdb3BWy4mLQ9AFj+yJ+lu6oUfiT
+X-Google-Smtp-Source: APXvYqxbUoRILXfaEqaw8RMHfZLuWpPIyJFBJzCjNMPvTogWw0IU4tWkBRsgOfE/Rmt4ajNZokTbMA==
+X-Received: by 2002:a62:68c4:: with SMTP id
+	d187mr20800026pfc.245.1557808833241; 
+	Mon, 13 May 2019 21:40:33 -0700 (PDT)
+Received: from akuster-ThinkPad-T460s.mvista.com
+	([2601:202:4180:c33:d909:eb3d:d2ab:fd1d])
 	by smtp.gmail.com with ESMTPSA id
-	z74sm17032075wmc.2.2019.05.12.01.28.05
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Sun, 12 May 2019 01:28:06 -0700 (PDT)
-Message-ID: <850ae48669455c75cf34b2306f01add428aa62c0.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sun, 12 May 2019 09:28:05 +0100
-In-Reply-To: <ac4edd962cb6b4831cb85cd731d2d2a810c62503.1557388944.git.liezhi.yang@windriver.com>
-References: <cover.1557388944.git.liezhi.yang@windriver.com>
-	<ac4edd962cb6b4831cb85cd731d2d2a810c62503.1557388944.git.liezhi.yang@windriver.com>
-User-Agent: Evolution 3.32.1-2 
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/1] bitbake: cookerdata: Avoid double exceptions for bb.fatal()
+	132sm18371323pga.79.2019.05.13.21.40.32
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 13 May 2019 21:40:32 -0700 (PDT)
+From: Armin Kuster <akuster808@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 13 May 2019 21:40:26 -0700
+Message-Id: <cover.1557808320.git.akuster808@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 0/2] bitbake 1.42 next patch review
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,60 +57,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 12 May 2019 08:28:06 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 14 May 2019 04:40:32 -0000
 
-On Thu, 2019-05-09 at 16:03 +0800, Robert Yang wrote:
-> The bb.fatal() raises BBHandledException() which causes double exceptions,
-> e.g.:
-> 
-> Add 'HOSTTOOLS += "hello"' to conf/local.conf:
-> $ bitbake -p
-> [snip]
-> During handling of the above exception, another exception occurred:
-> [snip]
-> ERROR: The following required tools (as specified by HOSTTOOLS) appear to be unavailable in PATH, please install them in order to proceed:
->   hello
-> 
-> Use "raise" rather than "raise bb.BBHandledException" to fix the double
-> exceptions.
-> 
-> [YOCTO #13267]
-> 
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
->  bitbake/lib/bb/cookerdata.py | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/bitbake/lib/bb/cookerdata.py
-> b/bitbake/lib/bb/cookerdata.py
-> index f8ae410..585edc5 100644
-> --- a/bitbake/lib/bb/cookerdata.py
-> +++ b/bitbake/lib/bb/cookerdata.py
-> @@ -301,7 +301,9 @@ class CookerDataBuilder(object):
->              if multiconfig:
->                  bb.event.fire(bb.event.MultiConfigParsed(self.mcdata
-> ), self.data)
->  
-> -        except (SyntaxError, bb.BBHandledException):
-> +        except bb.BBHandledException:
-> +            raise
-> +        except SyntaxError:
->              raise bb.BBHandledException
->          except bb.data_smart.ExpansionError as e:
->              logger.error(str(e))
+Please review these changes for the next 1.42 update
 
-Hi Robert,
+The following changes since commit cd8d4ec8ec6650b756dafe750436528f736b3938:
 
-This doesn't sound right, where is this exception being printed a
-second time? The point of "BBHandledException" is to say "don't print
-any further traces for this exception". If this fixes the bug, it means
-something somewhere is printing a trace for a second time when it
-should pass through BBHandledException?
+  bitbake-user-manual: Added section on modifying variables (2019-04-23 16:33:48 +0100)
 
-Cheers,
+are available in the git repository at:
 
-Richard
+  git://git.openembedded.org/bitbake-contrib stable/1.42-nmut
+  http://cgit.openembedded.org/bitbake-contrib /log/?h=stable/1.42-nmut
+
+David Reyna (1):
+  toaster: update to Warrior
+
+Naveen Saini (1):
+  bitbake: fetch2/git: git-lfs check
+
+ lib/bb/fetch2/git.py                 | 25 +++++++++++++++++++++++++
+ lib/toaster/orm/fixtures/oe-core.xml | 12 ++++++------
+ lib/toaster/orm/fixtures/poky.xml    | 18 +++++++++---------
+ 3 files changed, 40 insertions(+), 15 deletions(-)
+
+-- 
+2.7.4
 
 
