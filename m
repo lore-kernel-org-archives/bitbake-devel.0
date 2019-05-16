@@ -1,22 +1,23 @@
 Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 3886B7D32D
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id B08277DFD6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 May 2019 10:46:18 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x4GAkHKL022900
+	Thu, 16 May 2019 10:46:49 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x4GAkEUY024465
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 16 May 2019 03:46:17 -0700 (PDT)
-Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.439.0;
-	Thu, 16 May 2019 03:46:17 -0700
+	Thu, 16 May 2019 03:46:25 -0700
+Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.439.0;
+	Thu, 16 May 2019 03:46:04 -0700
 From: Mark Hatle <mark.hatle@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 16 May 2019 06:46:16 -0400
-Message-ID: <20190516104616.154845-1-mark.hatle@windriver.com>
+Date: Thu, 16 May 2019 06:46:03 -0400
+Message-ID: <20190516104603.154796-1-mark.hatle@windriver.com>
 X-Mailer: git-send-email 2.16.0.rc2
 MIME-Version: 1.0
-Subject: [PATCH v2] svn.py: Stop SVN from directly pulling from an external layer w/o fetcher
+Subject: [PATCH] svn.py: Stop SVN from directly pulling from an external layer w/o fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,7 +30,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 May 2019 10:46:18 -0000
+X-List-Received-Date: Thu, 16 May 2019 10:46:49 -0000
 Content-Type: text/plain
 
 Add a new option to the svn fetcher url "externals=allowed".  This will allow
