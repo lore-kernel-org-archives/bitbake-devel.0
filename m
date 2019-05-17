@@ -1,23 +1,52 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id B08277DFD6
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
+	[209.85.128.65])
+	by mail.openembedded.org (Postfix) with ESMTP id EB8E67E094
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 May 2019 10:46:49 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x4GAkEUY024465
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 16 May 2019 03:46:25 -0700
-Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.439.0;
-	Thu, 16 May 2019 03:46:04 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 16 May 2019 06:46:03 -0400
-Message-ID: <20190516104603.154796-1-mark.hatle@windriver.com>
-X-Mailer: git-send-email 2.16.0.rc2
+	Fri, 17 May 2019 06:16:32 +0000 (UTC)
+Received: by mail-wm1-f65.google.com with SMTP id y3so5706068wmm.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 16 May 2019 23:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=Hkv1F44MTeszXz1r/7Ky/67q7xi1zaZQQKH39K1ZKkc=;
+	b=JUscEEfq7kCDiw6Srg2vXkXEcqA7lFcNWcMM4Cp2W0udj/4aoQejb2aHv5kO89frAp
+	so3HOcXyoJNWuPAcmddhrpMifdcYT99zWqOCGktRyO5hBf/rVmkYlzu5GQxgi/884Y+L
+	095Hl4bEilIIFAoeg3Ke3EuuwEPfVEBhOl9zU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=Hkv1F44MTeszXz1r/7Ky/67q7xi1zaZQQKH39K1ZKkc=;
+	b=B49PfM56zjRe4FC4mguiiFTGhs49a07eDgkqFMcSNn0KKYSAwoRDOBtPdiNsEKGDxV
+	twKICh/KyHGpijvlOHz4fnMnonubQ0wxDq4NMso1LBDe0CqNGnfYmiwqD453MYuXzIcR
+	9SOBSrZ9EjdhmwtgWMdw/GMH74oHRcRdG0FFxT8IdJWYedZzcYvUgC35ncZ+/5VHq2jU
+	vML/yVeY9CTIUWgMW7EaXTu8kND3gURHWbTcSZJvucj6VoBC2Yc0SFUDYP14tqSHAwVo
+	xwBc+2afqTnOgK+nGIvBKl78MPSs6t5tomUCBaYqz7gHLyftpfck9QXUKSes/eCJ5msp
+	kytA==
+X-Gm-Message-State: APjAAAV3HE6ruFeUqW7Vg5mFB4L4ojA6bbo83Hx246/eaTVYUmLSDd/7
+	r1bkqdrCWx4anXEUDWiErfHYF7dGvOs=
+X-Google-Smtp-Source: APXvYqxp5+ldihFcjOaZjMHDqZPOWMuHirdnKqhg0TxhW5qzJq32WHET/fNiX9NRvebL6xXhic6cBA==
+X-Received: by 2002:a05:600c:2289:: with SMTP id
+	9mr16236165wmf.106.1558073793710; 
+	Thu, 16 May 2019 23:16:33 -0700 (PDT)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	c14sm1347472wrt.45.2019.05.16.23.16.32
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Thu, 16 May 2019 23:16:33 -0700 (PDT)
+Message-ID: <bc82f26011bc7642e1fef6e8e2b52334a263fdb0.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Mark Hatle <mark.hatle@windriver.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Fri, 17 May 2019 07:16:31 +0100
+In-Reply-To: <20190516104616.154845-1-mark.hatle@windriver.com>
+References: <20190516104616.154845-1-mark.hatle@windriver.com>
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Subject: [PATCH] svn.py: Stop SVN from directly pulling from an external layer w/o fetcher
+Subject: Re: [PATCH v2] svn.py: Stop SVN from directly pulling from an external layer w/o fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,160 +59,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 May 2019 10:46:49 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 17 May 2019 06:16:33 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Add a new option to the svn fetcher url "externals=allowed".  This will allow
-a user to enable svn co w/ externals.  However, this does avoid the fetcher,
-network access and mirror systems.
+On Thu, 2019-05-16 at 06:46 -0400, Mark Hatle wrote:
+> Add a new option to the svn fetcher url "externals=allowed".  This will allow
+> a user to enable svn co w/ externals.  However, this does avoid the fetcher,
+> network access and mirror systems.
+> 
+> By default we no longer allow externals in the checkout.  This ensures a
+> deterministic download.  The system does attempt to identify SVN repos that
+> have externals enabled, and will warn the user.  It is up to the user to
+> determine if these are necessary for the recipe.  They may disable the warning
+> by adding "externals=nowarn" to the url.
+> 
+> In the future we would like to parse this list and see if the items are already
+> in the SRC_URI for that recipe, but with SVN being in limited use these days
+> that extra work is likely not worth the trouble.
+> 
+> Add test cases that generated a local SVN tree, with an external source
+> set to github bitbake in svn format.  One test case checks that externals are
+> ignored, and one checks that they in downloaded.
+> 
+> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+> ---
+> v2:
+>  Refactored the test case to use --non-interactive option to try to avoid
+>  the controlling terminal failure.
 
-By default we no longer allow externals in the checkout.  This ensures a
-deterministic download.  The system does attempt to identify SVN repos that
-have externals enabled, and will warn the user.  It is up to the user to
-determine if these are necessary for the recipe.  They may disable the warning
-by adding "externals=nowarn" to the url.
+I think this is working better but it leaves us with a second issue,
+not all our autobuilder workers have subversion installed:
 
-In the future we would like to parse this list and see if the items are already
-in the SRC_URI for that recipe, but with SVN being in limited use these days
-that extra work is likely not worth the trouble.
+https://autobuilder.yoctoproject.org/typhoon/#/builders/80/builds/177
+https://autobuilder.yoctoproject.org/typhoon/#/builders/86/builds/176
+https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/175
 
-Add test cases that generated a local SVN tree, with an external source
-set to github bitbake in svn format.  One test case checks that externals are
-ignored, and one checks that they in downloaded.
+(a pass: 
+https://autobuilder.yoctoproject.org/typhoon/#/builders/79/builds/180)
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
----
-v2:
- Refactored the test case to use --non-interactive option to try to avoid
- the controlling terminal failure.
+I did specifically test on debian 9 where we saw the problem last time
+and that issue is resolved and passes now.
 
- Update the warning message to give more information, as well as a way to
- disable the message if the recipe has already verified it is ok.
+The question now is whether we want to install subversion on all our
+workers, whether we download and install some kind of standalone test
+tarball for this test or whether we disable the test by default...
 
-v1:
- This was done in response to the patch from Krzysztof Zawadzki and the resulting
- discussion to make this the default instead of optional.
+Cheers,
 
- lib/bb/fetch2/svn.py  | 19 +++++++++++++++
- lib/bb/tests/fetch.py | 67 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 86 insertions(+)
+Richard
 
-diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
-index baeb0e7..59ce931 100644
---- a/lib/bb/fetch2/svn.py
-+++ b/lib/bb/fetch2/svn.py
-@@ -91,6 +91,13 @@ class Svn(FetchMethod):
-             svncmd = "%s log --limit 1 %s %s://%s/%s/" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module)
-         else:
-             suffix = ""
-+
-+            # externals may be either 'allowed' or 'nowarn', but not both.  Allowed
-+            # will not issue a warning, but will log to the debug buffer what has likely
-+            # been downloaded by SVN.
-+            if not ("externals" in ud.parm and ud.parm["externals"] == "allowed"):
-+                options.append("--ignore-externals")
-+
-             if ud.revision:
-                 options.append("-r %s" % ud.revision)
-                 suffix = "@%s" % (ud.revision)
-@@ -136,6 +143,18 @@ class Svn(FetchMethod):
-                 bb.fetch2.check_network_access(d, svnfetchcmd, ud.url)
-                 runfetchcmd(svnfetchcmd, d, workdir=ud.pkgdir)
- 
-+            if not ("externals" in ud.parm and ud.parm["externals"] == "nowarn"):
-+                # Warn the user if this had externals (won't catch them all)
-+                output = runfetchcmd("svn propget svn:externals", d, workdir=ud.moddir)
-+                if output:
-+                    if "--ignore-externals" in svnfetchcmd.split():
-+                        bb.warn("%s contains svn:externals." % ud.url)
-+                        bb.warn("These should be added to the recipe SRC_URI as necessary.")
-+                        bb.warn("svn fetch has ignored externals:\n%s" % output)
-+                        bb.warn("To disable this warning add ';externals=nowarn' to the url.")
-+                    else:
-+                        bb.debug(1, "svn repository has externals:\n%s" % output)
-+
-             scmdata = ud.parm.get("scmdata", "")
-             if scmdata == "keep":
-                 tar_flags = ""
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 6bdf041..803dc6b 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -991,6 +991,73 @@ class FetcherNetworkTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(repo_path, 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c/deps/ctest/README.md')), msg='Missing submodule checkout')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c/deps/testrunner/readme.md')), msg='Missing submodule checkout')
- 
-+class SVNTest(FetcherTest):
-+
-+    def setUp(self):
-+        """ Create a local repository """
-+
-+        super(SVNTest, self).setUp()
-+
-+        # Create something we can fetch
-+        src_dir = tempfile.mkdtemp(dir=self.tempdir,
-+                                   prefix='svnfetch_srcdir_')
-+        src_dir = os.path.abspath(src_dir)
-+        bb.process.run("echo readme > README.md", cwd=src_dir)
-+
-+        # Store it in a local SVN repository
-+        repo_dir = tempfile.mkdtemp(dir=self.tempdir,
-+                                   prefix='svnfetch_localrepo_')
-+        repo_dir = os.path.abspath(repo_dir)
-+        bb.process.run("svnadmin create project", cwd=repo_dir)
-+
-+        self.repo_url = "file://%s/project" % repo_dir
-+        bb.process.run("svn import --non-interactive -m 'Initial import' %s %s/trunk" % (src_dir, self.repo_url),
-+                       cwd=repo_dir)
-+
-+        bb.process.run("svn co %s svnfetch_co" % self.repo_url, cwd=self.tempdir)
-+        # Github will emulate SVN.  Use this to check if we're downloding...
-+        bb.process.run("svn propset svn:externals 'bitbake http://github.com/openembedded/bitbake' .",
-+                       cwd=os.path.join(self.tempdir, 'svnfetch_co', 'trunk'))
-+        bb.process.run("svn commit --non-interactive -m 'Add external'",
-+                       cwd=os.path.join(self.tempdir, 'svnfetch_co', 'trunk'))
-+
-+        self.src_dir = src_dir
-+        self.repo_dir = repo_dir
-+
-+    def tearDown(self):
-+        os.chdir(self.origdir)
-+        if os.environ.get("BB_TMPDIR_NOCLEAN") == "yes":
-+            print("Not cleaning up %s. Please remove manually." % self.tempdir)
-+        else:
-+            bb.utils.prunedir(self.tempdir)
-+
-+    @skipIfNoNetwork()
-+    def test_noexternal_svn(self):
-+        # Always match the rev count from setUp (currently rev 2)
-+        url = "svn://%s;module=trunk;protocol=file;rev=2" % self.repo_url.replace('file://', '')
-+        fetcher = bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+        os.chdir(os.path.dirname(self.unpackdir))
-+        fetcher.unpack(self.unpackdir)
-+
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'trunk')), msg="Missing trunk")
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'trunk', 'README.md')), msg="Missing contents")
-+        self.assertFalse(os.path.exists(os.path.join(self.unpackdir, 'trunk/bitbake/trunk')), msg="External dir should NOT exist")
-+        self.assertFalse(os.path.exists(os.path.join(self.unpackdir, 'trunk/bitbake/trunk', 'README')), msg="External README should NOT exit")
-+
-+    def test_external_svn(self):
-+        # Always match the rev count from setUp (currently rev 2)
-+        url = "svn://%s;module=trunk;protocol=file;externals=allowed;rev=2" % self.repo_url.replace('file://', '')
-+        fetcher = bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+        os.chdir(os.path.dirname(self.unpackdir))
-+        fetcher.unpack(self.unpackdir)
-+
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'trunk')), msg="Missing trunk")
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'trunk', 'README.md')), msg="Missing contents")
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'trunk/bitbake/trunk')), msg="External dir should exist")
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'trunk/bitbake/trunk', 'README')), msg="External README should exit")
-+
- class TrustedNetworksTest(FetcherTest):
-     def test_trusted_network(self):
-         # Ensure trusted_network returns False when the host IS in the list.
--- 
-1.8.3.1
+
 
 
