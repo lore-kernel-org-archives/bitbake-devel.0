@@ -1,41 +1,42 @@
-Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id A20137D44D
+Return-Path: <andrew.featherstone@gmail.com>
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com
+	[209.85.128.45])
+	by mail.openembedded.org (Postfix) with ESMTP id B01DF6C44A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 May 2019 19:18:34 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 553C89C01CD;
-	Fri, 17 May 2019 15:18:35 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10032)
-	with ESMTP id 4iNSKA1xTKo9; Fri, 17 May 2019 15:18:32 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1D2159C0323;
-	Fri, 17 May 2019 15:18:32 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10026)
-	with ESMTP id S7u7A6vOsg_d; Fri, 17 May 2019 15:18:32 -0400 (EDT)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id F0ED59C01CD;
-	Fri, 17 May 2019 15:18:31 -0400 (EDT)
-Date: Fri, 17 May 2019 15:18:31 -0400 (EDT)
-From: Jean-marie Lemetayer <jean-marie.lemetayer@savoirfairelinux.com>
-To: akuster <akuster@mvista.com>
-Message-ID: <575051071.4784041.1558120711945.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <7ae99b0a-258f-9f52-265a-a9b2de251774@mvista.com>
-References: <20190517151410.8487-1-jean-marie.lemetayer@savoirfairelinux.com>
-	<7ae99b0a-258f-9f52-265a-a9b2de251774@mvista.com>
+	Sat, 18 May 2019 09:04:37 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id f204so8951985wme.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 18 May 2019 02:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=CL+kl0VAmjdK8lmYf3U7c0ZcOes3SKQvlXzyPLnYzT0=;
+	b=mLokk5P6VTNDoEV0O8KWfzwerayQ04O02hPc6hn1FZCikFdcxCCZXsPlT1GHdQ4REY
+	uIYVZzg9gBvW8Bbuq99alMUvIkSwXEgkJdXvtQrm9b+pDMUOuf7VZiNqzMLYZ7+18V+V
+	bLi9cmECKubJ6RZaLaTRf9KY4haRGj4cmLSUmpUGzIolLygrWA77ZHNXLGJbBzoL3A4O
+	yHpYoP86KthunNwCUV5Vd+zg6kBdY+wPHdGBatQBtw2tePELDjfZ2EX2qtSHOU7i5VM4
+	4uPq3agSbBMoBrHb1dCSEoxDqsj5p5R02NaQqkP2TAleucJ4QfpSZ9HxhNwYRfMnvvD9
+	akIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=CL+kl0VAmjdK8lmYf3U7c0ZcOes3SKQvlXzyPLnYzT0=;
+	b=lorijhK/IpB+t00ATdMbkZwvAXd8nA18s07zod4HpETVL9vMaNRFG0SpOfr4ApHn2b
+	rzSaiNn2F7RWfWVkXoTPRpMgW7PudOlr6oqkjpFz7RXj562sSoeho8V5XmvsuURKLkXq
+	9YWs0j3fRkxUYrW6mypJARlF/2BzazfgkO+3joLge97Jg8CnmsN9N5S4IO6KVUPh3N7G
+	z3bLQlQ11OAnmPXxoWqCi9xJNYvd78X2GrxrpY7My46cKXUOErhZXt1RbCkFfgiXiFVl
+	D3Uklud6WortLSfuPcf67sKw/qOp9ybMeQ3syvTfaAAPouS7loJ5OXc+KLPddPvY1aHJ
+	nG8Q==
+X-Gm-Message-State: APjAAAVE4C2SOu8IowSKwfF+rXc0cVjnRcAsZxd8jNmQcAKrCj0H2f+k
+	PH/RViLPKxZO2/64rFy0xyEGsAd0X9AEp1OTE+Ere8hBRB4=
+X-Google-Smtp-Source: APXvYqxT62UicfLsryTAuOXFalok5wATUFWDRUDWcoE2jHw1TRo3QDhbqE52+9yt449RXjZGvvWmI+RNs8y1GIVto90=
+X-Received: by 2002:a1c:9a14:: with SMTP id c20mr18489937wme.104.1558170278209;
+	Sat, 18 May 2019 02:04:38 -0700 (PDT)
 MIME-Version: 1.0
-X-Mailer: Zimbra 8.8.11_GA_3737 (ZimbraWebClient - GC74 (Linux)/8.8.11_GA_3737)
-Thread-Topic: NPM fixes
-Thread-Index: lM2/+ABEIVRrdPKvxFnwcv1TLJLK/g==
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/4] NPM fixes
+From: Andrew Featherstone <andrew.featherstone@gmail.com>
+Date: Sat, 18 May 2019 10:04:24 +0100
+Message-ID: <CAGW41X4-eci5jLF=is4zXyZ_S-09KAm3u6zRY7bZRm5-ZOBoNg@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: BitBake release notes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,53 +49,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 May 2019 19:18:35 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 18 May 2019 09:04:38 -0000
+Content-Type: multipart/alternative; boundary="000000000000eead01058925c951"
 
-Yes, I have tagged the patches but forgot to add a global explanation. Here it is:
+--000000000000eead01058925c951
+Content-Type: text/plain; charset="UTF-8"
 
- - PATCH 1/4: fix the bug:
-     https://bugzilla.yoctoproject.org/show_bug.cgi?id=13344
- - PATCH 2/4: fix an extra case of the bug:
-     https://bugzilla.yoctoproject.org/show_bug.cgi?id=12534
- - PATCH 3/4: fix the bug:
-     https://bugzilla.yoctoproject.org/show_bug.cgi?id=13349
- - PATCH 4/4: initiate fix for the bug:
-     https://bugzilla.yoctoproject.org/show_bug.cgi?id=11028
+Hi There,
 
+First apologies in advance if this is the wrong mailing list. If there's a
+bitbake-users list, please let me know.
 
------ Original Message -----
-From: "akuster" <akuster@mvista.com>
-To: "Jean-Marie LEMETAYER" <jean-marie.lemetayer@savoirfairelinux.com>, bitbake-devel@lists.openembedded.org
-Sent: Friday, May 17, 2019 5:32:44 PM
-Subject: Re: [bitbake-devel] [PATCH 0/4] NPM fixes
+I'm looking for some release notes for BitBake to help understand
+compatibility of recipes and when new features were added. The changelog at
+https://git.openembedded.org/bitbake/tree/ChangeLog hasn't been touched in
+quite a few years, Yocto Project release notes include details of changes
+https://wiki.yoctoproject.org/wiki/Releases, but nothing about
+compatibility. Are all 1.x releases of BitBake backwards compatible?
 
-On 5/17/19 8:14 AM, Jean-Marie LEMETAYER wrote:
-> Hi folks,
->
-> I have recently integrated a nodejs server with an angular application using
-> poky and meta-openembedded (thud branch). Some fixes were needed to make it
-> work.
+Regards,
+Andrew
 
-Is this fixing YP bug:
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=13344 ?
+--000000000000eead01058925c951
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-- armin
-> Best regards,
-> Jean-Marie
->
-> Jean-Marie LEMETAYER (4):
->   bitbake: fetch2/npm: fix npw view parsing
->   npm: get npm package name from npm pack
->   npm: fix node and npm default directory conflict
->   npm: remove some temporary build files
->
->  bitbake/lib/bb/fetch2/npm.py | 19 +++++--------------
->  meta/classes/npm.bbclass     | 11 +++++++----
->  2 files changed, 12 insertions(+), 18 deletions(-)
->
-> --
-> 2.20.1
->
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div>Hi There,</div><div=
+><br></div><div>First apologies in advance if this is the wrong mailing lis=
+t. If there&#39;s a bitbake-users list, please let me know.</div><div><br><=
+/div><div>I&#39;m looking for some release notes for BitBake to help unders=
+tand compatibility of recipes and when new features were added. The changel=
+og at <a href=3D"https://git.openembedded.org/bitbake/tree/ChangeLog">https=
+://git.openembedded.org/bitbake/tree/ChangeLog</a> hasn&#39;t been touched =
+in quite a few years, Yocto Project release notes include details of change=
+s <a href=3D"https://wiki.yoctoproject.org/wiki/Releases">https://wiki.yoct=
+oproject.org/wiki/Releases</a>, but nothing about compatibility. Are all 1.=
+x releases of BitBake backwards compatible?</div><div><br></div><div>Regard=
+s,</div><div>Andrew<br></div></div></div></div>
 
+--000000000000eead01058925c951--
