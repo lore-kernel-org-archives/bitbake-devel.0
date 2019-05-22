@@ -1,51 +1,44 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-it1-f195.google.com (mail-it1-f195.google.com
-	[209.85.166.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 7DBF07E279
+Return-Path: <matthias.schiffer@ew.tq-group.com>
+X-Greylist: delayed 590 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 22 May 2019 09:23:14 UTC
+Received: from mx1.tq-group.com (mx1.tq-group.com [62.157.118.193])
+	by mail.openembedded.org (Postfix) with ESMTP id A2BD87E39C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 May 2019 21:49:58 +0000 (UTC)
-Received: by mail-it1-f195.google.com with SMTP id i63so181595ita.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 May 2019 14:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=3yw96ovuTHS2NQRPFr/YUGMUN5Oda8MKUtlWW6TnyOg=;
-	b=dgfhif9Sh5X0xhCVbOhqzGpJbcophsDjl6arAaMHjbGqa8Oz99uLV0uMoHFUrqUIYl
-	X0mHcuOIJT/1zuWJZdgWVCnrxrnpdY5AUUpDBXNPpgaMlKsHfMKs0qRyGbbEgbVZQ9i1
-	QKwhrP4kndNXRZ32nETZb/OwfPTagheigOit9EmvD05IuQXiEhu5U2RXlhy2VMbSfXn9
-	Jlpi/WTTYsGYGXCNTaZz8f7w5D9HZdy5rXSgukLjwga0aMILbJ3aoVsggtpmD8l/0eP5
-	tLGWdXmo6LoNG2dZYcVB0/27x2VMZjDWvH+TMDrIfzA9lYZJCef6PH4NZKgIJUU2WHSx
-	MHww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=3yw96ovuTHS2NQRPFr/YUGMUN5Oda8MKUtlWW6TnyOg=;
-	b=t9ls5Qu2C/eoI9MQIhMYrReoNjvI71logfehde44Qb2AHSi/fDtGHN1iTncgtrVnsq
-	OGIjvPXm6wfoufEizffQ0Y0hoAZb7lcfgim2sd1ha9ZPUwpoMqdKnkV6tdLqA/YckIAd
-	+k8dII3fXSw5jpzE08L4FBCCFilIQuLYHHD7LvoHq+c0N287G6iVs7lkO6dqelYhCr/R
-	fTIFm+RRZ3HUvp+uxR64YNMrTcB4OB4inLAsfbw5gH0jBH7CLwzwhxZWDbLon+Ym6HfD
-	hHSk1laqRgVYSZU0lVkwCH7hgsrKF/2R41XbBZn/f8tc7t/YL2yk1YMKAxWxJgLjBJjj
-	IYgA==
-X-Gm-Message-State: APjAAAU/RQp2feLYag9tSqRcaFHXPZMw2mIQWNntW9BOBViwdQ3BIMCT
-	kd1gQkxEYjbiT6QdTGcONPXx9k7K
-X-Google-Smtp-Source: APXvYqxMjl8r1HasC8tOG2+N67g2xXd691Sjafv6TISwRtIdP7zmt9GmTJodr+YdfR2gjR6ap39FsA==
-X-Received: by 2002:a02:b79a:: with SMTP id f26mr6028706jam.135.1558475399171; 
-	Tue, 21 May 2019 14:49:59 -0700 (PDT)
-Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id l25sm7266782ioj.8.2019.05.21.14.49.58
-	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Tue, 21 May 2019 14:49:58 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+	Wed, 22 May 2019 09:23:14 +0000 (UTC)
+X-IronPort-AV: E=Sophos;i="5.60,498,1549926000"; 
+   d="scan'208";a="7525096"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+	by mx1-pgp.tq-group.com with ESMTP; 22 May 2019 11:13:24 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+	by tq-pgp-pr1.tq-net.de (PGP Universal service);
+	Wed, 22 May 2019 11:13:24 +0200
+X-PGP-Universal: processed;
+	by tq-pgp-pr1.tq-net.de on Wed, 22 May 2019 11:13:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+	d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+	t=1558516404; x=1590052404;
+	h=from:to:cc:subject:date:message-id;
+	bh=wvCPn3Ca9ZNkAro+EwdBlyOpDhDsBczrlFe41WaUiYc=;
+	b=Bbm5mEQRfxHvX+/LV840K0y1oVRpTDY60WHxBKsHZYd+Oc9lJdyxxoYA
+	TGaEyimLHKiXTFUHWk6OQSIC+GvzDL012wbp2PRYoAqNOLr66sQVUGNEO
+	S48Yk9psNMP5ukLgPZgECaBt8A3W5/IQsALZz/Ywi6sro8CdMYtEl65z+
+	OxSKIOrzWylkXtWxvZ1OqplVy+lS3dubXlYZ6ywcqUHKBWUudN7tajP+V
+	p7YkQDShpdhPHWoFrNWB8iLdMzdvJw4qsj1/c/ZDyIHRkCw+2fcBicblu
+	AwRYDY+ACZAAHN4LUu9QfJ8pV2hs0M0rgLMvvHmPxtaoJYD00HK69Ve5L Q==;
+X-IronPort-AV: E=Sophos;i="5.60,498,1549926000"; 
+   d="scan'208";a="7525095"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+	by mx1.tq-group.com with ESMTP; 22 May 2019 11:13:24 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de
+	[10.117.49.26])
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 37875280074;
+	Wed, 22 May 2019 11:13:23 +0200 (CEST)
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 21 May 2019 16:49:42 -0500
-Message-Id: <20190521214942.3300-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Cc: Joshua Watt <Joshua.Watt@garmin.com>
-Subject: [PATCH] bitbake: cooker: Rename __depends in all multiconfigs
+Date: Wed, 22 May 2019 11:13:10 +0200
+Message-Id: <20190522091310.14470-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH master 1.42] fetch2: runfetchcmd(): unset _PYTHON_SYSCONFIGDATA_NAME
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,43 +51,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 May 2019 21:49:58 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 22 May 2019 09:23:15 -0000
 
-From: Joshua Watt <Joshua.Watt@garmin.com>
+Since warrior, python3native.bbclass sets _PYTHON_SYSCONFIGDATA_NAME;
+unfortunately, this also affects Python scripts run as fetch commands like
+git-make-shallow, breaking it with a message like
 
-The renaming of the __depends variable to __base_depends and file
-watches needs to occurs for all multiconfigs, not just the base config.
-Failing to do this for all multiconfigs will result in a huge increase
-in the size of the parsing cache (about 5x for a single mulitconfig)
-because all multiconfig caches will still depend on the base config
-files. This will also seen a similar jump in the amount of time required
-to load the parsing cache from memory, both because the cache is larger
-and because of explosion of additional existence checks that must be
-done for the base files.
+    Failed to import the site module
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/site.py", line 570, in <module>
+        main()
+      File "/usr/lib/python3.6/site.py", line 556, in main
+        known_paths = addusersitepackages(known_paths)
+      File "/usr/lib/python3.6/site.py", line 288, in addusersitepackages
+        user_site = getusersitepackages()
+      File "/usr/lib/python3.6/site.py", line 264, in getusersitepackages
+        user_base = getuserbase() # this will also set USER_BASE
+      File "/usr/lib/python3.6/site.py", line 254, in getuserbase
+        USER_BASE = get_config_var('userbase')
+      File "/usr/lib/python3.6/sysconfig.py", line 607, in get_config_var
+        return get_config_vars().get(name)
+      File "/usr/lib/python3.6/sysconfig.py", line 550, in get_config_vars
+        _init_posix(_CONFIG_VARS)
+      File "/usr/lib/python3.6/sysconfig.py", line 421, in _init_posix
+        _temp = __import__(name, globals(), locals(), ['build_time_vars'], 0)
+    ModuleNotFoundError: No module named '_sysconfigdata'
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+on an Ubuntu 18.04 system (and likely others) when building with
+BB_GIT_SHALLOW and BB_GENERATE_SHALLOW_TARBALLS.
+
+Unset _PYTHON_SYSCONFIGDATA_NAME in runfetchcmd() to work around this.
+
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 ---
- bitbake/lib/bb/cooker.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index adc41014e64..78658a1683e 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -391,8 +391,9 @@ class BBCooker:
-         if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
-             self.disableDataTracking()
+I think this (or a different fix for this issue) should be added to both
+master and 1.42, as Yocto warrior is affected.
+
+Note that this fix assumes that the host Python does not need a
+_PYTHON_SYSCONFIGDATA_NAME, which should be true on most systems. A more
+complete fix would be to reset _PYTHON_SYSCONFIGDATA_NAME to its original
+value, but I don't know the Bitbake code well enough to do that.
+
+ lib/bb/fetch2/__init__.py | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 0126e0d7..f6b5529b 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -843,6 +843,11 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None):
+         if val:
+             cmd = 'export ' + var + '=\"%s\"; %s' % (val, cmd)
  
--        self.data.renameVar("__depends", "__base_depends")
--        self.add_filewatch(self.data.getVar("__base_depends", False), self.configwatcher)
-+        for mc in self.databuilder.mcdata.values():
-+            mc.renameVar("__depends", "__base_depends")
-+            self.add_filewatch(mc.getVar("__base_depends", False), self.configwatcher)
++    # Ensure that a _PYTHON_SYSCONFIGDATA_NAME value set by a recipe
++    # (for example via python3native.bbclass since warrior) is not set for
++    # host Python (otherwise tools like git-make-shallow will fail)
++    cmd = 'unset _PYTHON_SYSCONFIGDATA_NAME; ' + cmd
++
+     # Disable pseudo as it may affect ssh, potentially causing it to hang.
+     cmd = 'export PSEUDO_DISABLED=1; ' + cmd
  
-         self.baseconfig_valid = True
-         self.parsecache_valid = False
 -- 
-2.21.0
+2.17.1
 
 
