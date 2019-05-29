@@ -1,66 +1,57 @@
-Return-Path: <paul@betafive.co.uk>
-X-Greylist: delayed 324 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 28 May 2019 09:26:05 UTC
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com
-	[66.111.4.28])
-	by mail.openembedded.org (Postfix) with ESMTP id DD0557DEA7
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-it1-f193.google.com (mail-it1-f193.google.com
+	[209.85.166.193])
+	by mail.openembedded.org (Postfix) with ESMTP id B541360069
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 May 2019 09:26:05 +0000 (UTC)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id DC3B22229F;
-	Tue, 28 May 2019 05:20:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-	by compute1.internal (MEProxy); Tue, 28 May 2019 05:20:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=betafive.co.uk;
-	h=subject:to:references:from:message-id:date:mime-version
-	:in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=A
-	qa3+tn/T2I3IEF3crlhmlvMz1ltj7dHL1oCvbcc3UM=; b=PrmetqoLcHcW5CPNj
-	oBBl2DZ6TE5LM56XYzG3ohfJ57eJpcVHZpsYZ77SDJm5+p4WOJa2b8x5ucV1DwxO
-	EC6UbrPJ9jek2HbRh6kpZNDbhxfbQfZFZGMBkXwrzORm96GfLkE0a52fgUGIovRp
-	6Y+EJ6AO8PuQOCi4kqWLID9+Ju4gzUDmQmIUVU8gLu4e44uYI0mNK8vzm4dnkPDF
-	4PXOI2misK6rwGzecuAjwflcxOt7nFli0CwJV7OBB2r6MS9Fpb4WSAvzDYLK8+Jj
-	dNGif7qcr/fo7CXsFnWUk/Huev3tIO+orSgEUDeGD9Q9kaKihUpZiw3M0shntAGr
-	viJpw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=content-transfer-encoding:content-type
-	:date:from:in-reply-to:message-id:mime-version:references
-	:subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; bh=Aqa3+tn/T2I3IEF3crlhmlvMz1ltj7dHL1oCvbcc3
-	UM=; b=wQ+V6p5bkPIog4bQ6SDYsFNqmEphw5NyN9TJfl83YUsLgjAfvE+x6HgJc
-	YDbxfyAnDJ+8ldj1JCWdzuWbBIQfWcY0wE5H+b4YbNtnn0q/FaBaBBKM9WGPVo58
-	u2I4pN/SEpmO3PCxVmErmV1yCuvLEC6+sJIcAwx2FoCW4eXO5fMM+oy+rfQa9iPT
-	cTMVLr4LwZBX4+Nb/dVLT6rIsmK/TxWVGSXIwfKL4GoQB4AEzOkUOz3H2C1ON7TR
-	miExAMb7ITqY4ln0iqeCIyTVuEYv3WmPmOX4imNa319eY0y6weM1GnDXQarcWRx3
-	71iFfifJaafkVxmG2u27xkcc41qDA==
-X-ME-Sender: <xms:af3sXGAyB9EbxYXcYyiYX2liaw_xlPky4zE2s_ASVxULCaj6GM4ZDw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddvhedgudehucetufdoteggodetrfdotf
-	fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-	uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-	cujfgurhepuffvfhfhohfkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefrrghu
-	lhcuuegrrhhkvghruceophgruhhlsegsvghtrghfihhvvgdrtghordhukheqnecuffhomh
-	grihhnpehgihhthhhusgdrtghomhenucfkphepkedurddukeejrdefvddrudefkeenucfr
-	rghrrghmpehmrghilhhfrhhomhepphgruhhlsegsvghtrghfihhvvgdrtghordhukhenuc
-	evlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:af3sXEyo98gdmY1kn8nk9uP8qNCdS6FvZDCLSRkMUejh0I7eFYD9FA>
-	<xmx:af3sXEndYeLMlY85mA-haF2TzpmYX43abvKGRc0at6toiYCd52nuyw>
-	<xmx:af3sXJHXxaz2xsjfU64IUcz4XqM9hHupQ2q3OmD0haQZRF-eP8D0Zw>
-	<xmx:af3sXDM8vDO_m-_UGGxtgsXRaj4Ma4I0ddnknqm8kXgjzXIfMFJocQ>
-Received: from [192.168.1.120] (138.32.187.81.in-addr.arpa [81.187.32.138])
-	by mail.messagingengine.com (Postfix) with ESMTPA id 904288005C;
-	Tue, 28 May 2019 05:20:40 -0400 (EDT)
-To: Schneider Oliver <O.Schneider@precitec-optronik.de>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-References: <58a1f0cc-7bb8-9b35-7142-23d95537cdf8@precitec-optronik.de>
-From: Paul Barker <paul@betafive.co.uk>
-Organization: Beta Five Ltd
-Message-ID: <be4f1c5d-d00a-92f8-2b67-be969f325871@betafive.co.uk>
-Date: Tue, 28 May 2019 10:20:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-	Thunderbird/60.5.0
+	Wed, 29 May 2019 15:37:18 +0000 (UTC)
+Received: by mail-it1-f193.google.com with SMTP id t184so4606811itf.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 29 May 2019 08:37:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:subject:to:references:message-id:date:user-agent:mime-version
+	:in-reply-to:content-transfer-encoding:content-language;
+	bh=o+UYLwWZzPezRFGhKpmqD0qoLLPmwJvfawjNPgiqeQ0=;
+	b=bi2VsnYrl8CEVCA15mD3m4ziux7kw3a8WP5NIwTjpjmkovYsqgagxQJe6pDRtE4Unj
+	/PKLv/PfT3wYYLJK3BWB9uEHRRtkxMMNlc0wmeIqQPFA10M1JHs3Mp0ciWg+u3EKO/dc
+	ftQbzoot/YEYb2RuSmQ1pwb39X+b04v6AISG3D7g4VDq/XjQUEJhGADyiEShlyrjiOLJ
+	ivfpA8gX1CkGbd7VsBxiXd/BWDEl/QbCdGydFx7h0Ejf9IWXNokgdBlKylpRnoLqHBMl
+	TyiIwFHjY0oRCKl1BYxlQDIsP3fOtF2euTqPJaKwSZGi+60e6j13sLpRY9Eol/p/mUPA
+	Rl7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:subject:to:references:message-id:date
+	:user-agent:mime-version:in-reply-to:content-transfer-encoding
+	:content-language;
+	bh=o+UYLwWZzPezRFGhKpmqD0qoLLPmwJvfawjNPgiqeQ0=;
+	b=jgXMbs2i0fj27qfvQlFpTOpzUN18dp5JmRyxFhTMnzClsc+DSmUpdUhIvU7YzJE569
+	ald7kbShNGi2awmtPYY01C1JJvGV+hRbL+Ukhz9wNo4MQTI3IKacoYEI2N9FkbBOjbMi
+	u3fr4S+u5lxQmO5v/BUVs3IJjwc/8V3puFM/cmYl1hHK0g1wf5wneeU05ctuF+dg/5SW
+	NiudWjj/eYUAjtNDabDnzkwE/vyrKHrOgDaCHAyL7I79h2vFPJ/0r7mlDVVYeeSJuUK8
+	K40GqQn6/0LdGkObGzyZBtpVQ5/pzfc4Idoe89SjBWsr6fPONj2AxUEKQ4T1643LHU1f
+	Z3Pg==
+X-Gm-Message-State: APjAAAUzSrCVsT+nyXeFJmctwaa6JWZ0Zrz3L7ecalJc5MOpILf0/EjY
+	O91OisLdUG3KFKRHuSNZSd2zmuSC
+X-Google-Smtp-Source: APXvYqwlyp3kFsUW1qUuwCxJZLP8UK/EAIGmW15arJ/vnUf5PtAHGQ98yfJBRWt56oJuasCkSYZJQg==
+X-Received: by 2002:a24:734c:: with SMTP id y73mr7600033itb.72.1559144239025; 
+	Wed, 29 May 2019 08:37:19 -0700 (PDT)
+Received: from [10.30.197.57] ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id
+	a129sm1093998ith.7.2019.05.29.08.37.17
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+	Wed, 29 May 2019 08:37:18 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+References: <20190521214942.3300-1-JPEWhacker@gmail.com>
+	<20190522133503.14212-1-JPEWhacker@gmail.com>
+Message-ID: <6c1741b7-eebd-7253-6f7b-852fba966c85@gmail.com>
+Date: Wed, 29 May 2019 10:37:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <58a1f0cc-7bb8-9b35-7142-23d95537cdf8@precitec-optronik.de>
-Subject: Re: Typo in main.py
+In-Reply-To: <20190522133503.14212-1-JPEWhacker@gmail.com>
+Subject: Re: [PATCH v2] bitbake: cooker: Rename __depends in all multiconfigs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -73,27 +64,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 May 2019 09:26:06 -0000
+X-List-Received-Date: Wed, 29 May 2019 15:37:18 -0000
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-On 27/05/2019 11:27, Schneider Oliver wrote:
-> Hi,
-> 
-> just stumbled over this because I had copied/pasted the variable name
-> from the error output to my invocation.
-> 
-> https://github.com/openembedded/bitbake/blob/master/lib/bb/main.py#L494
-> 
-> A cursory look over the code base seems to suggest that BBPATH is
-> incorrectly spelled as BBAPTH.
-> 
+Ping
 
-Are you able to send a patch for this? Seems like a simple change to make.
-
--- 
-Paul Barker
-Managing Director & Principal Engineer
-Beta Five Ltd
+On 5/22/19 8:35 AM, Joshua Watt wrote:
+> The renaming of the __depends variable to __base_depends and file
+> watches needs to occurs for all multiconfigs, not just the base config.
+> Failing to do this for all multiconfigs will result in a huge increase
+> in the size of the parsing cache (about 5x for a single mulitconfig)
+> because all multiconfig caches will still depend on the base config
+> files. This will also seen a similar jump in the amount of time required
+> to load the parsing cache from memory, both because the cache is larger
+> and because of explosion of additional existence checks that must be
+> done for the base files.
+>
+> [YOCTO #13359]
+>
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+>   bitbake/lib/bb/cooker.py | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+> index adc41014e6..78658a1683 100644
+> --- a/bitbake/lib/bb/cooker.py
+> +++ b/bitbake/lib/bb/cooker.py
+> @@ -391,8 +391,9 @@ class BBCooker:
+>           if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
+>               self.disableDataTracking()
+>   
+> -        self.data.renameVar("__depends", "__base_depends")
+> -        self.add_filewatch(self.data.getVar("__base_depends", False), self.configwatcher)
+> +        for mc in self.databuilder.mcdata.values():
+> +            mc.renameVar("__depends", "__base_depends")
+> +            self.add_filewatch(mc.getVar("__base_depends", False), self.configwatcher)
+>   
+>           self.baseconfig_valid = True
+>           self.parsecache_valid = False
 
