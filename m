@@ -1,35 +1,48 @@
-Return-Path: <Leif.Middelschulte@klsmartin.com>
-Received: from ironport.klsmartin.com (ironport.klsmartin.com [212.211.191.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 6296F7DE7D
+Return-Path: <olof.johansson@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id C4D647DE81
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  4 Jun 2019 16:09:23 +0000 (UTC)
-X-IronPort-AV: E=Sophos;i="5.60,550,1549926000"; 
-   d="scan'208";a="1788398"
-Received: from unknown (HELO hera.klsmartin.com) ([172.30.5.66])
-	by ironport.klsmartin.com with ESMTP/TLS/DHE-RSA-AES256-SHA;
-	04 Jun 2019 18:02:19 +0200
-Received: from SUMMAIL01.UMK.KLS.zentral ([172.25.1.63])
-	by hera.klsmartin.com (8.14.3/8.13.1/SuSE Linux 0.7) with ESMTP id
-	x54G2801016093 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 4 Jun 2019 18:02:10 +0200
-Received: from UML026.UMK.KLS.zentral (172.25.2.60) by
-	SUMMAIL01.UMK.KLS.zentral (172.25.1.63) with Microsoft SMTP Server
-	(TLS) id 14.3.408.0; Tue, 4 Jun 2019 18:02:13 +0200
-From: Leif Middelschulte <leif.middelschulte@klsmartin.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 4 Jun 2019 18:01:37 +0200
-Message-ID: <20190604160137.5636-2-leif.middelschulte@klsmartin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190604160137.5636-1-leif.middelschulte@klsmartin.com>
+	Tue,  4 Jun 2019 17:39:01 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 2397818521;
+	Tue,  4 Jun 2019 19:39:01 +0200 (CEST)
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id 9tR_mw7dk5dV; Tue,  4 Jun 2019 19:39:00 +0200 (CEST)
+Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
+	by bastet.se.axis.com (Postfix) with ESMTPS id 3DC851848E;
+	Tue,  4 Jun 2019 19:39:00 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 21BDD1A072;
+	Tue,  4 Jun 2019 19:39:00 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 169401A06D;
+	Tue,  4 Jun 2019 19:39:00 +0200 (CEST)
+Received: from thoth.se.axis.com (unknown [10.0.2.173])
+	by boulder02.se.axis.com (Postfix) with ESMTP;
+	Tue,  4 Jun 2019 19:39:00 +0200 (CEST)
+Received: from lnxolofjn.se.axis.com (lnxolofjn.se.axis.com [10.92.17.1])
+	by thoth.se.axis.com (Postfix) with ESMTP id 0A7E33123;
+	Tue,  4 Jun 2019 19:39:00 +0200 (CEST)
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)
+	id 008CF9C0BC; Tue,  4 Jun 2019 19:38:59 +0200 (CEST)
+Date: Tue, 4 Jun 2019 19:38:59 +0200
+From: Olof Johansson <olof.johansson@axis.com>
+To: Leif Middelschulte <leif.middelschulte@klsmartin.com>
+Message-ID: <20190604173859.napxayq2tbfvgcx2@axis.com>
+Mail-Followup-To: Leif Middelschulte <leif.middelschulte@klsmartin.com>,
+	bitbake-devel@lists.openembedded.org
 References: <20190604160137.5636-1-leif.middelschulte@klsmartin.com>
 MIME-Version: 1.0
-X-Originating-IP: [172.25.2.60]
-X-KSE-ServerInfo: SUMMAIL01.UMK.KLS.zentral, 9
-X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 04.06.2019 11:03:00
-Cc: Leif Middelschulte <leif.middelschulte@klsmartin.com>
-Subject: [PATCH 1/1] bitbake: fetch2/git: set password in https clones too
+In-Reply-To: <20190604160137.5636-1-leif.middelschulte@klsmartin.com>
+User-Agent: NeoMutt/20180716
+X-TM-AS-GCONF: 00
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/1] bitbake: fetch2/git: fix initial http authed clone
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,43 +55,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Jun 2019 16:09:23 -0000
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-List-Received-Date: Tue, 04 Jun 2019 17:39:02 -0000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fetching submodules via https, using the basic HTTP auth scheme, failed.
+On 19-06-04 18:01 +0200, Leif Middelschulte wrote:
+> This patch fixes initial clones of git repositories authenticated
+> via basic http authentication. This became apparent when code was
+> reused to clone submodules too.
+> 
+> The method is the recommended way of cloning source code by CI
+> runners. This patch fixes the currently broken behvior.
 
-Example for a broken URL:
-SRC_URI = "gitsm://example.com/some_repo.git;protocol=https;user=john:secret"
+Hi,
 
-Now, if some_repo.git had a relative submodule, the initial clone would fail:
-> fatal: could not read Username for 'https://example.com':
-> No such device or address
+Recommended by whom specifically? Encoding passwords in URIs was
+deprecated RFC 3986 for security reasons. Some tools may not be
+aware of security sensitive information contained in URIs.
 
-This happended, because the password was correctly read into another
-`ud`-field (`pswd`), but not added back, when the URL was rebuilt.
+RFC 3986:
+> Applications should not render as clear text any data after the
+> first colon (":") character found within a userinfo
+> subcomponent ...
 
-Signed-off-by: Leif Middelschulte <leif.middelschulte@klsmartin.com>
----
- lib/bb/fetch2/git.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Having passwords and security sensitive info in the bitbake
+metadata also seems a bit weird to me, but bb.fetch2.decodeurl()
+does support extracting it. I thought the git fetcher didn't
+support auth details (other than user) via the URI by design, but
+this is just my assumption.
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index e171aa7e..7afc2b52 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -570,7 +570,9 @@ class Git(FetchMethod):
-         """
-         Return the repository URL
-         """
--        if ud.user:
-+        if ud.user and ud.pswd:
-+            username = "%s:%s@" % (ud.user, ud.pswd)
-+        elif ud.user:
-             username = ud.user + '@'
-         else:
-             username = ""
+The gitcredentials manpage recommends using the global
+configuration with [credential.<uri-pattern>] blocks to specify
+this instead.
+
+https://git-scm.com/docs/gitcredentials
+
 -- 
-2.21.0
-
+olofjn
 
