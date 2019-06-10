@@ -1,26 +1,25 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 7E5DF7E52D
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 9224C7E513
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Jun 2019 00:50:43 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x5A0oidx028054
+	Mon, 10 Jun 2019 00:50:44 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x5A0oP2c007981
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 9 Jun 2019 17:50:44 -0700 (PDT)
+	Sun, 9 Jun 2019 17:50:35 -0700
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.209.225) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.439.0; Sun, 9 Jun 2019 17:50:44 -0700
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.439.0; Sun, 9 Jun 2019 17:50:14 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 9 Jun 2019 17:48:46 -0700
-Message-ID: <c1d41fc70102c410e99b571eaddfa0461e9554fc.1560127555.git.David.Reyna@windriver.com>
+Date: Sun, 9 Jun 2019 17:48:17 -0700
+Message-ID: <cover.1560127555.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1560127555.git.David.Reyna@windriver.com>
-References: <cover.1560127555.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.209.225]
-Subject: [PATCH 1/1] [WARRIOR] toaster: Fix Thud Bitbake release for YP-2.7
+Subject: [PATCH 0/1] [WARRIOR] toaster: Fix Thud Bitbake release for YP-2.7
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,47 +32,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Jun 2019 00:50:43 -0000
+X-List-Received-Date: Mon, 10 Jun 2019 00:50:44 -0000
 Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-Fix the Bitbake version ID for Thud (1.40).
+For the Warrior release, this is to fix a broken bitbake vertion pointer for the thud branch. 
+This is allow master Toaster to build Thud-based projects.
 
-[YOCTO #13356]
+The following changes since commit 2fd4bf41a39f34075cfd42d46de1b0eea2ecc5eb:
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
+  dbus-test: Improve ptest dependencies dependencies (2019-06-09 11:01:08 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib dreyna/toaster/thud_bitbake_2_7_13356
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/toaster/thud_bitbake_2_7_13356
+
+David Reyna (1):
+  toaster: Fix Thud Bitbake release for YP-2.7
+
  lib/toaster/orm/fixtures/oe-core.xml | 2 +-
  lib/toaster/orm/fixtures/poky.xml    | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/orm/fixtures/oe-core.xml b/lib/toaster/orm/fixtures/oe-core.xml
-index bd9c3268..9ae2e42 100644
---- a/lib/toaster/orm/fixtures/oe-core.xml
-+++ b/lib/toaster/orm/fixtures/oe-core.xml
-@@ -53,7 +53,7 @@
-   <object model="orm.release" pk="4">
-     <field type="CharField" name="name">thud</field>
-     <field type="CharField" name="description">Openembedded Thud</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-     <field type="CharField" name="branch_name">thud</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"http://cgit.openembedded.org/openembedded-core/log/?h=thud\"&gt;OpenEmbedded Thud&lt;/a&gt; branch.</field>
-   </object>
-diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
-index 4162e4f..da3b930 100644
---- a/lib/toaster/orm/fixtures/poky.xml
-+++ b/lib/toaster/orm/fixtures/poky.xml
-@@ -58,7 +58,7 @@
-   <object model="orm.release" pk="4">
-     <field type="CharField" name="name">thud</field>
-     <field type="CharField" name="description">Yocto Project 2.6 "Thud"</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-     <field type="CharField" name="branch_name">thud</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="http://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=thud"&gt;Yocto Project Thud branch&lt;/a&gt;.</field>
-   </object>
 -- 
 1.9.1
 
