@@ -1,51 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com
-	[209.85.128.67])
-	by mail.openembedded.org (Postfix) with ESMTP id F3D8F7DAD9
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
+	[209.85.221.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 8284A7E464
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Jun 2019 08:46:43 +0000 (UTC)
-Received: by mail-wm1-f67.google.com with SMTP id 22so7301745wmg.2
+	Mon, 10 Jun 2019 13:39:15 +0000 (UTC)
+Received: by mail-wr1-f67.google.com with SMTP id x17so9203692wrl.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Jun 2019 01:46:45 -0700 (PDT)
+	Mon, 10 Jun 2019 06:39:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=p9+S9LG2FSYG5qibNoCcJF6IfyKpCBV6hhiauJSPfxI=;
-	b=AgjyPxgYPuLSB0yQsLht0TTi7WWChAMt0Pqm5qMA7VjTqK30MvkuuSErhqYDaH8DBQ
-	SS64VqggYeY5sJl5w8lb50CxpsN5+tfnoXfD8RzECiLaH1sSc7+db4OUslly8TXeY5aq
-	ZgIHm3iSD+WbhJ7GRJqDVvIe/LUK1r7ranf00=
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=GUSvmT6WbvridRed7zPhS+pDYhcPbh/6A3ohgbrs+hs=;
+	b=f2AS64ld4Ab5PfHn+KsGXIp+302C+aJhdsrqyHAcmoMqq/D/9b8IY2HgmSf9y1GT8h
+	SXd0RdslpDRikyILAO7mcy8AJZjxBrvxEj0TNVaVVXkKIfoRqRtG94bLlfMxtfrdDWPi
+	7RLDAhChUdz/aUPchpIiIByt09C1843enZNTU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=p9+S9LG2FSYG5qibNoCcJF6IfyKpCBV6hhiauJSPfxI=;
-	b=qyeavWxjAAYE4nGjZhUleiNeobzpvtD4kLNPlj3j9wznWltw/5LZd4C9QChv5DPMee
-	nEEftt2bi71aT2pxGPq7t6R+ljXLf0vymv3yCM6BONC1FkWHOphwkMX0cfup3hMPtS38
-	3tgKW0YHXoSKl03MD9gKVKH3ZgHzWq6sHtCITNTMRzuJ6JVXXH28YzX/7hxmUzEw3Q71
-	IbKmQQHtbJx4HZn91uTmwlNsCwmQpp5F6K5wtXQ0kWIfCRYhyEEgbSDTWnyemRG2Ptw6
-	bvIaPy8rH4cEFW524cKitlM8jjZ2vfnSG9NbAOF+HkfSrYQ7xV7j9ds/oAjUEzYGdp90
-	hNYQ==
-X-Gm-Message-State: APjAAAWgc5ERa3DFxsRScYFwttWg2VcZZfKPU3QuKPBsJR65auQ1+c7Q
-	3XZcXQu81Z7Ynsu5R1T4TrU7iA==
-X-Google-Smtp-Source: APXvYqx1NBexaLjEtXYApMsCzIrFK7iXXIXnZy4GX2sJIK/TIYzXTfnrcymkcUwQC1jRDek6VkG1Vg==
-X-Received: by 2002:a1c:a00f:: with SMTP id j15mr13446598wme.167.1560156404733;
-	Mon, 10 Jun 2019 01:46:44 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id f21sm9620524wmb.2.2019.06.10.01.46.43
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=GUSvmT6WbvridRed7zPhS+pDYhcPbh/6A3ohgbrs+hs=;
+	b=mIqwWXsX9pJbX50QEP/zH7rUeupo1KfPVG3NmURB7f4Awox1b8WMvlHRemVlkq/a7R
+	UDjC3gshuvcddKmYW5rz1UWVe+m79kpvtP+dErNt3DbQRSJacAROkKY1imHmOvnNX2qn
+	29pP3J+TPRZRM8+3hRSIzxRqNW6uJUWP6PdYUyxKZVn9/a3Ogz1eQSqnBtC8Z+xILL/i
+	DesFhFo0gHcKVwC1KyX/ThIyuLM6o2Sspx8ei1rhJ4m1ou5UhEkC177DuFkaXWjTY7vr
+	n1/pqVb7vIH7VAuNtEgpwDLYzCIiXBmKnJBmh8zJ8sq0iZPhYhd+DYY3PQMZK/06SjKD
+	KAHg==
+X-Gm-Message-State: APjAAAXxBUW584y37yp2WjWdSn9Uxf/3CZUn+fl+q3IR8neoV9eH3SeZ
+	P5GGHb8bT1kiM9nQWfQX0KePTHt8kr8=
+X-Google-Smtp-Source: APXvYqyoP3nn1C2EIf+YJ4Pck4V6188FvoDWQ3CF3w511PZjgMmM89qm1yHsZ6UxQxy7GVBvijhT8Q==
+X-Received: by 2002:adf:9003:: with SMTP id h3mr22966732wrh.172.1560173955843; 
+	Mon, 10 Jun 2019 06:39:15 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	j8sm9685234wrr.64.2019.06.10.06.39.14
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Mon, 10 Jun 2019 01:46:44 -0700 (PDT)
-Message-ID: <8b6337f60aa01cc8e4c940f6fb20f4d8207d2b5c.camel@linuxfoundation.org>
+	Mon, 10 Jun 2019 06:39:15 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: David Reyna <david.reyna@windriver.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Jun 2019 09:46:42 +0100
-In-Reply-To: <2784075cbd0cc105c8c6ecdced2226de94d4b343.1560127238.git.David.Reyna@windriver.com>
-References: <cover.1560127238.git.David.Reyna@windriver.com>
-	<2784075cbd0cc105c8c6ecdced2226de94d4b343.1560127238.git.David.Reyna@windriver.com>
-User-Agent: Evolution 3.32.2-1 
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 10 Jun 2019 14:39:14 +0100
+Message-Id: <20190610133914.20291-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/1] [THUD] toaster: Fix Thud Bitbake release for YP-2.6
+Subject: [PATCH] cooker: Add compability handling for multiconfig: prefix migration
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,36 +56,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Jun 2019 08:46:44 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 10 Jun 2019 13:39:15 -0000
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2019-06-09 at 17:44 -0700, David Reyna wrote:
-> From: David Reyna <David.Reyna@windriver.com>
-> 
-> Fix the Bitbake version ID for Thud (1.40).
-> 
-> [YOCTO #13356]
-> 
-> Signed-off-by: David Reyna <David.Reyna@windriver.com>
-> ---
->  lib/toaster/orm/fixtures/oe-core.xml | 2 +-
->  lib/toaster/orm/fixtures/poky.xml    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+This allows "multiconfig:" targets to continue to work by internally
+mapping them to the new "mc:" naming, allowing older builds to work
+as before.
 
-Thanks for these David.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-When we fix an issue like this we really need to fix it on master
-first, then backport the fix to the warrior and then thud branches.
-
-In this case I've applied the fix to master (with some teaks to the
-commit message), then backported it to the 1.42 and 1.40 branches with
-a straightforward cherry-pick.
-
-Can you check I've got the right changes in please?
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 855a180523..e0cbed5378 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1600,6 +1600,9 @@ class BBCooker:
+         for pkg in pkgs_to_build:
+             if pkg in ignore:
+                 parselog.warning("Explicit target \"%s\" is in ASSUME_PROVIDED, ignoring" % pkg)
++            if pkg.startswith("multiconfig:"):
++                pkgs_to_build.remove(pkg)
++                pkgs_to_build.append(pkg.replace("multiconfig:", "mc:"))
+ 
+         if 'world' in pkgs_to_build:
+             pkgs_to_build.remove('world')
+-- 
+2.20.1
 
 
