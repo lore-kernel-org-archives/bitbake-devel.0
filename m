@@ -1,51 +1,34 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 4E4247E58B
+Return-Path: <david.reyna@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 2E3847DA9A
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Jun 2019 13:51:29 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id b17so9261171wrq.11
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Jun 2019 06:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=oIajlEGrHdUoW465bQj6WMLpP84FZ8ABw+wzPNi8uls=;
-	b=CqjMn0QpCeC3dv03BiJoeDeNkZWG0uqhJyhnZRYpJIb4/mKIPByWeD0Jmp2MQVjE5o
-	X/K71okzWesI8Qe5CA+De4N75aA/MKDZv10AqYkjN3tLkmE+ECknZBm/63EwWp7UYMGZ
-	mm8LTUjIz2JHaqJCEQfJNXekFKG6lE1h8iVKU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=oIajlEGrHdUoW465bQj6WMLpP84FZ8ABw+wzPNi8uls=;
-	b=nU/Pse0/R0YMI5IKWExggAAWPvW5GMKbO4ueALPy1bwmeVf3fCONRYxA9aMiLGQ+3O
-	TgiRNjRg7PK+T9B7VvmmmT/as2bsRUtxmFVM2+IBxbNFZe9962YsSTAOrkmo5emVPkZj
-	q+gCd1epUlf2f8UPpTdxmsRKvbil1YzH5ckuTJkgjjeFcXrybG9n4CMaUwsSFIGC2mgy
-	qGOzexb5Ib7LIepQ/8j69RZ4KSVBfItXyeCNLQ9xyvaYlGc0YbLbu6T/tWBdcubXScPR
-	bxsi85XdYetA5ZelX2kkD5zvzksEGRWa4EnFuBnogkGhn+8OdaftvzzzKYne0aRVHqx5
-	rOeA==
-X-Gm-Message-State: APjAAAVB2TiMJaeuoFtUkHt3XkA2VVigqdnAYhcLLaAu99Nhh9j0tmyC
-	VGBoOzTGG75D2zVrE/rXouAp8Rv3FBA=
-X-Google-Smtp-Source: APXvYqzMnTFIvOZtoQFa61lil0AbA/0c7Op7y6LCeF4K16yCmQTNrdDcJ6uZOEa+mo+wdtwplZHQyw==
-X-Received: by 2002:a5d:4087:: with SMTP id o7mr31739969wrp.277.1560174690114; 
-	Mon, 10 Jun 2019 06:51:30 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	t15sm3199267wrx.84.2019.06.10.06.51.28
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Mon, 10 Jun 2019 06:51:29 -0700 (PDT)
-Message-ID: <074214af47d0baf080b35dc30d69f76295a864fa.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Chris Laplante <chris.laplante@agilent.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Jun 2019 14:51:28 +0100
-In-Reply-To: <1559931844-116966-1-git-send-email-chris.laplante@agilent.com>
-References: <1559931844-116966-1-git-send-email-chris.laplante@agilent.com>
-User-Agent: Evolution 3.32.2-1 
+	Tue, 11 Jun 2019 08:24:52 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x5B8Oqbn002190
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 11 Jun 2019 01:24:52 -0700 (PDT)
+Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.194]) by
+	ALA-HCB.corp.ad.wrs.com ([147.11.189.41]) with mapi id 14.03.0439.000;
+	Tue, 11 Jun 2019 01:24:51 -0700
+From: "Reyna, David" <david.reyna@windriver.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 1/1] [THUD] toaster: Fix Thud Bitbake
+	release for YP-2.6
+Thread-Index: AQHVH2kOLmmPzXZcikCBtOTr8Es/pqaWG22A
+Date: Tue, 11 Jun 2019 08:24:51 +0000
+Message-ID: <5E53D14CE4667A45B9A06760DE5D13D0F3CA1F08@ALA-MBD.corp.ad.wrs.com>
+References: <cover.1560127238.git.David.Reyna@windriver.com>
+	<2784075cbd0cc105c8c6ecdced2226de94d4b343.1560127238.git.David.Reyna@windriver.com>
+	<8b6337f60aa01cc8e4c940f6fb20f4d8207d2b5c.camel@linuxfoundation.org>
+In-Reply-To: <8b6337f60aa01cc8e4c940f6fb20f4d8207d2b5c.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [147.11.119.52]
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/4] Progress handling enhancements
+Subject: Re: [PATCH 1/1] [THUD] toaster: Fix Thud Bitbake release for YP-2.6
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,46 +41,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Jun 2019 13:51:29 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 11 Jun 2019 08:24:52 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Fri, 2019-06-07 at 14:24 -0400, Chris Laplante via bitbake-devel
-wrote:
-> This series of patches supersedes a couple of individual patches I
-> had submitted in the past but that were not merged (either because of
-> feedback or because people forgot about them, I guess).
-> 
-> For simplicity and to consolidate my work, I have prepared this patch
-> set.
-> 
-> An additional change to poky is necessary (I will submit it soon) for
-> functionality in the last commit to be fully usable. But no harm will
-> come from merging this patch set before the poky change.
-> 
-> Chris Laplante (4):
->   bitbake: knotty: allow progress rate for indeterminate bars
->   bitbake: build: extract progress handler creation logic into its
-> own
->     method
->   bitbake: build/progress: use context managers for progress handlers
->   bitbake: build: implement custom progress handlers injected via
->     OE_EXTRA_IMPORTS
-
-Could you resend at least the first patch please? For some reason I
-have the other three in my mail but not the first one.
-
-Alternatively a pointer to a git repo with the patches in would be
-good, or cc me on the patches please?
-
-We're about to change the mailing list infrastructure and one reason is
-some of these kinds of issues so trying to figure out what happened to
-it isn't top of the list of priorities...
-
-Cheers,
-
-Richard
-
-
-
+SGkgUmljaGFyZCwNCg0KPiBXaGVuIHdlIGZpeCBhbiBpc3N1ZSBsaWtlIHRoaXMgd2UgcmVhbGx5
+IG5lZWQgdG8gZml4IGl0IG9uIG1hc3RlciBmaXJzdC4uLg0KDQpJIHdhcyBhY3R1YWxseSBub3Qg
+Z29pbmcgdG8gZml4IG1hc3RlciBiZWNhdXNlICJUaHVkIiBkaXNhcHBlYXJzIGZyb20gdGhlc2Ug
+ZmlsZXMgYW5kIGdldHMgcmVwbGFjZWQgYnkgIlpldXMiIHdoZW4gbWFzdGVyIGZpbmFsbHkgYmVj
+b21lcyAiWmV1cyIsIGJ1dCBJIHVuZGVyc3RhbmQgeW91ciBwb2ludC4NCg0KPiAuLi4gdGhlbiBi
+YWNrcG9ydGVkIGl0IHRvIHRoZSAxLjQyIGFuZCAxLjQwIGJyYW5jaGVzIHdpdGggYSBzdHJhaWdo
+dGZvcndhcmQgY2hlcnJ5LXBpY2suDQoNClRoYXQgc2hvdWxkIHdvcmsuIFRoZSBhZmZlY3RlZCBm
+aWxlcyBhcmUgc2xpZ2h0bHkgZGlmZmVyZW50IG5lYXJieSwgYnV0IHNpbmNlIHRoZSBjaGVycnkg
+cGljayB3b3JrZWQgdGhvc2UgZGlmZmVyZW5jZXMgYXJlIGZvcnR1bmF0ZWx5IG91dHNpZGUgdGhl
+IGZ1enogem9uZSwgc28gYWxsIGlzIGdvb2QuDQoNCj4gQ2FuIHlvdSBjaGVjayBJJ3ZlIGdvdCB0
+aGUgcmlnaHQgY2hhbmdlcyBpbiBwbGVhc2U/DQoNClllcyB0aGV5IGFyZSENCg0KLSBEYXZpZA0K
+DQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogUmljaGFyZCBQdXJkaWUgW21haWx0
+bzpyaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnXSANClNlbnQ6IE1vbmRheSwgSnVu
+ZSAxMCwgMjAxOSAxOjQ3IEFNDQpUbzogUmV5bmEsIERhdmlkOyBiaXRiYWtlLWRldmVsQGxpc3Rz
+Lm9wZW5lbWJlZGRlZC5vcmcNClN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIIDEv
+MV0gW1RIVURdIHRvYXN0ZXI6IEZpeCBUaHVkIEJpdGJha2UgcmVsZWFzZSBmb3IgWVAtMi42DQoN
+Ck9uIFN1biwgMjAxOS0wNi0wOSBhdCAxNzo0NCAtMDcwMCwgRGF2aWQgUmV5bmEgd3JvdGU6DQo+
+IEZyb206IERhdmlkIFJleW5hIDxEYXZpZC5SZXluYUB3aW5kcml2ZXIuY29tPg0KPiANCj4gRml4
+IHRoZSBCaXRiYWtlIHZlcnNpb24gSUQgZm9yIFRodWQgKDEuNDApLg0KPiANCj4gW1lPQ1RPICMx
+MzM1Nl0NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERhdmlkIFJleW5hIDxEYXZpZC5SZXluYUB3aW5k
+cml2ZXIuY29tPg0KPiAtLS0NCj4gIGxpYi90b2FzdGVyL29ybS9maXh0dXJlcy9vZS1jb3JlLnht
+bCB8IDIgKy0NCj4gIGxpYi90b2FzdGVyL29ybS9maXh0dXJlcy9wb2t5LnhtbCAgICB8IDIgKy0N
+Cj4gIDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpU
+aGFua3MgZm9yIHRoZXNlIERhdmlkLg0KDQpXaGVuIHdlIGZpeCBhbiBpc3N1ZSBsaWtlIHRoaXMg
+d2UgcmVhbGx5IG5lZWQgdG8gZml4IGl0IG9uIG1hc3Rlcg0KZmlyc3QsIHRoZW4gYmFja3BvcnQg
+dGhlIGZpeCB0byB0aGUgd2FycmlvciBhbmQgdGhlbiB0aHVkIGJyYW5jaGVzLg0KDQpJbiB0aGlz
+IGNhc2UgSSd2ZSBhcHBsaWVkIHRoZSBmaXggdG8gbWFzdGVyICh3aXRoIHNvbWUgdGVha3MgdG8g
+dGhlDQpjb21taXQgbWVzc2FnZSksIHRoZW4gYmFja3BvcnRlZCBpdCB0byB0aGUgMS40MiBhbmQg
+MS40MCBicmFuY2hlcyB3aXRoDQphIHN0cmFpZ2h0Zm9yd2FyZCBjaGVycnktcGljay4NCg0KQ2Fu
+IHlvdSBjaGVjayBJJ3ZlIGdvdCB0aGUgcmlnaHQgY2hhbmdlcyBpbiBwbGVhc2U/DQoNCkNoZWVy
+cywNCg0KUmljaGFyZA0KDQo=
 
