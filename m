@@ -1,52 +1,51 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com
-	[209.85.214.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 0289F7EAAB
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com
+	[209.85.215.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 78F157EAD4
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 15 Jun 2019 17:51:07 +0000 (UTC)
-Received: by mail-pl1-f194.google.com with SMTP id s24so2351854plr.8
+	Sat, 15 Jun 2019 17:51:08 +0000 (UTC)
+Received: by mail-pg1-f174.google.com with SMTP id s27so3418794pgl.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 15 Jun 2019 10:51:09 -0700 (PDT)
+	Sat, 15 Jun 2019 10:51:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=bi3vORrScoWI2LXYof30FL04KSL4NhLYemC4AGwSoug=;
-	b=bjbXWUW3HpegryvP9zZoSNrv1wBUqWPg2YIG0lAQsS1DLKZhBXcqvd9XLMUC4RHi1K
-	wWJYYCm3mIQzI8vcnaTsDF3gfM5hTTpOs0+tnALvZOvddMAqkFNNfzsbwgeGUOyRScPA
-	SxDnCw3AvPYx7VfVL4G8w2PNmMJSI+d8v99jg634aAis0w09HW/iqDDXgzhIwIYAB65q
-	Xeb1+brsLJtUHNT7GTiUtBtv4W9frBkBTIw7d7pekkA21dxUSrEaj6YvOCo2ePHnPKts
-	J9p7eVkiZBiyh1yswgKQZsMVe1lq0C3nBUUk+gTkWFPbj02YD0YLYmMmiOtNtQQD6MGQ
-	qvpg==
+	bh=GUtQkksRAdgBXTzjXZvJM05e/JuiwRsETmjyukxwN1o=;
+	b=eGUgqZ+mwqq2ojlRuvpLuIDm03s/CIHQAq9HwjnyfXhAQKSk6DqZMREEGWEYe7lylE
+	+kGrgJe2fSp0JcepiiMMTyBoqC7kr1E04L6rC67sbCuRn/oNPnIe8gLndmX0gcIXcQB9
+	qLZF5Lzdak0Y3jzo5FDkFmsmXmrvCDOjWSZ7/ItDcrCT856PNcGmZX6deKpVeoJRlmGZ
+	6O/jwidNt+3dxouPe5Bbw3m2HE0VGWyq0EPnvrKTiClKDnU4MEq94o9imr0dmN1BNQFh
+	EEn2B0BGJGBiOd01Bg7isWXHouWZeRMlv9s36jyaSKNDxIONTnj+cuCkImoE9lZxJ+r5
+	AWIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=bi3vORrScoWI2LXYof30FL04KSL4NhLYemC4AGwSoug=;
-	b=Y9kAltArChdEKxnnlj2GAcNwXR8z5VuadO47i9RGplksx6fHTJoXWVnagLOF4WYAsD
-	fpp6QHc6bhNYksm5k8UNSuykopSyiQasx3hiaAn/kqrhNiT3JJ7Uz+4qcdXNzKYGX1rs
-	l6uKiLDAxtb/MXjWrC7knEbryWP/1aME2Cwa5dA7ORUBYlPp/CzWaWVuDMEA/wiQQL5Z
-	fNpEwNVUgrm+uiPRtlH/FkhSdcZVfLfA/upAOtIQkCiPF9K9y7QY7x4FGReeyJW7LogY
-	6oJsru7IOTOVDIzBOp6KbMXle1RaJWmk0CAotqaGcI4+8ZSaXzm6+lZgi402bUo+y8BV
-	u15g==
-X-Gm-Message-State: APjAAAXMAfgTkcTveXWrPVWE/cwNj1Y8jrdjUI4eUhEVPUm3bT98nMSW
-	2Tf0YoRfx5X+omlIx6RRxyvCEV8X
-X-Google-Smtp-Source: APXvYqwj1jP3Wo7URS3O6DiUaTGUDiXRKMNOyc4oJT+H2DIIUXTvCd2d57n3r5YkgU+KR92t0FvWZw==
-X-Received: by 2002:a17:902:760f:: with SMTP id
-	k15mr75084922pll.125.1560621068866; 
-	Sat, 15 Jun 2019 10:51:08 -0700 (PDT)
+	bh=GUtQkksRAdgBXTzjXZvJM05e/JuiwRsETmjyukxwN1o=;
+	b=nrSrIxAogqJt5qfVpaGZFfsJiIVg53Oche54pIMJt6yYJ8rKX4nxsSMWCUNVhmm3Jv
+	wEr+oGH1tZaIkl2imCUUkYHG9xE8LMIGlle3K4c24gIMaWXc5Iury4eo3br/QWruAZFq
+	8x+2OpaFp8EA8zlX1A2OqVUq84WuERWqlxYI4ZOmqpJWig2sC2egwDp5jxL8jNJKaVqv
+	DZ7SaCz3u0JabIQY8uIy9CeaqSLRH4ifm9IjTo20Y9V5h0ZhSEJOWC1yXCH0dagqrV2n
+	2elqSHnLVhdEZhz7YlzIvy13xLJfGwJn0TJjVTnhNFooqGSQkfXleoLxUgrME8ybf4LV
+	T9ww==
+X-Gm-Message-State: APjAAAWRe02rSzArBiUZVuGHdOEttOMk3Mqlre9iMqsq9nRmA1d1mufF
+	qEqKOIWB7aCGX0C1U+tpKri6cn+f
+X-Google-Smtp-Source: APXvYqzDOEr9Z7TuRnz0q9oAj7TeN7TExxRQB/zULQ5YXIEv0N83FN2+EX7hX3KKvZC4p7hwUCBNJA==
+X-Received: by 2002:a63:3148:: with SMTP id x69mr26553310pgx.226.1560621069561;
+	Sat, 15 Jun 2019 10:51:09 -0700 (PDT)
 Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
 	([2601:202:4180:c33:5942:80bf:dc9c:15ab])
 	by smtp.gmail.com with ESMTPSA id x5sm6622470pjp.21.2019.06.15.10.51.08
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 15 Jun 2019 10:51:08 -0700 (PDT)
+	Sat, 15 Jun 2019 10:51:09 -0700 (PDT)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 15 Jun 2019 10:50:39 -0700
-Message-Id: <b5276e52e10bb87ba38872f0bd0cf9b9214fc8bf.1560620937.git.akuster808@gmail.com>
+Date: Sat, 15 Jun 2019 10:50:40 -0700
+Message-Id: <e7a0f311e3ce9abd6fe1d06ed255e15d48916b3c.1560620937.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1560620937.git.akuster808@gmail.com>
 References: <cover.1560620937.git.akuster808@gmail.com>
-Subject: [Warror][ 09/23] igmpproxy: remove 0001-src-igmpproxy.h-Include-sys-types.h-for-u_short-u_in.patch and _GNU_SOURCE
+Subject: [Warror][ 10/23] libvncserver: set PV in the recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,92 +62,29 @@ X-List-Received-Date: Sat, 15 Jun 2019 17:51:08 -0000
 
 From: Martin Jansa <martin.jansa@gmail.com>
 
-* it was upgraded to 0.2.1 in:
-  commit 50979151e69e5707580b2f3d263a9b36b6a190d5
-  Author: Oleksandr Kravchuk <open.source@oleksandr-kravchuk.com>
-  Date:   Sat Mar 16 18:22:59 2019 +0100
-
-    igmpproxy: update to 0.2.1
-
-* which includes _GNU_SOURCE:
-  https://github.com/pali/igmpproxy/commit/7d790aa2f16afad63418e573db13ea39d76ed141
-* and includes sys/types.h in os-linux.h:
-  https://github.com/pali/igmpproxy/commit/6f92242b23178e979f4a806abe4ac9652b51c593
-* and the patch doesn't apply cleanly:
-  ERROR: Fuzz detected:
-
-  checking file src/igmpproxy.h
-  Hunk #1 succeeded at 51 with fuzz 2 (offset 5 lines).
-
-  patching file src/igmpproxy.h
-  Hunk #1 succeeded at 51 with fuzz 2 (offset 5 lines).
-
-  The context lines in the patches can be updated with devtool:
-
-      devtool modify lib32-igmpproxy
-      devtool finish --force-patch-refresh lib32-igmpproxy <layer_path>
-
-  Don't forget to review changes done by devtool!
-
-  ERROR: QA Issue: Patch log indicates that patches do not apply cleanly. [patch-fuzz]
+* last SRCREV bump commit says:
+  libvncserver: Update to latest commit post 0.9.12
+  but there is no PV in the recipe, so the version was just:
+  git-r0
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- ...xy.h-Include-sys-types.h-for-u_short-u_in.patch | 25 ----------------------
- .../recipes-daemons/igmpproxy/igmpproxy_0.2.1.bb   |  6 +-----
- 2 files changed, 1 insertion(+), 30 deletions(-)
- delete mode 100644 meta-networking/recipes-daemons/igmpproxy/igmpproxy/0001-src-igmpproxy.h-Include-sys-types.h-for-u_short-u_in.patch
+ meta-oe/recipes-graphics/libvncserver/libvncserver_git.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-networking/recipes-daemons/igmpproxy/igmpproxy/0001-src-igmpproxy.h-Include-sys-types.h-for-u_short-u_in.patch b/meta-networking/recipes-daemons/igmpproxy/igmpproxy/0001-src-igmpproxy.h-Include-sys-types.h-for-u_short-u_in.patch
-deleted file mode 100644
-index 82cdc36..0000000
---- a/meta-networking/recipes-daemons/igmpproxy/igmpproxy/0001-src-igmpproxy.h-Include-sys-types.h-for-u_short-u_in.patch
-+++ /dev/null
-@@ -1,25 +0,0 @@
--From a557651a08e21e3c7c7f5eca9f5405f86624903f Mon Sep 17 00:00:00 2001
--From: Khem Raj <raj.khem@gmail.com>
--Date: Fri, 14 Jul 2017 22:42:51 -0700
--Subject: [PATCH] src/igmpproxy.h: Include sys/types.h for u_short/u_init
--
--Signed-off-by: Khem Raj <raj.khem@gmail.com>
-----
-- src/igmpproxy.h | 1 +
-- 1 file changed, 1 insertion(+)
--
--diff --git a/src/igmpproxy.h b/src/igmpproxy.h
--index 4dabd1c..4454729 100644
----- a/src/igmpproxy.h
--+++ b/src/igmpproxy.h
--@@ -46,6 +46,7 @@
-- #include <stdbool.h>
-- 
-- #include <sys/socket.h>
--+#include <sys/types.h>
-- #include <sys/un.h>
-- #include <sys/time.h>
-- #include <sys/ioctl.h>
---- 
--2.13.3
--
-diff --git a/meta-networking/recipes-daemons/igmpproxy/igmpproxy_0.2.1.bb b/meta-networking/recipes-daemons/igmpproxy/igmpproxy_0.2.1.bb
-index c99ebe0..db96d48 100644
---- a/meta-networking/recipes-daemons/igmpproxy/igmpproxy_0.2.1.bb
-+++ b/meta-networking/recipes-daemons/igmpproxy/igmpproxy_0.2.1.bb
-@@ -4,12 +4,8 @@ HOMEPAGE = "http://sourceforge.net/projects/igmpproxy/"
- LICENSE = "GPLv2+"
- LIC_FILES_CHKSUM = "file://COPYING;md5=432040ff3a55670c1dec0c32b209ad69"
+diff --git a/meta-oe/recipes-graphics/libvncserver/libvncserver_git.bb b/meta-oe/recipes-graphics/libvncserver/libvncserver_git.bb
+index 6a806ff..bc47a3f 100644
+--- a/meta-oe/recipes-graphics/libvncserver/libvncserver_git.bb
++++ b/meta-oe/recipes-graphics/libvncserver/libvncserver_git.bb
+@@ -32,6 +32,6 @@ inherit cmake
  
--SRC_URI = "https://github.com/pali/igmpproxy/releases/download/${PV}/igmpproxy-${PV}.tar.gz \
--           file://0001-src-igmpproxy.h-Include-sys-types.h-for-u_short-u_in.patch \
--"
-+SRC_URI = "https://github.com/pali/igmpproxy/releases/download/${PV}/${BP}.tar.gz"
- SRC_URI[md5sum] = "3a9c2cb42c1f5ee0cb769a4884545641"
- SRC_URI[sha256sum] = "d351e623037390f575c1203d9cbb7ba33a8bdef85a3c5e1d2901c5a2a38449a1"
- 
- inherit autotools pkgconfig
+ SRC_URI = "git://github.com/LibVNC/libvncserver"
+ SRCREV = "c0a23857a5c42b45b6d22ccf7218becd1fa69402"
 -
--CFLAGS += "-D_GNU_SOURCE"
++PV = "0.9.12+git${SRCPV}"
+ 
+ S = "${WORKDIR}/git"
 -- 
 2.7.4
 
