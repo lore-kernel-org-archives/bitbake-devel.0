@@ -1,52 +1,49 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
-	[209.85.128.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 5C09C7E8F5
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com
+	[209.85.215.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 06D637E3EB
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 15 Jun 2019 10:05:55 +0000 (UTC)
-Received: by mail-wm1-f65.google.com with SMTP id x15so4694714wmj.3
+	Sat, 15 Jun 2019 17:50:59 +0000 (UTC)
+Received: by mail-pg1-f173.google.com with SMTP id s21so3386141pga.12
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 15 Jun 2019 03:05:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=rT9hC4VwQe49JCofZrw7Mytr91XAsMWwyPtCbik6Yco=;
-	b=d7Co6xk3o6SG6/aGjTJzxZlanNN+qElm5kwsFjXts9L2hF+UoX0Y7mZnU0wrXXtrsI
-	5rruBoTksaSFYsRczi5aYgNhNeTi4RfICPkQY5HLvvj2wg/iagijvPbLIAQt4nhn9mQE
-	es9ao1x9WgKkAZivWviF4atCCs5iTYxuWhL2s=
+	Sat, 15 Jun 2019 10:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id;
+	bh=k02GN0UTATudfVCULAcwxsZQv2/5mP4AIRz/5qja6x0=;
+	b=JVXit1VZh3fYEae/nTBtnfLKX3cidkom0yLkWee0FoZlGSm6LrrdgrdJNq5ws93lM6
+	r3J7TElJilDIvZX5LbdUaFEGOy5rWplcqrCD3TViICb6wDAdagqGl8+LAiJfUqip/Ct0
+	t1N7oVWqmOoXdGmkLM9Dge2RRbLjgLArTi9FyHqlxywQwn8XyiuVkLfv+Asw764O9co3
+	6ncBfssdbZyMJZ9aXucbIKS1vBXqeWDQj2QaYaPYVsRRep8OxtajoQx+qxhsR8+U/+gl
+	VmuZow08F76gPTllS1xbie/3Z0L4/BCAU2ZeukCZSU5cIHIZihjyGVQE9+Zg1uPwC9mH
+	pYcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=rT9hC4VwQe49JCofZrw7Mytr91XAsMWwyPtCbik6Yco=;
-	b=eYOrioGmzIlnVFNINQuxXfMCf+rpbOPrVIthT11Eo7ycw9P/PaATh1+6bO0BZa1htE
-	aEHdaL5Inp+JZI+ZEYXT9bzxBDU2sma0uMYN5XDvcIqzsf3iBfZHUTaapAJ5323EhFmP
-	xyE9+WELfpwxEE5JzYZztKSkykOMlimzswtVoyrUgkTqpI5zNMGHpMBy4bOCp4U+4CZl
-	g9XlFPygEcHEl5O0sys0Vy0v06FkgwHAcfLV1nLXCcJvSMdJMfs4oyevrSuwFT0etkae
-	Obah0dkxVigHctM1Jh/RancFEWM6XYr5G5aYAmb9mdDJjX2FklFFI5DVLS5zthamCwgq
-	aDiw==
-X-Gm-Message-State: APjAAAWGu7FFSSAhxeDt/+lYIAk76FAtn8OczFuTMY5K9/Vti0KdnjUk
-	iPa2ztJHop3Ebk1U3uO1pmX0UQ==
-X-Google-Smtp-Source: APXvYqwirOvcExHBl99LnR1WTgBiQPuDRE5t6MCRpZO0Y1z+0kY7ev2xgHkfJJP9DtBad3ST8zeG/w==
-X-Received: by 2002:a05:600c:118a:: with SMTP id
-	i10mr5731120wmf.162.1560593155942; 
-	Sat, 15 Jun 2019 03:05:55 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id u5sm6912655wmc.32.2019.06.15.03.05.54
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Sat, 15 Jun 2019 03:05:55 -0700 (PDT)
-Message-ID: <afda1b3651286141fa61d53afd0a38ec24ee84ef.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: Martin Jansa <martin.jansa@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sat, 15 Jun 2019 11:05:53 +0100
-In-Reply-To: <20190615072409.GA1486@jama>
-References: <20190615071743.9494-1-Martin.Jansa@gmail.com>
-	<20190615072409.GA1486@jama>
-User-Agent: Evolution 3.32.2-1 
-MIME-Version: 1.0
-Subject: Re: [1.40][PATCH] bitbake: fix version comparison when one of the versions ends in .
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=k02GN0UTATudfVCULAcwxsZQv2/5mP4AIRz/5qja6x0=;
+	b=EQh0Bkn74u4Blqww/4LcKyMGCFVMOJX+PUctlK0UEdJ9jSGv6nGBfFVki20fYWut2c
+	VUjj78YNVPXFRrXLgXb8npe3mErjSDGZw9ih4ZUxsB6cf1LEYVZ5Uqkp1RGw1EExF64q
+	GiX7fYvqcwe2+YhihA0N551wz53QT+2rNP+UeI5edAUU/Kt8E3XgYGK4rYsTa7uxPzFB
+	WlDW+Qqa9Ch11lCFsAV1AdIy1pqsxeagtifjYCHOIGxXTWBYbKtIz+QPwceTddts6Prs
+	DYrWGYvfi3cRhupfZBmmy7gz0qrT/ppsy437fWDtfANZ/WWP2UhqFuXa/X9bEEBIU64/
+	d5DQ==
+X-Gm-Message-State: APjAAAVjejIyY8puJRynvedb8kaAYjCdeG26QlEH73VM6nkZtzqsKwYD
+	G7rSZgDxktck/5kA7wdIv8cvoS9b
+X-Google-Smtp-Source: APXvYqxQLcKCagTjnt2zV6THZ1m9i+bX2Luz0zepIy5JsSZlIh89FrhE8NTgsDmZzLaB/DRFCUNsag==
+X-Received: by 2002:a17:90a:e38f:: with SMTP id
+	b15mr17642057pjz.85.1560621060810; 
+	Sat, 15 Jun 2019 10:51:00 -0700 (PDT)
+Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
+	([2601:202:4180:c33:5942:80bf:dc9c:15ab])
+	by smtp.gmail.com with ESMTPSA id x5sm6622470pjp.21.2019.06.15.10.50.59
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Sat, 15 Jun 2019 10:50:59 -0700 (PDT)
+From: Armin Kuster <akuster808@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sat, 15 Jun 2019 10:50:30 -0700
+Message-Id: <cover.1560620937.git.akuster808@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [Warror][ 00/23] Patch review
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,28 +56,106 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 15 Jun 2019 10:05:55 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 15 Jun 2019 17:51:00 -0000
 
-On Sat, 2019-06-15 at 09:24 +0200, Martin Jansa wrote:
-> I was seeing the same error on versions not ending with '.', in my
-> case:
-> bb.utils.vercmp((0,1.0.2r,r0.0webos22),
-> (0,1.0.2r0webos19,r0.0webos21)
-> 
-> Which lead to do_packagedata failure through
-> buildhistory_emit_pkghistory shown bellow.
-> 
-> Alex's fix works for the above versions as well, should I extend
-> the bb.utils.vercmp selftest with even weirder versions like we're
-> using
-> or leave it as is?
+Most of these where back port requests so I am giving a short review window.
+Commnets by Sunday.
 
-Adding such examples would be good please!
+The following changes since commit 21cbe3ec166696b4d67d2ef5486a394d14d29269:
 
-Cheers,
+  aufs-util: prevent native aufs-util depending on target kernel (2019-05-18 07:38:39 -0700)
 
-Richard
+are available in the git repository at:
+
+  https://git.openembedded.org/meta-openembedded-contrib stable/warrior-nmut
+  http://cgit.openembedded.org//log/?h=stable/warrior-nmut
+
+Changqing Li (1):
+  netkit-telnet: add rconflicts
+
+Hongxu Jia (1):
+  crash: do not use unstable github archive tarballs
+
+Liwei Song (1):
+  turbostat: copy bits.h from kernel to turbostat
+
+Martin Jansa (16):
+  gtkwave: add distro_features_check
+  ndctl: make MACHINE_ARCH and ignore from libblockdev
+  oprofile: make MACHINE_ARCH
+  umip: make MACHINE_ARCH
+  mscgen: fix SRC_URI for multilib
+  triggerhappy: fix issues
+  python-cassandra-driver.inc: fix DEPENDS
+  opencv: use the same package name in PACKAGES and RDEPENDS
+  igmpproxy: remove
+    0001-src-igmpproxy.h-Include-sys-types.h-for-u_short-u_in.patch and
+    _GNU_SOURCE
+  libvncserver: set PV in the recipe
+  ccid: fix SRC_URI
+  ne10, libopus: add armv7ve override as well
+  hunspell: use git fetcher instead of github archive
+  ttf-mplus, ttf-vlgothic: add ttf-mplus license
+  libmikmod: fix SRC_URI
+  leptonica: fix SRC_URI
+
+Mingli Yu (1):
+  mariadb: Upgrade to 10.3.15
+
+Qi.Chen@windriver.com (1):
+  polkit: fix CVE-2019-6133
+
+Scott Ellis (1):
+  wireguard: Upgrade 20190123 -> 20190406
+
+nick83ola (1):
+  uthash: do not use unstable github archive tarballs
+
+ .../recipes-connectivity/umip/umip_1.0.bb          |   3 +
+ ...xy.h-Include-sys-types.h-for-u_short-u_in.patch |  25 ---
+ .../recipes-daemons/igmpproxy/igmpproxy_0.2.1.bb   |   6 +-
+ ...0190123.bb => wireguard-module_0.0.20190406.bb} |   0
+ ...20190123.bb => wireguard-tools_0.0.20190406.bb} |   0
+ .../recipes-kernel/wireguard/wireguard.inc         |   4 +-
+ .../netkit-telnet/netkit-telnet_0.17.bb            |   1 +
+ meta-oe/conf/layer.conf                            |   6 +
+ meta-oe/licenses/ttf-mplus                         |  16 ++
+ meta-oe/recipes-core/ndctl/ndctl_v63.bb            |   3 +
+ .../packagegroups/packagegroup-meta-oe.bb          |   3 +-
+ ...native_10.3.13.bb => mariadb-native_10.3.15.bb} |   0
+ meta-oe/recipes-dbs/mysql/mariadb.inc              |   4 +-
+ .../{mariadb_10.3.13.bb => mariadb_10.3.15.bb}     |   0
+ ...pare-PolkitUnixProcess-uids-for-temporary.patch | 186 +++++++++++++++++++++
+ meta-oe/recipes-extended/polkit/polkit_0.115.bb    |   7 +-
+ .../{triggerhappy_0.5.0.bb => triggerhappy_git.bb} |  22 +--
+ meta-oe/recipes-graphics/gtkwave/gtkwave_3.3.98.bb |   4 +
+ .../recipes-graphics/leptonica/leptonica_1.74.4.bb |   2 +-
+ .../libvncserver/libvncserver_git.bb               |   2 +-
+ .../recipes-graphics/ttf-fonts/ttf-mplus_027.bb    |   2 +-
+ .../ttf-fonts/ttf-vlgothic_20141206.bb             |   2 +-
+ meta-oe/recipes-kernel/crash/crash_7.2.5.bb        |   8 +-
+ meta-oe/recipes-kernel/oprofile/oprofile_1.3.0.bb  |   3 +
+ meta-oe/recipes-kernel/turbostat/turbostat_3.4.bb  |   2 +
+ .../recipes-multimedia/libopus/libopus_1.1.3.bb    |   3 +-
+ .../recipes-multimedia/mikmod/libmikmod_3.3.6.bb   |   2 +-
+ meta-oe/recipes-support/ccid/ccid_1.4.24.bb        |   4 +-
+ meta-oe/recipes-support/hunspell/hunspell_1.7.0.bb |   7 +-
+ meta-oe/recipes-support/mscgen/mscgen_0.20.bb      |   2 +-
+ meta-oe/recipes-support/ne10/ne10_1.2.1.bb         |   4 +-
+ meta-oe/recipes-support/opencv/opencv_3.4.5.bb     |   2 +-
+ meta-oe/recipes-support/uthash/uthash_2.1.0.bb     |   7 +-
+ .../python/python-cassandra-driver.inc             |   2 +-
+ 34 files changed, 272 insertions(+), 72 deletions(-)
+ delete mode 100644 meta-networking/recipes-daemons/igmpproxy/igmpproxy/0001-src-igmpproxy.h-Include-sys-types.h-for-u_short-u_in.patch
+ rename meta-networking/recipes-kernel/wireguard/{wireguard-module_0.0.20190123.bb => wireguard-module_0.0.20190406.bb} (100%)
+ rename meta-networking/recipes-kernel/wireguard/{wireguard-tools_0.0.20190123.bb => wireguard-tools_0.0.20190406.bb} (100%)
+ create mode 100644 meta-oe/licenses/ttf-mplus
+ rename meta-oe/recipes-dbs/mysql/{mariadb-native_10.3.13.bb => mariadb-native_10.3.15.bb} (100%)
+ rename meta-oe/recipes-dbs/mysql/{mariadb_10.3.13.bb => mariadb_10.3.15.bb} (100%)
+ create mode 100644 meta-oe/recipes-extended/polkit/polkit/0001-backend-Compare-PolkitUnixProcess-uids-for-temporary.patch
+ rename meta-oe/recipes-extended/triggerhappy/{triggerhappy_0.5.0.bb => triggerhappy_git.bb} (73%)
+
+-- 
+2.7.4
 
 
