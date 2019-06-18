@@ -1,48 +1,52 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com
-	[209.85.210.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 5B89B7E912
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com
+	[209.85.128.51])
+	by mail.openembedded.org (Postfix) with ESMTP id CB9327E949
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Jun 2019 15:41:22 +0000 (UTC)
-Received: by mail-pf1-f194.google.com with SMTP id p184so7881545pfp.7
+	Tue, 18 Jun 2019 15:58:05 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id u8so3842314wmm.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Jun 2019 08:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id;
-	bh=WWag5wTUrrVyE/8pZz3ziG4bsGeRoW2Zoce5S70gSv8=;
-	b=b8tnmEX3kouRfvhm9I4gGIgB77cIWmadxwYPfDMGwIxCrp/RdrV5OQhd6yAWnTHv1M
-	0JCKXpZgeH0LgQi+syi6RfoEd1HO4vyoq6Mel5p4kdByGbsvYkhlVWQ5xYYj6r5jfiJs
-	uPKtD07tyQ6bRBy0odSzCcqpQeTMEJAX4w/tH0hldURSKPS4U7qgdtwTzCNphTcFO/Jq
-	FN4AHWTayPU6hk9te4UvvbU4NEkZdRqhY7AEOsZafpKI/0sCxp27yVtHHr/CeKPs4Ztr
-	q5E7QtlHNZ7+oO7DWesYrOPbfDw1UCh5xleBVV9DUkr+ZCYkPU/g//z8SlPKpBv0zNy7
-	b06w==
+	Tue, 18 Jun 2019 08:58:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=1Fh3PXvQdyrLMNscAHhoe+wUqNazq8WbWXb8Z7uhbL8=;
+	b=OitF9Oo1EwVUfJF9q04zcfWUEtnrNJZ9Q2oVBectQb5qar4pWzpbQ9UkqkFjWzF9XH
+	7uwXxNpEApnAiMl490hB6jhuac2D5J6EKWyDXmxHbg2SvaVpV57VW6zM5rJX50oWkbGm
+	361S4waEylpA7mqmlLTDTjJ0R8jzN3uO38CpU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=WWag5wTUrrVyE/8pZz3ziG4bsGeRoW2Zoce5S70gSv8=;
-	b=jpOYgxB9Q1F0BoTR0rxq1sPx8nBIQKOmcbdhHFCeA+wZBVxkPxV338O8VOfxuVUdff
-	QGd54W938tdVXbQMKFe0mt5/jSd/yoeTjP38nbN0I/xostooKAYNOYrnYlM9wGpc6pK8
-	e5bS7K//JT41g4rdkN2HY/ksWlxM19JoUQ3i5W7qLfsShS5ivFN7dBxfsw2xmIqOumGC
-	VurHI4BMfFNFOjb1rZ1RKI8qH+3oh4yw/INqHj5jDKev2Llch4JpFKqSF5hCMK1Bl4l4
-	eJEg56sVDsEC1qm5uRDqHdyTxtyeJaUVjdcBW6d+46WDspGrhDilehQr6fNyvtqlBu+h
-	rVcQ==
-X-Gm-Message-State: APjAAAWoO4fbGa5/EGLIXUbfajQuySLaQmPBNgjRFXbLbHFzd1xJxxZ3
-	+bsebx8BE9s3RdgueC5CsxJpstWhgL8=
-X-Google-Smtp-Source: APXvYqwqGnOGHXatPgzLRuWvDlIY44b33Jmjx+kq0sQQlwa7LzN2moPIm2kR07mElxYcdZd3IA2vkA==
-X-Received: by 2002:a62:1d11:: with SMTP id d17mr28978838pfd.249.1560872483141;
-	Tue, 18 Jun 2019 08:41:23 -0700 (PDT)
-Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
-	([2601:202:4180:c33:748c:5242:a62f:a00e])
-	by smtp.gmail.com with ESMTPSA id a18sm3028379pjq.0.2019.06.18.08.41.22
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 18 Jun 2019 08:41:22 -0700 (PDT)
-From: Armin Kuster <akuster808@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Jun 2019 08:41:13 -0700
-Message-Id: <cover.1560872271.git.akuster808@gmail.com>
-X-Mailer: git-send-email 2.7.4
-Subject: [PATCH 0/3] 1.42 next pull reqest
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=1Fh3PXvQdyrLMNscAHhoe+wUqNazq8WbWXb8Z7uhbL8=;
+	b=BWwom9Hu6lMgoHqrDaMcCFJ9BoDLmkI3+QVeE9Y9ECdJ3yUDoJkkuOoo47Fg7jHq8k
+	a/clcew+ttRmHKMvKYHcm2frB/8f2U3BtrfCbzid8ymxXGMz+u/wmSfkxdo2Ydhm8Ccp
+	9xqtKgCcQGnAmO/96Hh9kuuPh4SfVoq85NpIjCtcUjRJZNajLbcCL6GJ5qGXNLYkcT7/
+	mY8QkSELAj3ZVRVrKQ/wuCtlr9s7+gvqxF4L3MA6XxdUm4oO+luSb5rK9WWbISlzaXmx
+	exZY1tx0JI++VFmgiSD5jA8sthtKCGXRAGGRF412cEMlb8YL6ukGakOF3wCNJmTQwe6p
+	cMIQ==
+X-Gm-Message-State: APjAAAUvDl+ZCH1gj7ax4VhRf5kajP8IEUoYdveZk0nr9yrY+fVlCwVI
+	ELhIY89g3A3EvgiJPp0UglupaNNLeHE=
+X-Google-Smtp-Source: APXvYqzUu0rV1tuLRq4p/VxSTQpGovsfjd89QFUFOL6skm5y6BPJQ6+mIDBL50IbH3P8/TSeD4Tegg==
+X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr4097729wmg.177.1560873486528;
+	Tue, 18 Jun 2019 08:58:06 -0700 (PDT)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	l19sm1721748wmj.33.2019.06.18.08.58.05
+	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+	Tue, 18 Jun 2019 08:58:05 -0700 (PDT)
+Message-ID: <d770ec48cbf5abb2adae2bb8454809c00e92da3d.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Oleksandr Kravchuk <open.source@oleksandr-kravchuk.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 18 Jun 2019 16:58:04 +0100
+In-Reply-To: <f13ae5e7-a356-f42e-0efc-020f5ee29cb0@oleksandr-kravchuk.com>
+References: <20190614000925.12048-1-open.source@oleksandr-kravchuk.com>
+	<f13ae5e7-a356-f42e-0efc-020f5ee29cb0@oleksandr-kravchuk.com>
+User-Agent: Evolution 3.32.2-1 
+MIME-Version: 1.0
+Subject: Re: [PATCH] bitbake: cooker: list all nonexistent bblayer directories
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,209 +59,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Jun 2019 15:41:22 -0000
+X-List-Received-Date: Tue, 18 Jun 2019 15:58:06 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Please consider these for 1.42
-The following changes since commit 2a823584a5dbc2427060352f3b4798dbb2640cfd:
+On Fri, 2019-06-14 at 02:09 +0200, Oleksandr Kravchuk wrote:
+> This is how log will look like:
+> 
+> ERROR: Unable to start bitbake server (None)
+> ERROR: Server log for this session
+> (/home/sashko/projects/yocto/open-embedded/build/bitbake-
+> cookerdaemon.log):
+> --- Starting bitbake server pid 11745 at 2019-06-14 02:08:15.687299
+> ---
+> ERROR: The following layer directories do not exist:
+> ERROR:    /home/sashko/projects/yocto/open-
+> embedded/sources/poky/meta-abc
+> ERROR:    /home/sashko/projects/yocto/open-
+> embedded/sources/poky/meta-xyz
+> ERROR: Please check BBLAYERS in
+> /home/sashko/projects/yocto/open-embedded/build/conf/bblayers.conf
 
-  gitsm: Fix a bug where the wrong path was used for the submodule init (2019-06-18 11:43:03 +0100)
+Looks good to me, I've merged this thanks!
 
-are available in the git repository at:
+Cheers,
 
-  git://git.openembedded.org/bitbake-contrib stable/1.42-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.42-next
-
-Matthias Schiffer (1):
-  fetch2: runfetchcmd(): unset _PYTHON_SYSCONFIGDATA_NAME
-
-Richard Purdie (2):
-  bitbake: Add initial pass of SPDX license headers to source code
-  bitbake: Drop duplicate license boilerplace text
-
- HEADER                                             | 13 +----
- LICENSE                                            | 12 ++++-
- COPYING => LICENSE.GPL-2.0-only                    | 61 ++--------------------
- LICENSE.MIT                                        | 25 +++++++++
- MANIFEST.in                                        |  4 +-
- bin/bitbake                                        | 12 +----
- bin/bitbake-diffsigs                               | 12 +----
- bin/bitbake-hashserv                               | 13 +----
- bin/bitbake-layers                                 | 12 +----
- bin/bitbake-prserv                                 |  4 ++
- bin/bitbake-selftest                               | 12 +----
- bin/bitbake-worker                                 |  3 ++
- bin/bitdoc                                         | 12 +----
- bin/git-make-shallow                               |  4 ++
- bin/toaster                                        | 12 +----
- bin/toaster-eventreplay                            | 15 +-----
- lib/bb/COW.py                                      | 13 -----
- lib/bb/__init__.py                                 | 12 +----
- lib/bb/build.py                                    | 13 +----
- lib/bb/cache.py                                    | 12 +----
- lib/bb/cache_extra.py                              | 12 +----
- lib/bb/checksum.py                                 | 12 +----
- lib/bb/codeparser.py                               |  4 ++
- lib/bb/command.py                                  | 12 +----
- lib/bb/compat.py                                   |  4 ++
- lib/bb/cooker.py                                   | 13 +----
- lib/bb/cookerdata.py                               | 12 +----
- lib/bb/daemonize.py                                |  4 ++
- lib/bb/data.py                                     | 13 +----
- lib/bb/data_smart.py                               | 12 +----
- lib/bb/event.py                                    | 12 +----
- lib/bb/exceptions.py                               |  3 ++
- lib/bb/fetch2/__init__.py                          | 18 +++----
- lib/bb/fetch2/bzr.py                               | 12 +----
- lib/bb/fetch2/clearcase.py                         | 13 +----
- lib/bb/fetch2/cvs.py                               | 15 +-----
- lib/bb/fetch2/git.py                               | 14 +----
- lib/bb/fetch2/gitannex.py                          | 12 +----
- lib/bb/fetch2/gitsm.py                             | 12 +----
- lib/bb/fetch2/hg.py                                | 14 +----
- lib/bb/fetch2/local.py                             | 14 +----
- lib/bb/fetch2/npm.py                               |  3 ++
- lib/bb/fetch2/osc.py                               |  3 ++
- lib/bb/fetch2/perforce.py                          | 13 +----
- lib/bb/fetch2/repo.py                              | 14 +----
- lib/bb/fetch2/s3.py                                | 13 +----
- lib/bb/fetch2/sftp.py                              | 13 +----
- lib/bb/fetch2/ssh.py                               | 12 +----
- lib/bb/fetch2/svn.py                               | 13 +----
- lib/bb/fetch2/wget.py                              | 13 +----
- lib/bb/main.py                                     | 12 +----
- lib/bb/methodpool.py                               | 12 +----
- lib/bb/monitordisk.py                              | 12 +----
- lib/bb/msg.py                                      | 12 +----
- lib/bb/namedtuple_with_abc.py                      |  3 ++
- lib/bb/parse/__init__.py                           | 14 +----
- lib/bb/parse/ast.py                                | 13 +----
- lib/bb/parse/parse_py/BBHandler.py                 | 13 +----
- lib/bb/parse/parse_py/ConfHandler.py               | 12 +----
- lib/bb/parse/parse_py/__init__.py                  | 14 +----
- lib/bb/persist_data.py                             | 12 +----
- lib/bb/process.py                                  |  4 ++
- lib/bb/progress.py                                 | 12 +----
- lib/bb/providers.py                                | 12 +----
- lib/bb/remotedata.py                               | 12 +----
- lib/bb/runqueue.py                                 | 12 +----
- lib/bb/server/__init__.py                          | 14 +----
- lib/bb/server/process.py                           | 12 +----
- lib/bb/server/xmlrpcclient.py                      | 12 +----
- lib/bb/server/xmlrpcserver.py                      | 12 +----
- lib/bb/siggen.py                                   |  4 ++
- lib/bb/taskdata.py                                 | 12 +----
- lib/bb/tests/codeparser.py                         | 13 +----
- lib/bb/tests/cooker.py                             | 13 +----
- lib/bb/tests/cow.py                                | 15 +-----
- lib/bb/tests/data.py                               | 13 +----
- lib/bb/tests/event.py                              | 13 +----
- lib/bb/tests/fetch.py                              | 13 +----
- lib/bb/tests/parse.py                              | 13 +----
- lib/bb/tests/persist_data.py                       | 13 +----
- lib/bb/tests/utils.py                              | 13 +----
- lib/bb/tinfoil.py                                  | 12 +----
- lib/bb/ui/__init__.py                              | 12 +----
- lib/bb/ui/buildinfohelper.py                       | 12 +----
- lib/bb/ui/knotty.py                                | 12 +----
- lib/bb/ui/ncurses.py                               | 12 +----
- lib/bb/ui/taskexp.py                               | 12 +----
- lib/bb/ui/toasterui.py                             | 12 +----
- lib/bb/ui/uievent.py                               | 13 +----
- lib/bb/ui/uihelper.py                              | 12 +----
- lib/bb/utils.py                                    | 12 +----
- lib/bblayers/__init__.py                           |  4 ++
- lib/bblayers/action.py                             |  4 ++
- lib/bblayers/common.py                             |  4 ++
- lib/bblayers/layerindex.py                         |  4 ++
- lib/bblayers/query.py                              |  4 ++
- lib/hashserv/__init__.py                           | 12 +----
- lib/hashserv/tests.py                              | 12 +----
- lib/layerindexlib/__init__.py                      | 12 +----
- lib/layerindexlib/cooker.py                        | 12 +----
- lib/layerindexlib/plugin.py                        | 13 +----
- lib/layerindexlib/restapi.py                       | 12 +----
- lib/layerindexlib/tests/common.py                  | 12 +----
- lib/layerindexlib/tests/cooker.py                  | 12 +----
- lib/layerindexlib/tests/layerindexobj.py           | 12 +----
- lib/layerindexlib/tests/restapi.py                 | 12 +----
- lib/progressbar/__init__.py                        |  2 +
- lib/progressbar/compat.py                          |  2 +
- lib/progressbar/progressbar.py                     |  2 +
- lib/progressbar/widgets.py                         |  2 +
- lib/prserv/__init__.py                             |  4 ++
- lib/prserv/db.py                                   |  4 ++
- lib/prserv/serv.py                                 |  4 ++
- lib/pyinotify.py                                   | 17 +-----
- lib/toaster/bldcollector/admin.py                  |  4 ++
- lib/toaster/bldcollector/urls.py                   | 13 +----
- lib/toaster/bldcollector/views.py                  | 12 +----
- lib/toaster/bldcontrol/admin.py                    |  4 ++
- lib/toaster/bldcontrol/bbcontroller.py             | 13 +----
- lib/toaster/bldcontrol/localhostbecontroller.py    | 13 +----
- .../management/commands/checksettings.py           |  4 ++
- .../bldcontrol/management/commands/runbuilds.py    |  4 ++
- lib/toaster/bldcontrol/models.py                   |  4 ++
- lib/toaster/bldcontrol/views.py                    |  4 ++
- lib/toaster/manage.py                              |  4 ++
- lib/toaster/orm/management/commands/lsupdates.py   | 12 +----
- lib/toaster/orm/models.py                          | 12 +----
- lib/toaster/tests/browser/selenium_helpers.py      | 13 +----
- lib/toaster/tests/browser/selenium_helpers_base.py | 13 +----
- lib/toaster/tests/browser/test_all_builds_page.py  | 12 +----
- .../tests/browser/test_all_projects_page.py        | 12 +----
- .../tests/browser/test_builddashboard_page.py      | 12 +----
- .../browser/test_builddashboard_page_artifacts.py  | 12 +----
- .../browser/test_builddashboard_page_recipes.py    | 12 +----
- .../browser/test_builddashboard_page_tasks.py      | 12 +----
- lib/toaster/tests/browser/test_js_unit_tests.py    | 12 +----
- lib/toaster/tests/browser/test_landing_page.py     | 14 +----
- .../tests/browser/test_layerdetails_page.py        | 14 +----
- .../browser/test_most_recent_builds_states.py      | 14 +----
- .../tests/browser/test_new_custom_image_page.py    | 12 +----
- lib/toaster/tests/browser/test_new_project_page.py | 12 +----
- .../tests/browser/test_project_builds_page.py      | 12 +----
- .../tests/browser/test_project_config_page.py      | 12 +----
- lib/toaster/tests/browser/test_project_page.py     | 12 +----
- lib/toaster/tests/browser/test_sample.py           | 12 +----
- lib/toaster/tests/browser/test_task_page.py        | 12 +----
- lib/toaster/tests/browser/test_toastertable_ui.py  | 12 +----
- lib/toaster/tests/builds/buildtest.py              | 12 +----
- lib/toaster/tests/builds/test_core_image_min.py    | 13 +----
- lib/toaster/tests/commands/test_loaddata.py        | 12 +----
- lib/toaster/tests/commands/test_lsupdates.py       | 12 +----
- lib/toaster/tests/commands/test_runbuilds.py       | 12 +----
- lib/toaster/tests/db/test_db.py                    |  2 +
- lib/toaster/tests/eventreplay/__init__.py          | 12 +----
- lib/toaster/tests/functional/functional_helpers.py | 12 +----
- .../tests/functional/test_functional_basic.py      | 12 +----
- lib/toaster/tests/views/test_views.py              | 12 +----
- lib/toaster/toastergui/api.py                      | 13 +----
- lib/toaster/toastergui/buildtables.py              | 12 +----
- lib/toaster/toastergui/tablefilter.py              | 12 +----
- lib/toaster/toastergui/tables.py                   | 12 +----
- .../toastergui/templatetags/field_values_filter.py |  4 ++
- .../templatetags/objects_to_dictionaries_filter.py |  4 ++
- .../toastergui/templatetags/project_url_tag.py     |  4 ++
- lib/toaster/toastergui/templatetags/projecttags.py | 12 +----
- lib/toaster/toastergui/typeaheads.py               | 12 +----
- lib/toaster/toastergui/urls.py                     | 12 +----
- lib/toaster/toastergui/views.py                    | 13 +----
- lib/toaster/toastergui/widgets.py                  | 12 +----
- .../toastermain/management/commands/builddelete.py |  4 ++
- .../toastermain/management/commands/buildimport.py | 12 +----
- .../toastermain/management/commands/buildslist.py  |  4 ++
- .../toastermain/management/commands/checksocket.py | 12 +----
- .../toastermain/management/commands/perf.py        |  4 ++
- lib/toaster/toastermain/settings.py                | 12 +----
- .../toastermain/settings_production_example.py     | 12 +----
- lib/toaster/toastermain/settings_test.py           | 12 +----
- lib/toaster/toastermain/urls.py                    | 12 +----
- lib/toaster/toastermain/wsgi.py                    |  4 ++
- 179 files changed, 338 insertions(+), 1609 deletions(-)
- rename COPYING => LICENSE.GPL-2.0-only (84%)
- create mode 100644 LICENSE.MIT
-
--- 
-2.7.4
+Richard
 
 
