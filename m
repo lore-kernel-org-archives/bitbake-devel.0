@@ -1,52 +1,50 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com
-	[209.85.128.51])
-	by mail.openembedded.org (Postfix) with ESMTP id CB9327E949
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
+	[209.85.221.67])
+	by mail.openembedded.org (Postfix) with ESMTP id AEDD07E923
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Jun 2019 15:58:05 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id u8so3842314wmm.1
+	Tue, 18 Jun 2019 15:59:16 +0000 (UTC)
+Received: by mail-wr1-f67.google.com with SMTP id f9so50308wre.12
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Jun 2019 08:58:07 -0700 (PDT)
+	Tue, 18 Jun 2019 08:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
 	:mime-version:content-transfer-encoding;
-	bh=1Fh3PXvQdyrLMNscAHhoe+wUqNazq8WbWXb8Z7uhbL8=;
-	b=OitF9Oo1EwVUfJF9q04zcfWUEtnrNJZ9Q2oVBectQb5qar4pWzpbQ9UkqkFjWzF9XH
-	7uwXxNpEApnAiMl490hB6jhuac2D5J6EKWyDXmxHbg2SvaVpV57VW6zM5rJX50oWkbGm
-	361S4waEylpA7mqmlLTDTjJ0R8jzN3uO38CpU=
+	bh=hQedKZ9y8ekY8A/9EtHFgStcSSzyCH9S6lHjmuaITgg=;
+	b=ihyy+ErpBWISr5zxeWILvhN4lOErDklrllyzfeqc6Dg4m31OF1vrWQ+BYxsfoXdOc1
+	bXRHvZUsqsRseaLdtA1qVHt6MLNtNJgY/NbmGua9cEFG4zu9TD1jENbXI6U23Lazh7iH
+	AQDaFGRaptv3ZnJWM/975VLPR+H4SIue1DPbY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
 	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=1Fh3PXvQdyrLMNscAHhoe+wUqNazq8WbWXb8Z7uhbL8=;
-	b=BWwom9Hu6lMgoHqrDaMcCFJ9BoDLmkI3+QVeE9Y9ECdJ3yUDoJkkuOoo47Fg7jHq8k
-	a/clcew+ttRmHKMvKYHcm2frB/8f2U3BtrfCbzid8ymxXGMz+u/wmSfkxdo2Ydhm8Ccp
-	9xqtKgCcQGnAmO/96Hh9kuuPh4SfVoq85NpIjCtcUjRJZNajLbcCL6GJ5qGXNLYkcT7/
-	mY8QkSELAj3ZVRVrKQ/wuCtlr9s7+gvqxF4L3MA6XxdUm4oO+luSb5rK9WWbISlzaXmx
-	exZY1tx0JI++VFmgiSD5jA8sthtKCGXRAGGRF412cEMlb8YL6ukGakOF3wCNJmTQwe6p
-	cMIQ==
-X-Gm-Message-State: APjAAAUvDl+ZCH1gj7ax4VhRf5kajP8IEUoYdveZk0nr9yrY+fVlCwVI
-	ELhIY89g3A3EvgiJPp0UglupaNNLeHE=
-X-Google-Smtp-Source: APXvYqzUu0rV1tuLRq4p/VxSTQpGovsfjd89QFUFOL6skm5y6BPJQ6+mIDBL50IbH3P8/TSeD4Tegg==
-X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr4097729wmg.177.1560873486528;
-	Tue, 18 Jun 2019 08:58:06 -0700 (PDT)
+	bh=hQedKZ9y8ekY8A/9EtHFgStcSSzyCH9S6lHjmuaITgg=;
+	b=qNKc60PFpAwLq2aVFsh0UNSYMNPfeZ0ZVXcpDNBTcMyc/4Ss3djopU46JBRyA1TCtc
+	kCJExX8nV4/533H0d5VBt9X66ND9/I4O2XLzrcq9g2VbBu2QtOWjshVZ14JljQNENXe5
+	rU83cQpU9SvEoGzzLS8+Pc0DWW1o60nnryHTWscUbmYgVpa3X85H+ktpar5Xz4A2ku3i
+	6m0kj1lqOZXO9JJK3ypGhSk5q1rR3nnZ6f4nIGJ0aZbYHYVTMXXA2Vbdbk0TZ0fS/kW9
+	pec0N2YY+csHE/DheSk/S5fRKQvStmiO+TO35ZpTXxIifet8TO1/2QbhESSb0zdfkzq7
+	Qc/g==
+X-Gm-Message-State: APjAAAWFOPI+PkTMCHTzRwAHc4esNs/P4EpQy9Dm8TcWwrRhUtiDep+X
+	TqtYmT1fWJwDCcMkqopyQmhSTg==
+X-Google-Smtp-Source: APXvYqyIf9ppebEwAiWynBPDloprOAmwXPMENexPIqLzjcri4cBXvcVNKWfMKn+YnhkIG2oOq4OBkg==
+X-Received: by 2002:adf:f812:: with SMTP id s18mr16510015wrp.32.1560873557429; 
+	Tue, 18 Jun 2019 08:59:17 -0700 (PDT)
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	l19sm1721748wmj.33.2019.06.18.08.58.05
+	u11sm11159671wrn.1.2019.06.18.08.59.16
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Tue, 18 Jun 2019 08:58:05 -0700 (PDT)
-Message-ID: <d770ec48cbf5abb2adae2bb8454809c00e92da3d.camel@linuxfoundation.org>
+	Tue, 18 Jun 2019 08:59:16 -0700 (PDT)
+Message-ID: <21e75add4a5c58632ef8817d9c9c0a94d88fbd1c.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Oleksandr Kravchuk <open.source@oleksandr-kravchuk.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Jun 2019 16:58:04 +0100
-In-Reply-To: <f13ae5e7-a356-f42e-0efc-020f5ee29cb0@oleksandr-kravchuk.com>
-References: <20190614000925.12048-1-open.source@oleksandr-kravchuk.com>
-	<f13ae5e7-a356-f42e-0efc-020f5ee29cb0@oleksandr-kravchuk.com>
+To: Armin Kuster <akuster808@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Tue, 18 Jun 2019 16:59:15 +0100
+In-Reply-To: <cover.1560872271.git.akuster808@gmail.com>
+References: <cover.1560872271.git.akuster808@gmail.com>
 User-Agent: Evolution 3.32.2-1 
 MIME-Version: 1.0
-Subject: Re: [PATCH] bitbake: cooker: list all nonexistent bblayer directories
+Subject: Re: [PATCH 0/3] 1.42 next pull reqest
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,28 +57,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Jun 2019 15:58:06 -0000
+X-List-Received-Date: Tue, 18 Jun 2019 15:59:16 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2019-06-14 at 02:09 +0200, Oleksandr Kravchuk wrote:
-> This is how log will look like:
+On Tue, 2019-06-18 at 08:41 -0700, Armin Kuster wrote:
+> Please consider these for 1.42
+> The following changes since commit
+> 2a823584a5dbc2427060352f3b4798dbb2640cfd:
 > 
-> ERROR: Unable to start bitbake server (None)
-> ERROR: Server log for this session
-> (/home/sashko/projects/yocto/open-embedded/build/bitbake-
-> cookerdaemon.log):
-> --- Starting bitbake server pid 11745 at 2019-06-14 02:08:15.687299
-> ---
-> ERROR: The following layer directories do not exist:
-> ERROR:    /home/sashko/projects/yocto/open-
-> embedded/sources/poky/meta-abc
-> ERROR:    /home/sashko/projects/yocto/open-
-> embedded/sources/poky/meta-xyz
-> ERROR: Please check BBLAYERS in
-> /home/sashko/projects/yocto/open-embedded/build/conf/bblayers.conf
+>   gitsm: Fix a bug where the wrong path was used for the submodule
+> init (2019-06-18 11:43:03 +0100)
+> 
+> are available in the git repository at:
+> 
+>   git://git.openembedded.org/bitbake-contrib stable/1.42-next
+>   
+> http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.42-next
+> 
+> Matthias Schiffer (1):
+>   fetch2: runfetchcmd(): unset _PYTHON_SYSCONFIGDATA_NAME
+> 
+> Richard Purdie (2):
+>   bitbake: Add initial pass of SPDX license headers to source code
+>   bitbake: Drop duplicate license boilerplace text
 
-Looks good to me, I've merged this thanks!
+Do we really want to backport the SPDX header changes? I'm not sure
+that is particularly desirable for the stable series...
 
 Cheers,
 
