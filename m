@@ -1,25 +1,25 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 1ECBB6D74B
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 54F1F7E65E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Jun 2019 06:35:55 +0000 (UTC)
+	Thu, 27 Jun 2019 06:35:56 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x5R6Ztxr020971
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x5R6ZveC026090
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Jun 2019 23:35:56 -0700 (PDT)
+	Wed, 26 Jun 2019 23:35:57 -0700 (PDT)
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Wed, 26 Jun 2019 23:35:55 -0700
+	14.3.439.0; Wed, 26 Jun 2019 23:35:56 -0700
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 27 Jun 2019 14:59:47 +0800
-Message-ID: <c10318f78e7b7f877309751a9771aae93326f6e1.1561617701.git.liezhi.yang@windriver.com>
+Date: Thu, 27 Jun 2019 14:59:48 +0800
+Message-ID: <360239d4eed93a97a1dfd06d662a34dac1d70dab.1561617701.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1561617701.git.liezhi.yang@windriver.com>
 References: <cover.1561617701.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/2] bitbake: lib: Cleanup /usr/bin/env python
+Subject: [PATCH 2/2] bitbake: toaster:tests: python -> python3
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,125 +32,341 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Jun 2019 06:35:55 -0000
+X-List-Received-Date: Thu, 27 Jun 2019 06:35:56 -0000
 Content-Type: text/plain
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/cooker.py                     | 1 -
- bitbake/lib/bb/cookerdata.py                 | 1 -
- bitbake/lib/bb/main.py                       | 1 -
- bitbake/lib/bb/monitordisk.py                | 1 -
- bitbake/lib/bb/namedtuple_with_abc.py        | 1 -
- bitbake/lib/bb/parse/parse_py/BBHandler.py   | 1 -
- bitbake/lib/bb/parse/parse_py/ConfHandler.py | 1 -
- bitbake/lib/bb/parse/parse_py/__init__.py    | 1 -
- bitbake/lib/bb/runqueue.py                   | 1 -
- bitbake/lib/bb/taskdata.py                   | 1 -
- bitbake/lib/pyinotify.py                     | 3 +--
- 11 files changed, 1 insertion(+), 12 deletions(-)
+ bitbake/lib/toaster/tests/browser/selenium_helpers.py                   | 2 +-
+ bitbake/lib/toaster/tests/browser/selenium_helpers_base.py              | 2 +-
+ bitbake/lib/toaster/tests/browser/test_all_builds_page.py               | 2 +-
+ bitbake/lib/toaster/tests/browser/test_all_projects_page.py             | 2 +-
+ bitbake/lib/toaster/tests/browser/test_builddashboard_page.py           | 2 +-
+ bitbake/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py | 2 +-
+ bitbake/lib/toaster/tests/browser/test_builddashboard_page_recipes.py   | 2 +-
+ bitbake/lib/toaster/tests/browser/test_builddashboard_page_tasks.py     | 2 +-
+ bitbake/lib/toaster/tests/browser/test_js_unit_tests.py                 | 2 +-
+ bitbake/lib/toaster/tests/browser/test_landing_page.py                  | 2 +-
+ bitbake/lib/toaster/tests/browser/test_layerdetails_page.py             | 2 +-
+ bitbake/lib/toaster/tests/browser/test_most_recent_builds_states.py     | 2 +-
+ bitbake/lib/toaster/tests/browser/test_new_custom_image_page.py         | 2 +-
+ bitbake/lib/toaster/tests/browser/test_new_project_page.py              | 2 +-
+ bitbake/lib/toaster/tests/browser/test_project_builds_page.py           | 2 +-
+ bitbake/lib/toaster/tests/browser/test_project_config_page.py           | 2 +-
+ bitbake/lib/toaster/tests/browser/test_project_page.py                  | 2 +-
+ bitbake/lib/toaster/tests/browser/test_sample.py                        | 2 +-
+ bitbake/lib/toaster/tests/browser/test_task_page.py                     | 2 +-
+ bitbake/lib/toaster/tests/browser/test_toastertable_ui.py               | 2 +-
+ bitbake/lib/toaster/tests/builds/buildtest.py                           | 2 +-
+ bitbake/lib/toaster/tests/builds/test_core_image_min.py                 | 2 +-
+ bitbake/lib/toaster/tests/commands/test_loaddata.py                     | 2 +-
+ bitbake/lib/toaster/tests/commands/test_lsupdates.py                    | 2 +-
+ bitbake/lib/toaster/tests/commands/test_runbuilds.py                    | 2 +-
+ bitbake/lib/toaster/tests/eventreplay/__init__.py                       | 2 +-
+ bitbake/lib/toaster/tests/functional/functional_helpers.py              | 2 +-
+ bitbake/lib/toaster/tests/functional/test_functional_basic.py           | 2 +-
+ bitbake/lib/toaster/tests/views/test_views.py                           | 2 +-
+ bitbake/lib/toaster/toastermain/management/commands/checksocket.py      | 2 +-
+ 30 files changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 0008c2f..b4851e1 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1,4 +1,3 @@
--#!/usr/bin/env python
+diff --git a/bitbake/lib/toaster/tests/browser/selenium_helpers.py b/bitbake/lib/toaster/tests/browser/selenium_helpers.py
+index 6d9bb80..02d4f4b 100644
+--- a/bitbake/lib/toaster/tests/browser/selenium_helpers.py
++++ b/bitbake/lib/toaster/tests/browser/selenium_helpers.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
  #
- # Copyright (C) 2003, 2004  Chris Larson
- # Copyright (C) 2003, 2004  Phil Blundell
-diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
-index 842275d..e64c6c5 100644
---- a/bitbake/lib/bb/cookerdata.py
-+++ b/bitbake/lib/bb/cookerdata.py
-@@ -1,4 +1,3 @@
--#!/usr/bin/env python
+ # BitBake Toaster Implementation
  #
- # Copyright (C) 2003, 2004  Chris Larson
- # Copyright (C) 2003, 2004  Phil Blundell
-diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-index ca59eb9..bd11619 100755
---- a/bitbake/lib/bb/main.py
-+++ b/bitbake/lib/bb/main.py
-@@ -1,4 +1,3 @@
--#!/usr/bin/env python
+diff --git a/bitbake/lib/toaster/tests/browser/selenium_helpers_base.py b/bitbake/lib/toaster/tests/browser/selenium_helpers_base.py
+index 8417aa3..6c94684 100644
+--- a/bitbake/lib/toaster/tests/browser/selenium_helpers_base.py
++++ b/bitbake/lib/toaster/tests/browser/selenium_helpers_base.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
  #
- # Copyright (C) 2003, 2004  Chris Larson
- # Copyright (C) 2003, 2004  Phil Blundell
-diff --git a/bitbake/lib/bb/monitordisk.py b/bitbake/lib/bb/monitordisk.py
-index 69b25c7..1a25b00 100644
---- a/bitbake/lib/bb/monitordisk.py
-+++ b/bitbake/lib/bb/monitordisk.py
-@@ -1,4 +1,3 @@
--#!/usr/bin/env python
+ # BitBake Toaster Implementation
  #
- # Copyright (C) 2012 Robert Yang
+diff --git a/bitbake/lib/toaster/tests/browser/test_all_builds_page.py b/bitbake/lib/toaster/tests/browser/test_all_builds_page.py
+index f402161..fba627b 100644
+--- a/bitbake/lib/toaster/tests/browser/test_all_builds_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_all_builds_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
  #
-diff --git a/bitbake/lib/bb/namedtuple_with_abc.py b/bitbake/lib/bb/namedtuple_with_abc.py
-index c8e1d55..646aed6 100644
---- a/bitbake/lib/bb/namedtuple_with_abc.py
-+++ b/bitbake/lib/bb/namedtuple_with_abc.py
-@@ -1,5 +1,4 @@
- # http://code.activestate.com/recipes/577629-namedtupleabc-abstract-base-class-mix-in-for-named/
--#!/usr/bin/env python
- # Copyright (c) 2011 Jan Kaliszewski (zuo). Available under the MIT License.
+ # BitBake Toaster Implementation
  #
- # SPDX-License-Identifier: MIT
-diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-index 889f230..6f7cf82 100644
---- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-@@ -1,4 +1,3 @@
+diff --git a/bitbake/lib/toaster/tests/browser/test_all_projects_page.py b/bitbake/lib/toaster/tests/browser/test_all_projects_page.py
+index f86d19d..afd2d35 100644
+--- a/bitbake/lib/toaster/tests/browser/test_all_projects_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_all_projects_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_builddashboard_page.py b/bitbake/lib/toaster/tests/browser/test_builddashboard_page.py
+index 53c125e..d972aff 100644
+--- a/bitbake/lib/toaster/tests/browser/test_builddashboard_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_builddashboard_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py b/bitbake/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
+index c560d7d..e2623e8 100644
+--- a/bitbake/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
++++ b/bitbake/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_builddashboard_page_recipes.py b/bitbake/lib/toaster/tests/browser/test_builddashboard_page_recipes.py
+index e4f3d68..c542d45 100644
+--- a/bitbake/lib/toaster/tests/browser/test_builddashboard_page_recipes.py
++++ b/bitbake/lib/toaster/tests/browser/test_builddashboard_page_recipes.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_builddashboard_page_tasks.py b/bitbake/lib/toaster/tests/browser/test_builddashboard_page_tasks.py
+index bdb0c27..22acb47 100644
+--- a/bitbake/lib/toaster/tests/browser/test_builddashboard_page_tasks.py
++++ b/bitbake/lib/toaster/tests/browser/test_builddashboard_page_tasks.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_js_unit_tests.py b/bitbake/lib/toaster/tests/browser/test_js_unit_tests.py
+index 63f3f4a..e8b4295 100644
+--- a/bitbake/lib/toaster/tests/browser/test_js_unit_tests.py
++++ b/bitbake/lib/toaster/tests/browser/test_js_unit_tests.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_landing_page.py b/bitbake/lib/toaster/tests/browser/test_landing_page.py
+index 0a00fcc..0790198 100644
+--- a/bitbake/lib/toaster/tests/browser/test_landing_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_landing_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py b/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
+index e34aa13..f81e696 100644
+--- a/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_layerdetails_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_most_recent_builds_states.py b/bitbake/lib/toaster/tests/browser/test_most_recent_builds_states.py
+index d52b184..15d25dc 100644
+--- a/bitbake/lib/toaster/tests/browser/test_most_recent_builds_states.py
++++ b/bitbake/lib/toaster/tests/browser/test_most_recent_builds_states.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_new_custom_image_page.py b/bitbake/lib/toaster/tests/browser/test_new_custom_image_page.py
+index 3b47a49..0aa3b7a 100644
+--- a/bitbake/lib/toaster/tests/browser/test_new_custom_image_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_new_custom_image_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_new_project_page.py b/bitbake/lib/toaster/tests/browser/test_new_project_page.py
+index d250bd1..8e56bb0 100644
+--- a/bitbake/lib/toaster/tests/browser/test_new_project_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_new_project_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_project_builds_page.py b/bitbake/lib/toaster/tests/browser/test_project_builds_page.py
+index 065f3eb..47fb10b 100644
+--- a/bitbake/lib/toaster/tests/browser/test_project_builds_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_project_builds_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_project_config_page.py b/bitbake/lib/toaster/tests/browser/test_project_config_page.py
+index 48508df..2816eb9 100644
+--- a/bitbake/lib/toaster/tests/browser/test_project_config_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_project_config_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_project_page.py b/bitbake/lib/toaster/tests/browser/test_project_page.py
+index 5cb607d..8b5e1b6 100644
+--- a/bitbake/lib/toaster/tests/browser/test_project_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_project_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_sample.py b/bitbake/lib/toaster/tests/browser/test_sample.py
+index 008ba14..f4ad670 100644
+--- a/bitbake/lib/toaster/tests/browser/test_sample.py
++++ b/bitbake/lib/toaster/tests/browser/test_sample.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_task_page.py b/bitbake/lib/toaster/tests/browser/test_task_page.py
+index 47c8c1a..26f3dca 100644
+--- a/bitbake/lib/toaster/tests/browser/test_task_page.py
++++ b/bitbake/lib/toaster/tests/browser/test_task_page.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/browser/test_toastertable_ui.py b/bitbake/lib/toaster/tests/browser/test_toastertable_ui.py
+index b4f8344..ef78cbb 100644
+--- a/bitbake/lib/toaster/tests/browser/test_toastertable_ui.py
++++ b/bitbake/lib/toaster/tests/browser/test_toastertable_ui.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/builds/buildtest.py b/bitbake/lib/toaster/tests/builds/buildtest.py
+index 9f40f97..872bbd3 100644
+--- a/bitbake/lib/toaster/tests/builds/buildtest.py
++++ b/bitbake/lib/toaster/tests/builds/buildtest.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/builds/test_core_image_min.py b/bitbake/lib/toaster/tests/builds/test_core_image_min.py
+index 3d3aa2a..44b6cbe 100644
+--- a/bitbake/lib/toaster/tests/builds/test_core_image_min.py
++++ b/bitbake/lib/toaster/tests/builds/test_core_image_min.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/commands/test_loaddata.py b/bitbake/lib/toaster/tests/commands/test_loaddata.py
+index b633d97..9e8d555 100644
+--- a/bitbake/lib/toaster/tests/commands/test_loaddata.py
++++ b/bitbake/lib/toaster/tests/commands/test_loaddata.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/commands/test_lsupdates.py b/bitbake/lib/toaster/tests/commands/test_lsupdates.py
+index 23a84a2..3c4fbe0 100644
+--- a/bitbake/lib/toaster/tests/commands/test_lsupdates.py
++++ b/bitbake/lib/toaster/tests/commands/test_lsupdates.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/commands/test_runbuilds.py b/bitbake/lib/toaster/tests/commands/test_runbuilds.py
+index 29bc7c9..e223b95 100644
+--- a/bitbake/lib/toaster/tests/commands/test_runbuilds.py
++++ b/bitbake/lib/toaster/tests/commands/test_runbuilds.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/eventreplay/__init__.py b/bitbake/lib/toaster/tests/eventreplay/__init__.py
+index 3606cba..8ed6792 100644
+--- a/bitbake/lib/toaster/tests/eventreplay/__init__.py
++++ b/bitbake/lib/toaster/tests/eventreplay/__init__.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/functional/functional_helpers.py b/bitbake/lib/toaster/tests/functional/functional_helpers.py
+index 6a3f74b..455c408 100644
+--- a/bitbake/lib/toaster/tests/functional/functional_helpers.py
++++ b/bitbake/lib/toaster/tests/functional/functional_helpers.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster functional tests implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/functional/test_functional_basic.py b/bitbake/lib/toaster/tests/functional/test_functional_basic.py
+index 2b3a288..56c84fb 100644
+--- a/bitbake/lib/toaster/tests/functional/test_functional_basic.py
++++ b/bitbake/lib/toaster/tests/functional/test_functional_basic.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster functional tests implementation
+ #
+diff --git a/bitbake/lib/toaster/tests/views/test_views.py b/bitbake/lib/toaster/tests/views/test_views.py
+index 477654e..68d9e9d 100644
+--- a/bitbake/lib/toaster/tests/views/test_views.py
++++ b/bitbake/lib/toaster/tests/views/test_views.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
+ #
+diff --git a/bitbake/lib/toaster/toastermain/management/commands/checksocket.py b/bitbake/lib/toaster/toastermain/management/commands/checksocket.py
+index c1758f3..811fd5d 100644
+--- a/bitbake/lib/toaster/toastermain/management/commands/checksocket.py
++++ b/bitbake/lib/toaster/toastermain/management/commands/checksocket.py
+@@ -1,4 +1,4 @@
 -#!/usr/bin/env python
- """
-    class for handling .bb files
- 
-diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index 71bf61b..2e84b91 100644
---- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-@@ -1,4 +1,3 @@
--#!/usr/bin/env python
- """
-    class for handling configuration data files
- 
-diff --git a/bitbake/lib/bb/parse/parse_py/__init__.py b/bitbake/lib/bb/parse/parse_py/__init__.py
-index cdebe44..f508afa 100644
---- a/bitbake/lib/bb/parse/parse_py/__init__.py
-+++ b/bitbake/lib/bb/parse/parse_py/__init__.py
-@@ -1,4 +1,3 @@
--#!/usr/bin/env python
- """
- BitBake Parsers
- 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 010b085..58707db 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1,4 +1,3 @@
--#!/usr/bin/env python
- """
- BitBake 'RunQueue' implementation
- 
-diff --git a/bitbake/lib/bb/taskdata.py b/bitbake/lib/bb/taskdata.py
-index d13bd7c..8c25e09 100644
---- a/bitbake/lib/bb/taskdata.py
-+++ b/bitbake/lib/bb/taskdata.py
-@@ -1,4 +1,3 @@
--#!/usr/bin/env python
- """
- BitBake 'TaskData' implementation
- 
-diff --git a/bitbake/lib/pyinotify.py b/bitbake/lib/pyinotify.py
-index 9dcfd0d..1528a22 100644
---- a/bitbake/lib/pyinotify.py
-+++ b/bitbake/lib/pyinotify.py
-@@ -1,5 +1,4 @@
--#!/usr/bin/env python
--
-+#
- # pyinotify.py - python interface to inotify
- # Copyright (c) 2005-2015 Sebastien Martini <seb@dbzteam.org>
++#!/usr/bin/env python3
+ #
+ # BitBake Toaster Implementation
  #
 -- 
 2.7.4
