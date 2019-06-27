@@ -1,50 +1,25 @@
-Return-Path: <luca.boccassi@gmail.com>
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
-	[209.85.221.65])
-	by mail.openembedded.org (Postfix) with ESMTP id C49836D147
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 1ECBB6D74B
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Jun 2019 15:12:19 +0000 (UTC)
-Received: by mail-wr1-f65.google.com with SMTP id k11so3196675wrl.1
+	Thu, 27 Jun 2019 06:35:55 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x5R6Ztxr020971
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Jun 2019 08:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=fSdHaoTLD+UlRKG+IAf2zkGgwGpEnz4+fUqtp0jz0dM=;
-	b=oBOOtyrXMqp8rcZ3u4gSwdqCxX+1jKJVocKeEsvfQfpZ5Q7vZcxd1JNjiswz5jOsqC
-	dMxcztKvFq8AG25D0LTg6S95udn7Tgd6gprW5Z49kAuHplvuRjDP4Q7pvMCiRGUBgO29
-	PAFriHm2KBbFvhhJge3McNVQIFNtw7qBtk9hGMz1FZPGWqQQAHAp7sIuyUeUYXIPXcSl
-	UnPvXfb0Vsv4SEjXqskjPuYvwlIoOxHvAt4jbbb8HyLTY7CGIbuzOI0OSSJP/mNYoLF+
-	w3K95tCB5+zn0J+67ORi77Jkyu9P0MiCWn6iBMEsuQttNUWJIm34kDtj6K1329ZfmBLP
-	T+Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=fSdHaoTLD+UlRKG+IAf2zkGgwGpEnz4+fUqtp0jz0dM=;
-	b=rdu10JnQ+D9Znll1ouu6mUbKOnSSkYkKgms6nAyTvUcAUFP347G4jftF6/IVYxx9Gi
-	s7MZroauVNjwxS2IO39WdLTW48ZaRmdws60kSdMnwLbQDlW4AKeH2uzF+1PPDsikVS7p
-	3d0xlwuxKQ5+cx6nlPWQDGXQndQd1+uDVt4pCnwwALyqyjY4RYNIeuHn1bLfih/a5Tb0
-	JZKQnvz40CIgiDUCTIHGve1RNt87QBcpvLRMNA8pVDWvhNpHQ9Z9l1pWlQeNtk2ZaY2Q
-	7F0Qle3GKbyODwVk3n9BGub+qRO3LhIRmsRgt6hhIkXJujS3qDtAQr2q29IpyGnrvob3
-	WvpA==
-X-Gm-Message-State: APjAAAXQa0J32uhbtnBNq4ugbedfjiwsfYUGaSafRuqjAIVAXvsFiOTI
-	25qNSYiNJ30Nt071gTUfkyt5lbV2
-X-Google-Smtp-Source: APXvYqwZEiZx45CJPbDqj904qJAQDAGZkVJjZkKEj9yVbvVbbzeCddObET+vAQ75S1Oc0rBbc577Cw==
-X-Received: by 2002:a5d:6b03:: with SMTP id v3mr3992135wrw.309.1561561940034; 
-	Wed, 26 Jun 2019 08:12:20 -0700 (PDT)
-Received: from localhost ([88.98.246.218]) by smtp.gmail.com with ESMTPSA id
-	y44sm17218362wrd.13.2019.06.26.08.12.18
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Wed, 26 Jun 2019 08:12:19 -0700 (PDT)
-From: luca.boccassi@gmail.com
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 26 Jun 2019 16:12:17 +0100
-Message-Id: <20190626151217.16298-1-luca.boccassi@gmail.com>
-X-Mailer: git-send-email 2.20.1
+	Wed, 26 Jun 2019 23:35:56 -0700 (PDT)
+Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.3.439.0; Wed, 26 Jun 2019 23:35:55 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 27 Jun 2019 14:59:47 +0800
+Message-ID: <c10318f78e7b7f877309751a9771aae93326f6e1.1561617701.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1561617701.git.liezhi.yang@windriver.com>
+References: <cover.1561617701.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH] tests/fetch.py: add missing skipIfNoNetwork tags to tests that try to git clone
+Subject: [PATCH 1/2] bitbake: lib: Cleanup /usr/bin/env python
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,65 +32,127 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 26 Jun 2019 15:12:20 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 27 Jun 2019 06:35:55 -0000
+Content-Type: text/plain
 
-From: Luca Boccassi <luca.boccassi@microsoft.com>
-
-test_git_submodule_dbus_broker, test_git_submodule_CLI11, test_git_submodule_update_CLI11,
-test_git_submodule_aktualizr and test_git_submodule_iotedge try to access the network via
-git clone, which fails when there is no network available. Add the relevant skip tag.
-
-Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/tests/fetch.py | 5 +++++
- 1 file changed, 5 insertions(+)
+ bitbake/lib/bb/cooker.py                     | 1 -
+ bitbake/lib/bb/cookerdata.py                 | 1 -
+ bitbake/lib/bb/main.py                       | 1 -
+ bitbake/lib/bb/monitordisk.py                | 1 -
+ bitbake/lib/bb/namedtuple_with_abc.py        | 1 -
+ bitbake/lib/bb/parse/parse_py/BBHandler.py   | 1 -
+ bitbake/lib/bb/parse/parse_py/ConfHandler.py | 1 -
+ bitbake/lib/bb/parse/parse_py/__init__.py    | 1 -
+ bitbake/lib/bb/runqueue.py                   | 1 -
+ bitbake/lib/bb/taskdata.py                   | 1 -
+ bitbake/lib/pyinotify.py                     | 3 +--
+ 11 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index 16f975b137..23c6338a46 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -899,6 +899,7 @@ class FetcherNetworkTest(FetcherTest):
-         if os.path.exists(os.path.join(repo_path, 'bitbake-gitsm-test1')):
-             self.assertTrue(os.path.exists(os.path.join(repo_path, 'bitbake-gitsm-test1', 'bitbake')), msg='submodule of submodule missing')
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 0008c2f..b4851e1 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ #
+ # Copyright (C) 2003, 2004  Chris Larson
+ # Copyright (C) 2003, 2004  Phil Blundell
+diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
+index 842275d..e64c6c5 100644
+--- a/bitbake/lib/bb/cookerdata.py
++++ b/bitbake/lib/bb/cookerdata.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ #
+ # Copyright (C) 2003, 2004  Chris Larson
+ # Copyright (C) 2003, 2004  Phil Blundell
+diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+index ca59eb9..bd11619 100755
+--- a/bitbake/lib/bb/main.py
++++ b/bitbake/lib/bb/main.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ #
+ # Copyright (C) 2003, 2004  Chris Larson
+ # Copyright (C) 2003, 2004  Phil Blundell
+diff --git a/bitbake/lib/bb/monitordisk.py b/bitbake/lib/bb/monitordisk.py
+index 69b25c7..1a25b00 100644
+--- a/bitbake/lib/bb/monitordisk.py
++++ b/bitbake/lib/bb/monitordisk.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ #
+ # Copyright (C) 2012 Robert Yang
+ #
+diff --git a/bitbake/lib/bb/namedtuple_with_abc.py b/bitbake/lib/bb/namedtuple_with_abc.py
+index c8e1d55..646aed6 100644
+--- a/bitbake/lib/bb/namedtuple_with_abc.py
++++ b/bitbake/lib/bb/namedtuple_with_abc.py
+@@ -1,5 +1,4 @@
+ # http://code.activestate.com/recipes/577629-namedtupleabc-abstract-base-class-mix-in-for-named/
+-#!/usr/bin/env python
+ # Copyright (c) 2011 Jan Kaliszewski (zuo). Available under the MIT License.
+ #
+ # SPDX-License-Identifier: MIT
+diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+index 889f230..6f7cf82 100644
+--- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ """
+    class for handling .bb files
  
-+    @skipIfNoNetwork()
-     def test_git_submodule_dbus_broker(self):
-         # The following external repositories have show failures in fetch and unpack operations
-         # We want to avoid regressions!
-@@ -916,6 +917,7 @@ class FetcherNetworkTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/subprojects/c-sundry/config')), msg='Missing submodule config "subprojects/c-sundry"')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/subprojects/c-utf8/config')), msg='Missing submodule config "subprojects/c-utf8"')
+diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+index 71bf61b..2e84b91 100644
+--- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ """
+    class for handling configuration data files
  
-+    @skipIfNoNetwork()
-     def test_git_submodule_CLI11(self):
-         url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=bd4dc911847d0cde7a6b41dfa626a85aab213baf"
-         fetcher = bb.fetch.Fetch([url], self.d)
-@@ -929,6 +931,7 @@ class FetcherNetworkTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
+diff --git a/bitbake/lib/bb/parse/parse_py/__init__.py b/bitbake/lib/bb/parse/parse_py/__init__.py
+index cdebe44..f508afa 100644
+--- a/bitbake/lib/bb/parse/parse_py/__init__.py
++++ b/bitbake/lib/bb/parse/parse_py/__init__.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ """
+ BitBake Parsers
  
-+    @skipIfNoNetwork()
-     def test_git_submodule_update_CLI11(self):
-         """ Prevent regression on update detection not finding missing submodule, or modules without needed commits """
-         url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=cf6a99fa69aaefe477cc52e3ef4a7d2d7fa40714"
-@@ -948,6 +951,7 @@ class FetcherNetworkTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/json/config')), msg='Missing submodule config "extern/json"')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/extern/sanitizers/config')), msg='Missing submodule config "extern/sanitizers"')
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 010b085..58707db 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ """
+ BitBake 'RunQueue' implementation
  
-+    @skipIfNoNetwork()
-     def test_git_submodule_aktualizr(self):
-         url = "gitsm://github.com/advancedtelematic/aktualizr;branch=master;protocol=git;rev=d00d1a04cc2366d1a5f143b84b9f507f8bd32c44"
-         fetcher = bb.fetch.Fetch([url], self.d)
-@@ -964,6 +968,7 @@ class FetcherNetworkTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/third_party/googletest/config')), msg='Missing submodule config "third_party/googletest/config"')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, '.git/modules/third_party/HdrHistogram_c/config')), msg='Missing submodule config "third_party/HdrHistogram_c/config"')
+diff --git a/bitbake/lib/bb/taskdata.py b/bitbake/lib/bb/taskdata.py
+index d13bd7c..8c25e09 100644
+--- a/bitbake/lib/bb/taskdata.py
++++ b/bitbake/lib/bb/taskdata.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ """
+ BitBake 'TaskData' implementation
  
-+    @skipIfNoNetwork()
-     def test_git_submodule_iotedge(self):
-         """ Prevent regression on deeply nested submodules not being checked out properly, even though they were fetched. """
- 
+diff --git a/bitbake/lib/pyinotify.py b/bitbake/lib/pyinotify.py
+index 9dcfd0d..1528a22 100644
+--- a/bitbake/lib/pyinotify.py
++++ b/bitbake/lib/pyinotify.py
+@@ -1,5 +1,4 @@
+-#!/usr/bin/env python
+-
++#
+ # pyinotify.py - python interface to inotify
+ # Copyright (c) 2005-2015 Sebastien Martini <seb@dbzteam.org>
+ #
 -- 
-2.20.1
+2.7.4
 
 
