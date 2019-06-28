@@ -1,43 +1,44 @@
-Return-Path: <alan.kozlay@ves.solutions>
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com
-	[209.85.210.179])
-	by mail.openembedded.org (Postfix) with ESMTP id 40E437EA7A
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com
+	[209.85.128.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 228977DB57
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Jun 2019 17:31:41 +0000 (UTC)
-Received: by mail-pf1-f179.google.com with SMTP id q10so3318360pff.9
+	Fri, 28 Jun 2019 22:23:34 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id u8so10283995wmm.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Jun 2019 10:31:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ves-solutions-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=zeLpm8yeXXCsgCLAVYKehjzQHqXiqkdqsYrl1MfvBR8=;
-	b=ya2vPOQJTVp7/vFcfhsZY0bThSXBxFaPjZH/MIVODtLRUG278XMCk/+Vkcyl7wP4xP
-	ThVNAZwCnFTtstIMPinWil9vM9UfItc1QHqbQfEiBhYO/a1s13alyC3VxS1ur7I+2L1K
-	dX1+SBapCW6Ln1r0f5HjrIVVhiz3mlxPH44MrIfyig35H0laDgLL1fMfCEPR4S5jnlc8
-	4EU2Pafx9fp4gcQsI3UhfmugUfKzeJGRfwzHbKTUkxQB+a6c/AzE/acfb37hzdwihJwY
-	icgd8QSeWKdmUccztVRM6SWx5h3+kL+uYgbkycHmhC/lBEggAW8tCUEuuuFFHB1spkjD
-	iw2w==
+	Fri, 28 Jun 2019 15:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:from:date:message-id:subject:to
+	:content-transfer-encoding;
+	bh=FVTpkmULGZiJXG3k9Pb7KBMOI91TR2POcGPkqUBdXHQ=;
+	b=FYzxoxUiyF6lJW1lNskWI0aLge+14dKcBo55ASs9IO0FUOGexm4yvoqyh0jTRp5RYY
+	TPrSxokv1pFO8mVWIphApuet36GiJq1gVDzqC0svKg6j5xZOjVyUQw+9VfeczEGJCnNG
+	0IO9FRFWXaHOoDAxOZ51I5SezNcMq4WI+FMMM6f5mCS5qXHbvhyviLlugF4NdDvSx/ak
+	fTPyiTHgCXFNAN4rRrmW9igjO0c5Zs4zvfeK+hF1VlkXa03bXHxbUQy3JJxIoMR5rp9R
+	NXn/c/E98tGT6gc5gIjmLiSG/gPCS4HDfZkIcYu7fPU8gx7uYrs2BSBaYxJ+jylWvmAN
+	HDrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=zeLpm8yeXXCsgCLAVYKehjzQHqXiqkdqsYrl1MfvBR8=;
-	b=QdpaRG5ZpTyEE4EDUZh6w5LLiQHKmjNzWCMapDrEapYvsiPP0xw5BlkGDcjjqZHEdg
-	5VGuuLMEX66smcj6zvZBVHeCLr0gPbC+lQ7CmO802e29urQIyQcRLSjtNz4GgLNNweQW
-	TlgWW6YF8orDhNfnRmGSQzMBD3ppICQsOXyoI7uO/KBmxUGWq+x9QvH3VYp09098+NAX
-	pUsZGhipqqaQKTatVobs0fRG45qxuQwNFQLQ/9B5Kp+cBRMjP12JdZBgfTX2/7Cg42Q4
-	5YVgYPCez/c1GHO/6cF/j6aNd3ykllncLaY/pZ2WLl/iln4WnK59O5JJSY+uU6q3SlUb
-	kOAg==
-X-Gm-Message-State: APjAAAXY28OPD8jQ5y5vAwxJKZYs6F34VWmjEpl9OysMQuEHRtRrpxz1
-	PTGDnhXgiXCS1qeYJxABA4Mp2AXR1C0w+cT4hyjdwEGR3MI=
-X-Google-Smtp-Source: APXvYqzqZBJcqpX4Ez9YVHRN6G4STDsf5ZEX2Ff91iDniV4kb8Eoo06tNC4dz53wwkLNmcZ1VeXgz/GLCIxZwNERzEI=
-X-Received: by 2002:a63:d84e:: with SMTP id k14mr10426966pgj.234.1561743101971;
-	Fri, 28 Jun 2019 10:31:41 -0700 (PDT)
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+	:content-transfer-encoding;
+	bh=FVTpkmULGZiJXG3k9Pb7KBMOI91TR2POcGPkqUBdXHQ=;
+	b=it/OFcO2USbiLJRhrId1Jl8Ba9zAfz3WYbRMJXycEb3viQyIBqSrgTGq769hDe/QU7
+	7VgN2yyG1ORi7lBDvOCGPtqNSNfNDME0c0nx3zINNegO/55fTEK13QWjB3jU18TM//9D
+	Rv359CHK43HaDrZOrt6nBTq2w+ZOU+8dUi0RNWpg6hNIQOqPEhZO6TkIJ/Fm2j2KmR6E
+	6jj1USMiI6OwRXRrUJUtoHecbOjC9Zd8VA+2fIDkBmw6oV1JQj+Bw5kheJKq2r5iIjoI
+	xkdlRMTigcNEW/Xr3w5LyXg4h3rE40cQ5PXv1V+aMsRdAZiZ4cohd/shjmqB9EOVs2rs
+	P9Kg==
+X-Gm-Message-State: APjAAAVL8sGKaUkD7SYLO8SOMLBQ6kgu5e6w4uHaMr+RpqMzbUOgiaBn
+	wThdondyWLJi6vD1gea0CMyb5EnRigvRoCFjPA4yAVqX
+X-Google-Smtp-Source: APXvYqwFz1iKPPbDLI5L/OWvB0ADkdX5txv28AwF7kQGkOsCia2A28hjZa9yq8dPG9RmO6vc8ujr7FCdQ/hHfGtFjEQ=
+X-Received: by 2002:a7b:c398:: with SMTP id s24mr8737259wmj.53.1561760614574; 
+	Fri, 28 Jun 2019 15:23:34 -0700 (PDT)
 MIME-Version: 1.0
-From: Alan Kozlay <alan.kozlay@ves-solutions.com>
-Date: Fri, 28 Jun 2019 13:31:06 -0400
-Message-ID: <CAJE9sG=4MPryg2+h5a-jmhhpqPW=o6E26rte-JSPc31UioNbwQ@mail.gmail.com>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Fri, 28 Jun 2019 17:23:23 -0500
+Message-ID: <CAJdd5GbvT5NaKsn0MvLLKWaHuo2izHCLxGPW0oN88+EKxO-G2A@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: Should multiconfig save build time?
+Subject: setscene fetch failures are fatal
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,81 +51,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Jun 2019 17:31:41 -0000
-Content-Type: multipart/alternative; boundary="000000000000d2f16e058c65a68f"
-
---000000000000d2f16e058c65a68f
+X-List-Received-Date: Fri, 28 Jun 2019 22:23:34 -0000
 Content-Type: text/plain; charset="UTF-8"
-
-All,
-
-We have need to generate 6 slighly different images, with different
-dedicated applications and use cases, but they're all destined for the same
-hardware.
-We have multiconfig set to build these 6 variants.  Clearly, they'll all
-share a majority of underlying packages.
-While the bitbake initialization takes a long time (*with multiconfig*), we
-were under the impression that it could save time during the actual build
-process because it could have the potential to reuse packages already built
-from mc A for mc B if the inputs to the recipes are unchanged (if same
-xxx_FEATURES, same arch, etc.).
-
-This was a guess on our part since we initially didn't assign different tmp
-directories for each conf.  So, the <WORKDIR> didn't change between mc
-builds.  That actually was causing some issues until we realized that
-separate tmp dirs was recommended for them.
-Since they all now have separate tmp dirs, they clearly are not going to
-share work dirs, so, now we're questioning our original assumption about
-any build-time speed benefit.
-
-So, is mc expected to be any faster than, say, 6 separate invocations of
-non-mc bitbake whilst switching out the local.conf between them?
-
-Thanks,
--Alan
-
--- 
-Alan Kozlay
-VES Solutions, LLC
-Alan Kozlay <alan.kozlay@ves.solutions>
-DESK 443-595-7734
-CELL 443-752-0323
-
---000000000000d2f16e058c65a68f
-Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">All,<div><br></div><div>We have need to generate 6 slighly=
- different images, with different dedicated applications and use cases, but=
- they&#39;re all destined for the same hardware.</div><div>We have multicon=
-fig set to build these 6 variants.=C2=A0 Clearly, they&#39;ll all share a m=
-ajority of underlying packages.</div><div>While the bitbake initialization =
-takes a long time (<i>with multiconfig</i>), we were under the impression t=
-hat it could save time during the actual build process because it could hav=
-e the potential to reuse packages already built from mc A for mc B if the i=
-nputs to the recipes are unchanged (if same xxx_FEATURES, same arch, etc.).=
-</div><div><br></div><div>This was a guess on our part since we initially d=
-idn&#39;t assign different tmp directories for each conf.=C2=A0 So, the &lt=
-;WORKDIR&gt; didn&#39;t change between mc builds.=C2=A0 That actually was c=
-ausing some issues until we realized that separate tmp dirs was recommended=
- for them.</div><div>Since they all now have separate tmp dirs, they clearl=
-y are not going to share work dirs, so, now we&#39;re questioning our origi=
-nal assumption about any build-time speed benefit.</div><div><br></div><div=
->So, is mc expected to be any faster than, say, 6 separate invocations of n=
-on-mc bitbake whilst switching out the local.conf between them?=C2=A0</div>=
-<div><br></div><div>Thanks,</div><div>-Alan<br clear=3D"all"><div><br></div=
->-- <br><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=3D"gmail_=
-signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><span><div><div dir=3D"lt=
-r"><div><div>Alan Kozlay<br></div><div dir=3D"ltr">VES Solutions, LLC<br><s=
-pan>Alan Kozlay &lt;alan.kozlay@ves.solutions&gt;</span><div>DESK 443-595-7=
-734<br></div><div>CELL 443-752-0323</div></div></div></div></div></span></d=
-iv></div></div></div><input name=3D"virtru-metadata" type=3D"hidden" value=
-=3D"{&quot;email-policy&quot;:{&quot;state&quot;:&quot;closed&quot;,&quot;e=
-xpirationUnit&quot;:&quot;days&quot;,&quot;disableCopyPaste&quot;:false,&qu=
-ot;disablePrint&quot;:false,&quot;disableForwarding&quot;:false,&quot;enabl=
-eNoauth&quot;:false,&quot;persistentProtection&quot;:false,&quot;expandedWa=
-termarking&quot;:false,&quot;expires&quot;:false,&quot;isManaged&quot;:fals=
-e},&quot;attachments&quot;:{},&quot;compose-id&quot;:&quot;1&quot;,&quot;co=
-mpose-window&quot;:{&quot;secure&quot;:false}}"></div></div>
+I'm having an issue with the _setscene tasks failing to fetch causing
+our builds to fail. For example: we see the following in our CI build
+logs:
 
---000000000000d2f16e058c65a68f--
+ WARNING: flac-1.3.1-r0 do_package_write_ipk_setscene: Failed to fetch
+URL file://07/sstate:flac:cortexa15hf-neon-poky-linux-gnueabi:1.3.1:r0:cort=
+exa15hf-neon:3:07fe4a22caf5e326a98e397f7923060a_package_write_ipk.tgz.sigin=
+fo;downloadfilename=3D07/sstate:flac:cortexa15hf-neon-poky-linux-gnueabi:1.=
+3.1:r0:cortexa15hf-neon:3:07fe4a22caf5e326a98e397f7923060a_package_write_ip=
+k.tgz.siginfo,
+attempting MIRRORS if available
+ ERROR: flac-1.3.1-r0 do_package_write_ipk_setscene: Fetcher failure:
+Unable to find file
+file://07/sstate:flac:cortexa15hf-neon-poky-linux-gnueabi:1.3.1:r0:cortexa1=
+5hf-neon:3:07fe4a22caf5e326a98e397f7923060a_package_write_ipk.tgz.siginfo;d=
+ownloadfilename=3D07/sstate:flac:cortexa15hf-neon-poky-linux-gnueabi:1.3.1:=
+r0:cortexa15hf-neon:3:07fe4a22caf5e326a98e397f7923060a_package_write_ipk.tg=
+z.siginfo
+anywhere. The paths that were searched were:
+  /tmp/tmp.S3vCIuI7SE/sstate
+
+The build carries on as normal and even builds everything
+successfully, but the final error code returned from bitbake is '1'.
+This is particularly annoying because A) this happens a lot and B) the
+build did actually produce usable outputs so failing isn't really
+accurate.
+
+Near as I can tell, this is caused because the knotty UI treats any
+logging.error() message as fatal and will have a non-zero return code
+if one occurs.
+
+I also realize this is probably mostly caused by an infrastructure
+problem on our end, but I don't seem to be able to get anyone to
+magically make that better so that this failure stops happening :(
+
+Does anyone have any ideas for things that could be done to mitigate
+this? So far, the only thing I've come up with is to modify the
+bitbake Fetch.download() so that an argument can be passed that says
+whether to use logger.error() or logger.warning() when reporting an
+error, but that feels really ugly.
+
+Thanks,
+Joshua Watt
+
