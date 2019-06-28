@@ -1,24 +1,43 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 530646D74B
+Return-Path: <alan.kozlay@ves.solutions>
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com
+	[209.85.210.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 40E437EA7A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Jun 2019 06:36:03 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x5R6ZiGc005079
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Fri, 28 Jun 2019 17:31:41 +0000 (UTC)
+Received: by mail-pf1-f179.google.com with SMTP id q10so3318360pff.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Jun 2019 23:35:54 -0700
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.439.0; Wed, 26 Jun 2019 23:35:33 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 27 Jun 2019 14:59:46 +0800
-Message-ID: <cover.1561617701.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
+	Fri, 28 Jun 2019 10:31:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ves-solutions-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=zeLpm8yeXXCsgCLAVYKehjzQHqXiqkdqsYrl1MfvBR8=;
+	b=ya2vPOQJTVp7/vFcfhsZY0bThSXBxFaPjZH/MIVODtLRUG278XMCk/+Vkcyl7wP4xP
+	ThVNAZwCnFTtstIMPinWil9vM9UfItc1QHqbQfEiBhYO/a1s13alyC3VxS1ur7I+2L1K
+	dX1+SBapCW6Ln1r0f5HjrIVVhiz3mlxPH44MrIfyig35H0laDgLL1fMfCEPR4S5jnlc8
+	4EU2Pafx9fp4gcQsI3UhfmugUfKzeJGRfwzHbKTUkxQB+a6c/AzE/acfb37hzdwihJwY
+	icgd8QSeWKdmUccztVRM6SWx5h3+kL+uYgbkycHmhC/lBEggAW8tCUEuuuFFHB1spkjD
+	iw2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=zeLpm8yeXXCsgCLAVYKehjzQHqXiqkdqsYrl1MfvBR8=;
+	b=QdpaRG5ZpTyEE4EDUZh6w5LLiQHKmjNzWCMapDrEapYvsiPP0xw5BlkGDcjjqZHEdg
+	5VGuuLMEX66smcj6zvZBVHeCLr0gPbC+lQ7CmO802e29urQIyQcRLSjtNz4GgLNNweQW
+	TlgWW6YF8orDhNfnRmGSQzMBD3ppICQsOXyoI7uO/KBmxUGWq+x9QvH3VYp09098+NAX
+	pUsZGhipqqaQKTatVobs0fRG45qxuQwNFQLQ/9B5Kp+cBRMjP12JdZBgfTX2/7Cg42Q4
+	5YVgYPCez/c1GHO/6cF/j6aNd3ykllncLaY/pZ2WLl/iln4WnK59O5JJSY+uU6q3SlUb
+	kOAg==
+X-Gm-Message-State: APjAAAXY28OPD8jQ5y5vAwxJKZYs6F34VWmjEpl9OysMQuEHRtRrpxz1
+	PTGDnhXgiXCS1qeYJxABA4Mp2AXR1C0w+cT4hyjdwEGR3MI=
+X-Google-Smtp-Source: APXvYqzqZBJcqpX4Ez9YVHRN6G4STDsf5ZEX2Ff91iDniV4kb8Eoo06tNC4dz53wwkLNmcZ1VeXgz/GLCIxZwNERzEI=
+X-Received: by 2002:a63:d84e:: with SMTP id k14mr10426966pgj.234.1561743101971;
+	Fri, 28 Jun 2019 10:31:41 -0700 (PDT)
 MIME-Version: 1.0
-Subject: [PATCH 0/2] bitbake: python2 -> python3
+From: Alan Kozlay <alan.kozlay@ves-solutions.com>
+Date: Fri, 28 Jun 2019 13:31:06 -0400
+Message-ID: <CAJE9sG=4MPryg2+h5a-jmhhpqPW=o6E26rte-JSPc31UioNbwQ@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Should multiconfig save build time?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,81 +50,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Jun 2019 06:36:03 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 28 Jun 2019 17:31:41 -0000
+Content-Type: multipart/alternative; boundary="000000000000d2f16e058c65a68f"
 
-Hi RP,
+--000000000000d2f16e058c65a68f
+Content-Type: text/plain; charset="UTF-8"
 
-- For bitbake/lib/bb's changes, I removed the line '#! /usr/bin/env python',
-  and I've run bitbake-selftest, everything is fine except one test case which
-  says can't clone git://git.infradead.org/mtd-utils.git, I can't clone it
-  mannually, either.
+All,
 
-- For toaster/tests, I read it's README, it needs a web browser to run the test
-  cases, but I don't have it on my server, so I didn't run the test cases. I just
-  changed python2 -> python3, but kept the line there, I used 2to3 to check these
-  files, they are python3 indeed.
+We have need to generate 6 slighly different images, with different
+dedicated applications and use cases, but they're all destined for the same
+hardware.
+We have multiconfig set to build these 6 variants.  Clearly, they'll all
+share a majority of underlying packages.
+While the bitbake initialization takes a long time (*with multiconfig*), we
+were under the impression that it could save time during the actual build
+process because it could have the potential to reuse packages already built
+from mc A for mc B if the inputs to the recipes are unchanged (if same
+xxx_FEATURES, same arch, etc.).
 
-// Robert
-  
+This was a guess on our part since we initially didn't assign different tmp
+directories for each conf.  So, the <WORKDIR> didn't change between mc
+builds.  That actually was causing some issues until we realized that
+separate tmp dirs was recommended for them.
+Since they all now have separate tmp dirs, they clearly are not going to
+share work dirs, so, now we're questioning our original assumption about
+any build-time speed benefit.
 
-The following changes since commit 67266331b0f557c01cde1cc1b1a1de7197443a6c:
+So, is mc expected to be any faster than, say, 6 separate invocations of
+non-mc bitbake whilst switching out the local.conf between them?
 
-  local.conf.sample.extended: remove redundant RUNTIMETARGET assignment (2019-06-24 17:34:25 +0100)
-
-are available in the git repository at:
-
-  git://git.pokylinux.org/poky-contrib rbt/py3
-  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/py3
-
-Robert Yang (2):
-  bitbake: lib: Cleanup /usr/bin/env python
-  bitbake: toaster:tests: python -> python3
-
- bitbake/lib/bb/cooker.py                                               | 1 -
- bitbake/lib/bb/cookerdata.py                                           | 1 -
- bitbake/lib/bb/main.py                                                 | 1 -
- bitbake/lib/bb/monitordisk.py                                          | 1 -
- bitbake/lib/bb/namedtuple_with_abc.py                                  | 1 -
- bitbake/lib/bb/parse/parse_py/BBHandler.py                             | 1 -
- bitbake/lib/bb/parse/parse_py/ConfHandler.py                           | 1 -
- bitbake/lib/bb/parse/parse_py/__init__.py                              | 1 -
- bitbake/lib/bb/runqueue.py                                             | 1 -
- bitbake/lib/bb/taskdata.py                                             | 1 -
- bitbake/lib/pyinotify.py                                               | 3 +--
- bitbake/lib/toaster/tests/browser/selenium_helpers.py                  | 2 +-
- bitbake/lib/toaster/tests/browser/selenium_helpers_base.py             | 2 +-
- bitbake/lib/toaster/tests/browser/test_all_builds_page.py              | 2 +-
- bitbake/lib/toaster/tests/browser/test_all_projects_page.py            | 2 +-
- bitbake/lib/toaster/tests/browser/test_builddashboard_page.py          | 2 +-
- .../lib/toaster/tests/browser/test_builddashboard_page_artifacts.py    | 2 +-
- bitbake/lib/toaster/tests/browser/test_builddashboard_page_recipes.py  | 2 +-
- bitbake/lib/toaster/tests/browser/test_builddashboard_page_tasks.py    | 2 +-
- bitbake/lib/toaster/tests/browser/test_js_unit_tests.py                | 2 +-
- bitbake/lib/toaster/tests/browser/test_landing_page.py                 | 2 +-
- bitbake/lib/toaster/tests/browser/test_layerdetails_page.py            | 2 +-
- bitbake/lib/toaster/tests/browser/test_most_recent_builds_states.py    | 2 +-
- bitbake/lib/toaster/tests/browser/test_new_custom_image_page.py        | 2 +-
- bitbake/lib/toaster/tests/browser/test_new_project_page.py             | 2 +-
- bitbake/lib/toaster/tests/browser/test_project_builds_page.py          | 2 +-
- bitbake/lib/toaster/tests/browser/test_project_config_page.py          | 2 +-
- bitbake/lib/toaster/tests/browser/test_project_page.py                 | 2 +-
- bitbake/lib/toaster/tests/browser/test_sample.py                       | 2 +-
- bitbake/lib/toaster/tests/browser/test_task_page.py                    | 2 +-
- bitbake/lib/toaster/tests/browser/test_toastertable_ui.py              | 2 +-
- bitbake/lib/toaster/tests/builds/buildtest.py                          | 2 +-
- bitbake/lib/toaster/tests/builds/test_core_image_min.py                | 2 +-
- bitbake/lib/toaster/tests/commands/test_loaddata.py                    | 2 +-
- bitbake/lib/toaster/tests/commands/test_lsupdates.py                   | 2 +-
- bitbake/lib/toaster/tests/commands/test_runbuilds.py                   | 2 +-
- bitbake/lib/toaster/tests/eventreplay/__init__.py                      | 2 +-
- bitbake/lib/toaster/tests/functional/functional_helpers.py             | 2 +-
- bitbake/lib/toaster/tests/functional/test_functional_basic.py          | 2 +-
- bitbake/lib/toaster/tests/views/test_views.py                          | 2 +-
- bitbake/lib/toaster/toastermain/management/commands/checksocket.py     | 2 +-
- 41 files changed, 31 insertions(+), 42 deletions(-)
+Thanks,
+-Alan
 
 -- 
-2.7.4
+Alan Kozlay
+VES Solutions, LLC
+Alan Kozlay <alan.kozlay@ves.solutions>
+DESK 443-595-7734
+CELL 443-752-0323
 
+--000000000000d2f16e058c65a68f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr">All,<div><br></div><div>We have need to generate 6 slighly=
+ different images, with different dedicated applications and use cases, but=
+ they&#39;re all destined for the same hardware.</div><div>We have multicon=
+fig set to build these 6 variants.=C2=A0 Clearly, they&#39;ll all share a m=
+ajority of underlying packages.</div><div>While the bitbake initialization =
+takes a long time (<i>with multiconfig</i>), we were under the impression t=
+hat it could save time during the actual build process because it could hav=
+e the potential to reuse packages already built from mc A for mc B if the i=
+nputs to the recipes are unchanged (if same xxx_FEATURES, same arch, etc.).=
+</div><div><br></div><div>This was a guess on our part since we initially d=
+idn&#39;t assign different tmp directories for each conf.=C2=A0 So, the &lt=
+;WORKDIR&gt; didn&#39;t change between mc builds.=C2=A0 That actually was c=
+ausing some issues until we realized that separate tmp dirs was recommended=
+ for them.</div><div>Since they all now have separate tmp dirs, they clearl=
+y are not going to share work dirs, so, now we&#39;re questioning our origi=
+nal assumption about any build-time speed benefit.</div><div><br></div><div=
+>So, is mc expected to be any faster than, say, 6 separate invocations of n=
+on-mc bitbake whilst switching out the local.conf between them?=C2=A0</div>=
+<div><br></div><div>Thanks,</div><div>-Alan<br clear=3D"all"><div><br></div=
+>-- <br><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=3D"gmail_=
+signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><span><div><div dir=3D"lt=
+r"><div><div>Alan Kozlay<br></div><div dir=3D"ltr">VES Solutions, LLC<br><s=
+pan>Alan Kozlay &lt;alan.kozlay@ves.solutions&gt;</span><div>DESK 443-595-7=
+734<br></div><div>CELL 443-752-0323</div></div></div></div></div></span></d=
+iv></div></div></div><input name=3D"virtru-metadata" type=3D"hidden" value=
+=3D"{&quot;email-policy&quot;:{&quot;state&quot;:&quot;closed&quot;,&quot;e=
+xpirationUnit&quot;:&quot;days&quot;,&quot;disableCopyPaste&quot;:false,&qu=
+ot;disablePrint&quot;:false,&quot;disableForwarding&quot;:false,&quot;enabl=
+eNoauth&quot;:false,&quot;persistentProtection&quot;:false,&quot;expandedWa=
+termarking&quot;:false,&quot;expires&quot;:false,&quot;isManaged&quot;:fals=
+e},&quot;attachments&quot;:{},&quot;compose-id&quot;:&quot;1&quot;,&quot;co=
+mpose-window&quot;:{&quot;secure&quot;:false}}"></div></div>
+
+--000000000000d2f16e058c65a68f--
