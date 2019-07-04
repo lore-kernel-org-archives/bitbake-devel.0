@@ -1,45 +1,23 @@
-Return-Path: <ankur.tyagi85@gmail.com>
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com
-	[209.85.208.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 7F4987C5F0
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 2FDE06C0EB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Jul 2019 00:57:46 +0000 (UTC)
-Received: by mail-lj1-f180.google.com with SMTP id t28so4349742lje.9
+	Thu,  4 Jul 2019 03:48:19 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x643mHfX010926
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 03 Jul 2019 17:57:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to; 
-	bh=VaDwrL0Zl3KiBEhNCQgO2ZUh8RnhGn8iN31IFBdD7Qk=;
-	b=JsG6O257T7mgfteNmhmo62BeuJ3ha4pzB1Th0RzaZLqvSoLekowoCm+cnVqnvG7BW0
-	cVtZXoW8JxAWSeU6zKOFES2DzmFOzESKtD44wTA5l6dw3ge1dyiY70gxoXHi9KpgPSmm
-	pv7OZkdX5AmcTy7ycN/sl/XZnPdJfQpGVZ/d4s30z9xjFBlWNN5/tMml23Wpuj9/bcJA
-	y1I8ppoKcOH8Bx2M3a7nuVEqbaHvd8aiL8yEWMQYQ3Y8S6JowyyeOKoTmJs8Yal9fG+/
-	bfFIRWQc9VZ5LwmtfpdY/NxAw6CIlIKMtegAnpP5T92febvrk3cJPWY/RWZmn9bBYM4y
-	1+Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to;
-	bh=VaDwrL0Zl3KiBEhNCQgO2ZUh8RnhGn8iN31IFBdD7Qk=;
-	b=bleWWXLygAVGfYZGUkxVX82lsRiIWb5akcKIxNmN94eNBi90zp5zovS5my7vz/qygO
-	2aJidtzsovmKznhOEubYUuOhD+4onWGTIyV9lkXKbzGJpHhddA4LesXhZLlYSwDEn0nJ
-	aNHurnoDaqr3cvCokwol2YTyaaU5GZtwZq5I4QtxvsSXTDbyF36QNXFiRSxsGfFTe03u
-	Jt9/u+eOd5Jez7cWFhruvoEXWBUd2Bux4b6pKXZqG5/DWtNnnZ0O5TIs3nH0Y9EorJea
-	WWKs8oN+H/J2DFpNybztymLiLnbVEwfwciBmgnTbKig05ikiRcZS98cVtcMq4kP7MpwJ
-	1UxQ==
-X-Gm-Message-State: APjAAAXTSmKQ5DgAl55ZS+LfsTzj+n9MEQlvCpYDrwh6hd4E0FdXrJMl
-	XTE6RVMM/+19bgpCpmZ3VjVOXdojupvpUfCb1m1tNQ==
-X-Google-Smtp-Source: APXvYqx14wBV6+S2QMdOjwvtp/ZzypRFP9je8HLBlGAb97yrqtM7ObF0KIZQFcT5FbUngab5Nofu4tMJfccKShCDEeU=
-X-Received: by 2002:a2e:a171:: with SMTP id u17mr16111421ljl.209.1562201866618;
-	Wed, 03 Jul 2019 17:57:46 -0700 (PDT)
+	Wed, 3 Jul 2019 20:48:18 -0700 (PDT)
+Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.3.439.0; Wed, 3 Jul 2019 20:48:17 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 4 Jul 2019 12:12:36 +0800
+Message-ID: <cover.1562213458.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <mailman.1.1562155201.10255.bitbake-devel@lists.openembedded.org>
-In-Reply-To: <mailman.1.1562155201.10255.bitbake-devel@lists.openembedded.org>
-From: Ankur Tyagi <ankur.tyagi85@gmail.com>
-Date: Thu, 4 Jul 2019 12:57:56 +1200
-Message-ID: <CADySD0Ed3fhSK2dTZ-DCJCSEF3DtONNTXgm0g46stwj3nMTzng@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: Re: bitbake-devel Digest, Vol 99, Issue 4
+Subject: [PATCH 0/1] cache: Create a symlink for current cachefile
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,92 +30,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Jul 2019 00:57:46 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Thu, 04 Jul 2019 03:48:19 -0000
+Content-Type: text/plain
 
-Hi,
+The following changes since commit 4fd9ee4670293632cc0ca1e64b8833eb6014435d:
 
-So should I only fix the path if protocol is http/https and send v2 of patch?
+  bitbake: bitbake: Add --skip-setscene option (2019-07-03 17:00:57 +0100)
 
-Thanks
-Ankur
+are available in the git repository at:
 
-> Message: 1
-> Date: Tue, 2 Jul 2019 10:19:46 +0000
-> From: Ernst Sj?strand <ernst.sjostrand@verisure.com>
-> To: "bitbake-devel@lists.openembedded.org"
->         <bitbake-devel@lists.openembedded.org>
-> Subject: Re: [bitbake-devel] [bitbake-devel, 1.42, 1.40] git.py:
->         Handle space in git repo name
-> Message-ID:
->         <d86c3787f5e287b397f96be56c8f680c5c16f564.camel@verisure.com>
-> Content-Type: text/plain; charset="utf-8"
->
-> Hi,
->
-> wouldn't this break the non-http protocols?
->
-> Regards
-> //Ernst
->
-> tis 2019-07-02 klockan 21:07 +1200 skrev Ankur Tyagi:
-> > Signed-off-by: Ankur Tyagi <
-> > ankur.tyagi85@gmail.com
-> > >
-> > ---
-> >  lib/bb/fetch2/git.py | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> > index e171aa7e..5300fa8f 100644
-> > --- a/lib/bb/fetch2/git.py
-> > +++ b/lib/bb/fetch2/git.py
-> > @@ -236,7 +236,7 @@ class Git(FetchMethod):
-> >                      ud.unresolvedrev[name] = ud.revisions[name]
-> >                  ud.revisions[name] = self.latest_revision(ud, d,
-> > name)
-> >
-> > -        gitsrcname = '%s%s' % (ud.host.replace(':', '.'),
-> > ud.path.replace('/', '.').replace('*', '.'))
-> > +        gitsrcname = '%s%s' % (ud.host.replace(':', '.'),
-> > ud.path.replace('/', '.').replace('*', '.').replace(" ", "%20"))
-> >          if gitsrcname.startswith('.'):
-> >              gitsrcname = gitsrcname[1:]
-> >
-> > @@ -459,7 +459,7 @@ class Git(FetchMethod):
-> >              readpathspec = ""
-> >              def_destsuffix = "git/"
-> >
-> > -        destsuffix = ud.parm.get("destsuffix", def_destsuffix)
-> > +        destsuffix = ud.parm.get("destsuffix",
-> > def_destsuffix).replace(" ", "%20")
-> >          destdir = ud.destdir = os.path.join(destdir, destsuffix)
-> >          if os.path.exists(destdir):
-> >              bb.utils.prunedir(destdir)
-> > @@ -574,7 +574,7 @@ class Git(FetchMethod):
-> >              username = ud.user + '@'
-> >          else:
-> >              username = ""
-> > -        return "%s://%s%s%s" % (ud.proto, username, ud.host,
-> > ud.path)
-> > +        return "%s://%s%s%s" % (ud.proto, username, ud.host,
-> > ud.path.replace(" ", "%20"))
-> >
-> >      def _revision_key(self, ud, d, name):
-> >          """
-> > --
-> > 2.22.0.windows.1
-> >
->
-> ------------------------------
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
->
-> End of bitbake-devel Digest, Vol 99, Issue 4
-> ********************************************
+  git://git.pokylinux.org/poky-contrib rbt/symlink
+  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/symlink
+
+Robert Yang (1):
+  cache: Create a symlink for current cachefile
+
+ bitbake/lib/bb/cache.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+-- 
+2.7.4
+
 
