@@ -1,29 +1,51 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id D87587EEBB
+Return-Path: <mads.andreasen@gmail.com>
+Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com
+	[209.85.208.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 8F0FF7C5FC
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 08:47:36 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x6A8laQn010112
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 10 Jul 2019 01:47:37 -0700 (PDT)
-Received: from localhost.corp.ad.wrs.com (128.224.162.182) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.3.439.0; Wed, 10 Jul 2019 01:47:36 -0700
-To: Alan Kozlay <alan.kozlay@ves-solutions.com>,
-	<bitbake-devel@lists.openembedded.org>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>
-References: <CAJE9sG=4MPryg2+h5a-jmhhpqPW=o6E26rte-JSPc31UioNbwQ@mail.gmail.com>
-	<d12b286a3b55653e61d8d8e7672d87b374ae37d6.camel@linuxfoundation.org>
-	<CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <eea2f89b-ed8d-40ed-9c9a-d70f4d1457f3@windriver.com>
-Date: Wed, 10 Jul 2019 16:48:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-	Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
-Subject: Re: Should multiconfig save build time?
+	Sun,  7 Jul 2019 07:20:01 +0000 (UTC)
+Received: by mail-lj1-f195.google.com with SMTP id r9so12867051ljg.5
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 07 Jul 2019 00:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=sender:from:to:cc:subject:date:message-id;
+	bh=LakdqicPkSWz8JyNT++RFNnRJGZJm/safAUzG7QPTc8=;
+	b=Dt4TqwScvMZra1XJ5E2E+zIdL15cq+IhlNdEqXyzRUyRuyhbK2aoaFj8AieuQmtTiy
+	oD6Ys7iSCtdt7JgegivQ/iWyxfx6eebHSFFWtv+NddUI/T5K+Dbb6QyMpPqoYDdJNWRt
+	dslxLZzJTkjlcQHpYkTN92oWwNgFqJM4x8g25ptLs+/ZOLgjH68YUVZm5aRTVUvau/1d
+	zpvBfKx0rIK1AMlMcsHPQNcGjepoJq/IKQsfoCiJ1oK0SNx+kXZQvDViEAafOzUfQNWy
+	XOpjN3HmFb3u1ADJcCS8ZnT9ALC99DmWedpEw94I4GANgOWcow4+KhSPXkhzC5yYP14n
+	w7Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+	bh=LakdqicPkSWz8JyNT++RFNnRJGZJm/safAUzG7QPTc8=;
+	b=G3baTA9qDMRDsroJRvR44EXyeeAwVM+UaBf/fP3oGkWl/HeCCf6u811daJbn/0nBOg
+	j148ZKGUPJkTQoTlKCLOwg6o33037J8uCg2UDYoTxfpwfI7vM/8y9w8fEGI5jUNZKBrd
+	zq9fSLp9b/Mf/Yecmb1sG+L1g4TbnJgxYEJxp9WzLgbrN5cAv6PfLp6SfsRFRQqeGpmC
+	9+ck6CTXmSOgNQob2zRu01nyTwIa8kZvPzIgIOGiov8N52dlUQMuweNZXCqeLJTsfJ5Q
+	1rPTfEAPYtDN/naA5lx6HEOvfhXkBRtEK7UcppW8MrWXupkeLOz+FlusG39Do+k1egIv
+	SAkg==
+X-Gm-Message-State: APjAAAWDpNhva0MoL3E1aN65uUhvbmEdbmT8jzffw3T4WUK0cCZhj/k/
+	1eD38MP8VetQ4rJSaY4hBYcVk51nrg0=
+X-Google-Smtp-Source: APXvYqxTCL6JkteY/a8ZJ0FKfpv4bfnIj3ZNRvR22FxsS0+bxfz9BmmjyO10e4C7FatcVXOP3PfMQQ==
+X-Received: by 2002:a2e:9e81:: with SMTP id f1mr6844929ljk.29.1562484001697;
+	Sun, 07 Jul 2019 00:20:01 -0700 (PDT)
+Received: from localhost.localdomain (2-108-165-194-cable.dk.customer.tdc.net.
+	[2.108.165.194]) by smtp.gmail.com with ESMTPSA id
+	h78sm2850017ljf.88.2019.07.07.00.20.00
+	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+	Sun, 07 Jul 2019 00:20:01 -0700 (PDT)
+Sender: Mads Andreasen <mads.andreasen@gmail.com>
+From: Mads Andreasen <mads@andreasen.cc>
+X-Google-Original-From: Mads Andreasen <github@andreasen.cc>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun,  7 Jul 2019 09:19:44 +0200
+Message-Id: <20190707071944.5653-1-github@andreasen.cc>
+X-Mailer: git-send-email 2.17.1
+X-Mailman-Approved-At: Wed, 10 Jul 2019 09:14:02 +0000
+Cc: Mads Andreasen <github@andreasen.cc>
+Subject: [PATCH] fetch2/npm: Use npm pack to download node modules instead of wget
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,127 +58,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Jul 2019 08:47:37 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Sun, 07 Jul 2019 07:20:02 -0000
 
+Using npm pack to download the main node module and its dependencies
+allow for the use of private npm modules and access to them via .npmrc
 
+Signed-off-by: Mads Andreasen <mads@andreasen.cc>
+---
+ lib/bb/fetch2/npm.py | 45 ++++++++++++++++++++++----------------------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
 
-On 7/9/19 2:27 AM, Alan Kozlay wrote:
-> All,
-> 
-> In regards to our original June 28th post:
-> 
-> We're looking for things we can do to improve the multiconfig build time.
-> 
-> Even on our build servers it still takes a long time.
-> For instance, our build servers each have 64 core, 128G RAM with 4 NVMe SSD HDs 
-> in a striped raid (/all configured with bells and whistles to make it super fast/).
-> A full fresh build on one of those servers still takes 6 hours.
-> 
-> I need to also clarify that we do indeed define different DISTRO_FEATURES 
-> between multiconfigs, so multiconfig is necessary.
-> 
-> (1) We're attempting to use the ccache (via ccache.bbclass), but it's causing 
-> some build errors that we're investigating.
+diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+index 4427b1bb..6c4d397f 100644
+--- a/lib/bb/fetch2/npm.py
++++ b/lib/bb/fetch2/npm.py
+@@ -101,11 +101,19 @@ class Npm(FetchMethod):
+             return False
+         return True
+ 
+-    def _runwget(self, ud, d, command, quiet):
+-        logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
+-        bb.fetch2.check_network_access(d, command, ud.url)
++    def _runpack(self, ud, d, pkgfullname: str, quiet=False) -> str:
++        """
++        Runs npm pack on a full package name. 
++        Returns the filename of the downloaded package
++        """
++        bb.fetch2.check_network_access(d, pkgfullname, ud.registry)
+         dldir = d.getVar("DL_DIR")
+-        runfetchcmd(command, d, quiet, workdir=dldir)
++        dldir = os.path.join(dldir, ud.prefixdir)
++
++        command = f"npm pack {pkgfullname} --registry {ud.registry}"
++        logger.debug(2, "Fetching {pkgfullname} using command '{command}' in {dldir}")
++        filename = runfetchcmd(command, d, quiet, workdir=dldir)
++        return filename.rstrip()
+ 
+     def _unpackdep(self, ud, pkg, data, destdir, dldir, d):
+         file = data[pkg]['tgz']
+@@ -163,6 +171,9 @@ class Npm(FetchMethod):
+         pkgfullname = pkg
+         if version != '*' and not '/' in version:
+             pkgfullname += "@'%s'" % version
++        if pkgfullname in fetchedlist:
++            return
++
+         logger.debug(2, "Calling getdeps on %s" % pkg)
+         fetchcmd = "npm view %s --json --registry %s" % (pkgfullname, ud.registry)
+         output = runfetchcmd(fetchcmd, d, True)
+@@ -182,15 +193,10 @@ class Npm(FetchMethod):
+                 if (not blacklist and 'linux' not in pkg_os) or '!linux' in pkg_os:
+                     logger.debug(2, "Skipping %s since it's incompatible with Linux" % pkg)
+                     return
+-        #logger.debug(2, "Output URL is %s - %s - %s" % (ud.basepath, ud.basename, ud.localfile))
+-        outputurl = pdata['dist']['tarball']
++        filename = self._runpack(ud, d, pkgfullname)
+         data[pkg] = {}
+-        data[pkg]['tgz'] = os.path.basename(outputurl)
+-        if outputurl in fetchedlist:
+-            return
+-
+-        self._runwget(ud, d, "%s --directory-prefix=%s %s" % (self.basecmd, ud.prefixdir, outputurl), False)
+-        fetchedlist.append(outputurl)
++        data[pkg]['tgz'] = filename
++        fetchedlist.append(pkgfullname)
+ 
+         dependencies = pdata.get('dependencies', {})
+         optionalDependencies = pdata.get('optionalDependencies', {})
+@@ -217,17 +223,12 @@ class Npm(FetchMethod):
+                     if obj == pkg:
+                         self._getshrinkeddependencies(obj, data['dependencies'][obj], data['dependencies'][obj]['version'], d, ud, lockdown, manifest, False)
+                         return
+-        outputurl = "invalid"
+-        if ('resolved' not in data) or (not data['resolved'].startswith('http://') and not data['resolved'].startswith('https://')):
+-            # will be the case for ${PN}
+-            fetchcmd = "npm view %s@%s dist.tarball --registry %s" % (pkg, version, ud.registry)
+-            logger.debug(2, "Found this matching URL: %s" % str(fetchcmd))
+-            outputurl = runfetchcmd(fetchcmd, d, True)
+-        else:
+-            outputurl = data['resolved']
+-        self._runwget(ud, d, "%s --directory-prefix=%s %s" % (self.basecmd, ud.prefixdir, outputurl), False)
++
++        pkgnameWithVersion = f"{pkg}@{version}"
++        logger.debug(2, f"Get dependencies for {pkgnameWithVersion}")
++        filename = self._runpack(ud, d, pkgnameWithVersion)
+         manifest[pkg] = {}
+-        manifest[pkg]['tgz'] = os.path.basename(outputurl).rstrip()
++        manifest[pkg]['tgz'] = filename
+         manifest[pkg]['deps'] = {}
+ 
+         if pkg in lockdown:
+-- 
+2.17.1
 
-Which branch are you using, please? What's the detailed errors?
-
-> (2) Can we at least set the root native work directory to be the same for all 
-> multiconfigs?
-> 
->   * Would each multiconfig honor the previously built native tools?
->   * Or, would it just rebuild them, anyway?
->   * Is this safe or tested or supported?
-> 
-> (3) We're considering a network shared sstate-cache.  But it's not entirely 
-> clear if a multiconfig build is benefited by the sstate-cache directory.
-> 
->   * Under what circumstances does a multiconfig leverage sstate-cache when
->     building for another multiconfig?
-
-Only when the checksums are the same.
-
->   * What if the recipe would be affected by a change in DISTRO_FEATURES between >     multiconfigs?
-
-You can use:
-$ bitbake -Sprintdiff <recipe> (or world)
-
-Before and after DISTRO_FEATURES changed to see the differences.
-
->   * Are native packages included in the sstate-cache or just target packages?
-
-I prefer including all of them in the sstate-cache, e.g., allarch recipes
-may also re-use the sstate-cache.
-
-
-Build time is a problem, I had tried to adjust the build options to make it
-faster, but didn't improve a lot. Make bitbake support distributed build
-might be a good choice, not distribute C/C++ files, but distribute
-the whole recipes or task queues to other hosts to build them. bitbake
-doesn't support this atm. Perhaps we may make it work in the future,
-add RP in the loop to see his comments.
-
-// Robert
-
-> 
-> We welcome all thoughts and ideas.
-> 
-> -Alan
-> 
-> On Sun, Jun 30, 2019 at 5:38 PM Richard Purdie 
-> <richard.purdie@linuxfoundation.org <mailto:richard.purdie@linuxfoundation.org>> 
-> wrote:
-> 
->     On Fri, 2019-06-28 at 13:31 -0400, Alan Kozlay wrote:
->      > We have need to generate 6 slighly different images, with different
->      > dedicated applications and use cases, but they're all destined for
->      > the same hardware.
->      > We have multiconfig set to build these 6 variants.  Clearly, they'll
->      > all share a majority of underlying packages.
->      > While the bitbake initialization takes a long time (with
->      > multiconfig), we were under the impression that it could save time
->      > during the actual build process because it could have the potential
->      > to reuse packages already built from mc A for mc B if the inputs to
->      > the recipes are unchanged (if same xxx_FEATURES, same arch, etc.).
->      >
->      > This was a guess on our part since we initially didn't assign
->      > different tmp directories for each conf.  So, the <WORKDIR> didn't
->      > change between mc builds.  That actually was causing some issues
->      > until we realized that separate tmp dirs was recommended for them.
->      > Since they all now have separate tmp dirs, they clearly are not going
->      > to share work dirs, so, now we're questioning our original assumption
->      > about any build-time speed benefit.
->      >
->      > So, is mc expected to be any faster than, say, 6 separate invocations
->      > of non-mc bitbake whilst switching out the local.conf between them?
-> 
->     Ultimately, yes, it would be expected to be faster.
-> 
->     With the code as it stands today, no, it won't be. Its a known open
->     issue:
-> 
->     https://bugzilla.yoctoproject.org/show_bug.cgi?id=10682
-> 
->     What would be faster is to build one of the configs initially which
->     will populate the sstate cache, then build the other 5 together in one
->     multiconfig.
-> 
->     We obviously want to get that issue fixed ultimately but its not an
->     easy thing to do due to the way our codebase works.
-> 
->     Cheers,
-> 
->     Richard
-> 
-> 
-> 
-> -- 
-> Alan Kozlay
-> VES Solutions, LLC
-> Alan Kozlay <alan.kozlay@ves.solutions>
-> DESK 443-595-7734
-> CELL 443-752-0323
-> 
 
