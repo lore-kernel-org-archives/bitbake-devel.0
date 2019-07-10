@@ -1,51 +1,50 @@
-Return-Path: <mads.andreasen@gmail.com>
-Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com
-	[209.85.208.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 8F0FF7C5FC
+Return-Path: <ankur.tyagi85@gmail.com>
+Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com
+	[209.85.167.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 4723B60273
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  7 Jul 2019 07:20:01 +0000 (UTC)
-Received: by mail-lj1-f195.google.com with SMTP id r9so12867051ljg.5
+	Wed, 10 Jul 2019 09:26:40 +0000 (UTC)
+Received: by mail-lf1-f65.google.com with SMTP id b29so1113008lfq.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 07 Jul 2019 00:20:02 -0700 (PDT)
+	Wed, 10 Jul 2019 02:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=sender:from:to:cc:subject:date:message-id;
-	bh=LakdqicPkSWz8JyNT++RFNnRJGZJm/safAUzG7QPTc8=;
-	b=Dt4TqwScvMZra1XJ5E2E+zIdL15cq+IhlNdEqXyzRUyRuyhbK2aoaFj8AieuQmtTiy
-	oD6Ys7iSCtdt7JgegivQ/iWyxfx6eebHSFFWtv+NddUI/T5K+Dbb6QyMpPqoYDdJNWRt
-	dslxLZzJTkjlcQHpYkTN92oWwNgFqJM4x8g25ptLs+/ZOLgjH68YUVZm5aRTVUvau/1d
-	zpvBfKx0rIK1AMlMcsHPQNcGjepoJq/IKQsfoCiJ1oK0SNx+kXZQvDViEAafOzUfQNWy
-	XOpjN3HmFb3u1ADJcCS8ZnT9ALC99DmWedpEw94I4GANgOWcow4+KhSPXkhzC5yYP14n
-	w7Tw==
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=GHu5AscaDrHJZtKvhceVGbWXBF2ojqkcPqSfV31JXsE=;
+	b=CcFiyrAlN4PxiEoXfUCkS1J8jwwzxXc/2o+g07sWjVxOY5i+7+1q6fDgV8AIC4Me32
+	D5Gav4N2xVazoC/SVX4L/kPOOsyAtEs96PxX4xVp9yomvmC2dEvu7EnCB0ahsW9j8rPz
+	q75yJRzER5cBrH4kdscUwobzYpUUHq+i5D5Enx4wPmlgbnSjPwE312TE0Saxy/9j9cBm
+	VLIyJiexjGNPOYTMfsQTade2aTZ06enu30fosj3ttZnhhFeWgymi/ZokkBP0stg45tqL
+	/CQjxpifD64AG9E3zYBD8gg/xpbwrOoN2KUKDbyh7FkP1MOkeoGudYabYx9Wc7Dmm57U
+	tsxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-	bh=LakdqicPkSWz8JyNT++RFNnRJGZJm/safAUzG7QPTc8=;
-	b=G3baTA9qDMRDsroJRvR44EXyeeAwVM+UaBf/fP3oGkWl/HeCCf6u811daJbn/0nBOg
-	j148ZKGUPJkTQoTlKCLOwg6o33037J8uCg2UDYoTxfpwfI7vM/8y9w8fEGI5jUNZKBrd
-	zq9fSLp9b/Mf/Yecmb1sG+L1g4TbnJgxYEJxp9WzLgbrN5cAv6PfLp6SfsRFRQqeGpmC
-	9+ck6CTXmSOgNQob2zRu01nyTwIa8kZvPzIgIOGiov8N52dlUQMuweNZXCqeLJTsfJ5Q
-	1rPTfEAPYtDN/naA5lx6HEOvfhXkBRtEK7UcppW8MrWXupkeLOz+FlusG39Do+k1egIv
-	SAkg==
-X-Gm-Message-State: APjAAAWDpNhva0MoL3E1aN65uUhvbmEdbmT8jzffw3T4WUK0cCZhj/k/
-	1eD38MP8VetQ4rJSaY4hBYcVk51nrg0=
-X-Google-Smtp-Source: APXvYqxTCL6JkteY/a8ZJ0FKfpv4bfnIj3ZNRvR22FxsS0+bxfz9BmmjyO10e4C7FatcVXOP3PfMQQ==
-X-Received: by 2002:a2e:9e81:: with SMTP id f1mr6844929ljk.29.1562484001697;
-	Sun, 07 Jul 2019 00:20:01 -0700 (PDT)
-Received: from localhost.localdomain (2-108-165-194-cable.dk.customer.tdc.net.
-	[2.108.165.194]) by smtp.gmail.com with ESMTPSA id
-	h78sm2850017ljf.88.2019.07.07.00.20.00
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Sun, 07 Jul 2019 00:20:01 -0700 (PDT)
-Sender: Mads Andreasen <mads.andreasen@gmail.com>
-From: Mads Andreasen <mads@andreasen.cc>
-X-Google-Original-From: Mads Andreasen <github@andreasen.cc>
-To: bitbake-devel@lists.openembedded.org
-Date: Sun,  7 Jul 2019 09:19:44 +0200
-Message-Id: <20190707071944.5653-1-github@andreasen.cc>
-X-Mailer: git-send-email 2.17.1
-X-Mailman-Approved-At: Wed, 10 Jul 2019 09:14:02 +0000
-Cc: Mads Andreasen <github@andreasen.cc>
-Subject: [PATCH] fetch2/npm: Use npm pack to download node modules instead of wget
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=GHu5AscaDrHJZtKvhceVGbWXBF2ojqkcPqSfV31JXsE=;
+	b=pSJ2lW0Csbr7CGMskDOCn6ByYafA3GeeRFJ3DXGBMk2wsb6SR8jZakeMC/v1V57cui
+	wWo1YByiRqxLveCyN5H6/aHWVtFbaE74ygFtpt6pAUeWh5LP6Yah0ZOaEo96hUM8EYtK
+	ETz9IOqJHYWb8EXPwH5aRLcNpXDZdw0QIiPwKRdB7zx8x01u6PSq4Ct7zSsKpqSqF+nI
+	fdIkP0ijFwa4KxsCHUKIsbOJptYxex4JyQG/Rly3zDTce2bo3TcO2xuBjdyfCWjVcyog
+	RxIjPq+0sCefGTE3HyAB+niU+2qV2v+20YRzCOQnx8tOq+OKvS/f/nqVzSW7sS0npw/N
+	i17g==
+X-Gm-Message-State: APjAAAUpXQt/J29X0p07Q/hbO4866XCiTu3lxTQ8FLBB/RYf2wKOhFPM
+	8LgHg5O3FQ27NM8YFzXp0RxitAh91F6dldVn/Bk=
+X-Google-Smtp-Source: APXvYqx0Ac4k7t83MODrjD2wLKZrjx+DjNjnNlhIX+wSkLEIiopocWgpB5Vj7bdSXY6nEh45h2IdsmYKJlR/P8Z59xQ=
+X-Received: by 2002:a19:a83:: with SMTP id 125mr14984206lfk.150.1562750800603; 
+	Wed, 10 Jul 2019 02:26:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190704044603.9943-1-ankur.tyagi85@gmail.com>
+	<c7df70a3-d581-5e21-842b-0e941ec80a05@windriver.com>
+	<CADySD0EkWkJ6mbg7jh3hRq3E7bjaqDFa=Aeax7OpertQ0XygSA@mail.gmail.com>
+	<d69bc7b9-b946-582d-880c-ef41338affbe@windriver.com>
+	<CADySD0HDCdVHnwzXN+POLEoQg73enGZ6XPht5HLZcySGj0XXww@mail.gmail.com>
+In-Reply-To: <CADySD0HDCdVHnwzXN+POLEoQg73enGZ6XPht5HLZcySGj0XXww@mail.gmail.com>
+From: Ankur Tyagi <ankur.tyagi85@gmail.com>
+Date: Wed, 10 Jul 2019 21:26:31 +1200
+Message-ID: <CADySD0G-iSynqSRo9o-y_e0Hvz4L+GzvsBYm=9mHq25yAn0c6Q@mail.gmail.com>
+To: Mark Hatle <mark.hatle@windriver.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel, 1.42, 1.40, v2] git.py: Handle space in git repo name for http/https protocol
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,97 +57,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 07 Jul 2019 07:20:02 -0000
+X-List-Received-Date: Wed, 10 Jul 2019 09:26:40 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-Using npm pack to download the main node module and its dependencies
-allow for the use of private npm modules and access to them via .npmrc
+Hi,
 
-Signed-off-by: Mads Andreasen <mads@andreasen.cc>
----
- lib/bb/fetch2/npm.py | 45 ++++++++++++++++++++++----------------------
- 1 file changed, 23 insertions(+), 22 deletions(-)
+Is there something else that needs to be done in this patch? Or
+perhaps there is a better to handle this?
+I am willing to learn and try it out if original patch is not good.
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 4427b1bb..6c4d397f 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -101,11 +101,19 @@ class Npm(FetchMethod):
-             return False
-         return True
- 
--    def _runwget(self, ud, d, command, quiet):
--        logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
--        bb.fetch2.check_network_access(d, command, ud.url)
-+    def _runpack(self, ud, d, pkgfullname: str, quiet=False) -> str:
-+        """
-+        Runs npm pack on a full package name. 
-+        Returns the filename of the downloaded package
-+        """
-+        bb.fetch2.check_network_access(d, pkgfullname, ud.registry)
-         dldir = d.getVar("DL_DIR")
--        runfetchcmd(command, d, quiet, workdir=dldir)
-+        dldir = os.path.join(dldir, ud.prefixdir)
-+
-+        command = f"npm pack {pkgfullname} --registry {ud.registry}"
-+        logger.debug(2, "Fetching {pkgfullname} using command '{command}' in {dldir}")
-+        filename = runfetchcmd(command, d, quiet, workdir=dldir)
-+        return filename.rstrip()
- 
-     def _unpackdep(self, ud, pkg, data, destdir, dldir, d):
-         file = data[pkg]['tgz']
-@@ -163,6 +171,9 @@ class Npm(FetchMethod):
-         pkgfullname = pkg
-         if version != '*' and not '/' in version:
-             pkgfullname += "@'%s'" % version
-+        if pkgfullname in fetchedlist:
-+            return
-+
-         logger.debug(2, "Calling getdeps on %s" % pkg)
-         fetchcmd = "npm view %s --json --registry %s" % (pkgfullname, ud.registry)
-         output = runfetchcmd(fetchcmd, d, True)
-@@ -182,15 +193,10 @@ class Npm(FetchMethod):
-                 if (not blacklist and 'linux' not in pkg_os) or '!linux' in pkg_os:
-                     logger.debug(2, "Skipping %s since it's incompatible with Linux" % pkg)
-                     return
--        #logger.debug(2, "Output URL is %s - %s - %s" % (ud.basepath, ud.basename, ud.localfile))
--        outputurl = pdata['dist']['tarball']
-+        filename = self._runpack(ud, d, pkgfullname)
-         data[pkg] = {}
--        data[pkg]['tgz'] = os.path.basename(outputurl)
--        if outputurl in fetchedlist:
--            return
--
--        self._runwget(ud, d, "%s --directory-prefix=%s %s" % (self.basecmd, ud.prefixdir, outputurl), False)
--        fetchedlist.append(outputurl)
-+        data[pkg]['tgz'] = filename
-+        fetchedlist.append(pkgfullname)
- 
-         dependencies = pdata.get('dependencies', {})
-         optionalDependencies = pdata.get('optionalDependencies', {})
-@@ -217,17 +223,12 @@ class Npm(FetchMethod):
-                     if obj == pkg:
-                         self._getshrinkeddependencies(obj, data['dependencies'][obj], data['dependencies'][obj]['version'], d, ud, lockdown, manifest, False)
-                         return
--        outputurl = "invalid"
--        if ('resolved' not in data) or (not data['resolved'].startswith('http://') and not data['resolved'].startswith('https://')):
--            # will be the case for ${PN}
--            fetchcmd = "npm view %s@%s dist.tarball --registry %s" % (pkg, version, ud.registry)
--            logger.debug(2, "Found this matching URL: %s" % str(fetchcmd))
--            outputurl = runfetchcmd(fetchcmd, d, True)
--        else:
--            outputurl = data['resolved']
--        self._runwget(ud, d, "%s --directory-prefix=%s %s" % (self.basecmd, ud.prefixdir, outputurl), False)
-+
-+        pkgnameWithVersion = f"{pkg}@{version}"
-+        logger.debug(2, f"Get dependencies for {pkgnameWithVersion}")
-+        filename = self._runpack(ud, d, pkgnameWithVersion)
-         manifest[pkg] = {}
--        manifest[pkg]['tgz'] = os.path.basename(outputurl).rstrip()
-+        manifest[pkg]['tgz'] = filename
-         manifest[pkg]['deps'] = {}
- 
-         if pkg in lockdown:
--- 
-2.17.1
+Thanks
+Ankur
 
+On Tue, Jul 9, 2019 at 11:50 AM Ankur Tyagi <ankur.tyagi85@gmail.com> wrote:
+>
+> On Tue, Jul 9, 2019 at 11:01 AM Mark Hatle <mark.hatle@windriver.com> wrote:
+> >
+> > On 7/8/19 4:12 PM, Ankur Tyagi wrote:
+> > > We are using TFS in our company and within TFS we have different
+> > > project names that can have spaces.
+> > > With new version of TFS, git repo can also be created inside it and
+> > > the path of those repo also includes the project name that can have
+> > > space.
+> >
+> > Yes, spaces are valid.  I don't dispute that.. but however are you entering them?
+>
+> I am entering the url in SRC_URI with %20 in place of space
+>
+> > > Hence the SRC_URI will have a space and that's when I started seeing errors.
+> >
+> >
+> > SRC_URI = "https://foo.com/bar foobar bar"
+>
+> In my case, it is SRC_URI = "https://foo.com/bar%20foobar%20bar"
+>
+> > That will result in -three- entries:
+> >
+> > https://foo.com/bar
+> > foobar
+> > bar
+> >
+> > The later two are invalid, because SRC_URI is split on whitespace (spaces and tabs.)
+> >
+> > So what I don't understand is how are spaces being entered into the SRC_URI
+> > (other then with %20) unless they are coming in via gitsm?
+>
+> Then during the fetch task, git clone command looks like this
+> "git clone https://foo.com/bar foobar bar" which results in errors
+>
+> That's why I am trying to insert "%20" back
+>
+> Regards
+> Ankur
+> >
+> > --Mark
+> >
+> > > Hope it answers your question
+> > >
+> > > regards
+> > > Ankur
+> > >
+> > > On Tue, Jul 9, 2019 at 6:28 AM Mark Hatle <mark.hatle@windriver.com> wrote:
+> > >>
+> > >> How is a space being added?  I'm a bit confused by this.  Is it due to the gitsm
+> > >> fetching?  or has someone figured out a way in SRC_URI to included spaces?
+> > >>
+> > >> If it's only in the gitsm fetching, then maybe we need to do the conversion
+> > >> there instead.
+> > >>
+> > >> --Mark
+> > >>
+> > >> On 7/3/19 11:46 PM, Ankur Tyagi wrote:
+> > >>> Signed-off-by: Ankur Tyagi <ankur.tyagi85@gmail.com>
+> > >>> ---
+> > >>>  lib/bb/fetch2/git.py | 3 +++
+> > >>>  1 file changed, 3 insertions(+)
+> > >>>
+> > >>> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> > >>> index 59a2ee8f..a8fcc2bf 100644
+> > >>> --- a/lib/bb/fetch2/git.py
+> > >>> +++ b/lib/bb/fetch2/git.py
+> > >>> @@ -156,6 +156,9 @@ class Git(FetchMethod):
+> > >>>          if not ud.proto in ('git', 'file', 'ssh', 'http', 'https', 'rsync'):
+> > >>>              raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
+> > >>>
+> > >>> +        if ud.proto in ('http', 'https'):
+> > >>> +            ud.path = ud.path.replace(" ", "%20")
+> > >>> +
+> > >>>          ud.nocheckout = ud.parm.get("nocheckout","0") == "1"
+> > >>>
+> > >>>          ud.rebaseable = ud.parm.get("rebaseable","0") == "1"
+> > >>>
+> > >>
+> >
 
