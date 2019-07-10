@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com
-	[209.85.221.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 73F907F010
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
+	[209.85.221.51])
+	by mail.openembedded.org (Postfix) with ESMTP id A8F577F025
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 23:54:28 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id p17so4197711wrf.11
+	Wed, 10 Jul 2019 23:54:30 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id r1so4212460wrl.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 16:54:29 -0700 (PDT)
+	Wed, 10 Jul 2019 16:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=ArbwX4gXGeQuK9W7CD4lOqbP4YLPSJr6YE/3US4qnns=;
-	b=WSs1fq7R75NcnN5ZAsa5qU9p9N9hmyLjfv7rJlOW2tNxNNSGZyXpIRcCQqJZeCxRbT
-	m3ol+XPL2E18uxs2FfjqfCv1xgh2cIeYHUc1/3sUvzS9Wcpy8VkQJMsA/baTxmBRSGQe
-	7oeN3fl32bbfmrELxj1ypaeCQUNejAa7u7YR0=
+	bh=5gXrNJY3NR1m4Udgg6cVKMhJesQNrMa1F8uBnk6Sz98=;
+	b=OJa+1VMVHX6s4kMcZiIyAQTggV4nUXAt3nMoYWAzDQDYiO6stJ3lJorndFebTQOLm2
+	Dn7oWEwGPKqQdX+M0azwdwqCVJidhJK3wxNGIgBbb+sG3D+aH1o9NyQCzejzeTrmMIFN
+	RQ4zRQVlS1cOGahHcCsKPVcaBSDnN775u6EW4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=ArbwX4gXGeQuK9W7CD4lOqbP4YLPSJr6YE/3US4qnns=;
-	b=kUwKFA4jAojAsAxUCr4W+jjDKouSK/rs8iMJyAPjPSGC4ysyJHS83uPlPN6DdDEEjL
-	K/wZ4hDNSIzm3bCNhhDxQe8Srmtm3kWccPLHvC967GJR1xptmY+FO2vv3eO4kvn7QlV/
-	iaO6Gt7wxurXVOb885y+6dg17WTwn4yCPEo4JcPuKccCfw50p8tRm3wriqzgWcUF1Sa5
-	goY6KtubXFp9hqU7tqJ4FLzywI7xkqD6cE5bIrBk2s1fB0jMNl4/rztLl+ivwPP5T7PO
-	5oJV6CjqGdYp3WMKZgZ5/ZmhkSjb0NQeOUCVPlj3ukssSHh2Pm7oekuD7VG6KIb6QNVB
-	Te1A==
-X-Gm-Message-State: APjAAAXvkR3m6cTsavHH0L52RzD3FL7y+3GMmBBhPMRTMHQ8EWlj8NwF
-	PNG2QY2Y4p/XyOKjVdBwi6wPxkv+d3I=
-X-Google-Smtp-Source: APXvYqw7L6FPxpWTCVcklRUkxahFq+3nPeb2GAyPRBmz2ZWrInDSJEe23Cilx8gof68hZt0Yv07huw==
-X-Received: by 2002:a5d:4ec1:: with SMTP id s1mr220193wrv.19.1562802869119;
-	Wed, 10 Jul 2019 16:54:29 -0700 (PDT)
+	bh=5gXrNJY3NR1m4Udgg6cVKMhJesQNrMa1F8uBnk6Sz98=;
+	b=g76UqO9EMnHHTnjc450iBMTxjbEB1/e3mchwcvKBADZ2Do+hsmyPRIrFoEgzMdUfvj
+	0iEQQ7sfUArfYTQ8ng41rf5Zkib0T2iXQOVRRUwxXmtMWM/XKcOQNuUg7BGlsHHUzY5C
+	bUNFUtHsQHdaccuHcnG6Ng+D7FK9Ws7Ns8HyL7KDfw+dMgQB2CFBxWFxqvpYXfJ62yAT
+	5rQfD6NX6F1tdKvRbjFqkA3BiLECxSRSzaUYXI8BOslGGagwRERGwInn1h7EK1ozU8A7
+	XOS3JNxwj+e51FCrUwCV39NW+AIsAtBP6pevITYpcfQ27Wpe5uR4+xcF72E9wqqEgwCx
+	OrXA==
+X-Gm-Message-State: APjAAAUCXfVvd+tIJLIUEt0QgM31hM5KHq+OW21QDLIciNFXMDAxDJR3
+	lyt7mbr1ycGKaVNj4GpHLFnCP5w8uKQ=
+X-Google-Smtp-Source: APXvYqwTwktlZnkVzIqUCLJO57dyl7V1Q62k7q1zS4D0Q21JZtRagxCkNZBnqOLIDCqEFtl11SL8+Q==
+X-Received: by 2002:a5d:55c2:: with SMTP id i2mr244287wrw.96.1562802871170;
+	Wed, 10 Jul 2019 16:54:31 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	r12sm4710783wrt.95.2019.07.10.16.54.27
+	r12sm4710783wrt.95.2019.07.10.16.54.30
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Wed, 10 Jul 2019 16:54:28 -0700 (PDT)
+	Wed, 10 Jul 2019 16:54:30 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 11 Jul 2019 00:54:02 +0100
-Message-Id: <20190710235420.23825-8-richard.purdie@linuxfoundation.org>
+Date: Thu, 11 Jul 2019 00:54:04 +0100
+Message-Id: <20190710235420.23825-10-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190710235420.23825-1-richard.purdie@linuxfoundation.org>
 References: <20190710235420.23825-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 08/26] runqueue: Merge stats handling together for setscene/real tasks
+Subject: [PATCH 10/26] runqueue: Fix counter/task updating glitch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,143 +58,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Jul 2019 23:54:29 -0000
+X-List-Received-Date: Wed, 10 Jul 2019 23:54:30 -0000
 Content-Transfer-Encoding: 8bit
 
-Use a seperate stats class for scenequeue tasks and move the setup
-into the base class. Update references accordingly.
+Some tasks were not being marked as covered/notcovered since internal
+calls were being made without using the external call points.
+
+Fix the accounting issues by using the correct external call points.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 39 ++++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+ lib/bb/runqueue.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index c512920a6d..7de27ec315 100644
+index 9ec2f7d2d4..54dce83737 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -1748,6 +1748,9 @@ class RunQueueExecute:
- 
-         self.stampcache = {}
- 
-+        self.stats = RunQueueStats(len(self.rqdata.runtaskentries))
-+        self.sq_stats = RunQueueStats(len(self.rqdata.runq_setscene_tids))
-+
-         for mc in rq.worker:
-             rq.worker[mc].pipe.setrunqueueexec(self)
-         for mc in rq.fakeworker:
-@@ -1802,8 +1805,9 @@ class RunQueueExecute:
-     def finish(self):
-         self.rq.state = runQueueCleanUp
- 
--        if self.stats.active > 0:
--            bb.event.fire(runQueueExitWait(self.stats.active), self.cfgData)
-+        active = self.stats.active + self.sq_stats.active
-+        if active > 0:
-+            bb.event.fire(runQueueExitWait(active), self.cfgData)
-             self.rq.read_workers()
-             return self.rq.active_fds()
- 
-@@ -1831,7 +1835,8 @@ class RunQueueExecute:
-         return valid
- 
-     def can_start_task(self):
--        can_start = self.stats.active < self.number_tasks
-+        active = self.stats.active + self.sq_stats.active
-+        can_start = active < self.number_tasks
-         return can_start
- 
- class RunQueueExecuteDummy(RunQueueExecute):
-@@ -1847,8 +1852,6 @@ class RunQueueExecuteTasks(RunQueueExecute):
-     def __init__(self, rq):
-         RunQueueExecute.__init__(self, rq)
- 
--        self.stats = RunQueueStats(len(self.rqdata.runtaskentries))
--
-         self.stampcache = {}
- 
-         # Mark initial buildable tasks
-@@ -2347,8 +2350,6 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             rq.state = runQueueRunInit
-             return
- 
--        self.stats = RunQueueStats(len(self.rqdata.runq_setscene_tids))
--
-         self.sqdata = SQData()
-         build_scenequeue_data(self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self)
- 
-@@ -2390,13 +2391,13 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                 self.rq.state = runQueueCleanUp
- 
-     def sq_task_complete(self, task):
--        self.stats.taskCompleted()
--        bb.event.fire(sceneQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
-+        self.sq_stats.taskCompleted()
-+        bb.event.fire(sceneQueueTaskCompleted(task, self.sq_stats, self.rq), self.cfgData)
-         self.sq_task_completeoutright(task)
- 
-     def sq_task_fail(self, task, result):
--        self.stats.taskFailed()
--        bb.event.fire(sceneQueueTaskFailed(task, self.stats, result, self), self.cfgData)
-+        self.sq_stats.taskFailed()
-+        bb.event.fire(sceneQueueTaskFailed(task, self.sq_stats, result, self), self.cfgData)
-         self.scenequeue_notcovered.add(task)
-         self.scenequeue_updatecounters(task, True)
-         self.sq_check_taskfail(task)
-@@ -2404,8 +2405,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-     def sq_task_failoutright(self, task):
-         self.sq_running.add(task)
-         self.sq_buildable.add(task)
--        self.stats.taskSkipped()
--        self.stats.taskCompleted()
-+        self.sq_stats.taskSkipped()
-+        self.sq_stats.taskCompleted()
-         self.scenequeue_notcovered.add(task)
-         self.scenequeue_updatecounters(task, True)
- 
-@@ -2413,8 +2414,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         self.sq_running.add(task)
-         self.sq_buildable.add(task)
-         self.sq_task_completeoutright(task)
--        self.stats.taskSkipped()
--        self.stats.taskCompleted()
-+        self.sq_stats.taskSkipped()
-+        self.sq_stats.taskCompleted()
- 
-     def sq_execute(self):
-         """
-@@ -2469,7 +2470,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                 self.sq_task_failoutright(task)
-                 return True
- 
--            startevent = sceneQueueTaskStarted(task, self.stats, self.rq)
-+            startevent = sceneQueueTaskStarted(task, self.sq_stats, self.rq)
-             bb.event.fire(startevent, self.cfgData)
- 
-             taskdepdata = self.sq_build_taskdepdata(task)
-@@ -2490,11 +2491,11 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             self.build_stamps2.append(self.build_stamps[task])
-             self.sq_running.add(task)
-             self.sq_live.add(task)
--            self.stats.taskActive()
-+            self.sq_stats.taskActive()
-             if self.can_start_task():
-                 return True
- 
--        if self.stats.active > 0:
-+        if self.sq_stats.active > 0:
-             self.rq.read_workers()
-             return self.rq.active_fds()
- 
-@@ -2511,7 +2512,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
- 
-         self.rq.state = runQueueRunInit
- 
--        completeevent = sceneQueueComplete(self.stats, self.rq)
-+        completeevent = sceneQueueComplete(self.sq_stats, self.rq)
-         bb.event.fire(completeevent, self.cfgData)
- 
-         return True
+@@ -2044,7 +2044,7 @@ class RunQueueExecute:
+         for dep in self.sqdata.sq_deps[task]:
+             if fail and task in self.sqdata.sq_harddeps and dep in self.sqdata.sq_harddeps[task]:
+                 logger.debug(2, "%s was unavailable and is a hard dependency of %s so skipping" % (task, dep))
+-                self.scenequeue_updatecounters(dep, fail)
++                self.sq_task_failoutright(dep)
+                 continue
+             if task not in self.sqdata.sq_revdeps2[dep]:
+                 # May already have been removed by the fail case above
 -- 
 2.20.1
 
