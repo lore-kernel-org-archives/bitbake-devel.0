@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com
-	[209.85.128.45])
-	by mail.openembedded.org (Postfix) with ESMTP id AEE9C7F023
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com
+	[209.85.128.47])
+	by mail.openembedded.org (Postfix) with ESMTP id A3D4C7F023
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 23:54:32 +0000 (UTC)
-Received: by mail-wm1-f45.google.com with SMTP id 207so3908479wma.1
+	Wed, 10 Jul 2019 23:54:33 +0000 (UTC)
+Received: by mail-wm1-f47.google.com with SMTP id l2so3919114wmg.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 16:54:34 -0700 (PDT)
+	Wed, 10 Jul 2019 16:54:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=iW+DurM9iU+4n8oESsZDiwoE+El58r+2kuYmjXbcz8U=;
-	b=iV4RrSloGXV5U81gBA97X7yozm+qOR2K7wSiTRF4HJZmgZUqVXANDq3PtwW79KfUn9
-	v8ZFBL3+5i6TZvrPg2BpWCCLh1EirCMZxmUAefotxz8IvMrgKCMnn4KiP3oqs7ehKV0U
-	a6bpcI0g+sYtlU/7a+WUFiYRRtbzX38SFhR7E=
+	bh=Ic9BBntaZgGTzpgC4ZzoZzUG10vK9wict8VSWqztdLo=;
+	b=TE7mTy60B4jsX+iuztnKasjiMTTJCvQTkbtGpiZ66EqJVJTVnkq1aHactYIhD21IL2
+	N5r6+yI6XjiCyWaLWb4MyGVdmtGD3Clidyhh+p3GMFUffvdCtHV+9n0dsodJKMHSrY+d
+	Pl22zBEN5eEQqv6jZUr160DJvsFPmdeWjYHEc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=iW+DurM9iU+4n8oESsZDiwoE+El58r+2kuYmjXbcz8U=;
-	b=eeg5IL2MK/3UWJ+o+0kBla6q8TbhMusyieEqgwPyHj/2u4zWXl80Gxgh1c+CVaK5AW
-	RXsJ2oMusqA+1rD6MvWixqEvO9cywwieJLqTLbyt5G0fZhhuRrYJQHehNxOUxRViYUOx
-	iUUOJ5X8GdLmu35/vELFIneH7XHuSUAYGJqQaWxvRdBFUBWdOmZQYiytXWqADGD/tXby
-	NvMuKiBeW0PVZcGuJanG3osTQAao7J0U/lRhgC01Z1gP+9ROagqRFKfTEUR0Je7ZxwwE
-	EXESrh1+b2eXuJgKw9n5VfOCHgjOBU83ZoGk6wn9mrspzSyVDVZOF+ojsh5VfHaORJh+
-	Z3zQ==
-X-Gm-Message-State: APjAAAXBOIQwXzxYxISJAu0j5HhY0dzCxAsQSF9PEv2WGi69PX5GVvRP
-	y11i/mBtklFvhxodbRQTIHWwqs/DNJo=
-X-Google-Smtp-Source: APXvYqwCmR89aZh/1Q+lh9EAefWMM2YBfTz7kSfgj5j+QqYNKLiAX2ekQ6jDQQgKWK62TVW4AstKgg==
-X-Received: by 2002:a1c:a5c2:: with SMTP id o185mr285336wme.172.1562802873085; 
-	Wed, 10 Jul 2019 16:54:33 -0700 (PDT)
+	bh=Ic9BBntaZgGTzpgC4ZzoZzUG10vK9wict8VSWqztdLo=;
+	b=bve0IjPF9pmwhy9TZG7cqmMxaXR4HA8nEAyH3dg7N/eOyeEkEBm9WCI94E+6etTZQD
+	WVWM78eoaNtpxieHoxvU93d85VcFxBzw3DANK8wGkvg058FcHsJujAd0VrIhHh/k9E7s
+	zXrQeZPYxk0ipCFMMnxC0HKIBpl7a6jCBOrpOEnd8qnVSCHFJ2PuL1rfE7HSYWf7ppiv
+	Gn94fKuwcFf+kmEwnefmHFzPaaV2Tq3V7iWX6AXomlyn1GU6m5fs1Hw9J6IXU7xkpPcR
+	j0FJLf2G1OoEicldLpmoC8A097td+qZaqDQjtpiDzoouwulUEQJmEztLLxcUD9wqv1uf
+	vbeA==
+X-Gm-Message-State: APjAAAXXt+6f0MDL1rl2K2kKucHhxzM9OAcEd/OMYHhf13O9KEKZL/nL
+	8IcgwdG0P55AoECO59E6Znk6agqML/8=
+X-Google-Smtp-Source: APXvYqx4+uTEZEuSmb7soyUDldQjtOiMcJBgkn2rLLcqBJlfPxdrtdrNrMo8OH1u905ylpA1Fxi+ag==
+X-Received: by 2002:a1c:5f09:: with SMTP id t9mr312814wmb.112.1562802874037;
+	Wed, 10 Jul 2019 16:54:34 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	r12sm4710783wrt.95.2019.07.10.16.54.32
+	r12sm4710783wrt.95.2019.07.10.16.54.33
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Wed, 10 Jul 2019 16:54:32 -0700 (PDT)
+	Wed, 10 Jul 2019 16:54:33 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 11 Jul 2019 00:54:06 +0100
-Message-Id: <20190710235420.23825-12-richard.purdie@linuxfoundation.org>
+Date: Thu, 11 Jul 2019 00:54:07 +0100
+Message-Id: <20190710235420.23825-13-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190710235420.23825-1-richard.purdie@linuxfoundation.org>
 References: <20190710235420.23825-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 12/26] runqueue: Simplify _execute_runqueue logic
+Subject: [PATCH 13/26] runqueue: Fold remains of the scenequeue setup into RunQueueExecute
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,90 +58,190 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Jul 2019 23:54:32 -0000
+X-List-Received-Date: Wed, 10 Jul 2019 23:54:33 -0000
 Content-Transfer-Encoding: 8bit
 
-Cleanup to the _execute_runqueue logic to reduce indentation, drop the
-dummy executor class concept and prepare for further changes.
+Also move the scheduler init over, apart for the builtable tasks part which need
+to remain called later.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 46 ++++++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 22 deletions(-)
+ lib/bb/runqueue.py | 89 ++++++++++++++++++++++------------------------
+ 1 file changed, 42 insertions(+), 47 deletions(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 3456fd976b..a19fb61fe7 100644
+index a19fb61fe7..46146466fc 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -1420,15 +1420,16 @@ class RunQueue:
-                 self.state = runQueueComplete
-             else:
-                 self.state = runQueueSceneInit
--                self.rqdata.init_progress_reporter.next_stage()
--
--                # we are ready to run,  emit dependency info to any UI or class which
--                # needs it
--                depgraph = self.cooker.buildDependTree(self, self.rqdata.taskData)
--                self.rqdata.init_progress_reporter.next_stage()
--                bb.event.fire(bb.event.DepTreeGenerated(depgraph), self.cooker.data)
+@@ -196,6 +196,11 @@ class RunQueueScheduler(object):
+         if self.rq.can_start_task():
+             return self.next_buildable_task()
  
-         if self.state is runQueueSceneInit:
-+            self.rqdata.init_progress_reporter.next_stage()
++    def initbuildable(self):
++        for tid in self.rqdata.runtaskentries:
++            if tid in self.rq.runq_buildable:
++                self.buildable.append(tid)
 +
-+            # we are ready to run,  emit dependency info to any UI or class which
-+            # needs it
-+            depgraph = self.cooker.buildDependTree(self, self.rqdata.taskData)
-+            self.rqdata.init_progress_reporter.next_stage()
-+            bb.event.fire(bb.event.DepTreeGenerated(depgraph), self.cooker.data)
+     def newbuildable(self, task):
+         self.buildable.append(task)
+ 
+@@ -1451,7 +1456,14 @@ class RunQueue:
+             self.start_worker()
+             self.rqdata.init_progress_reporter.next_stage()
+             self.rqexe = RunQueueExecute(self)
+-            start_scenequeue_tasks(self.rqexe)
 +
-             if not self.dm_event_handler_registered:
-                  res = bb.event.register(self.dm_event_handler_name,
-                                          lambda x: self.dm.check(self) if self.state in [runQueueSceneRun, runQueueRunning, runQueueCleanUp] else False,
-@@ -1444,13 +1445,13 @@ class RunQueue:
-                 if 'printdiff' in dump:
-                     self.write_diffscenetasks(invalidtasks)
-                 self.state = runQueueComplete
--            else:
--                self.rqdata.init_progress_reporter.next_stage()
--                self.start_worker()
--                self.rqdata.init_progress_reporter.next_stage()
--                if not self.rqexe:
--                    self.rqexe = RunQueueExecute(self)
--                start_scenequeue_tasks(self.rqexe)
-+
-+        if self.state is runQueueSceneInit:
-+            self.rqdata.init_progress_reporter.next_stage()
-+            self.start_worker()
-+            self.rqdata.init_progress_reporter.next_stage()
-+            self.rqexe = RunQueueExecute(self)
-+            start_scenequeue_tasks(self.rqexe)
++            # If we don't have any setscene functions, skip execution
++            if len(self.rqdata.runq_setscene_tids) == 0:
++                self.rqdata.init_progress_reporter.finish()
++                self.state = runQueueRunInit
++            else:
++                logger.info('Executing SetScene Tasks')
++                self.state = runQueueSceneRun
  
          if self.state is runQueueSceneRun:
              retval = self.rqexe.sq_execute()
-@@ -1458,14 +1459,15 @@ class RunQueue:
-         if self.state is runQueueRunInit:
-             if self.cooker.configuration.setsceneonly:
+@@ -1461,11 +1473,7 @@ class RunQueue:
                  self.state = runQueueComplete
--            else:
--                # Just in case we didn't setscene
--                self.rqdata.init_progress_reporter.finish()
--                logger.info("Executing RunQueue Tasks")
--                if not self.rqexe:
--                    self.rqexe = RunQueueExecute(self)
--                start_runqueue_tasks(self.rqexe)
--                self.state = runQueueRunning
-+
-+        if self.state is runQueueRunInit:
-+            # Just in case we didn't setscene
-+            self.rqdata.init_progress_reporter.finish()
-+            logger.info("Executing RunQueue Tasks")
-+            if not self.rqexe:
-+                self.rqexe = RunQueueExecute(self)
-+            start_runqueue_tasks(self.rqexe)
-+            self.state = runQueueRunning
  
-         if self.state is runQueueRunning:
-             retval = self.rqexe.execute()
+         if self.state is runQueueRunInit:
+-            # Just in case we didn't setscene
+-            self.rqdata.init_progress_reporter.finish()
+             logger.info("Executing RunQueue Tasks")
+-            if not self.rqexe:
+-                self.rqexe = RunQueueExecute(self)
+             start_runqueue_tasks(self.rqexe)
+             self.state = runQueueRunning
+ 
+@@ -1690,7 +1698,7 @@ def process_setscene_whitelist(rq, rqdata, stampcache, sched, rqex):
+     def check_norun_task(tid, showerror=False):
+         (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
+         # Ignore covered tasks
+-        if tid in rq.scenequeue_covered:
++        if tid in rqex.scenequeue_covered:
+             return False
+         # Ignore stamped tasks
+         if rq.check_stamp_task(tid, taskname, cache=stampcache):
+@@ -1765,6 +1773,24 @@ class RunQueueExecute:
+         if self.number_tasks <= 0:
+              bb.fatal("Invalid BB_NUMBER_THREADS %s" % self.number_tasks)
+ 
++        self.scenequeue_covered = set()
++        self.scenequeue_notcovered = set()
++        self.scenequeue_notneeded = set()
++
++        if len(self.rqdata.runq_setscene_tids) > 0:
++            self.sqdata = SQData()
++            build_scenequeue_data(self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self)
++
++        schedulers = self.get_schedulers()
++        for scheduler in schedulers:
++            if self.scheduler == scheduler.name:
++                self.sched = scheduler(self, self.rqdata)
++                logger.debug(1, "Using runqueue scheduler '%s'", scheduler.name)
++                break
++        else:
++            bb.fatal("Invalid scheduler '%s'.  Available schedulers: %s" %
++                     (self.scheduler, ", ".join(obj.name for obj in schedulers)))
++
+     def runqueue_process_waitpid(self, task, status):
+ 
+         # self.build_stamps[pid] may not exist when use shared work directory.
+@@ -1937,7 +1963,7 @@ class RunQueueExecute:
+         if task is not None:
+             (mc, fn, taskname, taskfn) = split_tid_mcfn(task)
+ 
+-            if task in self.rq.scenequeue_covered:
++            if task in self.scenequeue_covered:
+                 logger.debug(2, "Setscene covered task %s", task)
+                 self.task_skip(task, "covered")
+                 return True
+@@ -2194,10 +2220,7 @@ class RunQueueExecute:
+         #        revdeps = self.sqdata.sq_revdeps[tid]
+         #        bb.warn("Found we didn't run %s %s %s" % (tid, buildable, str(revdeps)))
+ 
+-        self.rq.scenequeue_covered = self.scenequeue_covered
+-        self.rq.scenequeue_notcovered = self.scenequeue_notcovered
+-
+-        logger.debug(1, 'We can skip tasks %s', "\n".join(sorted(self.rq.scenequeue_covered)))
++        logger.debug(1, 'We can skip tasks %s', "\n".join(sorted(self.scenequeue_covered)))
+ 
+         self.rq.state = runQueueRunInit
+ 
+@@ -2479,29 +2502,28 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
+                 sqdata.outrightfail.append(tid)
+ 
+ def start_runqueue_tasks(rqexec):
+-
+         # Mark initial buildable tasks
+         for tid in rqexec.rqdata.runtaskentries:
+             if len(rqexec.rqdata.runtaskentries[tid].depends) == 0:
+                 rqexec.runq_buildable.add(tid)
+-            if len(rqexec.rqdata.runtaskentries[tid].revdeps) > 0 and rqexec.rqdata.runtaskentries[tid].revdeps.issubset(rqexec.rq.scenequeue_covered):
+-                rqexec.rq.scenequeue_covered.add(tid)
++            if len(rqexec.rqdata.runtaskentries[tid].revdeps) > 0 and rqexec.rqdata.runtaskentries[tid].revdeps.issubset(rqexec.scenequeue_covered):
++                rqexec.scenequeue_covered.add(tid)
+ 
+         found = True
+         while found:
+             found = False
+             for tid in rqexec.rqdata.runtaskentries:
+-                if tid in rqexec.rq.scenequeue_covered:
++                if tid in rqexec.scenequeue_covered:
+                     continue
+                 logger.debug(1, 'Considering %s: %s' % (tid, str(rqexec.rqdata.runtaskentries[tid].revdeps)))
+ 
+-                if len(rqexec.rqdata.runtaskentries[tid].revdeps) > 0 and rqexec.rqdata.runtaskentries[tid].revdeps.issubset(rqexec.rq.scenequeue_covered):
+-                    if tid in rqexec.rq.scenequeue_notcovered:
++                if len(rqexec.rqdata.runtaskentries[tid].revdeps) > 0 and rqexec.rqdata.runtaskentries[tid].revdeps.issubset(rqexec.scenequeue_covered):
++                    if tid in rqexec.scenequeue_notcovered:
+                         continue
+                     found = True
+-                    rqexec.rq.scenequeue_covered.add(tid)
++                    rqexec.scenequeue_covered.add(tid)
+ 
+-        logger.debug(1, 'Skip list %s', sorted(rqexec.rq.scenequeue_covered))
++        logger.debug(1, 'Skip list %s', sorted(rqexec.scenequeue_covered))
+ 
+         for task in self.rq.scenequeue_notcovered:
+             logger.debug(1, 'Not skipping task %s', task)
+@@ -2514,35 +2536,8 @@ def start_runqueue_tasks(rqexec):
+                     target_pairs.append((fn, taskname))
+ 
+             event.fire(bb.event.StampUpdate(target_pairs, rqexec.rqdata.dataCaches[mc].stamp), rqexec.cfgData)
++        rqexec.sched.initbuildable()
+ 
+-        schedulers = rqexec.get_schedulers()
+-        for scheduler in schedulers:
+-            if rqexec.scheduler == scheduler.name:
+-                rqexec.sched = scheduler(rqexec, rqexec.rqdata)
+-                logger.debug(1, "Using runqueue scheduler '%s'", scheduler.name)
+-                break
+-        else:
+-            bb.fatal("Invalid scheduler '%s'.  Available schedulers: %s" %
+-                     (rqexec.scheduler, ", ".join(obj.name for obj in schedulers)))
+-
+-def start_scenequeue_tasks(rqexec):
+-        rqexec.scenequeue_covered = set()
+-        rqexec.scenequeue_notcovered = set()
+-        rqexec.scenequeue_notneeded = set()
+-
+-        # If we don't have any setscene functions, skip this step
+-        if len(rqexec.rqdata.runq_setscene_tids) == 0:
+-            rqexec.rq.scenequeue_covered = set()
+-            rqexec.rq.scenequeue_notcovered = set()
+-            rqexec.rq.state = runQueueRunInit
+-            return
+-
+-        rqexec.sqdata = SQData()
+-        build_scenequeue_data(rqexec.sqdata, rqexec.rqdata, rqexec.rq, rqexec.cooker, rqexec.stampcache, rqexec)
+-
+-        logger.info('Executing SetScene Tasks')
+-
+-        rqexec.rq.state = runQueueSceneRun
+ 
+ class TaskFailure(Exception):
+     """
 -- 
 2.20.1
 
