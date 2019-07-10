@@ -1,49 +1,29 @@
-Return-Path: <ankur.tyagi85@gmail.com>
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com
-	[209.85.208.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 567C17DE87
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id D87587EEBB
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Jul 2019 23:50:31 +0000 (UTC)
-Received: by mail-lj1-f194.google.com with SMTP id m23so17664028lje.12
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 08 Jul 2019 16:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=VEyYp8uCK2VS42ogVN6LpF8t1e9DyXY6FX4nbe/Wkv4=;
-	b=tG9qLNEkl0I6o+VK6TsvvTbppvi4s5nLDLHYMO1PdWfhI5Jv0EihI2NmcP/GjvZrup
-	+NvnzQYvaxXvh9KeKEfN2QHztb5ytswL3rRke5JtlDjkhJ7sQ/F624K2tQ7btyI3UCRz
-	fam873r+5Pn15awMbwH60+75od49Mdpv4gKxAiV9jTcn193dxEnrI8svMkSJvpkYXHGL
-	ZGODcFhhmBPoAitrQa4vDpBSJUy8VzO6uHtNzBbglQfJGJiGa5N+OoRCBMbISyZtmjGt
-	cTDxmBV1fyD0om9NxvkJt3OcHQq45YlkRyfRUlFjwovISlXwPJXwdGmzmyU1ATSFix3U
-	Ep+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=VEyYp8uCK2VS42ogVN6LpF8t1e9DyXY6FX4nbe/Wkv4=;
-	b=XoWgvPYZtRMsg8xe4aDWk/yG1ujoCgJ4wOf+vhDpuAsu2Oz99wtwOA6DZvquxyoDQR
-	kfbRta6UBXhMTdHwM3tea2gh1wapMhngaK/Xq5tLjtywipP393koAp1/GaYLMbIvR33K
-	xpvRyECT+EM3VpC+4oct4971W/umj6LtHaHmtdocmPtxA1xXC2TWoYONZttkI7gfHxla
-	IeQSvLnPbtSHwTNq/xCdSBAj6eHwo7x1Zz+NtbyZKbiTc+zkU7b8FD0uT49lULbie0f9
-	sC47crnWDTxP8bgawxWD2Ys43K1/SU2iPgD8Tp52DQBRZoQGcGVzC/KzH5hg6XbRPvJv
-	e1Kw==
-X-Gm-Message-State: APjAAAXYcjpA8v2cUCou0qgYgXTrQmc9QnOHs8IONGRt/Gs6zuMAxrvo
-	t65F+dyRh4mPSNPo0Yxvqq5+1x7yZQVLpmuIStNn3G8y
-X-Google-Smtp-Source: APXvYqyH2ZMQdP+t/UcgZbVsUxXHuS3Wr23v7ENtdxyawlIlSoC4mWS2uDiyAyLF0tp+uN0TPzbW7xWn052FuHPT20M=
-X-Received: by 2002:a2e:8155:: with SMTP id t21mr11709684ljg.80.1562629831683; 
-	Mon, 08 Jul 2019 16:50:31 -0700 (PDT)
+	Wed, 10 Jul 2019 08:47:36 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x6A8laQn010112
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 10 Jul 2019 01:47:37 -0700 (PDT)
+Received: from localhost.corp.ad.wrs.com (128.224.162.182) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.439.0; Wed, 10 Jul 2019 01:47:36 -0700
+To: Alan Kozlay <alan.kozlay@ves-solutions.com>,
+	<bitbake-devel@lists.openembedded.org>, Richard Purdie
+	<richard.purdie@linuxfoundation.org>
+References: <CAJE9sG=4MPryg2+h5a-jmhhpqPW=o6E26rte-JSPc31UioNbwQ@mail.gmail.com>
+	<d12b286a3b55653e61d8d8e7672d87b374ae37d6.camel@linuxfoundation.org>
+	<CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <eea2f89b-ed8d-40ed-9c9a-d70f4d1457f3@windriver.com>
+Date: Wed, 10 Jul 2019 16:48:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190704044603.9943-1-ankur.tyagi85@gmail.com>
-	<c7df70a3-d581-5e21-842b-0e941ec80a05@windriver.com>
-	<CADySD0EkWkJ6mbg7jh3hRq3E7bjaqDFa=Aeax7OpertQ0XygSA@mail.gmail.com>
-	<d69bc7b9-b946-582d-880c-ef41338affbe@windriver.com>
-In-Reply-To: <d69bc7b9-b946-582d-880c-ef41338affbe@windriver.com>
-From: Ankur Tyagi <ankur.tyagi85@gmail.com>
-Date: Tue, 9 Jul 2019 11:50:44 +1200
-Message-ID: <CADySD0HDCdVHnwzXN+POLEoQg73enGZ6XPht5HLZcySGj0XXww@mail.gmail.com>
-To: Mark Hatle <mark.hatle@windriver.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel, 1.42, 1.40, v2] git.py: Handle space in git repo name for http/https protocol
+In-Reply-To: <CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
+Subject: Re: Should multiconfig save build time?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,86 +36,127 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Jul 2019 23:50:31 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 10 Jul 2019 08:47:37 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 9, 2019 at 11:01 AM Mark Hatle <mark.hatle@windriver.com> wrote:
->
-> On 7/8/19 4:12 PM, Ankur Tyagi wrote:
-> > We are using TFS in our company and within TFS we have different
-> > project names that can have spaces.
-> > With new version of TFS, git repo can also be created inside it and
-> > the path of those repo also includes the project name that can have
-> > space.
->
-> Yes, spaces are valid.  I don't dispute that.. but however are you entering them?
 
-I am entering the url in SRC_URI with %20 in place of space
 
-> > Hence the SRC_URI will have a space and that's when I started seeing errors.
->
->
-> SRC_URI = "https://foo.com/bar foobar bar"
+On 7/9/19 2:27 AM, Alan Kozlay wrote:
+> All,
+> 
+> In regards to our original June 28th post:
+> 
+> We're looking for things we can do to improve the multiconfig build time.
+> 
+> Even on our build servers it still takes a long time.
+> For instance, our build servers each have 64 core, 128G RAM with 4 NVMe SSD HDs 
+> in a striped raid (/all configured with bells and whistles to make it super fast/).
+> A full fresh build on one of those servers still takes 6 hours.
+> 
+> I need to also clarify that we do indeed define different DISTRO_FEATURES 
+> between multiconfigs, so multiconfig is necessary.
+> 
+> (1) We're attempting to use the ccache (via ccache.bbclass), but it's causing 
+> some build errors that we're investigating.
 
-In my case, it is SRC_URI = "https://foo.com/bar%20foobar%20bar"
+Which branch are you using, please? What's the detailed errors?
 
-> That will result in -three- entries:
->
-> https://foo.com/bar
-> foobar
-> bar
->
-> The later two are invalid, because SRC_URI is split on whitespace (spaces and tabs.)
->
-> So what I don't understand is how are spaces being entered into the SRC_URI
-> (other then with %20) unless they are coming in via gitsm?
+> (2) Can we at least set the root native work directory to be the same for all 
+> multiconfigs?
+> 
+>   * Would each multiconfig honor the previously built native tools?
+>   * Or, would it just rebuild them, anyway?
+>   * Is this safe or tested or supported?
+> 
+> (3) We're considering a network shared sstate-cache.  But it's not entirely 
+> clear if a multiconfig build is benefited by the sstate-cache directory.
+> 
+>   * Under what circumstances does a multiconfig leverage sstate-cache when
+>     building for another multiconfig?
 
-Then during the fetch task, git clone command looks like this
-"git clone https://foo.com/bar foobar bar" which results in errors
+Only when the checksums are the same.
 
-That's why I am trying to insert "%20" back
+>   * What if the recipe would be affected by a change in DISTRO_FEATURES between >     multiconfigs?
 
-Regards
-Ankur
->
-> --Mark
->
-> > Hope it answers your question
-> >
-> > regards
-> > Ankur
-> >
-> > On Tue, Jul 9, 2019 at 6:28 AM Mark Hatle <mark.hatle@windriver.com> wrote:
-> >>
-> >> How is a space being added?  I'm a bit confused by this.  Is it due to the gitsm
-> >> fetching?  or has someone figured out a way in SRC_URI to included spaces?
-> >>
-> >> If it's only in the gitsm fetching, then maybe we need to do the conversion
-> >> there instead.
-> >>
-> >> --Mark
-> >>
-> >> On 7/3/19 11:46 PM, Ankur Tyagi wrote:
-> >>> Signed-off-by: Ankur Tyagi <ankur.tyagi85@gmail.com>
-> >>> ---
-> >>>  lib/bb/fetch2/git.py | 3 +++
-> >>>  1 file changed, 3 insertions(+)
-> >>>
-> >>> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> >>> index 59a2ee8f..a8fcc2bf 100644
-> >>> --- a/lib/bb/fetch2/git.py
-> >>> +++ b/lib/bb/fetch2/git.py
-> >>> @@ -156,6 +156,9 @@ class Git(FetchMethod):
-> >>>          if not ud.proto in ('git', 'file', 'ssh', 'http', 'https', 'rsync'):
-> >>>              raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
-> >>>
-> >>> +        if ud.proto in ('http', 'https'):
-> >>> +            ud.path = ud.path.replace(" ", "%20")
-> >>> +
-> >>>          ud.nocheckout = ud.parm.get("nocheckout","0") == "1"
-> >>>
-> >>>          ud.rebaseable = ud.parm.get("rebaseable","0") == "1"
-> >>>
-> >>
->
+You can use:
+$ bitbake -Sprintdiff <recipe> (or world)
+
+Before and after DISTRO_FEATURES changed to see the differences.
+
+>   * Are native packages included in the sstate-cache or just target packages?
+
+I prefer including all of them in the sstate-cache, e.g., allarch recipes
+may also re-use the sstate-cache.
+
+
+Build time is a problem, I had tried to adjust the build options to make it
+faster, but didn't improve a lot. Make bitbake support distributed build
+might be a good choice, not distribute C/C++ files, but distribute
+the whole recipes or task queues to other hosts to build them. bitbake
+doesn't support this atm. Perhaps we may make it work in the future,
+add RP in the loop to see his comments.
+
+// Robert
+
+> 
+> We welcome all thoughts and ideas.
+> 
+> -Alan
+> 
+> On Sun, Jun 30, 2019 at 5:38 PM Richard Purdie 
+> <richard.purdie@linuxfoundation.org <mailto:richard.purdie@linuxfoundation.org>> 
+> wrote:
+> 
+>     On Fri, 2019-06-28 at 13:31 -0400, Alan Kozlay wrote:
+>      > We have need to generate 6 slighly different images, with different
+>      > dedicated applications and use cases, but they're all destined for
+>      > the same hardware.
+>      > We have multiconfig set to build these 6 variants.  Clearly, they'll
+>      > all share a majority of underlying packages.
+>      > While the bitbake initialization takes a long time (with
+>      > multiconfig), we were under the impression that it could save time
+>      > during the actual build process because it could have the potential
+>      > to reuse packages already built from mc A for mc B if the inputs to
+>      > the recipes are unchanged (if same xxx_FEATURES, same arch, etc.).
+>      >
+>      > This was a guess on our part since we initially didn't assign
+>      > different tmp directories for each conf.  So, the <WORKDIR> didn't
+>      > change between mc builds.  That actually was causing some issues
+>      > until we realized that separate tmp dirs was recommended for them.
+>      > Since they all now have separate tmp dirs, they clearly are not going
+>      > to share work dirs, so, now we're questioning our original assumption
+>      > about any build-time speed benefit.
+>      >
+>      > So, is mc expected to be any faster than, say, 6 separate invocations
+>      > of non-mc bitbake whilst switching out the local.conf between them?
+> 
+>     Ultimately, yes, it would be expected to be faster.
+> 
+>     With the code as it stands today, no, it won't be. Its a known open
+>     issue:
+> 
+>     https://bugzilla.yoctoproject.org/show_bug.cgi?id=10682
+> 
+>     What would be faster is to build one of the configs initially which
+>     will populate the sstate cache, then build the other 5 together in one
+>     multiconfig.
+> 
+>     We obviously want to get that issue fixed ultimately but its not an
+>     easy thing to do due to the way our codebase works.
+> 
+>     Cheers,
+> 
+>     Richard
+> 
+> 
+> 
+> -- 
+> Alan Kozlay
+> VES Solutions, LLC
+> Alan Kozlay <alan.kozlay@ves.solutions>
+> DESK 443-595-7734
+> CELL 443-752-0323
+> 
 
