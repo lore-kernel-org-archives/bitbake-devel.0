@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
-	[209.85.128.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 698F17F02A
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com
+	[209.85.221.46])
+	by mail.openembedded.org (Postfix) with ESMTP id 489C27F041
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 23:54:35 +0000 (UTC)
-Received: by mail-wm1-f66.google.com with SMTP id x15so3902264wmj.3
+	Wed, 10 Jul 2019 23:54:36 +0000 (UTC)
+Received: by mail-wr1-f46.google.com with SMTP id g17so4225658wrr.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 16:54:36 -0700 (PDT)
+	Wed, 10 Jul 2019 16:54:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=uvTg+LlqShvI89ZcKy58gwFKy386mARGe0BcPPVhjH8=;
-	b=Y/yfET3k0vTh80Lgkv8QPFrptivBb9+/1+gj+PuhVupCpMBn6e4bEV81totViLDhM3
-	H/C4AXgRpNP+brbQGxYw+fOXnhD2p0uJ1H3GgJlw2JfhkdWKB8jePXFuJgN5dhtXVctN
-	NSGidDCxXmPUcjqWZj/LfmctyHhuY8sHIyquA=
+	bh=vK06hrOkqxHXMkkDClQV+iPNBeFBrXwYF3tb01tVtPE=;
+	b=XTFPuXKq16MeMxqiZ1c8Ls/Jqlf5ba/REM9kiKxC0z+ApG7TemtULpAzcHdQjKUFh6
+	B6pTYgW6Lexbb9LD+z4dblU9H5Z3yy2a1ufYpbrQOtZ2wTsQVmmqG4B+6HdE3AhOaW++
+	hkDe67bclZSJlPUFODPKrYwA8QqWzJ06r31Zs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=uvTg+LlqShvI89ZcKy58gwFKy386mARGe0BcPPVhjH8=;
-	b=CzGlv/BYHS3mpmq86bMFE/a4re5ujvh6cZ9k6f33Ovm2rpYi+dmzAvzYjDJTwspf+i
-	dGJR6Bwe4XfO3baKmWaZsL3iSBgOV7ysxH7p7XA1IYwvz7Y3PNBo0gp2TLUP4CYgQIVA
-	oRcA9AS4nhgiq8zpFBGskz3HwCpILIbw2ZIWIYJFUw7cwkmYGugPok4KNBinzJB9hPS1
-	Y+5rUYqvDZIOACsMvKVoj8TxYmlDYoEfaw9+gcpGu1K420X36UQR247RBoeOx1IHYL6K
-	DxVW2MEaTA6NRjz5VN4PLQW7D/q7OoFhSml7uVU0QzOEUHdiE301LK4JHJqe9lvPiWC1
-	yRsg==
-X-Gm-Message-State: APjAAAXX84w2PPevq/Q+lE+LFUpjv0EwjPj65zcbYst5HF6unJadeeaA
-	Y5dLQGGQy5JWF1bJlDVfxpcZpTJGLvA=
-X-Google-Smtp-Source: APXvYqxHh/DHifcwOBAqRTcFCRgjWaiIHtBQjspzpNh4bM3OIb6ZSinyWfYCG7q3jd4tYSZU4q0xTw==
-X-Received: by 2002:a1c:7f93:: with SMTP id a141mr273019wmd.131.1562802875810; 
-	Wed, 10 Jul 2019 16:54:35 -0700 (PDT)
+	bh=vK06hrOkqxHXMkkDClQV+iPNBeFBrXwYF3tb01tVtPE=;
+	b=MePdJzqr6A72UHwahxTPdMpdyGuOQAjW+JwvMZIqFqPM7b4772+HVHQiVpGn9qFFk+
+	zFMsd05y5/+x8xiAwvEORigl2iBJJmGUwJ+EPlwNf7Csz0yCCKrcOXfS8erFxNHCXtfL
+	2SzkrHXLYn6/wNUXIDiIZZNgYBVnl5bEhDNDCIEYJN0X7fgGSiksHJXItoeotlYmVHTA
+	RT5430CLyxlqY3TyMOzT4l2rUqSl5TOnbOZuDPkBUKDjYYmLwfXzWk6kvDLUnudMvYB1
+	9yd34b1Ab5zIIIRcW7boMn0GyChH69v0ErOziDUvy+c7Kj9nEFUnP3c3ImZJ7VNoNyYR
+	rrIQ==
+X-Gm-Message-State: APjAAAXv8nxhKTxASD1j4G2C/hQoiy/Qzi97FeWOhgPdLFXMjQ35TdLv
+	A+Xgs5712FTClFk53XUiDeoL2wb0cyI=
+X-Google-Smtp-Source: APXvYqx/EnH3V+ckW9TNeIRZp9vo28+BacW5IjUctZfDLm0l5l9x1AMnck72GZ0fieBkZmt7P65aJQ==
+X-Received: by 2002:adf:dd8e:: with SMTP id x14mr236439wrl.344.1562802876754; 
+	Wed, 10 Jul 2019 16:54:36 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
 	r12sm4710783wrt.95.2019.07.10.16.54.35
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Wed, 10 Jul 2019 16:54:35 -0700 (PDT)
+	Wed, 10 Jul 2019 16:54:36 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 11 Jul 2019 00:54:09 +0100
-Message-Id: <20190710235420.23825-15-richard.purdie@linuxfoundation.org>
+Date: Thu, 11 Jul 2019 00:54:10 +0100
+Message-Id: <20190710235420.23825-16-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190710235420.23825-1-richard.purdie@linuxfoundation.org>
 References: <20190710235420.23825-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 15/26] runqueue: Add covered_tasks (or 'collated_deps') to scenequeue data
+Subject: [PATCH 16/26] runqueue: Simplify scenequeue unskippable calculation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,58 +58,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Jul 2019 23:54:35 -0000
+X-List-Received-Date: Wed, 10 Jul 2019 23:54:36 -0000
 Content-Transfer-Encoding: 8bit
 
-Its useful to have a list of all the tasks a given setscene task covers
-and we can easily generate this data whilst doing other data processing.
+The existing code to compute the 'unskippable' setscene task list is overcomlicated,
+so replace it with something functionally equivalent but simpler and more efficient.
 
-This is used in later changes to runqueue rather than trying to compute it
-on the fly which is difficult.
+We don't need to process all chains, just the 'top' ones to the first setscene tasks.
+
+This also makes the code more readable.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+ lib/bb/runqueue.py | 45 +++++++++++++--------------------------------
+ 1 file changed, 13 insertions(+), 32 deletions(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 30b13d54a8..1d7706a219 100644
+index 1d7706a219..1f41340170 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -2278,6 +2278,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     sq_revdeps = {}
-     sq_revdeps_new = {}
-     sq_revdeps_squash = {}
-+    sq_collated_deps = {}
+@@ -2271,7 +2271,7 @@ class SQData(object):
+     def __init__(self):
+         self.sq_harddeps = {}
+         self.stamps = {}
+-        self.unskippable = []
++        self.unskippable = set()
  
-     # We need to construct a dependency graph for the setscene functions. Intermediate
-     # dependencies between the setscene tasks only complicate the code. This code
-@@ -2299,6 +2300,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
+ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
  
-     # Secondly process the chains between setscene tasks.
-     for tid in rqdata.runq_setscene_tids:
-+        sq_collated_deps[tid] = set()
-         #bb.warn("Added endpoint 2 %s" % (tid))
-         for dep in rqdata.runtaskentries[tid].depends:
-                 if tid in sq_revdeps[dep]:
-@@ -2318,6 +2320,9 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-                 tasks |= task
-             if sq_revdeps_new[point]:
-                 tasks |= sq_revdeps_new[point]
-+            if point not in rqdata.runq_setscene_tids:
-+                for t in tasks:
-+                    sq_collated_deps[t].add(point)
-             sq_revdeps_new[point] = set()
-             if point in rqdata.runq_setscene_tids:
-                 sq_revdeps_new[point] = tasks
-@@ -2430,6 +2435,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     sqdata.sq_deps = {}
-     sqdata.sq_revdeps = sq_revdeps_squash
-     sqdata.sq_revdeps2 = copy.deepcopy(sqdata.sq_revdeps)
-+    sqdata.sq_covered_tasks = sq_collated_deps
+@@ -2344,38 +2344,19 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
  
-     for tid in sqdata.sq_revdeps:
-         sqdata.sq_deps[tid] = set()
+     # Build a list of setscene tasks which are "unskippable"
+     # These are direct endpoints referenced by the build
+-    endpoints2 = {}
+-    sq_revdeps2 = {}
+-    sq_revdeps_new2 = {}
+-    def process_endpoints2(endpoints):
+-        newendpoints = {}
+-        for point, task in endpoints.items():
+-            tasks = set([point])
+-            if task:
+-                tasks |= task
+-            if sq_revdeps_new2[point]:
+-                tasks |= sq_revdeps_new2[point]
+-            sq_revdeps_new2[point] = set()
+-            if point in rqdata.runq_setscene_tids:
+-                sq_revdeps_new2[point] = tasks
+-            for dep in rqdata.runtaskentries[point].depends:
+-                if point in sq_revdeps2[dep]:
+-                    sq_revdeps2[dep].remove(point)
+-                if tasks:
+-                    sq_revdeps_new2[dep] |= tasks
+-                if (len(sq_revdeps2[dep]) == 0 or len(sq_revdeps_new2[dep]) != 0) and dep not in rqdata.runq_setscene_tids:
+-                    newendpoints[dep] = tasks
+-        if len(newendpoints) != 0:
+-            process_endpoints2(newendpoints)
++    # Take the build endpoints (no revdeps) and find the sstate tasks they depend upon
++    new = True
+     for tid in rqdata.runtaskentries:
+-        sq_revdeps2[tid] = copy.copy(rqdata.runtaskentries[tid].revdeps)
+-        sq_revdeps_new2[tid] = set()
+-        if (len(sq_revdeps2[tid]) == 0) and tid not in rqdata.runq_setscene_tids:
+-            endpoints2[tid] = set()
+-    process_endpoints2(endpoints2)
+-    for tid in rqdata.runq_setscene_tids:
+-        if sq_revdeps_new2[tid]:
+-            sqdata.unskippable.append(tid)
++        if len(rqdata.runtaskentries[tid].revdeps) == 0:
++            sqdata.unskippable.add(tid)
++    while new:
++        new = False
++        for tid in sqdata.unskippable.copy():
++            if tid in rqdata.runq_setscene_tids:
++                continue
++            sqdata.unskippable.remove(tid)
++            sqdata.unskippable |= rqdata.runtaskentries[tid].depends
++            new = True
+ 
+     rqdata.init_progress_reporter.next_stage(len(rqdata.runtaskentries))
+ 
 -- 
 2.20.1
 
