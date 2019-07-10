@@ -1,50 +1,53 @@
-Return-Path: <ankur.tyagi85@gmail.com>
-Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com
-	[209.85.167.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 4723B60273
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+	[209.85.221.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 5EB3A7EF14
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 09:26:40 +0000 (UTC)
-Received: by mail-lf1-f65.google.com with SMTP id b29so1113008lfq.1
+	Wed, 10 Jul 2019 09:32:23 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id g17so1667161wrr.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jul 2019 02:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=GHu5AscaDrHJZtKvhceVGbWXBF2ojqkcPqSfV31JXsE=;
-	b=CcFiyrAlN4PxiEoXfUCkS1J8jwwzxXc/2o+g07sWjVxOY5i+7+1q6fDgV8AIC4Me32
-	D5Gav4N2xVazoC/SVX4L/kPOOsyAtEs96PxX4xVp9yomvmC2dEvu7EnCB0ahsW9j8rPz
-	q75yJRzER5cBrH4kdscUwobzYpUUHq+i5D5Enx4wPmlgbnSjPwE312TE0Saxy/9j9cBm
-	VLIyJiexjGNPOYTMfsQTade2aTZ06enu30fosj3ttZnhhFeWgymi/ZokkBP0stg45tqL
-	/CQjxpifD64AG9E3zYBD8gg/xpbwrOoN2KUKDbyh7FkP1MOkeoGudYabYx9Wc7Dmm57U
-	tsxw==
+	Wed, 10 Jul 2019 02:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=jpazy8f6FFj3gzmF3yT3e3w5JoBjN7E+sTezSjij+Fs=;
+	b=CdPJdzFAQdu96uEMQ/yeq43/DY4SWCs2OvoyH+7W2tj6+ByEiQ+G1n6uYM4mRSj4I6
+	eCtgYg8XRE5s+Ngr4CRPQ+RCL7WZjRlVJUeYjVZBCYXjIXxOVVGO82vkPPy06BY+JIb1
+	jK6F8osZ1+lmbL2SjJF/1hzHHxoPFuqyqvM/A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=GHu5AscaDrHJZtKvhceVGbWXBF2ojqkcPqSfV31JXsE=;
-	b=pSJ2lW0Csbr7CGMskDOCn6ByYafA3GeeRFJ3DXGBMk2wsb6SR8jZakeMC/v1V57cui
-	wWo1YByiRqxLveCyN5H6/aHWVtFbaE74ygFtpt6pAUeWh5LP6Yah0ZOaEo96hUM8EYtK
-	ETz9IOqJHYWb8EXPwH5aRLcNpXDZdw0QIiPwKRdB7zx8x01u6PSq4Ct7zSsKpqSqF+nI
-	fdIkP0ijFwa4KxsCHUKIsbOJptYxex4JyQG/Rly3zDTce2bo3TcO2xuBjdyfCWjVcyog
-	RxIjPq+0sCefGTE3HyAB+niU+2qV2v+20YRzCOQnx8tOq+OKvS/f/nqVzSW7sS0npw/N
-	i17g==
-X-Gm-Message-State: APjAAAUpXQt/J29X0p07Q/hbO4866XCiTu3lxTQ8FLBB/RYf2wKOhFPM
-	8LgHg5O3FQ27NM8YFzXp0RxitAh91F6dldVn/Bk=
-X-Google-Smtp-Source: APXvYqx0Ac4k7t83MODrjD2wLKZrjx+DjNjnNlhIX+wSkLEIiopocWgpB5Vj7bdSXY6nEh45h2IdsmYKJlR/P8Z59xQ=
-X-Received: by 2002:a19:a83:: with SMTP id 125mr14984206lfk.150.1562750800603; 
-	Wed, 10 Jul 2019 02:26:40 -0700 (PDT)
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=jpazy8f6FFj3gzmF3yT3e3w5JoBjN7E+sTezSjij+Fs=;
+	b=cpjGIKnX7MiZnhTLaZwboSMmw01vrQvu+FllBLYXei2IuuhgMHmymby1th5Oa+PpMd
+	e/d3qhq3UrXAsvygE84edccUYjtjupwl+YbcZ6KjcbrrVkzafUMX1jPURwRHEIBmy+fc
+	ikrLu37ai8WHl9EBAEl1wBTi6mNlhivG1L3LuN7vs4xrMDzsk7uXdWaGn5VIWsHFa290
+	AflYH72wY9ZEFXtHDT8g4n4Cpt16cXMiUI+FC+lQJ3I2eDAnOzZ6xpojhkYmCH96JuHl
+	cj4bOVqTnft5fsBaRzazaV67WetAMj8JpTOIaBVA5xvK1jGq2C7B447TU2x1ONqxubZL
+	KqbA==
+X-Gm-Message-State: APjAAAVVFc8XIjqXIfX33W+NxT5XTPRAGlcLS04IBS2xSzsbFW9PWdNe
+	kSalxa3vuNqUg285xJfowSf0SxAtLRc=
+X-Google-Smtp-Source: APXvYqwyS7/tpL+sNhhZBB/t1nK02nT6Xvjhg5OUw92arLyg+xWtdE4QVQehnyPyX4ZLSyyb3CMDDA==
+X-Received: by 2002:adf:ecd0:: with SMTP id s16mr5529664wro.324.1562751144032; 
+	Wed, 10 Jul 2019 02:32:24 -0700 (PDT)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	n14sm2308789wra.75.2019.07.10.02.32.23
+	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+	Wed, 10 Jul 2019 02:32:23 -0700 (PDT)
+Message-ID: <a29ff39b8e26b1c9dd7d1f24e8991e93097225ec.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alan Kozlay <alan.kozlay@ves-solutions.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Wed, 10 Jul 2019 10:32:22 +0100
+In-Reply-To: <CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
+References: <CAJE9sG=4MPryg2+h5a-jmhhpqPW=o6E26rte-JSPc31UioNbwQ@mail.gmail.com>
+	<d12b286a3b55653e61d8d8e7672d87b374ae37d6.camel@linuxfoundation.org>
+	<CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
+User-Agent: Evolution 3.32.2-1 
 MIME-Version: 1.0
-References: <20190704044603.9943-1-ankur.tyagi85@gmail.com>
-	<c7df70a3-d581-5e21-842b-0e941ec80a05@windriver.com>
-	<CADySD0EkWkJ6mbg7jh3hRq3E7bjaqDFa=Aeax7OpertQ0XygSA@mail.gmail.com>
-	<d69bc7b9-b946-582d-880c-ef41338affbe@windriver.com>
-	<CADySD0HDCdVHnwzXN+POLEoQg73enGZ6XPht5HLZcySGj0XXww@mail.gmail.com>
-In-Reply-To: <CADySD0HDCdVHnwzXN+POLEoQg73enGZ6XPht5HLZcySGj0XXww@mail.gmail.com>
-From: Ankur Tyagi <ankur.tyagi85@gmail.com>
-Date: Wed, 10 Jul 2019 21:26:31 +1200
-Message-ID: <CADySD0G-iSynqSRo9o-y_e0Hvz4L+GzvsBYm=9mHq25yAn0c6Q@mail.gmail.com>
-To: Mark Hatle <mark.hatle@windriver.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel, 1.42, 1.40, v2] git.py: Handle space in git repo name for http/https protocol
+Subject: Re: Should multiconfig save build time?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,97 +60,91 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Jul 2019 09:26:40 -0000
+X-List-Received-Date: Wed, 10 Jul 2019 09:32:23 -0000
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Mon, 2019-07-08 at 14:27 -0400, Alan Kozlay wrote:
+> We're looking for things we can do to improve the multiconfig build
+> time.
+> 
+> Even on our build servers it still takes a long time.
+> For instance, our build servers each have 64 core, 128G RAM with 4
+> NVMe SSD HDs in a striped raid (all configured with bells and
+> whistles to make it super fast).
+> A full fresh build on one of those servers still takes 6 hours.
 
-Is there something else that needs to be done in this patch? Or
-perhaps there is a better to handle this?
-I am willing to learn and try it out if original patch is not good.
+Given we have no idea what these mulitconfigs are, how much overlap
+there is or how you're running it, its hard to know whether 6 hours is
+good or bad.
 
-Thanks
-Ankur
+> I need to also clarify that we do indeed define different
+> DISTRO_FEATURES between multiconfigs, so multiconfig is necessary.
+> 
+> (1) We're attempting to use the ccache (via ccache.bbclass), but it's
+> causing some build errors that we're investigating.
 
-On Tue, Jul 9, 2019 at 11:50 AM Ankur Tyagi <ankur.tyagi85@gmail.com> wrote:
->
-> On Tue, Jul 9, 2019 at 11:01 AM Mark Hatle <mark.hatle@windriver.com> wrote:
-> >
-> > On 7/8/19 4:12 PM, Ankur Tyagi wrote:
-> > > We are using TFS in our company and within TFS we have different
-> > > project names that can have spaces.
-> > > With new version of TFS, git repo can also be created inside it and
-> > > the path of those repo also includes the project name that can have
-> > > space.
-> >
-> > Yes, spaces are valid.  I don't dispute that.. but however are you entering them?
->
-> I am entering the url in SRC_URI with %20 in place of space
->
-> > > Hence the SRC_URI will have a space and that's when I started seeing errors.
-> >
-> >
-> > SRC_URI = "https://foo.com/bar foobar bar"
->
-> In my case, it is SRC_URI = "https://foo.com/bar%20foobar%20bar"
->
-> > That will result in -three- entries:
-> >
-> > https://foo.com/bar
-> > foobar
-> > bar
-> >
-> > The later two are invalid, because SRC_URI is split on whitespace (spaces and tabs.)
-> >
-> > So what I don't understand is how are spaces being entered into the SRC_URI
-> > (other then with %20) unless they are coming in via gitsm?
->
-> Then during the fetch task, git clone command looks like this
-> "git clone https://foo.com/bar foobar bar" which results in errors
->
-> That's why I am trying to insert "%20" back
->
-> Regards
-> Ankur
-> >
-> > --Mark
-> >
-> > > Hope it answers your question
-> > >
-> > > regards
-> > > Ankur
-> > >
-> > > On Tue, Jul 9, 2019 at 6:28 AM Mark Hatle <mark.hatle@windriver.com> wrote:
-> > >>
-> > >> How is a space being added?  I'm a bit confused by this.  Is it due to the gitsm
-> > >> fetching?  or has someone figured out a way in SRC_URI to included spaces?
-> > >>
-> > >> If it's only in the gitsm fetching, then maybe we need to do the conversion
-> > >> there instead.
-> > >>
-> > >> --Mark
-> > >>
-> > >> On 7/3/19 11:46 PM, Ankur Tyagi wrote:
-> > >>> Signed-off-by: Ankur Tyagi <ankur.tyagi85@gmail.com>
-> > >>> ---
-> > >>>  lib/bb/fetch2/git.py | 3 +++
-> > >>>  1 file changed, 3 insertions(+)
-> > >>>
-> > >>> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> > >>> index 59a2ee8f..a8fcc2bf 100644
-> > >>> --- a/lib/bb/fetch2/git.py
-> > >>> +++ b/lib/bb/fetch2/git.py
-> > >>> @@ -156,6 +156,9 @@ class Git(FetchMethod):
-> > >>>          if not ud.proto in ('git', 'file', 'ssh', 'http', 'https', 'rsync'):
-> > >>>              raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
-> > >>>
-> > >>> +        if ud.proto in ('http', 'https'):
-> > >>> +            ud.path = ud.path.replace(" ", "%20")
-> > >>> +
-> > >>>          ud.nocheckout = ud.parm.get("nocheckout","0") == "1"
-> > >>>
-> > >>>          ud.rebaseable = ud.parm.get("rebaseable","0") == "1"
-> > >>>
-> > >>
-> >
+That shouldn't cause errors and would likely be some ccache problem.
+
+> (2) Can we at least set the root native work directory to be the same
+> for all multiconfigs?
+
+It depends if the configurations are different or not. WORKDIR isn't
+your problem here, you really need the builds to have the same sysroot-
+components dir for the native case too, else this won't work. Its more
+about the output from the task than the directory they were built in.
+
+> Would each multiconfig honor the previously built native tools?
+> Or, would it just rebuild them, anyway?
+> Is this safe or tested or supported?
+
+multiconfig is configured so that if it sees overlapping stamp files it
+would handle that correctly. The tricky part is you'd have to split
+some directories which aren't usually split such as sysroot-components. 
+I've never seen that attempted and am not sure if it would work or not.
+
+> (3) We're considering a network shared sstate-cache.  But it's not
+> entirely clear if a multiconfig build is benefited by the sstate-
+> cache directory.
+> Under what circumstances does a multiconfig leverage sstate-cache
+> when building for another multiconfig?
+
+Right now today for a single multiconfig build it won't.
+
+> What if the recipe would be affected by a change in DISTRO_FEATURES
+> between multiconfigs?
+> Are native packages included in the sstate-cache or just target
+> packages?
+
+native and target are included in sstate-cache.
+
+> We welcome all thoughts and ideas.
+
+With current bitbake you'd be best off splitting your multiconfig build
+into two parts a first stage where you build common shared components
+and a second where you leverage them.
+
+I appreciate that isn't a good solution but its what will work right
+now.
+
+The initial work in adapting bitbake to better handle situations like
+this is being done, as we speak and there are patches starting it in
+master-next.
+
+Right now those patches also won't change anything for you, they re-
+architect the codebase so we have a chance of implementing what you
+want. It is however at least a start. I'm working on this effectively
+alone with the day to day patch review, email and bugs to handle at the
+same time :(. As a project we know this is important but we struggle to
+find people willing to contribute development resources to make these
+kinds of changes happen.
+
+Next step is to write a regression test suite for runqueue. Once I've
+done that I'll start to think about optimisation work.
+
+Cheers,
+
+Richard
+
+
 
