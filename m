@@ -1,54 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com
-	[209.85.128.53])
-	by mail.openembedded.org (Postfix) with ESMTP id 0677C7EF50
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
+	[209.85.221.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 8EDBF7EED2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Jul 2019 16:14:48 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id h19so7328247wme.0
+	Thu, 11 Jul 2019 16:21:29 +0000 (UTC)
+Received: by mail-wr1-f66.google.com with SMTP id p13so6938646wru.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Jul 2019 09:14:50 -0700 (PDT)
+	Thu, 11 Jul 2019 09:21:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=jSTaXIzHsISHNKsdxymXw0lzhjc08RCps+ejfyv+waw=;
-	b=JsMX/uPZRrAOh/uiEd+bjw+sHtbl4yEaY6uirWBRBnidq/Snj28YbBGVjTWrJnbFLF
-	fYquwsfCWJi6b6EkExfMtWoKsTJG4GfNDFkJuf0u96jYhA13w4Q421We7kUgTSa6pctc
-	AepZOjacdJ/MYle0xcVano+zGmdwB3lTSWiUA=
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=HEI0UjdkB354xbAsZzTZidl7daIkcWj2fCktg8ToSSw=;
+	b=L2b0nLWW8Ju8NEj1dp0Day7lra6PUePZpGpM6VE2Eu4E6VKgt/IAqVPNSGKwo58dRq
+	xZnKFZ1yuJs0DcFin+yM/Nfehcmk236A7w4duiWQO6wj1V5ukKSPHGa2crY5MVE90C/W
+	Ovs/iLje7khhdfQhv06Xl6UuOh5c94VABBHQQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
 	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=jSTaXIzHsISHNKsdxymXw0lzhjc08RCps+ejfyv+waw=;
-	b=I/Zqi0Vb+fKRzVyBvH7T0Z7uKMsjmJlz1cnuwUYQOC7vVa/uqN8bPL1qiwrt6nRsvh
-	zTMYWQE98IvnLeVevAmN1W7ilwD7jEnqS9ccq9TMfIUWAuP2cg5dNvFzFnmxTU2bZ3HK
-	hN9Qx/hv2Ei7+jK32eREv+94eJjURNxvSJ/ODn2ScPozpk4E8Zr3FMqsyONvgbdydHyj
-	b0MiCLE8jan4ZdMvcEe0zq5DzwaAr5YV2SgTyc02lLe0F8opRCQ8ZfbAnkWv1HAQRGcg
-	9FAteGXSitVWVTmsmc00007UaWMngaEtqlaZuNiYFSfsuX15jYDA7JdSewrustsjx2OC
-	iY2Q==
-X-Gm-Message-State: APjAAAV6qVEjxXMID5n4bCy47Iqq5uvqEmXfQbL8bNELghVdWZPucOu+
-	T94jEO+H8c1SbbUjwtGVq50/tDJIjow=
-X-Google-Smtp-Source: APXvYqzdrfn0d2ClLYzHIPWjdlhH4X+JV6C3Q/uTY3zJB0XwVYZ8vFobf7GjTxDMjuRJlAvD7gIB/w==
-X-Received: by 2002:a1c:4c1a:: with SMTP id z26mr4884658wmf.2.1562861689691;
-	Thu, 11 Jul 2019 09:14:49 -0700 (PDT)
+	bh=HEI0UjdkB354xbAsZzTZidl7daIkcWj2fCktg8ToSSw=;
+	b=hO3hvw6C6uRz0FXaGEh2mnvzkMvh0obBBPev3Cpa/2EjIxpx6F2KvQZpw6Tkv23MJT
+	PznomaxNCnLEBywlS7+DwhdPH87H5llZ+WYHrfjITqn5Eqw15L3tWfG8mnmVOi+wL1RR
+	Mzizmf4Ajuhzp3GPe+GFckCnOpA6yTrGWaPLF7eHmzC342WOfXlFmsZIrHIi0+cYwv7i
+	Udp6c7rS5ztdU19iKxP4WnoeXk8WWzFr21sJ6HffK6BIBOz4FrcWLdakbdSRSAp8HUzK
+	+kfxSV0CllxuAKM+aoaz6Qd4d55fPYwsgWF2Z822lupreOQwSQsumQWyANnyAEnmEFyZ
+	FjZA==
+X-Gm-Message-State: APjAAAW6v5VWb/cCsh+tNDYD7lDyqXc9LYD8c7O//v8Bs7MQm9oTyhbN
+	Rwqw4gYa2VsD0dJaA2X66wUS/VjXCwA=
+X-Google-Smtp-Source: APXvYqyluvr/5xoe2RsHaq7vhZc/JhxefQgvUHNCrAHQKXf9PmSvvwCe1MewiPfxtpHs5wA2lrdccQ==
+X-Received: by 2002:a5d:6a84:: with SMTP id s4mr5996086wru.125.1562862090058; 
+	Thu, 11 Jul 2019 09:21:30 -0700 (PDT)
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id a8sm4721770wma.31.2019.07.11.09.14.48
+	by smtp.gmail.com with ESMTPSA id a2sm6114151wmj.9.2019.07.11.09.21.28
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Thu, 11 Jul 2019 09:14:49 -0700 (PDT)
-Message-ID: <a964c86b9ef3301b22f75c2cc79af35cfa1ed598.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: Alan Kozlay <alan.kozlay@ves-solutions.com>
-Date: Thu, 11 Jul 2019 17:14:47 +0100
-In-Reply-To: <CAJE9sGk59TaZiijPx5GqsJ7KVEeq3yW3ywTC7Z6phihCjua4mg@mail.gmail.com>
-References: <CAJE9sG=4MPryg2+h5a-jmhhpqPW=o6E26rte-JSPc31UioNbwQ@mail.gmail.com>
-	<d12b286a3b55653e61d8d8e7672d87b374ae37d6.camel@linuxfoundation.org>
-	<CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
-	<a29ff39b8e26b1c9dd7d1f24e8991e93097225ec.camel@linuxfoundation.org>
-	<CAJE9sGk59TaZiijPx5GqsJ7KVEeq3yW3ywTC7Z6phihCjua4mg@mail.gmail.com>
+	Thu, 11 Jul 2019 09:21:29 -0700 (PDT)
+Message-ID: <e09869e803d875b3dfc9ba329dc261550bb25143.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 11 Jul 2019 17:21:28 +0100
+In-Reply-To: <8ace64fd460c657fee23dd39887825e418314c5e.camel@linuxfoundation.org>
+References: <20190710235420.23825-1-richard.purdie@linuxfoundation.org>
+	<8ace64fd460c657fee23dd39887825e418314c5e.camel@linuxfoundation.org>
 User-Agent: Evolution 3.32.2-1 
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Should multiconfig save build time?
+Subject: Re: [PATCH 00/26] runqueue changes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,21 +58,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 11 Jul 2019 16:14:49 -0000
+X-List-Received-Date: Thu, 11 Jul 2019 16:21:30 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2019-07-10 at 11:58 -0400, Alan Kozlay wrote:
-> Thanks for the feedback. 
+On Thu, 2019-07-11 at 01:05 +0100, Richard Purdie wrote:
+> These changes set up the foundations so that we can work on two other
+> significant problems:
+> 
+> a) reuse of sstate artefacts between multiconfig build tasks
 
-Good news is that with the basics of the work done, optimising the
-multiconfig case turned out not to be too bad.
+I have spent a long time thinking about this so now the codebase was
+ready it turned out not to be too hard to make it work. Patches aren't
+tested apart from with the unittest but I've posted them and we can
+take them from here.
 
-I've shared some further patches on the mailing list (also in master-
-next) and you could give those a try if you're feeling adventurous.
+> b) adapting the task queue 'on the fly' if the output of a task
+> matches a previous output and hence we have sstate hash equivalency
+> 
+> Solving these would be great for OE!
+> 
+> I will follow up with more details on the future plans for the above
+> and this code soon.
 
-I've shown they do the right thing in the test I wrote for it. Its had
-no real world testing as yet, you're at the edge of development here.
+Adapting to new hashes "on the fly" is definitely going to be the
+harder challenge.
+
+This will involve the following steps:
+
+a) Knowing there are new unitask hashes available and propagating that
+information
+
+b) Figuring out which tasks should now have their sstate retested
+
+c) Test for sstate existence (if it doesn't exist, no point in going
+further)
+
+d) Ensure any normal tasks covered by the sstate task are not running,
+wait if any are
+
+e) Remove all those normal tasks from access by the normal task running
+code
+
+f) Enable those tasks in the scenequeue code
+
+We have no existing code which moves things "backward" in the state
+engine from normal task to scenequeue so this will be new ground, but
+should be feasible.
+
+I'm going to wait for the current patches to settle before I look into
+this any further though.
 
 Cheers,
 
