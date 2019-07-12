@@ -1,54 +1,49 @@
-Return-Path: <alan.kozlay@ves.solutions>
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com
-	[209.85.215.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 52E957F143
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+	[209.85.221.45])
+	by mail.openembedded.org (Postfix) with ESMTP id BBFD67F11D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Jul 2019 13:57:16 +0000 (UTC)
-Received: by mail-pg1-f172.google.com with SMTP id u17so4586823pgi.6
+	Fri, 12 Jul 2019 15:22:15 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id f9so10334812wre.12
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Jul 2019 06:57:17 -0700 (PDT)
+	Fri, 12 Jul 2019 08:22:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ves-solutions-com.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=aTz7rmeukLOEzZJkMHqUp3yMekoa/MxsoyAtOPrY/xE=;
-	b=xosdpUeNp+GEvTGdCe19fziEIkqh/R2aOhvBzwh5G0OgH+wXaXnurfgzg3e9Ma4Tvx
-	S2NAAIkAq7ZyzaAH5S2/wRexE352NHaa4zS244uLNh+C5P5LhbeBLXeROaAgrw42E3xy
-	nbhaTP8+mbdzujtPcwLJ3fkpkK9wJLUFNGf3cn1MX7moMOaym49nfIOK0fR1vRgbrikk
-	Fjh2Si60O2tdCphpUHNsVM+fUNnsaj7L7ib3ZsuclR2p8v2enQBuGp1a+m/vANMQLTcw
-	pmoDxdagazjg2eihhSjBSNK0uXwfvXuc+BxN6HoQEvIvHX3TpBrRXCwzDcUTYa3Hif0F
-	INfQ==
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=wNmqqftcxdkWIlSHEYehLSXSn1nqJ3Jkn76ywWlpd8Q=;
+	b=iNa334v7K4mDknFz7x3/6pMnMAglO6/dxivP/GVte0bh42FHWqBH/7uB8F1TJ8DZn9
+	cIKetJPrO5Yl2IiFhUmMYqkHhHUy0C8Ne7IZjIoynzNwbQkJjzuEts0QTVIAOCXW6OwE
+	TeEAMEZe39NOsKxNJL250c0K/UMRS6gCvCq3U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=aTz7rmeukLOEzZJkMHqUp3yMekoa/MxsoyAtOPrY/xE=;
-	b=O9Zl1U/SA8ok/TrcWH0fcwArhKh25Co9Yf1pZ+bkKSZfniMqzWUecFecTEakfuP/LH
-	7hWIgIj/0xJqCaynKvu6fcTySg64PUkJUmIeqie4usx0630ynJfn3II9F3Hu/rPxGcNa
-	1sszcOHMHGmoXT7qdvFoWXKVLCH/tyTHs+TUwTxHdqkHoy2hDw7di4EmSEIIi47L/SIF
-	UTvAvCm00I9dsaGVn6/AwzCD1KmDKijhyHjgI6AMwnSijPez9GimQZGaknspUd1zZ/4y
-	jD8wqsSTMz/BhZD6BrJU/jjsFZRO6Y+b1RZKM+C11zGcqiPZ5eWtdfAoE7f4dOKeXcUt
-	GEfg==
-X-Gm-Message-State: APjAAAUwcAuSrfcNjQJhQKuVmtTUW7HCpxm24zyPZUNBwzyMSuK3N8VO
-	v5G6zDriuSscHku9HeMyIUMpmFwDO7/Xm4xt9pT7TA==
-X-Google-Smtp-Source: APXvYqwPHwMd4yH2k346HvarEQXN6ERvHREAkQs/lnPhnuJrgLd0KrFAd/jl4mxniPHE0F0rRBoQuH40PCilFHX5p5o=
-X-Received: by 2002:a17:90a:d14a:: with SMTP id
-	t10mr12064236pjw.85.1562939837401; 
-	Fri, 12 Jul 2019 06:57:17 -0700 (PDT)
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=wNmqqftcxdkWIlSHEYehLSXSn1nqJ3Jkn76ywWlpd8Q=;
+	b=KwUFupbX+cSAcFp64iCEFKmO9+pqTcEa0oZp2mDkQEWzrZfQh7Kx8aYte1r2e5fxzm
+	yTaJxV83ExzQC2BRv2YsyraVdImPnxmvAE1xuLhjdvWA7t5CLKLNWfabk9nlvZNQlNji
+	y7SJqrjmMVS0IIsmHLLv8Q6Ds5N8bqfTY34rB95mMaPiuvp9M2Rl3RlsM23GcrC3Jf+s
+	8uUWiFLGwi9lAGwOeLMjTu1g0mS7LIy+nVwZZNYin9f7ftpTyKUd411MdUuCMaFn6l3P
+	93MQw7d6F6AnZCuT3x64eW1MH0uXqYDVwuMfNvIscTFx0TJuEaRqDYkSs9hpPHxgWaUK
+	jZWw==
+X-Gm-Message-State: APjAAAVu2qRz5mHz516475Mh/Y+2Ix3962vYoPeGpr4sIOTXARtNEEXf
+	CLWHrWiqvkteYTxj8nzwjNmYUHgIwPU=
+X-Google-Smtp-Source: APXvYqw/FQNUIcCIWoQQQY+U+HBHX1TAFjMENpGWd/qY+3W6g9jSGaBMZwvTGwxav62J9yVhMChBYw==
+X-Received: by 2002:adf:b60c:: with SMTP id f12mr12541898wre.231.1562944935988;
+	Fri, 12 Jul 2019 08:22:15 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	d10sm10755988wro.18.2019.07.12.08.22.14
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+	Fri, 12 Jul 2019 08:22:15 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 12 Jul 2019 16:22:14 +0100
+Message-Id: <20190712152214.20201-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CAJE9sG=4MPryg2+h5a-jmhhpqPW=o6E26rte-JSPc31UioNbwQ@mail.gmail.com>
-	<d12b286a3b55653e61d8d8e7672d87b374ae37d6.camel@linuxfoundation.org>
-	<CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
-	<a29ff39b8e26b1c9dd7d1f24e8991e93097225ec.camel@linuxfoundation.org>
-	<CAJE9sGk59TaZiijPx5GqsJ7KVEeq3yW3ywTC7Z6phihCjua4mg@mail.gmail.com>
-	<a964c86b9ef3301b22f75c2cc79af35cfa1ed598.camel@linuxfoundation.org>
-	<CAJE9sGmMNHgT_N1VQo7Qi+=M+7vxBiMeA0eMsiFE8KS37hUH3g@mail.gmail.com>
-In-Reply-To: <CAJE9sGmMNHgT_N1VQo7Qi+=M+7vxBiMeA0eMsiFE8KS37hUH3g@mail.gmail.com>
-From: Alan Kozlay <alan.kozlay@ves-solutions.com>
-Date: Fri, 12 Jul 2019 09:56:41 -0400
-Message-ID: <CAJE9sG==Zop5SKhyGsZqk13Sm+eyYjieXDLkgnSy7YedAzdMzg@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Should multiconfig save build time?
+Subject: [PATCH] runqueue: Optimise multiconfig with overlapping setscene
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,113 +56,301 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Jul 2019 13:57:16 -0000
-Content-Type: multipart/alternative; boundary="000000000000d05c3a058d7c49f2"
+X-List-Received-Date: Fri, 12 Jul 2019 15:22:16 -0000
+Content-Transfer-Encoding: 8bit
 
---000000000000d05c3a058d7c49f2
-Content-Type: text/plain; charset="UTF-8"
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/runqueue.py                            | 60 ++++++++++++++++---
+ .../tests/runqueue-tests/classes/base.bbclass | 19 +++++-
+ lib/bb/tests/runqueue-tests/conf/bitbake.conf |  9 ++-
+ .../runqueue-tests/conf/multiconfig/mc1.conf  |  1 +
+ .../runqueue-tests/conf/multiconfig/mc2.conf  |  1 +
+ lib/bb/tests/runqueue.py                      | 19 ++++++
+ 6 files changed, 99 insertions(+), 10 deletions(-)
+ create mode 100644 lib/bb/tests/runqueue-tests/conf/multiconfig/mc1.conf
+ create mode 100644 lib/bb/tests/runqueue-tests/conf/multiconfig/mc2.conf
 
-Richard,
-
-I was already planning on doing some build time testing, over the weekend.
-l plan to add your patches and see how it goes.  I'll let you know what I
-find out.
-
-Thanks for working on it.
-
--Alan
-
-On Fri, Jul 12, 2019 at 9:03 AM Alan Kozlay <alan.kozlay@ves-solutions.com>
-wrote:
-
-> Cool, thanks!
->
-> Alan Kozlay
-> 443-752-0323
-> Software Engineer
-> VES Solutions, LLC
-> Sent from my Android phone
->
-> On Thu, Jul 11, 2019, 12:14 PM <richard.purdie@linuxfoundation.org> wrote:
->
->> On Wed, 2019-07-10 at 11:58 -0400, Alan Kozlay wrote:
->> > Thanks for the feedback.
->>
->> Good news is that with the basics of the work done, optimising the
->> multiconfig case turned out not to be too bad.
->>
->> I've shared some further patches on the mailing list (also in master-
->> next) and you could give those a try if you're feeling adventurous.
->>
->> I've shown they do the right thing in the test I wrote for it. Its had
->> no real world testing as yet, you're at the edge of development here.
->>
->> Cheers,
->>
->> Richard
->>
->>
-
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 1cc2bf267c..1a689e5073 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -68,6 +68,14 @@ def build_tid(mc, fn, taskname):
+         return "mc:" + mc + ":" + fn + ":" + taskname
+     return fn + ":" + taskname
+ 
++# Index used to pair up potentially matching multiconfig tasks
++# We match on PN, taskname and hash being equal
++def pending_hash_index(tid, rqdata):
++    (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
++    pn = rqdata.dataCaches[mc].pkg_fn[taskfn]
++    h = rqdata.runtaskentries[tid].hash
++    return pn + ":" + "taskname" + h
++
+ class RunQueueStats:
+     """
+     Holds statistics on the tasks handled by the associated runQueue
+@@ -1717,6 +1725,8 @@ class RunQueueExecute:
+         self.build_stamps = {}
+         self.build_stamps2 = []
+         self.failed_tids = []
++        self.pending_hashes = {}
++        self.sq_deferred = set()
+ 
+         self.stampcache = {}
+ 
+@@ -1884,6 +1894,10 @@ class RunQueueExecute:
+             if alldeps:
+                 self.setbuildable(revdep)
+                 logger.debug(1, "Marking task %s as buildable", revdep)
++        if task in self.rqdata.runq_setscene_tids:
++           h = pending_hash_index(task, self.rqdata)
++           if h in self.pending_hashes:
++               del self.pending_hashes[h]
+ 
+     def task_complete(self, task):
+         self.stats.taskCompleted()
+@@ -1921,14 +1935,25 @@ class RunQueueExecute:
+             # Find the next setscene to run
+             for nexttask in self.rqdata.runq_setscene_tids:
+                 if nexttask in self.sq_buildable and nexttask not in self.sq_running and self.sqdata.stamps[nexttask] not in self.build_stamps.values():
+-                    if nexttask in self.sqdata.unskippable:
+-                        logger.debug(2, "Setscene task %s is unskippable" % nexttask)
+                     if nexttask not in self.sqdata.unskippable and len(self.sqdata.sq_revdeps[nexttask]) > 0 and self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and self.check_dependencies(nexttask, self.sqdata.sq_revdeps[nexttask]):
+                         if nexttask not in self.rqdata.target_tids:
+                             logger.debug(2, "Skipping setscene for task %s" % nexttask)
+                             self.sq_task_skip(nexttask)
+                             self.scenequeue_notneeded.add(nexttask)
+                             return True
++                    if pending_hash_index(nexttask, self.rqdata) in self.pending_hashes:
++                        # This setscene task has a hash matching something we're currently building, so wait
++                        continue
++                    if nexttask in self.sq_deferred:
++                        logger.debug(1, "Task %s no longer deferred" % nexttask)
++                        self.sq_deferred.remove(nexttask)
++                        valid = self.rq.validate_hashes(set([nexttask]), self.cooker.data, None, False)
++                        if not valid:
++                            logger.debug(1, "%s didn't become valid, skipping setscene" % nexttask)
++                            self.sq_task_failoutright(nexttask)
++                            return True
++                    if nexttask in self.sqdata.unskippable:
++                        logger.debug(2, "Setscene task %s is unskippable" % nexttask)
+                     task = nexttask
+                     break
+         if task is not None:
+@@ -1979,7 +2004,7 @@ class RunQueueExecute:
+             if self.can_start_task():
+                 return True
+ 
+-        if not self.sq_live and not self.sqdone:
++        if not self.sq_live and not self.sqdone and not self.sq_deferred:
+             logger.info("Setscene tasks completed")
+             logger.debug(1, 'We could skip tasks %s', "\n".join(sorted(self.scenequeue_covered)))
+ 
+@@ -2080,6 +2105,13 @@ class RunQueueExecute:
+             self.rq.read_workers()
+             return self.rq.active_fds()
+ 
++        # No more tasks can be run. If we have deferred setscene tasks we should run them.
++        if self.sq_deferred:
++            tid = self.sq_deferred.pop()
++            logger.warning("Runqeueue deadlocked on deferred tasks, forcing task %s" % tid)
++            self.sq_task_failoutright(tid)
++            return True
++
+         if len(self.failed_tids) != 0:
+             self.rq.state = runQueueFailed
+             return True
+@@ -2248,6 +2280,8 @@ class RunQueueExecute:
+         bb.event.fire(sceneQueueTaskFailed(task, self.sq_stats, result, self), self.cfgData)
+         self.scenequeue_notcovered.add(task)
+         self.tasks_notcovered.add(task)
++        h = pending_hash_index(task, self.rqdata)
++        self.pending_hashes[h] = task
+         self.scenequeue_updatecounters(task, True)
+         self.sq_check_taskfail(task)
+ 
+@@ -2258,6 +2292,8 @@ class RunQueueExecute:
+         self.sq_stats.taskCompleted()
+         self.scenequeue_notcovered.add(task)
+         self.tasks_notcovered.add(task)
++        h = pending_hash_index(task, self.rqdata)
++        self.pending_hashes[h] = task
+         self.scenequeue_updatecounters(task, True)
+ 
+     def sq_task_skip(self, task):
+@@ -2505,7 +2541,9 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
+ 
+     rqdata.init_progress_reporter.next_stage()
+ 
++    multiconfigs = set()
+     for tid in sqdata.sq_revdeps:
++        multiconfigs.add(mc_from_tid(tid))
+         if len(sqdata.sq_revdeps[tid]) == 0:
+             sqrq.sq_buildable.add(tid)
+ 
+@@ -2547,10 +2585,18 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
+         for v in valid:
+             valid_new.append(v)
+ 
+-        for tid in sqdata.sq_revdeps:
+-            if tid not in valid_new and tid not in noexec:
+-                logger.debug(2, 'No package found, so skipping setscene task %s', tid)
+-                sqrq.sq_task_failoutright(tid)
++        for mc in sorted(multiconfigs):
++            for tid in sqdata.sq_revdeps:
++                if mc_from_tid(tid) != mc:
++                    continue
++                if tid not in valid_new and tid not in noexec and tid not in sqrq.scenequeue_notcovered:
++                    h = pending_hash_index(tid, rqdata)
++                    if h in sqrq.pending_hashes:
++                        logger.debug(1, "Deferring %s due to %s" % (tid, sqrq.pending_hashes[h]))
++                        sqrq.sq_deferred.add(tid)
++                        continue
++                    logger.debug(2, 'No package found, so skipping setscene task %s', tid)
++                    sqrq.sq_task_failoutright(tid)
+ 
+ class TaskFailure(Exception):
+     """
+diff --git a/lib/bb/tests/runqueue-tests/classes/base.bbclass b/lib/bb/tests/runqueue-tests/classes/base.bbclass
+index e81df7ac42..b966568dc7 100644
+--- a/lib/bb/tests/runqueue-tests/classes/base.bbclass
++++ b/lib/bb/tests/runqueue-tests/classes/base.bbclass
+@@ -4,7 +4,9 @@ SSTATEVALID ??= ""
+ def stamptask(d):
+     import time
+ 
+-    thistask = d.expand("${PN}:${BB_CURRENTTASK}") 
++    thistask = d.expand("${PN}:${BB_CURRENTTASK}")
++    if d.getVar("BB_CURRENT_MC") != "default":
++        thistask = d.expand("${BB_CURRENT_MC}:${PN}:${BB_CURRENTTASK}")
+     if thistask in d.getVar("SLOWTASKS").split():
+         bb.note("Slowing task %s" % thistask)
+         time.sleep(0.5)
+@@ -13,48 +15,63 @@ def stamptask(d):
+         f.write(thistask + "\n")
+ 
+ python do_fetch() {
++    # fetch
+     stamptask(d)
+ }
+ python do_unpack() {
++    # unpack
+     stamptask(d)
+ }
+ python do_patch() {
++    # patch
+     stamptask(d)
+ }
+ python do_populate_lic() {
++    # populate_lic
+     stamptask(d)
+ }
+ python do_prepare_recipe_sysroot() {
++    # prepare_recipe_sysroot
+     stamptask(d)
+ }
+ python do_configure() {
++    # configure
+     stamptask(d)
+ }
+ python do_compile() {
++    # compile
+     stamptask(d)
+ }
+ python do_install() {
++    # install
+     stamptask(d)
+ }
+ python do_populate_sysroot() {
++    # populate_sysroot
+     stamptask(d)
+ }
+ python do_package() {
++    # package
+     stamptask(d)
+ }
+ python do_package_write_ipk() {
++    # package_write_ipk
+     stamptask(d)
+ }
+ python do_package_write_rpm() {
++    # package_write_rpm
+     stamptask(d)
+ }
+ python do_packagedata() {
++    # packagedata
+     stamptask(d)
+ }
+ python do_package_qa() {
++    # package_qa
+     stamptask(d)
+ }
+ python do_build() {
++    # build
+     stamptask(d)
+ }
+ do_prepare_recipe_sysroot[deptask] = "do_populate_sysroot"
+diff --git a/lib/bb/tests/runqueue-tests/conf/bitbake.conf b/lib/bb/tests/runqueue-tests/conf/bitbake.conf
+index cccd677966..d87ded29a7 100644
+--- a/lib/bb/tests/runqueue-tests/conf/bitbake.conf
++++ b/lib/bb/tests/runqueue-tests/conf/bitbake.conf
+@@ -5,6 +5,11 @@ BBFILES = "${COREBASE}/recipes/*.bb"
+ PROVIDES = "${PN}"
+ PN = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[0]}"
+ export PATH
+-STAMP = "${TOPDIR}/stamps/${PN}"
+-T = "${TOPDIR}/workdir/${PN}/temp"
++TMPDIR ??= "${TOPDIR}"
++STAMP = "${TMPDIR}/stamps/${PN}"
++T = "${TMPDIR}/workdir/${PN}/temp"
+ BB_NUMBER_THREADS = "4"
++
++BB_HASHBASE_WHITELIST = "BB_CURRENT_MC"
++
++include conf/multiconfig/${BB_CURRENT_MC}.conf
+diff --git a/lib/bb/tests/runqueue-tests/conf/multiconfig/mc1.conf b/lib/bb/tests/runqueue-tests/conf/multiconfig/mc1.conf
+new file mode 100644
+index 0000000000..ecf23e1c73
+--- /dev/null
++++ b/lib/bb/tests/runqueue-tests/conf/multiconfig/mc1.conf
+@@ -0,0 +1 @@
++TMPDIR = "${TOPDIR}/mc1/"
+diff --git a/lib/bb/tests/runqueue-tests/conf/multiconfig/mc2.conf b/lib/bb/tests/runqueue-tests/conf/multiconfig/mc2.conf
+new file mode 100644
+index 0000000000..eef338e4cc
+--- /dev/null
++++ b/lib/bb/tests/runqueue-tests/conf/multiconfig/mc2.conf
+@@ -0,0 +1 @@
++TMPDIR = "${TOPDIR}/mc2/"
+diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
+index b1a23bc5d4..8b29fde864 100644
+--- a/lib/bb/tests/runqueue.py
++++ b/lib/bb/tests/runqueue.py
+@@ -189,3 +189,22 @@ class RunQueueTests(unittest.TestCase):
+                         'b1:packagedata_setscene', 'b1:package_qa_setscene', 'b1:populate_sysroot_setscene']
+             self.assertEqual(set(tasks), set(expected))
+ 
++    def test_multiconfig_setscene_optimise(self):
++        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
++            extraenv = {
++                "BBMULTICONFIG" : "mc1 mc2",
++                "BB_SIGNATURE_HANDLER" : "basic"
++            }
++            cmd = ["bitbake", "b1", "mc:mc1:b1", "mc:mc2:b1"]
++            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
++                             'populate_sysroot_setscene', 'package_qa_setscene']
++            sstatevalid = ""
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv)
++            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks] + \
++                       ['mc1:b1:' + x for x in setscenetasks] + ['mc1:a1:' + x for x in setscenetasks] + \
++                       ['mc2:b1:' + x for x in setscenetasks] + ['mc2:a1:' + x for x in setscenetasks] + \
++                       ['mc1:b1:build', 'mc2:b1:build']
++            for x in ['mc1:a1:package_qa_setscene', 'mc2:a1:package_qa_setscene', 'a1:build', 'a1:package_qa']:
++                expected.remove(x)
++            self.assertEqual(set(tasks), set(expected))
++
 -- 
-Alan Kozlay
-VES Solutions, LLC
-Alan Kozlay <alan.kozlay@ves.solutions>
-DESK 443-595-7734
-CELL 443-752-0323
+2.20.1
 
---000000000000d05c3a058d7c49f2
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr">Richard,<input name=3D"virtru-metadata" t=
-ype=3D"hidden" value=3D"{&quot;email-policy&quot;:{&quot;state&quot;:&quot;=
-closed&quot;,&quot;expirationUnit&quot;:&quot;days&quot;,&quot;disableCopyP=
-aste&quot;:false,&quot;disablePrint&quot;:false,&quot;disableForwarding&quo=
-t;:false,&quot;enableNoauth&quot;:false,&quot;persistentProtection&quot;:fa=
-lse,&quot;expandedWatermarking&quot;:false,&quot;expires&quot;:false,&quot;=
-isManaged&quot;:false},&quot;attachments&quot;:{},&quot;compose-id&quot;:&q=
-uot;21&quot;,&quot;compose-window&quot;:{&quot;secure&quot;:false}}"><div><=
-br></div><div>I was already planning on doing some build time testing, over=
- the weekend.</div><div>l plan to add your patches and see how it goes.=C2=
-=A0 I&#39;ll let you know what I find out.</div><div><br></div><div>Thanks =
-for working on it.</div><div><br></div><div>-Alan</div></div><br><div class=
-=3D"gmail_quote" style=3D""><div dir=3D"ltr" class=3D"gmail_attr">On Fri, J=
-ul 12, 2019 at 9:03 AM Alan Kozlay &lt;<a href=3D"mailto:alan.kozlay@ves-so=
-lutions.com">alan.kozlay@ves-solutions.com</a>&gt; wrote:<br></div><blockqu=
-ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px=
- solid rgb(204,204,204);padding-left:1ex"><div dir=3D"auto">Cool, thanks!<b=
-r><br><div>Alan Kozlay<br>443-752-0323<br>Software Engineer<br>VES Solution=
-s, LLC<br>Sent from my Android phone</div></div><br><div class=3D"gmail_quo=
-te"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Jul 11, 2019, 12:14 PM  &=
-lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">=
-richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid r=
-gb(204,204,204);padding-left:1ex">On Wed, 2019-07-10 at 11:58 -0400, Alan K=
-ozlay wrote:<br>
-&gt; Thanks for the feedback. <br>
-<br>
-Good news is that with the basics of the work done, optimising the<br>
-multiconfig case turned out not to be too bad.<br>
-<br>
-I&#39;ve shared some further patches on the mailing list (also in master-<b=
-r>
-next) and you could give those a try if you&#39;re feeling adventurous.<br>
-<br>
-I&#39;ve shown they do the right thing in the test I wrote for it. Its had<=
-br>
-no real world testing as yet, you&#39;re at the edge of development here.<b=
-r>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
-</blockquote></div>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><span><di=
-v><div dir=3D"ltr"><div><div>Alan Kozlay<br></div><div dir=3D"ltr">VES Solu=
-tions, LLC<br><span>Alan Kozlay &lt;alan.kozlay@ves.solutions&gt;</span><di=
-v>DESK 443-595-7734<br></div><div>CELL 443-752-0323</div></div></div></div>=
-</div></span></div></div></div></div></div>
-
---000000000000d05c3a058d7c49f2--
