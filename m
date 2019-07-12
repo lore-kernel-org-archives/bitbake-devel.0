@@ -1,53 +1,52 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
-	[209.85.221.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 30ACB7F0D7
+Return-Path: <alan.kozlay@ves.solutions>
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com
+	[209.85.210.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 606027F0DA
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Jul 2019 08:13:48 +0000 (UTC)
-Received: by mail-wr1-f65.google.com with SMTP id z1so8924986wru.13
+	Fri, 12 Jul 2019 13:03:28 +0000 (UTC)
+Received: by mail-pf1-f170.google.com with SMTP id q10so4282566pff.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Jul 2019 01:13:49 -0700 (PDT)
+	Fri, 12 Jul 2019 06:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=0r1n7vvEgkLxxqu/dRMDWneHJQORc5cmOZmSKLXIWhY=;
-	b=PlFBzxcxqDVEEIX0BxiAAOJ3DwPnIoz3SUgID391ciArHv6HLUvxeD+vmYxC0QtfDy
-	Dv5NDDDCNJ7qqIZCyeqRO4ZWimgYDILiJ5FahFMbitAzhriPajACijbNe80lsJnVRR49
-	LHxD/MGptDf6FVXTjdQ+1pE4En+t9Bdi1uhPM=
+	d=ves-solutions-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=Cf+4FhLcYhrLPIniYLQBRivOOxlsjnxUnUJvyFf3nmg=;
+	b=J+QIvy7BiIRMQ1t32qkL6kG3aArJ/Ks46rBja3U5dI0iDGZP5KbRIrEqGr5SOpre0g
+	Wh0NOt87QuaNFZ7a5vlrWx5R3nNTa3M2khcs7lZ01ZiflCS3G3dVzdRXV87vaaAjnJc6
+	y6AIJZ9I5kCTeiO02l166lzGE9NKfHvsok+E31gvqE+dvGi6o4nWxYR4ksv4erZWKtI0
+	7FHLTXhSHXNPE9GWwA1jXqWidwSlP83Yc9M3Vc32qB2EK8zrBLdIFgOE7n+h4s+PcgVN
+	w6+UOFRzj+nS5/GQ17ytp6L7ggyt8nZcqojkF2d1K99NM7LxWqsGz75FkxnP3R0mvz/8
+	44oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=0r1n7vvEgkLxxqu/dRMDWneHJQORc5cmOZmSKLXIWhY=;
-	b=lR2K5/vvk0hk7Sh8Xf998ZBL5EUaj/mIctJ3IY8PgY5eIZM8tDa24iGdxGHmreGmSc
-	AkK7SBNAoyzgnaBRh3Vu40IQFm+VuCk/hNPkxXq7RbmfoSe2JwlDSt94vxyY4IiIoltA
-	QgKAq6c+n82PnYqFjHoH+cSiOiDLUaoXvSHO5LU0ZE3KnxK331z188Jut6+XBvaLcRsL
-	4rhimnqUGKyp0ayHCHk/4lmJ/puSFSE3vTh2WStL6iM6nDjdoLlfFFRhc5uMG2s6UD1g
-	h2Ag5bHTMQA23DPt1d0pCRrVDPkYvVyLF76+HdGrCIiLbVOJact421WquL7i1IP2nl68
-	YLkA==
-X-Gm-Message-State: APjAAAVLDlpjkXa6+ZjnUZ3/FnmeZ2b6WJmzbftaMOTwyCiguaGxpo7Q
-	9cdGmxDB6rDjgAgusIbta7UkVQ==
-X-Google-Smtp-Source: APXvYqzcM5wV8ljdgecMxwf9AJgyOl4k7RG8vdAQTg0RtLstJi+u+AwE3iEmRcXdIKWfveIK1o0I8w==
-X-Received: by 2002:adf:e841:: with SMTP id d1mr10301773wrn.204.1562919228964; 
-	Fri, 12 Jul 2019 01:13:48 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id g8sm7463711wmf.17.2019.07.12.01.13.48
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Fri, 12 Jul 2019 01:13:48 -0700 (PDT)
-Message-ID: <6a89042251ee14aa63722cd202618dc70da36f87.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: Khem Raj <raj.khem@gmail.com>
-Date: Fri, 12 Jul 2019 09:13:47 +0100
-In-Reply-To: <CAMKF1srFj=bqwA3V4JUFX-eLuDfPxjpgU8d55PG+CxbE4j=c2g@mail.gmail.com>
-References: <20190710235420.23825-1-richard.purdie@linuxfoundation.org>
-	<8ace64fd460c657fee23dd39887825e418314c5e.camel@linuxfoundation.org>
-	<e09869e803d875b3dfc9ba329dc261550bb25143.camel@linuxfoundation.org>
-	<CAMKF1srFj=bqwA3V4JUFX-eLuDfPxjpgU8d55PG+CxbE4j=c2g@mail.gmail.com>
-User-Agent: Evolution 3.32.2-1 
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=Cf+4FhLcYhrLPIniYLQBRivOOxlsjnxUnUJvyFf3nmg=;
+	b=CcqxLDGceAwF4cP7hoKTj2TF6ZIgelc8s8ju5v5LpCwKQcA111eTGMypoHBFg7jrD1
+	lDqEaTpEo+tJD6sBV24nFOqe93bGHFTCI6njfobg37RjVf5vG5OT5IrlJBiREKRmSEUd
+	nEjVrHmqlK645blaocL2aHXknbNq3XkKxtQBRlOVbqEhSc6Uas+y9ZX/KL4FaFnc2i8L
+	wh4lQx0ACPUMHyKVEEsGMcDtinJYgMaNzV4MOR0FlhikMmMEVVBd6WTdOArO8VLu3R0W
+	VYnEtGKUqY8wQZvu7peXHb3h2esvZcNv4JQpCX8uj9c4l4Hs3sZmYm2JmlPHYktoYlOJ
+	xwaA==
+X-Gm-Message-State: APjAAAX+5XLQUlrXhQHxn8vnO0XS2vQbQSghgru+YmijVIf5KkfmJw7+
+	IZmAHqHS4oCPB/nmrCMyD16+oVh83JyynvaeXDEyjGKr
+X-Google-Smtp-Source: APXvYqybIiL4qG5Vkv80XxjUGKM7RU+AnQd5kLvddbdDfDruIpIlNjSbsiiEZ0IbIPbd61j44BZWwGJusHLXejzzlAM=
+X-Received: by 2002:a63:d84e:: with SMTP id k14mr10778551pgj.234.1562936609174;
+	Fri, 12 Jul 2019 06:03:29 -0700 (PDT)
 MIME-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 00/26] runqueue changes
+References: <CAJE9sG=4MPryg2+h5a-jmhhpqPW=o6E26rte-JSPc31UioNbwQ@mail.gmail.com>
+	<d12b286a3b55653e61d8d8e7672d87b374ae37d6.camel@linuxfoundation.org>
+	<CAJE9sGmynaeD3uL-UBJnJt74rhv-sjSYjtQ=mNByQ69pVwaerg@mail.gmail.com>
+	<a29ff39b8e26b1c9dd7d1f24e8991e93097225ec.camel@linuxfoundation.org>
+	<CAJE9sGk59TaZiijPx5GqsJ7KVEeq3yW3ywTC7Z6phihCjua4mg@mail.gmail.com>
+	<a964c86b9ef3301b22f75c2cc79af35cfa1ed598.camel@linuxfoundation.org>
+In-Reply-To: <a964c86b9ef3301b22f75c2cc79af35cfa1ed598.camel@linuxfoundation.org>
+From: Alan Kozlay <alan.kozlay@ves-solutions.com>
+Date: Fri, 12 Jul 2019 09:03:18 -0400
+Message-ID: <CAJE9sGmMNHgT_N1VQo7Qi+=M+7vxBiMeA0eMsiFE8KS37hUH3g@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Should multiconfig save build time?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,22 +59,70 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Jul 2019 08:13:48 -0000
+X-List-Received-Date: Fri, 12 Jul 2019 13:03:28 -0000
+Content-Type: multipart/alternative; boundary="00000000000065953b058d7b89ff"
+
+--00000000000065953b058d7b89ff
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-Hi Khem,
+Cool, thanks!
 
-On Thu, 2019-07-11 at 17:57 -0700, Khem Raj wrote:
-> Hi Richard
-> 
-> Good changes I believe. Can you push them to a temp branch on bitbake
-> repo ?
+Alan Kozlay
+443-752-0323
+Software Engineer
+VES Solutions, LLC
+Sent from my Android phone
 
-They're in master-next!
+On Thu, Jul 11, 2019, 12:14 PM <richard.purdie@linuxfoundation.org> wrote:
 
-Cheers,
+> On Wed, 2019-07-10 at 11:58 -0400, Alan Kozlay wrote:
+> > Thanks for the feedback.
+>
+> Good news is that with the basics of the work done, optimising the
+> multiconfig case turned out not to be too bad.
+>
+> I've shared some further patches on the mailing list (also in master-
+> next) and you could give those a try if you're feeling adventurous.
+>
+> I've shown they do the right thing in the test I wrote for it. Its had
+> no real world testing as yet, you're at the edge of development here.
+>
+> Cheers,
+>
+> Richard
+>
+>
 
-Richard
+--00000000000065953b058d7b89ff
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"auto">Cool, thanks!<br><br><div data-smartmail=3D"gmail_signatu=
+re">Alan Kozlay<br>443-752-0323<br>Software Engineer<br>VES Solutions, LLC<=
+br>Sent from my Android phone</div></div><br><div class=3D"gmail_quote"><di=
+v dir=3D"ltr" class=3D"gmail_attr">On Thu, Jul 11, 2019, 12:14 PM  &lt;<a h=
+ref=3D"mailto:richard.purdie@linuxfoundation.org">richard.purdie@linuxfound=
+ation.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">On Wed, =
+2019-07-10 at 11:58 -0400, Alan Kozlay wrote:<br>
+&gt; Thanks for the feedback. <br>
+<br>
+Good news is that with the basics of the work done, optimising the<br>
+multiconfig case turned out not to be too bad.<br>
+<br>
+I&#39;ve shared some further patches on the mailing list (also in master-<b=
+r>
+next) and you could give those a try if you&#39;re feeling adventurous.<br>
+<br>
+I&#39;ve shown they do the right thing in the test I wrote for it. Its had<=
+br>
+no real world testing as yet, you&#39;re at the edge of development here.<b=
+r>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+<br>
+</blockquote></div>
 
+--00000000000065953b058d7b89ff--
