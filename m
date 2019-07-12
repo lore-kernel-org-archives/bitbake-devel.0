@@ -1,25 +1,24 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id E899E7F03A
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id AB8727F0BC
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Jul 2019 03:02:24 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x6C32PK8003268
+	Fri, 12 Jul 2019 03:02:27 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x6C328jm020785
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Jul 2019 20:02:25 -0700 (PDT)
+	Thu, 11 Jul 2019 20:02:18 -0700
 Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.468.0; Thu, 11 Jul 2019 20:02:24 -0700
+	14.3.468.0; Thu, 11 Jul 2019 20:01:48 -0700
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 12 Jul 2019 11:26:15 +0800
-Message-ID: <af05f775953106ed9ce7dd27e83b7da1970b0b1b.1562901936.git.liezhi.yang@windriver.com>
+Date: Fri, 12 Jul 2019 11:26:13 +0800
+Message-ID: <cover.1562901936.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1562901936.git.liezhi.yang@windriver.com>
-References: <cover.1562901936.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/2] cache: Set packages for skipped recipes
+Subject: [PATCH 0/2] cache: Set packages for skipped recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,69 +31,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Jul 2019 03:02:25 -0000
+X-List-Received-Date: Fri, 12 Jul 2019 03:02:27 -0000
 Content-Type: text/plain
 
-The provides and rprovides had been set for skipped recipes, packages are
-similar to them (all of them provide something), so also set it. This makes it
-easier to figure out the RDEPENDS issues, for example, lmsensors
-(lmsensors_3.5.0.bb) RRECOMMENDS lmsensors-config-fancontrol
-(lmsensors-config_1.0.bb), but lmsensors-config is skipped for some reasons,
-then if we run:
+The following changes since commit 80ab79168ede2786868cbd354f0950c949f73527:
 
-$ bitbake lmsensors
-ERROR: Nothing RPROVIDES 'lmsensors-config-fancontrol' (but /path/to/lmsensors_3.5.0.bb RDEPENDS on or otherwise requires it)
-NOTE: Runtime target 'lmsensors-config-fancontrol' is unbuildable, removing...
-Missing or unbuildable dependency chain was: ['lmsensors-config-fancontrol']
-ERROR: Required build target 'lmsensors' has no buildable providers.
-Missing or unbuildable dependency chain was: ['lmsensors', 'lmsensors-config-fancontrol']
+  gnome-themes-standard: remove (2019-07-11 09:32:50 +0100)
 
-We had no way to know who rprovides lmsensors-config-fancontrol, we can figure
-it out by bitbake/contrib/dump_cache.py after this patch.
+are available in the git repository at:
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/cache.py | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+  git://git.pokylinux.org/poky-contrib rbt/ccache
+  http://git.pokylinux.org/cgit.cgi//log/?h=rbt/ccache
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 62d43ee..bec8ef7 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -85,19 +85,19 @@ class CoreRecipeInfo(RecipeInfoCommon):
- 
-         self.provides  = self.depvar('PROVIDES', metadata)
-         self.rprovides = self.depvar('RPROVIDES', metadata)
-+        self.pn = self.getvar('PN', metadata) or bb.parse.vars_from_file(filename,metadata)[0]
-+        self.packages = self.listvar('PACKAGES', metadata)
-+        if not self.packages:
-+            self.packages.append(self.pn)
-+        self.packages_dynamic = self.listvar('PACKAGES_DYNAMIC', metadata)
-+
-         self.skipreason = self.getvar('__SKIPPED', metadata)
-         if self.skipreason:
--            self.pn = self.getvar('PN', metadata) or bb.parse.vars_from_file(filename,metadata)[0]
-             self.skipped = True
-             return
- 
-         self.tasks = metadata.getVar('__BBTASKS', False)
- 
--        self.pn = self.getvar('PN', metadata)
--        self.packages = self.listvar('PACKAGES', metadata)
--        if not self.packages:
--            self.packages.append(self.pn)
--
-         self.basetaskhashes = self.taskvar('BB_BASEHASH', self.tasks, metadata)
-         self.hashfilename = self.getvar('BB_HASHFILENAME', metadata)
- 
-@@ -113,7 +113,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         self.stampclean = self.getvar('STAMPCLEAN', metadata)
-         self.stamp_extrainfo = self.flaglist('stamp-extra-info', self.tasks, metadata)
-         self.file_checksums = self.flaglist('file-checksums', self.tasks, metadata, True)
--        self.packages_dynamic = self.listvar('PACKAGES_DYNAMIC', metadata)
-         self.depends          = self.depvar('DEPENDS', metadata)
-         self.rdepends         = self.depvar('RDEPENDS', metadata)
-         self.rrecommends      = self.depvar('RRECOMMENDS', metadata)
+Robert Yang (2):
+  cache: Remove duplicated lines for provides and rprovides
+  cache: Set packages for skipped recipes
+
+ bitbake/lib/bb/cache.py | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
 -- 
 2.7.4
 
