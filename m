@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com
-	[209.85.221.53])
-	by mail.openembedded.org (Postfix) with ESMTP id 9C8CA7F105
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+	[209.85.221.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 9C4747F105
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Jul 2019 13:13:52 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id n4so9969038wrs.3
+	Fri, 12 Jul 2019 13:13:53 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id n4so9969114wrs.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Jul 2019 06:13:53 -0700 (PDT)
+	Fri, 12 Jul 2019 06:13:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=eWWX3L0aRgE9sLDCKq4RP5Fnzggv86Cpj1TGrqOpoqY=;
-	b=SE7u8F/1rOY65ND9Tj3hIXsFVoLztT9mBfwV39CxcODRcTe4IiAPngF+hq2B+6PeSx
-	PzJh8SuyeMlkNbC3sUMbkgsg5DTe4/D7JGmXyARQYWKDeFIZ4s0ITGKtFj7gOtYI+zDX
-	OcA2QLllUeX40sq6jzev4KbEJKiFGbCj1p/I0=
+	bh=UBeJBS3p+Z/C/Mwa1v+13mvPV/Skap8e8Rma9uuEjVw=;
+	b=Xa7V1IPVzP7ys29jcpoQ5dHnd+/B9inm0hSITHFMBqz12knEnOO3YzIgEmJCOptl4g
+	cC0woEWLqRAFoQhcRkk/SUlPzzZDbvdV+0P4ksFOuLLQBS4l5RdcIF7zVo2EBIMS0Eog
+	C2kjhWWH8eKygi0jDdCF8AMRfr/w9u2shNfRo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=eWWX3L0aRgE9sLDCKq4RP5Fnzggv86Cpj1TGrqOpoqY=;
-	b=StowIimL1z8jmL6xI3SbQVrE5SDMA/C+Ri6mDJb4pvqaR1INXUZboO6SnSNoeEkKoM
-	YqBc+hKXvfTWZpv9OZrzGZuNkQi69OHUGWf79xK9Q1lCNInVHEFb2KBhRxH8npnHaN/4
-	MsWc/n0lA+1TuSYBtDZw0b+wwzOBkmQj4GwDQobFRtnt9UHtabnARMyVr3HSaUYZw5AO
-	f1wzUOuzivdHNDfA/tJJyI4ZdDi7N1Y8oUHCAguuTTp3ddZedlkOmWO+Nc2XHYp18lO1
-	JPSs0bBPYNyjiqXHObx4wIVUdkvs5XvCEju11vu1qXPNigPilmYC881xMctl5CFfB6O5
-	9Rmg==
-X-Gm-Message-State: APjAAAU2EfkplC4wsgdm0mjxuJS74ImW+4mEyje+ZO4B1VqRHbyJqkw7
-	dZqqU6/Kq3RSgvfwWjoqS0bSxWwkrRs=
-X-Google-Smtp-Source: APXvYqy0lOWhrLM37HV/GnUelOlSqrqHWWLvU65tcUwywKnyUj7gLMedtgTM2we1rB+R6Y1RnQnKSw==
-X-Received: by 2002:a5d:4cca:: with SMTP id c10mr11219770wrt.233.1562937232909;
-	Fri, 12 Jul 2019 06:13:52 -0700 (PDT)
+	bh=UBeJBS3p+Z/C/Mwa1v+13mvPV/Skap8e8Rma9uuEjVw=;
+	b=i0Klh3d0JwG3f8L3RtNNuOpN/WG0/CU/37z+lxQP8KvetgKNDK8siLc20GKFGrH9v6
+	JGUscuRqH2P8sONBzLi1dykWTtN0t6khTMyA1rV0+2x6HO4WraVh5P7lDuNGcNUHNMU1
+	T0jp9Y78R+IArgIrtxD89LNSA2KIu6CMREsN2CDdRIdIcv44aihL7/lXdka97syV1xn9
+	jLTvJdCzBHDJtCvaxcMP1BYWNJDCsNkJEJK+PkFsrFsnhJFzDlpd5TdVO7TutKy/KcgU
+	8XEr36Ss1LRAqf13YGgi7ugAdJOyIQ59EZKnl5ltrD3w/nSGsebhBrqY921i+I2JQMT8
+	fjTQ==
+X-Gm-Message-State: APjAAAWqd8bDa0Ok2r6aqOW0+wigxpQR+UiqEoK9+aTXDp9OqNC08b62
+	7qaCLSccoIjohHIb7ttEbrKUof8lf2c=
+X-Google-Smtp-Source: APXvYqwle1ID2OR2EEVbhuO95Oknbr1DAyPDwVgRJLGTyISO66IyHe+c5xpB7Aw9IqAOgGM4ArBL0Q==
+X-Received: by 2002:a5d:56d0:: with SMTP id m16mr11372729wrw.276.1562937234055;
+	Fri, 12 Jul 2019 06:13:54 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
 	k9sm6015169wmi.33.2019.07.12.06.13.52
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Fri, 12 Jul 2019 06:13:52 -0700 (PDT)
+	Fri, 12 Jul 2019 06:13:53 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 12 Jul 2019 14:13:45 +0100
-Message-Id: <20190712131349.29918-3-richard.purdie@linuxfoundation.org>
+Date: Fri, 12 Jul 2019 14:13:46 +0100
+Message-Id: <20190712131349.29918-4-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190712131349.29918-1-richard.purdie@linuxfoundation.org>
 References: <20190712131349.29918-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 3/7] runqueue: Whitespace fix
+Subject: [PATCH 4/7] siggen: Use unique hashes for tasks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,69 +58,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Jul 2019 13:13:52 -0000
+X-List-Received-Date: Fri, 12 Jul 2019 13:13:54 -0000
 Content-Transfer-Encoding: 8bit
 
-Fix some unwanted extra indentation.
+Now that runqueue optimises based on task hash, we need to ensure
+tasks have unique hashes even in the simplest siggen mode. Use
+the task name to calculate a unique hash.
+
+This fixes runqueue tests when hash optimisations are added.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ lib/bb/siggen.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 2d52ef3190..624cc756fd 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2438,29 +2438,29 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     # e.g. do_sometask_setscene[depends] = "targetname:do_someothertask_setscene"
-     # Note that anything explicitly depended upon will have its reverse dependencies removed to avoid circular dependencies
-     for tid in rqdata.runq_setscene_tids:
--            (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
--            realtid = tid + "_setscene"
--            idepends = rqdata.taskData[mc].taskentries[realtid].idepends
--            sqdata.stamps[tid] = bb.build.stampfile(taskname + "_setscene", rqdata.dataCaches[mc], taskfn, noextra=True)
--            for (depname, idependtask) in idepends:
-+        (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
-+        realtid = tid + "_setscene"
-+        idepends = rqdata.taskData[mc].taskentries[realtid].idepends
-+        sqdata.stamps[tid] = bb.build.stampfile(taskname + "_setscene", rqdata.dataCaches[mc], taskfn, noextra=True)
-+        for (depname, idependtask) in idepends:
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 3b017219ed..f9c4798e3d 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -49,8 +49,9 @@ class SignatureGenerator(object):
+         return self.taskhash[task]
  
--                if depname not in rqdata.taskData[mc].build_targets:
--                    continue
-+            if depname not in rqdata.taskData[mc].build_targets:
-+                continue
+     def get_taskhash(self, fn, task, deps, dataCache):
+-        self.taskhash[fn + "." + task] = "0"
+-        return self.taskhash[fn + "." + task]
++        k = fn + "." + task
++        self.taskhash[k] = hashlib.sha256(k.encode("utf-8")).hexdigest()
++        return self.taskhash[k]
  
--                depfn = rqdata.taskData[mc].build_targets[depname][0]
--                if depfn is None:
--                     continue
--                deptid = depfn + ":" + idependtask.replace("_setscene", "")
--                if deptid not in rqdata.runtaskentries:
--                    bb.msg.fatal("RunQueue", "Task %s depends upon non-existent task %s:%s" % (realtid, depfn, idependtask))
-+            depfn = rqdata.taskData[mc].build_targets[depname][0]
-+            if depfn is None:
-+                continue
-+            deptid = depfn + ":" + idependtask.replace("_setscene", "")
-+            if deptid not in rqdata.runtaskentries:
-+                bb.msg.fatal("RunQueue", "Task %s depends upon non-existent task %s:%s" % (realtid, depfn, idependtask))
- 
--                if not deptid in sqdata.sq_harddeps:
--                    sqdata.sq_harddeps[deptid] = set()
--                sqdata.sq_harddeps[deptid].add(tid)
-+            if not deptid in sqdata.sq_harddeps:
-+                sqdata.sq_harddeps[deptid] = set()
-+            sqdata.sq_harddeps[deptid].add(tid)
- 
--                sq_revdeps_squash[tid].add(deptid)
--                # Have to zero this to avoid circular dependencies
--                sq_revdeps_squash[deptid] = set()
-+            sq_revdeps_squash[tid].add(deptid)
-+            # Have to zero this to avoid circular dependencies
-+            sq_revdeps_squash[deptid] = set()
- 
-     rqdata.init_progress_reporter.next_stage()
- 
+     def writeout_file_checksum_cache(self):
+         """Write/update the file checksum cache onto disk"""
 -- 
 2.20.1
 
