@@ -1,26 +1,49 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id E35607F012
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id F18BA7EE59
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Jul 2019 03:10:51 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x6I3ApbF008966
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 17 Jul 2019 20:10:51 -0700 (PDT)
-Received: from localhost.corp.ad.wrs.com (128.224.162.182) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
-	14.3.468.0; Wed, 17 Jul 2019 20:10:50 -0700
-To: <bitbake-devel@lists.openembedded.org>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>
-References: <cover.1562213458.git.liezhi.yang@windriver.com>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <31eb8ea3-76b2-74ff-dfef-f260b11b3fa3@windriver.com>
-Date: Thu, 18 Jul 2019 11:11:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-	Thunderbird/60.7.2
+	Fri, 19 Jul 2019 15:20:19 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id 31so32693795wrm.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 19 Jul 2019 08:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=dUQJ2hswBCupKlLOPt3T730pHhG5RLjyOCAoGBbQ2i8=;
+	b=SZgEPAfCxBTd0ybfZWj0J2zZD6V2KXEJDSV3XxvBZ170wArH5Yow4ChTHYxsYqm3XZ
+	Kp9/LIzHh9aAKIhDB0VqzUaYplmRiGrXq6YOHOo1k1ukJMxtYQEFl3JwiHK5tBXNHTXv
+	83zhrBdh16tN88vUnZpow+ue3ag3O4BrYsbwM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=dUQJ2hswBCupKlLOPt3T730pHhG5RLjyOCAoGBbQ2i8=;
+	b=Yt01L28+fXJS04XEDmm+B6fYLCIXZkjC+2a2QZ5KRN767zMVNp60bDNgW5VRLvIS/H
+	iqp/UYRdQF137JZwRlLiy6N2LVnaF2/HUUxFX5UIaRmIBtKrFG+2tjOnR4uIzTC4BnRx
+	zIRGuJPUGduKkOQktF/1lDgjlkApFxEnve+YbA3NCaiijkahXskSbAOSofaWdwgs8Dj3
+	eMVANnY3F5YuhVCgIEJQ3TQ/gslt20ojqRqTGtqRZpdtGwPERUSc3ZCCSGI6oPqTExMj
+	6O42BuDiskVHkb+XInmagGmXKd/nb/H/nzmbvCagsU7Wwg+rgaw1vVc8ayp2194mQ8DY
+	hVrQ==
+X-Gm-Message-State: APjAAAXVHxwCI/Xh7BvsoQ8aJIV+d289OShl+HBnV1/Mp0+896THcOFx
+	hbb5wzxheArEn7u6ch5vQUozTIwwl5I=
+X-Google-Smtp-Source: APXvYqyUkYWTk4Zu1k2xaYYs0EOu6V5ic9U/iokvh6bqpkgU8HUv6ZIZq5O2OUFNnwxZ1rv23vZrjg==
+X-Received: by 2002:a5d:4211:: with SMTP id n17mr51968964wrq.137.1563549620333;
+	Fri, 19 Jul 2019 08:20:20 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	r14sm28494978wrx.57.2019.07.19.08.20.19
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+	Fri, 19 Jul 2019 08:20:19 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 19 Jul 2019 16:20:18 +0100
+Message-Id: <20190719152018.12154-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <cover.1562213458.git.liezhi.yang@windriver.com>
-Subject: Re: [PATCH 0/1] cache: Create a symlink for current cachefile
+Subject: [PATCH] siggen: Fix handling of tainted sig files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,31 +56,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 18 Jul 2019 03:10:52 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 19 Jul 2019 15:20:20 -0000
+Content-Transfer-Encoding: 8bit
 
-Hi RP,
+The addition of some debugging code meant that comparisions between sig
+files with a taint and without a taint weren't working. Tweak the logic
+to avoid tracebacks if one side doesn't have a taint.
 
-Do you have any comments or concerns on this one, please?
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/siggen.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-// Robert
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index f9c4798e3d..6a729f3b1e 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -645,9 +645,9 @@ def compare_sigfiles(a, b, recursecb=None, color=False, collapsed=False):
+     a_taint = a_data.get('taint', None)
+     b_taint = b_data.get('taint', None)
+     if a_taint != b_taint:
+-        if a_taint.startswith('nostamp:'):
++        if a_taint and a_taint.startswith('nostamp:'):
+             a_taint = a_taint.replace('nostamp:', 'nostamp(uuid4):')
+-        if b_taint.startswith('nostamp:'):
++        if b_taint and b_taint.startswith('nostamp:'):
+             b_taint = b_taint.replace('nostamp:', 'nostamp(uuid4):')
+         output.append(color_format("{color_title}Taint (by forced/invalidated task) changed{color_default} from %s to %s") % (a_taint, b_taint))
+ 
+-- 
+2.20.1
 
-On 7/4/19 12:12 PM, Robert Yang wrote:
-> The following changes since commit 4fd9ee4670293632cc0ca1e64b8833eb6014435d:
-> 
->    bitbake: bitbake: Add --skip-setscene option (2019-07-03 17:00:57 +0100)
-> 
-> are available in the git repository at:
-> 
->    git://git.pokylinux.org/poky-contrib rbt/symlink
->    http://git.pokylinux.org/cgit.cgi//log/?h=rbt/symlink
-> 
-> Robert Yang (1):
->    cache: Create a symlink for current cachefile
-> 
->   bitbake/lib/bb/cache.py | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
 
