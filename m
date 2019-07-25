@@ -1,55 +1,22 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
-	[209.85.221.66])
-	by mail.openembedded.org (Postfix) with ESMTP id CF0A17F143
+Return-Path: <daniel.ammann@bytesatwork.ch>
+X-Greylist: delayed 580 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 25 Jul 2019 10:41:27 UTC
+Received: from bytesatwork.ch (bytesatwork.ch [91.135.72.15])
+	by mail.openembedded.org (Postfix) with ESMTP id C79727D1E9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 24 Jul 2019 14:19:49 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id 31so47252805wrm.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 24 Jul 2019 07:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=flZNj/e3NkOFz+9E8bIhYvS1za6zaMx1LdSksZKJcLo=;
-	b=UhmA68pQD5gtW/zuC96Kx7Bde3dP1c4clRbM8WWq+FSxzHWH/QuqjklaGNSKnKiO7p
-	/5Fm+aWm5DgSR1d0jOFidVuv9v8h9VVcvASe9SzS9YAzjICzVkEq+p/DatnJqV4ZV0Xa
-	NHZqehWV14ivp/O5QxTzl0hfdd9QUNkB+UUG8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=flZNj/e3NkOFz+9E8bIhYvS1za6zaMx1LdSksZKJcLo=;
-	b=fdNCDos8mwZQxCwGhNfcskasXj2DDujBN0wdXEF189kczyeZ+BFsu2JLwO0BE3minv
-	Y2rHTxRz5m1udOmgSwOmIgjb96gXGTxRgnxv5uW+Mv0wzLsnf3FcrV75AHvrRLaZaXLs
-	TYZ6R3Kxon621I/3vw4bbEKGv6jD3nj1++Uyqq/iFdEEqOFiUwu1kO8vop8AhS/zuq7p
-	GWuwBvvj0Qq7fL8UB/FXM9mYoK3ET4PuoUhxtvN1RcUHFc/3mgJG/g5r/tmpC78JpS/j
-	KF9nxH6kGdhJBt8IU6HFnQWQxl+2mDpAOXdEqOQrhC9ZkSeUMims4YYvZ0UY62PZTB7W
-	2Cpw==
-X-Gm-Message-State: APjAAAV0hGBNvcR6DLzdw+mfdp/z2RZ8+pK9C/AdiKwBiFtJlQekP6gw
-	XvOOjIENB4xG3oFi1WOw4LRtjQ==
-X-Google-Smtp-Source: APXvYqyucnGXrVDm08DM+2fp5ZdN7kZz2en/frE+yDR+vWIRFkqK8P3mEoMBAFbq6r/YgjbCagx6KQ==
-X-Received: by 2002:a5d:48cf:: with SMTP id p15mr38631387wrs.151.1563977990609;
-	Wed, 24 Jul 2019 07:19:50 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	x185sm35589011wmg.46.2019.07.24.07.19.49
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Wed, 24 Jul 2019 07:19:50 -0700 (PDT)
-Message-ID: <f6f6e58e652516f2402d4c247237c9116054b0a8.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: Mike Crowe <mac@mcrowe.com>
-Date: Wed, 24 Jul 2019 15:19:48 +0100
-In-Reply-To: <20190724091134.kqctx32x3daxiwjq@mcrowe.com>
-References: <20181217171645.8145-1-richard.purdie@linuxfoundation.org>
-	<20190723160909.wdj7fwboiy65kfet@mcrowe.com>
-	<00066477-9727-3081-a300-e030ef733333@windriver.com>
-	<1e930c00f2f1ef60bda5c7d25d2850d438f3345a.camel@linuxfoundation.org>
-	<20190724091134.kqctx32x3daxiwjq@mcrowe.com>
-User-Agent: Evolution 3.32.2-1 
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] data/siggen: Switch md5 -> sha256
+	Thu, 25 Jul 2019 10:41:27 +0000 (UTC)
+Received: from mimas.bytesatwork.ch (162.40.150.83.ftth.as8758.net
+	[83.150.40.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested) (Authenticated sender: daniel)
+	by bytesatwork.ch (Postfix) with ESMTPSA id BDB2C101C2A6B;
+	Thu, 25 Jul 2019 12:31:43 +0200 (CEST)
+From: Daniel Ammann <daniel.ammann@bytesatwork.ch>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 25 Jul 2019 12:31:40 +0200
+Message-Id: <20190725103140.5972-1-daniel.ammann@bytesatwork.ch>
+X-Mailer: git-send-email 2.11.0
+Subject: [PATCH] toaster: Sync list of fs_types with oe-core
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,55 +29,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 24 Jul 2019 14:19:50 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 25 Jul 2019 10:41:28 -0000
 
-On Wed, 2019-07-24 at 10:11 +0100, Mike Crowe wrote:
-> We make use of the recipe name in our sstate cache pruning script,
-> since some recipes have more churn and we expire them more quickly.
-> That shouldn't be a problem as long as the recipe name is kept in
-> preference to the version.
+Signed-off-by: Daniel Ammann <daniel.ammann@bytesatwork.ch>
+---
+ lib/toaster/orm/models.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Lets get the abstraction, then we can discuss which pieces make most
-sense and have which priority.
-
-> > > So the same truncation when matching, and it should be safe.  The
-> > > recipe,
-> > > version ... task bit is nice to have for a human reader, but I
-> > > don't
-> > > think it's
-> > > actually needed by the system itself.
-> > > 
-> > > This should avoid any collisions and keep the maximum information
-> > > that will fit
-> > > in the filename(s).
-> > 
-> > In some ways regardless of what we do, we need to abstract it so
-> > that
-> > we have one function generating the filenames.
-> > 
-> > So yes, think we need a patch which abstracts the filename
-> > generation.
-> > It needs to be able to truncate elements of the constructed name
-> > other
-> > than the hash. I do prefer truncating the other elements than
-> > changing
-> > the hash.
-> 
-> If we're going to keep the 64-character SHA-256 hash and instead
-> elide parts of the sstate filenames, then I think only sstate.bbclass
-> needs to change, so this isn't a Bitbake issue and we should probably
-> move this thread it openembedded-core.
-> 
-> Or perhaps I'm misunderstanding your suggestion.
-
-No, this probably becomes an OE-Core issue. Keep in mind that some code
-does glob on these names though iirc so we'll have to consider those
-bits too.
-
-Cheers,
-
-Richard
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 41a9f819d..bb6b5decf 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -965,12 +965,12 @@ class TargetSDKFile(models.Model):
+ class Target_Image_File(models.Model):
+     # valid suffixes for image files produced by a build
+     SUFFIXES = {
+-        'btrfs', 'cpio', 'cpio.gz', 'cpio.lz4', 'cpio.lzma', 'cpio.xz',
+-        'cramfs', 'elf', 'ext2', 'ext2.bz2', 'ext2.gz', 'ext2.lzma', 'ext4',
+-        'ext4.gz', 'ext3', 'ext3.gz', 'hdddirect', 'hddimg', 'iso', 'jffs2',
+-        'jffs2.sum', 'multiubi', 'qcow2', 'squashfs', 'squashfs-lzo',
++        'btrfs', 'container', 'cpio', 'cpio.gz', 'cpio.lz4', 'cpio.lzma',
++        'cpio.xz', 'cramfs', 'ext2', 'ext2.bz2', 'ext2.gz', 'ext2.lzma',
++        'ext3', 'ext3.gz', 'ext4', 'ext4.gz', 'f2fs', 'hddimg', 'iso', 'jffs2',
++        'jffs2.sum', 'multiubi', 'squashfs', 'squashfs-lz4', 'squashfs-lzo',
+         'squashfs-xz', 'tar', 'tar.bz2', 'tar.gz', 'tar.lz4', 'tar.xz', 'ubi',
+-        'ubifs', 'vdi', 'vmdk', 'wic', 'wic.bmap', 'wic.bz2', 'wic.gz', 'wic.lzma'
++        'ubifs', 'wic', 'wic.bz2', 'wic.gz', 'wic.lzma'
+     }
+ 
+     target = models.ForeignKey(Target)
+-- 
+2.11.0
 
 
