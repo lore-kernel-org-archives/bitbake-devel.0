@@ -1,44 +1,77 @@
-Return-Path: <alex.kanavin@gmail.com>
-Received: from mail-vs1-f68.google.com (mail-vs1-f68.google.com
-	[209.85.217.68])
-	by mail.openembedded.org (Postfix) with ESMTP id E21F77D40E
+Return-Path: <chris.laplante@agilent.com>
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com
+	(mail-eopbgr740048.outbound.protection.outlook.com [40.107.74.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 9C5D67F13D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Jul 2019 15:06:14 +0000 (UTC)
-Received: by mail-vs1-f68.google.com with SMTP id r3so36267177vsr.13
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Jul 2019 08:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=KUjY7KmxYLmNfJDCglR5S2SL1Dn7qLPRwVdG/obDQWM=;
-	b=ViwXiaGTCnTB2urB3a3nOD3U8B1MOBMYmxfTTB0ODQgQ5KXdOc3hwwri5ehXh0WG83
-	r5nZJ2tp7FEvEfTJ9gVa0LU3gi5UjWX7RcZZIn8TxvdpALDj5lfwIjHP9uwzsAABHyI2
-	brfOqr6MlW0W87B01W67/eV0sShu71rGCcPBVIcv0YAG1ulv30y1UhpBssQ591OaS9OW
-	6jB4veXCZ9+1VDepXEg8N+3MJOD46AeiGCpIfT4C9iyGz8CPvorxA4kU3CWbCHybAkw/
-	2J8VeD7al1Jx0X6o3AlHllw7iWd7jYuJe3r7POtvyqPmhcwVK/Q9oN15l4ORSTmhTQ1X
-	QfAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=KUjY7KmxYLmNfJDCglR5S2SL1Dn7qLPRwVdG/obDQWM=;
-	b=tOKP3xFIlwAcGfTjECiOCMjXBi+BGN7KwWzTmtdhdcw70C3QHDA3kmPah/6Aa5Bs3z
-	pio1wvTANba7LuUAEvOZDmh27uONshfZNtCl5TkINxAm3CQtY4I0BFduodZnlaGqitAv
-	Ntwn7PARkbc7sUTNd9ObiQ6SksaaitNwjsf9rw2GJm6zFMc7Hceb1toTAXGgm77HvJ94
-	tO88HFoIEKYCWXAp9oCjTs2gJaTUUqXqTmIUZZODHHIUFvXfzs4Y8spodBfNPJBJoZkb
-	IJoCeaCE/M1B01tUP8wRvHq9wnMVFQ8aTLhCR+KL1gna3QIHrYj+Ng1v056JqTsQIGXD
-	sR7A==
-X-Gm-Message-State: APjAAAVbFRNTQXuEgQOLeyuNjaiJhCW9Lin2SCYll8Rib2KZaVehG2eJ
-	RzwQtVZi8Djx8swsK/fFnwgWkJ7yALcd6v6+2Lnp2wiQ
-X-Google-Smtp-Source: APXvYqwpc87lWUarB6+0AwqAjM1eASeH++t8nPTgkS8VchRL3zNvq65ZWB8pFEVOz3pgZBdfVTCfQC0do2iokRIg+T4=
-X-Received: by 2002:a67:fd13:: with SMTP id f19mr59742855vsr.25.1564153575819; 
-	Fri, 26 Jul 2019 08:06:15 -0700 (PDT)
-MIME-Version: 1.0
+	Fri, 26 Jul 2019 15:46:57 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=OVhcAC//q1OCHI7dXOgT9tabUxkslZ/6Qh0ZNBzAMEnal6/vlm4bC1SRF5B4Bs8iL6N3E7ACCjfTODl3y9e6W/zIzxcov0H3Mh65CY8hsztKuNNXNW5XjvvyrwIU3iIAxQ2CLfhKNA6rsWMKPEIDJbBn4zat7Yx7E/MLPlx1mW0e5rcgBl0Z2xy5kNXG+COJxjuGPhJb86fcNOCH0z0uGOcxnIbNuaMh73PoZ7AJqMd9/H0FNEe3Ux6OCvPfYtBbtDPFDB2hEGblQvg0kMlEp86pqPE6Vyz3A0H5wYxUGaxHHA3rtWvCTEahtPI32wEJaf5B75h3t4uOdhQgQLH1sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=gowqIpvoQf8Urneiidk+/6sMnRNAHhaG6zo8YChWcqc=;
+	b=hJLbTqk3ULvx8DF9IbPXwhufqznESM1lrH6fMkjQMOJXUDoA+BJIQ+zJp7HWSWjbc98wRd4R3VMoMCKXjWjvwf8S1hId/G4Hd9wRlUw1lbe03941ansrzXbW0zmFCsN3NEuYd3+SrhT6hiZplPCUfhYqexpSWmmfzuo43yhbcMNr9JwXL6aV4NxHQtmhPSHYDtY403a0Pghhn2W4gv0hnTHBDCKF093JbHwuALGWEF5XIELvriJ5lObf5kuo4NBSrXa21KhZzjvm6eJxrj9JXjEegeEWUmDIfyjDqcLHk3CzzzRedefOmLKldqiZ0X5BEbxrNUR6eph2HuNH3A5YzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+	smtp.mailfrom=agilent.com;dmarc=pass action=none
+	header.from=agilent.com;dkim=pass header.d=agilent.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+	s=selector2;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=gowqIpvoQf8Urneiidk+/6sMnRNAHhaG6zo8YChWcqc=;
+	b=TCKzkFKZgd2yME0793cDU/zvSBsOdE9+gP0WGdoDja2VmbHqb0M1Uq2A1Ap02IOVp4d4wOb6Lk2H7v20lrufbUoEgkVYTrPPuEJ/ku7vxXvTNpstkCxVhiJ8QM4QXHVa3T1XSd5jRV0DHKtcRflM98QHX31rNQkv7wyWI1CCnaY=
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
+	CY4PR12MB1511.namprd12.prod.outlook.com (10.172.66.15) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2094.17; Fri, 26 Jul 2019 15:46:56 +0000
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::4154:e959:dc1e:4abc]) by
+	CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::4154:e959:dc1e:4abc%9]) with mapi id 15.20.2094.013;
+	Fri, 26 Jul 2019 15:46:56 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Thread-Topic: [bitbake-devel] [PATCH] fetch2: add ability to skip recipes when
+	get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
+Thread-Index: AQHVQ7myBvHQRVvKAU6e6N46xT51eqbc/9MAgAAJKuA=
+Date: Fri, 26 Jul 2019 15:46:56 +0000
+Message-ID: <CY4PR12MB1653B3168D82F8A1E6AC390C8BC00@CY4PR12MB1653.namprd12.prod.outlook.com>
 References: <1564149248-7626-1-git-send-email-chris.laplante@agilent.com>
-In-Reply-To: <1564149248-7626-1-git-send-email-chris.laplante@agilent.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 26 Jul 2019 18:06:02 +0300
-Message-ID: <CANNYZj_ykVaOvq4EKtJ=7qpTNt5HcdpYqE+z4dRpqNQH-6ykYA@mail.gmail.com>
-To: Chris Laplante <chris.laplante@agilent.com>
+	<CANNYZj_ykVaOvq4EKtJ=7qpTNt5HcdpYqE+z4dRpqNQH-6ykYA@mail.gmail.com>
+In-Reply-To: <CANNYZj_ykVaOvq4EKtJ=7qpTNt5HcdpYqE+z4dRpqNQH-6ykYA@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=chris.laplante@agilent.com; 
+x-originating-ip: [4.16.127.92]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0b4757e5-fe80-4532-8728-08d711e07d3a
+x-microsoft-antispam: BCL:0; PCL:0;
+	RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);
+	SRVR:CY4PR12MB1511; 
+x-ms-traffictypediagnostic: CY4PR12MB1511:
+x-microsoft-antispam-prvs: <CY4PR12MB151158C4D00404F371BCBA288BC00@CY4PR12MB1511.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01106E96F6
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(376002)(346002)(39860400002)(396003)(366004)(136003)(199004)(189003)(13464003)(29502001)(305945005)(229853002)(256004)(6116002)(81166006)(14444005)(33656002)(7736002)(71190400001)(3846002)(8676002)(81156014)(14454004)(8936002)(74316002)(476003)(68736007)(53546011)(26005)(316002)(66066001)(71200400001)(11346002)(66476007)(5660300002)(478600001)(2906002)(186003)(66556008)(55016002)(64756008)(102836004)(99286004)(66446008)(52536014)(66946007)(6436002)(9686003)(446003)(76116006)(4326008)(76176011)(25786009)(6246003)(53936002)(86362001)(7696005)(6916009)(6506007)(486006);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1511;
+	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
+received-spf: None (protection.outlook.com: agilent.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xlkB3bifRiu98v4lifIPtRE6t5a1KLzH1euPwB0idE9x9Mp7UQOGu2A0wK09ziV/2FXXnpLy2HU0LYU3LRhB6BUks8JuGMeO8YuvWQiauUHqwkn4+lShCUxvT1BaRS2rGM5BwkuhQY50GRtmff+t2XrvniD7NPtfe8/aAjkNOQNqarOxmmD/oRCzmSYe4CN7v9oZ4rBogStXJ8J8KTqJxMp8ephM4BJrSDA1IPVUob9lcAvNUDsxVPc4B/bh09WBLyczv2sSoxUqTbYmChhAWm/FXFUFFSQc2DKIWrF6ZSfK0cMonx9e+0DYiCqarsUWzhu54CFajlHz8tBttKYtgl4j3qVUq49HIlht7vz90Wp+JxPlo2kT7Ud3lRcbnrm5nQqn35Y+36psy7BkQpLntFRpplZf/yRvmd5W1y0tQDo=
+MIME-Version: 1.0
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b4757e5-fe80-4532-8728-08d711e07d3a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 15:46:56.6199 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: chris.laplante@agilent.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1511
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] fetch2: add ability to skip recipes when get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -53,387 +86,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 26 Jul 2019 15:06:16 -0000
-Content-Type: multipart/alternative; boundary="00000000000042ced7058e96e2be"
+X-List-Received-Date: Fri, 26 Jul 2019 15:46:57 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
---00000000000042ced7058e96e2be
-Content-Type: text/plain; charset="UTF-8"
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbGV4YW5kZXIgS2FuYXZpbiA8
+YWxleC5rYW5hdmluQGdtYWlsLmNvbT4NCj4gU2VudDogRnJpZGF5LCBKdWx5IDI2LCAyMDE5IDEx
+OjA2IEFNDQo+IFRvOiBMQVBMQU5URSxDSFJJUyAoQWdpbGVudCBVU0EpIDxjaHJpcy5sYXBsYW50
+ZUBhZ2lsZW50LmNvbT4NCj4gQ2M6IGJpdGJha2UtZGV2ZWwgPGJpdGJha2UtZGV2ZWxAbGlzdHMu
+b3BlbmVtYmVkZGVkLm9yZz4NCj4gU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0hd
+IGZldGNoMjogYWRkIGFiaWxpdHkgdG8gc2tpcCByZWNpcGVzIHdoZW4gZ2V0X3NyY3JldiBmYWls
+cyB2aWEgQkJfRkVUQ0hfU0tJUF9PTl9TUkNSRVZfRVJST1INCj4gDQo+IEkgdGhpbmsgaXQncyBi
+ZXR0ZXIgdG8gcmVhcnJhbmdlIHRoZSBsYXllciBpdHNlbGYsIGFuZCBzcGxpdCBpdCBpbnRvIGEg
+cHJpdmlsZWdlZCBhbmQgYSBub24tcHJpdmlsZWdlZCBvbmUuDQo+IA0KDQpZZXMsIHRoYXQncyB0
+aGUgImNsZWFuZXN0IiBzb2x1dGlvbiwgYnV0IGl0IGRvZXNu4oCZdCBuZWNlc3NhcmlseSBzY2Fs
+ZSB3ZWxsIHdoZW4geW91IGFkZCBtb3JlIGFuZCBtb3JlIGRpc2pvaW50IHNldHMgb2YgdXNlcnMg
+dGhhdCBjYW4vY2FuJ3QgYWNjZXNzIHBhcnRpY3VsYXIgcmVjaXBlcy4gDQoNCkFsc28sIGp1c3Qg
+dG8gYWRkIHNvbWUgbW9yZSBjb250ZXh0IHRvIGhvdyB3ZSBhcmUgdXNpbmcgdGhpczogZm9yIGVh
+Y2ggb2Ygb3VyICJza2lwcGFibGUiIHJlY2lwZXMsIHdlIGhhdmUgYWx0ZXJuYXRpdmUgcHJvdmlk
+ZXJzIHRoYXQgcHVsbCBwcmUtY29tcGlsZWQgYXJ0aWZhY3RzIGZyb20gInBvb2wiIHJlcG9zaXRv
+cmllcy4gSXQgaXMgbmljZSB0byBrZWVwIHRoZSBwcm92aWRlcnMnIHJlY2lwZXMgaW4gb25lIHBs
+YWNlLg0KDQo+IFRoaXMgcGF0Y2ggc2VlbXMgdG8gZW5hYmxlIHNraXBwaW5nIHRoZSByZWNpcGUs
+IHJlZ2FyZGxlc3Mgb2Ygd2hhdCB0aGUgYWN0dWFsIGlzc3VlIHdpdGggZmV0Y2hpbmcgd2FzICh3
+aGljaCBtYXkgb3IgbWF5IG5vdCBiZSAnYWNjZXNzDQo+IGRlbmllZCcpLiBTa2lwcGluZyBvbiBh
+bnkgZXJyb3IgZG9lc24ndCBzZWVtIHJpZ2h0IHRvIG1lIGFzIGl0IG1heSBtYXNrIG90aGVyIHR5
+cGVzIG9mIHByb2JsZW1zLg0KDQpJIHNlZSB5b3VyIHBvaW50IChpbiBnZW5lcmFsKSwgYnV0IG5v
+dGUgdGhhdCB0aGlzIG9ubHkgc2tpcHMgdGhlIHJlY2lwZSBpZiBhbiBlcnJvciBvY2N1cnMgaW4g
+Z2V0X3NyY3JldiBkdXJpbmcgdGhlIHBhcnNpbmcgc3RhZ2UgKGFuZCB3ZSBhcmUgbm90IGV4ZWN1
+dGluZyBpbiBhIHRhc2spLiBUaGUgb3JpZ2luYWwgZXhjZXB0aW9uIHdpbGwgc3RpbGwgYmUgZGlz
+cGxheWVkIHRvIHRoZSB1c2VyLiANCg0KQnV0IGl0IGNlcnRhaW5seSB3b3VsZCBiZSBiZXR0ZXIg
+dG8gYmUgbW9yZSBzZWxlY3RpdmUgd2l0aCB3aGljaCBraW5kIG9mIGVycm9ycyBnZXQgc3dhbGxv
+d2VkLiBJIHdpbGwgdHJ5IHRvIGxvb2sgaW50byB0aGF0Lg0KDQpUaGFua3MsDQpDaHJpcw0K
 
-I think it's better to rearrange the layer itself, and split it into a
-privileged and a non-privileged one.
-
-This patch seems to enable skipping the recipe, regardless of what the
-actual issue with fetching was (which may or may not be 'access denied').
-Skipping on any error doesn't seem right to me as it may mask other types
-of problems.
-
-Alex
-
-On Fri, 26 Jul 2019 at 16:55, Chris Laplante via bitbake-devel <
-bitbake-devel@lists.openembedded.org> wrote:
-
-> Sometimes it is desirable to just skip a recipe if the upstream(s) can't be
-> accessed by the user, rather than fail the whole build outright.
->
-> For example, in a corporate environment, sometimes certain git repositories
-> are access controlled. If privileged and non-privileged users share
-> the same Yocto layers, it would be nice for the non-privileged users to
-> be able to build the recipes they need, without tripping over parse
-> failures on the non-accessible recipes.
->
-> Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
-> ---
->  lib/bb/fetch2/__init__.py | 99
-> +++++++++++++++++++++++++----------------------
->  1 file changed, 52 insertions(+), 47 deletions(-)
->
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index f6b5529..a165a77 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -741,55 +741,60 @@ def get_srcrev(d, method_name='sortable_revision'):
->      that fetcher provides a method with the given name and the same
-> signature as sortable_revision.
->      """
->
-> -    scms = []
-> -    fetcher = Fetch(d.getVar('SRC_URI').split(), d)
-> -    urldata = fetcher.ud
-> -    for u in urldata:
-> -        if urldata[u].method.supports_srcrev():
-> -            scms.append(u)
-> -
-> -    if len(scms) == 0:
-> -        raise FetchError("SRCREV was used yet no valid SCM was found in
-> SRC_URI")
-> -
-> -    if len(scms) == 1 and len(urldata[scms[0]].names) == 1:
-> -        autoinc, rev = getattr(urldata[scms[0]].method,
-> method_name)(urldata[scms[0]], d, urldata[scms[0]].names[0])
-> -        if len(rev) > 10:
-> -            rev = rev[:10]
-> -        if autoinc:
-> -            return "AUTOINC+" + rev
-> -        return rev
-> -
-> -    #
-> -    # Mutiple SCMs are in SRC_URI so we resort to SRCREV_FORMAT
-> -    #
-> -    format = d.getVar('SRCREV_FORMAT')
-> -    if not format:
-> -        raise FetchError("The SRCREV_FORMAT variable must be set when
-> multiple SCMs are used.\n"\
-> -                         "The SCMs are:\n%s" % '\n'.join(scms))
-> -
-> -    name_to_rev = {}
-> -    seenautoinc = False
-> -    for scm in scms:
-> -        ud = urldata[scm]
-> -        for name in ud.names:
-> -            autoinc, rev = getattr(ud.method, method_name)(ud, d, name)
-> -            seenautoinc = seenautoinc or autoinc
-> +    try:
-> +        scms = []
-> +        fetcher = Fetch(d.getVar('SRC_URI').split(), d)
-> +        urldata = fetcher.ud
-> +        for u in urldata:
-> +            if urldata[u].method.supports_srcrev():
-> +                scms.append(u)
-> +
-> +        if len(scms) == 0:
-> +            raise FetchError("SRCREV was used yet no valid SCM was found
-> in SRC_URI")
-> +
-> +        if len(scms) == 1 and len(urldata[scms[0]].names) == 1:
-> +            autoinc, rev = getattr(urldata[scms[0]].method,
-> method_name)(urldata[scms[0]], d, urldata[scms[0]].names[0])
->              if len(rev) > 10:
->                  rev = rev[:10]
-> -            name_to_rev[name] = rev
-> -    # Replace names by revisions in the SRCREV_FORMAT string. The
-> approach used
-> -    # here can handle names being prefixes of other names and names
-> appearing
-> -    # as substrings in revisions (in which case the name should not be
-> -    # expanded). The '|' regular expression operator tries matches from
-> left to
-> -    # right, so we need to sort the names with the longest ones first.
-> -    names_descending_len = sorted(name_to_rev, key=len, reverse=True)
-> -    name_to_rev_re = "|".join(re.escape(name) for name in
-> names_descending_len)
-> -    format = re.sub(name_to_rev_re, lambda match:
-> name_to_rev[match.group(0)], format)
-> -
-> -    if seenautoinc:
-> -        format = "AUTOINC+" + format
-> -
-> -    return format
-> +            if autoinc:
-> +                return "AUTOINC+" + rev
-> +            return rev
-> +
-> +        #
-> +        # Mutiple SCMs are in SRC_URI so we resort to SRCREV_FORMAT
-> +        #
-> +        format = d.getVar('SRCREV_FORMAT')
-> +        if not format:
-> +            raise FetchError("The SRCREV_FORMAT variable must be set when
-> multiple SCMs are used.\n"\
-> +                             "The SCMs are:\n%s" % '\n'.join(scms))
-> +
-> +        name_to_rev = {}
-> +        seenautoinc = False
-> +        for scm in scms:
-> +            ud = urldata[scm]
-> +            for name in ud.names:
-> +                autoinc, rev = getattr(ud.method, method_name)(ud, d,
-> name)
-> +                seenautoinc = seenautoinc or autoinc
-> +                if len(rev) > 10:
-> +                    rev = rev[:10]
-> +                name_to_rev[name] = rev
-> +        # Replace names by revisions in the SRCREV_FORMAT string. The
-> approach used
-> +        # here can handle names being prefixes of other names and names
-> appearing
-> +        # as substrings in revisions (in which case the name should not be
-> +        # expanded). The '|' regular expression operator tries matches
-> from left to
-> +        # right, so we need to sort the names with the longest ones first.
-> +        names_descending_len = sorted(name_to_rev, key=len, reverse=True)
-> +        name_to_rev_re = "|".join(re.escape(name) for name in
-> names_descending_len)
-> +        format = re.sub(name_to_rev_re, lambda match:
-> name_to_rev[match.group(0)], format)
-> +
-> +        if seenautoinc:
-> +            format = "AUTOINC+" + format
-> +
-> +        return format
-> +    except FetchError as e:
-> +        if d.getVar('BB_WORKERCONTEXT') != '1' and
-> bb.utils.to_boolean(d.getVar("BB_FETCH_SKIP_ON_SRCREV_ERROR")):
-> +            raise bb.parse.SkipRecipe(e)
-> +        raise
->
->  def localpath(url, d):
->      fetcher = bb.fetch2.Fetch([url], d)
-> --
-> 2.7.4
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
-
---00000000000042ced7058e96e2be
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">I think it&#39;s better to rearrange the layer itself, and=
- split it into a privileged and a non-privileged one.=C2=A0<div><br></div><=
-div>This patch seems to enable skipping the recipe, regardless of what the =
-actual issue with fetching was (which may or may not be &#39;access denied&=
-#39;). Skipping on any error doesn&#39;t seem right to me as it may mask ot=
-her types of problems.<br><div><br></div><div>Alex</div></div></div><br><di=
-v class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, 26 Ju=
-l 2019 at 16:55, Chris Laplante via bitbake-devel &lt;<a href=3D"mailto:bit=
-bake-devel@lists.openembedded.org">bitbake-devel@lists.openembedded.org</a>=
-&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
-0px 0px 0.8ex;border-left-width:1px;border-left-style:solid;border-left-col=
-or:rgb(204,204,204);padding-left:1ex">Sometimes it is desirable to just ski=
-p a recipe if the upstream(s) can&#39;t be<br>
-accessed by the user, rather than fail the whole build outright.<br>
-<br>
-For example, in a corporate environment, sometimes certain git repositories=
-<br>
-are access controlled. If privileged and non-privileged users share<br>
-the same Yocto layers, it would be nice for the non-privileged users to<br>
-be able to build the recipes they need, without tripping over parse<br>
-failures on the non-accessible recipes.<br>
-<br>
-Signed-off-by: Chris Laplante &lt;<a href=3D"mailto:chris.laplante@agilent.=
-com" target=3D"_blank">chris.laplante@agilent.com</a>&gt;<br>
----<br>
-=C2=A0lib/bb/fetch2/__init__.py | 99 +++++++++++++++++++++++++-------------=
----------<br>
-=C2=A01 file changed, 52 insertions(+), 47 deletions(-)<br>
-<br>
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py<br>
-index f6b5529..a165a77 100644<br>
---- a/lib/bb/fetch2/__init__.py<br>
-+++ b/lib/bb/fetch2/__init__.py<br>
-@@ -741,55 +741,60 @@ def get_srcrev(d, method_name=3D&#39;sortable_revisio=
-n&#39;):<br>
-=C2=A0 =C2=A0 =C2=A0that fetcher provides a method with the given name and =
-the same signature as sortable_revision.<br>
-=C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;<br>
-<br>
--=C2=A0 =C2=A0 scms =3D []<br>
--=C2=A0 =C2=A0 fetcher =3D Fetch(d.getVar(&#39;SRC_URI&#39;).split(), d)<br=
->
--=C2=A0 =C2=A0 urldata =3D fetcher.ud<br>
--=C2=A0 =C2=A0 for u in urldata:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if urldata[u].method.supports_srcrev():<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 scms.append(u)<br>
--<br>
--=C2=A0 =C2=A0 if len(scms) =3D=3D 0:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 raise FetchError(&quot;SRCREV was used yet no =
-valid SCM was found in SRC_URI&quot;)<br>
--<br>
--=C2=A0 =C2=A0 if len(scms) =3D=3D 1 and len(urldata[scms[0]].names) =3D=3D=
- 1:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 autoinc, rev =3D getattr(urldata[scms[0]].meth=
-od, method_name)(urldata[scms[0]], d, urldata[scms[0]].names[0])<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(rev) &gt; 10:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rev =3D rev[:10]<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if autoinc:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return &quot;AUTOINC+&quot; + re=
-v<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 return rev<br>
--<br>
--=C2=A0 =C2=A0 #<br>
--=C2=A0 =C2=A0 # Mutiple SCMs are in SRC_URI so we resort to SRCREV_FORMAT<=
-br>
--=C2=A0 =C2=A0 #<br>
--=C2=A0 =C2=A0 format =3D d.getVar(&#39;SRCREV_FORMAT&#39;)<br>
--=C2=A0 =C2=A0 if not format:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 raise FetchError(&quot;The SRCREV_FORMAT varia=
-ble must be set when multiple SCMs are used.\n&quot;\<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0&quot;The SCMs are:\n%s&quot; % &#39;\n&#39;.join(scms))<b=
-r>
--<br>
--=C2=A0 =C2=A0 name_to_rev =3D {}<br>
--=C2=A0 =C2=A0 seenautoinc =3D False<br>
--=C2=A0 =C2=A0 for scm in scms:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud =3D urldata[scm]<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 for name in ud.names:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 autoinc, rev =3D getattr(ud.meth=
-od, method_name)(ud, d, name)<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 seenautoinc =3D seenautoinc or a=
-utoinc<br>
-+=C2=A0 =C2=A0 try:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 scms =3D []<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher =3D Fetch(d.getVar(&#39;SRC_URI&#39;).=
-split(), d)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 urldata =3D fetcher.ud<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 for u in urldata:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if urldata[u].method.supports_sr=
-crev():<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 scms.append(u)<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(scms) =3D=3D 0:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 raise FetchError(&quot;SRCREV wa=
-s used yet no valid SCM was found in SRC_URI&quot;)<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(scms) =3D=3D 1 and len(urldata[scms[0]]=
-.names) =3D=3D 1:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 autoinc, rev =3D getattr(urldata=
-[scms[0]].method, method_name)(urldata[scms[0]], d, urldata[scms[0]].names[=
-0])<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if len(rev) &gt; 10:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0rev =3D rev[:=
-10]<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 name_to_rev[name] =3D rev<br>
--=C2=A0 =C2=A0 # Replace names by revisions in the SRCREV_FORMAT string. Th=
-e approach used<br>
--=C2=A0 =C2=A0 # here can handle names being prefixes of other names and na=
-mes appearing<br>
--=C2=A0 =C2=A0 # as substrings in revisions (in which case the name should =
-not be<br>
--=C2=A0 =C2=A0 # expanded). The &#39;|&#39; regular expression operator tri=
-es matches from left to<br>
--=C2=A0 =C2=A0 # right, so we need to sort the names with the longest ones =
-first.<br>
--=C2=A0 =C2=A0 names_descending_len =3D sorted(name_to_rev, key=3Dlen, reve=
-rse=3DTrue)<br>
--=C2=A0 =C2=A0 name_to_rev_re =3D &quot;|&quot;.join(re.escape(name) for na=
-me in names_descending_len)<br>
--=C2=A0 =C2=A0 format =3D re.sub(name_to_rev_re, lambda match: name_to_rev[=
-match.group(0)], format)<br>
--<br>
--=C2=A0 =C2=A0 if seenautoinc:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 format =3D &quot;AUTOINC+&quot; + format<br>
--<br>
--=C2=A0 =C2=A0 return format<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if autoinc:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return &quot;AUTOI=
-NC+&quot; + rev<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return rev<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 #<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Mutiple SCMs are in SRC_URI so we resort to =
-SRCREV_FORMAT<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 #<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 format =3D d.getVar(&#39;SRCREV_FORMAT&#39;)<b=
-r>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if not format:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 raise FetchError(&quot;The SRCRE=
-V_FORMAT variable must be set when multiple SCMs are used.\n&quot;\<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;The SCMs are:\n%s&quot; % &#39;\n&#39;=
-.join(scms))<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 name_to_rev =3D {}<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 seenautoinc =3D False<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 for scm in scms:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ud =3D urldata[scm]<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for name in ud.names:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 autoinc, rev =3D g=
-etattr(ud.method, method_name)(ud, d, name)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 seenautoinc =3D se=
-enautoinc or autoinc<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(rev) &gt; 1=
-0:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rev =
-=3D rev[:10]<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 name_to_rev[name] =
-=3D rev<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Replace names by revisions in the SRCREV_FOR=
-MAT string. The approach used<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # here can handle names being prefixes of othe=
-r names and names appearing<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # as substrings in revisions (in which case th=
-e name should not be<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # expanded). The &#39;|&#39; regular expressio=
-n operator tries matches from left to<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # right, so we need to sort the names with the=
- longest ones first.<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 names_descending_len =3D sorted(name_to_rev, k=
-ey=3Dlen, reverse=3DTrue)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 name_to_rev_re =3D &quot;|&quot;.join(re.escap=
-e(name) for name in names_descending_len)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 format =3D re.sub(name_to_rev_re, lambda match=
-: name_to_rev[match.group(0)], format)<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if seenautoinc:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 format =3D &quot;AUTOINC+&quot; =
-+ format<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 return format<br>
-+=C2=A0 =C2=A0 except FetchError as e:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if d.getVar(&#39;BB_WORKERCONTEXT&#39;) !=3D &=
-#39;1&#39; and bb.utils.to_boolean(d.getVar(&quot;BB_FETCH_SKIP_ON_SRCREV_E=
-RROR&quot;)):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 raise bb.parse.SkipRecipe(e)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 raise<br>
-<br>
-=C2=A0def localpath(url, d):<br>
-=C2=A0 =C2=A0 =C2=A0fetcher =3D bb.fetch2.Fetch([url], d)<br>
--- <br>
-2.7.4<br>
-<br>
--- <br>
-_______________________________________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
-itbake-devel@lists.openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
-stinfo/bitbake-devel</a><br>
-</blockquote></div>
-
---00000000000042ced7058e96e2be--
