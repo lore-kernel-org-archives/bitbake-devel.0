@@ -1,51 +1,52 @@
-Return-Path: <mads.andreasen@gmail.com>
+Return-Path: <ankur.tyagi85@gmail.com>
 Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com
 	[209.85.208.196])
-	by mail.openembedded.org (Postfix) with ESMTP id CFDFE7EFD1
+	by mail.openembedded.org (Postfix) with ESMTP id D01FB7BD72
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Jul 2019 19:05:44 +0000 (UTC)
-Received: by mail-lj1-f196.google.com with SMTP id r9so49037536ljg.5
+	Fri, 26 Jul 2019 02:24:00 +0000 (UTC)
+Received: by mail-lj1-f196.google.com with SMTP id h10so49933626ljg.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Jul 2019 12:05:46 -0700 (PDT)
+	Thu, 25 Jul 2019 19:24:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=sender:from:to:cc:subject:date:message-id;
-	bh=hTOXQWWXrxp9ImOpzs8rU3GDizaJYirSnn5Qp9hqkcs=;
-	b=J+S37ePbmFAd0qnHNdS+OVUPQz/T8Qr8q5G0Qpv/TCFNgysFKh1zh+S4+bWJVMavBS
-	4o+jZBi0reauhW9xYXw4rMeaXqGCyXuBtFsopZUrPNrwVrDfhj8HfzSaDItwkz4MN2jK
-	U8AQkgbIH24D8Bt2C01BQhQ9RkrIAlheNjHGhRa6u1sGG0BP7vbd7oHunRPMTTi3rf5u
-	+JXR1W9vwpDh/4lyGSMLjNa6YhN0HFQc4nbFkwEYHcQcSfTLlt9HqTG9Nxilom3BXueY
-	c1vMi2grnh0oxGrz7Y965v08yol/WwcPGLwINUgUHjBKRlDRv5g//DrBml7BUNXHVDC8
-	SZow==
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=cpefFg4L+D8gH+Ct7oDRtyXR1t6bKM1S2Mv1NrPkucI=;
+	b=Ed4EyLkoOZAGPkuctWL/5JftTQLDsrnBMUEGdCyA1AW4IlZkk8eFZ5XsM6ROt0Uyim
+	6KvB8iK1NqqvS2rzyDbUGHLE/KB0z0b/4/d5UIOQTSLTxl6Tj4JxO3i9KtrW1bUvtQw5
+	rAu0b6mXQn7zFa/bJCIrZex4TLb0xZO0pS6cAKZsWOtaWB5ZjWPENAIH/Cpynz1f/uo4
+	WvAFT4b+Gk6HKzEHc1NLhJTXCtJVooa4l2aFA99hBQTRGMiRRGoI265RJA2E6ZjIdLEF
+	VM675VgygmG0K8ftyQqQNxpDEt2qHMAsvOEY1yJme6F+qNENR2zEXykmpji2e0Oe8SYj
+	wqhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-	bh=hTOXQWWXrxp9ImOpzs8rU3GDizaJYirSnn5Qp9hqkcs=;
-	b=XgZpsa3lw7kVaojZbWeKtEOZKTYsstEJge7KY+YR7JKeBn3iz+WBdF6vQSZFaUdK9N
-	EoGEWNUfyA5oDFuDHbbEU5T9ZjUVRAPr0ZbM1NS5baUVi2aJrT4u3iExiKpi9UzFAuZ1
-	JvAXyuBnKHpz3+0+4cs1xXWhTG1522PAIOwBZ9xxbRQok9J5KKl1Lfg64z0sA6gMaSAQ
-	DcATWejT440yruO/Ee+TqOA4LeYb/h3r3tAerChUzfjVR82EwZ7q4v/OidRNNc/fTZ5u
-	thCOOJcUyBxd1fRD8IPTB5J28yyDKjvccsh4UjSi2ETp292MGP8KSjnDR+/QOmilDsmt
-	mOUw==
-X-Gm-Message-State: APjAAAU7W5/Y7RiZd/Tw+tkHWJiPmiE40Il5022hRVfoWwn6YdEapISs
-	qdGRrehmZi7d+hnzLi70PXAiFoEIr2I=
-X-Google-Smtp-Source: APXvYqwz5a0FJZOhrF12zYmWw3Bbc7FyLe79qZIFlGZNVqdj4jytFdoSdH2PEmOfSNGW02FT54/WBg==
-X-Received: by 2002:a2e:4794:: with SMTP id
-	u142mr47523630lja.222.1564081544919; 
-	Thu, 25 Jul 2019 12:05:44 -0700 (PDT)
-Received: from localhost.localdomain (2-108-165-194-cable.dk.customer.tdc.net.
-	[2.108.165.194]) by smtp.gmail.com with ESMTPSA id
-	m25sm7756226lfp.97.2019.07.25.12.05.43
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Thu, 25 Jul 2019 12:05:44 -0700 (PDT)
-Sender: Mads Andreasen <mads.andreasen@gmail.com>
-From: Mads Andreasen <mads@andreasen.cc>
-X-Google-Original-From: Mads Andreasen <github@andreasen.cc>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 25 Jul 2019 21:05:33 +0200
-Message-Id: <20190725190533.17677-1-github@andreasen.cc>
-X-Mailer: git-send-email 2.17.1
-Cc: Mads Andreasen <github@andreasen.cc>
-Subject: [PATCH] fetch2/npm: Use npm pack to download node modules instead of wget
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=cpefFg4L+D8gH+Ct7oDRtyXR1t6bKM1S2Mv1NrPkucI=;
+	b=strS8yIklLd68ZPCTR9XGGqsNO1eQgR+12M6o8vKdcdoQZ+99+z4mn+YlQocxsX4YA
+	lonru5JqBqONV1pz+4KaXHW+Er0fHDFCNjATUpLb6nlWnrBhbuz02MffTLMCHOjR5M9K
+	NJ6U8uVEXOqScVvWLzgXCGQu7ZiWzHAUrxqph6ngDAgSoayn+49iVU+Isyq5v4b+5x2J
+	VA2IIxQzgh5VHqT0VHeQCwW6CRql9UVom1Uq8N4Q9ivKkzwz12MehEezlA4jtBTUxjb9
+	muE0lXJDv4Ldd8HQgjUYHaasmjOduaCSmT0WlVZ00kiL8ElLYIcNbmdXddJtxPZhvYab
+	6n0Q==
+X-Gm-Message-State: APjAAAU1qI28pbgQ+HhZRvT0MmMNBA/kF/A2QAuSNMfMjyiNCk+nyWDU
+	4amNF9pkh+6b0b5xURXsbOn4zU91lFFCPYXwBQg=
+X-Google-Smtp-Source: APXvYqwu4DpCkrXjK017H2zU5SpLvLDU8ixAOeXLTo39oHrpYGO+fpgFPCsrbRfnDFN0HE2OZw9t1YJ1KY9ls+wRYDE=
+X-Received: by 2002:a2e:a171:: with SMTP id u17mr2638517ljl.209.1564107841130; 
+	Thu, 25 Jul 2019 19:24:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190704044603.9943-1-ankur.tyagi85@gmail.com>
+	<c7df70a3-d581-5e21-842b-0e941ec80a05@windriver.com>
+	<CADySD0EkWkJ6mbg7jh3hRq3E7bjaqDFa=Aeax7OpertQ0XygSA@mail.gmail.com>
+	<d69bc7b9-b946-582d-880c-ef41338affbe@windriver.com>
+	<CADySD0HDCdVHnwzXN+POLEoQg73enGZ6XPht5HLZcySGj0XXww@mail.gmail.com>
+	<CADySD0G-iSynqSRo9o-y_e0Hvz4L+GzvsBYm=9mHq25yAn0c6Q@mail.gmail.com>
+	<9758178e3d22e58c18d4de719933d5957ea23ec2.camel@linuxfoundation.org>
+In-Reply-To: <9758178e3d22e58c18d4de719933d5957ea23ec2.camel@linuxfoundation.org>
+From: Ankur Tyagi <ankur.tyagi85@gmail.com>
+Date: Thu, 25 Jul 2019 19:23:48 -0700
+Message-ID: <CADySD0E7eWVYfEtMk-6+KMnb+WKAMyTEuHLotGQBf8sefFysgg@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel, 1.42, 1.40, v2] git.py: Handle space in git repo name for http/https protocol
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,97 +59,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 Jul 2019 19:05:45 -0000
+X-List-Received-Date: Fri, 26 Jul 2019 02:24:01 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-Using npm pack to download the main node module and its dependencies
-allow for the use of private npm modules and access to them via .npmrc
+Hi,
 
-Signed-off-by: Mads Andreasen <mads@andreasen.cc>
----
- lib/bb/fetch2/npm.py | 45 ++++++++++++++++++++++----------------------
- 1 file changed, 23 insertions(+), 22 deletions(-)
+Sorry for the late reply but I have figured out where %20 is being stripped out.
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 4427b1bb..9700e610 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -101,11 +101,19 @@ class Npm(FetchMethod):
-             return False
-         return True
- 
--    def _runwget(self, ud, d, command, quiet):
--        logger.debug(2, "Fetching %s using command '%s'" % (ud.url, command))
--        bb.fetch2.check_network_access(d, command, ud.url)
-+    def _runpack(self, ud, d, pkgfullname: str, quiet=False) -> str:
-+        """
-+        Runs npm pack on a full package name.
-+        Returns the filename of the downloaded package
-+        """
-+        bb.fetch2.check_network_access(d, pkgfullname, ud.registry)
-         dldir = d.getVar("DL_DIR")
--        runfetchcmd(command, d, quiet, workdir=dldir)
-+        dldir = os.path.join(dldir, ud.prefixdir)
-+
-+        command = "npm pack {} --registry {}".format(pkgfullname, ud.registry)
-+        logger.debug(2, "Fetching {} using command '{}' in {}".format(pkgfullname, command, dldir))
-+        filename = runfetchcmd(command, d, quiet, workdir=dldir)
-+        return filename.rstrip()
- 
-     def _unpackdep(self, ud, pkg, data, destdir, dldir, d):
-         file = data[pkg]['tgz']
-@@ -163,6 +171,9 @@ class Npm(FetchMethod):
-         pkgfullname = pkg
-         if version != '*' and not '/' in version:
-             pkgfullname += "@'%s'" % version
-+        if pkgfullname in fetchedlist:
-+            return
-+
-         logger.debug(2, "Calling getdeps on %s" % pkg)
-         fetchcmd = "npm view %s --json --registry %s" % (pkgfullname, ud.registry)
-         output = runfetchcmd(fetchcmd, d, True)
-@@ -182,15 +193,10 @@ class Npm(FetchMethod):
-                 if (not blacklist and 'linux' not in pkg_os) or '!linux' in pkg_os:
-                     logger.debug(2, "Skipping %s since it's incompatible with Linux" % pkg)
-                     return
--        #logger.debug(2, "Output URL is %s - %s - %s" % (ud.basepath, ud.basename, ud.localfile))
--        outputurl = pdata['dist']['tarball']
-+        filename = self._runpack(ud, d, pkgfullname)
-         data[pkg] = {}
--        data[pkg]['tgz'] = os.path.basename(outputurl)
--        if outputurl in fetchedlist:
--            return
--
--        self._runwget(ud, d, "%s --directory-prefix=%s %s" % (self.basecmd, ud.prefixdir, outputurl), False)
--        fetchedlist.append(outputurl)
-+        data[pkg]['tgz'] = filename
-+        fetchedlist.append(pkgfullname)
- 
-         dependencies = pdata.get('dependencies', {})
-         optionalDependencies = pdata.get('optionalDependencies', {})
-@@ -217,17 +223,12 @@ class Npm(FetchMethod):
-                     if obj == pkg:
-                         self._getshrinkeddependencies(obj, data['dependencies'][obj], data['dependencies'][obj]['version'], d, ud, lockdown, manifest, False)
-                         return
--        outputurl = "invalid"
--        if ('resolved' not in data) or (not data['resolved'].startswith('http://') and not data['resolved'].startswith('https://')):
--            # will be the case for ${PN}
--            fetchcmd = "npm view %s@%s dist.tarball --registry %s" % (pkg, version, ud.registry)
--            logger.debug(2, "Found this matching URL: %s" % str(fetchcmd))
--            outputurl = runfetchcmd(fetchcmd, d, True)
--        else:
--            outputurl = data['resolved']
--        self._runwget(ud, d, "%s --directory-prefix=%s %s" % (self.basecmd, ud.prefixdir, outputurl), False)
-+
-+        pkgnameWithVersion = "{}@{}".format(pkg, version)
-+        logger.debug(2, "Get dependencies for {}".format(pkgnameWithVersion))
-+        filename = self._runpack(ud, d, pkgnameWithVersion)
-         manifest[pkg] = {}
--        manifest[pkg]['tgz'] = os.path.basename(outputurl).rstrip()
-+        manifest[pkg]['tgz'] = filename
-         manifest[pkg]['deps'] = {}
- 
-         if pkg in lockdown:
--- 
-2.17.1
+File lib/bb/fetch2/__init__.py, method decodeurl(url) is returning
+path as urllib.parse.unquote(path) which strips out %20
+So if I return path as it is, then %20 is preserved and works as expected.
 
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index f6b5529b..97fd59e1 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -389,7 +389,7 @@ def decodeurl(url):
+                 s1, s2 = s.split('=')
+                 p[s1] = s2
+
+-    return type, host, urllib.parse.unquote(path), user, pswd, p
++    return type, host, path, user, pswd, p
+
+
+Is above change acceptable?
+
+Regards
+Ankur
+
+On Wed, Jul 10, 2019 at 4:33 AM Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+>
+> On Wed, 2019-07-10 at 21:26 +1200, Ankur Tyagi wrote:
+> > Hi,
+> >
+> > Is there something else that needs to be done in this patch? Or
+> > perhaps there is a better to handle this?
+> > I am willing to learn and try it out if original patch is not good.
+>
+> I think Mark is right, we need to figure out where the %20 characters
+> are being stripped out and preserve them rather than injecting them
+> back in again.
+>
+> The question is therefore where they're being stripped out in the code?
+>
+> Cheers,
+>
+> Richard
+>
 
