@@ -1,79 +1,88 @@
 Return-Path: <chris.laplante@agilent.com>
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com
-	(mail-eopbgr740048.outbound.protection.outlook.com [40.107.74.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 9C5D67F13D
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com
+	(mail-eopbgr780048.outbound.protection.outlook.com [40.107.78.48])
+	by mail.openembedded.org (Postfix) with ESMTP id D63757EE86
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Jul 2019 15:46:57 +0000 (UTC)
+	Fri, 26 Jul 2019 17:19:31 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=OVhcAC//q1OCHI7dXOgT9tabUxkslZ/6Qh0ZNBzAMEnal6/vlm4bC1SRF5B4Bs8iL6N3E7ACCjfTODl3y9e6W/zIzxcov0H3Mh65CY8hsztKuNNXNW5XjvvyrwIU3iIAxQ2CLfhKNA6rsWMKPEIDJbBn4zat7Yx7E/MLPlx1mW0e5rcgBl0Z2xy5kNXG+COJxjuGPhJb86fcNOCH0z0uGOcxnIbNuaMh73PoZ7AJqMd9/H0FNEe3Ux6OCvPfYtBbtDPFDB2hEGblQvg0kMlEp86pqPE6Vyz3A0H5wYxUGaxHHA3rtWvCTEahtPI32wEJaf5B75h3t4uOdhQgQLH1sw==
+	b=jqRC42PjMPDQZAVcAW9yBzgPApIeBO13ma2X/EeqbjIzHOAZPlmrzEOq9zgz+BTZ1Wtut7aiXNAcyLiO3kbjKCBWc9ZEHBvvmdALGd/acR8m2UqolsE4LUhgu5nM9Ao5ByhGBjLYrSs+tc8v/u5VDmXqga2GaLhl8Rk42csF03e+7wjtgaicR45ne/woIA8VnH38W2G/EUlZmI5AkkWqder3k+DoVLVNZL+Yrb65uOeI1//flczYn7WkLb+d4cs0fCijsRkzhMdpz/djb+j7ThkuZn5nfZTWAxLjFWYlFByAkgVQDTkq4DzNvtKt8R6CDOmnfe7+2kmpCeJ0HOB2+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
 	s=arcselector9901;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=gowqIpvoQf8Urneiidk+/6sMnRNAHhaG6zo8YChWcqc=;
-	b=hJLbTqk3ULvx8DF9IbPXwhufqznESM1lrH6fMkjQMOJXUDoA+BJIQ+zJp7HWSWjbc98wRd4R3VMoMCKXjWjvwf8S1hId/G4Hd9wRlUw1lbe03941ansrzXbW0zmFCsN3NEuYd3+SrhT6hiZplPCUfhYqexpSWmmfzuo43yhbcMNr9JwXL6aV4NxHQtmhPSHYDtY403a0Pghhn2W4gv0hnTHBDCKF093JbHwuALGWEF5XIELvriJ5lObf5kuo4NBSrXa21KhZzjvm6eJxrj9JXjEegeEWUmDIfyjDqcLHk3CzzzRedefOmLKldqiZ0X5BEbxrNUR6eph2HuNH3A5YzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
-	smtp.mailfrom=agilent.com;dmarc=pass action=none
-	header.from=agilent.com;dkim=pass header.d=agilent.com;arc=none
+	bh=ltg4UYl6AtlDmoDD6+PDrwsLUAPGLw2oPAoxZigBLNE=;
+	b=M5QOrnCWq0lY79Mor1ygOxLHAriZW31BAawPaMbLMWmyre/QEyhtvptkkKveTQGpScFcalQZzXvIUOFDF3R3nVbv/rPRsscgpqzsc9g2S3lr+sGAh2/RMDBAgINdCjsymItXFp9TgvLhTuCssSxe0dCs5sX/uOmMa1pnJMakz87rSb20aUcSJVKYI9EFSA3GHgbVq5gdzXxqkgtkkZFIid5ZwE7w826dR6vdZF2gYzhHf2B+3HASYzkNvn5lycQ3xlrzFYuj2pxKSgnfl+PXanBJFs9IgTr4/Wl4R12WOLxoksR8Kc6hkOPr2AqrIxBGwTjiDIr/FMI1VGq+yUpMTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+	192.25.218.34) smtp.rcpttodomain=lists.openembedded.org
+	smtp.mailfrom=agilent.com;
+	dmarc=pass (p=reject sp=none pct=100) action=none
+	header.from=agilent.com;dkim=none (message not signed);arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
 	s=selector2;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=gowqIpvoQf8Urneiidk+/6sMnRNAHhaG6zo8YChWcqc=;
-	b=TCKzkFKZgd2yME0793cDU/zvSBsOdE9+gP0WGdoDja2VmbHqb0M1Uq2A1Ap02IOVp4d4wOb6Lk2H7v20lrufbUoEgkVYTrPPuEJ/ku7vxXvTNpstkCxVhiJ8QM4QXHVa3T1XSd5jRV0DHKtcRflM98QHX31rNQkv7wyWI1CCnaY=
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
-	CY4PR12MB1511.namprd12.prod.outlook.com (10.172.66.15) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2094.17; Fri, 26 Jul 2019 15:46:56 +0000
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::4154:e959:dc1e:4abc]) by
-	CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::4154:e959:dc1e:4abc%9]) with mapi id 15.20.2094.013;
-	Fri, 26 Jul 2019 15:46:56 +0000
-From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Thread-Topic: [bitbake-devel] [PATCH] fetch2: add ability to skip recipes when
-	get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
-Thread-Index: AQHVQ7myBvHQRVvKAU6e6N46xT51eqbc/9MAgAAJKuA=
-Date: Fri, 26 Jul 2019 15:46:56 +0000
-Message-ID: <CY4PR12MB1653B3168D82F8A1E6AC390C8BC00@CY4PR12MB1653.namprd12.prod.outlook.com>
-References: <1564149248-7626-1-git-send-email-chris.laplante@agilent.com>
-	<CANNYZj_ykVaOvq4EKtJ=7qpTNt5HcdpYqE+z4dRpqNQH-6ykYA@mail.gmail.com>
-In-Reply-To: <CANNYZj_ykVaOvq4EKtJ=7qpTNt5HcdpYqE+z4dRpqNQH-6ykYA@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=chris.laplante@agilent.com; 
-x-originating-ip: [4.16.127.92]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0b4757e5-fe80-4532-8728-08d711e07d3a
-x-microsoft-antispam: BCL:0; PCL:0;
-	RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);
-	SRVR:CY4PR12MB1511; 
-x-ms-traffictypediagnostic: CY4PR12MB1511:
-x-microsoft-antispam-prvs: <CY4PR12MB151158C4D00404F371BCBA288BC00@CY4PR12MB1511.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01106E96F6
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(376002)(346002)(39860400002)(396003)(366004)(136003)(199004)(189003)(13464003)(29502001)(305945005)(229853002)(256004)(6116002)(81166006)(14444005)(33656002)(7736002)(71190400001)(3846002)(8676002)(81156014)(14454004)(8936002)(74316002)(476003)(68736007)(53546011)(26005)(316002)(66066001)(71200400001)(11346002)(66476007)(5660300002)(478600001)(2906002)(186003)(66556008)(55016002)(64756008)(102836004)(99286004)(66446008)(52536014)(66946007)(6436002)(9686003)(446003)(76116006)(4326008)(76176011)(25786009)(6246003)(53936002)(86362001)(7696005)(6916009)(6506007)(486006);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1511;
-	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
-received-spf: None (protection.outlook.com: agilent.com does not designate
-	permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xlkB3bifRiu98v4lifIPtRE6t5a1KLzH1euPwB0idE9x9Mp7UQOGu2A0wK09ziV/2FXXnpLy2HU0LYU3LRhB6BUks8JuGMeO8YuvWQiauUHqwkn4+lShCUxvT1BaRS2rGM5BwkuhQY50GRtmff+t2XrvniD7NPtfe8/aAjkNOQNqarOxmmD/oRCzmSYe4CN7v9oZ4rBogStXJ8J8KTqJxMp8ephM4BJrSDA1IPVUob9lcAvNUDsxVPc4B/bh09WBLyczv2sSoxUqTbYmChhAWm/FXFUFFSQc2DKIWrF6ZSfK0cMonx9e+0DYiCqarsUWzhu54CFajlHz8tBttKYtgl4j3qVUq49HIlht7vz90Wp+JxPlo2kT7Ud3lRcbnrm5nQqn35Y+36psy7BkQpLntFRpplZf/yRvmd5W1y0tQDo=
+	bh=ltg4UYl6AtlDmoDD6+PDrwsLUAPGLw2oPAoxZigBLNE=;
+	b=UFVr4lspZsB+q+mbp22PXK0gNba2CwxE29bl9V7Ws30y9iD/vJn8FtfemN7pJ0yPv8XPxlacgPX1ITpaXEjaXq5CeKSLUPqmzv+MPkj59oAzdpnkSpFY4vXq94laTk37mUTkngmurM1B31JfX5DQT48knV41LCiZkT/R2ki0wL0=
+Received: from CY4PR12CA0047.namprd12.prod.outlook.com (2603:10b6:903:129::33)
+	by MWHPR12MB1661.namprd12.prod.outlook.com (2603:10b6:301:3::17) with
+	Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2094.17;
+	Fri, 26 Jul 2019 17:19:31 +0000
+Received: from CO1NAM05FT037.eop-nam05.prod.protection.outlook.com
+	(2a01:111:f400:7e50::204) by CY4PR12CA0047.outlook.office365.com
+	(2603:10b6:903:129::33) with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2094.16 via
+	Frontend Transport; Fri, 26 Jul 2019 17:19:30 +0000
+Authentication-Results: spf=pass (sender IP is 192.25.218.34)
+	smtp.mailfrom=agilent.com; lists.openembedded.org;
+	dkim=none (message not
+	signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
+	header.from=agilent.com;
+Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
+	192.25.218.34 as permitted sender) receiver=protection.outlook.com;
+	client-ip=192.25.218.34; helo=edgeappmail.agilent.com;
+Received: from edgeappmail.agilent.com (192.25.218.34) by
+	CO1NAM05FT037.mail.protection.outlook.com (10.152.96.150) with
+	Microsoft SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+	15.20.2136.7 via Frontend Transport; Fri, 26 Jul 2019 17:19:30 +0000
+Received: from localhost.localdomain (130.30.246.172) by
+	edgeappmail.agilent.com (192.25.218.34) with Microsoft SMTP Server id
+	15.1.1713.5; Fri, 26 Jul 2019 11:19:28 -0600
+From: Chris Laplante <chris.laplante@agilent.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 26 Jul 2019 13:18:37 -0400
+Message-ID: <1564161517-28530-1-git-send-email-chris.laplante@agilent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
+Received-SPF: None (wpcosapexchedg3.windmz.agilent.com:
+	chris.laplante@agilent.com does not designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:192.25.218.34; IPV:NLI; CTRY:US; EFV:NLI;
+	SFV:NSPM;
+	SFS:(10009020)(346002)(396003)(39860400002)(136003)(376002)(2980300002)(199004)(189003)(29502001)(186003)(4326008)(6666004)(36756003)(14444005)(476003)(51416003)(7636002)(50226002)(36906005)(106002)(8936002)(8676002)(47776003)(50466002)(305945005)(316002)(486006)(426003)(246002)(44832011)(2351001)(16586007)(48376002)(356004)(2616005)(26005)(336012)(126002)(6916009)(478600001)(49486002)(5660300002)(70206006)(107886003)(956004)(86362001)(2906002)(5001870100001);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:MWHPR12MB1661;
+	H:edgeappmail.agilent.com; FPR:; SPF:Pass; LANG:en;
+	PTR:wpcosapexchedg3.windmz.agilent.com,cos.smtp.agilent.com; A:1;
+	MX:1; 
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3d917e13-21c7-4bcd-e7e2-08d711ed6b80
+X-Microsoft-Antispam: BCL:0; PCL:0;
+	RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);
+	SRVR:MWHPR12MB1661; 
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1661:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB16614E6AAFBC21A93CFAE74F8BC00@MWHPR12MB1661.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 01106E96F6
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 8G7SBVrLEDkwOfvwqoTl189U0FFyaLSCjCntS79Nujbpb7Xq1R7lGo1VgDgsZSkpNKjnXigVbXzPWdHMW8ZoNTizJ4+CeKVb8NM7dg92LGCWl/Joq+14nBYwDCrRj0DPqptnxXP+Yezbi+OtrDy5lzUjUIgbQnlD5Rsjy5PLxc30gJCYPMhu4xn5VKmNnZIbkuj6tZVAC3lq0IgbM+kJCmQio0nooRcY8uXtXG//bhmrJOA76MnQ9w139vI75wu9BYtCB+CMAMFhlSa8+O6n2PCWl3gzyhjry0pMjNdT7Sb+vXpQZHdckc8WtZJ1N03suwtIA2LxQFm0SMM3Fn8lE4IjNshtoueoI6nqgqwBIRo9W9YwvlohkYf4vnx8siUx53jvRnDmresndSfpXrqZadhbcE02mcQxhkpPE20QweU=
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b4757e5-fe80-4532-8728-08d711e07d3a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 15:46:56.6199 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: chris.laplante@agilent.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1511
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] fetch2: add ability to skip recipes when get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2019 17:19:30.3474 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d917e13-21c7-4bcd-e7e2-08d711ed6b80
+X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
+	Ip=[192.25.218.34]; Helo=[edgeappmail.agilent.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1661
+Subject: [PATCH] fetch2/wget: avoid 'maximum recursion depth' RuntimeErrors when handling 403 codes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -86,36 +95,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 26 Jul 2019 15:46:57 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Fri, 26 Jul 2019 17:19:32 -0000
+Content-Type: text/plain
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbGV4YW5kZXIgS2FuYXZpbiA8
-YWxleC5rYW5hdmluQGdtYWlsLmNvbT4NCj4gU2VudDogRnJpZGF5LCBKdWx5IDI2LCAyMDE5IDEx
-OjA2IEFNDQo+IFRvOiBMQVBMQU5URSxDSFJJUyAoQWdpbGVudCBVU0EpIDxjaHJpcy5sYXBsYW50
-ZUBhZ2lsZW50LmNvbT4NCj4gQ2M6IGJpdGJha2UtZGV2ZWwgPGJpdGJha2UtZGV2ZWxAbGlzdHMu
-b3BlbmVtYmVkZGVkLm9yZz4NCj4gU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0hd
-IGZldGNoMjogYWRkIGFiaWxpdHkgdG8gc2tpcCByZWNpcGVzIHdoZW4gZ2V0X3NyY3JldiBmYWls
-cyB2aWEgQkJfRkVUQ0hfU0tJUF9PTl9TUkNSRVZfRVJST1INCj4gDQo+IEkgdGhpbmsgaXQncyBi
-ZXR0ZXIgdG8gcmVhcnJhbmdlIHRoZSBsYXllciBpdHNlbGYsIGFuZCBzcGxpdCBpdCBpbnRvIGEg
-cHJpdmlsZWdlZCBhbmQgYSBub24tcHJpdmlsZWdlZCBvbmUuDQo+IA0KDQpZZXMsIHRoYXQncyB0
-aGUgImNsZWFuZXN0IiBzb2x1dGlvbiwgYnV0IGl0IGRvZXNu4oCZdCBuZWNlc3NhcmlseSBzY2Fs
-ZSB3ZWxsIHdoZW4geW91IGFkZCBtb3JlIGFuZCBtb3JlIGRpc2pvaW50IHNldHMgb2YgdXNlcnMg
-dGhhdCBjYW4vY2FuJ3QgYWNjZXNzIHBhcnRpY3VsYXIgcmVjaXBlcy4gDQoNCkFsc28sIGp1c3Qg
-dG8gYWRkIHNvbWUgbW9yZSBjb250ZXh0IHRvIGhvdyB3ZSBhcmUgdXNpbmcgdGhpczogZm9yIGVh
-Y2ggb2Ygb3VyICJza2lwcGFibGUiIHJlY2lwZXMsIHdlIGhhdmUgYWx0ZXJuYXRpdmUgcHJvdmlk
-ZXJzIHRoYXQgcHVsbCBwcmUtY29tcGlsZWQgYXJ0aWZhY3RzIGZyb20gInBvb2wiIHJlcG9zaXRv
-cmllcy4gSXQgaXMgbmljZSB0byBrZWVwIHRoZSBwcm92aWRlcnMnIHJlY2lwZXMgaW4gb25lIHBs
-YWNlLg0KDQo+IFRoaXMgcGF0Y2ggc2VlbXMgdG8gZW5hYmxlIHNraXBwaW5nIHRoZSByZWNpcGUs
-IHJlZ2FyZGxlc3Mgb2Ygd2hhdCB0aGUgYWN0dWFsIGlzc3VlIHdpdGggZmV0Y2hpbmcgd2FzICh3
-aGljaCBtYXkgb3IgbWF5IG5vdCBiZSAnYWNjZXNzDQo+IGRlbmllZCcpLiBTa2lwcGluZyBvbiBh
-bnkgZXJyb3IgZG9lc24ndCBzZWVtIHJpZ2h0IHRvIG1lIGFzIGl0IG1heSBtYXNrIG90aGVyIHR5
-cGVzIG9mIHByb2JsZW1zLg0KDQpJIHNlZSB5b3VyIHBvaW50IChpbiBnZW5lcmFsKSwgYnV0IG5v
-dGUgdGhhdCB0aGlzIG9ubHkgc2tpcHMgdGhlIHJlY2lwZSBpZiBhbiBlcnJvciBvY2N1cnMgaW4g
-Z2V0X3NyY3JldiBkdXJpbmcgdGhlIHBhcnNpbmcgc3RhZ2UgKGFuZCB3ZSBhcmUgbm90IGV4ZWN1
-dGluZyBpbiBhIHRhc2spLiBUaGUgb3JpZ2luYWwgZXhjZXB0aW9uIHdpbGwgc3RpbGwgYmUgZGlz
-cGxheWVkIHRvIHRoZSB1c2VyLiANCg0KQnV0IGl0IGNlcnRhaW5seSB3b3VsZCBiZSBiZXR0ZXIg
-dG8gYmUgbW9yZSBzZWxlY3RpdmUgd2l0aCB3aGljaCBraW5kIG9mIGVycm9ycyBnZXQgc3dhbGxv
-d2VkLiBJIHdpbGwgdHJ5IHRvIGxvb2sgaW50byB0aGF0Lg0KDQpUaGFua3MsDQpDaHJpcw0K
+The code says that some servers respond with 403 codes when they really
+mean 405 codes. But we still need to account for legitimate 403 codes.
+
+Before this change, I noticed that sstate mirror checking was taking a
+very long time when I purposely entered incorrect credentials into my
+.netrc file for our sstate mirror. Instrumenting the code, I discovered
+tracebacks like the following for every mirror access attempt:
+
+    File "/home/laplante/yocto/sources/poky/meta/classes/sstate.bbclass", line 839, in checkstatus
+      fetcher.checkstatus()
+    File "/home/laplante/yocto/sources/poky/bitbake/lib/bb/fetch2/__init__.py", line 1736, in checkstatus
+      ret = try_mirrors(self, self.d, ud, mirrors, True)
+    File "/home/laplante/yocto/sources/poky/bitbake/lib/bb/fetch2/__init__.py", line 1077, in try_mirrors
+      ret = try_mirror_url(fetch, origud, uds[index], ld, check)
+    File "/home/laplante/yocto/sources/poky/bitbake/lib/bb/fetch2/__init__.py", line 979, in try_mirror_url
+      found = ud.method.checkstatus(fetch, ud, ld)
+    File "/home/laplante/yocto/sources/poky/bitbake/lib/bb/fetch2/wget.py", line 337, in checkstatus
+      opener.open(r)
+    File "/usr/lib/python3.5/urllib/request.py", line 472, in open
+      response = meth(req, response)
+    File "/usr/lib/python3.5/urllib/request.py", line 582, in http_response
+      'http', request, response, code, msg, hdrs)
+    File "/usr/lib/python3.5/urllib/request.py", line 504, in error
+      result = self._call_chain(*args)
+    File "/usr/lib/python3.5/urllib/request.py", line 444, in _call_chain
+      result = func(*args)
+    File "/home/laplante/yocto/sources/poky/bitbake/lib/bb/fetch2/wget.py", line 280, in http_error_405
+      unverifiable=True))
+    File "/usr/lib/python3.5/urllib/request.py", line 472, in open
+      response = meth(req, response)
+    File "/usr/lib/python3.5/urllib/request.py", line 582, in http_response
+      'http', request, response, code, msg, hdrs)
+    File "/usr/lib/python3.5/urllib/request.py", line 504, in error
+      result = self._call_chain(*args)
+    File "/usr/lib/python3.5/urllib/request.py", line 444, in _call_chain
+      result = func(*args)
+    File "/home/laplante/yocto/sources/poky/bitbake/lib/bb/fetch2/wget.py", line 280, in http_error_405
+      unverifiable=True))
+    ...  (repeats until recursion depth is reached)
+
+Solution is to make sure we only attempt the GET request once when handling 403/405 error codes.
+
+Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+---
+ lib/bb/fetch2/wget.py | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 0f71ee4..725586d 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -257,13 +257,15 @@ class Wget(FetchMethod):
+                 fp.read()
+                 fp.close()
+ 
+-                newheaders = dict((k, v) for k, v in list(req.headers.items())
+-                                  if k.lower() not in ("content-length", "content-type"))
+-                return self.parent.open(urllib.request.Request(req.get_full_url(),
+-                                                        headers=newheaders,
+-                                                        origin_req_host=req.origin_req_host,
+-                                                        unverifiable=True))
+-
++                if req.get_method() != 'GET':
++                    newheaders = dict((k, v) for k, v in list(req.headers.items())
++                                      if k.lower() not in ("content-length", "content-type"))
++                    return self.parent.open(urllib.request.Request(req.get_full_url(),
++                                                            headers=newheaders,
++                                                            origin_req_host=req.origin_req_host,
++                                                            unverifiable=True))
++
++                raise urllib.request.HTTPError(req, code, msg, headers, None)
+ 
+             # Some servers (e.g. GitHub archives, hosted on Amazon S3) return 403
+             # Forbidden when they actually mean 405 Method Not Allowed.
+-- 
+2.7.4
+
 
