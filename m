@@ -1,54 +1,56 @@
-Return-Path: <ankur.tyagi85@gmail.com>
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com
-	[209.85.208.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 1DFBB7D71B
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 6061E7F297
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 28 Jul 2019 09:15:25 +0000 (UTC)
-Received: by mail-lj1-f196.google.com with SMTP id v24so55645992ljg.13
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 28 Jul 2019 02:15:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=DtThZ6R1fUL6jRidC5716dlWv4tDplzrE+IOKOVVRRQ=;
-	b=hnsmh5q+r8vFEuOdUQRRh/EhCYs1MrsE/vsLYiX4k7AMdhq3+wOqAvwevdzlod0Vn0
-	/35W61c/HMn819e22WGs4znRol5H1ikTBPA+V6P+ls1wKjnW9X6cZGJv165P/pCTEAo3
-	fHTFPYKrzjdKjXDkPVA/Re2+Y5LsUd6bD+ZesC6zeleohNNqAwaN9fZxUt2ylQSNYKPg
-	2PdsCsDkNzc5lvf4C4brRPRANUoI07DaK0B7mz50xsYa+gkc1vV3M5SP2eKdE9U57NY+
-	hMbkKFSc8cqUOYzuxLtfRF4oKMSlh7TVnRQfo3KwVozNb+V9sB+5SHJ0tZH+V0ny5amc
-	u4Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=DtThZ6R1fUL6jRidC5716dlWv4tDplzrE+IOKOVVRRQ=;
-	b=Jj3kUaU2RU++fhRhsw3DNbZ7P6Pw4KEuNVflByH+tXftj/yH/jjHm5CHi1d3lup1Hk
-	Fhgtm4Aq7g2MssRWdlPoPoxxKR4kwYG4AGDvZVzvaNwOlvNYOSucnH5Cp8SZV53nXF4x
-	hrBb4USqGZVqsZMWW8RSq66wSznmIKB0CIk3EcxjxLMEBx0/9GUGFvs9HZxHIdrXAjy/
-	lYnl1eS+SZ+MrKmp7h7iM4Fve39EJPod+QH7uXXeFyxlPKRiI8iIWKFuTFX5X0RFgDWB
-	q7rUNaAMTMURK2zmKu+r6Eo7dbQwmTAZBLqMG0UuyH+MPB3GeAdSVsBBZPO2BsI/HMAC
-	Hugg==
-X-Gm-Message-State: APjAAAVw49Emdqc0gBClYIjPkuoLEkBmBAM4Sudsh0J8DQOrfbgqHYHP
-	U/Pg6QJnmcUYf9YqIV0DZj/CraH6/OAuqJyTV2M=
-X-Google-Smtp-Source: APXvYqxmy94ZM67/7aVKqcC9EC5b8m1aOvvmJyX1lmcnHkAMxBx33bZhNMnnKBZ2K8JSPXpzpL8wrk/6Tv9+Fxwww3c=
-X-Received: by 2002:a2e:96c3:: with SMTP id d3mr11422286ljj.68.1564305326347; 
-	Sun, 28 Jul 2019 02:15:26 -0700 (PDT)
+	Mon, 29 Jul 2019 14:44:25 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x6TEiKcT002142
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Mon, 29 Jul 2019 07:44:20 -0700 (PDT)
+Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.468.0;
+	Mon, 29 Jul 2019 07:44:19 -0700
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"chris.laplante@agilent.com" <chris.laplante@agilent.com>,
+	Alexander Kanavin <alex.kanavin@gmail.com>
+References: <1564149248-7626-1-git-send-email-chris.laplante@agilent.com>
+	<CANNYZj_ykVaOvq4EKtJ=7qpTNt5HcdpYqE+z4dRpqNQH-6ykYA@mail.gmail.com>
+	<CY4PR12MB1653B3168D82F8A1E6AC390C8BC00@CY4PR12MB1653.namprd12.prod.outlook.com>
+	<67699ebfc6de01ea166ea537a64ff658c9f3b14b.camel@linuxfoundation.org>
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <d7938e72-8955-354a-112a-873a00492eb3@windriver.com>
+Date: Mon, 29 Jul 2019 09:44:18 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190704044603.9943-1-ankur.tyagi85@gmail.com>
-	<c7df70a3-d581-5e21-842b-0e941ec80a05@windriver.com>
-	<CADySD0EkWkJ6mbg7jh3hRq3E7bjaqDFa=Aeax7OpertQ0XygSA@mail.gmail.com>
-	<d69bc7b9-b946-582d-880c-ef41338affbe@windriver.com>
-	<CADySD0HDCdVHnwzXN+POLEoQg73enGZ6XPht5HLZcySGj0XXww@mail.gmail.com>
-	<CADySD0G-iSynqSRo9o-y_e0Hvz4L+GzvsBYm=9mHq25yAn0c6Q@mail.gmail.com>
-	<9758178e3d22e58c18d4de719933d5957ea23ec2.camel@linuxfoundation.org>
-	<CADySD0E7eWVYfEtMk-6+KMnb+WKAMyTEuHLotGQBf8sefFysgg@mail.gmail.com>
-	<CADySD0HXOc7RWpVs+nhD3810D3mQc62KiKdsZo0Q5FnEar27GQ@mail.gmail.com>
-In-Reply-To: <CADySD0HXOc7RWpVs+nhD3810D3mQc62KiKdsZo0Q5FnEar27GQ@mail.gmail.com>
-From: Ankur Tyagi <ankur.tyagi85@gmail.com>
-Date: Sun, 28 Jul 2019 21:15:23 +1200
-Message-ID: <CADySD0EhCzQFTXb40wknh=Fr6VSBVocppVOe_ssuxS5U0vL3vQ@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel, 1.42, 1.40, v2] git.py: Handle space in git repo name for http/https protocol
+In-Reply-To: <67699ebfc6de01ea166ea537a64ff658c9f3b14b.camel@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] fetch2: add ability to skip recipes when get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,116 +63,95 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 28 Jul 2019 09:15:26 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Mon, 29 Jul 2019 14:44:25 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-How about something like this:
+On 7/27/19 5:26 AM, Richard Purdie wrote:
+> On Fri, 2019-07-26 at 15:46 +0000, chris.laplante--- via bitbake-devel
+> wrote:
+>>> -----Original Message-----
+>>> From: Alexander Kanavin <alex.kanavin@gmail.com>
+>>> Sent: Friday, July 26, 2019 11:06 AM
+>>> To: LAPLANTE,CHRIS (Agilent USA) <chris.laplante@agilent.com>
+>>> Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+>>> Subject: Re: [bitbake-devel] [PATCH] fetch2: add ability to skip
+>>> recipes when get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
+>>>
+>>> I think it's better to rearrange the layer itself, and split it
+>>> into a privileged and a non-privileged one.
+>>>
+>>
+>> Yes, that's the "cleanest" solution, but it doesn’t necessarily scale
+>> well when you add more and more disjoint sets of users that can/can't
+>> access particular recipes. 
+>>
+>> Also, just to add some more context to how we are using this: for
+>> each of our "skippable" recipes, we have alternative providers that
+>> pull pre-compiled artifacts from "pool" repositories. It is nice to
+>> keep the providers' recipes in one place.
+>>
+>>> This patch seems to enable skipping the recipe, regardless of what
+>>> the actual issue with fetching was (which may or may not be 'access
+>>> denied'). Skipping on any error doesn't seem right to me as it may
+>>> mask other types of problems.
+>>
+>> I see your point (in general), but note that this only skips the
+>> recipe if an error occurs in get_srcrev during the parsing stage (and
+>> we are not executing in a task). The original exception will still be
+>> displayed to the user. 
+>>
+>> But it certainly would be better to be more selective with which kind
+>> of errors get swallowed. I will try to look into that.
+> 
+> I have some quite strong feelings on when recipes should or shouldn't
+> be skipped.
+> 
+> Skipped recipes are problematic in that they "disappear" from the user
+> view and it can be hard to understand why. I've therefore always wanted
+> a strongly deterministic and obvious approach to when it happens and
+> when it doesn't.
+> 
+> Alex just commented on another thread where he didn't like recipe
+> dependencies needing to be marked as skipped individually rather than
+> some automatic magic. That was deliberate as it would be far too easy
+> for bitbake to mark nearly everything as skipped should something
+> simple go wrong. I've seen that happen and I could barely unravel it
+> despite knowing what was happening.
+> 
+> This SRCREV change feels similar, I can just imagine the bug reports
+> for user A able to build just fine, user B can't even see the recipe
+> and its all down to say their git config in their homedir.
+> 
+> You can likely do something similar to this by checking access earlier
+> in the recipe with an immediate expansion calling your custom function
+> which traps FetchError and have a similar effect to what you want. I
+> think this is a sufficiently niche and also specialised use case that
+> we don't want to encourage it or "pollute" the core with code for it.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index f6b5529b..fa1f9e27 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -380,6 +380,9 @@ def decodeurl(url):
-         user = ''
-         pswd = ''
+I agree, I don't really like auto skipping in this case as it will make it
+difficult to determine or resolve issues from different users.
 
-+    if type not in ['git']:
-+        path = urllib.parse.unquote(path)
-+
-     p = collections.OrderedDict()
-     if parm:
-         for s in parm.split(';'):
-@@ -389,7 +392,7 @@ def decodeurl(url):
-                 s1, s2 = s.split('=')
-                 p[s1] = s2
+But I do wonder if this is a specific URL/SRCREV that isn't available to this
+user, or is this related to AUTOREV?
 
--    return type, host, urllib.parse.unquote(path), user, pswd, p
-+    return type, host, path, user, pswd, p
+I've had people request this type of behavior or an alternative behavior for
+AUTOREV packages in the past from me.
 
- def encodeurl(decoded):
-     """Encodes a URL from tokens (scheme, network location, path,
+In the AUTOREV case, what was requested of me (and I declined) was try the
+network, if we couldn't do that then look for a local mirror and use that
+instead.  Only fail if we didn't have a local mirror.   Depending on how this
+would be implemented it may suffer from similar non-deterministic behavior.
 
-regards
-Ankur
+--Mark
 
-On Fri, Jul 26, 2019 at 3:13 PM Ankur Tyagi <ankur.tyagi85@gmail.com> wrote:
->
-> Hi,
->
-> Previous idea is stupid, please discard that.
-> Just checked quote/unquote were added as part of commit
-> b1dbc24ebcc4e5100c32568c2c41fd982fb4bcce
->
-> So explaining the situation again --> when fecthing from repo url
-> https://tfs.local/repos/foo%bar
->
-> During FetchData initialization, decodeurl(d.expand(url)) returns path
-> with %20 stripped
->
-> [log][__init__][decodeurl] Path returned /repos/foo bar
->
-> And when git method urldata_init() is called, it sets gitsrcname with
-> space instead of %20
->
-> [log][git][urldata_init] gitsrcname is tfs.local.repos.foo bar
->
-> And when git method _get_repo_url is called, it always returns Path
-> with space instead of %20
->
-> [log][git][_get_repo_url] Path returned /repos/foo bar
->
-> So I am bit confused now on how to handle it properly as unquote is
-> removing %20 and it cannot be added back in later stage.
->
-> Regards
-> Ankur
->
->
-> On Thu, Jul 25, 2019 at 7:23 PM Ankur Tyagi <ankur.tyagi85@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > Sorry for the late reply but I have figured out where %20 is being stripped out.
-> >
-> > File lib/bb/fetch2/__init__.py, method decodeurl(url) is returning
-> > path as urllib.parse.unquote(path) which strips out %20
-> > So if I return path as it is, then %20 is preserved and works as expected.
-> >
-> > diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> > index f6b5529b..97fd59e1 100644
-> > --- a/lib/bb/fetch2/__init__.py
-> > +++ b/lib/bb/fetch2/__init__.py
-> > @@ -389,7 +389,7 @@ def decodeurl(url):
-> >                  s1, s2 = s.split('=')
-> >                  p[s1] = s2
-> >
-> > -    return type, host, urllib.parse.unquote(path), user, pswd, p
-> > +    return type, host, path, user, pswd, p
-> >
-> >
-> > Is above change acceptable?
-> >
-> > Regards
-> > Ankur
-> >
-> > On Wed, Jul 10, 2019 at 4:33 AM Richard Purdie
-> > <richard.purdie@linuxfoundation.org> wrote:
-> > >
-> > > On Wed, 2019-07-10 at 21:26 +1200, Ankur Tyagi wrote:
-> > > > Hi,
-> > > >
-> > > > Is there something else that needs to be done in this patch? Or
-> > > > perhaps there is a better to handle this?
-> > > > I am willing to learn and try it out if original patch is not good.
-> > >
-> > > I think Mark is right, we need to figure out where the %20 characters
-> > > are being stripped out and preserve them rather than injecting them
-> > > back in again.
-> > >
-> > > The question is therefore where they're being stripped out in the code?
-> > >
-> > > Cheers,
-> > >
-> > > Richard
-> > >
+> Cheers,
+> 
+> Richard
+> 
+> 
+> 
+> 
+
 
