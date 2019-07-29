@@ -1,56 +1,84 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 6061E7F297
+Return-Path: <chris.laplante@agilent.com>
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com
+	(mail-eopbgr680048.outbound.protection.outlook.com [40.107.68.48])
+	by mail.openembedded.org (Postfix) with ESMTP id E62137F27D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Jul 2019 14:44:25 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x6TEiKcT002142
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 29 Jul 2019 07:44:20 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.468.0;
-	Mon, 29 Jul 2019 07:44:19 -0700
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"chris.laplante@agilent.com" <chris.laplante@agilent.com>,
-	Alexander Kanavin <alex.kanavin@gmail.com>
+	Mon, 29 Jul 2019 15:14:04 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=AVntQbh4DhPBIfelLVepD9ryIqOXJXnMpwr5wuNn8ld8SNt0GkSfr+rM8LsScOU24OrqR+twoJ3WbFuFMPoBryqJxXLc8EOkoTZ73BPVSl5CcrD+2u7v7avTTfvOCJGUbmm6bsfA9xWz1r4vwWuWhu6P9iVgrzNEOEBvnHUhLT5ktR4RjdlPVec/liJ8tBAmVyXjw7N2JlaMoX0eTwO8uq96YgZNLbWcX7dcgjo44lfgmBnzIq0xaNCaB1Q+h2SaayWQeCbC/twSQLq/5Rp3clGMk0yv2UPcscEpck08A9Is0QxChEG26DvWR4DtDxKgmdwUPoOvSAR0TUkhXr/u6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=DLLMjMOhRdY2UNk9I52kcVY9l9mCfCg9evrXLr+mWKo=;
+	b=eSOiSEleNrSwHoVGKAVFAqTMFw5hRMSa4h2h/YuBwAVdcpd6jDw6ckwAVKNb4C/84H8oD0F/mgw15YytpOwWUq0KdBKQ8ijNVB2fapiK3qjVOjiM7RUXkZ53XLGnMKG3w2VeC5EtSUWdAd9ANJ6YXzte9LEB3+FOOpuSxr7nALVfaZaO9JmgsOr4sL+6adpLguPI9vtnIZtRfyqP/KGk8jET8Crz+4ri+2+7w7f6kK8MtmDqWqUfz9TXD7Ano9l+B5t6JI8XkO2OYeitOSWy67AOVXGI4V8q21EhQySN7bZnYPxTvgV6kKFW6KRv9UJaiNMOgRmA2x4ACocm+puZRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+	smtp.mailfrom=agilent.com;dmarc=pass action=none
+	header.from=agilent.com;dkim=pass header.d=agilent.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+	s=selector2;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=DLLMjMOhRdY2UNk9I52kcVY9l9mCfCg9evrXLr+mWKo=;
+	b=qjXcVuhpSb8jcoyc/LDPx4K1S8VL5/rZE9hJKbkS0odDUYCI2e+tqw1Eevjm7oVmCASmC/wIIqpFlI6LeESoBdoje0TnWqMvxX7Cei124+k1pT1NuYjlUOU3dyGyHUMb+5/fyit4UU9U2RuUZNVyz2hwXaKWUBJXUXpmbKtsGdY=
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
+	CY4PR12MB1720.namprd12.prod.outlook.com (10.175.62.142) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2094.16; Mon, 29 Jul 2019 15:14:03 +0000
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::4154:e959:dc1e:4abc]) by
+	CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::4154:e959:dc1e:4abc%9]) with mapi id 15.20.2094.013;
+	Mon, 29 Jul 2019 15:14:03 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: Mark Hatle <mark.hatle@windriver.com>, Richard Purdie
+	<richard.purdie@linuxfoundation.org>
+Thread-Topic: UNVERIFIED SENDER Re: [bitbake-devel] [PATCH] fetch2: add
+	ability to skip recipes when get_srcrev fails via
+	BB_FETCH_SKIP_ON_SRCREV_ERROR
+Thread-Index: AQHVQ7myBvHQRVvKAU6e6N46xT51eqbc/9MAgAAJKuCAATsbAIADbKcAgAAEqUA=
+Date: Mon, 29 Jul 2019 15:14:03 +0000
+Message-ID: <CY4PR12MB16531F5005814431DEA66CF58BDD0@CY4PR12MB1653.namprd12.prod.outlook.com>
 References: <1564149248-7626-1-git-send-email-chris.laplante@agilent.com>
 	<CANNYZj_ykVaOvq4EKtJ=7qpTNt5HcdpYqE+z4dRpqNQH-6ykYA@mail.gmail.com>
 	<CY4PR12MB1653B3168D82F8A1E6AC390C8BC00@CY4PR12MB1653.namprd12.prod.outlook.com>
 	<67699ebfc6de01ea166ea537a64ff658c9f3b14b.camel@linuxfoundation.org>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <d7938e72-8955-354a-112a-873a00492eb3@windriver.com>
-Date: Mon, 29 Jul 2019 09:44:18 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.8.0
+	<d7938e72-8955-354a-112a-873a00492eb3@windriver.com>
+In-Reply-To: <d7938e72-8955-354a-112a-873a00492eb3@windriver.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=chris.laplante@agilent.com; 
+x-originating-ip: [4.16.127.92]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7da21298-f78a-471c-4859-08d714376479
+x-microsoft-antispam: BCL:0; PCL:0;
+	RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);
+	SRVR:CY4PR12MB1720; 
+x-ms-traffictypediagnostic: CY4PR12MB1720:
+x-microsoft-antispam-prvs: <CY4PR12MB1720F65DF90C0552DF1CFEA78BDD0@CY4PR12MB1720.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(346002)(396003)(136003)(376002)(39860400002)(366004)(199004)(189003)(29502001)(2906002)(9686003)(71200400001)(71190400001)(53936002)(33656002)(6246003)(66446008)(68736007)(8936002)(25786009)(64756008)(55016002)(5660300002)(4326008)(52536014)(476003)(486006)(81166006)(6436002)(81156014)(74316002)(8676002)(305945005)(7736002)(66556008)(54906003)(110136005)(7696005)(76116006)(76176011)(66066001)(66476007)(66946007)(229853002)(3846002)(6116002)(446003)(11346002)(102836004)(478600001)(6506007)(256004)(14444005)(186003)(99286004)(86362001)(26005)(14454004)(316002);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1720;
+	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
+received-spf: None (protection.outlook.com: agilent.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IQLy+SRuSICFcwkmNnRb0yDBBEp9235SPIPQvL9q3AEX4SooOu6bVURBRgDVpLxKTQiiIVqm3Zghl91CkARQeNgW21MRzhA9rcroEwxdt/N1ZPwoCW0LGTnNh0QQvq0O6QtT/EQ+2kG4ZiSgteGnGmrhS6Ru7wJxGihxVlm4PHaZDnrzSpdiPUP6vkpjhEe6Ae1/AgjBlhpct25Q/BCVvGddRS3CL22y0/JLDLFBY3n6pNwpdXYqIp8U0MtJ8w0bS/6fCT8Y6BRxOEgc+ILjdB3evRDxeBznrXYvrtCdsyqMtuBoqCzbEOstbp4ePi4dAW093b2wzz/xRAlAa8RGxGJkkBlfpQKpyJW3htyES6ZHCigE+UPIvxN9vVmqpaPlnjFRvC/r8b0TzDGdnqBYXEkHdW33mBODWyrVNwtKB7o=
 MIME-Version: 1.0
-In-Reply-To: <67699ebfc6de01ea166ea537a64ff658c9f3b14b.camel@linuxfoundation.org>
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7da21298-f78a-471c-4859-08d714376479
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 15:14:03.6901 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: chris.laplante@agilent.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1720
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] fetch2: add ability to skip recipes when get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
+Subject: Re: UNVERIFIED SENDER Re: [PATCH] fetch2: add ability to skip recipes when get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,95 +91,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Jul 2019 14:44:25 -0000
-Content-Type: text/plain; charset="utf-8"
+X-List-Received-Date: Mon, 29 Jul 2019 15:14:05 -0000
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On 7/27/19 5:26 AM, Richard Purdie wrote:
-> On Fri, 2019-07-26 at 15:46 +0000, chris.laplante--- via bitbake-devel
-> wrote:
->>> -----Original Message-----
->>> From: Alexander Kanavin <alex.kanavin@gmail.com>
->>> Sent: Friday, July 26, 2019 11:06 AM
->>> To: LAPLANTE,CHRIS (Agilent USA) <chris.laplante@agilent.com>
->>> Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
->>> Subject: Re: [bitbake-devel] [PATCH] fetch2: add ability to skip
->>> recipes when get_srcrev fails via BB_FETCH_SKIP_ON_SRCREV_ERROR
->>>
->>> I think it's better to rearrange the layer itself, and split it
->>> into a privileged and a non-privileged one.
->>>
->>
->> Yes, that's the "cleanest" solution, but it doesn’t necessarily scale
->> well when you add more and more disjoint sets of users that can/can't
->> access particular recipes. 
->>
->> Also, just to add some more context to how we are using this: for
->> each of our "skippable" recipes, we have alternative providers that
->> pull pre-compiled artifacts from "pool" repositories. It is nice to
->> keep the providers' recipes in one place.
->>
->>> This patch seems to enable skipping the recipe, regardless of what
->>> the actual issue with fetching was (which may or may not be 'access
->>> denied'). Skipping on any error doesn't seem right to me as it may
->>> mask other types of problems.
->>
->> I see your point (in general), but note that this only skips the
->> recipe if an error occurs in get_srcrev during the parsing stage (and
->> we are not executing in a task). The original exception will still be
->> displayed to the user. 
->>
->> But it certainly would be better to be more selective with which kind
->> of errors get swallowed. I will try to look into that.
-> 
-> I have some quite strong feelings on when recipes should or shouldn't
-> be skipped.
-> 
-> Skipped recipes are problematic in that they "disappear" from the user
-> view and it can be hard to understand why. I've therefore always wanted
-> a strongly deterministic and obvious approach to when it happens and
-> when it doesn't.
-> 
-> Alex just commented on another thread where he didn't like recipe
-> dependencies needing to be marked as skipped individually rather than
-> some automatic magic. That was deliberate as it would be far too easy
-> for bitbake to mark nearly everything as skipped should something
-> simple go wrong. I've seen that happen and I could barely unravel it
-> despite knowing what was happening.
-> 
-> This SRCREV change feels similar, I can just imagine the bug reports
-> for user A able to build just fine, user B can't even see the recipe
-> and its all down to say their git config in their homedir.
-> 
-> You can likely do something similar to this by checking access earlier
-> in the recipe with an immediate expansion calling your custom function
-> which traps FetchError and have a similar effect to what you want. I
-> think this is a sufficiently niche and also specialised use case that
-> we don't want to encourage it or "pollute" the core with code for it.
-
-I agree, I don't really like auto skipping in this case as it will make it
-difficult to determine or resolve issues from different users.
-
-But I do wonder if this is a specific URL/SRCREV that isn't available to this
-user, or is this related to AUTOREV?
-
-I've had people request this type of behavior or an alternative behavior for
-AUTOREV packages in the past from me.
-
-In the AUTOREV case, what was requested of me (and I declined) was try the
-network, if we couldn't do that then look for a local mirror and use that
-instead.  Only fail if we didn't have a local mirror.   Depending on how this
-would be implemented it may suffer from similar non-deterministic behavior.
-
---Mark
-
-> Cheers,
-> 
-> Richard
-> 
-> 
-> 
-> 
-
+PiBJIGFncmVlLCBJIGRvbid0IHJlYWxseSBsaWtlIGF1dG8gc2tpcHBpbmcgaW4gdGhpcyBjYXNl
+IGFzIGl0IHdpbGwgbWFrZSBpdA0KPiBkaWZmaWN1bHQgdG8gZGV0ZXJtaW5lIG9yIHJlc29sdmUg
+aXNzdWVzIGZyb20gZGlmZmVyZW50IHVzZXJzLg0KPiANCj4gQnV0IEkgZG8gd29uZGVyIGlmIHRo
+aXMgaXMgYSBzcGVjaWZpYyBVUkwvU1JDUkVWIHRoYXQgaXNuJ3QgYXZhaWxhYmxlIHRvIHRoaXMN
+Cj4gdXNlciwgb3IgaXMgdGhpcyByZWxhdGVkIHRvIEFVVE9SRVY/DQo+IA0KDQpJdCdzIGEgYml0
+IG9mIGJvdGguIEZvciBzb21lIG9mIHRoZXNlIHJlY2lwZXMsIHRoZSBub24tcHJpdmlsZWdlZCB1
+c2VycyBoYXZlIGFjY2VzcyB0byB0aGUgdXBzdHJlYW0gc291cmNlIGNvZGUgdXNpbmcgYSBkaWZm
+ZXJlbnQgbG9naW4gbmFtZS4gRm9yIGEgaGFuZGZ1bCBvZiBvdGhlcnMsIHRoZXkgaGF2ZSBubyBh
+Y2Nlc3Mgd2hhdHNvZXZlci4NCg0KRm9yIHRoZSBmb3JtZXIgY2FzZSwgSSBoYXZlIGEgY2xhc3Mg
+dGhhdCByZXdyaXRlcyB0aGUgU1JDX1VSSXMgaW4gYSBSZWNpcGVQcmVGaW5hbGlzZSBldmVudCBo
+YW5kbGVyLiBGb3IgdGhlIGxhdHRlciBjYXNlIEkgYW0gY3VycmVudGx5IHVzaW5nIHRoZSBmb2xs
+b3dpbmcgY2xhc3MgKHdoaWNoIHR1cm5zIG91dCB0byBiZSBzaW1pbGFyIHRvIHdoYXQgUmljaGFy
+ZCBzdWdnZXN0ZWQpOg0KDQphZGRoYW5kbGVyIHNraXBfZXZlbnRoYW5kbGVyDQpweXRob24gc2tp
+cF9ldmVudGhhbmRsZXIoKSB7DQogICAgdHJ5Og0KICAgICAgICBiYi5mZXRjaDIuRmV0Y2goZC5n
+ZXRWYXIoIlNSQ19VUkkiKS5zcGxpdCgpLCBkKQ0KICAgIGV4Y2VwdCBiYi5mZXRjaDIuRmV0Y2hF
+cnJvcjoNCiAgICAgICAgcmFpc2UgYmIucGFyc2UuU2tpcFJlY2lwZSgic2tpcC1pbmFjY2Vzc2li
+bGU6IGNvdWxkIG5vdCBhY2Nlc3MgdXBzdHJlYW0gcmVwbzsgY2hlY2sgU1JDX1VSSSwgYWNjZXNz
+IHJpZ2h0cywgYW5kIG5ldHdvcmsgYXZhaWxhYmlsaXR5IikNCn0NCnNraXBfZXZlbnRoYW5kbGVy
+W2V2ZW50bWFza10gPSAiYmIuZXZlbnQuUmVjaXBlUHJlRmluYWxpc2UiDQoNCkkgaGF2ZSBoZWFy
+ZCBhbmQgZnVsbHkgYWdyZWUgdGhhdCBzdWNoIHN0dWZmIHNob3VsZG4ndCBiZSBpbiB0aGUgY29y
+ZS4gSXQncyBjZXJ0YWlubHkgbm90aGluZyBJIHdhbnRlZCB0byBoYXZlIHRvIGltcGxlbWVudCA6
+KQ0KDQpIb3dldmVyLCBJIGZlZWwgbGlrZSBpdCB3b3VsZCBiZSBuaWNlIHRvIGhhdmUgc29tZXdo
+ZXJlIHRvIGRvY3VtZW50IHRoZXNlIGtpbmRzIG9mIHJlYWwtd29ybGQgcHJvYmxlbXMgd2l0aCBu
+b24tb3B0aW1hbCBzb2x1dGlvbnMsIGZvciB0aGUgYmVuZWZpdCBvZiBvdGhlciBwZW9wbGUgZGVh
+bGluZyB3aXRoIGFjY2VzcyBjb250cm9sbGVkIHNvdXJjZSBjb2RlLiBQZXJoYXBzIHRoaXMgZW1h
+aWwgY2hhaW4gaXMgZG9jdW1lbnRhdGlvbiBlbm91Z2g/DQoNClRoYW5rcywNCkNocmlzDQo=
 
