@@ -1,53 +1,81 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 459657F33B;
-	Thu,  1 Aug 2019 17:02:06 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x71H1UOq005438
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 1 Aug 2019 10:01:40 -0700
-Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.468.0;
-	Thu, 1 Aug 2019 10:01:20 -0700
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>,
-	"Openembedded-core@lists.openembedded.org"
-	<Openembedded-core@lists.openembedded.org>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
+Return-Path: <chris.laplante@agilent.com>
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com
+	(mail-eopbgr790089.outbound.protection.outlook.com [40.107.79.89])
+	by mail.openembedded.org (Postfix) with ESMTP id 5CCBD7F59F;
+	Thu,  1 Aug 2019 17:02:48 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=TmwHiIWAH51fyfx+AM5uVx0Hr0U+BkVYjx+389NM3tQHVAZEt/fanIV9o2s+DJ5LENCO9144dsnWM9h/Qq9E5OYF2Hu9c8YdCv4uvDa9hAv6BI7Sh4MBevRdhu4zJomo3ErfOb76U808pPiRQVj63PbKJ0ftm+hqpbJZyFChXsDu8X39APzGZPBWNej2SE6knL6yAE0KvX0tq9b9BbqdKXK+9DSVzlBXl7d/Fu+lcBCTLzKpeqcJ7IvhYqalv5OWxR9EfpCTTRpNf6/ZFS9km9CU2cZqRFjq5ZvZkPUhgBCJBYIs5OLRSdAgSX8aQ22guMZxIo7Qzm0zOe72DuO9ZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=qlBHLHrv6M4M040kb8v4Cy9kvRajX/1gpUjUwSfXrJY=;
+	b=RcQP0a3cbCawnYX0g7b8/8ixyP+ebWAVYRPT9Or1pG8FAn7/ddUKLOOw635bnPQkoonVJedrQkxEx8RyGGovo4KXkl9+S+8MKNljWfEKX+FjJ95c1HDJGEAyoPLCQSwqd85xbZiNgosQdOXvB9TF0mOyPSjLQUrmra+EdyK/eMAcB4ylM5ToWd1sTaG0m9bDJAqnvr4cVDkos4fjhZH1+WIvH8J82VlhrPc8opiBGly2V1SA1Z5tYKJd3YiLeCVBNpt1OHa6046AZOfmp/2+gFfIFi1AuE6l6WR5t88BlT1hJJhqZlA5Pa4Hmr7twtf6dLuJxmy5ObsEgSh4AiE2DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+	smtp.mailfrom=agilent.com;dmarc=pass action=none
+	header.from=agilent.com;dkim=pass header.d=agilent.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+	s=selector2;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=qlBHLHrv6M4M040kb8v4Cy9kvRajX/1gpUjUwSfXrJY=;
+	b=YfW5NgZJuRpMyDd1oTTGCF36d68xi8QdFy9JvjxlAO7w70pB2UjqSnEl8AD/dxzgLBBdIjGee9MCwnSqruq+g9qimQzpfZoFmbGahYwEzyQ45hrYDcMlaqNfA0iECpgiMlmGlurwBFxJ7HZRimdXj0Ib35a6tYoqjZm61PKHgNM=
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
+	CY4PR12MB1638.namprd12.prod.outlook.com (10.172.72.23) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2115.15; Thu, 1 Aug 2019 17:02:48 +0000
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::4154:e959:dc1e:4abc]) by
+	CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::4154:e959:dc1e:4abc%9]) with mapi id 15.20.2136.010;
+	Thu, 1 Aug 2019 17:02:48 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Thread-Topic: [bitbake-devel] RFC: exposing information about the
+	SRC_URI(s)/branch via buildhistory (or similar mechanism)
+Thread-Index: AdVIiV4bZ0XUaI6MTqawP3i+Dxw25gAAQ5gAAAAN7JA=
+Date: Thu, 1 Aug 2019 17:02:48 +0000
+Message-ID: <CY4PR12MB1653A6BB54BCDF95634D6CC48BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
 References: <CY4PR12MB1653C06268B3B4B862119BE18BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <baa880f5-9f42-9364-dd23-325837f791c5@windriver.com>
-Date: Thu, 1 Aug 2019 12:01:18 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.8.0
+	<CANNYZj9+4L=N-5KCmcb8Xe_NyY=6iygbnq7quedZWR2cZocKrw@mail.gmail.com>
+In-Reply-To: <CANNYZj9+4L=N-5KCmcb8Xe_NyY=6iygbnq7quedZWR2cZocKrw@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=chris.laplante@agilent.com; 
+x-originating-ip: [68.80.99.7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 34a700c2-508f-477c-ef46-08d716a2149c
+x-microsoft-antispam: BCL:0; PCL:0;
+	RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);
+	SRVR:CY4PR12MB1638; 
+x-ms-traffictypediagnostic: CY4PR12MB1638:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <CY4PR12MB16386D4962226D8EE61BC0098BDE0@CY4PR12MB1638.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01165471DB
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(376002)(136003)(39860400002)(366004)(396003)(346002)(29502001)(51444003)(199004)(189003)(53754006)(5660300002)(7736002)(790700001)(2906002)(4326008)(66946007)(476003)(6306002)(6116002)(76116006)(14454004)(8676002)(74316002)(53546011)(186003)(99286004)(8936002)(81156014)(25786009)(3846002)(6506007)(102836004)(26005)(52536014)(71200400001)(64756008)(9686003)(54906003)(76176011)(66446008)(7696005)(66556008)(256004)(33656002)(966005)(81166006)(6246003)(229853002)(316002)(54896002)(71190400001)(6916009)(446003)(55016002)(11346002)(486006)(478600001)(606006)(6436002)(86362001)(53936002)(66476007)(66066001)(236005)(68736007);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1638;
+	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
+received-spf: None (protection.outlook.com: agilent.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ob7E+SYq+3y50uGeE4NoL3uTJXSa+XqdLOw2IfKzcnkQQN0qcsh+5f7ESlsQ2bFf0/gSnfpFhaSobOr3G0ES2KpkVLi3njoTdZKvnicRYuJM+m1m7LfomE/aq9L8dlwnDqQ1q+qIHDJjNUdnrFf5gIc3ggzBxGu6FBisseKb9F9efgrnfjIBL3JW7/HPjyIvhhghIQRc8k3WqoqcgDZT33FT12uAQJmtPP/yRlW5MAGx4o8gkTIO/WP+a6dh4DgBXQIS7FNFopAFKxDNYD1XLYJbhB7EZOl3P66tuw0lfBNTiyYmTABVu3l73URHjijhACGBPE8uCzuUlaArkgQGxZA7LVFqRcf8z/45FFHIRbI7V6MlZcdQb30TeS7JenPYsKyJL5/YaZStDSqFA95S3tW2N+emp/jWk+VjGaywbAU=
 MIME-Version: 1.0
-In-Reply-To: <CY4PR12MB1653C06268B3B4B862119BE18BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34a700c2-508f-477c-ef46-08d716a2149c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 17:02:48.1017 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: chris.laplante@agilent.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1638
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	"Openembedded-core@lists.openembedded.org"
+	<Openembedded-core@lists.openembedded.org>
 Subject: Re: RFC: exposing information about the SRC_URI(s)/branch via buildhistory (or similar mechanism)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -61,89 +89,228 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Aug 2019 17:02:07 -0000
-Content-Type: text/plain; charset="windows-1252"
+X-List-Received-Date: Thu, 01 Aug 2019 17:02:48 -0000
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/alternative;
+	boundary="_000_CY4PR12MB1653A6BB54BCDF95634D6CC48BDE0CY4PR12MB1653namp_"
 
-On 8/1/19 11:51 AM, chris.laplante--- via bitbake-devel wrote:
-> Hello all,
-> 
->  
-> 
-> Most of my team’s closed source recipes use something like the following:
-> 
->  
-> 
-> SRC_URI = "git://git@host/path;protocol=ssh;branch=${BRANCH}"
-> 
-> SRCREV = “${AUTOREV}”
-> 
-> BRANCH ??= “master”
-> 
->  
-> 
-> (BRANCH is just a convention we use to make the SRC_URI branch easy to override.)
-> 
->  
-> 
-> This makes nightly builds convenient because we always build from the latest.
-> For release versions, we can use SRCREV_pn-recipe and/or BRANCH_pn-recipe
-> overrides in local.conf. We get the SRCREV overrides using
-> buildhistory-collect-srcrevs. But buildhistory has no notion or tracking of
-> SRC_URI or branches, so currently we use a script that generates the BRANCH
-> overrides.
-> 
->  
-> 
-> I’m interesting in adding SRC_URI support to buildhistory (or a similar
-> mechanism), and would like to get some input.
-> 
->  
-> 
-> Option 1) The easiest way, I think, is to just generate SRC_URI_pn- overrides
-> with variable expansion.
-> 
->  
-> 
-> Option 2) I think it could be useful to introduce BRANCH as a convention.
-> Currently the “branch” SRC_URI parameter implicitly defaults to “master”. I
-> could foresee it implicitly defaulting to “${BRANCH}”, with BRANCH ??= “master”
-> to replicate existing functionality. To handle multiple source-controlled
-> SRC_URIs, we’d have to do something similar to how SRCREV has a “name” override.
-> With this option, I wouldn’t think it would be necessary to generate SRC_URI
-> overrides; just BRANCH overrides.
-> 
->  
-> 
-> Option 3) A combination of 1 and 2?
-> 
+--_000_CY4PR12MB1653A6BB54BCDF95634D6CC48BDE0CY4PR12MB1653namp_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-I've had some thoughts of capturing that same information, as well as
-automatically generating a changelog (from short-commit entries) from the last
-build to the current one use standard git commands... but I've never had time to
-implement anything.
+V2XigJlyZSB3ZWxsIGF3YXJlIG9mIHRoZSBsaW1pdGF0aW9ucyBhbmQgcG9zc2liaWxpdHkgb2Yg
+ZmFpbGVkIGJ1aWxkcywgYXMgSSBzYWlkIHdlIGhhcmRjb2RlIHJldmlzaW9ucyB1c2luZyBTUkNS
+RVYgb3ZlcnJpZGVzIHdoZW4gbmVjZXNzYXJ5LiBJdOKAmXMgYmVlbiB3b3JraW5nIHdlbGwgZm9y
+IHVzIHNvIGZhci4gU28sIHJlc3BlY3RmdWxseSwgSSB0aGluayB0aGF04oCZcyBub3QgcmVsZXZh
+bnQgdG8gdGhlIGRpc2N1c3Npb24uDQoNCkNocmlzDQoNCkZyb206IEFsZXhhbmRlciBLYW5hdmlu
+IDxhbGV4LmthbmF2aW5AZ21haWwuY29tPg0KU2VudDogVGh1cnNkYXksIEF1Z3VzdCAwMSwgMjAx
+OSAxMjo1OSBQTQ0KVG86IExBUExBTlRFLENIUklTIChBZ2lsZW50IFVTQSkgPGNocmlzLmxhcGxh
+bnRlQGFnaWxlbnQuY29tPg0KQ2M6IE9wZW5lbWJlZGRlZC1jb3JlQGxpc3RzLm9wZW5lbWJlZGRl
+ZC5vcmc7IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6
+IFtiaXRiYWtlLWRldmVsXSBSRkM6IGV4cG9zaW5nIGluZm9ybWF0aW9uIGFib3V0IHRoZSBTUkNf
+VVJJKHMpL2JyYW5jaCB2aWEgYnVpbGRoaXN0b3J5IChvciBzaW1pbGFyIG1lY2hhbmlzbSkNCg0K
+QXBvbG9naWVzLCBidXQgSSB0aGluayB5b3Ugc2hvdWxkIGRyb3AgdGhlIHByYWN0aWNlIG9mIHVz
+aW5nIEFVVE9SRVYuIFRoaXMgY29tcGxldGVseSBkZXN0cm95cyByZXByb2R1Y2liaWxpdHkgb2Yg
+YnVpbGRzLCBhbmQgbWFrZXMgdGhlbSBzdXNjZXB0aWJsZSB0byBnbG9iYWwgYnJlYWthZ2Ugd2hl
+biBzb21lb25lIHB1c2hlcyBhIGJyb2tlbiBjb21taXQgaW50byBvbmUgb2YgdGhlIGNvbXBvbmVu
+dCByZXBvc2l0b3JpZXMuDQoNClllcywgYnVtcGluZyBTUkNSRVYgaXMgYW5ub3lpbmcsIGJ1dCBh
+KSBpdCBjYW4gYmUgYXV0b21hdGVkOyBiKSB5b3UgY2FuIGNhdGNoIGFuZCByZWplY3QgYW55IHBy
+b2JsZW1zIHdpdGggdGhlIGJ1aWxkIGF0IHRoYXQgcG9pbnQsIHNvIHlvdSBhbHdheXMgaGF2ZSBh
+IG5pZ2h0bHkgdGhhdCB3b3Jrcy4NCg0KQVVUT1JFViB3YXMgbmV2ZXIgbWVhbnQgZm9yIHRoZSBw
+cm9qZWN0IGxldmVsLCBpdCBpcyBhIGZhY2lsaXR5IHN0cmljdGx5IGZvciBsb2NhbCBkZXZlbG9w
+bWVudC4NCg0KQWxleA0KDQpPbiBUaHUsIDEgQXVnIDIwMTkgYXQgMTg6NTEsIGNocmlzLmxhcGxh
+bnRlLS0tIHZpYSBiaXRiYWtlLWRldmVsIDxiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRl
+ZC5vcmc8bWFpbHRvOmJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4+IHdyb3Rl
+Og0KSGVsbG8gYWxsLA0KDQpNb3N0IG9mIG15IHRlYW3igJlzIGNsb3NlZCBzb3VyY2UgcmVjaXBl
+cyB1c2Ugc29tZXRoaW5nIGxpa2UgdGhlIGZvbGxvd2luZzoNCg0KU1JDX1VSSSA9ICJnaXQ6Ly9n
+aXRAaG9zdC9wYXRoO3Byb3RvY29sPXNzaDticmFuY2g9JHtCUkFOQ0h9Ig0KU1JDUkVWID0g4oCc
+JHtBVVRPUkVWfeKAnQ0KQlJBTkNIID8/PSDigJxtYXN0ZXLigJ0NCg0KKEJSQU5DSCBpcyBqdXN0
+IGEgY29udmVudGlvbiB3ZSB1c2UgdG8gbWFrZSB0aGUgU1JDX1VSSSBicmFuY2ggZWFzeSB0byBv
+dmVycmlkZS4pDQoNClRoaXMgbWFrZXMgbmlnaHRseSBidWlsZHMgY29udmVuaWVudCBiZWNhdXNl
+IHdlIGFsd2F5cyBidWlsZCBmcm9tIHRoZSBsYXRlc3QuIEZvciByZWxlYXNlIHZlcnNpb25zLCB3
+ZSBjYW4gdXNlIFNSQ1JFVl9wbi1yZWNpcGUgYW5kL29yIEJSQU5DSF9wbi1yZWNpcGUgb3ZlcnJp
+ZGVzIGluIGxvY2FsLmNvbmYuIFdlIGdldCB0aGUgU1JDUkVWIG92ZXJyaWRlcyB1c2luZyBidWls
+ZGhpc3RvcnktY29sbGVjdC1zcmNyZXZzLiBCdXQgYnVpbGRoaXN0b3J5IGhhcyBubyBub3Rpb24g
+b3IgdHJhY2tpbmcgb2YgU1JDX1VSSSBvciBicmFuY2hlcywgc28gY3VycmVudGx5IHdlIHVzZSBh
+IHNjcmlwdCB0aGF0IGdlbmVyYXRlcyB0aGUgQlJBTkNIIG92ZXJyaWRlcy4NCg0KSeKAmW0gaW50
+ZXJlc3RpbmcgaW4gYWRkaW5nIFNSQ19VUkkgc3VwcG9ydCB0byBidWlsZGhpc3RvcnkgKG9yIGEg
+c2ltaWxhciBtZWNoYW5pc20pLCBhbmQgd291bGQgbGlrZSB0byBnZXQgc29tZSBpbnB1dC4NCg0K
+T3B0aW9uIDEpIFRoZSBlYXNpZXN0IHdheSwgSSB0aGluaywgaXMgdG8ganVzdCBnZW5lcmF0ZSBT
+UkNfVVJJX3BuLSBvdmVycmlkZXMgd2l0aCB2YXJpYWJsZSBleHBhbnNpb24uDQoNCk9wdGlvbiAy
+KSBJIHRoaW5rIGl0IGNvdWxkIGJlIHVzZWZ1bCB0byBpbnRyb2R1Y2UgQlJBTkNIIGFzIGEgY29u
+dmVudGlvbi4gQ3VycmVudGx5IHRoZSDigJxicmFuY2jigJ0gU1JDX1VSSSBwYXJhbWV0ZXIgaW1w
+bGljaXRseSBkZWZhdWx0cyB0byDigJxtYXN0ZXLigJ0uIEkgY291bGQgZm9yZXNlZSBpdCBpbXBs
+aWNpdGx5IGRlZmF1bHRpbmcgdG8g4oCcJHtCUkFOQ0h94oCdLCB3aXRoIEJSQU5DSCA/Pz0g4oCc
+bWFzdGVy4oCdIHRvIHJlcGxpY2F0ZSBleGlzdGluZyBmdW5jdGlvbmFsaXR5LiBUbyBoYW5kbGUg
+bXVsdGlwbGUgc291cmNlLWNvbnRyb2xsZWQgU1JDX1VSSXMsIHdl4oCZZCBoYXZlIHRvIGRvIHNv
+bWV0aGluZyBzaW1pbGFyIHRvIGhvdyBTUkNSRVYgaGFzIGEg4oCcbmFtZeKAnSBvdmVycmlkZS4g
+V2l0aCB0aGlzIG9wdGlvbiwgSSB3b3VsZG7igJl0IHRoaW5rIGl0IHdvdWxkIGJlIG5lY2Vzc2Fy
+eSB0byBnZW5lcmF0ZSBTUkNfVVJJIG92ZXJyaWRlczsganVzdCBCUkFOQ0ggb3ZlcnJpZGVzLg0K
+DQpPcHRpb24gMykgQSBjb21iaW5hdGlvbiBvZiAxIGFuZCAyPw0KDQpMb29raW5nIGZvcndhcmQg
+dG8gaW5wdXQuDQoNClRoYW5rcywNCkNocmlzDQotLQ0KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18NCmJpdGJha2UtZGV2ZWwgbWFpbGluZyBsaXN0DQpiaXRi
+YWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8bWFpbHRvOmJpdGJha2UtZGV2ZWxAbGlz
+dHMub3BlbmVtYmVkZGVkLm9yZz4NCmh0dHA6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL21haWxt
+YW4vbGlzdGluZm8vYml0YmFrZS1kZXZlbA0K
 
-When I talked with RP about this a while back, he mentioned it should be
-possible to extend the functionality of buildhistory with an additional class.
-So the user could opt into extended functionality by including more then one
-buildhistory class.
+--_000_CY4PR12MB1653A6BB54BCDF95634D6CC48BDE0CY4PR12MB1653namp_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-So my recommendation, store the URL you pulled from along with the SRCREV (if
-it's not already been stored).  This can then be used later to investigate -- or
-extended [internally or externally] to create changelogs.
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OiJZdSBHb3RoaWMiOw0KCXBhbm9zZS0xOjIgMTEgNCAwIDAgMCAw
+IDAgMCAwO30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToy
+IDE1IDUgMiAyIDIgNCAzIDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OiJcQFl1IEdv
+dGhpYyI7DQoJcGFub3NlLTE6MiAxMSA0IDAgMCAwIDAgMCAwIDA7fQ0KLyogU3R5bGUgRGVmaW5p
+dGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwNCgl7bWFy
+Z2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJZm9udC1zaXplOjExLjBwdDsNCglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQphOmxpbmssIHNwYW4uTXNvSHlwZXJs
+aW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpibHVlOw0KCXRleHQtZGVjb3Jh
+dGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJ
+e21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpwdXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9u
+OnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25vcm1hbDAsIGRpdi5tc29ub3JtYWww
+DQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsN
+CgltYXJnaW4tcmlnaHQ6MGluOw0KCW1zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvOw0KCW1hcmdp
+bi1sZWZ0OjBpbjsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixz
+YW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE4DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFs
+LXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCWNvbG9yOndpbmRv
+d3RleHQ7fQ0KLk1zb0NocERlZmF1bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7DQoJ
+Zm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJ
+e3NpemU6OC41aW4gMTEuMGluOw0KCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9DQpk
+aXYuV29yZFNlY3Rpb24xDQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtp
+ZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4
+PSIxMDI2IiAvPg0KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8
+bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0i
+MSIgLz4NCjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5
+IGxhbmc9IkVOLVVTIiBsaW5rPSJibHVlIiB2bGluaz0icHVycGxlIj4NCjxkaXYgY2xhc3M9Ildv
+cmRTZWN0aW9uMSI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5XZeKAmXJlIHdlbGwgYXdhcmUgb2Yg
+dGhlIGxpbWl0YXRpb25zIGFuZCBwb3NzaWJpbGl0eSBvZiBmYWlsZWQgYnVpbGRzLCBhcyBJIHNh
+aWQgd2UgaGFyZGNvZGUgcmV2aXNpb25zIHVzaW5nIFNSQ1JFViBvdmVycmlkZXMgd2hlbiBuZWNl
+c3NhcnkuIEl04oCZcyBiZWVuIHdvcmtpbmcgd2VsbCBmb3IgdXMgc28gZmFyLiBTbywgcmVzcGVj
+dGZ1bGx5LCBJIHRoaW5rIHRoYXTigJlzIG5vdCByZWxldmFudCB0byB0aGUgZGlzY3Vzc2lvbi4N
+CjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48
+L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5DaHJpczxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9u
+ZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNC4wcHQi
+Pg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29saWQgI0UxRTFF
+MSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBpbiAwaW4gMGluIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxiPkZyb206PC9iPiBBbGV4YW5kZXIgS2FuYXZpbiAmbHQ7YWxleC5rYW5hdmluQGdtYWlsLmNv
+bSZndDsgPGJyPg0KPGI+U2VudDo8L2I+IFRodXJzZGF5LCBBdWd1c3QgMDEsIDIwMTkgMTI6NTkg
+UE08YnI+DQo8Yj5Ubzo8L2I+IExBUExBTlRFLENIUklTIChBZ2lsZW50IFVTQSkgJmx0O2Nocmlz
+LmxhcGxhbnRlQGFnaWxlbnQuY29tJmd0Ozxicj4NCjxiPkNjOjwvYj4gT3BlbmVtYmVkZGVkLWNv
+cmVAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzsgYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRk
+ZWQub3JnPGJyPg0KPGI+U3ViamVjdDo8L2I+IFJlOiBbYml0YmFrZS1kZXZlbF0gUkZDOiBleHBv
+c2luZyBpbmZvcm1hdGlvbiBhYm91dCB0aGUgU1JDX1VSSShzKS9icmFuY2ggdmlhIGJ1aWxkaGlz
+dG9yeSAob3Igc2ltaWxhciBtZWNoYW5pc20pPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjwvZGl2
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPGRp
+dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkFwb2xvZ2llcywgYnV0IEkgdGhpbmsgeW91IHNob3Vs
+ZCBkcm9wIHRoZSBwcmFjdGljZSBvZiB1c2luZyBBVVRPUkVWLiBUaGlzIGNvbXBsZXRlbHkgZGVz
+dHJveXMgcmVwcm9kdWNpYmlsaXR5IG9mIGJ1aWxkcywgYW5kIG1ha2VzIHRoZW0gc3VzY2VwdGli
+bGUgdG8gZ2xvYmFsIGJyZWFrYWdlIHdoZW4gc29tZW9uZSBwdXNoZXMgYSBicm9rZW4gY29tbWl0
+IGludG8gb25lIG9mIHRoZSBjb21wb25lbnQgcmVwb3NpdG9yaWVzLg0KPG86cD48L286cD48L3A+
+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRp
+dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlllcywgYnVtcGluZyBTUkNSRVYgaXMgYW5ub3lpbmcs
+IGJ1dCBhKSBpdCBjYW4gYmUgYXV0b21hdGVkOyBiKSB5b3UgY2FuIGNhdGNoIGFuZCByZWplY3Qg
+YW55IHByb2JsZW1zIHdpdGggdGhlIGJ1aWxkIGF0IHRoYXQgcG9pbnQsIHNvIHlvdSBhbHdheXMg
+aGF2ZSBhIG5pZ2h0bHkgdGhhdCB3b3Jrcy48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QVVUT1JFViB3YXMgbmV2ZXIgbWVhbnQgZm9yIHRoZSBw
+cm9qZWN0IGxldmVsLCBpdCBpcyBhIGZhY2lsaXR5IHN0cmljdGx5IGZvciBsb2NhbCBkZXZlbG9w
+bWVudC48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+QWxleDxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5PbiBUaHUsIDEgQXVnIDIwMTkgYXQgMTg6NTEsIGNocmlzLmxhcGxhbnRlLS0tIHZpYSBi
+aXRiYWtlLWRldmVsICZsdDs8YSBocmVmPSJtYWlsdG86Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVu
+ZW1iZWRkZWQub3JnIj5iaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8L2E+Jmd0
+OyB3cm90ZTo8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGJsb2NrcXVvdGUgc3R5bGU9ImJvcmRl
+cjpub25lO2JvcmRlci1sZWZ0OnNvbGlkICNDQ0NDQ0MgMS4wcHQ7cGFkZGluZzowaW4gMGluIDBp
+biA2LjBwdDttYXJnaW4tbGVmdDo0LjhwdDttYXJnaW4tcmlnaHQ6MGluIj4NCjxkaXY+DQo8ZGl2
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21z
+by1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj5IZWxsbyBhbGwsPG86cD48L286cD48L3A+DQo8cCBj
+bGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdp
+bi1ib3R0b20tYWx0OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
+cm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFs
+dDphdXRvIj5Nb3N0IG9mIG15IHRlYW3igJlzIGNsb3NlZCBzb3VyY2UgcmVjaXBlcyB1c2Ugc29t
+ZXRoaW5nIGxpa2UgdGhlIGZvbGxvd2luZzoNCjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9t
+LWFsdDphdXRvIj4mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0
+eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0bztt
+YXJnaW4tbGVmdDouNWluIj4NClNSQ19VUkkgPSAmcXVvdDtnaXQ6Ly9naXRAaG9zdC9wYXRoO3By
+b3RvY29sPXNzaDticmFuY2g9JHtCUkFOQ0h9JnF1b3Q7PG86cD48L286cD48L3A+DQo8cCBjbGFz
+cz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1i
+b3R0b20tYWx0OmF1dG87bWFyZ2luLWxlZnQ6LjVpbiI+DQpTUkNSRVYgPSDigJwke0FVVE9SRVZ9
+4oCdPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdp
+bi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG87bWFyZ2luLWxlZnQ6LjVp
+biI+DQpCUkFOQ0ggPz89IOKAnG1hc3RlcuKAnTxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9t
+LWFsdDphdXRvIj4mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0
+eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+
+KEJSQU5DSCBpcyBqdXN0IGEgY29udmVudGlvbiB3ZSB1c2UgdG8gbWFrZSB0aGUgU1JDX1VSSSBi
+cmFuY2ggZWFzeSB0byBvdmVycmlkZS4pPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0
+OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9
+Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj5UaGlz
+IG1ha2VzIG5pZ2h0bHkgYnVpbGRzIGNvbnZlbmllbnQgYmVjYXVzZSB3ZSBhbHdheXMgYnVpbGQg
+ZnJvbSB0aGUgbGF0ZXN0LiBGb3IgcmVsZWFzZSB2ZXJzaW9ucywgd2UgY2FuIHVzZSBTUkNSRVZf
+cG4tcmVjaXBlIGFuZC9vciBCUkFOQ0hfcG4tcmVjaXBlIG92ZXJyaWRlcyBpbiBsb2NhbC5jb25m
+Lg0KIFdlIGdldCB0aGUgU1JDUkVWIG92ZXJyaWRlcyB1c2luZyBidWlsZGhpc3RvcnktY29sbGVj
+dC1zcmNyZXZzLiBCdXQgYnVpbGRoaXN0b3J5IGhhcyBubyBub3Rpb24gb3IgdHJhY2tpbmcgb2Yg
+U1JDX1VSSSBvciBicmFuY2hlcywgc28gY3VycmVudGx5IHdlIHVzZSBhIHNjcmlwdCB0aGF0IGdl
+bmVyYXRlcyB0aGUgQlJBTkNIIG92ZXJyaWRlcy4NCjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90
+dG9tLWFsdDphdXRvIj4mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+IHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0
+byI+SeKAmW0gaW50ZXJlc3RpbmcgaW4gYWRkaW5nIFNSQ19VUkkgc3VwcG9ydCB0byBidWlsZGhp
+c3RvcnkgKG9yIGEgc2ltaWxhciBtZWNoYW5pc20pLCBhbmQgd291bGQgbGlrZSB0byBnZXQgc29t
+ZSBpbnB1dC4NCjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1z
+by1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4mbmJzcDs8
+bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRv
+cC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+T3B0aW9uIDEpIFRoZSBlYXNp
+ZXN0IHdheSwgSSB0aGluaywgaXMgdG8ganVzdCBnZW5lcmF0ZSBTUkNfVVJJX3BuLSBvdmVycmlk
+ZXMgd2l0aCB2YXJpYWJsZSBleHBhbnNpb24uDQo8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRv
+bS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBz
+dHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8i
+Pk9wdGlvbiAyKSBJIHRoaW5rIGl0IGNvdWxkIGJlIHVzZWZ1bCB0byBpbnRyb2R1Y2UgQlJBTkNI
+IGFzIGEgY29udmVudGlvbi4gQ3VycmVudGx5IHRoZSDigJxicmFuY2jigJ0gU1JDX1VSSSBwYXJh
+bWV0ZXIgaW1wbGljaXRseSBkZWZhdWx0cyB0byDigJxtYXN0ZXLigJ0uIEkgY291bGQgZm9yZXNl
+ZSBpdCBpbXBsaWNpdGx5DQogZGVmYXVsdGluZyB0byDigJwke0JSQU5DSH3igJ0sIHdpdGggQlJB
+TkNIID8/PSDigJxtYXN0ZXLigJ0gdG8gcmVwbGljYXRlIGV4aXN0aW5nIGZ1bmN0aW9uYWxpdHku
+IFRvIGhhbmRsZSBtdWx0aXBsZSBzb3VyY2UtY29udHJvbGxlZCBTUkNfVVJJcywgd2XigJlkIGhh
+dmUgdG8gZG8gc29tZXRoaW5nIHNpbWlsYXIgdG8gaG93IFNSQ1JFViBoYXMgYSDigJxuYW1l4oCd
+IG92ZXJyaWRlLiBXaXRoIHRoaXMgb3B0aW9uLCBJIHdvdWxkbuKAmXQgdGhpbmsgaXQgd291bGQg
+YmUgbmVjZXNzYXJ5DQogdG8gZ2VuZXJhdGUgU1JDX1VSSSBvdmVycmlkZXM7IGp1c3QgQlJBTkNI
+IG92ZXJyaWRlcy48bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJt
+c28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7
+PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10
+b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPk9wdGlvbiAzKSBBIGNvbWJp
+bmF0aW9uIG9mIDEgYW5kIDI/PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBz
+dHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8i
+PiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1t
+YXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj5Mb29raW5nIGZv
+cndhcmQgdG8gaW5wdXQuPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHls
+ZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPiZu
+YnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJn
+aW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj5UaGFua3MsPG86cD48
+L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0
+OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPkNocmlzPG86cD48L286cD48L3A+DQo8
+L2Rpdj4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+LS0gPGJyPg0KX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188YnI+DQpiaXRiYWtlLWRldmVsIG1h
+aWxpbmcgbGlzdDxicj4NCjxhIGhyZWY9Im1haWx0bzpiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5l
+bWJlZGRlZC5vcmciIHRhcmdldD0iX2JsYW5rIj5iaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJl
+ZGRlZC5vcmc8L2E+PGJyPg0KPGEgaHJlZj0iaHR0cDovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9iaXRiYWtlLWRldmVsIiB0YXJnZXQ9Il9ibGFuayI+aHR0cDovL2xp
+c3RzLm9wZW5lbWJlZGRlZC5vcmcvbWFpbG1hbi9saXN0aW5mby9iaXRiYWtlLWRldmVsPC9hPjxv
+OnA+PC9vOnA+PC9wPg0KPC9ibG9ja3F1b3RlPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9i
+b2R5Pg0KPC9odG1sPg0K
 
---Mark
-
-> 
-> Looking forward to input.
-> 
->  
-> 
-> Thanks,
-> 
-> Chris
-> 
-> 
-
-
+--_000_CY4PR12MB1653A6BB54BCDF95634D6CC48BDE0CY4PR12MB1653namp_--
