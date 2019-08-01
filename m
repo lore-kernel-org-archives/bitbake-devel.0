@@ -1,55 +1,84 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id A74477F572;
-	Thu,  1 Aug 2019 18:27:10 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x71IR9hh014653
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 1 Aug 2019 11:27:09 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.468.0;
-	Thu, 1 Aug 2019 11:27:08 -0700
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>,
+Return-Path: <chris.laplante@agilent.com>
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com
+	(mail-eopbgr680080.outbound.protection.outlook.com [40.107.68.80])
+	by mail.openembedded.org (Postfix) with ESMTP id 840146BE2D;
+	Thu,  1 Aug 2019 20:18:59 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=Vgubm+TBi1VnwUJYFyEo+sqzEwhSM+OueY5s2WGRh0oVwFqAwmF4IQTMuSvi+nqB9tUS/lWflAjCaoHsVIwKFdWkGoL22eF55qKdCJ280bm/S3O+sET2RAjfrNr8Zcq5kj6DJYveyhKtDS4q5MYsFaMB0oSTvpvGpUHLCgzTkMnvwhjyVbKWxrL9dezR10vlTI/XASbkRT2XLoA7tOYzZ1h/bWKfKzk0IqMdQ6MOyqfkuT33+9L56WWs1UPPqHpT+IhEn7WhqrxShoNMcrpPZD1qFM3nGqJB6VQPY4M+elkKzErnktejEnFF6hCEPFJueMFsGMuX+JzwQLaW9h5F4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=hFuc/035ASI8Wc90apsTwpvKHM9c3XCt2AO386HShRs=;
+	b=hvI/QZ0LUhCezb2LJL01Z8C4Wjjua+8lH93UFzuCqHUuJLVnmC1sKxKnP0OZf6RhKkzmXgQbIqsext9qp8tJs7GirxUUAqRFdJHRmOAoo+lvJdeiSLTrZ9jp+STRdC87qab9zo+lIpxpT5nRZUYFj0oqjVKUZFlm/4YawhyOyru03AJQUAPggFISe0goRv7LUQ6+HsKS+vYG075RukFqv5CgE7EUyI484CXSs/mIob1X1MJ5fj2x4urtxtvdJzsnwvMg/Uv33g5epLI000NLs/oE+soncHX3IZIdkeTZxmG8iRsmIWqsVGREnyFq2iXo5KrMNhKnQoo0uYgQdEiepA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+	smtp.mailfrom=agilent.com;dmarc=pass action=none
+	header.from=agilent.com;dkim=pass header.d=agilent.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+	s=selector2;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=hFuc/035ASI8Wc90apsTwpvKHM9c3XCt2AO386HShRs=;
+	b=LU5wXb6I9i9JGvClDJWz8svHnscy7wkhLjt9QKgClieZ6k/92wfiFoa8fti4UmbqsKzmIrhnxhEZ+dIYcz6fuZqJKKnldaCy0eki6IFHEdQSHoy6ArC7Sc5LS+wgD6OEirPQQHR8Yk+bBjI/kLfNOyOaXwMmbwXakBzRwLtNuQg=
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
+	CY4PR12MB1158.namprd12.prod.outlook.com (10.168.168.143) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2136.12; Thu, 1 Aug 2019 20:18:59 +0000
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::4154:e959:dc1e:4abc]) by
+	CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::4154:e959:dc1e:4abc%9]) with mapi id 15.20.2136.010;
+	Thu, 1 Aug 2019 20:18:59 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: Mark Hatle <mark.hatle@windriver.com>,
 	"Openembedded-core@lists.openembedded.org"
 	<Openembedded-core@lists.openembedded.org>,
 	"bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: UNVERIFIED SENDER Re: UNVERIFIED SENDER Re: [bitbake-devel] RFC:
+	exposing information about the SRC_URI(s)/branch via
+	buildhistory (or similar mechanism)
+Thread-Index: AdVIiV4bZ0XUaI6MTqawP3i+Dxw25gAAV48AAAIZtdAAAOWOgAADxTCw
+Date: Thu, 1 Aug 2019 20:18:59 +0000
+Message-ID: <CY4PR12MB16531320849693B31BF37FFD8BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
 References: <CY4PR12MB1653C06268B3B4B862119BE18BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
 	<baa880f5-9f42-9364-dd23-325837f791c5@windriver.com>
 	<CY4PR12MB1653E78A4333D0184E5A67178BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <92bd027a-4edb-f23f-a7c8-cbd3d91543b3@windriver.com>
-Date: Thu, 1 Aug 2019 13:27:07 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.8.0
+	<92bd027a-4edb-f23f-a7c8-cbd3d91543b3@windriver.com>
+In-Reply-To: <92bd027a-4edb-f23f-a7c8-cbd3d91543b3@windriver.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=chris.laplante@agilent.com; 
+x-originating-ip: [68.80.99.7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7c9a7eeb-e4b5-4aae-40b8-08d716bd7ce3
+x-microsoft-antispam: BCL:0; PCL:0;
+	RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);
+	SRVR:CY4PR12MB1158; 
+x-ms-traffictypediagnostic: CY4PR12MB1158:
+x-microsoft-antispam-prvs: <CY4PR12MB11588128ABF5044F1E430EAD8BDE0@CY4PR12MB1158.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01165471DB
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(396003)(366004)(376002)(136003)(39860400002)(346002)(29502001)(199004)(189003)(54534003)(14444005)(229853002)(71200400001)(86362001)(2201001)(71190400001)(66446008)(256004)(52536014)(53936002)(478600001)(9686003)(55016002)(74316002)(66556008)(66066001)(305945005)(110136005)(64756008)(7736002)(66946007)(6506007)(102836004)(186003)(2906002)(66476007)(14454004)(76116006)(7696005)(26005)(76176011)(11346002)(99286004)(446003)(8676002)(6246003)(476003)(486006)(33656002)(81166006)(81156014)(3846002)(6116002)(68736007)(5660300002)(2501003)(6436002)(25786009)(8936002)(4744005)(316002);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1158;
+	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
+received-spf: None (protection.outlook.com: agilent.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: oD6oMWptZr4P2EkpUKNcoy1rlRCjdgwXqe84eA/bb7AfWqglNd+1NFyFe9m4q7kfvYYSw83lW5h36fWggcXtlhfBAS/rSjIh6ZLhD/Uzk1UPEaE9EzwPJzUM+JsxPgLB4lQ3n95He1GufkvX7HGXng0AEKXKaBp6Pvi42FejSvP4PMt6I72OzxWOwGZisMqI8MTed+eofHdTVDExrsFZAsrRtWS8QHlWdj4BLgKyEHkJ1SEw3eO3AoWxQ5zH9yBzj0Atw4uCR9ZPLqLLnOcuys9+7i5IGQvgHAst1+qOozcBDWguJhQI9JzOo2eFxJTnERPfDoB3/x+1HYGJ545YNA0Xqm18BYR8Hh41pn6ft35RwuljtqembuMZjsoeHlXMCRuzs+d6w/fvWrac6eAo5sORr4WJw893TTsnD1rbZ1w=
 MIME-Version: 1.0
-In-Reply-To: <CY4PR12MB1653E78A4333D0184E5A67178BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
-Subject: Re: UNVERIFIED SENDER Re: RFC: exposing information about the SRC_URI(s)/branch via buildhistory (or similar mechanism)
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c9a7eeb-e4b5-4aae-40b8-08d716bd7ce3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 20:18:59.4793 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: chris.laplante@agilent.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1158
+Subject: Re: UNVERIFIED SENDER Re: UNVERIFIED SENDER Re: RFC: exposing information about the SRC_URI(s)/branch via buildhistory (or similar mechanism)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,38 +91,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Aug 2019 18:27:10 -0000
-Content-Type: text/plain; charset="utf-8"
+X-List-Received-Date: Thu, 01 Aug 2019 20:19:01 -0000
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On 8/1/19 1:03 PM, chris.laplante@agilent.com wrote:
->> I've had some thoughts of capturing that same information, as well as
->> automatically generating a changelog (from short-commit entries) from the last
->> build to the current one use standard git commands... but I've never had time to
->> implement anything.
->>
->> When I talked with RP about this a while back, he mentioned it should be
->> possible to extend the functionality of buildhistory with an additional class.
->> So the user could opt into extended functionality by including more then one
->> buildhistory class.
->>
->> So my recommendation, store the URL you pulled from along with the SRCREV (if
->> it's not already been stored).  This can then be used later to investigate -- or
->> extended [internally or externally] to create changelogs.
-> 
-> Wouldn't it be a bit overkill to add a new class just to handle SRC_URI? I would think it would just be a little extra code inside write_latest_srcrev.
-
-Ordinarily I'd say yes.  But RP had concerns that these changes add up and
-unless everyone wants them it could prove to be a maintenance problem.  At the
-time he wanted a system for people to opt in to new functionality.  (I'm not
-trying to speak for him, just repeating what I was told when I asked him a
-similar question.)   In my case though I was suggesting much more functionality
-then just this one item.
-
---Mark
-
-> Chris 
-> 
-
+PiA+IFdvdWxkbid0IGl0IGJlIGEgYml0IG92ZXJraWxsIHRvIGFkZCBhIG5ldyBjbGFzcyBqdXN0
+IHRvIGhhbmRsZSBTUkNfVVJJPyBJIHdvdWxkIHRoaW5rIGl0IHdvdWxkIGp1c3QgYmUgYSBsaXR0
+bGUgZXh0cmEgY29kZSBpbnNpZGUNCj4gd3JpdGVfbGF0ZXN0X3NyY3Jldi4NCj4gDQo+IE9yZGlu
+YXJpbHkgSSdkIHNheSB5ZXMuICBCdXQgUlAgaGFkIGNvbmNlcm5zIHRoYXQgdGhlc2UgY2hhbmdl
+cyBhZGQgdXAgYW5kDQo+IHVubGVzcyBldmVyeW9uZSB3YW50cyB0aGVtIGl0IGNvdWxkIHByb3Zl
+IHRvIGJlIGEgbWFpbnRlbmFuY2UgcHJvYmxlbS4gIEF0IHRoZQ0KPiB0aW1lIGhlIHdhbnRlZCBh
+IHN5c3RlbSBmb3IgcGVvcGxlIHRvIG9wdCBpbiB0byBuZXcgZnVuY3Rpb25hbGl0eS4gIChJJ20g
+bm90DQo+IHRyeWluZyB0byBzcGVhayBmb3IgaGltLCBqdXN0IHJlcGVhdGluZyB3aGF0IEkgd2Fz
+IHRvbGQgd2hlbiBJIGFza2VkIGhpbSBhDQo+IHNpbWlsYXIgcXVlc3Rpb24uKSAgIEluIG15IGNh
+c2UgdGhvdWdoIEkgd2FzIHN1Z2dlc3RpbmcgbXVjaCBtb3JlIGZ1bmN0aW9uYWxpdHkNCj4gdGhl
+biBqdXN0IHRoaXMgb25lIGl0ZW0uDQoNCk1ha2VzIHNlbnNlLiBJIGRlZmluaXRlbHkgbGlrZSB0
+aGUgaWRlYSBvZiB0aGUgYXV0b21hdGljIGNoYW5nZWxvZy4NCg0KRm9yIG5vdywgYXMgYSBxdWlj
+ayBwcm90b3R5cGUgb2YgdGhlIGJhc2ljIGZ1bmN0aW9uYWxpdHkgKGNhcHR1cmluZyBTUkNfVVJJ
+KSwgSSB3aWxsIGRvIGFzIHRoZSBiYmNsYXNzIHN1Z2dlc3RzIGFuZCBleHRlbmQgQlVJTERISVNU
+T1JZX1BSRVNFUlZFLg0KDQpUaGFua3MsDQpDaHJpcw0K
 
