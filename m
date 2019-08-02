@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
-	[209.85.128.54])
-	by mail.openembedded.org (Postfix) with ESMTP id B93D97F318
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 7D3C57F357
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  2 Aug 2019 15:21:02 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id 207so68359459wma.1
+	Fri,  2 Aug 2019 15:21:03 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id c2so74354995wrm.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Aug 2019 08:21:04 -0700 (PDT)
+	Fri, 02 Aug 2019 08:21:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=q9E9/9ipd9lOEE6qm35zbIWmSZHPo3nK5NYAAayOWTo=;
-	b=fyMZtHlo8GhGwyU3xtn/zOHHAyuDyn2SI8t55kckZ3b8un2sTv/5d5e+6o7YXJFPfW
-	sJAdIt2gY28hQc/wslHXjQFyeBEUlz5kB2nDtm7qUjQ82lQ4YnBrJkNGPU6zeE27Jrqr
-	C2ssjg2KH0xoGpqMLn7rRTWRFrWwaPiwxmEL8=
+	bh=m1yTLR48o57s8MSYoAcVt6BvJunyz9PXGuHqinS83qw=;
+	b=FI+4DBoY6JPGy2I1LCehIRJAduuc15PLMzIb+FLbwk/9GaRD254tVr8GiMxyc8VRqg
+	ppmmzuKU7yjOfxAGyulpoy85aeLLJu0MB4+3kb2r6eIXxWbqJpvvc+2bbaibU+RIaw5H
+	uyRvEC758psg2m773eTyWgaBO7UFt87VcK9zE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=q9E9/9ipd9lOEE6qm35zbIWmSZHPo3nK5NYAAayOWTo=;
-	b=TzFu276rI0YswAnWm/uhMJ+ILgIQs8TLf3SuaYwoR5sl4WVk37AoP0JOVgKErqb38d
-	nxlPK4NsztK+7jtoi7ogSdsifxXPrDq9rxB9bo2Wu8TUuyNSBQVEnpeTf+KBaF+D8XHi
-	lph6MZk7hfz2QD0Lk3fRf8W1Hd61Iq55Xy/ipqGp/I1VnWxlR3qcDSTak1GiV/JXG4mJ
-	vQ9EMOeBGZkqdrD35xv8KOEikQHX2QmbgOiVrtHgQ1ally+GH9W7HAEdI4EwEer6swMr
-	i003wwh9l2SS7IwIbEFjQIdYJXVUHvbRMIL/7cVGmW1DLoR1PN+Z07ZU4M0Pqvkn5Dou
-	FAfQ==
-X-Gm-Message-State: APjAAAV0V+pxAVUzZ/NtPqQmzYTaZwmpPayZRGYens9THS90EpHZv+j+
-	NiIRJ8iRlYUsYlvCIPQgkrHt9Vf1j8c=
-X-Google-Smtp-Source: APXvYqzCGxNQ5JQy6wNLRnvPa7k2/9m0q5USJb0HWeYrmtkEpN69roGgJfJ6Q92nV9Ja3uTCNUhvNA==
-X-Received: by 2002:a1c:c706:: with SMTP id x6mr4849193wmf.162.1564759263055; 
-	Fri, 02 Aug 2019 08:21:03 -0700 (PDT)
+	bh=m1yTLR48o57s8MSYoAcVt6BvJunyz9PXGuHqinS83qw=;
+	b=UiXHLNP5/Pmv1+ypwI3rATJgIuXhMJPT9oOmTdxBf6Bi8b3bsTFSPDaHZ3Wat7Ohrn
+	uZpHPjNPQSY2LMKzqhOV57iynIsIKQUsOhh7fW4NuyG0duR4pKmvIGPdZxI6ySC8XtI3
+	bSdWk/YqJV2FM+Ug9A3X0hdK2m0dmS2jUCqmQS8ajmJ+J0qyH3jp1Eyp01vkwdxUJvR0
+	2ZlATUt1qFF9OVIfZjeEQCQl1WvW2hKjHkHQPCYl/r8X5TUX6c1zpFfnH8CpXojZOB+T
+	TihQxO7qcTgFU8hXwNu7/9sISD57SIJhHE0rHumIuwmzt788FvhFDIYoJSjXuc4mx9Ne
+	2e+Q==
+X-Gm-Message-State: APjAAAWJFvYU3hr25XpPxpSzieQX0EHDm/Gfabhu63vDjzQWp2kHdd4G
+	+Y4iVBg3RdBpAfQ0hl7BTw8UlAUt/gw=
+X-Google-Smtp-Source: APXvYqwZxtPLFdHwSE+NdU+OujWibnh/U2iHiAzbS7ttZviazlxjF/upFO61btwVBFHVsY0aNBuzaA==
+X-Received: by 2002:a5d:69c4:: with SMTP id s4mr117676828wrw.163.1564759264007;
+	Fri, 02 Aug 2019 08:21:04 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	p14sm62491785wrx.17.2019.08.02.08.21.02
+	p14sm62491785wrx.17.2019.08.02.08.21.03
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Fri, 02 Aug 2019 08:21:02 -0700 (PDT)
+	Fri, 02 Aug 2019 08:21:03 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  2 Aug 2019 16:20:47 +0100
-Message-Id: <20190802152049.16529-14-richard.purdie@linuxfoundation.org>
+Date: Fri,  2 Aug 2019 16:20:48 +0100
+Message-Id: <20190802152049.16529-15-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802152049.16529-1-richard.purdie@linuxfoundation.org>
 References: <20190802152049.16529-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 14/16] build/utils: Drop bb.build.FuncFailed
+Subject: [PATCH 15/16] tests/runqueue: Add hashserv+runqueue test
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,170 +61,161 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Fri, 02 Aug 2019 15:21:03 -0000
 Content-Transfer-Encoding: 8bit
 
-Its hard to see what this exception adds in the current codebase. The logfile
-attribute is effectively ignored, the exception doesn't serve a defined
-purpose and mostly seems to be worked around.
-
-Remove it entirely. If this does cause output problems, we'll figure
-out better ways to address those.
+Add a test which tests the runqueue adaptations for hash equivalency.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/build.py | 57 +++++++++----------------------------------------
- lib/bb/data.py  |  2 +-
- lib/bb/utils.py |  2 +-
- 3 files changed, 12 insertions(+), 49 deletions(-)
+ lib/bb/siggen.py                              | 23 +++++++++++++---
+ .../tests/runqueue-tests/classes/base.bbclass | 14 +++++++++-
+ lib/bb/tests/runqueue-tests/conf/bitbake.conf |  2 +-
+ lib/bb/tests/runqueue.py                      | 27 ++++++++++++++++++-
+ 4 files changed, 59 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index e2f91fa3b7..30a2ba236f 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -54,23 +54,6 @@ else:
- builtins['bb'] = bb
- builtins['os'] = os
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 912c92c8be..b503559305 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -12,6 +12,7 @@ import bb.data
+ import difflib
+ import simplediff
+ from bb.checksum import FileChecksumCache
++from bb import runqueue
  
--class FuncFailed(Exception):
--    def __init__(self, name = None, logfile = None):
--        self.logfile = logfile
--        self.name = name
--        if name:
--            self.msg = 'Function failed: %s' % name
--        else:
--            self.msg = "Function failed"
+ logger = logging.getLogger('BitBake.SigGen')
+ 
+@@ -473,10 +474,12 @@ class SignatureGeneratorUniHashMixIn(object):
+ 
+             locs = {'path': path, 'sigfile': sigfile, 'task': task, 'd': d}
+ 
+-            (module, method) = self.method.rsplit('.', 1)
+-            locs['method'] = getattr(importlib.import_module(module), method)
 -
--    def __str__(self):
--        if self.logfile and os.path.exists(self.logfile):
--            msg = ("%s (log file is located at %s)" %
--                   (self.msg, self.logfile))
--        else:
--            msg = self.msg
--        return msg
--
- class TaskBase(event.Event):
-     """Base class for task events"""
+-            outhash = bb.utils.better_eval('method(path, sigfile, task, d)', locs)
++            if "." in self.method:
++                (module, method) = self.method.rsplit('.', 1)
++                locs['method'] = getattr(importlib.import_module(module), method)
++                outhash = bb.utils.better_eval('method(path, sigfile, task, d)', locs)
++            else:
++                outhash = bb.utils.better_eval(self.method + '(path, sigfile, task, d)', locs)
  
-@@ -189,12 +172,7 @@ class StdoutNoopContextManager:
-         return sys.stdout.name
+             try:
+                 url = '%s/v1/equivalent' % self.server
+@@ -527,6 +530,18 @@ class SignatureGeneratorUniHashMixIn(object):
+                 except OSError:
+                     pass
  
++
++#
++# Dummy class used for bitbake-selftest
++#
++class SignatureGeneratorTestEquivHash(SignatureGeneratorUniHashMixIn, SignatureGeneratorBasicHash):
++    name = "TestEquivHash"
++    def init_rundepcheck(self, data):
++        super().init_rundepcheck(data)
++        self.server = "http://" + data.getVar('BB_HASHSERVE')
++        self.method = "sstate_output_hash"
++
++
+ def dump_this_task(outfile, d):
+     import bb.parse
+     fn = d.getVar("BB_FILENAME")
+diff --git a/lib/bb/tests/runqueue-tests/classes/base.bbclass b/lib/bb/tests/runqueue-tests/classes/base.bbclass
+index 3a0f151c9a..138edc3fa9 100644
+--- a/lib/bb/tests/runqueue-tests/classes/base.bbclass
++++ b/lib/bb/tests/runqueue-tests/classes/base.bbclass
+@@ -5,7 +5,8 @@ def stamptask(d):
+     import time
  
--#
--# pythonexception allows the python exceptions generated to be raised
--# as the real exceptions (not FuncFailed) and without a backtrace at the
--# origin of the failure.
--#
--def exec_func(func, d, dirs = None, pythonexception=False):
-+def exec_func(func, d, dirs = None):
-     """Execute a BB 'function'"""
+     thistask = d.expand("${PN}:${BB_CURRENTTASK}")
+-    with open(d.expand("${TOPDIR}/%s.run") % thistask, "a+") as f:
++    stampname = d.expand("${TOPDIR}/%s.run" % thistask)
++    with open(stampname, "a+") as f:
+         f.write("\n")
  
-     try:
-@@ -266,7 +244,7 @@ def exec_func(func, d, dirs = None, pythonexception=False):
+     if d.getVar("BB_CURRENT_MC") != "default":
+@@ -13,10 +14,21 @@ def stamptask(d):
+     if thistask in d.getVar("SLOWTASKS").split():
+         bb.note("Slowing task %s" % thistask)
+         time.sleep(0.5)
++    if d.getVar("BB_HASHSERVE"):
++        task = d.getVar("BB_CURRENTTASK")
++        if task in ['package', 'package_qa', 'packagedata', 'package_write_ipk', 'package_write_rpm', 'populate_lic', 'populate_sysroot']:
++            bb.parse.siggen.report_unihash(os.getcwd(), d.getVar("BB_CURRENTTASK"), d)
  
-     with bb.utils.fileslocked(lockfiles):
-         if ispython:
--            exec_func_python(func, d, runfile, cwd=adir, pythonexception=pythonexception)
-+            exec_func_python(func, d, runfile, cwd=adir)
-         else:
-             exec_func_shell(func, d, runfile, cwd=adir)
+     with open(d.expand("${TOPDIR}/task.log"), "a+") as f:
+         f.write(thistask + "\n")
  
-@@ -286,7 +264,7 @@ _functionfmt = """
- {function}(d)
- """
- logformatter = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
--def exec_func_python(func, d, runfile, cwd=None, pythonexception=False):
-+def exec_func_python(func, d, runfile, cwd=None):
-     """Execute a python BB 'function'"""
++
++def sstate_output_hash(path, sigfile, task, d):
++    import hashlib
++    h = hashlib.sha256()
++    h.update(d.expand("${PN}:${BB_CURRENTTASK}").encode('utf-8'))
++    return h.hexdigest()
++
+ python do_fetch() {
+     # fetch
+     stamptask(d)
+diff --git a/lib/bb/tests/runqueue-tests/conf/bitbake.conf b/lib/bb/tests/runqueue-tests/conf/bitbake.conf
+index 96ee1cd5ec..1c61f27607 100644
+--- a/lib/bb/tests/runqueue-tests/conf/bitbake.conf
++++ b/lib/bb/tests/runqueue-tests/conf/bitbake.conf
+@@ -11,6 +11,6 @@ STAMP = "${TMPDIR}/stamps/${PN}"
+ T = "${TMPDIR}/workdir/${PN}/temp"
+ BB_NUMBER_THREADS = "4"
  
-     code = _functionfmt.format(function=func)
-@@ -311,14 +289,7 @@ def exec_func_python(func, d, runfile, cwd=None, pythonexception=False):
-         bb.methodpool.insert_method(func, text, fn, lineno - 1)
+-BB_HASHBASE_WHITELIST = "BB_CURRENT_MC"
++BB_HASHBASE_WHITELIST = "BB_CURRENT_MC BB_HASHSERVE"
  
-         comp = utils.better_compile(code, func, "exec_python_func() autogenerated")
--        utils.better_exec(comp, {"d": d}, code, "exec_python_func() autogenerated", pythonexception=pythonexception)
--    except (bb.parse.SkipRecipe, bb.build.FuncFailed):
--        raise
--    except Exception as e:
--        if pythonexception:
--            raise
--        logger.error(str(e))
--        raise FuncFailed(func, None)
-+        utils.better_exec(comp, {"d": d}, code, "exec_python_func() autogenerated")
-     finally:
-         bb.debug(2, "Python function %s finished" % func)
+ include conf/multiconfig/${BB_CURRENT_MC}.conf
+diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
+index f22ad4bd81..fbdacccfa1 100644
+--- a/lib/bb/tests/runqueue.py
++++ b/lib/bb/tests/runqueue.py
+@@ -25,7 +25,7 @@ class RunQueueTests(unittest.TestCase):
+     a1_sstatevalid = "a1:do_package a1:do_package_qa a1:do_packagedata a1:do_package_write_ipk a1:do_package_write_rpm a1:do_populate_lic a1:do_populate_sysroot"
+     b1_sstatevalid = "b1:do_package b1:do_package_qa b1:do_packagedata b1:do_package_write_ipk b1:do_package_write_rpm b1:do_populate_lic b1:do_populate_sysroot"
  
-@@ -475,13 +446,8 @@ exit $ret
-     with open(fifopath, 'r+b', buffering=0) as fifo:
-         try:
-             bb.debug(2, "Executing shell function %s" % func)
--
--            try:
--                with open(os.devnull, 'r+') as stdin, logfile:
--                    bb.process.run(cmd, shell=False, stdin=stdin, log=logfile, extrafiles=[(fifo,readfifo)])
--            except bb.process.CmdError:
--                logfn = d.getVar('BB_LOGFILE')
--                raise FuncFailed(func, logfn)
-+            with open(os.devnull, 'r+') as stdin, logfile:
-+                bb.process.run(cmd, shell=False, stdin=stdin, log=logfile, extrafiles=[(fifo,readfifo)])
-         finally:
-             os.unlink(fifopath)
+-    def run_bitbakecmd(self, cmd, builddir, sstatevalid="", slowtasks="", extraenv=None):
++    def run_bitbakecmd(self, cmd, builddir, sstatevalid="", slowtasks="", extraenv=None, cleanup=False):
+         env = os.environ.copy()
+         env["BBPATH"] = os.path.realpath(os.path.join(os.path.dirname(__file__), "runqueue-tests"))
+         env["BB_ENV_EXTRAWHITE"] = "SSTATEVALID SLOWTASKS"
+@@ -42,6 +42,8 @@ class RunQueueTests(unittest.TestCase):
+         tasks = []
+         with open(builddir + "/task.log", "r") as f:
+             tasks = [line.rstrip() for line in f]
++        if cleanup:
++            os.remove(builddir + "/task.log")
+         return tasks
  
-@@ -609,9 +575,6 @@ def _exec_task(fn, task, d, quieterr):
-             event.fire(TaskStarted(task, logfn, flags, localdata), localdata)
-         except (bb.BBHandledException, SystemExit):
-             return 1
--        except FuncFailed as exc:
--            logger.error(str(exc))
--            return 1
+     def test_no_setscenevalid(self):
+@@ -226,3 +228,26 @@ class RunQueueTests(unittest.TestCase):
+                 expected.remove(x)
+             self.assertEqual(set(tasks), set(expected))
  
-         try:
-             for func in (prefuncs or '').split():
-@@ -619,7 +582,10 @@ def _exec_task(fn, task, d, quieterr):
-             exec_func(task, localdata)
-             for func in (postfuncs or '').split():
-                 exec_func(func, localdata)
--        except FuncFailed as exc:
-+        except bb.BBHandledException:
-+            event.fire(TaskFailed(task, logfn, localdata, True), localdata)
-+            return 1
-+        except Exception as exc:
-             if quieterr:
-                 event.fire(TaskFailedSilent(task, logfn, localdata), localdata)
-             else:
-@@ -627,9 +593,6 @@ def _exec_task(fn, task, d, quieterr):
-                 logger.error(str(exc))
-                 event.fire(TaskFailed(task, logfn, localdata, errprinted), localdata)
-             return 1
--        except bb.BBHandledException:
--            event.fire(TaskFailed(task, logfn, localdata, True), localdata)
--            return 1
-     finally:
-         sys.stdout.flush()
-         sys.stderr.flush()
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 443615b977..0d75d0c1a9 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -130,7 +130,7 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-         if all:
-             oval = d.getVar(var, False)
-         val = d.getVar(var)
--    except (KeyboardInterrupt, bb.build.FuncFailed):
-+    except (KeyboardInterrupt):
-         raise
-     except Exception as exc:
-         o.write('# expansion of %s threw %s: %s\n' % (var, exc.__class__.__name__, str(exc)))
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index ed19825faf..0618e46fe6 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -394,7 +394,7 @@ def better_exec(code, context, text = None, realfile = "<code>", pythonexception
-         code = better_compile(code, realfile, realfile)
-     try:
-         exec(code, get_context(), context)
--    except (bb.BBHandledException, bb.parse.SkipRecipe, bb.build.FuncFailed, bb.data_smart.ExpansionError):
-+    except (bb.BBHandledException, bb.parse.SkipRecipe, bb.data_smart.ExpansionError):
-         # Error already shown so passthrough, no need for traceback
-         raise
-     except Exception as e:
++
++    def test_hashserv(self):
++        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
++            extraenv = {
++                "BB_HASHSERVE" : "localhost:0",
++                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
++            }
++            cmd = ["bitbake", "a1", "b1"]
++            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
++                             'populate_sysroot_setscene', 'package_qa_setscene']
++            sstatevalid = ""
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks]
++            self.assertEqual(set(tasks), set(expected))
++            cmd = ["bitbake", "a1", "-c", "install", "-f"]
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:install']
++            self.assertEqual(set(tasks), set(expected))
++            cmd = ["bitbake", "a1", "b1"]
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:' + x for x in setscenetasks] + ['b1:' + x for x in setscenetasks] + ['a1:build', 'b1:build']
++            self.assertEqual(set(tasks), set(expected))
++
 -- 
 2.20.1
 
