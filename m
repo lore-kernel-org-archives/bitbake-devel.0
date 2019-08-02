@@ -1,24 +1,58 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 895127F2B8
+Return-Path: <prvs=110bfcb55=Mikko.Rapeli@bmw.de>
+X-Greylist: delayed 429 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 02 Aug 2019 07:45:05 UTC
+Received: from esa6.bmw.c3s2.iphmx.com (esa6.bmw.c3s2.iphmx.com
+	[68.232.139.124])
+	by mail.openembedded.org (Postfix) with ESMTP id 707EA7F2FB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Aug 2019 20:37:19 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x71Kb0qq010798
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 1 Aug 2019 13:37:10 -0700
-Received: from msp-lpggp1.wrs.com (172.25.34.110) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.468.0;
-	Thu, 1 Aug 2019 13:36:54 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 1 Aug 2019 16:36:54 -0400
-Message-ID: <20190801203654.140427-1-mark.hatle@windriver.com>
-X-Mailer: git-send-email 2.16.0.rc2
+	Fri,  2 Aug 2019 07:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
+	t=1564731908; x=1596267908;
+	h=from:to:cc:subject:date:message-id:references:
+	in-reply-to:content-id:content-transfer-encoding: mime-version;
+	bh=x45KArdW+WnN6QjnPCy5SnkUzOozYClFI23GksIVLao=;
+	b=DtfM+PyTrr71l4UXfJP9gndCCBmFY8fjQlj2ggKq4uRJjogjK69OOunF
+	WpD8tNijn9Nmzo2V9IqS273TXI9/2rcU+4rmQJCZH6OPbUlrO4ZhVr++P
+	CA63RwmhjQtjxF46VO9CAclbyEHRunbTRgVsGyH/hGE8uV9YwGlMSrtX/ 4=;
+IronPort-SDR: 58c7O0dRA6yeQdHq1Cj2E+6qNKlFb1cLH2LE6RgXxYgUYqZgLM3Jw3nd8alNdXfU2ishLuwekt
+	+EV5r09QaV5X+6zYU2pShpP/Yy9nEXiUqTUMXJrr5KuUQmw9knHFHg1KCy9SWC48mROAjyIhIv
+	jYlrjUgy94feL09qdh2YUg//GPqUrBeiNL0BWEwEKPkHh/bUNrt95IlU/ybcy7oNa1vaoVf5/c
+	VDAy3ZoIi6ug5dvm1bk1slGhJtMXL/nlP331SEVbVEUdnLRB8gyIRElyWvtfp+M+3Wenvsxw0Z
+	Ik8=
+Received: from esagw4.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
+	esa6.bmw.c3s2.iphmx.com with ESMTP/TLS; 02 Aug 2019 09:37:57 +0200
+Received: from esabb4.muc ([160.50.100.33])  by esagw4.muc with ESMTP/TLS;
+	02 Aug 2019 09:37:43 +0200
+Received: from smucm10l.bmwgroup.net (HELO smucm10l.europe.bmw.corp)
+	([160.48.96.48])
+	by esabb4.muc with ESMTP/TLS; 02 Aug 2019 09:37:43 +0200
+Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
+	smucm10l.europe.bmw.corp
+	(160.48.96.48) with Microsoft SMTP Server (TLS;
+	Fri, 2 Aug 2019 09:37:43 +0200
+Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
+	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1473.005;
+	Fri, 2 Aug 2019 09:37:43 +0200
+From: <Mikko.Rapeli@bmw.de>
+To: <chris.laplante@agilent.com>
+Thread-Topic: [OE-core] RFC: exposing information about the SRC_URI(s)/branch
+	via buildhistory (or similar mechanism)
+Thread-Index: AdVIiV4bZ0XUaI6MTqawP3i+Dxw25gAawieA
+Date: Fri, 2 Aug 2019 07:37:43 +0000
+Message-ID: <20190802073741.GI3459@hiutale>
+References: <CY4PR12MB1653C06268B3B4B862119BE18BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
+In-Reply-To: <CY4PR12MB1653C06268B3B4B862119BE18BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [192.168.221.38]
 MIME-Version: 1.0
-Subject: [PATCH] layerindexlib: Fix parsing of recursive layer dependencies
+Cc: bitbake-devel@lists.openembedded.org,
+	Openembedded-core@lists.openembedded.org
+Subject: Re: [OE-core] RFC: exposing information about the SRC_URI(s)/branch via buildhistory (or similar mechanism)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,71 +65,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Aug 2019 20:37:19 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 02 Aug 2019 07:45:05 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <554F7A9EB981D84B801809F9E48A023F@bmwmail.corp>
+Content-Transfer-Encoding: quoted-printable
 
-[YOCTO #13447]
+Hi,
 
-When running bitbake-layers layerindex-fetch from 'master', there is a
-circular dependency between meta-oe and meta-python.  This triggered a maximum
-recursion depth exception.
+On Thu, Aug 01, 2019 at 04:51:38PM +0000, chris.laplante--- via Openembedde=
+d-core wrote:
+<snip>
+> I'm interesting in adding SRC_URI support to buildhistory (or a similar m=
+echanism), and would like to get some input.
 
-To fix the exception, as we walk down a branch (depth first search), we track
-the layers we've already seen.  If we are about to recurse into a layer we've
-already seen we report a warning and then stop recursion.
+Yes to this.
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
----
- lib/layerindexlib/__init__.py | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+Also would be nice if there was an easy way to add bitbake variables to
+buildhistory.
 
-diff --git a/lib/layerindexlib/__init__.py b/lib/layerindexlib/__init__.py
-index d231cf6a..77196b40 100644
---- a/lib/layerindexlib/__init__.py
-+++ b/lib/layerindexlib/__init__.py
-@@ -376,7 +376,7 @@ layerBranches set.  If not, they are effectively blank.'''
-                 invalid.append(name)
- 
- 
--        def _resolve_dependencies(layerbranches, ignores, dependencies, invalid):
-+        def _resolve_dependencies(layerbranches, ignores, dependencies, invalid, processed=None):
-             for layerbranch in layerbranches:
-                 if ignores and layerbranch.layer.name in ignores:
-                     continue
-@@ -388,6 +388,13 @@ layerBranches set.  If not, they are effectively blank.'''
-                     if ignores and deplayerbranch.layer.name in ignores:
-                         continue
- 
-+                    # Since this is depth first, we need to know what we're currently processing
-+                    # in order to avoid infinite recursion on a loop.
-+                    if processed and deplayerbranch.layer.name in processed:
-+                        # We have found a recursion...
-+                        logger.warning('Circular layer dependency found: %s -> %s' % (processed, deplayerbranch.layer.name))
-+                        continue
-+
-                     # This little block is why we can't re-use the LayerIndexObj version,
-                     # we must be able to satisfy each dependencies across layer indexes and
-                     # use the layer index order for priority.  (r stands for replacement below)
-@@ -411,7 +418,17 @@ layerBranches set.  If not, they are effectively blank.'''
- 
-                     # New dependency, we need to resolve it now... depth-first
-                     if deplayerbranch.layer.name not in dependencies:
--                        (dependencies, invalid) = _resolve_dependencies([deplayerbranch], ignores, dependencies, invalid)
-+                        # Avoid recursion on this branch.
-+                        # We copy so we don't end up polluting the depth-first branch with other
-+                        # branches.  Duplication between individual branches IS expected and
-+                        # handled by 'dependencies' processing.
-+                        if not processed:
-+                            local_processed = []
-+                        else:
-+                            local_processed = processed.copy()
-+                        local_processed.append(deplayerbranch.layer.name)
-+
-+                        (dependencies, invalid) = _resolve_dependencies([deplayerbranch], ignores, dependencies, invalid, local_processed)
- 
-                     if deplayerbranch.layer.name not in dependencies:
-                         dependencies[deplayerbranch.layer.name] = [deplayerbranch, layerdependency]
--- 
-2.16.0.rc2
+I've patched our tree so that SRC_URI, LICENSE and CVE_PRODUCT are archived
+in buildhistory. SRC_URI has many uses and changes and patches can
+be easily identified. Same with LICENSE, any changes trigger a review.
+CVE_PRODUCT is exported so that we can do QA check to make sure mapping
+from CVE_PRODUCT for non CLOSED licenses exists to NVD database product
+names (maintaining a white list of recipes which don't have any CVEs yet).
 
+We've also changed the SDK name to be stable across builds and added
+DISTRO to the path. In our case IMAGE_NAME and SDK_NAME will include
+git tree tag and hash if tree is dirty, which changes buildhistory SDK path=
+s
+for every build with different input.
+
+I could submit the patches if there is interest in them.
+
+Cheers,
+
+-Mikko=
 
