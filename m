@@ -1,52 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com
-	[209.85.128.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 862C27F318
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+	[209.85.221.48])
+	by mail.openembedded.org (Postfix) with ESMTP id AE9027F338
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri,  2 Aug 2019 15:20:53 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id w9so1694533wmd.1
+Received: by mail-wr1-f48.google.com with SMTP id g17so77579703wrr.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Aug 2019 08:20:54 -0700 (PDT)
+	Fri, 02 Aug 2019 08:20:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=Af+tTHZ0vNcZZPcG4sU83zTiPrNDw9RLglRG0xMK9iU=;
-	b=YYb/kennSlh6WkcdS0v5PbPn4508xtI2tsgdSUvJNiVPJf4dei1jb2C0Zn6r9liwqr
-	M3kEb4a2q7JyTRsoSkazz7eG6eO3v0ACbNlNoqj7cacnva68bitwj7OImSPJznKXTX7J
-	kmpKnjAFqOIJMxl+bhAlEqJ0TLHaG9Bhzq7a4=
+	bh=ZbrtOqyH1A79RMWwZNvv4amcsns5a1Ha9odYdWNZllY=;
+	b=OVmAq5LiECgAorfh9md4/85CQ/jJkYXK8aQjDz7Sbr/tlumUAXzSmHlf5pxadkNKdm
+	JJeJrE3hplsltCjwpry8R9OFx6aSf6TLEaxYYZCcAcAk4SXFCnyQwrTnYVGPsrw7Duv7
+	lbhZa43qviw1hUxKmuy9f+0Wies+HSG52RWuc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=Af+tTHZ0vNcZZPcG4sU83zTiPrNDw9RLglRG0xMK9iU=;
-	b=GfLxIkyOcgr1011eGJtOXVThMxa6eb/qhELFku9VNq/2/CcZ79MUS+BodWnN8Dcr78
-	abU6lkeK2IFlvwxbE0Xwt1rp0C4Tvx8SPs5BiEe8EIi5Asne8ygkRSMdrXDFHdstDBfb
-	yd0mDUelTaAH+hn3gnZVzxB3wl4DdCnlOlz8dTRfuF0Zd2CkWeRjKQZA0oUu45w0y7sf
-	W1rch9YCGlFsCKHDs3YUrNxD3ZNO3aw7Foi+lnmf7P17HhxmaPGGAMK9cTRBeWwki11l
-	2mNvjUe67A5Bk7oD/qEzobMFsl+e3sP5/5LA8QzoYPnO+pSbiqjQQed1xUynYvDheQHg
-	2Szw==
-X-Gm-Message-State: APjAAAUHQQL5qMH3GXEuKRZJNoAiNZNoLN50cyDGw5Wg7VzFLy+JknoN
-	2P1ueZLQxqoWfhYtHXvC+C8q+O8xAPA=
-X-Google-Smtp-Source: APXvYqxnrbCJ6WPXTkUvREJJK/Z4A1n5OG9UjpKQs+9KfFFX+uZNzHgRpOnPcEe7H456KoX2Bq+E7Q==
-X-Received: by 2002:a05:600c:224d:: with SMTP id
-	a13mr4862031wmm.62.1564759253885; 
+	bh=ZbrtOqyH1A79RMWwZNvv4amcsns5a1Ha9odYdWNZllY=;
+	b=QA7bIC0zt0ztMWCMj18VMlr6f5kMkjrrz7B0IyJYjJgxj+BI3f7V4mFWM234dUY2UH
+	faJY8zcNe2UJ8PCitbBUv8Ncg9coohXSP6pEI+9uw66wrwNA2Nim1bjloYkvAw1Cn5f8
+	AihhJfk2rvqugMK5L39GcFWk0V28asuhI8Wo46rZk4AImNUSB7HzdRYZiS2dSSwuxn9W
+	cwzdJyn1B0V0CYZUONAAP51mLYBwOfgfEwkpJyA66dOqzUQgdROusuubwTVIgvwQ1R2m
+	CWg+b6VRKTauvkMEXSXQO/0ccaHBfEmCBi38cMf9VS7w0RwMkCU+k7BeRfRQTNtMEeuU
+	KgRA==
+X-Gm-Message-State: APjAAAUre3heqQm90CTsSbnPpQqGhk1rMznLWqslNA9nISSj+INUz/3Q
+	wjdBeWJBAYjZJY56ehWjS6j3vJBkAA4=
+X-Google-Smtp-Source: APXvYqzaAmzgaY/3tPyANdsv/fumRdyu2DyfQ3msxzTdFP37SrRNrcQaCSSw3nGQZdjvCzHuEoVqbw==
+X-Received: by 2002:adf:fa49:: with SMTP id y9mr19201462wrr.6.1564759253078;
 	Fri, 02 Aug 2019 08:20:53 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	p14sm62491785wrx.17.2019.08.02.08.20.53
+	p14sm62491785wrx.17.2019.08.02.08.20.52
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Fri, 02 Aug 2019 08:20:53 -0700 (PDT)
+	Fri, 02 Aug 2019 08:20:52 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  2 Aug 2019 16:20:37 +0100
-Message-Id: <20190802152049.16529-4-richard.purdie@linuxfoundation.org>
+Date: Fri,  2 Aug 2019 16:20:36 +0100
+Message-Id: <20190802152049.16529-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802152049.16529-1-richard.purdie@linuxfoundation.org>
 References: <20190802152049.16529-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 04/16] siggen: Add new unitaskhashes data variable which is cached
+Subject: [PATCH 03/16] runqueue: Improve scenequeue processing logic
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,87 +61,54 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Fri, 02 Aug 2019 15:20:54 -0000
 Content-Transfer-Encoding: 8bit
 
-We need to preserve unihash task hashes between runs. Use the new SimpleCache
-class to create such a class within the signature generator which is loaded
-at init time and saved when builds complete. The default is unpopulated but
-metadata sig handlers can populate this cache.
+Rather than a special copy of the data structure which we change, compute
+the logic using set operations from other data we have. This means
+we can add tasks back into the scenequeue without having to worry about
+reversing operations on this variable with all the potential bugs that
+might involve.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py |  1 +
- lib/bb/siggen.py   | 20 ++++++++++++++++++--
- 2 files changed, 19 insertions(+), 2 deletions(-)
+ lib/bb/runqueue.py | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 9883a982c2..519561c231 100644
+index 6a2de240cc..9883a982c2 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -1516,6 +1516,7 @@ class RunQueue:
-             self.dm_event_handler_registered = False
+@@ -2206,12 +2206,9 @@ class RunQueueExecute:
+                 logger.debug(2, "%s was unavailable and is a hard dependency of %s so skipping" % (task, dep))
+                 self.sq_task_failoutright(dep)
+                 continue
+-            if task not in self.sqdata.sq_revdeps2[dep]:
+-                # May already have been removed by the fail case above
+-                continue
+-            self.sqdata.sq_revdeps2[dep].remove(task)
+-            if len(self.sqdata.sq_revdeps2[dep]) == 0:
+-                self.sq_buildable.add(dep)
++            if self.sqdata.sq_revdeps[dep].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
++                if dep not in self.sq_buildable:
++                    self.sq_buildable.add(dep)
  
-         if build_done and self.rqexe:
-+            bb.parse.siggen.save_unitaskhashes()
-             self.teardown_workers()
-             if self.rqexe:
-                 if self.rqexe.stats.failed:
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 0105fa7251..2bb0b68527 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -41,6 +41,7 @@ class SignatureGenerator(object):
-         self.runtaskdeps = {}
-         self.file_checksum_values = {}
-         self.taints = {}
-+        self.unitaskhashes = {}
+         next = set([task])
+         while next:
+@@ -2377,8 +2374,6 @@ class SQData(object):
+         self.sq_deps = {}
+         # SceneQueue reverse dependencies
+         self.sq_revdeps = {}
+-        # Copy of reverse dependencies used by sq processing code
+-        self.sq_revdeps2 = {}
+         # Injected inter-setscene task dependencies
+         self.sq_harddeps = {}
+         # Cache of stamp files so duplicates can't run in parallel
+@@ -2537,7 +2532,6 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
+     #    bb.warn("Task %s_setscene: is %s " % (tid, data))
  
-     def finalise(self, fn, d, varient):
-         return
-@@ -73,14 +74,23 @@ class SignatureGenerator(object):
-         return
+     sqdata.sq_revdeps = sq_revdeps_squash
+-    sqdata.sq_revdeps2 = copy.deepcopy(sqdata.sq_revdeps)
+     sqdata.sq_covered_tasks = sq_collated_deps
  
-     def get_taskdata(self):
--        return (self.runtaskdeps, self.taskhash, self.file_checksum_values, self.taints, self.basehash)
-+        return (self.runtaskdeps, self.taskhash, self.file_checksum_values, self.taints, self.basehash, self.unitaskhashes)
- 
-     def set_taskdata(self, data):
--        self.runtaskdeps, self.taskhash, self.file_checksum_values, self.taints, self.basehash = data
-+        self.runtaskdeps, self.taskhash, self.file_checksum_values, self.taints, self.basehash, self.unitaskhashes = data
- 
-     def reset(self, data):
-         self.__init__(data)
- 
-+    def get_taskhashes(self):
-+        return self.taskhash, self.unitaskhashes
-+
-+    def set_taskhashes(self, hashes):
-+        self.taskhash, self.unitaskhashes = hashes
-+
-+    def save_unitaskhashes(self):
-+        return
-+
- 
- class SignatureGeneratorBasic(SignatureGenerator):
-     """
-@@ -107,6 +117,9 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         else:
-             self.checksum_cache = None
- 
-+        self.unihash_cache = bb.cache.SimpleCache("1")
-+        self.unitaskhashes = self.unihash_cache.init_cache(data, "bb_unihashes.dat", {})
-+
-     def init_rundepcheck(self, data):
-         self.taskwhitelist = data.getVar("BB_HASHTASK_WHITELIST") or None
-         if self.taskwhitelist:
-@@ -244,6 +257,9 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             bb.fetch2.fetcher_parse_save()
-             bb.fetch2.fetcher_parse_done()
- 
-+    def save_unitaskhashes(self):
-+        self.unihash_cache.save(self.unitaskhashes)
-+
-     def dump_sigtask(self, fn, task, stampbase, runtime):
- 
-         k = fn + "." + task
+     # Build reverse version of revdeps to populate deps structure
 -- 
 2.20.1
 
