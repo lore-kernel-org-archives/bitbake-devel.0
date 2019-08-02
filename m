@@ -1,53 +1,47 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
-	[209.85.128.66])
-	by mail.openembedded.org (Postfix) with ESMTP id D845E6BF37
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  2 Aug 2019 21:04:35 +0000 (UTC)
-Received: by mail-wm1-f66.google.com with SMTP id 207so69186753wma.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Aug 2019 14:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=TCwB9b+Aq3WY5teLT+Y8KEzmIGdqzlzU8DnD26bmmnM=;
-	b=ZE7301D2wjHYSUQT9b5/c2qja84USbb95e/eQjNu2+tzSBm9guXG0VdxSgN+k5KT3M
-	ekmRx1MdY17juG7epE2yVL5ktRx7mWbDEPhKC4AUHpSH2N2MFdH9YQ+SJmXkR2Cpa/z+
-	2CHKvLNGPi4OKGXNAL4zRUltv0/JJeI+jaHdQ=
+Return-Path: <wbourque@gmail.com>
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com
+	[209.85.210.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 1820A7C86A;
+	Fri,  2 Aug 2019 13:58:56 +0000 (UTC)
+Received: by mail-ot1-f52.google.com with SMTP id j19so1566388otq.2;
+	Fri, 02 Aug 2019 06:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=C8ymqktiWFiY1nXg+G4/AL0jjyNHhgONLI4oBxn6yrI=;
+	b=ZWUJIqz9YolGMwddHAyVeZwS+EjNjoSpdqKaYZRdRsFzYpiesERTqt0mimEo2a+VaR
+	nAfHcXVspikg+TA/0GkcpohA/5yOHZ9Bu4amk6ONcg64NqgtfBqG4yaMb+IlH0VC3X+S
+	95GvT9X6TNLpyl/cr3WuCrjQVMnxtckYckdK4e4AmjHJV/3mabKCwfleOD8akcqoHXtf
+	6G47APcXX1p7w2sJV38GcwYCf5A5NViJ5cG3NMQvjbvgMTM6DiI0HYxABqoeHTIyYO/u
+	b6nwATYG3WHkBXOWEA9NUuPL+xM3oUG/sBnfgCrxa0paCteeyWjDwbbKOvnoPeWURoxH
+	XuWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=TCwB9b+Aq3WY5teLT+Y8KEzmIGdqzlzU8DnD26bmmnM=;
-	b=uN3RM9Ef/po/MX9cJ141vUE6e5hxAmwAV/l4X4bRFJId0DA94SnK4f7scseb2GI1jj
-	+0PqnYNQEEAlZHzQ32ug4SyW9sIvUdDZflTq6UKL2zWioUVlqBD7EAjtK+jwDbXbQugF
-	Dv+Z8xfUG0OPsjEOJrFyXrzrzrYJHwrh2JXopEeVhh0vzWF53OntprBdYbuDi+Li1DlM
-	1s+kRtUeX3wndYmYpUfRtaiXntUBsnhKJJMLYT3/AexMqJ74z5wN9eXbhPE1jvo6u1kh
-	CcCNeCRAO8jJXqWxvV565zyyB8xH2eq9onFe4oiNOLcYLlZMhL3rkmEapP7piN7ige+o
-	NYHA==
-X-Gm-Message-State: APjAAAXsc7i9Tl9/Wini9OzWjAWCg8uMZsL1B1hInUpzaTam+AtmFnFw
-	qlqcrZYjexid1CCVvnxj4FDHIQ==
-X-Google-Smtp-Source: APXvYqyvJHWuNsuraMCkucjthfQtlL/+7FUtZVQNMkpu1FHNEPBESQf47ftsL5KdSK7EELZ883VmBg==
-X-Received: by 2002:a1c:200a:: with SMTP id g10mr5365666wmg.160.1564779876543; 
-	Fri, 02 Aug 2019 14:04:36 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	t185sm67788777wma.11.2019.08.02.14.04.35
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Fri, 02 Aug 2019 14:04:35 -0700 (PDT)
-Message-ID: <6862406955958f1c0c5287053003dde0bfe5c829.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Mark Hatle <mark.hatle@windriver.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Fri, 02 Aug 2019 22:04:33 +0100
-In-Reply-To: <b1fdf23c-671e-ef1f-d01e-2ef891179d62@windriver.com>
-References: <20190802152049.16529-1-richard.purdie@linuxfoundation.org>
-	<20190802152049.16529-9-richard.purdie@linuxfoundation.org>
-	<b1fdf23c-671e-ef1f-d01e-2ef891179d62@windriver.com>
-User-Agent: Evolution 3.32.2-1 
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=C8ymqktiWFiY1nXg+G4/AL0jjyNHhgONLI4oBxn6yrI=;
+	b=TRzwME56Tzc+vMo6e+sfWVLyc7nNjBYJcDNLtmIfq0A7f9vezLRXIIGN3Hc+Eti1hn
+	KZEj/dz9UccPTpdNwbJDdzVbke6N9ZVR9KCkNmbkqg1TNLafc1lILrwrsLsQrRWagJ1r
+	QAl5Lpv3XckUgK9ODSEohgm2VSFS8d524FJBtcH4xmPK/Hpr9F0py2C0/D9Efd/eSY6P
+	71I+oG966/PDMcns8zDLT1ZwRlTKar5u3p8t8vLviLxolni+20ZQ3CNe4YaVjEvINqXx
+	LROgEIO4qutA9mazBDZ9HfWA4AOr8iHsYTh3uT1ls2F1XCQpiADMwotlxd+6MsnGC9ht
+	NHWA==
+X-Gm-Message-State: APjAAAWe2T9LPpR4I/qm8shuqI+yGeTwS6/cvS39aNAiB/R5OZbkwzuo
+	z0fP8MKUKgmp2HWqEnLExPBW+rga60zmQPQKM7v76w==
+X-Google-Smtp-Source: APXvYqwJ+2Z29MLEEPH7P03RcFUPOXYm98SepxeVOOPHTBesPJXiH3GRUzJzCqdd/e+bOhkrlls4HpDqji/bbIMDe5k=
+X-Received: by 2002:a9d:3e4e:: with SMTP id h14mr98505404otg.182.1564754337999;
+	Fri, 02 Aug 2019 06:58:57 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH 09/16] prserv: Use a memory journal
+References: <CY4PR12MB1653C06268B3B4B862119BE18BDE0@CY4PR12MB1653.namprd12.prod.outlook.com>
+	<20190802073741.GI3459@hiutale>
+In-Reply-To: <20190802073741.GI3459@hiutale>
+From: William Bourque <wbourque@gmail.com>
+Date: Fri, 2 Aug 2019 09:58:46 -0400
+Message-ID: <CANBSh+OGvD1wqrXGRfufYf2KpKJPM44fUcoeangTBVMSJBKxRg@mail.gmail.com>
+To: Mikko.Rapeli@bmw.de
+X-Mailman-Approved-At: Sat, 03 Aug 2019 09:15:17 +0000
+Cc: bitbake-devel@lists.openembedded.org,
+	Openembedded-core@lists.openembedded.org
+Subject: Re: [OE-core] RFC: exposing information about the SRC_URI(s)/branch via buildhistory (or similar mechanism)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,28 +54,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Aug 2019 21:04:36 -0000
+X-List-Received-Date: Fri, 02 Aug 2019 13:58:57 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Fri, 2019-08-02 at 10:30 -0500, Mark Hatle wrote:
-> On 8/2/19 10:20 AM, Richard Purdie wrote:
-> > We've seen PR Server timeouts on the autobuilder, this is likely
-> > from the
-> > journal being blocked on disk IO generated by the build.
-> > 
-> > Since we're running with synchronous off, we may as well put the
-> > journal
-> > into memory and avoid any IO related stalls.
-> 
-> When does it flush to disk?  On exit?
+I'd be curious to see the patches.
+It's definitely something we could use here; we used to have nightly
+build checking the build using AUTOREV as well.
 
-It will make the correct writes to preserve the database so program
-crashes won't corrupt, only a poweroff situation. Basically we're not
-trying to second guess the VFS in the kernel.
-
-Cheers,
-
-Richard
-
+On Fri, Aug 2, 2019 at 3:43 AM <Mikko.Rapeli@bmw.de> wrote:
+>
+> Hi,
+>
+> On Thu, Aug 01, 2019 at 04:51:38PM +0000, chris.laplante--- via Openembedded-core wrote:
+> <snip>
+> > I'm interesting in adding SRC_URI support to buildhistory (or a similar mechanism), and would like to get some input.
+>
+> Yes to this.
+>
+> Also would be nice if there was an easy way to add bitbake variables to
+> buildhistory.
+>
+> I've patched our tree so that SRC_URI, LICENSE and CVE_PRODUCT are archived
+> in buildhistory. SRC_URI has many uses and changes and patches can
+> be easily identified. Same with LICENSE, any changes trigger a review.
+> CVE_PRODUCT is exported so that we can do QA check to make sure mapping
+> from CVE_PRODUCT for non CLOSED licenses exists to NVD database product
+> names (maintaining a white list of recipes which don't have any CVEs yet).
+>
+> We've also changed the SDK name to be stable across builds and added
+> DISTRO to the path. In our case IMAGE_NAME and SDK_NAME will include
+> git tree tag and hash if tree is dirty, which changes buildhistory SDK paths
+> for every build with different input.
+>
+> I could submit the patches if there is interest in them.
+>
+> Cheers,
+>
+> -Mikko
+> --
+> _______________________________________________
+> Openembedded-core mailing list
+> Openembedded-core@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/openembedded-core
 
