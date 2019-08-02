@@ -1,51 +1,52 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
-	[209.85.221.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 7E34F7F357
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id DC0CC6BDE3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  2 Aug 2019 15:21:04 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id f9so77548725wre.12
+	Fri,  2 Aug 2019 15:30:36 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x72FUcqQ015340
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Aug 2019 08:21:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=qS8O0sjT24hMYb2xextODzoj/OxvF9ZwrYh96tVj8+M=;
-	b=UwZ3XA+HoNDxPNGgnh1lp62hohrPNqQNFc/U7A58W3mD4UzsUNH+AFz6OBsBA1aBK2
-	7F9lCK4KhWfpKvzGPw6dn+o3QXOhC9lHmGVaKscPvZfPTIh2QywjTMfUQ/uRvg3qDmyl
-	EY6X+ap8gTXQ+9yyfep65U05YSW5TA8m3bPYU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=qS8O0sjT24hMYb2xextODzoj/OxvF9ZwrYh96tVj8+M=;
-	b=jxzRJ0WQEZohYME5OFUHg+7fbXP4gI52AR72Hl4VuPOfjdxZ28xx8YbLt3cOelCGXf
-	Sg8q1MQ84EBzmIs3rxMb1Oy90GbgGJQao+H5A2GJADgwQOaG62eMwzboogjssWTlvLfc
-	dzgHJutW5RF38J+POb2npS17O6nE4NWy9Cddp4HJvUwlU8+LnAZfwvuxRyAwaTj7EBPo
-	MfDBCErNMt6+few1D1Q2i3lxT0zWEUTEe6SoosIXnNcRfDCuxHYXZk9dttE41h9mriHV
-	LOZBIW6VC7DL/VgYmzEdQQXyGjRYQtk/Ll+8bV18P3nrnSE2lJlEpzumMvhwJ4i/rLxl
-	KVRA==
-X-Gm-Message-State: APjAAAWCitqC+qVOQGvdFeK6abGTm57AUconbNXCgHRmgvn6vEH0KIhP
-	dYA4dDNQbpCoVEvebmN7XccDtKc17Fo=
-X-Google-Smtp-Source: APXvYqyDXhx7sdwvJxOhEYfusR1BYC87upQ6ET1NZaZ9XUDN9PpSDA6V5CFKI8z4OBfo7EwnYfuv/A==
-X-Received: by 2002:adf:f204:: with SMTP id p4mr29029671wro.317.1564759265000; 
-	Fri, 02 Aug 2019 08:21:05 -0700 (PDT)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	p14sm62491785wrx.17.2019.08.02.08.21.04
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Fri, 02 Aug 2019 08:21:04 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri,  2 Aug 2019 16:20:49 +0100
-Message-Id: <20190802152049.16529-16-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802152049.16529-1-richard.purdie@linuxfoundation.org>
+	Fri, 2 Aug 2019 08:30:38 -0700 (PDT)
+Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.468.0;
+	Fri, 2 Aug 2019 08:30:37 -0700
+To: <bitbake-devel@lists.openembedded.org>
 References: <20190802152049.16529-1-richard.purdie@linuxfoundation.org>
+	<20190802152049.16529-9-richard.purdie@linuxfoundation.org>
+From: Mark Hatle <mark.hatle@windriver.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
+	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
+	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
+	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
+	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
+	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
+	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
+	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
+	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
+	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
+	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
+	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
+	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
+	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
+	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
+	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
+	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
+	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
+	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
+	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
+	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
+	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
+	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
+Organization: Wind River Systems
+Message-ID: <b1fdf23c-671e-ef1f-d01e-2ef891179d62@windriver.com>
+Date: Fri, 2 Aug 2019 10:30:36 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Subject: [PATCH 16/16] bitbake: Bump version to 1.43.1 for API changes
+In-Reply-To: <20190802152049.16529-9-richard.purdie@linuxfoundation.org>
+Subject: Re: [PATCH 09/16] prserv: Use a memory journal
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,42 +59,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Aug 2019 15:21:04 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 02 Aug 2019 15:30:37 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- bin/bitbake        | 2 +-
- lib/bb/__init__.py | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On 8/2/19 10:20 AM, Richard Purdie wrote:
+> We've seen PR Server timeouts on the autobuilder, this is likely from the
+> journal being blocked on disk IO generated by the build.
+> 
+> Since we're running with synchronous off, we may as well put the journal
+> into memory and avoid any IO related stalls.
 
-diff --git a/bin/bitbake b/bin/bitbake
-index b219d362e7..4834a71585 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -26,7 +26,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
- if sys.getfilesystemencoding() != "utf-8":
-     sys.exit("Please use a locale setting which supports UTF-8 (such as LANG=en_US.UTF-8).\nPython can't change the filesystem locale after loading so we need a UTF-8 when Python starts or things won't work.")
- 
--__version__ = "1.43.0"
-+__version__ = "1.43.1"
- 
- if __name__ == "__main__":
-     if __version__ != bb.__version__:
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 7579a893b6..322a1e0937 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -9,7 +9,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
- 
--__version__ = "1.43.0"
-+__version__ = "1.43.1"
- 
- import sys
- if sys.version_info < (3, 4, 0):
--- 
-2.20.1
+When does it flush to disk?  On exit?
+
+--Mark
+
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/prserv/db.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/prserv/db.py b/lib/prserv/db.py
+> index d6188a679b..117d8c052c 100644
+> --- a/lib/prserv/db.py
+> +++ b/lib/prserv/db.py
+> @@ -257,7 +257,7 @@ class PRData(object):
+>          self.connection=sqlite3.connect(self.filename, isolation_level="EXCLUSIVE", check_same_thread = False)
+>          self.connection.row_factory=sqlite3.Row
+>          self.connection.execute("pragma synchronous = off;")
+> -        self.connection.execute("PRAGMA journal_mode = WAL;")
+> +        self.connection.execute("PRAGMA journal_mode = MEMORY;")
+>          self._tables={}
+>  
+>      def disconnect(self):
+> 
 
 
