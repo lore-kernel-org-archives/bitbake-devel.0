@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
-	[209.85.221.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 51D457E58B
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com
+	[209.85.128.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 553497E5F1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Aug 2019 15:14:22 +0000 (UTC)
-Received: by mail-wr1-f65.google.com with SMTP id n9so105006776wru.0
+	Mon, 12 Aug 2019 15:14:23 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id v15so12527012wml.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Aug 2019 08:14:23 -0700 (PDT)
+	Mon, 12 Aug 2019 08:14:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=I6h5lDYvwG1taMXO5kQZxzd0+xeCVPwPn/G6uQfJqtk=;
-	b=iZdXzCa7ONyBywil0VngGtKvu4gf0KdrhPnZ8BjIqhY6Ush421fbQqyjabdoFBcnqk
-	9e6Wy9os6Rlo6azx149ObnXoZDOrdOODBOpW8wFm0/QShg4pdZBskK9qRVUkrQybW9Pu
-	pjgs3Mv2JGuQq67wYPEXWEVbs9cOAYQ7N/IcM=
+	bh=fTeY0EpOr+U8oorI/ha5kWYQJskXbD8dHq86sY9/+w0=;
+	b=IN6gYeHTa434TSaPLFl5xrenuotnU5UWrzLj9TL1mwh6VWOxYVxAwrCj2gJdF9c2ty
+	FqjSqTdwa9c9WMY8U7waV3XJBh5E8UUTO/q6MEjZ47UPXtkMTtiH8OwvQU5MxErFMl0q
+	LeKanMxf2mYLjsnrP7R8bK5XTjfI6s8MrZTZ4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=I6h5lDYvwG1taMXO5kQZxzd0+xeCVPwPn/G6uQfJqtk=;
-	b=nQi6wk8cxPlSIJA7h7uZGO77Gu9Zm4FNYxvLnrTTNzFUpfl7Si7C97h2w52iQUQSw6
-	kuOjc1QPy6ERlHhhz19Q102ojojTSmLvIxu9E2tJQpxz6GEXmzUO+zqQBVs6t5+q8Ihm
-	YiOcQOkhdY1Thzq8PMiFne/KeqQeCv3E7EjwHnvX8WzEi3YJu4P0inxWLXdlfxQjfLjp
-	EBmyLya3Mc4xnppjBvGvUxNxt5qPLeQ4wpWmMmbBrVuq2WDb0iwcDItBEWIfovnUzs6L
-	iiJ0897u+tsU0wXi14jfwnzE9bf5V/i1G7Njq3Ie0ztxA49dSf7qbrK6N3X5oKdfT1PY
-	Dsog==
-X-Gm-Message-State: APjAAAXYpHgYBSuq5A0n1BlAO13JBII8hB5mrZ1xE+vm4NxThnC9zhWh
-	xlMlPsKKYTohlwHL0JV/+fNPf0VuYVftGA==
-X-Google-Smtp-Source: APXvYqzV3tHxK+Ge623nufA2v59bwDnD2TqnQfWLjBxUI71fKsqe8Yq3mnNXiTYXOr7jUL1XJN/TXA==
-X-Received: by 2002:a5d:4b05:: with SMTP id v5mr16128722wrq.208.1565622862537; 
-	Mon, 12 Aug 2019 08:14:22 -0700 (PDT)
+	bh=fTeY0EpOr+U8oorI/ha5kWYQJskXbD8dHq86sY9/+w0=;
+	b=KwfnX1BqxjtJaTVBbQEba5SaMprI/f4ah9vqK185iUfTkUFuW++TvmLIIQfOWHYKTI
+	Z1Ck/iWLDAuIklQoeAe2Svj0RRnsWat8mRDbL/PqFBVc29JhRHordTVvzqMG9KTdiztq
+	JQXGXP1r+Wk7G3nfdfB+TxwXXeZnTYl3hiSBP7QNu1pq6UMSvtDW6wtsyknfEk0x50Sf
+	KmqDbNlse60+UWg9KLdxxw2CyoctcCOP92NuF2+uu/Oj80SFKp8oAx2oQZOmsWuaRvqU
+	qPZOkuIA3mfi34qfP1JhINk4vxFMw28BopQrDAyOzPD9O1aAPs927T29kxZgPTth1jsx
+	RpLg==
+X-Gm-Message-State: APjAAAVzq0+KM5F7hvm1MboBRm5iYdvorZVeatHAlgSTJa1iJIbAjSy9
+	sacDJI2EMh17WYSkchXwhHH2MBh27qMYFg==
+X-Google-Smtp-Source: APXvYqwia9mWEF4d+ihE3nItRzcezY3YFcu14+QXhcf+jbzDa+Bi8vSOHrkU0EZpqM+gs4a16naHKg==
+X-Received: by 2002:a7b:c947:: with SMTP id i7mr29276335wml.77.1565622863752; 
+	Mon, 12 Aug 2019 08:14:23 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	b2sm12029638wrf.94.2019.08.12.08.14.21
+	b2sm12029638wrf.94.2019.08.12.08.14.22
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
 	Mon, 12 Aug 2019 08:14:22 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 12 Aug 2019 16:14:17 +0100
-Message-Id: <20190812151418.31307-3-richard.purdie@linuxfoundation.org>
+Date: Mon, 12 Aug 2019 16:14:18 +0100
+Message-Id: <20190812151418.31307-4-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190812151418.31307-1-richard.purdie@linuxfoundation.org>
 References: <20190812151418.31307-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 3/4] tests/runqueue: Add further hash equivalence tests
+Subject: [PATCH 4/4] cooker: Improve hash server startup code to avoid exit tracebacks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,256 +58,92 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 12 Aug 2019 15:14:22 -0000
+X-List-Received-Date: Mon, 12 Aug 2019 15:14:23 -0000
 Content-Transfer-Encoding: 8bit
 
-Add some extra hash equivalence runqueue tests based on recent scenarios
-that caused problems during testing.
+At exit the hashserv code was causing tracebacks as join() wasn't
+being called from the thread that started the process. Ensure that
+the hashserver is started from the pre_serve hook which is the
+final thread the cooker runs in. This avoids the traceback at the
+expense of some horrific poking into data stores which will ultimately
+need improving through a proper API.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- .../tests/runqueue-tests/classes/base.bbclass |  20 ++-
- lib/bb/tests/runqueue-tests/conf/bitbake.conf |   2 +-
- lib/bb/tests/runqueue.py                      | 155 +++++++++++++++++-
- 3 files changed, 165 insertions(+), 12 deletions(-)
+ lib/bb/cooker.py         | 29 +++++++++++++++++------------
+ lib/hashserv/__init__.py |  1 +
+ 2 files changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/lib/bb/tests/runqueue-tests/classes/base.bbclass b/lib/bb/tests/runqueue-tests/classes/base.bbclass
-index 138edc3fa9..b57650d591 100644
---- a/lib/bb/tests/runqueue-tests/classes/base.bbclass
-+++ b/lib/bb/tests/runqueue-tests/classes/base.bbclass
-@@ -7,7 +7,7 @@ def stamptask(d):
-     thistask = d.expand("${PN}:${BB_CURRENTTASK}")
-     stampname = d.expand("${TOPDIR}/%s.run" % thistask)
-     with open(stampname, "a+") as f:
--        f.write("\n")
-+        f.write(d.getVar("BB_UNIHASH") + "\n")
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index ec1b35d724..0607fcc708 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -371,22 +371,10 @@ class BBCooker:
  
-     if d.getVar("BB_CURRENT_MC") != "default":
-         thistask = d.expand("${BB_CURRENT_MC}:${PN}:${BB_CURRENTTASK}")
-@@ -235,18 +235,28 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, **kwargs):
+         self.data.setVar('BB_CMDLINE', self.ui_cmdline)
  
-     valid = d.getVar("SSTATEVALID").split()
+-        if self.data.getVar("BB_HASHSERVE") == "localhost:0":
+-            if not self.hashserv:
+-                dbfile = (self.data.getVar("PERSISTENT_DIR") or self.data.getVar("CACHE")) + "/hashserv.db"
+-                self.hashserv = hashserv.create_server(('localhost', 0), dbfile, '')
+-                self.hashservport = "localhost:" + str(self.hashserv.server_port)
+-                self.hashserv.process = multiprocessing.Process(target=self.hashserv.serve_forever)
+-                self.hashserv.process.daemon = True
+-                self.hashserv.process.start()
+-            self.data.setVar("BB_HASHSERVE", self.hashservport)
+-
+         #
+         # Copy of the data store which has been expanded.
+         # Used for firing events and accessing variables where expansion needs to be accounted for
+         #
+-        bb.parse.init_parser(self.data)
+-
+         if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
+             self.disableDataTracking()
  
--    for tid in sq_data['hash']:
-+    for tid in sorted(sq_data['hash']):
-         n = os.path.basename(bb.runqueue.fn_from_tid(tid)).split(".")[0] + ":do_" + bb.runqueue.taskname_from_tid(tid)[3:]
-         print(n)
-+        stampfile = d.expand("${TOPDIR}/%s.run" % n.replace("do_", ""))
-         if n in valid:
-             bb.note("SState: Found valid sstate for %s" % n)
-             found.add(tid)
--        elif os.path.exists(d.expand("${TOPDIR}/%s.run" % n.replace("do_", ""))):
--            bb.note("SState: Found valid sstate for %s (already run)" % n)
-+        elif n + ":" + sq_data['hash'][tid] in valid:
-+            bb.note("SState: Found valid sstate for %s" % n)
-             found.add(tid)
-+        elif os.path.exists(stampfile):
-+            with open(stampfile, "r") as f:
-+                hash = f.readline().strip()
-+            if hash == sq_data['hash'][tid]:
-+                bb.note("SState: Found valid sstate for %s (already run)" % n)
-+                found.add(tid)
-+            else:
-+                bb.note("SState: sstate hash didn't match previous run for %s (%s vs %s)" % (n, sq_data['hash'][tid], hash))
-+                missed.add(tid)
-         else:
-             missed.add(tid)
--            bb.note("SState: Found no valid sstate for %s" % n)
-+            bb.note("SState: Found no valid sstate for %s (%s)" % (n, sq_data['hash'][tid]))
+@@ -404,6 +392,22 @@ class BBCooker:
+         except prserv.serv.PRServiceConfigError as e:
+             bb.fatal("Unable to start PR Server, exitting")
  
-     return found
- 
-diff --git a/lib/bb/tests/runqueue-tests/conf/bitbake.conf b/lib/bb/tests/runqueue-tests/conf/bitbake.conf
-index 1c61f27607..ab0f6bcfac 100644
---- a/lib/bb/tests/runqueue-tests/conf/bitbake.conf
-+++ b/lib/bb/tests/runqueue-tests/conf/bitbake.conf
-@@ -11,6 +11,6 @@ STAMP = "${TMPDIR}/stamps/${PN}"
- T = "${TMPDIR}/workdir/${PN}/temp"
- BB_NUMBER_THREADS = "4"
- 
--BB_HASHBASE_WHITELIST = "BB_CURRENT_MC BB_HASHSERVE"
-+BB_HASHBASE_WHITELIST = "BB_CURRENT_MC BB_HASHSERVE TMPDIR TOPDIR SLOWTASKS SSTATEVALID"
- 
- include conf/multiconfig/${BB_CURRENT_MC}.conf
-diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
-index fbdacccfa1..1103f905f9 100644
---- a/lib/bb/tests/runqueue.py
-+++ b/lib/bb/tests/runqueue.py
-@@ -40,10 +40,12 @@ class RunQueueTests(unittest.TestCase):
-         except subprocess.CalledProcessError as e:
-             self.fail("Command %s failed with %s" % (cmd, e.output))
-         tasks = []
--        with open(builddir + "/task.log", "r") as f:
--            tasks = [line.rstrip() for line in f]
--        if cleanup:
--            os.remove(builddir + "/task.log")
-+        tasklog = builddir + "/task.log"
-+        if os.path.exists(tasklog):
-+            with open(tasklog, "r") as f:
-+                tasks = [line.rstrip() for line in f]
-+            if cleanup:
-+                os.remove(tasklog)
-         return tasks
- 
-     def test_no_setscenevalid(self):
-@@ -229,7 +231,7 @@ class RunQueueTests(unittest.TestCase):
-             self.assertEqual(set(tasks), set(expected))
- 
- 
--    def test_hashserv(self):
-+    def test_hashserv_single(self):
-         with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-             extraenv = {
-                 "BB_HASHSERVE" : "localhost:0",
-@@ -248,6 +250,147 @@ class RunQueueTests(unittest.TestCase):
-             self.assertEqual(set(tasks), set(expected))
-             cmd = ["bitbake", "a1", "b1"]
-             tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
--            expected = ['a1:' + x for x in setscenetasks] + ['b1:' + x for x in setscenetasks] + ['a1:build', 'b1:build']
-+            expected = ['a1:populate_sysroot', 'a1:package', 'a1:package_write_rpm_setscene', 'a1:packagedata_setscene',
-+                        'a1:package_write_ipk_setscene', 'a1:package_qa_setscene']
-             self.assertEqual(set(tasks), set(expected))
- 
-+    def test_hashserv_double(self):
-+        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-+            extraenv = {
-+                "BB_HASHSERVE" : "localhost:0",
-+                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
-+            }
-+            cmd = ["bitbake", "a1", "b1", "e1"]
-+            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
-+                             'populate_sysroot_setscene', 'package_qa_setscene']
-+            sstatevalid = ""
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks] + ['e1:' + x for x in self.alltasks]
-+            self.assertEqual(set(tasks), set(expected))
-+            cmd = ["bitbake", "a1", "b1", "-c", "install", "-fn"]
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            cmd = ["bitbake", "e1"]
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
-+                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
-+                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene']
-+            self.assertEqual(set(tasks), set(expected))
++        if self.data.getVar("BB_HASHSERVE") == "localhost:0":
++            if not self.hashserv:
++                dbfile = (self.data.getVar("PERSISTENT_DIR") or self.data.getVar("CACHE")) + "/hashserv.db"
++                self.hashserv = hashserv.create_server(('localhost', 0), dbfile, '')
++                self.hashservport = "localhost:" + str(self.hashserv.server_port)
++                self.hashserv.process = multiprocessing.Process(target=self.hashserv.serve_forever)
++                self.hashserv.process.daemon = True
++                self.hashserv.process.start()
++            self.data.setVar("BB_HASHSERVE", self.hashservport)
++            self.databuilder.origdata.setVar("BB_HASHSERVE", self.hashservport)
++            self.databuilder.data.setVar("BB_HASHSERVE", self.hashservport)
++            for mc in self.databuilder.mcdata:
++                self.databuilder.mcdata[mc].setVar("BB_HASHSERVE", self.hashservport)
 +
++        bb.parse.init_parser(self.data)
 +
-+    def test_hashserv_multiple_setscene(self):
-+        # Runs e1:do_package_setscene twice
-+        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-+            extraenv = {
-+                "BB_HASHSERVE" : "localhost:0",
-+                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
-+            }
-+            cmd = ["bitbake", "a1", "b1", "e1"]
-+            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
-+                             'populate_sysroot_setscene', 'package_qa_setscene']
-+            sstatevalid = ""
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks] + ['e1:' + x for x in self.alltasks]
-+            self.assertEqual(set(tasks), set(expected))
-+            cmd = ["bitbake", "a1", "b1", "-c", "install", "-fn"]
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            cmd = ["bitbake", "e1"]
-+            sstatevalid = "e1:do_package"
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True, slowtasks="a1:populate_sysroot b1:populate_sysroot")
-+            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
-+                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
-+                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene',
-+                        'e1:package_setscene']
-+            self.assertEqual(set(tasks), set(expected))
-+            for i in expected:
-+                if i in ["e1:package_setscene"]:
-+                    self.assertEqual(tasks.count(i), 4, "%s not in task list four times" % i)
-+                else:
-+                    self.assertEqual(tasks.count(i), 1, "%s not in task list once" % i)
-+
-+    def test_hashserv_partial_match(self):
-+        # e1:do_package matches initial built but not second hash value
-+        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-+            extraenv = {
-+                "BB_HASHSERVE" : "localhost:0",
-+                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
-+            }
-+            cmd = ["bitbake", "a1", "b1"]
-+            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
-+                             'populate_sysroot_setscene', 'package_qa_setscene']
-+            sstatevalid = ""
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks]
-+            self.assertEqual(set(tasks), set(expected))
-+            with open(tempdir + "/stamps/a1.do_install.taint", "w") as f:
-+               f.write("d460a29e-903f-4b76-a96b-3bcc22a65994")
-+            with open(tempdir + "/stamps/b1.do_install.taint", "w") as f:
-+               f.write("ed36d46a-2977-458a-b3de-eef885bc1817")
-+            cmd = ["bitbake", "e1"]
-+            sstatevalid = "e1:do_package:cb47e017ab549d87aab614c0f49dcf969ff6414745909094f0af7e657cedc657"
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
-+                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
-+                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene',
-+                        'e1:package_setscene'] + ['e1:' + x for x in self.alltasks]
-+            expected.remove('e1:package')
-+            self.assertEqual(set(tasks), set(expected))
-+
-+    def test_hashserv_partial_match2(self):
-+        # e1:do_package + e1:do_populate_sysroot matches initial built but not second hash value
-+        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-+            extraenv = {
-+                "BB_HASHSERVE" : "localhost:0",
-+                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
-+            }
-+            cmd = ["bitbake", "a1", "b1"]
-+            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
-+                             'populate_sysroot_setscene', 'package_qa_setscene']
-+            sstatevalid = ""
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks]
-+            self.assertEqual(set(tasks), set(expected))
-+            with open(tempdir + "/stamps/a1.do_install.taint", "w") as f:
-+               f.write("d460a29e-903f-4b76-a96b-3bcc22a65994")
-+            with open(tempdir + "/stamps/b1.do_install.taint", "w") as f:
-+               f.write("ed36d46a-2977-458a-b3de-eef885bc1817")
-+            cmd = ["bitbake", "e1"]
-+            sstatevalid = "e1:do_package:cb47e017ab549d87aab614c0f49dcf969ff6414745909094f0af7e657cedc657 e1:do_populate_sysroot:aa6a915229f04af429d3c6c59c303516c500650b7c48da8e07b20a53acd86c5f"
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
-+                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
-+                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene',
-+                        'e1:package_setscene', 'e1:populate_sysroot_setscene', 'e1:build', 'e1:package_qa', 'e1:package_write_rpm', 'e1:package_write_ipk', 'e1:packagedata']
-+            self.assertEqual(set(tasks), set(expected))
-+
-+
-+    def test_hashserv_partial_match3(self):
-+        # e1:do_package is valid for a1 but not after b1
-+        # In former buggy code, this triggered e1:do_fetch, then e1:do_populate_sysroot to run
-+        # with none of the intermediate tasks which is a serious bug
-+        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-+            extraenv = {
-+                "BB_HASHSERVE" : "localhost:0",
-+                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
-+            }
-+            cmd = ["bitbake", "a1", "b1"]
-+            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
-+                             'populate_sysroot_setscene', 'package_qa_setscene']
-+            sstatevalid = ""
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
-+            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks]
-+            self.assertEqual(set(tasks), set(expected))
-+            with open(tempdir + "/stamps/a1.do_install.taint", "w") as f:
-+               f.write("d460a29e-903f-4b76-a96b-3bcc22a65994")
-+            with open(tempdir + "/stamps/b1.do_install.taint", "w") as f:
-+               f.write("ed36d46a-2977-458a-b3de-eef885bc1817")
-+            cmd = ["bitbake", "e1", "-DD"]
-+            sstatevalid = "e1:do_package:b710f6312ffed900b4b2761cc05538645f4ff3e7e0b70d688c70c0f3bcc2e1a2"
-+            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True, slowtasks="e1:fetch")
-+            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
-+                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
-+                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene',
-+                        'e1:package_setscene']  + ['e1:' + x for x in self.alltasks]
-+            expected.remove('e1:package')
-+            self.assertEqual(set(tasks), set(expected))
-+
-+
+     def enableDataTracking(self):
+         self.configuration.tracking = True
+         if hasattr(self, "data"):
+@@ -1677,6 +1681,7 @@ class BBCooker:
+ 
+     def reset(self):
+         self.initConfigurationData()
++        self.handlePRServ()
+ 
+     def clientComplete(self):
+         """Called when the client is done using the server"""
+diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
+index 1d5e08ee5a..55966e748a 100644
+--- a/lib/hashserv/__init__.py
++++ b/lib/hashserv/__init__.py
+@@ -151,6 +151,7 @@ class ThreadedHTTPServer(HTTPServer):
+ 
+         signal.signal(signal.SIGTERM, self.sigterm_exception)
+         super().serve_forever()
++        os._exit(0)
+ 
+     def sigterm_exception(self, signum, stackframe):
+         self.server_close()
 -- 
 2.20.1
 
