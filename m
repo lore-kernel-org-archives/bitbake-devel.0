@@ -1,51 +1,49 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 875D47F32E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+	[209.85.221.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 459E27E58B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Aug 2019 16:49:46 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x79Gnlth025128
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Mon, 12 Aug 2019 15:14:20 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id t16so14773344wra.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 9 Aug 2019 09:49:47 -0700 (PDT)
-Received: from soho-mhatle-m.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.468.0;
-	Fri, 9 Aug 2019 09:49:46 -0700
-To: <bitbake-devel@lists.openembedded.org>
-References: <20190801203654.140427-1-mark.hatle@windriver.com>
-From: Mark Hatle <mark.hatle@windriver.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mark.hatle@windriver.com; prefer-encrypt=mutual; keydata=
-	mQENBFYKxFgBCACt/pzutBp6p/xVKTFJjHbM3KpQKCblyot/YP+bpTr51Hrc5xDXBQhoG7TC
-	aIRvRIvbhEevEQK9y04gW3JK/5lobq5ORebolcsHlYBUvpNeIPjupLQwGvz/TPtrLRNGLqDC
-	rvsM6OA2XbQ2bwzxWaSQS3ImE2O2iXOZn9HhThMGeDB4Nff3fgUvXOTDIrgWOn9K2DgLL7Yc
-	zkUIlFdj+Nraksd/7BSk8oH6tjeBVhFqSFvKta9QxWgdr58oPaTYaW/xNqUjlLrbJuMw/MSe
-	xzuYfdfDfm6J8kRjMOnwQ0n8svJElzqAk+d83ow38gpGQ+LkjGgnf8ZFJ4rUJFADroX3ABEB
-	AAG0JU1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAd2luZHJpdmVyLmNvbT6JATcEEwEIACEFAlYK
-	xFgCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQfv796/r0vvlvZAf9Gs+eN320yhRW
-	V/fZCsngKhmOK4v3HrTwFrkSmoD9QHQiE/5IPdNacHwIPwZx07tNBohB8xOeNqCPRYRBwGhA
-	AnxKOPyd0nnm6ZhPzbA57v4x3IGRQr4QzvcBTASJq91l3Ew4lpAslyx5w1DPPqRD7G8ycDKg
-	peKyDwmdkvCunVisSAQI3XIMq2y230biTO98tDPEezg+lg+yTsz9ZT33F5KNuWrpf8VL5fG/
-	mt+kAv7wtsx/KTRbqhH3iFXF6eBSwMjAfTXFlkLfbM9riJGXrWEl9n2S2R3cDHNHug0lb8f4
-	whK370KEO4OwRKIYW/VUBmzk5XZUE9DTlDSV8ycsrrkBDQRWCsRYAQgAwK3FuHCE+HW3YWdH
-	PUjeSn5p//xJ57u8g2rng8zm9zNjmYgpPv5UxozaD9i2jf4mlQLHGGOezhHae8K4Nj70oVcv
-	8AmwcrJa9i9WL1oy/9R3fHMWf/Ctt9VXTO0qlCuq6PDzaUfvsXR61aJIjTKNQTOjCLjY1vXm
-	VSewUgARysmA8WrjTfwGBihMBxAX0+kIjx8nOlam0WvekMBXZ0AbS56oTLRxYao6DI3GeB/N
-	oWPy/5DfuTKaSdM0Pf8al20x9RuNN5/HLMlyDH/k8bIa1xd9aAqW+Feiw5gC107V2E6ULyIy
-	q6em2UrsmIRxrvpHqbNgQKqvTehJ+V/i4g/uOwARAQABiQEfBBgBCAAJBQJWCsRYAhsMAAoJ
-	EH7+/ev69L755XAH/3ZcNhooqd9OBhFkvXm1iWZ8EoC7motWqVn2oEyxoonsg8AD9kFXiN+T
-	dYp7dH99EZu9q4ptj56AXm4uHzOgywL/5/V2TY6twCGAjUGzDjAB5gzoi+JLIBlDiyOip0eL
-	QswIhRk473xy3j8DA4oVamnSPWgyNJ+qsdt37YWDzoDFFvtDoRU7Eb+znfIMDKzlny0XU/8L
-	cW1bNHJlpv/78GPdfP4tjysEd8MuA5jf5o5w4XqcwTqalffEJtQ/s3pbkstEi7qm5uPui5Kt
-	gq6YYLSqcSNe0GWAF9/T+qwyo7burSTxUWCWtMmlXdAQLW9SynLhB3Jbch0nFAh0fCKi6yY=
-Organization: Wind River Systems
-Message-ID: <e1df1aa0-de09-f507-9868-65211538696b@windriver.com>
-Date: Fri, 9 Aug 2019 11:49:46 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
-	Gecko/20100101 Thunderbird/60.8.0
+	Mon, 12 Aug 2019 08:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=nbx/nLuPLjhsitl85vKef8hCxizM4rj8LS4DVnCxdpU=;
+	b=fxby5Ja1/OZ0GQ0FFOiVu2IXNYnKtjT3dm4E8n9pQ9zB09kO0gP5CMk4VIdLHEWNfW
+	1NBRVyosFY0rr0xu9ziA1WqbYdC0yOisytVEzzBIC4QtYruI3JDLOVHz8XZvc0XsqBlU
+	kHQqObeuQdBhQsSTurB8EB/Numpet+ozeMQK8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=nbx/nLuPLjhsitl85vKef8hCxizM4rj8LS4DVnCxdpU=;
+	b=U05VYMRSJeoYLR80tqqnnTQMW3puxpKyHhVw1BXBq+J5ooy9ckhCKogKsER72THbju
+	TPD/3IQ/M7dpSeJ0ig+WO7AwxDNSFAyrfV8S1tQ1dpWSfiDt84uV2ogYGR+AOF8dBTJU
+	/Li5BmgScHy1sDbYbW5w8eQkjPQ02Cw+SodBdYacRLxfsgq6r3FAzCkVgsC2WveGGaP8
+	A9yvz3Rg/+neE+VRwc3bGNEiIPO7VBkHGz6IzHyu+kDP1ke5c1zVifHYAMwehWnVD8UP
+	KqLkZBj/5EX72mbKmoddITwQfsUneZ2wzW1NSYqmlRnkTONcEub7Byh28QuSSlY1H2k2
+	tOsA==
+X-Gm-Message-State: APjAAAU38n/3GdROvMbYvTSY8s+7myWXzXYa+n4I0BAZ222NVgTff0KJ
+	oLqB/1WUPse14IpzUOk4ree/re5wJOuqWQ==
+X-Google-Smtp-Source: APXvYqwrsORV8SmFTbNLRTyfvDs/aLJTBPNxOeqZiAj7y6ylDN9mLXU4CD5cLsY+4Dzjn4oVyn4/dw==
+X-Received: by 2002:adf:ea01:: with SMTP id q1mr24593727wrm.271.1565622860660; 
+	Mon, 12 Aug 2019 08:14:20 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	b2sm12029638wrf.94.2019.08.12.08.14.19
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+	Mon, 12 Aug 2019 08:14:20 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 12 Aug 2019 16:14:15 +0100
+Message-Id: <20190812151418.31307-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190801203654.140427-1-mark.hatle@windriver.com>
-Subject: Re: [PATCH] layerindexlib: Fix parsing of recursive layer dependencies
+Subject: [PATCH 1/4] runqueue: Fix corruption issue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,78 +56,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 09 Aug 2019 16:49:46 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 12 Aug 2019 15:14:20 -0000
+Content-Transfer-Encoding: 8bit
 
-Ping.  I haven't seen any feedback on this and it doesn't appear to have been
-included in -next.
+We need to copy this set, not modify the original else all kinds
+of weird and bad things break, mostly from circular references.
+We'll not go into how much sleep I lost tracking down the fallout
+from this.
 
---Mark
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/runqueue.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 8/1/19 3:36 PM, Mark Hatle wrote:
-> [YOCTO #13447]
-> 
-> When running bitbake-layers layerindex-fetch from 'master', there is a
-> circular dependency between meta-oe and meta-python.  This triggered a maximum
-> recursion depth exception.
-> 
-> To fix the exception, as we walk down a branch (depth first search), we track
-> the layers we've already seen.  If we are about to recurse into a layer we've
-> already seen we report a warning and then stop recursion.
-> 
-> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-> ---
->  lib/layerindexlib/__init__.py | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/layerindexlib/__init__.py b/lib/layerindexlib/__init__.py
-> index d231cf6a..77196b40 100644
-> --- a/lib/layerindexlib/__init__.py
-> +++ b/lib/layerindexlib/__init__.py
-> @@ -376,7 +376,7 @@ layerBranches set.  If not, they are effectively blank.'''
->                  invalid.append(name)
->  
->  
-> -        def _resolve_dependencies(layerbranches, ignores, dependencies, invalid):
-> +        def _resolve_dependencies(layerbranches, ignores, dependencies, invalid, processed=None):
->              for layerbranch in layerbranches:
->                  if ignores and layerbranch.layer.name in ignores:
->                      continue
-> @@ -388,6 +388,13 @@ layerBranches set.  If not, they are effectively blank.'''
->                      if ignores and deplayerbranch.layer.name in ignores:
->                          continue
->  
-> +                    # Since this is depth first, we need to know what we're currently processing
-> +                    # in order to avoid infinite recursion on a loop.
-> +                    if processed and deplayerbranch.layer.name in processed:
-> +                        # We have found a recursion...
-> +                        logger.warning('Circular layer dependency found: %s -> %s' % (processed, deplayerbranch.layer.name))
-> +                        continue
-> +
->                      # This little block is why we can't re-use the LayerIndexObj version,
->                      # we must be able to satisfy each dependencies across layer indexes and
->                      # use the layer index order for priority.  (r stands for replacement below)
-> @@ -411,7 +418,17 @@ layerBranches set.  If not, they are effectively blank.'''
->  
->                      # New dependency, we need to resolve it now... depth-first
->                      if deplayerbranch.layer.name not in dependencies:
-> -                        (dependencies, invalid) = _resolve_dependencies([deplayerbranch], ignores, dependencies, invalid)
-> +                        # Avoid recursion on this branch.
-> +                        # We copy so we don't end up polluting the depth-first branch with other
-> +                        # branches.  Duplication between individual branches IS expected and
-> +                        # handled by 'dependencies' processing.
-> +                        if not processed:
-> +                            local_processed = []
-> +                        else:
-> +                            local_processed = processed.copy()
-> +                        local_processed.append(deplayerbranch.layer.name)
-> +
-> +                        (dependencies, invalid) = _resolve_dependencies([deplayerbranch], ignores, dependencies, invalid, local_processed)
->  
->                      if deplayerbranch.layer.name not in dependencies:
->                          dependencies[deplayerbranch.layer.name] = [deplayerbranch, layerdependency]
-> 
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index bb61087359..2bf19b9778 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2124,7 +2124,7 @@ class RunQueueExecute:
+     # as most code can't handle them
+     def build_taskdepdata(self, task):
+         taskdepdata = {}
+-        next = self.rqdata.runtaskentries[task].depends
++        next = self.rqdata.runtaskentries[task].depends.copy()
+         next.add(task)
+         next = self.filtermcdeps(task, next)
+         while next:
+-- 
+2.20.1
 
 
