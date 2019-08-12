@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
-	[209.85.221.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 3D2C77E58B
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 51D457E58B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Aug 2019 15:14:21 +0000 (UTC)
-Received: by mail-wr1-f45.google.com with SMTP id 31so104930454wrm.1
+	Mon, 12 Aug 2019 15:14:22 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id n9so105006776wru.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Aug 2019 08:14:22 -0700 (PDT)
+	Mon, 12 Aug 2019 08:14:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=RoqkLvB1jDiLmwR55EPjfOJHovmbbNxoXtv0zbfCtxA=;
-	b=bGIWEXrOruJtc9ox/VIIVWRXKwnGldy0qz3CA1Z/UwzY+ywwRt6FUhjlnpVeUVsEBL
-	GBgYAD/o4wV0fXLgmvuXfIQzUreGs8FCmx/A+ei4h5uHHO2wjN2FtA1xOtP2en0ehFJJ
-	ElI0hRIj5ntxwRFeY2g47lFDAbQIoSzPhNa1E=
+	bh=I6h5lDYvwG1taMXO5kQZxzd0+xeCVPwPn/G6uQfJqtk=;
+	b=iZdXzCa7ONyBywil0VngGtKvu4gf0KdrhPnZ8BjIqhY6Ush421fbQqyjabdoFBcnqk
+	9e6Wy9os6Rlo6azx149ObnXoZDOrdOODBOpW8wFm0/QShg4pdZBskK9qRVUkrQybW9Pu
+	pjgs3Mv2JGuQq67wYPEXWEVbs9cOAYQ7N/IcM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=RoqkLvB1jDiLmwR55EPjfOJHovmbbNxoXtv0zbfCtxA=;
-	b=Ij3tt0fIullKV/GRDG03rhr6e3Ve+GMxqTGy5mb9xHsmkaQ828Yr8pItL1nl+Dxjv7
-	BVUmutoEPXJyKlgLLa2Oqo9gj0kjNUX3wqpFQKMPM6hT+rPWP+msrlm5cmY8s33OyuQ8
-	oik1qp3va6OdhVUQIYu/hkqUAZD07L1WbI/in6r8Xo9g40NGWLe2PPqgdYaH6Jr7Zqr8
-	i04rP7hTXQncqpfs43wPUOB8dDfr3PVkJAQXltFWVIL2/8gjeYmsUAE+HjP9istwn3gg
-	eYFI2KLxOq9NC40pYe8BIqtvV09pAefIyifYiQWF3wK/RabY6YxPMJcCGntna5nhO+gt
-	RFWA==
-X-Gm-Message-State: APjAAAUHTTNMx4Gx+rd+2YpjW2gzsXhWXAq/ImKdw7058xSgzJwG5XbP
-	VoJwkcYRdjdBd3hksU4DpgIBzBRXq6TltA==
-X-Google-Smtp-Source: APXvYqx6p/ylr7kff1VqejRLvijUik2UWlPvx2sm4RDgGKwjEf7xd4N3LiCXJkzrqV/h/Q4MjcBtkw==
-X-Received: by 2002:a5d:6b11:: with SMTP id v17mr40789554wrw.323.1565622861568;
-	Mon, 12 Aug 2019 08:14:21 -0700 (PDT)
+	bh=I6h5lDYvwG1taMXO5kQZxzd0+xeCVPwPn/G6uQfJqtk=;
+	b=nQi6wk8cxPlSIJA7h7uZGO77Gu9Zm4FNYxvLnrTTNzFUpfl7Si7C97h2w52iQUQSw6
+	kuOjc1QPy6ERlHhhz19Q102ojojTSmLvIxu9E2tJQpxz6GEXmzUO+zqQBVs6t5+q8Ihm
+	YiOcQOkhdY1Thzq8PMiFne/KeqQeCv3E7EjwHnvX8WzEi3YJu4P0inxWLXdlfxQjfLjp
+	EBmyLya3Mc4xnppjBvGvUxNxt5qPLeQ4wpWmMmbBrVuq2WDb0iwcDItBEWIfovnUzs6L
+	iiJ0897u+tsU0wXi14jfwnzE9bf5V/i1G7Njq3Ie0ztxA49dSf7qbrK6N3X5oKdfT1PY
+	Dsog==
+X-Gm-Message-State: APjAAAXYpHgYBSuq5A0n1BlAO13JBII8hB5mrZ1xE+vm4NxThnC9zhWh
+	xlMlPsKKYTohlwHL0JV/+fNPf0VuYVftGA==
+X-Google-Smtp-Source: APXvYqzV3tHxK+Ge623nufA2v59bwDnD2TqnQfWLjBxUI71fKsqe8Yq3mnNXiTYXOr7jUL1XJN/TXA==
+X-Received: by 2002:a5d:4b05:: with SMTP id v5mr16128722wrq.208.1565622862537; 
+	Mon, 12 Aug 2019 08:14:22 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	b2sm12029638wrf.94.2019.08.12.08.14.20
+	b2sm12029638wrf.94.2019.08.12.08.14.21
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Mon, 12 Aug 2019 08:14:21 -0700 (PDT)
+	Mon, 12 Aug 2019 08:14:22 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 12 Aug 2019 16:14:16 +0100
-Message-Id: <20190812151418.31307-2-richard.purdie@linuxfoundation.org>
+Date: Mon, 12 Aug 2019 16:14:17 +0100
+Message-Id: <20190812151418.31307-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190812151418.31307-1-richard.purdie@linuxfoundation.org>
 References: <20190812151418.31307-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 2/4] runqueue: Improve setscene task handling logic
+Subject: [PATCH 3/4] tests/runqueue: Add further hash equivalence tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,214 +58,256 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 12 Aug 2019 15:14:21 -0000
+X-List-Received-Date: Mon, 12 Aug 2019 15:14:22 -0000
 Content-Transfer-Encoding: 8bit
 
-The previous tasks_covered and tasks_notcovered were basically unstable
-data structures. We couldn't always tell whether tasks should be covered
-or not when trying to repair the sturcture if sstate tasks reran.
-
-In the end its simpler to throw the lists away and rebuild them based upon
-current data rather than trying to patch it adhoc. This turns out to be
-simpler and much more reliable and I've much more confidence in this code.
+Add some extra hash equivalence runqueue tests based on recent scenarios
+that caused problems during testing.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 109 ++++++++++++++-------------------------------
- 1 file changed, 34 insertions(+), 75 deletions(-)
+ .../tests/runqueue-tests/classes/base.bbclass |  20 ++-
+ lib/bb/tests/runqueue-tests/conf/bitbake.conf |   2 +-
+ lib/bb/tests/runqueue.py                      | 155 +++++++++++++++++-
+ 3 files changed, 165 insertions(+), 12 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 2bf19b9778..bda8a4baee 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1730,7 +1730,9 @@ class RunQueueExecute:
-         self.tasks_notcovered = set()
-         self.scenequeue_notneeded = set()
+diff --git a/lib/bb/tests/runqueue-tests/classes/base.bbclass b/lib/bb/tests/runqueue-tests/classes/base.bbclass
+index 138edc3fa9..b57650d591 100644
+--- a/lib/bb/tests/runqueue-tests/classes/base.bbclass
++++ b/lib/bb/tests/runqueue-tests/classes/base.bbclass
+@@ -7,7 +7,7 @@ def stamptask(d):
+     thistask = d.expand("${PN}:${BB_CURRENTTASK}")
+     stampname = d.expand("${TOPDIR}/%s.run" % thistask)
+     with open(stampname, "a+") as f:
+-        f.write("\n")
++        f.write(d.getVar("BB_UNIHASH") + "\n")
  
--        self.coveredtopocess = set()
-+        # We can't skip specified target tasks which aren't setscene tasks
-+        self.cantskip = set(self.rqdata.target_tids)
-+        self.cantskip.difference_update(self.rqdata.runq_setscene_tids)
+     if d.getVar("BB_CURRENT_MC") != "default":
+         thistask = d.expand("${BB_CURRENT_MC}:${PN}:${BB_CURRENTTASK}")
+@@ -235,18 +235,28 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, **kwargs):
  
-         schedulers = self.get_schedulers()
-         for scheduler in schedulers:
-@@ -2237,10 +2239,9 @@ class RunQueueExecute:
+     valid = d.getVar("SSTATEVALID").split()
  
-             for dep in self.sqdata.sq_covered_tasks[tid]:
-                 if dep not in self.runq_complete:
--                    if dep in self.tasks_scenequeue_done:
-+                    if dep in self.tasks_scenequeue_done and dep not in self.sqdata.unskippable:
-+                        logger.debug(1, "Removing to done %s" % dep)
-                         self.tasks_scenequeue_done.remove(dep)
--                    if dep in self.tasks_notcovered:
--                        self.tasks_notcovered.remove(dep)
+-    for tid in sq_data['hash']:
++    for tid in sorted(sq_data['hash']):
+         n = os.path.basename(bb.runqueue.fn_from_tid(tid)).split(".")[0] + ":do_" + bb.runqueue.taskname_from_tid(tid)[3:]
+         print(n)
++        stampfile = d.expand("${TOPDIR}/%s.run" % n.replace("do_", ""))
+         if n in valid:
+             bb.note("SState: Found valid sstate for %s" % n)
+             found.add(tid)
+-        elif os.path.exists(d.expand("${TOPDIR}/%s.run" % n.replace("do_", ""))):
+-            bb.note("SState: Found valid sstate for %s (already run)" % n)
++        elif n + ":" + sq_data['hash'][tid] in valid:
++            bb.note("SState: Found valid sstate for %s" % n)
+             found.add(tid)
++        elif os.path.exists(stampfile):
++            with open(stampfile, "r") as f:
++                hash = f.readline().strip()
++            if hash == sq_data['hash'][tid]:
++                bb.note("SState: Found valid sstate for %s (already run)" % n)
++                found.add(tid)
++            else:
++                bb.note("SState: sstate hash didn't match previous run for %s (%s vs %s)" % (n, sq_data['hash'][tid], hash))
++                missed.add(tid)
+         else:
+             missed.add(tid)
+-            bb.note("SState: Found no valid sstate for %s" % n)
++            bb.note("SState: Found no valid sstate for %s (%s)" % (n, sq_data['hash'][tid]))
  
-             if tid in self.sq_buildable:
-                 self.sq_buildable.remove(tid)
-@@ -2254,6 +2255,8 @@ class RunQueueExecute:
-                 self.sqdata.outrightfail.remove(tid)
-             if tid in self.scenequeue_notcovered:
-                 self.scenequeue_notcovered.remove(tid)
-+            if tid in self.scenequeue_covered:
-+                self.scenequeue_covered.remove(tid)
+     return found
  
-             (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
-             self.sqdata.stamps[tid] = bb.build.stampfile(taskname + "_setscene", self.rqdata.dataCaches[mc], taskfn, noextra=True)
-@@ -2269,41 +2272,8 @@ class RunQueueExecute:
-         if changes:
-             self.update_holdofftasks()
+diff --git a/lib/bb/tests/runqueue-tests/conf/bitbake.conf b/lib/bb/tests/runqueue-tests/conf/bitbake.conf
+index 1c61f27607..ab0f6bcfac 100644
+--- a/lib/bb/tests/runqueue-tests/conf/bitbake.conf
++++ b/lib/bb/tests/runqueue-tests/conf/bitbake.conf
+@@ -11,6 +11,6 @@ STAMP = "${TMPDIR}/stamps/${PN}"
+ T = "${TMPDIR}/workdir/${PN}/temp"
+ BB_NUMBER_THREADS = "4"
  
--    def scenequeue_process_notcovered(self, task):
--        if len(self.rqdata.runtaskentries[task].depends) == 0:
--            self.setbuildable(task)
--        notcovered = set([task])
--        while notcovered:
--            new = set()
--            for t in sorted(notcovered):
--                for deptask in sorted(self.rqdata.runtaskentries[t].depends):
--                    if deptask in notcovered or deptask in new or deptask in self.rqdata.runq_setscene_tids or deptask in self.tasks_notcovered:
--                        continue
--                    logger.debug(1, 'Task %s depends on non-setscene task %s so not skipping' % (t, deptask))
--                    new.add(deptask)
--                    self.tasks_notcovered.add(deptask)
--                    if len(self.rqdata.runtaskentries[deptask].depends) == 0:
--                        self.setbuildable(deptask)
--            notcovered = new
--
--    def scenequeue_process_unskippable(self, task):
--        # Look up the dependency chain for non-setscene things which depend on this task
--        # and mark as 'done'/notcovered
--        ready = set([task])
--        while ready:
--            new = set()
--            for t in sorted(ready):
--                for deptask in sorted(self.rqdata.runtaskentries[t].revdeps):
--                    if deptask in ready or deptask in new or deptask in self.tasks_scenequeue_done or deptask in self.rqdata.runq_setscene_tids:
--                        continue
--                    if deptask in self.sqdata.unskippable:
--                        new.add(deptask)
--                        self.tasks_scenequeue_done.add(deptask)
--                        self.tasks_notcovered.add(deptask)
--                        #logger.warning("Up: " + str(deptask))
--            ready = new
--
-     def scenequeue_updatecounters(self, task, fail=False):
+-BB_HASHBASE_WHITELIST = "BB_CURRENT_MC BB_HASHSERVE"
++BB_HASHBASE_WHITELIST = "BB_CURRENT_MC BB_HASHSERVE TMPDIR TOPDIR SLOWTASKS SSTATEVALID"
+ 
+ include conf/multiconfig/${BB_CURRENT_MC}.conf
+diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
+index fbdacccfa1..1103f905f9 100644
+--- a/lib/bb/tests/runqueue.py
++++ b/lib/bb/tests/runqueue.py
+@@ -40,10 +40,12 @@ class RunQueueTests(unittest.TestCase):
+         except subprocess.CalledProcessError as e:
+             self.fail("Command %s failed with %s" % (cmd, e.output))
+         tasks = []
+-        with open(builddir + "/task.log", "r") as f:
+-            tasks = [line.rstrip() for line in f]
+-        if cleanup:
+-            os.remove(builddir + "/task.log")
++        tasklog = builddir + "/task.log"
++        if os.path.exists(tasklog):
++            with open(tasklog, "r") as f:
++                tasks = [line.rstrip() for line in f]
++            if cleanup:
++                os.remove(tasklog)
+         return tasks
+ 
+     def test_no_setscenevalid(self):
+@@ -229,7 +231,7 @@ class RunQueueTests(unittest.TestCase):
+             self.assertEqual(set(tasks), set(expected))
+ 
+ 
+-    def test_hashserv(self):
++    def test_hashserv_single(self):
+         with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
+             extraenv = {
+                 "BB_HASHSERVE" : "localhost:0",
+@@ -248,6 +250,147 @@ class RunQueueTests(unittest.TestCase):
+             self.assertEqual(set(tasks), set(expected))
+             cmd = ["bitbake", "a1", "b1"]
+             tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
+-            expected = ['a1:' + x for x in setscenetasks] + ['b1:' + x for x in setscenetasks] + ['a1:build', 'b1:build']
++            expected = ['a1:populate_sysroot', 'a1:package', 'a1:package_write_rpm_setscene', 'a1:packagedata_setscene',
++                        'a1:package_write_ipk_setscene', 'a1:package_qa_setscene']
+             self.assertEqual(set(tasks), set(expected))
+ 
++    def test_hashserv_double(self):
++        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
++            extraenv = {
++                "BB_HASHSERVE" : "localhost:0",
++                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
++            }
++            cmd = ["bitbake", "a1", "b1", "e1"]
++            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
++                             'populate_sysroot_setscene', 'package_qa_setscene']
++            sstatevalid = ""
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks] + ['e1:' + x for x in self.alltasks]
++            self.assertEqual(set(tasks), set(expected))
++            cmd = ["bitbake", "a1", "b1", "-c", "install", "-fn"]
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            cmd = ["bitbake", "e1"]
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
++                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
++                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene']
++            self.assertEqual(set(tasks), set(expected))
 +
-         for dep in sorted(self.sqdata.sq_deps[task]):
-             if fail and task in self.sqdata.sq_harddeps and dep in self.sqdata.sq_harddeps[task]:
-                 logger.debug(2, "%s was unavailable and is a hard dependency of %s so skipping" % (task, dep))
-@@ -2325,39 +2295,31 @@ class RunQueueExecute:
-                         continue
-                     if self.rqdata.runtaskentries[dep].revdeps.issubset(self.tasks_scenequeue_done):
-                         new.add(dep)
--                        #logger.warning(" Down: " + dep)
-             next = new
- 
--        if task in self.sqdata.unskippable:
--            self.scenequeue_process_unskippable(task)
--
--        if task in self.scenequeue_notcovered:
--            logger.debug(1, 'Not skipping setscene task %s', task)
--            self.scenequeue_process_notcovered(task)
--        elif task in self.scenequeue_covered:
--            logger.debug(1, 'Queued setscene task %s', task)
--            self.coveredtopocess.add(task)
--
--        for task in sorted(self.coveredtopocess.copy()):
--            if self.sqdata.sq_covered_tasks[task].issubset(self.tasks_scenequeue_done):
--                logger.debug(1, 'Processing setscene task %s', task)
--                covered = self.sqdata.sq_covered_tasks[task]
--                covered.add(task)
--
--                # If a task is in target_tids and isn't a setscene task, we can't skip it.
--                cantskip = covered.intersection(self.rqdata.target_tids).difference(self.rqdata.runq_setscene_tids)
--                for tid in sorted(cantskip):
--                    self.tasks_notcovered.add(tid)
--                    self.scenequeue_process_notcovered(tid)
--                covered.difference_update(cantskip)
--
--                # Remove notcovered tasks
--                covered.difference_update(self.tasks_notcovered)
--                self.tasks_covered.update(covered)
--                self.coveredtopocess.remove(task)
--                for tid in sorted(covered):
--                    if self.rqdata.runtaskentries[tid].depends.issubset(self.runq_complete):
--                        self.setbuildable(tid)
-+        notcovered = set(self.scenequeue_notcovered)
-+        notcovered |= self.cantskip
-+        for tid in self.scenequeue_notcovered:
-+            notcovered |= self.sqdata.sq_covered_tasks[tid]
-+        notcovered |= self.sqdata.unskippable.difference(self.rqdata.runq_setscene_tids)
-+        notcovered.intersection_update(self.tasks_scenequeue_done)
 +
-+        covered = set(self.scenequeue_covered)
-+        for tid in self.scenequeue_covered:
-+            covered |= self.sqdata.sq_covered_tasks[tid]
-+        covered.difference_update(notcovered)
-+        covered.intersection_update(self.tasks_scenequeue_done)
++    def test_hashserv_multiple_setscene(self):
++        # Runs e1:do_package_setscene twice
++        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
++            extraenv = {
++                "BB_HASHSERVE" : "localhost:0",
++                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
++            }
++            cmd = ["bitbake", "a1", "b1", "e1"]
++            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
++                             'populate_sysroot_setscene', 'package_qa_setscene']
++            sstatevalid = ""
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks] + ['e1:' + x for x in self.alltasks]
++            self.assertEqual(set(tasks), set(expected))
++            cmd = ["bitbake", "a1", "b1", "-c", "install", "-fn"]
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            cmd = ["bitbake", "e1"]
++            sstatevalid = "e1:do_package"
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True, slowtasks="a1:populate_sysroot b1:populate_sysroot")
++            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
++                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
++                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene',
++                        'e1:package_setscene']
++            self.assertEqual(set(tasks), set(expected))
++            for i in expected:
++                if i in ["e1:package_setscene"]:
++                    self.assertEqual(tasks.count(i), 4, "%s not in task list four times" % i)
++                else:
++                    self.assertEqual(tasks.count(i), 1, "%s not in task list once" % i)
 +
-+        for tid in notcovered:
-+            if len(self.rqdata.runtaskentries[tid].depends) == 0:
-+                self.setbuildable(tid)
-+        for tid in covered:
-+             if self.rqdata.runtaskentries[tid].depends.issubset(self.runq_complete):
-+                 self.setbuildable(tid)
++    def test_hashserv_partial_match(self):
++        # e1:do_package matches initial built but not second hash value
++        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
++            extraenv = {
++                "BB_HASHSERVE" : "localhost:0",
++                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
++            }
++            cmd = ["bitbake", "a1", "b1"]
++            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
++                             'populate_sysroot_setscene', 'package_qa_setscene']
++            sstatevalid = ""
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks]
++            self.assertEqual(set(tasks), set(expected))
++            with open(tempdir + "/stamps/a1.do_install.taint", "w") as f:
++               f.write("d460a29e-903f-4b76-a96b-3bcc22a65994")
++            with open(tempdir + "/stamps/b1.do_install.taint", "w") as f:
++               f.write("ed36d46a-2977-458a-b3de-eef885bc1817")
++            cmd = ["bitbake", "e1"]
++            sstatevalid = "e1:do_package:cb47e017ab549d87aab614c0f49dcf969ff6414745909094f0af7e657cedc657"
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
++                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
++                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene',
++                        'e1:package_setscene'] + ['e1:' + x for x in self.alltasks]
++            expected.remove('e1:package')
++            self.assertEqual(set(tasks), set(expected))
 +
-+        self.tasks_covered = covered
-+        self.tasks_notcovered = notcovered
++    def test_hashserv_partial_match2(self):
++        # e1:do_package + e1:do_populate_sysroot matches initial built but not second hash value
++        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
++            extraenv = {
++                "BB_HASHSERVE" : "localhost:0",
++                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
++            }
++            cmd = ["bitbake", "a1", "b1"]
++            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
++                             'populate_sysroot_setscene', 'package_qa_setscene']
++            sstatevalid = ""
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks]
++            self.assertEqual(set(tasks), set(expected))
++            with open(tempdir + "/stamps/a1.do_install.taint", "w") as f:
++               f.write("d460a29e-903f-4b76-a96b-3bcc22a65994")
++            with open(tempdir + "/stamps/b1.do_install.taint", "w") as f:
++               f.write("ed36d46a-2977-458a-b3de-eef885bc1817")
++            cmd = ["bitbake", "e1"]
++            sstatevalid = "e1:do_package:cb47e017ab549d87aab614c0f49dcf969ff6414745909094f0af7e657cedc657 e1:do_populate_sysroot:aa6a915229f04af429d3c6c59c303516c500650b7c48da8e07b20a53acd86c5f"
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
++                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
++                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene',
++                        'e1:package_setscene', 'e1:populate_sysroot_setscene', 'e1:build', 'e1:package_qa', 'e1:package_write_rpm', 'e1:package_write_ipk', 'e1:packagedata']
++            self.assertEqual(set(tasks), set(expected))
 +
-         self.update_holdofftasks()
- 
-     def sq_task_completeoutright(self, task):
-@@ -2369,7 +2331,6 @@ class RunQueueExecute:
- 
-         logger.debug(1, 'Found task %s which could be accelerated', task)
-         self.scenequeue_covered.add(task)
--        self.tasks_covered.add(task)
-         self.scenequeue_updatecounters(task)
- 
-     def sq_check_taskfail(self, task):
-@@ -2390,7 +2351,6 @@ class RunQueueExecute:
-         self.sq_stats.taskFailed()
-         bb.event.fire(sceneQueueTaskFailed(task, self.sq_stats, result, self), self.cfgData)
-         self.scenequeue_notcovered.add(task)
--        self.tasks_notcovered.add(task)
-         self.scenequeue_updatecounters(task, True)
-         self.sq_check_taskfail(task)
- 
-@@ -2400,7 +2360,6 @@ class RunQueueExecute:
-         self.sq_stats.taskSkipped()
-         self.sq_stats.taskCompleted()
-         self.scenequeue_notcovered.add(task)
--        self.tasks_notcovered.add(task)
-         self.scenequeue_updatecounters(task, True)
- 
-     def sq_task_skip(self, task):
-@@ -2564,6 +2523,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     for tid in rqdata.runtaskentries:
-         if len(rqdata.runtaskentries[tid].revdeps) == 0:
-             sqdata.unskippable.add(tid)
-+    sqdata.unskippable |= sqrq.cantskip
-     while new:
-         new = False
-         orig = sqdata.unskippable.copy()
-@@ -2572,14 +2532,13 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-                 continue
-             if len(rqdata.runtaskentries[tid].depends) == 0:
-                 # These are tasks which have no setscene tasks in their chain, need to mark as directly buildable
--                sqrq.tasks_notcovered.add(tid)
--                sqrq.tasks_scenequeue_done.add(tid)
-                 sqrq.setbuildable(tid)
--            sqrq.scenequeue_process_unskippable(tid)
-             sqdata.unskippable |= rqdata.runtaskentries[tid].depends
-             if sqdata.unskippable != orig:
-                 new = True
- 
-+    sqrq.tasks_scenequeue_done |= sqdata.unskippable.difference(rqdata.runq_setscene_tids)
 +
-     rqdata.init_progress_reporter.next_stage(len(rqdata.runtaskentries))
- 
-     # Sanity check all dependencies could be changed to setscene task references
++    def test_hashserv_partial_match3(self):
++        # e1:do_package is valid for a1 but not after b1
++        # In former buggy code, this triggered e1:do_fetch, then e1:do_populate_sysroot to run
++        # with none of the intermediate tasks which is a serious bug
++        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
++            extraenv = {
++                "BB_HASHSERVE" : "localhost:0",
++                "BB_SIGNATURE_HANDLER" : "TestEquivHash"
++            }
++            cmd = ["bitbake", "a1", "b1"]
++            setscenetasks = ['package_write_ipk_setscene', 'package_write_rpm_setscene', 'packagedata_setscene',
++                             'populate_sysroot_setscene', 'package_qa_setscene']
++            sstatevalid = ""
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True)
++            expected = ['a1:' + x for x in self.alltasks] + ['b1:' + x for x in self.alltasks]
++            self.assertEqual(set(tasks), set(expected))
++            with open(tempdir + "/stamps/a1.do_install.taint", "w") as f:
++               f.write("d460a29e-903f-4b76-a96b-3bcc22a65994")
++            with open(tempdir + "/stamps/b1.do_install.taint", "w") as f:
++               f.write("ed36d46a-2977-458a-b3de-eef885bc1817")
++            cmd = ["bitbake", "e1", "-DD"]
++            sstatevalid = "e1:do_package:b710f6312ffed900b4b2761cc05538645f4ff3e7e0b70d688c70c0f3bcc2e1a2"
++            tasks = self.run_bitbakecmd(cmd, tempdir, sstatevalid, extraenv=extraenv, cleanup=True, slowtasks="e1:fetch")
++            expected = ['a1:package', 'a1:install', 'b1:package', 'b1:install', 'a1:populate_sysroot', 'b1:populate_sysroot',
++                        'a1:package_write_ipk_setscene', 'b1:packagedata_setscene', 'b1:package_write_rpm_setscene',
++                        'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene',
++                        'e1:package_setscene']  + ['e1:' + x for x in self.alltasks]
++            expected.remove('e1:package')
++            self.assertEqual(set(tasks), set(expected))
++
++
 -- 
 2.20.1
 
