@@ -1,51 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com
-	[209.85.221.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 135CA7ECA6
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com
+	[209.85.128.50])
+	by mail.openembedded.org (Postfix) with ESMTP id AAB9F7EAC3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Aug 2019 13:53:26 +0000 (UTC)
-Received: by mail-wr1-f46.google.com with SMTP id c3so2921899wrd.7
+	Wed, 14 Aug 2019 15:02:51 +0000 (UTC)
+Received: by mail-wm1-f50.google.com with SMTP id v15so4888600wml.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Aug 2019 06:53:28 -0700 (PDT)
+	Wed, 14 Aug 2019 08:02:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+	h=from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=DFifN8zGFbs1VfGzHEab4h1DYyTm0920HMn94SGFwis=;
-	b=ZiuabF1OCy9d7+v667iIznBfmK8TGEj4/6g0a5pDU7spswNd4cnPspLfZrGtwsD46I
-	eqlqwA1mfdatvsl8wgGRC3IH3s4ZjJAT90xjnNgGWJcaVErDEVObklA0Y1P1AALJd987
-	9SkJ6zFesWDfCEo38xLhSEc3wjSX5jnDwGcW8=
+	bh=aMMBAyvcpoX7TJjxhu911WAPw8BaESM0GPGE9Tel/v8=;
+	b=bVPz1eR/y+BfLiWjYhbZgaoOG8sljQQ4joJsEqbvHFJgzMNCVcM6U80nQ99mQxa20J
+	QKGagh0nMklCFsfrO4TrnyjRdodlwNwDRHnLWWw2z5vd2Wow0QO2K15hSgeKnw6uJtUG
+	wKjIJieaqriNGezR5oGzWWrZYfLahYqdx8gPo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=DFifN8zGFbs1VfGzHEab4h1DYyTm0920HMn94SGFwis=;
-	b=V459IJ4uv/TJ9itoEudrycBUjQcNNWq5bSEagkhrBuMxg9nmRAXlUhDVWl/mPYkT25
-	RpnMLsmLiV5mqMIixUNdftMkzalzo5uXEwDu+arvrkCfYDXx3oB8G7+lJWFVXEh5P8+2
-	Xy7RGAkvDVN1z66dfqlML3vMCw6EAo/u1w6dynG+wum9LjXm58iALuQ0z0ncdGutsWLX
-	TSL///QzpUe2KOkncoBpdHWKkyshRlU8fmsrNcrTM9XRXjrGoPXvlqUTpZ1IQnjB6RtI
-	JfZ1R51x1c8yTtfeCsgNTordhAe5khfbaTc5JW+2hJTtRDB1Q/n+htVGBCG8JUo99w6t
-	syMQ==
-X-Gm-Message-State: APjAAAXaZ71hdXBpgGREeHpNrBgJOw/Gx15BpYTR4XhZGDsLcOEwuYDK
-	lbgWF2T3XRiybTzXo1KMgNmWZEupa1oRhg==
-X-Google-Smtp-Source: APXvYqyp8ODZDT6od7fumglpUGcdiKpT25KR0c+s1vGFm6TeVLwKRyTGQSCfAmb9gczltC23J0YS/g==
-X-Received: by 2002:a5d:6911:: with SMTP id t17mr17169140wru.255.1565790807440;
-	Wed, 14 Aug 2019 06:53:27 -0700 (PDT)
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=aMMBAyvcpoX7TJjxhu911WAPw8BaESM0GPGE9Tel/v8=;
+	b=ssIlGopKD+I3qw71I4mraEaTSIlAnELXI2hvGyF1gdy6s4MLjvlUhrYv7dv0ALRwQT
+	NkSKElIKJDTIqvJSUO2B9B0tEiqTSnYq/VTiC3+xGd5cffQFuCoeqVxj8iEV/z1tn2RB
+	nRl2DjfcA6cJRMxIqqBHAjmCGgEZ/Z6yNs/ojQ+xGwFzghzdfOrtf49PYauvQPXgAZmI
+	iyYQqOuzVm7Nk3CG0d/N58sDuPNUt9rltqcHApklu8NN7rTrEhQX+hSODmGoxko06izE
+	lOfYCrLiWC6Ht658xa3JFqUdSBWkprnUl+KnvLYDoEYzCnwzD8hceGfY13pDIUwcnXWJ
+	HGaQ==
+X-Gm-Message-State: APjAAAV0pKnQGHa5NBzHz5fi14FbSKhxd52XqE5Pj9Oc29K1bG/72Ivr
+	/XMyL8U8xI1bsB9Xd1avWTJugusQwO4fMQ==
+X-Google-Smtp-Source: APXvYqy8NMWhImpqgW1mwW9/+eLX0su3BFj+lE/ieYdIL3KwpSwqG2jR3EynBdMcQTscXudyAxyYJg==
+X-Received: by 2002:a1c:a6c8:: with SMTP id p191mr8563846wme.99.1565794972240; 
+	Wed, 14 Aug 2019 08:02:52 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	e6sm1859275wrr.14.2019.08.14.06.53.26
+	v65sm6165285wme.31.2019.08.14.08.02.51
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Wed, 14 Aug 2019 06:53:26 -0700 (PDT)
+	Wed, 14 Aug 2019 08:02:51 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Aug 2019 14:53:17 +0100
-Message-Id: <20190814135317.28887-10-richard.purdie@linuxfoundation.org>
+Date: Wed, 14 Aug 2019 16:02:48 +0100
+Message-Id: <20190814150250.332-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814135317.28887-1-richard.purdie@linuxfoundation.org>
-References: <20190814135317.28887-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 10/10] runqueue: Drop debug statement causing performance issues
+Subject: [PATCH 1/3] runqueue: Add further debug information
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,33 +56,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Aug 2019 13:53:27 -0000
+X-List-Received-Date: Wed, 14 Aug 2019 15:02:53 -0000
 Content-Transfer-Encoding: 8bit
 
-This debug statement could result in a long list of tasks which when
-repeatedly sent over our IPC, slowed down the builds immensely. Remove
-it in favour of other more targetted debugging added recently, brining
-back some lost performance, partciclarly on builds with large numbers
-of tasks.
+Further testing shows we should test some extra datastructures to help pinpoint logic
+errors more precisely. This adds some further data structure sanity checks.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 2 --
- 1 file changed, 2 deletions(-)
+ lib/bb/runqueue.py | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index a04703c870..b571dde4bf 100644
+index b571dde4bf..ff19564a8c 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -2189,8 +2189,6 @@ class RunQueueExecute:
-             for dep in self.sqdata.sq_covered_tasks[tid]:
-                 if dep not in self.runq_complete:
-                     self.holdoff_tasks.add(dep)
--        logger.debug(2, "Holding off tasks %s" % pprint.pformat(self.holdoff_tasks))
--
+@@ -1918,6 +1918,17 @@ class RunQueueExecute:
+             logger.error("Scenequeue had holdoff tasks: %s" % pprint.pformat(self.holdoff_tasks))
+             err = True
  
-     def process_possible_migrations(self):
- 
++        for tid in self.rqdata.runq_setscene_tids:
++            if tid not in self.scenequeue_covered and tid not in self.scenequeue_notcovered:
++                err = True
++                logger.error("Setscene Task %s was never marked as covered or not covered" % tid)
++            if tid not in self.sq_buildable:
++                err = True
++                logger.error("Setscene Task %s was never marked as buildable" % tid)
++            if tid not in self.sq_running:
++                err = True
++                logger.error("Setscene Task %s was never marked as running" % tid)
++
+         for x in self.rqdata.runtaskentries:
+             if x not in self.tasks_covered and x not in self.tasks_notcovered:
+                 logger.error("Task %s was never moved from the setscene queue" % x)
 -- 
 2.20.1
 
