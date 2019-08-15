@@ -1,52 +1,29 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com
-	[209.85.128.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 034CC7D6C5
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id DF8937CD73
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Aug 2019 15:02:53 +0000 (UTC)
-Received: by mail-wm1-f42.google.com with SMTP id p74so4879660wme.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Aug 2019 08:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=wGng2OoYPUCS416VBV6mCMW3mJ0TzLaxTVvoDLmXAck=;
-	b=fCr46B3RbysAJjCu6C0kQY36azLY78f/MvBSOUtNU/27sMNfGtdUPW+aXjvPiq6+wx
-	A1ZUcFizHb7G3cCMqHXgqWoHQDiK9mL0S4O/i2nhPbD74hXEnYpV+KaRYEhwcXWBdmcp
-	+SAFDXZVafAiO/S14kqAR2d4T7z5KCi7vO9+Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=wGng2OoYPUCS416VBV6mCMW3mJ0TzLaxTVvoDLmXAck=;
-	b=LrK0zZ/SCkZwd0clcF3Ny4bRZupdyj/YI/qcvQBp/303kZ4nrxx9Vq2Zy7QCfb2ZUo
-	aOC8Foj0Vs+CTxB9UrLWQTec/4UXC9XoSJPlzWeNB1FN+UElYhRh9u97eZLXW4V1q8HH
-	Cbe/oxE/TobnTjlb14uOMc7/GwWFQjvaE9OCzYLd0Kyjyd1w4vPmhBVVvDvMtSZRuURl
-	jo8j0DMOwIG2SF+txa/TbvZ63zwIrJv40O6Lur8Wzk5Gpy4h+oN6IyW2djFZP0bXdlAl
-	7nqaibFnqg0LjdlGuHsxvKwq6GdK3OOCiBfPXHbOyTI1pUWARHvPvrHRf6qPYAqRAKUU
-	1pJg==
-X-Gm-Message-State: APjAAAWjdTBb308a6aj4ko9yuRstMREBL2LlgD7CpgejSW+jCy7vHseP
-	cS1+sG6u8uH++/Ok2F2x1WcxrfFn5YIB+Q==
-X-Google-Smtp-Source: APXvYqxl71oKUxeDGFKvo8oDYNgBit9pKQUVEWEh1JeeUEE3wDn7/6uxd7rxmodRMukyKKP/vwfXbQ==
-X-Received: by 2002:a05:600c:40f:: with SMTP id
-	q15mr9270724wmb.88.1565794974385; 
-	Wed, 14 Aug 2019 08:02:54 -0700 (PDT)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	v65sm6165285wme.31.2019.08.14.08.02.53
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-	Wed, 14 Aug 2019 08:02:53 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Aug 2019 16:02:50 +0100
-Message-Id: <20190814150250.332-3-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190814150250.332-1-richard.purdie@linuxfoundation.org>
-References: <20190814150250.332-1-richard.purdie@linuxfoundation.org>
+	Thu, 15 Aug 2019 10:54:54 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x7FAsIKm005102
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 15 Aug 2019 03:54:28 -0700
+Received: from localhost.localdomain (128.224.162.182) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.3.468.0; Thu, 15 Aug 2019 03:54:07 -0700
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	<bitbake-devel@lists.openembedded.org>
+References: <cover.1557388944.git.liezhi.yang@windriver.com>
+	<ac4edd962cb6b4831cb85cd731d2d2a810c62503.1557388944.git.liezhi.yang@windriver.com>
+	<850ae48669455c75cf34b2306f01add428aa62c0.camel@linuxfoundation.org>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <95b0b779-42a9-5078-1d40-a6ecb0b38294@windriver.com>
+Date: Thu, 15 Aug 2019 18:55:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+	Thunderbird/60.8.0
 MIME-Version: 1.0
-Subject: [PATCH 3/3] runqueue: Ensure we clear the stamp cache
+In-Reply-To: <850ae48669455c75cf34b2306f01add428aa62c0.camel@linuxfoundation.org>
+Subject: Re: [PATCH 1/1] bitbake: cookerdata: Avoid double exceptions for bb.fatal()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,33 +36,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Aug 2019 15:02:54 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 15 Aug 2019 10:54:55 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-When the task hashes change we need to ensure the stampcache is cleared out
-else tasks don't rerun when they should as we're basing decisions on stale
-cache data.
+Hi RP,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/runqueue.py | 3 +++
- 1 file changed, 3 insertions(+)
+On 5/12/19 4:28 PM, Richard Purdie wrote:
+> On Thu, 2019-05-09 at 16:03 +0800, Robert Yang wrote:
+>> The bb.fatal() raises BBHandledException() which causes double exceptions,
+>> e.g.:
+>>
+>> Add 'HOSTTOOLS += "hello"' to conf/local.conf:
+>> $ bitbake -p
+>> [snip]
+>> During handling of the above exception, another exception occurred:
+>> [snip]
+>> ERROR: The following required tools (as specified by HOSTTOOLS) appear to be unavailable in PATH, please install them in order to proceed:
+>>    hello
+>>
+>> Use "raise" rather than "raise bb.BBHandledException" to fix the double
+>> exceptions.
+>>
+>> [YOCTO #13267]
+>>
+>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>> ---
+>>   bitbake/lib/bb/cookerdata.py | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/bitbake/lib/bb/cookerdata.py
+>> b/bitbake/lib/bb/cookerdata.py
+>> index f8ae410..585edc5 100644
+>> --- a/bitbake/lib/bb/cookerdata.py
+>> +++ b/bitbake/lib/bb/cookerdata.py
+>> @@ -301,7 +301,9 @@ class CookerDataBuilder(object):
+>>               if multiconfig:
+>>                   bb.event.fire(bb.event.MultiConfigParsed(self.mcdata
+>> ), self.data)
+>>   
+>> -        except (SyntaxError, bb.BBHandledException):
+>> +        except bb.BBHandledException:
+>> +            raise
+>> +        except SyntaxError:
+>>               raise bb.BBHandledException
+>>           except bb.data_smart.ExpansionError as e:
+>>               logger.error(str(e))
+> 
+> Hi Robert,
+> 
+> This doesn't sound right, where is this exception being printed a
+> second time? The point of "BBHandledException" is to say "don't print
+> any further traces for this exception". If this fixes the bug, it means
+> something somewhere is printing a trace for a second time when it
+> should pass through BBHandledException?
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 9f4337610b..4bf817773a 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2307,6 +2307,9 @@ class RunQueueExecute:
-             (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
-             self.sqdata.stamps[tid] = bb.build.stampfile(taskname + "_setscene", self.rqdata.dataCaches[mc], taskfn, noextra=True)
- 
-+            if tid in self.stampcache:
-+                del self.stampcache[tid]
-+
-             if tid in self.build_stamps:
-                 del self.build_stamps[tid]
- 
--- 
-2.20.1
+I think that I've found the root cause, it is because no code handles
+BBHandledException during server is starting, so we will *always* get
+(double) exceptions when BBHandledException comes during server is starting,
+such as call bb.fatal() during parsing configurations files. I will
+send a patch to fix it.
 
+// Robert
+
+> 
+> Cheers,
+> 
+> Richard
+> 
+> 
 
