@@ -1,57 +1,49 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 867E57DE3D
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
+	[209.85.128.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 5B3F27F2F9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 10:58:27 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 2D00B183E8
+	Fri, 16 Aug 2019 14:46:02 +0000 (UTC)
+Received: by mail-wm1-f65.google.com with SMTP id g67so4285407wme.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 12:58:28 +0200 (CEST)
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id DpwzyJq8kfUJ for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 12:58:27 +0200 (CEST)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-	by bastet.se.axis.com (Postfix) with ESMTPS id 706FD185B0
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 12:58:27 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 427451A069
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 12:58:27 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 36C091A065
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 12:58:27 +0200 (CEST)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-	by boulder02.se.axis.com (Postfix) with ESMTP
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 12:58:27 +0200 (CEST)
-Received: from saur.se.axis.com (saur.se.axis.com [10.92.3.10])
-	by seth.se.axis.com (Postfix) with ESMTP id 2AC821766
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 12:58:27 +0200 (CEST)
-Received: from saur.se.axis.com (localhost [127.0.0.1])
-	by saur.se.axis.com (8.15.2/8.15.2) with ESMTPS id x7GAwRA1000343
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 12:58:27 +0200
-Received: (from pkj@localhost)
-	by saur.se.axis.com (8.15.2/8.15.2/Submit) id x7GAwRQD000338
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 16 Aug 2019 12:58:27 +0200
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+	Fri, 16 Aug 2019 07:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=mA/DbJZuuTzbBRgNmT6IqcsJcCmVxObn5JjmRCwXVRY=;
+	b=PVIh1sdecjby+nB6VxT758uVSP29BulDzTuG15mxhfrOI3LSIdBlu+X5W0q4Fvp/DA
+	dYr+tTHeo2eqbCu1P6fpPJ7fchGKrOWD4bAQKeEi/sfXd7iMvqSiqVvwRpAAogN1Bwm5
+	UmhI7wv4U14qYdJ6TBMDwplh0ASNXSnEgm6ZI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=mA/DbJZuuTzbBRgNmT6IqcsJcCmVxObn5JjmRCwXVRY=;
+	b=Oy/lt7d5H3AQChj1W7LZ1QcugZASsJkEUD2ELo89q6ADaIy/UD2sAEQf6K/cS/6EfN
+	MrxM6dl5a3Iwmz0weQug/oT4Vjua/M1iCd10iGCFHaBxBO41/JPJVWm5DaXcjEIIjOvR
+	g3ewV1R/83tBJN6DA9fZMUvcU0r/0f4WMsJTOLtnFe+4HmRkmYJiXrDMN6XDQ2jBv1V9
+	ryZ+1bEWa2+/JgYS3CdgwI62LljzQeghn4Gv8nIILcoJxDATG2SUQHKZ8zFoh7x/iA++
+	BN7LrMqZ5LRu47t0Cm/ozz+6kyzZrs4DoBVfF5wegqgIQU1qwqu0wENI4A6JBZEeL5l2
+	u4gA==
+X-Gm-Message-State: APjAAAUXZxaYqqBRtGA8rvLWKqtMs7OwAVj9ASFdah9iJeKZwt6m4zre
+	rc+Arx4w8ZcNzwxL+bGIAOVsQ5sY8qp56Q==
+X-Google-Smtp-Source: APXvYqzabhC2Ef7FON4+cnSDmlbYaowudn5Dk7ED+/VpmTyQs0nzZVquH/qB3ijjIMzG16d/pckL4g==
+X-Received: by 2002:a7b:c775:: with SMTP id x21mr249506wmk.97.1565966762640;
+	Fri, 16 Aug 2019 07:46:02 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	q3sm6126651wma.48.2019.08.16.07.46.01
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Fri, 16 Aug 2019 07:46:02 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Aug 2019 12:58:24 +0200
-Message-Id: <20190816105824.32765-1-pkj@axis.com>
-X-Mailer: git-send-email 2.21.0
+Date: Fri, 16 Aug 2019 15:46:00 +0100
+Message-Id: <20190816144601.20352-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-Subject: [PATCHv2] runqueue: Add a progress meter for checking the task stamps
+Subject: [PATCH 1/2] cookerdata: Delay the setup of the siggen slightly to allow metadata defined siggens
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,44 +56,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Aug 2019 10:58:28 -0000
+X-List-Received-Date: Fri, 16 Aug 2019 14:46:02 -0000
 Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
- bitbake/lib/bb/runqueue.py | 8 ++++++++
- 1 file changed, 8 insertions(+)
+If we define a metadata siggen it can fail due to the early init here. Move
+slightly later to avoid those failures which allows fixes in OE to the
+check-layer script related to the hash equiv siggen.
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 7fa074f679..86dbd16def 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -2672,9 +2672,16 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-         stamppresent = []
-         tocheck = set()
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cookerdata.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 144e803b4f..96a8e6beee 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -268,11 +268,11 @@ class CookerDataBuilder(object):
  
-+        msg = "Checking task stamps"
-+        bb.event.fire(bb.event.ProcessStarted(msg, len(sqdata.sq_revdeps)), cooker.data)
-+
-+        checked = 0
-         for tid in sorted(sqdata.sq_revdeps):
-             (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
+     def parseBaseConfiguration(self):
+         try:
+-            bb.parse.init_parser(self.basedata)
+             self.data = self.parseConfigurationFiles(self.prefiles, self.postfiles)
  
-+            checked = checked + 1
-+            bb.event.fire(bb.event.ProcessProgress(msg, checked), cooker.data)
-+
-             taskdep = rqdata.dataCaches[mc].task_deps[taskfn]
+             if self.data.getVar("BB_WORKERCONTEXT", False) is None:
+                 bb.fetch.fetcher_init(self.data)
++            bb.parse.init_parser(self.data)
+             bb.codeparser.parser_cache_init(self.data)
  
-             if 'noexec' in taskdep and taskname in taskdep['noexec']:
-@@ -2696,6 +2703,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-                 continue
- 
-             tocheck.add(tid)
-+        bb.event.fire(bb.event.ProcessFinished(msg), cooker.data)
- 
-         valid = rq.validate_hashes(tocheck, cooker.data, len(stamppresent), False)
- 
+             bb.event.fire(bb.event.ConfigParsed(), self.data)
 -- 
-2.21.0
+2.20.1
 
 
