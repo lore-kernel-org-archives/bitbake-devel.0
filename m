@@ -1,49 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
-	[209.85.128.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 5B3F27F2F9
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
+	[209.85.128.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 5B2ED7F2F9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 14:46:02 +0000 (UTC)
-Received: by mail-wm1-f65.google.com with SMTP id g67so4285407wme.1
+	Fri, 16 Aug 2019 14:46:05 +0000 (UTC)
+Received: by mail-wm1-f66.google.com with SMTP id i63so4276078wmg.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2019 07:46:03 -0700 (PDT)
+	Fri, 16 Aug 2019 07:46:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
+	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=mA/DbJZuuTzbBRgNmT6IqcsJcCmVxObn5JjmRCwXVRY=;
-	b=PVIh1sdecjby+nB6VxT758uVSP29BulDzTuG15mxhfrOI3LSIdBlu+X5W0q4Fvp/DA
-	dYr+tTHeo2eqbCu1P6fpPJ7fchGKrOWD4bAQKeEi/sfXd7iMvqSiqVvwRpAAogN1Bwm5
-	UmhI7wv4U14qYdJ6TBMDwplh0ASNXSnEgm6ZI=
+	bh=v3WelEI4+ZM9Eb0azK9djFizLj7ZeSgaSPPlOcj1vew=;
+	b=fnS2y/fyHgnhZ/y+nmuBL4KyXi9RUY2YFrL6T4cVymO6E9hoW3xITuYMRh8Wt16lRm
+	y/aMcw3VuJIzbs3V/SIv+Br26LRTWerqyTKbDjBJixY3Jkc93UxenxIb+XA7g+JSBJlw
+	gCTsoK9cqZCeP/G+LbTNRxdxTQbPe4tN7n2PU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=mA/DbJZuuTzbBRgNmT6IqcsJcCmVxObn5JjmRCwXVRY=;
-	b=Oy/lt7d5H3AQChj1W7LZ1QcugZASsJkEUD2ELo89q6ADaIy/UD2sAEQf6K/cS/6EfN
-	MrxM6dl5a3Iwmz0weQug/oT4Vjua/M1iCd10iGCFHaBxBO41/JPJVWm5DaXcjEIIjOvR
-	g3ewV1R/83tBJN6DA9fZMUvcU0r/0f4WMsJTOLtnFe+4HmRkmYJiXrDMN6XDQ2jBv1V9
-	ryZ+1bEWa2+/JgYS3CdgwI62LljzQeghn4Gv8nIILcoJxDATG2SUQHKZ8zFoh7x/iA++
-	BN7LrMqZ5LRu47t0Cm/ozz+6kyzZrs4DoBVfF5wegqgIQU1qwqu0wENI4A6JBZEeL5l2
-	u4gA==
-X-Gm-Message-State: APjAAAUXZxaYqqBRtGA8rvLWKqtMs7OwAVj9ASFdah9iJeKZwt6m4zre
-	rc+Arx4w8ZcNzwxL+bGIAOVsQ5sY8qp56Q==
-X-Google-Smtp-Source: APXvYqzabhC2Ef7FON4+cnSDmlbYaowudn5Dk7ED+/VpmTyQs0nzZVquH/qB3ijjIMzG16d/pckL4g==
-X-Received: by 2002:a7b:c775:: with SMTP id x21mr249506wmk.97.1565966762640;
-	Fri, 16 Aug 2019 07:46:02 -0700 (PDT)
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=v3WelEI4+ZM9Eb0azK9djFizLj7ZeSgaSPPlOcj1vew=;
+	b=hD8m6bnhO5CokgqJi63Cb1vEAJWGxA1KNPM8Ga6fQsMPeKHUzrYskXtpJPe07oZtIF
+	98N+K7ydlgcUHlTo2qgefFGl7JK/STq7KP3lFrURlcz5dev4Dq7XuBF7Kf4K3+J/jn7H
+	zw3UR6xFemrLAEqShl7cATEP2IWzY/r21diJCHGWCgabS57aen3QAUVSC8a0YA4/l07j
+	9i9AjXiQyaTp9Z9xfh2MOkHHNhXj9I+vnpWnp2QrAHJ5Dg07lRxvd+FH6Nor/Fa+GXof
+	KJrToVgYrXmvu8LCmChCm5Xp2ynoi4IzcTeymkk7aM0T62MKKPNpRI18RhgKeirgeaas
+	02/g==
+X-Gm-Message-State: APjAAAWLJBVingXK5ae+HRWCSHHDKeLrrhOdvn2UsMMird9QTe+v+s5H
+	hsaZJpkLG44OBu/GHoUkC9ne04POJ9wykg==
+X-Google-Smtp-Source: APXvYqxEyo9zDq37g8OQQMuQ3e8e1rZ7m3E1ltbqe7DFnubACZiSY0mlPm3GmH1mXbOmEmadXOGfhQ==
+X-Received: by 2002:a1c:1f41:: with SMTP id f62mr8093786wmf.176.1565966763538; 
+	Fri, 16 Aug 2019 07:46:03 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	q3sm6126651wma.48.2019.08.16.07.46.01
+	q3sm6126651wma.48.2019.08.16.07.46.02
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
 	Fri, 16 Aug 2019 07:46:02 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Aug 2019 15:46:00 +0100
-Message-Id: <20190816144601.20352-1-richard.purdie@linuxfoundation.org>
+Date: Fri, 16 Aug 2019 15:46:01 +0100
+Message-Id: <20190816144601.20352-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190816144601.20352-1-richard.purdie@linuxfoundation.org>
+References: <20190816144601.20352-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 1/2] cookerdata: Delay the setup of the siggen slightly to allow metadata defined siggens
+Subject: [PATCH 2/2] runqueue: Small but critical fix
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,35 +58,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Aug 2019 14:46:02 -0000
+X-List-Received-Date: Fri, 16 Aug 2019 14:46:05 -0000
 Content-Transfer-Encoding: 8bit
 
-If we define a metadata siggen it can fail due to the early init here. Move
-slightly later to avoid those failures which allows fixes in OE to the
-check-layer script related to the hash equiv siggen.
+We've observed do_package and do_package_setscene running in parallel. The
+reason is that holdoff_tasks wasn't getting updated. Looking at the code, it
+would seem the reason is that the task was in pending_migrations and hence
+changed wasn't set and holdoff_tasks wasn't updated.
+
+Fix this. It only affects builds with rehashing enabled.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cookerdata.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/runqueue.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 144e803b4f..96a8e6beee 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -268,11 +268,11 @@ class CookerDataBuilder(object):
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 7fa074f679..88212ca00c 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2283,6 +2283,7 @@ class RunQueueExecute:
+                 continue
  
-     def parseBaseConfiguration(self):
-         try:
--            bb.parse.init_parser(self.basedata)
-             self.data = self.parseConfigurationFiles(self.prefiles, self.postfiles)
+             self.pending_migrations.remove(tid)
++            changed = True
  
-             if self.data.getVar("BB_WORKERCONTEXT", False) is None:
-                 bb.fetch.fetcher_init(self.data)
-+            bb.parse.init_parser(self.data)
-             bb.codeparser.parser_cache_init(self.data)
- 
-             bb.event.fire(bb.event.ConfigParsed(), self.data)
+             if tid in self.tasks_scenequeue_done:
+                 self.tasks_scenequeue_done.remove(tid)
 -- 
 2.20.1
 
