@@ -1,24 +1,23 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 39E017EC95
+Return-Path: <Qi.Chen@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 1A6AE7F07B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Aug 2019 07:10:18 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x7M7A060000398
+	Thu, 22 Aug 2019 07:39:09 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x7M7dBDS023735
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Aug 2019 00:10:10 -0700
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.468.0; Thu, 22 Aug 2019 00:09:49 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
+	Thu, 22 Aug 2019 00:39:11 -0700 (PDT)
+Received: from pek-qchen1-d1.corp.ad.wrs.com (128.224.162.148) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.468.0; Thu, 22 Aug 2019 00:39:10 -0700
+From: Chen Qi <Qi.Chen@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 22 Aug 2019 15:35:37 +0800
-Message-ID: <cover.1566459309.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
+Date: Thu, 22 Aug 2019 15:52:50 +0800
+Message-ID: <cover.1566460314.git.Qi.Chen@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Subject: [PATCH 0/1] bitbake: cooker: Kill alive process before join it
+Subject: [PATCH V2 0/1] cooker.py: remove generation of recipe-depends.dot
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,8 +30,11 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Aug 2019 07:10:19 -0000
+X-List-Received-Date: Thu, 22 Aug 2019 07:39:10 -0000
 Content-Type: text/plain
+
+Changes in V2:
+* Remove the file to avoid misleading information
 
 The following changes since commit 58ab85d3e005476ab5bcc288ad421c0c5d1e0582:
 
@@ -40,16 +42,16 @@ The following changes since commit 58ab85d3e005476ab5bcc288ad421c0c5d1e0582:
 
 are available in the git repository at:
 
-  git://git.pokylinux.org/poky-contrib rbt/cooker
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/cooker
+  git://git.pokylinux.org/poky-contrib ChenQi/recipe-depends
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=ChenQi/recipe-depends
 
-Robert Yang (1):
-  bitbake: cooker: Kill alive process before join it
+Chen Qi (1):
+  cooker.py: remove generation of recipe-depends.dot
 
- bitbake/lib/bb/cooker.py | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ bitbake/lib/bb/cooker.py | 25 ++++---------------------
+ 1 file changed, 4 insertions(+), 21 deletions(-)
 
 -- 
-2.7.4
+1.9.1
 
 
