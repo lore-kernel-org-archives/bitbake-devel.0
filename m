@@ -1,32 +1,54 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id A0BAB7EAC3
+Return-Path: <kergoth@gmail.com>
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com
+	[209.85.215.171])
+	by mail.openembedded.org (Postfix) with ESMTP id C4F8B7E265
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Aug 2019 09:05:18 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x7M95JRp024451
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 22 Aug 2019 02:05:19 -0700 (PDT)
-Received: from localhost.localdomain (128.224.162.182) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.3.468.0; Thu, 22 Aug 2019 02:05:06 -0700
-To: <richard.purdie@linuxfoundation.org>,
-	<bitbake-devel@lists.openembedded.org>
-References: <cover.1557388944.git.liezhi.yang@windriver.com>
-	<ac4edd962cb6b4831cb85cd731d2d2a810c62503.1557388944.git.liezhi.yang@windriver.com>
-	<850ae48669455c75cf34b2306f01add428aa62c0.camel@linuxfoundation.org>
-	<3fb3e0d9-098f-7fdc-5c3c-9501dfe98af4@windriver.com>
-	<e6a757b4-a2f0-1785-3db9-fa496ead7441@windriver.com>
-	<352084d7f3f933b692ad60aa8ce50dee9b05c80d.camel@linuxfoundation.org>
-	<e4e11458-d818-db1c-7001-112d303a9edc@windriver.com>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <7eeeb507-1b1f-92da-edf1-e97675401338@windriver.com>
-Date: Thu, 22 Aug 2019 17:06:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-	Thunderbird/60.8.0
+	Thu, 22 Aug 2019 14:14:40 +0000 (UTC)
+Received: by mail-pg1-f171.google.com with SMTP id u17so3752795pgi.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 22 Aug 2019 07:14:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=date:from:to:message-id:in-reply-to:references:subject:mime-version; 
+	bh=ZLQUJwvd9uE5sjk1BgGLVt7R7Gmkp1QV+jYuljCWjNI=;
+	b=NIfobVN5tTWhA99qhxLn0wK/1gJMMVoepp/eAa5G1Vvnfe5qNvHG0SuQGbC2k2/lpM
+	CaKRlqCMycnppmzEJDgAGR8V4U2qpL4ESsjnakFFC74ZN5nSqVTaPEt26NEmdXaeefy2
+	/7roCONWfg1EvuB9qOTrqA1YBtbgKKDzN+iX7pi+hWjMFjyMRexdcAQDH75ovJbhiUx6
+	Md8GH5rlFF+eIxn0EpmBsyVMudI4qxTb4B78x9mSOj+w/XJkJjJ5gnmUOV7dtFwDvpfg
+	VzVVADzlK73Cp2icxD0yZdMlEyqDxH9rtwGKHICzfrcRaLpWikIzyO6JJH1xDIASx6x2
+	mMng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
+	:subject:mime-version;
+	bh=ZLQUJwvd9uE5sjk1BgGLVt7R7Gmkp1QV+jYuljCWjNI=;
+	b=Qi3/6STkjnk+gYR9FTQ8gWUCJF7W6EyUwvb4zPEq9Zwpi+zymziIBRcpqMwTSPKCs+
+	TI38mnGrAmGjMKvEbz71KwCmn7LTGEcvCsgjhvsRyCjN09cYTYO/CGdrxDLjdmnu1WPQ
+	6lUzWSrbwXyu/xbV/hPT5n19w1KOFzhhKM+XGYD61CNz+P/1WiaT7EuvxqkOnfiPy2Js
+	TH+fO5xGM2fTqSlKDT8af4V2swK5jdMSJnb2b2W35fNDmhwl8LIXGXdgxlaTxn7zTzq7
+	CrRaFRoAftmluXVA7iw5+n5s0+92s4op7spT6aceShpdvVrXz4p13loRFvM13jjVp8E2
+	FpGA==
+X-Gm-Message-State: APjAAAVMag06emUM5/3rcBj1zAGI15+I1l1AXdOKNvEHTSLa8XJhiAzy
+	VynMsrRDpmYFr1yIrLZnFGEHM89p
+X-Google-Smtp-Source: APXvYqxhm/m72JKQVlPL4YjSrXdE/UBr1z3LnJaXHmtNbn8BgKV7uEQUCtuYlOG0b6k5ZISANvNwzA==
+X-Received: by 2002:a17:90a:ac11:: with SMTP id
+	o17mr5812999pjq.104.1566483281482; 
+	Thu, 22 Aug 2019 07:14:41 -0700 (PDT)
+Received: from [192.168.1.17] (ip70-180-21-74.ph.ph.cox.net. [70.180.21.74])
+	by smtp.gmail.com with ESMTPSA id
+	o129sm28537582pfg.1.2019.08.22.07.14.39
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 22 Aug 2019 07:14:40 -0700 (PDT)
+Date: Thu, 22 Aug 2019 07:14:33 -0700
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org, Robert Yang
+	<liezhi.yang@windriver.com>
+Message-ID: <6c3c318c-9e88-48b6-80c0-b98a8b79e759@Spark>
+In-Reply-To: <3562c905fd50bb986aba8a40778245a026339c93.1566459309.git.liezhi.yang@windriver.com>
+References: <cover.1566459309.git.liezhi.yang@windriver.com>
+	<3562c905fd50bb986aba8a40778245a026339c93.1566459309.git.liezhi.yang@windriver.com>
+X-Readdle-Message-ID: 6c3c318c-9e88-48b6-80c0-b98a8b79e759@Spark
 MIME-Version: 1.0
-In-Reply-To: <e4e11458-d818-db1c-7001-112d303a9edc@windriver.com>
-Subject: Re: [PATCH 1/1] bitbake: cookerdata: Avoid double exceptions for bb.fatal()
+Subject: Re: [PATCH 1/1] bitbake: cooker: Kill alive process before join it
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,186 +61,170 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Aug 2019 09:05:18 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 22 Aug 2019 14:14:40 -0000
+Content-Type: multipart/alternative; boundary="5d5ea34e_625558ec_dbd3"
 
+--5d5ea34e_625558ec_dbd3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
+Looks like you=E2=80=99re partially duplicating what the =E2=80=98force=E2=
+=80=99 logic does already, but for the non-force case as well, yes=3F pro=
+cess.terminate() sounds a lot like sending a SIGTERM, though admittedly I=
+ haven=E2=80=99t read the code to Process recently. Perhaps if this is tr=
+uly necessary, the logic can be simplified.
+On Aug 22, 2019, 12:10 AM -0700, Robert Yang <liezhi.yang=40windriver.com=
+>, wrote:
+> =46ixed:
+> =24 echo helloworld >> meta/recipes-extended/bash/bash=5F4.4.18.bb
+> =24 while true; do kill-bb; rm -fr bitbake-cookerdaemon.log tmp/cache/d=
+efault-glibc/qemux86-64/x86=5F64/bb=5Fcache.dat* ; bitbake -p; done
+>
+> It may hang in 10 mins, there are two problems:
+> * There might be deadlocks when call process.join() if the queue is not=
+ NULL,
+> so we need cleanup the queue before join() it, but:
+> * The self.result=5Fqueue.get(timeout=3D0.25) may hang if the queue.=5F=
+wlock is hold
+> by SomeOtherProcess, the queue has the following info when it hangs:
+> '=5Fwlock': <Lock(owner=3DSomeOtherProcess)>, so that we may can't clea=
+n up the
+> queue.
+>
+> We can kill alvie process before join it to fix the problems.
+>
+> Signed-off-by: Robert Yang <liezhi.yang=40windriver.com>
+> ---
+> bitbake/lib/bb/cooker.py =7C 12 ++++--------
+> 1 file changed, 4 insertions(+), 8 deletions(-)
+>
+> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+> index 0607fcc..e42bcba 100644
+> --- a/bitbake/lib/bb/cooker.py
+> +++ b/bitbake/lib/bb/cooker.py
+> =40=40 -2082,19 +2082,15 =40=40 class CookerParser(object):
+> for process in self.processes:
+> self.parser=5Fquit.put(None)
+>
+> - =23 Cleanup the queue before call process.join(), otherwise there mig=
+ht be
+> - =23 deadlocks.
+> - while True:
+> - try:
+> - self.result=5Fqueue.get(timeout=3D0.25)
+> - except queue.Empty:
+> - break
+> -
+> for process in self.processes:
+> if force:
+> process.join(.1)
+> process.terminate()
+> else:
+> + =23 Kill the alive process firstly before join() it to avoid
+> + =23 deadlocks
+> + if process.is=5Falive():
+> + os.kill(process.pid, 9)
+> process.join()
+>
+> sync =3D threading.Thread(target=3Dself.bb=5Fcache.sync)
+> --
+> 2.7.4
+>
+> --
+> =5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
+> bitbake-devel mailing list
+> bitbake-devel=40lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
-On 8/19/19 4:34 PM, Robert Yang wrote:
-> 
-> On 8/16/19 7:03 AM, richard.purdie@linuxfoundation.org wrote:
->> On Thu, 2019-08-15 at 19:29 +0800, Robert Yang wrote:
->>>
->>> On 5/14/19 7:02 PM, Robert Yang wrote:
->>>>
->>>> On 5/12/19 4:28 PM, Richard Purdie wrote:
->>>>> On Thu, 2019-05-09 at 16:03 +0800, Robert Yang wrote:
->>>>>> The bb.fatal() raises BBHandledException() which causes double
->>>>>> exceptions,
->>>>>> e.g.:
->>>>>>
->>>>>> Add 'HOSTTOOLS += "hello"' to conf/local.conf:
->>>>>> $ bitbake -p
->>>>>> [snip]
->>>>>> During handling of the above exception, another exception
->>>>>> occurred:
->>>>>> [snip]
->>>>>> ERROR: The following required tools (as specified by HOSTTOOLS)
->>>>>> appear to be
->>>>>> unavailable in PATH, please install them in order to proceed:
->>>>>>     hello
->>>>>>
->>>>>> Use "raise" rather than "raise bb.BBHandledException" to fix
->>>>>> the double
->>>>>> exceptions.
->>>>>>
->>>>>> [YOCTO #13267]
->>>>>>
->>>>>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->>>>>> ---
->>>>>>    bitbake/lib/bb/cookerdata.py | 4 +++-
->>>>>>    1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/bitbake/lib/bb/cookerdata.py
->>>>>> b/bitbake/lib/bb/cookerdata.py
->>>>>> index f8ae410..585edc5 100644
->>>>>> --- a/bitbake/lib/bb/cookerdata.py
->>>>>> +++ b/bitbake/lib/bb/cookerdata.py
->>>>>> @@ -301,7 +301,9 @@ class CookerDataBuilder(object):
->>>>>>                if multiconfig:
->>>>>> bb.event.fire(bb.event.MultiConfigParsed(self.mcdata
->>>>>> ), self.data)
->>>>>> -        except (SyntaxError, bb.BBHandledException):
->>>>>> +        except bb.BBHandledException:
->>>>>> +            raise
->>>>>> +        except SyntaxError:
->>>>>>                raise bb.BBHandledException
->>>>>>            except bb.data_smart.ExpansionError as e:
->>>>>>                logger.error(str(e))
->>>>>
->>>>> Hi Robert,
->>>>>
->>>>> This doesn't sound right, where is this exception being printed a
->>>>> second time? The point of "BBHandledException" is to say "don't
->>>>> print
->>>>> any further traces for this exception". If this fixes the bug, it
->>>>> means
->>>>> something somewhere is printing a trace for a second time when it
->>>>> should pass through BBHandledException?
->>>>
->>>> Hi RP,
->>>>
->>>> I found another serious problem when tried to raise
->>>> BBHandledException. There
->>>> is a deadlock when a recipe is failed to parse, e.g.:
->>>>
->>>> $ echo helloworld >> meta/recipes-extended/bash/bash_4.4.18.bb
->>>> $ bitbake -p
->>>> meta/recipes-extended/bash/bash_4.4.18.bb:42: unparsed line:
->>>> 'helloworld'
->>>> [hangs]
->>>>
->>>> Then bitbake hangs, we can use Ctrl-C to break it, but the sub
->>>> processes
->>>> are still existed, and we need kill them manually, otherwise we
->>>> can't start
->>>> bitbake again.
->>>
->>> BTW, things becomes much better after the following two patches are
->>> merged:
->>> bitbake: knotty: Fix for the Second Keyboard Interrupt
->>> bitbake: cooker: Cleanup the queue before call process.join()
->>>
->>> Now we hardly can reproduce the problem:
->>> echo helloworld >> meta/recipes-extended/bash/bash_4.4.18.bb
->>> $ while true; do kill-bb; rm -fr bitbake-cookerdaemon.log
->>> tmp/cache/default-glibc/qemux86-64/x86_64/bb_cache.dat* ; bitbake -p;
->>> done
->>>
->>> It's not easy to hang any more, but still hangs sometimes, I tried to
->>> debug it,
->>> but didn't find the root cause, the ui/knotty.py can't get event from
->>> server,
->>> and goes into a dead loop.
->>>
->>>               event = eventHandler.waitEvent(0)
->>>               if event is None:
->>>                   if main.shutdown > 1:
->>>                       break
->>>                   termfilter.updateFooter()
->>>                   event = eventHandler.waitEvent(0.25)
->>>                   if event is None:
->>>                       continue
->>>
->>> The main.shutdown is always 0 when it hangs.
->>
->> In theory there are timeouts there so it should never hang waiting for
->> an event. Is it looping and not getting an event? or is the other end
->> disconnected?
->>
->> I guess the question is what we can do to detect a dead connection, or
->> if the server is still alive, why the server is hanging and not sending
->> any events?
-> 
-> After more investigations, it may hang at two places, they are very rarely to
-> happen, but does happen, I can use the following command to reproduce it in
-> 10 minutes:
-> 
-> $ while true; do kill-bb; rm -fr bitbake-cookerdaemon.log 
-> tmp/cache/default-glibc/qemux86-64/x86_64/bb_cache.dat* ; bitbake -p; done
-> 
-> * Hangs #1 in cooker.py:
-> 
-> 2065         # Cleanup the queue before call process.join(), otherwise there 
-> might be
-> 2066         # deadlocks.
-> 2067         while True:
-> 2068             try:
-> 2069                self.result_queue.get(timeout=0.25)
-> 2070             except queue.Empty:
-> 2071                 break
-> 
-> It hangs at self.result_queue.get(timeout=0.25), the timeout doesn't work
-> here, I tried python 3.5.2 and 3.6.7, the later one is a little better,
-> but still have the problem, I think that it's a bug of python3's 
-> multiprocessing, and we can call self.result_queue.cancel_join_thread()
-> to fix the problem.
-> 
-> 
-> * Hangs #2 in cooker.py:
-> 2073         for process in self.processes:
-> 2074             if force:
-> 2075                 process.join(.1)
-> 2076                 process.terminate()
-> 2077             else:
-> 2078                 process.join()
-> 
-> 
-> It hangs at process.join(), I added debug code there, it is because the process
-> is alive when join() it, I think that we can use a while loop to check whether
-> the process is alive or not before join(), and force join() after many tries.
-> 
-> I will do more testing before send the patches, make sure it won't hang in hours.
+--5d5ea34e_625558ec_dbd3
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
+<html xmlns=3D=22http://www.w3.org/1999/xhtml=22>
+<head>
+<title></title>
+</head>
+<body>
+<div name=3D=22messageBodySection=22>
+<div dir=3D=22auto=22>Looks like you=E2=80=99re partially duplicating wha=
+t the =E2=80=98force=E2=80=99 logic does already, but for the non-force c=
+ase as well, yes=3F process.terminate() sounds a lot like sending a SIGTE=
+RM, though admittedly I haven=E2=80=99t read the code to Process recently=
+. Perhaps if this is truly necessary, the logic can be simplified.</div>
+</div>
+<div name=3D=22messageReplySection=22>On Aug 22, 2019, 12:10 AM -0700, Ro=
+bert Yang &lt;liezhi.yang=40windriver.com&gt;, wrote:<br />
+<blockquote type=3D=22cite=22 class=3D=22spark=5Fquote=22 style=3D=22marg=
+in: 5px 5px; padding-left: 10px; border-left: thin solid =231abc9c;=22>=46=
+ixed:<br />
+=24 echo helloworld &gt;&gt; meta/recipes-extended/bash/bash=5F4.4.18.bb<=
+br />
+=24 while true; do kill-bb; rm -fr bitbake-cookerdaemon.log tmp/cache/def=
+ault-glibc/qemux86-64/x86=5F64/bb=5Fcache.dat* ; bitbake -p; done<br />
+<br />
+It may hang in 10 mins, there are two problems:<br />
+* There might be deadlocks when call process.join() if the queue is not N=
+ULL,<br />
+so we need cleanup the queue before join() it, but:<br />
+* The self.result=5Fqueue.get(timeout=3D0.25) may hang if the queue.=5Fwl=
+ock is hold<br />
+by SomeOtherProcess, the queue has the following info when it hangs:<br /=
+>
+'=5Fwlock': &lt;Lock(owner=3DSomeOtherProcess)&gt;, so that we may can't =
+clean up the<br />
+queue.<br />
+<br />
+We can kill alvie process before join it to fix the problems.<br />
+<br />
+Signed-off-by: Robert Yang &lt;liezhi.yang=40windriver.com&gt;<br />
+---<br />
+bitbake/lib/bb/cooker.py =7C 12 ++++--------<br />
+1 file changed, 4 insertions(+), 8 deletions(-)<br />
+<br />
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py<br />
+index 0607fcc..e42bcba 100644<br />
+--- a/bitbake/lib/bb/cooker.py<br />
++++ b/bitbake/lib/bb/cooker.py<br />
+=40=40 -2082,19 +2082,15 =40=40 class CookerParser(object):<br />
+for process in self.processes:<br />
+self.parser=5Fquit.put(None)<br />
+<br />
+- =23 Cleanup the queue before call process.join(), otherwise there might=
+ be<br />
+- =23 deadlocks.<br />
+- while True:<br />
+- try:<br />
+- self.result=5Fqueue.get(timeout=3D0.25)<br />
+- except queue.Empty:<br />
+- break<br />
+-<br />
+for process in self.processes:<br />
+if force:<br />
+process.join(.1)<br />
+process.terminate()<br />
+else:<br />
++ =23 Kill the alive process firstly before join() it to avoid<br />
++ =23 deadlocks<br />
++ if process.is=5Falive():<br />
++ os.kill(process.pid, 9)<br />
+process.join()<br />
+<br />
+sync =3D threading.Thread(target=3Dself.bb=5Fcache.sync)<br />
+--<br />
+2.7.4<br />
+<br />
+--<br />
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F<br />
+bitbake-devel mailing list<br />
+bitbake-devel=40lists.openembedded.org<br />
+http://lists.openembedded.org/mailman/listinfo/bitbake-devel<br /></block=
+quote>
+</div>
+</body>
+</html>
 
-After a lot tries, the only reliable way to avoid hanging is os.kill(), I've
-sent the patch for it, and added reason in the commit message.
-
-// Robert
-
-> 
-> // Robert
-> 
->>
->> Thanks for the patches, those were tricky issues to track down and
->> solve!
->>
->> Cheers,
->>
->> Richard
->>
->>
->>
-
+--5d5ea34e_625558ec_dbd3--
