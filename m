@@ -1,29 +1,51 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id B97F17D251
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-io1-f67.google.com (mail-io1-f67.google.com
+	[209.85.166.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 3CC187E97A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Aug 2019 03:51:40 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x7N3osFB028507
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 22 Aug 2019 20:51:14 -0700
-Received: from localhost.localdomain (128.224.162.182) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.3.468.0; Thu, 22 Aug 2019 20:50:38 -0700
-To: Christopher Larson <kergoth@gmail.com>,
-	<bitbake-devel@lists.openembedded.org>
-References: <cover.1566459309.git.liezhi.yang@windriver.com>
-	<3562c905fd50bb986aba8a40778245a026339c93.1566459309.git.liezhi.yang@windriver.com>
-	<6c3c318c-9e88-48b6-80c0-b98a8b79e759@Spark>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <556a2ab1-6245-6666-8e0f-080c9de259ef@windriver.com>
-Date: Fri, 23 Aug 2019 11:52:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-	Thunderbird/60.8.0
+	Mon, 26 Aug 2019 21:27:23 +0000 (UTC)
+Received: by mail-io1-f67.google.com with SMTP id x4so40883692iog.13
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 26 Aug 2019 14:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=ednbdbgHk3kTPlCffV77KaDP9+GG7tQwB09c8UQt4EI=;
+	b=chbytiEJFWbP1XTKqkKJW6M2gG0SSKMItqU2UFA6g4dwtb2ILk4d5+6Z3IWH4vVmy8
+	+DF0HurcCyHexQ/iESbLZsEFjgq7mBxq3rnosttnYx+K0zn5OlClWBXvjWxhE9jXCSLa
+	6V8bTWKIj5cxiNe8B0y0moszXv7bcBvHcfIR/nEp9SdqNEc72CNIF1cX8hLZsDDKxVtg
+	TJjjN1WMakrNk0EOV7yWv8kF+eoOm4gPy8RuiUAtfOt0NTmFeFXt2Ck9dysblt7I1q5/
+	4dy3av+326+iOAeziBEG4P7xk+kCOEP4GV/t8JICqXFDXvF4+THBE5RnAAvEo0lCGlWt
+	1KPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=ednbdbgHk3kTPlCffV77KaDP9+GG7tQwB09c8UQt4EI=;
+	b=IKT+rK9eG+NTJYfmQqHjyEVCbVfXYD0rxacvwnIg6yz7o4/HzRz+xA2XeZUCfPbs23
+	Af8XR5IFHjaOFuSEZQCrUtEfbye2rh3v0i8B7l4w13Vk3yzUIgXE0HnjPa/Ib6jAoQuY
+	whIajGaiWaMubz6xbBeYM8hSur/KRG0kbgzN5/B4F/woCQ7JHZdKokNbEhtnOOycWqvl
+	CmSHwiFNaVW8Kqb8iJKYaBYyk3d74e9cigRSpvsf9sH7QDGB7ARWH8vcEId0OO/uybOK
+	C2nAfbyjPOrowlYG9lvPH7nY7hkYXGEE6Jev4BTBhCTnge1hz1mqkuMJS52Xv12V0Kdq
+	ou/Q==
+X-Gm-Message-State: APjAAAW7mZ5L/kQObNoJrLooI19noMKDMTK9bgfRbANHhHaansS7EoX9
+	7tzGu01gfxRygZN6hPHnpLjXwwNi
+X-Google-Smtp-Source: APXvYqzEkq96RbrLtlOJLK4KWJO6pGGMRyZ72VwjiShPh6UAdL56IwQwF/Rklk6gG32qwthPbMmpnQ==
+X-Received: by 2002:a6b:6c09:: with SMTP id a9mr407186ioh.27.1566854843802;
+	Mon, 26 Aug 2019 14:27:23 -0700 (PDT)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id
+	z9sm17964095ior.79.2019.08.26.14.27.22
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Mon, 26 Aug 2019 14:27:23 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 26 Aug 2019 16:27:20 -0500
+Message-Id: <20190826212720.25980-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <6c3c318c-9e88-48b6-80c0-b98a8b79e759@Spark>
-Subject: Re: [PATCH 1/1] bitbake: cooker: Kill alive process before join it
+Subject: [PATCH] bitbake: respect force flag in runall and runonly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,85 +58,89 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Aug 2019 03:51:40 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+X-List-Received-Date: Mon, 26 Aug 2019 21:27:23 -0000
 Content-Transfer-Encoding: 8bit
 
-Hi Larson,
+Specifying the force flag will now cause runall and runonly to
+invalidate the tasks before running them. This allows a --runall or
+--runonly to force the tasks to run, even if they would have otherwise
+been skipped, e.g.:
 
-On 8/22/19 10:14 PM, Christopher Larson wrote:
-> Looks like you’re partially duplicating what the ‘force’ logic does already, but 
-> for the non-force case as well, yes? process.terminate() sounds a lot like 
-> sending a SIGTERM, though admittedly I haven’t read the code to Process 
-> recently. Perhaps if this is truly necessary, the logic can be simplified.
+ bitbake -f --runall fetch
 
+Will run all do_fetch tasks even if they wouldn't be necessary (for
+example, skipped by setscene)
 
-The process.join(.1) may also hang if the result_queue is not NULL, but AFAIK ,
-this only happens when KeyboardInterrupt or Failed to parse a recipe, so I think
-that 'force' shutdown's process.jion(.1) won't hang, and I didn't see it hangs
-in the "force" code, we may have another way to make it better, check
-result_queue._wlock, but the _wlock is an internal variable, so I gave it up and
-just use os.kill() to avoid the hang problem completely, but there might be
-side effects that I didn't know?
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/runqueue.py | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-// Robert
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 4f69578e466..addb2bb82fd 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -849,6 +849,20 @@ class RunQueueData:
+             for depend in depends:
+                 mark_active(depend, depth+1)
+ 
++        def invalidate_task(tid, error_nostamp):
++            (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
++            taskdep = self.dataCaches[mc].task_deps[taskfn]
++            if fn + ":" + taskname not in taskData[mc].taskentries:
++                logger.warning("Task %s does not exist, invalidating this task will have no effect" % taskname)
++            if 'nostamp' in taskdep and taskname in taskdep['nostamp']:
++                if error_nostamp:
++                    bb.fatal("Task %s is marked nostamp, cannot invalidate this task" % taskname)
++                else:
++                    bb.debug(1, "Task %s is marked nostamp, cannot invalidate this task" % taskname)
++            else:
++                logger.verbose("Invalidate task %s, %s", taskname, fn)
++                bb.parse.siggen.invalidate_task(taskname, self.dataCaches[mc], taskfn)
++
+         self.target_tids = []
+         for (mc, target, task, fn) in self.targets:
+ 
+@@ -917,6 +931,8 @@ class RunQueueData:
+ 
+                 for tid in list(runall_tids):
+                     mark_active(tid,1)
++                    if self.cooker.configuration.force:
++                        invalidate_task(tid, False)
+ 
+             for tid in list(self.runtaskentries.keys()):
+                 if tid not in runq_build:
+@@ -938,6 +954,8 @@ class RunQueueData:
+ 
+                 for tid in list(runonly_tids):
+                     mark_active(tid,1)
++                    if self.cooker.configuration.force:
++                        invalidate_task(tid, False)
+ 
+             for tid in list(self.runtaskentries.keys()):
+                 if tid not in runq_build:
+@@ -1114,20 +1132,6 @@ class RunQueueData:
+                     continue
+                 self.runq_setscene_tids.append(tid)
+ 
+-        def invalidate_task(tid, error_nostamp):
+-            (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
+-            taskdep = self.dataCaches[mc].task_deps[taskfn]
+-            if fn + ":" + taskname not in taskData[mc].taskentries:
+-                logger.warning("Task %s does not exist, invalidating this task will have no effect" % taskname)
+-            if 'nostamp' in taskdep and taskname in taskdep['nostamp']:
+-                if error_nostamp:
+-                    bb.fatal("Task %s is marked nostamp, cannot invalidate this task" % taskname)
+-                else:
+-                    bb.debug(1, "Task %s is marked nostamp, cannot invalidate this task" % taskname)
+-            else:
+-                logger.verbose("Invalidate task %s, %s", taskname, fn)
+-                bb.parse.siggen.invalidate_task(taskname, self.dataCaches[mc], taskfn)
+-
+         self.init_progress_reporter.next_stage()
+ 
+         # Invalidate task if force mode active
+-- 
+2.21.0
 
-> On Aug 22, 2019, 12:10 AM -0700, Robert Yang <liezhi.yang@windriver.com>, wrote:
->> Fixed:
->> $ echo helloworld >> meta/recipes-extended/bash/bash_4.4.18.bb
->> $ while true; do kill-bb; rm -fr bitbake-cookerdaemon.log 
->> tmp/cache/default-glibc/qemux86-64/x86_64/bb_cache.dat* ; bitbake -p; done
->>
->> It may hang in 10 mins, there are two problems:
->> * There might be deadlocks when call process.join() if the queue is not NULL,
->> so we need cleanup the queue before join() it, but:
->> * The self.result_queue.get(timeout=0.25) may hang if the queue._wlock is hold
->> by SomeOtherProcess, the queue has the following info when it hangs:
->> '_wlock': <Lock(owner=SomeOtherProcess)>, so that we may can't clean up the
->> queue.
->>
->> We can kill alvie process before join it to fix the problems.
->>
->> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->> ---
->> bitbake/lib/bb/cooker.py | 12 ++++--------
->> 1 file changed, 4 insertions(+), 8 deletions(-)
->>
->> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
->> index 0607fcc..e42bcba 100644
->> --- a/bitbake/lib/bb/cooker.py
->> +++ b/bitbake/lib/bb/cooker.py
->> @@ -2082,19 +2082,15 @@ class CookerParser(object):
->> for process in self.processes:
->> self.parser_quit.put(None)
->>
->> - # Cleanup the queue before call process.join(), otherwise there might be
->> - # deadlocks.
->> - while True:
->> - try:
->> - self.result_queue.get(timeout=0.25)
->> - except queue.Empty:
->> - break
->> -
->> for process in self.processes:
->> if force:
->> process.join(.1)
->> process.terminate()
->> else:
->> + # Kill the alive process firstly before join() it to avoid
->> + # deadlocks
->> + if process.is_alive():
->> + os.kill(process.pid, 9)
->> process.join()
->>
->> sync = threading.Thread(target=self.bb_cache.sync)
->> --
->> 2.7.4
->>
->> --
->> _______________________________________________
->> bitbake-devel mailing list
->> bitbake-devel@lists.openembedded.org
->> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
