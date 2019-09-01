@@ -1,63 +1,49 @@
-Return-Path: <andrew@aj.id.au>
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com
-	[66.111.4.29])
-	by mail.openembedded.org (Postfix) with ESMTP id A5FD37ED22
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com
+	[209.85.210.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 0C4AA7F26D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 30 Aug 2019 00:18:03 +0000 (UTC)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id C306721FA9;
-	Thu, 29 Aug 2019 20:18:04 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-	by compute4.internal (MEProxy); Thu, 29 Aug 2019 20:18:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-	mime-version:message-id:in-reply-to:references:date:from:to:cc
-	:subject:content-type; s=fm3; bh=OXTtYgJFKNpaO5E3KgUDO8PyIwuglen
-	+M6VoNLM3NzY=; b=NKsbsWSd6pN7xPc/UGUNERlaW9S7Y4uyB9JTiwNleFaOBIW
-	ww+nhXBG1cKh9JjPB9FVdLrb6kkM8dg8hzqbFVCn2XvRinYS5zD8z0xiswVdLE6r
-	SnMcJpVeLnK2Tu7cFQdPoUOaHQKdJJJ6ftIE/OYbaZuDjxVwUdi3k+Hjb/DXTR/H
-	ScaE8qNkUNnoL4fZ/tQuEuUksm/XZjlH0uB60U0zGi3elL/WzI1+LfpiKU6JQk9/
-	TLrZqwV8rbaD6dZEWB21U9AtqgN9RDBenkwi5CinQIP7D5Cvy/i650Bfgp2nvAUx
-	4D9tqRR6tHWDBof1fxLj1vYUR4RX5DdAucDQdgQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OXTtYg
-	JFKNpaO5E3KgUDO8PyIwuglen+M6VoNLM3NzY=; b=N6YbqbqL6+zfKi65apdL0v
-	W3xNXkltL2ZNhC8EWCMo6BKBQlvhKyfaKevNKyiRrG+c6y742f6+p6m9oucGlgik
-	PZefRB9N7pr/UuoXo1XWjtAUqV3s7tiAiJ9RYnumNEogqcsUadwiSTPCD409hJFS
-	PmkRF8r7zD41+WYdxE9Nbla10xjiAa/68RyRZ7XSo30de1J25sEPOp1B0rFbqD5b
-	Vzgn0B1dYp8zIX5UrmdI8uy4tvZD6MraYWwQAo2b4v8sYp7A7xzw4opdfe9JQccs
-	14Jy5JQI7Ge2RQ8aOuYLMw3oLK8MqXKY4lrlwxT7QYwz/xgqWDgoBdKytCr2A4BA
-	==
-X-ME-Sender: <xms:O2toXZsA-Q204ORw6Jo1Z4nkTjXfXu21dg5a7wFDSEyEv4i7ZhHtRA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeifedgfedtucetufdoteggodetrfdotf
-	fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-	uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-	cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-	rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
-	grihhnpehgihhthhhusgdrtghomhenucfrrghrrghmpehmrghilhhfrhhomheprghnughr
-	vgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:O2toXZTplEatzC3bJsZjfNmU-23eUVvnJA9O5EPPUiir8to8hsIN5Q>
-	<xmx:O2toXVsCQGGGrgOi1HnbB_sr_QdT5zffzZXvLCk01exmr_RNwdG_Aw>
-	<xmx:O2toXTCORBjcJ-O3jEIF9nusV02BWB4resgEZMUKzeSYqgNk1UdGUA>
-	<xmx:PGtoXTuwaSa9tl6u-ri6KCrmbJy-WDE3JuUEgrmZMIHV_bs5UX9NeA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id C6D4FE00A3; Thu, 29 Aug 2019 20:18:03 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-154-gfa7592a-fmstable-20190829v1
-Mime-Version: 1.0
-Message-Id: <0a78764d-8b0e-4c41-9c33-dc48fe5cfcde@www.fastmail.com>
-In-Reply-To: <8c839340-36e8-1c42-a242-9c9eb8720147@windriver.com>
-References: <20190827000358.25777-1-andrew@aj.id.au>
-	<a0279d01-3d06-3648-f63c-9392be141397@windriver.com>
-	<2e4b0f4a-8288-490a-8bc2-7d49f460487e@www.fastmail.com>
-	<8c839340-36e8-1c42-a242-9c9eb8720147@windriver.com>
-Date: Fri, 30 Aug 2019 09:48:25 +0930
-From: "Andrew Jeffery" <andrew@aj.id.au>
-To: "Mark Hatle" <mark.hatle@windriver.com>,
-	bitbake-devel@lists.openembedded.org
-Cc: Brad Bishop <bradleyb@fuzziesquirrel.com>, ojayanth@in.ibm.com
-Subject: Re: [RESEND RFC PATCH] gitsm: Control submodule recursion
+	Sun,  1 Sep 2019 21:28:05 +0000 (UTC)
+Received: by mail-pf1-f170.google.com with SMTP id w16so7742972pfn.7
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 01 Sep 2019 14:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id;
+	bh=WMjp0julzjr6hGrldVpgPJY5mMyrE517wVsB/mLQ/0c=;
+	b=iWLFOaiBdqFfAR9Oh0wpD7a6Rw7nky2wVTzxms5P5zhyFlfW9aihfGbc8Ya5EWmQN5
+	BkOA/1ldbWTFpUTuS/1+4EkmlGk8k7kbe2UoCfnuHZZDFCq4jpM2JpOHW6XSd1Z3IW1g
+	Otqa50mDL66dYos5U9Ve7DKXE43Xn2QFOO2CpFe8p0Msd9a4zs7fzManwGwZFsrBPP1p
+	kXS6PUmGz84ARZqif/4Ncxn3LW9LiGfw5Bv4DjroxR4mws1Wid+/Q6VILmfL2LLjGgMV
+	kbvG+XjQEu+WSFKwKFy2J0/rvbBfNlUWoC/xS95EjvnNS1zXlWRCUr3h9ohl2FE5uxvO
+	o51Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=WMjp0julzjr6hGrldVpgPJY5mMyrE517wVsB/mLQ/0c=;
+	b=mP4ClmOxHnfX8FubQJONzJDgjxXuNUM42CskxrG0KMBNycoFMS5F53v8DhAIB7Tg3x
+	3WcA3kbmIBdogxsJ4PpRs0KEWKYBhfJ92FIez7iLLDiDtAR5HXvuhznesS0X9a0mBsV+
+	9XBA54+9eeHb5iGycBcfJh5YY44Gc2TOp0OQZ0E3+V3O2Gi9/cEwf66kB1B6fPaJ0Swi
+	cAap3emG9urYkQXMvnxZRc85dsHTUemDzXpcXwZ10NaBJivxTfeoNe6BN0SR7uszCvxz
+	96hqjYGsQcdsB8eHHKd5eRVAMJPMntWziGX+ZOLIkHu/UKB4LP8O2KCw2eLPggwgfSwN
+	UXww==
+X-Gm-Message-State: APjAAAUs5lTRGHdX/TgvrAOYqYXsdtUP1xoUNaFg0qumjk5gYFOMAJut
+	uARLIityFuJdoHu0tVdWLLd6U023
+X-Google-Smtp-Source: APXvYqw0K/IBdksnV/rWH3C1RqLRu6aINLF7WX1HJsvDr8+Vx0PAb3QIeP02Hej/QULBmKS/67MerQ==
+X-Received: by 2002:a62:1c16:: with SMTP id c22mr10317438pfc.10.1567373286746; 
+	Sun, 01 Sep 2019 14:28:06 -0700 (PDT)
+Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
+	([2601:202:4180:c33:1d53:5246:e59:bfe9])
+	by smtp.gmail.com with ESMTPSA id
+	y16sm16985522pfc.36.2019.09.01.14.28.05
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Sun, 01 Sep 2019 14:28:06 -0700 (PDT)
+From: Armin Kuster <akuster808@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun,  1 Sep 2019 14:28:04 -0700
+Message-Id: <1567373284-8760-1-git-send-email-akuster808@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [PATCH]] tests: fetch error in bitbake-selftest
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -70,89 +56,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 30 Aug 2019 00:18:03 -0000
-Content-Type: text/plain
+X-List-Received-Date: Sun, 01 Sep 2019 21:28:06 -0000
 
+FAIL: test_wget_latest_versionstring (bb.tests.fetch.FetchLatestVersionTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/pokybuild/yocto-worker/oe-selftest/build/bitbake/lib/bb/tests/fetch.py", line 1229, in test_wget_latest_versionstring
+      self.assertTrue(verstring, msg="Could not find upstream version for %s" % k[0])
+      AssertionError: '' is not true : Could not find upstream version for db
 
+[Yocto 13496]
 
-On Thu, 29 Aug 2019, at 01:02, Mark Hatle wrote:
-> On 8/28/19 9:38 AM, Andrew Jeffery wrote:
-> > Hi Mark,
-> > 
-> > On Wed, 28 Aug 2019, at 23:30, Mark Hatle wrote:
-> >> On 8/26/19 7:03 PM, Andrew Jeffery wrote:
-> >>> There exist some use-cases where repositories related by submodules do
-> >>> not require submodules be recursively initialised despite needing the
-> >>> first layer of submodules to be fetched. Enable this usecase in gitsm by
-> >>> implementing a `recurse=X` SRC_URI parameter. The current implementation
-> >>> of the recurse parameter defaults to enabling exhaustive recursion to
-> >>> match the current behaviour of gitsm, with the one alternative being no
-> >>> recursion. Enough rope is provided to allow specific recursion depths to
-> >>> be implemented if necessary via the same interface. Values currently
-> >>> unsupported for the recurse parameter raise a ValueError to ensure
-> >>> forward compatibility.
-> >>
-> >> I was thinking about this patch and I'm not sure it's needed.  There are ways to
-> >> do this without using gitsm.
-> >>
-> >> If you don't want recursion, then why are you specifying 'gitsm' at all? 
-> > 
-> > As far as I'm aware the git fetcher doesn't handle submodules at all. If I
-> > have a misunderstanding there and this patch is unnecessary then that's
-> > excellent, because I hate it :D
-> 
-> Yes, that is the point.  Since it doesn't handle submodules, there it won't
-> recurse and you are fine.
-> 
-> For example:
-> 
-> SRC_URI =
-> "gitsm://github.com/bus1/dbus-broker;protocol=git;rev=fc874afa0992d0c75ec25acb43d344679f0ee7d2"
-> 
-> This will result in the following submodules:
-> 
-> > Submodule 'edgelet/hsm-sys/azure-iot-hsm-c/deps/azure-c-shared-utility' (https://github.com/Azure/azure-c-shared-utility.git) registered for path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/c-shared'
-> > Submodule 'edgelet/hsm-sys/azure-iot-hsm-c/deps/azure-utpm-c' (https://github.com/Azure/azure-utpm-c.git) registered for path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm'
-> > Submodule 'testtools/ctest' (https://github.com/Azure/azure-ctest.git) registered for path 'testtools/ctest'
-> > Submodule 'testtools/testrunner' (https://github.com/Azure/azure-c-testrunnerswitcher.git) registered for path 'testtools/testrunner'
-> > Submodule 'testtools/umock-c' (https://github.com/Azure/umock-c.git) registered for path 'testtools/umock-c'
-> > Submodule 'deps/azure-ctest' (https://github.com/Azure/azure-ctest.git) registered for path 'deps/ctest'
-> > Submodule 'deps/testrunner' (https://github.com/Azure/azure-c-testrunnerswitcher.git) registered for path 'deps/testrunner'
-> > Submodule 'deps/c-utility' (https://github.com/Azure/azure-c-shared-utility.git) registered for path 'deps/c-utility'
-> > Submodule 'testtools/ctest' (https://github.com/Azure/azure-ctest.git) registered for path 'testtools/ctest'
-> > Submodule 'testtools/testrunner' (https://github.com/Azure/azure-c-testrunnerswitcher.git) registered for path 'testtools/testrunner'
-> > Submodule 'testtools/umock-c' (https://github.com/Azure/umock-c.git) registered for path 'testtools/umock-c'
-> > Submodule 'deps/azure-ctest' (https://github.com/Azure/azure-ctest.git) registered for path 'deps/ctest'
-> > Submodule 'deps/testrunner' (https://github.com/Azure/azure-c-testrunnerswitcher.git) registered for path 'deps/testrunner'
-> 
-> With the following commits:
-> 
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/c-shared': checked out '4deb950a4154e9baa39c87d75dd323dd58e239b7'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/c-shared/testtools/ctest': checked out 'b1d09aff8212f1fb62ca9d6014cb3509d8b5559a'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/c-shared/testtools/testrunner': checked out '721daafd8c34616f77a7697210470c0227dca20b'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/c-shared/testtools/umock-c': checked out 'c2c0f18d785ba85fef213302266f520c64201bb1'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/c-shared/testtools/umock-c/deps/ctest': checked out 'b1d09aff8212f1fb62ca9d6014cb3509d8b5559a'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/c-shared/testtools/umock-c/deps/testrunner': checked out '721daafd8c34616f77a7697210470c0227dca20b'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm': checked out 'a82e758bfcea806167e19d9dd94c2e1cc223aaee'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility': checked out '4deb950a4154e9baa39c87d75dd323dd58e239b7'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/ctest': checked out 'b1d09aff8212f1fb62ca9d6014cb3509d8b5559a'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/testrunner': checked out '721daafd8c34616f77a7697210470c0227dca20b'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c': checked out 'c2c0f18d785ba85fef213302266f520c64201bb1'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c/deps/ctest': checked out 'b1d09aff8212f1fb62ca9d6014cb3509d8b5559a'
-> > Submodule path 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c/deps/testrunner': checked out '721daafd8c34616f77a7697210470c0227dca20b'
-> 
-> If we clone this WITHOUT gitsm, it would be done as, and only want a subset, we
-> could do:
-> 
-> > 
-> > SRC_URI = "git://github.com/bus1/dbus-broker;protocol=git;rev=fc874afa0992d0c75ec25acb43d344679f0ee7d2 \
-> >            git://github.com/Azure/azure-c-shared-utility.git;protocol=git;subpath=edgelet/hsm-sys/azure-iot-hsm-c/deps/c-shared;rev=4deb950a4154e9baa39c87d75dd323dd58e239b7 \
-> >            "
-> 
+The Oracle UPSTREAM_CHECK_URI used changed and does not work with logic in wget.
 
-Makes sense, and I'm pleased we don't need my patch in the end.
+Update UPSTREAM_CHECK_URI and UPSTREAM_CHECK_REGEX to match the ones used in the
+recipe. Also change the version being checked.
 
-Thanks for your help,
+Signed-off-by: Armin Kuster <akuster808@gmail.com>
+---
+ lib/bb/tests/fetch.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Andrew
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 23c6338..2ee0305 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1200,8 +1200,8 @@ class FetchLatestVersionTest(FetcherTest):
+         # packages with valid UPSTREAM_CHECK_URI and UPSTREAM_CHECK_REGEX
+         ("cups", "http://www.cups.org/software/1.7.2/cups-1.7.2-source.tar.bz2", "https://github.com/apple/cups/releases", "(?P<name>cups\-)(?P<pver>((\d+[\.\-_]*)+))\-source\.tar\.gz")
+             : "2.0.0",
+-        ("db", "http://download.oracle.com/berkeley-db/db-5.3.21.tar.gz", "http://www.oracle.com/technetwork/products/berkeleydb/downloads/index-082944.html", "http://download.oracle.com/otn/berkeley-db/(?P<name>db-)(?P<pver>((\d+[\.\-_]*)+))\.tar\.gz")
+-            : "6.1.19",
++        ("db", "http://download.oracle.com/berkeley-db/db-5.3.21.tar.gz", "http://ftp.debian.org/debian/pool/main/d/db5.3/", "(?P<name>db5\.3_)(?P<pver>\d+(\.\d+)+).+\.orig\.tar\.xz")
++            : "5.3.10",
+     }
+ 
+     @skipIfNoNetwork()
+-- 
+2.7.4
+
 
