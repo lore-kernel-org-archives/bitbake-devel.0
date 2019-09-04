@@ -1,47 +1,51 @@
 Return-Path: <martin.jansa@gmail.com>
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
-	[209.85.221.66])
-	by mail.openembedded.org (Postfix) with ESMTP id C9D647F29F
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com
+	[209.85.221.53])
+	by mail.openembedded.org (Postfix) with ESMTP id D850E7F29F
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  4 Sep 2019 07:37:26 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id j16so20060936wrr.8
+	Wed,  4 Sep 2019 07:37:27 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id 30so9094684wrk.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 04 Sep 2019 00:37:28 -0700 (PDT)
+	Wed, 04 Sep 2019 00:37:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=rWPhVCdKnOSZ2nR6UWYqfP2rw2FkcaVTXl0yUJPLIBQ=;
-	b=Ujw/i4d8ro15SFXbJFd8asMX+ydB3/ei80aqdK74+PAdWukAFnHzck2GjnNfU/iZ5d
-	LzAuv2Kb+aTx6zblkjHe+8AuiOUaDOP/BDuXVKlx4Tt4TKnhYkbxv3SRowYeOM2u/2SV
-	H1bdT8iEGAMNbKlM6g0upB5NVG2INl5m2ZIcO2UhMVsOQwRQeZbm73KtpBpzh5d8yfKX
-	kqXaHuSlnjuYeC8Z+AksL+gKirBScCtTIlcDtZvLtOOvkU2Tgxa86PGbKV6TP8d7n4Bi
-	4igZX2vtWCh4XzAHiip3ebXg0b/rVwh43Rq7FdW8uCt2PCmg8JBPT+DmzGlbJ84+eR4B
-	eSLw==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=aFQjJrPuznJWTgfnDkOx9+f5+vtktMp82uhAJnuKpSA=;
+	b=l0Mjal9wZkL7iv8w4B0TOh5DjB1cWELzJwE1vGkdEIbDpAkbxwo08727Z/NDkAysnp
+	9hYUvk9+cxGja7g8g2Ck2sVDKBfN7c39qGaMg+yrwaSjlkXzHN5sKQlmMsQ8aFkKDK7X
+	ntjmk1d2CeEE9rkDY1/iF12EcdINyCkg35mFcwMxxxvnFz5pwljbQPoKOND1uuUMu24t
+	NkSwgl/LNTP8obpR1WMyw669cCuUVS+pSWZboB6/4GoozJAXgehBKdsB80zqdVK/LN3w
+	zNCsPsIzPUWTYA+AMPvY6y39m51EakwF9qvNrtCPssGgo0ZTv6LwLSuUeSiXij4XwXd9
+	mDRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=rWPhVCdKnOSZ2nR6UWYqfP2rw2FkcaVTXl0yUJPLIBQ=;
-	b=SyG8mlNshRh9s7/8VfUPxC1To7cqO26ejShrPvANkjQ8Y5PuCpDwDyp02IUNO27iSt
-	Enu0iKdZwd+KAqaqmfzrowwnnKxwDC8AdtK65N6Dk0Gh2K1IYaKG/cr+2RrBRG1UtWx7
-	vyU3mKP90XRHfe2lOIRp1BioXDZE2phj9Xud04T3YpQ/hM//buJe6Tj1ISdkmgiVY0cm
-	XzjcfCoNZMB+fniNfSg1tWF1Ymhh4igUED+RKGLYSuW8b15OHnRravBNcSnhG/Gawrjh
-	s/FjwL9ovq/mn1Xf9pelCefF40roq1VMLMBAKlDWC1L6JTzLMN/BDUbLXHHI+jP9VyPY
-	w5oA==
-X-Gm-Message-State: APjAAAVpYPOpK8Pc6Tj6puc8J7hu1VsHEbObejmDdwYlBKpE9ZaziNXF
-	CcqE3MZkMzCL1FnbTEPA2DiXBohKBi4=
-X-Google-Smtp-Source: APXvYqxoqFTJq5cnzaMNh0sGzDpILoB1fmaXYTYFZUUFNVDVOdqnKlzBFjgCHW08ZUXfNmA31Bi7Rw==
-X-Received: by 2002:adf:f18c:: with SMTP id h12mr44593524wro.47.1567582647242; 
-	Wed, 04 Sep 2019 00:37:27 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=aFQjJrPuznJWTgfnDkOx9+f5+vtktMp82uhAJnuKpSA=;
+	b=pttQFd/2Z2Ybu4uMbYkMBmZfnUfLbF174aKttU7H/FQfnhdi7AgkxCFt3WR3keJ7Qo
+	SaUNKtx32C/1SIFzUQeNQ8WbeE7Uzw+9WuiPbP+Xz2jeGLS1Yyw8YQxcoAPUbiCOiYJ7
+	CPRlacxMblvGb34NAdgqp1/S/SocTXRqzwNHN1/Iu442aENsKYIySsLrwfxUW8KJ/nW2
+	6SI1mDyir8Ds49e38tzdU0n2IIovGgMEzfOWKy91baEyjVwZ2nxTuUGfq84uodeJlFTq
+	8cRyW5B/e33cQk4DMZrfKRlcOb/Mrw9bdIWGIw9aMdK+znY3Re9/gD1gtaNDMUPWZ/T9
+	UmbQ==
+X-Gm-Message-State: APjAAAX2KP5PN5iSaiPqorbZXF13ti2y89REJgXwGlasmPMEjN2OC2BX
+	6u36+Sv2m5Fnzl7oZPna97ESddGkqnw=
+X-Google-Smtp-Source: APXvYqwXIKMulz4/+uR0yOnsAqSNCk8AMTosoWJ3hiHMYhsd8r9Ss020qPmHr/Y0y7DcC2QQL6AZ0Q==
+X-Received: by 2002:a5d:66d2:: with SMTP id k18mr391799wrw.7.1567582648387;
+	Wed, 04 Sep 2019 00:37:28 -0700 (PDT)
 Received: from localhost (ip-217-030-068-212.aim-net.cz. [217.30.68.212])
-	by smtp.gmail.com with ESMTPSA id f15sm2964718wml.8.2019.09.04.00.37.26
+	by smtp.gmail.com with ESMTPSA id
+	d28sm20678173wrb.95.2019.09.04.00.37.27
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Wed, 04 Sep 2019 00:37:26 -0700 (PDT)
+	Wed, 04 Sep 2019 00:37:27 -0700 (PDT)
 From: Martin Jansa <martin.jansa@gmail.com>
 X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  4 Sep 2019 07:37:27 +0000
-Message-Id: <20190904073728.2567560-1-Martin.Jansa@gmail.com>
+Date: Wed,  4 Sep 2019 07:37:28 +0000
+Message-Id: <20190904073728.2567560-2-Martin.Jansa@gmail.com>
 X-Mailer: git-send-email 2.17.1
-Subject: [1.42][PATCH 1/2] utils: Fix movefile() exception handling with python3
+In-Reply-To: <20190904073728.2567560-1-Martin.Jansa@gmail.com>
+References: <20190904073728.2567560-1-Martin.Jansa@gmail.com>
+Subject: [1.42][PATCH 2/2] fetch2: show warning when renaming the archive with bad checksum failed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,42 +58,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 04 Sep 2019 07:37:27 -0000
+X-List-Received-Date: Wed, 04 Sep 2019 07:37:28 -0000
 
 From: Martin Jansa <martin.jansa@gmail.com>
 
-* with python3 this fails with:
-  File: 'bitbake/lib/bb/utils.py', lineno: 799, function: movefile
-       0795:        try:
-       0796:            os.rename(src, destpath)
-       0797:            renamefailed = 0
-       0798:        except Exception as e:
-   *** 0799:            if e[0] != errno.EXDEV:
-       0800:                # Some random error.
-       0801:                print("movefile: Failed to move", src, "to", dest, e)
-       0802:                return None
-       0803:            # Invalid cross-device-link 'bind' mounted or actually Cross-Device
-  Exception: TypeError: 'OSError' object is not subscriptable
+* noticed on read-only sshfs premirror
+* it was showing the warning about renaming the file:
+  WARNING: laser-geometry-1.6.4-r0 do_fetch: Renaming /jenkins/mjansa/sshfs/webos-ose-thud/downloads/laser_geometry-1.6.4.tar.gz to /jenkins/mjansa/sshfs/webos-ose-thud/downloads/laser_geometry-1.6.4.tar.gz_bad-checksum_1ee7479b8c5914b4ffae996945121441
+
+  and then failed because of movefile() issue with python3 (fixed in previous commit):
+  ERROR: laser-geometry-1.6.4-r0 do_fetch: Error executing a python function in exec_python_func() autogenerated:
+
+  with movefile() fixed, it let do_fetch continue and re-fetch locally with the right
+  checksum, but still the renamed file didn't exist, because of movefile failure - add
+  another warning when the movefile fails - for whatever reason - unfortunately movefile
+  prints error messages with just print() so the real error is hidden only in log.do_fetch
+  in this case:
+  movefile: Failed to move /jenkins/mjansa/sshfs/webos-ose-thud/downloads/laser_geometry-1.6.4.tar.gz to /jenkins/mjansa/sshfs/webos-ose-thud/downloads/laser_geometry-1.6.4.tar.gz_bad-checksum_1ee7479b8c5914b4ffae996945121441 [Errno 30] Read-only file system: '/jenkins/mjansa/sshfs/webos-ose-thud/downloads/laser_geometry-1.6.4.tar.gz' -> '/jenkins/mjansa/sshfs/webos-ose-thud/downloads/laser_geometry-1.6.4.tar.gz_bad-checksum_1ee7479b8c5914b4ffae996945121441'
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/utils.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/__init__.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index e4386940..7aaf9309 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -782,7 +782,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
-             os.rename(src, destpath)
-             renamefailed = 0
-         except Exception as e:
--            if e[0] != errno.EXDEV:
-+            if e.errno != errno.EXDEV:
-                 # Some random error.
-                 print("movefile: Failed to move", src, "to", dest, e)
-                 return None
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 56129eee..e73f7d47 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -964,7 +964,8 @@ def rename_bad_checksum(ud, suffix):
+ 
+     new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
+     bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
+-    bb.utils.movefile(ud.localpath, new_localpath)
++    if not bb.utils.movefile(ud.localpath, new_localpath):
++        bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (ud.localpath, new_localpath))
+ 
+ 
+ def try_mirror_url(fetch, origud, ud, ld, check = False):
 -- 
 2.17.1
 
