@@ -1,49 +1,48 @@
-Return-Path: <wesley.lindauer@gmail.com>
-Received: from mail-io1-f67.google.com (mail-io1-f67.google.com
-	[209.85.166.67])
-	by mail.openembedded.org (Postfix) with ESMTP id A492A72EB7
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
+	[209.85.221.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 7EF367F363
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  4 Sep 2019 15:50:05 +0000 (UTC)
-Received: by mail-io1-f67.google.com with SMTP id r4so30003015iop.4
+	Fri,  6 Sep 2019 11:31:44 +0000 (UTC)
+Received: by mail-wr1-f67.google.com with SMTP id i1so5622446wro.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 04 Sep 2019 08:50:07 -0700 (PDT)
+	Fri, 06 Sep 2019 04:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id;
-	bh=bigSN5HY3Wurb/pG0r6pdDOo5/QMf/0b4oQpKtq6RkM=;
-	b=Oegracrm1IT0n4PnvbVpxslyewv4+IG/HG038v2ODiTNQC28m7pn7jvLqDrlvr8d85
-	W/bJV6k63zBVIhqIcS0IGRiRVcfWKHNfAWmsg8nUIUxtGAo8i0HOUYxJPc089D0jIheu
-	u/ELFsooYP43tncRirz37MmVqRHWzZdyoshK/zqLa75c5rjpTuM+4k9ueMr/I+ixTbql
-	PKlwSvhQy34IFaXULkyWx23FGabyGwWpT/8r9WaRsWR468+h8szGuDdChgNwrz3he++9
-	HtxpxzPCCkEE8MTtlZ5th+LMtST7jqf3nILFUOPoNGSfMIPjHvF05JipaRRf1CwaIvwH
-	xeNg==
+	bh=dU9QlSRYabcX/W00X9EGZfb55BjbEGKlkDmhTT2CsTo=;
+	b=Eqc77DFbAoEx44DnOO6jIZdBz0Z7OHDJf9vIUxm4DDm/e9FQJ+lDEIMmVzOQ+Bd9K4
+	VRqD5MmjF06vL/DUtH9X1uaKn+ZUOt9kbVJWssqIjDgdjhi55FFDvIbeURXzAhudPygV
+	060cBS8OxduE5lchITcqNANOcoK0aZ+MtmoyhCpFskr2eSJLpciaD+v+ArcdoxDLF3WZ
+	HdqgtjfWGMoTilqFTdHzoXej9MVysDZd/2NQn1qc/PQH/NA9/WdnK4SsoDqny1lb4GEf
+	NuM+KhSOSkELQNVk3x60JbsYvkkuIswUVEhVZzGBudk00vkOYGzyUlipcFKf4J6EgBsE
+	J95w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=bigSN5HY3Wurb/pG0r6pdDOo5/QMf/0b4oQpKtq6RkM=;
-	b=VDblTCB2EOaO4XnoAIUp9L+7ri+jaDG9QvX3UkeE0lHt1ret2tp6xE6tYB68CLxjL5
-	V5Ks36CHPLpE6jQPOr1UaSxVYoVAhTQYKCEo408v7WqKbuYKywawtAS1fQi5aAaiULzh
-	3nrWGMbBlFwN6DGANNVXlKbC5uTwppvrjMmyxq+TFuRybtNpHhbGo1eC7mVU2OEsOG8w
-	+NiYqXiqX9tnphH9vFZoBGrENTIzKQ52ZQS3nJ8WeJXismAUcU8LLvkIjqmcUlxH+PsG
-	ZAOAC4xUtLyOGSAcI/eRVu+tVgz3W0q6qJ/410wf15ev6q/sN8F/KDmDMbRJG+0qqqef
-	6lnA==
-X-Gm-Message-State: APjAAAXIqZLl7MYTXeklx+7tjfrnrBrp388b/Gi6kU1BwHDfD0MtIw+i
-	hN0Pdn1ZE219lLa7TbM2VUZvVrtVqrfHklLC
-X-Google-Smtp-Source: APXvYqx4aN5SJGSmY4TZgV8QdHBkmUBm1GxRjlxgmn6RNqWrvXcaEFrYifNKNXEip/AYo6DfVw5MAg==
-X-Received: by 2002:a02:7044:: with SMTP id f65mr21070286jac.37.1567612206588; 
-	Wed, 04 Sep 2019 08:50:06 -0700 (PDT)
-Received: from camaro.lpdev.prtdev.lexmark.com
-	([2600:380:5c13:7f9c:59eb:8f16:e2a0:29de])
-	by smtp.gmail.com with ESMTPSA id
-	j16sm17898353iok.34.2019.09.04.08.50.05
+	bh=dU9QlSRYabcX/W00X9EGZfb55BjbEGKlkDmhTT2CsTo=;
+	b=YpDvXGKwyVvQ+6cY7dVFLBDUCHD6UaeCtHhO1ScLxnJS0EndyFPMmR4yt3LNL3NA19
+	sT4dW+qIVIdft2cSndIJ7OKXKj/AieCj2CPMk5NegZMNUtIHXzxvRIb0pdvYOlqGoDWn
+	kivB06fvOhCRx2kRnFrGJap0fWfL7euRra6irf/AvgbS8Bd1GbB2AGXsE9XACQZQDYbh
+	DOJfKSZNNoOltxDFYNQ3nuDTaVxCFZfQExO8PfNbGXQ2Xa3BDK1vPlgFkv6h7qYLKWBU
+	WWL2asABhK7LOcS78XRjiRu3eITiaDj0Tlw+gLO9EVn3Ss6Y5iBqfGwLunV6nt6ozmTm
+	eztA==
+X-Gm-Message-State: APjAAAWkXEd5M/p+jiez35Ev5+FV/46mHNDcUtzlkXMZTu8KkoMYal2s
+	g9D0Qlt5korbCkpWARsxZbRJHtCeMW8=
+X-Google-Smtp-Source: APXvYqxDxiZ8cJ8HD3VcYAgYHSZJpZdRqxY4eZgTezwS7m25gFxi9EsRuvRVCBDMbxtGmAbnih0s7Q==
+X-Received: by 2002:adf:e503:: with SMTP id j3mr6471405wrm.166.1567769504954; 
+	Fri, 06 Sep 2019 04:31:44 -0700 (PDT)
+Received: from localhost (ip-217-030-068-212.aim-net.cz. [217.30.68.212])
+	by smtp.gmail.com with ESMTPSA id x6sm8997967wmf.38.2019.09.06.04.31.44
 	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-	Wed, 04 Sep 2019 08:50:05 -0700 (PDT)
-From: Wes Lindauer <wesley.lindauer@gmail.com>
+	Fri, 06 Sep 2019 04:31:44 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  4 Sep 2019 11:49:56 -0400
-Message-Id: <20190904154956.804-1-wesley.lindauer@gmail.com>
-X-Mailer: git-send-email 2.14.5
-Cc: Wes Lindauer <wesley.lindauer@gmail.com>
-Subject: [PATCH] bitbake: cooker: Ensure bbappends are found in stable order
+Date: Fri,  6 Sep 2019 11:31:44 +0000
+Message-Id: <20190906113144.58253-1-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Cc: Herb Kuta <herb.kuta@lge.com>
+Subject: [PATCH] bitbake-user-manual: Improve the example for Removal (Override Style Syntax)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,34 +55,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 04 Sep 2019 15:50:05 -0000
+X-List-Received-Date: Fri, 06 Sep 2019 11:31:44 -0000
 
-Thanks to wildcards in bbappend filenames, it's possible to have
-multiple bbappends that apply to the same recipe in the same directory.
-In order to get sstate hits between different workspaces, we want to
-apply those bbappend files in a consistent order.  Since readdir()
-returns files in a non-deterministic order between workspaces (based on
-inode number and/or time of creation), we'll need to sort its result in
-order to have any consistency.
+* to better show how it works with spaces and multiple values
 
-Signed-off-by: Wes Lindauer <wesley.lindauer@gmail.com>
+Signed-off-by: Herb Kuta <herb.kuta@lge.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- bitbake/lib/bb/cooker.py | 1 +
- 1 file changed, 1 insertion(+)
+ .../bitbake-user-manual-metadata.xml                 | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 0607fcc708..a9ee142aa5 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1869,6 +1869,7 @@ class CookerCollectFiles(object):
-             (bbappend, filename) = b
-             if (bbappend == f) or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
-                 filelist.append(filename)
-+        filelist.sort()
-         return filelist
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+index a125ad33..88622421 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+@@ -420,13 +420,17 @@
+      FOO = "123 456 789 123456 123 456 123 456"
+      FOO_remove = "123"
+      FOO_remove = "456"
+-     FOO2 = "abc def ghi abcdef abc def abc def"
+-     FOO2_remove = "abc def"
++     FOO2 = " abc  def ghi abcdef abc def abc  def def"
++     FOO2_remove = " \
++         def \
++         abc \
++         ghi \
++     "
+                 </literallayout>
+                 The variable <filename>FOO</filename> becomes
+-                "&nbsp;&nbsp;789 123456&nbsp;&nbsp;&nbsp;&nbsp;"
++                "&nbsp;&nbsp;789&nbsp;123456&nbsp;&nbsp;&nbsp;&nbsp;"
+                 and <filename>FOO2</filename> becomes
+-                "&nbsp;&nbsp;ghi abcdef&nbsp;&nbsp;&nbsp;&nbsp;".
++                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jkl&nbsp;&nbsp;abcdef&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
+             </para>
  
-     def collection_priorities(self, pkgfns, d):
+             <para>
 -- 
-2.14.5
+2.17.1
 
 
