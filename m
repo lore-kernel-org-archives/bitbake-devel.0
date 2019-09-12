@@ -1,51 +1,48 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
-	[209.85.221.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 4019D7F351
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 5C3727D30C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Sep 2019 14:16:13 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id l16so20547203wrv.12
+	Thu, 12 Sep 2019 12:36:19 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id i1so27678725wro.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Sep 2019 07:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=2OW/aL4H5jkbPu3ZDS+OWH2WkPx65CaY2bMF+u5rm4I=;
-	b=QS1Yv+RIAwUnUyvu16UqNmBRMyyrU53GiDcgtp+Ycre1gAqLgPEonOmpa5BzoK9nHh
-	ODaudcNZQV2ZCPCzc7h5DGAFzbT++8AcDZ5wSwvcmGoCEmT2nbU2uq4fYZgHKOHu3Kto
-	CJ8exs6/OJOLdxx5t+S/QdZ47XC4OtfaKW8V8=
+	Thu, 12 Sep 2019 05:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=nfGdWjt02rdvmw142NusuqZA66HwflsEvZc0B/qLh9w=;
+	b=e+Nh7BJHBYVrfse4TA7Z9nrUcwtnZEQUo4y2xcZH2Z3PD37pRFA7u/gIII2y8o0Pj9
+	ZsEulLvlEWB5fMIJ/7Yo0+nNQpqmd2we6bb4OcnQdQHZ1eEtX2U7BfJYf8ttSWStwVqp
+	+g18fMduj8WfY7cB9BYX95PlfK+eP+wnPULuYAcAmTWitao1hzG27nc/1c1KYsq3ZXsq
+	ArOXwkNRDYfdjBGvJQ4F30H+pQ9CeXie3WNybpM9dqwfAOLAtDbHI4XHe2oPkjcUov3P
+	APaGEDGzf49YRG3UNtcMmlZ2ZbmYmHdJGr67B5MgiWCxEZIVP95zLgERmyTruDq0UpsV
+	j8+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=2OW/aL4H5jkbPu3ZDS+OWH2WkPx65CaY2bMF+u5rm4I=;
-	b=RNXnRmn3HYjbJheCwtd4a11nPes+3TeFwWGUKaQ0215SgyS/vrMADtpqHGl+G2LDGL
-	+v1wL3gIsxleN1QypVppLH2BEOpXk25Ii9IAOkZwlILqDEB9mjFPSTBKdtkyZUU7h3bS
-	B/DcPwV36dXlmwQIUqW4Uq+cJmXk1A8L4Rgwv/jnrGNDOVGplQ5h0o7+ku5V4WLvp5Xu
-	fOf+TLam7fIYCwONZocAr+IzDGKG8fPPL2Cqog+2NeTvQlCY21copceDKVzuwSnfk1DK
-	yhj9zPcGYeH781xvuXwqygWYH3GCVROKQnPuvozmjefyCmG2BwEoruO1Yc6APv3ykWO/
-	Tv8g==
-X-Gm-Message-State: APjAAAVTVw92OepWvf1/QQg86K3Y8aTkIkzNVg/4VMbzubCdA0TaOhWa
-	xKZpp1xs9BU2OVBGkNZp4LNAXjRud6k5Dw==
-X-Google-Smtp-Source: APXvYqxDWTYvDeK/5D9b8unvM/EPGgki16hLYYkiBYSSYeDikdvkK6ckkXgXTUnCTGbhwzGz0oxjVg==
-X-Received: by 2002:adf:f282:: with SMTP id k2mr26156576wro.38.1568124964811; 
-	Tue, 10 Sep 2019 07:16:04 -0700 (PDT)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=nfGdWjt02rdvmw142NusuqZA66HwflsEvZc0B/qLh9w=;
+	b=jBE2Q446QvjRk1jFHjNJ1ccjYYGDbtX4+6kPttKljnSFWDJwIozxh7JYrtN2gB9K3O
+	yG3Rn9lj2X4v/UFQaT26eiExUuexCQXjKVCg2cilm/SPB90hN5b5LF2Ebl0DlZzZjcyp
+	/fktcibzz4scbcjhHOJ19qZSbvxe2NMdbYCSu0rBZ1NfW+g4Z/inIJftSGs8ay3zzrQR
+	jmtPiXTJbdgkzimhm+hkE7ZYlFDRpVch7/vFz7i24Ge1Ukbh9FuUNhvxILop0MGpYfcT
+	+sndhZrxhS1QwVDG9OklRUkKFOLdLkyV5Bj3XB2rGq2SsgX2dh9uH1hdWot6qeAHl1vT
+	kKXg==
+X-Gm-Message-State: APjAAAXRBw5BeifaaNAM+PtOrV+5A6HNkNF+Tii6JKkzNf21/XGtUFJg
+	avFK9LNSOB/pWD35Xgo1zWPjOk8WF8Y=
+X-Google-Smtp-Source: APXvYqyflIsuVikI7+43QEhUH+cXQi4UNGX0r2eoFl69O/BCtVLsU9BGxsgs8GJhZfNcUoq9yWyccA==
+X-Received: by 2002:adf:de8a:: with SMTP id w10mr32992683wrl.276.1568291780496;
+	Thu, 12 Sep 2019 05:36:20 -0700 (PDT)
+Received: from localhost (ip-217-030-068-212.aim-net.cz. [217.30.68.212])
 	by smtp.gmail.com with ESMTPSA id
-	f186sm4954353wmg.21.2019.09.10.07.16.03
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 10 Sep 2019 07:16:04 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	o14sm15846148wrw.11.2019.09.12.05.36.19
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Thu, 12 Sep 2019 05:36:19 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 10 Sep 2019 15:15:55 +0100
-Message-Id: <20190910141555.6710-2-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190910141555.6710-1-richard.purdie@linuxfoundation.org>
-References: <20190910141555.6710-1-richard.purdie@linuxfoundation.org>
-MIME-Version: 1.0
-Subject: [PATCH 2/2] hashserv: Drop handler thread
+Date: Thu, 12 Sep 2019 12:36:27 +0000
+Message-Id: <20190912123627.96-1-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] Revert "bitbake: cooker: Ensure bbappends are found in stable order"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,129 +55,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Sep 2019 14:16:13 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 12 Sep 2019 12:36:20 -0000
 
-With performance measurements we've proven the handler thread is slower than not
-bothering with threading so drop it.
+This reverts commit 94c0c7f15c7a6244a8576ed948ffc21afb96ba82.
 
-There was also a bug in this code where the database was being repeatedly being
-reopened/closed.
+This ignores the layer priority, making the issue much worse.
+E.g. I'm seeing a lot of failures caused by missing users, because
+base-passwd bbappends applied in unexpected order caused different
+passwd.master to be found in re-ordered FILESPATH.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- lib/hashserv/__init__.py | 62 ++++------------------------------------
- 1 file changed, 5 insertions(+), 57 deletions(-)
+ lib/bb/cooker.py | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
-index eb03c32213..9d5722ab88 100644
---- a/lib/hashserv/__init__.py
-+++ b/lib/hashserv/__init__.py
-@@ -24,17 +24,8 @@ class HashEquivalenceServer(BaseHTTPRequestHandler):
-     def log_message(self, f, *args):
-         logger.debug(f, *args)
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 89d1916e..a0e60024 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1855,7 +1855,6 @@ class CookerCollectFiles(object):
+             (bbappend, filename) = b
+             if (bbappend == f) or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
+                 filelist.append(filename)
+-        filelist.sort()
+         return filelist
  
--    def opendb(self):
--        self.db = sqlite3.connect(self.dbname)
--        self.db.row_factory = sqlite3.Row
--        self.db.execute("PRAGMA synchronous = OFF;")
--        self.db.execute("PRAGMA journal_mode = MEMORY;")
--
-     def do_GET(self):
-         try:
--            if not self.db:
--                self.opendb()
--
-             p = urllib.parse.urlparse(self.path)
- 
-             if p.path != self.prefix + '/v1/equivalent':
-@@ -67,9 +58,6 @@ class HashEquivalenceServer(BaseHTTPRequestHandler):
- 
-     def do_POST(self):
-         try:
--            if not self.db:
--                self.opendb()
--
-             p = urllib.parse.urlparse(self.path)
- 
-             if p.path != self.prefix + '/v1/equivalent':
-@@ -141,62 +129,22 @@ class HashEquivalenceServer(BaseHTTPRequestHandler):
-             self.send_error(400, explain=traceback.format_exc())
-             return
- 
--class ThreadedHTTPServer(HTTPServer):
--    quit = False
--
--    def serve_forever(self):
--        self.requestqueue = queue.Queue()
--        self.handlerthread = threading.Thread(target=self.process_request_thread)
--        self.handlerthread.daemon = False
--
--        self.handlerthread.start()
--
--        signal.signal(signal.SIGTERM, self.sigterm_exception)
--        super().serve_forever()
--        os._exit(0)
--
--    def sigterm_exception(self, signum, stackframe):
--        self.server_close()
--        os._exit(0)
--
-+class HashHTTPServer(HTTPServer):
-     def server_bind(self):
-         HTTPServer.server_bind(self)
-         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
- 
--    def process_request_thread(self):
--        while not self.quit:
--            try:
--                (request, client_address) = self.requestqueue.get(True)
--            except queue.Empty:
--                continue
--            if request is None:
--                continue
--            try:
--                self.finish_request(request, client_address)
--            except Exception:
--                self.handle_error(request, client_address)
--            finally:
--                self.shutdown_request(request)
--        os._exit(0)
--
--    def process_request(self, request, client_address):
--        self.requestqueue.put((request, client_address))
--
--    def server_close(self):
--        super().server_close()
--        self.quit = True
--        self.requestqueue.put((None, None))
--        self.handlerthread.join()
--
- def create_server(addr, dbname, prefix=''):
-     class Handler(HashEquivalenceServer):
-         pass
- 
-     db = sqlite3.connect(dbname)
-     db.row_factory = sqlite3.Row
-+    db.execute("PRAGMA synchronous = OFF;")
-+    db.execute("PRAGMA journal_mode = MEMORY;")
- 
-     Handler.prefix = prefix
--    Handler.db = None
-+    Handler.db = db
-     Handler.dbname = dbname
- 
-     with contextlib.closing(db.cursor()) as cursor:
-@@ -223,7 +171,7 @@ def create_server(addr, dbname, prefix=''):
-         cursor.execute('CREATE INDEX IF NOT EXISTS taskhash_lookup ON tasks_v2 (method, taskhash)')
-         cursor.execute('CREATE INDEX IF NOT EXISTS outhash_lookup ON tasks_v2 (method, outhash)')
- 
--    ret = ThreadedHTTPServer(addr, Handler)
-+    ret = HashHTTPServer(addr, Handler)
- 
-     logger.info('Starting server on %s\n', ret.server_port)
- 
+     def collection_priorities(self, pkgfns, d):
 -- 
-2.20.1
+2.17.1
 
 
