@@ -1,26 +1,52 @@
-Return-Path: <ee.peng.yeoh@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 63AF17D391
+Return-Path: <mcfrisk@kapsi.fi>
+X-Greylist: delayed 2067 seconds by postgrey-1.34 at layers.openembedded.org;
+	Mon, 16 Sep 2019 07:50:01 UTC
+Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
+	by mail.openembedded.org (Postfix) with ESMTP id 086917ED7E
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 Sep 2019 03:58:50 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	12 Sep 2019 20:58:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; d="scan'208";a="197430603"
-Received: from andromeda02.png.intel.com ([10.221.183.11])
-	by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 20:58:50 -0700
-From: Yeoh Ee Peng <ee.peng.yeoh@intel.com>
+	Mon, 16 Sep 2019 07:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+	s=20161220; h=Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=UTc+tMI9b4H31AcSq2NHHlQa1QbO/Jkm7LldiG2CkmY=;
+	b=DE+fA8sRSaDNPJXSQkPncCnBua
+	SZcImBFNcPivNX6Bhn94q3jal0sHfeNu8TkDG2jXOgF9klK/gA1dkQKs/VucpD1e+w7VqiHyK0Io+
+	hny+yi8CCG89ZgN+KOtwAmDIK+Dh/nxgsk/8dn0GQ597vDzPiN6Rzpx8H1FVau6TZr9QImhioCv0f
+	fvB8p5M4JfNW0aKW5NJPVV1I33CkPFgXM/mPMU2RGjmOG2Z1eeab6UG/BYl99o+ndPZcKNZC+wifu
+	XvrTDbi3df3dO6qNWy0Lv/ScWw7Dnvx4QrfLtBd3vizRuIEHiq/gG3ZINPP8EO38VQDugMpHZMGzz
+	Q9oq8buw==;
+Received: from kapsi.fi ([91.232.154.11] helo=lakka.kapsi.fi)
+	by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.89) (envelope-from <mcfrisk@kapsi.fi>)
+	id 1i9lET-0000qs-FP; Mon, 16 Sep 2019 10:15:33 +0300
+Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.84_2)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1i9lE2-0003Uc-T0; Mon, 16 Sep 2019 10:15:06 +0300
+From: Mikko Rapeli <mikko.rapeli@bmw.de>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 13 Sep 2019 11:58:41 +0800
-Message-Id: <1568347121-43357-4-git-send-email-ee.peng.yeoh@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568347121-43357-1-git-send-email-ee.peng.yeoh@intel.com>
-References: <1568347121-43357-1-git-send-email-ee.peng.yeoh@intel.com>
-X-Mailman-Approved-At: Sat, 14 Sep 2019 11:25:37 +0000
-Subject: [PATCH 3/3] bitbake: bitbake-layers: show-recipes: Enable remove the (skipped) tag
+Date: Mon, 16 Sep 2019 10:14:50 +0300
+Message-Id: <1568618090-6633-1-git-send-email-mikko.rapeli@bmw.de>
+X-Mailer: git-send-email 2.1.4
+X-Rspam-Score: 1.2 (+)
+X-Rspam-Report: Action: no action Symbol: ARC_NA(0.00)
+	Symbol: DMARC_POLICY_SOFTFAIL(0.10) Symbol: R_SPF_NEUTRAL(0.00)
+	Symbol: FROM_HAS_DN(0.00) Symbol: TO_DN_SOME(0.00)
+	Symbol: TO_MATCH_ENVRCPT_ALL(0.00) Symbol: MIME_GOOD(-0.10)
+	Symbol: RCVD_TLS_LAST(0.00) Symbol: NEURAL_SPAM(0.00)
+	Symbol: IP_SCORE(-0.10) Symbol: RCPT_COUNT_TWO(0.00)
+	Symbol: MID_CONTAINS_FROM(1.00) Symbol: FORGED_SENDER(0.30)
+	Symbol: R_DKIM_NA(0.00) Symbol: MIME_TRACE(0.00)
+	Symbol: ASN(0.00) Symbol: FROM_NEQ_ENVFROM(0.00)
+	Symbol: RCVD_COUNT_TWO(0.00) Message: (SPF): spf neutral
+	Message-ID: 1568618090-6633-1-git-send-email-mikko.rapeli@bmw.de
+X-Rspam-Bar: +
+X-SA-Exim-Connect-IP: 91.232.154.11
+X-SA-Exim-Mail-From: mcfrisk@kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+Subject: [PATCH 2/2] svn fetcher: allow "svn propget svn:externals" to fail
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,75 +59,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Sep 2019 03:58:50 -0000
+X-List-Received-Date: Mon, 16 Sep 2019 07:50:02 -0000
 
-Currently, show-recipes will append "(skipped)" to recipes which
-were skipped due these recipes does not satisfied the configurations.
+Not all servers and repositories have this property set
+which results in failures like this when actual svn checkout
+command succeeded:
 
-Example: $ bitbake-layers show-recipes -p
-ace
-backport-iwlwifi
-core-image-rt (skipped)
-core-image-rt-sdk (skipped)
-core-image-tiny
+svn: warning: W200017: Property 'svn:externals' not found on ''
+svn: E200000: A problem occurred; see other errors for details
 
-Enable removal of the "(skipped)" tag appended to recipe using -r.
-
-Example: $ bitbake-layers show-recipes -p -r
-ace
-backport-iwlwifi
-core-image-rt
-core-image-rt-sdk
-core-image-tiny
-
-Signed-off-by: Yeoh Ee Peng <ee.peng.yeoh@intel.com>
+Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
 ---
- lib/bblayers/query.py | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/fetch2/svn.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
-index 8ba94ac..44ab907 100644
---- a/lib/bblayers/query.py
-+++ b/lib/bblayers/query.py
-@@ -46,7 +46,7 @@ layer, with the preferred version first. Note that skipped recipes that
- are overlayed will also be listed, with a " (skipped)" suffix.
- """
+diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
+index 59ce931..96d666b 100644
+--- a/bitbake/lib/bb/fetch2/svn.py
++++ b/bitbake/lib/bb/fetch2/svn.py
+@@ -145,7 +145,7 @@ class Svn(FetchMethod):
  
--        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, False, True, None, None)
-+        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, False, True, None, False, None)
- 
-         # Check for overlayed .bbclass files
-         classes = collections.defaultdict(list)
-@@ -112,9 +112,9 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
-             title = 'Matching recipes:'
-         else:
-             title = 'Available recipes:'
--        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.packagenames, args.multiple, args.layer, inheritlist)
-+        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.packagenames, args.multiple, args.layer, args.remove_skip_tag, inheritlist)
- 
--    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_packagenames, show_multi_provider_only, show_provided_layer_only, inherits):
-+    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_packagenames, show_multi_provider_only, show_provided_layer_only, remove_skip_tag, inherits):
-         if inherits:
-             bbpath = str(self.tinfoil.config_data.getVar('BBPATH'))
-             for classname in inherits:
-@@ -145,7 +145,7 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
- 
-         def print_item(f, pn, ver, layer, ispref):
-             if not show_provided_layer_only or layer == show_provided_layer_only:
--                if f in skiplist:
-+                if not remove_skip_tag and f in skiplist:
-                     skipped = ' (skipped)'
-                 else:
-                     skipped = ''
-@@ -503,6 +503,7 @@ NOTE: .bbappend files can impact the dependencies.
-         parser_show_recipes.add_argument('-m', '--multiple', help='only list where multiple recipes (in the same layer or different layers) exist for the same recipe name', action='store_true')
-         parser_show_recipes.add_argument('-i', '--inherits', help='only list recipes that inherit the named class(es) - separate multiple classes using , (without spaces)', metavar='CLASS', default='')
-         parser_show_recipes.add_argument('-l', '--layer', help='only list recipes from the provided layer', default='')
-+        parser_show_recipes.add_argument('-r', '--remove-skip-tag', help='remove the "(skipped)" tag from recipes', action='store_true')
-         parser_show_recipes.add_argument('pnspec', nargs='*', help='optional recipe name specification (wildcards allowed, enclose in quotes to avoid shell expansion)')
- 
-         parser_show_appends = self.add_command(sp, 'show-appends', self.do_show_appends)
+             if not ("externals" in ud.parm and ud.parm["externals"] == "nowarn"):
+                 # Warn the user if this had externals (won't catch them all)
+-                output = runfetchcmd("svn propget svn:externals", d, workdir=ud.moddir)
++                output = runfetchcmd("svn propget svn:externals || true", d, workdir=ud.moddir)
+                 if output:
+                     if "--ignore-externals" in svnfetchcmd.split():
+                         bb.warn("%s contains svn:externals." % ud.url)
 -- 
-2.7.4
+1.9.1
 
 
