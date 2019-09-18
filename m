@@ -1,26 +1,52 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 80B5F7BE3C
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com
+	[209.85.128.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 5F4127F1BA
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Sep 2019 08:26:10 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x8I8Pp6q013340
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Wed, 18 Sep 2019 16:59:37 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id y21so889814wmi.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Sep 2019 01:26:01 -0700
-Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.468.0; Wed, 18 Sep 2019 01:25:39 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 18 Sep 2019 16:51:48 +0800
-Message-ID: <4e0c92990453e4bc7cae058ca7e6cfde28d0d5d9.1568796682.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1568796682.git.liezhi.yang@windriver.com>
-References: <cover.1568796682.git.liezhi.yang@windriver.com>
+	Wed, 18 Sep 2019 09:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=ndkBtG7xnGdsD3obfFv2wnEvINJRiDohyY8dGdcCOjw=;
+	b=SaCG91ebMu8FlD6d5uVU3BPy71d9TONOnBHJ2+KDUtLYrBJKxeiseLmRkxy9oEjF4M
+	VonHf5+R/YUu6gLQ3FqfDlr+BA7L/xqb1aMwuL2t/regwsinhzsOqwQIMRBW2s9vwmUj
+	2qkKwjcmsjv3PNaKqHsOCQEI1VxdNtelryxvfHLHNMegrmKTEcCh6cUZPfC9PK6HOoW9
+	K7lQ4LK/Fu5L6qlHAO0r9XYcDGmZ0FKXjlLvwoO5Ek3i+VES7urtprcuqg9+La9HT8pB
+	P17+5F8HiIg8S7LXJr5DhiMmxPAHvdcrFw/buH2ITWzjanzxmT4PK9XoC/20DnCeyvOh
+	QXlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=ndkBtG7xnGdsD3obfFv2wnEvINJRiDohyY8dGdcCOjw=;
+	b=uF7UH+bbDqsdTyAJIcxmxZaHFrzrnezx6Y5I1XUUC5d2A14mLqxSxR5ywPh/na53jK
+	CQSmuNF6VR4pPAPzjtwh5VVQKio631xY0UxtHG4zJMgPe0cDfD2FSRyQPps2E6RlQsiA
+	9FrJs2C0hpEwddvMFhhDW6zGnRmNbIj1VTIEakO/XbIGYXEdB2U88AEWDjIGIbASFjg2
+	yp064rILLIRu+GV/QsrfozN/mvZ7sKzqrusefBcCYNexrFQfMzg+atqOQY2iH69NDrM+
+	OyhJIGPPeHfTDaRacSor3sw/7EPLd7tU5/WQUKrVhqdVzuXxRqYTp41V+KTxZJIgPydU
+	01og==
+X-Gm-Message-State: APjAAAVYgK5W18SViu7bJgj+Z1YEKphV+gDw1xjennSpLHCtCsXRzgdN
+	LzZh3ngHJFlEA04LNKd1d9xcfDK1OpQ=
+X-Google-Smtp-Source: APXvYqwtN6kfpEyh5mscQqYWVqWlEzjoDiWVSWcPMMAM4LU4nOrR/HYIsUYhy0IROlYfA591pgFLDw==
+X-Received: by 2002:a1c:cfc9:: with SMTP id f192mr3487704wmg.85.1568825977742; 
+	Wed, 18 Sep 2019 09:59:37 -0700 (PDT)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35])
+	by smtp.gmail.com with ESMTPSA id h17sm5370393wme.6.2019.09.18.09.59.35
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Wed, 18 Sep 2019 09:59:36 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 18 Sep 2019 17:59:32 +0100
+Message-Id: <20190918165932.8358-1-ross.burton@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: [PATCH 1/1] runqueue: validate_hashes(): currentcount should be a number
+Subject: [PATCH] fetch2/git: add git-lfs toggle option
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,64 +59,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Sep 2019 08:26:10 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 18 Sep 2019 16:59:37 -0000
+Content-Transfer-Encoding: 8bit
 
-According to sstate_checkhashes which is defined in sstate.bbclass, the
-currentcoun should be a number (0, not None).
+Add a new 'lfs' option to the git fetcher so that we can optionally not fetch
+git-lfs content, for repositories that contain LFS data that we don't
+actually need for building.
 
-Fixed:
-$ bitbake base-files -Sprintdiff
-    >    bb.plain("Sstate summary: Wanted %d Found %d Missed %d Current %d (%d%% match, %d%% complete)" % (total, len(found), len(missed), currentcount, match, complete))
+By default lfs is set to 1, so if the repository has LFS content then git-lfs is
+required.  Setting lfs to 0 will mean that git-lfs won't be required to fetch,
+and some files will be missing.
 
-TypeError: %d format: a number is required, not NoneType
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- bitbake/lib/bb/runqueue.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/fetch2/git.py | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 45bfec8..b8ca129 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1394,7 +1394,7 @@ class RunQueue:
-             cache[tid] = iscurrent
-         return iscurrent
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index e171aa7eb16..5fd63b4e33b 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -464,6 +464,8 @@ class Git(FetchMethod):
+         if os.path.exists(destdir):
+             bb.utils.prunedir(destdir)
  
--    def validate_hashes(self, tocheck, data, currentcount=None, siginfo=False):
-+    def validate_hashes(self, tocheck, data, currentcount=0, siginfo=False):
-         valid = set()
-         if self.hashvalidate:
-             sq_data = {}
-@@ -1601,7 +1601,7 @@ class RunQueue:
++        need_lfs = ud.parm.get("lfs", "1") == "1"
++
+         source_found = False
+         source_error = []
  
-             tocheck.add(tid)
+@@ -493,14 +495,16 @@ class Git(FetchMethod):
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, repourl), d, workdir=destdir)
  
--        valid_new = self.validate_hashes(tocheck, self.cooker.data, None, True)
-+        valid_new = self.validate_hashes(tocheck, self.cooker.data, 0, True)
+         if self._contains_lfs(ud, d, destdir):
+-            path = d.getVar('PATH')
+-            if path:
+-                gitlfstool = bb.utils.which(path, "git-lfs", executable=True)
+-                if not gitlfstool:
+-                    raise bb.fetch2.FetchError("Repository %s has lfs content, install git-lfs plugin on host to download" % (repourl))
++            if need_lfs:
++                path = d.getVar('PATH')
++                if path:
++                    gitlfstool = bb.utils.which(path, "git-lfs", executable=True)
++                    if not gitlfstool:
++                        raise bb.fetch2.FetchError("Repository %s has LFS content, install git-lfs on host to download (or set lfs=0 to ignore it)" % (repourl))
++                else:
++                    bb.note("Could not find 'PATH'")
+             else:
+-                bb.note("Could not find 'PATH'")
+-
++                bb.note("Repository %s has LFS content but it is not being fetched" % (repourl))
  
-         # Tasks which are both setscene and noexec never care about dependencies
-         # We therefore find tasks which are setscene and noexec and mark their
-@@ -1982,7 +1982,7 @@ class RunQueueExecute:
-                             continue
-                         logger.debug(1, "Task %s no longer deferred" % nexttask)
-                         del self.sq_deferred[nexttask]
--                        valid = self.rq.validate_hashes(set([nexttask]), self.cooker.data, None, False)
-+                        valid = self.rq.validate_hashes(set([nexttask]), self.cooker.data, 0, False)
-                         if not valid:
-                             logger.debug(1, "%s didn't become valid, skipping setscene" % nexttask)
-                             self.sq_task_failoutright(nexttask)
-@@ -2299,7 +2299,7 @@ class RunQueueExecute:
-         for tid in changed:
-             if tid not in self.rqdata.runq_setscene_tids:
-                 continue
--            valid = self.rq.validate_hashes(set([tid]), self.cooker.data, None, False)
-+            valid = self.rq.validate_hashes(set([tid]), self.cooker.data, 0, False)
-             if not valid:
-                 continue
-             if tid in self.runq_running:
+         if not ud.nocheckout:
+             if subdir != "":
 -- 
-2.7.4
+2.20.1
 
 
