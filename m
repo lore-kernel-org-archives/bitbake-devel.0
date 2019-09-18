@@ -1,29 +1,23 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id C51FC73196
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 3085090189
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Sep 2019 22:29:32 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-	by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	17 Sep 2019 15:29:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,518,1559545200"; d="scan'208";a="386695847"
-Received: from mnazeli-mobl.gar.corp.intel.com (HELO linux.fritz.box)
-	([10.255.175.201])
-	by fmsmga005.fm.intel.com with ESMTP; 17 Sep 2019 15:29:31 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Yeoh Ee Peng <ee.peng.yeoh@intel.com>
-Date: Wed, 18 Sep 2019 10:29:28 +1200
-Message-ID: <7662783.7FHmSSFdrl@linux.fritz.box>
-Organization: Intel Corporation
-In-Reply-To: <1568347121-43357-4-git-send-email-ee.peng.yeoh@intel.com>
-References: <1568347121-43357-1-git-send-email-ee.peng.yeoh@intel.com>
-	<1568347121-43357-4-git-send-email-ee.peng.yeoh@intel.com>
+	Wed, 18 Sep 2019 08:25:37 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x8I8Pd7b016299
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Sep 2019 01:25:39 -0700 (PDT)
+Received: from pek-lpg-core1.wrs.com (128.224.156.132) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.3.468.0; Wed, 18 Sep 2019 01:25:38 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 18 Sep 2019 16:51:47 +0800
+Message-ID: <cover.1568796682.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 3/3] bitbake: bitbake-layers: show-recipes: Enable remove the (skipped) tag
+Subject: [PATCH 0/1] runqueue: validate_hashes(): currentcount should be a number
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,84 +30,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 17 Sep 2019 22:29:33 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Wed, 18 Sep 2019 08:25:38 -0000
+Content-Type: text/plain
 
-On Friday, 13 September 2019 3:58:41 PM NZST Yeoh Ee Peng wrote:
-> Currently, show-recipes will append "(skipped)" to recipes which
-> were skipped due these recipes does not satisfied the configurations.
-> 
-> Example: $ bitbake-layers show-recipes -p
-> ace
-> backport-iwlwifi
-> core-image-rt (skipped)
-> core-image-rt-sdk (skipped)
-> core-image-tiny
-> 
-> Enable removal of the "(skipped)" tag appended to recipe using -r.
-> 
-> Example: $ bitbake-layers show-recipes -p -r
-> ace
-> backport-iwlwifi
-> core-image-rt
-> core-image-rt-sdk
-> core-image-tiny
-> 
-> Signed-off-by: Yeoh Ee Peng <ee.peng.yeoh@intel.com>
-> ---
->  lib/bblayers/query.py | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
-> index 8ba94ac..44ab907 100644
-> --- a/lib/bblayers/query.py
-> +++ b/lib/bblayers/query.py
-> @@ -46,7 +46,7 @@ layer, with the preferred version first. Note that skipped recipes that
->  are overlayed will also be listed, with a " (skipped)" suffix.
->  """
->  
-> -        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, False, True, None, None)
-> +        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, False, True, None, False, None)
->  
->          # Check for overlayed .bbclass files
->          classes = collections.defaultdict(list)
-> @@ -112,9 +112,9 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
->              title = 'Matching recipes:'
->          else:
->              title = 'Available recipes:'
-> -        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.packagenames, args.multiple, args.layer, inheritlist)
-> +        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.packagenames, args.multiple, args.layer, args.remove_skip_tag, inheritlist)
->  
-> -    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_packagenames, show_multi_provider_only, show_provided_layer_only, inherits):
-> +    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_packagenames, show_multi_provider_only, show_provided_layer_only, remove_skip_tag, inherits):
->          if inherits:
->              bbpath = str(self.tinfoil.config_data.getVar('BBPATH'))
->              for classname in inherits:
-> @@ -145,7 +145,7 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
->  
->          def print_item(f, pn, ver, layer, ispref):
->              if not show_provided_layer_only or layer == show_provided_layer_only:
-> -                if f in skiplist:
-> +                if not remove_skip_tag and f in skiplist:
->                      skipped = ' (skipped)'
->                  else:
->                      skipped = ''
-> @@ -503,6 +503,7 @@ NOTE: .bbappend files can impact the dependencies.
->          parser_show_recipes.add_argument('-m', '--multiple', help='only list where multiple recipes (in the same layer or different layers) exist for the same recipe name', action='store_true')
->          parser_show_recipes.add_argument('-i', '--inherits', help='only list recipes that inherit the named class(es) - separate multiple classes using , (without spaces)', metavar='CLASS', default='')
->          parser_show_recipes.add_argument('-l', '--layer', help='only list recipes from the provided layer', default='')
-> +        parser_show_recipes.add_argument('-r', '--remove-skip-tag', help='remove the "(skipped)" tag from recipes', action='store_true')
+The following changes since commit f025010ee02130bd7f6bd6073a9a0b111aaa9936:
 
-Rather than describing it in this way could we call this -b/--bare i.e. output just names without any additional markers e.g. "(skipped)"? This would allow us to have this disable any other such extraneous output in future.
+  bitbake: runqueue/siggen: Optimise hash equiv queries (2019-09-16 23:02:45 +0100)
 
-Cheers
-Paul
+are available in the git repository at:
+
+  git://git.openembedded.org/openembedded-core-contrib rbt/runqueue
+  http://cgit.openembedded.org/openembedded-core-contrib/log/?h=rbt/runqueue
+
+Robert Yang (1):
+  runqueue: validate_hashes(): currentcount should be a number
+
+ bitbake/lib/bb/runqueue.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 -- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
-
+2.7.4
 
 
