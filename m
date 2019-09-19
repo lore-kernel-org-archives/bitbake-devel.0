@@ -1,51 +1,52 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com
-	[209.85.128.67])
-	by mail.openembedded.org (Postfix) with ESMTP id F12727FE2F
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+	[209.85.221.48])
+	by mail.openembedded.org (Postfix) with ESMTP id C41BD7FE7B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Sep 2019 19:38:23 +0000 (UTC)
-Received: by mail-wm1-f67.google.com with SMTP id b24so5313527wmj.5
+	Thu, 19 Sep 2019 22:43:42 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id y19so4800932wrd.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Sep 2019 12:38:25 -0700 (PDT)
+	Thu, 19 Sep 2019 15:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=wD+F62cBfcgDBW4Owv6gXZU0Bu+aWA6PX9vgj8hOve4=;
-	b=WFQC3y+57HwMhQiwxh4VErbqFGnZof7Qdzoty2tShyomWCCxJDJp1WJeSaCyhH5KKD
-	aVDRivE0zmErcg5jZEN3F4vKu2cz7vVLpQn6y1XnJRdlBaWr3ZQEyAven1Wqr80HWxGk
-	yG0m4lyZEdeX6Yvv+9oKNfHR7TYOvcGQoWx2I=
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=8vjrzt+oP3yTuwB7rNSU0RpkwwLYbXNClh2bAsIhqQ0=;
+	b=t9yCdrQB08w1LH031Uu1OZ6CiJVr71OuX077tzYmSL0Stfu2+Q+gToftb1QDGsWk5u
+	3Xd38o9gNRPAeF30FH23vHqcKY6ZqBLAMH+FRNN3WeME+NlVpgGT4tfcP9K+HCPhzZ3w
+	nxl6rrI0MPAWW3sxYTAjX9/bVlFXauWuIHK3ZZNA29NkjX2TZX9TF/OfN7flanhFkwMG
+	MZ04wNPghGWRbSM9YvWuN3TrN/sZ1oNaJevqIHPFP5uD17A9WgsNiBchnyPIg7yYkfAe
+	/7ARJM9sI1eUye8VOEoogLhfdA4Djs2M7v5i9y63x6q7cN/EV+Xkx/KLI04XJwZZqJHB
+	Sk1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=wD+F62cBfcgDBW4Owv6gXZU0Bu+aWA6PX9vgj8hOve4=;
-	b=V5SO7GaFzhZaBnK3KLAqJhlR7pJXkjbj2l+ObXRj9KUp/R2Z+U/dP4HTY6i/bH0szL
-	+QOilxNx2WlAQLtyvufPhOITz3V9qxe22x7YyeqGpLuRofUSf8B7ARQ2NYTQ4jbU8rQh
-	nVGhGLWysSA/WxRIuzTMvbJFJRxPwfNpoZkVjIZW5ijZPLjY21gQ0B+tJB6Tpazi0e9M
-	K9wHPQIw8W9cml07Qp14nX0SymmUpxdci4YGSTq2S/iwt7IOx9Q5w+edZluz7LWFIdgO
-	cYmn1Q1vjCZIwN5LFDFkos6CpMx0/KGYuGHHz8HV0dzQF67JZ867cDsEhLAXOtLF5xEB
-	X/+w==
-X-Gm-Message-State: APjAAAXJSzu/zAEj312FKmlicaXdX58Wx3gOPr+hqbWU0QvHoMFDDHYf
-	Dwlax4KhoWfV8HZ8YCs75qwdHg==
-X-Google-Smtp-Source: APXvYqxQ5mb2NVmztYSp84QVhz1q/WSpv7LPyhAdTbBqav0B0pftdbArrAVzWwAh7e/YtUhANGWY+g==
-X-Received: by 2002:a1c:3cc3:: with SMTP id j186mr4018660wma.119.1568921904661;
-	Thu, 19 Sep 2019 12:38:24 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	a10sm10562046wrm.52.2019.09.19.12.38.23
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=8vjrzt+oP3yTuwB7rNSU0RpkwwLYbXNClh2bAsIhqQ0=;
+	b=OR033BsJIbWK+PoCRXAlWMAohQxNQ9ca7bagv6/GcX2PL2UedBvcge1bcIm8YnASe4
+	mxyanaD1FFSgd1ta+aGLHMbJBW7oVT3SHUGvaDDBs/Lq8hrkWUsDFyWktqTobpYZZtgB
+	313xtU1AF6wjey+HPzJiJU/bkUZo3by4TPuIjvDof4CLnChCevMyqEA+6zJFBkXNjDm3
+	43Kle4o4WxHBG8p8PeGxIe/Q86B7sayS0lHXlmEburF2hbvGUtIhKLH9YXXL8cbuwHvH
+	fVk6zpg787DNzw0wku+TMrT74/HrQkDBfcd/6jxXCU5P9tgoHKEG5vmzQG+cuJi34FjE
+	po9w==
+X-Gm-Message-State: APjAAAXFaHwGRijifoKleqPpmtDfDQpIy77VeNkLw8z7yK8zOt498Elt
+	8+RTgTjX4rTQ3Q9fTJH6U74KNUkay9o=
+X-Google-Smtp-Source: APXvYqy0V+5ZeFUrBqHPfR5mE47ah2KIh9kjSoFTL23GuFcjjGb7jj52zRtjGDzevvA8/+Z4sdJxJQ==
+X-Received: by 2002:adf:dc4b:: with SMTP id m11mr9434731wrj.269.1568933023142; 
+	Thu, 19 Sep 2019 15:43:43 -0700 (PDT)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
+	u18sm5562054wmj.11.2019.09.19.15.43.41
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 19 Sep 2019 12:38:23 -0700 (PDT)
-Message-ID: <04de5bfb296a0ca8abe1425e1368bcceb82055ab.camel@linuxfoundation.org>
-From: richard.purdie@linuxfoundation.org
-To: akuster <akuster@mvista.com>, bitbake-devel@lists.openembedded.org
-Date: Thu, 19 Sep 2019 20:38:22 +0100
-In-Reply-To: <b3abe85f-fcb5-69ca-4f05-11a1437b19ae@mvista.com>
-References: <20190919155122.28732-1-richard.purdie@linuxfoundation.org>
-	<b3abe85f-fcb5-69ca-4f05-11a1437b19ae@mvista.com>
-User-Agent: Evolution 3.33.4-1build1 
+	Thu, 19 Sep 2019 15:43:41 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 19 Sep 2019 23:43:36 +0100
+Message-Id: <20190919224337.30208-1-ross.burton@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: Re: [PATCH] utils: Add ionice option to prunedir
+Subject: [PATCH 1/2] fetch2/git: refactor check for git-lfs command
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,65 +59,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Sep 2019 19:38:24 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 19 Sep 2019 22:43:44 -0000
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2019-09-19 at 11:02 -0700, akuster wrote:
-> 
-> On 9/19/19 8:51 AM, Richard Purdie wrote:
-> > Autobuilder type infrastructure can benefit from deletion of
-> > certain files as
-> > background IO due to the way Linux filesystem priority works.
-> > 
-> > We have problems where build directories as part of oe-selftest
-> > being
-> > delete starves the running tasks of IO to the point builds take
-> > much
-> > longer to compelte.
-> > 
-> > Having this option of running the deletion at "idle" helps a lot
-> > with
-> > that.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > ---
-> >  lib/bb/utils.py | 11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-> > index 3e90b6a306..d035949b3d 100644
-> > --- a/lib/bb/utils.py
-> > +++ b/lib/bb/utils.py
-> > @@ -677,7 +677,7 @@ def _check_unsafe_delete_path(path):
-> >          return True
-> >      return False
-> >  
-> > -def remove(path, recurse=False):
-> > +def remove(path, recurse=False, ionice=False):
-> >      """Equivalent to rm -f or rm -rf"""
-> >      if not path:
-> >          return
-> > @@ -686,7 +686,10 @@ def remove(path, recurse=False):
-> >              if _check_unsafe_delete_path(path):
-> >                  raise Exception('bb.utils.remove: called with
-> > dangerous path "%s" and recurse=True, refusing to delete!' % path)
-> >          # shutil.rmtree(name) would be ideal but its too slow
-> > -        subprocess.check_call(['rm', '-rf'] + glob.glob(path))
-> > +        cmd = []
-> > +        if ionice:
-> > +            cmd = ['ionice', '-c', '3']
-> Would allowing folks to configure the ionice value apply here?
+Refactor the git-lfs checking: this means both clearer code in the download()
+function and allows unit testing to monkeypatch the functionality.
 
-Its a good question, there isn't usually a lot of choice since a
-process can only "degrade" its priority, not increase it. I'd prefer to
-leave this as is and extend if anyone ever really needs it.
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/fetch2/git.py | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-(3 means 'idle' which matches what the autobuilder does for file
-deletion in general)
-
-Cheers,
-
-Richard
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 5fd63b4e33b..2d1d2cabd59 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -495,14 +495,8 @@ class Git(FetchMethod):
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, repourl), d, workdir=destdir)
+ 
+         if self._contains_lfs(ud, d, destdir):
+-            if need_lfs:
+-                path = d.getVar('PATH')
+-                if path:
+-                    gitlfstool = bb.utils.which(path, "git-lfs", executable=True)
+-                    if not gitlfstool:
+-                        raise bb.fetch2.FetchError("Repository %s has LFS content, install git-lfs on host to download (or set lfs=0 to ignore it)" % (repourl))
+-                else:
+-                    bb.note("Could not find 'PATH'")
++            if need_lfs and not self._find_git_lfs(d):
++                raise bb.fetch2.FetchError("Repository %s has LFS content, install git-lfs on host to download (or set lfs=0 to ignore it)" % (repourl))
+             else:
+                 bb.note("Repository %s has LFS content but it is not being fetched" % (repourl))
+ 
+@@ -570,6 +564,13 @@ class Git(FetchMethod):
+             pass
+         return False
+ 
++    def _find_git_lfs(self, d):
++        """
++        Return True if git-lfs can be found, False otherwise.
++        """
++        import shutil
++        return shutil.which("git-lfs", path=d.getVar('PATH')) is not None
++
+     def _get_repo_url(self, ud):
+         """
+         Return the repository URL
+-- 
+2.20.1
 
 
