@@ -1,54 +1,50 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com
-	[209.85.221.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 5E8D37FE7B
+Return-Path: <jacob.kroon@gmail.com>
+Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com
+	[209.85.208.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 586D27FA7F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Sep 2019 22:43:43 +0000 (UTC)
-Received: by mail-wr1-f46.google.com with SMTP id r3so4781192wrj.6
+	Fri, 20 Sep 2019 09:11:07 +0000 (UTC)
+Received: by mail-lj1-f194.google.com with SMTP id j19so4868557lja.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Sep 2019 15:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+	Fri, 20 Sep 2019 02:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=6fkIGc3z3ldKbz9sdrzJJfHqc8nBd9vvd0YMnPxpE/s=;
-	b=RgjOjT9ez7hQn8Z84mjX5KJpj7DhN0btewC0FZxeB36QZ/mg0U9x9BiuBhVYVfBQFf
-	/JBb54F42DcIDVrqCxn3YCHqA2JrlmNT+TKPhu+QOJSy8nESVXSvdiBVFnAWxpDL6zF0
-	zoVqHOjYfcfBtyLQIHfKsC+rRJHhMJlNmE0orqtHirCi4/Piwrd2fv6Q25cq9HCR4teK
-	M0VdnjJ45V7loPQoMg66d2D2sX3YENz284pPjCoyq/uiAK96JzyZ1CRCtVkiUXlubPM2
-	bXsZP86RJrq/QJArvfqXup3mbnEqSD2w+EhuHtNdWnJD/lBVsXEUO9Z9W76i2FqiCpHV
-	xlsw==
+	bh=OdbaT5AxJLBgmXudDDEV9spQ+5Fh3sTJEQhSCQBCt3M=;
+	b=gk8GjHDYeSPsk0d6XDRmGQVF5ySNDyXGTwE5QExZ3qaVqAenbn9YPxSWGgZMRnNGsK
+	2B+HTHIBSZk2xwrQ9kfEq0s4u6ct5/CehkQTUNv6aEUb9FT0ZWdQX3x7imgn51I8b0Ou
+	EB3+uVdWDaQPsJG1PJvQ3oVd2HvZAbbK6n8zxHHhXnlJR8kIi8p9nB43UPLjO5lbfGJq
+	q6Id0PfFjemsUFAie0x3/fpycd0dTDkCr8W4YVVi0OOMusvfINGs/xoCbkHRmxnA1tdK
+	m+sWJkkQRD+OOKQ0fS9rgBbYpmGmV8SuXRzZhmUkJgxGAfGvS2/NyagtYHRw1D7xr6WY
+	6DJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=6fkIGc3z3ldKbz9sdrzJJfHqc8nBd9vvd0YMnPxpE/s=;
-	b=XOUScGkizTC5W5/TPNYwNf/DSysvSuav1wQoqtNLuC2tFucFcdEMwasWyv1kxopAzW
-	PY2GpOIfbQ4qPEWaoiauFZvvGt+UB51vP5tuc58paT9kiK1iTduoLF68iVxp/pISxIE3
-	4DiJWkaCtjPI+U7eJQ8GLc8hPa7YeYKQ/dJBPHUR11Rcz2+Bo9MH3hcsgyfKoM3ZXE7D
-	cWfNJrsxFx7FkScDgyBrPjqJrDNLADc+Ll414bgZdK3Sj/wKJI7xdQ/e+ozLwbSvRXeI
-	sfbtCoHLx9LRJqnH3R7AYmxuocu0avnXh2C/wA3BSl+AZU4YvF17tbnoDCL3z2H9iHwx
-	JJxQ==
-X-Gm-Message-State: APjAAAXBSK+VNIWFYAyTRTjstFz+Da3kSDPNlWLwsTlCX0b2+Sk1TtYZ
-	6fr0dGGxiwgaDvUIV0pAR3VsTWODhwc=
-X-Google-Smtp-Source: APXvYqwbFx3dEK8Wv9ay+Nj6slPN2yF83MkR0EA0RTL7BVonfwbtCC6fr5KXxQ1TyhQuFZAXuLkbYg==
-X-Received: by 2002:adf:f5ca:: with SMTP id k10mr9493936wrp.236.1568933024088; 
-	Thu, 19 Sep 2019 15:43:44 -0700 (PDT)
-Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
-	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
-	u18sm5562054wmj.11.2019.09.19.15.43.43
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=OdbaT5AxJLBgmXudDDEV9spQ+5Fh3sTJEQhSCQBCt3M=;
+	b=BU4G5QB5Zm8i1X4Owq7vjC28QEjLLPvcpfD5P7rsh1+lvuIYVSM2S/GDeDwdQWP6is
+	xEalyb7fl07vQkfLKdHwg28E6ZM2Uwwr+iUzuQbdEa4mJz2AOwxitPC4jIN83B7xheWL
+	2k7WcUH9er3A/uvyRTKu2ySIw56uOUz0jyl80u9zCKee2hcYikmd0YxzeDY20CM+u4fL
+	ERVUdmpSJbCY5l8J1N2cmmDHdIZBdhPM+jTojtOl/HXrxtPrMvoTq9VFnOJyiWOz66Zn
+	cpjtu+JCjwehiMdykjMuUri1N8zb+c7j9Oh6ip0u09vN9uktp1dzmYrLz8gnKB4Xju34
+	pBsg==
+X-Gm-Message-State: APjAAAUheKx4xkH7LNb7zr51NZYH8m+ZouuAb58CP4zdWZCnE6yO+BqC
+	jY0BXRF1d/NRPXTYpB/fIPrGeQRa02Q=
+X-Google-Smtp-Source: APXvYqwp5b5rvcaeH2ZQLHjaL0jtwPs7Kx05TUTgNaE86ccZO0ta5JLG7cYkXhxYd3ifZCNrp5VwPg==
+X-Received: by 2002:a2e:9a0c:: with SMTP id o12mr4508688lji.204.1568970667150; 
+	Fri, 20 Sep 2019 02:11:07 -0700 (PDT)
+Received: from manatarms-greyskull.lan.mikrodidakt.se ([213.185.29.22])
+	by smtp.gmail.com with ESMTPSA id r22sm299794ljr.43.2019.09.20.02.11.02
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 19 Sep 2019 15:43:43 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
+	Fri, 20 Sep 2019 02:11:03 -0700 (PDT)
+From: Jacob Kroon <jacob.kroon@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 19 Sep 2019 23:43:37 +0100
-Message-Id: <20190919224337.30208-2-ross.burton@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190919224337.30208-1-ross.burton@intel.com>
-References: <20190919224337.30208-1-ross.burton@intel.com>
+Date: Fri, 20 Sep 2019 11:10:51 +0200
+Message-Id: <20190920091051.29088-1-jacob.kroon@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Subject: [PATCH 2/2] tests/fetch: add test case for git-lfs handling
+Subject: [PATCH] tests/data: Test combinations of _append together with override
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,106 +57,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Sep 2019 22:43:44 -0000
+X-List-Received-Date: Fri, 20 Sep 2019 09:11:07 -0000
 Content-Transfer-Encoding: 8bit
 
-Add a test case to exercise the detection of git-lfs repositories and the
-behaviour of the lfs parameter.
-
-Signed-off-by: Ross Burton <ross.burton@intel.com>
+Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
 ---
- bitbake/lib/bb/tests/fetch.py | 80 +++++++++++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+ lib/bb/tests/data.py | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index 2ee030546a5..a0b656b6105 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -1908,3 +1908,83 @@ class GitShallowTest(FetcherTest):
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index a9b0bdb0..3e49984c 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -381,6 +381,19 @@ class TestOverrides(unittest.TestCase):
+         self.d.setVar("OVERRIDES", "foo:bar:some_val")
+         self.assertEqual(self.d.getVar("TEST"), " testvalue5")
  
-         dir = os.listdir(self.unpackdir + "/git/")
-         self.assertIn("fstests.doap", dir)
++    def test_append_and_override_1(self):
++        self.d.setVar("TEST_append", "testvalue2")
++        self.d.setVar("TEST_bar", "testvalue3")
++        self.assertEqual(self.d.getVar("TEST"), "testvalue3testvalue2")
 +
-+class GitLfsTest(FetcherTest):
-+    def setUp(self):
-+        FetcherTest.setUp(self)
++    def test_append_and_override_2(self):
++        self.d.setVar("TEST_append_bar", "testvalue2")
++        self.assertEqual(self.d.getVar("TEST"), "testvaluetestvalue2")
 +
-+        self.gitdir = os.path.join(self.tempdir, 'git')
-+        self.srcdir = os.path.join(self.tempdir, 'gitsource')
-+        
-+        self.d.setVar('WORKDIR', self.tempdir)
-+        self.d.setVar('S', self.gitdir)
-+        self.d.delVar('PREMIRRORS')
-+        self.d.delVar('MIRRORS')
++    def test_append_and_override_3(self):
++        self.d.setVar("TEST_bar_append", "testvalue2")
++        self.assertEqual(self.d.getVar("TEST"), "testvalue2")
 +
-+        self.d.setVar('SRCREV', '${AUTOREV}')
-+        self.d.setVar('AUTOREV', '${@bb.fetch2.get_autorev(d)}')
-+
-+        bb.utils.mkdirhier(self.srcdir)
-+        self.git('init', cwd=self.srcdir)
-+        with open(os.path.join(self.srcdir, '.gitattributes'), 'wt') as attrs:
-+            attrs.write('*.mp3 filter=lfs -text')
-+        self.git(['add', '.gitattributes'], cwd=self.srcdir)
-+        self.git(['commit', '-m', "attributes", '.gitattributes'], cwd=self.srcdir)
-+
-+    def git(self, cmd, cwd=None):
-+        if isinstance(cmd, str):
-+            cmd = 'git ' + cmd
-+        else:
-+            cmd = ['git'] + cmd
-+        if cwd is None:
-+            cwd = self.gitdir
-+        return bb.process.run(cmd, cwd=cwd)[0]
-+
-+    def fetch(self, uri=None):
-+        uris = self.d.getVar('SRC_URI').split()
-+        uri = uris[0]
-+        d = self.d
-+
-+        fetcher = bb.fetch2.Fetch(uris, d)
-+        fetcher.download()
-+        ud = fetcher.ud[uri]
-+        return fetcher, ud
-+
-+    def test_lfs_enabled(self):
-+        import shutil
-+
-+        uri = 'git://%s;protocol=file;subdir=${S};lfs=1' % self.srcdir
-+        self.d.setVar('SRC_URI', uri)
-+
-+        fetcher, ud = self.fetch()
-+        self.assertIsNotNone(ud.method._find_git_lfs)
-+
-+        # If git-lfs can be found, the unpack should be successful
-+        ud.method._find_git_lfs = lambda d: True
-+        shutil.rmtree(self.gitdir, ignore_errors=True)
-+        fetcher.unpack(self.d.getVar('WORKDIR'))
-+
-+        # If git-lfs cannot be found, the unpack should throw an error
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            ud.method._find_git_lfs = lambda d: False
-+            shutil.rmtree(self.gitdir, ignore_errors=True)
-+            fetcher.unpack(self.d.getVar('WORKDIR'))
-+
-+    def test_lfs_disabled(self):
-+        import shutil
-+
-+        uri = 'git://%s;protocol=file;subdir=${S};lfs=0' % self.srcdir
-+        self.d.setVar('SRC_URI', uri)
-+
-+        fetcher, ud = self.fetch()
-+        self.assertIsNotNone(ud.method._find_git_lfs)
-+
-+        # If git-lfs can be found, the unpack should be successful
-+        ud.method._find_git_lfs = lambda d: True
-+        shutil.rmtree(self.gitdir, ignore_errors=True)
-+        fetcher.unpack(self.d.getVar('WORKDIR'))
-+
-+        # If git-lfs cannot be found, the unpack should be successful
-+        ud.method._find_git_lfs = lambda d: False
-+        shutil.rmtree(self.gitdir, ignore_errors=True)
-+        fetcher.unpack(self.d.getVar('WORKDIR'))
+     # Test an override with _<numeric> in it based on a real world OE issue
+     def test_underscore_override(self):
+         self.d.setVar("TARGET_ARCH", "x86_64")
 -- 
-2.20.1
+2.21.0
 
 
