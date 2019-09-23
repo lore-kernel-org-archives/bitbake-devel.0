@@ -1,50 +1,52 @@
-Return-Path: <jacob.kroon@gmail.com>
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com
-	[209.85.208.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 586D27FA7F
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com
+	[209.85.166.50])
+	by mail.openembedded.org (Postfix) with ESMTP id D2BB07DE37
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Sep 2019 09:11:07 +0000 (UTC)
-Received: by mail-lj1-f194.google.com with SMTP id j19so4868557lja.1
+	Mon, 23 Sep 2019 18:21:16 +0000 (UTC)
+Received: by mail-io1-f50.google.com with SMTP id b136so35858627iof.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Sep 2019 02:11:08 -0700 (PDT)
+	Mon, 23 Sep 2019 11:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:mime-version
+	h=from:to:cc:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=OdbaT5AxJLBgmXudDDEV9spQ+5Fh3sTJEQhSCQBCt3M=;
-	b=gk8GjHDYeSPsk0d6XDRmGQVF5ySNDyXGTwE5QExZ3qaVqAenbn9YPxSWGgZMRnNGsK
-	2B+HTHIBSZk2xwrQ9kfEq0s4u6ct5/CehkQTUNv6aEUb9FT0ZWdQX3x7imgn51I8b0Ou
-	EB3+uVdWDaQPsJG1PJvQ3oVd2HvZAbbK6n8zxHHhXnlJR8kIi8p9nB43UPLjO5lbfGJq
-	q6Id0PfFjemsUFAie0x3/fpycd0dTDkCr8W4YVVi0OOMusvfINGs/xoCbkHRmxnA1tdK
-	m+sWJkkQRD+OOKQ0fS9rgBbYpmGmV8SuXRzZhmUkJgxGAfGvS2/NyagtYHRw1D7xr6WY
-	6DJw==
+	bh=DtPBh/Li15EfDi8OQE59CE/2vgVNqL/NfD7rGuJ3QHU=;
+	b=iNKcgP2Q0CH24+GlSDa/yELsbsvP0De7fcjfxuZG9P1u1kEpo9GpU064y80X0mUugT
+	sS/G5NtwVqy8j4fsP5jvvBbfttyUU52HyzBtVaSy/awX29uAOtC6BKL+9eFIiVz5i8zN
+	1BB7h2DL5uWczv2jp2ExdLSK2SK0cUi6Y3clu+LvsX1E0RDW2wB8I3OdOIy/r0ew0GEs
+	aHItX7uUZXcvyDrpFd0GSMwm9YCKdxIwbfIc7M9fCocDtkoGZ6pqgNjoK7gDUPBM05sB
+	FfVJrU37irvO5WJZmKrNOQ9Km7L9+PM6V9VGgc7+tNFQRuFVIcctE2rgzFRYb8P38sgI
+	e5GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=OdbaT5AxJLBgmXudDDEV9spQ+5Fh3sTJEQhSCQBCt3M=;
-	b=BU4G5QB5Zm8i1X4Owq7vjC28QEjLLPvcpfD5P7rsh1+lvuIYVSM2S/GDeDwdQWP6is
-	xEalyb7fl07vQkfLKdHwg28E6ZM2Uwwr+iUzuQbdEa4mJz2AOwxitPC4jIN83B7xheWL
-	2k7WcUH9er3A/uvyRTKu2ySIw56uOUz0jyl80u9zCKee2hcYikmd0YxzeDY20CM+u4fL
-	ERVUdmpSJbCY5l8J1N2cmmDHdIZBdhPM+jTojtOl/HXrxtPrMvoTq9VFnOJyiWOz66Zn
-	cpjtu+JCjwehiMdykjMuUri1N8zb+c7j9Oh6ip0u09vN9uktp1dzmYrLz8gnKB4Xju34
-	pBsg==
-X-Gm-Message-State: APjAAAUheKx4xkH7LNb7zr51NZYH8m+ZouuAb58CP4zdWZCnE6yO+BqC
-	jY0BXRF1d/NRPXTYpB/fIPrGeQRa02Q=
-X-Google-Smtp-Source: APXvYqwp5b5rvcaeH2ZQLHjaL0jtwPs7Kx05TUTgNaE86ccZO0ta5JLG7cYkXhxYd3ifZCNrp5VwPg==
-X-Received: by 2002:a2e:9a0c:: with SMTP id o12mr4508688lji.204.1568970667150; 
-	Fri, 20 Sep 2019 02:11:07 -0700 (PDT)
-Received: from manatarms-greyskull.lan.mikrodidakt.se ([213.185.29.22])
-	by smtp.gmail.com with ESMTPSA id r22sm299794ljr.43.2019.09.20.02.11.02
-	for <bitbake-devel@lists.openembedded.org>
+	bh=DtPBh/Li15EfDi8OQE59CE/2vgVNqL/NfD7rGuJ3QHU=;
+	b=l41r/WVq903R6Oknbj/ep33TctyK1qShhYxM5tALUF9DR4Do+I9LKNNyuoArWvKcSR
+	BNcHEZZ8O+5XGZswy8AzPQ12TZHw629Fr5GuynLvTg03MP6GLyUxWsx6XCbqJWbU3bBv
+	ggRIQe6I160zTBYpDnno3l0L0IQRl2++c+h4+goZ6Jt+GAUL8C2uZbIkHIF8k5d/YgKI
+	Ii6DBzaVxpVQxCk7wAsuoZRuxCchpNswnRbcTLP7/tnfHQmbeKRcU5gSWL9rdrglY4/C
+	xs7GAe8/4lnC6WVpUqQq9+V+JTeIjaZGDggJ6d6oAly/vzHDBYN1rKej4ApFnfZ9IJId
+	eLhg==
+X-Gm-Message-State: APjAAAXW/XgAMs9zhQzRTCCp0A+gpcvujPYHTxgZqW4kozv8bF9MrpHL
+	3EG09h3lljP1XVXRp1SJnBY9X5hi
+X-Google-Smtp-Source: APXvYqysgwnNsST6Ehgwd+Ogji3tHax3STxw8EM+fRVqZIM8ppwJn73Q2PBNrm9+Qj/Qi13zcxjXEA==
+X-Received: by 2002:a02:344a:: with SMTP id z10mr793341jaz.123.1569262877469; 
+	Mon, 23 Sep 2019 11:21:17 -0700 (PDT)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id
+	n17sm10114154ioj.73.2019.09.23.11.21.16
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 20 Sep 2019 02:11:03 -0700 (PDT)
-From: Jacob Kroon <jacob.kroon@gmail.com>
+	Mon, 23 Sep 2019 11:21:16 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Sep 2019 11:10:51 +0200
-Message-Id: <20190920091051.29088-1-jacob.kroon@gmail.com>
+Date: Mon, 23 Sep 2019 13:21:11 -0500
+Message-Id: <20190923182111.30212-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Subject: [PATCH] tests/data: Test combinations of _append together with override
+Cc: zbooth.dev@gmail.com
+Subject: [PATCH] cookerdata: Add mc conffiles hashes to cache hash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,38 +59,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Sep 2019 09:11:07 -0000
+X-List-Received-Date: Mon, 23 Sep 2019 18:21:17 -0000
 Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
----
- lib/bb/tests/data.py | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+The variable values that result from parsing multiconfig should be
+included in the cooker data hash, otherwise changes to these files won't
+be detected, which will allow the parsing cache to be loaded with the
+old values for the multiconfigs. This can either manifest as the
+variable values simply not updating, or getting basehash changed errors
+when building.
 
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index a9b0bdb0..3e49984c 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -381,6 +381,19 @@ class TestOverrides(unittest.TestCase):
-         self.d.setVar("OVERRIDES", "foo:bar:some_val")
-         self.assertEqual(self.d.getVar("TEST"), " testvalue5")
+This bug was previously undetected because all of the multiconfig base
+files were a direct file dependency in all parsed recipes. This was
+fixed in 34137a00f60 ("bitbake: bitbake: cooker: Rename __depends in all
+multiconfigs"), exposing this bug.
+
+[YOCTO #13541]
+
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/cookerdata.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
+index 96a8e6beeec..472423fdc87 100644
+--- a/bitbake/lib/bb/cookerdata.py
++++ b/bitbake/lib/bb/cookerdata.py
+@@ -13,6 +13,7 @@ import logging
+ import os
+ import re
+ import sys
++import hashlib
+ from functools import wraps
+ import bb
+ from bb import data
+@@ -267,6 +268,7 @@ class CookerDataBuilder(object):
+         self.mcdata = {}
  
-+    def test_append_and_override_1(self):
-+        self.d.setVar("TEST_append", "testvalue2")
-+        self.d.setVar("TEST_bar", "testvalue3")
-+        self.assertEqual(self.d.getVar("TEST"), "testvalue3testvalue2")
-+
-+    def test_append_and_override_2(self):
-+        self.d.setVar("TEST_append_bar", "testvalue2")
-+        self.assertEqual(self.d.getVar("TEST"), "testvaluetestvalue2")
-+
-+    def test_append_and_override_3(self):
-+        self.d.setVar("TEST_bar_append", "testvalue2")
-+        self.assertEqual(self.d.getVar("TEST"), "testvalue2")
-+
-     # Test an override with _<numeric> in it based on a real world OE issue
-     def test_underscore_override(self):
-         self.d.setVar("TARGET_ARCH", "x86_64")
+     def parseBaseConfiguration(self):
++        data_hash = hashlib.sha256()
+         try:
+             self.data = self.parseConfigurationFiles(self.prefiles, self.postfiles)
+ 
+@@ -290,7 +292,7 @@ class CookerDataBuilder(object):
+                 bb.event.fire(bb.event.ConfigParsed(), self.data)
+ 
+             bb.parse.init_parser(self.data)
+-            self.data_hash = self.data.get_hash()
++            data_hash.update(self.data.get_hash().encode('utf-8'))
+             self.mcdata[''] = self.data
+ 
+             multiconfig = (self.data.getVar("BBMULTICONFIG") or "").split()
+@@ -298,9 +300,11 @@ class CookerDataBuilder(object):
+                 mcdata = self.parseConfigurationFiles(self.prefiles, self.postfiles, config)
+                 bb.event.fire(bb.event.ConfigParsed(), mcdata)
+                 self.mcdata[config] = mcdata
++                data_hash.update(mcdata.get_hash().encode('utf-8'))
+             if multiconfig:
+                 bb.event.fire(bb.event.MultiConfigParsed(self.mcdata), self.data)
+ 
++            self.data_hash = data_hash.hexdigest()
+         except (SyntaxError, bb.BBHandledException):
+             raise bb.BBHandledException
+         except bb.data_smart.ExpansionError as e:
 -- 
 2.21.0
 
