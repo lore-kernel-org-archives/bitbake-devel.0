@@ -1,50 +1,54 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com
-	[209.85.221.53])
-	by mail.openembedded.org (Postfix) with ESMTP id E09887EE4F
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com
+	[209.85.128.46])
+	by mail.openembedded.org (Postfix) with ESMTP id 320B87EE4F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 20:50:22 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id w12so301045wro.5
+	Thu, 26 Sep 2019 20:52:52 +0000 (UTC)
+Received: by mail-wm1-f46.google.com with SMTP id b24so3953331wmj.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 13:50:24 -0700 (PDT)
+	Thu, 26 Sep 2019 13:52:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
 	:mime-version:content-transfer-encoding;
-	bh=6SrPx122afrQaO0tfkdW7l/xBVB4Gng4kjwnrMSPG8w=;
-	b=ZQc52lCFZYcWvqFNVNcFrGbqzFvZExM5HW5ISJQa39y3uhCo8+Af9lBzA1ioomL00Z
-	GTy2n9QYs2aYf3acs4HTL/p33IapybPntKw4KWvbU5YTtdL5K30KSQYzwtKvBfdvL98N
-	tZtEeHw8ZMeXPS/B9w9XFZxZt2/3NrCgpRplE=
+	bh=hAH7kLcls/jvQLcDMAfDgnOuDNVlldRoPlw31cQhxLw=;
+	b=FTH+xK7HvN8ERDm+RAlWA20IaoQXwl3RbhLtI3SqP7CWAs0mQYMP+d59ykCc0aER5H
+	Pp7eoGBArqtMhHdhLK9ejFfpiPdeZrhpAlKYQerblsGBXccaiqPRtk2R8c40ZbqrO+i2
+	uj90lMh2m3BP2Z6waAF1Wor9RucTi+MYUcGdo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
 	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=6SrPx122afrQaO0tfkdW7l/xBVB4Gng4kjwnrMSPG8w=;
-	b=oZODag4JN1yjETFmukglLfbZxMazO6GiLdDBNDSoVMQeQnCb/7u/NE4v/FO9/Wfsnw
-	6T8GH8o16tgTlGxxOSeVLWHiGk7q8t+K9cHEsHUZp4/XW558nvn9z/E3OoKVMnFuqkqa
-	pjlWL2XsRXlk4wCOVdJbr2aPnwmqB/egFml4DZa4mLI8K6PmgQDO0ROkD6MvwCB4TIKY
-	lQgT8GFIyl3eGfsxEGjI+YU24QJ+Tv3o9mJH/ZY+fP/K+h4nqB2bgs6xE7K6SIs4Ww/E
-	43btEFyOWIEf6w2JpXWPfqHfQBpc0NA/QNNPaY+daeajaZ8rA/buI+qpEPVYoGrMiy4R
-	OYNQ==
-X-Gm-Message-State: APjAAAW3HDAOZchKZrg/QO3PNnOTmjLwAbPODIHocOx+1ljaw8a1os5Q
-	pnPnMclCA2+Nb54ZaDbZ4nlVdA==
-X-Google-Smtp-Source: APXvYqwrLYyvh1kXF1XvArwocKdBMXoVq6QFo8qC/DqRkTjsAMC8YEg1g4T35lQ1wJvEVEDAQm25vQ==
-X-Received: by 2002:adf:e546:: with SMTP id z6mr255199wrm.113.1569531023287;
-	Thu, 26 Sep 2019 13:50:23 -0700 (PDT)
+	bh=hAH7kLcls/jvQLcDMAfDgnOuDNVlldRoPlw31cQhxLw=;
+	b=ooYM0hIvO54OAK4L3Gt3/SlLuwrW7zN1efs4n2KxIogw2Jf8OQER8cZR5aw43zeinx
+	kAjLetUAZIndY375k7kuGDJVPC1ibuu3AlSxso3QSkr59PIcj2gm5/O2VXO0txaWiOMn
+	BnVWhAu9bxNeoAiFM2WVvUDictiITkYkK4P6vmMjyHLSm7iTLZEgtZclZOx506/bJSyA
+	NGU716lB69WmDt74W6X8HAC+USeaZ4LfQQteCnVBy0oSZICkoAaZFNkXlG/LEZJVZ0aE
+	lBQEMp5L4u//crCS3f4hYI/LplYOvCFYxOKzV8/ezzKsxnCxzSACpm4pokV9f/att/u1
+	gZaw==
+X-Gm-Message-State: APjAAAWIwAcuWpZBI2PiLtaMMd6MOBh7UOotuh4JXR6i28Bby/I0YcTL
+	0+SMIlcS/3w0yvxxhhbviVIrnw==
+X-Google-Smtp-Source: APXvYqyH+3aN6geBpwW8EJopJmV58Z2fy2Zony8FcCgxl83UjSWicb7ICp7uNxf0R2N/h+qXKSVoWA==
+X-Received: by 2002:a1c:1903:: with SMTP id 3mr4274901wmz.4.1569531172917;
+	Thu, 26 Sep 2019 13:52:52 -0700 (PDT)
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id a13sm250763wrf.73.2019.09.26.13.50.21
+	by smtp.gmail.com with ESMTPSA id
+	o188sm6424737wma.14.2019.09.26.13.52.51
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 26 Sep 2019 13:50:22 -0700 (PDT)
-Message-ID: <c31b6cbb514d4d1bc30fd0d7b6c6b4e124086a75.camel@linuxfoundation.org>
+	Thu, 26 Sep 2019 13:52:51 -0700 (PDT)
+Message-ID: <b1f2e008047cb4c75b7e23fc8b3e92410c8f183f.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Grzegorz Heldt <grzegorz.heldt@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Thu, 26 Sep 2019 21:50:21 +0100
-In-Reply-To: <CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com>
-References: <CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com>
+To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, 
+	"Openembedded-core@lists.openembedded.org"
+	<Openembedded-core@lists.openembedded.org>, 
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Thu, 26 Sep 2019 21:52:50 +0100
+In-Reply-To: <CY4PR12MB16531DD24CCB0C838C7906608B840@CY4PR12MB1653.namprd12.prod.outlook.com>
+References: <CY4PR12MB16531DD24CCB0C838C7906608B840@CY4PR12MB1653.namprd12.prod.outlook.com>
 User-Agent: Evolution 3.34.0-1 
 MIME-Version: 1.0
-Subject: Re: bitbake-layers add-layer issue
+Subject: Re: Keeping multiconfig config files in sync
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,44 +61,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Sep 2019 20:50:23 -0000
+X-List-Received-Date: Thu, 26 Sep 2019 20:52:52 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2019-09-25 at 22:38 +0200, Grzegorz Heldt wrote:
-> Hello.
-> 
-> To setup my projects im usually using bash scripts like that performs
-> following steps:
-> 
-> -------------------------------
-> wiesniak@desk:~/projects/yocto-rasp/poky/build/conf$ cat
-> ../../../setup 
-> #!/bin/bash
-> 
-> BRANCH=warrior
-> git clone git://git.yoctoproject.org/meta-raspberrypi -b $BRANCH
-> git clone git://git.yoctoproject.org/poky -b $BRANCH
-> git clone git://git.openembedded.org/meta-openembedded -b $BRANCH
-> 
-> cd poky
-> . oe-init-build-env
-> bitbake-layers add-layer ../../meta-raspberrypi/
-> bitbake-layers add-layer ../../meta-openembedded/meta-python/
-> bitbake-layers add-layer ../../meta-openembedded/meta-oe/
-> bitbake-layers add-layer ../../meta-openembedded/meta-multimedia/
-> bitbake-layers add-layer ../../meta-openembedded/meta-networking/
-> 
-> echo INHERIT += \"rm_work\" >> conf/local.conf
-> echo DL_DIR = \"/home/yocto-downloads\" >> conf/local.conf
-> 
-> -----------------------------
-> 
-> The problem is that at one of steps that invokes bitbake-layers add-
-> layer, issue is reported and script fails.
+Hi Chris,
 
-What is the issue that is reported? Telling us that might help us
-understand what is happening...
+On Tue, 2019-09-24 at 18:21 +0000, chris.laplante--- via bitbake-devel
+wrote:
+> Thanks to Richard and others recent hard work, multiconfig is poised
+> to become much more practical in YP 3.0.
+>  
+> One thing I’m not clear on, however, is how it will work in a team
+> environment. If I have recipes with multiconfig dependencies, then I
+> must ensure that anyone else using those recipes has the exact same
+> set of multiconfig config files defined in their
+> build/conf/multiconfig/ directory. Or at least, compatible
+> multiconfigs with matching names.
+>  
+> Since these files are under build/conf/, it’s not immediately clear
+> how one might version control these. Unless I’m mistaken and there is
+> a better way, as a workaround I will probably put the multiconfigs in
+> a layer and instruct developers to symlink build/conf/multiconfig to
+> there.
+>  
+> Any insight?
+
+This has bugged me since we first created multiconfig. It was always
+intended we'd have configs you could reference. It turned out to be
+hard to code and we (well, I) decided to "come back to it". That hasn't
+happened yet.
+
+I'd welcome proposals on how it could work (its harder than it first
+appears). It'd be good to check we do have a bug open for it too.
+
+So yes, its an issue, I know about it, I don't have a good fix but
+would like to see some kind of improvement.
 
 Cheers,
 
