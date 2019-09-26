@@ -1,52 +1,58 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
-	[209.85.221.47])
-	by mail.openembedded.org (Postfix) with ESMTP id 2A1B17F278
+Return-Path: <jpuhlman@mvista.com>
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com
+	[209.85.167.176])
+	by mail.openembedded.org (Postfix) with ESMTP id A0A1E7F27B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 21:08:53 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id w12so344993wro.5
+	Thu, 26 Sep 2019 23:12:20 +0000 (UTC)
+Received: by mail-oi1-f176.google.com with SMTP id i16so3626974oie.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 14:08:55 -0700 (PDT)
+	Thu, 26 Sep 2019 16:12:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=AKtXwugHh6fMH6DXNv62ksOLS6BwKuFgjh3v3BRF3S8=;
-	b=Mnu/QPZU1MnJOZTUNET8TLV7S5mxTTjwUxgQXyJXQaFiXB4+YXlPQRCVlwN9HHj6Bg
-	10BWEZcwyG6z+ARDdA5FSNxdLYlLhLP93xsREA8oWUrFGR8TTsm+m3DD4/5+ad9iJ6px
-	2s0zUDJqouKTcbwZx33U5bMGCE07On6TecxOQ=
+	d=mvista-com.20150623.gappssmtp.com; s=20150623;
+	h=subject:to:references:from:message-id:date:user-agent:mime-version
+	:in-reply-to:content-transfer-encoding:content-language;
+	bh=Q242mLsL5RgXQBFk5fRgH05JWl4TFI/ZqnMwPMwXgik=;
+	b=L+cmunKr4TuRra47cPCqKAkvD8oYACW4Mik5oaMiTa56SRmV7JYdoZ41k5GQeC934D
+	32W7SK5yvBzCsWfsnDyhjPYnaV9Y/fvXZEsLKfxMiFXbtFvg57EvNuUVULI37GeoEKX+
+	VHSFQJFQo+gh2l3B8uxVnQozlYuQtBNlARkb3akTiAwVhS7RAHBi/y/UyMIbdZDD7FCC
+	dliitx2AEGcbliuCupIV0ENczQDOLNsiJF6c/7L90K+KcsP/yXYNkPoOxZeGLntHVi12
+	oKYz90FaSQ3yZwYJi2KHw7unAUobWgpkBVgZanivlVkVD5LdIdSbmXjAjXvLL1jtjpOq
+	4MEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=AKtXwugHh6fMH6DXNv62ksOLS6BwKuFgjh3v3BRF3S8=;
-	b=Gm/6RIDBTMh+JRCewFvKUe5R/OVnakPPXJhyI/rK/NHhcu5Md+l68MMjERg5SjTmss
-	SRoBZL4nImtRZDIMmP/IL9yl3+XHSKoe8aaR1Z8SxmQpwOfthje8H1FmuxCS46wKetWc
-	xS8wlGsigk11nXIUWjRBo1C70yR1Ei8M3Ezpz8taTLn3aEWuqcCf3ui1bOe1KSy/FOQQ
-	opWaw9l6kLPh0Y8ZWVGIOPeK+TnbRh6eKrQGehGpr3AhYv1RmxTnh/3bC34eQOogDGeQ
-	G6IerMQFW/kJeYD08NcA/cTYQFWhQjRLZ1ByfQSiKWhvs0s52M1NHM0Z5bgPpjAxkPQ5
-	8XIQ==
-X-Gm-Message-State: APjAAAVeUkkyMAhWnqZpqMUplKbARhnjiWlx9YrxZzbEhuueePXt8xqc
-	oTMv+d9XPqfF3ROhzkXOibUcyfkzg2w=
-X-Google-Smtp-Source: APXvYqziNXi/WZ2/7ZyfYOX3vjJXZCug6MusVIlvrcByhyqDXZgZVd/xHaC1fisoY8w/++tOhx2l3w==
-X-Received: by 2002:adf:e607:: with SMTP id p7mr320402wrm.230.1569532134707;
-	Thu, 26 Sep 2019 14:08:54 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id v8sm331747wra.79.2019.09.26.14.08.53
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 26 Sep 2019 14:08:53 -0700 (PDT)
-Message-ID: <63e618d3ffaf83959d6a0f62ae1a6b17d556d480.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: SHOAIB MUHAMMAD <19558058@students.latrobe.edu.au>, 
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Date: Thu, 26 Sep 2019 22:08:52 +0100
-In-Reply-To: <MEAPR01MB419977871A4644D3FA437302C0860@MEAPR01MB4199.ausprd01.prod.outlook.com>
-References: <MEAPR01MB419977871A4644D3FA437302C0860@MEAPR01MB4199.ausprd01.prod.outlook.com>
-User-Agent: Evolution 3.34.0-1 
+	h=x-gm-message-state:subject:to:references:from:message-id:date
+	:user-agent:mime-version:in-reply-to:content-transfer-encoding
+	:content-language;
+	bh=Q242mLsL5RgXQBFk5fRgH05JWl4TFI/ZqnMwPMwXgik=;
+	b=c+H2Mw2r8pQXrVEFdS+WXqmhbMqnZcFTVX0a2TrwKI9oEkpBq1gT0H26BC1R92zeCI
+	oDUAqB5zklnhdBlInn83K6Z3wdC3Dhgsnj/2mXrvi0X/ExRcqqWGg/lLabYGQsBAKLHt
+	yvJKup2TkSOWji3l6mciTNhrgnOedSBmPxY4w+U5MJAyhqgf7R8EbFQmt6tdViv+l7Bc
+	WxWnteRBQKMcBV7eQwUzxbOcZWULrvMQrxbUlx3ZsZysyM+QPCpSShMqqeD2WgwG9bNx
+	wGvGUEksn1FRz7zNFbXIY0w4p/ESNuhROp2OfDQaysLSd0kCnRF63bBSZQOXPLQrWlLt
+	OeOQ==
+X-Gm-Message-State: APjAAAV0Kr2VG96TwncIz7qRn9S4HOFtFfSoHBMVY8y6QDmjR7ii/5RG
+	IPrXFSe3a2QWycgte2V2hki+OQ==
+X-Google-Smtp-Source: APXvYqwgLMe9aFuXc6rRKjC6JaD9NVSy+F2PAiMLSZLzYoGH2Z8oalJrDgsaHlRNa/omML2o2mhIPQ==
+X-Received: by 2002:aca:aa56:: with SMTP id t83mr4718453oie.178.1569539541510; 
+	Thu, 26 Sep 2019 16:12:21 -0700 (PDT)
+Received: from ?IPv6:2600:1700:4c90:60a0:8460:5454:270e:1a37?
+	([2600:1700:4c90:60a0:8460:5454:270e:1a37])
+	by smtp.gmail.com with ESMTPSA id n17sm290514otk.5.2019.09.26.16.12.20
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 26 Sep 2019 16:12:20 -0700 (PDT)
+To: Mark Hatle <mark.hatle@kernel.crashing.org>,
+	bitbake-devel@lists.openembedded.org, grzegorz.heldt@gmail.com
+References: <CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com>
+	<d6a33b15-e28a-b2b8-3359-8c4b38afe5eb@mvista.com>
+	<9022a7bc-7f91-dddb-5bfc-530b42a2d1bf@kernel.crashing.org>
+From: "Jeremy A. Puhlman" <jpuhlman@mvista.com>
+Message-ID: <625be95c-9f8f-adcc-2c27-179733423b59@mvista.com>
+Date: Thu, 26 Sep 2019 16:12:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+	Thunderbird/60.9.0
 MIME-Version: 1.0
-Cc: ADARSH KUMAR <19844172@students.latrobe.edu.au>
-Subject: Re: Bitbake Error
+In-Reply-To: <9022a7bc-7f91-dddb-5bfc-530b42a2d1bf@kernel.crashing.org>
+Subject: Re: bitbake-layers add-layer issue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,21 +65,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Sep 2019 21:08:54 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Thu, 26 Sep 2019 23:12:20 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-On Thu, 2019-09-26 at 04:47 +0000, SHOAIB MUHAMMAD wrote:
-> It seems that a command is outdated with the current system I am
-> using. I am running a Linux 18.04 LTS on the host PC.
-> Is there any way to fix this?
 
-You're using krogoth and that is an old release (and now unsupported).
-You'd need to use an older operating system to build it, either
-directly or in a container/VM.
+>> This is what you get on thud.
+>>
+>> [cluge@jptest01 build]$ bitbake-layers add-layer ../meta-openembedded/meta-python/
+>> NOTE: Starting bitbake server...
+>> [cluge@jptest01 build]$ bitbake-layers add-layer ../meta-openembedded/meta-oe/
+>> NOTE: Starting bitbake server...
+> Ya, the dredded circular dependency.  I thought you could add them both at the
+> same time to resolve this.  (You can via the layer index mechanism at least..)
+> I believe the circular dependency has been resolved in master.)
+>
+> --Mark
 
-Cheers,
+I haven't looked at warrior, but thud its not circular at least when it 
+comes to layer depends(yeah it think
+there is meta-oe content that can depend on meta-python). If you reverse 
+the two, it works just fine.
 
-Richard
+-- 
+Jeremy A. Puhlman
+jpuhlman@mvista.com
 
 
