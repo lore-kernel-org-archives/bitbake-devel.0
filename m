@@ -1,54 +1,55 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com
-	[209.85.128.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 320B87EE4F
+Return-Path: <jpuhlman@mvista.com>
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com
+	[209.85.210.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 436EA7EE4F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 20:52:52 +0000 (UTC)
-Received: by mail-wm1-f46.google.com with SMTP id b24so3953331wmj.5
+	Thu, 26 Sep 2019 21:00:50 +0000 (UTC)
+Received: by mail-ot1-f48.google.com with SMTP id 21so369675otj.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 13:52:53 -0700 (PDT)
+	Thu, 26 Sep 2019 14:00:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=hAH7kLcls/jvQLcDMAfDgnOuDNVlldRoPlw31cQhxLw=;
-	b=FTH+xK7HvN8ERDm+RAlWA20IaoQXwl3RbhLtI3SqP7CWAs0mQYMP+d59ykCc0aER5H
-	Pp7eoGBArqtMhHdhLK9ejFfpiPdeZrhpAlKYQerblsGBXccaiqPRtk2R8c40ZbqrO+i2
-	uj90lMh2m3BP2Z6waAF1Wor9RucTi+MYUcGdo=
+	d=mvista-com.20150623.gappssmtp.com; s=20150623;
+	h=subject:to:references:from:message-id:date:user-agent:mime-version
+	:in-reply-to:content-language;
+	bh=k/dcURxDiSkILveB/XHAp0/EndpPm081uvBDjvKTspQ=;
+	b=xsJ1vLrEr7caFMsP6l8fXR84+xbKxVnD3UpUDv/H1OEi7vafCYYer6fw4POXx7io66
+	ItoPlAsUuE50pKj09Ddhvkvc+N1mL89IcoX3UeqlbIO78yIOzSQplOp2dTTf5rkrUyJv
+	kDdRuZG22jgw0Voc+5Eo8ju3fSYiZRJ2n0faYhmsWTtmM34W6vDplAhFVylGzIL9S83r
+	/oGA7d/LlmX3cwutNJeJpbe0Fm0VSuXeR94xgAftDyNv/zLt1bprHKcumHaiWNQPMRNz
+	esFcL7EcDrntGg0GRMuphFUmCaIUNVIlg3dTLB/IrNQG6OJVXSh5Y+3nTvvTOQpaAINP
+	7tmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=hAH7kLcls/jvQLcDMAfDgnOuDNVlldRoPlw31cQhxLw=;
-	b=ooYM0hIvO54OAK4L3Gt3/SlLuwrW7zN1efs4n2KxIogw2Jf8OQER8cZR5aw43zeinx
-	kAjLetUAZIndY375k7kuGDJVPC1ibuu3AlSxso3QSkr59PIcj2gm5/O2VXO0txaWiOMn
-	BnVWhAu9bxNeoAiFM2WVvUDictiITkYkK4P6vmMjyHLSm7iTLZEgtZclZOx506/bJSyA
-	NGU716lB69WmDt74W6X8HAC+USeaZ4LfQQteCnVBy0oSZICkoAaZFNkXlG/LEZJVZ0aE
-	lBQEMp5L4u//crCS3f4hYI/LplYOvCFYxOKzV8/ezzKsxnCxzSACpm4pokV9f/att/u1
-	gZaw==
-X-Gm-Message-State: APjAAAWIwAcuWpZBI2PiLtaMMd6MOBh7UOotuh4JXR6i28Bby/I0YcTL
-	0+SMIlcS/3w0yvxxhhbviVIrnw==
-X-Google-Smtp-Source: APXvYqyH+3aN6geBpwW8EJopJmV58Z2fy2Zony8FcCgxl83UjSWicb7ICp7uNxf0R2N/h+qXKSVoWA==
-X-Received: by 2002:a1c:1903:: with SMTP id 3mr4274901wmz.4.1569531172917;
-	Thu, 26 Sep 2019 13:52:52 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	h=x-gm-message-state:subject:to:references:from:message-id:date
+	:user-agent:mime-version:in-reply-to:content-language;
+	bh=k/dcURxDiSkILveB/XHAp0/EndpPm081uvBDjvKTspQ=;
+	b=T8mSICc6ZrF4BOR69M40L7iy4FT7CXhiN9vPofgw8PSC6oJW1qBSvnQ+XsBRkRmwiN
+	X+ajpgohyA/tFeN1veCmmkjlZTNR/CRSKPIu4KPtjuWxjz6u5KK8VztlgU3XS7Vra40C
+	abZmttqeF6cWFre8GXTD3sO/YPFh2YYSe/tK19zm0Co4SuRJWOyG8eYFFQdznvcz0JPj
+	AOQdmx+3sZGxcquJh33ljxSesOUFnKVnRF6FfQ5gPlj3lLdzDBSYGJKIBFjKZD10ka+0
+	xhCgEoQnpY9tfI3RldMBOl34R8ut/XYzkdFJ8RIGSWfnuXjKcDJa2elMObB8A10Ail7n
+	dZ4Q==
+X-Gm-Message-State: APjAAAWx36YOwWwcUkjapY+KkvBSTnjMz6PpAqgimv7ZKszPZkBCdD3q
+	1PYt/7cLV/mdHIILJQTU74qlug==
+X-Google-Smtp-Source: APXvYqwfcyIc2vpsw3bWPFMjbxZfIaSf6zuPmSINLL7iniONoJL8FEBNNgAywO9hZBJzsWb6zavpYA==
+X-Received: by 2002:a9d:6305:: with SMTP id q5mr562099otk.102.1569531650989;
+	Thu, 26 Sep 2019 14:00:50 -0700 (PDT)
+Received: from ?IPv6:2600:1700:4c90:60a0:8460:5454:270e:1a37?
+	([2600:1700:4c90:60a0:8460:5454:270e:1a37])
 	by smtp.gmail.com with ESMTPSA id
-	o188sm6424737wma.14.2019.09.26.13.52.51
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 26 Sep 2019 13:52:51 -0700 (PDT)
-Message-ID: <b1f2e008047cb4c75b7e23fc8b3e92410c8f183f.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, 
-	"Openembedded-core@lists.openembedded.org"
-	<Openembedded-core@lists.openembedded.org>, 
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Date: Thu, 26 Sep 2019 21:52:50 +0100
-In-Reply-To: <CY4PR12MB16531DD24CCB0C838C7906608B840@CY4PR12MB1653.namprd12.prod.outlook.com>
-References: <CY4PR12MB16531DD24CCB0C838C7906608B840@CY4PR12MB1653.namprd12.prod.outlook.com>
-User-Agent: Evolution 3.34.0-1 
+	x140sm1031850oix.42.2019.09.26.14.00.49
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 26 Sep 2019 14:00:49 -0700 (PDT)
+To: bitbake-devel@lists.openembedded.org, grzegorz.heldt@gmail.com
+References: <CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com>
+From: "Jeremy A. Puhlman" <jpuhlman@mvista.com>
+Message-ID: <d6a33b15-e28a-b2b8-3359-8c4b38afe5eb@mvista.com>
+Date: Thu, 26 Sep 2019 14:00:46 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+	Thunderbird/60.9.0
 MIME-Version: 1.0
-Subject: Re: Keeping multiconfig config files in sync
+In-Reply-To: <CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com>
+Subject: Re: bitbake-layers add-layer issue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,45 +62,254 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Sep 2019 20:52:52 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Thu, 26 Sep 2019 21:00:50 -0000
+Content-Type: multipart/alternative;
+	boundary="------------3D0A6F80EA70CBCDA1995CA4"
+Content-Language: en-US
+
+--------------3D0A6F80EA70CBCDA1995CA4
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Chris,
-
-On Tue, 2019-09-24 at 18:21 +0000, chris.laplante--- via bitbake-devel
-wrote:
-> Thanks to Richard and others recent hard work, multiconfig is poised
-> to become much more practical in YP 3.0.
->  
-> One thing I’m not clear on, however, is how it will work in a team
-> environment. If I have recipes with multiconfig dependencies, then I
-> must ensure that anyone else using those recipes has the exact same
-> set of multiconfig config files defined in their
-> build/conf/multiconfig/ directory. Or at least, compatible
-> multiconfigs with matching names.
->  
-> Since these files are under build/conf/, it’s not immediately clear
-> how one might version control these. Unless I’m mistaken and there is
-> a better way, as a workaround I will probably put the multiconfigs in
-> a layer and instruct developers to symlink build/conf/multiconfig to
-> there.
->  
-> Any insight?
-
-This has bugged me since we first created multiconfig. It was always
-intended we'd have configs you could reference. It turned out to be
-hard to code and we (well, I) decided to "come back to it". That hasn't
-happened yet.
-
-I'd welcome proposals on how it could work (its harder than it first
-appears). It'd be good to check we do have a bug open for it too.
-
-So yes, its an issue, I know about it, I don't have a good fix but
-would like to see some kind of improvement.
-
-Cheers,
-
-Richard
 
 
+On 9/25/2019 1:38 PM, Grzegorz Heldt wrote:
+> Hello.
+>
+> To setup my projects im usually using bash scripts like that performs 
+> following steps:
+>
+> -------------------------------
+> wiesniak@desk:~/projects/yocto-rasp/poky/build/conf$ cat ../../../setup
+> #!/bin/bash
+>
+> BRANCH=warrior
+> git clone git://git.yoctoproject.org/meta-raspberrypi 
+> <http://git.yoctoproject.org/meta-raspberrypi> -b $BRANCH
+> git clone git://git.yoctoproject.org/poky 
+> <http://git.yoctoproject.org/poky> -b $BRANCH
+> git clone git://git.openembedded.org/meta-openembedded 
+> <http://git.openembedded.org/meta-openembedded> -b $BRANCH
+>
+> cd poky
+> . oe-init-build-env
+> bitbake-layers add-layer ../../meta-raspberrypi/
+> bitbake-layers add-layer ../../meta-openembedded/meta-python/
+> bitbake-layers add-layer ../../meta-openembedded/meta-oe/
+> bitbake-layers add-layer ../../meta-openembedded/meta-multimedia/
+> bitbake-layers add-layer ../../meta-openembedded/meta-networking/
+>
+> echo INHERIT += \"rm_work\" >> conf/local.conf
+> echo DL_DIR = \"/home/yocto-downloads\" >> conf/local.conf
+>
+You need to add meta-oe before meta-python since meta-python depends on 
+it. Once meta-python is added bitbake the next add
+fail because it cannot satisfy the meta-oe requirement. The error is not 
+really helpful.
+
+This is what you get on thud.
+
+[cluge@jptest01 build]$ bitbake-layers add-layer 
+../meta-openembedded/meta-python/
+NOTE: Starting bitbake server...
+[cluge@jptest01 build]$ bitbake-layers add-layer 
+../meta-openembedded/meta-oe/
+NOTE: Starting bitbake server...
+Traceback (most recent call last):
+   File 
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/bin/bitbake-layers", 
+line 103, in <module>
+     ret = main()
+   File 
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/bin/bitbake-layers", 
+line 71, in main
+     tinfoil.prepare(True)
+   File 
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/tinfoil.py", 
+line 418, in prepare
+     self.run_command('parseConfiguration')
+   File 
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/tinfoil.py", 
+line 476, in run_command
+     raise TinfoilCommandFailed(result[1])
+bb.tinfoil.TinfoilCommandFailed: Traceback (most recent call last):
+   File 
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/command.py", 
+line 84, in runCommand
+     result = command_method(self, commandline)
+   File 
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/command.py", 
+line 285, in parseConfiguration
+     command.cooker.parseConfiguration()
+   File 
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/cooker.py", 
+line 438, in parseConfiguration
+     self.handleCollections(self.data.getVar("BBFILE_COLLECTIONS"))
+   File 
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/cooker.py", 
+line 1232, in handleCollections
+     raise CollectionError("Errors during parsing layer configuration")
+bb.cooker.CollectionError: Errors during parsing layer configuration
+>
+>
+> <http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=emailclient> 
+> 	Virus-free. www.avg.com 
+> <http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=emailclient> 
+>
+>
+> <#DAB4FAD8-2DD7-40BB-A1B8-4E2AA1F9FDF2>
+>
+
+-- 
+Jeremy A. Puhlman
+jpuhlman@mvista.com
+
+
+--------------3D0A6F80EA70CBCDA1995CA4
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <br>
+    <br>
+    <div class="moz-cite-prefix">On 9/25/2019 1:38 PM, Grzegorz Heldt
+      wrote:<br>
+    </div>
+    <blockquote type="cite"
+cite="mid:CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com">
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <div dir="ltr">Hello.
+        <div><br>
+        </div>
+        <div>To setup my projects im usually using bash scripts like
+          that performs following steps:</div>
+        <div><br>
+        </div>
+        <div>-------------------------------</div>
+        <div>wiesniak@desk:~/projects/yocto-rasp/poky/build/conf$ cat
+          ../../../setup <br>
+          #!/bin/bash<br>
+          <br>
+          BRANCH=warrior<br>
+          git clone git://<a
+            href="http://git.yoctoproject.org/meta-raspberrypi"
+            moz-do-not-send="true">git.yoctoproject.org/meta-raspberrypi</a>
+          -b $BRANCH<br>
+          git clone git://<a href="http://git.yoctoproject.org/poky"
+            moz-do-not-send="true">git.yoctoproject.org/poky</a> -b
+          $BRANCH<br>
+          git clone git://<a
+            href="http://git.openembedded.org/meta-openembedded"
+            moz-do-not-send="true">git.openembedded.org/meta-openembedded</a>
+          -b $BRANCH<br>
+          <br>
+          cd poky<br>
+          . oe-init-build-env<br>
+          bitbake-layers add-layer ../../meta-raspberrypi/<br>
+          bitbake-layers add-layer ../../meta-openembedded/meta-python/<br>
+          bitbake-layers add-layer ../../meta-openembedded/meta-oe/<br>
+          bitbake-layers add-layer
+          ../../meta-openembedded/meta-multimedia/<br>
+          bitbake-layers add-layer
+          ../../meta-openembedded/meta-networking/<br>
+          <br>
+        </div>
+        <div>echo INHERIT += \"rm_work\" &gt;&gt; conf/local.conf<br>
+          echo DL_DIR = \"/home/yocto-downloads\" &gt;&gt;
+          conf/local.conf<br>
+          <br>
+        </div>
+      </div>
+    </blockquote>
+    You need to add meta-oe before meta-python since meta-python depends
+    on it. Once meta-python is added bitbake the next add <br>
+    fail because it cannot satisfy the meta-oe requirement. The error is
+    not really helpful.<br>
+    <br>
+    This is what you get on thud.<br>
+    <br>
+    [cluge@jptest01 build]$ bitbake-layers add-layer
+    ../meta-openembedded/meta-python/<br>
+    NOTE: Starting bitbake server...<br>
+    [cluge@jptest01 build]$ bitbake-layers add-layer
+    ../meta-openembedded/meta-oe/<br>
+    NOTE: Starting bitbake server...<br>
+    Traceback (most recent call last):<br>
+      File
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/bin/bitbake-layers",
+    line 103, in &lt;module&gt;<br>
+        ret = main()<br>
+      File
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/bin/bitbake-layers",
+    line 71, in main<br>
+        tinfoil.prepare(True)<br>
+      File
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/tinfoil.py",
+    line 418, in prepare<br>
+        self.run_command('parseConfiguration')<br>
+      File
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/tinfoil.py",
+    line 476, in run_command<br>
+        raise TinfoilCommandFailed(result[1])<br>
+    bb.tinfoil.TinfoilCommandFailed: Traceback (most recent call last):<br>
+      File
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/command.py",
+    line 84, in runCommand<br>
+        result = command_method(self, commandline)<br>
+      File
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/command.py",
+    line 285, in parseConfiguration<br>
+        command.cooker.parseConfiguration()<br>
+      File
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/cooker.py",
+    line 438, in parseConfiguration<br>
+        self.handleCollections(self.data.getVar("BBFILE_COLLECTIONS"))<br>
+      File
+"/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/cooker.py",
+    line 1232, in handleCollections<br>
+        raise CollectionError("Errors during parsing layer
+    configuration")<br>
+    bb.cooker.CollectionError: Errors during parsing layer configuration
+    <blockquote type="cite"
+cite="mid:CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com">
+      <div dir="ltr">
+        <div><br>
+        </div>
+      </div>
+      <div id="DAB4FAD8-2DD7-40BB-A1B8-4E2AA1F9FDF2"><br>
+        <table style="border-top: 1px solid #D3D4DE;">
+          <tbody>
+            <tr>
+              <td style="width: 55px; padding-top: 13px;"><a
+href="http://www.avg.com/email-signature?utm_medium=email&amp;utm_source=link&amp;utm_campaign=sig-email&amp;utm_content=emailclient"
+                  target="_blank" moz-do-not-send="true"><img
+src="https://ipmcdn.avast.com/images/icons/icon-envelope-tick-green-avg-v1.png"
+                    alt="" style="width: 46px; height: 29px;"
+                    moz-do-not-send="true" width="46" height="29"></a></td>
+              <td style="width: 470px; padding-top: 12px; color:
+                #41424e; font-size: 13px; font-family: Arial, Helvetica,
+                sans-serif; line-height: 18px;">Virus-free. <a
+href="http://www.avg.com/email-signature?utm_medium=email&amp;utm_source=link&amp;utm_campaign=sig-email&amp;utm_content=emailclient"
+                  target="_blank" style="color: #4453ea;"
+                  moz-do-not-send="true">www.avg.com</a> </td>
+            </tr>
+          </tbody>
+        </table>
+        <a href="#DAB4FAD8-2DD7-40BB-A1B8-4E2AA1F9FDF2" width="1"
+          height="1" moz-do-not-send="true"> </a></div>
+      <br>
+      <fieldset class="mimeAttachmentHeader"></fieldset>
+    </blockquote>
+    <br>
+    <pre class="moz-signature" cols="72">-- 
+Jeremy A. Puhlman
+<a class="moz-txt-link-abbreviated" href="mailto:jpuhlman@mvista.com">jpuhlman@mvista.com</a>
+</pre>
+  </body>
+</html>
+
+--------------3D0A6F80EA70CBCDA1995CA4--
