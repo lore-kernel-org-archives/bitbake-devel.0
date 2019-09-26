@@ -1,57 +1,59 @@
 Return-Path: <jpuhlman@mvista.com>
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com
-	[209.85.167.176])
-	by mail.openembedded.org (Postfix) with ESMTP id A0A1E7F27B
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com
+	[209.85.210.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 463C67F276
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 23:12:20 +0000 (UTC)
-Received: by mail-oi1-f176.google.com with SMTP id i16so3626974oie.4
+	Thu, 26 Sep 2019 23:19:03 +0000 (UTC)
+Received: by mail-ot1-f41.google.com with SMTP id y39so668566ota.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 16:12:22 -0700 (PDT)
+	Thu, 26 Sep 2019 16:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=mvista-com.20150623.gappssmtp.com; s=20150623;
-	h=subject:to:references:from:message-id:date:user-agent:mime-version
+	h=subject:from:to:references:message-id:date:user-agent:mime-version
 	:in-reply-to:content-transfer-encoding:content-language;
-	bh=Q242mLsL5RgXQBFk5fRgH05JWl4TFI/ZqnMwPMwXgik=;
-	b=L+cmunKr4TuRra47cPCqKAkvD8oYACW4Mik5oaMiTa56SRmV7JYdoZ41k5GQeC934D
-	32W7SK5yvBzCsWfsnDyhjPYnaV9Y/fvXZEsLKfxMiFXbtFvg57EvNuUVULI37GeoEKX+
-	VHSFQJFQo+gh2l3B8uxVnQozlYuQtBNlARkb3akTiAwVhS7RAHBi/y/UyMIbdZDD7FCC
-	dliitx2AEGcbliuCupIV0ENczQDOLNsiJF6c/7L90K+KcsP/yXYNkPoOxZeGLntHVi12
-	oKYz90FaSQ3yZwYJi2KHw7unAUobWgpkBVgZanivlVkVD5LdIdSbmXjAjXvLL1jtjpOq
-	4MEw==
+	bh=3o83WlqVesbBt7e8ekNBS3ejFae5ueiRi/rP44gQ7qk=;
+	b=IdYpiuTJ0fB02Fnd6THd7LLBqJ0cbf935yGzuS2xXbf9+acwaPGIDYNpjnZErVWRYn
+	Pd881/cyng0XnYYvkinqPbCCOK4nAdXGHuHWLcUyz3BdZ8PXoftWIga2MIJZU4wUjWnK
+	AXDeUF7I+30xixsbYCgaeXg+0xJ+prwUQdblKZLUDOYyo+I+2g2v+XYXTTYqsUo3OkD4
+	ssdpkDbKGGXBOQfSCcjTsqj3ECpRt2rsPclxE+slB/YL0IgzFrGbU9SPKhL8Bx9NmIis
+	fipaPT6vsKMPfu+9ggtBQirbjV2cV/V97sbTEnMg2W+r2LjWs5W6Ngl8w35UBrXlgV+Y
+	bdgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:subject:to:references:from:message-id:date
+	h=x-gm-message-state:subject:from:to:references:message-id:date
 	:user-agent:mime-version:in-reply-to:content-transfer-encoding
 	:content-language;
-	bh=Q242mLsL5RgXQBFk5fRgH05JWl4TFI/ZqnMwPMwXgik=;
-	b=c+H2Mw2r8pQXrVEFdS+WXqmhbMqnZcFTVX0a2TrwKI9oEkpBq1gT0H26BC1R92zeCI
-	oDUAqB5zklnhdBlInn83K6Z3wdC3Dhgsnj/2mXrvi0X/ExRcqqWGg/lLabYGQsBAKLHt
-	yvJKup2TkSOWji3l6mciTNhrgnOedSBmPxY4w+U5MJAyhqgf7R8EbFQmt6tdViv+l7Bc
-	WxWnteRBQKMcBV7eQwUzxbOcZWULrvMQrxbUlx3ZsZysyM+QPCpSShMqqeD2WgwG9bNx
-	wGvGUEksn1FRz7zNFbXIY0w4p/ESNuhROp2OfDQaysLSd0kCnRF63bBSZQOXPLQrWlLt
-	OeOQ==
-X-Gm-Message-State: APjAAAV0Kr2VG96TwncIz7qRn9S4HOFtFfSoHBMVY8y6QDmjR7ii/5RG
-	IPrXFSe3a2QWycgte2V2hki+OQ==
-X-Google-Smtp-Source: APXvYqwgLMe9aFuXc6rRKjC6JaD9NVSy+F2PAiMLSZLzYoGH2Z8oalJrDgsaHlRNa/omML2o2mhIPQ==
-X-Received: by 2002:aca:aa56:: with SMTP id t83mr4718453oie.178.1569539541510; 
-	Thu, 26 Sep 2019 16:12:21 -0700 (PDT)
+	bh=3o83WlqVesbBt7e8ekNBS3ejFae5ueiRi/rP44gQ7qk=;
+	b=MfRQEYevMhFBy9UOa6+fH2i8RlkdP94w3pMV6iQHNOA/FsS5GK1XoPbn2DVuvgoWM2
+	xHUi3mvbaxJ6n15duYPOGgK+OZEwioivnp/AwM98LW5zTD50HIJ/IxZovU0RG/ra4MnZ
+	+rZNInUJOwv1bO+SDAv1xry3BavOOU80Iz5VE/MuZxyIJGG2PAizAQW4uGBcCnGUUUVR
+	UUqLaNci9HgGhoMriE5qJPsRceQJJxO8wXD0lC1lpAn0HJyLuKGptdUb/ocs+BwUSuNT
+	IgjgfajazNvK5pf22oXvGmLzjpXWycND4FzQ6faIkgSdk1T28LV4H4UHlBlwYI6bWdzo
+	EbTA==
+X-Gm-Message-State: APjAAAU5LJUByBFiI85AkheKcxaujeYr/AqCnaOvb07ELXAREi+QSvUR
+	53Zmi1+Wd8jgY8vfAUhA8jwnoQ==
+X-Google-Smtp-Source: APXvYqxvi8WVzmp/UQYYyqFHdHNS1K85zDLCoFCDpEV5zAxkKZqCKGS9xugHVDHH5qrI0jgYbNecgQ==
+X-Received: by 2002:a9d:2902:: with SMTP id d2mr867140otb.333.1569539944168;
+	Thu, 26 Sep 2019 16:19:04 -0700 (PDT)
 Received: from ?IPv6:2600:1700:4c90:60a0:8460:5454:270e:1a37?
 	([2600:1700:4c90:60a0:8460:5454:270e:1a37])
-	by smtp.gmail.com with ESMTPSA id n17sm290514otk.5.2019.09.26.16.12.20
+	by smtp.gmail.com with ESMTPSA id
+	w13sm1042453oih.54.2019.09.26.16.19.02
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 26 Sep 2019 16:12:20 -0700 (PDT)
+	Thu, 26 Sep 2019 16:19:03 -0700 (PDT)
+From: "Jeremy A. Puhlman" <jpuhlman@mvista.com>
 To: Mark Hatle <mark.hatle@kernel.crashing.org>,
 	bitbake-devel@lists.openembedded.org, grzegorz.heldt@gmail.com
 References: <CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com>
 	<d6a33b15-e28a-b2b8-3359-8c4b38afe5eb@mvista.com>
 	<9022a7bc-7f91-dddb-5bfc-530b42a2d1bf@kernel.crashing.org>
-From: "Jeremy A. Puhlman" <jpuhlman@mvista.com>
-Message-ID: <625be95c-9f8f-adcc-2c27-179733423b59@mvista.com>
-Date: Thu, 26 Sep 2019 16:12:17 -0700
+	<625be95c-9f8f-adcc-2c27-179733423b59@mvista.com>
+Message-ID: <d7e77675-23ff-ed76-026a-e7c842a0f8bb@mvista.com>
+Date: Thu, 26 Sep 2019 16:18:59 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
 	Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <9022a7bc-7f91-dddb-5bfc-530b42a2d1bf@kernel.crashing.org>
+In-Reply-To: <625be95c-9f8f-adcc-2c27-179733423b59@mvista.com>
 Subject: Re: bitbake-layers add-layer issue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -65,28 +67,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Sep 2019 23:12:20 -0000
+X-List-Received-Date: Thu, 26 Sep 2019 23:19:03 -0000
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 
 
->> This is what you get on thud.
->>
->> [cluge@jptest01 build]$ bitbake-layers add-layer ../meta-openembedded/meta-python/
->> NOTE: Starting bitbake server...
->> [cluge@jptest01 build]$ bitbake-layers add-layer ../meta-openembedded/meta-oe/
->> NOTE: Starting bitbake server...
-> Ya, the dredded circular dependency.  I thought you could add them both at the
-> same time to resolve this.  (You can via the layer index mechanism at least..)
-> I believe the circular dependency has been resolved in master.)
->
-> --Mark
 
-I haven't looked at warrior, but thud its not circular at least when it 
-comes to layer depends(yeah it think
-there is meta-oe content that can depend on meta-python). If you reverse 
-the two, it works just fine.
+On 9/26/2019 4:12 PM, Jeremy A. Puhlman wrote:
+>
+>>> This is what you get on thud.
+>>>
+>>> [cluge@jptest01 build]$ bitbake-layers add-layer 
+>>> ../meta-openembedded/meta-python/
+>>> NOTE: Starting bitbake server...
+>>> [cluge@jptest01 build]$ bitbake-layers add-layer 
+>>> ../meta-openembedded/meta-oe/
+>>> NOTE: Starting bitbake server...
+>> Ya, the dredded circular dependency.  I thought you could add them 
+>> both at the
+>> same time to resolve this.  (You can via the layer index mechanism at 
+>> least..)
+>> I believe the circular dependency has been resolved in master.)
+>>
+>> --Mark
+>
+> I haven't looked at warrior, but thud its not circular at least when 
+> it comes to layer depends(yeah it think
+> there is meta-oe content that can depend on meta-python). If you 
+> reverse the two, it works just fine.
+>
+Yeah the its still the same with warrior. You just need to reorder adds, 
+if doing it one at a time. However, you
+are correct you can add them at the same time on the same line.
 
 -- 
 Jeremy A. Puhlman
