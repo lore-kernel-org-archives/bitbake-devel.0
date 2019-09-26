@@ -1,59 +1,25 @@
-Return-Path: <jpuhlman@mvista.com>
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com
-	[209.85.210.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 463C67F276
+Return-Path: <mark.hatle@kernel.crashing.org>
+X-Greylist: delayed 1087 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 26 Sep 2019 23:22:58 UTC
+Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 6B4A27F276
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 23:19:03 +0000 (UTC)
-Received: by mail-ot1-f41.google.com with SMTP id y39so668566ota.7
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Sep 2019 16:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mvista-com.20150623.gappssmtp.com; s=20150623;
-	h=subject:from:to:references:message-id:date:user-agent:mime-version
-	:in-reply-to:content-transfer-encoding:content-language;
-	bh=3o83WlqVesbBt7e8ekNBS3ejFae5ueiRi/rP44gQ7qk=;
-	b=IdYpiuTJ0fB02Fnd6THd7LLBqJ0cbf935yGzuS2xXbf9+acwaPGIDYNpjnZErVWRYn
-	Pd881/cyng0XnYYvkinqPbCCOK4nAdXGHuHWLcUyz3BdZ8PXoftWIga2MIJZU4wUjWnK
-	AXDeUF7I+30xixsbYCgaeXg+0xJ+prwUQdblKZLUDOYyo+I+2g2v+XYXTTYqsUo3OkD4
-	ssdpkDbKGGXBOQfSCcjTsqj3ECpRt2rsPclxE+slB/YL0IgzFrGbU9SPKhL8Bx9NmIis
-	fipaPT6vsKMPfu+9ggtBQirbjV2cV/V97sbTEnMg2W+r2LjWs5W6Ngl8w35UBrXlgV+Y
-	bdgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:subject:from:to:references:message-id:date
-	:user-agent:mime-version:in-reply-to:content-transfer-encoding
-	:content-language;
-	bh=3o83WlqVesbBt7e8ekNBS3ejFae5ueiRi/rP44gQ7qk=;
-	b=MfRQEYevMhFBy9UOa6+fH2i8RlkdP94w3pMV6iQHNOA/FsS5GK1XoPbn2DVuvgoWM2
-	xHUi3mvbaxJ6n15duYPOGgK+OZEwioivnp/AwM98LW5zTD50HIJ/IxZovU0RG/ra4MnZ
-	+rZNInUJOwv1bO+SDAv1xry3BavOOU80Iz5VE/MuZxyIJGG2PAizAQW4uGBcCnGUUUVR
-	UUqLaNci9HgGhoMriE5qJPsRceQJJxO8wXD0lC1lpAn0HJyLuKGptdUb/ocs+BwUSuNT
-	IgjgfajazNvK5pf22oXvGmLzjpXWycND4FzQ6faIkgSdk1T28LV4H4UHlBlwYI6bWdzo
-	EbTA==
-X-Gm-Message-State: APjAAAU5LJUByBFiI85AkheKcxaujeYr/AqCnaOvb07ELXAREi+QSvUR
-	53Zmi1+Wd8jgY8vfAUhA8jwnoQ==
-X-Google-Smtp-Source: APXvYqxvi8WVzmp/UQYYyqFHdHNS1K85zDLCoFCDpEV5zAxkKZqCKGS9xugHVDHH5qrI0jgYbNecgQ==
-X-Received: by 2002:a9d:2902:: with SMTP id d2mr867140otb.333.1569539944168;
-	Thu, 26 Sep 2019 16:19:04 -0700 (PDT)
-Received: from ?IPv6:2600:1700:4c90:60a0:8460:5454:270e:1a37?
-	([2600:1700:4c90:60a0:8460:5454:270e:1a37])
-	by smtp.gmail.com with ESMTPSA id
-	w13sm1042453oih.54.2019.09.26.16.19.02
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 26 Sep 2019 16:19:03 -0700 (PDT)
-From: "Jeremy A. Puhlman" <jpuhlman@mvista.com>
-To: Mark Hatle <mark.hatle@kernel.crashing.org>,
+	Thu, 26 Sep 2019 23:22:58 +0000 (UTC)
+Received: from Marks-MacBook-Pro.local ([76.164.61.198]) (authenticated bits=0)
+	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id x8QN4aEO030553
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NO); Thu, 26 Sep 2019 18:04:37 -0500
+To: "Jeremy A. Puhlman" <jpuhlman@mvista.com>,
 	bitbake-devel@lists.openembedded.org, grzegorz.heldt@gmail.com
 References: <CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com>
 	<d6a33b15-e28a-b2b8-3359-8c4b38afe5eb@mvista.com>
-	<9022a7bc-7f91-dddb-5bfc-530b42a2d1bf@kernel.crashing.org>
-	<625be95c-9f8f-adcc-2c27-179733423b59@mvista.com>
-Message-ID: <d7e77675-23ff-ed76-026a-e7c842a0f8bb@mvista.com>
-Date: Thu, 26 Sep 2019 16:18:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-	Thunderbird/60.9.0
+From: Mark Hatle <mark.hatle@kernel.crashing.org>
+Message-ID: <9022a7bc-7f91-dddb-5bfc-530b42a2d1bf@kernel.crashing.org>
+Date: Thu, 26 Sep 2019 18:04:35 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+	Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <625be95c-9f8f-adcc-2c27-179733423b59@mvista.com>
+In-Reply-To: <d6a33b15-e28a-b2b8-3359-8c4b38afe5eb@mvista.com>
 Subject: Re: bitbake-layers add-layer issue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -67,42 +33,111 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Sep 2019 23:19:03 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 26 Sep 2019 23:23:01 -0000
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
 
 
-On 9/26/2019 4:12 PM, Jeremy A. Puhlman wrote:
->
->>> This is what you get on thud.
->>>
->>> [cluge@jptest01 build]$ bitbake-layers add-layer 
->>> ../meta-openembedded/meta-python/
->>> NOTE: Starting bitbake server...
->>> [cluge@jptest01 build]$ bitbake-layers add-layer 
->>> ../meta-openembedded/meta-oe/
->>> NOTE: Starting bitbake server...
->> Ya, the dredded circular dependency.  I thought you could add them 
->> both at the
->> same time to resolve this.  (You can via the layer index mechanism at 
->> least..)
->> I believe the circular dependency has been resolved in master.)
+On 9/26/19 4:00 PM, Jeremy A. Puhlman wrote:
+> 
+> 
+> On 9/25/2019 1:38 PM, Grzegorz Heldt wrote:
+>> Hello.
 >>
->> --Mark
->
-> I haven't looked at warrior, but thud its not circular at least when 
-> it comes to layer depends(yeah it think
-> there is meta-oe content that can depend on meta-python). If you 
-> reverse the two, it works just fine.
->
-Yeah the its still the same with warrior. You just need to reorder adds, 
-if doing it one at a time. However, you
-are correct you can add them at the same time on the same line.
+>> To setup my projects im usually using bash scripts like that performs
+>> following steps:
+>>
+>> -------------------------------
+>> wiesniak@desk:~/projects/yocto-rasp/poky/build/conf$ cat ../../../setup
+>> #!/bin/bash
+>>
+>> BRANCH=warrior
+>> git clone git://git.yoctoproject.org/meta-raspberrypi
+>> <http://git.yoctoproject.org/meta-raspberrypi> -b $BRANCH
+>> git clone git://git.yoctoproject.org/poky <http://git.yoctoproject.org/poky>
+>> -b $BRANCH
+>> git clone git://git.openembedded.org/meta-openembedded
+>> <http://git.openembedded.org/meta-openembedded> -b $BRANCH
+>>
+>> cd poky
+>> . oe-init-build-env
+>> bitbake-layers add-layer ../../meta-raspberrypi/
+>> bitbake-layers add-layer ../../meta-openembedded/meta-python/
+>> bitbake-layers add-layer ../../meta-openembedded/meta-oe/
+>> bitbake-layers add-layer ../../meta-openembedded/meta-multimedia/
+>> bitbake-layers add-layer ../../meta-openembedded/meta-networking/
+>>
+>> echo INHERIT += \"rm_work\" >> conf/local.conf
+>> echo DL_DIR = \"/home/yocto-downloads\" >> conf/local.conf
+>>
+> You need to add meta-oe before meta-python since meta-python depends on it. Once
+> meta-python is added bitbake the next add
+> fail because it cannot satisfy the meta-oe requirement. The error is not really
+> helpful.
+> 
+> This is what you get on thud.
+> 
+> [cluge@jptest01 build]$ bitbake-layers add-layer ../meta-openembedded/meta-python/
+> NOTE: Starting bitbake server...
+> [cluge@jptest01 build]$ bitbake-layers add-layer ../meta-openembedded/meta-oe/
+> NOTE: Starting bitbake server...
 
--- 
-Jeremy A. Puhlman
-jpuhlman@mvista.com
+Ya, the dredded circular dependency.  I thought you could add them both at the
+same time to resolve this.  (You can via the layer index mechanism at least..)
+I believe the circular dependency has been resolved in master.)
 
+--Mark
+
+> Traceback (most recent call last):
+>   File
+> "/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/bin/bitbake-layers",
+> line 103, in <module>
+>     ret = main()
+>   File
+> "/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/bin/bitbake-layers",
+> line 71, in main
+>     tinfoil.prepare(True)
+>   File
+> "/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/tinfoil.py",
+> line 418, in prepare
+>     self.run_command('parseConfiguration')
+>   File
+> "/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/tinfoil.py",
+> line 476, in run_command
+>     raise TinfoilCommandFailed(result[1])
+> bb.tinfoil.TinfoilCommandFailed: Traceback (most recent call last):
+>   File
+> "/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/command.py",
+> line 84, in runCommand
+>     result = command_method(self, commandline)
+>   File
+> "/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/command.py",
+> line 285, in parseConfiguration
+>     command.cooker.parseConfiguration()
+>   File
+> "/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/cooker.py",
+> line 438, in parseConfiguration
+>     self.handleCollections(self.data.getVar("BBFILE_COLLECTIONS"))
+>   File
+> "/local/cluge/builds/2.6/x86-generic-64-4.19-2.6-cgx/layers/poky/bitbake/lib/bb/cooker.py",
+> line 1232, in handleCollections
+>     raise CollectionError("Errors during parsing layer configuration")
+> bb.cooker.CollectionError: Errors during parsing layer configuration
+>>
+>>
+>> <http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=emailclient>
+>> 	Virus-free. www.avg.com
+>> <http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=emailclient>
+>>
+>>
+>> <#DAB4FAD8-2DD7-40BB-A1B8-4E2AA1F9FDF2>
+>>
+> 
+> -- 
+> Jeremy A. Puhlman
+> jpuhlman@mvista.com
+> 
+> 
 
