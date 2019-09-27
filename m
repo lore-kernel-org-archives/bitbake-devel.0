@@ -1,57 +1,103 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io1-f66.google.com (mail-io1-f66.google.com
-	[209.85.166.66])
-	by mail.openembedded.org (Postfix) with ESMTP id D28847F347
+Return-Path: <akuster@mvista.com>
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com
+	[209.85.215.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 8ED7F7F359
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Sep 2019 13:35:45 +0000 (UTC)
-Received: by mail-io1-f66.google.com with SMTP id q1so16444252ion.1
+	Fri, 27 Sep 2019 15:17:22 +0000 (UTC)
+Received: by mail-pg1-f195.google.com with SMTP id o10so3673919pgs.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Sep 2019 06:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:subject:to:references:message-id:date:user-agent:mime-version
-	:in-reply-to:content-transfer-encoding:content-language;
-	bh=qQPOnIbvgAMZeiBIwXLxYFmlF0Ko3v/UEfNR3Ut4kzI=;
-	b=V2q+KOMvmxUfCP6233t008ngh6JCOJ2zHwyB8Q4mN2iO1FmV3/f0GvxVFinR9usqbs
-	zn7UVbRpOXJCf1HI0kWnkW73XLHI8/t2fSZYPEZylno1sdlbLYUjT/7O0Ed4JvqZIy0p
-	ZPjy+HqwrZyqQKcOlmd069ICi5R99AonwcZJnEuGWYPhaTZyozh9EL1jdu+TNz6W4m7w
-	KY5tfMMUhyH88FQ6/iBRiv3EE63TvONIKTLKd65rvqZbDHTb1X5kIhTSs9abJ59Q76l/
-	9K2H6Ouk0RZP5IgV0eghneCmKB84uwUTHBDXVI+o5V6/iKRixrqrUzFb1Ao25CKPUGmy
-	x4Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:subject:to:references:message-id:date
+	Fri, 27 Sep 2019 08:17:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=mvista-com.20150623.gappssmtp.com; s=20150623;
+	h=subject:to:references:from:openpgp:autocrypt:message-id:date
 	:user-agent:mime-version:in-reply-to:content-transfer-encoding
 	:content-language;
-	bh=qQPOnIbvgAMZeiBIwXLxYFmlF0Ko3v/UEfNR3Ut4kzI=;
-	b=bt77jH4/1Pz5QtQrgpIasQMd5ppfum22oTysVSpdkBWamGoHFQZ57Sk9zD5VqiAtpY
-	9Sxfbng9MR4hSt2a1TJaerBP9hqbeqRlCEWnCX0P5cR/AwbR3peSDzADMZeHIVZL3YKL
-	8HR+/n3iGGq8jPWo6iAfVtwmHsVKSfbGQltRPPpuGaL07nZnfaDjl5KB2wtUxBwiHDe9
-	AQybSNMB3M607cYe4nn1t3gAJt+JEcXxYBqwbkqAHbGCCNiJQzqKIUf2OB3ef0N5Htms
-	5hiyErd+47Colq+NPeuj9a+Mdv1NpCpQZ7zTBj1QF+psgaFmko4wSVrMrQ8oxjW+TgFz
-	gkxQ==
-X-Gm-Message-State: APjAAAXUYOgTFI/HyfDfIZQr0muHC9IrBFyZ3+l6Mg92RpP7W9N7HWGY
-	hWYU/zgYJzZeJ2DemNhM9laa5CQg
-X-Google-Smtp-Source: APXvYqxZlfY2ddZKtz6C8mpmYix2s8v8B0X04ame1821oofzYd1H8g9n26Y3/ivO0sjFviibVnbA+g==
-X-Received: by 2002:a02:9f02:: with SMTP id z2mr7834404jal.78.1569591345782;
-	Fri, 27 Sep 2019 06:35:45 -0700 (PDT)
-Received: from [10.30.197.57] ([204.77.163.55])
+	bh=Lw9HxdetfPlhKhg2X1bEjf1pIGcLdmdPU5YRUTWkq/g=;
+	b=rVNnXHlZAh7MzJn9eWCpfV6br1eFH/KZSo36hk0T3uVDnTNILVl5sZAL7pVX+lOch1
+	OPB44ZiZkDxA+fwBMYaNF9sdjYmFtYaUoz7Qcc/4EJiviTsH3i3gmnxgrV7yUki/5fo6
+	tEi1gqT9Jmsd86FeVUly0m0gU9c0r5sp4uXqlqAw4dmrnBkqs8YUJNjSIEK0je5zTTPb
+	NxArkND142I66/xZuVjDqtI2dBr0NrkSJ22jbyrA9BAMY3+GaB43TPEhxsKEMr24RM3g
+	1ZCMrdr4qxYuC6kG29JTWnPLnVwpMaUbEcw+VCZoi9o6WW+Ye6b4gJRNOnMv9dSqiFY5
+	F75A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
+	:message-id:date:user-agent:mime-version:in-reply-to
+	:content-transfer-encoding:content-language;
+	bh=Lw9HxdetfPlhKhg2X1bEjf1pIGcLdmdPU5YRUTWkq/g=;
+	b=bTYmIQKjgpX6u14K+KYSrn4CMmjf8PBzkN1y1Tn/i45raQ6invziGBjxEcxgdA+Rhx
+	GNP21H5yySaFHmq6nxH93YIFCqvEEgi4yDDfS7zGd0gFGxHXZMBWxMTV3mR/WBCLSWUu
+	GDBM9sejz3h5kfOWkzzaxMOCIcVuO6PSZ7Ivv35iBNYbs0jDbB5mXczLw8dJOFUVsNbL
+	nus9Om/xdT619aEkQFq4arfdARD/Lt6Mg95KZIFiV/6JkWHzr/dWqdfAum4DVnJlerqA
+	DrxvyeBVnCu4KQ6tUof4dc1dkPF8RgqTUN3C7iJzcauKfsgTcgH2xsR4B+brI1dpcqSD
+	lR7Q==
+X-Gm-Message-State: APjAAAX+Z0ZxY6cQ7gewvSq5FHJ4PJziBZaxap1ppu/L7RRieuZdv/CQ
+	asq0xqkRZA0WUZ2rRd5TlHU9b020ais=
+X-Google-Smtp-Source: APXvYqzvQAlCmxg64zWwN5DoFiDgZmBH1FWWAzVUpk6s0WHLoNizX4PvxaDg+2HkTk3EoI64mvTINQ==
+X-Received: by 2002:a63:3c08:: with SMTP id j8mr9584737pga.72.1569597442781;
+	Fri, 27 Sep 2019 08:17:22 -0700 (PDT)
+Received: from ?IPv6:2601:202:4180:a5c0:40e0:1cd6:848:14bf?
+	([2601:202:4180:a5c0:40e0:1cd6:848:14bf])
 	by smtp.gmail.com with ESMTPSA id
-	e15sm2150974ioe.33.2019.09.27.06.35.44
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Fri, 27 Sep 2019 06:35:45 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-References: <20190927123347.19276-1-richard.purdie@linuxfoundation.org>
-	<20190927123347.19276-5-richard.purdie@linuxfoundation.org>
-Message-ID: <22cd7d8c-27d9-d56e-4630-34ce3d8347fb@gmail.com>
-Date: Fri, 27 Sep 2019 08:35:44 -0500
+	w188sm5283269pgw.26.2019.09.27.08.17.21
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 27 Sep 2019 08:17:22 -0700 (PDT)
+To: Robert Yang <liezhi.yang@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+References: <cover.1569582663.git.liezhi.yang@windriver.com>
+	<a375d82d5287417286d50ebbfb3d6d2b386731cd.1569582663.git.liezhi.yang@windriver.com>
+From: akuster <akuster@mvista.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=akuster@mvista.com; prefer-encrypt=mutual; keydata=
+	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
+	8CS2NxU=
+Message-ID: <f759b566-62cc-1d43-ae9b-fcc5da364259@mvista.com>
+Date: Fri, 27 Sep 2019 08:17:20 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
 	Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190927123347.19276-5-richard.purdie@linuxfoundation.org>
-Subject: Re: [PATCH 5/9] siggen/runqueue: Fix signature mismatch issues
+In-Reply-To: <a375d82d5287417286d50ebbfb3d6d2b386731cd.1569582663.git.liezhi.yang@windriver.com>
+Subject: Re: [PATCH 2/2] net-snmp: Fix PACKAGECONFIG for perl
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,66 +110,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 Sep 2019 13:35:47 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
+X-List-Received-Date: Fri, 27 Sep 2019 15:17:22 -0000
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 
 
-On 9/27/19 7:33 AM, Richard Purdie wrote:
-> We need to set the setscene tasklist before we call into the
-> taskhash/unihash code else the behaviour is inconsistent.
+
+On 9/27/19 4:12 AM, Robert Yang wrote:
+> * Remove perl-lib since it had been removed by oe-core:
+>   commit 68552c353255188de3d5b42135360a30e7eac535
+>   Author: Alexander Kanavin <alex.kanavin@gmail.com>
+>   Date:   Sun Dec 2 12:46:37 2018 +0100
 >
-> Avoid reporting hashes for non setscene tasks since we'd never
-> query that.
+>       perl: remove the previous version of the recipe
 >
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+>   Now the files are in perl pacakge.
+>
+> * Fix perl paths when perl is enabled.
+>
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+
+Wrong mailing list
+
+- armin
 > ---
->   lib/bb/runqueue.py | 3 ++-
->   lib/bb/siggen.py   | 6 +++++-
->   2 files changed, 7 insertions(+), 2 deletions(-)
+>  meta-networking/recipes-protocols/net-snmp/net-snmp_5.8.bb | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 >
-> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-> index 65169931f1..29bfd65e0b 100644
-> --- a/lib/bb/runqueue.py
-> +++ b/lib/bb/runqueue.py
-> @@ -1162,6 +1162,8 @@ class RunQueueData:
->   
->           self.init_progress_reporter.next_stage()
->   
-> +        bb.parse.siggen.set_setscene_tasks(self.runq_setscene_tids)
-> +
->           # Iterate over the task list and call into the siggen code
->           dealtwith = set()
->           todeal = set(self.runtaskentries)
-> @@ -1173,7 +1175,6 @@ class RunQueueData:
->                       self.prepare_task_hash(tid)
->   
->           bb.parse.siggen.writeout_file_checksum_cache()
-> -        bb.parse.siggen.set_setscene_tasks(self.runq_setscene_tids)
->   
->           #self.dump_data()
->           return len(self.runtaskentries)
-> diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-> index 71fa018227..6207cbca30 100644
-> --- a/lib/bb/siggen.py
-> +++ b/lib/bb/siggen.py
-> @@ -455,7 +455,11 @@ class SignatureGeneratorUniHashMixIn(object):
->           report_taskdata = d.getVar('SSTATE_HASHEQUIV_REPORT_TASKDATA') == '1'
->           tempdir = d.getVar('T')
->           fn = d.getVar('BB_FILENAME')
-> -        key = fn + ':do_' + task + ':' + taskhash
-> +        tid = fn + ':do_' + task
-> +        key = tid + ':' + taskhash
-> +
-> +        if self.setscenetasks and tid not in self.setscenetasks:
-> +            return
+> diff --git a/meta-networking/recipes-protocols/net-snmp/net-snmp_5.8.bb b/meta-networking/recipes-protocols/net-snmp/net-snmp_5.8.bb
+> index 60b2b38..192b6b5 100644
+> --- a/meta-networking/recipes-protocols/net-snmp/net-snmp_5.8.bb
+> +++ b/meta-networking/recipes-protocols/net-snmp/net-snmp_5.8.bb
+> @@ -50,7 +50,7 @@ PACKAGECONFIG[libnl] = "--with-nl, --without-nl, libnl"
+>  PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,,"
+>  
+>  PACKAGECONFIG[perl] = "--enable-embedded-perl --with-perl-modules=yes, --disable-embedded-perl --with-perl-modules=no,\
+> -                       perl, perl perl-lib"
+> +                       perl,"
+>  PACKAGECONFIG[des] = "--enable-des,--disable-des"
+>  
+>  EXTRA_OECONF = "--enable-shared \
+> @@ -88,8 +88,8 @@ do_configure_prepend() {
+>  
+>      if [ "${HAS_PERL}" = "1" ]; then
+>          # this may need to be changed when package perl has any change.
+> -        cp -f ${STAGING_DIR_TARGET}/usr/lib*/perl/*/Config.pm ${WORKDIR}/
+> -        cp -f ${STAGING_DIR_TARGET}/usr/lib*/perl/*/Config_heavy.pl ${WORKDIR}/
+> +        cp -f ${STAGING_DIR_TARGET}/usr/lib*/perl?/*/Config.pm ${WORKDIR}/
+> +        cp -f ${STAGING_DIR_TARGET}/usr/lib*/perl?/*/*/Config_heavy.pl ${WORKDIR}/
+>          sed -e "s@libpth => '/usr/lib.*@libpth => '${STAGING_DIR_TARGET}/${libdir} ${STAGING_DIR_TARGET}/${base_libdir}',@g" \
+>              -e "s@privlibexp => '/usr@privlibexp => '${STAGING_DIR_TARGET}/usr@g" \
+>              -e "s@scriptdir => '/usr@scriptdir => '${STAGING_DIR_TARGET}/usr@g" \
+> @@ -190,7 +190,8 @@ ALLOW_EMPTY_${PN} = "1"
+>  ALLOW_EMPTY_${PN}-server = "1"
+>  ALLOW_EMPTY_${PN}-libs = "1"
+>  
+> -FILES_${PN}-perl-modules = "${libdir}/perl/*"
+> +FILES_${PN}-perl-modules = "${libdir}/perl?/*"
+> +RDEPENDS_${PN}-perl-modules = "perl"
+>  
+>  FILES_${PN}-libs = ""
+>  FILES_${PN}-mibs = "${datadir}/snmp/mibs"
 
-Would this be worth of a bb.fatal() (or perhaps a bb.warn()) to try and 
-discover issues sooner?
-
-
->   
->           # Sanity checks
->           cache_unihash = self.unitaskhashes.get(key, None)
 
