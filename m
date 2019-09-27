@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
-	[209.85.221.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 24B497F2B0
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com
+	[209.85.128.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 015C07F33F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Sep 2019 12:33:54 +0000 (UTC)
-Received: by mail-wr1-f65.google.com with SMTP id b9so2569884wrs.0
+	Fri, 27 Sep 2019 12:33:55 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id v17so5984266wml.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Sep 2019 05:33:55 -0700 (PDT)
+	Fri, 27 Sep 2019 05:33:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=tq6Kx2YNVHiFnFdWoQotNINDedBAmuRQSenMyxID4kE=;
-	b=aEvvNw8EIfEcVl+/kenQUph178dlnL1JLEyFZEHdP8zYVcinR1mDb8kRiVfsatt6rv
-	ihpwuETHghzg45vDE9r+AquUKD6Lb7aPPIB2PPFWeOmCdux6acETRkL1NC0mDpPMccN3
-	KXQb1cV11vxwIiXAqCZy5epK0hiZIOfYoUqk8=
+	bh=AlKjrsJMeAuUPf85PcZ+Hi9v+AjmMmF3DQkLd2O5Pwo=;
+	b=Lll1NLD/kLph8nvGuS7pmYLxSA3A2r7ZHE8797THXyLgaZm2+jf78rJoNLyakhcvbs
+	KqiRhHABErrRvrQ7TZVPSLskBpT2seYAazqcnK8VpmSCKUg7dj+40mLBikdluZcAan7E
+	CvmafFzelMctNyN6xU1V0cVgDCm2tl3ht0QXw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=tq6Kx2YNVHiFnFdWoQotNINDedBAmuRQSenMyxID4kE=;
-	b=nsXZdyAP6qfoLWaiBxjsql7AgJjrupg5fahE6Y92VgEk/jy9/S7vz/JCMrhZlUc1By
-	aSlW4UajvHiCoftrF6x3w2ILhBCYhU7IfC/sxLpaXBF1FsMiqHH8Vtuil/HLwxDA8kPe
-	4404ilvNvaX+2MPdfLmC/pyjTWQCMpMGaRrPjEwiDAGiHHT0Voyks3sv9SDc3xb4t0hr
-	NH9WWjkrRv/ZKIJ4Q2cahZzVarc20NhfBEVQXmJIVkcyvx4wbwQqJp7Lsa6ZMmjVMRHy
-	VRWJ46HphhCjGWEAq7dxFCWClYJS7XJQhzKGlRsNP61zA45/lhf1qbpvP8+r0VwprzHJ
-	4R2g==
-X-Gm-Message-State: APjAAAWvaULfPBDFYbswDtI9CbkLl+Ddy7e6cbBWX4YN2K8g5PmVCBu0
-	O0cL3+0AYMv8Zkrg8N1sW1sC607W7SQ=
-X-Google-Smtp-Source: APXvYqzMycTOnOb/BDym2RixyuIMtV1XnnEgB9BMUQzYBHHwHB0O4DEofyv39sIXjun0CxOEHu6nCQ==
-X-Received: by 2002:a5d:6951:: with SMTP id r17mr2688355wrw.208.1569587634624; 
-	Fri, 27 Sep 2019 05:33:54 -0700 (PDT)
+	bh=AlKjrsJMeAuUPf85PcZ+Hi9v+AjmMmF3DQkLd2O5Pwo=;
+	b=n9k2OCZL7o+f4YjKN+7eLN/E2C5erUh1ajAjp1hG+6JTAaqN4vPA+D+Vd8vCgdSiuI
+	v4dhwutJFwbDjoxvXORUBvyaP6dZKtr+YVDGGJmnSOc8uhn/upmCVnuKYNa5QLuWpwR8
+	X1SgDd0VhlM8mIqtjxlOv0jXkoEX+whGJ9uduKpIcltEa0dSSlBBiQ+WdITV4vdPdxBJ
+	2W556WGFvQKSfcRCngrfN5BzNbwIz+ZqTYMMBMELRaZ71l6Xt2jaepwkjIMR8KJQAE5/
+	Xm0UejMx/U5o7F1lpH0ANKUudg0iOqHYonW4kDDdKZDLkCnT/AF++NEGqqapApHQg2B5
+	/7hg==
+X-Gm-Message-State: APjAAAWq+0tM7OnTfjWP/RfujHqV1XALz9SULIOm+wCrmcYgA/gr42TS
+	upfEv+Ad68EuLvl9dfIEfFzY+1/o6ck=
+X-Google-Smtp-Source: APXvYqzLbtld0QxNsfoHO1CcCWVGJxqBObNf/Osz3vTvPlL6ZqrnfcpUkE9zP2ljJxezAkpnMG3dig==
+X-Received: by 2002:a1c:1a45:: with SMTP id a66mr6939460wma.102.1569587636348; 
+	Fri, 27 Sep 2019 05:33:56 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	g73sm6543031wme.10.2019.09.27.05.33.53
+	g73sm6543031wme.10.2019.09.27.05.33.55
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 27 Sep 2019 05:33:54 -0700 (PDT)
+	Fri, 27 Sep 2019 05:33:55 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 27 Sep 2019 13:33:44 +0100
-Message-Id: <20190927123347.19276-6-richard.purdie@linuxfoundation.org>
+Date: Fri, 27 Sep 2019 13:33:46 +0100
+Message-Id: <20190927123347.19276-8-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190927123347.19276-1-richard.purdie@linuxfoundation.org>
 References: <20190927123347.19276-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 6/9] siggen: Avoid writing misleading sigdata files
+Subject: [PATCH 8/9] runqueue: Small performance optimisation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,39 +58,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 Sep 2019 12:33:54 -0000
+X-List-Received-Date: Fri, 27 Sep 2019 12:33:56 -0000
 Content-Transfer-Encoding: 8bit
 
-Use the unihash in the output filename of sigdata files else the contents
-of stamp directories is misleading. Write the unihash into the singature to
-make it clear what happened.
+A minor performance optmisation to keep lists smaller when running large
+builds. We can do this since once a task has been built, we don't need
+to worry about it. This improves a major bottleneck that shows up on
+performance profile charts in dryruns.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/siggen.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/bb/runqueue.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 6207cbca30..90f0926f25 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -268,7 +268,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             sigfile = stampbase
-             referencestamp = runtime[11:]
-         elif runtime and tid in self.taskhash:
--            sigfile = stampbase + "." + task + ".sigdata" + "." + self.taskhash[tid]
-+            sigfile = stampbase + "." + task + ".sigdata" + "." + self.get_unihash(tid)
-         else:
-             sigfile = stampbase + "." + task + ".sigbasedata" + "." + self.basehash[tid]
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 31de3ed1cf..18049436fd 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -207,6 +207,8 @@ class RunQueueScheduler(object):
  
-@@ -296,6 +296,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             for dep in data['runtaskdeps']:
-                 data['runtaskhashes'][dep] = self.get_unihash(dep)
-             data['taskhash'] = self.taskhash[tid]
-+            data['unihash'] = self.get_unihash(tid)
+     def newbuildable(self, task):
+         self.buildable.add(task)
++        # Once tasks are running we don't need to worry about them again
++        self.buildable.difference_update(self.rq.runq_running)
  
-         taint = self.read_taint(fn, task, referencestamp)
-         if taint:
+     def removebuildable(self, task):
+         self.buildable.remove(task)
 -- 
 2.20.1
 
