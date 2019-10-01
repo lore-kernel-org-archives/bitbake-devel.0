@@ -1,34 +1,25 @@
-Return-Path: <houssem.chaabani@sofia-technologies.com>
-X-Greylist: delayed 8400 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 30 Sep 2019 16:57:49 UTC
-Received: from 8.mo7.mail-out.ovh.net (8.mo7.mail-out.ovh.net [46.105.77.114])
-	by mail.openembedded.org (Postfix) with ESMTP id A7FEA7F2FA
+Return-Path: <david.reyna@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 484797DDCC
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Sep 2019 16:57:49 +0000 (UTC)
-Received: from player157.ha.ovh.net (unknown [10.108.57.38])
-	by mo7.mail-out.ovh.net (Postfix) with ESMTP id 0681B13514A
+	Tue,  1 Oct 2019 23:19:15 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x91NJFBZ007986
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Sep 2019 16:29:54 +0200 (CEST)
-Received: from RCM-web1.webmail.mail.ovh.net (unknown [41.226.168.190])
-	(Authenticated sender: houssem.chaabani@sofia-technologies.com)
-	by player157.ha.ovh.net (Postfix) with ESMTPSA id B4835A5466B2
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Sep 2019 14:29:54 +0000 (UTC)
+	Tue, 1 Oct 2019 16:19:16 -0700
+Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.209.225) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server
+	(TLS) id 14.3.468.0; Tue, 1 Oct 2019 16:19:15 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 1 Oct 2019 16:17:42 -0700
+Message-ID: <cover.1569971660.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Date: Mon, 30 Sep 2019 15:29:54 +0100
-From: houssem.chaabani@sofia-technologies.com
-To: bitbake-devel@lists.openembedded.org
-Message-ID: <4b8fe9596d1e1dae1f37cca59d71b113@sofia-technologies.com>
-X-Sender: houssem.chaabani@sofia-technologies.com
-User-Agent: Roundcube Webmail/1.3.10
-X-Originating-IP: 41.226.168.190
-X-Webmail-UserID: houssem.chaabani@sofia-technologies.com
-X-Ovh-Tracer-Id: 1252563647244634430
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrgedvgdejgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecu
-X-Mailman-Approved-At: Tue, 01 Oct 2019 21:28:02 +0000
-Subject: error while building SPB228 USB driver
+X-Originating-IP: [147.11.209.225]
+Subject: [PATCH 0/2] toaster: cummulative 100119 patch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,34 +32,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 30 Sep 2019 16:57:49 -0000
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 01 Oct 2019 23:19:15 -0000
+Content-Type: text/plain
 
-Hi,
+From: David Reyna <David.Reyna@windriver.com>
 
-I am adding SPB228 driver to an raspberry image and a got an error while 
-compiling:
+Toaster cummulative patch October 01, 2019
+  [YOCTO #13385] toaster: issues in import layer when clicking 'add layer'
+  [YOCTO #13386]toaster: improve warnings when adding dependency to packages
 
-ERROR: linux-sdio-driver-228-1.0-r0 do_compile: oe_runmake failed
-ERROR: linux-sdio-driver-228-1.0-r0 do_compile: Function failed: 
-do_compile (log file is located at 
-/home/houssem/poky/build/tmp/work/raspberrypi3-poky-linux-gnueabi/linux-sdio-driver-228/1.0-r0/temp/log.do_compile.7259)
-ERROR: Logfile of failure stored in: 
-/home/houssem/poky/build/tmp/work/raspberrypi3-poky-linux-gnueabi/linux-sdio-driver-228/1.0-r0/temp/log.do_compile.7259
-.
-.
-.
-.
-ERROR: Task 
-(/home/houssem/meta-spb228-sdio/recipes-kernel/spb228-sdio/linux-sdio-driver-228.bb:do_compile) 
-failed with exit code '1'
+The following changes since commit a73cbe649af5e988eddb4a35b81011cb482d7480:
 
+  bitbake: siggen: Remove full path from unitaskhashes keys (2019-09-30 17:23:35 +0100)
 
+are available in the git repository at:
 
-if there is a solution it will be very helpful.
+  git://git.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/toaster_cummulative_100119
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=dreyna/submit/dreyna/toaster/toaster_cummulative_100119
 
-Best regards
-Houssem
+David Reyna (2):
+  toaster: issues in import layer when clicking 'add layer'
+  toaster: improve warnings when adding dependency to packages
+
+ lib/bb/ui/buildinfohelper.py                    | 10 ++++++++++
+ lib/toaster/toastergui/static/js/importlayer.js | 12 ++++++++++--
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+-- 
+1.9.1
+
 
