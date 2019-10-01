@@ -1,27 +1,27 @@
 Return-Path: <david.reyna@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 17A9F7ED4E
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id BD1FF7ED4E
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue,  1 Oct 2019 23:19:30 +0000 (UTC)
 Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
 	[147.11.189.41])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x91NJVN1007990
+	by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id x91NJVg7014456
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 1 Oct 2019 16:19:31 -0700
+	Tue, 1 Oct 2019 16:19:32 -0700 (PDT)
 Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.209.225) by
 	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.468.0; Tue, 1 Oct 2019 16:19:24 -0700
+	(TLS) id 14.3.468.0; Tue, 1 Oct 2019 16:19:31 -0700
 From: David Reyna <david.reyna@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 1 Oct 2019 16:17:50 -0700
-Message-ID: <247eb8a652145bddf9703718b1c068ef0502ba06.1569971660.git.David.Reyna@windriver.com>
+Date: Tue, 1 Oct 2019 16:17:51 -0700
+Message-ID: <daa7bf8718a4b82f82c7a2b907ba4bcdbd8eff45.1569971660.git.David.Reyna@windriver.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1569971660.git.David.Reyna@windriver.com>
 References: <cover.1569971660.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [147.11.209.225]
-Subject: [PATCH 1/2] toaster: issues in import layer when clicking 'add layer'
+Subject: [PATCH 2/2] toaster: improve warnings when adding dependency to packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,72 +39,45 @@ Content-Type: text/plain
 
 From: David Reyna <David.Reyna@windriver.com>
 
-There were three issues in this one bug.
-  1) The Add Layer button allows empty layers
-  2) The internal XHR URL was wrong, which caused a hidden AJAX error
-     and did not correctly complete the action nor disable the button
-     after an add.
-  3) There was a race condition between typing in the dependent layer
-     select text box (which would normally disable the add button), and
-     the typeahead pull-down selection (which would normally enable the
-     add button). This forced the user to select the typedahead layer twice.
+Some of the objects that bitbake reports to Toaster as dependencies to packages
+are known objects that are not packages, for example library files and kernel
+modules. In the Toaster logs, mark these as "Info" instead of "Warning".
 
-[YOCTO #13385]
+[YOCTO #13386]
 
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/toastergui/static/js/importlayer.js | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ lib/bb/ui/buildinfohelper.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
-index 2964839..8e2032d 100644
---- a/lib/toaster/toastergui/static/js/importlayer.js
-+++ b/lib/toaster/toastergui/static/js/importlayer.js
-@@ -17,11 +17,15 @@ function importLayerPageInit (ctx) {
-   var currentLayerDepSelection;
-   var validLayerName = /^(\w|-)+$/;
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index f2151c2..5cbca97 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -646,6 +646,9 @@ class ORMWrapper(object):
+                 Target_Installed_Package.objects.create(target = target_obj, package = packagedict[p]['object'])
  
-+  /* Catch 'disable' race condition between type-ahead started and "input change" */
-+  var typeAheadStarted = 0;
-+
-   libtoaster.makeTypeahead(layerDepInput,
-                            libtoaster.ctx.layersTypeAheadUrl,
-                            { include_added: "true" }, function(item){
-     currentLayerDepSelection = item;
-     layerDepBtn.removeAttr("disabled");
-+    typeAheadStarted = 1;
-   });
+         packagedeps_objs = []
++        pattern_so = re.compile(r'.*\.so(\.\d*)?$')
++        pattern_lib = re.compile(r'.*\-suffix(\d*)?$')
++        pattern_ko = re.compile(r'^kernel-module-.*')
+         for p in packagedict:
+             for (px,deptype) in packagedict[p]['depends']:
+                 if deptype == 'depends':
+@@ -654,6 +657,13 @@ class ORMWrapper(object):
+                     tdeptype = Package_Dependency.TYPE_TRECOMMENDS
  
-   layerDepInput.on("typeahead:select", function(event, data){
-@@ -34,7 +38,10 @@ function importLayerPageInit (ctx) {
-   // disable the "Add layer" button when the layer input typeahead is empty
-   // or not in the typeahead choices
-   layerDepInput.on("input change", function(){
--    layerDepBtn.attr("disabled","disabled");
-+    if (0 == typeAheadStarted) {
-+      layerDepBtn.attr("disabled","disabled");
-+    }
-+    typeAheadStarted = 0;
-   });
- 
-   /* We automatically add "openembedded-core" layer for convenience as a
-@@ -50,6 +57,7 @@ function importLayerPageInit (ctx) {
-   });
- 
-   layerDepBtn.click(function(){
-+    typeAheadStarted = 0;
-     if (currentLayerDepSelection == undefined)
-       return;
- 
-@@ -77,7 +85,7 @@ function importLayerPageInit (ctx) {
- 
-     $("#layer-deps-list").append(newLayerDep);
- 
--    libtoaster.getLayerDepsForProject(currentLayerDepSelection.layerdetailurl,
-+    libtoaster.getLayerDepsForProject(currentLayerDepSelection.xhrLayerUrl,
-                                       function (data){
-         /* These are the dependencies of the layer added as a dependency */
-         if (data.list.length > 0) {
+                 try:
++                    # Skip known non-package objects like libraries and kernel modules
++                    if pattern_so.match(px) or pattern_lib.match(px):
++                        logger.info("Toaster does not add library file dependencies to packages (%s,%s)", p, px)
++                        continue
++                    if pattern_ko.match(px):
++                        logger.info("Toaster does not add kernel module dependencies to packages (%s,%s)", p, px)
++                        continue
+                     packagedeps_objs.append(Package_Dependency(
+                         package = packagedict[p]['object'],
+                         depends_on = packagedict[px]['object'],
 -- 
 1.9.1
 
