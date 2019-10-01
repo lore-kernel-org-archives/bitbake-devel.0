@@ -1,50 +1,59 @@
-Return-Path: <grzegorz.heldt@gmail.com>
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com
-	[209.85.217.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 8F34E7F280
+Return-Path: <oobitots@cisco.com>
+X-Greylist: delayed 425 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 01 Oct 2019 11:30:42 UTC
+Received: from rcdn-iport-6.cisco.com (rcdn-iport-6.cisco.com [173.37.86.77])
+	by mail.openembedded.org (Postfix) with ESMTP id DC6637F26A
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 28 Sep 2019 04:04:10 +0000 (UTC)
-Received: by mail-vs1-f45.google.com with SMTP id w195so3234040vsw.11
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Sep 2019 21:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to; 
-	bh=HDqbY4QCfodYu3ISZGs2jYSW2+VH5pnncZkXaVgTRZY=;
-	b=irXHOdYQ6Acc2tsXOkGhMKpwquIX0+c1cQiqsE/oXr43J+2/y+qdpbuml8AMq7Vr6O
-	thrwfPSvb5CtwHIYAW5Jt6j6/qB27fMHIwe0HtUyEWq6a/a4ycHpQTmS+DmhesgfhkBl
-	B3W8OXkoC4UPikVfn/bbkQWiaDPDRJ+dgJ3QmFtC+lExTyhN5sIUPlCVo/ZlkhtBSRex
-	MF+nkdgAbN1T3IJeYCpNKneKJIS2DcA/5eVLkHf9w674U62TEym9YCaqK4EBr0G2ibiq
-	J0kdMCaawzWrExG74V6fNtIZCjYCWI7peWn6551C0zj/YbZ0bMMNQK2YV6kiRYd8jtyo
-	GlNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to;
-	bh=HDqbY4QCfodYu3ISZGs2jYSW2+VH5pnncZkXaVgTRZY=;
-	b=GMT4oQZjb8Fjp3+zDckgy0JBVU85PaIJh/TPmbwG/IMSLFHyCgDrFYbDcCUVWru+GU
-	5Rkft2ha5T0ZgBAYvshQLuTxccHYL2neILbeZJIv5T2jQwOVYzF3ZlmAbz+u0RcszlvV
-	avWBROh5ztOqf9RS9JibVfeLBYC14WIr9kEZuQgCLRGvmzzAgbmOMa0+BMRF0UUTXy4C
-	ZPcxkk8tOAEXhChTCJNiakql2UHo7K9BKf7vl+SdjTKDELh4hFJNL9Ij9Bpe0U+389cy
-	Y1Tf9l7JcE95vQumG75eFL9Jaddu8fBs8NJfKYxR8yAA1A4Tj1tGaCA3hnQyw7iUM8/W
-	3mKg==
-X-Gm-Message-State: APjAAAWmnOM/l2w5XkcTZNXDyfazMQ77k2n566QqW6Qy+0pbjVgbpQn3
-	J3kG7V2yZopSvabcP3QB9JoPYktyuYBc9NMmiE99vNX2
-X-Google-Smtp-Source: APXvYqw8LWFYcKiNN2YxZJseyPEWjRq9/LN1Gue1xrSWZ4uE1PQQL2wXrcvUxD60DJa9W2138BhcJvvCtDqBzKEr0jc=
-X-Received: by 2002:a67:6404:: with SMTP id y4mr4371671vsb.120.1569643451020; 
-	Fri, 27 Sep 2019 21:04:11 -0700 (PDT)
+	Tue,  1 Oct 2019 11:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=cisco.com; i=@cisco.com; l=6244; q=dns/txt; s=iport;
+	t=1569929444; x=1571139044;
+	h=from:to:cc:subject:date:message-id:mime-version;
+	bh=CnY/R7OqgQBGD5unou23Ni9WgMo8UXMx/UzViU/WVqE=;
+	b=HvLgRchqQf7reYuMzrnfGXuu394Pp3OYr2PnXUrko00HGxFG2d4r/U1H
+	1CEmTNLL17cnNCiEoHUUiZEbZcmSgOn44UJJK70RJIokZMgdzS11m30sK
+	kbl6LexuFLDgDEFYEGtF1nO7rpsISzIy0hbuhkUCtQa0GnnxcQvmpuoqW w=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0B7AAAbNpNd/4sNJK1mGwEBAQEDAQE?=
+	=?us-ascii?q?BDAMBAQGBVgMBAQELAYEbgQKBcjSaEQEBjiCICQkBAQEMAQEvAQGEQIIwIzc?=
+	=?us-ascii?q?GDgIDCQEBBAEBAQIBBQRthS4LhXlSEgEpNCMfCAQOIIQlba4AgXQzikGBNAG?=
+	=?us-ascii?q?MDRiBf48KBIxahhOCJYEDlxAKHYIFlREbmTmOI5kpAhEVgTI2IyqBLnAVgyh?=
+	=?us-ascii?q?PEBSBWhiOI0OQe4EjAQE?=
+X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
+	d="scan'208,217";a="640053530"
+Received: from alln-core-6.cisco.com ([173.36.13.139])
+	by rcdn-iport-6.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA;
+	01 Oct 2019 11:23:37 +0000
+Received: from XCH-RTP-004.cisco.com (xch-rtp-004.cisco.com [64.101.220.144])
+	by alln-core-6.cisco.com (8.15.2/8.15.2) with ESMTPS id
+	x91BNbnw005031
+	(version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>; Tue, 1 Oct 2019 11:23:37 GMT
+Received: from xch-rtp-004.cisco.com (64.101.220.144) by XCH-RTP-004.cisco.com
+	(64.101.220.144) with Microsoft SMTP Server (TLS) id 15.0.1473.3;
+	Tue, 1 Oct 2019 07:23:36 -0400
+Received: from xch-rtp-004.cisco.com ([64.101.220.144]) by
+	XCH-RTP-004.cisco.com ([64.101.220.144]) with mapi id 15.00.1473.003;
+	Tue, 1 Oct 2019 07:23:36 -0400
+From: "Oleksiy Obitotskyi -X (oobitots - GLOBALLOGIC INC@Cisco)" <oobitots@cisco.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: nativesdk dependencies on shared packages
+Thread-Index: AQHVeEK7FV2xM6uL60KN9SR+VGk6vw==
+Date: Tue, 1 Oct 2019 11:23:36 +0000
+Message-ID: <1569929018481.70045@cisco.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.63.15.140]
 MIME-Version: 1.0
-References: <CAK5ws+EfD=A3ROQmZe9A0Enb-83NcrW_9er2BB7-e9N1H=xmEQ@mail.gmail.com>
-	<d6a33b15-e28a-b2b8-3359-8c4b38afe5eb@mvista.com>
-	<9022a7bc-7f91-dddb-5bfc-530b42a2d1bf@kernel.crashing.org>
-	<625be95c-9f8f-adcc-2c27-179733423b59@mvista.com>
-	<d7e77675-23ff-ed76-026a-e7c842a0f8bb@mvista.com>
-In-Reply-To: <d7e77675-23ff-ed76-026a-e7c842a0f8bb@mvista.com>
-From: Grzegorz Heldt <grzegorz.heldt@gmail.com>
-Date: Sat, 28 Sep 2019 06:03:59 +0200
-Message-ID: <CAK5ws+EXCgv_wJKv3epebvyuJe6WXrUY+2R=2W2jAitYGBp-VQ@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-X-Mailman-Approved-At: Mon, 30 Sep 2019 09:00:29 +0000
-Subject: Re: bitbake-layers add-layer issue
+X-Outbound-SMTP-Client: 64.101.220.144, xch-rtp-004.cisco.com
+X-Outbound-Node: alln-core-6.cisco.com
+Cc: "Taras Kondratiuk \(takondra\)" <takondra@cisco.com>,
+	"Ruslan Bilovol -X \(rbilovol - GLOBALLOGIC INC at Cisco\)"
+	<rbilovol@cisco.com>
+Subject: nativesdk dependencies on shared packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,56 +66,167 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 28 Sep 2019 04:04:10 -0000
-Content-Type: multipart/alternative; boundary="00000000000052777b059395185c"
+X-List-Received-Date: Tue, 01 Oct 2019 11:30:43 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_156992901848170045ciscocom_"
 
---00000000000052777b059395185c
-Content-Type: text/plain; charset="UTF-8"
-
->
->
-> Yeah the its still the same with warrior. You just need to reorder adds,
-> if doing it one at a time. However, you
-> are correct you can add them at the same time on the same line.
->
-> --
-> Jeremy A. Puhlman
-> jpuhlman@mvista.com
->
->
-I have learnt three things:
-
-1. Dependencies are checked during "bitbake-layers add-layer", I thought it
-only adds layer to bblayers.conf
-2. I can add many layers using single "bitbake-layers add-layer" command.
-3. bitbake-devel group is very friendly and helpful.
-
-Best Regards
-Grzegorz Heldt.
-
---00000000000052777b059395185c
-Content-Type: text/html; charset="UTF-8"
+--_000_156992901848170045ciscocom_
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_quote"><blockquote class=3D"gmail_quot=
-e" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204)=
-;padding-left:1ex"><br>
-Yeah the its still the same with warrior. You just need to reorder adds, <b=
-r>
-if doing it one at a time. However, you<br>
-are correct you can add them at the same time on the same line.<br>
-<br>
--- <br>
-Jeremy A. Puhlman<br>
-<a href=3D"mailto:jpuhlman@mvista.com" target=3D"_blank">jpuhlman@mvista.co=
-m</a><br>
-<br>
-</blockquote></div><br clear=3D"all"><div>I have learnt three things:</div>=
-<div><br></div><div>1. Dependencies are checked during &quot;bitbake-layers=
- add-layer&quot;, I thought=C2=A0it only adds layer to bblayers.conf</div><=
-div>2. I can add many layers using single &quot;bitbake-layers add-layer&qu=
-ot; command.</div><div>3. bitbake-devel group is very friendly and helpful.=
-</div><div><br></div><div>Best Regards</div><div>Grzegorz Heldt.</div><div>=
-<br></div><div><br></div><br></div>
+Hi,
 
---00000000000052777b059395185c--
+
+We have situation when MACHINE value change affect nativesdk packages (thud=
+ but the same situation was on krogoth).
+
+MACHINE=3D"x86" bitbake nativesdk-<package> -> build package and dependenci=
+es x86
+MACHINE=3D"x86-64" bitbake nativesdk-<package> -> build package and depende=
+ncies for x86-64
+and finally
+MACHINE=3D"x86" bitbake nativesdk-<cpackage> -> a lot of setscene functons =
+executed for nativesdk packages
+
+MACHINE value affects BASELIB. For x86-64 we override BASELIB =3D lib64.
+For x86 BASELIB =3D lib. baselib for cross/natviesdk ramains unchanged (lib=
+).
+
+# $BASELIB
+#   set <>/openembedded-core/meta/conf/bitbake.conf:12
+#     "lib"
+# pre-expansion value:
+#   "lib"
+BASELIB=3D"lib"
+
+# $BASELIB [2 operations]
+#   set <>/openembedded-core/meta/conf/bitbake.conf:12
+#     "lib"
+#   set <>/x86-64-platforms.inc:22
+#     "lib64"
+# pre-expansion value:
+#   "lib64"
+BASELIB=3D"lib64"
+
+Tracking dependencies shows that nativesdk-<package> depends on gcc-crosssd=
+k which depend on
+shared gcc-source package. And gcc-source tasks hash values (starting from =
+from gcc-source.do_patch) are different for
+x86 and x86-64 (due to baselib), so nativesdk-<package> task stamp signatur=
+e deps part depends on gcc-source tasks hash
+
+and also become different if we change MACHINE.
+
+
+Technically  it can be fixed with tweaking sstate_rundepfilter - but it's n=
+ot generic solution.
+
+Is there any way to avoid rebuilding nativesdk packages that depend on shar=
+ed packages (e.g. gcc-source)?
+
+
+Regards,
+
+Oleksiy
+
+--_000_156992901848170045ciscocom_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none"><!--P{margin-top:0;margin-b=
+ottom:0;} P{margin-top:0;margin-bottom:0;}--></style>
+</head>
+<body dir=3D"ltr" style=3D"font-size:12pt;color:#000000;background-color:#F=
+FFFFF;font-family:Calibri,Arial,Helvetica,sans-serif;">
+<p>Hi,</p>
+<p><br>
+</p>
+<p>We have situation when MACHINE value change affect nativesdk packages (t=
+hud but the same situation was on krogoth).<br>
+<br>
+MACHINE=3D&quot;x86&quot; bitbake nativesdk-&lt;package&gt; -&gt; build pac=
+kage and dependencies x86<br>
+MACHINE=3D&quot;x86-64&quot; bitbake nativesdk-&lt;package&gt; -&gt; build =
+package and dependencies for x86-64<br>
+and finally<br>
+MACHINE=3D&quot;x86&quot; bitbake nativesdk-&lt;cpackage&gt; -&gt; a lot of=
+ setscene functons executed for nativesdk packages<br>
+<br>
+MACHINE value affects BASELIB. For x86-64 we override BASELIB =3D lib64.<br=
+>
+For x86 BASELIB =3D lib. baselib for cross/natviesdk ramains unchanged (lib=
+).<br>
+<br>
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;"># $BASELIB=
+</span><br style=3D"font-family: &quot;Courier New&quot;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">#&nbsp;&nb=
+sp; set &lt;&gt;/openembedded-core/meta/conf/bitbake.conf:12</span><br styl=
+e=3D"font-family: &quot;Courier New&quot;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">#&nbsp;&nb=
+sp;&nbsp;&nbsp; &quot;lib&quot;</span><br style=3D"font-family: &quot;Couri=
+er New&quot;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;"># pre-expa=
+nsion value:</span><br style=3D"font-family: &quot;Courier New&quot;, monos=
+pace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">#&nbsp;&nb=
+sp; &quot;lib&quot;</span><br style=3D"font-family: &quot;Courier New&quot;=
+, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">BASELIB=3D=
+&quot;lib&quot;</span><br style=3D"font-family: &quot;Courier New&quot;, mo=
+nospace;">
+<br style=3D"font-family: &quot;Courier New&quot;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;"># $BASELIB=
+ [2 operations]</span><br style=3D"font-family: &quot;Courier New&quot;, mo=
+nospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">#&nbsp;&nb=
+sp; set &lt;&gt;/openembedded-core/meta/conf/bitbake.conf:12</span><br styl=
+e=3D"font-family: &quot;Courier New&quot;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">#&nbsp;&nb=
+sp;&nbsp;&nbsp; &quot;lib&quot;</span><br style=3D"font-family: &quot;Couri=
+er New&quot;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">#&nbsp;&nb=
+sp; set &lt;&gt;/x86-64-platforms.inc:22</span><br style=3D"font-family: &q=
+uot;Courier New&quot;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">#&nbsp;&nb=
+sp;&nbsp;&nbsp; &quot;lib64&quot;</span><br style=3D"font-family: &quot;Cou=
+rier New&quot;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;"># pre-expa=
+nsion value:</span><br style=3D"font-family: &quot;Courier New&quot;, monos=
+pace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">#&nbsp;&nb=
+sp; &quot;lib64&quot;</span><br style=3D"font-family: &quot;Courier New&quo=
+t;, monospace;">
+<span style=3D"font-family: &quot;Courier New&quot;, monospace;">BASELIB=3D=
+&quot;lib64&quot;</span><br>
+<br>
+Tracking dependencies shows that nativesdk-&lt;package&gt; depends on gcc-c=
+rosssdk which depend on<br>
+shared gcc-source package. And gcc-source tasks hash values (starting from =
+from gcc-source.do_patch) are different for<br>
+x86 and x86-64 (due to baselib), so nativesdk-&lt;package&gt; task stamp si=
+gnature deps part depends on gcc-source tasks hash
+</p>
+<p>and also become different if we change MACHINE.<br>
+</p>
+<p><br>
+</p>
+<p>Technically&nbsp; it can be fixed with tweaking sstate_rundepfilter - bu=
+t it's not generic solution.<br>
+</p>
+<p><br>
+Is there any way to avoid rebuilding nativesdk packages that depend on shar=
+ed packages (e.g. gcc-source)?</p>
+<p><br>
+</p>
+<p>Regards,</p>
+<p>Oleksiy<br>
+</p>
+</body>
+</html>
+
+--_000_156992901848170045ciscocom_--
