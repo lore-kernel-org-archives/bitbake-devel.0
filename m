@@ -1,27 +1,49 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id BD1FF7ED4E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
+	[209.85.128.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 3C5797EFD5
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Oct 2019 23:19:30 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id x91NJVg7014456
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Wed,  2 Oct 2019 09:28:55 +0000 (UTC)
+Received: by mail-wm1-f65.google.com with SMTP id f22so6177556wmc.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 1 Oct 2019 16:19:32 -0700 (PDT)
-Received: from ala-dreyna-lx3.corp.ad.wrs.com (147.11.209.225) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server
-	(TLS) id 14.3.468.0; Tue, 1 Oct 2019 16:19:31 -0700
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 1 Oct 2019 16:17:51 -0700
-Message-ID: <daa7bf8718a4b82f82c7a2b907ba4bcdbd8eff45.1569971660.git.David.Reyna@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1569971660.git.David.Reyna@windriver.com>
-References: <cover.1569971660.git.David.Reyna@windriver.com>
+	Wed, 02 Oct 2019 02:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=LHQJ/lR6f0W8kfSg7QAJUtTtsah8gs017uDrQGP3J1c=;
+	b=bdmq8SvAWukbV0mhpVAyBZ70I5V4CLrTah6F4T4TJVJSLEw2CpAn3ll2TLVk0LBV37
+	pXP3icMFhCy8IHUGviqr48wa2bpnpqJc7zcZKlx12tXd0k4m2ktSzrGePHPcVkiW+iwF
+	km17Pd8KdGuW+HWgZs0LDH849CyGYxIzfxQ1I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=LHQJ/lR6f0W8kfSg7QAJUtTtsah8gs017uDrQGP3J1c=;
+	b=h64NWr5/UmjmAiLcTsTWR38GA0mMrIodGEmKXmZOuPZvQL9fTspofHeymZDbYqkGrJ
+	gCAhKzt3SEU64DF1HGaxhJcAnqQva7FnOGtthXRUVxAy6A2k00k9t+iCJPKvIY6zbYiG
+	UK7+joJpfE6G3gqsW4qZVcKnqlDACpAv7oh79FTRVfjjL1cmitaVascbyXbqCzcPoa7o
+	5CvuNCZvUBJQ5tOMYdBwPg1YYpg138jnnYIZuJEiY5ML7AZg+0Ik10R1VIE1AYQqx6HO
+	oE7wBKYXKLOU70rroXjjJNc+sF6BHbk3wY6jVYNSSW3fm6GeBnNEd7BsgBwfnxaqLVz9
+	+vyA==
+X-Gm-Message-State: APjAAAUq8yEMM6A4nwtTt0Cfx5w2+48BFo5hO9GE7Hog+mrFTXXxD2/f
+	PjHWiuxJ7KaCO9lkwaMVaBVze1nY/Jw=
+X-Google-Smtp-Source: APXvYqyayOApSdlFUT6xiTpHSIWI+mFO3oLHVsdqeicL3jk9exSVqdfa1Z16xUOox7cGIGRr+ZrDTQ==
+X-Received: by 2002:a7b:c94a:: with SMTP id i10mr2168743wml.40.1570008535558; 
+	Wed, 02 Oct 2019 02:28:55 -0700 (PDT)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	u25sm5294414wml.4.2019.10.02.02.28.54
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Wed, 02 Oct 2019 02:28:55 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  2 Oct 2019 10:28:53 +0100
+Message-Id: <20191002092853.21251-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Originating-IP: [147.11.209.225]
-Subject: [PATCH 2/2] toaster: improve warnings when adding dependency to packages
+Subject: [PATCH] tests/runqueue: Fix hashserve shutdown race
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,51 +56,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 01 Oct 2019 23:19:30 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 02 Oct 2019 09:28:55 -0000
+Content-Transfer-Encoding: 8bit
 
-From: David Reyna <David.Reyna@windriver.com>
+The hashserve can delete its socket whilst the cleanup us happening leading to
+backtraces and test failures.
 
-Some of the objects that bitbake reports to Toaster as dependencies to packages
-are known objects that are not packages, for example library files and kernel
-modules. In the Toaster logs, mark these as "Info" instead of "Warning".
+Add code to avoid this race condition.
 
-[YOCTO #13386]
+[YOCTO #13542]
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/buildinfohelper.py | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ lib/bb/tests/runqueue.py | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index f2151c2..5cbca97 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -646,6 +646,9 @@ class ORMWrapper(object):
-                 Target_Installed_Package.objects.create(target = target_obj, package = packagedict[p]['object'])
+diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
+index 50b3392bc1..5e6439156d 100644
+--- a/lib/bb/tests/runqueue.py
++++ b/lib/bb/tests/runqueue.py
+@@ -12,6 +12,7 @@ import os
+ import tempfile
+ import subprocess
+ import sys
++import time
  
-         packagedeps_objs = []
-+        pattern_so = re.compile(r'.*\.so(\.\d*)?$')
-+        pattern_lib = re.compile(r'.*\-suffix(\d*)?$')
-+        pattern_ko = re.compile(r'^kernel-module-.*')
-         for p in packagedict:
-             for (px,deptype) in packagedict[p]['depends']:
-                 if deptype == 'depends':
-@@ -654,6 +657,13 @@ class ORMWrapper(object):
-                     tdeptype = Package_Dependency.TYPE_TRECOMMENDS
+ #
+ # TODO:
+@@ -257,6 +258,8 @@ class RunQueueTests(unittest.TestCase):
+                         'a1:package_write_ipk_setscene', 'a1:package_qa_setscene']
+             self.assertEqual(set(tasks), set(expected))
  
-                 try:
-+                    # Skip known non-package objects like libraries and kernel modules
-+                    if pattern_so.match(px) or pattern_lib.match(px):
-+                        logger.info("Toaster does not add library file dependencies to packages (%s,%s)", p, px)
-+                        continue
-+                    if pattern_ko.match(px):
-+                        logger.info("Toaster does not add kernel module dependencies to packages (%s,%s)", p, px)
-+                        continue
-                     packagedeps_objs.append(Package_Dependency(
-                         package = packagedict[p]['object'],
-                         depends_on = packagedict[px]['object'],
++            self.shutdown(tempdir)
++
+     @unittest.skipIf(sys.version_info < (3, 5, 0), 'Python 3.5 or later required')
+     def test_hashserv_double(self):
+         with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
+@@ -280,6 +283,7 @@ class RunQueueTests(unittest.TestCase):
+                         'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene']
+             self.assertEqual(set(tasks), set(expected))
+ 
++            self.shutdown(tempdir)
+ 
+     @unittest.skipIf(sys.version_info < (3, 5, 0), 'Python 3.5 or later required')
+     def test_hashserv_multiple_setscene(self):
+@@ -309,3 +313,11 @@ class RunQueueTests(unittest.TestCase):
+             for i in expected:
+                 self.assertEqual(tasks.count(i), 1, "%s not in task list once" % i)
+ 
++            self.shutdown(tempdir)
++
++    def shutdown(self, tempdir):
++        # Wait for the hashserve socket to disappear else we'll see races with the tempdir cleanup
++        while os.path.exists(tempdir + "/hashserve.sock"):
++            time.sleep(0.5)
++
++
 -- 
-1.9.1
+2.20.1
 
 
