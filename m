@@ -1,49 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
-	[209.85.128.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 3C5797EFD5
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
+	[209.85.221.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 4B4D17ECB9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Oct 2019 09:28:55 +0000 (UTC)
-Received: by mail-wm1-f65.google.com with SMTP id f22so6177556wmc.2
+	Wed,  2 Oct 2019 14:09:26 +0000 (UTC)
+Received: by mail-wr1-f52.google.com with SMTP id o18so19800724wrv.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Oct 2019 02:28:56 -0700 (PDT)
+	Wed, 02 Oct 2019 07:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=LHQJ/lR6f0W8kfSg7QAJUtTtsah8gs017uDrQGP3J1c=;
-	b=bdmq8SvAWukbV0mhpVAyBZ70I5V4CLrTah6F4T4TJVJSLEw2CpAn3ll2TLVk0LBV37
-	pXP3icMFhCy8IHUGviqr48wa2bpnpqJc7zcZKlx12tXd0k4m2ktSzrGePHPcVkiW+iwF
-	km17Pd8KdGuW+HWgZs0LDH849CyGYxIzfxQ1I=
+	bh=Lv0ORxeEbbH9Wiyrii7BGVC7hraMdjPF0UJ0yBKbTvs=;
+	b=LiZkbRIWnM7cNAzkaSZCs4EEmnNxdIDQfAVtj+CJt1KkROj2S3XQtn8zY/vOc0XG/0
+	d/3wLxu6AqrD6gCWmajw6rXIfuXCOYVRMrOGwHaZQ+AC6NMov1ktBfRl/WdU2MTrWRy7
+	O4cu1XaeLl2dC4sSAzvdrDp92gkvI1jMQgDPI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=LHQJ/lR6f0W8kfSg7QAJUtTtsah8gs017uDrQGP3J1c=;
-	b=h64NWr5/UmjmAiLcTsTWR38GA0mMrIodGEmKXmZOuPZvQL9fTspofHeymZDbYqkGrJ
-	gCAhKzt3SEU64DF1HGaxhJcAnqQva7FnOGtthXRUVxAy6A2k00k9t+iCJPKvIY6zbYiG
-	UK7+joJpfE6G3gqsW4qZVcKnqlDACpAv7oh79FTRVfjjL1cmitaVascbyXbqCzcPoa7o
-	5CvuNCZvUBJQ5tOMYdBwPg1YYpg138jnnYIZuJEiY5ML7AZg+0Ik10R1VIE1AYQqx6HO
-	oE7wBKYXKLOU70rroXjjJNc+sF6BHbk3wY6jVYNSSW3fm6GeBnNEd7BsgBwfnxaqLVz9
-	+vyA==
-X-Gm-Message-State: APjAAAUq8yEMM6A4nwtTt0Cfx5w2+48BFo5hO9GE7Hog+mrFTXXxD2/f
-	PjHWiuxJ7KaCO9lkwaMVaBVze1nY/Jw=
-X-Google-Smtp-Source: APXvYqyayOApSdlFUT6xiTpHSIWI+mFO3oLHVsdqeicL3jk9exSVqdfa1Z16xUOox7cGIGRr+ZrDTQ==
-X-Received: by 2002:a7b:c94a:: with SMTP id i10mr2168743wml.40.1570008535558; 
-	Wed, 02 Oct 2019 02:28:55 -0700 (PDT)
+	bh=Lv0ORxeEbbH9Wiyrii7BGVC7hraMdjPF0UJ0yBKbTvs=;
+	b=LCPNy7aufhHF/tzRidg5UkoJ5Cdo1anzUUTbXslCtwfhW8LtoIyWkxcC3l7P3Qng5T
+	FXOhVyDeU5IO4GyIg0YQSxE059N15iB36IYg//3wv87wlBVmFX9KKnxVJFWmbpJq/5+I
+	f9+eV3V72nHmG5/3agCywxYnXxwCjzqQnvrnZGro8JTxqw5Yr0BBmrDN0MGQ9GXgq7U8
+	LFSCTuUZpShMeidIkxqEh4Q+BVJzPufK0PFZhuCobjScjxvBZiVtjU4aG4Z/iN2U+mde
+	T13HKYL5IEZiEIlrxU79dUBW1TS3+0qqow3l5JoAhAttEXyo85RursZVQERbhE/bPlnb
+	hrvQ==
+X-Gm-Message-State: APjAAAXq8Jx8E6lLKvVp9N6CyFv2STssHTZhaVir1RRE0FMQLXvcO3D2
+	5xq4EP8P7/mDZ48Uj6s26t3QYSXDMGw=
+X-Google-Smtp-Source: APXvYqy+O42u/16/QzGZE3HBpshX8f97BgYGQh4zvL12nihDIe6CCEcwUMX3QNbjbjO+wcdtb/QvOg==
+X-Received: by 2002:adf:fd4d:: with SMTP id h13mr2910661wrs.66.1570025365754; 
+	Wed, 02 Oct 2019 07:09:25 -0700 (PDT)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	u25sm5294414wml.4.2019.10.02.02.28.54
+	z9sm30275676wrp.26.2019.10.02.07.09.24
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 02 Oct 2019 02:28:55 -0700 (PDT)
+	Wed, 02 Oct 2019 07:09:25 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Oct 2019 10:28:53 +0100
-Message-Id: <20191002092853.21251-1-richard.purdie@linuxfoundation.org>
+Date: Wed,  2 Oct 2019 15:09:24 +0100
+Message-Id: <20191002140924.30412-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: [PATCH] tests/runqueue: Fix hashserve shutdown race
+Subject: [PATCH] bitbake: Bump verison 1.43.1 -> 1.43.2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,62 +56,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 02 Oct 2019 09:28:55 -0000
+X-List-Received-Date: Wed, 02 Oct 2019 14:09:26 -0000
 Content-Transfer-Encoding: 8bit
 
-The hashserve can delete its socket whilst the cleanup us happening leading to
-backtraces and test failures.
-
-Add code to avoid this race condition.
-
-[YOCTO #13542]
+This allows metadata to depend on SignatureGeneratorUniHashMixIn which was recently added.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/tests/runqueue.py | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ bin/bitbake        | 2 +-
+ lib/bb/__init__.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
-index 50b3392bc1..5e6439156d 100644
---- a/lib/bb/tests/runqueue.py
-+++ b/lib/bb/tests/runqueue.py
-@@ -12,6 +12,7 @@ import os
- import tempfile
- import subprocess
- import sys
-+import time
+diff --git a/bin/bitbake b/bin/bitbake
+index 4834a71585..778b1d69eb 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -26,7 +26,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
+ if sys.getfilesystemencoding() != "utf-8":
+     sys.exit("Please use a locale setting which supports UTF-8 (such as LANG=en_US.UTF-8).\nPython can't change the filesystem locale after loading so we need a UTF-8 when Python starts or things won't work.")
  
+-__version__ = "1.43.1"
++__version__ = "1.43.2"
+ 
+ if __name__ == "__main__":
+     if __version__ != bb.__version__:
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 322a1e0937..f899691741 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -9,7 +9,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
  #
- # TODO:
-@@ -257,6 +258,8 @@ class RunQueueTests(unittest.TestCase):
-                         'a1:package_write_ipk_setscene', 'a1:package_qa_setscene']
-             self.assertEqual(set(tasks), set(expected))
  
-+            self.shutdown(tempdir)
-+
-     @unittest.skipIf(sys.version_info < (3, 5, 0), 'Python 3.5 or later required')
-     def test_hashserv_double(self):
-         with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-@@ -280,6 +283,7 @@ class RunQueueTests(unittest.TestCase):
-                         'a1:package_write_rpm_setscene', 'b1:package_write_ipk_setscene', 'a1:packagedata_setscene']
-             self.assertEqual(set(tasks), set(expected))
+-__version__ = "1.43.1"
++__version__ = "1.43.2"
  
-+            self.shutdown(tempdir)
- 
-     @unittest.skipIf(sys.version_info < (3, 5, 0), 'Python 3.5 or later required')
-     def test_hashserv_multiple_setscene(self):
-@@ -309,3 +313,11 @@ class RunQueueTests(unittest.TestCase):
-             for i in expected:
-                 self.assertEqual(tasks.count(i), 1, "%s not in task list once" % i)
- 
-+            self.shutdown(tempdir)
-+
-+    def shutdown(self, tempdir):
-+        # Wait for the hashserve socket to disappear else we'll see races with the tempdir cleanup
-+        while os.path.exists(tempdir + "/hashserve.sock"):
-+            time.sleep(0.5)
-+
-+
+ import sys
+ if sys.version_info < (3, 4, 0):
 -- 
 2.20.1
 
