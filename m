@@ -1,42 +1,46 @@
-Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
-X-Greylist: delayed 567 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 04 Oct 2019 07:51:40 UTC
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 1285D7F260
+Return-Path: <zboszor@pr.hu>
+Received: from mail9.pr.hu (mail9.pr.hu [87.242.0.9])
+	by mail.openembedded.org (Postfix) with ESMTP id EF68E6C3A9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  4 Oct 2019 07:51:40 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 99E589C0198;
-	Fri,  4 Oct 2019 03:42:13 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10032)
-	with ESMTP id LoBRDAAzP0_I; Fri,  4 Oct 2019 03:42:12 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8BD359C02A4;
-	Fri,  4 Oct 2019 03:42:12 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10026)
-	with ESMTP id sxIRoXFMBkzP; Fri,  4 Oct 2019 03:42:12 -0400 (EDT)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 65D169C0198;
-	Fri,  4 Oct 2019 03:42:12 -0400 (EDT)
-Date: Fri, 4 Oct 2019 03:42:11 -0400 (EDT)
-From: Jean-marie Lemetayer <jean-marie.lemetayer@savoirfairelinux.com>
-To: =?utf-8?B?QsO2c3rDtnJtw6lueWkgWm9sdMOhbg==?= <zboszor@pr.hu>
-Message-ID: <144607162.8615467.1570174931312.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <2b4588c7-adff-5a12-2cb7-c1b3be1eeb74@pr.hu>
+	Sat,  5 Oct 2019 06:47:15 +0000 (UTC)
+Received: from [2a02:808:3:101::5] (helo=mail.pr.hu)
+	by frontdoor.pr.hu with esmtps
+	(TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim 4.89)
+	(envelope-from <zboszor@pr.hu>)
+	id 1iGdqV-00074n-Vp; Sat, 05 Oct 2019 08:47:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=pr.hu;
+	s=pr20170203; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+	MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lgWeQF3Rmxoq6jBbFBz3W4a2eBk+kCn+ErYxLEdw6zs=;
+	b=ih6g/JMYqfOxA5cRemsuK/g5D3
+	4RS5Ve/lR8aUFle6kT/bk30gu8/JnjPnsffmDBh5+fU9YtGD2PvNZNTYNOzl9HA3d0I6rzaO92REv
+	JcbfHsp7ncyEx3iIyKt/HgOh5Qlcd+X65YFUgyKOWdoGBUky733qUZGgTMpGVaiOpWIVUgQLy1Uwj
+	E/ULFVa6GMc8Yyt6lbH76qicpsf3Mung/ahfXnd02fYeMb2lAkldb8IeDQ6+eKpjHFFrvPHJC5YIP
+	/mcSAxkBNE8BZz82VXA3c1NikI0Toq2qZV0TOmoXivTIPIgVL1hBU/E2JXizye744NY6oIpfmafCb
+	GKwOiv/w==;
+Received: from host-87-242-20-26.prtelecom.hu ([87.242.20.26]
+	helo=[192.168.1.13])
+	by mail.pr.hu with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.89) (envelope-from <zboszor@pr.hu>)
+	id 1iGdqR-0001eC-JR; Sat, 05 Oct 2019 08:47:13 +0200
+To: Jean-marie Lemetayer <jean-marie.lemetayer@savoirfairelinux.com>
 References: <1518388275-4589-1-git-send-email-mvader@victronenergy.com>
 	<82bcf115-965e-60fb-ed35-a116cabce937@pr.hu>
 	<2b4588c7-adff-5a12-2cb7-c1b3be1eeb74@pr.hu>
+	<144607162.8615467.1570174931312.JavaMail.zimbra@savoirfairelinux.com>
+From: =?UTF-8?B?QsO2c3rDtnJtw6lueWkgWm9sdMOhbg==?= <zboszor@pr.hu>
+Message-ID: <ae8379b3-c784-9b4c-da19-3f8d9f279030@pr.hu>
+Date: Sat, 5 Oct 2019 08:47:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+	Thunderbird/68.1.1
 MIME-Version: 1.0
-X-Mailer: Zimbra 8.8.11_GA_3737 (ZimbraWebClient - GC77 (Linux)/8.8.11_GA_3737)
-Thread-Topic: fetch2/npm: fix parsing multiple matching packages
-Thread-Index: isoe3JiNpEXv+QxUBAs78D7CThWD2Q==
+In-Reply-To: <144607162.8615467.1570174931312.JavaMail.zimbra@savoirfairelinux.com>
+X-Spam-Score: -1.8 (-)
+X-Scan-Signature: 4504fbbec4e21e79d85e2024c7bc7f5e
+X-Spam-Tracer: backend.mail.pr.hu -1.8 20191005064713Z
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] fetch2/npm: fix parsing multiple matching packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -51,152 +55,125 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Oct 2019 07:51:41 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Sat, 05 Oct 2019 06:47:16 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-Hi Zolt=C3=A1n,
+Hi,
 
-It seems that this issue have already been fixed by this patch:
-https://git.openembedded.org/bitbake/commit/?id=3D3d319c79981811d3cfd473288=
-5057db4fd5afcc2
+2019. 10. 04. 9:42 keltezéssel, Jean-marie Lemetayer írta:
+> Hi Zoltán,
+> 
+> It seems that this issue have already been fixed by this patch:
+> https://git.openembedded.org/bitbake/commit/?id=3d319c79981811d3cfd4732885057db4fd5afcc2
+> 
+> Not the same implementation as yours, but it fixes the same issue.
 
-Not the same implementation as yours, but it fixes the same issue.
+The implementation is not mine, I just tested it back then with Yocto 2.5.
 
-Best regards,
-Jean-Marie Lemetayer
+Will your patch backported to older major versions of Bitbake?
+The issue is present in older Yocto versions.
 
------ Mail original -----
-De: "bitbake-devel" <bitbake-devel@lists.openembedded.org>
-=C3=80: "mpvader" <mvader@victronenergy.com>, "bitbake-devel" <bitbake-deve=
-l@lists.openembedded.org>
-Envoy=C3=A9: Vendredi 4 Octobre 2019 07:58:56
-Objet: Re: [bitbake-devel] [PATCH] fetch2/npm: fix parsing multiple matchin=
-g packages
-
-Hi Bitbake devs!
-
-The exception with the below "devtool add ..." command still occurs with
-bvitbake 1.42.0 used in Yocto 2.7 and is fixed with the patch.
-
-Please consider applying/backporting it.
-
-Best regards,
-Zolt=C3=A1n B=C3=B6sz=C3=B6rm=C3=A9nyi
-
-2018. 02. 19. 9:55 keltez=C3=A9ssel, B=C3=B6sz=C3=B6rm=C3=A9nyi Zolt=C3=A1n=
- =C3=ADrta:
-> 2018-02-11 23:31 keltez=C3=A9ssel, mpvader =C3=ADrta:
->> Replace the self-implemented parser with loading the complete json and t=
-hen
->> taking the last element from it.
+> 
+> Best regards,
+> Jean-Marie Lemetayer
+> 
+> ----- Mail original -----
+> De: "bitbake-devel" <bitbake-devel@lists.openembedded.org>
+> À: "mpvader" <mvader@victronenergy.com>, "bitbake-devel" <bitbake-devel@lists.openembedded.org>
+> Envoyé: Vendredi 4 Octobre 2019 07:58:56
+> Objet: Re: [bitbake-devel] [PATCH] fetch2/npm: fix parsing multiple matching packages
+> 
+> Hi Bitbake devs!
+> 
+> The exception with the below "devtool add ..." command still occurs with
+> bvitbake 1.42.0 used in Yocto 2.7 and is fixed with the patch.
+> 
+> Please consider applying/backporting it.
+> 
+> Best regards,
+> Zoltán Böszörményi
+> 
+> 2018. 02. 19. 9:55 keltezéssel, Böszörményi Zoltán írta:
+>> 2018-02-11 23:31 keltezéssel, mpvader írta:
+>>> Replace the self-implemented parser with loading the complete json and then
+>>> taking the last element from it.
+>>>
+>>> This fixes an error fetching the lex-parser package, as a dependency of, for
+>>> example, jison. Reproduce the error with this command:
+>>>
+>>> devtool add "npm://registry.npmjs.org;name=jison;version=0.4.18"
+>>>
+>>> _parse_view() didn't properly parse the npm view result [1], resulting in
+>>> an Exception in the subsequent json.loads() function:
+>>> Exception: ValueError: Extra data: line 57 column 4 - line 296 column 2 (char 5874 - 29698)
 >>
->> This fixes an error fetching the lex-parser package, as a dependency of,=
- for
->> example, jison. Reproduce the error with this command:
+>> I can confirm this problem exists in Bitbake 1.36 and goes away with the patch.
 >>
->> devtool add "npm://registry.npmjs.org;name=3Djison;version=3D0.4.18"
+>> Also tested the patch for the handful of node module recipes
+>> I have and they still build properly.
 >>
->> _parse_view() didn't properly parse the npm view result [1], resulting i=
-n
->> an Exception in the subsequent json.loads() function:
->> Exception: ValueError: Extra data: line 57 column 4 - line 296 column 2 =
-(char 5874 - 29698)
->=20
-> I can confirm this problem exists in Bitbake 1.36 and goes away with the =
-patch.
->=20
-> Also tested the patch for the handful of node module recipes
-> I have and they still build properly.
->=20
+>>>
+>>> [1] npm view lex-parser@'0.1.x' --json --registry http://registry.npmjs.org
+>>>
+>>> Signed-off-by: mpvader <mvader@victronenergy.com>
 >>
->> [1] npm view lex-parser@'0.1.x' --json --registry http://registry.npmjs.=
-org
+>> Tested-by: Zoltán Böszörményi <zboszor@pr.hu>
 >>
->> Signed-off-by: mpvader <mvader@victronenergy.com>
->=20
-> Tested-by: Zolt=C3=A1n B=C3=B6sz=C3=B6rm=C3=A9nyi <zboszor@pr.hu>
->=20
->> ---
->> =C2=A0 lib/bb/fetch2/npm.py | 29 ++++++++---------------------
->> =C2=A0 1 file changed, 8 insertions(+), 21 deletions(-)
+>>> ---
+>>>    lib/bb/fetch2/npm.py | 29 ++++++++---------------------
+>>>    1 file changed, 8 insertions(+), 21 deletions(-)
+>>>
+>>> diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+>>> index b5f148c..e257355 100644
+>>> --- a/lib/bb/fetch2/npm.py
+>>> +++ b/lib/bb/fetch2/npm.py
+>>> @@ -146,25 +146,6 @@ class Npm(FetchMethod):
+>>>            self._unpackdep(ud, ud.pkgname, workobj, unpackdir, dldir, d)
+>>> -    def _parse_view(self, output):
+>>> -        '''
+>>> -        Parse the output of npm view --json; the last JSON result
+>>> -        is assumed to be the one that we're interested in.
+>>> -        '''
+>>> -        pdata = None
+>>> -        outdeps = {}
+>>> -        datalines = []
+>>> -        bracelevel = 0
+>>> -        for line in output.splitlines():
+>>> -            if bracelevel:
+>>> -                datalines.append(line)
+>>> -            elif '{' in line:
+>>> -                datalines = []
+>>> -                datalines.append(line)
+>>> -            bracelevel = bracelevel + line.count('{') - line.count('}')
+>>> -        if datalines:
+>>> -            pdata = json.loads('\n'.join(datalines))
+>>> -        return pdata
+>>>        def _getdependencies(self, pkg, data, version, d, ud, optional=False,
+>>> fetchedlist=None):
+>>>            if fetchedlist is None:
+>>> @@ -175,9 +156,15 @@ class Npm(FetchMethod):
+>>>            logger.debug(2, "Calling getdeps on %s" % pkg)
+>>>            fetchcmd = "npm view %s --json --registry %s" % (pkgfullname, ud.registry)
+>>>            output = runfetchcmd(fetchcmd, d, True)
+>>> -        pdata = self._parse_view(output)
+>>> -        if not pdata:
+>>> +        if not output:
+>>>                raise FetchError("The command '%s' returned no output" % fetchcmd)
+>>> +        pdata = json.loads(output)
+>>> +
+>>> +        # npm registry will return multiple dicts in a list when there is more than one
+>>> matching
+>>> +        # version. Take the last one.
+>>> +        if isinstance(pdata, list):
+>>> +            pdata = pdata[-1]
+>>> +
+>>>            if optional:
+>>>                pkg_os = pdata.get('os', None)
+>>>                if pkg_os:
+>>>
 >>
->> diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
->> index b5f148c..e257355 100644
->> --- a/lib/bb/fetch2/npm.py
->> +++ b/lib/bb/fetch2/npm.py
->> @@ -146,25 +146,6 @@ class Npm(FetchMethod):
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self._unpackdep(u=
-d, ud.pkgname, workobj, unpackdir, dldir, d)
->> -=C2=A0=C2=A0=C2=A0 def _parse_view(self, output):
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 '''
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Parse the output of npm view=
- --json; the last JSON result
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 is assumed to be the one tha=
-t we're interested in.
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 '''
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pdata =3D None
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 outdeps =3D {}
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 datalines =3D []
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bracelevel =3D 0
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for line in output.splitline=
-s():
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if b=
-racelevel:
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 datalines.append(line)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 elif=
- '{' in line:
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 datalines =3D []
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 datalines.append(line)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 brac=
-elevel =3D bracelevel + line.count('{') - line.count('}')
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if datalines:
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pdat=
-a =3D json.loads('\n'.join(datalines))
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return pdata
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 def _getdependencies(self, pkg, data, ver=
-sion, d, ud, optional=3DFalse,=20
->> fetchedlist=3DNone):
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if fetchedlist is=
- None:
->> @@ -175,9 +156,15 @@ class Npm(FetchMethod):
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 logger.debug(2, "=
-Calling getdeps on %s" % pkg)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchcmd =3D "npm=
- view %s --json --registry %s" % (pkgfullname, ud.registry)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 output =3D runfet=
-chcmd(fetchcmd, d, True)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pdata =3D self._parse_view(o=
-utput)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if not pdata:
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if not output:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 raise FetchError("The command '%s' returned no output" % fetchcmd)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pdata =3D json.loads(output)
->> +
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # npm registry will return m=
-ultiple dicts in a list when there is more than one=20
->> matching
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # version. Take the last one=
-.
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if isinstance(pdata, list):
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pdat=
-a =3D pdata[-1]
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if optional:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 pkg_os =3D pdata.get('os', None)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 if pkg_os:
->>
->=20
+> 
 
---=20
-_______________________________________________
-bitbake-devel mailing list
-bitbake-devel@lists.openembedded.org
-http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
