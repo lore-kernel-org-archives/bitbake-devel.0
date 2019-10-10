@@ -1,49 +1,25 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
-	[209.85.221.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 0AC097BD97
+Return-Path: <krystian.garlinski@comarch.pl>
+X-Greylist: delayed 1729 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 10 Oct 2019 14:32:19 UTC
+Received: from odzwierny0.comarch.com (odzwierny0.comarch.com [217.74.69.8])
+	by mail.openembedded.org (Postfix) with ESMTP id 2D7FE7F3F6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Oct 2019 12:40:29 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id v8so7716468wrt.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Oct 2019 05:40:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=dcAsBjh1lYjHJF4zflW7SlXWA0IXYG5hctOoH4L2lAM=;
-	b=E8vj0ywCdXO5ij4fizTH1353XYZNn77R42+x1xKJwsbypyLouv6hWmz5yvF6FbEeOZ
-	nJimv1W9mFb1ikbhgNiJFsEL7E4LehooMJ74aaNF3JGlhlLIJhNnM6cRpLy/0f/y0tBS
-	RMaYaZ3gfckKZPW4Q8uab5P3J85QQu+DmicCI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=dcAsBjh1lYjHJF4zflW7SlXWA0IXYG5hctOoH4L2lAM=;
-	b=XCc1ChOOS0lDuzS3Sae0O5SyZZfCPSXphCrESrOe13DVSeuton0OJ6dmCXeqRdyi0T
-	EBsqTkTeJDufl+CZF0c1bgacBADWyGH117zVkWCBxpfrZdBCUnkA8L/WHkwXFrFbLRKf
-	IeiDv+euaFU23/gf1R8AJk2ukTwES83Fwdej0PlHJzMXNquOa789d9gKvpB7elqql5Jh
-	IEM4kTp6Zr9yjHSmafeHI31+R/VZX59IU0LAdfZDKuyK6tsArbaSlEJdXwFtb2pk7EiK
-	l+xmMIsWzy4g3A/FWA9Tm9JQkCrar+aP0aIDsdgSNUokq2eqDaD/+urzzkyEopJT/UKI
-	B3Mw==
-X-Gm-Message-State: APjAAAW1rHcibzHdNeOUY2vQsOKmmnKPBU6+c+Fe/J+Ck9kD5eXK/omo
-	r4ACDozOLQ3/qlw92D9/6BbZRQ==
-X-Google-Smtp-Source: APXvYqzAef8gaxKpqSIiy9hmQJmw6HbZ8ZD+eSoc2a7/1yMfbkdiN76j1kUR/IysQjsoeaaeShD6kA==
-X-Received: by 2002:adf:ff87:: with SMTP id j7mr8281689wrr.360.1570711230766; 
-	Thu, 10 Oct 2019 05:40:30 -0700 (PDT)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id b5sm4492350wmj.18.2019.10.10.05.40.29
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 10 Oct 2019 05:40:30 -0700 (PDT)
-Message-ID: <e5d1ae1121599ba195203285b2745dc9396024ea.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Watt <jpewhacker@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Thu, 10 Oct 2019 13:40:29 +0100
-In-Reply-To: <20191009132226.1808-1-JPEWhacker@gmail.com>
-References: <20191009132226.1808-1-JPEWhacker@gmail.com>
-User-Agent: Evolution 3.34.1-2 
+	Thu, 10 Oct 2019 14:32:19 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	authenticated as krystian.garlinski@comarch.com
+	by odzwierny0.comarch.com with esmtpsa (TLSv1:AES256-SHA:256)(ComArch
+	ESMTP) id 1iIZ2Q-000Dd4-AI; Thu, 10 Oct 2019 16:03:30 +0200
+From: =?UTF-8?q?Krystian=20Garli=C5=84ski?= <krystian.garlinski@comarch.pl>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 10 Oct 2019 16:03:21 +0200
+Message-Id: <20191010140321.15248-1-krystian.garlinski@comarch.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: Re: [PATCH] siggen: Include unihash and taskhash in sigdata
+X-CA-Antivirus: Scanned by ComArch Antivirus on odzwierny0.comarch.com
+X-CA-Is-Spam: No
+Cc: =?UTF-8?q?=EF=BF=BCTomasz=20Meresi=C5=84ski?=
+	<tomasz.meresinski@comarch.com>
+Subject: [PATCH] ui/json: Add JSON UI
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,28 +32,291 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Oct 2019 12:40:30 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 10 Oct 2019 14:32:19 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2019-10-09 at 08:22 -0500, Joshua Watt wrote:
-> Captures the unihash and the taskhash when generating the signature
-> data. The taskhash doesn't actually factor into the signature
-> calculation, but it is very useful to know what it was for debugging
-> purposes.
-> 
-> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> ---
->  bitbake/lib/bb/siggen.py | 24 ++++++++++++++----------
->  1 file changed, 14 insertions(+), 10 deletions(-)
+Knotty UI output is difficult to parse correctly when trying to integrate
+bitbake with different systems. This commit adds JSON UI that prints all
+events to stdout as JSON objects, which makes the integration with
+external tools and build systems easy.
 
-Unfortunately this will break anything using existing sigdata files
-from disk (e.g. in sstate mirrors) so we'll have to think a bit more
-about how to add this without changing the data format in a backwards
-incompatible way.
+Signed-off-by: ￼Tomasz Meresiński <tomasz.meresinski@comarch.com>
+Signed-off-by: Krystian Garliński <krystian.garlinski@comarch.pl>
+---
+ lib/bb/ui/json.py | 262 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 262 insertions(+)
+ create mode 100644 lib/bb/ui/json.py
 
-Cheers,
-
-Richard
+diff --git a/lib/bb/ui/json.py b/lib/bb/ui/json.py
+new file mode 100644
+index 00000000..f9699d95
+--- /dev/null
++++ b/lib/bb/ui/json.py
+@@ -0,0 +1,262 @@
++#
++# Bitbake JSON UI
++#
++# Prints all events as JSON objects to stdout
++#
++# Copyright (C) 2018-2019 Comarch SA
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++import json
++import logging
++import os
++
++import bb
++
++def generate_type(event):
++    c = event.__class__
++
++    return "{c.__module__}.{c.__name__}".format(c=c)
++
++json_types = {
++    logging.LogRecord: lambda event: {
++        **event.__dict__
++    },
++    bb.event.Event: lambda event: {
++        "pid": event.pid,
++    },
++    bb.event.HeartbeatEvent: lambda event: {
++        "time": event.time,
++    },
++    bb.event.OperationStarted: lambda event: {
++        "msg": event.msg,
++    },
++    bb.event.OperationCompleted: lambda event: {
++        "total": event.total,
++        "msg": event.msg,
++    },
++    bb.event.OperationProgress: lambda event: {
++        "current": event.current,
++        "total": event.total,
++        "msg": event.msg,
++    },
++    bb.event.MultiConfigParsed: lambda event: {
++        "mcdata": event.mcdata,
++    },
++    bb.event.RecipeEvent: lambda event: {
++        "fn": event.fn,
++    },
++    bb.event.RecipeTaskPreProcess: lambda event: {
++        "fn": event.fn,
++        "tasklist": event.tasklist,
++    },
++    bb.event.BuildBase: lambda event: {
++        "pkgs": event.pkgs,
++        "name": event.name,
++        "failures": event.getFailures(),
++    },
++    bb.event.MonitorDiskEvent: lambda event: {
++        "disk_usage": event.disk_usage,
++    },
++    bb.event.DiskUsageSample: lambda sample: {
++        "available_bytes": sample.available_bytes,
++        "free_bytes": sample.free_bytes,
++        "total_bytes": sample.total_bytes,
++    },
++    bb.event.NoProvider: lambda event: {
++        "item": event.getItem(),
++        "isRuntime": event.isRuntime(),
++        "msg": str(event),
++    },
++    bb.event.MultipleProviders: lambda event: {
++        "isRuntime": event.isRuntime(),
++        "item": event.getItem(),
++        "candidates": event.getCandidates(),
++        "msg": str(event),
++    },
++    bb.event.ParseStarted: lambda event: {
++        "total": event.total,
++    },
++    bb.event.ParseCompleted: lambda event: {
++        "cached": event.cached,
++        "parsed": event.parsed,
++        "skipped": event.skipped,
++        "virtuals": event.virtuals,
++        "masked": event.masked,
++        "errors": event.errors,
++        "sofar": event.sofar,
++    },
++    bb.event.CacheLoadStarted: lambda event: {
++        "total": event.total,
++    },
++    bb.event.CacheLoadCompleted: lambda event: {
++        "num_entries": event.num_entries,
++    },
++    bb.event.ReachableStamps: lambda event: {
++        "stamps": event.stamps,
++    },
++    bb.event.LogExecTTY: lambda event: {
++        "msg": event.msg,
++        "prog": event.prog,
++        "sleep_delay": event.sleep_delay,
++        "retries": event.retries,
++    },
++    bb.event.MetadataEvent: lambda event: {
++        "type": event.type,
++    },
++    bb.event.ProcessStarted: lambda event: {
++        "processname": event.processname,
++        "total": event.total,
++    },
++    bb.event.ProcessProgress: lambda event: {
++        "processname": event.processname,
++        "progress": event.progress,
++    },
++    bb.event.ProcessFinished: lambda event: {
++        "processname": event.processname,
++    },
++    bb.event.SanityCheck: lambda event: {
++        "generateevents": event.generateevents,
++    },
++    bb.event.NetworkTest: lambda event: {
++        "generateevents": event.generateevents,
++    },
++    bb.event.FindSigInfoResult: lambda event: {
++        "result": event.result,
++    },
++    bb.build.TaskBase: lambda event: {
++        "taskfile": event.taskfile,
++        "taskname": event.taskname,
++        "logfile": event.logfile,
++        "time": event.time,
++        "task": event.task,
++        "displayName": event.getDisplayName(),
++        "package": event._package,
++    },
++    bb.build.TaskStarted: lambda event: {
++        "taskflags": event.taskflags,
++    },
++    bb.build.TaskFailed: lambda event: {
++        "errprinted": event.errprinted,
++    },
++    bb.build.TaskProgress: lambda event: {
++        "progress": event.progress,
++        "rate": event.rate,
++    },
++    bb.runqueue.runQueueExitWait: lambda event: {
++        "remain": event.remain,
++        "message": event.message,
++    },
++    bb.runqueue.runQueueEvent: lambda event: {
++        "taskid": event.taskid,
++        "taskstring": event.taskstring,
++        "taskname": event.taskname,
++        "taskfile": event.taskfile,
++        "taskhash": event.taskhash,
++        "stats": event.stats,
++    },
++    bb.runqueue.RunQueueStats: lambda stats: {
++        "completed": stats.completed,
++        "skipped": stats.skipped,
++        "failed": stats.failed,
++        "active": stats.active,
++        "total": stats.total,
++    },
++    bb.runqueue.runQueueTaskStarted: lambda event: {
++        "noexec": event.noexec,
++    },
++    bb.runqueue.sceneQueueTaskStarted: lambda event: {
++        "noexec": event.noexec,
++    },
++    bb.runqueue.runQueueTaskFailed: lambda event: {
++        "exitcode": event.exitcode,
++        "msg": str(event),
++    },
++    bb.runqueue.sceneQueueTaskFailed: lambda event: {
++        "exitcode": event.exitcode,
++        "msg": str(event),
++    },
++    bb.runqueue.runQueueTaskSkipped: lambda event: {
++        "reason": event.reason,
++    },
++    bb.command.CommandExit: lambda event: {
++        "exitcode": event.exitcode,
++    },
++    bb.command.CommandFailed: lambda event: {
++        "error": event.error,
++    },
++}
++
++class EventEncoder(json.JSONEncoder):
++    def default(self, event):
++        result = dict()
++
++        if isinstance(event, bb.runqueue.sceneQueueComplete):
++            result["stats"] = event.stats
++        else:
++            for (event_type, callback) in json_types.items():
++                if isinstance(event, event_type):
++                    result.update(callback(event))
++
++        if len(result) > 0:
++            # we've handled that event type
++            result["type"] = generate_type(event)
++            return result
++
++        # unknown event type
++        return json.JSONEncoder.default(self, event)
++
++def main(server, eventHandler, params):
++    # llevel, debug_domains = bb.msg.constructLogOptions()
++    # server.runCommand(["setEventMask", server.getEventHandle(), llevel, debug_domains, _evt_list])
++
++    if not params.observe_only:
++        params.updateToServer(server, os.environ.copy())
++
++    bb.utils.set_process_name("JSON-UI")
++
++    if params.options.remote_server and params.options.kill_server:
++        server.terminateServer()
++        return 0
++
++    if not params.observe_only:
++        params.updateFromServer(server)
++        cmdline = params.parseActions()
++        if not cmdline:
++            #Nothing to do
++            return 0
++
++        if 'msg' in cmdline and cmdline['msg']:
++            record = logging.makeLogRecord({'level': logging.ERROR, 'msg': cmdline['msg']})
++            print(json.dumps(record, cls=EventEncoder), flush=True)
++            return 0
++
++        action = cmdline['action']
++
++        ret, error = server.runCommand(action)
++        if ret != True:
++            error = "Cannot get default commandline"
++
++        if error:
++            record = logging.makeLogRecord({'level': logging.ERROR, 'msg': "Error running command '%s': %s" % (action, error)})
++
++    try:
++        return_value = 0
++        while True:
++            event = eventHandler.waitEvent(None)
++
++            print(json.dumps(event, cls=EventEncoder), flush=True)
++
++            if isinstance(event, bb.command.CommandFailed):
++                return 1
++
++            if isinstance(event, bb.build.TaskFailed):
++                return_value = 1
++
++            if isinstance(event, (bb.command.CommandCompleted, bb.cooker.CookerExit)):
++                return return_value
++
++    except Exception:
++        server.runCommand(["stateForceShutdown"])
++        return 1
+-- 
+2.20.1
 
 
