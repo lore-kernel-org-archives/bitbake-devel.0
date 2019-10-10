@@ -1,25 +1,26 @@
-Return-Path: <krystian.garlinski@comarch.pl>
-X-Greylist: delayed 1729 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 10 Oct 2019 14:32:19 UTC
-Received: from odzwierny0.comarch.com (odzwierny0.comarch.com [217.74.69.8])
-	by mail.openembedded.org (Postfix) with ESMTP id 2D7FE7F3F6
+Return-Path: <mark.hatle@kernel.crashing.org>
+Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
+	by mail.openembedded.org (Postfix) with ESMTP id D75A26011A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Oct 2019 14:32:19 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	authenticated as krystian.garlinski@comarch.com
-	by odzwierny0.comarch.com with esmtpsa (TLSv1:AES256-SHA:256)(ComArch
-	ESMTP) id 1iIZ2Q-000Dd4-AI; Thu, 10 Oct 2019 16:03:30 +0200
-From: =?UTF-8?q?Krystian=20Garli=C5=84ski?= <krystian.garlinski@comarch.pl>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 10 Oct 2019 16:03:21 +0200
-Message-Id: <20191010140321.15248-1-krystian.garlinski@comarch.pl>
-X-Mailer: git-send-email 2.20.1
+	Thu, 10 Oct 2019 23:53:57 +0000 (UTC)
+Received: from Marks-MacBook-Pro.local ([76.164.61.198]) (authenticated bits=0)
+	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id x9ANrrCO004570
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NO); Thu, 10 Oct 2019 18:53:54 -0500
+To: Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <20191008184512.20130-1-anibal.limon@linaro.org>
+	<47c79ccca81ec9c237357f4a91973d2b6cee77e1.camel@linuxfoundation.org>
+	<CAP71WjyAPhw6f+9ZW0NMdzhV-cwWcNc3SLCO74Sv+noXnyX7tA@mail.gmail.com>
+From: Mark Hatle <mark.hatle@kernel.crashing.org>
+Message-ID: <1c61b38a-d1a5-cacc-960c-012cb4dd3f88@kernel.crashing.org>
+Date: Thu, 10 Oct 2019 18:53:53 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+	Gecko/20100101 Thunderbird/68.1.1
 MIME-Version: 1.0
-X-CA-Antivirus: Scanned by ComArch Antivirus on odzwierny0.comarch.com
-X-CA-Is-Spam: No
-Cc: =?UTF-8?q?=EF=BF=BCTomasz=20Meresi=C5=84ski?=
-	<tomasz.meresinski@comarch.com>
-Subject: [PATCH] ui/json: Add JSON UI
+In-Reply-To: <CAP71WjyAPhw6f+9ZW0NMdzhV-cwWcNc3SLCO74Sv+noXnyX7tA@mail.gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [RFC][WIP][PATCHv1] lib/bb/checksum.py: Speed-up checksum gen when directory is git
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,291 +33,156 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Oct 2019 14:32:19 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Thu, 10 Oct 2019 23:53:58 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 
-Knotty UI output is difficult to parse correctly when trying to integrate
-bitbake with different systems. This commit adds JSON UI that prints all
-events to stdout as JSON objects, which makes the integration with
-external tools and build systems easy.
 
-Signed-off-by: ￼Tomasz Meresiński <tomasz.meresinski@comarch.com>
-Signed-off-by: Krystian Garliński <krystian.garlinski@comarch.pl>
----
- lib/bb/ui/json.py | 262 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 262 insertions(+)
- create mode 100644 lib/bb/ui/json.py
 
-diff --git a/lib/bb/ui/json.py b/lib/bb/ui/json.py
-new file mode 100644
-index 00000000..f9699d95
---- /dev/null
-+++ b/lib/bb/ui/json.py
-@@ -0,0 +1,262 @@
-+#
-+# Bitbake JSON UI
-+#
-+# Prints all events as JSON objects to stdout
-+#
-+# Copyright (C) 2018-2019 Comarch SA
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+
-+import json
-+import logging
-+import os
-+
-+import bb
-+
-+def generate_type(event):
-+    c = event.__class__
-+
-+    return "{c.__module__}.{c.__name__}".format(c=c)
-+
-+json_types = {
-+    logging.LogRecord: lambda event: {
-+        **event.__dict__
-+    },
-+    bb.event.Event: lambda event: {
-+        "pid": event.pid,
-+    },
-+    bb.event.HeartbeatEvent: lambda event: {
-+        "time": event.time,
-+    },
-+    bb.event.OperationStarted: lambda event: {
-+        "msg": event.msg,
-+    },
-+    bb.event.OperationCompleted: lambda event: {
-+        "total": event.total,
-+        "msg": event.msg,
-+    },
-+    bb.event.OperationProgress: lambda event: {
-+        "current": event.current,
-+        "total": event.total,
-+        "msg": event.msg,
-+    },
-+    bb.event.MultiConfigParsed: lambda event: {
-+        "mcdata": event.mcdata,
-+    },
-+    bb.event.RecipeEvent: lambda event: {
-+        "fn": event.fn,
-+    },
-+    bb.event.RecipeTaskPreProcess: lambda event: {
-+        "fn": event.fn,
-+        "tasklist": event.tasklist,
-+    },
-+    bb.event.BuildBase: lambda event: {
-+        "pkgs": event.pkgs,
-+        "name": event.name,
-+        "failures": event.getFailures(),
-+    },
-+    bb.event.MonitorDiskEvent: lambda event: {
-+        "disk_usage": event.disk_usage,
-+    },
-+    bb.event.DiskUsageSample: lambda sample: {
-+        "available_bytes": sample.available_bytes,
-+        "free_bytes": sample.free_bytes,
-+        "total_bytes": sample.total_bytes,
-+    },
-+    bb.event.NoProvider: lambda event: {
-+        "item": event.getItem(),
-+        "isRuntime": event.isRuntime(),
-+        "msg": str(event),
-+    },
-+    bb.event.MultipleProviders: lambda event: {
-+        "isRuntime": event.isRuntime(),
-+        "item": event.getItem(),
-+        "candidates": event.getCandidates(),
-+        "msg": str(event),
-+    },
-+    bb.event.ParseStarted: lambda event: {
-+        "total": event.total,
-+    },
-+    bb.event.ParseCompleted: lambda event: {
-+        "cached": event.cached,
-+        "parsed": event.parsed,
-+        "skipped": event.skipped,
-+        "virtuals": event.virtuals,
-+        "masked": event.masked,
-+        "errors": event.errors,
-+        "sofar": event.sofar,
-+    },
-+    bb.event.CacheLoadStarted: lambda event: {
-+        "total": event.total,
-+    },
-+    bb.event.CacheLoadCompleted: lambda event: {
-+        "num_entries": event.num_entries,
-+    },
-+    bb.event.ReachableStamps: lambda event: {
-+        "stamps": event.stamps,
-+    },
-+    bb.event.LogExecTTY: lambda event: {
-+        "msg": event.msg,
-+        "prog": event.prog,
-+        "sleep_delay": event.sleep_delay,
-+        "retries": event.retries,
-+    },
-+    bb.event.MetadataEvent: lambda event: {
-+        "type": event.type,
-+    },
-+    bb.event.ProcessStarted: lambda event: {
-+        "processname": event.processname,
-+        "total": event.total,
-+    },
-+    bb.event.ProcessProgress: lambda event: {
-+        "processname": event.processname,
-+        "progress": event.progress,
-+    },
-+    bb.event.ProcessFinished: lambda event: {
-+        "processname": event.processname,
-+    },
-+    bb.event.SanityCheck: lambda event: {
-+        "generateevents": event.generateevents,
-+    },
-+    bb.event.NetworkTest: lambda event: {
-+        "generateevents": event.generateevents,
-+    },
-+    bb.event.FindSigInfoResult: lambda event: {
-+        "result": event.result,
-+    },
-+    bb.build.TaskBase: lambda event: {
-+        "taskfile": event.taskfile,
-+        "taskname": event.taskname,
-+        "logfile": event.logfile,
-+        "time": event.time,
-+        "task": event.task,
-+        "displayName": event.getDisplayName(),
-+        "package": event._package,
-+    },
-+    bb.build.TaskStarted: lambda event: {
-+        "taskflags": event.taskflags,
-+    },
-+    bb.build.TaskFailed: lambda event: {
-+        "errprinted": event.errprinted,
-+    },
-+    bb.build.TaskProgress: lambda event: {
-+        "progress": event.progress,
-+        "rate": event.rate,
-+    },
-+    bb.runqueue.runQueueExitWait: lambda event: {
-+        "remain": event.remain,
-+        "message": event.message,
-+    },
-+    bb.runqueue.runQueueEvent: lambda event: {
-+        "taskid": event.taskid,
-+        "taskstring": event.taskstring,
-+        "taskname": event.taskname,
-+        "taskfile": event.taskfile,
-+        "taskhash": event.taskhash,
-+        "stats": event.stats,
-+    },
-+    bb.runqueue.RunQueueStats: lambda stats: {
-+        "completed": stats.completed,
-+        "skipped": stats.skipped,
-+        "failed": stats.failed,
-+        "active": stats.active,
-+        "total": stats.total,
-+    },
-+    bb.runqueue.runQueueTaskStarted: lambda event: {
-+        "noexec": event.noexec,
-+    },
-+    bb.runqueue.sceneQueueTaskStarted: lambda event: {
-+        "noexec": event.noexec,
-+    },
-+    bb.runqueue.runQueueTaskFailed: lambda event: {
-+        "exitcode": event.exitcode,
-+        "msg": str(event),
-+    },
-+    bb.runqueue.sceneQueueTaskFailed: lambda event: {
-+        "exitcode": event.exitcode,
-+        "msg": str(event),
-+    },
-+    bb.runqueue.runQueueTaskSkipped: lambda event: {
-+        "reason": event.reason,
-+    },
-+    bb.command.CommandExit: lambda event: {
-+        "exitcode": event.exitcode,
-+    },
-+    bb.command.CommandFailed: lambda event: {
-+        "error": event.error,
-+    },
-+}
-+
-+class EventEncoder(json.JSONEncoder):
-+    def default(self, event):
-+        result = dict()
-+
-+        if isinstance(event, bb.runqueue.sceneQueueComplete):
-+            result["stats"] = event.stats
-+        else:
-+            for (event_type, callback) in json_types.items():
-+                if isinstance(event, event_type):
-+                    result.update(callback(event))
-+
-+        if len(result) > 0:
-+            # we've handled that event type
-+            result["type"] = generate_type(event)
-+            return result
-+
-+        # unknown event type
-+        return json.JSONEncoder.default(self, event)
-+
-+def main(server, eventHandler, params):
-+    # llevel, debug_domains = bb.msg.constructLogOptions()
-+    # server.runCommand(["setEventMask", server.getEventHandle(), llevel, debug_domains, _evt_list])
-+
-+    if not params.observe_only:
-+        params.updateToServer(server, os.environ.copy())
-+
-+    bb.utils.set_process_name("JSON-UI")
-+
-+    if params.options.remote_server and params.options.kill_server:
-+        server.terminateServer()
-+        return 0
-+
-+    if not params.observe_only:
-+        params.updateFromServer(server)
-+        cmdline = params.parseActions()
-+        if not cmdline:
-+            #Nothing to do
-+            return 0
-+
-+        if 'msg' in cmdline and cmdline['msg']:
-+            record = logging.makeLogRecord({'level': logging.ERROR, 'msg': cmdline['msg']})
-+            print(json.dumps(record, cls=EventEncoder), flush=True)
-+            return 0
-+
-+        action = cmdline['action']
-+
-+        ret, error = server.runCommand(action)
-+        if ret != True:
-+            error = "Cannot get default commandline"
-+
-+        if error:
-+            record = logging.makeLogRecord({'level': logging.ERROR, 'msg': "Error running command '%s': %s" % (action, error)})
-+
-+    try:
-+        return_value = 0
-+        while True:
-+            event = eventHandler.waitEvent(None)
-+
-+            print(json.dumps(event, cls=EventEncoder), flush=True)
-+
-+            if isinstance(event, bb.command.CommandFailed):
-+                return 1
-+
-+            if isinstance(event, bb.build.TaskFailed):
-+                return_value = 1
-+
-+            if isinstance(event, (bb.command.CommandCompleted, bb.cooker.CookerExit)):
-+                return return_value
-+
-+    except Exception:
-+        server.runCommand(["stateForceShutdown"])
-+        return 1
--- 
-2.20.1
+On 10/9/19 4:02 AM, Nicolas Dechesne wrote:
+> On Wed, Oct 9, 2019 at 1:15 AM <richard.purdie@linuxfoundation.org> wrote:
+>>
+>> On Tue, 2019-10-08 at 13:45 -0500, Aníbal Limón wrote:
+>>> In some cases people/organizations are using a SRC_URI with
+>>> file:///PATH_TO_DIR that contains a git repository for different
+>>> reasons, it is useful when want to do an internal build without
+>>> clone sources from outside.
+>>>
+>>> This could consume a lot of CPU time because the current taskhash
+>>> generation mechanism didn't identify that the folder is a VCS
+>>> (git, svn, cvs) and makes the cksum for every file including the
+>>> .git repository in this case.
+>>>
+>>> There are different ways to improve the situation,
+>>>
+>>> * Add protocol=gitscm in file:// SRC_URI but the taskhash is
+>>>   calculated before the fetcher identifies the protocol, will require
+>>>   some changes in bitbake codebase.
+>>> * This patch: When directory is a git repository (contains .git)
+>>>   use HEAD rev + git diff to calculate checksum instead of do it
+>>>   in every file, that is hackish because make some assumptions about
+>>>   .git directory contents.
+>>> * Variant of this patch: Make a list of VCS directories (.git, .svn,
+>>>   .cvs) and take out for cksum calculations, same as before making
+>>>   assumptions about the . folders content.
+>>
+>> This is an interesting one.
+> 
+> Are you referring to the last bullet here? I suspect it's the second one.
+> 
+> Also to give a bit more background to everyone, as it might not be
+> obvious. I've seen the same pattern used several times , especially in
+> large/corporate deployment of OE/YP. the whole build workspace is
+> built as:
+> 
+> |- sources
+> |---- kernel
+> |---- component_A
+> |---- component_B
+> |- layers
+> |---- poky
+> |---- meta-mycompany
+> |-------- recipes for kernel, component_A, ...
+> 
+> The whole workspace is managed with a repo manifest, and the recipes
+> are written to use source code from the 'sources' local folder.
 
+This exact situation is why (when I was at WR) we patched git-repo to allow for
+bare repository checkouts.. There is no reason for source/* to be checked out,
+but it does need a local clone for performance.
+
+Once you have a local clone then you can use the mirroring to point to it and
+everything works properly using git://....;protocol=file
+
+> I am not trying to argue whether this is a good practice or not ;-)
+> but from the perspectives of the folks I've talked to , there are a
+> couple of critical advantages of doing something like that:
+
+The problem with google's restrictive patch submission requirements is I was
+never able to push the changes back to google to enable these bare
+repositories.. but the patches have been published and are regularly updated at:
+
+https://github.com/WindRiver-OpenSourceLabs/git-repo
+
+Look in the master-next / master-wr-next branches for the rebased versions.
+
+> * it looks like Android development workflow ;-)
+> * it relates to the company license/legal process and review. e.g. all
+> the software that gets out of the company is managed by a single repo
+> manifest xml file
+> * it solves "nicely" the problem of being able to iteratively develop
+> using bitbake natively. e.g. "bibtake myimage" always work, and uses
+> local changes from 'sources'
+
+Yes, all of that can be accomplished with a bare checkout...  but even if you
+don't do a bare checkout, you can still do this with bitbake the way it is.
+
+Instead of pointing to sources/kernel you would point to 'sources/kernel/.git'..
+
+PREMIRRORS_append := "\
+     git://.*/.* file://${LAYERDIR}/downloads/ \n \
+     git://.*/.* git://${LAYERDIR}/../../git/BASENAME;protocol=file \n \
+     git://.*/.* git://${LAYERDIR}/../../git/MIRRORNAME;protocol=file \n \
+"
+
+For the bare version the above works...  (The file one is for a 'download
+tarball'...)
+
+Otherwise, '/.git' after the 'NAME' to do the checked out version.  (I've not
+tried this recently but it used to work...  but dramatically increases the
+length of time required for a download.)
+
+> So overall, i am being convinced that this is a valid use case for OE
+> end users. I don't think we can use the git:// fetcher as we need the
+> snapshot of the current 'sources' (with local changes), and using the
+
+I think we need to be precise on what you mean by local changes.  Local as in
+not yet committed?  Or local as in on the local disk.  The later you can
+definitely use the mirroring.. the former you need to use other approaches to
+satisfy (externalsrc... but then you run into the any file changes and it will
+rebuild.   If anything, I'd say maybe externalsrc needs to be enhanced?)
+
+> file:// fetcher has important performance impacts:
+> * checksum for 'each' file (which can be large, especially for kernel)
+> * un-expected rebuild when running repo sync, if any new git objects
+> are put in .git (even when no changes are made to the local worktree
+> of the git project).
+
+This is why using git://... is needed to tell the system to use the git
+formatting and ignore just new files.
+
+--Mark
+
+>>
+>> File checksums are added to the hashes "late" so that we don't have to
+>> reparse entire recipes when files change. We do need a mechanism to
+>> know when we need to reparse the checksum. I think this means you can
+>> skip the checksum calculation for each file but you do still end up
+>> having to stat all files in the tree separately for bitbake's tracking
+>> and for git. We also have to notice when new files are added.
+>>
+>> As such I'm not convinced this patch will work correctly (e.g. would it
+>> notice if I copy in a new file to the directory untracked by git).
+> 
+> At least I confirm that with the file:// fetcher everything works
+> fine, when modifying files. I don't think I have tried adding new
+> files. But I will try that.
+> 
+> Are you trying to say that to fix this properly we might need another
+> Fetcher , something in between file:// and git://, e.g. localgit://?
+> Would that make this problem easier to solve?
+> 
+>>
+>> A first step may be to add some further tests to bitbake-selftest to
+>> better cover this area...
+>>
+>> Cheers,
+>>
+>> Richard
+>>
+>>
+>>
+>>
+>>
 
