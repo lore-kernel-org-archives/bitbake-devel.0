@@ -1,16 +1,16 @@
 Return-Path: <chris.laplante@agilent.com>
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com
-	(mail-eopbgr810054.outbound.protection.outlook.com [40.107.81.54])
-	by mail.openembedded.org (Postfix) with ESMTP id BC2DC7F5B9
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com
+	(mail-eopbgr790044.outbound.protection.outlook.com [40.107.79.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 30AB67F5B9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Oct 2019 16:23:32 +0000 (UTC)
+	Fri, 11 Oct 2019 16:23:35 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=fEz565wEcGIBkQTcDZt5IW14u/FORxIu8j+j8BDtogOxHR05hiLzfSqvsxN6RXzYaShY2tadI3VLbN+Ag+5fTeym5Ywwfo6Tek+8BwKq3LJY1jvmm6kk7s2TMhlgHd8KsJopyVSeQIpW/dEI3baZvC3rbbbe6JOyPWpBxCPFoERFuttQORi0qCSrNeWDO8SCKRpsHvV59t9ZS6ohQ9xFHon3HVMK+ydQmDNAoT2sEL3WrZG3pvGXKo6yuhoxdQb6WUua4mbir3SxYfisWuldbdLJtwAkiQ91DV8+gxgJXLcv5OUWAUsLBW2MHxkZCmLskDrUIg0bGvvda59Xr6f6PA==
+	b=cVAxHiUp9hffcqRox5O+mvrCgw7AClB0OwpBXUIM0ur+yPl9PTEhfcVuk1wXD/z1yFtY5bTTVWRUd1AScnfFQd9VPx4o9b6zoCHxI+fdSbHWzRcstvAGPW0qsfi1AuF+GckZ1mc7tW1mpqiVJ1wAh5NNNPu7giZ8aM9E8Mv8rx+20jYuax0GDhqAJfdB7ZCVgccEjFhDSTtS5y9++Xpss7AMNxAZwqeCgxWtznZ3HQWhymae53hQFRU1BkYLodaBbGHu9Y3Cqxl9lmHyJYnr603Q2J0on07uzwP2b7Q5G3wG0vVO+7GHPC1083pqhqBo41COduiJRJxB5vWNkDV0Mg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
 	s=arcselector9901;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=SYvlnYozCccrnz/VtqCCu5uWSuONvur/K9BshP+SG1Q=;
-	b=cYr20uNNBIES3N5JUYVqzKqm8kbl+ku6AJZlY/NV1jV8As5LdDNmMpojyk50EFDTzmYCoqnozE+0eakY/vRwsSdKqHYSDOOi2V10JXOaaTel5nk1doRhz9aE/rkPVKQh7gURj6rQxNIRTy2N7d7L20YokwC1/jVpofWgubC+87/sMPColHUu5GmUC1r8kX+Rgx46+l8ChB9bR1AENPY+3iTR9jkRb29lxEpWX18PRWWuzjAOnFgGyiPy6h+BkH/G6ry6SGW2JEaPFLuJv4VCzE33i70EOu13ynAH7e23w/cSPMrn+t/YdUuvgQJVdWJnqiDLqZiAgGUA8Vcl58nxdg==
+	bh=TXE8G4x4lSSIIa/UlD75zeuzqFSVSFO/HnTLhK7v15k=;
+	b=jvJx/yVj95W3r/+Pzi3GpgFe0qAeD10FN6cOfR9CzGdHQAD7bFUAQ/sLg18tBPNOTSIjyIom2GipIemELiSjLex0YM95/0Y9qg81A+mGY15Y7Vt1Pr0MSBo11jWdGb9HXXMyq7G0zSVMEsXjOhDEEmWk4t7q+m34AoEOdiPlNcwlQjk9NJmwyFzcPqdmjecHsUA40qWlIU36cWOw+RDbHwKl8vXR2dCzUc5v1eRfQHJS8FxalNz49pOEM75EXx6GeyNS6r2Ag6qhrRPCRCm0v3KZXnix7tLuUcSchXJINj3+sPUmyXxXUSznyfkxidXjmmfe3kgVn02LPzBrQjnlZQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 	192.25.218.34) smtp.rcpttodomain=lists.openembedded.org
 	smtp.mailfrom=agilent.com;
@@ -19,18 +19,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
 	s=selector2;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=SYvlnYozCccrnz/VtqCCu5uWSuONvur/K9BshP+SG1Q=;
-	b=rhdJW1pJY4PS0zI7UVcvqD+dQeXLz5xdyxXDfhPIQ9O/dfyrBayLFE5ELA/TW1GczV/nM6ZzG4Ioublq70MdGbsY4l1oMhn5eCY8H6/Pzg6BjZlAp8ZYI4bN+uBa+oInqSxONpCYogLHly+4xHVS+NxbpNS3OPs8zucAnDzk8r8=
-Received: from BN8PR12CA0029.namprd12.prod.outlook.com (2603:10b6:408:60::42)
-	by CH2PR12MB4261.namprd12.prod.outlook.com (2603:10b6:610:a9::8) with
+	bh=TXE8G4x4lSSIIa/UlD75zeuzqFSVSFO/HnTLhK7v15k=;
+	b=pEfal2sEElKg7yB6h6q8UdBYl3qE5oT27WYwy6LZia+016P4BIW0u+7hZ78VNN+rUaYJt/3xXW7Y59watCWzFPwUGK2MzianuCE+hxggUMT75mgpxopV0Eo3QxaME/YpIHHx7tZ8Wn8NrIpYA/J+BOQJOyWc1++RJ3oaYgD4IWA=
+Received: from BN8PR12CA0017.namprd12.prod.outlook.com (2603:10b6:408:60::30)
+	by DM6PR12MB3225.namprd12.prod.outlook.com (2603:10b6:5:185::29) with
 	Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.18;
-	Fri, 11 Oct 2019 16:23:32 +0000
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16;
+	Fri, 11 Oct 2019 16:23:34 +0000
 Received: from CO1NAM05FT045.eop-nam05.prod.protection.outlook.com
-	(2a01:111:f400:7e50::208) by BN8PR12CA0029.outlook.office365.com
-	(2603:10b6:408:60::42) with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.21 via
-	Frontend Transport; Fri, 11 Oct 2019 16:23:32 +0000
+	(2a01:111:f400:7e50::204) by BN8PR12CA0017.outlook.office365.com
+	(2603:10b6:408:60::30) with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.18 via
+	Frontend Transport; Fri, 11 Oct 2019 16:23:34 +0000
 Authentication-Results: spf=pass (sender IP is 192.25.218.34)
 	smtp.mailfrom=agilent.com; lists.openembedded.org;
 	dkim=none (message not
@@ -43,14 +43,14 @@ Received: from edgeappmail.agilent.com (192.25.218.34) by
 	CO1NAM05FT045.mail.protection.outlook.com (10.152.96.159) with
 	Microsoft SMTP
 	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2367.5 via Frontend Transport; Fri, 11 Oct 2019 16:23:32 +0000
+	15.20.2367.5 via Frontend Transport; Fri, 11 Oct 2019 16:23:33 +0000
 Received: from localhost.localdomain (130.30.246.172) by
 	edgeappmail.agilent.com (192.25.218.34) with Microsoft SMTP Server id
-	15.1.1713.5; Fri, 11 Oct 2019 10:23:24 -0600
+	15.1.1713.5; Fri, 11 Oct 2019 10:23:25 -0600
 From: Chris Laplante <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 11 Oct 2019 12:23:06 -0400
-Message-ID: <04412d1ae59990919a0ff1ca32583d4e103feee5.1570810590.git.chris.laplante@agilent.com>
+Date: Fri, 11 Oct 2019 12:23:07 -0400
+Message-ID: <54e0fdde718a04a6706cea9272bc46a2361f68b3.1570810590.git.chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1570810590.git.chris.laplante@agilent.com>
 References: <cover.1570810590.git.chris.laplante@agilent.com>
@@ -60,30 +60,30 @@ Received-SPF: None (wpcosapexchedg3.windmz.agilent.com:
 X-EOPAttributedMessage: 0
 X-Forefront-Antispam-Report: CIP:192.25.218.34; IPV:NLI; CTRY:US; EFV:NLI;
 	SFV:NSPM;
-	SFS:(10009020)(376002)(346002)(136003)(39860400002)(396003)(199004)(189003)(29502001)(6916009)(106002)(118296001)(336012)(956004)(36906005)(48376002)(2906002)(54906003)(86362001)(16586007)(2616005)(11346002)(446003)(6666004)(126002)(316002)(356004)(486006)(476003)(44832011)(426003)(2351001)(36756003)(246002)(478600001)(50466002)(7636002)(8936002)(305945005)(76176011)(5660300002)(51416003)(8676002)(186003)(70206006)(26005)(107886003)(47776003)(50226002)(4326008)(5001870100001);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:CH2PR12MB4261;
+	SFS:(10009020)(396003)(376002)(346002)(39860400002)(136003)(199004)(189003)(29502001)(86362001)(478600001)(50226002)(2351001)(14444005)(36756003)(186003)(36906005)(8676002)(51416003)(7636002)(246002)(118296001)(305945005)(316002)(106002)(8936002)(48376002)(26005)(76176011)(6916009)(16586007)(5660300002)(446003)(11346002)(126002)(426003)(50466002)(2616005)(107886003)(44832011)(356004)(476003)(54906003)(4326008)(6666004)(336012)(2906002)(70206006)(486006)(956004)(47776003)(5001870100001);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:DM6PR12MB3225;
 	H:edgeappmail.agilent.com; FPR:; SPF:Pass; LANG:en;
 	PTR:wpcosapexchedg3.windmz.agilent.com,cos.smtp.agilent.com; A:1;
 	MX:1; 
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a1949298-0f78-4441-2320-08d74e675ba6
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4261:
+X-MS-Office365-Filtering-Correlation-Id: 3bc7e8ac-03f0-49cd-f6bb-08d74e675cb5
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3225:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR12MB4261CEFA26C4BBE93A1EC9968B970@CH2PR12MB4261.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:586;
+X-Microsoft-Antispam-PRVS: <DM6PR12MB32256BD9076C4C30607DD1BB8B970@DM6PR12MB3225.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
 X-Forefront-PRVS: 0187F3EA14
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: F1lWKbrUzQrA9FMZMpm7mgNcVT81NEcMn9pqZBK76Eo7EE2KYjWFKg/5JGvCyTpV+xaSeoy3I0VskMs6JJW1N7haHhyoBMkcvK/fKZfvINNKTgdiZGXGQqC/RkWrPvNCj5cNSyRNrYQSMtGCQPjgQKQtd0srUcOBmx7QbIODye3QL0pvhMbbLZ6NrPg/IZPZVFW4RH0hbB/8VSgVsN931NDSQPAUHCE055zU4hNK+qyomfW/e1YO8odNlhQGaF1q0QPs0o3rCHuajSYE6rm8ZVn4Bo4XsmbJXB0W7jVhU0ZY13YISqSxtqpWvfqJJ/LQlBUXvCE3gS+YehFW3Wb0Ucgp2k4K1y7lPKRbtSEOaxWNK7NNlVnTh2xXaj346IIA4jsKmiAtAQ4pOViJaQtySD4ClIsz8RO1p/5cwY4AIOo=
+X-Microsoft-Antispam-Message-Info: Rp8VHShnar37XAnlSchl+RHBgfw4WLZ3gSnOzRN8BcMaxXC9lUtd+GSu/JM4JHUi0+pEjO2S9xl8ltKCZd4n0Z/hzG1cmN2qP30WxG42J0/RG/+PuWWsoi1JFFBZDt/VNSbUMeKSMoavBSGIGvbJCvsWwMaBnIGk2HAh2P+VKv84Tv1WXyQZEyOyUoOPuyGGCRcaln4+0Snzi8bFMwl9q3B0jLUKfMN0k65KQTEZ4nAAgvnIB2fPT23GcphZBYD+88QtNj4AGbY3WR1v5LIc1/yGSz4Er2XRZFsueXU/AbPY+JpmtARoK0GB6imZCzma8l42cSX6IXvT9f2O4PpSTZ1HsG3gaNR1ZNVZmqw3Bh3kqeljB4GN1M9YOC1LeuGQmpnBhvpsJK7AcHsZlnLECWE+5jTeCh4nRuGl38lyRQc=
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2019 16:23:32.1346 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1949298-0f78-4441-2320-08d74e675ba6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2019 16:23:33.9130 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bc7e8ac-03f0-49cd-f6bb-08d74e675cb5
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
 	Ip=[192.25.218.34]; Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4261
-Subject: [PATCH 6/9] bitbake: contrib/vim: renaming & comments
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3225
+Subject: [PATCH 7/9] bitbake: contrib/vim: indenting for assignments; tweak Python indenting
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -96,53 +96,100 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 11 Oct 2019 16:23:33 -0000
+X-List-Received-Date: Fri, 11 Oct 2019 16:23:36 -0000
 Content-Type: text/plain
 
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- bitbake/contrib/vim/indent/bitbake.vim | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ bitbake/contrib/vim/indent/bitbake.vim | 56 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 3 deletions(-)
 
 diff --git a/bitbake/contrib/vim/indent/bitbake.vim b/bitbake/contrib/vim/indent/bitbake.vim
-index 3a0ca86..782137f 100644
+index 782137f..ed2bd32 100644
 --- a/bitbake/contrib/vim/indent/bitbake.vim
 +++ b/bitbake/contrib/vim/indent/bitbake.vim
-@@ -12,7 +12,7 @@ unlet b:did_indent
- setlocal indentexpr=BitbakeIndent(v:lnum)
- setlocal autoindent nolisp
+@@ -109,7 +109,12 @@ function GetPythonIndent(lnum)
+             \ . " =~ '\\(Comment\\|Todo\\|String\\)$'",
+             \ searchpair_stopline, searchpair_timeout)
+     if p > 0
+-        if s:is_python_func_def(p)
++        if s:is_bb_python_func_def(p)
++          " Handle first non-empty line inside a BB Python task
++          if p == plnum
++              return shiftwidth()
++          endif
++
+           " Handle the user actually trying to close a BitBake Python task
+           let line = getline(a:lnum)
+           if line =~ '^\s*}'
+@@ -241,6 +246,7 @@ unlet s:keepcpo
  
--function s:is_python_func_def(lnum)
-+function s:is_bb_python_func_def(lnum)
-     let stack = synstack(a:lnum, 1)
+ 
+ let b:did_indent = 1
++setlocal indentkeys+=0\"
+ 
+ 
+ function BitbakeIndent(lnum)
+@@ -248,13 +254,57 @@ function BitbakeIndent(lnum)
+         return -1
+     endif
+ 
+-    let stack = synstack(a:lnum, col("."))
++    let stack = synstack(a:lnum, 1)
      if len(stack) == 0
-         return 0
-@@ -84,7 +84,7 @@ function GetPythonIndent(lnum)
-     if parlnum > 0
-       " We may have found the opening brace of a BitBake Python task, e.g. 'python do_task {'
-       " If so, ignore it here - it will be handled later.
--      if s:is_python_func_def(parlnum)
-+      if s:is_bb_python_func_def(parlnum)
-         let parlnum = 0
-         let plindent = indent(plnum)
-         let plnumstart = plnum
-@@ -179,6 +179,7 @@ function GetPythonIndent(lnum)
-   endif
+         return -1
+     endif
  
-   " If the previous line was a stop-execution statement...
-+  " TODO: utilize this logic to deindent when ending a bbPyDefRegion
-   if getline(plnum) =~ '^\s*\(break\|continue\|raise\|return\|pass\|bb\.fatal\)\>'
-     " See if the user has already dedented
-     if indent(a:lnum) > indent(plnum) - shiftwidth()
-@@ -257,7 +258,7 @@ function BitbakeIndent(lnum)
+     let name = synIDattr(stack[0], "name")
+-    "echo name
++
++    " TODO: support different styles of indentation for assignments. For now,
++    " we only support like this:
++    " VAR = " \
++    "     value1 \
++    "     value2 \
++    " "
++    "
++    " i.e. each value indented by shiftwidth(), with the final quote " completely unindented.
++    if name == "bbVarValue"
++        " Quote handling is tricky. kernel.bbclass has this line for instance:
++        "     EXTRA_OEMAKE = " HOSTCC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}" " HOSTCPP="${BUILD_CPP}""
++        " Instead of trying to handle crazy cases like that, just assume that a
++        " double-quote on a line by itself (following an assignment) means the
++        " user is closing the assignment, and de-dent.
++        if getline(a:lnum) =~ '^\s*"$'
++            return 0
++        endif
++
++        let prevstack = synstack(a:lnum - 1, 1)
++        if len(prevstack) == 0
++            return -1
++        endif
++
++        let prevname = synIDattr(prevstack[0], "name")
++
++        " Only indent if there was actually a continuation character on
++        " the previous line, to avoid misleading indentation.
++        let prevlinelastchar = synIDattr(synID(a:lnum - 1, col([a:lnum - 1, "$"]) - 1, 1), "name")
++        let prev_continued = prevlinelastchar == "bbContinue"
++
++        " Did the previous line introduce an assignment?
++        if index(["bbVarDef", "bbVarFlagDef"], prevname) != -1
++            if prev_continued
++                return shiftwidth()
++            endif
++        endif
++
++        if !prev_continued
++            return 0
++        endif
++
++        " Autoindent can take it from here
++        return -1
++    endif
  
      if index(["bbPyDefRegion", "bbPyFuncRegion"], name) != -1
          let ret = GetPythonIndent(a:lnum)
--        " Should always be indented by at least one shiftwidth; but allow
-+        " Should normally always be indented by at least one shiftwidth; but allow
-         " return of -1 (defer to autoindent) or -2 (force indent to 0)
-         if ret == 0
-             return shiftwidth()
 -- 
 2.7.4
 
