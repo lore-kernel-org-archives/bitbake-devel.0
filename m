@@ -1,53 +1,78 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
-	[209.85.221.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 8290B7F5C0
+Return-Path: <chris.laplante@agilent.com>
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com
+	(mail-eopbgr820045.outbound.protection.outlook.com [40.107.82.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 9B3657F5C0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Oct 2019 17:43:48 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id p14so12840671wro.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Oct 2019 10:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:date:to:cc:subject:message-id:references:mime-version
-	:content-disposition:in-reply-to:user-agent;
-	bh=9BNcgLdngeyBbWYik3LmyEUlwN8Z4P1Ocfk2Ru/hOas=;
-	b=XAfcJc2J8dATjI1ZjNYtVmAqqJbKdCkA360c07AcVlX1J9oMU1gf9iT1Ce30nQKJy3
-	GGtdTmXpM/Tjv8Lzx/pXkJwfZhYOYFEJLPhzIb9brUOgRuQL1ZSptr3+oRh6hWQyqW0b
-	54g/t1mEeYU5/H492qcLCCNPCwWzN1r1jN8GzjEqH4ZaI6anB9f7x6hsnGhTEdOgYgL6
-	kazJoBHChzP9jiczbOm7zH4dfzvPWSk71IP5Pwaw2oPqB6dAy7TJZH5gdVxpNqYbWVNT
-	zwUZMZmZ4gJ15aWkzlk0aIxdomyaEPAm9FP15skfHp+k6NVBbXw3zlojmbFLV7y4KScK
-	x+wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-	:mime-version:content-disposition:in-reply-to:user-agent;
-	bh=9BNcgLdngeyBbWYik3LmyEUlwN8Z4P1Ocfk2Ru/hOas=;
-	b=BM6xMORVTIg7fi0ZqbtcnuFMcBkA5z9lJR76vcDiA885IDMLv0QgKJuvvD3a+EXWS+
-	cZrjBV795v1mD+8OI0ZrnOQ31F494DeOfRIh/SR90Bq2TlzlZVlAwWz7KZ2IUZnoRHua
-	ebB97rO78Vft7l0JFqccZ08OX9xugEZeKf3eTJGq3VX9eW1mV1udzqU6C24b2q0cLcmS
-	INAf+MUxHNf92+jr57AE2mfjahk8DqpWauM8vZ544i/chAtxe/nhBSak7diHXePnmYde
-	h5scDhao4+c+MrK6ngmp0WmKZW1v5LdCJWyqE1OgX3HvClhNL3DulDFQyYiGDxxUTm9u
-	Zh1A==
-X-Gm-Message-State: APjAAAU77It+6h13kN5HU96XBwl/ZvY31UyIReSPLpwF8BzU4qqfO/df
-	0p5ppBFhRzYxU0x8tbLDW6rVtnde00M=
-X-Google-Smtp-Source: APXvYqzzk6bgBja2L+VuyG2JTUUaTVfeyt3QxCb2TDEdl1ERyG7HzlCEp84y1w7isdnkCAr+n+GZ1w==
-X-Received: by 2002:adf:e302:: with SMTP id b2mr13264625wrj.298.1570815829156; 
-	Fri, 11 Oct 2019 10:43:49 -0700 (PDT)
-Received: from localhost (ip-217-030-068-212.aim-net.cz. [217.30.68.212])
-	by smtp.gmail.com with ESMTPSA id
-	c18sm10459400wrv.10.2019.10.11.10.43.47
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 11 Oct 2019 10:43:48 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Fri, 11 Oct 2019 19:43:51 +0200
-To: Chris Laplante <chris.laplante@agilent.com>
-Message-ID: <20191011174351.GA1563@jama>
+	Fri, 11 Oct 2019 17:52:05 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=Dr3asycgKGBZvfNeJFrI1qxFLfgY8C5FWc5oFOst4WHfkHZTq8DfT9o68X7xke1Fh8kPZoiv3uNDnVv4BduBejMkFupy1XQYI3NXrnaR9zjBdjFMDbkhPynCTyNPzikq9ajt3LElaHMSJq7HgKBT79BMA5z9jfi2+6DEYHlRz6MTYA1f2IccAYkpYgfzd9Q9sn4SNXffgXAB7a2y6NZRvcnWxEtxN0qj+6HCW7bwWBXPFPkEC0Qj3MngvpLOidwSPYqSCUKOMONgAHOfK0vTbZtvy9OoNZgmU7uvXSavRq+21irOOZ3zlHgc0NPElQyK2ZFwsDQMTWK6cL72O3X9fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=ITmH1mT+Udx6FJeGIUBQyLmNaDpyk5TYmis7wJKDgS4=;
+	b=RGz76AzIEeVKXbyjamLjFHn9BX4hGc+TIfK11ZwFmWn6wepu3U0S2MweIyPQiETZ4JbCyxAkUnzn+0EllE8SBmkdXqkd5EW+oVefKUVmGxE22ttNLGyIgHlRTpWGcJ1WQssYNAc1CNx4GDQWBoGPgvLmm9DdA0VBevzBf5hLzHksLIUdZluw2Wg95LIx0XcuD+0VYVm1xGi1S1E4gUzXTneyInB/8okprBC0Vj/9oV2T7M+VKU4FeiwMzKFz9fF2t9+HoV55fAaXN+9ryl/vV6wqghneU0vpfEPSdQsVbTtvT0qscv6YySZWFBoBIozsy0JiTboDiGu8UViYPldcVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+	smtp.mailfrom=agilent.com;
+	dmarc=pass action=none header.from=agilent.com; 
+	dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+	s=selector2;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=ITmH1mT+Udx6FJeGIUBQyLmNaDpyk5TYmis7wJKDgS4=;
+	b=DuVtpqxhtgCT7x9EAtVZ99UC3TM790JCT5HutcOBvIIEO4uRAlN+WTFZy3YTACltubi56xTTSBogD7weoY+N/aci8hKbW8SLDfWrNLzRbpZvz0/Hg7edBpFQEHuhBIfrgdCgHQvjKBVh+TdeMZ9jkYG5x/0KyJkCsPCszaEbUlE=
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
+	CY4PR12MB1623.namprd12.prod.outlook.com (10.172.67.16) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2347.16; Fri, 11 Oct 2019 17:52:04 +0000
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::fdcf:99b9:ab44:4986]) by
+	CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::fdcf:99b9:ab44:4986%5]) with mapi id 15.20.2347.021;
+	Fri, 11 Oct 2019 17:52:04 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: Martin Jansa <martin.jansa@gmail.com>
+Thread-Topic: [bitbake-devel] [PATCH 0/9] BitBake Vim indentation plugin
+Thread-Index: AQHVgFtyeEUVfFcZN0ytFKxbyomEcKdVtoKQ
+Date: Fri, 11 Oct 2019 17:52:03 +0000
+Message-ID: <CY4PR12MB165321DBBFA7D2109755B8D38B970@CY4PR12MB1653.namprd12.prod.outlook.com>
 References: <cover.1570810590.git.chris.laplante@agilent.com>
+	<20191011174351.GA1563@jama>
+In-Reply-To: <20191011174351.GA1563@jama>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=chris.laplante@agilent.com; 
+x-originating-ip: [4.16.127.92]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6d4b6e83-6030-4945-9382-08d74e73b9bf
+x-ms-traffictypediagnostic: CY4PR12MB1623:
+x-microsoft-antispam-prvs: <CY4PR12MB1623CCC086EC9FE12BF9E7628B970@CY4PR12MB1623.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(396003)(39860400002)(366004)(376002)(346002)(136003)(29502001)(189003)(199004)(66476007)(66066001)(71200400001)(71190400001)(8676002)(81156014)(81166006)(316002)(486006)(11346002)(446003)(14454004)(478600001)(6246003)(66946007)(8936002)(4326008)(5660300002)(476003)(76116006)(52536014)(66556008)(64756008)(66446008)(25786009)(6116002)(3846002)(55016002)(6436002)(9686003)(7696005)(99286004)(2906002)(76176011)(33656002)(186003)(6506007)(256004)(102836004)(229853002)(26005)(6916009)(86362001)(74316002)(7736002)(305945005);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1623;
+	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; MX:1; A:1; 
+received-spf: None (protection.outlook.com: agilent.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pNjVURn39altiNp9ccmWoGw6baW84q6whw+P31lGtN5AJd0kLtM9x/GFP8s/pQOmIWRm05NYNaCP7unEwUj89HS1eLRVafrSrdjntLb2b69/ZSZ18tXXic5j4c6y6svS/AzkUEdWXIbUXujoRY28hNFKZSHaTiYDx93Gwc6t66PaGc+b3rBjil163+9oxtxPTC7y+BDahTxo+6siy3mAn7Z6eFtlgOA2oUXqP4V7rpHgpbNFTWppKRdVsWF1cKBKLaOGqXbO6kqmin2lTe230SokRci76W/PQYmel5jIue3+jThfovTWZoIIACe6j02e/lUJIMERvOThBkA4atlDEqoyTxIE1+eJf75Iue6HJbb0zTdRyi7eZdTwmoeuh+DmudO9Rvp/sFTT11BSBbPIK8ab6h+2AUWPS0CzBF2M8NU=
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-In-Reply-To: <cover.1570810590.git.chris.laplante@agilent.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-Cc: bitbake-devel@lists.openembedded.org
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d4b6e83-6030-4945-9382-08d74e73b9bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 17:52:03.8971 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JJXX9WaEVkGVUWkogIsDQULhUXzt7CyFf+cZtHCeiBFiaYNftm4Gk1p6oG6DDxj+8F1fUhb7+JTBdIa3oJLKZ5A2IYGWW31O0tjkoEJ8uWw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1623
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH 0/9] BitBake Vim indentation plugin
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -61,95 +86,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 11 Oct 2019 17:43:48 -0000
-X-Groupsio-MsgNum: 10614
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Content-Disposition: inline
-
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Fri, 11 Oct 2019 17:52:05 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2019 at 12:22:58PM -0400, Chris Laplante via bitbake-devel =
-wrote:
-> This patchset adds Vim indentation support for the BitBake language.
+Hi Martin,
+
+> > It supports indenting variable assignments, Python and shell tasks/func=
+tions.
+> > To accomplish Python indentation, it uses a hacked-up version of the Py=
+thon indenter
+> > from Vim upstream. The upstream shell indenter is used directly, withou=
+t
+> > modification, however in the future it will be necessary to modify the =
+shell
+> > indenter to properly support "fakeroot" shell tasks.
 >=20
-> It supports indenting variable assignments, Python and shell tasks/functi=
-ons.
-> To accomplish Python indentation, it uses a hacked-up version of the Pyth=
-on indenter
-> from Vim upstream. The upstream shell indenter is used directly, without
-> modification, however in the future it will be necessary to modify the sh=
-ell
-> indenter to properly support "fakeroot" shell tasks.
-
-Thank you. As vim user I'll test this soon.
-
-Does the above mean that it will use 4 spaces for python and tabs for
-shell tasks like oe-core is using?
-
-Would it be possible to simply modify it locally to use 4 spaces for
-indentation everywhere like other OE layers are using?
-
-https://www.openembedded.org/wiki/Styleguide#Format_Guidelines
-
-Cheers,
-
-> The following changes since commit 94f6b31befda5c496f65e863a6f8152b42d7eb=
-f0:
+> Thank you. As vim user I'll test this soon.
 >=20
->   build-appliance-image: Update to master head revision (2019-10-09 22:28=
-:50 +0100)
->=20
-> are available in the git repository at:
->=20
->   git://git.yoctoproject.org/poky-contrib cpl/bitbake-vim
->   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=3Dcpl/bitbake-=
-vim
->=20
-> Chris Laplante (9):
->   bitbake: contrib/vim: initial commit, with unmodified code from
->     indent/python.vim
->   bitbake: contrib/vim: Modify Python indentation to work with 'python
->     do_task {'
->   bitbake: contrib/vim: More Python indenting; move indent file to
->     correct directory
->   bitbake: contrib/vim: Special handling of bb.fatal
->   bitbake: contrib/vim: don't redeclare indenter
->   bitbake: contrib/vim: renaming & comments
->   bitbake: contrib/vim: indenting for assignments; tweak Python
->     indenting
->   bitbake: contrib/vim: handle shell indenting
->   bitbake: contrib/vim: Add copyright and license notice
->=20
->  bitbake/contrib/vim/indent/bitbake.vim | 342 +++++++++++++++++++++++++++=
-++++++
->  1 file changed, 342 insertions(+)
->  create mode 100644 bitbake/contrib/vim/indent/bitbake.vim
->=20
-> --
-> 2.7.4
->=20
-> --=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+> Does the above mean that it will use 4 spaces for python and tabs for
+> shell tasks like oe-core is using?
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+It currently doesn't specifically enforce either of those. The plugin is ba=
+sed on autoindent, so the expandtab, tabstop, and shiftwidth are respected.=
+ My editor is currently configured for 4 spaces everywhere, and that is use=
+d even for shell tasks. Unfortunately I don't know enough about Vim plugins=
+ to quickly answer how simple (or possible) it would be to change tab/space=
+s mode on a per-region basis. I'll add it to my TODO list though.
 
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks,
+Chris
 
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRU+ejDffEzV2Je2oc3VSO3ZXaAHAUCXaC/VgAKCRA3VSO3ZXaA
-HAjVAJ93y5xi9h5m7nXJiKICIL/lmhk4OgCfSgKbe2gM7sSrlSIoHzs5LywxjBo=
-=X7bw
------END PGP SIGNATURE-----
-
---dDRMvlgZJXvWKvBx--
