@@ -1,84 +1,59 @@
-Return-Path: <aehs29@gmail.com>
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com
-	(mail-eopbgr750042.outbound.protection.outlook.com [40.107.75.42])
-	by mail.openembedded.org (Postfix) with ESMTP id B5543751D2
+Return-Path: <oobitots@cisco.com>
+Received: from rcdn-iport-9.cisco.com (rcdn-iport-9.cisco.com [173.37.86.80])
+	by mail.openembedded.org (Postfix) with ESMTP id E0BF47C85D
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Oct 2019 00:40:06 +0000 (UTC)
-Received: from BYAPR02CA0033.namprd02.prod.outlook.com (2603:10b6:a02:ee::46)
-	by BY5PR02MB6338.namprd02.prod.outlook.com (2603:10b6:a03:1b5::33)
-	with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16;
-	Wed, 9 Oct 2019 00:40:07 +0000
-Received: from BL2NAM02FT003.eop-nam02.prod.protection.outlook.com
-	(2a01:111:f400:7e46::207) by BYAPR02CA0033.outlook.office365.com
-	(2603:10b6:a02:ee::46) with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.25 via
-	Frontend Transport; Wed, 9 Oct 2019 00:40:06 +0000
-Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
-	smtp.mailfrom=gmail.com; lists.openembedded.org; dkim=none (message not
-	signed) header.d=none;lists.openembedded.org; dmarc=fail action=none
-	header.from=gmail.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
-	gmail.com discourages use of 149.199.60.83 as permitted sender)
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
-	BL2NAM02FT003.mail.protection.outlook.com (10.152.76.204) with
-	Microsoft SMTP Server (version=TLS1_0,
-	cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2327.21
-	via Frontend Transport; Wed, 9 Oct 2019 00:40:06 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-	by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-	(envelope-from <aehs29@gmail.com>)
-	id 1iHzz2-0004Sn-Ts; Tue, 08 Oct 2019 17:37:40 -0700
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
-	by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-	(envelope-from <aehs29@gmail.com>)
-	id 1iHzyx-00080A-PN; Tue, 08 Oct 2019 17:37:35 -0700
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-	by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id
-	x990bYSb000994; Tue, 8 Oct 2019 17:37:35 -0700
-Received: from [172.19.2.8] (helo=xsjalejandr50.xilinx.com)
-	by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-	(envelope-from <aehs29@gmail.com>)
-	id 1iHzyw-000807-To; Tue, 08 Oct 2019 17:37:34 -0700
-From: Alejandro Enedino Hernandez Samaniego <aehs29@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue,  8 Oct 2019 17:37:33 -0700
-Message-Id: <1570581453-13681-1-git-send-email-aehs29@gmail.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--4.337-7.0-31-1
-X-imss-scan-details: No--4.337-7.0-31-1;No--4.337-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-Matching-Connectors: 132150552066580750;
-	(f9e945fa-a09a-4caa-7158-08d2eb1d8c44); ()
-X-Forefront-Antispam-Report: CIP:149.199.60.83; IPV:NLI; CTRY:US; EFV:NLI;
-	SFV:NSPM;
-	SFS:(10009020)(376002)(396003)(39860400002)(346002)(136003)(199004)(189003)(48376002)(55446002)(50466002)(4326008)(9786002)(107886003)(86362001)(2351001)(2361001)(81166006)(81156014)(8676002)(50226002)(8936002)(47776003)(61266001)(16586007)(316002)(336012)(36756003)(476003)(2616005)(73392003)(486006)(70206006)(70586007)(426003)(82202003)(5660300002)(76482006)(51416003)(126002)(498600001)(2906002)(6916009)(26005)(356004)(305945005);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:BY5PR02MB6338; H:xsj-pvapsmtpgw01;
-	FPR:; SPF:SoftFail; LANG:en; PTR:unknown-60-83.xilinx.com; A:1;
-	MX:1; 
+	Tue, 15 Oct 2019 09:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=cisco.com; i=@cisco.com; l=8612; q=dns/txt; s=iport;
+	t=1571130086; x=1572339686;
+	h=from:to:subject:date:message-id:references:in-reply-to:
+	mime-version; bh=DbzLsN1+/ro5hIXit2epx8brCx/DmQvsvwxPwgQpciA=;
+	b=VvyiGrSsg4o/ws3NKVytr8QoZFNGgOwLMZgDpJd3caZUqRQpw2SmBR8p
+	LZVQUb28ynxeZs1/+jM3T/vBvvqk8HWymsKi8C5ru1UjjI3O+zxZjTbxy
+	nEY97CwWMIlSJQHIJcJnvr4KlL0WP7yTx9nPCCO8+Ew7RQJZ6BWSuMiQh 8=;
+X-Files: ATT00001.txt : 182
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0CeBACEiqVd/4MNJK1mHAEBAQEBBwE?=
+	=?us-ascii?q?BEQEEBAEBgXuBHAGBA2yBBioKknyCD4R5jiSICgIHAQEBDAEBGAEKDAEBg3t?=
+	=?us-ascii?q?FAoJmJDgTAgMJAQEEAQEBAgEFBG2FLQELhUsBAQEBAwEBJUcbAgEZBAEBCiU?=
+	=?us-ascii?q?CDRgBCh0CBgIEEw4NgwiCdw+tZ4F0M4VNhGgQgTSMDhiBf4dCAQSBPgEBhgo?=
+	=?us-ascii?q?EjGOGGYIqgQQOlxIKHYIFg0SCMIEWiGqFJxuDLJYVjjGII5EYAhEVgTI3Iiq?=
+	=?us-ascii?q?BLnAVO4JsCUcQFIFaGIhkhT9DMY8EgSKBIwEB?=
+X-IronPort-AV: E=Sophos;i="5.67,298,1566864000"; 
+	d="txt'?scan'208,217";a="559320085"
+Received: from alln-core-1.cisco.com ([173.36.13.131])
+	by rcdn-iport-9.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA;
+	15 Oct 2019 09:01:25 +0000
+Received: from XCH-RTP-004.cisco.com (xch-rtp-004.cisco.com [64.101.220.144])
+	by alln-core-1.cisco.com (8.15.2/8.15.2) with ESMTPS id
+	x9F91OFP014005
+	(version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 15 Oct 2019 09:01:25 GMT
+Received: from xch-rtp-004.cisco.com (64.101.220.144) by XCH-RTP-004.cisco.com
+	(64.101.220.144) with Microsoft SMTP Server (TLS) id 15.0.1473.3;
+	Tue, 15 Oct 2019 05:01:24 -0400
+Received: from xch-rtp-004.cisco.com ([64.101.220.144]) by
+	XCH-RTP-004.cisco.com ([64.101.220.144]) with mapi id 15.00.1473.003;
+	Tue, 15 Oct 2019 05:01:24 -0400
+From: "Oleksiy Obitotskyi -X (oobitots - GLOBALLOGIC INC@Cisco)" <oobitots@cisco.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: nativesdk dependencies on shared packages
+Thread-Index: AQHVeEK7FV2xM6uL60KN9SR+VGk6v6dbfPWs
+Date: Tue, 15 Oct 2019 09:01:24 +0000
+Message-ID: <1571130084095.4900@cisco.com>
+References: <1569929018481.70045@cisco.com>
+In-Reply-To: <1569929018481.70045@cisco.com>
+Accept-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.63.114.240]
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4255c29b-5f36-4578-a5bf-08d74c513b39
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6338:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB633837005FA1FA95193FEA54CF950@BY5PR02MB6338.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 018577E36E
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GZ3AJoWTcmgS/0Ooi+ADKHGHWhrz9TayS3XB+4Jgsjfl2C0BPnj5NC8T7yzxw36Doqy7haB00mkbzFt7v8PktpUqCz6GhwhpALdc/XfxCbhl1XvaPaiK9Hyu37392R+Q7HtbAi/9Jym2dJrXDVbWRfnVKL2P64BdfVDquRgNLpA+51ddjHhtyCAbN/93KZZgs3jqmOK6XBDw8uAZ/uRddVbDt1x0lZHgYMfwJ+mcD+dIuH4xvncKJgARSx8IX7eoj5p6cK48ANbWgjCcx+D+OgSEbT40Un/EEhgE3K+QFfRDXH1RkuLlA2En0KFVwYdXFGkGPVWdstcivdX7AJwRxgqPWQuilp+ewqXgIR0+BJ61IfECLo+QtBjeJ1kFvNov/WG1b19ANRBxVn9SxT6ggtvxnWyCxDxh5mtp1sa04bg=
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2019 00:40:06.3518 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4255c29b-5f36-4578-a5bf-08d74c513b39
-X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;
-	Ip=[149.199.60.83]; Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6338
-X-Mailman-Approved-At: Sun, 13 Oct 2019 22:29:20 +0000
-Cc: Alejandro Enedino Hernandez Samaniego <aehs29@gmail.com>
-Subject: [PATCH] bitbake-user-manual: Update multiconfig syntax and explanation of BBMULTICONFIG
+X-Outbound-SMTP-Client: 64.101.220.144, xch-rtp-004.cisco.com
+X-Outbound-Node: alln-core-1.cisco.com
+Subject: nativesdk dependencies on shared packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -91,85 +66,241 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Oct 2019 00:40:08 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 15 Oct 2019 09:01:25 -0000
+X-Groupsio-MsgNum: 10619
+Content-Language: en-US
+Content-Type: multipart/mixed; boundary="_004_15711300840954900ciscocom_"
 
-The syntax to use multiconfig builds changed from multiconfig:foo:target
-to mc:foo:target, change the syntax on bitbakes documentation.
+--_004_15711300840954900ciscocom_
+Content-Type: multipart/alternative;
+	boundary="_000_15711300840954900ciscocom_"
 
-Clarify that BBMULTICONFIG defines additional configurations along with
-the one coming from local.conf.
+--_000_15711300840954900ciscocom_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alejandro Enedino Hernandez Samaniego <aehs29@gmail.com>
----
- doc/bitbake-user-manual/bitbake-user-manual-intro.xml | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-index 02058a6..8f2a960 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-@@ -791,7 +791,7 @@
-                     The following statement in the
-                     <filename>local.conf</filename> file both enables
-                     BitBake to perform multiple configuration builds and
--                    specifies the two multiconfigs:
-+                    specifies the two extra multiconfigs:
-                     <literallayout class='monospaced'>
-      BBMULTICONFIG = "target1 target2"
-                     </literallayout>
-@@ -803,13 +803,13 @@
-                     builds, use the following command form to start the
-                     builds:
-                     <literallayout class='monospaced'>
--     $ bitbake [multiconfig:<replaceable>multiconfigname</replaceable>:]<replaceable>target</replaceable> [[[multiconfig:<replaceable>multiconfigname</replaceable>:]<replaceable>target</replaceable>] ... ]
-+     $ bitbake [mc:<replaceable>multiconfigname</replaceable>:]<replaceable>target</replaceable> [[[mc:<replaceable>multiconfigname</replaceable>:]<replaceable>target</replaceable>] ... ]
-                     </literallayout>
--                    Here is an example for two multiconfigs:
-+                    Here is an example for two extra multiconfigs:
-                     <filename>target1</filename> and
-                     <filename>target2</filename>:
-                     <literallayout class='monospaced'>
--     $ bitbake multiconfig:target1:<replaceable>target</replaceable> multiconfig:target2:<replaceable>target</replaceable>
-+     $ bitbake mc::<replaceable>target</replaceable> mc:target1:<replaceable>target</replaceable> mc:target2:<replaceable>target</replaceable>
-                     </literallayout>
-                 </para>
-             </section>
-@@ -837,13 +837,13 @@
-                     build, you must declare the dependencies in the recipe
-                     using the following statement form:
-                     <literallayout class='monospaced'>
--     <replaceable>task_or_package</replaceable>[mcdepends] = "multiconfig:<replaceable>from_multiconfig</replaceable>:<replaceable>to_multiconfig</replaceable>:<replaceable>recipe_name</replaceable>:<replaceable>task_on_which_to_depend</replaceable>"
-+     <replaceable>task_or_package</replaceable>[mcdepends] = "mc:<replaceable>from_multiconfig</replaceable>:<replaceable>to_multiconfig</replaceable>:<replaceable>recipe_name</replaceable>:<replaceable>task_on_which_to_depend</replaceable>"
-                     </literallayout>
-                     To better show how to use this statement, consider an
-                     example with two multiconfigs: <filename>target1</filename>
-                     and <filename>target2</filename>:
-                     <literallayout class='monospaced'>
--     <replaceable>image_task</replaceable>[mcdepends] = "multiconfig:target1:target2:<replaceable>image2</replaceable>:<replaceable>rootfs_task</replaceable>"
-+     <replaceable>image_task</replaceable>[mcdepends] = "mc:target1:target2:<replaceable>image2</replaceable>:<replaceable>rootfs_task</replaceable>"
-                     </literallayout>
-                     In this example, the
-                     <replaceable>from_multiconfig</replaceable> is "target1" and
-@@ -859,7 +859,7 @@
-                    Once you set up this dependency, you can build the
-                    "target1" multiconfig using a BitBake command as follows:
-                    <literallayout class='monospaced'>
--     $ bitbake multiconfig:target1:<replaceable>image1</replaceable>
-+     $ bitbake mc:target1:<replaceable>image1</replaceable>
-                    </literallayout>
-                    This command executes all the tasks needed to create
-                    <replaceable>image1</replaceable> for the "target1"
-@@ -875,7 +875,7 @@
-                    Consider this change to the statement in the
-                    <replaceable>image1</replaceable> recipe:
-                    <literallayout class='monospaced'>
--     <replaceable>image_task</replaceable>[mcdepends] = "multiconfig:target1:target2:<replaceable>image2</replaceable>:<replaceable>image_task</replaceable>"
-+     <replaceable>image_task</replaceable>[mcdepends] = "mc:target1:target2:<replaceable>image2</replaceable>:<replaceable>image_task</replaceable>"
-                    </literallayout>
-                    In this case, BitBake must create
-                    <replaceable>image2</replaceable> for the "target2"
--- 
-2.7.4
+Hi,
 
 
+In case previous mail was omitted.
+
+
+Regards,
+
+Oleksiy
+
+________________________________
+From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-bounces@l=
+ists.openembedded.org> on behalf of Oleksiy Obitotskyi -X (oobitots - GLOBA=
+LLOGIC INC at Cisco) via bitbake-devel <bitbake-devel@lists.openembedded.or=
+g>
+Sent: Tuesday, October 1, 2019 14:23
+To: bitbake-devel@lists.openembedded.org
+Cc: Taras Kondratiuk (takondra); Ruslan Bilovol -X (rbilovol - GLOBALLOGIC =
+INC at Cisco)
+Subject: [bitbake-devel] nativesdk dependencies on shared packages
+
+
+Hi,
+
+
+We have situation when MACHINE value change affect nativesdk packages (thud=
+ but the same situation was on krogoth).
+
+MACHINE=3D"x86" bitbake nativesdk-<package> -> build package and dependenci=
+es x86
+MACHINE=3D"x86-64" bitbake nativesdk-<package> -> build package and depende=
+ncies for x86-64
+and finally
+MACHINE=3D"x86" bitbake nativesdk-<cpackage> -> a lot of setscene functons =
+executed for nativesdk packages
+
+MACHINE value affects BASELIB. For x86-64 we override BASELIB =3D lib64.
+For x86 BASELIB =3D lib. baselib for cross/natviesdk ramains unchanged (lib=
+).
+
+# $BASELIB
+#   set <>/openembedded-core/meta/conf/bitbake.conf:12
+#     "lib"
+# pre-expansion value:
+#   "lib"
+BASELIB=3D"lib"
+
+# $BASELIB [2 operations]
+#   set <>/openembedded-core/meta/conf/bitbake.conf:12
+#     "lib"
+#   set <>/x86-64-platforms.inc:22
+#     "lib64"
+# pre-expansion value:
+#   "lib64"
+BASELIB=3D"lib64"
+
+Tracking dependencies shows that nativesdk-<package> depends on gcc-crosssd=
+k which depend on
+shared gcc-source package. And gcc-source tasks hash values (starting from =
+from gcc-source.do_patch) are different for
+x86 and x86-64 (due to baselib), so nativesdk-<package> task stamp signatur=
+e deps part depends on gcc-source tasks hash
+
+and also become different if we change MACHINE.
+
+
+Technically  it can be fixed with tweaking sstate_rundepfilter - but it's n=
+ot generic solution.
+
+Is there any way to avoid rebuilding nativesdk packages that depend on shar=
+ed packages (e.g. gcc-source)?
+
+
+Regards,
+
+Oleksiy
+
+--_000_15711300840954900ciscocom_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none"><!--P{margin-top:0;margin-b=
+ottom:0;} p=0A=
+	{margin-top:0;=0A=
+	margin-bottom:0}--></style>
+</head>
+<body dir=3D"ltr" style=3D"font-size:12pt;color:#000000;background-color:#F=
+FFFFF;font-family:Calibri,Arial,Helvetica,sans-serif;">
+<p>Hi,</p>
+<p><br>
+</p>
+<p>In case previous mail was omitted.<br>
+</p>
+<p><br>
+</p>
+<p>Regards,</p>
+<p>Oleksiy<br>
+</p>
+<div dir=3D"ltr" style=3D"font-size:12pt; color:#000000; background-color:#=
+FFFFFF; font-family:Calibri,Arial,Helvetica,sans-serif">
+<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
+<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font style=3D"font-size:11pt" face=
+=3D"Calibri, sans-serif" color=3D"#000000"><b>From:</b> bitbake-devel-bounc=
+es@lists.openembedded.org &lt;bitbake-devel-bounces@lists.openembedded.org&=
+gt; on behalf of Oleksiy Obitotskyi -X (oobitots -
+ GLOBALLOGIC INC at Cisco) via bitbake-devel &lt;bitbake-devel@lists.openem=
+bedded.org&gt;<br>
+<b>Sent:</b> Tuesday, October 1, 2019 14:23<br>
+<b>To:</b> bitbake-devel@lists.openembedded.org<br>
+<b>Cc:</b> Taras Kondratiuk (takondra); Ruslan Bilovol -X (rbilovol - GLOBA=
+LLOGIC INC at Cisco)<br>
+<b>Subject:</b> [bitbake-devel] nativesdk dependencies on shared packages</=
+font>
+<div>&nbsp;</div>
+</div>
+<div>
+<p>Hi,</p>
+<p><br>
+</p>
+<p>We have situation when MACHINE value change affect nativesdk packages (t=
+hud but the same situation was on krogoth).<br>
+<br>
+MACHINE=3D&quot;x86&quot; bitbake nativesdk-&lt;package&gt; -&gt; build pac=
+kage and dependencies x86<br>
+MACHINE=3D&quot;x86-64&quot; bitbake nativesdk-&lt;package&gt; -&gt; build =
+package and dependencies for x86-64<br>
+and finally<br>
+MACHINE=3D&quot;x86&quot; bitbake nativesdk-&lt;cpackage&gt; -&gt; a lot of=
+ setscene functons executed for nativesdk packages<br>
+<br>
+MACHINE value affects BASELIB. For x86-64 we override BASELIB =3D lib64.<br=
+>
+For x86 BASELIB =3D lib. baselib for cross/natviesdk ramains unchanged (lib=
+).<br>
+<br>
+<span style=3D"font-family:&quot;Courier New&quot;,monospace"># $BASELIB</s=
+pan><br style=3D"font-family:&quot;Courier New&quot;,monospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">#&nbsp;&nbsp;=
+ set &lt;&gt;/openembedded-core/meta/conf/bitbake.conf:12</span><br style=
+=3D"font-family:&quot;Courier New&quot;,monospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">#&nbsp;&nbsp;=
+&nbsp;&nbsp; &quot;lib&quot;</span><br style=3D"font-family:&quot;Courier N=
+ew&quot;,monospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace"># pre-expansi=
+on value:</span><br style=3D"font-family:&quot;Courier New&quot;,monospace"=
+>
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">#&nbsp;&nbsp;=
+ &quot;lib&quot;</span><br style=3D"font-family:&quot;Courier New&quot;,mon=
+ospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">BASELIB=3D&qu=
+ot;lib&quot;</span><br style=3D"font-family:&quot;Courier New&quot;,monospa=
+ce">
+<br style=3D"font-family:&quot;Courier New&quot;,monospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace"># $BASELIB [2=
+ operations]</span><br style=3D"font-family:&quot;Courier New&quot;,monospa=
+ce">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">#&nbsp;&nbsp;=
+ set &lt;&gt;/openembedded-core/meta/conf/bitbake.conf:12</span><br style=
+=3D"font-family:&quot;Courier New&quot;,monospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">#&nbsp;&nbsp;=
+&nbsp;&nbsp; &quot;lib&quot;</span><br style=3D"font-family:&quot;Courier N=
+ew&quot;,monospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">#&nbsp;&nbsp;=
+ set &lt;&gt;/x86-64-platforms.inc:22</span><br style=3D"font-family:&quot;=
+Courier New&quot;,monospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">#&nbsp;&nbsp;=
+&nbsp;&nbsp; &quot;lib64&quot;</span><br style=3D"font-family:&quot;Courier=
+ New&quot;,monospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace"># pre-expansi=
+on value:</span><br style=3D"font-family:&quot;Courier New&quot;,monospace"=
+>
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">#&nbsp;&nbsp;=
+ &quot;lib64&quot;</span><br style=3D"font-family:&quot;Courier New&quot;,m=
+onospace">
+<span style=3D"font-family:&quot;Courier New&quot;,monospace">BASELIB=3D&qu=
+ot;lib64&quot;</span><br>
+<br>
+Tracking dependencies shows that nativesdk-&lt;package&gt; depends on gcc-c=
+rosssdk which depend on<br>
+shared gcc-source package. And gcc-source tasks hash values (starting from =
+from gcc-source.do_patch) are different for<br>
+x86 and x86-64 (due to baselib), so nativesdk-&lt;package&gt; task stamp si=
+gnature deps part depends on gcc-source tasks hash
+</p>
+<p>and also become different if we change MACHINE.<br>
+</p>
+<p><br>
+</p>
+<p>Technically&nbsp; it can be fixed with tweaking sstate_rundepfilter - bu=
+t it's not generic solution.<br>
+</p>
+<p><br>
+Is there any way to avoid rebuilding nativesdk packages that depend on shar=
+ed packages (e.g. gcc-source)?</p>
+<p><br>
+</p>
+<p>Regards,</p>
+<p>Oleksiy<br>
+</p>
+</div>
+</div>
+</body>
+</html>
+
+--_000_15711300840954900ciscocom_--
+
+--_004_15711300840954900ciscocom_
+Content-Type: text/plain; name="ATT00001.txt"
+Content-Description: ATT00001.txt
+Content-Disposition: attachment; filename="ATT00001.txt"; size=182;
+	creation-date="Tue, 01 Oct 2019 11:30:59 GMT";
+	modification-date="Tue, 01 Oct 2019 11:30:59 GMT"
+Content-ID: <7DA3C241215D9E49B5112AA7532E2E93@emea.cisco.com>
+Content-Transfer-Encoding: base64
+
+LS0gDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KYml0
+YmFrZS1kZXZlbCBtYWlsaW5nIGxpc3QNCmJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVk
+Lm9yZw0KaHR0cDovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvbWFpbG1hbi9saXN0aW5mby9iaXRi
+YWtlLWRldmVsDQo=
+
+--_004_15711300840954900ciscocom_--
