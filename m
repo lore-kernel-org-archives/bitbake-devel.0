@@ -1,34 +1,24 @@
-Return-Path: <david.reyna@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 301A37F4E2
+Return-Path: <Kai.Kang@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id DFED77F380
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 15 Oct 2019 15:09:11 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id x9FF9Bif007593
+	Thu, 17 Oct 2019 03:08:34 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x9H38WGY020904
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 15 Oct 2019 08:09:11 -0700 (PDT)
-Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.166]) by
-	ALA-HCA.corp.ad.wrs.com ([147.11.189.40]) with mapi id 14.03.0468.000;
-	Tue, 15 Oct 2019 08:09:10 -0700
-From: "Reyna, David" <david.reyna@windriver.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	"richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>
-Thread-Topic: [bitbake-devel] [PATCH 2/2] toaster: improve warnings when
-	adding	dependency to packages
-Thread-Index: AQHVeK62MJRbnsAVMUemdovoa/1FRadb41kA
-Date: Tue, 15 Oct 2019 15:09:09 +0000
-Message-ID: <5E53D14CE4667A45B9A06760DE5D13D0FAE251A0@ALA-MBD.corp.ad.wrs.com>
-References: <cover.1569971660.git.David.Reyna@windriver.com>
-	<daa7bf8718a4b82f82c7a2b907ba4bcdbd8eff45.1569971660.git.David.Reyna@windriver.com>
-In-Reply-To: <daa7bf8718a4b82f82c7a2b907ba4bcdbd8eff45.1569971660.git.David.Reyna@windriver.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [147.11.117.105]
+	Wed, 16 Oct 2019 20:08:32 -0700
+Received: from pek-lpg-core3.wrs.com (128.224.153.232) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.468.0; Wed, 16 Oct 2019 20:08:19 -0700
+From: <kai.kang@windriver.com>
+To: <richard.purdie@linuxfoundation.org>
+Date: Thu, 17 Oct 2019 11:08:12 +0800
+Message-ID: <20191017030812.17173-1-kai.kang@windriver.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] toaster: improve warnings when adding	dependency to packages
+Cc: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] runqueue.py: not show warning for deferred multiconfig task
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,79 +31,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 15 Oct 2019 15:09:11 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 17 Oct 2019 03:08:35 -0000
+Content-Type: text/plain
 
-Hi Richard,
+From: Kai Kang <kai.kang@windriver.com>
 
-This is the second of two patches that I sent. The first one got merged but=
- this one did not.
+When follow the instructions of multiconfig from Yocto dev manual that
+set in core-image-sato recipe:
 
-- David
+  do_image[mcdepends] = "multiconfig:x86:arm:core-image-minimal:do_rootfs"
 
------Original Message-----
-From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
-unces@lists.openembedded.org] On Behalf Of David Reyna
-Sent: Tuesday, October 01, 2019 4:18 PM
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake-devel] [PATCH 2/2] toaster: improve warnings when adding =
-dependency to packages
+it show too many annoying warnings look like:
 
-From: David Reyna <David.Reyna@windriver.com>
+| WARNING: Deferring mc:x86:virtual:native:/buildarea6/kkang/poky/meta/recipes-support/libxslt/libxslt_1.1.33.bb:do_populate_sysroot
+| after mc:arm: virtual:native:/buildarea6/kkang/poky/meta/recipes-support/libxslt/libxslt_1.1.33.bb:do_populate_sysroot
 
-Some of the objects that bitbake reports to Toaster as dependencies to pack=
-ages
-are known objects that are not packages, for example library files and kern=
-el
-modules. In the Toaster logs, mark these as "Info" instead of "Warning".
+Treat them as infomations rather than warnings.
 
-[YOCTO #13386]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
 ---
- lib/bb/ui/buildinfohelper.py | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ bitbake/lib/bb/runqueue.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index f2151c2..5cbca97 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -646,6 +646,9 @@ class ORMWrapper(object):
-                 Target_Installed_Package.objects.create(target =3D target_=
-obj, package =3D packagedict[p]['object'])
-=20
-         packagedeps_objs =3D []
-+        pattern_so =3D re.compile(r'.*\.so(\.\d*)?$')
-+        pattern_lib =3D re.compile(r'.*\-suffix(\d*)?$')
-+        pattern_ko =3D re.compile(r'^kernel-module-.*')
-         for p in packagedict:
-             for (px,deptype) in packagedict[p]['depends']:
-                 if deptype =3D=3D 'depends':
-@@ -654,6 +657,13 @@ class ORMWrapper(object):
-                     tdeptype =3D Package_Dependency.TYPE_TRECOMMENDS
-=20
-                 try:
-+                    # Skip known non-package objects like libraries and ke=
-rnel modules
-+                    if pattern_so.match(px) or pattern_lib.match(px):
-+                        logger.info("Toaster does not add library file dep=
-endencies to packages (%s,%s)", p, px)
-+                        continue
-+                    if pattern_ko.match(px):
-+                        logger.info("Toaster does not add kernel module de=
-pendencies to packages (%s,%s)", p, px)
-+                        continue
-                     packagedeps_objs.append(Package_Dependency(
-                         package =3D packagedict[p]['object'],
-                         depends_on =3D packagedict[px]['object'],
---=20
-1.9.1
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 18049436fd..21a9f02a1e 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -2750,7 +2750,7 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq):
+                 sqdata.hashes[h] = tid
+             else:
+                 sqrq.sq_deferred[tid] = sqdata.hashes[h]
+-                bb.warn("Deferring %s after %s" % (tid, sqdata.hashes[h]))
++                bb.note("Deferring %s after %s" % (tid, sqdata.hashes[h]))
+ 
+ 
+ class TaskFailure(Exception):
+-- 
+2.17.1
 
---=20
-_______________________________________________
-bitbake-devel mailing list
-bitbake-devel@lists.openembedded.org
-http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
