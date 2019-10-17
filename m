@@ -1,16 +1,16 @@
 Return-Path: <chris.laplante@agilent.com>
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com
-	(mail-eopbgr820049.outbound.protection.outlook.com [40.107.82.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 01E847F6C0
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com
+	(mail-eopbgr780079.outbound.protection.outlook.com [40.107.78.79])
+	by mail.openembedded.org (Postfix) with ESMTP id 6905F7F6B6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Oct 2019 16:37:14 +0000 (UTC)
+	Thu, 17 Oct 2019 16:37:16 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=f+2W5zxE9jT8j9vyGGE+jBSL994tVbP100CSNohI2YgVaa999VGagCKJy8xBFrTFIQxMR4CDlawF+vJ1IYz54uQFfbGs8FU3y9Fr5WWmPr3IVTuBoXsJ3BSL6e24PEFV0kSeGjndTPDHKGfBWwyJoaNyMloI6uq2/gNqdg6Lepr8SSBERN0BvGoZeJmSOqKm0sYV4PLvcYBdWesBLuyKBYCi2wqvcM+XjUCIcDO06HxBW2usdzJeaFZJ/Gvh+AT/3fouYx+XyeHveFVJHWOQNH6/c3KlQsmw6MkmlCt3V3ARdm0LvgtJGXYrlu+nUoDwsEwoVWBwqVgXhOeC4X9C0A==
+	b=koCl9WGTjDFVM+euGsqseFqkyrMVxspyM5y9vX+J0JW7RsG2XMpp68H/ed+REgKnir9fatGTxDhBieKBRuU+i1rgna1QECxXWp6cnqfdLUC2ENEaoCc69uLFL9gG4jTiKyoebQ4T8e2HdJy069h6RVOxWoUOp7tAtqQSjBPAGxwhXm1/7Vo5lKxicDM2x6/aKkHUWLx6KqgW0gA4X3neMydjM7Ssuebjg3g/+gWrOz5sd58iGW+ZFR+Q3kQj513Xy9aDiqqwe0eB/V90PxC/ZHTM4+I2z9W+gcmIDToy10+NuMf/XjbpN5UrEqNEt+DOAne++uzNOlsxnyMFVMn+Rw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
 	s=arcselector9901;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=mIxbpJwaFcbfXyq90KvFBy1NCMz0FJx9YwOhMWmHQqc=;
-	b=JTynB4q2U8xd4gO1wjlut09C56y9BoBdt4zv/pZHechpZDEHErjNi2OVMbfk8+P+HNqh57mAopw3twuXLI+fLuZ0LxCobV55U9vmkIncMNDU6Sj6I+DTOAeBjwlzn03p69KZaN/0Wr8XiqucDJDbB+UWryB8igc5v6lbH+HsAcrZg4QHCv9rRt4O/+r0ORnGDpmr7fi8m5kE32nuj3lRiTOKECAPqNoLCxJnm12kCGIYezQOJSDv8JCk4wkxBzRY479wqVwfCehasku6tp+i2ljRoOI16Jgb2SaQxx6LwzmRkhnYofFamaQuDm4Tl1oGmxCfprjsdmN6ywWiztq6KA==
+	bh=XSKL1dbnjUF00WWIP2jLMp6TKiJm5x3EUiGHsa7ZeVA=;
+	b=cu19zJmF/MuF3/5ewPz2VHMBxp0/kGGWVI3anATUszrGZNWdPg5mss0/M6fpUB/a50H3D5TDJULzmq/a45KjYj9smlUVPugkVtI+szoU5WPYsDpcN3sq2qjRHHJoHPcQSEd9IMn3vDPVo7wuERgWNO+FHhulFXKM6cPCM6JZmjQjuQjWsEI1jqEte6gTp7n5nk2AvdJViaAWm0DhrAOBYMmZE4q3IUQOC5XxFRhqIivHvshmIxUm0Df+DmG6W2I5xULaBs5PRuDkTTfm0Wgum7ygZ+iVoIQFjzB/8R+FvHKpiS+Rj1buTLeJuGD/7DWRvvU5asYpzu7n3Sh/YbaCSw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 	192.25.218.37) smtp.rcpttodomain=lists.openembedded.org
 	smtp.mailfrom=agilent.com;
@@ -19,18 +19,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
 	s=selector2;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=mIxbpJwaFcbfXyq90KvFBy1NCMz0FJx9YwOhMWmHQqc=;
-	b=caTWXK/kBNHwJzXKQeMDI5HHMt0oOjQXB6n+JoXbuWzv9vdfCwMBx0o+IktI9Q2/8xLdgi3lzKpEApk1te2POfadaSdccy7vHl4o/IcuHwbspqP5zJ7PwI1aWgpn7TgPDL1PIDHll4xjXa4BOXfnZrTyleG+bALJ//VfVfEGXj0=
+	bh=XSKL1dbnjUF00WWIP2jLMp6TKiJm5x3EUiGHsa7ZeVA=;
+	b=D65iEuyCIlMJqf3H+bPWVqs0FnxDhEIzaKlF9+BYFNe+7sTMK5hIwCfjHzvCLdp1NlxH6Z8lluG+F+zECutvFnmJEVSOuiQErLouYez4SU5drKnfsFzSBlEv8epQ4GpICBiLX2w1UWaZPWFnp+GG7xmva81NPCMILZTGbHmrKYY=
 Received: from BN6PR12CA0032.namprd12.prod.outlook.com (2603:10b6:405:70::18)
-	by BN8PR12MB3620.namprd12.prod.outlook.com (2603:10b6:408:49::27)
+	by MN2PR12MB3245.namprd12.prod.outlook.com (2603:10b6:208:103::24)
 	with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.19;
-	Thu, 17 Oct 2019 16:37:15 +0000
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16;
+	Thu, 17 Oct 2019 16:37:16 +0000
 Received: from DM3NAM05FT036.eop-nam05.prod.protection.outlook.com
 	(2a01:111:f400:7e51::209) by BN6PR12CA0032.outlook.office365.com
 	(2603:10b6:405:70::18) with Microsoft SMTP Server (version=TLS1_2,
 	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.17 via
-	Frontend Transport; Thu, 17 Oct 2019 16:37:15 +0000
+	Frontend Transport; Thu, 17 Oct 2019 16:37:16 +0000
 Authentication-Results: spf=pass (sender IP is 192.25.218.37)
 	smtp.mailfrom=agilent.com; lists.openembedded.org;
 	dkim=none (message not
@@ -43,14 +43,14 @@ Received: from edgeappmail.agilent.com (192.25.218.37) by
 	DM3NAM05FT036.mail.protection.outlook.com (10.152.98.149) with
 	Microsoft SMTP
 	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2367.5 via Frontend Transport; Thu, 17 Oct 2019 16:37:14 +0000
+	15.20.2367.5 via Frontend Transport; Thu, 17 Oct 2019 16:37:15 +0000
 Received: from localhost.localdomain (130.30.246.172) by
 	edgeappmail.agilent.com (192.25.218.37) with Microsoft SMTP Server id
 	15.1.1261.35; Thu, 17 Oct 2019 10:36:25 -0600
 From: Chris Laplante <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 17 Oct 2019 12:36:51 -0400
-Message-ID: <a12ff384ce194f69ceeb3a47abcf8806cf17a802.1571329975.git.chris.laplante@agilent.com>
+Date: Thu, 17 Oct 2019 12:36:52 -0400
+Message-ID: <879c0a0e303ace0c5df2e1535f6debee338b2d36.1571329975.git.chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1571329975.git.chris.laplante@agilent.com>
 References: <cover.1571329975.git.chris.laplante@agilent.com>
@@ -60,30 +60,30 @@ Received-SPF: None (wpcosapexchedg1.windmz.agilent.com:
 X-EOPAttributedMessage: 0
 X-Forefront-Antispam-Report: CIP:192.25.218.37; IPV:NLI; CTRY:US; EFV:NLI;
 	SFV:NSPM;
-	SFS:(10009020)(376002)(346002)(396003)(136003)(39860400002)(199004)(189003)(29502001)(4744005)(47776003)(44832011)(446003)(11346002)(956004)(486006)(126002)(426003)(107886003)(6666004)(356004)(4326008)(2616005)(476003)(5660300002)(86362001)(478600001)(118296001)(70206006)(2906002)(48376002)(316002)(305945005)(50466002)(51416003)(8936002)(106002)(2351001)(7636002)(54906003)(6916009)(16586007)(26005)(186003)(50226002)(336012)(246002)(8676002)(36756003)(76176011)(5001870100001);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:BN8PR12MB3620;
+	SFS:(10009020)(189003)(199004)(29502001)(86362001)(5660300002)(498600001)(36756003)(107886003)(106002)(47776003)(54906003)(70206006)(16586007)(6666004)(356004)(6916009)(4326008)(76176011)(2906002)(305945005)(186003)(118296001)(50226002)(48376002)(26005)(50466002)(126002)(336012)(476003)(956004)(2351001)(2616005)(426003)(51416003)(8936002)(8676002)(246002)(446003)(44832011)(486006)(7636002)(11346002)(5001870100001);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:MN2PR12MB3245;
 	H:edgeappmail.agilent.com; FPR:; SPF:Pass; LANG:en;
-	PTR:cos.smtp.agilent.com,wpcosapexchedg1.windmz.agilent.com; A:1;
-	MX:1; 
+	PTR:cos.smtp.agilent.com,wpcosapexchedg1.windmz.agilent.com;
+	MX:1; A:1; 
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a40ed161-c8d7-465a-69be-08d753204487
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3620:
+X-MS-Office365-Filtering-Correlation-Id: 91bb20de-9a0c-42ce-1bab-08d753204503
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3245:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR12MB3620990E7D8187590237628F8B6D0@BN8PR12MB3620.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:346;
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3245F25BB75B8FB3C7014F7A8B6D0@MN2PR12MB3245.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:586;
 X-Forefront-PRVS: 01930B2BA8
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NPVpA/kgmhM22V9nAKTdQDZXVT06Y8AFY0vfJURs4yoWNdoARsRSibE0BZqbf2MP9jGWTIGF/xLDiVRiNOD1eMZl87SDh0E2QuabEPgrqvoEB0cJW9i04ysii1tRRaTlSCxBhGfmzF1J6M4BlrVyg/4c+GcFjyQ8mPhNSBQmEXbfdb4OdkIHQmA6YmHHnaU57a1fMEZpOzBcZK7iIWaoVx4RoDbKOdHnArH+iomDOouBxoXNdTmb/+2dyRL6E6hyODHiIAEt8Oeh78GihR5rdZVWa8z3+YSGSidnidXVQWB/LTJ+FGjvX7rh7TTdoUx6q6Mpc/HYNqzWt44vb9msvq27ncWS/ZJZqqsueBfJiS+Hwkuo7/xWPcpWyonGM90uQ1XLnGOOM9IKICRlQ2CnEyvvSTk45O0wKezr8PAg3I0=
+X-Microsoft-Antispam-Message-Info: YVFlgfhkShJ0bYP+dpvMx10m/KxPDOq+bzD0jtzSH3eU2R/qtuPXUMGoZp7uYRITrqctVwzkSozG4CeWLZ0KR4TlpS9mNRDOCvLlbOyc12u0nNNP2udy9mEqtIv2vKtdt+SKa5gne2CcOJ+07dqh5DqNx8AmocByVPedvRECctutgzthP1KiLjmLsyWn044jr/cjS1OFSuBvYHi4kznjtGWs21e8ZXXZUzwS97ylJ4AFOqhVpGxAYZd/n9TduvL9OZKtZt1UKS44uWWT9V6ua2YAp5CQ+0XdtwyfxQ3Emct5cgdkyo3CxIHUn1xmF4EubF9V0zyILjOH5IrdQXeBQ8YRPfY5xRz/lP3+1P2WBHqFt2qSeW/5YZfi0tFhQav+hvB6LFO9jip7rQxYHbeusa80SUCQ1AVzLUZHbhXcNNU=
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2019 16:37:14.8737 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a40ed161-c8d7-465a-69be-08d753204487
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2019 16:37:15.6833 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91bb20de-9a0c-42ce-1bab-08d753204503
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
 	Ip=[192.25.218.37]; Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3620
-Subject: [PATCH v2 5/9] bitbake: contrib/vim: don't redeclare indenter
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3245
+Subject: [PATCH v2 6/9] bitbake: contrib/vim: renaming & comments
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -96,29 +96,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Oct 2019 16:37:15 -0000
+X-List-Received-Date: Thu, 17 Oct 2019 16:37:16 -0000
 Content-Type: text/plain
 
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- bitbake/contrib/vim/indent/bitbake.vim | 4 ++++
- 1 file changed, 4 insertions(+)
+ bitbake/contrib/vim/indent/bitbake.vim | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/bitbake/contrib/vim/indent/bitbake.vim b/bitbake/contrib/vim/indent/bitbake.vim
-index d8bffe0..fc428a2 100644
+index fc428a2..76f84e5 100644
 --- a/bitbake/contrib/vim/indent/bitbake.vim
 +++ b/bitbake/contrib/vim/indent/bitbake.vim
-@@ -2,6 +2,10 @@ if exists("b:did_indent")
-     finish
- endif
+@@ -12,7 +12,7 @@ unlet b:did_indent
+ setlocal indentexpr=BitbakeIndent(v:lnum)
+ setlocal autoindent nolisp
  
-+if exists("*BitbakeIndent")
-+    finish
-+endif
-+
- runtime! indent/sh.vim
- unlet b:did_indent
+-function s:is_python_func_def(lnum)
++function s:is_bb_python_func_def(lnum)
+     let stack = synstack(a:lnum, 1)
+     if len(stack) == 0
+         return 0
+@@ -85,7 +85,7 @@ function GetPythonIndent(lnum)
+     if parlnum > 0
+       " We may have found the opening brace of a BitBake Python task, e.g. 'python do_task {'
+       " If so, ignore it here - it will be handled later.
+-      if s:is_python_func_def(parlnum)
++      if s:is_bb_python_func_def(parlnum)
+         let parlnum = 0
+         let plindent = indent(plnum)
+         let plnumstart = plnum
+@@ -180,6 +180,7 @@ function GetPythonIndent(lnum)
+   endif
  
+   " If the previous line was a stop-execution statement...
++  " TODO: utilize this logic to deindent when ending a bbPyDefRegion
+   if getline(plnum) =~ '^\s*\(break\|continue\|raise\|return\|pass\|bb\.fatal\)\>'
+     " See if the user has already dedented
+     if indent(a:lnum) > indent(plnum) - shiftwidth()
+@@ -258,7 +259,7 @@ function BitbakeIndent(lnum)
+ 
+     if index(["bbPyDefRegion", "bbPyFuncRegion"], name) != -1
+         let ret = GetPythonIndent(a:lnum)
+-        " Should always be indented by at least one shiftwidth; but allow
++        " Should normally always be indented by at least one shiftwidth; but allow
+         " return of -1 (defer to autoindent) or -2 (force indent to 0)
+         if ret == 0
+             return shiftwidth()
 -- 
 2.7.4
 
