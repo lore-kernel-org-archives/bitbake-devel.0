@@ -1,51 +1,47 @@
-Return-Path: <ola.x.nilsson@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id F258878F72
+Return-Path: <kergoth@gmail.com>
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
+	[209.85.221.44])
+	by mail.openembedded.org (Postfix) with ESMTP id C6CBA606B2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Oct 2019 09:07:06 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id C6696182F4
+	Mon, 21 Oct 2019 17:08:54 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id p4so14868464wrm.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Oct 2019 11:07:07 +0200 (CEST)
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id zye0rLXjCmHQ for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Oct 2019 11:07:06 +0200 (CEST)
-Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-	by bastet.se.axis.com (Postfix) with ESMTPS id 0F5941831E
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Oct 2019 11:07:06 +0200 (CEST)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8621F1E077
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Oct 2019 11:07:05 +0200 (CEST)
-Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 798231E076
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Oct 2019 11:07:05 +0200 (CEST)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-	by boulder03.se.axis.com (Postfix) with ESMTP
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Oct 2019 11:07:05 +0200 (CEST)
-Received: from lnxolani1.se.axis.com (lnxolani1.se.axis.com [10.88.130.9])
-	by seth.se.axis.com (Postfix) with ESMTP id 6D48B1A95
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Oct 2019 11:07:05 +0200 (CEST)
-Received: by lnxolani1.se.axis.com (Postfix, from userid 20853)
-	id 655E640AA1; Mon, 21 Oct 2019 11:07:05 +0200 (CEST)
-From: Ola x Nilsson <ola.x.nilsson@axis.com>
+	Mon, 21 Oct 2019 10:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=mwzy0596Lvg6AyuhnBGwtdIyi8b2uR+VkJdZPffpx3k=;
+	b=ChJ1p+PmSJVgUY+lvIB5ONtVIZrbSygrVZOEGuu5zqha0AVgsRsfKye2gC6jIlI8dH
+	7wZDnBIHUKbCnFP5ZmZCHklKcwtSUIA68NHrac+x5HpJEPxZ8lMb9MKJbXpoeKoxMUds
+	7qk0C3KqxsNvW/xSh/5Nm9jKOlzSNSdLmsuVW2eej1gba+dBG5t3bJDXdElx2dvCGVy/
+	wE68CVYqfg2ComKZhRhcTMDCtTE3q0a+l+b4uocl+EsjNqr4Sy+12tS06iGHm+a/TmeF
+	8G3Uy4pb5sRibzj+EtZq5kR2BzC+zd2q8UCBwNtOVjAmHcU+z6oH4Gz8AlXqfhmqV3cZ
+	JaEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=mwzy0596Lvg6AyuhnBGwtdIyi8b2uR+VkJdZPffpx3k=;
+	b=dzz7oJjlpo8EUYerYoHD47kV4lfN/1LT4ea72O+Xg7AB3qmnCZKleW8dfa7MnCnT1v
+	gwLYmkklkJI5tCbcgg5x73ztrJEmWjoJyBjUDpRGQnTtwsozxwKqc191fPtnUXQmxqxK
+	/Uqohtp3KbmqlltK6Mjsst6biLzNfIEfS7XCPNViIHtdzvitKYLprrXoNEvbFLECQfk7
+	1wYJMNffzT4e9OqYmp07M/46rLObgqXA+VYhLOAzc5CfuIktvR4vokuykdFuNsySTHI1
+	TJy63AygCkOBfgO5kMYm/vULwo+ccXBB/DexbvHZ6Ce+CnPsQD0F8e5ssOvl2rZF1Cbi
+	/f9g==
+X-Gm-Message-State: APjAAAUQP2xTiJLXa6Yc9h2UNyDXIXi6nUFE7fEg+zlOLqWOkZC9ITYJ
+	LO/O0dJqJpkIcAdGSzaNy7ZmR8tz
+X-Google-Smtp-Source: APXvYqxJB7+FLmRf9gCDOt3XxrP/mWk/cd7qQmagBdZ9gP+jE1M9L/LZI5Xx902a/RE09iEfrIDaEw==
+X-Received: by 2002:adf:dd4d:: with SMTP id u13mr6574060wrm.104.1571677734920; 
+	Mon, 21 Oct 2019 10:08:54 -0700 (PDT)
+Received: from svr-pkl-eng-07.mgc.mentorg.com ([110.93.212.98])
+	by smtp.gmail.com with ESMTPSA id y1sm18532170wrw.6.2019.10.21.10.08.52
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 21 Oct 2019 10:08:53 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 21 Oct 2019 11:07:05 +0200
-Message-Id: <20191021090705.31214-2-olani@axis.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191021090705.31214-1-olani@axis.com>
-References: <20191021090705.31214-1-olani@axis.com>
-X-TM-AS-GCONF: 00
-Subject: [PATCH 2/2] bitbake: ConfHandler: Use with to manage filehandle lifetime
+Date: Mon, 21 Oct 2019 22:09:52 +0500
+Message-Id: <cover.1571423184.git.chris_larson@mentor.com>
+X-Mailer: git-send-email 2.11.1
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: [PATCH 0/2] fetch2/git: fetch shallow revs when needed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,71 +54,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Oct 2019 09:07:07 -0000
+X-List-Received-Date: Mon, 21 Oct 2019 17:08:55 -0000
 
-Signed-off-by: Ola x Nilsson <olani@axis.com>
----
- lib/bb/parse/parse_py/ConfHandler.py | 44 ++++++++++++++++++------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+From: Christopher Larson <chris_larson@mentor.com>
 
-diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
-index 2e84b913..af64d344 100644
---- a/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/lib/bb/parse/parse_py/ConfHandler.py
-@@ -119,30 +119,30 @@ def handle(fn, data, include):
-         oldfile = data.getVar('FILE', False)
- 
-     abs_fn = resolve_file(fn, data)
--    f = open(abs_fn, 'r')
-+    with open(abs_fn, 'r') as f:
- 
--    statements = ast.StatementGroup()
--    lineno = 0
--    while True:
--        lineno = lineno + 1
--        s = f.readline()
--        if not s:
--            break
--        w = s.strip()
--        # skip empty lines
--        if not w:
--            continue
--        s = s.rstrip()
--        while s[-1] == '\\':
--            s2 = f.readline().rstrip()
-+        statements = ast.StatementGroup()
-+        lineno = 0
-+        while True:
-             lineno = lineno + 1
--            if (not s2 or s2 and s2[0] != "#") and s[0] == "#" :
--                bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
--            s = s[:-1] + s2
--        # skip comments
--        if s[0] == '#':
--            continue
--        feeder(lineno, s, abs_fn, statements)
-+            s = f.readline()
-+            if not s:
-+                break
-+            w = s.strip()
-+            # skip empty lines
-+            if not w:
-+                continue
-+            s = s.rstrip()
-+            while s[-1] == '\\':
-+                s2 = f.readline().rstrip()
-+                lineno = lineno + 1
-+                if (not s2 or s2 and s2[0] != "#") and s[0] == "#" :
-+                    bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
-+                s = s[:-1] + s2
-+            # skip comments
-+            if s[0] == '#':
-+                continue
-+            feeder(lineno, s, abs_fn, statements)
- 
-     # DONE WITH PARSING... time to evaluate
-     data.setVar('FILE', abs_fn)
+When bitbake determines if a git clone needs updating, it only checks for the
+needed srcrevs, not the revs listed in BB_GIT_SHALLOW_REVS, which will fail if
+using shallow and the needed rev was added to the upstream git repo after a
+previous fetch. Ensure that we also check for shallow revs.
+
+[YOCTO #13586]
+
+The following changes since commit 5d83d828cacb58ccb7c464e799c85fd2d2a50ccc:
+
+  bitbake: Update to version 1.44.0 (2019-10-09 14:10:21 +0100)
+
+are available in the git repository at:
+
+  git@github.com:kergoth/bitbake 13586
+
+for you to fetch changes up to 47e7f25073fe14cae3d1c181bb52766adfad59da:
+
+  tests/fetch: add test for fetching shallow revs (2019-10-18 23:25:13 +0500)
+
+----------------------------------------------------------------
+Christopher Larson (2):
+      fetch2/git: fetch shallow revs when needed
+      tests/fetch: add test for fetching shallow revs
+
+ lib/bb/fetch2/git.py  | 23 ++++++++++++++++-------
+ lib/bb/tests/fetch.py | 20 ++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 7 deletions(-)
+
 -- 
-2.11.0
+2.11.1
 
 
