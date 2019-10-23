@@ -1,40 +1,24 @@
-Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 891646C1D5
+Return-Path: <mark.hatle@kernel.crashing.org>
+Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
+	by mail.openembedded.org (Postfix) with ESMTP id BCA087F817
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 Oct 2019 13:08:07 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id C143E9C0368;
-	Wed, 23 Oct 2019 09:08:08 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10032)
-	with ESMTP id 57ytkeKmvR2X; Wed, 23 Oct 2019 09:08:08 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2FF049C0425;
-	Wed, 23 Oct 2019 09:08:08 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10026)
-	with ESMTP id a79esqZ7FQss; Wed, 23 Oct 2019 09:08:08 -0400 (EDT)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0EF9A9C03F0;
-	Wed, 23 Oct 2019 09:08:08 -0400 (EDT)
-Date: Wed, 23 Oct 2019 09:08:08 -0400 (EDT)
-From: Jean-marie Lemetayer <jean-marie.lemetayer@savoirfairelinux.com>
-To: Mark Hatle <mark.hatle@kernel.crashing.org>
-Message-ID: <1859460807.248980.1571836088029.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <4409c36d-23b9-4ddb-d681-5328f75330dc@kernel.crashing.org>
+	Wed, 23 Oct 2019 14:27:16 +0000 (UTC)
+Received: from Marks-MacBook-Pro.local ([76.164.61.198]) (authenticated bits=0)
+	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id x9NERBaH020016
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NO); Wed, 23 Oct 2019 09:27:14 -0500
+To: Jean-marie Lemetayer <jean-marie.lemetayer@savoirfairelinux.com>
 References: <20191022090408.1368-1-jean-marie.lemetayer@savoirfairelinux.com>
 	<20191022090408.1368-3-jean-marie.lemetayer@savoirfairelinux.com>
 	<4409c36d-23b9-4ddb-d681-5328f75330dc@kernel.crashing.org>
+	<1859460807.248980.1571836088029.JavaMail.zimbra@savoirfairelinux.com>
+From: Mark Hatle <mark.hatle@kernel.crashing.org>
+Message-ID: <ead7c39d-6ac4-a469-b190-90f259433595@kernel.crashing.org>
+Date: Wed, 23 Oct 2019 09:27:11 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+	Gecko/20100101 Thunderbird/68.1.2
 MIME-Version: 1.0
-X-Mailer: Zimbra 8.8.11_GA_3737 (ZimbraWebClient - GC77 (Linux)/8.8.11_GA_3737)
-Thread-Topic: fetch2/npm.py: refactor the npm fetcher
-Thread-Index: Bq5zMN79US+yjvOA6G16nflImnON1A==
+In-Reply-To: <1859460807.248980.1571836088029.JavaMail.zimbra@savoirfairelinux.com>
 Cc: paul eggleton <paul.eggleton@linux.intel.com>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>,
 	Savoir-faire Linux Rennes <rennes@savoirfairelinux.com>
@@ -51,58 +35,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Oct 2019 13:08:07 -0000
+X-List-Received-Date: Wed, 23 Oct 2019 14:27:17 -0000
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-On Oct 22, 2019, at 7:10 PM, Mark Hatle mark.hatle@kernel.crashing.org wrot=
-e:
-> On 10/22/19 4:04 AM, Jean-Marie LEMETAYER wrote:
->> This commit refactors the npm fetcher to improve some points and fix
->> others:
->>=20
->> =C2=A0- The big change is that the fetcher is only fetching the package
->> =C2=A0 =C2=A0source and no more the dependencies. Thus the npm fetcher a=
-ct as the
->> =C2=A0 =C2=A0other fetchers e.g git, wget. The dependencies will now be =
-fetched
->> =C2=A0 =C2=A0by the npm class.
->=20
-> I don't completely understand this and the associated class, but does it =
-work
-> with the existing MIRROR and BB_NO_NETWORK/BB_ALLOWED_NETWORKS settings?
->=20
-> My concern is for people in environments that are not allowed to download=
- except
-> from trusted machines, or on disconnected networks so they have everythin=
-g on a
-> local mirror of some sort.
->=20
-> Additionally with the mirroring, it's not unusual for the name of what is
-> downloaded (as well as where it's downloaded from) to change protocol and
-> format. =C2=A0I.e. I'd hope something like:
->=20
-> .*:.*/.* file://my_local/on/disk/mirror
 
-Thank you for pointing this out. As I was inspired by the wget fetcher, I
-think this should be good but i still need to check.
 
-However the npm.bbclass fetches the npm dependencies (currently in the
-do_compile task) and this settings are not respected. I am working on a v2
-to fix this point.
+On 10/23/19 8:08 AM, Jean-marie Lemetayer wrote:
+> On Oct 22, 2019, at 7:10 PM, Mark Hatle mark.hatle@kernel.crashing.org wrote:
+>> On 10/22/19 4:04 AM, Jean-Marie LEMETAYER wrote:
+>>> This commit refactors the npm fetcher to improve some points and fix
+>>> others:
+>>>
+>>>  - The big change is that the fetcher is only fetching the package
+>>>    source and no more the dependencies. Thus the npm fetcher act as the
+>>>    other fetchers e.g git, wget. The dependencies will now be fetched
+>>>    by the npm class.
+>>
+>> I don't completely understand this and the associated class, but does it work
+>> with the existing MIRROR and BB_NO_NETWORK/BB_ALLOWED_NETWORKS settings?
+>>
+>> My concern is for people in environments that are not allowed to download except
+>> from trusted machines, or on disconnected networks so they have everything on a
+>> local mirror of some sort.
+>>
+>> Additionally with the mirroring, it's not unusual for the name of what is
+>> downloaded (as well as where it's downloaded from) to change protocol and
+>> format.  I.e. I'd hope something like:
+>>
+>> .*:.*/.* file://my_local/on/disk/mirror
+> 
+> Thank you for pointing this out. As I was inspired by the wget fetcher, I
+> think this should be good but i still need to check.
+> 
+> However the npm.bbclass fetches the npm dependencies (currently in the
+> do_compile task) and this settings are not respected. I am working on a v2
+> to fix this point.
+> 
+>> I'm also not seeing any test cases for this fetcher.  Since this work isn't well
+>> understood by most of the regular maintainers, I think it's extremely important
+>> that test cases are added during any new changes to ensure that the fetcher is
+>> working properly.
+> 
+> Thank you again. The former npm support does not have any tests so I did not
+> think about it. I will add some basic tests in the v2.
 
-> I'm also not seeing any test cases for this fetcher. =C2=A0Since this wor=
-k isn't well
-> understood by most of the regular maintainers, I think it's extremely imp=
-ortant
-> that test cases are added during any new changes to ensure that the fetch=
-er is
-> working properly.
+If you need some pointers on where and how to write the tests, please let me
+know.  I've had to write a number of them for the gitsm fetcher.
 
-Thank you again. The former npm support does not have any tests so I did no=
-t
-think about it. I will add some basic tests in the v2.
+Hint: https://git.openembedded.org/bitbake/tree/lib/bb/tests/fetch.py
 
-Regards,
-Jean-Marie
+Stuff I added is mostly found by looking for 'test_git_submodule...'
+
+I'd expect we need a new test_npm_.... series.
+
+--Mark
+
+> Regards,
+> Jean-Marie
+> 
 
