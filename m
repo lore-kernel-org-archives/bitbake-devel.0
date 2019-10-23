@@ -1,32 +1,32 @@
 Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
 	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id DD5B76C1D5
+	by mail.openembedded.org (Postfix) with ESMTP id 88F077F835
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 Oct 2019 13:07:14 +0000 (UTC)
+	Wed, 23 Oct 2019 13:07:44 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id D0FBA9C0349;
-	Wed, 23 Oct 2019 09:07:15 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id A94169C0349;
+	Wed, 23 Oct 2019 09:07:45 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10032)
-	with ESMTP id Su3IbIDhCVIL; Wed, 23 Oct 2019 09:07:14 -0400 (EDT)
+	with ESMTP id D-6gJXck6Pne; Wed, 23 Oct 2019 09:07:44 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id D142B9C0368;
-	Wed, 23 Oct 2019 09:07:14 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 9577F9C0368;
+	Wed, 23 Oct 2019 09:07:44 -0400 (EDT)
 X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10026)
-	with ESMTP id oiitLFj0ArpW; Wed, 23 Oct 2019 09:07:14 -0400 (EDT)
+	with ESMTP id yCUtEie4tGgS; Wed, 23 Oct 2019 09:07:44 -0400 (EDT)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
 	[192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id A73949C0349;
-	Wed, 23 Oct 2019 09:07:14 -0400 (EDT)
-Date: Wed, 23 Oct 2019 09:07:14 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 6C5179C0349;
+	Wed, 23 Oct 2019 09:07:44 -0400 (EDT)
+Date: Wed, 23 Oct 2019 09:07:44 -0400 (EDT)
 From: Jean-marie Lemetayer <jean-marie.lemetayer@savoirfairelinux.com>
 To: Mark Hatle <mark.hatle@kernel.crashing.org>
-Message-ID: <573850250.248944.1571836034627.JavaMail.zimbra@savoirfairelinux.com>
+Message-ID: <1414446736.248948.1571836064394.JavaMail.zimbra@savoirfairelinux.com>
 In-Reply-To: <4409c36d-23b9-4ddb-d681-5328f75330dc@kernel.crashing.org>
 References: <20191022090408.1368-1-jean-marie.lemetayer@savoirfairelinux.com>
 	<20191022090408.1368-3-jean-marie.lemetayer@savoirfairelinux.com>
@@ -34,7 +34,7 @@ References: <20191022090408.1368-1-jean-marie.lemetayer@savoirfairelinux.com>
 MIME-Version: 1.0
 X-Mailer: Zimbra 8.8.11_GA_3737 (ZimbraWebClient - GC77 (Linux)/8.8.11_GA_3737)
 Thread-Topic: fetch2/npm.py: refactor the npm fetcher
-Thread-Index: OaOQRPvomuOV/1In4aSGDC6NXfz2oQ==
+Thread-Index: shqm+VNMrKYUw7YKdCbJzWBWyt62aA==
 Cc: paul eggleton <paul.eggleton@linux.intel.com>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>,
 	Savoir-faire Linux Rennes <rennes@savoirfairelinux.com>
@@ -51,7 +51,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Oct 2019 13:07:15 -0000
+X-List-Received-Date: Wed, 23 Oct 2019 13:07:44 -0000
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
