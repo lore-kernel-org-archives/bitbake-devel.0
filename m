@@ -1,25 +1,26 @@
-Return-Path: <mark.hatle@kernel.crashing.org>
-Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 7A8F07FA8C
+Return-Path: <Konrad.Scherer@windriver.com>
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 982B67FBAD
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Oct 2019 18:28:13 +0000 (UTC)
-Received: from Marks-MacBook-Pro.local ([76.164.61.198]) (authenticated bits=0)
-	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id x9PIS014001503
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NO); Fri, 25 Oct 2019 13:28:02 -0500
-To: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>,
-	bitbake-devel@lists.openembedded.org
-References: <20191025083925.14535-1-jean-marie.lemetayer@savoirfairelinux.com>
-	<20191025083925.14535-4-jean-marie.lemetayer@savoirfairelinux.com>
-From: Mark Hatle <mark.hatle@kernel.crashing.org>
-Message-ID: <20f382ab-ed8b-0dea-cc80-bb60ffdb6d68@kernel.crashing.org>
-Date: Fri, 25 Oct 2019 13:27:59 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
-	Gecko/20100101 Thunderbird/68.1.2
+	Fri, 25 Oct 2019 20:39:37 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x9PKdcqJ000610
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Oct 2019 13:39:38 -0700
+Received: from [128.224.21.229] (128.224.21.229) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0;
+	Fri, 25 Oct 2019 13:39:37 -0700
+To: <bitbake-devel@lists.openembedded.org>
+From: Konrad Scherer <Konrad.Scherer@windriver.com>
+Message-ID: <f49f3c55-72d8-a781-955d-8f257a42615d@windriver.com>
+Date: Fri, 25 Oct 2019 16:39:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+	Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20191025083925.14535-4-jean-marie.lemetayer@savoirfairelinux.com>
-Cc: paul.eggleton@linux.intel.com, rennes@savoirfairelinux.com
-Subject: Re: [RFC][PATCH v2 3/3] tests/fetch.py: add npm tests
+X-Originating-IP: [128.224.21.229]
+Subject: Using gitsm fetcher and PREMIRROR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,125 +33,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Oct 2019 18:28:13 -0000
-Content-Type: text/plain; charset=utf-8
+X-List-Received-Date: Fri, 25 Oct 2019 20:39:37 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 
-The only test(s) I see missing are the "NoNetwork" tests.
+Hello,
 
-I.e. you should fetch/download a know item, and then verify it ends up in the
-DL_DIR in the "correct" format.
+I recently found a strange problem involving the gitsm fetcher and our PREMIRRORS and I was able to 
+reproduce it using poky.
 
-Then a second test (with BB_NO_NETWORK = "1") both a positive and negative test.
+ > git clone git://git.yoctoproject.org/poky poky1
+ > cd poky1
+ > . oe-init-build-env
+ > bitbake ovmf
 
-Negative - try to fetch something from the network and verify it fails.
+The ovmf recipe has git submodules inside git submodules. This step works fine.
 
-Positive - use the DL_DIR version (from above) and verify the local version is
-re-used, no network is used.
+I then exposed the downloads directory over http (http://<host>/downloads) and the downloads/git2 
+directory over http with git-http-backend enabled (http://<host>/git).
 
-Otherwise the testing looks good to me.  (I don't know enough about the
-particular NPM steps to review the other parts.)
+I noticed that there are shallow clone tarballs in downloads that match the git repos in 
+downloads/git2. For example:
 
---Mark
+downloads/git2/boringssl.googlesource.com.boringssl/
+downloads/git2_boringssl.googlesource.com.boringssl.tar.gz
 
-On 10/25/19 3:39 AM, Jean-Marie LEMETAYER wrote:
-> This commit adds some basic tests for the npm fetcher.
-> 
-> Signed-off-by: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
-> ---
->  lib/bb/tests/fetch.py | 82 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
-> 
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index a0b656b6..781226d2 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -1988,3 +1988,85 @@ class GitLfsTest(FetcherTest):
->          ud.method._find_git_lfs = lambda d: False
->          shutil.rmtree(self.gitdir, ignore_errors=True)
->          fetcher.unpack(self.d.getVar('WORKDIR'))
-> +
-> +class NPMTest(FetcherTest):
-> +    def skipIfNoNpm():
-> +        import shutil
-> +        if not shutil.which('npm'):
-> +            return unittest.skip('npm not installed, tests being skipped')
-> +        return lambda f: f
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        unpackdir = os.path.join(self.unpackdir, 'npm')
-> +        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_registry_alternate(self):
-> +        url = 'npm://registry.freajs.org;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        unpackdir = os.path.join(self.unpackdir, 'npm')
-> +        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_version_latest(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example;version=latest'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        unpackdir = os.path.join(self.unpackdir, 'npm')
-> +        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_registry_invalid(self):
-> +        url = 'npm://registry.invalid.org;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        with self.assertRaises(bb.fetch2.FetchError):
-> +            fetcher.download()
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_name_invalid(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/invalid;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        with self.assertRaises(bb.fetch2.FetchError):
-> +            fetcher.download()
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_version_invalid(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example;version=invalid'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        with self.assertRaises(bb.fetch2.FetchError):
-> +            fetcher.download()
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_registry_none(self):
-> +        url = 'npm://;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        with self.assertRaises(bb.fetch2.MalformedUrl):
-> +            fetcher = bb.fetch.Fetch([url], self.d)
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_name_none(self):
-> +        url = 'npm://registry.npmjs.org;version=1.0.0'
-> +        with self.assertRaises(AttributeError):
-> +            fetcher = bb.fetch.Fetch([url], self.d)
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_version_none(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example'
-> +        with self.assertRaises(AttributeError):
-> +            fetcher = bb.fetch.Fetch([url], self.d)
-> 
+Since these are duplicates of the git repos, I deleted the tar.gz files
+
+ > rm -f downloads/git2_*
+
+<new shell>
+
+ > git clone git://git.yoctoproject.org/poky poky2
+ > cd poky2
+ > . oe-init-build-env
+ > cat >> conf/local.conf <<EOF
+WRS_MIRROR_HOST = "<host>"
+BB_ALLOWED_NETWORKS = "${WRS_MIRROR_HOST}"
+
+BB_NO_NETWORK = '0'
+BB_FETCH_PREMIRRORONLY = '1'
+
+PREMIRRORS_append = " \
+      .*://.*/.* http://${WRS_MIRROR_HOST}/downloads/ \n \
+      git://.*/.* git://${WRS_MIRROR_HOST}/git/MIRRORNAME;protocol=http \n \
+      gitsm://.*/.* git://${WRS_MIRROR_HOST}/git/MIRRORNAME;protocol=http \n \
+"
+CONNECTIVITY_CHECK_URIS = ""
+EOF
+ > bitbake ovmf
+
+This fails with:
+
+ERROR: ovmf-edk2-stable201905-r0 do_unpack: gitsm: submodule unpack failed: UnpackError Unpack 
+failure for URL: 
+'gitsm://github.com/openssl/openssl;protocol=https;name=CryptoPkg/Library/OpensslLib/openssl;subpath=CryptoPkg/Library/OpensslLib/openssl;bareclone=1;nobranch=1'. 
+No up to date source found: clone directory not available or not up to date: 
+/ala-lpggp22/kscherer/gitsm/poky2/build/downloads/git2/github.com.openssl.openssl; shallow clone not 
+enabled
+
+If I leave the shallow clone tarballs in the PREMIRROR the build succeeds. The other recipes that 
+use git are fetched properly. The logs don't have any warnings before the error and I verified that 
+the objects are indeed present in the repo.
+
+Are my PREMIRROR settings correct? Is this a bug in the gitsm fetcher?
+
+Any help and insight appreciated.
+
+-- 
+Konrad Scherer, MTS, Linux Products Group, Wind River
 
