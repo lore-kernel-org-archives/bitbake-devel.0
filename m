@@ -1,79 +1,49 @@
-Return-Path: <chris.laplante@agilent.com>
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com
-	(mail-eopbgr750089.outbound.protection.outlook.com [40.107.75.89])
-	by mail.openembedded.org (Postfix) with ESMTP id 942107FA6F
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com
+	[209.85.128.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 2DA7374813
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 31 Oct 2019 18:16:48 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=nSnJ+KrijQDtxCr1XGe6HXGfGcRCADLGDghTa1YnKRFd+dE6HCMR6yLVneeBgnSFgKSYa2U1OMFUqgBMCAeuEjhlvwEAb84aG0/S966B0M0Nb95s9yOqdTlq7sFdF7xQc+bAo+oyvLqs/IZ7ZzQ8hE6CyV9TwgYTFJzfIu7FM0Jjx5+CedScQsWdFd5cYufLBwlow8g2mLxSGjM7dWCtKEHXkCYOxT4wY6268qjWYWMWI+VX5MKdipKAArHrHbtaSNeOjgVDEiPM6WMHPwA3P6bk5Q8ZdBknSttGtrjgWCrVZ17a1QVzhx9qTOCshiqTMLJsKy9uviMCV4mmef8i4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
-	s=arcselector9901;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=OZdDMJVQkpg2epELTozyC8+g38xIcl4QWznNaxo00SE=;
-	b=CLyN5Q229yNJlTTtRKF9G5iIaINK8OIpPW24A+4XsTC8oVdEfBAuPZUmxdbpHCBZdSjpFmP/Bw68nCm/FOJNQVtz0xbf4xPnVc7pNS9VRAZzxxR/L2rdy/Kjk+SeFZo/2+kuchGmUqGZXLpdMbMVm3jiYYK3FOsSTh4RwwDCBjPdq5ObG8/kTo+kdsX6vhw98c7u+/Tcs2imxZbNREVy+jorQXcb25MOzH1YJ5+yrjmNDA7cuz4WHUr8/4F/e3+L9zhw3vlkoIiUqEDMhvvz/kcXWIGEDjevNOlCtHubOVL0eUNOKQ9nBjv4EiRfbKCyzQ+Zh7dnO6XW0cCnuRy2vA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
-	smtp.mailfrom=agilent.com;
-	dmarc=pass action=none header.from=agilent.com; 
-	dkim=pass header.d=agilent.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
-	s=selector2;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=OZdDMJVQkpg2epELTozyC8+g38xIcl4QWznNaxo00SE=;
-	b=VLQ46xNAlX8sC3MNOq+1kXOW6MkkmuLrAGEm2/VE9Bus1BCxKRYZUfL1x8II+V9UTn090AI+Rz0rVzF0ZmhON+p4vRUaza2PZuiNMFmMuIn4jYRxN8UPPekDUCZTBQXIgeD/nE3I9yT6NzdsQHPAiONxAnuE8mJkHqmFxPE0Qm8=
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
-	CY4PR12MB1640.namprd12.prod.outlook.com (10.172.72.136) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2387.20; Thu, 31 Oct 2019 18:16:48 +0000
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::fdcf:99b9:ab44:4986]) by
-	CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::fdcf:99b9:ab44:4986%5]) with mapi id 15.20.2387.028;
-	Thu, 31 Oct 2019 18:16:48 +0000
-From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH] bitbake: command: add getOverrideData
-	command
-Thread-Index: AQHVkBG+ZtQDzdJ3tkeVmF9E32Yz26d1DgfQ
-Date: Thu, 31 Oct 2019 18:16:47 +0000
-Message-ID: <CY4PR12MB165395F03AF67093B489A54C8B630@CY4PR12MB1653.namprd12.prod.outlook.com>
-References: <1572543354-4229-1-git-send-email-chris.laplante@agilent.com>
-In-Reply-To: <1572543354-4229-1-git-send-email-chris.laplante@agilent.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=chris.laplante@agilent.com; 
-x-originating-ip: [4.16.127.92]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fcd9c2ba-1b38-474a-13b5-08d75e2e7eb5
-x-ms-traffictypediagnostic: CY4PR12MB1640:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CY4PR12MB1640ED505CAC4FB684E52A1A8B630@CY4PR12MB1640.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02070414A1
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(136003)(366004)(39860400002)(376002)(396003)(346002)(29502001)(199004)(189003)(102836004)(99286004)(186003)(6436002)(26005)(6916009)(5660300002)(4744005)(2501003)(229853002)(14454004)(6506007)(305945005)(81166006)(81156014)(74316002)(7736002)(6246003)(6116002)(476003)(33656002)(8936002)(8676002)(966005)(5640700003)(3846002)(66066001)(71190400001)(71200400001)(486006)(52536014)(66476007)(66946007)(66556008)(9686003)(6306002)(7696005)(256004)(14444005)(478600001)(55016002)(86362001)(11346002)(2351001)(2906002)(76176011)(64756008)(316002)(66446008)(446003)(25786009)(76116006);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1640;
-	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
-received-spf: None (protection.outlook.com: agilent.com does not designate
-	permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3+nidQ2IpR6HXVPoHxAY9Aju2OYch3/fwSb7ZM7tv9pEHjtwkoRDmQUww4EOnumBX5Hv6BhCFDLCxDF9qldiePMG6qzsCvIq7ZFgDcwwPC0x2MAAYxM7Q/Ozmgo+zMEOWJx+hWoIOC1XHHP05ZW/kEVhf+/m0nmodUVKoeFOQ59qvSYBoSGdyuw/Y8vK4HAPG/SMbFJ1Zq4OQvS7ZWCh5y6GBPPqgBZr1HJk6EYqtD4DQFENht0Fi6LW9twQYghiLuUQoPb2jUFxSjz2gADARs40y6+g2u4tAivm+kmtBeWyRMJm+1pj7u7g+Onml90xWqmruOiEC94SoMw5OyJsWb2dzIpa5wYoiaSMBFFewsXiCG38xKfBYlvr0BSM9Iqz8Oj+oJImImj5Hcp+jMgG00/KM0XaL+4R+82R9mxjTVLBzR7jVVomF6wJzXsx5/s2LRHblh30WTQRtU5SBR/72lrgRizbjuNv0hxfAKxudxeZWuimpnLB4goNvZvcfo38
-x-ms-exchange-transport-forked: True
+	Sat,  2 Nov 2019 18:06:00 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id c12so8007206wml.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 02 Nov 2019 11:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=QTUuDZR01a2eUjZbODVeksbjNAglkA3VCyV8RTf+OFk=;
+	b=UrJwe1wo3J/LORWTgmSzLPzswjlCQjk/3K6HEQao/2br8A8XenJ8ranRLZwFycPm0p
+	FYmdprQZEacoCXIzh08KQbiI1tjNdjfKa27BHx8JYWehE+dW/Z/vzqIU4HBLJHwrEVro
+	6GVD/tQDIddaPsAdBkMBdh2H1mGntBmJW82JU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=QTUuDZR01a2eUjZbODVeksbjNAglkA3VCyV8RTf+OFk=;
+	b=pSzk7BN3hg++dLQT+KpD5IBibn8ITKGY3eRXeSCOCI9qEsKWHfdyJYmEowRUAaaYr7
+	MstFtjsY4cYjhdnZJxOaH8TbO/xTgFyysBdat/EZSGxaFKD0pCb1llf8dfQgftfg8eOd
+	7wvskiXZQ11/fuBqdzKGviqZMsoQ8Yh4w6mX4ZD6qYgYDA5A7yQukmp5nbqD6tFnlJeo
+	4LE6jSxu0VIDnJdhcQHDxQHONZnEkBLPSVKbcVVijL26Pug3KVyBCG/4Vef6cpZdhURO
+	hfJuoVtQv5FEA7mS3drNk80cQl7KM+nbgK+eApnGfhi2ehTXCzj8rhg1b07+a+JU2DKo
+	g7AA==
+X-Gm-Message-State: APjAAAULJpUeDL8c9uIRo9pSF/OtzSLNh0DrfaVYoYQ17A3aeqHqGMDQ
+	R3EXaRiGfAHx7VKA+ZMDnox++zLXBEWFHA==
+X-Google-Smtp-Source: APXvYqy1xZjJDRulWZUUC45wulUeuCozNpTdDFn/cGDy68fZMNsuKZtuFZ8pg5EWpMcqR8gGV7uFRA==
+X-Received: by 2002:a7b:cd04:: with SMTP id f4mr10992384wmj.91.1572717960559; 
+	Sat, 02 Nov 2019 11:06:00 -0700 (PDT)
+Received: from hex.int.rpsys.net ([176.12.107.140])
+	by smtp.gmail.com with ESMTPSA id
+	y128sm11433729wmg.10.2019.11.02.11.05.59
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Sat, 02 Nov 2019 11:05:59 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Sat,  2 Nov 2019 18:05:58 +0000
+Message-Id: <20191102180558.5116-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcd9c2ba-1b38-474a-13b5-08d75e2e7eb5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 18:16:47.9719 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UrICcY0xwYhF1wYD5WLpWCzoGP+y5c/fy9f+SDvhctDt2CPriSQTiCgHovGMzq8l8fzYSdVVoOpDJ+aZ1WyyT41scCM/SRhLuofGH+PIUUU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1640
-Subject: Re: [PATCH] bitbake: command: add getOverrideData command
+Subject: [PATCH] fetch2: Ensure cached url data is matched to a datastore
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -86,24 +56,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 31 Oct 2019 18:16:48 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Sat, 02 Nov 2019 18:06:00 -0000
+Content-Transfer-Encoding: 8bit
 
-> Sent: Thursday, October 31, 2019 1:36 PM
-> Subject: [bitbake-devel] [PATCH] bitbake: command: add getOverrideData co=
-mmand
->=20
-> While working on a script using tinfoil, I needed a way to access the
-> overridedata for a given variable. Unfortunately, I found that
-> data_smart does not have remotedata proxying for it.
->=20
-> By adding the getOverrideData command, I am able to use a method like
-> this to access override data (either for a particular var, or all data):
+There was a weird error in OE-Core where "devtool modify virtual/kernel"
+was showing basehash mismatch errors. This was due to SRCPV sometimes being:
+AUTOINC+b867b78b50_47b80ef7bd and sometimes AUTOINC+b867b78b50_255a750d28.
 
-On a side note, can anyone explain why my patches are being identified by P=
-atchwork as coming from Nicolas Cornu? See: https://patchwork.openembedded.=
-org/project/bitbake/patches/?submitter=3D12924
+The latter hash comes from KBRANCH and meant sometimes the correct branch
+was seen, sometimes it was not. The issue was complicated by the execution
+using a remote datastore over tinfoil.
+
+The problem turns out to be a fetcher caching error. If the datastore
+changes, the cached url data may not be valid.
+
+We therefore ensure we match cached url data against the datastore that
+generated it, which appears to fix this issue.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/__init__.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 1f5f8f1f14..07de6c2693 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1593,7 +1593,7 @@ class Fetch(object):
+         fn = d.getVar('FILE')
+         mc = d.getVar('__BBMULTICONFIG') or ""
+         if cache and fn and mc + fn in urldata_cache:
+-            self.ud = urldata_cache[mc + fn]
++            self.ud = urldata_cache[mc + fn + str(id(d))]
+ 
+         for url in urls:
+             if url not in self.ud:
+@@ -1605,7 +1605,7 @@ class Fetch(object):
+                         pass
+ 
+         if fn and cache:
+-            urldata_cache[mc + fn] = self.ud
++            urldata_cache[mc + fn + str(id(d))] = self.ud
+ 
+     def localpath(self, url):
+         if url not in self.urls:
+-- 
+2.20.1
 
 
