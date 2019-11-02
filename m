@@ -1,49 +1,50 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com
-	[209.85.128.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 2DA7374813
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 56B737EC95
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  2 Nov 2019 18:06:00 +0000 (UTC)
-Received: by mail-wm1-f45.google.com with SMTP id c12so8007206wml.4
+	Sat,  2 Nov 2019 20:43:10 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id b3so7167219wrs.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 02 Nov 2019 11:06:01 -0700 (PDT)
+	Sat, 02 Nov 2019 13:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=QTUuDZR01a2eUjZbODVeksbjNAglkA3VCyV8RTf+OFk=;
-	b=UrJwe1wo3J/LORWTgmSzLPzswjlCQjk/3K6HEQao/2br8A8XenJ8ranRLZwFycPm0p
-	FYmdprQZEacoCXIzh08KQbiI1tjNdjfKa27BHx8JYWehE+dW/Z/vzqIU4HBLJHwrEVro
-	6GVD/tQDIddaPsAdBkMBdh2H1mGntBmJW82JU=
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=FeZNLETFyWFINOhik/aOSecU2KVAlOFhnZmpOJinK7k=;
+	b=NXGgvpCKOnPFt4LfXbR62gcAugFyc0dJyreH1T4jEDdgBPJxinKF3rP5ZFC83TDy6R
+	/f8KfisWSWVrciGu9s3WnSuh59Cd/HG9W+0xOAUql/8WBd3cG9KMcZBgePtxaxmysoFW
+	c9Wq5+kPRJnagV5Lnjv/gw44CkPm+NOPa9qjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=QTUuDZR01a2eUjZbODVeksbjNAglkA3VCyV8RTf+OFk=;
-	b=pSzk7BN3hg++dLQT+KpD5IBibn8ITKGY3eRXeSCOCI9qEsKWHfdyJYmEowRUAaaYr7
-	MstFtjsY4cYjhdnZJxOaH8TbO/xTgFyysBdat/EZSGxaFKD0pCb1llf8dfQgftfg8eOd
-	7wvskiXZQ11/fuBqdzKGviqZMsoQ8Yh4w6mX4ZD6qYgYDA5A7yQukmp5nbqD6tFnlJeo
-	4LE6jSxu0VIDnJdhcQHDxQHONZnEkBLPSVKbcVVijL26Pug3KVyBCG/4Vef6cpZdhURO
-	hfJuoVtQv5FEA7mS3drNk80cQl7KM+nbgK+eApnGfhi2ehTXCzj8rhg1b07+a+JU2DKo
-	g7AA==
-X-Gm-Message-State: APjAAAULJpUeDL8c9uIRo9pSF/OtzSLNh0DrfaVYoYQ17A3aeqHqGMDQ
-	R3EXaRiGfAHx7VKA+ZMDnox++zLXBEWFHA==
-X-Google-Smtp-Source: APXvYqy1xZjJDRulWZUUC45wulUeuCozNpTdDFn/cGDy68fZMNsuKZtuFZ8pg5EWpMcqR8gGV7uFRA==
-X-Received: by 2002:a7b:cd04:: with SMTP id f4mr10992384wmj.91.1572717960559; 
-	Sat, 02 Nov 2019 11:06:00 -0700 (PDT)
-Received: from hex.int.rpsys.net ([176.12.107.140])
-	by smtp.gmail.com with ESMTPSA id
-	y128sm11433729wmg.10.2019.11.02.11.05.59
-	for <bitbake-devel@lists.openembedded.org>
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=FeZNLETFyWFINOhik/aOSecU2KVAlOFhnZmpOJinK7k=;
+	b=qh+CNpNqiTzvy5XrQCZdj1TgP/fMsMTpafAsRLgiJ1tbzPrfzUpiYML8pAwhBF+9Ny
+	0hWGdqOUuy45sPNpMr4hwzkJPvAlmwo4tQlrqol1RStj8OdZpOCM1aXPZKHCivZ7uiUa
+	8nEICgV3YFd7Gb2rCHs2SKaXP8QLq+IbDZioWc3MYzyWXdF7wA/RkTNln5QbKDbTS4OS
+	jzQ+7CzZhxs2T9OPD8Qw1t5ffvEblgsQJy1dwjxlSisRc9uEjE0YB2oGXTeyEOs3B+Yk
+	06IiXttQ+87czbRRYk8j+zX6bHixicdSC1pJj3tZv1IJifBGUHCQ2NXHDAktJ4jmkaFW
+	4fIA==
+X-Gm-Message-State: APjAAAXO8n0q+V8hl1nuhSZELA4h8cawEpkKZHjNdi40C1w1M68QB1IP
+	l+sZy3mYhonxPqKnRaSIGAtmQ7VpxKxe0A==
+X-Google-Smtp-Source: APXvYqzwD6STJS2PjNvNVmrs2AJRsChUhZ/cRYzN0tFMy7ZzbSanL79fFEpGqkGJrkTyh2o8lVX+Tw==
+X-Received: by 2002:adf:dc03:: with SMTP id t3mr15617564wri.95.1572727390874; 
+	Sat, 02 Nov 2019 13:43:10 -0700 (PDT)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id r3sm12243882wmh.9.2019.11.02.13.43.09
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sat, 02 Nov 2019 11:05:59 -0700 (PDT)
+	Sat, 02 Nov 2019 13:43:10 -0700 (PDT)
+Message-ID: <5375964a726a0a4790c99137a52227a66e09b243.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Sat,  2 Nov 2019 18:05:58 +0000
-Message-Id: <20191102180558.5116-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+To: Chris Laplante <chris.laplante@agilent.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Sat, 02 Nov 2019 20:43:08 +0000
+In-Reply-To: <1572543354-4229-1-git-send-email-chris.laplante@agilent.com>
+References: <1572543354-4229-1-git-send-email-chris.laplante@agilent.com>
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Subject: [PATCH] fetch2: Ensure cached url data is matched to a datastore
+Subject: Re: [PATCH] bitbake: command: add getOverrideData command
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,51 +57,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 02 Nov 2019 18:06:00 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Sat, 02 Nov 2019 20:43:10 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-There was a weird error in OE-Core where "devtool modify virtual/kernel"
-was showing basehash mismatch errors. This was due to SRCPV sometimes being:
-AUTOINC+b867b78b50_47b80ef7bd and sometimes AUTOINC+b867b78b50_255a750d28.
+On Thu, 2019-10-31 at 13:35 -0400, Chris Laplante via bitbake-devel
+wrote:
+> While working on a script using tinfoil, I needed a way to access the
+> overridedata for a given variable. Unfortunately, I found that
+> data_smart does not have remotedata proxying for it.
+> 
+> By adding the getOverrideData command, I am able to use a method like
+> this to access override data (either for a particular var, or all
+> data):
+> 
+> def get_override_data(d, var=None):
+>     if "_remote_data" in d:
+>         connector = d["_remote_data"]  # type:
+> bb.tinfoil.TinfoilDataStoreConnector
+>         return connector.getOverrideData(var)
+> 
+>     if var:
+>         return d.overridedata[var]
+>     return d.overridedata
+> 
+> Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 
-The latter hash comes from KBRANCH and meant sometimes the correct branch
-was seen, sometimes it was not. The issue was complicated by the execution
-using a remote datastore over tinfoil.
+The question here is what is the usecase?
 
-The problem turns out to be a fetcher caching error. If the datastore
-changes, the cached url data may not be valid.
+The override data in this form is really a datastore internal and
+shouldn't be something we expose an external API for. It happens to
+exist in this form for the current implementation of the datastore but
+it didn't used to and may not again, depending on how we change that
+implementation, particularly as people look at parsing performance.
 
-We therefore ensure we match cached url data against the datastore that
-generated it, which appears to fix this issue.
+Cheers,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/__init__.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 1f5f8f1f14..07de6c2693 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1593,7 +1593,7 @@ class Fetch(object):
-         fn = d.getVar('FILE')
-         mc = d.getVar('__BBMULTICONFIG') or ""
-         if cache and fn and mc + fn in urldata_cache:
--            self.ud = urldata_cache[mc + fn]
-+            self.ud = urldata_cache[mc + fn + str(id(d))]
- 
-         for url in urls:
-             if url not in self.ud:
-@@ -1605,7 +1605,7 @@ class Fetch(object):
-                         pass
- 
-         if fn and cache:
--            urldata_cache[mc + fn] = self.ud
-+            urldata_cache[mc + fn + str(id(d))] = self.ud
- 
-     def localpath(self, url):
-         if url not in self.urls:
--- 
-2.20.1
+Richard
 
 
