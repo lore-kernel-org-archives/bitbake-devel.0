@@ -1,43 +1,45 @@
 Return-Path: <i.efimov@inango-systems.com>
+X-Greylist: delayed 545 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 05 Nov 2019 14:16:51 UTC
 Received: from mail.inango-sw.com (mail.inango-systems.com [213.136.71.184])
-	by mail.openembedded.org (Postfix) with ESMTP id 863697F9B8
+	by mail.openembedded.org (Postfix) with ESMTP id 8532B7CBDF
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue,  5 Nov 2019 14:16:51 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.inango-sw.com (Postfix) with ESMTP id C8E2D7A2565
+	by mail.inango-sw.com (Postfix) with ESMTP id D2B907A249C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Nov 2019 16:08:10 +0200 (IST)
+	Tue,  5 Nov 2019 16:07:46 +0200 (IST)
 Received: from mail.inango-sw.com ([127.0.0.1])
 	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id uuMX25gdXrwk; Tue,  5 Nov 2019 16:08:06 +0200 (IST)
+	with ESMTP id 05LsQzUJVn4O; Tue,  5 Nov 2019 16:07:44 +0200 (IST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.inango-sw.com (Postfix) with ESMTP id A77EF7A253E;
-	Tue,  5 Nov 2019 16:08:05 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com A77EF7A253E
+	by mail.inango-sw.com (Postfix) with ESMTP id E5AB27A2491;
+	Tue,  5 Nov 2019 16:07:43 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com E5AB27A2491
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1572962885;
-	bh=KPAejySyQyQQUyWGV2kVtaOmrmuGAVWmxO7D1AbDh7E=;
+	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1572962863;
+	bh=W6Y8Icw+kVs/YFqoFYHtNUC4Cj34PZhxEI+gNng01os=;
 	h=From:To:Date:Message-Id;
-	b=B2Fr3oOBuB0rH37K5TCHAfDxWw+cPj0ANJiYMQ5uVmtWa+rncM1iY4hff2eort7Q8
-	FlpRAQx6CxBu1mWc/GCd1pDCuFOrALbYUHf/QYSQYGmP6R/7cvYnwuUz1K5w0RVcDI
-	k36T5dazcCbMtb5SsXymdbafK+msj0FZqfk9LrJ/qGyYOCXXoSaxhJAWQQOYuEJcM/
-	60YbXnCDBlsYPrq3VpT0ZRJBqK5EDi0sHB+kQympw0nnktfeOcMn4uzHaCMH7Gmfof
-	YRAHlLadBT8d6t867tVy2P4OyFsdV+vOeCxYEMsBMVCxRBUQ9SbGpoD8aBJFXUw2Vq
-	ojDV3n64KTuNg==
+	b=XM0PCHoTeavpBoZCztzTF+2J0Pb1jgF/MxaPaPyn0Lcri5b3U1HoGQWR/5iItUS4k
+	8gemWOwb2EmKrBT1p5B5+NfySAYE9bFXyOlx1iwT+wQPDkbFSkbBAkCn/WnBap1w2R
+	tvI3LA9ogi0FL7ztZNS2RDFV/VxUkKUbiENhM1CIGr9uKmqD+rK03veME+isAk9xZu
+	Yg0ROpfcBxW/Fdx4dBUcbYTuV+SvPGManOkQIr5pZludhw5kvVkUb4STBAkg+Pv4uN
+	O0HxDcqH6lWKy0JUzG7WJWtlR+xrwfRd/lX2HeKtYEGL3QntmYlPFeImxiPXLDRUBm
+	28F3fSUhJas2w==
 X-Virus-Scanned: amavisd-new at inango-sw.com
 Received: from mail.inango-sw.com ([127.0.0.1])
 	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id k00OAXycDfMW; Tue,  5 Nov 2019 16:08:05 +0200 (IST)
+	with ESMTP id 2IFuw84nHcGi; Tue,  5 Nov 2019 16:07:43 +0200 (IST)
 Received: from ivane-1.inango.loc (unknown [194.60.247.123])
-	by mail.inango-sw.com (Postfix) with ESMTPSA id 46DEF7A250B;
-	Tue,  5 Nov 2019 16:08:04 +0200 (IST)
+	by mail.inango-sw.com (Postfix) with ESMTPSA id 564A17A12C1;
+	Tue,  5 Nov 2019 16:07:43 +0200 (IST)
 From: Ivan Efimov <i.efimov@inango-systems.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  5 Nov 2019 19:07:03 +0500
-Message-Id: <20191105140703.29122-1-i.efimov@inango-systems.com>
+Date: Tue,  5 Nov 2019 19:07:35 +0500
+Message-Id: <20191105140735.8204-1-i.efimov@inango-systems.com>
 X-Mailer: git-send-email 2.17.1
 X-Mailman-Approved-At: Wed, 06 Nov 2019 11:07:36 +0000
-Subject: [PATCH] bitbake-worker child process create group before registering SIGTERM handler
+Subject: [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -67,10 +69,10 @@ Signed-off-by: Ivan Efimov <i.efimov@inango-systems.com>
  1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 6776cadd..1e641e81 100755
+index db3c4b18..6a12a31c 100755
 --- a/bin/bitbake-worker
 +++ b/bin/bitbake-worker
-@@ -195,9 +195,6 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+@@ -189,9 +189,6 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
              global worker_pipe_lock
              pipein.close()
  
@@ -80,7 +82,7 @@ index 6776cadd..1e641e81 100755
              bb.utils.signal_on_parent_exit("SIGTERM")
  
              # Save out the PID so that the event can include it the
-@@ -212,6 +209,11 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+@@ -206,6 +203,11 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
              # This ensures signals sent to the controlling terminal like Ctrl+C
              # don't stop the child processes.
              os.setsid()
