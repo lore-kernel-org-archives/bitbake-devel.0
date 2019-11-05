@@ -1,82 +1,49 @@
-Return-Path: <chris.laplante@agilent.com>
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com
-	(mail-eopbgr740087.outbound.protection.outlook.com [40.107.74.87])
-	by mail.openembedded.org (Postfix) with ESMTP id E6D28745BF
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 284057F8F4
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  3 Nov 2019 13:20:39 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=AgfTd/FNDG9GeAVqcPwtFrAWVoogwRlNe1BLFrl+8PvQqpZzCFmc6wjiH987HEykT0YP318CwAXH4OPUqIFX4JW0bIElyymFK5mcZZTelF8vZ7sKBB7Q8E+hiA66GR+C8I3tHUvTGCP2tLSKfRVilyZtWuNXhE7SJNqlas7pgG5zmNb/i9uZpg6WGLSzHEdPO6TBCq/aImP4zfux6+/dFtw4Eh1lqbdNBFMMtdfi8uYQ2vjzTkgdPsn9YJaAH0qyerFILnhqYnNpoGOaEVsPq5V1BIuTl4o5tSHolk2XQBOL37PF6JyzNxdIkHynBuwcgaoikDJsHUSqZrsjIHtA3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
-	s=arcselector9901;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=zuBFKpOUIxdj+WwoVmVUeMIAKpQQctzOrR7hu4Hm4XY=;
-	b=IsFrVjDvPA0s41/uzX1IROVtvl8YV1QcPWyNRFV18Tf6Y5/ieeqFVkzm3g1qN4olxVAMmly2zouCcBTZxxw6dgMv4gn5HebbYy+nMVSQXywSm0LldzbJ66qB4FiLXqqX7I9vV8N+/SqEBdztqXRDQZ5G2NklCyHZCujYBTCbAaHuR62hzJk6D2s9gvlNHxxxD8aPBd3hGpzFqP78kFcvondLBbKUnUrVtteGUN6QEnOCsQXq70dlOQUwsdn8vbljk4mgU4XMRsou+kYk1SG4PM8T6W6DSNkrCFBYx4RkzA2WZtpDi7EokeZC7AcdQb8pmHzF6DDOskxlK98KRnEqSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
-	smtp.mailfrom=agilent.com;
-	dmarc=pass action=none header.from=agilent.com; 
-	dkim=pass header.d=agilent.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
-	s=selector2;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=zuBFKpOUIxdj+WwoVmVUeMIAKpQQctzOrR7hu4Hm4XY=;
-	b=N7b1vmcpguixp4HzQgMpGaHxSUFtmg3HTZNN25FKdIjgfSvSTsoAhTcg5qhN0r2wF268P250+xFwHMjVdo06zYjrLQ0NLMY3TBINO2fzZHZnGzCcZ+8n4yJJAxVzdN7kD0YahEgXHbFIapefinvhyKiSOEIkLIZWrfsA0NmRvpE=
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
-	CY4PR12MB1288.namprd12.prod.outlook.com (10.168.167.20) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2408.24; Sun, 3 Nov 2019 13:20:39 +0000
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::fdcf:99b9:ab44:4986]) by
-	CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::fdcf:99b9:ab44:4986%5]) with mapi id 15.20.2387.028;
-	Sun, 3 Nov 2019 13:20:39 +0000
-From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH] bitbake: command: add getOverrideData
-	command
-Thread-Index: AQHVkBG+ZtQDzdJ3tkeVmF9E32Yz26d4XCAAgAAmxhCAALN1AIAANnqQ
-Date: Sun, 3 Nov 2019 13:20:39 +0000
-Message-ID: <CY4PR12MB16533C2D7C7BB75812EB7D3E8B7C0@CY4PR12MB1653.namprd12.prod.outlook.com>
-References: <1572543354-4229-1-git-send-email-chris.laplante@agilent.com>
-	<5375964a726a0a4790c99137a52227a66e09b243.camel@linuxfoundation.org>
-	<CY4PR12MB16530722ADF132F7AE920D908B7D0@CY4PR12MB1653.namprd12.prod.outlook.com>
-	<c032a294dd1e26fd5061d850f9d5322a79de0c14.camel@linuxfoundation.org>
-In-Reply-To: <c032a294dd1e26fd5061d850f9d5322a79de0c14.camel@linuxfoundation.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=chris.laplante@agilent.com; 
-x-originating-ip: [76.99.179.205]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6fd30d1e-7263-4af2-706a-08d760609ee6
-x-ms-traffictypediagnostic: CY4PR12MB1288:
-x-microsoft-antispam-prvs: <CY4PR12MB1288D64EAA770C615C2938AA8B7C0@CY4PR12MB1288.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0210479ED8
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(39860400002)(376002)(366004)(396003)(136003)(346002)(29502001)(199004)(189003)(76116006)(81156014)(71200400001)(476003)(76176011)(102836004)(305945005)(6436002)(478600001)(6116002)(66476007)(66556008)(64756008)(66446008)(7696005)(66946007)(5660300002)(186003)(66066001)(3846002)(33656002)(6246003)(6506007)(99286004)(26005)(25786009)(2501003)(71190400001)(8676002)(316002)(81166006)(52536014)(486006)(256004)(7736002)(14454004)(229853002)(9686003)(55016002)(11346002)(446003)(110136005)(86362001)(2906002)(8936002)(74316002);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1288;
-	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
-received-spf: None (protection.outlook.com: agilent.com does not designate
-	permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lrpGw0cDTjTSIChofZBeoqbUPIU8UyfzrQae+Et8yMjqLokvRN9/XkZMM73a6fsOATL0mi1GhoXKXNCEJG1diQ4Eag+L+zVk6iojQCh7WI49b6xMhn8VIT5lUweocTcFcLMgRs/mpU6MAvBUI1SAnaTt5EwPzEfgKflhuJzLFBLzje3UOhX6/IQsYE2rU725jDZK0MVP57uEeVjZFIfTyZXfRlyVHFY+QyOtoT86aA2bAOKCuZACoeNGCMzGdxnI9T6zKkkxL7OFqgoqOPsV58XE7aMIgFbiIN6JuRyQds+HXmkeXF9m1T1q0taeotAqhnVXkYJ+m0w7xQxCnhra48Nc2ySnozoVCxMVoTR348+fGa8AiBgTjXDj8HGSo48mYeH0LY/xPS7rZP3YZ560LEDO4Ek2REGZvZgQSb+nhuYT9C8gEi4w3kIC2gbpq+lnY7iiQ20R0mRaSyL2USyuIA==
-x-ms-exchange-transport-forked: True
+	Tue,  5 Nov 2019 11:58:58 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id n1so21025073wra.10
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 05 Nov 2019 03:58:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=Fl/srODFlB3eoTgTe2tca+sRgvDCAlHhzqnHnHZLrA0=;
+	b=MYgyE1/RbvgsAjy9zgHEiyoO3CsnbP2sSokj/hFtFMMcEZMe1VcQBPVA/qAbKlGLkO
+	3yt49f8sOyr2Kc4akWDeguhl2yewlM8HuPne6El9/kebTO4mu6YBfjoc/pabCl24IduW
+	gi+XKBMOopNw8e4FguKPhrmMMARgP4mHaQ8rA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=Fl/srODFlB3eoTgTe2tca+sRgvDCAlHhzqnHnHZLrA0=;
+	b=SqSdqHdF6ZV7qcV1erm+78wXSvcPqW5KKPpVvXysGv0xfz+HOsgweEm81E3xPASTOI
+	3x0V2h2mFLKdTtpzB2ZGFcXaeLjcXQ9KhqKoms8oq3PQqTh5zAfUWO/lW5VBfdZtBtoR
+	u7UOFOYYFq8S9/OJoSqJBiEZJEzZ/mOyMnYJRofvPUSOWQfULpNWe7u/eJ/y6o21J+O/
+	Sp7LHPJs7iqOrElLF8AoHzVAcrXQKqC4ydc2gO9bZ+x4UZaDDYGX2kFfe184z4BWWNQ0
+	i9oleupESmGJpu8QumDnNDvNVgtgVenK70hVJrv550JSRrTXI5YUYTGxlevv3UgDghf2
+	mP/A==
+X-Gm-Message-State: APjAAAWU61jCIMSyfP9YKjv6RgU6v1z9FFU9d6GTnfTHkhwKY32hgIBN
+	DCX3wjUqqtHPG+oOSkubvEcMifNqL6g=
+X-Google-Smtp-Source: APXvYqxGrFfAyUSYhoaM6O4hq4q1C3/A+QVNGqBCM9xBY739brkbXJGIYVrFgoyZ9hHbg/mOiOm8Ng==
+X-Received: by 2002:a5d:55c2:: with SMTP id i2mr28496389wrw.176.1572955138521; 
+	Tue, 05 Nov 2019 03:58:58 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	v128sm26887278wmb.14.2019.11.05.03.58.57
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Tue, 05 Nov 2019 03:58:58 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  5 Nov 2019 11:58:56 +0000
+Message-Id: <20191105115856.14129-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fd30d1e-7263-4af2-706a-08d760609ee6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Nov 2019 13:20:39.1845 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HGeLZg/lmEYSzurksHju8n+Fw3UmFzPLeuG8v7sIA53x8cn3lo7ZHNGT6eMGz1twXm6j+YG9hEs4viUI7FkrWhF+NUZtZ/POJ/mmSS6RAbg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1288
-Subject: Re: [PATCH] bitbake: command: add getOverrideData command
+Subject: [PATCH] runqueue: Improve sstate rehashing output
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -89,38 +56,111 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 03 Nov 2019 13:20:40 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Tue, 05 Nov 2019 11:58:58 -0000
+Content-Transfer-Encoding: 8bit
 
-PiA+IE15IHBhcnRpY3VsYXIgdXNlIGNhc2UgaXMgdGhhdCBJIG5lZWRlZCB0byBpZGVudGlmeSBp
-ZiBhbmQgd2hlcmUNCj4gPiBTUkNSRVYgaXMgZ2V0dGluZyBvdmVycmlkZGVuIGZvciBwYXJ0aWN1
-bGFyIHJlY2lwZXMuIEZvciBpbnN0YW5jZSwNCj4gPiBzb21lb25lIG1pZ2h0IGhhdmUgYWRkZWQg
-YSBTUkNSRVZfcG4tcmVjaXBlIHRvIHRoZWlyIGxvY2FsLmNvbmYuIEkgYW0NCj4gPiB3b3JraW5n
-IG9uIGEgdG9vbCB0aGF0IHByb2R1Y2VzICJidWlsZGhpc3RvcnktY29sbGVjdC1zcmNyZXZzIi1z
-dHlsZQ0KPiA+IG91dHB1dCBmcm9tIHRoZSBTUkNSRVYgY2FjaGUgaXRzZWxmLCB3aXRob3V0IGFj
-dHVhbGx5IHJlcXVpcmluZyB0aGF0DQo+ID4gYnVpbGRoaXN0b3J5IGlzIGVuYWJsZWQuIEl0J3Mg
-YWN0dWFsbHkgYSBnZW5lcmFsIHRvb2wgdG8gaW5zcGVjdCBhbmQNCj4gPiBtYW5pcHVsYXRlIHRo
-ZSBTUkNSRVYgY2FjaGUuIE15IHRlYW0gdXNlcyBBVVRPUkVWIHByZXR0eSBleHRlbnNpdmVseSwN
-Cj4gPiBzbyB0aGlzIGtpbmQgb2YgdG9vbCB3aWxsIGJlIHZlcnkgdXNlZnVsIHRvIHVzLg0KPiAN
-Cj4gSSB0aGluayBpdCBkZXBlbmRzIHdoYXQga2luZCBvZiBndWFyYW50ZWVzIHdlJ3JlIGV4cGVj
-dGluZyBhcm91bmQgdGhpcy4NCj4gRm9yIGV4YW1wbGU6DQo+IA0KPiBweXRob24gKCkgew0KPiAg
-ICAgaWYgZC5nZXRWYXIoIk1BQ0hJTkUiKSA9PSAiYmFyIjoNCj4gICAgICAgICBkLnNldFZhcigi
-U1JDUkVWIiwgInByb2JsZW0iKQ0KPiB9DQo+IA0KPiBSZWFsbHkgdGhlIG9ubHkgd2F5IHRvIGJl
-IHN1cmUgaXMgdG8gcGFyc2UgZm9yIGVhY2ggTUFDSElORSBhbmQgc2VlDQo+IHdoYXQgdGhlIHZh
-bHVlcyBhcmUuIEkgZGlkIHdvbmRlciBpZiB5b3UgY291bGQganVzdCBzd2l0Y2ggYmV0d2Vlbg0K
-PiBNQUNISU5FIHZhbHVlcyBidXQgdGhhdCBkb2Vzbid0IGV2ZW4gY292ZXIgdGhlIHB5dGhvbiBh
-Ym92ZSB3aXRob3V0IHRoZQ0KPiBkYXRhc3RvcmUgZmluYWxpc2F0aW9uLg0KPiANCj4gQmFzaWNh
-bGx5IG15IHdvcnJ5IGlzIHdoYXQgdGhlIGV4cGVjdGF0aW9ucyBvZiB0aGUgQVBJIGFyZS4gV2hp
-bHN0IHlvdQ0KPiBtYXkgYmUgZmluZSB3aXRoIHRoZSBsaW1pdGF0aW9ucywgaXRzIHRoZSBtYWtp
-bmdzIG9mIGFuIHVuc29sdmFibGUgYnVnDQo+IHJlcG9ydCB0b21vcnJvdyA6KC4NCg0KWWVwLCBJ
-IGRlZmluaXRlbHkgZ2V0IHlvdXIgcG9pbnQuIEkgcGVyc29uYWxseSBhbSBub3Qgd29ycmllZCBh
-Ym91dCB0aGUgbW9yZSAicGF0aG9sb2dpY2FsIiBjYXNlcyBsaWtlIHdoYXQgeW91IGhhdmUgYWJv
-dmUuIE15IHRvb2wgYmFzaWNhbGx5IG9ubHkgY2FyZXMgYWJvdXQgb3ZlcnJpZGVzIHRoYXQgb3Jp
-Z2luYXRlIGluIGxvY2FsLmNvbmYuIEJ1dCBJJ20gc3VyZSBtb3N0IGh5cG90aGV0aWNhbCBjb25z
-dW1lcnMgb2YgdGhpcyBBUEkgd291bGQgbm90IGFjY2VwdCB0aGF0IGxpbWl0YXRpb24sIHNvIEkg
-YWdyZWUgdGhhdCB0aGlzIGRvZXNuJ3QgY29uc3RpdHV0ZSBhIGdvb2QgbG9uZy10ZXJtIHBsYW4u
-IA0KDQpJIHdpbGwgdGhlcmVmb3JlIGtlZXAgdGhpcyBwYXRjaCBhcyBhIGxvY2FsIG1vZGlmaWNh
-dGlvbiB0byBiaXRiYWtlLg0KDQpUaGFua3MsDQpDaHJpcw0K
+Bibake is currently too 'chatty' when hash equivalence is enabled. Fix
+this by only printing the log output if a rehash happens and it matches
+an sstate object.
+
+Also, pass a summary option to the hash checking function. This was
+already changed to a mechanism which allows addition of new parameters
+so this should be backwards and forwards compatible.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/runqueue.py | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 18049436fd..8622738fd9 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1397,7 +1397,7 @@ class RunQueue:
+             cache[tid] = iscurrent
+         return iscurrent
+ 
+-    def validate_hashes(self, tocheck, data, currentcount=0, siginfo=False):
++    def validate_hashes(self, tocheck, data, currentcount=0, siginfo=False, summary=True):
+         valid = set()
+         if self.hashvalidate:
+             sq_data = {}
+@@ -1410,15 +1410,15 @@ class RunQueue:
+                 sq_data['hashfn'][tid] = self.rqdata.dataCaches[mc].hashfn[taskfn]
+                 sq_data['unihash'][tid] = self.rqdata.runtaskentries[tid].unihash
+ 
+-            valid = self.validate_hash(sq_data, data, siginfo, currentcount)
++            valid = self.validate_hash(sq_data, data, siginfo, currentcount, summary)
+ 
+         return valid
+ 
+-    def validate_hash(self, sq_data, d, siginfo, currentcount):
+-        locs = {"sq_data" : sq_data, "d" : d, "siginfo" : siginfo, "currentcount" : currentcount}
++    def validate_hash(self, sq_data, d, siginfo, currentcount, summary):
++        locs = {"sq_data" : sq_data, "d" : d, "siginfo" : siginfo, "currentcount" : currentcount, "summary" : summary}
+ 
+         # Metadata has **kwargs so args can be added, sq_data can also gain new fields
+-        call = self.hashvalidate + "(sq_data, d, siginfo=siginfo, currentcount=currentcount)"
++        call = self.hashvalidate + "(sq_data, d, siginfo=siginfo, currentcount=currentcount, summary=summary)"
+ 
+         return bb.utils.better_eval(call, locs)
+ 
+@@ -1605,7 +1605,7 @@ class RunQueue:
+ 
+             tocheck.add(tid)
+ 
+-        valid_new = self.validate_hashes(tocheck, self.cooker.data, 0, True)
++        valid_new = self.validate_hashes(tocheck, self.cooker.data, 0, True, summary=False)
+ 
+         # Tasks which are both setscene and noexec never care about dependencies
+         # We therefore find tasks which are setscene and noexec and mark their
+@@ -1986,7 +1986,7 @@ class RunQueueExecute:
+                             continue
+                         logger.debug(1, "Task %s no longer deferred" % nexttask)
+                         del self.sq_deferred[nexttask]
+-                        valid = self.rq.validate_hashes(set([nexttask]), self.cooker.data, 0, False)
++                        valid = self.rq.validate_hashes(set([nexttask]), self.cooker.data, 0, False, summary=False)
+                         if not valid:
+                             logger.debug(1, "%s didn't become valid, skipping setscene" % nexttask)
+                             self.sq_task_failoutright(nexttask)
+@@ -2361,9 +2361,13 @@ class RunQueueExecute:
+             if tid in self.build_stamps:
+                 del self.build_stamps[tid]
+ 
+-            logger.info("Setscene task %s now valid and being rerun" % tid)
++            origvalid = False
++            if tid in self.sqdata.valid:
++                origvalid = True
+             self.sqdone = False
+-            update_scenequeue_data([tid], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self)
++            update_scenequeue_data([tid], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
++            if tid in self.sqdata.valid and not origvalid:
++                logger.info("Setscene task %s became valid" % tid)
+ 
+         if changed:
+             self.holdoff_need_update = True
+@@ -2692,9 +2696,9 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
+     sqdata.stamppresent = set()
+     sqdata.valid = set()
+ 
+-    update_scenequeue_data(sqdata.sq_revdeps, sqdata, rqdata, rq, cooker, stampcache, sqrq)
++    update_scenequeue_data(sqdata.sq_revdeps, sqdata, rqdata, rq, cooker, stampcache, sqrq, summary=True)
+ 
+-def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq):
++def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq, summary=True):
+ 
+     tocheck = set()
+ 
+@@ -2728,7 +2732,7 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq):
+ 
+         tocheck.add(tid)
+ 
+-    sqdata.valid |= rq.validate_hashes(tocheck, cooker.data, len(sqdata.stamppresent), False)
++    sqdata.valid |= rq.validate_hashes(tocheck, cooker.data, len(sqdata.stamppresent), False, summary=summary)
+ 
+     sqdata.hashes = {}
+     for mc in sorted(sqdata.multiconfigs):
+-- 
+2.20.1
+
 
