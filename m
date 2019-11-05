@@ -1,47 +1,43 @@
-Return-Path: <nicolas.dechesne@linaro.org>
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com
-	[209.85.167.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 058EC7C86A
+Return-Path: <i.efimov@inango-systems.com>
+Received: from mail.inango-sw.com (mail.inango-systems.com [213.136.71.184])
+	by mail.openembedded.org (Postfix) with ESMTP id 863697F9B8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Nov 2019 04:50:30 +0000 (UTC)
-Received: by mail-lf1-f51.google.com with SMTP id y6so16949471lfj.2
+	Tue,  5 Nov 2019 14:16:51 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-sw.com (Postfix) with ESMTP id C8E2D7A2565
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 05 Nov 2019 20:50:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linaro.org; s=google;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=bNFmatGc3po1Zst+rzbHDv1zBWTyIKlp5NwLlCFP4tA=;
-	b=tfYKEE1wSnRa/k+RjuIH+t8Eokx6ZK6RxX9GkmKBzjN1uE1p2jKo3tFIDL2LgdCpen
-	D0CpT95NUu6OFzJaESRVvcaySdLUoJwJLIs5AB+WKJaRrS4x+pHUjK9vFnj2cODscgSu
-	8D/2zP7ACspQNqmAuZReXeHiTOwgAzUMDACFZZeaFa8vIEOlvgZTG/7nHXVgDw39oiTr
-	IVw15sfVSSA8NV8GiuDtSlZrUYOD61cHrR9TYHz0KvRABNkAI7UiaJrO3I9bb3YDOTWx
-	bfqblGczq2qAkXwC3KDYpX2CrmKbtFhprwBH3yHrf69wNv8Va2PJS+Ai28onDLUXEXHd
-	o15g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=bNFmatGc3po1Zst+rzbHDv1zBWTyIKlp5NwLlCFP4tA=;
-	b=cLrRqvKSTlKm5YXKpKmRKtnXXNtsfbDZoLGvf2UBhVa318JQOm19WSXcl18NlJjtlx
-	hqVLP5Jzp9u7j9NN0u2OQ1X9VCcTWkra3uHQO1QlRLu8B2pJ832hjTtLGsOBR0U0A6sA
-	0JxNwrlGz5+Io8mVNPYok5TPls6k58eeCJAkRLNs2ZQ7QvIT+r1F3FUZCkTL3DvTAXFN
-	VBscgsZSK6zpRzzOcHgkLEBRXYvpZ2eF/uRhYTJ7HVGJOIVZyPpNn5aWnrG6e38j74qz
-	g8eLLRQtOk4tUwA+raSyfMb++HM3oj72jXd7eKvTWzM58//KmM7c3/D2zRzSgjvByKmn
-	b2jg==
-X-Gm-Message-State: APjAAAWxfiRkl0i+embs0Od4YJPt0lJwY4jLb6KAilAcInktZ/pa2Amv
-	i6cj3d96096OynH38Hy95MWgCtvkbjokd44OKWLPwg==
-X-Google-Smtp-Source: APXvYqxEHSNeiH/inMbYsT14DmfHctGeiZNSjmLNE6ZAIz6OmkHQVG9Y0VbvOj+Dn6H7EERITRM3cMj63+AlZAjq24w=
-X-Received: by 2002:a19:614b:: with SMTP id m11mr4101316lfk.157.1573015831294; 
-	Tue, 05 Nov 2019 20:50:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191008184512.20130-1-anibal.limon@linaro.org>
-In-Reply-To: <20191008184512.20130-1-anibal.limon@linaro.org>
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Date: Wed, 6 Nov 2019 05:50:22 +0100
-Message-ID: <CAP71WjybOqGNu8Js9pnPEHsuYHRe5LVPgCdei7FsvqQG_L5U1A@mail.gmail.com>
-To: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linaro.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [RFC][WIP][PATCHv1] lib/bb/checksum.py: Speed-up checksum gen when directory is git
+	Tue,  5 Nov 2019 16:08:10 +0200 (IST)
+Received: from mail.inango-sw.com ([127.0.0.1])
+	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id uuMX25gdXrwk; Tue,  5 Nov 2019 16:08:06 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-sw.com (Postfix) with ESMTP id A77EF7A253E;
+	Tue,  5 Nov 2019 16:08:05 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com A77EF7A253E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1572962885;
+	bh=KPAejySyQyQQUyWGV2kVtaOmrmuGAVWmxO7D1AbDh7E=;
+	h=From:To:Date:Message-Id;
+	b=B2Fr3oOBuB0rH37K5TCHAfDxWw+cPj0ANJiYMQ5uVmtWa+rncM1iY4hff2eort7Q8
+	FlpRAQx6CxBu1mWc/GCd1pDCuFOrALbYUHf/QYSQYGmP6R/7cvYnwuUz1K5w0RVcDI
+	k36T5dazcCbMtb5SsXymdbafK+msj0FZqfk9LrJ/qGyYOCXXoSaxhJAWQQOYuEJcM/
+	60YbXnCDBlsYPrq3VpT0ZRJBqK5EDi0sHB+kQympw0nnktfeOcMn4uzHaCMH7Gmfof
+	YRAHlLadBT8d6t867tVy2P4OyFsdV+vOeCxYEMsBMVCxRBUQ9SbGpoD8aBJFXUw2Vq
+	ojDV3n64KTuNg==
+X-Virus-Scanned: amavisd-new at inango-sw.com
+Received: from mail.inango-sw.com ([127.0.0.1])
+	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id k00OAXycDfMW; Tue,  5 Nov 2019 16:08:05 +0200 (IST)
+Received: from ivane-1.inango.loc (unknown [194.60.247.123])
+	by mail.inango-sw.com (Postfix) with ESMTPSA id 46DEF7A250B;
+	Tue,  5 Nov 2019 16:08:04 +0200 (IST)
+From: Ivan Efimov <i.efimov@inango-systems.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  5 Nov 2019 19:07:03 +0500
+Message-Id: <20191105140703.29122-1-i.efimov@inango-systems.com>
+X-Mailer: git-send-email 2.17.1
+X-Mailman-Approved-At: Wed, 06 Nov 2019 11:07:36 +0000
+Subject: [PATCH] bitbake-worker child process create group before registering SIGTERM handler
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,85 +50,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Nov 2019 04:50:31 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 05 Nov 2019 14:16:52 -0000
 
-hi,
+The bitbake-worker child on the SIGTERM signal handling send the SIGTERM to all
+processes in it's process group. In cases when the bitbake-worker child got
+SIGTERM after registering own SIGTERM handler and before the os.setsid() call
+it can send SIGTERM to unwanted processes.
 
-On Tue, Oct 8, 2019 at 8:42 PM An=C3=ADbal Lim=C3=B3n <anibal.limon@linaro.=
-org> wrote:
->
-> In some cases people/organizations are using a SRC_URI with
-> file:///PATH_TO_DIR that contains a git repository for different
-> reasons, it is useful when want to do an internal build without
-> clone sources from outside.
->
-> This could consume a lot of CPU time because the current taskhash
-> generation mechanism didn't identify that the folder is a VCS
-> (git, svn, cvs) and makes the cksum for every file including the
-> .git repository in this case.
->
-> There are different ways to improve the situation,
->
-> * Add protocol=3Dgitscm in file:// SRC_URI but the taskhash is
->   calculated before the fetcher identifies the protocol, will require
->   some changes in bitbake codebase.
-> * This patch: When directory is a git repository (contains .git)
->   use HEAD rev + git diff to calculate checksum instead of do it
->   in every file, that is hackish because make some assumptions about
->   .git directory contents.
-> * Variant of this patch: Make a list of VCS directories (.git, .svn,
->   .cvs) and take out for cksum calculations, same as before making
->   assumptions about the . folders content.
+In the worst case during SIGTERM processing the bitbake-worker child can be in
+the group of the process that started BitBake itself. As a result it can kill
+processes that not related to BitBake at all.
 
-I've discussed with Khem and Richard today (@ELCE) about this patch.
-We kind of agreed that the current approach is not really good since
-the local fetcher isn't supposed to 'deal' with scm commands. however
-we agreed that the last variant proposed above might be a much better
-approach. The idea would be to exclude VCS directories from the
-checksum computation. It could potentially be extended in a slightly
-more generic way, like using a variable to specify a list of
-directories to exclude, which could be unset by default, and set in oe
-core as
-BB_LOCAL_DIRS_EXCLUDE =3D ".git .cvs .svn"
+Signed-off-by: Ivan Efimov <i.efimov@inango-systems.com>
+---
+ bin/bitbake-worker | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Anibal: do you think you can give it a try?
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index 6776cadd..1e641e81 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -195,9 +195,6 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+             global worker_pipe_lock
+             pipein.close()
+ 
+-            signal.signal(signal.SIGTERM, sigterm_handler)
+-            # Let SIGHUP exit as SIGTERM
+-            signal.signal(signal.SIGHUP, sigterm_handler)
+             bb.utils.signal_on_parent_exit("SIGTERM")
+ 
+             # Save out the PID so that the event can include it the
+@@ -212,6 +209,11 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+             # This ensures signals sent to the controlling terminal like Ctrl+C
+             # don't stop the child processes.
+             os.setsid()
++
++            signal.signal(signal.SIGTERM, sigterm_handler)
++            # Let SIGHUP exit as SIGTERM
++            signal.signal(signal.SIGHUP, sigterm_handler)
++
+             # No stdin
+             newsi = os.open(os.devnull, os.O_RDWR)
+             os.dup2(newsi, sys.stdin.fileno())
+-- 
+2.17.1
 
-
->
-> Signed-off-by: An=C3=ADbal Lim=C3=B3n <anibal.limon@linaro.org>
-> ---
->  lib/bb/checksum.py | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
-> index 5bc8a8fc..ee125cb5 100644
-> --- a/lib/bb/checksum.py
-> +++ b/lib/bb/checksum.py
-> @@ -86,6 +86,19 @@ class FileChecksumCache(MultiProcessCache):
->              return checksum
->
->          def checksum_dir(pth):
-> +            git_dir =3D os.path.join(pth, '.git')
-> +            if os.path.exists(git_dir):
-> +                import subprocess, hashlib
-> +                m =3D hashlib.md5()
-> +                head =3D subprocess.check_output("cd %s && git rev-parse=
- HEAD" % pth, shell=3DTrue)
-> +                diff =3D subprocess.check_output("cd %s && git diff" % p=
-th, shell=3DTrue)
-> +                m.update(head)
-> +                if diff:
-> +                    m.update(diff)
-> +
-> +                return [(pth, m.hexdigest())]
-> +
-> +
->              # Handle directories recursively
->              if pth =3D=3D "/":
->                  bb.fatal("Refusing to checksum /")
-> --
-> 2.23.0
->
 
