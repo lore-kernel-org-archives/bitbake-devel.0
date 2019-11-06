@@ -1,45 +1,43 @@
-Return-Path: <i.efimov@inango-systems.com>
-X-Greylist: delayed 545 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 05 Nov 2019 14:16:51 UTC
-Received: from mail.inango-sw.com (mail.inango-systems.com [213.136.71.184])
-	by mail.openembedded.org (Postfix) with ESMTP id 8532B7CBDF
+Return-Path: <maxim.uvarov@linaro.org>
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com
+	[209.85.219.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 3BCFF7F798
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Nov 2019 14:16:51 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.inango-sw.com (Postfix) with ESMTP id D2B907A249C
+	Wed,  6 Nov 2019 10:42:34 +0000 (UTC)
+Received: by mail-yb1-f169.google.com with SMTP id q18so10208216ybq.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Nov 2019 16:07:46 +0200 (IST)
-Received: from mail.inango-sw.com ([127.0.0.1])
-	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 05LsQzUJVn4O; Tue,  5 Nov 2019 16:07:44 +0200 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.inango-sw.com (Postfix) with ESMTP id E5AB27A2491;
-	Tue,  5 Nov 2019 16:07:43 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com E5AB27A2491
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1572962863;
-	bh=W6Y8Icw+kVs/YFqoFYHtNUC4Cj34PZhxEI+gNng01os=;
-	h=From:To:Date:Message-Id;
-	b=XM0PCHoTeavpBoZCztzTF+2J0Pb1jgF/MxaPaPyn0Lcri5b3U1HoGQWR/5iItUS4k
-	8gemWOwb2EmKrBT1p5B5+NfySAYE9bFXyOlx1iwT+wQPDkbFSkbBAkCn/WnBap1w2R
-	tvI3LA9ogi0FL7ztZNS2RDFV/VxUkKUbiENhM1CIGr9uKmqD+rK03veME+isAk9xZu
-	Yg0ROpfcBxW/Fdx4dBUcbYTuV+SvPGManOkQIr5pZludhw5kvVkUb4STBAkg+Pv4uN
-	O0HxDcqH6lWKy0JUzG7WJWtlR+xrwfRd/lX2HeKtYEGL3QntmYlPFeImxiPXLDRUBm
-	28F3fSUhJas2w==
-X-Virus-Scanned: amavisd-new at inango-sw.com
-Received: from mail.inango-sw.com ([127.0.0.1])
-	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 2IFuw84nHcGi; Tue,  5 Nov 2019 16:07:43 +0200 (IST)
-Received: from ivane-1.inango.loc (unknown [194.60.247.123])
-	by mail.inango-sw.com (Postfix) with ESMTPSA id 564A17A12C1;
-	Tue,  5 Nov 2019 16:07:43 +0200 (IST)
-From: Ivan Efimov <i.efimov@inango-systems.com>
+	Wed, 06 Nov 2019 02:42:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linaro.org; s=google;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=1NJWmuJLTNL7l+KulyMejn5wJ26y9FFQu1/UDlH+PSw=;
+	b=v4D2KDxfR9cLQstax/FpjdM84BiuFLg1WfqhhL7575nS/n1SeSseUpMAfzFFVhmOgV
+	9a5DIIwdJjdUeE4XGx0jyemV1azX0JiL5vRtAL+0fciB2RFdSb00pbwaAC/cWtiBbgp1
+	ZDuWtzqAlohZM3vCzwgS2sNUNZlOMAlIzoq4rq3FvOSNw7G2lO9XAaT47X9JaaKnSAqN
+	gRVpeO7WHNtQqbwwzNdt3lnvuGCnSy+Fs9Q81k8jjjC/AZmtV9veE/dCxMt4wIbxaQNZ
+	iW3xjCed+CNcU/lCHywJ8vCZyy9t0WkozKXqiYr4O+IeF+oi59xHiRveIXgIe+4XYF+J
+	GjYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=1NJWmuJLTNL7l+KulyMejn5wJ26y9FFQu1/UDlH+PSw=;
+	b=GTdCtQcFM/i6r3fdJLYMAXzpOE3TTgNCm0vWoE4ZRWvljThQOfAsSFhGjxkBVs4b7L
+	k44EpAaKXIFl3qgi2E4h8r3AX7tgJOTD4YOqzehZyQQ0+vmJkjNksv9AJazBsyLibGOu
+	hZ5nGXDNZ6mib0B2Y2dO5bYp5itqw7eR4cJzTQeKsXuN2C5YXtEP8eIKtkBsR2JDSSpt
+	D2ZWHx57ezoCB5kblvsHhws3T6zmEo3eQQ6qEVh33lymSGu6i1LrqpsvD9YObYLMLyiU
+	g1NNFjeVacm6bqWsw0tCvtGnXylWpZ2/4Wdjko25V8KsVffV4XBasKJEJhX3XjqJR0nN
+	UFhA==
+X-Gm-Message-State: APjAAAVX32LOTWthsiH+eizG7ugM7Ar1o0z4LPDvgvUn9R06kfFiuzKP
+	suGFC2pE8cI/xXSUyApKAh1kdc/nc9zYpujbWBq2YeF0bvQ=
+X-Google-Smtp-Source: APXvYqzrO7M9tZZV5mF/rJge92wlTBnaHffCbNzKwAFhDSkn2Z5hMwt/7bE3KU/dM3F9Jm29PR2hCNrh3AJNzvJewCo=
+X-Received: by 2002:a25:af41:: with SMTP id c1mr1465151ybj.187.1573036954801; 
+	Wed, 06 Nov 2019 02:42:34 -0800 (PST)
+MIME-Version: 1.0
+From: Maxim Uvarov <maxim.uvarov@linaro.org>
+Date: Wed, 6 Nov 2019 13:42:24 +0300
+Message-ID: <CAD8XO3ZVwS0B-u064nEOPMzx8ngft2q8S3KM9VCG+V61PA3_aA@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  5 Nov 2019 19:07:35 +0500
-Message-Id: <20191105140735.8204-1-i.efimov@inango-systems.com>
-X-Mailer: git-send-email 2.17.1
 X-Mailman-Approved-At: Wed, 06 Nov 2019 11:07:36 +0000
-Subject: [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
+Subject: hg fix was not merged
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,49 +50,13 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Nov 2019 14:16:52 -0000
+X-List-Received-Date: Wed, 06 Nov 2019 10:42:34 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-The bitbake-worker child on the SIGTERM signal handling send the SIGTERM to all
-processes in it's process group. In cases when the bitbake-worker child got
-SIGTERM after registering own SIGTERM handler and before the os.setsid() call
-it can send SIGTERM to unwanted processes.
+Is there any reason why this patch was not merged?
+http://lists.openembedded.org/pipermail/bitbake-devel/2017-November/009097.html
 
-In the worst case during SIGTERM processing the bitbake-worker child can be in
-the group of the process that started BitBake itself. As a result it can kill
-processes that not related to BitBake at all.
+Patch fixes hg fetched.
 
-Signed-off-by: Ivan Efimov <i.efimov@inango-systems.com>
----
- bin/bitbake-worker | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index db3c4b18..6a12a31c 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -189,9 +189,6 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
-             global worker_pipe_lock
-             pipein.close()
- 
--            signal.signal(signal.SIGTERM, sigterm_handler)
--            # Let SIGHUP exit as SIGTERM
--            signal.signal(signal.SIGHUP, sigterm_handler)
-             bb.utils.signal_on_parent_exit("SIGTERM")
- 
-             # Save out the PID so that the event can include it the
-@@ -206,6 +203,11 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
-             # This ensures signals sent to the controlling terminal like Ctrl+C
-             # don't stop the child processes.
-             os.setsid()
-+
-+            signal.signal(signal.SIGTERM, sigterm_handler)
-+            # Let SIGHUP exit as SIGTERM
-+            signal.signal(signal.SIGHUP, sigterm_handler)
-+
-             # No stdin
-             newsi = os.open(os.devnull, os.O_RDWR)
-             os.dup2(newsi, sys.stdin.fileno())
--- 
-2.17.1
-
+Maxim.
 
