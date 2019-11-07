@@ -1,50 +1,77 @@
-Return-Path: <i.efimov@inango-systems.com>
-Received: from mail.inango-sw.com (mail.inango-systems.com [213.136.71.184])
-	by mail.openembedded.org (Postfix) with ESMTP id C97AA7F642
+Return-Path: <chris.laplante@agilent.com>
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com
+	(mail-eopbgr760048.outbound.protection.outlook.com [40.107.76.48])
+	by mail.openembedded.org (Postfix) with ESMTP id A3DEF6004D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2019 06:35:23 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.inango-sw.com (Postfix) with ESMTP id F37E37A12CA;
-	Thu,  7 Nov 2019 08:35:22 +0200 (IST)
-Received: from mail.inango-sw.com ([127.0.0.1])
-	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id GT_wygIKMBhr; Thu,  7 Nov 2019 08:35:14 +0200 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.inango-sw.com (Postfix) with ESMTP id 5E10C7A237D;
-	Thu,  7 Nov 2019 08:35:14 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com 5E10C7A237D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1573108514;
-	bh=u9Ag4MFJKUST039bIElQK+FSz2UkiuhkBumx42ockOw=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=W7G3OXSdw/n1bMDsKjVoRDAQxwkncUW6kqo77FoKYp9CBLUe5k7IDV3yC/eQbq/yN
-	IGtJVZqKwuqyuirp27tGZn7MPiJVnIIIEhnyvFcVysI113+jqEcr08x5rRaca+kmiF
-	dfH3wGGPnoVsY4PVKF3UgYqVX68ULWoxD9H3ISbQ/WtKVGDrWASTCTweoCoaZpaeeJ
-	kk8VYIfoXSO56Ru9NlWERixc+k+iKAuKtEi3TaCzYqoGP7Sf8oNkrvtTynOpUVnDSd
-	Jr/vneIMiLMhTbBQsfst35+8c5m1Xz1F8fcOq+BWoWMzzy62XePx2ungY0XL7pkIHE
-	WaWAV+u9MfVxw==
-X-Virus-Scanned: amavisd-new at inango-sw.com
-Received: from mail.inango-sw.com ([127.0.0.1])
-	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id wUW23WiHQZnN; Thu,  7 Nov 2019 08:35:14 +0200 (IST)
-Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
-	by mail.inango-sw.com (Postfix) with ESMTP id 182887A12CA;
-	Thu,  7 Nov 2019 08:35:14 +0200 (IST)
-Date: Thu, 7 Nov 2019 08:35:12 +0200 (IST)
-From: Ivan Efimov <i.efimov@inango-systems.com>
-To: akuster <akuster@mvista.com>
-Message-ID: <1370792230.5885.1573108512017.JavaMail.zimbra@inango-systems.com>
-In-Reply-To: <c080c0f1-426e-e40a-c4f5-3e66c6f7fd86@mvista.com>
-References: <20191105140735.8204-1-i.efimov@inango-systems.com>
-	<c080c0f1-426e-e40a-c4f5-3e66c6f7fd86@mvista.com>
+	Thu,  7 Nov 2019 14:41:45 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=az5VMYlvfBTZ/NW/Cdv3R5CrlE4Ik9/j/m+kKews4zKqLxDhZQ9b/vkxvNVmNdWYOA3WikeAe5hWYb7TsP6gu3iq4lQeRz7LkgpN8Pu2qd58KFxsBNeAd2vQ9dtmT7qyUGlb59Tn9PXUr8hVe2Su9F7Wkt5hdDPJRjMmoxyGpBZ1c+MbRzF8drOz5SUy3rkICAoQ5TNN2Dxm4ev8xK1+psuNNeM7ZtwkPn56Hukw91d2A9v2wSeaYjjS94JkFTxwFrlliV3W8CqjJP+cNm1mFgJ4TMKz8g7agVmgEIVIHFXwAPGEbFR1TJV1ylXlnVmBjcRnq6zIKGVns59VR7bQrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=/nz1cryZczYvr4+A1nIYG54lDIthBFEZ84YoB/CHyAc=;
+	b=ocgRj0tk7UejZJVNiLLJhZMjdgIDfT3HjRZxNKUR3VpDIoyzn9OIx22RB2UrpT7uXHj8F5BPxEa7bPQP++WgznT6AHeEcPwWIk1PmLOhzVKitJsrZ5bLz8w/RotR3H+BmEDjkrWCMQ8JfzQwzQNMAR4R7ysJIw/GdN0dvgqvOxXihhFdIHfj1SCudpxthKumfHztAQ4lEC+FGQ9v88XUBy1B2aK8U29o/vIqhWUmMjLimmZFjZt8fDMUkgYjgM6m68JEZfQ1p93t19X7VmVqFBjPZGTPrjju9r16bdUkg5D1k87q0SFx83qasdaDE1BlEO8H5vheOXCspBm6EkCH6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+	smtp.mailfrom=agilent.com;
+	dmarc=pass action=none header.from=agilent.com; 
+	dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+	s=selector2;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=/nz1cryZczYvr4+A1nIYG54lDIthBFEZ84YoB/CHyAc=;
+	b=WeUEWVL8Nce2wK0SjOnfIzI5Jlzrb8SJcBXMdtQ/aRlNog4DAJXerL4BSuZGbib7CbOSFz84rT3Gm1PCbQt7wKMGkZhEuc4n0MzEln+alJc7bzSxXuOeGXUSXHP0nV0JrXoEAyI0/nMJSstePW/Q4tNhJ11wX6QZevZ7QDXb7GE=
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
+	CY4PR12MB1175.namprd12.prod.outlook.com (10.168.167.10) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2408.24; Thu, 7 Nov 2019 14:41:45 +0000
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::38c8:b362:f0b6:5134]) by
+	CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::38c8:b362:f0b6:5134%8]) with mapi id 15.20.2408.028;
+	Thu, 7 Nov 2019 14:41:45 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel][PATCH v2 0/9] BitBake Vim indentation plugin
+Thread-Index: AQHVhQkXgo4MEInU/kOfVjEqhWSO/qd/6Jqw
+Date: Thu, 7 Nov 2019 14:41:45 +0000
+Message-ID: <CY4PR12MB16530118DE572B2CC64389008B780@CY4PR12MB1653.namprd12.prod.outlook.com>
+References: <cover.1571329975.git.chris.laplante@agilent.com>
+In-Reply-To: <cover.1571329975.git.chris.laplante@agilent.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=chris.laplante@agilent.com; 
+x-originating-ip: [4.16.127.92]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 17bde97a-f380-428c-dde7-08d763909d24
+x-ms-traffictypediagnostic: CY4PR12MB1175:
+x-microsoft-antispam-prvs: <CY4PR12MB1175C377A39038E2F5BCF1398B780@CY4PR12MB1175.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(366004)(376002)(396003)(136003)(346002)(39860400002)(29502001)(189003)(199004)(51874003)(99286004)(6116002)(256004)(2501003)(6506007)(74316002)(52536014)(2906002)(2351001)(66066001)(81166006)(5660300002)(26005)(6436002)(6916009)(71200400001)(102836004)(55016002)(5640700003)(478600001)(76176011)(14454004)(229853002)(71190400001)(8676002)(9686003)(486006)(305945005)(6246003)(186003)(81156014)(4744005)(25786009)(7736002)(86362001)(7696005)(316002)(8936002)(446003)(66946007)(11346002)(66446008)(76116006)(476003)(64756008)(33656002)(66476007)(66556008)(3846002)(4326008);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1175;
+	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; MX:1; A:1; 
+received-spf: None (protection.outlook.com: agilent.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tLJesiJOU/Ay1pEP6tBiwOAJ1xNAzV6abOzQeTFdzUmZCsTodU8b/I8L/oew0F5KJHZQaxvGvj6gJxQbdxlXIemPMJ9GVVQc7wQj0f3zvMvfnW6GJH81WnfEPX6/7rhlxq6mI8q0fnYzkRJEDomiuF3yxvFLg4o/pkDmU6GoWbftc4PXEuuNsVSZ3XTe/k1xDVmZ6ucUI9UpmSvBcv1xhUQBoyY54YXphIwmjaYGE/6gp675gFGvFpN9JTP2A3hP4vjQDR2+s/Ps033+uOorD2rvkFFs4DLSmeg7Oze5g71oBDO0RNyPhY9+6RN/nKcLlAef+wOa3ZJrKu8N8qXCnKdMsluW0y9xFpzLCaDRNDuRHKDaIC+uNJhVY5y0+cTyWiXVrHeZ0VlWPJXbUWkaAI500qesW0RKZ0s0MngLsxtHR0meqIbZZJh2N7b38WIw//7xCI23epOB3n+ic+Ackg==
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-X-Originating-IP: [172.17.220.3]
-X-Mailer: Zimbra 8.8.9_GA_3006 (ZimbraWebClient - GC78 (Linux)/8.8.9_GA_3006)
-Thread-Topic: bitbake-worker child process create group before registering
-	SIGTERM handler
-Thread-Index: rcKYbhrf4PiRdzQ7b9c8aPf9hakMqA==
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17bde97a-f380-428c-dde7-08d763909d24
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 14:41:45.8114 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zclJGFDivhh/vKHdCWlTfqdOBEFT/k55wh9BL+oxmpOLVcPHrQguDdLQE0YZxIYk+7p4MxA3nSmw2lN3HtSk4ZA/rYdDWT3AQPJIUkHjGIo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1175
+Subject: Re: [PATCH v2 0/9] BitBake Vim indentation plugin
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,88 +84,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2019 06:35:24 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 07 Nov 2019 14:41:45 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Armin,
+> This patchset adds Vim indentation support for the BitBake language.
+>=20
+> It supports indenting variable assignments, Python and shell tasks/functi=
+ons.
+> To accomplish Python indentation, it uses a hacked-up version of the Pyth=
+on indenter
+> from Vim upstream. The upstream shell indenter is used directly, without
+> modification, however in the future it will be necessary to modify the sh=
+ell
+> indenter to properly support "fakeroot" shell tasks.
 
-I've rechecked that this issue is relevant to next branches besides 1.32 and master:
+Heads up, it seems only the first two commits in this patch series were com=
+mitted to Poky. Could someone please commit the remaining 7?
 
-1.26
-1.28
-1.30
-1.34
-1.36
-1.38
-1.40
-1.42
-1.44
-
-Could you please tell me what of them are still supported by BitBake community?
-
-Best regards,
-Ivan
-
-
-
-[ https://inango.com/ |    ] 
-Ivan Efimov 
-Software Architect, Arch Group 
-i.efimov@inango-systems.com 
-T +7 343 298 0147 C +7 904 9 888 350 
-[ https://inango.com/ | inango.com ] [ https://www.linkedin.com/company/inango ]
-
------ Original Message -----
-From: "akuster" <akuster@mvista.com>
-To: "Ivan Efimov" <i.efimov@inango-systems.com>, bitbake-devel@lists.openembedded.org
-Sent: Thursday, November 7, 2019 3:00:46 AM
-Subject: Re: [bitbake-devel] [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
-
-On 11/5/19 6:07 AM, Ivan Efimov via bitbake-devel wrote:
-> The bitbake-worker child on the SIGTERM signal handling send the SIGTERM to all
-> processes in it's process group. In cases when the bitbake-worker child got
-> SIGTERM after registering own SIGTERM handler and before the os.setsid() call
-> it can send SIGTERM to unwanted processes.
->
-> In the worst case during SIGTERM processing the bitbake-worker child can be in
-> the group of the process that started BitBake itself. As a result it can kill
-> processes that not related to BitBake at all.
->
-> Signed-off-by: Ivan Efimov <i.efimov@inango-systems.com>
-
-I see master and 1.32 have patches. To confirm, 1.44, 140.1.38, 1.36,...
-need this too?
-
-- Armin
-> ---
->  bin/bitbake-worker | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-> index db3c4b18..6a12a31c 100755
-> --- a/bin/bitbake-worker
-> +++ b/bin/bitbake-worker
-> @@ -189,9 +189,6 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
->              global worker_pipe_lock
->              pipein.close()
->  
-> -            signal.signal(signal.SIGTERM, sigterm_handler)
-> -            # Let SIGHUP exit as SIGTERM
-> -            signal.signal(signal.SIGHUP, sigterm_handler)
->              bb.utils.signal_on_parent_exit("SIGTERM")
->  
->              # Save out the PID so that the event can include it the
-> @@ -206,6 +203,11 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, append
->              # This ensures signals sent to the controlling terminal like Ctrl+C
->              # don't stop the child processes.
->              os.setsid()
-> +
-> +            signal.signal(signal.SIGTERM, sigterm_handler)
-> +            # Let SIGHUP exit as SIGTERM
-> +            signal.signal(signal.SIGHUP, sigterm_handler)
-> +
->              # No stdin
->              newsi = os.open(os.devnull, os.O_RDWR)
->              os.dup2(newsi, sys.stdin.fileno())
+Thanks in advance,
+Chris
 
