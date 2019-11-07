@@ -1,80 +1,52 @@
-Return-Path: <chris.laplante@agilent.com>
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com
-	(mail-eopbgr700087.outbound.protection.outlook.com [40.107.70.87])
-	by mail.openembedded.org (Postfix) with ESMTP id 804427F642
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
+	[209.85.128.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 90B517F362
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2019 20:48:28 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=Nr267aR0o5wBzxcgyjZ2dKtaQhk5oX2SAXRyXBOa2IUcpSvBER3oO3mKmavxwaEXSmCRFN2dQo/uqz7Z+b3UOo/BTCqaBVGYrtiXYsMnlcaYZu01AiZyYO2pPCKOwgohIMzEc26EafHFL8zy8HzAed8oM+IWXkcdN1WdQZyopD4BP81ny8aDxtoIOG1CeAcAMJN/OvrNwLp622GDbY062PSYT4d+Ou3plS81T7xFILc050Z2VW5OJN0tq8ox0ZXSRBiOJFiQ6Yvff5+gsL2x4BAPq0b5vdENYC0S/Vklf0SIQjv1jLKAlUpbBRzX3ui+8B0LGfxjkLs6fu3K0BPQiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
-	s=arcselector9901;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=uq5BTGqpPn9b2eTRAYU+W/2hOG98pMFlFBxHbyPm5j4=;
-	b=CEfgj3k0s7CWnRiwO/sQ7T5dXes0eY2ZElcJplfeHKfuEZMzIvLVsSZVMS4kCBJupyWew8UKMLvIWoMwbJXVi1wgrqAr98IWEUp0GWGqjn2xDgdvprKBKnMAm8QbmtYN72iSLGwI2mkwC0rgmpsO1CFkqnjlU99V0Q3ruKKSj/pql9UqyXmuqe6Fb8wU5ODSDzrla7BPHj+0mznHwbhhVxC44wZ2ztEKc2T5457kleCzWYjkecpS7lBkpYzUP7Oh4nqA6DLHNsOyHiY1fsNNHmONtAYyx5njeomzs0YeF069lE0h/vAaNLhG9jhH+pzlRI5HzUNQXxOFBKPg8ijE/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
-	smtp.mailfrom=agilent.com;
-	dmarc=pass action=none header.from=agilent.com; 
-	dkim=pass header.d=agilent.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
-	s=selector2;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=uq5BTGqpPn9b2eTRAYU+W/2hOG98pMFlFBxHbyPm5j4=;
-	b=GUrsw8OUeruYWcxlz1c8PM+Gcv32OIoOFO2EyCZOhBJPSkTDmJYXwfE+bIhZO5Xrd7+9FO017VQzGJw+A61XNyPBCcfPzZ72nWagZHcOFPGoiBJY35CzTeHxKwInG0cdfvG4vANLLnG+p5tX8vaJUgyPeTz1o5z6A2+1UZjUK4w=
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
-	CY4PR12MB1253.namprd12.prod.outlook.com (10.168.166.149) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2408.24; Thu, 7 Nov 2019 20:48:28 +0000
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::38c8:b362:f0b6:5134]) by
-	CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::38c8:b362:f0b6:5134%8]) with mapi id 15.20.2408.028;
-	Thu, 7 Nov 2019 20:48:28 +0000
-From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH v2 0/9] BitBake Vim indentation plugin
-Thread-Index: AQHVlaPnAOve6ca5k064d7BXhv//5qeALhJA
-Date: Thu, 7 Nov 2019 20:48:28 +0000
-Message-ID: <CY4PR12MB16539BDE0C7FA79922C041188B780@CY4PR12MB1653.namprd12.prod.outlook.com>
-References: <cover.1571329975.git.chris.laplante@agilent.com>
-	<CY4PR12MB16530118DE572B2CC64389008B780@CY4PR12MB1653.namprd12.prod.outlook.com>
-	<a1a450081b95cd56557a5c0341ab46ed601b059e.camel@linuxfoundation.org>
-In-Reply-To: <a1a450081b95cd56557a5c0341ab46ed601b059e.camel@linuxfoundation.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=chris.laplante@agilent.com; 
-x-originating-ip: [4.16.127.92]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d6bcb110-99ab-4e09-bee1-08d763c3d7c1
-x-ms-traffictypediagnostic: CY4PR12MB1253:
-x-microsoft-antispam-prvs: <CY4PR12MB125359A235342FFA4117B8C58B780@CY4PR12MB1253.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0214EB3F68
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(366004)(136003)(376002)(346002)(396003)(39860400002)(199004)(189003)(29502001)(305945005)(6506007)(476003)(52536014)(229853002)(71200400001)(86362001)(186003)(26005)(66476007)(55016002)(99286004)(6436002)(2501003)(76176011)(102836004)(81166006)(64756008)(66946007)(14454004)(71190400001)(81156014)(8676002)(66446008)(66556008)(9686003)(316002)(7696005)(8936002)(76116006)(66066001)(446003)(11346002)(110136005)(5660300002)(486006)(6246003)(2906002)(6116002)(3846002)(478600001)(7736002)(25786009)(256004)(558084003)(33656002)(74316002);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1253;
-	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
-received-spf: None (protection.outlook.com: agilent.com does not designate
-	permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mRwyUQqXdq+lEbUllHERqbQWlvstPKRMvJ758vw/3AcAPrQnKEBnjb6fZAvJCw1/eqNy3h3CYb550HzYi+FPrEQIUjC+IIKx4xdcYfixtlTAuip+YCaEkQZ+sOuSDHY7uUmNzJDb5n0nv61yNULBZnGx02ZL9gppxH3gHkECnqUsnn/cesDyJkqXswz1tZivdx6rzKQjKPVm4da8KfGof+iWZwNgymSNQyIYxXp7zMknqilJpiZGCeSolODiAhD6Eyba8d8eGOzUQB9bpOLzNSDMMHQWlYqPPrljyZgcJNK/JTdGtyOp1e2B1/u140lzMb3GWZCPK4AylNhHLQqhNPOuiDN7CSHHnHkGRfdSGamtoqoEolRp5ToANy97fPDNT2pssIQHNjnMIpztsx11UUbPI2UY8ChMS7bmv9BVmQR5tW+04D+pu3vbLA9sYHuro7X7kc9hgko+ALto71p8Lw==
-x-ms-exchange-transport-forked: True
+	Thu,  7 Nov 2019 23:57:37 +0000 (UTC)
+Received: by mail-wm1-f68.google.com with SMTP id b11so4363343wmb.5
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 07 Nov 2019 15:57:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=6k5ogX/HFeO9TczhfXPRYiZFnaKPfhmGk++C8pGPKSA=;
+	b=ooCGsz/eJ0z1vfxW25UFxVqngYzbUAZfFoxzx28Rht3Y+5sVJQSblnAJKUFsLcw9y/
+	BghHrEJ6OuYOmZbBb0yVMtJ1MVKpjWjp0+EWD7aMKokbzxlCsr+TCmAkjYhw0VuEHZNw
+	w8D9yu1LPvwBY2NnPvRXbBJ2lM9TMW7nRx6lC9mR8OCpLJ3VKlSV5obX4cLkTWAPK9Pk
+	GVQ4qLpaflFGNbgIB2Ja2cup+LMIPpqHiv2KLRfFNKgVt3Gag4rnS3WXv9svjcdQD4Jg
+	gq/tJ00YGtMaM2xoBLpGeaGukKjz2BKSA/CTJK4X46gsCJuylAy4GdI7afrGi/UC+/S5
+	GA9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=6k5ogX/HFeO9TczhfXPRYiZFnaKPfhmGk++C8pGPKSA=;
+	b=gwlJOC48ZRMVID6rL9+Ls1acPFLxSG3bts+MkDa7y+UBQOopF6AffNVqSzauPU8C67
+	kFVmObqvOCeZcamHNdMVyTCJIhS/R9lI5KVDMhZaBu1NF9DyEmica2sq9wSMGUjX3Qf6
+	7t4ldu4PNcz7kgSWJe/Hcn47fmka8U6Lcec7xIPuEB2RhGpcZDhhG2LdE3h9iaYF1yOM
+	9fT77CWe8WRRLbByIlSHswBpjbab6FILjmnuUgn5oHTSTspy7hicsRy0xq2z9xA2oJJZ
+	f3Pj5rgSpmNe0R3uonSLpN6nV+YQbvvG8TkVtdPafYQszO1gE5OdR2VUusdNJCFmV4Nv
+	zlRw==
+X-Gm-Message-State: APjAAAWAnhmKzWa8Yy6HH5owlR5iBbDVlajlFul3xcgETXP7ODnvEwSm
+	xlDTQcbOmfuGhQ1KnoptAm1D3ronF6U=
+X-Google-Smtp-Source: APXvYqxxPEWEIRl/ggAsa3DazuOpZdedW6JLk8A1mXnzMCKveMfRyzLkOEYQ5BvhsytguCFx7m1cZg==
+X-Received: by 2002:a1c:1b06:: with SMTP id b6mr5351124wmb.3.1573171057839;
+	Thu, 07 Nov 2019 15:57:37 -0800 (PST)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
+	n17sm3626275wrp.40.2019.11.07.15.57.35
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Thu, 07 Nov 2019 15:57:36 -0800 (PST)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  7 Nov 2019 23:57:32 +0000
+Message-Id: <20191107235733.25853-1-ross.burton@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6bcb110-99ab-4e09-bee1-08d763c3d7c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 20:48:28.4696 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6nOVvGVgXTj5JqhAIqZosyqC7mTCob4Rrk7i5B/ZCo59uTSE3VJWTHt4xq+sJn2NJJOGjjkbmazEQPw10Kc2nyeK3iGuF2PW9AkL/cnLdks=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1253
-Subject: Re: [PATCH v2 0/9] BitBake Vim indentation plugin
+Subject: [PATCH 1/2] tests: add test for the hashing functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -87,12 +59,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2019 20:48:28 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Thu, 07 Nov 2019 23:57:38 -0000
+Content-Transfer-Encoding: 8bit
 
-PiBGaXhlZCwgdGhlIHJlbmFtZSBpbiBwYXRjaCAzIGJyb2tlIHRoZSB0b29saW5nIGJ1dCBJIHNv
-cnRlZCBpdCBvdXQNCj4gbWFudWFsbHkuDQoNCkFwcHJlY2lhdGUgaXQsIHRoYW5rcyENCg0KQ2hy
-aXMNCg==
+Add a basic test for bb.utils.md5_file() etc.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/tests/utils.py | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/bitbake/lib/bb/tests/utils.py b/bitbake/lib/bb/tests/utils.py
+index f4adf1d44b0..5c910b4b8eb 100644
+--- a/bitbake/lib/bb/tests/utils.py
++++ b/bitbake/lib/bb/tests/utils.py
+@@ -103,6 +103,32 @@ class Path(unittest.TestCase):
+             result = bb.utils._check_unsafe_delete_path(arg1)
+             self.assertEqual(result, correctresult, '_check_unsafe_delete_path("%s") != %s' % (arg1, correctresult))
+ 
++class Checksum(unittest.TestCase):
++    filler = b"Shiver me timbers square-rigged spike Gold Road galleon bilge water boatswain wherry jack pirate. Mizzenmast rum lad Privateer jack salmagundi hang the jib piracy Pieces of Eight Corsair. Parrel marooned black spot yawl provost quarterdeck cable no prey, no pay spirits lateen sail."
++
++    def test_md5(self):
++        import hashlib
++        with tempfile.NamedTemporaryFile() as f:
++            f.write(self.filler)
++            f.flush()
++            checksum = bb.utils.md5_file(f.name)
++            self.assertEqual(checksum, "bd572cd5de30a785f4efcb6eaf5089e3")
++
++    def test_sha1(self):
++        import hashlib
++        with tempfile.NamedTemporaryFile() as f:
++            f.write(self.filler)
++            f.flush()
++            checksum = bb.utils.sha1_file(f.name)
++            self.assertEqual(checksum, "249eb8fd654732ea836d5e702d7aa567898eca71")
++
++    def test_sha256(self):
++        import hashlib
++        with tempfile.NamedTemporaryFile() as f:
++            f.write(self.filler)
++            f.flush()
++            checksum = bb.utils.sha256_file(f.name)
++            self.assertEqual(checksum, "fcfbae8bf6b721dbb9d2dc6a9334a58f2031a9a9b302999243f99da4d7f12d0f")
+ 
+ class EditMetadataFile(unittest.TestCase):
+     _origfile = """
+-- 
+2.20.1
+
 
