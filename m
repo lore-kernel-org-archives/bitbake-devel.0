@@ -1,78 +1,57 @@
-Return-Path: <chris.laplante@agilent.com>
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com
-	(mail-eopbgr740051.outbound.protection.outlook.com [40.107.74.51])
-	by mail.openembedded.org (Postfix) with ESMTP id DBCF67FC6E
+Return-Path: <b.shehter@inango-systems.com>
+X-Greylist: delayed 434 seconds by postgrey-1.34 at layers.openembedded.org;
+	Sun, 10 Nov 2019 08:12:11 UTC
+Received: from mail.inango-sw.com (mail.inango-systems.com [213.136.71.184])
+	by mail.openembedded.org (Postfix) with ESMTP id 57B897F99A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  8 Nov 2019 15:19:22 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=YY3yLNUsENhz89mibaUNVbo0Z7ZsWIk9sTndn19dOIL0hN4JdwBOM/SaBdnbw5e35+LebzOqgFrSWCz1McUv6nnMRf/NJW+G+kJklvu/DizvkW8RW4vBpuvumcdRqxvybt39tqPZrkvEjsV6DKJdpinOfIhV+EhP8O+YLenrXwW+6qK7VULaDgRSozjpCXpXvyy69pHhyV1gwkXk2vHNU6Nl2TcbLyCYEIOr/6K6UGx6u9madmf3MBjtHPDayTGtdePXW00aklrZQ/Ci2IW6ZaAS80IS13G85SIwzkO7ASIfuGO6RJtKGudAqjzvRiS2+rIwzp4hXZBIKG4PSJKX/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
-	s=arcselector9901;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=KTcVKeoCTYbFVF/wT2fgNiygFKG0yTuBDkfJ6BxiCkI=;
-	b=IdhavEb/Qi1gSgU4WkBhzVhVr9MVjoyQSNfNOG73gG1SXb2ATVpFgCzyrIDJl7u1Gm0VYE1IBAIkRZzyBwPUT1xSE210YDmnhp52BFC5herLSALbQIiYu1vNGc03jDZWpoCa56rn0XNPQOmF8nCFNqnQ0NyNjNwlP0r3LAKvaEgv2RHTMn/0YSfboHZQUi9lKKhANSi+qnkPGVynARpaCpCmMkBCeliOPzqegPFGvtHBko/2bMghRGOfrFBr0BfgBZtSQj2eSBnlFzhfOALhDfyXeuVM4m/AUH966kR2gSiXepw6abMyd5DIVLos6AdhP+lFNBqJN43oAlF9SnZxEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
-	smtp.mailfrom=agilent.com;
-	dmarc=pass action=none header.from=agilent.com; 
-	dkim=pass header.d=agilent.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
-	s=selector2;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=KTcVKeoCTYbFVF/wT2fgNiygFKG0yTuBDkfJ6BxiCkI=;
-	b=PBPoKh21U/EgchAFZ3XtaXiQeOtZZQjwXNVTJkgTF5tcnG1V3T2zoW8M6ynxW3UwPOkRL7FhJ76uVOrwpcY0tBW1GcHKQ2s9o+2AJYgyejDWTg/K5LRpJ2gGgzreVGZT+qolgFh0ZcpZ8bTwZPD7ojEhi9FUMdR6qpKdMFv1t5A=
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
-	CY4PR12MB1623.namprd12.prod.outlook.com (10.172.67.16) with Microsoft
-	SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2430.24; Fri, 8 Nov 2019 15:19:20 +0000
-Received: from CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::38c8:b362:f0b6:5134]) by
-	CY4PR12MB1653.namprd12.prod.outlook.com
-	([fe80::38c8:b362:f0b6:5134%8]) with mapi id 15.20.2430.023;
-	Fri, 8 Nov 2019 15:19:20 +0000
-From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
-To: Yi Zhao <yi.zhao@windriver.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH] contrib/vim/indent/bitbake.vim: move it
-	to	correct directory
-Thread-Index: AQHVlecQ9fxbIU3m40+JsmmIspMBoqeBY2Uw
-Date: Fri, 8 Nov 2019 15:19:20 +0000
-Message-ID: <CY4PR12MB16535F784360503E5D9A9AAB8B7B0@CY4PR12MB1653.namprd12.prod.outlook.com>
-References: <20191108034600.13103-1-yi.zhao@windriver.com>
-In-Reply-To: <20191108034600.13103-1-yi.zhao@windriver.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
-	smtp.mailfrom=chris.laplante@agilent.com; 
-x-originating-ip: [4.16.127.92]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9864282d-fb02-49c7-0580-08d7645f0747
-x-ms-traffictypediagnostic: CY4PR12MB1623:
-x-microsoft-antispam-prvs: <CY4PR12MB162327D57B957D6DEC7460558B7B0@CY4PR12MB1623.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1303;
-x-forefront-prvs: 0215D7173F
-x-forefront-antispam-report: SFV:NSPM;
-	SFS:(10009020)(376002)(346002)(366004)(39860400002)(396003)(136003)(199004)(189003)(29502001)(66446008)(71200400001)(53546011)(6506007)(102836004)(71190400001)(76176011)(7696005)(7736002)(256004)(305945005)(478600001)(8936002)(81156014)(81166006)(33656002)(74316002)(6116002)(3846002)(99286004)(2906002)(14454004)(9686003)(316002)(55016002)(66946007)(86362001)(110136005)(2501003)(66066001)(25786009)(6436002)(229853002)(66556008)(4744005)(26005)(76116006)(11346002)(186003)(64756008)(52536014)(6246003)(476003)(446003)(486006)(66476007)(5660300002)(4326008);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1623;
-	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
-	LANG:en; PTR:InfoNoRecords; A:1; MX:3; 
-received-spf: None (protection.outlook.com: agilent.com does not designate
-	permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: z0yKT0auG2UdSZ5VkIbDZE87Bz6LztYQSJGkPqjO1pg6zCOYKZnwF5MWlHiXEhC5boeActVR7ZFdx6DaNXU0Nx9tJI8OCXdktpD2IBjxLwJtf492R6cyyTrD2s+hNkCcwm67cLCfWKq4OZLTvZh1imWWpsmqKoILk+4CjdfDp+LT5jEt8E3GFaFQxMLPT3u7Z81atpCn4rcZZsEMgAxhPR6jfYyQe27zp24MmjvwLGCRIvENORAf65e42vXA02G1RJ3btZqa1L22KJzo1axJQxR8/K9wBCednwAu0IMnWpvRDdbxCIsxVn5HSi66ODvB3MKnih2w937Odbpva+iwLy9FmpYLtEgIAf4q0dQBok+S57VqTNn/UGdaS52fhyQdc9oh6JozP4YesSMrJzBrGDLNeSfIIcKHdjIl6msmUAbZH1T5h1Rv3jdESmtcDlzIIvwRor4gJH04k6oD/hF7Jg==
-x-ms-exchange-transport-forked: True
+	Sun, 10 Nov 2019 08:12:11 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-sw.com (Postfix) with ESMTP id 7BB7A7A2410;
+	Sun, 10 Nov 2019 10:04:58 +0200 (IST)
+Received: from mail.inango-sw.com ([127.0.0.1])
+	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id qy0ZFjvNJfrp; Sun, 10 Nov 2019 10:04:51 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-sw.com (Postfix) with ESMTP id 26D587A23EE;
+	Sun, 10 Nov 2019 10:04:51 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com 26D587A23EE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1573373091;
+	bh=2lhpqCsg8/KSr2IBH2YOIe9+B2RfJ1yx0PscVd7QW3E=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=HO0TTTlzU/NAGmV4JS41YCZ6z5f+FgVem4aWkRSqE872SzsuIYozsJEqh+DE6DBJz
+	roP78JHFL1mnJXl+nBW+LA6Qbsgz1lE5wCfUEDJZUhFuqztNdnPjD1dCKw3I56JNoS
+	GFWGZqOitSqByLM7XFYfMG8PfWHV9aAY/UIHmTG5o6Zjp0XAiV+c9lKHSSn52CBehd
+	Sh8cepoXPFnk5MTqG76F0ZfctDdZhKPwrleTebpRWnmqi4W8sozSjy4ocAN3KlRROy
+	sLwj59fjdoUkycmpvZgmJro+tQvKVQPvHpKVcIvav1b2CTyN9BtuXZUUKpmM1EgJTq
+	KOMPrLHkPcB7Q==
+X-Virus-Scanned: amavisd-new at inango-sw.com
+Received: from mail.inango-sw.com ([127.0.0.1])
+	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id NmEJB2JIwbP6; Sun, 10 Nov 2019 10:04:50 +0200 (IST)
+Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
+	by mail.inango-sw.com (Postfix) with ESMTP id B255C7A23E0;
+	Sun, 10 Nov 2019 10:04:50 +0200 (IST)
+Date: Sun, 10 Nov 2019 10:04:50 +0200 (IST)
+From: Boris Shehter <b.shehter@inango-systems.com>
+To: Ivan Efimov <i.efimov@inango-systems.com>, 
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <227567679.138464.1573373090025.JavaMail.zimbra@inango-systems.com>
+In-Reply-To: <1469739070.33402.1573188489180.JavaMail.zimbra@inango-systems.com>
+References: <20191105140735.8204-1-i.efimov@inango-systems.com>
+	<c080c0f1-426e-e40a-c4f5-3e66c6f7fd86@mvista.com>
+	<1370792230.5885.1573108512017.JavaMail.zimbra@inango-systems.com>
+	<be08b56117e97f23007b6984a0a98999f2644063.camel@linuxfoundation.org>
+	<1469739070.33402.1573188489180.JavaMail.zimbra@inango-systems.com>
 MIME-Version: 1.0
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9864282d-fb02-49c7-0580-08d7645f0747
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 15:19:20.1460 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4d0g1y8a7Z4cF8qjEK0yPrnAijnPxVWQ/Ud4WOesT48I3OjbO6P0oMfCdlquS2no4IdxECmjfQIW6x9nKlYntwQe0ZgzcaSP3IFMU7yre/M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1623
-Subject: Re: [PATCH] contrib/vim/indent/bitbake.vim: move it to	correct directory
+X-Originating-IP: [172.17.220.3]
+X-Mailer: Zimbra 8.8.9_GA_3006 (ZimbraWebClient - GC78 (Win)/8.8.9_GA_3006)
+Thread-Topic: bitbake-worker child process create group before registering
+	SIGTERM handler
+Thread-Index: M1jVFBSZcvB9J0eFtPfThAPxpSBX1mtly48h
+X-Mailman-Approved-At: Sun, 10 Nov 2019 09:07:12 +0000
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -85,28 +64,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Nov 2019 15:19:23 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Sun, 10 Nov 2019 08:12:11 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-> From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-bounces=
-@lists.openembedded.org> On Behalf Of Yi Zhao
-> Sent: Thursday, November 07, 2019 10:46 PM
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH] contrib/vim/indent/bitbake.vim: move it =
-to correct directory
->=20
-> Move bitbake.vim from bitbake/contrib/vim/indent to contrib/vim/indent.
->=20
-> Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
-> ---
->  {bitbake/contrib =3D> contrib}/vim/indent/bitbake.vim | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename {bitbake/contrib =3D> contrib}/vim/indent/bitbake.vim (100%)
+Hi Richard 
+We intensive are using yocto daisy and morty and we will be happy to test this fix on those version . Let say - we already tested. How can we integrate fix in relevant versions or only maintainer can do this  ? 
 
 
-Oof, good catch! Thanks.
+--------
+Boris Shehter
+(c) +972-54-6604528
 
-Chris
+----- Original Message -----
+From: "Ivan Efimov" <i.efimov@inango-systems.com>
+To: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+Cc: "akuster" <akuster@mvista.com>, "bitbake-devel" <bitbake-devel@lists.openembedded.org>
+Sent: Friday, November 8, 2019 6:48:09 AM
+Subject: Re: [bitbake-devel] [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
+
+Thanks a lot, Richard.
+
+Best regards,
+Ivan
+
+[ https://inango.com/ |    ] 
+Ivan Efimov 
+Software Architect, Arch Group 
+i.efimov@inango-systems.com 
+T +7 343 298 0147 C +7 904 9 888 350 
+[ https://inango.com/ | inango.com ] [ https://www.linkedin.com/company/inango ]
+
+----- Original Message -----
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: "Ivan Efimov" <i.efimov@inango-systems.com>, "akuster" <akuster@mvista.com>
+Cc: "bitbake-devel" <bitbake-devel@lists.openembedded.org>
+Sent: Friday, November 8, 2019 12:50:13 AM
+Subject: Re: [bitbake-devel] [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
+
+On Thu, 2019-11-07 at 08:35 +0200, Ivan Efimov via bitbake-devel wrote:
+> Hi Armin,
+> 
+> I've rechecked that this issue is relevant to next branches besides
+> 1.32 and master:
+> 
+> 1.26
+> 1.28
+> 1.30
+> 1.34
+> 1.36
+> 1.38
+> 1.40
+> 1.42
+> 1.44
+> 
+> Could you please tell me what of them are still supported by BitBake
+> community?
+
+I think 1.40 onwards are still supported. I've just applied to patch to
+those branches since its a clear/obvious fix and a clean backport. I
+think I can do that in my capacity as bitbake maintainer! I also added
+it to 1.38 since it helps with some other experiments I'm doing. I'm
+reluctant to go further back as we have no testing capacity for the
+older releases right now.
+
+Cheers,
+
+Richard
 
