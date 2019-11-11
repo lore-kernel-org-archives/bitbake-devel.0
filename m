@@ -1,57 +1,55 @@
-Return-Path: <b.shehter@inango-systems.com>
-X-Greylist: delayed 434 seconds by postgrey-1.34 at layers.openembedded.org;
-	Sun, 10 Nov 2019 08:12:11 UTC
-Received: from mail.inango-sw.com (mail.inango-systems.com [213.136.71.184])
-	by mail.openembedded.org (Postfix) with ESMTP id 57B897F99A
+Return-Path: <prvs=211bdf3dd=Mikko.Rapeli@bmw.de>
+X-Greylist: delayed 427 seconds by postgrey-1.34 at layers.openembedded.org;
+	Mon, 11 Nov 2019 08:05:27 UTC
+Received: from esa2.bmw.c3s2.iphmx.com (esa2.bmw.c3s2.iphmx.com
+	[68.232.133.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 92BDD7F957
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 10 Nov 2019 08:12:11 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.inango-sw.com (Postfix) with ESMTP id 7BB7A7A2410;
-	Sun, 10 Nov 2019 10:04:58 +0200 (IST)
-Received: from mail.inango-sw.com ([127.0.0.1])
-	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id qy0ZFjvNJfrp; Sun, 10 Nov 2019 10:04:51 +0200 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.inango-sw.com (Postfix) with ESMTP id 26D587A23EE;
-	Sun, 10 Nov 2019 10:04:51 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com 26D587A23EE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1573373091;
-	bh=2lhpqCsg8/KSr2IBH2YOIe9+B2RfJ1yx0PscVd7QW3E=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=HO0TTTlzU/NAGmV4JS41YCZ6z5f+FgVem4aWkRSqE872SzsuIYozsJEqh+DE6DBJz
-	roP78JHFL1mnJXl+nBW+LA6Qbsgz1lE5wCfUEDJZUhFuqztNdnPjD1dCKw3I56JNoS
-	GFWGZqOitSqByLM7XFYfMG8PfWHV9aAY/UIHmTG5o6Zjp0XAiV+c9lKHSSn52CBehd
-	Sh8cepoXPFnk5MTqG76F0ZfctDdZhKPwrleTebpRWnmqi4W8sozSjy4ocAN3KlRROy
-	sLwj59fjdoUkycmpvZgmJro+tQvKVQPvHpKVcIvav1b2CTyN9BtuXZUUKpmM1EgJTq
-	KOMPrLHkPcB7Q==
-X-Virus-Scanned: amavisd-new at inango-sw.com
-Received: from mail.inango-sw.com ([127.0.0.1])
-	by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NmEJB2JIwbP6; Sun, 10 Nov 2019 10:04:50 +0200 (IST)
-Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
-	by mail.inango-sw.com (Postfix) with ESMTP id B255C7A23E0;
-	Sun, 10 Nov 2019 10:04:50 +0200 (IST)
-Date: Sun, 10 Nov 2019 10:04:50 +0200 (IST)
-From: Boris Shehter <b.shehter@inango-systems.com>
-To: Ivan Efimov <i.efimov@inango-systems.com>, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-ID: <227567679.138464.1573373090025.JavaMail.zimbra@inango-systems.com>
-In-Reply-To: <1469739070.33402.1573188489180.JavaMail.zimbra@inango-systems.com>
-References: <20191105140735.8204-1-i.efimov@inango-systems.com>
-	<c080c0f1-426e-e40a-c4f5-3e66c6f7fd86@mvista.com>
-	<1370792230.5885.1573108512017.JavaMail.zimbra@inango-systems.com>
-	<be08b56117e97f23007b6984a0a98999f2644063.camel@linuxfoundation.org>
-	<1469739070.33402.1573188489180.JavaMail.zimbra@inango-systems.com>
+	Mon, 11 Nov 2019 08:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
+	t=1573459529; x=1604995529;
+	h=from:to:cc:subject:date:message-id:references:
+	in-reply-to:content-id:content-transfer-encoding: mime-version;
+	bh=ZwC5wnEPMeS8kppszluFW3p5TfwJF/YfvaqIupPLJbM=;
+	b=ClVfjUQZgRvMG1+UVX8gtXEGDoVFNWwm0RMAVadiM1JFBOdC0IyoNw+8
+	AOy4I6lC+usj8ckIxthhQBsG5HQi8AA9Hi9K1HujvXaojXHaFULCVYWEK
+	1/a/QEHTk5enYlnOeC+jDnl+X4mLsbnQwRDTKNApED+kQFsz+2mUHuPcC g=;
+IronPort-SDR: 8qGZXDHm8zYOwdHOFDU2RekW6PufY3XpnaNfQxME3EZkJ9JQ4wMEtWiPbOnp+012nQkmnBF9vE
+	0f8HIAkSM5RlWiOxuFfYdE5qxhg8Z3BxI0YlpkUVlqpdtTGFeNl8Lir5RXIYEm84tNAW+GIhtr
+	nN5AESGrJPcy8HICMChHSGkSaQJnbmqhTF5GzMEXcQsnhSaY3Q4SdIUU6dIyn3N4DEo076d2n/
+	GMVOLkQt9cvSPK/lG7HJKJx66ZFtJzb+xpLMOgzhEHtCVMmRoafKL7nsWJ3911ZH0+phK+IvfA
+	Mgw=
+Received: from esagw6.bmwgroup.com (HELO esagw6.muc) ([160.46.252.49]) by
+	esa2.bmw.c3s2.iphmx.com with ESMTP/TLS; 11 Nov 2019 08:58:21 +0100
+Received: from esabb1.muc ([160.50.100.31])  by esagw6.muc with ESMTP/TLS;
+	11 Nov 2019 08:58:20 +0100
+Received: from smucm10k.bmwgroup.net (HELO smucm10k.europe.bmw.corp)
+	([160.48.96.47])
+	by esabb1.muc with ESMTP/TLS; 11 Nov 2019 08:58:20 +0100
+Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
+	smucm10k.europe.bmw.corp
+	(160.48.96.47) with Microsoft SMTP Server (TLS;
+	Mon, 11 Nov 2019 08:58:20 +0100
+Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
+	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1473.005;
+	Mon, 11 Nov 2019 08:58:20 +0100
+From: <Mikko.Rapeli@bmw.de>
+To: <martin.jansa@gmail.com>
+Thread-Topic: [bitbake-devel] Patch idea - fetcher for gerrit patches
+Thread-Index: AQHVlj4ShXeRFcEfx0eQVA8E6932i6eBTNeAgARBegA=
+Date: Mon, 11 Nov 2019 07:58:20 +0000
+Message-ID: <20191111075820.GX2398@hiutale>
+References: <6f692d96-9b78-b317-d033-09d1f140da62@linux.intel.com>
+	<CA+chaQcOse_xmbyi0q=WXB1JQxV6AgGJtvrFZ_Wtmi-N2z0g6A@mail.gmail.com>
+In-Reply-To: <CA+chaQcOse_xmbyi0q=WXB1JQxV6AgGJtvrFZ_Wtmi-N2z0g6A@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
 MIME-Version: 1.0
-X-Originating-IP: [172.17.220.3]
-X-Mailer: Zimbra 8.8.9_GA_3006 (ZimbraWebClient - GC78 (Win)/8.8.9_GA_3006)
-Thread-Topic: bitbake-worker child process create group before registering
-	SIGTERM handler
-Thread-Index: M1jVFBSZcvB9J0eFtPfThAPxpSBX1mtly48h
-X-Mailman-Approved-At: Sun, 10 Nov 2019 09:07:12 +0000
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Patch idea - fetcher for gerrit patches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,71 +62,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 10 Nov 2019 08:12:11 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 11 Nov 2019 08:05:28 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-2"
+Content-ID: <7CC1EEE76EF77847A3AF3401332820E1@bmwmail.corp>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Richard 
-We intensive are using yocto daisy and morty and we will be happy to test this fix on those version . Let say - we already tested. How can we integrate fix in relevant versions or only maintainer can do this  ? 
+Hi,
 
+Interesting idea.
 
---------
-Boris Shehter
-(c) +972-54-6604528
+We use gerrit but don't neeed to expose gerrit details to bitbake fetcher.
 
------ Original Message -----
-From: "Ivan Efimov" <i.efimov@inango-systems.com>
-To: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-Cc: "akuster" <akuster@mvista.com>, "bitbake-devel" <bitbake-devel@lists.openembedded.org>
-Sent: Friday, November 8, 2019 6:48:09 AM
-Subject: Re: [bitbake-devel] [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
+Instead, we use gerrit changes to fetch meta layer changes using a separate=
+ checkout
+script. It handles gerrit topics, e.g. same topic name is used to bundle ch=
+anges
+from multiple meta layer git trees. This enables large transitions and upda=
+tes as single
+topic.
 
-Thanks a lot, Richard.
+In our case it's a grave bug to use SRC_URIs in bitbake recipes without ref=
+erring
+to proper branch and commit id. There have been cases where a commit-id fro=
+m an open
+gerrit review got integrated which is bad, bad. I can only imagine that tes=
+ting
+could be easier if bitbake recipes were to support gerrit directly, e.g. to=
+ trigger
+a bitbake test build for an open gerrit review change. But there are other =
+ways
+to script that without exposing gerrit details to bitbake.
 
-Best regards,
-Ivan
-
-[ https://inango.com/ |    ] 
-Ivan Efimov 
-Software Architect, Arch Group 
-i.efimov@inango-systems.com 
-T +7 343 298 0147 C +7 904 9 888 350 
-[ https://inango.com/ | inango.com ] [ https://www.linkedin.com/company/inango ]
-
------ Original Message -----
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "Ivan Efimov" <i.efimov@inango-systems.com>, "akuster" <akuster@mvista.com>
-Cc: "bitbake-devel" <bitbake-devel@lists.openembedded.org>
-Sent: Friday, November 8, 2019 12:50:13 AM
-Subject: Re: [bitbake-devel] [1.32][PATCH] bitbake-worker child process create group before registering SIGTERM handler
-
-On Thu, 2019-11-07 at 08:35 +0200, Ivan Efimov via bitbake-devel wrote:
-> Hi Armin,
-> 
-> I've rechecked that this issue is relevant to next branches besides
-> 1.32 and master:
-> 
-> 1.26
-> 1.28
-> 1.30
-> 1.34
-> 1.36
-> 1.38
-> 1.40
-> 1.42
-> 1.44
-> 
-> Could you please tell me what of them are still supported by BitBake
-> community?
-
-I think 1.40 onwards are still supported. I've just applied to patch to
-those branches since its a clear/obvious fix and a clean backport. I
-think I can do that in my capacity as bitbake maintainer! I also added
-it to 1.38 since it helps with some other experiments I'm doing. I'm
-reluctant to go further back as we have no testing capacity for the
-older releases right now.
+So I'm not sure if this gerrit fetcher is easier. At least I would like to =
+disable it,
+or add a custom QA check which forbids its use in release build recipes.
 
 Cheers,
 
-Richard
+-Mikko=
 
