@@ -1,58 +1,50 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com
-	[209.85.214.176])
-	by mail.openembedded.org (Postfix) with ESMTP id BB9977FB11
+Return-Path: <gavinli@thegavinli.com>
+Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com
+	[209.85.215.196])
+	by mail.openembedded.org (Postfix) with ESMTP id 252F17F921
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Nov 2019 15:24:46 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id ay6so7952740plb.0
+	Mon, 11 Nov 2019 22:17:44 +0000 (UTC)
+Received: by mail-pg1-f196.google.com with SMTP id z24so10369796pgu.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Nov 2019 07:24:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:organization:user-agent:mime-version:content-transfer-encoding;
-	bh=Ww71jBAk8bZecNhAIZlhi2G0kwJHps+YYN4vbJ9o8Xk=;
-	b=DSdvm4eIKOZyHPGzYM45xclhkDTAapH5tnBJchJVM7gAPKX3fXl/DiNh8XvpP47caY
-	g6cTYpE5SfxMTHJoyX2G6eoYVhy/XhwML6OjtqmEAbQ8Skoj1wSi2q2ulDZxjOIcCfbv
-	wZ6nBpubhgzxIGiXqt8tih30Ai9LH2czZ5fPogTzeY16CLOooPPT8LOMcDHoh9YrrEYx
-	bsR7XjIBZsuZr0xpSOqEbHzIS71M81EHiNuEfXnMUY+YgAxN3Llu+pMEp9pY/0Y98nAt
-	ZmoCWSQiGJgDpQdnAE8789bqOdM1/z5zQ29BxSOV1xUcJ4GNUC38RexUqtWb4rTcWdKW
-	lhmw==
+	Mon, 11 Nov 2019 14:17:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=thegavinli.com; s=google;
+	h=sender:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=KcRSQBfDWVESUb6T3zVZsMVOyHuOlSijvNN95yuoaKg=;
+	b=Q4SRwTX5r9NXRMRPGlLdGypM5QJiFKaUYqmMvewDTE4Bg/79gk9ZRonEIT4IlACGh1
+	Ta4suPu04DMpn3OSkH+YITRECLOHstwDxdPOb1Z9rJ49eMaiFFUq92N4iT5A4K8ji3FI
+	xdb6DqKiEnJYElMHO5TUTd9ViKq9EHjqX0+1E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:organization:user-agent:mime-version
-	:content-transfer-encoding;
-	bh=Ww71jBAk8bZecNhAIZlhi2G0kwJHps+YYN4vbJ9o8Xk=;
-	b=Svl6IoEEPmsv5RNt9dLBn5ODcXkum8askN7S3wMkFHimh+Xai2FZtL6FaKLNy71tdE
-	tAlD0qCHCgFpdxdntQTdm+obvBoLcznqQudVC27KYcCql68q2nEaBM/xyBl9ggX/ci65
-	J1TX6tCZNqDMMxCXJtt0XfiwK1qZzAEf2uCx91iqF2MySB+Ww/DRJtnKFdw/AyCzI8z3
-	3mNUN73Pjtgic/xZaVhmXUpDQV8x2YfCiR76T7Jgft+mkI+P4SsyTHipAXGDleJq5RQl
-	5CMMLcdrNAnhamTcmzSgKsAYKAt69BHef16b1g7qGZXH3VgngmzE9bxs255ZB7Zf/xr7
-	o3nw==
-X-Gm-Message-State: APjAAAUuM+TWnV8SUOUbR+j0PqAA6wJHQTcBcwLiYeQ0HdJjSYO2Ieqv
-	IZGKCn+6sXTltRsF6MQ5fwo=
-X-Google-Smtp-Source: APXvYqxBtdReWf2/s0ghXYy5PC/F7olrA9IXbrjv2fuBiApGMOQ446q6fXs6Qx6+a5kXE/RRhe2NzA==
-X-Received: by 2002:a17:902:b416:: with SMTP id
-	x22mr622804plr.12.1573485887372; 
-	Mon, 11 Nov 2019 07:24:47 -0800 (PST)
-Received: from apollo ([2601:646:8500:1c20::a99e])
+	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding;
+	bh=KcRSQBfDWVESUb6T3zVZsMVOyHuOlSijvNN95yuoaKg=;
+	b=b7KOKBOFl0BjIBhsCXNdIHu0hBy5GMgbVesRzikD0ZX0iWP42NR3qIGWs4rNgtBBLG
+	G4oJd5JrPjE08JkE0yUnMNCWCKNIhBn0pnlpD3tR8MQTt0vpqD+e+gGoJvAB1AlN0w6I
+	m/U63wtIT0GeK61zKiWyfI8qQcnwVZiy6yhQdIt9gPt1pMjuYuVGaB7IML+8odiw3oeM
+	bxJSv0ZH4Cw+U55J+tMd+MCLlzfzbZqf5iRUFLqDp4NB4GsSSKlZP50lxtMyPjExVghv
+	8fhg3uxncwzjcPfTc8JYNJSzSvbxkgERsd1vZBfNjIZ8XtxLqg6c0blXaGGXdZaevxn4
+	vuWg==
+X-Gm-Message-State: APjAAAWN9lN9Zve1Fy6fa3HIT1aMQ05wavtElExi7YXpVyQO10tubkeA
+	Vaqb/DNGwKQA8m1gMuLrTe0V8OFMZ04=
+X-Google-Smtp-Source: APXvYqzbE7+V4o+dKZ3+5NkW6/qt9xREIEev47g5Smp2lXglXBVOucyR4qDc0og4/9ON/FKERZg+oQ==
+X-Received: by 2002:a63:f945:: with SMTP id q5mr21288330pgk.340.1573510664852; 
+	Mon, 11 Nov 2019 14:17:44 -0800 (PST)
+Received: from mtgav.corp.matician.com ([2601:647:5a01:84c0::b5a])
 	by smtp.gmail.com with ESMTPSA id
-	r8sm15061716pgr.59.2019.11.11.07.24.46
+	x13sm6606669pfc.46.2019.11.11.14.17.43
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 11 Nov 2019 07:24:46 -0800 (PST)
-Message-ID: <5018021771633c0e30b5789f31948fcfac633a15.camel@gmail.com>
-From: Khem Raj <raj.khem@gmail.com>
-To: Mikko.Rapeli@bmw.de, martin.jansa@gmail.com
-Date: Mon, 11 Nov 2019 07:24:41 -0800
-In-Reply-To: <20191111075820.GX2398@hiutale>
-References: <6f692d96-9b78-b317-d033-09d1f140da62@linux.intel.com>
-	<CA+chaQcOse_xmbyi0q=WXB1JQxV6AgGJtvrFZ_Wtmi-N2z0g6A@mail.gmail.com>
-	<20191111075820.GX2398@hiutale>
-Organization: HIMVIS LLC
-User-Agent: Evolution 3.34.1 
+	Mon, 11 Nov 2019 14:17:44 -0800 (PST)
+Sender: Gavin Li <gav@thegavinli.com>
+From: gavinli@thegavinli.com
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 11 Nov 2019 14:17:39 -0800
+Message-Id: <20191111221739.1663625-1-gavinli@thegavinli.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Patch idea - fetcher for gerrit patches
+Cc: Gavin Li <gavin@matician.com>
+Subject: [PATCH] bitbake: prserv: fix ResourceWarning due to unclosed socket
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -65,54 +57,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Nov 2019 15:24:46 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 11 Nov 2019 22:17:44 -0000
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2019-11-11 at 07:58 +0000, Mikko.Rapeli@bmw.de wrote:
-> Hi,
-> 
-> Interesting idea.
-> 
-> We use gerrit but don't neeed to expose gerrit details to bitbake
-> fetcher.
-> 
-> Instead, we use gerrit changes to fetch meta layer changes using a
-> separate checkout
-> script. It handles gerrit topics, e.g. same topic name is used to
-> bundle changes
-> from multiple meta layer git trees. This enables large transitions
-> and updates as single
-> topic.
+From: Gavin Li <gavin@matician.com>
 
-There is a similar setup we have for CI using gerrit, but once you
-start playing with fetchers, bitbake is not happy and the build
-consistency is jeopardized as well, e.g. new QA checks etc, come in way
-in other words you have to maintain this additional CI fetch method and
-it grows cruft. So I would think if we were to do some additional work
-in fetchers to achieve this, that would be long term sustainable, and
-perhaps useful for other gerrit users or other SCMs
+With PRSERV_HOST = "localhost:0", this message would occasionally pop up
+during the initial cache read:
 
-> 
-> In our case it's a grave bug to use SRC_URIs in bitbake recipes
-> without referring
-> to proper branch and commit id. There have been cases where a commit-
-> id from an open
-> gerrit review got integrated which is bad, bad. I can only imagine
-> that testing
-> could be easier if bitbake recipes were to support gerrit directly,
-> e.g. to trigger
-> a bitbake test build for an open gerrit review change. But there are
-> other ways
-> to script that without exposing gerrit details to bitbake.
-> 
-> So I'm not sure if this gerrit fetcher is easier. At least I would
-> like to disable it,
-> or add a custom QA check which forbids its use in release build
-> recipes.
-> 
-> Cheers,
-> 
-> -Mikko
+WARNING: /home/matic/ambayocto/poky/bitbake/lib/bb/cache.py:446: ResourceWarning: unclosed <socket.socket fd=10, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 45655)>
+  value = pickled.load()
+
+The file location stated is irrelevant; it just happens to be wherever
+CPython decides to run the garbage collector. The issue is that after we
+fork off a PRServer, self.socket is also duplicated. The parent side of
+it also needs to be closed.
+
+Signed-off-by: Gavin Li <gavin@matician.com>
+---
+ bitbake/lib/prserv/serv.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/bitbake/lib/prserv/serv.py b/bitbake/lib/prserv/serv.py
+index be3acec36a..1d9148b817 100644
+--- a/bitbake/lib/prserv/serv.py
++++ b/bitbake/lib/prserv/serv.py
+@@ -243,6 +243,7 @@ class PRServer(SimpleXMLRPCServer):
+         try:
+             pid = os.fork()
+             if pid > 0:
++                self.socket.close() # avoid ResourceWarning in parent
+                 return pid
+         except OSError as e:
+             raise Exception("%s [%d]" % (e.strerror, e.errno))
+-- 
+2.23.0
 
 
