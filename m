@@ -1,55 +1,32 @@
-Return-Path: <prvs=2122a496f=Mikko.Rapeli@bmw.de>
-X-Greylist: delayed 427 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 12 Nov 2019 07:35:48 UTC
-Received: from esa6.bmw.c3s2.iphmx.com (esa6.bmw.c3s2.iphmx.com
-	[68.232.139.124])
-	by mail.openembedded.org (Postfix) with ESMTP id D3EF57FAB1
+Return-Path: <adrian.ambrozewicz@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 210F96C216
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Nov 2019 07:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-	t=1573544151; x=1605080151;
-	h=from:to:cc:subject:date:message-id:references:
-	in-reply-to:content-id:content-transfer-encoding: mime-version;
-	bh=/YBBs/+eBAk69IyXSlhg5J8OQRtHV/DHzepUd2lKDwE=;
-	b=DoWRcXPlpIOaaNY7F6i1ncDpZwyzbDK6jRnVEsC+olXbJ6fvOPcirFCs
-	tqFlG7tvYItqQohB3aAmF5E157atSQwL4K1kOwfAztGQD3aqC4IAfulHq
-	sWsMYfT9j4FaQUKLpDgzBtC6qIflUTTPB0g2qI0UCO53dHfx3X2mbfM7O Y=;
-IronPort-SDR: kxGlsVWJrPJhWhdxCJPPIviSZwCxMES0RWfxDScnpHF3ShyUWYRk5zdd2M2OJ16dvQrGxXDCYx
-	0mi0+C6Ab8fm5XCuSXrYP/UhHY+8bISIN6RbtoTPHZzbHSGZMbotX0ZBSiKWeNYoeuUJcjeDo6
-	QCpeMeXUxTmvZm3iGwdYJmRI2Dx1iXa71JOQDZn1sPkr2Yuf4OM8M5YghkPzW0fYLbxujSDPmo
-	IGTgkq48f0a45txNObMx0yIM6jyTvfdwE+OC+/8t+EvmsSD9My46jpFDQlB3NvnP0jcElyp84l
-	uvY=
-Received: from esagw4.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
-	esa6.bmw.c3s2.iphmx.com with ESMTP/TLS; 12 Nov 2019 08:28:42 +0100
-Received: from esabb5.muc ([160.50.100.47])  by esagw4.muc with ESMTP/TLS;
-	12 Nov 2019 08:28:41 +0100
-Received: from smucm10l.bmwgroup.net (HELO smucm10l.europe.bmw.corp)
-	([160.48.96.48])
-	by esabb5.muc with ESMTP/TLS; 12 Nov 2019 08:28:41 +0100
-Received: from smucm10k.europe.bmw.corp (160.48.96.47) by
-	smucm10l.europe.bmw.corp
-	(160.48.96.48) with Microsoft SMTP Server (TLS;
-	Tue, 12 Nov 2019 08:28:41 +0100
-Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
-	smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1473.005;
-	Tue, 12 Nov 2019 08:28:41 +0100
-From: <Mikko.Rapeli@bmw.de>
-To: <gavinli@thegavinli.com>
-Thread-Topic: [bitbake-devel] [PATCH] bitbake: prserv: fix ResourceWarning due
-	to unclosed socket
-Thread-Index: AQHVmSrO64jthHctYki6kF2vvPBNVA==
-Date: Tue, 12 Nov 2019 07:28:41 +0000
-Message-ID: <20191112072840.GI2398@hiutale>
-References: <20191111221739.1663625-1-gavinli@thegavinli.com>
-In-Reply-To: <20191111221739.1663625-1-gavinli@thegavinli.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
+	Tue, 12 Nov 2019 13:45:42 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+	by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	12 Nov 2019 05:45:43 -0800
+X-IronPort-AV: E=Sophos;i="5.68,296,1569308400"; d="scan'208";a="198081968"
+Received: from aambroze-mobl1.ger.corp.intel.com (HELO [10.102.85.150])
+	([10.102.85.150])
+	by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA;
+	12 Nov 2019 05:45:42 -0800
+To: Khem Raj <raj.khem@gmail.com>, Mikko.Rapeli@bmw.de, martin.jansa@gmail.com
+References: <6f692d96-9b78-b317-d033-09d1f140da62@linux.intel.com>
+	<CA+chaQcOse_xmbyi0q=WXB1JQxV6AgGJtvrFZ_Wtmi-N2z0g6A@mail.gmail.com>
+	<20191111075820.GX2398@hiutale>
+	<5018021771633c0e30b5789f31948fcfac633a15.camel@gmail.com>
+From: =?UTF-8?Q?Adrian_Ambro=c5=bcewicz?= <adrian.ambrozewicz@linux.intel.com>
+Message-ID: <32b4e32e-9b6e-0c47-3225-b15c550faed1@linux.intel.com>
+Date: Tue, 12 Nov 2019 14:45:39 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+	Thunderbird/60.9.0
 MIME-Version: 1.0
-Cc: gavin@matician.com, bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bitbake: prserv: fix ResourceWarning due to unclosed socket
+In-Reply-To: <5018021771633c0e30b5789f31948fcfac633a15.camel@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Patch idea - fetcher for gerrit patches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,64 +39,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Nov 2019 07:35:49 -0000
+X-List-Received-Date: Tue, 12 Nov 2019 13:45:43 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9BA92000BD67444681920C39B80FC0B5@bmwmail.corp>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-On Mon, Nov 11, 2019 at 02:17:39PM -0800, gavinli@thegavinli.com wrote:
-> From: Gavin Li <gavin@matician.com>
->=20
-> With PRSERV_HOST =3D "localhost:0", this message would occasionally pop u=
-p
-> during the initial cache read:
 
-Thanks for this fix!
+W dniu 11/11/2019 o 16:24, Khem Raj pisze:
+> On Mon, 2019-11-11 at 07:58 +0000, Mikko.Rapeli@bmw.de wrote:
+>> Hi,
+>>
+>> Interesting idea.
+>>
+>> We use gerrit but don't neeed to expose gerrit details to bitbake
+>> fetcher.
+>>
+>> Instead, we use gerrit changes to fetch meta layer changes using a
+>> separate checkout
+>> script. It handles gerrit topics, e.g. same topic name is used to
+>> bundle changes
+>> from multiple meta layer git trees. This enables large transitions
+>> and updates as single
+>> topic.
+We've tried approach with separate script. It's just ankward to use 
+separate checkout script for fetching and patching sources, when in fact 
+bitbake provides those utilities, just isn't compatible directly with 
+that SCM yet.
 
-It's not occasionally, it's all the time with zeus and Debian build contain=
-er...
+Idea is to have separate layer combining WIP/reviewed commits submitted 
+to different repositories as our 'baseline'. Gerrit fetcher would take 
+care of that.
 
-If it helps:
-Tested-by: Mikko Rapeli <mikko.rapeli@bmw.de>
+> 
+> There is a similar setup we have for CI using gerrit, but once you
+> start playing with fetchers, bitbake is not happy and the build
+> consistency is jeopardized as well, e.g. new QA checks etc, come in way
+> in other words you have to maintain this additional CI fetch method and
+> it grows cruft. So I would think if we were to do some additional work
+> in fetchers to achieve this, that would be long term sustainable, and
+> perhaps useful for other gerrit users or other SCMs
+> 
+>>
+>> In our case it's a grave bug to use SRC_URIs in bitbake recipes
+>> without referring
+>> to proper branch and commit id. There have been cases where a commit-
+>> id from an open
+>> gerrit review got integrated which is bad, bad. I can only imagine
+>> that testing
+>> could be easier if bitbake recipes were to support gerrit directly,
+>> e.g. to trigger
+>> a bitbake test build for an open gerrit review change. But there are
+>> other ways
+>> to script that without exposing gerrit details to bitbake.
+I agree, it would be easier and much more logical to integrate patches 
+in my layers just by specifying ongoing reviews. Why forcing user to 
+write his own external scripts to do that when proper patches might be 
+fetched and applied natively. We've tried that and failed miserably.
 
--Mikko
+>>
+>> So I'm not sure if this gerrit fetcher is easier. At least I would
+>> like to disable it,
+>> or add a custom QA check which forbids its use in release build
+>> recipes.
+In 'my' use case gerrit fetcher is aimed directly to ease development 
+for large features scattered among many repos. Opt-in for enabling that 
+and big warning in build log could be reasonable solution.
 
-> WARNING: /home/matic/ambayocto/poky/bitbake/lib/bb/cache.py:446: Resource=
-Warning: unclosed <socket.socket fd=3D10, family=3DAddressFamily.AF_INET, t=
-ype=3DSocketKind.SOCK_STREAM, proto=3D0, laddr=3D('127.0.0.1', 45655)>
->   value =3D pickled.load()
->=20
-> The file location stated is irrelevant; it just happens to be wherever
-> CPython decides to run the garbage collector. The issue is that after we
-> fork off a PRServer, self.socket is also duplicated. The parent side of
-> it also needs to be closed.
->=20
-> Signed-off-by: Gavin Li <gavin@matician.com>
-> ---
->  bitbake/lib/prserv/serv.py | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/bitbake/lib/prserv/serv.py b/bitbake/lib/prserv/serv.py
-> index be3acec36a..1d9148b817 100644
-> --- a/bitbake/lib/prserv/serv.py
-> +++ b/bitbake/lib/prserv/serv.py
-> @@ -243,6 +243,7 @@ class PRServer(SimpleXMLRPCServer):
->          try:
->              pid =3D os.fork()
->              if pid > 0:
-> +                self.socket.close() # avoid ResourceWarning in parent
->                  return pid
->          except OSError as e:
->              raise Exception("%s [%d]" % (e.strerror, e.errno))
-> --=20
-> 2.23.0
->=20
-> --=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel=
+>>
+>> Cheers,
+>>
+>> -Mikko
+> 
 
