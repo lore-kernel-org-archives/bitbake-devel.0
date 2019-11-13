@@ -1,40 +1,49 @@
-Return-Path: <bunk@stusta.de>
-X-Greylist: delayed 492 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 13 Nov 2019 08:41:31 UTC
-Received: from mail.stusta.mhn.de (mail.stusta.mhn.de [141.84.69.5])
-	by mail.openembedded.org (Postfix) with ESMTP id ACB246BE2A
+Return-Path: <alan.kozlay@ves.solutions>
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com
+	[209.85.210.178])
+	by mail.openembedded.org (Postfix) with ESMTP id A72CB6C108
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 13 Nov 2019 08:41:31 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 47CdDH4j2vz7x;
-	Wed, 13 Nov 2019 09:33:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stusta.de;
-	s=default; t=1573634000;
-	bh=H4VPwznmyLp46J6q+MUYWshchlCCDl6c7wTZ4IFgz7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=baGT5VqlrZoMVEI8wQUZ163/6EwaOo6LyM8mIZIl/43J1cvSU0JlZnXrv35FevIRp
-	8cx6zyw6kLIVn8VJttDRUwhsTXiTm17wIDKQN6pByINGLPzZycrC3SyoCD61HMlAP2
-	zm+sMlq8yM59Q14d7OBA7z1CHOkT4bgOt29HgXqk5NqXUmWnhoxh0Mbbr/sQK4Brlv
-	N+85tqGkPkOId8cpoO4Yx5VxVTfxq1hn2ZUUw4AEHNo2GdwCCV/NlQdBCzXEMGB6H5
-	EabfvloGP7lnPp4fI6Cn2zQ9HcG12kkXXSK4nkTHgP8WyXilYDBfiJ9T4ZO0XeLjDn
-	aD/6u7BsYcPTVv78kFFwhJVZNvKlWYknXDzRCoF1Le9u73nSF4Tl8qwpFUqUxx7Ofr
-	dI/i3xRURsTd4prdipYgbfoQlC3BXVzMqN2qKaoViO6EcKZnKxIsxsbBja2+xc0v85
-	HJZiMdyn+CJ+oZLnYcGNejHGSBC8FRWWW1lB8fDdag2yIj07B5xOYaqz37qYZCmifc
-	f4E9uiU29hmmoN3eKWD7LWiRCcj5ftkfigdp/f9rksdS3vjeyP379Zm9vjk+2DWmMD
-	yRBeMrEPYXDitzgMGiB2xFjwOMqv+iFE9iIdP6YTw5vRZakE57q2Y25lr3y2FVNDeK
-	C8OorLWuPpwlxjCPQH71MeGc=
-Date: Wed, 13 Nov 2019 10:33:17 +0200
-From: Adrian Bunk <bunk@stusta.de>
-To: Wayne Li <waynli329@gmail.com>
-Message-ID: <20191113083317.GA7340@localhost>
-References: <CAM2K0nqA0QGCcaN8z=qvtVu-U_aHswjqKTbZJ0YoCXE6OsvzQw@mail.gmail.com>
+	Wed, 13 Nov 2019 13:42:28 +0000 (UTC)
+Received: by mail-pf1-f178.google.com with SMTP id 3so1683022pfb.10
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 13 Nov 2019 05:42:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ves-solutions-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=P2zlv5OGHrmP6qmspNbOEEeZ3wxo11czuigqHfNAq8I=;
+	b=R/pQVP/kMvaA5WIP5HY3IB47PKOz4lqCtnJExApD7raOU0RpSkizWYSXO/r/4SfqGY
+	pKfh2rbK3PFcpxRHFQTlBZ5sioF8RI0dK3LoAXLy5o0OGujGrllVDshiLA/AwXraxZYi
+	FL7r4VWgYJwh4asMplQJvrfz7OWiOCgcO+dV/e1ZwTlZyHMnM+Ds7ivDcdFfpARmFgYA
+	Y2waegei3m+APAmyLd0/fqb3/qewhK18RXOELTlPMwT5cfa1tepWkcQXkudlNVTBOTPz
+	cEobW1GdykMRZSUI4Em+DPYkc46y75BXsq17WRjsiQpN7hO+OMe2On57aF13BewZtUpn
+	tQQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=P2zlv5OGHrmP6qmspNbOEEeZ3wxo11czuigqHfNAq8I=;
+	b=YabwNQ0xmZCFOzV+BmSP9vqjnWvYfqrTaFXmoflv4CQYSKzqndmOlD7iDKl3GlakvT
+	XL8P1Kl7XOcXHL8YllQN4LjdML/xkjUZmguRZhL3fR29RCxxNyu/7p3lzje9XYWDtAQX
+	7hZIOXAt4mizr5x5pJvQe8ZdjYdTjCn7p1v+syLi2lenVJQ2f+uhz1EoURRacoEi0yJu
+	7iJtFa4xFnpbuTqUumFptLkNvDeKGkYp/Ad0zgAF/rqk36jZF6hR67KOFy/i2uL3E/GB
+	r5zmTtU3TDnCO/oSkb98EDsSlpetQxyMJnhUQ1AjrJXVTQjmG+brgJT2yj8/TXLzVSEO
+	t1PA==
+X-Gm-Message-State: APjAAAVMyJF9NvYR5r1mLec/YtgERNxLFmIJFJEHRM7L+zddklBkXLjd
+	kjsHBgPDEdXS+sqzlgJq1Adjw8OgOZqNNzwFI8G9c6v0
+X-Google-Smtp-Source: APXvYqwTEy8CR5U6it8dfm/wSjHHyAniQz1sIjgkhjwo6INs1qGKfRSLh47NIhZOaEN+K4SaJAgxx1wQoIRDDNQ64Qs=
+X-Received: by 2002:a17:90a:610:: with SMTP id
+	j16mr5037401pjj.85.1573652549143; 
+	Wed, 13 Nov 2019 05:42:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAM2K0nqA0QGCcaN8z=qvtVu-U_aHswjqKTbZJ0YoCXE6OsvzQw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailman-Approved-At: Wed, 13 Nov 2019 12:18:43 +0000
-Cc: Yocto Project Discussion <yocto@yoctoproject.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [yocto] No Package Provides /bin/awk
+References: <CAJE9sG=reXLA4GZQjBMsHc8eis=W7ejHTSmvNTAfNJ7gDBsQXw@mail.gmail.com>
+	<685e3541-d3fe-4ca4-bb66-7e0c0ff79eca@Spark>
+In-Reply-To: <685e3541-d3fe-4ca4-bb66-7e0c0ff79eca@Spark>
+From: Alan Kozlay <alan.kozlay@ves-solutions.com>
+Date: Wed, 13 Nov 2019 08:41:53 -0500
+Message-ID: <CAJE9sGnsyY26PUB71QZdZjELfskoJPm10RyRTmZxcmVZqGXWGA@mail.gmail.com>
+To: Christopher Larson <kergoth@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: MACHINE_ARCH not in pkgarch (sstatesig.py)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,42 +56,130 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 Nov 2019 08:41:32 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-List-Received-Date: Wed, 13 Nov 2019 13:42:28 -0000
+Content-Type: multipart/alternative; boundary="0000000000003129cf05973a89ac"
 
-On Tue, Nov 12, 2019 at 04:08:48PM -0600, Wayne Li wrote:
-> Dear Yocto Developers,
-> 
-> I'm trying to to build a Yocto kernel for a T4240 RDB.  When I run "bitbake
-> fsl-image-full" to build the entire linux image, I get an error that says
-> "Can't install kernel-devsrc-1.0-r0@t4240rdb_64b: no package provides
-> /bin/awk".  Here's the entire error print that I see:
-> 
-> https://gist.github.com/WayneZhenLi/e35f65081092cf1f24df29ec369c701c
-> 
-> Anyway I'm confused about this error because /bin/awk does exist.  Like if
-> I run "/bin/awk" in the console I see help info come up describing how to
-> use a program called "gawk".  Why can't bitbake find /bin/awk then?  Or am
-> I misunderstanding what this error is trying to say?  I mean I'm assuming
-> it's just not able to find /bin/awk but maybe the error means something
-> else?  Or maybe /bin/awk is actually relative to some path?  Let me know
-> your thoughts.
+--0000000000003129cf05973a89ac
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-/bin/awk is missing on your target image that will run on the T4240 RDB.
+Chris,
 
-The smallest implementation is to enable CONFIG_AWK in your busybox config.
+Thanks for the explanation.  I understand now.
 
-> -Thanks!, Wayne Li
+-Alan
 
-cu
-Adrian
+On Tue, Nov 12, 2019 at 10:01 PM Christopher Larson <kergoth@gmail.com>
+wrote:
 
--- 
+> On Nov 12, 2019, 1:50 PM -0700, Alan Kozlay <alan.kozlay@ves-solutions.co=
+m>,
+> wrote:
+>
+> In:
+> oe-core/meta/lib/oe/sstatesig.py
+>
+> The find_sstate_manifest function will search for a manifest assuming a
+> number of potential paths based on various package architecture names.
+> However, a few of the choices appear to have needed to be queried from th=
+e
+> bitbake database but their bb database variable *names* are used,
+> instead.  That yields search paths which could never be correct:
+>
+>         pkgarchs =3D ['${MACHINE_ARCH}']
+>         pkgarchs =3D pkgarchs +
+> list(reversed(d2.getVar("PACKAGE_EXTRA_ARCHS").split()))
+>         pkgarchs.append('allarch')
+>         pkgarchs.append('${SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX}')
+>
+>         for pkgarch in pkgarchs:
+>                 manifest =3D
+> d2.expand("${SSTATE_MANIFESTS}/manifest-%s-%s.%s" % (pkgarch, taskdata,
+> taskname))
+>
+>
+> d2.expand() expands all the variable references from pkgarch, so unless
+> it=E2=80=99s also used later on and *isn=E2=80=99t* passed to expand(), t=
+his isn=E2=80=99t an issue.
+>
+> -Chris
+>
 
-       "Is there not promise of rain?" Ling Tan asked suddenly out
-        of the darkness. There had been need of rain for many days.
-       "Only a promise," Lao Er said.
-                                       Pearl S. Buck - Dragon Seed
+
+--=20
+Alan Kozlay
+VES Solutions, LLC
+Alan Kozlay <alan.kozlay@ves.solutions>
+DESK 443-595-7734
+CELL 443-752-0323
+
+--0000000000003129cf05973a89ac
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr">Chris,<input name=3D"virtru-metadata" typ=
+e=3D"hidden" value=3D"{&quot;email-policy&quot;:{&quot;state&quot;:&quot;cl=
+osed&quot;,&quot;expirationUnit&quot;:&quot;days&quot;,&quot;disableCopyPas=
+te&quot;:false,&quot;disablePrint&quot;:false,&quot;disableForwarding&quot;=
+:false,&quot;enableNoauth&quot;:false,&quot;persistentProtection&quot;:fals=
+e,&quot;expandedWatermarking&quot;:false,&quot;expires&quot;:false,&quot;is=
+Managed&quot;:false},&quot;attachments&quot;:{},&quot;compose-id&quot;:&quo=
+t;3&quot;,&quot;compose-window&quot;:{&quot;secure&quot;:false}}"><div><br>=
+</div><div>Thanks for the explanation.=C2=A0 I understand now.</div><div><b=
+r></div><div>-Alan</div></div><br><div class=3D"gmail_quote" style=3D""><di=
+v dir=3D"ltr" class=3D"gmail_attr">On Tue, Nov 12, 2019 at 10:01 PM Christo=
+pher Larson &lt;<a href=3D"mailto:kergoth@gmail.com">kergoth@gmail.com</a>&=
+gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
+px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
 
 
+
+<div>
+<div name=3D"messageReplySection">On Nov 12, 2019, 1:50 PM -0700, Alan Kozl=
+ay &lt;<a href=3D"mailto:alan.kozlay@ves-solutions.com" target=3D"_blank">a=
+lan.kozlay@ves-solutions.com</a>&gt;, wrote:<br>
+<blockquote type=3D"cite" style=3D"margin:5px;padding-left:10px;border-left=
+:thin solid rgb(26,188,156)">
+<div dir=3D"ltr">
+<div>In:</div>
+<div><font face=3D"monospace">oe-core/meta/lib/oe/sstatesig.py</font></div>
+<div><font face=3D"monospace"><br></font></div>
+<div>The <font face=3D"monospace">find_sstate_manifest</font> function will=
+ search for a manifest assuming a number of potential paths based on variou=
+s package architecture names.=C2=A0 However, a few of the choices appear to=
+ have needed to be queried from the bitbake database but their bb database =
+variable <i>names</i> are used, instead.=C2=A0 That yields search paths whi=
+ch could never be correct:</div>
+<div><br></div>
+<div><font face=3D"monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0 pkgarchs =3D [<fo=
+nt color=3D"#FF0000">&#39;${MACHINE_ARCH}&#39;</font>]<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 pkgarchs =3D pkgarchs + list(reversed(d2.getVar=
+(&quot;PACKAGE_EXTRA_ARCHS&quot;).split()))<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 pkgarchs.append(&#39;allarch&#39;)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 pkgarchs.append(<font color=3D"#FF0000">&#39;${=
+SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX}&#39;</font>)<br></font></div>
+<div><font face=3D"monospace"><br></font></div>
+<div><font face=3D"monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0 for pkgarch in pk=
+garchs:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 manifest =3D d2.exp=
+and(&quot;${SSTATE_MANIFESTS}/manifest-%s-%s.%s&quot; % (pkgarch, taskdata,=
+ taskname))=C2=A0<br></font></div>
+</div>
+</blockquote>
+<div><br></div>
+<div dir=3D"auto">d2.expand() expands all the variable references from pkga=
+rch, so unless it=E2=80=99s also used later on and *isn=E2=80=99t* passed t=
+o expand(), this isn=E2=80=99t an issue.</div>
+<div dir=3D"auto"><br></div>
+<div dir=3D"auto">-Chris</div>
+</div>
+</div>
+
+</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
+ class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><span><di=
+v><div dir=3D"ltr"><div><div>Alan Kozlay<br></div><div dir=3D"ltr">VES Solu=
+tions, LLC<br><span>Alan Kozlay &lt;alan.kozlay@ves.solutions&gt;</span><di=
+v>DESK 443-595-7734<br></div><div>CELL 443-752-0323</div></div></div></div>=
+</div></span></div></div></div></div></div>
+
+--0000000000003129cf05973a89ac--
