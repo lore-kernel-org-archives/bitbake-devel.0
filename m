@@ -1,25 +1,40 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
-	by mail.openembedded.org (Postfix) with ESMTP id 04DA77D6B4
+Return-Path: <bunk@stusta.de>
+X-Greylist: delayed 492 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 13 Nov 2019 08:41:31 UTC
+Received: from mail.stusta.mhn.de (mail.stusta.mhn.de [141.84.69.5])
+	by mail.openembedded.org (Postfix) with ESMTP id ACB246BE2A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 13 Nov 2019 05:17:17 +0000 (UTC)
-IronPort-SDR: +fBli98ydEyTKwLYliclCGpAApglGLh4OUSTigiTEqtHB1lq1tY4V8JnpExDQI4OQoYs/CSA3C
-	nkNQKT7rNGgAkHZB3Sfxcmktb+mqHnWQyGQ6iNkWTPQ+TfNCVnop6E8lPuBg2sC63HhD3L8YSQ
-	QBSfTkyFenv3fScwtxJ2bB47c+S7XyAq2SKUEpFJaPIKhpke/kibwT+CTiw2E85u6FoMoVOZbw
-	QYS0FYVdmzaHnmwgR/smw/XQr3ZaXPtzvvmGV5L4S09zlkYN8w3uduglXUBxeS+4VcksgD80Ls
-	XwE=
-X-IronPort-AV: E=Sophos;i="5.68,299,1569276000"; 
-   d="scan'208";a="2366816"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 13 Nov 2019 06:17:16 +0100
-Message-Id: <20191113051716.19050-1-pkj@axis.com>
-X-Mailer: git-send-email 2.21.0
+	Wed, 13 Nov 2019 08:41:31 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 47CdDH4j2vz7x;
+	Wed, 13 Nov 2019 09:33:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stusta.de;
+	s=default; t=1573634000;
+	bh=H4VPwznmyLp46J6q+MUYWshchlCCDl6c7wTZ4IFgz7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=baGT5VqlrZoMVEI8wQUZ163/6EwaOo6LyM8mIZIl/43J1cvSU0JlZnXrv35FevIRp
+	8cx6zyw6kLIVn8VJttDRUwhsTXiTm17wIDKQN6pByINGLPzZycrC3SyoCD61HMlAP2
+	zm+sMlq8yM59Q14d7OBA7z1CHOkT4bgOt29HgXqk5NqXUmWnhoxh0Mbbr/sQK4Brlv
+	N+85tqGkPkOId8cpoO4Yx5VxVTfxq1hn2ZUUw4AEHNo2GdwCCV/NlQdBCzXEMGB6H5
+	EabfvloGP7lnPp4fI6Cn2zQ9HcG12kkXXSK4nkTHgP8WyXilYDBfiJ9T4ZO0XeLjDn
+	aD/6u7BsYcPTVv78kFFwhJVZNvKlWYknXDzRCoF1Le9u73nSF4Tl8qwpFUqUxx7Ofr
+	dI/i3xRURsTd4prdipYgbfoQlC3BXVzMqN2qKaoViO6EcKZnKxIsxsbBja2+xc0v85
+	HJZiMdyn+CJ+oZLnYcGNejHGSBC8FRWWW1lB8fDdag2yIj07B5xOYaqz37qYZCmifc
+	f4E9uiU29hmmoN3eKWD7LWiRCcj5ftkfigdp/f9rksdS3vjeyP379Zm9vjk+2DWmMD
+	yRBeMrEPYXDitzgMGiB2xFjwOMqv+iFE9iIdP6YTw5vRZakE57q2Y25lr3y2FVNDeK
+	C8OorLWuPpwlxjCPQH71MeGc=
+Date: Wed, 13 Nov 2019 10:33:17 +0200
+From: Adrian Bunk <bunk@stusta.de>
+To: Wayne Li <waynli329@gmail.com>
+Message-ID: <20191113083317.GA7340@localhost>
+References: <CAM2K0nqA0QGCcaN8z=qvtVu-U_aHswjqKTbZJ0YoCXE6OsvzQw@mail.gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH] cooker: Remove a left-over comment about expanded_data
+In-Reply-To: <CAM2K0nqA0QGCcaN8z=qvtVu-U_aHswjqKTbZJ0YoCXE6OsvzQw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailman-Approved-At: Wed, 13 Nov 2019 12:18:43 +0000
+Cc: Yocto Project Discussion <yocto@yoctoproject.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [yocto] No Package Provides /bin/awk
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,33 +47,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 Nov 2019 05:17:18 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 13 Nov 2019 08:41:32 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-This should have been removed together with expanded_data in commit
-e3694e73 (cooker/command: Drop expanded_data).
+On Tue, Nov 12, 2019 at 04:08:48PM -0600, Wayne Li wrote:
+> Dear Yocto Developers,
+> 
+> I'm trying to to build a Yocto kernel for a T4240 RDB.  When I run "bitbake
+> fsl-image-full" to build the entire linux image, I get an error that says
+> "Can't install kernel-devsrc-1.0-r0@t4240rdb_64b: no package provides
+> /bin/awk".  Here's the entire error print that I see:
+> 
+> https://gist.github.com/WayneZhenLi/e35f65081092cf1f24df29ec369c701c
+> 
+> Anyway I'm confused about this error because /bin/awk does exist.  Like if
+> I run "/bin/awk" in the console I see help info come up describing how to
+> use a program called "gawk".  Why can't bitbake find /bin/awk then?  Or am
+> I misunderstanding what this error is trying to say?  I mean I'm assuming
+> it's just not able to find /bin/awk but maybe the error means something
+> else?  Or maybe /bin/awk is actually relative to some path?  Let me know
+> your thoughts.
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
- bitbake/lib/bb/cooker.py | 4 ----
- 1 file changed, 4 deletions(-)
+/bin/awk is missing on your target image that will run on the T4240 RDB.
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 20ef04d3ff..e6442bff93 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -371,10 +371,6 @@ class BBCooker:
- 
-         self.data.setVar('BB_CMDLINE', self.ui_cmdline)
- 
--        #
--        # Copy of the data store which has been expanded.
--        # Used for firing events and accessing variables where expansion needs to be accounted for
--        #
-         if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
-             self.disableDataTracking()
- 
+The smallest implementation is to enable CONFIG_AWK in your busybox config.
+
+> -Thanks!, Wayne Li
+
+cu
+Adrian
+
 -- 
-2.21.0
+
+       "Is there not promise of rain?" Ling Tan asked suddenly out
+        of the darkness. There had been need of rain for many days.
+       "Only a promise," Lao Er said.
+                                       Pearl S. Buck - Dragon Seed
 
 
