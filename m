@@ -1,45 +1,46 @@
 Return-Path: <anibal.limon@linaro.org>
-Received: from mail-vs1-f66.google.com (mail-vs1-f66.google.com
-	[209.85.217.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 347027F986
+Received: from mail-vs1-f65.google.com (mail-vs1-f65.google.com
+	[209.85.217.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 4EBF47F986
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Nov 2019 18:07:23 +0000 (UTC)
-Received: by mail-vs1-f66.google.com with SMTP id k15so4510095vsp.2
+	Thu, 14 Nov 2019 18:08:27 +0000 (UTC)
+Received: by mail-vs1-f65.google.com with SMTP id c25so4511750vsp.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Nov 2019 10:07:24 -0800 (PST)
+	Thu, 14 Nov 2019 10:08:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linaro.org; s=google;
 	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=9ComKc5pJwziHQefEpHNqpxmOywzjuckKYhtBpOVd54=;
-	b=m51CPZris+y+xskBloUawudCuWfkNEt1mHuI4Kyjo0GhEYT4PWVHitDuAODFeqA07P
-	qJielFVds7Ke93XtZDIB6d7zCUfTkFWtbWguHkQG+azJ0Cc2XwR+uLqpVTeDD0v5GMq+
-	fQBeZnuLd14hF652cVIxRx5Rtv/ydGSOidhQmncA2x5LCR+4Nf0XGjzardyCLdgpZc9l
-	v/1oIFaKICxeDCxVyietzDO2GQKz7Pebv2TLL1SWdMQHJU/cux4Ddqg4eNpezZJRCUvQ
-	81E4lI4doCjeQ+xk+DPq5qNJoqr3s65wHB7dmH6YiH6TcsvCdXvoPZTr+gkPXuuoHpNo
-	JHTg==
+	:cc; bh=RZLE7MDmCeu9nC+jBQWcz48MXzBP0WpSNYCHOhr1vyc=;
+	b=DeKi6z22WiQX38A0D5lsZxVT8Os52/Y4hzHJLAhOzNgBj1MT0XOdYcj4v8PTMse2Hy
+	kIgOnnRhG46IeBQSY9tZ3EzfCVOP+xLNSZHF/O3hC5pXLAxwodOeSTRqxDJTgDSTGU5E
+	YuYJE6uoZHY7ceBSqQglcH9hgbDEzLMaK0rFDisM1Emsx8J2VcIYn9rRhRQWmboiLNDG
+	3Vh/XZRedxpSPHay+Y2VPnlyxkzXoq1hgIYkSw+sgLAZwfk5yrJILi8RkqdYoqImXpH8
+	NYknu8lJNUjX+dru7pC61Xm1aubeCVh3iVjP+Ellq3i9JrSdZ5lZhr2cOx8VbnBfNz2q
+	zo7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
 	:message-id:subject:to:cc;
-	bh=9ComKc5pJwziHQefEpHNqpxmOywzjuckKYhtBpOVd54=;
-	b=ogjCNhSfqPQ5nyOP+agknT1Twdr/yqJorTQQ1rHSwdu9PfAhD3xmRsBlOJMJC/LLlz
-	MpfEDKJ9aFRQ1hsbJfei1z7ts8JO2I2UsnDDIIlvrQg6kyL8//EMNpgdbrpyr0FahhnD
-	yoylR8+D7aUwzgA7/l9Sh99uBny+i+TFJZp3Zm9ptaOSlANJM4DY1n262WOs1Pm1pS1E
-	YKyRf/HBHAEMccZsXZjLdh8yqxCFV7bm3gfM7Qf9+baIV9EQMrKlBUchmTC/ZoA8sJaq
-	P4d+tnZ83zdHRPK9U1g76c6/WQbFqKy8auM/QNcB5ucRUV/SL4oSDpAAjl0Sk1wWaKOT
-	D01A==
-X-Gm-Message-State: APjAAAU62e0nAe6rOoA3WoNUDuGhsZTgJ7MNwhToemI3VETL1lFv1UeS
-	cUCUvi1LLLknvUwvBrZqBn5AOPkN+C+QjYg82rcoWQ==
-X-Google-Smtp-Source: APXvYqyCdcT8PvD/BxPUljBGSjexCdd0Q7FonoE+BI9/l8DMJfG+cb3Bkbo6ZHe1Fz0/83GtbUKXYqKi42fJ2ZchUVY=
-X-Received: by 2002:a67:d802:: with SMTP id e2mr7274847vsj.221.1573754843976; 
-	Thu, 14 Nov 2019 10:07:23 -0800 (PST)
+	bh=RZLE7MDmCeu9nC+jBQWcz48MXzBP0WpSNYCHOhr1vyc=;
+	b=LSBdO0Vel6K3rU+7XO1C8qbRSpTbiRqmrFC3FWp/LWT5kgIiod8CYZ+ietzCedZs5e
+	Zokh9WdA3O1D2EYOuwpu7KZ1TYnXcGcTFiSleB5ZTz6zIuemPjl4NIlNd+PLbO0UlwSY
+	wtzWz2k9ourmmlK/nNO5olWWYZaFCpK2nCrqWUaQ9s0zTrZIxsbR3rJVBQVHiC5fmRDr
+	DZI2hCa8EOYzlxORMn7xUoUlmVcYKGdcsh4Rr//azoZS9YvDCpmYCl6QreT4v0nhiR1k
+	UkJJiUvbrT50QZ4wnHywn+KSc4TgSVar0n2E9nmjIv+ADTn3QCTOnE7suYpUmVVb6Kqo
+	A8UA==
+X-Gm-Message-State: APjAAAWbTilhFySRO4A5WpIPhwOrlusAt4++ZDgKZ4JfxU3/Hp2OYuV5
+	UHc4g9WIGeKQdowsV+nGPa2vqeJ16FMGS8tLCrPkRUsl
+X-Google-Smtp-Source: APXvYqxyr8UqATsui0FepWpUK+bPD7cpSIBtM6ApdE1wHK/f0M7u6s9jF6ILWWbBv4g9dWQbxR7o7mTkq644As4sIzs=
+X-Received: by 2002:a67:77d4:: with SMTP id s203mr6530831vsc.118.1573754908031;
+	Thu, 14 Nov 2019 10:08:28 -0800 (PST)
 MIME-Version: 1.0
 References: <20191113232303.29047-1-anibal.limon@linaro.org>
 	<CAMKF1sqvx_ttxt+AhJ+1r+o4rt-z7VYNfSge5Du3N6mgjaYxJA@mail.gmail.com>
 	<3ba6b1a5788f453aa1974a13342d148c@XBOX03.axis.com>
-In-Reply-To: <3ba6b1a5788f453aa1974a13342d148c@XBOX03.axis.com>
+	<CA+_AqistmpdU+yAShaA7ypfng2r=d7xo_5t1UUOQE5Jj=X3Y8g@mail.gmail.com>
+In-Reply-To: <CA+_AqistmpdU+yAShaA7ypfng2r=d7xo_5t1UUOQE5Jj=X3Y8g@mail.gmail.com>
 From: Anibal Limon <anibal.limon@linaro.org>
-Date: Thu, 14 Nov 2019 12:07:12 -0600
-Message-ID: <CA+_AqistmpdU+yAShaA7ypfng2r=d7xo_5t1UUOQE5Jj=X3Y8g@mail.gmail.com>
+Date: Thu, 14 Nov 2019 12:08:16 -0600
+Message-ID: <CA+_AqitPgjjOt1C8FTxd9FtjR_2V9Mgx5h9CYPNc53YuPkAmhA@mail.gmail.com>
 To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] lib/bb: Add BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on directories
@@ -55,70 +56,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Nov 2019 18:07:23 -0000
-Content-Type: multipart/alternative; boundary="000000000000706a580597525a23"
+X-List-Received-Date: Thu, 14 Nov 2019 18:08:27 -0000
+Content-Type: multipart/alternative; boundary="00000000000041d6a60597525e7b"
 
---000000000000706a580597525a23
+--00000000000041d6a60597525e7b
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 14 Nov 2019 at 10:54, Peter Kjellerstedt <
-peter.kjellerstedt@axis.com> wrote:
-
-> > -----Original Message-----
-> > From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
-> > bounces@lists.openembedded.org> On Behalf Of Khem Raj
-> > Sent: den 14 november 2019 03:55
-> > To: An=C3=ADbal Lim=C3=B3n <anibal.limon@linaro.org>
-> > Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-> > Subject: Re: [bitbake-devel] [PATCH] lib/bb: Add
-> > BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on directories
-> >
-> > On Wed, Nov 13, 2019 at 3:23 PM An=C3=ADbal Lim=C3=B3n <anibal.limon@li=
-naro.org>
-> > wrote:
-> > >
-> > > The new BB_SIGNATURE_LOCAL_DIRS_EXCLUDE allows you to specify a list
-> > > of directories to exclude when making taskhash, our specific case
-> > > is using SRC_URI that points local VCS directory.
-> > >
-> > > In OE-Core this variable could be set by default to:
-> > >
-> > > BB_SIGNATURE_LOCAL_DIRS_EXCLUDE =3D ".cvs .git .svn"
->
-> That should be:
->
-> BB_SIGNATURE_LOCAL_DIRS_EXCLUDE =3D "CVS .git .svn"
->
-
-So I will change to,
-
-+ self.localdirsexclude =3D (data.getVar("BB_SIGNATURE_LOCAL_DIRS_EXCLUDE")
-or "CVS .git .svn").split()
-
-Any other directory to add it?
-
-Cheers,
-Anibal
-
+On Thu, 14 Nov 2019 at 12:07, Anibal Limon <anibal.limon@linaro.org> wrote:
 
 >
-> > I like the approach.  perhaps a sane default would be nice.
+> On Thu, 14 Nov 2019 at 10:54, Peter Kjellerstedt <
+> peter.kjellerstedt@axis.com> wrote:
 >
-> //Peter
+>> > -----Original Message-----
+>> > From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
+>> > bounces@lists.openembedded.org> On Behalf Of Khem Raj
+>> > Sent: den 14 november 2019 03:55
+>> > To: An=C3=ADbal Lim=C3=B3n <anibal.limon@linaro.org>
+>> > Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+>> > Subject: Re: [bitbake-devel] [PATCH] lib/bb: Add
+>> > BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on directories
+>> >
+>> > On Wed, Nov 13, 2019 at 3:23 PM An=C3=ADbal Lim=C3=B3n <anibal.limon@l=
+inaro.org>
+>> > wrote:
+>> > >
+>> > > The new BB_SIGNATURE_LOCAL_DIRS_EXCLUDE allows you to specify a list
+>> > > of directories to exclude when making taskhash, our specific case
+>> > > is using SRC_URI that points local VCS directory.
+>> > >
+>> > > In OE-Core this variable could be set by default to:
+>> > >
+>> > > BB_SIGNATURE_LOCAL_DIRS_EXCLUDE =3D ".cvs .git .svn"
+>>
+>> That should be:
+>>
+>> BB_SIGNATURE_LOCAL_DIRS_EXCLUDE =3D "CVS .git .svn"
+>>
 >
+> So I will change to,
+>
+> + self.localdirsexclude =3D (data.getVar("BB_SIGNATURE_LOCAL_DIRS_EXCLUDE=
+")
+> or "CVS .git .svn").split()
+>
+> Any other directory to add it?
 >
 
---000000000000706a580597525a23
+Replying myself...
+
+What about add all VCS directories that we support in fetcher.
+
+
+>
+> Cheers,
+> Anibal
+>
+>
+>>
+>> > I like the approach.  perhaps a sane default would be nice.
+>>
+>> //Peter
+>>
+>>
+
+--00000000000041d6a60597525e7b
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr"></div><br><div class=3D"gmail_quote"><div=
- dir=3D"ltr" class=3D"gmail_attr">On Thu, 14 Nov 2019 at 10:54, Peter Kjell=
-erstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis.com">peter.kjellerste=
-dt@axis.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">&gt; -----Original Message-----<br>
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
+<div dir=3D"ltr" class=3D"gmail_attr">On Thu, 14 Nov 2019 at 12:07, Anibal =
+Limon &lt;<a href=3D"mailto:anibal.limon@linaro.org">anibal.limon@linaro.or=
+g</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin=
+:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"=
+><div dir=3D"ltr"><div dir=3D"ltr"></div><br><div class=3D"gmail_quote"><di=
+v dir=3D"ltr" class=3D"gmail_attr">On Thu, 14 Nov 2019 at 10:54, Peter Kjel=
+lerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis.com" target=3D"_blan=
+k">peter.kjellerstedt@axis.com</a>&gt; wrote:<br></div><blockquote class=3D=
+"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(2=
+04,204,204);padding-left:1ex">&gt; -----Original Message-----<br>
 &gt; From: <a href=3D"mailto:bitbake-devel-bounces@lists.openembedded.org" =
 target=3D"_blank">bitbake-devel-bounces@lists.openembedded.org</a> &lt;bitb=
 ake-devel-<br>
@@ -155,14 +172,20 @@ BB_SIGNATURE_LOCAL_DIRS_EXCLUDE =3D &quot;CVS .git .svn&quot;<br></blockquo=
 te><div><br></div><div>So I will change to,</div><div><br></div><div>+ self=
 .localdirsexclude =3D (data.getVar(&quot;BB_SIGNATURE_LOCAL_DIRS_EXCLUDE&qu=
 ot;) or &quot;CVS .git .svn&quot;).split()<br></div><div><br></div><div>Any=
- other directory to add it?</div><div><br></div><div>Cheers,</div><div>Anib=
-al</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:=
-0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+ other directory to add it?</div></div></div></blockquote><div><br></div><d=
+iv>Replying myself...</div><div><br></div><div>What about add all VCS direc=
+tories that we support in fetcher.</div><div>=C2=A0</div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex"><div dir=3D"ltr"><div class=3D"gmail_quote=
+"><div><br></div><div>Cheers,</div><div>Anibal</div><div>=C2=A0</div><block=
+quote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1=
+px solid rgb(204,204,204);padding-left:1ex">
 <br>
 &gt; I like the approach.=C2=A0 perhaps a sane default would be nice.<br>
 <br>
 //Peter<br>
 <br>
 </blockquote></div></div>
+</blockquote></div></div>
 
---000000000000706a580597525a23--
+--00000000000041d6a60597525e7b--
