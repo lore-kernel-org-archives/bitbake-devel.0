@@ -1,57 +1,50 @@
-Return-Path: <paul@betafive.co.uk>
-X-Greylist: delayed 428 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 15 Nov 2019 13:06:25 UTC
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com
-	[64.147.123.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 923967DF61
+Return-Path: <anibal.limon@linaro.org>
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com
+	[209.85.167.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 432817D2AE
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Nov 2019 13:06:25 +0000 (UTC)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.west.internal (Postfix) with ESMTP id 1A77164E
+	Fri, 15 Nov 2019 14:47:25 +0000 (UTC)
+Received: by mail-oi1-f182.google.com with SMTP id e9so8798642oif.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Nov 2019 07:59:17 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-	by compute1.internal (MEProxy); Fri, 15 Nov 2019 07:59:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=betafive.co.uk;
-	h=mime-version:message-id:date:from:to:subject:content-type; s=
-	fm3; bh=wwpUEHlwfijNiV/uwgzUrsgSl4BZXGTX0i4wdw107os=; b=pbpRDT9d
-	Zx/YgS2MrC36ZLgTECfVuOco/L7LFBU2gnJGi5WtJ3SonrAhQNGrKHwKP/YO+plj
-	Lp/vS0f0J+aqB7RRKoP6jiYZqZx6wO1iU4hNgoWj0lQ05faTqTFTUJ5C6dfozp9N
-	shdTSdD9n/zTrQRcFBYYy3Q7ts9pjjujljMyxgm5sj+TmIrBBAgVswpFDDFx5qWG
-	GDy6nnKZEaiuIWVoeCaEh54yBxExcr7bPwuOaZi49ZCluQwj2PyYCFCCyVdcca6x
-	vC0VdXzV+mOON3vgCZ2D/EaKfHUbS2JzBgowI1zh+63G/BYruGF8/dGJC1kL8XHV
-	UuuEL7WdM3Au/w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=content-type:date:from:message-id
-	:mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; bh=wwpUEHlwfijNiV/uwgzUrsgSl4BZX
-	GTX0i4wdw107os=; b=uYM20FtcRRWT8NqDOV0O4AHvS+qAtZ3C5TOaZvmfzfcaS
-	TAq3GGesXzRTgArXEFj65i7IH6cT2fbYYEZmQVWsJUgOSNdIWWif9U2iGxsSk0m6
-	ih8pXzkV7PJZQga22XVoagu4ssTh4MKcjDUqgTGMraliXcuUR3Lyz8+CtpaqxHF0
-	cp1LR6kcRaxia5BGVsX67EkMOp0mmBVd/SS8zRB3/splMvKk4oAefuj9FNA8sa7f
-	lOUHJicOMR5h+BbvIlv+QOerp5CunD6+A97ejUiIgxu6G7QO1Seq1eyCO/peQWdB
-	2ALHzgkernZe47l+HVLO1lZEurtvDaJ1Ae05fFlkw==
-X-ME-Sender: <xms:JKHOXTcYGqhuefwilBndQW_Jwvd3QdXpMds_WQu36lrtPqDmfcIh1A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudefhedggeejucetufdoteggodetrfdotf
-	fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-	uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfffhffvufgtsehttdertd
-	erredtnecuhfhrohhmpedfrfgruhhluceurghrkhgvrhdfuceophgruhhlsegsvghtrghf
-	ihhvvgdrtghordhukheqnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghulhessggvth
-	grfhhivhgvrdgtohdruhhknecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:JKHOXSgpf-0WG8-pumOMkbam4at8xvvBcFR9JKWG2msCxDr_usD1-w>
-	<xmx:JKHOXTxFdGU-LeQtLpNOfz0M8oCOaSVa5YaTQxF2eH9Dfn6znuAk8w>
-	<xmx:JKHOXWOBNRN9xx7_7MDGYS2ot8nSlPm9oyvlpn9yZzqCBw0o7ZRHLQ>
-	<xmx:JKHOXRXm4Q5AmO1GtFBmCZlcd4SUHn6qejcARdC-k8UdNDJ8jjT-sg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3F98AE00A3; Fri, 15 Nov 2019 07:59:16 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-562-gfd0633a-fmstable-20191114v1
-Mime-Version: 1.0
-Message-Id: <5d3e68e3-5c06-43f5-8a28-b19834b7b7c5@www.fastmail.com>
-Date: Fri, 15 Nov 2019 12:58:56 +0000
-From: "Paul Barker" <paul@betafive.co.uk>
+	Fri, 15 Nov 2019 06:47:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linaro.org; s=google;
+	h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=CmjHgm49Abq3CmO3eDxruSCzh6uIaPi+Lzzsq8oxKbg=;
+	b=qrEiyZNECwwtCi48WdL996udyk2cl/dv5o2dItFeAP7N44pLfjy2uR+KGwCTnNFirj
+	3dqOXXuZL06b8hF/YxhuOQqh4YjHPrIgCYwYk9vV9SUxE40kXHWYU9kRVUHFOa/JuEEm
+	U8CbtybDeAWZqBDR63rymQ2pb+DMAMm0JQ3VwmMpEXWiImZuvF9hWWyy/9UBUzIuC5H2
+	QhbpydKALG/BAkKleUduqlDTM++rFLN0hiPLOOwJd9F+TWPMY0D5cYlGyth2dYiyNqul
+	kZEm/n6GV3b0cka7dNObInIRT1mKE0+pcc05m1ZGZEliWfV5cI7k3a3lypUxzDlESRcr
+	dPlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=CmjHgm49Abq3CmO3eDxruSCzh6uIaPi+Lzzsq8oxKbg=;
+	b=Uprvxovq6hkeTKpZqPLNBziLvjWDC02SfPjcNkHS/ojNygCR7F9O+Y0t48mpzNHOSt
+	+hVMsvwbE6318GVz951q1DCW4XKE1Ow396Glqb8+CtoXoFXnN9xYxy3bLbBYbsCjTc9C
+	8gYR14ybRyN1u8r7jyj22qRsfX4z7Ms+e/L8ynGAbmOJSYeDzlTX64eS6SPJmjEwnYow
+	R/qSmlHy0MhlfLUfeI/7J6miflKbyo4R1YwmIIklsmvkrUDqeeIRsG9N7WjNbCpY50Ey
+	SjVw0qN4ZlrIVt0uMtF9o7MhGaB4d60QdmVYhQfwR+itw3Q/KCGnJGtodCa3eemAQs9x
+	6G2A==
+X-Gm-Message-State: APjAAAXY6Mx1A0Feaax3un+3gNPIkBhJDdbl+cFA8UYW6L4u9Mw9d1uj
+	iDngOngb5wwlopPUEKB+ue3RV2vs4IQ=
+X-Google-Smtp-Source: APXvYqzpZwQW1mu47yTTfQUxUPSS0cw1uoyp2kVykh/BcfjTsaHKwV/Ojyf+BuwXm9RJt0Hp/ZttLQ==
+X-Received: by 2002:a05:6808:8e9:: with SMTP id
+	d9mr7803527oic.29.1573829246589; 
+	Fri, 15 Nov 2019 06:47:26 -0800 (PST)
+Received: from blackbox.rga.ip ([2806:109f:4:a26c:908a:c7ff:fe6a:e9f5])
+	by smtp.gmail.com with ESMTPSA id t2sm2930271otm.75.2019.11.15.06.47.25
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Fri, 15 Nov 2019 06:47:26 -0800 (PST)
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linaro.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: Warnings when starting bitbake with Python 3.8.0
+Date: Fri, 15 Nov 2019 08:47:23 -0600
+Message-Id: <20191115144723.7452-1-anibal.limon@linaro.org>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Subject: [PATCHv2] lib/bb: Add BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on directories
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,24 +57,92 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Nov 2019 13:06:25 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 15 Nov 2019 14:47:26 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-I'm using Arch on one of my dev machines and recent upgrades have brought in Python 3.8.0.
+The new BB_SIGNATURE_LOCAL_DIRS_EXCLUDE allows you to specify a list
+of directories to exclude when making taskhash, our specific case
+is using SRC_URI that points local VCS directory.
 
-When running bitbake (latest master, 33197db8abf82be240d7c1c5c9d2484a08a90849) I'm seeing the following warnings. This only happens on the first invocation as __pycache__ is used after this.
+Use bb.fetch.module to set default to: "CVS .bzr .git .hg .osc .p4 .repo .svn"
 
-    /.../bitbake/lib/bb/fetch2/clearcase.py:148: SyntaxWarning: "is" with a literal. Did you mean "=="?
-      if command is 'mkview':
-    /.../bitbake/lib/bb/fetch2/clearcase.py:155: SyntaxWarning: "is" with a literal. Did you mean "=="?
-      elif command is 'rmview':
-    /.../bitbake/lib/bb/fetch2/clearcase.py:159: SyntaxWarning: "is" with a literal. Did you mean "=="?
-      elif command is 'setcs':
+Signed-off-by: Aníbal Limón <anibal.limon@linaro.org>
+---
+ lib/bb/checksum.py        | 5 +++--
+ lib/bb/fetch2/__init__.py | 4 ++--
+ lib/bb/siggen.py          | 5 +++--
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
-I've never used the clearcase fetcher and have no way of testing this myself so I don't want to dive into it. May be worth someone who is using this taking a look at it though.
-
-Thanks,
-
+diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
+index 5bc8a8fc..677020f4 100644
+--- a/lib/bb/checksum.py
++++ b/lib/bb/checksum.py
+@@ -74,7 +74,7 @@ class FileChecksumCache(MultiProcessCache):
+             else:
+                 dest[0][h] = source[0][h]
+ 
+-    def get_checksums(self, filelist, pn):
++    def get_checksums(self, filelist, pn, localdirsexclude):
+         """Get checksums for a list of files"""
+ 
+         def checksum_file(f):
+@@ -90,7 +90,8 @@ class FileChecksumCache(MultiProcessCache):
+             if pth == "/":
+                 bb.fatal("Refusing to checksum /")
+             dirchecksums = []
+-            for root, dirs, files in os.walk(pth):
++            for root, dirs, files in os.walk(pth, topdown=True):
++                [dirs.remove(d) for d in list(dirs) if d in localdirsexclude]
+                 for name in files:
+                     fullpth = os.path.join(root, name)
+                     checksum = checksum_file(fullpth)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 07de6c26..731c1608 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1197,14 +1197,14 @@ def get_checksum_file_list(d):
+ 
+     return " ".join(filelist)
+ 
+-def get_file_checksums(filelist, pn):
++def get_file_checksums(filelist, pn, localdirsexclude):
+     """Get a list of the checksums for a list of local files
+ 
+     Returns the checksums for a list of local files, caching the results as
+     it proceeds
+ 
+     """
+-    return _checksum_cache.get_checksums(filelist, pn)
++    return _checksum_cache.get_checksums(filelist, pn, localdirsexclude)
+ 
+ 
+ class FetchData(object):
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index a4bb1ff7..2445a340 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -123,6 +123,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+ 
+         self.unihash_cache = bb.cache.SimpleCache("1")
+         self.unitaskhashes = self.unihash_cache.init_cache(data, "bb_unihashes.dat", {})
++        self.localdirsexclude = (data.getVar("BB_SIGNATURE_LOCAL_DIRS_EXCLUDE") or "CVS .bzr .git .hg .osc .p4 .repo .svn").split()
+ 
+     def init_rundepcheck(self, data):
+         self.taskwhitelist = data.getVar("BB_HASHTASK_WHITELIST") or None
+@@ -221,9 +222,9 @@ class SignatureGeneratorBasic(SignatureGenerator):
+ 
+         if task in dataCache.file_checksums[fn]:
+             if self.checksum_cache:
+-                checksums = self.checksum_cache.get_checksums(dataCache.file_checksums[fn][task], recipename)
++                checksums = self.checksum_cache.get_checksums(dataCache.file_checksums[fn][task], recipename, self.localdirsexclude)
+             else:
+-                checksums = bb.fetch2.get_file_checksums(dataCache.file_checksums[fn][task], recipename)
++                checksums = bb.fetch2.get_file_checksums(dataCache.file_checksums[fn][task], recipename, self.localdirsexclude)
+             for (f,cs) in checksums:
+                 self.file_checksum_values[tid].append((f,cs))
+                 if cs:
 -- 
-Paul Barker
+2.24.0
+
 
