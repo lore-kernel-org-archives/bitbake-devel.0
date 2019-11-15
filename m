@@ -1,26 +1,21 @@
-Return-Path: <mark.hatle@kernel.crashing.org>
-Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 6A9EE7F7A6
+Return-Path: <ml@embed.me.uk>
+X-Greylist: delayed 556 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 15 Nov 2019 09:47:12 UTC
+Received: from g02sm02.soverin.net (unsecure-smtp.soverin.net [94.130.159.241])
+	by mail.openembedded.org (Postfix) with ESMTP id B714C7FC16
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Nov 2019 18:30:00 +0000 (UTC)
-Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
-	(authenticated bits=0)
-	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id xAKITrKh028273
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NO); Wed, 20 Nov 2019 12:29:55 -0600
-To: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>,
-	bitbake-devel@lists.openembedded.org
-References: <20191120093412.11519-1-jean-marie.lemetayer@savoirfairelinux.com>
-	<20191120093412.11519-8-jean-marie.lemetayer@savoirfairelinux.com>
-From: Mark Hatle <mark.hatle@kernel.crashing.org>
-Message-ID: <df6a4b5e-b2b8-900e-bc48-1ff6c35bde36@kernel.crashing.org>
-Date: Wed, 20 Nov 2019 12:29:53 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
-	Gecko/20100101 Thunderbird/68.2.2
+	Fri, 15 Nov 2019 09:47:12 +0000 (UTC)
+Received: from soverin.net by soverin.net
+From: ml@embed.me.uk
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 15 Nov 2019 09:37:48 +0000
+Message-Id: <20191115093748.61494-1-ml@embed.me.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191120093412.11519-8-jean-marie.lemetayer@savoirfairelinux.com>
-Cc: paul.eggleton@linux.intel.com, rennes@savoirfairelinux.com
-Subject: Re: [PATCH v3 7/7] tests/fetch.py: add npm tests
+X-Virus-Scanned: clamav-milter 0.99.2 at g02sm02
+X-Virus-Status: Clean
+X-Mailman-Approved-At: Wed, 20 Nov 2019 22:09:15 +0000
+Cc: Jack Mitchell <jack@embed.me.uk>
+Subject: [PATCH] fetch2/clearcase: fix python syntax warnings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,155 +28,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Nov 2019 18:30:00 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 15 Nov 2019 09:47:13 -0000
+Content-Transfer-Encoding: 8bit
 
-First thanks for the tests!  A few comments inline
+From: Jack Mitchell <jack@embed.me.uk>
 
-On 11/20/19 3:34 AM, Jean-Marie LEMETAYER wrote:
-> This commit adds some basic tests for the npm fetcher:
-> 
->  - bb.tests.fetch.NPMTest.test_npm
->  - bb.tests.fetch.NPMTest.test_npm_name_invalid
->  - bb.tests.fetch.NPMTest.test_npm_name_none
->  - bb.tests.fetch.NPMTest.test_npm_no_network_no_tarball
->  - bb.tests.fetch.NPMTest.test_npm_no_network_with_tarball
->  - bb.tests.fetch.NPMTest.test_npm_registry_alternate
->  - bb.tests.fetch.NPMTest.test_npm_registry_invalid
->  - bb.tests.fetch.NPMTest.test_npm_registry_none
->  - bb.tests.fetch.NPMTest.test_npm_version_invalid
->  - bb.tests.fetch.NPMTest.test_npm_version_latest
->  - bb.tests.fetch.NPMTest.test_npm_version_none
-> 
-> Signed-off-by: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
-> ---
->  lib/bb/tests/fetch.py | 103 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 103 insertions(+)
-> 
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index 83fad3ff..d1091fa7 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -2008,3 +2008,106 @@ class GitLfsTest(FetcherTest):
->          ud.method._find_git_lfs = lambda d: False
->          shutil.rmtree(self.gitdir, ignore_errors=True)
->          fetcher.unpack(self.d.getVar('WORKDIR'))
-> +
-> +class NPMTest(FetcherTest):
-> +    def skipIfNoNpm():
-> +        import shutil
-> +        if not shutil.which('npm'):
-> +            return unittest.skip('npm not installed, tests being skipped')
-> +        return lambda f: f
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        unpackdir = os.path.join(self.unpackdir, 'npm')
-> +        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_no_network_no_tarball(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        self.d.setVar('BB_NO_NETWORK', '1')
+bitbake.git/lib/bb/fetch2/clearcase.py:148: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  if command is 'mkview':
+bitbake.git/lib/bb/fetch2/clearcase.py:155: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  elif command is 'rmview':
+bitbake.git/lib/bb/fetch2/clearcase.py:159: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  elif command is 'setcs':
 
-Since this is a BB_NO_NETWORK=1 case, the @skipIfNoNetwork() should not be here,
-since it should not need the network to perform the test.
+Signed-off-by: Jack Mitchell <jack@embed.me.uk>
+---
+ lib/bb/fetch2/clearcase.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        with self.assertRaises(bb.fetch2.NetworkAccess):
-> +            fetcher.download()
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_no_network_with_tarball(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        fetcher.download()
-> +        self.d.setVar('BB_NO_NETWORK', '1')
+diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
+index 3dd93ad6..e2934ef9 100644
+--- a/lib/bb/fetch2/clearcase.py
++++ b/lib/bb/fetch2/clearcase.py
+@@ -145,18 +145,18 @@ class ClearCase(FetchMethod):
+ 
+         basecmd = "%s %s" % (ud.basecmd, command)
+ 
+-        if command is 'mkview':
++        if command == 'mkview':
+             if not "rcleartool" in ud.basecmd:
+                 # Cleartool needs a -snapshot view
+                 options.append("-snapshot")
+             options.append("-tag %s" % ud.viewname)
+             options.append(ud.viewdir)
+ 
+-        elif command is 'rmview':
++        elif command == 'rmview':
+             options.append("-force")
+             options.append("%s" % ud.viewdir)
+ 
+-        elif command is 'setcs':
++        elif command == 'setcs':
+             options.append("-overwrite")
+             options.append(ud.configspecfile)
+ 
+-- 
+2.24.0
 
-Same here.
-
-If any other the ones below work off local files, then similarly we shouldn't
-skip running them on a no network config.
-
---Mark
-
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        unpackdir = os.path.join(self.unpackdir, 'npm')
-> +        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_registry_alternate(self):
-> +        url = 'npm://registry.freajs.org;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        unpackdir = os.path.join(self.unpackdir, 'npm')
-> +        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_version_latest(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example;version=latest'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        unpackdir = os.path.join(self.unpackdir, 'npm')
-> +        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_registry_invalid(self):
-> +        url = 'npm://registry.invalid.org;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        with self.assertRaises(bb.fetch2.FetchError):
-> +            fetcher.download()
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_name_invalid(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/invalid;version=1.0.0'
-> +        fetcher = bb.fetch.Fetch([url], self.d)
-> +        with self.assertRaises(bb.fetch2.FetchError):
-> +            fetcher.download()
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_version_invalid(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example;version=invalid'
-> +        with self.assertRaises(bb.fetch2.ParameterError):
-> +            fetcher = bb.fetch.Fetch([url], self.d)
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_registry_none(self):
-> +        url = 'npm://;name=@savoirfairelinux/node-server-example;version=1.0.0'
-> +        with self.assertRaises(bb.fetch2.MalformedUrl):
-> +            fetcher = bb.fetch.Fetch([url], self.d)
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_name_none(self):
-> +        url = 'npm://registry.npmjs.org;version=1.0.0'
-> +        with self.assertRaises(AttributeError):
-> +            fetcher = bb.fetch.Fetch([url], self.d)
-> +
-> +    @skipIfNoNpm()
-> +    @skipIfNoNetwork()
-> +    def test_npm_version_none(self):
-> +        url = 'npm://registry.npmjs.org;name=@savoirfairelinux/node-server-example'
-> +        with self.assertRaises(AttributeError):
-> +            fetcher = bb.fetch.Fetch([url], self.d)
-> 
 
