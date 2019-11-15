@@ -1,56 +1,49 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com
-	[209.85.214.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 0ABBE7FAAD
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
+	[209.85.221.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 833EA7C446
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Nov 2019 17:26:40 +0000 (UTC)
-Received: by mail-pl1-f182.google.com with SMTP id s10so5120310plp.2
+	Fri, 15 Nov 2019 18:08:11 +0000 (UTC)
+Received: by mail-wr1-f68.google.com with SMTP id b3so11933119wrs.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Nov 2019 09:26:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=message-id:subject:from:to:date:in-reply-to:references:organization
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=f66NcovRgY03Rjty9dLGTOd8ml1eTe4krEz6sS+x7bk=;
-	b=sN0i65rRTsfZBc5mPIp/q8QmVSFfTAEeM7CeJ42qvlB+uSffdo5oLyWDo4LnJtM4wF
-	VEdvBOAYpLavKSZlZlucp8zOPx5E69kzQPJ3dCgpIIoiLjoVu9PBPlBvGNyBYB9RJBsn
-	msNEDcX76Nwd6g2e02PoaHuXJHsmT9i+CazNYeKRqQGnafz22jD0PyGKo0joXAhKUQzh
-	MCmRtefhHvvRY7cifb5TLF/aE/6qxJMMSasToz/am92HVAn88FF1xnlL7msnHtYWQsk7
-	AX8jgzKe33eAJ8odPTfEpLg+wkFA3SIpNe1UkR+5TkDoPYbroYunsu2UFBAf+rJCaTHb
-	kHbw==
+	Fri, 15 Nov 2019 10:08:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=O5KgPOJSjjGIt+IrGaBz2OQMsGQnka5YjhGLrCOmq3Q=;
+	b=JhvbG3KoLX1vDXGFcgUrs3wFxwoVlyyOoZfhkt06Guhb3CJEgos/zTahr/wpLr6NOg
+	p/JqF7lMcoHn/xuQa0pPHWLi3UBjpELfgUxEiWDueAFfjv5FFXDhiNI7NKr6x8bQck4J
+	h2zvZZYRAzIcY/jU+hT45fPZEIr9UXIVf+Xf8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:organization:user-agent:mime-version
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=f66NcovRgY03Rjty9dLGTOd8ml1eTe4krEz6sS+x7bk=;
-	b=dR1xGs8YLUx8bYcEhmlaWjI1nL9Y0XXnbkn7l0t6Sn4U2mHUdveftG4bZDz4mmQZFb
-	EvVzacAgNuh3Rm7jBBKGKDuqwFXP5fOHUzSL0QGysnyuSfU1oEeB+JSEOIi0MplrbqXw
-	EC0fxpAwXRlilVQdjAGkfXtmtqvH/K+HuBO9qjXPl9d1KL7jz16tiJSotoPd0SUlwkFy
-	7dRtskV4w6hxNe1DfqQJf32kvdaUJIjZQ07VnsI5koklsqsUAa0QQVpaRib5oPwNmVk4
-	7djOxUwICt4iXisDgFV7k3dmJTTFvS1vnq0qsSIetV6FSaFrT73V4zvnapybASOy26IS
-	gDig==
-X-Gm-Message-State: APjAAAWE/DS5/qEhKaHyLn2hwCnsMuUyc5jlr9kSMit7dL0K5J4TuprH
-	xGSiT2ifWyLfYdFsJtJX10s=
-X-Google-Smtp-Source: APXvYqy6DO189zB3wvwN31ENK5xCMRvwf4p1xQcsILrTtDsTUmW6wYJXBqqYxR13hH4rWMMWsmDuog==
-X-Received: by 2002:a17:90b:d88:: with SMTP id
-	bg8mr21286473pjb.78.1573838801746; 
-	Fri, 15 Nov 2019 09:26:41 -0800 (PST)
-Received: from apollo ([2601:646:8500:1c20::30e8])
-	by smtp.gmail.com with ESMTPSA id u7sm9297299pjx.19.2019.11.15.09.26.40
+	bh=O5KgPOJSjjGIt+IrGaBz2OQMsGQnka5YjhGLrCOmq3Q=;
+	b=r+1atcYyEyygDezt6pFQ3gSiqLmHSVHVuj1wWzU7nA67JG2R0brNIN5lAy0Zus4CHB
+	K59zg9PIe6AHpupUyC1H36WGgr1gReXEUsTKG1X0/iwvWUyNlClgl6zURf76SRjJxIZN
+	xwJKmJYkTmJvQTJRNqiRz52LQC7flOEACdp9xgtnH+yFV1/WVr96Bk/JR4xpo7uDdTmk
+	1jGSJOcQFqk/nzoqiFpM2qADCDEX++4U3ebqsjd6eS8Hz7LWPLJIwRh9fKar4m4+bnj8
+	R+EniOR0R+qZyEX/9VsyX5tSHYUPcKbEAmFs59g8UVz4Z5GI2k5mbOY3e8WYmuVG1jMb
+	NHuw==
+X-Gm-Message-State: APjAAAX57kl3d3wpsDZlWbge5Guq0FykPuSf2pKmwrpmWoqWWxljNsns
+	LzR4EMeTA3EtjOInx4G164lSLlh/vmE=
+X-Google-Smtp-Source: APXvYqzNg20FtN0DIU+R7CNyA2na0hySUJCVvIzBf+UmuZlDtpypn1yvwpZ2I9O3cAMrH40zSoXU7g==
+X-Received: by 2002:a5d:6b4d:: with SMTP id x13mr15842361wrw.96.1573841291609; 
+	Fri, 15 Nov 2019 10:08:11 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	11sm11360534wmb.34.2019.11.15.10.08.10
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 15 Nov 2019 09:26:41 -0800 (PST)
-Message-ID: <c2c0fb65a917506fb514588feffd8710be7c1fac.camel@gmail.com>
-From: Khem Raj <raj.khem@gmail.com>
-To: Christopher Larson <kergoth@gmail.com>, 
-	bitbake-devel@lists.openembedded.org, Paul Barker <paul@betafive.co.uk>
-Date: Fri, 15 Nov 2019 09:26:35 -0800
-In-Reply-To: <22367b6d-6c98-41fe-b795-4618af17cd6c@Spark>
-References: <5d3e68e3-5c06-43f5-8a28-b19834b7b7c5@www.fastmail.com>
-	<22367b6d-6c98-41fe-b795-4618af17cd6c@Spark>
-Organization: HIMVIS LLC
-User-Agent: Evolution 3.34.1 
+	Fri, 15 Nov 2019 10:08:11 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 15 Nov 2019 18:08:10 +0000
+Message-Id: <20191115180810.14392-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: Re: Warnings when starting bitbake with Python 3.8.0
+Subject: [PATCH] fetch2/clearcase: Fix warnings from python 3.8
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,47 +56,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Nov 2019 17:26:41 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Fri, 15 Nov 2019 18:08:11 -0000
 Content-Transfer-Encoding: 8bit
 
-On Fri, 2019-11-15 at 09:21 -0700, Christopher Larson wrote:
-> That’s definitely a bug, incorrect usage of `is`.
-> On Nov 15, 2019, 6:06 AM -0700, Paul Barker <paul@betafive.co.uk>,
-> wrote:
-> > I'm using Arch on one of my dev machines and recent upgrades have
-> > brought in Python 3.8.0.
-> > 
-> > When running bitbake (latest master,
-> > 33197db8abf82be240d7c1c5c9d2484a08a90849) I'm seeing the following
-> > warnings. This only happens on the first invocation as __pycache__
-> > is used after this.
-> > 
-> > /.../bitbake/lib/bb/fetch2/clearcase.py:148: SyntaxWarning: "is"
-> > with a literal. Did you mean "=="?
-> > if command is 'mkview':
-> > /.../bitbake/lib/bb/fetch2/clearcase.py:155: SyntaxWarning: "is"
-> > with a literal. Did you mean "=="?
-> > elif command is 'rmview':
-> > /.../bitbake/lib/bb/fetch2/clearcase.py:159: SyntaxWarning: "is"
-> > with a literal. Did you mean "=="?
-> > elif command is 'setcs':
-> > 
-> > I've never used the clearcase fetcher and have no way of testing
-> > this myself so I don't want to dive into it. May be worth someone
-> > who is using this taking a look at it though.
-> > 
+bitbake/lib/bb/fetch2/clearcase.py:148: SyntaxWarning: "is" with a literal. Did you mean "=="?
+      if command is 'mkview':
+bitbake/lib/bb/fetch2/clearcase.py:155: SyntaxWarning: "is" with a literal. Did you mean "=="?
+      elif command is 'rmview':
+bitbake/lib/bb/fetch2/clearcase.py:159: SyntaxWarning: "is" with a literal. Did you mean "=="?
+      elif command is 'setcs':
 
-Yes, this was latent, either a patch or bug will be good to have
+Python 3.8 is quite correct and we so mean "==" here, fix it to
+avoid the warnings.
 
-> > Thanks,
-> > 
-> > --
-> > Paul Barker
-> > --
-> > _______________________________________________
-> > bitbake-devel mailing list
-> > bitbake-devel@lists.openembedded.org
-> > http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/clearcase.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
+index 3dd93ad6b1..e2934ef9fc 100644
+--- a/lib/bb/fetch2/clearcase.py
++++ b/lib/bb/fetch2/clearcase.py
+@@ -145,18 +145,18 @@ class ClearCase(FetchMethod):
+ 
+         basecmd = "%s %s" % (ud.basecmd, command)
+ 
+-        if command is 'mkview':
++        if command == 'mkview':
+             if not "rcleartool" in ud.basecmd:
+                 # Cleartool needs a -snapshot view
+                 options.append("-snapshot")
+             options.append("-tag %s" % ud.viewname)
+             options.append(ud.viewdir)
+ 
+-        elif command is 'rmview':
++        elif command == 'rmview':
+             options.append("-force")
+             options.append("%s" % ud.viewdir)
+ 
+-        elif command is 'setcs':
++        elif command == 'setcs':
+             options.append("-overwrite")
+             options.append(ud.configspecfile)
+ 
+-- 
+2.20.1
 
 
