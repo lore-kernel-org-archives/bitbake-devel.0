@@ -1,50 +1,52 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com
-	[209.85.128.52])
-	by mail.openembedded.org (Postfix) with ESMTP id D03227F9DE
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com
+	[209.85.128.44])
+	by mail.openembedded.org (Postfix) with ESMTP id BF25E7F9DE
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Nov 2019 20:54:17 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id b11so5234777wmb.5
+	Thu, 21 Nov 2019 20:54:18 +0000 (UTC)
+Received: by mail-wm1-f44.google.com with SMTP id j18so8640019wmk.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Nov 2019 12:54:19 -0800 (PST)
+	Thu, 21 Nov 2019 12:54:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
+	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=SFEm1nVdnNWRlXsS0O1kAyUyXhOtFpff1iExCuDYnt4=;
-	b=drn5zEFbtuvFyzYacjGunp+Ha3qf3xCdoAKe5/4bvDKWJZSwuyX4NuuB9FTH5A+uuZ
-	r/wH+9WFu9A+VDpTR8+d9MA9YC/eZS9QhF7UhsReO/vETafoJyHyt74nryDGBCypCoJx
-	i0Ezm1Yk1CdqyNxqxC1kDxWoSGj+p+cfCrxWA=
+	bh=Df8SDzcH07/EgzZkQjazmRbP+wwmdIbuaF+jNdZHeM4=;
+	b=LKNNz/gzPYxeW6e/9Fdg8iy7878E1xRmyyxFCs+EvUeHGFc4vjc0n7P/JTN8G+WyGS
+	eP2MKVTPUv7B1Zr7R9CL/b00PyxUaZG2rBI5QfRzKTBFr1kJq+iPgBU8BfT6E52bp39c
+	3mqQ21ECq4BsoHJM4OVDqrFbXlPj5+Sy+E/EM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=SFEm1nVdnNWRlXsS0O1kAyUyXhOtFpff1iExCuDYnt4=;
-	b=qncQetKtckGJ0yrvpHGGq4d2owov5YCiFOElM7h8Wwt9WrQAZvYNUrC/uGMcPN+G/y
-	sOo/HC7ed0/iJqtYTPScOLg86A7rrlpII9QVy8pKGryAPaFj7lL+fsOnQ8N0aWozzmUu
-	E2Q+MpBrgxdMvtK3d7W3hbohSajtkmsb0xfMHptNxrvjXs78Pl3uYmHkZVlYguC+9tCj
-	PtjZGL3miUMYJJGsKSVH5KZzEmSYZAm91q4EtWWRtaNE7V4aiFFwEJt5gic2dOrLGnp9
-	cDfySE01t16kjo7/4yrQUzXgRkrXq6vPHraI8iLKOAc4HVHW6u19gmJ46su0NAPIA4AC
-	SziA==
-X-Gm-Message-State: APjAAAW8fDR8lJLDxR88i7cSAHuh7jykZ8A0/417Pu4z75HkVwtFyRoU
-	A4i9Mf/zM4LQ0Hcha0jSt+8rnBpmLc0=
-X-Google-Smtp-Source: APXvYqyh8tGLvD57ISiJqKA6t05d0WM54Bvfnt9UY8Xmh2i7SMsP4X0SPmBD2yFr/t8Fy0C2dIbh5w==
-X-Received: by 2002:a05:600c:206:: with SMTP id
-	6mr13271934wmi.78.1574369658065; 
-	Thu, 21 Nov 2019 12:54:18 -0800 (PST)
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=Df8SDzcH07/EgzZkQjazmRbP+wwmdIbuaF+jNdZHeM4=;
+	b=hfctgdznBvwiaO8p/GE6wammYdUo5CGB3be2C9ncGj5FWD91DAsHIMuOo/J+XiLB4K
+	rKMlrkU+CG+CsZHr6tDhrEoggm5AL1DDXGdNyzeTLYjLsglcs9aVd4mQgFbBSW8wtnyw
+	LZjfxkbDUbJfBiuDZsNXv88zc5HMxXd+W3m7g68DvuVBpoU8eucYSTTGZL/0xHtCWM7U
+	zJ6gi1hd3AuEIw3fCGRglqVA+sL7IQbuH0kcN0ghxJ9jSm5F70xgMEi/r03X9MvbShdd
+	PW/orNMdOkp3aKNaysbJIz7hJpy3y6Au3ufGJthJd6bd8fNAzX3r1x3CQQVnozGnjpYg
+	keUw==
+X-Gm-Message-State: APjAAAXMIVXG6m6IWLLkGzWr0EtqqKbPk58fcNT2qceosvyt1sVmEpKL
+	L+JThHi075lF0azAzaIhsDfx1neQLC8=
+X-Google-Smtp-Source: APXvYqzpljUQw6DLnr4U/kGAhKMJxhV+ZVN1uhLJE1cajsSM2eYD1K1QnR4wMzWe4M68ljUdq+HWvw==
+X-Received: by 2002:a05:600c:254:: with SMTP id
+	20mr13082874wmj.6.1574369659154; 
+	Thu, 21 Nov 2019 12:54:19 -0800 (PST)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	w12sm925982wmi.17.2019.11.21.12.54.16
+	w12sm925982wmi.17.2019.11.21.12.54.18
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 21 Nov 2019 12:54:17 -0800 (PST)
+	Thu, 21 Nov 2019 12:54:18 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Nov 2019 20:54:11 +0000
-Message-Id: <20191121205415.25946-1-richard.purdie@linuxfoundation.org>
+Date: Thu, 21 Nov 2019 20:54:12 +0000
+Message-Id: <20191121205415.25946-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191121205415.25946-1-richard.purdie@linuxfoundation.org>
+References: <20191121205415.25946-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 1/5] opkg: Add upstream fixes for empty packages
+Subject: [PATCH 2/5] opkg-utils: Fix silent empty/broken opkg package creation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,146 +59,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Nov 2019 20:54:18 -0000
+X-List-Received-Date: Thu, 21 Nov 2019 20:54:19 -0000
 Content-Transfer-Encoding: 8bit
 
-An ipk with a zero size data.tar file caused opkg to crash with a
-double free abort. Add the upstream fixes for this.
+opkg-build was failing on hosts where tar < 1.28 and reproducibile builds
+were enabled but it was doing this silently and generating corrupted
+(empty) ipk files. Add a fix for this (submitted upstream).
+
+The fix requires bash but if you're building ipk files this shoudn't be
+a problem.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- .../opkg/opkg/open_inner.patch                | 46 ++++++++++++++++
- .../opkg/opkg/opkg_archive.patch              | 54 +++++++++++++++++++
- meta/recipes-devtools/opkg/opkg_0.4.1.bb      |  2 +
- 3 files changed, 102 insertions(+)
- create mode 100644 meta/recipes-devtools/opkg/opkg/open_inner.patch
- create mode 100644 meta/recipes-devtools/opkg/opkg/opkg_archive.patch
+ .../opkg-utils/opkg-utils/pipefail.patch      | 31 +++++++++++++++++++
+ .../opkg-utils/opkg-utils_0.4.1.bb            |  3 ++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 meta/recipes-devtools/opkg-utils/opkg-utils/pipefail.patch
 
-diff --git a/meta/recipes-devtools/opkg/opkg/open_inner.patch b/meta/recipes-devtools/opkg/opkg/open_inner.patch
+diff --git a/meta/recipes-devtools/opkg-utils/opkg-utils/pipefail.patch b/meta/recipes-devtools/opkg-utils/opkg-utils/pipefail.patch
 new file mode 100644
-index 00000000000..278e099e3ac
+index 00000000000..55ddcc1fd20
 --- /dev/null
-+++ b/meta/recipes-devtools/opkg/opkg/open_inner.patch
-@@ -0,0 +1,46 @@
-+From alejandro.delcastillo@ni.com Wed Nov 20 22:35:02 2019
-+From: Alejandro del Castillo <alejandro.delcastillo@ni.com>
-+To: <opkg-devel@googlegroups.com>, <richard.purdie@linuxfoundation.org>
-+CC: Alejandro del Castillo <alejandro.delcastillo@ni.com>
-+Subject: [opkg][PATCH 2/2] open_inner: add support for empty payloads
-+Date: Wed, 20 Nov 2019 16:34:48 -0600
-+Message-ID: <20191120223448.26522-3-alejandro.delcastillo@ni.com>
-+X-Mailer: git-send-email 2.22.0
-+In-Reply-To: <20191120223448.26522-1-alejandro.delcastillo@ni.com>
-+References: <20191120223448.26522-1-alejandro.delcastillo@ni.com>
-+MIME-Version: 1.0
-+Content-Type: text/plain
-+Content-Transfer-Encoding: 8bit
++++ b/meta/recipes-devtools/opkg-utils/opkg-utils/pipefail.patch
+@@ -0,0 +1,31 @@
++We need opkg-build to fail if for example the tar command is passed invalid 
++options. Without this, we see silently created empty packaged where data.tar
++is zero bytes in size. This creates hard to debug problems.
 +
-+Support for empty compressed payloads need to be explicitly enabled on
-+libarchive.
++An example is when reproducible builds are enabled and run on old hosts like
++centos7 which has tar < 1.28:
 +
-+Signed-off-by: Alejandro del Castillo <alejandro.delcastillo@ni.com>
++Subprocess output:tar: unrecognized option '--clamp-mtime'
++Try `tar --help' or `tar --usage' for more information.
 +
-+Upstream-Status: Backport
-+---
-+ libopkg/opkg_archive.c | 7 +++++++
-+ 1 file changed, 7 insertions(+)
++Upstream-Status: Pending
++Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 +
-+diff --git a/libopkg/opkg_archive.c b/libopkg/opkg_archive.c
-+index 0e9ccea..f19cece 100644
-+--- a/libopkg/opkg_archive.c
-++++ b/libopkg/opkg_archive.c
-+@@ -618,6 +618,13 @@ static struct archive *open_inner(struct archive *outer)
-+         goto err_cleanup;
-+     }
++Index: opkg-utils-0.4.1/opkg-build
++===================================================================
++--- opkg-utils-0.4.1.orig/opkg-build
+++++ opkg-utils-0.4.1/opkg-build
++@@ -1,4 +1,4 @@
++-#!/bin/sh
+++#!/bin/bash
 + 
-++    r = archive_read_support_format_empty(inner);
-++    if (r != ARCHIVE_OK) {
-++        opkg_msg(ERROR, "Empty format not supported: %s\n",
-++                 archive_error_string(inner));
-++        goto err_cleanup;
-++    }
-++
-+     r = archive_read_open(inner, data, NULL, inner_read, inner_close);
-+     if (r != ARCHIVE_OK) {
-+         opkg_msg(ERROR, "Failed to open inner archive: %s\n",
-+-- 
-+2.22.0
-+
-+
-diff --git a/meta/recipes-devtools/opkg/opkg/opkg_archive.patch b/meta/recipes-devtools/opkg/opkg/opkg_archive.patch
-new file mode 100644
-index 00000000000..3e1ebae9530
---- /dev/null
-+++ b/meta/recipes-devtools/opkg/opkg/opkg_archive.patch
-@@ -0,0 +1,54 @@
-+From alejandro.delcastillo@ni.com Wed Nov 20 22:35:01 2019
-+Return-Path: <richard.purdie+caf_=rpurdie=rpsys.net@linuxfoundation.org>
-+From: Alejandro del Castillo <alejandro.delcastillo@ni.com>
-+To: <opkg-devel@googlegroups.com>, <richard.purdie@linuxfoundation.org>
-+CC: Alejandro del Castillo <alejandro.delcastillo@ni.com>
-+Subject: [opkg][PATCH 1/2] opkg_archive.c: avoid double free on uncompress
-+ error
-+Date: Wed, 20 Nov 2019 16:34:47 -0600
-+Message-ID: <20191120223448.26522-2-alejandro.delcastillo@ni.com>
-+X-Mailer: git-send-email 2.22.0
-+In-Reply-To: <20191120223448.26522-1-alejandro.delcastillo@ni.com>
-+References: <20191120223448.26522-1-alejandro.delcastillo@ni.com>
-+MIME-Version: 1.0
-+Content-Type: text/plain
-+Content-Transfer-Encoding: 8bit
-+
-+The open-inner function calls archive_read_open. On error,
-+archive_read_open calls inner_close, which also closes the outter
-+archive. On error, return NULL directly to avoid double free.
-+
-+
-+Upstream-Status: Backport
-+
-+Signed-off-by: Alejandro del Castillo <alejandro.delcastillo@ni.com>
-+---
-+ libopkg/opkg_archive.c | 4 ++--
-+ 1 file changed, 2 insertions(+), 2 deletions(-)
-+
-+diff --git a/libopkg/opkg_archive.c b/libopkg/opkg_archive.c
-+index 3d87db1..0e9ccea 100644
-+--- a/libopkg/opkg_archive.c
-++++ b/libopkg/opkg_archive.c
-+@@ -622,7 +622,7 @@ static struct archive *open_inner(struct archive *outer)
-+     if (r != ARCHIVE_OK) {
-+         opkg_msg(ERROR, "Failed to open inner archive: %s\n",
-+                  archive_error_string(inner));
-+-        goto err_cleanup;
-++        return NULL;
-+     }
++ : <<=cut
++ =head1 NAME
++@@ -12,6 +12,7 @@ opkg-build - construct an .opk from a di
++ #   Updated to work on Familiar Pre0.7rc1, with busybox tar.
++ #   Note it Requires: binutils-ar (since the busybox ar can't create)
++ set -e
+++set -o pipefail
 + 
-+     return inner;
-+@@ -683,7 +683,7 @@ static struct archive *extract_outer(const char *filename, const char *arname)
++ version=1.0
 + 
-+     inner = open_inner(outer);
-+     if (!inner)
-+-        goto err_cleanup;
-++        return NULL;
-+ 
-+     return inner;
-+ 
-+-- 
-+2.22.0
-+
-+
-diff --git a/meta/recipes-devtools/opkg/opkg_0.4.1.bb b/meta/recipes-devtools/opkg/opkg_0.4.1.bb
-index 149ee3ca190..f0ae8b36bd1 100644
---- a/meta/recipes-devtools/opkg/opkg_0.4.1.bb
-+++ b/meta/recipes-devtools/opkg/opkg_0.4.1.bb
-@@ -14,6 +14,8 @@ PE = "1"
- SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
-            file://opkg.conf \
-            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
-+           file://opkg_archive.patch \
-+           file://open_inner.patch \
-            file://run-ptest \
+diff --git a/meta/recipes-devtools/opkg-utils/opkg-utils_0.4.1.bb b/meta/recipes-devtools/opkg-utils/opkg-utils_0.4.1.bb
+index cf1e4670c65..eb6c7a3a6ad 100644
+--- a/meta/recipes-devtools/opkg-utils/opkg-utils_0.4.1.bb
++++ b/meta/recipes-devtools/opkg-utils/opkg-utils_0.4.1.bb
+@@ -10,6 +10,7 @@ PROVIDES += "${@bb.utils.contains('PACKAGECONFIG', 'update-alternatives', 'virtu
+ SRC_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/${BPN}/snapshot/${BPN}-${PV}.tar.gz \
+            file://0001-Switch-all-scripts-to-use-Python-3.x.patch \
+            file://0001-opkg-build-clamp-mtimes-to-SOURCE_DATE_EPOCH.patch \
++           file://pipefail.patch \
  "
+ UPSTREAM_CHECK_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/opkg-utils/refs/"
  
+@@ -19,6 +20,8 @@ SRC_URI[sha256sum] = "9ea9efdd9fe13661ad251e3a2860c1c93045adcfaa6659c3e86d9748ec
+ 
+ TARGET_CC_ARCH += "${LDFLAGS}"
+ 
++RDEPENDS_${PN} += "bash"
++
+ # For native builds we use the host Python
+ PYTHONRDEPS = "python3 python3-shell python3-io python3-math python3-crypt python3-logging python3-fcntl python3-pickle python3-compression python3-stringold"
+ PYTHONRDEPS_class-native = ""
 -- 
 2.20.1
 
