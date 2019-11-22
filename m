@@ -1,51 +1,31 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
-	[209.85.221.66])
-	by mail.openembedded.org (Postfix) with ESMTP id B9B5B7FCD4
+Return-Path: <ross.burton@intel.com>
+X-Greylist: delayed 426 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 22 Nov 2019 17:08:47 UTC
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	by mail.openembedded.org (Postfix) with ESMTP id B8C7C7FCD2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Nov 2019 16:34:14 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id a15so9340307wrf.9
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Nov 2019 08:34:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=TtveVRiTasdZEWieAhmOcCcKaSYDil7z6vUwSsxqJ/s=;
-	b=FNYB+K4x/CLFWU916FiY21Uz1Ew4cuUFTH7Y+AUadrRv1Q+HsTJsmi9EUcNyraJUCL
-	kBK7V7BJpMHm7WPovLYuflptWqatzoZFS1tu//bZMqg9cN1BpZsO1eDndvXKcqHjfS3/
-	wjehmSbcKbVEfm0WT7eeQVejFi6syLNLKuNk8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=TtveVRiTasdZEWieAhmOcCcKaSYDil7z6vUwSsxqJ/s=;
-	b=BWJOTt7W9S/DwytLW/AN3o94Pp0JwXa4RfdoO7xU895nz5vIoyZc4ZKwqT6RCxIGDy
-	ncLNycbA5Kf4qcvUDp0wz8w6S7QGdTSoKBZVyUkqi1NAWbZJLc46p34iLkRCHZmJ1yh5
-	9vXxcr8ZNlQpDcsfAZpQWCCGCqvAreu/R6qyslVqPm9Ze3dC5smmKvX6mhYq9juT3fTq
-	syUgWbED36pf3afG7LCCQ7cWAQNTVImfpsf0pKmWqG29lEtUyD8wYDz6Kv3PNkRSbjYt
-	X/PJYqWn/mjAx8DssJWlwjUT3X7bHiKI9zxSGfIcjI9sk1o+7x9pIGzs1L+9+HfyrkK4
-	Bfkg==
-X-Gm-Message-State: APjAAAWNmAcX6d28OerQbhD30iIA8qrlZE/kIhH9v2ZErTFh2FF0fXPp
-	PutMttTnaAQrVBiOGeWqZAl/NqBgCqU=
-X-Google-Smtp-Source: APXvYqy2NWzkfHy2uDIGrLN65mUWydlrnGzHmAo0i4VHKGZTCiAedR/EH3bhIz0UJ621TFU9P5oMLw==
-X-Received: by 2002:adf:ba4b:: with SMTP id t11mr18006740wrg.331.1574440455432;
-	Fri, 22 Nov 2019 08:34:15 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	o189sm4263325wmo.23.2019.11.22.08.34.14
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 22 Nov 2019 08:34:14 -0800 (PST)
-Message-ID: <061f8cc5e1ca6bf29d637fcc91ef1f0c825f4e84.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Fri, 22 Nov 2019 16:34:13 +0000
-In-Reply-To: <7c0067a9e4ae762d8c0f8f9dc50e6d3b8891dc60.camel@ew.tq-group.com>
-References: <7c0067a9e4ae762d8c0f8f9dc50e6d3b8891dc60.camel@ew.tq-group.com>
-User-Agent: Evolution 3.34.1-2 
+	Fri, 22 Nov 2019 17:08:47 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	22 Nov 2019 09:01:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; d="scan'208";a="232720213"
+Received: from unknown (HELO blackadder.local) ([10.252.49.82])
+	by fmsmga004.fm.intel.com with ESMTP; 22 Nov 2019 09:01:41 -0800
+To: bitbake-devel@lists.openembedded.org
+References: <20191114142131.29829-1-git@andred.net>
+From: Ross Burton <ross.burton@intel.com>
+Organization: Intel Corporation (UK) Ltd. - Co. Reg. #1134945 - Pipers Way,
+	Swindon SN3 1RJ
+Message-ID: <83d558f5-b153-b3ca-d4b7-eca7b37e78c3@intel.com>
+Date: Fri, 22 Nov 2019 17:01:41 +0000
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+	Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-Subject: Re: Forcing the rebuild of dependent tasks across recipes
+In-Reply-To: <20191114142131.29829-1-git@andred.net>
+Subject: Re: [master][PATCH] fetch2/wget: support releases from private github repositories
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,63 +38,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Nov 2019 16:34:15 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 22 Nov 2019 17:08:47 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2019-11-22 at 16:09 +0100, Matthias Schiffer wrote:
-> is there a robust way to enforce the automatic rebuild of dependent
-> tasks across recipes? I'm having the following issue:
+On 14/11/2019 14:21, André Draszik wrote:
+> The wget / http fetcher currently doesn't support fetching
+> assets attached to releases on private GitHub repositories,
+> i.e. release artefacts like
+>      https://github.com/<user>/<project>/releases/download/v1.0.0/asset1.txt
 > 
-> - Recipe my-core-image has an output file that is copied to the
-> deploy
-> dir. The output file is not fully reproducible, so cleaning the
-> recipe
-> and rebuilding it will yield a different file even through the sstate
-> signature of the recipe is unchanged (the file I'm interested is
-> DMVerity hash data that I generate as an additional filesystem type)
+> Those are special, in that HTTP basic auth is not used / possible
+> on the URL as seen in the GitHub UI, but instead the GitHub API
+> must be used for downloading (which does support HTTP basic auth)
+> where the URL will be different.
 > 
-> - Task do_compile of recipe my-initramfs-scripts depends on my-core-
-> image:do_image_complete. I need to enforce rebuilding of this task
-> whenever the deployed files of my-core-image have changed (the recipe
-> uses the "root hash" generated by DMVerity as input, so that the
-> filesystem can be verified on mount) - and of course also of all
-> dependent tasks like the initramfs image and FIT kernel image
+> To be able to access the GitHub API, opportunistic authentication
+> (auth-no-challenge) needs to be enabled. Then the API needs to
+> be queried for the real URL of the file to be downloaded, and
+> finally application/octet-stream must be specified explicitly.
 > 
-> I've experimented with things like file-checksums and BB_DONT_CACHE,
-> but everything I've tried fails when the rebuilds of my-core-image
-> and
-> my-initramfs-scripts are supposed to happen in the same run of
-> Bitbake:
+> Note that there is a slight difference in the location of the
+> REST API endpoints between GitHub.com and GitHub Enterprise.
 > 
-> - file-checksums only seems to be taken into account at initial
-> recipe
-> parse time, not when the task I'm interested in is actually executed?
-> I
-> need to run bitbake twice to get the correct results.
-> - When I use an anonymous Python function to put the root hash I'm
-> interested in into a variable, Bitbake complains about
-> nondeterministic
-> metadata.
+>      https://developer.github.com/v3/repos/releases/
+>      https://developer.github.com/enterprise/2.19/v3/enterprise-admin/
 > 
-> Using nostamp would be an option, but obviously an ugly one.
-> 
-> I'm currently on Yocto Thud / Bitbake 1.40.
+> As it's impossible to determine if a repository is on GitHub
+> or not (considering GitHub Enterprise), and even more so if a
+> repository is private or not, a new flag is introduced that
+> should be set to "1" - "github_private_asset", e.g.
 
-If you look behind the scenes at how "bitbake x -f" works, it writes
-.taint files into ${STAMPS}.
+That's a lot of "special" and "unfortunately" and "but", adding a 
+site-specific option and a non-trivial site-specific chunk of code to 
+the otherwise generic HTTP fetcher.
 
-If A depends on B and B taints A's stamp each time it runs, it will
-rerun that task and all tasks that depend upon it. See
-bb.build.write_taint(). That function is not designed to be called
-externally so you may need your own version. 
+I'd suggest implementing this as a new fetcher instead of shoe-horning 
+it into the wget fetcher.  Then you can do something like githubasset:// 
+in SRC_URI and the fetcher can do the right thing instead of jumping 
+through hoops and guessing.
 
-Ugly, but your problem is ugly. We don't have a standard mechanism as
-we don't really want to encourage this.
-
-Cheers,
-
-Richard
-
-
+Ross
 
