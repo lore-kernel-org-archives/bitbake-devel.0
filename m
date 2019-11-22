@@ -1,53 +1,57 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
-	[209.85.128.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 3127D6BD08
+Return-Path: <matthias.schiffer@ew.tq-group.com>
+X-Greylist: delayed 430 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 22 Nov 2019 15:16:45 UTC
+Received: from mx1.tq-group.com (mx1.tq-group.com [62.157.118.193])
+	by mail.openembedded.org (Postfix) with ESMTP id AEBE87F265
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Nov 2019 09:03:59 +0000 (UTC)
-Received: by mail-wm1-f68.google.com with SMTP id b11so6560943wmb.5
+	Fri, 22 Nov 2019 15:16:45 +0000 (UTC)
+IronPort-SDR: Ko8jMz8m177Ls8naTttUQRFR8yn/67FqDfUNGuVXrIDkhknN4buMU5/JCsBqd/H+TII3z4Bebl
+	EeEvaK86le9LjSp5RQacZy9bXu8xZk8868Xbw1nIInQF4aQfgiaSx1wpxTEqlWEmdkrxnoW2G9
+	Uji1bT1JjMeTLnd71jJCXnxU1f+uQjfS9uHE0bK02tSczy9p3WcAe66jbZ5uJlM5O8c36ktIqP
+	yGX+LNyd66JdObZhkForLCl6hN0T++Bzb0ZnHU9GnGPUtAY/QD+l46+9jErxK0PqHA8ORgZFMB
+	I0w=
+X-IronPort-AV: E=Sophos;i="5.69,230,1571695200"; 
+   d="scan'208";a="9912330"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+	by mx1-pgp.tq-group.com with ESMTP; 22 Nov 2019 16:09:35 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+	by tq-pgp-pr1.tq-net.de (PGP Universal service);
+	Fri, 22 Nov 2019 16:09:35 +0100
+X-PGP-Universal: processed;
+	by tq-pgp-pr1.tq-net.de on Fri, 22 Nov 2019 16:09:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+	d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+	t=1574435375; x=1605971375;
+	h=message-id:subject:from:to:date:mime-version:
+	content-transfer-encoding;
+	bh=R3X7fYreSFK7SNd37V3mBZOwhjQ5nJfzWyop0pBwBGc=;
+	b=HTyNGnk0j9nDctH9e92R3+OgkX0SYhNelTaPY/Qmjl6NoR5LYpVgM9Yu
+	vB6zxMzz4r8ZI3+fFRtuJDtlP//CdyAg2FgXNDV9yOaNobGFrax0reJ1G
+	Xnd/gLdBmTtvsjyq/jR4pa1knbOjfNhrdy5hcc+OPPIxtMRzJHH1lXfHs
+	jTNjzMzPOSD5GRPRzRhNE4fbqQDEszpwa6+Jflge0CzNZgPMxbT1bDTOr
+	VlhxfflG7SOI29GmzgutjhSP0wtkq+JBLajLHD/Y7RxgTW/m4Z+sw2vJz
+	aITQ65iPDL39V4CMr1/+UVVUKuvwyKxxwP3bExNEUWEA7hAChNRKyB0Lw w==;
+IronPort-SDR: 8cqeNHZ4zLkKN8FHeA3tT3aJIq+Zpd/YBlXCbYcnNLPdffYI1vxf1J5HxR1arJSUzS/L1An/3X
+	uaUbjusBUy3qPhT7CIfa1Kd739qXvP2rcG/XPZJkInVotQgXoVU9Hd3+IgPDcIA0YPEidoualD
+	Gp3fo93TbTyKpjzOzbp5Y01syRfJJFISvwLyADEzWBb2wzYGvijlIeE27pRPPcMhQTv2/BVmzY
+	jvHNKhPI2ehOAgpv2UkGJKVvzT0VDAiPXm8cdaB/rEiJo3750lnXow9fRuCzvaRGsgjHdbq3o+
+	GzY=
+X-IronPort-AV: E=Sophos;i="5.69,230,1571695200"; 
+   d="scan'208";a="9912329"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+	by mx1.tq-group.com with ESMTP; 22 Nov 2019 16:09:35 +0100
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de
+	[10.117.49.26])
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 9C47D280065
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Nov 2019 01:04:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=adGEQoH4E/jo0hV247V0zLTi90rSr/MRvyrL8uunZFc=;
-	b=VEZnoBlW2fTJgs9sbkwY97B8leRLAAwuQlGyFjMNERUyCoL9L7+cdkbWIhT7LOjQzp
-	OEmrRa8nnLi/o9VPDGy3TKBwEcSI8i/VH3AwVbB84N0STn2DsBeiOI4BbEmHiJYPPm+L
-	nv4DjLI5jTHZEl2uIPd4dmG5wmfnXcAQtlPP8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=adGEQoH4E/jo0hV247V0zLTi90rSr/MRvyrL8uunZFc=;
-	b=jszKfuWbyMPfszKrztFiCI+oI1WfQJOyRHNqkXc+Sp8hHLiYWhTAVmwCMMiQqcGbXo
-	Ddv+PgYvPk7ldP0wWitjf195gq/h+v/NtjH333+yxDeXEjG95CMyD6aZ/qFTzCwjTilp
-	u8gF8AIaxj4BrGczB1fsWIlQ8uy2PxZYl5CJlszn7Tar/7Xd9lPciyRtlVSsN/RLQyiD
-	nxfCZn5XObwPlICsDgt+V0VdlQQvBthSG72Gv0MHgJyFiiEzvQwlH0bIzjPF0SQkTtln
-	XNzrm97V5u7j5N4zmGpPwovti599QkeroROVf7qYx4pHwrEAcZoG9SO9Ld8xn+wZ6Aod
-	ULXQ==
-X-Gm-Message-State: APjAAAXybC/S85jTkXKLmmUsYmkspo4Fd4EIUjCYjOZIiN7g9xBF5EA2
-	yB60vpIh8Vqk4GyTosOjfFqbiQ==
-X-Google-Smtp-Source: APXvYqydnUAmwZcUYvnZIPi2uBzO1SWyd3ut1TSUbeVjcPNK6CbVtHvh4BcLTO04I+ewrd354wgvKg==
-X-Received: by 2002:a1c:ca:: with SMTP id 193mr15160323wma.103.1574413439952; 
-	Fri, 22 Nov 2019 01:03:59 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id z8sm6817446wrp.49.2019.11.22.01.03.58
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 22 Nov 2019 01:03:59 -0800 (PST)
-Message-ID: <689d2fc6cfdeee86fc84e487356b233e4894030e.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Khem Raj <raj.khem@gmail.com>, Alejandro del Castillo
-	<alejandro.delcastillo@ni.com>
-Date: Fri, 22 Nov 2019 09:03:58 +0000
-In-Reply-To: <CAMKF1sqZFNWQKAyK3sz5Hk32o55OeLPgsmhWGK0FLc1v=5W-bQ@mail.gmail.com>
-References: <20191121205415.25946-1-richard.purdie@linuxfoundation.org>
-	<20191121205415.25946-2-richard.purdie@linuxfoundation.org>
-	<CAMKF1sqZFNWQKAyK3sz5Hk32o55OeLPgsmhWGK0FLc1v=5W-bQ@mail.gmail.com>
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 2/5] opkg-utils: Fix silent empty/broken opkg package creation
+	Fri, 22 Nov 2019 16:09:47 +0100 (CET)
+Message-ID: <7c0067a9e4ae762d8c0f8f9dc50e6d3b8891dc60.camel@ew.tq-group.com>
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 22 Nov 2019 16:09:33 +0100
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Subject: Forcing the rebuild of dependent tasks across recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,45 +64,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Nov 2019 09:04:00 -0000
+X-List-Received-Date: Fri, 22 Nov 2019 15:16:46 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2019-11-21 at 16:38 -0800, Khem Raj wrote:
-> On Thu, Nov 21, 2019 at 12:54 PM Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
-> > opkg-build was failing on hosts where tar < 1.28 and reproducibile
-> > builds
-> > were enabled but it was doing this silently and generating
-> > corrupted
-> > (empty) ipk files. Add a fix for this (submitted upstream).
-> > 
-> > The fix requires bash but if you're building ipk files this
-> > shoudn't be
-> > a problem.
-> 
-> is the problem similar to this one
-> 
-> http://cfajohnson.com/shell/cus-faq-2.html#Q11
+Hi all,
 
-Yes.
+is there a robust way to enforce the automatic rebuild of dependent
+tasks across recipes? I'm having the following issue:
 
-> does it impact build times when default shell is not bash ?
+- Recipe my-core-image has an output file that is copied to the deploy
+dir. The output file is not fully reproducible, so cleaning the recipe
+and rebuilding it will yield a different file even through the sstate
+signature of the recipe is unchanged (the file I'm interested is
+DMVerity hash data that I generate as an additional filesystem type)
 
-I doubt very much whether it makes much difference at all. Its a single
-execution per package of a script which takes a comparatively long
-time. 
+- Task do_compile of recipe my-initramfs-scripts depends on my-core-
+image:do_image_complete. I need to enforce rebuilding of this task
+whenever the deployed files of my-core-image have changed (the recipe
+uses the "root hash" generated by DMVerity as input, so that the
+filesystem can be verified on mount) - and of course also of all
+dependent tasks like the initramfs image and FIT kernel image
 
-There are multiple places pipelines are used in the script and it would
-be fairly invasive to try and use tricks like the ones in the link
-above.
+I've experimented with things like file-checksums and BB_DONT_CACHE,
+but everything I've tried fails when the rebuilds of my-core-image and
+my-initramfs-scripts are supposed to happen in the same run of Bitbake:
 
-If it were something which looped tightly or has a short execution
-time, it would make a difference but that isn't the case.
+- file-checksums only seems to be taken into account at initial recipe
+parse time, not when the task I'm interested in is actually executed? I
+need to run bitbake twice to get the correct results.
+- When I use an anonymous Python function to put the root hash I'm
+interested in into a variable, Bitbake complains about nondeterministic
+metadata.
 
-Cheers,
+Using nostamp would be an option, but obviously an ugly one.
 
-Richard
+I'm currently on Yocto Thud / Bitbake 1.40.
 
+
+Thanks in advance,
+
+Matthias
 
 
