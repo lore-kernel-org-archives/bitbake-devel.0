@@ -1,51 +1,51 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com
-	[209.85.216.47])
-	by mail.openembedded.org (Postfix) with ESMTP id 462A07F6B5
+Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com
+	[209.85.216.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 123B87F7CD
 	for <bitbake-devel@lists.openembedded.org>;
 	Sat, 23 Nov 2019 16:25:06 +0000 (UTC)
-Received: by mail-pj1-f47.google.com with SMTP id f7so4523729pjw.5
+Received: by mail-pj1-f67.google.com with SMTP id a16so4505401pjs.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Nov 2019 08:25:07 -0800 (PST)
+	Sat, 23 Nov 2019 08:25:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=XIEkXxV3as/e2gfUKFsW8iQDscmyKhW92PP7lYtMVkc=;
-	b=gIubUHRFnV6m93IaWAj46eIaZjJcBeGZdEu/S7/gLwNGRwJGzRfDwcaGAM4UeolzNV
-	k1ABoq0H5WzbjAay4fpnNqOZevnVX78cfZsh1Mlb5fpKC/VoxJBw7mE9eSIFTDBHbLHf
-	fX9zK/BLG6ZfRoD/Fp8gCrdV+PghMFeU/whgNLmE6RafHGBAYrcHzTPmKj4vJR2tB5Gw
-	nVjz9uJTeKg/RlZGK1DW6H80DRz5bprzYuY8YOTiDOC6iTqahs7YMPp3Xw9Zb15uZnsW
-	WO/l2seeapIooWDEv1R15ALhz+w4Rypk+72PfuHwmhQsvf/pwbMijRXWmxhO3jxQBjf2
-	TXzA==
+	bh=qNW2oMhoh1ooC1l3VW9xrspqw2ifN79ISbOmet8Nnc0=;
+	b=NrAH0wJXjN54jE+UwPpR3DleYdD3wypAm6jzYY1Yo7N00Sl1vzgCJx1Abrbd0tJ/tF
+	TsBm94dllD6e4ljDrjdLl/A2UXQFi0+FmyVPix8Gkk3Ut/HefP36cQKDLyW1t2RrhlOe
+	Sccbz05OvFy/WK71XUjX0aGV5YUBTE4opFfOkf3c1MfPvTwoQrjCF+6qgEDk0MnOFKfX
+	Z6pbf5Z+tHqR7vHD47CkghqTSUMyYxoIcgGVna36UnBsRewLumhbycWj8dWJWE9T+QHl
+	ohcKxc9IQ2dgiVmUNVHCgLBisEA2LRsSp6Y94wCMZzBk0hzmkcmP9Lre3KJGgvx3tHjM
+	tXMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=XIEkXxV3as/e2gfUKFsW8iQDscmyKhW92PP7lYtMVkc=;
-	b=CXhabTtfjlzvvEYavlP7mDl8eDGTdcSdrPvnMMCptBF9hmAVazmAmVMvzrGXkyyfbW
-	7Bf/QnnXWB6uEPsYfgUWaokanL9qe6FmktD888+KxT4ZOVrEafIpmZuGDD8XnzOTTeW8
-	eZTxJuQDggar/Yva597bNt12YiRtFqu5SDN8QVvNj4ct4qAr1A0H1Q7+0uhaPBo2dQQL
-	RAycYjtV7IrBexvd3jx89/CTijEZum6+mxXD9xFa8NDdSh4C614ucY8IFhd0HDFWytnx
-	kOYHc7pqX/j/StpV5OvMx8G/crdwZVhmZXQgAD4z3u0bkYOhYgpDF3ypLPIZsQIhCupd
-	nDwg==
-X-Gm-Message-State: APjAAAVbHMyymeJtkARyptCyQfRnMCzf76WYzNfJbiE9wUr3PI4fgqKx
-	Qh0P7M5o0C1eUkPJhvJviOriahAl
-X-Google-Smtp-Source: APXvYqyggRku5UTofkJCcAYa4r40huH5OX2zNiyyV22FQaXixj+DM5rGwXUMsS5NooLjosWFnKNg7A==
-X-Received: by 2002:a17:902:b10b:: with SMTP id
-	q11mr20157856plr.172.1574526307039; 
+	bh=qNW2oMhoh1ooC1l3VW9xrspqw2ifN79ISbOmet8Nnc0=;
+	b=N6cJ2ST4B2JmHpSUE5EvqVp13AYdgQp4EK+K8le0J37yHRWQDlJnTRjXCMWmRtKOI+
+	aR4aU0SUzQhXiUoqiNIYMfg9gYqfStDyRwiOgZc04T6ybZtvwrrU0uucow3isWLosAod
+	1FFZZUPQhL7kHzU5Dn3V5NPCYa8/BqPe2zXQHUAbt2LH2FrXMSMUrO7qvWIElM7PG+Ts
+	K246sVvx2C9LtLLdMtVtjvRKwA15r7nqrUn8TdBNfEgfGV419iI/4WiUmndjWYiiP/ye
+	t1ltPI4kNMpJqEnPtuvL1f4B8j2Jlz+uAaIXKYLX0YqccMRyCFmMAmVNdlmdGb+MupSQ
+	wCAQ==
+X-Gm-Message-State: APjAAAXSUEJsgQ03wu2TJZEroFD4XzKgiM9u/zqwR0ZNqiE8wMyj1OPH
+	6whl1Bkn6yRoyVRQDqPEMFEgXDR4
+X-Google-Smtp-Source: APXvYqwaAgxEZW17o8/61k5zkrAJO7H8kVLIUN97XHGS3TpL7weW5quiP1k7efudUZoVSz24daalow==
+X-Received: by 2002:a17:90a:9705:: with SMTP id
+	x5mr25960223pjo.37.1574526307915; 
 	Sat, 23 Nov 2019 08:25:07 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
 	([2601:202:4180:a5c0:d5a1:4623:137e:d439])
-	by smtp.gmail.com with ESMTPSA id h9sm2735572pjh.8.2019.11.23.08.25.06
+	by smtp.gmail.com with ESMTPSA id h9sm2735572pjh.8.2019.11.23.08.25.07
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 23 Nov 2019 08:25:06 -0800 (PST)
+	Sat, 23 Nov 2019 08:25:07 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 23 Nov 2019 08:24:56 -0800
-Message-Id: <1574526299-21018-6-git-send-email-akuster808@gmail.com>
+Date: Sat, 23 Nov 2019 08:24:57 -0800
+Message-Id: <1574526299-21018-7-git-send-email-akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574526299-21018-1-git-send-email-akuster808@gmail.com>
 References: <1574526299-21018-1-git-send-email-akuster808@gmail.com>
-Subject: [1.44][PATCH 6/9] tests: add test for the hashing functions
+Subject: [1.44][PATCH 7/9] utils: also use mmap for SHA256 and SHA1, for performance
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,56 +58,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 23 Nov 2019 16:25:06 -0000
+X-List-Received-Date: Sat, 23 Nov 2019 16:25:07 -0000
 
 From: Ross Burton <ross.burton@intel.com>
 
-Add a basic test for bb.utils.md5_file() etc.
+md5_file() uses a mmap() window to improve performance when hashing files, so
+refactor the code and do the same for SHA1 and SHA256.
 
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/tests/utils.py | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ lib/bb/utils.py | 34 ++++++++++++++--------------------
+ 1 file changed, 14 insertions(+), 20 deletions(-)
 
-diff --git a/lib/bb/tests/utils.py b/lib/bb/tests/utils.py
-index f4adf1d..5c910b4 100644
---- a/lib/bb/tests/utils.py
-+++ b/lib/bb/tests/utils.py
-@@ -103,6 +103,32 @@ class Path(unittest.TestCase):
-             result = bb.utils._check_unsafe_delete_path(arg1)
-             self.assertEqual(result, correctresult, '_check_unsafe_delete_path("%s") != %s' % (arg1, correctresult))
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index d035949..8d40bcd 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -520,22 +520,26 @@ def unlockfile(lf):
+     fcntl.flock(lf.fileno(), fcntl.LOCK_UN)
+     lf.close()
  
-+class Checksum(unittest.TestCase):
-+    filler = b"Shiver me timbers square-rigged spike Gold Road galleon bilge water boatswain wherry jack pirate. Mizzenmast rum lad Privateer jack salmagundi hang the jib piracy Pieces of Eight Corsair. Parrel marooned black spot yawl provost quarterdeck cable no prey, no pay spirits lateen sail."
-+
-+    def test_md5(self):
-+        import hashlib
-+        with tempfile.NamedTemporaryFile() as f:
-+            f.write(self.filler)
-+            f.flush()
-+            checksum = bb.utils.md5_file(f.name)
-+            self.assertEqual(checksum, "bd572cd5de30a785f4efcb6eaf5089e3")
-+
-+    def test_sha1(self):
-+        import hashlib
-+        with tempfile.NamedTemporaryFile() as f:
-+            f.write(self.filler)
-+            f.flush()
-+            checksum = bb.utils.sha1_file(f.name)
-+            self.assertEqual(checksum, "249eb8fd654732ea836d5e702d7aa567898eca71")
-+
-+    def test_sha256(self):
-+        import hashlib
-+        with tempfile.NamedTemporaryFile() as f:
-+            f.write(self.filler)
-+            f.flush()
-+            checksum = bb.utils.sha256_file(f.name)
-+            self.assertEqual(checksum, "fcfbae8bf6b721dbb9d2dc6a9334a58f2031a9a9b302999243f99da4d7f12d0f")
+-def md5_file(filename):
+-    """
+-    Return the hex string representation of the MD5 checksum of filename.
+-    """
+-    import hashlib, mmap
++def _hasher(method, filename):
++    import mmap
  
- class EditMetadataFile(unittest.TestCase):
-     _origfile = """
+     with open(filename, "rb") as f:
+-        m = hashlib.md5()
+         try:
+             with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as mm:
+                 for chunk in iter(lambda: mm.read(8192), b''):
+-                    m.update(chunk)
++                    method.update(chunk)
+         except ValueError:
+             # You can't mmap() an empty file so silence this exception
+             pass
+-    return m.hexdigest()
++    return method.hexdigest()
++
++
++def md5_file(filename):
++    """
++    Return the hex string representation of the MD5 checksum of filename.
++    """
++    import hashlib
++    return _hasher(hashlib.md5(), filename)
+ 
+ def sha256_file(filename):
+     """
+@@ -543,24 +547,14 @@ def sha256_file(filename):
+     filename.
+     """
+     import hashlib
+-
+-    s = hashlib.sha256()
+-    with open(filename, "rb") as f:
+-        for line in f:
+-            s.update(line)
+-    return s.hexdigest()
++    return _hasher(hashlib.sha256(), filename)
+ 
+ def sha1_file(filename):
+     """
+     Return the hex string representation of the SHA1 checksum of the filename
+     """
+     import hashlib
+-
+-    s = hashlib.sha1()
+-    with open(filename, "rb") as f:
+-        for line in f:
+-            s.update(line)
+-    return s.hexdigest()
++    return _hasher(hashlib.sha1(), filename)
+ 
+ def preserved_envvars_exported():
+     """Variables which are taken from the environment and placed in and exported
 -- 
 2.7.4
 
