@@ -1,49 +1,49 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
-	[209.85.221.65])
-	by mail.openembedded.org (Postfix) with ESMTP id DD9386C44A
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com
+	[209.85.216.51])
+	by mail.openembedded.org (Postfix) with ESMTP id C7C3C7D00A
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Nov 2019 13:56:34 +0000 (UTC)
-Received: by mail-wr1-f65.google.com with SMTP id t2so12057412wrr.1
+	Sat, 23 Nov 2019 16:25:00 +0000 (UTC)
+Received: by mail-pj1-f51.google.com with SMTP id y21so4509970pjn.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Nov 2019 05:56:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=kTHHqZeM/8A/4tOlPUQkl+Vp1ruYjCtv4cGBDFue6cY=;
-	b=LV7/d3MdnszQ5KFG1tjHD7ZoWCHPmq+Of9Ndg/h6XrGHD6uw30CQcVQpQCILUUVKuP
-	qSuqgve+0OfsZfTaIa7LcLwaPqAwm+gV+GxSE9x7fbLXSN40WeheIsO0FwsEGC6Qk7my
-	dyIQ+iZTX4qZjGVTj46lj3P73qFo5vjyR/8P8=
+	Sat, 23 Nov 2019 08:25:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=HHn2uXs1Z46LnTtyhlpOIKac2f5SDu8r14PuBhSlgiU=;
+	b=QhKx06kkdtFR0unx1GqVj7XSg9edDrm07EMhx4cLafaErHJ+fQF5TFcq1rdiI9YYKY
+	xuOBbRG04I/ckKNxfwJV7tbfvBf9t56emW+QPboC/PCpheLgDlDSqE6tSYlLBVL4cPkg
+	KPkgfgbn+U2hurRzO8R9cXsRGHFqFOmxUP04TYt/gkJLBmxOOlh+3IDWIQw1WzYwJ7n4
+	5ttM2mA9di6M7bH8cwf+NeYrScSxOelfAbd1txDE6zkSAMOJt7kSCofHbNTLVtbqNJ3Z
+	aSVNAT2gxMwoCdlck0sAUUivrDeFotOqi+WM03GW+RsEt4raY4wDMdm5i3xr/Cf8uPVO
+	94IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=kTHHqZeM/8A/4tOlPUQkl+Vp1ruYjCtv4cGBDFue6cY=;
-	b=uARde1HWe6OwEtZJv8z3AKy+iun7EEjqXR/Jxcx2OiPjKaGb8ffyOyTC2Vs+zWMkB7
-	xwq1n0QoqbEvJpi/Ws1WlMmafmjI0IR5qeHYqjuuU12V+2oXyJCTtZIS7nkl6IRvKVun
-	eKC9ogJGbiKKl6V9U4A+4TaWFNcD4kRIWZv+z8oNFc02W0LMXv5ALBw9nzOUgVja37+j
-	rHpZ4kbOQe+IQTRrGUS+rrlve1GqjWDJ9xzReuiyvzBQe/eAD9sF116SK5zPjUUYcuri
-	4C+zAMvQBz7CZg0swYTsiO9Y1/YEUzB70DqmrrAAaXNuIH0ryCdmX9lsbCsfVAMnfaPH
-	MlBg==
-X-Gm-Message-State: APjAAAW8iPPa0dgIQ54yLyiWj/OcrzAfKVhKC6nvaQVfM7Ej3IK63W0a
-	Uw8hzrqsI6XC5WH+qmLCXxwnHmvLUhU=
-X-Google-Smtp-Source: APXvYqxxM+4odp4PX7exs/ieW0oob+odpJZTOPLPwbfFXV7SD6/nlfOH5inuim/QhMilvfyYlKa1jw==
-X-Received: by 2002:a5d:49c4:: with SMTP id t4mr15934442wrs.226.1574517395150; 
-	Sat, 23 Nov 2019 05:56:35 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	d20sm2316735wra.4.2019.11.23.05.56.34
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sat, 23 Nov 2019 05:56:34 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=HHn2uXs1Z46LnTtyhlpOIKac2f5SDu8r14PuBhSlgiU=;
+	b=FYAm/Na+i9943s0VqGecZo2P7+1jfw7PkZZyE423Psi5PTCBkWRTCZ+IL8GjDG1r52
+	QNky1QnDR9K9uECNudDtoHYR9SJuAEEbChUV+hoj52JYfrTe81YqkqlLKn31IwC3N4Lv
+	fE8Cl2Wl/Fvy0HGKNO3fg8C1I5jCxsVPm7x0wvkhBDTp55O4TVmox5bR8H5LX0ZSHrzA
+	XTOE32oTf7vpl45e3l6tivWckIXVHhkM7TGOmhXDqiybZlWie7vVx2JL/DpK3XQASPgU
+	BjTWKuTOlLrbeaHnzC4EjLLS6MT+4ZyzPweOVxDp7B/8drwXwkvC0jav+YRc7owRgZ+t
+	qKTQ==
+X-Gm-Message-State: APjAAAUWLzgY13NUYpyQl+JnXTgri7g78TvvCCY8Zngz5lUXdmynXZOk
+	pJPYm5exRyUuupfRupv69qExc+Fb
+X-Google-Smtp-Source: APXvYqzvhMKaHw8my896Ha/++RhJ56wf2VTedYwR0433A9I6IU49oF9np/xrgnaSfZopStd3FKZraQ==
+X-Received: by 2002:a17:902:6b0c:: with SMTP id
+	o12mr19936222plk.173.1574526301663; 
+	Sat, 23 Nov 2019 08:25:01 -0800 (PST)
+Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
+	([2601:202:4180:a5c0:d5a1:4623:137e:d439])
+	by smtp.gmail.com with ESMTPSA id h9sm2735572pjh.8.2019.11.23.08.25.00
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Sat, 23 Nov 2019 08:25:01 -0800 (PST)
+From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 23 Nov 2019 13:56:33 +0000
-Message-Id: <20191123135633.31288-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Subject: [PATCH] runqueue: Ensure failed harddependencies in scenequeue are accounted for in migrations
+Date: Sat, 23 Nov 2019 08:24:51 -0800
+Message-Id: <1574526299-21018-1-git-send-email-akuster808@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: [1.44][PATCH 1/9] fetch2/git: fetch shallow revs when needed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,52 +56,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 23 Nov 2019 13:56:35 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Sat, 23 Nov 2019 16:25:00 -0000
 
-Setscene hard dependencies were not being correctly handled during task migration.
-For example, do_package of recipe X might become valid due to hashequiv yet we're
-still rebuilding pseudo-native, a harddep of do_package. This would mean
-it would try to execute that setscene task despite pseudo not being present.
+From: Christopher Larson <chris_larson@mentor.com>
 
-Fix this by ignoring tasks with failed harddependencies. This does mean
-stlightly more rebuilds than is optimal but it avoids build crashes. Ultimately
-the new runqueue model can likely better handle these cases than the older codebase
-could but that is for another more invasive patch.
+When bitbake determines if a git clone needs updating, it only checks for the
+needed srcrevs, not the revs listed in BB_GIT_SHALLOW_REVS, which will fail if
+using shallow and the needed rev was added to the upstream git repo after a
+previous fetch. Ensure that we also check for shallow revs.
 
+[YOCTO #13586]
+
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/runqueue.py | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/git.py | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 26492e7087..485d9341f5 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2343,7 +2343,12 @@ class RunQueueExecute:
-                 self.sq_buildable.remove(tid)
-             if tid in self.sq_running:
-                 self.sq_running.remove(tid)
--            if self.sqdata.sq_revdeps[tid].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
-+            harddepfail = False
-+            for t in self.sqdata.sq_harddeps:
-+                if tid in self.sqdata.sq_harddeps[t] and t in self.scenequeue_notcovered:
-+                    harddepfail = True
-+                    break
-+            if not harddepfail and self.sqdata.sq_revdeps[tid].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
-                 if tid not in self.sq_buildable:
-                     self.sq_buildable.add(tid)
-             if len(self.sqdata.sq_revdeps[tid]) == 0:
-@@ -2374,6 +2379,8 @@ class RunQueueExecute:
-             update_scenequeue_data([tid], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
-             if tid in self.sqdata.valid and not origvalid:
-                 logger.info("Setscene task %s became valid" % tid)
-+            if harddepfail:
-+                self.sq_task_failoutright(tid)
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 2d1d2ca..fa41b07 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -292,11 +292,21 @@ class Git(FetchMethod):
+     def clonedir_need_update(self, ud, d):
+         if not os.path.exists(ud.clonedir):
+             return True
++        if ud.shallow and ud.write_shallow_tarballs and self.clonedir_need_shallow_revs(ud, d):
++            return True
+         for name in ud.names:
+             if not self._contains_ref(ud, d, name, ud.clonedir):
+                 return True
+         return False
  
-         if changed:
-             self.holdoff_need_update = True
++    def clonedir_need_shallow_revs(self, ud, d):
++        for rev in ud.shallow_revs:
++            try:
++                runfetchcmd('%s rev-parse -q --verify %s' % (ud.basecmd, rev), d, quiet=True, workdir=ud.clonedir)
++            except bb.fetch2.FetchError:
++                return rev
++        return None
++
+     def shallow_tarball_need_update(self, ud):
+         return ud.shallow and ud.write_shallow_tarballs and not os.path.exists(ud.fullshallow)
+ 
+@@ -339,13 +349,7 @@ class Git(FetchMethod):
+             runfetchcmd(clone_cmd, d, log=progresshandler)
+ 
+         # Update the checkout if needed
+-        needupdate = False
+-        for name in ud.names:
+-            if not self._contains_ref(ud, d, name, ud.clonedir):
+-                needupdate = True
+-                break
+-
+-        if needupdate:
++        if self.clonedir_need_update(ud, d):
+             output = runfetchcmd("%s remote" % ud.basecmd, d, quiet=True, workdir=ud.clonedir)
+             if "origin" in output:
+               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=ud.clonedir)
+@@ -369,6 +373,11 @@ class Git(FetchMethod):
+             if not self._contains_ref(ud, d, name, ud.clonedir):
+                 raise bb.fetch2.FetchError("Unable to find revision %s in branch %s even from upstream" % (ud.revisions[name], ud.branches[name]))
+ 
++        if ud.shallow and ud.write_shallow_tarballs:
++            missing_rev = self.clonedir_need_shallow_revs(ud, d)
++            if missing_rev:
++                raise bb.fetch2.FetchError("Unable to find revision %s even from upstream" % missing_rev)
++
+     def build_mirror_data(self, ud, d):
+         if ud.shallow and ud.write_shallow_tarballs:
+             if not os.path.exists(ud.fullshallow):
 -- 
-2.20.1
+2.7.4
 
 
