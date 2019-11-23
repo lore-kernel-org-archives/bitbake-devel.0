@@ -1,51 +1,51 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com
-	[209.85.214.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 15D0C7D39C
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com
+	[209.85.216.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 462A07F6B5
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Nov 2019 16:25:04 +0000 (UTC)
-Received: by mail-pl1-f196.google.com with SMTP id s10so4561245plp.2
+	Sat, 23 Nov 2019 16:25:06 +0000 (UTC)
+Received: by mail-pj1-f47.google.com with SMTP id f7so4523729pjw.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 23 Nov 2019 08:25:06 -0800 (PST)
+	Sat, 23 Nov 2019 08:25:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=f0v3WKOJFLSGahivqFK4MGF3dP8k1LRE8Cv3sCLguhA=;
-	b=AMFM3J36Z9W1uFj+oyaUjE7MGNvoCxkxEXACBSBapF6nDcU261pcxfZg8zKCPpAo/F
-	2Is2q1stbFiJNEmKpZOO9dP7JWm5RmSj9VWak5bJQ7EMSfv0VvkdiVO3/Zsn5ytS0o0b
-	vfnSV0Qawd6e/HNhC7vaZzI6+rZm6Y4chSG+yllQNGTZ4FCfb7Vtn5ouoXA5M/63Mtl9
-	L/CwkA8jBRRz/Qeeoa8VJdVmDNokwblvFNkWAzZ6ITdLtyeMBXcrmkX4FYMAtX3pM/Dg
-	qFp7ktVKrLIBYh8JEX6+LhhmlNc+1P2pvfWz5E+uqPdcnh41CX9WlH62NhAW+DE/jLn4
-	oC4Q==
+	bh=XIEkXxV3as/e2gfUKFsW8iQDscmyKhW92PP7lYtMVkc=;
+	b=gIubUHRFnV6m93IaWAj46eIaZjJcBeGZdEu/S7/gLwNGRwJGzRfDwcaGAM4UeolzNV
+	k1ABoq0H5WzbjAay4fpnNqOZevnVX78cfZsh1Mlb5fpKC/VoxJBw7mE9eSIFTDBHbLHf
+	fX9zK/BLG6ZfRoD/Fp8gCrdV+PghMFeU/whgNLmE6RafHGBAYrcHzTPmKj4vJR2tB5Gw
+	nVjz9uJTeKg/RlZGK1DW6H80DRz5bprzYuY8YOTiDOC6iTqahs7YMPp3Xw9Zb15uZnsW
+	WO/l2seeapIooWDEv1R15ALhz+w4Rypk+72PfuHwmhQsvf/pwbMijRXWmxhO3jxQBjf2
+	TXzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=f0v3WKOJFLSGahivqFK4MGF3dP8k1LRE8Cv3sCLguhA=;
-	b=cuefFuQxDdQQYdi9cd1UsSKvSxRHBjoVWW7/KxlfT8ft2XvMilSkFJd5gmtFqw5jq3
-	x8ZuPeS1XGG4L5yo4UVtHwog6DIi3FpGlCERE6xm37QBbiY5t6s39L4IgCdC8cXAIsE7
-	cMBMdb79RGQH7uo8R8CgN+GezJBZaZOfGhMkK295pF5XPIFhC2U89N8AWFeDDtQNzQ2h
-	0sf0Z2aECVHpARO5qHTA8RV/MTwqVNFJ5n+uG+eduH9P9qw0OerOlHAkAjhQsOaTPDyz
-	h+tqJIrizUywWSu9Wt5gFdAcQcShltkxusnFWoVKde0gUzTP6H03XJovns+73rOQWNX6
-	fBAA==
-X-Gm-Message-State: APjAAAWShQIOx1JKECTGcY0inuZmIYC6fRX5XY1v2HP634tlxiaa8fM7
-	JrrdeMj0ERqs5wun5faOhO3GAmOs
-X-Google-Smtp-Source: APXvYqwoJqZViJWrA9rx/2EDm0EzvkVGld3Jzhx8x1gHvWBwCjmHvnc1P7uDz5ghm1/0tqhKctJa7w==
-X-Received: by 2002:a17:90a:bf81:: with SMTP id
-	d1mr26506420pjs.125.1574526305931; 
-	Sat, 23 Nov 2019 08:25:05 -0800 (PST)
+	bh=XIEkXxV3as/e2gfUKFsW8iQDscmyKhW92PP7lYtMVkc=;
+	b=CXhabTtfjlzvvEYavlP7mDl8eDGTdcSdrPvnMMCptBF9hmAVazmAmVMvzrGXkyyfbW
+	7Bf/QnnXWB6uEPsYfgUWaokanL9qe6FmktD888+KxT4ZOVrEafIpmZuGDD8XnzOTTeW8
+	eZTxJuQDggar/Yva597bNt12YiRtFqu5SDN8QVvNj4ct4qAr1A0H1Q7+0uhaPBo2dQQL
+	RAycYjtV7IrBexvd3jx89/CTijEZum6+mxXD9xFa8NDdSh4C614ucY8IFhd0HDFWytnx
+	kOYHc7pqX/j/StpV5OvMx8G/crdwZVhmZXQgAD4z3u0bkYOhYgpDF3ypLPIZsQIhCupd
+	nDwg==
+X-Gm-Message-State: APjAAAVbHMyymeJtkARyptCyQfRnMCzf76WYzNfJbiE9wUr3PI4fgqKx
+	Qh0P7M5o0C1eUkPJhvJviOriahAl
+X-Google-Smtp-Source: APXvYqyggRku5UTofkJCcAYa4r40huH5OX2zNiyyV22FQaXixj+DM5rGwXUMsS5NooLjosWFnKNg7A==
+X-Received: by 2002:a17:902:b10b:: with SMTP id
+	q11mr20157856plr.172.1574526307039; 
+	Sat, 23 Nov 2019 08:25:07 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
 	([2601:202:4180:a5c0:d5a1:4623:137e:d439])
-	by smtp.gmail.com with ESMTPSA id h9sm2735572pjh.8.2019.11.23.08.25.05
+	by smtp.gmail.com with ESMTPSA id h9sm2735572pjh.8.2019.11.23.08.25.06
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 23 Nov 2019 08:25:05 -0800 (PST)
+	Sat, 23 Nov 2019 08:25:06 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 23 Nov 2019 08:24:55 -0800
-Message-Id: <1574526299-21018-5-git-send-email-akuster808@gmail.com>
+Date: Sat, 23 Nov 2019 08:24:56 -0800
+Message-Id: <1574526299-21018-6-git-send-email-akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574526299-21018-1-git-send-email-akuster808@gmail.com>
 References: <1574526299-21018-1-git-send-email-akuster808@gmail.com>
-Subject: [1.44][PATCH 5/9] cooker: Remove a left-over comment about expanded_data
+Subject: [1.44][PATCH 6/9] tests: add test for the hashing functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,35 +58,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 23 Nov 2019 16:25:05 -0000
+X-List-Received-Date: Sat, 23 Nov 2019 16:25:06 -0000
 
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+From: Ross Burton <ross.burton@intel.com>
 
-This should have been removed together with expanded_data in commit
-e3694e73 (cooker/command: Drop expanded_data).
+Add a basic test for bb.utils.md5_file() etc.
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/cooker.py | 4 ----
- 1 file changed, 4 deletions(-)
+ lib/bb/tests/utils.py | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 20ef04d..e6442bf 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -371,10 +371,6 @@ class BBCooker:
+diff --git a/lib/bb/tests/utils.py b/lib/bb/tests/utils.py
+index f4adf1d..5c910b4 100644
+--- a/lib/bb/tests/utils.py
++++ b/lib/bb/tests/utils.py
+@@ -103,6 +103,32 @@ class Path(unittest.TestCase):
+             result = bb.utils._check_unsafe_delete_path(arg1)
+             self.assertEqual(result, correctresult, '_check_unsafe_delete_path("%s") != %s' % (arg1, correctresult))
  
-         self.data.setVar('BB_CMDLINE', self.ui_cmdline)
++class Checksum(unittest.TestCase):
++    filler = b"Shiver me timbers square-rigged spike Gold Road galleon bilge water boatswain wherry jack pirate. Mizzenmast rum lad Privateer jack salmagundi hang the jib piracy Pieces of Eight Corsair. Parrel marooned black spot yawl provost quarterdeck cable no prey, no pay spirits lateen sail."
++
++    def test_md5(self):
++        import hashlib
++        with tempfile.NamedTemporaryFile() as f:
++            f.write(self.filler)
++            f.flush()
++            checksum = bb.utils.md5_file(f.name)
++            self.assertEqual(checksum, "bd572cd5de30a785f4efcb6eaf5089e3")
++
++    def test_sha1(self):
++        import hashlib
++        with tempfile.NamedTemporaryFile() as f:
++            f.write(self.filler)
++            f.flush()
++            checksum = bb.utils.sha1_file(f.name)
++            self.assertEqual(checksum, "249eb8fd654732ea836d5e702d7aa567898eca71")
++
++    def test_sha256(self):
++        import hashlib
++        with tempfile.NamedTemporaryFile() as f:
++            f.write(self.filler)
++            f.flush()
++            checksum = bb.utils.sha256_file(f.name)
++            self.assertEqual(checksum, "fcfbae8bf6b721dbb9d2dc6a9334a58f2031a9a9b302999243f99da4d7f12d0f")
  
--        #
--        # Copy of the data store which has been expanded.
--        # Used for firing events and accessing variables where expansion needs to be accounted for
--        #
-         if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
-             self.disableDataTracking()
- 
+ class EditMetadataFile(unittest.TestCase):
+     _origfile = """
 -- 
 2.7.4
 
