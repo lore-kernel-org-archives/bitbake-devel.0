@@ -1,52 +1,52 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com
-	[209.85.210.194])
-	by mail.openembedded.org (Postfix) with ESMTP id DD0157F67E
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com
+	[209.85.210.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 9B9FE7FC39
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 24 Nov 2019 23:43:28 +0000 (UTC)
-Received: by mail-pf1-f194.google.com with SMTP id z4so6318437pfn.12
+	Sun, 24 Nov 2019 23:43:29 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id s5so6319715pfh.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 24 Nov 2019 15:43:30 -0800 (PST)
+	Sun, 24 Nov 2019 15:43:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=m449gysWQEnaU6BDZuS7TRYq+rqA1jTrORZGDAIFbSM=;
-	b=FFJUqHmUVApStUErf1rdQ+YpU/sOxOkCKb99cezkOLCSzgmktDcBeX13bSI5bUABd0
-	Ih+VfGCjX3sfWPXE7zjddY5Jco8Y9FHdEcIKDLXp67vY1aM1yu6PcS+YcNI22tXh3Q6M
-	dxTPA+rCOG6Iri7FGSsLXyKUdwdNNIne0MCU0sjUe2VGrfoQUBad+YS7Q30QP/lj1KtW
-	bINRukLNes/Q+4RHxDlaPVhNk8Bq3axug9QCSDLIx8x3B4i1milBa1xVnzZGLBzC2tGf
-	S+peiLMbA9cxin49wmd41esn/JfhdcgVpHgorrb9trUH4K1MzymTN1Go1DJDJM0GwMfE
-	0XJg==
+	bh=AMe2ALnYR/4ZlgWKRb1LlbuFnw/nV/ePL/gOP1er8vI=;
+	b=g8934eXdLyzd9kDEs6FJ+sOI01xl7DJW1U//uUORrD0zqFYVGhxgJaYTOvmWKKwW9j
+	Jjsmeuk9zBg5iT5TXGfWPyHKbMLl5erzs/066PeZROoeEGL85l0S80l0Xw4/eBsFo7ZM
+	6fnlSN5eOmP/8zfyr4j15R2oZNskYAvgSethl0c+U8KUGtoyRZFXcWdYVnfhtwBSxEjG
+	72Bklsq5ob4rNEvdVq3YhvCYfHwYRbizY+6e/aqoEXPFbV5L6OY8Swb9Gn8Lsx/ad5yU
+	099Gx/R5soQLPek3IzVv+ecpQpv6Iv/s3qIYP5Kdi69kh1h6IUd9VT8ZexDLxEBq7GXj
+	uTtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=m449gysWQEnaU6BDZuS7TRYq+rqA1jTrORZGDAIFbSM=;
-	b=mrmYgIQj3hDAwUmIAa0XDlp2EmM6UEE53ajJwfEApXu5o++/XTJiIOJRXzh72tmygc
-	poxGa/+VKLBZRsLL9xnQ3Ut/dACeMkxoGPZRE1QYCcx84t6Qr2N2q7ZuTEBd6qT8KWuq
-	BQU+SHtMH5Oql32O4w3PL821ItyqyS6ShAf1JMrG9H4VqSYRANy1VQ3X9BwpLIVkmV0+
-	TNkiaDC4IWVsqBkQjhaNl8AM0H5z1MyuAVDyr9XIDFya4QHYIGkNxcLlDdD0wcEHpfCA
-	okxtKIcbehB0IAe7EPcrYl+VTOWWndSF4rho92HILsks0xqoEBIjvYy8MIlKS9aYS3hk
-	Ap/A==
-X-Gm-Message-State: APjAAAVLVMGRlWJUfZnnw0EODnbVzXF05aBVisCud9WnqpxDlDicm5zy
-	qtFR6wXuwNt3vtxtQuHVrXJm53wh
-X-Google-Smtp-Source: APXvYqw8Vl2LoyC/eQ+UINHrVjIYYeq1dmkeYVnLTdMHhmxn9aAtapLj3JPf1e9MMmtf7/DzoVCy6w==
-X-Received: by 2002:a63:4c14:: with SMTP id z20mr20432082pga.10.1574639009772; 
-	Sun, 24 Nov 2019 15:43:29 -0800 (PST)
+	bh=AMe2ALnYR/4ZlgWKRb1LlbuFnw/nV/ePL/gOP1er8vI=;
+	b=ajgQS30W5A7LnndTDaVbob/2dTaGjhvPe1egRMQwaYTEHUDy8bJa8cbJgy467rqz9o
+	Psob1d44LUMRMX4v2zzL7KWPiYrTpTeeUL/OQf8QA6p71bj6oFbgccBmkjMSkEioPKLs
+	wuAbD06UqRQ9VSnIbhb0OMiSLtT071jXzetIUMLbz7RL3BpPRoXaD3YscBUync3TtDzZ
+	YYSeg6Ui6AWEysoE+ponA/CebK4SIX8bwakE+IKZEf1kBs85JcfyqaeTbhmG9dvUFm3T
+	x9+PCwjDCP3BZK7UOM3uM6viUxvxKBi+0lrVAY5GFDfWXDiQYtV832OOqCPBilp6pf0r
+	SyFQ==
+X-Gm-Message-State: APjAAAWjXg3xy79vO0j+OxJd/uT0d8Jpc0oFij6ZNPZQuHBtw1Q4eG1Q
+	SQUArEEkgf2jl5B45ZR2u5NxdaJD
+X-Google-Smtp-Source: APXvYqxri0E49bPVl8OQe7+2CF5c6/QTvaAvPGxGCysg8K34GE7MifJIc9kyJRtrRv64AASvadXVlQ==
+X-Received: by 2002:a65:44ca:: with SMTP id g10mr29089151pgs.104.1574639010653;
+	Sun, 24 Nov 2019 15:43:30 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
 	([2601:202:4180:a5c0:69ac:e4d2:e89f:98da])
 	by smtp.gmail.com with ESMTPSA id
 	125sm5729367pfu.136.2019.11.24.15.43.29
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sun, 24 Nov 2019 15:43:29 -0800 (PST)
+	Sun, 24 Nov 2019 15:43:30 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 24 Nov 2019 15:43:16 -0800
-Message-Id: <c61c8356cce4d7307f74147dcf2b2cf103db84a8.1574638886.git.akuster808@gmail.com>
+Date: Sun, 24 Nov 2019 15:43:17 -0800
+Message-Id: <cd970c9efa805ec3e7ba952df1701b347441ec7b.1574638886.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1574638886.git.akuster808@gmail.com>
 References: <cover.1574638886.git.akuster808@gmail.com>
-Subject: [PATCH 3/9] fetch2/hg: Fix various runtime issues
+Subject: [PATCH 4/9] prserv: fix ResourceWarning due to unclosed socket
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,81 +61,38 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Sun, 24 Nov 2019 23:43:29 -0000
 
-From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
+From: Gavin Li <gavin@matician.com>
 
-Fix mercurial fetching after breakage from changes to the core fetcher.
-Fix username and password usage and setting moddir needed by setup_revisions.
+With PRSERV_HOST = "localhost:0", this message would occasionally pop up
+during the initial cache read:
 
-Signed-off-by: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
+WARNING: /home/matic/ambayocto/poky/bitbake/lib/bb/cache.py:446: ResourceWarning: unclosed <socket.socket fd=10, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 45655)>
+  value = pickled.load()
+
+The file location stated is irrelevant; it just happens to be wherever
+CPython decides to run the garbage collector. The issue is that after we
+fork off a PRServer, self.socket is also duplicated. The parent side of
+it also needs to be closed.
+
+Signed-off-by: Gavin Li <gavin@matician.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/fetch2/hg.py | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ lib/prserv/serv.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index 15d729e..e21115d 100644
---- a/lib/bb/fetch2/hg.py
-+++ b/lib/bb/fetch2/hg.py
-@@ -54,13 +54,6 @@ class Hg(FetchMethod):
-         else:
-             ud.proto = "hg"
- 
--        ud.setup_revisions(d)
--
--        if 'rev' in ud.parm:
--            ud.revision = ud.parm['rev']
--        elif not ud.revision:
--            ud.revision = self.latest_revision(ud, d)
--
-         # Create paths to mercurial checkouts
-         hgsrcname = '%s_%s_%s' % (ud.module.replace('/', '.'), \
-                             ud.host, ud.path.replace('/', '.'))
-@@ -74,6 +67,13 @@ class Hg(FetchMethod):
-         ud.localfile = ud.moddir
-         ud.basecmd = d.getVar("FETCHCMD_hg") or "/usr/bin/env hg"
- 
-+        ud.setup_revisions(d)
-+
-+        if 'rev' in ud.parm:
-+            ud.revision = ud.parm['rev']
-+        elif not ud.revision:
-+            ud.revision = self.latest_revision(ud, d)
-+
-         ud.write_tarballs = d.getVar("BB_GENERATE_MIRROR_TARBALLS")
- 
-     def need_update(self, ud, d):
-@@ -139,7 +139,7 @@ class Hg(FetchMethod):
-                 cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" pull" % (ud.basecmd, ud.user, ud.pswd, proto)
-             else:
-                 cmd = "%s pull" % (ud.basecmd)
--        elif command == "update":
-+        elif command == "update" or command == "up":
-             if ud.user and ud.pswd:
-                 cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" update -C %s" % (ud.basecmd, ud.user, ud.pswd, proto, " ".join(options))
-             else:
-@@ -247,12 +247,19 @@ class Hg(FetchMethod):
- 
-         scmdata = ud.parm.get("scmdata", "")
-         if scmdata != "nokeep":
-+            proto = ud.parm.get('protocol', 'http')
-             if not os.access(os.path.join(codir, '.hg'), os.R_OK):
-                 logger.debug(2, "Unpack: creating new hg repository in '" + codir + "'")
-                 runfetchcmd("%s init %s" % (ud.basecmd, codir), d)
-             logger.debug(2, "Unpack: updating source in '" + codir + "'")
--            runfetchcmd("%s pull %s" % (ud.basecmd, ud.moddir), d, workdir=codir)
--            runfetchcmd("%s up -C %s" % (ud.basecmd, revflag), d, workdir=codir)
-+            if ud.user and ud.pswd:
-+                runfetchcmd("%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" pull %s" % (ud.basecmd, ud.user, ud.pswd, proto, ud.moddir), d, workdir=codir)
-+            else:
-+                runfetchcmd("%s pull %s" % (ud.basecmd, ud.moddir), d, workdir=codir)
-+            if ud.user and ud.pswd:
-+                runfetchcmd("%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" up -C %s" % (ud.basecmd, ud.user, ud.pswd, proto, revflag), d, workdir=codir)
-+            else:
-+                runfetchcmd("%s up -C %s" % (ud.basecmd, revflag), d, workdir=codir)
-         else:
-             logger.debug(2, "Unpack: extracting source to '" + codir + "'")
-             runfetchcmd("%s archive -t files %s %s" % (ud.basecmd, revflag, codir), d, workdir=ud.moddir)
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index be3acec..1d9148b 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -243,6 +243,7 @@ class PRServer(SimpleXMLRPCServer):
+         try:
+             pid = os.fork()
+             if pid > 0:
++                self.socket.close() # avoid ResourceWarning in parent
+                 return pid
+         except OSError as e:
+             raise Exception("%s [%d]" % (e.strerror, e.errno))
 -- 
 2.7.4
 
