@@ -1,52 +1,53 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com
-	[209.85.210.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 475D87F67E
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com
+	[209.85.216.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 7452C7F67E
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 24 Nov 2019 23:43:32 +0000 (UTC)
-Received: by mail-pf1-f196.google.com with SMTP id 3so6315464pfb.10
+	Sun, 24 Nov 2019 23:43:33 +0000 (UTC)
+Received: by mail-pj1-f49.google.com with SMTP id o14so5601526pjr.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 24 Nov 2019 15:43:33 -0800 (PST)
+	Sun, 24 Nov 2019 15:43:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=qNW2oMhoh1ooC1l3VW9xrspqw2ifN79ISbOmet8Nnc0=;
-	b=OzOdmEXpGLk8xJyeUUwya8P7HzDMSvXxMDlRhbGYIYZHNUzW7bGxvomdPbLOcC7eSq
-	Is8NNyYQGnGdDAe3gSECP/RR3CY6oZygRKQB043FBoGeFhokx+oO0PBfzUJqZdoSDLHq
-	sI3htk3bQNaubhnJ2xOhK5OQf+ISQvj3TbxQRKhNHXxCyalShhVetNeygxoeK6T0b0lR
-	oL3uKeP19QgS8z357b2/zdp8EWANf6DXsitVPHlp8+opi1kumtMx6lpM83l+tEj1i7qc
-	lk3yIJdDf5ht2SIOmvNKDZtU0WpKkb1Fpl/picsB/jc5GQOrFmwlG19bLTJUjMjVq+Rv
-	br9A==
+	bh=Oxh2CzT3JzHrCDAsLAy/ngKb5Ze7jh6N7vXYXYy+k7g=;
+	b=QDLAMUi7hD2RFC6Op6VrMDGKCmGG78v9LvZ4/OgMnhkrHX8QWu6eGwi7TpHRdu5yyV
+	nVCTYedCGlGlfzq25K+M7ib6KmRNofwfqGOYSItbrB/UmOwqplE7dvj4HMPGF++eKxpa
+	Nh7xr6Lc1BH0crqJDkpbw6nUDQKMTLr/aEYTfLUp1WUIalijm0xWre2QktGA1wZjQ0G/
+	7ZzReJ6qg5b4/xlsBVIonPnPEhyhuiThL3LKFHi8bFrrkwO1UnYYOhdArHfTyFNnCZ3u
+	r73AbxOQOvIO1gK4pjfbZ+MjarlDPZXyP8PkBUNWQ5VdrvhCNUxRpwtim1jbGqVikhHH
+	9VWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=qNW2oMhoh1ooC1l3VW9xrspqw2ifN79ISbOmet8Nnc0=;
-	b=Yd17DdJ6Kdqff846gc0p4oRR+WV0pGgQiQZ5w7Tc+Z059iDHvUoovmkk4IKElgP3lE
-	mO1syO3jEN6EAQ4/4ntFlkA+0VeCXzYhcVTidfoBqetJHdhirrCnF2LrqIjx+g7PWc4i
-	oPShnWekokyQy5P+APeleC67kQDU80B5klxiyIjqkF2XuOcE5MINt/LMBvkN/WBjAWCb
-	ub4KTRzQiHsdZBMQUgFEYDYG8QuYS/8TJfhN7KqawhXK++igcVABVvAKfhe5qKZB5zAd
-	QwG3R88BEXUMpUQpZ4z3fS0TxaGXYL3XSS4GH2abrao0c3MoHyKI0lJ401edKCywVSX7
-	SY8g==
-X-Gm-Message-State: APjAAAUqyQxv6EXjllxgYtDcPJlej4IF+J2bZOTUFZz/LIgv+FmfYm8A
-	Wdt65qysgeYgS/dy6x1gicJPsf4e
-X-Google-Smtp-Source: APXvYqyRMS1fS830gJEnr2m9DUkjfejsBlJjs3J1m3sRm20BBVU1WA4Ddlqhoeer1Ll0RKwP+dNvdw==
-X-Received: by 2002:aa7:8256:: with SMTP id e22mr31087029pfn.247.1574639013462;
-	Sun, 24 Nov 2019 15:43:33 -0800 (PST)
+	bh=Oxh2CzT3JzHrCDAsLAy/ngKb5Ze7jh6N7vXYXYy+k7g=;
+	b=AfYbwRaq5PnsFUvCWJbYrgG3VMex9i8+2ucIMYO2HY9T8DQqjxcC282wMW1JC9E9Td
+	lLMUhAGqe935LmsJ8DZnn4fkJGAOByXXv9CFJjR1xMfT67k8LOaygBdktBw5f38k6UCM
+	EmTFvThcBETfztEye0AF9303mWRevX4wqXDq5pXnOf3HUOlsQfmk7qq8uMe5TDDFarL5
+	NJkqHPPn0rj6QsN5Kg8ac/7HNarzJlcqg9Xq4F53owm7BvQ2NwSXWvGFpSnnb7skbgMm
+	G+A8dVMDKna3nsNUERjv+19IjbL3fYNKRVKSDB6UYPgTlebtc91NSa+Lq2wNCtRRNi6b
+	I0/Q==
+X-Gm-Message-State: APjAAAUwNS9HmN7NpQ1I9fKqMi7X6i48RRdLb5HQeKSuLJNXp0D/udNC
+	sLfj5pG6r/gdWg3jmYhXWPC7b6rS
+X-Google-Smtp-Source: APXvYqygSFB8JzF50eAvEsD6nPBV+W97inAuXbTCbJcbI+rl/keIHTmDxeY6OkFS8io/ABSwH65DmA==
+X-Received: by 2002:a17:90a:868b:: with SMTP id
+	p11mr12216166pjn.60.1574639014277; 
+	Sun, 24 Nov 2019 15:43:34 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
 	([2601:202:4180:a5c0:69ac:e4d2:e89f:98da])
 	by smtp.gmail.com with ESMTPSA id
-	125sm5729367pfu.136.2019.11.24.15.43.32
+	125sm5729367pfu.136.2019.11.24.15.43.33
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sun, 24 Nov 2019 15:43:32 -0800 (PST)
+	Sun, 24 Nov 2019 15:43:33 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 24 Nov 2019 15:43:20 -0800
-Message-Id: <94ede642dce8cdbf09f566e3f7e9e260d33fda27.1574638886.git.akuster808@gmail.com>
+Date: Sun, 24 Nov 2019 15:43:21 -0800
+Message-Id: <2cccc14304855cb55f339e465f6ba6ed0c69a7ab.1574638886.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1574638886.git.akuster808@gmail.com>
 References: <cover.1574638886.git.akuster808@gmail.com>
-Subject: [PATCH 7/9] utils: also use mmap for SHA256 and SHA1, for performance
+Subject: [PATCH 8/9] fetch2/clearcase: Fix warnings from python 3.8
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,84 +62,50 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Sun, 24 Nov 2019 23:43:33 -0000
 
-From: Ross Burton <ross.burton@intel.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-md5_file() uses a mmap() window to improve performance when hashing files, so
-refactor the code and do the same for SHA1 and SHA256.
+bitbake/lib/bb/fetch2/clearcase.py:148: SyntaxWarning: "is" with a literal. Did you mean "=="?
+      if command is 'mkview':
+bitbake/lib/bb/fetch2/clearcase.py:155: SyntaxWarning: "is" with a literal. Did you mean "=="?
+      elif command is 'rmview':
+bitbake/lib/bb/fetch2/clearcase.py:159: SyntaxWarning: "is" with a literal. Did you mean "=="?
+      elif command is 'setcs':
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
+Python 3.8 is quite correct and we so mean "==" here, fix it to
+avoid the warnings.
+
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/utils.py | 34 ++++++++++++++--------------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+ lib/bb/fetch2/clearcase.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index d035949..8d40bcd 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -520,22 +520,26 @@ def unlockfile(lf):
-     fcntl.flock(lf.fileno(), fcntl.LOCK_UN)
-     lf.close()
+diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
+index 3dd93ad..e2934ef 100644
+--- a/lib/bb/fetch2/clearcase.py
++++ b/lib/bb/fetch2/clearcase.py
+@@ -145,18 +145,18 @@ class ClearCase(FetchMethod):
  
--def md5_file(filename):
--    """
--    Return the hex string representation of the MD5 checksum of filename.
--    """
--    import hashlib, mmap
-+def _hasher(method, filename):
-+    import mmap
+         basecmd = "%s %s" % (ud.basecmd, command)
  
-     with open(filename, "rb") as f:
--        m = hashlib.md5()
-         try:
-             with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as mm:
-                 for chunk in iter(lambda: mm.read(8192), b''):
--                    m.update(chunk)
-+                    method.update(chunk)
-         except ValueError:
-             # You can't mmap() an empty file so silence this exception
-             pass
--    return m.hexdigest()
-+    return method.hexdigest()
-+
-+
-+def md5_file(filename):
-+    """
-+    Return the hex string representation of the MD5 checksum of filename.
-+    """
-+    import hashlib
-+    return _hasher(hashlib.md5(), filename)
+-        if command is 'mkview':
++        if command == 'mkview':
+             if not "rcleartool" in ud.basecmd:
+                 # Cleartool needs a -snapshot view
+                 options.append("-snapshot")
+             options.append("-tag %s" % ud.viewname)
+             options.append(ud.viewdir)
  
- def sha256_file(filename):
-     """
-@@ -543,24 +547,14 @@ def sha256_file(filename):
-     filename.
-     """
-     import hashlib
--
--    s = hashlib.sha256()
--    with open(filename, "rb") as f:
--        for line in f:
--            s.update(line)
--    return s.hexdigest()
-+    return _hasher(hashlib.sha256(), filename)
+-        elif command is 'rmview':
++        elif command == 'rmview':
+             options.append("-force")
+             options.append("%s" % ud.viewdir)
  
- def sha1_file(filename):
-     """
-     Return the hex string representation of the SHA1 checksum of the filename
-     """
-     import hashlib
--
--    s = hashlib.sha1()
--    with open(filename, "rb") as f:
--        for line in f:
--            s.update(line)
--    return s.hexdigest()
-+    return _hasher(hashlib.sha1(), filename)
+-        elif command is 'setcs':
++        elif command == 'setcs':
+             options.append("-overwrite")
+             options.append(ud.configspecfile)
  
- def preserved_envvars_exported():
-     """Variables which are taken from the environment and placed in and exported
 -- 
 2.7.4
 
