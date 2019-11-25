@@ -1,54 +1,54 @@
 Return-Path: <matthias.schiffer@ew.tq-group.com>
 Received: from mx1.tq-group.com (mx1.tq-group.com [62.157.118.193])
-	by mail.openembedded.org (Postfix) with ESMTP id 90B8D60017
+	by mail.openembedded.org (Postfix) with ESMTP id 5709D731AF
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Nov 2019 09:46:26 +0000 (UTC)
-IronPort-SDR: kn1h0bO5zPjPFCTtw85sY+rgEEei2a8jJ8ugDqnnrYTzE29D2+PJJET6PEE8w89XwuILwf1N4d
-	H0hdyYiL2UHltktrdjCgUAIYEtCfQsnEfB6QHYBhZl+H/UrjzwEuOr4ARFReoRLwTjQj3uS+l3
-	jrERBPsiHHR7YyAcAv3RcVW3dbgInOe2B8c6ehBOd/2gbLiZ+i7YEl/KrLtCyrvbsAIjz4wG4g
-	p8W0ldr4c9LPBhJDRUbWCR6BnLVHsBTV6ra/ZheTB2yaYEFCebIhIAI+uFbfCN51J6CXkzs3mP
-	0L0=
+	Mon, 25 Nov 2019 09:58:13 +0000 (UTC)
+IronPort-SDR: VnmfrmVWLY6XOJlIYrattAJCly1F5uLb/RPqpoaPs1D8DSnZLnnxPnapggVf+I3EkVweVSBxK5
+	V0P1oZ7zwYcVlq5PVKkTFzxdujsv9dBdLXA4XQXtI672M+nkNsZaeHmd6+WV/jnKz8TAqytYtR
+	KgKodnrQtayS9O/xOVUuVVkHp+oAgpIGIq5/wDaRVmTU7PQMHUnqWKmLrtjAaYfN7RRXCx9q38
+	KRc8E+SUI31weq2UBvUl29L7aKxhyE2aC+gQlfE6VAaB2pFo4U4F1PpjrJqEpsJiM1Y5PtLvQA
+	yvw=
 X-IronPort-AV: E=Sophos;i="5.69,241,1571695200"; 
-   d="scan'208";a="9926721"
+   d="scan'208";a="9927049"
 Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-	by mx1-pgp.tq-group.com with ESMTP; 25 Nov 2019 10:46:27 +0100
+	by mx1-pgp.tq-group.com with ESMTP; 25 Nov 2019 10:58:14 +0100
 Received: from mx1.tq-group.com ([192.168.6.7])
 	by tq-pgp-pr1.tq-net.de (PGP Universal service);
-	Mon, 25 Nov 2019 10:46:27 +0100
+	Mon, 25 Nov 2019 10:58:14 +0100
 X-PGP-Universal: processed;
-	by tq-pgp-pr1.tq-net.de on Mon, 25 Nov 2019 10:46:27 +0100
+	by tq-pgp-pr1.tq-net.de on Mon, 25 Nov 2019 10:58:14 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
 	d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-	t=1574675187; x=1606211187;
+	t=1574675894; x=1606211894;
 	h=message-id:subject:from:to:cc:date:in-reply-to:
 	references:mime-version:content-transfer-encoding;
-	bh=zFh2RYNUEd+INnSZI9CceaGlemxNr0XexrUC30PE2AQ=;
-	b=PX7Z9StynpnwjtRxvQXeyM8FN0E7LaGPS02SDjbvnb3Mf61bF0U34vpx
-	gf+S9oQy/OhUgurbGtnySfr63Lxnph/styl7nVrOFZjN+WBW6ofr3TcLF
-	T/FcwGJTYynJtk1LqGyQ8C4+zQ3APSQJSqbbcl/MUs9gSHRYfzw/VwRfq
-	68nvHzm7lY5WQKx9MBYPYMqIF1ouPY/g7uefs6ZDxHRN21EdRBmWsENZi
-	kkqFYvtV5liaHFbW6NNC2CroVjVx79TIGs0nuGi13dBwqHQ+vjQ+yih7T
-	F2SrRX03c7IEfSOiX0Y75vn+1jThGvFd710c29ekLIlN2gi/VBDQRkhzp Q==;
-IronPort-SDR: vGuEzPUSrN8Xofs7976xdbhkSOE1g2xdVX8sHei6TOHeYfrS5kX37CGguaRliglfNG0weBwFFm
-	9O40SDPX7xjLsnXxblEMhC4BDe5pkieN7A9teQ2++bCb0eiTmJiGGjujuouiVCaCo893MUqD8A
-	FLkT6nW189YD6XstSU0d7OWXRXA5czpU7cQ8MaKZ+A9uVyAiQB9jXvEcMrr87qwsj5kFkF/Z5Q
-	86BpA83BNfW33jnQXLeo8FeDz9HCGqRishGr7L7zXx95I3FWexO4tVfeawO513PVdUg+AvSBUD
-	BFs=
+	bh=HYA75hA1Z8IERSHlf4Z4/T6Cmvia/TenRFhQaVwJf3c=;
+	b=NGQ2mmsMCl0E9EXgji2Q5p/nEkCbCqhBh4/UWMIBQLuH4tLdB+YDN9u5
+	A04ERbTqDckhBxwoSA3JRyukpIQOfUpMVrbPHMfNZDfOQplD/BNV1PmLL
+	s8REyQ7nRUDZdWAQKlGpOVJvlS1HVbf95HzMCvKIanXASmJ7otIxfX8Qk
+	YamQXRCykuINSpKsqgtPjZXJooJWox37Rnt4w/n2n9Wv3MlfzL8T9baZh
+	dpL61Mi3jkyNE6nWhUc3xyTelcBbUp/UT2AwFD7FB0qi0qXrkqMcCk06j
+	1MuJiTrqst1QsGHFh/dvMnjNaw8EKkxS/d4+KsohgiQH6PQiru/dC74Ix g==;
+IronPort-SDR: rLeenjjWm7dd6claMbqIk4c7PYcBEWmOdTNyQV+mObMs3xgkFBRtFCx3kcbV47TCcilwz72ZzU
+	xi1WiinriwXubvRK4Wl4/LzuZF3sG9H/FHS+79ZUerfE+lAlUlFMqchznFfqF+GzHmp7ZO70Ql
+	pBXk4jh3Q+0uAswfK/qSgJPAE0czRy9T6+aogYNHdHOrQOopn0WIu42QBbOPJ1w07JKk0qeVqy
+	tUkkn3LrPl4WIuW00JguF3P1ULkpfKcvHZYm45c4QotJizqv/wMFxOrU/2cA9V2iPEEr7cPiKD
+	KWI=
 X-IronPort-AV: E=Sophos;i="5.69,241,1571695200"; 
-   d="scan'208";a="9926720"
+   d="scan'208";a="9927047"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-	by mx1.tq-group.com with ESMTP; 25 Nov 2019 10:46:27 +0100
+	by mx1.tq-group.com with ESMTP; 25 Nov 2019 10:58:14 +0100
 Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de
 	[10.117.49.26])
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPA id BE32B280065;
-	Mon, 25 Nov 2019 10:46:42 +0100 (CET)
-Message-ID: <3592f3682a71efa74c879767585e58809f7e7335.camel@ew.tq-group.com>
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPA id E047C280065;
+	Mon, 25 Nov 2019 10:58:29 +0100 (CET)
+Message-ID: <20a5a2afc463bd7e29688bfba96a3206f6802f0f.camel@ew.tq-group.com>
 From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Mon, 25 Nov 2019 10:46:25 +0100
-In-Reply-To: <061f8cc5e1ca6bf29d637fcc91ef1f0c825f4e84.camel@linuxfoundation.org>
+To: Mark Hatle <mark.hatle@kernel.crashing.org>
+Date: Mon, 25 Nov 2019 10:58:06 +0100
+In-Reply-To: <9c849d9b-ec91-a67f-284f-86c33c1e6d99@kernel.crashing.org>
 References: <7c0067a9e4ae762d8c0f8f9dc50e6d3b8891dc60.camel@ew.tq-group.com>
-	<061f8cc5e1ca6bf29d637fcc91ef1f0c825f4e84.camel@linuxfoundation.org>
+	<9c849d9b-ec91-a67f-284f-86c33c1e6d99@kernel.crashing.org>
 X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
 Mime-Version: 1.0
 Cc: bitbake-devel@lists.openembedded.org
@@ -65,12 +65,15 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Nov 2019 09:46:28 -0000
+X-List-Received-Date: Mon, 25 Nov 2019 09:58:14 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2019-11-22 at 16:34 +0000, Richard Purdie wrote:
-> On Fri, 2019-11-22 at 16:09 +0100, Matthias Schiffer wrote:
+On Fri, 2019-11-22 at 11:15 -0600, Mark Hatle wrote:
+> 
+> On 11/22/19 9:09 AM, Matthias Schiffer wrote:
+> > Hi all,
+> > 
 > > is there a robust way to enforce the automatic rebuild of dependent
 > > tasks across recipes? I'm having the following issue:
 > > 
@@ -103,36 +106,40 @@ On Fri, 2019-11-22 at 16:34 +0000, Richard Purdie wrote:
 > > - file-checksums only seems to be taken into account at initial
 > > recipe
 > > parse time, not when the task I'm interested in is actually
-> > executed?
-> > I
+> > executed? I
 > > need to run bitbake twice to get the correct results.
 > > - When I use an anonymous Python function to put the root hash I'm
 > > interested in into a variable, Bitbake complains about
 > > nondeterministic
 > > metadata.
-> > 
-> > Using nostamp would be an option, but obviously an ugly one.
-> > 
-> > I'm currently on Yocto Thud / Bitbake 1.40.
 > 
-> If you look behind the scenes at how "bitbake x -f" works, it writes
-> .taint files into ${STAMPS}.
+> There is a way of doing this, I've had to do it in the past.
 > 
-> If A depends on B and B taints A's stamp each time it runs, it will
-> rerun that task and all tasks that depend upon it. See
-> bb.build.write_taint(). That function is not designed to be called
-> externally so you may need your own version. 
+> The anonymous python function needs to product the same output on
+> each and every
+> run.  If it doesn't this will cause the non-deterministic
+> behavior.  (It can't
+> rely on another items to finish building for instance.)
+> 
+> So you end up having to have a recipe (with a file-checksum and/or
+> anon python)
+> that sets up variables that will keep the hash up-to-date for THAT
+> recipe.. then
+> your image (or other) recipes need to depend on that one.
 
-Hello Richard,
+Hello Mark,
 
-I don't think this will help me. If I'm interpreting the Bitbake code
-correctly, the taint will only be interpreted at initial parse time
-(which it must, as it would lead to non-deterministic task signatures
-otherwise). So I can either set the taint early (always invalidating
-the signature, leading to nostamp behaviour), or during my core image
-creation (leading to the file-checksums behaviour, requiring a second
-bitbake run before the taint has any effect). Or am I overlooking
-something?
+I'm afraid I don't follow. How does doing something in another recipe
+fix the non-deterministic behaviour?
+
+I'd think that any solution based on the task signatures will have the
+same issue - that a hash correctly reflecting the inputs that go into
+my initramfs task would depend on the build results of my core image
+task, which is not available at recipe parse time.
+
+I think I'll have to go with nostamp after all - the unnessesary
+rebuilds it causes in this case are ugly, but rather negligible in
+terms of build time.
 
 
 Thanks,
@@ -140,14 +147,24 @@ Thanks,
 Matthias
 
 
+
 > 
-> Ugly, but your problem is ugly. We don't have a standard mechanism as
-> we don't really want to encourage this.
+> Unfortunately I no longer have access to the example where I had to
+> do this in
+> the past, or I could try to give you something more concrete to look
+> at.
 > 
-> Cheers,
+> --Mark
 > 
-> Richard
-> 
-> 
+> > 
+> > Using nostamp would be an option, but obviously an ugly one.
+> > 
+> > I'm currently on Yocto Thud / Bitbake 1.40.
+> > 
+> > 
+> > Thanks in advance,
+> > 
+> > Matthias
+> > 
 
 
