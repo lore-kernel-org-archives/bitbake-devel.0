@@ -1,53 +1,58 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com
-	[209.85.214.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 471BE7FC0C
+Return-Path: <matthias.schiffer@ew.tq-group.com>
+Received: from mx1.tq-group.com (mx1.tq-group.com [62.157.118.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 90B8D60017
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 24 Nov 2019 23:43:34 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id h13so5604492plr.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 24 Nov 2019 15:43:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=k7UNZI1jGDhRcgfWRgCQ0NYO6Mdl2NPCF8YVzTmWbo0=;
-	b=l+TUfmh9dbAPC9utQe7mDdW0Zn4phSQP7V7kGGrqu/hmz7zliK5nSSisCJSYDsvOnv
-	OXreFxYev56etZjX5teu0bO2Vvh7u5xE8lAUfnQ/eseXKJ3QYqwOfUfNmv3Lz1YffPwv
-	gtJc/bs3mPnHoZ7m2adrhB9OW1iH7Xzh0cds5T/J+VZ7L7YzAj6io6X5Tm1Bhvog84cj
-	t3we9TBZ8FS2zBJuWeJHHHHYGeUdkOOEcubjAIP3KrEN1JrzHTZ/lMfq3ne3/EdvzXN+
-	lu1xHliQlsPi20hC6Oyw1K++5hvtFifhCZGp2dVvLdBBODrFQwAQSm6t3pZY57H6swit
-	ZZkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=k7UNZI1jGDhRcgfWRgCQ0NYO6Mdl2NPCF8YVzTmWbo0=;
-	b=C4uwM4hQuae8vRBAOqNxVeXjX2w4nOt5IRCx0Ueh2POuC0h++2HiTek3jzJBpVvZ+P
-	9vSfbDY+fOSCRDT6SwzPRBSRDJrTXpYIXbPHNajlYzqRa5LNpwqCCmJRWGLwJqzoNroK
-	S/hlKfY+RVxmOtiHI37EpM8KhKONKU6+NpmtoixHTW1Ue2ORCRNQf5+F2Epwz5ELxfi5
-	oz7KrzZIDI2I3c/uWo+0cem9G4PpSDnH5zQOzP+lzsNBgy1QB4c9dmD3jP20Z7rlnJsb
-	L+M59lKdOYJZQpOrN3KpE5rGuQJuI+KcLlmpzTD/6cIFNNZZf9496+nm3m+HM5LxM8fG
-	w3kA==
-X-Gm-Message-State: APjAAAWkD99AIAK1alrW474js+h8J37CNgkYb3LLzO2KQ1qynbDHD297
-	ybzV3tEMf4B/qyBkiFhOrEjcmXg5
-X-Google-Smtp-Source: APXvYqwjKvRX6UFdJAuk2Pd1STc7/4CAdIgNgsvlTxTLyJC/hgA07G7bwFZ7VSATYepHiX7Fou7tBg==
-X-Received: by 2002:a17:90a:9b87:: with SMTP id
-	g7mr34709778pjp.64.1574639015202; 
-	Sun, 24 Nov 2019 15:43:35 -0800 (PST)
-Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
-	([2601:202:4180:a5c0:69ac:e4d2:e89f:98da])
-	by smtp.gmail.com with ESMTPSA id
-	125sm5729367pfu.136.2019.11.24.15.43.34
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sun, 24 Nov 2019 15:43:34 -0800 (PST)
-From: Armin Kuster <akuster808@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Sun, 24 Nov 2019 15:43:22 -0800
-Message-Id: <33ffc2128b1a74fa7179a8341db68cddf402536f.1574638886.git.akuster808@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1574638886.git.akuster808@gmail.com>
-References: <cover.1574638886.git.akuster808@gmail.com>
-Subject: [PATCH 9/9] runqueue: Fix hash equivalence duplicate tasks running
+	Mon, 25 Nov 2019 09:46:26 +0000 (UTC)
+IronPort-SDR: kn1h0bO5zPjPFCTtw85sY+rgEEei2a8jJ8ugDqnnrYTzE29D2+PJJET6PEE8w89XwuILwf1N4d
+	H0hdyYiL2UHltktrdjCgUAIYEtCfQsnEfB6QHYBhZl+H/UrjzwEuOr4ARFReoRLwTjQj3uS+l3
+	jrERBPsiHHR7YyAcAv3RcVW3dbgInOe2B8c6ehBOd/2gbLiZ+i7YEl/KrLtCyrvbsAIjz4wG4g
+	p8W0ldr4c9LPBhJDRUbWCR6BnLVHsBTV6ra/ZheTB2yaYEFCebIhIAI+uFbfCN51J6CXkzs3mP
+	0L0=
+X-IronPort-AV: E=Sophos;i="5.69,241,1571695200"; 
+   d="scan'208";a="9926721"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+	by mx1-pgp.tq-group.com with ESMTP; 25 Nov 2019 10:46:27 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+	by tq-pgp-pr1.tq-net.de (PGP Universal service);
+	Mon, 25 Nov 2019 10:46:27 +0100
+X-PGP-Universal: processed;
+	by tq-pgp-pr1.tq-net.de on Mon, 25 Nov 2019 10:46:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+	d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+	t=1574675187; x=1606211187;
+	h=message-id:subject:from:to:cc:date:in-reply-to:
+	references:mime-version:content-transfer-encoding;
+	bh=zFh2RYNUEd+INnSZI9CceaGlemxNr0XexrUC30PE2AQ=;
+	b=PX7Z9StynpnwjtRxvQXeyM8FN0E7LaGPS02SDjbvnb3Mf61bF0U34vpx
+	gf+S9oQy/OhUgurbGtnySfr63Lxnph/styl7nVrOFZjN+WBW6ofr3TcLF
+	T/FcwGJTYynJtk1LqGyQ8C4+zQ3APSQJSqbbcl/MUs9gSHRYfzw/VwRfq
+	68nvHzm7lY5WQKx9MBYPYMqIF1ouPY/g7uefs6ZDxHRN21EdRBmWsENZi
+	kkqFYvtV5liaHFbW6NNC2CroVjVx79TIGs0nuGi13dBwqHQ+vjQ+yih7T
+	F2SrRX03c7IEfSOiX0Y75vn+1jThGvFd710c29ekLIlN2gi/VBDQRkhzp Q==;
+IronPort-SDR: vGuEzPUSrN8Xofs7976xdbhkSOE1g2xdVX8sHei6TOHeYfrS5kX37CGguaRliglfNG0weBwFFm
+	9O40SDPX7xjLsnXxblEMhC4BDe5pkieN7A9teQ2++bCb0eiTmJiGGjujuouiVCaCo893MUqD8A
+	FLkT6nW189YD6XstSU0d7OWXRXA5czpU7cQ8MaKZ+A9uVyAiQB9jXvEcMrr87qwsj5kFkF/Z5Q
+	86BpA83BNfW33jnQXLeo8FeDz9HCGqRishGr7L7zXx95I3FWexO4tVfeawO513PVdUg+AvSBUD
+	BFs=
+X-IronPort-AV: E=Sophos;i="5.69,241,1571695200"; 
+   d="scan'208";a="9926720"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+	by mx1.tq-group.com with ESMTP; 25 Nov 2019 10:46:27 +0100
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de
+	[10.117.49.26])
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPA id BE32B280065;
+	Mon, 25 Nov 2019 10:46:42 +0100 (CET)
+Message-ID: <3592f3682a71efa74c879767585e58809f7e7335.camel@ew.tq-group.com>
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Mon, 25 Nov 2019 10:46:25 +0100
+In-Reply-To: <061f8cc5e1ca6bf29d637fcc91ef1f0c825f4e84.camel@linuxfoundation.org>
+References: <7c0067a9e4ae762d8c0f8f9dc50e6d3b8891dc60.camel@ew.tq-group.com>
+	<061f8cc5e1ca6bf29d637fcc91ef1f0c825f4e84.camel@linuxfoundation.org>
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: (EXT) Re: Forcing the rebuild of dependent tasks across recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,57 +65,89 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 24 Nov 2019 23:43:34 -0000
+X-List-Received-Date: Mon, 25 Nov 2019 09:46:28 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+On Fri, 2019-11-22 at 16:34 +0000, Richard Purdie wrote:
+> On Fri, 2019-11-22 at 16:09 +0100, Matthias Schiffer wrote:
+> > is there a robust way to enforce the automatic rebuild of dependent
+> > tasks across recipes? I'm having the following issue:
+> > 
+> > - Recipe my-core-image has an output file that is copied to the
+> > deploy
+> > dir. The output file is not fully reproducible, so cleaning the
+> > recipe
+> > and rebuilding it will yield a different file even through the
+> > sstate
+> > signature of the recipe is unchanged (the file I'm interested is
+> > DMVerity hash data that I generate as an additional filesystem
+> > type)
+> > 
+> > - Task do_compile of recipe my-initramfs-scripts depends on my-
+> > core-
+> > image:do_image_complete. I need to enforce rebuilding of this task
+> > whenever the deployed files of my-core-image have changed (the
+> > recipe
+> > uses the "root hash" generated by DMVerity as input, so that the
+> > filesystem can be verified on mount) - and of course also of all
+> > dependent tasks like the initramfs image and FIT kernel image
+> > 
+> > I've experimented with things like file-checksums and
+> > BB_DONT_CACHE,
+> > but everything I've tried fails when the rebuilds of my-core-image
+> > and
+> > my-initramfs-scripts are supposed to happen in the same run of
+> > Bitbake:
+> > 
+> > - file-checksums only seems to be taken into account at initial
+> > recipe
+> > parse time, not when the task I'm interested in is actually
+> > executed?
+> > I
+> > need to run bitbake twice to get the correct results.
+> > - When I use an anonymous Python function to put the root hash I'm
+> > interested in into a variable, Bitbake complains about
+> > nondeterministic
+> > metadata.
+> > 
+> > Using nostamp would be an option, but obviously an ugly one.
+> > 
+> > I'm currently on Yocto Thud / Bitbake 1.40.
+> 
+> If you look behind the scenes at how "bitbake x -f" works, it writes
+> .taint files into ${STAMPS}.
+> 
+> If A depends on B and B taints A's stamp each time it runs, it will
+> rerun that task and all tasks that depend upon it. See
+> bb.build.write_taint(). That function is not designed to be called
+> externally so you may need your own version. 
 
-The key problem is that currently running setscene tasks are not
-accounted for when processing task migrations. This means can allow
-two of the same task to execute at the same time with unpredictable
-effects.
+Hello Richard,
 
-This change allows us to stop doing that and refactor the code slightly
-to make it clearer that these conditions don't arrive even with
-deferred tasks.
+I don't think this will help me. If I'm interpreting the Bitbake code
+correctly, the taint will only be interpreted at initial parse time
+(which it must, as it would lead to non-deterministic task signatures
+otherwise). So I can either set the taint early (always invalidating
+the signature, leading to nostamp behaviour), or during my core image
+creation (leading to the file-checksums behaviour, requiring a second
+bitbake run before the taint has any effect). Or am I overlooking
+something?
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Signed-off-by: Armin Kuster <akuster808@gmail.com>
----
- lib/bb/runqueue.py | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 1804943..02a9b91 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2303,16 +2303,22 @@ class RunQueueExecute:
-         for tid in changed:
-             if tid not in self.rqdata.runq_setscene_tids:
-                 continue
-+            if tid not in self.pending_migrations:
-+                self.pending_migrations.add(tid)
-+
-+        for tid in self.pending_migrations.copy():
-             if tid in self.runq_running:
-+                # Too late, task already running, not much we can do now
-+                self.pending_migrations.remove(tid)
-                 continue
--            if tid in self.scenequeue_covered:
-+
-+            if tid in self.scenequeue_covered or tid in self.sq_live:
-+                # Already ran this setscene task or it running
-                 # Potentially risky, should we report this hash as a match?
-                 logger.info("Already covered setscene for %s so ignoring rehash" % (tid))
-+                self.pending_migrations.remove(tid)
-                 continue
--            if tid not in self.pending_migrations:
--                self.pending_migrations.add(tid)
- 
--        for tid in self.pending_migrations.copy():
-             valid = True
-             # Check no tasks this covers are running
-             for dep in self.sqdata.sq_covered_tasks[tid]:
--- 
-2.7.4
+Thanks,
+
+Matthias
+
+
+> 
+> Ugly, but your problem is ugly. We don't have a standard mechanism as
+> we don't really want to encourage this.
+> 
+> Cheers,
+> 
+> Richard
+> 
+> 
 
 
