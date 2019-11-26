@@ -1,44 +1,28 @@
-Return-Path: <andre.draszik@gmail.com>
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
-	[209.85.128.68])
-	by mail.openembedded.org (Postfix) with ESMTP id C2ACE7FC81
+Return-Path: <mark.hatle@kernel.crashing.org>
+Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 16EB37F896
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 26 Nov 2019 09:40:52 +0000 (UTC)
-Received: by mail-wm1-f68.google.com with SMTP id n188so2487280wme.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 26 Nov 2019 01:40:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=ocmdEUxSFqR33aGLoaJxtISsldoyZ+EU9INcvu+AKXk=;
-	b=nLqm3W1GT11P92vWEt/QEotGltLqdtPP+HTvzeMNcBzoLkCK6xyAbhU85oaZKR8SVM
-	wdelq4mAVqsvKEaEqExJZIGY0INiuaVjv4REjrwaHBpRs8aRWuQCsbUlxgDpdpk2XgqW
-	tceDktyxZ5Y2pwbnAuV3SfM7/enGCuud/Ile7ZgFCol2Zd6IvtqIe7QeygaqiRdgtkGy
-	W0P09dPCWOn54OGH8hkk1DlI71CEi1sMGKI30lvd0TEUrsXC7lBRFHIaGLx9QcBspt0W
-	YoQm81E66cJYwLcWw8HgRfsKe9URJfgVoLlrJ9F31D2AydlUrfG6ukd3OsICM5d3S9M1
-	kXoA==
-X-Gm-Message-State: APjAAAWTWH5DuJhi0vMsPhYOrJj6Echrss1lund7G3aZpuHkyIZkFIjF
-	Qaji+b2V9GnwVEF52g9hjvQEp6mc
-X-Google-Smtp-Source: APXvYqzzFlVFfoNiovPxfN3+j9EYTW6cPNYhlqjkjDrGK59dlNV8aigSAuM6Qt8cIGxTl7XCTJE+qA==
-X-Received: by 2002:a05:600c:149:: with SMTP id
-	w9mr140345wmm.132.1574761253415; 
-	Tue, 26 Nov 2019 01:40:53 -0800 (PST)
-Received: from tfsielt31850 ([77.107.218.170])
-	by smtp.gmail.com with ESMTPSA id
-	m15sm14015486wrq.97.2019.11.26.01.40.52
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 26 Nov 2019 01:40:52 -0800 (PST)
-Message-ID: <84d7813c801887d697d24798965f4fc4763336c1.camel@andred.net>
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-To: Ross Burton <ross.burton@intel.com>, bitbake-devel@lists.openembedded.org
-Date: Tue, 26 Nov 2019 09:40:52 +0000
-In-Reply-To: <83d558f5-b153-b3ca-d4b7-eca7b37e78c3@intel.com>
-References: <20191114142131.29829-1-git@andred.net>
-	<83d558f5-b153-b3ca-d4b7-eca7b37e78c3@intel.com>
-User-Agent: Evolution 3.30.5-1.1 
+	Tue, 26 Nov 2019 15:40:24 +0000 (UTC)
+Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
+	(authenticated bits=0)
+	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id xAQFeEP2002035
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NO); Tue, 26 Nov 2019 09:40:15 -0600
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+References: <7c0067a9e4ae762d8c0f8f9dc50e6d3b8891dc60.camel@ew.tq-group.com>
+	<9c849d9b-ec91-a67f-284f-86c33c1e6d99@kernel.crashing.org>
+	<20a5a2afc463bd7e29688bfba96a3206f6802f0f.camel@ew.tq-group.com>
+	<7ae30f61-e69a-88f2-ad94-eb4638cf5804@kernel.crashing.org>
+	<19d11123cce3a537390c3fb82c3376fb28e34268.camel@ew.tq-group.com>
+From: Mark Hatle <mark.hatle@kernel.crashing.org>
+Message-ID: <7054c677-681e-39ae-c4d2-89cad7267b86@kernel.crashing.org>
+Date: Tue, 26 Nov 2019 09:40:14 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+	Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-Subject: Re: [master][PATCH] fetch2/wget: support releases from private github repositories
+In-Reply-To: <19d11123cce3a537390c3fb82c3376fb28e34268.camel@ew.tq-group.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: (EXT) Re: (EXT) Re: Forcing the rebuild of dependent tasks across recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,58 +35,175 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 26 Nov 2019 09:40:53 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 26 Nov 2019 15:40:25 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Hi Ross,
 
-On Fri, 2019-11-22 at 17:01 +0000, Ross Burton wrote:
-> On 14/11/2019 14:21, André Draszik wrote:
-> > The wget / http fetcher currently doesn't support fetching
-> > assets attached to releases on private GitHub repositories,
-> > i.e. release artefacts like
-> >      https://github.com/<user>/<project>/releases/download/v1.0.0/asset1.txt
-> > 
-> > Those are special, in that HTTP basic auth is not used / possible
-> > on the URL as seen in the GitHub UI, but instead the GitHub API
-> > must be used for downloading (which does support HTTP basic auth)
-> > where the URL will be different.
-> > 
-> > To be able to access the GitHub API, opportunistic authentication
-> > (auth-no-challenge) needs to be enabled. Then the API needs to
-> > be queried for the real URL of the file to be downloaded, and
-> > finally application/octet-stream must be specified explicitly.
-> > 
-> > Note that there is a slight difference in the location of the
-> > REST API endpoints between GitHub.com and GitHub Enterprise.
-> > 
-> >      https://developer.github.com/v3/repos/releases/
-> >      https://developer.github.com/enterprise/2.19/v3/enterprise-admin/
-> > 
-> > As it's impossible to determine if a repository is on GitHub
-> > or not (considering GitHub Enterprise), and even more so if a
-> > repository is private or not, a new flag is introduced that
-> > should be set to "1" - "github_private_asset", e.g.
+
+On 11/26/19 2:43 AM, Matthias Schiffer wrote:
+> On Mon, 2019-11-25 at 08:54 -0600, Mark Hatle wrote:
+>>
+>> On 11/25/19 3:58 AM, Matthias Schiffer wrote:
+>>> On Fri, 2019-11-22 at 11:15 -0600, Mark Hatle wrote:
+>>>>
+>>>> On 11/22/19 9:09 AM, Matthias Schiffer wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> is there a robust way to enforce the automatic rebuild of
+>>>>> dependent
+>>>>> tasks across recipes? I'm having the following issue:
+>>>>>
+>>>>> - Recipe my-core-image has an output file that is copied to the
+>>>>> deploy
+>>>>> dir. The output file is not fully reproducible, so cleaning the
+>>>>> recipe
+>>>>> and rebuilding it will yield a different file even through the
+>>>>> sstate
+>>>>> signature of the recipe is unchanged (the file I'm interested
+>>>>> is
+>>>>> DMVerity hash data that I generate as an additional filesystem
+>>>>> type)
+>>>>>
+>>>>> - Task do_compile of recipe my-initramfs-scripts depends on my-
+>>>>> core-
+>>>>> image:do_image_complete. I need to enforce rebuilding of this
+>>>>> task
+>>>>> whenever the deployed files of my-core-image have changed (the
+>>>>> recipe
+>>>>> uses the "root hash" generated by DMVerity as input, so that
+>>>>> the
+>>>>> filesystem can be verified on mount) - and of course also of
+>>>>> all
+>>>>> dependent tasks like the initramfs image and FIT kernel image
+>>>>>
+>>>>> I've experimented with things like file-checksums and
+>>>>> BB_DONT_CACHE,
+>>>>> but everything I've tried fails when the rebuilds of my-core-
+>>>>> image
+>>>>> and
+>>>>> my-initramfs-scripts are supposed to happen in the same run of
+>>>>> Bitbake:
+>>>>>
+>>>>> - file-checksums only seems to be taken into account at initial
+>>>>> recipe
+>>>>> parse time, not when the task I'm interested in is actually
+>>>>> executed? I
+>>>>> need to run bitbake twice to get the correct results.
+>>>>> - When I use an anonymous Python function to put the root hash
+>>>>> I'm
+>>>>> interested in into a variable, Bitbake complains about
+>>>>> nondeterministic
+>>>>> metadata.
+>>>>
+>>>> There is a way of doing this, I've had to do it in the past.
+>>>>
+>>>> The anonymous python function needs to product the same output on
+>>>> each and every
+>>>> run.  If it doesn't this will cause the non-deterministic
+>>>> behavior.  (It can't
+>>>> rely on another items to finish building for instance.)
+>>>>
+>>>> So you end up having to have a recipe (with a file-checksum
+>>>> and/or
+>>>> anon python)
+>>>> that sets up variables that will keep the hash up-to-date for
+>>>> THAT
+>>>> recipe.. then
+>>>> your image (or other) recipes need to depend on that one.
+>>>
+>>> Hello Mark,
+>>>
+>>> I'm afraid I don't follow. How does doing something in another
+>>> recipe
+>>> fix the non-deterministic behaviour?
+>>
+>> You must always compute your internal variables in -exactly- the same
+>> way.  You
+>> were saying you were passing in an external object and needed to have
+>> that
+>> influence the values.  (Unless I am understanding incorrectly.)
+>>
+>>> I'd think that any solution based on the task signatures will have
+>>> the
+>>> same issue - that a hash correctly reflecting the inputs that go
+>>> into
+>>> my initramfs task would depend on the build results of my core
+>>> image
+>>> task, which is not available at recipe parse time.
+>>
+>> All signatures are computed at parse time.  They either need to be
+>> computed
+>> based on external (non-changing) input, or other recipes (which
+>> themselves would
+>> have an static hash, but can change from build to build.)
+>>
+>>> I think I'll have to go with nostamp after all - the unnessesary
+>>> rebuilds it causes in this case are ugly, but rather negligible in
+>>> terms of build time.
+>>
+>> So is the input changing out from under the system?  I.e. during the
+>> build
+>> process did it change, or are you trying to use the output of one
+>> recipe to
+>> create input from another without standard recipe dependency
+>> behavior?
 > 
-> That's a lot of "special" and "unfortunately" and "but", adding a 
-> site-specific option and a non-trivial site-specific chunk of code to 
-> the otherwise generic HTTP fetcher.
+> The latter. I have a regular core image built by Yocto, and I don't
+> want to care about full reproducibility - so rebuilding the core image
+> will give me a different image regarding timestamps etc. The second
+> recipe (and its dependents) needs to rerun when the hash of the built
+> image changes. This does not happen without nostamp, because no
+> variable known to Bitbake can contain this hash at parse time.
+
+Bitbake DOES know the hash of the produced image -recipe-, and that should be
+enough to know if you need to rebuild.
+
+So you'd end up with a recipe dependency set that looks something like:
+
+final_recipe -> image_recipe -> glibc, bash, etc...
+
+(with modern OE, you can do a multiconfig build if your final_recipe and
+image_recipe are different architectures..)
+
+
+or you build as two separate steps (two different bitbake commands)..
+
+
+--Mark
+
+> Matthias
 > 
-> I'd suggest implementing this as a new fetcher instead of shoe-horning 
-> it into the wget fetcher.  Then you can do something like githubasset:// 
-> in SRC_URI and the fetcher can do the right thing instead of jumping 
-> through hoops and guessing.
-
-Thanks for your comments. Yes, I was in two minds about it as well. I was also
-contemplating a new bbclass for this instead of a new fetcher for github
-private repositories.
-
-I'll write a new fetcher and see how that will work out...
-
-
-Thanks,
-Andre'
-
-
+> 
+>>
+>> --Mark
+>>
+>>>
+>>> Thanks,
+>>>
+>>> Matthias
+>>>
+>>>
+>>>
+>>>>
+>>>> Unfortunately I no longer have access to the example where I had
+>>>> to
+>>>> do this in
+>>>> the past, or I could try to give you something more concrete to
+>>>> look
+>>>> at.
+>>>>
+>>>> --Mark
+>>>>
+>>>>>
+>>>>> Using nostamp would be an option, but obviously an ugly one.
+>>>>>
+>>>>> I'm currently on Yocto Thud / Bitbake 1.40.
+>>>>>
+>>>>>
+>>>>> Thanks in advance,
+>>>>>
+>>>>> Matthias
+>>>>>
 
