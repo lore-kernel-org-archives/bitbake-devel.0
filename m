@@ -1,51 +1,50 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
-	[209.85.128.68])
-	by mail.openembedded.org (Postfix) with ESMTP id B3CD17CBDD
+Return-Path: <kergoth@gmail.com>
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com
+	[209.85.210.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 5AF6D7F953
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 Nov 2019 17:51:52 +0000 (UTC)
-Received: by mail-wm1-f68.google.com with SMTP id j18so7951759wmk.1
+	Thu, 28 Nov 2019 21:20:55 +0000 (UTC)
+Received: by mail-pf1-f193.google.com with SMTP id x185so944091pfc.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 Nov 2019 09:51:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=1Jw2Czs13NS2Kl1c61Qs23UkjLskIR5jSvhf/sSWRVg=;
-	b=Oa2ybNnKBfQ8NtqHj09ZVlgZMbRvCpIp43Q1RUw7KalJZtxACVIjXWdcDuMqT+IYhJ
-	OY8xxwG+7d+0eWJzumEtTCtiLw30+ZLDMlROwqSyduqRAwrgQ7Fq9a233UEQu3fjXHib
-	SSzfQpEf7JX231/36+8jrMfjP8jpSpzdovR6A=
+	Thu, 28 Nov 2019 13:20:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=date:from:to:message-id:in-reply-to:references:subject:mime-version; 
+	bh=wA+BJDo8PD4oKymEel/LDyVeI+emZTkH1w+TrGLEYa8=;
+	b=jpfgGp9sF5OpCX5hZkO11c0KYnq4CGzh/FwXOL7il4ODp5r7qkrNJdBZBidOabQ4bJ
+	OL4Wk3Cqb3wU9C9BoqxhDgTQ/QvurONfYppMII7KDg37RYtBr5uMPsK2ZXTzfal7NeE5
+	KyRGDVm6wPLxVIwfvoscxL/QIY50Uexiiq39D1sf5MqyBd2haPFTTnJZB9FkxfhQ7BWC
+	wJETelGOQj1PvQQ2PaLucK3NVkZ+p/YV5FYqTrSb9z3nJRa9g1lEeSQ6qMos/w3QiDSl
+	HaUo/OhT58ipQpGug+9IINhDp4gfb89al2alJXDlmTDFbnu7yfw0fmIqc8ZUGZiP2U7D
+	qg9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=1Jw2Czs13NS2Kl1c61Qs23UkjLskIR5jSvhf/sSWRVg=;
-	b=fkc2YU4xFEznHRm0w18EEnVLDvCOgt4P7bCNquBvC6JA7FImluOmXajCB+2Jei9aTo
-	CrPJkGAjhiPYUIWRUsYZJtqskpogTyiDAKMISNWw2ueQAnNTd1kewDmhzNa3MlPE0QSL
-	dqW1k8+h4Z5YqFsEWTIdK4gvHGRQJn2Z6WlOTeTrTkfRYdAPgpU5S+KtF7skR4aRBK+/
-	Yb3aWFjxahxEIwr61rF8+T9HC9ix3Eu3stez+p8DuA6wDI3ZrJeo42oMD3zf1Yiea/GV
-	VcYjkMf3tCOIk3keFICBmUoyqvKoFgPOzNwjNi8FnFBZBNo0okhcX8NBTw6pit+mvNfu
-	jr9w==
-X-Gm-Message-State: APjAAAWWic0RWbDkSn54tCtNGKIyy3cAU1kdHGuM2WIrbAB/GMdeJ03O
-	50HyrpQ3oeycWhhEPfSFMF10tn93gzM=
-X-Google-Smtp-Source: APXvYqyIxieGwYbzmzr7J+gSKT3+Zd+4Vt+qJOdy6u6p3sj/R+oIUqeHSvEG+zvAsQ1WsgW2Y6RRHA==
-X-Received: by 2002:a1c:6086:: with SMTP id
-	u128mr10071851wmb.131.1574963513375; 
-	Thu, 28 Nov 2019 09:51:53 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	a15sm25984164wrx.81.2019.11.28.09.51.52
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 28 Nov 2019 09:51:52 -0800 (PST)
-Message-ID: <140ccb87e6820c4daea903644f43b178a8541a26.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: kai.kang@windriver.com, bitbake-devel@lists.openembedded.org
-Date: Thu, 28 Nov 2019 17:51:51 +0000
-In-Reply-To: <20191128092718.13336-1-kai.kang@windriver.com>
-References: <20191128092718.13336-1-kai.kang@windriver.com>
-User-Agent: Evolution 3.34.1-2 
+	h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
+	:subject:mime-version;
+	bh=wA+BJDo8PD4oKymEel/LDyVeI+emZTkH1w+TrGLEYa8=;
+	b=A0UwekLGI5WUxPVYZkJj0cN177N2YhLugmawyuaUgV4aqcEzlzdboO2KK3QyzLLqeE
+	/ISCMkplORqtEpz87UWPodD7GOReNDOqVgwz3gX0wanYuxetK5mfsXM+9laECqJBBFYI
+	184EC5IH/xoBKJpSps6M+bIYq774AD4znQHfi8+2dVIVdFhaAOj0y5GXN7GgboZHugxG
+	2zFt4TFBm9Iv5/rqTrfcDXjm+dOKhLHiOqhXqHZ0Tl7AJS2MPyRm7fqYdrhsmeCJa94O
+	vJSe042Cg2UnFdku/haqifOi/2CeuBvvW8P4+A8wMXRfVxzrGBLhasZMXvCH6+9UyFxx
+	+Npw==
+X-Gm-Message-State: APjAAAUwQKgghVZ1s1Dv8/pH0lW50YsH1O3ZVLyXaFHfXNGxt3/Nef2f
+	UQEITI+YrtSU1Ub7mJRckphLy8mjgtQ=
+X-Google-Smtp-Source: APXvYqxditafbSo+Zt1YQfoOiCcdqxRCkQOXKhH/ey7zlTKRxxsL9akPh94k+eH9J+9zFc50Kh/izw==
+X-Received: by 2002:aa7:8edd:: with SMTP id b29mr54710748pfr.23.1574976056034; 
+	Thu, 28 Nov 2019 13:20:56 -0800 (PST)
+Received: from [192.168.1.17] (ip70-180-21-74.ph.ph.cox.net. [70.180.21.74])
+	by smtp.gmail.com with ESMTPSA id j18sm7527983pgk.1.2019.11.28.13.20.54
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 28 Nov 2019 13:20:54 -0800 (PST)
+Date: Thu, 28 Nov 2019 14:20:48 -0700
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org, Khem Raj <raj.khem@gmail.com>
+Message-ID: <4835c6d4-a3a2-45cb-ad0c-1a95070b4c22@Spark>
+In-Reply-To: <20191128040947.3413821-1-raj.khem@gmail.com>
+References: <20191128040947.3413821-1-raj.khem@gmail.com>
+X-Readdle-Message-ID: 4835c6d4-a3a2-45cb-ad0c-1a95070b4c22@Spark
 MIME-Version: 1.0
-Subject: Re: [PATCH] runqueue: add mc to pending hash index
+Subject: Re: [PATCH] hg: Add python3-native to native paths
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,76 +57,116 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 Nov 2019 17:51:53 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 28 Nov 2019 21:20:55 -0000
+Content-Type: multipart/alternative; boundary="5de03a35_6b68079a_2d9"
 
-On Thu, 2019-11-28 at 17:27 +0800, kai.kang@windriver.com wrote:
-> From: Kai Kang <kai.kang@windriver.com>
-> 
-> When build multiconfig target by following steps in section "Enabling
-> Multiple Configuration Build Dependencies" in yocto dev-manual which
-> adds dependency between multiconfig targets:
-> 
-> do_image[mcdepends] = "mc:x86:arm:core-image-minimal:do_rootfs"
-> 
-> it shows a lot of warnings, such as:
-> 
-> > WARNING: Deferring
-> >   mc:x86:virtual:native:/path/to/meta/recipes-
-> > support/nss/nss_3.45.bb:do_populate_sysroot
-> >   after
-> >   mc:arm:virtual:native:/path/to/meta/recipes-
-> > support/nss/nss_3.45.bb:do_populate_sysroot
-> 
-> In function pending_hash_index it only checks PN, taskname and hash.
-> But
-> they are same for multiconfig native and allarch packages. Add
-> multiconfig
-> to pending hash index too to make the index unique.
-> 
-> Ref:
-> https://www.yoctoproject.org/docs/latest/dev-manual/dev-manual.html#dev-enabling-multiple-configuration-build-dependencies
-> 
-> Signed-off-by: Kai Kang <kai.kang@windriver.com>
+--5de03a35_6b68079a_2d9
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-This patch completes defeats the point of this code, disabling it. Its
-the wrong thing to do, we want this code to be active.
+EXTRANATIVEPATH is an oe-core-ism, not bitbake, so this isn=E2=80=99t an =
+appropriate place for it. Perhaps in do=5Ffetch in base.bbclass.
+On Nov 27, 2019, 9:10 PM -0700, Khem Raj <raj.khem=40gmail.com>, wrote:
+> This helps fix an issue where python interpreter in hg script could
+> overflow the BINPRM=5FBU=46=5FSIZE which is 128 on most of systems, bec=
+ause
+> interpreter is hardcoded and build paths can be deep.
+>
+> This patch helps, because now the absolute python interp path in hg can=
 
-The bug is that this should not be a warning, probably just a note.
+> be replaced with '/usr/bin/env python3' and it will ensure that python3=
 
-We need it to be a note so that we can tell the mechanism is in action
-from build output logs.
-
-Cheers,
-
-Richard
-
+> from native install is used instead of the one on host.
+>
+> Signed-off-by: Khem Raj <raj.khem=40gmail.com>
 > ---
->  bitbake/lib/bb/runqueue.py | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-> index 485d9341f5..059eb9e283 100644
-> --- a/bitbake/lib/bb/runqueue.py
-> +++ b/bitbake/lib/bb/runqueue.py
-> @@ -69,12 +69,12 @@ def build_tid(mc, fn, taskname):
->      return fn + ":" + taskname
->  
->  # Index used to pair up potentially matching multiconfig tasks
-> -# We match on PN, taskname and hash being equal
-> +# We match on mc, PN, taskname and hash being equal
->  def pending_hash_index(tid, rqdata):
->      (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
->      pn = rqdata.dataCaches[mc].pkg_fn[taskfn]
->      h = rqdata.runtaskentries[tid].unihash
-> -    return pn + ":" + "taskname" + h
-> +    return mc + ":" + pn + ":" + "taskname" + h
->  
->  class RunQueueStats:
->      """
-> -- 
-> 2.17.1
-> 
+> lib/bb/fetch2/hg.py =7C 1 +
+> 1 file changed, 1 insertion(+)
+>
+> diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
+> index e21115de..a640a80c 100644
+> --- a/lib/bb/fetch2/hg.py
+> +++ b/lib/bb/fetch2/hg.py
+> =40=40 -65,6 +65,7 =40=40 class Hg(=46etchMethod):
+> ud.pkgdir =3D os.path.join(hgdir, hgsrcname)
+> ud.moddir =3D os.path.join(ud.pkgdir, ud.module)
+> ud.localfile =3D ud.moddir
+> + d.appendVar(=22EXTRANATIVEPATH=22, =22 python3-native =22)
+> ud.basecmd =3D d.getVar(=22=46ETCHCMD=5Fhg=22) or =22/usr/bin/env hg=22=
 
+>
+> ud.setup=5Frevisions(d)
+> --
+> 2.24.0
+>
+> --
+> =5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
+> bitbake-devel mailing list
+> bitbake-devel=40lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
+--5de03a35_6b68079a_2d9
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+<html xmlns=3D=22http://www.w3.org/1999/xhtml=22>
+<head>
+<title></title>
+</head>
+<body>
+<div name=3D=22messageBodySection=22>
+<div dir=3D=22auto=22>EXTRANATIVEPATH is an oe-core-ism, not bitbake, so =
+this isn=E2=80=99t an appropriate place for it. Perhaps in do=5Ffetch in =
+base.bbclass.</div>
+</div>
+<div name=3D=22messageReplySection=22>On Nov 27, 2019, 9:10 PM -0700, Khe=
+m Raj &lt;raj.khem=40gmail.com&gt;, wrote:<br />
+<blockquote type=3D=22cite=22 class=3D=22spark=5Fquote=22 style=3D=22marg=
+in: 5px 5px; padding-left: 10px; border-left: thin solid =231abc9c;=22>Th=
+is helps fix an issue where python interpreter in hg script could<br />
+overflow the BINPRM=5FBU=46=5FSIZE which is 128 on most of systems, becau=
+se<br />
+interpreter is hardcoded and build paths can be deep.<br />
+<br />
+This patch helps, because now the absolute python interp path in hg can<b=
+r />
+be replaced with '/usr/bin/env python3' and it will ensure that python3<b=
+r />
+from native install is used instead of the one on host.<br />
+<br />
+Signed-off-by: Khem Raj &lt;raj.khem=40gmail.com&gt;<br />
+---<br />
+lib/bb/fetch2/hg.py =7C 1 +<br />
+1 file changed, 1 insertion(+)<br />
+<br />
+diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py<br />
+index e21115de..a640a80c 100644<br />
+--- a/lib/bb/fetch2/hg.py<br />
++++ b/lib/bb/fetch2/hg.py<br />
+=40=40 -65,6 +65,7 =40=40 class Hg(=46etchMethod):<br />
+ud.pkgdir =3D os.path.join(hgdir, hgsrcname)<br />
+ud.moddir =3D os.path.join(ud.pkgdir, ud.module)<br />
+ud.localfile =3D ud.moddir<br />
++ d.appendVar(=22EXTRANATIVEPATH=22, =22 python3-native =22)<br />
+ud.basecmd =3D d.getVar(=22=46ETCHCMD=5Fhg=22) or =22/usr/bin/env hg=22<b=
+r />
+<br />
+ud.setup=5Frevisions(d)<br />
+--<br />
+2.24.0<br />
+<br />
+--<br />
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F<br />
+bitbake-devel mailing list<br />
+bitbake-devel=40lists.openembedded.org<br />
+http://lists.openembedded.org/mailman/listinfo/bitbake-devel<br /></block=
+quote>
+</div>
+</body>
+</html>
+
+--5de03a35_6b68079a_2d9--
