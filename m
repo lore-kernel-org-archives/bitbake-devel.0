@@ -1,50 +1,49 @@
-Return-Path: <pascal.huerst@gmail.com>
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com
-	[209.85.208.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 5EAA37F362
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
+	[209.85.221.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 1A9D37F2BC
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  4 Dec 2019 09:16:01 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id j17so5989357edp.3
+	Wed,  4 Dec 2019 11:53:03 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id d16so3593085wre.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 04 Dec 2019 01:16:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:mime-version
+	Wed, 04 Dec 2019 03:53:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=Soy51/V3bnIThjA4EOobLZ9L8xBpwsrE+SANHdy3XsI=;
-	b=tw7/Kg7HpLy9cH5W3+TtBixsyTfAfRkOfhAMvT9uWDHPViMYw/lqppBV2oCYOe5qyu
-	mFjeCux0WPpo0/lOxR4eLfO2LJ0wiey/ZepB6KW40rEj7qavbrAahPnPb6JlHrBS8N+C
-	EXMOeyT3Fc7Q5HwMce74CC/nmPFdsDrldWMju+a6n8GwuCoKo7+grZ3P8a5rYTbLY6wr
-	z9xk/XW/VLhbnL3ZVk+d5/18JESkgi4zzOQGC5ldGe8P8SE0ZAWltm0Vxd7O2EC7MDEv
-	kgHL5wwFWzzPSOegHcLwFAB8VoM28SDXPU975m2vaJk4K5XHOiP2isqwnNsfWrsZRAGy
-	ErQQ==
+	bh=SG4SQOHu19+GnH1xfpmRckTPs8bcEJsjS0TeDdsI1xI=;
+	b=DDdjAogj/2+mlLJ7W4OWrSnHuQmFEbS3DM5US3ygdBTFVajnUhgz2NTdA+lHRGYOB1
+	vuzwApyJsK247KQMIe99/51hEuKXvEVDuv2icGT0ZtAwuSnGROjq5sVYkzL4sq+fHhak
+	I5IzZ25fSJNYt3uUcRi5q6AHNBnNltfL/7N8s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=Soy51/V3bnIThjA4EOobLZ9L8xBpwsrE+SANHdy3XsI=;
-	b=fRTM2uG1v4G29nrfE18DLYPrFjUZZFR30TM3tldNOZWsqHegCgOEFhwyjtAZfaJ1bO
-	KppuCVmSsWGFM2Ts1uIyAsthfrPsTAE6L9k/WkmqlTOyDsqxu6tzQeV7AwhX9XFydZpO
-	YTOhQMeERhHlLV8xXYkDATaut58fM1rBgWL7B4B4xRgg5f2BNNbvlzhidD8/ZReD1Jug
-	K02HcgUVzuEQr169bTVPQSESA+m0HYVy6uYIugccUXU9ZLt6Nvnm5gQTqUDw/EVBH37h
-	7B/vN8+vCleyrexDGn2r+/G2BFgFc8xfp7ShmOcdE+ATI2bzs03sPYkZYOKpLyWGT362
-	CkiQ==
-X-Gm-Message-State: APjAAAUwdK3PVaNEvdIchXi/nAKRNI28cy1asESRqTbBwqR9XFWJK++i
-	VleRuqUJPYgwTKsI3Yb5u9Z9m+bV
-X-Google-Smtp-Source: APXvYqwBOez9l5CjbQWqVN/Uy5uLTebq76AVbh4OCWZcnILSAWhgYAULyc22hCQOQHGhNke+5zKMwg==
-X-Received: by 2002:a05:6402:1b11:: with SMTP id
-	by17mr2827917edb.13.1575450961839; 
-	Wed, 04 Dec 2019 01:16:01 -0800 (PST)
-Received: from t470s-local.localdomain ([194.162.236.226])
-	by smtp.gmail.com with ESMTPSA id q2sm72455eje.63.2019.12.04.01.16.01
+	bh=SG4SQOHu19+GnH1xfpmRckTPs8bcEJsjS0TeDdsI1xI=;
+	b=Kw6u99Lh+Vj9n8lYHuXssdedfTiXIHyqJSlv/q+Yn0Ii1h+NVJZ005QiHlA9EUWG3j
+	AJCYeHiUsnE22/Kdns4x2opcLbnRz8NRYXooVuh6jusGpFZ4ubDnereU9EyZu7392gg4
+	3yfJpJX90MKSL8YxwHWiYPKy1zPapMBsuL5PE7Sl8830AHUWZEZQrXf3vI/kn7KvMd0q
+	MqX2N5wXz9ETZsX0BfrZMtgb7fcmIqdlI9URv9hZ/HZ1bt8Mw0ldR623e45gDVxYic1O
+	LBGXRiZxI7Jl99kbMaObnAS80ZQlhRz6jfZI612O611AdP1Zo2al4Dodfqyknd4JQpnL
+	6jvw==
+X-Gm-Message-State: APjAAAUVngZ/qkCKpNiGvIK7sOGkZIQhDg1FShs5aFHDOC+Dc2FlZSLz
+	I3A7teN+/36QsumhCKfUwwmAh5qCHwE=
+X-Google-Smtp-Source: APXvYqxyXHgb9OxdYZbaGh+FFBWX+GZmdZP3dQB5KeCyl1pU/LsBaT0nbYkmY3tQBCrm4BpEvgLlLQ==
+X-Received: by 2002:adf:9124:: with SMTP id j33mr3717137wrj.357.1575460384290; 
+	Wed, 04 Dec 2019 03:53:04 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	o4sm7813059wrw.97.2019.12.04.03.53.03
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 04 Dec 2019 01:16:01 -0800 (PST)
-From: pascal.huerst@gmail.com
+	Wed, 04 Dec 2019 03:53:03 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  4 Dec 2019 10:15:40 +0100
-Message-Id: <20191204091540.28005-1-pascal.huerst@gmail.com>
-X-Mailer: git-send-email 2.23.0
+Date: Wed,  4 Dec 2019 11:52:59 +0000
+Message-Id: <20191204115302.24692-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: [PATCH v1] bitbake: fetch2/git: add SRC_URI option versiontag
+Subject: [PATCH 1/4] hashserv: Add support for equivalent hash reporting
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,117 +56,106 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 04 Dec 2019 09:16:01 -0000
+X-List-Received-Date: Wed, 04 Dec 2019 11:53:04 -0000
 Content-Transfer-Encoding: 8bit
 
-From: Pascal Huerst <pascal.huerst@gmail.com>
+The reason for this should be recorded in the commit logs. Imagine
+you have a target recipe (e.g. meta-extsdk-toolchain) which depends on
+gdb-cross. sstate in OE-Core allows gdb-cross to have the same hash
+regardless of whether its built on x86 or arm. The outhash will be
+different.
 
-Use latest_versionstring() to find the latest tagged release for use with
-AUTOREV. This can be useful, if you want to build the latest tagged release
-instead of a branch. UPSTREAM_CHECK_GITTAGREGEX can be used to specify a
-version format.
+We need hashequiv to be able to adapt to the prescence of sstate artefacts
+for meta-extsdk-toolchain and allow the hashes to re-intersect, rather than
+trying to force a rebuild of meta-extsdk-toolchain. By this point in the build,
+it would have already been installed from sstate so the build needs to adapt.
 
-Signed-off-by: Pascal Huerst <pascal.huerst@gmail.com>
+Equivalent hashes should be reported to the server as a taskhash that
+needs to map to an specific unihash. This patch adds API to the hashserv
+client/server to allow this.
+
+[Thanks to Joshua Watt for help with this patch]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/fetch2/git.py  | 24 ++++++++++++++++++++----
- bitbake/lib/bb/tests/fetch.py | 18 ++++++++++++++++++
- 2 files changed, 38 insertions(+), 4 deletions(-)
+ lib/hashserv/client.py |  8 ++++++++
+ lib/hashserv/server.py | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index fa41b078f1..3091619475 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -47,6 +47,11 @@ Supported SRC_URI options are:
-    referring to commit which is valid in tag instead of branch.
-    The default is "0", set nobranch=1 if needed.
+diff --git a/lib/hashserv/client.py b/lib/hashserv/client.py
+index f65956617b..ae0cce9df4 100644
+--- a/lib/hashserv/client.py
++++ b/lib/hashserv/client.py
+@@ -148,6 +148,14 @@ class Client(object):
+         m['unihash'] = unihash
+         return self.send_message({'report': m})
  
-+- versiontag
-+   Use latest_versionstring() to find the latest tagged release for use with
-+   AUTOREV. Implies nobranch. Check UPSTREAM_CHECK_GITTAGREGEX on how to specify
-+   your version format.
++    def report_unihash_equiv(self, taskhash, method, unihash, extra={}):
++        self._set_mode(self.MODE_NORMAL)
++        m = extra.copy()
++        m['taskhash'] = taskhash
++        m['method'] = method
++        m['unihash'] = unihash
++        return self.send_message({'report-equiv': m})
 +
- - usehead
-    For local git:// urls to use the current branch HEAD as the revision for use with
-    AUTOREV. Implies nobranch.
-@@ -150,6 +155,8 @@ class Git(FetchMethod):
+     def get_stats(self):
+         self._set_mode(self.MODE_NORMAL)
+         return self.send_message({'get-stats': None})
+diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+index 0aff77688e..cc7e48233b 100644
+--- a/lib/hashserv/server.py
++++ b/lib/hashserv/server.py
+@@ -143,6 +143,7 @@ class ServerClient(object):
+             handlers = {
+                 'get': self.handle_get,
+                 'report': self.handle_report,
++                'report-equiv': self.handle_equivreport,
+                 'get-stream': self.handle_get_stream,
+                 'get-stats': self.handle_get_stats,
+                 'reset-stats': self.handle_reset_stats,
+@@ -303,6 +304,41 @@ class ServerClient(object):
  
-         ud.nobranch = ud.parm.get("nobranch","0") == "1"
+         self.write_message(d)
  
-+        ud.versiontag = ud.parm.get("versiontag","0") == "1"
++    async def handle_equivreport(self, data):
++        with closing(self.db.cursor()) as cursor:
++            insert_data = {
++                'method': data['method'],
++                'outhash': "",
++                'taskhash': data['taskhash'],
++                'unihash': data['unihash'],
++                'created': datetime.now()
++            }
 +
-         # usehead implies nobranch
-         ud.usehead = ud.parm.get("usehead","0") == "1"
-         if ud.usehead:
-@@ -161,9 +168,20 @@ class Git(FetchMethod):
-         ud.bareclone = ud.parm.get("bareclone","0") == "1"
-         if ud.bareclone:
-             ud.nocheckout = 1
--  
++            for k in ('owner', 'PN', 'PV', 'PR', 'task', 'outhash_siginfo'):
++                if k in data:
++                    insert_data[k] = data[k]
 +
-+        # versiontag implies nobranch
-+        if ud.versiontag:
-+            ud.nobranch = 1
++            cursor.execute('''INSERT OR IGNORE INTO tasks_v2 (%s) VALUES (%s)''' % (
++                ', '.join(sorted(insert_data.keys())),
++                ', '.join(':' + k for k in sorted(insert_data.keys()))),
++                insert_data)
 +
-+        ud.basecmd = d.getVar("FETCHCMD_git") or "git -c core.fsyncobjectfiles=0"
++            self.db.commit()
 +
-         ud.unresolvedrev = {}
-         branches = ud.parm.get("branch", "master").split(',')
++            # Fetch the unihash that will be reported for the taskhash. If the
++            # unihash matches, it means this row was inserted (or the mapping
++            # was already valid)
++            row = self.query_equivalent(data['method'], data['taskhash'])
 +
-+        if ud.versiontag:
-+            upversion, revision = self.latest_versionstring(ud, d)
-+            d.setVar("SRCREV", revision)
++            if row['unihash'] == data['unihash']:
++                logger.info('Adding taskhash equivalence for %s with unihash %s',
++                                data['taskhash'], row['unihash'])
 +
-         if len(branches) != len(ud.names):
-             raise bb.fetch2.ParameterError("The number of name and branch parameters is not balanced", ud.url)
- 
-@@ -221,8 +239,6 @@ class Git(FetchMethod):
-         if ud.usehead:
-             ud.unresolvedrev['default'] = 'HEAD'
- 
--        ud.basecmd = d.getVar("FETCHCMD_git") or "git -c core.fsyncobjectfiles=0"
--
-         write_tarballs = d.getVar("BB_GENERATE_MIRROR_TARBALLS") or "0"
-         ud.write_tarballs = write_tarballs != "0" or ud.rebaseable
-         ud.write_shallow_tarballs = (d.getVar("BB_GENERATE_SHALLOW_TARBALLS") or write_tarballs) != "0"
-@@ -674,7 +690,7 @@ class Git(FetchMethod):
-             if tag == None:
-                 continue
- 
--            tag = tag.group('pver')
-+            tag = tag.group(0)
-             tag = tag.replace("_", ".")
- 
-             if verstring and bb.utils.vercmp(("0", tag, ""), ("0", verstring, "")) < 0:
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index 83fad3ff0d..175f0abd61 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -996,6 +996,24 @@ class FetcherNetworkTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(repo_path, 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c/deps/ctest/README.md')), msg='Missing submodule checkout')
-         self.assertTrue(os.path.exists(os.path.join(repo_path, 'edgelet/hsm-sys/azure-iot-hsm-c/deps/utpm/deps/c-utility/testtools/umock-c/deps/testrunner/readme.md')), msg='Missing submodule checkout')
- 
-+    @skipIfNoNetwork()
-+    def test_git_versiontag(self):
-+        """ If versiontag is set in SRC_URI, it should fetch the latest release tag, using UPSTREAM_CHECK_GITTAGREGEX. If unset, standard format vX.X.X is used"""
++            d = {k: row[k] for k in ('taskhash', 'method', 'unihash')}
 +
-+        url = "git://git.yoctoproject.org/git/poky;protocol=https;versiontag=1"
++        self.write_message(d)
 +
-+        self.d.setVar('SRCREV', '${AUTOREV}')
-+        self.d.setVar('AUTOREV', '${@bb.fetch2.get_autorev(d)}')
-+        self.d.setVar('UPSTREAM_CHECK_GITTAGREGEX', "([a-z]+)-([0-9]+).([0-9]+).([0-9]+)")
 +
-+        fetcher = bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+
-+        os.chdir(os.path.dirname(self.unpackdir))
-+        fetcher.unpack(self.unpackdir)
-+
-+        repo_path = os.path.join(self.tempdir, 'unpacked', 'git')
-+
- class SVNTest(FetcherTest):
-     def skipIfNoSvn():
-         import shutil
+     async def handle_get_stats(self, request):
+         d = {
+             'requests': self.request_stats.todict(),
 -- 
-2.23.0
+2.20.1
 
 
