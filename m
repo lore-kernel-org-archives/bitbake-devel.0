@@ -1,46 +1,49 @@
-Return-Path: <mailych@yahoo.com>
-Received: from sonic307-20.consmr.mail.sg3.yahoo.com
-	(sonic307-20.consmr.mail.sg3.yahoo.com [106.10.241.37])
-	by mail.openembedded.org (Postfix) with ESMTP id CCC3D60273
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
+	[209.85.221.68])
+	by mail.openembedded.org (Postfix) with ESMTP id BFC306C149
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 Dec 2019 09:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
-	t=1575538513; bh=hXhFkl+rwT7ZEaxnzeiRKdUh1eyQF858Kj8skLB2rB8=;
-	h=Date:From:To:Subject:References:From:Subject;
-	b=ORpToj5K74nR83VG1IsKYjJJQd4nPsf/900B3VTSmas9vlklMXW8aalUIG8n82zx/JKxcmyM9NdCDlKZYfskR9GmWez7EnE4G2Cm6N6H09sIzwLMZVllH5+aeoIcufr8DbzceMECWyMXR56tHocdN/O5TuVJw49Wwc0LM7yYWznSocvz8Xdj1uKMht7DIv0AUgX7jPynkMajiLq5cjrUWmx4ysVhPo8FryGZcydp47KuKEpN55s327fuU0mG+tnd3gzsJj7KheVtjwcQMmA9mYjMy89Sok6+lT2+nxhUE+HQHHG+5TSISnPQtpW0VGbOQQsqN6oBQcvpjI/h7YsS9Q==
-X-YMail-OSG: d7arfFwVM1lA8LQVBmjWRP81_9GMKAnI8F7fyzhPVv2FNchCcV4nSNJMFbjel4U
-	8viFLMmR9lfB7RK2Ka3KVRPrCUZAQdFsOwo.jPeF7IR3Ne7RykTC1wgKJgPM44aXWuQ6JH2w_Ddt
-	aw3EOSvdlKCqwfJvaAaf_Q2p8kJwIShfurAr4DYGEwN4VkpKMnylBy8rwEa37NXUGVjHSQZlgr0I
-	JOc0rCh5igkob6_ncsUoMdlO0s2EH21BM4akbok6rRd.5CK0.gSR9mrENVOkTHFxWZfajJG_82.A
-	4BSrFwz2AL9xlMKzW9KdR0K7S6KHIhl_3fYVCOEN3xbAlKHi7Eu_v1PJ6gnHdUmLwYFUDBpPPRGP
-	0csEfT2GyF1FXgaLX7Ue6Q.m89miU6MWWk3WuTcX9Z5ZLpdXCRsvCjYkWaLeh9fyMD2yIXVSivbb
-	w6Fc1v9r4VNoXLR2A9o57HAnT9YfkUZFwdYR0pntJ2TrY9NHYGbnIb6fFTmhjRTMaxjb__B_hMg0
-	Uv4m9Z7s0TwEpZCq1l216msWoFECsZFE3wkl80txi0uz_4LZ1p5dN6e7oppimXkd1Rhd6cx0NcaG
-	fkQvDvUd1qE7sIY.hLd4Ri2UykEFTVvbys0__pC_60WYbd33odjqz9ygnpjccDTO8I5PBd_fm_cm
-	3j5.mtXZm715CG9.u_MH9FQ9lOGLhV8n89RxlrPYGjuZO.naDyBdyAcSeRBQCW0fFD1oTRAkBe5F
-	ZpRFE.QcWNaNaZf8PbKAXKNhxwWqY4aCyMhmlOkUautO5c.o1ZxB5NXeBPZ8HF3zJgQK6KTgp_LH
-	BxzMgVv3i0Nxelxi4G1ZKilJi5bQ6bGJKIL8nkyGUY0wEPzcWSj.Nte95hZt15IBZWpKYXyXUxdn
-	IvHxEvqkuXvEZfotu52nHFWaiG1E43Jt3yAhnhgL3MMVzPVbg2ktHPEDlWR7Lpo5uSyfnKqIkbWP
-	g3PDta3WDt4LMQT.z144jzwGK.kRE.SnRi9EmWpF4al4Gc1xCho0oOmHCU0r7MShjTYuuexAh2jo
-	b4cKuv.a87sesuQEcGth9PYsNfYNaGsTZAEfzLswjcYdDwMecPTTsCZDLPgI4DVFZdRYa1.ynJis
-	79a93ZPwwiJdE.Ux8zidU8sH6UyBJKiPmtedA3im.0zkddhx0io1XrTgcH_TzNsmhmCDYFRtA4GM
-	G6z.uNOxy4E5fappDE3roi0a5SYxSQ7pGw.KX.sd0ap2dFRIkU7uHHx1RA9HO_DFdeTcUEFzIYLx
-	TOcn5jEv0iQfxWlwZ2LWwiXWx9gCk2bsq3bReUa2amy_8dxNMhOtfmsOJVuXirzmy4IVNCbE5Uta
-	dy9nvt_0rsp0-
-Received: from sonic.gate.mail.ne1.yahoo.com by
-	sonic307.consmr.mail.sg3.yahoo.com with HTTP;
-	Thu, 5 Dec 2019 09:35:13 +0000
-Date: Thu, 5 Dec 2019 09:35:09 +0000 (UTC)
-From: Yoonus <mailych@yahoo.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Message-ID: <622579253.3909060.1575538509713@mail.yahoo.com>
+	Thu,  5 Dec 2019 15:29:10 +0000 (UTC)
+Received: by mail-wr1-f68.google.com with SMTP id c14so4117518wrn.7
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 05 Dec 2019 07:29:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=KFeifF8dGoi2qsj8ueTpc/UTaqYXpt+hjWhgSbNFBck=;
+	b=XwODFZhQXOnUVioPQlM3WrPj85O3HJJLmy0EmE0sjOZRUkkHNJQ5T434hDZHOq/Es9
+	SnxxJIF2IKEvtyY3vdrD2qPsSWR0weXFzpMq5pRF+hcIhxJxFF0Yv8EjWY08j+IdyOEU
+	oZnLLqm3FPxn+gC0sQFHtMegRAG8Uo35DI26U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=KFeifF8dGoi2qsj8ueTpc/UTaqYXpt+hjWhgSbNFBck=;
+	b=opDWwQQzREWz6XNhe17jgYTXNIAP7AQAQ6+MC1DDKt3kagr0xaowBRprT6nI2usUae
+	g0VWjXLOTz3RQsUdkSwciQy8uq59AZGVYEzv0ySGV3F1hrJmdWG7pAx8iaN5GWjDCRSQ
+	aKZpupJ+2bYm6+OsoV/ngHVG9hjqpZDmU3GoSaS0PpGahXbQlAmB8nzv3NsY+8L3iGrJ
+	xVfcV49zZaAV3cXG+V/RUOQPQ7ryb5CCpMYCHCkvUe1TRkruuMGld1CVMbmYRTp12zoD
+	ewvWDtZGnfhQ6jMWLfdv5vDkF8sk26X3MRJJWtutdrmCIRBtV9/i2VxpMGGdXKwq1RGx
+	ewUg==
+X-Gm-Message-State: APjAAAXKiK+VxBC0EuAdpq4tO5C08iVEj53bIK4okqEnzW4dNDnCTOO0
+	9FKoTeMfBx32gzigsrNTUceXRW3JZWI=
+X-Google-Smtp-Source: APXvYqwIFOs3W90usogjqAyXxZ/CSAmV0y21ds8iq65Ep9hLKrclbbnO2IdJt3GrxAURnRgHVOCexQ==
+X-Received: by 2002:a5d:6305:: with SMTP id i5mr11010517wru.119.1575559751076; 
+	Thu, 05 Dec 2019 07:29:11 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	a7sm13147004wrr.50.2019.12.05.07.29.10
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Thu, 05 Dec 2019 07:29:10 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  5 Dec 2019 15:29:09 +0000
+Message-Id: <20191205152909.30943-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <622579253.3909060.1575538509713.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.14728 YMailNorrin Mozilla/5.0 (Windows NT 6.1; Win64;
-	x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120
-	Safari/537.36
-Subject: BitBake - How to run do_install_prepend() for single machine conf
+Subject: [PATCH] siggen: Avoid taskhash mismatch errors for nostamp tasks when dependencies rehash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,99 +56,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Dec 2019 09:35:13 -0000
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_3909059_553992535.1575538509712"
+X-List-Received-Date: Thu, 05 Dec 2019 15:29:11 -0000
+Content-Transfer-Encoding: 8bit
 
-------=_Part_3909059_553992535.1575538509712
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+An example:
 
-Hi,
-I have a bb file with following functions.=C2=A0do_install_prepend() is for=
- default/base machine configuration.do_install_prepend_m1() is for m1 machi=
-ne configuration.do_install_prepend_m2() is for m2 machine configuration.do=
-_install_prepend_m3() is for m3 machine configuration.
-m1 is derived from default configuration. m2 and m3 are derived from m1.
-When I run bb file for m3 machine configuration, I see, it runs do_install_=
-prepend_m3(), do_install_prepend_m1() and do_install_prepend(). All 3 funct=
-ions are called.
-Is there a way to modify this bb, so that, only do_install_prepend_m3() is =
-run? If do_install_prepend_m3() is not present, then it should run do_insta=
-ll_prepend_m1().If that is not present, it should run do_install_prepend().=
- That is, I only want to run one function.
+NOTE: recipe binutils-cross-testsuite-2.32.0-r0: task do_check: Started
+ERROR: Taskhash mismatch b074da4334aff8aa06572e7a8725c941fa6b08de4ce714a65a90c0c0b680abea versus 17375278daed609a7129769b74a1336a37bdef14b534ae85189ccc033a9f2db4 for /home/pokybuild/yocto-worker/qemux86-64/build/meta/recipes-devtools/binutils/binutils-cross-testsuite_2.32.bb:do_check
+NOTE: recipe binutils-cross-testsuite-2.32.0-r0: task do_check: Succeeded
 
-do_install_prepend () {=C2=A0 echo "default install_prepend"}
-do_install_prepend_m1 () {=C2=A0 echo "m1 install_prepend"}
-do_install_prepend_m2 () {=C2=A0 echo "m2 install_prepend"}
-do_install_prepend_m3 () {=C2=A0 echo "m3 install_prepend"}
+Is caused by a rehash in a dependency happening somewhere earlier in the build
+and the taint being reset.
 
-Thanks for your help.
+Change the code so that nostamp taints are preserved to avoid the issue.
 
-------=_Part_3909059_553992535.1575538509712
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/siggen.py | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-<html><head></head><body><div class=3D"yahoo-style-wrap" style=3D"font-fami=
-ly:garamond, new york, times, serif;font-size:16px;"><div dir=3D"ltr" data-=
-setdir=3D"false"><div><div><font face=3D"courier new, courier, monaco, mono=
-space, sans-serif" size=3D"2">Hi,</font></div><div><font face=3D"courier ne=
-w, courier, monaco, monospace, sans-serif" size=3D"2"><br></font></div><div=
-><font face=3D"courier new, courier, monaco, monospace, sans-serif" size=3D=
-"2">I have a bb file with following functions.&nbsp;</font></div><div><font=
- face=3D"courier new, courier, monaco, monospace, sans-serif" size=3D"2">do=
-_install_prepend() is for default/base machine configuration.</font></div><=
-div><font face=3D"courier new, courier, monaco, monospace, sans-serif" size=
-=3D"2">do_install_prepend_m1() is for m1 machine configuration.</font></div=
-><div><font face=3D"courier new, courier, monaco, monospace, sans-serif" si=
-ze=3D"2">do_install_prepend_m2() is for m2 machine configuration.</font></d=
-iv><div><font face=3D"courier new, courier, monaco, monospace, sans-serif" =
-size=3D"2">do_install_prepend_m3() is for m3 machine configuration.</font><=
-/div><div><font face=3D"courier new, courier, monaco, monospace, sans-serif=
-" size=3D"2"><br></font></div><div><font face=3D"courier new, courier, mona=
-co, monospace, sans-serif" size=3D"2">m1 is derived from default configurat=
-ion. m2 and m3 are derived from m1.</font></div><div><font face=3D"courier =
-new, courier, monaco, monospace, sans-serif" size=3D"2"><br></font></div><d=
-iv><font face=3D"courier new, courier, monaco, monospace, sans-serif" size=
-=3D"2">When I run bb file for m3 machine configuration, I see, it runs do_i=
-nstall_prepend_m3(), do_install_prepend_m1() and do_install_prepend(). All =
-3 functions are called.</font></div><div><font face=3D"courier new, courier=
-, monaco, monospace, sans-serif" size=3D"2"><br></font></div><div><font fac=
-e=3D"courier new, courier, monaco, monospace, sans-serif" size=3D"2">Is the=
-re a way to modify this bb, so that, only do_install_prepend_m3() is run? I=
-f do_install_prepend_m3() is not present, then it should run do_install_pre=
-pend_m1().</font></div><div><font face=3D"courier new, courier, monaco, mon=
-ospace, sans-serif" size=3D"2">If that is not present, it should run do_ins=
-tall_prepend(). That is, I only want to run one function.</font></div><div>=
-<font face=3D"courier new, courier, monaco, monospace, sans-serif" size=3D"=
-2"><br></font></div><div><font face=3D"courier new, courier, monaco, monosp=
-ace, sans-serif" size=3D"2"><br></font></div><div><font face=3D"courier new=
-, courier, monaco, monospace, sans-serif" size=3D"2">do_install_prepend () =
-{</font></div><div><font face=3D"courier new, courier, monaco, monospace, s=
-ans-serif" size=3D"2">&nbsp; echo "default install_prepend"</font></div><di=
-v><font face=3D"courier new, courier, monaco, monospace, sans-serif" size=
-=3D"2">}</font></div><div><font face=3D"courier new, courier, monaco, monos=
-pace, sans-serif" size=3D"2"><br></font></div><div><font face=3D"courier ne=
-w, courier, monaco, monospace, sans-serif" size=3D"2">do_install_prepend_m1=
- () {</font></div><div><font face=3D"courier new, courier, monaco, monospac=
-e, sans-serif" size=3D"2">&nbsp; echo "m1 install_prepend"</font></div><div=
-><font face=3D"courier new, courier, monaco, monospace, sans-serif" size=3D=
-"2">}</font></div><div><font face=3D"courier new, courier, monaco, monospac=
-e, sans-serif" size=3D"2"><br></font></div><div><font face=3D"courier new, =
-courier, monaco, monospace, sans-serif" size=3D"2">do_install_prepend_m2 ()=
- {</font></div><div><font face=3D"courier new, courier, monaco, monospace, =
-sans-serif" size=3D"2">&nbsp; echo "m2 install_prepend"</font></div><div><f=
-ont face=3D"courier new, courier, monaco, monospace, sans-serif" size=3D"2"=
->}</font></div><div><font face=3D"courier new, courier, monaco, monospace, =
-sans-serif" size=3D"2"><br></font></div><div><font face=3D"courier new, cou=
-rier, monaco, monospace, sans-serif" size=3D"2">do_install_prepend_m3 () {<=
-/font></div><div><font face=3D"courier new, courier, monaco, monospace, san=
-s-serif" size=3D"2">&nbsp; echo "m3 install_prepend"</font></div><div><font=
- face=3D"courier new, courier, monaco, monospace, sans-serif" size=3D"2">}<=
-/font></div><div><font face=3D"courier new, courier, monaco, monospace, san=
-s-serif" size=3D"2"><br></font></div><div><font face=3D"courier new, courie=
-r, monaco, monospace, sans-serif" size=3D"2"><br></font></div><div><font fa=
-ce=3D"courier new, courier, monaco, monospace, sans-serif" size=3D"2">Thank=
-s for your help.</font></div></div><br></div></div></body></html>
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index edf10105f9..de85326872 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -232,10 +232,14 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         taskdep = dataCache.task_deps[fn]
+         if 'nostamp' in taskdep and task in taskdep['nostamp']:
+             # Nostamp tasks need an implicit taint so that they force any dependent tasks to run
+-            import uuid
+-            taint = str(uuid.uuid4())
+-            data = data + taint
+-            self.taints[tid] = "nostamp:" + taint
++            if tid in self.taints and self.taints[tid].startswith("nostamp:"):
++                # Don't reset taint value upon every call
++                data = data + self.taints[tid][8:]
++            else:
++                import uuid
++                taint = str(uuid.uuid4())
++                data = data + taint
++                self.taints[tid] = "nostamp:" + taint
+ 
+         taint = self.read_taint(fn, task, dataCache.stamp[fn])
+         if taint:
+-- 
+2.20.1
 
-------=_Part_3909059_553992535.1575538509712--
+
