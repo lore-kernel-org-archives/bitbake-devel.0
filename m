@@ -1,47 +1,106 @@
-Return-Path: <bkylerussell@gmail.com>
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com
-	[209.85.214.182])
-	by mail.openembedded.org (Postfix) with ESMTP id DF1E67E66A
+Return-Path: <prvs=0242cc7aa0=sean.mckay@hpe.com>
+X-Greylist: delayed 713 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 05 Dec 2019 23:25:53 UTC
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com
+	[148.163.143.35])
+	by mail.openembedded.org (Postfix) with ESMTP id 3B7777F8F3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  6 Dec 2019 22:10:15 +0000 (UTC)
-Received: by mail-pl1-f182.google.com with SMTP id bh2so2163556plb.11
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 06 Dec 2019 14:10:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=R3eRb4dd7SH7Hxc4XiR1a96OXsKkqpCyWJKH105cZfA=;
-	b=WhUdPogyoulUSHdflR0JtMD9hRqAVn5a+GKimcAvIk20TzpcJ3/zGOl5RZ92vlM7eE
-	bdTswkCwiLh7/D6roBoqCL9mT5/YwT1g05eXV/05lcrtWttdi+UVnVnyvE87WgfWVrq8
-	Jebq1+EZsPqw8zpjMGBBkKIcMDN0GNw4cKt/YQclp7NveEPubeeQMn5vNBGIGgDMHpp+
-	xc7imixy3EZBONvOid5nkyX4HYMYw75tVVBZwshHXOWz6Ovqet/tgJi8duMFKGTdiDzd
-	Mcr4DHY9OcpFygStQPQ5OKlZrxkJjw93i+6+Rop8SMS9uxe61tuG/u7ymYM0RZmF05Zx
-	HWiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=R3eRb4dd7SH7Hxc4XiR1a96OXsKkqpCyWJKH105cZfA=;
-	b=KXbpzprqHXAKkKHkwcLA2MbCqJdXvO1RgrwoCb2SugixWcZJ9meo+xh9Um5eXG7BGw
-	YaUrla/E2hJBRqgwSohLtrhZX8FvqSS9uvIZ/phW9S8bk7tl9iU8J6rj4nJdut/c9cM7
-	+g84PMMW96YjdL8SbtROtEbHDu388BkQta1bG7v4PDLf6ahEYp3Y12B/sEYZlYB+QMQp
-	83yVpLFtB0txAx+2j1d1ntY0XQ5zJ6oqOfenHp87phLP3xMPvTZF0royq2bDJ+knvJpX
-	jUF2tjOTMidgc9qZBjLX3niP2e7G1hjdvhInNyGAVSdLRUOq3Oy5vd7d3tdc9De6UQGp
-	Mhxg==
-X-Gm-Message-State: APjAAAVhr4NNEDWGj4EcSTfFP8W7Uhg19xB9uXRrvPaOf35ZHoY0PBCr
-	KAmlEL4jSg6tVXaN3AbLKX/f3TCl
-X-Google-Smtp-Source: APXvYqwmG9kj/G7Z2AsEntNB6CWy7uQBZ/2qMCaSJ++nF3vRTv1oa4Su4dE3QVgMvAUB82NDjGr1fw==
-X-Received: by 2002:a17:902:b614:: with SMTP id
-	b20mr16956266pls.305.1575670216749; 
-	Fri, 06 Dec 2019 14:10:16 -0800 (PST)
-Received: from poirot.lexmark.com ([12.190.236.26])
-	by smtp.gmail.com with ESMTPSA id 91sm4375021pjq.18.2019.12.06.14.10.15
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 06 Dec 2019 14:10:16 -0800 (PST)
-From: Kyle Russell <bkylerussell@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri,  6 Dec 2019 17:10:00 -0500
-Message-Id: <20191206221000.16714-1-bkylerussell@gmail.com>
-X-Mailer: git-send-email 2.17.1
-Subject: [1.40][PATCH] runqueue: fix multiconfig task dependency filtering
+	Thu,  5 Dec 2019 23:25:53 +0000 (UTC)
+Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id
+	xB5N6eQL009100; Thu, 5 Dec 2019 23:14:00 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com
+	[15.241.140.78])
+	by mx0b-002e3701.pphosted.com with ESMTP id 2wq721hn4x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NOT); Thu, 05 Dec 2019 23:14:00 +0000
+Received: from G4W10204.americas.hpqcorp.net (g4w10204.houston.hpecorp.net
+	[16.207.82.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by g4t3425.houston.hpe.com (Postfix) with ESMTPS id B9A4B9D;
+	Thu,  5 Dec 2019 23:13:59 +0000 (UTC)
+Received: from G2W6311.americas.hpqcorp.net (16.197.64.53) by
+	G4W10204.americas.hpqcorp.net (16.207.82.16) with Microsoft SMTP Server
+	(TLS) id 15.0.1367.3; Thu, 5 Dec 2019 23:13:59 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (15.241.52.11) by
+	G2W6311.americas.hpqcorp.net (16.197.64.53) with Microsoft SMTP
+	Server (TLS)
+	id 15.0.1367.3 via Frontend Transport; Thu, 5 Dec 2019 23:13:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=iPf8BYh78+oktSIe4RvWdeyRslWFYwr9xrzTmWaoI6ZOtmTCJqLbJsjib7KtTlMSZXpGCOYiJRyf7luZqVfzRMs25QAkXZGTq37ocBJshRfHiOdhUZPZwSfbK0Nu+Q/1XOY04yjq9HI1FX/RoOk94KjqGYLgNhna5mPwQ88iscmzdcLHl6BM68FZdFVlnWa7tDnvBjOgZK1tqFUZWpcMvlSASqIEO0b2immMNyvDDA9Dj7S7TEnOlmyEh6rv73Y+E4FZEVY/ehRzm21nR6+LUJctRT8QE/Zyq+FLnC5dVVwkQvyuzUmc//y1j+sTyRfJCcgoIbXQxSBHLpc6BuotJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=H2ng4EN7ySEKBgJbDGI/K7DbZ4oocAEngn8pKoryVGc=;
+	b=Hw1IQYo+tQshjjr9/IMtMSaMX5X8vKLJ/d/l+lP7KjlV/yXfF3NH+FYNznSz1citlggj1YzChphRxAvkPWUyWhY+3SbwNGGkPQsMVcrI+guDr9rCBsxJQZnOFiO7iXtmQJ3JUdqcs4/tGyAcggwfDMtQX/3wWAG1oU6oFy2m3lp+1OOiuA7Ei1uJERyauKUu2hGH5T7zKWYflg8y5LGWJxX2dqdlUUJxcri6UomNjfPyZYcUVQV+NWAazHZnrYx8C3SQZfiUJJscrcYcvTmtPFkTOclQlANl5vmLf9HkpjaVgP02GNXsumB5sA5bQJl4W1enb/7Wh6GkpSyQom35LA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+	smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com;
+	dkim=pass header.d=hpe.com; arc=none
+Received: from CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM (10.169.98.21) by
+	CS1PR8401MB0661.NAMPRD84.PROD.OUTLOOK.COM (10.169.13.9) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2516.12; Thu, 5 Dec 2019 23:13:57 +0000
+Received: from CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM
+	([fe80::d1fe:bb34:5d7b:3048]) by
+	CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM
+	([fe80::d1fe:bb34:5d7b:3048%11]) with mapi id 15.20.2495.026;
+	Thu, 5 Dec 2019 23:13:57 +0000
+From: "McKay, Sean" <sean.mckay@hpe.com>
+To: Wayne Li <waynli329@gmail.com>, bitbake-devel
+	<bitbake-devel@lists.openembedded.org>, Yocto Project Discussion
+	<yocto@yoctoproject.org>
+Thread-Topic: [yocto] Question about shipping files to package.
+Thread-Index: AQHVq7sHX3+w6HSLQUKMdPA7wqvviqesJUaQ
+Date: Thu, 5 Dec 2019 23:13:57 +0000
+Message-ID: <CS1PR8401MB0568A3D49346083E949FA11C825C0@CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM>
+References: <CAM2K0nr6suFCaV-Ne7zv7ukyiXh4BG5H0Y6S6UkS5h08x8aGAg@mail.gmail.com>
+In-Reply-To: <CAM2K0nr6suFCaV-Ne7zv7ukyiXh4BG5H0Y6S6UkS5h08x8aGAg@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [15.211.195.14]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0bcc465e-8f2e-4584-b7aa-08d779d8ce10
+x-ms-traffictypediagnostic: CS1PR8401MB0661:
+x-microsoft-antispam-prvs: <CS1PR8401MB066120A1A7772234294ABF6A825C0@CS1PR8401MB0661.NAMPRD84.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10019020)(366004)(189003)(199004)(81156014)(81166006)(55016002)(74316002)(25786009)(99286004)(229853002)(71200400001)(71190400001)(498600001)(86362001)(11346002)(14454004)(9686003)(8936002)(26005)(52536014)(8676002)(186003)(66946007)(2906002)(66574012)(110136005)(6506007)(53546011)(7696005)(102836004)(76176011)(64756008)(33656002)(66476007)(66446008)(54896002)(66556008)(76116006)(5660300002);
+	DIR:OUT; SFP:1102; SCL:1; SRVR:CS1PR8401MB0661;
+	H:CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; MX:1; A:1; 
+received-spf: None (protection.outlook.com: hpe.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5zpFYMci68/wtl6FrxGyN2T4HM3uKBlBqZwmoDJiel5PkB+ArfHAjVSIdMs6wtXMqK+aDOvJWO9OPAHWK31IB63tnSfqD5umn+w5EtI0pBm9vQHSOuJS33cTX86vJPscXBMNuLJwz1db1DljsHtzhSQMT2IxX/mO/22jc16LyML36yj019uroFGc0+vnpsfhl4rmXEqpaH6i4QAxiW0v4koadvVIUxYmVnPtgnvp00C3TiHGuyBMmT0mbUTONaJ2TcieKSRvVW2sLku2MGhWBGxxjxl9XKF+VEHKdaBH8aKSWj8vrByCam5J091/b/1xwRCzeHdcbu3usg2HLiPcWyuuI0PQ84jdrTMmM4aOYzUAjEPGnIT3I89yEDrrb/cUV++FFAnu6WiFsBjnY5Gl0kh9tPA6J0gWc2LrH1WBo/buLFPQs2RQDlXGHsNF9gcH
+x-ms-exchange-transport-forked: True
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bcc465e-8f2e-4584-b7aa-08d779d8ce10
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 23:13:57.2643 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rX/ElL4TNadxqC1BYYqICi1WaysTvo+QGgY32Sus9M0nLbRV/RFOSYzt87yqj5Even3eQQBvpiwpOAeHwdwwbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CS1PR8401MB0661
+X-OriginatorOrg: hpe.com
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+	definitions=2019-12-05_10:2019-12-04,2019-12-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+	lowpriorityscore=0
+	phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+	suspectscore=0 adultscore=0 priorityscore=1501 mlxscore=0
+	malwarescore=0
+	clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+	engine=8.12.0-1910280000 definitions=main-1912050189
+X-Mailman-Approved-At: Sun, 08 Dec 2019 12:39:06 +0000
+Subject: Re: [yocto] Question about shipping files to package.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,59 +113,221 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Dec 2019 22:10:17 -0000
+X-List-Received-Date: Thu, 05 Dec 2019 23:25:54 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_CS1PR8401MB0568A3D49346083E949FA11C825C0CS1PR8401MB0568_"
 
-multiconfig dependencies should be excluded from BB_TASKDEPDATA.
-However in thud, multiconfig filtering on task dependencies doesn't
-happen until after deps has already been added to taskdepdata.
+--_000_CS1PR8401MB0568A3D49346083E949FA11C825C0CS1PR8401MB0568_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-One manifestation of this results in multiconfig dependencies leaking
-into staging processing.
+SeKAmW0gbm90IGFuIGV4cGVydCBvbiBjb21waWxpbmcga2VybmVsIG1vZHVsZXMsIGJ1dCBJIGNh
+biBhdCBsZWFzdCBhbnN3ZXIgc29tZSBvZiB5b3VyIHF1ZXN0aW9ucyB0byBnZXQgc3RhcnRlZC4g
+SeKAmW0gYWxzbyBub3QgYW4gYWN0dWFsIGV4cGVydCwgYnV0IGp1c3QgYW5vdGhlciB1c2VyLCBz
+byBpdOKAmXMgZW50aXJlbHkgcG9zc2libGUgdGhhdCBzb21lb25lIG1vcmUga25vd2xlZGdlYWJs
+ZSB3aWxsIGNvbWUgYWxvbmcgYW5kIHRlbGwgdXMgdGhhdCBJ4oCZbSB3cm9uZy4NCg0KV2l0aCB0
+aGF0IHNhaWQsIGZpcnN0LCBJIGhhdmUgdG8gYXNrIHRoZSBzaW1wbGUgc3R1ZmY6IHdoZW4geW91
+IHNheSB0aGF0IG5vIC5rbyBpcyBiZWluZyBjcmVhdGVkLCB3aGVyZSBhcmUgeW91IGxvb2tpbmc/
+IElmIHlvdeKAmXJlIG5vdCBzdXJlIHdoZXJlIHlvdSBzaG91bGQgYmUgbG9va2luZywgSeKAmWQg
+cmVjb21tZW5kIGJ5IGRvaW5nIGEgZmluZCBpbnNpZGUgb2YgeW91ciAke1dPUktESVJ9IHRvIHNl
+ZSB3aGV0aGVyIG9yIG5vdCB5b3XigJl2ZSBnb3QgYW55IC5rbyBmaWxlcy4gVGhleSB3b27igJl0
+IHF1aXRlIGJlIG91dCBpbiBwbGFpbiBzaWdodC4NCg0KSW4gZ2VuZXJhbCAodGhvdWdoIGFnYWlu
+LCBJIGNhbuKAmXQgc3BlYWsgZm9yIHRoZSBtb2R1bGUgY2xhc3MpLCBjb21waWxhdGlvbnMgdGFr
+ZSBwbGFjZSBpbiBhIGJ1aWxkIGRpcmVjdG9yeSBpbnNpZGUgb2YgdGhlIHJlY2lwZeKAmXMgd29y
+a2RpciAoJHtCfSBpbiBiaXRiYWtlIHBhcmxhbmNlKS4gVGhlIGluc3RhbGwgcHJvY2VzcyB0aGVu
+IGNvcGllcyB0aGUgY3JlYXRlZCBmaWxlcyB0byBhIHN0YWdpbmcgZGlyZWN0b3J5ICgke0R9IGlu
+IGJpdGJha2UgcGFybGFuY2UpIHRoYXTigJlzIHVzdWFsbHkgJHtXT1JLRElSfS9pbWFnZS4NCg0K
+UGFja2FnaW5nIGlzIHRoZSBwcm9jZXNzIG9mIHRha2luZyB0aG9zZSBvdXRwdXQgZmlsZXMgZnJv
+bSAke0R9IGFuZCBwYWNrYWdpbmcgdGhlbSBpbnRvIG9uZSBvZiBhIGZldyB3ZWxsIGRlZmluZWQg
+cGFja2FnaW5nIGZvcm1hdHMuIElmIHlvdeKAmXJlIHVzaW5nIHRoZSBkZWZhdWx0cywgdGhpcyB3
+b3VsZCBiZSBSUE0uIEEgc2luZ2xlIHJlY2lwZSBjYW4gKGFuZCBvZnRlbiBkb2VzKSBwcm9kdWNl
+IG11bHRpcGxlIHBhY2thZ2VzLiBXaGVuIGJpdGJha2UgbW92ZXMgb250byB0aGUgcGFja2FnaW5n
+IHN0ZXAgKEnigJltIHNpbXBsaWZ5aW5nIGEgYml0KSwgaXQgY3JlYXRlcyBkaXJlY3RvcmllcyBm
+b3IgZWFjaCBwYWNrYWdlIHRoYXTigJlzIGdvaW5nIHRvIGJlIGdlbmVyYXRlZCBpbnNpZGUgb2Yg
+JHtXT1JLRElSfS9wYWNrYWdlcy1zcGxpdC4gSXQgdGhlbiBsb29rcyBhdCB0aGUgRklMRVMgdmFy
+aWFibGUgZm9yIHRoZSBwYXJ0aWN1bGFyIHBhY2thZ2UgaXTigJlzIHdvcmtpbmcgb24gYW5kIGNv
+cGllcyBhbnkgZmlsZXMgdGhhdCBtYXRjaCB0aGUgcGF0dGVybnMgaW4gdGhhdCB2YXJpYWJsZSBp
+bnRvIHRoYXQgcGFja2FnZeKAmXMgZGlyZWN0b3J5IGluIHBhY2thZ2VzLXNwbGl0LiBXaGVuIGl0
+4oCZcyBkb25lIGNvcHlpbmcgZmlsZXMsIGVhY2ggb2YgdGhvc2UgZGlyZWN0b3JpZXMgYXJlIHR1
+cm5lZCBpbnRvIHRoZSBhcHByb3ByaWF0ZSBwYWNrYWdlIChwcm9iYWJseSAucnBtKSBmaWxlLg0K
+U28sIGZvciBhIHNvbWV3aGF0IG1vcmUgY29uY3JldGUgZXhhbXBsZSwgd2hlbiB5b3Ugc2FpZCDi
+gJhGSUxFU18ke1BOfSArPSAiL2xpYi9tb2R1bGVzLzQuMS44LXJ0OCtnYmQ1MWJhZiLigJksIHlv
+dSB0b2xkIGJpdGJha2UgdGhhdCBhbnl0aGluZyB0aGF0IG1hdGNoZWQgL2xpYi9tb2R1bGVzLzQu
+MS44LXJ0OCtnYmQ1MWJhZiBzaG91bGQgZ2V0IHB1dCBpbiB0aGUgJHtQTn0gKG1haW4pIHBhY2th
+Z2UuDQoNCkluIHRoZSBjb250ZXh0IG9mIHRoZSBlcnJvciBtZXNzYWdlIHlvdSB3ZXJlIHByZXZp
+b3VzbHkgcmVjZWl2aW5nLCDigJxpbnN0YWxsZWTigJ0gaXMgdGhlIGRvX2luc3RhbGwgc3RlcCwg
+d2hpY2ggaXMgcmVmZXJyaW5nIHRvIHRoYXQgc3RhZ2luZyBwcm9jZXNzIChhbmFsb2dvdXMgdG8g
+cnVubmluZyDigJhtYWtlIGluc3RhbGzigJkgb24gc29tZXRoaW5nIHlvdSBqdXN0IGRvd25sb2Fk
+ZWQgZnJvbSB0aGUgaW50ZXJuZXQpLiBTb21ldGhpbmcgaXMg4oCYc2hpcHBlZOKAmSBpZiBpdCBp
+cyBwYWNrYWdlZCBpbnRvIG9uZSBvZiB0aGUgZmluYWwgcnBtIGZpbGVzLg0KDQpDaGVlcnMhDQot
+U2VhbiBNY0theQ0KDQpGcm9tOiB5b2N0b0BsaXN0cy55b2N0b3Byb2plY3Qub3JnIDx5b2N0b0Bs
+aXN0cy55b2N0b3Byb2plY3Qub3JnPiBPbiBCZWhhbGYgT2YgV2F5bmUgTGkNClNlbnQ6IFRodXJz
+ZGF5LCBEZWNlbWJlciA1LCAyMDE5IDI6MjYgUE0NClRvOiBiaXRiYWtlLWRldmVsIDxiaXRiYWtl
+LWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc+OyBZb2N0byBQcm9qZWN0IERpc2N1c3Npb24g
+PHlvY3RvQHlvY3RvcHJvamVjdC5vcmc+DQpTdWJqZWN0OiBbeW9jdG9dIFF1ZXN0aW9uIGFib3V0
+IHNoaXBwaW5nIGZpbGVzIHRvIHBhY2thZ2UuDQoNCkRlYXIgWW9jdG8gRGV2ZWxvcGVycywNCg0K
+U28gSSBjcmVhdGVkIGEgYml0YmFrZSByZWNpcGUgdG8gaW50ZWdyYXRlIGt2bSBpbnRvIG15IGlt
+YWdlIGFzIGFuIG91dC1vZi10cmVlIGtlcm5lbCBtb2R1bGUuICBIZXJlJ3MgbXkgcmVjaXBlIHJp
+Z2h0IG5vdzoNCg0KTElDRU5TRSA9ICJHUEx2MiINCkxJQ19GSUxFU19DSEtTVU0gPSAiZmlsZTov
+L0NPUFlJTkc7bWQ1PWM2MTZkMGU3OTI0ZTllNzhlZTE5MmQ5OWEzYjI2ZmJkIg0KDQppbmhlcml0
+IG1vZHVsZQ0KDQpTUkNfVVJJID0gImZpbGU6Ly8vaG9tZWFkL1FvcklRLVNESy1WMi4wLTIwMTYw
+NTI3LXlvY3RvL3NvdXJjZXMvbWV0YS12aXJ0dWFsaXphdGlvbi9yZWNpcGVzLWtlcm5lbC9rdm0t
+a21vZHVsZS9rdm0ta21vZC0zLjEwLjIxLnRhci5iejIiDQoNClMgPSAiJHtXT1JLRElSfS9rdm0t
+a21vZC0zLjEwLjIxIg0KDQpkb19jb25maWd1cmUoKSB7DQogICAgLi9jb25maWd1cmUgLS1hcmNo
+PXBwYzY0IC0ta2VybmVsZGlyPS9ob21lYWQvUW9ySVEtU0RLLVYyLjAtMjAxNjA1MjcteW9jdG8v
+YnVpbGRfdDQyNDByZGItNjRiL3RtcC93b3JrL3Q0MjQwcmRiXzY0Yi1mc2wtbGludXgva2VybmVs
+LWRldnNyYy8xLjAtcjAvaW1hZ2UvdXNyL3NyYy9rZXJuZWwNCn0NCg0KRklMRVNfJHtQTn0gKz0g
+Ii9saWIvbW9kdWxlcy80LjEuOC1ydDgrZ2JkNTFiYWYiDQoNCkJpdGJha2luZyB0aGlzIHJlY2lw
+ZSBjb21wbGV0ZXMgd2l0aCBubyBwcm9ibGVtcyBidXQgbm8ga2VybmVsIG1vZHVsZSBpcyBjcmVh
+dGVkIChjb21waWxpbmcgdGhlIHNvdXJjZSBjb2RlIHNob3VsZCBjcmVhdGUgYSBrZXJuZWwgbW9k
+dWxlIGZpbGUga3ZtLmtvKS4gIEkgd2FzIHdvbmRlcmluZyBpZiB0aGUgcHJvYmxlbSBtaWdodCBi
+ZSBiZWNhdXNlIG9mIHdoYXQgSSBzZXQgRklMRVNfJHtQTn0gdG8gYmUuICBCZWZvcmUgSSBzZXQg
+dGhlIEZJTEVTIHZhcmlhYmxlIEkgd2FzIGdldHRpbmcgYW4gZXJyb3Igc2F5aW5nIHNvbWV0aGlu
+ZyBhbG9uZyB0aGUgbGluZXMgb2YsICJGaWxlcy9kaXJlY3RvcmllcyB3ZXJlIGluc3RhbGxlZCBi
+dXQgbm90IHNoaXBwZWQuIiAgVGhlbiBJIG1vcmUgb3IgbGVzcyBqdXN0IGd1ZXNzZWQgYSBkaXJl
+Y3RvcnkgYW5kIHNldCBteSBGSUxFUyB2YXJpYWJsZSB0byBpdCBhbmQgdGhlbiB0aGUgcmVjaXBl
+IGZpbmlzaGVkIGJpdGJha2luZyB3aXRoIG5vIGVycm9ycy4NCg0KQnV0IG5vdyB0aGF0IHRoZSBr
+dm0ua28gZmlsZSBpc24ndCBldmVuIGJlaW5nIGNyZWF0ZWQsIEkgYW0gd29uZGVyaW5nIGlmIGl0
+IG1pZ2h0IGJlIGJlY2F1c2UgSSBzZXQgdGhlIEZJTEVTIHZhcmlhYmxlIHdyb25nPyAgV2hhdCBk
+b2VzIHRoZSB3b3JkICJzaGlwIiBtZWFuPyAgQW5kIGFsb25nIHRob3NlIGxpbmVzIHdoYXQgZXhh
+Y3RseSBpcyBhICJwYWNrYWdlIiBpbiB0aGUgc2V0dGluZyBvZiBZb2N0byBwcm9qZWN0Pw0KDQot
+VGhhbmtzISwgV2F5bmUgTGkNCg==
 
-File: 'exec_python_func() autogenerated', lineno: 2, function: <module>
-     0001:
- *** 0002:extend_recipe_sysroot(d)
-     0003:
-File: '/home/user/thud/meta/classes/staging.bbclass', lineno: 344, function: extend_recipe_sysroot
-     0340:    #bb.note(" start is %s" % str(start))
-     0341:
-     0342:    # Direct dependencies should be present and can be depended upon
-     0343:    for dep in set(start):
- *** 0344:        if setscenedeps[dep][1] == "do_populate_sysroot":
-     0345:            if dep not in configuredeps:
-     0346:                configuredeps.append(dep)
-     0347:    bb.note("Direct dependencies are %s" % str(configuredeps))
-     0348:    #bb.note(" or %s" % str(start))
-Exception: KeyError: 'multiconfig:musl:/home/user/thud/meta/recipes-kernel/linux/linux-yocto_4.18.bb:do_deploy'
+--_000_CS1PR8401MB0568A3D49346083E949FA11C825C0CS1PR8401MB0568_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-This can be reproduced on thud by backporting the multiconfig.MultiConfig.test_multiconfig
-test and mcextend bbclass from warrior.
+PGh0bWwgeG1sbnM6bz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlIiB4
+bWxuczp3PSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkIiB4bWxuczptPSJo
+dHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJo
+dHRwOi8vd3d3LnczLm9yZy9UUi9SRUMtaHRtbDQwIj4NCjxoZWFkPg0KPG1ldGEgaHR0cC1lcXVp
+dj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPg0KPG1l
+dGEgbmFtZT0iR2VuZXJhdG9yIiBjb250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQg
+bWVkaXVtKSI+DQo8c3R5bGU+PCEtLQ0KLyogRm9udCBEZWZpbml0aW9ucyAqLw0KQGZvbnQtZmFj
+ZQ0KCXtmb250LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2
+IDMgMiA0O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToy
+IDE1IDUgMiAyIDIgNCAzIDIgNDt9DQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLw0KcC5Nc29Ob3Jt
+YWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbA0KCXttYXJnaW46MGluOw0KCW1hcmdpbi1i
+b3R0b206LjAwMDFwdDsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJp
+IixzYW5zLXNlcmlmO30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsNCgl7bXNvLXN0eWxlLXBy
+aW9yaXR5Ojk5Ow0KCWNvbG9yOiMwNTYzQzE7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9
+DQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQNCgl7bXNvLXN0eWxlLXByaW9y
+aXR5Ojk5Ow0KCWNvbG9yOiM5NTRGNzI7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpw
+Lm1zb25vcm1hbDAsIGxpLm1zb25vcm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1u
+YW1lOm1zb25vcm1hbDsNCgltc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6
+MGluOw0KCW1zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBpbjsNCglm
+b250LXNpemU6MTEuMHB0Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNw
+YW4uRW1haWxTdHlsZTE5DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsOw0KCWZvbnQtZmFtaWx5
+OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCWNvbG9yOndpbmRvd3RleHQ7fQ0Kc3Bhbi5FbWFpbFN0
+eWxlMjANCgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsNCglmb250LWZhbWlseToi
+Q2FsaWJyaSIsc2Fucy1zZXJpZjsNCgljb2xvcjp3aW5kb3d0ZXh0O30NCi5Nc29DaHBEZWZhdWx0
+DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixz
+YW5zLXNlcmlmO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjguNWluIDExLjBpbjsNCglt
+YXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4waW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdl
+OldvcmRTZWN0aW9uMTt9DQotLT48L3N0eWxlPg0KPC9oZWFkPg0KPGJvZHkgbGFuZz0iRU4tVVMi
+IGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4NCjxkaXYgY2xhc3M9IldvcmRTZWN0aW9u
+MSI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5J4oCZbSBub3QgYW4gZXhwZXJ0IG9uIGNvbXBpbGlu
+ZyBrZXJuZWwgbW9kdWxlcywgYnV0IEkgY2FuIGF0IGxlYXN0IGFuc3dlciBzb21lIG9mIHlvdXIg
+cXVlc3Rpb25zIHRvIGdldCBzdGFydGVkLiBJ4oCZbSBhbHNvIG5vdCBhbiBhY3R1YWwgZXhwZXJ0
+LCBidXQganVzdCBhbm90aGVyIHVzZXIsIHNvIGl04oCZcyBlbnRpcmVseSBwb3NzaWJsZSB0aGF0
+IHNvbWVvbmUgbW9yZSBrbm93bGVkZ2VhYmxlIHdpbGwgY29tZSBhbG9uZw0KIGFuZCB0ZWxsIHVz
+IHRoYXQgSeKAmW0gd3JvbmcuPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
+bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPldpdGggdGhhdCBzYWlk
+LCBmaXJzdCwgSSBoYXZlIHRvIGFzayB0aGUgc2ltcGxlIHN0dWZmOiB3aGVuIHlvdSBzYXkgdGhh
+dCBubyAua28gaXMgYmVpbmcgY3JlYXRlZCwgd2hlcmUgYXJlIHlvdSBsb29raW5nPyBJZiB5b3Xi
+gJlyZSBub3Qgc3VyZSB3aGVyZSB5b3Ugc2hvdWxkIGJlIGxvb2tpbmcsIEnigJlkIHJlY29tbWVu
+ZCBieSBkb2luZyBhIGZpbmQgaW5zaWRlIG9mIHlvdXIgJHtXT1JLRElSfSB0byBzZWUgd2hldGhl
+cg0KIG9yIG5vdCB5b3XigJl2ZSBnb3QgYW55IC5rbyBmaWxlcy4gVGhleSB3b27igJl0IHF1aXRl
+IGJlIG91dCBpbiBwbGFpbiBzaWdodC48bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SW4gZ2VuZXJh
+bCAodGhvdWdoIGFnYWluLCBJIGNhbuKAmXQgc3BlYWsgZm9yIHRoZSBtb2R1bGUgY2xhc3MpLCBj
+b21waWxhdGlvbnMgdGFrZSBwbGFjZSBpbiBhIGJ1aWxkIGRpcmVjdG9yeSBpbnNpZGUgb2YgdGhl
+IHJlY2lwZeKAmXMgd29ya2RpciAoJHtCfSBpbiBiaXRiYWtlIHBhcmxhbmNlKS4gVGhlIGluc3Rh
+bGwgcHJvY2VzcyB0aGVuIGNvcGllcyB0aGUgY3JlYXRlZCBmaWxlcyB0byBhIHN0YWdpbmcgZGly
+ZWN0b3J5DQogKCR7RH0gaW4gYml0YmFrZSBwYXJsYW5jZSkgdGhhdOKAmXMgdXN1YWxseSAke1dP
+UktESVJ9L2ltYWdlLjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4m
+bmJzcDs8L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5QYWNrYWdpbmcgaXMgdGhlIHBy
+b2Nlc3Mgb2YgdGFraW5nIHRob3NlIG91dHB1dCBmaWxlcyBmcm9tICR7RH0gYW5kIHBhY2thZ2lu
+ZyB0aGVtIGludG8gb25lIG9mIGEgZmV3IHdlbGwgZGVmaW5lZCBwYWNrYWdpbmcgZm9ybWF0cy4g
+SWYgeW914oCZcmUgdXNpbmcgdGhlIGRlZmF1bHRzLCB0aGlzIHdvdWxkIGJlIFJQTS4gQSBzaW5n
+bGUgcmVjaXBlIGNhbiAoYW5kIG9mdGVuIGRvZXMpIHByb2R1Y2UgbXVsdGlwbGUNCiBwYWNrYWdl
+cy4gV2hlbiBiaXRiYWtlIG1vdmVzIG9udG8gdGhlIHBhY2thZ2luZyBzdGVwIChJ4oCZbSBzaW1w
+bGlmeWluZyBhIGJpdCksIGl0IGNyZWF0ZXMgZGlyZWN0b3JpZXMgZm9yIGVhY2ggcGFja2FnZSB0
+aGF04oCZcyBnb2luZyB0byBiZSBnZW5lcmF0ZWQgaW5zaWRlIG9mICR7V09SS0RJUn0vcGFja2Fn
+ZXMtc3BsaXQuIEl0IHRoZW4gbG9va3MgYXQgdGhlIEZJTEVTIHZhcmlhYmxlIGZvciB0aGUgcGFy
+dGljdWxhciBwYWNrYWdlIGl04oCZcyB3b3JraW5nDQogb24gYW5kIGNvcGllcyBhbnkgZmlsZXMg
+dGhhdCBtYXRjaCB0aGUgcGF0dGVybnMgaW4gdGhhdCB2YXJpYWJsZSBpbnRvIHRoYXQgcGFja2Fn
+ZeKAmXMgZGlyZWN0b3J5IGluIHBhY2thZ2VzLXNwbGl0LiBXaGVuIGl04oCZcyBkb25lIGNvcHlp
+bmcgZmlsZXMsIGVhY2ggb2YgdGhvc2UgZGlyZWN0b3JpZXMgYXJlIHR1cm5lZCBpbnRvIHRoZSBh
+cHByb3ByaWF0ZSBwYWNrYWdlIChwcm9iYWJseSAucnBtKSBmaWxlLjxvOnA+PC9vOnA+PC9wPg0K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+U28sIGZvciBhIHNvbWV3aGF0IG1vcmUgY29uY3JldGUgZXhh
+bXBsZSwgd2hlbiB5b3Ugc2FpZCDigJhGSUxFU18ke1BOfSAmIzQzOz0gJnF1b3Q7L2xpYi9tb2R1
+bGVzLzQuMS44LXJ0OCYjNDM7Z2JkNTFiYWYmcXVvdDvigJksIHlvdSB0b2xkIGJpdGJha2UgdGhh
+dCBhbnl0aGluZyB0aGF0IG1hdGNoZWQgL2xpYi9tb2R1bGVzLzQuMS44LXJ0OCYjNDM7Z2JkNTFi
+YWYgc2hvdWxkIGdldCBwdXQgaW4gdGhlICR7UE59IChtYWluKSBwYWNrYWdlLjxvOnA+PC9vOnA+
+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj5JbiB0aGUgY29udGV4dCBvZiB0aGUgZXJyb3IgbWVzc2FnZSB5b3Ugd2Vy
+ZSBwcmV2aW91c2x5IHJlY2VpdmluZywg4oCcaW5zdGFsbGVk4oCdIGlzIHRoZSBkb19pbnN0YWxs
+IHN0ZXAsIHdoaWNoIGlzIHJlZmVycmluZyB0byB0aGF0IHN0YWdpbmcgcHJvY2VzcyAoYW5hbG9n
+b3VzIHRvIHJ1bm5pbmcg4oCYbWFrZSBpbnN0YWxs4oCZIG9uIHNvbWV0aGluZyB5b3UganVzdCBk
+b3dubG9hZGVkIGZyb20gdGhlIGludGVybmV0KS4NCiBTb21ldGhpbmcgaXMg4oCYc2hpcHBlZOKA
+mSBpZiBpdCBpcyBwYWNrYWdlZCBpbnRvIG9uZSBvZiB0aGUgZmluYWwgcnBtIGZpbGVzLiA8bzpw
+PjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+Q2hlZXJzITxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+LVNlYW4gTWNLYXk8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+RnJvbTo8L2I+
+IHlvY3RvQGxpc3RzLnlvY3RvcHJvamVjdC5vcmcgJmx0O3lvY3RvQGxpc3RzLnlvY3RvcHJvamVj
+dC5vcmcmZ3Q7DQo8Yj5PbiBCZWhhbGYgT2YgPC9iPldheW5lIExpPGJyPg0KPGI+U2VudDo8L2I+
+IFRodXJzZGF5LCBEZWNlbWJlciA1LCAyMDE5IDI6MjYgUE08YnI+DQo8Yj5Ubzo8L2I+IGJpdGJh
+a2UtZGV2ZWwgJmx0O2JpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyZndDs7IFlv
+Y3RvIFByb2plY3QgRGlzY3Vzc2lvbiAmbHQ7eW9jdG9AeW9jdG9wcm9qZWN0Lm9yZyZndDs8YnI+
+DQo8Yj5TdWJqZWN0OjwvYj4gW3lvY3RvXSBRdWVzdGlvbiBhYm91dCBzaGlwcGluZyBmaWxlcyB0
+byBwYWNrYWdlLjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJz
+cDs8L286cD48L3A+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkRlYXIgWW9j
+dG8gRGV2ZWxvcGVycyw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+U28gSSBjcmVhdGVkIGEgYml0YmFrZSByZWNpcGUgdG8gaW50ZWdyYXRlIGt2
+bSBpbnRvIG15IGltYWdlIGFzIGFuIG91dC1vZi10cmVlIGtlcm5lbCBtb2R1bGUuJm5ic3A7IEhl
+cmUncyBteSByZWNpcGUgcmlnaHQgbm93OjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxkaXYg
+c3R5bGU9Im1hcmdpbi1sZWZ0OjMwLjBwdCI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5MSUNFTlNF
+ID0gJnF1b3Q7R1BMdjImcXVvdDs8YnI+DQpMSUNfRklMRVNfQ0hLU1VNID0gJnF1b3Q7PGEgaHJl
+Zj0iZmlsZTovL0NPUFlJTkc7bWQ1PWM2MTZkMGU3OTI0ZTllNzhlZTE5MmQ5OWEzYjI2ZmJkIj5m
+aWxlOi8vQ09QWUlORzttZDU9YzYxNmQwZTc5MjRlOWU3OGVlMTkyZDk5YTNiMjZmYmQ8L2E+JnF1
+b3Q7PGJyPg0KPGJyPg0KaW5oZXJpdCBtb2R1bGU8YnI+DQo8YnI+DQpTUkNfVVJJID0gJnF1b3Q7
+PGEgaHJlZj0iZmlsZTovLy9ob21lYWQvUW9ySVEtU0RLLVYyLjAtMjAxNjA1MjcteW9jdG8vc291
+cmNlcy9tZXRhLXZpcnR1YWxpemF0aW9uL3JlY2lwZXMta2VybmVsL2t2bS1rbW9kdWxlL2t2bS1r
+bW9kLTMuMTAuMjEudGFyLmJ6MiI+ZmlsZTovLy9ob21lYWQvUW9ySVEtU0RLLVYyLjAtMjAxNjA1
+MjcteW9jdG8vc291cmNlcy9tZXRhLXZpcnR1YWxpemF0aW9uL3JlY2lwZXMta2VybmVsL2t2bS1r
+bW9kdWxlL2t2bS1rbW9kLTMuMTAuMjEudGFyLmJ6MjwvYT4mcXVvdDs8YnI+DQo8YnI+DQpTID0g
+JnF1b3Q7JHtXT1JLRElSfS9rdm0ta21vZC0zLjEwLjIxJnF1b3Q7PGJyPg0KPGJyPg0KZG9fY29u
+ZmlndXJlKCkgezxicj4NCiZuYnNwOyAmbmJzcDsgLi9jb25maWd1cmUgLS1hcmNoPXBwYzY0IC0t
+a2VybmVsZGlyPS9ob21lYWQvUW9ySVEtU0RLLVYyLjAtMjAxNjA1MjcteW9jdG8vYnVpbGRfdDQy
+NDByZGItNjRiL3RtcC93b3JrL3Q0MjQwcmRiXzY0Yi1mc2wtbGludXgva2VybmVsLWRldnNyYy8x
+LjAtcjAvaW1hZ2UvdXNyL3NyYy9rZXJuZWw8YnI+DQp9PGJyPg0KPGJyPg0KRklMRVNfJHtQTn0g
+JiM0Mzs9ICZxdW90Oy9saWIvbW9kdWxlcy80LjEuOC1ydDgmIzQzO2diZDUxYmFmJnF1b3Q7PG86
+cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXYgc3R5bGU9Im1hcmdpbi1sZWZ0OjMwLjBwdCI+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkJpdGJha2luZyB0aGlzIHJlY2lwZSBjb21wbGV0ZXMgd2l0
+aCBubyBwcm9ibGVtcyBidXQgbm8ga2VybmVsIG1vZHVsZSBpcyBjcmVhdGVkIChjb21waWxpbmcg
+dGhlIHNvdXJjZSBjb2RlIHNob3VsZCBjcmVhdGUgYSBrZXJuZWwgbW9kdWxlIGZpbGUga3ZtLmtv
+KS4mbmJzcDsgSSB3YXMgd29uZGVyaW5nIGlmIHRoZSBwcm9ibGVtIG1pZ2h0IGJlIGJlY2F1c2Ug
+b2Ygd2hhdCBJIHNldCBGSUxFU18ke1BOfSB0byBiZS4mbmJzcDsgQmVmb3JlDQogSSBzZXQgdGhl
+IEZJTEVTIHZhcmlhYmxlIEkgd2FzIGdldHRpbmcgYW4gZXJyb3Igc2F5aW5nIHNvbWV0aGluZyBh
+bG9uZyB0aGUgbGluZXMgb2YsICZxdW90O0ZpbGVzL2RpcmVjdG9yaWVzIHdlcmUgaW5zdGFsbGVk
+IGJ1dCBub3Qgc2hpcHBlZC4mcXVvdDsmbmJzcDsgVGhlbiBJIG1vcmUgb3IgbGVzcyBqdXN0IGd1
+ZXNzZWQgYSBkaXJlY3RvcnkgYW5kIHNldCBteSBGSUxFUyB2YXJpYWJsZSB0byBpdCBhbmQgdGhl
+biB0aGUgcmVjaXBlIGZpbmlzaGVkIGJpdGJha2luZyB3aXRoDQogbm8gZXJyb3JzLjxvOnA+PC9v
+OnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
+L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5CdXQgbm93IHRo
+YXQgdGhlIGt2bS5rbyBmaWxlIGlzbid0IGV2ZW4gYmVpbmcgY3JlYXRlZCwgSSBhbSB3b25kZXJp
+bmcgaWYgaXQgbWlnaHQgYmUgYmVjYXVzZSBJIHNldCB0aGUgRklMRVMgdmFyaWFibGUgd3Jvbmc/
+Jm5ic3A7IFdoYXQgZG9lcyB0aGUgd29yZCAmcXVvdDtzaGlwJnF1b3Q7IG1lYW4/Jm5ic3A7IEFu
+ZCBhbG9uZyB0aG9zZSBsaW5lcyB3aGF0IGV4YWN0bHkgaXMgYSAmcXVvdDtwYWNrYWdlJnF1b3Q7
+IGluIHRoZSBzZXR0aW5nIG9mIFlvY3RvIHByb2plY3Q/PG86cD48L286cD48L3A+DQo8L2Rpdj4N
+CjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2
+Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPi1UaGFua3MhLCBXYXluZSBMaTxvOnA+PC9v
+OnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
 
-d22b6e03a5504145abed7c2ca44cf12854df85da mcextend: Add helper class useful for multiconfig
-d9018a3d9c828551c465b68b27920ec4681524ae selftest: Add multiconfig test
-
-Flipping the ordering to match warrior's behavior fixes the test case.
-
-Signed-off-by: Kyle Russell <bkylerussell@gmail.com>
----
- lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 383c1832..0f2fdcee 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2109,8 +2109,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                 deps = self.rqdata.runtaskentries[revdep].depends
-                 provides = self.rqdata.dataCaches[mc].fn_provides[taskfn]
-                 taskhash = self.rqdata.runtaskentries[revdep].hash
--                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
-                 deps = self.filtermcdeps(task, deps)
-+                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
-                 for revdep2 in deps:
-                     if revdep2 not in taskdepdata:
-                         additional.append(revdep2)
--- 
-2.17.1
-
-
+--_000_CS1PR8401MB0568A3D49346083E949FA11C825C0CS1PR8401MB0568_--
