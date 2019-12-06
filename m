@@ -1,43 +1,50 @@
-Return-Path: <waynli329@gmail.com>
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com
-	[209.85.166.169])
-	by mail.openembedded.org (Postfix) with ESMTP id 6BAF67F96F
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com
+	[209.85.166.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 8E3147F979
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 Dec 2019 22:25:51 +0000 (UTC)
-Received: by mail-il1-f169.google.com with SMTP id z12so4435964iln.11
+	Fri,  6 Dec 2019 18:14:07 +0000 (UTC)
+Received: by mail-il1-f173.google.com with SMTP id a7so7013292ild.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 05 Dec 2019 14:25:52 -0800 (PST)
+	Fri, 06 Dec 2019 10:14:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=f3/+vapBayJEMdSCIhoz401YoTDLwGFmvwPOoV9MNO8=;
-	b=rPunGtAy7SLqv32Wo4aVupBiH/PbbT5sRNJrt8o9up1jjv6Jdq+2TZvpnRmVjolimo
-	qYaarzr09Mph323BaZ00iF2NfX10UquN60gLVTJW097H+/CSwzjHcDiN+XQBWIrpi0kU
-	hmfjaOJvekXUVFRsz1BaiQRMWThi7XPrQK6PIm6fyhtifEouDkPLU8vveecStwv/K9WU
-	s+SxtJ1IMQ09+9wm0TS3wcn/CMI3898e8jR3MN2bQrnXEVjW0UABKhhanQ7lRuyATb2T
-	/znDadHxkv7UjFwdpdrsSsuEC+3TJXNZ/pkYU0oF2CVASoYEi5XEJYJ6SueDwf6GIlVW
-	kLMw==
+	h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=jCT+OZNisAYyJkjpIUujFax5XtYG9dDN+9IiK9hxd3o=;
+	b=cza9LGTpy1ephUz+rFLCO0WyLPGmz2+muhutd9pXLpWMJzjhEflMwWAB9o6duW5WdN
+	r9NJH4CwAD+2NQevytqob2bKhuPdkREIcyPONuNrBgNQfUDuAQ7Wyq2iLKRF5qVrY1UD
+	jeOe4UumDzZV8mdwStnb8C8VMPErwbZBUNab0b0jihV+eM5NhQknnt49gH2gzlSZu+x2
+	oQ/89Fq4O52E88mlL31jdm5/lyEqJmiu5LyYWuPCHoOTe0Phut357K0XnaoakbL9gNdi
+	s3a4TOTiRFGiz8R4fhJI6QNynVSmrsuO5nifKHn2foTmL4KgFRSfFETHCGk62I9HztnZ
+	XeyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=f3/+vapBayJEMdSCIhoz401YoTDLwGFmvwPOoV9MNO8=;
-	b=CMsqvm8SauQ70/aPG1fKkJ8oTjvgGxeUUSnPx5kE4Zy1Jde9kcJ0V7O87sHDybjj7h
-	VNnq+q99ElsQ3ikwpzMuahpdiGahaX9XZT5iawaklfF67GTSCuKUWkShPMsjenTpBPi+
-	/NJrDsq8r7M2oQcFr/a4e1db9iYNdm2GmOQHGRmPm+WGUo1vJ+oI3nrVkqwG968zjQ68
-	idiyt2eNx+69ZN7KMr0AXwFDjxh9dTueZmH8lM9RGzIbSZodP+Djm3qGyhRvjpmwesQX
-	sgw8bjKKVzf6o1pRQ17jQplbsyXCZLsQDOpHs5LVI8ka1YDvvW9qi7QDDuAO6F2cY89V
-	JbwQ==
-X-Gm-Message-State: APjAAAW3Bs+WVDACSUDRPb7TBQXEQqpec1JDDppQRBxR42xbd4AI1AaU
-	JQ/6kjOYUVqDnJ6sCQWg1PAnEdUyXYdqETQeGjfFDR2f
-X-Google-Smtp-Source: APXvYqzZBJky0Z8zY5jL0wnu/8QamUgniyKq6prd/N09ypuT2+VfFWlqCu6YvnsUaXThcDGIAd9FNA4nqD6D0dI9Qco=
-X-Received: by 2002:a92:b749:: with SMTP id c9mr10726748ilm.143.1575584752148; 
-	Thu, 05 Dec 2019 14:25:52 -0800 (PST)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=jCT+OZNisAYyJkjpIUujFax5XtYG9dDN+9IiK9hxd3o=;
+	b=CS5DX2g9bnabKcCFSCFqk/ApuyxVS8DmgEPRub/KMyTKd1W8LlepBjba7bbuqIblhB
+	C78FziyfRbUvkitRk6oSZV3UY/vQxpxZg2QsLtJqkt1chYoYCTn8Neqp68pivOB0Y5hx
+	hBaU+iZ8q7dg8gfOFI5VGDsY7jZS/SsBUEi3ZOxw4yYPbIM40Uknn7hT82vkl/G5FazR
+	eSGwtJ/ja38WT4bh/g8lL0DihjynM0xj+rl1LfuIWj6LclAxOMN/7QMmnak48MaJ4No7
+	ujXMPXW1WpNL5exUZ3zlLXLQzMtrotInDoMJDr+VrWJ5gsEIfLTKZ5TYaRDj6aNiKyrj
+	HDKg==
+X-Gm-Message-State: APjAAAUHc3hJ6cP6TxqG/Am0FXnHPaP7iBOtNsvKdlZcR2vbGs7XVvek
+	uKQHNvNkJbKSUywgWtW2PBGT5Mi0Y/Y=
+X-Google-Smtp-Source: APXvYqwcSaO7PJN/Q4YIzWk/wu4UMLqavI4ZgVRrnR3/tiXfrQU4cgXvIMTPwnsMK8kXywYDWOEJFA==
+X-Received: by 2002:a92:aa4d:: with SMTP id j74mr15892344ili.271.1575656048238;
+	Fri, 06 Dec 2019 10:14:08 -0800 (PST)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id k9sm3398138ior.0.2019.12.06.10.14.07
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Fri, 06 Dec 2019 10:14:07 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  6 Dec 2019 12:12:56 -0600
+Message-Id: <20191206181256.1392097-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-From: Wayne Li <waynli329@gmail.com>
-Date: Thu, 5 Dec 2019 22:25:41 +0000
-Message-ID: <CAM2K0nr6suFCaV-Ne7zv7ukyiXh4BG5H0Y6S6UkS5h08x8aGAg@mail.gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
-	Yocto Project Discussion <yocto@yoctoproject.org>
-Subject: Question about shipping files to package.
+Subject: [PATCH] Bump minimum python version to 3.5
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,77 +57,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Dec 2019 22:25:51 -0000
-Content-Type: multipart/alternative; boundary="00000000000077491b0598fc69bf"
+X-List-Received-Date: Fri, 06 Dec 2019 18:14:07 -0000
+Content-Transfer-Encoding: 8bit
 
---00000000000077491b0598fc69bf
-Content-Type: text/plain; charset="UTF-8"
+The local hash equivalence server used by bitbake requires python 3.5,
+so bump up the minimum required version.
 
-Dear Yocto Developers,
+[YOCTO #13678]
 
-So I created a bitbake recipe to integrate kvm into my image as an
-out-of-tree kernel module.  Here's my recipe right now:
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/__init__.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=c616d0e7924e9e78ee192d99a3b26fbd"
+diff --git a/bitbake/lib/bb/__init__.py b/bitbake/lib/bb/__init__.py
+index c144311be4c..b9d8bfa7694 100644
+--- a/bitbake/lib/bb/__init__.py
++++ b/bitbake/lib/bb/__init__.py
+@@ -12,8 +12,8 @@
+ __version__ = "1.44.0"
+ 
+ import sys
+-if sys.version_info < (3, 4, 0):
+-    raise RuntimeError("Sorry, python 3.4.0 or later is required for this version of bitbake")
++if sys.version_info < (3, 5, 0):
++    raise RuntimeError("Sorry, python 3.5.0 or later is required for this version of bitbake")
+ 
+ 
+ class BBHandledException(Exception):
+-- 
+2.23.0
 
-inherit module
 
-SRC_URI =
-"file:///homead/QorIQ-SDK-V2.0-20160527-yocto/sources/meta-virtualization/recipes-kernel/kvm-kmodule/kvm-kmod-3.10.21.tar.bz2"
-
-S = "${WORKDIR}/kvm-kmod-3.10.21"
-
-do_configure() {
-    ./configure --arch=ppc64
---kerneldir=/homead/QorIQ-SDK-V2.0-20160527-yocto/build_t4240rdb-64b/tmp/work/t4240rdb_64b-fsl-linux/kernel-devsrc/1.0-r0/image/usr/src/kernel
-}
-
-FILES_${PN} += "/lib/modules/4.1.8-rt8+gbd51baf"
-
-Bitbaking this recipe completes with no problems but no kernel module is
-created (compiling the source code should create a kernel module file
-kvm.ko).  I was wondering if the problem might be because of what I set
-FILES_${PN} to be.  Before I set the FILES variable I was getting an error
-saying something along the lines of, "Files/directories were installed but
-not shipped."  Then I more or less just guessed a directory and set my
-FILES variable to it and then the recipe finished bitbaking with no errors.
-
-But now that the kvm.ko file isn't even being created, I am wondering if it
-might be because I set the FILES variable wrong?  What does the word "ship"
-mean?  And along those lines what exactly is a "package" in the setting of
-Yocto project?
-
--Thanks!, Wayne Li
-
---00000000000077491b0598fc69bf
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Dear Yocto Developers,</div><div><br></div><div>So I =
-created a bitbake recipe to integrate kvm into my image as an out-of-tree k=
-ernel module.=C2=A0 Here&#39;s my recipe right now:</div><div><br></div><di=
-v style=3D"margin-left:40px">LICENSE =3D &quot;GPLv2&quot;<br>LIC_FILES_CHK=
-SUM =3D &quot;file://COPYING;md5=3Dc616d0e7924e9e78ee192d99a3b26fbd&quot;<b=
-r><br>inherit module<br><br>SRC_URI =3D &quot;file:///homead/QorIQ-SDK-V2.0=
--20160527-yocto/sources/meta-virtualization/recipes-kernel/kvm-kmodule/kvm-=
-kmod-3.10.21.tar.bz2&quot;<br><br>S =3D &quot;${WORKDIR}/kvm-kmod-3.10.21&q=
-uot;<br><br>do_configure() {<br>=C2=A0 =C2=A0 ./configure --arch=3Dppc64 --=
-kerneldir=3D/homead/QorIQ-SDK-V2.0-20160527-yocto/build_t4240rdb-64b/tmp/wo=
-rk/t4240rdb_64b-fsl-linux/kernel-devsrc/1.0-r0/image/usr/src/kernel<br>}<br=
-><br>FILES_${PN} +=3D &quot;/lib/modules/4.1.8-rt8+gbd51baf&quot;</div><div=
- style=3D"margin-left:40px"><br></div><div>Bitbaking this recipe completes =
-with no problems but no kernel module is created (compiling the source code=
- should create a kernel module file kvm.ko).=C2=A0 I was wondering if the p=
-roblem might be because of what I set FILES_${PN} to be.=C2=A0 Before I set=
- the FILES variable I was getting an error saying something along the lines=
- of, &quot;Files/directories were installed but not shipped.&quot;=C2=A0 Th=
-en I more or less just guessed a directory and set my FILES variable to it =
-and then the recipe finished bitbaking with no errors.</div><div><br></div>=
-<div>But now that the kvm.ko file isn&#39;t even being created, I am wonder=
-ing if it might be because I set the FILES variable wrong?=C2=A0 What does =
-the word &quot;ship&quot; mean?=C2=A0 And along those lines what exactly is=
- a &quot;package&quot; in the setting of Yocto project?</div><div><br></div=
-><div>-Thanks!, Wayne Li<br></div></div>
-
---00000000000077491b0598fc69bf--
