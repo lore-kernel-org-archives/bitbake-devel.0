@@ -1,50 +1,47 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com
-	[209.85.166.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 8E3147F979
+Return-Path: <bkylerussell@gmail.com>
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com
+	[209.85.214.182])
+	by mail.openembedded.org (Postfix) with ESMTP id DF1E67E66A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  6 Dec 2019 18:14:07 +0000 (UTC)
-Received: by mail-il1-f173.google.com with SMTP id a7so7013292ild.6
+	Fri,  6 Dec 2019 22:10:15 +0000 (UTC)
+Received: by mail-pl1-f182.google.com with SMTP id bh2so2163556plb.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 06 Dec 2019 10:14:09 -0800 (PST)
+	Fri, 06 Dec 2019 14:10:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=jCT+OZNisAYyJkjpIUujFax5XtYG9dDN+9IiK9hxd3o=;
-	b=cza9LGTpy1ephUz+rFLCO0WyLPGmz2+muhutd9pXLpWMJzjhEflMwWAB9o6duW5WdN
-	r9NJH4CwAD+2NQevytqob2bKhuPdkREIcyPONuNrBgNQfUDuAQ7Wyq2iLKRF5qVrY1UD
-	jeOe4UumDzZV8mdwStnb8C8VMPErwbZBUNab0b0jihV+eM5NhQknnt49gH2gzlSZu+x2
-	oQ/89Fq4O52E88mlL31jdm5/lyEqJmiu5LyYWuPCHoOTe0Phut357K0XnaoakbL9gNdi
-	s3a4TOTiRFGiz8R4fhJI6QNynVSmrsuO5nifKHn2foTmL4KgFRSfFETHCGk62I9HztnZ
-	XeyA==
+	h=from:to:cc:subject:date:message-id;
+	bh=R3eRb4dd7SH7Hxc4XiR1a96OXsKkqpCyWJKH105cZfA=;
+	b=WhUdPogyoulUSHdflR0JtMD9hRqAVn5a+GKimcAvIk20TzpcJ3/zGOl5RZ92vlM7eE
+	bdTswkCwiLh7/D6roBoqCL9mT5/YwT1g05eXV/05lcrtWttdi+UVnVnyvE87WgfWVrq8
+	Jebq1+EZsPqw8zpjMGBBkKIcMDN0GNw4cKt/YQclp7NveEPubeeQMn5vNBGIGgDMHpp+
+	xc7imixy3EZBONvOid5nkyX4HYMYw75tVVBZwshHXOWz6Ovqet/tgJi8duMFKGTdiDzd
+	Mcr4DHY9OcpFygStQPQ5OKlZrxkJjw93i+6+Rop8SMS9uxe61tuG/u7ymYM0RZmF05Zx
+	HWiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=jCT+OZNisAYyJkjpIUujFax5XtYG9dDN+9IiK9hxd3o=;
-	b=CS5DX2g9bnabKcCFSCFqk/ApuyxVS8DmgEPRub/KMyTKd1W8LlepBjba7bbuqIblhB
-	C78FziyfRbUvkitRk6oSZV3UY/vQxpxZg2QsLtJqkt1chYoYCTn8Neqp68pivOB0Y5hx
-	hBaU+iZ8q7dg8gfOFI5VGDsY7jZS/SsBUEi3ZOxw4yYPbIM40Uknn7hT82vkl/G5FazR
-	eSGwtJ/ja38WT4bh/g8lL0DihjynM0xj+rl1LfuIWj6LclAxOMN/7QMmnak48MaJ4No7
-	ujXMPXW1WpNL5exUZ3zlLXLQzMtrotInDoMJDr+VrWJ5gsEIfLTKZ5TYaRDj6aNiKyrj
-	HDKg==
-X-Gm-Message-State: APjAAAUHc3hJ6cP6TxqG/Am0FXnHPaP7iBOtNsvKdlZcR2vbGs7XVvek
-	uKQHNvNkJbKSUywgWtW2PBGT5Mi0Y/Y=
-X-Google-Smtp-Source: APXvYqwcSaO7PJN/Q4YIzWk/wu4UMLqavI4ZgVRrnR3/tiXfrQU4cgXvIMTPwnsMK8kXywYDWOEJFA==
-X-Received: by 2002:a92:aa4d:: with SMTP id j74mr15892344ili.271.1575656048238;
-	Fri, 06 Dec 2019 10:14:08 -0800 (PST)
-Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id k9sm3398138ior.0.2019.12.06.10.14.07
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=R3eRb4dd7SH7Hxc4XiR1a96OXsKkqpCyWJKH105cZfA=;
+	b=KXbpzprqHXAKkKHkwcLA2MbCqJdXvO1RgrwoCb2SugixWcZJ9meo+xh9Um5eXG7BGw
+	YaUrla/E2hJBRqgwSohLtrhZX8FvqSS9uvIZ/phW9S8bk7tl9iU8J6rj4nJdut/c9cM7
+	+g84PMMW96YjdL8SbtROtEbHDu388BkQta1bG7v4PDLf6ahEYp3Y12B/sEYZlYB+QMQp
+	83yVpLFtB0txAx+2j1d1ntY0XQ5zJ6oqOfenHp87phLP3xMPvTZF0royq2bDJ+knvJpX
+	jUF2tjOTMidgc9qZBjLX3niP2e7G1hjdvhInNyGAVSdLRUOq3Oy5vd7d3tdc9De6UQGp
+	Mhxg==
+X-Gm-Message-State: APjAAAVhr4NNEDWGj4EcSTfFP8W7Uhg19xB9uXRrvPaOf35ZHoY0PBCr
+	KAmlEL4jSg6tVXaN3AbLKX/f3TCl
+X-Google-Smtp-Source: APXvYqwmG9kj/G7Z2AsEntNB6CWy7uQBZ/2qMCaSJ++nF3vRTv1oa4Su4dE3QVgMvAUB82NDjGr1fw==
+X-Received: by 2002:a17:902:b614:: with SMTP id
+	b20mr16956266pls.305.1575670216749; 
+	Fri, 06 Dec 2019 14:10:16 -0800 (PST)
+Received: from poirot.lexmark.com ([12.190.236.26])
+	by smtp.gmail.com with ESMTPSA id 91sm4375021pjq.18.2019.12.06.14.10.15
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 06 Dec 2019 10:14:07 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+	Fri, 06 Dec 2019 14:10:16 -0800 (PST)
+From: Kyle Russell <bkylerussell@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  6 Dec 2019 12:12:56 -0600
-Message-Id: <20191206181256.1392097-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Subject: [PATCH] Bump minimum python version to 3.5
+Date: Fri,  6 Dec 2019 17:10:00 -0500
+Message-Id: <20191206221000.16714-1-bkylerussell@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Subject: [1.40][PATCH] runqueue: fix multiconfig task dependency filtering
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,35 +54,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Dec 2019 18:14:07 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 06 Dec 2019 22:10:17 -0000
 
-The local hash equivalence server used by bitbake requires python 3.5,
-so bump up the minimum required version.
+multiconfig dependencies should be excluded from BB_TASKDEPDATA.
+However in thud, multiconfig filtering on task dependencies doesn't
+happen until after deps has already been added to taskdepdata.
 
-[YOCTO #13678]
+One manifestation of this results in multiconfig dependencies leaking
+into staging processing.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+File: 'exec_python_func() autogenerated', lineno: 2, function: <module>
+     0001:
+ *** 0002:extend_recipe_sysroot(d)
+     0003:
+File: '/home/user/thud/meta/classes/staging.bbclass', lineno: 344, function: extend_recipe_sysroot
+     0340:    #bb.note(" start is %s" % str(start))
+     0341:
+     0342:    # Direct dependencies should be present and can be depended upon
+     0343:    for dep in set(start):
+ *** 0344:        if setscenedeps[dep][1] == "do_populate_sysroot":
+     0345:            if dep not in configuredeps:
+     0346:                configuredeps.append(dep)
+     0347:    bb.note("Direct dependencies are %s" % str(configuredeps))
+     0348:    #bb.note(" or %s" % str(start))
+Exception: KeyError: 'multiconfig:musl:/home/user/thud/meta/recipes-kernel/linux/linux-yocto_4.18.bb:do_deploy'
+
+This can be reproduced on thud by backporting the multiconfig.MultiConfig.test_multiconfig
+test and mcextend bbclass from warrior.
+
+d22b6e03a5504145abed7c2ca44cf12854df85da mcextend: Add helper class useful for multiconfig
+d9018a3d9c828551c465b68b27920ec4681524ae selftest: Add multiconfig test
+
+Flipping the ordering to match warrior's behavior fixes the test case.
+
+Signed-off-by: Kyle Russell <bkylerussell@gmail.com>
 ---
- bitbake/lib/bb/__init__.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/runqueue.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/__init__.py b/bitbake/lib/bb/__init__.py
-index c144311be4c..b9d8bfa7694 100644
---- a/bitbake/lib/bb/__init__.py
-+++ b/bitbake/lib/bb/__init__.py
-@@ -12,8 +12,8 @@
- __version__ = "1.44.0"
- 
- import sys
--if sys.version_info < (3, 4, 0):
--    raise RuntimeError("Sorry, python 3.4.0 or later is required for this version of bitbake")
-+if sys.version_info < (3, 5, 0):
-+    raise RuntimeError("Sorry, python 3.5.0 or later is required for this version of bitbake")
- 
- 
- class BBHandledException(Exception):
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 383c1832..0f2fdcee 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2109,8 +2109,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                 deps = self.rqdata.runtaskentries[revdep].depends
+                 provides = self.rqdata.dataCaches[mc].fn_provides[taskfn]
+                 taskhash = self.rqdata.runtaskentries[revdep].hash
+-                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
+                 deps = self.filtermcdeps(task, deps)
++                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash]
+                 for revdep2 in deps:
+                     if revdep2 not in taskdepdata:
+                         additional.append(revdep2)
 -- 
-2.23.0
+2.17.1
 
 
