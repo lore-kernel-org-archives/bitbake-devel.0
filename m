@@ -1,47 +1,103 @@
-Return-Path: <waynli329@gmail.com>
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com
-	[209.85.166.41])
-	by mail.openembedded.org (Postfix) with ESMTP id BAD2E7CDC0
+Return-Path: <prvs=0247c659d0=sean.mckay@hpe.com>
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com
+	[148.163.143.35])
+	by mail.openembedded.org (Postfix) with ESMTP id 63B9C7D19E
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Dec 2019 21:08:57 +0000 (UTC)
-Received: by mail-io1-f41.google.com with SMTP id x1so20345352iop.7
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Dec 2019 13:08:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=hh7wpWcxjHloxCDngpv5IIHsM5p6Ae22z1DuDLZckW4=;
-	b=vhqO1ngy/Q4AbgKRhyun5IXhJppgqeKeKDZJ+WqPNoVyh9Vootsb0AuOWmC08Eb0tZ
-	av3OIebE5h9EQCPItpBlsbNjIpknJ8kiF0A7GjINiAwJuCAjhDCcv4ywn7bbPoirQjh4
-	C/BQ1O7zH0eenyCg7eANmYr1t6Kghj0N0cH9SleTKBlAzolDieaFZZ2Sl2N9YGScI9FC
-	MtV/ozyi1ErCJQzs+AEM1Fmc0lS7QfN8vUsCn15n3o8zquX6pzX0LlJ8LsyCFScqBTdA
-	AwM97EruswI47FOxIiK8VZuNfUo9tvat+sltUTq+T8oo/XcyQp5KzfQaLDY34bdrerhN
-	xuNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=hh7wpWcxjHloxCDngpv5IIHsM5p6Ae22z1DuDLZckW4=;
-	b=oDaUtNJTZ0jQ3ao9Q180wQR8QMNuU+3AUmuWYTN1hPlMpZugnX4jCyrnH7jjpgvfh9
-	CgV2FuWcq4ahAViZFxeYz+pSCC0eJVCEB2iLfqD6zFfD1QwDDTEko4cg50CKJOeEfo4b
-	VZv1ZEGBZAkWlXbXkgfWOU3HU5w9/1uf0vxKWl9EqCDSnpMQn6CQoxhK4Lz8KltnamKJ
-	rd1Ydc4GoO6323APwethXaxE33YO6FXxSQkyflyP+HyOmV72kWlpQEUKBcXBnt4tFuSb
-	v9FTvoFu/kf+OyQDzBcA8xXHtq0BEcUC2pdq+DafAwuASGUueGh5K2yzr3vl8Jecw0D3
-	4HAQ==
-X-Gm-Message-State: APjAAAWMIIe69TL1dlZIqe5bhDVyNkUCWmtFAZrt/Z0o6K+eLvd46XBN
-	zIMYhWHMZWkIJdS0bsHFqbJz9fv+EnsbQpeyH94=
-X-Google-Smtp-Source: APXvYqwdmglKgoMH8M/tAHhUIYGn+QQ4BpQKUGUjw4U5Gad9f0eBTF4hYf3wibK+lLdKYeqiiSlQXRPI8OjIMEBb8aM=
-X-Received: by 2002:a02:aa10:: with SMTP id r16mr9643360jam.48.1576012138684; 
-	Tue, 10 Dec 2019 13:08:58 -0800 (PST)
-MIME-Version: 1.0
+	Tue, 10 Dec 2019 20:54:23 +0000 (UTC)
+Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id
+	xBAKlij7017858; Tue, 10 Dec 2019 20:54:22 GMT
+Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
+	by mx0b-002e3701.pphosted.com with ESMTP id 2wtewe1w9u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NOT); Tue, 10 Dec 2019 20:54:22 +0000
+Received: from G4W10205.americas.hpqcorp.net (g4w10205.houston.hpecorp.net
+	[16.207.82.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by g2t2354.austin.hpe.com (Postfix) with ESMTPS id E6E3FA2;
+	Tue, 10 Dec 2019 20:54:21 +0000 (UTC)
+Received: from G4W10204.americas.hpqcorp.net (2002:10cf:5210::10cf:5210) by
+	G4W10205.americas.hpqcorp.net (2002:10cf:520f::10cf:520f) with
+	Microsoft SMTP
+	Server (TLS) id 15.0.1367.3; Tue, 10 Dec 2019 20:54:21 +0000
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (15.241.52.12) by
+	G4W10204.americas.hpqcorp.net (16.207.82.16) with Microsoft SMTP
+	Server (TLS)
+	id 15.0.1367.3 via Frontend Transport; Tue, 10 Dec 2019 20:54:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=iwLrY3zpbG4ylk4gSXiAadwFmqKAYgWH1yNpjR/QLG5Pi8CI71vSEzZLMZ7oRoddMQsZI3B7onkaeqHoedp5I/Zf4nQYA7qwA/OypRaR3yQS3MytSskN6CwTKV3chLzc9+jEzIc8prfZbk7b6y6kNRF4oVm3o5B/NJupDVG/e4zmplA8/358ZrCKeiUSrAhDUyqSKqlSlsbGmQPQdeziOfGd8wehPZZWoMC7J1TzaVU8tfIMq/jOvjJy8+0w+hes/1SdlrcUHb4hcaOjW5qGfINmypD8aY51/Jbfa7STsQCsFrJ1fe1NY+/Zrmk3qiCfsEBSwy2OITMmeMzlj+inkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=Q/qS4FanyERIJ0tIyjeAO+t6HhQgy/i6szN8yJkj9ow=;
+	b=fbHxs7WoZN1mVIugoHtlEIhS3H42DswwQ/Fxc0svFh3W7ZRnaSTsz2LoLkgSiOsi9L+NBXrmKgLEK58akNb/FONf0d85nKqyq1zC+isu5yOBbghmZ1iXJzfX5HHGaxiNBErG5bZtHHs3Y+JBIVxyEZkSkW3BPj3Lp1Ao/LGLTkKaUOxIwe1qjtoveUvV9eurIdenLBnb50bU71RETLyF6b8OkgL/CcdCkTT9WuIyGT4LS9AdCzADfNsUEcbxrkBx7ARTCyqJjrzBqcYN2SvQBHgKhEYjKwcPbpqqR8X/TMOC4uaMzi6k+YVfYVl3UCfTgHcEE2evqlT8mFy60+bvHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+	smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com;
+	dkim=pass header.d=hpe.com; arc=none
+Received: from CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM (10.169.98.21) by
+	CS1PR8401MB1094.NAMPRD84.PROD.OUTLOOK.COM (10.169.96.20) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2516.13; Tue, 10 Dec 2019 20:54:20 +0000
+Received: from CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM
+	([fe80::c941:2303:b66f:c2c]) by
+	CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM
+	([fe80::c941:2303:b66f:c2c%11]) with mapi id 15.20.2516.018;
+	Tue, 10 Dec 2019 20:54:20 +0000
+From: "McKay, Sean" <sean.mckay@hpe.com>
+To: Wayne Li <waynli329@gmail.com>
+Thread-Topic: [yocto] Question about shipping files to package.
+Thread-Index: AQHVq7sHX3+w6HSLQUKMdPA7wqvviqesJUaQgAeyYACAAAB0gA==
+Date: Tue, 10 Dec 2019 20:54:20 +0000
+Message-ID: <CS1PR8401MB0568292C74FD3BC61A690DC3825B0@CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM>
 References: <CAM2K0nr6suFCaV-Ne7zv7ukyiXh4BG5H0Y6S6UkS5h08x8aGAg@mail.gmail.com>
 	<CS1PR8401MB0568A3D49346083E949FA11C825C0@CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM>
 	<CAM2K0nrFdGNsU=BxEDV9nPj0W0zqKTogq9RXoBofiQYKGGCuqA@mail.gmail.com>
-	<CS1PR8401MB0568292C74FD3BC61A690DC3825B0@CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM>
-In-Reply-To: <CS1PR8401MB0568292C74FD3BC61A690DC3825B0@CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM>
-From: Wayne Li <waynli329@gmail.com>
-Date: Tue, 10 Dec 2019 21:08:47 +0000
-Message-ID: <CAM2K0nqnEyUMg_RBd1QY=4VACtdXogJg=5dq3n-GE=DK+39EEQ@mail.gmail.com>
-To: "McKay, Sean" <sean.mckay@hpe.com>
+In-Reply-To: <CAM2K0nrFdGNsU=BxEDV9nPj0W0zqKTogq9RXoBofiQYKGGCuqA@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [15.211.195.4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2c313a24-e044-467f-fcd2-08d77db320fd
+x-ms-traffictypediagnostic: CS1PR8401MB1094:
+x-microsoft-antispam-prvs: <CS1PR8401MB10945BA4AF4AF2AF4A071B05825B0@CS1PR8401MB1094.NAMPRD84.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02475B2A01
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10019020)(136003)(39860400002)(376002)(396003)(366004)(346002)(199004)(189003)(51914003)(52314003)(8676002)(5660300002)(33656002)(8936002)(66574012)(26005)(71200400001)(54906003)(2906002)(9686003)(186003)(316002)(81156014)(81166006)(4326008)(55016002)(66946007)(76116006)(66556008)(66476007)(64756008)(7696005)(6916009)(86362001)(53546011)(6506007)(478600001)(52536014)(66446008);
+	DIR:OUT; SFP:1102; SCL:1; SRVR:CS1PR8401MB1094;
+	H:CS1PR8401MB0568.NAMPRD84.PROD.OUTLOOK.COM; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; A:1; MX:1; 
+received-spf: None (protection.outlook.com: hpe.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6vFjCwGTg/QhvrX18wKFsbIWoiuYTdrGNnIdeD5Pq6N3HNtmDEcxsRwAubKq+wCFcduNAiFdA+i7mgm3hVU9vRp+pLuZ0c9tsYf3RVNVbDAVEhitS/0xpxkZveN+qKALN72bHsMtr2HqWiroImUWSWa4VmjfGc1yRC+HhIuI2bsXUbfMXv/+GRZcbl82ScFqHaa3XgpblP5glFlSicmnyWaKieGqfT68hQxabQYLQ1pxv+fB2vzldrldJQ00mSxpawSN4oa8OQXZa1H+aaP7ghEq4mfvnCWf8ZBHbHdHI90e/KZKPRLJlg+lgQbjtX7uCFxDSN9rkSfMscYMZ0YSLxguWiOVZFKSQDSA79CGHqQrTe1lIGlqQ9/NLmpmzsZEzv9abyO5W8xCnUtaKdT58bxeDFR5jCHuaKOaFfMN30LqnBVMOF/zys7MSDOeUu4GcEfDI9NSEDM3mHxKU9xrCbcKGGx9tnPR49BNrKZfMEcGsDnJTbnkec51NB0POX5SdWBFDnQ4FFVmE2e+KHcYhw==
+x-ms-exchange-transport-forked: True
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c313a24-e044-467f-fcd2-08d77db320fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 20:54:20.0919 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6kme7LxJupX4GMcnBORXqI5gd4d60W0B1/ys56QISY9Us7Gh8zPo6PBkDCOYGG0rFdnl3w6ny0xysQdmdaXbTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CS1PR8401MB1094
+X-OriginatorOrg: hpe.com
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+	definitions=2019-12-10_06:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+	suspectscore=0 phishscore=0
+	priorityscore=1501 clxscore=1015 impostorscore=0 spamscore=0
+	malwarescore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999
+	mlxscore=0
+	bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+	engine=8.12.0-1910280000 definitions=main-1912100171
+X-Mailman-Approved-At: Tue, 10 Dec 2019 23:32:17 +0000
 Cc: Yocto Project Discussion <yocto@yoctoproject.org>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [yocto] Question about shipping files to package.
@@ -57,418 +113,331 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Dec 2019 21:08:57 -0000
-Content-Type: multipart/alternative; boundary="000000000000b024f405995feb1f"
+X-List-Received-Date: Tue, 10 Dec 2019 20:54:23 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_CS1PR8401MB0568292C74FD3BC61A690DC3825B0CS1PR8401MB0568_"
 
---000000000000b024f405995feb1f
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--_000_CS1PR8401MB0568292C74FD3BC61A690DC3825B0CS1PR8401MB0568_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-That makes a lot of sense.  The version I'm on is: PV=3D"4.1" (I just ran
-bitbake -e virtual/kernel | grep "^PV").
+SWYgdGhlIGlzc3VlIHdlcmUganVzdCB0aGF0IHlvdXIgRklMRVNfKiB2YXJpYWJsZXMgd2VyZSBz
+ZXQgaW5jb3JyZWN0bHksIHlvdeKAmWQgYXQgbGVhc3QgZW5kIHVwIHdpdGggdGhlIC5rbyBmaWxl
+IHNvbWV3aGVyZSBpbiB5b3VyICR7V09SS0RJUn0vaW1hZ2UgKCR7RH0pIGRpcmVjdG9yeS4gWW91
+4oCZZCBhbG1vc3QgY2VydGFpbmx5IGZpbmQgYW5vdGhlciBvbmUgaW4gdGhlIGJ1aWxkIG9yIHNv
+dXJjZSBkaXJlY3RvcnkgYXMgd2VsbCAoZGVwZW5kaW5nIG9uIGhvdyB5b3VyIC5iYi9iYmNsYXNz
+IGZpbGVzIGRlZmluZSB0aGUgbG9jYXRpb24gb2YgdGhlIGNvbXBpbGF0aW9uKS4NCg0KVGhlIGZh
+Y3QgdGhhdCB5b3UgZG9u4oCZdCBoYXZlIG9uZSBhbnl3aGVyZSBzZWVtcyB0byBpbmRpY2F0ZSB0
+aGF0IHlvdXIgZG9fY29tcGlsZSBzdGVwIGlzbuKAmXQgYWN0dWFsbHkgZ2VuZXJhdGluZyB0aGUg
+LmtvIHRoYXQgeW91IGV4cGVjdCBpdCB0bywgc28geW914oCZbGwgbmVlZCB0byByZXdpbmQgeW91
+ciByZWNpcGUgY3JlYXRpb24gdG8gd29ya2luZyBvbiB0aGF0IHN0ZXAgYW5kIGRlYnVnIHRoZXJl
+Lg0KDQpBc3N1bWluZyB5b3XigJlyZSB1c2luZyBwb2t5IGFzIGEgYmFzZSwgd2hhdCB2ZXJzaW9u
+IGFyZSB5b3Ugb24gc28gSSBjYW4gZ28gcmVhZCB0aGUgLmJiY2xhc3MgeW914oCZcmUgdXNpbmc/
+DQoNCi1TZWFuDQoNCkZyb206IFdheW5lIExpIDx3YXlubGkzMjlAZ21haWwuY29tPg0KU2VudDog
+VHVlc2RheSwgRGVjZW1iZXIgMTAsIDIwMTkgMTI6MjMgUE0NClRvOiBNY0theSwgU2VhbiA8c2Vh
+bi5tY2theUBocGUuY29tPg0KQ2M6IGJpdGJha2UtZGV2ZWwgPGJpdGJha2UtZGV2ZWxAbGlzdHMu
+b3BlbmVtYmVkZGVkLm9yZz47IFlvY3RvIFByb2plY3QgRGlzY3Vzc2lvbiA8eW9jdG9AeW9jdG9w
+cm9qZWN0Lm9yZz4NClN1YmplY3Q6IFJlOiBbeW9jdG9dIFF1ZXN0aW9uIGFib3V0IHNoaXBwaW5n
+IGZpbGVzIHRvIHBhY2thZ2UuDQoNCkkgZGlkIGEgZmluZCBmb3IgYW55IGZpbGVzIHdpdGggYSBr
+dm0gYW5kIGEgLmtvIGluIGl0cyBuYW1lIHRocm91Z2hvdXQgbXkgZW50aXJlIHdvcmtzcGFjZSBh
+bmQgbm90aGluZyBjYW1lIHVwLiAgQnV0IGFueXdheSwgdGhhbmtzIGZvciB0aGUgZXhwbGFuYXRp
+b24uICBDb3VsZCBwYWNrYWdpbmcgdGhlIGZpbGVzIHdyb25nIChpLmUuIHNldHRpbmcgdGhlIEZJ
+TEVTIHZhcmlhYmxlIHdyb25nKSBjYXVzZSB0aGUga3ZtLmtvIGZpbGUgdG8gbmV2ZXIgc2hvdyB1
+cCBhdCBhbGw/ICBJIGd1ZXNzIHRoYXQgY291bGRuJ3QgYmUgdGhlIGNhc2UgdGhvdWdoIGJlY2F1
+c2UgdGhlIC5rbyBmaWxlcyBhcmUgY3JlYXRlZCBmaXJzdCBiZWZvcmUgaXQgZ2V0cyBwYWNrYWdl
+ZCB1cCBzbyBpZiB0aGV5IHdlcmUgY3JlYXRlZCBpbiB0aGUgZmlyc3QgcGxhY2UgYSBzZWFyY2gg
+dGhyb3VnaCBteSBlbnRpcmUgd29ya3NwYWNlIHdvdWxkIHR1cm4gdGhlbSB1cC4gIElzIHRoYXQg
+Y29ycmVjdD8NCg0KT24gVGh1LCBEZWMgNSwgMjAxOSBhdCAxMToxNCBQTSBNY0theSwgU2VhbiA8
+c2Vhbi5tY2theUBocGUuY29tPG1haWx0bzpzZWFuLm1ja2F5QGhwZS5jb20+PiB3cm90ZToNCkni
+gJltIG5vdCBhbiBleHBlcnQgb24gY29tcGlsaW5nIGtlcm5lbCBtb2R1bGVzLCBidXQgSSBjYW4g
+YXQgbGVhc3QgYW5zd2VyIHNvbWUgb2YgeW91ciBxdWVzdGlvbnMgdG8gZ2V0IHN0YXJ0ZWQuIEni
+gJltIGFsc28gbm90IGFuIGFjdHVhbCBleHBlcnQsIGJ1dCBqdXN0IGFub3RoZXIgdXNlciwgc28g
+aXTigJlzIGVudGlyZWx5IHBvc3NpYmxlIHRoYXQgc29tZW9uZSBtb3JlIGtub3dsZWRnZWFibGUg
+d2lsbCBjb21lIGFsb25nIGFuZCB0ZWxsIHVzIHRoYXQgSeKAmW0gd3JvbmcuDQoNCldpdGggdGhh
+dCBzYWlkLCBmaXJzdCwgSSBoYXZlIHRvIGFzayB0aGUgc2ltcGxlIHN0dWZmOiB3aGVuIHlvdSBz
+YXkgdGhhdCBubyAua28gaXMgYmVpbmcgY3JlYXRlZCwgd2hlcmUgYXJlIHlvdSBsb29raW5nPyBJ
+ZiB5b3XigJlyZSBub3Qgc3VyZSB3aGVyZSB5b3Ugc2hvdWxkIGJlIGxvb2tpbmcsIEnigJlkIHJl
+Y29tbWVuZCBieSBkb2luZyBhIGZpbmQgaW5zaWRlIG9mIHlvdXIgJHtXT1JLRElSfSB0byBzZWUg
+d2hldGhlciBvciBub3QgeW914oCZdmUgZ290IGFueSAua28gZmlsZXMuIFRoZXkgd29u4oCZdCBx
+dWl0ZSBiZSBvdXQgaW4gcGxhaW4gc2lnaHQuDQoNCkluIGdlbmVyYWwgKHRob3VnaCBhZ2Fpbiwg
+SSBjYW7igJl0IHNwZWFrIGZvciB0aGUgbW9kdWxlIGNsYXNzKSwgY29tcGlsYXRpb25zIHRha2Ug
+cGxhY2UgaW4gYSBidWlsZCBkaXJlY3RvcnkgaW5zaWRlIG9mIHRoZSByZWNpcGXigJlzIHdvcmtk
+aXIgKCR7Qn0gaW4gYml0YmFrZSBwYXJsYW5jZSkuIFRoZSBpbnN0YWxsIHByb2Nlc3MgdGhlbiBj
+b3BpZXMgdGhlIGNyZWF0ZWQgZmlsZXMgdG8gYSBzdGFnaW5nIGRpcmVjdG9yeSAoJHtEfSBpbiBi
+aXRiYWtlIHBhcmxhbmNlKSB0aGF04oCZcyB1c3VhbGx5ICR7V09SS0RJUn0vaW1hZ2UuDQoNClBh
+Y2thZ2luZyBpcyB0aGUgcHJvY2VzcyBvZiB0YWtpbmcgdGhvc2Ugb3V0cHV0IGZpbGVzIGZyb20g
+JHtEfSBhbmQgcGFja2FnaW5nIHRoZW0gaW50byBvbmUgb2YgYSBmZXcgd2VsbCBkZWZpbmVkIHBh
+Y2thZ2luZyBmb3JtYXRzLiBJZiB5b3XigJlyZSB1c2luZyB0aGUgZGVmYXVsdHMsIHRoaXMgd291
+bGQgYmUgUlBNLiBBIHNpbmdsZSByZWNpcGUgY2FuIChhbmQgb2Z0ZW4gZG9lcykgcHJvZHVjZSBt
+dWx0aXBsZSBwYWNrYWdlcy4gV2hlbiBiaXRiYWtlIG1vdmVzIG9udG8gdGhlIHBhY2thZ2luZyBz
+dGVwIChJ4oCZbSBzaW1wbGlmeWluZyBhIGJpdCksIGl0IGNyZWF0ZXMgZGlyZWN0b3JpZXMgZm9y
+IGVhY2ggcGFja2FnZSB0aGF04oCZcyBnb2luZyB0byBiZSBnZW5lcmF0ZWQgaW5zaWRlIG9mICR7
+V09SS0RJUn0vcGFja2FnZXMtc3BsaXQuIEl0IHRoZW4gbG9va3MgYXQgdGhlIEZJTEVTIHZhcmlh
+YmxlIGZvciB0aGUgcGFydGljdWxhciBwYWNrYWdlIGl04oCZcyB3b3JraW5nIG9uIGFuZCBjb3Bp
+ZXMgYW55IGZpbGVzIHRoYXQgbWF0Y2ggdGhlIHBhdHRlcm5zIGluIHRoYXQgdmFyaWFibGUgaW50
+byB0aGF0IHBhY2thZ2XigJlzIGRpcmVjdG9yeSBpbiBwYWNrYWdlcy1zcGxpdC4gV2hlbiBpdOKA
+mXMgZG9uZSBjb3B5aW5nIGZpbGVzLCBlYWNoIG9mIHRob3NlIGRpcmVjdG9yaWVzIGFyZSB0dXJu
+ZWQgaW50byB0aGUgYXBwcm9wcmlhdGUgcGFja2FnZSAocHJvYmFibHkgLnJwbSkgZmlsZS4NClNv
+LCBmb3IgYSBzb21ld2hhdCBtb3JlIGNvbmNyZXRlIGV4YW1wbGUsIHdoZW4geW91IHNhaWQg4oCY
+RklMRVNfJHtQTn0gKz0gIi9saWIvbW9kdWxlcy80LjEuOC1ydDgrZ2JkNTFiYWYi4oCZLCB5b3Ug
+dG9sZCBiaXRiYWtlIHRoYXQgYW55dGhpbmcgdGhhdCBtYXRjaGVkIC9saWIvbW9kdWxlcy80LjEu
+OC1ydDgrZ2JkNTFiYWYgc2hvdWxkIGdldCBwdXQgaW4gdGhlICR7UE59IChtYWluKSBwYWNrYWdl
+Lg0KDQpJbiB0aGUgY29udGV4dCBvZiB0aGUgZXJyb3IgbWVzc2FnZSB5b3Ugd2VyZSBwcmV2aW91
+c2x5IHJlY2VpdmluZywg4oCcaW5zdGFsbGVk4oCdIGlzIHRoZSBkb19pbnN0YWxsIHN0ZXAsIHdo
+aWNoIGlzIHJlZmVycmluZyB0byB0aGF0IHN0YWdpbmcgcHJvY2VzcyAoYW5hbG9nb3VzIHRvIHJ1
+bm5pbmcg4oCYbWFrZSBpbnN0YWxs4oCZIG9uIHNvbWV0aGluZyB5b3UganVzdCBkb3dubG9hZGVk
+IGZyb20gdGhlIGludGVybmV0KS4gU29tZXRoaW5nIGlzIOKAmHNoaXBwZWTigJkgaWYgaXQgaXMg
+cGFja2FnZWQgaW50byBvbmUgb2YgdGhlIGZpbmFsIHJwbSBmaWxlcy4NCg0KQ2hlZXJzIQ0KLVNl
+YW4gTWNLYXkNCg0KRnJvbTogeW9jdG9AbGlzdHMueW9jdG9wcm9qZWN0Lm9yZzxtYWlsdG86eW9j
+dG9AbGlzdHMueW9jdG9wcm9qZWN0Lm9yZz4gPHlvY3RvQGxpc3RzLnlvY3RvcHJvamVjdC5vcmc8
+bWFpbHRvOnlvY3RvQGxpc3RzLnlvY3RvcHJvamVjdC5vcmc+PiBPbiBCZWhhbGYgT2YgV2F5bmUg
+TGkNClNlbnQ6IFRodXJzZGF5LCBEZWNlbWJlciA1LCAyMDE5IDI6MjYgUE0NClRvOiBiaXRiYWtl
+LWRldmVsIDxiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8bWFpbHRvOmJpdGJh
+a2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4+OyBZb2N0byBQcm9qZWN0IERpc2N1c3Np
+b24gPHlvY3RvQHlvY3RvcHJvamVjdC5vcmc8bWFpbHRvOnlvY3RvQHlvY3RvcHJvamVjdC5vcmc+
+Pg0KU3ViamVjdDogW3lvY3RvXSBRdWVzdGlvbiBhYm91dCBzaGlwcGluZyBmaWxlcyB0byBwYWNr
+YWdlLg0KDQpEZWFyIFlvY3RvIERldmVsb3BlcnMsDQoNClNvIEkgY3JlYXRlZCBhIGJpdGJha2Ug
+cmVjaXBlIHRvIGludGVncmF0ZSBrdm0gaW50byBteSBpbWFnZSBhcyBhbiBvdXQtb2YtdHJlZSBr
+ZXJuZWwgbW9kdWxlLiAgSGVyZSdzIG15IHJlY2lwZSByaWdodCBub3c6DQoNCkxJQ0VOU0UgPSAi
+R1BMdjIiDQpMSUNfRklMRVNfQ0hLU1VNID0gImZpbGU6Ly9DT1BZSU5HO21kNT1jNjE2ZDBlNzky
+NGU5ZTc4ZWUxOTJkOTlhM2IyNmZiZCINCg0KaW5oZXJpdCBtb2R1bGUNCg0KU1JDX1VSSSA9ICJm
+aWxlOi8vL2hvbWVhZC9Rb3JJUS1TREstVjIuMC0yMDE2MDUyNy15b2N0by9zb3VyY2VzL21ldGEt
+dmlydHVhbGl6YXRpb24vcmVjaXBlcy1rZXJuZWwva3ZtLWttb2R1bGUva3ZtLWttb2QtMy4xMC4y
+MS50YXIuYnoyIg0KDQpTID0gIiR7V09SS0RJUn0va3ZtLWttb2QtMy4xMC4yMSINCg0KZG9fY29u
+ZmlndXJlKCkgew0KICAgIC4vY29uZmlndXJlIC0tYXJjaD1wcGM2NCAtLWtlcm5lbGRpcj0vaG9t
+ZWFkL1FvcklRLVNESy1WMi4wLTIwMTYwNTI3LXlvY3RvL2J1aWxkX3Q0MjQwcmRiLTY0Yi90bXAv
+d29yay90NDI0MHJkYl82NGItZnNsLWxpbnV4L2tlcm5lbC1kZXZzcmMvMS4wLXIwL2ltYWdlL3Vz
+ci9zcmMva2VybmVsDQp9DQoNCkZJTEVTXyR7UE59ICs9ICIvbGliL21vZHVsZXMvNC4xLjgtcnQ4
+K2diZDUxYmFmIg0KDQpCaXRiYWtpbmcgdGhpcyByZWNpcGUgY29tcGxldGVzIHdpdGggbm8gcHJv
+YmxlbXMgYnV0IG5vIGtlcm5lbCBtb2R1bGUgaXMgY3JlYXRlZCAoY29tcGlsaW5nIHRoZSBzb3Vy
+Y2UgY29kZSBzaG91bGQgY3JlYXRlIGEga2VybmVsIG1vZHVsZSBmaWxlIGt2bS5rbykuICBJIHdh
+cyB3b25kZXJpbmcgaWYgdGhlIHByb2JsZW0gbWlnaHQgYmUgYmVjYXVzZSBvZiB3aGF0IEkgc2V0
+IEZJTEVTXyR7UE59IHRvIGJlLiAgQmVmb3JlIEkgc2V0IHRoZSBGSUxFUyB2YXJpYWJsZSBJIHdh
+cyBnZXR0aW5nIGFuIGVycm9yIHNheWluZyBzb21ldGhpbmcgYWxvbmcgdGhlIGxpbmVzIG9mLCAi
+RmlsZXMvZGlyZWN0b3JpZXMgd2VyZSBpbnN0YWxsZWQgYnV0IG5vdCBzaGlwcGVkLiIgIFRoZW4g
+SSBtb3JlIG9yIGxlc3MganVzdCBndWVzc2VkIGEgZGlyZWN0b3J5IGFuZCBzZXQgbXkgRklMRVMg
+dmFyaWFibGUgdG8gaXQgYW5kIHRoZW4gdGhlIHJlY2lwZSBmaW5pc2hlZCBiaXRiYWtpbmcgd2l0
+aCBubyBlcnJvcnMuDQoNCkJ1dCBub3cgdGhhdCB0aGUga3ZtLmtvIGZpbGUgaXNuJ3QgZXZlbiBi
+ZWluZyBjcmVhdGVkLCBJIGFtIHdvbmRlcmluZyBpZiBpdCBtaWdodCBiZSBiZWNhdXNlIEkgc2V0
+IHRoZSBGSUxFUyB2YXJpYWJsZSB3cm9uZz8gIFdoYXQgZG9lcyB0aGUgd29yZCAic2hpcCIgbWVh
+bj8gIEFuZCBhbG9uZyB0aG9zZSBsaW5lcyB3aGF0IGV4YWN0bHkgaXMgYSAicGFja2FnZSIgaW4g
+dGhlIHNldHRpbmcgb2YgWW9jdG8gcHJvamVjdD8NCg0KLVRoYW5rcyEsIFdheW5lIExpDQo=
 
-On Tue, Dec 10, 2019 at 8:54 PM McKay, Sean <sean.mckay@hpe.com> wrote:
+--_000_CS1PR8401MB0568292C74FD3BC61A690DC3825B0CS1PR8401MB0568_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-> If the issue were *just* that your FILES_* variables were set
-> incorrectly, you=E2=80=99d at least end up with the .ko file somewhere in=
- your
-> ${WORKDIR}/image (${D}) directory. You=E2=80=99d almost certainly find an=
-other one
-> in the build or source directory as well (depending on how your .bb/bbcla=
-ss
-> files define the location of the compilation).
->
->
->
-> The fact that you don=E2=80=99t have one anywhere seems to indicate that =
-your
-> do_compile step isn=E2=80=99t actually generating the .ko that you expect=
- it to, so
-> you=E2=80=99ll need to rewind your recipe creation to working on that ste=
-p and
-> debug there.
->
->
->
-> Assuming you=E2=80=99re using poky as a base, what version are you on so =
-I can go
-> read the .bbclass you=E2=80=99re using?
->
->
->
-> -Sean
->
->
->
-> *From:* Wayne Li <waynli329@gmail.com>
-> *Sent:* Tuesday, December 10, 2019 12:23 PM
-> *To:* McKay, Sean <sean.mckay@hpe.com>
-> *Cc:* bitbake-devel <bitbake-devel@lists.openembedded.org>; Yocto Project
-> Discussion <yocto@yoctoproject.org>
-> *Subject:* Re: [yocto] Question about shipping files to package.
->
->
->
-> I did a find for any files with a kvm and a .ko in its name throughout my
-> entire workspace and nothing came up.  But anyway, thanks for the
-> explanation.  Could packaging the files wrong (i.e. setting the FILES
-> variable wrong) cause the kvm.ko file to never show up at all?  I guess
-> that couldn't be the case though because the .ko files are created first
-> before it gets packaged up so if they were created in the first place a
-> search through my entire workspace would turn them up.  Is that correct?
->
->
->
-> On Thu, Dec 5, 2019 at 11:14 PM McKay, Sean <sean.mckay@hpe.com> wrote:
->
-> I=E2=80=99m not an expert on compiling kernel modules, but I can at least=
- answer
-> some of your questions to get started. I=E2=80=99m also not an actual exp=
-ert, but
-> just another user, so it=E2=80=99s entirely possible that someone more
-> knowledgeable will come along and tell us that I=E2=80=99m wrong.
->
->
->
-> With that said, first, I have to ask the simple stuff: when you say that
-> no .ko is being created, where are you looking? If you=E2=80=99re not sur=
-e where
-> you should be looking, I=E2=80=99d recommend by doing a find inside of yo=
-ur
-> ${WORKDIR} to see whether or not you=E2=80=99ve got any .ko files. They w=
-on=E2=80=99t quite
-> be out in plain sight.
->
->
->
-> In general (though again, I can=E2=80=99t speak for the module class),
-> compilations take place in a build directory inside of the recipe=E2=80=
-=99s workdir
-> (${B} in bitbake parlance). The install process then copies the created
-> files to a staging directory (${D} in bitbake parlance) that=E2=80=99s us=
-ually
-> ${WORKDIR}/image.
->
->
->
-> Packaging is the process of taking those output files from ${D} and
-> packaging them into one of a few well defined packaging formats. If you=
-=E2=80=99re
-> using the defaults, this would be RPM. A single recipe can (and often doe=
-s)
-> produce multiple packages. When bitbake moves onto the packaging step (I=
-=E2=80=99m
-> simplifying a bit), it creates directories for each package that=E2=80=99=
-s going to
-> be generated inside of ${WORKDIR}/packages-split. It then looks at the
-> FILES variable for the particular package it=E2=80=99s working on and cop=
-ies any
-> files that match the patterns in that variable into that package=E2=80=99=
-s
-> directory in packages-split. When it=E2=80=99s done copying files, each o=
-f those
-> directories are turned into the appropriate package (probably .rpm) file.
->
-> So, for a somewhat more concrete example, when you said =E2=80=98FILES_${=
-PN} +=3D
-> "/lib/modules/4.1.8-rt8+gbd51baf"=E2=80=99, you told bitbake that anythin=
-g that
-> matched /lib/modules/4.1.8-rt8+gbd51baf should get put in the ${PN} (main=
-)
-> package.
->
->
->
-> In the context of the error message you were previously receiving,
-> =E2=80=9Cinstalled=E2=80=9D is the do_install step, which is referring to=
- that staging
-> process (analogous to running =E2=80=98make install=E2=80=99 on something=
- you just
-> downloaded from the internet). Something is =E2=80=98shipped=E2=80=99 if =
-it is packaged
-> into one of the final rpm files.
->
->
->
-> Cheers!
->
-> -Sean McKay
->
->
->
-> *From:* yocto@lists.yoctoproject.org <yocto@lists.yoctoproject.org> *On
-> Behalf Of *Wayne Li
-> *Sent:* Thursday, December 5, 2019 2:26 PM
-> *To:* bitbake-devel <bitbake-devel@lists.openembedded.org>; Yocto Project
-> Discussion <yocto@yoctoproject.org>
-> *Subject:* [yocto] Question about shipping files to package.
->
->
->
-> Dear Yocto Developers,
->
->
->
-> So I created a bitbake recipe to integrate kvm into my image as an
-> out-of-tree kernel module.  Here's my recipe right now:
->
->
->
-> LICENSE =3D "GPLv2"
-> LIC_FILES_CHKSUM =3D "file://COPYING;md5=3Dc616d0e7924e9e78ee192d99a3b26f=
-bd"
->
-> inherit module
->
-> SRC_URI =3D "
-> file:///homead/QorIQ-SDK-V2.0-20160527-yocto/sources/meta-virtualization/=
-recipes-kernel/kvm-kmodule/kvm-kmod-3.10.21.tar.bz2
-> "
->
-> S =3D "${WORKDIR}/kvm-kmod-3.10.21"
->
-> do_configure() {
->     ./configure --arch=3Dppc64
-> --kerneldir=3D/homead/QorIQ-SDK-V2.0-20160527-yocto/build_t4240rdb-64b/tm=
-p/work/t4240rdb_64b-fsl-linux/kernel-devsrc/1.0-r0/image/usr/src/kernel
-> }
->
-> FILES_${PN} +=3D "/lib/modules/4.1.8-rt8+gbd51baf"
->
->
->
-> Bitbaking this recipe completes with no problems but no kernel module is
-> created (compiling the source code should create a kernel module file
-> kvm.ko).  I was wondering if the problem might be because of what I set
-> FILES_${PN} to be.  Before I set the FILES variable I was getting an erro=
-r
-> saying something along the lines of, "Files/directories were installed bu=
-t
-> not shipped."  Then I more or less just guessed a directory and set my
-> FILES variable to it and then the recipe finished bitbaking with no error=
-s.
->
->
->
-> But now that the kvm.ko file isn't even being created, I am wondering if
-> it might be because I set the FILES variable wrong?  What does the word
-> "ship" mean?  And along those lines what exactly is a "package" in the
-> setting of Yocto project?
->
->
->
-> -Thanks!, Wayne Li
->
->
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
+OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
+cjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1z
+b0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpwdXJw
+bGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25v
+cm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28t
+bWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGluOw0KCW1zby1tYXJnaW4tYm90
+dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBpbjsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZv
+bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE5DQoJe21z
+by1zdHlsZS10eXBlOnBlcnNvbmFsOw0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlm
+Ow0KCWNvbG9yOndpbmRvd3RleHQ7fQ0Kc3Bhbi5FbWFpbFN0eWxlMjANCgl7bXNvLXN0eWxlLXR5
+cGU6cGVyc29uYWwtY29tcG9zZTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsN
+Cgljb2xvcjp3aW5kb3d0ZXh0O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4
+cG9ydC1vbmx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCkBwYWdlIFdv
+cmRTZWN0aW9uMQ0KCXtzaXplOjguNWluIDExLjBpbjsNCgltYXJnaW46MS4waW4gMS4waW4gMS4w
+aW4gMS4waW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48
+L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0i
+ZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1z
+byA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9
+ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8
+L2hlYWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+DQo8
+ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SWYgdGhlIGlz
+c3VlIHdlcmUgPGk+anVzdDwvaT4gdGhhdCB5b3VyIEZJTEVTXyogdmFyaWFibGVzIHdlcmUgc2V0
+IGluY29ycmVjdGx5LCB5b3XigJlkIGF0IGxlYXN0IGVuZCB1cCB3aXRoIHRoZSAua28gZmlsZSBz
+b21ld2hlcmUgaW4geW91ciAke1dPUktESVJ9L2ltYWdlICgke0R9KSBkaXJlY3RvcnkuIFlvdeKA
+mWQgYWxtb3N0IGNlcnRhaW5seSBmaW5kIGFub3RoZXIgb25lIGluIHRoZSBidWlsZCBvciBzb3Vy
+Y2UNCiBkaXJlY3RvcnkgYXMgd2VsbCAoZGVwZW5kaW5nIG9uIGhvdyB5b3VyIC5iYi9iYmNsYXNz
+IGZpbGVzIGRlZmluZSB0aGUgbG9jYXRpb24gb2YgdGhlIGNvbXBpbGF0aW9uKS48bzpwPjwvbzpw
+PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+VGhlIGZhY3QgdGhhdCB5b3UgZG9u4oCZdCBoYXZlIG9uZSBhbnl3aGVy
+ZSBzZWVtcyB0byBpbmRpY2F0ZSB0aGF0IHlvdXIgZG9fY29tcGlsZSBzdGVwIGlzbuKAmXQgYWN0
+dWFsbHkgZ2VuZXJhdGluZyB0aGUgLmtvIHRoYXQgeW91IGV4cGVjdCBpdCB0bywgc28geW914oCZ
+bGwgbmVlZCB0byByZXdpbmQgeW91ciByZWNpcGUgY3JlYXRpb24gdG8gd29ya2luZyBvbiB0aGF0
+IHN0ZXAgYW5kIGRlYnVnIHRoZXJlLjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5Bc3N1bWluZyB5
+b3XigJlyZSB1c2luZyBwb2t5IGFzIGEgYmFzZSwgd2hhdCB2ZXJzaW9uIGFyZSB5b3Ugb24gc28g
+SSBjYW4gZ28gcmVhZCB0aGUgLmJiY2xhc3MgeW914oCZcmUgdXNpbmc/PG86cD48L286cD48L3A+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPi1TZWFuPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpw
+PiZuYnNwOzwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPkZyb206PC9iPiBXYXlu
+ZSBMaSAmbHQ7d2F5bmxpMzI5QGdtYWlsLmNvbSZndDsgPGJyPg0KPGI+U2VudDo8L2I+IFR1ZXNk
+YXksIERlY2VtYmVyIDEwLCAyMDE5IDEyOjIzIFBNPGJyPg0KPGI+VG86PC9iPiBNY0theSwgU2Vh
+biAmbHQ7c2Vhbi5tY2theUBocGUuY29tJmd0Ozxicj4NCjxiPkNjOjwvYj4gYml0YmFrZS1kZXZl
+bCAmbHQ7Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnJmd0OzsgWW9jdG8gUHJv
+amVjdCBEaXNjdXNzaW9uICZsdDt5b2N0b0B5b2N0b3Byb2plY3Qub3JnJmd0Ozxicj4NCjxiPlN1
+YmplY3Q6PC9iPiBSZTogW3lvY3RvXSBRdWVzdGlvbiBhYm91dCBzaGlwcGluZyBmaWxlcyB0byBw
+YWNrYWdlLjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
+L286cD48L3A+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSBkaWQgYSBmaW5kIGZvciBh
+bnkgZmlsZXMgd2l0aCBhIGt2bSBhbmQgYSAua28gaW4gaXRzIG5hbWUgdGhyb3VnaG91dCBteSBl
+bnRpcmUgd29ya3NwYWNlIGFuZCBub3RoaW5nIGNhbWUgdXAuJm5ic3A7IEJ1dCBhbnl3YXksIHRo
+YW5rcyBmb3IgdGhlIGV4cGxhbmF0aW9uLiZuYnNwOyBDb3VsZCBwYWNrYWdpbmcgdGhlIGZpbGVz
+IHdyb25nIChpLmUuIHNldHRpbmcgdGhlIEZJTEVTIHZhcmlhYmxlIHdyb25nKSBjYXVzZSB0aGUN
+CiBrdm0ua28gZmlsZSB0byBuZXZlciBzaG93IHVwIGF0IGFsbD8mbmJzcDsgSSBndWVzcyB0aGF0
+IGNvdWxkbid0IGJlIHRoZSBjYXNlIHRob3VnaCBiZWNhdXNlIHRoZSAua28gZmlsZXMgYXJlIGNy
+ZWF0ZWQgZmlyc3QgYmVmb3JlIGl0IGdldHMgcGFja2FnZWQgdXAgc28gaWYgdGhleSB3ZXJlIGNy
+ZWF0ZWQgaW4gdGhlIGZpcnN0IHBsYWNlIGEgc2VhcmNoIHRocm91Z2ggbXkgZW50aXJlIHdvcmtz
+cGFjZSB3b3VsZCB0dXJuIHRoZW0gdXAuJm5ic3A7IElzIHRoYXQgY29ycmVjdD88bzpwPjwvbzpw
+PjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+
+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPk9uIFRodSwgRGVjIDUsIDIwMTkg
+YXQgMTE6MTQgUE0gTWNLYXksIFNlYW4gJmx0OzxhIGhyZWY9Im1haWx0bzpzZWFuLm1ja2F5QGhw
+ZS5jb20iPnNlYW4ubWNrYXlAaHBlLmNvbTwvYT4mZ3Q7IHdyb3RlOjxvOnA+PC9vOnA+PC9wPg0K
+PC9kaXY+DQo8YmxvY2txdW90ZSBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29saWQg
+I0NDQ0NDQyAxLjBwdDtwYWRkaW5nOjBpbiAwaW4gMGluIDYuMHB0O21hcmdpbi1sZWZ0OjQuOHB0
+O21hcmdpbi1yaWdodDowaW4iPg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBz
+dHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8i
+PknigJltIG5vdCBhbiBleHBlcnQgb24gY29tcGlsaW5nIGtlcm5lbCBtb2R1bGVzLCBidXQgSSBj
+YW4gYXQgbGVhc3QgYW5zd2VyIHNvbWUgb2YgeW91ciBxdWVzdGlvbnMgdG8gZ2V0IHN0YXJ0ZWQu
+IEnigJltIGFsc28gbm90IGFuIGFjdHVhbCBleHBlcnQsIGJ1dCBqdXN0IGFub3RoZXIgdXNlciwg
+c28gaXTigJlzIGVudGlyZWx5DQogcG9zc2libGUgdGhhdCBzb21lb25lIG1vcmUga25vd2xlZGdl
+YWJsZSB3aWxsIGNvbWUgYWxvbmcgYW5kIHRlbGwgdXMgdGhhdCBJ4oCZbSB3cm9uZy48bzpwPjwv
+bzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6
+YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1h
+cmdpbi1ib3R0b20tYWx0OmF1dG8iPldpdGggdGhhdCBzYWlkLCBmaXJzdCwgSSBoYXZlIHRvIGFz
+ayB0aGUgc2ltcGxlIHN0dWZmOiB3aGVuIHlvdSBzYXkgdGhhdCBubyAua28gaXMgYmVpbmcgY3Jl
+YXRlZCwgd2hlcmUgYXJlIHlvdSBsb29raW5nPyBJZiB5b3XigJlyZSBub3Qgc3VyZSB3aGVyZSB5
+b3Ugc2hvdWxkIGJlIGxvb2tpbmcsIEnigJlkIHJlY29tbWVuZA0KIGJ5IGRvaW5nIGEgZmluZCBp
+bnNpZGUgb2YgeW91ciAke1dPUktESVJ9IHRvIHNlZSB3aGV0aGVyIG9yIG5vdCB5b3XigJl2ZSBn
+b3QgYW55IC5rbyBmaWxlcy4gVGhleSB3b27igJl0IHF1aXRlIGJlIG91dCBpbiBwbGFpbiBzaWdo
+dC48bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2lu
+LXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286
+cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1
+dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPkluIGdlbmVyYWwgKHRob3VnaCBhZ2Fpbiwg
+SSBjYW7igJl0IHNwZWFrIGZvciB0aGUgbW9kdWxlIGNsYXNzKSwgY29tcGlsYXRpb25zIHRha2Ug
+cGxhY2UgaW4gYSBidWlsZCBkaXJlY3RvcnkgaW5zaWRlIG9mIHRoZSByZWNpcGXigJlzIHdvcmtk
+aXIgKCR7Qn0gaW4gYml0YmFrZSBwYXJsYW5jZSkuIFRoZSBpbnN0YWxsDQogcHJvY2VzcyB0aGVu
+IGNvcGllcyB0aGUgY3JlYXRlZCBmaWxlcyB0byBhIHN0YWdpbmcgZGlyZWN0b3J5ICgke0R9IGlu
+IGJpdGJha2UgcGFybGFuY2UpIHRoYXTigJlzIHVzdWFsbHkgJHtXT1JLRElSfS9pbWFnZS48bzpw
+PjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1h
+bHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNv
+LW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPlBhY2thZ2luZyBpcyB0aGUgcHJvY2VzcyBvZiB0YWtp
+bmcgdGhvc2Ugb3V0cHV0IGZpbGVzIGZyb20gJHtEfSBhbmQgcGFja2FnaW5nIHRoZW0gaW50byBv
+bmUgb2YgYSBmZXcgd2VsbCBkZWZpbmVkIHBhY2thZ2luZyBmb3JtYXRzLiBJZiB5b3XigJlyZSB1
+c2luZyB0aGUgZGVmYXVsdHMsIHRoaXMgd291bGQgYmUNCiBSUE0uIEEgc2luZ2xlIHJlY2lwZSBj
+YW4gKGFuZCBvZnRlbiBkb2VzKSBwcm9kdWNlIG11bHRpcGxlIHBhY2thZ2VzLiBXaGVuIGJpdGJh
+a2UgbW92ZXMgb250byB0aGUgcGFja2FnaW5nIHN0ZXAgKEnigJltIHNpbXBsaWZ5aW5nIGEgYml0
+KSwgaXQgY3JlYXRlcyBkaXJlY3RvcmllcyBmb3IgZWFjaCBwYWNrYWdlIHRoYXTigJlzIGdvaW5n
+IHRvIGJlIGdlbmVyYXRlZCBpbnNpZGUgb2YgJHtXT1JLRElSfS9wYWNrYWdlcy1zcGxpdC4gSXQg
+dGhlbiBsb29rcw0KIGF0IHRoZSBGSUxFUyB2YXJpYWJsZSBmb3IgdGhlIHBhcnRpY3VsYXIgcGFj
+a2FnZSBpdOKAmXMgd29ya2luZyBvbiBhbmQgY29waWVzIGFueSBmaWxlcyB0aGF0IG1hdGNoIHRo
+ZSBwYXR0ZXJucyBpbiB0aGF0IHZhcmlhYmxlIGludG8gdGhhdCBwYWNrYWdl4oCZcyBkaXJlY3Rv
+cnkgaW4gcGFja2FnZXMtc3BsaXQuIFdoZW4gaXTigJlzIGRvbmUgY29weWluZyBmaWxlcywgZWFj
+aCBvZiB0aG9zZSBkaXJlY3RvcmllcyBhcmUgdHVybmVkIGludG8gdGhlIGFwcHJvcHJpYXRlDQog
+cGFja2FnZSAocHJvYmFibHkgLnJwbSkgZmlsZS48bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRv
+bS1hbHQ6YXV0byI+U28sIGZvciBhIHNvbWV3aGF0IG1vcmUgY29uY3JldGUgZXhhbXBsZSwgd2hl
+biB5b3Ugc2FpZCDigJhGSUxFU18ke1BOfSAmIzQzOz0gJnF1b3Q7L2xpYi9tb2R1bGVzLzQuMS44
+LXJ0OCYjNDM7Z2JkNTFiYWYmcXVvdDvigJksIHlvdSB0b2xkIGJpdGJha2UgdGhhdCBhbnl0aGlu
+ZyB0aGF0IG1hdGNoZWQgL2xpYi9tb2R1bGVzLzQuMS44LXJ0OCYjNDM7Z2JkNTFiYWYNCiBzaG91
+bGQgZ2V0IHB1dCBpbiB0aGUgJHtQTn0gKG1haW4pIHBhY2thZ2UuPG86cD48L286cD48L3A+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1h
+cmdpbi1ib3R0b20tYWx0OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9t
+LWFsdDphdXRvIj5JbiB0aGUgY29udGV4dCBvZiB0aGUgZXJyb3IgbWVzc2FnZSB5b3Ugd2VyZSBw
+cmV2aW91c2x5IHJlY2VpdmluZywg4oCcaW5zdGFsbGVk4oCdIGlzIHRoZSBkb19pbnN0YWxsIHN0
+ZXAsIHdoaWNoIGlzIHJlZmVycmluZyB0byB0aGF0IHN0YWdpbmcgcHJvY2VzcyAoYW5hbG9nb3Vz
+IHRvIHJ1bm5pbmcg4oCYbWFrZSBpbnN0YWxs4oCZDQogb24gc29tZXRoaW5nIHlvdSBqdXN0IGRv
+d25sb2FkZWQgZnJvbSB0aGUgaW50ZXJuZXQpLiBTb21ldGhpbmcgaXMg4oCYc2hpcHBlZOKAmSBp
+ZiBpdCBpcyBwYWNrYWdlZCBpbnRvIG9uZSBvZiB0aGUgZmluYWwgcnBtIGZpbGVzLg0KPG86cD48
+L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0
+OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0K
+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1t
+YXJnaW4tYm90dG9tLWFsdDphdXRvIj5DaGVlcnMhPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0i
+TXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0
+b20tYWx0OmF1dG8iPi1TZWFuIE1jS2F5PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0
+OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9
+Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj48Yj5G
+cm9tOjwvYj4NCjxhIGhyZWY9Im1haWx0bzp5b2N0b0BsaXN0cy55b2N0b3Byb2plY3Qub3JnIiB0
+YXJnZXQ9Il9ibGFuayI+eW9jdG9AbGlzdHMueW9jdG9wcm9qZWN0Lm9yZzwvYT4gJmx0OzxhIGhy
+ZWY9Im1haWx0bzp5b2N0b0BsaXN0cy55b2N0b3Byb2plY3Qub3JnIiB0YXJnZXQ9Il9ibGFuayI+
+eW9jdG9AbGlzdHMueW9jdG9wcm9qZWN0Lm9yZzwvYT4mZ3Q7DQo8Yj5PbiBCZWhhbGYgT2YgPC9i
+PldheW5lIExpPGJyPg0KPGI+U2VudDo8L2I+IFRodXJzZGF5LCBEZWNlbWJlciA1LCAyMDE5IDI6
+MjYgUE08YnI+DQo8Yj5Ubzo8L2I+IGJpdGJha2UtZGV2ZWwgJmx0OzxhIGhyZWY9Im1haWx0bzpi
+aXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmciIHRhcmdldD0iX2JsYW5rIj5iaXRi
+YWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8L2E+Jmd0OzsgWW9jdG8gUHJvamVjdCBE
+aXNjdXNzaW9uICZsdDs8YSBocmVmPSJtYWlsdG86eW9jdG9AeW9jdG9wcm9qZWN0Lm9yZyIgdGFy
+Z2V0PSJfYmxhbmsiPnlvY3RvQHlvY3RvcHJvamVjdC5vcmc8L2E+Jmd0Ozxicj4NCjxiPlN1Ympl
+Y3Q6PC9iPiBbeW9jdG9dIFF1ZXN0aW9uIGFib3V0IHNoaXBwaW5nIGZpbGVzIHRvIHBhY2thZ2Uu
+PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10
+b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+
+PC9wPg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdp
+bi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPkRlYXIgWW9jdG8gRGV2
+ZWxvcGVycyw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6
+YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20t
+YWx0OmF1dG8iPlNvIEkgY3JlYXRlZCBhIGJpdGJha2UgcmVjaXBlIHRvIGludGVncmF0ZSBrdm0g
+aW50byBteSBpbWFnZSBhcyBhbiBvdXQtb2YtdHJlZSBrZXJuZWwgbW9kdWxlLiZuYnNwOyBIZXJl
+J3MgbXkgcmVjaXBlIHJpZ2h0IG5vdzo8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFy
+Z2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXYg
+c3R5bGU9Im1hcmdpbi1sZWZ0OjMwLjBwdCI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0i
+bXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPkxJQ0VO
+U0UgPSAmcXVvdDtHUEx2MiZxdW90Ozxicj4NCkxJQ19GSUxFU19DSEtTVU0gPSAmcXVvdDs8YSBo
+cmVmPSJmaWxlOi8vQ09QWUlORzttZDU9YzYxNmQwZTc5MjRlOWU3OGVlMTkyZDk5YTNiMjZmYmQi
+PmZpbGU6Ly9DT1BZSU5HO21kNT1jNjE2ZDBlNzkyNGU5ZTc4ZWUxOTJkOTlhM2IyNmZiZDwvYT4m
+cXVvdDs8YnI+DQo8YnI+DQppbmhlcml0IG1vZHVsZTxicj4NCjxicj4NClNSQ19VUkkgPSAmcXVv
+dDs8YSBocmVmPSJmaWxlOi8vL2hvbWVhZC9Rb3JJUS1TREstVjIuMC0yMDE2MDUyNy15b2N0by9z
+b3VyY2VzL21ldGEtdmlydHVhbGl6YXRpb24vcmVjaXBlcy1rZXJuZWwva3ZtLWttb2R1bGUva3Zt
+LWttb2QtMy4xMC4yMS50YXIuYnoyIj5maWxlOi8vL2hvbWVhZC9Rb3JJUS1TREstVjIuMC0yMDE2
+MDUyNy15b2N0by9zb3VyY2VzL21ldGEtdmlydHVhbGl6YXRpb24vcmVjaXBlcy1rZXJuZWwva3Zt
+LWttb2R1bGUva3ZtLWttb2QtMy4xMC4yMS50YXIuYnoyPC9hPiZxdW90Ozxicj4NCjxicj4NClMg
+PSAmcXVvdDske1dPUktESVJ9L2t2bS1rbW9kLTMuMTAuMjEmcXVvdDs8YnI+DQo8YnI+DQpkb19j
+b25maWd1cmUoKSB7PGJyPg0KJm5ic3A7ICZuYnNwOyAuL2NvbmZpZ3VyZSAtLWFyY2g9cHBjNjQg
+LS1rZXJuZWxkaXI9L2hvbWVhZC9Rb3JJUS1TREstVjIuMC0yMDE2MDUyNy15b2N0by9idWlsZF90
+NDI0MHJkYi02NGIvdG1wL3dvcmsvdDQyNDByZGJfNjRiLWZzbC1saW51eC9rZXJuZWwtZGV2c3Jj
+LzEuMC1yMC9pbWFnZS91c3Ivc3JjL2tlcm5lbDxicj4NCn08YnI+DQo8YnI+DQpGSUxFU18ke1BO
+fSAmIzQzOz0gJnF1b3Q7L2xpYi9tb2R1bGVzLzQuMS44LXJ0OCYjNDM7Z2JkNTFiYWYmcXVvdDs8
+bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdiBzdHlsZT0ibWFyZ2luLWxlZnQ6MzAuMHB0Ij4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28t
+bWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxk
+aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87
+bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPkJpdGJha2luZyB0aGlzIHJlY2lwZSBjb21wbGV0
+ZXMgd2l0aCBubyBwcm9ibGVtcyBidXQgbm8ga2VybmVsIG1vZHVsZSBpcyBjcmVhdGVkIChjb21w
+aWxpbmcgdGhlIHNvdXJjZSBjb2RlIHNob3VsZCBjcmVhdGUgYSBrZXJuZWwgbW9kdWxlIGZpbGUg
+a3ZtLmtvKS4mbmJzcDsgSSB3YXMgd29uZGVyaW5nIGlmIHRoZSBwcm9ibGVtDQogbWlnaHQgYmUg
+YmVjYXVzZSBvZiB3aGF0IEkgc2V0IEZJTEVTXyR7UE59IHRvIGJlLiZuYnNwOyBCZWZvcmUgSSBz
+ZXQgdGhlIEZJTEVTIHZhcmlhYmxlIEkgd2FzIGdldHRpbmcgYW4gZXJyb3Igc2F5aW5nIHNvbWV0
+aGluZyBhbG9uZyB0aGUgbGluZXMgb2YsICZxdW90O0ZpbGVzL2RpcmVjdG9yaWVzIHdlcmUgaW5z
+dGFsbGVkIGJ1dCBub3Qgc2hpcHBlZC4mcXVvdDsmbmJzcDsgVGhlbiBJIG1vcmUgb3IgbGVzcyBq
+dXN0IGd1ZXNzZWQgYSBkaXJlY3RvcnkgYW5kIHNldCBteSBGSUxFUw0KIHZhcmlhYmxlIHRvIGl0
+IGFuZCB0aGVuIHRoZSByZWNpcGUgZmluaXNoZWQgYml0YmFraW5nIHdpdGggbm8gZXJyb3JzLjxv
+OnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9
+Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4mbmJz
+cDs8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0
+eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+
+QnV0IG5vdyB0aGF0IHRoZSBrdm0ua28gZmlsZSBpc24ndCBldmVuIGJlaW5nIGNyZWF0ZWQsIEkg
+YW0gd29uZGVyaW5nIGlmIGl0IG1pZ2h0IGJlIGJlY2F1c2UgSSBzZXQgdGhlIEZJTEVTIHZhcmlh
+YmxlIHdyb25nPyZuYnNwOyBXaGF0IGRvZXMgdGhlIHdvcmQgJnF1b3Q7c2hpcCZxdW90OyBtZWFu
+PyZuYnNwOyBBbmQgYWxvbmcgdGhvc2UgbGluZXMNCiB3aGF0IGV4YWN0bHkgaXMgYSAmcXVvdDtw
+YWNrYWdlJnF1b3Q7IGluIHRoZSBzZXR0aW5nIG9mIFlvY3RvIHByb2plY3Q/PG86cD48L286cD48
+L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdp
+bi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPiZuYnNwOzxvOnA+PC9v
+OnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1t
+YXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4tVGhhbmtzISwg
+V2F5bmUgTGk8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0K
+PC9ibG9ja3F1b3RlPg0KPC9kaXY+DQo8L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4NCg==
 
---000000000000b024f405995feb1f
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">That makes a lot of sense.=C2=A0 The version I&#39;m on is=
-: PV=3D&quot;4.1&quot; (I just ran bitbake -e virtual/kernel | grep &quot;^=
-PV&quot;).<br></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=
-=3D"gmail_attr">On Tue, Dec 10, 2019 at 8:54 PM McKay, Sean &lt;<a href=3D"=
-mailto:sean.mckay@hpe.com">sean.mckay@hpe.com</a>&gt; wrote:<br></div><bloc=
-kquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:=
-1px solid rgb(204,204,204);padding-left:1ex">
-
-
-
-
-
-<div lang=3D"EN-US">
-<div class=3D"gmail-m_-3875789674800328248WordSection1">
-<p class=3D"MsoNormal">If the issue were <i>just</i> that your FILES_* vari=
-ables were set incorrectly, you=E2=80=99d at least end up with the .ko file=
- somewhere in your ${WORKDIR}/image (${D}) directory. You=E2=80=99d almost =
-certainly find another one in the build or source
- directory as well (depending on how your .bb/bbclass files define the loca=
-tion of the compilation).<u></u><u></u></p>
-<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
-<p class=3D"MsoNormal">The fact that you don=E2=80=99t have one anywhere se=
-ems to indicate that your do_compile step isn=E2=80=99t actually generating=
- the .ko that you expect it to, so you=E2=80=99ll need to rewind your recip=
-e creation to working on that step and debug there.<u></u><u></u></p>
-<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
-<p class=3D"MsoNormal">Assuming you=E2=80=99re using poky as a base, what v=
-ersion are you on so I can go read the .bbclass you=E2=80=99re using?<u></u=
-><u></u></p>
-<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
-<p class=3D"MsoNormal">-Sean<u></u><u></u></p>
-<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
-<p class=3D"MsoNormal"><b>From:</b> Wayne Li &lt;<a href=3D"mailto:waynli32=
-9@gmail.com" target=3D"_blank">waynli329@gmail.com</a>&gt; <br>
-<b>Sent:</b> Tuesday, December 10, 2019 12:23 PM<br>
-<b>To:</b> McKay, Sean &lt;<a href=3D"mailto:sean.mckay@hpe.com" target=3D"=
-_blank">sean.mckay@hpe.com</a>&gt;<br>
-<b>Cc:</b> bitbake-devel &lt;<a href=3D"mailto:bitbake-devel@lists.openembe=
-dded.org" target=3D"_blank">bitbake-devel@lists.openembedded.org</a>&gt;; Y=
-octo Project Discussion &lt;<a href=3D"mailto:yocto@yoctoproject.org" targe=
-t=3D"_blank">yocto@yoctoproject.org</a>&gt;<br>
-<b>Subject:</b> Re: [yocto] Question about shipping files to package.<u></u=
-><u></u></p>
-<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
-<div>
-<p class=3D"MsoNormal">I did a find for any files with a kvm and a .ko in i=
-ts name throughout my entire workspace and nothing came up.=C2=A0 But anywa=
-y, thanks for the explanation.=C2=A0 Could packaging the files wrong (i.e. =
-setting the FILES variable wrong) cause the
- kvm.ko file to never show up at all?=C2=A0 I guess that couldn&#39;t be th=
-e case though because the .ko files are created first before it gets packag=
-ed up so if they were created in the first place a search through my entire=
- workspace would turn them up.=C2=A0 Is that correct?<u></u><u></u></p>
-</div>
-<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
-<div>
-<div>
-<p class=3D"MsoNormal">On Thu, Dec 5, 2019 at 11:14 PM McKay, Sean &lt;<a h=
-ref=3D"mailto:sean.mckay@hpe.com" target=3D"_blank">sean.mckay@hpe.com</a>&=
-gt; wrote:<u></u><u></u></p>
-</div>
-<blockquote style=3D"border-color:currentcolor currentcolor currentcolor rg=
-b(204,204,204);border-style:none none none solid;border-width:medium medium=
- medium 1pt;padding:0in 0in 0in 6pt;margin-left:4.8pt;margin-right:0in">
-<div>
-<div>
-<p class=3D"MsoNormal">I=E2=80=99m not an expert on compiling kernel module=
-s, but I can at least answer some of your questions to get started. I=E2=80=
-=99m also not an actual expert, but just another user, so it=E2=80=99s enti=
-rely
- possible that someone more knowledgeable will come along and tell us that =
-I=E2=80=99m wrong.<u></u><u></u></p>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-<p class=3D"MsoNormal">With that said, first, I have to ask the simple stuf=
-f: when you say that no .ko is being created, where are you looking? If you=
-=E2=80=99re not sure where you should be looking, I=E2=80=99d recommend
- by doing a find inside of your ${WORKDIR} to see whether or not you=E2=80=
-=99ve got any .ko files. They won=E2=80=99t quite be out in plain sight.<u>=
-</u><u></u></p>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-<p class=3D"MsoNormal">In general (though again, I can=E2=80=99t speak for =
-the module class), compilations take place in a build directory inside of t=
-he recipe=E2=80=99s workdir (${B} in bitbake parlance). The install
- process then copies the created files to a staging directory (${D} in bitb=
-ake parlance) that=E2=80=99s usually ${WORKDIR}/image.<u></u><u></u></p>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-<p class=3D"MsoNormal">Packaging is the process of taking those output file=
-s from ${D} and packaging them into one of a few well defined packaging for=
-mats. If you=E2=80=99re using the defaults, this would be
- RPM. A single recipe can (and often does) produce multiple packages. When =
-bitbake moves onto the packaging step (I=E2=80=99m simplifying a bit), it c=
-reates directories for each package that=E2=80=99s going to be generated in=
-side of ${WORKDIR}/packages-split. It then looks
- at the FILES variable for the particular package it=E2=80=99s working on a=
-nd copies any files that match the patterns in that variable into that pack=
-age=E2=80=99s directory in packages-split. When it=E2=80=99s done copying f=
-iles, each of those directories are turned into the appropriate
- package (probably .rpm) file.<u></u><u></u></p>
-<p class=3D"MsoNormal">So, for a somewhat more concrete example, when you s=
-aid =E2=80=98FILES_${PN} +=3D &quot;/lib/modules/4.1.8-rt8+gbd51baf&quot;=
-=E2=80=99, you told bitbake that anything that matched /lib/modules/4.1.8-r=
-t8+gbd51baf
- should get put in the ${PN} (main) package.<u></u><u></u></p>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-<p class=3D"MsoNormal">In the context of the error message you were previou=
-sly receiving, =E2=80=9Cinstalled=E2=80=9D is the do_install step, which is=
- referring to that staging process (analogous to running =E2=80=98make inst=
-all=E2=80=99
- on something you just downloaded from the internet). Something is =E2=80=
-=98shipped=E2=80=99 if it is packaged into one of the final rpm files.
-<u></u><u></u></p>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-<p class=3D"MsoNormal">Cheers!<u></u><u></u></p>
-<p class=3D"MsoNormal">-Sean McKay<u></u><u></u></p>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-<p class=3D"MsoNormal"><b>From:</b>
-<a href=3D"mailto:yocto@lists.yoctoproject.org" target=3D"_blank">yocto@lis=
-ts.yoctoproject.org</a> &lt;<a href=3D"mailto:yocto@lists.yoctoproject.org"=
- target=3D"_blank">yocto@lists.yoctoproject.org</a>&gt;
-<b>On Behalf Of </b>Wayne Li<br>
-<b>Sent:</b> Thursday, December 5, 2019 2:26 PM<br>
-<b>To:</b> bitbake-devel &lt;<a href=3D"mailto:bitbake-devel@lists.openembe=
-dded.org" target=3D"_blank">bitbake-devel@lists.openembedded.org</a>&gt;; Y=
-octo Project Discussion &lt;<a href=3D"mailto:yocto@yoctoproject.org" targe=
-t=3D"_blank">yocto@yoctoproject.org</a>&gt;<br>
-<b>Subject:</b> [yocto] Question about shipping files to package.<u></u><u>=
-</u></p>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-<div>
-<div>
-<p class=3D"MsoNormal">Dear Yocto Developers,<u></u><u></u></p>
-</div>
-<div>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-</div>
-<div>
-<p class=3D"MsoNormal">So I created a bitbake recipe to integrate kvm into =
-my image as an out-of-tree kernel module.=C2=A0 Here&#39;s my recipe right =
-now:<u></u><u></u></p>
-</div>
-<div>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-</div>
-<div style=3D"margin-left:30pt">
-<p class=3D"MsoNormal">LICENSE =3D &quot;GPLv2&quot;<br>
-LIC_FILES_CHKSUM =3D &quot;<a>file://COPYING;md5=3Dc616d0e7924e9e78ee192d99=
-a3b26fbd</a>&quot;<br>
-<br>
-inherit module<br>
-<br>
-SRC_URI =3D &quot;<a>file:///homead/QorIQ-SDK-V2.0-20160527-yocto/sources/m=
-eta-virtualization/recipes-kernel/kvm-kmodule/kvm-kmod-3.10.21.tar.bz2</a>&=
-quot;<br>
-<br>
-S =3D &quot;${WORKDIR}/kvm-kmod-3.10.21&quot;<br>
-<br>
-do_configure() {<br>
-=C2=A0 =C2=A0 ./configure --arch=3Dppc64 --kerneldir=3D/homead/QorIQ-SDK-V2=
-.0-20160527-yocto/build_t4240rdb-64b/tmp/work/t4240rdb_64b-fsl-linux/kernel=
--devsrc/1.0-r0/image/usr/src/kernel<br>
-}<br>
-<br>
-FILES_${PN} +=3D &quot;/lib/modules/4.1.8-rt8+gbd51baf&quot;<u></u><u></u><=
-/p>
-</div>
-<div style=3D"margin-left:30pt">
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-</div>
-<div>
-<p class=3D"MsoNormal">Bitbaking this recipe completes with no problems but=
- no kernel module is created (compiling the source code should create a ker=
-nel module file kvm.ko).=C2=A0 I was wondering if the problem
- might be because of what I set FILES_${PN} to be.=C2=A0 Before I set the F=
-ILES variable I was getting an error saying something along the lines of, &=
-quot;Files/directories were installed but not shipped.&quot;=C2=A0 Then I m=
-ore or less just guessed a directory and set my FILES
- variable to it and then the recipe finished bitbaking with no errors.<u></=
-u><u></u></p>
-</div>
-<div>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-</div>
-<div>
-<p class=3D"MsoNormal">But now that the kvm.ko file isn&#39;t even being cr=
-eated, I am wondering if it might be because I set the FILES variable wrong=
-?=C2=A0 What does the word &quot;ship&quot; mean?=C2=A0 And along those lin=
-es
- what exactly is a &quot;package&quot; in the setting of Yocto project?<u><=
-/u><u></u></p>
-</div>
-<div>
-<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
-</div>
-<div>
-<p class=3D"MsoNormal">-Thanks!, Wayne Li<u></u><u></u></p>
-</div>
-</div>
-</div>
-</div>
-</blockquote>
-</div>
-</div>
-</div>
-
-</blockquote></div>
-
---000000000000b024f405995feb1f--
+--_000_CS1PR8401MB0568292C74FD3BC61A690DC3825B0CS1PR8401MB0568_--
