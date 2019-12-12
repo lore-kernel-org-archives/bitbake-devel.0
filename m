@@ -1,50 +1,49 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f194.google.com (mail-il1-f194.google.com
-	[209.85.166.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 3D5C27F9B3
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com
+	[209.85.221.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 180EE7FA32
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Dec 2019 22:16:34 +0000 (UTC)
-Received: by mail-il1-f194.google.com with SMTP id b15so257818iln.3
+	Thu, 12 Dec 2019 18:58:08 +0000 (UTC)
+Received: by mail-wr1-f66.google.com with SMTP id z7so3875713wrl.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Dec 2019 14:16:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:mime-version
+	Thu, 12 Dec 2019 10:58:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=lFNOd5/I0CRcWJCWRuGoby6aOw8BtFE3fpCiolptKy4=;
-	b=T831nsZCKow6pnag5mEDbYPRhmaamTJAWQYRAL45fxfNf/qCPsMx5kQvMVhaBSeLsH
-	au0LobfpinViPyOVnGqHUVowbetlE4UEHkW0OK6i6PoZN03hIvAhnoBM4kfzpaVtw1w6
-	e6nkG9JlH/813/0egmQ2y4zHsJM2jjd3Ei0f6funrikdn5LXZbpvuYmqBHNC5jH7M3aF
-	ygo2XInxqwwduWStz7hNNKtVDXo47xYWssO92rgSHVpixUgYSGiPz/KZshkJkHl2a1xD
-	93AQIVmQllNTMKunxmE0S5sJ8bgdWafrhwwEGZAyrMIySzlnTFvlvONy0qPXEofClwdn
-	KsSA==
+	bh=H+2rWrYlHi2ep+tMPMoo9SdlPEs029QqCSiCjuKjmK8=;
+	b=TZtCVpQAujGNUOON7O57tsb6aYNnnkaMpyPQ/dVCmpF0ek2v6V8bKjHCNbQBTkAGrM
+	Ti/o4023W66W6hPbP7diHrxsQ3lqTcEEUvCVdTfceqP8o919iMcch2RtwA8XtKO20Ji1
+	od677YeqZl14tF0oY5pjV8b3Z6ojkcz4j9h7U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=lFNOd5/I0CRcWJCWRuGoby6aOw8BtFE3fpCiolptKy4=;
-	b=eWHnk3MFsLBfQwSETukoSQX5U1Ngbhz06o+msF2At9S4aMXeSUrnMpDabsdqSaKIat
-	Zpx5IlLUe8qunxyfs0wK+ZX/2ur1c1w/YiUtaCeCRQpP+HVaY6wQcRR0cFsJyeWRrmEb
-	iy+uSZni71WDiF7vhF9JMW/M2PSg+Lvm5e2fYI9vekcJihy4DaRSzB7wD98hieMw3GO7
-	O7E0bwdI7gaOMng4Pypt3SshljGYclAGWCcplFW9/AJl8K21KYLUCqunENmO3iij6/RD
-	6cul2zRapflyeTa2rMnRMq6ctEmeC007d063jWLkAEJEN6BvU2qulpMjPxqiffgoAQmA
-	raAQ==
-X-Gm-Message-State: APjAAAVk/qkA2AQBu4/ciThl7ueGd+rrYO49fP30j/rLLagb04QJF6of
-	KlKN7A+ovhiLPOqGO3YW4Q6GAScrB2I=
-X-Google-Smtp-Source: APXvYqxEDi2hM+FvuswnjlJ7lCofAbKS3RLx8E0pOvBF0nWuQd/NCl0b/hg/IpWYVROuzbt4QJWVEQ==
-X-Received: by 2002:a92:5c8f:: with SMTP id d15mr5757638ilg.102.1576102594819; 
-	Wed, 11 Dec 2019 14:16:34 -0800 (PST)
-Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id n9sm801265ioo.38.2019.12.11.14.16.33
+	bh=H+2rWrYlHi2ep+tMPMoo9SdlPEs029QqCSiCjuKjmK8=;
+	b=Jd1eB+L6sTamsgjTuPMWT6TEWH0rYjyGk7/TKsJ5HkoYKWmkKymc2rsVSiUsNx20yB
+	mFSa+HwaRvhTQqLmoePkznH5+gIgTi8R0XcS0ZPTmQSQ3t3kadMlTdRiEadvrnVJqpkz
+	VLZPwSazbTNfZnFuMw3+CKaVShDZFH3jMZdFFxXeoMtcCN7Kmgn6kgunhytEHAz3KEYK
+	Y6z348EisTe7JD25dujmXHV8uFk5FYhu3xqVe/oyd24piqoSty2B0ncsxtcTvK0+227k
+	USUSwwgqKJMICCV8Z/m+jfrzWJi0Z9LrYCdiUXXG693t0g8teygFzElMpf41OxXJmhfa
+	A94A==
+X-Gm-Message-State: APjAAAUFKBCV+FExIiY+otroVdNmJdMnyCXOhS3OQvXFsA0zQBlGj9eJ
+	KtpcHEmENCUJvHcMS60NfHb0VhrEF/w=
+X-Google-Smtp-Source: APXvYqyvdevWl3Jh/wwBOWBA51AYwJ6fi7y4uQv20VboukK7U4kp9SPEUKZJBzrKETWp5IkpMBUCpQ==
+X-Received: by 2002:a5d:6a83:: with SMTP id s3mr7654094wru.99.1576177089433;
+	Thu, 12 Dec 2019 10:58:09 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	i10sm6883963wru.16.2019.12.12.10.58.08
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 11 Dec 2019 14:16:34 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+	Thu, 12 Dec 2019 10:58:08 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Dec 2019 16:16:29 -0600
-Message-Id: <20191211221629.971140-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.23.0
+Date: Thu, 12 Dec 2019 18:58:07 +0000
+Message-Id: <20191212185807.10411-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: [PATCH] runqueue: Batch scenequeue updates
+Subject: [PATCH] siggen: Fix performance issue in get_unihash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,50 +56,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Dec 2019 22:16:34 -0000
+X-List-Received-Date: Thu, 12 Dec 2019 18:58:09 -0000
 Content-Transfer-Encoding: 8bit
 
-Batch all updates to scenequeue data together in a single invocation
-instead of checking each task serially. This allows the checks for
-sstate object to happen in parallel, and also makes sure the log
-statement only happens once (per set of rehashes).
+There is a significant performance issue in get_unihash(). The issue turns out
+to be the lookups of setscene tasks. We can fix this by using a set() instead of
+the current list.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/runqueue.py | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ lib/bb/siggen.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 246a9cdb642..cb499a1cba6 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -2320,6 +2320,7 @@ class RunQueueExecute:
-             if tid not in self.pending_migrations:
-                 self.pending_migrations.add(tid)
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index dbf510238f..2fec8599b3 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -44,7 +44,7 @@ class SignatureGenerator(object):
+         self.file_checksum_values = {}
+         self.taints = {}
+         self.unitaskhashes = {}
+-        self.setscenetasks = {}
++        self.setscenetasks = set()
  
-+        update_tasks = []
-         for tid in self.pending_migrations.copy():
-             if tid in self.runq_running or tid in self.sq_live:
-                 # Too late, task already running, not much we can do now
-@@ -2379,11 +2380,13 @@ class RunQueueExecute:
-             if tid in self.build_stamps:
-                 del self.build_stamps[tid]
+     def finalise(self, fn, d, varient):
+         return
+@@ -110,7 +110,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         self.taints = {}
+         self.gendeps = {}
+         self.lookupcache = {}
+-        self.setscenetasks = {}
++        self.setscenetasks = set()
+         self.basewhitelist = set((data.getVar("BB_HASHBASE_WHITELIST") or "").split())
+         self.taskwhitelist = None
+         self.init_rundepcheck(data)
+@@ -157,7 +157,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         return taskdeps
  
--            origvalid = False
--            if tid in self.sqdata.valid:
--                origvalid = True
-+            update_tasks.append((tid, harddepfail, tid in self.sqdata.valid))
-+
-+        if update_tasks:
-             self.sqdone = False
--            update_scenequeue_data([tid], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
-+            update_scenequeue_data([t[0] for t in update_tasks], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
-+
-+        for (tid, harddepfail, origvalid) in update_tasks:
-             if tid in self.sqdata.valid and not origvalid:
-                 logger.info("Setscene task %s became valid" % tid)
-             if harddepfail:
+     def set_setscene_tasks(self, setscene_tasks):
+-        self.setscenetasks = setscene_tasks
++        self.setscenetasks = set(setscene_tasks)
+ 
+     def finalise(self, fn, d, variant):
+ 
 -- 
-2.23.0
+2.20.1
 
 
