@@ -1,49 +1,42 @@
-Return-Path: <anibal.limon@linaro.org>
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com
-	[209.85.221.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 2E89F7EB92
+Return-Path: <timblaktu@gmail.com>
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com
+	[209.85.210.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 153297FCBA
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 16 Dec 2019 18:55:40 +0000 (UTC)
-Received: by mail-vk1-f173.google.com with SMTP id i78so1943055vke.0
+	Wed, 18 Dec 2019 00:17:18 +0000 (UTC)
+Received: by mail-ot1-f44.google.com with SMTP id p8so118596oth.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 16 Dec 2019 10:55:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linaro.org; s=google;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=B1BIfkPjMMXCVyWau2J1b171KVzHTzAnCPIWvQI8/10=;
-	b=IHgUmyBROOIq4BImAnigNDfaAB7D/Oc+IdqHQWrPJZ3Ppy+3mgb5uKHxqCjrbdf3gi
-	H9nrPxwedhJp7Lf6E3Jnkg5bMKMO6hoftSORKyQct3f3kayY65tF7VEjO8SQMLHVYrOm
-	0XUT6tRekOdfX4BQ576WoEyJWbBZBbP8UbHxIECQQP2QVYirAynIra8sFafLk/OHuylG
-	nJggPk4fWTSqtJvW3x3oFAoZFsGKui2MejLm7D2FbA1lNtfQl3+HC++Zwg/0xNCZobm+
-	Dbp2HG2lFlfZIvv5cLr9Hu6gTj9pXqAxZXBZTXqpdYXqDBzZY8DuL3CyHE0BrYNKH764
-	WSVw==
+	Tue, 17 Dec 2019 16:17:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=O1yDY8uJcYBj3szeuFebxogS5cbFJv1FEnuHHhpw5aI=;
+	b=cKddvBFlJVYeAAo2c/c99PSV82A8YxKt9CFxt18AmFbwQCtxP2R/K3oQpBgU3Gmrm4
+	YGjXqmvOo4IIbsnXq7TLUUhSZ5TGTB83WO3JXeevxB9ALT5DxW3L5aLBeJoOO+lrXrwT
+	xXlyVLug8nENZyJk6WUuMlewbnudzQU88fQWghO8prB17ZSGlM2lXKtU/ipDc79TISlR
+	CjfB+YZLLz/19N6aBaysfzzynQED7ovSpBK/ZeSFW7fIJfrkcGwj3+/h2eGhXNcvQf/S
+	hxcTdzjNWlA2XXKB+PrD/43Ebf3i3pK3tvWXlY/GsRXt42Yk6Ad7kks55L66em21qlPv
+	Wa2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=B1BIfkPjMMXCVyWau2J1b171KVzHTzAnCPIWvQI8/10=;
-	b=NsaXjxejFtA1ws9bXAsOIszSIxAjZphzR/enGzc+dd8Xc3AqwRx6gDsAwoUfoXfay1
-	hvKe3ue+216tlnIc3tnpfhBkMZK95s8Vvguw9EWnz+7H8EUXY0HunFhVl6MnfFxFYCrf
-	uqDP8VYIc4uow6BuHHTUvXJaAknqjBCMYMFgTTG2s4btcpy0J7c3IGeXUwLnmKHyLehO
-	9uj4gVoc0OCq6+FR7FRcyCJff8wJUhqOyb0R8DwcuWHDdEQ38nf1vmb0EJ9HFAuRTpT2
-	XgcgFBfzBUkmzWmwIXcuE3N4Vn4ByVxmGzlrQ7oLXhN4s86uATRsvmjju8+g0t03FAJU
-	ZNpw==
-X-Gm-Message-State: APjAAAUdJpqLcGG+8/upDB/z2/emc9d+TNVlZgtHcn4QYZQlSpd4hmMw
-	Qe66WH9fyUkW9vx2uFPfQVbZxCaSqVvD0BPttIQaG8gl
-X-Google-Smtp-Source: APXvYqwFt48KC8ZAOX1UgwQNV3UE+EuPXOgTHIupcU4aLv+mlS4hCJIGxB6TsWk7aAdcfB9jdGp0ZTxGYmcjK+ixRmk=
-X-Received: by 2002:ac5:c7da:: with SMTP id e26mr343575vkn.38.1576522540939;
-	Mon, 16 Dec 2019 10:55:40 -0800 (PST)
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=O1yDY8uJcYBj3szeuFebxogS5cbFJv1FEnuHHhpw5aI=;
+	b=YxyknJajhO75lJLyX1c2FsTDSHCXf0X9E/MG39v4ZDgScT24zumJ6Yb/Onnp/4GSjI
+	R+osnMVoyZ22HYozzCADRis5e81o+GgQ8spGR8wJRC8gXP68Ezu5fftvX+10dfdRqUTJ
+	2oSlWraaw8/8PuX0yAyMGMwcUvVLHKnT84NPQOV1RqB5McxLq4iJPegznROIJpBq+oKL
+	Dur83T72218LUdtnlN3LhNYRZzxyJepKv+T55jIouTG7SL2osbn6XZS002DtSpfNUD8C
+	o9xJW2Sr98rlPjY+z1wAsdg3iIYA8g3M6NpW+0/1aZsP54MrD2UpbcbMbxCYuvHiX4id
+	EjcA==
+X-Gm-Message-State: APjAAAUBBWj8zm3dA8uWONFB9WFJOzFw9DQFAEjccn2fCVqtz8i1DYXx
+	C82nGKiUv+qdcMDY+CuxSW0/M7Kk63P2e899ccqGYgKqLOQ=
+X-Google-Smtp-Source: APXvYqyQCYTd0B3QjiS0HtR0buo4NF/TbRFyRR7PFw0fpijEZfgM/zCKft9uHLrUHogC2eericKlRD+OE9e9JtuF4xs=
+X-Received: by 2002:a9d:f26:: with SMTP id 35mr278447ott.260.1576628238762;
+	Tue, 17 Dec 2019 16:17:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20191115144723.7452-1-anibal.limon@linaro.org>
-	<401cecf1881048e594574ca4d37c446c@XBOX03.axis.com>
-	<58e2fa07-4c32-a09d-0d26-0a810b1ef0f8@kernel.crashing.org>
-	<CA+_AqitZ_frw7Xz1n+MajpaZjiQWqRa2UPzZnm4seQO42MWRuA@mail.gmail.com>
-In-Reply-To: <CA+_AqitZ_frw7Xz1n+MajpaZjiQWqRa2UPzZnm4seQO42MWRuA@mail.gmail.com>
-From: Anibal Limon <anibal.limon@linaro.org>
-Date: Mon, 16 Dec 2019 12:55:28 -0600
-Message-ID: <CA+_Aqiu57N1m-DRcRdg2-xacn1eBUHgkh7hVZS2VkLA0rjmXVA@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCHv2] lib/bb: Add BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on directories
+From: Tim Black <timblaktu@gmail.com>
+Date: Tue, 17 Dec 2019 16:17:08 -0800
+Message-ID: <CA+23wiTzQ01zjRzYXYpcz9nLf=Pvt+8wQzg46LfjbRXp2rDhMA@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: pyshtables.py and problems with concurrent bitbake builds
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,219 +49,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Dec 2019 18:55:40 -0000
-Content-Type: multipart/alternative; boundary="0000000000000891020599d6c252"
+X-List-Received-Date: Wed, 18 Dec 2019 00:17:18 -0000
+Content-Type: multipart/alternative; boundary="0000000000001d48600599ef5ed0"
 
---0000000000000891020599d6c252
+--0000000000001d48600599ef5ed0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, any update?
+My team employs a Jenkins Pipeline that performs 3 concurrent bitbake
+builds, one for each of our "arches", in parallel steps/stages. Previously,
+we cloned poky separately for each of these builds and each was performed
+in separate, but identical, working trees. Our project structure is
+designed to keep all of the arches' recipes maintained in separate,
+distinct folders.
 
-Regards,
-Anibal
+We recently "improved" this process to perform a single clone of the repo
+and to perform the parallel builds on the same local working tree, and we
+started seeing intermittent bitbake errors that appear to be caused by
+races between these concurrent processes in producing, and
+importing/consuming, pyshtables.py. These manifest as simple SyntaxErrors
+raised at import time, caused by pyshtables.py being instantaneously
+malformed. Presumably, one process is writing pyshtables.py while another
+is importing it. Since this file appears to be written to and read from a
+shared location -  bitbake/lib/bb/pysh/pyshtables.py - we have a race
+condition.
 
-El lun., 18 de nov. de 2019 09:22, Anibal Limon <anibal.limon@linaro.org>
-escribi=C3=B3:
+We understand that this generated file is a fundamental requirement for any
+bitbake process to proceed. I would like to get feedback from the
+developers on the assumptions we have made, and the quality of the
+workaround we arrived at through trial and error.
 
->
->
-> On Fri, 15 Nov 2019 at 11:12, Mark Hatle <mark.hatle@kernel.crashing.org>
-> wrote:
->
->>
->>
->> On 11/15/19 10:29 AM, Peter Kjellerstedt wrote:
->> >> -----Original Message-----
->> >> From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
->> >> bounces@lists.openembedded.org> On Behalf Of An=C3=ADbal Lim=C3=B3n
->> >> Sent: den 15 november 2019 15:47
->> >> To: bitbake-devel@lists.openembedded.org
->> >> Subject: [bitbake-devel] [PATCHv2] lib/bb: Add
->> >> BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on directories
->> >>
->> >> The new BB_SIGNATURE_LOCAL_DIRS_EXCLUDE allows you to specify a list
->> >> of directories to exclude when making taskhash, our specific case
->> >> is using SRC_URI that points local VCS directory.
->> >>
->> >> Use bb.fetch.module to set default to: "CVS .bzr .git .hg .osc .p4
->> .repo
->> >> .svn"
->> >>
->> >> Signed-off-by: An=C3=ADbal Lim=C3=B3n <anibal.limon@linaro.org>
->> >> ---
->> >>  lib/bb/checksum.py        | 5 +++--
->> >>  lib/bb/fetch2/__init__.py | 4 ++--
->> >>  lib/bb/siggen.py          | 5 +++--
->> >>  3 files changed, 8 insertions(+), 6 deletions(-)
->> >
->> > [cut]
->> >
->> >> --- a/lib/bb/siggen.py
->> >> +++ b/lib/bb/siggen.py
->> >> @@ -123,6 +123,7 @@ class SignatureGeneratorBasic(SignatureGenerator)=
-:
->> >>
->> >>          self.unihash_cache =3D bb.cache.SimpleCache("1")
->> >>          self.unitaskhashes =3D self.unihash_cache.init_cache(data,
->> "bb_unihashes.dat", {})
->> >> +        self.localdirsexclude =3D
->> (data.getVar("BB_SIGNATURE_LOCAL_DIRS_EXCLUDE") or "CVS .bzr .git .hg .o=
-sc
->> .p4 .repo .svn").split()
->> >
->> > I don't like this construct, because if I do:
->> >
->> > BB_SIGNATURE_LOCAL_DIRS_EXCLUDE_append =3D " some_dir"
->> >
->> > it means that all of a sudden the SCM directories listed above will no
->> > longer be excluded since BB_SIGNATURE_LOCAL_DIRS_EXCLUDE will now be
->> > defined, but only contain " some_dir". Isn't it better to add:
->> >
->> > BB_SIGNATURE_LOCAL_DIRS_EXCLUDE ??=3D "CVS .bzr .git .hg .osc .p4 .rep=
-o
->> .svn"
->>
->> I agree.. this really should be put into the bitbake.conf file in
->> OE-core.  (I'd
->> also suggest adding it to the bitbake.conf file in bitbake itself, as an
->> example.)
->>
->> --Mark
->>
->> > somewhere in OE-Core (and it can then also have a suitable
->> > BB_SIGNATURE_LOCAL_DIRS_EXCLUDE[doc], though it seems BB_-variables
->> > are only documented in meta/conf/documentation.conf)?
->> >
->> > Alternatively, to keep the list above within bitbake, make it two
->> > variables, one for the list of directories above that is not really
->> > intended to be modified, and one for additional directories (which
->> > should still be documented in meta/conf/documentation.conf).
->>
->
-> For me it is fine if we set this variable in OE-Core with a default value
-> to VCS directories this is covered by v1 PATCH, after merge I will send
-> a patch to OE-Core adding the default value.
->
-> Regards,
-> Anibal
->
->
->> >
->> > //Peter
->> >
->>
->
+What we have empirically determined (since all googling of this file
+produces only issues related to .gitignoring it and permissions errors
+while writing it) is that bitbake unconditionally generates this file, but
+that it will "fall back" to writing it in the local build directory if it
+fails to write it in bitbake/lib/bb/pysh, e.g. if it does not have write
+permissions in that dir.
 
---0000000000000891020599d6c252
+So, our workaround is to simply remove write permissions on that folder:
+
+    chmod a-w ${pokyPath}/bitbake/lib/bb/pysh
+
+..and let each of our concurrent bitbake processes fallback to writing this
+(and others?) file into their distinct build subfolders. This appears to
+work, but we are looking for confirmation that:
+
+1. these assumptions are correct
+2. when bitbake falls back to generating files in the local build
+directory, these files are actually used from this location (through python
+path adjustment?)
+3. Are there any other such generated files or similar concerns related to
+concurrent bitbake builds in the same poky working tree that we should be
+worried about here?
+
+Thanks for your consideration and expertise,
+Tim Black
+
+--0000000000001d48600599ef5ed0
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"auto">Hi, any update?<div dir=3D"auto"><br></div><div dir=3D"au=
-to">Regards,</div><div dir=3D"auto">Anibal</div></div><br><div class=3D"gma=
-il_quote"><div dir=3D"ltr" class=3D"gmail_attr">El lun., 18 de nov. de 2019=
- 09:22, Anibal Limon &lt;<a href=3D"mailto:anibal.limon@linaro.org">anibal.=
-limon@linaro.org</a>&gt; escribi=C3=B3:<br></div><blockquote class=3D"gmail=
-_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:=
-1ex"><div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_qu=
-ote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, 15 Nov 2019 at 11:12, Ma=
-rk Hatle &lt;<a href=3D"mailto:mark.hatle@kernel.crashing.org" target=3D"_b=
-lank" rel=3D"noreferrer">mark.hatle@kernel.crashing.org</a>&gt; wrote:<br><=
-/div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bo=
-rder-left:1px solid rgb(204,204,204);padding-left:1ex"><br>
-<br>
-On 11/15/19 10:29 AM, Peter Kjellerstedt wrote:<br>
-&gt;&gt; -----Original Message-----<br>
-&gt;&gt; From: <a href=3D"mailto:bitbake-devel-bounces@lists.openembedded.o=
-rg" target=3D"_blank" rel=3D"noreferrer">bitbake-devel-bounces@lists.openem=
-bedded.org</a> &lt;bitbake-devel-<br>
-&gt;&gt; <a href=3D"mailto:bounces@lists.openembedded.org" target=3D"_blank=
-" rel=3D"noreferrer">bounces@lists.openembedded.org</a>&gt; On Behalf Of An=
-=C3=ADbal Lim=C3=B3n<br>
-&gt;&gt; Sent: den 15 november 2019 15:47<br>
-&gt;&gt; To: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=
-=3D"_blank" rel=3D"noreferrer">bitbake-devel@lists.openembedded.org</a><br>
-&gt;&gt; Subject: [bitbake-devel] [PATCHv2] lib/bb: Add<br>
-&gt;&gt; BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on directorie=
-s<br>
-&gt;&gt;<br>
-&gt;&gt; The new BB_SIGNATURE_LOCAL_DIRS_EXCLUDE allows you to specify a li=
-st<br>
-&gt;&gt; of directories to exclude when making taskhash, our specific case<=
-br>
-&gt;&gt; is using SRC_URI that points local VCS directory.<br>
-&gt;&gt;<br>
-&gt;&gt; Use bb.fetch.module to set default to: &quot;CVS .bzr .git .hg .os=
-c .p4 .repo<br>
-&gt;&gt; .svn&quot;<br>
-&gt;&gt;<br>
-&gt;&gt; Signed-off-by: An=C3=ADbal Lim=C3=B3n &lt;<a href=3D"mailto:anibal=
-.limon@linaro.org" target=3D"_blank" rel=3D"noreferrer">anibal.limon@linaro=
-.org</a>&gt;<br>
-&gt;&gt; ---<br>
-&gt;&gt;=C2=A0 lib/bb/checksum.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 | 5 +++--<br>
-&gt;&gt;=C2=A0 lib/bb/fetch2/__init__.py | 4 ++--<br>
-&gt;&gt;=C2=A0 lib/bb/siggen.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 | 5 +++--=
-<br>
-&gt;&gt;=C2=A0 3 files changed, 8 insertions(+), 6 deletions(-)<br>
-&gt; <br>
-&gt; [cut]<br>
-&gt; <br>
-&gt;&gt; --- a/lib/bb/siggen.py<br>
-&gt;&gt; +++ b/lib/bb/siggen.py<br>
-&gt;&gt; @@ -123,6 +123,7 @@ class SignatureGeneratorBasic(SignatureGenerat=
-or):<br>
-&gt;&gt;<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.unihash_cache =3D bb.cache.=
-SimpleCache(&quot;1&quot;)<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.unitaskhashes =3D self.unih=
-ash_cache.init_cache(data, &quot;bb_unihashes.dat&quot;, {})<br>
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.localdirsexclude =3D (data.getVa=
-r(&quot;BB_SIGNATURE_LOCAL_DIRS_EXCLUDE&quot;) or &quot;CVS .bzr .git .hg .=
-osc .p4 .repo .svn&quot;).split()<br>
-&gt; <br>
-&gt; I don&#39;t like this construct, because if I do:<br>
-&gt; <br>
-&gt; BB_SIGNATURE_LOCAL_DIRS_EXCLUDE_append =3D &quot; some_dir&quot;<br>
-&gt; <br>
-&gt; it means that all of a sudden the SCM directories listed above will no=
- <br>
-&gt; longer be excluded since BB_SIGNATURE_LOCAL_DIRS_EXCLUDE will now be <=
-br>
-&gt; defined, but only contain &quot; some_dir&quot;. Isn&#39;t it better t=
-o add:<br>
-&gt; <br>
-&gt; BB_SIGNATURE_LOCAL_DIRS_EXCLUDE ??=3D &quot;CVS .bzr .git .hg .osc .p4=
- .repo .svn&quot;<br>
-<br>
-I agree.. this really should be put into the bitbake.conf file in OE-core.=
-=C2=A0 (I&#39;d<br>
-also suggest adding it to the bitbake.conf file in bitbake itself, as an ex=
-ample.)<br>
-<br>
---Mark<br>
-<br>
-&gt; somewhere in OE-Core (and it can then also have a suitable <br>
-&gt; BB_SIGNATURE_LOCAL_DIRS_EXCLUDE[doc], though it seems BB_-variables <b=
-r>
-&gt; are only documented in meta/conf/documentation.conf)?<br>
-&gt; <br>
-&gt; Alternatively, to keep the list above within bitbake, make it two <br>
-&gt; variables, one for the list of directories above that is not really <b=
-r>
-&gt; intended to be modified, and one for additional directories (which <br=
->
-&gt; should still be documented in meta/conf/documentation.conf).<br></bloc=
-kquote><div><br></div><div>For me it is fine if we set this variable in OE-=
-Core with a default value to VCS directories this is covered by v1 PATCH, a=
-fter merge I will send=C2=A0</div><div>a patch to OE-Core adding the defaul=
-t value.</div><div><br></div><div>Regards,</div><div>Anibal</div><div>=C2=
-=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
-x;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-&gt; <br>
-&gt; //Peter<br>
-&gt; <br>
-</blockquote></div></div>
-</blockquote></div>
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr">My team employs a Jenkin=
+s Pipeline that performs 3 concurrent bitbake builds, one for each of our &=
+quot;arches&quot;, in parallel steps/stages. Previously, we cloned poky sep=
+arately for each of these builds and each was performed in separate, but id=
+entical, working trees. Our project structure is designed to keep all of th=
+e arches&#39; recipes maintained in separate, distinct folders.<div><br></d=
+iv><div>We recently &quot;improved&quot; this process to perform a single c=
+lone of the repo and to perform the parallel builds on the same local worki=
+ng tree, and we started seeing intermittent bitbake errors that appear to b=
+e caused by races between these concurrent processes in producing, and impo=
+rting/consuming, pyshtables.py. These manifest as simple SyntaxErrors raise=
+d at import time, caused by pyshtables.py being instantaneously malformed. =
+Presumably, one process is writing pyshtables.py while another is importing=
+ it. Since this file appears to be written to and read from a shared locati=
+on -=C2=A0 bitbake/lib/bb/pysh/pyshtables.py - we have a race condition.=C2=
+=A0=C2=A0
+</div><div><br></div><div>We understand that this generated file is a funda=
+mental requirement for any bitbake process to proceed. I would like to get =
+feedback from the developers on the assumptions we have made, and the quali=
+ty of the workaround we arrived at through trial and error.</div><div><br><=
+/div><div>What we have empirically determined (since all googling of this f=
+ile produces only issues related to .gitignoring it and permissions errors =
+while writing it) is that bitbake unconditionally generates this file, but =
+that it will &quot;fall back&quot; to writing it in the local build directo=
+ry if it fails to write it in=20
 
---0000000000000891020599d6c252--
+bitbake/lib/bb/pysh, e.g. if it does not have write permissions in that dir=
+.</div><div><br></div><div>So, our workaround is to simply remove write per=
+missions on that folder:</div><div><br></div><div>=C2=A0 =C2=A0 chmod a-w $=
+{pokyPath}/bitbake/lib/bb/pysh</div><div><br></div><div>..and let each of o=
+ur concurrent bitbake processes fallback to writing this (and others?) file=
+ into their distinct build subfolders. This appears to work, but we are loo=
+king for confirmation that:</div><div><br></div><div>1. these assumptions a=
+re correct</div><div>2. when bitbake falls back to generating files in the =
+local build directory, these files are actually used from this location (th=
+rough python path adjustment?)</div><div>3. Are there any other such genera=
+ted files or similar concerns related to concurrent bitbake builds in the s=
+ame poky working tree that we should be worried about here?</div><div><br><=
+/div><div>Thanks for your consideration and expertise,</div><div>Tim Black<=
+/div></div></div></div>
+
+--0000000000001d48600599ef5ed0--
