@@ -1,52 +1,25 @@
-Return-Path: <nick83ola@gmail.com>
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
-	[209.85.221.67])
-	by mail.openembedded.org (Postfix) with ESMTP id DEF5A7FD7F
+Return-Path: <mark.hatle@kernel.crashing.org>
+Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 334BB7FD79
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Dec 2019 15:07:08 +0000 (UTC)
-Received: by mail-wr1-f67.google.com with SMTP id q6so6299193wro.9
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Dec 2019 07:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding;
-	bh=6GE95Nowgv2j0PnQ//R4G6yRfb7bBKg6V0cy5Fqg6KE=;
-	b=Iyzg1J/rNMZ4DRSJzzQPJ30YvUdo9gwEL9tvCtEx/6ean/j47RSgM9Viw7eaKztA0y
-	4x7Iipue43r8ik23kOAqQFLeeoVUhGpALH/8zln+unTEZsSvWrC/ihtFV3BeeUrH1LTk
-	BVxvC6j8hM1Y6V1BQlhfe1xg5/vcSRy2iYWavOOSijQB6AJjoBuBHNncGWQlmNDXDoFA
-	pXNMuR0EomIUKUKpa+RbCQ9gfs795j0jJDcf8T9VAbqLCiOb7Gl0cymysUBDqr57IHXP
-	SmiFL8NIPgBpYFsoqJ9GW4NyoWw/Fyx3LuP2huHudDIIXA7vPvPN7lpnR2zl06K/Hw/U
-	znXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=6GE95Nowgv2j0PnQ//R4G6yRfb7bBKg6V0cy5Fqg6KE=;
-	b=YC4P4TG6SjqTC8zeaLCuwxq1akuO8Wf1U03zAf2u82PHR7/9a6ZzV3ojuVJtzeuykv
-	PjfcYNbfNjwYRWPaR5Wj9+LC5GMjtE3npEUbfXMxi7GkYP9vnnTHYG1Hfn9uJp9xUb5u
-	yL7eNlJGLEc32cxcoFeo0drdpIC6n+5z3lfXgd4eH6Fq1tpHx3ya2lrwKQB9bwy4+v0W
-	saKX/CHFwEQfT+F1uGy/AOpfe2Abvkt4xxWgpIeDnxJzXoDfbN8CWqB5L97y1oe1kPw3
-	eOjNV8dYAEqRyVPg9jRjopMtrAKtzAriftBLThgpeVo7M6/3YoMhU4wGK4RfxEJF5ZsL
-	WDOg==
-X-Gm-Message-State: APjAAAUGbz8kRiknRRPM1NUDC2+ZyswVS8Ifg0XL2Aw4a9NbCaaycSWu
-	SPAwFLfXO6SxUCs+S/i+T7Bm7WruPzs=
-X-Google-Smtp-Source: APXvYqxuFp4TWnIjH33yxIb+BCToVhb++7W+ttO1Tc/3T4CaZPKARFwVNLygU6T9cuvsmryNhouNwQ==
-X-Received: by 2002:adf:8041:: with SMTP id 59mr9573149wrk.257.1576768029217; 
-	Thu, 19 Dec 2019 07:07:09 -0800 (PST)
-Received: from nick-bbestie.garage.tyco.com ([77.107.218.170])
-	by smtp.gmail.com with ESMTPSA id
-	s128sm6542189wme.39.2019.12.19.07.07.08
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 19 Dec 2019 07:07:08 -0800 (PST)
-From: Nicola Lunghi <nick83ola@gmail.com>
+	Thu, 19 Dec 2019 16:18:10 +0000 (UTC)
+Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
+	(authenticated bits=0)
+	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id xBJGIAi6017129
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NO) for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Dec 2019 10:18:10 -0600
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 19 Dec 2019 15:06:40 +0000
-Message-Id: <20191219150638.31858-2-nick83ola@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191219150638.31858-1-nick83ola@gmail.com>
-References: <20191219150638.31858-1-nick83ola@gmail.com>
+References: <20191218184525.27246-1-jdmason@kudzu.us>
+	<3e0d7e89-2d4f-c8c3-e2d8-4de49f9c1c42@kernel.crashing.org>
+From: Mark Hatle <mark.hatle@kernel.crashing.org>
+Message-ID: <e10cc269-4fb5-5ca7-e4cb-d2b49676087a@kernel.crashing.org>
+Date: Thu, 19 Dec 2019 10:18:09 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+	Gecko/20100101 Thunderbird/68.3.0
 MIME-Version: 1.0
-Subject: [PATCH 2/2] bitbake: fetch2/wget: checkstatus: use the same arguments as parent
+In-Reply-To: <3e0d7e89-2d4f-c8c3-e2d8-4de49f9c1c42@kernel.crashing.org>
+Subject: Re: [PATCH] bitbake: layerindex: use branch when specified
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,63 +32,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Dec 2019 15:07:09 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 19 Dec 2019 16:18:10 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-the commit:
-  312f1a5e741: bitbake: fetchption: attempt checkstatus again if it fails
+I just realized I wasn't clear with my reply yesterday.  I will start with Jon's
+patch, and make the change and test it and then send up a V2.  (Since I was
+already working on that code.)
 
-was introducing an extra parameter to the checkstatus function, overriding
-the parent.
+--Mark
 
-Avoid that and remove recursion as is not needed.
-Also introduce a small delay between the two requests.
-
-Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
----
- bitbake/lib/bb/fetch2/wget.py | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 180fe9aacd..9c0defb6d2 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -201,7 +201,7 @@ class Wget(FetchMethod):
- 
-         return True
- 
--    def checkstatus(self, fetch, ud, d, try_again=True):
-+    def checkstatus(self, fetch, ud, d):
-         class HTTPConnectionCache(http.client.HTTPConnection):
-             if fetch.connection_cache:
-                 def connect(self):
-@@ -404,10 +404,21 @@ class Wget(FetchMethod):
-                 pass
-             return True
-         except urllib.error.URLError as e:
--            logger.debug(2, "checkstatus() urlopen failed: %s" % e)
--        if try_again:
--            logger.debug(2, "checkstatus: trying again")
--            return self.checkstatus(fetch, ud, d, False)
-+            logger.debug(2, "checkstatus() urlopen failed: %s", e)
-+
-+        # Some services such as SourceForge seem to struggle to keep up under
-+        # load, with the result that over half of the autobuilder checkuri
-+        # runs fail with sourceforge.net "connection timed out". Attempt to
-+        # mitigate this by re-attempting once the network operation on failure.
-+        import time
-+        time.sleep(0.2)
-+        logger.debug(2, "checkstatus: trying again")
-+        try:
-+            with opener.open(r) as response:
-+                pass
-+            return True
-+        except urllib.error.URLError as e:
-+            logger.debug(2, "checkstatus() urlopen failed for the second time: %s", e)
-         return False
- 
-     def _parse_path(self, regex, s):
--- 
-2.20.1
-
+On 12/18/19 8:44 PM, Mark Hatle wrote:
+> I just found this same issue and was working on a fix.  What you have below is
+> almsot correct, however the value of the branch is NOT args.branch.
+> 
+> args.branch specifies the branch of the layerindex, but the layerindex
+> internally knows the name of the branch corresponding the release branch.
+> 
+> You actually need to get the 'actual_branch' value from the layerBranch item.
+> 
+> See below:
+> 
+> On 12/18/19 12:45 PM, Jon Mason wrote:
+>> When currently specified, the branch is used to verify the versioning of
+>> the meta layer, but the master branch is checked out.  This change
+>> allows for the branch to be specified.  Now it is easy to specify all
+>> of the meta layers being added are of the same version, without having
+>> to do it in each individual git tree.  Also, it will error if there are
+>> branches without a matching version.  Finally, this allows for meta
+>> layer git trees without a master branch.
+>>
+>> Signed-off-by: Jon Mason <jdmason@kudzu.us>
+>> ---
+>>  bitbake/lib/bblayers/layerindex.py | 9 ++++++---
+>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/bitbake/lib/bblayers/layerindex.py b/bitbake/lib/bblayers/layerindex.py
+>> index 57cd9027f6..55029e0482 100644
+>> --- a/bitbake/lib/bblayers/layerindex.py
+>> +++ b/bitbake/lib/bblayers/layerindex.py
+>> @@ -24,7 +24,7 @@ class LayerIndexPlugin(ActionPlugin):
+>>      This class inherits ActionPlugin to get do_add_layer.
+>>      """
+>>  
+>> -    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer):
+>> +    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer, branch):
+>>          layername = self.get_layer_name(url)
+>>          if os.path.splitext(layername)[1] == '.git':
+>>              layername = os.path.splitext(layername)[0]
+>> @@ -32,7 +32,9 @@ class LayerIndexPlugin(ActionPlugin):
+>>          layerdir = os.path.join(repodir, subdir)
+>>          if not os.path.exists(repodir):
+>>              if fetch_layer:
+>> -                result = subprocess.call(['git', 'clone', url, repodir])
+>> +                if not branch:
+>> +                    branch = "master"
+>> +                result = subprocess.call(['git', 'clone', '-b' , branch, url, repodir])
+>>                  if result:
+>>                      logger.error("Failed to download %s" % url)
+>>                      return None, None, None
+>> @@ -171,7 +173,8 @@ class LayerIndexPlugin(ActionPlugin):
+>>                  subdir, name, layerdir = self.get_fetch_layer(fetchdir,
+>>                                                        layerBranch.layer.vcs_url,
+>>                                                        layerBranch.vcs_subdir,
+>> -                                                      not args.show_only)
+>> +                                                      not args.show_only,
+>> +                                                      args.branch)
+> 
+> The above should be 'layerBranch.actual_branch', instead of args.branch.
+> 
+> For example, in master -- "meta-gumstix" in master is set to the branch 'dora'.
+> 
+> --Mark
+> 
+>>                  if not name:
+>>                      # Error already shown
+>>                      return 1
+>>
 
