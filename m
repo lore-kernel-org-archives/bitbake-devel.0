@@ -1,50 +1,52 @@
 Return-Path: <nick83ola@gmail.com>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 9ABF27FD18
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
+	[209.85.221.67])
+	by mail.openembedded.org (Postfix) with ESMTP id DEF5A7FD7F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Dec 2019 15:06:54 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id z3so6341237wru.3
+	Thu, 19 Dec 2019 15:07:08 +0000 (UTC)
+Received: by mail-wr1-f67.google.com with SMTP id q6so6299193wro.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Dec 2019 07:06:56 -0800 (PST)
+	Thu, 19 Dec 2019 07:07:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=JYR4oewYOakq4gp3S3Rl7DiQwshx300I5qbBBz9cSws=;
-	b=LxB3nnk6NvkgPyKpUoBVKx+3dljPWj8Q8c4RcmOSuHIm7LhdyEJ18XhDu3kbuDVWkP
-	0ZoFHa/oblwjL/EiDqwkdsozhb8oG78avjBvubEWOV+jmEwj9zIbo7aqCjiF0awUxV08
-	q9+YEInyZ/XjaEuAlnaUYyUhITscnEpT97HbokZ4zaCodstwl01AL0oLn8Pl95EumVtc
-	mw+/TzGzbJHv0bitoT58fj84qzPuvwdQu4k8FfCBkJFD+GmEr0QIgQO94Go7wLy/H3wV
-	yvATzt5EYZfMOCPTWdCxP3SueonMiuhr7k7yE6/Kjar5O2cuItOCFx3HZ265FICuHAv6
-	PHmg==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding;
+	bh=6GE95Nowgv2j0PnQ//R4G6yRfb7bBKg6V0cy5Fqg6KE=;
+	b=Iyzg1J/rNMZ4DRSJzzQPJ30YvUdo9gwEL9tvCtEx/6ean/j47RSgM9Viw7eaKztA0y
+	4x7Iipue43r8ik23kOAqQFLeeoVUhGpALH/8zln+unTEZsSvWrC/ihtFV3BeeUrH1LTk
+	BVxvC6j8hM1Y6V1BQlhfe1xg5/vcSRy2iYWavOOSijQB6AJjoBuBHNncGWQlmNDXDoFA
+	pXNMuR0EomIUKUKpa+RbCQ9gfs795j0jJDcf8T9VAbqLCiOb7Gl0cymysUBDqr57IHXP
+	SmiFL8NIPgBpYFsoqJ9GW4NyoWw/Fyx3LuP2huHudDIIXA7vPvPN7lpnR2zl06K/Hw/U
+	znXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=JYR4oewYOakq4gp3S3Rl7DiQwshx300I5qbBBz9cSws=;
-	b=ecSz0ZroDJ6kjDi3t8LecoD5v32PF7iRMA17vD6kAOwQiDTM2hs6ndjS4FnXLSipNb
-	CZiRy61GJcyZwBAXAp5mgfza7CUxC6ASVvN0E6w9bApw/cw2grY35l54+aQXpW2gbrlY
-	OY9+pctpysjwKHYcJJDQ6QMjJakHatqu/h3rHieYhtFWOQjfLZ+ZUKNeMkJ65U3q3Nz1
-	lCtkpPqsT9WzOn1cbe0CkAGT+Dwryou1xNX1VmlsRvqxQQE/z6MqrMAfszMUyrfI5UoP
-	WT+h4El8l0ML6xwoiEL0lMDkS+IXTYpjHtJMV2OVlznrNAIkAzxFMRMaSWlKzH8mcS1u
-	0gAQ==
-X-Gm-Message-State: APjAAAVs7uH2D3nbDpQpts3WwA2yKL0aNtUA5NeYs5fsB4Fcdv3ZAhYN
-	vRd9f2cIV/OJviDpk+ZyVxYpzsOFnkA=
-X-Google-Smtp-Source: APXvYqy1ncpFTULum0etOjft/OnEcjzOuTyca+LW/oMTv8ZFqroyPzykzpQMlamLwcboZdf72SuB1g==
-X-Received: by 2002:a5d:4651:: with SMTP id j17mr10400874wrs.237.1576768015174;
-	Thu, 19 Dec 2019 07:06:55 -0800 (PST)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=6GE95Nowgv2j0PnQ//R4G6yRfb7bBKg6V0cy5Fqg6KE=;
+	b=YC4P4TG6SjqTC8zeaLCuwxq1akuO8Wf1U03zAf2u82PHR7/9a6ZzV3ojuVJtzeuykv
+	PjfcYNbfNjwYRWPaR5Wj9+LC5GMjtE3npEUbfXMxi7GkYP9vnnTHYG1Hfn9uJp9xUb5u
+	yL7eNlJGLEc32cxcoFeo0drdpIC6n+5z3lfXgd4eH6Fq1tpHx3ya2lrwKQB9bwy4+v0W
+	saKX/CHFwEQfT+F1uGy/AOpfe2Abvkt4xxWgpIeDnxJzXoDfbN8CWqB5L97y1oe1kPw3
+	eOjNV8dYAEqRyVPg9jRjopMtrAKtzAriftBLThgpeVo7M6/3YoMhU4wGK4RfxEJF5ZsL
+	WDOg==
+X-Gm-Message-State: APjAAAUGbz8kRiknRRPM1NUDC2+ZyswVS8Ifg0XL2Aw4a9NbCaaycSWu
+	SPAwFLfXO6SxUCs+S/i+T7Bm7WruPzs=
+X-Google-Smtp-Source: APXvYqxuFp4TWnIjH33yxIb+BCToVhb++7W+ttO1Tc/3T4CaZPKARFwVNLygU6T9cuvsmryNhouNwQ==
+X-Received: by 2002:adf:8041:: with SMTP id 59mr9573149wrk.257.1576768029217; 
+	Thu, 19 Dec 2019 07:07:09 -0800 (PST)
 Received: from nick-bbestie.garage.tyco.com ([77.107.218.170])
 	by smtp.gmail.com with ESMTPSA id
-	s128sm6542189wme.39.2019.12.19.07.06.54
+	s128sm6542189wme.39.2019.12.19.07.07.08
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 19 Dec 2019 07:06:54 -0800 (PST)
+	Thu, 19 Dec 2019 07:07:08 -0800 (PST)
 From: Nicola Lunghi <nick83ola@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 19 Dec 2019 15:06:38 +0000
-Message-Id: <20191219150638.31858-1-nick83ola@gmail.com>
+Date: Thu, 19 Dec 2019 15:06:40 +0000
+Message-Id: <20191219150638.31858-2-nick83ola@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191219150638.31858-1-nick83ola@gmail.com>
+References: <20191219150638.31858-1-nick83ola@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/2] bitbake: fetch2/wget: checkstatus: cleanup URLError exception
+Subject: [PATCH 2/2] bitbake: fetch2/wget: checkstatus: use the same arguments as parent
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,101 +59,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Dec 2019 15:06:56 -0000
+X-List-Received-Date: Thu, 19 Dec 2019 15:07:09 -0000
 Content-Transfer-Encoding: 8bit
 
-The exception for urllib.error.URLError can only happen on the
-
-  with opener.open(r) as response:
-
-line.
-Limit the try except span to this line and move the retry logic of
-commit 312f1a5e741 outside of the try/except catch
-
-see also commit:
+the commit:
   312f1a5e741: bitbake: fetchption: attempt checkstatus again if it fails
+
+was introducing an extra parameter to the checkstatus function, overriding
+the parent.
+
+Avoid that and remove recursion as is not needed.
+Also introduce a small delay between the two requests.
 
 Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
 ---
- bitbake/lib/bb/fetch2/wget.py | 60 +++++++++++++++++------------------
- 1 file changed, 29 insertions(+), 31 deletions(-)
+ bitbake/lib/bb/fetch2/wget.py | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 90aa9b190a..180fe9aacd 100644
+index 180fe9aacd..9c0defb6d2 100644
 --- a/bitbake/lib/bb/fetch2/wget.py
 +++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -375,42 +375,40 @@ class Wget(FetchMethod):
-             handlers.append(urllib.request.HTTPSHandler(context=ssl._create_unverified_context()))
-         opener = urllib.request.build_opener(*handlers)
+@@ -201,7 +201,7 @@ class Wget(FetchMethod):
  
--        try:
--            uri = ud.url.split(";")[0]
--            r = urllib.request.Request(uri)
--            r.get_method = lambda: "HEAD"
--            # Some servers (FusionForge, as used on Alioth) require that the
--            # optional Accept header is set.
--            r.add_header("Accept", "*/*")
--            def add_basic_auth(login_str, request):
--                '''Adds Basic auth to http request, pass in login:password as string'''
--                import base64
--                encodeuser = base64.b64encode(login_str.encode('utf-8')).decode("utf-8")
--                authheader = "Basic %s" % encodeuser
--                r.add_header("Authorization", authheader)
--
--            if ud.user and ud.pswd:
--                add_basic_auth(ud.user + ':' + ud.pswd, r)
-+        uri = ud.url.split(";")[0]
-+        r = urllib.request.Request(uri)
-+        r.get_method = lambda: "HEAD"
-+        # Some servers (FusionForge, as used on Alioth) require that the
-+        # optional Accept header is set.
-+        r.add_header("Accept", "*/*")
-+        def add_basic_auth(login_str, request):
-+            '''Adds Basic auth to http request, pass in login:password as string'''
-+            import base64
-+            encodeuser = base64.b64encode(login_str.encode('utf-8')).decode("utf-8")
-+            authheader = "Basic %s" % encodeuser
-+            r.add_header("Authorization", authheader)
-+
-+        if ud.user and ud.pswd:
-+            add_basic_auth(ud.user + ':' + ud.pswd, r)
+         return True
  
--            try:
--                import netrc
--                n = netrc.netrc()
--                login, unused, password = n.authenticators(urllib.parse.urlparse(uri).hostname)
--                add_basic_auth("%s:%s" % (login, password), r)
--            except (TypeError, ImportError, IOError, netrc.NetrcParseError):
--                pass
-+        try:
-+            import netrc
-+            n = netrc.netrc()
-+            login, unused, password = n.authenticators(urllib.parse.urlparse(uri).hostname)
-+            add_basic_auth("%s:%s" % (login, password), r)
-+        except (TypeError, ImportError, IOError, netrc.NetrcParseError):
-+            pass
- 
-+        try:
-             with opener.open(r) as response:
+-    def checkstatus(self, fetch, ud, d, try_again=True):
++    def checkstatus(self, fetch, ud, d):
+         class HTTPConnectionCache(http.client.HTTPConnection):
+             if fetch.connection_cache:
+                 def connect(self):
+@@ -404,10 +404,21 @@ class Wget(FetchMethod):
                  pass
-+            return True
+             return True
          except urllib.error.URLError as e:
--            if try_again:
--                logger.debug(2, "checkstatus: trying again")
--                return self.checkstatus(fetch, ud, d, False)
--            else:
--                # debug for now to avoid spamming the logs in e.g. remote sstate searches
--                logger.debug(2, "checkstatus() urlopen failed: %s" % e)
--                return False
--        return True
-+            logger.debug(2, "checkstatus() urlopen failed: %s" % e)
-+        if try_again:
-+            logger.debug(2, "checkstatus: trying again")
-+            return self.checkstatus(fetch, ud, d, False)
-+        return False
+-            logger.debug(2, "checkstatus() urlopen failed: %s" % e)
+-        if try_again:
+-            logger.debug(2, "checkstatus: trying again")
+-            return self.checkstatus(fetch, ud, d, False)
++            logger.debug(2, "checkstatus() urlopen failed: %s", e)
++
++        # Some services such as SourceForge seem to struggle to keep up under
++        # load, with the result that over half of the autobuilder checkuri
++        # runs fail with sourceforge.net "connection timed out". Attempt to
++        # mitigate this by re-attempting once the network operation on failure.
++        import time
++        time.sleep(0.2)
++        logger.debug(2, "checkstatus: trying again")
++        try:
++            with opener.open(r) as response:
++                pass
++            return True
++        except urllib.error.URLError as e:
++            logger.debug(2, "checkstatus() urlopen failed for the second time: %s", e)
+         return False
  
      def _parse_path(self, regex, s):
-         """
 -- 
 2.20.1
 
