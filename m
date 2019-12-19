@@ -1,24 +1,50 @@
-Return-Path: <mark.hatle@kernel.crashing.org>
-Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 027197F7A2
+Return-Path: <nick83ola@gmail.com>
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
+	[209.85.221.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 9ABF27FD18
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Dec 2019 02:44:22 +0000 (UTC)
-Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
-	(authenticated bits=0)
-	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id xBJ2iKID006932
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NO) for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Dec 2019 20:44:21 -0600
+	Thu, 19 Dec 2019 15:06:54 +0000 (UTC)
+Received: by mail-wr1-f68.google.com with SMTP id z3so6341237wru.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Dec 2019 07:06:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=JYR4oewYOakq4gp3S3Rl7DiQwshx300I5qbBBz9cSws=;
+	b=LxB3nnk6NvkgPyKpUoBVKx+3dljPWj8Q8c4RcmOSuHIm7LhdyEJ18XhDu3kbuDVWkP
+	0ZoFHa/oblwjL/EiDqwkdsozhb8oG78avjBvubEWOV+jmEwj9zIbo7aqCjiF0awUxV08
+	q9+YEInyZ/XjaEuAlnaUYyUhITscnEpT97HbokZ4zaCodstwl01AL0oLn8Pl95EumVtc
+	mw+/TzGzbJHv0bitoT58fj84qzPuvwdQu4k8FfCBkJFD+GmEr0QIgQO94Go7wLy/H3wV
+	yvATzt5EYZfMOCPTWdCxP3SueonMiuhr7k7yE6/Kjar5O2cuItOCFx3HZ265FICuHAv6
+	PHmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=JYR4oewYOakq4gp3S3Rl7DiQwshx300I5qbBBz9cSws=;
+	b=ecSz0ZroDJ6kjDi3t8LecoD5v32PF7iRMA17vD6kAOwQiDTM2hs6ndjS4FnXLSipNb
+	CZiRy61GJcyZwBAXAp5mgfza7CUxC6ASVvN0E6w9bApw/cw2grY35l54+aQXpW2gbrlY
+	OY9+pctpysjwKHYcJJDQ6QMjJakHatqu/h3rHieYhtFWOQjfLZ+ZUKNeMkJ65U3q3Nz1
+	lCtkpPqsT9WzOn1cbe0CkAGT+Dwryou1xNX1VmlsRvqxQQE/z6MqrMAfszMUyrfI5UoP
+	WT+h4El8l0ML6xwoiEL0lMDkS+IXTYpjHtJMV2OVlznrNAIkAzxFMRMaSWlKzH8mcS1u
+	0gAQ==
+X-Gm-Message-State: APjAAAVs7uH2D3nbDpQpts3WwA2yKL0aNtUA5NeYs5fsB4Fcdv3ZAhYN
+	vRd9f2cIV/OJviDpk+ZyVxYpzsOFnkA=
+X-Google-Smtp-Source: APXvYqy1ncpFTULum0etOjft/OnEcjzOuTyca+LW/oMTv8ZFqroyPzykzpQMlamLwcboZdf72SuB1g==
+X-Received: by 2002:a5d:4651:: with SMTP id j17mr10400874wrs.237.1576768015174;
+	Thu, 19 Dec 2019 07:06:55 -0800 (PST)
+Received: from nick-bbestie.garage.tyco.com ([77.107.218.170])
+	by smtp.gmail.com with ESMTPSA id
+	s128sm6542189wme.39.2019.12.19.07.06.54
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Thu, 19 Dec 2019 07:06:54 -0800 (PST)
+From: Nicola Lunghi <nick83ola@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-References: <20191218184525.27246-1-jdmason@kudzu.us>
-From: Mark Hatle <mark.hatle@kernel.crashing.org>
-Message-ID: <3e0d7e89-2d4f-c8c3-e2d8-4de49f9c1c42@kernel.crashing.org>
-Date: Wed, 18 Dec 2019 20:44:19 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
-	Gecko/20100101 Thunderbird/68.3.0
+Date: Thu, 19 Dec 2019 15:06:38 +0000
+Message-Id: <20191219150638.31858-1-nick83ola@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191218184525.27246-1-jdmason@kudzu.us>
-Subject: Re: [PATCH] bitbake: layerindex: use branch when specified
+Subject: [PATCH 1/2] bitbake: fetch2/wget: checkstatus: cleanup URLError exception
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,75 +57,102 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Dec 2019 02:44:23 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 19 Dec 2019 15:06:56 -0000
+Content-Transfer-Encoding: 8bit
 
-I just found this same issue and was working on a fix.  What you have below is
-almsot correct, however the value of the branch is NOT args.branch.
+The exception for urllib.error.URLError can only happen on the
 
-args.branch specifies the branch of the layerindex, but the layerindex
-internally knows the name of the branch corresponding the release branch.
+  with opener.open(r) as response:
 
-You actually need to get the 'actual_branch' value from the layerBranch item.
+line.
+Limit the try except span to this line and move the retry logic of
+commit 312f1a5e741 outside of the try/except catch
 
-See below:
+see also commit:
+  312f1a5e741: bitbake: fetchption: attempt checkstatus again if it fails
 
-On 12/18/19 12:45 PM, Jon Mason wrote:
-> When currently specified, the branch is used to verify the versioning of
-> the meta layer, but the master branch is checked out.  This change
-> allows for the branch to be specified.  Now it is easy to specify all
-> of the meta layers being added are of the same version, without having
-> to do it in each individual git tree.  Also, it will error if there are
-> branches without a matching version.  Finally, this allows for meta
-> layer git trees without a master branch.
-> 
-> Signed-off-by: Jon Mason <jdmason@kudzu.us>
-> ---
->  bitbake/lib/bblayers/layerindex.py | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/bitbake/lib/bblayers/layerindex.py b/bitbake/lib/bblayers/layerindex.py
-> index 57cd9027f6..55029e0482 100644
-> --- a/bitbake/lib/bblayers/layerindex.py
-> +++ b/bitbake/lib/bblayers/layerindex.py
-> @@ -24,7 +24,7 @@ class LayerIndexPlugin(ActionPlugin):
->      This class inherits ActionPlugin to get do_add_layer.
->      """
->  
-> -    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer):
-> +    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer, branch):
->          layername = self.get_layer_name(url)
->          if os.path.splitext(layername)[1] == '.git':
->              layername = os.path.splitext(layername)[0]
-> @@ -32,7 +32,9 @@ class LayerIndexPlugin(ActionPlugin):
->          layerdir = os.path.join(repodir, subdir)
->          if not os.path.exists(repodir):
->              if fetch_layer:
-> -                result = subprocess.call(['git', 'clone', url, repodir])
-> +                if not branch:
-> +                    branch = "master"
-> +                result = subprocess.call(['git', 'clone', '-b' , branch, url, repodir])
->                  if result:
->                      logger.error("Failed to download %s" % url)
->                      return None, None, None
-> @@ -171,7 +173,8 @@ class LayerIndexPlugin(ActionPlugin):
->                  subdir, name, layerdir = self.get_fetch_layer(fetchdir,
->                                                        layerBranch.layer.vcs_url,
->                                                        layerBranch.vcs_subdir,
-> -                                                      not args.show_only)
-> +                                                      not args.show_only,
-> +                                                      args.branch)
+Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
+---
+ bitbake/lib/bb/fetch2/wget.py | 60 +++++++++++++++++------------------
+ 1 file changed, 29 insertions(+), 31 deletions(-)
 
-The above should be 'layerBranch.actual_branch', instead of args.branch.
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 90aa9b190a..180fe9aacd 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -375,42 +375,40 @@ class Wget(FetchMethod):
+             handlers.append(urllib.request.HTTPSHandler(context=ssl._create_unverified_context()))
+         opener = urllib.request.build_opener(*handlers)
+ 
+-        try:
+-            uri = ud.url.split(";")[0]
+-            r = urllib.request.Request(uri)
+-            r.get_method = lambda: "HEAD"
+-            # Some servers (FusionForge, as used on Alioth) require that the
+-            # optional Accept header is set.
+-            r.add_header("Accept", "*/*")
+-            def add_basic_auth(login_str, request):
+-                '''Adds Basic auth to http request, pass in login:password as string'''
+-                import base64
+-                encodeuser = base64.b64encode(login_str.encode('utf-8')).decode("utf-8")
+-                authheader = "Basic %s" % encodeuser
+-                r.add_header("Authorization", authheader)
+-
+-            if ud.user and ud.pswd:
+-                add_basic_auth(ud.user + ':' + ud.pswd, r)
++        uri = ud.url.split(";")[0]
++        r = urllib.request.Request(uri)
++        r.get_method = lambda: "HEAD"
++        # Some servers (FusionForge, as used on Alioth) require that the
++        # optional Accept header is set.
++        r.add_header("Accept", "*/*")
++        def add_basic_auth(login_str, request):
++            '''Adds Basic auth to http request, pass in login:password as string'''
++            import base64
++            encodeuser = base64.b64encode(login_str.encode('utf-8')).decode("utf-8")
++            authheader = "Basic %s" % encodeuser
++            r.add_header("Authorization", authheader)
++
++        if ud.user and ud.pswd:
++            add_basic_auth(ud.user + ':' + ud.pswd, r)
+ 
+-            try:
+-                import netrc
+-                n = netrc.netrc()
+-                login, unused, password = n.authenticators(urllib.parse.urlparse(uri).hostname)
+-                add_basic_auth("%s:%s" % (login, password), r)
+-            except (TypeError, ImportError, IOError, netrc.NetrcParseError):
+-                pass
++        try:
++            import netrc
++            n = netrc.netrc()
++            login, unused, password = n.authenticators(urllib.parse.urlparse(uri).hostname)
++            add_basic_auth("%s:%s" % (login, password), r)
++        except (TypeError, ImportError, IOError, netrc.NetrcParseError):
++            pass
+ 
++        try:
+             with opener.open(r) as response:
+                 pass
++            return True
+         except urllib.error.URLError as e:
+-            if try_again:
+-                logger.debug(2, "checkstatus: trying again")
+-                return self.checkstatus(fetch, ud, d, False)
+-            else:
+-                # debug for now to avoid spamming the logs in e.g. remote sstate searches
+-                logger.debug(2, "checkstatus() urlopen failed: %s" % e)
+-                return False
+-        return True
++            logger.debug(2, "checkstatus() urlopen failed: %s" % e)
++        if try_again:
++            logger.debug(2, "checkstatus: trying again")
++            return self.checkstatus(fetch, ud, d, False)
++        return False
+ 
+     def _parse_path(self, regex, s):
+         """
+-- 
+2.20.1
 
-For example, in master -- "meta-gumstix" in master is set to the branch 'dora'.
-
---Mark
-
->                  if not name:
->                      # Error already shown
->                      return 1
-> 
 
