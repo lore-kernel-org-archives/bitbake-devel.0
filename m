@@ -1,41 +1,37 @@
 Return-Path: <masahiroy@kernel.org>
-Received: from conssluserg-02.nifty.com (conssluserg-02.nifty.com
-	[210.131.2.81])
-	by mail.openembedded.org (Postfix) with ESMTP id C4BA97FA3F
+X-Greylist: delayed 367 seconds by postgrey-1.34 at layers.openembedded.org;
+	Sun, 22 Dec 2019 06:45:59 UTC
+Received: from condef-03.nifty.com (condef-03.nifty.com [202.248.20.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 662947FC99
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 25 Dec 2019 07:33:50 +0000 (UTC)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com
-	[209.85.222.53]) (authenticated)
-	by conssluserg-02.nifty.com with ESMTP id xBP7Xhis029785
+	Sun, 22 Dec 2019 06:45:59 +0000 (UTC)
+Received: from conuserg-11.nifty.com ([10.126.8.74])by condef-03.nifty.com
+	with ESMTP id xBM6be6L001027
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 25 Dec 2019 16:33:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xBP7Xhis029785
+	Sun, 22 Dec 2019 15:37:40 +0900
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net
+	[126.93.102.113]) (authenticated)
+	by conuserg-11.nifty.com with ESMTP id xBM6bKDA011121;
+	Sun, 22 Dec 2019 15:37:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com xBM6bKDA011121
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-	s=dec2015msa; t=1577259224;
-	bh=ZMoPwqg4Yt0WyMSu6eWNIQOQgHA+/EctWr7iWCFm1jo=;
-	h=From:Date:Subject:To:From;
-	b=nNXJmh+VCSjyGfpxzn43OYMH/TFQeDZX2kIXmZCAPGdn6s0un6me5EBqJI49vtCRO
-	aUdo4FYi60RGmglq8FQ3ycR92ZnpD+wUNr6hMzOw2guQTfndOXJb8eSaoXgNyxlzIh
-	8YBB2bG4nJQZ68t4n5xTbbkdt86sYRX7grNU/kpRZbjxohlQ3xVkKh8RLuXwzT7UfA
-	yf24Ks/znMI2mg/+Snf7mcPbzZxQZLzZJqfyHI494F9hs9RAgqNI7xwfS7Dxf4XHuX
-	exo8BBfvlrTRNd/3r2EbYyj8Ow5tlUa90PKDstMSiPYxvomkDotKEEGD/At0Ti8D37
-	gzD8v1622djwA==
-X-Nifty-SrcIP: [209.85.222.53]
-Received: by mail-ua1-f53.google.com with SMTP id h32so864095uah.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Dec 2019 23:33:43 -0800 (PST)
-X-Gm-Message-State: APjAAAXtqMzZ6RzpS2rJsfaiSYqcvqg3s93D90yr14FZK2h7uZWAQ9/7
-	4xvYFlPRrhDJauPI98QBA0RftFBiI5/eVcvzXZk=
-X-Google-Smtp-Source: APXvYqyXQaglWCO3ZzQQSKArU4dJL1oKw+1Jjgu8ilL3AKIEybaSrjJvnLXzmtqdzZCeuIG5kAk5ZMuSuHENOSILhyY=
-X-Received: by 2002:ab0:14ea:: with SMTP id f39mr13307117uae.40.1577259222825; 
-	Tue, 24 Dec 2019 23:33:42 -0800 (PST)
-MIME-Version: 1.0
+	s=dec2015msa; t=1576996640;
+	bh=ue0cCcYHl/Nfe7UBp7qX8T6/qdQP9t8i18ovLDOpCWI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=olnZGR0z/zQgJgfD2naol7VTM0cMW4jeLRgjn9MgAld4cy2VxleYrEMzgkfb8B4yM
+	SOMZbBX3yNj3BvQ3ZCBko50cZtC8W+Jr+D9uzpH3/qGKVPKiFp57VWVs5QPwjPl5CJ
+	drVmFqPc91xSFqoY/50txnRpWTjAo79+iftWJzat0efrwvB3iu74zkkfTWWvlqPhXs
+	KSW1sTw9qSrPqTe04gbRcvpuZtnrwQ+XmRoqmQzp3uqcgeXp5qURSgLuWC9b0RV3mn
+	fnGVfioUNhZdLIkpediMvPTRJuzAc+pAQ0ZZp6PwMNzQ+zv3psWeGqtFw0ai71lGfo
+	qYRagGbdG/s1Q==
+X-Nifty-SrcIP: [126.93.102.113]
 From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 25 Dec 2019 16:33:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ+4TEnV+hW9ZQpn5dK+brp9o6UfD3OLk++eHn4T_ezxQ@mail.gmail.com>
-Message-ID: <CAK7LNAQ+4TEnV+hW9ZQpn5dK+brp9o6UfD3OLk++eHn4T_ezxQ@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: DEPENDS vs RDEPENDS from bitbake PoV
+Date: Sun, 22 Dec 2019 15:37:18 +0900
+Message-Id: <20191222063718.9330-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+X-Mailman-Approved-At: Sat, 28 Dec 2019 12:13:12 +0000
+Subject: [PATCH] base.bbclass: fix 'python should use 4 spaces indentation' warnings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,100 +44,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 25 Dec 2019 07:33:51 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Sun, 22 Dec 2019 06:45:59 -0000
 
-Hi,
+Even if there are not so many users of base.bbclass bundled in bitbake,
+it is helpful as sample code at least.
 
-I think "the difference between DEPENDS and RDEPENDS"
-is FAQ, but there is still something unclear to me.
+If this base.bbclass is used, bitbake emits the following warnings:
 
-I read the bitbake manual,
-asked Google about this question,
-and found lots of Q&A there, but
-I could not find any answer that satisfied me.
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 41
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 42
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 43
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 44
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 45
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 46
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 47
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 53
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 54
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 55
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 56
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 63
+WARNING: python should use 4 spaces indentation, but found tabs in base.bbclass, line 64
 
-Of course, I am not looking for the boilerplate answer
-like "DEPENDS is build-time dependency,
-whereas RDEPENDS is run-time dependency."
+Let's fix the indentation as suggested. While I was touching these lines,
+I also fixed "isnt" into "isn't" in the comment line.
 
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-To clarify my question,
-I'd like to know how DEPENDS and RDEPENDS
-behave differently in the following sample code
-if there is any difference.
+ classes/base.bbclass | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-
-Sample code
------------
-
-[base.bbclass]
-addtask build
-do_build[nostamp] = "1"
-
-
-[bar.bb]
-PN = 'bar'
-python do_build() {
-    import time
-    bb.plain("bar.do_build START")
-    time.sleep(5)
-    bb.plain("bar.do_build END")
-}
-
-
-[foo.bb]
-PN = 'foo'
-python do_build() {
-    bb.plain("foo.do_build");
-}
-DEPENDS = "bar"
-do_build[deptask] = "do_build"
-
-
-
-Result
-------
-
-Running "bitbake foo" displays
-the following in the terminal.
-
-bar.do_build START
-bar.do_build END
-foo.do_build
-
-
-So, foo.do_build starts after bar.do_build has completed.
-
-If I replace the last twos lines in foo.bb:
-
-DEPENDS = "bar"
-do_build[deptask] = "do_build"
-
-... with:
-
-RDEPENDS = "bar"
-do_build[rdeptask] = "do_build"
-
-the result is the same.
-foo.do_build still starts after bar.do_build has completed.
-
-
-So, DEPENDS and RDEPENDS are fundamentally the same
-from the bitbake point of view.
-Is my understanding correct?
-
-
-I know there is slight difference between them.
-For the RDEPENDS variant, the form RDEPENDS_<pkg> is also supported.
-(<pkg> is the element in ${PACKAGES}, or ${PN} if ${PACKAGES} is empty).
-
-Other than that, the functionality looks the same between
-DEPENDS and RDEPENDS.
-
-
-
+diff --git a/classes/base.bbclass b/classes/base.bbclass
+index 08441fe1..18093961 100644
+--- a/classes/base.bbclass
++++ b/classes/base.bbclass
+@@ -38,30 +38,30 @@ bbfatal() {
+ addtask showdata
+ do_showdata[nostamp] = "1"
+ python do_showdata() {
+-	import sys
+-	# emit variables and shell functions
+-	bb.data.emit_env(sys.__stdout__, d, True)
+-	# emit the metadata which isnt valid shell
+-	for e in bb.data.keys(d):
+-		if d.getVarFlag(e, 'python', False):
+-			bb.plain("\npython %s () {\n%s}" % (e, d.getVar(e)))
++    import sys
++    # emit variables and shell functions
++    bb.data.emit_env(sys.__stdout__, d, True)
++    # emit the metadata which isn't valid shell
++    for e in bb.data.keys(d):
++        if d.getVarFlag(e, 'python', False):
++            bb.plain("\npython %s () {\n%s}" % (e, d.getVar(e)))
+ }
+ 
+ addtask listtasks
+ do_listtasks[nostamp] = "1"
+ python do_listtasks() {
+-	import sys
+-	for e in bb.data.keys(d):
+-		if d.getVarFlag(e, 'task', False):
+-			bb.plain("%s" % e)
++    import sys
++    for e in bb.data.keys(d):
++        if d.getVarFlag(e, 'task', False):
++            bb.plain("%s" % e)
+ }
+ 
+ addtask build
+ do_build[dirs] = "${TOPDIR}"
+ do_build[nostamp] = "1"
+ python base_do_build () {
+-	bb.note("The included, default BB base.bbclass does not define a useful default task.")
+-	bb.note("Try running the 'listtasks' task against a .bb to see what tasks are defined.")
++    bb.note("The included, default BB base.bbclass does not define a useful default task.")
++    bb.note("Try running the 'listtasks' task against a .bb to see what tasks are defined.")
+ }
+ 
+ EXPORT_FUNCTIONS do_clean do_mrproper do_build
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
 
