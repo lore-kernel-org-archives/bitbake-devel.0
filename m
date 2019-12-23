@@ -1,53 +1,53 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com
-	[209.85.214.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 6A2337F881
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com
+	[209.85.214.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 388647F847
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Dec 2019 04:50:47 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id f20so6704505plj.5
+	Mon, 23 Dec 2019 04:50:48 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id g6so6709975plt.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 22 Dec 2019 20:50:48 -0800 (PST)
+	Sun, 22 Dec 2019 20:50:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=6jlWjogoIX0rYFx9k9fgto4Jb7E867ovD66tQsR8wDo=;
-	b=fqTJ7+M3NUCClrDvcoz33iJIXKAXYW1563zb/Ex127Kb1VgYXS8N8RR0ufVqULRWVy
-	vD6OcftBzg5H0G2DTwYGMmQQq4BxKPAPC0KF7jZFUPhiWoUsRgqviDnRg6+BQDXZfEA2
-	bFjIwcV+EJPyEznrmCpZsAAcLvUfI49Vgtk/uAIYt98i1vfNcbFxBRchxuZ9k0QrV9HB
-	+h697rKry+Q/moeBRdIeUvlSOSBXJTp9dN4qYcIr4lxIanYbz+XAK0nfHSJbW21Kh9BB
-	72uL9r4jLXbBV8WZmfv+Mq/Wbw3kTDmnH1oFWHl35P+Vn2/mAFNTFsrcT1sPUIpqHcnq
-	tPYA==
+	bh=j4KGs5DCOEg8GzBlizCGe0Fuv2WG0/v6hJSevcpcgWQ=;
+	b=JVJbSQH4H/jbBJhM0AGHbcgVbC9U15yeR/Zh1FAVeuZHYAAS6VzUUmMOqmwzgMeQDU
+	MKQl4ocPB33cb3BcrMS9rjLK2zyCkpxd1+Uh38wdOegmk91KJmm79L+1m4Vq+U698sne
+	/Hz25Qb9AOhfcVl1kxXZNKMFBvvzAbooLV5QW3yAs5qWC/tEXmjIZavdBk3YcY/ucqAv
+	uZ2yEMoor/3QyePAgR/2Bp4ktcJ2ZLIzhukTaclRh87im/ay8W66XFKYnniuwq1VJqiV
+	bnK4+NSjk2Rtuahkk3DEFHzP9jDq05psrvZinxr1u+vN93zvLpccxhQ2pYYPjW5QGyn5
+	aHbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=6jlWjogoIX0rYFx9k9fgto4Jb7E867ovD66tQsR8wDo=;
-	b=FNTfKL0ibKw7k93b2qCK1beeGlteVjmNEZjM4XhgwFvbNh13H3eKpOq1W2AGj3gg0H
-	0qlYQUigZcDa1p/6rYIDR4uw0sbAjgYvf0Pil6fGsWsrIZolwgkGJXUbdzNSdeiq76Fu
-	vAi+jTe9UcFuTcgBOlU4XLG2x7gXRVMTW6+aP74UPoUK76jePy71OlV3qiKtWwwrD3Vf
-	+/NS+m/FtIadVBe49jVVTKjTdtGYJhfgRehl6SnceCCMchiuzTOBjm1T7r8makq/Jcet
-	M0NLYqh1+ebfNuzFrEpZKY410vJekpjvsWj46qvSWMlXo93QZZrsRcIBzZo842k4ASrD
-	Q+Lw==
-X-Gm-Message-State: APjAAAWI+AdShs/CKAZouQQp0XIsGi1hBhfOMhb7NE48KG1QXqj5XjvH
-	JNz/GvK4fjineSunCM9PoJj4c5dUlo0=
-X-Google-Smtp-Source: APXvYqx6iIKVz2uxqfe6fpk/tzBFhxQVVybNE81pTqRtnDMfVrdIN0c6N5qIgCOrFl3gIjOmSFp2vQ==
-X-Received: by 2002:a17:902:8685:: with SMTP id
-	g5mr29316627plo.5.1577076648328; 
-	Sun, 22 Dec 2019 20:50:48 -0800 (PST)
+	bh=j4KGs5DCOEg8GzBlizCGe0Fuv2WG0/v6hJSevcpcgWQ=;
+	b=hbAO2zFrt+oETwRqwKewuX6gvAhmRiyCnMB+kop3C1KEWhLPbTidzyFEUxenKWx1Tp
+	zdWuYTHL1B/zeB8WWUvnH1R9oSMfdBAW8GVTKNmZnlbwgYc7Rx7PMDLDqcJ3YCmhZWCZ
+	8wT8RMGWskEqzQWUquuuv38DuftFVAOUJvqnS98qAwlBQjvdeO9eHNB0nwCNhjaMkHO3
+	loExV8nAnNGLJQ+JWLJj+oA2WkJJ8yAQAkfv1qE6Uydd53FOLOWK3P2rlJFHtC65D4sz
+	ZKKYB36i9pinDYrPRtbSqvtc78gdLmBOw0lUMliZqZd/uIEdlkM5+jURKEa/HB+fTV3K
+	tncg==
+X-Gm-Message-State: APjAAAWM5hEbv6ThFS4q54DhW5ZcjdYAz4tlT9cFVNbNy+9pHLvaJwpm
+	aNuKBKyaY+PwXHovdSXSMgOi+FGraiw=
+X-Google-Smtp-Source: APXvYqzFU7cNTCaAiUBEZQZ3uKmNQWG/4VamjwNXWLWK+5hBbAZMFI0oJXaCz1jx6fWkXHZAPOFCCw==
+X-Received: by 2002:a17:902:6a8a:: with SMTP id
+	n10mr29148270plk.9.1577076649261; 
+	Sun, 22 Dec 2019 20:50:49 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
 	([2601:202:4180:a5c0:30f1:af1:c5e0:a746])
 	by smtp.gmail.com with ESMTPSA id
-	q11sm22276726pff.111.2019.12.22.20.50.47
+	q11sm22276726pff.111.2019.12.22.20.50.48
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sun, 22 Dec 2019 20:50:47 -0800 (PST)
+	Sun, 22 Dec 2019 20:50:48 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 22 Dec 2019 20:50:26 -0800
-Message-Id: <222df6d6b832868c6e87334f8acdd74b730a91d6.1577076251.git.akuster808@gmail.com>
+Date: Sun, 22 Dec 2019 20:50:27 -0800
+Message-Id: <6f0b82627edc82601f80f0f096bf96db43afefa8.1577076251.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1577076251.git.akuster808@gmail.com>
 References: <cover.1577076251.git.akuster808@gmail.com>
-Subject: [1.44 02/18] runqueue/siggen: Allow handling of equivalent hashes
+Subject: [1.44 03/18] runqueue: Add extra debugging when locked sigs mismatches occur
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,116 +60,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Dec 2019 04:50:47 -0000
+X-List-Received-Date: Mon, 23 Dec 2019 04:50:48 -0000
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Based on the hashserv's new ability to accept hash mappings, update runqueue
-to use this through a helper function in siggen.
-
-This addresses problems with meta-extsdk-toolchain and its dependency on
-gdb-cross which caused errors when building eSDK. See the previous commit
-for more details.
-
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 39098b4ba2133f4d9229a0aa4fcf4c3e1291286a)
+(cherry picked from commit 3aad9978be2a40d4c535a5ae092f374ba2a5f627)
 ---
- lib/bb/runqueue.py | 31 +++++++++++++++++++------------
- lib/bb/siggen.py   | 26 ++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+), 12 deletions(-)
+ lib/bb/runqueue.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index bd7f03f..a869ba5 100644
+index a869ba5..246a9cd 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -2283,12 +2283,26 @@ class RunQueueExecute:
-                         for dep in self.rqdata.runtaskentries[tid].depends:
-                             procdep.append(dep)
-                         orighash = self.rqdata.runtaskentries[tid].hash
--                        self.rqdata.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(tid, procdep, self.rqdata.dataCaches[mc_from_tid(tid)])
-+                        newhash = bb.parse.siggen.get_taskhash(tid, procdep, self.rqdata.dataCaches[mc_from_tid(tid)])
-                         origuni = self.rqdata.runtaskentries[tid].unihash
--                        self.rqdata.runtaskentries[tid].unihash = bb.parse.siggen.get_unihash(tid)
--                        logger.debug(1, "Task %s hash changes: %s->%s %s->%s" % (tid, orighash, self.rqdata.runtaskentries[tid].hash, origuni, self.rqdata.runtaskentries[tid].unihash))
-+                        newuni = bb.parse.siggen.get_unihash(tid)
-+                        # FIXME, need to check it can come from sstate at all for determinism?
-+                        remapped = False
-+                        if newuni == origuni:
-+                            # Nothing to do, we match, skip code below
-+                            remapped = True
-+                        elif tid in self.scenequeue_covered or tid in self.sq_live:
-+                            # Already ran this setscene task or it running. Report the new taskhash
-+                            remapped = bb.parse.siggen.report_unihash_equiv(tid, newhash, origuni, newuni, self.rqdata.dataCaches)
-+                            logger.info("Already covered setscene for %s so ignoring rehash (remap)" % (tid))
-+
-+                        if not remapped:
-+                            logger.debug(1, "Task %s hash changes: %s->%s %s->%s" % (tid, orighash, newhash, origuni, newuni))
-+                            self.rqdata.runtaskentries[tid].hash = newhash
-+                            self.rqdata.runtaskentries[tid].unihash = newuni
-+                            changed.add(tid)
-+
-                         next |= self.rqdata.runtaskentries[tid].revdeps
--                        changed.add(tid)
-                         total.remove(tid)
-                         next.intersection_update(total)
- 
-@@ -2307,18 +2321,11 @@ class RunQueueExecute:
-                 self.pending_migrations.add(tid)
- 
-         for tid in self.pending_migrations.copy():
--            if tid in self.runq_running:
-+            if tid in self.runq_running or tid in self.sq_live:
-                 # Too late, task already running, not much we can do now
-                 self.pending_migrations.remove(tid)
-                 continue
- 
--            if tid in self.scenequeue_covered or tid in self.sq_live:
--                # Already ran this setscene task or it running
--                # Potentially risky, should we report this hash as a match?
--                logger.info("Already covered setscene for %s so ignoring rehash" % (tid))
--                self.pending_migrations.remove(tid)
--                continue
--
-             valid = True
-             # Check no tasks this covers are running
-             for dep in self.sqdata.sq_covered_tasks[tid]:
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index e19812b..edf1010 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -525,6 +525,32 @@ class SignatureGeneratorUniHashMixIn(object):
-                 except OSError:
-                     pass
- 
-+    def report_unihash_equiv(self, tid, taskhash, wanted_unihash, current_unihash, datacaches):
-+        try:
-+            extra_data = {}
-+            data = self.client().report_unihash_equiv(taskhash, self.method, wanted_unihash, extra_data)
-+            bb.note('Reported task %s as unihash %s to %s (%s)' % (tid, wanted_unihash, self.server, str(data)))
-+
-+            if data is None:
-+                bb.warn("Server unable to handle unihash report")
-+                return False
-+
-+            finalunihash = data['unihash']
-+
-+            if finalunihash == current_unihash:
-+                bb.note('Task %s unihash %s unchanged by server' % (tid, finalunihash))
-+            elif finalunihash == wanted_unihash:
-+                bb.note('Task %s unihash changed %s -> %s as wanted' % (tid, current_unihash, finalunihash))
-+                self.set_unihash(tid, finalunihash)
-+                return True
-+            else:
-+                # TODO: What to do here?
-+                bb.note('Task %s unihash reported as unwanted hash %s' % (tid, finalunihash))
-+
-+        except hashserv.client.HashConnectionError as e:
-+            bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
-+
-+        return False
- 
- #
- # Dummy class used for bitbake-selftest
+@@ -2524,6 +2524,8 @@ class RunQueueExecute:
+                 msg = 'Task %s.%s attempted to execute unexpectedly and should have been setscened' % (pn, taskname)
+             else:
+                 msg = 'Task %s.%s attempted to execute unexpectedly' % (pn, taskname)
++            for t in self.scenequeue_notcovered:
++                msg = msg + "\nTask %s, unihash %s, taskhash %s" % (t, self.rqdata.runtaskentries[t].unihash, self.rqdata.runtaskentries[t].hash)
+             logger.error(msg + '\nThis is usually due to missing setscene tasks. Those missing in this build were: %s' % pprint.pformat(self.scenequeue_notcovered))
+             return True
+         return False
 -- 
 2.7.4
 
