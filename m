@@ -1,53 +1,53 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com
-	[209.85.214.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 6A1497F873
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com
+	[209.85.214.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 071907F873
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 23 Dec 2019 04:50:51 +0000 (UTC)
-Received: by mail-pl1-f172.google.com with SMTP id bd4so6700212plb.8
+Received: by mail-pl1-f177.google.com with SMTP id c13so6714470pls.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 22 Dec 2019 20:50:52 -0800 (PST)
+	Sun, 22 Dec 2019 20:50:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=wHfUod3r5VQucU0Z+mK5DUTFmNVlGd+GOtkG8Fk3usg=;
-	b=JzF6TiLxQ7WZvFb1mcXjGuApyzduSHBxDnDxLo1AzjMa+uuhiqKgxb9uDquHgEtILh
-	Q6kCrf2g/6P+lxKxxemYYb61P8OiGiVRJ58HIPQQDV8bVtTNDEgQDuv1AGk4h5AGUw/w
-	gA7++UitezWjb3SUjjz2nSUx0XkoB2Zq039on5f0QxaMDZPXb0Cr6xAdqaXRHqatQ6Ed
-	BsD1Nus69SD8EePo6LCctR521sedUgV9TZmW+pg/B8IRKQHiW8Q8Sg4SDwChyYGjDI7X
-	/J2z+K8otFF5TxhDKcgkgUlB/cJ1lBunIlqkDxrTNCcPcb5T9YUKSEZy5CsJc7xzwSn5
-	Juhw==
+	bh=cvqFWcNQYjhZTEHrqrlJZpAl26iBLGPd9X2gvWDBXBE=;
+	b=gBckRoeHTMlnysBIKDtInESqzYxLx/1OVgRjl8h7nFIWBxyTVHbvK+hONk7TlmHlTu
+	D7RqwZmv/6JkqDrdBrGRot6ePspAzfj8HnHp1V4WWa0iQwU0Oe85Tk8ZJGHDbAZX5GVr
+	8hN+CB2BhrBH4TAUTuvp+NTXcM1W4Zjy+bKcKmd5+R4ps9xbsj+2l8uFeiCWHCICeLZ0
+	LNT18uPWRfvrTOulfdhhz7uEoiU0c+Al+/VFCkPV2U1mjWXgY/HSlZN6hOanVk6Amz/E
+	xO8Cp6mXj9JSq3MAdvBBgmIQZxPJfu/uZHNK6uAX+j5m83re5CGK07EbNZYRlQYkqe0S
+	+FKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=wHfUod3r5VQucU0Z+mK5DUTFmNVlGd+GOtkG8Fk3usg=;
-	b=Hx5vkcZJpbnHPXjrM/o/NALtg/b+flfcCYmR8NGW6rCF1myGFT6Buw46fcwNZiBm3W
-	8A0y5IhIDpf/x4gV2sAibeiuwuczaaL+XpW8VnC1Bqf2boPuJOKopHxsjRKS1tYaftai
-	bev+26M8x9mwxPinuwbAHR9p1zl8Sej5W8VX4iAUO01BmtWtN4McwROZS3SvjT9njvq6
-	xlt6rK272mjIBupu2DVe54EqeaPaME5Wm/8QQsUl52CRWxqsQ6VEOdlWoCQ5R0tPBk3K
-	KGhsViUjCW8Vo8AoPLVglnUrzdZ5lIwFWV/Rnb8MFNM1IgG4O/aHf//SElEDy775cKHD
-	yo2Q==
-X-Gm-Message-State: APjAAAWmkOK3iiRxtMS+dkvVMiwn7I4NTBlGWWBdiMglSXZrvjX7rVXz
-	+c2J8qb8t/I0+XUd6TVlJfKRC/xd7bs=
-X-Google-Smtp-Source: APXvYqyZ/hxpUz3Ajr5UszjQ442Mmbm9zfwTolTrHjq1PQSv14p+qXrVfac1NEiebyYnkWeTd0BTHw==
-X-Received: by 2002:a17:90b:3d0:: with SMTP id
-	go16mr32365268pjb.75.1577076651659; 
-	Sun, 22 Dec 2019 20:50:51 -0800 (PST)
+	bh=cvqFWcNQYjhZTEHrqrlJZpAl26iBLGPd9X2gvWDBXBE=;
+	b=O4kjLYEo15ipXmULinHbg+rRFJ5vRsOXphclCW/HolFCvc8id1uIp3sUTQEnL/eSkC
+	zdfRryWGebYLSC/uOxIYyydaWeR9vOyoBiA8u2ReeOVT2MRokG1PRrZvAj0I/aMJHUzc
+	XoTF5OuLrfFtCUT/zm45g8JQFnjrCJwoTewdvx/Oms3zUTX5EfVSEc68tX5PUh1tRdak
+	kZLBR/ybIkXTNtBOFe+Y/Uf1tjdBDSY8C2DD/4yTdUIrmr5oSazq+FCGhEHiW/0KCH6H
+	bKQu1pyWVAzLnsQvwJr4Ob31KsXbeeG23ZxQOkmDBLMfetLIY2E1QQ682ddJ1TqGUX57
+	kIXQ==
+X-Gm-Message-State: APjAAAWhQ66MJ+53VTgM1uPBM/XSfIzYTs5I0q6Hqwx4MNRJk/P6garc
+	HPBIHTzUyiZg+VdTU0AdZbSYNj/vq2Y=
+X-Google-Smtp-Source: APXvYqw1PctfUwkSraULSFrkpzTCg1cF0+ybyJE/2MEQkcrZ6riek35kWYOWKBsC7UlSib+w/Orccg==
+X-Received: by 2002:a17:90a:d995:: with SMTP id
+	d21mr32360640pjv.118.1577076653063; 
+	Sun, 22 Dec 2019 20:50:53 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
 	([2601:202:4180:a5c0:30f1:af1:c5e0:a746])
 	by smtp.gmail.com with ESMTPSA id
-	q11sm22276726pff.111.2019.12.22.20.50.51
+	q11sm22276726pff.111.2019.12.22.20.50.52
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sun, 22 Dec 2019 20:50:51 -0800 (PST)
+	Sun, 22 Dec 2019 20:50:52 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 22 Dec 2019 20:50:30 -0800
-Message-Id: <0aee83e4e31dff7f4354e4eb4cbd35dd592e9f06.1577076251.git.akuster808@gmail.com>
+Date: Sun, 22 Dec 2019 20:50:32 -0800
+Message-Id: <5afad266f2ce55db2038c36f2e49a3c80be9bbfc.1577076251.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1577076251.git.akuster808@gmail.com>
 References: <cover.1577076251.git.akuster808@gmail.com>
-Subject: [1.44 06/18] siggen: Ensure new unihash propagates through the system
+Subject: [1.44 08/18] siggen: Fix performance issue in get_unihash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,32 +60,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Dec 2019 04:50:51 -0000
+X-List-Received-Date: Mon, 23 Dec 2019 04:50:52 -0000
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Its possible the new unihash may not exist in sstate. Currently the code
-would create an sstate object with the old hash however this updates it to
-create the object with the new unihash.
+There is a significant performance issue in get_unihash(). The issue turns out
+to be the lookups of setscene tasks. We can fix this by using a set() instead of
+the current list.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit abcaa1398031fa5338a43859c661e6d4a9ce863d)
+(cherry picked from commit 1e561672d039ebfb8cd0e0654a44dcf48513317c)
 ---
- lib/bb/siggen.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/siggen.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index de85326..dbf5102 100644
+index dbf5102..2fec859 100644
 --- a/lib/bb/siggen.py
 +++ b/lib/bb/siggen.py
-@@ -513,6 +513,7 @@ class SignatureGeneratorUniHashMixIn(object):
-                     bb.debug(1, 'Task %s unihash changed %s -> %s by server %s' % (taskhash, unihash, new_unihash, self.server))
-                     bb.event.fire(bb.runqueue.taskUniHashUpdate(fn + ':do_' + task, new_unihash), d)
-                     self.set_unihash(tid, new_unihash)
-+                    d.setVar('BB_UNIHASH', new_unihash)
-                 else:
-                     bb.debug(1, 'Reported task %s as unihash %s to %s' % (taskhash, unihash, self.server))
-             except hashserv.client.HashConnectionError as e:
+@@ -44,7 +44,7 @@ class SignatureGenerator(object):
+         self.file_checksum_values = {}
+         self.taints = {}
+         self.unitaskhashes = {}
+-        self.setscenetasks = {}
++        self.setscenetasks = set()
+ 
+     def finalise(self, fn, d, varient):
+         return
+@@ -110,7 +110,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         self.taints = {}
+         self.gendeps = {}
+         self.lookupcache = {}
+-        self.setscenetasks = {}
++        self.setscenetasks = set()
+         self.basewhitelist = set((data.getVar("BB_HASHBASE_WHITELIST") or "").split())
+         self.taskwhitelist = None
+         self.init_rundepcheck(data)
+@@ -157,7 +157,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         return taskdeps
+ 
+     def set_setscene_tasks(self, setscene_tasks):
+-        self.setscenetasks = setscene_tasks
++        self.setscenetasks = set(setscene_tasks)
+ 
+     def finalise(self, fn, d, variant):
+ 
 -- 
 2.7.4
 
