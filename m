@@ -1,25 +1,50 @@
-Return-Path: <mark.hatle@kernel.crashing.org>
-Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 207207F822
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com
+	[209.85.214.174])
+	by mail.openembedded.org (Postfix) with ESMTP id CCB217F847
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 22 Dec 2019 18:53:15 +0000 (UTC)
-Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
-	(authenticated bits=0)
-	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id xBMIr56t007145
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NO); Sun, 22 Dec 2019 12:53:14 -0600
-To: Konrad Weihmann <kweihmann@outlook.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-References: <AM4PR05MB3380452CB92A3A59408226A0A82F0@AM4PR05MB3380.eurprd05.prod.outlook.com>
-From: Mark Hatle <mark.hatle@kernel.crashing.org>
-Message-ID: <708bc336-ff40-143c-5218-9acfd2dccab0@kernel.crashing.org>
-Date: Sun, 22 Dec 2019 12:53:05 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
-	Gecko/20100101 Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <AM4PR05MB3380452CB92A3A59408226A0A82F0@AM4PR05MB3380.eurprd05.prod.outlook.com>
-Subject: Re: Bitbake exception when recipe path contains a blank
+	Mon, 23 Dec 2019 04:50:45 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id g6so3756144plp.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 22 Dec 2019 20:50:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id;
+	bh=+Twtl7frfVSPDYPrlRwqIDtLpNMCpOrhfzuFllQIvdw=;
+	b=d7zdYykkX+30vtR8LW2+726Ebi+SU12lQHDJcGKXI47hxvAUML5wQH2x35+rrRPgFf
+	2yEp1xw9c90gRXVkYrp6UfYcyRqFUagt+llgBxjMxat18iyICz7o2OQZ4v5qkzfcN0Ys
+	CUyo219Bj1dauzHBx902/hIjd45OWQv5wveXkyTMoWPiDEb2kvR52mMuYWLxqEiFipEB
+	/AkPeN1GqqhnM/4BTNkDFnoFKky/QVcFqgUYbFpwSfY9TZVshB/J5Zpebzk5XjmE1dL/
+	G7qdVE8OIF+0m+3s2wED+/lq5zN0AQI116e7K3yyBhi+cpKRWuNpP3H34rvArFTwl6lW
+	+F/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=+Twtl7frfVSPDYPrlRwqIDtLpNMCpOrhfzuFllQIvdw=;
+	b=HG0G8yNz7weFolm9ggJ5VDqyiLrI4FUWLzK46wPvMLqNinURpMLzfsSu9xAJU9lpnd
+	ySb/2sLQSV/bmSWhPtE4nKkZSbG54NeFgvMUhN0rUm+dBcbL4pop/zFiicsMxkALslbQ
+	qWRQzKAAIN2n1lUHTu/Plucc8h0/l8iByFS7LdPZsOHQqhshOhSgFLCdQWy4cgAFiRaH
+	pwWtRGLmzmRwBiZCswtqduBilYsLhNcDVfq+itwnpwQ+umpOmTQerSY57iyKpUgRaa/u
+	MjCdtodygJIq5PIl+rXzXGSjxGIogqegG1k+XPbpp4sUA4CZuUXm/N8ZERA1RWGkp67V
+	pLaw==
+X-Gm-Message-State: APjAAAWlyPiDClaqKQ5l5OZL70lrRZXeI2fjG14ss8k0M1KQm75QYfA0
+	DzqUxH8Li3L4DBMw/2vDFfdzewB/8IY=
+X-Google-Smtp-Source: APXvYqyR9txWFHz5U+rxxTimGIWpaqR2jPpvodTqd3ZgL34MQ0AYQW9xUxi9CCYvS3mjRj5cRZGyCg==
+X-Received: by 2002:a17:902:8481:: with SMTP id
+	c1mr1344262plo.319.1577076646570; 
+	Sun, 22 Dec 2019 20:50:46 -0800 (PST)
+Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
+	([2601:202:4180:a5c0:30f1:af1:c5e0:a746])
+	by smtp.gmail.com with ESMTPSA id
+	q11sm22276726pff.111.2019.12.22.20.50.45
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Sun, 22 Dec 2019 20:50:46 -0800 (PST)
+From: Armin Kuster <akuster808@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun, 22 Dec 2019 20:50:24 -0800
+Message-Id: <cover.1577076251.git.akuster808@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Subject: [1.44 00/18] Patch review
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,68 +57,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 22 Dec 2019 18:53:16 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 23 Dec 2019 04:50:46 -0000
 
-It's a known issue, spaces are not allowed in path names.
+This series has been run on the AB.
 
-There should already be checks without OE for this, but I'm guessing that this
-is firing before those checks (or those checks are incomplete.)
+I relize the hash work is progress for fixes to 1.44.
 
-I believe this is in sanity.bbclass, "chcek_sanity_everybuild" function, about
-line 837 in the current master.
+This is what I have so far.
+The following changes since commit cfa307aabf710d79c404a8571b4158b864a94727:
 
-The check appears to only be scanning 'oeroot'.  Perhaps a new check for the
-layers either inside of the sanity (if it's run early enough) or in bitbake
-itself is needed.
+  runqueue.py: not show warning for deferred multiconfig task (2019-11-29 11:26:07 +0000)
 
-Note, the big below should likely get fixed.  Any time the system throws an
-exception like this, I'd consider it a bug.
+are available in the git repository at:
 
---Mark
+  git://git.openembedded.org/bitbake-contrib stable/1.44-nut
+  http://cgit.openembedded.org//log/?h=stable/1.44-nut
 
-On 12/22/19 8:29 AM, Konrad Weihmann wrote:
-> Hi All,
-> 
-> I experienced a strange issue recently - currently I'm using bitbake 
-> 1.44.0 as it comes with Yocto:zeus-release, but it really doesn't 
-> matter, as the underlying code didn't change within the last few years.
-> 
-> I created a recipe (nothing special, just some files and some compiler 
-> instructions).
-> Important is that SRC_URI contains at least one file://-entry.
-> 
-> When I tried to run the recipe build crashed with the following exception
-> 
->    File "/build/poky/bitbake/lib/bb/checksum.py", line 103, in 
-> FileChecksumCache.get_checksums(filelist='/build/meta-something/test-recipe 
-> /test-recipe/mydistro/a.file:False ', pn='test-recipe'):
-> 
->               for pth in filelist.split():
->      >            exist = pth.split(":")[1]
->                   if exist == "False":
-> IndexError: list index out of range
-> 
-> A look at the filelist argument shows a strange first item (missing ':').
-> 
-> After some debugging it went done to that the path to the recipe was
-> 
-> "/build/meta-something /test-recipe" instead of 
-> "/build/meta-something/test-recipe".
-> 
-> After removing the blank in the path, everything went well.
-> 
-> Maybe that's one for the initial parsing to issue a warning, that the 
-> path to a recipe is corrupted.
-> 
-> Does anyone encountered that before? Any thoughts on how and where to 
-> fix this?
-> 
-> Regards
-> 
-> Konrad
-> 
-> 
+Chris Laplante via bitbake-devel (1):
+  bb.utils.fileslocked: don't leak files if yield throws
+
+Joshua Watt (1):
+  runqueue: Batch scenequeue updates
+
+Richard Purdie (16):
+  hashserv: Add support for equivalent hash reporting
+  runqueue/siggen: Allow handling of equivalent hashes
+  runqueue: Add extra debugging when locked sigs mismatches occur
+  knotty/uihelper: Switch from pids to tids for Task event management
+  siggen: Avoid taskhash mismatch errors for nostamp tasks when
+    dependencies rehash
+  siggen: Ensure new unihash propagates through the system
+  siggen: Fix performance issue in get_unihash
+  runqueue: Rework process_possible_migrations() to improve performance
+  runqueue: Fix task mismatch failures from incorrect logic
+  siggen: Split get_tashhash for performance
+  runqueue: Fix sstate task iteration performance
+  runqueue: Optimise task migration code slightly
+  runqueue: Optimise out pointless loop iteration
+  runqueue: Optimise task filtering
+  runqueue: Only call into the migrations function if migrations active
+  lib/bb: Optimise out debug messages from cooker
+
+ lib/bb/__init__.py     |   5 ++
+ lib/bb/build.py        |  25 +++++-----
+ lib/bb/runqueue.py     | 127 ++++++++++++++++++++++++++++---------------------
+ lib/bb/siggen.py       |  74 ++++++++++++++++++++++------
+ lib/bb/ui/knotty.py    |  12 ++---
+ lib/bb/ui/uihelper.py  |  39 +++++++++------
+ lib/bb/utils.py        |   9 ++--
+ lib/hashserv/client.py |   8 ++++
+ lib/hashserv/server.py |  36 ++++++++++++++
+ 9 files changed, 231 insertions(+), 104 deletions(-)
+
+-- 
+2.7.4
+
 
