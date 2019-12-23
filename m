@@ -1,52 +1,52 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com
-	[209.85.215.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 4AAC07F849
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com
+	[209.85.210.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 06AB57F88A
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 23 Dec 2019 04:50:49 +0000 (UTC)
-Received: by mail-pg1-f182.google.com with SMTP id x7so8180776pgl.11
+Received: by mail-pf1-f179.google.com with SMTP id i23so3148474pfo.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 22 Dec 2019 20:50:50 -0800 (PST)
+	Sun, 22 Dec 2019 20:50:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=BkLs2H2CSf4CS2ErMW2nOhuaZWG0RMDiU/WvOm2D2xk=;
-	b=JSN42d8lc8Yo6oA7/rV7hdidTfULI3CQCYuuw/tq4BJIoopeyku31zS8S71Uu0qwUu
-	ph+SQr1EYLn6QMSSa1VPsz0fc2tEJDLtiA1SqMxw/D3BELGRek4ZcKq2vNdvYHeE6C6y
-	9UbcyeyJf4FFR4zJ9UjQImqs9w/wF4L0hHXiy9imF5hE/52MRC2eHKc8HAP/YIogNm4O
-	jrC6GYPQOmN60p6g7yjr5Mf/5mphudbdvJGy69iXvlxmAfYtk5f70WcwQpu3Jnj4qdUf
-	EwI94w9RJkXt6IkeZvlnTcbY5eih/zUCMn9MIKwF5H/+oFbaK5e//LceCphDxG6/KX1T
-	iIfw==
+	bh=bi7RuMP+Bnsa8jazFTu3FId2GX6ThWlRUnZE3+EHWgY=;
+	b=DNdgSFBA28etg0xsj0DCPWEIkzren/fTgJV8hRr1GZH87brbKmvLnDS1ziRjGHBK4t
+	mWksAlfKm6eg3aAOzz4afpLibJYAj6yATzIRHapmFpd1q3v36m49EZ4B+8Oki71PX82K
+	cOgca4/MN6tZXIUFLsuuc3AzfFgYOtMyRPjVI0HPtjG1cdQyEE9auyWd5HBVbZHPpFe5
+	UPxMaUYMksX5w/zI5AaFjhwv4oBRkXBJGQaXhgJwtYOF+YH1ChzhvI50EqMs0xFMScTu
+	Ci9q5reno5nQg9/d9dybM00ALpl9xX8mwFn9oSx+55wqzZX4P1XOzRmeRIcaXx4sg/VS
+	RmmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=BkLs2H2CSf4CS2ErMW2nOhuaZWG0RMDiU/WvOm2D2xk=;
-	b=fHB4pd+MbbVdlEaXNf+chqQ7VvObgSw3lXuCTjKAmD8kkwB6jDXc/ATO0XZ8BPK3l+
-	PFniJpVX7GDnDU8khD4PH63CW6EDJV9DOQ19rKhAq8MXbQOF9Zjoh/x0sWDhY7QfunhH
-	gNWWzzGjLG7Jv5SkI9bnhxh9oqPDWoXjFdcA0guzRoOY3HFZpq0KGbw2pcr6HEp1vuTA
-	84Gpn2F9PyJkF/10/QLBiXPTbldshgQg2dEIMUcZT0XeZ/wpoWum0mMrgRjE09Dh23XX
-	BhTvQk+N4JKrsnmhG1tW39lvNvSIbtsxx0DKnTbfqTyENbczcdwQcO7j7O5xANOgqq4d
-	WsGw==
-X-Gm-Message-State: APjAAAW/mgFn8nMnPMs0VrE/w2kOypsQvaZY9TMCoDR9LbjKyhWIuVjY
-	+0OmOvtAEQuzGDi68L/G5dG0UNmc36Q=
-X-Google-Smtp-Source: APXvYqziaumVUSbmrtAISq8nx3vMSCYdz4yKymhCGfYPwvTzPV4B94mRQrJ9TK31k70fka/hCnFjeA==
-X-Received: by 2002:a63:184d:: with SMTP id 13mr29122294pgy.132.1577076650115; 
+	bh=bi7RuMP+Bnsa8jazFTu3FId2GX6ThWlRUnZE3+EHWgY=;
+	b=mwOUSv+eSFx7wfS3lzilkEZV10wPwx0KfXEtHeU3r4E25EIZ7auzwPqFy6j6wPYmO7
+	HCULYdAopi3W03YFBJyU2DSWUh+ZITGr0bUuPlaEMV5MABcLfuVHfV3AgUs3uunlo5S/
+	PDn2XdEO/eHi1hsah91+7EpOQoHe1dP0jke/bPuuXVDraHlQdw+mt9NAQe6NiqCkFUCW
+	l/E+Pyhp2bJtv5aMCJR2Vq2Jcus7xz0FIvdTCfxmrLrgSZj3sbUZA/HzUbLiLBUAwLPl
+	BGK6Cdw32vGOzUTlVtjbm7LGQe7QzjN3EQwSJr1/ULS+SfIQS8pf7c6f8DaXlFOiiXbv
+	N8HA==
+X-Gm-Message-State: APjAAAUqza1MG/s6vbeFr3E5LBYc80YTac9BcHXCXcwLI0bVinUxAQdU
+	/w2uPgXyYlou19odjRl58yAcJgPAD5E=
+X-Google-Smtp-Source: APXvYqyBhWSFy85ZPD3zU8H/mCXkejis+MPm//Q4kFlsh6VQKYBNAsg6GtlfUzzfRwHwgWZRnTM/cQ==
+X-Received: by 2002:a63:b64a:: with SMTP id v10mr30013464pgt.145.1577076650958;
 	Sun, 22 Dec 2019 20:50:50 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
 	([2601:202:4180:a5c0:30f1:af1:c5e0:a746])
 	by smtp.gmail.com with ESMTPSA id
-	q11sm22276726pff.111.2019.12.22.20.50.49
+	q11sm22276726pff.111.2019.12.22.20.50.50
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sun, 22 Dec 2019 20:50:49 -0800 (PST)
+	Sun, 22 Dec 2019 20:50:50 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 22 Dec 2019 20:50:28 -0800
-Message-Id: <a109d034cf4fc059fd5a1e1d03246dac65522dd6.1577076251.git.akuster808@gmail.com>
+Date: Sun, 22 Dec 2019 20:50:29 -0800
+Message-Id: <c42d00ff293d0538cad1b84c108bf7f5f49d4d84.1577076251.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1577076251.git.akuster808@gmail.com>
 References: <cover.1577076251.git.akuster808@gmail.com>
-Subject: [1.44 04/18] knotty/uihelper: Switch from pids to tids for Task event management
+Subject: [1.44 05/18] siggen: Avoid taskhash mismatch errors for nostamp tasks when dependencies rehash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,232 +59,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Dec 2019 04:50:49 -0000
+X-List-Received-Date: Mon, 23 Dec 2019 04:50:50 -0000
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-We've seen cases where a task can execute with a given pid, complete
-and a new task can start using the same pid before the UI handler has
-had time to adapt.
+An example:
 
-Traceback (most recent call last):
-  File "/home/pokybuild/yocto-worker/qemux86-alt/build/bitbake/lib/bb/ui/knotty.py", line 484, in main
-    helper.eventHandler(event)
-  File "/home/pokybuild/yocto-worker/qemux86-alt/build/bitbake/lib/bb/ui/uihelper.py", line 30, in eventHandler
-    del self.running_tasks[event.pid]
-KeyError: 13490
+NOTE: recipe binutils-cross-testsuite-2.32.0-r0: task do_check: Started
+ERROR: Taskhash mismatch b074da4334aff8aa06572e7a8725c941fa6b08de4ce714a65a90c0c0b680abea versus 17375278daed609a7129769b74a1336a37bdef14b534ae85189ccc033a9f2db4 for /home/pokybuild/yocto-worker/qemux86-64/build/meta/recipes-devtools/binutils/binutils-cross-testsuite_2.32.bb:do_check
+NOTE: recipe binutils-cross-testsuite-2.32.0-r0: task do_check: Succeeded
 
-This means using pids to match up events on the UI side is a bad
-idea. Change the code to use task ids instead. There is a small
-amount of fuzzy matching for the progress information since there
-is no task information there and we don't want the overhead of a task
-ID in every event, however since pid reuse is unlikely, we can live
-with a progress bar not quite working properly in a corner case like
-this.
+Is caused by a rehash in a dependency happening somewhere earlier in the build
+and the taint being reset.
 
-[YOCTO #13667]
+Change the code so that nostamp taints are preserved to avoid the issue.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit e427eafa1bb04008d12100ccc5c862122bba53e0)
+(cherry picked from commit 61624a3fc38e8546e01356d5ce7a09f21e7094ab)
 ---
- lib/bb/build.py       | 25 +++++++++++++------------
- lib/bb/ui/knotty.py   | 12 ++++++------
- lib/bb/ui/uihelper.py | 39 ++++++++++++++++++++++++---------------
- 3 files changed, 43 insertions(+), 33 deletions(-)
+ lib/bb/siggen.py | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 30a2ba2..3d9cc10 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -57,8 +57,9 @@ builtins['os'] = os
- class TaskBase(event.Event):
-     """Base class for task events"""
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index edf1010..de85326 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -232,10 +232,14 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         taskdep = dataCache.task_deps[fn]
+         if 'nostamp' in taskdep and task in taskdep['nostamp']:
+             # Nostamp tasks need an implicit taint so that they force any dependent tasks to run
+-            import uuid
+-            taint = str(uuid.uuid4())
+-            data = data + taint
+-            self.taints[tid] = "nostamp:" + taint
++            if tid in self.taints and self.taints[tid].startswith("nostamp:"):
++                # Don't reset taint value upon every call
++                data = data + self.taints[tid][8:]
++            else:
++                import uuid
++                taint = str(uuid.uuid4())
++                data = data + taint
++                self.taints[tid] = "nostamp:" + taint
  
--    def __init__(self, t, logfile, d):
-+    def __init__(self, t, fn, logfile, d):
-         self._task = t
-+        self._fn = fn
-         self._package = d.getVar("PF")
-         self._mc = d.getVar("BB_CURRENT_MC")
-         self.taskfile = d.getVar("FILE")
-@@ -81,8 +82,8 @@ class TaskBase(event.Event):
- 
- class TaskStarted(TaskBase):
-     """Task execution started"""
--    def __init__(self, t, logfile, taskflags, d):
--        super(TaskStarted, self).__init__(t, logfile, d)
-+    def __init__(self, t, fn, logfile, taskflags, d):
-+        super(TaskStarted, self).__init__(t, fn, logfile, d)
-         self.taskflags = taskflags
- 
- class TaskSucceeded(TaskBase):
-@@ -91,9 +92,9 @@ class TaskSucceeded(TaskBase):
- class TaskFailed(TaskBase):
-     """Task execution failed"""
- 
--    def __init__(self, task, logfile, metadata, errprinted = False):
-+    def __init__(self, task, fn, logfile, metadata, errprinted = False):
-         self.errprinted = errprinted
--        super(TaskFailed, self).__init__(task, logfile, metadata)
-+        super(TaskFailed, self).__init__(task, fn, logfile, metadata)
- 
- class TaskFailedSilent(TaskBase):
-     """Task execution failed (silently)"""
-@@ -103,8 +104,8 @@ class TaskFailedSilent(TaskBase):
- 
- class TaskInvalid(TaskBase):
- 
--    def __init__(self, task, metadata):
--        super(TaskInvalid, self).__init__(task, None, metadata)
-+    def __init__(self, task, fn, metadata):
-+        super(TaskInvalid, self).__init__(task, fn, None, metadata)
-         self._message = "No such task '%s'" % task
- 
- class TaskProgress(event.Event):
-@@ -572,7 +573,7 @@ def _exec_task(fn, task, d, quieterr):
- 
-     try:
-         try:
--            event.fire(TaskStarted(task, logfn, flags, localdata), localdata)
-+            event.fire(TaskStarted(task, fn, logfn, flags, localdata), localdata)
-         except (bb.BBHandledException, SystemExit):
-             return 1
- 
-@@ -583,15 +584,15 @@ def _exec_task(fn, task, d, quieterr):
-             for func in (postfuncs or '').split():
-                 exec_func(func, localdata)
-         except bb.BBHandledException:
--            event.fire(TaskFailed(task, logfn, localdata, True), localdata)
-+            event.fire(TaskFailed(task, fn, logfn, localdata, True), localdata)
-             return 1
-         except Exception as exc:
-             if quieterr:
--                event.fire(TaskFailedSilent(task, logfn, localdata), localdata)
-+                event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
-             else:
-                 errprinted = errchk.triggered
-                 logger.error(str(exc))
--                event.fire(TaskFailed(task, logfn, localdata, errprinted), localdata)
-+                event.fire(TaskFailed(task, fn, logfn, localdata, errprinted), localdata)
-             return 1
-     finally:
-         sys.stdout.flush()
-@@ -614,7 +615,7 @@ def _exec_task(fn, task, d, quieterr):
-             logger.debug(2, "Zero size logfn %s, removing", logfn)
-             bb.utils.remove(logfn)
-             bb.utils.remove(loglink)
--    event.fire(TaskSucceeded(task, logfn, localdata), localdata)
-+    event.fire(TaskSucceeded(task, fn, logfn, localdata), localdata)
- 
-     if not localdata.getVarFlag(task, 'nostamp', False) and not localdata.getVarFlag(task, 'selfstamp', False):
-         make_stamp(task, localdata)
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 35736ad..bd9911c 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -255,19 +255,19 @@ class TerminalFilter(object):
-                 start_time = activetasks[t].get("starttime", None)
-                 if not pbar or pbar.bouncing != (progress < 0):
-                     if progress < 0:
--                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], t), 100, widgets=[progressbar.BouncingSlider(), ''], extrapos=2, resize_handler=self.sigwinch_handle)
-+                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[progressbar.BouncingSlider(), ''], extrapos=2, resize_handler=self.sigwinch_handle)
-                         pbar.bouncing = True
-                     else:
--                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], t), 100, widgets=[progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=4, resize_handler=self.sigwinch_handle)
-+                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=4, resize_handler=self.sigwinch_handle)
-                         pbar.bouncing = False
-                     activetasks[t]["progressbar"] = pbar
-                 tasks.append((pbar, progress, rate, start_time))
-             else:
-                 start_time = activetasks[t].get("starttime", None)
-                 if start_time:
--                    tasks.append("%s - %s (pid %s)" % (activetasks[t]["title"], self.elapsed(currenttime - start_time), t))
-+                    tasks.append("%s - %s (pid %s)" % (activetasks[t]["title"], self.elapsed(currenttime - start_time), activetasks[t]["pid"]))
-                 else:
--                    tasks.append("%s (pid %s)" % (activetasks[t]["title"], t))
-+                    tasks.append("%s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"]))
- 
-         if self.main.shutdown:
-             content = "Waiting for %s running tasks to finish:" % len(activetasks)
-@@ -517,8 +517,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                         continue
- 
-                     # Prefix task messages with recipe/task
--                    if event.taskpid in helper.running_tasks and event.levelno != format.PLAIN:
--                        taskinfo = helper.running_tasks[event.taskpid]
-+                    if event.taskpid in helper.pidmap and event.levelno != format.PLAIN:
-+                        taskinfo = helper.running_tasks[helper.pidmap[event.taskpid]]
-                         event.msg = taskinfo['title'] + ': ' + event.msg
-                 if hasattr(event, 'fn'):
-                     event.msg = event.fn + ': ' + event.msg
-diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
-index c8dd7df..48d808a 100644
---- a/lib/bb/ui/uihelper.py
-+++ b/lib/bb/ui/uihelper.py
-@@ -15,39 +15,48 @@ class BBUIHelper:
-         # Running PIDs preserves the order tasks were executed in
-         self.running_pids = []
-         self.failed_tasks = []
-+        self.pidmap = {}
-         self.tasknumber_current = 0
-         self.tasknumber_total = 0
- 
-     def eventHandler(self, event):
-+        # PIDs are a bad idea as they can be reused before we process all UI events.
-+        # We maintain a 'fuzzy' match for TaskProgress since there is no other way to match
-+        def removetid(pid, tid):
-+            self.running_pids.remove(tid)
-+            del self.running_tasks[tid]
-+            if self.pidmap[pid] == tid:
-+                del self.pidmap[pid]
-+            self.needUpdate = True
-+
-         if isinstance(event, bb.build.TaskStarted):
-+            tid = event._fn + ":" + event._task
-             if event._mc != "default":
--                self.running_tasks[event.pid] = { 'title' : "mc:%s:%s %s" % (event._mc, event._package, event._task), 'starttime' : time.time() }
-+                self.running_tasks[tid] = { 'title' : "mc:%s:%s %s" % (event._mc, event._package, event._task), 'starttime' : time.time(), 'pid' : event.pid }
-             else:
--                self.running_tasks[event.pid] = { 'title' : "%s %s" % (event._package, event._task), 'starttime' : time.time() }
--            self.running_pids.append(event.pid)
-+                self.running_tasks[tid] = { 'title' : "%s %s" % (event._package, event._task), 'starttime' : time.time(), 'pid' : event.pid }
-+            self.running_pids.append(tid)
-+            self.pidmap[event.pid] = tid
-             self.needUpdate = True
-         elif isinstance(event, bb.build.TaskSucceeded):
--            del self.running_tasks[event.pid]
--            self.running_pids.remove(event.pid)
--            self.needUpdate = True
-+            tid = event._fn + ":" + event._task
-+            removetid(event.pid, tid)
-         elif isinstance(event, bb.build.TaskFailedSilent):
--            del self.running_tasks[event.pid]
--            self.running_pids.remove(event.pid)
-+            tid = event._fn + ":" + event._task
-+            removetid(event.pid, tid)
-             # Don't add to the failed tasks list since this is e.g. a setscene task failure
--            self.needUpdate = True
-         elif isinstance(event, bb.build.TaskFailed):
--            del self.running_tasks[event.pid]
--            self.running_pids.remove(event.pid)
-+            tid = event._fn + ":" + event._task
-+            removetid(event.pid, tid)
-             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
--            self.needUpdate = True
-         elif isinstance(event, bb.runqueue.runQueueTaskStarted):
-             self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
-             self.tasknumber_total = event.stats.total
-             self.needUpdate = True
-         elif isinstance(event, bb.build.TaskProgress):
--            if event.pid > 0:
--                self.running_tasks[event.pid]['progress'] = event.progress
--                self.running_tasks[event.pid]['rate'] = event.rate
-+            if event.pid > 0 and event.pid in self.pidmap:
-+                self.running_tasks[self.pidmap[event.pid]]['progress'] = event.progress
-+                self.running_tasks[self.pidmap[event.pid]]['rate'] = event.rate
-                 self.needUpdate = True
-         else:
-             return False
+         taint = self.read_taint(fn, task, dataCache.stamp[fn])
+         if taint:
 -- 
 2.7.4
 
