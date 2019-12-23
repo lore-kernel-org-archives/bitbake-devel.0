@@ -1,53 +1,33 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com
-	[209.85.216.67])
-	by mail.openembedded.org (Postfix) with ESMTP id D25AD7F85F
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+	by mail.openembedded.org (Postfix) with ESMTP id 2A2C87F586
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Dec 2019 04:50:59 +0000 (UTC)
-Received: by mail-pj1-f67.google.com with SMTP id t101so6933157pjb.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 22 Dec 2019 20:51:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=xIJPttv3fL4RmSejdO/4k+0rctvuV5k2jY4SsyrToBU=;
-	b=bP5pAV3sZY/gFoG6yv+yzbAgR4d7G97eKsiEJQRW9/J6a8XN5XE3tgMVIvY7/Iur1R
-	p6LB6p14TdbPaayJl5Iszm+fqQjOqDH3hIXQr7YhgSaP2vpzKwdMJYZqQrX95DRm/J3M
-	uK0VlF2R5Xz+odh1LtBL9GZSPWWKc5CCj0VnADsw0lNDUwfT2zbdgZXZcW6RNe1OUHWr
-	SXLqmMqCrp9vPMAW9brtpsGwY6KoRlffCHguuiK+a/l8wErg53mrKBq288Mx921euQSw
-	6c20Biml9tzoyZELIpexKTiE+zcAgq0xy1VnGBi4ghhxGcyivaOePptOcxFBp0ZLJfDm
-	nvlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=xIJPttv3fL4RmSejdO/4k+0rctvuV5k2jY4SsyrToBU=;
-	b=amghNU4uVjfp1r2EyXuoqxXzF3XJOFhK10neGYqQeAPdARKWwG6g2AVZw3IvQOoJuZ
-	Fe4LBdYihs6NxI6uzU9wZdGQ5NoHwXM60UFgPUuzKLahaCzWYE53YswPsN0kGuqoTVI9
-	c0q8VnOXKrv/Gq70IVIkWGWAAqFLDFRz98sqFeQ4L7Kz0fzk6lp2vqexRv9iE5aOZRYE
-	A2r/TAsb5DjwrJhQrPRMLhOo5Lik3bJHFa4xzO38n2UMpnLEGnrGLr7ND3ry76qp/qNP
-	BfMPZgfVEK3QQYKJAV+KGQPOTYLTa4ghoLEiHXReupoT7AXcZsGbaDVWZID6s7wEVgii
-	1+jg==
-X-Gm-Message-State: APjAAAUOA6Y0Z98plEYjaPAhJn7k/QjM462wm4p0eYk94cKYnaMT1MxV
-	V/u3GN8XI6itX/IYOBi7T2YBCCUVe7M=
-X-Google-Smtp-Source: APXvYqxsUk3NkUPxIAzucC4qmzShYNwL/h1KF6N8k7FtDKSj/FBsW4DtO7IIopUAlj+AFu2a+k3gjA==
-X-Received: by 2002:a17:90a:840a:: with SMTP id
-	j10mr2816351pjn.35.1577076660887; 
-	Sun, 22 Dec 2019 20:51:00 -0800 (PST)
-Received: from akuster-ThinkPad-T460s.hsd1.ca.comcast.net
-	([2601:202:4180:a5c0:30f1:af1:c5e0:a746])
-	by smtp.gmail.com with ESMTPSA id
-	q11sm22276726pff.111.2019.12.22.20.51.00
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sun, 22 Dec 2019 20:51:00 -0800 (PST)
-From: Armin Kuster <akuster808@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Sun, 22 Dec 2019 20:50:42 -0800
-Message-Id: <f224201b5003b89367d688b1f08a062754fce13a.1577076251.git.akuster808@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1577076251.git.akuster808@gmail.com>
+	Mon, 23 Dec 2019 08:25:15 +0000 (UTC)
+IronPort-SDR: nXRR1W1aDtcLvmA14FMXyH8Km3JOZsj2NJsnWJ/WAD9yWsnPdWTysm4y3KJ7CKRPiUGbEEM1+X
+	bZqobsseMb7OVMFuD/3/Ltu8OHqmSx5HZFDAocpiSwqBwpteVmQcZssPLkgV+UGNSk3qYMZZZN
+	JEyaU/SIGEABr4dlxU5hi7pt9LQFgDNs98YMtavgBVn4C3nMHFrWKIMWJHirsG9eQoTG0vRHBR
+	Koqg6MJhDL2NwdOojJsqSbJE1MLLFs3I+x37+VIlvlndCRqeROQfoldQJRbvuwGlAHHT0yMOfr
+	Erk=
+X-IronPort-AV: E=Sophos;i="5.69,346,1571695200"; 
+   d="scan'208";a="3848783"
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Armin Kuster <akuster808@gmail.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [1.44 02/18] runqueue/siggen: Allow handling of
+	equivalent hashes
+Thread-Index: AQHVuUyfrv2Gsdgmzk2Wby/mHNtUcKfHXkkg
+Date: Mon, 23 Dec 2019 08:25:13 +0000
+Message-ID: <16250e99a56442a4b98a5635c635c8f3@XBOX03.axis.com>
 References: <cover.1577076251.git.akuster808@gmail.com>
-Subject: [1.44 18/18] lib/bb: Optimise out debug messages from cooker
+	<222df6d6b832868c6e87334f8acdd74b730a91d6.1577076251.git.akuster808@gmail.com>
+In-Reply-To: <222df6d6b832868c6e87334f8acdd74b730a91d6.1577076251.git.akuster808@gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
+MIME-Version: 1.0
+Subject: Re: [1.44 02/18] runqueue/siggen: Allow handling of	equivalent hashes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,44 +40,173 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Dec 2019 04:50:59 -0000
+X-List-Received-Date: Mon, 23 Dec 2019 08:25:16 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+> -----Original Message-----
+> From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
+> bounces@lists.openembedded.org> On Behalf Of Armin Kuster
+> Sent: den 23 december 2019 05:50
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [1.44 02/18] runqueue/siggen: Allow handling of
+> equivalent hashes
+>=20
+> From: Richard Purdie <richard.purdie@linuxfoundation.org>
+>=20
+> Based on the hashserv's new ability to accept hash mappings, update
+> runqueue
+> to use this through a helper function in siggen.
+>=20
+> This addresses problems with meta-extsdk-toolchain and its dependency on
+> gdb-cross which caused errors when building eSDK. See the previous commit
+> for more details.
+>=20
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> (cherry picked from commit 39098b4ba2133f4d9229a0aa4fcf4c3e1291286a)
+> ---
+>  lib/bb/runqueue.py | 31 +++++++++++++++++++------------
+>  lib/bb/siggen.py   | 26 ++++++++++++++++++++++++++
+>  2 files changed, 45 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+> index bd7f03f..a869ba5 100644
+> --- a/lib/bb/runqueue.py
+> +++ b/lib/bb/runqueue.py
+> @@ -2283,12 +2283,26 @@ class RunQueueExecute:
+>                          for dep in self.rqdata.runtaskentries[tid].depen=
+ds:
+>                              procdep.append(dep)
+>                          orighash =3D self.rqdata.runtaskentries[tid].has=
+h
+> -                        self.rqdata.runtaskentries[tid].hash =3D bb.pars=
+e.siggen.get_taskhash(tid, procdep, self.rqdata.dataCaches[mc_from_tid(tid)=
+])
+> +                        newhash =3D bb.parse.siggen.get_taskhash(tid, pr=
+ocdep, self.rqdata.dataCaches[mc_from_tid(tid)])
+>                          origuni =3D self.rqdata.runtaskentries[tid].unih=
+ash
+> -                        self.rqdata.runtaskentries[tid].unihash =3D bb.p=
+arse.siggen.get_unihash(tid)
+> -                        logger.debug(1, "Task %s hash changes: %s->%s %s=
+->%s" % (tid, orighash, self.rqdata.runtaskentries[tid].hash, origuni, self=
+.rqdata.runtaskentries[tid].unihash))
+> +                        newuni =3D bb.parse.siggen.get_unihash(tid)
+> +                        # FIXME, need to check it can come from sstate a=
+t all for determinism?
+> +                        remapped =3D False
+> +                        if newuni =3D=3D origuni:
+> +                            # Nothing to do, we match, skip code below
+> +                            remapped =3D True
+> +                        elif tid in self.scenequeue_covered or tid in se=
+lf.sq_live:
+> +                            # Already ran this setscene task or it runni=
+ng. Report the new taskhash
+> +                            remapped =3D bb.parse.siggen.report_unihash_=
+equiv(tid, newhash, origuni, newuni, self.rqdata.dataCaches)
+> +                            logger.info("Already covered setscene for %s=
+ so ignoring rehash (remap)" % (tid))
 
-We have bb.debug(2, xxx) messages in cooker which are useful for debugging
-but have really bad effects on performance, 640,000 calls on recent profile
-graphs taking tens of seconds.
+Do we really want this level of logging? I have not commented on it for=20
+master (yet), as I expect it is invaluable for RP & co that are currently=20
+working hard on the hash server, but for me as common user of bitbake,=20
+this is just noise (and a lot of it). I have a local patch that changes=20
+this to logger.debug(1, ...) together with another logger.info("Task %s=20
+unihash changed to %s" ...) a few lines earlier to get the cooker UI=20
+reasonably back to usable. Also see below.
 
-Rather than commenting out debug which can be useful for debugging, don't
-create events for debug log messages from cooker which would never be seen.
-We already stop the messages hitting the IPC but this avoids the overhead
-of creating the log messages too, which has been shown to be signficiant
-on the profiles. This allows the code to perform whilst allowing debug
-messages to be availble when wanted/enabled.
+> +
+> +                        if not remapped:
+> +                            logger.debug(1, "Task %s hash changes: %s->%=
+s %s->%s" % (tid, orighash, newhash, origuni, newuni))
+> +                            self.rqdata.runtaskentries[tid].hash =3D new=
+hash
+> +                            self.rqdata.runtaskentries[tid].unihash =3D =
+newuni
+> +                            changed.add(tid)
+> +
+>                          next |=3D self.rqdata.runtaskentries[tid].revdep=
+s
+> -                        changed.add(tid)
+>                          total.remove(tid)
+>                          next.intersection_update(total)
+>=20
+> @@ -2307,18 +2321,11 @@ class RunQueueExecute:
+>                  self.pending_migrations.add(tid)
+>=20
+>          for tid in self.pending_migrations.copy():
+> -            if tid in self.runq_running:
+> +            if tid in self.runq_running or tid in self.sq_live:
+>                  # Too late, task already running, not much we can do now
+>                  self.pending_migrations.remove(tid)
+>                  continue
+>=20
+> -            if tid in self.scenequeue_covered or tid in self.sq_live:
+> -                # Already ran this setscene task or it running
+> -                # Potentially risky, should we report this hash as a mat=
+ch?
+> -                logger.info("Already covered setscene for %s so ignoring=
+ rehash" % (tid))
+> -                self.pending_migrations.remove(tid)
+> -                continue
+> -
+>              valid =3D True
+>              # Check no tasks this covers are running
+>              for dep in self.sqdata.sq_covered_tasks[tid]:
+> diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+> index e19812b..edf1010 100644
+> --- a/lib/bb/siggen.py
+> +++ b/lib/bb/siggen.py
+> @@ -525,6 +525,32 @@ class SignatureGeneratorUniHashMixIn(object):
+>                  except OSError:
+>                      pass
+>=20
+> +    def report_unihash_equiv(self, tid, taskhash, wanted_unihash, curren=
+t_unihash, datacaches):
+> +        try:
+> +            extra_data =3D {}
+> +            data =3D self.client().report_unihash_equiv(taskhash, self.m=
+ethod, wanted_unihash, extra_data)
+> +            bb.note('Reported task %s as unihash %s to %s (%s)' % (tid, =
+wanted_unihash, self.server, str(data)))
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit f04cd931091fb0508badf3e002d70a6952700495)
----
- lib/bb/__init__.py | 5 +++++
- 1 file changed, 5 insertions(+)
+This one and ...
 
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index c144311..ce519ba 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -43,6 +43,11 @@ class BBLogger(Logger):
-         Logger.__init__(self, name)
- 
-     def bbdebug(self, level, msg, *args, **kwargs):
-+        if not bb.event.worker_pid:
-+            if self.name in bb.msg.loggerDefaultDomains and level > (bb.msg.loggerDefaultDomains[self.name]):
-+                return
-+            if level > (bb.msg.loggerDefaultDebugLevel):
-+                return
-         return self.log(logging.DEBUG - level + 1, msg, *args, **kwargs)
- 
-     def plain(self, msg, *args, **kwargs):
--- 
-2.7.4
+> +
+> +            if data is None:
+> +                bb.warn("Server unable to handle unihash report")
+> +                return False
+> +
+> +            finalunihash =3D data['unihash']
+> +
+> +            if finalunihash =3D=3D current_unihash:
+> +                bb.note('Task %s unihash %s unchanged by server' % (tid,=
+ finalunihash))
+> +            elif finalunihash =3D=3D wanted_unihash:
+> +                bb.note('Task %s unihash changed %s -> %s as wanted' % (=
+tid, current_unihash, finalunihash))
+> +                self.set_unihash(tid, finalunihash)
+> +                return True
+> +            else:
+> +                # TODO: What to do here?
+> +                bb.note('Task %s unihash reported as unwanted hash %s' %=
+ (tid, finalunihash))
+
+... and these also seem excessive. I have changed them locally to=20
+bb.debug(1, ...) too.
+
+> +        except hashserv.client.HashConnectionError as e:
+> +            bb.warn('Error contacting Hash Equivalence Server %s: %s' % =
+(self.server, str(e)))
+> +
+> +        return False
+>=20
+>  #
+>  # Dummy class used for bitbake-selftest
+> --
+> 2.7.4
+
+//Peter
 
 
