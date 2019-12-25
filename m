@@ -1,44 +1,41 @@
-Return-Path: <prvs=3260bcf0e2=cherzig@gauselmann.de>
-X-Greylist: delayed 1465 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 23 Dec 2019 16:24:09 UTC
-Received: from mail2.gauselmann.com (mail2.gauselmann.com [193.102.155.89])
-	by mail.openembedded.org (Postfix) with ESMTP id D11196C23A
+Return-Path: <masahiroy@kernel.org>
+Received: from conssluserg-02.nifty.com (conssluserg-02.nifty.com
+	[210.131.2.81])
+	by mail.openembedded.org (Postfix) with ESMTP id C4BA97FA3F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Dec 2019 16:24:09 +0000 (UTC)
-Received: from pps.filterd (mail2.gauselmann.com [127.0.0.1])
-	by mail2.gauselmann.com (8.16.0.27/8.16.0.27) with SMTP id
-	xBNFwNCY005251; Mon, 23 Dec 2019 16:59:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gauselmann.de;
-	h=to : cc :
-	mime-version : subject : message-id : from : date : content-type;
-	s=20190718; bh=86r6n58otdcR5AL7TqEgss5F6jNU60DO2nXcqKKdX0Q=;
-	b=fplzj204T2Mk+y/KYnsTh3Lt/XbWbovhB9V6nmZ723Wkyil9+3mL7nCa7vXvvCyz9M45
-	ATJn3SZbl8RC203vW8HoQkl//kDEj67T1ySdnl+KZZLkkkuDjt+7iJcwt+tlmVGTs+XZ
-	VWo8IcKjCvhEThDfPUkbrlm9cjtEtWaRSaFMrSCAfFQ/XsR5xMatgO652N+gQdWz9B7Q
-	heggoVeYiT5ovxnQd5kFcNRCsfAbW7LAeIhGaNRkq07JXx6FLmN260w0ZShyCS19n1Jj
-	SGeS7rCc0YgtpjXvKSflI1IdHilkONjzOOazL49GBbV2jhZAJgf/KUEM+rAUi7yGkDjK
-	UQ== 
-Received: from bswinp16.gg.gauselmann.com ([10.99.84.148])
-	by mail2.gauselmann.com with ESMTP id 2x1awyja5s-1;
-	Mon, 23 Dec 2019 16:59:41 +0100
-Received: from wm01.gauselmann.com ([10.99.82.28])
-	by BSWINP16.gg.gauselmann.com with ESMTP id 2019122316594161-5924 ;
-	Mon, 23 Dec 2019 16:59:41 +0100 
-To: bitbake-devel@lists.openembedded.org, poky@lists.yoctoproject.org
+	Wed, 25 Dec 2019 07:33:50 +0000 (UTC)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com
+	[209.85.222.53]) (authenticated)
+	by conssluserg-02.nifty.com with ESMTP id xBP7Xhis029785
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 25 Dec 2019 16:33:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xBP7Xhis029785
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+	s=dec2015msa; t=1577259224;
+	bh=ZMoPwqg4Yt0WyMSu6eWNIQOQgHA+/EctWr7iWCFm1jo=;
+	h=From:Date:Subject:To:From;
+	b=nNXJmh+VCSjyGfpxzn43OYMH/TFQeDZX2kIXmZCAPGdn6s0un6me5EBqJI49vtCRO
+	aUdo4FYi60RGmglq8FQ3ycR92ZnpD+wUNr6hMzOw2guQTfndOXJb8eSaoXgNyxlzIh
+	8YBB2bG4nJQZ68t4n5xTbbkdt86sYRX7grNU/kpRZbjxohlQ3xVkKh8RLuXwzT7UfA
+	yf24Ks/znMI2mg/+Snf7mcPbzZxQZLzZJqfyHI494F9hs9RAgqNI7xwfS7Dxf4XHuX
+	exo8BBfvlrTRNd/3r2EbYyj8Ow5tlUa90PKDstMSiPYxvomkDotKEEGD/At0Ti8D37
+	gzD8v1622djwA==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id h32so864095uah.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 24 Dec 2019 23:33:43 -0800 (PST)
+X-Gm-Message-State: APjAAAXtqMzZ6RzpS2rJsfaiSYqcvqg3s93D90yr14FZK2h7uZWAQ9/7
+	4xvYFlPRrhDJauPI98QBA0RftFBiI5/eVcvzXZk=
+X-Google-Smtp-Source: APXvYqyXQaglWCO3ZzQQSKArU4dJL1oKw+1Jjgu8ilL3AKIEybaSrjJvnLXzmtqdzZCeuIG5kAk5ZMuSuHENOSILhyY=
+X-Received: by 2002:ab0:14ea:: with SMTP id f39mr13307117uae.40.1577259222825; 
+	Tue, 24 Dec 2019 23:33:42 -0800 (PST)
 MIME-Version: 1.0
-X-KeepSent: D5254A7C:60A3DB90-C12584D9:00487C7B;
-	type=4; flags=0; name=$KeepSent
-Message-ID: <OFD5254A7C.60A3DB90-ONC12584D9.00487C7B-C12584D9.0057DCCA@gauselmann.com>
-From: CHerzig@Gauselmann.de
-Date: Mon, 23 Dec 2019 16:59:41 +0100
-X-MIMETrack: Serialize by Router on LNS3/BEIT GmbH at 23.12.2019 16:59:41,
-	Serialize complete at 23.12.2019 16:59:41,
-	Itemize by SMTP Server on LNS13/BEIT GmbH at 23.12.2019 16:59:41,
-	Serialize by Router on LNS13/BEIT GmbH at 23.12.2019 16:59:41
-X-TNEFEvaluated: 1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:, ,
-	definitions=2019-12-23_07:, , signatures=0
-Subject: [PATCH] bitbake: fetch2/clearcase: Fix tar command
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 25 Dec 2019 16:33:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ+4TEnV+hW9ZQpn5dK+brp9o6UfD3OLk++eHn4T_ezxQ@mail.gmail.com>
+Message-ID: <CAK7LNAQ+4TEnV+hW9ZQpn5dK+brp9o6UfD3OLk++eHn4T_ezxQ@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: DEPENDS vs RDEPENDS from bitbake PoV
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,67 +48,100 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Dec 2019 16:24:10 -0000
-Content-Type: multipart/alternative;
-	boundary="=_alternative 0057DCC8C12584D9_="
+X-List-Received-Date: Wed, 25 Dec 2019 07:33:51 -0000
+Content-Type: text/plain; charset="UTF-8"
 
---=_alternative 0057DCC8C12584D9_=
-Content-Type: text/plain; charset="US-ASCII"
+Hi,
 
-Signed-off-by: Christian Herzig <cherzig@gauselmann.de>
----
- bitbake/lib/bb/fetch2/clearcase.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think "the difference between DEPENDS and RDEPENDS"
+is FAQ, but there is still something unclear to me.
 
-diff --git a/bitbake/lib/bb/fetch2/clearcase.py 
-b/bitbake/lib/bb/fetch2/clearcase.py
-index e2934ef9fc..ad2f3edc74 100644
---- a/bitbake/lib/bb/fetch2/clearcase.py
-+++ b/bitbake/lib/bb/fetch2/clearcase.py
-@@ -238,7 +238,7 @@ class ClearCase(FetchMethod):
- 
-         # Clean clearcase meta-data before tar
- 
--        runfetchcmd('tar -czf "%s" .' % (ud.localpath), d, cleanup = 
-[ud.localpath])
-+        runfetchcmd('tar -czf "%s" .' % (ud.localpath), d, cleanup = 
-[ud.localpath], workdir = ud.viewdir)
- 
-         # Clean up so we can create a new view next time
-         self.clean(ud, d);
+I read the bitbake manual,
+asked Google about this question,
+and found lots of Q&A there, but
+I could not find any answer that satisfied me.
+
+Of course, I am not looking for the boilerplate answer
+like "DEPENDS is build-time dependency,
+whereas RDEPENDS is run-time dependency."
+
+
+To clarify my question,
+I'd like to know how DEPENDS and RDEPENDS
+behave differently in the following sample code
+if there is any difference.
+
+
+Sample code
+-----------
+
+[base.bbclass]
+addtask build
+do_build[nostamp] = "1"
+
+
+[bar.bb]
+PN = 'bar'
+python do_build() {
+    import time
+    bb.plain("bar.do_build START")
+    time.sleep(5)
+    bb.plain("bar.do_build END")
+}
+
+
+[foo.bb]
+PN = 'foo'
+python do_build() {
+    bb.plain("foo.do_build");
+}
+DEPENDS = "bar"
+do_build[deptask] = "do_build"
+
+
+
+Result
+------
+
+Running "bitbake foo" displays
+the following in the terminal.
+
+bar.do_build START
+bar.do_build END
+foo.do_build
+
+
+So, foo.do_build starts after bar.do_build has completed.
+
+If I replace the last twos lines in foo.bb:
+
+DEPENDS = "bar"
+do_build[deptask] = "do_build"
+
+... with:
+
+RDEPENDS = "bar"
+do_build[rdeptask] = "do_build"
+
+the result is the same.
+foo.do_build still starts after bar.do_build has completed.
+
+
+So, DEPENDS and RDEPENDS are fundamentally the same
+from the bitbake point of view.
+Is my understanding correct?
+
+
+I know there is slight difference between them.
+For the RDEPENDS variant, the form RDEPENDS_<pkg> is also supported.
+(<pkg> is the element in ${PACKAGES}, or ${PN} if ${PACKAGES} is empty).
+
+Other than that, the functionality looks the same between
+DEPENDS and RDEPENDS.
+
+
+
 -- 
-2.17.1
+Best Regards
+Masahiro Yamada
 
-
-
---=_alternative 0057DCC8C12584D9_=
-Content-Type: text/html; charset="US-ASCII"
-
-<tt><span style=" font-size:10pt">Signed-off-by: Christian Herzig &lt;cherzig@gauselmann.de&gt;<br>
----<br>
- bitbake/lib/bb/fetch2/clearcase.py | 2 +-<br>
- 1 file changed, 1 insertion(+), 1 deletion(-)<br>
-<br>
-diff --git a/bitbake/lib/bb/fetch2/clearcase.py b/bitbake/lib/bb/fetch2/clearcase.py<br>
-index e2934ef9fc..ad2f3edc74 100644<br>
---- a/bitbake/lib/bb/fetch2/clearcase.py<br>
-+++ b/bitbake/lib/bb/fetch2/clearcase.py<br>
-@@ -238,7 +238,7 @@ class ClearCase(FetchMethod):<br>
- <br>
- &nbsp; &nbsp; &nbsp; &nbsp; # Clean clearcase meta-data before tar<br>
- <br>
-- &nbsp; &nbsp; &nbsp; &nbsp;runfetchcmd('tar -czf &quot;%s&quot; .' %
-(ud.localpath), d, cleanup = [ud.localpath])<br>
-+ &nbsp; &nbsp; &nbsp; &nbsp;runfetchcmd('tar -czf &quot;%s&quot; .' %
-(ud.localpath), d, cleanup = [ud.localpath], workdir = ud.viewdir)<br>
- <br>
- &nbsp; &nbsp; &nbsp; &nbsp; # Clean up so we can create a new view next
-time<br>
- &nbsp; &nbsp; &nbsp; &nbsp; self.clean(ud, d);<br>
--- <br>
-2.17.1<br>
-<br>
-</span></tt>
-<br>
-
---=_alternative 0057DCC8C12584D9_=--
