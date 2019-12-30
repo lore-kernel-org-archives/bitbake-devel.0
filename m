@@ -1,55 +1,35 @@
-Return-Path: <persaur@gmail.com>
-Received: from mail-yb1-f195.google.com (mail-yb1-f195.google.com
-	[209.85.219.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 1D65C7F363
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+	by mail.openembedded.org (Postfix) with ESMTP id 1B08E7FA20
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 29 Dec 2019 02:04:09 +0000 (UTC)
-Received: by mail-yb1-f195.google.com with SMTP id l7so4917925ybp.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 28 Dec 2019 18:04:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=content-transfer-encoding:mime-version:subject:from:in-reply-to:cc
-	:date:message-id:references:to;
-	bh=JugsxEHN6zC4l4RDa9CLOklXZ+xAaapS0nN8pIUS1BA=;
-	b=pd05lrL3fhHlFJprXmSrXzHxJ3QLm/eLBp6j31L0SW3y4nEvhXy9nFaRX72BrPxex1
-	C1MrumEZ/UZr66lWecSeK/kK4pfOQtrAISbVtO+BuW6rlGfKuqjNSbUZiXoqRmQmr6uy
-	nM6sOLz8czxorDeflUrFJ8AKiEkxlzRgVdpOvDG4xFavube8rBb0L8sfh7s6ga3IW4o7
-	9j8UJcbj9RxPwzcOr8yhqzyotYEfxo4yj71c5yZ/u4QWzWRyW3JtPPe1SkW54vbCZqoq
-	hoF08NBeC1vbOJTmvSuSZyXa7gs+WeGvH/EYBeE04oFT8ezwWdUgefrl3Q29JE0k4n5g
-	5mhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:content-transfer-encoding:mime-version:subject
-	:from:in-reply-to:cc:date:message-id:references:to;
-	bh=JugsxEHN6zC4l4RDa9CLOklXZ+xAaapS0nN8pIUS1BA=;
-	b=VsMDt4NRyY5xsznp1CEENxJJMBE1kCM1C+4t3Eq3wDkUgJt/J0eKt0qH4o2obc5tgJ
-	wA6TtJkmKt5cmKeNY+qbSXV9w8dRHI3OA9BaatDhYQQydhtkUak6rn5eNkilTl7bK7YM
-	YQ3pR0bzBtiKVMagfKht3OJ+HY958ivB9aA5j2+0XLUOsR5r2XVLOoQBOIvkdr8bI5Tt
-	c2o6spNyam/rGQpErlh3Y482J55ozrM6vlVvEU1DZRq1tT9X0HBfyump9sAzvSUMxiNh
-	rc8uq8GIwieNQ2QQnrGoFEGqVP1rTdRw8OrzD1KXuCzKEPKbSfTdRAqbXeRmBuBpK3fD
-	ePyg==
-X-Gm-Message-State: APjAAAVxlTP+MGBFdUIZKrU0XSOxTsSNfXQnLLPAa/tWILT9ENXETU7D
-	YrsBeNJJPx6kvF5IE72Y09y/zp/g
-X-Google-Smtp-Source: APXvYqxpEuoa6NBlUDa9as7JjxepmF1AwO5uhgO5V00OIuGwToRYvgOgbQpMrLWLSYp34zmpp1VgNw==
-X-Received: by 2002:a25:c584:: with SMTP id
-	v126mr43819384ybe.171.1577585050669; 
-	Sat, 28 Dec 2019 18:04:10 -0800 (PST)
-Received: from [100.64.72.6] ([173.245.215.240])
-	by smtp.gmail.com with ESMTPSA id
-	o2sm12294111ywe.98.2019.12.28.18.04.09
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Sat, 28 Dec 2019 18:04:10 -0800 (PST)
-Mime-Version: 1.0 (1.0)
-From: Rich Persaud <persaur@gmail.com>
-In-Reply-To: <20191204091540.28005-1-pascal.huerst@gmail.com>
-Date: Sat, 28 Dec 2019 21:04:09 -0500
-Message-Id: <53A94A50-42DF-469F-8372-62BF68789262@gmail.com>
-References: <20191204091540.28005-1-pascal.huerst@gmail.com>
-To: pascal.huerst@gmail.com
-X-Mailer: iPad Mail (17C54)
-X-Mailman-Approved-At: Mon, 30 Dec 2019 11:01:04 +0000
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH v1] bitbake: fetch2/git: add SRC_URI option versiontag
+	Mon, 30 Dec 2019 12:20:18 +0000 (UTC)
+IronPort-SDR: MXIiWECRkQ22rRWtf5g2ZgTsrdZYopFiFsZ1TUTCQaB0XBiWuo8uX/JpE1uPMDhuWXB6OtTkPK
+	kyONmdBcidi+KPvPo4SyslcfMRtfsvoVrEHIFxPbgkpW9WsyUxxzca6n6FnLIQDkLPuGCokkef
+	y2KVsrjpBLoIkMlJ2+NyCc4n0EBV4bRDmGJk+/n5rH8ap1cYHXVdn54qM1hSpCKxirSL+9Ohhc
+	ROdS1/oFuRSSokTKTcD5/OwATx83uPzSZAdnWz+DptU+xY1F2KInA4810juPfSCwHm+umV86+8
+	6FA=
+X-IronPort-AV: E=Sophos;i="5.69,375,1571695200"; 
+   d="scan'208";a="3858205"
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, Ola x Nilsson
+	<Ola.x.Nilsson@axis.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 1/2] bitbake: prserv/serv: Use with while
+	reading pidfile
+Thread-Index: AQHVt0IZbLc9zLhLlkCY/JpmjdqcT6fDRI+QgA881wCAACNyAA==
+Date: Mon, 30 Dec 2019 12:20:18 +0000
+Message-ID: <6a86529855cc4276944551773f09e266@XBOX03.axis.com>
+References: <20191220142320.17724-1-olani@axis.com>
+	<e512728a2ecb4ba68e0cbd3005596a99@XBOX03.axis.com>
+	<d7d728082189ea9cde744cac1ab40b9bb11cd64e.camel@linuxfoundation.org>
+In-Reply-To: <d7d728082189ea9cde744cac1ab40b9bb11cd64e.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/2] bitbake: prserv/serv: Use with while	reading pidfile
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -62,64 +42,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 29 Dec 2019 02:04:10 -0000
-Content-Type: multipart/alternative;
-	boundary=Apple-Mail-A15E3EA7-CA38-4347-95CB-522D1B5F3CD6
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 30 Dec 2019 12:20:19 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
---Apple-Mail-A15E3EA7-CA38-4347-95CB-522D1B5F3CD6
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
+aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDMwIGRlY2VtYmVy
+IDIwMTkgMTI6MDANCj4gVG86IFBldGVyIEtqZWxsZXJzdGVkdCA8cGV0ZXIua2plbGxlcnN0ZWR0
+QGF4aXMuY29tPjsgT2xhIHggTmlsc3Nvbg0KPiA8T2xhLnguTmlsc3NvbkBheGlzLmNvbT47IGJp
+dGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBTdWJqZWN0OiBSZTogW2JpdGJh
+a2UtZGV2ZWxdIFtQQVRDSCAxLzJdIGJpdGJha2U6IHByc2Vydi9zZXJ2OiBVc2Ugd2l0aA0KPiB3
+aGlsZSByZWFkaW5nIHBpZGZpbGUNCj4gDQo+IE9uIEZyaSwgMjAxOS0xMi0yMCBhdCAxNzoyMiAr
+MDAwMCwgUGV0ZXIgS2plbGxlcnN0ZWR0IHdyb3RlOg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gPiA+IEZyb206IGJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVuZW1i
+ZWRkZWQub3JnIDxiaXRiYWtlLWRldmVsLQ0KPiA+ID4gYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRk
+ZWQub3JnPiBPbiBCZWhhbGYgT2YgT2xhIHggTmlsc3Nvbg0KPiA+ID4gU2VudDogZGVuIDIwIGRl
+Y2VtYmVyIDIwMTkgMTU6MjMNCj4gPiA+IFRvOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJl
+ZGRlZC5vcmcNCj4gPiA+IFN1YmplY3Q6IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0ggMS8yXSBiaXRi
+YWtlOiBwcnNlcnYvc2VydjogVXNlIHdpdGgNCj4gPiA+IHdoaWxlDQo+ID4gPiByZWFkaW5nIHBp
+ZGZpbGUNCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBPbGEgeCBOaWxzc29uIDxvbGFuaUBh
+eGlzLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gIGxpYi9wcnNlcnYvc2Vydi5weSB8IDUgKystLS0N
+Cj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0K
+PiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9saWIvcHJzZXJ2L3NlcnYucHkgYi9saWIvcHJzZXJ2
+L3NlcnYucHkNCj4gPiA+IGluZGV4IDMxMjRiMDc5Li43MDhiMmUwYSAxMDA2NDQNCj4gPiA+IC0t
+LSBhL2xpYi9wcnNlcnYvc2Vydi5weQ0KPiA+ID4gKysrIGIvbGliL3Byc2Vydi9zZXJ2LnB5DQo+
+ID4gPiBAQCAtMzUzLDkgKzM1Myw4IEBAIGRlZiBzdGFydF9kYWVtb24oZGJmaWxlLCBob3N0LCBw
+b3J0LCBsb2dmaWxlKToNCj4gPiA+ICAgICAgaXAgPSBzb2NrZXQuZ2V0aG9zdGJ5bmFtZShob3N0
+KQ0KPiA+ID4gICAgICBwaWRmaWxlID0gUElEUFJFRklYICUgKGlwLCBwb3J0KQ0KPiA+ID4gICAg
+ICB0cnk6DQo+ID4gPiAtICAgICAgICBwZiA9IG9wZW4ocGlkZmlsZSwncicpDQo+ID4gPiAtICAg
+ICAgICBwaWQgPSBpbnQocGYucmVhZGxpbmUoKS5zdHJpcCgpKQ0KPiA+ID4gLSAgICAgICAgcGYu
+Y2xvc2UoKQ0KPiA+ID4gKyAgICAgICAgd2l0aCBvcGVuKHBpZGZpbGUpIGFzIHBmOg0KPiA+ID4g
+KyAgICAgICAgICAgIHBpZCA9IGludChwZi5yZWFkbGluZSgpLnN0cmlwKCkpDQo+ID4gPiAgICAg
+IGV4Y2VwdCBJT0Vycm9yOg0KPiA+ID4gICAgICAgICAgcGlkID0gTm9uZQ0KPiA+ID4NCj4gPiA+
+IC0tDQo+ID4gPiAyLjExLjANCj4gPg0KPiA+IFRoaXMgb25seSBoYWxmIHRoZSBwYXRjaC4gUGxl
+YXNlIGFkZCB0aGUgZm9sbG93aW5nOg0KPiA+DQo+ID4gQEAgLTI5MiwxMCArMjkyLDkgQEAgY2xh
+c3MgUFJTZXJ2ZXIoU2ltcGxlWE1MUlBDU2VydmVyKToNCj4gPiAgICAgICAgICBsb2dnZXIuYWRk
+SGFuZGxlcihzdHJlYW1oYW5kbGVyKQ0KPiA+DQo+ID4gICAgICAgICAgIyB3cml0ZSBwaWRmaWxl
+DQo+ID4gLSAgICAgICAgcGlkID0gc3RyKG9zLmdldHBpZCgpKQ0KPiA+IC0gICAgICAgIHBmID0g
+b3BlbihzZWxmLnBpZGZpbGUsICd3JykNCj4gPiAtICAgICAgICBwZi53cml0ZSgiJXNcbiIgJSBw
+aWQpDQo+ID4gLSAgICAgICAgcGYuY2xvc2UoKQ0KPiA+ICsgICAgICAgIHBpZCA9IHN0cihvcy5n
+ZXRwaWQoKSkNCj4gPiArICAgICAgICB3aXRoIG9wZW4oc2VsZi5waWRmaWxlLCAndycpIGFzIHBm
+Og0KPiA+ICsgICAgICAgICAgICBwZi53cml0ZSgiJXNcbiIgJSBwaWQpDQo+ID4NCj4gPiAgICAg
+ICAgICBzZWxmLndvcmtfZm9yZXZlcigpDQo+ID4gICAgICAgICAgc2VsZi5kZWxwaWQoKQ0KPiA+
+DQo+IA0KPiBJJ3ZlIGhhbmRsZWQgdGhpcyBidXQgYXNraW5nIG1lIHRvIG1hbnVhbGx5IG1lcmdl
+IGh1bmtzIG9mIHBhdGNoZXMNCj4gdG9nZXRoZXIgYmVmb3JlIGFwcGx5aW5nIHRoZW0gc2VlbXMg
+YSBsaXR0bGUgcG90ZW50aWFsbHkgZXJyb3IgcHJvbmU/DQo+IA0KPiBDaGVlcnMsDQo+IA0KPiBS
+aWNoYXJkDQoNCldlbGwsIEkgbWFpbmx5IG1lYW50IGZvciBPbGEgdG8gc2VuZCBhbiB1cGRhdGVk
+IHBhdGNoIHdpdGggYm90aCBodW5rcywgYnV0IA0KSSBndWVzcyBJIHNob3VsZCBoYXZlIHN0YXRl
+ZCB0aGF0IGluIG15IHJlc3BvbnNlLiBBbnl3YXksIHRoYW5rcyBmb3IgdGFraW5nIA0KY2FyZSBv
+ZiBpdC4NCg0KLy9QZXRlcg0KDQo=
 
-> On Dec 4, 2019, at 04:16, pascal.huerst@gmail.com wrote:
-> =EF=BB=BFFrom: Pascal Huerst <pascal.huerst@gmail.com>
->=20
-> Use latest_versionstring() to find the latest tagged release for use with
-> AUTOREV. This can be useful, if you want to build the latest tagged releas=
-e
-> instead of a branch. UPSTREAM_CHECK_GITTAGREGEX can be used to specify a
-> version format.
-
-Have you seen this approach?
-https://code.ossystems.com.br/gitweb?p=3Dmeta-ossystems-base.git;a=3Dblob;f=3D=
-classes/ossystems-srcrev-handler.bbclass
-
-For development workflows, it would be useful to override a recipe-specific b=
-ranch/tag via bitbake CLI.  For production/stable release workflows, it woul=
-d be useful to override a layer-specific branch/tag via bitbake CLI, which c=
-ould be propagated to all recipes within the layer.   This would help when m=
-aintaining multiple versions of a layer, corresponding to multiple OE versio=
-ns.
-
-Rich
-
---Apple-Mail-A15E3EA7-CA38-4347-95CB-522D1B5F3CD6
-Content-Type: text/html;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charset=3D=
-utf-8"></head><body dir=3D"auto"><div dir=3D"ltr"><meta http-equiv=3D"conten=
-t-type" content=3D"text/html; charset=3Dutf-8"><div dir=3D"ltr">On Dec 4, 20=
-19, at 04:16, pascal.huerst@gmail.com wrote:</div><div dir=3D"ltr"><blockquo=
-te type=3D"cite"><br></blockquote></div><blockquote type=3D"cite"><div dir=3D=
-"ltr">=EF=BB=BF<span>From: Pascal Huerst &lt;pascal.huerst@gmail.com&gt;</sp=
-an><br><span></span><br><span>Use latest_versionstring() to find the latest t=
-agged release for use with</span><br><span>AUTOREV. This can be useful, if y=
-ou want to build the latest tagged release</span><br><span>instead of a bran=
-ch. UPSTREAM_CHECK_GITTAGREGEX can be used to specify a</span><br><span>vers=
-ion format.</span><br></div></blockquote><div><br></div><div>Have you seen t=
-his approach?</div><div><a href=3D"https://code.ossystems.com.br/gitweb?p=3D=
-meta-ossystems-base.git;a=3Dblob;f=3Dclasses/ossystems-srcrev-handler.bbclas=
-s">https://code.ossystems.com.br/gitweb?p=3Dmeta-ossystems-base.git;a=3Dblob=
-;f=3Dclasses/ossystems-srcrev-handler.bbclass</a></div><div><br></div><div>Fo=
-r development workflows, it would be useful to override a recipe-specific br=
-anch/tag via bitbake CLI. &nbsp;For production/stable release workflows, it w=
-ould be useful to override a layer-specific branch/tag via bitbake CLI, whic=
-h could be propagated to all recipes within the layer. &nbsp; This would hel=
-p when maintaining multiple versions of a layer, corresponding to multiple O=
-E versions.</div><div><br></div><div>Rich</div><div></div></div></body></htm=
-l>=
-
---Apple-Mail-A15E3EA7-CA38-4347-95CB-522D1B5F3CD6--
