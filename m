@@ -1,51 +1,51 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
-	[209.85.221.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 1DB106C102
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com
+	[209.85.221.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 489827FC02
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 Jan 2020 11:03:09 +0000 (UTC)
-Received: by mail-wr1-f52.google.com with SMTP id q6so36738196wro.9
+	Wed,  1 Jan 2020 11:03:10 +0000 (UTC)
+Received: by mail-wr1-f43.google.com with SMTP id t2so36816699wrr.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 01 Jan 2020 03:03:10 -0800 (PST)
+	Wed, 01 Jan 2020 03:03:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
 	:content-transfer-encoding;
-	bh=jVV+li5LJx6SqrhSyEaU2w65Q/Q8GjO5Uem/nwO3rpg=;
-	b=b5+v1Zt0zTDSpbOyXiVkzPzj9Zg74lFVpk/xvXGc0VEDJSMS57WPdj2Jjm06ppvVeJ
-	F4a3OOEhJIVBB2Se4QOclepP9gCu70dkcUtJqkK4HspXNijSMWBtPzbSm/wD8S+6dsmL
-	leZK1ZKWj4KFtNqb41l7dLyXObiVKsNlXbTOY=
+	bh=AnPwVh9MIR6rSupelb+iaAWRRFV1KT1AkH15l4qa7e0=;
+	b=WbGCT/VimafRXeS+VSRi+yZ40rcOxgu7n571CuRWBzzt+A5K/avcDGcGoLesbe2cV6
+	GWsLThGHoWsrOr90AsjL1nNiXiAV+SxgAq+wuRLXTC2RMJjkB8tu/I7ZNSEs83KwXA1q
+	EOzQT7nbj2PUNKnAaPjEYPZlucp98cvcuiOHw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references:mime-version:content-transfer-encoding;
-	bh=jVV+li5LJx6SqrhSyEaU2w65Q/Q8GjO5Uem/nwO3rpg=;
-	b=tcsY9OtE2QHJTKimaCQEtJJcbP1PKY9HE1OVx1AzfIyQmTpVtX4T5qzWesxZMC9hVz
-	UA9iH1oZEMwL7b/ONBGmoy3qfLNcERHwXON3LwjEhW/vW7OP6gmcfM9Undt8jmw7uCSw
-	r4lyvrH5G2l4pE+kRCt2Xte6mPSSwTKPfSV8xYMIcqiOfFp6yLmdZRI1fng36iGiulhb
-	6nzvSIKE0Abc5GWeJg94vj8tTpkWjdcF+UdchfvsfIALIR2fmVwJCrUz3mCkOT+ePOOL
-	Q1zbDWsn77e50tPkG/AOc+CjV4+fzZBOU2h38AhmMI35PQRYXVREtRLzwhGhB/Hlm/VX
-	tYsw==
-X-Gm-Message-State: APjAAAVVgipKqxzinqaK1hKGJPSVj5KCblJA3d/M4NYFikNXtfDLyeXN
-	7Oya/CA5km38MITyrA4SZK+R/WkkbEI=
-X-Google-Smtp-Source: APXvYqwgKm3t9L4BIxP7gDYlvoZSGH8mIgNVpz7guPNsSkved+TlSKI28rn3ssfqA8wF8eYRjUf+wg==
-X-Received: by 2002:a5d:4cc9:: with SMTP id c9mr74707820wrt.70.1577876589750; 
-	Wed, 01 Jan 2020 03:03:09 -0800 (PST)
+	bh=AnPwVh9MIR6rSupelb+iaAWRRFV1KT1AkH15l4qa7e0=;
+	b=cH350hvmJ5IPTH8smiOvQjZIJBI3jsA0yEaWHPUkgb/511bRkpvRHZ28wD+CyoWm3C
+	M3KJxAsqDKBebZCx9F/aK/buwdZGP3LqY9YIXyT1tLMhSw+imLfV4vdu4L1kKBei6CQZ
+	0B8mrjV6a4nnUBQH2ydszTIr64LjFEFoxPF1c/GX1QzCnKN7YItwrQ1C0noROzjaLeH/
+	E0uNwoLv9leU9HLzN0qfBNoqkDnnieL2do19HZjS22x1e944Xj0iYrNhVBPUZuMWKd9/
+	a+D+R/pTwOmoigJo+rL6Rzk/6lxEsOMxhA0LOq9BS4Y/DO5de4v++s7jEwz3g7LIA8tu
+	xcSg==
+X-Gm-Message-State: APjAAAVo3XDgLoMuQ3JiqRk5/dUx+YOTLArvrgjqM96WepXdc+FSZBJL
+	E6Lq9oZRo0/dJ+EUtWlb70VrLB6U7xk=
+X-Google-Smtp-Source: APXvYqwH1IJa2BxMO/kjoCzKFsBRQY+82oGi/7O7KtsFMzx+0t8BlSCfqVSqezJLZM0RnbGzOQIx6g==
+X-Received: by 2002:adf:e58d:: with SMTP id l13mr74287891wrm.135.1577876590680;
+	Wed, 01 Jan 2020 03:03:10 -0800 (PST)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	a1sm5250672wmj.40.2020.01.01.03.03.08
+	a1sm5250672wmj.40.2020.01.01.03.03.09
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 01 Jan 2020 03:03:08 -0800 (PST)
+	Wed, 01 Jan 2020 03:03:10 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 Jan 2020 11:03:02 +0000
-Message-Id: <20200101110305.12317-2-richard.purdie@linuxfoundation.org>
+Date: Wed,  1 Jan 2020 11:03:03 +0000
+Message-Id: <20200101110305.12317-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200101110305.12317-1-richard.purdie@linuxfoundation.org>
 References: <20200101110305.12317-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 2/5] runqueue: Ensure task dependencies are run correctly
+Subject: [PATCH 3/5] runqueue: Fix task dependency corner case in sanity test
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,43 +61,53 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Wed, 01 Jan 2020 11:03:10 -0000
 Content-Transfer-Encoding: 8bit
 
-We've seen a number of mystery failures where task B would run despite
-task A, its dependency not having run. An example would be do_compile
-when do_unpack didn't run.
-
-This has been tracked down to this code block. In theory it shouldn't
-trigger however it can and has due to bugs elsewhere. When it does, it
-causes significant weird failures and possible build corruption.
-
-Change the code to abort the build. This avoids any chance of corruption
-and should ensure the issues get reported, putting an end to the weird
-build failures.
-
-There may be some cases where this triggers and it shouldn't, we'll work
-through those as they arise and are identified.
+A corner case was identified where tasks with valid stamps from previous
+builds need to be accounted for in the new sanity test in the migration
+code. Add a variable to track such completed tasks to ensure the sanity
+test works correctly.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+ lib/bb/runqueue.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index f82799800b..56ca2529ca 100644
+index 56ca2529ca..6e3a91b850 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -2353,6 +2353,12 @@ class RunQueueExecute:
+@@ -1708,6 +1708,7 @@ class RunQueueExecute:
+         self.runq_buildable = set()
+         self.runq_running = set()
+         self.runq_complete = set()
++        self.runq_tasksrun = set()
+ 
+         self.build_stamps = {}
+         self.build_stamps2 = []
+@@ -1893,6 +1894,7 @@ class RunQueueExecute:
+         self.stats.taskCompleted()
+         bb.event.fire(runQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
+         self.task_completeoutright(task)
++        self.runq_tasksrun.add(task)
+ 
+     def task_fail(self, task, exitcode):
+         """
+@@ -2092,6 +2094,7 @@ class RunQueueExecute:
+                 logger.debug(2, "Stamp current task %s", task)
+ 
+                 self.task_skip(task, "existing")
++                self.runq_tasksrun.add(task)
+                 return True
+ 
+             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
+@@ -2353,7 +2356,7 @@ class RunQueueExecute:
              if tid in self.tasks_scenequeue_done:
                  self.tasks_scenequeue_done.remove(tid)
              for dep in self.sqdata.sq_covered_tasks[tid]:
-+                if dep in self.runq_complete:
-+                    bb.error("Task %s marked as completed but now needing to rerun? Aborting build." % dep)
-+                    self.failed_tids.append(tid)
-+                    self.rq.state = runQueueCleanUp
-+                    return
-+
-                 if dep not in self.runq_complete:
-                     if dep in self.tasks_scenequeue_done and dep not in self.sqdata.unskippable:
-                         self.tasks_scenequeue_done.remove(dep)
+-                if dep in self.runq_complete:
++                if dep in self.runq_complete and dep not in self.runq_tasksrun:
+                     bb.error("Task %s marked as completed but now needing to rerun? Aborting build." % dep)
+                     self.failed_tids.append(tid)
+                     self.rq.state = runQueueCleanUp
 -- 
 2.20.1
 
