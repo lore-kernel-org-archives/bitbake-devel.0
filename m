@@ -1,53 +1,53 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com
-	[209.85.216.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 031107FA28
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com
+	[209.85.214.174])
+	by mail.openembedded.org (Postfix) with ESMTP id B63E97FC8F
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  4 Jan 2020 02:23:33 +0000 (UTC)
-Received: by mail-pj1-f43.google.com with SMTP id r67so5244013pjb.0
+	Sat,  4 Jan 2020 02:23:34 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id c23so19660761plz.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 03 Jan 2020 18:23:35 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=Rg2aUlKmyk1Wq73V3NdktdULv2/Nq/lk0pdlVAb/jXg=;
-	b=he4uKHj3mYGJZEU8uQXq7vwfojZiDzw7whquOIlm2gVU2byBo/hIrZYqkmHPF0MnT0
-	pxxEIK2jpkrVEDiKK5SvpX7j+0Cgjt3QcYYBC5DBUM8ecygJ3pRfI4cDRS85uT7zFVou
-	94BaK8UltP58Xoy2i/J86cgP7uh/cuIrCUL1erG35b5v9LcCupxD9ZG9AtuRx14Fw6uH
-	gM/FhJyvV/5DJ4HDZR8hlYwGaRaBYx91O9TvCgwlz/frM1oW1mzm790SFDQCcNuCXCXP
-	CUHIMJizzu6PZ29aH3puQv154JOCrmeawstP/44advB9Q75uEjn05bB7ed94G0eORvNR
-	IGpQ==
+	bh=hmALHdmhxRw1EUAOm7N9d+epIQ5T83F4X+sc2/jt1p4=;
+	b=qEJJFhyWR5AZpURdXrjutt9gvQysS+zP6FHyGOMwVdxUslZlAzM1vI4vF6/wKRO7Hk
+	B/TYimGlnJE4gX5bZxQbXPrKU9rvOgqLrydjZS0RZLriGBD+krQ9HKpPIdbbx5m+3LgK
+	QiU3+e9AsyO19a0Z1BjDhjBgV6+qqrnCNaa537g5sfyEmPu7coKA9i7NRc2lu8MZRavM
+	VXFK1YDutaqjECrEmz4s4+wNFXuxpZH4zRzB//9Wf1gMLPVgPkxJmlOjXnsV1BiM0FyZ
+	jPOSIhxH65HGgTxQERgXPzlo62+95Ea8/IKBKorA+sDMBzT049a+MtQKRJJO9AP6N9P3
+	Q+4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=Rg2aUlKmyk1Wq73V3NdktdULv2/Nq/lk0pdlVAb/jXg=;
-	b=sncyVFY+cUF8NRdVzJFa/y0vbg2FkvUexFkjucz1KsPOA8EsdkiYIzX2+rFywxkvp6
-	LsfB4J2MBNsINRuZ5UY0o05AlfvKEOZozAMVfNfdQfwKKn2DAOy+jIAHPxrdqmdy22LN
-	iGOyewTtMFv57ofFb2QpmOueGPNdveL5ITZzBib9YK6wTQ9ADLRGlHVT+U/D+e00Tr70
-	Gn6rDLsrpAynu4aPlRJmLSQFIm3Cpa75yhS3A1rq72EA3fBClLNpp3eEW9WYMNVbak44
-	YS4f+fiEBr7Alqugr1KwG5oNme2314K5CaajgMCxJQ5roX4QtKfXFu1JFRbaDXp85Ug9
-	VmoA==
-X-Gm-Message-State: APjAAAVM2v/ttAabX3AOVJT20L302vPR0GV8y6lZxqiFcvi1/b0MstLb
-	8+8+0AWHZX+WKTKtiRAtuFNlumygGIs=
-X-Google-Smtp-Source: APXvYqw+xGPMA7l0MUjbx42kCs0fAZL/phNDKz4fMPYR8bPuPv3Bgm3V7MTlyQc6xWDJ0MD6cJ/3kw==
-X-Received: by 2002:a17:902:9302:: with SMTP id
-	bc2mr78676405plb.328.1578104614877; 
-	Fri, 03 Jan 2020 18:23:34 -0800 (PST)
+	bh=hmALHdmhxRw1EUAOm7N9d+epIQ5T83F4X+sc2/jt1p4=;
+	b=AK8FL7+7lBeDp0Um6ZYtmmZSeHmuCWNVcuFJIGxfTHIo0HO/dkrY3pzFGdqa9W5Gym
+	G0B+ljyda/LM8sIbO62U996TyBNndxlmhTDVspiHtyr+BowZTSgHADjOP6RzDF0ZJG3r
+	qA/HvmLt8C1qFmG6fMQr1b4cARN0CCdGuWujpQ86AkD73H3/+ozRiXKjmWdo7eH+lhFO
+	nuGJj665+ao82oWwVljukJQprbr4qowNrNWjCtT1LSY0Amq1jo63ASk3H2ieuDrQ1wOy
+	DFLT7gdTV4ARbf0kqrt56ChpdAjjxfug85kIHerBkzu1KNmlUjXhTahUSv1lhtI9Oh3z
+	h5aQ==
+X-Gm-Message-State: APjAAAVNcU6rILEWbhc7tL1PrDgt8t1aTmuOrH2YHyL0nhjR84kl6cfp
+	akXjXijx+34nhyK2O/97UibMuc5CImY=
+X-Google-Smtp-Source: APXvYqwUA3WwfniIETGi9QRvWnvm+WaPOMq0wmZnPLCfY4myoYC+rgtDHhTYmItDzNzijdqP13Nh2Q==
+X-Received: by 2002:a17:90a:b010:: with SMTP id
+	x16mr31246483pjq.130.1578104615663; 
+	Fri, 03 Jan 2020 18:23:35 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:e812:6764:3882:fa62])
 	by smtp.gmail.com with ESMTPSA id
-	s11sm58830590pfd.157.2020.01.03.18.23.34
+	s11sm58830590pfd.157.2020.01.03.18.23.35
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 03 Jan 2020 18:23:34 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:35 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jan 2020 18:23:08 -0800
-Message-Id: <39cc4930676970b2e51b99a778f5d5d9b5259991.1578104305.git.akuster808@gmail.com>
+Date: Fri,  3 Jan 2020 18:23:09 -0800
+Message-Id: <e21bf572cfe18e805d3f849777189685f7391a67.1578104305.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1578104305.git.akuster808@gmail.com>
 References: <cover.1578104305.git.akuster808@gmail.com>
-Subject: [PATCH 23/25] runqueue: Fix task dependency corner case in sanity test
+Subject: [PATCH 24/25] siggen: Test extra cross/native hashserv method
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,55 +64,85 @@ X-List-Received-Date: Sat, 04 Jan 2020 02:23:34 -0000
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-A corner case was identified where tasks with valid stamps from previous
-builds need to be accounted for in the new sanity test in the migration
-code. Add a variable to track such completed tasks to ensure the sanity
-test works correctly.
+Hack the hashserv to allow extra data to be injected into the hashserv
+method. This allows OE-Core to handle cases where there are multiple
+sstate objects for the same taskhash, e.g. native/cross objects based
+upon BUILD_ARCH or the host distro (when uninative isn't used).
+
+This has been tested and proven to be very effective. We will likely
+rework the code to improve how this is handled but for now this
+improves automated builds until we can get to that refactoring and
+more invasive changes.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit d517b1ef13ca7ab2fb4d761d3bd3b9fb7c591514)
+(cherry picked from commit 0a09b0fa03d1afc08037964dc63a18ef7cff9c78)
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/runqueue.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ lib/bb/siggen.py | 27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 56ca2529..6e3a91b8 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1708,6 +1708,7 @@ class RunQueueExecute:
-         self.runq_buildable = set()
-         self.runq_running = set()
-         self.runq_complete = set()
-+        self.runq_tasksrun = set()
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index f982bf22..ded1da02 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -391,12 +391,16 @@ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
+         bb.build.write_taint(task, d, fn)
  
-         self.build_stamps = {}
-         self.build_stamps2 = []
-@@ -1893,6 +1894,7 @@ class RunQueueExecute:
-         self.stats.taskCompleted()
-         bb.event.fire(runQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
-         self.task_completeoutright(task)
-+        self.runq_tasksrun.add(task)
+ class SignatureGeneratorUniHashMixIn(object):
++    def __init__(self, data):
++        self.extramethod = {}
++        super().__init__(data)
++
+     def get_taskdata(self):
+-        return (self.server, self.method) + super().get_taskdata()
++        return (self.server, self.method, self.extramethod) + super().get_taskdata()
  
-     def task_fail(self, task, exitcode):
-         """
-@@ -2092,6 +2094,7 @@ class RunQueueExecute:
-                 logger.debug(2, "Stamp current task %s", task)
+     def set_taskdata(self, data):
+-        self.server, self.method = data[:2]
+-        super().set_taskdata(data[2:])
++        self.server, self.method, self.extramethod = data[:3]
++        super().set_taskdata(data[3:])
  
-                 self.task_skip(task, "existing")
-+                self.runq_tasksrun.add(task)
-                 return True
+     def client(self):
+         if getattr(self, '_client', None) is None:
+@@ -453,7 +457,10 @@ class SignatureGeneratorUniHashMixIn(object):
+         unihash = taskhash
  
-             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
-@@ -2353,7 +2356,7 @@ class RunQueueExecute:
-             if tid in self.tasks_scenequeue_done:
-                 self.tasks_scenequeue_done.remove(tid)
-             for dep in self.sqdata.sq_covered_tasks[tid]:
--                if dep in self.runq_complete:
-+                if dep in self.runq_complete and dep not in self.runq_tasksrun:
-                     bb.error("Task %s marked as completed but now needing to rerun? Aborting build." % dep)
-                     self.failed_tids.append(tid)
-                     self.rq.state = runQueueCleanUp
+         try:
+-            data = self.client().get_unihash(self.method, self.taskhash[tid])
++            method = self.method
++            if tid in self.extramethod:
++                method = method + self.extramethod[tid]
++            data = self.client().get_unihash(method, self.taskhash[tid])
+             if data:
+                 unihash = data
+                 # A unique hash equal to the taskhash is not very interesting,
+@@ -522,7 +529,11 @@ class SignatureGeneratorUniHashMixIn(object):
+                     extra_data['task'] = task
+                     extra_data['outhash_siginfo'] = sigfile.read().decode('utf-8')
+ 
+-                data = self.client().report_unihash(taskhash, self.method, outhash, unihash, extra_data)
++                method = self.method
++                if tid in self.extramethod:
++                    method = method + self.extramethod[tid]
++
++                data = self.client().report_unihash(taskhash, method, outhash, unihash, extra_data)
+                 new_unihash = data['unihash']
+ 
+                 if new_unihash != unihash:
+@@ -549,7 +560,11 @@ class SignatureGeneratorUniHashMixIn(object):
+     def report_unihash_equiv(self, tid, taskhash, wanted_unihash, current_unihash, datacaches):
+         try:
+             extra_data = {}
+-            data = self.client().report_unihash_equiv(taskhash, self.method, wanted_unihash, extra_data)
++            method = self.method
++            if tid in self.extramethod:
++                method = method + self.extramethod[tid]
++
++            data = self.client().report_unihash_equiv(taskhash, method, wanted_unihash, extra_data)
+             bb.note('Reported task %s as unihash %s to %s (%s)' % (tid, wanted_unihash, self.server, str(data)))
+ 
+             if data is None:
 -- 
 2.17.1
 
