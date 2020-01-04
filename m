@@ -1,53 +1,52 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com
-	[209.85.216.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 6D9337F898
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com
+	[209.85.215.193])
+	by mail.openembedded.org (Postfix) with ESMTP id B6E997F894
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  4 Jan 2020 02:23:18 +0000 (UTC)
-Received: by mail-pj1-f68.google.com with SMTP id j11so5245588pjs.1
+	Sat,  4 Jan 2020 02:23:19 +0000 (UTC)
+Received: by mail-pg1-f193.google.com with SMTP id z124so24163670pgb.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 03 Jan 2020 18:23:19 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=yJENfPE4I8gLB+2D2ASqpt9NY2UteBRBavTqjS3xgl4=;
-	b=XvY0Ucm4M+Ls1Mvn8Nj96GLffg6G+WseXAPHAXLG5OZGDZp2LdwrU/B3m/RCy7NNrC
-	964iqDlDYDg7/thH6RDYJQSLkbfnmJTQ+W1fHC6kX7xY3txn+kDyprM4C2KJq3la8JTz
-	xBh00SuRDjgv1g9ePUUoUhUbXUwOswC25phDx/xpA5Jfep53brogTX2IsJQSPJdsiWLE
-	7qvhFGJlO9mTOVFXWxbQYl4ifejgw21kuVbuJAI1cTZnhBKkYnXjW/DGc+1eY/QjQbo8
-	DkUbnQJDcAPe9Zlw7ZhqYQit6X3RCmiRgH5ryQKlrRNgZDwhYd+oyY6eYtDol0fSjZhN
-	GY9A==
+	bh=nRRdQRKmh9ijSCjVPXxTOLx9VYr3CQs/WC+XIihr5XM=;
+	b=ZSFpTLPtbdkSoXN7sU7fG14KyYJElA9L2Ys+4gMrOWfri1QVtJYabZoQy18r8qWU48
+	vDxWdlRdj9P5Bjc+Kx+spGPEuy9Yu25mTcRrVJib+NSKrym5MIIKJEdkoW0o77BMw3Sx
+	/VIovczvxFZzdQUqQaQoomVp48mfU+mkQEXYeHig8d7YLgLaZ+Gci7STdjLYBQIQI3oI
+	50Y0EmfMjxYqapUSrnqtgvfUzuu4F3MeIXQCKAurCr/UrKByD4ayAQ6nzbEjUtXo9uK/
+	T4kJksibm9yTlKmzXuw3HLIE23Ao/Fn7nHXS3JQ0NBJyHmNFI8cdUVIUAzR64/o+jB6v
+	lNlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=yJENfPE4I8gLB+2D2ASqpt9NY2UteBRBavTqjS3xgl4=;
-	b=uBpcdRD2uGdgEORgHmHYYgaCbxKT5pgTS+EHGCix7oIHvTICecw5S0kdIh4JLh7vkS
-	xPBaSJS8le57FzkS4yhffmxRzIgQ/G8URN9a5iBkE5WWxRtYPcZ0xu/+Bee8iji+jdKT
-	wMm2qBxHITCPMe+fmv+Voi6gR+Pk2+yPF5XHb9ZLWP17WEQL70UITt8LocWsWcH1e+mX
-	chVPsQdsU0FG/W6hb+QrjIpqvsc6V3Jg0HYZxnuTgmKFCEUk3sJ9tESLz2B/97fyqZVl
-	q4rxBJ5gqK2xZbqV2LmaP2iRIgI899iHdXKUDb/WOOALH4HnNQh5ZznbMzM4rNxsEKkA
-	Ey2Q==
-X-Gm-Message-State: APjAAAUoxuAf4XvQ2E7Nf3Gsw0p0RDqOncDtCdOcZQ+sK5VBDAMmUOoK
-	D8xwLF76UDoU06gzD4/SAMAlQlJ/MoU=
-X-Google-Smtp-Source: APXvYqxIogIyJOiGfzUB6K4y1yLcmb71w0svcXdypmLNPmgd11xXcNuF5X2OJh0zcg0zFXejsx72DQ==
-X-Received: by 2002:a17:90a:25cb:: with SMTP id
-	k69mr30659735pje.121.1578104599302; 
-	Fri, 03 Jan 2020 18:23:19 -0800 (PST)
+	bh=nRRdQRKmh9ijSCjVPXxTOLx9VYr3CQs/WC+XIihr5XM=;
+	b=Yi7ouaZjLJ7lRj2bpAYc1115KGcXThLeYqvmyNEoX8ZB8RmhgmiqXBRfDIXshMpekx
+	JB2DUxHq1B57vA5ckBG8vEp+TGRPdhq2CWg19reEiy8+UiiCtA/O7bQOLmuXXD6ryc2r
+	xYrPFWYiPkJKTb9Cb6fRFP8jYiK3jr5oNCfaLqkHvwnCwVXJaYi1fzSYGVkoinFXXoup
+	JKeLV6sAlXMW/3TiPokFGP1+HNOw7gZ+Nc9hl0E/jALHyTjEnO/q9id7esSv3TaNP2id
+	zbXT6Xdw+KJG2vkIcSdG8aexUTZyaLnxM5sMHJ13aCi3+mQRaryocBFUgMLg1cukEa23
+	rrdA==
+X-Gm-Message-State: APjAAAUIVKD7eTZpclxXPNJU4vaSBkzomUZFxYAHExuFW3ImzkVP33w9
+	m2KgU1IJvdKkux+UQCnWUeT/9ufqdT0=
+X-Google-Smtp-Source: APXvYqxC0rn53Grr+TrUEcyV3+GkcqcwxffOYTHcTrMgI7RuvOHHmYSOkngxgxLCrCaIt94KPPpUkA==
+X-Received: by 2002:a65:6088:: with SMTP id t8mr100547223pgu.329.1578104600851;
+	Fri, 03 Jan 2020 18:23:20 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:e812:6764:3882:fa62])
 	by smtp.gmail.com with ESMTPSA id
-	s11sm58830590pfd.157.2020.01.03.18.23.18
+	s11sm58830590pfd.157.2020.01.03.18.23.20
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 03 Jan 2020 18:23:18 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:20 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jan 2020 18:22:50 -0800
-Message-Id: <c42d00ff293d0538cad1b84c108bf7f5f49d4d84.1578104305.git.akuster808@gmail.com>
+Date: Fri,  3 Jan 2020 18:22:52 -0800
+Message-Id: <a7426c73a8e9fae468414a2c32a533d9c3729405.1578104305.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1578104305.git.akuster808@gmail.com>
 References: <cover.1578104305.git.akuster808@gmail.com>
-Subject: [PATCH 05/25] siggen: Avoid taskhash mismatch errors for nostamp tasks when dependencies rehash
+Subject: [PATCH 07/25] runqueue: Batch scenequeue updates
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,50 +59,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 04 Jan 2020 02:23:18 -0000
+X-List-Received-Date: Sat, 04 Jan 2020 02:23:19 -0000
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Joshua Watt <jpewhacker@gmail.com>
 
-An example:
+Batch all updates to scenequeue data together in a single invocation
+instead of checking each task serially. This allows the checks for
+sstate object to happen in parallel, and also makes sure the log
+statement only happens once (per set of rehashes).
 
-NOTE: recipe binutils-cross-testsuite-2.32.0-r0: task do_check: Started
-ERROR: Taskhash mismatch b074da4334aff8aa06572e7a8725c941fa6b08de4ce714a65a90c0c0b680abea versus 17375278daed609a7129769b74a1336a37bdef14b534ae85189ccc033a9f2db4 for /home/pokybuild/yocto-worker/qemux86-64/build/meta/recipes-devtools/binutils/binutils-cross-testsuite_2.32.bb:do_check
-NOTE: recipe binutils-cross-testsuite-2.32.0-r0: task do_check: Succeeded
-
-Is caused by a rehash in a dependency happening somewhere earlier in the build
-and the taint being reset.
-
-Change the code so that nostamp taints are preserved to avoid the issue.
-
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 61624a3fc38e8546e01356d5ce7a09f21e7094ab)
+(cherry picked from commit db033a8f8a276d864bdb2e1eef159ab5794a0658)
 ---
- lib/bb/siggen.py | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ lib/bb/runqueue.py | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index edf10105..de853268 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -232,10 +232,14 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         taskdep = dataCache.task_deps[fn]
-         if 'nostamp' in taskdep and task in taskdep['nostamp']:
-             # Nostamp tasks need an implicit taint so that they force any dependent tasks to run
--            import uuid
--            taint = str(uuid.uuid4())
--            data = data + taint
--            self.taints[tid] = "nostamp:" + taint
-+            if tid in self.taints and self.taints[tid].startswith("nostamp:"):
-+                # Don't reset taint value upon every call
-+                data = data + self.taints[tid][8:]
-+            else:
-+                import uuid
-+                taint = str(uuid.uuid4())
-+                data = data + taint
-+                self.taints[tid] = "nostamp:" + taint
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 246a9cdb..cb499a1c 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2320,6 +2320,7 @@ class RunQueueExecute:
+             if tid not in self.pending_migrations:
+                 self.pending_migrations.add(tid)
  
-         taint = self.read_taint(fn, task, dataCache.stamp[fn])
-         if taint:
++        update_tasks = []
+         for tid in self.pending_migrations.copy():
+             if tid in self.runq_running or tid in self.sq_live:
+                 # Too late, task already running, not much we can do now
+@@ -2379,11 +2380,13 @@ class RunQueueExecute:
+             if tid in self.build_stamps:
+                 del self.build_stamps[tid]
+ 
+-            origvalid = False
+-            if tid in self.sqdata.valid:
+-                origvalid = True
++            update_tasks.append((tid, harddepfail, tid in self.sqdata.valid))
++
++        if update_tasks:
+             self.sqdone = False
+-            update_scenequeue_data([tid], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
++            update_scenequeue_data([t[0] for t in update_tasks], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
++
++        for (tid, harddepfail, origvalid) in update_tasks:
+             if tid in self.sqdata.valid and not origvalid:
+                 logger.info("Setscene task %s became valid" % tid)
+             if harddepfail:
 -- 
 2.17.1
 
