@@ -1,52 +1,53 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
-	[209.85.221.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 136377FC1B
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com
+	[209.85.214.173])
+	by mail.openembedded.org (Postfix) with ESMTP id C51247F978
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 Jan 2020 11:03:11 +0000 (UTC)
-Received: by mail-wr1-f48.google.com with SMTP id b6so36864708wrq.0
+	Sat,  4 Jan 2020 02:23:13 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id p9so19661166plk.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 01 Jan 2020 03:03:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+	Fri, 03 Jan 2020 18:23:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=4PTJj3BIDKCA2PhkVD/d0f84ziLMoTO4rRh1tBC0bCU=;
-	b=hzjlPdf6DKoMfFWDzEa76VMgG5ZxoX81kzcjXq6cIQhwawWZYA7akieqOIo0G589Y/
-	7ZzDsqbUrDZMBTkFs77Pr55kdMlSMiEL4XKhHeDB2F0ASUT1gyHO7UZhsGlcbtYyKPHz
-	jgQC+AmXtT8aO/9MT+4/+qWLWneUFsgD0TlT8=
+	bh=POtfboDHqIN7hhObkoHZaYCkUfl3fGXmLddHnyRSBDo=;
+	b=P3n7PRrCF/96JQ/Dj/LEE7ulcYdzdcCDDLWg0qb5xx2Pwk/D3IXfKNazBC94nWue84
+	5hHrGn0uIU1xjXmpKFtiWVY3xJBGlR44QQ9UjuW8zvc+WTz3XmgExZs8Pphe2FUEzRbS
+	a8+qMMWUFuAmk9lZgzFhcPKW203pJC9ECcLJBtH6E5hXnULQjyq5Detv+Y1IjIeKRlKk
+	rtiztI6OdbZyeglZlYLfYYqTjp01rP29LT5dkVUaDAA55wb11GCfmOVpD4l5g7eA7oPb
+	iwHthcBQJKoGNMjmvxCTncNCwnWhIloY31JiCYfIhHpCxKSDdK+6CN6Iz5cBtAuu0Muz
+	9zYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=4PTJj3BIDKCA2PhkVD/d0f84ziLMoTO4rRh1tBC0bCU=;
-	b=nz86wpXMaGjnrRX/Zk5HeIPp5jA7Xz8rLTAprRaXVmmQ2imMkJ3GpSMppNpiW8e/af
-	RtTBJod0WLLrm3Z9YKBM+JZKMkaWiUj/tffAdDAkZAbcItsxvULB6Xra/U3xUpp8tdTj
-	X64vb2HyvNIqZc5k7J8sYSyJkkQbodPI+MQcm71Y57/+Guns5KsiXjYwOLyDJCbgAL9F
-	qRy1OWt3vvXn9mHaw7STrzQiQo8/+ZcxDu5lVg2IyU5XP5elpeVTCXNaexsoDBFglNee
-	9yy3VOlqr4kLF5sbht7jkXZp1nEOpGTzJyRvjxf5UcGE684+5M+fEt3GJNPl4qiRgN7X
-	hMCA==
-X-Gm-Message-State: APjAAAWpWqOZJaE6PjV2/wisqhWojFP3TM7MI8GtBMxHW+dsTtp4LDkv
-	PN7C6dAm8jSb7dH8eNvRB60Ox4V4xds=
-X-Google-Smtp-Source: APXvYqz71AGnvDE8e4pETWYw69V9VxTLCRcky3hQA3lU7naLdZHVrU+3JbqSJLMnp6oQqJLRcgyoAQ==
-X-Received: by 2002:a05:6000:367:: with SMTP id
-	f7mr74906647wrf.174.1577876592436; 
-	Wed, 01 Jan 2020 03:03:12 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=POtfboDHqIN7hhObkoHZaYCkUfl3fGXmLddHnyRSBDo=;
+	b=Cu7D4QGTo27WsUYAN/QBFU99/ZxqwC4kW+gnlmXrBNZow8A8YAJ+atcy0sAdqLk7Fm
+	WTHgbR31lwD1ZW2pY4KT2tgn1LSN4vNsYTTXm3NgyGsYWt6heAnvyVHb9dWxQ+dzyUdm
+	MFkFro0XsqmOfvMxm7KhmE4f19O4gTw57vWSzsNmXSiOlKz2BH6bdS2WJTFNsA5KHd+e
+	A1NzbKfyz0CjV5Oc+SFhR/UYfjy1msy61d3WamvuM75rk/gnuS9UmY3pcbOrG9CNvSaD
+	pTXPphJSmxkaVUEuwNYMCQ3aatrRh4RhxiPSeaTBGh7WMdUKS5kVO3nJTgYKFzXdIcul
+	8Ysw==
+X-Gm-Message-State: APjAAAWzY5OS+pjrGmU8MNLtwmNxsD8rhrqmWwn/s4IoEnR+qQ1P56Nz
+	vToxCjvAmpuUHVHaDY5+oGcrgrKPkBg=
+X-Google-Smtp-Source: APXvYqz2MulXk63DI5UfKR9bvrd5MJgKwUn1R4TF+2nSJYhN1SIQMLtxlVMYGuYHcP8EnbrWHd9iFw==
+X-Received: by 2002:a17:902:b18e:: with SMTP id
+	s14mr97750329plr.261.1578104594771; 
+	Fri, 03 Jan 2020 18:23:14 -0800 (PST)
+Received: from akuster-ThinkPad-T460s.mvista.com
+	([2601:202:4180:a5c0:e812:6764:3882:fa62])
 	by smtp.gmail.com with ESMTPSA id
-	a1sm5250672wmj.40.2020.01.01.03.03.11
+	s11sm58830590pfd.157.2020.01.03.18.23.13
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 01 Jan 2020 03:03:11 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Fri, 03 Jan 2020 18:23:14 -0800 (PST)
+From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 Jan 2020 11:03:05 +0000
-Message-Id: <20200101110305.12317-5-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200101110305.12317-1-richard.purdie@linuxfoundation.org>
-References: <20200101110305.12317-1-richard.purdie@linuxfoundation.org>
+Date: Fri,  3 Jan 2020 18:22:45 -0800
+Message-Id: <cover.1578104305.git.akuster808@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Subject: [PATCH 5/5] cache: Lower debug level for wold build messages
+Subject: [PATCH 00/25] 1.44 Patch review
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,36 +60,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 Jan 2020 11:03:12 -0000
+X-List-Received-Date: Sat, 04 Jan 2020 02:23:15 -0000
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-These messages spam the logs for no good reason, they were useful for debugging
-a particular problem long ago but are distracting noise now. Disable them.
+This is a consolidate set which includes last weeks series. 
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cache.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Passes on AB. Please have comment back by Monday.
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index b6f7da5920..ead8abc5d8 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -208,10 +208,10 @@ class CoreRecipeInfo(RecipeInfoCommon):
- 
-         # Collect files we may need for possible world-dep
-         # calculations
--        if self.not_world:
--            logger.debug(1, "EXCLUDE FROM WORLD: %s", fn)
--        else:
-+        if not self.not_world:
-             cachedata.possible_world.append(fn)
-+        #else:
-+        #    logger.debug(2, "EXCLUDE FROM WORLD: %s", fn)
- 
-         # create a collection of all targets for sanity checking
-         # tasks, such as upstream versions, license, and tools for
+The following changes since commit cfa307aabf710d79c404a8571b4158b864a94727:
+
+  runqueue.py: not show warning for deferred multiconfig task (2019-11-29 11:26:07 +0000)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.44-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.44-nut
+
+Aníbal Limón (1):
+  lib/bb: Add BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on
+    directories
+
+Chris Laplante via bitbake-devel (1):
+  bb.utils.fileslocked: don't leak files if yield throws
+
+Joshua Watt (1):
+  runqueue: Batch scenequeue updates
+
+Ola x Nilsson (1):
+  prserv/serv: Use with while reading pidfile
+
+Richard Purdie (21):
+  hashserv: Add support for equivalent hash reporting
+  runqueue/siggen: Allow handling of equivalent hashes
+  runqueue: Add extra debugging when locked sigs mismatches occur
+  knotty/uihelper: Switch from pids to tids for Task event management
+  siggen: Avoid taskhash mismatch errors for nostamp tasks when
+    dependencies rehash
+  siggen: Ensure new unihash propagates through the system
+  siggen: Fix performance issue in get_unihash
+  runqueue: Rework process_possible_migrations() to improve performance
+  runqueue: Fix task mismatch failures from incorrect logic
+  siggen: Split get_tashhash for performance
+  runqueue: Fix sstate task iteration performance
+  runqueue: Optimise task migration code slightly
+  runqueue: Optimise out pointless loop iteration
+  runqueue: Optimise task filtering
+  runqueue: Only call into the migrations function if migrations active
+  lib/bb: Optimise out debug messages from cooker
+  runqueue: Fix equiv hash handling build failures
+  runqueue: Ensure task dependencies are run correctly
+  runqueue: Fix task dependency corner case in sanity test
+  siggen: Test extra cross/native hashserv method
+  cache: Lower debug level for wold build messages
+
+ lib/bb/__init__.py        |   5 ++
+ lib/bb/build.py           |  25 +++----
+ lib/bb/cache.py           |   6 +-
+ lib/bb/checksum.py        |   5 +-
+ lib/bb/fetch2/__init__.py |   4 +-
+ lib/bb/runqueue.py        | 137 +++++++++++++++++++++++---------------
+ lib/bb/siggen.py          | 104 +++++++++++++++++++++++------
+ lib/bb/ui/knotty.py       |  12 ++--
+ lib/bb/ui/uihelper.py     |  39 ++++++-----
+ lib/bb/utils.py           |   9 +--
+ lib/hashserv/client.py    |   8 +++
+ lib/hashserv/server.py    |  36 ++++++++++
+ lib/prserv/serv.py        |  12 ++--
+ 13 files changed, 277 insertions(+), 125 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
 
