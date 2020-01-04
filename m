@@ -1,54 +1,53 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com
-	[209.85.215.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 4C0EA7F894
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com
+	[209.85.214.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 916E47F894
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  4 Jan 2020 02:23:30 +0000 (UTC)
-Received: by mail-pg1-f176.google.com with SMTP id q127so24195852pga.4
+	Sat,  4 Jan 2020 02:23:31 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id bd4so19658275plb.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 03 Jan 2020 18:23:31 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=2PQFLTpft4I4RHmYaiSVuS4s4wdizbv7+pRw3yKbcHg=;
-	b=tjY5yJLNCewuSNbpFl+RQdZLiq8H49Xy5vZyuAOp3S96Ga0btq8CliLgWHCoJsM8fm
-	GZnQObybGlywDUbhQVYgLQxkII5iCPIfyCN4+0/Yk35IigN9LRPAACGUwR3E30+DfUvZ
-	KZJdhf49bi+86+Xnne6KsOZvx5PSKRYfUS6aJU4I0WcM4SbG+QmBDb/FZruXIOpgVK3r
-	7GjDB/BzPJxadJ/7dvJ2V28/Hgw6S0wMiypBAVvYbMNfU2Kj9cmNG8JBKbig7sprz4HB
-	Bb9oNHPHVz1bsUfl1VB9tQ9TLnV7P7CNNJLw0p7hkCvDaT9fkBmpZkq/9ns4x0f1uIoi
-	JXBg==
+	h=from:to:subject:date:message-id:in-reply-to:references;
+	bh=pYJZrlTM0BAkluFIzDyFJq8aVbNCeqKkRa7nWMZK0No=;
+	b=mvoGYBQKc1nI42H27UAQlPqZEePNQWJGRhrw817cc+oxp85JeehY+d/HGuWzLKr9cG
+	wUufB40ee2wfZSL9DcOgRO+nnzy7TuYIVHNenP630ZkWxQ4Np3KZo8oRCpE2nieErbT3
+	GVOx/WZf0oaL8tzLVTTKL81QHJHVMY+KmF/QVw0eR2hsbWmGcFu1sFqWNnkrpDSDgyG4
+	V6+mhTYT8TOjJSgy+Liquesdh68VSOwIffl2tIJKbNbR2wsfMLDxWPZz4ruwSVJADFMH
+	hAjiAyy2ImnsABnKCcrTQNNQo+yw7vZ4nIOCNVqXHBFS55zPsXGeaVHF3xR4RFsZogtP
+	rkdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=2PQFLTpft4I4RHmYaiSVuS4s4wdizbv7+pRw3yKbcHg=;
-	b=MADR6nmzHFtg1vpwJoxPyHhMjRY4AxxTEfD/yxiMAGI4Ag8f/cv5FiNbvFSC/ikWbK
-	UZop2z6j/IRVmyNySYEYeCY/wsRN962U43+3RRJuVh7nhedZNaFFSLYUVwfjIdB27Bgk
-	bWohOys7aZqquLkf1i5HsThJsO01/sgY1mbfYhV8PZPqRAKjVNjQLaUuAQDdPjIB5RiZ
-	GCtLDSpgj9Mvf9sZmzEx6XhJ+6xL1V0g+r9vG2H6NiSOmY+tY3LJuH3cQDBtKbG6oUpc
-	EOIYyqnKhXVSVo+0DesLXOSmqLDU2FgHO+1HaWArGRcJJhMvwq4v2DsTBfa7buIHuBB3
-	lLuQ==
-X-Gm-Message-State: APjAAAXWuWKSagFUYDHbfkwsmIQZJKpo3IfHlnRuy1SPpKhdaD0ORUea
-	4aePpyv3N4PAH01icPojPkW6agRoszY=
-X-Google-Smtp-Source: APXvYqyZ/yZBl3Y01SnZJJnhVsIQjKLU0iI3+RyNP/14e09WtwLTJQh5rBFLXGDrlfD+pUZeyZ5bRw==
-X-Received: by 2002:a63:5f45:: with SMTP id t66mr96561516pgb.198.1578104611369;
-	Fri, 03 Jan 2020 18:23:31 -0800 (PST)
+	:references;
+	bh=pYJZrlTM0BAkluFIzDyFJq8aVbNCeqKkRa7nWMZK0No=;
+	b=V0S9TR9E6xtIMvFMfgz3T9gIb8B+0Mmq9fWdu2fxHDZadaslgNrjJ75R4a6oTwK2lc
+	BspiMa3A59+NUwsAVWZzOLj1iBAOPSCs+7rUm+Gz4RmqGH3nBtCaocEi3WERbIm7kFg5
+	wVvNZKXmcMnNsKYHclagtalAbOYVcxW5Nd2GbzlC2zORjSXKZMxGGFGp92dgPurgq6sG
+	xmtLJ5xTmP4jyevG8c7LjhMquxfEd5P04U8hDBHVtkQdjOFl/OgrnVfWJOOU3tUpXhgN
+	Gl8BrBspGNh8oIdN9LEmvFMXi4Jo2C9zeq+SzjveU+Bw0nWjAGPH6Ta55xXqYkump2id
+	wtUQ==
+X-Gm-Message-State: APjAAAWu8eu8EpV0A7qnWc3IXa46iYTM0xY9GYLSrmwtkC3/GPzQlbYK
+	qaeDfvTVZoVEIPdULoHg65e2fTYhJ0M=
+X-Google-Smtp-Source: APXvYqxxz9EUCKwHVYuki3Xp/6PM2A8h3vPcwfLlN6vGspc2i9X/qtkZ/y8Qan/vWCKDAyBAnUkFUg==
+X-Received: by 2002:a17:90a:3a86:: with SMTP id
+	b6mr30192868pjc.96.1578104612404; 
+	Fri, 03 Jan 2020 18:23:32 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:e812:6764:3882:fa62])
 	by smtp.gmail.com with ESMTPSA id
-	s11sm58830590pfd.157.2020.01.03.18.23.30
+	s11sm58830590pfd.157.2020.01.03.18.23.31
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 03 Jan 2020 18:23:31 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:32 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jan 2020 18:23:04 -0800
-Message-Id: <4c7d689341f471efdf8ab7c2a7c6a19d2d370f5c.1578104305.git.akuster808@gmail.com>
+Date: Fri,  3 Jan 2020 18:23:05 -0800
+Message-Id: <e731f72ca86629eb935bb1c4f7323421a125aace.1578104305.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1578104305.git.akuster808@gmail.com>
 References: <cover.1578104305.git.akuster808@gmail.com>
-MIME-Version: 1.0
-Subject: [PATCH 19/25] lib/bb: Add BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on directories
+Subject: [PATCH 20/25] prserv/serv: Use with while reading pidfile
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,95 +60,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 04 Jan 2020 02:23:30 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Sat, 04 Jan 2020 02:23:31 -0000
 
-From: Aníbal Limón <anibal.limon@linaro.org>
+From: Ola x Nilsson <ola.x.nilsson@axis.com>
 
-The new BB_SIGNATURE_LOCAL_DIRS_EXCLUDE allows you to specify a list
-of directories to exclude when making taskhash, our specific case
-is using SRC_URI that points local VCS directory.
-
-Use bb.fetch.module to set default to: "CVS .bzr .git .hg .osc .p4 .repo .svn"
-
-Signed-off-by: Aníbal Limón <anibal.limon@linaro.org>
+Signed-off-by: Ola x Nilsson <olani@axis.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 923aff060d8aba8456979c35b16d300ba7c13ff9)
+(cherry picked from commit 6fa8a18ea4994031fdd1253fe363c5d8eeeba456)
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/checksum.py        | 5 +++--
- lib/bb/fetch2/__init__.py | 4 ++--
- lib/bb/siggen.py          | 5 +++--
- 3 files changed, 8 insertions(+), 6 deletions(-)
+ lib/prserv/serv.py | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
-index 5bc8a8fc..677020f4 100644
---- a/lib/bb/checksum.py
-+++ b/lib/bb/checksum.py
-@@ -74,7 +74,7 @@ class FileChecksumCache(MultiProcessCache):
-             else:
-                 dest[0][h] = source[0][h]
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 6d8142fc..446e1fe1 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -292,10 +292,9 @@ class PRServer(SimpleXMLRPCServer):
+         logger.addHandler(streamhandler)
  
--    def get_checksums(self, filelist, pn):
-+    def get_checksums(self, filelist, pn, localdirsexclude):
-         """Get checksums for a list of files"""
+         # write pidfile
+-        pid = str(os.getpid()) 
+-        pf = open(self.pidfile, 'w')
+-        pf.write("%s\n" % pid)
+-        pf.close()
++        pid = str(os.getpid())
++        with open(self.pidfile, 'w') as pf:
++            pf.write("%s\n" % pid)
  
-         def checksum_file(f):
-@@ -90,7 +90,8 @@ class FileChecksumCache(MultiProcessCache):
-             if pth == "/":
-                 bb.fatal("Refusing to checksum /")
-             dirchecksums = []
--            for root, dirs, files in os.walk(pth):
-+            for root, dirs, files in os.walk(pth, topdown=True):
-+                [dirs.remove(d) for d in list(dirs) if d in localdirsexclude]
-                 for name in files:
-                     fullpth = os.path.join(root, name)
-                     checksum = checksum_file(fullpth)
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 07de6c26..731c1608 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1197,14 +1197,14 @@ def get_checksum_file_list(d):
- 
-     return " ".join(filelist)
- 
--def get_file_checksums(filelist, pn):
-+def get_file_checksums(filelist, pn, localdirsexclude):
-     """Get a list of the checksums for a list of local files
- 
-     Returns the checksums for a list of local files, caching the results as
-     it proceeds
- 
-     """
--    return _checksum_cache.get_checksums(filelist, pn)
-+    return _checksum_cache.get_checksums(filelist, pn, localdirsexclude)
- 
- 
- class FetchData(object):
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index e484e5e3..f982bf22 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -126,6 +126,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
- 
-         self.unihash_cache = bb.cache.SimpleCache("1")
-         self.unitaskhashes = self.unihash_cache.init_cache(data, "bb_unihashes.dat", {})
-+        self.localdirsexclude = (data.getVar("BB_SIGNATURE_LOCAL_DIRS_EXCLUDE") or "CVS .bzr .git .hg .osc .p4 .repo .svn").split()
- 
-     def init_rundepcheck(self, data):
-         self.taskwhitelist = data.getVar("BB_HASHTASK_WHITELIST") or None
-@@ -222,9 +223,9 @@ class SignatureGeneratorBasic(SignatureGenerator):
- 
-         if task in dataCache.file_checksums[fn]:
-             if self.checksum_cache:
--                checksums = self.checksum_cache.get_checksums(dataCache.file_checksums[fn][task], recipename)
-+                checksums = self.checksum_cache.get_checksums(dataCache.file_checksums[fn][task], recipename, self.localdirsexclude)
-             else:
--                checksums = bb.fetch2.get_file_checksums(dataCache.file_checksums[fn][task], recipename)
-+                checksums = bb.fetch2.get_file_checksums(dataCache.file_checksums[fn][task], recipename, self.localdirsexclude)
-             for (f,cs) in checksums:
-                 self.file_checksum_values[tid].append((f,cs))
+         self.work_forever()
+         self.delpid()
+@@ -353,9 +352,8 @@ def start_daemon(dbfile, host, port, logfile):
+     ip = socket.gethostbyname(host)
+     pidfile = PIDPREFIX % (ip, port)
+     try:
+-        pf = open(pidfile,'r')
+-        pid = int(pf.readline().strip())
+-        pf.close()
++        with open(pidfile) as pf:
++            pid = int(pf.readline().strip())
+     except IOError:
+         pid = None
  
 -- 
 2.17.1
