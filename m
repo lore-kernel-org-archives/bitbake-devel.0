@@ -1,53 +1,53 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com
-	[209.85.214.173])
-	by mail.openembedded.org (Postfix) with ESMTP id C51247F978
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com
+	[209.85.214.170])
+	by mail.openembedded.org (Postfix) with ESMTP id CF9107F98A
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  4 Jan 2020 02:23:13 +0000 (UTC)
-Received: by mail-pl1-f173.google.com with SMTP id p9so19661166plk.9
+	Sat,  4 Jan 2020 02:23:14 +0000 (UTC)
+Received: by mail-pl1-f170.google.com with SMTP id c13so19665664pls.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 03 Jan 2020 18:23:15 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=POtfboDHqIN7hhObkoHZaYCkUfl3fGXmLddHnyRSBDo=;
-	b=P3n7PRrCF/96JQ/Dj/LEE7ulcYdzdcCDDLWg0qb5xx2Pwk/D3IXfKNazBC94nWue84
-	5hHrGn0uIU1xjXmpKFtiWVY3xJBGlR44QQ9UjuW8zvc+WTz3XmgExZs8Pphe2FUEzRbS
-	a8+qMMWUFuAmk9lZgzFhcPKW203pJC9ECcLJBtH6E5hXnULQjyq5Detv+Y1IjIeKRlKk
-	rtiztI6OdbZyeglZlYLfYYqTjp01rP29LT5dkVUaDAA55wb11GCfmOVpD4l5g7eA7oPb
-	iwHthcBQJKoGNMjmvxCTncNCwnWhIloY31JiCYfIhHpCxKSDdK+6CN6Iz5cBtAuu0Muz
-	9zYw==
+	h=from:to:subject:date:message-id:in-reply-to:references;
+	bh=6bQKooXyuoH7psTkcZwWKaBo2B1xCfR1d+uO6pvRaa4=;
+	b=WI7SFCTB3bud3jtC+iVjAyiGptkvcX8Wn2Nm/3n9iVXX2aHXiPTNZeSQcxEWlu7GB8
+	XuwBdbh59lkp6iPQ+v8usY6a7DndAg0Sz9Dd0EwKC1JWY9ex2yCzmAR7p1EySXJ9xx3+
+	h+n6gd+w7iW6ptahjvO9yopgDYej7ggO/O4TcVcHOKEZGDtdyM3SqWaSNt/A+xVTxj2X
+	LAc48ojMzQ94ywjxwWyTEbjNzm2/vXj+WpNlAe7LCiVMCbfEU/0ltvED4DHZYOuTJ1sq
+	gFFgtNTbVzlZWKio3SFSWO/LEN3byP20cAASgOVBIVQ7lVdP9JcH4WLn2f/Geq3EkfPn
+	1C0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=POtfboDHqIN7hhObkoHZaYCkUfl3fGXmLddHnyRSBDo=;
-	b=Cu7D4QGTo27WsUYAN/QBFU99/ZxqwC4kW+gnlmXrBNZow8A8YAJ+atcy0sAdqLk7Fm
-	WTHgbR31lwD1ZW2pY4KT2tgn1LSN4vNsYTTXm3NgyGsYWt6heAnvyVHb9dWxQ+dzyUdm
-	MFkFro0XsqmOfvMxm7KhmE4f19O4gTw57vWSzsNmXSiOlKz2BH6bdS2WJTFNsA5KHd+e
-	A1NzbKfyz0CjV5Oc+SFhR/UYfjy1msy61d3WamvuM75rk/gnuS9UmY3pcbOrG9CNvSaD
-	pTXPphJSmxkaVUEuwNYMCQ3aatrRh4RhxiPSeaTBGh7WMdUKS5kVO3nJTgYKFzXdIcul
-	8Ysw==
-X-Gm-Message-State: APjAAAWzY5OS+pjrGmU8MNLtwmNxsD8rhrqmWwn/s4IoEnR+qQ1P56Nz
-	vToxCjvAmpuUHVHaDY5+oGcrgrKPkBg=
-X-Google-Smtp-Source: APXvYqz2MulXk63DI5UfKR9bvrd5MJgKwUn1R4TF+2nSJYhN1SIQMLtxlVMYGuYHcP8EnbrWHd9iFw==
-X-Received: by 2002:a17:902:b18e:: with SMTP id
-	s14mr97750329plr.261.1578104594771; 
-	Fri, 03 Jan 2020 18:23:14 -0800 (PST)
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references;
+	bh=6bQKooXyuoH7psTkcZwWKaBo2B1xCfR1d+uO6pvRaa4=;
+	b=YwZpLgayLmxafi2VQ6vIaV00jcx+jYQH/pc+MqJmcLT+xMLliXNoX9g6AmbmfGgCNy
+	lk6wSMcNjl4ZTDpz+lq6TnIAZDShjbxMGQogGba6Fgw7nKYwJ8o/whGDmskg4aLVQLSB
+	1rTY+o+DwLUPO+rv/IQvsgjP5gvPubpYa0fKmpE6vEW2iEacP/+zan7ay+CY07WQT4vX
+	Fc0lZ+wJ+rqVkNOXaeG6YFjAdpYWoSJ9jbUVEqx/J9QvwuAfM1Bbp4cmPjHkdAMykoKL
+	pxBh3t+CcUxDvAnUY6x9d6mXL/PxJT7N5ffoWoW1lZyA/R1+hydDLxYVkSvqDypuKGfu
+	EYxQ==
+X-Gm-Message-State: APjAAAXdHJ6OyVHWpWAr2f3bNslA+q9sjj0OipBlHypxro75AqXh/9TK
+	o3U4YY3l/Or+w+rjZRD0VSUE4TdpSZg=
+X-Google-Smtp-Source: APXvYqwAFRweMkrFby/KTQ4n5zj9n79RwUOwVD4olF19vueQZPypUrCJUYi4XeTAJ18LsRH1Dalxsw==
+X-Received: by 2002:a17:902:d686:: with SMTP id
+	v6mr96565262ply.266.1578104595672; 
+	Fri, 03 Jan 2020 18:23:15 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:e812:6764:3882:fa62])
 	by smtp.gmail.com with ESMTPSA id
-	s11sm58830590pfd.157.2020.01.03.18.23.13
+	s11sm58830590pfd.157.2020.01.03.18.23.14
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 03 Jan 2020 18:23:14 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:15 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jan 2020 18:22:45 -0800
-Message-Id: <cover.1578104305.git.akuster808@gmail.com>
+Date: Fri,  3 Jan 2020 18:22:46 -0800
+Message-Id: <0d154434ed8e3e88ad440a8dd21a164e72ba4ac5.1578104305.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Subject: [PATCH 00/25] 1.44 Patch review
+In-Reply-To: <cover.1578104305.git.akuster808@gmail.com>
+References: <cover.1578104305.git.akuster808@gmail.com>
+Subject: [PATCH 01/25] hashserv: Add support for equivalent hash reporting
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,74 +61,106 @@ List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Sat, 04 Jan 2020 02:23:15 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-This is a consolidate set which includes last weeks series. 
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Passes on AB. Please have comment back by Monday.
+The reason for this should be recorded in the commit logs. Imagine
+you have a target recipe (e.g. meta-extsdk-toolchain) which depends on
+gdb-cross. sstate in OE-Core allows gdb-cross to have the same hash
+regardless of whether its built on x86 or arm. The outhash will be
+different.
 
-The following changes since commit cfa307aabf710d79c404a8571b4158b864a94727:
+We need hashequiv to be able to adapt to the prescence of sstate artefacts
+for meta-extsdk-toolchain and allow the hashes to re-intersect, rather than
+trying to force a rebuild of meta-extsdk-toolchain. By this point in the build,
+it would have already been installed from sstate so the build needs to adapt.
 
-  runqueue.py: not show warning for deferred multiconfig task (2019-11-29 11:26:07 +0000)
+Equivalent hashes should be reported to the server as a taskhash that
+needs to map to an specific unihash. This patch adds API to the hashserv
+client/server to allow this.
 
-are available in the Git repository at:
+[Thanks to Joshua Watt for help with this patch]
 
-  git://git.openembedded.org/bitbake-contrib stable/1.44-nut
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.44-nut
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 674692fd46a7691a1de59ace6af0556cc5dd6a71)
+---
+ lib/hashserv/client.py |  8 ++++++++
+ lib/hashserv/server.py | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-Aníbal Limón (1):
-  lib/bb: Add BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on
-    directories
-
-Chris Laplante via bitbake-devel (1):
-  bb.utils.fileslocked: don't leak files if yield throws
-
-Joshua Watt (1):
-  runqueue: Batch scenequeue updates
-
-Ola x Nilsson (1):
-  prserv/serv: Use with while reading pidfile
-
-Richard Purdie (21):
-  hashserv: Add support for equivalent hash reporting
-  runqueue/siggen: Allow handling of equivalent hashes
-  runqueue: Add extra debugging when locked sigs mismatches occur
-  knotty/uihelper: Switch from pids to tids for Task event management
-  siggen: Avoid taskhash mismatch errors for nostamp tasks when
-    dependencies rehash
-  siggen: Ensure new unihash propagates through the system
-  siggen: Fix performance issue in get_unihash
-  runqueue: Rework process_possible_migrations() to improve performance
-  runqueue: Fix task mismatch failures from incorrect logic
-  siggen: Split get_tashhash for performance
-  runqueue: Fix sstate task iteration performance
-  runqueue: Optimise task migration code slightly
-  runqueue: Optimise out pointless loop iteration
-  runqueue: Optimise task filtering
-  runqueue: Only call into the migrations function if migrations active
-  lib/bb: Optimise out debug messages from cooker
-  runqueue: Fix equiv hash handling build failures
-  runqueue: Ensure task dependencies are run correctly
-  runqueue: Fix task dependency corner case in sanity test
-  siggen: Test extra cross/native hashserv method
-  cache: Lower debug level for wold build messages
-
- lib/bb/__init__.py        |   5 ++
- lib/bb/build.py           |  25 +++----
- lib/bb/cache.py           |   6 +-
- lib/bb/checksum.py        |   5 +-
- lib/bb/fetch2/__init__.py |   4 +-
- lib/bb/runqueue.py        | 137 +++++++++++++++++++++++---------------
- lib/bb/siggen.py          | 104 +++++++++++++++++++++++------
- lib/bb/ui/knotty.py       |  12 ++--
- lib/bb/ui/uihelper.py     |  39 ++++++-----
- lib/bb/utils.py           |   9 +--
- lib/hashserv/client.py    |   8 +++
- lib/hashserv/server.py    |  36 ++++++++++
- lib/prserv/serv.py        |  12 ++--
- 13 files changed, 277 insertions(+), 125 deletions(-)
-
+diff --git a/lib/hashserv/client.py b/lib/hashserv/client.py
+index f6595661..ae0cce9d 100644
+--- a/lib/hashserv/client.py
++++ b/lib/hashserv/client.py
+@@ -148,6 +148,14 @@ class Client(object):
+         m['unihash'] = unihash
+         return self.send_message({'report': m})
+ 
++    def report_unihash_equiv(self, taskhash, method, unihash, extra={}):
++        self._set_mode(self.MODE_NORMAL)
++        m = extra.copy()
++        m['taskhash'] = taskhash
++        m['method'] = method
++        m['unihash'] = unihash
++        return self.send_message({'report-equiv': m})
++
+     def get_stats(self):
+         self._set_mode(self.MODE_NORMAL)
+         return self.send_message({'get-stats': None})
+diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+index 0aff7768..cc7e4823 100644
+--- a/lib/hashserv/server.py
++++ b/lib/hashserv/server.py
+@@ -143,6 +143,7 @@ class ServerClient(object):
+             handlers = {
+                 'get': self.handle_get,
+                 'report': self.handle_report,
++                'report-equiv': self.handle_equivreport,
+                 'get-stream': self.handle_get_stream,
+                 'get-stats': self.handle_get_stats,
+                 'reset-stats': self.handle_reset_stats,
+@@ -303,6 +304,41 @@ class ServerClient(object):
+ 
+         self.write_message(d)
+ 
++    async def handle_equivreport(self, data):
++        with closing(self.db.cursor()) as cursor:
++            insert_data = {
++                'method': data['method'],
++                'outhash': "",
++                'taskhash': data['taskhash'],
++                'unihash': data['unihash'],
++                'created': datetime.now()
++            }
++
++            for k in ('owner', 'PN', 'PV', 'PR', 'task', 'outhash_siginfo'):
++                if k in data:
++                    insert_data[k] = data[k]
++
++            cursor.execute('''INSERT OR IGNORE INTO tasks_v2 (%s) VALUES (%s)''' % (
++                ', '.join(sorted(insert_data.keys())),
++                ', '.join(':' + k for k in sorted(insert_data.keys()))),
++                insert_data)
++
++            self.db.commit()
++
++            # Fetch the unihash that will be reported for the taskhash. If the
++            # unihash matches, it means this row was inserted (or the mapping
++            # was already valid)
++            row = self.query_equivalent(data['method'], data['taskhash'])
++
++            if row['unihash'] == data['unihash']:
++                logger.info('Adding taskhash equivalence for %s with unihash %s',
++                                data['taskhash'], row['unihash'])
++
++            d = {k: row[k] for k in ('taskhash', 'method', 'unihash')}
++
++        self.write_message(d)
++
++
+     async def handle_get_stats(self, request):
+         d = {
+             'requests': self.request_stats.todict(),
 -- 
 2.17.1
 
