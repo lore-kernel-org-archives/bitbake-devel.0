@@ -1,53 +1,53 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com
-	[209.85.215.195])
-	by mail.openembedded.org (Postfix) with ESMTP id EF81F7F894
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com
+	[209.85.210.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 321597F894
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  4 Jan 2020 02:23:25 +0000 (UTC)
-Received: by mail-pg1-f195.google.com with SMTP id b137so24180161pga.6
+	Sat,  4 Jan 2020 02:23:26 +0000 (UTC)
+Received: by mail-pf1-f177.google.com with SMTP id 195so23424397pfw.11
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 03 Jan 2020 18:23:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=sHHC5spCdMcHMA8SiX5GYtNvF19WVafzS8tfmK/YS/4=;
-	b=OCkEHY/4d2ewWniifJMJaX/UnChFMHsjLn58EkQooqLbvB+HiNbblpHeHNlokvuKrs
-	4BIhC6aJlSfIXSHfQ+fdnz28oZWJ+9J/cVhe979d6vmVeyk4vVbND9TaLIV//MThYS6L
-	adiRDv3f3tMJKEC8XsNGw8Hya2xk6JTuShCYb4Csg3tNrO4z3SHucEw3oCtl6x5UawHz
-	7JjczyxrfPq/CP8VaF+jk18/5xbYWECEn5IrO44fMxp9aMSuS7D9WysxUi4ww4VcMCfu
-	vC7+6Dz/Vgh6jZa3566zQI12A/IhVWA8Wbr9jPY2JeZTSbwfjQ0D9RNWC7/sgMRJtcDG
-	jL0A==
+	bh=Rlc1OF0Phsi+GUzKQVF5KBH54uMrUokL0zzu3ychQow=;
+	b=Z5RkOyRqrVvL8Jrv8kxA3Dg1pA6x6mBibSXU7UvHoKUuUitVkogYrlfG1Smh9ddzzr
+	XFKE1sIvQfXT6Ky/E9RXT8dtIkUZ25kjQR24UofcRBWikR8LO2hkoAMLao7Ay0VRL2Wj
+	nhlOXualKL8n1BgLaVhSJGI/GeMk40KdI047JH1sWymhsnEwBo07XXoingzA5y3RMcUY
+	b4jaqtYUigsQoqam8R56j+mxnT3T9D9pVCrPLsYZ8/a4bJ73T7m8MOx5AedWMSIazzpv
+	aay4AIQx5Me1U2LPOtZj/eXGk31Ukvnel2iyJ3R52oE75cziPyUq+SsFkBCqiI1eQXSF
+	CM0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=sHHC5spCdMcHMA8SiX5GYtNvF19WVafzS8tfmK/YS/4=;
-	b=s0zOeSQ8lIp7H6BDvTroIL/JOb9474o9agrFXMVa41kSkY5/VDz6ABI4+E3/OwFhpa
-	g0BJ4PU0UaPP7nRbvBxA1nSRveelC0+LuYZgxIoQGlI3lEx5RiLi67pZlVVJna89KAbG
-	Vg+LLl/tWk/EXk33akO80206P+9T4yOl/gncflxIzXbRhKOJUOe+PEGqmlRHgZrud0So
-	fqwa+OhuLGb6kNr8zV4q3do3zzUmg6QilSjAolquo7Nqx+BCMnlWg8Z53a4eRzj7gLi2
-	Y3G2nedIq6UUdSWKZtPR/hl1unMh+teW45WQbuP2vfQv2WzGVCs2YIgNufGKEQQgN4xT
-	wSmA==
-X-Gm-Message-State: APjAAAXkORz4j/EV/4Qy6qhq3qwb2lo3ao8V29PadwnSKICwzh2czhzG
-	+d1AnNHt3cWnwEWprSQqh9TYUvqhfSE=
-X-Google-Smtp-Source: APXvYqwyS7dqmKEU+7HMsAsuvL8PchsP1RsgqAIOKYAtY6icAdavkrunjarri5EsMiOQohLv7aXwBA==
-X-Received: by 2002:a63:5162:: with SMTP id
-	r34mr101209406pgl.227.1578104606932; 
+	bh=Rlc1OF0Phsi+GUzKQVF5KBH54uMrUokL0zzu3ychQow=;
+	b=mb8rd0CY8BQcBWaqRyeiVu3UG9iQOftvFoxzMQcG4jLd9J6GTXrPAYhg+NyckJIgFD
+	L1oKV1BqRRQKs0HT1xbfJ/L9YMogoMrWNCs+/Ea8DaqkvBDEPg5L5G/5GH+5p6EeO/g4
+	Uqm6Lu3W8fYhbt+pjU99WdZjLO2PkI6uHeFKwsLIAOXPm9JtPLNx9tw+PXoVHO+7Cw4e
+	snz0gmzVg6RT2wRbwUXI9OOfVgAHZGoFSWIOhY3DvGxKzXvzrft8grJo41jsnLoVcPsb
+	fPRPFzceOBV5HvOuZ5XevcYduUW+9I+w1TrXlKE4iwCTOwVbZ0nx2pWsIxEYQmP4jo8q
+	TSpg==
+X-Gm-Message-State: APjAAAXp/92J+p8QLQU5k0r+Qp8OJAx8kGqqZg+0IUQg0Fngz72xo0I0
+	TaQv82U53GIvO3SxBR6P5Pkz3PFLytc=
+X-Google-Smtp-Source: APXvYqxoxfSVZsvtWBvbpqpuKaVJUcTe/Cb+IxsP3lSUJB2xIk75W7uuy9FpYf439pbW6JsGHMpFZg==
+X-Received: by 2002:a63:5b0e:: with SMTP id
+	p14mr102530918pgb.315.1578104606070; 
 	Fri, 03 Jan 2020 18:23:26 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:e812:6764:3882:fa62])
 	by smtp.gmail.com with ESMTPSA id
-	s11sm58830590pfd.157.2020.01.03.18.23.26
+	s11sm58830590pfd.157.2020.01.03.18.23.25
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 03 Jan 2020 18:23:26 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:25 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jan 2020 18:22:59 -0800
-Message-Id: <57df7f191755dd887827d51b125d246c1af3e1b6.1578104305.git.akuster808@gmail.com>
+Date: Fri,  3 Jan 2020 18:22:58 -0800
+Message-Id: <a80024a4397485f96693c4df108b40f6b1bdf32b.1578104305.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1578104305.git.akuster808@gmail.com>
 References: <cover.1578104305.git.akuster808@gmail.com>
-Subject: [PATCH 14/25] runqueue: Optimise task migration code slightly
+Subject: [PATCH 13/25] runqueue: Fix sstate task iteration performance
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,48 +64,37 @@ X-List-Received-Date: Sat, 04 Jan 2020 02:23:26 -0000
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Move the calls to difference_update out a code level which improves efficiency
-significantly.
+Creating a new sorted list of sstate tasks each iteration through runqueue is
+extremely ineffecient and was compounded by the recent change from a list to set.
 
-Also further combine the outer loop for efficiency too.
-
-These two changes remove a bottleneck from the performance charts.
+Create one sorted list instead of recreating it each time.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit e28ec69356f1797de3e4e3fca0fef710bc4564de)
+(cherry picked from commit de18824996841c3f35f54ff5ad12f94f6dc20d88)
 ---
- lib/bb/runqueue.py | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ lib/bb/runqueue.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 2ba4557f..6da612b7 100644
+index 515e9d43..2ba4557f 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -2268,15 +2268,16 @@ class RunQueueExecute:
+@@ -1965,10 +1965,14 @@ class RunQueueExecute:
+         self.rq.read_workers()
+         self.process_possible_migrations()
  
-         # Work out all tasks which depend upon these
-         total = set()
-+        next = set()
-         for p in toprocess:
--            next = set(self.rqdata.runtaskentries[p].revdeps)
--            while next:
--                current = next.copy()
--                total = total | next
--                next = set()
--                for ntid in current:
--                    next |= self.rqdata.runtaskentries[ntid].revdeps
--                    next.difference_update(total)
-+            next |= self.rqdata.runtaskentries[p].revdeps
-+        while next:
-+            current = next.copy()
-+            total = total | next
-+            next = set()
-+            for ntid in current:
-+                next |= self.rqdata.runtaskentries[ntid].revdeps
-+            next.difference_update(total)
- 
-         # Now iterate those tasks in dependency order to regenerate their taskhash/unihash
-         next = set()
++        if not hasattr(self, "sorted_setscene_tids"):
++            # Don't want to sort this set every execution
++            self.sorted_setscene_tids = sorted(self.rqdata.runq_setscene_tids)
++
+         task = None
+         if not self.sqdone and self.can_start_task():
+             # Find the next setscene to run
+-            for nexttask in sorted(self.rqdata.runq_setscene_tids):
++            for nexttask in self.sorted_setscene_tids:
+                 if nexttask in self.sq_buildable and nexttask not in self.sq_running and self.sqdata.stamps[nexttask] not in self.build_stamps.values():
+                     if nexttask not in self.sqdata.unskippable and len(self.sqdata.sq_revdeps[nexttask]) > 0 and self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and self.check_dependencies(nexttask, self.sqdata.sq_revdeps[nexttask]):
+                         if nexttask not in self.rqdata.target_tids:
 -- 
 2.17.1
 
