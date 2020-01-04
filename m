@@ -1,52 +1,52 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com
-	[209.85.210.195])
-	by mail.openembedded.org (Postfix) with ESMTP id A536A7F894
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com
+	[209.85.210.194])
+	by mail.openembedded.org (Postfix) with ESMTP id BA4527F898
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  4 Jan 2020 02:23:28 +0000 (UTC)
-Received: by mail-pf1-f195.google.com with SMTP id q8so24287397pfh.7
+	Sat,  4 Jan 2020 02:23:29 +0000 (UTC)
+Received: by mail-pf1-f194.google.com with SMTP id 4so24278370pfz.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 03 Jan 2020 18:23:30 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=uqsU4iahV6ya7AsZvE73RbOcH+y0VC0dy9bHnjPg1qg=;
-	b=RNDFwDnAVolMBkWUw25xdgzBxgANG11+TfrgPYRADZZlpOMi3/J6J+UsQqeVKYllVo
-	7cPmD73OszO2upuxyCQ2SNJpibK6/NXuv0UuWoUmKwYlE9HeQMiyY1D9ua2Fau1gzfrX
-	dK7v3f8ihEUL4BNoLH21vLAP7fvs1fgNfe9IjMADLI9vpHhRIBEYI1BzXLhDAhM13tBB
-	pMeeJn4cU5U4olzmGpFL2Rp50ORGkIrkwWq6tELWnrOUVadkswq8t3WklOlAeB/XJjfJ
-	vHNEiu2jYqSoA2Q0LXVpvVEalLTtjU9jxXrX6nGxxTLZcrhkw5zwGroub9dUa5yWcV5g
-	Vxlg==
+	bh=aYPGjXLf6XivrgBH5cjcAjQXglcJR21U0Vx1oKVXJ2I=;
+	b=KqtCC5pDIyUex71MPYyH3o69gpJ6251MgEv7WAVesb/7I8wcysqfTUtiVHvuydCe8B
+	/0LMEuD49uwFBC8nr0eoo4bgNXufLIxEJ/aeYeDcXbyyRoyyrgw+XwT3Qq6er8/juJFt
+	fl56e2psAXvlkDMgese6x6KsWXmziJBfERzXzIq/Zk6+dRwyfZlGzgVPaivXqG21lVzZ
+	4nH3QE8sBPculHMKkHv/d7F3NxsLlEsB6wIqEmUm8oec4f4cESyZkOyrus5U83LYfG8D
+	5/SgUuHbeCl8w204duSWVphnsJUM7VFjCqgPgmwU3zR+HIrXeNPRJ47PSaLln8+HWhqo
+	zq8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=uqsU4iahV6ya7AsZvE73RbOcH+y0VC0dy9bHnjPg1qg=;
-	b=IYA0K9QSZ6FVsKqgMUydIOSsJ/vLzxN29pABMknKjyvoFigXPSs5ypuMgmpHuG4Wbz
-	MVIYIIULDWcIkXEds9am1Z5UCVq0k9lFguJPjRIdhss5HqEn6Ojxt+ZS9XMwIuNtlVZ7
-	KCjVIO32+br2991brJIwLU/Y/5YFjC5Abg1M80MJPpsOHxSw/CesdYquCscfW2lOUBzE
-	98Ino6DiUqfKPDvpUPbWvKZlZssluIaZC9KOyFbtY5cRxLjmSlP1heO+NEi9PyVmSUG0
-	ik2LCc2G/zavQML60j/Zi0h3gD8u3OxPylysVRFjN1bsFRw0N/gygH4peJhZfyzS2yCS
-	7AGA==
-X-Gm-Message-State: APjAAAWpYlX9TuZmGW9rCuqV05owV9l3adbzrQ9J4jkSi2j5zNHo8czR
-	nOArZEIGo31ybuWLq+KjEeSNs0qckHU=
-X-Google-Smtp-Source: APXvYqxCc/jdwX0a4WB4QN1bzdRNwwEl7/jFVZPg1bxHkjkkKCtEtSVApv+Dy9H6hqlWg4PdHfd0eg==
-X-Received: by 2002:a63:70e:: with SMTP id 14mr97402741pgh.266.1578104609649; 
-	Fri, 03 Jan 2020 18:23:29 -0800 (PST)
+	bh=aYPGjXLf6XivrgBH5cjcAjQXglcJR21U0Vx1oKVXJ2I=;
+	b=tuTWngJOnxlMp9hA5GnlM6QHewlW5QmdSa62zNRrFvtLXdixImnp/2h6QwkzbEiJ1r
+	t31IBRosxncojvjj4mgOdjOSPUIsEkMH6Lw6+0DI+PITl6MM2gHYI8F0XAtQA3bqThd8
+	sVfkOeYxBXzzT4vRXyP0cZoTUAMVyCFHLxnq5wmSTg4SggiFWw0lN3YqQiePM8iBaR84
+	CL4qZYSxcAUZ8bsi4gP4m316bH1SFaZEJKSIsRoJz3zH4Mp5BDmRKmn/R5OLyItyBcD0
+	mtwTj2upCrjbbBRO7kfX56zKfWs4qdXzNiwOl5gYCEvGU+5vosHiIc+zyN0zRW8CNQD9
+	IbZA==
+X-Gm-Message-State: APjAAAXAQr/oSObkzivjMiQKLUVgZK9sn65bWdv3k2CUU8yJN4LHM3N/
+	XMw65p5bSsa/P80ceukChsSXh1vkrJ0=
+X-Google-Smtp-Source: APXvYqw8pE5nG72MRS4VABRSd5sUMAPLXM4ZG4u7Kv5wR8ALBC5Cu0BfhdwYBQs0N7YFBPU9Sjs6iQ==
+X-Received: by 2002:a63:fc01:: with SMTP id j1mr103180452pgi.220.1578104610667;
+	Fri, 03 Jan 2020 18:23:30 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:e812:6764:3882:fa62])
 	by smtp.gmail.com with ESMTPSA id
 	s11sm58830590pfd.157.2020.01.03.18.23.29
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 03 Jan 2020 18:23:29 -0800 (PST)
+	Fri, 03 Jan 2020 18:23:30 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jan 2020 18:23:02 -0800
-Message-Id: <53a3cba93401c902d1d214cafe0bc036e1b101e5.1578104305.git.akuster808@gmail.com>
+Date: Fri,  3 Jan 2020 18:23:03 -0800
+Message-Id: <f224201b5003b89367d688b1f08a062754fce13a.1578104305.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1578104305.git.akuster808@gmail.com>
 References: <cover.1578104305.git.akuster808@gmail.com>
-Subject: [PATCH 17/25] runqueue: Only call into the migrations function if migrations active
+Subject: [PATCH 18/25] lib/bb: Optimise out debug messages from cooker
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -63,29 +63,39 @@ X-List-Received-Date: Sat, 04 Jan 2020 02:23:29 -0000
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-This doesn't save much time but does make the profile counts for the
-function more accurate which is in itself useful.
+We have bb.debug(2, xxx) messages in cooker which are useful for debugging
+but have really bad effects on performance, 640,000 calls on recent profile
+graphs taking tens of seconds.
+
+Rather than commenting out debug which can be useful for debugging, don't
+create events for debug log messages from cooker which would never be seen.
+We already stop the messages hitting the IPC but this avoids the overhead
+of creating the log messages too, which has been shown to be signficiant
+on the profiles. This allows the code to perform whilst allowing debug
+messages to be availble when wanted/enabled.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit d446fa89d206fbc6d098215163c968ea5a8cf4a9)
+(cherry picked from commit f04cd931091fb0508badf3e002d70a6952700495)
 ---
- lib/bb/runqueue.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/bb/__init__.py | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index b90ac875..729439ef 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1959,7 +1959,8 @@ class RunQueueExecute:
-         """
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index c144311b..ce519ba3 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -43,6 +43,11 @@ class BBLogger(Logger):
+         Logger.__init__(self, name)
  
-         self.rq.read_workers()
--        self.process_possible_migrations()
-+        if self.updated_taskhash_queue or self.pending_migrations:
-+            self.process_possible_migrations()
+     def bbdebug(self, level, msg, *args, **kwargs):
++        if not bb.event.worker_pid:
++            if self.name in bb.msg.loggerDefaultDomains and level > (bb.msg.loggerDefaultDomains[self.name]):
++                return
++            if level > (bb.msg.loggerDefaultDebugLevel):
++                return
+         return self.log(logging.DEBUG - level + 1, msg, *args, **kwargs)
  
-         if not hasattr(self, "sorted_setscene_tids"):
-             # Don't want to sort this set every execution
+     def plain(self, msg, *args, **kwargs):
 -- 
 2.17.1
 
