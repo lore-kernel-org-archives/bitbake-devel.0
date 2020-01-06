@@ -1,53 +1,52 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com
-	[209.85.214.178])
-	by mail.openembedded.org (Postfix) with ESMTP id E108B7FD83
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com
+	[209.85.215.175])
+	by mail.openembedded.org (Postfix) with ESMTP id 3573F7FDE7
 	for <bitbake-devel@openembedded.org>;
-	Mon,  6 Jan 2020 16:27:05 +0000 (UTC)
-Received: by mail-pl1-f178.google.com with SMTP id g6so19086757plp.6
+	Mon,  6 Jan 2020 16:27:06 +0000 (UTC)
+Received: by mail-pg1-f175.google.com with SMTP id b9so27082446pgk.12
 	for <bitbake-devel@openembedded.org>;
 	Mon, 06 Jan 2020 08:27:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=0ViN4eew048vW/phfY2G2OZGq0yL+x9DncJgy3Y4PCk=;
-	b=VYC6sme9SePNjleUAVPnWMVkUPTPHqISlRVJ2gGABvtkmWXcuNIE/6lhsZdcOAvkTg
-	OsLTogOS4SRfBjrk+g7D7gkpkf3Xk7b9TedfYASf3l9nZAphqf0Fb5pFiM1I1fpSssfc
-	gy6n8wDJYMWLZ9nm3vtGL9Ebg8S5YotIxGjvaib5bfSqWM8gZ+M46IObYjyJTWcUBpVA
-	nUOvdcdSO+/ur1Jqn8fvXTnYJpW3h4jOPGTO3S/OW//gFlCx6fp+/Q7Ib/f29jiSFB5k
-	DO+vcQJUvnwxSa6e1saUQAk/TIhgM0jGhhZ9/dlU1WzuYTpeH2IHo8qRuonTgba7Jz7y
-	1RZA==
+	bh=uqsU4iahV6ya7AsZvE73RbOcH+y0VC0dy9bHnjPg1qg=;
+	b=KZrecoSPV8q2eEyK+lwQYggn/qw+Ojqr/Dl3M8C7ybN1AnFj35VZW9bAqT3zHLe+dn
+	/QtrppeeB1X/N7RZHThhM1MzwwK7TNjHC1UFrdq9P1SwiSEliqYVNCjut3uhDU6hWkQf
+	iTErp8ei5EgD8btPrf3OgAKeYVQjSHmit3yXVvIg2E7aWkkMLxDqb0gu+zz/0noL6ipk
+	F6dQC/UcQNjfJYu2ZQ8VbohkiopYU9+xf0EJqlux6s/ysYU/wissryk97jAH+HioTtI3
+	jzvaZJs7S1Z2jEEUYQFs+9BTqszDPJHFtSPq0shBbBbFL5jDShr/IwiFzjVwVMPpq21G
+	uN8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=0ViN4eew048vW/phfY2G2OZGq0yL+x9DncJgy3Y4PCk=;
-	b=Mg+vqdaiX8MvnZIDjpBNFu9ubi3qYzwlBdiiAPvd2tKpzMFbhnSg5N8VVCWp+EfsWw
-	yGbsyXPW2IPlMFZP3yIvta+DMO9KByZoSBXXHjGYtyB+mRWEtVPMTBFjtKoPIag2mc7s
-	ser63K8yyhccQ504pPui6r6RIkcL8CGUdLo2FbUzEdb/7TdnHoC+5roWPr08KsubDoG3
-	KspLycLVKljO35t8QywLenjrRjRrdA2Q/PIw1qKQJUgKBQiD0IiaIvt2IRGf0R9sM+/8
-	pRS5CEibpt/mpTBW9yu3KaB3rtGOyvWfwSBWLrlc9WwVARB+xiUlHR+C8hjKg0tw87Fh
-	eXxw==
-X-Gm-Message-State: APjAAAW/kiQaZVObNWLu2bDLekbZLkvc4gqjm4rRFT1FYPdPzwBMlgIz
-	LaVL0RhCdnvvYJTopulOiiN12iCs
-X-Google-Smtp-Source: APXvYqwx12nzsg7FscHEvI1q4vNYXCWPZkrv+w5F819jNAjBLNRu0ySkb7iQS2KCYINkeEZqGHpSFQ==
-X-Received: by 2002:a17:90a:8545:: with SMTP id
-	a5mr43898757pjw.43.1578328026203; 
-	Mon, 06 Jan 2020 08:27:06 -0800 (PST)
+	bh=uqsU4iahV6ya7AsZvE73RbOcH+y0VC0dy9bHnjPg1qg=;
+	b=cIG2JJp0iSXNEXh0j637XjroCm944K5GmdCqujaIkbC/FwIWz2q/Zn/pgYtrO7vWdM
+	/L45OUTB/Lw/RLHLDuJuxHzQt48PIINLtGwfGUNQrAnHqivMwzDnpQ2IDsTNm7oihz0T
+	OgI7+0o3ZTs0ltroxGoAXXN3kGtCLJyPlmfODhYxAgyOQb6vY/P5cGikpcy2YVMUl4V5
+	gVkOCZAnpc8fn+5gsK8Z3FNDihFq3C9DKVBXhQvKdlvewZ6MJywAObJ608WQrJWDaG3n
+	rtSLyz/6wYLNmaD2KfGuAjWsDUhVoYbp7/eURmfHSIDevqaRYynzwzi35CjLNqRRQs9J
+	Q5TA==
+X-Gm-Message-State: APjAAAWeRnSAELnNpi2Hf/DCdAkBWCKPfydJc6ScHthaCW2NoX1FEUbs
+	qLJ5Gq7TQ7y49ZO/fgCoXL9zSu2N
+X-Google-Smtp-Source: APXvYqwjBuJEU5Zao+bfm/5uP6pJ7rp1Aeyyd5ccPMGy2pdrcbESEhsOH9UXaAb3+jK2JbzszRLGIg==
+X-Received: by 2002:a63:d543:: with SMTP id v3mr109029012pgi.285.1578328027112;
+	Mon, 06 Jan 2020 08:27:07 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:6832:e19c:36b9:d5e])
 	by smtp.gmail.com with ESMTPSA id
-	d3sm24538668pjx.16.2020.01.06.08.27.05
+	d3sm24538668pjx.16.2020.01.06.08.27.06
 	for <bitbake-devel@openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 06 Jan 2020 08:27:05 -0800 (PST)
+	Mon, 06 Jan 2020 08:27:06 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@openembedded.org
-Date: Mon,  6 Jan 2020 08:26:37 -0800
-Message-Id: <7fa3ede953971f761d8cafafa37d1bcb65ad6a77.1578327474.git.akuster808@gmail.com>
+Date: Mon,  6 Jan 2020 08:26:38 -0800
+Message-Id: <53a3cba93401c902d1d214cafe0bc036e1b101e5.1578327474.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1578327474.git.akuster808@gmail.com>
 References: <cover.1578327474.git.akuster808@gmail.com>
-Subject: [1.44 16/25] runqueue: Optimise task filtering
+Subject: [1.44 17/25] runqueue: Only call into the migrations function if migrations active
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -64,39 +63,29 @@ X-List-Received-Date: Mon, 06 Jan 2020 16:27:06 -0000
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-We were seeing this running thousands of times with hashequiv, do
-the filtering where it makes more sense and make it persist.
+This doesn't save much time but does make the profile counts for the
+function more accurate which is in itself useful.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 2cfeb9998a8ad5b1dcda0bb4e192c5e4306dab17)
+(cherry picked from commit d446fa89d206fbc6d098215163c968ea5a8cf4a9)
 ---
- lib/bb/runqueue.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ lib/bb/runqueue.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 73775d97..b90ac875 100644
+index b90ac875..729439ef 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -148,8 +148,9 @@ class RunQueueScheduler(object):
+@@ -1959,7 +1959,8 @@ class RunQueueExecute:
          """
-         Return the id of the first task we find that is buildable
-         """
-+        # Once tasks are running we don't need to worry about them again
-+        self.buildable.difference_update(self.rq.runq_running)
-         buildable = set(self.buildable)
--        buildable.difference_update(self.rq.runq_running)
-         buildable.difference_update(self.rq.holdoff_tasks)
-         buildable.intersection_update(self.rq.tasks_covered | self.rq.tasks_notcovered)
-         if not buildable:
-@@ -207,8 +208,6 @@ class RunQueueScheduler(object):
  
-     def newbuildable(self, task):
-         self.buildable.add(task)
--        # Once tasks are running we don't need to worry about them again
--        self.buildable.difference_update(self.rq.runq_running)
+         self.rq.read_workers()
+-        self.process_possible_migrations()
++        if self.updated_taskhash_queue or self.pending_migrations:
++            self.process_possible_migrations()
  
-     def removebuildable(self, task):
-         self.buildable.remove(task)
+         if not hasattr(self, "sorted_setscene_tids"):
+             # Don't want to sort this set every execution
 -- 
 2.17.1
 
