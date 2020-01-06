@@ -1,53 +1,53 @@
-Return-Path: <persaur@gmail.com>
-Received: from mail-il1-f195.google.com (mail-il1-f195.google.com
-	[209.85.166.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 804C47F89D
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  6 Jan 2020 15:46:02 +0000 (UTC)
-Received: by mail-il1-f195.google.com with SMTP id v69so42878861ili.10
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 06 Jan 2020 07:46:04 -0800 (PST)
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com
+	[209.85.214.172])
+	by mail.openembedded.org (Postfix) with ESMTP id AF2CD7FA0C
+	for <bitbake-devel@openembedded.org>;
+	Mon,  6 Jan 2020 16:26:48 +0000 (UTC)
+Received: by mail-pl1-f172.google.com with SMTP id x17so22040183pln.1
+	for <bitbake-devel@openembedded.org>;
+	Mon, 06 Jan 2020 08:26:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=content-transfer-encoding:mime-version:subject:from:in-reply-to:cc
-	:date:message-id:references:to;
-	bh=kRDhIWaCtCOBfrT0lA/1bGKD5gTwpE7CQcpIxOfkcI0=;
-	b=sYpluwIDaQ/FaJCfvK5873zXoeEWrd813sW3izyN7RextzkEUKur9Y5Ttp4ilYj/HZ
-	uAyYN8cO27NWWffwzcYbToIc5zbE1sQgvkHf6pZbDVyywuUM6HlVx1w/IgYxQ+j5aXUa
-	y3rKUf9tcTU8j2iI+28Fyjp8rEhSpy8kRmSuiCKxBYrKwUzR1W8ML3HSbNfXbnbEfCxG
-	sJ6xKltWR2q5Zee7N1Q2rtQme8U7BexCBnLwrLlE0k7BBK5SWRG8sOAxTfcZo8Q/Glm3
-	wTpRuZQLiRUykJoAe+Ax7vncSHfbqPKMVp1AH4m6ekemo39zFRJOMt4TMt+yxPwKDUg0
-	EViA==
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=GaZWonIRjfqGU5xGxrhi2qB09AUo+iu9jjX0GJVt8Ug=;
+	b=LO44cuVhi+iakr+eeHAcwR1hF6n0iuF5sjYkgdYDZ1578eh0qvR3Ke4zlnf2wLsAbO
+	dCUw99JEgHxeeO6l5BL/HfyB1vBs0sqg8E6XzLBpKC6mvYB3UFZUjf4JUpr0Cc0OdwLl
+	YWIavkb+/dtGZh4EUfb3Pay8I5e5BAz5xgtYcuZYycdQLfXQzviPctWeD0Nffeyxl1Fj
+	+uofiTKazPZjXTLEIdMJ7j62SDTXOqmoiVYMs+/EdnDvvahQNvchzGjlz3JQTjesXvM+
+	UO6Hu3ob9ivhWH5whCkOZ7jXCVLeoFyaBaO0zQapXv5jACA657JBKog4ouQx1lNv66ga
+	bQdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:content-transfer-encoding:mime-version:subject
-	:from:in-reply-to:cc:date:message-id:references:to;
-	bh=kRDhIWaCtCOBfrT0lA/1bGKD5gTwpE7CQcpIxOfkcI0=;
-	b=PP/5Xi69ZKBn7IlUeSPSZkfMrnQpHSx5uci0rwI9x4Wjj591HoEjc55u+IWOxZM9g+
-	o2rzxu7p5tWjwbudBdVsND6u8xz3Xkj6fAirKXGb4DpEAG5byvG++wqXtvqOD6bO3nl4
-	VLc/pCTQfHhPICyTGMdc05aTG2HLeHGhf9BqHK//n6PXGg/6Q6Ds45ITFhblW9U7alUn
-	0OUL1X6Shm/Zux3nosdkCR7OrDJ7u/86Q3qHo6eZ5By81IGqGZc1VF7QC5KvM4AEooUE
-	KjcCOFFuRe3K3+FZpdZVBht7znJnh2aJRbY4mNVJeNBOWLFze1CxUuTAYcooU70M0AHg
-	liyA==
-X-Gm-Message-State: APjAAAUETu0lHKSieWxyeUMOxjzC18vXzp/cTOSk1ttNtCtSZKwSQxhN
-	Yhnb07QDtGcknQ0oa8//4xc=
-X-Google-Smtp-Source: APXvYqxts9owg3L/gIQaDvZ+J82juY1+YEY1dDRswHsHlJQQa9KOMymhN5dUuq/x++uBY1OLF2M3nA==
-X-Received: by 2002:a92:d2:: with SMTP id 201mr89557240ila.22.1578325563836;
-	Mon, 06 Jan 2020 07:46:03 -0800 (PST)
-Received: from [100.64.72.6] ([173.245.215.240])
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=GaZWonIRjfqGU5xGxrhi2qB09AUo+iu9jjX0GJVt8Ug=;
+	b=hvZ1CMTxy0btFzHliUZ5yyIVnI95qT1/cS5L+59T/xH5el47D8Fyk2Bv5QiYKUYBL5
+	VzAjwmj6KMRcppEXwEjq/hK7/AOpw/kgs/n+PEycoCKI8YrfgRySudnf/GtgacyGWc/R
+	IPJ+jjEop8AFiUAoJloMsFBFX3atk+lG9XzToOucPH/Hz6piSqYCY/ZM4mSIAPtQakXN
+	pABCWVIVVb8TuVtiMdQiHJhgEz0Q24WwS4MDKewnUMHU6q3csDFNaHWdS/CEgLiDM0ut
+	GaS4R+C/+H7DrN8i/q6YFOM6mAmM4o+7jlo//XZUerKnowXfhCJ+hqVPOFGzQ3KlNirZ
+	6mFg==
+X-Gm-Message-State: APjAAAXU7kicQTpvWMKVTXwhKOlBBBkc1S6Lk6eMsRqOTkveQl39Vf2N
+	bfTmRYaJ7VN48sun9RLZgMffZK1W
+X-Google-Smtp-Source: APXvYqwSUIbZnVQgNFPbxOnTJzqGMgEd5Pr8eTz53ZBeVcu6eyuWogr+cBSfUYT75xV2FuPcuQCuww==
+X-Received: by 2002:a17:902:a70c:: with SMTP id
+	w12mr105699336plq.124.1578328009732; 
+	Mon, 06 Jan 2020 08:26:49 -0800 (PST)
+Received: from akuster-ThinkPad-T460s.mvista.com
+	([2601:202:4180:a5c0:6832:e19c:36b9:d5e])
 	by smtp.gmail.com with ESMTPSA id
-	l22sm24260339ilh.37.2020.01.06.07.46.02
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Mon, 06 Jan 2020 07:46:03 -0800 (PST)
-Mime-Version: 1.0 (1.0)
-From: Rich Persaud <persaur@gmail.com>
-In-Reply-To: <ec84fd38-c014-0014-2dbb-b3bb06364ce1@gmail.com>
-Date: Mon, 6 Jan 2020 10:46:02 -0500
-Message-Id: <91D12B92-6D18-4C3A-930F-45E2B2227600@gmail.com>
-References: <ec84fd38-c014-0014-2dbb-b3bb06364ce1@gmail.com>
-To: Pascal Huerst <pascal.huerst@gmail.com>
-X-Mailer: iPad Mail (17C54)
-Cc: Philip Balister <philip@balister.org>, bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH v1] bitbake: fetch2/git: add SRC_URI option versiontag
+	d3sm24538668pjx.16.2020.01.06.08.26.49
+	for <bitbake-devel@openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Mon, 06 Jan 2020 08:26:49 -0800 (PST)
+From: Armin Kuster <akuster808@gmail.com>
+To: bitbake-devel@openembedded.org
+Date: Mon,  6 Jan 2020 08:26:21 -0800
+Message-Id: <cover.1578327474.git.akuster808@gmail.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Subject: [1.44 00/25] Pull request
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,53 +60,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 06 Jan 2020 15:46:03 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 06 Jan 2020 16:26:48 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> On Jan 6, 2020, at 10:15, Pascal Huerst <pascal.huerst@gmail.com> wrote:
->=20
-> =EF=BB=BFHey Rich,
->=20
->> On 29/12/2019 03:04, Rich Persaud wrote:
->>> On Dec 4, 2019, at 04:16, pascal.huerst@gmail.com wrote:
->>> =EF=BB=BFFrom: Pascal Huerst <pascal.huerst@gmail.com>
->>> Use latest_versionstring() to find the latest tagged release for use wit=
-h
->>> AUTOREV. This can be useful, if you want to build the latest tagged
->>> release
->>> instead of a branch. UPSTREAM_CHECK_GITTAGREGEX can be used to specify a=
+Here is the next series for 1.44.
+Please merge to 1.44.
 
->>> version format.
->> Have you seen this approach?
->> https://code.ossystems.com.br/gitweb?p=3Dmeta-ossystems-base.git;a=3Dblob=
-;f=3Dclasses/ossystems-srcrev-handler.bbclass
->=20
-> Thanks for the hint, this goes into the right direction, but does not
-> solve my problem.
->=20
->> For development workflows, it would be useful to override a
->> recipe-specific branch/tag via bitbake CLI.  For production/stable
->> release workflows, it would be useful to override a layer-specific
->> branch/tag via bitbake CLI, which could be propagated to all recipes
->> within the layer.   This would help when maintaining multiple versions
->> of a layer, corresponding to multiple OE versions.
->=20
-> That's exactly how we manage our development releases, but what I wanted
-> to achieve with this patch is to just tag releases in our repositories
-> and let bitbake figure out the latest releases to create an image from
-> it. That way we don't have to fiddle around with bitbake CLI or yocto at
-> all, but can just tag releases in our repositories.
->=20
-> I find that quite useful, but the interest has been near zero for that
-> patch and I'm not sure, whether this is such an exotic use-case or if
-> there are quality issues with my patch...?
 
-Maybe start a thread on another mailing list (oe-arch? oe-core?) to collect r=
-equirements for related workflows, so your patch can be generalized to addre=
-ss more use cases, before extending the syntax for bitbake invocation?  Ther=
-e may be other bitbake improvements that OE developers have done downstream,=
- which could be consolidated.
+The following changes since commit cfa307aabf710d79c404a8571b4158b864a94727:
 
-Rich=
+  runqueue.py: not show warning for deferred multiconfig task (2019-11-29 11:26:07 +0000)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.44-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.44-next
+
+Aníbal Limón (1):
+  lib/bb: Add BB_SIGNATURE_LOCAL_DIRS_EXCLUDE to speed-up taskhash on
+    directories
+
+Chris Laplante via bitbake-devel (1):
+  bb.utils.fileslocked: don't leak files if yield throws
+
+Joshua Watt (1):
+  runqueue: Batch scenequeue updates
+
+Ola x Nilsson (1):
+  prserv/serv: Use with while reading pidfile
+
+Richard Purdie (21):
+  hashserv: Add support for equivalent hash reporting
+  runqueue/siggen: Allow handling of equivalent hashes
+  runqueue: Add extra debugging when locked sigs mismatches occur
+  knotty/uihelper: Switch from pids to tids for Task event management
+  siggen: Avoid taskhash mismatch errors for nostamp tasks when
+    dependencies rehash
+  siggen: Ensure new unihash propagates through the system
+  siggen: Fix performance issue in get_unihash
+  runqueue: Rework process_possible_migrations() to improve performance
+  runqueue: Fix task mismatch failures from incorrect logic
+  siggen: Split get_tashhash for performance
+  runqueue: Fix sstate task iteration performance
+  runqueue: Optimise task migration code slightly
+  runqueue: Optimise out pointless loop iteration
+  runqueue: Optimise task filtering
+  runqueue: Only call into the migrations function if migrations active
+  lib/bb: Optimise out debug messages from cooker
+  runqueue: Fix equiv hash handling build failures
+  runqueue: Ensure task dependencies are run correctly
+  runqueue: Fix task dependency corner case in sanity test
+  siggen: Test extra cross/native hashserv method
+  cache: Lower debug level for wold build messages
+
+ lib/bb/__init__.py        |   5 ++
+ lib/bb/build.py           |  25 +++----
+ lib/bb/cache.py           |   6 +-
+ lib/bb/checksum.py        |   5 +-
+ lib/bb/fetch2/__init__.py |   4 +-
+ lib/bb/runqueue.py        | 137 +++++++++++++++++++++++---------------
+ lib/bb/siggen.py          | 104 +++++++++++++++++++++++------
+ lib/bb/ui/knotty.py       |  12 ++--
+ lib/bb/ui/uihelper.py     |  39 ++++++-----
+ lib/bb/utils.py           |   9 +--
+ lib/hashserv/client.py    |   8 +++
+ lib/hashserv/server.py    |  36 ++++++++++
+ lib/prserv/serv.py        |  12 ++--
+ 13 files changed, 277 insertions(+), 125 deletions(-)
+
+-- 
+2.17.1
+
 
