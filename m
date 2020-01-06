@@ -1,53 +1,50 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com
-	[209.85.214.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 526677FC05
+Return-Path: <nick83ola@gmail.com>
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com
+	[209.85.128.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 599D57F9A7
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  4 Jan 2020 02:23:35 +0000 (UTC)
-Received: by mail-pl1-f178.google.com with SMTP id c23so19660765plz.4
+	Mon,  6 Jan 2020 10:31:01 +0000 (UTC)
+Received: by mail-wm1-f65.google.com with SMTP id m24so14444443wmc.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 03 Jan 2020 18:23:36 -0800 (PST)
+	Mon, 06 Jan 2020 02:31:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=LiWJLKqi9pFegSoVEfTeD4wh9oClWOTDZXocYAp3wXU=;
-	b=j1awQP2M/vFSUeZNOkM05UW/XL/VD8p83CcgXnieHS7/axHeSwF7aCX6Kokmp1iSKl
-	KcXRDfKIjHB/axzGWxVu5eTU8idYX+wMkQ+8zpdTn0PFmpj9lzUnSqixGKrYvw7gqOSq
-	XqG7DMb7eSEg63fxX2jlDurGyx8J5v864/PGNz5peXkpBY4LqiE2kHkh1iuKptMfDaYD
-	JAMMo+EwP5wy2f7HyzLXOy18xkXpM3XMDsAZS3P2dzO/nGW2DoLNGT+czxcYirijEYcB
-	Xr5dFgm8mdZtMnqxntTgy7SZ7E7goq4x9hpMZFLZkdxX0j0fryal2Udnhss1Bo2djihI
-	u/1g==
+	h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=eLSZ9TFBa5+9WzyFxrPAlH8MdpCC4HZSettpfvmo5Xg=;
+	b=tXk5cxCufKU/cgP1MXY6OOmwY2VPm/ERBHHPyE0x/EmsYleeR/ua0+LtuUP0I0k+B0
+	5gWl+p3UbueyWzn8kSXZBm+GLIv8xehXJiyNU6XjFZzgomiyLzfC7MDhtinydBiCYs55
+	B7s1j1KO1qAGiwU82uwuWO9FtEBGkiqi/a395asSKfGMOEMdKdDJwC3F48xLMXKIy3Uk
+	A0hQvKMA5YJi4pQkhuUIi2W+SRcFLG60bfByXZKb+xPkhn+QJwDYqsOkYGkQQOxoU07s
+	qGCTz6LjWn85f3KK/9k54aYoHS5hS7gnZp28Zvv3deka1AqiUxAuw34qaCFf7LE1GhUY
+	baFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=LiWJLKqi9pFegSoVEfTeD4wh9oClWOTDZXocYAp3wXU=;
-	b=ULNfirtsqPxUbh8x0ZrEF1cNMC5Da93r3UXreZe27nPCiV1/BHNwZ7kE8QRTU5yyXH
-	AUzfYowfWxKssj6/xuzDKsQjnHELKBuDqozGp0LZTknHC3Ec746kOWAfHeQnxVuOemJu
-	mnGoXL8jqdG2hlQ8rJTmvE9czjh+TWSl//ImdqISvBNaHAllMZx+CR1w72vwdIehFVoU
-	D7zfC+PdE0lEjyupdlhNUjSiNaPR7oDWW33hD825Q7K5tGrjPpaOB2/YeB6qPoeGfVDj
-	LkC/4i+4Pfcfp1c8mjwBJjiNUnoxTTHtZJKJjo2+xk7orqpn2qjux8YHqGB+aA1Sy1oV
-	7e3w==
-X-Gm-Message-State: APjAAAVV/cxOuwkIMTsM5tpxnLHzEPaHFiRHrtgTMgZiHR7it92czjHv
-	Q9clZhFGSUzoRFaBzuGifkXEvrwtxNE=
-X-Google-Smtp-Source: APXvYqztMS5KKQiZRBQhERUUJLJMitaUgwFR7H1p0n+c8S0q7UYujqKBm+RsmvRnL4wf4QGiscDvMg==
-X-Received: by 2002:a17:90b:145:: with SMTP id
-	em5mr29673590pjb.20.1578104616383; 
-	Fri, 03 Jan 2020 18:23:36 -0800 (PST)
-Received: from akuster-ThinkPad-T460s.mvista.com
-	([2601:202:4180:a5c0:e812:6764:3882:fa62])
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=eLSZ9TFBa5+9WzyFxrPAlH8MdpCC4HZSettpfvmo5Xg=;
+	b=t4IneBadiwXQ87ScOlUKwgma6zOXKppt/o54T2kmc24HlgG+TiZ1qyRA0bKhWjLvol
+	SPXg33YW2oAj+pmrZPc5+SiHWFSeYjxDlDEt7hR8aRkTaz9XAsjbCnUhTjWYxAOWu0Vd
+	gugpUSaUlrkYn8+PJvmmqRKsEa4TWxP3Zevzs9hno93PFMdApTQWMqtgoIOHoG0z51Nz
+	+amtn8iTEpdwqsoWEVs2T/E2BAvkTmvabqjWnAUu+fus1I4jS3fN/YMI0al/KUI/alHB
+	P6TiwvvNJE4h4JUqgsF6dPo0uaEFJsYe4EUyV6Og+s3P4hQR3DsoJ2/suhwRqQssEfsT
+	iMOQ==
+X-Gm-Message-State: APjAAAVbeRYu5TbBjSJFIq3e4auYLBNgsquvQBnuMvFXC5gE0UdcwqpF
+	s60juLcE+5Hle1I8EBGltKlJWnX2lvc=
+X-Google-Smtp-Source: APXvYqx47zrdihD06kV20U/r4OaCxIJu801uVF7tAIgc+0co8VeOHr73SZ6WOw/lvh/5tZxmKx2iZw==
+X-Received: by 2002:a1c:3803:: with SMTP id f3mr34827323wma.134.1578306661580; 
+	Mon, 06 Jan 2020 02:31:01 -0800 (PST)
+Received: from nick-bbestie.garage.tyco.com ([77.107.218.170])
 	by smtp.gmail.com with ESMTPSA id
-	s11sm58830590pfd.157.2020.01.03.18.23.35
-	for <bitbake-devel@lists.openembedded.org>
+	g25sm23670600wmh.3.2020.01.06.02.31.00
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Fri, 03 Jan 2020 18:23:35 -0800 (PST)
-From: Armin Kuster <akuster808@gmail.com>
+	Mon, 06 Jan 2020 02:31:00 -0800 (PST)
+From: Nicola Lunghi <nick83ola@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jan 2020 18:23:10 -0800
-Message-Id: <46969195492708a705390896c9dea515f158954c.1578104305.git.akuster808@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1578104305.git.akuster808@gmail.com>
-References: <cover.1578104305.git.akuster808@gmail.com>
-Subject: [PATCH 25/25] cache: Lower debug level for wold build messages
+Date: Mon,  6 Jan 2020 10:30:39 +0000
+Message-Id: <20200106103039.34321-1-nick83ola@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Subject: [OE-core][PATCH v2 REPOST 1/2] bitbake: fetch2/wget: checkstatus: cleanup URLError exception
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,39 +57,102 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 04 Jan 2020 02:23:35 -0000
+X-List-Received-Date: Mon, 06 Jan 2020 10:31:01 -0000
+Content-Transfer-Encoding: 8bit
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+The exception for urllib.error.URLError can only happen on the
 
-These messages spam the logs for no good reason, they were useful for debugging
-a particular problem long ago but are distracting noise now. Disable them.
+  with opener.open(r) as response:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 1a9247c468cf09da60e5d396ccb81e950841c99e)
-Signed-off-by: Armin Kuster <akuster808@gmail.com>
+line.
+Limit the try except span to this line and move the retry logic of
+commit 312f1a5e741 outside of the try/except catch
+
+see also commit:
+  312f1a5e741: bitbake: fetchption: attempt checkstatus again if it fails
+
+Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
 ---
- lib/bb/cache.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/fetch2/wget.py | 60 +++++++++++++++++------------------
+ 1 file changed, 29 insertions(+), 31 deletions(-)
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index b6f7da59..ead8abc5 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -208,10 +208,10 @@ class CoreRecipeInfo(RecipeInfoCommon):
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 725586d2b5..5aef55a9c6 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -295,42 +295,40 @@ class Wget(FetchMethod):
+             handlers.append(urllib.request.HTTPSHandler(context=ssl._create_unverified_context()))
+         opener = urllib.request.build_opener(*handlers)
  
-         # Collect files we may need for possible world-dep
-         # calculations
--        if self.not_world:
--            logger.debug(1, "EXCLUDE FROM WORLD: %s", fn)
--        else:
-+        if not self.not_world:
-             cachedata.possible_world.append(fn)
-+        #else:
-+        #    logger.debug(2, "EXCLUDE FROM WORLD: %s", fn)
+-        try:
+-            uri = ud.url.split(";")[0]
+-            r = urllib.request.Request(uri)
+-            r.get_method = lambda: "HEAD"
+-            # Some servers (FusionForge, as used on Alioth) require that the
+-            # optional Accept header is set.
+-            r.add_header("Accept", "*/*")
+-            def add_basic_auth(login_str, request):
+-                '''Adds Basic auth to http request, pass in login:password as string'''
+-                import base64
+-                encodeuser = base64.b64encode(login_str.encode('utf-8')).decode("utf-8")
+-                authheader = "Basic %s" % encodeuser
+-                r.add_header("Authorization", authheader)
+-
+-            if ud.user and ud.pswd:
+-                add_basic_auth(ud.user + ':' + ud.pswd, r)
++        uri = ud.url.split(";")[0]
++        r = urllib.request.Request(uri)
++        r.get_method = lambda: "HEAD"
++        # Some servers (FusionForge, as used on Alioth) require that the
++        # optional Accept header is set.
++        r.add_header("Accept", "*/*")
++        def add_basic_auth(login_str, request):
++            '''Adds Basic auth to http request, pass in login:password as string'''
++            import base64
++            encodeuser = base64.b64encode(login_str.encode('utf-8')).decode("utf-8")
++            authheader = "Basic %s" % encodeuser
++            r.add_header("Authorization", authheader)
  
-         # create a collection of all targets for sanity checking
-         # tasks, such as upstream versions, license, and tools for
+-            try:
+-                import netrc
+-                n = netrc.netrc()
+-                login, unused, password = n.authenticators(urllib.parse.urlparse(uri).hostname)
+-                add_basic_auth("%s:%s" % (login, password), r)
+-            except (TypeError, ImportError, IOError, netrc.NetrcParseError):
+-                pass
++        if ud.user and ud.pswd:
++            add_basic_auth(ud.user + ':' + ud.pswd, r)
+ 
++        try:
++            import netrc
++            n = netrc.netrc()
++            login, unused, password = n.authenticators(urllib.parse.urlparse(uri).hostname)
++            add_basic_auth("%s:%s" % (login, password), r)
++        except (TypeError, ImportError, IOError, netrc.NetrcParseError):
++            pass
++
++        try:
+             with opener.open(r) as response:
+                 pass
++            return True
+         except urllib.error.URLError as e:
+-            if try_again:
+-                logger.debug(2, "checkstatus: trying again")
+-                return self.checkstatus(fetch, ud, d, False)
+-            else:
+-                # debug for now to avoid spamming the logs in e.g. remote sstate searches
+-                logger.debug(2, "checkstatus() urlopen failed: %s" % e)
+-                return False
+-        return True
++            logger.debug(2, "checkstatus() urlopen failed: %s" % e)
++        if try_again:
++            logger.debug(2, "checkstatus: trying again")
++            return self.checkstatus(fetch, ud, d, False)
++        return False
+ 
+     def _parse_path(self, regex, s):
+         """
 -- 
-2.17.1
+2.20.1
 
 
