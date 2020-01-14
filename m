@@ -1,20 +1,21 @@
 Return-Path: <frazer.clews@codethink.co.uk>
-Received: from imap2.colo.codethink.co.uk (imap2.colo.codethink.co.uk
-	[78.40.148.184])
-	by mail.openembedded.org (Postfix) with ESMTP id 9D5287FAB2
+X-Greylist: delayed 2640 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 14 Jan 2020 15:27:13 UTC
+Received: from imap3.hz.codethink.co.uk (imap3.hz.codethink.co.uk [176.9.8.87])
+	by mail.openembedded.org (Postfix) with ESMTP id D5E587BEDF
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jan 2020 14:46:59 +0000 (UTC)
+	Tue, 14 Jan 2020 15:27:13 +0000 (UTC)
 Received: from [167.98.27.226] (helo=localhost.co.uk)
-	by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-	id 1irNNB-0004m0-1E; Tue, 14 Jan 2020 14:40:49 +0000
+	by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+	id 1irNPV-0004dY-Bf; Tue, 14 Jan 2020 14:43:13 +0000
 From: frazer.clews@codethink.co.uk
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 14 Jan 2020 14:40:24 +0000
-Message-Id: <20200114144024.163030-1-frazer.clews@codethink.co.uk>
+Date: Tue, 14 Jan 2020 14:43:03 +0000
+Message-Id: <20200114144303.163316-1-frazer.clews@codethink.co.uk>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 X-Mailman-Approved-At: Tue, 14 Jan 2020 22:30:13 +0000
-Subject: [PATCH] lib: amend code to use proper singleton comparisons where possible
+Subject: [PATCH] lib: remove unused imports
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,683 +28,1321 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Jan 2020 14:47:00 -0000
+X-List-Received-Date: Tue, 14 Jan 2020 15:27:14 -0000
 Content-Transfer-Encoding: 8bit
 
 From: Frazer Clews <frazer.clews@codethink.co.uk>
 
-amend the code to handle singleton comparisons properly so it only checks
-if they only refer to the same object or not, and not bother
-comparing the values.
+removed unused imports which made the code harder to read, and slightly
+but less efficient
 
 Signed-off-by: Frazer Clews <frazer.clews@codethink.co.uk>
 ---
- lib/bb/command.py                             |  2 +-
- lib/bb/cooker.py                              |  8 ++++----
- lib/bb/data.py                                |  2 +-
- lib/bb/event.py                               |  2 +-
- lib/bb/fetch2/__init__.py                     |  4 ++--
- lib/bb/fetch2/git.py                          |  2 +-
- lib/bb/fetch2/osc.py                          |  2 +-
- lib/bb/fetch2/perforce.py                     |  2 +-
- lib/bb/fetch2/ssh.py                          |  2 +-
- lib/bb/parse/ast.py                           | 20 +++++++++----------
- lib/bb/providers.py                           |  6 +++---
- lib/bb/taskdata.py                            |  2 +-
- lib/bb/ui/buildinfohelper.py                  |  8 ++++----
- lib/bb/ui/knotty.py                           |  2 +-
- lib/bb/ui/ncurses.py                          |  2 +-
- lib/bb/ui/taskexp.py                          |  2 +-
- lib/bb/ui/toasterui.py                        |  2 +-
- lib/bb/ui/uievent.py                          |  2 +-
- lib/bs4/__init__.py                           |  2 +-
- lib/bs4/builder/_html5lib.py                  |  2 +-
- lib/ply/yacc.py                               |  6 +++---
- lib/prserv/db.py                              | 14 ++++++-------
- lib/pyinotify.py                              |  4 ++--
- .../management/commands/checksettings.py      |  2 +-
- lib/toaster/orm/models.py                     |  4 ++--
- .../toastergui/templatetags/projecttags.py    |  4 ++--
- lib/toaster/toastergui/views.py               | 18 ++++++++---------
- .../management/commands/buildimport.py        |  2 +-
- 28 files changed, 65 insertions(+), 65 deletions(-)
+ lib/bb/COW.py                                 |  1 -
+ lib/bb/build.py                               |  1 -
+ lib/bb/cache.py                               |  1 -
+ lib/bb/checksum.py                            |  1 -
+ lib/bb/codeparser.py                          | 26 ++-----------------
+ lib/bb/cooker.py                              |  4 ---
+ lib/bb/event.py                               |  3 +--
+ lib/bb/exceptions.py                          |  1 -
+ lib/bb/fetch2/bzr.py                          |  2 --
+ lib/bb/fetch2/clearcase.py                    |  1 -
+ lib/bb/fetch2/cvs.py                          |  1 -
+ lib/bb/fetch2/gitannex.py                     |  2 --
+ lib/bb/fetch2/gitsm.py                        |  1 -
+ lib/bb/fetch2/hg.py                           |  2 --
+ lib/bb/fetch2/npm.py                          |  1 -
+ lib/bb/fetch2/osc.py                          |  2 --
+ lib/bb/fetch2/perforce.py                     |  1 -
+ lib/bb/fetch2/ssh.py                          |  2 --
+ lib/bb/fetch2/svn.py                          |  2 --
+ lib/bb/fetch2/wget.py                         |  3 ---
+ lib/bb/monitordisk.py                         |  2 +-
+ lib/bb/msg.py                                 |  2 --
+ lib/bb/parse/ast.py                           |  4 ---
+ lib/bb/parse/parse_py/BBHandler.py            |  2 --
+ lib/bb/progress.py                            |  1 -
+ lib/bb/runqueue.py                            |  4 +--
+ lib/bb/server/process.py                      |  1 -
+ lib/bb/server/xmlrpcclient.py                 |  3 ---
+ lib/bb/server/xmlrpcserver.py                 |  3 ---
+ lib/bb/tests/cooker.py                        |  1 -
+ lib/bb/tests/cow.py                           |  2 +-
+ lib/bb/tests/fetch.py                         |  2 --
+ lib/bb/tests/runqueue.py                      |  1 -
+ lib/bb/tinfoil.py                             |  4 +--
+ lib/bb/ui/knotty.py                           |  1 -
+ lib/bb/ui/ncurses.py                          |  3 +--
+ lib/bb/ui/taskexp.py                          |  2 --
+ lib/bb/utils.py                               |  1 -
+ lib/bs4/builder/_html5lib.py                  |  1 -
+ lib/bs4/dammit.py                             |  8 ------
+ lib/bs4/element.py                            |  1 -
+ lib/bs4/testing.py                            |  1 -
+ lib/bs4/tests/test_docs.py                    |  4 ---
+ lib/bs4/tests/test_htmlparser.py              |  1 -
+ lib/bs4/tests/test_lxml.py                    |  8 +-----
+ lib/bs4/tests/test_soup.py                    |  6 +----
+ lib/bs4/tests/test_tree.py                    | 11 ++------
+ lib/hashserv/client.py                        |  1 -
+ lib/layerindexlib/cooker.py                   |  3 +--
+ lib/layerindexlib/plugin.py                   |  3 ---
+ lib/layerindexlib/tests/cooker.py             |  3 ---
+ lib/layerindexlib/tests/layerindexobj.py      |  6 -----
+ lib/layerindexlib/tests/restapi.py            |  3 ---
+ lib/toaster/bldcollector/urls.py              |  2 +-
+ lib/toaster/bldcollector/views.py             |  8 ------
+ lib/toaster/bldcontrol/admin.py               |  1 -
+ lib/toaster/bldcontrol/bbcontroller.py        |  4 +--
+ .../bldcontrol/localhostbecontroller.py       | 11 +++-----
+ .../management/commands/checksettings.py      |  4 +--
+ lib/toaster/bldcontrol/models.py              |  3 +--
+ .../orm/management/commands/lsupdates.py      |  2 +-
+ .../orm/migrations/0011_delete_layersource.py |  2 +-
+ .../tests/browser/selenium_helpers_base.py    |  1 -
+ .../tests/browser/test_project_config_page.py |  3 ---
+ .../tests/functional/test_functional_basic.py |  1 -
+ lib/toaster/toastergui/api.py                 |  3 ---
+ lib/toaster/toastergui/tables.py              |  9 ++-----
+ .../objects_to_dictionaries_filter.py         |  1 -
+ .../toastergui/templatetags/projecttags.py    |  2 +-
+ lib/toaster/toastergui/urls.py                |  5 ++--
+ lib/toaster/toastergui/views.py               |  9 +++----
+ .../management/commands/builddelete.py        |  4 +--
+ .../management/commands/buildimport.py        |  6 ++---
+ .../management/commands/buildslist.py         |  3 +--
+ 74 files changed, 36 insertions(+), 205 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 378f389b..c8e13528 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -65,7 +65,7 @@ class Command:
-             # Can run synchronous commands straight away
-             command_method = getattr(self.cmds_sync, command)
-             if ro_only:
--                if not hasattr(command_method, 'readonly') or False == getattr(command_method, 'readonly'):
-+                if not hasattr(command_method, 'readonly') or not getattr(command_method, 'readonly'):
-                     return None, "Not able to execute not readonly commands in readonly mode"
-             try:
-                 self.cooker.process_inotify_updates()
+diff --git a/lib/bb/COW.py b/lib/bb/COW.py
+index d26e9819..bc20ce38 100644
+--- a/lib/bb/COW.py
++++ b/lib/bb/COW.py
+@@ -10,7 +10,6 @@
+ 
+ 
+ import copy
+-import types
+ ImmutableTypes = (
+     bool,
+     complex,
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 3d9cc10c..b6d23e68 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -15,7 +15,6 @@
+ import os
+ import sys
+ import logging
+-import shlex
+ import glob
+ import time
+ import stat
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index ead8abc5..a5aaf3b9 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -17,7 +17,6 @@
+ #
+ 
+ import os
+-import sys
+ import logging
+ import pickle
+ from collections import defaultdict
+diff --git a/lib/bb/checksum.py b/lib/bb/checksum.py
+index 677020f4..1d50a264 100644
+--- a/lib/bb/checksum.py
++++ b/lib/bb/checksum.py
+@@ -9,7 +9,6 @@ import glob
+ import operator
+ import os
+ import stat
+-import pickle
+ import bb.utils
+ import logging
+ from bb.cache import MultiProcessCache
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index fd2c4734..25a7ac69 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -25,13 +25,11 @@ import ast
+ import sys
+ import codegen
+ import logging
+-import pickle
+ import bb.pysh as pysh
+-import os.path
+ import bb.utils, bb.data
+ import hashlib
+ from itertools import chain
+-from bb.pysh import pyshyacc, pyshlex, sherrors
++from bb.pysh import pyshyacc, pyshlex
+ from bb.cache import MultiProcessCache
+ 
+ logger = logging.getLogger('BitBake.CodeParser')
+@@ -58,30 +56,10 @@ def check_indent(codestr):
+ 
+     return codestr
+ 
+-
+-# Basically pickle, in python 2.7.3 at least, does badly with data duplication 
+-# upon pickling and unpickling. Combine this with duplicate objects and things
+-# are a mess.
+-#
+-# When the sets are originally created, python calls intern() on the set keys
+-# which significantly improves memory usage. Sadly the pickle/unpickle process
+-# doesn't call intern() on the keys and results in the same strings being duplicated
+-# in memory. This also means pickle will save the same string multiple times in
+-# the cache file.
+-#
+-# By having shell and python cacheline objects with setstate/getstate, we force
+-# the object creation through our own routine where we can call intern (via internSet).
+-#
+-# We also use hashable frozensets and ensure we use references to these so that
+-# duplicates can be removed, both in memory and in the resulting pickled data.
+-#
+-# By playing these games, the size of the cache file shrinks dramatically
+-# meaning faster load times and the reloaded cache files also consume much less
+-# memory. Smaller cache files, faster load times and lower memory usage is good.
+-#
+ # A custom getstate/setstate using tuples is actually worth 15% cachesize by
+ # avoiding duplication of the attribute names!
+ 
++
+ class SetCache(object):
+     def __init__(self):
+         self.setcache = {}
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index b74affa7..aee16bbf 100644
+index b74affa7..3d65b0cb 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -1208,7 +1208,7 @@ class BBCooker:
-             for c in collection_list:
-                 calc_layer_priority(c)
-                 regex = self.data.getVar("BBFILE_PATTERN_%s" % c)
--                if regex == None:
-+                if regex is None:
-                     parselog.error("BBFILE_PATTERN_%s not defined" % c)
-                     errors = True
-                     continue
-@@ -1314,7 +1314,7 @@ class BBCooker:
-         self.parseConfiguration()
+@@ -10,7 +10,6 @@
+ #
  
-         # If we are told to do the None task then query the default task
--        if (task == None):
-+        if task is None:
-             task = self.configuration.cmd
-         if not task.startswith("do_"):
-             task = "do_%s" % task
-@@ -1458,7 +1458,7 @@ class BBCooker:
-         self.buildSetVars()
- 
-         # If we are told to do the None task then query the default task
--        if (task == None):
-+        if task is None:
-             task = self.configuration.cmd
- 
-         if not task.startswith("do_"):
-@@ -1691,7 +1691,7 @@ class CookerCollectFiles(object):
-     def calc_bbfile_priority( self, filename, matched = None ):
-         for _, _, regex, pri in self.bbfile_config_priorities:
-             if regex.match(filename):
--                if matched != None:
-+                if matched is not None:
-                     if not regex in matched:
-                         matched.add(regex)
-                 return pri
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 0d75d0c1..6dc02172 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -79,7 +79,7 @@ def expand(s, d, varname = None):
-     return d.expand(s, varname)
- 
- def expandKeys(alterdata, readdata = None):
--    if readdata == None:
-+    if readdata is None:
-         readdata = alterdata
- 
-     todolist = {}
+ import sys, os, glob, os.path, re, time
+-import atexit
+ import itertools
+ import logging
+ import multiprocessing
+@@ -18,14 +17,11 @@ import sre_constants
+ import threading
+ from io import StringIO, UnsupportedOperation
+ from contextlib import closing
+-from functools import wraps
+ from collections import defaultdict, namedtuple
+ import bb, bb.exceptions, bb.command
+ from bb import utils, data, parse, event, cache, providers, taskdata, runqueue, build
+ import queue
+ import signal
+-import subprocess
+-import errno
+ import prserv.serv
+ import pyinotify
+ import json
 diff --git a/lib/bb/event.py b/lib/bb/event.py
-index d44621ed..94d35edb 100644
+index d44621ed..42143e74 100644
 --- a/lib/bb/event.py
 +++ b/lib/bb/event.py
-@@ -347,7 +347,7 @@ def set_UIHmask(handlerNum, level, debug_domains, mask):
+@@ -10,8 +10,7 @@ BitBake build tools.
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
  
- def getName(e):
-     """Returns the name of a class or class instance"""
--    if getattr(e, "__name__", None) == None:
-+    if getattr(e, "__name__", None) is None:
-         return e.__class__.__name__
-     else:
-         return e.__name__
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 731c1608..18a6819d 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1081,7 +1081,7 @@ def try_mirrors(fetch, d, origud, mirrors, check = False):
+-import os, sys
+-import warnings
++import sys
+ import pickle
+ import logging
+ import atexit
+diff --git a/lib/bb/exceptions.py b/lib/bb/exceptions.py
+index ecbad599..321cbf64 100644
+--- a/lib/bb/exceptions.py
++++ b/lib/bb/exceptions.py
+@@ -4,7 +4,6 @@
  
-     for index, uri in enumerate(uris):
-         ret = try_mirror_url(fetch, origud, uds[index], ld, check)
--        if ret != False:
-+        if ret:
-             return ret
-     return None
+ import inspect
+ import traceback
+-import bb.namedtuple_with_abc
+ from collections import namedtuple
  
-@@ -1351,7 +1351,7 @@ class FetchMethod(object):
-         """
  
-         # We cannot compute checksums for directories
--        if os.path.isdir(urldata.localpath) == True:
-+        if os.path.isdir(urldata.localpath):
-             return False
-         if urldata.localpath.find("*") != -1:
-             return False
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index fa41b078..fe0a384a 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -671,7 +671,7 @@ class Git(FetchMethod):
+diff --git a/lib/bb/fetch2/bzr.py b/lib/bb/fetch2/bzr.py
+index c56d8753..566ace9f 100644
+--- a/lib/bb/fetch2/bzr.py
++++ b/lib/bb/fetch2/bzr.py
+@@ -14,8 +14,6 @@ BitBake 'Fetch' implementation for bzr.
+ #
  
-             # search for version in the line
-             tag = tagregex.search(tag_head)
--            if tag == None:
-+            if tag is None:
-                 continue
+ import os
+-import sys
+-import logging
+ import bb
+ from bb.fetch2 import FetchMethod
+ from bb.fetch2 import FetchError
+diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
+index ad2f3edc..49d7ae1b 100644
+--- a/lib/bb/fetch2/clearcase.py
++++ b/lib/bb/fetch2/clearcase.py
+@@ -49,7 +49,6 @@ User credentials:
+ #
  
-             tag = tag.group('pver')
+ import os
+-import sys
+ import shutil
+ import bb
+ from   bb.fetch2 import FetchMethod
+diff --git a/lib/bb/fetch2/cvs.py b/lib/bb/fetch2/cvs.py
+index 1b35ba4c..29123a48 100644
+--- a/lib/bb/fetch2/cvs.py
++++ b/lib/bb/fetch2/cvs.py
+@@ -14,7 +14,6 @@ BitBake build tools.
+ #
+ 
+ import os
+-import logging
+ import bb
+ from bb.fetch2 import FetchMethod, FetchError, MissingParameterError, logger
+ from bb.fetch2 import runfetchcmd
+diff --git a/lib/bb/fetch2/gitannex.py b/lib/bb/fetch2/gitannex.py
+index 1d497dcb..80a808d8 100644
+--- a/lib/bb/fetch2/gitannex.py
++++ b/lib/bb/fetch2/gitannex.py
+@@ -8,11 +8,9 @@ BitBake 'Fetch' git annex implementation
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import os
+ import bb
+ from   bb.fetch2.git import Git
+ from   bb.fetch2 import runfetchcmd
+-from   bb.fetch2 import logger
+ 
+ class GitANNEX(Git):
+     def supports(self, ud, d):
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index c622771d..aa121cbe 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -24,7 +24,6 @@ from   bb.fetch2.git import Git
+ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
+ from   bb.fetch2 import Fetch
+-from   bb.fetch2 import BBFetchException
+ 
+ class GitSM(Git):
+     def supports(self, ud, d):
+diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
+index e21115de..8f503701 100644
+--- a/lib/bb/fetch2/hg.py
++++ b/lib/bb/fetch2/hg.py
+@@ -13,8 +13,6 @@ BitBake 'Fetch' implementation for mercurial DRCS (hg).
+ #
+ 
+ import os
+-import sys
+-import logging
+ import bb
+ import errno
+ from bb.fetch2 import FetchMethod
+diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+index 9700e610..be21399e 100644
+--- a/lib/bb/fetch2/npm.py
++++ b/lib/bb/fetch2/npm.py
+@@ -20,7 +20,6 @@ Usage in the recipe:
+ """
+ 
+ import os
+-import sys
+ import urllib.request, urllib.parse, urllib.error
+ import json
+ import subprocess
 diff --git a/lib/bb/fetch2/osc.py b/lib/bb/fetch2/osc.py
-index 3e567155..3eb411af 100644
+index 3e567155..f55db6f7 100644
 --- a/lib/bb/fetch2/osc.py
 +++ b/lib/bb/fetch2/osc.py
-@@ -43,7 +43,7 @@ class Osc(FetchMethod):
-         else:
-             pv = d.getVar("PV", False)
-             rev = bb.fetch2.srcrev_internal_helper(ud, d)
--            if rev and rev != True:
-+            if rev and not rev:
-                 ud.revision = rev
-             else:
-                 ud.revision = ""
+@@ -7,8 +7,6 @@ Based on the svn "Fetch" implementation.
+ 
+ """
+ 
+-import  os
+-import  sys
+ import logging
+ import  bb
+ from    bb.fetch2 import FetchMethod
 diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
-index 54d001ec..51628ffb 100644
+index 54d001ec..b2ac11ec 100644
 --- a/lib/bb/fetch2/perforce.py
 +++ b/lib/bb/fetch2/perforce.py
-@@ -105,7 +105,7 @@ class Perforce(FetchMethod):
-         if command == 'changes':
-             p4cmd = '%s%s changes -m 1 //%s' % (ud.basecmd, p4opt, pathnrev)
-         elif command == 'print':
--            if depot_filename != None:
-+            if depot_filename is not None:
-                 p4cmd = '%s%s print -o "p4/%s" "%s"' % (ud.basecmd, p4opt, filename, depot_filename)
-             else:
-                 raise FetchError('No depot file name provided to p4 %s' % command, ud.url)
+@@ -11,7 +11,6 @@ BitBake 'Fetch' implementation for perforce
+ # Based on functions from the base bb module, Copyright 2003 Holger Schurig
+ 
+ import os
+-import logging
+ import bb
+ from   bb.fetch2 import FetchMethod
+ from   bb.fetch2 import FetchError
 diff --git a/lib/bb/fetch2/ssh.py b/lib/bb/fetch2/ssh.py
-index f5be060c..49730166 100644
+index f5be060c..34debe39 100644
 --- a/lib/bb/fetch2/ssh.py
 +++ b/lib/bb/fetch2/ssh.py
-@@ -60,7 +60,7 @@ class SSH(FetchMethod):
-     '''Class to fetch a module or modules via Secure Shell'''
+@@ -32,8 +32,6 @@ IETF secsh internet draft:
  
-     def supports(self, urldata, d):
--        return __pattern__.match(urldata.url) != None
-+        return __pattern__.match(urldata.url) is not None
+ import re, os
+ from   bb.fetch2 import FetchMethod
+-from   bb.fetch2 import FetchError
+-from   bb.fetch2 import logger
+ from   bb.fetch2 import runfetchcmd
  
-     def supports_checksum(self, urldata):
-         return False
+ 
+diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
+index 96d666ba..6c8caf5f 100644
+--- a/lib/bb/fetch2/svn.py
++++ b/lib/bb/fetch2/svn.py
+@@ -11,8 +11,6 @@ BitBake 'Fetch' implementation for svn.
+ # Based on functions from the base bb module, Copyright 2003 Holger Schurig
+ 
+ import os
+-import sys
+-import logging
+ import bb
+ import re
+ from   bb.fetch2 import FetchMethod
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 725586d2..72bc6c8f 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -14,9 +14,7 @@ BitBake build tools.
+ 
+ import re
+ import tempfile
+-import subprocess
+ import os
+-import logging
+ import errno
+ import bb
+ import bb.progress
+@@ -27,7 +25,6 @@ from   bb.fetch2 import FetchMethod
+ from   bb.fetch2 import FetchError
+ from   bb.fetch2 import logger
+ from   bb.fetch2 import runfetchcmd
+-from   bb.fetch2 import FetchConnectionCache
+ from   bb.utils import export_proxies
+ from   bs4 import BeautifulSoup
+ from   bs4 import SoupStrainer
+diff --git a/lib/bb/monitordisk.py b/lib/bb/monitordisk.py
+index 1a25b004..e7c07264 100644
+--- a/lib/bb/monitordisk.py
++++ b/lib/bb/monitordisk.py
+@@ -4,7 +4,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import os, logging, re, sys
++import os, logging, re
+ import bb
+ logger = logging.getLogger("BitBake.Monitor")
+ 
+diff --git a/lib/bb/msg.py b/lib/bb/msg.py
+index 6216eb3b..33c0e2fa 100644
+--- a/lib/bb/msg.py
++++ b/lib/bb/msg.py
+@@ -13,9 +13,7 @@ Message handling infrastructure for bitbake
+ import sys
+ import copy
+ import logging
+-import collections
+ from itertools import groupby
+-import warnings
+ import bb
+ import bb.event
+ 
 diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index f0911e6f..6d8a5c5f 100644
+index f0911e6f..362c1a39 100644
 --- a/lib/bb/parse/ast.py
 +++ b/lib/bb/parse/ast.py
-@@ -93,7 +93,7 @@ class DataNode(AstNode):
-         self.groupd = groupd
+@@ -9,11 +9,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
  
-     def getFunc(self, key, data):
--        if 'flag' in self.groupd and self.groupd['flag'] != None:
-+        if 'flag' in self.groupd and self.groupd['flag'] is not None:
-             return data.getVarFlag(key, self.groupd['flag'], expand=False, noweakdefault=True)
-         else:
-             return data.getVar(key, False, noweakdefault=True, parsing=True)
-@@ -106,36 +106,36 @@ class DataNode(AstNode):
-             'file': self.filename,
-             'line': self.lineno,
-         }
--        if "exp" in groupd and groupd["exp"] != None:
-+        if "exp" in groupd and groupd["exp"] is not None:
-             data.setVarFlag(key, "export", 1, op = 'exported', **loginfo)
+-import re
+-import string
+-import logging
+ import bb
+-import itertools
+ from bb import methodpool
+ from bb.parse import logger
  
-         op = "set"
--        if "ques" in groupd and groupd["ques"] != None:
-+        if "ques" in groupd and groupd["ques"] is not None:
-             val = self.getFunc(key, data)
-             op = "set?"
--            if val == None:
-+            if val is None:
-                 val = groupd["value"]
--        elif "colon" in groupd and groupd["colon"] != None:
-+        elif "colon" in groupd and groupd["colon"] is not None:
-             e = data.createCopy()
-             op = "immediate"
-             val = e.expand(groupd["value"], key + "[:=]")
--        elif "append" in groupd and groupd["append"] != None:
-+        elif "append" in groupd and groupd["append"] is not None:
-             op = "append"
-             val = "%s %s" % ((self.getFunc(key, data) or ""), groupd["value"])
--        elif "prepend" in groupd and groupd["prepend"] != None:
-+        elif "prepend" in groupd and groupd["prepend"] is not None:
-             op = "prepend"
-             val = "%s %s" % (groupd["value"], (self.getFunc(key, data) or ""))
--        elif "postdot" in groupd and groupd["postdot"] != None:
-+        elif "postdot" in groupd and groupd["postdot"] is not None:
-             op = "postdot"
-             val = "%s%s" % ((self.getFunc(key, data) or ""), groupd["value"])
--        elif "predot" in groupd and groupd["predot"] != None:
-+        elif "predot" in groupd and groupd["predot"] is not None:
-             op = "predot"
-             val = "%s%s" % (groupd["value"], (self.getFunc(key, data) or ""))
-         else:
-             val = groupd["value"]
+diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
+index 6f7cf82b..6e216eff 100644
+--- a/lib/bb/parse/parse_py/BBHandler.py
++++ b/lib/bb/parse/parse_py/BBHandler.py
+@@ -13,9 +13,7 @@
+ #
  
-         flag = None
--        if 'flag' in groupd and groupd['flag'] != None:
-+        if 'flag' in groupd and groupd['flag'] is not None:
-             flag = groupd['flag']
-         elif groupd["lazyques"]:
-             flag = "_defaultval"
-diff --git a/lib/bb/providers.py b/lib/bb/providers.py
-index f80963cb..81459c36 100644
---- a/lib/bb/providers.py
-+++ b/lib/bb/providers.py
-@@ -92,11 +92,11 @@ def preferredVersionMatch(pe, pv, pr, preferred_e, preferred_v, preferred_r):
-     Check if the version pe,pv,pr is the preferred one.
-     If there is preferred version defined and ends with '%', then pv has to start with that version after removing the '%'
+ import re, bb, os
+-import logging
+ import bb.build, bb.utils
+-from bb import data
+ 
+ from . import ConfHandler
+ from .. import resolve_file, ast, logger, ParseError
+diff --git a/lib/bb/progress.py b/lib/bb/progress.py
+index 4022caa7..9c755b7f 100644
+--- a/lib/bb/progress.py
++++ b/lib/bb/progress.py
+@@ -7,7 +7,6 @@ BitBake progress handling code
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import sys
+ import re
+ import time
+ import inspect
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index d7186e85..71108eee 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -12,14 +12,12 @@ Handles preparation and execution of a queue of tasks
+ import copy
+ import os
+ import sys
+-import signal
+ import stat
+-import fcntl
+ import errno
+ import logging
+ import re
+ import bb
+-from bb import msg, data, event
++from bb import msg, event
+ from bb import monitordisk
+ import subprocess
+ import pickle
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 69aae626..5b1d22cb 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -27,7 +27,6 @@ import re
+ import datetime
+ import bb.server.xmlrpcserver
+ from bb import daemonize
+-from multiprocessing import queues
+ 
+ logger = logging.getLogger('BitBake')
+ 
+diff --git a/lib/bb/server/xmlrpcclient.py b/lib/bb/server/xmlrpcclient.py
+index c054c3c8..442ea7b2 100644
+--- a/lib/bb/server/xmlrpcclient.py
++++ b/lib/bb/server/xmlrpcclient.py
+@@ -7,9 +7,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import os
+-import sys
+-
+ import socket
+ import http.client
+ import xmlrpc.client
+diff --git a/lib/bb/server/xmlrpcserver.py b/lib/bb/server/xmlrpcserver.py
+index 54fa32f5..2fa71be6 100644
+--- a/lib/bb/server/xmlrpcserver.py
++++ b/lib/bb/server/xmlrpcserver.py
+@@ -7,9 +7,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import os
+-import sys
+-
+ import hashlib
+ import time
+ import inspect
+diff --git a/lib/bb/tests/cooker.py b/lib/bb/tests/cooker.py
+index 090916e9..74c903f0 100644
+--- a/lib/bb/tests/cooker.py
++++ b/lib/bb/tests/cooker.py
+@@ -5,7 +5,6 @@
+ #
+ 
+ import unittest
+-import tempfile
+ import os
+ import bb, bb.cooker
+ import re
+diff --git a/lib/bb/tests/cow.py b/lib/bb/tests/cow.py
+index b4af4bbc..bf6e79fc 100644
+--- a/lib/bb/tests/cow.py
++++ b/lib/bb/tests/cow.py
+@@ -7,7 +7,7 @@
+ #
+ 
+ import unittest
+-import os
++
+ 
+ class COWTestCase(unittest.TestCase):
      """
--    if (pr == preferred_r or preferred_r == None):
--        if (pe == preferred_e or preferred_e == None):
-+    if pr == preferred_r or preferred_r is None:
-+        if pe == preferred_e or preferred_e is None:
-             if preferred_v == pv:
-                 return True
--            if preferred_v != None and preferred_v.endswith('%') and pv.startswith(preferred_v[:len(preferred_v)-1]):
-+            if preferred_v is not None and preferred_v.endswith('%') and pv.startswith(preferred_v[:len(preferred_v)-1]):
-                 return True
-     return False
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 83fad3ff..f29631ec 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -9,11 +9,9 @@
+ import unittest
+ import hashlib
+ import tempfile
+-import subprocess
+ import collections
+ import os
+ from bb.fetch2 import URI
+-from bb.fetch2 import FetchMethod
+ import bb
  
-diff --git a/lib/bb/taskdata.py b/lib/bb/taskdata.py
-index 8c25e09e..d13a1249 100644
---- a/lib/bb/taskdata.py
-+++ b/lib/bb/taskdata.py
-@@ -362,7 +362,7 @@ class TaskData:
-             bb.event.fire(bb.event.NoProvider(item, dependees=self.get_dependees(item), reasons=["No eligible PROVIDERs exist for '%s'" % item]), cfgData)
-             raise bb.providers.NoProvider(item)
+ def skipIfNoNetwork():
+diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
+index 20c88ac3..4ba12a07 100644
+--- a/lib/bb/tests/runqueue.py
++++ b/lib/bb/tests/runqueue.py
+@@ -7,7 +7,6 @@
+ #
  
--        if len(eligible) > 1 and foundUnique == False:
-+        if len(eligible) > 1 and not foundUnique:
-             if item not in self.consider_msgs_cache:
-                 providers_list = []
-                 for fn in eligible:
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 5cbca97f..82c62e33 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -935,7 +935,7 @@ class BuildInfoHelper(object):
+ import unittest
+-import bb
+ import os
+ import tempfile
+ import subprocess
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 0a1b9130..0bd78363 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -21,8 +21,8 @@ import bb.taskdata
+ import bb.utils
+ import bb.command
+ import bb.remotedata
+-from bb.cookerdata import CookerConfiguration, ConfigParameters
+-from bb.main import setup_bitbake, BitBakeConfigParameters, BBMainException
++from bb.cookerdata import CookerConfiguration
++from bb.main import setup_bitbake, BitBakeConfigParameters
+ import bb.fetch2
  
-             # only reset the build name if the one on the server is actually
-             # a valid value for the build_name field
--            if build_name != None:
-+            if build_name is not None:
-                 build_info['build_name'] = build_name
-                 changed = True
  
-@@ -1194,7 +1194,7 @@ class BuildInfoHelper(object):
-         evdata = BuildInfoHelper._get_data_from_event(event)
- 
-         for t in self.internal_state['targets']:
--            if t.is_image == True:
-+            if t.is_image:
-                 output_files = list(evdata.keys())
-                 for output in output_files:
-                     if t.target in output and 'rootfs' in output and not output.endswith(".manifest"):
-@@ -1236,7 +1236,7 @@ class BuildInfoHelper(object):
-                 task_information['outcome'] = Task.OUTCOME_PREBUILT
-         else:
-             task_information['task_executed'] = True
--            if 'noexec' in vars(event) and event.noexec == True:
-+            if 'noexec' in vars(event) and event.noexec:
-                 task_information['task_executed'] = False
-                 task_information['outcome'] = Task.OUTCOME_EMPTY
-                 task_information['script_type'] = Task.CODING_NA
-@@ -1776,7 +1776,7 @@ class BuildInfoHelper(object):
-         image_file_extensions_unique = {}
-         image_fstypes = self.server.runCommand(
-             ['getVariable', 'IMAGE_FSTYPES'])[0]
--        if image_fstypes != None:
-+        if image_fstypes is not None:
-             image_types_str = image_fstypes.strip()
-             image_file_extensions = re.sub(r' {2,}', ' ', image_types_str)
-             image_file_extensions_unique = set(image_file_extensions.split(' '))
 diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index c6abb2a1..9047746e 100644
+index c6abb2a1..19008a4e 100644
 --- a/lib/bb/ui/knotty.py
 +++ b/lib/bb/ui/knotty.py
-@@ -448,7 +448,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-         if error:
-             logger.error("Command '%s' failed: %s" % (cmdline, error))
-             return 1
--        elif ret != True:
-+        elif not ret:
-             logger.error("Command '%s' failed: returned %s" % (cmdline, ret))
-             return 1
+@@ -12,7 +12,6 @@ from __future__ import division
  
+ import os
+ import sys
+-import xmlrpc.client as xmlrpclib
+ import logging
+ import progressbar
+ import signal
 diff --git a/lib/bb/ui/ncurses.py b/lib/bb/ui/ncurses.py
-index c422732b..8df528e2 100644
+index c422732b..49569e37 100644
 --- a/lib/bb/ui/ncurses.py
 +++ b/lib/bb/ui/ncurses.py
-@@ -239,7 +239,7 @@ class NCursesUI:
-             if error:
-                 print("Error running command '%s': %s" % (cmdline, error))
-                 return
--            elif ret != True:
-+            elif not ret:
-                 print("Couldn't get default commandlind! %s" % ret)
-                 return
-         except xmlrpc.client.Fault as x:
+@@ -37,7 +37,7 @@
+ 
+ 
+ import logging
+-import os, sys, itertools, time, subprocess
++import os, sys, itertools, time
+ 
+ try:
+     import curses
+@@ -46,7 +46,6 @@ except ImportError:
+ 
+ import bb
+ import xmlrpc.client
+-from bb import ui
+ from bb.ui import uihelper
+ 
+ parsespin = itertools.cycle( r'|/-\\' )
 diff --git a/lib/bb/ui/taskexp.py b/lib/bb/ui/taskexp.py
-index 50a943cd..8448cb39 100644
+index 50a943cd..7895102b 100644
 --- a/lib/bb/ui/taskexp.py
 +++ b/lib/bb/ui/taskexp.py
-@@ -202,7 +202,7 @@ def main(server, eventHandler, params):
-         if error:
-             print("Error running command '%s': %s" % (cmdline, error))
-             return 1
--        elif ret != True:
-+        elif not ret:
-             print("Error running command '%s': returned %s" % (cmdline, ret))
-             return 1
-     except client.Fault as x:
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 51892c9a..9260f5d9 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -176,7 +176,7 @@ def main(server, eventHandler, params):
-         if error:
-             logger.error("Command '%s' failed: %s" % (cmdline, error))
-             return 1
--        elif ret != True:
-+        elif not ret:
-             logger.error("Command '%s' failed: returned %s" % (cmdline, ret))
-             return 1
+@@ -11,10 +11,8 @@ import sys
+ import gi
+ gi.require_version('Gtk', '3.0')
+ from gi.repository import Gtk, Gdk, GObject
+-from multiprocessing import Queue
+ import threading
+ from xmlrpc import client
+-import time
+ import bb
+ import bb.event
  
-diff --git a/lib/bb/ui/uievent.py b/lib/bb/ui/uievent.py
-index fedb0506..13d0d4a0 100644
---- a/lib/bb/ui/uievent.py
-+++ b/lib/bb/ui/uievent.py
-@@ -46,7 +46,7 @@ class BBUIEventQueue:
-                 self.EventHandle = ret
-                 error = ""
- 
--            if self.EventHandle != None:
-+            if self.EventHandle is not None:
-                 break
- 
-             errmsg = "Could not register UI event handler. Error: %s, host %s, "\
-diff --git a/lib/bs4/__init__.py b/lib/bs4/__init__.py
-index f6fdfd50..e35725b8 100644
---- a/lib/bs4/__init__.py
-+++ b/lib/bs4/__init__.py
-@@ -427,7 +427,7 @@ class BeautifulSoup(Tag):
-         if self.is_xml:
-             # Print the XML declaration
-             encoding_part = ''
--            if eventual_encoding != None:
-+            if eventual_encoding is not None:
-                 encoding_part = ' encoding="%s"' % eventual_encoding
-             prefix = '<?xml version="1.0"%s?>\n' % encoding_part
-         else:
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index d65265c4..06c8819d 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -24,7 +24,6 @@ import fnmatch
+ import traceback
+ import errno
+ import signal
+-import ast
+ import collections
+ import copy
+ from subprocess import getstatusoutput
 diff --git a/lib/bs4/builder/_html5lib.py b/lib/bs4/builder/_html5lib.py
-index 2b7a70aa..a8552828 100644
+index 2b7a70aa..4091ce88 100644
 --- a/lib/bs4/builder/_html5lib.py
 +++ b/lib/bs4/builder/_html5lib.py
-@@ -322,7 +322,7 @@ class Element(treebuildersbase.Node):
-         return self.element.contents
+@@ -2,7 +2,6 @@ __all__ = [
+     'HTML5TreeBuilder',
+     ]
  
-     def getNameTuple(self):
--        if self.namespace == None:
-+        if self.namespace is None:
-             return namespaces["html"], self.name
-         else:
-             return self.namespace, self.name
-diff --git a/lib/ply/yacc.py b/lib/ply/yacc.py
-index d50886ed..561784f2 100644
---- a/lib/ply/yacc.py
-+++ b/lib/ply/yacc.py
-@@ -488,7 +488,7 @@ class LRParser:
-                     # --! DEBUG
-                     return result
+-from pdb import set_trace
+ import warnings
+ from bs4.builder import (
+     PERMISSIVE,
+diff --git a/lib/bs4/dammit.py b/lib/bs4/dammit.py
+index 805aa908..7ad9e0dd 100644
+--- a/lib/bs4/dammit.py
++++ b/lib/bs4/dammit.py
+@@ -8,12 +8,10 @@ XML or HTML to reflect a new encoding; that's the tree builder's job.
+ """
+ __license__ = "MIT"
  
--            if t == None:
-+            if t is None:
+-from pdb import set_trace
+ import codecs
+ from html.entities import codepoint2name
+ import re
+ import logging
+-import string
  
-                 # --! DEBUG
-                 debug.error('Error  : %s',
-@@ -766,7 +766,7 @@ class LRParser:
-                     n = symstack[-1]
-                     return getattr(n,"value",None)
- 
--            if t == None:
-+            if t is None:
- 
-                 # We have some kind of parsing error here.  To handle
-                 # this, we are going to push the current token onto
-@@ -1021,7 +1021,7 @@ class LRParser:
-                     n = symstack[-1]
-                     return getattr(n,"value",None)
- 
--            if t == None:
-+            if t is None:
- 
-                 # We have some kind of parsing error here.  To handle
-                 # this, we are going to push the current token onto
-diff --git a/lib/prserv/db.py b/lib/prserv/db.py
-index 117d8c05..cb2a2461 100644
---- a/lib/prserv/db.py
-+++ b/lib/prserv/db.py
-@@ -71,7 +71,7 @@ class PRTable(object):
-         data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-                            (version, pkgarch, checksum))
-         row=data.fetchone()
--        if row != None:
-+        if row is not None:
-             return row[0]
-         else:
-             #no value found, try to insert
-@@ -87,7 +87,7 @@ class PRTable(object):
-             data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-                                (version, pkgarch, checksum))
-             row=data.fetchone()
--            if row != None:
-+            if row is not None:
-                 return row[0]
-             else:
-                 raise prserv.NotFoundError
-@@ -99,7 +99,7 @@ class PRTable(object):
-                             % (self.table, self.table),
-                             (version, pkgarch, checksum, version, pkgarch))
-         row=data.fetchone()
--        if row != None:
-+        if row is not None:
-             return row[0]
-         else:
-             #no value found, try to insert
-@@ -116,7 +116,7 @@ class PRTable(object):
-             data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-                                (version, pkgarch, checksum))
-             row=data.fetchone()
--            if row != None:
-+            if row is not None:
-                 return row[0]
-             else:
-                 raise prserv.NotFoundError
-@@ -132,7 +132,7 @@ class PRTable(object):
-         data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-                            (version, pkgarch, checksum))
-         row = data.fetchone()
--        if row != None:
-+        if row is not None:
-             val=row[0]
-         else:
-             #no value found, try to insert
-@@ -147,7 +147,7 @@ class PRTable(object):
-             data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-                            (version, pkgarch, checksum))
-             row = data.fetchone()
--            if row != None:
-+            if row is not None:
-                 val = row[0]
-         return val
- 
-@@ -170,7 +170,7 @@ class PRTable(object):
-         data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=? AND value>=?;" % self.table,
-                             (version,pkgarch,checksum,value))
-         row=data.fetchone()
--        if row != None:
-+        if row is not None:
-             return row[0]
-         else:
+ # Import a library to autodetect character encodings.
+ chardet_type = None
+@@ -38,12 +36,6 @@ except ImportError:
+         def chardet_dammit(s):
              return None
-diff --git a/lib/pyinotify.py b/lib/pyinotify.py
-index 1528a22e..6ae40a2d 100644
---- a/lib/pyinotify.py
-+++ b/lib/pyinotify.py
-@@ -1274,7 +1274,7 @@ class Notifier:
-             basename = os.path.basename(sys.argv[0]) or 'pyinotify'
-             pid_file = os.path.join(dirname, basename + '.pid')
  
--        if pid_file != False and os.path.lexists(pid_file):
-+        if pid_file and os.path.lexists(pid_file):
-             err = 'Cannot daemonize: pid file %s already exists.' % pid_file
-             raise NotifierError(err)
+-# Available from http://cjkpython.i18n.org/.
+-try:
+-    import iconv_codec
+-except ImportError:
+-    pass
+-
+ xml_encoding_re = re.compile(
+     r'^<\?.*encoding=[\'"](.*?)[\'"].*\?>'.encode(), re.I)
+ html_meta_re = re.compile(
+diff --git a/lib/bs4/element.py b/lib/bs4/element.py
+index 3775a604..68be42d1 100644
+--- a/lib/bs4/element.py
++++ b/lib/bs4/element.py
+@@ -1,6 +1,5 @@
+ __license__ = "MIT"
  
-@@ -1308,7 +1308,7 @@ class Notifier:
-         fork_daemon()
+-from pdb import set_trace
+ import collections.abc
+ import re
+ import sys
+diff --git a/lib/bs4/testing.py b/lib/bs4/testing.py
+index 3a2f260e..953bca8e 100644
+--- a/lib/bs4/testing.py
++++ b/lib/bs4/testing.py
+@@ -4,7 +4,6 @@ __license__ = "MIT"
  
-         # Write pid
--        if pid_file != False:
-+        if pid_file:
-             flags = os.O_WRONLY|os.O_CREAT|os.O_NOFOLLOW|os.O_EXCL
-             fd_pid = os.open(pid_file, flags, 0o0600)
-             os.write(fd_pid,  bytes(str(os.getpid()) + '\n',
+ import pickle
+ import copy
+-import functools
+ import unittest
+ from unittest import TestCase
+ from bs4 import BeautifulSoup
+diff --git a/lib/bs4/tests/test_docs.py b/lib/bs4/tests/test_docs.py
+index 5b9f6770..d1d76a33 100644
+--- a/lib/bs4/tests/test_docs.py
++++ b/lib/bs4/tests/test_docs.py
+@@ -7,19 +7,15 @@ __all__ = [
+     'additional_tests',
+     ]
+ 
+-import atexit
+ import doctest
+-import os
+ #from pkg_resources import (
+ #    resource_filename, resource_exists, resource_listdir, cleanup_resources)
+-import unittest
+ 
+ DOCTEST_FLAGS = (
+     doctest.ELLIPSIS |
+     doctest.NORMALIZE_WHITESPACE |
+     doctest.REPORT_NDIFF)
+ 
+-
+ # def additional_tests():
+ #     "Run the doc tests (README.txt and docs/*, if any exist)"
+ #     doctest_files = [
+diff --git a/lib/bs4/tests/test_htmlparser.py b/lib/bs4/tests/test_htmlparser.py
+index b45e35f9..30a25e67 100644
+--- a/lib/bs4/tests/test_htmlparser.py
++++ b/lib/bs4/tests/test_htmlparser.py
+@@ -1,7 +1,6 @@
+ """Tests to ensure that the html.parser tree builder generates good
+ trees."""
+ 
+-from pdb import set_trace
+ import pickle
+ from bs4.testing import SoupTest, HTMLTreeBuilderSmokeTest
+ from bs4.builder import HTMLParserTreeBuilder
+diff --git a/lib/bs4/tests/test_lxml.py b/lib/bs4/tests/test_lxml.py
+index 6c2a1d73..6b6cdd07 100644
+--- a/lib/bs4/tests/test_lxml.py
++++ b/lib/bs4/tests/test_lxml.py
+@@ -1,6 +1,5 @@
+ """Tests to ensure that the lxml tree builder generates good trees."""
+ 
+-import re
+ import warnings
+ 
+ try:
+@@ -14,13 +13,8 @@ except ImportError as e:
+ if LXML_PRESENT:
+     from bs4.builder import LXMLTreeBuilder, LXMLTreeBuilderForXML
+ 
+-from bs4 import (
+-    BeautifulSoup,
+-    BeautifulStoneSoup,
+-    )
+-from bs4.element import Comment, Doctype, SoupStrainer
++from bs4 import BeautifulStoneSoup
+ from bs4.testing import skipIf
+-from bs4.tests import test_htmlparser
+ from bs4.testing import (
+     HTMLTreeBuilderSmokeTest,
+     XMLTreeBuilderSmokeTest,
+diff --git a/lib/bs4/tests/test_soup.py b/lib/bs4/tests/test_soup.py
+index f87949e3..6ad3cb37 100644
+--- a/lib/bs4/tests/test_soup.py
++++ b/lib/bs4/tests/test_soup.py
+@@ -1,16 +1,12 @@
+ # -*- coding: utf-8 -*-
+ """Tests of Beautiful Soup as a whole."""
+ 
+-from pdb import set_trace
+ import logging
+ import unittest
+ import sys
+ import tempfile
+ 
+-from bs4 import (
+-    BeautifulSoup,
+-    BeautifulStoneSoup,
+-)
++from bs4 import BeautifulSoup
+ from bs4.element import (
+     CharsetMetaAttributeValue,
+     ContentMetaAttributeValue,
+diff --git a/lib/bs4/tests/test_tree.py b/lib/bs4/tests/test_tree.py
+index 6d3e67f3..8e5c6642 100644
+--- a/lib/bs4/tests/test_tree.py
++++ b/lib/bs4/tests/test_tree.py
+@@ -9,16 +9,12 @@ same markup, but all Beautiful Soup trees can be traversed with the
+ methods tested here.
+ """
+ 
+-from pdb import set_trace
+ import copy
+ import pickle
+ import re
+ import warnings
+ from bs4 import BeautifulSoup
+-from bs4.builder import (
+-    builder_registry,
+-    HTMLParserTreeBuilder,
+-)
++from bs4.builder import builder_registry
+ from bs4.element import (
+     PY3K,
+     CData,
+@@ -29,10 +25,7 @@ from bs4.element import (
+     SoupStrainer,
+     Tag,
+ )
+-from bs4.testing import (
+-    SoupTest,
+-    skipIf,
+-)
++from bs4.testing import SoupTest
+ 
+ XML_BUILDER_PRESENT = (builder_registry.lookup("xml") is not None)
+ LXML_PRESENT = (builder_registry.lookup("lxml") is not None)
+diff --git a/lib/hashserv/client.py b/lib/hashserv/client.py
+index ae0cce9d..46085d64 100644
+--- a/lib/hashserv/client.py
++++ b/lib/hashserv/client.py
+@@ -3,7 +3,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-from contextlib import closing
+ import json
+ import logging
+ import socket
+diff --git a/lib/layerindexlib/cooker.py b/lib/layerindexlib/cooker.py
+index 604a9611..4ce397d8 100644
+--- a/lib/layerindexlib/cooker.py
++++ b/lib/layerindexlib/cooker.py
+@@ -4,9 +4,8 @@
+ #
+ 
+ import logging
+-import json
+ 
+-from collections import OrderedDict, defaultdict
++from collections import defaultdict
+ 
+ from urllib.parse import unquote, urlparse
+ 
+diff --git a/lib/layerindexlib/plugin.py b/lib/layerindexlib/plugin.py
+index 7015a1af..cadda36c 100644
+--- a/lib/layerindexlib/plugin.py
++++ b/lib/layerindexlib/plugin.py
+@@ -7,10 +7,7 @@
+ #   Plugin base class
+ #   Utility Functions for working on layerindex data
+ 
+-import argparse
+ import logging
+-import os
+-import bb.msg
+ 
+ logger = logging.getLogger('BitBake.layerindexlib.plugin')
+ 
+diff --git a/lib/layerindexlib/tests/cooker.py b/lib/layerindexlib/tests/cooker.py
+index 1fa102e6..1d0685e0 100644
+--- a/lib/layerindexlib/tests/cooker.py
++++ b/lib/layerindexlib/tests/cooker.py
+@@ -3,15 +3,12 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import unittest
+-import tempfile
+ import os
+ import bb
+ 
+ import layerindexlib
+ from layerindexlib.tests.common import LayersTest
+ 
+-import logging
+ 
+ class LayerIndexCookerTest(LayersTest):
+ 
+diff --git a/lib/layerindexlib/tests/layerindexobj.py b/lib/layerindexlib/tests/layerindexobj.py
+index 0c5ec888..de1e4746 100644
+--- a/lib/layerindexlib/tests/layerindexobj.py
++++ b/lib/layerindexlib/tests/layerindexobj.py
+@@ -3,14 +3,8 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import unittest
+-import tempfile
+-import os
+-import bb
+-
+ from layerindexlib.tests.common import LayersTest
+ 
+-import logging
+ 
+ class LayerIndexObjectsTest(LayersTest):
+     def setUp(self):
+diff --git a/lib/layerindexlib/tests/restapi.py b/lib/layerindexlib/tests/restapi.py
+index 6d8dc005..e5ccafe5 100644
+--- a/lib/layerindexlib/tests/restapi.py
++++ b/lib/layerindexlib/tests/restapi.py
+@@ -4,14 +4,11 @@
+ #
+ 
+ import unittest
+-import tempfile
+ import os
+-import bb
+ 
+ import layerindexlib
+ from layerindexlib.tests.common import LayersTest
+ 
+-import logging
+ 
+ def skipIfNoNetwork():
+     if os.environ.get("BB_SKIP_NETTESTS") == "yes":
+diff --git a/lib/toaster/bldcollector/urls.py b/lib/toaster/bldcollector/urls.py
+index 8eb1e34a..efd67a81 100644
+--- a/lib/toaster/bldcollector/urls.py
++++ b/lib/toaster/bldcollector/urls.py
+@@ -6,7 +6,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-from django.conf.urls import include, url
++from django.conf.urls import url
+ 
+ import bldcollector.views
+ 
+diff --git a/lib/toaster/bldcollector/views.py b/lib/toaster/bldcollector/views.py
+index c708b415..6d9227cd 100644
+--- a/lib/toaster/bldcollector/views.py
++++ b/lib/toaster/bldcollector/views.py
+@@ -6,16 +6,8 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-from django.views.decorators.cache import cache_control
+ from django.core.urlresolvers import reverse
+-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+ from django.http import HttpResponseBadRequest, HttpResponse
+-from django.utils import timezone
+-from django.utils.html import escape
+-from datetime import timedelta
+-from django.utils import formats
+-from toastergui.templatetags.projecttags import json as jsonfilter
+-import json
+ import os
+ import tempfile
+ import subprocess
+diff --git a/lib/toaster/bldcontrol/admin.py b/lib/toaster/bldcontrol/admin.py
+index e85c30ed..1754bc11 100644
+--- a/lib/toaster/bldcontrol/admin.py
++++ b/lib/toaster/bldcontrol/admin.py
+@@ -3,7 +3,6 @@
+ #
+ 
+ from django.contrib import admin
+-from django.contrib.admin.filters import RelatedFieldListFilter
+ from .models import BuildEnvironment
+ 
+ class BuildEnvironmentAdmin(admin.ModelAdmin):
+diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
+index 301df188..71c288df 100644
+--- a/lib/toaster/bldcontrol/bbcontroller.py
++++ b/lib/toaster/bldcontrol/bbcontroller.py
+@@ -8,10 +8,8 @@
+ 
+ import os
+ import sys
+-import re
+-from django.db import transaction
+ from django.db.models import Q
+-from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget, BRBitbake
++from bldcontrol.models import BuildEnvironment, BRLayer, BRBitbake
+ 
+ # load Bitbake components
+ path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 39ea736b..75674ccb 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -7,27 +7,24 @@
+ #
+ 
+ import os
+-import sys
+ import re
+ import shutil
+ import time
+-from django.db import transaction
+-from django.db.models import Q
+-from bldcontrol.models import BuildEnvironment, BuildRequest, BRLayer, BRVariable, BRTarget, BRBitbake, Build
+-from orm.models import CustomImageRecipe, Layer, Layer_Version, Project, ProjectLayer, ToasterSetting
++from bldcontrol.models import BuildEnvironment, BuildRequest, Build
++from orm.models import CustomImageRecipe, Layer, Layer_Version, Project, ToasterSetting
+ from orm.models import signal_runbuilds
+ import subprocess
+ 
+ from toastermain import settings
+ 
+-from bldcontrol.bbcontroller import BuildEnvironmentController, ShellCmdException, BuildSetupException, BitbakeController
++from bldcontrol.bbcontroller import BuildEnvironmentController, ShellCmdException, BuildSetupException
+ 
+ import logging
+ logger = logging.getLogger("toaster")
+ 
+ install_dir = os.environ.get('TOASTER_DIR')
+ 
+-from pprint import pprint, pformat
++from pprint import pformat
+ 
+ class LocalhostBEController(BuildEnvironmentController):
+     """ Implementation of the BuildEnvironmentController for the localhost;
 diff --git a/lib/toaster/bldcontrol/management/commands/checksettings.py b/lib/toaster/bldcontrol/management/commands/checksettings.py
-index fe2c4dc2..21c21657 100644
+index fe2c4dc2..cfcd4a00 100644
 --- a/lib/toaster/bldcontrol/management/commands/checksettings.py
 +++ b/lib/toaster/bldcontrol/management/commands/checksettings.py
-@@ -80,7 +80,7 @@ class Command(BaseCommand):
-                         template_conf = os.environ.get("TEMPLATECONF", "")
-                         custom_xml_only = os.environ.get("CUSTOM_XML_ONLY")
+@@ -2,11 +2,9 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
  
--                        if ToasterSetting.objects.filter(name='CUSTOM_XML_ONLY').count() > 0 or (not custom_xml_only == None):
-+                        if ToasterSetting.objects.filter(name='CUSTOM_XML_ONLY').count() > 0 or custom_xml_only is not None:
-                             # only use the custom settings
-                             pass
-                         elif "poky" in template_conf:
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index bb6b5dec..caf06972 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -1647,14 +1647,14 @@ class CustomImageRecipe(Recipe):
-         """
-         # Check if we're aldready up-to-date or not
-         target = self.get_last_successful_built_target()
--        if target == None:
-+        if target is None:
-             # So we've never actually built this Custom recipe but what about
-             # the recipe it's based on?
-             target = \
-                 Target.objects.filter(Q(build__outcome=Build.SUCCEEDED) &
-                                       Q(build__project=self.project) &
-                                       Q(target=self.base_recipe.name)).last()
--            if target == None:
-+            if target is None:
-                 return
+-from django.core.management.base import BaseCommand, CommandError
+-from django.db import transaction
++from django.core.management.base import BaseCommand
  
-         if target.build.completed_on == self.last_updated:
+ from django.core.management import call_command
+-from bldcontrol.bbcontroller import getBuildEnvironmentController, ShellCmdException
+ from bldcontrol.models import BuildRequest, BuildEnvironment, BRError
+ from orm.models import ToasterSetting, Build, Layer
+ 
+diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
+index bcffcf5e..0d30fd9b 100644
+--- a/lib/toaster/bldcontrol/models.py
++++ b/lib/toaster/bldcontrol/models.py
+@@ -4,9 +4,8 @@
+ 
+ from __future__ import unicode_literals
+ from django.db import models
+-from django.core.validators import MaxValueValidator, MinValueValidator
+ from django.utils.encoding import force_text
+-from orm.models import Project, ProjectLayer, ProjectVariable, ProjectTarget, Build, Layer_Version
++from orm.models import Project, Build, Layer_Version
+ 
+ import logging
+ logger = logging.getLogger("toaster")
+diff --git a/lib/toaster/orm/management/commands/lsupdates.py b/lib/toaster/orm/management/commands/lsupdates.py
+index 5b5abbb2..a4dbcaa7 100644
+--- a/lib/toaster/orm/management/commands/lsupdates.py
++++ b/lib/toaster/orm/management/commands/lsupdates.py
+@@ -8,7 +8,7 @@
+ 
+ from django.core.management.base import BaseCommand
+ 
+-from orm.models import LayerSource, Layer, Release, Layer_Version
++from orm.models import Layer, Release, Layer_Version
+ from orm.models import LayerVersionDependency, Machine, Recipe
+ from orm.models import Distro
+ from orm.models import ToasterSetting
+diff --git a/lib/toaster/orm/migrations/0011_delete_layersource.py b/lib/toaster/orm/migrations/0011_delete_layersource.py
+index 75506961..3f3a2e16 100644
+--- a/lib/toaster/orm/migrations/0011_delete_layersource.py
++++ b/lib/toaster/orm/migrations/0011_delete_layersource.py
+@@ -1,7 +1,7 @@
+ # -*- coding: utf-8 -*-
+ from __future__ import unicode_literals
+ 
+-from django.db import migrations, models
++from django.db import migrations
+ 
+ 
+ class Migration(migrations.Migration):
+diff --git a/lib/toaster/tests/browser/selenium_helpers_base.py b/lib/toaster/tests/browser/selenium_helpers_base.py
+index 6c94684e..644d45fe 100644
+--- a/lib/toaster/tests/browser/selenium_helpers_base.py
++++ b/lib/toaster/tests/browser/selenium_helpers_base.py
+@@ -19,7 +19,6 @@ import os
+ import time
+ import unittest
+ 
+-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+ from selenium import webdriver
+ from selenium.webdriver.support.ui import WebDriverWait
+ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+diff --git a/lib/toaster/tests/browser/test_project_config_page.py b/lib/toaster/tests/browser/test_project_config_page.py
+index 2816eb90..eaf27a1e 100644
+--- a/lib/toaster/tests/browser/test_project_config_page.py
++++ b/lib/toaster/tests/browser/test_project_config_page.py
+@@ -7,10 +7,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import re
+-
+ from django.core.urlresolvers import reverse
+-from django.utils import timezone
+ from tests.browser.selenium_helpers import SeleniumTestCase
+ 
+ from orm.models import BitbakeVersion, Release, Project, ProjectVariable
+diff --git a/lib/toaster/tests/functional/test_functional_basic.py b/lib/toaster/tests/functional/test_functional_basic.py
+index 56c84fba..5683e387 100644
+--- a/lib/toaster/tests/functional/test_functional_basic.py
++++ b/lib/toaster/tests/functional/test_functional_basic.py
+@@ -7,7 +7,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import time
+ import re
+ from tests.functional.functional_helpers import SeleniumFunctionalTestCase
+ from orm.models import Project
+diff --git a/lib/toaster/toastergui/api.py b/lib/toaster/toastergui/api.py
+index 8b49b3ee..a4afc9e7 100644
+--- a/lib/toaster/toastergui/api.py
++++ b/lib/toaster/toastergui/api.py
+@@ -13,7 +13,6 @@ import logging
+ import json
+ import subprocess
+ from collections import Counter
+-from shutil import copyfile
+ 
+ from orm.models import Project, ProjectTarget, Build, Layer_Version
+ from orm.models import LayerVersionDependency, LayerSource, ProjectLayer
+@@ -29,8 +28,6 @@ from django.core.urlresolvers import reverse
+ from django.db.models import Q, F
+ from django.db import Error
+ from toastergui.templatetags.projecttags import filtered_filesizeformat
+-from django.utils import timezone
+-import pytz
+ 
+ # development/debugging support
+ verbose = 2
+diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
+index b3ea2227..528dd32b 100644
+--- a/lib/toaster/toastergui/tables.py
++++ b/lib/toaster/toastergui/tables.py
+@@ -7,15 +7,10 @@
+ #
+ 
+ from toastergui.widgets import ToasterTable
+-from orm.models import Recipe, ProjectLayer, Layer_Version, Machine, Project
++from orm.models import Recipe, ProjectLayer, Layer_Version, Project
+ from orm.models import CustomImageRecipe, Package, Target, Build, LogMessage, Task
+ from orm.models import CustomImagePackage, Package_DependencyManager
+-from orm.models import Distro
+-from django.db.models import Q, Max, Sum, Count, When, Case, Value, IntegerField
+-from django.conf.urls import url
+-from django.core.urlresolvers import reverse, resolve
+-from django.http import HttpResponse
+-from django.views.generic import TemplateView
++from django.db.models import Q, Sum, Count, When, Case, Value, IntegerField
+ 
+ from toastergui.tablefilter import TableFilter
+ from toastergui.tablefilter import TableFilterActionToggle
+diff --git a/lib/toaster/toastergui/templatetags/objects_to_dictionaries_filter.py b/lib/toaster/toastergui/templatetags/objects_to_dictionaries_filter.py
+index 048d5338..e242234b 100644
+--- a/lib/toaster/toastergui/templatetags/objects_to_dictionaries_filter.py
++++ b/lib/toaster/toastergui/templatetags/objects_to_dictionaries_filter.py
+@@ -3,7 +3,6 @@
+ #
+ 
+ from django import template
+-import json
+ 
+ register = template.Library()
+ 
 diff --git a/lib/toaster/toastergui/templatetags/projecttags.py b/lib/toaster/toastergui/templatetags/projecttags.py
-index 1dbab3bd..8a9a01ef 100644
+index 1dbab3bd..354b61f0 100644
 --- a/lib/toaster/toastergui/templatetags/projecttags.py
 +++ b/lib/toaster/toastergui/templatetags/projecttags.py
-@@ -212,7 +212,7 @@ def filtered_installedsize(size, installed_size):
-     """If package.installed_size not null and not empty return it,
-        else return package.size
-     """
--    return size if (installed_size == 0) or (installed_size == "") or (installed_size == None) else installed_size
-+    return size if (installed_size == 0) or (installed_size == "") or (installed_size is None) else installed_size
+@@ -6,7 +6,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
  
- @register.filter
- def filtered_packageversion(version, revision):
-@@ -228,7 +228,7 @@ def filter_sizeovertotal(package_object, total_size):
-         formatted nicely.
-     """
-     size = package_object.installed_size
--    if size == None or size == '':
-+    if size is None or size == '':
-         size = package_object.size
+-from datetime import datetime, timedelta
++from datetime import timedelta
+ from os.path import relpath
+ import re
+ from django import template
+diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
+index 673d9ae9..d2df4e60 100644
+--- a/lib/toaster/toastergui/urls.py
++++ b/lib/toaster/toastergui/urls.py
+@@ -6,10 +6,9 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
  
-     return '{:.1%}'.format(float(size)/float(total_size))
+-from django.conf.urls import include, url
+-from django.views.generic import RedirectView, TemplateView
++from django.conf.urls import url
++from django.views.generic import RedirectView
+ 
+-from django.http import HttpResponseBadRequest
+ from toastergui import tables
+ from toastergui import buildtables
+ from toastergui import typeaheads
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index d7acaff8..6d7290b6 100644
+index d7acaff8..7fecdaa9 100644
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -51,7 +51,7 @@ class MimeTypeFinder(object):
-     def get_mimetype(self, path):
-         guess = mimetypes.guess_type(path, self._strict)
-         guessed_type = guess[0]
--        if guessed_type == None:
-+        if guessed_type is None:
-             guessed_type = 'application/octet-stream'
-         return guessed_type
+@@ -20,7 +20,7 @@ from orm.models import TargetKernelFile, TargetSDKFile, Target_Image_File
+ from orm.models import BitbakeVersion, CustomImageRecipe
  
-@@ -126,7 +126,7 @@ def _lv_to_dict(prj, x = None):
-     return {"id": x.pk,
-             "name": x.layer.name,
-             "tooltip": "%s | %s" % (x.layer.vcs_url,x.get_vcs_reference()),
--            "detail": "(%s" % x.layer.vcs_url + (")" if x.release == None else " | "+x.get_vcs_reference()+")"),
-+            "detail": "(%s" % x.layer.vcs_url + (")" if x.release is None else " | "+x.get_vcs_reference()+")"),
-             "giturl": x.layer.vcs_url,
-             "layerdetailurl" : reverse('layerdetails', args=(prj.id,x.pk)),
-             "revision" : x.get_vcs_reference(),
-@@ -719,7 +719,7 @@ def _get_dir_entries(build_id, target_id, start):
-                 resolved_id = o.sym_target_id
-                 resolved_path = o.path
-                 if target_packages.count():
--                    while resolved_id != "" and resolved_id != None:
-+                    while resolved_id != "" and resolved_id is not None:
-                         tf = Target_File.objects.get(pk=resolved_id)
-                         resolved_path = tf.path
-                         resolved_id = tf.sym_target_id
-@@ -731,10 +731,10 @@ def _get_dir_entries(build_id, target_id, start):
-                         entry['package_id'] = str(p.id)
-                         entry['package'] = p.name
-                 # don't use resolved path from above, show immediate link-to
--                if o.sym_target_id != "" and o.sym_target_id != None:
-+                if o.sym_target_id != "" and o.sym_target_id is not None:
-                     entry['link_to'] = Target_File.objects.get(pk=o.sym_target_id).path
-             entry['size'] = filtered_filesizeformat(o.size)
--            if entry['link_to'] != None:
-+            if entry['link_to'] is not None:
-                 entry['permission'] = node_str[o.inodetype] + o.permission
-             else:
-                 entry['permission'] = node_str[o.inodetype] + o.permission
-@@ -756,7 +756,7 @@ def dirinfo(request, build_id, target_id, file_path=None):
-     objects = _get_dir_entries(build_id, target_id, '/')
-     packages_sum = Package.objects.filter(id__in=Target_Installed_Package.objects.filter(target_id=target_id).values('package_id')).aggregate(Sum('installed_size'))
-     dir_list = None
--    if file_path != None:
-+    if file_path is not None:
-         """
-         Link from the included package detail file list page and is
-         requesting opening the dir info to a specific file path.
-@@ -1030,15 +1030,15 @@ def _get_package_dependency_count(package, target_id, is_installed):
+ from django.core.urlresolvers import reverse, resolve
+-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
++from django.core.exceptions import ObjectDoesNotExist
+ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+ from django.http import HttpResponseNotFound, JsonResponse
+ from django.utils import timezone
+@@ -664,7 +664,6 @@ def recipe_packages(request, build_id, recipe_id):
+     _set_parameters_values(pagesize, orderby, request)
+     return response
  
- def _get_package_alias(package):
-     alias = package.installed_name
--    if alias != None and alias != '' and alias != package.name:
-+    if alias is not None and alias != '' and alias != package.name:
-         return alias
-     else:
-         return ''
+-from django.core.serializers.json import DjangoJSONEncoder
+ from django.http import HttpResponse
+ def xhr_dirinfo(request, build_id, target_id):
+     top = request.GET.get('start', '/')
+@@ -1340,7 +1339,7 @@ def json_build(request,build_id):
  
- def _get_fullpackagespec(package):
-     r = package.name
--    version_good = package.version != None and  package.version != ''
--    revision_good = package.revision != None and package.revision != ''
-+    version_good = package.version is not None and  package.version != ''
-+    revision_good = package.revision is not None and package.revision != ''
-     if version_good or revision_good:
-         r += '_'
-         if version_good:
+ import toastermain.settings
+ 
+-from orm.models import Project, ProjectLayer, ProjectTarget, ProjectVariable
++from orm.models import Project, ProjectLayer, ProjectVariable
+ from bldcontrol.models import  BuildEnvironment
+ 
+ # we have a set of functions if we're in managed mode, or
+@@ -1349,10 +1348,8 @@ from bldcontrol.models import  BuildEnvironment
+ if True:
+     from django.contrib.auth.models import User
+     from django.contrib.auth import authenticate, login
+-    from django.contrib.auth.decorators import login_required
+ 
+-    from orm.models import LayerSource, ToasterSetting, Release, Machine, LayerVersionDependency
+-    from bldcontrol.models import BuildRequest
++    from orm.models import LayerSource, ToasterSetting, Release
+ 
+     import traceback
+ 
+diff --git a/lib/toaster/toastermain/management/commands/builddelete.py b/lib/toaster/toastermain/management/commands/builddelete.py
+index c2d773a5..93919dec 100644
+--- a/lib/toaster/toastermain/management/commands/builddelete.py
++++ b/lib/toaster/toastermain/management/commands/builddelete.py
+@@ -2,12 +2,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-from django.core.management.base import BaseCommand, CommandError
++from django.core.management.base import BaseCommand
+ from django.core.exceptions import ObjectDoesNotExist
+ from orm.models import Build
+ from django.db import OperationalError
+-import os
+-
+ 
+ 
+ class Command(BaseCommand):
 diff --git a/lib/toaster/toastermain/management/commands/buildimport.py b/lib/toaster/toastermain/management/commands/buildimport.py
-index 408ad44e..aba0e4bd 100644
+index 408ad44e..9af54ec2 100644
 --- a/lib/toaster/toastermain/management/commands/buildimport.py
 +++ b/lib/toaster/toastermain/management/commands/buildimport.py
-@@ -507,7 +507,7 @@ class Command(BaseCommand):
-         default_release = Release.objects.get(id=1)
+@@ -31,12 +31,10 @@
  
-         # SANITY: if 'reconfig' but project does not exist (deleted externally), switch to 'import'
--        if ("reconfigure" == options['command']) and (None == project):
-+        if ("reconfigure" == options['command']) and project is None:
-             options['command'] = 'import'
+ # ../bitbake/lib/toaster/manage.py buildimport --name=test --path=`pwd` --callback="" --command=import
  
-         # 'Configure':
+-from django.core.management.base import BaseCommand, CommandError
+-from django.core.exceptions import ObjectDoesNotExist
+-from orm.models import ProjectManager, Project, Release, ProjectVariable
++from django.core.management.base import BaseCommand
++from orm.models import Project, Release, ProjectVariable
+ from orm.models import Layer, Layer_Version, LayerSource, ProjectLayer
+ from toastergui.api import scan_layer_content
+-from django.db import OperationalError
+ 
+ import os
+ import re
+diff --git a/lib/toaster/toastermain/management/commands/buildslist.py b/lib/toaster/toastermain/management/commands/buildslist.py
+index 1ed20224..3ad5289c 100644
+--- a/lib/toaster/toastermain/management/commands/buildslist.py
++++ b/lib/toaster/toastermain/management/commands/buildslist.py
+@@ -2,9 +2,8 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-from django.core.management.base import BaseCommand, CommandError
++from django.core.management.base import BaseCommand
+ from orm.models import Build
+-import os
+ 
+ 
+ 
 -- 
 2.24.1
 
