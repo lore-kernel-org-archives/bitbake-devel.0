@@ -1,51 +1,22 @@
-Return-Path: <stevenrwalter@gmail.com>
-Received: from mail-yw1-f65.google.com (mail-yw1-f65.google.com
-	[209.85.161.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 787D77FA18
+Return-Path: <frazer.clews@codethink.co.uk>
+X-Greylist: delayed 331 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 14 Jan 2020 14:46:20 UTC
+Received: from imap2.colo.codethink.co.uk (imap2.colo.codethink.co.uk
+	[78.40.148.184])
+	by mail.openembedded.org (Postfix) with ESMTP id E331A7FBE2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jan 2020 22:15:40 +0000 (UTC)
-Received: by mail-yw1-f65.google.com with SMTP id 192so10151211ywy.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jan 2020 14:15:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=PafM3le3UIvkAHBQrd889FJ0OdF5YEYf3qeWe3aDv8M=;
-	b=KYPerDqhE5SOBgmG+M2kXzmmr4IvRbVSI6mBxqWHb4QBCf+QcY/3UF8NjtOVeN2vw/
-	UVAdL2UNRxYk4E3gAaGZRRx6DVHY31xL2OX8SZZ6iXnTaGDGDBszmM82xQZFbKzhQytr
-	M4eYLYAHtuworm/1u19QKkaXlEroQsWJj3T76X1QzpTcEgTk0dp3vDx6257xvZjpl11Y
-	NqXk/WO1x5TbkCWsrk3YACUCAvOFDnPDxDyDgK5lQCIQd6o4EryrvgL4OvvinlyljeOP
-	sFgJ2E7BJrg30SJEVlxfV47SUNeuLoR4oqderNxqqHd9P0lu8tW0KdjnFrknwaQilnAh
-	0Row==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=PafM3le3UIvkAHBQrd889FJ0OdF5YEYf3qeWe3aDv8M=;
-	b=N3239ioDdprx8co9JkSYPnDJjyuWJIPoAFJxgbFgVOI6WgBTOqGDw3whSDchmqrpZU
-	eDwwFAR4knUosAarW+Xf++yvHRSi86gWNXz+N3mUCrbIUpSLYuNdQOKqVQJq7DrcpBhB
-	bNNc9KhkksiDeig2mVttwTrNe4CiOlXZ22qhp2P+XqboYDux+ZPTSC+29gnlk7dNg44u
-	9E/qDdkkqmQr7ahOtaTV5F3BrEr48Ecebe+Fx/REgKPnam6o85TkKs1c7Yym9L/ibS+P
-	BZJnbc8qKOaCb+oALFGvfn1gdL8ajF7HAAHlVjLOCWlxb5CN2dM+ShpZxe/yt7oGay5P
-	E3fw==
-X-Gm-Message-State: APjAAAWqXUbx01SWA//Ud2ngwzOC3RExZIb/vW1Mkhjt81f+IryaonMX
-	7UDXmuR8pqDqZi5xKt5QB9IdJP7Q2bw=
-X-Google-Smtp-Source: APXvYqzey/tu3YSr28LA47UJNSnf1z2YN/Ytq+hlZk9eQkJJXev1gTWALVg8s9faUaTsNWHqWJGiIw==
-X-Received: by 2002:a81:8350:: with SMTP id t77mr14624676ywf.442.1579040141134;
-	Tue, 14 Jan 2020 14:15:41 -0800 (PST)
-Received: from brock.localdomain ([2605:a000:1707:25a:1de4:eabf:e8ce:977a])
-	by smtp.gmail.com with ESMTPSA id
-	h193sm7151148ywc.88.2020.01.14.14.15.40
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 14 Jan 2020 14:15:40 -0800 (PST)
-From: Steven Walter <stevenrwalter@gmail.com>
+	Tue, 14 Jan 2020 14:46:20 +0000 (UTC)
+Received: from [167.98.27.226] (helo=localhost.co.uk)
+	by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+	id 1irNSW-0004um-VW; Tue, 14 Jan 2020 14:46:21 +0000
+From: frazer.clews@codethink.co.uk
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 14 Jan 2020 17:15:36 -0500
-Message-Id: <20200114221536.5647-1-stevenrwalter@gmail.com>
+Date: Tue, 14 Jan 2020 14:46:06 +0000
+Message-Id: <20200114144606.163629-1-frazer.clews@codethink.co.uk>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Cc: Steven Walter <stevenrwalter@gmail.com>
-Subject: [PATCH 1/2] Allow original $GPG_AGENT_INFO into do_fetch
+X-Mailman-Approved-At: Tue, 14 Jan 2020 22:30:13 +0000
+Subject: [PATCH] replaced deprecated method warn() with warning()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,32 +29,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Jan 2020 22:15:40 -0000
+X-List-Received-Date: Tue, 14 Jan 2020 14:46:21 -0000
 Content-Transfer-Encoding: 8bit
 
-subversion 1.9 uses gpg to encrypt authentication details that are
-stored in ~/.subversion.  This means that GPG_AGENT_INFO needs to be
-available when svn is run by do_fetch, or else svn will not be able to
-authenticate to the remote server.  Treat GPG_AGENT_INFO like
-SSH_AUTH_SOCK, including it in the fetch environment and BB_ENV_EXTRAWHITE
+From: Frazer Clews <frazer.clews@codethink.co.uk>
 
-Signed-off-by: Steven Walter <stevenrwalter@gmail.com>
+Removed the deprecated methods as it will only cause problems later on,
+and since warn() just calls warning(), it shouldn't change anything
+
+Signed-off-by: Frazer Clews <frazer.clews@codethink.co.uk>
 ---
- bitbake/lib/bb/fetch2/__init__.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/cooker.py                                        | 2 +-
+ lib/toaster/bldcontrol/management/commands/runbuilds.py | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 07de6c2693..e920d5f491 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -819,6 +819,7 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None):
-                   'GIT_SSL_CAINFO',
-                   'GIT_SMART_HTTP',
-                   'SSH_AUTH_SOCK', 'SSH_AGENT_PID',
-+                  'GPG_AGENT_INFO',
-                   'SOCKS5_USER', 'SOCKS5_PASSWD',
-                   'DBUS_SESSION_BUS_ADDRESS',
-                   'P4CONFIG']
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index b74affa7..911805a6 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1788,7 +1788,7 @@ class CookerCollectFiles(object):
+                 # When constructing an older style single regex, it's possible for BBMASK
+                 # to end up beginning with '|', which matches and masks _everything_.
+                 if mask.startswith("|"):
+-                    collectlog.warn("BBMASK contains regular expression beginning with '|', fixing: %s" % mask)
++                    collectlog.warning("BBMASK contains regular expression beginning with '|', fixing: %s" % mask)
+                     mask = mask[1:]
+                 try:
+                     re.compile(mask)
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 50ec4098..19f659ec 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -168,17 +168,17 @@ class Command(BaseCommand):
+         try:
+             self.cleanup()
+         except Exception as e:
+-            logger.warn("runbuilds: cleanup exception %s" % str(e))
++            logger.warning("runbuilds: cleanup exception %s" % str(e))
+ 
+         try:
+             self.archive()
+         except Exception as e:
+-            logger.warn("runbuilds: archive exception %s" % str(e))
++            logger.warning("runbuilds: archive exception %s" % str(e))
+ 
+         try:
+             self.schedule()
+         except Exception as e:
+-            logger.warn("runbuilds: schedule exception %s" % str(e))
++            logger.warning("runbuilds: schedule exception %s" % str(e))
+ 
+     def handle(self, **options):
+         pidfile_path = os.path.join(os.environ.get("BUILDDIR", "."),
 -- 
 2.24.1
 
