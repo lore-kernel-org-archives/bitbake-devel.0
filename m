@@ -1,22 +1,44 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
-	by mail.openembedded.org (Postfix) with ESMTP id CEC157FFB5
+Return-Path: <andre.draszik@gmail.com>
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com
+	[209.85.128.50])
+	by mail.openembedded.org (Postfix) with ESMTP id D504C7FBB5
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Jan 2020 03:01:45 +0000 (UTC)
-IronPort-SDR: d2XPQr4jWbqCunavQcowPr3kCMzUsHbxOU3+NV+nFc15drd+/zEjubI5sMnI85CZ9EUr05HywC
-	lXWwX99cJH4jN4gnN+by/5QUCtopMcwcwPA+74zuKHUcUi/Pntp4HhB3sWUwXxn44ViRNekJtz
-	T/XtEQXkYZ90b4CmX7FIwD0GVOK2a/9QfiUs9DgxdgQ/W6gi7CNi+1gsCPRScM7UCIcHIwxRGV
-	PbpBG+XOutXYNQq35iwzrJIgNBFSzsnueBhJeKKD0QreSw4jm2ly+RBhSGwbiuwx/U9YcSUwba
-	Cok=
-X-IronPort-AV: E=Sophos;i="5.69,419,1571695200"; 
-   d="scan'208";a="4204864"
-From: Peter Kjellerstedt <pkj@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sat, 11 Jan 2020 04:01:44 +0100
-Message-ID: <20200111030144.19773-1-pkj@axis.com>
-X-Mailer: git-send-email 2.21.1
+	Tue, 14 Jan 2020 15:09:21 +0000 (UTC)
+Received: by mail-wm1-f50.google.com with SMTP id p17so14155772wmb.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 14 Jan 2020 07:09:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=8/jKBFloNvhfg5uG+YRAYdqWw1QMblOIMioUcSZkd4M=;
+	b=UX2S+yVSXAqd2ciT4+b8pqlWvrGkWedrMsSDYj9Dx7XcIOliBp/KAYVp2S3phh8tsk
+	p7C8saSn6aHTv4NRacrRGSrDLTV5BR4mw5TZt263hEIVosa6UVCcuc6ZFIom8liL2MMS
+	3+26LLyzEaj8T+TFRe90qJTy4ADPFY0Odxdmhd+3SsLgwmQxgI+7SInYVbfOQo5bWzeZ
+	ePl0g5CBKbzYYNlaadwED5JA5WF6v48BnwPowbTbmFKIt3WUylbMnI/jrR7Y2rVxcLoa
+	kVfkWEKwK0SbZLXOGyW4mwfaRUhzsQHTmmd9v3+gxBWcSw+OGl5ZjCCR2BiYjf/5xC3n
+	/wFQ==
+X-Gm-Message-State: APjAAAUPH/O0yYyMK9CdRlaH3TVmj1TXgoH7HFSd0FYdCYCwOYYhiGdc
+	991eTpA2oKsodM3DJb/QP23yEWeS
+X-Google-Smtp-Source: APXvYqyYkmJKo20pjxsYyEZio8KGNfme1ulzz3MunRmqWFtkfmE5r9fNRW3T8b6dKzUUulkUKRV0ug==
+X-Received: by 2002:a05:600c:211:: with SMTP id
+	17mr27424282wmi.60.1579014561926; 
+	Tue, 14 Jan 2020 07:09:21 -0800 (PST)
+Received: from tfsielt31850 ([77.107.218.170])
+	by smtp.gmail.com with ESMTPSA id w8sm364995wmd.2.2020.01.14.07.09.18
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Tue, 14 Jan 2020 07:09:20 -0800 (PST)
+Message-ID: <13e9835095c0fd0d98b36feed69bbf75f3588a9d.camel@andred.net>
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 14 Jan 2020 15:09:18 +0000
+In-Reply-To: <20191220100831.33196-1-git@andred.net>
+References: <20191114142131.29829-1-git@andred.net>
+	<20191220100831.33196-1-git@andred.net>
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Subject: [PATCH] knotty: Be consistent when creating/updating progress bars
+Subject: Re: [master][PATCH v2] fetch2/githubprivate: new fetcher for private github repositories
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,67 +51,295 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 11 Jan 2020 03:01:46 -0000
+X-List-Received-Date: Tue, 14 Jan 2020 15:09:22 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-When creating a new progress bar (using BBProgress), a colon was
-appended to the supplied message. However, when updating the message,
-no colon was appended.
+ping
 
-Change this so that the colon is instead part of the widgets that make
-up the progress bar so that it does not matter when and how the
-message is updated, it always displays the same.
-
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
-
-This is actually a resend of a patch I sent two years ago, which was
-left without comments or action. It only applies to master (the
-original patch from two years ago should still apply to Zeus, but I do
-not see it as necessary to apply it there).
-
- bitbake/lib/bb/ui/knotty.py | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index bd9911cf6f..fcc6cddc60 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -35,15 +35,15 @@ class BBProgress(progressbar.ProgressBar):
-         self.msg = msg
-         self.extrapos = extrapos
-         if not widgets:
--            widgets = [progressbar.Percentage(), ' ', progressbar.Bar(), ' ',
--            progressbar.ETA()]
--            self.extrapos = 4
-+            widgets = [': ', progressbar.Percentage(), ' ', progressbar.Bar(),
-+                       ' ', progressbar.ETA()]
-+            self.extrapos = 5
- 
-         if resize_handler:
-             self._resize_default = resize_handler
-         else:
-             self._resize_default = signal.getsignal(signal.SIGWINCH)
--        progressbar.ProgressBar.__init__(self, maxval, [self.msg + ": "] + widgets, fd=sys.stdout)
-+        progressbar.ProgressBar.__init__(self, maxval, [self.msg] + widgets, fd=sys.stdout)
- 
-     def _handle_resize(self, signum=None, frame=None):
-         progressbar.ProgressBar._handle_resize(self, signum, frame)
-@@ -255,10 +255,10 @@ class TerminalFilter(object):
-                 start_time = activetasks[t].get("starttime", None)
-                 if not pbar or pbar.bouncing != (progress < 0):
-                     if progress < 0:
--                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[progressbar.BouncingSlider(), ''], extrapos=2, resize_handler=self.sigwinch_handle)
-+                        pbar = BBProgress("0: %s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[' ', progressbar.BouncingSlider(), ''], extrapos=3, resize_handler=self.sigwinch_handle)
-                         pbar.bouncing = True
-                     else:
--                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=4, resize_handler=self.sigwinch_handle)
-+                        pbar = BBProgress("0: %s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[' ', progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=5, resize_handler=self.sigwinch_handle)
-                         pbar.bouncing = False
-                     activetasks[t]["progressbar"] = pbar
-                 tasks.append((pbar, progress, rate, start_time))
--- 
-2.21.1
+On Fri, 2019-12-20 at 10:08 +0000, André Draszik wrote:
+> The wget / http fetcher doesn't support fetching assets
+> attached to releases on private GitHub repositories, i.e.
+> release artefacts like
+>     https://github.com/<user>/<project>/releases/download/v1.0.0/asset1.txt
+> 
+> Those are special, in that HTTP basic auth is not used / possible
+> on the URL as seen in the GitHub UI, but instead the GitHub API
+> must be used for downloading (which does support HTTP basic auth)
+> where the URL will be different.
+> 
+> Implement a new fetcher that:
+>     * uses the GitHub API to determine the asset URL
+>     * re-uses the existing wget fetcher to download this URL
+>       instead
+>     * supports checkstatus() (bitbake -c checkuri)
+>     * supports latest_versionstring() (devtool latest-version)
+>     * supports GitHub.com and GitHub Enterprise for the above
+> 
+> Implementation notes:
+> To be able to access the GitHub API, opportunistic authentication
+> (auth-no-challenge) needs to be enabled. Then the API needs to
+> be queried for the real URL of the file to be downloaded, and
+> finally application/octet-stream must be specified explicitly.
+> 
+> Note that there is a slight difference in the location of the
+> REST API endpoints between GitHub.com and GitHub Enterprise.
+> 
+>     https://developer.github.com/v3/repos/releases/
+>     https://developer.github.com/enterprise/2.19/v3/enterprise-admin/
+> 
+> Some notes:
+> * --auth-no-challenge is added unconditionally because we know
+>   username / password will definitely be needed, and they are
+>   likely specified in ~/.netrc, rather than in the recipe (but
+>   username / password via recipe is still supported)
+> * the release information returned looks sth like:
+> [
+>     {
+>         ...
+>         "name": <name of the release>
+>         "assets": [
+>             {
+>                 ...
+>                 "browser_download_url": "https://github.com/<user>/<project>/releases/download/v1.0.0/asset1.txt",
+>                 "url": "https://api.github.com/repos/<user>/<project>/releases/assets/16146291",
+>                 ...
+>             },
+>             ...
+>         ],
+>         ...
+>     },
+>     ...
+> ]
+>   hence we need to pass -O to wget to explicitly download using
+>   the original name
+> * to determine the latest available version, we can simply query
+>   the API for the version (name) that the SRC_URI entry is
+>   attached to, and then figure out if there is a more recent
+>   version available, rather than doing lots of matches using
+>   regexes
+> * this has been tested with github.com and GitHub Enterprise on
+>   private repositories, with and without PREMIRRORS
+> 
+> Signed-off-by: André Draszik <git@andred.net>
+> ---
+>  bitbake/lib/bb/fetch2/__init__.py      |   6 +-
+>  bitbake/lib/bb/fetch2/githubprivate.py | 174 +++++++++++++++++++++++++
+>  2 files changed, 178 insertions(+), 2 deletions(-)
+>  create mode 100644 bitbake/lib/bb/fetch2/githubprivate.py
+> 
+> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+> index 07de6c2693..5c533cf78e 100644
+> --- a/bitbake/lib/bb/fetch2/__init__.py
+> +++ b/bitbake/lib/bb/fetch2/__init__.py
+> @@ -1238,13 +1238,13 @@ class FetchData(object):
+>              self.sha256_name = "sha256sum"
+>          if self.md5_name in self.parm:
+>              self.md5_expected = self.parm[self.md5_name]
+> -        elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3"]:
+> +        elif self.type not in ["http", "https", "ftp", "ftps", "githubprivate", "sftp", "s3"]:
+>              self.md5_expected = None
+>          else:
+>              self.md5_expected = d.getVarFlag("SRC_URI", self.md5_name)
+>          if self.sha256_name in self.parm:
+>              self.sha256_expected = self.parm[self.sha256_name]
+> -        elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3"]:
+> +        elif self.type not in ["http", "https", "ftp", "ftps", "githubprivate", "sftp", "s3"]:
+>              self.sha256_expected = None
+>          else:
+>              self.sha256_expected = d.getVarFlag("SRC_URI", self.sha256_name)
+> @@ -1853,6 +1853,7 @@ from . import osc
+>  from . import repo
+>  from . import clearcase
+>  from . import npm
+> +from . import githubprivate
+>  
+>  methods.append(local.Local())
+>  methods.append(wget.Wget())
+> @@ -1871,3 +1872,4 @@ methods.append(osc.Osc())
+>  methods.append(repo.Repo())
+>  methods.append(clearcase.ClearCase())
+>  methods.append(npm.Npm())
+> +methods.append(githubprivate.Githubprivate())
+> diff --git a/bitbake/lib/bb/fetch2/githubprivate.py b/bitbake/lib/bb/fetch2/githubprivate.py
+> new file mode 100644
+> index 0000000000..5a007c4e69
+> --- /dev/null
+> +++ b/bitbake/lib/bb/fetch2/githubprivate.py
+> @@ -0,0 +1,174 @@
+> +#
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +"""
+> +Bitbake "Fetch" implementation for assets attached to private
+> +repositories on GitHub or GitHub Enterprise.
+> +"""
+> +
+> +import os
+> +import json
+> +import tempfile
+> +import bb
+> +from   bb.fetch2.wget import Wget
+> +from   bb.fetch2 import FetchError
+> +from   bb.fetch2 import logger
+> +from   bb.fetch2 import uri_replace
+> +
+> +class Githubprivate(Wget):
+> +    """Class to fetch an asset from a private repository on GitHub
+> +       (or GitHub Enterprise)."""
+> +
+> +    def supports(self, ud, d):
+> +        return ud.type in ['githubprivate']
+> +
+> +    def urldata_init(self, ud, d):
+> +        ud.proto = 'https'
+> +        if 'protocol' in ud.parm:
+> +            ud.proto = ud.parm['protocol']
+> +        if not ud.proto in ('http', 'https'):
+> +            raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
+> +
+> +        if not 'downloadfilename' in ud.parm:
+> +            # The asset filename determined using the GitHub API will
+> +            # not match the filename of the release artefact (as in
+> +            # SRC_URI). Hence we need to unconditionally instruct
+> +            # wget to download using -O. This can be achieved by
+> +            # unconditionally setting 'downloadfilename' here.
+> +            ud.parm['downloadfilename'] = os.path.basename(ud.path)
+> +        super(Githubprivate, self).urldata_init(ud, d)
+> +        # To be able to access the GitHub API, opportunistic authentication
+> +        # needs to be enabled. Also username / password will definitely be
+> +        # needed, and they are likely specified in ~/.netrc, rather than in
+> +        # the recipe itself.
+> +        self.basecmd += " --auth-no-challenge"
+> +
+> +    def _get_gh_releases_info(self, uri, ud, d):
+> +        fetchcmd = self.basecmd
+> +        if ud.user and ud.pswd:
+> +            fetchcmd += " --user=%s --password=%s" % (ud.user, ud.pswd)
+> +
+> +        # Github private repositories support basic-auth via the API
+> +        # endpoints only. Using those, the download URL will be
+> +        # different, and we need to download using application/octet-stream.
+> +        # The API endpoint mapping is different for github.com and
+> +        # GitHub Enterprise:
+> +        #     github.com -> api.github.com
+> +        #     github.example.com -> github.example.com/api/v3/
+> +        # The Accept header is used in any case to fix the API version to
+> +        # the supported level (version 3).
+> +        #
+> +        # To get the download URL when using the API, all the releases
+> +        # are listed via
+> +        #     https://api.github.com/<user>/<project>/releases
+> +        # which returns a JSON message describing all releases and all
+> +        # their attached artefacts. We can easily search that for
+> +        # the artefact that we're trying to download, and use
+> +        # the replacement URL from that response.
+> +        assetinfo_cmd = fetchcmd + " --header='Accept: application/vnd.github.v3+json'"
+> +        api_replacements = ['githubprivate://github.com/.* TYPE://api.github.com/repos/REPORELEASES',
+> +                            'githubprivate://.*/.* TYPE://HOST/api/v3/repos/REPORELEASES']
+> +        replacements = {}
+> +        replacements["TYPE"] = ud.proto
+> +        replacements["HOST"] = ud.host
+> +        # github release artifacts are of the form
+> +        #     https://github.com/<user>/<project>/releases/download/v1.0.0/asset1.txt
+> +        # drop everything after .../releases and point to api.github.com
+> +        replacements["REPORELEASES"] = ud.path.rsplit('/', maxsplit=3)[0]
+> +        for api_replacement in api_replacements:
+> +            (find, replace) = api_replacement.split()
+> +            rel_api_uri = uri_replace(ud, find, replace, replacements, d)
+> +            if rel_api_uri == None:
+> +                continue
+> +            # uri_replace() keeps the params, and the actual filename.
+> +            # drop both - we only want
+> +            #     https://api.github.com/<user>/<project>/releases
+> +            # from the example above
+> +            rel_api_uri = rel_api_uri.split(';')[0].rsplit('/', maxsplit=1)[0]
+> +            with tempfile.TemporaryDirectory(prefix="wget-github-release-") as workdir, \
+> +                    tempfile.NamedTemporaryFile(mode="w+", dir=workdir, prefix="wget-release-") as f:
+> +                assetinfo_cmd += " -O " + f.name + " '" + rel_api_uri + "'"
+> +                logger.debug(2, "For url %s trying to retrieve asset info from %s" % (uri, assetinfo_cmd))
+> +                try:
+> +                    self._runwget(ud, d, assetinfo_cmd, True)
+> +                except FetchError as e:
+> +                    # Accessing a (PRE)MIRROR using the github API
+> +                    # obviously doesn't work, just ignore
+> +                    continue
+> +                if os.path.getsize(f.name) == 0:
+> +                    # the fetch resulted in a zero size file, ignore
+> +                    logger.debug(2, "Could not retrieve asset info from %s" % rel_api_uri)
+> +                    continue
+> +                return json.load(f)
+> +
+> +        return []
+> +
+> +    def _get_gh_asset_uri(self, uri, ud, d):
+> +        uri = uri.replace("githubprivate://", ud.proto + "://", 1)
+> +        gh_asset_uri = None
+> +        releases = self._get_gh_releases_info(uri, ud, d)
+> +        # As per https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
+> +        # Each release will have a list of assets, where the 'browser_download_url'
+> +        # is what we intended to download, but we need to get it via the 'url',
+> +        # which points to the github api and supports username/password
+> +        for release in releases:
+> +            for asset in release['assets']:
+> +                logger.debug(2, "Comparing asset id %u URL %s" \
+> +                                % (asset['id'], asset['browser_download_url']))
+> +                if asset['browser_download_url'] == uri:
+> +                    gh_asset_uri = asset['url']
+> +                    logger.debug(2, "For URI %s using GitHub asset %s" % (uri, gh_asset_uri))
+> +                    break
+> +            if gh_asset_uri:
+> +                break
+> +
+> +        if not gh_asset_uri:
+> +            raise FetchError("Could not determine the GitHub asset URI for URI %s" % uri, uri)
+> +
+> +        return gh_asset_uri
+> +
+> +    def download(self, ud, d):
+> +        """Fetch urls"""
+> +        orig_uri = ud.url.split(";")[0]
+> +        gh_asset_uri = self._get_gh_asset_uri(orig_uri, ud, d)
+> +        ud.url = ud.url.replace(orig_uri, gh_asset_uri, 1)
+> +        # To be able to download the actual asset, we need to force
+> +        # the mime-type. Otherwise we'll get the asset info json.
+> +        self.basecmd += " --header='Accept: application/octet-stream'"
+> +        return super(Githubprivate, self).download(ud, d)
+> +
+> +    def latest_versionstring(self, ud, d):
+> +        """
+> +        Manipulate the URL and try to obtain the latest package version
+> +        using GitHub API.
+> +        """
+> +        # We first get the release (name) that corresponds to the URL ...
+> +        uri = ud.url.split(";")[0].replace("githubprivate://", ud.proto + "://", 1)
+> +        releases = self._get_gh_releases_info(uri, ud, d)
+> +        current_version = '0'
+> +        for release in releases:
+> +            bb.debug(3, "Getting current version info for URL %s" % uri)
+> +            for release in releases:
+> +                for asset in release['assets']:
+> +                    if asset['browser_download_url'] == uri:
+> +                        current_version = release['name']
+> +                        break
+> +                if current_version != '0':
+> +                    break
+> +            if current_version != '0':
+> +                bb.debug(3, "Current version info is %s" % current_version)
+> +
+> +        # ... and then try to find a newer release (name).
+> +        for release in releases:
+> +            this_version = ['', release['name'], '']
+> +            if self._vercmp(['', current_version, ''], this_version) < 0:
+> +                current_version = this_version[1]
+> +
+> +        return (current_version, '')
+> +
+> +    def checkstatus(self, fetch, urldata, d):
+> +        """Check if urls are accessible"""
+> +        orig_uri = urldata.url.split(";")[0]
+> +        gh_asset_uri = self._get_gh_asset_uri(orig_uri, urldata, d)
+> +        urldata.url = urldata.url.replace(orig_uri, gh_asset_uri, 1)
+> +        return super(Githubprivate, self).checkstatus(fetch, urldata, d)
 
 
