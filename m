@@ -1,16 +1,15 @@
 Return-Path: <frazer.clews@codethink.co.uk>
-Received: from imap2.colo.codethink.co.uk (imap2.colo.codethink.co.uk
-	[78.40.148.184])
-	by mail.openembedded.org (Postfix) with ESMTP id 3AD137F88D
+Received: from imap3.hz.codethink.co.uk (imap3.hz.codethink.co.uk [176.9.8.87])
+	by mail.openembedded.org (Postfix) with ESMTP id 90A297F88D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Jan 2020 16:54:10 +0000 (UTC)
+	Thu, 16 Jan 2020 16:55:27 +0000 (UTC)
 Received: from [167.98.27.226] (helo=localhost.co.uk)
-	by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-	id 1is8PL-0005HT-3L; Thu, 16 Jan 2020 16:54:11 +0000
+	by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+	id 1is8QZ-0002cb-QM; Thu, 16 Jan 2020 16:55:27 +0000
 From: frazer.clews@codethink.co.uk
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 16 Jan 2020 16:54:02 +0000
-Message-Id: <20200116165402.300635-1-frazer.clews@codethink.co.uk>
+Date: Thu, 16 Jan 2020 16:55:18 +0000
+Message-Id: <20200116165518.300869-1-frazer.clews@codethink.co.uk>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Subject: [PATCH v2] lib: remove unused imports
@@ -26,7 +25,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 Jan 2020 16:54:11 -0000
+X-List-Received-Date: Thu, 16 Jan 2020 16:55:28 -0000
 Content-Transfer-Encoding: 8bit
 
 From: Frazer Clews <frazer.clews@codethink.co.uk>
@@ -65,7 +64,7 @@ Signed-off-by: Frazer Clews <frazer.clews@codethink.co.uk>
  lib/bb/server/xmlrpcserver.py                 |  3 ---
  lib/bb/tests/cooker.py                        |  1 -
  lib/bb/tests/cow.py                           |  2 +-
- lib/bb/tests/fetch.py                         |  2 --
+ lib/bb/tests/fetch.py                         |  1 -
  lib/bb/tests/runqueue.py                      |  1 -
  lib/bb/tinfoil.py                             |  4 +--
  lib/bb/ui/knotty.py                           |  1 -
@@ -108,7 +107,7 @@ Signed-off-by: Frazer Clews <frazer.clews@codethink.co.uk>
  .../management/commands/builddelete.py        |  4 +--
  .../management/commands/buildimport.py        |  6 ++---
  .../management/commands/buildslist.py         |  3 +--
- 72 files changed, 36 insertions(+), 203 deletions(-)
+ 72 files changed, 36 insertions(+), 202 deletions(-)
 
 diff --git a/lib/bb/COW.py b/lib/bb/COW.py
 index d26e9819..bc20ce38 100644
@@ -556,10 +555,10 @@ index b4af4bbc..bf6e79fc 100644
  class COWTestCase(unittest.TestCase):
      """
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 83fad3ff..f29631ec 100644
+index 83fad3ff..4d347dea 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -9,11 +9,9 @@
+@@ -9,7 +9,6 @@
  import unittest
  import hashlib
  import tempfile
@@ -567,10 +566,6 @@ index 83fad3ff..f29631ec 100644
  import collections
  import os
  from bb.fetch2 import URI
--from bb.fetch2 import FetchMethod
- import bb
- 
- def skipIfNoNetwork():
 diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
 index 20c88ac3..4ba12a07 100644
 --- a/lib/bb/tests/runqueue.py
