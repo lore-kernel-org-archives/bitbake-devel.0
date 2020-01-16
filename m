@@ -1,30 +1,45 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 0D0DF79AE7
+Return-Path: <masahiroy@kernel.org>
+Received: from conssluserg-03.nifty.com (conssluserg-03.nifty.com
+	[210.131.2.82])
+	by mail.openembedded.org (Postfix) with ESMTP id 124997E5FB
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Jan 2020 14:07:56 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-	by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	15 Jan 2020 06:07:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,322,1574150400"; d="scan'208";a="213710493"
-Received: from jmmarti7-mobl1.amr.corp.intel.com (HELO rburton-mac01.local)
-	([10.252.51.74])
-	by orsmga007.jf.intel.com with ESMTP; 15 Jan 2020 06:07:57 -0800
-To: frazer.clews@codethink.co.uk, bitbake-devel@lists.openembedded.org
-References: <20200114144024.163030-1-frazer.clews@codethink.co.uk>
-From: Ross Burton <ross.burton@intel.com>
-Organization: Intel Corporation (UK) Ltd. - Co. Reg. #1134945 - Pipers Way,
-	Swindon SN3 1RJ
-Message-ID: <1b13f770-5d64-8c62-9baa-f0be71be374f@intel.com>
-Date: Wed, 15 Jan 2020 14:07:55 +0000
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
-	Gecko/20100101 Thunderbird/68.4.1
+	Thu, 16 Jan 2020 01:55:12 +0000 (UTC)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com
+	[209.85.222.50]) (authenticated)
+	by conssluserg-03.nifty.com with ESMTP id 00G1ski7009258
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 16 Jan 2020 10:54:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 00G1ski7009258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+	s=dec2015msa; t=1579139687;
+	bh=aPmQAy12DQxgl5oqsapchVAINXac6yLwFHFzWR3ADAs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ahDticfZlYMZpmETU+Iz0qIyzW+xbMgtFqoqYdK5WGpPqiyN6LNXbYRMfGckNapo+
+	wbZmKFb7jcvrnYjN4IW1u/+AQ6/wTFm5SARnb8j6+YO7KyK5Da9LfEaaj3sKYx2LWO
+	+VFfEHB2KuEh3CxRJqCX591P6+v6StWMlmETikjjJpjCWKezB+s6ZZTiXXXA1VC0SC
+	6OllHa2cAg50vLX6+ylxbmWXV39J/17vMSlnTX5ThBVE8E2vDm3pk50b376VKfle4h
+	ANJcOP9ZficpJoUMmxIinUTdI/TPo7+G7Jq81Pb3idb7OZdCr2pu89UrnsJ4e9gANF
+	bnjOL3aUOXJsQ==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id y3so7126437uae.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 15 Jan 2020 17:54:47 -0800 (PST)
+X-Gm-Message-State: APjAAAUuwZN+DRZ/Z/mDU7altqutQD8I9II17BNSz4LkdmN0Q8mE6sOo
+	EuRN8VM/2lpox2Eo64WH0xj3mBaDmkGbWpwjDZc=
+X-Google-Smtp-Source: APXvYqyCKFQ/BTPmxfKUTmoBbGR5JCKBJw8bX3WSBz+6D/PbxrgfTjouFPwslOEVoMonfjO8McV0Ucq0jDQ4r+IYsJ4=
+X-Received: by 2002:ab0:7049:: with SMTP id v9mr19138222ual.95.1579139686316; 
+	Wed, 15 Jan 2020 17:54:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200114144024.163030-1-frazer.clews@codethink.co.uk>
-Subject: Re: [PATCH] lib: amend code to use proper singleton comparisons where possible
+References: <CAK7LNARkXaLFq8eJpNkbbkXDnRrVdXjXfYtHuqRA1OdO7AfU4g@mail.gmail.com>
+	<d5d59f4d6db40c644c9f827697b38d216b251e8a.camel@linuxfoundation.org>
+In-Reply-To: <d5d59f4d6db40c644c9f827697b38d216b251e8a.camel@linuxfoundation.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 16 Jan 2020 10:54:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQcnVQ_V6kH-taJrVnwnfocp=Tev5NTNvHN0NyYcS_6+w@mail.gmail.com>
+Message-ID: <CAK7LNAQcnVQ_V6kH-taJrVnwnfocp=Tev5NTNvHN0NyYcS_6+w@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Why does recrdeptask delete a task from the dependency graph?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,30 +52,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 Jan 2020 14:07:57 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 16 Jan 2020 01:55:13 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-On 14/01/2020 14:40, frazer.clews@codethink.co.uk wrote:
-> --- a/lib/bb/fetch2/osc.py
-> +++ b/lib/bb/fetch2/osc.py
-> @@ -43,7 +43,7 @@ class Osc(FetchMethod):
->           else:
->               pv = d.getVar("PV", False)
->               rev = bb.fetch2.srcrev_internal_helper(ud, d)
-> -            if rev and rev != True:
-> +            if rev and not rev:
->                   ud.revision = rev
->               else:
->                   ud.revision = ""
+Hi Richard,
 
-I don't think that's what was intended!
+On Wed, Jan 8, 2020 at 5:48 PM Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+>
+> On Wed, 2020-01-08 at 13:26 +0900, Masahiro Yamada wrote:
+> > If I add
+> >   do_build[recrdeptask] = "do_build"
+> > to recipes/bar.bb
+> >
+> > "bitbake foo" shows
+> >
+> > baz.do_build
+> > foo.do_build
+> >
+> >
+> > So, bar:do_build is dropped from the dependency.
+> >
+> > What is the intent of this behavior?
+>
+> Quickly looking at your testcase, I'm not sure it is the intended
+> behaviour so it could be a bug.
 
-The previous logic is saying "if rev as a bool is true and if rev is not 
-actually True" then do something.  srcrev_internal_helper appears to 
-always return a string or None so I'd imagine this test could be 
-simplified to just if rev.
 
-Ross
+OK, I do not care about this for now.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
 
