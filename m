@@ -1,37 +1,35 @@
 Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
 	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 136907F9C4
+	by mail.openembedded.org (Postfix) with ESMTP id 25CBE7FA25
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 17 Jan 2020 16:52:10 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7058F9C045E;
-	Fri, 17 Jan 2020 11:46:01 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id C5BD79C041F;
+	Fri, 17 Jan 2020 11:45:55 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10032)
-	with ESMTP id ZDsOZEeFgOJ2; Fri, 17 Jan 2020 11:46:00 -0500 (EST)
+	with ESMTP id 3Rpy6uyzxl4A; Fri, 17 Jan 2020 11:45:55 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id C3B969C044D;
-	Fri, 17 Jan 2020 11:46:00 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 072659C041E;
+	Fri, 17 Jan 2020 11:45:55 -0500 (EST)
 X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10026)
-	with ESMTP id XWw6iaoKYgAs; Fri, 17 Jan 2020 11:46:00 -0500 (EST)
+	with ESMTP id mQfE3xP02zPB; Fri, 17 Jan 2020 11:45:54 -0500 (EST)
 Received: from sulaco.example.com (40.73.12.109.rev.sfr.net [109.12.73.40])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id DD7CE9C042B;
-	Fri, 17 Jan 2020 11:45:59 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 1EFA79C01D1;
+	Fri, 17 Jan 2020 11:45:54 -0500 (EST)
 From: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 17 Jan 2020 17:45:42 +0100
-Message-Id: <20200117164548.28453-7-jean-marie.lemetayer@savoirfairelinux.com>
+Date: Fri, 17 Jan 2020 17:45:36 +0100
+Message-Id: <20200117164548.28453-1-jean-marie.lemetayer@savoirfairelinux.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200117164548.28453-1-jean-marie.lemetayer@savoirfairelinux.com>
-References: <20200117164548.28453-1-jean-marie.lemetayer@savoirfairelinux.com>
 MIME-Version: 1.0
 Cc: rennes-dev@savoirfairelinux.com, paul.eggleton@linux.intel.com
-Subject: [PATCH v4 06/12] bitbake: fetch2: allow fetchers to forward the mirrors management
+Subject: [PATCH v4 00/12] NPM refactoring
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,62 +45,71 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Fri, 17 Jan 2020 16:52:10 -0000
 Content-Transfer-Encoding: quoted-printable
 
-This commit is necessary to introduce proxy fetchers and do not modify
-the behavior of existing fetchers.
+Hi folks and happy new year,
 
-This commit allows fetchers to forwards the "try_mirrors" functions to
-a proxy fetcher.
+These patches are part of a set which are mainly in OE-core.
+More infos can be found on the openembedded-core list.
 
-Signed-off-by: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinu=
-x.com>
----
- lib/bb/fetch2/__init__.py | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+For readability here is a link if you want the history of this patchset:
+http://lists.openembedded.org/pipermail/openembedded-core/2019-December/2=
+90298.html
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 45596bef..0d060e19 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1564,6 +1564,12 @@ class FetchMethod(object):
-         """
-         return True
-=20
-+    def try_mirrors(self, fetch, urldata, d, mirrors):
-+        """
-+        Try to use a mirror
-+        """
-+        return try_mirrors(fetch, d, urldata, mirrors)
-+
-     def checkstatus(self, fetch, urldata, d):
-         """
-         Check the status of a URL
-@@ -1679,7 +1685,7 @@ class Fetch(object):
-                 elif m.try_premirror(ud, self.d):
-                     logger.debug(1, "Trying PREMIRRORS")
-                     mirrors =3D mirror_from_string(self.d.getVar('PREMIR=
-RORS'))
--                    localpath =3D try_mirrors(self, self.d, ud, mirrors,=
- False)
-+                    localpath =3D m.try_mirrors(self, ud, self.d, mirror=
-s)
-                     if localpath:
-                         try:
-                             # early checksum verification so that if the=
- checksum of the premirror
-@@ -1728,7 +1734,7 @@ class Fetch(object):
-                             m.clean(ud, self.d)
-                         logger.debug(1, "Trying MIRRORS")
-                         mirrors =3D mirror_from_string(self.d.getVar('MI=
-RRORS'))
--                        localpath =3D try_mirrors(self, self.d, ud, mirr=
-ors)
-+                        localpath =3D m.try_mirrors(self, ud, self.d, mi=
-rrors)
-=20
-                 if not localpath or ((not os.path.exists(localpath)) and=
- localpath.find("*") =3D=3D -1):
-                     if firsterr:
---=20
+--- V4
+
+These patches can be found here:
+https://github.com/savoirfairelinux/bitbake/tree/npm-refactoring-v4
+
+ - As suggested by Richard, a new npmsw fetcher have been implemented to =
+handle
+   the npm dependencies. Now the fetch of the main package is separated f=
+rom the
+   fetch of its dependencies.
+
+ - Add the support of "proxy" fetchers. These fetchers (npm and npmsw) ju=
+st
+   resolves an url and forwards it to a "raw" fetcher (wget, git, ...).
+   For example an npm url like:
+     npm://registry...;package=3D...;version=3D...
+   is converted as:
+     https://registry.../...tgz;downloadfilename=3Dnpm2/...tgz;sha256sum=3D=
+...
+
+ - Add more hash functions for checksum verification to be able to suppor=
+t the
+   subresource integrity [1] returned by the npm registry. The supported =
+hash
+   functions are now: md5, sha1, sha256, sha384, sah512
+
+ - More tests have been added for the npm and the npmsw fetchers includin=
+g tests
+   for the proxy forwarding thing (checksum, mirrors).
+
+1: https://www.w3.org/TR/SRI/
+
+Jean-Marie LEMETAYER (12):
+  bitbake: utils: add sha384_file and sha512_file functions
+  bitbake: utils: add is_semver function
+  bitbake: fetch2: refactor checksum verification
+  bitbake: fetch2: add more hash functions for checksum verification
+  bitbake: fetch2: allow fetchers to forward the donestamp management
+  bitbake: fetch2: allow fetchers to forward the mirrors management
+  bitbake: fetch2: allow fetchers to forward the done condition
+  bitbake: fetch2/wget: fix downloadfilename parameter
+  bitbake: fetch2/npm: refactor the npm fetcher
+  bitbake: tests/fetch: add npm tests
+  bitbake: fetch2: add the npmsw fetcher
+  bitbake: tests/fetch: add npmsw tests
+
+ lib/bb/fetch2/__init__.py | 215 +++++++++------
+ lib/bb/fetch2/npm.py      | 538 +++++++++++++++++++-------------------
+ lib/bb/fetch2/npmsw.py    | 255 ++++++++++++++++++
+ lib/bb/fetch2/wget.py     |   6 +-
+ lib/bb/tests/fetch.py     | 434 ++++++++++++++++++++++++++++++
+ lib/bb/utils.py           |  40 +++
+ 6 files changed, 1127 insertions(+), 361 deletions(-)
+ create mode 100644 lib/bb/fetch2/npmsw.py
+
+--
 2.20.1
 
 
