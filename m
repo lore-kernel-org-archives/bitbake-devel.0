@@ -1,89 +1,49 @@
-Return-Path: <chris.laplante@agilent.com>
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com
-	(mail-bn7nam10on2066.outbound.protection.outlook.com [40.107.92.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 4D2D27FBCD
+Return-Path: <kergoth@gmail.com>
+Received: from mail-ot1-f68.google.com (mail-ot1-f68.google.com
+	[209.85.210.68])
+	by mail.openembedded.org (Postfix) with ESMTP id 00F117FC0C
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2020 19:40:16 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=YWlJgVvLH7QulyzK+HjqQHI8MNXCabmwzLCPMbNHUKlcWxMFMyskScFVREzfwbeFVg6mJaeUTF72r8M5CIPns4eLRTittiJkXmbNsXolB5nc3u3Bn4HRsfnNv+y26p1hYt+rwUm3d+q97fXvDo/aKz476++gE5ltC8hXedEn/Nj6zRR6GSKMF9U1DJ8xvO0u48BgocMYOya4+l6frRRSnQ8sjh0Y3GBh7ctJAjEE+CCXdFQFMwyj5cYzGxFJGDCsyRJg5oLL3KggOiUCSs9v8mX8z2cu7rHJq8koNokk8jLZTvK2nhb/Zsd/TYEe+uGUx+d3m1WqTejocjqhyPxH2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
-	s=arcselector9901;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=kiWADKvavB1U1awAB2TXVEyvEJd0uG26CoN8NAr6DPU=;
-	b=CoAZp9/ZOlk+AnuLXXAMhdmqcagBBbGR1o5yYabZR6IXPSgaL5YQt8fHxW5K8vmrm6wMbk7c92AZnWBTxDNmsSWHSChOAdaLPVMcQEMx/sXByui/6lJTSa29zCffX2rviuZHFSrY6bSWkw82t5/piM26/njGblOluv4pRrdcYI2zVurjrTkJAn46Khtn7ih4RE9dbbvF1YruT4iXJ2DpimIlj3Fk1cIEIn7RcQjbCF7STgwTE7Lvq6A5JIJ1FFOi6cL8HhRHWdObFCgW0cyPtmg1PsHmaCDg7NuDGgbNGD/nzdqPaAQLGX8hNsTq8T/6cqlap08Rco8eR8JQTE/8/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
-	192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
-	smtp.mailfrom=agilent.com;
-	dmarc=pass (p=reject sp=none pct=100) action=none
-	header.from=agilent.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
-	s=selector2;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=kiWADKvavB1U1awAB2TXVEyvEJd0uG26CoN8NAr6DPU=;
-	b=KqzUnY+/vv0CKEkBi843HUwPVcbJ1MrJJnPT8SBYsXV956g10Y6VrBr4Dt27J6cFKvHylfFfrghK2LxSiVsfsnRY6t5yj3XVCMYoT1WibfD72IFS1YG6QDIcbxnjHo3VQV1NHRl32/E6kXgL/W10erMuiXElK7f2iI6wpnx1PkQ=
-Received: from SN1PR12CA0094.namprd12.prod.outlook.com (2603:10b6:802:21::29)
-	by CH2PR12MB4279.namprd12.prod.outlook.com (2603:10b6:610:af::24)
-	with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18;
-	Fri, 17 Jan 2020 19:40:15 +0000
-Received: from BN8NAM12FT027.eop-nam12.prod.protection.outlook.com
-	(2a01:111:f400:fe5b::207) by SN1PR12CA0094.outlook.office365.com
-	(2603:10b6:802:21::29) with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.23 via
-	Frontend Transport; Fri, 17 Jan 2020 19:40:15 +0000
-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
-	smtp.mailfrom=agilent.com; lists.openembedded.org;
-	dkim=none (message not
-	signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
-	header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
-	192.25.218.41 as permitted sender) receiver=protection.outlook.com;
-	client-ip=192.25.218.41; helo=edgeappmail.agilent.com;
-Received: from edgeappmail.agilent.com (192.25.218.41) by
-	BN8NAM12FT027.mail.protection.outlook.com (10.13.182.138) with
-	Microsoft SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2665.6 via Frontend Transport; Fri, 17 Jan 2020 19:40:14 +0000
-Received: from lm18-laplante-laptop.localdomain (192.25.126.27) by
-	edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
-	15.1.1713.5; Fri, 17 Jan 2020 12:40:06 -0700
-From: Chris Laplante <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 17 Jan 2020 14:39:55 -0500
-Message-ID: <1579289995-70510-2-git-send-email-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579289995-70510-1-git-send-email-chris.laplante@agilent.com>
-References: <1579289995-70510-1-git-send-email-chris.laplante@agilent.com>
+	Fri, 17 Jan 2020 20:44:10 +0000 (UTC)
+Received: by mail-ot1-f68.google.com with SMTP id k14so23733521otn.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 17 Jan 2020 12:44:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=uOXPgyMg0cVIeYwfbqgoq3FUSUZei1XDGw7TFRofMZw=;
+	b=GF1hXSyUaHfxWR2JXE7n+RVnhdD6wQqfgEkySLsmVXlpN1cs0aTBcWFlEkXkfJ6zJ2
+	2O2OlDZNtHstgyylC+Bry2jprNJEWkvhVB1XyyL+tJL0WpF0Ev2gxabFmUSxw2bDdt57
+	8Tg9Dy+bHyhRjd40BR0jHvvjGeEn8zkAF6qtYOR0QsaWw7NzCE/BFrUEQF2ld20gvqnd
+	o9et9HmMLZFhRICP4wIxns6z9DBRmU1+T8p6W0MqKAIpky7loydCjI/RQcSfepXSzPMB
+	8WgnrbKJkjSQjIpRGvJKrbjMIg9zfrQ8UFmfOjw3YsjED5NxB1w0elq69NoIwHZh9krn
+	EDkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=uOXPgyMg0cVIeYwfbqgoq3FUSUZei1XDGw7TFRofMZw=;
+	b=Q+g50x+l/5lo4CMKbAVa4GbM55MGNtr9hrOM1zzJPbIfVVFMpRS7ZPgRoknFzP2r/+
+	SwOwuBLdq1Rl3knjo6UmK0qfttNZYV50Wq7kS6Q9v0izwcVHlGwl/3iCTENvqqFMfoTa
+	3JnSSQw1WN8vP3UBPXnbYpPcNfQw9qKLw9JxIFNiv8mtVIGWUe6Ni+BW42N+zA++M1OC
+	mPFC4Pt+ChdNoyBOT3VccbrXOGZgWwtNnusiTmlNpSebQjLG93UXtdGiWkhMDigZRMoh
+	I7b8a6tBCYTDbXvCPihotUGJp8+3/K8yw7JT6r7zyL8lj+FzsVmDCpJTyJTHn3XEp7JL
+	yAbw==
+X-Gm-Message-State: APjAAAWr/5gLOqghK5nGlvRedeG7F3kQko6jqAK53H5jibWDR/Iwidf2
+	fa8xCECZiaUCynSIo1j0xTVky+P/iO3Sft6XMSA=
+X-Google-Smtp-Source: APXvYqwI00nPk20Y34TmJuU41jRupfxG7tag0Yv9tyfYHJ2PDokwk9peECyf6HdZ2yqpGUf3Ng4Cj8yT1yeQdmWSsFU=
+X-Received: by 2002:a05:6830:1e16:: with SMTP id
+	s22mr7555520otr.340.1579293851929; 
+	Fri, 17 Jan 2020 12:44:11 -0800 (PST)
 MIME-Version: 1.0
-Received-SPF: None (wpcosapexchedg2.windmz.agilent.com:
-	chris.laplante@agilent.com does not designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:192.25.218.41; IPV:; CTRY:US; EFV:NLI;
-	SFV:NSPM;
-	SFS:(10009020)(39860400002)(376002)(396003)(346002)(136003)(199004)(189003)(29502001)(246002)(2906002)(5660300002)(6666004)(107886003)(356004)(4326008)(8936002)(8676002)(478600001)(70206006)(186003)(86362001)(36756003)(26005)(956004)(2616005)(6916009)(44832011)(336012)(36906005)(316002)(7636002)(426003);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:CH2PR12MB4279;
-	H:edgeappmail.agilent.com; FPR:; SPF:Pass; LANG:en;
-	PTR:exch.smtp.agilent.com; A:1; MX:1; 
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7c8fa511-f8e7-4d65-699c-08d79b851324
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4279:
-X-MS-Exchange-AtpMessageProperties: SA|SL
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR12MB42797C02E626ABA31A71520E8B310@CH2PR12MB4279.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-Forefront-PRVS: 0285201563
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /hn0zLiAzpmetsqjOYURRN2rMWYYjzzffFvTdglzWXXhduoQaI49Fcp3dklTPxMWYBYcogHjvMp/N90ieiFqL5+QKlMBkzbeiFwvWHDPEjwTdtgN2iZTHl3GXgZAj/VKI8kWsPBxZug9eHy86J58VfEUWdrCp9OowNSTuT+m9fFtsVsH/YAuheGxPO7Uqs2IUMdOSS4U01l1T9EcmvP+rDjAzXcnFKY9zvGIknp+8YljUVHdbSdGHOrJFSmoQABnWZmhMfoYUhmn2/FUKgHrciFPFJ4y/1WYeab0LUkM9/7DqEbAidBR1DDJNJfPn9udL8v3BzbxT9xAUFfwAHtXjRGTY5S2q56xsfPLs9y1WwguXyfO4gZ1CEda4XTbwZXz6/lhDhr6yogfimGD9QwdpJtI6cDkHCk3w1rKfDxqAqE6tfoTS9Fh0FoqstuOPi6h12IH9ImcGrt268hilDzSu+3ceyjauv+WXUknhQL/F3p+XefEageANjSnFpQfa2AS
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2020 19:40:14.8794 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c8fa511-f8e7-4d65-699c-08d79b851324
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
-	Ip=[192.25.218.41]; Helo=[edgeappmail.agilent.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4279
-Subject: [PATCH 2/2] tests/utils: add tests for bb.utils.get_referenced_vars
+References: <20200117164548.28453-1-jean-marie.lemetayer@savoirfairelinux.com>
+	<20200117164548.28453-9-jean-marie.lemetayer@savoirfairelinux.com>
+In-Reply-To: <20200117164548.28453-9-jean-marie.lemetayer@savoirfairelinux.com>
+From: Christopher Larson <kergoth@gmail.com>
+Date: Fri, 17 Jan 2020 13:44:00 -0700
+Message-ID: <CABcZANkG0e9z_pZrzOq--oNP=JPTk9UmnOfWOGaXVQU2MyCXWg@mail.gmail.com>
+To: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
+Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
+	bitbake-devel@lists.openembedded.org, rennes-dev@savoirfairelinux.com
+Subject: Re: [PATCH v4 08/12] bitbake: fetch2/wget: fix downloadfilename parameter
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -96,67 +56,134 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Jan 2020 19:40:16 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 17 Jan 2020 20:44:11 -0000
+Content-Type: multipart/alternative; boundary="0000000000000a5086059c5c011a"
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- lib/bb/tests/utils.py | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+--0000000000000a5086059c5c011a
+Content-Type: text/plain; charset="UTF-8"
 
-diff --git a/lib/bb/tests/utils.py b/lib/bb/tests/utils.py
-index 5c910b4..a7ff33d 100644
---- a/lib/bb/tests/utils.py
-+++ b/lib/bb/tests/utils.py
-@@ -622,3 +622,47 @@ BBLAYERS += "/home/user/otherpath/layer6"
-                                  ['/home/user/otherpath/layer6', '/home/user/path/layer3'], ['/home/user/path/layer1', '/home/user/path/layer4', '/home/user/path/layer7'],
-                                  ['/home/user/path/layer3'],
-                                  ['/home/user/path/layer7'])
-+
-+
-+class GetReferencedVars(unittest.TestCase):
-+    def setUp(self):
-+        self.d = bb.data.init()
-+
-+    def check_referenced(self, expression, expected_layers):
-+        vars = bb.utils.get_referenced_vars(expression, self.d)
-+
-+        # Do the easy check first - is every variable accounted for?
-+        expected_vars = set.union(set(), *expected_layers)
-+        got_vars = set(vars)
-+        self.assertSetEqual(got_vars, expected_vars)
-+
-+        # Now test the order of the layers
-+        start = 0
-+        for i, expected_layer in enumerate(expected_layers):
-+            got_layer = set(vars[start:len(expected_layer)+start])
-+            start += len(expected_layer)
-+            self.assertSetEqual(got_layer, expected_layer)
-+
-+    def test_no_vars(self):
-+        self.check_referenced("", [])
-+        self.check_referenced(" ", [])
-+        self.check_referenced(" no vars here! ", [])
-+
-+    def test_single_layer(self):
-+        self.check_referenced("${VAR}", [{"VAR"}])
-+        self.check_referenced("${VAR} ${VAR}", [{"VAR"}])
-+
-+    def test_two_layer(self):
-+        self.d.setVar("VAR", "${B}")
-+        self.check_referenced("${VAR}", [{"VAR"}, {"B"}])
-+        self.check_referenced("${@d.getVar('VAR')}", [{"VAR"}, {"B"}])
-+
-+    def test_more_complicated(self):
-+        self.d["SRC_URI"] = "${QT_GIT}/${QT_MODULE}.git;name=${QT_MODULE};${QT_MODULE_BRANCH_PARAM};protocol=${QT_GIT_PROTOCOL}"
-+        self.d["QT_GIT"] = "git://code.qt.io/${QT_GIT_PROJECT}"
-+        self.d["QT_MODULE_BRANCH_PARAM"] = "branch=${QT_MODULE_BRANCH}"
-+        self.d["QT_MODULE"] = "${BPN}"
-+        self.d["BPN"] = "something to do with ${PN} and ${SPECIAL_PKGSUFFIX}"
-+
-+        layers = [{"SRC_URI"}, {"QT_GIT", "QT_MODULE", "QT_MODULE_BRANCH_PARAM", "QT_GIT_PROTOCOL"}, {"QT_GIT_PROJECT", "QT_MODULE_BRANCH", "BPN"}, {"PN", "SPECIAL_PKGSUFFIX"}]
-+        self.check_referenced("${SRC_URI}", layers)
+This doesn't escape the filename, it quotes it, so should probably correct
+the message, and will almost certainly break if the name contains a single
+quote. I'd suggest using subprocess.list2cmdline(), pipes.quote(), or
+similar instead of doing it manually. Definitely a good fix, just likely
+best done with an existing mechanism :) Thanks for the contribution.
+
+On Fri, Jan 17, 2020 at 9:52 AM Jean-Marie LEMETAYER <
+jean-marie.lemetayer@savoirfairelinux.com> wrote:
+
+> When using a download filename with characters which can be interpreted
+> by the shell ('(', ')', '&', ';', ...) the command fails. Escaping the
+> filename fixes the issue.
+>
+> Signed-off-by: Jean-Marie LEMETAYER <
+> jean-marie.lemetayer@savoirfairelinux.com>
+> ---
+>  lib/bb/fetch2/wget.py | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+> index 725586d2..6506e1e2 100644
+> --- a/lib/bb/fetch2/wget.py
+> +++ b/lib/bb/fetch2/wget.py
+> @@ -94,9 +94,9 @@ class Wget(FetchMethod):
+>          fetchcmd = self.basecmd
+>
+>          if 'downloadfilename' in ud.parm:
+> -            dldir = d.getVar("DL_DIR")
+> -            bb.utils.mkdirhier(os.path.dirname(dldir + os.sep +
+> ud.localfile))
+> -            fetchcmd += " -O " + dldir + os.sep + ud.localfile
+> +            localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
+> +            bb.utils.mkdirhier(os.path.dirname(localpath))
+> +            fetchcmd += " -O '%s'" % localpath
+>
+>          if ud.user and ud.pswd:
+>              fetchcmd += " --user=%s --password=%s --auth-no-challenge" %
+> (ud.user, ud.pswd)
+> --
+> 2.20.1
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
+
+
 -- 
-2.7.4
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
 
+--0000000000000a5086059c5c011a
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr">This doesn&#39;t escape the filename, it quotes it, so sho=
+uld probably correct the message, and will almost certainly break if the na=
+me contains a single quote. I&#39;d suggest using subprocess.list2cmdline()=
+, pipes.quote(), or similar instead of doing it manually. Definitely a good=
+ fix, just likely best done with an existing mechanism :) Thanks for the co=
+ntribution.</div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"g=
+mail_attr">On Fri, Jan 17, 2020 at 9:52 AM Jean-Marie LEMETAYER &lt;<a href=
+=3D"mailto:jean-marie.lemetayer@savoirfairelinux.com">jean-marie.lemetayer@=
+savoirfairelinux.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quo=
+te" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-sty=
+le:solid;border-left-color:rgb(204,204,204);padding-left:1ex">When using a =
+download filename with characters which can be interpreted<br>
+by the shell (&#39;(&#39;, &#39;)&#39;, &#39;&amp;&#39;, &#39;;&#39;, ...) =
+the command fails. Escaping the<br>
+filename fixes the issue.<br>
+<br>
+Signed-off-by: Jean-Marie LEMETAYER &lt;<a href=3D"mailto:jean-marie.lemeta=
+yer@savoirfairelinux.com" target=3D"_blank">jean-marie.lemetayer@savoirfair=
+elinux.com</a>&gt;<br>
+---<br>
+=C2=A0lib/bb/fetch2/wget.py | 6 +++---<br>
+=C2=A01 file changed, 3 insertions(+), 3 deletions(-)<br>
+<br>
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py<br>
+index 725586d2..6506e1e2 100644<br>
+--- a/lib/bb/fetch2/wget.py<br>
++++ b/lib/bb/fetch2/wget.py<br>
+@@ -94,9 +94,9 @@ class Wget(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fetchcmd =3D self.basecmd<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if &#39;downloadfilename&#39; in ud.parm:=
+<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dldir =3D d.getVar(&quot;DL_DIR&=
+quot;)<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.utils.mkdirhier(os.path.dirna=
+me(dldir + os.sep + ud.localfile))<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetchcmd +=3D &quot; -O &quot; +=
+ dldir + os.sep + ud.localfile<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 localpath =3D os.path.join(d.get=
+Var(&quot;DL_DIR&quot;), ud.localfile)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.utils.mkdirhier(os.path.dirna=
+me(localpath))<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetchcmd +=3D &quot; -O &#39;%s&=
+#39;&quot; % localpath<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if ud.user and ud.pswd:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fetchcmd +=3D &quot; --user=
+=3D%s --password=3D%s --auth-no-challenge&quot; % (ud.user, ud.pswd)<br>
+-- <br>
+2.20.1<br>
+<br>
+-- <br>
+_______________________________________________<br>
+bitbake-devel mailing list<br>
+<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
+itbake-devel@lists.openembedded.org</a><br>
+<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
+l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
+stinfo/bitbake-devel</a><br>
+</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
+ class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christoph=
+er Larson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, O=
+penZaurus<br>Senior Software Engineer, Mentor Graphics</div></div></div></d=
+iv>
+
+--0000000000000a5086059c5c011a--
