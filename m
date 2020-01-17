@@ -1,16 +1,16 @@
 Return-Path: <chris.laplante@agilent.com>
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com
-	(mail-mw2nam10on2067.outbound.protection.outlook.com [40.107.94.67])
-	by mail.openembedded.org (Postfix) with ESMTP id D62EB7FBCD
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com
+	(mail-bn7nam10on2066.outbound.protection.outlook.com [40.107.92.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 4D2D27FBCD
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2020 19:40:15 +0000 (UTC)
+	Fri, 17 Jan 2020 19:40:16 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=muE4sbFVXSQVqVzqeAwo99ddiojvOb6Wh0NNkeYwHLMQvjXkUguXVgpUH1dLbRQbXdkcUQzFKSL6M6dF7zyY9+evEscVLE4Fke5YpGxJBltdyrj06SG418yuZ9muThIVy2wQdbDCvjQvN3LCkQf/qemmDfFPBp9fFxqjWkecdtzOGcLzpk8S2b7qoFKlbC8U5qRByUvNSG4xyXLCgQcKS/aY9maEo5Hr+6C53K1ybDbs+2BKTZufxWwdt7wz1UsBCPuMEmrKUPoZZpWtovYFemqUnJN9RSjRlXkiMivYtEacKqlj1/xoHWrMCikOh+uIvCPlsajI9IyuUXWwGwas9A==
+	b=YWlJgVvLH7QulyzK+HjqQHI8MNXCabmwzLCPMbNHUKlcWxMFMyskScFVREzfwbeFVg6mJaeUTF72r8M5CIPns4eLRTittiJkXmbNsXolB5nc3u3Bn4HRsfnNv+y26p1hYt+rwUm3d+q97fXvDo/aKz476++gE5ltC8hXedEn/Nj6zRR6GSKMF9U1DJ8xvO0u48BgocMYOya4+l6frRRSnQ8sjh0Y3GBh7ctJAjEE+CCXdFQFMwyj5cYzGxFJGDCsyRJg5oLL3KggOiUCSs9v8mX8z2cu7rHJq8koNokk8jLZTvK2nhb/Zsd/TYEe+uGUx+d3m1WqTejocjqhyPxH2A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
 	s=arcselector9901;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=eHMLStukZ6wdPldgUb4gVsyetKG/KevwpmFDqzA3ny4=;
-	b=l2jvlEZkyD+dfh9Mcl/vy7SVd3LC4V6IXuCe/LittkKVrSkZPfGELQ3offCoJymuixBBjc+O1ukFOWX42BxLU2HERqg3ifhaxMAl0AfEImnrAnL/Gc7haazcdhxgCLeh84GBWRKOIO5hDorG7dHN6TQM2GNbhAU15fImgSclRsHfJsgCLDadFihwhAvtu+RXWA1sl6ku7JYYPlZDUWqaocK4m5nG2Bq/C/k31cT9l58FFvf+izG3OdmsZwp4w6abN8PXeSmvbnCbtB5j6VdIchkv0MUonKrRe93CXoNZh8arSPkVYQaJqYsi9tWoH/UDmPzFDAHuuz4Czj6pMSoBBg==
+	bh=kiWADKvavB1U1awAB2TXVEyvEJd0uG26CoN8NAr6DPU=;
+	b=CoAZp9/ZOlk+AnuLXXAMhdmqcagBBbGR1o5yYabZR6IXPSgaL5YQt8fHxW5K8vmrm6wMbk7c92AZnWBTxDNmsSWHSChOAdaLPVMcQEMx/sXByui/6lJTSa29zCffX2rviuZHFSrY6bSWkw82t5/piM26/njGblOluv4pRrdcYI2zVurjrTkJAn46Khtn7ih4RE9dbbvF1YruT4iXJ2DpimIlj3Fk1cIEIn7RcQjbCF7STgwTE7Lvq6A5JIJ1FFOi6cL8HhRHWdObFCgW0cyPtmg1PsHmaCDg7NuDGgbNGD/nzdqPaAQLGX8hNsTq8T/6cqlap08Rco8eR8JQTE/8/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 	192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
 	smtp.mailfrom=agilent.com;
@@ -19,18 +19,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
 	s=selector2;
 	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=eHMLStukZ6wdPldgUb4gVsyetKG/KevwpmFDqzA3ny4=;
-	b=LFUSoKVzlgc0fc7Rden2WVVfOJo64EgSdPB6aHFauwT1iMWxN4fqQVeGWmTxBeNhvarlpG+Utq+mQogD7K/zoYgXzwH1knWGHHtmE56g8kXaRg1WMCNTnS2b5WKFOjjc1ByFhSoDoi5k+0pMUJWq1PtCOg/rtPuaTVgtOhDQD4Y=
-Received: from SN1PR12CA0084.namprd12.prod.outlook.com (2603:10b6:802:21::19)
-	by BN6PR1201MB0227.namprd12.prod.outlook.com (2603:10b6:405:4e::7)
+	bh=kiWADKvavB1U1awAB2TXVEyvEJd0uG26CoN8NAr6DPU=;
+	b=KqzUnY+/vv0CKEkBi843HUwPVcbJ1MrJJnPT8SBYsXV956g10Y6VrBr4Dt27J6cFKvHylfFfrghK2LxSiVsfsnRY6t5yj3XVCMYoT1WibfD72IFS1YG6QDIcbxnjHo3VQV1NHRl32/E6kXgL/W10erMuiXElK7f2iI6wpnx1PkQ=
+Received: from SN1PR12CA0094.namprd12.prod.outlook.com (2603:10b6:802:21::29)
+	by CH2PR12MB4279.namprd12.prod.outlook.com (2603:10b6:610:af::24)
 	with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.21;
-	Fri, 17 Jan 2020 19:40:14 +0000
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18;
+	Fri, 17 Jan 2020 19:40:15 +0000
 Received: from BN8NAM12FT027.eop-nam12.prod.protection.outlook.com
-	(2a01:111:f400:fe5b::202) by SN1PR12CA0084.outlook.office365.com
-	(2603:10b6:802:21::19) with Microsoft SMTP Server (version=TLS1_2,
+	(2a01:111:f400:fe5b::207) by SN1PR12CA0094.outlook.office365.com
+	(2603:10b6:802:21::29) with Microsoft SMTP Server (version=TLS1_2,
 	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.23 via
-	Frontend Transport; Fri, 17 Jan 2020 19:40:13 +0000
+	Frontend Transport; Fri, 17 Jan 2020 19:40:15 +0000
 Authentication-Results: spf=pass (sender IP is 192.25.218.41)
 	smtp.mailfrom=agilent.com; lists.openembedded.org;
 	dkim=none (message not
@@ -43,45 +43,47 @@ Received: from edgeappmail.agilent.com (192.25.218.41) by
 	BN8NAM12FT027.mail.protection.outlook.com (10.13.182.138) with
 	Microsoft SMTP
 	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2665.6 via Frontend Transport; Fri, 17 Jan 2020 19:40:13 +0000
+	15.20.2665.6 via Frontend Transport; Fri, 17 Jan 2020 19:40:14 +0000
 Received: from lm18-laplante-laptop.localdomain (192.25.126.27) by
 	edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
-	15.1.1713.5; Fri, 17 Jan 2020 12:40:05 -0700
+	15.1.1713.5; Fri, 17 Jan 2020 12:40:06 -0700
 From: Chris Laplante <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 17 Jan 2020 14:39:54 -0500
-Message-ID: <1579289995-70510-1-git-send-email-chris.laplante@agilent.com>
+Date: Fri, 17 Jan 2020 14:39:55 -0500
+Message-ID: <1579289995-70510-2-git-send-email-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1579289995-70510-1-git-send-email-chris.laplante@agilent.com>
+References: <1579289995-70510-1-git-send-email-chris.laplante@agilent.com>
 MIME-Version: 1.0
 Received-SPF: None (wpcosapexchedg2.windmz.agilent.com:
 	chris.laplante@agilent.com does not designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-Forefront-Antispam-Report: CIP:192.25.218.41; IPV:; CTRY:US; EFV:NLI;
 	SFV:NSPM;
-	SFS:(10009020)(376002)(39860400002)(346002)(396003)(136003)(29502001)(189003)(199004)(8676002)(7636002)(86362001)(246002)(186003)(26005)(44832011)(2616005)(336012)(316002)(956004)(426003)(36756003)(107886003)(478600001)(8936002)(6666004)(4326008)(70206006)(356004)(36906005)(6916009)(2906002)(5660300002);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:BN6PR1201MB0227;
+	SFS:(10009020)(39860400002)(376002)(396003)(346002)(136003)(199004)(189003)(29502001)(246002)(2906002)(5660300002)(6666004)(107886003)(356004)(4326008)(8936002)(8676002)(478600001)(70206006)(186003)(86362001)(36756003)(26005)(956004)(2616005)(6916009)(44832011)(336012)(36906005)(316002)(7636002)(426003);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CH2PR12MB4279;
 	H:edgeappmail.agilent.com; FPR:; SPF:Pass; LANG:en;
-	PTR:exch.smtp.agilent.com; MX:1; A:1; 
+	PTR:exch.smtp.agilent.com; A:1; MX:1; 
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 32c5b918-87f8-4eb8-a785-08d79b85121d
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB0227:
+X-MS-Office365-Filtering-Correlation-Id: 7c8fa511-f8e7-4d65-699c-08d79b851324
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4279:
 X-MS-Exchange-AtpMessageProperties: SA|SL
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB02274AF420BE10ACAB23D2118B310@BN6PR1201MB0227.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Microsoft-Antispam-PRVS: <CH2PR12MB42797C02E626ABA31A71520E8B310@CH2PR12MB4279.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
 X-Forefront-PRVS: 0285201563
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Luh/gk2qp5FLHIWxLTr57WsO2NRYn5HtatrShiOHmZSEkI/B9r046P+OhU6HgBNEoqVAUnBqycXDJkeLWluyks8iO77cEx9UfvklDWKZey+2bbW5rDj1GUJ6i7de/1xdHqV8cKM6WoCzWXdOz+B/TJ3dYDtCvuZrS74w6dT5KaMWJQVZ0EMfiJKCu7ZOqmUQxsNMxxQhik9YqILDTTngNgmRcfDBd5ANza4hw1jgQ+Kj4W1wtz+YodbWi/ngv0ta7BEqO2GwtF7rvODxUHFrNId1ZWiUlf9NV9xl3WCK4ZDjE35Y9DBDzXiOBt8ax5b/nYbU9JfmqES/vClUz5Tbsvm6uPPjx0vPSiwhamBNEKtpKhhFVL+NR+FtWzpReAjX3rwxe/u1Lgio3umyxY9Ru+srcPxrn8LtzkXmRr8/mktyhfoX8OZAdaNooJMLQJqP7Dp5Q7VfjlQ0fzKyA5lnSWHFV83o2pk5xRgI6Zs5x5RMY6ByxkYWxcVc8x+frSoH
+X-Microsoft-Antispam-Message-Info: /hn0zLiAzpmetsqjOYURRN2rMWYYjzzffFvTdglzWXXhduoQaI49Fcp3dklTPxMWYBYcogHjvMp/N90ieiFqL5+QKlMBkzbeiFwvWHDPEjwTdtgN2iZTHl3GXgZAj/VKI8kWsPBxZug9eHy86J58VfEUWdrCp9OowNSTuT+m9fFtsVsH/YAuheGxPO7Uqs2IUMdOSS4U01l1T9EcmvP+rDjAzXcnFKY9zvGIknp+8YljUVHdbSdGHOrJFSmoQABnWZmhMfoYUhmn2/FUKgHrciFPFJ4y/1WYeab0LUkM9/7DqEbAidBR1DDJNJfPn9udL8v3BzbxT9xAUFfwAHtXjRGTY5S2q56xsfPLs9y1WwguXyfO4gZ1CEda4XTbwZXz6/lhDhr6yogfimGD9QwdpJtI6cDkHCk3w1rKfDxqAqE6tfoTS9Fh0FoqstuOPi6h12IH9ImcGrt268hilDzSu+3ceyjauv+WXUknhQL/F3p+XefEageANjSnFpQfa2AS
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2020 19:40:13.1554 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32c5b918-87f8-4eb8-a785-08d79b85121d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2020 19:40:14.8794 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c8fa511-f8e7-4d65-699c-08d79b851324
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
 	Ip=[192.25.218.41]; Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0227
-Subject: [PATCH 1/2] bb.utils: add get_referenced_vars
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4279
+Subject: [PATCH 2/2] tests/utils: add tests for bb.utils.get_referenced_vars
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -97,76 +99,63 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Fri, 17 Jan 2020 19:40:16 -0000
 Content-Type: text/plain
 
-Given a start expression, bb.utils.get_referenced_vars returns the
-referenced variable names in a quasi-BFS order (variables within the
-same level are ordered aribitrarily).
-
-For example, given an empty data store:
-
-    bb.utils.get_referenced_vars("${A} ${B} ${d.getVar('C')}", d)
-
-returns either ["A", "B", "C"], ["A", "C", "B"], or another
-permutation.
-
-If we then set A = "${F} ${G}", then the same call will return a
-permutation of [A, B, C] concatenated with a permutation of [F, G].
-
-This method is like a version of d.expandWithRefs().references that
-gives some insight into the depth of variable references.
-
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- lib/bb/utils.py | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ lib/bb/tests/utils.py | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index d65265c..a2fd1fd 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -1026,6 +1026,43 @@ def filter(variable, checkvalues, d):
-         checkvalues = set(checkvalues)
-     return ' '.join(sorted(checkvalues & val))
- 
-+
-+def get_referenced_vars(start_expr, d):
-+    """
-+    :return: names of vars referenced in start_expr (recursively), in quasi-BFS order (variables within the same level
-+    are ordered arbitrarily)
-+    """
-+
-+    seen = set()
-+    ret = []
-+
-+    # The first entry in the queue is the unexpanded start expression
-+    queue = collections.deque([start_expr])
-+    # Subsequent entries will be variable names, so we need to track whether or not entry requires getVar
-+    is_first = True
-+
-+    empty_data = bb.data.init()
-+    while queue:
-+        entry = queue.popleft()
-+        if is_first:
-+            # Entry is the start expression - no expansion needed
-+            is_first = False
-+            expression = entry
-+        else:
-+            # This is a variable name - need to get the value
-+            expression = d.getVar(entry, False)
-+            ret.append(entry)
-+
-+        # expandWithRefs is how we actually get the referenced variables in the expression. We call it using an empty
-+        # data store because we only want the variables directly used in the expression. It returns a set, which is what
-+        # dooms us to only ever be "quasi-BFS" rather than full BFS.
-+        new_vars = empty_data.expandWithRefs(expression, None).references - set(seen)
-+
-+        queue.extend(new_vars)
-+        seen.update(new_vars)
-+    return ret
+diff --git a/lib/bb/tests/utils.py b/lib/bb/tests/utils.py
+index 5c910b4..a7ff33d 100644
+--- a/lib/bb/tests/utils.py
++++ b/lib/bb/tests/utils.py
+@@ -622,3 +622,47 @@ BBLAYERS += "/home/user/otherpath/layer6"
+                                  ['/home/user/otherpath/layer6', '/home/user/path/layer3'], ['/home/user/path/layer1', '/home/user/path/layer4', '/home/user/path/layer7'],
+                                  ['/home/user/path/layer3'],
+                                  ['/home/user/path/layer7'])
 +
 +
- def cpu_count():
-     return multiprocessing.cpu_count()
- 
++class GetReferencedVars(unittest.TestCase):
++    def setUp(self):
++        self.d = bb.data.init()
++
++    def check_referenced(self, expression, expected_layers):
++        vars = bb.utils.get_referenced_vars(expression, self.d)
++
++        # Do the easy check first - is every variable accounted for?
++        expected_vars = set.union(set(), *expected_layers)
++        got_vars = set(vars)
++        self.assertSetEqual(got_vars, expected_vars)
++
++        # Now test the order of the layers
++        start = 0
++        for i, expected_layer in enumerate(expected_layers):
++            got_layer = set(vars[start:len(expected_layer)+start])
++            start += len(expected_layer)
++            self.assertSetEqual(got_layer, expected_layer)
++
++    def test_no_vars(self):
++        self.check_referenced("", [])
++        self.check_referenced(" ", [])
++        self.check_referenced(" no vars here! ", [])
++
++    def test_single_layer(self):
++        self.check_referenced("${VAR}", [{"VAR"}])
++        self.check_referenced("${VAR} ${VAR}", [{"VAR"}])
++
++    def test_two_layer(self):
++        self.d.setVar("VAR", "${B}")
++        self.check_referenced("${VAR}", [{"VAR"}, {"B"}])
++        self.check_referenced("${@d.getVar('VAR')}", [{"VAR"}, {"B"}])
++
++    def test_more_complicated(self):
++        self.d["SRC_URI"] = "${QT_GIT}/${QT_MODULE}.git;name=${QT_MODULE};${QT_MODULE_BRANCH_PARAM};protocol=${QT_GIT_PROTOCOL}"
++        self.d["QT_GIT"] = "git://code.qt.io/${QT_GIT_PROJECT}"
++        self.d["QT_MODULE_BRANCH_PARAM"] = "branch=${QT_MODULE_BRANCH}"
++        self.d["QT_MODULE"] = "${BPN}"
++        self.d["BPN"] = "something to do with ${PN} and ${SPECIAL_PKGSUFFIX}"
++
++        layers = [{"SRC_URI"}, {"QT_GIT", "QT_MODULE", "QT_MODULE_BRANCH_PARAM", "QT_GIT_PROTOCOL"}, {"QT_GIT_PROJECT", "QT_MODULE_BRANCH", "BPN"}, {"PN", "SPECIAL_PKGSUFFIX"}]
++        self.check_referenced("${SRC_URI}", layers)
 -- 
 2.7.4
 
