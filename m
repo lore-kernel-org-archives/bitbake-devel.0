@@ -1,49 +1,83 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-ot1-f68.google.com (mail-ot1-f68.google.com
-	[209.85.210.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 00F117FC0C
+Return-Path: <rasmus.villemoes@prevas.dk>
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com
+	(mail-eopbgr60133.outbound.protection.outlook.com [40.107.6.133])
+	by mail.openembedded.org (Postfix) with ESMTP id E00397FA42
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2020 20:44:10 +0000 (UTC)
-Received: by mail-ot1-f68.google.com with SMTP id k14so23733521otn.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2020 12:44:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=uOXPgyMg0cVIeYwfbqgoq3FUSUZei1XDGw7TFRofMZw=;
-	b=GF1hXSyUaHfxWR2JXE7n+RVnhdD6wQqfgEkySLsmVXlpN1cs0aTBcWFlEkXkfJ6zJ2
-	2O2OlDZNtHstgyylC+Bry2jprNJEWkvhVB1XyyL+tJL0WpF0Ev2gxabFmUSxw2bDdt57
-	8Tg9Dy+bHyhRjd40BR0jHvvjGeEn8zkAF6qtYOR0QsaWw7NzCE/BFrUEQF2ld20gvqnd
-	o9et9HmMLZFhRICP4wIxns6z9DBRmU1+T8p6W0MqKAIpky7loydCjI/RQcSfepXSzPMB
-	8WgnrbKJkjSQjIpRGvJKrbjMIg9zfrQ8UFmfOjw3YsjED5NxB1w0elq69NoIwHZh9krn
-	EDkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=uOXPgyMg0cVIeYwfbqgoq3FUSUZei1XDGw7TFRofMZw=;
-	b=Q+g50x+l/5lo4CMKbAVa4GbM55MGNtr9hrOM1zzJPbIfVVFMpRS7ZPgRoknFzP2r/+
-	SwOwuBLdq1Rl3knjo6UmK0qfttNZYV50Wq7kS6Q9v0izwcVHlGwl/3iCTENvqqFMfoTa
-	3JnSSQw1WN8vP3UBPXnbYpPcNfQw9qKLw9JxIFNiv8mtVIGWUe6Ni+BW42N+zA++M1OC
-	mPFC4Pt+ChdNoyBOT3VccbrXOGZgWwtNnusiTmlNpSebQjLG93UXtdGiWkhMDigZRMoh
-	I7b8a6tBCYTDbXvCPihotUGJp8+3/K8yw7JT6r7zyL8lj+FzsVmDCpJTyJTHn3XEp7JL
-	yAbw==
-X-Gm-Message-State: APjAAAWr/5gLOqghK5nGlvRedeG7F3kQko6jqAK53H5jibWDR/Iwidf2
-	fa8xCECZiaUCynSIo1j0xTVky+P/iO3Sft6XMSA=
-X-Google-Smtp-Source: APXvYqwI00nPk20Y34TmJuU41jRupfxG7tag0Yv9tyfYHJ2PDokwk9peECyf6HdZ2yqpGUf3Ng4Cj8yT1yeQdmWSsFU=
-X-Received: by 2002:a05:6830:1e16:: with SMTP id
-	s22mr7555520otr.340.1579293851929; 
-	Fri, 17 Jan 2020 12:44:11 -0800 (PST)
+	Sat, 18 Jan 2020 22:37:16 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=hfDE9jifs8Gyae/yJKa0/lHyRtlOsQ+PJsQScPGCw3HSULgFSoa5Dszq7XnmudQ/s7vmjJcPuTbxxONCosToR5FApR7/x96FBSELBWfx9aESxv4Y6vKL//egBErv8ywEbzELTjCgMgEG3yy3xM+gwKcc5tEbYAMBLUnvrGLv3BBIKK3G4g9msH/EK+qkKVsb7Kyj9ftie+qHr0RAwIsR9GK4d/MsRkFZopRvPxccjK/0dO6kZD7CPG7LtZ0yePqJfMarSMDHCXKDf4WD+Z6hyzZW5APNb06kkM3s/8QTkuB4D6PHP/5oAugdQdapdHtNUDue6LX7PjNI6FWRjbl4Jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=Dilb3fett9SHQEMPDYm5Kx7WRJA431E6LVkZl1sBJFg=;
+	b=JdRKuPaxx64HyM8cpLyiu5qn0B/tluLDPsUlEavwePzeBrlYr4soZ7QIKhPXKudniH3JewTsscPSCsBmJgHpsddcDKLfqR6ArQCd+3L55uiyPVpoqaB3n16j3VnNAdFURA6wICXbsvZZw4Xx/Xl3LZjyP1EM2E0QWq2EVLhBxBQ9ZsJKWtVwVn0A2AWK5OcYBnvg94xB/iwAY1zL7wYRPGB7kdZP3MNNozewjjRO5FDOkWvt85cAqkGrC8FxvqIWl1Zak20UztnEC8qZdsOYH8vMNNp/mEr5TVnvv81M0z8hb372o4cxmRzlnH7uxk9CjY62AgSjQJmfkj1NwU9QOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+	smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk; 
+	dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk; s=selector1;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=Dilb3fett9SHQEMPDYm5Kx7WRJA431E6LVkZl1sBJFg=;
+	b=ikuyA5irTF12MqAiW+gE9u+1Wc9sUYamsr3ri8hbUL7y10x6DDBRzXTnoAYkYd3ISAfpV2inTviLUWBchVAyaHeS0w/Ef11GSA2ggfhCvLbUzxtBZQP6r32FW8cbRC6jbyM9jI8Be8zm962JlZdKaZDJdvglrsqhA1oubk/vfJA=
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM (20.178.126.85) by
+	VI1PR10MB3646.EURPRD10.PROD.OUTLOOK.COM (10.186.161.203) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2644.19; Sat, 18 Jan 2020 22:37:13 +0000
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+	([fe80::8175:5aa2:2870:766d]) by
+	VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+	([fe80::8175:5aa2:2870:766d%6]) with mapi id 15.20.2644.024;
+	Sat, 18 Jan 2020 22:37:13 +0000
+Received: from prevas-ravi.prevas.se (5.186.115.54) by
+	AM6P191CA0031.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:8b::44)
+	with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19
+	via Frontend Transport; Sat, 18 Jan 2020 22:37:13 +0000
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [PATCH] build.py: record time spent executing each function
+Thread-Index: AQHVzk/UviyzOepWnki5zcAR3u5NfA==
+Date: Sat, 18 Jan 2020 22:37:13 +0000
+Message-ID: <20200118223705.17230-1-rasmus.villemoes@prevas.dk>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6P191CA0031.EURP191.PROD.OUTLOOK.COM
+	(2603:10a6:209:8b::44) To VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+	(2603:10a6:803:e1::21)
+x-mailer: git-send-email 2.23.0
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=rasmus.villemoes@prevas.dk; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [5.186.115.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 45aa62fc-ef13-4f20-3d18-08d79c66f690
+x-ms-traffictypediagnostic: VI1PR10MB3646:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR10MB3646FF634F11108D56B9310093300@VI1PR10MB3646.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0286D7B531
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10019020)(376002)(136003)(396003)(366004)(346002)(39840400004)(189003)(199004)(107886003)(6916009)(2616005)(956004)(8676002)(86362001)(16526019)(6486002)(1076003)(6512007)(186003)(26005)(478600001)(71200400001)(66446008)(81166006)(81156014)(4326008)(5660300002)(52116002)(44832011)(2906002)(66556008)(66476007)(54906003)(36756003)(6506007)(8936002)(316002)(64756008)(8976002)(66946007);
+	DIR:OUT; SFP:1102; SCL:1; SRVR:VI1PR10MB3646;
+	H:VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; MX:1; A:1; 
+received-spf: None (protection.outlook.com: prevas.dk does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IeeKAQF7Ejl2SWJLdpYYUNO5kZZB0lvm3Hy8mNa6uMb69Upy1NBbiQk3uiExmEriYG2eU1Jg2c+ld3O14OllCXS6QRwqOHTj4g/n2aXZYc+npWFaUiGRrDY6iR005gLXtWuyrWmSyQfj4kxZbRZXzMKoeqvFSk+g8vOo75Y7u0H2c4WMVBLijzhfIN1Jbfl+XyBPUCPyz+GVFWWbwonUVXKPEKEDAu/4FW7kfvvhLbW95q4G3xPbyJN1wa2jIULjqtP3TuIWNvoQHAJYtxfvG3TYdbeGMYrvjSEdRT391cDQ/MRrj3Y4F5E3IrZovsN9QVCBqFL4MsQvxwBN/83mDGCgXzVl6FLobfx57e0hbb2Zd5M2hTh4JBJUUKYDtokFFEWlMMk8s3gm0u7yG2hMH2STz0pn/+6G8/9d6BO5g4E8+LP9uUch3PZ8Sm9vWzaw
 MIME-Version: 1.0
-References: <20200117164548.28453-1-jean-marie.lemetayer@savoirfairelinux.com>
-	<20200117164548.28453-9-jean-marie.lemetayer@savoirfairelinux.com>
-In-Reply-To: <20200117164548.28453-9-jean-marie.lemetayer@savoirfairelinux.com>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Fri, 17 Jan 2020 13:44:00 -0700
-Message-ID: <CABcZANkG0e9z_pZrzOq--oNP=JPTk9UmnOfWOGaXVQU2MyCXWg@mail.gmail.com>
-To: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
-Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
-	bitbake-devel@lists.openembedded.org, rennes-dev@savoirfairelinux.com
-Subject: Re: [PATCH v4 08/12] bitbake: fetch2/wget: fix downloadfilename parameter
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45aa62fc-ef13-4f20-3d18-08d79c66f690
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2020 22:37:13.5378 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qxahtl1DI0g7RcPbW1vXPsdK+t5iNSMGLCSuOZRQpWFtZ6WoStPwwIddFsxjH3a7OgTsD0LKWIF/R++8GeIqqXJx+bcTiMMFJA+V5dgZ52g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB3646
+Subject: [PATCH] build.py: record time spent executing each function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,134 +90,77 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Jan 2020 20:44:11 -0000
-Content-Type: multipart/alternative; boundary="0000000000000a5086059c5c011a"
-
---0000000000000a5086059c5c011a
-Content-Type: text/plain; charset="UTF-8"
-
-This doesn't escape the filename, it quotes it, so should probably correct
-the message, and will almost certainly break if the name contains a single
-quote. I'd suggest using subprocess.list2cmdline(), pipes.quote(), or
-similar instead of doing it manually. Definitely a good fix, just likely
-best done with an existing mechanism :) Thanks for the contribution.
-
-On Fri, Jan 17, 2020 at 9:52 AM Jean-Marie LEMETAYER <
-jean-marie.lemetayer@savoirfairelinux.com> wrote:
-
-> When using a download filename with characters which can be interpreted
-> by the shell ('(', ')', '&', ';', ...) the command fails. Escaping the
-> filename fixes the issue.
->
-> Signed-off-by: Jean-Marie LEMETAYER <
-> jean-marie.lemetayer@savoirfairelinux.com>
-> ---
->  lib/bb/fetch2/wget.py | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-> index 725586d2..6506e1e2 100644
-> --- a/lib/bb/fetch2/wget.py
-> +++ b/lib/bb/fetch2/wget.py
-> @@ -94,9 +94,9 @@ class Wget(FetchMethod):
->          fetchcmd = self.basecmd
->
->          if 'downloadfilename' in ud.parm:
-> -            dldir = d.getVar("DL_DIR")
-> -            bb.utils.mkdirhier(os.path.dirname(dldir + os.sep +
-> ud.localfile))
-> -            fetchcmd += " -O " + dldir + os.sep + ud.localfile
-> +            localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
-> +            bb.utils.mkdirhier(os.path.dirname(localpath))
-> +            fetchcmd += " -O '%s'" % localpath
->
->          if ud.user and ud.pswd:
->              fetchcmd += " --user=%s --password=%s --auth-no-challenge" %
-> (ud.user, ud.pswd)
-> --
-> 2.20.1
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
-
-
--- 
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
-
---0000000000000a5086059c5c011a
-Content-Type: text/html; charset="UTF-8"
+X-List-Received-Date: Sat, 18 Jan 2020 22:37:17 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">This doesn&#39;t escape the filename, it quotes it, so sho=
-uld probably correct the message, and will almost certainly break if the na=
-me contains a single quote. I&#39;d suggest using subprocess.list2cmdline()=
-, pipes.quote(), or similar instead of doing it manually. Definitely a good=
- fix, just likely best done with an existing mechanism :) Thanks for the co=
-ntribution.</div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"g=
-mail_attr">On Fri, Jan 17, 2020 at 9:52 AM Jean-Marie LEMETAYER &lt;<a href=
-=3D"mailto:jean-marie.lemetayer@savoirfairelinux.com">jean-marie.lemetayer@=
-savoirfairelinux.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quo=
-te" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-sty=
-le:solid;border-left-color:rgb(204,204,204);padding-left:1ex">When using a =
-download filename with characters which can be interpreted<br>
-by the shell (&#39;(&#39;, &#39;)&#39;, &#39;&amp;&#39;, &#39;;&#39;, ...) =
-the command fails. Escaping the<br>
-filename fixes the issue.<br>
-<br>
-Signed-off-by: Jean-Marie LEMETAYER &lt;<a href=3D"mailto:jean-marie.lemeta=
-yer@savoirfairelinux.com" target=3D"_blank">jean-marie.lemetayer@savoirfair=
-elinux.com</a>&gt;<br>
----<br>
-=C2=A0lib/bb/fetch2/wget.py | 6 +++---<br>
-=C2=A01 file changed, 3 insertions(+), 3 deletions(-)<br>
-<br>
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py<br>
-index 725586d2..6506e1e2 100644<br>
---- a/lib/bb/fetch2/wget.py<br>
-+++ b/lib/bb/fetch2/wget.py<br>
-@@ -94,9 +94,9 @@ class Wget(FetchMethod):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fetchcmd =3D self.basecmd<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if &#39;downloadfilename&#39; in ud.parm:=
-<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dldir =3D d.getVar(&quot;DL_DIR&=
-quot;)<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.utils.mkdirhier(os.path.dirna=
-me(dldir + os.sep + ud.localfile))<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetchcmd +=3D &quot; -O &quot; +=
- dldir + os.sep + ud.localfile<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 localpath =3D os.path.join(d.get=
-Var(&quot;DL_DIR&quot;), ud.localfile)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.utils.mkdirhier(os.path.dirna=
-me(localpath))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetchcmd +=3D &quot; -O &#39;%s&=
-#39;&quot; % localpath<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if ud.user and ud.pswd:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fetchcmd +=3D &quot; --user=
-=3D%s --password=3D%s --auth-no-challenge&quot; % (ud.user, ud.pswd)<br>
--- <br>
-2.20.1<br>
-<br>
--- <br>
-_______________________________________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
-itbake-devel@lists.openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
-stinfo/bitbake-devel</a><br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christoph=
-er Larson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, O=
-penZaurus<br>Senior Software Engineer, Mentor Graphics</div></div></div></d=
-iv>
+In order to have a quick way to see if optimizing some task function
+actually has an effect, add a single line to the log file for each
+function executed listing the wallclock, system and user time
+spent. That can also help figure out which parts of a recipe is taking
+the longest and hence find places that might be worth looking at.
 
---0000000000000a5086059c5c011a--
+bitbake already has the --profile/-P option, but that produces an
+enourmous amount of output, and AFAICT only concerns python code, so
+won't help finding suboptimal shell functions.
+
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+---
+ lib/bb/build.py | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 3d9cc10c..945efeae 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -19,6 +19,7 @@ import shlex
+ import glob
+ import time
+ import stat
++import resource
+ import bb
+ import bb.msg
+ import bb.process
+@@ -172,6 +173,14 @@ class StdoutNoopContextManager:
+     def name(self):
+         return sys.stdout.name
+=20
++def _get_times():
++    wall =3D time.monotonic()
++    self =3D resource.getrusage(resource.RUSAGE_SELF)
++    children =3D resource.getrusage(resource.RUSAGE_CHILDREN)
++    user =3D self.ru_utime + children.ru_utime
++    sys =3D  self.ru_stime + children.ru_stime
++
++    return (wall, user, sys)
+=20
+ def exec_func(func, d, dirs =3D None):
+     """Execute a BB 'function'"""
+@@ -244,10 +253,21 @@ def exec_func(func, d, dirs =3D None):
+                 pass
+=20
+     with bb.utils.fileslocked(lockfiles):
++        try:
++            t0 =3D _get_times()
++        except:
++            t0 =3D None
+         if ispython:
+             exec_func_python(func, d, runfile, cwd=3Dadir)
+         else:
+             exec_func_shell(func, d, runfile, cwd=3Dadir)
++        if t0:
++            t1 =3D _get_times()
++            wtime =3D t1[0] - t0[0]
++            utime =3D t1[1] - t0[1]
++            stime =3D t1[2] - t0[2]
++            bb.debug(2, "Time spent executing %s: wall %.3f; user %.3f; sy=
+stem %.3f" %
++                     (func, wtime, utime, stime))
+=20
+     try:
+         curcwd =3D os.getcwd()
+--=20
+2.23.0
+
+
