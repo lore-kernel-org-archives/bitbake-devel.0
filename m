@@ -1,37 +1,37 @@
 Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
 	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 327B97FC0D
+	by mail.openembedded.org (Postfix) with ESMTP id BA40C7FC0D
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 20 Jan 2020 10:27:48 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 6EE3E9C01E1;
-	Mon, 20 Jan 2020 05:27:49 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 041689C01C4;
+	Mon, 20 Jan 2020 05:27:50 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10032)
-	with ESMTP id sHXxIaeBOw6W; Mon, 20 Jan 2020 05:27:45 -0500 (EST)
+	with ESMTP id x7mrI5c09eIv; Mon, 20 Jan 2020 05:27:49 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 02E569C01CF;
-	Mon, 20 Jan 2020 05:27:45 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 4F4829C01D2;
+	Mon, 20 Jan 2020 05:27:49 -0500 (EST)
 X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10026)
-	with ESMTP id Vv8tv0tgd4cZ; Mon, 20 Jan 2020 05:27:44 -0500 (EST)
+	with ESMTP id ZgOhbCOhdoTX; Mon, 20 Jan 2020 05:27:49 -0500 (EST)
 Received: from sulaco.example.com (40.73.12.109.rev.sfr.net [109.12.73.40])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 0A4969C01C4;
-	Mon, 20 Jan 2020 05:27:43 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 53CFF9C01D5;
+	Mon, 20 Jan 2020 05:27:48 -0500 (EST)
 From: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 20 Jan 2020 11:27:09 +0100
-Message-Id: <20200120102720.20868-2-jean-marie.lemetayer@savoirfairelinux.com>
+Date: Mon, 20 Jan 2020 11:27:13 +0100
+Message-Id: <20200120102720.20868-6-jean-marie.lemetayer@savoirfairelinux.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200120102720.20868-1-jean-marie.lemetayer@savoirfairelinux.com>
 References: <20200120102720.20868-1-jean-marie.lemetayer@savoirfairelinux.com>
 MIME-Version: 1.0
 Cc: rennes-dev@savoirfairelinux.com, paul.eggleton@linux.intel.com
-Subject: [PATCH v5 01/12] bitbake: utils: add sha384_file and sha512_file functions
+Subject: [PATCH v5 05/12] bitbake: fetch2: allow fetchers to forward the donestamp management
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,46 +44,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Jan 2020 10:27:48 -0000
+X-List-Received-Date: Mon, 20 Jan 2020 10:27:49 -0000
 Content-Transfer-Encoding: quoted-printable
 
-The npm fetcher needs these functions to support the subresource
-integrity: https://www.w3.org/TR/SRI/
+This commit is necessary to introduce proxy fetchers and do not modify
+the behavior of existing fetchers.
+
+This commit allows fetchers to forwards the "verify_donestamp" and
+"update_stamp" functions to a proxy fetcher.
 
 Signed-off-by: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinu=
 x.com>
 ---
- lib/bb/utils.py | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ lib/bb/fetch2/__init__.py | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 68ca4ef2..28368f0a 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -556,6 +556,20 @@ def sha1_file(filename):
-     import hashlib
-     return _hasher(hashlib.sha1(), filename)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 8bdcd1c9..d4d87f3a 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1378,6 +1378,18 @@ class FetchMethod(object):
+         """
+         return False
 =20
-+def sha384_file(filename):
-+    """
-+    Return the hex string representation of the SHA384 checksum of the f=
-ilename
-+    """
-+    import hashlib
-+    return _hasher(hashlib.sha384(), filename)
++    def verify_donestamp(self, ud, d):
++        """
++        Verify the donestamp file
++        """
++        return verify_donestamp(ud, d)
 +
-+def sha512_file(filename):
-+    """
-+    Return the hex string representation of the SHA512 checksum of the f=
-ilename
-+    """
-+    import hashlib
-+    return _hasher(hashlib.sha512(), filename)
++    def update_donestamp(self, ud, d):
++        """
++        Update the donestamp file
++        """
++        update_stamp(ud, d)
 +
- def preserved_envvars_exported():
-     """Variables which are taken from the environment and placed in and =
-exported
-     from the metadata"""
+     def _strip_leading_slashes(self, relpath):
+         """
+         Remove leading slash as os.path.join can't cope
+@@ -1661,7 +1673,7 @@ class Fetch(object):
+             try:
+                 self.d.setVar("BB_NO_NETWORK", network)
+=20
+-                if verify_donestamp(ud, self.d) and not m.need_update(ud=
+, self.d):
++                if m.verify_donestamp(ud, self.d) and not m.need_update(=
+ud, self.d):
+                     localpath =3D ud.localpath
+                 elif m.try_premirror(ud, self.d):
+                     logger.debug(1, "Trying PREMIRRORS")
+@@ -1671,7 +1683,7 @@ class Fetch(object):
+                         try:
+                             # early checksum verification so that if the=
+ checksum of the premirror
+                             # contents mismatch the fetcher can still tr=
+y upstream and mirrors
+-                            update_stamp(ud, self.d)
++                            m.update_donestamp(ud, self.d)
+                         except ChecksumError as e:
+                             logger.warning("Checksum failure encountered=
+ with premirror download of %s - will attempt other sources." % u)
+                             logger.debug(1, str(e))
+@@ -1681,7 +1693,7 @@ class Fetch(object):
+                     self.d.setVar("BB_NO_NETWORK", "1")
+=20
+                 firsterr =3D None
+-                verified_stamp =3D verify_donestamp(ud, self.d)
++                verified_stamp =3D m.verify_donestamp(ud, self.d)
+                 if not localpath and (not verified_stamp or m.need_updat=
+e(ud, self.d)):
+                     try:
+                         if not trusted_network(self.d, ud.url):
+@@ -1693,7 +1705,7 @@ class Fetch(object):
+                         localpath =3D ud.localpath
+                         # early checksum verify, so that if checksum mis=
+matched,
+                         # fetcher still have chance to fetch from mirror
+-                        update_stamp(ud, self.d)
++                        m.update_donestamp(ud, self.d)
+=20
+                     except bb.fetch2.NetworkAccess:
+                         raise
+@@ -1722,7 +1734,7 @@ class Fetch(object):
+                         logger.error(str(firsterr))
+                     raise FetchError("Unable to fetch URL from any sourc=
+e.", u)
+=20
+-                update_stamp(ud, self.d)
++                m.update_donestamp(ud, self.d)
+=20
+             except IOError as e:
+                 if e.errno in [errno.ESTALE]:
 --=20
 2.20.1
 
