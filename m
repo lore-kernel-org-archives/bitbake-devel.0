@@ -1,37 +1,37 @@
 Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
 	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id BA40C7FC0D
+	by mail.openembedded.org (Postfix) with ESMTP id 5F5D47FC0D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2020 10:27:48 +0000 (UTC)
+	Mon, 20 Jan 2020 10:27:49 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 041689C01C4;
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 9D4379C01D2;
 	Mon, 20 Jan 2020 05:27:50 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10032)
-	with ESMTP id x7mrI5c09eIv; Mon, 20 Jan 2020 05:27:49 -0500 (EST)
+	with ESMTP id VuPtGvtq7smr; Mon, 20 Jan 2020 05:27:46 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 4F4829C01D2;
-	Mon, 20 Jan 2020 05:27:49 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 122489C01D1;
+	Mon, 20 Jan 2020 05:27:46 -0500 (EST)
 X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10026)
-	with ESMTP id ZgOhbCOhdoTX; Mon, 20 Jan 2020 05:27:49 -0500 (EST)
+	with ESMTP id v0AUYftT2A2Z; Mon, 20 Jan 2020 05:27:45 -0500 (EST)
 Received: from sulaco.example.com (40.73.12.109.rev.sfr.net [109.12.73.40])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 53CFF9C01D5;
-	Mon, 20 Jan 2020 05:27:48 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 1BAC49C01C4;
+	Mon, 20 Jan 2020 05:27:45 -0500 (EST)
 From: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 20 Jan 2020 11:27:13 +0100
-Message-Id: <20200120102720.20868-6-jean-marie.lemetayer@savoirfairelinux.com>
+Date: Mon, 20 Jan 2020 11:27:10 +0100
+Message-Id: <20200120102720.20868-3-jean-marie.lemetayer@savoirfairelinux.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200120102720.20868-1-jean-marie.lemetayer@savoirfairelinux.com>
 References: <20200120102720.20868-1-jean-marie.lemetayer@savoirfairelinux.com>
 MIME-Version: 1.0
 Cc: rennes-dev@savoirfairelinux.com, paul.eggleton@linux.intel.com
-Subject: [PATCH v5 05/12] bitbake: fetch2: allow fetchers to forward the donestamp management
+Subject: [PATCH v5 02/12] bitbake: utils: add is_semver function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,94 +47,51 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Mon, 20 Jan 2020 10:27:49 -0000
 Content-Transfer-Encoding: quoted-printable
 
-This commit is necessary to introduce proxy fetchers and do not modify
-the behavior of existing fetchers.
+This function checks if a string is a semantic version:
+    https://semver.org/spec/v2.0.0.html
 
-This commit allows fetchers to forwards the "verify_donestamp" and
-"update_stamp" functions to a proxy fetcher.
+The npm fetcher needs this function to validate its version parameter.
 
 Signed-off-by: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinu=
 x.com>
 ---
- lib/bb/fetch2/__init__.py | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ lib/bb/utils.py | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 8bdcd1c9..d4d87f3a 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1378,6 +1378,18 @@ class FetchMethod(object):
-         """
-         return False
-=20
-+    def verify_donestamp(self, ud, d):
-+        """
-+        Verify the donestamp file
-+        """
-+        return verify_donestamp(ud, d)
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 28368f0a..47805d02 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1611,3 +1611,29 @@ class LogCatcher(logging.Handler):
+         self.messages.append(bb.build.logformatter.format(record))
+     def contains(self, message):
+         return (message in self.messages)
 +
-+    def update_donestamp(self, ud, d):
-+        """
-+        Update the donestamp file
-+        """
-+        update_stamp(ud, d)
++def is_semver(version):
++    """
++        Is the version string following the semver semantic?
 +
-     def _strip_leading_slashes(self, relpath):
-         """
-         Remove leading slash as os.path.join can't cope
-@@ -1661,7 +1673,7 @@ class Fetch(object):
-             try:
-                 self.d.setVar("BB_NO_NETWORK", network)
-=20
--                if verify_donestamp(ud, self.d) and not m.need_update(ud=
-, self.d):
-+                if m.verify_donestamp(ud, self.d) and not m.need_update(=
-ud, self.d):
-                     localpath =3D ud.localpath
-                 elif m.try_premirror(ud, self.d):
-                     logger.debug(1, "Trying PREMIRRORS")
-@@ -1671,7 +1683,7 @@ class Fetch(object):
-                         try:
-                             # early checksum verification so that if the=
- checksum of the premirror
-                             # contents mismatch the fetcher can still tr=
-y upstream and mirrors
--                            update_stamp(ud, self.d)
-+                            m.update_donestamp(ud, self.d)
-                         except ChecksumError as e:
-                             logger.warning("Checksum failure encountered=
- with premirror download of %s - will attempt other sources." % u)
-                             logger.debug(1, str(e))
-@@ -1681,7 +1693,7 @@ class Fetch(object):
-                     self.d.setVar("BB_NO_NETWORK", "1")
-=20
-                 firsterr =3D None
--                verified_stamp =3D verify_donestamp(ud, self.d)
-+                verified_stamp =3D m.verify_donestamp(ud, self.d)
-                 if not localpath and (not verified_stamp or m.need_updat=
-e(ud, self.d)):
-                     try:
-                         if not trusted_network(self.d, ud.url):
-@@ -1693,7 +1705,7 @@ class Fetch(object):
-                         localpath =3D ud.localpath
-                         # early checksum verify, so that if checksum mis=
-matched,
-                         # fetcher still have chance to fetch from mirror
--                        update_stamp(ud, self.d)
-+                        m.update_donestamp(ud, self.d)
-=20
-                     except bb.fetch2.NetworkAccess:
-                         raise
-@@ -1722,7 +1734,7 @@ class Fetch(object):
-                         logger.error(str(firsterr))
-                     raise FetchError("Unable to fetch URL from any sourc=
-e.", u)
-=20
--                update_stamp(ud, self.d)
-+                m.update_donestamp(ud, self.d)
-=20
-             except IOError as e:
-                 if e.errno in [errno.ESTALE]:
++        https://semver.org/spec/v2.0.0.html
++    """
++    regex =3D re.compile(
++    r"""
++    ^
++    (0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)
++    (?:-(
++        (?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)
++        (?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*
++    ))?
++    (?:\+(
++        [0-9a-zA-Z-]+
++        (?:\.[0-9a-zA-Z-]+)*
++    ))?
++    $
++    """, re.VERBOSE)
++
++    if regex.match(version) is None:
++        return False
++
++    return True
 --=20
 2.20.1
 
