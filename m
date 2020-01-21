@@ -1,37 +1,49 @@
-Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id A24687FC8A
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
+	[209.85.128.66])
+	by mail.openembedded.org (Postfix) with ESMTP id 98ECD7D084
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2020 10:27:59 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id DFB9C9C01B1;
-	Mon, 20 Jan 2020 05:28:00 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10032)
-	with ESMTP id 2tT_pfNLye7L; Mon, 20 Jan 2020 05:27:56 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id E2E189C01D2;
-	Mon, 20 Jan 2020 05:27:56 -0500 (EST)
-X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10026)
-	with ESMTP id KFk3CxSCzoLH; Mon, 20 Jan 2020 05:27:56 -0500 (EST)
-Received: from sulaco.example.com (40.73.12.109.rev.sfr.net [109.12.73.40])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id E8DFD9C01E1;
-	Mon, 20 Jan 2020 05:27:55 -0500 (EST)
-From: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 20 Jan 2020 11:27:20 +0100
-Message-Id: <20200120102720.20868-13-jean-marie.lemetayer@savoirfairelinux.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200120102720.20868-1-jean-marie.lemetayer@savoirfairelinux.com>
-References: <20200120102720.20868-1-jean-marie.lemetayer@savoirfairelinux.com>
+	Tue, 21 Jan 2020 08:23:28 +0000 (UTC)
+Received: by mail-wm1-f66.google.com with SMTP id b19so1926985wmj.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Jan 2020 00:23:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:user-agent:mime-version
+	:content-transfer-encoding;
+	bh=JFjQI5j0ZISCZW+inI5xiUKYE88GDXepJuJJmLjInxU=;
+	b=BlpWSC3NZ5HaBYQnBg5NhdleriLUx7DzoErbomVB0ogmCFHgA+yFoBlTe9RnFifCo7
+	QCGNexxyaKCnbeWuNAW7r5BD7gUhTDCLXgEtqAid74YQWoSzpomreer5fqlxVAY8p3vq
+	UHZYYXVdNvZVqnSXolyT3lV73wU6+lVCRKrDc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:date:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=JFjQI5j0ZISCZW+inI5xiUKYE88GDXepJuJJmLjInxU=;
+	b=FNWT/EpHq0d0anhpo67E+YrAby6hXBCPHoVi/wvAutSNTNMz8k0vhHu6RjecqUxELV
+	GcnD0f/EevKlniMimuVwm72mIrh/olX90zpcuGS1WZKRlVVp72W9XwJs0bNan1RRiDI3
+	8asIdux7OzDcXI2Pc/GX/7My5mlBV3BV17p2I/WcqwSzZ5aHy6dduNy8rbAGZxDDN9lO
+	/mDkSvdHkhKsDrGHkW7w8NG5aUXQq+jVh6ufECeHCakbc0tr0tXjP9GirYRmN8Wgp3de
+	y8RI4McEanS+CZtmmnOjvaKmmvYFaBdmIJ5xWtHPZOkWCTOZGdqXGnUgeS3mNyyxGsTw
+	OgZQ==
+X-Gm-Message-State: APjAAAWhWYcqaYqUZ8LDRLBby/8Ewkm1bCSQs97rzCHUBT9q1qgz4RQk
+	86QHodj6LnFiWJtvlsZPj4PyOiUl/SE=
+X-Google-Smtp-Source: APXvYqyvF35p3oYnidkKvePipaZdMRrMM301ObUbn7RxOXfOoGrNbHmh3qXRdB5jDXqbi3nufXPNpQ==
+X-Received: by 2002:a05:600c:22d3:: with SMTP id
+	19mr3095075wmg.20.1579595008453; 
+	Tue, 21 Jan 2020 00:23:28 -0800 (PST)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id p18sm2834621wmg.4.2020.01.21.00.23.27
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Tue, 21 Jan 2020 00:23:27 -0800 (PST)
+Message-ID: <1b0b9e7f969425301e677ad5880b290007b8c126.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 21 Jan 2020 08:23:26 +0000
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Cc: rennes-dev@savoirfairelinux.com, paul.eggleton@linux.intel.com
-Subject: [PATCH v5 12/12] bitbake: tests/fetch: add npmsw tests
+Subject: [PATCH] tests/fetch: Allow wget upgrade tests to run against a local server
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,330 +56,102 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Jan 2020 10:27:59 -0000
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 21 Jan 2020 08:23:29 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This commit adds some tests to validate the npmsw fetcher:
+[This patch is large and the mailing list doesn't like it. It contains
+a static snapshots of various websites we've been using for testing
+release tarball downloads which allows us to operate independently from
+the upstream through a local http server. Its in master-next if anyone
+wants to look at the code, just headers posted here]
 
-     - bb.tests.fetch.NPMTest.test_npmsw
-     - bb.tests.fetch.NPMTest.test_npmsw_bad_checksum
-     - bb.tests.fetch.NPMTest.test_npmsw_destsuffix
-     - bb.tests.fetch.NPMTest.test_npmsw_dev
-     - bb.tests.fetch.NPMTest.test_npmsw_mirrors
-     - bb.tests.fetch.NPMTest.test_npmsw_no_network_no_tarball
-     - bb.tests.fetch.NPMTest.test_npmsw_no_network_with_tarball
-     - bb.tests.fetch.NPMTest.test_npmsw_npm_reusability
-     - bb.tests.fetch.NPMTest.test_npmsw_premirrors
+Currently these tests rely upon multiple uptream webservers which may change
+or be unavailable. Add local copies of the test data, copy the httpserver
+from OE-Core (used for testing there) and run these tests against a local
+server instead.
 
-Signed-off-by: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinu=
-x.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/tests/fetch.py | 251 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 251 insertions(+)
-
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 95b1f99a..18ec016c 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2190,3 +2190,254 @@ class NPMTest(FetcherTest):
-         url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example'
-         with self.assertRaises(bb.fetch2.MissingParameterError):
-             fetcher =3D bb.fetch.Fetch([url], self.d)
-+
-+    def create_shrinkwrap_file(self, data):
-+        import json
-+        datadir =3D os.path.join(self.tempdir, 'data')
-+        swfile =3D os.path.join(datadir, 'npm-shrinkwrap.json')
-+        bb.utils.mkdirhier(datadir)
-+        with open(swfile, 'w') as f:
-+            json.dump(data, f)
-+        # Also configure the S directory
-+        self.sdir =3D os.path.join(self.unpackdir, 'S')
-+        self.d.setVar('S', self.sdir)
-+        return swfile
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw(self):
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D',
-+                    'dependencies': {
-+                        'content-type': {
-+                            'version': 'https://registry.npmjs.org/conte=
-nt-type/-/content-type-1.0.4.tgz',
-+                            'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwO=
-Aps4mk2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-+                            'dependencies': {
-+                                'cookie': {
-+                                    'version': 'git+https://github.com/j=
-shttp/cookie.git#aec1177c7da67e3b3273df96cf476824dbc9ae09',
-+                                    'from': 'git+https://github.com/jsht=
-tp/cookie.git'
-+                                }
-+                            }
-+                        }
-+                    }
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'array-flatten-1.1.1.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'content-type-1.0.4.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', =
-'github.com.jshttp.cookie.git')))
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'npm-shri=
-nkwrap.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_mod=
-ules', 'array-flatten', 'package.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_mod=
-ules', 'array-flatten', 'node_modules', 'content-type', 'package.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_mod=
-ules', 'array-flatten', 'node_modules', 'content-type', 'node_modules', '=
-cookie', 'package.json')))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_dev(self):
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                },
-+                'content-type': {
-+                    'version': '1.0.4',
-+                    'resolved': 'https://registry.npmjs.org/content-type=
-/-/content-type-1.0.4.tgz',
-+                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Z=
-ob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-+                    'dev': True
-+                }
-+            }
-+        })
-+        # Fetch with dev disabled
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'array-flatten-1.1.1.tgz')))
-+        self.assertFalse(os.path.exists(os.path.join(self.dldir, 'npm2',=
- 'content-type-1.0.4.tgz')))
-+        # Fetch with dev enabled
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile + ';dev=3D1'], s=
-elf.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'array-flatten-1.1.1.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'content-type-1.0.4.tgz')))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_destsuffix(self):
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile + ';destsuffix=3D=
-foo/bar'], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'foo=
-', 'bar', 'node_modules', 'array-flatten', 'package.json')))
-+
-+    def test_npmsw_no_network_no_tarball(self):
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        self.d.setVar('BB_NO_NETWORK', '1')
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        with self.assertRaises(bb.fetch2.NetworkAccess):
-+            fetcher.download()
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_no_network_with_tarball(self):
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3D=
-array-flatten;version=3D1.1.1'], self.d)
-+        fetcher.download()
-+        # Disable network access
-+        self.d.setVar('BB_NO_NETWORK', '1')
-+        # Fetch again
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_mod=
-ules', 'array-flatten', 'package.json')))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_npm_reusability(self):
-+        # Fetch once with npmsw
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        # Disable network access
-+        self.d.setVar('BB_NO_NETWORK', '1')
-+        # Fetch again with npm
-+        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3D=
-array-flatten;version=3D1.1.1'], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'npm=
-', 'package.json')))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_bad_checksum(self):
-+        # Try to fetch with bad checksum
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-gfNEp2hqgLTFKT6P3AsBYMgsBqg=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            fetcher.download()
-+        # Fetch correctly to get a tarball
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        localpath =3D os.path.join(self.dldir, 'npm2', 'array-flatten-1.=
-1.1.tgz')
-+        self.assertTrue(os.path.exists(localpath))
-+        # Modify the tarball
-+        bad =3D b'bad checksum'
-+        with open(localpath, 'wb') as f:
-+            f.write(bad)
-+        # Verify that the tarball is fetched again
-+        fetcher.download()
-+        badsum =3D hashlib.sha1(bad).hexdigest()
-+        self.assertTrue(os.path.exists(localpath + '_bad-checksum_' + ba=
-dsum))
-+        self.assertTrue(os.path.exists(localpath))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_premirrors(self):
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3D=
-array-flatten;version=3D1.1.1'], self.d)
-+        ud =3D fetcher.ud[fetcher.urls[0]]
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+        # Setup the mirror
-+        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        bb.utils.mkdirhier(mirrordir)
-+        os.replace(ud.localpath, os.path.join(mirrordir, os.path.basenam=
-e(ud.localpath)))
-+        self.d.setVar('PREMIRRORS', 'https?$://.*/.* file://%s/\n' % mir=
-rordir)
-+        self.d.setVar('BB_FETCH_PREMIRRORONLY', '1')
-+        # Fetch again
-+        self.assertFalse(os.path.exists(ud.localpath))
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_mirrors(self):
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3D=
-array-flatten;version=3D1.1.1'], self.d)
-+        ud =3D fetcher.ud[fetcher.urls[0]]
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+        # Setup the mirror
-+        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        bb.utils.mkdirhier(mirrordir)
-+        os.replace(ud.localpath, os.path.join(mirrordir, os.path.basenam=
-e(ud.localpath)))
-+        self.d.setVar('MIRRORS', 'https?$://.*/.* file://%s/\n' % mirror=
-dir)
-+        # Fetch again with invalid url
-+        self.assertFalse(os.path.exists(ud.localpath))
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://invalid',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
---=20
-2.20.1
+ .../tests/fetch-testdata/apple/cups/releases  | 2400 +++++++++++++++++
+ .../debian/pool/main/d/db5.3/index.html       |  509 ++++
+ .../downloads/enchant/1.6.0/index.html        |   15 +
+ .../fetch-testdata/files/v2.8/index.html      |  774 ++++++
+ .../fetch-testdata/files/v3.0/index.html      |  209 ++
+ .../fetch-testdata/files/v3.1/index.html      |  156 ++
+ .../fetch-testdata/files/v3.10/index.html     |  131 +
+ .../fetch-testdata/files/v3.11/index.html     |  131 +
+ .../fetch-testdata/files/v3.12/index.html     |  118 +
+ .../fetch-testdata/files/v3.13/index.html     |  131 +
+ .../fetch-testdata/files/v3.14/index.html     |  170 ++
+ .../fetch-testdata/files/v3.15/index.html     |  157 ++
+ .../fetch-testdata/files/v3.16/index.html     |   86 +
+ .../fetch-testdata/files/v3.2/index.html      |  132 +
+ .../fetch-testdata/files/v3.3/index.html      |  163 ++
+ .../fetch-testdata/files/v3.4/index.html      |  127 +
+ .../fetch-testdata/files/v3.5/index.html      |  111 +
+ .../fetch-testdata/files/v3.6/index.html      |  159 ++
+ .../fetch-testdata/files/v3.7/index.html      |   92 +
+ .../fetch-testdata/files/v3.8/index.html      |  105 +
+ .../fetch-testdata/files/v3.9/index.html      |  183 ++
+ .../linux/utils/util-linux/v2.23/index.html   |   45 +
+ .../linux/utils/util-linux/v2.24/index.html   |   43 +
+ .../linux/utils/util-linux/v2.25/index.html   |   46 +
+ .../linux/utils/util-linux/v2.26/index.html   |   42 +
+ .../linux/utils/util-linux/v2.27/index.html   |   35 +
+ .../linux/utils/util-linux/v2.28/index.html   |   42 +
+ .../linux/utils/util-linux/v2.29/index.html   |   42 +
+ .../linux/utils/util-linux/v2.30/index.html   |   42 +
+ .../linux/utils/util-linux/v2.31/index.html   |   35 +
+ .../linux/utils/util-linux/v2.32/index.html   |   35 +
+ .../linux/utils/util-linux/v2.33/index.html   |   42 +
+ .../linux/utils/util-linux/v2.34/index.html   |   28 +
+ .../linux/utils/util-linux/v2.35/index.html   |   18 +
+ .../fetch-testdata/releases/eglibc/index.html |   21 +
+ .../releases/gnu-config/index.html            |    9 +
+ .../releases/individual/xserver/index.html    |  609 +++++
+ .../software/pulseaudio/releases/index.html   |  383 +++
+ lib/bb/tests/fetch.py                         |   70 +-
+ lib/bb/tests/support/httpserver.py            |   65 +
+ 40 files changed, 7691 insertions(+), 20 deletions(-)
+ create mode 100644 lib/bb/tests/fetch-testdata/apple/cups/releases
+ create mode 100644 lib/bb/tests/fetch-testdata/debian/pool/main/d/db5.3/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/downloads/enchant/1.6.0/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v2.8/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.0/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.1/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.10/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.11/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.12/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.13/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.14/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.15/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.16/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.2/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.3/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.4/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.5/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.6/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.7/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.8/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/files/v3.9/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.23/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.24/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.25/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.26/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.27/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.28/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.29/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.30/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.31/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.32/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.33/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.34/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/pub/linux/utils/util-linux/v2.35/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/releases/eglibc/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/releases/gnu-config/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/releases/individual/xserver/index.html
+ create mode 100644 lib/bb/tests/fetch-testdata/software/pulseaudio/releases/index.html
+ create mode 100644 lib/bb/tests/support/httpserver.py
 
 
