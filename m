@@ -1,47 +1,80 @@
-Return-Path: <alex.kanavin@gmail.com>
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com
-	[209.85.217.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 92BA37FD8B
+Return-Path: <chris.laplante@agilent.com>
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com
+	(mail-dm6nam11on2046.outbound.protection.outlook.com [40.107.223.46])
+	by mail.openembedded.org (Postfix) with ESMTP id CE0A07FB78
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Jan 2020 10:49:24 +0000 (UTC)
-Received: by mail-vs1-f48.google.com with SMTP id p6so1410365vsj.11
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Jan 2020 02:49:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=oSmoM2rb3nSOamAzVW1e80pTFWANaKeBexF6+b+d8Rk=;
-	b=plXpOhQdQ0sVkT7A0bUcl/qjcF05Ie0TCrrnFtcWUVznfl6ZVQFnvwEjAMdqmRXQe3
-	Q12iYDMpabcPh2MjaxSe7IDfMNhM+YwXb426DWC7pwAqeiGMNjVv2Z7LeJ4CC7RMwp0N
-	J8mQRJc85+Vu0eGM9eh2oT+IXF+mFllni4mHyOpIY60g7m4+Jq+T/Rlt1oClAWugURKX
-	UayPCDC7PRJJ1g5vlUC8nkK2rfGj3bAipYOWuQdHWoKO6r7Ts+jiIfYH+YAo1CfGlkN7
-	5+Gzxs1qDn5KRgTZDwH9+ErLU8gFdue/UeISG6TU09E2tj3BNXC5pTtrZUF2G+zRBUDZ
-	mDjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=oSmoM2rb3nSOamAzVW1e80pTFWANaKeBexF6+b+d8Rk=;
-	b=OJXtCIlr8GUO+BiE65g6BG7W15riI+wQfUYhajfCk8dJSbakoRQ3BJVRNsKur6cluX
-	OoEegiGZR+9OzZtYzZo7lJ8HjECxaGjajh+ozvVnnl76Yvvg/PMwWG8/FOT8nyuhnV3s
-	DO/cW8vJNNcWC8DjofFVZnPRFF7HHfvPkia01yTxQEHlfGJcwLfwL0bgwMLZ57jI49fq
-	EpUnX+A/b5ZBAulMRtp9ZGMBEureQskjXiu0ur/XuOftVhT08Mk68CmGY/m1A5iC5Uxg
-	ZFvKknCVglMLw5gdQFy7pYyWAdiOWQyNKMlY4Ioo7NpJeqwlYqSxtRvS8sl62ZHj0qwY
-	raDQ==
-X-Gm-Message-State: APjAAAXD8eqtHlGbGg9nJVhLK4G9Xmlg6yf5ved4KdFwp/9T42Lk5vjq
-	BGMTHETewE6L3DEL9T8X+fGzFyBqkL/QE/9Zok1D6Q==
-X-Google-Smtp-Source: APXvYqxrO1Gu2bVPYlzbkRJMPEIHTXST3njDPRvie517jDHf/c9OtPdAqUJcXRzy1Y4FIXx4avDy1+FYiaIrjFsuIEk=
-X-Received: by 2002:a05:6102:405:: with SMTP id
-	d5mr2132432vsq.94.1579603765414; 
-	Tue, 21 Jan 2020 02:49:25 -0800 (PST)
+	Tue, 21 Jan 2020 14:30:45 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=KGhQmDKNpKpYmVxhvAd5lYCSHYLK3o1P7wUby+0hyZQBrXsm1CgNgGpUpKqhoBfDlWd7Ie4GnahWkbcnVjNuu/e210CKKMqfot25nFBPKmH5vrTxfJQXgBEr8sZapYVai2+iq7FyixUec6px8lo++q079w72kPc+jQAhn8hwh8HW0BRMKjOsjTbU7XV0Nk7FvIirfH9i4+D7hkSpTaep6XiN4uduPb3hLo6pCwR6boF+RhiVhuqvjYChOXCDZ+Bso6ZsN90SFyYnfn3nGL+5p1ZzeldhvRMOp4m4K6lE5oB9KTy10TfDzechyEoZ18EUIo6X+3cvBeDDIRaSJwL6Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=9gzEfwWm2Y6ASSmc4w8StSJ16x7WRuoCFGnsRR5y4wQ=;
+	b=GjaNnIIis3VEjcFZsBSzei4nabdOHyyJMQGwQCl371S8RXEztqixRpt0wKZAmwB/KGSmLxvHKkhfnuB7eaOaLETyLSOWOxI1E1NV/W0hwvXsT78aleE7LQgnFiAS1yuwXJDMarce3JCs9GLfNjfF84gFymNSuiPjtnfP26BAqqgHofigMvmDxwIBDLrX7eYoiR9Q6URXC09+DY+K33Njs9MGl3zmThMUgIJcOl+CZEQghMURZYf0/VIZCQ9JIbxqubCO+KCqY9ZksM0hnHU2RLLUdbBtMTpOH+Fim5b1OK5LYRvz9H9ZI85xoxsII55xC4jDl175ah6Rj1NhK2EUDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+	smtp.mailfrom=agilent.com;
+	dmarc=pass action=none header.from=agilent.com; 
+	dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+	s=selector2;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=9gzEfwWm2Y6ASSmc4w8StSJ16x7WRuoCFGnsRR5y4wQ=;
+	b=MNHGnGBkhaQ2NvjTIaQKqSWT6uYdjCaMklO4Yk8/BAX+YIJ3Hh5/vqkZLa3vZuE9yzpE58Z732sXu4/ZsfCpn3kVHYZZvsjlhkdE2a2Bt3IMw9gVisGWzQLKK2AWjN5EushNbzRBDnS42PmkjdrpmThGxULgxGc1+cP2OeyqAuU=
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
+	CY4PR12MB1735.namprd12.prod.outlook.com (10.175.63.13) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2644.25; Tue, 21 Jan 2020 14:30:46 +0000
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::3c16:3c42:ee9f:b486]) by
+	CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::3c16:3c42:ee9f:b486%9]) with mapi id 15.20.2644.027;
+	Tue, 21 Jan 2020 14:30:45 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [PATCH] build.py: record time spent executing each function
+Thread-Index: AQHVzk/UviyzOepWnki5zcAR3u5NfKfxP3sAgAHtRICAAgVIQA==
+Date: Tue, 21 Jan 2020 14:30:45 +0000
+Message-ID: <CY4PR12MB1653F078FA4980624C8D6E5F8B0D0@CY4PR12MB1653.namprd12.prod.outlook.com>
+References: <20200118223705.17230-1-rasmus.villemoes@prevas.dk>
+	<CY4PR12MB1653C176011A53D5E6A523568B330@CY4PR12MB1653.namprd12.prod.outlook.com>
+	<7a8eddab-af95-21b2-6392-aab5c8ed7348@prevas.dk>
+In-Reply-To: <7a8eddab-af95-21b2-6392-aab5c8ed7348@prevas.dk>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=chris.laplante@agilent.com; 
+x-originating-ip: [4.16.127.92]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dc58591a-d9d9-410a-a243-08d79e7e80c9
+x-ms-traffictypediagnostic: CY4PR12MB1735:
+x-microsoft-antispam-prvs: <CY4PR12MB1735D248A72D100D734754CE8B0D0@CY4PR12MB1735.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0289B6431E
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(366004)(396003)(136003)(346002)(39860400002)(376002)(189003)(29502001)(199004)(26005)(186003)(478600001)(6506007)(7696005)(66946007)(8936002)(55016002)(71200400001)(52536014)(110136005)(86362001)(316002)(5660300002)(76116006)(2906002)(558084003)(66556008)(64756008)(9686003)(8676002)(66476007)(33656002)(81166006)(81156014)(66446008)(4326008);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1735;
+	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; MX:1; A:1; 
+received-spf: None (protection.outlook.com: agilent.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: khWolX2VSJoYLaPd4nFn55LMMzP9Xu4eaZBfFalMuEHd2AvwcPrPbsQqCuylhUz8hc5hu0X/sM/MtyFcxBv8M1dDtO6kM/sN7HN1evrhIhztKtUBNFW+koAxfKd9GM8vl7Rn19Z4GqB/9VNduL7faKWv3o7Z6G8/rRq4FGWN8E+zcL4FprmpBxX7+q7Khr8FhKy4jN5oZxTFhgOEbbP9/vdbmrtYHb2Q6ytQPtNa+Vh/+ZaVR5Sf6gFxBQOzwY8ZaibwHaK7CWieubpMqSVlSitVVlBi69HBGl/IMThHG9MBhVSe3iU9oWwW2CMTQ2lJ8aZnwzKsDr1fpk4EozDzcLdThrWVx1AiWr3Q3CwtLf7MGiYWAKL31z5u289k0ok8U4Hmt5XHrTg55DggoH7yv0tH2kbM/tFrDolRt+v4wve7po9N9d8uwLz9ltwgU/ZqHtvVgjUya3GOzg9lohpQWDChGuhQ9FMSpVR2IuMGe5v4PAQAv3cD9h5ErtjqhxZh
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-References: <4bee3ba1-3608-5598-b168-1e6009bdc986@linux.intel.com>
-In-Reply-To: <4bee3ba1-3608-5598-b168-1e6009bdc986@linux.intel.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 21 Jan 2020 11:49:13 +0100
-Message-ID: <CANNYZj8CRSC3V8K08-dpEmGg5zbY9N4jiJPQhia04d7NRKiTEw@mail.gmail.com>
-To: =?UTF-8?Q?Adrian_Ambro=C5=BCewicz?= <adrian.ambrozewicz@linux.intel.com>
-Cc: Bitbake-Devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: devtool hardcodes using 'git' patchtool which causes errors
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc58591a-d9d9-410a-a243-08d79e7e80c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 14:30:45.8511 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uLTR+zXPkwowEHe+K1uxeTf5TUFm776/qg7GywZ0nR/A0lsEavleGrMxkiBoWio/IqOTY7/at6m1b2aoSnevVLbApv6yQ3HaqVoUwAJvjKM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1735
+Subject: Re: [PATCH] build.py: record time spent executing each function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,108 +87,16 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Jan 2020 10:49:24 -0000
-Content-Type: multipart/alternative; boundary="00000000000052ceaf059ca429b2"
-
---00000000000052ceaf059ca429b2
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 21 Jan 2020 14:30:46 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-I am not entirely sure about this, but I believe devtool is using git to
-keep track of patches when modifying or upgrading (e.g. adding, modifying
-or rebasing custom recipe patches), so using quilt may not be an option.
-Fixing the scenarios that go wrong for you is probably a better path.
+> > Not sure why you sent this to me, to be honest.
+>=20
+> Lacking something like scripts/get_maintainer, I resorted to cc'ing the
+> last few people to touch that file.
 
-Alex
+Ah, gotcha :)
 
-On Tue, 21 Jan 2020 at 10:44, Adrian Ambro=C5=BCewicz <
-adrian.ambrozewicz@linux.intel.com> wrote:
 
-> In poky sources i can see that default PATCHTOOL used is 'quilt'
-> (
-> https://github.com/openembedded/openembedded-core/blob/master/meta/conf/b=
-itbake.conf)
->
-> and it works flawlessly. Devtool however still defaults to legacy 'git'
-> PATCHTOOL, as specified here:
->
-> http://git.yoctoproject.org/cgit.cgi/poky/plain/scripts/lib/devtool/stand=
-ard.py
->   > f.write('PATCHTOOL =3D "git"\n')
->
-> Request:
-> I've tried to debug the problem but I'm not very familiar with Bitbake
-> code, so I wonder if we could default to 'quilt' for devtool as well?
->
-> Rationale:
-> 'git' PATCHER doesn't work well when he have nested WORKDIR and
-> striplevel used. 'bitbake -c patch [pkg]' works fine, but 'devtool
-> modify [pkg]' fails with weird behavior. For example - new files created
-> by patches are created in wrong location (WORKDIR instead of nested
-> directory) and package doesn't compile until manually fixed.
->
-> Regards,
-> Adrian
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
-
---00000000000052ceaf059ca429b2
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>I am not entirely sure about this, but I believe devt=
-ool is using git to keep track of patches when modifying or upgrading (e.g.=
- adding, modifying or rebasing custom recipe patches), so using quilt may n=
-ot be an option. Fixing the scenarios that go wrong for you is probably a b=
-etter path.</div><div><br></div><div>Alex<br></div></div><br><div class=3D"=
-gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, 21 Jan 2020 at 1=
-0:44, Adrian Ambro=C5=BCewicz &lt;<a href=3D"mailto:adrian.ambrozewicz@linu=
-x.intel.com">adrian.ambrozewicz@linux.intel.com</a>&gt; wrote:<br></div><bl=
-ockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-lef=
-t:1px solid rgb(204,204,204);padding-left:1ex">In poky sources i can see th=
-at default PATCHTOOL used is &#39;quilt&#39; <br>
-(<a href=3D"https://github.com/openembedded/openembedded-core/blob/master/m=
-eta/conf/bitbake.conf" rel=3D"noreferrer" target=3D"_blank">https://github.=
-com/openembedded/openembedded-core/blob/master/meta/conf/bitbake.conf</a>) =
-<br>
-and it works flawlessly. Devtool however still defaults to legacy &#39;git&=
-#39; <br>
-PATCHTOOL, as specified here:<br>
-<a href=3D"http://git.yoctoproject.org/cgit.cgi/poky/plain/scripts/lib/devt=
-ool/standard.py" rel=3D"noreferrer" target=3D"_blank">http://git.yoctoproje=
-ct.org/cgit.cgi/poky/plain/scripts/lib/devtool/standard.py</a><br>
-=C2=A0 &gt; f.write(&#39;PATCHTOOL =3D &quot;git&quot;\n&#39;)<br>
-<br>
-Request:<br>
-I&#39;ve tried to debug the problem but I&#39;m not very familiar with Bitb=
-ake <br>
-code, so I wonder if we could default to &#39;quilt&#39; for devtool as wel=
-l?<br>
-<br>
-Rationale:<br>
-&#39;git&#39; PATCHER doesn&#39;t work well when he have nested WORKDIR and=
- <br>
-striplevel used. &#39;bitbake -c patch [pkg]&#39; works fine, but &#39;devt=
-ool <br>
-modify [pkg]&#39; fails with weird behavior. For example - new files create=
-d <br>
-by patches are created in wrong location (WORKDIR instead of nested <br>
-directory) and package doesn&#39;t compile until manually fixed.<br>
-<br>
-Regards,<br>
-Adrian<br>
--- <br>
-_______________________________________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">b=
-itbake-devel@lists.openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
-stinfo/bitbake-devel</a><br>
-</blockquote></div>
-
---00000000000052ceaf059ca429b2--
