@@ -1,29 +1,48 @@
-Return-Path: <adrian.ambrozewicz@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 3AE537FEFB
+Return-Path: <alex.kanavin@gmail.com>
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com
+	[209.85.217.52])
+	by mail.openembedded.org (Postfix) with ESMTP id B32EA7FF1F
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Jan 2020 15:06:00 +0000 (UTC)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-	by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
-	22 Jan 2020 07:06:01 -0800
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; d="scan'208";a="220339365"
-Received: from aambroze-mobl1.ger.corp.intel.com (HELO [10.102.85.150])
-	([10.102.85.150])
-	by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA;
-	22 Jan 2020 07:05:59 -0800
-From: =?UTF-8?Q?Adrian_Ambro=c5=bcewicz?= <adrian.ambrozewicz@linux.intel.com>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
+	Wed, 22 Jan 2020 15:10:46 +0000 (UTC)
+Received: by mail-vs1-f52.google.com with SMTP id p6so4334881vsj.11
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 22 Jan 2020 07:10:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=kPFts5aWY8m5kn1dI0H2H7baGygP9Tn6SiTgi+Jhk7Y=;
+	b=IukIT6ZGF9OK53H8E0bqAptNQMw4lHr25vZi8RNsHncpelgYZqsin+qqeZoXicBbyt
+	T4heJp/3wUPlrfsSZjwQ8x/AoYv4FPQL6pUg+xpK817aT21cRdyGUQNVxIGdyWTMVr4B
+	L8ZxqQDqnzXHWk+hlmx17yBvBXxGAO/PqcUbk1Q3bQHH8MEricN0Bju1Ow1S0LIByYY5
+	gkQ9HekokWkkmuiPGIrAIcvZbQ8vvs37VL2vYD/m0dP+H+DNSK1NJtL+Gpx0dq/RF+Vp
+	WvfGPQ6UyOcIbe60IPy5hKyDeWu2OK8kqia0S/OaPiI430A3XG95qydBIb2CO8M82tsZ
+	gdaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=kPFts5aWY8m5kn1dI0H2H7baGygP9Tn6SiTgi+Jhk7Y=;
+	b=tvqzbPxGSyBD3iZwf3hOO74tOl8ESQkLWCVKkz+VEAVa0ZgopoHlr1m/H745uh33mr
+	0VZsPkCRzZ8Jph9YQ+3ncIT5h0l7hr/HHaKNuhn8soNHeTgGomf5cqUoaUrxiYaBfPy9
+	VYOFfco9qV3EkMweF5+tTwowwV1sc6fpUSy6F5Kz7cqNQMHzWidImMxuC/q5IkQYmjD6
+	Mhk6+u1QuEAtCv+InxhDOmH1zFjN4UK6yf2uXnHAxQAlqQ53/yR1i26OOotyTL2ta8kw
+	nhbh8FtdKy/+eOE1WNmgFOjZ6TgKWzYoHazeL4v10QaurYOjbDvlHTy+ZW86d6joiFZA
+	6z+Q==
+X-Gm-Message-State: APjAAAWtQ4Lj8JvCr07ijcGytfjsqQNgTvucvEgBaf/nbcRg8+riixwc
+	NhnTA2wnrZMdxOAaEta7HnFJ+QmNI1iOObJgQShgqA==
+X-Google-Smtp-Source: APXvYqyvz+Z/aHQA3IjkJ0v+vKmDIswFw2w9U8y6fsgwgIJILGiIUyHJ3epJLQHNWNfUq/RblZeZlZcE9MluYWbt4U0=
+X-Received: by 2002:a05:6102:405:: with SMTP id
+	d5mr2792234vsq.94.1579705847449; 
+	Wed, 22 Jan 2020 07:10:47 -0800 (PST)
+MIME-Version: 1.0
 References: <4bee3ba1-3608-5598-b168-1e6009bdc986@linux.intel.com>
 	<CANNYZj8CRSC3V8K08-dpEmGg5zbY9N4jiJPQhia04d7NRKiTEw@mail.gmail.com>
 	<b64ada55-a892-09a5-13b2-f76e2b0507d1@linux.intel.com>
-Message-ID: <a4d78a27-50e6-ee87-bcd7-71694b7da60f@linux.intel.com>
-Date: Wed, 22 Jan 2020 16:05:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-	Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <b64ada55-a892-09a5-13b2-f76e2b0507d1@linux.intel.com>
+	<a4d78a27-50e6-ee87-bcd7-71694b7da60f@linux.intel.com>
+In-Reply-To: <a4d78a27-50e6-ee87-bcd7-71694b7da60f@linux.intel.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 22 Jan 2020 16:10:36 +0100
+Message-ID: <CANNYZj8S5A1qKy8m_=pPfP_Hbqs7qzYqE-rwMf+DGE0ivnBxpA@mail.gmail.com>
+To: =?UTF-8?Q?Adrian_Ambro=C5=BCewicz?= <adrian.ambrozewicz@linux.intel.com>
 Cc: Bitbake-Devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: devtool hardcodes using 'git' patchtool which causes errors
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -38,92 +57,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Jan 2020 15:06:00 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 22 Jan 2020 15:10:46 -0000
+Content-Type: multipart/alternative; boundary="000000000000e30cf3059cbbed4b"
 
-I actually gave the problem some thought and I believe i must take back 
-my first assumption that 'git' patcher is wrong. In fact - is either 
-quilt or the way we achieve certain thing described here:
+--000000000000e30cf3059cbbed4b
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We have repo with project in nested directory. Lets imagine repo with 
-following structure
-\ // repo root
-  \ project_dir
-  \ other_project_dir
+On Wed, 22 Jan 2020 at 16:06, Adrian Ambro=C5=BCewicz <
+adrian.ambrozewicz@linux.intel.com> wrote:
 
-We have a recipe, which is set to build project from this repo. We do 
-that by modyfing S variable to:
-S = "${WORKDIR}/git/project_dir/"
+>
+> My question is - is there a way to have both of these patchers working
+> with such folder structure? Maybe 'S' overwriting was not a good idea
+> after all?
+>
 
-Our local patches aims the repository structure, so they modify paths 
-like "+++ a/project_dir/src/file.cpp". They don't apply cleanly during 
-'bitbake -c patch [project]', as quilt tries to apply them from inside S 
-directory ('${WORKDIR}/git/project_dir'). To mitigate that - author of 
-recipe used 'striplevel=2' to allow proper building in such case.
+I guess the problem here is that S is used for both patching and building,
+and the 'root' for these may not necessarily match. Maybe there could be a
+variable that, when set, overrides S for the purpose of patching.
 
-Now that I analyzed that I see why 'git' patcher has problems with that. 
-Git patcher uses 'git am', which naturally knows where the root of 
-repository is (even if it was called from subdirectory). In case of 
-'git' patcher striplevel should be defaulted to 1.
+Alex
 
-My question is - is there a way to have both of these patchers working 
-with such folder structure? Maybe 'S' overwriting was not a good idea 
-after all?
+--000000000000e30cf3059cbbed4b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Adrian
+<div dir=3D"ltr"><div dir=3D"ltr">On Wed, 22 Jan 2020 at 16:06, Adrian Ambr=
+o=C5=BCewicz &lt;<a href=3D"mailto:adrian.ambrozewicz@linux.intel.com">adri=
+an.ambrozewicz@linux.intel.com</a>&gt; wrote:<br></div><div class=3D"gmail_=
+quote"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;=
+border-left:1px solid rgb(204,204,204);padding-left:1ex"><br>
+My question is - is there a way to have both of these patchers working <br>
+with such folder structure? Maybe &#39;S&#39; overwriting was not a good id=
+ea <br>
+after all?<br></blockquote><div><br></div><div>I guess the problem here is =
+that S is used for both patching and building, and the &#39;root&#39; for t=
+hese may not necessarily match. Maybe there could be a variable that, when =
+set, overrides S for the purpose of patching.</div><div><br></div><div>Alex=
+<br></div></div></div>
 
-
-W dniu 1/22/2020 o 09:49, Adrian Ambrożewicz pisze:
-> I see. However - this looks like quite a minefield :)
-> 
-> W dniu 1/21/2020 o 11:49, Alexander Kanavin pisze:
->> I am not entirely sure about this, but I believe devtool is using git 
->> to keep track of patches when modifying or upgrading (e.g. adding, 
->> modifying or rebasing custom recipe patches), so using quilt may not 
->> be an option. Fixing the scenarios that go wrong for you is probably a 
->> better path.
->>
->> Alex
->>
->> On Tue, 21 Jan 2020 at 10:44, Adrian Ambrożewicz 
->> <adrian.ambrozewicz@linux.intel.com 
->> <mailto:adrian.ambrozewicz@linux.intel.com>> wrote:
->>
->>     In poky sources i can see that default PATCHTOOL used is 'quilt'
->>     
->> (https://github.com/openembedded/openembedded-core/blob/master/meta/conf/bitbake.conf) 
->>
->>
->>     and it works flawlessly. Devtool however still defaults to legacy 
->> 'git'
->>     PATCHTOOL, as specified here:
->>     
->> http://git.yoctoproject.org/cgit.cgi/poky/plain/scripts/lib/devtool/standard.py 
->>
->>        > f.write('PATCHTOOL = "git"\n')
->>
->>     Request:
->>     I've tried to debug the problem but I'm not very familiar with 
->> Bitbake
->>     code, so I wonder if we could default to 'quilt' for devtool as well?
->>
->>     Rationale:
->>     'git' PATCHER doesn't work well when he have nested WORKDIR and
->>     striplevel used. 'bitbake -c patch [pkg]' works fine, but 'devtool
->>     modify [pkg]' fails with weird behavior. For example - new files
->>     created
->>     by patches are created in wrong location (WORKDIR instead of nested
->>     directory) and package doesn't compile until manually fixed.
->>
->>     Regards,
->>     Adrian
->>     --     _______________________________________________
->>     bitbake-devel mailing list
->>     bitbake-devel@lists.openembedded.org
->>     <mailto:bitbake-devel@lists.openembedded.org>
->>     http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->>
-
+--000000000000e30cf3059cbbed4b--
