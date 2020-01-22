@@ -1,51 +1,30 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com
-	[209.85.216.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 51F747FCF1
-	for <bitbake-devel@openembedded.org>;
-	Wed, 22 Jan 2020 05:25:09 +0000 (UTC)
-Received: by mail-pj1-f42.google.com with SMTP id bg7so2857863pjb.5
-	for <bitbake-devel@openembedded.org>;
-	Tue, 21 Jan 2020 21:25:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=7y2zBWwKC6qnS72kXGbDa3QCDiRfdiQ33YGrxTjhjTM=;
-	b=DNWX/D7q6b5yXFq5yX3JE1SeG0IYXQGGOBIudz8DK2GBXhkLkUBhZfxauFG+BztPk8
-	wJ6cgtVwdM1rwtbJy4iwk7ktohb9EZuexHLUSkftqFU1HM6MjvNAaEmW3tIZeopPRF+y
-	n0sDI2+E8Pxk1vqwrusy0Xx5J6HqrHfdyaPMa312bdWIdouPM4qpFw4JhLrZhWZFIj5p
-	o5ZJnhLWceltsIG1BJVrXalfoJIpE92taD8WxnMYK92XW3l0UAbNtXHzUXG7LGV3n2ma
-	BSKtTv4jv+TUK+kbCPQXTKQRyCQF/nDCAPvusfUMj57aA3pNYLsgi6lgEY7DrOh01LiU
-	2i5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=7y2zBWwKC6qnS72kXGbDa3QCDiRfdiQ33YGrxTjhjTM=;
-	b=KrtDKi0mN6k7xgBWqdyupa/Bms9tR+jMl+NKJNds9UkF8XZa2Z1W7aZ+ULE15ja151
-	YR3I0XC43lubQB73GCh5Sv6RjFaCbCY+9mwr/M0OQnCz0zcg6j0v+AnWceA1+83a+sig
-	tKOrVsvbyi5z+yfDP7REuBa2pGFY+i+0EXCS+HVCqHMMmX5BnbYCSUZXBfJIdRLBeM4n
-	gcPjVcrycMzHhzHBpbHqh7YV4ZebRFXOlnc9GPJcdAUU7+D5Hi2RJZugMY1gAazbjE22
-	1WCDDe4nSFo3pVoFEmXMyQMidYeV0gPWD+KaucaIn3C3WmkVnwTsgfGXgXGPacZC1EvT
-	8hZA==
-X-Gm-Message-State: APjAAAW56V0+iWSOHFlMEYmtIqjAGK6SVrGMFdfSCSs9FaPGPHAo0nhP
-	Q6RYhxe9EsARfCT3Mha2hJtpcijF
-X-Google-Smtp-Source: APXvYqy8PDmMipCaYrgTGp0dkSRVOW1wH+D7Mu9Uc+umx2krdRS+MiKty5dvJpHxgoMWNRaKm4TEdQ==
-X-Received: by 2002:a17:902:b7c3:: with SMTP id v3mr2954124plz.0.1579670710269;
-	Tue, 21 Jan 2020 21:25:10 -0800 (PST)
-Received: from akuster-ThinkPad-T460s.mvista.com
-	([2601:202:4180:a5c0:682c:76b9:6d8a:bbd2])
-	by smtp.gmail.com with ESMTPSA id o7sm1228628pjs.28.2020.01.21.21.25.09
-	for <bitbake-devel@openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 21 Jan 2020 21:25:09 -0800 (PST)
-From: Armin Kuster <akuster808@gmail.com>
-To: bitbake-devel@openembedded.org
-Date: Tue, 21 Jan 2020 21:25:02 -0800
-Message-Id: <1a026d4aca47ed1b0b74a8a818635e7520e8f9c8.1579670574.git.akuster808@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1579670574.git.akuster808@gmail.com>
-References: <cover.1579670574.git.akuster808@gmail.com>
-Subject: [1.44 4/4] runqueue: Use a set for the setscene tasks list
+Return-Path: <adrian.ambrozewicz@linux.intel.com>
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	by mail.openembedded.org (Postfix) with ESMTP id E8FFB7F7E1
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 22 Jan 2020 08:49:12 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+	by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	22 Jan 2020 00:49:14 -0800
+X-IronPort-AV: E=Sophos;i="5.70,348,1574150400"; d="scan'208";a="220242938"
+Received: from aambroze-mobl1.ger.corp.intel.com (HELO [10.102.85.150])
+	([10.102.85.150])
+	by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA;
+	22 Jan 2020 00:49:13 -0800
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+References: <4bee3ba1-3608-5598-b168-1e6009bdc986@linux.intel.com>
+	<CANNYZj8CRSC3V8K08-dpEmGg5zbY9N4jiJPQhia04d7NRKiTEw@mail.gmail.com>
+From: =?UTF-8?Q?Adrian_Ambro=c5=bcewicz?= <adrian.ambrozewicz@linux.intel.com>
+Message-ID: <b64ada55-a892-09a5-13b2-f76e2b0507d1@linux.intel.com>
+Date: Wed, 22 Jan 2020 09:49:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+	Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <CANNYZj8CRSC3V8K08-dpEmGg5zbY9N4jiJPQhia04d7NRKiTEw@mail.gmail.com>
+Cc: Bitbake-Devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: devtool hardcodes using 'git' patchtool which causes errors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,43 +37,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Jan 2020 05:25:09 -0000
+X-List-Received-Date: Wed, 22 Jan 2020 08:49:13 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+I see. However - this looks like quite a minefield :)
 
-This should give performance improvements to functions using this list of
-tasks (sets are used for most of the other code for this reason, not sure
-why this wasn't a set in the first place).
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit f5daef68703481a3c243dfecc7de404e6ebfdbb6)
-Signed-off-by: Armin Kuster <akuster808@gmail.com>
----
- lib/bb/runqueue.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 6e3a91b8..d7186e85 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1124,14 +1124,14 @@ class RunQueueData:
-         self.init_progress_reporter.next_stage()
- 
-         # Iterate over the task list looking for tasks with a 'setscene' function
--        self.runq_setscene_tids = []
-+        self.runq_setscene_tids = set()
-         if not self.cooker.configuration.nosetscene:
-             for tid in self.runtaskentries:
-                 (mc, fn, taskname, _) = split_tid_mcfn(tid)
-                 setscenetid = tid + "_setscene"
-                 if setscenetid not in taskData[mc].taskentries:
-                     continue
--                self.runq_setscene_tids.append(tid)
-+                self.runq_setscene_tids.add(tid)
- 
-         self.init_progress_reporter.next_stage()
- 
--- 
-2.17.1
-
+W dniu 1/21/2020 o 11:49, Alexander Kanavin pisze:
+> I am not entirely sure about this, but I believe devtool is using git to 
+> keep track of patches when modifying or upgrading (e.g. adding, 
+> modifying or rebasing custom recipe patches), so using quilt may not be 
+> an option. Fixing the scenarios that go wrong for you is probably a 
+> better path.
+> 
+> Alex
+> 
+> On Tue, 21 Jan 2020 at 10:44, Adrian Ambrożewicz 
+> <adrian.ambrozewicz@linux.intel.com 
+> <mailto:adrian.ambrozewicz@linux.intel.com>> wrote:
+> 
+>     In poky sources i can see that default PATCHTOOL used is 'quilt'
+>     (https://github.com/openembedded/openembedded-core/blob/master/meta/conf/bitbake.conf)
+> 
+>     and it works flawlessly. Devtool however still defaults to legacy 'git'
+>     PATCHTOOL, as specified here:
+>     http://git.yoctoproject.org/cgit.cgi/poky/plain/scripts/lib/devtool/standard.py
+>        > f.write('PATCHTOOL = "git"\n')
+> 
+>     Request:
+>     I've tried to debug the problem but I'm not very familiar with Bitbake
+>     code, so I wonder if we could default to 'quilt' for devtool as well?
+> 
+>     Rationale:
+>     'git' PATCHER doesn't work well when he have nested WORKDIR and
+>     striplevel used. 'bitbake -c patch [pkg]' works fine, but 'devtool
+>     modify [pkg]' fails with weird behavior. For example - new files
+>     created
+>     by patches are created in wrong location (WORKDIR instead of nested
+>     directory) and package doesn't compile until manually fixed.
+> 
+>     Regards,
+>     Adrian
+>     -- 
+>     _______________________________________________
+>     bitbake-devel mailing list
+>     bitbake-devel@lists.openembedded.org
+>     <mailto:bitbake-devel@lists.openembedded.org>
+>     http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+> 
 
