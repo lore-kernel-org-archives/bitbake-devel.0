@@ -1,87 +1,33 @@
-Return-Path: <chris.laplante@agilent.com>
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com
-	(mail-eopbgr680064.outbound.protection.outlook.com [40.107.68.64])
-	by mail.openembedded.org (Postfix) with ESMTP id ADBE07FD8D
+Return-Path: <adrian.ambrozewicz@linux.intel.com>
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 09DF97FD81
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Jan 2020 17:26:34 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
-	b=GL2yaOh/lDRpcgMKQkBBunnh2E82ZQxkbquSPioyWU25NWNCZpc7QETv9dV9d2Wsbw5Kh5UyqfQBIGMtcaUH2JlLakCmd1GM3PCIRxFmI7cpHs6zXa8CsCE+f8POW/c/wURy3UoeMpkVm8+L70cjUHzlWP2/0S0XDMQpvpKqH84LDFRQlQ6XXz/h6sYf/+yqdLpPbCU6zieO2YufNHhdy6Y+FzHXABWOh/8xwb5GOi+xnmIjEEcuSyu4nMbMVZCTvyIwLzBZp+MfPrjyqex8EAOdEcthxqvNsYIhs/4IA3nqy9mtu3rSlqNRztAEo1REep0OczA22T5fGm9j0kkpQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
-	s=arcselector9901;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=I3TFRHCcHZJifihoM77qI6hxvLUD++W1WP3k7xAEm9Q=;
-	b=gr6qbsZf0jUIbFlPJiksNrQfmq2BQEkxNkX/wXDIGFcznfMvFWOLqsydM6KJAku6qvreTaBQiIfzp/PVFnQMwaf+rfgD9kqObKf0cko5UmXHox9AXgja/q/TM505e1fmvJMqR2QmphZuzz3SnG86UENacD68WgJT9fWTb6wQnAlaUWrZqpb7VoM+qG7nLXwbl7syFvsGZ9/LjpAfXk6+P8J4zI9daiH68G9AgsAWVkl6iRskjq0VAJ5nPvWJcn2/eBIPYKowmb5geT8Z5OgIQZj7aJiKYD9/9D2gx4R0F1eRbfWQPqASIoobCvcJV7uiogd/0N4wCx+v7G1a/jPfTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
-	192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
-	smtp.mailfrom=agilent.com;
-	dmarc=pass (p=reject sp=none pct=100) action=none
-	header.from=agilent.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
-	s=selector2;
-	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
-	bh=I3TFRHCcHZJifihoM77qI6hxvLUD++W1WP3k7xAEm9Q=;
-	b=PYfONLHx8eXszcxyrceKtgnsysTTqlr5hRcLjdacTAb39wf+qfuFgcQebKhf/j/tsmNP5EAMgkNiPLoIW0XGrPD8BpH0GhNsaizqKZJwmk48vUeL9co24EhoU9ernw0/kYSkCxxdlBPCR7RJ5lYcrASdFBGaaaIAn2RXAyTnIlc=
-Received: from DM3PR12CA0077.namprd12.prod.outlook.com (2603:10b6:0:57::21) by
-	MWHPR12MB1711.namprd12.prod.outlook.com (2603:10b6:300:10a::20) with
-	Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.24;
-	Wed, 22 Jan 2020 17:26:34 +0000
-Received: from DM6NAM12FT006.eop-nam12.prod.protection.outlook.com
-	(2a01:111:f400:fe59::206) by DM3PR12CA0077.outlook.office365.com
-	(2603:10b6:0:57::21) with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via
-	Frontend Transport; Wed, 22 Jan 2020 17:26:34 +0000
-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
-	smtp.mailfrom=agilent.com; lists.openembedded.org;
-	dkim=none (message not
-	signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
-	header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
-	192.25.218.41 as permitted sender) receiver=protection.outlook.com;
-	client-ip=192.25.218.41; helo=edgeappmail.agilent.com;
-Received: from edgeappmail.agilent.com (192.25.218.41) by
-	DM6NAM12FT006.mail.protection.outlook.com (10.13.178.234) with
-	Microsoft SMTP
-	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.20.2665.6 via Frontend Transport; Wed, 22 Jan 2020 17:26:33 +0000
-Received: from lm18-laplante-laptop.localdomain (192.25.126.27) by
-	edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
-	15.1.1713.5; Wed, 22 Jan 2020 10:26:30 -0700
-From: Chris Laplante <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 22 Jan 2020 12:26:04 -0500
-Message-ID: <1579713964-40343-1-git-send-email-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.7.4
+	Thu, 23 Jan 2020 10:02:46 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+	by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	23 Jan 2020 02:02:48 -0800
+X-IronPort-AV: E=Sophos;i="5.70,353,1574150400"; d="scan'208";a="220617250"
+Received: from aambroze-mobl1.ger.corp.intel.com (HELO [10.102.85.150])
+	([10.102.85.150])
+	by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA;
+	23 Jan 2020 02:02:47 -0800
+To: bitbake-devel@lists.openembedded.org
+References: <4bee3ba1-3608-5598-b168-1e6009bdc986@linux.intel.com>
+	<CANNYZj8CRSC3V8K08-dpEmGg5zbY9N4jiJPQhia04d7NRKiTEw@mail.gmail.com>
+	<b64ada55-a892-09a5-13b2-f76e2b0507d1@linux.intel.com>
+	<a4d78a27-50e6-ee87-bcd7-71694b7da60f@linux.intel.com>
+	<CANNYZj8S5A1qKy8m_=pPfP_Hbqs7qzYqE-rwMf+DGE0ivnBxpA@mail.gmail.com>
+	<4fef2d1e-5fcc-5143-5cf9-cac5ea30b442@linux.intel.com>
+From: =?UTF-8?Q?Adrian_Ambro=c5=bcewicz?= <adrian.ambrozewicz@linux.intel.com>
+Message-ID: <f9dbd756-6bed-d3ec-f3db-8b2da765b99f@linux.intel.com>
+Date: Thu, 23 Jan 2020 11:02:45 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+	Thunderbird/68.4.1
 MIME-Version: 1.0
-Received-SPF: None (wpcosapexchedg2.windmz.agilent.com:
-	chris.laplante@agilent.com does not designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:192.25.218.41; IPV:; CTRY:US; EFV:NLI;
-	SFV:NSPM;
-	SFS:(10009020)(376002)(136003)(396003)(346002)(39860400002)(189003)(199004)(29502001)(26005)(107886003)(5660300002)(4744005)(478600001)(186003)(70206006)(36906005)(7636002)(2906002)(86362001)(4326008)(336012)(356004)(426003)(6666004)(2616005)(44832011)(956004)(316002)(6916009)(8936002)(246002)(8676002)(36756003);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:MWHPR12MB1711;
-	H:edgeappmail.agilent.com; FPR:; SPF:Pass; LANG:en;
-	PTR:exch.smtp.agilent.com; MX:1; A:1; 
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: df553d68-b885-4a9c-b056-08d79f603a4b
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1711:
-X-MS-Exchange-AtpMessageProperties: SA|SL
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1711BC132B4BFD0A74DBECA78B0C0@MWHPR12MB1711.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:154;
-X-Forefront-PRVS: 029097202E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NeRVSZUgpTUYtb958GeoNjov22xH3oJKw9+eXzblbHczQiAWVNlWxoHIZrNpXdokz0VNpkLsu8SCfvCqDqUr6EnTp+tL/NlJQFbghPvNbIfNI1SKfi0N9PnlJjUtvB/Wqi6ZGfQSBdwyVWSAgLpcwoYf4vfXwoAB5hbGJLZWWOLNzIcSWYM0nA9+ZnzIeGftDtKYOsWa+SXNy7/KXI0HYBaUeLBPyLGrX1FOt1CuTwyYz/dXJpTWPqagyJj/5jj+/8Jh42J+vetNw5Wc1kBgGNCyiYOMQ3l4RIpR33/MlJHxml7HencxKxdGOmXHZ0a3ckdIEjS4ePmw1RNU6M1EheW7s6jPoWRRvIvylJDi0cSteEXTK7r3YhQiHTBeR82B0MWVOOE7BPlhUXxXtoUhawMbAFQafopfnWVA//DQxZBHhrRAAvvrBa/XPwrEbDPrz6qKbHUGv3+k0jiHxZV5dq/9MJVFLhkLa7N/pDGcXf1QbGRSF8w6qSXxmoqh/BkX
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2020 17:26:33.8630 (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: df553d68-b885-4a9c-b056-08d79f603a4b
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
-	Ip=[192.25.218.41]; Helo=[edgeappmail.agilent.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1711
-Subject: [PATCH] build.py: augment TaskBase to capture PN and PV
+In-Reply-To: <4fef2d1e-5fcc-5143-5cf9-cac5ea30b442@linux.intel.com>
+Subject: Re: devtool hardcodes using 'git' patchtool which causes errors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -94,31 +40,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Jan 2020 17:26:35 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 23 Jan 2020 10:02:47 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-PF is already captured, but it's a pain to try to parse out PN and PV,
-which can be helpful to have available.
+I've tried yet another approach, leveraging that this project is built 
+using cmake and it worked! I know it's not a generic fix, but it looks 
+like in bitbake nothing is really generic...
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- lib/bb/build.py | 2 ++
- 1 file changed, 2 insertions(+)
+Instead of having project set like this:
+SRC_URI = '[path_to_repo]'
+S = '${WORKDIR}/git/project_dir'
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index b6d23e6..23b6ee4 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -65,6 +65,8 @@ class TaskBase(event.Event):
-         self.taskname = self._task
-         self.logfile = logfile
-         self.time = time.time()
-+        self.pn = d.getVar("PN")
-+        self.pv = d.getVar("PV")
-         event.Event.__init__(self)
-         self._message = "recipe %s: task %s: %s" % (d.getVar("PF"), t, self.getDisplayName())
- 
--- 
-2.7.4
+I've set it like this:
+SRC_URI = "[path_to_repo]"
+S = "${WORKDIR}/git"
+OECMAKE_SOURCEPATH = "${S}/virtual-media"
 
+In that way both quilt and git patcher uses proper 'S' directory, while 
+Cmake perform compilation from desired subdirectory.
+
+I just hope I won't stumble into this kind of problem with another build 
+system :)
+
+Thanks a lot for your input, it lead me to correct track.
+
+Regards,
+Adrian
+
+W dniu 1/22/2020 o 16:49, Adrian Ambrożewicz pisze:
+> It looks like git:// fetcher option 'subpath' might be good alternative 
+> designed to address those kind of issues.
+> 
+> Setting:
+> SRC_URI = '[repopath];subpath=project_dir'
+> S = '${WORKDIR}/project_dir'
+> works exactly the same as my previous approach when it comes to 'bitbake 
+> -c patch [project]'
+> 
+> Unfortunately it looks like devtool ignores that param and clones whole 
+> repository structure. I'll try fiddling around to implement that support 
+> in devtool.
+> 
+> 
+> W dniu 1/22/2020 o 16:10, Alexander Kanavin pisze:
+>> On Wed, 22 Jan 2020 at 16:06, Adrian Ambrożewicz 
+>> <adrian.ambrozewicz@linux.intel.com 
+>> <mailto:adrian.ambrozewicz@linux.intel.com>> wrote:
+>>
+>>
+>>     My question is - is there a way to have both of these patchers 
+>> working
+>>     with such folder structure? Maybe 'S' overwriting was not a good idea
+>>     after all?
+>>
+>>
+>> I guess the problem here is that S is used for both patching and 
+>> building, and the 'root' for these may not necessarily match. Maybe 
+>> there could be a variable that, when set, overrides S for the purpose 
+>> of patching.
+>>
+>> Alex
 
