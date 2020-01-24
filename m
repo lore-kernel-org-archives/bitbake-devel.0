@@ -1,98 +1,80 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com
-	[209.85.216.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 7566D7FD59;
-	Fri, 24 Jan 2020 16:10:58 +0000 (UTC)
-Received: by mail-pj1-f41.google.com with SMTP id bg7so1327128pjb.5;
-	Fri, 24 Jan 2020 08:11:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=to:from:subject:autocrypt:message-id:date:user-agent:mime-version
-	:content-transfer-encoding:content-language;
-	bh=Z2vkk8WTy8Z3hH+kZ9ZvDeaZrajyB1pak9kEyk6lmZQ=;
-	b=cYUCEAuod7VSUUccFXQBrlozVINo711BGrYq2OPtns28PoyYwEiEtAmHzbi4mmWSa3
-	z2gF+NmOldoaGsYRl5fqYlKdmd8cgO69fWoLqfvR7KyT2FLianeClizogZ9lRFvIgbzn
-	xWTDoMbYWAs7FBe+uP4ziuhVD8Wbn4peEWAoa0w+RTULp/tSZuO7DdWjNx089xcnAHem
-	p6lhp4AnhvcZZ9kiMC8s9qBWKgoXfxblxENMMWs58FaOhuSJB8dT29IWjm6SYKJXlhAk
-	GILfNMHWNPU6wVVFnW9q66IqhZZnBrgPWX0TK2fTXfGTw3ZEb8HhoMAL9BmaryxTq4IZ
-	Q+/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:to:from:subject:autocrypt:message-id:date
-	:user-agent:mime-version:content-transfer-encoding:content-language;
-	bh=Z2vkk8WTy8Z3hH+kZ9ZvDeaZrajyB1pak9kEyk6lmZQ=;
-	b=PUhSe7zSKcfbPfqqTnix4wCM99CAnQY2W+FARWFPVUr5pPia1zBhxm4BOvzqmerJ2d
-	IDee8HHHxvhIUYpwmkn/6n6HlIGo9ULoVMwJuLaks9byOmTCsSTebuJX4w6BQ8EVQQXD
-	gYmlflRhG+nRPEfAb7iULvVg1zI7f7cYwiEuIQHatigLS1AXT6MrMFb/CWxFofj5/uki
-	sipRSRBXLZw3P0BJ6x9ilEBB07YxHbVV/TajaDGFdd1WcI55Hjb+5V3mXJ0C87l5tXxd
-	mUYEpknaTpgU3wNBOR0EB6TVPwosha9uR8Sf31dTEKQHCIQsAcXoMEIQhsqA/AtzsAZJ
-	o2KA==
-X-Gm-Message-State: APjAAAV3KZRhZeDCKh/P6AmSXxK3hYA9A2qesL2hRnKUYxFPpdcL7boS
-	p7Du1ysKQIe0XgMPxDDS94qpw5Qw
-X-Google-Smtp-Source: APXvYqx3aGUyM1GF5W5foMA3Lj4AuBXZNTo41YSuB/rKWaP4W56Bea1jGz67VUSMZYAXEX3QgsSalw==
-X-Received: by 2002:a17:902:b690:: with SMTP id
-	c16mr4325632pls.320.1579882259540; 
-	Fri, 24 Jan 2020 08:10:59 -0800 (PST)
-Received: from ?IPv6:2601:202:4180:a5c0:c529:ee5d:f9be:6846?
-	([2601:202:4180:a5c0:c529:ee5d:f9be:6846])
-	by smtp.gmail.com with ESMTPSA id
-	w20sm6892091pfi.86.2020.01.24.08.10.58
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Fri, 24 Jan 2020 08:10:59 -0800 (PST)
-To: "yocto@yoctoproject.org" <yocto@yoctoproject.org>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-From: akuster808 <akuster808@gmail.com>
-Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
-	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
-	8CS2NxU=
-Message-ID: <95e2150e-8330-df7e-4a41-1e564d24400a@gmail.com>
-Date: Fri, 24 Jan 2020 08:10:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-	Thunderbird/68.2.2
+Return-Path: <chris.laplante@agilent.com>
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com
+	(mail-mw2nam12on2073.outbound.protection.outlook.com [40.107.244.73])
+	by mail.openembedded.org (Postfix) with ESMTP id 866737FD84
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 24 Jan 2020 16:11:18 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+	b=LrJeby1ZV7LHCVkmMTT7d3ndqXUevryzHiIzklFjoLxJDplbltaS18yS0beX87ILcWh6lpoxzkVcdLtMjUib3EGPLu6B0G6Wip3PCoR8HK5shztej8sh59f9K3nmrH+ajj0QypvQkegvZF2d0fTqYyq3SOYyQsLmi/Mwjgw11EQEj5+gYPNMWMV7TUIKOTQPH5bMsw6cAOu/ZbeHOGBf+1klLR+nmnwzvPJGErACFfYMiH5gm9g5/u39p2J2gpxcm8vhBucvSCe3nCfM8w/qTqzIsoSLWUCMn9wv1zUDBghveaGjMUFf51fxX6s8efZXvYCUi2656IG5M41ZBHu+oQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+	s=arcselector9901;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=lVLlhMh3hSQSBjO2ZI/gtOFWVXDEgdWRGXlh9f1WPLU=;
+	b=ltjpqmZsIvCSRU5fAd++QI8VXMIHR5vnlP1QblSN8ifFHxgomy68DHy+z8tMiOyXc5fxWdz9jwBwfBFEpow5U2hIklLHgiSw0ZFBCEkIonBuPehPgRYDT6x1H/E+nWfGXBJx3vqLycDR+YdhaE0i9bJwsGOXlCNslu3HjMHNKbk/focwEnMJJcFH9PAccp3ZMY/ye5DKBDTTojI/CY9cNvrSk3lv0nAIpIcav1yEG1v0BZOB5eqHdEIw2r9VpIMHFSoYD7ggXQcG3w7kB945qr11pIanx/DeQ77ac1kCK5HBjXBf0iR2BJo6YnMfkJ5HgLWEv/J5rohuNnC7l7tp1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+	smtp.mailfrom=agilent.com;
+	dmarc=pass action=none header.from=agilent.com; 
+	dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+	s=selector2;
+	h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=lVLlhMh3hSQSBjO2ZI/gtOFWVXDEgdWRGXlh9f1WPLU=;
+	b=MkyRt+j+r4d1Cj0RqXumXyqzDTFCZ3ciq58FekTLzS903soqCeFwldyfenZIV5HkLisJgmMiJu1+WHmgc43uIQPSXnKmXgmBqQ7EZxjw/smoH3ITLiM1MZKuyEDQH05jvjD2SWZbykowgDU0hoUFZoUaI8bj8uxrgshTDOEHW8s=
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com (10.172.71.137) by
+	CY4PR12MB1207.namprd12.prod.outlook.com (10.168.165.7) with Microsoft
+	SMTP
+	Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.2644.24; Fri, 24 Jan 2020 16:11:17 +0000
+Received: from CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::3c16:3c42:ee9f:b486]) by
+	CY4PR12MB1653.namprd12.prod.outlook.com
+	([fe80::3c16:3c42:ee9f:b486%9]) with mapi id 15.20.2644.028;
+	Fri, 24 Jan 2020 16:11:17 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: akuster808 <akuster808@gmail.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 1/1] ui/teamcity: add a TeamCity service
+	message frontend
+Thread-Index: AQHV0slMZ7xATRCQ70+vdYhZirmKfKf595IAgAABFjA=
+Date: Fri, 24 Jan 2020 16:11:17 +0000
+Message-ID: <CY4PR12MB16539949F474DD1C2691D84B8B0E0@CY4PR12MB1653.namprd12.prod.outlook.com>
+References: <1579878983-121851-1-git-send-email-chris.laplante@agilent.com>
+	<1579878983-121851-2-git-send-email-chris.laplante@agilent.com>
+	<53c09892-ad7a-9a16-bfbc-80189d668933@gmail.com>
+In-Reply-To: <53c09892-ad7a-9a16-bfbc-80189d668933@gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+	smtp.mailfrom=chris.laplante@agilent.com; 
+x-originating-ip: [4.16.127.92]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ec68fa01-cb79-4701-c1e2-08d7a0e80b34
+x-ms-traffictypediagnostic: CY4PR12MB1207:
+x-microsoft-antispam-prvs: <CY4PR12MB1207974FE44FABD685434FF88B0E0@CY4PR12MB1207.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02929ECF07
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009020)(136003)(376002)(366004)(346002)(39860400002)(396003)(189003)(199004)(29502001)(9686003)(6506007)(110136005)(8936002)(186003)(33656002)(52536014)(55016002)(478600001)(316002)(2906002)(26005)(71200400001)(5660300002)(86362001)(7696005)(66556008)(81166006)(66446008)(76116006)(4744005)(64756008)(66476007)(81156014)(66946007)(8676002);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:CY4PR12MB1207;
+	H:CY4PR12MB1653.namprd12.prod.outlook.com; FPR:; SPF:None;
+	LANG:en; PTR:InfoNoRecords; MX:1; A:1; 
+received-spf: None (protection.outlook.com: agilent.com does not designate
+	permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YSHlJzoa6YM21k80+ulcZvvlv2nydlgnQb2l7qpIA3kFQc15dyL4DL4OVlFOjZsH4Z+XnA2KWtNLC95eEwv4zix28UkdcUaEJ074KZy5BZdndQPKargSMX/RqhRdqnK2kwXyY9GMqSBi1ir/2gC0Ygh7Lj8y2nrUMrrLNilmyEY1sJ8cVAf2YUfWBPz4Mh8dpW4ECrH8vNiNfbnmvzGEp0KR4R1KVC6+R2VCNPdvpwB5VXjUHZN3elp7ZxSiu2bRIRgJRVULIf9rYbkDLcbUdtqpuB3+DRV4xgi+j2Sb+nzru4fxJEgeGDvbKC+lvvphxKyXbyRAg/vwmhFWS69ZauI8h+5QT7VeqObP76aeOSFgcr+twb976bxnKib4A+UZ5lK7stp0q8bYcV+cwWqBrWrM+dv+rnmaJJW5CEoFTKRxmwCG5E4peCzOTDy/e1HPWOzUyflgPBJiq5COt+kbPuBrY+TvxnhW2xQb3H+WNcaMVil2f7u9LAWtEoNVjDs+
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-Subject: Zeus /1.44 call for patches
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec68fa01-cb79-4701-c1e2-08d7a0e80b34
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jan 2020 16:11:17.5818 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wBpTxr3nVD7inMnBkb2NEMN7t57gv2ZsRw5VlPZj7GiFqI/Fn18EjJeEljm56bJh2Zz05UD9BGM75ILQb2InkNty1qaeB6z/3Sr6laKLavY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1207
+Subject: Re: [PATCH 1/1] ui/teamcity: add a TeamCity service message frontend
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -105,18 +87,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Jan 2020 16:10:58 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 24 Jan 2020 16:11:18 -0000
 Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Apologies for cross posting.
-
-The next zeus dot release is scheduled to be built on Feb 3.
-
-Please submit patches or backport requests to the list(s) by Jan 30th.
-
-Regards,
-Armin
-
+SGkgQXJtaW4sDQoNCj4gSSBhbSBub3Qgc3VyZSBob3cgQml0YmFrZSBhY2NlcHRzIG5ldyBVSSdz
+IGJ1dCBjYW4geW91IGV4cGxhaW4gd2h5IHRoaXMNCj4gaXMgdXNlZnVsIGFuZCBob3cgaXQgZGlm
+ZmVycyBmcm9tIFRvYXN0ZXI/DQoNCkl0J3MgdXNlZnVsIGZvciBhbnlvbmUgdXNpbmcgVGVhbUNp
+dHkgdGhhdCB3YW50cyB0byBydW4gQml0QmFrZSBidWlsZHMgOikuIFRoZXJlIGFyZSBudW1lcm91
+cyByZWFzb25zIHdoeSB3ZSBjaG9zZSBUZWFtQ2l0eSByYXRoZXIgdGhhbiBUb2FzdGVyLCBub3Qg
+YWxsIG9mIHdoaWNoIHJlbGF0ZWQgdG8gWW9jdG86IExEQVAgaW50ZWdyYXRpb24sIGFiaWxpdHkg
+dG8gZG8gV2luZG93cyAmIExpbnV4IGJ1aWxkcywgZXRjLiBTbyBJIGNob3NlIHRvIHNldCB1cCBv
+bmUgYnVpbGQgc2VydmVyIChUZWFtQ2l0eSkgcmF0aGVyIHRoYW4gdHdvIChUZWFtQ2l0eSBhbmQg
+VG9hc3RlcikuIEkgaW1hZ2luZSB3ZSBhcmUgbm90IHRoZSBvbmx5IG9uZXMgd2hvIHRvb2sgYSBz
+aW1pbGFyIGFwcHJvYWNoLg0KDQo+IEFyZSB5b3Ugd2lsbGluZyB0byBtYWludGFpbiB0aGlzIFVJ
+Lg0KDQpZZXMuIEkgaGF2ZSBiZWVuIGZvciB0aGUgcGFzdCB0d28geWVhcnMgaW50ZXJuYWxseSwg
+YW55d2F5Lg0KDQo+IElmIHRoZXJlIHNvbWUgc29ydCBvZiB0ZXN0aW5nIHRoYXQgZW5zdXJlcyB0
+aGUgY29udGludWVkIG9wZXJhdGlvbiBvZg0KPiB0aGlzIGNvZGU/DQoNCk5vLCBidXQgaXQncyBv
+YnZpb3VzbHkgYSBnb29kIGlkZWEgc28gSSdsbCBhZGQgaXQgdG8gbXkgVE9ETyBsaXN0LiANCg0K
+VGhhbmtzLA0KQ2hyaXMNCg==
 
