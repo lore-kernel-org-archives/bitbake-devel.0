@@ -1,37 +1,37 @@
 Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
 	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 292177FE1D
+	by mail.openembedded.org (Postfix) with ESMTP id 3B3597FE06
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jan 2020 17:08:31 +0000 (UTC)
+	Fri, 24 Jan 2020 17:08:32 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 4DE379C02D7;
-	Fri, 24 Jan 2020 12:08:32 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 757C99C01D8;
+	Fri, 24 Jan 2020 12:08:33 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10032)
-	with ESMTP id ZUl6m--sJXdj; Fri, 24 Jan 2020 12:08:31 -0500 (EST)
+	with ESMTP id MLUgJUFnHA0h; Fri, 24 Jan 2020 12:08:32 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2267A9C02EE;
-	Fri, 24 Jan 2020 12:08:31 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 28B7A9C02F3;
+	Fri, 24 Jan 2020 12:08:32 -0500 (EST)
 X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
 	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
 	port 10026)
-	with ESMTP id e2mXbwBdw_tf; Fri, 24 Jan 2020 12:08:30 -0500 (EST)
+	with ESMTP id g9rPEWuWNf8D; Fri, 24 Jan 2020 12:08:31 -0500 (EST)
 Received: from sulaco.jml.bzh (91-167-182-132.subs.proxad.net [91.167.182.132])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 10FC59C02F3;
-	Fri, 24 Jan 2020 12:08:29 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 18DC69C02ED;
+	Fri, 24 Jan 2020 12:08:31 -0500 (EST)
 From: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 24 Jan 2020 18:08:12 +0100
-Message-Id: <20200124170814.20510-11-jean-marie.lemetayer@savoirfairelinux.com>
+Date: Fri, 24 Jan 2020 18:08:13 +0100
+Message-Id: <20200124170814.20510-12-jean-marie.lemetayer@savoirfairelinux.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124170814.20510-1-jean-marie.lemetayer@savoirfairelinux.com>
 References: <20200124170814.20510-1-jean-marie.lemetayer@savoirfairelinux.com>
 MIME-Version: 1.0
 Cc: paul.eggleton@linux.intel.com, rennes-dev@savoirfairelinux.com
-Subject: [PATCH v6 10/12] tests/fetch: add npm tests
+Subject: [PATCH v6 11/12] fetch2: add the npmsw fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,251 +44,328 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Jan 2020 17:08:31 -0000
+X-List-Received-Date: Fri, 24 Jan 2020 17:08:32 -0000
 Content-Transfer-Encoding: quoted-printable
 
-This commit adds some tests to validate the npm fetcher:
+This commit adds a new npmsw fetcher that fetches every npm dependencies
+described in a npm shrinkwrap file:
 
-     - bb.tests.fetch.NPMTest.test_npm
-     - bb.tests.fetch.NPMTest.test_npm_bad_checksum
-     - bb.tests.fetch.NPMTest.test_npm_destsuffix_downloadfilename
-     - bb.tests.fetch.NPMTest.test_npm_mirrors
-     - bb.tests.fetch.NPMTest.test_npm_no_network_no_tarball
-     - bb.tests.fetch.NPMTest.test_npm_no_network_with_tarball
-     - bb.tests.fetch.NPMTest.test_npm_package_invalid
-     - bb.tests.fetch.NPMTest.test_npm_package_none
-     - bb.tests.fetch.NPMTest.test_npm_premirrors
-     - bb.tests.fetch.NPMTest.test_npm_registry_alternate
-     - bb.tests.fetch.NPMTest.test_npm_registry_invalid
-     - bb.tests.fetch.NPMTest.test_npm_registry_none
-     - bb.tests.fetch.NPMTest.test_npm_version_invalid
-     - bb.tests.fetch.NPMTest.test_npm_version_latest
-     - bb.tests.fetch.NPMTest.test_npm_version_none
+  https://docs.npmjs.com/files/shrinkwrap.json.html
+
+The main package must be fetched separately:
+
+  SRC_URI =3D "npm://registry.url;package=3Dfoobar;version=3D1.0.0 \
+             npmsw://${THISDIR}/npm-shrinkwrap.json"
+
+Since a separation has been created between the package and its
+dependencies, the package can also be fetched with a non npm fetcher
+without impacting the general behavior:
+
+  SRC_URI =3D "git://github.com/foo/bar.git;protocol=3Dhttps \
+             npmsw://${THISDIR}/npm-shrinkwrap.json"
 
 Signed-off-by: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinu=
 x.com>
 ---
- lib/bb/tests/fetch.py | 183 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 183 insertions(+)
+ lib/bb/fetch2/__init__.py |   2 +
+ lib/bb/fetch2/npmsw.py    | 255 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 257 insertions(+)
+ create mode 100644 lib/bb/fetch2/npmsw.py
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index fa0c5c5a..5eeb64c5 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2037,3 +2037,186 @@ class GitLfsTest(FetcherTest):
-         ud.method._find_git_lfs =3D lambda d: False
-         shutil.rmtree(self.gitdir, ignore_errors=3DTrue)
-         fetcher.unpack(self.d.getVar('WORKDIR'))
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 4fe04273..1b7f5736 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1894,6 +1894,7 @@ from . import osc
+ from . import repo
+ from . import clearcase
+ from . import npm
++from . import npmsw
+=20
+ methods.append(local.Local())
+ methods.append(wget.Wget())
+@@ -1912,3 +1913,4 @@ methods.append(osc.Osc())
+ methods.append(repo.Repo())
+ methods.append(clearcase.ClearCase())
+ methods.append(npm.Npm())
++methods.append(npmsw.NpmShrinkWrap())
+diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+new file mode 100644
+index 00000000..0c3511d8
+--- /dev/null
++++ b/lib/bb/fetch2/npmsw.py
+@@ -0,0 +1,255 @@
++# Copyright (C) 2020 Savoir-Faire Linux
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++"""
++BitBake 'Fetch' npm shrinkwrap implementation
 +
-+class NPMTest(FetcherTest):
-+    def skipIfNoNpm():
-+        import shutil
-+        if not shutil.which('npm'):
-+            return unittest.skip('npm not installed, tests being skipped=
-')
-+        return lambda f: f
++npm fetcher support the SRC_URI with format of:
++SRC_URI =3D "npmsw://some.registry.url;OptionA=3Dxxx;OptionB=3Dxxx;..."
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0'
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        ud =3D fetcher.ud[fetcher.urls[0]]
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+        self.assertTrue(os.path.exists(ud.localpath + '.done'))
-+        self.assertTrue(os.path.exists(ud.resolvefile))
-+        fetcher.unpack(self.unpackdir)
-+        unpackdir =3D os.path.join(self.unpackdir, 'npm')
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.=
-json')))
++Supported SRC_URI options are:
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_bad_checksum(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0'
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        ud =3D fetcher.ud[fetcher.urls[0]]
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+        # Modify the tarball
-+        bad =3D b'bad checksum'
-+        with open(ud.localpath, 'wb') as f:
-+            f.write(bad)
-+        # Verify that the tarball is fetched again
-+        fetcher.download()
-+        badsum =3D hashlib.sha512(bad).hexdigest()
-+        self.assertTrue(os.path.exists(ud.localpath + '_bad-checksum_' +=
- badsum))
-+        self.assertTrue(os.path.exists(ud.localpath))
++- dev
++   Set to 1 to also install devDependencies.
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_premirrors(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0'
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        ud =3D fetcher.ud[fetcher.urls[0]]
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+        # Setup the mirror
-+        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        bb.utils.mkdirhier(mirrordir)
-+        os.replace(ud.localpath, os.path.join(mirrordir, os.path.basenam=
-e(ud.localpath)))
-+        self.d.setVar('PREMIRRORS', 'https?$://.*/.* file://%s/\n' % mir=
-rordir)
-+        self.d.setVar('BB_FETCH_PREMIRRORONLY', '1')
-+        # Fetch again
-+        self.assertFalse(os.path.exists(ud.localpath))
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
++- destsuffix
++    Specifies the directory to use to unpack the dependencies (default: =
+${S}).
++"""
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_mirrors(self):
-+        # Fetch once to get a tarball
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0'
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        ud =3D fetcher.ud[fetcher.urls[0]]
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+        # Setup the mirror
-+        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        bb.utils.mkdirhier(mirrordir)
-+        os.replace(ud.localpath, os.path.join(mirrordir, os.path.basenam=
-e(ud.localpath)))
-+        self.d.setVar('MIRRORS', 'https?$://.*/.* file://%s/\n' % mirror=
-dir)
-+        # Update the resolved url to an invalid url
-+        with open(ud.resolvefile, 'r') as f:
-+            url =3D f.read()
-+        uri =3D URI(url)
-+        uri.path =3D '/invalid'
-+        with open(ud.resolvefile, 'w') as f:
-+            f.write(str(uri))
-+        # Fetch again
-+        self.assertFalse(os.path.exists(ud.localpath))
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
++import json
++import os
++import re
++import bb
++from bb.fetch2 import Fetch
++from bb.fetch2 import FetchMethod
++from bb.fetch2 import ParameterError
++from bb.fetch2 import URI
++from bb.fetch2.npm import npm_integrity
++from bb.fetch2.npm import npm_localfile
++from bb.fetch2.npm import npm_unpack
++from bb.utils import is_semver
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_destsuffix_downloadfilename(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0;destsuffix=3Dfoo/bar;downloadfilename=3D=
-foo-bar.tgz'
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'foo-bar=
-.tgz')))
-+        fetcher.unpack(self.unpackdir)
-+        unpackdir =3D os.path.join(self.unpackdir, 'foo', 'bar')
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.=
-json')))
++def foreach_dependencies(shrinkwrap, callback=3DNone, dev=3DFalse):
++    """
++        Run a callback for each dependencies of a shrinkwrap file.
++        The callback is using the format:
++            callback(name, params, deptree)
++        with:
++            name =3D the package name (string)
++            params =3D the package parameters (dictionary)
++            deptree =3D the package dependency tree (array of strings)
++    """
++    def _walk_deps(deps, deptree):
++        for name in deps:
++            subtree =3D [*deptree, name]
++            _walk_deps(deps[name].get("dependencies", {}), subtree)
++            if callback is not None:
++                if deps[name].get("dev", False) and not dev:
++                    continue
++                elif deps[name].get("bundled", False):
++                    continue
++                callback(name, deps[name], subtree)
 +
-+    def test_npm_no_network_no_tarball(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0'
-+        self.d.setVar('BB_NO_NETWORK', '1')
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        with self.assertRaises(bb.fetch2.NetworkAccess):
-+            fetcher.download()
++    _walk_deps(shrinkwrap.get("dependencies", {}), [])
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_no_network_with_tarball(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0'
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+        # Disable network access
-+        self.d.setVar('BB_NO_NETWORK', '1')
-+        # Fetch again
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        unpackdir =3D os.path.join(self.unpackdir, 'npm')
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.=
-json')))
++class NpmShrinkWrap(FetchMethod):
++    """Class to fetch all package from a shrinkwrap file"""
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_registry_alternate(self):
-+        url =3D 'npm://registry.freajs.org;package=3D@savoirfairelinux/n=
-ode-server-example;version=3D1.0.0'
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        unpackdir =3D os.path.join(self.unpackdir, 'npm')
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.=
-json')))
++    def supports(self, ud, d):
++        """Check if a given url can be fetched with npmsw"""
++        return ud.type in ["npmsw"]
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_version_latest(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3Dlatest'
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        unpackdir =3D os.path.join(self.unpackdir, 'npm')
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.=
-json')))
++    def urldata_init(self, ud, d):
++        """Init npmsw specific variables within url data"""
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_registry_invalid(self):
-+        url =3D 'npm://registry.invalid.org;package=3D@savoirfairelinux/=
-node-server-example;version=3D1.0.0'
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            fetcher.download()
++        # Get the 'shrinkwrap' parameter
++        ud.shrinkwrap_file =3D re.sub(r"^npmsw://", "", ud.url.split(";"=
+)[0])
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_package_invalid(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/in=
-valid;version=3D1.0.0'
-+        fetcher =3D bb.fetch.Fetch([url], self.d)
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            fetcher.download()
++        # Get the 'dev' parameter
++        ud.dev =3D bb.utils.to_boolean(ud.parm.get("dev"), False)
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_version_invalid(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3Dinvalid'
-+        with self.assertRaises(bb.fetch2.ParameterError):
-+            fetcher =3D bb.fetch.Fetch([url], self.d)
++        # Resolve the dependencies
++        ud.deps =3D []
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_registry_none(self):
-+        url =3D 'npm://;package=3D@savoirfairelinux/node-server-example;=
-version=3D1.0.0'
-+        with self.assertRaises(bb.fetch2.MalformedUrl):
-+            fetcher =3D bb.fetch.Fetch([url], self.d)
++        def _resolve_dependency(name, params, deptree):
++            url =3D None
++            localpath =3D None
++            extrapaths =3D []
++            destsubdirs =3D [os.path.join("node_modules", dep) for dep i=
+n deptree]
++            destsuffix =3D os.path.join(*destsubdirs)
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_package_none(self):
-+        url =3D 'npm://registry.npmjs.org;version=3D1.0.0'
-+        with self.assertRaises(bb.fetch2.MissingParameterError):
-+            fetcher =3D bb.fetch.Fetch([url], self.d)
++            integrity =3D params.get("integrity", None)
++            resolved =3D params.get("resolved", None)
++            version =3D params.get("version", None)
 +
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npm_version_none(self):
-+        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example'
-+        with self.assertRaises(bb.fetch2.MissingParameterError):
-+            fetcher =3D bb.fetch.Fetch([url], self.d)
++            # Handle registry sources
++            if is_semver(version) and resolved and integrity:
++                localfile =3D npm_localfile(name, version)
++
++                uri =3D URI(resolved)
++                uri.params["downloadfilename"] =3D localfile
++
++                checksum_name, checksum_expected =3D npm_integrity(integ=
+rity)
++                uri.params[checksum_name] =3D checksum_expected
++
++                url =3D str(uri)
++
++                localpath =3D os.path.join(d.getVar("DL_DIR"), localfile=
+)
++
++                # Create a resolve file to mimic the npm fetcher and all=
+ow
++                # re-usability of the downloaded file.
++                resolvefile =3D localpath + ".resolved"
++
++                bb.utils.mkdirhier(os.path.dirname(resolvefile))
++                with open(resolvefile, "w") as f:
++                    f.write(url)
++
++                extrapaths.append(resolvefile)
++
++            # Handle http tarball sources
++            elif version.startswith("http") and integrity:
++                localfile =3D os.path.join("npm2", os.path.basename(vers=
+ion))
++
++                uri =3D URI(version)
++                uri.params["downloadfilename"] =3D localfile
++
++                checksum_name, checksum_expected =3D npm_integrity(integ=
+rity)
++                uri.params[checksum_name] =3D checksum_expected
++
++                url =3D str(uri)
++
++                localpath =3D os.path.join(d.getVar("DL_DIR"), localfile=
+)
++
++            # Handle git sources
++            elif version.startswith("git"):
++                regex =3D re.compile(r"""
++                    ^
++                    git\+
++                    (?P<protocol>[a-z]+)
++                    ://
++                    (?P<url>[^#]+)
++                    \#
++                    (?P<rev>[0-9a-f]+)
++                    $
++                    """, re.VERBOSE)
++
++                match =3D regex.match(version)
++
++                if not match:
++                    raise ParameterError("Invalid git url: %s" % version=
+, ud.url)
++
++                groups =3D match.groupdict()
++
++                uri =3D URI("git://" + str(groups["url"]))
++                uri.params["protocol"] =3D str(groups["protocol"])
++                uri.params["rev"] =3D str(groups["rev"])
++                uri.params["destsuffix"] =3D destsuffix
++
++                url =3D str(uri)
++
++            # local tarball sources and local link sources are unsupport=
+ed
++            else:
++                raise ParameterError("Unsupported dependency: %s" % name=
+, ud.url)
++
++            ud.deps.append({
++                "url": url,
++                "localpath": localpath,
++                "extrapaths": extrapaths,
++                "destsuffix": destsuffix,
++            })
++
++        try:
++            with open(ud.shrinkwrap_file, "r") as f:
++                shrinkwrap =3D json.load(f)
++        except Exception as e:
++            raise ParameterError("Invalid shrinkwrap file: %s" % str(e),=
+ ud.url)
++
++        foreach_dependencies(shrinkwrap, _resolve_dependency, ud.dev)
++
++        # Avoid conflicts between the environment data and:
++        # - the proxy url revision
++        # - the proxy url checksum
++        data =3D bb.data.createCopy(d)
++        data.delVar("SRCREV")
++        data.delVarFlags("SRC_URI")
++
++        # This fetcher resolves multiple URIs from a shrinkwrap file and=
+ then
++        # forwards it to a proxy fetcher. The management of the donestam=
+p file,
++        # the lockfile and the checksums are forwarded to the proxy fetc=
+her.
++        ud.proxy =3D Fetch([dep["url"] for dep in ud.deps], data)
++        ud.needdonestamp =3D False
++
++    @staticmethod
++    def _foreach_proxy_method(ud, handle):
++        returns =3D []
++        for proxy_url in ud.proxy.urls:
++            proxy_ud =3D ud.proxy.ud[proxy_url]
++            proxy_d =3D ud.proxy.d
++            proxy_ud.setup_localpath(proxy_d)
++            returns.append(handle(proxy_ud.method, proxy_ud, proxy_d))
++        return returns
++
++    def verify_donestamp(self, ud, d):
++        """Verify the donestamp file"""
++        def _handle(m, ud, d):
++            return m.verify_donestamp(ud, d)
++        return all(self._foreach_proxy_method(ud, _handle))
++
++    def update_donestamp(self, ud, d):
++        """Update the donestamp file"""
++        def _handle(m, ud, d):
++            m.update_donestamp(ud, d)
++        self._foreach_proxy_method(ud, _handle)
++
++    def need_update(self, ud, d):
++        """Force a fetch, even if localpath exists ?"""
++        def _handle(m, ud, d):
++            return m.need_update(ud, d)
++        return all(self._foreach_proxy_method(ud, _handle))
++
++    def try_mirrors(self, fetch, ud, d, mirrors):
++        """Try to use a mirror"""
++        def _handle(m, ud, d):
++            return m.try_mirrors(fetch, ud, d, mirrors)
++        return all(self._foreach_proxy_method(ud, _handle))
++
++    def download(self, ud, d):
++        """Fetch url"""
++        ud.proxy.download()
++
++    def unpack(self, ud, rootdir, d):
++        """Unpack the downloaded dependencies"""
++        destdir =3D d.getVar("S")
++        destsuffix =3D ud.parm.get("destsuffix")
++        if destsuffix:
++            destdir =3D os.path.join(rootdir, destsuffix)
++
++        bb.utils.mkdirhier(destdir)
++        bb.utils.copyfile(ud.shrinkwrap_file,
++                          os.path.join(destdir, "npm-shrinkwrap.json"))
++
++        auto =3D [dep["url"] for dep in ud.deps if not dep["localpath"]]
++        manual =3D [dep for dep in ud.deps if dep["localpath"]]
++
++        if auto:
++            ud.proxy.unpack(destdir, auto)
++
++        for dep in manual:
++            depdestdir =3D os.path.join(destdir, dep["destsuffix"])
++            npm_unpack(dep["localpath"], depdestdir, d)
++
++    def clean(self, ud, d):
++        """Clean any existing full or partial download"""
++        ud.proxy.clean()
++
++        # Clean extra files
++        for dep in ud.deps:
++            for path in dep["extrapaths"]:
++                bb.utils.remove(path)
++
++    def done(self, ud, d):
++        """Is the download done ?"""
++        def _handle(m, ud, d):
++            return m.done(ud, d)
++        return all(self._foreach_proxy_method(ud, _handle))
 --=20
 2.20.1
 
