@@ -1,51 +1,51 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com
-	[209.85.215.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 4CF007FD5E
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com
+	[209.85.210.174])
+	by mail.openembedded.org (Postfix) with ESMTP id DBCC97FC8B
 	for <bitbake-devel@openembedded.org>;
 	Sat, 25 Jan 2020 16:01:14 +0000 (UTC)
-Received: by mail-pg1-f181.google.com with SMTP id q127so2795804pga.4
+Received: by mail-pf1-f174.google.com with SMTP id q10so2680919pfs.6
 	for <bitbake-devel@openembedded.org>;
-	Sat, 25 Jan 2020 08:01:15 -0800 (PST)
+	Sat, 25 Jan 2020 08:01:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=uUF1CzOIRrVfItCXb7QNbPR6UCe3KiwyhKUJBWMTiUk=;
-	b=SBV4UAHUNEz5jGisT64U39Q9ecS6TWWE5uXv//hUqhxA4cseXx8bH1OIgOrKSLygw7
-	9oxbf24W9ng5EIGKdsWfbzaCbNj9tCbU7DzI8Z208EQ6DgH6QEvtX04aifvbxYgvXBC6
-	rT/3kjyf37dZtdz0Qe7iuOgSPKnpsFv94Lal586yoM6Jodp/yHNghpjgopo6WZWPqq0V
-	2iO5kb+bNFgLFVuJOgR+XQg3RdNx6dnzMk+jaBoqiCndf+CCqnjONs0zNtsi63aArUW1
-	FfuZwsItBIy6DArQdocPtMWebSn+ZVw2WvHRJqFTe0vxtmye12EWo1zhPW63pAlIN+bH
-	YySA==
+	bh=7y2zBWwKC6qnS72kXGbDa3QCDiRfdiQ33YGrxTjhjTM=;
+	b=NEM+ocpMWHCXbj8USTsl2uOHcxQuMXZOz65poANfe0cD0bF76DwLYDIMh/azl5sPz5
+	jt5SGa+ufYH5WnmiD551nM8M88mbsUltp+K4z2UitSQaP+1fqKuOPrHHE3NUcBjtZQAv
+	+kWQUekLJj1CBZLG0/k/0WFopTWpvvhd9l2+wMS+pRgS3TuhWdCwc9d1v1nWOPuh0E2h
+	L6FhwDfRJCYabwrOXtKB4HSvN9hl1FdRJUZJS5P4OisiGxF1+tg9yyBYt01Y40PBTqum
+	qqF7MsHgi9iv7qaXF9NB7LuQYe8/nmKCaYT4d1rjlafQLrLvGnl3LvuKsIweCMPuo3yG
+	r1zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=uUF1CzOIRrVfItCXb7QNbPR6UCe3KiwyhKUJBWMTiUk=;
-	b=rP7MssI+2+UQZYxc3NEUt6+QLlD1vbNVzCwAZ3nwZbMsaJ6+u+KZHU1Zt11jB28VrH
-	SjbPdwmvvS0CkTQJiJN8HPlFZ2humHR1kNPJZz/721K0l6XKKBFtyyWje2WhHe3/GI6b
-	cMAlB1b+97lVGVCOzT5lCVP4C+Jse19nKY3LdmUEWottbCtkdAn5gHPi+uYPmVF3XbTp
-	j/XrvOa8VX94BBIUlE0JQYHXsa6PpMp8iOwIlT780P16BiNenzSAitPqbA6PRke/cVgv
-	Bd5hXxOpvAlYy+nVuChw1QJm0Gxnx6Mfd2LFZNA/NzcpOl7AX668wbZMx3oedQg/L2Qx
-	DWnQ==
-X-Gm-Message-State: APjAAAXcSRtvckjudnA1taxCFIBRjDdeAFJa0j1i/y94PieGthQehHVB
-	4c1qRxxtPiYwlFb8gEni0QOdZL0U
-X-Google-Smtp-Source: APXvYqwaPzQ0rff4ycjR5jbIVHDJqVlgBVGqIffLCKYQTSO5WFazSi5wZp/amPILE/YuzYHUDs/QEw==
-X-Received: by 2002:a63:d306:: with SMTP id b6mr10148782pgg.195.1579968074931; 
-	Sat, 25 Jan 2020 08:01:14 -0800 (PST)
+	bh=7y2zBWwKC6qnS72kXGbDa3QCDiRfdiQ33YGrxTjhjTM=;
+	b=seOlae2PFkV7Zkrt6yY6Yo2m1s/ppkpc5hX3reiiXNbSTL7zjBm/vUFR9yHkIxAiVA
+	MaZw4oUYDyIzwISFHD59C4Ph/IC/ncWh2LBQdahyH+3JO0rJkk68qNLr9SoAqSNHLNj8
+	5kHaoEcAmI5iraEBmonGPaZeTafYBbk0OaLBxUfAXemzGzVOuhzTjVoLblxvPrk1DTAm
+	Ij4uqn1uzz+rji1KafFwzY8l0mH7XkiUu4IRLB1geLk0XNr3Fkl8SDBk94ttfGxoYd8/
+	mPCLVI2+SYTiJZsdXMOAYKyPW/2wyaurC7mJGHm15BOE5SK1zQMmsl88zFfzO8F3vpG1
+	QOnw==
+X-Gm-Message-State: APjAAAWJ93BcLZSIWJHhu+Qmt4tBURXQZ7OSpW83mHguJci27g7s0eRT
+	kPeb0M5eM05YMaI/QMy20i2kwyC6
+X-Google-Smtp-Source: APXvYqwrGqHrIPgdUusV1qUNg67L9k+XJCBJT9J27Y0Sa1IhZoBv0u8XO0Wkd/virbIFuwXiPNQglQ==
+X-Received: by 2002:a63:512:: with SMTP id 18mr10340892pgf.221.1579968075851; 
+	Sat, 25 Jan 2020 08:01:15 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:953f:6ade:6955:1d1c])
-	by smtp.gmail.com with ESMTPSA id j9sm10291064pff.6.2020.01.25.08.01.14
+	by smtp.gmail.com with ESMTPSA id j9sm10291064pff.6.2020.01.25.08.01.15
 	for <bitbake-devel@openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sat, 25 Jan 2020 08:01:14 -0800 (PST)
+	Sat, 25 Jan 2020 08:01:15 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@openembedded.org
-Date: Sat, 25 Jan 2020 08:01:07 -0800
-Message-Id: <1115a14c93dc44124c3ab95053142da78032a004.1579968003.git.akuster808@gmail.com>
+Date: Sat, 25 Jan 2020 08:01:08 -0800
+Message-Id: <1a026d4aca47ed1b0b74a8a818635e7520e8f9c8.1579968003.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1579968003.git.akuster808@gmail.com>
 References: <cover.1579968003.git.akuster808@gmail.com>
-Subject: [1.44 3/4] knotty: Be consistent when creating/updating progress bars
+Subject: [1.44 4/4] runqueue: Use a set for the setscene tasks list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,63 +58,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 25 Jan 2020 16:01:14 -0000
+X-List-Received-Date: Sat, 25 Jan 2020 16:01:15 -0000
 
-From: Peter Kjellerstedt <pkj@axis.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-When creating a new progress bar (using BBProgress), a colon was
-appended to the supplied message. However, when updating the message,
-no colon was appended.
+This should give performance improvements to functions using this list of
+tasks (sets are used for most of the other code for this reason, not sure
+why this wasn't a set in the first place).
 
-Change this so that the colon is instead part of the widgets that make
-up the progress bar so that it does not matter when and how the
-message is updated, it always displays the same.
-
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 08f35c04f6e1ce4c4ca5c2bef4cd8a192e12e682)
+(cherry picked from commit f5daef68703481a3c243dfecc7de404e6ebfdbb6)
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/ui/knotty.py | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ lib/bb/runqueue.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index ddcb2148..c6abb2a1 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -35,15 +35,15 @@ class BBProgress(progressbar.ProgressBar):
-         self.msg = msg
-         self.extrapos = extrapos
-         if not widgets:
--            widgets = [progressbar.Percentage(), ' ', progressbar.Bar(), ' ',
--            progressbar.ETA()]
--            self.extrapos = 4
-+            widgets = [': ', progressbar.Percentage(), ' ', progressbar.Bar(),
-+                       ' ', progressbar.ETA()]
-+            self.extrapos = 5
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 6e3a91b8..d7186e85 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1124,14 +1124,14 @@ class RunQueueData:
+         self.init_progress_reporter.next_stage()
  
-         if resize_handler:
-             self._resize_default = resize_handler
-         else:
-             self._resize_default = signal.getsignal(signal.SIGWINCH)
--        progressbar.ProgressBar.__init__(self, maxval, [self.msg + ": "] + widgets, fd=sys.stdout)
-+        progressbar.ProgressBar.__init__(self, maxval, [self.msg] + widgets, fd=sys.stdout)
+         # Iterate over the task list looking for tasks with a 'setscene' function
+-        self.runq_setscene_tids = []
++        self.runq_setscene_tids = set()
+         if not self.cooker.configuration.nosetscene:
+             for tid in self.runtaskentries:
+                 (mc, fn, taskname, _) = split_tid_mcfn(tid)
+                 setscenetid = tid + "_setscene"
+                 if setscenetid not in taskData[mc].taskentries:
+                     continue
+-                self.runq_setscene_tids.append(tid)
++                self.runq_setscene_tids.add(tid)
  
-     def _handle_resize(self, signum=None, frame=None):
-         progressbar.ProgressBar._handle_resize(self, signum, frame)
-@@ -255,10 +255,10 @@ class TerminalFilter(object):
-                 start_time = activetasks[t].get("starttime", None)
-                 if not pbar or pbar.bouncing != (progress < 0):
-                     if progress < 0:
--                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[progressbar.BouncingSlider(), ''], extrapos=2, resize_handler=self.sigwinch_handle)
-+                        pbar = BBProgress("0: %s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[' ', progressbar.BouncingSlider(), ''], extrapos=3, resize_handler=self.sigwinch_handle)
-                         pbar.bouncing = True
-                     else:
--                        pbar = BBProgress("0: %s (pid %s) " % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=4, resize_handler=self.sigwinch_handle)
-+                        pbar = BBProgress("0: %s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[' ', progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=5, resize_handler=self.sigwinch_handle)
-                         pbar.bouncing = False
-                     activetasks[t]["progressbar"] = pbar
-                 tasks.append((pbar, progress, rate, start_time))
+         self.init_progress_reporter.next_stage()
+ 
 -- 
 2.17.1
 
