@@ -1,37 +1,53 @@
-Return-Path: <jean-marie.lemetayer@savoirfairelinux.com>
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com
-	[208.88.110.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 41F587FD8C
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-vs1-f65.google.com (mail-vs1-f65.google.com
+	[209.85.217.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 8FF967F80F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jan 2020 17:08:33 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7E5C99C02BF;
-	Fri, 24 Jan 2020 12:08:34 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10032)
-	with ESMTP id 8AN8G8uPjEPT; Fri, 24 Jan 2020 12:08:33 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1C3B29C019E;
-	Fri, 24 Jan 2020 12:08:33 -0500 (EST)
-X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new,
-	port 10026)
-	with ESMTP id SuS690uWfIvd; Fri, 24 Jan 2020 12:08:32 -0500 (EST)
-Received: from sulaco.jml.bzh (91-167-182-132.subs.proxad.net [91.167.182.132])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 2169B9C02E8;
-	Fri, 24 Jan 2020 12:08:32 -0500 (EST)
-From: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinux.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 24 Jan 2020 18:08:14 +0100
-Message-Id: <20200124170814.20510-13-jean-marie.lemetayer@savoirfairelinux.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124170814.20510-1-jean-marie.lemetayer@savoirfairelinux.com>
-References: <20200124170814.20510-1-jean-marie.lemetayer@savoirfairelinux.com>
+	Sat, 25 Jan 2020 06:34:42 +0000 (UTC)
+Received: by mail-vs1-f65.google.com with SMTP id n27so2681705vsa.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 24 Jan 2020 22:34:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc:content-transfer-encoding;
+	bh=Po0C3iOG58PLhl5loN+Xlr3DXZWjg7+hgR3gsoYv9Fw=;
+	b=k67K/8RXm0HoLttxh/cvPdkNGCUnHjJ2Ms8Klf4ZE4ZWd+k83sNxOMHp0yc4m45AzQ
+	Pjr3BL/krPc9ROjemVEzHFt+Ea8/z/OMxk/DU+3jxPv/2MOyEbD9u72gkR6SZ8GmORnm
+	ykbmPMykxW4kqyATgzBE8EVRe6lrW9vRVAODioEGmurR9BDrJVKefbBsbKOvjx5IerHz
+	ExWl6sNqdyNaVS+SMU10re8KbWa7/gl67jmiFPwL/ls5GWAVFcy2dEK7sHXc2SaROyrE
+	PMzB5G3gITzZ+qfxQKvI2nYsXI22SGHSLqibuwNl1wKGgA8b0ldRZh9uCukkDOmLOgVC
+	f1cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc:content-transfer-encoding;
+	bh=Po0C3iOG58PLhl5loN+Xlr3DXZWjg7+hgR3gsoYv9Fw=;
+	b=K6GXjaFQzIdOtX0iBcs6CucIvO6b8wC4gnWeCXis6j3NYgj05cffbBAn44EmWATM+w
+	OBuEEkwGirJlZhDH/lOZZPTMvVU/9nuJtttoEJ7LeZY4D2wLcvUEuYW1APse8nJ7Gd+b
+	241n7epOmZkH1a/PH4kP356awN/irWPgWywRJAWpwRbnn4Lun/10VQHmZKUCYv5ZwIxo
+	DB0T2D34324J9F997cNlqvRz7JypK2ruk3k4+ubIfIe9Zi2CqxTEkDUQe8AbD8U6sV1H
+	O8c8vDseMAyerDCLZ/1DNN1nNHs38qi+TaffrxuKqR5GzwdlxiR/kW1nveeryV4GtTie
+	VaKQ==
+X-Gm-Message-State: APjAAAU0yr68dU0vxgspqduLoH/7LhMw6+Ko+jJwSOosQIDS2ec1lIyo
+	bGpzAA4AZ1imqHdEGakLDm/F1rFCO1CXU8ZtFUxFAQ==
+X-Google-Smtp-Source: APXvYqwYHX8m3QcjSmWLBmFvPbmKk6KCs28hMlKjRk32cyUuj01QpMZSl82lprs5zDZ5Drk2tCPZzu2MnnWP/5XKwjE=
+X-Received: by 2002:a67:f51a:: with SMTP id u26mr4469475vsn.11.1579934083243; 
+	Fri, 24 Jan 2020 22:34:43 -0800 (PST)
 MIME-Version: 1.0
-Cc: paul.eggleton@linux.intel.com, rennes-dev@savoirfairelinux.com
-Subject: [PATCH v6 12/12] tests/fetch: add npmsw tests
+References: <4bee3ba1-3608-5598-b168-1e6009bdc986@linux.intel.com>
+	<CANNYZj8CRSC3V8K08-dpEmGg5zbY9N4jiJPQhia04d7NRKiTEw@mail.gmail.com>
+	<b64ada55-a892-09a5-13b2-f76e2b0507d1@linux.intel.com>
+	<a4d78a27-50e6-ee87-bcd7-71694b7da60f@linux.intel.com>
+	<CANNYZj8S5A1qKy8m_=pPfP_Hbqs7qzYqE-rwMf+DGE0ivnBxpA@mail.gmail.com>
+	<4fef2d1e-5fcc-5143-5cf9-cac5ea30b442@linux.intel.com>
+	<f9dbd756-6bed-d3ec-f3db-8b2da765b99f@linux.intel.com>
+In-Reply-To: <f9dbd756-6bed-d3ec-f3db-8b2da765b99f@linux.intel.com>
+From: Andre McCurdy <armccurdy@gmail.com>
+Date: Fri, 24 Jan 2020 22:34:32 -0800
+Message-ID: <CAJ86T=V7P6-oXp6HSw2c31ObBRBQOqU=esetXK7cZkD-8vaXEA@mail.gmail.com>
+To: =?UTF-8?Q?Adrian_Ambro=C5=BCewicz?= <adrian.ambrozewicz@linux.intel.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: devtool hardcodes using 'git' patchtool which causes errors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,330 +60,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Jan 2020 17:08:33 -0000
+X-List-Received-Date: Sat, 25 Jan 2020 06:34:42 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-This commit adds some tests to validate the npmsw fetcher:
+On Thu, Jan 23, 2020 at 2:03 AM Adrian Ambro=C5=BCewicz
+<adrian.ambrozewicz@linux.intel.com> wrote:
+>
+> I've tried yet another approach, leveraging that this project is built
+> using cmake and it worked! I know it's not a generic fix, but it looks
+> like in bitbake nothing is really generic...
 
-     - bb.tests.fetch.NPMTest.test_npmsw
-     - bb.tests.fetch.NPMTest.test_npmsw_bad_checksum
-     - bb.tests.fetch.NPMTest.test_npmsw_destsuffix
-     - bb.tests.fetch.NPMTest.test_npmsw_dev
-     - bb.tests.fetch.NPMTest.test_npmsw_mirrors
-     - bb.tests.fetch.NPMTest.test_npmsw_no_network_no_tarball
-     - bb.tests.fetch.NPMTest.test_npmsw_no_network_with_tarball
-     - bb.tests.fetch.NPMTest.test_npmsw_npm_reusability
-     - bb.tests.fetch.NPMTest.test_npmsw_premirrors
+An alternative approach (perhaps the official generic solution?) may
+be to use S=3D"${WORKDIR}/git/project_dir", (re)create your patches from
+the top level of the git repo without any extra strip levels etc and
+then specify "patchdir" for each patch in SRC_URI, e.g. in your case
+patchdir would be set to ".." in order to apply patches from the
+directory one level above ${S}.
 
-Signed-off-by: Jean-Marie LEMETAYER <jean-marie.lemetayer@savoirfairelinu=
-x.com>
----
- lib/bb/tests/fetch.py | 251 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 251 insertions(+)
-
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 5eeb64c5..45dc9e5d 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2220,3 +2220,254 @@ class NPMTest(FetcherTest):
-         url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example'
-         with self.assertRaises(bb.fetch2.MissingParameterError):
-             fetcher =3D bb.fetch.Fetch([url], self.d)
-+
-+    def create_shrinkwrap_file(self, data):
-+        import json
-+        datadir =3D os.path.join(self.tempdir, 'data')
-+        swfile =3D os.path.join(datadir, 'npm-shrinkwrap.json')
-+        bb.utils.mkdirhier(datadir)
-+        with open(swfile, 'w') as f:
-+            json.dump(data, f)
-+        # Also configure the S directory
-+        self.sdir =3D os.path.join(self.unpackdir, 'S')
-+        self.d.setVar('S', self.sdir)
-+        return swfile
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw(self):
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D',
-+                    'dependencies': {
-+                        'content-type': {
-+                            'version': 'https://registry.npmjs.org/conte=
-nt-type/-/content-type-1.0.4.tgz',
-+                            'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwO=
-Aps4mk2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-+                            'dependencies': {
-+                                'cookie': {
-+                                    'version': 'git+https://github.com/j=
-shttp/cookie.git#aec1177c7da67e3b3273df96cf476824dbc9ae09',
-+                                    'from': 'git+https://github.com/jsht=
-tp/cookie.git'
-+                                }
-+                            }
-+                        }
-+                    }
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'array-flatten-1.1.1.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'content-type-1.0.4.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', =
-'github.com.jshttp.cookie.git')))
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'npm-shri=
-nkwrap.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_mod=
-ules', 'array-flatten', 'package.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_mod=
-ules', 'array-flatten', 'node_modules', 'content-type', 'package.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_mod=
-ules', 'array-flatten', 'node_modules', 'content-type', 'node_modules', '=
-cookie', 'package.json')))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_dev(self):
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                },
-+                'content-type': {
-+                    'version': '1.0.4',
-+                    'resolved': 'https://registry.npmjs.org/content-type=
-/-/content-type-1.0.4.tgz',
-+                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Z=
-ob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-+                    'dev': True
-+                }
-+            }
-+        })
-+        # Fetch with dev disabled
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'array-flatten-1.1.1.tgz')))
-+        self.assertFalse(os.path.exists(os.path.join(self.dldir, 'npm2',=
- 'content-type-1.0.4.tgz')))
-+        # Fetch with dev enabled
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile + ';dev=3D1'], s=
-elf.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'array-flatten-1.1.1.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', =
-'content-type-1.0.4.tgz')))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_destsuffix(self):
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile + ';destsuffix=3D=
-foo/bar'], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'foo=
-', 'bar', 'node_modules', 'array-flatten', 'package.json')))
-+
-+    def test_npmsw_no_network_no_tarball(self):
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        self.d.setVar('BB_NO_NETWORK', '1')
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        with self.assertRaises(bb.fetch2.NetworkAccess):
-+            fetcher.download()
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_no_network_with_tarball(self):
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3D=
-array-flatten;version=3D1.1.1'], self.d)
-+        fetcher.download()
-+        # Disable network access
-+        self.d.setVar('BB_NO_NETWORK', '1')
-+        # Fetch again
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_mod=
-ules', 'array-flatten', 'package.json')))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_npm_reusability(self):
-+        # Fetch once with npmsw
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        # Disable network access
-+        self.d.setVar('BB_NO_NETWORK', '1')
-+        # Fetch again with npm
-+        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3D=
-array-flatten;version=3D1.1.1'], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'npm=
-', 'package.json')))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_bad_checksum(self):
-+        # Try to fetch with bad checksum
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-gfNEp2hqgLTFKT6P3AsBYMgsBqg=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            fetcher.download()
-+        # Fetch correctly to get a tarball
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        localpath =3D os.path.join(self.dldir, 'npm2', 'array-flatten-1.=
-1.1.tgz')
-+        self.assertTrue(os.path.exists(localpath))
-+        # Modify the tarball
-+        bad =3D b'bad checksum'
-+        with open(localpath, 'wb') as f:
-+            f.write(bad)
-+        # Verify that the tarball is fetched again
-+        fetcher.download()
-+        badsum =3D hashlib.sha1(bad).hexdigest()
-+        self.assertTrue(os.path.exists(localpath + '_bad-checksum_' + ba=
-dsum))
-+        self.assertTrue(os.path.exists(localpath))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_premirrors(self):
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3D=
-array-flatten;version=3D1.1.1'], self.d)
-+        ud =3D fetcher.ud[fetcher.urls[0]]
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+        # Setup the mirror
-+        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        bb.utils.mkdirhier(mirrordir)
-+        os.replace(ud.localpath, os.path.join(mirrordir, os.path.basenam=
-e(ud.localpath)))
-+        self.d.setVar('PREMIRRORS', 'https?$://.*/.* file://%s/\n' % mir=
-rordir)
-+        self.d.setVar('BB_FETCH_PREMIRRORONLY', '1')
-+        # Fetch again
-+        self.assertFalse(os.path.exists(ud.localpath))
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatte=
-n/-/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+
-+    @skipIfNoNpm()
-+    @skipIfNoNetwork()
-+    def test_npmsw_mirrors(self):
-+        # Fetch once to get a tarball
-+        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3D=
-array-flatten;version=3D1.1.1'], self.d)
-+        ud =3D fetcher.ud[fetcher.urls[0]]
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+        # Setup the mirror
-+        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        bb.utils.mkdirhier(mirrordir)
-+        os.replace(ud.localpath, os.path.join(mirrordir, os.path.basenam=
-e(ud.localpath)))
-+        self.d.setVar('MIRRORS', 'https?$://.*/.* file://%s/\n' % mirror=
-dir)
-+        # Fetch again with invalid url
-+        self.assertFalse(os.path.exists(ud.localpath))
-+        swfile =3D self.create_shrinkwrap_file({
-+            'dependencies': {
-+                'array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://invalid',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                }
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
---=20
-2.20.1
-
+SRC_URI +=3D "file://mychanges.patch;patchdir=3D.."
 
