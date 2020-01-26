@@ -1,51 +1,50 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com
-	[209.85.210.174])
-	by mail.openembedded.org (Postfix) with ESMTP id DBCC97FC8B
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com
+	[209.85.216.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 0A3F19201C
 	for <bitbake-devel@openembedded.org>;
-	Sat, 25 Jan 2020 16:01:14 +0000 (UTC)
-Received: by mail-pf1-f174.google.com with SMTP id q10so2680919pfs.6
+	Sun, 26 Jan 2020 16:16:27 +0000 (UTC)
+Received: by mail-pj1-f53.google.com with SMTP id a6so2000079pjh.2
 	for <bitbake-devel@openembedded.org>;
-	Sat, 25 Jan 2020 08:01:16 -0800 (PST)
+	Sun, 26 Jan 2020 08:16:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=7y2zBWwKC6qnS72kXGbDa3QCDiRfdiQ33YGrxTjhjTM=;
-	b=NEM+ocpMWHCXbj8USTsl2uOHcxQuMXZOz65poANfe0cD0bF76DwLYDIMh/azl5sPz5
-	jt5SGa+ufYH5WnmiD551nM8M88mbsUltp+K4z2UitSQaP+1fqKuOPrHHE3NUcBjtZQAv
-	+kWQUekLJj1CBZLG0/k/0WFopTWpvvhd9l2+wMS+pRgS3TuhWdCwc9d1v1nWOPuh0E2h
-	L6FhwDfRJCYabwrOXtKB4HSvN9hl1FdRJUZJS5P4OisiGxF1+tg9yyBYt01Y40PBTqum
-	qqF7MsHgi9iv7qaXF9NB7LuQYe8/nmKCaYT4d1rjlafQLrLvGnl3LvuKsIweCMPuo3yG
-	r1zA==
+	h=from:to:subject:date:message-id;
+	bh=w/nLhd8rlm54YfG9+yqQrHc9HO2VBOjtE70YOup+w+U=;
+	b=gjtov1AADKwn+9O2l1WRXRqwJTYiZh+m+jDl7aDLQiacHU1UOEEs5s8dvkOFlscRyd
+	NjQVdqe2F7NEGR7rh/P3hL/OLqg+DrNaA2TntzU22DyLXbJd08BYg96tQqLZNRHfirLp
+	J+vcpNaiJxz+HgNBlnEeSiW29grD2ciBgHbf63A7SOkX0O1Gx7otKY/bhpE1c2M/U41K
+	1mYkTOa3EAtNhyXnt9lkNWieYqjaSllQEqSA2hFxk0onC1DNrkcz67y4T5Z9GejtdMDY
+	VtOn0BEY0qnyGw728payy7vArEp0j7EqKJRhluOkhVt4rn8OMLU8cFBuRseD/HGLXp56
+	oCkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=7y2zBWwKC6qnS72kXGbDa3QCDiRfdiQ33YGrxTjhjTM=;
-	b=seOlae2PFkV7Zkrt6yY6Yo2m1s/ppkpc5hX3reiiXNbSTL7zjBm/vUFR9yHkIxAiVA
-	MaZw4oUYDyIzwISFHD59C4Ph/IC/ncWh2LBQdahyH+3JO0rJkk68qNLr9SoAqSNHLNj8
-	5kHaoEcAmI5iraEBmonGPaZeTafYBbk0OaLBxUfAXemzGzVOuhzTjVoLblxvPrk1DTAm
-	Ij4uqn1uzz+rji1KafFwzY8l0mH7XkiUu4IRLB1geLk0XNr3Fkl8SDBk94ttfGxoYd8/
-	mPCLVI2+SYTiJZsdXMOAYKyPW/2wyaurC7mJGHm15BOE5SK1zQMmsl88zFfzO8F3vpG1
-	QOnw==
-X-Gm-Message-State: APjAAAWJ93BcLZSIWJHhu+Qmt4tBURXQZ7OSpW83mHguJci27g7s0eRT
-	kPeb0M5eM05YMaI/QMy20i2kwyC6
-X-Google-Smtp-Source: APXvYqwrGqHrIPgdUusV1qUNg67L9k+XJCBJT9J27Y0Sa1IhZoBv0u8XO0Wkd/virbIFuwXiPNQglQ==
-X-Received: by 2002:a63:512:: with SMTP id 18mr10340892pgf.221.1579968075851; 
-	Sat, 25 Jan 2020 08:01:15 -0800 (PST)
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=w/nLhd8rlm54YfG9+yqQrHc9HO2VBOjtE70YOup+w+U=;
+	b=T+GaK9oaDBzqCTXugT6GJ6k4eRqGUXIOiKoDf+CaJsnl2FrcjblTWjr3sz5qXan2yW
+	5Cr3QS9bCy63LGLERuElZ0f4MUwL31yvcB5mWlPTIXSUHzbeya2eO/NmRmu9je7C5DCN
+	Wz2yet1JS6glBrK6EvRCaTMxQbdKebfNMhT1h5dbQHRr5mMFwxALM03U5hQsHBq6ENhM
+	b+6hCn6imRtQGak0fGxG0cynMwa7uB2mpw3pk5O7/5h2kMK941gy/nG3Hy6Yuw6fuLec
+	7LerBsZDKXyjTy+VIUV8/V5nHMwekPa5+qbSWnNl9IoX6QZfDUL1JY29Hn4tCSj/4bK4
+	s5qw==
+X-Gm-Message-State: APjAAAWkFAOsTEWmAOyloyfT9a8Yqz48R8n4nBb4bgxylMSMznK3AIhA
+	SQ2TXgnLNwLyh3Ld3wbub/CCK7iP
+X-Google-Smtp-Source: APXvYqxmsUYO6VGVikGodmqJPLJ2mwmF0k6BHMLvTGc9r3VmJVqxXA+A7hLOlwYykLmDR4BEZQyuHA==
+X-Received: by 2002:a17:902:864a:: with SMTP id
+	y10mr13761467plt.2.1580055388828; 
+	Sun, 26 Jan 2020 08:16:28 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
-	([2601:202:4180:a5c0:953f:6ade:6955:1d1c])
-	by smtp.gmail.com with ESMTPSA id j9sm10291064pff.6.2020.01.25.08.01.15
+	([2601:202:4180:a5c0:bddb:633c:e712:cec2])
+	by smtp.gmail.com with ESMTPSA id
+	b4sm12895937pfd.18.2020.01.26.08.16.27
 	for <bitbake-devel@openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sat, 25 Jan 2020 08:01:15 -0800 (PST)
+	Sun, 26 Jan 2020 08:16:28 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@openembedded.org
-Date: Sat, 25 Jan 2020 08:01:08 -0800
-Message-Id: <1a026d4aca47ed1b0b74a8a818635e7520e8f9c8.1579968003.git.akuster808@gmail.com>
+Date: Sun, 26 Jan 2020 08:16:22 -0800
+Message-Id: <cover.1580055259.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1579968003.git.akuster808@gmail.com>
-References: <cover.1579968003.git.akuster808@gmail.com>
-Subject: [1.44 4/4] runqueue: Use a set for the setscene tasks list
+Subject: [1.42 0/1] Merge request
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,42 +57,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 25 Jan 2020 16:01:15 -0000
+X-List-Received-Date: Sun, 26 Jan 2020 16:16:28 -0000
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Please concider this for 1.42
 
-This should give performance improvements to functions using this list of
-tasks (sets are used for most of the other code for this reason, not sure
-why this wasn't a set in the first place).
+The following changes since commit 4ce50bbd34eefeabfeca89a6a66c71598d3c58f6:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit f5daef68703481a3c243dfecc7de404e6ebfdbb6)
-Signed-off-by: Armin Kuster <akuster808@gmail.com>
----
- lib/bb/runqueue.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+  fetch2: Ensure cached url data is matched to a datastore (2019-11-13 22:00:03 +0000)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 6e3a91b8..d7186e85 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1124,14 +1124,14 @@ class RunQueueData:
-         self.init_progress_reporter.next_stage()
- 
-         # Iterate over the task list looking for tasks with a 'setscene' function
--        self.runq_setscene_tids = []
-+        self.runq_setscene_tids = set()
-         if not self.cooker.configuration.nosetscene:
-             for tid in self.runtaskentries:
-                 (mc, fn, taskname, _) = split_tid_mcfn(tid)
-                 setscenetid = tid + "_setscene"
-                 if setscenetid not in taskData[mc].taskentries:
-                     continue
--                self.runq_setscene_tids.append(tid)
-+                self.runq_setscene_tids.add(tid)
- 
-         self.init_progress_reporter.next_stage()
- 
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.42-next
+  http://cgit.openembedded.org//log/?h=stable/1.42-next
+
+Peter Kjellerstedt (1):
+  cooker: Keep track of watched files using a set instead of a list
+
+ lib/bb/cooker.py | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
 -- 
 2.17.1
 
