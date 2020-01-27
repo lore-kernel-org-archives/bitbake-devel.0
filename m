@@ -1,52 +1,36 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com
-	[209.85.210.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 2EC5A91665
-	for <bitbake-devel@openembedded.org>;
-	Sun, 26 Jan 2020 16:16:28 +0000 (UTC)
-Received: by mail-pf1-f180.google.com with SMTP id p14so3746612pfn.4
-	for <bitbake-devel@openembedded.org>;
-	Sun, 26 Jan 2020 08:16:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=nvZMBgl7N170zgYVja3AHuusnU/uDzhLHg2hSX1lfEc=;
-	b=d2XzVqIDLSqF3fYwKjvdBqv5yhh6nf5AbGhtmLJMKSLvZ1l1N4Q5GMRtloWv7AV4/W
-	UHcWOgU23KZbhSbiGT1RMs2af+hWoIUjKqBF7e0DM/u8XB5TVsN0qRfl5WF4vIH3/GYB
-	ZFAV51/YsXEP+SAQllKUVbsj+QJgEblUkC3AFAgtv1lQv8pch04uT9W2pa+ORAzbCUot
-	Dv3zDGSWHPO6YGC/yRXoCHRT++AITJXCDQQlHOb+XP038haO1+ROcHp7IhtDQwOoeB3r
-	Qt+4HnVsGtgY5FQNgCdbPlcNg7W3Kr9NmMxoyKNPmwdPep04DZZoMkAmxjhb08XipwuX
-	7trw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=nvZMBgl7N170zgYVja3AHuusnU/uDzhLHg2hSX1lfEc=;
-	b=QnmINmIoTO2/buka0+U7zDBvSxqljaU4eDMlxFEDRMlvoeHj790PV62vlxm/IUKYuQ
-	jNS84VkUNCPCuGXgTBn/sbLsQJSosL21NlQhLNetm0zQ0YuE2FsHDt2pr9+RlYi0dvXd
-	yDAPRXnmEHaVQwE7qNyUwyhrLXAh6GDVbsHr3elM4MtTUy2Q/SdqYhUKMdFLnd3xQCSE
-	J0a1CCqtB3pI9pQ9mZe55xb9m3/BNDJteUr45OMooBU1/KcMEbvUiUxQkDngBGorRSHR
-	oL1rrGTgjzVrCgpbwGjMVYlG8xlwkIe7GGqrY5zZiM901bLBMT9u+OWYDOC1soXxEZw0
-	BsRg==
-X-Gm-Message-State: APjAAAX3iqQS/B8JUNnYAhqyoJfuJ3uwgrXKG1iaL2u3Tm/cY181gcBD
-	zrSC9WIygdcT2FtNE/85+15uWJ5P
-X-Google-Smtp-Source: APXvYqwuoaNvvUNSAQKgct8ZTa7a2O57fgyKt6U84Gpm4puZPq+CsnZMUVgA+dp1mpC1lOM7ocE4TA==
-X-Received: by 2002:a62:3086:: with SMTP id w128mr12013927pfw.58.1580055389946;
-	Sun, 26 Jan 2020 08:16:29 -0800 (PST)
-Received: from akuster-ThinkPad-T460s.mvista.com
-	([2601:202:4180:a5c0:bddb:633c:e712:cec2])
-	by smtp.gmail.com with ESMTPSA id
-	b4sm12895937pfd.18.2020.01.26.08.16.29
-	for <bitbake-devel@openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sun, 26 Jan 2020 08:16:29 -0800 (PST)
-From: Armin Kuster <akuster808@gmail.com>
-To: bitbake-devel@openembedded.org
-Date: Sun, 26 Jan 2020 08:16:23 -0800
-Message-Id: <aa770081d7d3ff678b18117a4b4e9b3da09b72be.1580055259.git.akuster808@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1580055259.git.akuster808@gmail.com>
-References: <cover.1580055259.git.akuster808@gmail.com>
-Subject: [1.42 1/1] cooker: Keep track of watched files using a set instead of a list
+Return-Path: <adrian.ambrozewicz@linux.intel.com>
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 983347FD3C
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 27 Jan 2020 08:56:14 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+	27 Jan 2020 00:56:15 -0800
+X-IronPort-AV: E=Sophos;i="5.70,369,1574150400"; d="scan'208";a="276856749"
+Received: from aambroze-mobl1.ger.corp.intel.com (HELO [10.102.85.150])
+	([10.102.85.150])
+	by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA;
+	27 Jan 2020 00:56:14 -0800
+To: Andre McCurdy <armccurdy@gmail.com>
+References: <4bee3ba1-3608-5598-b168-1e6009bdc986@linux.intel.com>
+	<CANNYZj8CRSC3V8K08-dpEmGg5zbY9N4jiJPQhia04d7NRKiTEw@mail.gmail.com>
+	<b64ada55-a892-09a5-13b2-f76e2b0507d1@linux.intel.com>
+	<a4d78a27-50e6-ee87-bcd7-71694b7da60f@linux.intel.com>
+	<CANNYZj8S5A1qKy8m_=pPfP_Hbqs7qzYqE-rwMf+DGE0ivnBxpA@mail.gmail.com>
+	<4fef2d1e-5fcc-5143-5cf9-cac5ea30b442@linux.intel.com>
+	<f9dbd756-6bed-d3ec-f3db-8b2da765b99f@linux.intel.com>
+	<CAJ86T=V7P6-oXp6HSw2c31ObBRBQOqU=esetXK7cZkD-8vaXEA@mail.gmail.com>
+From: =?UTF-8?Q?Adrian_Ambro=c5=bcewicz?= <adrian.ambrozewicz@linux.intel.com>
+Message-ID: <2f960b35-19a2-9360-701a-5d5f033b8806@linux.intel.com>
+Date: Mon, 27 Jan 2020 09:56:12 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+	Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <CAJ86T=V7P6-oXp6HSw2c31ObBRBQOqU=esetXK7cZkD-8vaXEA@mail.gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: devtool hardcodes using 'git' patchtool which causes errors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,83 +43,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 26 Jan 2020 16:16:29 -0000
+X-List-Received-Date: Mon, 27 Jan 2020 08:56:14 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+I was not aware of patchdir option, so kudos for you. Will keep that in 
+mind, thanks!
 
-When there are many watched files, keeping track of them using lists
-is suboptimal. Using sets improves the performance considerably.
-
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 1e96df260e47d160dbd36bfc92c31ef06266f662)
-Signed-off-by: Armin Kuster <akuster808@gmail.com>
----
- lib/bb/cooker.py | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index a97bafdc..77d18a5d 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -171,8 +171,8 @@ class BBCooker:
-         bb.debug(1, "BBCooker pyinotify1 %s" % time.time())
-         sys.stdout.flush()
- 
--        self.configwatcher.bbseen = []
--        self.configwatcher.bbwatchedfiles = []
-+        self.configwatcher.bbseen = set()
-+        self.configwatcher.bbwatchedfiles = set()
-         self.confignotifier = pyinotify.Notifier(self.configwatcher, self.config_notifications)
-         bb.debug(1, "BBCooker pyinotify2 %s" % time.time())
-         sys.stdout.flush()
-@@ -182,8 +182,8 @@ class BBCooker:
-         self.watcher = pyinotify.WatchManager()
-         bb.debug(1, "BBCooker pyinotify3 %s" % time.time())
-         sys.stdout.flush()
--        self.watcher.bbseen = []
--        self.watcher.bbwatchedfiles = []
-+        self.watcher.bbseen = set()
-+        self.watcher.bbwatchedfiles = set()
-         self.notifier = pyinotify.Notifier(self.watcher, self.notifications)
- 
-         bb.debug(1, "BBCooker pyinotify complete %s" % time.time())
-@@ -278,14 +278,14 @@ class BBCooker:
-         if not watcher:
-             watcher = self.watcher
-         for i in deps:
--            watcher.bbwatchedfiles.append(i[0])
-+            watcher.bbwatchedfiles.add(i[0])
-             if dirs:
-                 f = i[0]
-             else:
-                 f = os.path.dirname(i[0])
-             if f in watcher.bbseen:
-                 continue
--            watcher.bbseen.append(f)
-+            watcher.bbseen.add(f)
-             watchtarget = None
-             while True:
-                 # We try and add watches for files that don't exist but if they did, would influence
-@@ -294,7 +294,7 @@ class BBCooker:
-                 try:
-                     watcher.add_watch(f, self.watchmask, quiet=False)
-                     if watchtarget:
--                        watcher.bbwatchedfiles.append(watchtarget)
-+                        watcher.bbwatchedfiles.add(watchtarget)
-                     break
-                 except pyinotify.WatchManagerError as e:
-                     if 'ENOENT' in str(e):
-@@ -302,7 +302,7 @@ class BBCooker:
-                         f = os.path.dirname(f)
-                         if f in watcher.bbseen:
-                             break
--                        watcher.bbseen.append(f)
-+                        watcher.bbseen.add(f)
-                         continue
-                     if 'ENOSPC' in str(e):
-                         providerlog.error("No space left on device or exceeds fs.inotify.max_user_watches?")
--- 
-2.17.1
-
+W dniu 1/25/2020 o 07:34, Andre McCurdy pisze:
+> On Thu, Jan 23, 2020 at 2:03 AM Adrian Ambrożewicz
+> <adrian.ambrozewicz@linux.intel.com> wrote:
+>>
+>> I've tried yet another approach, leveraging that this project is built
+>> using cmake and it worked! I know it's not a generic fix, but it looks
+>> like in bitbake nothing is really generic...
+> 
+> An alternative approach (perhaps the official generic solution?) may
+> be to use S="${WORKDIR}/git/project_dir", (re)create your patches from
+> the top level of the git repo without any extra strip levels etc and
+> then specify "patchdir" for each patch in SRC_URI, e.g. in your case
+> patchdir would be set to ".." in order to apply patches from the
+> directory one level above ${S}.
+> 
+> SRC_URI += "file://mychanges.patch;patchdir=.."
+> 
 
