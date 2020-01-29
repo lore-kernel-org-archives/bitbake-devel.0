@@ -1,51 +1,23 @@
-Return-Path: <jacob.kroon@gmail.com>
-Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com
-	[209.85.167.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 8A9227FED2
+Return-Path: <frazer.clews@codethink.co.uk>
+Received: from imap2.colo.codethink.co.uk (imap2.colo.codethink.co.uk
+	[78.40.148.184])
+	by mail.openembedded.org (Postfix) with ESMTP id 965E760AE0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Jan 2020 19:10:49 +0000 (UTC)
-Received: by mail-lf1-f65.google.com with SMTP id z26so9934357lfg.13
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Jan 2020 11:10:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=dd2Ecp8uiTzYtibEJaRXH8EfrkHKqDacvRbz64meeWY=;
-	b=ikTs/xORb2kCsxGrrfkKq73fH0YkcPtq1UnUARBvefbEhtmZRAsv/1kmDRLTk5XRiA
-	GEpVYqf+TRC1USvKJ/zze8MEC2RLuV/OZIsSfjuo+nru20BIPhmeSdP0e3V9XrnLxgI1
-	TKRMcaqPn3Weh/CvtzVn8WlXVBIj1KKb6hVrfHcoP0g9mb3poUmHHV1X1eAtsloc6ajH
-	A2G7Psz2dBP4KDL1G7tnTY0bJ0Pci2D3bcJZhhZQ8ATt4tSl+KvakY5i8UCsLB8rNHrN
-	eT93qwfaLeYI4U0RCtc1G4Cy0znnx1CL4yq9jmTpD7blPE4ByrCw9T/wTFKJTNVzEWfy
-	4deQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=dd2Ecp8uiTzYtibEJaRXH8EfrkHKqDacvRbz64meeWY=;
-	b=o2I8bdnA9cKw8UN4yLh6s3t8fQAw1pcpTgfT30mA73bc7hSmAiVd5tfX4e8RtZLH5z
-	t0ADDVPyzzH2jzeTWVl4ROWlcAWeu3ns7Q1FQalRLcSKITt+bPo9PFZpG/KJtRICSkpU
-	JOQHVGx9BCjQLEQtlBR02oLxrlDqWwdzyEOtj+5hIgC73KChYka0igkoCYP2pjP9U650
-	Csf2zRx+2EfZpYjyix59IIiI/xQHue4IZkuw5Fy/GEJJ5V0mJSKBhxhvN1QiPyRfZMHE
-	qyLIWXchj2etRSk7Bq9AQMlRmRNpbeMEn/ALArVlSqVxhOxZZ6BibsW0KL0IXMy08t5m
-	17SQ==
-X-Gm-Message-State: APjAAAXEdbmtu3fYqO8kJYtqWieR+3nmCoTZ901il99CNqu1IyeHtSSn
-	nbXAYABFr6GpIC5V6VmiT/3wpn5K
-X-Google-Smtp-Source: APXvYqweQtuOn8fN/tmvfad+nRciIwKL+cMKDjtE7E1FpOtY9+IIE1IGlhdIh5raI+oRxJ2Vzboq4Q==
-X-Received: by 2002:ac2:4c84:: with SMTP id d4mr3227007lfl.64.1580238649791;
-	Tue, 28 Jan 2020 11:10:49 -0800 (PST)
-Received: from localhost.localdomain (37-247-29-68.customers.ownit.se.
-	[37.247.29.68]) by smtp.gmail.com with ESMTPSA id
-	v12sm3176676ljc.94.2020.01.28.11.10.48
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 28 Jan 2020 11:10:49 -0800 (PST)
-From: Jacob Kroon <jacob.kroon@gmail.com>
+	Thu, 30 Jan 2020 16:49:31 +0000 (UTC)
+Received: from [167.98.27.226] (helo=localhost.localdomain)
+	by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+	id 1iwpN4-0007yo-Uw for <bitbake-devel@lists.openembedded.org> ;
+	Wed, 29 Jan 2020 15:35:15 +0000
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 28 Jan 2020 20:10:29 +0100
-Message-Id: <20200128191029.33319-1-jacob.kroon@gmail.com>
-X-Mailer: git-send-email 2.24.1
+References: <20200114144606.163629-1-frazer.clews@codethink.co.uk>
+From: Frazer Leslie Clews <frazer.clews@codethink.co.uk>
+Message-ID: <6c85422c-470f-3353-5926-ab6d786fcca7@codethink.co.uk>
+Date: Wed, 29 Jan 2020 15:35:14 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+	Thunderbird/68.4.1
 MIME-Version: 1.0
-Subject: [PATCH] bitbake-user-manual: immediate-variable-expansion: Correct description
+In-Reply-To: <20200114144606.163629-1-frazer.clews@codethink.co.uk>
+Subject: Re: [PATCH] replaced deprecated method warn() with warning()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,49 +30,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Jan 2020 19:10:49 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 31 Jan 2020 09:28:00 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-References to undefined variables are preserved as is and do not
-expand to nothing as in GNU Make.
+Hi
 
-Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
----
- .../bitbake-user-manual-metadata.xml          | 20 ++++---------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+I was wondering if anyone has had a chance to look at this, or is this 
+not wanted?
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-index 421364c2..0104b174 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-@@ -291,22 +291,10 @@
-             <para>
-                 The ":=" operator results in a variable's
-                 contents being expanded immediately,
--                rather than when the variable is actually used:
--                <literallayout class='monospaced'>
--     T = "123"
--     A := "${B} ${A} test ${T}"
--     T = "456"
--     B = "${T} bval"
--     C = "cval"
--     C := "${C}append"
--                </literallayout>
--                In this example, <filename>A</filename> contains
--                "test 123" because <filename>${B}</filename> and
--                <filename>${A}</filename> at the time of parsing are undefined,
--                which leaves "test 123".
--                And, the variable <filename>C</filename>
--                contains "cvalappend" since <filename>${C}</filename> immediately
--                expands to "cval".
-+                rather than when the variable is actually used.
-+                In contrast to how GNU Make handles immediate expansion,
-+                references to undefined variables are preserved as is,
-+                instead of evaluating to nothing.
-             </para>
-         </section>
- 
--- 
-2.24.1
+KInd regards
 
+Frazer
+
+On 14/01/2020 14:46, frazer.clews@codethink.co.uk wrote:
+> From: Frazer Clews <frazer.clews@codethink.co.uk>
+>
+> lib: Removed the deprecated methods as it will only cause problems later on,
+> and since warn() just calls warning(), it shouldn't change anything
+>
+> Signed-off-by: Frazer Clews <frazer.clews@codethink.co.uk>
+> ---
+>   lib/bb/cooker.py                                        | 2 +-
+>   lib/toaster/bldcontrol/management/commands/runbuilds.py | 6 +++---
+>   2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+> index b74affa7..911805a6 100644
+> --- a/lib/bb/cooker.py
+> +++ b/lib/bb/cooker.py
+> @@ -1788,7 +1788,7 @@ class CookerCollectFiles(object):
+>                   # When constructing an older style single regex, it's possible for BBMASK
+>                   # to end up beginning with '|', which matches and masks _everything_.
+>                   if mask.startswith("|"):
+> -                    collectlog.warn("BBMASK contains regular expression beginning with '|', fixing: %s" % mask)
+> +                    collectlog.warning("BBMASK contains regular expression beginning with '|', fixing: %s" % mask)
+>                       mask = mask[1:]
+>                   try:
+>                       re.compile(mask)
+> diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+> index 50ec4098..19f659ec 100644
+> --- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
+> +++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+> @@ -168,17 +168,17 @@ class Command(BaseCommand):
+>           try:
+>               self.cleanup()
+>           except Exception as e:
+> -            logger.warn("runbuilds: cleanup exception %s" % str(e))
+> +            logger.warning("runbuilds: cleanup exception %s" % str(e))
+>   
+>           try:
+>               self.archive()
+>           except Exception as e:
+> -            logger.warn("runbuilds: archive exception %s" % str(e))
+> +            logger.warning("runbuilds: archive exception %s" % str(e))
+>   
+>           try:
+>               self.schedule()
+>           except Exception as e:
+> -            logger.warn("runbuilds: schedule exception %s" % str(e))
+> +            logger.warning("runbuilds: schedule exception %s" % str(e))
+>   
+>       def handle(self, **options):
+>           pidfile_path = os.path.join(os.environ.get("BUILDDIR", "."),
 
