@@ -1,52 +1,43 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com
-	[209.85.216.54])
-	by mail.openembedded.org (Postfix) with ESMTP id CD06060EE7
-	for <bitbake-devel@openembedded.org>;
-	Sun,  9 Feb 2020 16:03:23 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id ep11so3082361pjb.2
-	for <bitbake-devel@openembedded.org>;
-	Sun, 09 Feb 2020 08:03:25 -0800 (PST)
+Return-Path: <maurofrqueiros@gmail.com>
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com
+	[209.85.217.41])
+	by mail.openembedded.org (Postfix) with ESMTP id B2A9E60646
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Jan 2020 13:51:46 +0000 (UTC)
+Received: by mail-vs1-f41.google.com with SMTP id g15so2107986vsf.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Jan 2020 05:51:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=WQ7yZj3pSrN8ZeyfYDFvr722Dn/LBYkMSJQuJ3+NyGo=;
-	b=EmwpAAnGgSkWK/VUkqm0694utAKl9DzW0ee1CIbA8FY5VEFZ7DlXr+Ro+lfcit0phT
-	taDiRSAt5gZ28yv21Tv5NgMC8vSZW4FyoVNwIIrT5GyHDfLxqidygDeqH2UCP0jjEkFn
-	On1EkmsuuCRhEABxgv2ib853KN3wO/f7b5TX8nTvYvLc7p1KBpVDsLqQbxeX7MIiapbr
-	6uVLQuSiuLIQBwjobysIEQYqtAxafFYZcYXJblprEXTY/X/HCtW0r+AQQisqUui4S1Wc
-	V7rQxKDgqzLC4ZcNadNxKkpFYDW9/GEtDLPOoheee7og1ONvJG9wa6Q+t4QbyN3UC54O
-	2wcw==
+	h=mime-version:from:date:message-id:subject:to;
+	bh=fj9FhFsKdrnZRPl61Og+vt5X30gDe+VSQ3qyg7ffwao=;
+	b=UcaYZaySUKCEUoDlG2usPvXTWzUQyccxHLlWeqwBGC5cAW3c27CdWqmFM0HtIyWhuu
+	LQWB/qaZkruNJCNa75kyHC05lyka1yEzmfkMxX+D6AE5a07MkEpxpBoRH5RS669n5p/w
+	REh58vJMBJ5rMab7Xxu+WtxlKzSIjPFRSSB2ZEHqVjH340L9xC1XJ+fz5zqTiR0vqmQs
+	lAkVuaMsqyQcdygINJpNvWM9yNrAdfBaVPwfvw8+5PHfFC1s+wIukaK5vTqbqZqCJEAM
+	/asAvODG/qk3tBiuacykfn4XT0p0L+imeb4pJkSPYs9/FbDuvcWbcM9gEboJjo57Tye6
+	ueyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=WQ7yZj3pSrN8ZeyfYDFvr722Dn/LBYkMSJQuJ3+NyGo=;
-	b=UJm/9mkonX9mtlkU5bl96TW18B5P74xNT24To61Qwf/wXXZNT3agBxqL2C7PxBOAVq
-	eSQBlj1BcIZP44gcF2cMeWQJPhE9rxXBe69biAJyCdYbF47xU3QuZ8rfUVblpEFnUVD4
-	OM3evQEAZspvOAWLk1Lg/nzI8NPybwIWkLix6aIx1yX1ey+Jqoc+xzah9eB4Ktuy+JV2
-	mrpoRznWQAkqhRwj953xzFSCrca9eo1lORCzXhVvbOf2SH+GycmzwSIbbFrj/Yl+hgms
-	2f8EjwFr+6WrhC2CZU1JEKs5w5o3XS7hGJNXB4L2QN5mLLZH5YyetrP/Bh8zkUZYpgwU
-	nKAQ==
-X-Gm-Message-State: APjAAAUYi01EWG/TZXL5n7L6sUf43YdAn/Cvv9vfJxFp8KDGQMKEPVoV
-	IZIcPnPTO9B0htF1qAAxCy8SN0Cq
-X-Google-Smtp-Source: APXvYqwEDdWwzWkuUxRe1AmxMUok/0y/lufEbkPu76fy3DQQg76ObaZqIYC4CwEmzZjfa3fPOAnk2Q==
-X-Received: by 2002:a17:902:7e4b:: with SMTP id
-	a11mr8683567pln.61.1581264204708; 
-	Sun, 09 Feb 2020 08:03:24 -0800 (PST)
-Received: from akuster-ThinkPad-T460s.mvista.com
-	([2601:202:4180:a5c0:154b:3780:5122:4aa9])
-	by smtp.gmail.com with ESMTPSA id d3sm8529353pjx.10.2020.02.09.08.03.24
-	for <bitbake-devel@openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sun, 09 Feb 2020 08:03:24 -0800 (PST)
-From: Armin Kuster <akuster808@gmail.com>
-To: bitbake-devel@openembedded.org
-Date: Sun,  9 Feb 2020 08:03:15 -0800
-Message-Id: <95687be83e716220eb3893b67428f97fd59fc2c5.1581264053.git.akuster808@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1581264053.git.akuster808@gmail.com>
-References: <cover.1581264053.git.akuster808@gmail.com>
-Subject: [1.44 7/7] siggen: Avoid cache mismatch issues with locked sigs
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=fj9FhFsKdrnZRPl61Og+vt5X30gDe+VSQ3qyg7ffwao=;
+	b=al4SngcuEhQwOlOkAiGxrSLiyscdGaPjJ+25aYhff8RJhUvCYNET+OvxZhB8M2rvs2
+	1a8vZVFlmaZ5Wbpo1064+ehd6sffD84xMomYHCzfWLgQW6u7crFcSzDKNWb4AUEZMTBP
+	1d0qboeedr4WeH+K4/vK6iFknicIROeZ3HaAWA4aNfdiHZDr7bN6GPtFoB5SuzdgLDsF
+	TCi1yFU8v1+Kf4qE3OZ10GUJWSVPqvvvC6YYsGkwM0j9P4lm/6YuKB7TpMR22fuPYhMw
+	Dgl8ckG09RrpyKLgLgaqibdmRiKXFQDLflMgVawIWF8lykb83X49BeYOblRIkD6Ai0T8
+	jzwA==
+X-Gm-Message-State: APjAAAVrz4Ewo0F4zZOfQQBZgOmoKp334nXfZVZHDyeLFoVcrnht58jC
+	a6ftwEemNHxLfCt3SLUQLteBYgTPKsoKoouLwYORH2Ed
+X-Google-Smtp-Source: APXvYqwqVJJG9zSJCSAqBkgJ+X1ae8v2+dqHls5RI38kSdcrNOv9EjPnasVRm3RzRKnN4qEHtaH0cevAA89ImF99lQM=
+X-Received: by 2002:ac5:cdcd:: with SMTP id u13mr16577162vkn.0.1580300510959; 
+	Wed, 29 Jan 2020 04:21:50 -0800 (PST)
+MIME-Version: 1.0
+From: =?UTF-8?Q?Mauro_Queir=C3=B3s?= <maurofrqueiros@gmail.com>
+Date: Wed, 29 Jan 2020 12:21:40 +0000
+Message-ID: <CAOev9BfgUF4yCYYVwtLm1jQCKjwdTJPc5XHtPtrKq-vFzkdP_A@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+X-Mailman-Approved-At: Mon, 10 Feb 2020 14:14:47 +0000
+Subject: git-lfs validation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,36 +50,90 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 09 Feb 2020 16:03:23 -0000
+X-List-Received-Date: Fri, 31 Jan 2020 09:28:01 -0000
+Content-Type: multipart/alternative; boundary="000000000000981c7e059d46626b"
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+--000000000000981c7e059d46626b
+Content-Type: text/plain; charset="UTF-8"
 
-If locked sigs are in use this function makes little sense, need to
-avoid generating mismatch warnings.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 27ad9c1d468fba858a4adeb56b605227b415ae0f)
-Signed-off-by: Armin Kuster <akuster808@gmail.com>
----
- lib/bb/siggen.py | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 96807c46..ffd8fcaf 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -515,6 +515,10 @@ class SignatureGeneratorUniHashMixIn(object):
-         if self.setscenetasks and tid not in self.setscenetasks:
-             return
- 
-+        # This can happen if locked sigs are in action. Detect and just abort
-+        if taskhash != self.taskhash[tid]:
-+            return
-+
-         # Sanity checks
-         cache_unihash = self._get_unihash(tid, checkkey=taskhash)
-         if cache_unihash is None:
--- 
-2.17.1
+Hi,
 
 
+
+I noticed two things related to git-lfs on
+poky/bitbake/lib/bb/fetch2/git.py, which I think may me improved:
+
+
+
+First, git.py seems to always check the master branch when looking for lfs
+objects (_contains_lfs function), even when the branch is specified in
+SRC_URI;
+
+
+
+Second, the warning message "Repository %s has LFS content but it is not
+being fetched" is printed even when git-lfs is available and "lfs=1" is set.
+
+
+
+I could also provide a patch if you think these two issues make sense.
+
+--000000000000981c7e059d46626b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">
+
+
+
+
+
+
+
+
+
+
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">H=
+i, </p>
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">=
+=C2=A0</p>
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">I=
+ noticed two things related to git-lfs on poky/bitbake/lib/bb/fetch2/git.py=
+, which I think
+may me improved:</p>
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">=
+=C2=A0</p>
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">F=
+irst,
+git.py seems to always check the master branch when looking for lfs objects
+(_contains_lfs function), even when the branch is specified in SRC_URI;</p>
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">=
+=C2=A0</p>
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">S=
+econd,
+the warning message &quot;Repository %s has LFS content but it is not being
+fetched&quot; is printed even when git-lfs is available and &quot;lfs=3D1&q=
+uot;
+is set.</p>
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">=
+=C2=A0</p>
+
+<p style=3D"margin:0in;font-family:Calibri;font-size:11pt" lang=3D"en-US">I=
+ could also provide a patch if you think these two issues make sense.<br></=
+p>
+
+
+
+
+
+</div>
+
+--000000000000981c7e059d46626b--
