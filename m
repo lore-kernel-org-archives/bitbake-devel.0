@@ -1,52 +1,36 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com
-	[209.85.128.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 671C660F4B
+Return-Path: <rpjday@crashcourse.ca>
+Received: from cpanel7.indieserve.net (cpanel7.indieserve.net [199.212.143.8])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CAEE60F7A
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  8 Feb 2020 16:01:14 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id b17so5975876wmb.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 08 Feb 2020 08:01:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding;
-	bh=wfcfr7s2dwD9SevPhJ9RsMb3a9cxhynC5lsPnjOHru4=;
-	b=iaiqvoxE4Up8okHrOib34iv+7cE/1OoJkj+9COuZStjqgrkEchi1038kiWUPwHXX8K
-	tXrSsUmWPAUWhmW10YVyTrfkrkKiVGOYob/6sVnist5hL4Vmxjj/gSUQPeF7kNM5cii0
-	h7fyj9GA5WmdvP19FoqmV9vg8UokWPt+f0f8s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references:mime-version:content-transfer-encoding;
-	bh=wfcfr7s2dwD9SevPhJ9RsMb3a9cxhynC5lsPnjOHru4=;
-	b=X4m431d+XKnEWP8o5V8uI9U5kZz1RP2EjkA7FE8ce3WKSxNAcJT+YOBAYLzszfGLqS
-	d0LwX8z+i1lM71KfbScjAdhGH/eVjEgqjYmh4LLf2siesXHtO4AOIJrokRS/jYnnbIVa
-	a3jMpeL+luCDw6M9DZ7w/LN5VS7zhDkwUppeG1yhcnhe/xvfNg3/HA6EJr74jDiBXVfa
-	R0sUDBE17Wk+nEZU9OJPagPme86CKb1y5vaKKS9j/xiIBRVt197Qf1Wlq8440Qpk/Ib9
-	gRa6G9oNwBEhZpdBZMvtwvxupWBcplYCWS9NpfGXABuqo7sGYzTzO1H/SIp/UGJOIEC9
-	OQRw==
-X-Gm-Message-State: APjAAAVMt9UrB3GelRzG+3IaI4vZM3Zrdx4aLorCCUxXGGqKXb75yYMb
-	ElQJTAEKvcsUKQoxTjZ8PSnSo5B5d2A=
-X-Google-Smtp-Source: APXvYqw1k/rgZk9yUlxeyPKySPmrpjJDfb8swNistFMsU9z33bJeuicMOoLqhYi0JgpHdJA3jozeQA==
-X-Received: by 2002:a05:600c:410f:: with SMTP id
-	j15mr4091329wmi.132.1581177674857; 
-	Sat, 08 Feb 2020 08:01:14 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	s23sm2512996wra.15.2020.02.08.08.01.13
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sat, 08 Feb 2020 08:01:14 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Sat,  8 Feb 2020 16:01:11 +0000
-Message-Id: <20200208160111.13305-3-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200208160111.13305-1-richard.purdie@linuxfoundation.org>
-References: <20200208160111.13305-1-richard.purdie@linuxfoundation.org>
+	Sat,  8 Feb 2020 19:43:39 +0000 (UTC)
+Received: from cpef81d0f814063-cmf81d0f814060.cpe.net.cable.rogers.com
+	([174.114.57.56]:48458 helo=localhost.localdomain)
+	by cpanel7.indieserve.net with esmtpsa
+	(TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256) (Exim 4.92)
+	(envelope-from <rpjday@crashcourse.ca>) id 1j0W0y-008Gnk-EU
+	for bitbake-devel@lists.openembedded.org;
+	Sat, 08 Feb 2020 14:43:40 -0500
+Date: Sat, 8 Feb 2020 14:43:38 -0500 (EST)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@localhost.localdomain
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.LFD.2.21.2002081443050.2161731@localhost.localdomain>
 MIME-Version: 1.0
-Subject: [PATCH 3/3] siggen: Avoid cache mismatch issues with locked sigs
+X-OutGoing-Spam-Status: No, score=-0.2
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel7.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel7.indieserve.net: authenticated_id:
+	rpjday+crashcourse.ca/only user confirmed/virtual account not
+	confirmed
+X-Authenticated-Sender: cpanel7.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: [PATCH] doc: correct typo of 'BitBack'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,33 +43,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 08 Feb 2020 16:01:14 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Sat, 08 Feb 2020 19:43:40 -0000
+Content-Type: text/plain; charset=US-ASCII
 
-If locked sigs are in use this function makes little sense, need to
-avoid generating mismatch warnings.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+
 ---
- lib/bb/siggen.py | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 96807c46cd..ffd8fcaf36 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -515,6 +515,10 @@ class SignatureGeneratorUniHashMixIn(object):
-         if self.setscenetasks and tid not in self.setscenetasks:
-             return
- 
-+        # This can happen if locked sigs are in action. Detect and just abort
-+        if taskhash != self.taskhash[tid]:
-+            return
-+
-         # Sanity checks
-         cache_unihash = self._get_unihash(tid, checkkey=taskhash)
-         if cache_unihash is None:
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+index 421364c2..455f5bf3 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+@@ -1864,7 +1864,7 @@
+                         accessing your <filename>$HOME/.ccache</filename>
+                         directory.
+                         The following command "whitelists" the environment variable
+-                        <filename>CCACHE_DIR</filename> causing BitBack to allow that
++                        <filename>CCACHE_DIR</filename> causing BitBake to allow that
+                         variable into the datastore:
+                         <literallayout class='monospaced'>
+      export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE CCACHE_DIR"
+
 -- 
-2.20.1
 
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                         http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
