@@ -1,22 +1,48 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
-	by mail.openembedded.org (Postfix) with ESMTP id 91B46608AF
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  9 Feb 2020 08:50:38 +0000 (UTC)
-IronPort-SDR: APiG5/3Hxg55O5EmmU3SJra+P5FC+aiUKQguQh6soqzcdSTbxOyKg3eU2cDYM2hIFC9ukKnb9Q
-	v0R0Ugn3Dobiy6yDSEb6wvpqGzJepMqMGtONpQVXuxP3SymOYF2+yxlFcvA+44n4oswSvX2cJ4
-	W7ADyqxt1iCks4Gk9/FvNXQoU8eANhjZrfswZlOvouHcHAYA49cLBr5BIvTBmmsDDXRBx8GmPy
-	TvBS6V+70kYmJfc3/LSO0xVyi57XrlLztXIcVxiEFMJrm2njsGDWh41NaP+bqhlhp31dXeEuO/
-	DY8=
-X-IronPort-AV: E=Sophos;i="5.70,420,1574118000"; 
-   d="scan'208";a="5225059"
-From: Peter Kjellerstedt <pkj@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 9 Feb 2020 09:50:34 +0100
-Message-ID: <20200209085034.16349-1-pkj@axis.com>
-X-Mailer: git-send-email 2.21.1
-MIME-Version: 1.0
-Subject: [master][zeus][PATCH] uihelper: Track scene tasks again
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com
+	[209.85.215.178])
+	by mail.openembedded.org (Postfix) with ESMTP id 341E96080B
+	for <bitbake-devel@openembedded.org>;
+	Sun,  9 Feb 2020 16:03:18 +0000 (UTC)
+Received: by mail-pg1-f178.google.com with SMTP id d6so2525587pgn.5
+	for <bitbake-devel@openembedded.org>;
+	Sun, 09 Feb 2020 08:03:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:subject:date:message-id;
+	bh=yNZXZxV0skD5J0C6F3J54rf2oWb8TZhoIxsksoWlASo=;
+	b=C55mkrQTO/tFDUuXRlZ0ajgFjT3VobzgUyuKd2OeuuhLlm4VI8AqAof29PacS3BfOk
+	tWVmwDhJ2XAFPQZF219nAwGkL+78WT1fRDX33CxALevbNhrMIhzwln7zVwC1o9WzADKQ
+	4yihD56FENVf9Syr64Hl7/oYAzlJnMSgOFBagF4TwcWJkRyy8j3eL0pTqBlbDqd3K6tN
+	iilqlHzUDH0tEvlDm4H+JwQlCBbg4EGOkk6YEuNDYFKPBUrGqGiRS4J2Ddw3o07RSYtC
+	+qxOjFuQGhtFqAhKyw+4H4nov7y5n/JoRzUzfqeRw3cNZoTSvUK7hOr2502SEI5dwkHK
+	pcMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=yNZXZxV0skD5J0C6F3J54rf2oWb8TZhoIxsksoWlASo=;
+	b=Oi5kVQPGwPk2zjuovOjfCP7zJ3hbv3nDnOxuf7tIA+/nTJU7UicSbvBWsRKzY8Dviu
+	0Lwh8+ZwXiozJVSTAodf0krFRWOpOEQPRvHk2qyNxwgU8A719qmnW1ezPZJ3e24P4u4/
+	D9a73KuVyeXe7wPJR0ctmUBJUYb+xG2WOnIMj2nlPzZjBUvh4NoXxkOf1oZnz68gaPGu
+	+Lm5sN3CCCydpxkVMcA5q5KMnHwc6YTwq7vOaHnyGuZhTtgpe2BWBQK1ZbTGFt/PTm0p
+	Tm290millTsxWGW93ojLGr49pBJH/4rJszTKBAjPXqQo0CuC/WL6P+4oUnEmCnyrPjF8
+	Lrfw==
+X-Gm-Message-State: APjAAAVtNOZymqSd328lZoSburjZsNeFSOtrGmaqWGBFc3UjPFXbCYmQ
+	BrLJUQrhH8oIRnfzkXCjTCmjLUcA
+X-Google-Smtp-Source: APXvYqwhfChOKgeSgs1cbMHS5aMDEToUSGz5+FSEwiaKizwLDNF0Pan7MHv/x0q23h6ih98PtpP4SA==
+X-Received: by 2002:a63:6c09:: with SMTP id h9mr9643664pgc.34.1581264198841;
+	Sun, 09 Feb 2020 08:03:18 -0800 (PST)
+Received: from akuster-ThinkPad-T460s.mvista.com
+	([2601:202:4180:a5c0:154b:3780:5122:4aa9])
+	by smtp.gmail.com with ESMTPSA id d3sm8529353pjx.10.2020.02.09.08.03.18
+	for <bitbake-devel@openembedded.org>
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Sun, 09 Feb 2020 08:03:18 -0800 (PST)
+From: Armin Kuster <akuster808@gmail.com>
+To: bitbake-devel@openembedded.org
+Date: Sun,  9 Feb 2020 08:03:08 -0800
+Message-Id: <cover.1581264053.git.akuster808@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Subject: [1.44 0/7] patch review
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,56 +55,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 09 Feb 2020 08:50:41 -0000
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-List-Received-Date: Sun, 09 Feb 2020 16:03:18 -0000
 
-Track both scene tasks and run tasks to provide a complete progress
-information for all tasks. This avoids the progress bar from stating
-"Currently XX running tasks (0 of 0)" while progressing through
-thousands of setscene tasks, obviously confusing the user.
+Here are a few more changes targeted for the zeus 3.0.2 release.
+Please have comments back by Tuesday.
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
- bitbake/lib/bb/ui/uihelper.py | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+The following changes since commit 1a026d4aca47ed1b0b74a8a818635e7520e8f9c8:
 
-diff --git a/bitbake/lib/bb/ui/uihelper.py b/bitbake/lib/bb/ui/uihelper.py
-index 48d808ae28..ac4ac5a882 100644
---- a/bitbake/lib/bb/ui/uihelper.py
-+++ b/bitbake/lib/bb/ui/uihelper.py
-@@ -16,6 +16,10 @@ class BBUIHelper:
-         self.running_pids = []
-         self.failed_tasks = []
-         self.pidmap = {}
-+        self.scenetasks_current = 0
-+        self.scenetasks_total = 0
-+        self.runtasks_current = 0
-+        self.runtasks_total = 0
-         self.tasknumber_current = 0
-         self.tasknumber_total = 0
- 
-@@ -49,9 +53,17 @@ class BBUIHelper:
-             tid = event._fn + ":" + event._task
-             removetid(event.pid, tid)
-             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
-+        elif isinstance(event, bb.runqueue.sceneQueueTaskStarted):
-+            self.scenetasks_current = event.stats.completed + event.stats.active + event.stats.failed + 1
-+            self.scenetasks_total = event.stats.total
-+            self.tasknumber_current = self.scenetasks_current + self.runtasks_current
-+            self.tasknumber_total = self.scenetasks_total + self.runtasks_total
-+            self.needUpdate = True
-         elif isinstance(event, bb.runqueue.runQueueTaskStarted):
--            self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
--            self.tasknumber_total = event.stats.total
-+            self.runtasks_current = event.stats.completed + event.stats.active + event.stats.failed + 1
-+            self.runtasks_total = event.stats.total
-+            self.tasknumber_current = self.scenetasks_current + self.runtasks_current
-+            self.tasknumber_total = self.scenetasks_total + self.runtasks_total
-             self.needUpdate = True
-         elif isinstance(event, bb.build.TaskProgress):
-             if event.pid > 0 and event.pid in self.pidmap:
+  runqueue: Use a set for the setscene tasks list (2020-01-18 12:20:38 -0800)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.44-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.44-nut
+
+Chris Laplante (3):
+  fetch2: do not suffix srcrev cache key with PN
+  fetch2/git: _revision_key: collapse adjacent slashes
+  persist_data.py: Immediately get exclusive lock in __setitem__
+
+Frazer Clews (1):
+  cooker/toaster: replaced deprecated method warn() with warning()
+
+Richard Purdie (3):
+  siggen: Optimise get_unihash disk based cache handling
+  siggen: Cache unihash values to avoid cache lookup
+  siggen: Avoid cache mismatch issues with locked sigs
+
+ lib/bb/cooker.py                              |  2 +-
+ lib/bb/fetch2/__init__.py                     |  3 +-
+ lib/bb/fetch2/git.py                          |  4 +-
+ lib/bb/persist_data.py                        |  3 +
+ lib/bb/siggen.py                              | 68 +++++++++++++------
+ .../management/commands/runbuilds.py          |  6 +-
+ 6 files changed, 60 insertions(+), 26 deletions(-)
+
 -- 
-2.21.1
+2.17.1
 
 
