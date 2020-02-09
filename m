@@ -1,51 +1,51 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com
-	[209.85.215.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 50FFB60D1F
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com
+	[209.85.215.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 31EF260F02
 	for <bitbake-devel@openembedded.org>;
-	Sun,  9 Feb 2020 16:03:20 +0000 (UTC)
-Received: by mail-pg1-f174.google.com with SMTP id b35so2498812pgm.13
+	Sun,  9 Feb 2020 16:03:21 +0000 (UTC)
+Received: by mail-pg1-f182.google.com with SMTP id j15so2523513pgm.6
 	for <bitbake-devel@openembedded.org>;
-	Sun, 09 Feb 2020 08:03:21 -0800 (PST)
+	Sun, 09 Feb 2020 08:03:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:subject:date:message-id:in-reply-to:references;
-	bh=IgcAKPRW+3/BKYjgf+qvn+tomuP+rx4SEmjKYBXqRR4=;
-	b=NEc6pHGKNwjMHbKsYuSZvWURnPTS0W36cj42CvxRWkJH0A7mZ7LSWrS0GsBGgr5zKH
-	Id1EBMb3vqv4Q7Jm9S+EUkxXYs183W1IA21+oP3t5j2lN+uWr2vGs07YVK4pyRfpmbvP
-	P2KjDYGVe/Zp3sjQYaqkuobsJOFGpluoxTXDXM3MOOYkmpRTOhHKiXrdRB0MRCWIkKh8
-	ZW6E0CL43XhvNIu7HHKz0lHpDOSUxxAU5GW0R+312pJ77HUeRNRD/Pr6iTGwR2kke6OB
-	1TIZqbZ2WDnStocu27z7NHQq9JaY18AwucwtEes70joX39iWKgVYqDbHfRd9Orgxm17W
-	2ffg==
+	bh=cvL06cyv1l6oPDblufFcFa5ccpI+33CpXfXABFGonUc=;
+	b=DvrroWH7W/c3xABECFqX4pgEfHzwRpJR/wN3bCWITXy3XB8MOlG50s/mMko6vjOZTV
+	QHevQBzzXVbhTDZboD3D7tR0h1+IwHKkpBgu6Li/DFWs5rCmiMCuvKJuPEs6n8rmbfcK
+	yWpCGAaStzjW/YUXB7umIf8yOxD20x1/yCLG8PKPZl2W1fYcx3EOTY17Qajp9KCUlkWd
+	aUWsA32B0rCiJtJgO4Wo7kJSMoAOPJ4t4/+YBu5NXabh7E50KxqngRBx4bErRuTXOWh6
+	adCGBsJ3e6Lk/44M3i6vUAESjm0Ryd55qRyRRY5Pn13vIcEEESan4iiL9EdAJHu7qwEk
+	aiqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
 	:references;
-	bh=IgcAKPRW+3/BKYjgf+qvn+tomuP+rx4SEmjKYBXqRR4=;
-	b=fWsX5kJNkOL4HAETn6bgGPjW1irnsAvlJceBZ9MHoxwsrrVvz72rpLvvvCfMtisA/l
-	q9G6N5Thpzu2jVei5mGT9hE0D5Ku3oP0qQ12c6c/JwIaLMdkO7fyd7fAkM/TFTnJ1xZ7
-	FzmokOKBppUNzZqL/1rCRVBvFxcOWDo4n3LD0GJlDtH+S5AGg+fzGVdEwqVqmJouPnYz
-	aQe3f9ky4kwZUD/kjUH3aWEg0vKy5zxc0z4G3ls4pJhcAwxf+BPwXIzypaKrBheVsJFY
-	mZtXT8BMAf3NS+icAGfSlHFtTyly32VmEsy9Fq4tO+3Cl/aKUb5K0nVmk206wXoM//ie
-	2ehg==
-X-Gm-Message-State: APjAAAVQGTWH+SVwd2o65WTXAfXLf7pPqzWIgz9b2/eZVpe5sQhdAUIg
-	T1tplrXyTjw48eIN6cIy5VWz5FlZ
-X-Google-Smtp-Source: APXvYqxoB7sTrlrC6E0+JGWM5CRMktyj6TN6PAOl5TcmvyzqhO0pkXAmlmhMLaHWjdshBnpzorfM4Q==
-X-Received: by 2002:a63:5508:: with SMTP id j8mr9568133pgb.170.1581264201270; 
-	Sun, 09 Feb 2020 08:03:21 -0800 (PST)
+	bh=cvL06cyv1l6oPDblufFcFa5ccpI+33CpXfXABFGonUc=;
+	b=h/5A+te6f5UCnmhnTzOwoZzMfRV3I31ijoOK4/b8ygiznHJvcRXU9al4X5ZpoIfW6t
+	3AMvD4qDUMc1KTxi9vKCOw0B7oFzxTENktpER7a2U8t0NxE/L9gmzb8JnP9VnF17oTYk
+	SWLRgy2fs2asvsEvHxfDB1WKAmwuBqygZcyDzFkltf8raqCxBYZv4nSdl4QMp9uhXFGc
+	1a5zpIRU7LK3ETzeekYrU3DkqAWood0260UsWHeE2CsJ7CJXu/g0BDEQvkfmNyWNAGIv
+	G+bJYGV/MfyoubdjKOyCAHeN7R1831p/NLteD2AKuJ1p+w4S+0hLdwzpoXNLwTyF9rfy
+	8XNw==
+X-Gm-Message-State: APjAAAXBcr+lxUBiZDCRpCp2ND9NHlzj7xDWcAWQ6RPDeFpn+SLhaE9l
+	tr/ntmjjvFsqUTq0MCwgbiEX5kY0
+X-Google-Smtp-Source: APXvYqz3wtFlFFuEvktQiUoeMQI/anzOdgKCQrRtoO5QF/iolqDbH99WH/XPgxhmlYYPkj3v3SHBlg==
+X-Received: by 2002:a63:5807:: with SMTP id m7mr9128113pgb.83.1581264202069;
+	Sun, 09 Feb 2020 08:03:22 -0800 (PST)
 Received: from akuster-ThinkPad-T460s.mvista.com
 	([2601:202:4180:a5c0:154b:3780:5122:4aa9])
-	by smtp.gmail.com with ESMTPSA id d3sm8529353pjx.10.2020.02.09.08.03.20
+	by smtp.gmail.com with ESMTPSA id d3sm8529353pjx.10.2020.02.09.08.03.21
 	for <bitbake-devel@openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sun, 09 Feb 2020 08:03:20 -0800 (PST)
+	Sun, 09 Feb 2020 08:03:21 -0800 (PST)
 From: Armin Kuster <akuster808@gmail.com>
 To: bitbake-devel@openembedded.org
-Date: Sun,  9 Feb 2020 08:03:11 -0800
-Message-Id: <2ba2f224b50956313f5c2ba01942143b4d6098f2.1581264053.git.akuster808@gmail.com>
+Date: Sun,  9 Feb 2020 08:03:12 -0800
+Message-Id: <c131015f1ac152f1fea4b83a3d451c3e4d05ebec.1581264053.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1581264053.git.akuster808@gmail.com>
 References: <cover.1581264053.git.akuster808@gmail.com>
-Subject: [1.44 3/7] persist_data.py: Immediately get exclusive lock in __setitem__
+Subject: [1.44 4/7] cooker/toaster: replaced deprecated method warn() with warning()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,35 +58,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 09 Feb 2020 16:03:20 -0000
+X-List-Received-Date: Sun, 09 Feb 2020 16:03:21 -0000
 
-From: Chris Laplante <chris.laplante@agilent.com>
+From: Frazer Clews <frazer.clews@codethink.co.uk>
 
-To avoid races, SQLTable::__setitem__ needs an exclusive lock for the
-entire transaction, not just the INSERT/UPDATE part.
+Removed the deprecated methods as it will only cause problems later on,
+and since warn() just calls warning(), it shouldn't change anything
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+Signed-off-by: Frazer Clews <frazer.clews@codethink.co.uk>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit feb43e7c30f5bfab75d718896c45df621810d06f)
+(cherry picked from commit a194f275235f22411cb2368f06a44f61ceb6a0f3)
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- lib/bb/persist_data.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/bb/cooker.py                                        | 2 +-
+ lib/toaster/bldcontrol/management/commands/runbuilds.py | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
-index de8f87a8..7357ab2d 100644
---- a/lib/bb/persist_data.py
-+++ b/lib/bb/persist_data.py
-@@ -179,6 +179,9 @@ class SQLTable(collections.MutableMapping):
-         elif not isinstance(value, str):
-             raise TypeError('Only string values are supported')
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index b74affa7..911805a6 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1788,7 +1788,7 @@ class CookerCollectFiles(object):
+                 # When constructing an older style single regex, it's possible for BBMASK
+                 # to end up beginning with '|', which matches and masks _everything_.
+                 if mask.startswith("|"):
+-                    collectlog.warn("BBMASK contains regular expression beginning with '|', fixing: %s" % mask)
++                    collectlog.warning("BBMASK contains regular expression beginning with '|', fixing: %s" % mask)
+                     mask = mask[1:]
+                 try:
+                     re.compile(mask)
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 50ec4098..19f659ec 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -168,17 +168,17 @@ class Command(BaseCommand):
+         try:
+             self.cleanup()
+         except Exception as e:
+-            logger.warn("runbuilds: cleanup exception %s" % str(e))
++            logger.warning("runbuilds: cleanup exception %s" % str(e))
  
-+        # Ensure the entire transaction (including SELECT) executes under write lock
-+        cursor.execute("BEGIN EXCLUSIVE")
-+
-         cursor.execute("SELECT * from %s where key=?;" % self.table, [key])
-         row = cursor.fetchone()
-         if row is not None:
+         try:
+             self.archive()
+         except Exception as e:
+-            logger.warn("runbuilds: archive exception %s" % str(e))
++            logger.warning("runbuilds: archive exception %s" % str(e))
+ 
+         try:
+             self.schedule()
+         except Exception as e:
+-            logger.warn("runbuilds: schedule exception %s" % str(e))
++            logger.warning("runbuilds: schedule exception %s" % str(e))
+ 
+     def handle(self, **options):
+         pidfile_path = os.path.join(os.environ.get("BUILDDIR", "."),
 -- 
 2.17.1
 
