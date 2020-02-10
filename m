@@ -1,47 +1,32 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
-	[209.85.128.66])
-	by mail.openembedded.org (Postfix) with ESMTP id E99606022D
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+	by mail.openembedded.org (Postfix) with ESMTP id C949B60213
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Feb 2020 14:17:41 +0000 (UTC)
-Received: by mail-wm1-f66.google.com with SMTP id a6so522337wme.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Feb 2020 06:17:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=FxS3KaLDROgdGNSxBoo8FRWCyblSR+rp0Gqu0UTu6EA=;
-	b=GmNI9OTwGihYQ2rh8Snu0+H89ZCskohSEInWbc6qmJudzLGAmsXlbfQEQVAJTPaYmd
-	64/L9Z/byn72CejK21gae7h3YVr+P8j6CNJsE5eHIiSf11NF1yt2D06JygLbIP4HGgmC
-	OdSXMslOJ5haBsdSlqa+iPUL3V3ASLRrTapIw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=FxS3KaLDROgdGNSxBoo8FRWCyblSR+rp0Gqu0UTu6EA=;
-	b=ASRSUOM09gsL7Gk/fIRHRFfHNE24w8EMlrLwJgH90LENVjNcBUtvgQJZQqcfmSTyod
-	VlnAkmCX9EC7s8Qhf4rkhHDRJ76i3Mjzye1C0NW41jwY9fqynlbSpIl318opP9uOP2N+
-	iaukjGY0UanJDTx1ln2qs2OnoyrYI3fxaoV7w3NgjIQabLjsdQnB9M0VKfV5JNO0mXTX
-	Tu+l91qKGPmo6RjbsmZ6mRCUoFgTAJokLrvPWW5lY3L+lkuKWmv4Hj8+KhlzKGOfwMZ7
-	WYPTppGcGsY0PCSctRWbKOK3um9WllYIg5UzzYh+5gUSaNjnpamsgVe6T9xiyKqPUjZS
-	yelQ==
-X-Gm-Message-State: APjAAAVJGtj4NAuhOZ9b0pBr+co/UgctEjTy4hdof8LlQYEC4m5CwaNP
-	QlZxdCCe1KAyEJJ5u4r8w7Rt2w==
-X-Google-Smtp-Source: APXvYqyRxP22NdUKLuroa29ik61k6u4dt0n5RtdsSC3i2EBv3O2Ec1+ZtPxxU6ixIWUhVUhEaCKrGQ==
-X-Received: by 2002:a1c:9dce:: with SMTP id g197mr15052410wme.23.1581344261821;
-	Mon, 10 Feb 2020 06:17:41 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id w7sm773891wmi.9.2020.02.10.06.17.39
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 10 Feb 2020 06:17:41 -0800 (PST)
-Message-ID: <29677f1ba34d00b61ad1375b38f56b20c3e98d50.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Peter Kjellerstedt <pkj@axis.com>, bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Feb 2020 14:17:35 +0000
-In-Reply-To: <20200209085034.16349-1-pkj@axis.com>
+	Mon, 10 Feb 2020 15:01:24 +0000 (UTC)
+IronPort-SDR: CiKv3DI7Y5D+eeT+p/Rr638QC9UGE9//Biz2obcUMV5xxxirpuIacu1SZ8K/RQZdHHOMTl6bHt
+	zau2jirqzhNxMQ4YCnvHxmpHI15vAdNh4acIIDic6wj8QHBUhDJ4au+ec0HcKvFgdp0l7jm3JL
+	Rw0wHRxNHGGqB0pmqpI/8T3e8F/fYYXqxKvM2k2517MuE2HBCDiF7NuWyfH9sH85qFqiAc863c
+	c2DQuzMa+KMKo1/o7aIcUZ9myv5YgORmcZbeRhvW1BUSlIU4irvbxtDRT8Vmctyd+XVmHAyITy
+	qc8=
+X-IronPort-AV: E=Sophos;i="5.70,425,1574118000"; 
+   d="scan'208";a="5116064"
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [master][zeus][PATCH] uihelper: Track scene
+	tasks again
+Thread-Index: AQHV4Bzc9xFX8di2zEWzwAbvgkavfKgUg8ig
+Date: Mon, 10 Feb 2020 15:01:24 +0000
+Message-ID: <68698044e91d4c4dbaa60d63260ac7f7@XBOX03.axis.com>
 References: <20200209085034.16349-1-pkj@axis.com>
-User-Agent: Evolution 3.34.1-2 
+	<29677f1ba34d00b61ad1375b38f56b20c3e98d50.camel@linuxfoundation.org>
+In-Reply-To: <29677f1ba34d00b61ad1375b38f56b20c3e98d50.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
 Subject: Re: [master][zeus][PATCH] uihelper: Track scene tasks again
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -56,24 +41,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Feb 2020 14:17:42 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 10 Feb 2020 15:01:25 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Sun, 2020-02-09 at 09:50 +0100, Peter Kjellerstedt wrote:
-> Track both scene tasks and run tasks to provide a complete progress
-> information for all tasks. This avoids the progress bar from stating
-> "Currently XX running tasks (0 of 0)" while progressing through
-> thousands of setscene tasks, obviously confusing the user.
-
-There was a reason this was removed, this can't work unfortunately. 
-
-The code was changed such that setscene tasks can potentially be rerun
-so we have no idea what "complete" looks like or how many will actually
-run. I'm not happy about that but there wasn't an alternative.
-
-Cheers,
-
-Richard
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
+aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDEwIGZlYnJ1YXJp
+IDIwMjAgMTU6MTgNCj4gVG86IFBldGVyIEtqZWxsZXJzdGVkdCA8cGV0ZXIua2plbGxlcnN0ZWR0
+QGF4aXMuY29tPjsgYml0YmFrZS0NCj4gZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBT
+dWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFttYXN0ZXJdW3pldXNdW1BBVENIXSB1aWhlbHBl
+cjogVHJhY2sgc2NlbmUNCj4gdGFza3MgYWdhaW4NCj4gDQo+IE9uIFN1biwgMjAyMC0wMi0wOSBh
+dCAwOTo1MCArMDEwMCwgUGV0ZXIgS2plbGxlcnN0ZWR0IHdyb3RlOg0KPiA+IFRyYWNrIGJvdGgg
+c2NlbmUgdGFza3MgYW5kIHJ1biB0YXNrcyB0byBwcm92aWRlIGEgY29tcGxldGUgcHJvZ3Jlc3MN
+Cj4gPiBpbmZvcm1hdGlvbiBmb3IgYWxsIHRhc2tzLiBUaGlzIGF2b2lkcyB0aGUgcHJvZ3Jlc3Mg
+YmFyIGZyb20gc3RhdGluZw0KPiA+ICJDdXJyZW50bHkgWFggcnVubmluZyB0YXNrcyAoMCBvZiAw
+KSIgd2hpbGUgcHJvZ3Jlc3NpbmcgdGhyb3VnaA0KPiA+IHRob3VzYW5kcyBvZiBzZXRzY2VuZSB0
+YXNrcywgb2J2aW91c2x5IGNvbmZ1c2luZyB0aGUgdXNlci4NCj4gDQo+IFRoZXJlIHdhcyBhIHJl
+YXNvbiB0aGlzIHdhcyByZW1vdmVkLCB0aGlzIGNhbid0IHdvcmsgdW5mb3J0dW5hdGVseS4NCj4g
+DQo+IFRoZSBjb2RlIHdhcyBjaGFuZ2VkIHN1Y2ggdGhhdCBzZXRzY2VuZSB0YXNrcyBjYW4gcG90
+ZW50aWFsbHkgYmUgcmVydW4NCj4gc28gd2UgaGF2ZSBubyBpZGVhIHdoYXQgImNvbXBsZXRlIiBs
+b29rcyBsaWtlIG9yIGhvdyBtYW55IHdpbGwgYWN0dWFsbHkNCj4gcnVuLiBJJ20gbm90IGhhcHB5
+IGFib3V0IHRoYXQgYnV0IHRoZXJlIHdhc24ndCBhbiBhbHRlcm5hdGl2ZS4NCj4gDQo+IENoZWVy
+cywNCj4gDQo+IFJpY2hhcmQNCg0KSWYgYSBzZXRzY2VuZSB0YXNrIGlzIHJlcnVuLCB3b24ndCB0
+aGF0IGp1c3QgbWVhbiB0aGF0IHRoZSBjb3VudGVycyANCmRvbid0IGNoYW5nZSBkdWUgdG8gdGhp
+cz8gU28gaW4gdGhpcyBjYXNlIHRoZXJlIHdvbid0IGJlIGFueSBwcm9ncmVzcyANCnRvIHRoZSB0
+b3RhbCBwcm9ncmVzcyBiYXIgZXZlbiBpZiBhIHRhc2sgaXMgcnVubmluZz8gVGhhdCBzaG91bGQg
+c3RpbGwgDQpiZSBiZXR0ZXIgdGhhbiB0aGUgY3VycmVudCBzaXR1YXRpb24gd2hlbiB0aGV5IGFy
+ZSBuZXZlciBjb3VudGVkLg0KDQovL1BldGVyDQoNCg==
 
