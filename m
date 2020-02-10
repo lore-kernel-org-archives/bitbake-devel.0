@@ -1,35 +1,49 @@
-Return-Path: <Joao.CCabral@parceiros.nos.pt>
-Received: from mail.nos.pt (mail.nos.pt [194.79.86.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 6A14F60B0E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com
+	[209.85.128.66])
+	by mail.openembedded.org (Postfix) with ESMTP id E99606022D
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  9 Feb 2020 23:33:02 +0000 (UTC)
-Received: from PO2EXC012.corporativo.pt (10.227.74.90) by
-	LX3EXC013.corporativo.pt (10.228.74.238) with Microsoft SMTP Server
-	(TLS) id 15.0.1395.4; Sun, 9 Feb 2020 23:17:54 +0000
-Received: from PO2EXC013.corporativo.pt (10.227.74.91) by
-	PO2EXC012.corporativo.pt (10.227.74.94) with Microsoft SMTP Server
-	(TLS) id 15.0.1395.4; Sun, 9 Feb 2020 23:17:54 +0000
-Received: from PO2EXC013.corporativo.pt ([fe80::c83:a3b7:8c1a:f0a6]) by
-	PO2EXC013.corporativo.pt ([fe80::c83:a3b7:8c1a:f0a6%21]) with mapi id
-	15.00.1395.000; Sun, 9 Feb 2020 23:17:54 +0000
-From: "Joao Carlos Cabral (P)" <Joao.CCabral@parceiros.nos.pt>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [HELP] Create a new image recipe based on a (changed) existing
-	one
-Thread-Index: AQHV358opy/+hFiacEiPKhEmZbhQdg==
-Date: Sun, 9 Feb 2020 23:17:54 +0000
-Message-ID: <61f1517446c596d50dfa4aa434e1b3934ab5696c.camel@parceiros.nos.pt>
-Accept-Language: en-US, pt-PT
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [192.168.221.166]
-x-tm-snts-smtp: FEAD529367351A20499ACA65F235A592F3A80809B0A76770863B18C677D5C3452000:8
+	Mon, 10 Feb 2020 14:17:41 +0000 (UTC)
+Received: by mail-wm1-f66.google.com with SMTP id a6so522337wme.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 10 Feb 2020 06:17:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=FxS3KaLDROgdGNSxBoo8FRWCyblSR+rp0Gqu0UTu6EA=;
+	b=GmNI9OTwGihYQ2rh8Snu0+H89ZCskohSEInWbc6qmJudzLGAmsXlbfQEQVAJTPaYmd
+	64/L9Z/byn72CejK21gae7h3YVr+P8j6CNJsE5eHIiSf11NF1yt2D06JygLbIP4HGgmC
+	OdSXMslOJ5haBsdSlqa+iPUL3V3ASLRrTapIw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=FxS3KaLDROgdGNSxBoo8FRWCyblSR+rp0Gqu0UTu6EA=;
+	b=ASRSUOM09gsL7Gk/fIRHRFfHNE24w8EMlrLwJgH90LENVjNcBUtvgQJZQqcfmSTyod
+	VlnAkmCX9EC7s8Qhf4rkhHDRJ76i3Mjzye1C0NW41jwY9fqynlbSpIl318opP9uOP2N+
+	iaukjGY0UanJDTx1ln2qs2OnoyrYI3fxaoV7w3NgjIQabLjsdQnB9M0VKfV5JNO0mXTX
+	Tu+l91qKGPmo6RjbsmZ6mRCUoFgTAJokLrvPWW5lY3L+lkuKWmv4Hj8+KhlzKGOfwMZ7
+	WYPTppGcGsY0PCSctRWbKOK3um9WllYIg5UzzYh+5gUSaNjnpamsgVe6T9xiyKqPUjZS
+	yelQ==
+X-Gm-Message-State: APjAAAVJGtj4NAuhOZ9b0pBr+co/UgctEjTy4hdof8LlQYEC4m5CwaNP
+	QlZxdCCe1KAyEJJ5u4r8w7Rt2w==
+X-Google-Smtp-Source: APXvYqyRxP22NdUKLuroa29ik61k6u4dt0n5RtdsSC3i2EBv3O2Ec1+ZtPxxU6ixIWUhVUhEaCKrGQ==
+X-Received: by 2002:a1c:9dce:: with SMTP id g197mr15052410wme.23.1581344261821;
+	Mon, 10 Feb 2020 06:17:41 -0800 (PST)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id w7sm773891wmi.9.2020.02.10.06.17.39
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Mon, 10 Feb 2020 06:17:41 -0800 (PST)
+Message-ID: <29677f1ba34d00b61ad1375b38f56b20c3e98d50.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Peter Kjellerstedt <pkj@axis.com>, bitbake-devel@lists.openembedded.org
+Date: Mon, 10 Feb 2020 14:17:35 +0000
+In-Reply-To: <20200209085034.16349-1-pkj@axis.com>
+References: <20200209085034.16349-1-pkj@axis.com>
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-Mailman-Approved-At: Mon, 10 Feb 2020 14:14:47 +0000
-Subject: [HELP] Create a new image recipe based on a (changed) existing one
+Subject: Re: [master][zeus][PATCH] uihelper: Track scene tasks again
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,50 +56,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 09 Feb 2020 23:33:02 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AA9DF831041C2642A530132CB6767CFC@nos.pt>
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Mon, 10 Feb 2020 14:17:42 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-SGksIA0KDQpJJ20gdHJ5aW5nIHRvIGNyZWF0ZSBhIGltYWdlIHJlY2lwZSBiYXNlZCBvbiBhIGV4
-aXN0aW5nIG9uZS4NCkkndmUgc2VhcmNoZWQgb25saW5lLCBhbmQgSSBjb3VsZCBmaW5kIHN1Y2gg
-YW4gZXhhbXBsZS4NCg0KTXkgcHJvYmxlbSBpcyB0aGF0IHRoZSBpbWFnZSBJIHdoYXQgdG8gc2Vy
-dmUgYXMgYSBiYXNlIGlzIGNoYW5nZWQgaW4NCmFub3RoZXIgbGF5ZXIsIGFuZCBJIHdhbnQgdG8g
-aW5jbHVkZSB0aGF0IGNoYW5nZXMuDQoNCkV4Og0KDQoodHJlZSkNCg0KUHJqX3Jvb3QNCiAgICAt
-PiBsYXllcjENCiAgICAgICAgLT4gcmVjaXBlcy1jb3JlDQogICAgICAgICAgICAtPiBpbWFnZXMN
-CiAgICAgICAgICAgICAgICAtPiBteS1pbWFnZS5iYiAgW1RoaXMgaXMgdGhlIGJhc2UgcmVjaXBl
-XQ0KICAgIC0+IGxheWVyMg0KICAgICAgICAtPiByZWNpcGVzLWNvcmUNCiAgICAgICAgICAgIC0+
-IGltYWdlcw0KICAgICAgICAgICAgICAgIC0+IG15LWltYWdlLmJiYXBwZW5kIFtUaGlzIGlzIHRo
-ZSBjaGFuZ2VkIG9uZV0NCiAgICAtPiBsYXllcjMNCiAgICAgICAgLT4gcmVjaXBlcy1jb3JlDQog
-ICAgICAgICAgICAtPiBpbWFnZXMNCiAgICAgICAgICAgICAgICAtPiBteS1pbWFnZS1kZXYuYmIg
-W3RoaXMgaXMgdGhlIG5ldyBpbWFnZSwgYmFzZWQgb24gbXktDQppbWFnZV0NCg0KbXktaW1hZ2Uu
-YmJhcHBlbmQgaXMgc29tZXRoaW5nIGxpa2UgdGhpczoNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-IG15LWltYWdlLmJiYXBwZW5kIC0tLS0tLS0tLQ0KUFJPVklERVMgPSAicHJvZHVjdCINCg0KSU1B
-R0VfSU5TVEFMTCArPSAiIFwNCgk8c29tZV9wYWNrYWdlcz4gXA0KIg0KSU1BR0VfSU5TVEFMTF9y
-ZW1vdmUgKz0gIiBcDQogICAgICAgIDxvdGhlci1wYWNrZWdlcz4NCiINCg0KKCsgb3RoZXIgZnVu
-Y3Rpb25zIHJlbGF0ZWQgd2l0aCBzaWduaW5nIHRoZSBpbWFnZSkNCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCg0KVGhlIGZpbmFsIGltYWdlIGlzIGNy
-ZWF0ZWQgd2l0aCAnYml0YmFrZSBwcm9kdWN0Jy4NCkFuZCwgSSB3YW50IHRvIGNyZWF0ZSBhIGRl
-diBpbWFnZSB0aGF0IG11c3QgYmUgYmFzZWQgb24gdGhlIGN1cnJlbnQNCiJwcm9kdWN0IiBpbWFn
-ZSAobXktaW1hZ2UuYmIgKyBteS1pbWFnZS5iYmFwcGVuZCkgd2l0aCBzb21lIGRldg0KcGFja2Fn
-ZXMuDQpTbywgSSBuZWVkIHRvIGluY2x1ZGUgdGhlIGNoYW5nZXMgdGhhdCBteS1pbWFnZS5iYmFw
-ZW5kIGRvZXMgdG8gdGhpcw0KZGV2IGltYWdlIEknbSB0cnlpbmcgdG8gY3JlYXRlLg0KDQoNClRy
-aWVkIHNpbXBsZSBjcmVhdGUgYSBuZXcgaW1hZ2UgdGhhdCBzaG91bGQgYmUgYSBjb3B5IG9mIHRo
-ZSB3b3JraW5nDQpvbmUsIGFuZCB0aGVuIGFkZCB0aGUgbmVlZGVkIHBhY2thZ2VzIGZvciBkZXZl
-bG9wbWVudC4NClNvIEkgZGlkIHRoZSBmb2xsb3dpbmcuLi4NCg0KLS0tLS0tLS0tLS0tLS0tLSBt
-eS1pbWFnZS1kZXYuYmJhcHBlbmQgLS0tLS0tLS0tLQ0KDQpTVU1NQVJZID0gImRldiBJbWFnZSIN
-Cg0KcmVxdWlyZSBsYXllcjEvcmVjaXBlcy1jb3JlL2ltYWdlcy9teS1pbWFnZS5iYg0KLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNCkkgY2FuIHJ1biAn
-Yml0YmFrZSBteS1pbWFnZS1kZXYnIGFuZCBpdCBydW5zLCBidXQgZG9lc24ndCBwcm9kdWNlIHRo
-ZQ0Kc2FtZSBvdXRwdXQgYXMgJ2JpdGJha2UgcHJvZHVjdCcuDQoNCkFsc28sIElmIEkgcnVuICdi
-aXRiYWtlIG15LWltYWdlLWRldicgMXN0LCBpdCBmaW5pc2hlcyBmaW5lLiBSdW5uaW5nDQonYml0
-YmFrZSBwcm9kdWN0JyBhZnRlciBtYWtlcyBhIGJ1bmNoIG9mIG90aGVyIHRhc2tzIGFuZCBmaW5p
-c2hlcyBmaW5lLg0KUnVubmluZyBhZ2FpbiAnYml0YmFrZSBteS1pbWFnZS1kZXYnIGZpbmlzaGVz
-IHdpdGggYW4gZXJyb3Igb24gYQ0Kc3BlY2lmaWMgdGFzay4gKCBJdCBzaG93cyB0aGF0IHRoZXkg
-YXJlIG5vdCBidWlsZGluZyB0aGUgc2FtZSB0aGluZykNCg0KSG93IGNhbiBJIGRvIHdoYXQgSSBu
-ZWVkPyANCk5PVEU6IEkgY2FuJ3QgY2hhbmdlIGFueXRoaW5nIGluIHRoZSBsYXllcjEgYW5kIGxh
-eWVyMi4NCg0KUFMuIEFsc28gdHJpZWQgdG8gcmVxdWlyZSB0aGUgYmJhcHBlbmQgZmlsZSwgYnV0
-IGJpdGJha2UgZmFpbHMgc2F5aW5nDQp0aGF0IGl0J3Mgbm90IGEgYml0YmFrZSBmaWxlLg0KICAg
-IAkNClRoYW5rcyBpbiBhZHZhbmNlZC4NCg0KSm/Do28gQ2FicmFsDQo=
+On Sun, 2020-02-09 at 09:50 +0100, Peter Kjellerstedt wrote:
+> Track both scene tasks and run tasks to provide a complete progress
+> information for all tasks. This avoids the progress bar from stating
+> "Currently XX running tasks (0 of 0)" while progressing through
+> thousands of setscene tasks, obviously confusing the user.
+
+There was a reason this was removed, this can't work unfortunately. 
+
+The code was changed such that setscene tasks can potentially be rerun
+so we have no idea what "complete" looks like or how many will actually
+run. I'm not happy about that but there wasn't an alternative.
+
+Cheers,
+
+Richard
+
 
