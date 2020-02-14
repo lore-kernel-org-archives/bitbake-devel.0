@@ -1,48 +1,50 @@
 Return-Path: <dl9pf@gmx.de>
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 1E3F7610AB
+X-Greylist: delayed 302 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 14 Feb 2020 15:06:31 UTC
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	by mail.openembedded.org (Postfix) with ESMTP id 704E8610B4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 14 Feb 2020 14:48:02 +0000 (UTC)
+	Fri, 14 Feb 2020 15:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1581691683;
-	bh=GeKW34OoF1Dp0MMIQk4FaQiTiFIKvfv3mca8YzSIjgw=;
+	s=badeba3b8450; t=1581692792;
+	bh=ORhzCrj+MhIZpkCpGr3uWfXvGFmzDIY/frfTNfmJcU8=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=j6DQr+SXjh5uPZNHV8oNkcclhsuGoFyftrGmZAdJrZWA69QfYICcLMEOsQIbWGzju
-	6y2z7Mfg9ortTfuBrKb33l265b0ruGpjomJa8Vrhypk4Xy6AOnSlq49zrQtGAbQzLA
-	y14yY2jaVdTySuycpin/pho4zC+3CKQOLnqkHNhM=
+	b=dqsrWAatImPxDxlLUwy5LWUT45TgBErQHrCwHVxo0u8gAuEG9OMUB7/iVyw6Sc5to
+	OQ83pPXS2jBx3CEUWH6NDIuEscvpmYitzjN8oMx2CfNfmYKEumVCihHaruaBY2oU9y
+	OWpW+7noKLIfoh2JqgDoEHuAOZV3GQD46h9YrJCg=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([95.216.96.43]) by mail.gmx.com
-	(mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
-	1N4z6q-1jRofv1Hds-010ro6; Fri, 14 Feb 2020 15:48:03 +0100
+	(mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+	1MuDXz-1jLWvk1T9p-00ud2j; Fri, 14 Feb 2020 16:01:29 +0100
 From: dl9pf@gmx.de
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 14 Feb 2020 15:47:42 +0100
-Message-Id: <20200214144742.28943-1-dl9pf@gmx.de>
+Date: Fri, 14 Feb 2020 16:01:09 +0100
+Message-Id: <20200214150109.29296-1-dl9pf@gmx.de>
 X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:Gkqy80/ZiyCGPgP3h1vF4qydHwWpe512VdKW9+x5K+lLEq3OHB7
-	NwLcqsC8HJylSREJzP4+8inu/PIhY5f9ZRJfeylmFEbyClpolh5SWEieJUWzwvUAxD2O4B7
-	G319M4JP8GwBQEBQgUe5d+wSFQEcx03/aTSsEcAKJfPLK8b4jJmu3WBgIUXlLCPvsTUJVUq
-	00b/XjhuzlxHot8NCDNgQ==
+X-Provags-ID: V03:K1:AWugaQ39wODa7Wm2K+qQyBpaX7MIwtpZoPJTIYrlRFKlnK9uEa0
+	XltC/Ze9AIMdAFEJZ0L65Rina/gQ0AUHqyqbspYLMA6pQi0VoqXTk0EgcQFSQC4xY+LYDe6
+	U7Y4hlVvUlMTSc2cToxlknhxWeDUtgCkvfMkE8jiOHj4oc0XP2DqjoNO/KQYM7+aWjYowRw
+	YvPeI5PGpZA8ngdinMxTw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+lXmFqAOiHU=:fj4gns/LZdXXX4NkS44Y/K
-	IkPKc+CqwLjRXZenNDx5JFVSqlEygD+Qx8RfK0M5msDi2LmTns/hOADCMPCJaeUGh1NPWbR+O
-	SvGz667LXi5YhR+kRTzVQ61eCDiESkUxbNtS3e5FYzx0STqlSxmSmCwuWGN75SoIFrnaes7zn
-	QYmawOUMbNVTdvZdSNuPHIMeCfDF/CkmZW+mkvsFpJy0ebjbfUnIrkn0CmXtNtdwxQ+zi/OvT
-	Duo+pDDCBeAPdqPTj0ZCtXOuUH36GAn8qJ5kGFdmWeSCXkRz8keijTiMhKxmAYDL0tEIXoC1a
-	Kib78uZHtCVaw7x/dr3tfW1R+8T2MT8E5wsRDn+FemWscY+ss8A9RSjp/IAvyFI4kjRlkQn4b
-	Dgz5eWYnbuW0HW2vduzP/KpjDC/f/l0sNR24/iCUQItp8lv5aVLemcf0UqjRYgccMpm25deIo
-	ofNAKrOk+jJYc/CGLMttIIEOXlR7KNc55UNzVENwKg1dmhde0qPMJ+ijDRMxZzWNmNdyWM47l
-	a0ueBg7EVu8un+bp4UMtGKgullfqinKIlEzmHcSLc0/506ipzcNf/rkAiNiARO6V1LndcuMtG
-	x3inIFrgdfy39Sea4dFBeomSjKmn0twpZRvdIXyEeLTqT4WawgdWj8UOmYXZl8ZHDkXkiA0po
-	/LPYRhVOq6TqPkGiDgMQt4klPsSbN4p255+1dQMcsrxPCSbHs/8Zp+KVK8N8mXPY4AeY14Pcg
-	1wdCrv9lGnRvHim5c3lFd9tplHBdskWMA+RzpW2PCVsd7iMgPpXgS8bxHN6Em3yf4wShinNDC
-	8y/phIhRjkQpjTtYG6uvJPqO8r3GWI0ytEzWvlOXUz68yGjTry9b2Yi9b3w1BLR4t1zrShSl3
-	RCRN6OW+y8RIvc6e3AEcgy2squGzNbS6/u5HUEOI3WXSpRDhhOd0f/RnUDHPDOdM9hrHI6Fsg
-	+bruyuDKVUemBvrSK6ZI2vcCcMjYgWLddmRHsToFsVfz3/PY8VAVIfgjk3znhEwviZcZhvVhp
-	A/dn48D8SCS23Osf62oxj01D9N5GFxHtFVSQMWt8csIm10AMUHJohnKMiidEL8xw76MvjS5IO
-	Dn4MTiHefz+LUV+Dtsw7m7ZlmORj51l9JlqdHXJ8IzRCy0EokuuGK+CY96ihojv3rcpAfod/V
-	ki8wBQqpylsmftwTEsFQQpgU0jrI4jwI5TMckhnETXCHjot6wYOKucHoVFU9FqRd8aBZdwPfk
-	VmuR1RMnzUsjPTuoT
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lkQQ2FdoR3w=:MRM/RTRMiXZhmSZ/GG8hg/
+	8ujDg4LxifFo1Vl/dCEjD+0OYk8L2zwLMLZG4/HztuwRUCc6VoGMbmqgvs8ktJvWJycO2Zwsf
+	fKFV2tN0JT5HDyxz+YlKxgVbtpx85X0axUwbtWuE5tMOPVdp8CTj/JKrPRhGZmgTiraQq0mtf
+	A8zN8/oD41SqtA7rMst/aoHkiwHOuzrDett7UV6RDMKGtvs2z7vE1SRgaasoQWl6qBOEMqbMU
+	ClDx5Xlyfb8JxZpe5QzvOuVbo12opR4pO7cvnhdBr23JFZtxsFZfpGqUt/IVKnPqFllB8PBL2
+	zpssPxHpSE/6D6fSn36kAFydAAGIvzedsI55v9fpCZii8dJTZbILNExXT/YgfOSMiQYtJwFuU
+	R+Dyaa+8twT7Tji76G1PHqJtR44HKJ+MTaegE9dax5smt3Ib7R2R23KxFzsEg3tH+fNo4arhN
+	eBtPWm5j9Fy+AdUMKaUO0wDH+GiwVBrbozYnVeeyx9hPaWGPgcVG3s5rPiP7B4u7M29D7/VkB
+	NRbsrq80p/bD8iwLMH2SYmle287jg6z7Phq6LDwXt7lMhLeU+wMsp+9t5hSrPB+ArMITp3QJz
+	Hw+/K7tUmlnGn+M7mwptFGkfCP84FA5ebkkSNAgS2pfl4pFKSiTenVI+ZE+M5seWORNjmNdWy
+	5id7ypjxnh6eh8Qnao09xSyMSx8+K3Ibgcn2GRiYnAJ56Ril2e3Z//DAGzycPlNGZpfcBMBfT
+	UEORJJPrREkdwEkVw+DPQptaoJ6q/2xgwaz338e9fIUq4cxsXiG7fNM53fOM9x0bUEMK3Em/S
+	3X28U4HDu6I5U9U+/pexsWBZlUld+Xzb8UOIDj91vwEfYBCOz1xXDr4xThNKf82NYfo2euxGn
+	A43K5ichdTWo1ohTmWWaOe7uv/NO9YyppT1FtYASLs3AT3y9qMhMPi8BtrBri7YWqDrZOT7ym
+	kXrR4JE48di9Is/fErKaGESE1q93d8YxqYK+so3hOL7Wun9PNbNqrgqPEK40lbz9zzp9+it0k
+	mU5h40inAeubdU8awPIqOWhFQjEqghjrJj6k2uOfcorVapQG8czgsqqyUVtpLr1VkZj+vWnZr
+	O8+FbkE51KcVOT8+dWvxJd6kwLablMMDsC3SQHPt3nTNMU9PehpFdCgTOKcn7mlL2NtVRQboY
+	T5kcArIpjMcQsJeoLPykWoCAEbXMkubBc/GxZg01eEMOfDCY63fN7HoUquAZ6qMy8dhDSPILp
+	wZyeSmw/tV67WLHr7
 Subject: [PATCH] Fix bitbake-layerindex to checkout the requested branch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -56,7 +58,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Feb 2020 14:48:03 -0000
+X-List-Received-Date: Fri, 14 Feb 2020 15:06:31 -0000
 Content-Transfer-Encoding: quoted-printable
 
 From: Jan-Simon Moeller <jsmoeller@linuxfoundation.org>
@@ -66,6 +68,8 @@ This fixes the clone command.
 
 V2: Corrected 'branch' back to 'branches' and added
     a FIXME on multiple LAYERSERIES_CORENAMES.
+V3: After discussion on IRC use branches[-1] as well
+    educated guess for now but leave the FIXME in place.
 
 Signed-off-by: Jan-Simon Moeller <jsmoeller@linuxfoundation.org>
 =2D--
@@ -73,7 +77,7 @@ Signed-off-by: Jan-Simon Moeller <jsmoeller@linuxfoundation.org>
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index 57cd9027..32454c8a 100644
+index 57cd9027..096ea4f8 100644
 =2D-- a/lib/bblayers/layerindex.py
 +++ b/lib/bblayers/layerindex.py
 @@ -24,7 +24,7 @@ class LayerIndexPlugin(ActionPlugin):
@@ -97,18 +101,16 @@ index 57cd9027..32454c8a 100644
                  if result:
                      logger.error("Failed to download %s" % url)
                      return None, None, None
-@@ -71,8 +71,12 @@ class LayerIndexPlugin(ActionPlugin):
-         # Set the default...
-         if args.branch:
+@@ -73,6 +73,10 @@ class LayerIndexPlugin(ActionPlugin):
              branches =3D [args.branch]
-+            checkoutbranch =3D args.branch
          else:
              branches =3D (self.tinfoil.config_data.getVar('LAYERSERIES_CO=
 RENAMES') or 'master').split()
-+            # FIXME: multple branches is not deterministic when cloning t=
-he repository
-+            # for now pull master ...
-+            checkoutbranch =3D 'master'
++
++        # FIXME: multple branches is not deterministic when cloning the r=
+epository
++        # for now we pull the last entry
++        checkoutbranch =3D branches[-1]
          logger.debug(1, 'Trying branches: %s' % branches)
 
          ignore_layers =3D []
