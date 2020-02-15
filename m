@@ -1,34 +1,36 @@
 Return-Path: <peter.kjellerstedt@axis.com>
 Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
-	by mail.openembedded.org (Postfix) with ESMTP id 5F59F60221
+	by mail.openembedded.org (Postfix) with ESMTP id 3156C60221
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 15 Feb 2020 03:29:57 +0000 (UTC)
+	Sat, 15 Feb 2020 03:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=axis.com; l=810; q=dns/txt; s=axis-central1;
-	t=1581737400; x=1613273400;
-	h=from:to:subject:date:message-id:mime-version:
-	content-transfer-encoding;
-	bh=Yus6S3vOgk6AWLnzRGVStntHoOlmhM9joL7/sKZeaNg=;
-	b=eeR/ET73aHABCyn26gjaSo2WJm/wJb6UDshDGqx2sU+YyAdBQr6ywoq/
-	OPaQHDjrQcwtim96H5L+IQjsEktS+iWo079yUJNUdgjm7K5WshIyRnw+1
-	XhyA6oUZ/uLX5nbbp1fMhDPZgWqsrwKYG3a8Ea4n8L4IatvqJPIYUicrI
-	+PInlzNwFGNcoPQ+yUI6LZcHuvVZu0sUIbaRTosBgCvG3L+IGf5Pdc1Pp
-	j9QAzyxdip0B3PF4hie5iN4A5GG1NPc3MDc689BYKFFRe9Tf/MO4fRQhr
-	8WCiLxryou7bWXkyPO/d0glQwau08NBByg37515rHpFrHJ3l7nwmSl3JN w==;
-IronPort-SDR: Zkaw+lpiHP70I5aV+6W7yQzvMen/tEcqpFTj/sH1F9A6lDSJx6aq4jBs1jNs9FL3MtErXqKQCN
-	3SCVx3on1jUrbCdjHB23Hmhkng50LcAUqaa0auloshoaMvjn1GuMpPQVoIsDAtJkxpkzu9xh0H
-	6F6Rvy2fkcpVhL+gMw2CAYsg0iZZltFrdoi42rvKHB3e+59bmvhMKtjfNXoHKanbFY+JdUUH59
-	U8NJJvAz0KikeL7uWQ0uaqvT4fRRbMDqZ+1LJCUptOdKgBpGvO/wjQRlcOiLKlXJG5XU2IJAQd
-	VWk=
+	d=axis.com; l=2439; q=dns/txt; s=axis-central1;
+	t=1581737401; x=1613273401;
+	h=from:to:subject:date:message-id:in-reply-to:references:
+	mime-version:content-transfer-encoding;
+	bh=tV/FXSxcCPj2V/SEh9GbdpPtFPRXyJ/wAE+5V0l7Nuc=;
+	b=X9Gyxe0Ty0B0cKwyPwR/x97EaVznC4Dwq46epyZec9FBOUQ3TX+FHP0f
+	y2PZUowBqdsEBpH+sVEg/2CP4fpG9ahVIewzvH7UebLDqNG10Odbib8q0
+	UWazHuDihRpqKbp/Qg8mArlWVaUTLZXlXMVlzivPdz5AgpSbVZl2ElNIS
+	6HVIEHMvrUHCUutpPXG4dQswzQzyhjPfySFCJsB59DQ5vSwbayWGu0kJ5
+	W9m0UsLglcXE79+yxRait22RX0phn5wx0mNsmVm4qeb9mP0QKBmEeBBZS
+	L5FZstivcUBR/2+OSOj8SPL8jP5FqjCUx6+uO3AocBjQYnKzUWmqwnSKo Q==;
+IronPort-SDR: uOSfZrTT5gDWC6YSR+kGpiEutWo/zefZ6YxiQvufgxCB+8IY3FfA5tl5ELmKwJQLl+wUp3Xq+u
+	PMzYlGF2xlgkQwM22eIQhepJCDWmf3xAUSwU3cfqgcYIfk6l7R6JyJYHUfUC3MXm9dR1eBdkTh
+	Uwz8paTlSs4v0LTczVic7d5qRUxA2vmSRgevs1DyPP5WtEwOei/VbQhr2TyrUbig/qCCp4stxT
+	ExXsO31rBNmodQQcdu4P7RHii0cCjkFqAQUFP8WaG+/xZYluTsphTORH07+g2kGIKTTWvYJGND
+	gXA=
 X-IronPort-AV: E=Sophos;i="5.70,443,1574118000"; 
-   d="scan'208";a="5300873"
+   d="scan'208";a="5300874"
 From: Peter Kjellerstedt <pkj@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Sat, 15 Feb 2020 04:29:53 +0100
-Message-ID: <20200215032955.3958-1-pkj@axis.com>
+Date: Sat, 15 Feb 2020 04:29:54 +0100
+Message-ID: <20200215032955.3958-2-pkj@axis.com>
 X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200215032955.3958-1-pkj@axis.com>
+References: <20200215032955.3958-1-pkj@axis.com>
 MIME-Version: 1.0
-Subject: [master][zeus][PATCH 1/3] knotty: Make the bb.command.CommandExit event terminate bitbake
+Subject: [master][zeus][PATCH 2/3] fetch2: Make fetcher_compare_revisions() work
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,31 +43,77 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 15 Feb 2020 03:29:58 -0000
+X-List-Received-Date: Sat, 15 Feb 2020 03:29:59 -0000
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-This matches the other bb.command.Command* events and without it,
-running `bitbake --revisions-changed` will hang indefinitely if there
-are changed revisions.
+This seems to have been broken for a very long time. Now it also works
+regardless of BB_SRCREV_POLICY.
 
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- bitbake/lib/bb/ui/knotty.py | 1 +
- 1 file changed, 1 insertion(+)
+ bitbake/lib/bb/fetch2/__init__.py | 33 +++++++++++++------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index a0340dfc20..cbb289b05f 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -590,6 +590,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-             if isinstance(event, bb.command.CommandExit):
-                 if not return_value:
-                     return_value = event.exitcode
-+                main.shutdown = 2
-                 continue
-             if isinstance(event, (bb.command.CommandCompleted, bb.cooker.CookerExit)):
-                 main.shutdown = 2
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 1b7f573642..56462767e5 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -485,17 +485,22 @@ def fetcher_init(d):
+     Called to initialize the fetchers once the configuration data is known.
+     Calls before this must not hit the cache.
+     """
++
++    revs = bb.persist_data.persist('BB_URI_HEADREVS', d)
++    try:
++        # fetcher_init is called multiple times, so make sure we only save the
++        # revs the first time it is called.
++        if not bb.fetch2.saved_headrevs:
++            bb.fetch2.saved_headrevs = dict(revs)
++    except:
++        pass
++
+     # When to drop SCM head revisions controlled by user policy
+     srcrev_policy = d.getVar('BB_SRCREV_POLICY') or "clear"
+     if srcrev_policy == "cache":
+         logger.debug(1, "Keeping SRCREV cache due to cache policy of: %s", srcrev_policy)
+     elif srcrev_policy == "clear":
+         logger.debug(1, "Clearing SRCREV cache due to cache policy of: %s", srcrev_policy)
+-        revs = bb.persist_data.persist('BB_URI_HEADREVS', d)
+-        try:
+-            bb.fetch2.saved_headrevs = revs.items()
+-        except:
+-            pass
+         revs.clear()
+     else:
+         raise FetchError("Invalid SRCREV cache policy of: %s" % srcrev_policy)
+@@ -514,22 +519,12 @@ def fetcher_parse_done():
+ 
+ def fetcher_compare_revisions(d):
+     """
+-    Compare the revisions in the persistant cache with current values and
+-    return true/false on whether they've changed.
++    Compare the revisions in the persistent cache with the saved values from
++    when bitbake was started and return true if they have changed.
+     """
+ 
+-    data = bb.persist_data.persist('BB_URI_HEADREVS', d).items()
+-    data2 = bb.fetch2.saved_headrevs
+-
+-    changed = False
+-    for key in data:
+-        if key not in data2 or data2[key] != data[key]:
+-            logger.debug(1, "%s changed", key)
+-            changed = True
+-            return True
+-        else:
+-            logger.debug(2, "%s did not change", key)
+-    return False
++    headrevs = dict(bb.persist_data.persist('BB_URI_HEADREVS', d))
++    return headrevs != bb.fetch2.saved_headrevs
+ 
+ def mirror_from_string(data):
+     mirrors = (data or "").replace('\\n',' ').split()
 -- 
 2.21.1
 
