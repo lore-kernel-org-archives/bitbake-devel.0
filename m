@@ -1,53 +1,47 @@
-Return-Path: <JanSimon.Moeller@gmx.de>
-X-Greylist: delayed 303 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 14 Feb 2020 21:12:57 UTC
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	by mail.openembedded.org (Postfix) with ESMTP id A3634610EF
+Return-Path: <bkylerussell@gmail.com>
+Received: from mail-yw1-f67.google.com (mail-yw1-f67.google.com
+	[209.85.161.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 55528613E0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 14 Feb 2020 21:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1581714778;
-	bh=aaeKQ4ii0PV2rLA/Jr/TwFW2bvCsipYtyc7iNFHLTbI=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SmGHazpmXWbYgLMENqvNCVa+lPMxz3ZCZGHomwr2nsT+nyuLAdlNqexxZ8JmFgHz8
-	R7E+rXPtI+WB67u8IPqmf+0BC4S1R9wcui8GpckzEnztzAl7/vkIfUw22LSvHBrebt
-	es7V1beNYhRJGbuKAiECkm1mxws6Lq8tWmSn7pN8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [91.67.26.134] ([91.67.26.134]) by web-mail.gmx.net
-	(3c-app-gmx-bap05.server.lan [172.19.172.75]) (via HTTP);
-	Fri, 14 Feb 2020 22:07:52 +0100
-MIME-Version: 1.0
-Message-ID: <trinity-9d130cae-9461-4149-b020-6aa0a462de8a-1581714472107@3c-app-gmx-bap05>
-From: =?UTF-8?Q?=22Jan-Simon_M=C3=B6ller=22?= <JanSimon.Moeller@gmx.de>
-To: "Mark Hatle" <mark.hatle@kernel.crashing.org>
-Date: Fri, 14 Feb 2020 22:07:52 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <80610678-1f40-8b81-f852-4d48a950ef73@kernel.crashing.org>
-References: <20200214150109.29296-1-dl9pf@gmx.de>
-	<80610678-1f40-8b81-f852-4d48a950ef73@kernel.crashing.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:9wnFCNq4G8W6eUnaqc8t9ZXQg2jh+6ZIjbgFSm1WISVxFibk/3o116cTzFmzzQx1zUM8v
-	8XbvmfMk1QoiZz9oIz8LfSkjb+asNkCH2KIECxuVwnHKTA1AMiZYoioiP9TmRDLjG565fxuSaEfD
-	fh67Y+/3VkRi6rknkXJRqT/YSgSXn7/mXrA+P3XbXI8fNOVhbuFm1Tiuw+Gl/jRKCpg+rc0djCOe
-	EaaJvVnNRj78E37S7OWBoGwBx++WZqjZiDIyE+xcxH4dQ63RsaTwf3isrbmUhuGYkRfXv2Zl30X7
-	CY=
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:O5y1tm3dDes=:na8Zcc3M3NAgcbFUvQcra9
-	hBkToJeA/EtAHVY7T9yJhXR/9cc5KJNnbOQkn+oYiAq8ll8XX1PQi/VFsCThbRU0jfFETpxkG
-	4W8mnd8XqOiS9/yH8Ief9/PU0wYTBh8fpQiyzF4TqkBC5ATSFhrOGDSF/ebCdws+/KG+ZxMze
-	S/qzH1JoBmuXOxOEu4tPXUm5VZ0KFZCbU3fLJHy16BF8HobKWgz3+yXuYDa+uuXFywx0t3dsm
-	DA1B2AB8rg9Ug4oboPnqDRAz+7D+AWmHc4xiU89BVCqTGReR8VOCWJfAjO6YGvQfAiPujG5o0
-	hqTUHxYRXEHZcag8i/h3dIcnhSiQRLHG+v2nyG3ByaI9XQ8iN3uqEzjIb4StXAOKiLrpzQQXF
-	mhMAcWb23uQ4F1Hf12CT9IEDAWj+BzglmuVMMum4U7wHde5sJ01ofF2p6IwFWWbIuSuP/t4Ta
-	/070RlYQwH/LjGDxzaE5yU/BptrT38p68zLj3wUY3goTBtaErsjlNfYJwShCjZUzmm7hvh4+/
-	EdDd64pT/krVGB/oei07ibbNCk8/2L7J5TlqES9gXm+aTv6DVAV92kwA+IPVajlZUCmLaQF8Y
-	8+Kcd1g7ILcGh/cfYTytoR1cLBfunnPTYw51DtCHCCiXlqT/xW5JgXqzv9u2NTyqlL/VqcFGh
-	ExBEnbLQyX1OV5SM0Skbx1tLFpj8AeLE4rAiqM+AqI8O9DXKp9x6uCK1QpHBYqzS/oHc=
-X-Mailman-Approved-At: Sat, 15 Feb 2020 09:30:45 +0000
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] Fix bitbake-layerindex to checkout the requested branch
+	Mon, 17 Feb 2020 15:26:18 +0000 (UTC)
+Received: by mail-yw1-f67.google.com with SMTP id f204so7942686ywc.10
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 17 Feb 2020 07:26:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=lACI1ruLtnGKLKV6ASguQCFbIso51AT+7u19hH5S0UY=;
+	b=Gi5rpoArqLCXzdcA1jhi6z9ov1WpVRUOV7v0TY7dKMTgfrmjXa1LldkPsNQX4DpByJ
+	SSJpd0yVtu4yNTOAE0cV/1syDxxWzK2JWgrvOD/C5gzosxFcvuvT1qazP2QwzPvdBtW7
+	16h0u+7bj4oMVosQ+BTxWDku/XsZ33A06fCNGwV1Q7AK+gTZA5yIqW5Q7O7pFKRAvpkz
+	IExzCq6Qp+8rKbA9TaD/Ic6yF9EI+qw18jymU7tIo0WJNNT4Q09SLFgkKV5LYCe1nP18
+	Zf4o69x8qu7LDpyYPTY/n6BltB0aAQEr8l6BlZbu/tRao8TtqylelsjH7AteX6eLmB+s
+	Br6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=lACI1ruLtnGKLKV6ASguQCFbIso51AT+7u19hH5S0UY=;
+	b=LxVS/SoSpso1q0FLWPHRib34UDZHV3MnCV1XEIswu1dz9eVcxiEQwoaBPtXNnFlhEJ
+	4OOp/M0oWBRvlHw5Z4bgvzRsflWqx+tXgsLjGdETG5cBV9InSxw/VjCOnL1qGQ3dNxZr
+	TyZtrMy6ft3BgGi2aEbXm1TqGY4mZJPYIXEbtbkm6hEg4izNEeXUfNkHkSQjrgXLCIUT
+	i+sWvqcCy7mVScsGnkULPuHI8y8StttSjvTiRThyFqdxbQqnthO54c3OJIvAj6MxhnoE
+	WQ9TDly+yT9V+ygaviK4XgXH8XwCJzE188fziBmGcHVgwB3uRsaTruADMj4IJthTt+nB
+	IEcA==
+X-Gm-Message-State: APjAAAU9y7TbTOC+yAhMfAmX3ORe1uvvKNSYVsD61sC8vX2DPQ7LRBMv
+	2qkZrBuGdzcSZC6QWYjY1gzpV7wv
+X-Google-Smtp-Source: APXvYqwRQJtjQovXLCGZp9w09DvDfLtvUtkbl7ykxbDKO65L7cEyOqIf9H6VRQkN1hKFe5tX2f7aUg==
+X-Received: by 2002:a81:98f:: with SMTP id 137mr14013303ywj.151.1581953178975; 
+	Mon, 17 Feb 2020 07:26:18 -0800 (PST)
+Received: from poirot.dhcp.lexmark.com ([192.146.101.90])
+	by smtp.gmail.com with ESMTPSA id
+	l37sm340824ywa.103.2020.02.17.07.26.16
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Mon, 17 Feb 2020 07:26:17 -0800 (PST)
+From: Kyle Russell <bkylerussell@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 17 Feb 2020 10:25:52 -0500
+Message-Id: <20200217152552.31991-1-bkylerussell@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Subject: [][PATCH] bitbake: don't allow renameVar calls with equivalent keys
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,27 +54,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Feb 2020 21:12:59 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 17 Feb 2020 15:26:19 -0000
 
-Hi Mark!
+While usually a programming error, the behavior can cause a Parser
+instance to eventually gobble up a significant amount of memory,
+greatly affecting system performance.  Try to avoid getting into
+that situation and alert the user about what they attempted to do.
 
-Thanks for reviewing=2E I had hoped to find the right variables=2E A pity =
-it did not land earlier=2E
-Can we backport this to zeus, please ?
-=C2=A0
-=C2=A0
-> This issue was already found (and I thought fixed?) Maybe the submission=
- hadn't
-> been accepted=2E See:
->=20
-> http://lists=2Eopenembedded=2Eorg/pipermail/bitbake-devel/2019-December/=
-020645=2Ehtml
+Signed-off-by: Kyle Russell <bkylerussell@gmail.com>
+---
+ lib/bb/data_smart.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index dd5c6185..63a32bc6 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -607,6 +607,10 @@ class DataSmart(MutableMapping):
+         """
+         Rename the variable key to newkey
+         """
++        if key == newkey:
++            bb.warn("Calling renameVar with equivalent keys (%s) is invalid" % key)
++            return
++
+         if '_remote_data' in self.dict:
+             connector = self.dict["_remote_data"]["_content"]
+             res = connector.renameVar(key, newkey)
+-- 
+2.17.1
 
-Please ignore my patchset then=2E
-
-Best,
-JS
 
