@@ -1,51 +1,48 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
-	[209.85.128.68])
-	by mail.openembedded.org (Postfix) with ESMTP id EB12E61517
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com
+	[209.85.128.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 978B7601B5
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Feb 2020 15:48:02 +0000 (UTC)
-Received: by mail-wm1-f68.google.com with SMTP id q9so3249837wmj.5
+	Tue, 18 Feb 2020 22:00:55 +0000 (UTC)
+Received: by mail-wm1-f67.google.com with SMTP id n3so2152044wmk.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Feb 2020 07:48:04 -0800 (PST)
+	Tue, 18 Feb 2020 14:00:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=mw3rAKXF4A1BkepAHOe45jlCUFTAru125KZ/D7DyNzw=;
-	b=fEu36pR5tcMRt8VZ6npop7qznIyu5mnLAJ/229IWCiadqmWUgFSL35B+mYS0wv7wUQ
-	5eu7YWla0+ulRUPe2hENgiOmPqs/UkgHb6wTA6Dp4pdQESZ5C4c3u5kr2WcnyYrs70my
-	Wgvq6ENrebvxmFGssQFxlKTAtvIKKXXYuhkJg=
+	h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=dKTRv60EKBqteur+SD4W7ZnVYkaXXf5B6Yl8EIOPAGk=;
+	b=XRGbI+rPYSIblInqxcokU8cZmrxcek2ztZF17dT+Ew86Jvb0cB0B7lt9Y2YM30nVj0
+	nz5uBUt++x9S/41TeLkFsnhoaD5Op/sdR3f/9VVIlVTGJm0+jRkfAduKrTFLTvbAR6SC
+	CVQP/5Q3nBlf4jQxhJnO/ToZ1JC/FbkdWU540=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=mw3rAKXF4A1BkepAHOe45jlCUFTAru125KZ/D7DyNzw=;
-	b=ea0sEN5B/Cu78q8VRaJz/LdhfTVcmeRLjNcZUwcxZzM0wL41StNqU3RLGwLTmD+dR2
-	M2ZU2PKgmqJLfI4Ii5Ifp86obrlq2uiRnXjkuX/PWdRwlIY8012UbJ48W61iL+ZzPM1c
-	OjvFN3BaLnHSTvhE5Z99i377jFgp2XsALw/DErGPjdhzLGBlaYR52tsA1VGwtqjtt/Ns
-	36CeiBDNjd1q0gjZXynJWvPJ+KqN6J/QXlzbZX+xNeCmyehqhv+S+/FmQl6m1CU0OkHA
-	JrlwvUbd/M0dzRTV4nwtqfowlwHxT3iB63zdWsGW6crOhOwPvBUPQW2unXtzphT/2iJy
-	JAYg==
-X-Gm-Message-State: APjAAAUf+RcHWeKXm8WwiGM85cEdzNCmAp68RhXWKatU1J4x0WPTOksg
-	GpmyXuSHTIx9JWkLjng7asLxFA==
-X-Google-Smtp-Source: APXvYqyiyvnoy+xZeaRpSvpiAy7dkiBj/uqPVHVyTT2HjOQp6naIrtsG4Kg5JhFJjigaCdvZlRrslg==
-X-Received: by 2002:a1c:1d09:: with SMTP id d9mr3946690wmd.91.1582040883440;
-	Tue, 18 Feb 2020 07:48:03 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	q124sm4641854wme.2.2020.02.18.07.48.02
+	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=dKTRv60EKBqteur+SD4W7ZnVYkaXXf5B6Yl8EIOPAGk=;
+	b=pvlTIjkF010p1B6fxYBaI/+gzEhh0UOA1LwMK+aUOJ4A2B6zToFwu54en2k2fiGiEe
+	4t1jl1NpuWiHU2Vl4+kLdriSX+4TXaRIuoS+oHhQ4wtGbVZplI88Ij5C08YuFjZnXniJ
+	cXeOz40blXoxB88tE66j3ZK3Y0pJB/yYqn4gw9uumrcHUMfxRio7vDdGSq9zovZuGZUl
+	SW3aiybtSb1xth8jMAN3/RP2HzENZvqq2wUkzNPEorvFjdPcwdEbySt2XQz0q0v0Z8Sj
+	JLraxjhyrr3b54dAqCAjPL7V2DtAXx7rFP3FKvJ/EbyyUzmM/NQ4d0lKwuv3GNL0YJK0
+	4OZw==
+X-Gm-Message-State: APjAAAW3Nc6FhpTduDabJ9rM7VJMxLFZA2fvoV5z42bGuhRZ9wAatxj8
+	kMXdbeCt+Elo8e/YC/KIDbJgqx0SrLE=
+X-Google-Smtp-Source: APXvYqxLIzFNkp/hCSrGogD0HjEB8Yn+8vH4m/p21XYcWDLGyJNsImzZFhASan4s+YTWBj7e/wp4JA==
+X-Received: by 2002:a7b:c152:: with SMTP id z18mr5274044wmi.70.1582063255730; 
+	Tue, 18 Feb 2020 14:00:55 -0800 (PST)
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id q9sm66450wrx.18.2020.02.18.14.00.54
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 18 Feb 2020 07:48:02 -0800 (PST)
-Message-ID: <bff19e6863158641908a0035fc8e834f95a0b9ee.camel@linuxfoundation.org>
+	Tue, 18 Feb 2020 14:00:55 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: akuster808 <akuster808@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Feb 2020 15:48:01 +0000
-In-Reply-To: <781da9cf-0229-1d3f-ab03-e064cd27265a@gmail.com>
-References: <20200217162307.36082-1-richard.purdie@linuxfoundation.org>
-	<781da9cf-0229-1d3f-ab03-e064cd27265a@gmail.com>
-User-Agent: Evolution 3.34.1-4 
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 18 Feb 2020 22:00:54 +0000
+Message-Id: <20200218220054.74923-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Subject: Re: [PATCH] cooker/siggen: Empty siggen cache during parsing
+Subject: [PATCH] cooker: Reset loghandler
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,24 +55,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Feb 2020 15:48:03 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 18 Feb 2020 22:00:55 -0000
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2020-02-18 at 07:44 -0800, akuster808 wrote:
-> 
-> On 2/17/20 8:23 AM, Richard Purdie wrote:
-> > When parsing recipes its apparent the memory usage of bitbake rises
-> > linearly
-> > with number of recipes parsed. It shouldn't.
-> This seems back port worthy to 1.44, 1.42
+When parsing, reset the loghandler when finished, else the messages
+can be misleading.
 
-Yes, I did it already! :)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-(With my bitbake maintainer hat on)
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index a05630d52d..2d937a413c 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1949,6 +1949,7 @@ class Parser(multiprocessing.Process):
+ 
+     def parse(self, filename, appends):
+         try:
++            origfilter = bb.event.LogHandler.filter
+             # Record the filename we're parsing into any events generated
+             def parse_filter(self, record):
+                 record.taskpid = bb.event.worker_pid
+@@ -1971,6 +1972,8 @@ class Parser(multiprocessing.Process):
+         # a SystemExit event for example.
+         except BaseException as exc:
+             return True, ParsingFailure(exc, filename)
++        finally:
++            bb.event.LogHandler.filter = origfilter
+ 
+ class CookerParser(object):
+     def __init__(self, cooker, filelist, masked):
+-- 
+2.25.0
 
 
