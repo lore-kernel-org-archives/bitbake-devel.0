@@ -1,48 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com
-	[209.85.128.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 978B7601B5
+Return-Path: <mark.hatle@kernel.crashing.org>
+Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
+	by mail.openembedded.org (Postfix) with ESMTP id 058F86142A
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Feb 2020 22:00:55 +0000 (UTC)
-Received: by mail-wm1-f67.google.com with SMTP id n3so2152044wmk.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Feb 2020 14:00:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=dKTRv60EKBqteur+SD4W7ZnVYkaXXf5B6Yl8EIOPAGk=;
-	b=XRGbI+rPYSIblInqxcokU8cZmrxcek2ztZF17dT+Ew86Jvb0cB0B7lt9Y2YM30nVj0
-	nz5uBUt++x9S/41TeLkFsnhoaD5Op/sdR3f/9VVIlVTGJm0+jRkfAduKrTFLTvbAR6SC
-	CVQP/5Q3nBlf4jQxhJnO/ToZ1JC/FbkdWU540=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=dKTRv60EKBqteur+SD4W7ZnVYkaXXf5B6Yl8EIOPAGk=;
-	b=pvlTIjkF010p1B6fxYBaI/+gzEhh0UOA1LwMK+aUOJ4A2B6zToFwu54en2k2fiGiEe
-	4t1jl1NpuWiHU2Vl4+kLdriSX+4TXaRIuoS+oHhQ4wtGbVZplI88Ij5C08YuFjZnXniJ
-	cXeOz40blXoxB88tE66j3ZK3Y0pJB/yYqn4gw9uumrcHUMfxRio7vDdGSq9zovZuGZUl
-	SW3aiybtSb1xth8jMAN3/RP2HzENZvqq2wUkzNPEorvFjdPcwdEbySt2XQz0q0v0Z8Sj
-	JLraxjhyrr3b54dAqCAjPL7V2DtAXx7rFP3FKvJ/EbyyUzmM/NQ4d0lKwuv3GNL0YJK0
-	4OZw==
-X-Gm-Message-State: APjAAAW3Nc6FhpTduDabJ9rM7VJMxLFZA2fvoV5z42bGuhRZ9wAatxj8
-	kMXdbeCt+Elo8e/YC/KIDbJgqx0SrLE=
-X-Google-Smtp-Source: APXvYqxLIzFNkp/hCSrGogD0HjEB8Yn+8vH4m/p21XYcWDLGyJNsImzZFhASan4s+YTWBj7e/wp4JA==
-X-Received: by 2002:a7b:c152:: with SMTP id z18mr5274044wmi.70.1582063255730; 
-	Tue, 18 Feb 2020 14:00:55 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id q9sm66450wrx.18.2020.02.18.14.00.54
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 18 Feb 2020 14:00:55 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Tue, 18 Feb 2020 22:06:37 +0000 (UTC)
+Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
+	(authenticated bits=0)
+	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01IM67kp020976
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
+	verify=NO) for <bitbake-devel@lists.openembedded.org>;
+	Tue, 18 Feb 2020 16:06:37 -0600
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Feb 2020 22:00:54 +0000
-Message-Id: <20200218220054.74923-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
+References: <20200218135554.19362-1-dl9pf@gmx.de>
+From: Mark Hatle <mark.hatle@kernel.crashing.org>
+Message-ID: <503a475e-e96d-2bd7-c132-a0df0b886be6@kernel.crashing.org>
+Date: Tue, 18 Feb 2020 16:06:07 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+	Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-Subject: [PATCH] cooker: Reset loghandler
+In-Reply-To: <20200218135554.19362-1-dl9pf@gmx.de>
+Subject: Re: [PATCH] bitbake: layerindex: allow clones to be shallow
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,39 +31,77 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Feb 2020 22:00:55 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 18 Feb 2020 22:06:38 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-When parsing, reset the loghandler when finished, else the messages
-can be misleading.
+Ack, this looks fine.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 3 +++
- 1 file changed, 3 insertions(+)
+It would be nice (in the future) to have a way to specify an optional depth,
+that could be passed through the system.  But as implemented it's fine.
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index a05630d52d..2d937a413c 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1949,6 +1949,7 @@ class Parser(multiprocessing.Process):
- 
-     def parse(self, filename, appends):
-         try:
-+            origfilter = bb.event.LogHandler.filter
-             # Record the filename we're parsing into any events generated
-             def parse_filter(self, record):
-                 record.taskpid = bb.event.worker_pid
-@@ -1971,6 +1972,8 @@ class Parser(multiprocessing.Process):
-         # a SystemExit event for example.
-         except BaseException as exc:
-             return True, ParsingFailure(exc, filename)
-+        finally:
-+            bb.event.LogHandler.filter = origfilter
- 
- class CookerParser(object):
-     def __init__(self, cooker, filelist, masked):
--- 
-2.25.0
+--Mark
 
+On 2/18/20 7:55 AM, Jan-Simon Moeller wrote:
+> When bitbake-layers fetch-layerindex clones the repositories, these are
+> full clones. Allow the user to specify '-s' and do shallow clones
+> instead for faster downloads.
+> 
+> Signed-off-by: Jan-Simon Moeller <dl9pf@gmx.de>
+> ---
+>  lib/bblayers/layerindex.py | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
+> index aa3b682d..95b67a66 100644
+> --- a/lib/bblayers/layerindex.py
+> +++ b/lib/bblayers/layerindex.py
+> @@ -24,7 +24,7 @@ class LayerIndexPlugin(ActionPlugin):
+>      This class inherits ActionPlugin to get do_add_layer.
+>      """
+> 
+> -    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer, branch):
+> +    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer, branch, shallow=False):
+>          layername = self.get_layer_name(url)
+>          if os.path.splitext(layername)[1] == '.git':
+>              layername = os.path.splitext(layername)[0]
+> @@ -32,10 +32,12 @@ class LayerIndexPlugin(ActionPlugin):
+>          layerdir = os.path.join(repodir, subdir)
+>          if not os.path.exists(repodir):
+>              if fetch_layer:
+> -                cmd = ['git', 'clone', '-b' , branch, url, repodir]
+> -                if not branch:
+> -                    # Branch really shouldn't be empty, but use the repo default if it is
+> -                    cmd = ['git', 'clone', url, repodir]
+> +                cmd = ['git', 'clone']
+> +                if shallow:
+> +                    cmd.extend(['--depth', '1'])
+> +                if branch:
+> +                    cmd.extend(['-b' , branch])
+> +                cmd.extend([url, repodir])
+>                  result = subprocess.call(cmd)
+>                  if result:
+>                      logger.error("Failed to download %s (%s)" % (url, branch))
+> @@ -176,7 +178,8 @@ class LayerIndexPlugin(ActionPlugin):
+>                                                        layerBranch.layer.vcs_url,
+>                                                        layerBranch.vcs_subdir,
+>                                                        not args.show_only,
+> -                                                      layerBranch.actual_branch)
+> +                                                      layerBranch.actual_branch,
+> +                                                      args.shallow)
+>                  if not name:
+>                      # Error already shown
+>                      return 1
+> @@ -209,6 +212,7 @@ class LayerIndexPlugin(ActionPlugin):
+>          parser_layerindex_fetch = self.add_command(sp, 'layerindex-fetch', self.do_layerindex_fetch, parserecipes=False)
+>          parser_layerindex_fetch.add_argument('-n', '--show-only', help='show dependencies and do nothing else', action='store_true')
+>          parser_layerindex_fetch.add_argument('-b', '--branch', help='branch name to fetch')
+> +        parser_layerindex_fetch.add_argument('-s', '--shallow', help='do only shallow clones (--depth=1)', action='store_true')
+>          parser_layerindex_fetch.add_argument('-i', '--ignore', help='assume the specified layers do not need to be fetched/added (separate multiple layers with commas, no spaces)', metavar='LAYER')
+>          parser_layerindex_fetch.add_argument('layername', nargs='+', help='layer to fetch')
+> 
+> --
+> 2.11.0
+> 
 
