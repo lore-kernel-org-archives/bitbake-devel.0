@@ -1,49 +1,48 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
-	[209.85.221.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 2CC6C61506
+Return-Path: <rehsack@gmail.com>
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+	[209.85.221.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 39F7061581
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Feb 2020 16:23:08 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id w12so20466528wrt.2
+	Tue, 18 Feb 2020 05:41:10 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id y11so22323138wrt.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Feb 2020 08:23:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=o7MGq+j6iO5gmCMW7Y1oI/+SVmgqonec3luH1FIyY14=;
-	b=CmJ5KhImy8ASYZAp2UM4P6bPRuLk4+cGdkKniHl4xvC9VgT2t0392IBZhFZPI8vzOt
-	297OfYBFXzSEYiLLoeIAjV4ck4/J3ZSTDqS1VOlIa0VE6PdMrfWvA7d/D8vUoZSPdm/T
-	BV5AVe79g+XnwdDvhDvB8HEIzeGlo7EvqJDZs=
+	Mon, 17 Feb 2020 21:41:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=sender:from:to:cc:subject:date:message-id;
+	bh=CTw4qOCbgEUJyVo4fN6OkOEuXzT4Nc94n+JWmASd+rg=;
+	b=gl+dkndwVkTRuLH9GyMOYFYOvaGqx1EbjTiOjB9XuAQYfdzAdK9Ozpi2YS7t9fAr0W
+	1p73bQPQSZ9SOpHRf7fAP39cpvYc3pu6ZbTUoabQ+1p/Ql3TGu8BYtg7C2TfYKNZ21Ce
+	M+E5fnbb1sdWAJYJtvCITm7lqK0eN67NurddfwS01O+h278KMgqLTfCpdmxrZYNtU/8W
+	UaROCGd9/w2//IMPMV6D6refPyhOQHkgJJxW2LP2jqWehzmvzBMux+3Ll/4Yueh9DVUH
+	itMgVIHrN3Thr5VVmob8xu0cfppSSleSEZ1u5Po0cn2C2uaTdDeOATvLtKwPp9LkKBOo
+	ubnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=o7MGq+j6iO5gmCMW7Y1oI/+SVmgqonec3luH1FIyY14=;
-	b=sV/nzolUC0HqZFE9VRBoFrHitYyJUtY2mgEto3+TrUs/mEUWhBrIRDDZwWUID4kyXp
-	p636nexHEjOCtObn9mvDMCo3vpCbC4WGN59DxGtOmsuW/rsbzm2wwM7qpxtH3XO0gSLh
-	6bA+JYCGly4LC7D+GO23vyh+DYy3HwGo7tYcdssD7KVR7WKK+J3sexNLqWuSgeD9e2Kh
-	IRH1G7zqfTWAX8HdazkUwJnLhWQl4iRsm+5Cn+WFnMpkGakhSEv9gHHD+ZnXHu/5T0Mo
-	T+Ke7+GM93fQ1gohTg5jz6DU/P3cuMdD1O1m75nVBIWQC2NC7ldrCOpcQ5ZCWuh9TN0v
-	srZA==
-X-Gm-Message-State: APjAAAVN198Ovuec2h4WxDhwyvpcQ5Ext6JS04ngceIXfsSQvfxo8stp
-	z03jBnM0RKt6VPjAxZbzOI3B6NYfT2A=
-X-Google-Smtp-Source: APXvYqxWBECPNH+tmprEY0waADT9YJNn1S3KFHpIKYOnSvLaww4ErpQuDlL2/x2XEnxH2DO2FdJL/Q==
-X-Received: by 2002:a5d:4204:: with SMTP id n4mr22665576wrq.123.1581956588530; 
-	Mon, 17 Feb 2020 08:23:08 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	a16sm1779725wrt.30.2020.02.17.08.23.07
-	for <bitbake-devel@lists.openembedded.org>
+	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+	bh=CTw4qOCbgEUJyVo4fN6OkOEuXzT4Nc94n+JWmASd+rg=;
+	b=L8pbI3rTsJS6Rcp9ETKKuJzRjm9R3H/R3r4UwPgxPOKd09t60/+dlCN6FlTXeE3Al6
+	6wT0Y+cLsE2DZ9xGB7Nqxx7xRuohVnLdhENnBz+5e7ww6OcMZJs4xI7UHj3ujWM2lGSP
+	4FzilWoFyKNypVwpCDv7W7ksTovy9qNIzyIcqIS58qJqZU0oAaekWC7gGALPloVONfBn
+	eJAuI3B807IIrSo63EQiOiEDUaoVuEVK2esbM0zmmUhBHZ8MO5m6NB3VCCORQDyiz233
+	UK/apcSiLxtMyQOARBJG/HSvv30XX5/XoOV7ZYJI8Epu6C+/+U6plLCVUkjBiv696+zx
+	F84g==
+X-Gm-Message-State: APjAAAXrFCYhJ14T/Z43LybhgK4aDeKSWc41qoXmTPgwAVIuNT/irlni
+	ThGHxsVXcDk9XH7iTSMdJA8V1GPA
+X-Google-Smtp-Source: APXvYqy+dp3P/DlEJKDgNP5Lt0uGtVNoOesJZst6VTiXEqY6Sefe/Ts1lW+uSGKWhoQzwyT4duZqBg==
+X-Received: by 2002:adf:f986:: with SMTP id f6mr27476962wrr.182.1582004470564; 
+	Mon, 17 Feb 2020 21:41:10 -0800 (PST)
+Received: from beaker.muppets.liwing.de (p4FE93807.dip0.t-ipconnect.de.
+	[79.233.56.7]) by smtp.gmail.com with ESMTPSA id
+	c74sm2211990wmd.26.2020.02.17.21.41.09
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 17 Feb 2020 08:23:08 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Mon, 17 Feb 2020 21:41:09 -0800 (PST)
+Sender: Jens Rehsack <rehsack@gmail.com>
+From: Jens Rehsack <sno@netbsd.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 17 Feb 2020 16:23:07 +0000
-Message-Id: <20200217162307.36082-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Subject: [PATCH] cooker/siggen: Empty siggen cache during parsing
+Date: Tue, 18 Feb 2020 06:40:53 +0100
+Message-Id: <20200218054053.2891-1-sno@netbsd.org>
+X-Mailer: git-send-email 2.17.1
+Subject: [OE-core][PATCH REBASED] bitbake: fetch2: svn: care for path_spec
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,72 +55,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Feb 2020 16:23:08 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 18 Feb 2020 05:41:10 -0000
 
-When parsing recipes its apparent the memory usage of bitbake rises linearly
-with number of recipes parsed. It shouldn't.
+From: Jens Rehsack <sno@NetBSD.org>
 
-Using tracemalloc (thanks for the tip Joshua Lock) it was clear that the
-dependency information left behind in siggen was the culprit. Add a new
-method to allow us to drop this information. We don't need it after the recipe
-has been parsed and hashes calculated (at runtime its different but only the
-currently executing task would be in memory).
+Documentation says:
+    "path_spec": A specific directory in which to checkout the specified
+    svn module.
+but existing svn fetcher uses "module" always as path of checked out
+svn-module, regardless whether path_spec was given or not.
 
-This should give signficant memory usage improvements for bitbake and that
-in turn should help speed on more constrained systems, as well as when used in
-multiconfig environments.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Jens Rehsack <sno@NetBSD.org>
 ---
- lib/bb/cooker.py |  3 ++-
- lib/bb/siggen.py | 11 +++++++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/fetch2/svn.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 1124332186..a05630d52d 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1940,7 +1940,8 @@ class Parser(multiprocessing.Process):
-                 except IndexError:
-                     break
-                 result = self.parse(*job)
--
-+                # Clear the siggen cache after parsing to control memory usage, its huge
-+                bb.parse.siggen.postparsing_clean_cache()
-             try:
-                 self.results.put(result, timeout=0.25)
-             except queue.Full:
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index ffd8fcaf36..c2d0c736cf 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -51,6 +51,9 @@ class SignatureGenerator(object):
-     def finalise(self, fn, d, varient):
-         return
- 
-+    def postparsing_clean_cache(self):
-+        return
-+
-     def get_unihash(self, tid):
-         return self.taskhash[tid]
- 
-@@ -188,6 +191,14 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         for task in taskdeps:
-             d.setVar("BB_BASEHASH_task-%s" % task, self.basehash[fn + ":" + task])
- 
-+    def postparsing_clean_cache(self):
-+        #
-+        # After parsing we can remove some things from memory to reduce our memory footprint
-+        #
-+        self.gendeps = {}
-+        self.lookupcache = {}
-+        self.taskdeps = {}
-+
-     def rundep_check(self, fn, recipename, task, dep, depname, dataCache):
-         # Return True if we should keep the dependency, False to drop it
-         # We only manipulate the dependencies for packages not in the whitelist
+diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
+index 6c8caf5fb9..385a6b2cf1 100644
+--- a/bitbake/lib/bb/fetch2/svn.py
++++ b/bitbake/lib/bb/fetch2/svn.py
+@@ -47,7 +47,7 @@ class Svn(FetchMethod):
+         svndir = d.getVar("SVNDIR") or (d.getVar("DL_DIR") + "/svn")
+         relpath = self._strip_leading_slashes(ud.path)
+         ud.pkgdir = os.path.join(svndir, ud.host, relpath)
+-        ud.moddir = os.path.join(ud.pkgdir, ud.module)
++        ud.moddir = os.path.join(ud.pkgdir, ud.path_spec)
+         # Protects the repository from concurrent updates, e.g. from two
+         # recipes fetching different revisions at the same time
+         ud.svnlock = os.path.join(ud.pkgdir, "svn.lock")
 -- 
-2.25.0
+2.17.1
 
 
