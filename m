@@ -1,99 +1,50 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com
-	[209.85.214.195])
-	by mail.openembedded.org (Postfix) with ESMTP id EAF4461517
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
+	[209.85.128.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 745AA6152B
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Feb 2020 15:44:47 +0000 (UTC)
-Received: by mail-pl1-f195.google.com with SMTP id y8so8212649pll.13
+	Tue, 18 Feb 2020 15:45:35 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id n3so1070970wmk.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Feb 2020 07:44:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=subject:to:references:from:autocrypt:message-id:date:user-agent
-	:mime-version:in-reply-to:content-transfer-encoding:content-language;
-	bh=M+sjp5vuq6QeQ5WUouJC7XPPRnA9Ys+olfU0js3+F9I=;
-	b=Pyw+Nm3qHwOnND2VnpuxteLsBELfqGl9oVvEjVkbl7WrVy02BEBUaoOw7msqAxlEFf
-	fMK0mJPKIe2miqJk4bAed+MQsVfrRwYOeuwOVHYsDGPUIe5n/6hyfwDrbTzmM4dOnU/5
-	UHQeHIcOCwPWN3CXnSrgHdh/DN5BE0O6+CxoLdmPsk1eo1cGbHetlQX5ATHAXniqJoaf
-	U5uzmJkaTFsalfTahJzbG4ibR8pg/MpA6x4czfbKquLAX4wUH0baOAuLNCADi10jC9Hb
-	2sCjnlnEbPjzu+p1qvbUiYUUvpXTpKPNz7OmpTWRrFODxuir93SV8lpVg5w3afKVZJsW
-	mqmQ==
+	Tue, 18 Feb 2020 07:45:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:cc:date:user-agent:mime-version
+	:content-transfer-encoding;
+	bh=zC4Es4AB6jfXvjBqxGk8SS8EEBYUIZeiWIpWXmnSUGA=;
+	b=Ok8sQO9y7qx8nZ5IRG1A8gXEqdc0jYAg3USR7rJmQqY3L9FQ7l9mDjytegqR79YSsi
+	tTCRjFS/xj6wmLQSApi+HmqkwaMxlIfaKJQ1z9g6Ix42K+eVSnYRDpKEAyUEzUEEMVlF
+	BOS63WIc1KvYhuXzHyHpxK1u+V9/27t3B73VQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-	:date:user-agent:mime-version:in-reply-to:content-transfer-encoding
-	:content-language;
-	bh=M+sjp5vuq6QeQ5WUouJC7XPPRnA9Ys+olfU0js3+F9I=;
-	b=FrFhQ7G2y4Uh9oWEJtq4eMKqyNub3kNVsfMO9fxGFPgsyV22Jla0aRCXbON+0BKfgm
-	Emb6pWM5VRciUSrnq3TH9DH+6TpykJIyDGAGsC0DhmxU49bXKbNHGoBdH4VA/X1QhDqM
-	pRltzDYTG+N2UI6pSPCGHXBk7AqPU8Sveq8AMzxPn9ARuwTQTOYewSkYT2KHD+svCm5L
-	Kvqr3A/gK+woP4pXsEVqXTaq4JR3QV0x9dgXeoe+tTi72SrC3vaR4f3RIuVO07HRkCAG
-	qpTwhU/G+guNnoaYtnAM50mYd0oEIMB+CG1fk4yL598XMLCP6iWBV4qSKJ9cOMPvWerQ
-	R7bg==
-X-Gm-Message-State: APjAAAVIUp04dw5+n70i+4/I3d+tRqg6wikm0SR5xDPZLrTOF0nryNLs
-	v+t6qopfJWeI8pgDyLMItEWwVUaJ
-X-Google-Smtp-Source: APXvYqzA+iaWRRWD42IsTGOnsG6/C/2Yok+lyyQ3TDGtajcoFFNDolUKBUlOoZ8xLAm/LploebjBZg==
-X-Received: by 2002:a17:902:9342:: with SMTP id
-	g2mr20685269plp.339.1582040688724; 
-	Tue, 18 Feb 2020 07:44:48 -0800 (PST)
-Received: from ?IPv6:2601:202:4180:a5c0:103:47a6:6829:8136?
-	([2601:202:4180:a5c0:103:47a6:6829:8136])
-	by smtp.gmail.com with ESMTPSA id v5sm5217697pgc.11.2020.02.18.07.44.47
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Tue, 18 Feb 2020 07:44:48 -0800 (PST)
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	bitbake-devel@lists.openembedded.org
-References: <20200217162307.36082-1-richard.purdie@linuxfoundation.org>
-From: akuster808 <akuster808@gmail.com>
-Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
-	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
-	8CS2NxU=
-Message-ID: <781da9cf-0229-1d3f-ab03-e064cd27265a@gmail.com>
-Date: Tue, 18 Feb 2020 07:44:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-	Thunderbird/68.4.1
+	h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
+	:mime-version:content-transfer-encoding;
+	bh=zC4Es4AB6jfXvjBqxGk8SS8EEBYUIZeiWIpWXmnSUGA=;
+	b=QODunuvWNn9Lnn5zCi9kC7YZjtlUxy7FNeCVSKgsXx9QOZnEvhLL6FS6puK771dqNP
+	IOdZmimKD11nt2cchSwGCUsktjonnMKf6wjxTTD0JGIjnXBDpiGFD7BmW/BbWFX4VkRo
+	nuaLLywZdbMU4Q4J7jIavs71H11BQ2nDK0/BFVL2UWI7jitouVHOLmd1gQDoVwv1Fi6n
+	n6QcOK42v+E2GM4/8GoNm3uHxQ6rHbc1Ew2WYWC8yj+GU7DaKz9QwYpPCVUfc/CBhZI1
+	FpFAONBm2XkFJw0ax715Cb477Mztc3fDz2MtHXkWkdhWf/XwfXumKBMiHHP0QQXaqR3B
+	exmA==
+X-Gm-Message-State: APjAAAUSwB+xkKjG/6sRbG5WZCQYN9+xTxYf7NTpt/PgSBq/fgd5Qai0
+	0Am1lWxKTzDxpp1s24FTSw+3I8mBAi4=
+X-Google-Smtp-Source: APXvYqx9r5PtdUF6lMGkM5IbqxXVJ5XKfS3Y5hcAJyOZdDY1sZAiXGv9dcElGcNvKkUlRYP+i4pTRg==
+X-Received: by 2002:a05:600c:2944:: with SMTP id
+	n4mr3825364wmd.22.1582040735146; 
+	Tue, 18 Feb 2020 07:45:35 -0800 (PST)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	b21sm3858908wmd.37.2020.02.18.07.45.33
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Tue, 18 Feb 2020 07:45:33 -0800 (PST)
+Message-ID: <64d9a5e38cb0159c1cce6f75b66f46b0d532c7fc.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 18 Feb 2020 15:45:32 +0000
+User-Agent: Evolution 3.34.1-4 
 MIME-Version: 1.0
-In-Reply-To: <20200217162307.36082-1-richard.purdie@linuxfoundation.org>
-Subject: Re: [PATCH] cooker/siggen: Empty siggen cache during parsing
+Cc: openembedded-core <openembedded-core@openembedded.org>
+Subject: bitbake memory usage debugging using tracemalloc
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -106,78 +57,163 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Feb 2020 15:44:48 -0000
-Content-Type: text/plain; charset=utf-8
+X-List-Received-Date: Tue, 18 Feb 2020 15:45:35 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+
+I wanted to quickly share an example of how we can use tracemalloc to
+debug memory usage in bitbake.
+
+What I'd noticed was that for each loop through the parsing code in the
+parsing thread, the RSS increased by a lot more than I'd expect. In
+other words it appeared to be leaking.
+
+I've given a code example below, you can see the RSS increase using
+psutil or resource which basically show the same thing. guppy3 is able
+to show there are a much larger number of sets and strings at the end
+compared to the start but not *where* they're hiding.
+
+Using tracemalloc, you can snapshot at the start, then at the finish
+and then get a difference. You run bitbake as "PYTHONTRACEMALLOC=1
+bitbake -p". Some example output is:
+
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:364: size=45.0 MiB (+45.0 MiB), count=136542 (+136542), average=346 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:388: size=10.1 MiB (+10.1 MiB), count=320 (+320), average=32.3 KiB
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:419: size=3868 KiB (+3868 KiB), count=9634 (+9634), average=411 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:93: size=3643 KiB (+3639 KiB), count=61407 (+61340), average=61 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:357: size=2828 KiB (+2828 KiB), count=37541 (+37541), average=77 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/parse_py/ConfHandler.py:163: size=936 KiB (-933 KiB), count=11639 (-736), average=82 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/parse_py/BBHandler.py:83: size=0 B (-858 KiB), count=0 (-9278)
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:276: size=786 KiB (+786 KiB), count=3725 (+3725), average=216 B
+WARNING: /media/build1/poky/bitbake/lib/bb/siggen.py:150: size=682 KiB (+682 KiB), count=4998 (+4998), average=140 B
+WARNING: /usr/lib/python3.8/copy.py:76: size=730 KiB (+646 KiB), count=1962 (+1761), average=381 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:89: size=633 KiB (+612 KiB), count=3001 (+2901), average=216 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:88: size=633 KiB (+612 KiB), count=3001 (+2901), average=216 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:426: size=552 KiB (+552 KiB), count=4998 (+4998), average=113 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:84: size=422 KiB (+407 KiB), count=6002 (+5793), average=72 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:158: size=793 KiB (+372 KiB), count=956 (+680), average=850 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:296: size=334 KiB (+334 KiB), count=963 (+963), average=355 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:193: size=724 KiB (+309 KiB), count=554 (+158), average=1338 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:798: size=296 KiB (+296 KiB), count=435 (+435), average=697 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:145: size=322 KiB (-256 KiB), count=1964 (-1558), average=168 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:353: size=252 KiB (+252 KiB), count=3428 (+3428), average=75 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:23: size=1600 B (-242 KiB), count=25 (-4654), average=64 B
+WARNING: <frozen importlib._bootstrap_external>:580: size=8878 KiB (+222 KiB), count=107185 (+2382), average=85 B
+WARNING: /media/build1/poky/bitbake/lib/bb/utils.py:305: size=653 KiB (+185 KiB), count=7046 (+2206), average=95 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:90: size=188 KiB (+181 KiB), count=3002 (+2891), average=64 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:427: size=178 KiB (+178 KiB), count=164 (+164), average=1112 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/__init__.py:163: size=185 KiB (+156 KiB), count=12 (+10), average=15.4 KiB
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:331: size=149 KiB (+149 KiB), count=2235 (+2235), average=68 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:379: size=145 KiB (+145 KiB), count=9 (+9), average=16.1 KiB
+WARNING: /media/build1/poky/bitbake/lib/bb/siggen.py:159: size=144 KiB (+144 KiB), count=1 (+1), average=144 KiB
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:409: size=137 KiB (+127 KiB), count=1445 (+1358), average=97 B
+
+(I'd changed the mutiple set() generations in data.py into one single
+one at the end of the function just to confirm it was that which was
+persisting in this chart, and to check I was understanding the trace).
+
+The remaining thing was to realise those sets allocated in that data.py
+function were being stored in the siggen code, which is apparent when
+you trace the function call paths or know the code.
+
+Compared to after my recent patch:
+
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/parse_py/ConfHandler.py:163: size=499 KiB (-1369 KiB), count=6297 (-6078), average=81 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/parse_py/BBHandler.py:83: size=0 B (-858 KiB), count=0 (-9278)
+WARNING: /media/build1/poky/bitbake/lib/bb/siggen.py:150: size=682 KiB (+682 KiB), count=4998 (+4998), average=140 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data.py:426: size=552 KiB (+552 KiB), count=4998 (+4998), average=113 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:89: size=381 KiB (+360 KiB), count=1807 (+1707), average=216 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:88: size=381 KiB (+360 KiB), count=1807 (+1707), average=216 B
+WARNING: /usr/lib/python3.8/copy.py:76: size=433 KiB (+348 KiB), count=978 (+777), average=453 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:145: size=315 KiB (-263 KiB), count=1918 (-1602), average=168 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:23: size=1792 B (-242 KiB), count=28 (-4651), average=64 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:84: size=254 KiB (+239 KiB), count=3614 (+3405), average=72 B
+WARNING: <frozen importlib._bootstrap_external>:580: size=8723 KiB (+222 KiB), count=105611 (+2379), average=85 B
+WARNING: /media/build1/poky/bitbake/lib/bb/utils.py:305: size=653 KiB (+184 KiB), count=7042 (+2203), average=95 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:465: size=333 KiB (-168 KiB), count=3791 (-1747), average=90 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:193: size=252 KiB (-163 KiB), count=237 (-159), average=1089 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:158: size=274 KiB (-147 KiB), count=212 (-64), average=1324 B
+WARNING: /media/build1/poky/bitbake/lib/bb/siggen.py:159: size=144 KiB (+144 KiB), count=1 (+1), average=144 KiB
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:90: size=113 KiB (+106 KiB), count=1808 (+1697), average=64 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/ast.py:287: size=456 B (-106 KiB), count=1 (-1947), average=456 B
+WARNING: /media/build1/poky/bitbake/lib/bb/utils.py:395: size=203 KiB (+102 KiB), count=395 (+172), average=525 B
+WARNING: /usr/lib/python3.8/tracemalloc.py:532: size=92.5 KiB (+92.4 KiB), count=1631 (+1630), average=58 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/__init__.py:163: size=106 KiB (+77.7 KiB), count=7 (+5), average=15.2 KiB
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:750: size=85.0 KiB (+76.8 KiB), count=518 (+468), average=168 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:409: size=72.2 KiB (+62.4 KiB), count=729 (+642), average=101 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:1064: size=656 B (-61.7 KiB), count=1 (-1129), average=656 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:587: size=153 KiB (-61.2 KiB), count=2508 (-1010), average=62 B
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:839: size=59.1 KiB (+54.7 KiB), count=9 (+5), average=6720 B
+WARNING: /media/build1/poky/bitbake/lib/bb/codeparser.py:38: size=57.0 KiB (+54.3 KiB), count=517 (+493), average=113 B
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/parse_py/BBHandler.py:165: size=0 B (-48.7 KiB), count=0 (-137)
+WARNING: /media/build1/poky/bitbake/lib/bb/parse/parse_py/BBHandler.py:171: size=0 B (-45.7 KiB), count=0 (-186)
+WARNING: /media/build1/poky/bitbake/lib/bb/data_smart.py:489: size=45.5 KiB (+45.2 KiB), count=7 (+6), average=6650 B
+
+so 45MB of data in just one object is removed, the overall gains were
+higher.
+
+I'm quite impressed with this module and I think we could use it to
+find other issues in bitbake.
+
+Cheers,
+
+Richard
 
 
-
-On 2/17/20 8:23 AM, Richard Purdie wrote:
-> When parsing recipes its apparent the memory usage of bitbake rises linearly
-> with number of recipes parsed. It shouldn't.
-This seems back port worthy to 1.44, 1.42
-
-- armin
->
-> Using tracemalloc (thanks for the tip Joshua Lock) it was clear that the
-> dependency information left behind in siggen was the culprit. Add a new
-> method to allow us to drop this information. We don't need it after the recipe
-> has been parsed and hashes calculated (at runtime its different but only the
-> currently executing task would be in memory).
->
-> This should give signficant memory usage improvements for bitbake and that
-> in turn should help speed on more constrained systems, as well as when used in
-> multiconfig environments.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/cooker.py |  3 ++-
->  lib/bb/siggen.py | 11 +++++++++++
->  2 files changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-> index 1124332186..a05630d52d 100644
-> --- a/lib/bb/cooker.py
-> +++ b/lib/bb/cooker.py
-> @@ -1940,7 +1940,8 @@ class Parser(multiprocessing.Process):
->                  except IndexError:
->                      break
->                  result = self.parse(*job)
-> -
-> +                # Clear the siggen cache after parsing to control memory usage, its huge
-> +                bb.parse.siggen.postparsing_clean_cache()
->              try:
->                  self.results.put(result, timeout=0.25)
->              except queue.Full:
-> diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-> index ffd8fcaf36..c2d0c736cf 100644
-> --- a/lib/bb/siggen.py
-> +++ b/lib/bb/siggen.py
-> @@ -51,6 +51,9 @@ class SignatureGenerator(object):
->      def finalise(self, fn, d, varient):
->          return
->  
-> +    def postparsing_clean_cache(self):
-> +        return
-> +
->      def get_unihash(self, tid):
->          return self.taskhash[tid]
->  
-> @@ -188,6 +191,14 @@ class SignatureGeneratorBasic(SignatureGenerator):
->          for task in taskdeps:
->              d.setVar("BB_BASEHASH_task-%s" % task, self.basehash[fn + ":" + task])
->  
-> +    def postparsing_clean_cache(self):
-> +        #
-> +        # After parsing we can remove some things from memory to reduce our memory footprint
-> +        #
-> +        self.gendeps = {}
-> +        self.lookupcache = {}
-> +        self.taskdeps = {}
-> +
->      def rundep_check(self, fn, recipename, task, dep, depname, dataCache):
->          # Return True if we should keep the dependency, False to drop it
->          # We only manipulate the dependencies for packages not in the whitelist
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 2d937a413cb..f4b25c336ed 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1890,6 +1890,11 @@ class ParsingFailure(Exception):
+         self.recipe = recipe
+         Exception.__init__(self, realexception, recipe)
+ 
++import psutil
++import resource
++import guppy
++import tracemalloc
++
+ class Parser(multiprocessing.Process):
+     def __init__(self, jobs, results, quit, init, profile):
+         self.jobs = jobs
+@@ -1922,6 +1927,11 @@ class Parser(multiprocessing.Process):
+         if self.init:
+             self.init()
+ 
++        psprocess = psutil.Process(os.getpid())
++        bb.warn("Init %d %s %s" % (os.getpid(), str(psprocess.memory_info().rss), str(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)))
++
++        snapshot1 = tracemalloc.take_snapshot()
++
+         pending = []
+         while True:
+             try:
+@@ -1942,11 +1952,26 @@ class Parser(multiprocessing.Process):
+                 result = self.parse(*job)
+                 # Clear the siggen cache after parsing to control memory usage, its huge
+                 bb.parse.siggen.postparsing_clean_cache()
++
++                psprocess = psutil.Process(os.getpid())
++                bb.warn("Mid %d %s %s" % (os.getpid(), str(psprocess.memory_info().rss), str(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)))
++
+             try:
+                 self.results.put(result, timeout=0.25)
+             except queue.Full:
+                 pending.append(result)
+ 
++        snapshot2 = tracemalloc.take_snapshot()
++        top_stats = snapshot2.compare_to(snapshot1, 'lineno')
++        for stat in top_stats[:30]:
++            bb.warn(str(stat))
++
++        psprocess = psutil.Process(os.getpid())
++        bb.warn("Exit %d %s %s" % (os.getpid(), str(psprocess.memory_info().rss), str(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)))
++
++        bb.warn(str(guppy.hpy().heap()))
++
++
+     def parse(self, filename, appends):
+         try:
+             origfilter = bb.event.LogHandler.filter
 
 
