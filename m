@@ -1,24 +1,48 @@
-Return-Path: <mark.hatle@kernel.crashing.org>
-Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 058F86142A
+Return-Path: <rehsack@gmail.com>
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com
+	[209.85.128.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 9AD38608E1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Feb 2020 22:06:37 +0000 (UTC)
-Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
-	(authenticated bits=0)
-	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01IM67kp020976
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NO) for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Feb 2020 16:06:37 -0600
+	Wed, 19 Feb 2020 06:27:26 +0000 (UTC)
+Received: by mail-wm1-f53.google.com with SMTP id a9so5413736wmj.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 18 Feb 2020 22:27:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=sender:from:to:cc:subject:date:message-id;
+	bh=CTw4qOCbgEUJyVo4fN6OkOEuXzT4Nc94n+JWmASd+rg=;
+	b=avSf48woO8+mizlB67/jE7HOIEbYKH0OcaqVdjBAL0susSCaI3C7xo+n4zvs8LmzvY
+	r5EuZ0WD5RR66d877MHhEdrVSRsw6+/muqBA9g2Rpj8fFtz69chFS+JDBH68zQl1V+hJ
+	86MuX3zaddA+dkLHUt16AxCBF2DCRM6e8GaANFCiGdY9zeLDe61fzfKb9NVmdKx+LGDp
+	FhtRTXbPW6hZZPF5bMfxp/Mox+wDYZw6Iysk5gvX4mcvEzhHM0NbenFzbPjTxglvPlfl
+	vd2nAmfjDLllXcBQy3cBuL0cPQyOrmn0Ke4EvC/v2+AoW501NcPgsLql3R0qHUxV0pbD
+	ObwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+	bh=CTw4qOCbgEUJyVo4fN6OkOEuXzT4Nc94n+JWmASd+rg=;
+	b=ZyB4i79KT+HbkEv6qfivRJqWVD2d90sLMkpicWN9I5/GVGJ6HNjLI5qXM4RQx5Thby
+	dVfR1+XI9oHlUnuIlx/yXFcOvgYpsfzsVM5xRSgag5jkQQbOXpKqmw8YlFhk6i/U2eb9
+	UnL8by3JS2VVUrj0joyU62lk8r65VAUYXbmDNvX8T9KItLyZHfEUKXWH7Z6//RVNuo2W
+	bB6VA5lbL67E3pelY+4rNjDtPwLn/mTiqo/hKg3VCESSJYUAwwYYRHXR8tpFQ6qEAa0p
+	NOD9mQxmdcblA3TkektRHmTTFafnOXjQyzUyRbGDh5t88tde8Dkir556rajDjA52yxys
+	EEpA==
+X-Gm-Message-State: APjAAAXw42RFK4Fa9IaLD7mQHHQE+zQ8UluMDpNdIrbBcD8W8kVnIxek
+	+vnNrnSqliSmernV1MC6iUDd7qER
+X-Google-Smtp-Source: APXvYqxgkMWxH6ej8xzBM71lv9qaprQ4kjjvNdQCHMrkqmtVLaNgVk+XreD5Fyjc8d3mJaTnQmbT8Q==
+X-Received: by 2002:a1c:2b44:: with SMTP id r65mr7603114wmr.72.1582093646551; 
+	Tue, 18 Feb 2020 22:27:26 -0800 (PST)
+Received: from beaker.muppets.liwing.de (p4FE93807.dip0.t-ipconnect.de.
+	[79.233.56.7])
+	by smtp.gmail.com with ESMTPSA id a5sm1611237wmb.37.2020.02.18.22.27.24
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Tue, 18 Feb 2020 22:27:24 -0800 (PST)
+Sender: Jens Rehsack <rehsack@gmail.com>
+From: Jens Rehsack <sno@netbsd.org>
 To: bitbake-devel@lists.openembedded.org
-References: <20200218135554.19362-1-dl9pf@gmx.de>
-From: Mark Hatle <mark.hatle@kernel.crashing.org>
-Message-ID: <503a475e-e96d-2bd7-c132-a0df0b886be6@kernel.crashing.org>
-Date: Tue, 18 Feb 2020 16:06:07 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
-	Gecko/20100101 Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200218135554.19362-1-dl9pf@gmx.de>
-Subject: Re: [PATCH] bitbake: layerindex: allow clones to be shallow
+Date: Wed, 19 Feb 2020 07:27:20 +0100
+Message-Id: <20200219062720.4509-1-sno@netbsd.org>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH REBASED] bitbake: fetch2: svn: care for path_spec
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,77 +55,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Feb 2020 22:06:38 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 19 Feb 2020 06:27:26 -0000
 
-Ack, this looks fine.
+From: Jens Rehsack <sno@NetBSD.org>
 
-It would be nice (in the future) to have a way to specify an optional depth,
-that could be passed through the system.  But as implemented it's fine.
+Documentation says:
+    "path_spec": A specific directory in which to checkout the specified
+    svn module.
+but existing svn fetcher uses "module" always as path of checked out
+svn-module, regardless whether path_spec was given or not.
 
---Mark
+Signed-off-by: Jens Rehsack <sno@NetBSD.org>
+---
+ bitbake/lib/bb/fetch2/svn.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2/18/20 7:55 AM, Jan-Simon Moeller wrote:
-> When bitbake-layers fetch-layerindex clones the repositories, these are
-> full clones. Allow the user to specify '-s' and do shallow clones
-> instead for faster downloads.
-> 
-> Signed-off-by: Jan-Simon Moeller <dl9pf@gmx.de>
-> ---
->  lib/bblayers/layerindex.py | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-> index aa3b682d..95b67a66 100644
-> --- a/lib/bblayers/layerindex.py
-> +++ b/lib/bblayers/layerindex.py
-> @@ -24,7 +24,7 @@ class LayerIndexPlugin(ActionPlugin):
->      This class inherits ActionPlugin to get do_add_layer.
->      """
-> 
-> -    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer, branch):
-> +    def get_fetch_layer(self, fetchdir, url, subdir, fetch_layer, branch, shallow=False):
->          layername = self.get_layer_name(url)
->          if os.path.splitext(layername)[1] == '.git':
->              layername = os.path.splitext(layername)[0]
-> @@ -32,10 +32,12 @@ class LayerIndexPlugin(ActionPlugin):
->          layerdir = os.path.join(repodir, subdir)
->          if not os.path.exists(repodir):
->              if fetch_layer:
-> -                cmd = ['git', 'clone', '-b' , branch, url, repodir]
-> -                if not branch:
-> -                    # Branch really shouldn't be empty, but use the repo default if it is
-> -                    cmd = ['git', 'clone', url, repodir]
-> +                cmd = ['git', 'clone']
-> +                if shallow:
-> +                    cmd.extend(['--depth', '1'])
-> +                if branch:
-> +                    cmd.extend(['-b' , branch])
-> +                cmd.extend([url, repodir])
->                  result = subprocess.call(cmd)
->                  if result:
->                      logger.error("Failed to download %s (%s)" % (url, branch))
-> @@ -176,7 +178,8 @@ class LayerIndexPlugin(ActionPlugin):
->                                                        layerBranch.layer.vcs_url,
->                                                        layerBranch.vcs_subdir,
->                                                        not args.show_only,
-> -                                                      layerBranch.actual_branch)
-> +                                                      layerBranch.actual_branch,
-> +                                                      args.shallow)
->                  if not name:
->                      # Error already shown
->                      return 1
-> @@ -209,6 +212,7 @@ class LayerIndexPlugin(ActionPlugin):
->          parser_layerindex_fetch = self.add_command(sp, 'layerindex-fetch', self.do_layerindex_fetch, parserecipes=False)
->          parser_layerindex_fetch.add_argument('-n', '--show-only', help='show dependencies and do nothing else', action='store_true')
->          parser_layerindex_fetch.add_argument('-b', '--branch', help='branch name to fetch')
-> +        parser_layerindex_fetch.add_argument('-s', '--shallow', help='do only shallow clones (--depth=1)', action='store_true')
->          parser_layerindex_fetch.add_argument('-i', '--ignore', help='assume the specified layers do not need to be fetched/added (separate multiple layers with commas, no spaces)', metavar='LAYER')
->          parser_layerindex_fetch.add_argument('layername', nargs='+', help='layer to fetch')
-> 
-> --
-> 2.11.0
-> 
+diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
+index 6c8caf5fb9..385a6b2cf1 100644
+--- a/bitbake/lib/bb/fetch2/svn.py
++++ b/bitbake/lib/bb/fetch2/svn.py
+@@ -47,7 +47,7 @@ class Svn(FetchMethod):
+         svndir = d.getVar("SVNDIR") or (d.getVar("DL_DIR") + "/svn")
+         relpath = self._strip_leading_slashes(ud.path)
+         ud.pkgdir = os.path.join(svndir, ud.host, relpath)
+-        ud.moddir = os.path.join(ud.pkgdir, ud.module)
++        ud.moddir = os.path.join(ud.pkgdir, ud.path_spec)
+         # Protects the repository from concurrent updates, e.g. from two
+         # recipes fetching different revisions at the same time
+         ud.svnlock = os.path.join(ud.pkgdir, "svn.lock")
+-- 
+2.17.1
+
 
