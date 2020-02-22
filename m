@@ -1,48 +1,36 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
-	[209.85.221.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 65DAD60AF4
+Return-Path: <bunk@stusta.de>
+Received: from mail.stusta.mhn.de (mail.stusta.mhn.de [141.84.69.5])
+	by mail.openembedded.org (Postfix) with ESMTP id 146B660AFA
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 22 Feb 2020 15:54:55 +0000 (UTC)
-Received: by mail-wr1-f48.google.com with SMTP id e8so5395061wrm.5
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 22 Feb 2020 07:54:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=R+WjogC1lKOYflckFzOh5ajdxGsyEW3CeQAkOUIWc+A=;
-	b=OZBETUkDd9EnNBL1O3ix5RaTS6tx3z4XBM5pAlnuiS6XTx6XqVEKB9yYKR9SXrwLzK
-	T3ma4WQQovhScUkWx2dFDBeHSnfDJ3lij6Xfy6MmYbEX0WFyrbyf6uNQPk0/a1+4kahe
-	vjDja5DycMZ+FZ+0N+pPf+3jf/KrvYzBPJ2Cw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=R+WjogC1lKOYflckFzOh5ajdxGsyEW3CeQAkOUIWc+A=;
-	b=Cjmly46LmLtRZudZTNuH2UIK6iGrCBKDy+He8JOMD1Nq1Y/km3L1zwt9aU52pBrATs
-	1Gt+OtL5Fvvnjo5YcC1W/mxVh0n1zHlzVqgciQOTvPTHFDOf1KhzL06znbnkk5iJ6hbC
-	2y5UxJj3E3MXsrBS8G5s/AGaKyFZiv7gZemmiPdiPwfhSwFR4fD42BmrYJtokU/fU3ag
-	UXGJsLvuE5YP6WwONG+EISrGyI6rjjymDqspK+ckinKVXTmILQzasEJoB0xkf2Se0+sv
-	TzlFzplpXHFRJUpZ9ThWkagzMuusiCafQ7CSnRDKIMhBgAclydhuWRhRew/tFGpYtTIX
-	1SxQ==
-X-Gm-Message-State: APjAAAXMU/LiPfMRSj0KYc2a6jtYKPCIM2ULc8r/eJGz6Kcl5sduvHnU
-	mM2xMq/V3yGKSPQlXLGkGvWFvA==
-X-Google-Smtp-Source: APXvYqwPwlSvEbzuTmOvHdFlZPVkFvdrkD3o3yuLMWsp1MAwcYoP/KtIHsM4K2cE65zqDo/IIPSHYw==
-X-Received: by 2002:adf:dfc8:: with SMTP id q8mr55474543wrn.135.1582386895910; 
-	Sat, 22 Feb 2020 07:54:55 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id w8sm9278654wmm.0.2020.02.22.07.54.54
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sat, 22 Feb 2020 07:54:55 -0800 (PST)
-Message-ID: <e349f1cc1d3b36fdff330dc7eab1f213a67d32b1.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Adrian Bunk <bunk@stusta.de>, bitbake-devel@lists.openembedded.org
-Date: Sat, 22 Feb 2020 15:54:54 +0000
-In-Reply-To: <20200221205213.16130-1-bunk@stusta.de>
+	Sat, 22 Feb 2020 22:05:22 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 48Q2Sc5Wfdz3l;
+	Sat, 22 Feb 2020 23:05:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stusta.de;
+	s=default; t=1582409121;
+	bh=tjxBtNnq18qUw4Yz2xPGnOWpYFsSvqNOINRyIF+V7P0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kDhjzFowN5xPBjNTUFFm7KA78i2DDh0swfyAaSR9L5o584yXaUlOIdIx3Oz0newYa
+	aSTNkeJMetjhtntWJ4D6oU/r9DpusiwO1Y8vPTrFgpTHJOzuPrgpZNmWdq9BQYKG8n
+	paBg3onZDuXWXlwD2QwNgoQwWJZbtVaRpOMDbrrRbzyvAFzNT3QgKzSNb5oFLaYtfF
+	XoGASMdscSmW/R1i5zGSEvlHlIbTNBCUcHX2vtSEQsp6PaIzLNXrsDbODINRTuGCtA
+	oX4hfBiKvKA6ssqOfe9p0hKWFs3ZfKwXMZppzu9rRqqRIaE3gLvnn/Wbl+t+rN8mVH
+	tWr3JZVqF+Fwmni8p5KGwukfbdTIL/1GSyBqvZzqDy3YbMHUC04nW9dBaqY46OVIOK
+	NgG9sDPBxwoMRdpeQvtDPdyqPwcWtCgvyJbnjFp1KMgEJzc/3H2iayCDowPnk0kLd6
+	HwAjtYVPc5kVbN8tzls6MvxeTRTJ77gWe+VdMNh5RCLh7vBJSrdX6Iho8iS31DoKB3
+	7nayQHmll86S1Hqy8rkyfFve/woLskdhPRP85463rtrS0vHdRFQOf+kOrWTS7l5z+3
+	wYvq58HYps0wblDeJGPhZ/xNVuiXWFg6vS6ZnRG7+6AYdsMU/ucJwoOKkGZTEdtoCE
+	zJ3UIEgkxOY3Y8pv5yJQfONM=
+Date: Sun, 23 Feb 2020 00:05:18 +0200
+From: Adrian Bunk <bunk@stusta.de>
+To: Andreas =?utf-8?Q?M=C3=BCller?= <schnitzeltony@gmail.com>
+Message-ID: <20200222220518.GD9628@localhost>
 References: <20200221205213.16130-1-bunk@stusta.de>
-User-Agent: Evolution 3.34.1-4 
+	<CALbNGRT8Zctc43d9xJ-1A2aANjONos0-EF-rzyUgzibs47kk_A@mail.gmail.com>
 MIME-Version: 1.0
+In-Reply-To: <CALbNGRT8Zctc43d9xJ-1A2aANjONos0-EF-rzyUgzibs47kk_A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] Lower priority of debug messages that should not be shown on the console
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -56,39 +44,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 22 Feb 2020 15:54:55 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 22 Feb 2020 22:05:23 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2020-02-21 at 22:52 +0200, Adrian Bunk wrote:
-> Signed-off-by: Adrian Bunk <bunk@stusta.de>
-> ---
->  bitbake/lib/bb/runqueue.py | 8 ++++----
->  bitbake/lib/bb/siggen.py   | 6 +++---
->  2 files changed, 7 insertions(+), 7 deletions(-)
+On Sat, Feb 22, 2020 at 12:57:47PM +0100, Andreas Müller wrote:
+> On Fri, Feb 21, 2020 at 10:00 PM Adrian Bunk <bunk@stusta.de> wrote:
+>...
+> > --- a/bitbake/lib/bb/runqueue.py
+> > +++ b/bitbake/lib/bb/runqueue.py
+> > @@ -2054,7 +2054,7 @@ class RunQueueExecute:
+> >          self.update_holdofftasks()
+> >
+> >          if not self.sq_live and not self.sqdone and not self.sq_deferred and not self.updated_taskhash_queue and not self.holdoff_tasks:
+> > -            logger.info("Setscene tasks completed")
+> > +            logger.debug(1, "Setscene tasks completed")
+> ^ Could you please leave this one - I consider it helpful
+>...
 
-The trouble here is that if we remove these messages (and I can
-understand why people want to), if there is a problem with hashequiv, I
-can simply look at the result and say "yes, it broke" with zero ability
-to understand why as we can't tell what happened in the build.
+It would be helpful if it would be shown only once.
 
-The correct fix is probably to change the console log messages to log
-differently to the on disk log file. Even then, it means we can't debug
-autobuilder failures unless we save those logs.
-
-So in summary, there is a choice:
-
-a) We can compel me to merge patches like this. I will then just have
-to close all hashequiv bug reports as WORKSFORME.
-
-b) We actually fix/improve the way logging works.
-
-I'd prefer b).
-
-Cheers,
-
-Richard
+I've seen it 10 times during a build where
+"Setscene task .. became valid" and "Already covered setscene for ..."
+also happened a few times.
 
 
-
+cu
+Adrian
 
