@@ -1,36 +1,36 @@
 Return-Path: <bunk@stusta.de>
 Received: from mail.stusta.mhn.de (mail.stusta.mhn.de [141.84.69.5])
-	by mail.openembedded.org (Postfix) with ESMTP id 146B660AFA
+	by mail.openembedded.org (Postfix) with ESMTP id 4B88661732
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 22 Feb 2020 22:05:22 +0000 (UTC)
+	Sun, 23 Feb 2020 19:51:52 +0000 (UTC)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 48Q2Sc5Wfdz3l;
-	Sat, 22 Feb 2020 23:05:20 +0100 (CET)
+	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 48QbS848Bbz3K;
+	Sun, 23 Feb 2020 20:51:51 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stusta.de;
-	s=default; t=1582409121;
-	bh=tjxBtNnq18qUw4Yz2xPGnOWpYFsSvqNOINRyIF+V7P0=;
+	s=default; t=1582487513;
+	bh=ImjVFe+i05Z0ZuFLg2trTfqwPBzAzRiu0sHVgRcu3r8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kDhjzFowN5xPBjNTUFFm7KA78i2DDh0swfyAaSR9L5o584yXaUlOIdIx3Oz0newYa
-	aSTNkeJMetjhtntWJ4D6oU/r9DpusiwO1Y8vPTrFgpTHJOzuPrgpZNmWdq9BQYKG8n
-	paBg3onZDuXWXlwD2QwNgoQwWJZbtVaRpOMDbrrRbzyvAFzNT3QgKzSNb5oFLaYtfF
-	XoGASMdscSmW/R1i5zGSEvlHlIbTNBCUcHX2vtSEQsp6PaIzLNXrsDbODINRTuGCtA
-	oX4hfBiKvKA6ssqOfe9p0hKWFs3ZfKwXMZppzu9rRqqRIaE3gLvnn/Wbl+t+rN8mVH
-	tWr3JZVqF+Fwmni8p5KGwukfbdTIL/1GSyBqvZzqDy3YbMHUC04nW9dBaqY46OVIOK
-	NgG9sDPBxwoMRdpeQvtDPdyqPwcWtCgvyJbnjFp1KMgEJzc/3H2iayCDowPnk0kLd6
-	HwAjtYVPc5kVbN8tzls6MvxeTRTJ77gWe+VdMNh5RCLh7vBJSrdX6Iho8iS31DoKB3
-	7nayQHmll86S1Hqy8rkyfFve/woLskdhPRP85463rtrS0vHdRFQOf+kOrWTS7l5z+3
-	wYvq58HYps0wblDeJGPhZ/xNVuiXWFg6vS6ZnRG7+6AYdsMU/ucJwoOKkGZTEdtoCE
-	zJ3UIEgkxOY3Y8pv5yJQfONM=
-Date: Sun, 23 Feb 2020 00:05:18 +0200
+	b=lhmeWK8ykEqhaX/Yw/6Z1bgJFvzqs62fc/y5KKXYYUfDIjOGWdI7Luy0VxFDtQNE4
+	wJqkLCzbWvzRDzyG8IEf9PwuBHvru8vNs+YfPuLEHTb8f+VawN+t7elT1wfsAuTEj8
+	9hxS8+fj+pPZ/CmSQHvzVMfu3ydNzGzG5l3pINk5UNWR/7Ulv1Nf1GmkEXJyz0Wxrn
+	3aBud8DMOklYjR92T+T5F5S4LZlomk7cAM4okPqoLS0k78HxallXr20neIFKjeADM7
+	6ye770THEbfTjf5hikw1lbyScywzohO83qSJGOXzKDAHOO1TTbrCdsuhWEXXyVA2H+
+	to+qu+XCcYszFfO4GVm9iDMczp1aomWk1iPUeyKq0AphOJ+p9oIMm1Y6VJh78PZSgN
+	Bt9bpSNMCPe3m1u4rWXpk9rUTNr/Yoy9g9AFkqjMbHRjAXERx18FsV/N6YiirpE+ZX
+	ndpd+FNUqS/Rl5gKCfI3kM/yEJVh44hOkT9pLJUsG6NQLJqfpd7JX4dvjue4TLv85Z
+	Hq4Ah5UdzgVWbCyv7X5io7UwjsQ8OY4FwaZklIB9MtDFJ40h12Hkus1yBkg0uu/PHR
+	yHOFK1FrCfx8R3i5kmB4r5I53afLpfda2npK4y7t95SLwTNCq1ceDUr4KjiAHAUXvm
+	xQ3aA7+3w3+2fL7rOinIpwdg=
+Date: Sun, 23 Feb 2020 21:51:48 +0200
 From: Adrian Bunk <bunk@stusta.de>
-To: Andreas =?utf-8?Q?M=C3=BCller?= <schnitzeltony@gmail.com>
-Message-ID: <20200222220518.GD9628@localhost>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20200223195148.GB3444@localhost>
 References: <20200221205213.16130-1-bunk@stusta.de>
-	<CALbNGRT8Zctc43d9xJ-1A2aANjONos0-EF-rzyUgzibs47kk_A@mail.gmail.com>
+	<e349f1cc1d3b36fdff330dc7eab1f213a67d32b1.camel@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <CALbNGRT8Zctc43d9xJ-1A2aANjONos0-EF-rzyUgzibs47kk_A@mail.gmail.com>
+In-Reply-To: <e349f1cc1d3b36fdff330dc7eab1f213a67d32b1.camel@linuxfoundation.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] Lower priority of debug messages that should not be shown on the console
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -44,31 +44,21 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 22 Feb 2020 22:05:23 -0000
+X-List-Received-Date: Sun, 23 Feb 2020 19:51:53 -0000
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 22, 2020 at 12:57:47PM +0100, Andreas Müller wrote:
-> On Fri, Feb 21, 2020 at 10:00 PM Adrian Bunk <bunk@stusta.de> wrote:
+On Sat, Feb 22, 2020 at 03:54:54PM +0000, Richard Purdie wrote:
 >...
-> > --- a/bitbake/lib/bb/runqueue.py
-> > +++ b/bitbake/lib/bb/runqueue.py
-> > @@ -2054,7 +2054,7 @@ class RunQueueExecute:
-> >          self.update_holdofftasks()
-> >
-> >          if not self.sq_live and not self.sqdone and not self.sq_deferred and not self.updated_taskhash_queue and not self.holdoff_tasks:
-> > -            logger.info("Setscene tasks completed")
-> > +            logger.debug(1, "Setscene tasks completed")
-> ^ Could you please leave this one - I consider it helpful
->...
+> b) We actually fix/improve the way logging works.
+> 
+> I'd prefer b).
 
-It would be helpful if it would be shown only once.
+Makes sense, I've submitted this as bug #13813.
 
-I've seen it 10 times during a build where
-"Setscene task .. became valid" and "Already covered setscene for ..."
-also happened a few times.
-
+> Cheers,
+> 
+> Richard
 
 cu
 Adrian
