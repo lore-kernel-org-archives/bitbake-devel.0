@@ -1,35 +1,51 @@
-Return-Path: <bunk@stusta.de>
-Received: from mail.stusta.mhn.de (mail.stusta.mhn.de [141.84.69.5])
-	by mail.openembedded.org (Postfix) with ESMTP id 4B88661732
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
+	[209.85.221.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 4748661825
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 23 Feb 2020 19:51:52 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 48QbS848Bbz3K;
-	Sun, 23 Feb 2020 20:51:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stusta.de;
-	s=default; t=1582487513;
-	bh=ImjVFe+i05Z0ZuFLg2trTfqwPBzAzRiu0sHVgRcu3r8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lhmeWK8ykEqhaX/Yw/6Z1bgJFvzqs62fc/y5KKXYYUfDIjOGWdI7Luy0VxFDtQNE4
-	wJqkLCzbWvzRDzyG8IEf9PwuBHvru8vNs+YfPuLEHTb8f+VawN+t7elT1wfsAuTEj8
-	9hxS8+fj+pPZ/CmSQHvzVMfu3ydNzGzG5l3pINk5UNWR/7Ulv1Nf1GmkEXJyz0Wxrn
-	3aBud8DMOklYjR92T+T5F5S4LZlomk7cAM4okPqoLS0k78HxallXr20neIFKjeADM7
-	6ye770THEbfTjf5hikw1lbyScywzohO83qSJGOXzKDAHOO1TTbrCdsuhWEXXyVA2H+
-	to+qu+XCcYszFfO4GVm9iDMczp1aomWk1iPUeyKq0AphOJ+p9oIMm1Y6VJh78PZSgN
-	Bt9bpSNMCPe3m1u4rWXpk9rUTNr/Yoy9g9AFkqjMbHRjAXERx18FsV/N6YiirpE+ZX
-	ndpd+FNUqS/Rl5gKCfI3kM/yEJVh44hOkT9pLJUsG6NQLJqfpd7JX4dvjue4TLv85Z
-	Hq4Ah5UdzgVWbCyv7X5io7UwjsQ8OY4FwaZklIB9MtDFJ40h12Hkus1yBkg0uu/PHR
-	yHOFK1FrCfx8R3i5kmB4r5I53afLpfda2npK4y7t95SLwTNCq1ceDUr4KjiAHAUXvm
-	xQ3aA7+3w3+2fL7rOinIpwdg=
-Date: Sun, 23 Feb 2020 21:51:48 +0200
-From: Adrian Bunk <bunk@stusta.de>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-ID: <20200223195148.GB3444@localhost>
+	Sun, 23 Feb 2020 23:53:59 +0000 (UTC)
+Received: by mail-wr1-f67.google.com with SMTP id n10so8318833wrm.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 23 Feb 2020 15:54:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=message-id:subject:from:to:cc:date:in-reply-to:references
+	:user-agent:mime-version:content-transfer-encoding;
+	bh=8pe9HFWQf3hadZAuK7vToXYADg5etAK4/8EnTC6MjPM=;
+	b=bUJoQWLB/F0m4dsGd1a0t1aWmDkw6kTeX9xg/fW9yEZXAhaZdvgIC1mwJ4JNeqNnRT
+	aaUnYldYkixo1QRQo1vmY9bminiOiWiGv7ixK40vkOUWAorf/DZRyMmSy/CJZhxCeTbT
+	vOW+q2WPJmGjmMF/kqBzv8yOIKntqkWPtR5Dw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+	:references:user-agent:mime-version:content-transfer-encoding;
+	bh=8pe9HFWQf3hadZAuK7vToXYADg5etAK4/8EnTC6MjPM=;
+	b=RRBIxnMx3oUD7JCW3oFf1J8KHPDIc58UzG3/w+YOFeOH6ZFxwJWhxrVYkQckJ1i0MH
+	sUH13CGCoLIAi5Zt1ow4KcFQ+Bce5xg8Ys0u7u7ofesuoyEON3dhnxFfoP2+VR3ElJh1
+	SzcBxdxhRWG0LDCiMYR+Pk7JAIy04tEEkUIGTMPmzKFtnYV7q8BHs7QI/MLMHR+MI6kr
+	Mic+D7ArqWIk8hGoATA37ASNi45+87AbUugqNzwvG+3vAqvxIz+472RUubDCo5pJhHAP
+	yrw9DhVLZesDUHBfaaHvsbIRJ9ONw/FJaQ/WzOUmdaJhc9olGHEtKlm5fMebuMpQDdqB
+	Ucvw==
+X-Gm-Message-State: APjAAAVr40dxcSSyZtE3RbGiH5agXEaSUfQnuHgczzM1w6SZ9CwtoU/S
+	R2nYxURi58yNu7Ye4q27INr/WOpVbuM=
+X-Google-Smtp-Source: APXvYqzc4ZXD1Xz6cgPw8IYURjBE+UzPUJnuC6SX+A7FYdush0nJGsUviQwnmQXujZ5bFMYfkDwU9g==
+X-Received: by 2002:adf:aadb:: with SMTP id i27mr66072484wrc.105.1582502039823;
+	Sun, 23 Feb 2020 15:53:59 -0800 (PST)
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+	by smtp.gmail.com with ESMTPSA id
+	x6sm15081300wmi.44.2020.02.23.15.53.58
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Sun, 23 Feb 2020 15:53:59 -0800 (PST)
+Message-ID: <49d09c50265086a49798d59c8569323c37bba430.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Adrian Bunk <bunk@stusta.de>
+Date: Sun, 23 Feb 2020 23:53:57 +0000
+In-Reply-To: <20200223195148.GB3444@localhost>
 References: <20200221205213.16130-1-bunk@stusta.de>
 	<e349f1cc1d3b36fdff330dc7eab1f213a67d32b1.camel@linuxfoundation.org>
+	<20200223195148.GB3444@localhost>
+User-Agent: Evolution 3.34.1-4 
 MIME-Version: 1.0
-In-Reply-To: <e349f1cc1d3b36fdff330dc7eab1f213a67d32b1.camel@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] Lower priority of debug messages that should not be shown on the console
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -44,22 +60,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 23 Feb 2020 19:51:53 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-List-Received-Date: Sun, 23 Feb 2020 23:53:59 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 22, 2020 at 03:54:54PM +0000, Richard Purdie wrote:
->...
-> b) We actually fix/improve the way logging works.
+On Sun, 2020-02-23 at 21:51 +0200, Adrian Bunk wrote:
+> On Sat, Feb 22, 2020 at 03:54:54PM +0000, Richard Purdie wrote:
+> > ...
+> > b) We actually fix/improve the way logging works.
+> > 
+> > I'd prefer b).
 > 
-> I'd prefer b).
+> Makes sense, I've submitted this as bug #13813.
 
-Makes sense, I've submitted this as bug #13813.
+I note you believe this has to be fixed before we reach M3. I guess I'd
+agree, I just don't know who is going to do it.
 
-> Cheers,
-> 
-> Richard
+Bitbake bugs get auto assigned to me. I physically cannot actually keep
+up with the incoming bugs despite working more than I should.
 
-cu
-Adrian
+I was actually trying to do something about my bug count as its
+seriously depressing me. For each one I try and fix I seem to find
+three more intermittent issues on the autobuilder :(.
+
+I know you didn't mean it this way and we need to track the issues, I
+just don't know how we're going to handle it.
+
+Cheers,
+
+Richard
+
+
+
+
+
+
+
 
