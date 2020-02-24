@@ -1,51 +1,37 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
-	[209.85.221.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 4748661825
+Return-Path: <bunk@stusta.de>
+Received: from mail.stusta.mhn.de (mail.stusta.mhn.de [141.84.69.5])
+	by mail.openembedded.org (Postfix) with ESMTP id 37259616BF
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 23 Feb 2020 23:53:59 +0000 (UTC)
-Received: by mail-wr1-f67.google.com with SMTP id n10so8318833wrm.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 23 Feb 2020 15:54:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:cc:date:in-reply-to:references
-	:user-agent:mime-version:content-transfer-encoding;
-	bh=8pe9HFWQf3hadZAuK7vToXYADg5etAK4/8EnTC6MjPM=;
-	b=bUJoQWLB/F0m4dsGd1a0t1aWmDkw6kTeX9xg/fW9yEZXAhaZdvgIC1mwJ4JNeqNnRT
-	aaUnYldYkixo1QRQo1vmY9bminiOiWiGv7ixK40vkOUWAorf/DZRyMmSy/CJZhxCeTbT
-	vOW+q2WPJmGjmMF/kqBzv8yOIKntqkWPtR5Dw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=8pe9HFWQf3hadZAuK7vToXYADg5etAK4/8EnTC6MjPM=;
-	b=RRBIxnMx3oUD7JCW3oFf1J8KHPDIc58UzG3/w+YOFeOH6ZFxwJWhxrVYkQckJ1i0MH
-	sUH13CGCoLIAi5Zt1ow4KcFQ+Bce5xg8Ys0u7u7ofesuoyEON3dhnxFfoP2+VR3ElJh1
-	SzcBxdxhRWG0LDCiMYR+Pk7JAIy04tEEkUIGTMPmzKFtnYV7q8BHs7QI/MLMHR+MI6kr
-	Mic+D7ArqWIk8hGoATA37ASNi45+87AbUugqNzwvG+3vAqvxIz+472RUubDCo5pJhHAP
-	yrw9DhVLZesDUHBfaaHvsbIRJ9ONw/FJaQ/WzOUmdaJhc9olGHEtKlm5fMebuMpQDdqB
-	Ucvw==
-X-Gm-Message-State: APjAAAVr40dxcSSyZtE3RbGiH5agXEaSUfQnuHgczzM1w6SZ9CwtoU/S
-	R2nYxURi58yNu7Ye4q27INr/WOpVbuM=
-X-Google-Smtp-Source: APXvYqzc4ZXD1Xz6cgPw8IYURjBE+UzPUJnuC6SX+A7FYdush0nJGsUviQwnmQXujZ5bFMYfkDwU9g==
-X-Received: by 2002:adf:aadb:: with SMTP id i27mr66072484wrc.105.1582502039823;
-	Sun, 23 Feb 2020 15:53:59 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	x6sm15081300wmi.44.2020.02.23.15.53.58
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sun, 23 Feb 2020 15:53:59 -0800 (PST)
-Message-ID: <49d09c50265086a49798d59c8569323c37bba430.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Adrian Bunk <bunk@stusta.de>
-Date: Sun, 23 Feb 2020 23:53:57 +0000
-In-Reply-To: <20200223195148.GB3444@localhost>
+	Mon, 24 Feb 2020 05:49:49 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 48Qrk344plz4S;
+	Mon, 24 Feb 2020 06:49:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stusta.de;
+	s=default; t=1582523387;
+	bh=WAJ62RLBF5xMLvXgVkZ8cFjg9LqNp1p8QUovqxpctAw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DqGwTXFX0pdGKAVTDtGW0z+gpcS/Zs2824sunebVuVFenMGKtTGYU419aOoOuKX9L
+	oiNfjYQH/X3gSktQr1pzf1WOntYWGkenna23De4go/Kn9ugHmRAxXfkuilrl1cekLL
+	DsUZapNLxop5rf9HAesvfp44SYajLrKYdQ8iO60MzxptV98syLAmsSp0aNtNNuNte9
+	b8xA08jBwn/e7W/N9gyeYKPFX+/FmzNL78r3tsd/KYB0ENs7Dat1g+TqTznC7xluNb
+	fWD3odXBl/14dmAJ9UwphwdvMCQluTjhXiMWiwWYcAr0+pXUw0uzf/026WLK+dTbNX
+	3rrNE/cVH53OEHlaSVlM+MdaZYdlx3TTs48y9oBd8zz8JRzNfnq3PKUo2KUafxEmnk
+	8OVlKm2vHUXhJM9csaZVjxxRy6uGi6/NN434APSc72fFQHXmiDP/Z63BXo+R+F40T5
+	Qhvicqh8gQebA3VRSRga0+c9GUED+SxXoOXAuSxxBclYSpRJy2hOljVEh4M1cp8i8W
+	aRRBG56DTwaaKMcw6Yu1QbWel5zMqLICvKZowrOObB28TTdS2KLUwFHQay6OhxeWh1
+	f8MvvNBCVLf5ib0QHl2E/FHj/8ITpOY3kZeIZ5spocnrjPpqbCYltWyeuHcz4arasS
+	KOKnebe9h7mCeTR+SAJ8Qetg=
+Date: Mon, 24 Feb 2020 07:49:45 +0200
+From: Adrian Bunk <bunk@stusta.de>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20200224054945.GB6683@localhost>
 References: <20200221205213.16130-1-bunk@stusta.de>
 	<e349f1cc1d3b36fdff330dc7eab1f213a67d32b1.camel@linuxfoundation.org>
 	<20200223195148.GB3444@localhost>
-User-Agent: Evolution 3.34.1-4 
+	<49d09c50265086a49798d59c8569323c37bba430.camel@linuxfoundation.org>
 MIME-Version: 1.0
+In-Reply-To: <49d09c50265086a49798d59c8569323c37bba430.camel@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] Lower priority of debug messages that should not be shown on the console
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -60,40 +46,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 23 Feb 2020 23:53:59 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 24 Feb 2020 05:49:49 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Sun, 2020-02-23 at 21:51 +0200, Adrian Bunk wrote:
-> On Sat, Feb 22, 2020 at 03:54:54PM +0000, Richard Purdie wrote:
-> > ...
-> > b) We actually fix/improve the way logging works.
+On Sun, Feb 23, 2020 at 11:53:57PM +0000, Richard Purdie wrote:
+> On Sun, 2020-02-23 at 21:51 +0200, Adrian Bunk wrote:
+> > On Sat, Feb 22, 2020 at 03:54:54PM +0000, Richard Purdie wrote:
+> > > ...
+> > > b) We actually fix/improve the way logging works.
+> > > 
+> > > I'd prefer b).
 > > 
-> > I'd prefer b).
+> > Makes sense, I've submitted this as bug #13813.
 > 
-> Makes sense, I've submitted this as bug #13813.
+> I note you believe this has to be fixed before we reach M3. I guess I'd
+> agree, I just don't know who is going to do it.
 
-I note you believe this has to be fixed before we reach M3. I guess I'd
-agree, I just don't know who is going to do it.
+I would have said M4, but that doesn't really change anything.
 
-Bitbake bugs get auto assigned to me. I physically cannot actually keep
-up with the incoming bugs despite working more than I should.
+> Bitbake bugs get auto assigned to me. I physically cannot actually keep
+> up with the incoming bugs despite working more than I should.
+> 
+> I was actually trying to do something about my bug count as its
+> seriously depressing me. For each one I try and fix I seem to find
+> three more intermittent issues on the autobuilder :(.
 
-I was actually trying to do something about my bug count as its
-seriously depressing me. For each one I try and fix I seem to find
-three more intermittent issues on the autobuilder :(.
+I know this might sound brutal, but in hindsight the hash equivalence 
+work was not a good idea with the current resourcing.
 
-I know you didn't mean it this way and we need to track the issues, I
-just don't know how we're going to handle it.
+I fully understand why it is attractive to properly fix a long-standing
+problem, but the hash equivalence work and followup fixes might have 
+been the difference between an OKish workload and working more than
+you should have done.
 
-Cheers,
+> I know you didn't mean it this way and we need to track the issues, I
+> just don't know how we're going to handle it.
 
-Richard
+From my side the problem is that my initial patch is what I can do with 
+reasonable effort.
 
+> Cheers,
+> 
+> Richard
 
-
-
-
-
-
+cu
+Adrian
 
