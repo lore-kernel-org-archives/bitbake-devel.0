@@ -1,39 +1,50 @@
-Return-Path: <daisuke.yamane@miraclelinux.com>
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com
-	[209.85.210.195])
-	by mail.openembedded.org (Postfix) with ESMTP id 1C3D8610B9
+Return-Path: <paul.barker@konsulko.com>
+Received: from mail-ot1-f67.google.com (mail-ot1-f67.google.com
+	[209.85.210.67])
+	by mail.openembedded.org (Postfix) with ESMTP id 5BE6B608BD
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Feb 2020 09:24:03 +0000 (UTC)
-Received: by mail-pf1-f195.google.com with SMTP id 185so6871476pfv.3
+	Tue, 25 Feb 2020 10:34:00 +0000 (UTC)
+Received: by mail-ot1-f67.google.com with SMTP id g64so11581178otb.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Feb 2020 01:24:05 -0800 (PST)
+	Tue, 25 Feb 2020 02:34:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=1+TtYSJyc2Emy+UeMVUYUlq6cGUiQTbNT4vqqYB6YsQ=;
+	b=UsyAppLAKPt3eDIE2EsCL0FiYHVf7ObiMTVM7Aa3EkxzsvG8bX/6yLlQQhvZeAEtv/
+	junqLI7q23RUxZBfaWxekBbKacxhmUYAS5wpd3gQg4NRqRWWJ/QGHGOKAGXN85VaKBLt
+	nF33Euch52JSlWmdEZ5DVgW8qJ8xKnFZQm96I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=20CImprZOYWJ0kJehmLwTy8+Pk7eRvRWjpPeEcxk1Z8=;
-	b=ga9gN1RQZxgzxTD+nPTY6d0rM/D1aKBHq5Vgtb7j+G1RFWWRlpV1QVKeR5oJGA9VRC
-	UxpqPA8hT/wWU9+sunPMfNzKzcWM7Xe335d2gkrlH6osJMCU4EiO7jYoExqXB0kG3KeH
-	xDKkx9MRj5YX9aNffxq1r+aLOw3wDJXmZJk6igMGqE9f/2zbyms6Cyr5c0JyFExwMzF0
-	2DAHZSmgnW+WemcAlwTBRbAGEW0vSZDsE8/tEfU73zXEK2Fi0vYpGATjSLjRgeKyG9Om
-	cvWxyxWNmEkZKPEyByKyqOrfAaqmwZkz1yZc/yvwRzux5z/AbU1qJ72FYuom1z85DsVd
-	oV7w==
-X-Gm-Message-State: APjAAAUfitY6JXEuJfZvd5CxHFChWeyBBkmmEPaSxWYElR6bhPqLZ3g4
-	Tanv0pTwYYflvCnO07GUp8t/jCMNCV8=
-X-Google-Smtp-Source: APXvYqxly7tMiqsIZCaCWBWxP6aXyMTOxgnj/bp7PUkm+TswY/NlwmpC85Qwx26eXnin7IPfE4DWzg==
-X-Received: by 2002:a62:7883:: with SMTP id
-	t125mr58064145pfc.141.1582622644668; 
-	Tue, 25 Feb 2020 01:24:04 -0800 (PST)
-Received: from AIBox-1804.lxd (219x123x27x194.ap219.ftth.ucom.ne.jp.
-	[219.123.27.194]) by smtp.googlemail.com with ESMTPSA id
-	r11sm16102870pgi.9.2020.02.25.01.24.02
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 25 Feb 2020 01:24:03 -0800 (PST)
-From: Daisuke Yamane <daisuke.yamane@cybertrust.co.jp>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 25 Feb 2020 09:23:56 +0000
-Message-Id: <20200225092356.898-1-daisuke.yamane@cybertrust.co.jp>
-X-Mailer: git-send-email 2.17.1
-Subject: [1.44, 1.42, 1.40] lib/bb/utils.py: Preserve ownership of symlink
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=1+TtYSJyc2Emy+UeMVUYUlq6cGUiQTbNT4vqqYB6YsQ=;
+	b=NSXKc8oIl0XXd5Z+iMhr6R0+LztpY/iqW4oSCs9W4hFdkMqR8526UVVuPHQbaCWGLp
+	BsZ5W6X8uCVqr9jgeRXuFWxNUtLMn2WAELAZq3bCvba/z4U5Lu1Oq/v+CcTWb8xMf903
+	8BaOO+pkwtPSjHhXURnhY2yEu1DU1C9QHQhnw88gjA3ZxWhnGjZAjl3u3wQQ2SShiH39
+	fYFr6wlJt9B8i8iIgOs8SEePoaTlYrsggQra1FQTLHwr0tBHq223ZMmDR7LWgeBdsg/m
+	0bcLtv0LwQymZEHD2FI/keyOBf5mp39h2jHAGqccYxe+DwU257UqoEwW22wnHhvpZOGh
+	/7+w==
+X-Gm-Message-State: APjAAAWM/hTHPIKB1kcGs0EnO5OFmkACDd8yXBb+RaKnv7r66iAsO1gF
+	9YoxI566/GioDXjJZ6DEdvOoCkZ/CrSFiOm3UNnIpQ==
+X-Google-Smtp-Source: APXvYqzUP1B6p9BWECy3L8a3sW/JqCj3Oi3EoTM3MhtH+EetLVeh5NXv8UmNC/2BIiC3Xp4rNAzfgaGBVi38d7RMA40=
+X-Received: by 2002:a05:6830:194:: with SMTP id
+	q20mr45345653ota.92.1582626841202; 
+	Tue, 25 Feb 2020 02:34:01 -0800 (PST)
+MIME-Version: 1.0
+References: <20200224201629.13774-1-pbarker@konsulko.com>
+	<ab447cea74fea333860e75d1b2619a7215855e67.camel@linuxfoundation.org>
+	<CAM9ZRVv3opmXyKAFPFaaUV7D33uNmxWmn47bQR_Ek_Z0eXqKxw@mail.gmail.com>
+	<d79eb8997dcf6635856e574d407c9c805e14326c.camel@linuxfoundation.org>
+	<CAM9ZRVtRhBeAdYSeODrxkPOpen3y-7NsJ-jvM5JN+mTO1A+ymA@mail.gmail.com>
+	<CABcZANms9EhTWSe=5WfnONjFjx2bTtVgYqx8YTc-MjJDYz7Q9Q@mail.gmail.com>
+	<CAM9ZRVs9ymWjxon2VcHQZQiE+wEkYA+jvX0TYzOR=626Q98RyA@mail.gmail.com>
+In-Reply-To: <CAM9ZRVs9ymWjxon2VcHQZQiE+wEkYA+jvX0TYzOR=626Q98RyA@mail.gmail.com>
+From: Paul Barker <pbarker@konsulko.com>
+Date: Tue, 25 Feb 2020 10:33:49 +0000
+Message-ID: <CAM9ZRVta1x+3SntEe8ex2LuOMQ45=+tzku68Ac5n_RS40jbPVg@mail.gmail.com>
+To: Christopher Larson <kergoth@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] fetch2/gitsm: Unpack shallow mirror tarballs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,32 +57,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 25 Feb 2020 09:24:04 -0000
+X-List-Received-Date: Tue, 25 Feb 2020 10:34:00 -0000
+Content-Type: text/plain; charset="UTF-8"
 
-Yocto Bug: https://bugzilla.yoctoproject.org/show_bug.cgi?id=13806
+On Mon, 24 Feb 2020 at 23:14, Paul Barker <pbarker@konsulko.com> wrote:
+>
+> On Mon, 24 Feb 2020 at 23:06, Christopher Larson <kergoth@gmail.com> wrote:
+> >
+> > I don't think this is right. This unpacks the shallow tarball into ud.clonedir. The fetcher is specifically done the way it is to avoid ud.clonedir ever being shallow so as to avoid having to maintain that state and convert it when necessary.
+>
+> Any suggestions on where we can unpack the shallow tarball then? We
+> need it to be unpacked somewhere so that we can examine the
+> .gitmodules file.
 
-Uncomment lchown() to preserve ownership of symlink.
+So my downloads directory blew up and I saw lots of fetch errors for
+git SRC_URIs on builds overnight after testing this patch.
 
-Signed-off-by: Daisuke Yamane <daisuke.yamane@cybertrust.co.jp>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/utils.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We could extract to a temporary directory as needed when downloading a
+gitsm shallow mirror tarball and then throw this away once we've
+checked .gitmodules. That would mean repeating the tarball extraction
+if the download method is executed again but that should be fairly
+rare. How does that sound?
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 47805d02..5f5767c1 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -864,7 +864,7 @@ def copyfile(src, dest, newmtime = None, sstat = None):
-             if destexists and not stat.S_ISDIR(dstat[stat.ST_MODE]):
-                 os.unlink(dest)
-             os.symlink(target, dest)
--            #os.lchown(dest,sstat[stat.ST_UID],sstat[stat.ST_GID])
-+            os.lchown(dest,sstat[stat.ST_UID],sstat[stat.ST_GID])
-             return os.lstat(dest)
-         except Exception as e:
-             logger.warning("copyfile: failed to create symlink %s to %s (%s)" % (dest, target, e))
--- 
-2.17.1
+The alternative would be to create a new 'gitsmshallow' directory
+under DL_DIR for unpacking gitsm shallow mirror tarballs only. The
+names of directories under 'gitsmshallow' would need to include the
+commit hash given in the shallow tarball filename so that we don't
+have clashes when DL_DIR is shared between builds which use different
+SRCREVs of the same gitsm SRC_URI.
 
+I also have a test case ready to go which I'll include in v2 of this
+patch once we've decided where to extract the tarballs.
+
+Thanks,
+Paul
 
