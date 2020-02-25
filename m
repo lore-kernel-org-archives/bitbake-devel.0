@@ -1,50 +1,36 @@
-Return-Path: <paul.barker@konsulko.com>
-Received: from mail-ot1-f67.google.com (mail-ot1-f67.google.com
-	[209.85.210.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 5BE6B608BD
+Return-Path: <rpjday@crashcourse.ca>
+Received: from cpanel7.indieserve.net (cpanel7.indieserve.net [199.212.143.8])
+	by mail.openembedded.org (Postfix) with ESMTP id 18A9A616E1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Feb 2020 10:34:00 +0000 (UTC)
-Received: by mail-ot1-f67.google.com with SMTP id g64so11581178otb.13
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Feb 2020 02:34:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=1+TtYSJyc2Emy+UeMVUYUlq6cGUiQTbNT4vqqYB6YsQ=;
-	b=UsyAppLAKPt3eDIE2EsCL0FiYHVf7ObiMTVM7Aa3EkxzsvG8bX/6yLlQQhvZeAEtv/
-	junqLI7q23RUxZBfaWxekBbKacxhmUYAS5wpd3gQg4NRqRWWJ/QGHGOKAGXN85VaKBLt
-	nF33Euch52JSlWmdEZ5DVgW8qJ8xKnFZQm96I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=1+TtYSJyc2Emy+UeMVUYUlq6cGUiQTbNT4vqqYB6YsQ=;
-	b=NSXKc8oIl0XXd5Z+iMhr6R0+LztpY/iqW4oSCs9W4hFdkMqR8526UVVuPHQbaCWGLp
-	BsZ5W6X8uCVqr9jgeRXuFWxNUtLMn2WAELAZq3bCvba/z4U5Lu1Oq/v+CcTWb8xMf903
-	8BaOO+pkwtPSjHhXURnhY2yEu1DU1C9QHQhnw88gjA3ZxWhnGjZAjl3u3wQQ2SShiH39
-	fYFr6wlJt9B8i8iIgOs8SEePoaTlYrsggQra1FQTLHwr0tBHq223ZMmDR7LWgeBdsg/m
-	0bcLtv0LwQymZEHD2FI/keyOBf5mp39h2jHAGqccYxe+DwU257UqoEwW22wnHhvpZOGh
-	/7+w==
-X-Gm-Message-State: APjAAAWM/hTHPIKB1kcGs0EnO5OFmkACDd8yXBb+RaKnv7r66iAsO1gF
-	9YoxI566/GioDXjJZ6DEdvOoCkZ/CrSFiOm3UNnIpQ==
-X-Google-Smtp-Source: APXvYqzUP1B6p9BWECy3L8a3sW/JqCj3Oi3EoTM3MhtH+EetLVeh5NXv8UmNC/2BIiC3Xp4rNAzfgaGBVi38d7RMA40=
-X-Received: by 2002:a05:6830:194:: with SMTP id
-	q20mr45345653ota.92.1582626841202; 
-	Tue, 25 Feb 2020 02:34:01 -0800 (PST)
+	Tue, 25 Feb 2020 21:22:45 +0000 (UTC)
+Received: from [127.0.0.1] (port=33364 helo=cpanel7.indieserve.net)
+	by cpanel7.indieserve.net with esmtpsa (TLS1.2) tls
+	TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (Exim 4.93)
+	(envelope-from <rpjday@crashcourse.ca>) id 1j6hfB-009wDP-7Z
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 25 Feb 2020 16:22:46 -0500
+Received: from [66.129.241.14] ([66.129.241.14]) by crashcourse.ca (Horde
+	Framework) with HTTPS; Tue, 25 Feb 2020 16:22:45 -0500
+Date: Tue, 25 Feb 2020 16:22:45 -0500
+Message-ID: <20200225162245.Horde.i6DmVIhAUjVbUGUQKtyMoua@crashcourse.ca>
+From: rpjday@crashcourse.ca
+To: bitbake-devel@lists.openembedded.org
+User-Agent: Horde Application Framework 5
 MIME-Version: 1.0
-References: <20200224201629.13774-1-pbarker@konsulko.com>
-	<ab447cea74fea333860e75d1b2619a7215855e67.camel@linuxfoundation.org>
-	<CAM9ZRVv3opmXyKAFPFaaUV7D33uNmxWmn47bQR_Ek_Z0eXqKxw@mail.gmail.com>
-	<d79eb8997dcf6635856e574d407c9c805e14326c.camel@linuxfoundation.org>
-	<CAM9ZRVtRhBeAdYSeODrxkPOpen3y-7NsJ-jvM5JN+mTO1A+ymA@mail.gmail.com>
-	<CABcZANms9EhTWSe=5WfnONjFjx2bTtVgYqx8YTc-MjJDYz7Q9Q@mail.gmail.com>
-	<CAM9ZRVs9ymWjxon2VcHQZQiE+wEkYA+jvX0TYzOR=626Q98RyA@mail.gmail.com>
-In-Reply-To: <CAM9ZRVs9ymWjxon2VcHQZQiE+wEkYA+jvX0TYzOR=626Q98RyA@mail.gmail.com>
-From: Paul Barker <pbarker@konsulko.com>
-Date: Tue, 25 Feb 2020 10:33:49 +0000
-Message-ID: <CAM9ZRVta1x+3SntEe8ex2LuOMQ45=+tzku68Ac5n_RS40jbPVg@mail.gmail.com>
-To: Christopher Larson <kergoth@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] fetch2/gitsm: Unpack shallow mirror tarballs
+X-OutGoing-Spam-Status: No, score=-1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel7.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel7.indieserve.net: authenticated_id:
+	rpjday@crashcourse.ca
+X-Authenticated-Sender: cpanel7.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: is there a bitbake equivalent to "touch"ing a file for gnu make?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,38 +43,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 25 Feb 2020 10:34:00 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 25 Feb 2020 21:22:45 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Feb 2020 at 23:14, Paul Barker <pbarker@konsulko.com> wrote:
->
-> On Mon, 24 Feb 2020 at 23:06, Christopher Larson <kergoth@gmail.com> wrote:
-> >
-> > I don't think this is right. This unpacks the shallow tarball into ud.clonedir. The fetcher is specifically done the way it is to avoid ud.clonedir ever being shallow so as to avoid having to maintain that state and convert it when necessary.
->
-> Any suggestions on where we can unpack the shallow tarball then? We
-> need it to be unpacked somewhere so that we can examine the
-> .gitmodules file.
+   colleague emails me the following puzzler … current project based on
+wind river linux 9 (so effectively morty 2.2), so it has bitbake 1.32.
+apparently, for a specific recipe, there are intermittent build errors
+which she suspects are caused by a race condition in the build of that
+recipe.
 
-So my downloads directory blew up and I saw lots of fetch errors for
-git SRC_URIs on builds overnight after testing this patch.
+   *but* that build error only occurs when something about the underlying
+layers have changed; as in, someone checked *something* in somewhere
+forcing at least something to be rebuilt, and that error does not
+even occur on *all* rebuilds, just some of them. so the question is,
+which underlying recipe change and rebuild could be triggering this?
 
-We could extract to a temporary directory as needed when downloading a
-gitsm shallow mirror tarball and then throw this away once we've
-checked .gitmodules. That would mean repeating the tarball extraction
-if the download method is executed again but that should be fairly
-rare. How does that sound?
+   she *suspects* it might be openssl, as their project is making
+regular changes to openssl, and that recipe seems to be an ultimate
+dependency for quite a number of recipes, so she's just guessing
+that might be the cause.
 
-The alternative would be to create a new 'gitsmshallow' directory
-under DL_DIR for unpacking gitsm shallow mirror tarballs only. The
-names of directories under 'gitsmshallow' would need to include the
-commit hash given in the shallow tarball filename so that we don't
-have clashes when DL_DIR is shared between builds which use different
-SRCREVs of the same gitsm SRC_URI.
+   in order to test this, she is currently running through a loop
+wherein, in order to kick off at least some recipe rebuilds, she
+makes some innocuous change to openssl, causing it to be rebuilt,
+which then rebuilds all recipes that depend on it and so on.
 
-I also have a test case ready to go which I'll include in v2 of this
-patch once we've decided where to extract the tarballs.
+   yuck.
 
-Thanks,
-Paul
+   on the other hand, i couldn't immediately suggest anything
+cleaner. my thought was to (somehow) fake a rebuild of openssl
+(perhaps by invalidating some timestamp), but that's not going
+to work as once it's rebuilt, it's just going to look like it
+did before, so nothing else will be rebuilt.
+
+   is there an easier way to do this? i don't have a system
+with that old a YP version at hand, so i can't test this, and
+nothing leaps to mind. is there a "make touch" equivalent
+that would drive a full rebuild of all recipes that depend
+on a given recipe, without having to actually mess with it?
+
+   i figured, "ah, this can't be that hard," but i haven't
+come up with anything.
+
+rday
+
+p.s. simply cleaning the offending recipe and rebuilding it
+won't trigger the build error (at least that's what I've been
+told) … one must change the underlying recipes at least a
+little in order to *force* a rebuild allegedly based on
+dependencies.
+
+   thoughts?
+
+
 
