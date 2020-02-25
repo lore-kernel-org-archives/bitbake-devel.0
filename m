@@ -1,49 +1,39 @@
-Return-Path: <paul.barker@konsulko.com>
-Received: from mail-ot1-f68.google.com (mail-ot1-f68.google.com
-	[209.85.210.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 1D95B606F2
+Return-Path: <daisuke.yamane@miraclelinux.com>
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com
+	[209.85.210.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 1C3D8610B9
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Feb 2020 23:15:04 +0000 (UTC)
-Received: by mail-ot1-f68.google.com with SMTP id i6so10349264otr.7
+	Tue, 25 Feb 2020 09:24:03 +0000 (UTC)
+Received: by mail-pf1-f195.google.com with SMTP id 185so6871476pfv.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Feb 2020 15:15:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=eSuqqGuL8+ZmVtg5vwcOjp6qe60uYyLwaG0FV//AWQ4=;
-	b=iLeeCAGe/CJDdkCnLAygE7O1k0cm6RQnyAzmJTGQyLUYjCVowyNR3fcsvEr3RBG8pI
-	FGsFYrsUelylp230qgPsTKqj5ecKeSZ1K/NX8PjtoZWSwMTdFNiANnxJFfjdvwCYN9Rg
-	l/lxIomt/KC+GnCU7UaIgJ6x5anasH+iClUxg=
+	Tue, 25 Feb 2020 01:24:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=eSuqqGuL8+ZmVtg5vwcOjp6qe60uYyLwaG0FV//AWQ4=;
-	b=NY6y61maFf/PFLF1kMulk9r/rIPmP5IFTJmdbz9m8+fP2301LYcO4A6XavuWhQ0I9z
-	jTucUrEjh+fc2mooaYb/XMiYmW3Gue15cihnCUns3uTWqo7Ofa0ISZBlN1ryRzEtSzNs
-	qGKJ6y5w+nwLE1ggPVObox608zwZRc3H5g0NMpF1gXSZ/qk/o8g8IhQuhwVIjwTFjNv/
-	mslTNtO5X3LmaZIVMZXZFJgv6UG3jUY7IXvJHTuYoTiIPCjNQVN56ya46b/FpUk/SG4a
-	bUQ0tKA465XpDpcUlrJN6DpCOZjbZ2JZZEynQiZ4H8+UMI9LYbJ6ADX4h663t5Mrx4L0
-	l9fA==
-X-Gm-Message-State: APjAAAW5eRs/6wSshKuUCdgBhoJZfuWTc6TMssJVj+wOHXGw+3noxtuM
-	YTtkF6ejakSLeWH6SMEl6ABfeD8x50OSt4pg5LMdtg==
-X-Google-Smtp-Source: APXvYqwjS/YmyqWdnJeIw9FiA3ex5NjO3aGFq9dlNNmdwq7OMG1PPua+06bGB8QXmJsEQydfHDi7MNyeJCfmM1mAnqU=
-X-Received: by 2002:a05:6830:194:: with SMTP id
-	q20mr43445293ota.92.1582586106045; 
-	Mon, 24 Feb 2020 15:15:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20200224201629.13774-1-pbarker@konsulko.com>
-	<ab447cea74fea333860e75d1b2619a7215855e67.camel@linuxfoundation.org>
-	<CAM9ZRVv3opmXyKAFPFaaUV7D33uNmxWmn47bQR_Ek_Z0eXqKxw@mail.gmail.com>
-	<d79eb8997dcf6635856e574d407c9c805e14326c.camel@linuxfoundation.org>
-	<CAM9ZRVtRhBeAdYSeODrxkPOpen3y-7NsJ-jvM5JN+mTO1A+ymA@mail.gmail.com>
-	<CABcZANms9EhTWSe=5WfnONjFjx2bTtVgYqx8YTc-MjJDYz7Q9Q@mail.gmail.com>
-In-Reply-To: <CABcZANms9EhTWSe=5WfnONjFjx2bTtVgYqx8YTc-MjJDYz7Q9Q@mail.gmail.com>
-From: Paul Barker <pbarker@konsulko.com>
-Date: Mon, 24 Feb 2020 23:14:55 +0000
-Message-ID: <CAM9ZRVs9ymWjxon2VcHQZQiE+wEkYA+jvX0TYzOR=626Q98RyA@mail.gmail.com>
-To: Christopher Larson <kergoth@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] fetch2/gitsm: Unpack shallow mirror tarballs
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=20CImprZOYWJ0kJehmLwTy8+Pk7eRvRWjpPeEcxk1Z8=;
+	b=ga9gN1RQZxgzxTD+nPTY6d0rM/D1aKBHq5Vgtb7j+G1RFWWRlpV1QVKeR5oJGA9VRC
+	UxpqPA8hT/wWU9+sunPMfNzKzcWM7Xe335d2gkrlH6osJMCU4EiO7jYoExqXB0kG3KeH
+	xDKkx9MRj5YX9aNffxq1r+aLOw3wDJXmZJk6igMGqE9f/2zbyms6Cyr5c0JyFExwMzF0
+	2DAHZSmgnW+WemcAlwTBRbAGEW0vSZDsE8/tEfU73zXEK2Fi0vYpGATjSLjRgeKyG9Om
+	cvWxyxWNmEkZKPEyByKyqOrfAaqmwZkz1yZc/yvwRzux5z/AbU1qJ72FYuom1z85DsVd
+	oV7w==
+X-Gm-Message-State: APjAAAUfitY6JXEuJfZvd5CxHFChWeyBBkmmEPaSxWYElR6bhPqLZ3g4
+	Tanv0pTwYYflvCnO07GUp8t/jCMNCV8=
+X-Google-Smtp-Source: APXvYqxly7tMiqsIZCaCWBWxP6aXyMTOxgnj/bp7PUkm+TswY/NlwmpC85Qwx26eXnin7IPfE4DWzg==
+X-Received: by 2002:a62:7883:: with SMTP id
+	t125mr58064145pfc.141.1582622644668; 
+	Tue, 25 Feb 2020 01:24:04 -0800 (PST)
+Received: from AIBox-1804.lxd (219x123x27x194.ap219.ftth.ucom.ne.jp.
+	[219.123.27.194]) by smtp.googlemail.com with ESMTPSA id
+	r11sm16102870pgi.9.2020.02.25.01.24.02
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Tue, 25 Feb 2020 01:24:03 -0800 (PST)
+From: Daisuke Yamane <daisuke.yamane@cybertrust.co.jp>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 25 Feb 2020 09:23:56 +0000
+Message-Id: <20200225092356.898-1-daisuke.yamane@cybertrust.co.jp>
+X-Mailer: git-send-email 2.17.1
+Subject: [1.44, 1.42, 1.40] lib/bb/utils.py: Preserve ownership of symlink
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,14 +46,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Feb 2020 23:15:05 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 25 Feb 2020 09:24:04 -0000
 
-On Mon, 24 Feb 2020 at 23:06, Christopher Larson <kergoth@gmail.com> wrote:
->
-> I don't think this is right. This unpacks the shallow tarball into ud.clonedir. The fetcher is specifically done the way it is to avoid ud.clonedir ever being shallow so as to avoid having to maintain that state and convert it when necessary.
+Yocto Bug: https://bugzilla.yoctoproject.org/show_bug.cgi?id=13806
 
-Any suggestions on where we can unpack the shallow tarball then? We
-need it to be unpacked somewhere so that we can examine the
-.gitmodules file.
+Uncomment lchown() to preserve ownership of symlink.
+
+Signed-off-by: Daisuke Yamane <daisuke.yamane@cybertrust.co.jp>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/utils.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 47805d02..5f5767c1 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -864,7 +864,7 @@ def copyfile(src, dest, newmtime = None, sstat = None):
+             if destexists and not stat.S_ISDIR(dstat[stat.ST_MODE]):
+                 os.unlink(dest)
+             os.symlink(target, dest)
+-            #os.lchown(dest,sstat[stat.ST_UID],sstat[stat.ST_GID])
++            os.lchown(dest,sstat[stat.ST_UID],sstat[stat.ST_GID])
+             return os.lstat(dest)
+         except Exception as e:
+             logger.warning("copyfile: failed to create symlink %s to %s (%s)" % (dest, target, e))
+-- 
+2.17.1
+
 
