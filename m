@@ -1,49 +1,45 @@
-Return-Path: <aaron@assonance.org>
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com
-	[209.85.167.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 3F160618BE
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+	by mail.openembedded.org (Postfix) with ESMTP id EE1C76197E
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Feb 2020 20:40:17 +0000 (UTC)
-Received: by mail-oi1-f182.google.com with SMTP id l12so4131432oil.9
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Feb 2020 12:40:18 -0800 (PST)
+	Fri, 28 Feb 2020 20:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=assonance-org.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=3GIFgA6gda/BvC/hAnbzIHuDGSIONkFC2YmbERK/Rd0=;
-	b=1jBbLrfS0cvqJQEQPEMiEFcTqqqg+vje2UKJaxKefvxfjf0vf2YMJr6uXmypYY+Na7
-	TJC2jsA20Qa7CRUL8ItPzttKmD9jCJQOtWuJoL+Q0u4tX7gD6Yb+8nFTSXCW4hficcFm
-	QxAAsr3QquS5i5xYm/HhwQF6yuAudQAUh0iIMEFAiudk+KgzO2MzFHH9xzUKs/130bvv
-	rkOogq0rhzpfDE4pzheHJWjgF8zjp9veaz072PQe7bJO5AJDL44qeycyC5gXC/s7lI9Z
-	swCWPyr8syoOWVP2jiryKTIk0Epu3qeHIi9EmU9UHoZOU9pBUGZUMEtIsVOdyljvh3Am
-	QquQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=3GIFgA6gda/BvC/hAnbzIHuDGSIONkFC2YmbERK/Rd0=;
-	b=LQNGll317GWnw0ahNKvCSk7NzPE9CAFlFh3wtROdlwWMBM850vZjcCyzZUPOQSUJXu
-	zKlV+OK7m7tU02yzS3E8VrU7lgD8CVRtjTXSrTb7hl05GyXxUkzZkOncQz8WFJkz4fR5
-	FuD0S17L/5LWnk4lr0Y8eIH+boqqDAx1JXmHAbuSL+fOjpYJMOVeJZ6BrO99x/WCPo79
-	J7KD6HBW4l1PQ8MRBenhew3Xx+dVv64LDTtziXzCvozZWhdZbE7Eic4Krl/DnX//bT14
-	p+rhBVotTog9BhU7ciFeTYsZSpfPSPoCbX1d5QTq0RHWj3qmKZ8Oy2fINEbhrr3uPTW3
-	8RsA==
-X-Gm-Message-State: APjAAAVX4ezR3YVnHZzC+wLkDQf/2hW3Yw+Ib/mKjaYJKi0L0Xg5jeC/
-	VT9csucys8IXNClLCVoT1EwudrRcPT+ZDVKPCtbMmw==
-X-Google-Smtp-Source: APXvYqyjVHXyzIg1c7FRDisDlTXKS+xGTz/feVCpr3XD7YusER+6Xc17a3YeAEeidGtl5rivh2OHkT3P7UZYozXW+H4=
-X-Received: by 2002:a05:6808:99c:: with SMTP id
-	a28mr4221205oic.164.1582922412918; 
-	Fri, 28 Feb 2020 12:40:12 -0800 (PST)
-MIME-Version: 1.0
+	d=axis.com; l=14946; q=dns/txt; s=axis-central1;
+	t=1582922792; x=1614458792;
+	h=from:to:cc:subject:date:message-id:references:
+	in-reply-to:mime-version;
+	bh=7fSeSI0aIY21CJsHIMxzGGEKuOSrp5or1s/8nyfbUhA=;
+	b=DEEab19/kl2ZxEPzQ5oO/5Kca7HXlRH9ijz6yLxykyIIy+uAr3v0PvNB
+	/klvrafqUnLlaU67rQrowjIVk9wvyzNuF5SxmCLvGXB8fwutDeJxO3IsX
+	lC0FcMjgs+H8bzK2F5Pu52UarQ4gNWuY7EOgAth0L22hcWQmomOPS1D/Z
+	CzU7efXK4Tuxs0r63tHZtoDhlO2njA2QpPpLoLIjXf5ZbVigxevgvhgOb
+	cBr4StLNgSVV3LfJ6yYPyyE54p4gB9xoIjg1kVmR9Dq2H3KslLmT8A+mb
+	HE732PJdl/yM9Uz1VQ+TnvYGIPz3/4d9tATxTLwazfEGQcZF/ndlFNBdU Q==;
+IronPort-SDR: f9lB/26RNIjI0Ngj+MUkxFCOm7BZ91cvPaU7PXAHNLEyqw51WMJxMVDCE2M99hVE4LaH+BGYqp
+	rcOIsMLOZnH3YLoakMdsiqwXK7JHfhOXk2je2Pi01wjkuqex9vH4QjFJ7o/sQHm7OdYL0sdLav
+	nqP9V+ot6xjVLKR9pqMA9U806neJfkQJjP9Ru4HE7X5ZwI+uOtWwg2WSfZepV5jXLpHu48Q5sG
+	/IxHF0JiB6ZVLZuETGtkWXth63KDX02x7Hu2LhhMrUBXRJJqMnW3qUJl7kUYCR3LsaLO7Mhepy
+	d88=
+X-IronPort-AV: E=Sophos;i="5.70,497,1574118000"; d="scan'208,217";a="5784695"
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Aaron Cohen <aaron@assonance.org>
+Thread-Topic: [bitbake-devel] can i get a list of only bbappend'ed recipes
+	that were *used* in a build?
+Thread-Index: AQHV7ju4CHDoMUkrjUSd3SIX30oFYqgwlBqAgABb4ICAABv6EP//9U+AgAASWOA=
+Date: Fri, 28 Feb 2020 20:46:29 +0000
+Message-ID: <3e40c1258e9a4593945215f9cd41593d@XBOX03.axis.com>
 References: <20200228083336.Horde.2i5ag6ZVWX3JF5j5y3bF1q2@crashcourse.ca>
 	<20200228140919.GO104502@korppu>
 	<alpine.LFD.2.21.2002281435580.6574@localhost.localdomain>
 	<52d5e8b6d3c64fe0a74d098e79651f2b@XBOX03.axis.com>
-In-Reply-To: <52d5e8b6d3c64fe0a74d098e79651f2b@XBOX03.axis.com>
-From: Aaron Cohen <aaron@assonance.org>
-Date: Fri, 28 Feb 2020 15:40:01 -0500
-Message-ID: <CAFSZm+iJtq-uNr3zudmtXHq7uZAmCKuxMtCkr6xH67NUjwKioQ@mail.gmail.com>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+	<CAFSZm+iJtq-uNr3zudmtXHq7uZAmCKuxMtCkr6xH67NUjwKioQ@mail.gmail.com>
+In-Reply-To: <CAFSZm+iJtq-uNr3zudmtXHq7uZAmCKuxMtCkr6xH67NUjwKioQ@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
+MIME-Version: 1.0
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
 Subject: Re: can i get a list of only bbappend'ed recipes that were *used* in a build?
@@ -59,164 +55,207 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Feb 2020 20:40:17 -0000
-Content-Type: multipart/alternative; boundary="00000000000022b3ea059fa8d86e"
+X-List-Received-Date: Fri, 28 Feb 2020 20:46:30 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_3e40c1258e9a4593945215f9cd41593dXBOX03axiscom_"
 
---00000000000022b3ea059fa8d86e
-Content-Type: text/plain; charset="UTF-8"
+--_000_3e40c1258e9a4593945215f9cd41593dXBOX03axiscom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Fri, Feb 28, 2020 at 3:32 PM Peter Kjellerstedt <
-peter.kjellerstedt@axis.com> wrote:
+VGhhdCB3YXMgZXZlbiBzaW1wbGVyIHRoYW4gSSBoYWQgdGhvdWdodC4gTmljZSEgOikNCg0KLy9Q
+ZXRlcg0KDQpGcm9tOiBBYXJvbiBDb2hlbiA8YWFyb25AYXNzb25hbmNlLm9yZz4NClNlbnQ6IGRl
+biAyOCBmZWJydWFyaSAyMDIwIDIxOjQwDQpUbzogUGV0ZXIgS2plbGxlcnN0ZWR0IDxwZXRlci5r
+amVsbGVyc3RlZHRAYXhpcy5jb20+DQpDYzogUm9iZXJ0IFAuIEouIERheSA8cnBqZGF5QGNyYXNo
+Y291cnNlLmNhPjsgTWlra28uUmFwZWxpQGJtdy5kZTsgYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVu
+ZW1iZWRkZWQub3JnDQpTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIGNhbiBpIGdldCBhIGxp
+c3Qgb2Ygb25seSBiYmFwcGVuZCdlZCByZWNpcGVzIHRoYXQgd2VyZSAqdXNlZCogaW4gYSBidWls
+ZD8NCg0KDQpPbiBGcmksIEZlYiAyOCwgMjAyMCBhdCAzOjMyIFBNIFBldGVyIEtqZWxsZXJzdGVk
+dCA8cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPG1haWx0bzpwZXRlci5ramVsbGVyc3RlZHRA
+YXhpcy5jb20+PiB3cm90ZToNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTog
+Yml0YmFrZS1kZXZlbC1ib3VuY2VzQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8bWFpbHRvOmJpdGJh
+a2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3JnPiA8Yml0YmFrZS1kZXZlbC0N
+Cj4gYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3JnPG1haWx0bzpib3VuY2VzQGxpc3RzLm9w
+ZW5lbWJlZGRlZC5vcmc+PiBPbiBCZWhhbGYgT2YgUm9iZXJ0IFAuIEouIERheQ0KPiBTZW50OiBk
+ZW4gMjggZmVicnVhcmkgMjAyMCAyMDozOA0KPiBUbzogTWlra28uUmFwZWxpQGJtdy5kZTxtYWls
+dG86TWlra28uUmFwZWxpQGJtdy5kZT4NCj4gQ2M6IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVt
+YmVkZGVkLm9yZzxtYWlsdG86Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPg0K
+PiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIGNhbiBpIGdldCBhIGxpc3Qgb2Ygb25seSBi
+YmFwcGVuZCdlZCByZWNpcGVzDQo+IHRoYXQgd2VyZSAqdXNlZCogaW4gYSBidWlsZD8NCj4NCj4g
+T24gRnJpLCAyOCBGZWIgMjAyMCwgTWlra28uUmFwZWxpQGJtdy5kZTxtYWlsdG86TWlra28uUmFw
+ZWxpQGJtdy5kZT4gd3JvdGU6DQo+DQo+ID4gSGksDQo+ID4NCj4gPiBPbiBGcmksIEZlYiAyOCwg
+MjAyMCBhdCAwODozMzozNkFNIC0wNTAwLCBycGpkYXlAY3Jhc2hjb3Vyc2UuY2E8bWFpbHRvOnJw
+amRheUBjcmFzaGNvdXJzZS5jYT4gd3JvdGU6DQo+ID4gPiBsb29rZWQgYXJvdW5kIGFuZCBpIGRv
+bid0IHNlZSBhbiBpbW1lZGlhdGVseSBvYnZpb3VzIHdheSB0byBkbw0KPiA+ID4gdGhpcyAuLi4g
+aXMgdGhlcmUgYSB3YXkgdG8gZ2VuZXJhdGUgYSBsaXN0IG9mICpvbmx5KiB0aG9zZSByZWNpcGVz
+DQo+ID4gPiB0aGF0IHdlcmUgdXNlZCBpbiB0aGUgY3VycmVudCBidWlsZCB0aGF0IGhhZCBhc3Nv
+Y2lhdGVkIC5iYmFwcGVuZA0KPiA+ID4gZmlsZXM/DQo+ID4gPg0KPiA+ID4gImJpdGJha2UtbGF5
+ZXJzIHNob3ctYXBwZW5kcyIgd2lsbCBzaG93IGFsbCByZWNpcGVzIHdpdGggLmJiYXBwZW5kDQo+
+ID4gPiBmaWxlcywgaW5jbHVkaW5nIHRob3NlIHRoYXQgYXJlIG5vdCBpbmNsdWRlZCBhbmQgcHJv
+Y2Vzc2VkIGZvciB0aGUNCj4gPiA+IGN1cnJlbnQgYnVpbGQvaW1hZ2UuIGhlcmUncyB0aGUgcmF0
+aW9uYWxlLCBpbiBjYXNlIGknbSBtaXNzaW5nDQo+ID4gPiBzb21ldGhpbmcuDQo+ID4NCj4gPiBJ
+J20gZG9pbmcgImZpbmQgbWV0YSogLW5hbWUgXCpyZWNpcGVcKmJiXCoiIGFuZCByZXZpZXdpbmcg
+ZXZlcnkgb25lDQo+ID4gb2YgdGhlbS4gTW9yZSB2aXNpYmlsaXR5IHRvIHRoaXMgaW5jbHVkaW5n
+IHBhcnNpbmcgb3JkZXIgd291bGQgYmUNCj4gPiBuaWNlIHRvIHN0b3JlIGluIGUuZy4gYnVpbGRo
+aXN0b3J5Lg0KPg0KPiAgIHRoYW5rcyBmb3IgY2xhcmlmeWluZyB0aGF0IHRoZXJlIHdhc24ndCBh
+IG1hc3NpdmVseSB0cml2aWFsIHdheSB0bw0KPiBkbyB0aGlzIHRoYXQgaSBqdXN0IGRpZG4ndCBz
+ZWUuDQoNCkZvciBlYWNoIGltYWdlIHlvdSBidWlsZCwgeW91IHNob3VsZCBmaW5kIGEgbWFuaWZl
+c3QgaW4NCiJ0bXAvZGVwbG95L2ltYWdlLzxtYWNoaW5lPi88aW1hZ2U+LTxtYWNoaW5lPi5tYW5p
+ZmVzdCIuIEl0IGNvbnRhaW5zIHRoZQ0KbmFtZXMsIGFyY2hpdGVjdHVyZXMgYW5kIHZlcnNpb25z
+IG9mIGFsbCBwYWNrYWdlcyB0aGF0IHdlcmUgaW5zdGFsbGVkIGluDQp0aGUgaW1hZ2UuDQoNClRv
+IGNvbnZlcnQgdGhlIHBhY2thZ2UgbmFtZXMgZnJvbSB0aGUgbWFuaWZlc3QgdG8gcmVjaXBlcywg
+eW91IGNhbiB1c2UNCm9lLXBrZ2RhdGEtdXRpbDoNCg0KICBvZS1wa2dkYXRhLXV0aWwgLXAgdG1w
+L3BrZ2RhdGEvPG1hY2hpbmU+IHBhY2thZ2UtaW5mbyAtZiA8cGF0aCB0byB0aGUgbWFuaWZlc3Qg
+ZmlsZT4NCg0KKHRoZSAtcCB0bXAvcGtnZGF0YS88bWFjaGluZT4gb3B0aW9uIGlzbid0IG5lY2Vz
+c2FyeSwgYnV0IHlvdSBhdm9pZA0Kc3RhcnRpbmcgdGluZm9pbCBpZiB5b3UgdXNlIGl0KS4gVGhp
+cyB3aWxsIGdpdmUgeW91IG9uZSBsaW5lIHBlciBwYWNrYWdlDQp0aGF0IGFsc28gaW5jbHVkZXMg
+dGhlIHJlY2lwZSBuYW1lLiBQYXNzIHRoZSBvdXRwdXQgdG8gYGN1dCAtZjMgLWQnICcgfA0Kc29y
+dCAtdScgYW5kIHlvdSBzaG91bGQgaGF2ZSB0aGUgbGlzdCBvZiByZWNpcGVzIHRoYXQgd2VyZSB1
+c2VkIHRvIGJ1aWxkDQp0aGUgcGFja2FnZXMgaW4geW91ciBpbWFnZS4NCg0KVGhlbiBhbGwgeW91
+IGhhdmUgdG8gZG8gaXMgdGFrZSB0aGUgaW50ZXJzZWN0aW9uIG9mIHJlY2lwZXMgZnJvbSB0aGF0
+DQpsaXN0IGFuZCBmcm9tIGBiaXRiYWtlLWxheWVycyBzaG93LWFwcGVuZHNgIGFuZCB5b3Ugc2hv
+dWxkIGhhdmUgdGhlDQpsaXN0IG9mIHJlY2lwZXMgdGhhdCBoYXZlIGJiYXBwZW5kcyBhcHBsaWVk
+IGFuZCBhcmUgdXNlZCB0byBidWlsZCB5b3VyDQppbWFnZS4NCg0KcGlwZSB0aGUgcGFja2FnZSBs
+aXN0IHRocm91Z2ggJ3hhcmdzIGJpdGJha2UtbGF5ZXJzIHNob3ctYXBwZW5kcycgYW5kIGl0IHNl
+ZW1zIGV4YWN0bHkgd2hhdCdzIGFza2VkIGZvci4NCg0Kb2UtcGtnZGF0YS11dGlsIC1wIHRtcC9w
+a2dkYXRhLzxtYWNoaW5lPiBwYWNrYWdlLWluZm8gLWYgdG1wL2RlcGxveS9pbWFnZXMvPG1hY2hp
+bmU+LzxpbWFnZT4ubWFuaWZlc3QgfCBjdXQgLWYzIC1kJyAnIHwgc29ydCAtdSB8IHhhcmdzIGJp
+dGJha2UtbGF5ZXJzIHNob3ctYXBwZW5kcw0KDQoNCg==
 
-> > -----Original Message-----
-> > From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
-> > bounces@lists.openembedded.org> On Behalf Of Robert P. J. Day
-> > Sent: den 28 februari 2020 20:38
-> > To: Mikko.Rapeli@bmw.de
-> > Cc: bitbake-devel@lists.openembedded.org
-> > Subject: Re: [bitbake-devel] can i get a list of only bbappend'ed recipes
-> > that were *used* in a build?
-> >
-> > On Fri, 28 Feb 2020, Mikko.Rapeli@bmw.de wrote:
-> >
-> > > Hi,
-> > >
-> > > On Fri, Feb 28, 2020 at 08:33:36AM -0500, rpjday@crashcourse.ca wrote:
-> > > > looked around and i don't see an immediately obvious way to do
-> > > > this ... is there a way to generate a list of *only* those recipes
-> > > > that were used in the current build that had associated .bbappend
-> > > > files?
-> > > >
-> > > > "bitbake-layers show-appends" will show all recipes with .bbappend
-> > > > files, including those that are not included and processed for the
-> > > > current build/image. here's the rationale, in case i'm missing
-> > > > something.
-> > >
-> > > I'm doing "find meta* -name \*recipe\*bb\*" and reviewing every one
-> > > of them. More visibility to this including parsing order would be
-> > > nice to store in e.g. buildhistory.
-> >
-> >   thanks for clarifying that there wasn't a massively trivial way to
-> > do this that i just didn't see.
->
-> For each image you build, you should find a manifest in
-> "tmp/deploy/image/<machine>/<image>-<machine>.manifest". It contains the
-> names, architectures and versions of all packages that were installed in
-> the image.
->
-> To convert the package names from the manifest to recipes, you can use
-> oe-pkgdata-util:
->
->   oe-pkgdata-util -p tmp/pkgdata/<machine> package-info -f <path to the
-> manifest file>
->
-> (the -p tmp/pkgdata/<machine> option isn't necessary, but you avoid
-> starting tinfoil if you use it). This will give you one line per package
-> that also includes the recipe name. Pass the output to `cut -f3 -d' ' |
-> sort -u' and you should have the list of recipes that were used to build
-> the packages in your image.
->
-> Then all you have to do is take the intersection of recipes from that
-> list and from `bitbake-layers show-appends` and you should have the
-> list of recipes that have bbappends applied and are used to build your
-> image.
->
->
-pipe the package list through 'xargs bitbake-layers show-appends' and it
-seems exactly what's asked for.
+--_000_3e40c1258e9a4593945215f9cd41593dXBOX03axiscom_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-oe-pkgdata-util -p tmp/pkgdata/<machine> package-info -f
-tmp/deploy/images/<machine>/<image>.manifest | cut -f3 -d' ' | sort -u |
-xargs bitbake-layers show-appends
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
+OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
+cjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1z
+b0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpwdXJw
+bGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25v
+cm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28t
+bWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0KCW1zby1tYXJnaW4tYm90
+dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZv
+bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE4DQoJe21z
+by1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5z
+LXNlcmlmOw0KCWNvbG9yOiM5NDM2MzQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZvbnQtc3R5
+bGU6bm9ybWFsO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5
+Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCW1zby1mYXJlYXN0LWxhbmd1
+YWdlOkVOLVVTO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjYxMi4wcHQgNzkyLjBwdDsN
+CgltYXJnaW46NzAuODVwdCA3MC44NXB0IDcwLjg1cHQgNzAuODVwdDt9DQpkaXYuV29yZFNlY3Rp
+b24xDQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDld
+Pjx4bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0K
+PC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91
+dCB2OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxhbmc9IlNWIiBs
+aW5rPSJibHVlIiB2bGluaz0icHVycGxlIj4NCjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2
+MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPlRoYXQgd2FzIGV2ZW4gc2ltcGxlciB0aGFu
+IEkgaGFkIHRob3VnaHQuIE5pY2UhIDopPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1m
+YXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2MzQ7
+bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPi8vUGV0ZXI8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5
+NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
+PjwvcD4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkIGJsdWUgMS41
+cHQ7cGFkZGluZzowY20gMGNtIDBjbSA0LjBwdCI+DQo8ZGl2Pg0KPGRpdiBzdHlsZT0iYm9yZGVy
+Om5vbmU7Ym9yZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEuMHB0O3BhZGRpbmc6My4wcHQgMGNtIDBj
+bSAwY20iPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gbGFuZz0iRU4tVVMiPkZyb206
+PC9zcGFuPjwvYj48c3BhbiBsYW5nPSJFTi1VUyI+IEFhcm9uIENvaGVuICZsdDthYXJvbkBhc3Nv
+bmFuY2Uub3JnJmd0Ow0KPGJyPg0KPGI+U2VudDo8L2I+IGRlbiAyOCBmZWJydWFyaSAyMDIwIDIx
+OjQwPGJyPg0KPGI+VG86PC9iPiBQZXRlciBLamVsbGVyc3RlZHQgJmx0O3BldGVyLmtqZWxsZXJz
+dGVkdEBheGlzLmNvbSZndDs8YnI+DQo8Yj5DYzo8L2I+IFJvYmVydCBQLiBKLiBEYXkgJmx0O3Jw
+amRheUBjcmFzaGNvdXJzZS5jYSZndDs7IE1pa2tvLlJhcGVsaUBibXcuZGU7IGJpdGJha2UtZGV2
+ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzxicj4NCjxiPlN1YmplY3Q6PC9iPiBSZTogW2JpdGJh
+a2UtZGV2ZWxdIGNhbiBpIGdldCBhIGxpc3Qgb2Ygb25seSBiYmFwcGVuZCdlZCByZWNpcGVzIHRo
+YXQgd2VyZSAqdXNlZCogaW4gYSBidWlsZD88bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4N
+CjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2
+Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9k
+aXY+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPk9uIEZyaSwgRmViIDI4LCAy
+MDIwIGF0IDM6MzIgUE0gUGV0ZXIgS2plbGxlcnN0ZWR0ICZsdDs8YSBocmVmPSJtYWlsdG86cGV0
+ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tIj5wZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb208L2E+
+Jmd0OyB3cm90ZTo8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGJsb2NrcXVvdGUgc3R5bGU9ImJv
+cmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkICNDQ0NDQ0MgMS4wcHQ7cGFkZGluZzowY20gMGNt
+IDBjbSA2LjBwdDttYXJnaW4tbGVmdDo0LjhwdDttYXJnaW4tcmlnaHQ6MGNtIj4NCjxwIGNsYXNz
+PSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+Jmd0OyAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLTxicj4NCiZndDsgRnJvbTogPGEgaHJlZj0ibWFpbHRvOmJpdGJha2Ut
+ZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3JnIiB0YXJnZXQ9Il9ibGFuayI+DQpi
+aXRiYWtlLWRldmVsLWJvdW5jZXNAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzwvYT4gJmx0O2JpdGJh
+a2UtZGV2ZWwtPGJyPg0KJmd0OyA8YSBocmVmPSJtYWlsdG86Ym91bmNlc0BsaXN0cy5vcGVuZW1i
+ZWRkZWQub3JnIiB0YXJnZXQ9Il9ibGFuayI+Ym91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
+PC9hPiZndDsgT24gQmVoYWxmIE9mIFJvYmVydCBQLiBKLiBEYXk8YnI+DQomZ3Q7IFNlbnQ6IGRl
+biAyOCBmZWJydWFyaSAyMDIwIDIwOjM4PGJyPg0KJmd0OyBUbzogPGEgaHJlZj0ibWFpbHRvOk1p
+a2tvLlJhcGVsaUBibXcuZGUiIHRhcmdldD0iX2JsYW5rIj5NaWtrby5SYXBlbGlAYm13LmRlPC9h
+Pjxicj4NCiZndDsgQ2M6IDxhIGhyZWY9Im1haWx0bzpiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5l
+bWJlZGRlZC5vcmciIHRhcmdldD0iX2JsYW5rIj5iaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJl
+ZGRlZC5vcmc8L2E+PGJyPg0KJmd0OyBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIGNhbiBp
+IGdldCBhIGxpc3Qgb2Ygb25seSBiYmFwcGVuZCdlZCByZWNpcGVzPGJyPg0KJmd0OyB0aGF0IHdl
+cmUgKnVzZWQqIGluIGEgYnVpbGQ/PGJyPg0KJmd0OyA8YnI+DQomZ3Q7IE9uIEZyaSwgMjggRmVi
+IDIwMjAsIDxhIGhyZWY9Im1haWx0bzpNaWtrby5SYXBlbGlAYm13LmRlIiB0YXJnZXQ9Il9ibGFu
+ayI+TWlra28uUmFwZWxpQGJtdy5kZTwvYT4gd3JvdGU6PGJyPg0KJmd0OyA8YnI+DQomZ3Q7ICZn
+dDsgSGksPGJyPg0KJmd0OyAmZ3Q7PGJyPg0KJmd0OyAmZ3Q7IE9uIEZyaSwgRmViIDI4LCAyMDIw
+IGF0IDA4OjMzOjM2QU0gLTA1MDAsIDxhIGhyZWY9Im1haWx0bzpycGpkYXlAY3Jhc2hjb3Vyc2Uu
+Y2EiIHRhcmdldD0iX2JsYW5rIj4NCnJwamRheUBjcmFzaGNvdXJzZS5jYTwvYT4gd3JvdGU6PGJy
+Pg0KJmd0OyAmZ3Q7ICZndDsgbG9va2VkIGFyb3VuZCBhbmQgaSBkb24ndCBzZWUgYW4gaW1tZWRp
+YXRlbHkgb2J2aW91cyB3YXkgdG8gZG88YnI+DQomZ3Q7ICZndDsgJmd0OyB0aGlzIC4uLiBpcyB0
+aGVyZSBhIHdheSB0byBnZW5lcmF0ZSBhIGxpc3Qgb2YgKm9ubHkqIHRob3NlIHJlY2lwZXM8YnI+
+DQomZ3Q7ICZndDsgJmd0OyB0aGF0IHdlcmUgdXNlZCBpbiB0aGUgY3VycmVudCBidWlsZCB0aGF0
+IGhhZCBhc3NvY2lhdGVkIC5iYmFwcGVuZDxicj4NCiZndDsgJmd0OyAmZ3Q7IGZpbGVzPzxicj4N
+CiZndDsgJmd0OyAmZ3Q7PGJyPg0KJmd0OyAmZ3Q7ICZndDsgJnF1b3Q7Yml0YmFrZS1sYXllcnMg
+c2hvdy1hcHBlbmRzJnF1b3Q7IHdpbGwgc2hvdyBhbGwgcmVjaXBlcyB3aXRoIC5iYmFwcGVuZDxi
+cj4NCiZndDsgJmd0OyAmZ3Q7IGZpbGVzLCBpbmNsdWRpbmcgdGhvc2UgdGhhdCBhcmUgbm90IGlu
+Y2x1ZGVkIGFuZCBwcm9jZXNzZWQgZm9yIHRoZTxicj4NCiZndDsgJmd0OyAmZ3Q7IGN1cnJlbnQg
+YnVpbGQvaW1hZ2UuIGhlcmUncyB0aGUgcmF0aW9uYWxlLCBpbiBjYXNlIGknbSBtaXNzaW5nPGJy
+Pg0KJmd0OyAmZ3Q7ICZndDsgc29tZXRoaW5nLjxicj4NCiZndDsgJmd0Ozxicj4NCiZndDsgJmd0
+OyBJJ20gZG9pbmcgJnF1b3Q7ZmluZCBtZXRhKiAtbmFtZSBcKnJlY2lwZVwqYmJcKiZxdW90OyBh
+bmQgcmV2aWV3aW5nIGV2ZXJ5IG9uZTxicj4NCiZndDsgJmd0OyBvZiB0aGVtLiBNb3JlIHZpc2li
+aWxpdHkgdG8gdGhpcyBpbmNsdWRpbmcgcGFyc2luZyBvcmRlciB3b3VsZCBiZTxicj4NCiZndDsg
+Jmd0OyBuaWNlIHRvIHN0b3JlIGluIGUuZy4gYnVpbGRoaXN0b3J5Ljxicj4NCiZndDsgPGJyPg0K
+Jmd0OyZuYnNwOyAmbmJzcDt0aGFua3MgZm9yIGNsYXJpZnlpbmcgdGhhdCB0aGVyZSB3YXNuJ3Qg
+YSBtYXNzaXZlbHkgdHJpdmlhbCB3YXkgdG88YnI+DQomZ3Q7IGRvIHRoaXMgdGhhdCBpIGp1c3Qg
+ZGlkbid0IHNlZS48YnI+DQo8YnI+DQpGb3IgZWFjaCBpbWFnZSB5b3UgYnVpbGQsIHlvdSBzaG91
+bGQgZmluZCBhIG1hbmlmZXN0IGluIDxicj4NCiZxdW90O3RtcC9kZXBsb3kvaW1hZ2UvJmx0O21h
+Y2hpbmUmZ3Q7LyZsdDtpbWFnZSZndDstJmx0O21hY2hpbmUmZ3Q7Lm1hbmlmZXN0JnF1b3Q7LiBJ
+dCBjb250YWlucyB0aGUgPGJyPg0KbmFtZXMsIGFyY2hpdGVjdHVyZXMgYW5kIHZlcnNpb25zIG9m
+IGFsbCBwYWNrYWdlcyB0aGF0IHdlcmUgaW5zdGFsbGVkIGluIDxicj4NCnRoZSBpbWFnZS4gPGJy
+Pg0KPGJyPg0KVG8gY29udmVydCB0aGUgcGFja2FnZSBuYW1lcyBmcm9tIHRoZSBtYW5pZmVzdCB0
+byByZWNpcGVzLCB5b3UgY2FuIHVzZSA8YnI+DQpvZS1wa2dkYXRhLXV0aWw6PGJyPg0KPGJyPg0K
+Jm5ic3A7IG9lLXBrZ2RhdGEtdXRpbCAtcCB0bXAvcGtnZGF0YS8mbHQ7bWFjaGluZSZndDsgcGFj
+a2FnZS1pbmZvIC1mICZsdDtwYXRoIHRvIHRoZSBtYW5pZmVzdCBmaWxlJmd0Ozxicj4NCjxicj4N
+Cih0aGUgLXAgdG1wL3BrZ2RhdGEvJmx0O21hY2hpbmUmZ3Q7IG9wdGlvbiBpc24ndCBuZWNlc3Nh
+cnksIGJ1dCB5b3UgYXZvaWQgPGJyPg0Kc3RhcnRpbmcgdGluZm9pbCBpZiB5b3UgdXNlIGl0KS4g
+VGhpcyB3aWxsIGdpdmUgeW91IG9uZSBsaW5lIHBlciBwYWNrYWdlIDxicj4NCnRoYXQgYWxzbyBp
+bmNsdWRlcyB0aGUgcmVjaXBlIG5hbWUuIFBhc3MgdGhlIG91dHB1dCB0byBgY3V0IC1mMyAtZCcg
+JyB8IDxicj4NCnNvcnQgLXUnIGFuZCB5b3Ugc2hvdWxkIGhhdmUgdGhlIGxpc3Qgb2YgcmVjaXBl
+cyB0aGF0IHdlcmUgdXNlZCB0byBidWlsZCA8YnI+DQp0aGUgcGFja2FnZXMgaW4geW91ciBpbWFn
+ZS48YnI+DQo8YnI+DQpUaGVuIGFsbCB5b3UgaGF2ZSB0byBkbyBpcyB0YWtlIHRoZSBpbnRlcnNl
+Y3Rpb24gb2YgcmVjaXBlcyBmcm9tIHRoYXQgPGJyPg0KbGlzdCBhbmQgZnJvbSBgYml0YmFrZS1s
+YXllcnMgc2hvdy1hcHBlbmRzYCBhbmQgeW91IHNob3VsZCBoYXZlIHRoZSA8YnI+DQpsaXN0IG9m
+IHJlY2lwZXMgdGhhdCBoYXZlIGJiYXBwZW5kcyBhcHBsaWVkIGFuZCBhcmUgdXNlZCB0byBidWls
+ZCB5b3VyIDxicj4NCmltYWdlLjxvOnA+PC9vOnA+PC9wPg0KPC9ibG9ja3F1b3RlPg0KPGRpdj4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+cGlwZSB0aGUgcGFja2FnZSBsaXN0IHRocm91Z2ggJ3hh
+cmdzIGJpdGJha2UtbGF5ZXJzIHNob3ctYXBwZW5kcycgYW5kIGl0IHNlZW1zIGV4YWN0bHkgd2hh
+dCdzIGFza2VkIGZvci48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+b2UtcGtnZGF0YS11dGlsIC1wIHRtcC9wa2dkYXRhLyZsdDttYWNoaW5lJmd0
+OyBwYWNrYWdlLWluZm8gLWYgdG1wL2RlcGxveS9pbWFnZXMvJmx0O21hY2hpbmUmZ3Q7LyZsdDtp
+bWFnZSZndDsubWFuaWZlc3QgfCBjdXQgLWYzIC1kJyAnIHwgc29ydCAtdSB8IHhhcmdzIGJpdGJh
+a2UtbGF5ZXJzIHNob3ctYXBwZW5kczxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPC9kaXY+
+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
 
---00000000000022b3ea059fa8d86e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><div class=3D"gmail_quote"><div=
- dir=3D"ltr" class=3D"gmail_attr">On Fri, Feb 28, 2020 at 3:32 PM Peter Kje=
-llerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis.com">peter.kjellers=
-tedt@axis.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
-ng-left:1ex">&gt; -----Original Message-----<br>
-&gt; From: <a href=3D"mailto:bitbake-devel-bounces@lists.openembedded.org" =
-target=3D"_blank">bitbake-devel-bounces@lists.openembedded.org</a> &lt;bitb=
-ake-devel-<br>
-&gt; <a href=3D"mailto:bounces@lists.openembedded.org" target=3D"_blank">bo=
-unces@lists.openembedded.org</a>&gt; On Behalf Of Robert P. J. Day<br>
-&gt; Sent: den 28 februari 2020 20:38<br>
-&gt; To: <a href=3D"mailto:Mikko.Rapeli@bmw.de" target=3D"_blank">Mikko.Rap=
-eli@bmw.de</a><br>
-&gt; Cc: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"=
-_blank">bitbake-devel@lists.openembedded.org</a><br>
-&gt; Subject: Re: [bitbake-devel] can i get a list of only bbappend&#39;ed =
-recipes<br>
-&gt; that were *used* in a build?<br>
-&gt; <br>
-&gt; On Fri, 28 Feb 2020, <a href=3D"mailto:Mikko.Rapeli@bmw.de" target=3D"=
-_blank">Mikko.Rapeli@bmw.de</a> wrote:<br>
-&gt; <br>
-&gt; &gt; Hi,<br>
-&gt; &gt;<br>
-&gt; &gt; On Fri, Feb 28, 2020 at 08:33:36AM -0500, <a href=3D"mailto:rpjda=
-y@crashcourse.ca" target=3D"_blank">rpjday@crashcourse.ca</a> wrote:<br>
-&gt; &gt; &gt; looked around and i don&#39;t see an immediately obvious way=
- to do<br>
-&gt; &gt; &gt; this ... is there a way to generate a list of *only* those r=
-ecipes<br>
-&gt; &gt; &gt; that were used in the current build that had associated .bba=
-ppend<br>
-&gt; &gt; &gt; files?<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; &quot;bitbake-layers show-appends&quot; will show all recipe=
-s with .bbappend<br>
-&gt; &gt; &gt; files, including those that are not included and processed f=
-or the<br>
-&gt; &gt; &gt; current build/image. here&#39;s the rationale, in case i&#39=
-;m missing<br>
-&gt; &gt; &gt; something.<br>
-&gt; &gt;<br>
-&gt; &gt; I&#39;m doing &quot;find meta* -name \*recipe\*bb\*&quot; and rev=
-iewing every one<br>
-&gt; &gt; of them. More visibility to this including parsing order would be=
-<br>
-&gt; &gt; nice to store in e.g. buildhistory.<br>
-&gt; <br>
-&gt;=C2=A0 =C2=A0thanks for clarifying that there wasn&#39;t a massively tr=
-ivial way to<br>
-&gt; do this that i just didn&#39;t see.<br>
-<br>
-For each image you build, you should find a manifest in <br>
-&quot;tmp/deploy/image/&lt;machine&gt;/&lt;image&gt;-&lt;machine&gt;.manife=
-st&quot;. It contains the <br>
-names, architectures and versions of all packages that were installed in <b=
-r>
-the image. <br>
-<br>
-To convert the package names from the manifest to recipes, you can use <br>
-oe-pkgdata-util:<br>
-<br>
-=C2=A0 oe-pkgdata-util -p tmp/pkgdata/&lt;machine&gt; package-info -f &lt;p=
-ath to the manifest file&gt;<br>
-<br>
-(the -p tmp/pkgdata/&lt;machine&gt; option isn&#39;t necessary, but you avo=
-id <br>
-starting tinfoil if you use it). This will give you one line per package <b=
-r>
-that also includes the recipe name. Pass the output to `cut -f3 -d&#39; &#3=
-9; | <br>
-sort -u&#39; and you should have the list of recipes that were used to buil=
-d <br>
-the packages in your image.<br>
-<br>
-Then all you have to do is take the intersection of recipes from that <br>
-list and from `bitbake-layers show-appends` and you should have the <br>
-list of recipes that have bbappends applied and are used to build your <br>
-image.<br><br></blockquote><div><br></div><div>pipe the package list throug=
-h &#39;xargs bitbake-layers show-appends&#39; and it seems exactly what&#39=
-;s asked for.</div><div><br></div><div>oe-pkgdata-util -p tmp/pkgdata/&lt;m=
-achine&gt; package-info -f tmp/deploy/images/&lt;machine&gt;/&lt;image&gt;.=
-manifest | cut -f3 -d&#39; &#39; | sort -u | xargs bitbake-layers show-appe=
-nds<br></div><div><br></div><div>=C2=A0</div></div></div>
-
---00000000000022b3ea059fa8d86e--
+--_000_3e40c1258e9a4593945215f9cd41593dXBOX03axiscom_--
