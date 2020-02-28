@@ -1,49 +1,36 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com
-	[209.85.221.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 023CA6092C
+Return-Path: <rpjday@crashcourse.ca>
+Received: from cpanel7.indieserve.net (cpanel7.indieserve.net [199.212.143.8])
+	by mail.openembedded.org (Postfix) with ESMTP id 5A92361960
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Feb 2020 01:32:03 +0000 (UTC)
-Received: by mail-vk1-f173.google.com with SMTP id t129so330137vkg.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Feb 2020 17:32:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc:content-transfer-encoding;
-	bh=9/F6WdW1vZLH759Fnf5XyOEHrsj6fUzG1ZPk0wc6qQY=;
-	b=PC0NlHLX16NRDjSum08y3ttodsOWQpaHOTrEMFdzjSG5zinCY39aCwPnXv0C5ydqAk
-	9o8xf+t+6vdhWhbDxxBmYXIhrtVn6zjKDNFJI6LK/imoNP76ThBMSrM8vKbZI6NrczwP
-	UWO07VZ1ETtdAb5VS4cgvkF5QNNTcSY0TjuIw1v69l87KmYOXr9Yvsitz5pWAW3+HOuz
-	mW8uS2oy9fAUhhvxq0/ynX9KazHfbw0mjvPxrINJEhIR9S9OWkfWGjd2cT+12Jg2jQp9
-	20BATLeRy/hnjO+lF/yoHSk5jwEEqqLa4E1D9UdjbzUw4FDOXqH+avK4yBvvH1ho553V
-	gxkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc:content-transfer-encoding;
-	bh=9/F6WdW1vZLH759Fnf5XyOEHrsj6fUzG1ZPk0wc6qQY=;
-	b=Re8WdzpN602qNwfEIYlamQqtyivSr/mlgc6uZYPg/eeOM/BnX6VT8xRJZZxv0Mcr8F
-	UvtwyglyggzxUc435IrPrPE6VQBUWSZHkS10sZpCZfhC9Z5XryXQ3fApR9UOqBF05Nzm
-	rzYQJjwtZxCFwjsNh38BZTUeG4wsMZaUv6kJihT7oJCleKNWPj5cw+HqFI1zsxzqmlq6
-	DbDLKaIdkYXTmRXQ7LR7fCkMGDDxbfN+QEGgGrNwP3TRAXnhxhHDL/X/rgy9Xyq3FBQb
-	i8AyvLV9+21EBSXop7W2pDNUxKCNQUvtqOJ2fk2l/ryI19uwXG6Z+wds7IScgc5NP0vn
-	/qPQ==
-X-Gm-Message-State: APjAAAXZFc0lvnipwc/0fXPofquNdAYXGPZPrOOsgQYXKdXUdgJuZiaA
-	Gn3SRTluGOmsPSFiUhfFWJ60H8BEW1vrcWOby02GUQ==
-X-Google-Smtp-Source: APXvYqwGkqOveeN5r7AaUPPGzrxNGRjlcigJmb717BnnOAjBrf4M9F6Yp5OT12NDiI7oYq7+TP/YD4mxmqV1jKp25c8=
-X-Received: by 2002:a1f:5fc7:: with SMTP id t190mr1890377vkb.52.1582680724738; 
-	Tue, 25 Feb 2020 17:32:04 -0800 (PST)
+	Fri, 28 Feb 2020 13:33:36 +0000 (UTC)
+Received: from [127.0.0.1] (port=49122 helo=cpanel7.indieserve.net)
+	by cpanel7.indieserve.net with esmtpsa (TLS1.2) tls
+	TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (Exim 4.93)
+	(envelope-from <rpjday@crashcourse.ca>) id 1j7flo-0008e0-NF
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 28 Feb 2020 08:33:37 -0500
+Received: from [66.129.241.14] ([66.129.241.14]) by crashcourse.ca (Horde
+	Framework) with HTTPS; Fri, 28 Feb 2020 08:33:36 -0500
+Date: Fri, 28 Feb 2020 08:33:36 -0500
+Message-ID: <20200228083336.Horde.2i5ag6ZVWX3JF5j5y3bF1q2@crashcourse.ca>
+From: rpjday@crashcourse.ca
+To: bitbake-devel@lists.openembedded.org
+User-Agent: Horde Application Framework 5
 MIME-Version: 1.0
-References: <20200225162245.Horde.i6DmVIhAUjVbUGUQKtyMoua@crashcourse.ca>
-	<CAJ86T=VvTrTLQLUeqQh8stS1ihQR4UQwi9faRG--FKP-wcLbqA@mail.gmail.com>
-	<alpine.LFD.2.21.2002252006080.10052@localhost.localdomain>
-In-Reply-To: <alpine.LFD.2.21.2002252006080.10052@localhost.localdomain>
-From: Andre McCurdy <armccurdy@gmail.com>
-Date: Tue, 25 Feb 2020 17:31:52 -0800
-Message-ID: <CAJ86T=XYp6GZqYiM+_JbR+1wdrdOzuBT6BoD0FLftAmEDUKCXg@mail.gmail.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: is there a bitbake equivalent to "touch"ing a file for gnu make?
+X-OutGoing-Spam-Status: No, score=-1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel7.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel7.indieserve.net: authenticated_id:
+	rpjday@crashcourse.ca
+X-Authenticated-Sender: cpanel7.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: can i get a list of only bbappend'ed recipes that were *used* in a build?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,73 +43,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 26 Feb 2020 01:32:04 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 28 Feb 2020 13:33:36 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+Content-Disposition: inline
 
-On Tue, Feb 25, 2020 at 5:07 PM Robert P. J. Day <rpjday@crashcourse.ca> wr=
-ote:
->
-> On Tue, 25 Feb 2020, Andre McCurdy wrote:
->
-> > On Tue, Feb 25, 2020 at 1:22 PM <rpjday@crashcourse.ca> wrote:
-> > >
-> > >    colleague emails me the following puzzler =E2=80=A6 current projec=
-t based on
-> > > wind river linux 9 (so effectively morty 2.2), so it has bitbake 1.32=
-.
-> > > apparently, for a specific recipe, there are intermittent build error=
-s
-> > > which she suspects are caused by a race condition in the build of tha=
-t
-> > > recipe.
-> > >
-> > >    *but* that build error only occurs when something about the underl=
-ying
-> > > layers have changed; as in, someone checked *something* in somewhere
-> > > forcing at least something to be rebuilt, and that error does not
-> > > even occur on *all* rebuilds, just some of them. so the question is,
-> > > which underlying recipe change and rebuild could be triggering this?
-> > >
-> > >    she *suspects* it might be openssl, as their project is making
-> > > regular changes to openssl, and that recipe seems to be an ultimate
-> > > dependency for quite a number of recipes, so she's just guessing
-> > > that might be the cause.
-> > >
-> > >    in order to test this, she is currently running through a loop
-> > > wherein, in order to kick off at least some recipe rebuilds, she
-> > > makes some innocuous change to openssl, causing it to be rebuilt,
-> > > which then rebuilds all recipes that depend on it and so on.
-> > >
-> > >    yuck.
-> > >
-> > >    on the other hand, i couldn't immediately suggest anything
-> > > cleaner. my thought was to (somehow) fake a rebuild of openssl
-> > > (perhaps by invalidating some timestamp), but that's not going
-> > > to work as once it's rebuilt, it's just going to look like it
-> > > did before, so nothing else will be rebuilt.
-> >
-> > Not sure what you mean by "fake" a rebuild. You can force a rebuild
-> > by e.g. manually changing something in the recipe such as PR,
-> > running "bitbake -c cleansstate openssl", ...
->
->   are you sure about that? i can test this when i get home, but i
-> thought just cleaning the sstate would not force rebuilds of the rest
-> of those recipes, just that one.
+looked around and i don't see an immediately obvious way to do this ...
+is there a way to generate a list of *only* those recipes that were
+used in the current build that had associated .bbappend files?
 
-Not 100% sure. Changing PR in the recipe should work though.
+"bitbake-layers show-appends" will show all recipes with .bbappend
+files, including those that are not included and processed for the
+current build/image. here's the rationale, in case i'm missing
+something.
 
-But anyway you probably want to focus on the specific recipe which
-fails intermittently. Forcing it to be rebuilt after removing tmp
-should at least tell you if it's a missing build dependency. If it
-fails then it's a missing dependency and it should be obvious from the
-build error (missing header, library, etc) what the missing dependency
-is.
+been handed an existing vendor layer, with *tons* of bbappend'ed
+recipes, some basic, some from meta-openembedded and many from
+the vendor's proprietary layer. my go-to strategy is to always try
+to build a core-image-minimal to establish a working baseline and,
+when that works, it would be nice to know which of the recipes
+that contributed to that core-image-minimal build were modified
+in any way via a .bbappend file, then work my way out.
 
-If it passes then it suggests that recipe has an unconstrained
-configure option which is behaving differently based on whether it
-autodetects something in the sysroot (which is shared in OE 2.2). In
-that case it should fail consistently if you run the full build (so
-that sysroot in tmp is fully populated) and then cleansstate and
-rebuild the failing recipe.
+does that make sense? is there a way to do this, other than wander
+down to tmp/work/... and try to figure out which recipes were
+modified from the original? am i overlooking something simple?
+
+rday
+
+
+
+
 
