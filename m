@@ -1,45 +1,49 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
-	by mail.openembedded.org (Postfix) with ESMTP id 3F7F2618BE
+Return-Path: <aaron@assonance.org>
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com
+	[209.85.167.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 3F160618BE
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Feb 2020 20:31:57 +0000 (UTC)
+	Fri, 28 Feb 2020 20:40:17 +0000 (UTC)
+Received: by mail-oi1-f182.google.com with SMTP id l12so4131432oil.9
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Feb 2020 12:40:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=axis.com; l=4017; q=dns/txt; s=axis-central1;
-	t=1582921920; x=1614457920;
-	h=from:to:cc:subject:date:message-id:references:
-	in-reply-to:content-transfer-encoding:mime-version;
-	bh=9FWZU+lJ/mLL1+5UWfnPp2I8wZM1+EjM290ufNyMc/8=;
-	b=XDUKTCE//hslVAo0XzWI2PuO7vFHbustlxmBppv2lBL7/zyaNo4qoS+/
-	1r3IJp2Rtglvn1msp8sTG9kbst2oDsFTribaMzpm22T76rNaO6eYKYDUS
-	xSliaVDu0waeXiks20oPd28pYE1D3cxTcRBihVC7OFr8eFvdZzrCeR0Tg
-	2AWSFA3Tq654gRTpXnW5hHWxIAs1OBRUSOHxonAIXatemLZcelTA1Rngy
-	JJUu60RVaAlnsspWeW9ljUqgME7LIbdmW/kqD8R5TgGTDwR5+gMn91KoH
-	FUPgum1iI/2QSV+1mscaDnRdVfW0kttkQJtW1bEhyUXOczo/t9+P0UsXT w==;
-IronPort-SDR: DYMFWRdTOLszgQ4y29+BsxX3MN+xsMb0nB/oNNoFOputIR5Vq/noC/dxZKvzEzctZ/BzVBbbE7
-	Z4uzebQVwlkIw0E/VbJmabvtg2kMF8KGaVP2C3APeqknmsiiP83VyA+TrJiiy5iBivqkVDoQo7
-	q/uzkRtiDD7aTZcn2Yh1x+Fw6aawWiCEbiDze7nbm5XMtOyxdJvycnXs0LBuqArys8LsH/f+WL
-	rrK2AXfAPAl4+eglB735MgzZpdqOE1dcpV83x5od8WLCpALW1+fgrSvM2oWJfdpz5MSb0636O/
-	WrQ=
-X-IronPort-AV: E=Sophos;i="5.70,497,1574118000"; 
-   d="scan'208";a="5784373"
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>, "Mikko.Rapeli@bmw.de"
-	<Mikko.Rapeli@bmw.de>
-Thread-Topic: [bitbake-devel] can i get a list of only bbappend'ed recipes
-	that were *used* in a build?
-Thread-Index: AQHV7ju4CHDoMUkrjUSd3SIX30oFYqgwlBqAgABb4ICAABv6EA==
-Date: Fri, 28 Feb 2020 20:31:58 +0000
-Message-ID: <52d5e8b6d3c64fe0a74d098e79651f2b@XBOX03.axis.com>
+	d=assonance-org.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc; bh=3GIFgA6gda/BvC/hAnbzIHuDGSIONkFC2YmbERK/Rd0=;
+	b=1jBbLrfS0cvqJQEQPEMiEFcTqqqg+vje2UKJaxKefvxfjf0vf2YMJr6uXmypYY+Na7
+	TJC2jsA20Qa7CRUL8ItPzttKmD9jCJQOtWuJoL+Q0u4tX7gD6Yb+8nFTSXCW4hficcFm
+	QxAAsr3QquS5i5xYm/HhwQF6yuAudQAUh0iIMEFAiudk+KgzO2MzFHH9xzUKs/130bvv
+	rkOogq0rhzpfDE4pzheHJWjgF8zjp9veaz072PQe7bJO5AJDL44qeycyC5gXC/s7lI9Z
+	swCWPyr8syoOWVP2jiryKTIk0Epu3qeHIi9EmU9UHoZOU9pBUGZUMEtIsVOdyljvh3Am
+	QquQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=3GIFgA6gda/BvC/hAnbzIHuDGSIONkFC2YmbERK/Rd0=;
+	b=LQNGll317GWnw0ahNKvCSk7NzPE9CAFlFh3wtROdlwWMBM850vZjcCyzZUPOQSUJXu
+	zKlV+OK7m7tU02yzS3E8VrU7lgD8CVRtjTXSrTb7hl05GyXxUkzZkOncQz8WFJkz4fR5
+	FuD0S17L/5LWnk4lr0Y8eIH+boqqDAx1JXmHAbuSL+fOjpYJMOVeJZ6BrO99x/WCPo79
+	J7KD6HBW4l1PQ8MRBenhew3Xx+dVv64LDTtziXzCvozZWhdZbE7Eic4Krl/DnX//bT14
+	p+rhBVotTog9BhU7ciFeTYsZSpfPSPoCbX1d5QTq0RHWj3qmKZ8Oy2fINEbhrr3uPTW3
+	8RsA==
+X-Gm-Message-State: APjAAAVX4ezR3YVnHZzC+wLkDQf/2hW3Yw+Ib/mKjaYJKi0L0Xg5jeC/
+	VT9csucys8IXNClLCVoT1EwudrRcPT+ZDVKPCtbMmw==
+X-Google-Smtp-Source: APXvYqyjVHXyzIg1c7FRDisDlTXKS+xGTz/feVCpr3XD7YusER+6Xc17a3YeAEeidGtl5rivh2OHkT3P7UZYozXW+H4=
+X-Received: by 2002:a05:6808:99c:: with SMTP id
+	a28mr4221205oic.164.1582922412918; 
+	Fri, 28 Feb 2020 12:40:12 -0800 (PST)
+MIME-Version: 1.0
 References: <20200228083336.Horde.2i5ag6ZVWX3JF5j5y3bF1q2@crashcourse.ca>
 	<20200228140919.GO104502@korppu>
 	<alpine.LFD.2.21.2002281435580.6574@localhost.localdomain>
-In-Reply-To: <alpine.LFD.2.21.2002281435580.6574@localhost.localdomain>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
-MIME-Version: 1.0
+	<52d5e8b6d3c64fe0a74d098e79651f2b@XBOX03.axis.com>
+In-Reply-To: <52d5e8b6d3c64fe0a74d098e79651f2b@XBOX03.axis.com>
+From: Aaron Cohen <aaron@assonance.org>
+Date: Fri, 28 Feb 2020 15:40:01 -0500
+Message-ID: <CAFSZm+iJtq-uNr3zudmtXHq7uZAmCKuxMtCkr6xH67NUjwKioQ@mail.gmail.com>
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
 Subject: Re: can i get a list of only bbappend'ed recipes that were *used* in a build?
@@ -55,101 +59,164 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Feb 2020 20:31:58 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Fri, 28 Feb 2020 20:40:17 -0000
+Content-Type: multipart/alternative; boundary="00000000000022b3ea059fa8d86e"
+
+--00000000000022b3ea059fa8d86e
+Content-Type: text/plain; charset="UTF-8"
+
+On Fri, Feb 28, 2020 at 3:32 PM Peter Kjellerstedt <
+peter.kjellerstedt@axis.com> wrote:
+
+> > -----Original Message-----
+> > From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
+> > bounces@lists.openembedded.org> On Behalf Of Robert P. J. Day
+> > Sent: den 28 februari 2020 20:38
+> > To: Mikko.Rapeli@bmw.de
+> > Cc: bitbake-devel@lists.openembedded.org
+> > Subject: Re: [bitbake-devel] can i get a list of only bbappend'ed recipes
+> > that were *used* in a build?
+> >
+> > On Fri, 28 Feb 2020, Mikko.Rapeli@bmw.de wrote:
+> >
+> > > Hi,
+> > >
+> > > On Fri, Feb 28, 2020 at 08:33:36AM -0500, rpjday@crashcourse.ca wrote:
+> > > > looked around and i don't see an immediately obvious way to do
+> > > > this ... is there a way to generate a list of *only* those recipes
+> > > > that were used in the current build that had associated .bbappend
+> > > > files?
+> > > >
+> > > > "bitbake-layers show-appends" will show all recipes with .bbappend
+> > > > files, including those that are not included and processed for the
+> > > > current build/image. here's the rationale, in case i'm missing
+> > > > something.
+> > >
+> > > I'm doing "find meta* -name \*recipe\*bb\*" and reviewing every one
+> > > of them. More visibility to this including parsing order would be
+> > > nice to store in e.g. buildhistory.
+> >
+> >   thanks for clarifying that there wasn't a massively trivial way to
+> > do this that i just didn't see.
+>
+> For each image you build, you should find a manifest in
+> "tmp/deploy/image/<machine>/<image>-<machine>.manifest". It contains the
+> names, architectures and versions of all packages that were installed in
+> the image.
+>
+> To convert the package names from the manifest to recipes, you can use
+> oe-pkgdata-util:
+>
+>   oe-pkgdata-util -p tmp/pkgdata/<machine> package-info -f <path to the
+> manifest file>
+>
+> (the -p tmp/pkgdata/<machine> option isn't necessary, but you avoid
+> starting tinfoil if you use it). This will give you one line per package
+> that also includes the recipe name. Pass the output to `cut -f3 -d' ' |
+> sort -u' and you should have the list of recipes that were used to build
+> the packages in your image.
+>
+> Then all you have to do is take the intersection of recipes from that
+> list and from `bitbake-layers show-appends` and you should have the
+> list of recipes that have bbappends applied and are used to build your
+> image.
+>
+>
+pipe the package list through 'xargs bitbake-layers show-appends' and it
+seems exactly what's asked for.
+
+oe-pkgdata-util -p tmp/pkgdata/<machine> package-info -f
+tmp/deploy/images/<machine>/<image>.manifest | cut -f3 -d' ' | sort -u |
+xargs bitbake-layers show-appends
+
+--00000000000022b3ea059fa8d86e
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: bitbake-devel-bounces@lists.openembedded.org <bitbake-devel-
-> bounces@lists.openembedded.org> On Behalf Of Robert P. J. Day
-> Sent: den 28 februari 2020 20:38
-> To: Mikko.Rapeli@bmw.de
-> Cc: bitbake-devel@lists.openembedded.org
-> Subject: Re: [bitbake-devel] can i get a list of only bbappend'ed recipes
-> that were *used* in a build?
->=20
-> On Fri, 28 Feb 2020, Mikko.Rapeli@bmw.de wrote:
->=20
-> > Hi,
-> >
-> > On Fri, Feb 28, 2020 at 08:33:36AM -0500, rpjday@crashcourse.ca wrote:
-> > > looked around and i don't see an immediately obvious way to do
-> > > this ... is there a way to generate a list of *only* those recipes
-> > > that were used in the current build that had associated .bbappend
-> > > files?
-> > >
-> > > "bitbake-layers show-appends" will show all recipes with .bbappend
-> > > files, including those that are not included and processed for the
-> > > current build/image. here's the rationale, in case i'm missing
-> > > something.
-> >
-> > I'm doing "find meta* -name \*recipe\*bb\*" and reviewing every one
-> > of them. More visibility to this including parsing order would be
-> > nice to store in e.g. buildhistory.
->=20
->   thanks for clarifying that there wasn't a massively trivial way to
-> do this that i just didn't see.
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><div class=3D"gmail_quote"><div=
+ dir=3D"ltr" class=3D"gmail_attr">On Fri, Feb 28, 2020 at 3:32 PM Peter Kje=
+llerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis.com">peter.kjellers=
+tedt@axis.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
+ng-left:1ex">&gt; -----Original Message-----<br>
+&gt; From: <a href=3D"mailto:bitbake-devel-bounces@lists.openembedded.org" =
+target=3D"_blank">bitbake-devel-bounces@lists.openembedded.org</a> &lt;bitb=
+ake-devel-<br>
+&gt; <a href=3D"mailto:bounces@lists.openembedded.org" target=3D"_blank">bo=
+unces@lists.openembedded.org</a>&gt; On Behalf Of Robert P. J. Day<br>
+&gt; Sent: den 28 februari 2020 20:38<br>
+&gt; To: <a href=3D"mailto:Mikko.Rapeli@bmw.de" target=3D"_blank">Mikko.Rap=
+eli@bmw.de</a><br>
+&gt; Cc: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"=
+_blank">bitbake-devel@lists.openembedded.org</a><br>
+&gt; Subject: Re: [bitbake-devel] can i get a list of only bbappend&#39;ed =
+recipes<br>
+&gt; that were *used* in a build?<br>
+&gt; <br>
+&gt; On Fri, 28 Feb 2020, <a href=3D"mailto:Mikko.Rapeli@bmw.de" target=3D"=
+_blank">Mikko.Rapeli@bmw.de</a> wrote:<br>
+&gt; <br>
+&gt; &gt; Hi,<br>
+&gt; &gt;<br>
+&gt; &gt; On Fri, Feb 28, 2020 at 08:33:36AM -0500, <a href=3D"mailto:rpjda=
+y@crashcourse.ca" target=3D"_blank">rpjday@crashcourse.ca</a> wrote:<br>
+&gt; &gt; &gt; looked around and i don&#39;t see an immediately obvious way=
+ to do<br>
+&gt; &gt; &gt; this ... is there a way to generate a list of *only* those r=
+ecipes<br>
+&gt; &gt; &gt; that were used in the current build that had associated .bba=
+ppend<br>
+&gt; &gt; &gt; files?<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; &quot;bitbake-layers show-appends&quot; will show all recipe=
+s with .bbappend<br>
+&gt; &gt; &gt; files, including those that are not included and processed f=
+or the<br>
+&gt; &gt; &gt; current build/image. here&#39;s the rationale, in case i&#39=
+;m missing<br>
+&gt; &gt; &gt; something.<br>
+&gt; &gt;<br>
+&gt; &gt; I&#39;m doing &quot;find meta* -name \*recipe\*bb\*&quot; and rev=
+iewing every one<br>
+&gt; &gt; of them. More visibility to this including parsing order would be=
+<br>
+&gt; &gt; nice to store in e.g. buildhistory.<br>
+&gt; <br>
+&gt;=C2=A0 =C2=A0thanks for clarifying that there wasn&#39;t a massively tr=
+ivial way to<br>
+&gt; do this that i just didn&#39;t see.<br>
+<br>
+For each image you build, you should find a manifest in <br>
+&quot;tmp/deploy/image/&lt;machine&gt;/&lt;image&gt;-&lt;machine&gt;.manife=
+st&quot;. It contains the <br>
+names, architectures and versions of all packages that were installed in <b=
+r>
+the image. <br>
+<br>
+To convert the package names from the manifest to recipes, you can use <br>
+oe-pkgdata-util:<br>
+<br>
+=C2=A0 oe-pkgdata-util -p tmp/pkgdata/&lt;machine&gt; package-info -f &lt;p=
+ath to the manifest file&gt;<br>
+<br>
+(the -p tmp/pkgdata/&lt;machine&gt; option isn&#39;t necessary, but you avo=
+id <br>
+starting tinfoil if you use it). This will give you one line per package <b=
+r>
+that also includes the recipe name. Pass the output to `cut -f3 -d&#39; &#3=
+9; | <br>
+sort -u&#39; and you should have the list of recipes that were used to buil=
+d <br>
+the packages in your image.<br>
+<br>
+Then all you have to do is take the intersection of recipes from that <br>
+list and from `bitbake-layers show-appends` and you should have the <br>
+list of recipes that have bbappends applied and are used to build your <br>
+image.<br><br></blockquote><div><br></div><div>pipe the package list throug=
+h &#39;xargs bitbake-layers show-appends&#39; and it seems exactly what&#39=
+;s asked for.</div><div><br></div><div>oe-pkgdata-util -p tmp/pkgdata/&lt;m=
+achine&gt; package-info -f tmp/deploy/images/&lt;machine&gt;/&lt;image&gt;.=
+manifest | cut -f3 -d&#39; &#39; | sort -u | xargs bitbake-layers show-appe=
+nds<br></div><div><br></div><div>=C2=A0</div></div></div>
 
-For each image you build, you should find a manifest in=20
-"tmp/deploy/image/<machine>/<image>-<machine>.manifest". It contains the=20
-names, architectures and versions of all packages that were installed in=20
-the image.=20
-
-To convert the package names from the manifest to recipes, you can use=20
-oe-pkgdata-util:
-
-  oe-pkgdata-util -p tmp/pkgdata/<machine> package-info -f <path to the man=
-ifest file>
-
-(the -p tmp/pkgdata/<machine> option isn't necessary, but you avoid=20
-starting tinfoil if you use it). This will give you one line per package=20
-that also includes the recipe name. Pass the output to `cut -f3 -d' ' |=20
-sort -u' and you should have the list of recipes that were used to build=20
-the packages in your image.
-
-Then all you have to do is take the intersection of recipes from that=20
-list and from `bitbake-layers show-appends` and you should have the=20
-list of recipes that have bbappends applied and are used to build your=20
-image.
-
-Not trivial, but it should be possible to write a relatively simple=20
-script to do the above.
-
-> > > been handed an existing vendor layer, with *tons* of bbappend'ed
-> > > recipes, some basic, some from meta-openembedded and many from the
-> > > vendor's proprietary layer. my go-to strategy is to always try to
-> > > build a core-image-minimal to establish a working baseline and,
-> > > when that works, it would be nice to know which of the recipes
-> > > that contributed to that core-image-minimal build were modified in
-> > > any way via a .bbappend file, then work my way out.
-> > >
-> > > does that make sense? is there a way to do this, other than wander
-> > > down to tmp/work/... and try to figure out which recipes were
-> > > modified from the original? am i overlooking something simple?
-> >
-> > I start off by reviewing every single file in vendor and BSP SW
-> > layers before I add them to builds. Sadly this does not catch bad
-> > things which get integrated later in updates.
-> >
-> > Resulting distro config in my projects is full of BBMASK paths to
-> > the various layers which are intrusive with their bbappends.
->=20
-> yup, i'd already thought of that ... a methodical way to slowly add
-> recipes/layers to the build.
->=20
-> > Maybe recording all bbappends and their relative paths in the
-> > project and parsing order to buildhistory would help.
-> >
-> > I would also like to limit layers from adding bbappends to certain
-> > recipes but I don't see ways for this currently without external
-> > scripts.
->=20
-> yeah, there's lots of cool things i can think of that would assist
-> in a migration from an older version of OE/YP to a more recent one.
->=20
-> rday
-
-//Peter
-
-
+--00000000000022b3ea059fa8d86e--
