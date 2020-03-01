@@ -1,49 +1,49 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com
-	[209.85.221.49])
-	by mail.openembedded.org (Postfix) with ESMTP id D26F661A5C
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
+	[209.85.221.68])
+	by mail.openembedded.org (Postfix) with ESMTP id E63AF619E4
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 29 Feb 2020 16:16:34 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id r17so7067481wrj.7
+	Sun,  1 Mar 2020 10:58:47 +0000 (UTC)
+Received: by mail-wr1-f68.google.com with SMTP id x7so8858896wrr.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 29 Feb 2020 08:16:36 -0800 (PST)
+	Sun, 01 Mar 2020 02:58:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linuxfoundation.org; s=google;
 	h=from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=+8pyYD7JeOFkyEOO6EB3ppBfbNLE3uST4lXgSCkDAyw=;
-	b=ALxebqJe2Fr+cgCzK/LwTsr1g6mNtxDiz3BY+rYX+Klx54rdxfGJIPf3Ldbb/SiXAS
-	3m3+5CUZsipciErAtjEKveKfvjjzKtiXdFHtKUquPru+8VKQORKZzFmi+ukI9v5Vrlbp
-	SHiQ/4wwtZ9oyZOMh0f+zl4yfbcHJmZBGTqMk=
+	bh=tzXc541PrPXsK56qqLBNiDjGU0aMLT0bzlIsyog9mU8=;
+	b=d7rAoTj4Am1UX4F/3HcDvR5vE4rR4uKqktnw98x7OqhkamubyYMXvbfftlNuOVZ0Km
+	lMV2bAEen5OV+DEFKGIiOTtLPW0Vh4zLRMHo3QcJ463YrVKK5P8KsWtJbBgIQ0ORWO01
+	O6I6YKm9G0hsWOHGL4nD4cbIb50NIFkE0yAi0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
 	:content-transfer-encoding;
-	bh=+8pyYD7JeOFkyEOO6EB3ppBfbNLE3uST4lXgSCkDAyw=;
-	b=ltbelLhPPRi0IZrSi7c4LeCcmL93rWGHgyddcCSRiCU+CUXLhtXhvcT+t1QlvLyvG1
-	69TXpnB9qcYE407+YJkfiB/wKP8oBldOpwJ3XtfycvqX6qsgIcJ6Bl9hSVCStXkg+FUq
-	nc3m60dWK9npq23BST8OuTeqBdNVDo8cXzMRocKNiNMjlJXANvCtNB6a6GN7nvWjcTUU
-	ysuyXsyjNvB8FAtqTz0eG3e3ett5GzdQ2/9A5QqQB+A3Ar0we5dfmgInGM7YBu0V3ec/
-	SFexQeSj8VWWB5xCK16TAxLz8RqING5fm1QRuZtOPhITQTVA86556l/kuN0DIWMfxut9
-	PgAQ==
-X-Gm-Message-State: APjAAAXAEH2CDTWIyl7lao80qttbyYaTQ4lNnDAw50q7gPgQB/AVlOnv
-	MPGasPB/ZPr5n9f5FQzAF+N8yrkQedo=
-X-Google-Smtp-Source: APXvYqwPxhGJq0wKjjVznanUC/fUFECyaARZ+o1uk21GVIGTyKL87XlbM1GgUBR82Qt/HSvkQmElKQ==
-X-Received: by 2002:adf:fecf:: with SMTP id q15mr11792983wrs.360.1582992995175;
-	Sat, 29 Feb 2020 08:16:35 -0800 (PST)
+	bh=tzXc541PrPXsK56qqLBNiDjGU0aMLT0bzlIsyog9mU8=;
+	b=smZcSOzBhwDTys/QPFuBK8zwiOkUPPwDa0GyUuE/dewFHEtXqFkPZrXK1hZbv07UWu
+	3T3oiOGqYhTlVdf7TnrQKH9Ckrw8/u5UwHQqim7cbane0NzXohsJtrnGPSoDVfQ410w8
+	SGaRkma2/okbIRKmQf8xJTCDezGUjCl45puK1Kolh2Oon+HenqQAfdFAExRJhZaxYyF0
+	vgwG1jnatElw4r3Lv5vuzqcqGKNp1gFnFuoOwTt2jmkq6qXWGZDnPdFm5fupnDC90Z3p
+	UfGp+CNptIWPbYJluROtDKC6HPjv6cDtmJAUM0I/Erad1MZIrPqXTUMPaJ4osXtpmgTX
+	EibQ==
+X-Gm-Message-State: APjAAAXNIZWcnNvJfKo9sa1XEouqzTfs7ccBmj/8K6Du3yRNCMNJf6lf
+	dqju4A69uaCranwt8fnKVrEZarjxWcA=
+X-Google-Smtp-Source: APXvYqwnH3/7NSwdsax/nh1Nxxm1qRjO6qOCWHsr/RDDeBRYZCYwiKZKtCEXW4q7OxN6u7/xiLu8iA==
+X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr15856935wrs.272.1583060328210; 
+	Sun, 01 Mar 2020 02:58:48 -0800 (PST)
 Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
 	by smtp.gmail.com with ESMTPSA id
-	e8sm18295104wrr.69.2020.02.29.08.16.34
+	c4sm10123946wml.7.2020.03.01.02.58.47
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sat, 29 Feb 2020 08:16:34 -0800 (PST)
+	Sun, 01 Mar 2020 02:58:47 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 29 Feb 2020 16:16:33 +0000
-Message-Id: <20200229161633.496077-1-richard.purdie@linuxfoundation.org>
+Date: Sun,  1 Mar 2020 10:58:46 +0000
+Message-Id: <20200301105846.525957-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Subject: [PATCH] fetch2: Limit shown checksums to sha256
+Subject: [PATCH] cooker: Reset unpon clientComplete
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,47 +56,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 29 Feb 2020 16:16:35 -0000
+X-List-Received-Date: Sun, 01 Mar 2020 10:58:49 -0000
 Content-Transfer-Encoding: 8bit
 
-Currently bitbake will list many checksums for a recipe when none are
-present, encouraging users to add them all to a recipe. We don't
-need/want them all.
+If for example a tinfoil connection edits the datastore, a subsequent
+connection can be "corrupted" by those changes. By calling the cooker
+reset function at exit, the behaviour becomes the same as a newly
+setup server.
 
-We used to show md5 and sha256 but given the concerns about md5,
-switch to showing just sha256 going forward which seems like the
-sensible one to standardise upon.
+This avoids problems in tests when BB_SERVER_TIMEOUT is set as the
+server is properly reset between connections.
 
-There will be no change to existing recipe functionality.
+[YOCTO #13812]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/__init__.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ lib/bb/cooker.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index b83347ad90..9734e21126 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -34,6 +34,7 @@ _checksum_cache = bb.checksum.FileChecksumCache()
- logger = logging.getLogger("BitBake.Fetcher")
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 2d937a413c..2a17c67373 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1665,6 +1665,7 @@ class BBCooker:
+         self.command.reset()
+         self.databuilder.reset()
+         self.data = self.databuilder.data
++        self.reset()
  
- CHECKSUM_LIST = [ "md5", "sha256", "sha1", "sha384", "sha512" ]
-+SHOWN_CHECKSUM_LIST = ["sha256"]
  
- class BBFetchException(Exception):
-     """Class all fetch exceptions inherit from"""
-@@ -580,7 +581,9 @@ def verify_checksum(ud, d, precomputed={}):
-     checksum_dict = {ci["id"] : ci["data"] for ci in checksum_infos}
-     checksum_event = {"%ssum" % ci["id"] : ci["data"] for ci in checksum_infos}
- 
--    checksum_lines = ["SRC_URI[%s] = \"%s\"" % (ci["name"], ci["data"]) for ci in checksum_infos]
-+    for ci in checksum_infos:
-+        if ci["id"] in SHOWN_CHECKSUM_LIST:
-+            checksum_lines = ["SRC_URI[%s] = \"%s\"" % (ci["name"], ci["data"])]
- 
-     # If no checksum has been provided
-     if ud.method.recommends_checksum(ud) and all(ci["expected"] is None for ci in checksum_infos):
+ class CookerExit(bb.event.Event):
 -- 
 2.25.0
 
