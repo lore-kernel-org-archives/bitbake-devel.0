@@ -1,49 +1,53 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id E63AF619E4
+Return-Path: <tanuk@iki.fi>
+X-Greylist: delayed 306 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 03 Mar 2020 08:01:41 UTC
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com
+	[66.111.4.25])
+	by mail.openembedded.org (Postfix) with ESMTP id BD5D261890
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  1 Mar 2020 10:58:47 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id x7so8858896wrr.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 01 Mar 2020 02:58:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=tzXc541PrPXsK56qqLBNiDjGU0aMLT0bzlIsyog9mU8=;
-	b=d7rAoTj4Am1UX4F/3HcDvR5vE4rR4uKqktnw98x7OqhkamubyYMXvbfftlNuOVZ0Km
-	lMV2bAEen5OV+DEFKGIiOTtLPW0Vh4zLRMHo3QcJ463YrVKK5P8KsWtJbBgIQ0ORWO01
-	O6I6YKm9G0hsWOHGL4nD4cbIb50NIFkE0yAi0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=tzXc541PrPXsK56qqLBNiDjGU0aMLT0bzlIsyog9mU8=;
-	b=smZcSOzBhwDTys/QPFuBK8zwiOkUPPwDa0GyUuE/dewFHEtXqFkPZrXK1hZbv07UWu
-	3T3oiOGqYhTlVdf7TnrQKH9Ckrw8/u5UwHQqim7cbane0NzXohsJtrnGPSoDVfQ410w8
-	SGaRkma2/okbIRKmQf8xJTCDezGUjCl45puK1Kolh2Oon+HenqQAfdFAExRJhZaxYyF0
-	vgwG1jnatElw4r3Lv5vuzqcqGKNp1gFnFuoOwTt2jmkq6qXWGZDnPdFm5fupnDC90Z3p
-	UfGp+CNptIWPbYJluROtDKC6HPjv6cDtmJAUM0I/Erad1MZIrPqXTUMPaJ4osXtpmgTX
-	EibQ==
-X-Gm-Message-State: APjAAAXNIZWcnNvJfKo9sa1XEouqzTfs7ccBmj/8K6Du3yRNCMNJf6lf
-	dqju4A69uaCranwt8fnKVrEZarjxWcA=
-X-Google-Smtp-Source: APXvYqwnH3/7NSwdsax/nh1Nxxm1qRjO6qOCWHsr/RDDeBRYZCYwiKZKtCEXW4q7OxN6u7/xiLu8iA==
-X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr15856935wrs.272.1583060328210; 
-	Sun, 01 Mar 2020 02:58:48 -0800 (PST)
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	c4sm10123946wml.7.2020.03.01.02.58.47
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Sun, 01 Mar 2020 02:58:47 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Sun,  1 Mar 2020 10:58:46 +0000
-Message-Id: <20200301105846.525957-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
+	Tue,  3 Mar 2020 08:01:41 +0000 (UTC)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+	by mailout.nyi.internal (Postfix) with ESMTP id BE41B21F34;
+	Tue,  3 Mar 2020 02:56:34 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+	by compute2.internal (MEProxy); Tue, 03 Mar 2020 02:56:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=content-transfer-encoding:content-type
+	:date:from:in-reply-to:message-id:mime-version:references
+	:subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; bh=9Phleqets2ep9D010fnzSH4y0gGe4UKLs8Y3UQN2d
+	J4=; b=NXmut9zUKT2wBfXnnFzCNkz6GGLEJOIYHih3XMp2KmpxnJe+UQ6tmE0PU
+	uJacDGTrLNMrWIk4bGyl3EeNaezpySHL8vMPkShYqqrXqr7YynEeVwV/bQ3gS2Ps
+	UIft+0mdSZ80e8kV6y+cPNa7fIkP18br0l822rfWdWP44kW4hBzNqRPhCpyjxfQT
+	4i8cMTo/7KzAwHCFQI2aLB9l3A0thRPvUkLST61oR/Sue9tLmhBt/EeYYtQhxYW0
+	OSQ/EDBWmWfnuKV3wTpIjV0DXztrK8QVTzJ+0GFlcYk2WCa2bSspIKsXwax4h3on
+	pyrswtqDo2t20puZZ4Tk2gK3lb+eA==
+X-ME-Sender: <xms:sg1eXtGbLyG4TZJp-iuro2SQAFdNSEBgV8x3ESoTUCY7aQ8eKNSvCw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddthedgudduvdcutefuodetggdotefrod
+	ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+	necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+	enucfjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefvrghn
+	uhcumfgrshhkihhnvghnuceothgrnhhukhesihhkihdrfhhiqeenucffohhmrghinhepph
+	grthhrvghonhdrtghomhdplhhisggvrhgrphgrhidrtghomhenucfkphepudeliedrvdeg
+	gedrudeluddrheeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+	hfrhhomhepthgrnhhukhesihhkihdrfhhi
+X-ME-Proxy: <xmx:sg1eXgfI4G1tajxIPW2bId2uHjOzo--X0KpM6YYfKaKRxFIX0pBmwQ>
+	<xmx:sg1eXpvM1uxRGprHrHjH02SDCy40RzN1X_FbsHsCAH-ZkNzrOmsjJA>
+	<xmx:sg1eXnl20GXqh147jYDY_rh3ZdiYLeKH6PHTRth3jQDjyH0Z-kiYoA>
+	<xmx:sg1eXhzoFRpFwgq6OkLG4LjY_aCA0GQ2tu4IZc0bcjVODx44gRvyKQ>
+Received: from laptop (unknown [196.244.191.58])
+	by mail.messagingengine.com (Postfix) with ESMTPA id E116F3280059;
+	Tue,  3 Mar 2020 02:56:33 -0500 (EST)
+Message-ID: <736799570e22f93fdea25f2fb0ecb129dacd5760.camel@iki.fi>
+From: Tanu Kaskinen <tanuk@iki.fi>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 03 Mar 2020 09:56:29 +0200
+In-Reply-To: <20200229161633.496077-1-richard.purdie@linuxfoundation.org>
+References: <20200229161633.496077-1-richard.purdie@linuxfoundation.org>
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Subject: [PATCH] cooker: Reset unpon clientComplete
+Subject: Re: [PATCH] fetch2: Limit shown checksums to sha256
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,37 +60,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 01 Mar 2020 10:58:49 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 03 Mar 2020 08:01:41 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If for example a tinfoil connection edits the datastore, a subsequent
-connection can be "corrupted" by those changes. By calling the cooker
-reset function at exit, the behaviour becomes the same as a newly
-setup server.
+On Sat, 2020-02-29 at 16:16 +0000, Richard Purdie wrote:
+> Currently bitbake will list many checksums for a recipe when none are
+> present, encouraging users to add them all to a recipe. We don't
+> need/want them all.
+> 
+> We used to show md5 and sha256 but given the concerns about md5,
+> switch to showing just sha256 going forward which seems like the
+> sensible one to standardise upon.
 
-This avoids problems in tests when BB_SERVER_TIMEOUT is set as the
-server is properly reset between connections.
+Should this be interpreted so that going forward, it's recommended to
+drop the md5 checksums from recipes when doing version upgrades?
 
-[YOCTO #13812]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 2d937a413c..2a17c67373 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1665,6 +1665,7 @@ class BBCooker:
-         self.command.reset()
-         self.databuilder.reset()
-         self.data = self.databuilder.data
-+        self.reset()
- 
- 
- class CookerExit(bb.event.Event):
 -- 
-2.25.0
+Tanu
+
+https://www.patreon.com/tanuk
+https://liberapay.com/tanuk
 
 
