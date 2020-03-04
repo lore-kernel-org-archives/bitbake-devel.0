@@ -1,51 +1,48 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	by mail.openembedded.org (Postfix) with ESMTP id 204DA6025D
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com
+	[209.85.166.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 347076021B
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  3 Mar 2020 08:24:00 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id h9so2191156wrr.10
+	Wed,  4 Mar 2020 20:02:28 +0000 (UTC)
+Received: by mail-io1-f49.google.com with SMTP id h3so3810642ioj.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 03 Mar 2020 00:24:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-	:mime-version:content-transfer-encoding;
-	bh=2YdWRRl2hj//o6sGgc+0WCjz/4p321Z6PQX6Ui0Ukr0=;
-	b=On4ha0dY3dskHYeJs+sBfZVfdp0X9/oEFuDHn36Ndol3lPJfNz+NnFH6sCH4ybuu3R
-	sWAGgGfN1xE1iIDQZ5/rR2EIIdYK4lnVtvgF464Y0vRxQKme1ggprsId3XhFsvB2H1Z6
-	VENU82pJnrPcAKtBNxgwAFHjquvkrHD3UXr0Y=
+	Wed, 04 Mar 2020 12:02:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=eZsIdKG0Kab7MNgDa/Coj+hRm5TWxEhHb1YwRBf8VbI=;
+	b=VyetLWeNNubK5Wj45DvjqfnlSv53yHw+/iV+gstLYNKOiMN+3krFEDqcIKNVh5MtRB
+	ygCP1XOvqOR8bcNXNA4XWY9gjbg0AtJkhhaOwUhKunXiHEV088LL0KCjWvGca199oDFY
+	TA5cfBYUOaGMMfOTmzGaNzYfe03U6yBolKXFcx1qHf+5wbhEwpale9ADQm26cqdlUDy+
+	Z+K/bEFCdDk3af8RhaadcOax8ZAnNMsCBQu46kIOYrlpyDH1vDWEKHg1LRXiZK/40ugZ
+	7hOnab1KXYXOZaPRDZ/lmO9M++4Kg6NQd7aue2z31pLKnGAbmFTDPNCx6mOUs6ny1v8c
+	cjeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-	:references:user-agent:mime-version:content-transfer-encoding;
-	bh=2YdWRRl2hj//o6sGgc+0WCjz/4p321Z6PQX6Ui0Ukr0=;
-	b=C4Q9uL2P+NY3U/iUOg551ZziXskyxLakqR1ID1bGQ9b+kCt7grxBxLCk84StrbBm3V
-	GjUAtVNyDaV4f7gJG/ZVzF2zeC8qqR3ZLtFfu226hrWzGqi/8eRS+ILZQRoYlW9K0blK
-	TqCzwB346xUu3s/8iV6MAV5lrlztQtfKWviuxKBWpWGMzRkA1b2jOoxeyBQ5GNyiUDZ0
-	mjv5/9GeRsWMcR2qEEcp01y6ApnYn0Y/b+pAuEI21GWiQTw3Wfxl5Wwiqgp2khrday1X
-	4RONeWUtSwelENiKTinjq2cCkxHotwcpTG8kISjQtYu5xvK53jWh5lSUmHm+djp6s2gg
-	QCag==
-X-Gm-Message-State: ANhLgQ01cQlHYyo2Oh1bP5Q/CgyOK5V3I7pllHiXZzfIZ1N8CnmFPlYs
-	6vwCbQ3Z/xfeowsRdDDfJj6qtA==
-X-Google-Smtp-Source: ADFU+vvXVS3awerMN591YPYF2Xujmryi3JWHsI71CeQ0E4IxVezv2uTFTjWY/ozZga0dIYza3jTO8A==
-X-Received: by 2002:adf:fa05:: with SMTP id m5mr4322707wrr.352.1583223841463; 
-	Tue, 03 Mar 2020 00:24:01 -0800 (PST)
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-	by smtp.gmail.com with ESMTPSA id
-	p17sm29899260wre.89.2020.03.03.00.24.00
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=eZsIdKG0Kab7MNgDa/Coj+hRm5TWxEhHb1YwRBf8VbI=;
+	b=kElu7a45aaG3PIjVF9YjcxfrisLX+GoH0fS/8LODLm6G2aasvkKQ15ErCCim+vmhO/
+	cMDe/gOAfs9DwF6G1wRGSoVu8TAO/mgk//QDDbPCozFOHqTfsdra2iBke84d7Dp50ZTy
+	aWfqSn4hnKbL188fvN3jMHeOrj8tedHo3HFh/bREpid7JtpG4e2sRyOwFnl1j4m1LYV2
+	1nOF3o5Nn5zDi2rD5IRtBa9nfc226l4vrR+c9q93nESaUMra0JL87iBoZoJY+NhBgqjE
+	N0p5NqAt3f5Wz/JlDMr/NphT49v9WzjzB4AcXvb4Xqxua9irQzG/rIx5n4pqcJnCxzJ8
+	tlHg==
+X-Gm-Message-State: ANhLgQ1iqU8/l2etPB4YTq4FePahkeUuJI0cXivkXpjEaQqoW7dyqy3d
+	cfPrCA6mOG9h9Gyoxkf81HxVsF/r6bQ=
+X-Google-Smtp-Source: ADFU+vsFwrIbdb20xEc4O6jnmwHi5rWpEcQex3uvdtE2Sgry9fOZm2RUDG83h+byRybgGjzMI2ocyw==
+X-Received: by 2002:a05:6638:38b:: with SMTP id
+	y11mr1030218jap.81.1583352149528; 
+	Wed, 04 Mar 2020 12:02:29 -0800 (PST)
+Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id j4sm7310626ilf.21.2020.03.04.12.02.28
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Tue, 03 Mar 2020 00:24:00 -0800 (PST)
-Message-ID: <777e3d343a1a29738dec59a3984ae63d6f7b296b.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Tanu Kaskinen <tanuk@iki.fi>, bitbake-devel@lists.openembedded.org
-Date: Tue, 03 Mar 2020 08:23:59 +0000
-In-Reply-To: <736799570e22f93fdea25f2fb0ecb129dacd5760.camel@iki.fi>
-References: <20200229161633.496077-1-richard.purdie@linuxfoundation.org>
-	<736799570e22f93fdea25f2fb0ecb129dacd5760.camel@iki.fi>
-User-Agent: Evolution 3.35.91-1 
-MIME-Version: 1.0
-Subject: Re: [PATCH] fetch2: Limit shown checksums to sha256
+	Wed, 04 Mar 2020 12:02:28 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  4 Mar 2020 14:02:22 -0600
+Message-Id: <20200304200226.23771-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Subject: [PATCH 0/4] bitbake: Add multiconfig to 'bitbake-layers show-recipes'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,29 +55,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 03 Mar 2020 08:24:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 04 Mar 2020 20:02:29 -0000
 
-On Tue, 2020-03-03 at 09:56 +0200, Tanu Kaskinen wrote:
-> On Sat, 2020-02-29 at 16:16 +0000, Richard Purdie wrote:
-> > Currently bitbake will list many checksums for a recipe when none
-> > are
-> > present, encouraging users to add them all to a recipe. We don't
-> > need/want them all.
-> > 
-> > We used to show md5 and sha256 but given the concerns about md5,
-> > switch to showing just sha256 going forward which seems like the
-> > sensible one to standardise upon.
-> 
-> Should this be interpreted so that going forward, it's recommended to
-> drop the md5 checksums from recipes when doing version upgrades?
+Implements support for specifying a specific multiconfig to use when
+running 'bitbake-layers show-recipes'. This required fixing up some of
+the multiconfig support in tinfoil and the cooker.
 
-Yes, that is the intent/plan. We don't really need both and this
-usability fix is a good opportunity to rationalise what we're doing.
+Joshua Watt (4):
+  bitbake: command: Add mc parameter to findProviders command
+  bitbake: cooker: Respect multiconfig parameter
+  bitbake: tinfoil: Add multiconfig support
+  bitbake: bblayers: query: Add multiconfig option
 
-Cheers,
+ bitbake/lib/bb/command.py     |  6 +++++-
+ bitbake/lib/bb/cooker.py      |  6 +++---
+ bitbake/lib/bb/tinfoil.py     | 38 ++++++++++++++++++-----------------
+ bitbake/lib/bblayers/query.py | 20 +++++++++++-------
+ 4 files changed, 41 insertions(+), 29 deletions(-)
 
-Richard
+-- 
+2.17.1
 
 
