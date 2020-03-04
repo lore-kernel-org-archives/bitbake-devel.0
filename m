@@ -1,48 +1,51 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com
-	[209.85.166.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 347076021B
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com
+	[209.85.166.173])
+	by mail.openembedded.org (Postfix) with ESMTP id BF2A460575
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  4 Mar 2020 20:02:28 +0000 (UTC)
-Received: by mail-io1-f49.google.com with SMTP id h3so3810642ioj.6
+	Wed,  4 Mar 2020 20:02:29 +0000 (UTC)
+Received: by mail-il1-f173.google.com with SMTP id g126so2936467ilh.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 04 Mar 2020 12:02:30 -0800 (PST)
+	Wed, 04 Mar 2020 12:02:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=eZsIdKG0Kab7MNgDa/Coj+hRm5TWxEhHb1YwRBf8VbI=;
-	b=VyetLWeNNubK5Wj45DvjqfnlSv53yHw+/iV+gstLYNKOiMN+3krFEDqcIKNVh5MtRB
-	ygCP1XOvqOR8bcNXNA4XWY9gjbg0AtJkhhaOwUhKunXiHEV088LL0KCjWvGca199oDFY
-	TA5cfBYUOaGMMfOTmzGaNzYfe03U6yBolKXFcx1qHf+5wbhEwpale9ADQm26cqdlUDy+
-	Z+K/bEFCdDk3af8RhaadcOax8ZAnNMsCBQu46kIOYrlpyDH1vDWEKHg1LRXiZK/40ugZ
-	7hOnab1KXYXOZaPRDZ/lmO9M++4Kg6NQd7aue2z31pLKnGAbmFTDPNCx6mOUs6ny1v8c
-	cjeQ==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=OkziaePXn1ZNuirYXFCENVGhejXcPnLVTKOf5kpPmrs=;
+	b=LfELrAO8ZZSiyAGZVmd52uLHhdCWvaOzGNt5JemCZ53Rf3RClycDDc4GNmU+hPJncm
+	Y7vo9zzVc0AoEmWxpacSoAE6k6uKOfCH7kZ3SwuXqw2RP5YRGDO8OZbb1hsuQo+ISN3k
+	41qSobleMfeqZeBIk3IK4Tz0L2CgR3TKAD00LUZH2qyDooEmGABaq2UNFW8vjVoXODnn
+	xwtXz3g6k2SwAV4Mo2i+jteXdwnM4de4+Tz0gN+fzvqYJVO36AW0KRyxCPoggtAES+sH
+	aRBkJ8RTlbGyaSFuPjxjgDBts6SUgT8Tw7cZ6Gw9K4h1JyPOd80KJoCQytdsBS5lMVj9
+	SafQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=eZsIdKG0Kab7MNgDa/Coj+hRm5TWxEhHb1YwRBf8VbI=;
-	b=kElu7a45aaG3PIjVF9YjcxfrisLX+GoH0fS/8LODLm6G2aasvkKQ15ErCCim+vmhO/
-	cMDe/gOAfs9DwF6G1wRGSoVu8TAO/mgk//QDDbPCozFOHqTfsdra2iBke84d7Dp50ZTy
-	aWfqSn4hnKbL188fvN3jMHeOrj8tedHo3HFh/bREpid7JtpG4e2sRyOwFnl1j4m1LYV2
-	1nOF3o5Nn5zDi2rD5IRtBa9nfc226l4vrR+c9q93nESaUMra0JL87iBoZoJY+NhBgqjE
-	N0p5NqAt3f5Wz/JlDMr/NphT49v9WzjzB4AcXvb4Xqxua9irQzG/rIx5n4pqcJnCxzJ8
-	tlHg==
-X-Gm-Message-State: ANhLgQ1iqU8/l2etPB4YTq4FePahkeUuJI0cXivkXpjEaQqoW7dyqy3d
-	cfPrCA6mOG9h9Gyoxkf81HxVsF/r6bQ=
-X-Google-Smtp-Source: ADFU+vsFwrIbdb20xEc4O6jnmwHi5rWpEcQex3uvdtE2Sgry9fOZm2RUDG83h+byRybgGjzMI2ocyw==
-X-Received: by 2002:a05:6638:38b:: with SMTP id
-	y11mr1030218jap.81.1583352149528; 
-	Wed, 04 Mar 2020 12:02:29 -0800 (PST)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=OkziaePXn1ZNuirYXFCENVGhejXcPnLVTKOf5kpPmrs=;
+	b=Q73sWK9GFSPonbl8xNQZ+YIh74cX8iTc0XZljJeMnvZr+R0alEBNhA/XosR2MSlNVo
+	14Ykr/QTe7ky2KDoX6fEKcsHiCu7e4WPUrL45C9y645slVGpJrRCecgpUUgPV4ehOS9+
+	tV1MBsJc9G/gxqcvNRSkdLm36Q0596J/c/5twk2wX7F3+GC49bIyEH6q9t0FodjCXZox
+	oFTBpVc76Mt99jNhXJtqgLk1fJK8/Cuizj/fqSO9is0CV7p72HOkIe4+1OcMHG6oZU4n
+	Atl2iSoTkic3L/7eaQV/ymGkSR6mOHhoHGMd1xv8DoQsXzN8l7nwZmRkp13V9QbgcHTB
+	puIw==
+X-Gm-Message-State: ANhLgQ3ZeVRbuOr120OyU+LwfDcIIdWRXVI4O9uBtS9jX6JwVsucd/q9
+	r6nzQmrXB7F2mFqXfeMi8BHFitFfzCI=
+X-Google-Smtp-Source: ADFU+vv/nLUY+wkD0G1iA5/uBBN8wJaqZIH1W5GskjOMz6rkc4BwlplU3Joi5OLPJ+HdiIpdsh73GQ==
+X-Received: by 2002:a05:6e02:e93:: with SMTP id
+	t19mr4643558ilj.286.1583352150489; 
+	Wed, 04 Mar 2020 12:02:30 -0800 (PST)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id j4sm7310626ilf.21.2020.03.04.12.02.28
+	by smtp.gmail.com with ESMTPSA id j4sm7310626ilf.21.2020.03.04.12.02.29
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 04 Mar 2020 12:02:28 -0800 (PST)
+	Wed, 04 Mar 2020 12:02:29 -0800 (PST)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  4 Mar 2020 14:02:22 -0600
-Message-Id: <20200304200226.23771-1-JPEWhacker@gmail.com>
+Date: Wed,  4 Mar 2020 14:02:23 -0600
+Message-Id: <20200304200226.23771-2-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
-Subject: [PATCH 0/4] bitbake: Add multiconfig to 'bitbake-layers show-recipes'
+In-Reply-To: <20200304200226.23771-1-JPEWhacker@gmail.com>
+References: <20200304200226.23771-1-JPEWhacker@gmail.com>
+Subject: [PATCH 1/4] bitbake: command: Add mc parameter to findProviders command
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,22 +60,32 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 04 Mar 2020 20:02:29 -0000
 
-Implements support for specifying a specific multiconfig to use when
-running 'bitbake-layers show-recipes'. This required fixing up some of
-the multiconfig support in tinfoil and the cooker.
+Adds a multiconfig selection parameter to the findProviders command.
+This allows a client to find the providers for a specific multiconfig
+instead of the base configuration.
 
-Joshua Watt (4):
-  bitbake: command: Add mc parameter to findProviders command
-  bitbake: cooker: Respect multiconfig parameter
-  bitbake: tinfoil: Add multiconfig support
-  bitbake: bblayers: query: Add multiconfig option
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/command.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
- bitbake/lib/bb/command.py     |  6 +++++-
- bitbake/lib/bb/cooker.py      |  6 +++---
- bitbake/lib/bb/tinfoil.py     | 38 ++++++++++++++++++-----------------
- bitbake/lib/bblayers/query.py | 20 +++++++++++-------
- 4 files changed, 41 insertions(+), 29 deletions(-)
-
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index c8e1352865..b38c151b3d 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -414,7 +414,11 @@ class CommandsSync:
+     getAllAppends.readonly = True
+ 
+     def findProviders(self, command, params):
+-        return command.cooker.findProviders()
++        try:
++            mc = params[0]
++        except IndexError:
++            mc = ''
++        return command.cooker.findProviders(mc)
+     findProviders.readonly = True
+ 
+     def findBestProvider(self, command, params):
 -- 
 2.17.1
 
