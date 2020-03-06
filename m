@@ -1,51 +1,41 @@
-Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io1-f66.google.com (mail-io1-f66.google.com
-	[209.85.166.66])
-	by mail.openembedded.org (Postfix) with ESMTP id E43316021B
+Return-Path: <bunk@stusta.de>
+Received: from mail.stusta.mhn.de (mail.stusta.mhn.de [141.84.69.5])
+	by mail.openembedded.org (Postfix) with ESMTP id BABE26101C
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  4 Mar 2020 20:02:32 +0000 (UTC)
-Received: by mail-io1-f66.google.com with SMTP id f3so1125181ioc.13
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 04 Mar 2020 12:02:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=/aMzZhtx1YlYYUVfixnLkvI7PakVrIglfWAyu7BmrZY=;
-	b=qdp5kAzMrcoR0w8curIyYiEnWMOmjPulth+Oh9rokjDfN7BLaNpnPa07GboH3niqZI
-	WclsqxSh/a3uMQ9Wvf90uAEWkhYipJfdk4+Md0SRRe0u8PApeeqQxux2futJnM/ZyEhS
-	U5cLlIZ5tv1Fen3ZhvogLucEhXgDssf/GM1lyANAExZ+OSzlLdHzfkx31AHeOeJdCD7y
-	B3qfGp4f9smQCRt+pzdrWtpOD7QT7ikTYKpSem5XQquLuxZQbF0aygXN3XoeaXgIg5UO
-	luMADCQgKnHmYPdNmGkUGLeFVRx6Tld07Dbq+V9Jzhex4owtAucckLGxn7l6hTCOwMp1
-	35ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=/aMzZhtx1YlYYUVfixnLkvI7PakVrIglfWAyu7BmrZY=;
-	b=g4J8e0+lwW+fSzSEMoh9Lc3ec1DxfACKakThgYy8AOnp5CwmohpOQDHLv6DkcIKCUR
-	KLYd2jgVuZo2U2osaVMsl8Zw/W8a3gZYbohEyPCthcop+sus+0lBJJpaFTUOpTFcFQnR
-	blXlYdEsZbq47enTusLlGdPCKO4iiYMr3HkBFVxM4cV0+7/TL5iMsCGVrh1RRblDBZAL
-	EbwXPMkB46CLkygD6BVlCKhaW3XYCuJEAvcPw1WnLqubK9Ggnik0J7JOuPoYYmXpLwfk
-	ch09jqiQTtIM+UwLBM1xMjIos4ZGnyGiWpO5odL28TlNKK+fbownoTrOmArJpJcXglND
-	tlzw==
-X-Gm-Message-State: ANhLgQ3dVLKeYFosmFLYl4o8hznWXF8bUKq+FTb/vzYgyzECTVRTAq9e
-	80EoC4Vli/0/wjJ4wbL9LKyUvGfuuHQ=
-X-Google-Smtp-Source: ADFU+vvHEjft3AFB+kzXq7YuLcwKoJy9yxzgt5g15L0eozi4sMh5kCL2WbF/TKsHJkekCzBoBjkMiA==
-X-Received: by 2002:a05:6638:a9b:: with SMTP id
-	27mr4292134jas.70.1583352153607; 
-	Wed, 04 Mar 2020 12:02:33 -0800 (PST)
-Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id j4sm7310626ilf.21.2020.03.04.12.02.32
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 04 Mar 2020 12:02:32 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  4 Mar 2020 14:02:26 -0600
-Message-Id: <20200304200226.23771-5-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200304200226.23771-1-JPEWhacker@gmail.com>
-References: <20200304200226.23771-1-JPEWhacker@gmail.com>
-Subject: [PATCH 4/4] bitbake: bblayers: query: Add multiconfig option
+	Fri,  6 Mar 2020 10:24:22 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 48YkHp09DPz4c;
+	Fri,  6 Mar 2020 11:24:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stusta.de;
+	s=default; t=1583490262;
+	bh=NIYvHNuaGb+oEPuwvsu2cUo79hUXpoErjqWpcm1p05I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r5/PdLvfYmfgC1YcdtKsqN1dsFaugemE7BvCu9Y/TVI8XhEpSDYAtA4++jfEAAzEp
+	4KGLGCxNS/ZTJ66SiNmWaVJ3NoWhaGXIyW+lNGpKhE/v1cazgmjzflZJfEZHfG66KC
+	1SzoTQqidO91lGzYriAFHks4aHEPsKo5aS4c3NZ/coOHVDoEiQIKSUmipPENPP57r8
+	cD8hhY3vQNN3yT3b4/E2P56W/czdhOG8y3khEBFOExizixkI9bx+GcLyov0JMcNVlE
+	e3MW1hzczkOpb1cTfJmKc0BM+i8tnPJoBUITsYfWPzHUjxYqfNmDrJ+Dp8oZvDMshX
+	8bJbUpY2m9SacRhUp63vgN0qeAVVGL/D/DkGAzgZ3BjFQkJVHh7rquDn2ZUZJ9SZnr
+	9jOqM2HXl3vLaCcKstWwnI2zDuVfctM/BqGeoKOJE+veDomPKw6yz/nlf0n//Z47KV
+	FtXbTsSJ2V5u1fL+qFdN7KD7qjCJeCVL9VqNk0ZaSvmfmAvaSXSWtmpGQQlp9ZOOZT
+	S3TfCWqZbR8JsNkONyVa5AGWIgzmKMeZyg9D1k2huVKF7+ZhBhsYoyLiqDy57a8FkZ
+	RdH6VOq5JNq2W++261P67d4LzeSUKVmpu1wtOwp2chVFiUInCbzncYe8Ne2yhY0s87
+	6n1RlZyznnlL4wchUwEWoA0Q=
+Date: Fri, 6 Mar 2020 12:24:20 +0200
+From: Adrian Bunk <bunk@stusta.de>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20200306102420.GB17785@localhost>
+References: <20200221205213.16130-1-bunk@stusta.de>
+	<e349f1cc1d3b36fdff330dc7eab1f213a67d32b1.camel@linuxfoundation.org>
+	<20200223195148.GB3444@localhost>
+	<49d09c50265086a49798d59c8569323c37bba430.camel@linuxfoundation.org>
+	<20200224054945.GB6683@localhost>
+	<f5a7208c16b4df00445cb280b3a556923c07db97.camel@linuxfoundation.org>
+MIME-Version: 1.0
+In-Reply-To: <f5a7208c16b4df00445cb280b3a556923c07db97.camel@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] Lower priority of debug messages that should not be shown on the console
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,89 +48,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 04 Mar 2020 20:02:34 -0000
+X-List-Received-Date: Fri, 06 Mar 2020 10:24:23 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Adds an option to the show-recipes subcommand that allows the user to
-specify which multiconfig should be shown.
+On Mon, Feb 24, 2020 at 09:12:06AM +0000, Richard Purdie wrote:
+> On Mon, 2020-02-24 at 07:49 +0200, Adrian Bunk wrote:
+> > On Sun, Feb 23, 2020 at 11:53:57PM +0000, Richard Purdie wrote:
+>...
+> > > I know you didn't mean it this way and we need to track the issues,
+> > > I
+> > > just don't know how we're going to handle it.
+> > 
+> > From my side the problem is that my initial patch is what I can do
+> > with reasonable effort.
+> 
+> Part of the reason I'm highlighting this is that I have a lot of
+> feedback that says people don't believe there is any problem with our
+> resourcing. Unless I can show where there are issues, its not going to
+> change :/.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bblayers/query.py | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+Why does YP give users false/misleading information regarding security
+support of stable and LTS releases despite lack of resources to provide
+security support?
 
-diff --git a/bitbake/lib/bblayers/query.py b/bitbake/lib/bblayers/query.py
-index 7db49c8e2a..e2cc310532 100644
---- a/bitbake/lib/bblayers/query.py
-+++ b/bitbake/lib/bblayers/query.py
-@@ -46,7 +46,7 @@ layer, with the preferred version first. Note that skipped recipes that
- are overlayed will also be listed, with a " (skipped)" suffix.
- """
- 
--        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, False, True, None, False, None)
-+        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, False, True, None, False, None, args.mc)
- 
-         # Check for overlayed .bbclass files
-         classes = collections.defaultdict(list)
-@@ -112,9 +112,9 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
-             title = 'Matching recipes:'
-         else:
-             title = 'Available recipes:'
--        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.recipes_only, args.multiple, args.layer, args.bare, inheritlist)
-+        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.recipes_only, args.multiple, args.layer, args.bare, inheritlist, args.mc)
- 
--    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_recipes_only, show_multi_provider_only, selected_layer, bare, inherits):
-+    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_recipes_only, show_multi_provider_only, selected_layer, bare, inherits, mc):
-         if inherits:
-             bbpath = str(self.tinfoil.config_data.getVar('BBPATH'))
-             for classname in inherits:
-@@ -123,14 +123,18 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
-                     logger.error('No class named %s found in BBPATH', classfile)
-                     sys.exit(1)
- 
--        pkg_pn = self.tinfoil.cooker.recipecaches[''].pkg_pn
--        (latest_versions, preferred_versions) = self.tinfoil.find_providers()
--        allproviders = self.tinfoil.get_all_providers()
-+        pkg_pn = self.tinfoil.cooker.recipecaches[mc].pkg_pn
-+        (latest_versions, preferred_versions) = self.tinfoil.find_providers(mc)
-+        allproviders = self.tinfoil.get_all_providers(mc)
- 
-         # Ensure we list skipped recipes
-         # We are largely guessing about PN, PV and the preferred version here,
-         # but we have no choice since skipped recipes are not fully parsed
-         skiplist = list(self.tinfoil.cooker.skiplist.keys())
-+        mcspec = 'mc:%s:' % mc
-+        if mc:
-+            skiplist = [s[len(mcspec):] for s in skiplist if s.startswith(mcspec)]
-+
-         for fn in skiplist:
-             recipe_parts = os.path.splitext(os.path.basename(fn))[0].split('_')
-             p = recipe_parts[0]
-@@ -187,7 +191,7 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
-                 # We only display once per recipe, we should prefer non extended versions of the
-                 # recipe if present (so e.g. in OpenEmbedded, openssl rather than nativesdk-openssl
-                 # which would otherwise sort first).
--                if realfn[1] and realfn[0] in self.tinfoil.cooker.recipecaches[''].pkg_fn:
-+                if realfn[1] and realfn[0] in self.tinfoil.cooker.recipecaches[mc].pkg_fn:
-                     continue
- 
-                 if inherits:
-@@ -496,6 +500,7 @@ NOTE: .bbappend files can impact the dependencies.
-         parser_show_overlayed = self.add_command(sp, 'show-overlayed', self.do_show_overlayed)
-         parser_show_overlayed.add_argument('-f', '--filenames', help='instead of the default formatting, list filenames of higher priority recipes with the ones they overlay indented underneath', action='store_true')
-         parser_show_overlayed.add_argument('-s', '--same-version', help='only list overlayed recipes where the version is the same', action='store_true')
-+        parser_show_overlayed.add_argument('--mc', help='use specified multiconfig', default='')
- 
-         parser_show_recipes = self.add_command(sp, 'show-recipes', self.do_show_recipes)
-         parser_show_recipes.add_argument('-f', '--filenames', help='instead of the default formatting, list filenames of higher priority recipes with the ones they overlay indented underneath', action='store_true')
-@@ -504,6 +509,7 @@ NOTE: .bbappend files can impact the dependencies.
-         parser_show_recipes.add_argument('-i', '--inherits', help='only list recipes that inherit the named class(es) - separate multiple classes using , (without spaces)', metavar='CLASS', default='')
-         parser_show_recipes.add_argument('-l', '--layer', help='only list recipes from the selected layer', default='')
-         parser_show_recipes.add_argument('-b', '--bare', help='output just names without the "(skipped)" marker', action='store_true')
-+        parser_show_recipes.add_argument('--mc', help='use specified multiconfig', default='')
-         parser_show_recipes.add_argument('pnspec', nargs='*', help='optional recipe name specification (wildcards allowed, enclose in quotes to avoid shell expansion)')
- 
-         parser_show_appends = self.add_command(sp, 'show-appends', self.do_show_appends)
--- 
-2.17.1
+There is no reason to believe claims that there would be any problem 
+with resourcing when the public announcements from YP give the opposite 
+impression.
 
+> Cheers,
+> 
+> Richard
+
+cu
+Adrian
 
