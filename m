@@ -1,54 +1,98 @@
-Return-Path: <alex.kanavin@gmail.com>
-Received: from mail-vk1-f194.google.com (mail-vk1-f194.google.com
-	[209.85.221.194])
-	by mail.openembedded.org (Postfix) with ESMTP id 92AB261B18
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  6 Mar 2020 11:18:26 +0000 (UTC)
-Received: by mail-vk1-f194.google.com with SMTP id y125so499003vkc.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 06 Mar 2020 03:18:28 -0800 (PST)
+Return-Path: <akuster808@gmail.com>
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com
+	[209.85.215.178])
+	by mail.openembedded.org (Postfix) with ESMTP id 74083611EC;
+	Sun,  8 Mar 2020 18:13:14 +0000 (UTC)
+Received: by mail-pg1-f178.google.com with SMTP id y30so3638023pga.13;
+	Sun, 08 Mar 2020 11:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-	:cc; bh=fjrthkpg4Hn4pNB7cUcBo7qyK0FLgkwy0mJRqtryeMA=;
-	b=Kc4Ko14oO7YDShklnjMayJ8qCfvrQ21J2tZLsQU6XfdQebqrUKU8a7ekGaqaHUgq1r
-	2Ul5n9TQ44PEK3C87BdmWDVxcP3Wc9q21JqjmkcjJuQ/r9pqN5ULXbZpnPdpolZQEIHE
-	BSY0NIgQGRGBa12eRFOzdP02GVsQtddymI0/Wpi9MYmqPRFobDhkRaCrDFjCYLIS/Abw
-	nv4lxnB3rtyQnT3mtoYJn9WipvEyaEf1Asmm1+sSm1cDc1uev+sv3qiwceJBRyyHCGbm
-	KXeIviKNlloFWhc4UJFNEBk0NNcVxnsVZ8hMxSh45GCRpOqJ9Xq5On/Occo8Nnpx7l+N
-	VL4Q==
+	h=to:from:subject:autocrypt:message-id:date:user-agent:mime-version
+	:content-transfer-encoding:content-language;
+	bh=XEkKq0T5LY6lgE2WKhgEsOYv4DE5i1HuFkZC3HIwHE4=;
+	b=XWR9Xgoi3y6ynQ1Wbqr/2hMMvbpC7xOxCrhGtp7gVIfn6lUuOL8PzKbtw42jSzqGvA
+	SdF4refh2xbXljrzSjoKlA7i6FbeKPXFSDwLJiW7RPIAI048o1KYnInkM5G68v8cvOD+
+	orEJ3CFLNjiMoO23zB3VeoBUdRvLr4srcVrfcEDyq4NvgzkDx2Wdxhly9RcGppTR2bXj
+	xMZQwAxNSj5skbbyBY0u0DMFUmHwLRmlhXcAA4p2Ja8NnDCWjPqZGMtlaSyKbcVN/sod
+	wkHuu2BwHAFXz1oK83UkZTpOvZ+h3G/h7C2kuKsUgXIG3mh5UT9E0Xk+N7YfT0koqSN0
+	g1+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=fjrthkpg4Hn4pNB7cUcBo7qyK0FLgkwy0mJRqtryeMA=;
-	b=MAaZ10+90x0+4HPxiVIzTb3td8p69iE/hPRa4s9V/kbr5uz9YdUAANvRH3y25kxJgI
-	BbPTS9xmUix11YpfBNzFMDhTz9cIUJCecmkHTLc4y51DpFN9Ch5I/K0QikxLKFJo4QvV
-	SeCnUBgCJS/s+zUTw5FqzF2uXSVtDKGe1ijgh+4kcilocxd5UdDaucKkJA2zYb39IOGB
-	n03LzM+T77hBo+Pwqb2WoVweBWY7A0UIeEkIihAPkv5+hhs+dRBjwIOBzft1ifhl+Ooc
-	2OL/Hrof4qVj9FvK0SeKS07C/f6a13sRdOnlLMfpZCFP+k+8lUtKfkWMgERmtoiqjcyp
-	qpOg==
-X-Gm-Message-State: ANhLgQ1HZ3jq0NB9Wg7r+fY1h+NzwRY0MV4XMPDlfWlcbvPQngWYVtkz
-	dicGGf8s0mRyPl5+Zj1BXqCkFhcbLPCEzzDzSbkthw==
-X-Google-Smtp-Source: ADFU+vuw+3QfpBHj1oXb25yY9ineXcwEOEVtfBgfiJQd4JA2s4dtPUkPxU4QX2H7YTEAJF2j5pR3RN10AnN7BDleQKE=
-X-Received: by 2002:a1f:38cb:: with SMTP id f194mr1260478vka.29.1583493507446; 
-	Fri, 06 Mar 2020 03:18:27 -0800 (PST)
+	h=x-gm-message-state:to:from:subject:autocrypt:message-id:date
+	:user-agent:mime-version:content-transfer-encoding:content-language;
+	bh=XEkKq0T5LY6lgE2WKhgEsOYv4DE5i1HuFkZC3HIwHE4=;
+	b=bTW1HmhFo54GOvTAUgWoqISJy/QAS59uBJFIbq6E4OQ0yx9Ms1FNYO0kjXFOesehwn
+	PT5XhyvfUPM+OppjOWVHhPeOkDNPZE6oGMt4J2sM0PiBLpT3Ly4YMbccA1KcEylv8A6Z
+	TVAZVO2xlKxVu3pGUzQaiwdhHpv5Ro5k0Evk/JCdPeqPwLp0mBr15MXjYN2R8Ge5Zirx
+	H6umwP7STzxo2Wbmu31lo3KzZQ4iuJB332bvCp18tB34NGRaT2cEpZAb2b80f94szJZw
+	wJM+8V6XyI2mXp1sAVKMBMS3743QsK0ZpyOP9VR432LvL3GRPzmSjSOLYE7Id7K8c5L+
+	7Omg==
+X-Gm-Message-State: ANhLgQ17nG0nKEHfvGsIVdveC9OZXCDZW24fzeAuWOz2OwyccC81a9pc
+	gGgoZLsXsoCkcvqay6nwhqFf9laY
+X-Google-Smtp-Source: ADFU+vuTcFwHIUksoEFDfc+outSz816phigeyeUwaY2/X39Ae/+BEcPrbYwMSFnpyPYHR6ZutYhy7A==
+X-Received: by 2002:aa7:947d:: with SMTP id t29mr894625pfq.184.1583691195388; 
+	Sun, 08 Mar 2020 11:13:15 -0700 (PDT)
+Received: from ?IPv6:2601:202:4180:a5c0:6c62:7a1c:e667:70?
+	([2601:202:4180:a5c0:6c62:7a1c:e667:70])
+	by smtp.gmail.com with ESMTPSA id
+	c20sm26923337pfc.140.2020.03.08.11.13.14
+	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+	Sun, 08 Mar 2020 11:13:14 -0700 (PDT)
+To: "yocto@yoctoproject.org" <yocto@yoctoproject.org>,
+	"poky@yoctoproject.org" <poky@yoctoproject.org>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	Patches and discussions about the oe-core layer
+	<openembedded-core@lists.openembedded.org>
+From: akuster808 <akuster808@gmail.com>
+Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
+	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
+	8CS2NxU=
+Message-ID: <ca05c738-c6ff-afa1-8b7b-a84ef6a31261@gmail.com>
+Date: Sun, 8 Mar 2020 11:13:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+	Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200221205213.16130-1-bunk@stusta.de>
-	<e349f1cc1d3b36fdff330dc7eab1f213a67d32b1.camel@linuxfoundation.org>
-	<20200223195148.GB3444@localhost>
-	<49d09c50265086a49798d59c8569323c37bba430.camel@linuxfoundation.org>
-	<20200224054945.GB6683@localhost>
-	<f5a7208c16b4df00445cb280b3a556923c07db97.camel@linuxfoundation.org>
-	<20200306102420.GB17785@localhost>
-	<c6f30f1b074af551a0b46837237c21e44e699c19.camel@linuxfoundation.org>
-In-Reply-To: <c6f30f1b074af551a0b46837237c21e44e699c19.camel@linuxfoundation.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 6 Mar 2020 12:18:16 +0100
-Message-ID: <CANNYZj-YKaO6seiURmbz79HRwT98DE9wKtTseHncYgOKA8CWDA@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Adrian Bunk <bunk@stusta.de>
-Subject: Re: [PATCH] Lower priority of debug messages that should not be shown on the console
+Subject: Stable life cycle status
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,43 +105,20 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Mar 2020 11:18:27 -0000
-Content-Type: multipart/alternative; boundary="00000000000003fd4105a02dd08a"
+X-List-Received-Date: Sun, 08 Mar 2020 18:13:14 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
---00000000000003fd4105a02dd08a
-Content-Type: text/plain; charset="UTF-8"
+Hello,
 
-On Fri, 6 Mar 2020 at 11:48, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+Thud has moved to "Community supported" today.
 
-> You'd be amazed at
-> the work in writing public statements and your reaction to the LTS
-> announcement will sadly be held as an example of why I shouldn't talk
-> about resourcing.
->
+The older releases have moved to EOL as no one has stepped up to take on
+the maintenance of those older branches.
 
-I am fairly sure that example is an outlier, and not a common data point.
-Both in substance (claiming that it's easy to misrepresent the LTS
-announcement - not true), and in tone (various toxic accusations).
 
-Alex
+regards,
+Armin
 
---00000000000003fd4105a02dd08a
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr">On Fri, 6 Mar 2020 at 11:48, Richard Purd=
-ie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richard.purdie=
-@linuxfoundation.org</a>&gt; wrote:<br></div><div class=3D"gmail_quote"><bl=
-ockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-lef=
-t:1px solid rgb(204,204,204);padding-left:1ex">You&#39;d be amazed at<br>
-the work in writing public statements and your reaction to the LTS<br>
-announcement will sadly be held as an example of why I shouldn&#39;t talk<b=
-r>
-about resourcing.<br></blockquote><div><br></div><div>I am fairly sure that=
- example is an outlier, and not a common data point. Both in substance (cla=
-iming that it&#39;s easy to misrepresent the LTS announcement - not true), =
-and in tone (various toxic accusations).</div><div><br></div><div>Alex<br><=
-/div></div></div>
-
---00000000000003fd4105a02dd08a--
