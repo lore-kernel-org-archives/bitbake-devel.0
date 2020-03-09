@@ -1,52 +1,52 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io1-f66.google.com (mail-io1-f66.google.com
-	[209.85.166.66])
-	by mail.openembedded.org (Postfix) with ESMTP id 08AEF616A9
+Received: from mail-il1-f195.google.com (mail-il1-f195.google.com
+	[209.85.166.195])
+	by mail.openembedded.org (Postfix) with ESMTP id E5CBD616A9
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Mar 2020 16:34:05 +0000 (UTC)
-Received: by mail-io1-f66.google.com with SMTP id v3so3709341iom.13
+	Mon,  9 Mar 2020 16:34:06 +0000 (UTC)
+Received: by mail-il1-f195.google.com with SMTP id p1so5244451ils.12
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 Mar 2020 09:34:07 -0700 (PDT)
+	Mon, 09 Mar 2020 09:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=UztnvAP5cwTiRhOiGKOmF9h7jxy4rznosiLxuuyOMT0=;
-	b=Z+8/MhnGISKR7gRtAw5vJ7yuGU0CIiu4JVzKXZzSvRo5snVK0bOieJqFtRMLJc4qZI
-	JP1pYupZ+cWU/fYbPNXKSItnVetribnxZmPWX1JUBU9h0IJK3Ktm28eKiCrteWGX8XGi
-	ZCy26YwEdN2TD+68rz8cq9MLPM5vUbekUAiXBkTyr1T8ewB4+a+V9c0UXUP70af4sG4N
-	U3CrQ57QxzkbsjLjCb/RtCxSZSIyXJNdvp5GB+TFRZl41D8aD1HYeuHJNANsM9oCp4d+
-	PSLjFqQ60gGeXB+SocNfZ+QoW3CF2gZpEgDVCIeDAh4N8Ka+0RzUHkVZYzYhQpbdk5o9
-	mGkg==
+	bh=p/HNZ8KoGtsbr4jsLYmw4BiFQXXrR6HYEhqea9IBZQM=;
+	b=Z2rRW3v6PPtk976/8pa7X4D2WxkGu2XWTDsfYbl6yHmPThDYWiCsVChReCA7/laW6U
+	LXlpvgQF7bLX5qDS++eR8h1SYAG98bAi28yytqEZGAh9PgAvv59MVKu/veNm7vwRaCis
+	BhUawDl2ZVsz8H16+oMIHiJi4fqPLeucZc5PMyYeDZf9QqnDBCPscEx6LWTGCenKTORS
+	Azh2LVPbwGZbDMuxC9Une1Susd1QiND4k98nP9VI0mvStF+Su2cBVlYblPyqfUf/BtXj
+	T0NPC+gRti0A5DOufZsseeP24yU48+mvGiPpytCGVYrcYb8KNgdS70dOitlnOAfMByM1
+	hIIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=UztnvAP5cwTiRhOiGKOmF9h7jxy4rznosiLxuuyOMT0=;
-	b=bSbkZdWE1M/waOWhYDdzwvJsvQWJcK4FNser0d5iI+zNscuPK0GUervNHxjbzp5gNC
-	S8gnZEssEPlV/60LoYlo53HwnChNDXt/R/eEoBiaravEz84Z1xNj2ABQPYt3TLJwMPDI
-	q+LTYBEOKGS4q6C4ydUqHrZ8mrEaPh+08QBtt9urjqt/qUIgMsV+TKgj8LDR2R2cp9Ll
-	MhkGN8fq9rkwCpNmJoDiRx57oOC8W1KIadGr953sKmiHP+1I2eJpImAW3p6FW/zGcyu6
-	gbjz8FmPxEQTYqUmqp865VdJvYmOat/KIT1sthQkRV2NZi1YF1PLaHVaLVOlAOM8y3tG
-	kn7A==
-X-Gm-Message-State: ANhLgQ1U1P7Sj6tPtSg3CqgXpbh/3nmlR+v9uAV76hqo6jhrp8OeoMve
-	qE7hNfTwR5xXaRgRZGpSIO73Q52297M=
-X-Google-Smtp-Source: ADFU+vtaUDoWSvMngKrAwS6nCiKq7yR8BsDmiE2ImOduAe1MjCqh7insKEBLio9LHiE98RDWEPIi1Q==
-X-Received: by 2002:a02:cd17:: with SMTP id g23mr16240990jaq.116.1583771646617;
-	Mon, 09 Mar 2020 09:34:06 -0700 (PDT)
+	bh=p/HNZ8KoGtsbr4jsLYmw4BiFQXXrR6HYEhqea9IBZQM=;
+	b=uHDxv63/PKqtsEPETN3Zik/I53J2cH/ONvFT/wAaZRKC/DQ/XU27ZwINBRAx704AL8
+	NYl4TarfQa7oZkLuJAVaUkNLZDHvkPqJcaNfg29nsfIfvn8nSZeCgEhDEdL/jjB035j2
+	WqgJ75fwRVgmJ8gmd6xKOKquNSypeTv0sAIbbBmvY+miQ5skzyLYhyRt2JthrmZACCRA
+	YatZYPWM0UlXvwT7ND1qx3Lmhl8gG84DcTT5iBpx7VdY4XKbVRPGqaUj1GVTk/j7GLgF
+	/3tX1iUWHCPv8+1Y8hrS/R2K8CMDtJZke0IvlPcwb35f8n6Lb13Je8VceFCsjHXRhq8U
+	3GJg==
+X-Gm-Message-State: ANhLgQ1DHq3/NuPtCYMNX3ADIBszqQirCzZ7XBzA+FX8GGfurA3wb3EZ
+	zA0dKSuXGbxO6NyzMJdBJOb+N1YOXwU=
+X-Google-Smtp-Source: ADFU+vsXJrZSmgHJV902GBrEvhpaV7AfvMPClZKXw3zuUT0brq8wC2PD0fYmnQ5LMgrm7A/gquLhSw==
+X-Received: by 2002:a92:cb09:: with SMTP id s9mr16446541ilo.299.1583771647690; 
+	Mon, 09 Mar 2020 09:34:07 -0700 (PDT)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	q1sm15049593ile.71.2020.03.09.09.34.05
+	q1sm15049593ile.71.2020.03.09.09.34.06
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 09 Mar 2020 09:34:05 -0700 (PDT)
+	Mon, 09 Mar 2020 09:34:07 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Mar 2020 11:33:46 -0500
-Message-Id: <20200309163353.15362-9-JPEWhacker@gmail.com>
+Date: Mon,  9 Mar 2020 11:33:47 -0500
+Message-Id: <20200309163353.15362-10-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309163353.15362-1-JPEWhacker@gmail.com>
 References: <20200309163353.15362-1-JPEWhacker@gmail.com>
 Cc: docs@lists.yoctoproject.org
-Subject: [PATCH 08/15] bitbake: lib/bb/msg.py: Add helper to set logging config
+Subject: [PATCH 09/15] bitbake: knotty: Remove dependency on format variable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,125 +59,130 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Mar 2020 16:34:06 -0000
+X-List-Received-Date: Mon, 09 Mar 2020 16:34:07 -0000
 
-Adds a helper function to setup the structure logging information in
-bitbake. The helper function takes a default configuration and an
-optional path to a user config file that can be merged into the default.
+Passing around the log formatter variable was unnecessary since the log
+levels of interest can be accesses as class members of
+bb.msg.BBLogFormatter. Switching to do this will make using the
+structured python logging much easier, since it can be difficult to
+extract out the formatter for a specific handler.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/msg.py | 93 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+ bitbake/lib/bb/tinfoil.py   |  4 +---
+ bitbake/lib/bb/ui/knotty.py | 32 ++++++++++++++++++++------------
+ 2 files changed, 21 insertions(+), 15 deletions(-)
 
-diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index cab079e333..6259af037f 100644
---- a/bitbake/lib/bb/msg.py
-+++ b/bitbake/lib/bb/msg.py
-@@ -13,6 +13,7 @@ Message handling infrastructure for bitbake
- import sys
- import copy
- import logging
-+import logging.config
- from itertools import groupby
- import bb
- import bb.event
-@@ -227,3 +228,95 @@ def has_console_handler(logger):
-             if handler.stream in [sys.stderr, sys.stdout]:
-                 return True
-     return False
-+
-+def setLoggingConfig(defaultconfig, userconfigfile=None):
-+    logconfig = copy.deepcopy(defaultconfig)
-+
-+    if userconfigfile:
-+        with open(userconfigfile, 'r') as f:
-+            if userconfigfile.endswith('.yml') or userconfigfile.endswith('.yaml'):
-+                import yaml
-+                userconfig = yaml.load(f)
-+            elif userconfigfile.endswith('.json') or userconfigfile.endswith('.cfg'):
-+                import json
-+                userconfig = json.load(f)
-+            else:
-+                raise BaseException("Unrecognized file format: %s" % userconfigfile)
-+
-+            if userconfig.get('bitbake_merge', True):
-+                # Merge config with the default config
-+                if userconfig.get('version') != logconfig['version']:
-+                    raise BaseException("Bad user configuration version. Expected %r, got %r" % (logconfig['version'], userconfig.get('version')))
-+
-+                # Set some defaults to make merging easier
-+                userconfig.setdefault("loggers", {})
-+
-+                # If a handler, formatter, or filter is defined in the user
-+                # config, it will replace an existing one in the default config
-+                for k in ("handlers", "formatters", "filters"):
-+                    logconfig.setdefault(k, {}).update(userconfig.get(k, {}))
-+
-+                seen_loggers = set()
-+                for name, l in logconfig["loggers"].items():
-+                    # If the merge option is set, merge the handlers and
-+                    # filters. Otherwise, if it is False, this logger won't get
-+                    # add to the set of seen loggers and will replace the
-+                    # existing one
-+                    if l.get('bitbake_merge', True):
-+                        ulogger = userconfig["loggers"].setdefault(name, {})
-+                        ulogger.setdefault("handlers", [])
-+                        ulogger.setdefault("filters", [])
-+
-+                        # Merge lists
-+                        l.setdefault("handlers", []).extend(ulogger["handlers"])
-+                        l.setdefault("filters", []).extend(ulogger["filters"])
-+
-+                        # Replace other properties if present
-+                        if "level" in ulogger:
-+                            l["level"] = ulogger["level"]
-+
-+                        if "propagate" in ulogger:
-+                            l["propagate"] = ulogger["propagate"]
-+
-+                        seen_loggers.add(name)
-+
-+                # Add all loggers present in the user config, but not any that
-+                # have already been processed
-+                for name in set(userconfig["loggers"].keys()) - seen_loggers:
-+                    logconfig["loggers"][name] = userconfig["loggers"][name]
-+
-+            else:
-+                # Replace the entire default config
-+                logconfig = userconfig
-+
-+    # Convert all level parameters to integers in case users want to use the
-+    # bitbake defined level names
-+    for h in logconfig["handlers"].values():
-+        if "level" in h:
-+            h["level"] = bb.msg.stringToLevel(h["level"])
-+
-+    for l in logconfig["loggers"].values():
-+        if "level" in l:
-+            l["level"] = bb.msg.stringToLevel(l["level"])
-+
-+    logging.config.dictConfig(logconfig)
-+
-+    # The user may have specified logging domains they want at a higher debug
-+    # level than the standard.
-+    for name, l in logconfig["loggers"].items():
-+        if not name.startswith("BitBake."):
-+            continue
-+
-+        if not "level" in l:
-+            continue
-+
-+        curlevel = bb.msg.loggerDefaultDomains.get(name)
-+        # Note: level parameter should already be a int because of conversion
-+        # above
-+        newlevel = int(l["level"])
-+        if curlevel is None or newlevel < curlevel:
-+            bb.msg.loggerDefaultDomains[name] = newlevel
-+
-+        # TODO: I don't think that setting the global log level should be necessary
-+        #if newlevel < bb.msg.loggerDefaultLogLevel:
-+        #    bb.msg.loggerDefaultLogLevel = newlevel
+diff --git a/bitbake/lib/bb/tinfoil.py b/bitbake/lib/bb/tinfoil.py
+index 9560eb5b49..5c5be456e2 100644
+--- a/bitbake/lib/bb/tinfoil.py
++++ b/bitbake/lib/bb/tinfoil.py
+@@ -735,11 +735,9 @@ class Tinfoil:
+                         console = handler
+                     elif handler.stream == sys.stderr:
+                         errconsole = handler
+-            format_str = "%(levelname)s: %(message)s"
+-            format = bb.msg.BBLogFormatter(format_str)
+             helper.shutdown = 0
+             parseprogress = None
+-            termfilter = bb.ui.knotty.TerminalFilter(helper, helper, console, errconsole, format, quiet=self.quiet)
++            termfilter = bb.ui.knotty.TerminalFilter(helper, helper, console, errconsole, quiet=self.quiet)
+             try:
+                 while True:
+                     try:
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index aac12cd479..d5dce7172a 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -109,12 +109,11 @@ def pluralise(singular, plural, qty):
+ 
+ 
+ class InteractConsoleLogFilter(logging.Filter):
+-    def __init__(self, tf, format):
++    def __init__(self, tf):
+         self.tf = tf
+-        self.format = format
+ 
+     def filter(self, record):
+-        if record.levelno == self.format.NOTE and (record.msg.startswith("Running") or record.msg.startswith("recipe ")):
++        if record.levelno == bb.msg.BBLogFormatter.NOTE and (record.msg.startswith("Running") or record.msg.startswith("recipe ")):
+             return False
+         self.tf.clearFooter()
+         return True
+@@ -150,7 +149,7 @@ class TerminalFilter(object):
+                 cr = (25, 80)
+         return cr
+ 
+-    def __init__(self, main, helper, console, errconsole, format, quiet):
++    def __init__(self, main, helper, console, errconsole, quiet):
+         self.main = main
+         self.helper = helper
+         self.cuu = None
+@@ -180,7 +179,16 @@ class TerminalFilter(object):
+             termios.tcsetattr(fd, termios.TCSADRAIN, new)
+             curses.setupterm()
+             if curses.tigetnum("colors") > 2:
+-                format.enable_color()
++                if console:
++                    try:
++                        console.formatter.enable_color()
++                    except AttributeError:
++                        pass
++                if errconsole:
++                    try:
++                        errconsole.formatter.enable_color()
++                    except AttributeError:
++                        pass
+             self.ed = curses.tigetstr("ed")
+             if self.ed:
+                 self.cuu = curses.tigetstr("cuu")
+@@ -197,9 +205,9 @@ class TerminalFilter(object):
+             bb.note("Unable to use interactive mode for this terminal, using fallback")
+             return
+         if console:
+-            console.addFilter(InteractConsoleLogFilter(self, format))
++            console.addFilter(InteractConsoleLogFilter(self))
+         if errconsole:
+-            errconsole.addFilter(InteractConsoleLogFilter(self, format))
++            errconsole.addFilter(InteractConsoleLogFilter(self))
+ 
+         self.main_progress = None
+ 
+@@ -469,7 +477,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+     printinterval = 5000
+     lastprint = time.time()
+ 
+-    termfilter = tf(main, helper, console, errconsole, format, params.options.quiet)
++    termfilter = tf(main, helper, console, errconsole, params.options.quiet)
+     atexit.register(termfilter.finish)
+ 
+     while True:
+@@ -508,21 +516,21 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+             if isinstance(event, logging.LogRecord):
+                 lastprint = time.time()
+                 printinterval = 5000
+-                if event.levelno >= format.ERROR:
++                if event.levelno >= bb.msg.BBLogFormatter.ERROR:
+                     errors = errors + 1
+                     return_value = 1
+-                elif event.levelno == format.WARNING:
++                elif event.levelno == bb.msg.BBLogFormatter.WARNING:
+                     warnings = warnings + 1
+ 
+                 if event.taskpid != 0:
+                     # For "normal" logging conditions, don't show note logs from tasks
+                     # but do show them if the user has changed the default log level to
+                     # include verbose/debug messages
+-                    if event.levelno <= format.NOTE and (event.levelno < llevel or (event.levelno == format.NOTE and llevel != format.VERBOSE)):
++                    if event.levelno <= bb.msg.BBLogFormatter.NOTE and (event.levelno < llevel or (event.levelno == bb.msg.BBLogFormatter.NOTE and llevel != bb.msg.BBLogFormatter.VERBOSE)):
+                         continue
+ 
+                     # Prefix task messages with recipe/task
+-                    if event.taskpid in helper.pidmap and event.levelno != format.PLAIN:
++                    if event.taskpid in helper.pidmap and event.levelno != bb.msg.BBLogFormatter.PLAIN:
+                         taskinfo = helper.running_tasks[helper.pidmap[event.taskpid]]
+                         event.msg = taskinfo['title'] + ': ' + event.msg
+                 if hasattr(event, 'fn'):
 -- 
 2.17.1
 
