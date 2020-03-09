@@ -1,52 +1,52 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f195.google.com (mail-il1-f195.google.com
-	[209.85.166.195])
-	by mail.openembedded.org (Postfix) with ESMTP id DB5B361A29
+Received: from mail-il1-f193.google.com (mail-il1-f193.google.com
+	[209.85.166.193])
+	by mail.openembedded.org (Postfix) with ESMTP id 1C7F660C0E
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Mar 2020 16:33:58 +0000 (UTC)
-Received: by mail-il1-f195.google.com with SMTP id b17so9265080iln.3
+	Mon,  9 Mar 2020 16:33:59 +0000 (UTC)
+Received: by mail-il1-f193.google.com with SMTP id j69so9234476ila.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 Mar 2020 09:34:00 -0700 (PDT)
+	Mon, 09 Mar 2020 09:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=9GpDTZg2EdA6OGVyzVkduC6kdcOl8rdgH43I5i9TB5s=;
-	b=QtZJnZ1r58kpG1spA7m+enHfa+dhK0za8OMSQHArxzto5LJzvP16bKoHdmzD+f0/If
-	MpazwLhMWmvlaZrzAWWSxGK3FY0Jik0CadbWBNqUbVJcrrA8+uPxwBKP6lxg//8E1E+9
-	NjxCywjnw8YarCrxQrw23EcE5/1kdNczEZBwer+U3/lM5LW1X56W9GaL/o1e0UozCYVd
-	MIYb6op/tgvkk/EKyM3Suwzws5mRsMGfoC97BLRSN+Zd5zMQuMDOxU8KEocu9RNeqhEZ
-	8pv/xfSaxJWyhqeYEyU18VmpW4OKLdoPvDQl/jqKVgIDRtGDvFJDXzGkXX8ei4MvNu+o
-	MKgw==
+	bh=8O7lGO0LmVTJ+Ts7W9DTNCOdKbql7m/OYMhfsPWF8ng=;
+	b=dTxAt8FgBbkhPyaQ13rTUJpmlqf/roRuxDdk7lnyNHWzT7OlzhWSPimb8c1+eU8Ojt
+	MQCgm5UB/ZMSUbsZn2WacWF7q1wlOpl9tlcKZL5DR/EfFW3QPZKmrm+shpo8qdWZQw5+
+	jsFtFsCtblbcPpQwpqsCzG2sNeyVdUL+0yvllTDEIGiW7iQPBUSpZuIww3KQKyJTISB6
+	L767mIBEPIdkmeO2zfxdkimbO2u7EhQKzEdyxPuMO8eSGOrqM9uVWi8Ru+ThvwVQyUe/
+	K2/ePuh+DYR9jLDTUpXm+ZI9WvemxDhdRME5L5n/6336k2dy+R7XrrFyOU6RbNJ6mmfN
+	+Ndg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=9GpDTZg2EdA6OGVyzVkduC6kdcOl8rdgH43I5i9TB5s=;
-	b=T7rCPot1HHFwmlMsrEyK7K5jFqJc5xmna8AK9FUuJA+QS1RlwREJZBKAN0KDA8wpaf
-	ww0vXkd53LvMEgCfe7VCo2KjzPN1avLURvLFoYBPn1drBksHog6vERMNzWR+CZJHGPNc
-	n+koNQj+V8Klvh04E9P4N3sKBVvBocVAnxipv7DNh5avq9izsDPJqqw3X3Z4Exwx/AF1
-	8hySyusUaAUfXMm7V+fn76c+vJSDyXafgA/Y6n+8psgwdCxTwX6Qy87kACG0KhRUf3kF
-	MJye46OBDxOgh3+iMyysSk61X9LJag0iS5a1GBJerchV8g+Go8OR05Y22+edVJh4hFNa
-	7DCQ==
-X-Gm-Message-State: ANhLgQ3r1VCgnIDLpCyc+Odom1PmEAnONoOmlvQWpdmIS9xoivJODjQz
-	rzKub5wKwMK18nLpzRFiYhr3fT38ovc=
-X-Google-Smtp-Source: ADFU+vstHnbPzbKdsf4/6cOT6WwPIhvwhaawk7AHZXh2aSDTLxIPsec2rmmg9NFphjybYlwO92VIpA==
-X-Received: by 2002:a92:35db:: with SMTP id c88mr2416237ilf.187.1583771639745; 
-	Mon, 09 Mar 2020 09:33:59 -0700 (PDT)
+	bh=8O7lGO0LmVTJ+Ts7W9DTNCOdKbql7m/OYMhfsPWF8ng=;
+	b=Ggum/cJQzzYieB4CpA8cHdQJ5V+FBracKVOHR9plq5/Bxp00TUD3p9DzGxoG8jkna2
+	1GaqQwWVjESN3pu/UekshxUDcvqMpvofr0G6qlVXubTlMkGGTQfU28pk6lsNGLjpy4IQ
+	JhcyVHwL+TBeBeB/WJPWKGkZh42PKyIuy/diS+/v6tumWJX5fWFg1+KPt9WtiGN6mq5p
+	7mATg9ZsbZzf7tNcJ+9Lu1ygKdfaAG3dVymLtZdPqDkbi9kGr+IOMmI77yxfVKOrWjz3
+	h1qJhwOJ1tQPBHE3wVP0z+sE47qTyVwRKl8DAxGMuSV9j88CEW0Ais6YQJUnOrn+/nbN
+	Lomw==
+X-Gm-Message-State: ANhLgQ3H02Pre0RJYPbHTkEdBvJrTwFkbU3xyTovdUzyufwvOyrWRBcR
+	jjo711TSSE6kZ3uOfBYrQLGH5FUpb70=
+X-Google-Smtp-Source: ADFU+vt7AXMZCExO6aPHpm+yVsQKvvHFk38JT7L2mQiPMtvG+Ed4UjD8xEZWQyNObrh9b9xrveR97g==
+X-Received: by 2002:a92:9114:: with SMTP id t20mr16759978ild.258.1583771640832;
+	Mon, 09 Mar 2020 09:34:00 -0700 (PDT)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	q1sm15049593ile.71.2020.03.09.09.33.58
+	q1sm15049593ile.71.2020.03.09.09.33.59
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 09 Mar 2020 09:33:59 -0700 (PDT)
+	Mon, 09 Mar 2020 09:34:00 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Mar 2020 11:33:41 -0500
-Message-Id: <20200309163353.15362-4-JPEWhacker@gmail.com>
+Date: Mon,  9 Mar 2020 11:33:42 -0500
+Message-Id: <20200309163353.15362-5-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309163353.15362-1-JPEWhacker@gmail.com>
 References: <20200309163353.15362-1-JPEWhacker@gmail.com>
 Cc: docs@lists.yoctoproject.org
-Subject: [PATCH 03/15] bitbake: lib/bb/msg.py: Use log level instead of debug count
+Subject: [PATCH 04/15] bitbake: lib/bb/msg.py: Add repr for BBLogFormatter
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,112 +59,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Mar 2020 16:33:59 -0000
+X-List-Received-Date: Mon, 09 Mar 2020 16:34:01 -0000
 
-Passes around the actual logging level as the default log level variable
-instead of the debug count. This makes it easier to deal with logging
-levels since the conversion from debug count and verbose flag only has
-to occur once when logging is initialized and after that actual log
-levels can be used
+Adds a __repr__ function for BBLogFormatter. This allows it to get a
+human readable string when printed using the logging_tree module
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/bin/bitbake-worker |  2 +-
- bitbake/lib/bb/__init__.py |  2 +-
- bitbake/lib/bb/msg.py      | 22 +++++++++-------------
- bitbake/lib/bb/runqueue.py |  2 +-
- 4 files changed, 12 insertions(+), 16 deletions(-)
+ bitbake/lib/bb/msg.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index 1e641e81c2..fc28a34d8a 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -414,7 +414,7 @@ class BitbakeWorker(object):
- 
-     def handle_workerdata(self, data):
-         self.workerdata = pickle.loads(data)
--        bb.msg.loggerDefaultDebugLevel = self.workerdata["logdefaultdebug"]
-+        bb.msg.loggerDefaultLogLevel = self.workerdata["logdefaultlevel"]
-         bb.msg.loggerDefaultVerbose = self.workerdata["logdefaultverbose"]
-         bb.msg.loggerVerboseLogs = self.workerdata["logdefaultverboselogs"]
-         bb.msg.loggerDefaultDomains = self.workerdata["logdefaultdomain"]
-diff --git a/bitbake/lib/bb/__init__.py b/bitbake/lib/bb/__init__.py
-index acd4af13a8..dc5e91e29a 100644
---- a/bitbake/lib/bb/__init__.py
-+++ b/bitbake/lib/bb/__init__.py
-@@ -47,7 +47,7 @@ class BBLogger(Logger):
-         if not bb.event.worker_pid:
-             if self.name in bb.msg.loggerDefaultDomains and loglevel > (bb.msg.loggerDefaultDomains[self.name]):
-                 return
--            if level > (bb.msg.loggerDefaultDebugLevel):
-+            if loglevel > bb.msg.loggerDefaultLogLevel:
-                 return
-         return self.log(loglevel, msg, *args, **kwargs)
- 
 diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index d1b0e929d4..ea6a9543f7 100644
+index ea6a9543f7..c70fd80806 100644
 --- a/bitbake/lib/bb/msg.py
 +++ b/bitbake/lib/bb/msg.py
-@@ -135,7 +135,7 @@ class BBLogFilterStdOut(BBLogFilter):
- # Message control functions
- #
+@@ -98,6 +98,9 @@ class BBLogFormatter(logging.Formatter):
+     def enable_color(self):
+         self.color_enabled = True
  
--loggerDefaultDebugLevel = 0
-+loggerDefaultLogLevel = BBLogFormatter.NOTE
- loggerDefaultVerbose = False
- loggerVerboseLogs = False
- loggerDefaultDomains = {}
-@@ -144,11 +144,17 @@ def init_msgconfig(verbose, debug, debug_domains=None):
-     """
-     Set default verbosity and debug levels config the logger
-     """
--    bb.msg.loggerDefaultDebugLevel = debug
-     bb.msg.loggerDefaultVerbose = verbose
-     if verbose:
-         bb.msg.loggerVerboseLogs = True
- 
-+    if debug:
-+        bb.msg.loggerDefaultLogLevel = BBLogFormatter.DEBUG - debug + 1
-+    elif verbose:
-+        bb.msg.loggerDefaultLogLevel = BBLogFormatter.VERBOSE
-+    else:
-+        bb.msg.loggerDefaultLogLevel = BBLogFormatter.NOTE
++    def __repr__(self):
++        return "%s fmt='%s' color=%s" % (self.__class__.__name__, self._fmt, "True" if self.color_enabled else "False")
 +
-     bb.msg.loggerDefaultDomains = {}
-     if debug_domains:
-         for (domainarg, iterator) in groupby(debug_domains):
-@@ -156,17 +162,7 @@ def init_msgconfig(verbose, debug, debug_domains=None):
-             bb.msg.loggerDefaultDomains["BitBake.%s" % domainarg] = logging.DEBUG - dlevel + 1
- 
- def constructLogOptions():
--    debug = loggerDefaultDebugLevel
--    verbose = loggerDefaultVerbose
--
--    if debug:
--        level = BBLogFormatter.DEBUG - debug + 1
--    elif verbose:
--        level = BBLogFormatter.VERBOSE
--    else:
--        level = BBLogFormatter.NOTE
--
--    return level, loggerDefaultDomains
-+    return loggerDefaultLogLevel, loggerDefaultDomains
- 
- def addDefaultlogFilter(handler, cls = BBLogFilter, forcelevel=None):
-     level, debug_domains = constructLogOptions()
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 32966b4f7c..4106fa4bc4 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1254,7 +1254,7 @@ class RunQueue:
-             "fakerootdirs" : self.rqdata.dataCaches[mc].fakerootdirs,
-             "fakerootnoenv" : self.rqdata.dataCaches[mc].fakerootnoenv,
-             "sigdata" : bb.parse.siggen.get_taskdata(),
--            "logdefaultdebug" : bb.msg.loggerDefaultDebugLevel,
-+            "logdefaultlevel" : bb.msg.loggerDefaultLogLevel,
-             "logdefaultverbose" : bb.msg.loggerDefaultVerbose,
-             "logdefaultverboselogs" : bb.msg.loggerVerboseLogs,
-             "logdefaultdomain" : bb.msg.loggerDefaultDomains,
+ class BBLogFilter(object):
+     def __init__(self, handler, level, debug_domains):
+         self.stdlevel = level
 -- 
 2.17.1
 
