@@ -1,53 +1,52 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f193.google.com (mail-il1-f193.google.com
-	[209.85.166.193])
-	by mail.openembedded.org (Postfix) with ESMTP id 6BCDF61B5D
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com
+	[209.85.166.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 78D4B61B62
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Mar 2020 16:34:12 +0000 (UTC)
-Received: by mail-il1-f193.google.com with SMTP id g126so9260072ilh.2
+	Mon,  9 Mar 2020 16:34:13 +0000 (UTC)
+Received: by mail-io1-f54.google.com with SMTP id d15so9773350iog.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 Mar 2020 09:34:13 -0700 (PDT)
+	Mon, 09 Mar 2020 09:34:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=kdwJ7fnO/vVAzYnb8Zdz1Byf4E3I0KMSBqjEaVRl2cU=;
-	b=HaqPP/r8W9cFEQjoFE8F2xj/iUC0I/Rxjs1jw8n4C2IsNqVa2HcLgOb+rF7DJKsqqf
-	ShkqBlWkd5LHbTNKJcj35JZxAPulw7WrULi6oeosT2czKxDBm8g0+5Grq57wiXF5Okeb
-	9dD3AydWzay5/+hJM6irg0ypzbMtpCXSWOLqEvJvU/fpGfCZZE624/ZLmY/aXJ+u1BQw
-	T6BPHG5sLv9Yo9CEYULDG+bOZK0pIQG6oQl0xjF1z4xRWbFNRUV2EhlBjGiJiOiF+LJW
-	SSmrcbec3ZuIQDhA83DdbX6adsUX8dE1O3d9SfrhGOPkx9rRK2MlIfsGvrk/Io8vSQS1
-	52Ig==
+	bh=hr9dryjHTlhNSJ9Ns5uD940C1U8021JNCYHN/HwNR1s=;
+	b=qQutinFAb3qk9paqVGFLi6p+Y5pYaJ2Z5SeZPEHokO7DuHd9bC/URKvDhRY8sF/lkP
+	xbiCqhswblVyQiRaV8raBNGmurhE27Lm2V69fA6asWyaP2sgMwHVLTRHzgpbRkdG8+LI
+	Q59AujP1DjOoTuZSOe4jL+4MQMVT/bdx+LdB1yW9sTT6xqzoe+3rY9rKrrJIzHHgKfqg
+	LLu0+MBj0lM5vGdY8a0SQix34WMbu4QxEoQEoRytp1SsJksJE8oAr4EckOE5t2LQ0an6
+	5ex29vNLdhxDTu4DxS5xZs4/GoROus7V/zJhHuJ0nwy1TAoZt4ze4zxpaMQaki+XDKC0
+	gNrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=kdwJ7fnO/vVAzYnb8Zdz1Byf4E3I0KMSBqjEaVRl2cU=;
-	b=LxbKFWys4JEX1vw95yJhtio2+QO+CFkoiugVl29epmhMgNX8pAJEbTgycKiHhXMVxj
-	mOU0fsxxZqsoHeQ6OvromjVKVy2T72SzjPyGjgDgUrM1CUdJsUud+JVvBfVrpGW7Vxtx
-	JprPCRmjRlauZB2Ce1JXmHcgv0Bo/N7CKfFwH0OWw2UWGgIibZLAjBb0Gb27xv8w5NkJ
-	f3crL9gGYaodU4EAiPIbe+CYJynYk3Hv2IPt/UMgC/vC08zSKyUeV6iDJ2wqxpfrSP5i
-	fhsBoAAxDDLHNLQLzK3uZti7eA5JVeHYBgWpx8CgSPfEB6lvO5FR8ZTjmzhSlqRpuIS8
-	NAuw==
-X-Gm-Message-State: ANhLgQ2Z3UVPgDyGQaJDlWNBbrxjx4vWzBqaywv6U2WSjOmrP6FiS2d7
-	gRBaVHJMEvRto6mrnZ5hR+wcvXzGIco=
-X-Google-Smtp-Source: ADFU+vuRpgtTYPM4mQg388JwDgv20RyWFPKSdIWVB0Yl4pOpHy9m5m0xUHgr24ZclYSFQdV102eZug==
-X-Received: by 2002:a05:6e02:4cd:: with SMTP id
-	f13mr16550829ils.237.1583771653235; 
-	Mon, 09 Mar 2020 09:34:13 -0700 (PDT)
+	bh=hr9dryjHTlhNSJ9Ns5uD940C1U8021JNCYHN/HwNR1s=;
+	b=R4fUczVf8e9lbT0aQCmDpdY3PgGrjHXUNy58xaPRHUCIiw4HJNVQSv+3Jczld+kryx
+	juVBXge/VT9949C3lcuZjHs8LboB6bAnOEljzFxGM0TuihBrrTlTZBuidM8TDdPC4/QR
+	uzSydTb8v+FDxjIJnwWzt8mRJGrurAMEUv1EcgafMFFpkg+s9CrpP9loOk8rJ8hvGn+G
+	1HycS/qtc4Mie8ox7UyPK7vL6G2lJZ3aiWk8AJhlqqrOWxLWhQJiVUHt07OvM3Gj/SUX
+	ZatGVmf7wwrMJw70rwI4sPpmMQ6Ad4d1ZqFWl9shnBNIHYHt3Bztn0s2r84ZVx1LrDW8
+	rGzw==
+X-Gm-Message-State: ANhLgQ2DvfzREdROCjFYu/SFn2xL45q0GOFjKYmoBp/ctq45i5F4MAON
+	xQYz71KG3rbfWZ7WHvMvSNNzenu23Rw=
+X-Google-Smtp-Source: ADFU+vtAShaCwGCu2lIM7yfk1qAp5Lgl2VJZ7NdpgtsooDJDrd+7TaZa5U+tdnOUA5dOQfGZt/aI+A==
+X-Received: by 2002:a02:a610:: with SMTP id c16mr15754992jam.43.1583771654264; 
+	Mon, 09 Mar 2020 09:34:14 -0700 (PDT)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
 	by smtp.gmail.com with ESMTPSA id
-	q1sm15049593ile.71.2020.03.09.09.34.12
+	q1sm15049593ile.71.2020.03.09.09.34.13
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 09 Mar 2020 09:34:12 -0700 (PDT)
+	Mon, 09 Mar 2020 09:34:13 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Mar 2020 11:33:52 -0500
-Message-Id: <20200309163353.15362-15-JPEWhacker@gmail.com>
+Date: Mon,  9 Mar 2020 11:33:53 -0500
+Message-Id: <20200309163353.15362-16-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309163353.15362-1-JPEWhacker@gmail.com>
 References: <20200309163353.15362-1-JPEWhacker@gmail.com>
 Cc: docs@lists.yoctoproject.org
-Subject: [PATCH 14/15] bitbake: Lower hash equivalence logging
+Subject: [PATCH 15/15] bitbake-user-manual: Add documentation for BB_LOGCONFIG
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,83 +59,145 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Mar 2020 16:34:12 -0000
+X-List-Received-Date: Mon, 09 Mar 2020 16:34:15 -0000
 
-Lowers the level at which hash equivalence messages are logged so as to
-not annoy the majority of users. The autobuilder can use a custom
-logging configuration to log these to a file for debugging (see
-contrib/autobuilderlog.json)
-
-[YOCTO #13813]
+Adds documentation describing how to use the BB_LOGCONFIG variable to
+enable custom logging.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/runqueue.py | 6 +++---
- bitbake/lib/bb/siggen.py   | 8 ++++----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ .../bitbake-user-manual-execution.xml         | 97 +++++++++++++++++++
+ .../bitbake-user-manual-ref-variables.xml     | 11 +++
+ 2 files changed, 108 insertions(+)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index e84890b8b7..cef9b0fbbf 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -2264,7 +2264,7 @@ class RunQueueExecute:
-             self.updated_taskhash_queue.remove((tid, unihash))
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.xml b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+index 8f606676b4..3b31f748cc 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+@@ -929,4 +929,101 @@
+             section.
+         </para>
+     </section>
++
++    <section id="logging">
++        <title>Logging</title>
++        <para>
++            In addition to the standard command line option to control how
++            verbose builds are when execute, bitbake also supports user defined
++            configuration of the
++            <ulink url='https://docs.python.org/3/library/logging.html'>Python logging</ulink>
++            facilities through the
++            <link linkend="var-bb-BB_LOGCONFIG"><filename>BB_LOGCONFIG</filename></link>
++            variable. This variable defines a json or yaml
++            <ulink url='https://docs.python.org/3/library/logging.config.html'>logging configuration</ulink>
++            that will be intelligently merged into the default configuration.
++            The logging configuration is merged using the following rules:
++            <itemizedlist>
++                <listitem><para>
++                    The user defined configuration will completely replace the default
++                    configuration if top level key
++                    <filename>bitbake_merge</filename> is set to the value
++                    <filename>False</filename>. In this case, all other rules
++                    are ignored.
++                </para></listitem>
++                <listitem><para>
++                    The user configuration must have a top level
++                    <filename>version</filename> which must match the value of
++                    the default configuration.
++                </para></listitem>
++                <listitem><para>
++                    Any keys defined in the <filename>handlers</filename>,
++                    <filename>formatters</filename>, or <filename>filters</filename>,
++                    will be merged into the same section in the default
++                    configuration, with the user specified keys taking
++                    replacing a default one if there is a conflict. In
++                    practice, this means that if both the default configuration
++                    and user configuration specify a handler named
++                    <filename>myhandler</filename>, the user defined one will
++                    replace the default. To prevent the user from inadvertently
++                    replacing a default handler, formatter, or filter, all of
++                    the default ones are named with a prefix of
++                    "<filename>BitBake.</filename>"
++                </para></listitem>
++                <listitem><para>
++                    If a logger is defined by the user with the key
++                    <filename>bitbake_merge</filename> set to
++                    <filename>False</filename>, that logger will be completely
++                    replaced by user configuration. In this case, no other
++                    rules will apply to that logger.
++                </listitem></para>
++                <listitem><para>
++                    All user defined <filename>filter</filename> and
++                    <filename>handlers</filename> properties for a given logger
++                    will be merged with corresponding properties from the
++                    default logger. For example, if the user configuration adds
++                    a filter called <filename>myFilter</filename> to the
++                    <filename>BitBake.SigGen</filename>, and the default
++                    configuration adds a filter called
++                    <filename>BitBake.defaultFilter</filename>, both filters
++                    will be applied to the logger
++                </listitem></para>
++            </itemizedlist>
++        </para>
++
++        <para>
++            As an example, consider the following user logging configuration
++            file which logs all Hash Equivalence related messages of VERBOSE or
++            higher to a file called <filename>hashequiv.log</filename>
++            <literallayout class='monospaced'>
++    {
++        "version": 1,
++        "handlers": {
++            "autobuilderlog": {
++                "class": "logging.FileHandler",
++                "formatter": "logfileFormatter",
++                "level": "DEBUG",
++                "filename": "hashequiv.log",
++                "mode": "w"
++            }
++        },
++        "formatters": {
++                "logfileFormatter": {
++                    "format": "%(name)s: %(levelname)s: %(message)s"
++                }
++        },
++        "loggers": {
++            "BitBake.SigGen.HashEquiv": {
++                "level": "VERBOSE",
++                "handlers": ["autobuilderlog"]
++            },
++            "BitBake.RunQueue.HashEquiv": {
++                "level": "VERBOSE",
++                "handlers": ["autobuilderlog"]
++            }
++        }
++    }
++            </literallayout>
++        </para>
++    </section>
+ </chapter>
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+index bae01d90c0..c4bd1f2584 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+@@ -539,6 +539,17 @@
+             </glossdef>
+         </glossentry>
  
-             if unihash != self.rqdata.runtaskentries[tid].unihash:
--                hashequiv_logger.info("Task %s unihash changed to %s" % (tid, unihash))
-+                hashequiv_logger.verbose("Task %s unihash changed to %s" % (tid, unihash))
-                 self.rqdata.runtaskentries[tid].unihash = unihash
-                 bb.parse.siggen.set_unihash(tid, unihash)
-                 toprocess.add(tid)
-@@ -2309,7 +2309,7 @@ class RunQueueExecute:
-                 elif tid in self.scenequeue_covered or tid in self.sq_live:
-                     # Already ran this setscene task or it running. Report the new taskhash
-                     bb.parse.siggen.report_unihash_equiv(tid, newhash, origuni, newuni, self.rqdata.dataCaches)
--                    hashequiv_logger.info("Already covered setscene for %s so ignoring rehash (remap)" % (tid))
-+                    hashequiv_logger.verbose("Already covered setscene for %s so ignoring rehash (remap)" % (tid))
-                     remapped = True
- 
-                 if not remapped:
-@@ -2410,7 +2410,7 @@ class RunQueueExecute:
- 
-         for (tid, harddepfail, origvalid) in update_tasks:
-             if tid in self.sqdata.valid and not origvalid:
--                hashequiv_logger.info("Setscene task %s became valid" % tid)
-+                hashequiv_logger.verbose("Setscene task %s became valid" % tid)
-             if harddepfail:
-                 self.sq_task_failoutright(tid)
- 
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 0357b544b5..8bfc45235d 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -607,7 +607,7 @@ class SignatureGeneratorUniHashMixIn(object):
-                 method = method + self.extramethod[tid]
- 
-             data = self.client().report_unihash_equiv(taskhash, method, wanted_unihash, extra_data)
--            hashequiv_logger.info('Reported task %s as unihash %s to %s (%s)' % (tid, wanted_unihash, self.server, str(data)))
-+            hashequiv_logger.verbose('Reported task %s as unihash %s to %s (%s)' % (tid, wanted_unihash, self.server, str(data)))
- 
-             if data is None:
-                 bb.warn("Server unable to handle unihash report")
-@@ -616,14 +616,14 @@ class SignatureGeneratorUniHashMixIn(object):
-             finalunihash = data['unihash']
- 
-             if finalunihash == current_unihash:
--                hashequiv_logger.info('Task %s unihash %s unchanged by server' % (tid, finalunihash))
-+                hashequiv_logger.verbose('Task %s unihash %s unchanged by server' % (tid, finalunihash))
-             elif finalunihash == wanted_unihash:
--                hashequiv_logger.info('Task %s unihash changed %s -> %s as wanted' % (tid, current_unihash, finalunihash))
-+                hashequiv_logger.verbose('Task %s unihash changed %s -> %s as wanted' % (tid, current_unihash, finalunihash))
-                 self.set_unihash(tid, finalunihash)
-                 return True
-             else:
-                 # TODO: What to do here?
--                hashequiv_logger.info('Task %s unihash reported as unwanted hash %s' % (tid, finalunihash))
-+                hashequiv_logger.verbose('Task %s unihash reported as unwanted hash %s' % (tid, finalunihash))
- 
-         except hashserv.client.HashConnectionError as e:
-             bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
++        <glossentry id='var-bb-BB_LOGCONFIG'><glossterm>BB_LOGCONFIG</glossterm>
++            <glossdef>
++                <para>
++                    Specifies the name of a config file that contains the user
++                    logging configuration. See
++                    <link linkend="logging">Logging</link> for additional
++                    information
++                </para>
++            </glossdef>
++        </glossentry>
++
+         <glossentry id='var-bb-BB_LOGFMT'><glossterm>BB_LOGFMT</glossterm>
+             <glossdef>
+                 <para>
 -- 
 2.17.1
 
