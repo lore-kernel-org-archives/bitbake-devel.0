@@ -1,98 +1,47 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com
-	[209.85.215.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 74083611EC;
-	Sun,  8 Mar 2020 18:13:14 +0000 (UTC)
-Received: by mail-pg1-f178.google.com with SMTP id y30so3638023pga.13;
-	Sun, 08 Mar 2020 11:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=to:from:subject:autocrypt:message-id:date:user-agent:mime-version
-	:content-transfer-encoding:content-language;
-	bh=XEkKq0T5LY6lgE2WKhgEsOYv4DE5i1HuFkZC3HIwHE4=;
-	b=XWR9Xgoi3y6ynQ1Wbqr/2hMMvbpC7xOxCrhGtp7gVIfn6lUuOL8PzKbtw42jSzqGvA
-	SdF4refh2xbXljrzSjoKlA7i6FbeKPXFSDwLJiW7RPIAI048o1KYnInkM5G68v8cvOD+
-	orEJ3CFLNjiMoO23zB3VeoBUdRvLr4srcVrfcEDyq4NvgzkDx2Wdxhly9RcGppTR2bXj
-	xMZQwAxNSj5skbbyBY0u0DMFUmHwLRmlhXcAA4p2Ja8NnDCWjPqZGMtlaSyKbcVN/sod
-	wkHuu2BwHAFXz1oK83UkZTpOvZ+h3G/h7C2kuKsUgXIG3mh5UT9E0Xk+N7YfT0koqSN0
-	g1+w==
+Return-Path: <pbarker@konsulko.com>
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id F1B28601F3
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon,  9 Mar 2020 13:43:05 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id a25so7412213wrd.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 09 Mar 2020 06:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
+	h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=LaZ8F/u28Qi7rLFHlQllelu1t531SqqmU2zwlyiFJoA=;
+	b=NzjIFMtIRUbUElN+9pyT5NgtCJV5NEpHDsDKheFaoCs+m3XuUiz420/2rgAX/bOFEQ
+	EFD/4fvx9vyJPia1qKhW/6vAkdKx6RvZNjmOFRE3i5WWDbWaajW+W+v+u7H3Ve/nPIaW
+	aVxpGgFZ9OADL0qd+o77S7pe+Ph+xHviDB+60=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:to:from:subject:autocrypt:message-id:date
-	:user-agent:mime-version:content-transfer-encoding:content-language;
-	bh=XEkKq0T5LY6lgE2WKhgEsOYv4DE5i1HuFkZC3HIwHE4=;
-	b=bTW1HmhFo54GOvTAUgWoqISJy/QAS59uBJFIbq6E4OQ0yx9Ms1FNYO0kjXFOesehwn
-	PT5XhyvfUPM+OppjOWVHhPeOkDNPZE6oGMt4J2sM0PiBLpT3Ly4YMbccA1KcEylv8A6Z
-	TVAZVO2xlKxVu3pGUzQaiwdhHpv5Ro5k0Evk/JCdPeqPwLp0mBr15MXjYN2R8Ge5Zirx
-	H6umwP7STzxo2Wbmu31lo3KzZQ4iuJB332bvCp18tB34NGRaT2cEpZAb2b80f94szJZw
-	wJM+8V6XyI2mXp1sAVKMBMS3743QsK0ZpyOP9VR432LvL3GRPzmSjSOLYE7Id7K8c5L+
-	7Omg==
-X-Gm-Message-State: ANhLgQ17nG0nKEHfvGsIVdveC9OZXCDZW24fzeAuWOz2OwyccC81a9pc
-	gGgoZLsXsoCkcvqay6nwhqFf9laY
-X-Google-Smtp-Source: ADFU+vuTcFwHIUksoEFDfc+outSz816phigeyeUwaY2/X39Ae/+BEcPrbYwMSFnpyPYHR6ZutYhy7A==
-X-Received: by 2002:aa7:947d:: with SMTP id t29mr894625pfq.184.1583691195388; 
-	Sun, 08 Mar 2020 11:13:15 -0700 (PDT)
-Received: from ?IPv6:2601:202:4180:a5c0:6c62:7a1c:e667:70?
-	([2601:202:4180:a5c0:6c62:7a1c:e667:70])
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding;
+	bh=LaZ8F/u28Qi7rLFHlQllelu1t531SqqmU2zwlyiFJoA=;
+	b=SAT7AkvS21I9KYB7qZlKoZUFbVmjtFTEv2uLXptGe6rKGDB2cuXdnfcyo2raaDo5Ws
+	w+X6GglllatTiHYMacn/hzimnCDG8qP4MJficCREJGsUqnpgG5Qvs/Zqal5JQ6qHn5aA
+	dDJgk+iVq2nqoZqhKvdWSOgr2geHCa+OR/u9yfGyZqzRNw7bIkAKNnmnKOJ8AuNrD4hk
+	ZXeFmFbOC3mGWa4c1AQWM5BEvLTVKYa9KUCxN/u37rSI4tnzJzLBGHGMvXVh3sufZAl5
+	tpt0bTAufd/nZ4v8GxLpDmfvERagewPpen88ar1FfEdTYdmIdWCUCZ2TlRssGr+gGuXJ
+	PylA==
+X-Gm-Message-State: ANhLgQ1V/eyyQTQinTJKpMWtKls75i6XVJZ1meMeZfrUAtsYl5s//EdW
+	ymde19E9EmWPQL8pnQbL96JTZXlnPJ74ehxT
+X-Google-Smtp-Source: ADFU+vuAWqr4ZByMJSd/gFbOB6e94FEDpOHFhqYXXFM7RYXuiRE6Aqz+/o2vGKTNY5GKCid+RmReIw==
+X-Received: by 2002:adf:f2ca:: with SMTP id d10mr22236880wrp.247.1583761386117;
+	Mon, 09 Mar 2020 06:43:06 -0700 (PDT)
+Received: from ub1910.Hitronhub.home ([213.48.11.149])
 	by smtp.gmail.com with ESMTPSA id
-	c20sm26923337pfc.140.2020.03.08.11.13.14
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Sun, 08 Mar 2020 11:13:14 -0700 (PDT)
-To: "yocto@yoctoproject.org" <yocto@yoctoproject.org>,
-	"poky@yoctoproject.org" <poky@yoctoproject.org>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-From: akuster808 <akuster808@gmail.com>
-Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
-	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
-	8CS2NxU=
-Message-ID: <ca05c738-c6ff-afa1-8b7b-a84ef6a31261@gmail.com>
-Date: Sun, 8 Mar 2020 11:13:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-	Thunderbird/68.4.1
+	h3sm15282154wmi.41.2020.03.09.06.43.04
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Mon, 09 Mar 2020 06:43:05 -0700 (PDT)
+From: Paul Barker <pbarker@konsulko.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  9 Mar 2020 13:42:46 +0000
+Message-Id: <20200309134246.14067-1-pbarker@konsulko.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Subject: Stable life cycle status
+Subject: [PATCH v2] fetch2/gitsm: Unpack shallow mirror tarballs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -105,20 +54,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 08 Mar 2020 18:13:14 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-List-Received-Date: Mon, 09 Mar 2020 13:43:06 -0000
+Content-Transfer-Encoding: 8bit
 
-Hello,
+When a shallow mirror tarball is used to satisfy a gitsm URI it needs to
+be unpacked temporarily so that the .gitmodules file can be examined.
 
-Thud has moved to "Community supported" today.
+Signed-off-by: Paul Barker <pbarker@konsulko.com>
+---
+ lib/bb/fetch2/gitsm.py | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-The older releases have moved to EOL as no one has stepped up to take on
-the maintenance of those older branches.
-
-
-regards,
-Armin
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index aa121cbe..e7083001 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -20,6 +20,8 @@ NOTE: Switching a SRC_URI from "git://" to "gitsm://" requires a clean of your r
+ import os
+ import bb
+ import copy
++import shutil
++import tempfile
+ from   bb.fetch2.git import Git
+ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
+@@ -130,7 +132,7 @@ class GitSM(Git):
+             ld.setVar('SRCPV', d.getVar('SRCPV'))
+             ld.setVar('SRCREV_FORMAT', module)
+ 
+-            function(ud, url, module, paths[module], ld)
++            function(ud, url, module, paths[module], workdir, ld)
+ 
+         return submodules != []
+ 
+@@ -152,7 +154,7 @@ class GitSM(Git):
+         return False
+ 
+     def download(self, ud, d):
+-        def download_submodule(ud, url, module, modpath, d):
++        def download_submodule(ud, url, module, modpath, workdir, d):
+             url += ";bareclone=1;nobranch=1"
+ 
+             # Is the following still needed?
+@@ -163,16 +165,25 @@ class GitSM(Git):
+                 newfetch.download()
+                 # Drop a nugget to add each of the srcrevs we've fetched (used by need_update)
+                 runfetchcmd("%s config --add bitbake.srcrev %s" % \
+-                            (ud.basecmd, ud.revisions[ud.names[0]]), d, workdir=ud.clonedir)
++                            (ud.basecmd, ud.revisions[ud.names[0]]), d, workdir=workdir)
+             except Exception as e:
+                 logger.error('gitsm: submodule download failed: %s %s' % (type(e).__name__, str(e)))
+                 raise
+ 
+         Git.download(self, ud, d)
+-        self.process_submodules(ud, ud.clonedir, download_submodule, d)
++
++        # If we're using a shallow mirror tarball it needs to be unpacked
++        # temporarily so that we can examine the .gitmodules file
++        if ud.shallow and os.path.exists(ud.fullshallow) and self.need_update(ud, d):
++            tmpdir = tempfile.mkdtemp(dir=d.getVar("DL_DIR"))
++            runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=tmpdir)
++            self.process_submodules(ud, tmpdir, download_submodule, d)
++            shutil.rmtree(tmpdir)
++        else:
++            self.process_submodules(ud, ud.clonedir, download_submodule, d)
+ 
+     def unpack(self, ud, destdir, d):
+-        def unpack_submodules(ud, url, module, modpath, d):
++        def unpack_submodules(ud, url, module, modpath, workdir, d):
+             url += ";bareclone=1;nobranch=1"
+ 
+             # Figure out where we clone over the bare submodules...
+-- 
+2.20.1
 
 
