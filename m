@@ -1,46 +1,49 @@
-Return-Path: <pbarker@konsulko.com>
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com
-	[209.85.221.67])
-	by mail.openembedded.org (Postfix) with ESMTP id 0CAC260C0E
+Return-Path: <jpewhacker@gmail.com>
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com
+	[209.85.166.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 4292961B3C
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Mar 2020 13:52:17 +0000 (UTC)
-Received: by mail-wr1-f67.google.com with SMTP id v11so11227846wrm.9
+	Mon,  9 Mar 2020 16:33:56 +0000 (UTC)
+Received: by mail-il1-f177.google.com with SMTP id g126so9259171ilh.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 Mar 2020 06:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
-	h=from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=24all8ezQCf7+fyjVCNekf1dOKX1FL7U9MeZ6eIUHIA=;
-	b=ro/qQLSgFzLYrnsResaRY6vIvqS2yEcEfr55SjI+CxoRCiEaC2ClkZEQm8nqT5mJHb
-	jkuWA0mMfqIAoDjJl1Cj/Hju3+y44ly6kva7kSi4xwua29+fajCk3w5B5dALkHeQlGc5
-	JwLQbB2J4RkxgYeILo76asAb8qHsUHefGhZrM=
+	Mon, 09 Mar 2020 09:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+	h=from:to:cc:subject:date:message-id;
+	bh=gT1Mi3jEUdvU6lRbSBYtEGXhMTh8izdAb8Qw+Uo03Ek=;
+	b=snExztFBiB8mJ54+yrrQOzDh1l4YJlSaiqWVZ+dgAVjwdJl602L3WasH0wtNzbLaFN
+	/vtPlP+6db0bZzH2VJ/E/S9MdrCaLyZbNctulxqe0qDebUoEhKnJV2uKluwgyzgorcvV
+	Km86juahdrSJeOFQILT/iD5FTMZtSR1JwNDLLiOm1Bkem+1YceWIW35GZ6qWh5+aXwmz
+	X6RpiQDi1pFNjdfejOn0E/ljuiBR9s4sWO3qqMWYtw8QhDyWeEOMLM62ZLn8dB0sH1PK
+	Pq9b6VVpu3YFFej18lqB6o6OnHEmL4TFDTrRW4/6XxIca6drQvQQ07fNnp5P+sjyLADp
+	C3qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding;
-	bh=24all8ezQCf7+fyjVCNekf1dOKX1FL7U9MeZ6eIUHIA=;
-	b=M4cJvT7DfOp0flLNINudamdW6T7gVc+quBawY4fs9e0egCAnclTGNhX6odKsrBTWqJ
-	ssqT6eEEvMUi6SV72MgdKnlxFXzuMWpQeKBL5K2AJez7WK8Nwud0ZcVIObH9q4CoSXGK
-	i6ivw07J25h+aK0ZCqmGYKnl89xO5nYmGrH+u0nBcchGQBYXl9VBqsLp2lbmf+cPlHn1
-	/fVte0jbB0nhvp5FlerMDaGGZtN53kSYDjVqd7jTOKUVoAL1Ss3VT8RdfyRmkvGGhwWo
-	dJo2O9/74drDLGzT2XAIQzCdEqTE61TFBFL3fC2dMmJhL7bzp/oV/k4r0/tFV2onHqTh
-	sqaw==
-X-Gm-Message-State: ANhLgQ1l0SENkNW9ImLX7lBByu/XcLdKLSDmP12sFXVmPby9C/phdGGP
-	ZWo85yYFstjKh2C59YIKW8HtEf9H9Xlj76te
-X-Google-Smtp-Source: ADFU+vtq+qhU9FO8GJLcUp1AKUhV3+vO5yqceVOXrM/KCzJly+WOs7Kk6YYmTitSTqjO8rNbK4mgbA==
-X-Received: by 2002:a5d:5090:: with SMTP id a16mr18756444wrt.191.1583761938192;
-	Mon, 09 Mar 2020 06:52:18 -0700 (PDT)
-Received: from ub1910.Hitronhub.home ([213.48.11.149])
-	by smtp.gmail.com with ESMTPSA id l5sm25510021wml.3.2020.03.09.06.52.16
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=gT1Mi3jEUdvU6lRbSBYtEGXhMTh8izdAb8Qw+Uo03Ek=;
+	b=HfmIUOXr9fFS8UFpkvSGEWY9Zb03fW5vyjI/zLZBO2fVQFubZ8gBvjAL0A9+6Md/q4
+	3SV5pHAna+kKdxLPFoPIZ6qQmAJau476KeGbaji559SZsPcgz+i67FqINnR+EXCEf8pQ
+	QaGFgI1temDpCGnyZrNgF56NMLs9ii5KBXBtaYe52UBh0Pg2JF3TG7F0XTMPg+lh2zC/
+	piYlMUSBF62UNE+UUygsDe7QeINCVkSPABe/NU8k+crDcBS1zHZzvZzXS1fOuqeraVn9
+	Xi2GBs9+BeRI1wBHFCjWINLluxh795KdeWxJrSboAeJ9XqsF2UqLYfb81W8jCCOh8RXk
+	GzdQ==
+X-Gm-Message-State: ANhLgQ2DXUVulZbIxXMZyBvDdReYLYml5ATnBtW48QpWQU3ighzdmYhX
+	IFj+259T0MDJr78VzmF+XttVN8NzIHQ=
+X-Google-Smtp-Source: ADFU+vs2rnJD/HqRxN1N2yktpz7pk/ySxL17MN9M9iWzoXZIK5Cgx8yDQCHeWKFNCWuJHBkc+drLug==
+X-Received: by 2002:a92:c50e:: with SMTP id r14mr16705676ilg.52.1583771636941; 
+	Mon, 09 Mar 2020 09:33:56 -0700 (PDT)
+Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
+	by smtp.gmail.com with ESMTPSA id
+	q1sm15049593ile.71.2020.03.09.09.33.56
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 09 Mar 2020 06:52:17 -0700 (PDT)
-From: Paul Barker <pbarker@konsulko.com>
+	Mon, 09 Mar 2020 09:33:56 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Mar 2020 13:52:13 +0000
-Message-Id: <20200309135213.14279-1-pbarker@konsulko.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Subject: [PATCH] tests: Add test for gitsm fetcher with shallow mirror tarballs
+Date: Mon,  9 Mar 2020 11:33:38 -0500
+Message-Id: <20200309163353.15362-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Cc: docs@lists.yoctoproject.org
+Subject: [PATCH 00/15] Add support for python structured logging
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,67 +56,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Mar 2020 13:52:18 -0000
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 09 Mar 2020 16:33:56 -0000
 
-Signed-off-by: Paul Barker <pbarker@konsulko.com>
----
- lib/bb/tests/fetch.py | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+Adds support for users to provide configuration for Python structured
+logging in bitbake. This gives a high degree of flexibility to the way
+that logs are capture and displayed, so users can generate very targeted
+logging if desired. The initial use case for this is to maintain the
+high level of hash equivalence logging on the Yocto autobuilders, while
+reducing the noise for most other users.
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 45dc9e5d..d0c161a7 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1691,6 +1691,47 @@ class GitShallowTest(FetcherTest):
-         # Verify the submodule is also shallow
-         self.assertRevCount(1, cwd=os.path.join(self.gitdir, 'gitsubmodule'))
- 
-+    def test_shallow_submodule_mirrors(self):
-+        self.add_empty_file('a')
-+        self.add_empty_file('b')
-+
-+        smdir = os.path.join(self.tempdir, 'gitsubmodule')
-+        bb.utils.mkdirhier(smdir)
-+        self.git('init', cwd=smdir)
-+        # Make this look like it was cloned from a remote...
-+        self.git('config --add remote.origin.url "%s"' % smdir, cwd=smdir)
-+        self.git('config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"', cwd=smdir)
-+        self.add_empty_file('asub', cwd=smdir)
-+        self.add_empty_file('bsub', cwd=smdir)
-+
-+        self.git('submodule init', cwd=self.srcdir)
-+        self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
-+        self.git('submodule update', cwd=self.srcdir)
-+        self.git('commit -m submodule -a', cwd=self.srcdir)
-+
-+        uri = 'gitsm://%s;protocol=file;subdir=${S}' % self.srcdir
-+
-+        # Fetch once to generate the shallow tarball
-+        fetcher, ud = self.fetch(uri)
-+
-+        # Set up the mirror
-+        mirrordir = os.path.join(self.tempdir, 'mirror')
-+        os.rename(self.dldir, mirrordir)
-+        self.d.setVar('PREMIRRORS', 'gitsm://.*/.* file://%s/\n' % mirrordir)
-+
-+        # Fetch from the mirror
-+        bb.utils.remove(self.dldir, recurse=True)
-+        bb.utils.remove(self.gitdir, recurse=True)
-+        self.fetch_and_unpack(uri)
-+
-+        # Verify the main repository is shallow
-+        self.assertRevCount(1)
-+
-+        # Verify the gitsubmodule directory is present
-+        assert os.listdir(os.path.join(self.gitdir, 'gitsubmodule'))
-+
-+        # Verify the submodule is also shallow
-+        self.assertRevCount(1, cwd=os.path.join(self.gitdir, 'gitsubmodule'))
- 
-     if any(os.path.exists(os.path.join(p, 'git-annex')) for p in os.environ.get('PATH').split(':')):
-         def test_shallow_annex(self):
+I've added documentation updates for the new BB_LOGCONFIG variable, but
+it probably needs some grooming.
+
+Joshua Watt (15):
+  bitbake: lib/bb/msg.py: Convert default domains to a dictionary
+  bitbake: knotty: Handle logging messages with specific logger
+  bitbake: lib/bb/msg.py: Use log level instead of debug count
+  bitbake: lib/bb/msg.py: Add repr for BBLogFormatter
+  bitbake: knotty: Add commented logging_tree code
+  bitbake: lib/bb/msg.py: Add filter utilities
+  bitbake: lib/bb/msg.py: Remove unused filters
+  bitbake: lib/bb/msg.py: Add helper to set logging config
+  bitbake: knotty: Remove dependency on format variable
+  bitbake: knotty: Setup logs with config helper
+  bitbake: worker: Remove unnecessary addDefaultLogFilter
+  bitbake: Log hash equivalence with a different logger
+  bitbake: Add autobuilder logging configuration
+  bitbake: Lower hash equivalence logging
+  bitbake: doc: Add documentation for BB_LOGCONFIG
+
+ bitbake/bin/bitbake-worker                    |   3 +-
+ bitbake/contrib/autobuilderlog.json           |  27 +++
+ .../bitbake-user-manual-execution.xml         |  97 ++++++++++
+ .../bitbake-user-manual-ref-variables.xml     |  11 ++
+ bitbake/lib/bb/__init__.py                    |   7 +-
+ bitbake/lib/bb/msg.py                         | 172 +++++++++++++----
+ bitbake/lib/bb/runqueue.py                    |  13 +-
+ bitbake/lib/bb/siggen.py                      |  17 +-
+ bitbake/lib/bb/tinfoil.py                     |   4 +-
+ bitbake/lib/bb/ui/knotty.py                   | 173 ++++++++++++------
+ 10 files changed, 419 insertions(+), 105 deletions(-)
+ create mode 100644 bitbake/contrib/autobuilderlog.json
+
 -- 
-2.20.1
+2.17.1
 
 
