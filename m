@@ -1,50 +1,50 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f196.google.com (mail-il1-f196.google.com
-	[209.85.166.196])
-	by mail.openembedded.org (Postfix) with ESMTP id 2967661BE5
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com
+	[209.85.166.171])
+	by mail.openembedded.org (Postfix) with ESMTP id 74D2D61BE5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Mar 2020 23:28:53 +0000 (UTC)
-Received: by mail-il1-f196.google.com with SMTP id k29so3778091ilg.0
+	Wed, 11 Mar 2020 23:28:54 +0000 (UTC)
+Received: by mail-il1-f171.google.com with SMTP id e8so3715566ilc.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Mar 2020 16:28:54 -0700 (PDT)
+	Wed, 11 Mar 2020 16:28:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=/CdgLDvzbeX53pWv2FsPR2gj2eJY16uI1tCnR+wJ1Os=;
-	b=VBd1Qpzwz0+cUbwqDZa39/796KkgfMCBpIJVrqqHi2KmPjbWbjSR/VzdJWk0t2xSdZ
-	SznxZXadB7UjPT6fyFyqQHJVfsXmBdYmrik4itcJGmANJYozGtNJgjRpqtxRH5WpxnZA
-	SQ2yNBMgidnOS5c/+QMPo545Zcc1Y6iWXMihuVWSNSxKFBcDwdN6ZA96jgXj1+gtBXHT
-	UvAfAXQAs3Ik1I+GJJCXPmA1isHfdCo4jsVj9EitQWMY327W6IgcE/jYBupGPk5HehY6
-	s+oDQarKNog5S5B1uV/MIV2MtmuuGTe146hepY6u5/rLqONIlAqht7rn2PW7vaFwG9v5
-	MevQ==
+	bh=Ywv3v+cKCvoSttSUXynqtrKDqYU11boKFpZJEYBElW0=;
+	b=eLY9C5pAuHO4E6XiLrbXjLIncC8wCccM/iWmjzOfrR+QXw+pDMhJzlz3UBF/nfRgnF
+	Fu7Q+8H91HRrY0EBjk5LUJeUxOarFuB9up7IbDtz5U3CQNL7mYQ5LObr44yZTHtYwk9R
+	jnC9dQwQX9EaaoR3nuH7ONEX/oj56h0hUBXOPHq28Aw+7a57dtdQPq4AJn0/0lstxuMn
+	Jzgshxe6qpQdPlkb5hoiKyywSKUxCSalbOLHZzs7gnvIheqW7Lz0LhngjjRgXjTTCGTt
+	5NX6Re1s3UOklOl2VgsGfEiOjvYbbIDsmX0+8sXHy0e3vhkDihxW8gr0YCgWT640Lwc8
+	DuwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=/CdgLDvzbeX53pWv2FsPR2gj2eJY16uI1tCnR+wJ1Os=;
-	b=MGyyZH+LyWhwgq43rHTXMS8laLN9ADDV7pHpljHBoTXaAwHUeXgool2bOPqrLOwKbi
-	D+fF901mAdwMXwEIy5eIA9S8OjBFo7M8xqGAZz73vVy5RIIg9044pAA2Pb1j7pxxj3Zp
-	we5Tu8XTiSxezCDt2+Eg5GZpJ4xsDl/4CbiPg0Jbme2wAF6pMHdmXt1CAicjabe+MTw3
-	TzovjMSC148zXWFTgngX7iyShrx/B8KJbmvgecEUhHFZghwCL9TmW2pHRSaPXr6Vxial
-	hEgC7oLADw8t/GgnKixTreeG2H7QqXIN7oCFhvIbMusCWWwU/G1deZ3RPdbKv6tHNqUb
-	JduQ==
-X-Gm-Message-State: ANhLgQ04sZGpFb+zE0QQjbOYRoF1t28mCPG+SIikjbVhZYvd9SbLAerT
-	Q1r7VsYGpXKWnirH1X0C5Pfu2+eHrEU=
-X-Google-Smtp-Source: ADFU+vtSndVCMb76bUHR/LkGiOGACIzl0jnid/5J6j//JuUVPb1f1H2ezAorsJ1zJ3xOXROqz2bzsQ==
-X-Received: by 2002:a92:3a1d:: with SMTP id h29mr5865368ila.112.1583969333709; 
-	Wed, 11 Mar 2020 16:28:53 -0700 (PDT)
+	bh=Ywv3v+cKCvoSttSUXynqtrKDqYU11boKFpZJEYBElW0=;
+	b=CbG0wP5Kkazq4calPTmhdhScVXcvVO1pxXXrzobPH5P3WvqFefVwtNu+eTs6kTWDt4
+	4nMbKEBcbEVGFqkBHVhQtdC1acx1PbahhjPZ+3jzwCDA0drzNFqmiGT63Nw2MvCj6SiL
+	m+WA6QY4DZGma+sJZSt31vukcuW19Wb/YrKOFkfjYBewNcd3AnqtPYXyjW4TaKHTCq3Q
+	dDBHFXKtRY+VnTNUFpt8g++s0k+fdEBftFZxeCXiXuFqsEztlp9IGN/2vWqx6LH+GSY7
+	+a084NKWpVAEp1YFV8EzwHsKdkOOWQ3b/bT6eUIHYVs76nN5r6SzO01YavYHfDCUZ8oO
+	YKrA==
+X-Gm-Message-State: ANhLgQ0mDARCMNhTfdHtEEXV7UzkDcrS5v6qdo/tUVigYbCVq1X0vvVO
+	zTARW2EcgEpPGXTWz1kefppcRHG7nCw=
+X-Google-Smtp-Source: ADFU+vuLZU7eLygpEi6zuswWbvHkXEjpZAmlBVeY37NQBf3d9aYNj7FWxcovYZpsa4nbReflWZqykA==
+X-Received: by 2002:a92:b6d0:: with SMTP id m77mr5078679ill.247.1583969335011; 
+	Wed, 11 Mar 2020 16:28:55 -0700 (PDT)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id w3sm3297603ior.55.2020.03.11.16.28.52
+	by smtp.gmail.com with ESMTPSA id w3sm3297603ior.55.2020.03.11.16.28.53
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 11 Mar 2020 16:28:52 -0700 (PDT)
+	Wed, 11 Mar 2020 16:28:54 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Mar 2020 18:28:45 -0500
-Message-Id: <20200311232847.2874-3-JPEWhacker@gmail.com>
+Date: Wed, 11 Mar 2020 18:28:46 -0500
+Message-Id: <20200311232847.2874-4-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200311232847.2874-1-JPEWhacker@gmail.com>
 References: <20200311232847.2874-1-JPEWhacker@gmail.com>
-Subject: [PATCH 2/4] bitbake: msg: Add helper to merge logging configs
+Subject: [PATCH 3/4] bitbake: knotty: Update hash equivalence logging
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -59,121 +59,153 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 11 Mar 2020 23:28:54 -0000
 
-Adds a function that can be used by UI front ends to merge logging
-configuration fragments.
+Updates hash equivalence logging so that the interesting VERBOSE
+messages are always logged to the consolelog file so that issues in
+individual user builds can be diagnosed. The autobuilder logging config
+then updates this so that they also are shown on stdout, since the
+consolelog file is not capture there.
+
+In order to facilitate this, 2 new logging handlers were added,
+"BitBake.verbconsole" and "BitBake.verbconsolelog". Neither of these
+handlers are attached to anything by default, but they will log any
+messages that wouldn't otherwise be logged by the normal console or
+consolelog handlers. Users can attach whatever loggers the desire to
+this handler to get them to appear on the console or in the consolelog,
+as demonstrated by the autobuilderlog.json file.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/msg.py | 89 +++++++++++++++++++++++--------------------
- 1 file changed, 48 insertions(+), 41 deletions(-)
+ bitbake/contrib/autobuilderlog.json | 18 +-------
+ bitbake/lib/bb/ui/knotty.py         | 68 +++++++++++++++++++++++++----
+ 2 files changed, 62 insertions(+), 24 deletions(-)
 
-diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index ee3c38b5a4..c22d0d3e15 100644
---- a/bitbake/lib/bb/msg.py
-+++ b/bitbake/lib/bb/msg.py
-@@ -193,6 +193,53 @@ def has_console_handler(logger):
-                 return True
-     return False
+diff --git a/bitbake/contrib/autobuilderlog.json b/bitbake/contrib/autobuilderlog.json
+index 103a1141f6..193a675a1f 100644
+--- a/bitbake/contrib/autobuilderlog.json
++++ b/bitbake/contrib/autobuilderlog.json
+@@ -1,27 +1,13 @@
+ {
+     "version": 1,
+-    "handlers": {
+-        "autobuilderlog": {
+-            "class": "logging.FileHandler",
+-            "formatter": "logfileFormatter",
+-            "level": "DEBUG",
+-            "filename": "autobuilder.log",
+-            "mode": "w"
+-        }
+-    },
+-    "formatters": {
+-            "logfileFormatter": {
+-                "format": "%(name)s: %(levelname)s: %(message)s"
+-            }
+-    },
+     "loggers": {
+         "BitBake.SigGen.HashEquiv": {
+             "level": "VERBOSE",
+-            "handlers": ["autobuilderlog"]
++            "handlers": ["BitBake.verbconsole"]
+         },
+         "BitBake.RunQueue.HashEquiv": {
+             "level": "VERBOSE",
+-            "handlers": ["autobuilderlog"]
++            "handlers": ["BitBake.verbconsole"]
+         }
+     }
+ }
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 2dfce90a4f..b4df5f6e88 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -419,6 +419,18 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 "stream": "ext://sys.stderr",
+                 "filters": ["BitBake.stderrFilter"],
+             },
++            # This handler can be used if specific loggers should print on
++            # the console at a lower severity than the default. It will
++            # display any messages sent to it that are lower than then
++            # BitBake.console logging level (so as to prevent duplication of
++            # messages). Nothing is attached to this handler by default
++            "BitBake.verbconsole": {
++                "class": "logging.StreamHandler",
++                "formatter": "BitBake.consoleFormatter",
++                "level": 1,
++                "stream": "ext://sys.stdout",
++                "filters": ["BitBake.verbconsoleFilter"],
++            },
+         },
+         "formatters": {
+             # This format instance will get color output enabled by the
+@@ -442,7 +454,11 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+             "BitBake.stderrFilter": {
+                 "()": "bb.msg.LogFilterGEQLevel",
+                 "level": "ERROR"
+-            }
++            },
++            "BitBake.verbconsoleFilter": {
++                "()": "bb.msg.LogFilterLTLevel",
++                "level": console_loglevel
++            },
+         },
+         "loggers": {
+             "BitBake": {
+@@ -455,13 +471,49 @@ def main(server, eventHandler, params, tf = TerminalFilter):
  
-+def mergeLoggingConfig(logconfig, userconfig):
-+    logconfig = copy.deepcopy(logconfig)
-+    userconfig = copy.deepcopy(userconfig)
+     # Enable the console log file if enabled
+     if consolelogfile and not params.options.show_environment and not params.options.show_versions:
+-        logconfig["handlers"]["BitBake.consolelog"] ={
+-            "class": "logging.FileHandler",
+-            "formatter": "BitBake.logfileFormatter",
+-            "level": "INFO",
+-            "filename": consolelogfile,
+-        }
+-        logconfig["loggers"]["BitBake"]["handlers"].append("BitBake.consolelog")
++        logconfig = bb.msg.mergeLoggingConfig(logconfig, {
++                "version": 1,
++                "handlers" : {
++                    "BitBake.consolelog": {
++                        "class": "logging.FileHandler",
++                        "formatter": "BitBake.logfileFormatter",
++                        "level": loglevel,
++                        "filename": consolelogfile,
++                    },
++                    # Just like verbconsole, anything sent here will go to the
++                    # log file, unless it would go to BitBake.consolelog
++                    "BitBake.verbconsolelog" : {
++                        "class": "logging.FileHandler",
++                        "formatter": "BitBake.logfileFormatter",
++                        "level": 1,
++                        "filename": consolelogfile,
++                        "filters": ["BitBake.verbconsolelogFilter"],
++                    },
++                },
++                "filters": {
++                    "BitBake.verbconsolelogFilter": {
++                        "()": "bb.msg.LogFilterLTLevel",
++                        "level": loglevel,
++                    },
++                },
++                "loggers": {
++                    "BitBake": {
++                        "handlers": ["BitBake.consolelog"],
++                    },
 +
-+    # Merge config with the default config
-+    if userconfig.get('version') != logconfig['version']:
-+        raise BaseException("Bad user configuration version. Expected %r, got %r" % (logconfig['version'], userconfig.get('version')))
-+
-+    # Set some defaults to make merging easier
-+    userconfig.setdefault("loggers", {})
-+
-+    # If a handler, formatter, or filter is defined in the user
-+    # config, it will replace an existing one in the default config
-+    for k in ("handlers", "formatters", "filters"):
-+        logconfig.setdefault(k, {}).update(userconfig.get(k, {}))
-+
-+    seen_loggers = set()
-+    for name, l in logconfig["loggers"].items():
-+        # If the merge option is set, merge the handlers and
-+        # filters. Otherwise, if it is False, this logger won't get
-+        # add to the set of seen loggers and will replace the
-+        # existing one
-+        if l.get('bitbake_merge', True):
-+            ulogger = userconfig["loggers"].setdefault(name, {})
-+            ulogger.setdefault("handlers", [])
-+            ulogger.setdefault("filters", [])
-+
-+            # Merge lists
-+            l.setdefault("handlers", []).extend(ulogger["handlers"])
-+            l.setdefault("filters", []).extend(ulogger["filters"])
-+
-+            # Replace other properties if present
-+            if "level" in ulogger:
-+                l["level"] = ulogger["level"]
-+
-+            if "propagate" in ulogger:
-+                l["propagate"] = ulogger["propagate"]
-+
-+            seen_loggers.add(name)
-+
-+    # Add all loggers present in the user config, but not any that
-+    # have already been processed
-+    for name in set(userconfig["loggers"].keys()) - seen_loggers:
-+        logconfig["loggers"][name] = userconfig["loggers"][name]
-+
-+    return logconfig
-+
- def setLoggingConfig(defaultconfig, userconfigfile=None):
-     logconfig = copy.deepcopy(defaultconfig)
++                    # Other interesting things that we want to keep an eye on
++                    # in the log files in case someone has an issue, but not
++                    # necessarily show to the user on the console
++                    "BitBake.SigGen.HashEquiv": {
++                        "level": "VERBOSE",
++                        "handlers": ["BitBake.verbconsolelog"],
++                    },
++                    "BitBake.RunQueue.HashEquiv": {
++                        "level": "VERBOSE",
++                        "handlers": ["BitBake.verbconsolelog"],
++                    }
++                }
++            })
  
-@@ -208,47 +255,7 @@ def setLoggingConfig(defaultconfig, userconfigfile=None):
-                 raise BaseException("Unrecognized file format: %s" % userconfigfile)
- 
-             if userconfig.get('bitbake_merge', True):
--                # Merge config with the default config
--                if userconfig.get('version') != logconfig['version']:
--                    raise BaseException("Bad user configuration version. Expected %r, got %r" % (logconfig['version'], userconfig.get('version')))
--
--                # Set some defaults to make merging easier
--                userconfig.setdefault("loggers", {})
--
--                # If a handler, formatter, or filter is defined in the user
--                # config, it will replace an existing one in the default config
--                for k in ("handlers", "formatters", "filters"):
--                    logconfig.setdefault(k, {}).update(userconfig.get(k, {}))
--
--                seen_loggers = set()
--                for name, l in logconfig["loggers"].items():
--                    # If the merge option is set, merge the handlers and
--                    # filters. Otherwise, if it is False, this logger won't get
--                    # add to the set of seen loggers and will replace the
--                    # existing one
--                    if l.get('bitbake_merge', True):
--                        ulogger = userconfig["loggers"].setdefault(name, {})
--                        ulogger.setdefault("handlers", [])
--                        ulogger.setdefault("filters", [])
--
--                        # Merge lists
--                        l.setdefault("handlers", []).extend(ulogger["handlers"])
--                        l.setdefault("filters", []).extend(ulogger["filters"])
--
--                        # Replace other properties if present
--                        if "level" in ulogger:
--                            l["level"] = ulogger["level"]
--
--                        if "propagate" in ulogger:
--                            l["propagate"] = ulogger["propagate"]
--
--                        seen_loggers.add(name)
--
--                # Add all loggers present in the user config, but not any that
--                # have already been processed
--                for name in set(userconfig["loggers"].keys()) - seen_loggers:
--                    logconfig["loggers"][name] = userconfig["loggers"][name]
--
-+                logconfig = mergeLoggingConfig(logconfig, userconfig)
-             else:
-                 # Replace the entire default config
-                 logconfig = userconfig
+         bb.utils.mkdirhier(os.path.dirname(consolelogfile))
+         loglink = os.path.join(os.path.dirname(consolelogfile), 'console-latest.log')
 -- 
 2.17.1
 
