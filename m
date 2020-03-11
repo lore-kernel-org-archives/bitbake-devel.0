@@ -1,50 +1,50 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com
-	[209.85.166.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 74D2D61BE5
+Received: from mail-io1-f65.google.com (mail-io1-f65.google.com
+	[209.85.166.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 7B93C61C12
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Mar 2020 23:28:54 +0000 (UTC)
-Received: by mail-il1-f171.google.com with SMTP id e8so3715566ilc.13
+	Wed, 11 Mar 2020 23:28:56 +0000 (UTC)
+Received: by mail-io1-f65.google.com with SMTP id h8so3790549iob.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Mar 2020 16:28:55 -0700 (PDT)
+	Wed, 11 Mar 2020 16:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=Ywv3v+cKCvoSttSUXynqtrKDqYU11boKFpZJEYBElW0=;
-	b=eLY9C5pAuHO4E6XiLrbXjLIncC8wCccM/iWmjzOfrR+QXw+pDMhJzlz3UBF/nfRgnF
-	Fu7Q+8H91HRrY0EBjk5LUJeUxOarFuB9up7IbDtz5U3CQNL7mYQ5LObr44yZTHtYwk9R
-	jnC9dQwQX9EaaoR3nuH7ONEX/oj56h0hUBXOPHq28Aw+7a57dtdQPq4AJn0/0lstxuMn
-	Jzgshxe6qpQdPlkb5hoiKyywSKUxCSalbOLHZzs7gnvIheqW7Lz0LhngjjRgXjTTCGTt
-	5NX6Re1s3UOklOl2VgsGfEiOjvYbbIDsmX0+8sXHy0e3vhkDihxW8gr0YCgWT640Lwc8
-	DuwQ==
+	bh=jDGyVuxkoAnm9OB0gdYStUIy4dbXtoNRptBL2rBM1+8=;
+	b=AHD4LqkwLpxlHPxG0YM/y4kgOWtMVo4d7SQHojgGVAMnMU/9PxSWpY+sKPGo8zXJtq
+	fHuR2qgk1Giqaozk2wxNY9d82iPHo8bnxmpggBL94qSO2LGmnycrgrl9aq2RP1ECFn+3
+	rBpBy/Uv36SkQDcpqWJCfLDBthGkdpcG+QB2OvdSF/ZOKeP2NNinXVBLDPBQBiRVyXhB
+	odcZFJpxeLebYLxAMvvochhcKMzKI986Yx0jPOQwyLCm3lN5hm4vJfK2HmRy7UdVwXl7
+	x991IZzygDMSnhsUfEMqrQQbToNeTXuLBn0RfHnSMRjo7i959IezAT6bGXluPc5yREPY
+	7XYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=Ywv3v+cKCvoSttSUXynqtrKDqYU11boKFpZJEYBElW0=;
-	b=CbG0wP5Kkazq4calPTmhdhScVXcvVO1pxXXrzobPH5P3WvqFefVwtNu+eTs6kTWDt4
-	4nMbKEBcbEVGFqkBHVhQtdC1acx1PbahhjPZ+3jzwCDA0drzNFqmiGT63Nw2MvCj6SiL
-	m+WA6QY4DZGma+sJZSt31vukcuW19Wb/YrKOFkfjYBewNcd3AnqtPYXyjW4TaKHTCq3Q
-	dDBHFXKtRY+VnTNUFpt8g++s0k+fdEBftFZxeCXiXuFqsEztlp9IGN/2vWqx6LH+GSY7
-	+a084NKWpVAEp1YFV8EzwHsKdkOOWQ3b/bT6eUIHYVs76nN5r6SzO01YavYHfDCUZ8oO
-	YKrA==
-X-Gm-Message-State: ANhLgQ0mDARCMNhTfdHtEEXV7UzkDcrS5v6qdo/tUVigYbCVq1X0vvVO
-	zTARW2EcgEpPGXTWz1kefppcRHG7nCw=
-X-Google-Smtp-Source: ADFU+vuLZU7eLygpEi6zuswWbvHkXEjpZAmlBVeY37NQBf3d9aYNj7FWxcovYZpsa4nbReflWZqykA==
-X-Received: by 2002:a92:b6d0:: with SMTP id m77mr5078679ill.247.1583969335011; 
-	Wed, 11 Mar 2020 16:28:55 -0700 (PDT)
+	bh=jDGyVuxkoAnm9OB0gdYStUIy4dbXtoNRptBL2rBM1+8=;
+	b=r+F00QFA2hdW5CzA7a7eFR5gB45kUBQPaj303QcKmMcTnWG2HYPdEycIUG2Xo0v4j/
+	R/XDiazEaj2gYgYpjmBjOS+ieivsYb0OJ6eVyUwYHRoKrwUrsBqGNRUN3luqcygU0dnx
+	ByFOfmcHkDVtdhiKfViYKEB+uYOUZd4Y+1Bg3ueVjwOy/JaIhP+6CBIxu7+Gb1QLUuYm
+	fW71eUCow0cJZpJEO8bd1Cn1n7Z4nHWj74uTu5OiQPHt4UlvRDp9RKFP8/r5lf+sNX4J
+	3zkNTdiRfgP/TKA19NcIercehwZ1LcuX1+zeGT6/q1GOEKQOLrMVfsAI/zqeF+3ggQCE
+	Bg/Q==
+X-Gm-Message-State: ANhLgQ1JYgtwTeud0GU3RHKtTWo5v9lOYaSa43RSBx0iHv9YlbsVpw1s
+	IToDmKwRPU7oXz72txm8s1/udy3kN74=
+X-Google-Smtp-Source: ADFU+vuorYVpLfILx1VAjhKyeKsxDKMZqXXhtTfdpLhuYbYDzi9cQghm1x6Rh7MiAkVyHxyVf+SFeA==
+X-Received: by 2002:a6b:c045:: with SMTP id q66mr5167932iof.10.1583969336064; 
+	Wed, 11 Mar 2020 16:28:56 -0700 (PDT)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id w3sm3297603ior.55.2020.03.11.16.28.53
+	by smtp.gmail.com with ESMTPSA id w3sm3297603ior.55.2020.03.11.16.28.55
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 11 Mar 2020 16:28:54 -0700 (PDT)
+	Wed, 11 Mar 2020 16:28:55 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Mar 2020 18:28:46 -0500
-Message-Id: <20200311232847.2874-4-JPEWhacker@gmail.com>
+Date: Wed, 11 Mar 2020 18:28:47 -0500
+Message-Id: <20200311232847.2874-5-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200311232847.2874-1-JPEWhacker@gmail.com>
 References: <20200311232847.2874-1-JPEWhacker@gmail.com>
-Subject: [PATCH 3/4] bitbake: knotty: Update hash equivalence logging
+Subject: [PATCH 4/4] bitbake: runqueue: Lower setscene complete logging level
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,155 +57,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Mar 2020 23:28:54 -0000
+X-List-Received-Date: Wed, 11 Mar 2020 23:28:56 -0000
 
-Updates hash equivalence logging so that the interesting VERBOSE
-messages are always logged to the consolelog file so that issues in
-individual user builds can be diagnosed. The autobuilder logging config
-then updates this so that they also are shown on stdout, since the
-consolelog file is not capture there.
+Lowers the level of the log message when setscene tasks have completed.
+This message can occur multiple times when hash equivalence is enabled,
+since the runqueue switches between executing setscene tasks and normal
+tasks. Since this is primarily of use when debugging hash equivalence,
+use the hash equivalence logger at VERBOSE level.
 
-In order to facilitate this, 2 new logging handlers were added,
-"BitBake.verbconsole" and "BitBake.verbconsolelog". Neither of these
-handlers are attached to anything by default, but they will log any
-messages that wouldn't otherwise be logged by the normal console or
-consolelog handlers. Users can attach whatever loggers the desire to
-this handler to get them to appear on the console or in the consolelog,
-as demonstrated by the autobuilderlog.json file.
+[YOCTO #13813]
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/contrib/autobuilderlog.json | 18 +-------
- bitbake/lib/bb/ui/knotty.py         | 68 +++++++++++++++++++++++++----
- 2 files changed, 62 insertions(+), 24 deletions(-)
+ bitbake/lib/bb/runqueue.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/contrib/autobuilderlog.json b/bitbake/contrib/autobuilderlog.json
-index 103a1141f6..193a675a1f 100644
---- a/bitbake/contrib/autobuilderlog.json
-+++ b/bitbake/contrib/autobuilderlog.json
-@@ -1,27 +1,13 @@
- {
-     "version": 1,
--    "handlers": {
--        "autobuilderlog": {
--            "class": "logging.FileHandler",
--            "formatter": "logfileFormatter",
--            "level": "DEBUG",
--            "filename": "autobuilder.log",
--            "mode": "w"
--        }
--    },
--    "formatters": {
--            "logfileFormatter": {
--                "format": "%(name)s: %(levelname)s: %(message)s"
--            }
--    },
-     "loggers": {
-         "BitBake.SigGen.HashEquiv": {
-             "level": "VERBOSE",
--            "handlers": ["autobuilderlog"]
-+            "handlers": ["BitBake.verbconsole"]
-         },
-         "BitBake.RunQueue.HashEquiv": {
-             "level": "VERBOSE",
--            "handlers": ["autobuilderlog"]
-+            "handlers": ["BitBake.verbconsole"]
-         }
-     }
- }
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 2dfce90a4f..b4df5f6e88 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -419,6 +419,18 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 "stream": "ext://sys.stderr",
-                 "filters": ["BitBake.stderrFilter"],
-             },
-+            # This handler can be used if specific loggers should print on
-+            # the console at a lower severity than the default. It will
-+            # display any messages sent to it that are lower than then
-+            # BitBake.console logging level (so as to prevent duplication of
-+            # messages). Nothing is attached to this handler by default
-+            "BitBake.verbconsole": {
-+                "class": "logging.StreamHandler",
-+                "formatter": "BitBake.consoleFormatter",
-+                "level": 1,
-+                "stream": "ext://sys.stdout",
-+                "filters": ["BitBake.verbconsoleFilter"],
-+            },
-         },
-         "formatters": {
-             # This format instance will get color output enabled by the
-@@ -442,7 +454,11 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-             "BitBake.stderrFilter": {
-                 "()": "bb.msg.LogFilterGEQLevel",
-                 "level": "ERROR"
--            }
-+            },
-+            "BitBake.verbconsoleFilter": {
-+                "()": "bb.msg.LogFilterLTLevel",
-+                "level": console_loglevel
-+            },
-         },
-         "loggers": {
-             "BitBake": {
-@@ -455,13 +471,49 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index cef9b0fbbf..16f076f3b1 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -2059,7 +2059,7 @@ class RunQueueExecute:
+         self.update_holdofftasks()
  
-     # Enable the console log file if enabled
-     if consolelogfile and not params.options.show_environment and not params.options.show_versions:
--        logconfig["handlers"]["BitBake.consolelog"] ={
--            "class": "logging.FileHandler",
--            "formatter": "BitBake.logfileFormatter",
--            "level": "INFO",
--            "filename": consolelogfile,
--        }
--        logconfig["loggers"]["BitBake"]["handlers"].append("BitBake.consolelog")
-+        logconfig = bb.msg.mergeLoggingConfig(logconfig, {
-+                "version": 1,
-+                "handlers" : {
-+                    "BitBake.consolelog": {
-+                        "class": "logging.FileHandler",
-+                        "formatter": "BitBake.logfileFormatter",
-+                        "level": loglevel,
-+                        "filename": consolelogfile,
-+                    },
-+                    # Just like verbconsole, anything sent here will go to the
-+                    # log file, unless it would go to BitBake.consolelog
-+                    "BitBake.verbconsolelog" : {
-+                        "class": "logging.FileHandler",
-+                        "formatter": "BitBake.logfileFormatter",
-+                        "level": 1,
-+                        "filename": consolelogfile,
-+                        "filters": ["BitBake.verbconsolelogFilter"],
-+                    },
-+                },
-+                "filters": {
-+                    "BitBake.verbconsolelogFilter": {
-+                        "()": "bb.msg.LogFilterLTLevel",
-+                        "level": loglevel,
-+                    },
-+                },
-+                "loggers": {
-+                    "BitBake": {
-+                        "handlers": ["BitBake.consolelog"],
-+                    },
-+
-+                    # Other interesting things that we want to keep an eye on
-+                    # in the log files in case someone has an issue, but not
-+                    # necessarily show to the user on the console
-+                    "BitBake.SigGen.HashEquiv": {
-+                        "level": "VERBOSE",
-+                        "handlers": ["BitBake.verbconsolelog"],
-+                    },
-+                    "BitBake.RunQueue.HashEquiv": {
-+                        "level": "VERBOSE",
-+                        "handlers": ["BitBake.verbconsolelog"],
-+                    }
-+                }
-+            })
+         if not self.sq_live and not self.sqdone and not self.sq_deferred and not self.updated_taskhash_queue and not self.holdoff_tasks:
+-            logger.info("Setscene tasks completed")
++            hashequiv_logger.verbose("Setscene tasks completed")
  
-         bb.utils.mkdirhier(os.path.dirname(consolelogfile))
-         loglink = os.path.join(os.path.dirname(consolelogfile), 'console-latest.log')
+             err = self.summarise_scenequeue_errors()
+             if err:
 -- 
 2.17.1
 
