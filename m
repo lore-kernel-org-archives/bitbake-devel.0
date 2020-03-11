@@ -1,48 +1,51 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com
-	[209.85.166.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 303C561BDE
+Received: from mail-io1-f65.google.com (mail-io1-f65.google.com
+	[209.85.166.65])
+	by mail.openembedded.org (Postfix) with ESMTP id DDCA261BF4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Mar 2020 23:28:50 +0000 (UTC)
-Received: by mail-il1-f181.google.com with SMTP id l14so3737352ilj.8
+	Wed, 11 Mar 2020 23:28:51 +0000 (UTC)
+Received: by mail-io1-f65.google.com with SMTP id t26so3763246ios.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Mar 2020 16:28:52 -0700 (PDT)
+	Wed, 11 Mar 2020 16:28:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id;
-	bh=g3/hByNRdYRwoBcgd/CWX8cmBrW2T1FMaTwb0ROakFw=;
-	b=ER0hHvcevwCuHYWSq4HHO9KCjNyPXxZNf2wLFbgx6AVYF4I1SbH3TYFNaZXZkr6ai/
-	kQyIT/U1dxXnCOxtcVoKMTmr19/n+kgiv2ZFw6tg/IisEKoh3D4SvACqK9ovNNadgFsH
-	yWP4zVY19Ww33smyvNUDjg0IC0V1fo36/Jt2TyB4QURGHXRub4SnRWzrC9URNKUZnor3
-	BZIQahdi0FMHYuXwEyMELyGh/Va6753KuL4lZY7EyFPfAgJM+9t6kvj+/puqwc6jRzEE
-	+oqks8ftajPcnNFxUq3f/23y9nfLiRQViDzrpuWYd6aFDIWeA8jnFwoZIpVL6rZrGTWm
-	X2Wg==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=BDD2k7q6fl2h/DR5DhF+hk2UKCmR+VmmiqsxZKSiIaE=;
+	b=OWwCSjKRBnh4qQQHb2HrrbjuNf5a420oEKOknwF/83QVVqIYAmD0k3aHtYSvteAFjO
+	yQGjsMalMrYEAvX1vbJNVfMeVxtRyxzhCWGPkdh4Kslxahlzj6wqLtU8o/ar5CpFaFoO
+	1BXv6XfFfBEzcpGxY2fPKFb4pUa32oRYSncgZhujzOouzw9Wg7/X9/aA/dHCsGO0MtKk
+	hV4oo21ZS9u3w+tVSR4fWZQj/DQMeZRp2duM7bDjtZvHgI7YaDNIg5ST2l36HfmJaoxu
+	on4sMN9aUfB8IGnlPbIljFJiaGacKtVKlwN90Kmx9RCtD37QgWERygjZjizmRCflXKiE
+	C7YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=g3/hByNRdYRwoBcgd/CWX8cmBrW2T1FMaTwb0ROakFw=;
-	b=akPFNWHKGO6HBNYCOm4Pf+b+XLQLDsAMfV8KDCnBoNNII26KN/7HUumb/LuHGZIHiD
-	u8Pu4XZOIBgmm3jmuElkPUriTKxV7wmS/ejhyIimU4ueFc6AOg9Vtt60pu3AlImPsIaR
-	lOXaiZK6fVKPzNkeRbi7z56xwHao2+w2P/unpBXbWkcxb2TAQdn7ExIev51qnAx4+hKA
-	WVhjlR+G+MSj/Xx7GdKcj8jq10XnRfyDNXEnyhnKSnVMlvZCUs5+ibUxnRam/cd27srU
-	ZI+rk7RFATyolwbaC6YSqJeR705JaLIvD9xk8o9D0S3UnNy/O/wREdbnCo0VqVEBD2Ux
-	2jAg==
-X-Gm-Message-State: ANhLgQ20By0Kb4T8Fhn1sfWZVLhp6AcBy6PMdGjrpLl4TPBmZGUiH0mA
-	w9Sn3tchoTnctLJerLKPgGjb5/RCOoQ=
-X-Google-Smtp-Source: ADFU+vtdAb4jmb6pjtiG5JF2WrDxS/o7OH6LDn//cF0k+XX6SN+UmZaGW4kemIKLCezin1lfXoR2hQ==
-X-Received: by 2002:a05:6e02:10d4:: with SMTP id
-	s20mr5497560ilj.85.1583969331668; 
-	Wed, 11 Mar 2020 16:28:51 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=BDD2k7q6fl2h/DR5DhF+hk2UKCmR+VmmiqsxZKSiIaE=;
+	b=g7ABSwtlZl4lsmdFedU9kse/HT0uQl2Sn4Ek7ffPFa6KguKNzOsAfCliYFJL8oDFQv
+	eup8YWb7oQRlZT0Ym6WxCAdbXq9PTV7um+a4Gdgzr89B8PJnJwEv34b4TheDGxv+1z0C
+	GMGgVFptkReAHQjmXxgpr5Q+4NTURYCdRhe+W6WzxDbbbvlLt0tpzt3bx7zLoECJS7ba
+	6U4P6AIoAjNFYr/MLAEyVSAaos8UcHOlOlj203zlhIpHTaUsAiYwzNtzBigywTXbpCNg
+	fxPDnkBW2p9O/zbiBDd1N8pZM7H8F3WXb4KRADnOvUgyIpJVTzReQF0QDyDOWxd5dsXW
+	jQyA==
+X-Gm-Message-State: ANhLgQ0OADB8N1DhWK1hSmyS62udhr7/rNcOy8/dOIAD55hg+AcHsbQC
+	0XIuFKg/YeVywMpNYjli5vhVGyJ1A3o=
+X-Google-Smtp-Source: ADFU+vu44Lzf0+UaMUy4SH/wpn52VbqV/WtVDX6wNiIkp5yqp8DvOe8m4XqxYZJLhutKi5c/4Uf9aQ==
+X-Received: by 2002:a05:6602:2541:: with SMTP id
+	j1mr5208433ioe.37.1583969332601; 
+	Wed, 11 Mar 2020 16:28:52 -0700 (PDT)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id w3sm3297603ior.55.2020.03.11.16.28.50
+	by smtp.gmail.com with ESMTPSA id w3sm3297603ior.55.2020.03.11.16.28.51
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 11 Mar 2020 16:28:51 -0700 (PDT)
+	Wed, 11 Mar 2020 16:28:52 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Mar 2020 18:28:43 -0500
-Message-Id: <20200311232847.2874-1-JPEWhacker@gmail.com>
+Date: Wed, 11 Mar 2020 18:28:44 -0500
+Message-Id: <20200311232847.2874-2-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
-Subject: [PATCH 0/4] More Bitbake logging improvements
+In-Reply-To: <20200311232847.2874-1-JPEWhacker@gmail.com>
+References: <20200311232847.2874-1-JPEWhacker@gmail.com>
+Subject: [PATCH 1/4] bitbake: knotty: Add logging cleanup
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,25 +58,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Mar 2020 23:28:51 -0000
+X-List-Received-Date: Wed, 11 Mar 2020 23:28:52 -0000
 
-Supplemental patches to improve logging in bitbake by using python
-structured logging. Fixes up some ResourceWarnings and improves the
-flexibility of the console and consolelog.
+Adds code to close all loggers when bitbake exits. This prevents
+unclosed file ResourceWarnings. A form of this closing existed
+previously, but was removed in the new logging code.
 
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/msg.py       | 11 +++++++++++
+ bitbake/lib/bb/ui/knotty.py |  2 ++
+ 2 files changed, 13 insertions(+)
 
-Joshua Watt (4):
-  bitbake: knotty: Add logging cleanup
-  bitbake: msg: Add helper to merge logging configs
-  bitbake: knotty: Update hash equivalence logging
-  bitbake: runqueue: Lower setscene complete logging level
-
- bitbake/contrib/autobuilderlog.json |  18 +----
- bitbake/lib/bb/msg.py               | 100 ++++++++++++++++------------
- bitbake/lib/bb/runqueue.py          |   2 +-
- bitbake/lib/bb/ui/knotty.py         |  70 ++++++++++++++++---
- 4 files changed, 124 insertions(+), 66 deletions(-)
-
+diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
+index ced605d96d..ee3c38b5a4 100644
+--- a/bitbake/lib/bb/msg.py
++++ b/bitbake/lib/bb/msg.py
+@@ -284,3 +284,14 @@ def setLoggingConfig(defaultconfig, userconfigfile=None):
+         # TODO: I don't think that setting the global log level should be necessary
+         #if newlevel < bb.msg.loggerDefaultLogLevel:
+         #    bb.msg.loggerDefaultLogLevel = newlevel
++
++def cleanupLogging():
++    # Iterate through all the handlers and close them if possible. Fixes
++    # 'Unclosed resource' warnings when bitbake exits, see
++    # https://bugs.python.org/issue23010
++    handlers = set()
++    for logger_iter in logging.Logger.manager.loggerDict.keys():
++        handlers.update(logging.getLogger(logger_iter).handlers)
++
++    for h in handlers:
++        h.close()
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index b229687ef8..2dfce90a4f 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -823,4 +823,6 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+         if e.errno == errno.EPIPE:
+             pass
+ 
++    bb.msg.cleanupLogging()
++
+     return return_value
 -- 
 2.17.1
 
