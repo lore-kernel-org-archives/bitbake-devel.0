@@ -1,50 +1,47 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-io1-f65.google.com (mail-io1-f65.google.com
-	[209.85.166.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 7B93C61C12
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com
+	[209.85.166.169])
+	by mail.openembedded.org (Postfix) with ESMTP id D967461B98
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Mar 2020 23:28:56 +0000 (UTC)
-Received: by mail-io1-f65.google.com with SMTP id h8so3790549iob.2
+	Thu, 12 Mar 2020 18:30:06 +0000 (UTC)
+Received: by mail-il1-f169.google.com with SMTP id f5so6434353ilq.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Mar 2020 16:28:58 -0700 (PDT)
+	Thu, 12 Mar 2020 11:30:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=jDGyVuxkoAnm9OB0gdYStUIy4dbXtoNRptBL2rBM1+8=;
-	b=AHD4LqkwLpxlHPxG0YM/y4kgOWtMVo4d7SQHojgGVAMnMU/9PxSWpY+sKPGo8zXJtq
-	fHuR2qgk1Giqaozk2wxNY9d82iPHo8bnxmpggBL94qSO2LGmnycrgrl9aq2RP1ECFn+3
-	rBpBy/Uv36SkQDcpqWJCfLDBthGkdpcG+QB2OvdSF/ZOKeP2NNinXVBLDPBQBiRVyXhB
-	odcZFJpxeLebYLxAMvvochhcKMzKI986Yx0jPOQwyLCm3lN5hm4vJfK2HmRy7UdVwXl7
-	x991IZzygDMSnhsUfEMqrQQbToNeTXuLBn0RfHnSMRjo7i959IezAT6bGXluPc5yREPY
-	7XYw==
+	h=from:to:cc:subject:date:message-id;
+	bh=/FfjVskp9yRy+etMkxy3t+OGLbFIzgneTKnECxir4Is=;
+	b=SunN0XQTeVKF4IW/BkASUHLV0YS7Mt5aFLNzhISbgkq0qvNRv3eUgpo0ip2k6enax8
+	LdNEsk8kZgwNZvgLAR3TCLTENnV6vSEsahWew8O7Am2xSndg0oiQIdV1+w8Zhc08R8jP
+	BAadUMyr4YksP4L83CkFSiUjSwBhyUjA0Pu8la+K/mnVfDvGPqfhXDQd1/zO4VAP8Rth
+	z3FGa/BSDUjfYpVvZtf9RGmZfpSGm/dGlEr7oYURbLsFsG1/ToIQtMfBJ50ZmpPPeQT7
+	LuF9HJ7/8gueqMGmqwauQ72Lp4U21uV+TyaKRb8z94tr7Id3QhVRriLrwdhz1rwsV04u
+	89Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=jDGyVuxkoAnm9OB0gdYStUIy4dbXtoNRptBL2rBM1+8=;
-	b=r+F00QFA2hdW5CzA7a7eFR5gB45kUBQPaj303QcKmMcTnWG2HYPdEycIUG2Xo0v4j/
-	R/XDiazEaj2gYgYpjmBjOS+ieivsYb0OJ6eVyUwYHRoKrwUrsBqGNRUN3luqcygU0dnx
-	ByFOfmcHkDVtdhiKfViYKEB+uYOUZd4Y+1Bg3ueVjwOy/JaIhP+6CBIxu7+Gb1QLUuYm
-	fW71eUCow0cJZpJEO8bd1Cn1n7Z4nHWj74uTu5OiQPHt4UlvRDp9RKFP8/r5lf+sNX4J
-	3zkNTdiRfgP/TKA19NcIercehwZ1LcuX1+zeGT6/q1GOEKQOLrMVfsAI/zqeF+3ggQCE
-	Bg/Q==
-X-Gm-Message-State: ANhLgQ1JYgtwTeud0GU3RHKtTWo5v9lOYaSa43RSBx0iHv9YlbsVpw1s
-	IToDmKwRPU7oXz72txm8s1/udy3kN74=
-X-Google-Smtp-Source: ADFU+vuorYVpLfILx1VAjhKyeKsxDKMZqXXhtTfdpLhuYbYDzi9cQghm1x6Rh7MiAkVyHxyVf+SFeA==
-X-Received: by 2002:a6b:c045:: with SMTP id q66mr5167932iof.10.1583969336064; 
-	Wed, 11 Mar 2020 16:28:56 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=/FfjVskp9yRy+etMkxy3t+OGLbFIzgneTKnECxir4Is=;
+	b=DM95OFPOABxVhaP/Ejbe4qjsfJAUB4/Zt0fNxqcvZ9+iiaZKM4V30FmKRj9DA9l+Bf
+	N5bEMwwdhIdB0JaZy3u8pBHxR8Xe0KWVE5Hvz5ugqiNxu1N333IHTaQCgfIv9GpBt4mK
+	pPmD3WS4AETsVgkf7WRhAiWcOiwGsImm8XjYdCV7nQdoRmkjPU+cPIihQI80vNEjE6Tp
+	fleFXcTY5mQwNTvm9hBo6jxKPs/mJEqdBQCv8wvwyxkmfDNt1h6MiIS58+OyJZEi6JKG
+	TJaz99W0LzxlC9xzNfMjs9f3o8j988YnDanRkDSWhsPy5zP1HZ05CjdVysXlcNMaHVGN
+	ycxg==
+X-Gm-Message-State: ANhLgQ3qXYylqRxKEf6wOQF7vRuGIBslD/N8l51XMlwjq+QvCCd8RgzQ
+	jpR+baKPMT0uCo4iPjamDRPNWJrivY4=
+X-Google-Smtp-Source: ADFU+vuzpV5F+0EMh+XfuMmoe+dI4Px088itCDT2ilq77YJFRTekKZEmygL0sO4r52h40BpveKoyjA==
+X-Received: by 2002:a92:c851:: with SMTP id b17mr3990430ilq.194.1584037807494; 
+	Thu, 12 Mar 2020 11:30:07 -0700 (PDT)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id w3sm3297603ior.55.2020.03.11.16.28.55
+	by smtp.gmail.com with ESMTPSA id b4sm6929029ilg.58.2020.03.12.11.30.06
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Wed, 11 Mar 2020 16:28:55 -0700 (PDT)
+	Thu, 12 Mar 2020 11:30:06 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Mar 2020 18:28:47 -0500
-Message-Id: <20200311232847.2874-5-JPEWhacker@gmail.com>
+Date: Thu, 12 Mar 2020 13:30:01 -0500
+Message-Id: <20200312183004.8339-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200311232847.2874-1-JPEWhacker@gmail.com>
-References: <20200311232847.2874-1-JPEWhacker@gmail.com>
-Subject: [PATCH 4/4] bitbake: runqueue: Lower setscene complete logging level
+Subject: [PATCH 0/3] More logging improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,34 +54,19 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Mar 2020 23:28:56 -0000
+X-List-Received-Date: Thu, 12 Mar 2020 18:30:08 -0000
 
-Lowers the level of the log message when setscene tasks have completed.
-This message can occur multiple times when hash equivalence is enabled,
-since the runqueue switches between executing setscene tasks and normal
-tasks. Since this is primarily of use when debugging hash equivalence,
-use the hash equivalence logger at VERBOSE level.
+A few more logging improvements for bitbake.
 
-[YOCTO #13813]
+Joshua Watt (3):
+  bitbake: msg: Return config object
+  bitbake: knotty: Treat verbconsole as a console output
+  bitbake: Use logging.shutdown() instead of bb.msg.cleanupLogging()
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/msg.py       | 14 +++----------
+ bitbake/lib/bb/ui/knotty.py | 42 +++++++++++++++++--------------------
+ 2 files changed, 22 insertions(+), 34 deletions(-)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index cef9b0fbbf..16f076f3b1 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -2059,7 +2059,7 @@ class RunQueueExecute:
-         self.update_holdofftasks()
- 
-         if not self.sq_live and not self.sqdone and not self.sq_deferred and not self.updated_taskhash_queue and not self.holdoff_tasks:
--            logger.info("Setscene tasks completed")
-+            hashequiv_logger.verbose("Setscene tasks completed")
- 
-             err = self.summarise_scenequeue_errors()
-             if err:
 -- 
 2.17.1
 
