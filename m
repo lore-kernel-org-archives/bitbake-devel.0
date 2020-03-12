@@ -1,50 +1,50 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com
-	[209.85.166.173])
-	by mail.openembedded.org (Postfix) with ESMTP id D42DE61C0A
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com
+	[209.85.166.169])
+	by mail.openembedded.org (Postfix) with ESMTP id DDE8061C56
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Mar 2020 18:30:08 +0000 (UTC)
-Received: by mail-il1-f173.google.com with SMTP id f5so6434455ilq.5
+	Thu, 12 Mar 2020 18:30:09 +0000 (UTC)
+Received: by mail-il1-f169.google.com with SMTP id c8so6495283ilm.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Mar 2020 11:30:10 -0700 (PDT)
+	Thu, 12 Mar 2020 11:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=9jAkg69tmQiauE/pIJT7oSwBmWv2zSV0l0x3zhXcCGM=;
-	b=hj0B7qDcsxLdVVoIf+H8nSepbzy4+Ogh9tZLLLyM4/uVO45/zfWSQ28mP7Kc2pFBBg
-	ttU3ouq+LDBcnC5qDxm1OTIf5SGl+zxwcckvcTgr5NIaE4PNixU/4W3lA16iC2316wuH
-	mMrNNYpnC8pDt8aRmAqxnng3Ptzx1hskOl9ZA0iBi13NhROeLEDhv2tN46/YX7a4+Y8e
-	gYmhBXgHFIzXq6JIEyz0RnkDcZkrpbHLyLb//AqOyOTUMp5NtNk4Vg+3oFsXY8/2wo8s
-	qynzsymqQRgpoWcjEO2GfEAWzL2qEF7KVNyqgSmfJLEGstGEdFG8FrU8mUnKVmT36o5j
-	7X/Q==
+	bh=IApHjogu4zAVQg6zxEBwm9EYKlIsnvjCwdV/jFWqW28=;
+	b=l2/z/Thur0no5l9BcyOHEauUSLnfbbbuB2EhwdJFig4ibb7J3oSB+fWxAzbO99Hd4C
+	AdkflrSsBY+Ax5p550sFqVSKYyAG80M4dxFtGgm5ckT/IaGCHN5f7K5JcEv1Mv4BJ1u7
+	7CBgbH0a383OCzQqH1oY/sSE2T7R9cdOFkwlici0iwoAb79kBQXTj2acTk3duhL8T+43
+	KtS7wWMlrBSUfG/fSR/z1AyMW1enDGQCNHCfHse1DsyeNXnGyI2FmY09j0q/wceV+bbd
+	kHFwD5hhnu//gJUKFRh/lPkZG45di26XQJyrH8WddSmaWXW+uZcy1LneXAz6X2hntRoJ
+	Oj3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=9jAkg69tmQiauE/pIJT7oSwBmWv2zSV0l0x3zhXcCGM=;
-	b=lyr9TtzRTWVFdCesTBO4zcpF9dAG5WINIcxuCMQuVxqB7x/enrRIQxJCjkYIANPs7u
-	nYOkz5yxk80+2Nl18OGkK3nQuexF04TKaTlbQ0WDuO6Ex+7mvUF575m5P6v3oBovwFLH
-	g2DOpmV7JcY6GO6zqnhaHhv8VNe0SnShBhgS1nVuhobO35XIjjwCRu6OF/DITHS7ksy1
-	qdkbKLe2kfdcUji4g7zt8U0CsorKMBM3ewJBoG7Lt7Yd7KFBwXZy3iUV8+WacXEWyweU
-	lUC+1PLd08NiJXjtTQMJELZQ5G031y3fIodTNAk5VUza5zIDiax9qUyG2YP3NqJDCQCn
-	eHOQ==
-X-Gm-Message-State: ANhLgQ3vLpWUUmN3zmsFwiHYudmwDcSaW3E+fy/i0BcveiKoEXmiiKlt
-	6Ny71No/crJg5RkwFKN+P6q/c2a5iuo=
-X-Google-Smtp-Source: ADFU+vtGA2tc+esN8kEBFjGXyxBjuNU5tWg177O+mC5iPvy+8L9Rt1BqKXKwG8CtgKhBKadhxhCMYA==
-X-Received: by 2002:a92:d183:: with SMTP id z3mr9257289ilz.214.1584037809404; 
-	Thu, 12 Mar 2020 11:30:09 -0700 (PDT)
+	bh=IApHjogu4zAVQg6zxEBwm9EYKlIsnvjCwdV/jFWqW28=;
+	b=B4enjUM2huirpvwPu5dlZ8rFkre54r4pL2NBlqSSC1oQVQSAuF9f/7XsrnKeIRPwY8
+	jimRDQv/4E2sxz1yf7VrkzSp1hcOGb7Y+rfWro7/1j6gOJ3h+KR6GaiIfz4v5I9sotyl
+	BFqrpaInsLCcU3+y1mc83gYhHd+RK+PyOWSHoh3Vp0XgPY0svOOB+Txm3n1Fv1xjI4MO
+	SKTWtHBo9omgpBJIg5Mi3jlY7cmTZHKRhlQ6Aj4vvSoOlbLlGd+JDRj1x/v2k0t+gsjE
+	rgqVOmo+28Awm437Z0/zKOs6+eFW+I8NnTLbrKfp6nUh0E3/Mk0OxY8aBK06BfqLE0Ab
+	BXnQ==
+X-Gm-Message-State: ANhLgQ31ZBpvAxZIRBEfNpBQp7JynIUMnyTtuVL9eRbUw0mIiyXNPcpe
+	WLNxMkyAS6pv+7Y+gLEcg9v5B3MRrls=
+X-Google-Smtp-Source: ADFU+vsOd/6vDHIl4EGNlxBYiJOX4f+BwX2GNig3XvXdL2rD4G1/7eT1ny8FRXOrEsQCFYtEioTsFw==
+X-Received: by 2002:a92:9642:: with SMTP id g63mr10198487ilh.223.1584037810669;
+	Thu, 12 Mar 2020 11:30:10 -0700 (PDT)
 Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id b4sm6929029ilg.58.2020.03.12.11.30.08
+	by smtp.gmail.com with ESMTPSA id b4sm6929029ilg.58.2020.03.12.11.30.09
 	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 12 Mar 2020 11:30:08 -0700 (PDT)
+	Thu, 12 Mar 2020 11:30:09 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 12 Mar 2020 13:30:03 -0500
-Message-Id: <20200312183004.8339-3-JPEWhacker@gmail.com>
+Date: Thu, 12 Mar 2020 13:30:04 -0500
+Message-Id: <20200312183004.8339-4-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200312183004.8339-1-JPEWhacker@gmail.com>
 References: <20200312183004.8339-1-JPEWhacker@gmail.com>
-Subject: [PATCH 2/3] bitbake: knotty: Treat verbconsole as a console output
+Subject: [PATCH 3/3] bitbake: Use logging.shutdown() instead of bb.msg.cleanupLogging()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,134 +57,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Mar 2020 18:30:09 -0000
+X-List-Received-Date: Thu, 12 Mar 2020 18:30:10 -0000
 
-The BitBake.verbconsole needs to be treated like a console output logger
-(meaning that the TerminalFilter attaches an InteractConsoleLogFilter to
-it), even if it's not directly attached to the root 'BitBake' logger.
-First, assign a special "is_console" property to the relevant handlers,
-then look for the property in the handlers from the configuration object
-return by bb.msg.setLoggingConfig(). Finally, pass the list of all
-handlers to the TerminalFilter object; it doesn't care about the
-difference between console and errconsole, so pass all the relevant
-handlers as a list.
-
-This fixes cases where the console output was corrupted when messages
-were sent to the 'BitBake.verbconsole' handler.
+The logging module provides a shutdown() function that does the same
+thing in a much better way
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/ui/knotty.py | 40 +++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
+ bitbake/lib/bb/msg.py       | 11 -----------
+ bitbake/lib/bb/ui/knotty.py |  2 +-
+ 2 files changed, 1 insertion(+), 12 deletions(-)
 
+diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
+index 3f95e21cc1..29f0a3999e 100644
+--- a/bitbake/lib/bb/msg.py
++++ b/bitbake/lib/bb/msg.py
+@@ -294,14 +294,3 @@ def setLoggingConfig(defaultconfig, userconfigfile=None):
+         #    bb.msg.loggerDefaultLogLevel = newlevel
+ 
+     return conf
+-
+-def cleanupLogging():
+-    # Iterate through all the handlers and close them if possible. Fixes
+-    # 'Unclosed resource' warnings when bitbake exits, see
+-    # https://bugs.python.org/issue23010
+-    handlers = set()
+-    for logger_iter in logging.Logger.manager.loggerDict.keys():
+-        handlers.update(logging.getLogger(logger_iter).handlers)
+-
+-    for h in handlers:
+-        h.close()
 diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index b4df5f6e88..db4511844a 100644
+index db4511844a..33ee891256 100644
 --- a/bitbake/lib/bb/ui/knotty.py
 +++ b/bitbake/lib/bb/ui/knotty.py
-@@ -149,7 +149,7 @@ class TerminalFilter(object):
-                 cr = (25, 80)
-         return cr
+@@ -871,6 +871,6 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+         if e.errno == errno.EPIPE:
+             pass
  
--    def __init__(self, main, helper, console, errconsole, quiet):
-+    def __init__(self, main, helper, handlers, quiet):
-         self.main = main
-         self.helper = helper
-         self.cuu = None
-@@ -179,14 +179,9 @@ class TerminalFilter(object):
-             termios.tcsetattr(fd, termios.TCSADRAIN, new)
-             curses.setupterm()
-             if curses.tigetnum("colors") > 2:
--                if console:
-+                for h in handlers:
-                     try:
--                        console.formatter.enable_color()
--                    except AttributeError:
--                        pass
--                if errconsole:
--                    try:
--                        errconsole.formatter.enable_color()
-+                        h.formatter.enable_color()
-                     except AttributeError:
-                         pass
-             self.ed = curses.tigetstr("ed")
-@@ -204,10 +199,9 @@ class TerminalFilter(object):
-             self.interactive = False
-             bb.note("Unable to use interactive mode for this terminal, using fallback")
-             return
--        if console:
--            console.addFilter(InteractConsoleLogFilter(self))
--        if errconsole:
--            errconsole.addFilter(InteractConsoleLogFilter(self))
-+
-+        for h in handlers:
-+            h.addFilter(InteractConsoleLogFilter(self))
+-    bb.msg.cleanupLogging()
++    logging.shutdown()
  
-         self.main_progress = None
- 
-@@ -411,6 +405,9 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 "level": console_loglevel,
-                 "stream": "ext://sys.stdout",
-                 "filters": ["BitBake.stdoutFilter"],
-+                ".": {
-+                    "is_console": True,
-+                },
-             },
-             "BitBake.errconsole": {
-                 "class": "logging.StreamHandler",
-@@ -418,6 +415,9 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 "level": loglevel,
-                 "stream": "ext://sys.stderr",
-                 "filters": ["BitBake.stderrFilter"],
-+                ".": {
-+                    "is_console": True,
-+                },
-             },
-             # This handler can be used if specific loggers should print on
-             # the console at a lower severity than the default. It will
-@@ -430,6 +430,9 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 "level": 1,
-                 "stream": "ext://sys.stdout",
-                 "filters": ["BitBake.verbconsoleFilter"],
-+                ".": {
-+                    "is_console": True,
-+                },
-             },
-         },
-         "formatters": {
-@@ -523,7 +526,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-         except OSError:
-            pass
- 
--    bb.msg.setLoggingConfig(logconfig, logconfigfile)
-+    conf = bb.msg.setLoggingConfig(logconfig, logconfigfile)
- 
-     if sys.stdin.isatty() and sys.stdout.isatty():
-         log_exec_tty = True
-@@ -534,14 +537,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
- 
-     # Look for the specially designated handlers which need to be passed to the
-     # terminal handler
--    console = None
--    errconsole = None
--    for h in logger.handlers:
--        name = getattr(h, '_name', None)
--        if name == 'BitBake.console':
--            console = h
--        elif name == 'BitBake.errconsole':
--            errconsole = h
-+    console_handlers = [h for h in conf.config['handlers'].values() if getattr(h, 'is_console', False)]
- 
-     bb.utils.set_process_name("KnottyUI")
- 
-@@ -591,7 +587,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-     printinterval = 5000
-     lastprint = time.time()
- 
--    termfilter = tf(main, helper, console, errconsole, params.options.quiet)
-+    termfilter = tf(main, helper, console_handlers, params.options.quiet)
-     atexit.register(termfilter.finish)
- 
-     while True:
+     return return_value
 -- 
 2.17.1
 
