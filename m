@@ -1,50 +1,49 @@
 Return-Path: <jpewhacker@gmail.com>
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com
-	[209.85.166.169])
-	by mail.openembedded.org (Postfix) with ESMTP id DDE8061C56
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com
+	[209.85.221.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 578FC6058C
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Mar 2020 18:30:09 +0000 (UTC)
-Received: by mail-il1-f169.google.com with SMTP id c8so6495283ilm.1
+	Fri, 13 Mar 2020 01:42:33 +0000 (UTC)
+Received: by mail-wr1-f65.google.com with SMTP id s5so10132682wrg.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Mar 2020 11:30:11 -0700 (PDT)
+	Thu, 12 Mar 2020 18:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=IApHjogu4zAVQg6zxEBwm9EYKlIsnvjCwdV/jFWqW28=;
-	b=l2/z/Thur0no5l9BcyOHEauUSLnfbbbuB2EhwdJFig4ibb7J3oSB+fWxAzbO99Hd4C
-	AdkflrSsBY+Ax5p550sFqVSKYyAG80M4dxFtGgm5ckT/IaGCHN5f7K5JcEv1Mv4BJ1u7
-	7CBgbH0a383OCzQqH1oY/sSE2T7R9cdOFkwlici0iwoAb79kBQXTj2acTk3duhL8T+43
-	KtS7wWMlrBSUfG/fSR/z1AyMW1enDGQCNHCfHse1DsyeNXnGyI2FmY09j0q/wceV+bbd
-	kHFwD5hhnu//gJUKFRh/lPkZG45di26XQJyrH8WddSmaWXW+uZcy1LneXAz6X2hntRoJ
-	Oj3A==
+	h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+	:cc:content-transfer-encoding;
+	bh=mU23rheHRfEB4VnNzf4RPDbG0twL8RifMoKXs/VfRWc=;
+	b=MmHqYQJEpMTmhAIdwXkA/jXLhOdDo/z7kGNSjt0aNLmde2ANOAzETYQ5g6meCEtFHs
+	BbuWkW/MZirzq1PZM2hYzKZ1R/Zpo/kAZBK00ODKMjZ3QgdEMJ1My0Llvr4x2nHnDGzm
+	F+0sQWelOgv5EtfctBrZ2ADKJblLMeTp/df4qvK/XUQKD3XsoOODkstdA+bdJi/o4lUC
+	+8bWKvDLTL6+nJFeSZLe6D+uriaWEeYxTtAQW99fJpJX5X9CbpfOXvzwwoFuek/htMUN
+	Vz4trdpwVVEza+cFb6gMNDMXVrvu5vMPAuQqToXowGNeqCLS1lNuDXoQlMwCKp1Ozhnm
+	jjxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=IApHjogu4zAVQg6zxEBwm9EYKlIsnvjCwdV/jFWqW28=;
-	b=B4enjUM2huirpvwPu5dlZ8rFkre54r4pL2NBlqSSC1oQVQSAuF9f/7XsrnKeIRPwY8
-	jimRDQv/4E2sxz1yf7VrkzSp1hcOGb7Y+rfWro7/1j6gOJ3h+KR6GaiIfz4v5I9sotyl
-	BFqrpaInsLCcU3+y1mc83gYhHd+RK+PyOWSHoh3Vp0XgPY0svOOB+Txm3n1Fv1xjI4MO
-	SKTWtHBo9omgpBJIg5Mi3jlY7cmTZHKRhlQ6Aj4vvSoOlbLlGd+JDRj1x/v2k0t+gsjE
-	rgqVOmo+28Awm437Z0/zKOs6+eFW+I8NnTLbrKfp6nUh0E3/Mk0OxY8aBK06BfqLE0Ab
-	BXnQ==
-X-Gm-Message-State: ANhLgQ31ZBpvAxZIRBEfNpBQp7JynIUMnyTtuVL9eRbUw0mIiyXNPcpe
-	WLNxMkyAS6pv+7Y+gLEcg9v5B3MRrls=
-X-Google-Smtp-Source: ADFU+vsOd/6vDHIl4EGNlxBYiJOX4f+BwX2GNig3XvXdL2rD4G1/7eT1ny8FRXOrEsQCFYtEioTsFw==
-X-Received: by 2002:a92:9642:: with SMTP id g63mr10198487ilh.223.1584037810669;
-	Thu, 12 Mar 2020 11:30:10 -0700 (PDT)
-Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-	by smtp.gmail.com with ESMTPSA id b4sm6929029ilg.58.2020.03.12.11.30.09
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Thu, 12 Mar 2020 11:30:09 -0700 (PDT)
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc:content-transfer-encoding;
+	bh=mU23rheHRfEB4VnNzf4RPDbG0twL8RifMoKXs/VfRWc=;
+	b=ja+3Nt3zTb+Omu4uCEKTAkQn++cdHiLyqp/3p79pVU6VAyWdHXjb6DK6rJ+pQsUeKD
+	oH9a6JST0XYY+BTj4pWsf65nps1TxqzrwUtoikI7Jdirr9E/4cegCRrFqzk+cox1ElCq
+	M64Omw5q1Is+3CCrfHcnfvURfu1MDPUxpdJQt3Z5q31X5WojxP3XeeF/ByRky9HqJcpl
+	cuE3uww5GPIjqEdPSxhwQw89ro64bsDFWQ4Y9Y7i5H5n0oEtdr5cMhQF/CkfuMkTPb06
+	FZaURm0JtEV/DDXJOWm37N5Mq2zEPPaVlqBjYMJszIipGbBcOKC3VsWD4+4hdrHH2IZP
+	XCuA==
+X-Gm-Message-State: ANhLgQ3wibIPS83+lhQ9TjW0HOE2gFuX6MR7dLekLHpcIZiijvnWK3UO
+	iMukRG+pUjGuRimYVNg7qIFg9vTknOBe3XxjCOzk24apAyA=
+X-Google-Smtp-Source: ADFU+vuzaV6mpUsjY3KavOJmm6BTNxkgTslLKrCUhm96sCts+GFjZDKP6V1Q8kTTTiLZMBmbI2GY6FDBuMk7xg8rGAg=
+X-Received: by 2002:adf:e742:: with SMTP id c2mr14142118wrn.361.1584063754508; 
+	Thu, 12 Mar 2020 18:42:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200309163353.15362-16-JPEWhacker@gmail.com>
+	<172109D8-BB79-48CB-93EB-C65C07EAE62A@stacktrust.org>
+In-Reply-To: <172109D8-BB79-48CB-93EB-C65C07EAE62A@stacktrust.org>
 From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 12 Mar 2020 13:30:04 -0500
-Message-Id: <20200312183004.8339-4-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200312183004.8339-1-JPEWhacker@gmail.com>
-References: <20200312183004.8339-1-JPEWhacker@gmail.com>
-Subject: [PATCH 3/3] bitbake: Use logging.shutdown() instead of bb.msg.cleanupLogging()
+Date: Thu, 12 Mar 2020 20:42:23 -0500
+Message-ID: <CAJdd5GZgyC5fgfEuB6XeO3wD6_fpf1dsR=gVaV66+v8EG9=OEA@mail.gmail.com>
+To: Rich Persaud <rp@stacktrust.org>
+Cc: docs@lists.yoctoproject.org,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [docs] [PATCH 15/15] bitbake-user-manual: Add documentation for BB_LOGCONFIG
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,49 +56,150 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Mar 2020 18:30:10 -0000
+X-List-Received-Date: Fri, 13 Mar 2020 01:42:34 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The logging module provides a shutdown() function that does the same
-thing in a much better way
+On Thu, Mar 12, 2020 at 6:50 PM Rich Persaud <rp@stacktrust.org> wrote:
+>
+> On Mar 9, 2020, at 12:34, Joshua Watt <jpewhacker@gmail.com> wrote:
+> >
+> > =EF=BB=BFAdds documentation describing how to use the BB_LOGCONFIG vari=
+able to
+> > enable custom logging.
+> >
+> > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> > ---
+> > .../bitbake-user-manual-execution.xml         | 97 +++++++++++++++++++
+> > .../bitbake-user-manual-ref-variables.xml     | 11 +++
+> > 2 files changed, 108 insertions(+)
+> >
+> > diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execut=
+ion.xml b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+> > index 8f606676b4..3b31f748cc 100644
+> > --- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+> > +++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+> > @@ -929,4 +929,101 @@
+> >             section.
+> >         </para>
+> >     </section>
+> > +
+> > +    <section id=3D"logging">
+> > +        <title>Logging</title>
+> > +        <para>
+> > +            In addition to the standard command line option to control=
+ how
+> > +            verbose builds are when execute, bitbake also supports use=
+r defined
+> > +            configuration of the
+> > +            <ulink url=3D'https://docs.python.org/3/library/logging.ht=
+ml'>Python logging</ulink>
+> > +            facilities through the
+> > +            <link linkend=3D"var-bb-BB_LOGCONFIG"><filename>BB_LOGCONF=
+IG</filename></link>
+> > +            variable. This variable defines a json or yaml
+> > +            <ulink url=3D'https://docs.python.org/3/library/logging.co=
+nfig.html'>logging configuration</ulink>
+> > +            that will be intelligently merged into the default configu=
+ration.
+> > +            The logging configuration is merged using the following ru=
+les:
+> > +            <itemizedlist>
+> > +                <listitem><para>
+> > +                    The user defined configuration will completely rep=
+lace the default
+> > +                    configuration if top level key
+> > +                    <filename>bitbake_merge</filename> is set to the v=
+alue
+> > +                    <filename>False</filename>. In this case, all othe=
+r rules
+> > +                    are ignored.
+> > +                </para></listitem>
+> > +                <listitem><para>
+> > +                    The user configuration must have a top level
+> > +                    <filename>version</filename> which must match the =
+value of
+> > +                    the default configuration.
+> > +                </para></listitem>
+> > +                <listitem><para>
+> > +                    Any keys defined in the <filename>handlers</filena=
+me>,
+> > +                    <filename>formatters</filename>, or <filename>filt=
+ers</filename>,
+> > +                    will be merged into the same section in the defaul=
+t
+> > +                    configuration, with the user specified keys taking
+> > +                    replacing a default one if there is a conflict. In
+> > +                    practice, this means that if both the default conf=
+iguration
+> > +                    and user configuration specify a handler named
+> > +                    <filename>myhandler</filename>, the user defined o=
+ne will
+> > +                    replace the default. To prevent the user from inad=
+vertently
+> > +                    replacing a default handler, formatter, or filter,=
+ all of
+> > +                    the default ones are named with a prefix of
+> > +                    "<filename>BitBake.</filename>"
+> > +                </para></listitem>
+> > +                <listitem><para>
+> > +                    If a logger is defined by the user with the key
+> > +                    <filename>bitbake_merge</filename> set to
+> > +                    <filename>False</filename>, that logger will be co=
+mpletely
+> > +                    replaced by user configuration. In this case, no o=
+ther
+> > +                    rules will apply to that logger.
+> > +                </listitem></para>
+> > +                <listitem><para>
+> > +                    All user defined <filename>filter</filename> and
+> > +                    <filename>handlers</filename> properties for a giv=
+en logger
+> > +                    will be merged with corresponding properties from =
+the
+> > +                    default logger. For example, if the user configura=
+tion adds
+> > +                    a filter called <filename>myFilter</filename> to t=
+he
+> > +                    <filename>BitBake.SigGen</filename>, and the defau=
+lt
+> > +                    configuration adds a filter called
+> > +                    <filename>BitBake.defaultFilter</filename>, both f=
+ilters
+> > +                    will be applied to the logger
+> > +                </listitem></para>
+> > +            </itemizedlist>
+> > +        </para>
+> > +
+> > +        <para>
+> > +            As an example, consider the following user logging configu=
+ration
+> > +            file which logs all Hash Equivalence related messages of V=
+ERBOSE or
+> > +            higher to a file called <filename>hashequiv.log</filename>
+> > +            <literallayout class=3D'monospaced'>
+> > +    {
+> > +        "version": 1,
+> > +        "handlers": {
+> > +            "autobuilderlog": {
+> > +                "class": "logging.FileHandler",
+> > +                "formatter": "logfileFormatter",
+> > +                "level": "DEBUG",
+> > +                "filename": "hashequiv.log",
+> > +                "mode": "w"
+> > +            }
+> > +        },
+> > +        "formatters": {
+> > +                "logfileFormatter": {
+> > +                    "format": "%(name)s: %(levelname)s: %(message)s"
+>
+> What's the syntax for including a timestamp in the log message?  Or is th=
+at implicit?
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bb/msg.py       | 11 -----------
- bitbake/lib/bb/ui/knotty.py |  2 +-
- 2 files changed, 1 insertion(+), 12 deletions(-)
+It's not implicit, but you can add it easily with %(asctime)s. There
+are also several other options:
+https://docs.python.org/3/library/logging.html#logrecord-attributes
 
-diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index 3f95e21cc1..29f0a3999e 100644
---- a/bitbake/lib/bb/msg.py
-+++ b/bitbake/lib/bb/msg.py
-@@ -294,14 +294,3 @@ def setLoggingConfig(defaultconfig, userconfigfile=None):
-         #    bb.msg.loggerDefaultLogLevel = newlevel
- 
-     return conf
--
--def cleanupLogging():
--    # Iterate through all the handlers and close them if possible. Fixes
--    # 'Unclosed resource' warnings when bitbake exits, see
--    # https://bugs.python.org/issue23010
--    handlers = set()
--    for logger_iter in logging.Logger.manager.loggerDict.keys():
--        handlers.update(logging.getLogger(logger_iter).handlers)
--
--    for h in handlers:
--        h.close()
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index db4511844a..33ee891256 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -871,6 +871,6 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-         if e.errno == errno.EPIPE:
-             pass
- 
--    bb.msg.cleanupLogging()
-+    logging.shutdown()
- 
-     return return_value
--- 
-2.17.1
-
+>
+> Rich
 
