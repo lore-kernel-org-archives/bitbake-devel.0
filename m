@@ -1,44 +1,52 @@
-Return-Path: <mhalstead@linuxfoundation.org>
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com
-	[209.85.210.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 19B6361CD9
+Return-Path: <matthias.schoepfer@googlemail.com>
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com
+	[209.85.128.53])
+	by mail.openembedded.org (Postfix) with ESMTP id F28D960EB7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 Mar 2020 23:58:40 +0000 (UTC)
-Received: by mail-ot1-f41.google.com with SMTP id a9so12005038otl.6
+	Sun, 15 Mar 2020 14:22:43 +0000 (UTC)
+Received: by mail-wm1-f53.google.com with SMTP id a5so14836390wmb.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 Mar 2020 16:58:42 -0700 (PDT)
+	Sun, 15 Mar 2020 07:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linuxfoundation.org; s=google;
-	h=mime-version:from:date:message-id:subject:to;
-	bh=Rq0sYyqzUa6ve58wf9QFme0R8HeZmQUxKqKZghBzCBs=;
-	b=U5cx0/pNEnncr4fatQwFkIfgicrNZl0tjvC6z9kyzPJYmEHvLUJPpzn4cGvvZ2K/Vp
-	ZSDRTomXJ9UpszClcCrE/N1kXodDQhvR2HIrGd10nTkIZ6CQR/iyX/Jt5xvMLDRbnptQ
-	ktphpA+hPHyYm/VzIPZQOFTKIoswseSskpER4=
+	d=googlemail.com; s=20161025;
+	h=to:cc:from:subject:message-id:date:user-agent:mime-version
+	:content-transfer-encoding:content-language;
+	bh=AMmOMuq7GKPRnQSu3WMYXCqGdKaWuaR+SH8CZuwjQJk=;
+	b=HkJbF3LdQNo5gKWeAJCM16+Zi8WvPqBMpNgRUa/R2t4niRDqkCH0DiAnTeOhoegnNC
+	ykttiDK9Vk7+EeSooVZzA9M8Y1pwSblEZx7BLB6GWbj1yhFSeMhGaNhnvvGOCTfmFN0Q
+	kg72b8ecbpxjXoGFj6cOKcOImzb50Ib4KpmiAMvXeCzZGBn5TcEMWTlmxgwOSPvd4Jq/
+	mu3KkgIZaxraX6lKVGdPmq3H6RYagQtNZF/Oxyg7ibXOUoVeEOp1YcvTtAtvLhkEB9YD
+	1VNUph/hV0U/M7HkxapDJwYhM69agFeezA8K0qHkGOA6TQXkznt6ekuPNGXMO3IK7ZwX
+	jUzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-	bh=Rq0sYyqzUa6ve58wf9QFme0R8HeZmQUxKqKZghBzCBs=;
-	b=jBqzbqOV1fc3Reof9hS4yCpnoSGFA762LtUMuAEVw5Do74/JD53M/EBjam9VcNg9Qb
-	pfGus7shHijIzjBHEP+1gT7t/4co1oa8fp9QLusmT6osP8KJi9Bf0RGfrOfcYqegPlTj
-	ZvSX6RjpB1ZrKxG3gFy/391I3XUfjqiGOor+unWsyfT4ny38EYtMajCijQCMDCrdkaQB
-	MF6dRwbmBAU10+k9wUUF+LGUtxa3s68mS7FYw7UDrAoEN5ivOBVVN7O07fPvEzSNxKO3
-	OnG8Q7faGmWg9hT3oauuznhmxNLcUwUpItStH95d6bMuRcbJkCKZza42kLLrdUjGSXBy
-	KEVA==
-X-Gm-Message-State: ANhLgQ0RYOCzJXk/P5Zulg2r3zzfP7sXil95AAawOACsCfdCyRGbpmR0
-	OgI6E2UWh4RHvE8w9IxOB/RePyrXddfmm/gAvSLT3jfYrxY=
-X-Google-Smtp-Source: ADFU+vuaWgTdGvwte3xYfKMHJQKAmg3AtmkhbSQgebszsBl7foyE7MTvX4gl+CdkhnwRtTLO9bnXGwslBIwcBSjzXlk=
-X-Received: by 2002:a05:6830:1e25:: with SMTP id
-	t5mr1367081otr.70.1584143921519; 
-	Fri, 13 Mar 2020 16:58:41 -0700 (PDT)
+	h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+	:mime-version:content-transfer-encoding:content-language;
+	bh=AMmOMuq7GKPRnQSu3WMYXCqGdKaWuaR+SH8CZuwjQJk=;
+	b=CyjCGfvrXoHxOrKJcGOLem0D7CBZN7oaH5DXaNH+o4n/66hvaF34MzeOKYvnTUjDC5
+	lTRu+Rriw1rI8+ztdKnzw+iSNjcxhtZwJX3iQzCFd6Oziut4WhrBXmWIbVwXHj556IKu
+	+y22XxzgIKO72AQk8jDLtBW73yZY9gcxJFuNybMrKPqVCbFEXZXIKR5BwX+tUVb2PU9A
+	44NzfTG9TynNnqv3cBpFo6f8K4HI0t/9ZO/ux2oAt18ci9xPeyXMEa0UltE2ybqATkb/
+	LWUA8VzRFe6t9LSsvMjNTdEkjIRXyxQ77ORy8g4/Gdrd907KRuKxQ6Ks9RIp315vQTiC
+	BjNg==
+X-Gm-Message-State: ANhLgQ03W9+0qjDzrs1HgBBadbT2O7RKKM40s2JPMA8V20VNsofTbvQo
+	aK1WQ6bgfQg6gwYBr+vpOJU=
+X-Google-Smtp-Source: ADFU+vv0KemqBUTdHmh1up9Xf/fhhLEUPcsBSc2tgbyfn4eYmFcmnKyLxkNYIXsDHU2kbgKShEsUQw==
+X-Received: by 2002:a1c:a102:: with SMTP id k2mr21391946wme.125.1584282164368; 
+	Sun, 15 Mar 2020 07:22:44 -0700 (PDT)
+Received: from [192.168.42.165] (tmo-110-85.customers.d1-online.com.
+	[80.187.110.85]) by smtp.gmail.com with ESMTPSA id
+	c124sm26463074wma.10.2020.03.15.07.22.43
+	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+	Sun, 15 Mar 2020 07:22:43 -0700 (PDT)
+To: bitbake-devel@lists.openembedded.org
+From: Matthias Schoepfer <matthias.schoepfer@googlemail.com>
+Message-ID: <d529063a-dd27-0bd1-67fd-9f5dffdb7fd8@googlemail.com>
+Date: Sun, 15 Mar 2020 15:22:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+	Thunderbird/68.5.0
 MIME-Version: 1.0
-From: Michael Halstead <mhalstead@linuxfoundation.org>
-Date: Fri, 13 Mar 2020 16:58:30 -0700
-Message-ID: <CADfgfobNNXr9HSOiwyamzbZ4q1uc8wgD5PzobDF56cDyYui-HQ@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org, 
-	openembedded-core <openembedded-core@lists.openembedded.org>, 
-	openembedded-architecture@lists.openembedded.org, 
-	openembeded-devel <Openembedded-devel@lists.openembedded.org>
-Subject: Mailing list platform change March 20th
+Subject: git fetcher: does not execute git fetch --tags or similar when HEAD has not changed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,50 +59,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Mar 2020 23:58:41 -0000
-Content-Type: multipart/alternative; boundary="000000000000b7349905a0c53f33"
+X-List-Received-Date: Sun, 15 Mar 2020 14:22:44 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 
---000000000000b7349905a0c53f33
-Content-Type: text/plain; charset="UTF-8"
+Hi!
 
-We are moving our lists from Mailman to Groups.io. E-mail to lists will be
-delayed during the move window. We are aiming to complete the migration
-during business hours in the Pacific time zone.
+As pointed by Denys Dmytriyenko, I repost here from the yocto project 
+mailing list.
 
-A new account will be created for you on the Groups.io platform if you
-don't already have one.
+We have noticed the following issue: We keep the versions of out 
+software by means of tags on the git repositories, i.e. during the 
+build, somethings like git describe --tags gets called. In yocto, our 
+recipe of SomeLibrary might look then similar to this:
 
-You can read more about the change on the wiki:
-https://www.openembedded.org/wiki/GroupsMigration
+SRC_URI = "git://our.private.gitserver.org/git/SomeLibrary.git;tags=v${PV}"
 
-If there are serious issues we will rollback the changes. We will e-mail
-all lists when work is complete.
+When we build the image, and *then* apply a tag to HEAD, that was 
+already built before, it seems like the tags are not fetched (my guess 
+is git fetcher sees that origins HEAD and local HEAD have the same hash 
+and is fine with it. I believe this is also true for SRCREV instead of 
+tags=).
 
---
-Michael Halstead
-Linux Foundation / Yocto Project
-Systems Operations Engineer
+The error is, that while the correct version is built, it will report 
+itself with a wrong version.
 
---000000000000b7349905a0c53f33
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Is this a bug? Would you welcome some patch that does git fetch --tags 
+in any case?!
 
-<div dir=3D"ltr"><div>We are moving our lists from Mailman to=C2=A0<span cl=
-ass=3D"gmail-il">Groups</span>.<span class=3D"gmail-il">io</span>. E-mail t=
-o lists will be delayed during the move window. We are aiming to complete t=
-he migration during business hours in the Pacific time zone.<br></div><div>=
-<br></div><div>A new account will be created for you on the=C2=A0<span clas=
-s=3D"gmail-il">Groups</span>.<span class=3D"gmail-il">io</span>=C2=A0platfo=
-rm if you don&#39;t already have one.<br></div><div><br></div><div>You can =
-read more about the change on the wiki:<br></div><a href=3D"https://www.ope=
-nembedded.org/wiki/GroupsMigration">https://www.openembedded.org/wiki/Group=
-sMigration</a><br><div><br></div><div>If there are serious issues we will r=
-ollback the changes. We will e-mail<br>all lists when work is complete.<br>=
-</div><div><br></div><div><span style=3D"color:rgb(136,136,136)">--</span><=
-br style=3D"color:rgb(136,136,136)"><span style=3D"color:rgb(136,136,136)">=
-Michael Halstead</span><br style=3D"color:rgb(136,136,136)"><span style=3D"=
-color:rgb(136,136,136)">Linux Foundation / Yocto Project</span><br style=3D=
-"color:rgb(136,136,136)"><span style=3D"color:rgb(136,136,136)">Systems Ope=
-rations Engineer</span><br></div><div><br></div></div>
+Regards,
 
---000000000000b7349905a0c53f33--
+   Matthias
+
+
