@@ -1,104 +1,152 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
- by mx.groups.io with SMTP id smtpd.web10.20135.1584833278653520940
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web10.20497.1584834622551335567
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 21 Mar 2020 16:27:58 -0700
+ Sat, 21 Mar 2020 16:50:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=GPWvaxAI;
- spf=pass (domain: gmail.com, ip: 209.85.214.193, mailfrom: raj.khem@gmail.com)
-Received: by mail-pl1-f193.google.com with SMTP id h11so4183676plk.7
-        for <bitbake-devel@lists.openembedded.org>; Sat, 21 Mar 2020 16:27:58 -0700 (PDT)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=Mh8jrVuP;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aRaj/+Fi+l+ykPaL2DVkawyjXm0JpGovpQ2KbmNhCCs=;
-        b=GPWvaxAIX3LF3HUIrCIrMLA0PNDNzbZhcAMibBil1UUnPhKLt3gcrqPsiui3ZgDfQo
-         69jcs+6XXDP9tG6iENIQxrM74qwS26vgdl/4oup91ypi3ThbwweJoDU/5AHNi6wAjgh9
-         s3M1tnEU7be6j5S+Ekq0+alNBhJqTzyHo+FV+3jNSs2KqcBUtS6s+5UQGv8vHQ8PIQf/
-         h211PJiRSdOrkzAptbX97IiNJ0NAuIguTZ8A+YV0UX+FluKBx2H/3VF8MUORwU/6eokp
-         A3tqb006tY71eWnxkOG/YauGDfLIC4p3swccQqkgtYzOuerR8AWWkd0VNghPHCV0JIcn
-         GF6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aRaj/+Fi+l+ykPaL2DVkawyjXm0JpGovpQ2KbmNhCCs=;
-        b=dGqh598Insg1uygicSmowiAbp9ilhlV72bUpnkUQ9uPavTGrgL2iwSzyaqVXhK5B9P
-         22FkXqtiuZSYJiozf3l/+Gc2TCz8i5yPIujedGQFlMVz43XIRcvHVfl/kc02qf37H0C2
-         5FH96FT5dBQaXmNRmsJ6wzy4TChqQPIJ8kKJJPb0P8T1TIQ6TiuBx/GtX7GOOhmRR/qm
-         QM7vqD9C1vkI/IkCC3zWNtp3As8Pl6hc7vWTvtiEiK+zbS+32TPjUdQ/e4zW77nni8aR
-         pnlokLk2QP2ZRYPDOmVE6q5uN05Ih8C70uqBsLpPoN+pNi0GzcBvX/wICs/LJYO1u61u
-         yigw==
-X-Gm-Message-State: ANhLgQ08MGNy+MoKkl5pbYM3R/5M/klEqZaUzl44qlAMUVpnxZsnLWpt
-	jPWxeTlvkSwRIGp2RNHP1MKw4sTE0o8=
-X-Google-Smtp-Source: ADFU+vvNgoFQ8JUX7ToTNBUEV0wOFrar2atNsLnY3YxMMlsxMue7nZtFtxOdWWkeA70kERpe5naXPg==
-X-Received: by 2002:a17:902:d712:: with SMTP id w18mr15784002ply.238.1584833277672;
-        Sat, 21 Mar 2020 16:27:57 -0700 (PDT)
-Return-Path: <raj.khem@gmail.com>
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:4e0::81bf])
-        by smtp.gmail.com with ESMTPSA id g9sm9119948pfi.37.2020.03.21.16.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 16:27:56 -0700 (PDT)
-From: "Khem Raj" <raj.khem@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] Revert "fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache""
-Date: Sat, 21 Mar 2020 16:28:03 -0700
-Message-Id: <20200321232803.746823-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.25.2
+  d=axis.com; l=7462; q=dns/txt; s=axis-central1;
+  t=1584834623; x=1616370623;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   mime-version;
+  bh=34E4APrGKKRAcZnZ7+uendwXFQhUwNWITZzcs26NEBw=;
+  b=Mh8jrVuPp5xw0ulfKG+BtPyMaAGtORGDWlXq9c1f6p3ZObzeBcfwIetO
+   SvOrPnAAbasLqosgI9LHqwLpb0ddX17yPW7U2fsjlxtYLylDVcM7a04eX
+   zLOGF8ZoeyFXs4wq6wdxa2Yg5/5xsm6e2gZIqwELXPHieXkvQ7EHUYky3
+   RJrEMgoGBEONoCRUGU2QCTIFc0fhxgHEcnfYNtxVTgZr+o8VujIKvJkwK
+   qak8WISvjDg5bs/zjMsZdllfWq4r8oL/hU8Ow/1/WP5UpvUeTJQtYXZbP
+   /Ik5J+Ssdj9V5Z6fShXKPnC50C6Kwibbm+tPNuzVo8Te2v/nXCNpYG1XH
+   g==;
+IronPort-SDR: QoSFnlSVGt8zHki7GxlbIVFtWcNHRlRXcQx8XZ2OnNS5U8kBW+m3z1cP6Yz9WiO5KrfZ3vqAmO
+ Yb3NH6dLIZWEWhbcd9W8h7KBFbAHIRXRHqpKWhkVMkzK/6fKyEk+k9bGu7betZCwuUwJx7GISb
+ +Fy7WzCelbGoPAyxotgYhWDnTeiI6p8MF20Ya0uNGfS+9QAoKtfoC0bpELJQG6ZTvnijoNivNO
+ IMlK0to78ZDQlHdac6EpQbylK8nfj68Bx/vWmU/tEJi8cnNI8UM/VV3+tLsxW0jem3Wzm88SSR
+ xsI=
+X-IronPort-AV: E=Sophos;i="5.72,290,1580770800"; 
+   d="scan'208,217";a="6783935"
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Khem Raj <raj.khem@gmail.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
+Thread-Topic: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
+ ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
+Thread-Index: AQHV/8nldQqzjdEoWEmBLHb/bMWci6hTs3rA
+Date: Sat, 21 Mar 2020 23:50:16 +0000
+Message-ID: <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com>
+References: <20200215032955.3958-3-pkj@axis.com>
+ <5532.1584827063458682607@lists.openembedded.org>
+In-Reply-To: <5532.1584827063458682607@lists.openembedded.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_1cdd50184c1f4af488baee9ee691b495XBOX03axiscom_"
 
-This reverts commit ba093a38539960e645e994a66ed7872a604c00a9.
+--_000_1cdd50184c1f4af488baee9ee691b495XBOX03axiscom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- lib/bb/fetch2/__init__.py | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+UmF0aGVyIHRoYW4gYmxpbmRseSByZXZlcnRpbmcsIGNhbuKAmXQgd2UgdXBkYXRlIHRoZSBkb2N1
+bWVudGF0aW9uIGluc3RlYWQ/IElmIHlvdSB1c2UgJHtBVVRPUkVWfSB5b3Ugb2J2aW91c2x5IGRv
+IGl0IGJlY2F1c2UgeW91IGFsd2F5cyB3YW50IHRoZSBsYXRlc3QgcmV2aXNpb24uDQoNCkJlZm9y
+ZSB0aGlzIGNoYW5nZSwgdXNpbmcgJHtBVVRPUkVWfSBpbiBjb21iaW5hdGlvbiB3aXRoIEJCX1NS
+Q1JFVl9QT0xJQ1kgPSDigJxjYWNoZeKAnSBkaWRu4oCZdCB3b3JrLCB3aGljaCBhbHNvIHdhc27i
+gJl0IGRvY3VtZW50ZWQuDQoNCi8vUGV0ZXINCg0KRnJvbTogYml0YmFrZS1kZXZlbEBsaXN0cy5v
+cGVuZW1iZWRkZWQub3JnIDxiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc+IE9u
+IEJlaGFsZiBPZiBLaGVtIFJhag0KU2VudDogZGVuIDIxIG1hcnMgMjAyMCAyMjo0NA0KVG86IGJp
+dGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtl
+LWRldmVsXSBbbWFzdGVyXVt6ZXVzXVtQQVRDSCAzLzNdIGZldGNoMjogQWxsb3cgJHtBVVRPUkVW
+fSB0byBiZSB1c2VkIHdoZW4gQkJfU1JDUkVWX1BPTElDWSBpcyAiY2FjaGUiDQoNCnJlbW92aW5n
+DQoNCmlmIGQuZ2V0VmFyKCdCQl9TUkNSRVZfUE9MSUNZJykgIT0gImNhY2hlIjoNCg0KV2lsbCBj
+YXVzZSBhdXRvcmV2cyB0byBiZSBleGNsdWRlZCBmcm9tIHBvbGljeSBhbmQgaXRzIG5vdCBkb2N1
+bWVudGVkDQoNCmh0dHBzOi8vd3d3LnlvY3RvcHJvamVjdC5vcmcvZG9jcy8yLjEvYml0YmFrZS11
+c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLmh0bWwjdmFyLUJCX1NSQ1JFVl9QT0xJQ1kN
+Cg0KZGlkIG5vdCBzdGF0ZSB0aGF0IEFVVE9SRVZzIHBsdXMgQkJfU1JDUkVWX1BPTElDWSBiZWhh
+dmlvciwgdGhpcyBwYXRjaCBpcyByZWdyZXNzaW5nIHRoZSBjYXNlDQp3aGVyZSB3ZSByZWx5IG9u
+IHRoaXMgYmVoYXZpb3IgdG8gdXNlIGV4dGVybmFsc3JjIG9uIEFVVE9SRVZlZCByZWNpcGVzLg0K
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 9734e211..d8ad19b5 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -500,11 +500,6 @@ def fetcher_init(d):
-     srcrev_policy = d.getVar('BB_SRCREV_POLICY') or "clear"
-     if srcrev_policy == "cache":
-         logger.debug(1, "Keeping SRCREV cache due to cache policy of: %s", srcrev_policy)
--        # We still need to remove keys that are marked with "dontcache".
--        for key in list(revs.keys()):
--            if key.startswith("dontcache-"):
--                logger.debug(1, "Removing SRCREV key: %s" % key)
--                revs.pop(key)
-     elif srcrev_policy == "clear":
-         logger.debug(1, "Clearing SRCREV cache due to cache policy of: %s", srcrev_policy)
-         revs.clear()
-@@ -737,8 +732,9 @@ def subprocess_setup():
-     signal.signal(signal.SIGPIPE, signal.SIG_DFL)
- 
- def get_autorev(d):
--    # Do not cache the srcrev in the autorev case
--    d.setVar('BB_DONT_CACHE', '1')
-+    #  only not cache src rev in autorev case
-+    if d.getVar('BB_SRCREV_POLICY') != "cache":
-+        d.setVar('BB_DONT_CACHE', '1')
-     return "AUTOINC"
- 
- def get_srcrev(d, method_name='sortable_revision'):
-@@ -1601,13 +1597,7 @@ class FetchMethod(object):
-         return True, str(latest_rev)
- 
-     def generate_revision_key(self, ud, d, name):
--        key = self._revision_key(ud, d, name)
--        if d.getVar('BB_DONT_CACHE'):
--            # Mark the key so it can be removed on the next bitbake run even if
--            # BB_SRCREV_POLICY is "cache".
--            return "dontcache-%s" % key
--        else:
--            return key
-+        return self._revision_key(ud, d, name)
- 
-     def latest_versionstring(self, ud, d):
-         """
--- 
-2.25.2
+--_000_1cdd50184c1f4af488baee9ee691b495XBOX03axiscom_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
+OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
+cjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1z
+b0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpwdXJw
+bGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25v
+cm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28t
+bWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0KCW1zby1tYXJnaW4tYm90
+dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZv
+bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE4DQoJe21z
+by1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5z
+LXNlcmlmOw0KCWNvbG9yOiM5NDM2MzQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZvbnQtc3R5
+bGU6bm9ybWFsO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5
+Ow0KCWZvbnQtc2l6ZToxMC4wcHQ7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6NjEyLjBw
+dCA3OTIuMHB0Ow0KCW1hcmdpbjo3MC44NXB0IDcwLjg1cHQgNzAuODVwdCA3MC44NXB0O30NCmRp
+di5Xb3JkU2VjdGlvbjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQ0KLS0+PC9zdHlsZT48IS0tW2lm
+IGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9
+IjEwMjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxv
+OnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIx
+IiAvPg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPg0KPC9oZWFkPg0KPGJvZHkg
+bGFuZz0iU1YiIGxpbms9ImJsdWUiIHZsaW5rPSJwdXJwbGUiPg0KPGRpdiBjbGFzcz0iV29yZFNl
+Y3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0i
+Y29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+UmF0aGVyIHRoYW4gYmxp
+bmRseSByZXZlcnRpbmcsIGNhbuKAmXQgd2UgdXBkYXRlIHRoZSBkb2N1bWVudGF0aW9uIGluc3Rl
+YWQ/IElmIHlvdSB1c2UgJHtBVVRPUkVWfSB5b3Ugb2J2aW91c2x5IGRvIGl0IGJlY2F1c2UgeW91
+IGFsd2F5cyB3YW50IHRoZSBsYXRlc3QgcmV2aXNpb24uDQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5
+NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
+PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29s
+b3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+QmVmb3JlIHRoaXMgY2hhbmdl
+LCB1c2luZyAke0FVVE9SRVZ9IGluIGNvbWJpbmF0aW9uIHdpdGggQkJfU1JDUkVWX1BPTElDWSA9
+IOKAnGNhY2hl4oCdIGRpZG7igJl0IHdvcmssIHdoaWNoIGFsc28gd2FzbuKAmXQgZG9jdW1lbnRl
+ZC4NCjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxh
+bmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1V
+UyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
+YW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdl
+OkVOLVVTIj4vL1BldGVyPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxh
+bmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8ZGl2IHN0eWxlPSJi
+b3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGNtIDBjbSAw
+Y20gNC4wcHQiPg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29s
+aWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBjbSAwY20gMGNtIj4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxiPjxzcGFuIGxhbmc9IkVOLVVTIj5Gcm9tOjwvc3Bhbj48L2I+PHNwYW4gbGFu
+Zz0iRU4tVVMiPiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcgJmx0O2JpdGJh
+a2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyZndDsNCjxiPk9uIEJlaGFsZiBPZiA8L2I+
+S2hlbSBSYWo8YnI+DQo8Yj5TZW50OjwvYj4gZGVuIDIxIG1hcnMgMjAyMCAyMjo0NDxicj4NCjxi
+PlRvOjwvYj4gYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPGJyPg0KPGI+U3Vi
+amVjdDo8L2I+IFJlOiBbYml0YmFrZS1kZXZlbF0gW21hc3Rlcl1bemV1c11bUEFUQ0ggMy8zXSBm
+ZXRjaDI6IEFsbG93ICR7QVVUT1JFVn0gdG8gYmUgdXNlZCB3aGVuIEJCX1NSQ1JFVl9QT0xJQ1kg
+aXMgJnF1b3Q7Y2FjaGUmcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj5yZW1vdmluZyA8YnI+DQo8YnI+DQppZiBkLmdldFZhcignQkJfU1JDUkVWX1BP
+TElDWScpICE9ICZxdW90O2NhY2hlJnF1b3Q7Ojxicj4NCjxicj4NCldpbGwgY2F1c2UgYXV0b3Jl
+dnMgdG8gYmUgZXhjbHVkZWQgZnJvbSBwb2xpY3kgYW5kIGl0cyBub3QgZG9jdW1lbnRlZCA8YnI+
+DQo8YnI+DQo8YSBocmVmPSJodHRwczovL3d3dy55b2N0b3Byb2plY3Qub3JnL2RvY3MvMi4xL2Jp
+dGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC5odG1sI3Zhci1CQl9TUkNSRVZf
+UE9MSUNZIiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly93d3cueW9jdG9wcm9qZWN0Lm9yZy9kb2Nz
+LzIuMS9iaXRiYWtlLXVzZXItbWFudWFsL2JpdGJha2UtdXNlci1tYW51YWwuaHRtbCN2YXItQkJf
+U1JDUkVWX1BPTElDWTwvYT48YnI+DQo8YnI+DQpkaWQgbm90IHN0YXRlIHRoYXQgQVVUT1JFVnMg
+cGx1cyBCQl9TUkNSRVZfUE9MSUNZIGJlaGF2aW9yLCB0aGlzIHBhdGNoIGlzIHJlZ3Jlc3Npbmcg
+dGhlIGNhc2U8YnI+DQp3aGVyZSB3ZSByZWx5IG9uIHRoaXMgYmVoYXZpb3IgdG8gdXNlIGV4dGVy
+bmFsc3JjIG9uIEFVVE9SRVZlZCByZWNpcGVzLiA8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPC9k
+aXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
+
+--_000_1cdd50184c1f4af488baee9ee691b495XBOX03axiscom_--
