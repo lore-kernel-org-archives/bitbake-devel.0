@@ -1,152 +1,96 @@
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web10.20497.1584834622551335567
+Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
+ by mx.groups.io with SMTP id smtpd.web12.20742.1584835147324453701
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 21 Mar 2020 16:50:23 -0700
+ Sat, 21 Mar 2020 16:59:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=Mh8jrVuP;
- spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=DEb7aXQs;
+ spf=pass (domain: gmail.com, ip: 209.85.160.195, mailfrom: raj.khem@gmail.com)
+Received: by mail-qt1-f195.google.com with SMTP id v15so8592308qto.2
+        for <bitbake-devel@lists.openembedded.org>; Sat, 21 Mar 2020 16:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=7462; q=dns/txt; s=axis-central1;
-  t=1584834623; x=1616370623;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   mime-version;
-  bh=34E4APrGKKRAcZnZ7+uendwXFQhUwNWITZzcs26NEBw=;
-  b=Mh8jrVuPp5xw0ulfKG+BtPyMaAGtORGDWlXq9c1f6p3ZObzeBcfwIetO
-   SvOrPnAAbasLqosgI9LHqwLpb0ddX17yPW7U2fsjlxtYLylDVcM7a04eX
-   zLOGF8ZoeyFXs4wq6wdxa2Yg5/5xsm6e2gZIqwELXPHieXkvQ7EHUYky3
-   RJrEMgoGBEONoCRUGU2QCTIFc0fhxgHEcnfYNtxVTgZr+o8VujIKvJkwK
-   qak8WISvjDg5bs/zjMsZdllfWq4r8oL/hU8Ow/1/WP5UpvUeTJQtYXZbP
-   /Ik5J+Ssdj9V5Z6fShXKPnC50C6Kwibbm+tPNuzVo8Te2v/nXCNpYG1XH
-   g==;
-IronPort-SDR: QoSFnlSVGt8zHki7GxlbIVFtWcNHRlRXcQx8XZ2OnNS5U8kBW+m3z1cP6Yz9WiO5KrfZ3vqAmO
- Yb3NH6dLIZWEWhbcd9W8h7KBFbAHIRXRHqpKWhkVMkzK/6fKyEk+k9bGu7betZCwuUwJx7GISb
- +Fy7WzCelbGoPAyxotgYhWDnTeiI6p8MF20Ya0uNGfS+9QAoKtfoC0bpELJQG6ZTvnijoNivNO
- IMlK0to78ZDQlHdac6EpQbylK8nfj68Bx/vWmU/tEJi8cnNI8UM/VV3+tLsxW0jem3Wzm88SSR
- xsI=
-X-IronPort-AV: E=Sophos;i="5.72,290,1580770800"; 
-   d="scan'208,217";a="6783935"
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Khem Raj <raj.khem@gmail.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-Thread-Topic: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
- ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-Thread-Index: AQHV/8nldQqzjdEoWEmBLHb/bMWci6hTs3rA
-Date: Sat, 21 Mar 2020 23:50:16 +0000
-Message-ID: <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com>
-References: <20200215032955.3958-3-pkj@axis.com>
- <5532.1584827063458682607@lists.openembedded.org>
-In-Reply-To: <5532.1584827063458682607@lists.openembedded.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nmFSxyLnKYIKmXVjrSp/mJkgGUeQYqg4gDSpdirdwoA=;
+        b=DEb7aXQsawnohbVwSbsEVIPFyeabFYJWkbY049pRcNopGsPS7HqLsvKDGaVVipF++S
+         JHMpBfoj/PaAzhQbBLWhFumP7pUBwZCuFbyOeA5VeVVJ1F9jBZPq4/BaHE/+YF9ELqOq
+         xoFo64Ah6uXsqAdguCgl8NzGCHJxHcEV4JzeGiVtl1jgmoxxDEnA2+wzWv5aCxbV1fFQ
+         TX8onClexDlgKMyg3120aq9uRD6MmW1qQLs321q5arFBx6Ukf8xga1uQ7yumlOc//kWg
+         QHddJMEsM6eecZDzXxo+P4gWEjJEuNiOLdNnbxx0Jp4NYCB16k3vSQ9aszuAIBgwrEZ4
+         sakQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nmFSxyLnKYIKmXVjrSp/mJkgGUeQYqg4gDSpdirdwoA=;
+        b=cHCt09usOL1+HScumKylsnT+aDVI+CB70bS1rcuJqFlxZZqebWkVtliauNYK+fy95c
+         LLRPPUfLy6uegW4cq77hUU58ERc871dop3VfUj1zIZ0JMZFVC5XcGSSsvGLndufBNmsJ
+         RingnvpEc4hS+m6V3laaTQlnEqvsyfGKQ/xmfNY5SR6W774HRR1fjK/U6MhxH0JNjz8k
+         iciFP5MN9KUhCS8Yh6jh18sng/50Pda6TjsfMa7+osDXENNk/JmnfgaOMiIRlAU1JDG+
+         0T1os+azHJcD8g0x/CL9nf8hujWMpompfIqR0A2fphaLspgbIFEJtKsb+rKvbcsicHLl
+         xcgg==
+X-Gm-Message-State: ANhLgQ1rA/cGixcZH8ZsD/EhpZqKVhJZ89KivoqiTwVX62sixLgt/EZT
+	vEqGKjT9JWM9HJET5dFdLVh64tfvAytYw5bySrk=
+X-Google-Smtp-Source: ADFU+vuDi4NI523RcgE/k1Ch1elr82yQvs2GUD58V/Ula1HpZXrmOalNAjqb2JcJPuMswS6MkW8cb84pasZDCGBgzkI=
+X-Received: by 2002:ac8:a09:: with SMTP id b9mr15272698qti.190.1584835146133;
+ Sat, 21 Mar 2020 16:59:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_1cdd50184c1f4af488baee9ee691b495XBOX03axiscom_"
+References: <20200215032955.3958-3-pkj@axis.com> <5532.1584827063458682607@lists.openembedded.org>
+ <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com>
+In-Reply-To: <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com>
+From: "Khem Raj" <raj.khem@gmail.com>
+Date: Sat, 21 Mar 2020 16:58:38 -0700
+Message-ID: <CAMKF1srOQVRW8n9bzr9GXiA3NBOX=cE5EV-W9S_dq+JFRqNjMQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---_000_1cdd50184c1f4af488baee9ee691b495XBOX03axiscom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+On Sat, Mar 21, 2020 at 4:50 PM Peter Kjellerstedt
+<peter.kjellerstedt@axis.com> wrote:
+>
+> Rather than blindly reverting, can=E2=80=99t we update the documentation =
+instead? If you use ${AUTOREV} you obviously do it because you always want =
+the latest revision.
+>
 
-UmF0aGVyIHRoYW4gYmxpbmRseSByZXZlcnRpbmcsIGNhbuKAmXQgd2UgdXBkYXRlIHRoZSBkb2N1
-bWVudGF0aW9uIGluc3RlYWQ/IElmIHlvdSB1c2UgJHtBVVRPUkVWfSB5b3Ugb2J2aW91c2x5IGRv
-IGl0IGJlY2F1c2UgeW91IGFsd2F5cyB3YW50IHRoZSBsYXRlc3QgcmV2aXNpb24uDQoNCkJlZm9y
-ZSB0aGlzIGNoYW5nZSwgdXNpbmcgJHtBVVRPUkVWfSBpbiBjb21iaW5hdGlvbiB3aXRoIEJCX1NS
-Q1JFVl9QT0xJQ1kgPSDigJxjYWNoZeKAnSBkaWRu4oCZdCB3b3JrLCB3aGljaCBhbHNvIHdhc27i
-gJl0IGRvY3VtZW50ZWQuDQoNCi8vUGV0ZXINCg0KRnJvbTogYml0YmFrZS1kZXZlbEBsaXN0cy5v
-cGVuZW1iZWRkZWQub3JnIDxiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc+IE9u
-IEJlaGFsZiBPZiBLaGVtIFJhag0KU2VudDogZGVuIDIxIG1hcnMgMjAyMCAyMjo0NA0KVG86IGJp
-dGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtl
-LWRldmVsXSBbbWFzdGVyXVt6ZXVzXVtQQVRDSCAzLzNdIGZldGNoMjogQWxsb3cgJHtBVVRPUkVW
-fSB0byBiZSB1c2VkIHdoZW4gQkJfU1JDUkVWX1BPTElDWSBpcyAiY2FjaGUiDQoNCnJlbW92aW5n
-DQoNCmlmIGQuZ2V0VmFyKCdCQl9TUkNSRVZfUE9MSUNZJykgIT0gImNhY2hlIjoNCg0KV2lsbCBj
-YXVzZSBhdXRvcmV2cyB0byBiZSBleGNsdWRlZCBmcm9tIHBvbGljeSBhbmQgaXRzIG5vdCBkb2N1
-bWVudGVkDQoNCmh0dHBzOi8vd3d3LnlvY3RvcHJvamVjdC5vcmcvZG9jcy8yLjEvYml0YmFrZS11
-c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLmh0bWwjdmFyLUJCX1NSQ1JFVl9QT0xJQ1kN
-Cg0KZGlkIG5vdCBzdGF0ZSB0aGF0IEFVVE9SRVZzIHBsdXMgQkJfU1JDUkVWX1BPTElDWSBiZWhh
-dmlvciwgdGhpcyBwYXRjaCBpcyByZWdyZXNzaW5nIHRoZSBjYXNlDQp3aGVyZSB3ZSByZWx5IG9u
-IHRoaXMgYmVoYXZpb3IgdG8gdXNlIGV4dGVybmFsc3JjIG9uIEFVVE9SRVZlZCByZWNpcGVzLg0K
+Autorev + clear srcrev policy if you want that
 
---_000_1cdd50184c1f4af488baee9ee691b495XBOX03axiscom_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+>
+>
+> Before this change, using ${AUTOREV} in combination with BB_SRCREV_POLICY=
+ =3D =E2=80=9Ccache=E2=80=9D didn=E2=80=99t work, which also wasn=E2=80=99t=
+ documented.
+>
+It could be interpreted also that cache also caches AUTOREVs
+this will break downstream projects. Its equivalent of ABI change,
+that perhaps will do more harm then what it fixes.
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
-OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
-cjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1z
-b0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpwdXJw
-bGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25v
-cm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28t
-bWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0KCW1zby1tYXJnaW4tYm90
-dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZv
-bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE4DQoJe21z
-by1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5z
-LXNlcmlmOw0KCWNvbG9yOiM5NDM2MzQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZvbnQtc3R5
-bGU6bm9ybWFsO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5
-Ow0KCWZvbnQtc2l6ZToxMC4wcHQ7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6NjEyLjBw
-dCA3OTIuMHB0Ow0KCW1hcmdpbjo3MC44NXB0IDcwLjg1cHQgNzAuODVwdCA3MC44NXB0O30NCmRp
-di5Xb3JkU2VjdGlvbjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQ0KLS0+PC9zdHlsZT48IS0tW2lm
-IGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9
-IjEwMjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxv
-OnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIx
-IiAvPg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPg0KPC9oZWFkPg0KPGJvZHkg
-bGFuZz0iU1YiIGxpbms9ImJsdWUiIHZsaW5rPSJwdXJwbGUiPg0KPGRpdiBjbGFzcz0iV29yZFNl
-Y3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0i
-Y29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+UmF0aGVyIHRoYW4gYmxp
-bmRseSByZXZlcnRpbmcsIGNhbuKAmXQgd2UgdXBkYXRlIHRoZSBkb2N1bWVudGF0aW9uIGluc3Rl
-YWQ/IElmIHlvdSB1c2UgJHtBVVRPUkVWfSB5b3Ugb2J2aW91c2x5IGRvIGl0IGJlY2F1c2UgeW91
-IGFsd2F5cyB3YW50IHRoZSBsYXRlc3QgcmV2aXNpb24uDQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5
-NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
-PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29s
-b3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+QmVmb3JlIHRoaXMgY2hhbmdl
-LCB1c2luZyAke0FVVE9SRVZ9IGluIGNvbWJpbmF0aW9uIHdpdGggQkJfU1JDUkVWX1BPTElDWSA9
-IOKAnGNhY2hl4oCdIGRpZG7igJl0IHdvcmssIHdoaWNoIGFsc28gd2FzbuKAmXQgZG9jdW1lbnRl
-ZC4NCjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxh
-bmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1V
-UyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdl
-OkVOLVVTIj4vL1BldGVyPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxh
-bmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8ZGl2IHN0eWxlPSJi
-b3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGNtIDBjbSAw
-Y20gNC4wcHQiPg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29s
-aWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBjbSAwY20gMGNtIj4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxiPjxzcGFuIGxhbmc9IkVOLVVTIj5Gcm9tOjwvc3Bhbj48L2I+PHNwYW4gbGFu
-Zz0iRU4tVVMiPiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcgJmx0O2JpdGJh
-a2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyZndDsNCjxiPk9uIEJlaGFsZiBPZiA8L2I+
-S2hlbSBSYWo8YnI+DQo8Yj5TZW50OjwvYj4gZGVuIDIxIG1hcnMgMjAyMCAyMjo0NDxicj4NCjxi
-PlRvOjwvYj4gYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPGJyPg0KPGI+U3Vi
-amVjdDo8L2I+IFJlOiBbYml0YmFrZS1kZXZlbF0gW21hc3Rlcl1bemV1c11bUEFUQ0ggMy8zXSBm
-ZXRjaDI6IEFsbG93ICR7QVVUT1JFVn0gdG8gYmUgdXNlZCB3aGVuIEJCX1NSQ1JFVl9QT0xJQ1kg
-aXMgJnF1b3Q7Y2FjaGUmcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj5yZW1vdmluZyA8YnI+DQo8YnI+DQppZiBkLmdldFZhcignQkJfU1JDUkVWX1BP
-TElDWScpICE9ICZxdW90O2NhY2hlJnF1b3Q7Ojxicj4NCjxicj4NCldpbGwgY2F1c2UgYXV0b3Jl
-dnMgdG8gYmUgZXhjbHVkZWQgZnJvbSBwb2xpY3kgYW5kIGl0cyBub3QgZG9jdW1lbnRlZCA8YnI+
-DQo8YnI+DQo8YSBocmVmPSJodHRwczovL3d3dy55b2N0b3Byb2plY3Qub3JnL2RvY3MvMi4xL2Jp
-dGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC5odG1sI3Zhci1CQl9TUkNSRVZf
-UE9MSUNZIiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly93d3cueW9jdG9wcm9qZWN0Lm9yZy9kb2Nz
-LzIuMS9iaXRiYWtlLXVzZXItbWFudWFsL2JpdGJha2UtdXNlci1tYW51YWwuaHRtbCN2YXItQkJf
-U1JDUkVWX1BPTElDWTwvYT48YnI+DQo8YnI+DQpkaWQgbm90IHN0YXRlIHRoYXQgQVVUT1JFVnMg
-cGx1cyBCQl9TUkNSRVZfUE9MSUNZIGJlaGF2aW9yLCB0aGlzIHBhdGNoIGlzIHJlZ3Jlc3Npbmcg
-dGhlIGNhc2U8YnI+DQp3aGVyZSB3ZSByZWx5IG9uIHRoaXMgYmVoYXZpb3IgdG8gdXNlIGV4dGVy
-bmFsc3JjIG9uIEFVVE9SRVZlZCByZWNpcGVzLiA8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPC9k
-aXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
-
---_000_1cdd50184c1f4af488baee9ee691b495XBOX03axiscom_--
+>
+>
+> //Peter
+>
+>
+>
+> From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembed=
+ded.org> On Behalf Of Khem Raj
+> Sent: den 21 mars 2020 22:44
+> To: bitbake-devel@lists.openembedded.org
+> Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow ${AU=
+TOREV} to be used when BB_SRCREV_POLICY is "cache"
+>
+>
+>
+> removing
+>
+> if d.getVar('BB_SRCREV_POLICY') !=3D "cache":
+>
+> Will cause autorevs to be excluded from policy and its not documented
+>
+> https://www.yoctoproject.org/docs/2.1/bitbake-user-manual/bitbake-user-ma=
+nual.html#var-BB_SRCREV_POLICY
+>
+> did not state that AUTOREVs plus BB_SRCREV_POLICY behavior, this patch is=
+ regressing the case
+> where we rely on this behavior to use externalsrc on AUTOREVed recipes.
