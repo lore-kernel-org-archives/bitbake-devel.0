@@ -1,240 +1,264 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
- by mx.groups.io with SMTP id smtpd.web10.22008.1584840462461006564
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+ by mx.groups.io with SMTP id smtpd.web11.24855.1584857981624109064
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 21 Mar 2020 18:27:42 -0700
+ Sat, 21 Mar 2020 23:19:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=pZTCxHDw;
- spf=pass (domain: gmail.com, ip: 209.85.222.178, mailfrom: raj.khem@gmail.com)
-Received: by mail-qk1-f178.google.com with SMTP id l25so6653126qki.7
-        for <bitbake-devel@lists.openembedded.org>; Sat, 21 Mar 2020 18:27:42 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=hyD6CNM7;
+ spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rc1gVbrjY32GNTZhpCKzYlebvK54LaezSXCXLLcZC0E=;
-        b=pZTCxHDw9JSltUJ4JXs8WjaopvZaB0sTs5fBgt+sXErwkU2SV8zjH1xBcrsMo/7DDs
-         v+yXHEG3gl537ApmUSaaQDyDpvW3aIHSZHxEzHUXChxyRQaoHLmWsehYPWwEsTPhcoY1
-         6PksHykmYU+jaU9kh/bA0j5+4h2sdu/fIsWYUfYM/80ig0eEZ9ONLRSFMASSiUhXSidf
-         Exv5hbxdo3y1alsueSWWjcXfN+OyBFLkzEKazVdxpvM1k/555Skn7/nFYb0XbaoreWEp
-         JYq9eA/OIk1MPjTaBcOGma4XlQhopxVxEABzJA9x7eetFv7HmcBTT4+GKouSHkdZ8/Pk
-         PmBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rc1gVbrjY32GNTZhpCKzYlebvK54LaezSXCXLLcZC0E=;
-        b=ib7+IiJA9l0y/zEWR/P9ebDX9rSgDv0nUzmdmD9pKH+Cx1Fxit5H7VzgttMwXld6w7
-         TtG+Va9X4nJLjykCzgQ11551gEvLNF8Wi4jQG9P/OlmCn9QG4zjlMlMQ7Wukrqz+T3fy
-         VBgqDkGXBdFPMf2NDj08Htn8/8VQ6+Im1L7rVlGdnnBpHaSKpZ2rPlGUkZ1Hu/Z8AEr0
-         eAYQDOVWMh8VItAJFtsTE8qJQeIJ4dEolJ1nutFbwEQZj65yIJ6O1f6UjFkNG3HHpptS
-         mKx71gwwYJuLZfnSTMplEOACdHfrX/KPgOuSbEeBCTaIxErFBdNY5eKxoNjcHCzIfRXT
-         owSg==
-X-Gm-Message-State: ANhLgQ1jxBRbp90z8hG1xiqEWDrZLx3O9FV82xYxn0sHt4xALnQ8gETX
-	gdQHhtxHX1kYleUgzT3PwmAdb1vAkuL3QfiSY6i+2J8h
-X-Google-Smtp-Source: ADFU+vs8V2bN4r9jBiBiSJK569VitgfowMLUd/bOi/6ixQJWXmvcKzIDxz8Xoz9zZ5IcF04DSQjL7hVviQANthmjB2w=
-X-Received: by 2002:a37:8d81:: with SMTP id p123mr3029561qkd.17.1584840461159;
- Sat, 21 Mar 2020 18:27:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200215032955.3958-3-pkj@axis.com> <5532.1584827063458682607@lists.openembedded.org>
- <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com> <CAMKF1srOQVRW8n9bzr9GXiA3NBOX=cE5EV-W9S_dq+JFRqNjMQ@mail.gmail.com>
- <2f891d304ee448538457d2b94c32bba3@XBOX03.axis.com>
-In-Reply-To: <2f891d304ee448538457d2b94c32bba3@XBOX03.axis.com>
-From: "Khem Raj" <raj.khem@gmail.com>
-Date: Sat, 21 Mar 2020 18:27:29 -0700
-Message-ID: <CAMKF1sqsZW4Nher5wy6WwjdoWcz7-Yd-KHQyzp0PxPZsyGT=yg@mail.gmail.com>
+  d=axis.com; l=15800; q=dns/txt; s=axis-central1;
+  t=1584857981; x=1616393981;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:mime-version;
+  bh=Em3ZSSeHHjLBwU0hMq4V9KEdhC0ypu+cnEwN2pxLk+g=;
+  b=hyD6CNM7DgfFWXv3x1vvXa0Oy6gjno/FvzXdVt91DBfC5MyFFJcHNG0L
+   GLn+ZFIeVIYY9NCdjd7c2+CPsXGnd+bBEs1PIwJTwscCgNd7RnjtcH4cR
+   Wvcm+rn6favWQV6MR7bqgTElu7f0EW5llVorpbSVHEulkfVjeJJ6S+dMO
+   +K80fLoHiQsCrNjPr1nhwWtmWT0QqBPGGIqCtsxmpKyUCeDdZpRicPOAx
+   vuAgfAblBg/ZOlgIyblv7Q6kraLEiD0/EQV18qmQM0lA4FVEtccvR9Fm3
+   ou5qV+rleJBebQSTEJMqgsIFAbkkRrscz5gUWSHgJzLMDwEx5qV4UJ3qw
+   A==;
+IronPort-SDR: BYE0ddaqkTkNXOkZ60M1EhetMetTX7Mel45WDr4EZBH40ClWhwEAJii1KhpoarvGbbL2yyimKK
+ QSoskqJ6mt5TTtgGIQzRzr4OYopwhcwCHtDJNFPP4u52TjtKof6SM+EPBNDm5n/UElfHGtomZU
+ vAwFnMpDUQzfoWhNHUMvpJBrrt+WaTLphP3pknoWCW4RHaOzFjb60RdZFJFzLgC5Xl96Mci5b3
+ IgGlo8CR5d869+SfJLdY3uOxXXADYGBXBy+jAaRGHq7hyBZd5X9kUYLxJtUhwFXDKElZQv9zdS
+ 1ZI=
+X-IronPort-AV: E=Sophos;i="5.72,291,1580770800"; 
+   d="scan'208,217";a="6600437"
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Khem Raj <raj.khem@gmail.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000b6903e05a1676cb0"
+Thread-Topic: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
+ ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
+Thread-Index: AQHV/8nldQqzjdEoWEmBLHb/bMWci6hTs3rA///1dQCAABaKoIAAAkmAgABhS0A=
+Date: Sun, 22 Mar 2020 06:19:34 +0000
+Message-ID: <074d4366010e45a3b56ed7de3238fda4@XBOX03.axis.com>
+References: <20200215032955.3958-3-pkj@axis.com>
+ <5532.1584827063458682607@lists.openembedded.org>
+ <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com>
+ <CAMKF1srOQVRW8n9bzr9GXiA3NBOX=cE5EV-W9S_dq+JFRqNjMQ@mail.gmail.com>
+ <2f891d304ee448538457d2b94c32bba3@XBOX03.axis.com>
+ <CAMKF1sqsZW4Nher5wy6WwjdoWcz7-Yd-KHQyzp0PxPZsyGT=yg@mail.gmail.com>
+In-Reply-To: <CAMKF1sqsZW4Nher5wy6WwjdoWcz7-Yd-KHQyzp0PxPZsyGT=yg@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
+MIME-Version: 1.0
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_074d4366010e45a3b56ed7de3238fda4XBOX03axiscom_"
 
---000000000000b6903e05a1676cb0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--_000_074d4366010e45a3b56ed7de3238fda4XBOX03axiscom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Sat, Mar 21, 2020 at 5:38 PM Peter Kjellerstedt <
-peter.kjellerstedt@axis.com> wrote:
+Q2FyZSB0byBlbGFib3JhdGU/IEJlY2F1c2UgSSBvYnZpb3VzbHkgZG8gbm90IHNlZSB0aGUgdXNl
+ZnVsbmVzcyBpbiBjb21iaW5pbmcgQkJfU1JDUkVWX1BPTElDWSA9ICJjYWNoZSIgd2l0aCAke0FV
+VE9SRVZ9IGFzIGl0IHdhcyBpbXBsZW1lbnRlZCBiZWZvcmUgbXkgY2hhbmdlLg0KDQovL1BldGVy
+DQoNCkZyb206IEtoZW0gUmFqIDxyYWoua2hlbUBnbWFpbC5jb20+DQpTZW50OiBkZW4gMjIgbWFy
+cyAyMDIwIDAyOjI3DQpUbzogUGV0ZXIgS2plbGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRA
+YXhpcy5jb20+DQpDYzogYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQpTdWJq
+ZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFttYXN0ZXJdW3pldXNdW1BBVENIIDMvM10gZmV0Y2gy
+OiBBbGxvdyAke0FVVE9SRVZ9IHRvIGJlIHVzZWQgd2hlbiBCQl9TUkNSRVZfUE9MSUNZIGlzICJj
+YWNoZSINCg0KDQoNCk9uIFNhdCwgTWFyIDIxLCAyMDIwIGF0IDU6MzggUE0gUGV0ZXIgS2plbGxl
+cnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb208bWFpbHRvOnBldGVyLmtqZWxsZXJz
+dGVkdEBheGlzLmNvbT4+IHdyb3RlOg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBG
+cm9tOiBLaGVtIFJhaiA8cmFqLmtoZW1AZ21haWwuY29tPG1haWx0bzpyYWoua2hlbUBnbWFpbC5j
+b20+Pg0KPiBTZW50OiBkZW4gMjIgbWFycyAyMDIwIDAwOjU5DQo+IFRvOiBQZXRlciBLamVsbGVy
+c3RlZHQgPHBldGVyLmtqZWxsZXJzdGVkdEBheGlzLmNvbTxtYWlsdG86cGV0ZXIua2plbGxlcnN0
+ZWR0QGF4aXMuY29tPj4NCj4gQ2M6IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9y
+ZzxtYWlsdG86Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPg0KPiBTdWJqZWN0
+OiBSZTogW2JpdGJha2UtZGV2ZWxdIFttYXN0ZXJdW3pldXNdW1BBVENIIDMvM10gZmV0Y2gyOiBB
+bGxvdw0KPiAke0FVVE9SRVZ9IHRvIGJlIHVzZWQgd2hlbiBCQl9TUkNSRVZfUE9MSUNZIGlzICJj
+YWNoZSINCj4NCj4gT24gU2F0LCBNYXIgMjEsIDIwMjAgYXQgNDo1MCBQTSBQZXRlciBLamVsbGVy
+c3RlZHQNCj4gPHBldGVyLmtqZWxsZXJzdGVkdEBheGlzLmNvbTxtYWlsdG86cGV0ZXIua2plbGxl
+cnN0ZWR0QGF4aXMuY29tPj4gd3JvdGU6DQo+ID4NCj4gPiBSYXRoZXIgdGhhbiBibGluZGx5IHJl
+dmVydGluZywgY2Fu4oCZdCB3ZSB1cGRhdGUgdGhlIGRvY3VtZW50YXRpb24NCj4gPiBpbnN0ZWFk
+PyBJZiB5b3UgdXNlICR7QVVUT1JFVn0geW91IG9idmlvdXNseSBkbyBpdCBiZWNhdXNlIHlvdSBh
+bHdheXMgd2FudA0KPiA+IHRoZSBsYXRlc3QgcmV2aXNpb24uDQo+DQo+IEF1dG9yZXYgKyBjbGVh
+ciBzcmNyZXYgcG9saWN5IGlmIHlvdSB3YW50IHRoYXQNCg0KV2VsbCwgb2J2aW91c2x5ICR7QVVU
+T1JFVn0gd29ya3Mgd2l0aCBCQl9TUkNSRVZfUE9MSUNZID0gImNsZWFyIi4gQnV0DQpCQl9TUkNS
+RVZfUE9MSUNZIGlzIGEgZGlzdHJvIGNvbmZpZ3VyYXRpb24gYW5kIGl0IGlzIG5vdCBwb3NzaWJs
+ZSB0byBvdmVycmlkZQ0KaXQgcGVyIHJlY2lwZS4gV2hpY2ggbWVhbnMgdGhhdCBpZiBpdCBpcyBz
+ZXQgdG8gImNhY2hlIiwgaXQgaXMgbm90IHBvc3NpYmxlDQp0byB1c2UgJHtBVVRPUkVWfS4gVGhp
+cyBpcyBub3QgZG9jdW1lbnRlZCwgYW5kIHRvIHRoZSBkZXZlbG9wZXJzIGl0IHdpbGwgbG9vaw0K
+YXMgaWYgaXQgaXMgd29ya2luZywgc2luY2UgaXQgZmV0Y2hlcyB0aGUgdmVyeSBmaXJzdCB0aW1l
+IHRoZSByZWNpcGUgaXMgYnVpbHQuDQpCdXQgdGhlcmUgd2lsbCBiZSBubyB1cGRhdGVzLCBzbyBp
+dCBpcyBhcyB1c2VmdWwgYXMgc2V0dGluZyBTUkNSRVYgPSAibWFzdGVyIg0KKHdoaWNoIHNvbWUg
+b2Ygb3VyIGRldmVsb3BlcnMgYWxzbyBoYXZlIHRyaWVkIGJlZm9yZSBiZWluZyBlZHVjYXRlZCB0
+byBob3cNCkJpdEJha2Ugd29ya3MpLi4uDQoNCj4gPiBCZWZvcmUgdGhpcyBjaGFuZ2UsIHVzaW5n
+ICR7QVVUT1JFVn0gaW4gY29tYmluYXRpb24gd2l0aA0KPiA+IEJCX1NSQ1JFVl9QT0xJQ1kgPSAi
+Y2FjaGUiIGRpZG7igJl0IHdvcmssIHdoaWNoIGFsc28gd2FzbuKAmXQgZG9jdW1lbnRlZC4NCj4N
+Cj4gSXQgY291bGQgYmUgaW50ZXJwcmV0ZWQgYWxzbyB0aGF0IGNhY2hlIGFsc28gY2FjaGVzIEFV
+VE9SRVZzDQo+IHRoaXMgd2lsbCBicmVhayBkb3duc3RyZWFtIHByb2plY3RzLiBJdHMgZXF1aXZh
+bGVudCBvZiBBQkkgY2hhbmdlLA0KPiB0aGF0IHBlcmhhcHMgd2lsbCBkbyBtb3JlIGhhcm0gdGhl
+biB3aGF0IGl0IGZpeGVzLg0KDQpJIGZhaWwgdG8gc2VlIGhvdyBpdCB3aWxsIGJyZWFrIHN0dWZm
+IGFzIGl0IHdhcyBub3QgcG9zc2libGUgdG8gdXNlICR7QVVUT1JFVn0NCmJlZm9yZSBpbiBhIG1l
+YW5pbmdmdWwgd2F5IHRvZ2V0aGVyIHdpdGggQkJfU1JDUkVWX1BPTElDWSA9ICJjYWNoZSIuDQoN
+ClRoZXJlIGFyZSB3b3JrZmxvd3MgZGVwZW5kaW5nIG9uIHRoaXMgYmVoYXZpb3IgdW5mb3J0dW5h
+dGVseQ0KDQoNCg0KPiA+IC8vUGV0ZXINCg0KLy9QZXRlcg0KDQo+ID4gRnJvbTogYml0YmFrZS1k
+ZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPG1haWx0bzpiaXRiYWtlLWRldmVsQGxpc3RzLm9w
+ZW5lbWJlZGRlZC5vcmc+IDxiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
+PG1haWx0bzpkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPj4gT24gQmVoYWxmIE9mIEtoZW0g
+UmFqDQo+ID4gU2VudDogZGVuIDIxIG1hcnMgMjAyMCAyMjo0NA0KPiA+IFRvOiBiaXRiYWtlLWRl
+dmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8bWFpbHRvOmJpdGJha2UtZGV2ZWxAbGlzdHMub3Bl
+bmVtYmVkZGVkLm9yZz4NCj4gPiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFttYXN0ZXJd
+W3pldXNdW1BBVENIIDMvM10gZmV0Y2gyOiBBbGxvdw0KPiAke0FVVE9SRVZ9IHRvIGJlIHVzZWQg
+d2hlbiBCQl9TUkNSRVZfUE9MSUNZIGlzICJjYWNoZSINCj4gPg0KPiA+DQo+ID4NCj4gPiByZW1v
+dmluZw0KPiA+DQo+ID4gaWYgZC5nZXRWYXIoJ0JCX1NSQ1JFVl9QT0xJQ1knKSAhPSAiY2FjaGUi
+Og0KPiA+DQo+ID4gV2lsbCBjYXVzZSBhdXRvcmV2cyB0byBiZSBleGNsdWRlZCBmcm9tIHBvbGlj
+eSBhbmQgaXRzIG5vdCBkb2N1bWVudGVkDQo+ID4NCj4gPiBodHRwczovL3d3dy55b2N0b3Byb2pl
+Y3Qub3JnL2RvY3MvMi4xL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLQ0KPiBtYW51
+YWwuaHRtbCN2YXItQkJfU1JDUkVWX1BPTElDWQ0KPiA+DQo+ID4gZGlkIG5vdCBzdGF0ZSB0aGF0
+IEFVVE9SRVZzIHBsdXMgQkJfU1JDUkVWX1BPTElDWSBiZWhhdmlvciwgdGhpcyBwYXRjaA0KPiBp
+cyByZWdyZXNzaW5nIHRoZSBjYXNlDQo+ID4gd2hlcmUgd2UgcmVseSBvbiB0aGlzIGJlaGF2aW9y
+IHRvIHVzZSBleHRlcm5hbHNyYyBvbiBBVVRPUkVWZWQgcmVjaXBlcy4NCg==
 
-> > -----Original Message-----
-> > From: Khem Raj <raj.khem@gmail.com>
-> > Sent: den 22 mars 2020 00:59
-> > To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> > Cc: bitbake-devel@lists.openembedded.org
-> > Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
-> > ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-> >
-> > On Sat, Mar 21, 2020 at 4:50 PM Peter Kjellerstedt
-> > <peter.kjellerstedt@axis.com> wrote:
-> > >
-> > > Rather than blindly reverting, can=E2=80=99t we update the documentat=
-ion
-> > > instead? If you use ${AUTOREV} you obviously do it because you always
-> want
-> > > the latest revision.
-> >
-> > Autorev + clear srcrev policy if you want that
->
-> Well, obviously ${AUTOREV} works with BB_SRCREV_POLICY =3D "clear". But
-> BB_SRCREV_POLICY is a distro configuration and it is not possible to
-> override
-> it per recipe. Which means that if it is set to "cache", it is not
-> possible
-> to use ${AUTOREV}. This is not documented, and to the developers it will
-> look
-> as if it is working, since it fetches the very first time the recipe is
-> built.
-> But there will be no updates, so it is as useful as setting SRCREV =3D
-> "master"
-> (which some of our developers also have tried before being educated to ho=
-w
-> BitBake works)...
->
-> > > Before this change, using ${AUTOREV} in combination with
-> > > BB_SRCREV_POLICY =3D "cache" didn=E2=80=99t work, which also wasn=E2=
-=80=99t documented.
-> >
-> > It could be interpreted also that cache also caches AUTOREVs
-> > this will break downstream projects. Its equivalent of ABI change,
-> > that perhaps will do more harm then what it fixes.
->
-> I fail to see how it will break stuff as it was not possible to use
-> ${AUTOREV}
-> before in a meaningful way together with BB_SRCREV_POLICY =3D "cache".
+--_000_074d4366010e45a3b56ed7de3238fda4XBOX03axiscom_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
+OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
+cjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1z
+b0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpwdXJw
+bGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25v
+cm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28t
+bWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0KCW1zby1tYXJnaW4tYm90
+dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZv
+bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE4DQoJe21z
+by1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5z
+LXNlcmlmOw0KCWNvbG9yOiM5NDM2MzQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZvbnQtc3R5
+bGU6bm9ybWFsO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5
+Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCW1zby1mYXJlYXN0LWxhbmd1
+YWdlOkVOLVVTO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjYxMi4wcHQgNzkyLjBwdDsN
+CgltYXJnaW46NzAuODVwdCA3MC44NXB0IDcwLjg1cHQgNzAuODVwdDt9DQpkaXYuV29yZFNlY3Rp
+b24xDQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDld
+Pjx4bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0K
+PC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91
+dCB2OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxhbmc9IlNWIiBs
+aW5rPSJibHVlIiB2bGluaz0icHVycGxlIj4NCjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2
+MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPkNhcmUgdG8gZWxhYm9yYXRlPyBCZWNhdXNl
+IEkgb2J2aW91c2x5IGRvIG5vdCBzZWUgdGhlIHVzZWZ1bG5lc3MgaW4gY29tYmluaW5nIEJCX1NS
+Q1JFVl9QT0xJQ1kgPSAmcXVvdDtjYWNoZSZxdW90OyB3aXRoICR7QVVUT1JFVn0gYXMgaXQgd2Fz
+IGltcGxlbWVudGVkIGJlZm9yZSBteSBjaGFuZ2UuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0
+O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5
+NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPi8vUGV0ZXI8bzpwPjwvbzpwPjwvc3Bh
+bj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNv
+bG9yOiM5NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+
+PC9zcGFuPjwvcD4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkIGJs
+dWUgMS41cHQ7cGFkZGluZzowY20gMGNtIDBjbSA0LjBwdCI+DQo8ZGl2Pg0KPGRpdiBzdHlsZT0i
+Ym9yZGVyOm5vbmU7Ym9yZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEuMHB0O3BhZGRpbmc6My4wcHQg
+MGNtIDBjbSAwY20iPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gbGFuZz0iRU4tVVMi
+PkZyb206PC9zcGFuPjwvYj48c3BhbiBsYW5nPSJFTi1VUyI+IEtoZW0gUmFqICZsdDtyYWoua2hl
+bUBnbWFpbC5jb20mZ3Q7DQo8YnI+DQo8Yj5TZW50OjwvYj4gZGVuIDIyIG1hcnMgMjAyMCAwMjoy
+Nzxicj4NCjxiPlRvOjwvYj4gUGV0ZXIgS2plbGxlcnN0ZWR0ICZsdDtwZXRlci5ramVsbGVyc3Rl
+ZHRAYXhpcy5jb20mZ3Q7PGJyPg0KPGI+Q2M6PC9iPiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5l
+bWJlZGRlZC5vcmc8YnI+DQo8Yj5TdWJqZWN0OjwvYj4gUmU6IFtiaXRiYWtlLWRldmVsXSBbbWFz
+dGVyXVt6ZXVzXVtQQVRDSCAzLzNdIGZldGNoMjogQWxsb3cgJHtBVVRPUkVWfSB0byBiZSB1c2Vk
+IHdoZW4gQkJfU1JDUkVWX1BPTElDWSBpcyAmcXVvdDtjYWNoZSZxdW90OzxvOnA+PC9vOnA+PC9z
+cGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
+OzwvbzpwPjwvcD4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpw
+PjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9wPg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5PbiBTYXQsIE1hciAy
+MSwgMjAyMCBhdCA1OjM4IFBNIFBldGVyIEtqZWxsZXJzdGVkdCAmbHQ7PGEgaHJlZj0ibWFpbHRv
+OnBldGVyLmtqZWxsZXJzdGVkdEBheGlzLmNvbSI+cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29t
+PC9hPiZndDsgd3JvdGU6PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxibG9ja3F1b3RlIHN0eWxl
+PSJib3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCAjQ0NDQ0NDIDEuMHB0O3BhZGRpbmc6MGNt
+IDBjbSAwY20gNi4wcHQ7bWFyZ2luLWxlZnQ6NC44cHQ7bWFyZ2luLXJpZ2h0OjBjbSI+DQo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj4mZ3Q7IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tPGJyPg0KJmd0
+OyBGcm9tOiBLaGVtIFJhaiAmbHQ7PGEgaHJlZj0ibWFpbHRvOnJhai5raGVtQGdtYWlsLmNvbSIg
+dGFyZ2V0PSJfYmxhbmsiPnJhai5raGVtQGdtYWlsLmNvbTwvYT4mZ3Q7PGJyPg0KJmd0OyBTZW50
+OiBkZW4gMjIgbWFycyAyMDIwIDAwOjU5PGJyPg0KJmd0OyBUbzogUGV0ZXIgS2plbGxlcnN0ZWR0
+ICZsdDs8YSBocmVmPSJtYWlsdG86cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tIiB0YXJnZXQ9
+Il9ibGFuayI+cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPC9hPiZndDs8YnI+DQomZ3Q7IENj
+OiA8YSBocmVmPSJtYWlsdG86Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIiB0
+YXJnZXQ9Il9ibGFuayI+Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPC9hPjxi
+cj4NCiZndDsgU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBbbWFzdGVyXVt6ZXVzXVtQQVRD
+SCAzLzNdIGZldGNoMjogQWxsb3c8YnI+DQomZ3Q7ICR7QVVUT1JFVn0gdG8gYmUgdXNlZCB3aGVu
+IEJCX1NSQ1JFVl9QT0xJQ1kgaXMgJnF1b3Q7Y2FjaGUmcXVvdDs8YnI+DQomZ3Q7IDxicj4NCiZn
+dDsgT24gU2F0LCBNYXIgMjEsIDIwMjAgYXQgNDo1MCBQTSBQZXRlciBLamVsbGVyc3RlZHQ8YnI+
+DQomZ3Q7ICZsdDs8YSBocmVmPSJtYWlsdG86cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tIiB0
+YXJnZXQ9Il9ibGFuayI+cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPC9hPiZndDsgd3JvdGU6
+PGJyPg0KJmd0OyAmZ3Q7PGJyPg0KJmd0OyAmZ3Q7IFJhdGhlciB0aGFuIGJsaW5kbHkgcmV2ZXJ0
+aW5nLCBjYW7igJl0IHdlIHVwZGF0ZSB0aGUgZG9jdW1lbnRhdGlvbjxicj4NCiZndDsgJmd0OyBp
+bnN0ZWFkPyBJZiB5b3UgdXNlICR7QVVUT1JFVn0geW91IG9idmlvdXNseSBkbyBpdCBiZWNhdXNl
+IHlvdSBhbHdheXMgd2FudDxicj4NCiZndDsgJmd0OyB0aGUgbGF0ZXN0IHJldmlzaW9uLjxicj4N
+CiZndDsmbmJzcDsgPGJyPg0KJmd0OyBBdXRvcmV2ICYjNDM7IGNsZWFyIHNyY3JldiBwb2xpY3kg
+aWYgeW91IHdhbnQgdGhhdDxicj4NCjxicj4NCldlbGwsIG9idmlvdXNseSAke0FVVE9SRVZ9IHdv
+cmtzIHdpdGggQkJfU1JDUkVWX1BPTElDWSA9ICZxdW90O2NsZWFyJnF1b3Q7LiBCdXQgPGJyPg0K
+QkJfU1JDUkVWX1BPTElDWSBpcyBhIGRpc3RybyBjb25maWd1cmF0aW9uIGFuZCBpdCBpcyBub3Qg
+cG9zc2libGUgdG8gb3ZlcnJpZGUgPGJyPg0KaXQgcGVyIHJlY2lwZS4gV2hpY2ggbWVhbnMgdGhh
+dCBpZiBpdCBpcyBzZXQgdG8gJnF1b3Q7Y2FjaGUmcXVvdDssIGl0IGlzIG5vdCBwb3NzaWJsZSA8
+YnI+DQp0byB1c2UgJHtBVVRPUkVWfS4gVGhpcyBpcyBub3QgZG9jdW1lbnRlZCwgYW5kIHRvIHRo
+ZSBkZXZlbG9wZXJzIGl0IHdpbGwgbG9vayA8YnI+DQphcyBpZiBpdCBpcyB3b3JraW5nLCBzaW5j
+ZSBpdCBmZXRjaGVzIHRoZSB2ZXJ5IGZpcnN0IHRpbWUgdGhlIHJlY2lwZSBpcyBidWlsdC48YnI+
+DQpCdXQgdGhlcmUgd2lsbCBiZSBubyB1cGRhdGVzLCBzbyBpdCBpcyBhcyB1c2VmdWwgYXMgc2V0
+dGluZyBTUkNSRVYgPSAmcXVvdDttYXN0ZXImcXVvdDsgPGJyPg0KKHdoaWNoIHNvbWUgb2Ygb3Vy
+IGRldmVsb3BlcnMgYWxzbyBoYXZlIHRyaWVkIGJlZm9yZSBiZWluZyBlZHVjYXRlZCB0byBob3cg
+PGJyPg0KQml0QmFrZSB3b3JrcykuLi48YnI+DQo8YnI+DQomZ3Q7ICZndDsgQmVmb3JlIHRoaXMg
+Y2hhbmdlLCB1c2luZyAke0FVVE9SRVZ9IGluIGNvbWJpbmF0aW9uIHdpdGg8YnI+DQomZ3Q7ICZn
+dDsgQkJfU1JDUkVWX1BPTElDWSA9ICZxdW90O2NhY2hlJnF1b3Q7IGRpZG7igJl0IHdvcmssIHdo
+aWNoIGFsc28gd2FzbuKAmXQgZG9jdW1lbnRlZC48YnI+DQomZ3Q7IDxicj4NCiZndDsgSXQgY291
+bGQgYmUgaW50ZXJwcmV0ZWQgYWxzbyB0aGF0IGNhY2hlIGFsc28gY2FjaGVzIEFVVE9SRVZzPGJy
+Pg0KJmd0OyB0aGlzIHdpbGwgYnJlYWsgZG93bnN0cmVhbSBwcm9qZWN0cy4gSXRzIGVxdWl2YWxl
+bnQgb2YgQUJJIGNoYW5nZSw8YnI+DQomZ3Q7IHRoYXQgcGVyaGFwcyB3aWxsIGRvIG1vcmUgaGFy
+bSB0aGVuIHdoYXQgaXQgZml4ZXMuPGJyPg0KPGJyPg0KSSBmYWlsIHRvIHNlZSBob3cgaXQgd2ls
+bCBicmVhayBzdHVmZiBhcyBpdCB3YXMgbm90IHBvc3NpYmxlIHRvIHVzZSAke0FVVE9SRVZ9IDxi
+cj4NCmJlZm9yZSBpbiBhIG1lYW5pbmdmdWwgd2F5IHRvZ2V0aGVyIHdpdGggQkJfU1JDUkVWX1BP
+TElDWSA9ICZxdW90O2NhY2hlJnF1b3Q7LjxvOnA+PC9vOnA+PC9wPg0KPC9ibG9ja3F1b3RlPg0K
+PGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+
+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhlcmUgYXJlIHdvcmtmbG93cyBkZXBlbmRp
+bmcgb24gdGhpcyBiZWhhdmlvciB1bmZvcnR1bmF0ZWx5Jm5ic3A7PG86cD48L286cD48L3A+DQo8
+L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4N
+CjwvZGl2Pg0KPGJsb2NrcXVvdGUgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlk
+ICNDQ0NDQ0MgMS4wcHQ7cGFkZGluZzowY20gMGNtIDBjbSA2LjBwdDttYXJnaW4tbGVmdDo0Ljhw
+dDttYXJnaW4tcmlnaHQ6MGNtIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxicj4NCjxicj4NCiZn
+dDsgJmd0OyAvL1BldGVyPGJyPg0KPGJyPg0KLy9QZXRlcjxicj4NCjxicj4NCiZndDsgJmd0OyBG
+cm9tOiA8YSBocmVmPSJtYWlsdG86Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
+IiB0YXJnZXQ9Il9ibGFuayI+Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPC9h
+PiAmbHQ7Yml0YmFrZS08YnI+DQomZ3Q7IDxhIGhyZWY9Im1haWx0bzpkZXZlbEBsaXN0cy5vcGVu
+ZW1iZWRkZWQub3JnIiB0YXJnZXQ9Il9ibGFuayI+ZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9y
+ZzwvYT4mZ3Q7IE9uIEJlaGFsZiBPZiBLaGVtIFJhajxicj4NCiZndDsgJmd0OyBTZW50OiBkZW4g
+MjEgbWFycyAyMDIwIDIyOjQ0PGJyPg0KJmd0OyAmZ3Q7IFRvOiA8YSBocmVmPSJtYWlsdG86Yml0
+YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIiB0YXJnZXQ9Il9ibGFuayI+Yml0YmFr
+ZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPC9hPjxicj4NCiZndDsgJmd0OyBTdWJqZWN0
+OiBSZTogW2JpdGJha2UtZGV2ZWxdIFttYXN0ZXJdW3pldXNdW1BBVENIIDMvM10gZmV0Y2gyOiBB
+bGxvdzxicj4NCiZndDsgJHtBVVRPUkVWfSB0byBiZSB1c2VkIHdoZW4gQkJfU1JDUkVWX1BPTElD
+WSBpcyAmcXVvdDtjYWNoZSZxdW90Ozxicj4NCiZndDsgJmd0Ozxicj4NCiZndDsgJmd0Ozxicj4N
+CiZndDsgJmd0Ozxicj4NCiZndDsgJmd0OyByZW1vdmluZzxicj4NCiZndDsgJmd0Ozxicj4NCiZn
+dDsgJmd0OyBpZiBkLmdldFZhcignQkJfU1JDUkVWX1BPTElDWScpICE9ICZxdW90O2NhY2hlJnF1
+b3Q7Ojxicj4NCiZndDsgJmd0Ozxicj4NCiZndDsgJmd0OyBXaWxsIGNhdXNlIGF1dG9yZXZzIHRv
+IGJlIGV4Y2x1ZGVkIGZyb20gcG9saWN5IGFuZCBpdHMgbm90IGRvY3VtZW50ZWQ8YnI+DQomZ3Q7
+ICZndDs8YnI+DQomZ3Q7ICZndDsgPGEgaHJlZj0iaHR0cHM6Ly93d3cueW9jdG9wcm9qZWN0Lm9y
+Zy9kb2NzLzIuMS9iaXRiYWtlLXVzZXItbWFudWFsL2JpdGJha2UtdXNlci0iIHRhcmdldD0iX2Js
+YW5rIj4NCmh0dHBzOi8vd3d3LnlvY3RvcHJvamVjdC5vcmcvZG9jcy8yLjEvYml0YmFrZS11c2Vy
+LW1hbnVhbC9iaXRiYWtlLXVzZXItPC9hPjxicj4NCiZndDsgbWFudWFsLmh0bWwjdmFyLUJCX1NS
+Q1JFVl9QT0xJQ1k8YnI+DQomZ3Q7ICZndDs8YnI+DQomZ3Q7ICZndDsgZGlkIG5vdCBzdGF0ZSB0
+aGF0IEFVVE9SRVZzIHBsdXMgQkJfU1JDUkVWX1BPTElDWSBiZWhhdmlvciwgdGhpcyBwYXRjaDxi
+cj4NCiZndDsgaXMgcmVncmVzc2luZyB0aGUgY2FzZTxicj4NCiZndDsgJmd0OyB3aGVyZSB3ZSBy
+ZWx5IG9uIHRoaXMgYmVoYXZpb3IgdG8gdXNlIGV4dGVybmFsc3JjIG9uIEFVVE9SRVZlZCByZWNp
+cGVzLjxvOnA+PC9vOnA+PC9wPg0KPC9ibG9ja3F1b3RlPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2
+Pg0KPC9kaXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
 
-There are workflows depending on this behavior unfortunately
-
-
->
-> > > //Peter
->
-> //Peter
->
-> > > From: bitbake-devel@lists.openembedded.org <bitbake-
-> > devel@lists.openembedded.org> On Behalf Of Khem Raj
-> > > Sent: den 21 mars 2020 22:44
-> > > To: bitbake-devel@lists.openembedded.org
-> > > Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
-> > ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-> > >
-> > >
-> > >
-> > > removing
-> > >
-> > > if d.getVar('BB_SRCREV_POLICY') !=3D "cache":
-> > >
-> > > Will cause autorevs to be excluded from policy and its not documented
-> > >
-> > >
-> https://www.yoctoproject.org/docs/2.1/bitbake-user-manual/bitbake-user-
-> > manual.html#var-BB_SRCREV_POLICY
-> > >
-> > > did not state that AUTOREVs plus BB_SRCREV_POLICY behavior, this patc=
-h
-> > is regressing the case
-> > > where we rely on this behavior to use externalsrc on AUTOREVed recipe=
-s.
->
-
---000000000000b6903e05a1676cb0
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div><br></div><div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=
-=3D"gmail_attr">On Sat, Mar 21, 2020 at 5:38 PM Peter Kjellerstedt &lt;<a h=
-ref=3D"mailto:peter.kjellerstedt@axis.com">peter.kjellerstedt@axis.com</a>&=
-gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0=
- .8ex;border-left:1px #ccc solid;padding-left:1ex">&gt; -----Original Messa=
-ge-----<br>
-&gt; From: Khem Raj &lt;<a href=3D"mailto:raj.khem@gmail.com" target=3D"_bl=
-ank">raj.khem@gmail.com</a>&gt;<br>
-&gt; Sent: den 22 mars 2020 00:59<br>
-&gt; To: Peter Kjellerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis.c=
-om" target=3D"_blank">peter.kjellerstedt@axis.com</a>&gt;<br>
-&gt; Cc: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"=
-_blank">bitbake-devel@lists.openembedded.org</a><br>
-&gt; Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow<b=
-r>
-&gt; ${AUTOREV} to be used when BB_SRCREV_POLICY is &quot;cache&quot;<br>
-&gt; <br>
-&gt; On Sat, Mar 21, 2020 at 4:50 PM Peter Kjellerstedt<br>
-&gt; &lt;<a href=3D"mailto:peter.kjellerstedt@axis.com" target=3D"_blank">p=
-eter.kjellerstedt@axis.com</a>&gt; wrote:<br>
-&gt; &gt;<br>
-&gt; &gt; Rather than blindly reverting, can=E2=80=99t we update the docume=
-ntation<br>
-&gt; &gt; instead? If you use ${AUTOREV} you obviously do it because you al=
-ways want<br>
-&gt; &gt; the latest revision.<br>
-&gt;=C2=A0 <br>
-&gt; Autorev + clear srcrev policy if you want that<br>
-<br>
-Well, obviously ${AUTOREV} works with BB_SRCREV_POLICY =3D &quot;clear&quot=
-;. But <br>
-BB_SRCREV_POLICY is a distro configuration and it is not possible to overri=
-de <br>
-it per recipe. Which means that if it is set to &quot;cache&quot;, it is no=
-t possible <br>
-to use ${AUTOREV}. This is not documented, and to the developers it will lo=
-ok <br>
-as if it is working, since it fetches the very first time the recipe is bui=
-lt.<br>
-But there will be no updates, so it is as useful as setting SRCREV =3D &quo=
-t;master&quot; <br>
-(which some of our developers also have tried before being educated to how =
-<br>
-BitBake works)...<br>
-<br>
-&gt; &gt; Before this change, using ${AUTOREV} in combination with<br>
-&gt; &gt; BB_SRCREV_POLICY =3D &quot;cache&quot; didn=E2=80=99t work, which=
- also wasn=E2=80=99t documented.<br>
-&gt; <br>
-&gt; It could be interpreted also that cache also caches AUTOREVs<br>
-&gt; this will break downstream projects. Its equivalent of ABI change,<br>
-&gt; that perhaps will do more harm then what it fixes.<br>
-<br>
-I fail to see how it will break stuff as it was not possible to use ${AUTOR=
-EV} <br>
-before in a meaningful way together with BB_SRCREV_POLICY =3D &quot;cache&q=
-uot;.</blockquote><div dir=3D"auto"><br></div><div dir=3D"auto">There are w=
-orkflows depending on this behavior unfortunately=C2=A0</div><div dir=3D"au=
-to"><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;=
-border-left:1px #ccc solid;padding-left:1ex"><br>
-<br>
-&gt; &gt; //Peter<br>
-<br>
-//Peter<br>
-<br>
-&gt; &gt; From: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" tar=
-get=3D"_blank">bitbake-devel@lists.openembedded.org</a> &lt;bitbake-<br>
-&gt; <a href=3D"mailto:devel@lists.openembedded.org" target=3D"_blank">deve=
-l@lists.openembedded.org</a>&gt; On Behalf Of Khem Raj<br>
-&gt; &gt; Sent: den 21 mars 2020 22:44<br>
-&gt; &gt; To: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" targe=
-t=3D"_blank">bitbake-devel@lists.openembedded.org</a><br>
-&gt; &gt; Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Al=
-low<br>
-&gt; ${AUTOREV} to be used when BB_SRCREV_POLICY is &quot;cache&quot;<br>
-&gt; &gt;<br>
-&gt; &gt;<br>
-&gt; &gt;<br>
-&gt; &gt; removing<br>
-&gt; &gt;<br>
-&gt; &gt; if d.getVar(&#39;BB_SRCREV_POLICY&#39;) !=3D &quot;cache&quot;:<b=
-r>
-&gt; &gt;<br>
-&gt; &gt; Will cause autorevs to be excluded from policy and its not docume=
-nted<br>
-&gt; &gt;<br>
-&gt; &gt; <a href=3D"https://www.yoctoproject.org/docs/2.1/bitbake-user-man=
-ual/bitbake-user-" rel=3D"noreferrer" target=3D"_blank">https://www.yoctopr=
-oject.org/docs/2.1/bitbake-user-manual/bitbake-user-</a><br>
-&gt; manual.html#var-BB_SRCREV_POLICY<br>
-&gt; &gt;<br>
-&gt; &gt; did not state that AUTOREVs plus BB_SRCREV_POLICY behavior, this =
-patch<br>
-&gt; is regressing the case<br>
-&gt; &gt; where we rely on this behavior to use externalsrc on AUTOREVed re=
-cipes.<br>
-</blockquote></div></div>
-
---000000000000b6903e05a1676cb0--
+--_000_074d4366010e45a3b56ed7de3238fda4XBOX03axiscom_--
