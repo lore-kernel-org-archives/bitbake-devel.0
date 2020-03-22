@@ -1,97 +1,240 @@
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web11.21336.1584837538586019049
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+ by mx.groups.io with SMTP id smtpd.web10.22008.1584840462461006564
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 21 Mar 2020 17:38:59 -0700
+ Sat, 21 Mar 2020 18:27:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=k0yYcAR1;
- spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=pZTCxHDw;
+ spf=pass (domain: gmail.com, ip: 209.85.222.178, mailfrom: raj.khem@gmail.com)
+Received: by mail-qk1-f178.google.com with SMTP id l25so6653126qki.7
+        for <bitbake-devel@lists.openembedded.org>; Sat, 21 Mar 2020 18:27:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=3478; q=dns/txt; s=axis-central1;
-  t=1584837539; x=1616373539;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=2/f94wBGaTZ87qEopGd1V931zszBC/lKIH0y2CopQ08=;
-  b=k0yYcAR1446XJ0QRxFRSP+v3+mTSWfqZcPEnLostwGfTZfunL9GDKa7j
-   ljd3osCAoFtL1eXsshRpjk0hEAQrEf4MFUaKBomGYsF7E2pBXAlUpTqj3
-   NeBZ5WVQNv3taCGBKFAzgApzw4untAS3n3X5SpAfZf/l6vCaLE+Tcy262
-   2Pj/5VC35OuVGPdgFyCu3x/0kindDlf05lLclOPDyEA0qxy60yTGPqsZJ
-   whjYKpoFll3jvTQMtfXtRsMh3XhoozpPLvytj5AXUuqLlWCeBE1yJaZYc
-   o0K0VSCe5U4+Acp7BTU3SsfcNawBuBJ2zbWbamawyNxJnRXETSlGO5BoI
-   g==;
-IronPort-SDR: EX9PHPysSPP4/8EQU+ogF/Dilzupva1SlrWmb8XCAjOGZ5D65CYKdJ3AI8Myx8iabxG+CW/xny
- aln2uBrg6Bc6vY9yNt2CWw3QwGB+QfkVlUWaqByC/vwCIEQwraCNw6tsOzlfnVyyUFEcNewXE7
- 2/kNOoVuxp7EMvM2fiww5KLOyZTvcZ2GmDAT2DoNxv9HuYR4r7M8vYLftQJEUJ4lDkkhWjwN2j
- o+XEgqeGaG7MBDDsjmB5gT8UNWBdP2lFNQvQFuj9kkfIVepARzpbmsZW1a2oK6IGEiR34ioAS4
- OYs=
-X-IronPort-AV: E=Sophos;i="5.72,290,1580770800"; 
-   d="scan'208";a="6599310"
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Khem Raj <raj.khem@gmail.com>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-Thread-Topic: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
- ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-Thread-Index: AQHV/8nldQqzjdEoWEmBLHb/bMWci6hTs3rA///1dQCAABaKoA==
-Date: Sun, 22 Mar 2020 00:38:51 +0000
-Message-ID: <2f891d304ee448538457d2b94c32bba3@XBOX03.axis.com>
-References: <20200215032955.3958-3-pkj@axis.com>
- <5532.1584827063458682607@lists.openembedded.org>
- <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com>
- <CAMKF1srOQVRW8n9bzr9GXiA3NBOX=cE5EV-W9S_dq+JFRqNjMQ@mail.gmail.com>
-In-Reply-To: <CAMKF1srOQVRW8n9bzr9GXiA3NBOX=cE5EV-W9S_dq+JFRqNjMQ@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rc1gVbrjY32GNTZhpCKzYlebvK54LaezSXCXLLcZC0E=;
+        b=pZTCxHDw9JSltUJ4JXs8WjaopvZaB0sTs5fBgt+sXErwkU2SV8zjH1xBcrsMo/7DDs
+         v+yXHEG3gl537ApmUSaaQDyDpvW3aIHSZHxEzHUXChxyRQaoHLmWsehYPWwEsTPhcoY1
+         6PksHykmYU+jaU9kh/bA0j5+4h2sdu/fIsWYUfYM/80ig0eEZ9ONLRSFMASSiUhXSidf
+         Exv5hbxdo3y1alsueSWWjcXfN+OyBFLkzEKazVdxpvM1k/555Skn7/nFYb0XbaoreWEp
+         JYq9eA/OIk1MPjTaBcOGma4XlQhopxVxEABzJA9x7eetFv7HmcBTT4+GKouSHkdZ8/Pk
+         PmBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rc1gVbrjY32GNTZhpCKzYlebvK54LaezSXCXLLcZC0E=;
+        b=ib7+IiJA9l0y/zEWR/P9ebDX9rSgDv0nUzmdmD9pKH+Cx1Fxit5H7VzgttMwXld6w7
+         TtG+Va9X4nJLjykCzgQ11551gEvLNF8Wi4jQG9P/OlmCn9QG4zjlMlMQ7Wukrqz+T3fy
+         VBgqDkGXBdFPMf2NDj08Htn8/8VQ6+Im1L7rVlGdnnBpHaSKpZ2rPlGUkZ1Hu/Z8AEr0
+         eAYQDOVWMh8VItAJFtsTE8qJQeIJ4dEolJ1nutFbwEQZj65yIJ6O1f6UjFkNG3HHpptS
+         mKx71gwwYJuLZfnSTMplEOACdHfrX/KPgOuSbEeBCTaIxErFBdNY5eKxoNjcHCzIfRXT
+         owSg==
+X-Gm-Message-State: ANhLgQ1jxBRbp90z8hG1xiqEWDrZLx3O9FV82xYxn0sHt4xALnQ8gETX
+	gdQHhtxHX1kYleUgzT3PwmAdb1vAkuL3QfiSY6i+2J8h
+X-Google-Smtp-Source: ADFU+vs8V2bN4r9jBiBiSJK569VitgfowMLUd/bOi/6ixQJWXmvcKzIDxz8Xoz9zZ5IcF04DSQjL7hVviQANthmjB2w=
+X-Received: by 2002:a37:8d81:: with SMTP id p123mr3029561qkd.17.1584840461159;
+ Sat, 21 Mar 2020 18:27:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+References: <20200215032955.3958-3-pkj@axis.com> <5532.1584827063458682607@lists.openembedded.org>
+ <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com> <CAMKF1srOQVRW8n9bzr9GXiA3NBOX=cE5EV-W9S_dq+JFRqNjMQ@mail.gmail.com>
+ <2f891d304ee448538457d2b94c32bba3@XBOX03.axis.com>
+In-Reply-To: <2f891d304ee448538457d2b94c32bba3@XBOX03.axis.com>
+From: "Khem Raj" <raj.khem@gmail.com>
+Date: Sat, 21 Mar 2020 18:27:29 -0700
+Message-ID: <CAMKF1sqsZW4Nher5wy6WwjdoWcz7-Yd-KHQyzp0PxPZsyGT=yg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="000000000000b6903e05a1676cb0"
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBLaGVtIFJhaiA8cmFqLmtoZW1A
-Z21haWwuY29tPg0KPiBTZW50OiBkZW4gMjIgbWFycyAyMDIwIDAwOjU5DQo+IFRvOiBQZXRlciBL
-amVsbGVyc3RlZHQgPHBldGVyLmtqZWxsZXJzdGVkdEBheGlzLmNvbT4NCj4gQ2M6IGJpdGJha2Ut
-ZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2
-ZWxdIFttYXN0ZXJdW3pldXNdW1BBVENIIDMvM10gZmV0Y2gyOiBBbGxvdw0KPiAke0FVVE9SRVZ9
-IHRvIGJlIHVzZWQgd2hlbiBCQl9TUkNSRVZfUE9MSUNZIGlzICJjYWNoZSINCj4gDQo+IE9uIFNh
-dCwgTWFyIDIxLCAyMDIwIGF0IDQ6NTAgUE0gUGV0ZXIgS2plbGxlcnN0ZWR0DQo+IDxwZXRlci5r
-amVsbGVyc3RlZHRAYXhpcy5jb20+IHdyb3RlOg0KPiA+DQo+ID4gUmF0aGVyIHRoYW4gYmxpbmRs
-eSByZXZlcnRpbmcsIGNhbuKAmXQgd2UgdXBkYXRlIHRoZSBkb2N1bWVudGF0aW9uDQo+ID4gaW5z
-dGVhZD8gSWYgeW91IHVzZSAke0FVVE9SRVZ9IHlvdSBvYnZpb3VzbHkgZG8gaXQgYmVjYXVzZSB5
-b3UgYWx3YXlzIHdhbnQNCj4gPiB0aGUgbGF0ZXN0IHJldmlzaW9uLg0KPiAgDQo+IEF1dG9yZXYg
-KyBjbGVhciBzcmNyZXYgcG9saWN5IGlmIHlvdSB3YW50IHRoYXQNCg0KV2VsbCwgb2J2aW91c2x5
-ICR7QVVUT1JFVn0gd29ya3Mgd2l0aCBCQl9TUkNSRVZfUE9MSUNZID0gImNsZWFyIi4gQnV0IA0K
-QkJfU1JDUkVWX1BPTElDWSBpcyBhIGRpc3RybyBjb25maWd1cmF0aW9uIGFuZCBpdCBpcyBub3Qg
-cG9zc2libGUgdG8gb3ZlcnJpZGUgDQppdCBwZXIgcmVjaXBlLiBXaGljaCBtZWFucyB0aGF0IGlm
-IGl0IGlzIHNldCB0byAiY2FjaGUiLCBpdCBpcyBub3QgcG9zc2libGUgDQp0byB1c2UgJHtBVVRP
-UkVWfS4gVGhpcyBpcyBub3QgZG9jdW1lbnRlZCwgYW5kIHRvIHRoZSBkZXZlbG9wZXJzIGl0IHdp
-bGwgbG9vayANCmFzIGlmIGl0IGlzIHdvcmtpbmcsIHNpbmNlIGl0IGZldGNoZXMgdGhlIHZlcnkg
-Zmlyc3QgdGltZSB0aGUgcmVjaXBlIGlzIGJ1aWx0Lg0KQnV0IHRoZXJlIHdpbGwgYmUgbm8gdXBk
-YXRlcywgc28gaXQgaXMgYXMgdXNlZnVsIGFzIHNldHRpbmcgU1JDUkVWID0gIm1hc3RlciIgDQoo
-d2hpY2ggc29tZSBvZiBvdXIgZGV2ZWxvcGVycyBhbHNvIGhhdmUgdHJpZWQgYmVmb3JlIGJlaW5n
-IGVkdWNhdGVkIHRvIGhvdyANCkJpdEJha2Ugd29ya3MpLi4uDQoNCj4gPiBCZWZvcmUgdGhpcyBj
-aGFuZ2UsIHVzaW5nICR7QVVUT1JFVn0gaW4gY29tYmluYXRpb24gd2l0aA0KPiA+IEJCX1NSQ1JF
-Vl9QT0xJQ1kgPSAiY2FjaGUiIGRpZG7igJl0IHdvcmssIHdoaWNoIGFsc28gd2FzbuKAmXQgZG9j
-dW1lbnRlZC4NCj4gDQo+IEl0IGNvdWxkIGJlIGludGVycHJldGVkIGFsc28gdGhhdCBjYWNoZSBh
-bHNvIGNhY2hlcyBBVVRPUkVWcw0KPiB0aGlzIHdpbGwgYnJlYWsgZG93bnN0cmVhbSBwcm9qZWN0
-cy4gSXRzIGVxdWl2YWxlbnQgb2YgQUJJIGNoYW5nZSwNCj4gdGhhdCBwZXJoYXBzIHdpbGwgZG8g
-bW9yZSBoYXJtIHRoZW4gd2hhdCBpdCBmaXhlcy4NCg0KSSBmYWlsIHRvIHNlZSBob3cgaXQgd2ls
-bCBicmVhayBzdHVmZiBhcyBpdCB3YXMgbm90IHBvc3NpYmxlIHRvIHVzZSAke0FVVE9SRVZ9IA0K
-YmVmb3JlIGluIGEgbWVhbmluZ2Z1bCB3YXkgdG9nZXRoZXIgd2l0aCBCQl9TUkNSRVZfUE9MSUNZ
-ID0gImNhY2hlIi4NCg0KPiA+IC8vUGV0ZXINCg0KLy9QZXRlcg0KDQo+ID4gRnJvbTogYml0YmFr
-ZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIDxiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0cy5v
-cGVuZW1iZWRkZWQub3JnPiBPbiBCZWhhbGYgT2YgS2hlbSBSYWoNCj4gPiBTZW50OiBkZW4gMjEg
-bWFycyAyMDIwIDIyOjQ0DQo+ID4gVG86IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVk
-Lm9yZw0KPiA+IFN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW21hc3Rlcl1bemV1c11bUEFU
-Q0ggMy8zXSBmZXRjaDI6IEFsbG93DQo+ICR7QVVUT1JFVn0gdG8gYmUgdXNlZCB3aGVuIEJCX1NS
-Q1JFVl9QT0xJQ1kgaXMgImNhY2hlIg0KPiA+DQo+ID4NCj4gPg0KPiA+IHJlbW92aW5nDQo+ID4N
-Cj4gPiBpZiBkLmdldFZhcignQkJfU1JDUkVWX1BPTElDWScpICE9ICJjYWNoZSI6DQo+ID4NCj4g
-PiBXaWxsIGNhdXNlIGF1dG9yZXZzIHRvIGJlIGV4Y2x1ZGVkIGZyb20gcG9saWN5IGFuZCBpdHMg
-bm90IGRvY3VtZW50ZWQNCj4gPg0KPiA+IGh0dHBzOi8vd3d3LnlvY3RvcHJvamVjdC5vcmcvZG9j
-cy8yLjEvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItDQo+IG1hbnVhbC5odG1sI3Zh
-ci1CQl9TUkNSRVZfUE9MSUNZDQo+ID4NCj4gPiBkaWQgbm90IHN0YXRlIHRoYXQgQVVUT1JFVnMg
-cGx1cyBCQl9TUkNSRVZfUE9MSUNZIGJlaGF2aW9yLCB0aGlzIHBhdGNoDQo+IGlzIHJlZ3Jlc3Np
-bmcgdGhlIGNhc2UNCj4gPiB3aGVyZSB3ZSByZWx5IG9uIHRoaXMgYmVoYXZpb3IgdG8gdXNlIGV4
-dGVybmFsc3JjIG9uIEFVVE9SRVZlZCByZWNpcGVzLg0K
+--000000000000b6903e05a1676cb0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Mar 21, 2020 at 5:38 PM Peter Kjellerstedt <
+peter.kjellerstedt@axis.com> wrote:
+
+> > -----Original Message-----
+> > From: Khem Raj <raj.khem@gmail.com>
+> > Sent: den 22 mars 2020 00:59
+> > To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> > Cc: bitbake-devel@lists.openembedded.org
+> > Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
+> > ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
+> >
+> > On Sat, Mar 21, 2020 at 4:50 PM Peter Kjellerstedt
+> > <peter.kjellerstedt@axis.com> wrote:
+> > >
+> > > Rather than blindly reverting, can=E2=80=99t we update the documentat=
+ion
+> > > instead? If you use ${AUTOREV} you obviously do it because you always
+> want
+> > > the latest revision.
+> >
+> > Autorev + clear srcrev policy if you want that
+>
+> Well, obviously ${AUTOREV} works with BB_SRCREV_POLICY =3D "clear". But
+> BB_SRCREV_POLICY is a distro configuration and it is not possible to
+> override
+> it per recipe. Which means that if it is set to "cache", it is not
+> possible
+> to use ${AUTOREV}. This is not documented, and to the developers it will
+> look
+> as if it is working, since it fetches the very first time the recipe is
+> built.
+> But there will be no updates, so it is as useful as setting SRCREV =3D
+> "master"
+> (which some of our developers also have tried before being educated to ho=
+w
+> BitBake works)...
+>
+> > > Before this change, using ${AUTOREV} in combination with
+> > > BB_SRCREV_POLICY =3D "cache" didn=E2=80=99t work, which also wasn=E2=
+=80=99t documented.
+> >
+> > It could be interpreted also that cache also caches AUTOREVs
+> > this will break downstream projects. Its equivalent of ABI change,
+> > that perhaps will do more harm then what it fixes.
+>
+> I fail to see how it will break stuff as it was not possible to use
+> ${AUTOREV}
+> before in a meaningful way together with BB_SRCREV_POLICY =3D "cache".
+
+
+There are workflows depending on this behavior unfortunately
+
+
+>
+> > > //Peter
+>
+> //Peter
+>
+> > > From: bitbake-devel@lists.openembedded.org <bitbake-
+> > devel@lists.openembedded.org> On Behalf Of Khem Raj
+> > > Sent: den 21 mars 2020 22:44
+> > > To: bitbake-devel@lists.openembedded.org
+> > > Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
+> > ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
+> > >
+> > >
+> > >
+> > > removing
+> > >
+> > > if d.getVar('BB_SRCREV_POLICY') !=3D "cache":
+> > >
+> > > Will cause autorevs to be excluded from policy and its not documented
+> > >
+> > >
+> https://www.yoctoproject.org/docs/2.1/bitbake-user-manual/bitbake-user-
+> > manual.html#var-BB_SRCREV_POLICY
+> > >
+> > > did not state that AUTOREVs plus BB_SRCREV_POLICY behavior, this patc=
+h
+> > is regressing the case
+> > > where we rely on this behavior to use externalsrc on AUTOREVed recipe=
+s.
+>
+
+--000000000000b6903e05a1676cb0
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div><br></div><div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=
+=3D"gmail_attr">On Sat, Mar 21, 2020 at 5:38 PM Peter Kjellerstedt &lt;<a h=
+ref=3D"mailto:peter.kjellerstedt@axis.com">peter.kjellerstedt@axis.com</a>&=
+gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0=
+ .8ex;border-left:1px #ccc solid;padding-left:1ex">&gt; -----Original Messa=
+ge-----<br>
+&gt; From: Khem Raj &lt;<a href=3D"mailto:raj.khem@gmail.com" target=3D"_bl=
+ank">raj.khem@gmail.com</a>&gt;<br>
+&gt; Sent: den 22 mars 2020 00:59<br>
+&gt; To: Peter Kjellerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis.c=
+om" target=3D"_blank">peter.kjellerstedt@axis.com</a>&gt;<br>
+&gt; Cc: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"=
+_blank">bitbake-devel@lists.openembedded.org</a><br>
+&gt; Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow<b=
+r>
+&gt; ${AUTOREV} to be used when BB_SRCREV_POLICY is &quot;cache&quot;<br>
+&gt; <br>
+&gt; On Sat, Mar 21, 2020 at 4:50 PM Peter Kjellerstedt<br>
+&gt; &lt;<a href=3D"mailto:peter.kjellerstedt@axis.com" target=3D"_blank">p=
+eter.kjellerstedt@axis.com</a>&gt; wrote:<br>
+&gt; &gt;<br>
+&gt; &gt; Rather than blindly reverting, can=E2=80=99t we update the docume=
+ntation<br>
+&gt; &gt; instead? If you use ${AUTOREV} you obviously do it because you al=
+ways want<br>
+&gt; &gt; the latest revision.<br>
+&gt;=C2=A0 <br>
+&gt; Autorev + clear srcrev policy if you want that<br>
+<br>
+Well, obviously ${AUTOREV} works with BB_SRCREV_POLICY =3D &quot;clear&quot=
+;. But <br>
+BB_SRCREV_POLICY is a distro configuration and it is not possible to overri=
+de <br>
+it per recipe. Which means that if it is set to &quot;cache&quot;, it is no=
+t possible <br>
+to use ${AUTOREV}. This is not documented, and to the developers it will lo=
+ok <br>
+as if it is working, since it fetches the very first time the recipe is bui=
+lt.<br>
+But there will be no updates, so it is as useful as setting SRCREV =3D &quo=
+t;master&quot; <br>
+(which some of our developers also have tried before being educated to how =
+<br>
+BitBake works)...<br>
+<br>
+&gt; &gt; Before this change, using ${AUTOREV} in combination with<br>
+&gt; &gt; BB_SRCREV_POLICY =3D &quot;cache&quot; didn=E2=80=99t work, which=
+ also wasn=E2=80=99t documented.<br>
+&gt; <br>
+&gt; It could be interpreted also that cache also caches AUTOREVs<br>
+&gt; this will break downstream projects. Its equivalent of ABI change,<br>
+&gt; that perhaps will do more harm then what it fixes.<br>
+<br>
+I fail to see how it will break stuff as it was not possible to use ${AUTOR=
+EV} <br>
+before in a meaningful way together with BB_SRCREV_POLICY =3D &quot;cache&q=
+uot;.</blockquote><div dir=3D"auto"><br></div><div dir=3D"auto">There are w=
+orkflows depending on this behavior unfortunately=C2=A0</div><div dir=3D"au=
+to"><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;=
+border-left:1px #ccc solid;padding-left:1ex"><br>
+<br>
+&gt; &gt; //Peter<br>
+<br>
+//Peter<br>
+<br>
+&gt; &gt; From: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" tar=
+get=3D"_blank">bitbake-devel@lists.openembedded.org</a> &lt;bitbake-<br>
+&gt; <a href=3D"mailto:devel@lists.openembedded.org" target=3D"_blank">deve=
+l@lists.openembedded.org</a>&gt; On Behalf Of Khem Raj<br>
+&gt; &gt; Sent: den 21 mars 2020 22:44<br>
+&gt; &gt; To: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" targe=
+t=3D"_blank">bitbake-devel@lists.openembedded.org</a><br>
+&gt; &gt; Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Al=
+low<br>
+&gt; ${AUTOREV} to be used when BB_SRCREV_POLICY is &quot;cache&quot;<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt; removing<br>
+&gt; &gt;<br>
+&gt; &gt; if d.getVar(&#39;BB_SRCREV_POLICY&#39;) !=3D &quot;cache&quot;:<b=
+r>
+&gt; &gt;<br>
+&gt; &gt; Will cause autorevs to be excluded from policy and its not docume=
+nted<br>
+&gt; &gt;<br>
+&gt; &gt; <a href=3D"https://www.yoctoproject.org/docs/2.1/bitbake-user-man=
+ual/bitbake-user-" rel=3D"noreferrer" target=3D"_blank">https://www.yoctopr=
+oject.org/docs/2.1/bitbake-user-manual/bitbake-user-</a><br>
+&gt; manual.html#var-BB_SRCREV_POLICY<br>
+&gt; &gt;<br>
+&gt; &gt; did not state that AUTOREVs plus BB_SRCREV_POLICY behavior, this =
+patch<br>
+&gt; is regressing the case<br>
+&gt; &gt; where we rely on this behavior to use externalsrc on AUTOREVed re=
+cipes.<br>
+</blockquote></div></div>
+
+--000000000000b6903e05a1676cb0--
