@@ -1,127 +1,98 @@
-Received: from mail-qt1-f196.google.com (mail-qt1-f196.google.com [209.85.160.196])
- by mx.groups.io with SMTP id smtpd.web11.36209.1584903310133632130
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+ by mx.groups.io with SMTP id smtpd.web12.299.1584983836472563270
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 22 Mar 2020 11:55:10 -0700
+ Mon, 23 Mar 2020 10:17:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Q3HktN62;
- spf=pass (domain: gmail.com, ip: 209.85.160.196, mailfrom: raj.khem@gmail.com)
-Received: by mail-qt1-f196.google.com with SMTP id c9so2845692qtw.7
-        for <bitbake-devel@lists.openembedded.org>; Sun, 22 Mar 2020 11:55:10 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=UMoDHg5R;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.66, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f66.google.com with SMTP id b12so229650wmj.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2020 10:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=B/TwMEbK6fJymJiUwRZU1J1ptsSRZ5QOfvRpcIBhfRU=;
-        b=Q3HktN627Jxf1aiAuc1eqDzwXOkA0VRr3K5zhLaHOXPGIgctCb/c98yaXNOGnHUZrB
-         mLaqm4MXTJqkx6SrBAoIJXArj7mmCifUCJhqwXTkiOlTnsc4PRDSfCGHR1tnssZCKJZG
-         ODUahIINwxqxx20WGJTpz2fBAGc//IiX3zTPKHNK77tGTtaJJ2ZF/bVfdXdtZS4hngQi
-         ipSNEV6aH1Ok2TqG5I9U8fvdKRKTVJbRoq9ezV714dsnI0fWWS4ypvtb/YokA9ueXK/O
-         Pdm2ZCkbjhPhuaUGDUoO/OtJoukz77tgGDQtvF7WFmLD94Lvt/YCisWP8kd7OjFYgYvm
-         4cEw==
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2e6zfmpo+TsnaW5UKmLPn5E9MaXvBdNKidjtTNe3pWo=;
+        b=UMoDHg5R6WZXsgpBDaNcf+dauaiO6Tj98N3B9+62Junsx3DpE9r6ToGT5WN2oKFm8c
+         KZE62GbAXGIdB2F2Ks37LPwmWOfHWXefwjdVJSd2Ipe4Z6TkcffxBj8m5m9iRZ/QwDMm
+         3TfjPUr+no45240QtwZSqKojDk2UrTF6vd+Dc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=B/TwMEbK6fJymJiUwRZU1J1ptsSRZ5QOfvRpcIBhfRU=;
-        b=aQiSPbrh1FxA6kLyd6SdRbaQNkEWUuLYRqMVYDakFBFbReIh5PABykp/fOj6mtE9Q4
-         vo+E6QRo5YDWZ4PrnUToTMQxgO/8mKnE2FtMSHSrv4pzixjUf7rTZB1xldz0He+bbwgz
-         b0mMLS8K4jEk7jaT4XP85AC4x3ElyWhhrGd2N3c0z9uLDzGBodHKYsmhcxcwdbObuGXJ
-         T4Bi4slfXg+stPRvAwdeMdNJTacQDz+SIyRyUqFEkVmoHsRcNI5b6Ml+ua2ashBx5Tvf
-         vRUtXyPd++fhHDJ0na8sdYsozfIshKFXn7S/DedPYmfN7wv4X9sTK5KUGTf9YhxTHGNW
-         Ssgw==
-X-Gm-Message-State: ANhLgQ2sE3vZ9gX8dhk3PSzuTG69+yXFfEedxIjPuZ8h7kFbB7Ip/OWY
-	WmQCMaVe7D6G4MR7obEwcKFV07WGKzoAtpW+Fiw=
-X-Google-Smtp-Source: ADFU+vs0SLDxflgtsopceR/GlISMRTOL2uhNrUgz5Psfz7qWUUtYCOwMHNC3Ne+tGWCN+6PywDIsPwQ8w0yIZU1n70c=
-X-Received: by 2002:ac8:17f9:: with SMTP id r54mr17917905qtk.285.1584903309111;
- Sun, 22 Mar 2020 11:55:09 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2e6zfmpo+TsnaW5UKmLPn5E9MaXvBdNKidjtTNe3pWo=;
+        b=NSI/nrR6ohzvJAhzwjQtJ7VATvTCo2DmJnHq/SFDe7MsyYexgvQYPuhXlxfQT5WyrA
+         Q1dbhiZSBecwezx92C4o1/6nnxDMVUAFJ0Uq9kCWzYvjvzQ7Y0uIJDtJQc3u6aj8TSnv
+         RloMdgYxRRWf7gsgMBfiyg4H8kVU/r6O+Vlg+xEMgFSAQbYCl+DiJQYHWuscHNijok7q
+         uQQKw92lOpIWVGszAXRt4a4fua/tVjwA91sIGh2vkMPaiPUvuRSCEspvN1qS9jZ2PPW0
+         CIUF8Ooko2F/5jAZLUpI5E8DnplTaEo/rofmSne/x5t6skz9Otgs09kbkSLMdMUhXi7l
+         /7/g==
+X-Gm-Message-State: ANhLgQ3puM3zhnb/7P6PBLjNBy7kzzoCvNtLv7BxTyP+PWaTsb5vUy/K
+	D941iuC+lpm/Z+tBJ/sTl0JLCh5v+3c=
+X-Google-Smtp-Source: ADFU+vtmoI/eJLzXco6WXebc5KZ875BajsfOmGrQZs2sxDYa44hhx7Y7xB7akfIdPjI7h3ni8JQjiw==
+X-Received: by 2002:a1c:b743:: with SMTP id h64mr334727wmf.88.1584983834386;
+        Mon, 23 Mar 2020 10:17:14 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id q185sm342144wme.10.2020.03.23.10.17.13
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 10:17:13 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/3] tinfoil: Drop parse_recipe_file custom datastore support
+Date: Mon, 23 Mar 2020 17:17:10 +0000
+Message-Id: <20200323171712.434949-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200215032955.3958-3-pkj@axis.com> <5532.1584827063458682607@lists.openembedded.org>
- <1cdd50184c1f4af488baee9ee691b495@XBOX03.axis.com> <CAMKF1srOQVRW8n9bzr9GXiA3NBOX=cE5EV-W9S_dq+JFRqNjMQ@mail.gmail.com>
- <2f891d304ee448538457d2b94c32bba3@XBOX03.axis.com> <0fa4ecce8452d9f015c00afe29710c45e5328899.camel@linuxfoundation.org>
-In-Reply-To: <0fa4ecce8452d9f015c00afe29710c45e5328899.camel@linuxfoundation.org>
-From: "Khem Raj" <raj.khem@gmail.com>
-Date: Sun, 22 Mar 2020 11:54:42 -0700
-Message-ID: <CAMKF1spR4qGxt+LBKAEiT2rOcxCwRgGMusvi64yUAajn+8DVbQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: Peter Kjellerstedt <peter.kjellerstedt@axis.com>, 
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 22, 2020 at 1:56 AM Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> On Sun, 2020-03-22 at 00:38 +0000, Peter Kjellerstedt wrote:
-> > > -----Original Message-----
-> > > From: Khem Raj <raj.khem@gmail.com>
-> > > Sent: den 22 mars 2020 00:59
-> > > To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> > > Cc: bitbake-devel@lists.openembedded.org
-> > > Subject: Re: [bitbake-devel] [master][zeus][PATCH 3/3] fetch2: Allow
-> > > ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-> > >
-> > > On Sat, Mar 21, 2020 at 4:50 PM Peter Kjellerstedt
-> > > <peter.kjellerstedt@axis.com> wrote:
-> > > > Rather than blindly reverting, can=E2=80=99t we update the document=
-ation
-> > > > instead? If you use ${AUTOREV} you obviously do it because you alwa=
-ys want
-> > > > the latest revision.
-> > >
-> > > Autorev + clear srcrev policy if you want that
-> >
-> > Well, obviously ${AUTOREV} works with BB_SRCREV_POLICY =3D "clear". But
-> > BB_SRCREV_POLICY is a distro configuration and it is not possible to ov=
-erride
-> > it per recipe.
->
-> BB_SRCREV_POLICY is quite an old piece of code and its design has
-> issues. It should really be changed to work per recipe (and use
-> something other than persist db but that is another story).
->
+This parameter is unused except for a single selftest and is problematic
+with regard to fixing some other bugs. Remove it for now, if really needed
+we could re-implement it in some other way in the future. Experience
+tells us we likely don't want to support this kind of change to the metadata
+anyway as its not as useful as it first sounds/appears.
 
-Right, I agree lets keep it as it is.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tinfoil.py | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-> >  Which means that if it is set to "cache", it is not possible
-> > to use ${AUTOREV}. This is not documented, and to the developers it wil=
-l look
-> > as if it is working, since it fetches the very first time the recipe is=
- built.
-> > But there will be no updates, so it is as useful as setting SRCREV =3D =
-"master"
-> > (which some of our developers also have tried before being educated to =
-how
-> > BitBake works)...
-> >
-> > > > Before this change, using ${AUTOREV} in combination with
-> > > > BB_SRCREV_POLICY =3D "cache" didn=E2=80=99t work, which also wasn=
-=E2=80=99t documented.
-> > >
-> > > It could be interpreted also that cache also caches AUTOREVs
-> > > this will break downstream projects. Its equivalent of ABI change,
-> > > that perhaps will do more harm then what it fixes.
-> >
-> > I fail to see how it will break stuff as it was not possible to use ${A=
-UTOREV}
-> > before in a meaningful way together with BB_SRCREV_POLICY =3D "cache".
->
-> It gives a behaviour people asked for and need under certain scenarios.
-> I appreciate that isn't yours. I should not have merged the patch as it
-> breaks behaviour that people do use and I misunderstood what the patch
-> was doing :(.
->
-> The question is where from here, technically a revert is justified but
-> I do understand the per recipe configuration issue.
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index a8e835d29c..70b381e351 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -615,7 +615,7 @@ class Tinfoil:
+         fn = self.get_recipe_file(pn)
+         return self.parse_recipe_file(fn)
+ 
+-    def parse_recipe_file(self, fn, appends=True, appendlist=None, config_data=None):
++    def parse_recipe_file(self, fn, appends=True, appendlist=None):
+         """
+         Parse the specified recipe file (with or without bbappends)
+         and return a datastore object representing the environment
+@@ -626,9 +626,6 @@ class Tinfoil:
+             appends: True to apply bbappends, False otherwise
+             appendlist: optional list of bbappend files to apply, if you
+                         want to filter them
+-            config_data: custom config datastore to use. NOTE: if you
+-                         specify config_data then you cannot use a virtual
+-                         specification for fn.
+         """
+         if self.tracking:
+             # Enable history tracking just for the parse operation
+@@ -636,11 +633,7 @@ class Tinfoil:
+         try:
+             if appends and appendlist == []:
+                 appends = False
+-            if config_data:
+-                dctr = bb.remotedata.RemoteDatastores.transmit_datastore(config_data)
+-                dscon = self.run_command('parseRecipeFile', fn, appends, appendlist, dctr)
+-            else:
+-                dscon = self.run_command('parseRecipeFile', fn, appends, appendlist)
++            dscon = self.run_command('parseRecipeFile', fn, appends, appendlist)
+             if dscon:
+                 return self._reconvert_type(dscon, 'DataStoreConnectionHandle')
+             else:
+-- 
+2.25.1
 
-I think there are large usecases depending on current behaviour. While
-RDK will migrate away
-from AUTOREVs but this is not happening in 3.1 time frame and there
-are other projects perhaps
-who are in same boat.
-
->
-> Cheers,
->
-> Richard
->
