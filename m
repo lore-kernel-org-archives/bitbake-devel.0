@@ -1,96 +1,86 @@
-Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
- by mx.groups.io with SMTP id smtpd.web10.26128.1585484476520998413
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web10.37621.1585518220368357852
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 29 Mar 2020 05:21:17 -0700
+ Sun, 29 Mar 2020 14:43:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@madison-systems.20150623.gappssmtp.com header.s=20150623 header.b=zPFX/Hdu;
- spf=none, err=SPF record not found (domain: madison.systems, ip: 209.85.167.66, mailfrom: matt@madison.systems)
-Received: by mail-lf1-f66.google.com with SMTP id n20so11551209lfl.10
-        for <bitbake-devel@lists.openembedded.org>; Sun, 29 Mar 2020 05:21:16 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=eX4w2lWA;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.67, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f67.google.com with SMTP id s1so18862568wrv.5
+        for <bitbake-devel@lists.openembedded.org>; Sun, 29 Mar 2020 14:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=madison-systems.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=naSCTY3HN0lhBKyZiK9IcKT0+aoTJ3Pan8fH79i0+oc=;
-        b=zPFX/Hdu4t3be5ygCT5u4m/v2JUn5ZBpMz0vxH5vJNC1ZW5/pN8KM3ijghuR6AjszO
-         XusIe77HvLSw4ip7rMl5DInrv1zjI35u4BY8TFSTvA4K75XEsUXxUEAsmJ1zueHWdjCn
-         U5yivIwpjHpsids7eE61ieTZOnljEndi5qBRaUORSlIcrttvThyMLxnqVaW8A0d0pIl3
-         DHz52iz+SX7tgzxx9KzY+UDcqy1rkyT7EB5kBvKDgdZvrHN8F1B2fgVJzNwYt+On2wCf
-         2ae44eImHY3eyw4w+/3Tljls/1fDbm9votR+Sz0I7OT6zvQ4dFYtrOqcZU9x8aGN0VZ1
-         wPsA==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=PfOL0wqih6xlBQktvFp4l6HEJgM6580XK+qNwrczea0=;
+        b=eX4w2lWAwsSG0FgN0E87GdqS7AnKb9GKalmFknSg46RFNXhc0svj0WE0ROO+137Y0Q
+         ujPtQ0pbOnM7r3iHYm4nWh/fox4zTFDmA/mqvFMXN7KMiUKXUMeuP0U/Fh6efj1soHCq
+         emwrcsF7ThoXSi4o8+YKZw3C0ZtwSz2pj1YsA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=naSCTY3HN0lhBKyZiK9IcKT0+aoTJ3Pan8fH79i0+oc=;
-        b=mu4IU+be5crJXbrronv+YfO+ns7j86VyPt9m5QCE81a3gP3YbyXWg8TY4AWmA0cWJc
-         v6EBKiT3Rp0naaZOOIYMMj2Pn6uN5Q6oING2Oi9Fbqbk/5IRLeIXzBf7d7vUejU4lLIZ
-         fPce5zDh2qjKcLWuLqVVybBDvRC1E9o6ve4gJl9JfNo4KUFzAXWw8Bc35UmXSPuMxJGK
-         DcBWuK3Qu6lwXmW857juKcWSa9Jsi1FwHLytMiWj6cW9NXJS1EFDJAplGeiL5sgmm8m4
-         QsRmyXR5wveKAin7QdorjhRBv+2fPk7ZFeubNfcpRTwI/8mWrsAOR8U7MP4oPUjHCKvv
-         s+SA==
-X-Gm-Message-State: AGi0PubXLKttZmkWcNAp7/Vl6u+Kk+/bELDTeioiMWB+WbqIOaKhns4w
-	Qy/GrY1bOZqOcO5Ukjw7uanmttbhtM111zWQVIBOLw==
-X-Google-Smtp-Source: APiQypIZamT3u+7DqdlvxpFSmSew/NbJFqZbAXIQyJNSwb4PgLXd+BGCZX/D3mZ9XUiIGMdQlVL11SKs3mN97oeIzps=
-X-Received: by 2002:ac2:5497:: with SMTP id t23mr1720653lfk.211.1585484474554;
- Sun, 29 Mar 2020 05:21:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200327144825.562857-1-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20200327144825.562857-1-richard.purdie@linuxfoundation.org>
-From: "Matt Madison" <matt@madison.systems>
-Date: Sun, 29 Mar 2020 05:21:03 -0700
-Message-ID: <CAGgRHJoTW30z6gQwCJByEB8xOQ62K-ecuYEE7ZKyd1GZgYehHw@mail.gmail.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=PfOL0wqih6xlBQktvFp4l6HEJgM6580XK+qNwrczea0=;
+        b=gxUC6Z1UNX9ZmPzl+u/QvDIUHJ8E83CZOGOl9V27VV4ahwjoAZTGR2zitLZb9y821U
+         iMhjmKqNZCM2mNbXWOuOaya8bmnZ65jR0U+oVg+jXxgcux+FPlBzE8Q7ubPUMUWof+P9
+         Fzxh/jr2ojRYcaq2NNr7TMhcvLGoPKZvJCUX9J+s/uDerZGB3fxUGlMd4IHTzrbCo41f
+         f3MucrNQcVYLa1bCaQUfMMY6b89RKsBgBMciZxq9uyfBSebSAww7aAKcdsQaiWYyjqMO
+         62FIaokJL5gdQJ0bCw0M5SpeCR+SOyErY5TyPhraNgYX0MlQwYW3Dtot2dD/se0lOEPc
+         qp5A==
+X-Gm-Message-State: ANhLgQ1bonSiYRjnm074X6b5jEHD7e5HyGJ560xTn84skk+DJ7kZOFV3
+	/NUW4yjLi5SmK5QhUrF7EGxNgA==
+X-Google-Smtp-Source: ADFU+vvijwDqNhm8l7keMNQJos+lkoQYQ42b9ZxBs/SHAoXFXeZB/pjPf4WrAtc15hYFXIq+FDWbMQ==
+X-Received: by 2002:adf:f452:: with SMTP id f18mr11364037wrp.222.1585518218757;
+        Sun, 29 Mar 2020 14:43:38 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id v21sm10113937wmh.26.2020.03.29.14.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 14:43:38 -0700 (PDT)
+Message-ID: <6c9604fa0806a5799519858c300c9336d9e6d351.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH] fetch2: Fix urldata_cache key issues
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Matt Madison <matt@madison.systems>
 Cc: bitbake-devel@lists.openembedded.org
+Date: Sun, 29 Mar 2020 22:43:36 +0100
+In-Reply-To: <CAGgRHJoTW30z6gQwCJByEB8xOQ62K-ecuYEE7ZKyd1GZgYehHw@mail.gmail.com>
+References: <20200327144825.562857-1-richard.purdie@linuxfoundation.org>
+	 <CAGgRHJoTW30z6gQwCJByEB8xOQ62K-ecuYEE7ZKyd1GZgYehHw@mail.gmail.com>
+User-Agent: Evolution 3.36.0-1 
+MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 27, 2020 at 7:48 AM Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> Upon inspection its clear the way the keys for this cache were being handled
-> would break it and cause the cache to never be used. Fix this.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/fetch2/__init__.py | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index d8ad19b59b..813f5eb773 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -1631,8 +1631,11 @@ class Fetch(object):
->
->          fn = d.getVar('FILE')
->          mc = d.getVar('__BBMULTICONFIG') or ""
-> -        if cache and fn and mc + fn in urldata_cache:
-> -            self.ud = urldata_cache[mc + fn + str(id(d))]
-> +        key = None
-> +        if cache and fn:
-> +            key = mc + fn in urldata_cache
-This doesn't look right.  Did you really mean to have the 'in
-urldata_cache' here?
+On Sun, 2020-03-29 at 05:21 -0700, Matt Madison wrote:
+> On Fri, Mar 27, 2020 at 7:48 AM Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+> > Upon inspection its clear the way the keys for this cache were
+> > being handled
+> > would break it and cause the cache to never be used. Fix this.
+> > 
+> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> > ---
+> >  lib/bb/fetch2/__init__.py | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> > index d8ad19b59b..813f5eb773 100644
+> > --- a/lib/bb/fetch2/__init__.py
+> > +++ b/lib/bb/fetch2/__init__.py
+> > @@ -1631,8 +1631,11 @@ class Fetch(object):
+> > 
+> >          fn = d.getVar('FILE')
+> >          mc = d.getVar('__BBMULTICONFIG') or ""
+> > -        if cache and fn and mc + fn in urldata_cache:
+> > -            self.ud = urldata_cache[mc + fn + str(id(d))]
+> > +        key = None
+> > +        if cache and fn:
+> > +            key = mc + fn in urldata_cache
+> This doesn't look right.  Did you really mean to have the 'in
+> urldata_cache' here?
 
--Matt
+No! Well spotted, thanks. I've fixed the patch.
 
-> +        if key in urldata_cache:
-> +            self.ud = urldata_cache[key]
->
->          for url in urls:
->              if url not in self.ud:
-> @@ -1643,8 +1646,8 @@ class Fetch(object):
->                          self.ud[url] = None
->                          pass
->
-> -        if fn and cache:
-> -            urldata_cache[mc + fn + str(id(d))] = self.ud
-> +        if key:
-> +            urldata_cache[key] = self.ud
->
->      def localpath(self, url):
->          if url not in self.urls:
-> --
-> 2.25.1
->
-> 
+Cheers,
+
+Richard
+
