@@ -1,84 +1,112 @@
-Subject: subversion authentication "--no-auth-cache"
-To: bitbake-devel@lists.openembedded.org
-From: daniel.litschauer@ta.co.at
-X-Originating-Location: Hoheneich, Lower Austria, AT (62.212.170.206)
-X-Originating-Platform: Linux Firefox 68
-User-Agent: GROUPS.IO Web Poster
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.52510.1585581535177424775
+ for <bitbake-devel@lists.openembedded.org>;
+ Mon, 30 Mar 2020 08:18:56 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=GHSPeDjq;
+ spf=pass (domain: gmail.com, ip: 209.85.221.47, mailfrom: martin.jansa@gmail.com)
+Received: by mail-wr1-f47.google.com with SMTP id d5so22198702wrn.2;
+        Mon, 30 Mar 2020 08:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e2h8VOz0p4Pg+RzOQEkI6HqOfuafCjE03DiyPGhlj/s=;
+        b=GHSPeDjqyrc92C5TXQRtrLoava7sDow/dr5oyKQHPxiSqg31ZiiS+cYdcoN4U26PM8
+         pL5XLB+OZlfT19TvPo6gvdpIb87YhlDOQJjCx9KS3YKS8bdTmgziFcYiCld7jBlyHpHf
+         WtJPLeS4etwbjhqMwUe0hhCOTDE9QOFYaY8nESX4puO1imI59XyaCbFUG0Iq9RhWX9o8
+         JclPqW+5AyhL5U8bLFQUOec9JWTSzAwjDnajCoecjdOIo6c70WNwNAdc6MwOt/1RMzuo
+         30syidzxGf7C3W/uqyngq1FNYXg+bWQFgA3YZXlqdoNUY7o3nBDzMElCqtRwOSCAwWRn
+         3tBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e2h8VOz0p4Pg+RzOQEkI6HqOfuafCjE03DiyPGhlj/s=;
+        b=fXxmCGs683WnPYLSjTEjKjPKPBOmYcX2AnRn4D+P8oyUdnLfNMoUd6LgAQj5E0AfsT
+         PVA1PYeQYJ+yy/Sjxbod04UTgJV6VoXoONUjps9X0ACVb95hK3dB6eX/A7Ct9TYLoeo7
+         vNIjyklyy7fy9StbTqXLXCz6sdrvQ1daoRVf/5guXLseP36HOEviAlaxAPpoqC/83eUR
+         KEEohaKBYYZ121wfBjfiwc4/7O2HDZ5xHBVS+XhOBB2TmhH3+hs1AqNzJk6miJP0lGMC
+         YpiF9SqHGa5+L6BjWfK8u2CgBnIjg/9Vfk/bNOA10S7imiM9VLM5dwUfETgFwd1ChYCp
+         BE9Q==
+X-Gm-Message-State: ANhLgQ15hLjaVu5Xefwb0WQFuEFBfz96PPO5JFfW2QOv90TZdUhkM8Hs
+	CgU/ZKEdPIscHPmKbR2jW90=
+X-Google-Smtp-Source: ADFU+vumv9AAIwecRYd3Le4a8dNU/fCiX1mqxopYDHpoirPlfUEj2WgnDruM4/G7yhIR7HuCdY0lAw==
+X-Received: by 2002:adf:94c6:: with SMTP id 64mr15735724wrr.386.1585581533734;
+        Mon, 30 Mar 2020 08:18:53 -0700 (PDT)
+Return-Path: <martin.jansa@gmail.com>
+Received: from localhost ([109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id y7sm25157307wrq.54.2020.03.30.08.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 08:18:52 -0700 (PDT)
+From: "Martin Jansa" <Martin.Jansa@gmail.com>
+X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Mon, 30 Mar 2020 17:18:52 +0200
+To: Michael Halstead <mhalstead@linuxfoundation.org>
+Cc: akuster808 <akuster808@gmail.com>, bitbake-devel@lists.openembedded.org,
+	openembedded-core <openembedded-core@lists.openembedded.org>,
+	openembedded-architecture@lists.openembedded.org,
+	openembeded-devel <Openembedded-devel@lists.openembedded.org>
+Subject: Re: [oe] [bitbake-devel] Mailing list platform change March 20th
+Message-ID: <20200330151851.s4p24hkg4kbrysd4@jama>
+References: <CADfgfobNNXr9HSOiwyamzbZ4q1uc8wgD5PzobDF56cDyYui-HQ@mail.gmail.com>
+ <CADfgfoYCjVip=oc_U0TdFzOVst5U-KU+R31JhdckRv77APzQ-g@mail.gmail.com>
+ <CADfgfob4=Zeh=jn9b9uMqq6Wnt83oGmJ-8yf1wSXYEFTppv2Bg@mail.gmail.com>
+ <24a37655-8c0b-ca10-543e-90a32bc6bdb9@gmail.com>
+ <CADfgfoZRZCM_Dvot5_z4YnG+OOyMg6xvDE13XQOK50wpucZWFA@mail.gmail.com>
+ <20200325150325.yq5jtofhnxaui6he@jama>
 MIME-Version: 1.0
-Date: Mon, 30 Mar 2020 06:15:34 -0700
-Message-ID: <CwqZ.1585574134967741661.NXjx@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="xexNAXlN0YwmJqsLxEDq"
+In-Reply-To: <20200325150325.yq5jtofhnxaui6he@jama>
+User-Agent: NeoMutt/20180716
+X-Groupsio-MsgNum: 11227
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bztawwnrdg3bwbdj"
+Content-Disposition: inline
 
---xexNAXlN0YwmJqsLxEDq
-Content-Type: text/plain; charset="utf-8"
+--bztawwnrdg3bwbdj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Mar 25, 2020 at 04:03:25PM +0100, Martin Jansa wrote:
+> On Fri, Mar 20, 2020 at 05:44:36PM -0700, Michael Halstead wrote:
+> > The migration to Groups.io is nearly complete. All functionality is rea=
+dy
+> > to use and you can send e-mail now. Archives are in place except for the
+> > most recent from the Openembedded-commits list. Those are continuing to
+> > import.
+> >=20
+> > There is no need to update your address book as the list addresses have=
+ not
+> > changed.
+> >=20
+> > If you encounter any issues please visit
+> > https://www.openembedded.org/wiki/GroupsMigration for the latest
+> > information. If your concern isn't addressed e-mail me directly.
+>=20
+> Hi,
+>=20
+> thanks Michael!
+>=20
+> Can you please check if git hooks sending e-mail notifications still
+> work or need some change (possibly related to this)?
+>=20
+> There were new commits recently in couple repositories, but last e-mail
+> from git hook I see from Mar 19th.
 
-I know variations of this question already popped up a few times, but I wa=
-sn=E2=80=99t able to find a answer that satisfied my needs.
+There was one e-mail today, but it doesn't seem to be working correctly:
+https://lists.openembedded.org/g/openembedded-commits/message/186006
 
-Authentication when using subversion can be as easy as typing:
+Cheers,
 
-SRC_URI =3D "svn://myrepos/proj1;module=3Dvip;protocol=3Dhttp;rev=3D667;us=
-er=3Duser;pswd=3Dpassword"
+--bztawwnrdg3bwbdj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-As I said easy, but with the drawback that I have to save my username and =
-password to a textfile. Subversion usually tries to find client credentials=
- in a =E2=80=9C GNOME Keyring =E2=80=9D , =E2=80=9C KDE Wallet =E2=80=9D , =
-or =E2=80=9C GnuPG Agent =E2=80=9D service and if there is nothing to find =
-at ~/.subversion/auth. Read about it if you are interested ( http://svnbook=
-.red-bean.com/nightly/en/svn.serverconfig.netmodel.html#svn.serverconfig.ne=
-tmodel.credcache ).
+-----BEGIN PGP SIGNATURE-----
 
-But this "system" is blocked by bitbake in the svn.py file ( https://githu=
-b.com/openembedded/bitbake/blob/master/lib/bb/fetch2/svn.py ). At line 78 i=
-t states: options. append ( "--no-auth-cache" )
+iF0EARECAB0WIQRU+ejDffEzV2Je2oc3VSO3ZXaAHAUCXoINjQAKCRA3VSO3ZXaA
+HNKmAJ0XgCK+F1JhVq4FZrozxZ33Oda0qACeIsKD5SbCsgZsxdMLorxFe9WTHiA=
+=b2wI
+-----END PGP SIGNATURE-----
 
-Is there a reason for this that I am not thinking about? And if there is n=
-o reason for this would it be possible to add a switch for this?
-
-SRC_URI =3D "svn://myrepos/proj1;module=3Dvip;protocol=3Dhttp;rev=3D667;us=
-er=3Duser;use_auth_cache=3Dno"
-
-Thank you in advance.
-
-Yours sincerely,
-
-Daniel
-
---xexNAXlN0YwmJqsLxEDq
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<p>Hello,</p>
-<p>I know variations of this question already popped up a few times, but I=
- wasn&rsquo;t able to find a answer that satisfied my needs.</p>
-<p>Authentication when using subversion can be as easy as typing:</p>
-<pre class=3D"literallayout">SRC_URI =3D "svn://myrepos/proj1;module=3Dvip=
-;protocol=3Dhttp;rev=3D667;user=3Duser;pswd=3Dpassword"</pre>
-<p>As I said easy, but with the drawback that I have to save my username a=
-nd password to a textfile. Subversion usually tries to find client credenti=
-als in a <span class=3D"quote">&ldquo;<span class=3D"quote">GNOME Keyring</=
-span>&rdquo;</span>, <span class=3D"quote">&ldquo;<span class=3D"quote">KDE=
- Wallet</span>&rdquo;</span>, or <span class=3D"quote">&ldquo;<span class=
-=3D"quote">GnuPG Agent</span>&rdquo;</span> service and if there is nothin=
-g to find at <em>~/.subversion/auth</em>. <a href=3D"http://svnbook.red-bea=
-n.com/nightly/en/svn.serverconfig.netmodel.html#svn.serverconfig.netmodel.c=
-redcache" target=3D"_blank" rel=3D"noopener">Read about it if you are inter=
-ested</a>.</p>
-<p>But this "system" is blocked by bitbake in the <a href=3D"https://githu=
-b.com/openembedded/bitbake/blob/master/lib/bb/fetch2/svn.py" target=3D"_bla=
-nk" rel=3D"noopener">svn.py file</a>. At line 78 it states:<em> <span class=
-=
-=3D"pl-s1">options</span>.<span class=3D"pl-en">append</span>(<span class=
-=3D"pl-s">"--no-auth-cache"</span>)</em></p>
-<p>Is there a reason for this that I am not thinking about? And if there i=
-s no reason for this would it be possible to add a switch for this?</p>
-<pre class=3D"literallayout">SRC_URI =3D "svn://myrepos/proj1;module=3Dvip=
-;protocol=3Dhttp;rev=3D667;user=3Duser;use_auth_cache=3Dno"</pre>
-<p>Thank you in advance.</p>
-<p>Yours sincerely,</p>
-<p>Daniel</p>
-
---xexNAXlN0YwmJqsLxEDq--
+--bztawwnrdg3bwbdj--
