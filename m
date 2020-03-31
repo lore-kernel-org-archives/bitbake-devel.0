@@ -1,82 +1,89 @@
-Received: from linuxplesk15.openhost.net.nz (linuxplesk15.openhost.net.nz [112.109.81.172])
- by mx.groups.io with SMTP id smtpd.web10.1182.1585689604783457524
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web12.385.1585694441233675089
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Mar 2020 14:20:05 -0700
+ Tue, 31 Mar 2020 15:40:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: bluelightning.org, ip: 112.109.81.172, mailfrom: bluelightning@bluelightning.org)
-Received: from linc.localnet (unknown [165.84.15.3])
-	by linuxplesk15.openhost.net.nz (Postfix) with ESMTPSA id F3BD2A1205;
-	Wed,  1 Apr 2020 10:20:01 +1300 (NZDT)
-Authentication-Results: linuxplesk15.openhost.net.nz;
-        spf=pass (sender IP is 165.84.15.3) smtp.mailfrom=bluelightning@bluelightning.org smtp.helo=linc.localnet
-Received-SPF: pass (linuxplesk15.openhost.net.nz: connection is authenticated)
-From: "Paul Eggleton" <bluelightning@bluelightning.org>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: Konrad Scherer <Konrad.Scherer@windriver.com>, bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] Layerindex broken by recent change to bitbake tinfoil
-Date: Wed, 01 Apr 2020 08:48:41 +1300
-Message-ID: <2650126.UBYc4EziqI@linc>
-In-Reply-To: <e0b081d78c3dea3f4cb6b0f549cd66afc49664f3.camel@linuxfoundation.org>
-References: <0675cf46-fd67-9b01-4c77-521099191339@windriver.com> <e0b081d78c3dea3f4cb6b0f549cd66afc49664f3.camel@linuxfoundation.org>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=P0TwiSGG;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f52.google.com with SMTP id d202so953889wmd.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Mar 2020 15:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=lkMqImgPpGzoyUE9Rn/ySRh58brpl0c/JPx2e31nfCc=;
+        b=P0TwiSGGBpbU2+wDFLHFeCamoC6PKLPnCHGitw3eyTtK2x1eG6D6jOtRcCLfDU4+pM
+         rOwF3JXtBKiOt1KPe2VZhYOWYoWaTOWXFmfawjURRjTnGrtdkpH/jEKyiYynnpaAD5da
+         q+tFe8lzJoYPzu4y71FAMCYPwTWZdsGo716Ww=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=lkMqImgPpGzoyUE9Rn/ySRh58brpl0c/JPx2e31nfCc=;
+        b=A7Xs8YM+8bwW6CdsED0pFjLqUiP3M08NUwxGBZ/I3Fnmo9SydJrsc0qVaqjiMRnI5I
+         0DSj45ZyZgdEAsE7mWGGDg2biin6ltrY7L9TFmlXZeeKwCPUj4hlJIYiithPIGe0vHwA
+         0hKA/RrvWRO6f+iJjL8m8xFB2vRdXwUw1pzM5uUw+DenO38oSliIwV8bg0MHsMmDUkFT
+         qTfAEkjZIHXNzhDgdJUTqkEDOaiI8LUQP2ccRQUv1GfLjPp6pR8jot56jMij8XYZqS6H
+         SX4CQsnnrNwpu6P1/qQ39rk2uUY7Ma6uk4E8PaEsj0Sq4irqRpN40vAq1Yop7gXxSukH
+         P7wg==
+X-Gm-Message-State: AGi0Pubctugw6isizQfstyTRPFw/hJVsiJlT3Np1z6JaYHsjlfosSlD4
+	lIXCu4r0j6S5EI3OvTo95gxqeA==
+X-Google-Smtp-Source: APiQypJlb/4rx+kKPEMvctkx8oirgnumUA35V+87vVOoUsJK1qZTg6f/AObYCd/EgoNC4Q6TdXKQzQ==
+X-Received: by 2002:a05:600c:24a:: with SMTP id 10mr1091730wmj.98.1585694439632;
+        Tue, 31 Mar 2020 15:40:39 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id q9sm233464wrp.84.2020.03.31.15.40.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 15:40:38 -0700 (PDT)
+Message-ID: <d19eee01b70c08e4b66b5c5572677c5d1ba60439.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] subversion authentication "--no-auth-cache"
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: daniel.litschauer@ta.co.at, bitbake-devel@lists.openembedded.org
+Date: Tue, 31 Mar 2020 23:40:37 +0100
+In-Reply-To: <CwqZ.1585574134967741661.NXjx@lists.openembedded.org>
+References: <CwqZ.1585574134967741661.NXjx@lists.openembedded.org>
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wednesday, 1 April 2020 02:25:11 NZDT Richard Purdie wrote:
-> On Tue, 2020-03-31 at 08:27 -0400, Konrad Scherer wrote:
-> > The following commit to bitbake breaks recipe parsing in the
-> > layerindex:
-> > 
-> > commit f2341dc46b6abfc08a4d01c7abdd3d4630577999
-> > Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > Date:   Mon Mar 23 12:30:04 2020 +0000
-> > 
-> >      tinfoil: Drop parse_recipe_file custom datastore support
-> > 
-> > The layerindex uses the tinfoil.parse_recipe_file call to build its
-> > database:
-> > 
-> > https://git.yoctoproject.org/cgit/cgit.cgi/layerindex-web/tree/layerindex/
-> > update_layer.py#n105
-> > 
-> > now fails with the following error message:
-> > 
-> > parse_recipe_file() got an unexpected keyword argument 'config_data'
-> > 
-> > When I remove the config_data argument from the layerindex code the
-> > parsing continues, but I don't
-> > know either code base well enough to determine if this is the correct
-> > solution. How best to resolve
-> > this problem?
+On Mon, 2020-03-30 at 06:15 -0700, daniel.litschauer via
+Lists.Openembedded.Org wrote:
+> I know variations of this question already popped up a few times, but
+> I wasn’t able to find a answer that satisfied my needs.
 > 
-> Adding Paul to this conversation.
+> Authentication when using subversion can be as easy as typing:
 > 
-> From my reading of the code, config_data comes from config_data_copy
-> and is most unmodified. The only place it is modified is in
-> update_distro_conf_file() which does:
+> SRC_URI =
+> "svn://myrepos/proj1;module=vip;protocol=http;rev=667;user=user;pswd=
+> password"
+> As I said easy, but with the drawback that I have to save my username
+> and password to a textfile. Subversion usually tries to find client
+> credentials in a “GNOME Keyring”, “KDE Wallet”, or “GnuPG Agent”
+> service and if there is nothing to find at ~/.subversion/auth. Read
+> about it if you are interested.
 > 
-> d = utils.parse_conf(path, d)
+> But this "system" is blocked by bitbake in the svn.py file. At line
+> 78 it states: options.append("--no-auth-cache")
 > 
-> which amounts to calling bb.parse.handler() on it.
-> 
-> Looking at the code, I'm not sure its intentional that those changes
-> are preserved in config_data_copy.
-> 
-> Paul: Should those distro changes persist in config_data_copy?
-> 
-> If not, the fix is easy and we just remove the parameter. If wanted,
-> that is harder.
+> Is there a reason for this that I am not thinking about? And if there
+> is no reason for this would it be possible to add a switch for this?
 
-Hang on, leaving the distro conf handling aside for a moment, 
-recipeparse.setup_layer() is where config_data_copy comes from and it is being 
-modified in there - we are parsing conf/layer.conf from the layer and all of 
-its dependencies. If we can't pass that into the recipe parsing then we won't 
-have things from layer.conf, which can turn out to be pretty important for 
-some layers.
+I did look back in the history but the reasoning isn't clear. In
+general it is bad for the system not to be self contained. Accessing
+/home/ during a build would make a build hard to reproduce for someone
+else.
 
-Sorry, I missed this when we reviewed the changes, that's my fault :( I'll 
-have to see what I can come up with in terms of a solution.
+> SRC_URI =
+> "svn://myrepos/proj1;module=vip;protocol=http;rev=667;user=user;use_a
+> uth_cache=no"
+> Thank you in advance.
 
-Paul
+I think adding a parameter to enable this would seem reasonable
+(leaving the default as is).
 
+Cheers,
+
+Richard
 
