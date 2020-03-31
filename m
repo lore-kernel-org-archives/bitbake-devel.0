@@ -1,112 +1,105 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web11.52510.1585581535177424775
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (NAM12-BN8-obe.outbound.protection.outlook.com [40.107.237.75])
+ by mx.groups.io with SMTP id smtpd.web10.7707.1585657651090017091
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Mar 2020 08:18:56 -0700
+ Tue, 31 Mar 2020 05:27:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=GHSPeDjq;
- spf=pass (domain: gmail.com, ip: 209.85.221.47, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wr1-f47.google.com with SMTP id d5so22198702wrn.2;
-        Mon, 30 Mar 2020 08:18:54 -0700 (PDT)
+ dkim=pass header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=Q6N8WIRX;
+ spf=pass (domain: windriver.com, ip: 40.107.237.75, mailfrom: konrad.scherer@windriver.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BflLfmFe8yvWYnFVgBaoEmmUUAJaOlw0T4I7duy0SZo6UE4F4rUsP2EhghZ1cTKn2+hB5yD9+CxrFwbTrxGX78vnt4PigcZAfpDA3/MJ02sBGVwBv9IzVRJiVTYmp1JWbG6T/75ON/npixdhzcmg8NclStiqSaDnNGDCwv4gQYc7WuJZBdJHMApfRR+9Ow1ZRBPMNySQdH08X6j7XZV7eofciGq3zUI8e6VLhMYCVrJhJvw670pSQGrFGImIzw/4kjT7rRhTnHrqcExjnUjKXItz2UKmlY7ZEtTDTP2C7SzIgv2BL8cS1aLpHF2i47937JhiRbCs9W6V0MAQ69m0Yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uQUIWjHyLcmw+PZRd15gcW9nI6lPuNxDJzE2juIo/tg=;
+ b=OxUj/tIF2RY3vLh7J7A2Jn0sR1bEoRiyF0Zg2qCQdU/Xy35qoOCxepxvN6DinhEEn/Ek7kvvgT7OU6fgVkLea0NqEfZP/3bCyc4kLUSlsUfrWcdRQ7J1m2Z/MSrCen1a8NSvakHQlnPsY1z8s/KZn7UCH+Jk6ZS5yJApqswrfrlq6ag0ryYWWzj1Zwk2+u0jhc1VPj6UHJH9o0m8jPDPcpiMlQLUGEouEK/+OO54Lw4keGs7WGMtUYlufBsw8hSAoLM4CHyRKeuv3YHmSxiByMVzS2EFG8KvA4nprMLNVn8hHm3403tt/3dVp5fOR5eJ/BISaF2mTwbLsnrLGgGKHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e2h8VOz0p4Pg+RzOQEkI6HqOfuafCjE03DiyPGhlj/s=;
-        b=GHSPeDjqyrc92C5TXQRtrLoava7sDow/dr5oyKQHPxiSqg31ZiiS+cYdcoN4U26PM8
-         pL5XLB+OZlfT19TvPo6gvdpIb87YhlDOQJjCx9KS3YKS8bdTmgziFcYiCld7jBlyHpHf
-         WtJPLeS4etwbjhqMwUe0hhCOTDE9QOFYaY8nESX4puO1imI59XyaCbFUG0Iq9RhWX9o8
-         JclPqW+5AyhL5U8bLFQUOec9JWTSzAwjDnajCoecjdOIo6c70WNwNAdc6MwOt/1RMzuo
-         30syidzxGf7C3W/uqyngq1FNYXg+bWQFgA3YZXlqdoNUY7o3nBDzMElCqtRwOSCAwWRn
-         3tBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e2h8VOz0p4Pg+RzOQEkI6HqOfuafCjE03DiyPGhlj/s=;
-        b=fXxmCGs683WnPYLSjTEjKjPKPBOmYcX2AnRn4D+P8oyUdnLfNMoUd6LgAQj5E0AfsT
-         PVA1PYeQYJ+yy/Sjxbod04UTgJV6VoXoONUjps9X0ACVb95hK3dB6eX/A7Ct9TYLoeo7
-         vNIjyklyy7fy9StbTqXLXCz6sdrvQ1daoRVf/5guXLseP36HOEviAlaxAPpoqC/83eUR
-         KEEohaKBYYZ121wfBjfiwc4/7O2HDZ5xHBVS+XhOBB2TmhH3+hs1AqNzJk6miJP0lGMC
-         YpiF9SqHGa5+L6BjWfK8u2CgBnIjg/9Vfk/bNOA10S7imiM9VLM5dwUfETgFwd1ChYCp
-         BE9Q==
-X-Gm-Message-State: ANhLgQ15hLjaVu5Xefwb0WQFuEFBfz96PPO5JFfW2QOv90TZdUhkM8Hs
-	CgU/ZKEdPIscHPmKbR2jW90=
-X-Google-Smtp-Source: ADFU+vumv9AAIwecRYd3Le4a8dNU/fCiX1mqxopYDHpoirPlfUEj2WgnDruM4/G7yhIR7HuCdY0lAw==
-X-Received: by 2002:adf:94c6:: with SMTP id 64mr15735724wrr.386.1585581533734;
-        Mon, 30 Mar 2020 08:18:53 -0700 (PDT)
-Return-Path: <martin.jansa@gmail.com>
-Received: from localhost ([109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id y7sm25157307wrq.54.2020.03.30.08.18.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:18:52 -0700 (PDT)
-From: "Martin Jansa" <Martin.Jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Mon, 30 Mar 2020 17:18:52 +0200
-To: Michael Halstead <mhalstead@linuxfoundation.org>
-Cc: akuster808 <akuster808@gmail.com>, bitbake-devel@lists.openembedded.org,
-	openembedded-core <openembedded-core@lists.openembedded.org>,
-	openembedded-architecture@lists.openembedded.org,
-	openembeded-devel <Openembedded-devel@lists.openembedded.org>
-Subject: Re: [oe] [bitbake-devel] Mailing list platform change March 20th
-Message-ID: <20200330151851.s4p24hkg4kbrysd4@jama>
-References: <CADfgfobNNXr9HSOiwyamzbZ4q1uc8wgD5PzobDF56cDyYui-HQ@mail.gmail.com>
- <CADfgfoYCjVip=oc_U0TdFzOVst5U-KU+R31JhdckRv77APzQ-g@mail.gmail.com>
- <CADfgfob4=Zeh=jn9b9uMqq6Wnt83oGmJ-8yf1wSXYEFTppv2Bg@mail.gmail.com>
- <24a37655-8c0b-ca10-543e-90a32bc6bdb9@gmail.com>
- <CADfgfoZRZCM_Dvot5_z4YnG+OOyMg6xvDE13XQOK50wpucZWFA@mail.gmail.com>
- <20200325150325.yq5jtofhnxaui6he@jama>
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uQUIWjHyLcmw+PZRd15gcW9nI6lPuNxDJzE2juIo/tg=;
+ b=Q6N8WIRXbN2AOC4k6TC22wmIDaP4q4E5C99nnOAGNJa3okisesnxcwKaTgRse/NGz8+qCk8JOuH+OTkIPUQpH7QqqzTaASqR7dboqzSPaoU6/LxAU11VJSBE/WtvlYxxEdRdC6yzjgPiy4fgVd5cU7pHvW64FNTOWtLxuQCLAdg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Konrad.Scherer@windriver.com; 
+Received: from BN8PR11MB3601.namprd11.prod.outlook.com (2603:10b6:408:84::23)
+ by BN8PR11MB3571.namprd11.prod.outlook.com (2603:10b6:408:8f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Tue, 31 Mar
+ 2020 12:27:29 +0000
+Received: from BN8PR11MB3601.namprd11.prod.outlook.com
+ ([fe80::1bb:6d72:f6c4:2a4b]) by BN8PR11MB3601.namprd11.prod.outlook.com
+ ([fe80::1bb:6d72:f6c4:2a4b%7]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
+ 12:27:29 +0000
+To: bitbake-devel@lists.openembedded.org
+From: "Konrad Scherer" <Konrad.Scherer@windriver.com>
+Subject: Layerindex broken by recent change to bitbake tinfoil
+Message-ID: <0675cf46-fd67-9b01-4c77-521099191339@windriver.com>
+Date: Tue, 31 Mar 2020 08:27:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+X-ClientProxiedBy: YTXPR0101CA0042.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::19) To BN8PR11MB3601.namprd11.prod.outlook.com
+ (2603:10b6:408:84::23)
+Return-Path: Konrad.Scherer@windriver.com
 MIME-Version: 1.0
-In-Reply-To: <20200325150325.yq5jtofhnxaui6he@jama>
-User-Agent: NeoMutt/20180716
-X-Groupsio-MsgNum: 11227
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bztawwnrdg3bwbdj"
-Content-Disposition: inline
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.12] (173.206.104.57) by YTXPR0101CA0042.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:1::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Tue, 31 Mar 2020 12:27:29 +0000
+X-Originating-IP: [173.206.104.57]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5132b3b5-5da9-4def-2455-08d7d56ee0f8
+X-MS-TrafficTypeDiagnostic: BN8PR11MB3571:
+X-Microsoft-Antispam-PRVS: 
+	<BN8PR11MB35719F79FB4BD65AEC200EFB90C80@BN8PR11MB3571.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
+X-Forefront-PRVS: 0359162B6D
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR11MB3601.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(396003)(39850400004)(346002)(136003)(366004)(26005)(6916009)(16526019)(52116002)(186003)(31696002)(4744005)(5660300002)(86362001)(31686004)(66946007)(956004)(478600001)(66476007)(66556008)(2906002)(81156014)(8676002)(966005)(316002)(36756003)(8936002)(6486002)(16576012)(2616005)(81166006);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: windriver.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Btb9heY7IyULy9SxyuI+BRXi0RdDUz6AKBQFwV6iqdpc13pH6FTNVdQ/S35W3qtzLtKAiDC5wlAN6Zp7fcXub+z6Spr6+eCdhNMAJ4gyHciBYSAm6GgKz64uAwcM9CQyBZTD3W45clnbz35/CYQrM5bdXp6tFHPPLIbFwMY6xdJAKMgL0gTMEUsmg0kUcBs75YDS8uYrUrQGRZLTvhj8gH98UtsCr9lN/KePNIYJy3kpMFkzkgV028AdMABYKg/KQHMSJjv8kxokKmw5JnH+MHTnJUYIXeCt51rNPd95d86vIIzLx+2b4Wpj6uC2Sy2/MzvQrHsbDnPqzC9Q4bh5dnxB6I24QM9FP3dofidbmkLzzUyjh/oVION2AjH3TNbAYOT9BOMtL6EeEcfZibkLWTyCHe6YmJXv9voWYw2GS+QZwtJrsVdLrQlglXS6UriqQUEsh0YK1iyMw0ZUxYRmCkM1n2GLAssUhkC7A1Ny/xWF2wvNj8A7CQkSCeEHazpSCigGAif87FAdlYqEqD9y0Q==
+X-MS-Exchange-AntiSpam-MessageData: 
+	33o4bTRarvc6pW+cBF2TNrn4g9nzBrBOEdge6Q2qlxMuP50St0z32HZkNjKu6VocHXDAmJFPECeB/RpXN7qTtQ2JCnIEe/y4pfEYLp3fQCf3dI0e7obmFwH9KxNSwu9zD6qOuEbrRG+XncSypgPIJw==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5132b3b5-5da9-4def-2455-08d7d56ee0f8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2020 12:27:29.5640
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uBVcTicL8GFTOX6kQqIeDBz2JnD1flXhHn7KiEDFFfLTpzkYfUSm59cbAofk+Nhem0LDtCQHSOYzhazed+Ke9F8wnxIdPKCZZ3Qd8m9Mm6M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR11MB3571
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
---bztawwnrdg3bwbdj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-On Wed, Mar 25, 2020 at 04:03:25PM +0100, Martin Jansa wrote:
-> On Fri, Mar 20, 2020 at 05:44:36PM -0700, Michael Halstead wrote:
-> > The migration to Groups.io is nearly complete. All functionality is rea=
-dy
-> > to use and you can send e-mail now. Archives are in place except for the
-> > most recent from the Openembedded-commits list. Those are continuing to
-> > import.
-> >=20
-> > There is no need to update your address book as the list addresses have=
- not
-> > changed.
-> >=20
-> > If you encounter any issues please visit
-> > https://www.openembedded.org/wiki/GroupsMigration for the latest
-> > information. If your concern isn't addressed e-mail me directly.
->=20
-> Hi,
->=20
-> thanks Michael!
->=20
-> Can you please check if git hooks sending e-mail notifications still
-> work or need some change (possibly related to this)?
->=20
-> There were new commits recently in couple repositories, but last e-mail
-> from git hook I see from Mar 19th.
+The following commit to bitbake breaks recipe parsing in the layerindex:
 
-There was one e-mail today, but it doesn't seem to be working correctly:
-https://lists.openembedded.org/g/openembedded-commits/message/186006
+commit f2341dc46b6abfc08a4d01c7abdd3d4630577999
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Mon Mar 23 12:30:04 2020 +0000
 
-Cheers,
+     tinfoil: Drop parse_recipe_file custom datastore support
 
---bztawwnrdg3bwbdj
-Content-Type: application/pgp-signature; name="signature.asc"
+The layerindex uses the tinfoil.parse_recipe_file call to build its database:
 
------BEGIN PGP SIGNATURE-----
+https://git.yoctoproject.org/cgit/cgit.cgi/layerindex-web/tree/layerindex/update_layer.py#n105
 
-iF0EARECAB0WIQRU+ejDffEzV2Je2oc3VSO3ZXaAHAUCXoINjQAKCRA3VSO3ZXaA
-HNKmAJ0XgCK+F1JhVq4FZrozxZ33Oda0qACeIsKD5SbCsgZsxdMLorxFe9WTHiA=
-=b2wI
------END PGP SIGNATURE-----
+now fails with the following error message:
 
---bztawwnrdg3bwbdj--
+parse_recipe_file() got an unexpected keyword argument 'config_data'
+
+When I remove the config_data argument from the layerindex code the parsing continues, but I don't 
+know either code base well enough to determine if this is the correct solution. How best to resolve 
+this problem?
+
+Thank you!
+
+-- 
+Konrad Scherer, MTS, Linux Products Group, Wind River
