@@ -1,94 +1,92 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
- by mx.groups.io with SMTP id smtpd.web12.3103.1585857069683917378
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web11.4867.1585861720529459421
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 02 Apr 2020 12:51:10 -0700
+ Thu, 02 Apr 2020 14:08:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmx.net header.s=badeba3b8450 header.b=Zkl1bfIw;
- spf=pass (domain: gmx.at, ip: 212.227.15.15, mailfrom: bernd.bauer@gmx.at)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1585857068;
-	bh=+v2oAwcM6LjAZ+EAC6iKXyc9FVaRIXwwH9ZMOxffuHY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=Zkl1bfIwGxvim4aAOkBh3PhyCP6IVa/KDA3+Uwu25sXfz0fvL0LyTILAvEEUaOvx0
-	 ldAX/1IW5XbqkOX1tOQJoV8vw5HWHsJ5EgY3e8K5VG2vokMNcUfKESR10uvcpWv4iD
-	 lTRQ1Ys0WKNPXZ5eC2pjJP74utQXdXjd+FbKWXpQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from berndtp.lan ([46.57.17.1]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wLZ-1jQRWa2ACR-007Qtj; Thu, 02
- Apr 2020 21:51:07 +0200
-From: "Bernd Bauer" <bernd.bauer@gmx.at>
-To: bitbake-devel@lists.openembedded.org
-Cc: Bernd Bauer <bernd.bauer@gmx.at>
-Subject: [PATCH] Gitsm does not use credentials when cloning submodules
-Date: Thu,  2 Apr 2020 21:51:04 +0200
-Message-Id: <20200402195104.2405-1-bernd.bauer@gmx.at>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TnGMkh/b;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.65, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f65.google.com with SMTP id t7so5878805wrw.12
+        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Apr 2020 14:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=9rEGDp4yNtx5UpgszS6Mk20bDVS7ZxLljbopLZZiGtE=;
+        b=TnGMkh/byKTNhxM1eGsNJ3NuOLvzfPGgH7AwtuVckcvL2IJFZgniggwywICf0SQAdd
+         iFsKOiBDGmZ+6651UwF/9Fzle9//GkcQz2F1g83NhSOmP985J3TCZL/IXInvgKNbsTae
+         0lIOvLzgCjTASQ9euaj8scZCaGyXGwOBUOGAo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=9rEGDp4yNtx5UpgszS6Mk20bDVS7ZxLljbopLZZiGtE=;
+        b=jgZZ5M7V5EHfmsUTbai54/Ir9UpbH6aOQSCLLVzaAKM6i+fq+CmgidDX0jstiqbNm7
+         xAAP3woBT8T7+9TiExRRnJe8EyNd99lfKl8Kv/rX/DztgLKViJM3NGe/erj66XomXTBa
+         eXpdMCnBkq8ADf2xOijmMcRX+XggdUbKZrf6D1vxzHlvJSOd691kqXzXseUmaXxiba1H
+         gVtELglw8nSPXWfFv5ea71tTkJz2awKIH/u+ZWGDgnIHwyJqo5TtKZNCnviGA0+9gf7U
+         1zFBngKlk7k+naXDEL6frXgOTBwNl/jeo7ZhHLKIP2T1WEr3hTZFBi0+Ej+K6vwEMm20
+         hGTg==
+X-Gm-Message-State: AGi0PuYtbtKtgCflxTEWYGIWYrjoeiizC3YOofiidr+P1yNTZagsb+r1
+	MNKTHziA89fqv2x4B4C+fiyLqA==
+X-Google-Smtp-Source: APiQypLLjxRtIB2WzjT2R8qJNQ4RuyqPXpINF0LOh7rITYHw8ieLHVdNvDp59zsOL0/UrHhiCS+y7g==
+X-Received: by 2002:a5d:6182:: with SMTP id j2mr5237997wru.131.1585861718986;
+        Thu, 02 Apr 2020 14:08:38 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id 189sm8932048wme.31.2020.04.02.14.08.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 14:08:38 -0700 (PDT)
+Message-ID: <fb960c2f15390746d24fd95368478c518748c957.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] Gitsm does not use credentials when cloning submodules
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Bernd Bauer <bernd.bauer@gmx.at>, bitbake-devel@lists.openembedded.org
+Date: Thu, 02 Apr 2020 22:08:37 +0100
+In-Reply-To: <20200402195104.2405-1-bernd.bauer@gmx.at>
+References: <20200402195104.2405-1-bernd.bauer@gmx.at>
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:Nb6hniQwnQRUaS3dq9Nt7b6KHODhIaflA3ovhVdFl17i2DsypbN
- br7bTi3kFtG/wlkQcN7+CfOJee/SUNuaSQKcYhP56bzPgk7sggx4cO5QGTe2r7SQfruD8HK
- 3Ha8fg25oIYhz2MukSOonTmwKiKyOGzvV5fVmJZVSvIosykeInL9AutLfw03oSji94gm33L
- XNhb717433pNiMqFUmzfQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8vjvDvSK9Tw=:HOURJDjA5AU0HQytBEvGId
- pCxOkCZCxtlsBsU6cFu3Bm/LHHrdN0dhlr1D3hmRUp3+NzmDLW2r9EpVl1ZYY7Y/u7B8+bzpM
- 5nTBgJumfzpaLQfRtehLWbk6wXNXJLZsB75rxIvSThMoVfKrQjH72R9Wf/FBIml7U9BBqzfiu
- r9YGB4uI4Co4Z5W1m7eWrs6TnVEluMMrGRzd1Ts7CieD3EQ8TkQzocddQxFwqSswTkEg2Y59d
- b8irczjqh+Qcht7O6jZNkhaMrEsUK7cPbQ+wIQp4+MZKNrC896HtJr0uFN0+EzFZzC20VoH80
- fadgGEpUR7cF98NuQum6WXjfA2BU3EB+XcV4J+Lisat9pGI6QSrPqY91uDfCvxCSrT/qz2IAV
- jZ3vq2vQkokhDYMr+D5LuMo3WRivVXr0i9kFawoG20mAmaocokXP59943ntPuuReLWRI2e0UP
- xgilZHixLaWl8NyOt8+UZD39AjhGMs+1PhyxB9megACiBgRh9SAfKvWecGUEBk/xMTxEaz45J
- x9dy0fiO8mjLlUUtsXmyppE2BLABmODOLijOTyf9dton9/1+NRvLISSOz4L05wxGv8CLKmHEl
- 5GmTnfpbdef6sqtGmSqQ3FItKYQqV7dzur/almf16qvFQvwDx4GeKrfFoOGyoM/rGhFq4kNlm
- 79OFVG5sOIDc88k+vbB/OyDXKPUfxkZ43wliFWe/sJo5khLU4JjO+0XbFaCJbmYG0S9klv+s0
- eACX5bj1uByTZ9GVmFz4fi8hv+xeMaat7GKN7XRn9WWki6S0h8+Ko3FtYTM2c2xkOPGUqKxzj
- tdYwaC9n7g+K5RqomyxxttVfeEJI8WrbXfIvpYVG9cyllvKNobJwOMgW8oWHSWOC0av4RTnc5
- 7ma6eq6oV9A/rDW2hpJJA0PD6RqMJge2SeVgvORvD+tvk3rGFUIa5ETbuF2FwEpx6XC96J0Q1
- xLEixsuJNoZVLig9IqudYw31qHN+PoQJhMTatMUMELhwJn6at2PcmnQ2q/RJDeKDa77qKWm1D
- rVqoco2lw9LTH6v1LvaoYfqF+t64j9BB+A/yYUu1X/hpK51B9LYye0QniT96T9GsftSBMAwdH
- kWxeae9zpDYCJKP3wDu04ng8dZS+2YmkFL7JQXly+PN9Ja8NJm4kwLQslaFcbO2yni0QdFVc0
- lpO/UuqTEFl31Mk0ODaJllvj47+BIXu8lROOKuabZ3svN8cw1D92Fw3af8vswX8Ks3jurvHfi
- d4fIGnHx+XQAiClYM
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If the git server needs authentication the credentials are
-encoded in the URL of the repositories.
-The credentials from the main repository are deposited in the
-recipe so main repository can still be cloned.
+On Thu, 2020-04-02 at 21:51 +0200, Bernd Bauer wrote:
+> If the git server needs authentication the credentials are
+> encoded in the URL of the repositories.
+> The credentials from the main repository are deposited in the
+> recipe so main repository can still be cloned.
+> 
+> But the URLs from the submodules are listed in the .gitmodules
+> file.
+> The submodule url is encoded with an username and a password
+> or a bitbucket URL token. See example.
+> 
+> The password is not stored in the ud.user but in the ud.pswd
+> variable. So in this case the url is made up by ud.user and
+> ud.pswd.
+> 
+> Example:
+> [submodule "sub1"]
+>         path = sub1
+>         url = https://user:password@test.org/url/to/sub1
+> 
+> Signed-off-by: Bernd Bauer <bernd.bauer@gmx.at>
+> ---
+>  bitbake/lib/bb/fetch2/git.py | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-But the URLs from the submodules are listed in the .gitmodules
-file.
-The submodule url is encoded with an username and a password
-or a bitbucket URL token. See example.
+We have had requests for this before and we've said "no" since
+encouraging people to put passwords in urls is bad and it leads to
+people making accidental exposures. Its basically too risky.
 
-The password is not stored in the ud.user but in the ud.pswd
-variable. So in this case the url is made up by ud.user and
-ud.pswd.
+For git submodules the line becomes blurred.
 
-Example:
-[submodule "sub1"]
-        path =3D sub1
-        url =3D https://user:password@test.org/url/to/sub1
+I'm open to the opinions of others but in this form the patch applies
+to git and gitsm and that in itself makes it more risky.
 
-Signed-off-by: Bernd Bauer <bernd.bauer@gmx.at>
-=2D--
- bitbake/lib/bb/fetch2/git.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I do understand why people want this, equally it really isn't a great
+idea in general :/.
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 5b3793a705..dc8f37b6c3 100644
-=2D-- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -584,7 +584,9 @@ class Git(FetchMethod):
-         """
-         Return the repository URL
-         """
--        if ud.user:
-+        if ud.user and ud.pswd:
-+            username =3D ud.user + ':' + ud.pswd + '@'
-+        elif ud.user:
-             username =3D ud.user + '@'
-         else:
-             username =3D ""
-=2D-
-2.17.1
+Cheers,
+
+Richard
+
 
