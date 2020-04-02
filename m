@@ -1,76 +1,94 @@
-Received: from smtpcmd03116.aruba.it (smtpcmd03116.aruba.it [62.149.158.116])
- by mx.groups.io with SMTP id smtpd.web10.9803.1585841657230452110
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+ by mx.groups.io with SMTP id smtpd.web12.3103.1585857069683917378
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 02 Apr 2020 08:34:17 -0700
+ Thu, 02 Apr 2020 12:51:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@aruba.it header.s=a1 header.b=jY4pJzwH;
- spf=none, err=permanent DNS error (domain: faresoftware.it, ip: 62.149.158.116, mailfrom: mauro@faresoftware.it)
-Received: from [192.168.24.172] ([93.38.119.136])
-	by smtpcmd03.ad.aruba.it with bizsmtp
-	id MraF2200U2wfazh01raFib; Thu, 02 Apr 2020 17:34:16 +0200
+ dkim=pass header.i=@gmx.net header.s=badeba3b8450 header.b=Zkl1bfIw;
+ spf=pass (domain: gmx.at, ip: 212.227.15.15, mailfrom: bernd.bauer@gmx.at)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1585857068;
+	bh=+v2oAwcM6LjAZ+EAC6iKXyc9FVaRIXwwH9ZMOxffuHY=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=Zkl1bfIwGxvim4aAOkBh3PhyCP6IVa/KDA3+Uwu25sXfz0fvL0LyTILAvEEUaOvx0
+	 ldAX/1IW5XbqkOX1tOQJoV8vw5HWHsJ5EgY3e8K5VG2vokMNcUfKESR10uvcpWv4iD
+	 lTRQ1Ys0WKNPXZ5eC2pjJP74utQXdXjd+FbKWXpQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from berndtp.lan ([46.57.17.1]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wLZ-1jQRWa2ACR-007Qtj; Thu, 02
+ Apr 2020 21:51:07 +0200
+From: "Bernd Bauer" <bernd.bauer@gmx.at>
 To: bitbake-devel@lists.openembedded.org
-From: "Mauro Ziliani" <mauro@faresoftware.it>
-Subject: Custom variable value: (OVERRIDES?)
-Message-ID: <6bce089d-050d-7c57-15ac-a182b548f694@faresoftware.it>
-Date: Thu, 2 Apr 2020 17:34:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Cc: Bernd Bauer <bernd.bauer@gmx.at>
+Subject: [PATCH] Gitsm does not use credentials when cloning submodules
+Date: Thu,  2 Apr 2020 21:51:04 +0200
+Message-Id: <20200402195104.2405-1-bernd.bauer@gmx.at>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-	t=1585841656; bh=sWXkO0Z/DDTSRKAVa1Ogc/sezrK4ivoYEVfzWkhyMz4=;
-	h=To:From:Subject:Date:MIME-Version:Content-Type;
-	b=jY4pJzwHSCT1B8FW9GsCvQ622yfyhgn/XpL+uXp63oPR0d+incA0rTVV07KAGos3p
-	 nyZw2nt0m0z9EbvAXaToc3PCXBSSQFXz4y6wtFJ4pgteJNLQ2LnOEbGHowwphFbDPO
-	 q7m497vhJ3HHvl14TWIw77fdv8LXup6MtenqRNvCeHYa18OGMPZPhI3dwLyUeCg5v8
-	 /+IgZgHHy4h3EJdTfARpsUAmieGMF218qyZRetrN6fBp44IDGOS5NRuj0ebb3Kl4th
-	 AyuKj14lizlRvu/dHT+kkQ7ctD4h7qbgDYHw/WPeZwueqTGGIOAWUmEHA1xnDBubIQ
-	 o9BJuc+nHOHmg==
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: it
+X-Provags-ID: V03:K1:Nb6hniQwnQRUaS3dq9Nt7b6KHODhIaflA3ovhVdFl17i2DsypbN
+ br7bTi3kFtG/wlkQcN7+CfOJee/SUNuaSQKcYhP56bzPgk7sggx4cO5QGTe2r7SQfruD8HK
+ 3Ha8fg25oIYhz2MukSOonTmwKiKyOGzvV5fVmJZVSvIosykeInL9AutLfw03oSji94gm33L
+ XNhb717433pNiMqFUmzfQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8vjvDvSK9Tw=:HOURJDjA5AU0HQytBEvGId
+ pCxOkCZCxtlsBsU6cFu3Bm/LHHrdN0dhlr1D3hmRUp3+NzmDLW2r9EpVl1ZYY7Y/u7B8+bzpM
+ 5nTBgJumfzpaLQfRtehLWbk6wXNXJLZsB75rxIvSThMoVfKrQjH72R9Wf/FBIml7U9BBqzfiu
+ r9YGB4uI4Co4Z5W1m7eWrs6TnVEluMMrGRzd1Ts7CieD3EQ8TkQzocddQxFwqSswTkEg2Y59d
+ b8irczjqh+Qcht7O6jZNkhaMrEsUK7cPbQ+wIQp4+MZKNrC896HtJr0uFN0+EzFZzC20VoH80
+ fadgGEpUR7cF98NuQum6WXjfA2BU3EB+XcV4J+Lisat9pGI6QSrPqY91uDfCvxCSrT/qz2IAV
+ jZ3vq2vQkokhDYMr+D5LuMo3WRivVXr0i9kFawoG20mAmaocokXP59943ntPuuReLWRI2e0UP
+ xgilZHixLaWl8NyOt8+UZD39AjhGMs+1PhyxB9megACiBgRh9SAfKvWecGUEBk/xMTxEaz45J
+ x9dy0fiO8mjLlUUtsXmyppE2BLABmODOLijOTyf9dton9/1+NRvLISSOz4L05wxGv8CLKmHEl
+ 5GmTnfpbdef6sqtGmSqQ3FItKYQqV7dzur/almf16qvFQvwDx4GeKrfFoOGyoM/rGhFq4kNlm
+ 79OFVG5sOIDc88k+vbB/OyDXKPUfxkZ43wliFWe/sJo5khLU4JjO+0XbFaCJbmYG0S9klv+s0
+ eACX5bj1uByTZ9GVmFz4fi8hv+xeMaat7GKN7XRn9WWki6S0h8+Ko3FtYTM2c2xkOPGUqKxzj
+ tdYwaC9n7g+K5RqomyxxttVfeEJI8WrbXfIvpYVG9cyllvKNobJwOMgW8oWHSWOC0av4RTnc5
+ 7ma6eq6oV9A/rDW2hpJJA0PD6RqMJge2SeVgvORvD+tvk3rGFUIa5ETbuF2FwEpx6XC96J0Q1
+ xLEixsuJNoZVLig9IqudYw31qHN+PoQJhMTatMUMELhwJn6at2PcmnQ2q/RJDeKDa77qKWm1D
+ rVqoco2lw9LTH6v1LvaoYfqF+t64j9BB+A/yYUu1X/hpK51B9LYye0QniT96T9GsftSBMAwdH
+ kWxeae9zpDYCJKP3wDu04ng8dZS+2YmkFL7JQXly+PN9Ja8NJm4kwLQslaFcbO2yni0QdFVc0
+ lpO/UuqTEFl31Mk0ODaJllvj47+BIXu8lROOKuabZ3svN8cw1D92Fw3af8vswX8Ks3jurvHfi
+ d4fIGnHx+XQAiClYM
+Content-Transfer-Encoding: quoted-printable
 
-Hi all.
+If the git server needs authentication the credentials are
+encoded in the URL of the repositories.
+The credentials from the main repository are deposited in the
+recipe so main repository can still be cloned.
 
-I don't understand how can I change a the value of a variable inside a 
-.bb file
+But the URLs from the submodules are listed in the .gitmodules
+file.
+The submodule url is encoded with an username and a password
+or a bitbucket URL token. See example.
 
-I do this work
+The password is not stored in the ud.user but in the ud.pswd
+variable. So in this case the url is made up by ud.user and
+ud.pswd.
 
-if MYVAR is empty I need to install default.txt in /etc
+Example:
+[submodule "sub1"]
+        path =3D sub1
+        url =3D https://user:password@test.org/url/to/sub1
 
-if MYVAR contains "white" i need to install white.txt in /etc
+Signed-off-by: Bernd Bauer <bernd.bauer@gmx.at>
+=2D--
+ bitbake/lib/bb/fetch2/git.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-
-So I extend myreciped.bb with this file
-
-
-myrecipe.bbappend
-
-MYVAR = "default.txt"
-
-MYVAR_white = "white.txt"
-
-
-do_install_append() {
-
-     install -m 0755 -d ${D}/etc
-
-     install -m 0644 ${MYVAR}    ${D}/etc/value
-
-}
-
-
-In conf/local.conf I put
-
-MYVAR_pn-myrecipe = "white"
-
-
-But nothing works as I expect.
-
-Where is my mistakes?
-
-
-Best regards,
-
-   MZ
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 5b3793a705..dc8f37b6c3 100644
+=2D-- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -584,7 +584,9 @@ class Git(FetchMethod):
+         """
+         Return the repository URL
+         """
+-        if ud.user:
++        if ud.user and ud.pswd:
++            username =3D ud.user + ':' + ud.pswd + '@'
++        elif ud.user:
+             username =3D ud.user + '@'
+         else:
+             username =3D ""
+=2D-
+2.17.1
 
