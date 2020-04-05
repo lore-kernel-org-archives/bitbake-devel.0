@@ -1,113 +1,118 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web11.13391.1586071022517381769
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web12.17702.1586095202316883135
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 05 Apr 2020 00:17:02 -0700
+ Sun, 05 Apr 2020 07:00:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DKz9mEUH;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id j19so12344687wmi.2
-        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Apr 2020 00:17:02 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EG0Eo71p;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f52.google.com with SMTP id p10so14192661wrt.6
+        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Apr 2020 07:00:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=u7zFrce/EgC2b7c2dE6MiGC2kRpe6QTHWTBpDVdYnOA=;
-        b=DKz9mEUHk2QNBnrscaBzpyqTv2pAFUgtDVhq2SHWNYRGMo900NJESsKkWVQoWSOQ6f
-         8BNO6+2c5nAZHBiwx94Jn1OX4siVyfA6I0sphAZBHvXBz3b/gMkKKEeS0VAxOsdNoo8d
-         soKn4xuYKSwp1x7bi5hCQq/nki+Qkr6C6/v8Q=
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o0K2+O0A2tmK0Ihl2hA8iLw2j3Aov4dqmVYUko6D4/E=;
+        b=EG0Eo71pvtmPs2P+4OCkakHEYqBG6miLA2Mu7R/OnS+5U6F1nn0cwjo47vS82V5FFm
+         voL3seobths74f/Wkpl1nZV7z8gahlEItMUojEq3N8fiWjwQkyrQ7O+WmiiP1atIWEgE
+         Un/oFuFTyCSZAU0UJpLsNWYNwK/8LRaSIy+lM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=u7zFrce/EgC2b7c2dE6MiGC2kRpe6QTHWTBpDVdYnOA=;
-        b=l2Qr0nP4QBKoYcSCAp5iraqN9d3KK42CqZKg/XGQenctCsGGuKkI4kUQQoSgkoP1vP
-         g5PExkRtNaaFYhs7aZBvD/2O6F4N2Prgx4QTiWRj+QJNSZq7XJAd/xAr/UL5wdZ0aOCm
-         4ATfRq/7RDbSyUmikijyZZewVJD89MInBHqjgS9pm4kJO3NFMncYwJmpD4DMQzUjMCKk
-         cOufOwqyYs0TCnEcC1FOxY+gtHOTHlEJ+u2z5KlF13V8qfTAUyY8ooHyqMpM+r3oYhjJ
-         KcUmGpw7OWo2Ghar9C6S9FeXoAJQLdv5YgPY6gcAh5WXF97mDM7HD0CK/w/iWkuEA8Dr
-         /4ow==
-X-Gm-Message-State: AGi0PubfvWEJr4bN+G/EcSISHDl28u5/aixYHxaVf3tOLZ3+92xgX4W8
-	oyF5DMaT12geSa5X6U5Zmzqe9A==
-X-Google-Smtp-Source: APiQypKEQloYzG0YvVrQ7CNf+z2qu/89a2wNxJvjJutIE+DM2ZIdYAfKswB05vsZbRn7OAZa60rbPg==
-X-Received: by 2002:a1c:b356:: with SMTP id c83mr17366565wmf.10.1586071020986;
-        Sun, 05 Apr 2020 00:17:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o0K2+O0A2tmK0Ihl2hA8iLw2j3Aov4dqmVYUko6D4/E=;
+        b=ScVSTLJ/9/KCUTS8vBa9+tUdPTfRXZnjw9COj5jI/r/qjZgMkILWx+Zo+nRqKBQlza
+         zATT/LH2dKOzEZR2SnZ+KXVD1q146Dx+kqFlEht+bQ3tG/P33Et/yUSmQQMqMih9Kl9n
+         1hwvrQnsckpaX+oKC5rvsaQglTzQ/HbyNIdGyc0yBMsTUPDOr8rALH6ywK96AzOoJgV8
+         ED49ign5fHbK1PBT4a7Bt1TUFey1hSpUpRw7WxQcAQsTQGiKn2kudVIOBl75Koyzuts8
+         Be69myJ+dWCyc22TyTBKYIiWY8+6y6G8mA48Sz0K0dZLWYONDUlDeTP6ihV1iLYQiL5R
+         bNKw==
+X-Gm-Message-State: AGi0PuYLPxYK82Z1z3nz7SHucVYPuE2QGTwBokeVvock/HZ2nD7GpmXm
+	n8Z/uhBbASOcA+AQH3oBWngN/DG80sU=
+X-Google-Smtp-Source: APiQypIckJBmMWrkQomIZHktUhMYRa6ppVM/lvtStsF9AIZYUS99yL7OiqKwFINmDetjKAYxP/RBvQ==
+X-Received: by 2002:adf:fc10:: with SMTP id i16mr3187429wrr.354.1586095200094;
+        Sun, 05 Apr 2020 07:00:00 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id r3sm20300956wrm.35.2020.04.05.00.16.59
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id v186sm20136545wme.24.2020.04.05.06.59.58
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 00:17:00 -0700 (PDT)
-Message-ID: <f48a8d347ce4ee70171c374f81090cd186652117.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Custom variable value: (OVERRIDES?)
+        Sun, 05 Apr 2020 06:59:59 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Mauro Ziliani <mauro@faresoftware.it>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sun, 05 Apr 2020 08:16:59 +0100
-In-Reply-To: <6bce089d-050d-7c57-15ac-a182b548f694@faresoftware.it>
-References: <6bce089d-050d-7c57-15ac-a182b548f694@faresoftware.it>
-User-Agent: Evolution 3.36.1-1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] data/siggen: Don't expand ignored variables
+Date: Sun,  5 Apr 2020 14:59:58 +0100
+Message-Id: <20200405135958.235528-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2020-04-02 at 17:34 +0200, Mauro Ziliani wrote:
-> I don't understand how can I change a the value of a variable inside
-> a  .bb file
-> 
-> I do this work
-> 
-> if MYVAR is empty I need to install default.txt in /etc
-> 
-> if MYVAR contains "white" i need to install white.txt in /etc
-> 
-> 
-> So I extend myreciped.bb with this file
-> 
-> 
-> myrecipe.bbappend
-> 
-> MYVAR = "default.txt"
-> 
-> MYVAR_white = "white.txt"
-> 
-> 
-> do_install_append() {
-> 
->      install -m 0755 -d ${D}/etc
-> 
->      install -m 0644 ${MYVAR}    ${D}/etc/value
-> 
-> }
-> 
-> 
-> In conf/local.conf I put
-> 
-> MYVAR_pn-myrecipe = "white"
-> 
-> 
-> But nothing works as I expect.
-> 
-> Where is my mistakes?
+If a variable is in the signature whitelist, we'd currently expand
+it, then later ignore the data. This is problemtic for code which
+has effects when expanded, recently source date epoch in OE-Core
+for example.
 
-You're mixing up a couple of concepts. In local.conf you could put:
+We don't actually need to do this, if we pass the whitelist into
+the earlier function it can avoid the expansion. This also also
+give a small performance boost since we avoid running code in some
+cases.
 
-MYVAR_pn-myrecipe = "white.txt"
+[YOCTO #13581]
 
-which would force the value of MYVAR to be "white.txt" in myrecipe.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/data.py       | 4 ++--
+ lib/bb/siggen.py     | 2 +-
+ lib/bb/tests/data.py | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-- or -
-
-OVERRIDES_append_pn-myrecipe = ":white"
-
-which adds "white" as an extra override for myrecipe, which would then
-means:
-
-MYVAR_white = "white.txt"
-becomes
-MYVAR = "white.txt"
-
-Hope that helps explain things!
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index 6dc02172cb..b0683c5180 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -365,7 +365,7 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
+     #bb.note("Variable %s references %s and calls %s" % (key, str(deps), str(execs)))
+     #d.setVarFlag(key, "vardeps", deps)
+ 
+-def generate_dependencies(d):
++def generate_dependencies(d, whitelist):
+ 
+     keys = set(key for key in d if not key.startswith("__"))
+     shelldeps = set(key for key in d.getVar("__exportlist", False) if d.getVarFlag(key, "export", False) and not d.getVarFlag(key, "unexport", False))
+@@ -380,7 +380,7 @@ def generate_dependencies(d):
+         newdeps = deps[task]
+         seen = set()
+         while newdeps:
+-            nextdeps = newdeps
++            nextdeps = newdeps - whitelist
+             seen |= nextdeps
+             newdeps = set()
+             for dep in nextdeps:
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 8bfc45235d..4c8d81c5da 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -146,7 +146,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+     def _build_data(self, fn, d):
+ 
+         ignore_mismatch = ((d.getVar("BB_HASH_IGNORE_MISMATCH") or '') == '1')
+-        tasklist, gendeps, lookupcache = bb.data.generate_dependencies(d)
++        tasklist, gendeps, lookupcache = bb.data.generate_dependencies(d, self.basewhitelist)
+ 
+         taskdeps, basehash = bb.data.generate_dependency_hash(tasklist, gendeps, lookupcache, self.basewhitelist, fn)
+ 
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index 2b137706dd..5f195047de 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -476,7 +476,7 @@ class Contains(unittest.TestCase):
+ class TaskHash(unittest.TestCase):
+     def test_taskhashes(self):
+         def gettask_bashhash(taskname, d):
+-            tasklist, gendeps, lookupcache = bb.data.generate_dependencies(d)
++            tasklist, gendeps, lookupcache = bb.data.generate_dependencies(d, set())
+             taskdeps, basehash = bb.data.generate_dependency_hash(tasklist, gendeps, lookupcache, set(), "somefile")
+             bb.warn(str(lookupcache))
+             return basehash["somefile:" + taskname]
+-- 
+2.25.1
 
