@@ -1,141 +1,113 @@
-Received: from mail-il1-f195.google.com (mail-il1-f195.google.com [209.85.166.195])
- by mx.groups.io with SMTP id smtpd.web12.874.1585934468808338070
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web11.13391.1586071022517381769
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 03 Apr 2020 10:21:08 -0700
+ Sun, 05 Apr 2020 00:17:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=jI+ZL5Qc;
- spf=pass (domain: gmail.com, ip: 209.85.166.195, mailfrom: raj.khem@gmail.com)
-Received: by mail-il1-f195.google.com with SMTP id n13so8029340ilm.5
-        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Apr 2020 10:21:08 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DKz9mEUH;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id j19so12344687wmi.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Apr 2020 00:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=A2HWLbIGrfM2gWLCeRBTyS9RJCkw0AJr5/ZRwTlAPKU=;
-        b=jI+ZL5QcqjBBfRkQdzSxu7FrxiLeRRwhdFZm4WtpLz55CU1ZvfKGJ/6s4Fd0/76NAF
-         zMyITKyTlnOlkomkycV8Go5DdABGWz8UU9Yn27R4Q6PaDmbB6cgIOnQwwaI+OVP/QSBG
-         nUpOYNTN1pxnuqiMkSAFcMRhzT9CM75tXmg1zicL4LJEpQbkwjfjnvIkEvOl6JMwL7LN
-         HeJyYA6V0MtkRO3OJ/E1f4FnUc8EJMkfRZ+s32209uk8Iu9Ndwk3MQYDoct9QDnlnXjl
-         iUJZV7g+dKo11WgrihvHX7AAQbEECqUAgnmEHdt9hxMxMKRAbnNsI3vXdgKXYK3+SAYO
-         q+aw==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=u7zFrce/EgC2b7c2dE6MiGC2kRpe6QTHWTBpDVdYnOA=;
+        b=DKz9mEUHk2QNBnrscaBzpyqTv2pAFUgtDVhq2SHWNYRGMo900NJESsKkWVQoWSOQ6f
+         8BNO6+2c5nAZHBiwx94Jn1OX4siVyfA6I0sphAZBHvXBz3b/gMkKKEeS0VAxOsdNoo8d
+         soKn4xuYKSwp1x7bi5hCQq/nki+Qkr6C6/v8Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A2HWLbIGrfM2gWLCeRBTyS9RJCkw0AJr5/ZRwTlAPKU=;
-        b=TxOWjIE6cqZlVJl6WXaFxM2VuDBzwXefT6VT3Hm8xQ7tlCIiZcM4+oT84SshewmzSk
-         D5nSKbIQpmU7v5SnWu7gvms8xKd1fOAzOiZSyYAZ854hR5olRxNNUSac953ysUkOoORH
-         jWxV9bGbwydJnwAAGk3kDdrtHGtWVmQcWBEM5UwC/SiUu/JijdERN+Y+XflBv6HWrRaV
-         pCmoj4tDz943hcaiuYrNWjMM9fSOXKgQcv2KHcij8dX16uTWXPGsKE3a/J8N4bliIbjG
-         BMFQtMMXpSiIPFZ52oT9k4lyw2ch0YO6I5DWRxTJTrCG+IDsLr+XXSIAejonSC2ZrGBD
-         E2Yw==
-X-Gm-Message-State: AGi0PuawwrgcBdyInNCO7bfJ0Q099a5bf2yF4cgpLY5LzLgytXhUg/lJ
-	0LFOilOX04fYwi9ts4AcJJU45ukbsyY=
-X-Google-Smtp-Source: APiQypJXAD6d2NRRjCfhlYZO0U4wM8JI0NhH6G1ICZa3uLj3Uv2Zm4ZKOcdzDzHp2wAK0OIJYqensQ==
-X-Received: by 2002:a92:3d10:: with SMTP id k16mr9395600ila.274.1585934467615;
-        Fri, 03 Apr 2020 10:21:07 -0700 (PDT)
-Return-Path: <raj.khem@gmail.com>
-Received: from ?IPv6:2601:646:9200:4e0:5d80:f4ba:ee3c:9546? ([2601:646:9200:4e0:5d80:f4ba:ee3c:9546])
-        by smtp.gmail.com with ESMTPSA id h12sm3003882ilq.66.2020.04.03.10.21.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 10:21:07 -0700 (PDT)
-Subject: Re: [bitbake-devel] [PATCH] Gitsm does not use credentials when cloning submodules
-To: bernd.bauer@gmx.at, bitbake-devel@lists.openembedded.org
-References: <20200402195104.2405-1-bernd.bauer@gmx.at>
- <fb960c2f15390746d24fd95368478c518748c957.camel@linuxfoundation.org>
- <55c322d4-aa7a-4a6e-6fbe-70ab9eecee83@gmx.at>
-From: "Khem Raj" <raj.khem@gmail.com>
-Message-ID: <d5b377f1-413b-6e50-87f3-c77e37ca9c35@gmail.com>
-Date: Fri, 3 Apr 2020 10:21:06 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=u7zFrce/EgC2b7c2dE6MiGC2kRpe6QTHWTBpDVdYnOA=;
+        b=l2Qr0nP4QBKoYcSCAp5iraqN9d3KK42CqZKg/XGQenctCsGGuKkI4kUQQoSgkoP1vP
+         g5PExkRtNaaFYhs7aZBvD/2O6F4N2Prgx4QTiWRj+QJNSZq7XJAd/xAr/UL5wdZ0aOCm
+         4ATfRq/7RDbSyUmikijyZZewVJD89MInBHqjgS9pm4kJO3NFMncYwJmpD4DMQzUjMCKk
+         cOufOwqyYs0TCnEcC1FOxY+gtHOTHlEJ+u2z5KlF13V8qfTAUyY8ooHyqMpM+r3oYhjJ
+         KcUmGpw7OWo2Ghar9C6S9FeXoAJQLdv5YgPY6gcAh5WXF97mDM7HD0CK/w/iWkuEA8Dr
+         /4ow==
+X-Gm-Message-State: AGi0PubfvWEJr4bN+G/EcSISHDl28u5/aixYHxaVf3tOLZ3+92xgX4W8
+	oyF5DMaT12geSa5X6U5Zmzqe9A==
+X-Google-Smtp-Source: APiQypKEQloYzG0YvVrQ7CNf+z2qu/89a2wNxJvjJutIE+DM2ZIdYAfKswB05vsZbRn7OAZa60rbPg==
+X-Received: by 2002:a1c:b356:: with SMTP id c83mr17366565wmf.10.1586071020986;
+        Sun, 05 Apr 2020 00:17:00 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id r3sm20300956wrm.35.2020.04.05.00.16.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 00:17:00 -0700 (PDT)
+Message-ID: <f48a8d347ce4ee70171c374f81090cd186652117.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] Custom variable value: (OVERRIDES?)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Mauro Ziliani <mauro@faresoftware.it>, 
+	bitbake-devel@lists.openembedded.org
+Date: Sun, 05 Apr 2020 08:16:59 +0100
+In-Reply-To: <6bce089d-050d-7c57-15ac-a182b548f694@faresoftware.it>
+References: <6bce089d-050d-7c57-15ac-a182b548f694@faresoftware.it>
+User-Agent: Evolution 3.36.1-1 
 MIME-Version: 1.0
-In-Reply-To: <55c322d4-aa7a-4a6e-6fbe-70ab9eecee83@gmx.at>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-
-
-On 4/3/20 12:29 AM, Bernd Bauer wrote:
-> Am 02.04.20 um 23:08 schrieb Richard Purdie:
->> On Thu, 2020-04-02 at 21:51 +0200, Bernd Bauer wrote:
->>> If the git server needs authentication the credentials are
->>> encoded in the URL of the repositories.
->>> The credentials from the main repository are deposited in the
->>> recipe so main repository can still be cloned.
->>>
->>> But the URLs from the submodules are listed in the .gitmodules
->>> file.
->>> The submodule url is encoded with an username and a password
->>> or a bitbucket URL token. See example.
->>>
->>> The password is not stored in the ud.user but in the ud.pswd
->>> variable. So in this case the url is made up by ud.user and
->>> ud.pswd.
->>>
->>> Example:
->>> [submodule "sub1"]
->>>          path = sub1
->>>          url = https://user:password@test.org/url/to/sub1
->>>
->>> Signed-off-by: Bernd Bauer <bernd.bauer@gmx.at>
->>> ---
->>>   bitbake/lib/bb/fetch2/git.py | 4 +++-
->>>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> We have had requests for this before and we've said "no" since
->> encouraging people to put passwords in urls is bad and it leads to
->> people making accidental exposures. Its basically too risky.
->>
->> For git submodules the line becomes blurred.
->>
->> I'm open to the opinions of others but in this form the patch applies
->> to git and gitsm and that in itself makes it more risky.
->>
->> I do understand why people want this, equally it really isn't a great
->> idea in general :/.
->>
->> Cheers,
->>
->> Richard
+On Thu, 2020-04-02 at 17:34 +0200, Mauro Ziliani wrote:
+> I don't understand how can I change a the value of a variable inside
+> a  .bb file
 > 
-> Hi!
+> I do this work
 > 
-> Of course it is not a good idea to write the credentials directly
-> in the recipe or in the .gitmodules.
-> Unfortunately I have no other choice than to encode the username
-> and password in the URL. This GIT server only allows HTTPS with
-> authentication. No SSH keys, no anonymous checkout.
-
-perhaps you should talk to your infosec about this.
-this is unusual setup, using key based authentication is far better than 
-username/password mechanism. but they might have their own reasons so 
-basically work out with IT and infosec to allow right kind of access 
-will get a long lasting solution
-
+> if MYVAR is empty I need to install default.txt in /etc
 > 
-> But without my patch the result would be the same.
-> I would have the URL with username and password in the
-> recipe and also in the submodules.
-> The only difference would be that I would have to define a
-> task in the recipe to check out the submodules.
-> So my recipe is getting complexer.
+> if MYVAR contains "white" i need to install white.txt in /etc
 > 
-> do_configure_prepend() {
->    cd ${WORKDIR}/git
->    git submodules update --init --recursive
+> 
+> So I extend myreciped.bb with this file
+> 
+> 
+> myrecipe.bbappend
+> 
+> MYVAR = "default.txt"
+> 
+> MYVAR_white = "white.txt"
+> 
+> 
+> do_install_append() {
+> 
+>      install -m 0755 -d ${D}/etc
+> 
+>      install -m 0644 ${MYVAR}    ${D}/etc/value
+> 
 > }
 > 
->  From my point of view, my patch would be more like
-> fixing a bug than an extension.
+> 
+> In conf/local.conf I put
+> 
+> MYVAR_pn-myrecipe = "white"
+> 
+> 
+> But nothing works as I expect.
+> 
+> Where is my mistakes?
 
-> 
-> Just my two cents...
-> 
-> Greets Bernd
-> 
-> 
-> 
-> 
+You're mixing up a couple of concepts. In local.conf you could put:
+
+MYVAR_pn-myrecipe = "white.txt"
+
+which would force the value of MYVAR to be "white.txt" in myrecipe.
+
+- or -
+
+OVERRIDES_append_pn-myrecipe = ":white"
+
+which adds "white" as an extra override for myrecipe, which would then
+means:
+
+MYVAR_white = "white.txt"
+becomes
+MYVAR = "white.txt"
+
+Hope that helps explain things!
+
+Cheers,
+
+Richard
+
