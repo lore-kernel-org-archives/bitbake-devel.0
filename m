@@ -1,117 +1,125 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web10.26363.1586120285881274035
+Received: from mail-vk1-f196.google.com (mail-vk1-f196.google.com [209.85.221.196])
+ by mx.groups.io with SMTP id smtpd.web11.27024.1586122882079621423
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 05 Apr 2020 13:58:06 -0700
+ Sun, 05 Apr 2020 14:41:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AXlJrFAN;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.67, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f67.google.com with SMTP id w15so8791051wrv.10
-        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Apr 2020 13:58:05 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Rpbu15qy;
+ spf=pass (domain: gmail.com, ip: 209.85.221.196, mailfrom: armccurdy@gmail.com)
+Received: by mail-vk1-f196.google.com with SMTP id s194so3458649vkb.11
+        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Apr 2020 14:41:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=bj76E5CAY2rEkKicjkIy2zFUyjM1HYyTjfifopRQyus=;
-        b=AXlJrFANXfIvwq2TK1xlSZyd493Eti5Br2CCgrI0IpLqL1+SNKb4WNLzzf4ZF10FKK
-         PgVldWF9C2uFKITV8CRBaTFv5K3VTolb+gT2Ybrn7zQ5nj9JbKExuDQK1EpIlBa7FrU7
-         6qvuYph5umB7HXypk1RIoLJED2cZCLPGw492g=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QH8QVSvee6y0/rwgloJ0kJgvWWQ0ATGzGsNRwW5ZzMI=;
+        b=Rpbu15qyeOdPa4qCWxFFGg9NhCCduedfuMcKluJJ5X+8NVdbtF9f/sHQHcDS56E8UL
+         WYN+f4j6gnEaQCr0YwgbFIuzvmQPBOfVdjPdS2nR9keuQpCBxpCBQvB6oxtfnuysxjwR
+         pAAaxbb+ciKiYsY8FpJ409mX0R3fJG1vMOOaE3oGLZ8yf5JTdUmhcrl9beUVNwq20IyX
+         gQzUFBcAp/BX9mw4DhqxSggEmpYP1MjMABDCD43vd5ewt+mvXzwu7KK1j7QyZh96nfr5
+         K+xcJmMPfMPsR+mnpHOuYSAUDAJDDTH7VgqdQDnwtQETIzRhbPsX+UhmlbFLEPKQIT21
+         3JAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=bj76E5CAY2rEkKicjkIy2zFUyjM1HYyTjfifopRQyus=;
-        b=UygH26y8o5F+I7nHRouH11PIgvcqlWG0sFbxbwJ5lnxdRKw1+zU0U6DfmYM+ujOMJE
-         cGNarh/RqK4tbuGi8MySBqR2kvosk2wzbpYoR8AHG2/W0gLcelJuVBszGDWDoAS3rlzX
-         FEbRlAMPChQZCunxOBlxx/IrL/YF0tVJoCN8YaVyJHHKWZQ5nfSHWi3plFWbn+KsmACQ
-         Cbm5qzjm8kp3PQnJEdgdV7Uo+9sPNE22NkVKqTu4bdIV9Lrv9QgJwH2v+pK770UhDSAL
-         r5K7cJXCtZIvA+VLZeV4Li+WIAiEuNJVKP97dGOcXrU4mElt6AlhmwkwwvVvBAunDBgp
-         8H8g==
-X-Gm-Message-State: AGi0PuYwF1VPbYXfwaJ5byJs/pS7B5Ns0APoMAPUz5ltBynan9e0/Rwh
-	h1qpk9R1HllpumugWv45aHEY9Q==
-X-Google-Smtp-Source: APiQypIoEp/i7h6OtXK0uHJt7hpvlaVkD7LlZ6sKLYO/lZrcQ6SwVGPe4ESA3vv585yaG3EyZeD5nA==
-X-Received: by 2002:adf:fe87:: with SMTP id l7mr19547268wrr.377.1586120284305;
-        Sun, 05 Apr 2020 13:58:04 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id h188sm8265921wme.8.2020.04.05.13.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 13:58:03 -0700 (PDT)
-Message-ID: <cb42c4a02d060b5366b6e22bf3ea31b66be3d05f.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Layerindex broken by recent change to bitbake tinfoil
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Paul Eggleton <bluelightning@bluelightning.org>
-Cc: Konrad Scherer <Konrad.Scherer@windriver.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sun, 05 Apr 2020 21:58:02 +0100
-In-Reply-To: <2650126.UBYc4EziqI@linc>
-References: <0675cf46-fd67-9b01-4c77-521099191339@windriver.com>
-	 <e0b081d78c3dea3f4cb6b0f549cd66afc49664f3.camel@linuxfoundation.org>
-	 <2650126.UBYc4EziqI@linc>
-User-Agent: Evolution 3.36.1-1 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QH8QVSvee6y0/rwgloJ0kJgvWWQ0ATGzGsNRwW5ZzMI=;
+        b=pjsJql/EZirTrOmtc6PIxr5rptx+A+mQbcl6eEFg8akDmjj+MlxjKCXwf2ji+XBQz+
+         s++AbqWM8u/X2acvMs4LUGncNTsXej5rsKretOTmfT8fw8cPPLxzXdQS2shm9jK8E70/
+         eZeo2JlxJXU2asPqmqVQ93ArXab1ngH9HiYEJJI/ZJPE68WaLjfyfd42svKSU1HpPcMT
+         VF/eHrGzCR/RtX6f/uCRN6UQdezveJipVMc3zPncuFJtPVRGSCfyKYz4O201pQY3rKW9
+         jlIt9RlUpvL35hbNFJn+MNzvyuc+fqBvCqQN9OqkfE+Cu7ru6scMydd+iMPgXjtnZeT8
+         K6Ow==
+X-Gm-Message-State: AGi0PuZuRDt9WPCHosj2LiLU8GmMdzEXB3oEjC1+2MahIRqKIBzacW/f
+	zLWFXUSHlbXyjMw7W1/OJmz+2LRrpE9Rww1VY5E=
+X-Google-Smtp-Source: APiQypKrvbUL0tDnw6RQ+BMPtPI1n4dTW1oLQCcmaAMKXy28sFXnoamDh4/5DimhtQm4q+zl0k68Ws552WdtNGvP86s=
+X-Received: by 2002:a1f:a055:: with SMTP id j82mr12615301vke.75.1586122881049;
+ Sun, 05 Apr 2020 14:41:21 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200402195104.2405-1-bernd.bauer@gmx.at> <fb960c2f15390746d24fd95368478c518748c957.camel@linuxfoundation.org>
+ <55c322d4-aa7a-4a6e-6fbe-70ab9eecee83@gmx.at>
+In-Reply-To: <55c322d4-aa7a-4a6e-6fbe-70ab9eecee83@gmx.at>
+From: "Andre McCurdy" <armccurdy@gmail.com>
+Date: Sun, 5 Apr 2020 14:41:13 -0700
+Message-ID: <CAJ86T=Wgue4EdLZAergwV6-Zg3w-5c33sXvjnC8LCNbx=dm08Q@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] Gitsm does not use credentials when cloning submodules
+To: bernd.bauer@gmx.at
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Wed, 2020-04-01 at 08:48 +1300, Paul Eggleton wrote:
-> On Wednesday, 1 April 2020 02:25:11 NZDT Richard Purdie wrote:
-> > On Tue, 2020-03-31 at 08:27 -0400, Konrad Scherer wrote:
-> > > The following commit to bitbake breaks recipe parsing in the
-> > > layerindex:
-> > > 
-> > > commit f2341dc46b6abfc08a4d01c7abdd3d4630577999
-> > > Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > > Date:   Mon Mar 23 12:30:04 2020 +0000
-> > > 
-> > >      tinfoil: Drop parse_recipe_file custom datastore support
-> > > 
-> > > The layerindex uses the tinfoil.parse_recipe_file call to build its
-> > > database:
-> > > 
-> > > https://git.yoctoproject.org/cgit/cgit.cgi/layerindex-web/tree/layerindex/
-> > > update_layer.py#n105
-> > > 
-> > > now fails with the following error message:
-> > > 
-> > > parse_recipe_file() got an unexpected keyword argument 'config_data'
-> > > 
-> > > When I remove the config_data argument from the layerindex code the
-> > > parsing continues, but I don't
-> > > know either code base well enough to determine if this is the correct
-> > > solution. How best to resolve
-> > > this problem?
-> > 
-> > Adding Paul to this conversation.
-> > 
-> > From my reading of the code, config_data comes from config_data_copy
-> > and is most unmodified. The only place it is modified is in
-> > update_distro_conf_file() which does:
-> > 
-> > d = utils.parse_conf(path, d)
-> > 
-> > which amounts to calling bb.parse.handler() on it.
-> > 
-> > Looking at the code, I'm not sure its intentional that those changes
-> > are preserved in config_data_copy.
-> > 
-> > Paul: Should those distro changes persist in config_data_copy?
-> > 
-> > If not, the fix is easy and we just remove the parameter. If wanted,
-> > that is harder.
+On Fri, Apr 3, 2020 at 12:29 AM Bernd Bauer <bernd.bauer@gmx.at> wrote:
+> Am 02.04.20 um 23:08 schrieb Richard Purdie:
+> > On Thu, 2020-04-02 at 21:51 +0200, Bernd Bauer wrote:
+> >> If the git server needs authentication the credentials are
+> >> encoded in the URL of the repositories.
+> >> The credentials from the main repository are deposited in the
+> >> recipe so main repository can still be cloned.
+> >>
+> >> But the URLs from the submodules are listed in the .gitmodules
+> >> file.
+> >> The submodule url is encoded with an username and a password
+> >> or a bitbucket URL token. See example.
+> >>
+> >> The password is not stored in the ud.user but in the ud.pswd
+> >> variable. So in this case the url is made up by ud.user and
+> >> ud.pswd.
+> >>
+> >> Example:
+> >> [submodule "sub1"]
+> >>         path = sub1
+> >>         url = https://user:password@test.org/url/to/sub1
+> >>
+> >> Signed-off-by: Bernd Bauer <bernd.bauer@gmx.at>
+> >> ---
+> >>  bitbake/lib/bb/fetch2/git.py | 4 +++-
+> >>  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > We have had requests for this before and we've said "no" since
+> > encouraging people to put passwords in urls is bad and it leads to
+> > people making accidental exposures. Its basically too risky.
+> >
+> > For git submodules the line becomes blurred.
+> >
+> > I'm open to the opinions of others but in this form the patch applies
+> > to git and gitsm and that in itself makes it more risky.
+> >
+> > I do understand why people want this, equally it really isn't a great
+> > idea in general :/.
+> >
+> > Cheers,
+> >
+> > Richard
+>
+> Hi!
+>
+> Of course it is not a good idea to write the credentials directly
+> in the recipe or in the .gitmodules.
+> Unfortunately I have no other choice than to encode the username
+> and password in the URL. This GIT server only allows HTTPS with
+> authentication. No SSH keys, no anonymous checkout.
+
+Google brings up a few possible alternatives:
+
+  https://confluence.atlassian.com/bitbucketserver/permanently-authenticating-with-git-repositories-776639846.html
+
+I also need to access a git server which supports only https with
+authentication and .netrc has always worked fine for me.
+
+> But without my patch the result would be the same.
+> I would have the URL with username and password in the
+> recipe and also in the submodules.
+> The only difference would be that I would have to define a
+> task in the recipe to check out the submodules.
+> So my recipe is getting complexer.
+>
+> do_configure_prepend() {
+>   cd ${WORKDIR}/git
+>   git submodules update --init --recursive
+> }
+>
+> From my point of view, my patch would be more like
+> fixing a bug than an extension.
+>
+> Just my two cents...
+>
+> Greets Bernd
 > 
-> Hang on, leaving the distro conf handling aside for a moment, 
-> recipeparse.setup_layer() is where config_data_copy comes from and it is being 
-> modified in there - we are parsing conf/layer.conf from the layer and all of 
-> its dependencies. If we can't pass that into the recipe parsing then we won't 
-> have things from layer.conf, which can turn out to be pretty important for 
-> some layers.
-> 
-> Sorry, I missed this when we reviewed the changes, that's my fault :( I'll 
-> have to see what I can come up with in terms of a solution.
-
-I've sent a patch which I think resolves the issue, thankfully it
-worked out simpler than I was expecting.
-
-Cheers,
-
-Richard
-
