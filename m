@@ -1,70 +1,80 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.web12.2796.1587026832182248549
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+ by mx.groups.io with SMTP id smtpd.web12.2807.1587026957456620156
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Apr 2020 01:47:12 -0700
+ Thu, 16 Apr 2020 01:49:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LBGfjYgm;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f65.google.com with SMTP id z6so3914874wml.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Apr 2020 01:47:11 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=E5ye5TWO;
+ spf=pass (domain: konsulko.com, ip: 209.85.128.66, mailfrom: pbarker@konsulko.com)
+Received: by mail-wm1-f66.google.com with SMTP id e26so3657299wmk.5
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Apr 2020 01:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=3+hoZEtCzftgX3cAwasLQSDgaifV53lQD88WLlj6suw=;
-        b=LBGfjYgm2hRmgvlCgGxIcjz1YUQTwfPcPfU9U9Enrenb0V+TMps2YOwz87iIWL0KmF
-         n7jUfTJaTuyEmkHdkztARyECOh4bfLM7PMYI68vQi/bBZyDoBhmHczGbzMyqRe1v4vF9
-         H9Wa3RPZ0xwQ10nrbWSvq39jvf01oLKakkSJc=
+        d=konsulko.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c8SFxII3tkNl/nccQ1cQ64UfoY30IQAJhxr1Q+o9awA=;
+        b=E5ye5TWO3lvIK8kyhNrVAUy1UlYCZp2bafLT+WN4zxnqvwcu1tpwc1rKZhRtq1Cy7y
+         TlQlXID5zyaj+nFoU/2XYmW/X5VpvXxZq34rE8/EZ+4yPPa7ARVVyc7UcVyliK+Q0+KL
+         42SoqrdhHlLPAQ0odwIbaFxUi7Va3hspiNAvY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=3+hoZEtCzftgX3cAwasLQSDgaifV53lQD88WLlj6suw=;
-        b=XrGGSu6C5oMr0NMOtk7kqEAZA08z8KMm45UskbYM1oY6lAnP1nNLqD/SLzJt48cBu5
-         iWhv9XIIl/t68wsfMiXiA7V9sC8qHwAOK5B+DDbwNPK5kBhVptPugJxWVJ3ZLNmgx2ga
-         /+Vn03l3mHhpf0Vd4sXqD2HDElq7By6Yjeexdx+41yjXMOvgdmxc5wr3mhQejCI4R2z2
-         QtpAJk3B1enBAnBRcA/on0C4Ldtz6g8YqB3loFwn0m7a66vyvmHB1/oEfAmGs81L0vn8
-         FP2rssrgGgs/OZSTLTwemniVw+pQw7jtAMrbLuvHWaP9ciyhu/tuWC3Zu+04bHGrWl5j
-         HdBA==
-X-Gm-Message-State: AGi0PubmBVAOIV0HVxPAyO2BapFMFMzwPuWyXpoPZE88AIQMUtpFOfgj
-	ketc7p50IuzSjU5/M5axX2i9fQ==
-X-Google-Smtp-Source: APiQypJ0CRx2FnXOUp4glEvz0PYZilYDq8u5v39pwTW8YNsQAZ1kczJAjhM4+UHBCmoj3moZqUI4dQ==
-X-Received: by 2002:a7b:c002:: with SMTP id c2mr3622649wmb.123.1587026830587;
-        Thu, 16 Apr 2020 01:47:10 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id s9sm15185105wrg.27.2020.04.16.01.47.09
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c8SFxII3tkNl/nccQ1cQ64UfoY30IQAJhxr1Q+o9awA=;
+        b=C5jLHT+HboJiq5XZmRKuegHup2j7VOSNqDukFQGmd82PRDwT+RHFjIvtdWWpe5qU6D
+         fvhveWvSHycRQz4X7nlTwFbzBe2i7ZG1BPGRdMRypjtgK/7lp3VdmhXboxskJg3TG5bR
+         dMZrQugi+uZpe42QtDytefX8d8cxxpha9n2t6ARR4v4bdCtQMoiU/M+ohfgGfbrd4K4p
+         TuqThymplJcytPNyCvP0Q4CnQuv7g8czBjTQ/MDhc/V1ehUVMj3PjgoyecttV75BB5yN
+         wOnN32IFjWVcKAiEiek3VNyg9BIwKQwQ6d5RrpXfcpe+5iylii+bzU/l7J+vtlV0sp54
+         Xy3Q==
+X-Gm-Message-State: AGi0PuatXQ6SdcP7h69E/DT9v+IopOQe6cTyB3XRIYcZdJkEfIjQUqCW
+	yTmoDp+B08ovpioHxu7/nn06uhF8bOtdNA==
+X-Google-Smtp-Source: APiQypL/aUmcIStawDuwZ0hGyikfNAnBXVLP7uh972MihcVu9wHsAoNwXtYrMyq50bO98MwWz+uEcw==
+X-Received: by 2002:a1c:770f:: with SMTP id t15mr3645335wmi.178.1587026955808;
+        Thu, 16 Apr 2020 01:49:15 -0700 (PDT)
+Return-Path: <pbarker@konsulko.com>
+Received: from ub1910.Hitronhub.home ([213.48.11.149])
+        by smtp.gmail.com with ESMTPSA id i16sm8863946wrm.8.2020.04.16.01.49.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 01:47:10 -0700 (PDT)
-Message-ID: <74e3f669d62abd35545e3552614bb303c13257af.camel@linuxfoundation.org>
-Subject: Re: [PATCH] tinfoil: fix config_data mess up insane check while parsing multiple recipes
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Hongxu Jia <hongxu.jia@windriver.com>, 
-	bitbake-devel@lists.openembedded.org, paul.eggleton@linux.intel.com
-Date: Thu, 16 Apr 2020 09:47:08 +0100
-In-Reply-To: <20200416074427.1716-1-hongxu.jia@windriver.com>
-References: <20200416074427.1716-1-hongxu.jia@windriver.com>
-User-Agent: Evolution 3.36.1-1 
+        Thu, 16 Apr 2020 01:49:15 -0700 (PDT)
+From: "Paul Barker" <pbarker@konsulko.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Paul Barker <pbarker@konsulko.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH] fetch2/wget: Set User-Agent when checking status of a URL
+Date: Thu, 16 Apr 2020 09:49:05 +0100
+Message-Id: <20200416084905.6453-1-pbarker@konsulko.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2020-04-16 at 15:44 +0800, Hongxu Jia wrote:
-> Since commit [tinfoil: Simplify remote datastore connections][1] and
-> [tinfoil: Add back ability to parse on top of a datastore][2]
-> applied,
-> bitbake run command parseRecipeFile with param config_data.dsindex
-> rather
-> than config_data.
-> 
-> While calling tinfoil.parse_recipe_file() with one config_data (with
-> the same
-> config_data.dsindex) to parse multiple recipes, it will mess up
-> insane check.
+When a website is behind a CDN like Cloudflare there may be a "Browser
+Integrity Check" or other test applied to requests before they are
+allowed through to the server. Downloading via wget passes these tests
+as headers are set appropriately, however the Python urllib module may
+fail these tests unless additional headers are set. This causes
+Wget.checkstatus() to fail where Wget.download() would actually succeed.
 
-Well spotted, thanks!
+For Cloudflare in particular a valid User-Agent is needed, it's easy to
+add this to the headers in Wget.checkstatus(). The user agent string is
+copied from Wget._fetch_index().
 
-Cheers,
+Signed-off-by: Paul Barker <pbarker@konsulko.com>
+---
+ lib/bb/fetch2/wget.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-Richard
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 5235ae4d..f7d1de26 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -300,6 +300,7 @@ class Wget(FetchMethod):
+             # Some servers (FusionForge, as used on Alioth) require that the
+             # optional Accept header is set.
+             r.add_header("Accept", "*/*")
++            r.add_header("User-Agent", "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12")
+             def add_basic_auth(login_str, request):
+                 '''Adds Basic auth to http request, pass in login:password as string'''
+                 import base64
+-- 
+2.20.1
 
