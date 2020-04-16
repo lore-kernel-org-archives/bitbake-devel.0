@@ -1,79 +1,70 @@
-Received: from mail5.wrs.com (mail5.wrs.com [192.103.53.11])
- by mx.groups.io with SMTP id smtpd.web11.2212.1587023145312014130
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web12.2796.1587026832182248549
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Apr 2020 00:45:45 -0700
+ Thu, 16 Apr 2020 01:47:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: windriver.com, ip: 192.103.53.11, mailfrom: hongxu.jia@windriver.com)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 03G7ie5m008553
-	(version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-	Thu, 16 Apr 2020 00:44:55 -0700
-Received: from jiahongxu-OptiPlex-990.wrs.com (128.224.162.134) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Apr 2020 00:44:29 -0700
-From: "hongxu" <hongxu.jia@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>,
-        <richard.purdie@linuxfoundation.org>, <paul.eggleton@linux.intel.com>
-Subject: [PATCH] tinfoil: fix config_data mess up insane check while parsing multiple recipes
-Date: Thu, 16 Apr 2020 15:44:27 +0800
-Message-ID: <20200416074427.1716-1-hongxu.jia@windriver.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LBGfjYgm;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f65.google.com with SMTP id z6so3914874wml.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Apr 2020 01:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=3+hoZEtCzftgX3cAwasLQSDgaifV53lQD88WLlj6suw=;
+        b=LBGfjYgm2hRmgvlCgGxIcjz1YUQTwfPcPfU9U9Enrenb0V+TMps2YOwz87iIWL0KmF
+         n7jUfTJaTuyEmkHdkztARyECOh4bfLM7PMYI68vQi/bBZyDoBhmHczGbzMyqRe1v4vF9
+         H9Wa3RPZ0xwQ10nrbWSvq39jvf01oLKakkSJc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=3+hoZEtCzftgX3cAwasLQSDgaifV53lQD88WLlj6suw=;
+        b=XrGGSu6C5oMr0NMOtk7kqEAZA08z8KMm45UskbYM1oY6lAnP1nNLqD/SLzJt48cBu5
+         iWhv9XIIl/t68wsfMiXiA7V9sC8qHwAOK5B+DDbwNPK5kBhVptPugJxWVJ3ZLNmgx2ga
+         /+Vn03l3mHhpf0Vd4sXqD2HDElq7By6Yjeexdx+41yjXMOvgdmxc5wr3mhQejCI4R2z2
+         QtpAJk3B1enBAnBRcA/on0C4Ldtz6g8YqB3loFwn0m7a66vyvmHB1/oEfAmGs81L0vn8
+         FP2rssrgGgs/OZSTLTwemniVw+pQw7jtAMrbLuvHWaP9ciyhu/tuWC3Zu+04bHGrWl5j
+         HdBA==
+X-Gm-Message-State: AGi0PubmBVAOIV0HVxPAyO2BapFMFMzwPuWyXpoPZE88AIQMUtpFOfgj
+	ketc7p50IuzSjU5/M5axX2i9fQ==
+X-Google-Smtp-Source: APiQypJ0CRx2FnXOUp4glEvz0PYZilYDq8u5v39pwTW8YNsQAZ1kczJAjhM4+UHBCmoj3moZqUI4dQ==
+X-Received: by 2002:a7b:c002:: with SMTP id c2mr3622649wmb.123.1587026830587;
+        Thu, 16 Apr 2020 01:47:10 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id s9sm15185105wrg.27.2020.04.16.01.47.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 01:47:10 -0700 (PDT)
+Message-ID: <74e3f669d62abd35545e3552614bb303c13257af.camel@linuxfoundation.org>
+Subject: Re: [PATCH] tinfoil: fix config_data mess up insane check while parsing multiple recipes
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Hongxu Jia <hongxu.jia@windriver.com>, 
+	bitbake-devel@lists.openembedded.org, paul.eggleton@linux.intel.com
+Date: Thu, 16 Apr 2020 09:47:08 +0100
+In-Reply-To: <20200416074427.1716-1-hongxu.jia@windriver.com>
+References: <20200416074427.1716-1-hongxu.jia@windriver.com>
+User-Agent: Evolution 3.36.1-1 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Since commit [tinfoil: Simplify remote datastore connections][1] and
-[tinfoil: Add back ability to parse on top of a datastore][2] applied,
-bitbake run command parseRecipeFile with param config_data.dsindex rather
-than config_data.
+On Thu, 2020-04-16 at 15:44 +0800, Hongxu Jia wrote:
+> Since commit [tinfoil: Simplify remote datastore connections][1] and
+> [tinfoil: Add back ability to parse on top of a datastore][2]
+> applied,
+> bitbake run command parseRecipeFile with param config_data.dsindex
+> rather
+> than config_data.
+> 
+> While calling tinfoil.parse_recipe_file() with one config_data (with
+> the same
+> config_data.dsindex) to parse multiple recipes, it will mess up
+> insane check.
 
-While calling tinfoil.parse_recipe_file() with one config_data (with the same
-config_data.dsindex) to parse multiple recipes, it will mess up insane check.
+Well spotted, thanks!
 
-It broke update_layer.py on layerindex, here are the simplified steps:
-[snip]
-t= bb.tinfoil.Tinfoil()
-t.prepare()
-data = bb.data.createCopy(t.config_data)
-fn = "path_to/oe-core/meta/recipes-graphics/images/core-image-clutter.bb"
-t.parse_recipe_file(fn, appends=False, config_data=data)
-fn = "path_to/oe-core/meta/recipes-graphics/packagegroups/packagegroup-core-x11-base.bb"
-t.parse_recipe_file(fn, appends=False, config_data=data)
+Cheers,
 
-|  File "path_to/oe-core/meta/classes/insane.bbclass", line 1303,
-in __anon_1304__path_to_oe_core_meta_classes_insane_bbclass
-|    bb.fatal("Fatal QA errors found, failing task.")
-[snip]
-
-In above failure, RDEPENDS is assigned `${PACKAGE_INSTALL} ${LINGUAS_INSTALL}
-${IMAGE_INSTALL_DEBUGFS}' in core-image-clutter.bb, but it broke insane check
-on packagegroup-core-x11-base.bb
-
-From commit [remotedata: enable transporting datastore from the client to
-the server][3], it create a new DataSmart to save receive_datastore's remote_data
-Similarly, make a copy of config_data(with different config_data.dsindex) could
-fix the issue.
-
-[1] http://git.openembedded.org/bitbake/commit/?id=85e03a64dd0a4ebe71009ec4bdf4192c04a9786e
-[2] http://git.openembedded.org/bitbake/commit/?id=4618da2094189e4d814b7d65672cb65c86c0626a
-[3] http://git.openembedded.org/bitbake/commit/?id=784d2f1a024efe632fc9049ce5b78692d419d938
-
-Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
----
- lib/bb/tinfoil.py | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 7d53608b2..8c9b6b8ca 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -636,6 +636,7 @@ class Tinfoil:
-             if appends and appendlist == []:
-                 appends = False
-             if config_data:
-+                 config_data = bb.data.createCopy(config_data)
-                  dscon = self.run_command('parseRecipeFile', fn, appends, appendlist, config_data.dsindex)
-             else:
-                 dscon = self.run_command('parseRecipeFile', fn, appends, appendlist)
--- 
-2.17.1
+Richard
 
