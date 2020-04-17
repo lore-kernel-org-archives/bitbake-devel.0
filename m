@@ -1,80 +1,89 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web12.2807.1587026957456620156
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [91.207.212.93])
+ by mx.groups.io with SMTP id smtpd.web10.6746.1587117253217496413
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Apr 2020 01:49:17 -0700
+ Fri, 17 Apr 2020 02:54:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=E5ye5TWO;
- spf=pass (domain: konsulko.com, ip: 209.85.128.66, mailfrom: pbarker@konsulko.com)
-Received: by mail-wm1-f66.google.com with SMTP id e26so3657299wmk.5
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Apr 2020 01:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c8SFxII3tkNl/nccQ1cQ64UfoY30IQAJhxr1Q+o9awA=;
-        b=E5ye5TWO3lvIK8kyhNrVAUy1UlYCZp2bafLT+WN4zxnqvwcu1tpwc1rKZhRtq1Cy7y
-         TlQlXID5zyaj+nFoU/2XYmW/X5VpvXxZq34rE8/EZ+4yPPa7ARVVyc7UcVyliK+Q0+KL
-         42SoqrdhHlLPAQ0odwIbaFxUi7Va3hspiNAvY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c8SFxII3tkNl/nccQ1cQ64UfoY30IQAJhxr1Q+o9awA=;
-        b=C5jLHT+HboJiq5XZmRKuegHup2j7VOSNqDukFQGmd82PRDwT+RHFjIvtdWWpe5qU6D
-         fvhveWvSHycRQz4X7nlTwFbzBe2i7ZG1BPGRdMRypjtgK/7lp3VdmhXboxskJg3TG5bR
-         dMZrQugi+uZpe42QtDytefX8d8cxxpha9n2t6ARR4v4bdCtQMoiU/M+ohfgGfbrd4K4p
-         TuqThymplJcytPNyCvP0Q4CnQuv7g8czBjTQ/MDhc/V1ehUVMj3PjgoyecttV75BB5yN
-         wOnN32IFjWVcKAiEiek3VNyg9BIwKQwQ6d5RrpXfcpe+5iylii+bzU/l7J+vtlV0sp54
-         Xy3Q==
-X-Gm-Message-State: AGi0PuatXQ6SdcP7h69E/DT9v+IopOQe6cTyB3XRIYcZdJkEfIjQUqCW
-	yTmoDp+B08ovpioHxu7/nn06uhF8bOtdNA==
-X-Google-Smtp-Source: APiQypL/aUmcIStawDuwZ0hGyikfNAnBXVLP7uh972MihcVu9wHsAoNwXtYrMyq50bO98MwWz+uEcw==
-X-Received: by 2002:a1c:770f:: with SMTP id t15mr3645335wmi.178.1587026955808;
-        Thu, 16 Apr 2020 01:49:15 -0700 (PDT)
-Return-Path: <pbarker@konsulko.com>
-Received: from ub1910.Hitronhub.home ([213.48.11.149])
-        by smtp.gmail.com with ESMTPSA id i16sm8863946wrm.8.2020.04.16.01.49.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 01:49:15 -0700 (PDT)
-From: "Paul Barker" <pbarker@konsulko.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Paul Barker <pbarker@konsulko.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [PATCH] fetch2/wget: Set User-Agent when checking status of a URL
-Date: Thu, 16 Apr 2020 09:49:05 +0100
-Message-Id: <20200416084905.6453-1-pbarker@konsulko.com>
-X-Mailer: git-send-email 2.20.1
+ dkim=pass header.i=@st.com header.s=stmicroelectronics header.b=Etr/JUHw;
+ spf=pass (domain: st.com, ip: 91.207.212.93, mailfrom: christophe.priouzeau@st.com)
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03H9lbBs007227
+	for <bitbake-devel@lists.openembedded.org>; Fri, 17 Apr 2020 11:54:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=STMicroelectronics;
+ bh=k4LVuAkN7U5HzKmxUL0kQ3Ep9TeCxFM7krhxBqjeauM=;
+ b=Etr/JUHwSnqrithhRZX2EmEwi4rSgH7Q8utlro2PdyNBTXC+IbaMCfpV1FWIWkz3ygeH
+ mWEf88k5KFKqMGPUBaSTZI3k4p6GT4+MOs+PXMoH9RMHA15+EgMU6NM7owvuA1SGDQah
+ QiBiAzE4Jg/0ZO9pyK760cfHYWxQRTT46511SrvYmnnl2SiVIM9Q21jUqMR9PzuJ8xrl
+ YMqIT7Vn1dBL+WmYiSpuK3PikyYnBq3e+J/fEXCgKRxOHsOpj11XOQahFfd33L1Uqg9X
+ /K623ikwYXGre8P0U3U41GQMwe4DDnm2w+9DANqbjRSsBkz+ne368ZkMKbYdmR0Allav Dw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com with ESMTP id 30dn8s8ku1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Fri, 17 Apr 2020 11:54:11 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 15C52100034
+	for <bitbake-devel@lists.openembedded.org>; Fri, 17 Apr 2020 11:54:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1316B2AF585
+	for <bitbake-devel@lists.openembedded.org>; Fri, 17 Apr 2020 11:54:10 +0200 (CEST)
+Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG6NODE3.st.com
+ (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
+ 2020 11:54:09 +0200
+Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
+ SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
+ 15.00.1347.000; Fri, 17 Apr 2020 11:54:09 +0200
+From: "cpriouzeau" <christophe.priouzeau@st.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+CC: Christophe PRIOUZEAU <christophe.priouzeau@st.com>,
+        Christophe GUILLON
+	<christophe.guillon@st.com>
+Subject: [PATCH] Fix infinite loop while trying to lock file on name too long error
+Thread-Topic: [PATCH] Fix infinite loop while trying to lock file on name too
+ long error
+Thread-Index: AQHWFJ4k6DGrhjE59ESWvqK/ItitXg==
+Date: Fri, 17 Apr 2020 09:54:09 +0000
+Message-ID: <20200417095407.8505-1-christophe.priouzeau@st.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-17_03:2020-04-17,2020-04-17 signatures=0
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-When a website is behind a CDN like Cloudflare there may be a "Browser
-Integrity Check" or other test applied to requests before they are
-allowed through to the server. Downloading via wget passes these tests
-as headers are set appropriately, however the Python urllib module may
-fail these tests unless additional headers are set. This causes
-Wget.checkstatus() to fail where Wget.download() would actually succeed.
+During a call of lockfile the open go on error and generate an infinite
+ loop of bitbake.
 
-For Cloudflare in particular a valid User-Agent is needed, it's easy to
-add this to the headers in Wget.checkstatus(). The user agent string is
-copied from Wget._fetch_index().
+open("...._deploy_source_date_epoch.tgz.siginfo.lock", O_RDWR|O_CREAT|O_APP=
+END|O_CLOEXEC, 0666) =3D -1 ENAMETOOLONG (File name too long)
 
-Signed-off-by: Paul Barker <pbarker@konsulko.com>
+Signed-off-by: Christophe Priouzeau <christophe.priouzeau@st.com>
+Signed-off-by: Christophe Guillon <christophe.guillon@st.com>
 ---
- lib/bb/fetch2/wget.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/utils.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 5235ae4d..f7d1de26 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -300,6 +300,7 @@ class Wget(FetchMethod):
-             # Some servers (FusionForge, as used on Alioth) require that the
-             # optional Accept header is set.
-             r.add_header("Accept", "*/*")
-+            r.add_header("User-Agent", "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12")
-             def add_basic_auth(login_str, request):
-                 '''Adds Basic auth to http request, pass in login:password as string'''
-                 import base64
--- 
-2.20.1
-
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 5f5767c1d..f48a30dea 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -494,7 +494,7 @@ def lockfile(name, shared=3DFalse, retry=3DTrue, block=
+=3DFalse):
+                     return lf
+             lf.close()
+         except OSError as e:
+-            if e.errno =3D=3D errno.EACCES:
++            if e.errno =3D=3D errno.EACCES or e.errno =3D=3D errno.ENAMETO=
+OLONG:
+                 logger.error("Unable to acquire lock '%s', %s",
+                              e.strerror, name)
+                 sys.exit(1)
+--=20
+2.17.1
