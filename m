@@ -1,93 +1,71 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
- by mx.groups.io with SMTP id smtpd.web10.3801.1587155097500246259
- for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Apr 2020 13:24:57 -0700
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=jNAEcNCA;
- spf=pass (domain: gmail.com, ip: 209.85.221.179, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-vk1-f179.google.com with SMTP id q200so693448vka.13
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Apr 2020 13:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HpVDMVf6FlwG4ic6Fn7jQDAaDnZcAuZTURnedtSLpPk=;
-        b=jNAEcNCA8+0kGJbcAlYaD+va0pflQ/aYgn7fze6jb5iNwd3CUnPJrEiz8SQbulafi6
-         t4TVIts0/DcKl1zq7Z1PFXeAXLvEI66ZqghlulYB2VfZcj6qdJvAZBV2ej+phR7Fumr+
-         GCNCm2s7N2fA4MvtA0XMpTdr92Xax3zFmTdIoS8kSGBiQysmEvT7FO8JxxRL9oEUUsPm
-         PtsPPQF+ybVYBXpMZWZlktlEa9trvknTbJsu8NvOzYlgcpVFglVr34HWjAZgxQET1+s8
-         0A/D5HY6XOKCK/zkyuYwbOKy5+eKbkphUtFrFPb89EGPClgQ/t4iPrjbuinYCb8TC++Q
-         JvCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HpVDMVf6FlwG4ic6Fn7jQDAaDnZcAuZTURnedtSLpPk=;
-        b=JJWJFb527T9yJrt+qzbaDSEr5aSHmre2m2sL2K0ykCiRAODIJ53qxSPDGy9BwpJpub
-         E7I1bY5jo0gCaiBD/17Wmx1cwyyfM9nfSIYzFpox/EChQiEYs2F9+/shxoZPwiv7RRcz
-         /t698Sh9Jr44aOnRbBhoRUZ8ZFRF3N7kY0GVkaKjF6uJCDnTozUvSdIv6sZBfI/uteS4
-         LM5Q56451OyjIejBGVMHeycVvR86PXD5dFzBZOAFOTAr+36blPh/RkYuLcnvZpVPQ/bQ
-         vKv+fKbHMRfjE4bBGYraTFumY6A9vU1jGDA47twqnAR4StkVav1+TnzvoJz+CyvKfGet
-         l4DA==
-X-Gm-Message-State: AGi0PuYu45dsLzzPhIfdZZ0T5lGXf6yjXkTKHhRXq+lOIkyiP2W4BFCr
-	Rpu5HicLC/DkbuQI7qXfUwK9eUOGImjc0LzudDY=
-X-Google-Smtp-Source: APiQypKE6sTPzXcGEB2k0OsKUXSIMX8z3xy8bMhACQ2MbJiLWMsUZ6Ejm7/6kMVobeRzFDsu3PTkIv1zuCrDGej0c8A=
-X-Received: by 2002:a1f:e182:: with SMTP id y124mr4346642vkg.0.1587155096666;
- Fri, 17 Apr 2020 13:24:56 -0700 (PDT)
+Subject: Re: Significance of "SRCREV_FORMAT" variable for multiple sources fetch
+To: bitbake-devel@lists.openembedded.org
+From: "Abhishek Shah" <abhishek.shah@broadcom.com>
+X-Originating-Location: Bengaluru, Karnataka, IN (103.252.25.193)
+X-Originating-Platform: Windows Chrome 80
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-References: <CANNYZj8E3O9D1m6nVoizgmWp_szadiSRGnjTfCXFxWJ9j2TZxg@mail.gmail.com>
- <10537.1587154291554351877@lists.openembedded.org>
-In-Reply-To: <10537.1587154291554351877@lists.openembedded.org>
-From: "Alexander Kanavin" <alex.kanavin@gmail.com>
-Date: Fri, 17 Apr 2020 22:24:45 +0200
-Message-ID: <CANNYZj_xP2UtR5Ohx5ufGv5UZHQjR51+iTashoPckm-C3BWHkw@mail.gmail.com>
-Subject: Re: [bitbake-devel] Significance of "SRCREV_FORMAT" variable for multiple sources fetch
-To: abhishek.shah@broadcom.com
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000bd85e005a38257af"
+Date: Sat, 18 Apr 2020 13:00:22 -0700
+References: <CANNYZj_xP2UtR5Ohx5ufGv5UZHQjR51+iTashoPckm-C3BWHkw@mail.gmail.com>
+In-Reply-To: <CANNYZj_xP2UtR5Ohx5ufGv5UZHQjR51+iTashoPckm-C3BWHkw@mail.gmail.com>
+Message-ID: <2736.1587240022802553223@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="ONSyP0jdU2jCo9M3LokO"
 
---000000000000bd85e005a38257af
-Content-Type: text/plain; charset="UTF-8"
-
-I think you should fix the code you're building so that it creates a
-relative symlink.
-
-Dropping SRCREV_FORMAT is a workaround to make the path shorter, not a real
-fix for the actual problem.
-
-Alex
-
-On Fri, 17 Apr 2020 at 22:11, Abhishek Shah via lists.openembedded.org
-<abhishek.shah=broadcom.com@lists.openembedded.org> wrote:
-
-> I just checked that we have mentioned commit in yocto we are using.
->
-> Could you please confirm, with this in place, is there no need to keep on
-> updating SRCREV_FORMAT
-> when new SRC_URI is added in the recipe?
-> Rather, can we just skip setting this variable for multiple source bitbake
-> recipe? 
->
-
---000000000000bd85e005a38257af
-Content-Type: text/html; charset="UTF-8"
+--ONSyP0jdU2jCo9M3LokO
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>I think you should fix the code you&#39;re building s=
-o that it creates a relative symlink. <br></div><div><br></div><div>Droppin=
-g SRCREV_FORMAT is a workaround to make the path shorter, not a real fix fo=
-r the actual problem.<br></div><div><br></div><div>Alex<br></div></div><br>=
-<div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, 17=
- Apr 2020 at 22:11, Abhishek Shah via <a href=3D"http://lists.openembedded.=
-org">lists.openembedded.org</a> &lt;abhishek.shah=3D<a href=3D"mailto:broad=
-com.com@lists.openembedded.org">broadcom.com@lists.openembedded.org</a>&gt;=
- wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px =
-0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">I just c=
-hecked that we have mentioned commit in yocto we are using.<br><br>Could yo=
-u please confirm, with this in place, is there no need to keep on updating =
-SRCREV_FORMAT<br>when new SRC_URI is added in the recipe?<br>Rather, can we=
- just skip setting this variable for multiple source bitbake recipe?
-<br>
-</blockquote></div>
+Thanks.
 
---000000000000bd85e005a38257af--
+FYI, here is the example directory and its symlink:
+directory path:
+'/tmp/yocto_builds/ 20133855_ genericx86-64/poky/build/tmp/work/
+aarch64-poky-linux/brcm-zephyr/gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30=
+_f3635d87f4_90d93a11ba_ae871b61ae_5ba575618e-r0/git/
+zephyr/include/arch/arm/aarch32/cortex_m/mpu'
+
+It's symlink created by subfolder_list.py:
+'/tmp/yocto_builds/ 20133855_ genericx86-64/poky/build/tmp/work/
+aarch64-poky-linux/brcm-zephyr/gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30=
+_f3635d87f4_90d93a11ba_ae871b61ae_5ba575618e-r0/git/
+zephyr/samples/hello_world/build_soc/zephyr/misc/generated/syscalls_links/
+_tmp_yocto_builds_20133855_genericx86-64_poky_build_tmp_work_aarch64-poky-=
+linux_brcm-zephyr_gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30_f3635d87f4_90=
+d93a11ba_ae871b61ae_5ba575618e-r0_git_zephyr_include_arch_arm_aarch32_corte=
+x_m_mpu'
+
+I have dropped an mail to community to take it further in direction of red=
+ucing symlink length:
+https://lists.zephyrproject.org/g/devel/message/6944
+
+Regards,
+Abhishek
+
+--ONSyP0jdU2jCo9M3LokO
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Thanks.<br /><br />FYI, here is the example directory and its symlink:<br /=
+>
+<div>directory path:</div>
+<div>'/tmp/yocto_builds/ 20133855_ genericx86-64/poky/build/tmp/work/<br /=
+>aarch64-poky-linux/brcm-zephyr/gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30=
+_f3635d87f4_90d93a11ba_ae871b61ae_5ba575618e-r0/git/<br />zephyr/include/ar=
+ch/arm/aarch32/cortex_m/mpu'</div>
+<div>&nbsp;</div>
+<div>It's symlink created by subfolder_list.py:</div>
+<div>&nbsp;'/tmp/yocto_builds/ 20133855_ genericx86-64/poky/build/tmp/work=
+/<br />aarch64-poky-linux/brcm-zephyr/gitAUTOINC+a20a30cd86_bfa48a337e_dbbf=
+7c9b30_f3635d87f4_90d93a11ba_ae871b61ae_5ba575618e-r0/git/<br />zephyr/samp=
+les/hello_world/build_soc/zephyr/misc/generated/syscalls_links/<br />_tmp_y=
+octo_builds_20133855_genericx86-64_poky_build_tmp_work_aarch64-poky-linux_b=
+rcm-zephyr_gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30_f3635d87f4_90d93a11b=
+a_ae871b61ae_5ba575618e-r0_git_zephyr_include_arch_arm_aarch32_cortex_m_mpu=
+'</div>
+<div>&nbsp;</div>
+I have dropped an mail to community to take it further in direction of red=
+ucing symlink length:<br /><a href=3D"https://lists.zephyrproject.org/g/dev=
+el/message/6944">https://lists.zephyrproject.org/g/devel/message/6944</a><b=
+r /><br />Regards,<br />Abhishek
+
+--ONSyP0jdU2jCo9M3LokO--
