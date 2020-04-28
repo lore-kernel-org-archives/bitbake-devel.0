@@ -1,71 +1,70 @@
-Subject: Re: Significance of "SRCREV_FORMAT" variable for multiple sources fetch
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+ by mx.groups.io with SMTP id smtpd.web11.238.1588040245852769822
+ for <bitbake-devel@lists.openembedded.org>;
+ Mon, 27 Apr 2020 19:17:25 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=E9S5GwqE;
+ spf=pass (domain: gmail.com, ip: 209.85.216.50, mailfrom: akuster808@gmail.com)
+Received: by mail-pj1-f50.google.com with SMTP id a32so450536pje.5
+        for <bitbake-devel@lists.openembedded.org>; Mon, 27 Apr 2020 19:17:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=CcPRIGLy2eXNQC6hrFVxofFexDoyy+z8r2HHFQCuL9k=;
+        b=E9S5GwqESVxYR2m+8k1u/BgvHZ/nTK0u+Ml0v0iNEOKcR5LJkwgXCNvQusC9td4rA3
+         ZCoUZ2/GVKjgwmRFloXTzfRbeGx1eVrBnIs1HbTjb5vCEv0I/9HYimZHcwCFg1JktQn0
+         Rum54yitPud+BVHdmca1ZIjLCbBNHDonKvBrhFF0GFp5fsrREhhbEFYvGcx9YMYMyz9J
+         0hUNAo18UGa7EBfoB4Suli7WDSLfNMtg/hhjXXzpDyVyAQh41MG90DboE6nSgErL/Z+V
+         nniv70BCFZXcQE91kDegmXJxDE7YuDhyCBjtx4h9yGr1e0upb5a2PE3xAm7opA9M01RL
+         58Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=CcPRIGLy2eXNQC6hrFVxofFexDoyy+z8r2HHFQCuL9k=;
+        b=s3LEbdzBa7IqI4MSJh+IuonmRY1VUNYPaUo9GSa4n0G/HAtPV1lbUm2aJXlVGAHaGp
+         U3vewmifDdNljgCPZX7EieOTRBDzgCDBvSpOGoslLemKRupGnadM5yepGkl1/3x0pVuu
+         dy/EgAtJqExz6KWM3R8JOYqNLQNTWaNBDb5cG7QNC1gQBv/xbPjg8YFSTZE++2Wf2Psb
+         gKnGcz6ZCUlqvlBC7wYnoqH5/yiUa7iyeCY4/pdwwJU8B5gxpa29S5hljSVDpNssOaHR
+         UVUUBRAatCFxsO5/7tQ1BuT1WoSR8Fl6zuKJPPhjjwX6eDZ4McSrOYuHfFHHWcpyOb24
+         xb6A==
+X-Gm-Message-State: AGi0PuauK5Kc4aW7cahStDKTEiCpqyTg2yqPa9JLtazYQfkcpEVW0YtG
+	7B6bK914P+gMbNfmorD/2cUb0sO4
+X-Google-Smtp-Source: APiQypIZNn2D7GQ93Ywqe7yhpuG8k5d/Mtt6LYUtsCAvJBbCLK05B7Kqp3MtxCUpaujKSfy97FaoOw==
+X-Received: by 2002:a17:90a:2949:: with SMTP id x9mr2160999pjf.33.1588040245220;
+        Mon, 27 Apr 2020 19:17:25 -0700 (PDT)
+Return-Path: <akuster808@gmail.com>
+Received: from akuster-ThinkPad-T460s.mvista.com ([2601:202:4180:a5c0:f1bf:759e:e8cd:49cd])
+        by smtp.gmail.com with ESMTPSA id c63sm9820866pfc.2.2020.04.27.19.17.24
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 19:17:24 -0700 (PDT)
+From: "akuster" <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-From: "Abhishek Shah" <abhishek.shah@broadcom.com>
-X-Originating-Location: Bengaluru, Karnataka, IN (103.252.25.193)
-X-Originating-Platform: Windows Chrome 80
-User-Agent: GROUPS.IO Web Poster
-MIME-Version: 1.0
-Date: Sat, 18 Apr 2020 13:00:22 -0700
-References: <CANNYZj_xP2UtR5Ohx5ufGv5UZHQjR51+iTashoPckm-C3BWHkw@mail.gmail.com>
-In-Reply-To: <CANNYZj_xP2UtR5Ohx5ufGv5UZHQjR51+iTashoPckm-C3BWHkw@mail.gmail.com>
-Message-ID: <2736.1587240022802553223@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="ONSyP0jdU2jCo9M3LokO"
+Subject: [1.44 0/3] Merge request
+Date: Mon, 27 Apr 2020 19:17:19 -0700
+Message-Id: <cover.1587931627.git.akuster808@gmail.com>
+X-Mailer: git-send-email 2.17.1
 
---ONSyP0jdU2jCo9M3LokO
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Please consider these changes for 1.44.
 
-Thanks.
+The following changes since commit 6836184ef5220488a1127413c7d2e523fc37e2e9:
 
-FYI, here is the example directory and its symlink:
-directory path:
-'/tmp/yocto_builds/ 20133855_ genericx86-64/poky/build/tmp/work/
-aarch64-poky-linux/brcm-zephyr/gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30=
-_f3635d87f4_90d93a11ba_ae871b61ae_5ba575618e-r0/git/
-zephyr/include/arch/arm/aarch32/cortex_m/mpu'
+  lib/bb/utils.py: Preserve ownership of symlink (2020-03-06 17:25:10 +0000)
 
-It's symlink created by subfolder_list.py:
-'/tmp/yocto_builds/ 20133855_ genericx86-64/poky/build/tmp/work/
-aarch64-poky-linux/brcm-zephyr/gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30=
-_f3635d87f4_90d93a11ba_ae871b61ae_5ba575618e-r0/git/
-zephyr/samples/hello_world/build_soc/zephyr/misc/generated/syscalls_links/
-_tmp_yocto_builds_20133855_genericx86-64_poky_build_tmp_work_aarch64-poky-=
-linux_brcm-zephyr_gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30_f3635d87f4_90=
-d93a11ba_ae871b61ae_5ba575618e-r0_git_zephyr_include_arch_arm_aarch32_corte=
-x_m_mpu'
+are available in the Git repository at:
 
-I have dropped an mail to community to take it further in direction of red=
-ucing symlink length:
-https://lists.zephyrproject.org/g/devel/message/6944
+  git://git.openembedded.org/bitbake-contrib stable/1.44-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.44-next
 
-Regards,
-Abhishek
+Peter Kjellerstedt (3):
+  knotty: Make the bb.command.CommandExit event terminate bitbake
+  fetch2: Make fetcher_compare_revisions() work
+  fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
 
---ONSyP0jdU2jCo9M3LokO
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+ lib/bb/fetch2/__init__.py | 51 +++++++++++++++++++++------------------
+ lib/bb/ui/knotty.py       |  1 +
+ 2 files changed, 29 insertions(+), 23 deletions(-)
 
-Thanks.<br /><br />FYI, here is the example directory and its symlink:<br /=
->
-<div>directory path:</div>
-<div>'/tmp/yocto_builds/ 20133855_ genericx86-64/poky/build/tmp/work/<br /=
->aarch64-poky-linux/brcm-zephyr/gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30=
-_f3635d87f4_90d93a11ba_ae871b61ae_5ba575618e-r0/git/<br />zephyr/include/ar=
-ch/arm/aarch32/cortex_m/mpu'</div>
-<div>&nbsp;</div>
-<div>It's symlink created by subfolder_list.py:</div>
-<div>&nbsp;'/tmp/yocto_builds/ 20133855_ genericx86-64/poky/build/tmp/work=
-/<br />aarch64-poky-linux/brcm-zephyr/gitAUTOINC+a20a30cd86_bfa48a337e_dbbf=
-7c9b30_f3635d87f4_90d93a11ba_ae871b61ae_5ba575618e-r0/git/<br />zephyr/samp=
-les/hello_world/build_soc/zephyr/misc/generated/syscalls_links/<br />_tmp_y=
-octo_builds_20133855_genericx86-64_poky_build_tmp_work_aarch64-poky-linux_b=
-rcm-zephyr_gitAUTOINC+a20a30cd86_bfa48a337e_dbbf7c9b30_f3635d87f4_90d93a11b=
-a_ae871b61ae_5ba575618e-r0_git_zephyr_include_arch_arm_aarch32_cortex_m_mpu=
-'</div>
-<div>&nbsp;</div>
-I have dropped an mail to community to take it further in direction of red=
-ucing symlink length:<br /><a href=3D"https://lists.zephyrproject.org/g/dev=
-el/message/6944">https://lists.zephyrproject.org/g/devel/message/6944</a><b=
-r /><br />Regards,<br />Abhishek
+-- 
+2.17.1
 
---ONSyP0jdU2jCo9M3LokO--
