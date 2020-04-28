@@ -1,75 +1,177 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web12.4412.1588068211744984788
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+ by mx.groups.io with SMTP id smtpd.web10.1002.1588097458183365273
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 28 Apr 2020 03:03:32 -0700
+ Tue, 28 Apr 2020 11:10:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aVZAK6lt;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.67, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f67.google.com with SMTP id t14so23889527wrw.12
-        for <bitbake-devel@lists.openembedded.org>; Tue, 28 Apr 2020 03:03:31 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=oYlQ+Z41;
+ spf=pass (domain: gmail.com, ip: 209.85.208.66, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ed1-f66.google.com with SMTP id s10so17140988edy.9;
+        Tue, 28 Apr 2020 11:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=+E+RY4y1/qZa7tWRYSiD3z+uJI891ILaj6DUekEmW70=;
-        b=aVZAK6ltNJzfBSO3ezmJxi/deBmF5SrlJ+AcPF7DyRchEDrFOYHHQwuZUEXOACo35D
-         rMVuc3CyNQo45JmYvsCxFR78ZmTT36e7bUerrzJlUWIlyfRXhPrzTs4VAygPoZpxQl4p
-         eCYvAbYKa+vGxlVeMy7018CI7lVKMDZqcbobw=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vQwzqE5uHcbqN5g1WDAzwZ97LhNcUaMpIQFIdJ7CPp0=;
+        b=oYlQ+Z41QbjuAVuSbdSqcK5vJ1bv92pLbr2Ws7P6WpNydKAsF5FKNvS6WiyRRNrnI8
+         6wJTPebjauvD9ry6gbOhWZIwXQXJm3OR5QD8sv5EHpnXbKsfwnzmI/OSbIsvc3eyl4PM
+         TNYTC4jKoKJxHvWDWYbH5VX+RFm9kjXfWsKg6XCiNhfrFCVkTfcMvwRYNTKbYqUkMdLV
+         FH9iT//Q8DMn6sD8ojQCLphWYOlosoQ4DMEc6V3gDg+FkIu1/qGV5Rm4/gnhGkX6Ya6r
+         /nx3danscbejHi10CztWuI7w/EOs1bZN/I5mOXbPzp9s2gotPhf7IftueN0mYJIRjoBY
+         hYmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=+E+RY4y1/qZa7tWRYSiD3z+uJI891ILaj6DUekEmW70=;
-        b=GpOYGGwOcNHfZT2OE6Sym06Cvh2Jp6JE+jlAVmoXW7+DlsaO0wDx1A4CGSxOWdT/TN
-         tzclG9mUlPx7N6IB6OcwCTF/KUuHQx9C5qAfI22YT1tvmomkrxeHln1jJpGhMh6Q+5pj
-         iWCa5fWoyU6/WPj30JFbRdVgCeUVErvTK80fk6KwvA0izlhN4jKMG3IzQ2CTItG4OCAd
-         4UHJgWkJ5Hu8g97nbPapl66FsjtjgiUEIHNbD9qxqiqw2sWWxzDKgPGGFpDPG3Ev2JMv
-         8bzZOhWe4in0VkCYdiBaOWZjOinKUCCR1BQAGW/Tv/yfCWuhvSQRoLbG/Cr06viRfVMU
-         aERA==
-X-Gm-Message-State: AGi0Pubn8Xf7gs/pOgjjO3FfSZfsYDyxgkQfoeTojf7/BhXf9phS0V8t
-	eUvGQ4vI3rT0DcBxAgUNuIE0eQ==
-X-Google-Smtp-Source: APiQypLG48qLDpYW6eulYEuJQ4dOPnugRxxtRieKPLyruZbpWux3i8D3iUQ4JIR8C/YjQ4C8UCMitw==
-X-Received: by 2002:adf:f5ce:: with SMTP id k14mr34967115wrp.39.1588068210172;
-        Tue, 28 Apr 2020 03:03:30 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id y7sm2765303wmb.43.2020.04.28.03.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 03:03:29 -0700 (PDT)
-Message-ID: <8847750bf3a00ee08c38dc6c2c192d3ddff73928.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [1.44 3/3] fetch2: Allow ${AUTOREV} to be used when BB_SRCREV_POLICY is "cache"
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: akuster <akuster808@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Tue, 28 Apr 2020 11:03:28 +0100
-In-Reply-To: <282920d985d63db6f2284718dc3db2196c6fbf6f.1587931627.git.akuster808@gmail.com>
-References: <cover.1587931627.git.akuster808@gmail.com>
-	 <282920d985d63db6f2284718dc3db2196c6fbf6f.1587931627.git.akuster808@gmail.com>
-User-Agent: Evolution 3.36.1-2 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vQwzqE5uHcbqN5g1WDAzwZ97LhNcUaMpIQFIdJ7CPp0=;
+        b=YBY9XAc5JUr+Kx0lZlCZ2/y7+3nxkhxIKpdA7+yCTYt7HJGpBbBw0o+laKT7zYZshN
+         YZxONQ1z/gj2nXSsPkYgO5s6psdKt52jcjpVzP0Jqgea3+d9ab5QtyBTkOrP9MAm2u0c
+         HHWoJRiOhDNvcej8jDE1vY7C2db4zfmHVdwk5T3RQpqm7EJ6GXCHYijz4Dp9Lpm17+A+
+         2fv1z1UShGrposBE+ul4ZzYIOCPrhDjhKfkWgce3+6nrKFswjpAPvRZsJlEQquwTK2AT
+         eSo5bdncJeegumk5puu2UUAIgQlPDg5siqc/XqZ8+/l4n2zIxyKUXnDF8VSF9jqGXOrN
+         3MWg==
+X-Gm-Message-State: AGi0Pua/oQTUpH/bZIZk/HSI4gZ/XH7ypctVfnW/47Ot+s/v0V0dbS5F
+	z7LQ9Cqbuonzlt0j+QLlvy2KHhBjKYoTfpiJ+jI=
+X-Google-Smtp-Source: APiQypJLcCXUblnqEMxMfaBnr3W8a+U5ePcMwm/i/9jID76QSEBbbrV9/nTlh6B3QoYugrNBCba81mQRfxK/m32xqGE=
+X-Received: by 2002:aa7:cdcb:: with SMTP id h11mr22696080edw.264.1588097456579;
+ Tue, 28 Apr 2020 11:10:56 -0700 (PDT)
 MIME-Version: 1.0
+References: <15FBEF1FC40D189D.8114@lists.yoctoproject.org> <81fb73b4-f683-5356-ff07-1ac909afb97d@gmail.com>
+In-Reply-To: <81fb73b4-f683-5356-ff07-1ac909afb97d@gmail.com>
+From: "Martin Jansa" <Martin.Jansa@gmail.com>
+Date: Tue, 28 Apr 2020 20:10:45 +0200
+Message-ID: <CA+chaQc8q4Nb4p76WPr=R7ocpDJ8CY3VnJ-k9W8bWW8nwMtYTw@mail.gmail.com>
+Subject: Re: [poky] Thud community support
+To: akuster <akuster808@gmail.com>
+Cc: Patches and discussions about the oe-core layer <openembedded-core@lists.openembedded.org>, 
+	"yocto@yoctoproject.org" <yocto@yoctoproject.org>, "poky@yoctoproject.org" <poky@yoctoproject.org>, 
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, poky@lists.yoctoproject.org
+Content-Type: multipart/alternative; boundary="000000000000c4aa0c05a45dc080"
+
+--000000000000c4aa0c05a45dc080
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Mon, 2020-04-27 at 19:17 -0700, akuster wrote:
-> From: Peter Kjellerstedt <pkj@axis.com>
+Is Thud EOL now?
+
+Or did someone volunteer off-list and now it waits for Maintainer selection
+process to be defined?
+
+https://wiki.yoctoproject.org/wiki/Releases still says Community support.
+
+Thanks
+
+On Tue, Mar 17, 2020 at 10:13 PM akuster <akuster808@gmail.com> wrote:
+
+>
+>
+> On 3/13/20 11:03 AM, akuster via Lists.Yoctoproject.Org wrote:
+>
+> The Poky thud branch is now under 'Community support' and is seeking a
+> maintainer to continue supporting the following repos for the thud release:
+>
+> bitbake, core, meta-yocto and yocto-docs.
+>
+>
+> There will be no more point releases.
+>
+> seehttps://wiki.yoctoproject.org/wiki/Stable_Release_and_LTS#Maintainer_Procedures
+> to get an idea on what is expected.
+>
+> The one thing we (YP) don't know is if there will be AutoBuilder
+> resources available.  Please contact me or Richard regarding that statement.
+>
+> If no one steps up by April 24th (six weeks -ish from now), Thud will be
+> moved to EOL status.
+>
+>
+> It was pointed out to me that there is no Maintainer selection process or
+> criteria defined.  This  will have to be sorted out before we move forward
+> on this transition.
+>
+>
+> - armin
+>
+> - Armin
+>
+>
+>
+>
+>
+>
 > 
-> Mark any keys used to cache the srcrevs for a recipe as "dontcache" if
-> BB_DONT_CACHE is set for the recipe. Remove any such keys upon the
-> next bitbake run even if BB_SRCREV_POLICY is set to "cache". This will
-> make sure the srcrev is updated as expected if ${AUTOREV} is used.
-> 
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> (cherry picked from commit ba093a38539960e645e994a66ed7872a604c00a9)
-> Signed-off-by: Armin Kuster <akuster808@gmail.com>
-> ---
->  lib/bb/fetch2/__init__.py | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
+>
 
-This was later reverted, so no:
+--000000000000c4aa0c05a45dc080
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-http://git.yoctoproject.org/cgit.cgi/poky/commit/bitbake?id=12fc1c5637bca79a7a5735d9a8e819aefd0dd19b
+<div dir=3D"ltr">Is Thud EOL now?<div><br></div><div>Or did someone volunte=
+er off-list and now it waits for Maintainer selection process to be defined=
+?</div><div><br></div><div><a href=3D"https://wiki.yoctoproject.org/wiki/Re=
+leases">https://wiki.yoctoproject.org/wiki/Releases</a>=C2=A0still says Com=
+munity support.<br></div><div><br></div><div>Thanks</div></div><br><div cla=
+ss=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Mar 17, 20=
+20 at 10:13 PM akuster &lt;<a href=3D"mailto:akuster808@gmail.com">akuster8=
+08@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" styl=
+e=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddin=
+g-left:1ex">
+  
+    
+  
+  <div>
+    <br>
+    <br>
+    <div>On 3/13/20 11:03 AM, akuster via
+      <a href=3D"http://Lists.Yoctoproject.Org" target=3D"_blank">Lists.Yo=
+ctoproject.Org</a> wrote:<br>
+    </div>
+    <blockquote type=3D"cite">
+      <pre>The Poky thud branch is now under &#39;Community support&#39; a=
+nd is seeking a
+maintainer to continue supporting the following repos for the thud release=
+:
 
-Cheers,
+bitbake, core, meta-yocto and yocto-docs.
 
-Richard
 
+There will be no more point releases.
+
+see
+<a href=3D"https://wiki.yoctoproject.org/wiki/Stable_Release_and_LTS#Maint=
+ainer_Procedures" target=3D"_blank">https://wiki.yoctoproject.org/wiki/Stab=
+le_Release_and_LTS#Maintainer_Procedures</a>=C2=A0
+to get an idea on what is expected.
+
+The one thing we (YP) don&#39;t know is if there will be AutoBuilder
+resources available.=C2=A0 Please contact me or Richard regarding that sta=
+tement.
+
+If no one steps up by April 24th (six weeks -ish from now), Thud will be
+moved to EOL status.
+</pre>
+    </blockquote>
+    <br>
+    It was pointed out to me that there is no Maintainer selection
+    process or criteria defined.=C2=A0 This=C2=A0 will have to be sorted o=
+ut
+    before we move forward on this transition.<br>
+    <br>
+    <br>
+    - armin<br>
+    <br>
+    <blockquote type=3D"cite">
+      <pre>- Armin
+
+
+
+</pre>
+      <br>
+      <fieldset></fieldset>
+      <pre></pre>
+    </blockquote>
+    <br>
+  </div>
+
+<br>
+</blockquote></div>
+
+--000000000000c4aa0c05a45dc080--
