@@ -1,96 +1,87 @@
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web11.1076.1588117954158118503
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web12.1539.1588140506163619611
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 28 Apr 2020 16:52:35 -0700
+ Tue, 28 Apr 2020 23:08:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=CmKETI0P;
- spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=MpdDLEGD;
+ spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: andrey.z@gmail.com)
+Received: by mail-wm1-f54.google.com with SMTP id x25so609380wmc.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 28 Apr 2020 23:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1407; q=dns/txt; s=axis-central1;
-  t=1588117954; x=1619653954;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=BxVBxamllLwZ2hrbvPJgjw9ox+ZuWkdEEezn3uw51oU=;
-  b=CmKETI0PrL34rSRNJgwvBCHq7Lk+osS5x+2GqiuJieinQYYlqCAiebMD
-   y4ixbzqCxNt0hT6nVNN2JKbnks+nJjOGcq238KN/z/T4fOvBjF0D7h3oW
-   WZQUiRckk0fCykzwh3wlPVO8GbaeB/9gWGW9lsBE7DxdgIYITSW5x1uXa
-   k79D8XzTUHgiE73+1AFihwauk7A+4VfJiFy+Pq8nwrUyKppqzorLLiRVm
-   6YWDW095u6+6gyEV2K4eAw/HR9qnoLB9VBianazQXCwQ57tjHJ/uAhgAD
-   bIM6iaDKWY1DQQAurVrEZ6hGbD/8t7ctWACcY9F4QC0u2lh9+3yqg/5AP
-   Q==;
-IronPort-SDR: /I6FjoE23HypiBACc6Tkj5ZqmJpptHH8lhl3bzCxppL9RqK4f4ZTpK3/EIZ+DWwhB5MMTfdOP2
- s5w/XDnZjXxluTBdX768h2GeVif6kfC6+0l90pptyzNrw8udBze9ixV8g9g6COMc0Q9k6kjfqc
- rmP4n6cYZDVna0j2bcGJ0UL+uGahRkhM4296v7xQtwD79fqpX4wq/DliM+TeoYSPKL+6hxSBUc
- Hw34lcQmTITM/8ck2sb7zgj9quRSAL8xYBrZAcPewXgdbk6/HjxVIW6Secd1PjBg84SOLQ9l0o
- gTs=
-X-IronPort-AV: E=Sophos;i="5.73,328,1583190000"; 
-   d="scan'208";a="8190946"
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Mauro Ziliani <mauro@faresoftware.it>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] Skipping recipe.bb or recipes.bbappend
-Thread-Topic: [bitbake-devel] Skipping recipe.bb or recipes.bbappend
-Thread-Index: AQHWHaV7bg7zCt9H+0CLDGPwSgJSaqiPMwGQ
-Date: Tue, 28 Apr 2020 23:52:30 +0000
-Message-ID: <9f8360317f2c4850a3861f0e091da896@XBOX03.axis.com>
-References: <d744891c-c4a6-9567-e042-d3e33f84805b@faresoftware.it>
-In-Reply-To: <d744891c-c4a6-9567-e042-d3e33f84805b@faresoftware.it>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tBfvQgYa4DDch8U0S4kjj4Zj18QaqfjEvJLEK+qrzx4=;
+        b=MpdDLEGD9QaVEh9+qbJvRRHQ1KKf5gl8BFTrwPKf8ADT8xBsJE2ZGN4+KFy09rM0tt
+         ziLsfW59RRFDsim5tgPZYktWGm7wcwTvdcOpEgYuBWeZCiLwS6WTVAedXwqH9WjvTZBO
+         kwW7N9J5AonOb7RsCtpVYHvjV91AU7tkLxbPNHoW3YZ1R3kT9MMonOFK9mQm332uv9ZT
+         OKMxnEIyv+0FRnCFJCd0EmfRegxaBhzqXl9IHZK7j8kkCZWqdYqVIzJWsGB9YIsFfrZR
+         O31hduZOf8zShFZhv2nW8eeqG8SiyDEXmLtQFw5l4qfWt8S273VPfcGWtiNZfXXtwN3O
+         jSQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tBfvQgYa4DDch8U0S4kjj4Zj18QaqfjEvJLEK+qrzx4=;
+        b=Vs/7b9LeOH9RIixK3bXS02cP2X+KFgUlggslshB8gFhNDeiTPjExshoN4qutfrWX0T
+         TfYCHtz0aDWEyjpKzMH4SyoBpJ2jSLX+S3xnD4EsE6BOGl57vc3uEFNnUzD2ZhHgoPcO
+         5LPGR37WzW2enh2EEobZVgr13ldTpCfCK4qyL2pMYYARiDtd/08Q39ssb7s2whtmwXJy
+         0Ucjizz2icuBjvGE1/8HjqryXLHN4BMv1ptmDH6+UAVmydw43TOSePTgcWH2TCH89mVC
+         XgBYFwJOB/LRd+njaAiE2VxwLss8omF7RT8rkyejE1Mq2YjomnvicN/bGRYbgk1vxPDX
+         0Idw==
+X-Gm-Message-State: AGi0PuYhVx1lmsoRVUocHaODub5AemUxk9vIp68nPqyunWQFHqHPJpkL
+	aQjr2WXlWF5WGilDiz24C6Ek09gclJaprZQR80A=
+X-Google-Smtp-Source: APiQypLqYsnnq4iksD7xmdyU4N/p/mneVlQE7+vHGKQRgje/nl3vYwt0cigM7HD3iib8UHxtmeodZmipbh1ZlSPUlR0=
+X-Received: by 2002:a1c:59c3:: with SMTP id n186mr1254480wmb.24.1588140504513;
+ Tue, 28 Apr 2020 23:08:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+References: <CAHtQpK54tCZf3PHY657cjARhj_j2X6SM834yybiCyk2EPO2Srg@mail.gmail.com>
+ <SN1PR12MB24804AF999291543ACA14B9C8BAC0@SN1PR12MB2480.namprd12.prod.outlook.com>
+In-Reply-To: <SN1PR12MB24804AF999291543ACA14B9C8BAC0@SN1PR12MB2480.namprd12.prod.outlook.com>
+From: "Andrey Zhizhikin" <andrey.z@gmail.com>
+Date: Wed, 29 Apr 2020 08:08:13 +0200
+Message-ID: <CAHtQpK44OMPm45otKBMZR1CTxb0uaw8GQE5+YRwSgFvcay8AmQ@mail.gmail.com>
+Subject: Re: ui/teamcity plugin is broken on master
+To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Mauro Ziliani
-> Sent: den 28 april 2020 23:39
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] Skipping recipe.bb or recipes.bbappend
->=20
-> Hi all.
->=20
-> I developed a small app for Yocto Pyro on IMX6DL, engicam platform
->=20
-> Now I'd like to port the same layer to openstlinux stm32mp1.
->=20
->=20
-> Some recipe.bbappend cannot be use with openstlinux layers because the
-> "mother" recipe.bb is missing.
->=20
->=20
-> How can I skip the recipes.bbappend uneeded?
->=20
-> i.e.
->=20
-> Engicam give me the recipe engicam-linux-fslc.bb and I addes
-> engicam-linux-fslc.bbappend
->=20
-> Now in openstlinux engicam-linux-fslc.bb doesn't exists and I need skip
-> the .bbappend.
->=20
->=20
-> Which is the right mode to skip engicam-linux-fslc.bbappend if I use my
-> layer in openstlinux?
->=20
->=20
-> Thanks to all
->=20
->=20
-> MZ
+Hi Chris,
 
-You can use BBFILES_DYNAMIC to make your bbappend file available=20
-depending on the presence of the engicam layer with the=20
-engicam-linux-fslc.bb recipe. See meta-oe for an example of=20
-BBFILES_DYNAMIC in action.
+On Wed, Apr 29, 2020 at 12:07 AM chris.laplante@agilent.com
+<chris.laplante@agilent.com> wrote:
+>
+> Hi Andrey,
+>
+> > It looks like those filters (BBLogFilterStdOut and BBLogFilterStdErr) were
+> > dropped with the commit 143685de1b9b0386a4dc8d404bdf342b45b7c030
+> > in upstream, so the plugin should have a great deal of rework now...
+> >
+> > I was able to bring it back to life by removing following lines from
+> > [bitbake/lib/bb/ui/teamcity.py]:
+> > -    bb.msg.addDefaultlogFilter(console, bb.msg.BBLogFilterStdOut,
+> > forcelevel)
+> > -    bb.msg.addDefaultlogFilter(errconsole, bb.msg.BBLogFilterStdErr)
+> >
+> > But that modification is considered a hack and I would not even dare to send
+> > a patch for this.
+> >
+> > I was wondering if anyone already had the same issue and is there a plan to
+> > update the teamcity UI plugin to use new log filter mechanisms (like knotty
+> > currently does)?
+>
+> I will try to get around to fixing it on master soon (but no guarantees). We are still on zeus at work - that's why it slipped my mind.
 
-Alternatively you can use BBMASK to instruct bitbake to ignore=20
-certain recipes and/or bbappend files. Notice that BBMASK is=20
-made up of regular expressions.
+Thanks for the update!
 
-//Peter
+I recently switch from zeus and this was how I had it discovered. I
+would switch the UI plugin back to knotty for my Team City and wait
+for fix on the master.
 
+>
+> Thanks,
+> Chris
+
+-- 
+Regards,
+Andrey.
