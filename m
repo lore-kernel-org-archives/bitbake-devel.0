@@ -1,288 +1,595 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
- by mx.groups.io with SMTP id smtpd.web11.2618.1588172003734716868
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web11.3816.1588174813074201878
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 29 Apr 2020 07:53:23 -0700
+ Wed, 29 Apr 2020 08:40:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=LPk1r2W+;
- spf=pass (domain: gmail.com, ip: 209.85.214.182, mailfrom: akuster808@gmail.com)
-Received: by mail-pl1-f182.google.com with SMTP id f8so924615plt.2;
-        Wed, 29 Apr 2020 07:53:23 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Yi5syWfh;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f65.google.com with SMTP id x4so2561843wmj.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 29 Apr 2020 08:40:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language;
-        bh=2RuV1L/3XvCiRbtORxc8zZvktnSaBZ0CgHrnyIimmNM=;
-        b=LPk1r2W+uCWybVrXd/dSkJGKaLbOdeukURnrVaahRyOp+cd6fpY2MojHHuYbrg+cgk
-         CDRDWaVe7CbTXa6FLeeVje/w/GICqAaI5Jul/5U7spe3T1zjd9lnpBUmJs2MCxa2M68W
-         ZzvkELaRiLgw8sp0g+tLnfGW6iWVIQeZla8zwxVpoLg6VNDd76c/0Xh4oN+BpYu3fX6H
-         iL3T35nTkI5toQeCrt6YexrYqxKMNvKPJ7nELSNDlY7RmFqNK13uQTLVXhxV6LI/N4mJ
-         I16KaLjLMk5V66KAsx7KddjOgshiGZO067q12M/ipTUVIiS6mGU8p6wqUTFK9EKq4h4q
-         posg==
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e3f9LqwweDPZ/zXr8O/zYbvFOPwcm2L0qamVjPEha3E=;
+        b=Yi5syWfhsPY5cnaH5PPhrmYZ1Wj1S1JPSGLMJjBhT3J5lHJAQx2q9zeiTG8mS+IPP4
+         2jPb+3ipeqk8eiyAwaaGNJLyJn+ahDrrbdQN0x5I3E2xXIrK4p53F1eqNtCW4up5oNSa
+         MueSYVoLt1xjyTUQ4lZKAM6aCs0OblN3899NM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language;
-        bh=2RuV1L/3XvCiRbtORxc8zZvktnSaBZ0CgHrnyIimmNM=;
-        b=SSGwo/Otn9P5di1C/gTXkQAbGaaPqty4kLu00DrFi7JUhkEbmChPdEG2VD8a0VIz6c
-         bjXLOkI+AmZYaCfEFyLbain43lFRrqwkXFW1c2mIiT+gwca/L6eWvT3id2CowyvDDvKo
-         x5GZig01lisQH4i1U96HBf2dfep5cwRGYa0cJH4JTBBKE64r1412Enf/93hGtFAprmId
-         zKRzGX9gtFHfosLDRApvFPIJVujMAzdJyWd7Mbi2BpuVataVLtfjGqk4UvbzLOs6JeQC
-         OIfBDceXR5tMGesfRhdi3OL9RMQU9mCKEWdRBfmQXax//9oBLQVRY1jqLRCQtRFeWC6H
-         dQPw==
-X-Gm-Message-State: AGi0PuYu7tATrX16FOb3OaJjdi3Fldz5shg+6OrzSqtuQa9kMNvS8T3Y
-	+wmuAjEWEuvmWSPgjk84izI=
-X-Google-Smtp-Source: APiQypI+8W1KlGvH+VxRbdG7E/r/9PdQJ+YoQ5lFauYpV1OkmAuuUIj6Lci3XeC8BsdxcUZ1sMqEpg==
-X-Received: by 2002:a17:90a:77c6:: with SMTP id e6mr3794392pjs.84.1588172002940;
-        Wed, 29 Apr 2020 07:53:22 -0700 (PDT)
-Return-Path: <akuster808@gmail.com>
-Received: from ?IPv6:2601:202:4180:a5c0:3c5d:7c09:562a:defe? ([2601:202:4180:a5c0:3c5d:7c09:562a:defe])
-        by smtp.gmail.com with ESMTPSA id j13sm4973706pje.1.2020.04.29.07.53.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 07:53:22 -0700 (PDT)
-Subject: Re: [bitbake-devel] [poky] Thud community support
-To: Martin Jansa <Martin.Jansa@gmail.com>, akuster <akuster808@gmail.com>
-Cc: Patches and discussions about the oe-core layer
- <openembedded-core@lists.openembedded.org>,
- "yocto@yoctoproject.org" <yocto@yoctoproject.org>,
- "poky@yoctoproject.org" <poky@yoctoproject.org>,
- "bitbake-devel@lists.openembedded.org"
- <bitbake-devel@lists.openembedded.org>, poky@lists.yoctoproject.org
-References: <15FBEF1FC40D189D.8114@lists.yoctoproject.org>
- <81fb73b4-f683-5356-ff07-1ac909afb97d@gmail.com>
- <CA+chaQc8q4Nb4p76WPr=R7ocpDJ8CY3VnJ-k9W8bWW8nwMtYTw@mail.gmail.com>
-From: "akuster" <akuster808@gmail.com>
-Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- 8CS2NxU=
-Message-ID: <dc37c701-80de-6719-8d8b-6d8dcd1771f4@gmail.com>
-Date: Wed, 29 Apr 2020 07:53:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e3f9LqwweDPZ/zXr8O/zYbvFOPwcm2L0qamVjPEha3E=;
+        b=aH6CA2WDM8v9uVih3GpFQakESwgT/bVPVG2Iq8PCIFUEkfTVyatyjdmfx94vIi1Y6L
+         OCMct3T+VVUw2mPSPFl3xp82SVEldKHPwW1sJbf/un7LtIFPj5SKG+UiD2q24UERZiNE
+         bXoIUDbyRdtvZEfpo1npt/YR9nzQRCe4GYE9cVEH2zbOHuHZP1J09BLFgNzX4ijS7DoX
+         5MQD+eX3aQmn4qkjniDAo3XkLAAM+2RUgmblE//5NRzBCcq/aAtYsZNBT23Sa+qsuuL8
+         QKNMTjUPEFYCxXhuSr1wB/v/d0cGqG18/riJi03eQbmP8WIhX3dBh+vEG0VF1Cpe5hFf
+         0Rzw==
+X-Gm-Message-State: AGi0PuZ4aYwwnwXY+3hPWh1JCTGnOAlBpefK9MBjFIjWcCT+U+AqJhaW
+	MOhJcwTy4ABJ3e45V0jXdc061vikPbA=
+X-Google-Smtp-Source: APiQypKvzlKvlYzjv3NFRBlUPeTafrBOO8Ybs3GYxepYRfqfYAuoiQKOi4ToLoUsbu3hTCjgzHzXOw==
+X-Received: by 2002:a7b:cb17:: with SMTP id u23mr3925843wmj.130.1588174810499;
+        Wed, 29 Apr 2020 08:40:10 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id u30sm30906264wru.13.2020.04.29.08.40.09
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 08:40:09 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] bitdoc: Remove it
+Date: Wed, 29 Apr 2020 16:40:08 +0100
+Message-Id: <20200429154008.1285749-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CA+chaQc8q4Nb4p76WPr=R7ocpDJ8CY3VnJ-k9W8bWW8nwMtYTw@mail.gmail.com>
-Content-Type: multipart/alternative;
- boundary="------------C2905E87FB9E46D7559EF363"
-Content-Language: en-US
-
---------------C2905E87FB9E46D7559EF363
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
+This script took a documentation.conf and generated an HTML index of
+each of the variables. The data in the yocto-docs manuals is now far
+superior to this. The script has bitrotted and doesn't run, hasn't for
+some time and wasn't reported until recently.
 
+Easiest is just to remove it as anyone would reimplement it quite
+differently now.
 
-On 4/28/20 11:10 AM, Martin Jansa wrote:
-> Is Thud EOL now?
-Go question.
+The referenced bug does have a patch which cleans up the code but I
+don't see value in keeping this around.
 
->
-> Or did someone volunteer off-list and now it waits for Maintainer
-> selection process to be defined?
-I received two inquires privately and forwarded them to Richard. I have
-not had time to document the community maintainer selection process. The
-ultimate decision will always be on the Repo maintainer which in this
-case is Richard.
+[YOCTO #13881]
 
-- armin
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ bin/bitdoc | 519 -----------------------------------------------------
+ 1 file changed, 519 deletions(-)
+ delete mode 100755 bin/bitdoc
 
-> https://wiki.yoctoproject.org/wiki/Releases still says Community support.
->
-> Thanks
->
-> On Tue, Mar 17, 2020 at 10:13 PM akuster <akuster808@gmail.com
-> <mailto:akuster808@gmail.com>> wrote:
->
->
->
->     On 3/13/20 11:03 AM, akuster via Lists.Yoctoproject.Org
->     <http://Lists.Yoctoproject.Org> wrote:
->>     The Poky thud branch is now under 'Community support' and is seeking a
->>     maintainer to continue supporting the following repos for the thud release:
->>
->>     bitbake, core, meta-yocto and yocto-docs.
->>
->>
->>     There will be no more point releases.
->>
->>     see
->>     https://wiki.yoctoproject.org/wiki/Stable_Release_and_LTS#Maintainer_Procedures 
->>     to get an idea on what is expected.
->>
->>     The one thing we (YP) don't know is if there will be AutoBuilder
->>     resources available.  Please contact me or Richard regarding that statement.
->>
->>     If no one steps up by April 24th (six weeks -ish from now), Thud will be
->>     moved to EOL status.
->
->     It was pointed out to me that there is no Maintainer selection
->     process or criteria defined.  This  will have to be sorted out
->     before we move forward on this transition.
->
->
->     - armin
->
->>     - Armin
->>
->>
->>
->>
->
->
->
-> 
+diff --git a/bin/bitdoc b/bin/bitdoc
+deleted file mode 100755
+index 9bd02be69c..0000000000
+--- a/bin/bitdoc
++++ /dev/null
+@@ -1,519 +0,0 @@
+-#!/usr/bin/env python3
+-#
+-# Copyright (C) 2005 Holger Hans Peter Freyther
+-#
+-# SPDX-License-Identifier: GPL-2.0-only
+-#
+-
+-import optparse, os, sys
+-
+-# bitbake
+-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__), 'lib'))
+-import bb
+-import bb.parse
+-from   string import split, join
+-
+-__version__ = "0.0.2"
+-
+-class HTMLFormatter:
+-    """
+-    Simple class to help to generate some sort of HTML files. It is
+-    quite inferior solution compared to docbook, gtkdoc, doxygen but it
+-    should work for now.
+-    We've a global introduction site (index.html) and then one site for
+-    the list of keys (alphabetical sorted) and one for the list of groups,
+-    one site for each key with links to the relations and groups.
+-
+-        index.html
+-        all_keys.html
+-        all_groups.html
+-        groupNAME.html
+-        keyNAME.html
+-    """
+-
+-    def replace(self, text, *pairs):
+-        """
+-        From pydoc... almost identical at least
+-        """
+-        while pairs:
+-            (a, b) = pairs[0]
+-            text = join(split(text, a), b)
+-            pairs = pairs[1:]
+-        return text
+-    def escape(self, text):
+-        """
+-        Escape string to be conform HTML
+-        """
+-        return self.replace(text, 
+-                            ('&', '&amp;'), 
+-                            ('<', '&lt;' ),
+-                            ('>', '&gt;' ) )
+-    def createNavigator(self):
+-        """
+-        Create the navgiator
+-        """
+-        return """<table class="navigation" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+-<tr valign="middle">
+-<td><a accesskey="g" href="index.html">Home</a></td>
+-<td><a accesskey="n" href="all_groups.html">Groups</a></td>
+-<td><a accesskey="u" href="all_keys.html">Keys</a></td>
+-</tr></table>
+-"""
+-
+-    def relatedKeys(self, item):
+-        """
+-        Create HTML to link to foreign keys
+-        """
+-
+-        if len(item.related()) == 0:
+-            return ""
+-
+-        txt = "<p><b>See also:</b><br>"
+-        txts = []
+-        for it in item.related():
+-            txts.append("""<a href="key%(it)s.html">%(it)s</a>""" % vars() )
+-
+-        return txt + ",".join(txts)
+-
+-    def groups(self, item):
+-        """
+-        Create HTML to link to related groups
+-        """
+-
+-        if len(item.groups()) == 0:
+-            return ""
+-
+-
+-        txt = "<p><b>See also:</b><br>"
+-        txts = []
+-        for group in item.groups():
+-            txts.append( """<a href="group%s.html">%s</a> """ % (group, group) )
+-
+-        return txt + ",".join(txts)
+-
+-
+-    def createKeySite(self, item):
+-        """
+-        Create a site for a key. It contains the header/navigator, a heading,
+-        the description, links to related keys and to the groups.
+-        """
+-
+-        return """<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+-<html><head><title>Key %s</title></head>
+-<link rel="stylesheet" href="style.css" type="text/css">
+-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+-%s
+-<h2><span class="refentrytitle">%s</span></h2>
+-
+-<div class="refsynopsisdiv">
+-<h2>Synopsis</h2>
+-<p>
+-%s
+-</p>
+-</div>
+-
+-<div class="refsynopsisdiv">
+-<h2>Related Keys</h2>
+-<p>
+-%s
+-</p>
+-</div>
+-
+-<div class="refsynopsisdiv">
+-<h2>Groups</h2>
+-<p>
+-%s
+-</p>
+-</div>
+-
+-
+-</body>
+-"""     % (item.name(), self.createNavigator(), item.name(), 
+-           self.escape(item.description()), self.relatedKeys(item), self.groups(item))
+-
+-    def createGroupsSite(self, doc):
+-        """
+-        Create the Group Overview site
+-        """
+-
+-        groups = ""
+-        sorted_groups = sorted(doc.groups())
+-        for group in sorted_groups:
+-            groups += """<a href="group%s.html">%s</a><br>""" % (group, group)
+-
+-        return """<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+-<html><head><title>Group overview</title></head>
+-<link rel="stylesheet" href="style.css" type="text/css">
+-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+-%s
+-<h2>Available Groups</h2>
+-%s
+-</body>
+-""" % (self.createNavigator(), groups)
+-
+-    def createIndex(self):
+-        """
+-        Create the index file
+-        """
+-
+-        return """<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+-<html><head><title>Bitbake Documentation</title></head>
+-<link rel="stylesheet" href="style.css" type="text/css">
+-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+-%s
+-<h2>Documentation Entrance</h2>
+-<a href="all_groups.html">All available groups</a><br>
+-<a href="all_keys.html">All available keys</a><br>
+-</body>
+-""" % self.createNavigator()
+-
+-    def createKeysSite(self, doc):
+-        """
+-        Create Overview of all avilable keys
+-        """
+-        keys = ""
+-        sorted_keys = sorted(doc.doc_keys())
+-        for key in sorted_keys:
+-            keys += """<a href="key%s.html">%s</a><br>""" % (key, key)
+-
+-        return """<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+-<html><head><title>Key overview</title></head>
+-<link rel="stylesheet" href="style.css" type="text/css">
+-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+-%s
+-<h2>Available Keys</h2>
+-%s
+-</body>
+-""" % (self.createNavigator(), keys)
+-
+-    def createGroupSite(self, gr, items, _description = None):
+-        """
+-        Create a site for a group:
+-        Group the name of the group, items contain the name of the keys
+-        inside this group
+-        """
+-        groups = ""
+-        description = ""
+-
+-        # create a section with the group descriptions
+-        if _description:
+-            description  += "<h2 Description of Grozp %s</h2>" % gr
+-            description  += _description
+-
+-        items.sort(lambda x, y:cmp(x.name(), y.name()))
+-        for group in items:
+-            groups += """<a href="key%s.html">%s</a><br>""" % (group.name(), group.name())
+-
+-        return """<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+-<html><head><title>Group %s</title></head>
+-<link rel="stylesheet" href="style.css" type="text/css">
+-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+-%s
+-%s
+-<div class="refsynopsisdiv">
+-<h2>Keys in Group %s</h2>
+-<pre class="synopsis">
+-%s
+-</pre>
+-</div>
+-</body>
+-""" % (gr, self.createNavigator(), description, gr, groups)
+-
+-
+-
+-    def createCSS(self):
+-        """
+-        Create the CSS file
+-        """
+-        return """.synopsis, .classsynopsis
+-{
+-  background: #eeeeee;
+-  border: solid 1px #aaaaaa;
+-  padding: 0.5em;
+-}
+-.programlisting
+-{
+-  background: #eeeeff;
+-  border: solid 1px #aaaaff;
+-  padding: 0.5em;
+-}
+-.variablelist
+-{
+-  padding: 4px;
+-  margin-left: 3em;
+-}
+-.variablelist td:first-child
+-{
+-  vertical-align: top;
+-}
+-table.navigation
+-{
+-  background: #ffeeee;
+-  border: solid 1px #ffaaaa;
+-  margin-top: 0.5em;
+-  margin-bottom: 0.5em;
+-}
+-.navigation a
+-{
+-  color: #770000;
+-}
+-.navigation a:visited
+-{
+-  color: #550000;
+-}
+-.navigation .title
+-{
+-  font-size: 200%;
+-}
+-div.refnamediv
+-{
+-  margin-top: 2em;
+-}
+-div.gallery-float
+-{
+-  float: left;
+-  padding: 10px;
+-}
+-div.gallery-float img
+-{
+-  border-style: none;
+-}
+-div.gallery-spacer
+-{
+-  clear: both;
+-}
+-a
+-{
+-  text-decoration: none;
+-}
+-a:hover
+-{
+-  text-decoration: underline;
+-  color: #FF0000;
+-}
+-"""
+-
+-
+-
+-class DocumentationItem:
+-    """
+-    A class to hold information about a configuration
+-    item. It contains the key name, description, a list of related names,
+-    and the group this item is contained in.
+-    """
+-
+-    def __init__(self):
+-        self._groups  = []
+-        self._related = []
+-        self._name    = ""
+-        self._desc    = ""
+-
+-    def groups(self):
+-        return self._groups
+-
+-    def name(self):
+-        return self._name
+-
+-    def description(self):
+-        return self._desc
+-
+-    def related(self):
+-        return self._related
+-
+-    def setName(self, name):
+-        self._name = name
+-
+-    def setDescription(self, desc):
+-        self._desc = desc
+-
+-    def addGroup(self, group):
+-        self._groups.append(group)
+-
+-    def addRelation(self, relation):
+-        self._related.append(relation)
+-
+-    def sort(self):
+-        self._related.sort()
+-        self._groups.sort()
+-
+-
+-class Documentation:
+-    """
+-    Holds the documentation... with mappings from key to items...
+-    """
+-
+-    def __init__(self):
+-        self.__keys   = {}
+-        self.__groups = {}
+-
+-    def insert_doc_item(self, item):
+-        """
+-        Insert the Doc Item into the internal list
+-        of representation
+-        """
+-        item.sort()
+-        self.__keys[item.name()] = item
+-
+-        for group in item.groups():
+-            if not group in self.__groups:
+-                self.__groups[group] = []
+-            self.__groups[group].append(item)
+-            self.__groups[group].sort()
+-
+-
+-    def doc_item(self, key):
+-        """
+-        Return the DocumentationInstance describing the key
+-        """
+-        try:
+-            return self.__keys[key]
+-        except KeyError:
+-            return None
+-
+-    def doc_keys(self):
+-        """
+-        Return the documented KEYS (names)
+-        """
+-        return self.__keys.keys()
+-
+-    def groups(self):
+-        """
+-        Return the names of available groups
+-        """
+-        return self.__groups.keys()
+-
+-    def group_content(self, group_name):
+-        """
+-        Return a list of keys/names that are in a specefic
+-        group or the empty list
+-        """
+-        try:
+-            return self.__groups[group_name]
+-        except KeyError:
+-            return []
+-
+-
+-def parse_cmdline(args):
+-    """
+-    Parse the CMD line and return the result as a n-tuple
+-    """
+-
+-    parser = optparse.OptionParser( version = "Bitbake Documentation Tool Core version %s, %%prog version %s" % (bb.__version__, __version__))
+-    usage  = """%prog [options]
+-
+-Create a set of html pages (documentation) for a bitbake.conf....
+-"""
+-
+-    # Add the needed options
+-    parser.add_option( "-c", "--config", help = "Use the specified configuration file as source",
+-                       action = "store", dest = "config", default = os.path.join("conf", "documentation.conf") )
+-
+-    parser.add_option( "-o", "--output", help = "Output directory for html files",
+-                       action = "store", dest = "output", default = "html/" )
+-
+-    parser.add_option( "-D",  "--debug", help = "Increase the debug level",
+-                       action = "count", dest = "debug", default = 0 )
+-
+-    parser.add_option( "-v", "--verbose", help = "output more chit-char to the terminal",
+-                       action = "store_true", dest = "verbose", default = False )
+-
+-    options, args = parser.parse_args( sys.argv )
+- 
+-    bb.msg.init_msgconfig(options.verbose, options.debug)
+-
+-    return options.config, options.output
+-
+-def main():
+-    """
+-    The main Method
+-    """
+-
+-    (config_file, output_dir) = parse_cmdline( sys.argv )
+-
+-    # right to let us load the file now
+-    try:
+-        documentation = bb.parse.handle( config_file, bb.data.init() )
+-    except IOError:
+-        bb.fatal( "Unable to open %s" % config_file )
+-    except bb.parse.ParseError:
+-        bb.fatal( "Unable to parse %s" % config_file )
+-
+-    if isinstance(documentation, dict):
+-        documentation = documentation[""]
+-
+-    # Assuming we've the file loaded now, we will initialize the 'tree'
+-    doc = Documentation()
+-
+-    # defined states
+-    state_begin = 0
+-    state_see   = 1
+-    state_group = 2
+-
+-    for key in bb.data.keys(documentation):
+-        data   = documentation.getVarFlag(key, "doc", False)
+-        if not data:
+-            continue
+-
+-        # The Documentation now starts
+-        doc_ins = DocumentationItem()
+-        doc_ins.setName(key)
+-
+-
+-        tokens = data.split(' ')
+-        state = state_begin
+-        string= ""
+-        for token in tokens:
+-            token = token.strip(',')
+-
+-            if not state == state_see and token == "@see":
+-                state = state_see
+-                continue
+-            elif not state == state_group and token  == "@group":
+-                state = state_group
+-                continue
+-
+-            if state == state_begin:
+-                string += " %s" % token
+-            elif state == state_see:
+-                doc_ins.addRelation(token)
+-            elif state == state_group:
+-                doc_ins.addGroup(token)
+-
+-        # set the description
+-        doc_ins.setDescription(string)
+-        doc.insert_doc_item(doc_ins)
+-
+-    # let us create the HTML now
+-    bb.utils.mkdirhier(output_dir)
+-    os.chdir(output_dir)
+-
+-    # Let us create the sites now. We do it in the following order
+-    # Start with the index.html. It will point to sites explaining all
+-    # keys and groups
+-    html_slave = HTMLFormatter()
+-
+-    f = file('style.css', 'w')
+-    print >> f, html_slave.createCSS()
+-
+-    f = file('index.html', 'w')
+-    print >> f, html_slave.createIndex()
+-
+-    f = file('all_groups.html', 'w')
+-    print >> f, html_slave.createGroupsSite(doc)
+-
+-    f = file('all_keys.html', 'w')
+-    print >> f, html_slave.createKeysSite(doc)
+-
+-    # now for each group create the site
+-    for group in doc.groups():
+-        f = file('group%s.html' % group, 'w')
+-        print >> f, html_slave.createGroupSite(group, doc.group_content(group))
+-
+-    # now for the keys
+-    for key in doc.doc_keys():
+-        f = file('key%s.html' % doc.doc_item(key).name(), 'w')
+-        print >> f, html_slave.createKeySite(doc.doc_item(key))
+-
+-
+-if __name__ == "__main__":
+-    main()
+-- 
+2.25.1
 
-
---------------C2905E87FB9E46D7559EF363
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <br>
-    <br>
-    <div class="moz-cite-prefix">On 4/28/20 11:10 AM, Martin Jansa
-      wrote:<br>
-    </div>
-    <blockquote type="cite"
-cite="mid:CA+chaQc8q4Nb4p76WPr=R7ocpDJ8CY3VnJ-k9W8bWW8nwMtYTw@mail.gmail.com">
-      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-      <div dir="ltr">Is Thud EOL now?</div>
-    </blockquote>
-    Go question.<br>
-    <br>
-    <blockquote type="cite"
-cite="mid:CA+chaQc8q4Nb4p76WPr=R7ocpDJ8CY3VnJ-k9W8bWW8nwMtYTw@mail.gmail.com">
-      <div dir="ltr">
-        <div><br>
-        </div>
-        <div>Or did someone volunteer off-list and now it waits for
-          Maintainer selection process to be defined?</div>
-      </div>
-    </blockquote>
-    I received two inquires privately and forwarded them to Richard. I
-    have not had time to document the community maintainer selection
-    process. The ultimate decision will always be on the Repo maintainer
-    which in this case is Richard.<br>
-    <br>
-    - armin<br>
-    <br>
-    <blockquote type="cite"
-cite="mid:CA+chaQc8q4Nb4p76WPr=R7ocpDJ8CY3VnJ-k9W8bWW8nwMtYTw@mail.gmail.com">
-      <div dir="ltr">
-        <div><a href="https://wiki.yoctoproject.org/wiki/Releases"
-            moz-do-not-send="true">https://wiki.yoctoproject.org/wiki/Releases</a> still
-          says Community support.<br>
-        </div>
-        <div><br>
-        </div>
-        <div>Thanks</div>
-      </div>
-      <br>
-      <div class="gmail_quote">
-        <div dir="ltr" class="gmail_attr">On Tue, Mar 17, 2020 at 10:13
-          PM akuster &lt;<a href="mailto:akuster808@gmail.com"
-            moz-do-not-send="true">akuster808@gmail.com</a>&gt; wrote:<br>
-        </div>
-        <blockquote class="gmail_quote" style="margin:0px 0px 0px
-          0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-          <div> <br>
-            <br>
-            <div>On 3/13/20 11:03 AM, akuster via <a
-                href="http://Lists.Yoctoproject.Org" target="_blank"
-                moz-do-not-send="true">Lists.Yoctoproject.Org</a> wrote:<br>
-            </div>
-            <blockquote type="cite">
-              <pre>The Poky thud branch is now under 'Community support' and is seeking a
-maintainer to continue supporting the following repos for the thud release:
-
-bitbake, core, meta-yocto and yocto-docs.
-
-
-There will be no more point releases.
-
-see
-<a href="https://wiki.yoctoproject.org/wiki/Stable_Release_and_LTS#Maintainer_Procedures" target="_blank" moz-do-not-send="true">https://wiki.yoctoproject.org/wiki/Stable_Release_and_LTS#Maintainer_Procedures</a> 
-to get an idea on what is expected.
-
-The one thing we (YP) don't know is if there will be AutoBuilder
-resources available.  Please contact me or Richard regarding that statement.
-
-If no one steps up by April 24th (six weeks -ish from now), Thud will be
-moved to EOL status.
-</pre>
-            </blockquote>
-            <br>
-            It was pointed out to me that there is no Maintainer
-            selection process or criteria defined.  This  will have to
-            be sorted out before we move forward on this transition.<br>
-            <br>
-            <br>
-            - armin<br>
-            <br>
-            <blockquote type="cite">
-              <pre>- Armin
-
-
-
-</pre>
-              <br>
-              <fieldset></fieldset>
-            </blockquote>
-            <br>
-          </div>
-          <br>
-        </blockquote>
-      </div>
-      <br>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <pre class="moz-quote-pre" wrap="">
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------C2905E87FB9E46D7559EF363--
