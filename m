@@ -1,44 +1,64 @@
-Received: from cpanel7.indieserve.net (cpanel7.indieserve.net [199.212.143.8])
- by mx.groups.io with SMTP id smtpd.web11.3424.1588587994848669634
+Received: from imap3.hz.codethink.co.uk (imap3.hz.codethink.co.uk [176.9.8.87])
+ by mx.groups.io with SMTP id smtpd.web12.5986.1588598789685549785
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 May 2020 03:26:35 -0700
+ Mon, 04 May 2020 06:26:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: crashcourse.ca, ip: 199.212.143.8, mailfrom: rpjday@crashcourse.ca)
-Received: from cpeac202e043973-cmac202e043970.sdns.net.rogers.com ([174.114.100.179]:48410 helo=localhost.localdomain)
-	by cpanel7.indieserve.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1jVYIz-00Cwfk-Li
-	for bitbake-devel@lists.openembedded.org; Mon, 04 May 2020 06:26:34 -0400
-Date: Mon, 4 May 2020 06:26:31 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost.localdomain
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: "-b" option doesn't need the full filename, correct?
-Message-ID: <alpine.LFD.2.21.2005040621420.6368@localhost.localdomain>
+ dkim=missing; spf=none, err=SPF record not found (domain: codethink.co.uk, ip: 176.9.8.87, mailfrom: frazer.clews@codethink.co.uk)
+Received: from host86-177-45-246.range86-177.btcentralplus.com ([86.177.45.246] helo=localhost.localdomain)
+	by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+	id 1jVb74-0007zs-Kh; Mon, 04 May 2020 14:26:26 +0100
+From: "Frazer Clews" <frazer.clews@codethink.co.uk>
+To: bitbake-devel@lists.openembedded.org
+Cc: Frazer Clews <frazer.clews@codethink.co.uk>
+Subject: [PATCH] lib/bs4/testing.py: fix bs4 testing
+Date: Mon,  4 May 2020 14:26:18 +0100
+Message-Id: <20200504132618.159099-1-frazer.clews@codethink.co.uk>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-OutGoing-Spam-Status: No, score=-1.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel7.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel7.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel7.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
+From: Frazer Clews <frazer.clews@codethink.co.uk>
 
-  currently poring over BB user manual and noticed that the
-explanation of "-b" strongly implies that the argument for this option
-must be the full recipe filename, such as strace_5.5.bb, but it seems
-to work fine with just:
+Have classes actually inherit SoupTest so it can
+use it's original methods, also correctly import
+HTMLParserTreeBuilder
 
-  $ bitbake -b strace
+Signed-off-by: Frazer Clews <frazer.clews@codethink.co.uk>
+---
+ lib/bs4/testing.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-is that deliberate or accidental or an unintentional side effect that
-should be discouraged?
+diff --git a/lib/bs4/testing.py b/lib/bs4/testing.py
+index 953bca8e..6584ecf3 100644
+--- a/lib/bs4/testing.py
++++ b/lib/bs4/testing.py
+@@ -15,7 +15,7 @@ from bs4.element import (
+     SoupStrainer,
+ )
+ 
+-from bs4.builder import HTMLParserTreeBuilder
++from bs4.builder._htmlparser import HTMLParserTreeBuilder
+ default_builder = HTMLParserTreeBuilder
+ 
+ 
+@@ -56,7 +56,7 @@ class SoupTest(unittest.TestCase):
+                 self.assertEqual(earlier, e.previous_element)
+             earlier = e
+ 
+-class HTMLTreeBuilderSmokeTest(object):
++class HTMLTreeBuilderSmokeTest(SoupTest):
+ 
+     """A basic test of a treebuilder's competence.
+ 
+@@ -541,7 +541,7 @@ Hello, world!
+         data.a['foo'] = 'bar'
+         self.assertEqual('<a foo="bar">text</a>', data.a.decode())
+ 
+-class XMLTreeBuilderSmokeTest(object):
++class XMLTreeBuilderSmokeTest(SoupTest):
+ 
+     def test_pickle_and_unpickle_identity(self):
+         # Pickling a tree, then unpickling it, yields a tree identical
+-- 
+2.26.2
 
-rday
