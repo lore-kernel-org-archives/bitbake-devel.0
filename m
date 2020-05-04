@@ -1,78 +1,58 @@
-Received: from cpanel7.indieserve.net (cpanel7.indieserve.net [199.212.143.8])
- by mx.groups.io with SMTP id smtpd.web10.7890.1588603922664768085
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+ by mx.groups.io with SMTP id smtpd.web11.16096.1588627442287331232
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 May 2020 07:52:03 -0700
+ Mon, 04 May 2020 14:24:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: crashcourse.ca, ip: 199.212.143.8, mailfrom: rpjday@crashcourse.ca)
-Received: from cpeac202e043973-cmac202e043970.sdns.net.rogers.com ([174.114.100.179]:50760 helo=localhost.localdomain)
-	by cpanel7.indieserve.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1jVcRs-00DZyZ-NV
-	for bitbake-devel@lists.openembedded.org; Mon, 04 May 2020 10:52:01 -0400
-Date: Mon, 4 May 2020 10:51:58 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost.localdomain
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH] docs: delete reference to obsolete recipe-depends.dot
-Message-ID: <alpine.LFD.2.21.2005041048060.212516@localhost.localdomain>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Xh8sE2Yl;
+ spf=pass (domain: gmail.com, ip: 209.85.166.50, mailfrom: schnitzeltony@gmail.com)
+Received: by mail-io1-f50.google.com with SMTP id w4so13968964ioc.6
+        for <bitbake-devel@lists.openembedded.org>; Mon, 04 May 2020 14:24:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=GcS3ruXWbcgRK95b/m2AR4seNb044KggJVCrqy6svWQ=;
+        b=Xh8sE2YlCqXCHe3CiUwokAHAexLDZjGE/8N9Zoxr9oj2RpGDAXq/lFR954wP14plgH
+         5crvvo/OIcC3BWv/O4Ite0RrTL7aHM7NZtVXPOM3k0oCiMcHuajxrmCFAzXnDjYIgvN/
+         xcnUHQg3rTDOwe9YNA/KXgKcmSqn7DFQbzwgQJeDLaOXDFoz0KNkCA9Ex/IhGVD5HTqk
+         Zap7bSCJdgNGewHqa/H8J7Tux3QxKVW2X93CtxJfJKEIreFYRsrW+6uY8Q+DQf8p8VLd
+         pqCG8EaH1lnfc68HkFtO3vOWIiL+arJ6xvE0KGQbKnhU6+AJhOqoVKkxnAQ5Yvm4Ftwj
+         yckg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=GcS3ruXWbcgRK95b/m2AR4seNb044KggJVCrqy6svWQ=;
+        b=VrUU/2lkQ77/pth1F0j7NtB0SXoN5ywQKCs64uu05DTbpppUVV40mngPR1R6Aqwlz/
+         99dgsnQQknzJrjTBmLyfpwpQHhCRRguzoKryF+aOB7pHoLom1Y1FL/c7hcd4yClj0Fzm
+         uWMuKLg3vN8TGnlAt3lkUw+0WKBxy1UHZqE+rDpfMYOMckk53DAcQ8vvXJYoYW8jGZhn
+         +uusL8HILTZkgVC3nGbGQLfeaRgrsAc/QK3f6y9lyI6bTWSQhaDVdQi9Tuk1biqeal51
+         TlbUFMnYQSOTPlw8iTQUulA1B+feToGadFSL4yclnt2arPZYt23qG9O1r3eTwrhNBxDL
+         tNwQ==
+X-Gm-Message-State: AGi0PuYi8dvJtz96euUYeSoszeW8jwc7XTVfnr2d3UMtv/DhIM0lIt3U
+	EjhGhS/ivGWunTMeTfsvduMVGTcFfEwhtKgXEnEsUmvi
+X-Google-Smtp-Source: APiQypJdvDOnh2fdos9YjnUMnMexqxsx0BQVKWP+xQZFUozHUEw1zzOMfmMS4XHZHitHT4B+2JZjOB3ILSStd/BBNtU=
+X-Received: by 2002:a6b:3ad4:: with SMTP id h203mr303673ioa.43.1588627441207;
+ Mon, 04 May 2020 14:24:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OutGoing-Spam-Status: No, score=-0.2
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel7.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel7.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel7.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Content-Type: text/plain; charset=US-ASCII
+From: "Andreas M?ller" <schnitzeltony@gmail.com>
+Date: Mon, 4 May 2020 23:23:50 +0200
+Message-ID: <CALbNGRQGgPng5u33Dq_DzpfcqQkhVeWgD4sW9sWymXMHqni8Mg@mail.gmail.com>
+Subject: Questions on fetcher
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Given that generation of recipe-depends.dot was removed:
+Hope this is the right place..
 
-  commit 4c484cc01e3eee7ab2ab0359fd680b4dbd31dc30
-  Author: Chen Qi <Qi.Chen@windriver.com>
-  Date:   Thu Aug 22 15:52:51 2019 +0800
+Have two questions on fetcher:
 
-      cooker.py: remove generation of recipe-depends.dot
+1. Feels this has changed recently: When I add/upgrade a recipe
+fetcher retries two times before giving up. Problem I have seen often:
+servers running two fast downloads but the third is VERY slow
+10-20K/s. I checked docs/mailing list but did not find helpful. Is
+there a chance to abort after 1st fail and show checksums?
+2. In case of incorrect checksum the error text to copy easily into
+recipe does no more contain md5 entry any more. Does that mean md5
+checksums are not necessary any more and can be removed?
 
-      The information of recipe-depends.dot is misleading.
+Thanks in advance
 
-delete mention of it from the user manual.
-
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-
----
-
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-index f5526c05..995c2fa7 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-@@ -694,14 +694,9 @@
-                 </para>
-
-                 <para>
--                    When you generate a dependency graph, BitBake writes three files
-+                    When you generate a dependency graph, BitBake writes two files
-                     to the current working directory:
-                     <itemizedlist>
--                        <listitem><para>
--                            <emphasis><filename>recipe-depends.dot</filename>:</emphasis>
--                            Shows dependencies between recipes (i.e. a collapsed version of
--                            <filename>task-depends.dot</filename>).
--                            </para></listitem>
-                         <listitem><para>
-                             <emphasis><filename>task-depends.dot</filename>:</emphasis>
-                             Shows dependencies between tasks.
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                         http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+Andreas
