@@ -1,58 +1,70 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
- by mx.groups.io with SMTP id smtpd.web11.16096.1588627442287331232
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web10.3581.1588665171475338256
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 May 2020 14:24:02 -0700
+ Tue, 05 May 2020 00:52:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Xh8sE2Yl;
- spf=pass (domain: gmail.com, ip: 209.85.166.50, mailfrom: schnitzeltony@gmail.com)
-Received: by mail-io1-f50.google.com with SMTP id w4so13968964ioc.6
-        for <bitbake-devel@lists.openembedded.org>; Mon, 04 May 2020 14:24:02 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DucOBHdw;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id y4so1262345wrm.11
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2020 00:52:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=GcS3ruXWbcgRK95b/m2AR4seNb044KggJVCrqy6svWQ=;
-        b=Xh8sE2YlCqXCHe3CiUwokAHAexLDZjGE/8N9Zoxr9oj2RpGDAXq/lFR954wP14plgH
-         5crvvo/OIcC3BWv/O4Ite0RrTL7aHM7NZtVXPOM3k0oCiMcHuajxrmCFAzXnDjYIgvN/
-         xcnUHQg3rTDOwe9YNA/KXgKcmSqn7DFQbzwgQJeDLaOXDFoz0KNkCA9Ex/IhGVD5HTqk
-         Zap7bSCJdgNGewHqa/H8J7Tux3QxKVW2X93CtxJfJKEIreFYRsrW+6uY8Q+DQf8p8VLd
-         pqCG8EaH1lnfc68HkFtO3vOWIiL+arJ6xvE0KGQbKnhU6+AJhOqoVKkxnAQ5Yvm4Ftwj
-         yckg==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=s85HhoO1yOHBzL/qMiiIyGVSPgBVJ8NToJ3bOXCjQNk=;
+        b=DucOBHdw1iqOHcGZvRbptxWW7Ko4Xq1Ko6dFk2cqlAupKZq6iOBo0VdkQXkNxXBJAg
+         dZf5ckUFrW6CHraiqWVI5N/OuDH/Qad4KKhg7ksZbofbihl9ImW+Mgs19FTdNOf67cEX
+         bH/Ao7icIRw3e477xHfdb3O76Y768zJdccbR4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=GcS3ruXWbcgRK95b/m2AR4seNb044KggJVCrqy6svWQ=;
-        b=VrUU/2lkQ77/pth1F0j7NtB0SXoN5ywQKCs64uu05DTbpppUVV40mngPR1R6Aqwlz/
-         99dgsnQQknzJrjTBmLyfpwpQHhCRRguzoKryF+aOB7pHoLom1Y1FL/c7hcd4yClj0Fzm
-         uWMuKLg3vN8TGnlAt3lkUw+0WKBxy1UHZqE+rDpfMYOMckk53DAcQ8vvXJYoYW8jGZhn
-         +uusL8HILTZkgVC3nGbGQLfeaRgrsAc/QK3f6y9lyI6bTWSQhaDVdQi9Tuk1biqeal51
-         TlbUFMnYQSOTPlw8iTQUulA1B+feToGadFSL4yclnt2arPZYt23qG9O1r3eTwrhNBxDL
-         tNwQ==
-X-Gm-Message-State: AGi0PuYi8dvJtz96euUYeSoszeW8jwc7XTVfnr2d3UMtv/DhIM0lIt3U
-	EjhGhS/ivGWunTMeTfsvduMVGTcFfEwhtKgXEnEsUmvi
-X-Google-Smtp-Source: APiQypJdvDOnh2fdos9YjnUMnMexqxsx0BQVKWP+xQZFUozHUEw1zzOMfmMS4XHZHitHT4B+2JZjOB3ILSStd/BBNtU=
-X-Received: by 2002:a6b:3ad4:: with SMTP id h203mr303673ioa.43.1588627441207;
- Mon, 04 May 2020 14:24:01 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=s85HhoO1yOHBzL/qMiiIyGVSPgBVJ8NToJ3bOXCjQNk=;
+        b=HL4JFMUY5lb1jWfRzm9xD3ymVkUfQ8NA/ArXNgML7+t/d4bHhjF1hgsst05EGdz5+T
+         e6bE21r5MeV/I3wkf63sE5NscIV4E9MIIrMOdHHxeU83mzA11DnNnaej1KbMrWh/75OT
+         cnWquW8n428b1gisCk7ewG/Kunh9cSjq3xSCGy1bn7gqlZvQcpkFvGrAx2db7URrF2DG
+         GmDxuitQDa93GxrnskT79Z/7P+5m/D0em+0mwpaeLuwLAZvHaNhcLEZHgSg6TcBqwhDX
+         i/wsmjNpFzFVTchZFyiQBVd6104i85VtV9I7YHavDCc1pdtLm9fBegeynZYI8bvOA7Wp
+         usXA==
+X-Gm-Message-State: AGi0PuaQEat2ofEJ59DmAj/kk9ItEnELAXnfXWi9qGiyFpAOwqEP2wxC
+	f20ro8n83TZrcpSq+igytDml636YQwQ=
+X-Google-Smtp-Source: APiQypLG6wkxYgTr887dwQVK/o4MQuTcD3Gn9KpUJGXIureieBhLZF9lsd2DCJkc3alyqh5VqDLmcA==
+X-Received: by 2002:adf:e88d:: with SMTP id d13mr2069008wrm.375.1588665169365;
+        Tue, 05 May 2020 00:52:49 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id t67sm2697561wmg.40.2020.05.05.00.52.47
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 00:52:48 -0700 (PDT)
+Message-ID: <6be4fcfc33a1e247a65c4c4a8dcef7d2d5a154f5.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] "-b" option doesn't need the full filename, correct?
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 05 May 2020 08:52:46 +0100
+In-Reply-To: <alpine.LFD.2.21.2005040621420.6368@localhost.localdomain>
+References: <alpine.LFD.2.21.2005040621420.6368@localhost.localdomain>
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-From: "Andreas M?ller" <schnitzeltony@gmail.com>
-Date: Mon, 4 May 2020 23:23:50 +0200
-Message-ID: <CALbNGRQGgPng5u33Dq_DzpfcqQkhVeWgD4sW9sWymXMHqni8Mg@mail.gmail.com>
-Subject: Questions on fetcher
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hope this is the right place..
+On Mon, 2020-05-04 at 06:26 -0400, Robert P. J. Day wrote:
+>   currently poring over BB user manual and noticed that the
+> explanation of "-b" strongly implies that the argument for this
+> option
+> must be the full recipe filename, such as strace_5.5.bb, but it seems
+> to work fine with just:
+> 
+>   $ bitbake -b strace
+> 
+> is that deliberate or accidental or an unintentional side effect that
+> should be discouraged?
 
-Have two questions on fetcher:
+It does pattern matching so it only works like that if strace is unique
+to a single filename. Try "gcc" ;-)
 
-1. Feels this has changed recently: When I add/upgrade a recipe
-fetcher retries two times before giving up. Problem I have seen often:
-servers running two fast downloads but the third is VERY slow
-10-20K/s. I checked docs/mailing list but did not find helpful. Is
-there a chance to abort after 1st fail and show checksums?
-2. In case of incorrect checksum the error text to copy easily into
-recipe does no more contain md5 entry any more. Does that mean md5
-checksums are not necessary any more and can be removed?
+Cheers,
 
-Thanks in advance
+Richard
 
-Andreas
