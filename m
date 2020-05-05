@@ -1,79 +1,123 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web12.3612.1588665316896557283
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web12.4912.1588673982421723116
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 May 2020 00:55:17 -0700
+ Tue, 05 May 2020 03:19:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ANpmq1FE;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f50.google.com with SMTP id f13so1469144wrm.13
-        for <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2020 00:55:16 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Hotp+Z8C;
+ spf=pass (domain: gmail.com, ip: 209.85.128.67, mailfrom: uvv.mail@gmail.com)
+Received: by mail-wm1-f67.google.com with SMTP id k12so1658107wmj.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2020 03:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=p8W6O+t+A0Xd+G00T+bZRkP1qLUkIB+/b7blK0DTJXU=;
-        b=ANpmq1FEoMfKTNkzwNe+dbJxfwHTggiEQe//jLgvKL2bk7Z/qi/PLnfRnuU+E4e1j0
-         ucJX0Cq3G0YSR4oxyvVOytlkGWQNFivAUjPqn5JrcHBfP1YH3DehbN8MOiB1l6H2Vhgg
-         c0BrtjoPxNPtXg6Xio+MlqdJuY3lag19brbXo=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6voPpv6paKOeofYmRFqDsoxDqFp4DwVBdezcvoR3Dqk=;
+        b=Hotp+Z8CI521OkTlcTpdh/K0KnelMPyvhLHWPZyLhFJZPqZATKkcOM1kYGpJe4KinY
+         XwayzGYo101KvaW88lOnT2345NTSn4HJk3mQYYP2Q2tGBy0WcrWY7AX0jwExoySQVD5D
+         pHUYd8By6T8C/l8CsSqrSRt1csFeoXALV0oAKYOTF+8MQlnSQI6gBO420ERwseu8l3dB
+         l9h79LS3GbnOS/HL74I23xdusEtg23bKUxwt8NDoa10fk1VL2K7mwM3tHmHIXa647O/J
+         9Wn4xem+rjPx+OeEQKY4JhbNeBPb/rpZnkRiJo94XLJVW5Xmme9BjgHQfSh9Pe4h14UJ
+         RKkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=p8W6O+t+A0Xd+G00T+bZRkP1qLUkIB+/b7blK0DTJXU=;
-        b=dgpja45CA+7cZY3yc+huDnRBbypCyKtPVVixWgPtec0ia/oML3TJRq5Zyr+F7aEU8/
-         amxsvhoR2lRAxlXjPWkBwJ7LimReshYGvelzRPfXjlkVR+CIYyKqgri3aJ3NR+Afi7G+
-         rB5KQpUs7QIWHZY5nK7zXk/+DvUEBXZxC/PCt9jkhSRXv6JnObZDsfWctOICiF3CvQJh
-         WYqsgTviJ3wzR9nzzgTgNsbqzIXIPqQeG2mbsIgtrgk9zSCkL2QCT2FhHwUgoH23BUQ/
-         SGN3XpM2PsHRC9hhO43DQjSa5tc5oJzON2tUz/UELhJFVmwtJm9xYqbyNhBb4eo7sulL
-         JgLg==
-X-Gm-Message-State: AGi0PuYgerqSNHbDJqUZnDeFFHVXttvxmVSQXr6HsfIu6Ifr4q1gPq+0
-	pvzBEHF9gzJOd4tJrZGmkZX9qAIeK88=
-X-Google-Smtp-Source: APiQypIO/ugrywm9dFackZ71E0cm/18bDGxi2L8kjR09E7Lkrh6U6WWLUWCS2GVULCAMEBpYxqaPcw==
-X-Received: by 2002:adf:f40b:: with SMTP id g11mr2393899wro.178.1588665315179;
-        Tue, 05 May 2020 00:55:15 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id a125sm2372237wme.3.2020.05.05.00.55.14
-        for <bitbake-devel@lists.openembedded.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6voPpv6paKOeofYmRFqDsoxDqFp4DwVBdezcvoR3Dqk=;
+        b=AylmBY5lGp/B8L3V5NI5pLbDlayWvSQGLYUQSVThLTpTBrIQuBtgPTp8gCFddr2q3v
+         T3xI2KH9USApqnVJ0QfqQDU2SBWl6xG66MblcYDHyE/N5A0rro2ZZ3dicpfjRcbmkpZp
+         98mAkfwaF2csnNBFFCbwMjqKG95GEO5LeoAPfMGgSvsKBFvub3i9HQjvzALOsXW9JWpj
+         YQ1PBOHeYshWYDm1qR5gAIBW8fZZdcBE9yHYXDG+CxpfUWnYlXS1ZPyZgE7e5HWiNa6S
+         xM3+Hdu1sT/lP3P3PqdpS6MkXrP6wmHlrJR/XKMZpx5hU0lAfThl6SM+MT2hKHVE77JY
+         O63w==
+X-Gm-Message-State: AGi0PuZtV/GQBGcqKJxBkHcGMlqC92gwS6mV87ZS5OoMw3fddPsRJjn0
+	nrzkyAtzq1YDamCCG52H7NB3NaYMjSE=
+X-Google-Smtp-Source: APiQypIaUQrE+13fFyTDAiaSCCftFJIk+mR2OLMD5iv/A9Gx7LFO/qSLuoY35JDwdz+jG9ADG3trSw==
+X-Received: by 2002:a1c:6344:: with SMTP id x65mr2724177wmb.56.1588673980261;
+        Tue, 05 May 2020 03:19:40 -0700 (PDT)
+Return-Path: <uvv.mail@gmail.com>
+Received: from localhost.localdomain (dslb-002-205-007-252.002.205.pools.vodafone-ip.de. [2.205.7.252])
+        by smtp.gmail.com with ESMTPSA id g25sm2992615wmh.24.2020.05.05.03.19.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 00:55:14 -0700 (PDT)
-Message-ID: <913bc1184c546164107fc8adcf7b9f76b5f2e0cd.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Questions on fetcher
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+        Tue, 05 May 2020 03:19:39 -0700 (PDT)
+From: "Vyacheslav Yurkov" <uvv.mail@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 05 May 2020 08:55:13 +0100
-In-Reply-To: <CALbNGRQGgPng5u33Dq_DzpfcqQkhVeWgD4sW9sWymXMHqni8Mg@mail.gmail.com>
-References: 
-	<CALbNGRQGgPng5u33Dq_DzpfcqQkhVeWgD4sW9sWymXMHqni8Mg@mail.gmail.com>
-User-Agent: Evolution 3.36.1-2 
+Cc: Vyacheslav Yurkov <Vyacheslav.Yurkov@bruker.com>
+Subject: [PATCH] bitbake: fetch2: Fix CVS fetcher clean method
+Date: Tue,  5 May 2020 12:18:09 +0200
+Message-Id: <20200505101809.702174-1-uvv.mail@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2020-05-04 at 23:23 +0200, Andreas M?ller wrote:
-> Hope this is the right place..
-> 
-> Have two questions on fetcher:
-> 
-> 1. Feels this has changed recently: When I add/upgrade a recipe
-> fetcher retries two times before giving up. Problem I have seen
-> often:
-> servers running two fast downloads but the third is VERY slow
-> 10-20K/s. I checked docs/mailing list but did not find helpful. Is
-> there a chance to abort after 1st fail and show checksums?
+From: Vyacheslav Yurkov <Vyacheslav.Yurkov@bruker.com>
 
-This sounds like there are mirrors configured and the fallback mirror
-is very slow. I'd check the fetch logs and see which the slow server
-is. The behaviour hasn't changed recently but some server may have.
+Clean method assumes that download directory should be determined from
+CVSDIR variable, but this is handled differently in download method.
+Now we set download directory for the whole class in urldata_init
 
-> 2. In case of incorrect checksum the error text to copy easily into
-> recipe does no more contain md5 entry any more. Does that mean md5
-> checksums are not necessary any more and can be removed?
+Signed-off-by: Vyacheslav Yurkov <Vyacheslav.Yurkov@bruker.com>
+---
+ bitbake/lib/bb/fetch2/cvs.py | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-Correct, we're now only requiring one checksum and preferring sha256.
-We'll just let the md5sums fade out over time.
-
-Cheers,
-
-Richard
+diff --git a/bitbake/lib/bb/fetch2/cvs.py b/bitbake/lib/bb/fetch2/cvs.py
+index 29123a483c..22abdef792 100644
+--- a/bitbake/lib/bb/fetch2/cvs.py
++++ b/bitbake/lib/bb/fetch2/cvs.py
+@@ -51,6 +51,10 @@ class Cvs(FetchMethod):
+ 
+         ud.localfile = d.expand('%s_%s_%s_%s%s%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.tag, ud.date, norecurse, fullpath))
+ 
++        pkg = d.getVar('PN')
++        cvsdir = d.getVar("CVSDIR") or (d.getVar("DL_DIR") + "/cvs")
++        ud.pkgdir = os.path.join(cvsdir, pkg)
++
+     def need_update(self, ud, d):
+         if (ud.date == "now"):
+             return True
+@@ -106,10 +110,7 @@ class Cvs(FetchMethod):
+ 
+         # create module directory
+         logger.debug(2, "Fetch: checking for module directory")
+-        pkg = d.getVar('PN')
+-        cvsdir = d.getVar("CVSDIR") or (d.getVar("DL_DIR") + "/cvs")
+-        pkgdir = os.path.join(cvsdir, pkg)
+-        moddir = os.path.join(pkgdir, localdir)
++        moddir = os.path.join(ud.pkgdir, localdir)
+         workdir = None
+         if os.access(os.path.join(moddir, 'CVS'), os.R_OK):
+             logger.info("Update " + ud.url)
+@@ -120,8 +121,8 @@ class Cvs(FetchMethod):
+         else:
+             logger.info("Fetch " + ud.url)
+             # check out sources there
+-            bb.utils.mkdirhier(pkgdir)
+-            workdir = pkgdir
++            bb.utils.mkdirhier(ud.pkgdir)
++            workdir = ud.pkgdir
+             logger.debug(1, "Running %s", cvscmd)
+             bb.fetch2.check_network_access(d, cvscmd, ud.url)
+             cmd = cvscmd
+@@ -140,7 +141,7 @@ class Cvs(FetchMethod):
+         # tar them up to a defined filename
+         workdir = None
+         if 'fullpath' in ud.parm:
+-            workdir = pkgdir
++            workdir = ud.pkgdir
+             cmd = "tar %s -czf %s %s" % (tar_flags, ud.localpath, localdir)
+         else:
+             workdir = os.path.dirname(os.path.realpath(moddir))
+@@ -151,9 +152,6 @@ class Cvs(FetchMethod):
+     def clean(self, ud, d):
+         """ Clean CVS Files and tarballs """
+ 
+-        pkg = d.getVar('PN')
+-        pkgdir = os.path.join(d.getVar("CVSDIR"), pkg)
+-
+-        bb.utils.remove(pkgdir, True)
++        bb.utils.remove(ud.pkgdir, True)
+         bb.utils.remove(ud.localpath)
+ 
+-- 
+2.25.1
 
