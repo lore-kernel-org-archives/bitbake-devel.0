@@ -1,68 +1,53 @@
-Received: from cpanel7.indieserve.net (cpanel7.indieserve.net [199.212.143.8])
- by mx.groups.io with SMTP id smtpd.web11.25.1588804224157062740
- for <bitbake-devel@lists.openembedded.org>;
- Wed, 06 May 2020 15:30:24 -0700
-Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: crashcourse.ca, ip: 199.212.143.8, mailfrom: rpjday@crashcourse.ca)
-Received: from cpef81d0f814063-cmf81d0f814060.cpe.net.cable.rogers.com ([174.114.57.56]:59180 helo=localhost.localdomain)
-	by cpanel7.indieserve.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1jWSYY-003SBx-J6
-	for bitbake-devel@lists.openembedded.org; Wed, 06 May 2020 18:30:23 -0400
-Date: Wed, 6 May 2020 18:30:20 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost.localdomain
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH] user manual: properly tag content as <replaceable>
-Message-ID: <alpine.LFD.2.21.2005061828570.16478@localhost.localdomain>
+Subject: SDK deployment of a meta-package
+To: bitbake-devel@lists.openembedded.org
+From: scinteeb@gmail.com
+X-Originating-Location: RO (82.79.95.216)
+X-Originating-Platform: Linux Firefox 75
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-X-OutGoing-Spam-Status: No, score=-0.2
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel7.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel7.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel7.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Content-Type: text/plain; charset=US-ASCII
+Date: Fri, 08 May 2020 07:32:48 -0700
+Message-ID: <ZfeL.1588948368113444766.TdoY@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="HOnSrzAhaelEHGokyo9j"
 
-Tag a couple fields as replaceable to be consistent with rest of
-manual.
+--HOnSrzAhaelEHGokyo9j
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+Hello,
 
----
+I am fairly new on using the Yocto project and I am at the beginning of my=
+ learning curve. I have tried to find the information that I need on intern=
+et but I couldn't identify any reference. That's why I am trying to get my =
+answers here, if somebody is having the time for it.
+I am trying to include the Poco library into the toolchain. For that I am =
+adding in the local.conf the variable TOOLCHAIN_HOST_TASK_append =3D " poco=
+ poco-dev". However, I am getting an error message on poco-dev saying that =
+there is nothing to provide a certain poco library. Looking at the poco rec=
+ipe file I saw that this is basically splitting the libraries in several rp=
+m packages, and the poco rpm which is expected to install the libraries, do=
+esn't contain any file, being a meta-package.
+The question is: how can I deploy in the SDK the 'meta-package'?
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-index 6c5234ed..e4251dff 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-@@ -618,12 +618,12 @@
-         <para>
-             Tasks can be either a shell task or a Python task.
-             For shell tasks, BitBake writes a shell script to
--            <filename>${</filename><link linkend='var-bb-T'><filename>T</filename></link><filename>}/run.do_taskname.pid</filename>
-+            <filename>${</filename><link linkend='var-bb-T'><filename>T</filename></link><filename>}/run.do_taskname.<replaceable>pid</replaceable></filename>
-             and then executes the script.
-             The generated shell script contains all the exported variables,
-             and the shell functions with all variables expanded.
-             Output from the shell script goes to the file
--            <filename>${T}/log.do_taskname.pid</filename>.
-+            <filename>${T}/log.do_taskname.<replaceable>pid</replaceable></filename>.
-             Looking at the expanded shell functions in the run file and
-             the output in the log files is a useful debugging technique.
-         </para>
+Thanks for your time,
+Bogdan.
 
--- 
+--HOnSrzAhaelEHGokyo9j
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                         http://crashcourse.ca
+<p>&nbsp;&nbsp; Hello,<br /><br />&nbsp; I am fairly new on using the Yocto=
+ project and I am at the beginning of my learning curve. I have tried to fi=
+nd the information that I need on internet but I couldn't identify any refe=
+rence. That's why I am trying to get my answers here, if somebody is having=
+ the time for it.<br />I am trying to include the Poco library into the too=
+lchain. For that I am adding in the local.conf the variable TOOLCHAIN_HOST_=
+TASK_append =3D " poco poco-dev". However, I am getting an error message on=
+ poco-dev saying that there is nothing to provide a certain poco library. L=
+ooking at the poco recipe file I saw that this is basically splitting the l=
+ibraries in several rpm packages, and the poco rpm which is expected to ins=
+tall the libraries, doesn't contain any file, being a meta-package.<br />Th=
+e question is: how can I deploy in the SDK the 'meta-package'?<br /><br />T=
+hanks for your time,<br />Bogdan.</p>
+<p>&nbsp;</p>
 
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+--HOnSrzAhaelEHGokyo9j--
