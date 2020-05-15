@@ -1,40 +1,36 @@
-Subject: Migrating yocto project from sumo to warrior - getting null registry error from npm
+Subject: possible to generate all scripts one time ?
 To: bitbake-devel@lists.openembedded.org
-From: christopher.mcclellan95@gmail.com
-X-Originating-Location: Valencia, California, US (198.72.131.105)
-X-Originating-Platform: Windows Firefox 76
+From: zhangyifan46@huawei.com
+X-Originating-Location: HK (116.66.184.175)
+X-Originating-Platform: Windows Chrome 80
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Tue, 12 May 2020 17:41:54 -0700
-Message-ID: <2sbt.1589330514952552942.tTjp@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="A0vIeexnEuudWutFCgvd"
+Date: Thu, 14 May 2020 18:10:02 -0700
+Message-ID: <tLbr.1589505002949120275.wxj7@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="lEQ3Mfr2hiysCXafeJHq"
 
---A0vIeexnEuudWutFCgvd
+--lEQ3Mfr2hiysCXafeJHq
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-I'm migrating a yocto project that is working on sumo to warrior, so I set =
-my layers to be the "warrior" branches. Everything runs fine until it fails=
- in my node project layer on "do_compile" with the error message "Cannot re=
-ad property 'replace' of null." It seems to return null for npm.config.get(=
-'registry'), but it is set on the Docker image that's building this image. =
-If I delete the npm-shrinkwrap.json, it builds, but I'd like to leave that =
-file in for the project. I think I need to either upgrade the npm version t=
-o 6.10.3 (where this error was fixed) or set the npm registry for the build=
- process. How would I do that?
+Hello guys,
+I am now currently using a parallel tool like icecream. And my project has=
+ over 200 packages.So when the build starts,it need to start icecream 200 t=
+imes and the start time is a great cost.
+So i am wondering do we have a method to generate all automake scripts(esp=
+ecially compile or install) one time and then i need to only start icecream=
+ once.
+Thanks for your ideas!
 
---A0vIeexnEuudWutFCgvd
+--lEQ3Mfr2hiysCXafeJHq
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-I'm migrating a yocto project that is working on sumo to warrior, so I set =
-my layers to be the "warrior" branches. Everything runs fine until it fails=
- in my node project layer on "do_compile" with the error message "Cannot re=
-ad property 'replace' of null." It seems to return null for npm.config.get(=
-'registry'), but it is set on the Docker image that's building this image. =
-If I delete the npm-shrinkwrap.json, it builds, but I'd like to leave that =
-file in for the project. I think I need to either upgrade the npm version t=
-o 6.10.3 (where this error was fixed) or set the npm registry for the build=
- process. How would I do that?
+Hello guys,<br />I am now currently using a parallel tool like icecream. An=
+d my project has over 200 packages.So when the build starts,it need to star=
+t icecream 200 times and the start time is a great cost.<br />So i am wonde=
+ring do we have a method to generate all automake scripts(especially compil=
+e or install) one time and then i need to only start icecream once.<br />Th=
+anks for your ideas!
 
---A0vIeexnEuudWutFCgvd--
+--lEQ3Mfr2hiysCXafeJHq--
