@@ -1,71 +1,83 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.9367.1589885929496331747
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web10.9376.1589885973051653006
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 19 May 2020 03:58:49 -0700
+ Tue, 19 May 2020 03:59:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QJZTub27;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f47.google.com with SMTP id f13so2570045wmc.5
-        for <bitbake-devel@lists.openembedded.org>; Tue, 19 May 2020 03:58:49 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=FiPn3Pz9;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f44.google.com with SMTP id h4so2575061wmb.4
+        for <bitbake-devel@lists.openembedded.org>; Tue, 19 May 2020 03:59:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=message-id:subject:from:to:date:in-reply-to:references:user-agent
          :mime-version:content-transfer-encoding;
-        bh=R/PzkP7A1285gCdqvmNIQ1jtZ1rE+8p1FalRejAi+kg=;
-        b=QJZTub27g5lOxxFCFTqnGNw1UOIJzHSOo5UMAtJounVMlCdunmSbqunP+ZnliXCRgF
-         h5e4lNhMEbW4/Pot82kB23TQ/qsI8VxGhSYREbSUcbCWpWJR9Ez0swiMoZwS/g/2cCYQ
-         +63La+LfPpcDf0NwHPsOytrgMB8x4QK2DbwLI=
+        bh=2R6lQR7yrqwL0DlkENOmFt3g9S20ZxuPyJ6IzVHHbBg=;
+        b=FiPn3Pz9D0zwFzlyAwTBF1hcijKo5NHYXojST9GGNLG0SsajyQ4YEc9dZI2q5cvRqf
+         /rmACwRXRvrGl+nDZ7ePxx2AuTYQfVr85zCpxfjyhd1rWScZTn77qL34rj4ZUXXrMqw7
+         Ec86wcgH7OF+ZD1eKR2H0HbK2rFaonWzlONrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=R/PzkP7A1285gCdqvmNIQ1jtZ1rE+8p1FalRejAi+kg=;
-        b=HP7CBI1+jtg4sTOgKwjR40fL74XjYikiIKX/emr9Jz3rz9tyFiyvDf3pfhXCwHbYxb
-         8Rwu8Lb2Lh1nHxl2ryTaTogpD/241FKEurECJfWI//rKDsAjScjpF0ogkoNeaZyt9CXc
-         o2MeWcy+2yNJveI5NY9OQNQYNSR8bp5+5X7u+Ey3+ymjjC6KTkLI414Utmjt8rfob4pq
-         YcOL7D0sWHOB9hTkwxXksYgyJ0x7Ee2XHLVqXpNNgiTD1Al3pfuXlKXfeguXxQXIviQS
-         PTE/zTmOPPncIeY8mERSt7/ka4MERUAKvxP0AE4JpylpDWOlW/ZEF1cVvAPH4fdc5F5w
-         n3VQ==
-X-Gm-Message-State: AOAM5306J3QKqStLqVPDiBJu1FAAGeYMgoj1UkZU4ZgrEXQ01Y2095KT
-	9eade+y6x2nCjMtc7yGO6YOe7TUhmEA=
-X-Google-Smtp-Source: ABdhPJznJ1wLK0+6WrCJU4ST72LfetZfeaqSKnVVSIKF6DfuMJce6FrXOMc7n0s85bHWe1nvBcZN6Q==
-X-Received: by 2002:a7b:c7d5:: with SMTP id z21mr4611859wmk.112.1589885927618;
-        Tue, 19 May 2020 03:58:47 -0700 (PDT)
+        bh=2R6lQR7yrqwL0DlkENOmFt3g9S20ZxuPyJ6IzVHHbBg=;
+        b=KLBogebfNWvOPyTdqwE8KW2gpGfEoeDsKItSmPRIAsoF2H0REuTpia03VY12ER5p27
+         5brFfQqhxsWQL18OLcgq4JkESjootaKXCNtB0OJY54TiDapC4hRECxyiel3Na6BKPdiQ
+         XllXa6yqYmL1EmLdf0T73q6Nj2WHSoDx7izTGrGn01UKguDBjUtW7sLQRph3mTr0r/vV
+         fOw85zTcAv2YtEynwkrr35vhojWnbauVVTe5v6H7M7oal2+ZhS6leqv8jV/vHzU23fD/
+         uBL62UJKXN38WboErQDVfP5NV1bn98pjtcncFhG4JobQ/qPW1fWba2go5xCCSDT+HDgD
+         HdaQ==
+X-Gm-Message-State: AOAM530IUFTv4OrPJKlY9zBTnVpCL5ryDFkcZwR+SyyxD22qFTmD5u1e
+	BZ0CIqtjgvZ54KmWxWGAE3eKUGJJIZs=
+X-Google-Smtp-Source: ABdhPJzPTwlzKPeVEc/38m2rDXoz+jizdz/rf3h1E+sqgko3rRcbO+RSYO8tE+G1NDnIfNswyPECmg==
+X-Received: by 2002:a7b:c1d2:: with SMTP id a18mr4782988wmj.176.1589885971354;
+        Tue, 19 May 2020 03:59:31 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id y207sm3807632wmd.7.2020.05.19.03.58.44
+        by smtp.gmail.com with ESMTPSA id c17sm20781321wrn.59.2020.05.19.03.59.30
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 03:58:45 -0700 (PDT)
-Message-ID: <2bad5b8490f2b1e2aad09127fb1ed2d8efeb7438.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] more nitpickery: difference between d.getVar() and d.expand()?
+        Tue, 19 May 2020 03:59:30 -0700 (PDT)
+Message-ID: <124b9b904c15e0dfea51d941bf234f89596d4aff.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] any point in defining classname_functionname() if not exporting it?
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 19 May 2020 11:58:44 +0100
-In-Reply-To: <alpine.LFD.2.21.2005050921570.14090@localhost.localdomain>
-References: <alpine.LFD.2.21.2005050921570.14090@localhost.localdomain>
+Date: Tue, 19 May 2020 11:59:29 +0100
+In-Reply-To: <alpine.LFD.2.21.2005051010500.15969@localhost.localdomain>
+References: <alpine.LFD.2.21.2005051010500.15969@localhost.localdomain>
 User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2020-05-05 at 09:27 -0400, Robert P. J. Day wrote:
->   no, wait, hear me out :-). still crawling through BB user manual,
-> section 3.5.2, talks about using d.getVar("X") "or for more
-> complicated expressions, use d.expand()".
+On Tue, 2020-05-05 at 10:25 -0400, Robert P. J. Day wrote:
+>   still in BB manual, section 3.5.6, "Flexible Inheritance for Class
+> Functions", that section makes perfect sense but it's not clear if
+> there is any value to defining a function of the form
+> classname_functionmame() if you're not going to export it with
+> EXPORT_FUNCTIONS.
 > 
->   fair enough, but it seems like a lot of the code bounces back and
-> forth when getting the value of a simple variable, as in:
+>   case in point -- cmake.bbclass. at bottom of file, we see some
+> perfectly reasonable exporting:
 > 
->   libdir = d.getVar("libdir")
->   libdir = d.expand("${libdir}")
+> EXPORT_FUNCTIONS do_configure do_compile do_install
+> do_generate_toolchain_file
 > 
-> given that d.getVar() by default expands the value, is there some
-> difference between the two statements above when specifically
-> accessing a single variable in the data dictionary?
+> but if you grep, there is an additional function being defined of
+> that
+> form:
+> 
+> cmake_do_generate_toolchain_file() {
+> cmake_do_configure() {
+> cmake_runcmake_build() {             <-- this one
+> cmake_do_compile()  {
+> cmake_do_install() {
+> 
+> sure, that function is invoked internally in that class file, but
+> without being exported, is there any reason that function has a
+> "cmake_" prefix?
 
-No, there is no difference. I'd usually suggest getVar for a single
-variable and expand for an expression.
+It makes it clear it comes from the cmake class? Namespacing is useful
+even if EXPORT_FUNCTIONS isn't involved.
 
 Cheers,
 
