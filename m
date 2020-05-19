@@ -1,83 +1,79 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.9376.1589885973051653006
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web10.9392.1589886049355092323
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 19 May 2020 03:59:33 -0700
+ Tue, 19 May 2020 04:00:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=FiPn3Pz9;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id h4so2575061wmb.4
-        for <bitbake-devel@lists.openembedded.org>; Tue, 19 May 2020 03:59:32 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=f1cqrFVa;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id e1so15397713wrt.5
+        for <bitbake-devel@lists.openembedded.org>; Tue, 19 May 2020 04:00:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=message-id:subject:from:to:date:in-reply-to:references:user-agent
          :mime-version:content-transfer-encoding;
-        bh=2R6lQR7yrqwL0DlkENOmFt3g9S20ZxuPyJ6IzVHHbBg=;
-        b=FiPn3Pz9D0zwFzlyAwTBF1hcijKo5NHYXojST9GGNLG0SsajyQ4YEc9dZI2q5cvRqf
-         /rmACwRXRvrGl+nDZ7ePxx2AuTYQfVr85zCpxfjyhd1rWScZTn77qL34rj4ZUXXrMqw7
-         Ec86wcgH7OF+ZD1eKR2H0HbK2rFaonWzlONrc=
+        bh=PYZGKx5GCm0N1AxpfQy+SnD+mjkbtJPNTonziXZb5MY=;
+        b=f1cqrFVauhlHA/g+sIjaC6tTR3f2nYkIUWjLRFnu6GpX1pPvIbDUFtSVRBjUVoGnBz
+         SA7EmcfIPeutf9wpLQLKLXt+Pn3zFszcyTwdSNj1Y92xcdDZtbtjmdZpH3+i1FfQiRJI
+         jrNNZltJGYjDM76pqPed00IYoa89JaBXrc13Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=2R6lQR7yrqwL0DlkENOmFt3g9S20ZxuPyJ6IzVHHbBg=;
-        b=KLBogebfNWvOPyTdqwE8KW2gpGfEoeDsKItSmPRIAsoF2H0REuTpia03VY12ER5p27
-         5brFfQqhxsWQL18OLcgq4JkESjootaKXCNtB0OJY54TiDapC4hRECxyiel3Na6BKPdiQ
-         XllXa6yqYmL1EmLdf0T73q6Nj2WHSoDx7izTGrGn01UKguDBjUtW7sLQRph3mTr0r/vV
-         fOw85zTcAv2YtEynwkrr35vhojWnbauVVTe5v6H7M7oal2+ZhS6leqv8jV/vHzU23fD/
-         uBL62UJKXN38WboErQDVfP5NV1bn98pjtcncFhG4JobQ/qPW1fWba2go5xCCSDT+HDgD
-         HdaQ==
-X-Gm-Message-State: AOAM530IUFTv4OrPJKlY9zBTnVpCL5ryDFkcZwR+SyyxD22qFTmD5u1e
-	BZ0CIqtjgvZ54KmWxWGAE3eKUGJJIZs=
-X-Google-Smtp-Source: ABdhPJzPTwlzKPeVEc/38m2rDXoz+jizdz/rf3h1E+sqgko3rRcbO+RSYO8tE+G1NDnIfNswyPECmg==
-X-Received: by 2002:a7b:c1d2:: with SMTP id a18mr4782988wmj.176.1589885971354;
-        Tue, 19 May 2020 03:59:31 -0700 (PDT)
+        bh=PYZGKx5GCm0N1AxpfQy+SnD+mjkbtJPNTonziXZb5MY=;
+        b=OF7Xjas5NTvLBTCjUnPfFZxphjbCrpGptaaNFq4jzTmRGEk3/tXbPCpF5X5KYa9hQJ
+         eDVt8AXfqHyAjOo/ouUika9x9Z1SPE10ab+JRK1u8LLUFj+Tbd2i8WL+t9RrBxM3WUd7
+         CnWetfvtr6wAG8muG33UF0qgiNbwrghvrMPhX4RXoeS7BN4O6OcNRBWdgSWV/IfoGRVs
+         uLWZEFhGw04A6ErzGZAcQMbXlYBb3TlXXoYzIiUQmJNeEpskuScSAhunmfQ5bhSj+CGi
+         GWkNTjlouhYG1JrsFVHIXjNVo/sDYLskSMUbL9gKm/AAWoEpqkXp375573DSIsI4Vdgz
+         7ueQ==
+X-Gm-Message-State: AOAM53342Sa5wCorBn/6TToITOJxePJEGoCQzfvi5rB87aSS3kEPL1gL
+	83bMkkpn+De5uCjig0wNtrhz/764GIA=
+X-Google-Smtp-Source: ABdhPJzjiJEnt3mNOZ1/UaYVOWZ5DbFOXHY24KEnRnseTKo9nMaHWk/8eGxGmX1ee2amDBtYnBXmrA==
+X-Received: by 2002:adf:df0e:: with SMTP id y14mr572651wrl.6.1589886047422;
+        Tue, 19 May 2020 04:00:47 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id c17sm20781321wrn.59.2020.05.19.03.59.30
+        by smtp.gmail.com with ESMTPSA id u10sm3443899wmc.31.2020.05.19.04.00.46
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 03:59:30 -0700 (PDT)
-Message-ID: <124b9b904c15e0dfea51d941bf234f89596d4aff.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] any point in defining classname_functionname() if not exporting it?
+        Tue, 19 May 2020 04:00:46 -0700 (PDT)
+Message-ID: <7615f5c76925fbe9edc0137c411db611a460aefa.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] BB user manual, "Variable Flags" can be applied to non-tasks, no?
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 19 May 2020 11:59:29 +0100
-In-Reply-To: <alpine.LFD.2.21.2005051010500.15969@localhost.localdomain>
-References: <alpine.LFD.2.21.2005051010500.15969@localhost.localdomain>
+Date: Tue, 19 May 2020 12:00:44 +0100
+In-Reply-To: <alpine.LFD.2.21.2005061136300.343666@localhost.localdomain>
+References: <alpine.LFD.2.21.2005061136300.343666@localhost.localdomain>
 User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2020-05-05 at 10:25 -0400, Robert P. J. Day wrote:
->   still in BB manual, section 3.5.6, "Flexible Inheritance for Class
-> Functions", that section makes perfect sense but it's not clear if
-> there is any value to defining a function of the form
-> classname_functionmame() if you're not going to export it with
-> EXPORT_FUNCTIONS.
+On Wed, 2020-05-06 at 11:40 -0400, Robert P. J. Day wrote:
+>   still poring over BB user manual -- Section 3.7 on variable flags
+> strongly suggests that numerous flags can be applied to tasks only,
+> but it seems that you can apply many of the same flags to non-task
+> functions. one example from package.bbclass:
 > 
->   case in point -- cmake.bbclass. at bottom of file, we see some
-> perfectly reasonable exporting:
+>   python perform_packagecopy () {
+>         ... snip ...
+>   }
+>   ...
+>   perform_packagecopy[cleandirs] = "${PKGD}"
+>   perform_packagecopy[dirs] = "${PKGD}"
 > 
-> EXPORT_FUNCTIONS do_configure do_compile do_install
-> do_generate_toolchain_file
-> 
-> but if you grep, there is an additional function being defined of
-> that
-> form:
-> 
-> cmake_do_generate_toolchain_file() {
-> cmake_do_configure() {
-> cmake_runcmake_build() {             <-- this one
-> cmake_do_compile()  {
-> cmake_do_install() {
-> 
-> sure, that function is invoked internally in that class file, but
-> without being exported, is there any reason that function has a
-> "cmake_" prefix?
+> pretty sure that function is not registered as a task, but still has
+> a couple flags applied to it. clarification?
 
-It makes it clear it comes from the cmake class? Namespacing is useful
-even if EXPORT_FUNCTIONS isn't involved.
+Some flags apply to tasks, some to functions. A task can call multiple
+functions.
+
+> rday
+> 
+> p.s. hang on ... it seems weird for the same routine to have both the
+> [dirs] and [cleandirs] flags set.
+
+You don't need both.
 
 Cheers,
 
