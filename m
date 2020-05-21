@@ -1,86 +1,78 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web12.3564.1590059389745105138
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.5719.1590067249275250376
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 21 May 2020 04:09:50 -0700
+ Thu, 21 May 2020 06:20:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IudzyYzb;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id c3so2023307wru.12
-        for <bitbake-devel@lists.openembedded.org>; Thu, 21 May 2020 04:09:49 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EfLtcXee;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id s8so6617411wrt.9
+        for <bitbake-devel@lists.openembedded.org>; Thu, 21 May 2020 06:20:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P2CcxFAieoUB9b3+ZwDzA7RuIWEKqdGZqxbAyhfPPPI=;
-        b=IudzyYzbK2kfFBCWE6gBHN4w//2ibZwUf8vhCFuzHY1g1ONoE5/TvTkoBHhbkfh2hd
-         0AxMfMhJ9s6w1JwF6JG8ZX1jIUWq/p14tJwPGp3IVu6xkmncsTMCHMbFlmlphDS18Q+H
-         FmNbKbERtobL+9/AHatb9tVnUsvTwSO0w55LU=
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=ugvqj2Qcb5Ul17CVmmAF/DMvTq9Jroa1SQCM0FIx7KA=;
+        b=EfLtcXee725wag1uOofYSzjNgn4ozr4ZICrDTWQ4C2Rfbom/sRvhmhdBxkZhf72RmX
+         l+EOSxRJwhzh2XUWQnBN1elWhvkHAMe3UBlOoIw6Tk6pAQ1dtgtnyOLSM9SCsEcNwVK5
+         sw7tNCJCIy/DTEggKwIhQRn3xdSgqzwEueFOw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P2CcxFAieoUB9b3+ZwDzA7RuIWEKqdGZqxbAyhfPPPI=;
-        b=TspkJh/ntPAUYOgjxR0h+9JGwD7pHYwCqj0l7llsoqgZUOSsrxORjNYypEdmRt8ZdA
-         zpa+nbhRksarEKDFLASn8/3m8Cg0xeFWyWPNqonopOBbGeWThePG2JVpERdW395TFKTM
-         8jTZ/JIEvimjsPUKwXY1O/6381QETRIfFAtG5IGyXRZRvhQkij5RxK7qsPIXzngAAhFh
-         Ne3PpBPFZf+Dm6SbsWYU30jahT9iTdvJlClT453mBB1aHII22SST/Jx48eHUWY2HIIFu
-         titp/FB1oeSLCTGT2JYnpy3WPRLj8ihbTchd4LklQcbqgDgs1cxKirRR/FKtwPfduw5c
-         tjtQ==
-X-Gm-Message-State: AOAM531hPU/xzhCXm+vfgRJPclyLZzp9D+aBf8ShqNWiIS186Ujeyv1u
-	s0emqkW6gZW/w7/hRq58/YwJP/dbfF0=
-X-Google-Smtp-Source: ABdhPJwB2HnB0wW9WurFALMKK4a/Sdn3b/gQqPY83LP0PubnNkXo/ex0tmzRc187ROHQrBJeD1vKyw==
-X-Received: by 2002:a5d:56c7:: with SMTP id m7mr7973887wrw.256.1590059387963;
-        Thu, 21 May 2020 04:09:47 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=ugvqj2Qcb5Ul17CVmmAF/DMvTq9Jroa1SQCM0FIx7KA=;
+        b=gLgXJnAoDKzixyzInEEeDg7Y/c9xzHJAQEG0ocwY6hp5EzWI2RU6y9WGF5DCiIkNAx
+         rEfoZ1T2/DLnA2uahlJIdP+yeH1PJa9V/5CGfF9ucz5in7hQI8EDzWs+8NeENgIx38CW
+         ZrhDBd/kjZ8nfFXQpXMjeZOTNoTEdDX9yk8JsRICXBBgT5o+F6CnKaqiK8ICSkXfOL6g
+         yc744bAtpxCNbgKbr8750I5vlwNO9x6DuWFLZarMs+9bc7bduVMEYBkHg1TOTT8lPfCA
+         W81Xt1I7BISw8hAnyz6pAbaDS19nekVv5LNLIXbNyXKWMByzOyaF+EPWBcrOfIchwuPj
+         hwZw==
+X-Gm-Message-State: AOAM533GmR0PV+Azj3t90c1PMg+m2U2NwBg35hUNHLZXB9L7qAbuvzAn
+	L1lzg7xzuHcrgYyZDmk9JEr+jg==
+X-Google-Smtp-Source: ABdhPJxGxXnNDI3lamfs5TiVr1wEXrVjCqatYimZlBV1E1HXqZ1z3bSi6wri7ck5sjFLP12vRvJp2g==
+X-Received: by 2002:a05:6000:108d:: with SMTP id y13mr1600141wrw.180.1590067247736;
+        Thu, 21 May 2020 06:20:47 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id l18sm5997334wmj.22.2020.05.21.04.09.47
-        for <bitbake-devel@lists.openembedded.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id b145sm7006317wme.41.2020.05.21.06.20.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 04:09:47 -0700 (PDT)
+        Thu, 21 May 2020 06:20:47 -0700 (PDT)
+Message-ID: <a453ed4506f15303da0337ff26efa40b24575503.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] possible to generate all scripts one time ?
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] event/ast: Add RecipePostKeyExpansion event
-Date: Thu, 21 May 2020 12:09:46 +0100
-Message-Id: <20200521110946.2202443-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
+To: zhangyifan46@huawei.com, bitbake-devel@lists.openembedded.org
+Date: Thu, 21 May 2020 14:20:45 +0100
+In-Reply-To: <tLbr.1589505002949120275.wxj7@lists.openembedded.org>
+References: <tLbr.1589505002949120275.wxj7@lists.openembedded.org>
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/event.py     | 4 ++++
- lib/bb/parse/ast.py | 3 +++
- 2 files changed, 7 insertions(+)
+Hi,
 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index d1359f0100..0e6d9b2964 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -389,6 +389,10 @@ class RecipeEvent(Event):
- class RecipePreFinalise(RecipeEvent):
-     """ Recipe Parsing Complete but not yet finalised"""
- 
-+class RecipePostKeyExpansion(RecipeEvent):
-+    """ Recipe Parsing Complete but not yet finalised"""
-+
-+
- class RecipeTaskPreProcess(RecipeEvent):
-     """
-     Recipe Tasks about to be finalised
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index eb8cfa21b8..785aa974eb 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -338,6 +338,9 @@ def finalize(fn, d, variant = None):
-         bb.event.fire(bb.event.RecipePreFinalise(fn), d)
- 
-         bb.data.expandKeys(d)
-+
-+        bb.event.fire(bb.event.RecipePostKeyExpansion(fn), d)
-+
-         runAnonFuncs(d)
- 
-         tasklist = d.getVar('__BBTASKS', False) or []
--- 
-2.25.1
+On Thu, 2020-05-14 at 18:10 -0700, zhangyifan46@huawei.com wrote:
+> I am now currently using a parallel tool like icecream. And my
+> project has over 200 packages.So when the build starts,it need to
+> start icecream 200 times and the start time is a great cost.
+> So i am wondering do we have a method to generate all automake
+> scripts(especially compile or install) one time and then i need to
+> only start icecream once.
+> Thanks for your ideas!
+
+When you say "packages", I suspect you mean "recipes". The challenge is
+that the recipes are all in independent processes. Its certainly
+possible you could generate those tasks but not run them, then try and
+collect and run them together but it wouldn't be easy. There are inter
+dependencies between them too, so its unlikely all 200 couldn't run
+together and there would have to be ordering between them.
+
+I know very little about icecream but would it not be possible to start
+it once, then use that instance for each of the tasks when they were
+ready? That would probably the least invasive/complex approach.
+
+Cheers,
+
+Richard
+
+
 
