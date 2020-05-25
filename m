@@ -1,78 +1,67 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.5719.1590067249275250376
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+ by mx.groups.io with SMTP id smtpd.web10.27715.1590391604293962306
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 21 May 2020 06:20:49 -0700
+ Mon, 25 May 2020 00:26:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EfLtcXee;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id s8so6617411wrt.9
-        for <bitbake-devel@lists.openembedded.org>; Thu, 21 May 2020 06:20:49 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=YIXZ2h1U;
+ spf=pass (domain: gmail.com, ip: 209.85.167.45, mailfrom: jacob.kroon@gmail.com)
+Received: by mail-lf1-f45.google.com with SMTP id z206so6318331lfc.6
+        for <bitbake-devel@lists.openembedded.org>; Mon, 25 May 2020 00:26:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=ugvqj2Qcb5Ul17CVmmAF/DMvTq9Jroa1SQCM0FIx7KA=;
-        b=EfLtcXee725wag1uOofYSzjNgn4ozr4ZICrDTWQ4C2Rfbom/sRvhmhdBxkZhf72RmX
-         l+EOSxRJwhzh2XUWQnBN1elWhvkHAMe3UBlOoIw6Tk6pAQ1dtgtnyOLSM9SCsEcNwVK5
-         sw7tNCJCIy/DTEggKwIhQRn3xdSgqzwEueFOw=
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=bcjXawszw4N7mMDROl1c8zmrwGrwViO3cREFOZMpbt0=;
+        b=YIXZ2h1UgugLgAuDRAsgTceXUmR00P89SRvW5kEkDEsXTfURhG9hYdXH/6e46Nji9Q
+         S6kG9Xd+BK1yjpA55IzVC7ddA+RWuwTPWzUUOgWcyCf+cwE7oK69mL49j/snRkl0Ohoh
+         Ywki6cGE/OYPYqLgGO2x5eB7kZ7Fl3wEgib3rhaZ4zHTcGvC3Jt86EKR9k8fjcbRN8zu
+         tNRP6v0Bpu69dAHyj4U9TAduhTnMuPZLGe7kd4V7mb6zonCZN5dyxlSeXq6/LAAl26ft
+         LCQR6Tdd5t5rLItZWk6Sl68W6ucPFUjLf7xvINCSDBtk2noquzBxrZcltq+4kEbeNSND
+         5CFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=ugvqj2Qcb5Ul17CVmmAF/DMvTq9Jroa1SQCM0FIx7KA=;
-        b=gLgXJnAoDKzixyzInEEeDg7Y/c9xzHJAQEG0ocwY6hp5EzWI2RU6y9WGF5DCiIkNAx
-         rEfoZ1T2/DLnA2uahlJIdP+yeH1PJa9V/5CGfF9ucz5in7hQI8EDzWs+8NeENgIx38CW
-         ZrhDBd/kjZ8nfFXQpXMjeZOTNoTEdDX9yk8JsRICXBBgT5o+F6CnKaqiK8ICSkXfOL6g
-         yc744bAtpxCNbgKbr8750I5vlwNO9x6DuWFLZarMs+9bc7bduVMEYBkHg1TOTT8lPfCA
-         W81Xt1I7BISw8hAnyz6pAbaDS19nekVv5LNLIXbNyXKWMByzOyaF+EPWBcrOfIchwuPj
-         hwZw==
-X-Gm-Message-State: AOAM533GmR0PV+Azj3t90c1PMg+m2U2NwBg35hUNHLZXB9L7qAbuvzAn
-	L1lzg7xzuHcrgYyZDmk9JEr+jg==
-X-Google-Smtp-Source: ABdhPJxGxXnNDI3lamfs5TiVr1wEXrVjCqatYimZlBV1E1HXqZ1z3bSi6wri7ck5sjFLP12vRvJp2g==
-X-Received: by 2002:a05:6000:108d:: with SMTP id y13mr1600141wrw.180.1590067247736;
-        Thu, 21 May 2020 06:20:47 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id b145sm7006317wme.41.2020.05.21.06.20.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 06:20:47 -0700 (PDT)
-Message-ID: <a453ed4506f15303da0337ff26efa40b24575503.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] possible to generate all scripts one time ?
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: zhangyifan46@huawei.com, bitbake-devel@lists.openembedded.org
-Date: Thu, 21 May 2020 14:20:45 +0100
-In-Reply-To: <tLbr.1589505002949120275.wxj7@lists.openembedded.org>
-References: <tLbr.1589505002949120275.wxj7@lists.openembedded.org>
-User-Agent: Evolution 3.36.1-2 
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=bcjXawszw4N7mMDROl1c8zmrwGrwViO3cREFOZMpbt0=;
+        b=NsDorzZBDrk9unaf8QZUptOTcpX3m6tCaY9rdevOLUGVqzZLB4In0C8Ckn56WrqM3d
+         UzjBwinsuo9SRxbpeEGr3vFxdfoEPDEe4nvy4LLuT1vQYZKrHguALNAV+lbgKZNhvHsS
+         BertGk6l4clwuiyRGSYLEjdx34KMzCh2MnbQOzJgxvruoxvILOgyNKB10fGl8tuluNaI
+         k0qfvQl9Q+9IdLtd8niDmXZde5offmMPW07+gn31v6mvimEqoJmMdK+0gTcBqysrc6MB
+         18tD05YtdE6LU5slfASY+Imt9SdRWlNGBFcAzMEE+ZFM/qdzrYz9oS30YBKu1Y8judPs
+         5sKA==
+X-Gm-Message-State: AOAM532L0c7excf1/OVM7Z5ZprwZK0bq7AC9eSSNILp5u+bFwhwsYssS
+	uWYUn4pqI5ypw3g5tz5q+SqGqo3k0H0=
+X-Google-Smtp-Source: ABdhPJxE91+mbgNMlobZ/1c0buwDjnkSyufE7QMa1Lf+kDFtDIXNVVIpN0uaJnVWW471Lmd+pwlIlg==
+X-Received: by 2002:a19:5f4e:: with SMTP id a14mr13867633lfj.57.1590391601936;
+        Mon, 25 May 2020 00:26:41 -0700 (PDT)
+Return-Path: <jacob.kroon@gmail.com>
+Received: from localhost.localdomain ([213.185.29.22])
+        by smtp.gmail.com with ESMTPSA id y24sm4873047ljh.18.2020.05.25.00.26.40
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 00:26:41 -0700 (PDT)
+To: bitbake-devel@lists.openembedded.org
+From: "Jacob Kroon" <jacob.kroon@gmail.com>
+Subject: Remove 'recideptask' varflag ?
+Message-ID: <3e812b97-803c-87e7-0d55-6627c28f9846@gmail.com>
+Date: Mon, 25 May 2020 09:26:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
 Hi,
 
-On Thu, 2020-05-14 at 18:10 -0700, zhangyifan46@huawei.com wrote:
-> I am now currently using a parallel tool like icecream. And my
-> project has over 200 packages.So when the build starts,it need to
-> start icecream 200 times and the start time is a great cost.
-> So i am wondering do we have a method to generate all automake
-> scripts(especially compile or install) one time and then i need to
-> only start icecream once.
-> Thanks for your ideas!
+I stumbled upon 'recideptask' varflag in the manual, but couldn't find 
+any use of it in OE-Core/meta-openembedded master. Judging by the commit 
+message in
 
-When you say "packages", I suspect you mean "recipes". The challenge is
-that the recipes are all in independent processes. Its certainly
-possible you could generate those tasks but not run them, then try and
-collect and run them together but it wouldn't be easy. There are inter
-dependencies between them too, so its unlikely all 200 couldn't run
-together and there would have to be ordering between them.
+http://git.openembedded.org/bitbake/commit/?id=f8c9b292b02ce2c28741b74901205f5e5807ca87
 
-I know very little about icecream but would it not be possible to start
-it once, then use that instance for each of the tasks when they were
-ready? That would probably the least invasive/complex approach.
+and seeing that its use was "cleaned" away 2018 in OE-Core judging by 
+"git log -p -Grecideptask", is there still a need for it ?
 
-Cheers,
-
-Richard
-
-
+/Jacob
 
