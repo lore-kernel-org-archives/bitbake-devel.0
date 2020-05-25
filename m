@@ -1,67 +1,75 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
- by mx.groups.io with SMTP id smtpd.web10.27715.1590391604293962306
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web12.39951.1590443031299184293
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 25 May 2020 00:26:44 -0700
+ Mon, 25 May 2020 14:43:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=YIXZ2h1U;
- spf=pass (domain: gmail.com, ip: 209.85.167.45, mailfrom: jacob.kroon@gmail.com)
-Received: by mail-lf1-f45.google.com with SMTP id z206so6318331lfc.6
-        for <bitbake-devel@lists.openembedded.org>; Mon, 25 May 2020 00:26:44 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gWcEcZ4s;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f66.google.com with SMTP id q11so6258866wrp.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 25 May 2020 14:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=bcjXawszw4N7mMDROl1c8zmrwGrwViO3cREFOZMpbt0=;
-        b=YIXZ2h1UgugLgAuDRAsgTceXUmR00P89SRvW5kEkDEsXTfURhG9hYdXH/6e46Nji9Q
-         S6kG9Xd+BK1yjpA55IzVC7ddA+RWuwTPWzUUOgWcyCf+cwE7oK69mL49j/snRkl0Ohoh
-         Ywki6cGE/OYPYqLgGO2x5eB7kZ7Fl3wEgib3rhaZ4zHTcGvC3Jt86EKR9k8fjcbRN8zu
-         tNRP6v0Bpu69dAHyj4U9TAduhTnMuPZLGe7kd4V7mb6zonCZN5dyxlSeXq6/LAAl26ft
-         LCQR6Tdd5t5rLItZWk6Sl68W6ucPFUjLf7xvINCSDBtk2noquzBxrZcltq+4kEbeNSND
-         5CFQ==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=SoD5ZDnV4kL/xIoaDX+Y+eFb775QjUAA1v7lnCuvZ3U=;
+        b=gWcEcZ4sq3HfyqG6NbkU9mJQUVnxOCxDC5csu7Nc6hO+tNs3O7RhxvUBS8f+V2rndP
+         cFKC7iELlX10QEH4NJBRcMCLi+JwaAjKcznGPbohWD8jFdTT6MWXGE/4DsHHUXWW8VOG
+         gpDTaSxMIaRWIvy3sHYo2K/3EnUDN15jgfPwY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=bcjXawszw4N7mMDROl1c8zmrwGrwViO3cREFOZMpbt0=;
-        b=NsDorzZBDrk9unaf8QZUptOTcpX3m6tCaY9rdevOLUGVqzZLB4In0C8Ckn56WrqM3d
-         UzjBwinsuo9SRxbpeEGr3vFxdfoEPDEe4nvy4LLuT1vQYZKrHguALNAV+lbgKZNhvHsS
-         BertGk6l4clwuiyRGSYLEjdx34KMzCh2MnbQOzJgxvruoxvILOgyNKB10fGl8tuluNaI
-         k0qfvQl9Q+9IdLtd8niDmXZde5offmMPW07+gn31v6mvimEqoJmMdK+0gTcBqysrc6MB
-         18tD05YtdE6LU5slfASY+Imt9SdRWlNGBFcAzMEE+ZFM/qdzrYz9oS30YBKu1Y8judPs
-         5sKA==
-X-Gm-Message-State: AOAM532L0c7excf1/OVM7Z5ZprwZK0bq7AC9eSSNILp5u+bFwhwsYssS
-	uWYUn4pqI5ypw3g5tz5q+SqGqo3k0H0=
-X-Google-Smtp-Source: ABdhPJxE91+mbgNMlobZ/1c0buwDjnkSyufE7QMa1Lf+kDFtDIXNVVIpN0uaJnVWW471Lmd+pwlIlg==
-X-Received: by 2002:a19:5f4e:: with SMTP id a14mr13867633lfj.57.1590391601936;
-        Mon, 25 May 2020 00:26:41 -0700 (PDT)
-Return-Path: <jacob.kroon@gmail.com>
-Received: from localhost.localdomain ([213.185.29.22])
-        by smtp.gmail.com with ESMTPSA id y24sm4873047ljh.18.2020.05.25.00.26.40
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 00:26:41 -0700 (PDT)
-To: bitbake-devel@lists.openembedded.org
-From: "Jacob Kroon" <jacob.kroon@gmail.com>
-Subject: Remove 'recideptask' varflag ?
-Message-ID: <3e812b97-803c-87e7-0d55-6627c28f9846@gmail.com>
-Date: Mon, 25 May 2020 09:26:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=SoD5ZDnV4kL/xIoaDX+Y+eFb775QjUAA1v7lnCuvZ3U=;
+        b=W/uBW8Ckk+fp6IDgKL9cDuI2DVckTguqtL9VuGOHR68Hg4E3jm4U28vAZsowexYBdn
+         1CZegyeHAYi0yJqb74Z7pQV0zQ9q9ZPT4N8yfnVivoZCnfgnRSWyIzEmkpGiwKhq+LcW
+         tWcRJPszQ9Dw08e82ObjweiVaIzEe0C9MmOxIKftfTi6iNMLrgrHr65RJQXA50QnI+Hi
+         nV0sQD9t0BfIqCOv6iRx2UGoX1noZx1A8qHUs72okm/s7RhdexJuRWMjUPiAKrf/2tXy
+         +qkGkNISFEQN9/ajm0gn0wJ/TP5vukIZLil/05l5bjliY2gZbQwlgtL6mA2rFJgQkQnw
+         4lgw==
+X-Gm-Message-State: AOAM532OxsfG1r+CYQNbldWF52tVVNRhN2MFb/Dmm/arL2IczQ7R6n66
+	2br5mKuz/YmbZ1X7GKvPleDvkw==
+X-Google-Smtp-Source: ABdhPJzzgUXZbVVVRajchXAQcG41Kf2nO+7wQdmBg8iFYL4/iKYKZ9LwWMWuQhdxdsWFNIuVQ62Oow==
+X-Received: by 2002:adf:dcc3:: with SMTP id x3mr3540158wrm.93.1590443029557;
+        Mon, 25 May 2020 14:43:49 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id z132sm20756104wmc.29.2020.05.25.14.43.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 14:43:48 -0700 (PDT)
+Message-ID: <e1530603bcc3fab4aa0528f0bf93d5c00c9ba6cb.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] Remove 'recideptask' varflag ?
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Jacob Kroon <jacob.kroon@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Mon, 25 May 2020 22:43:47 +0100
+In-Reply-To: <3e812b97-803c-87e7-0d55-6627c28f9846@gmail.com>
+References: <3e812b97-803c-87e7-0d55-6627c28f9846@gmail.com>
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 
-Hi,
+On Mon, 2020-05-25 at 09:26 +0200, Jacob Kroon wrote:
+> Hi,
+> 
+> I stumbled upon 'recideptask' varflag in the manual, but couldn't
+> find 
+> any use of it in OE-Core/meta-openembedded master. Judging by the
+> commit 
+> message in
+> 
+> http://git.openembedded.org/bitbake/commit/?id=f8c9b292b02ce2c28741b74901205f5e5807ca87
+> 
+> and seeing that its use was "cleaned" away 2018 in OE-Core judging
+> by 
+> "git log -p -Grecideptask", is there still a need for it ?
 
-I stumbled upon 'recideptask' varflag in the manual, but couldn't find 
-any use of it in OE-Core/meta-openembedded master. Judging by the commit 
-message in
+The use case it was created for was minimised by swapping those tasks
+for commandline --runall options which are much more efficient.
 
-http://git.openembedded.org/bitbake/commit/?id=f8c9b292b02ce2c28741b74901205f5e5807ca87
+I'm not sure the need for it was removed entirely and the code is
+minimal so I'd prefer to keep it since it was hard to get right.
 
-and seeing that its use was "cleaned" away 2018 in OE-Core judging by 
-"git log -p -Grecideptask", is there still a need for it ?
+Cheers,
 
-/Jacob
+Richard
 
