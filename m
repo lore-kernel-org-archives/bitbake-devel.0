@@ -1,74 +1,78 @@
-Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
- by mx.groups.io with SMTP id smtpd.web12.9.1590520918969724366
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+ by mx.groups.io with SMTP id smtpd.web11.1302.1590563494808180761
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 26 May 2020 12:21:59 -0700
+ Wed, 27 May 2020 00:11:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=spJuHAC1;
- spf=pass (domain: gmail.com, ip: 209.85.218.68, mailfrom: jacob.kroon@gmail.com)
-Received: by mail-ej1-f68.google.com with SMTP id a2so25022746ejb.10
-        for <bitbake-devel@lists.openembedded.org>; Tue, 26 May 2020 12:21:58 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=D5LOWX/u;
+ spf=pass (domain: gmail.com, ip: 209.85.208.172, mailfrom: jacob.kroon@gmail.com)
+Received: by mail-lj1-f172.google.com with SMTP id z18so27565280lji.12
+        for <bitbake-devel@lists.openembedded.org>; Wed, 27 May 2020 00:11:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9UcMP0OAnsDmfRrJZRZjlrSESVGSKhlDFnX+yPWw6U0=;
-        b=spJuHAC1MHm2AWvICreKvmUGk20oaVG7bOriM9+eTSYUzzY5lmgSB2imVmkAlX3M+j
-         8SSuzEQmt0TBPVeqHJQl2PzNDzjXGqGNPl6IvOEchSCxQqDXpRB2FMYO/iqF6vy1kXcd
-         KxeE7ICE5H9/a4mDCNK678dOKhHZMM+vMCshBgTR0X1puFdAQOTUlnTnNCKHcpntaakC
-         Ayl0c89HB8Wlo1t859FfFTMwMYv7mPUCuLmBFHhIUDYtSiYZOc6zaRUKSuQ+VR9OKWgD
-         arqELR3wCMg4Sl/EPbzKoOCVsqms+EnIN51voHKbD2Lsw23A0zICEPrDItioyvB78sJJ
-         /h0A==
+        h=from:to:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=6E1QLGeIBjox7wM/ocPnQHwRMFlqoAOIXFZJXuMyFx4=;
+        b=D5LOWX/uveKJJGjjeV1DNYRgfQawJ2PY6Pq/I0CmlVqdPnzPqHu90WrB+HIZmWC9oP
+         93svD8S5ycK/WOMtr45NLbh2f143wu52ldBELRf7QyxqhrMoTczkr/l044q92bKLT0Px
+         zlfMUZCArT4SsDPpw6lu2VXbRhAIt++4KICM5XhwEIF+8Ad1wf4xk9hNGCGT2AKrFbRm
+         Db8aj42R3/gIlUWIuyD7wbRU2MkexqKK4BP7s7L5C7trgmJ3+9VJLSRosl5jSpfSyIJe
+         eg4VLDELP57xNhOAAIFv2fcWB84Y6QPMljXu5cOmIiu7mFBn9BwIm383QpSHirg3vngO
+         5eSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9UcMP0OAnsDmfRrJZRZjlrSESVGSKhlDFnX+yPWw6U0=;
-        b=JuR8MY1auQXsBaQvIvE7y7pvYTKN5XbODSvSy9eGvNvlvAllsla487pW9nz301feny
-         bFHKji+DxV+mCeOszW+YggsuyvqpzyAjpSa6t0xRtK+GGbmFPuTA/QVaG07fGxMa31iP
-         imN6nc2MuGIUvf/BYrLrbFgLLvabM2ZnfWB37TnYTsfnecfgE+nlt2Manlmx0OnAywas
-         cflwns7+JKeTCxJYOhb4adl1MuVnXsF5huqF+Q98IY2qXhiBuLoTCQJiNGodu5v8tj39
-         fWj2G06l/Jb7L+38VoVFznG6NpoOHSodav2Xupx3vm7EqJXKJoFiCPfQA6LNXWOKwIJ7
-         zDPQ==
-X-Gm-Message-State: AOAM532qcrdaOZpMnp18LO4YK5lvyZIPNs1G2DHaRWJGze2D/wvg8I3Y
-	MthKump1I/KOAddMiKvIB307tkHc
-X-Google-Smtp-Source: ABdhPJzngIMs4619E3mmkpaJqoIafXTFpbfUHddGO+BTgkTyouX5JAMvNuKexcNSx3DKvj9aqliO0Q==
-X-Received: by 2002:a17:906:55ce:: with SMTP id z14mr1066668ejp.50.1590520916884;
-        Tue, 26 May 2020 12:21:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=6E1QLGeIBjox7wM/ocPnQHwRMFlqoAOIXFZJXuMyFx4=;
+        b=G9GJc0XXa0D99rgXKJtU3nY2qfWwH8AvUMyesph11aRJ13p1oe+8iKJHrtZ6+ci+sV
+         66DVQf44G6dKold6vPtKajeBZS07cMbXgw3VydVrbOkFleFHQRnE8ary0/m+1u5mR6Np
+         4MunhvOyFviHZ+MLHcps5P0b40FI87RgUa5xUhDYA9X9jr6JcYCmEnYTOi7iU1O5q4mW
+         yXG8DrHsURsBw9YfwN8Trb+z3Dpg0Bm/9c3TTif1uaPsnGYihu5gGr4wE9SPNNf/om5d
+         aaEQ3hx3ut+2r635V8+v+DThe5rFDrswKm32LCs/ioxSC/bHcniYc3BpgCr/0O5XM/xG
+         bpcA==
+X-Gm-Message-State: AOAM532sjnY/Pn1/nxgbR9+RZzrjdaKAMTxUtrEFKOurPNbBlonjDais
+	FAWGfSVrk5CPU5dI2W6sYqx0cG0jQkI=
+X-Google-Smtp-Source: ABdhPJwFVkLKbLJy8MlcPA62dQWY7Q5B4s4iM+9C/UZbCW7o9bELBj0+rrWNTzzhOF6mNvQf0uadZg==
+X-Received: by 2002:a2e:b17b:: with SMTP id a27mr2539900ljm.288.1590563492339;
+        Wed, 27 May 2020 00:11:32 -0700 (PDT)
 Return-Path: <jacob.kroon@gmail.com>
-Received: from localhost.localdomain (37-247-29-68.customers.ownit.se. [37.247.29.68])
-        by smtp.gmail.com with ESMTPSA id dt12sm593979ejb.102.2020.05.26.12.21.56
+Received: from localhost.localdomain ([213.185.29.22])
+        by smtp.gmail.com with ESMTPSA id t4sm560756ljo.36.2020.05.27.00.11.31
         for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 12:21:56 -0700 (PDT)
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 00:11:31 -0700 (PDT)
 From: "Jacob Kroon" <jacob.kroon@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] doc: Clarify how task dependencies relate to RDEPENDS
-Date: Tue, 26 May 2020 21:21:46 +0200
-Message-Id: <20200526192146.420290-1-jacob.kroon@gmail.com>
-X-Mailer: git-send-email 2.26.2
+Subject: Question about recursive dependencies
+Message-ID: <73eb04e4-ad0b-3738-fb82-39720a68e26c@gmail.com>
+Date: Wed, 27 May 2020 09:11:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Clarify that BitBake knows how to map entries defined in the runtime
-dependency namespace back to build-time dependencies (recipes) in
-which tasks are defined.
+Hi,
 
-Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
----
- doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 3 +++
- 1 file changed, 3 insertions(+)
+After many reading attempts I have to admit I still don't understand the 
+last section of
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-index 10b58835..95a8b95b 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-@@ -2526,6 +2526,9 @@
-                 In the previous example, the <filename>do_packagedata</filename>
-                 task of each item in <filename>RDEPENDS</filename> must have
-                 completed before <filename>do_package_qa</filename> can execute.
-+                Although <filename>RDEPENDS</filename> contains entries from the
-+                runtime dependency namespace, BitBake knows how to map them back
-+                to the build-time dependency namespace, in which the tasks are defined.
-             </para>
-         </section>
- 
+https://www.yoctoproject.org/docs/latest/bitbake-user-manual/bitbake-user-manual.html#recursive-dependencies
+
+<quote>
+You might want to not only have BitBake look for dependencies of those 
+tasks, but also have BitBake look for build-time and runtime 
+dependencies of the dependent tasks as well. If that is the case, you 
+need to reference the task name itself in the task list:
+
+      do_a[recrdeptask] = "do_a do_b"
+</quote>
+
+The text before would suggest this means that
+
+"do_a" and "do_b" in the current recipe, plus "do_a" and "do_b" in all 
+its build-time/runtime/inter-task dependencies, recursively, must run 
+before the recipe's "do_a" can run. That would mean "do_a" in the 
+current recipe depends on itself. What am I not getting here ?
+
+Jacob
