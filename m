@@ -1,66 +1,53 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.592.1590609964984907995
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+ by mx.groups.io with SMTP id smtpd.web11.1877.1590621931330034174
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 27 May 2020 13:06:05 -0700
+ Wed, 27 May 2020 16:25:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 5760A40C06;
-	Wed, 27 May 2020 20:06:04 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id He1Y7W7-3ibS; Wed, 27 May 2020 20:06:04 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 64F4640A93;
-	Wed, 27 May 2020 20:06:02 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 8F8761731FF; Wed, 27 May 2020 16:06:01 -0400 (EDT)
-Date: Wed, 27 May 2020 16:06:01 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Jacob Kroon <jacob.kroon@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH] doc: Clarify how task dependencies relate to RDEPENDS
-Message-ID: <20200527200601.GN17660@denix.org>
-References: <20200526192146.420290-1-jacob.kroon@gmail.com>
+ dkim=missing; spf=none, err=permanent DNS error (domain: linux.intel.com, ip: 192.55.52.93, mailfrom: timothy.t.orling@linux.intel.com)
+IronPort-SDR: 0SAXSUSSqUjMzqJoZdvCypAeJfHN6qNHHDhDcu9+0M31g97pbjZBnQq7VDNy6eBIfnD27EOnaX
+ bigtl1bT3Skg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 16:25:30 -0700
+IronPort-SDR: LSED8z36v06GTPMOJvfGQ5XxEl9e6rIs3sztp6MLQsZAn6aOM03Hn+9rmq2H693TOYG60tBbah
+ 1Xch3tO7DOjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="345702902"
+Received: from wrath.jf.intel.com ([10.54.31.24])
+  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 16:25:29 -0700
+From: "Tim Orling" <timothy.t.orling@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org,
+	toaster@lists.yoctoproject.org
+Cc: david.reyna@windriver.com,
+	Tim Orling <timothy.t.orling@linux.intel.com>
+Subject: [dunfell][1.46][PATCH] toaster-requirements.txt: require Django 2.2
+Date: Wed, 27 May 2020 16:25:12 -0700
+Message-Id: <20200527232512.27409-1-timothy.t.orling@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200526192146.420290-1-jacob.kroon@gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 26, 2020 at 09:21:46PM +0200, Jacob Kroon wrote:
-> Clarify that BitBake knows how to map entries defined in the runtime
-> dependency namespace back to build-time dependencies (recipes) in
-> which tasks are defined.
-> 
-> Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
-> ---
->  doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-> index 10b58835..95a8b95b 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-> @@ -2526,6 +2526,9 @@
->                  In the previous example, the <filename>do_packagedata</filename>
->                  task of each item in <filename>RDEPENDS</filename> must have
->                  completed before <filename>do_package_qa</filename> can execute.
-> +                Although <filename>RDEPENDS</filename> contains entries from the
-> +                runtime dependency namespace, BitBake knows how to map them back
-> +                to the build-time dependency namespace, in which the tasks are defined.
+In commit 9730f95686b2ac72cf1fa513c555f7c7787e2667
+Django 2.2 was enabled.
 
-That is quite an important clarification!
+Django 1.11 was EOL on April 1, 2020
 
-While working on multiconfig, I faced this issue - I can get build 
-dependencies covered by "mcdepends", but there's no way to pull the 
-resulting packages into images or SDK, as RDEPENDS or anything that 
-results in RDEPENDS (IMAGE_INSTALL, PACKAGE_INSTALL, etc) all trigger 
-this build-time dependency namespace check in bitbake and end up in 
-errors like "Nothing RPROVIDES <blah>".
-I wonder if multiconfig-aware RDEPENDS is needed to bypass this?
+Signed-off-by: Tim Orling <timothy.t.orling@linux.intel.com>
+---
+ toaster-requirements.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/toaster-requirements.txt b/toaster-requirements.txt
+index a682b085..735b6145 100644
+--- a/toaster-requirements.txt
++++ b/toaster-requirements.txt
+@@ -1,3 +1,3 @@
+-Django>1.8,<1.12
++Django>2.2,<2.3
+ beautifulsoup4>=4.4.0
+ pytz
 -- 
-Denys
+2.24.0
+
