@@ -1,92 +1,73 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web10.12440.1590673600682081777
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web10.13153.1590675546716025988
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 28 May 2020 06:46:41 -0700
+ Thu, 28 May 2020 07:19:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZdJSBj+O;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.68, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f68.google.com with SMTP id f5so3248232wmh.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 28 May 2020 06:46:40 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=j12/ez7w;
+ spf=pass (domain: gmail.com, ip: 209.85.128.65, mailfrom: maurofrqueiros@gmail.com)
+Received: by mail-wm1-f65.google.com with SMTP id r15so3338736wmh.5
+        for <bitbake-devel@lists.openembedded.org>; Thu, 28 May 2020 07:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=e/j5P7GnpJ2CyO5iv7B7uanJSyYCBrZleNrMEJ/cXrY=;
-        b=ZdJSBj+OABevZIeFogIjAglVe8hSZj05oBJicU1nclEkT0xZod6P4IbC7ZMKhVjCMJ
-         Sv0eYorkfY8bh8IDb+UpzbOOjVajeSVnYnwlrwbAurB252O2S+RkodZNde4hDzGKL51W
-         wOihI+dsCPADx9ndNE4/K+tI/SzKsotv/5+6U=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Pq1rjFiHyVfTgLwrY2X2NNS+e40M06+DBfE8mnJSS1I=;
+        b=j12/ez7wO4igtL6wX5qOF4a2RqIVckUNBut0yedeSst8m2hhKDlvN9760VL3Q8lV8b
+         HMFPkKivH9upzmx3U7KX1yGgdl/Tk/Z3Xsmp7+f68ngpRRYYp5/reyRBFIzbr0fD9jB4
+         j+QTUryqRL8x+TrLKkoJ+WAD0YDNfSoyce1idEtpxQ0zuwoSEIPu/upAf7Ci0LxAsdom
+         uPUeQoAg9VhD4g47GgEVr2jCDnJErylJOGO6K1VO47Fe+qqBQA6imlJUFnj/MSUA0JLh
+         5ZzudqDFfiWdZSmif1LkyFHGfpElfvt8VRll7M7vq9un2VUlYbUDk4fMZInf4sRjpePb
+         j0cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=e/j5P7GnpJ2CyO5iv7B7uanJSyYCBrZleNrMEJ/cXrY=;
-        b=PjW3GBK1QJzdbYVyGqKijkqWBw7SyZo8wu7Z77cvnQ062XZUZP6+vDAu81ihz3rOVT
-         ZU7t/F/aXKe6aWMF6AbZlZauk76f/TCsEfqSbZIwYX+TcsdrBPMNEEJyp8epyvkocBxD
-         k0buTo1l5kGgfFjzTh3YRdRp/oNjBqurvs2iBFKdZS1JoCjFVUhG29z5ckJGVmdZqGB9
-         +/Juat3oXyJyOrgPTga3Ve2dC05WaT6Gqm4S341BHLtb4ivNWXxAd7uOGUKSn/86udIh
-         mTGtv2UPWvcU6WmUJhJ09wJpgAjVvVGcy+x/t6Sb97/859RVeDwNKQDAw1sMWsNh/mHx
-         J9Pg==
-X-Gm-Message-State: AOAM533qld8SGiX9j2OJvZDeirKSnDrTXviQh10/qS+l2EyTY7jsgDQv
-	8RD7U3Bxhzy2qnhk4si6LvSdpQ==
-X-Google-Smtp-Source: ABdhPJxd6DX+b2Zghsl0YPap3BQZvaiJqn1jgt0oA83IDD2HPkVtNpIu4LikFe+WXXUBpqXyNkTVqw==
-X-Received: by 2002:a1c:9817:: with SMTP id a23mr3717774wme.133.1590673599127;
-        Thu, 28 May 2020 06:46:39 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id b132sm6900289wmh.3.2020.05.28.06.46.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Pq1rjFiHyVfTgLwrY2X2NNS+e40M06+DBfE8mnJSS1I=;
+        b=V9f/b4BQJ9i0jtzE7RRvFrVEzUkArhJkOHOXqij4C3P6WiYNT35Co3WW7KJGLoOALd
+         EqRpRqvP9Sc/JT2Utj4xlABwbQFFXF60/2Ei/iVl8d/V8+ztwTZF7F2f22sP4T3c91XL
+         lZ6O8Qf1hXgwowqQkUh6QlEjmSVrFiFOrPJObc3dDf+Q+3zo/kmqGsge716nWPh34yFV
+         kWSSayLzhM8OCmOah9Xj+2VsU/me2Mwke8NLg4GjS3Zcb7uCX+Vwh7erquBPZCYEEsYW
+         TK3cQrMkANbNjm3e3MsBoryvPz0GW+iVBNXE57XtMaqtT0PU6BgeIVewiAFq5hCD2Zpm
+         ra0Q==
+X-Gm-Message-State: AOAM533Ljyg6QCb8guy2BMwC2SMoq/DxCx3TzrX7KlPcy0TAOob1QT31
+	cj8E0cpmrQssDeJ0D2x5ixcya59FUsw9Og==
+X-Google-Smtp-Source: ABdhPJynhszua9Q5ebt3zFjQg0Ow+Yz7c0oFdm85pEFEr6nre7HSf7QctISjEmui8R+2p3w2AuxwAw==
+X-Received: by 2002:a7b:cc92:: with SMTP id p18mr3733980wma.174.1590675544926;
+        Thu, 28 May 2020 07:19:04 -0700 (PDT)
+Return-Path: <maurofrqueiros@gmail.com>
+Received: from ctw-bre-003.criticaltechworks.com ([83.240.214.249])
+        by smtp.gmail.com with ESMTPSA id q4sm6942497wma.47.2020.05.28.07.19.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 06:46:38 -0700 (PDT)
-Message-ID: <bc07f11a32eb98bfac79aa67bcc838cd1271bb4d.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] doc: More explanation to tasks that recursively depend on themselves
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Jacob Kroon <jacob.kroon@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Thu, 28 May 2020 14:46:37 +0100
-In-Reply-To: <20200528064115.35703-1-jacob.kroon@gmail.com>
-References: <20200528064115.35703-1-jacob.kroon@gmail.com>
-User-Agent: Evolution 3.36.1-2 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+        Thu, 28 May 2020 07:19:04 -0700 (PDT)
+From: =?UTF-8?B?TWF1cm8gUXVlaXLDs3M=?= <maurofrqueiros@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Mauro Queiros <maurofrqueiros@gmail.com>
+Subject: [PATCH 1/3] git.py: skip smudging if lfs=0 is set
+Date: Thu, 28 May 2020 15:18:51 +0100
+Message-Id: <20200528141853.213890-1-maurofrqueiros@gmail.com>
+X-Mailer: git-send-email 2.17.1
 
-On Thu, 2020-05-28 at 08:41 +0200, Jacob Kroon wrote:
-> Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
-> ---
->  .../bitbake-user-manual-metadata.xml               | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-> index 95a8b95b..069a0ec8 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-> @@ -2565,15 +2565,17 @@
->              </para>
->  
->              <para>
-> -                You might want to not only have BitBake look for
-> -                dependencies of those tasks, but also have BitBake look
-> -                for build-time and runtime dependencies of the dependent
-> -                tasks as well.
-> -                If that is the case, you need to reference the task name
-> -                itself in the task list:
-> +                BitBake allows a task to recursively depend on itself by
-> +                referencing itself in the task list:
->                  <literallayout class='monospaced'>
->       do_a[recrdeptask] = "do_a do_b"
->                  </literallayout>
-> +                In the same way as before, this means that the <filename>do_a</filename>
-> +                and <filename>do_b</filename> tasks of the current recipe and all
-> +                recipes reachable (by way of dependencies) from the recipe
-> +                must run before the <filename>do_a</filename> task can run. In this
-> +                case BitBake will ignore the current recipe's <filename>do_a</filename>
-> +                task circular dependency on itself.
->              </para>
->          </section>
+Git-LFS objects were being fetched even when lfs=0 was not set.
+This patch disables LFS smudging when lfs=0. That way, only the LFS pointers
+are downloaded during checkout.
 
-I'm not sure I 100% agree with the change. I think the original first
-paragraph is clearer but it is good to add something about breaking the
-circular dependency where necessary.
+Signed-off-by: Mauro Queiros <maurofrqueiros@gmail.com>
+---
+ lib/bb/fetch2/git.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Cheers,
-
-Richard
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 5b3793a7..4c7d388e 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -475,6 +475,9 @@ class Git(FetchMethod):
+ 
+         need_lfs = ud.parm.get("lfs", "1") == "1"
+ 
++        if not need_lfs:
++            ud.basecmd = "GIT_LFS_SKIP_SMUDGE=1 " + ud.basecmd
++
+         source_found = False
+         source_error = []
+ 
+-- 
+2.17.1
 
