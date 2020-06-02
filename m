@@ -1,85 +1,81 @@
-Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
- by mx.groups.io with SMTP id smtpd.web11.390.1591058397676618406
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+ by mx.groups.io with SMTP id smtpd.web11.393.1591058400205341620
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Jun 2020 17:39:57 -0700
+ Mon, 01 Jun 2020 17:40:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=VztaqIfu;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.65, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f65.google.com with SMTP id h95so594928pje.4
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2020 17:39:57 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=g93GoUkU;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.194, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f194.google.com with SMTP id t7so629486plr.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2020 17:40:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=9gpmxKDgYHajvbIk02jCd+t7pUqn2Ko8QIZ6HYI8h8c=;
-        b=VztaqIfuRIwiW95oHnyIngzA4Ca9rkCQEWMNaQTRTEUSx4B0xQpNxIWuDBhBwRBp5V
-         NbKGtsI3cZ8qBcQwuXMn09ciGZX9erRY1lBjgV94iWWQEqSEmV16r4nyU7j+nEzTqz6+
-         cldk/5mcR+XNBmtnHJg88z9pkB5cYmseCiIAhtUQtbryHU8rBTyaSJ2Uq2LbhN70pimK
-         KOJZdbP1f8pIfnqys6mO/QZ8y47dn66nSy8mQDVGsgZr0suu0mk9+jnWalCK8v9BpoiY
-         O098kd7bvxHrNZEh4awzjcbNHbxZrgY9bUFG3lXHa4danQwbEf5OCEIv3YK7fmRUWgZd
-         RDAQ==
+        bh=CkDFvmX+293dFC2ING/tPoZ0cbd7XEmSdVkGCt6ZPR0=;
+        b=g93GoUkUD2h43pKZzkEmEn2lgg72F6SmHegg2bh+eJ/+HiCVHItMbfpJ0nbo8+QkwR
+         OROlPAX4GPA4zXSz4L+49DrPqkOgQYHb8Ja4Qnw3uvW7ndxh9zWE+GWtyqnmzyKsLwC+
+         4otrpVLTlTGscxE5c/GWI711eacUbKBtDZy2NTeO3n+jg5yPOovwFSZ5IQ65wQR7/KDI
+         vKFFI33qMaV9UEM69xjuN7CqtpUWharPQUVCxv0FjQNdK4k4FwSYR+WkKt3tyRfi9/za
+         VKWBu6fAQvQ3+K0CK5pHpb26WI8nmmVWahbWAVsOBX/8LMFb0IXMNQxqYV6+scBx8yVg
+         dH1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=9gpmxKDgYHajvbIk02jCd+t7pUqn2Ko8QIZ6HYI8h8c=;
-        b=kMqp18RJw+HL+NGSd3QX9QCgenmM6kEN3RLIa7Z786301Fu+iJ+1czZ8LBMNQgbqyJ
-         BYMDJfkUUqIKh2be0KyHbA/7WtuUZvN3cH2aAPTnqwTtRA84YKgWo1VmhCrCIhAgoUvW
-         ngqxahQ7UeK0NYqwlT/W6xDTI0yJ89MdvP+40fd+au97AoAmUv03ypIAjgCOVGQBS/V3
-         znTvaxsRBYPUfdBDv/zhUjwYPA5v0r+hbo5+beHGjFncUiQ2u5y1ff88Vaq2tGDllHuU
-         8HR5mKJwrbIFrmlKTPIJ2Jbo7PPR7Ci6Z2RkfbnXsx6KkYEzz0wjbQUhnM3iBbM6OYx4
-         xaUA==
-X-Gm-Message-State: AOAM532pelj55GmN+JEICOcpRMWtOWCvZNfb+KqxwXeyTtaNKTAagcSH
-	IkeTYcH/n1cgmAVODHHyCWR34A8ocM8=
-X-Google-Smtp-Source: ABdhPJy+i6BwYStHnv0upO0paImBqjv4T2OZJ6XTw5PtrL164vg1EI7WHcVKMFVGP4bE5l6wrM3Jag==
-X-Received: by 2002:a17:90a:9292:: with SMTP id n18mr2259094pjo.3.1591058396735;
-        Mon, 01 Jun 2020 17:39:56 -0700 (PDT)
+        bh=CkDFvmX+293dFC2ING/tPoZ0cbd7XEmSdVkGCt6ZPR0=;
+        b=lCCJcL7YomvO34XHLEoMrlgof+6Ei63Qx9tHvRQltghu7z1ztcJAtHLQhM+2dwHUUn
+         oJtaJpvFD/Z9rxxbdkXm2pZjiH8InUvfl/ELs44NiuZsoJDid7aFJcyuHGudeF/H8SQv
+         CUQUbpPbfD1TWQgZ1bqnUJnT3VOuwmDM/EERgIJRtEyRCzgaxVVjgumMyRAIcZ8v0lb9
+         sjXUcV1u3O4w/TsEDBkGB+ulwtpqicv8Wa+ejcdRBBcS5Q7gdOlo3DBZOveRttbRwTlf
+         BWbJUoITigwHI6Wo9YDJBWJQ/xz38wEAmbAQ18vG55+FYGGrP9+ysODnBFBni4+rrkPJ
+         ls+Q==
+X-Gm-Message-State: AOAM530iKHmplYJF9YD4NGeO/NgMnT6aaDN/pCG9w8eH6wXfwU39MCVT
+	yYKPM7iFiIgIEUJDeB9SmFXIiAJjnI4=
+X-Google-Smtp-Source: ABdhPJyyHmCbPOL07nXYtAQTyEiHJkpEMtg52Vz0VQ8nElPeGXO+umUOtu+fJAnbzYIqxFq8n0jyGg==
+X-Received: by 2002:a17:90b:ed5:: with SMTP id gz21mr2248013pjb.214.1591058399310;
+        Mon, 01 Jun 2020 17:39:59 -0700 (PDT)
 Return-Path: <steve@sakoman.com>
 Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id l187sm465729pfl.218.2020.06.01.17.39.55
+        by smtp.gmail.com with ESMTPSA id l187sm465729pfl.218.2020.06.01.17.39.58
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 17:39:56 -0700 (PDT)
+        Mon, 01 Jun 2020 17:39:58 -0700 (PDT)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 2/6] user manual: properly tag content as <replaceable>
-Date: Mon,  1 Jun 2020 14:39:32 -1000
-Message-Id: <25c5c79bbe814eaff03c72cc2680414a73cff7f4.1591058197.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 3/6] doc: Clarify how task dependencies relate to RDEPENDS
+Date: Mon,  1 Jun 2020 14:39:33 -1000
+Message-Id: <e4695176ffdc5eb959f71a08f77ff6a8e028ffa9.1591058197.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1591058197.git.steve@sakoman.com>
 References: <cover.1591058197.git.steve@sakoman.com>
 
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+From: Jacob Kroon <jacob.kroon@gmail.com>
 
-Tag a couple fields as replaceable to be consistent with rest of
-manual.
+Clarify that BitBake knows how to map entries defined in the runtime
+dependency namespace back to build-time dependencies (recipes) in
+which tasks are defined.
 
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 647c13d4ae746a1bb9bd76ff318477dadb4d292f)
+(cherry picked from commit caf422435ad64aacbdab8a94da3115599dd0938b)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-execution.xml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-index 6c5234ed..e4251dff 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-@@ -618,12 +618,12 @@
-         <para>
-             Tasks can be either a shell task or a Python task.
-             For shell tasks, BitBake writes a shell script to
--            <filename>${</filename><link linkend='var-bb-T'><filename>T</filename></link><filename>}/run.do_taskname.pid</filename>
-+            <filename>${</filename><link linkend='var-bb-T'><filename>T</filename></link><filename>}/run.do_taskname.<replaceable>pid</replaceable></filename>
-             and then executes the script.
-             The generated shell script contains all the exported variables,
-             and the shell functions with all variables expanded.
-             Output from the shell script goes to the file
--            <filename>${T}/log.do_taskname.pid</filename>.
-+            <filename>${T}/log.do_taskname.<replaceable>pid</replaceable></filename>.
-             Looking at the expanded shell functions in the run file and
-             the output in the log files is a useful debugging technique.
-         </para>
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+index 10b58835..95a8b95b 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
+@@ -2526,6 +2526,9 @@
+                 In the previous example, the <filename>do_packagedata</filename>
+                 task of each item in <filename>RDEPENDS</filename> must have
+                 completed before <filename>do_package_qa</filename> can execute.
++                Although <filename>RDEPENDS</filename> contains entries from the
++                runtime dependency namespace, BitBake knows how to map them back
++                to the build-time dependency namespace, in which the tasks are defined.
+             </para>
+         </section>
+ 
 -- 
 2.17.1
 
