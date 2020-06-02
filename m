@@ -1,79 +1,77 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
- by mx.groups.io with SMTP id smtpd.web12.393.1591058406341473347
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+ by mx.groups.io with SMTP id smtpd.web11.398.1591058408524332260
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Jun 2020 17:40:06 -0700
+ Mon, 01 Jun 2020 17:40:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=bOMhBrua;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.193, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f193.google.com with SMTP id d66so4232253pfd.6
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2020 17:40:06 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=EW17Aos0;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.194, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f194.google.com with SMTP id bg4so623984plb.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2020 17:40:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=2MolsBTvKunpKbXPErvo07dxaeH9jLsjklhVYuV3a7E=;
-        b=bOMhBruai8wio/WYRicjPa+NoPiHNQtm9AGeNESxlg/QWD+jzuf5JKtIJ6CGg+Eahw
-         orHlSPy9gtxqHsIbg/dKzYppCfZwRb9lmjPGR2szbPtdYJU8iu122sgkdNydBuzBGyJY
-         1O09G36OCvy233bMboFHdNleBWiJW9MaV9L/5K9mgp08iTOXOfHgSVTc7sVkyZ9IHLW6
-         RIjmKLyp2ydycM5Wl6V02Z16gfZ2MNPR9Vd2AyuNKs2KHa6HdkBNyLyDUO++VX6vmMww
-         3YbhmrTHBYKsIRl9F1gCfrwN2d8JpXSbl11MfCW/to94WDmGP1TiaAEy/GB+FHU/PI+D
-         cvVQ==
+        bh=UTk4LVKh9RvpZ2JY6FT7IIidMHQinQNh6xWKVz8I+ds=;
+        b=EW17Aos0DiQEDS29meezdsaYFKjcMilyaP5Rmp2W+rM43r92QEUlf6OVh3Dvjk4nIz
+         iywQ8ANucFwC3pbaCrJK+RbqS0syI39godNLIuJ89s2DwPQhqqSnWSFwbI66BMtoVG2F
+         tT4rMHu580SInyarYBeiEZk6ekJ8IFsxFa+PONltkpsuMlN2+c0SXNy5oaIPM/zFIUgX
+         6ij3QN71SnQTGMLei9+vrfBF3/jg4YlCI/FhRL7VFYdIj/fuQ6Y2Cy+HKvzgoZ7GdwnC
+         mbLRNR2xs6NkA2x8C+t6nD7RQPU3ow2d2iDB/MZqGq16sQRudfdG45YW4V3gwgJvzwRv
+         4R8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=2MolsBTvKunpKbXPErvo07dxaeH9jLsjklhVYuV3a7E=;
-        b=eZheWCRLaSCE05UDVYvR+qD0Hdhuk3I8z/SimxgP83aWDtpkCLvJUueXGA/rCvSh+g
-         aG4QiZBjUPsYFPuxt+VmJz6YhkvoypXICvLTVZ9L8i/H1a9P/ZxgR9Ybyex3MrVFrpiR
-         0rJ1lVqknbXLhmgXm1Q9x05QmiUKVfUqAzzEFu5X7sQg8t8giNFaJeOYLLY8C58eykFW
-         Z5S2sB3WjO4pjaWXwsPhTi945u+FlhbtELulvlvR2ikWjyI+5jlPBk+glN7BqIZrS5Xb
-         O5DBT/g4XvgvqVy5YXnVH41hKCVPnP6P1Ma6dlob0FlKcZClfwNOos/QEgka5fp+GADh
-         9RVQ==
-X-Gm-Message-State: AOAM532z4CW6dn0QemB5xJX/cJGw2VzAu8AT1hw6stWAcOpK10LDhdXa
-	9vWyvPAw5LgCfInd5kA2wxZNK5qEQNM=
-X-Google-Smtp-Source: ABdhPJzDCKl3fDl/+fPKVdzqienxVZRPOziFVNjaUHARasn7EZom/GD1dm0OpYuW1L4XDIoD3hIckQ==
-X-Received: by 2002:a63:6345:: with SMTP id x66mr21124238pgb.156.1591058405472;
-        Mon, 01 Jun 2020 17:40:05 -0700 (PDT)
+        bh=UTk4LVKh9RvpZ2JY6FT7IIidMHQinQNh6xWKVz8I+ds=;
+        b=KZWHCrh1Hyq9R2gfPvTQ6N+tS5x1GOqkXKgXg/EKnLffaxMqHY9Ms1Hvu+yUkvo8fF
+         jRjM7z8rHnw3PzuGFRKfuGW79LvxdfVdfhBy4mNNz64VNX/UM8w7nu/v48bzU46ssrwB
+         0dKGWOswmM9jv5e9QnwDEERQ50Idb/5Xx6Qwu791v1CciRzTyo5iDXfxA1uqBASdIv3C
+         pAVRrpJ8AukZ3yxmcXXd5eHiDsJnZygumq+J9u1oZVBa5B40u1aFPSRh2GkFmChoq8ke
+         MlXrCNa6B0KSqleAiARIyGk7C488r7R+t+hXubmKpKr+GeQFLcp9g6heaBaQTBCJzM2U
+         X0/Q==
+X-Gm-Message-State: AOAM5325oekcb7Y37AWjqZaS1oXSUXnX8129Intm27XU6kswVNj66OcB
+	6Q29c0QxSsc0FhPPvuIHc6P1TwH3mnY=
+X-Google-Smtp-Source: ABdhPJxISu56cUjYORnAJg8BE1mJQqcFiftPX6zZMkgOBUULlNeFhS16fp+sAB8hxeDGtpTtK0lT+Q==
+X-Received: by 2002:a17:90a:17ed:: with SMTP id q100mr2125130pja.80.1591058407651;
+        Mon, 01 Jun 2020 17:40:07 -0700 (PDT)
 Return-Path: <steve@sakoman.com>
 Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id l187sm465729pfl.218.2020.06.01.17.40.04
+        by smtp.gmail.com with ESMTPSA id l187sm465729pfl.218.2020.06.01.17.40.06
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 17:40:04 -0700 (PDT)
+        Mon, 01 Jun 2020 17:40:07 -0700 (PDT)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 5/6] bitbake-user-manual-metadata.xml: fix a minor error
-Date: Mon,  1 Jun 2020 14:39:35 -1000
-Message-Id: <324aaa7f8d6d83e1e00b8054dac44df561588be8.1591058197.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 6/6] toaster-requirements.txt: require Django 2.2
+Date: Mon,  1 Jun 2020 14:39:36 -1000
+Message-Id: <6cc09fa33131f71a3fd0e336ff07a4186b41bf8f.1591058197.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1591058197.git.steve@sakoman.com>
 References: <cover.1591058197.git.steve@sakoman.com>
 
-From: Kai Kang <kai.kang@windriver.com>
+From: Tim Orling <timothy.t.orling@linux.intel.com>
 
-In the '_remove' example in bitbake-user-manual-metadata.xml, there is
-no 'jkl' in the original value of FOO2. So remove it from result.
+In commit 9730f95686b2ac72cf1fa513c555f7c7787e2667
+Django 2.2 was enabled.
 
-Signed-off-by: Kai Kang <kai.kang@windriver.com>
+Django 1.11 was EOL on April 1, 2020
+
+Signed-off-by: Tim Orling <timothy.t.orling@linux.intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 06b5cf0ab6c6e518ac780d081fab5546334c5c7d)
+(cherry picked from commit ee15e78c6f9b59c221b1e43973ee4db20c5b443b)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-metadata.xml | 2 +-
+ toaster-requirements.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-index 069a0ec8..0ca53216 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-@@ -432,7 +432,7 @@
-                 The variable <filename>FOO</filename> becomes
-                 "&nbsp;&nbsp;789&nbsp;123456&nbsp;&nbsp;&nbsp;&nbsp;"
-                 and <filename>FOO2</filename> becomes
--                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jkl&nbsp;&nbsp;abcdef&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
-+                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;abcdef&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".
-             </para>
- 
-             <para>
+diff --git a/toaster-requirements.txt b/toaster-requirements.txt
+index a682b085..735b6145 100644
+--- a/toaster-requirements.txt
++++ b/toaster-requirements.txt
+@@ -1,3 +1,3 @@
+-Django>1.8,<1.12
++Django>2.2,<2.3
+ beautifulsoup4>=4.4.0
+ pytz
 -- 
 2.17.1
 
