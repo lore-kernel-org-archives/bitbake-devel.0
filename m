@@ -1,113 +1,82 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
- by mx.groups.io with SMTP id smtpd.web12.48797.1591048199966671816
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+ by mx.groups.io with SMTP id smtpd.web12.387.1591058391863907044
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Jun 2020 14:50:00 -0700
+ Mon, 01 Jun 2020 17:39:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=LHj/1Lxy;
- spf=pass (domain: gmail.com, ip: 209.85.214.173, mailfrom: jpewhacker@gmail.com)
-Received: by mail-pl1-f173.google.com with SMTP id bh7so458898plb.11
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2020 14:49:59 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=tbcrTclv;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.196, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f196.google.com with SMTP id d66so4232037pfd.6
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2020 17:39:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wFWLywHUm0HXSp6XmwReaLd6W54PUwvEWB9wsisPuqk=;
-        b=LHj/1Lxy4T+CogMv+eqxsmLTw80QS9dK9NmdARQuhfs3FgMuKXCR0pYw+X7aarvup1
-         QwfZechxxKjSNCLJprjdkns14xw7LVEiWT+UrMcAgVpE28AEB+fai8sYwbySGCyfIcxJ
-         8c/PP6CYazwaNnml0jjcxfTxBH9mvIRJwYebvgkT7dKGrqpQTWksDJcBEBJGBiPkNEvI
-         0AX62qi0t2VmHdsk3KxXgQ403u5E9J03Shp7eCloGQvqtvEfOBgBz0sFC626s0Ukw0tf
-         ZAFefFGfKQvdmlZCwzLuq5NHOCjemGwFatrlT6ULJd+B0qim3EDGteS9zjnvn7V2taSz
-         vNzQ==
+        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id;
+        bh=O37PRi/dOYXmNKWqmOELj6r+j64/chLGqnXfwZh5vJM=;
+        b=tbcrTclv3WwlUVrNeCG71hfBK6Vu0s1V7TYkzCaJnVHF83gOJlaB9cTS9KmXfaQg/Z
+         XB3BestU8JMYncPuuovDcuJ7ZMMqhV8bYV7KtfPeIA/vN+hrYKLRwEOa8SXe95tD5dJS
+         beQT8Apy2Er+wSmb8VZMGPFcE+T8gPK/fmqtpIA9XF/ucH8mhtzUbeg59iZA2RUhdE/e
+         hgOxkw2k1vEBgd6pR1L/PikGpgmKPLEiOxcd6iezNaVKzmUPLaZUUdZeL8foOVLaqo43
+         qciubjDj2M2ZdAUtuMMQpWJPHZeHTIC2bR1CoH2gLqzjQTBlEaqnFSMzCzHbBRfL3mL+
+         foQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wFWLywHUm0HXSp6XmwReaLd6W54PUwvEWB9wsisPuqk=;
-        b=nXmz3KJ2rZA+G9t1RsTIVoJDeJb+1s1TYiDjnxQBp9COBNeMD7zAN+rTZozOpXf3on
-         IZjmaHk3Vx6VmJSX0N76X1B9eP7oxDwwVIjpdmJ2mYQWAwgiPL7/lCSTa2wc+Nsnv2oD
-         wmfDApspSJiyAwT4PZzNEM3UaSjyDXvGhmNsYE8IUh+BnytokTA4n5PzJqB+k/rgc17A
-         ybVVAEs8+Mtt8VCWdb4IgezH5NfF9uASir/G59qdJIOVKcbdE01T0qDuJGH0UbMWPJya
-         y24KZtWJF0bGU2awZKW3kBqXOgBcjEltUMmCHX7O4FnM0XmcFR1Ap25MN/xIIoJJMazc
-         8Xgw==
-X-Gm-Message-State: AOAM531HhoaSaRa/EF+qCXyB5Aw3e85q2nZN05bphefLIKlTn+UNkrmj
-	IDGPP8Nji2rBLgW2yAU3nrbyYoKcDhU=
-X-Google-Smtp-Source: ABdhPJx8uJ4qQiWelzJ+A5eNHVqg2TlNhFc7CD1pZ8ja76i3urt7QODMfSTKGocpmQAjlLZyRSYiaQ==
-X-Received: by 2002:a17:90a:8c8e:: with SMTP id b14mr1480220pjo.222.1591048199254;
-        Mon, 01 Jun 2020 14:49:59 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:ec76:791a:e792:c8c8])
-        by smtp.gmail.com with ESMTPSA id o18sm385458pjp.4.2020.06.01.14.49.58
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=O37PRi/dOYXmNKWqmOELj6r+j64/chLGqnXfwZh5vJM=;
+        b=f+n2wFnGyppN7FTL2YJrJ4FIHbipwiccZPvfg06k+CybHcLRMBLk2kZFOHJBTyiACv
+         uHQOQ+Xo3P7oS5fmKGhJSczXmW1P2gHjdjPmW439AhaArXGxryfToMoLgH9ETKF02phj
+         zxhk25t240GudUVYbFTjSMUWxvZVs2QRihDKlISa39DvGSRSCczWKmRe/XOZhpeS37mN
+         Qv8/NzuN5hYnxUhkKm5wXnslJoJHuLpPF/m6vhbl2AtkGwgnLBl1WmOCH80Uz4eVdcs/
+         IMa7mqbLazQM93fVmMXW1iUlDIfgC5rgu8E/BD3mHIITLLpNAKUyJ6t4luzUTipPeT6u
+         t82w==
+X-Gm-Message-State: AOAM533NLBlXtzDHR5mdOwpMtfsHX5jvx3TEC9+83To0SQKNv6WEJoYJ
+	lkcTXxyWBAn0dZ2NRsw68fKi5vaV/vs=
+X-Google-Smtp-Source: ABdhPJy+gxe4TCp84MkFosFdiQAss9A2B4xTxugI1XY0lUxxg5YwEelNIsrybm7Qayt0q8a7SAUOzQ==
+X-Received: by 2002:aa7:9ac5:: with SMTP id x5mr21191698pfp.234.1591058390784;
+        Mon, 01 Jun 2020 17:39:50 -0700 (PDT)
+Return-Path: <steve@sakoman.com>
+Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
+        by smtp.gmail.com with ESMTPSA id l187sm465729pfl.218.2020.06.01.17.39.49
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 14:49:58 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Mon, 01 Jun 2020 17:39:49 -0700 (PDT)
+From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v2 8/8] bitbake: command: Move split_mc_pn to runqueue
-Date: Mon,  1 Jun 2020 16:49:45 -0500
-Message-Id: <20200601214945.32481-9-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601214945.32481-1-JPEWhacker@gmail.com>
-References: <20200601202807.26357-1-JPEWhacker@gmail.com>
- <20200601214945.32481-1-JPEWhacker@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [bitbake][dunfell][1.46][PATCH 0/6] Patch review
+Date: Mon,  1 Jun 2020 14:39:30 -1000
+Message-Id: <cover.1591058197.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.17.1
 
-All of the other multiconfig splitting functions are located in runqueue
-so move the function to split a pn/fn there also so that its easier to
-see them all together. Fixes a case where the findBestProvider() command
-wasn't working for multiconfig because it was looking for a prefix of
-"multiconfig:" instead of the newer "mc:"
+Please review this set of patches for the upcoming 3.1.1 release and have comments back
+by end of day Wednesday.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bb/command.py  | 8 +-------
- bitbake/lib/bb/runqueue.py | 6 ++++++
- 2 files changed, 7 insertions(+), 7 deletions(-)
+The following changes since commit b94dec477a8d48ebceec91952ba290798c56c1f5:
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index f45b6e5320..8ed3d8f679 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -138,12 +138,6 @@ class Command:
-     def reset(self):
-         self.remotedatastores = bb.remotedata.RemoteDatastores(self.cooker)
- 
--def split_mc_pn(pn):
--    if pn.startswith("multiconfig:"):
--        _, mc, pn = pn.split(":", 2)
--        return (mc, pn)
--    return ('', pn)
--
- class CommandsSync:
-     """
-     A class of synchronous commands
-@@ -438,7 +432,7 @@ class CommandsSync:
-     findProviders.readonly = True
- 
-     def findBestProvider(self, command, params):
--        (mc, pn) = split_mc_pn(params[0])
-+        (mc, pn) = bb.runqueue.split_pn(params[0])
-         return command.cooker.findBestProvider(pn, mc)
-     findBestProvider.readonly = True
- 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 3d54c2b88a..cb5aa80f2f 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -46,6 +46,12 @@ def split_tid(tid):
-     (mc, fn, taskname, _) = split_tid_mcfn(tid)
-     return (mc, fn, taskname)
- 
-+def split_pn(pn):
-+    if pn.startswith("mc:"):
-+        _, mc, pn = pn.split(":", 2)
-+        return (mc, pn)
-+    return ('', pn)
-+
- def split_tid_mcfn(tid):
-     if tid.startswith('mc:'):
-         elems = tid.split(':')
+  bitbake.conf: Drop unneeded variables from bitbake.conf (2020-04-24 14:31:30 +0100)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
+
+Jacob Kroon (2):
+  doc: Clarify how task dependencies relate to RDEPENDS
+  doc: More explanation to tasks that recursively depend on themselves
+
+Kai Kang (1):
+  bitbake-user-manual-metadata.xml: fix a minor error
+
+Robert P. J. Day (2):
+  docs: delete reference to obsolete recipe-depends.dot
+  user manual: properly tag content as <replaceable>
+
+Tim Orling (1):
+  toaster-requirements.txt: require Django 2.2
+
+ .../bitbake-user-manual-execution.xml         |  4 ++--
+ .../bitbake-user-manual-intro.xml             |  7 +------
+ .../bitbake-user-manual-metadata.xml          | 19 ++++++++++++-------
+ toaster-requirements.txt                      |  2 +-
+ 4 files changed, 16 insertions(+), 16 deletions(-)
+
 -- 
-2.26.2
+2.17.1
 
