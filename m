@@ -1,146 +1,140 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
- by mx.groups.io with SMTP id smtpd.web12.9070.1591171865337479771
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web12.3710.1591212682490317442
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Jun 2020 01:11:05 -0700
+ Wed, 03 Jun 2020 12:31:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=YA43yjUd;
- spf=pass (domain: konsulko.com, ip: 209.85.167.171, mailfrom: paul.barker@konsulko.com)
-Received: by mail-oi1-f171.google.com with SMTP id a137so1064085oii.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2020 01:11:05 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=W6iqfK/g;
+ spf=pass (domain: konsulko.com, ip: 209.85.221.46, mailfrom: pbarker@konsulko.com)
+Received: by mail-wr1-f46.google.com with SMTP id c3so3580918wru.12
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2020 12:31:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FQuokL0PP7w8D2TZLNyJThfLsm6vV4+D/myHxZ2tzl4=;
-        b=YA43yjUdIm2R6OVfokKKvr+7LCLfrjg5nHjBKkJ8LlMdKHsgV6fDNmbV0PAiXUkHbL
-         UAwYgW1lWBQGYdIV7iCm5PNchx8RFXrkPv80FTuaXrLK4o0s8gChjeWPAxCZwElNhvhy
-         3YX1op6pCB46QBPJjDW1gevm4U7kD7PzGxbDo=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/WQ+yjGZU52M2svCpfFAMMFKuTYB1DFNPyMFP4uNi/Q=;
+        b=W6iqfK/g0CG+QFcVSZ+rE0SOIkDD0bTaqu4lGVtdOfUVPUaGECEoV/dbCcH/bnz63g
+         lgm9UI0KY0jsrXDVV6eqrqglKgLlS5ReLFk+EC5nwRrqnIQ+w07pUbwI1+KqWdK66HzG
+         B21+Yebc7wXAj8LT239CoLT2VRbdQccspjVtg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FQuokL0PP7w8D2TZLNyJThfLsm6vV4+D/myHxZ2tzl4=;
-        b=IqNGsk5ktyGZ5v8kXcQK4FLDJ6VgN+ualHV3cuj6g9EHPLrvffMMl9GFVwvyjA9F8M
-         BKrK1Uaf8lsFBhxKeTBYj7zLpheOwc/aJe3GDx2uhh5SicapHylRtqiMg6IyxG+QVrBH
-         nT/9M/Ex7PX+ZZ/8pFe4Gfi5FRh+okj3kAVHIbFW3eYnlyUx+vE2LXpDaKaiMBJ9mL6D
-         qBLReQh+Hum0JfUWHrpwdcgCq+jSmL3IiFtB5jzMaGf49NdFYTeJp4KRVz4YI8rLkfcv
-         5P67B/0AVE9SNeb5WefozlRs53el9/XecwNSaT1yQwAMF6bhPyOxr4QcH5aYh/372gs4
-         j7Xw==
-X-Gm-Message-State: AOAM532n+hNA4s8756cXyP8IOix5DApzi8PWURiFJkhdHxbbOB2Oi3Gj
-	aHyr1M0OesonnygU/W3WRlhOG+/lmdzUZUiB+7DRcA==
-X-Google-Smtp-Source: ABdhPJzdbWuqVe10SFnRqK3/+4BFvQMZomRT3lQOsIO78I+sJX2OynBxnZMK4PYSbeuFftC2OuMUJw8bwPAvz339z9k=
-X-Received: by 2002:a54:439a:: with SMTP id u26mr5143178oiv.6.1591171864620;
- Wed, 03 Jun 2020 01:11:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAM9ZRVuraU8rtGy2oDxrF1shUORXLSHU=F0T5H9jkEf3_RZ7Hg@mail.gmail.com>
- <c09767aec839d97043c4ea31be35038f282410ea.camel@linuxfoundation.org>
-In-Reply-To: <c09767aec839d97043c4ea31be35038f282410ea.camel@linuxfoundation.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/WQ+yjGZU52M2svCpfFAMMFKuTYB1DFNPyMFP4uNi/Q=;
+        b=Y2kng1c1DmELQxrC+y2VFYwDQ9Pzbna0wxKt+lcUdfLSDdk7eXcnrI+KPM3aAw0tYe
+         PIXTXe9mK9fUK0OVZJ8pqhihVfVDsLJOUuGFZxPjgfz8vr95BSJ5dlg3oOYN1ShYPmjX
+         IGWu7boFE2VtyXpNI+kre2V+K9vM1RWGZLxHdnFIKCloeP0a9H9yNIKF4TtZwdnNIN6Q
+         PDiVkXenCDpe421fjHBX98SbmG1okcopTdcRMJT1EeAKZ9ithpqTrHorRQb3gHaU9ext
+         +sub6l94ZzwMOVyAdmcEDqrCfbeh6yp+yo9PBuKycXE1tEzXLsyNwM9umPAd+U5G8kLP
+         vBsw==
+X-Gm-Message-State: AOAM531Alt0o3seaWKjWlDy5jXreqhfTX1WK/v4+bfOwFXdRQ99/Boj5
+	XDXORmjDKV9+EijDNsJekUrT+KO6dZOIjw==
+X-Google-Smtp-Source: ABdhPJyCIq5x4B00ngFz3pJGV40qA2IRm+IOuA+YIFtVJGzm/7WDqCfmSyOYhLItxwo370UYhXhQ3Q==
+X-Received: by 2002:a5d:6601:: with SMTP id n1mr859547wru.23.1591212680406;
+        Wed, 03 Jun 2020 12:31:20 -0700 (PDT)
+Return-Path: <pbarker@konsulko.com>
+Received: from ar2.home.b5net.uk ([213.48.11.149])
+        by smtp.gmail.com with ESMTPSA id o8sm4331290wmb.20.2020.06.03.12.31.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 12:31:19 -0700 (PDT)
 From: "Paul Barker" <pbarker@konsulko.com>
-Date: Wed, 3 Jun 2020 09:10:53 +0100
-Message-ID: <CAM9ZRVtjx3u9qbt2Kwa-XvAxT8GTuOnR8uN=WhB4cyC-LGfiZw@mail.gmail.com>
-Subject: Re: [bitbake-devel] Task names in bitbake-diffsigs output
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+To: bitbake-devel@lists.openembedded.org
+Cc: Paul Barker <pbarker@konsulko.com>
+Subject: [PATCH] fetch2: Add the ability to list expanded URL data
+Date: Wed,  3 Jun 2020 20:31:16 +0100
+Message-Id: <20200603193116.20924-1-pbarker@konsulko.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2 Jun 2020 at 21:33, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> On Tue, 2020-06-02 at 19:37 +0100, Paul Barker wrote:
-> > Running bitbake-diffsigs today to debug why sstate was not being
-> > reused gave the following output:
-> >
-> > NOTE: Starting bitbake server...
-> > runtaskdeps changed:
-> > [-
-> > autoconf/autoconf_2.69.bb:do_populate_sysroot:virtual:native:/w/layer
-> > s/poky/meta/recipes-devtools/autoconf/autoconf_2.69.bb
-> > automake/automake_1.16.1.bb:do_populate_sysroot:virtual:native:/w/lay
-> > ers/poky/meta/recipes-devtools/automake/automake_1.16.1.bb
-> > bzip2/bzip2_1.0.8.bb:do_populate_sysroot:virtual:native:/w/layers/pok
-> > y/meta/recipes-extended/bzip2/bzip2_1.0.8.bb
-> > file/file_5.38.bb:do_fetch:virtual:native:/w/layers/poky/meta/recipes
-> > -devtools/file/file_5.38.bb
-> > gnu-config/gnu-
-> > config_git.bb:do_populate_sysroot:virtual:native:/w/layers/poky/meta/
-> > recipes-devtools/gnu-config/gnu-config_git.bb,
-> > +autoconf/autoconf_2.69.bb:do_populate_sysroot:virtual:native:/builds
-> > /SanCloudLtd/meta-sancloud/layers/poky/meta/recipes-
-> > devtools/autoconf/autoconf_2.69.bb
-> > automake/automake_1.16.1.bb:do_populate_sysroot:virtual:native:/build
-> > s/SanCloudLtd/meta-sancloud/layers/poky/meta/recipes-
-> > devtools/automake/automake_1.16.1.bb
-> > file/file_5.38.bb:do_fetch:virtual:native:/builds/SanCloudLtd/meta-
-> > sancloud/layers/poky/meta/recipes-devtools/file/file_5.38.bb
-> > gnu-config/gnu-
-> > config_git.bb:do_populate_sysroot:virtual:native:/builds/SanCloudLtd/
-> > meta-sancloud/layers/poky/meta/recipes-devtools/gnu-config/gnu-
-> > config_git.bb,
-> > 'libtool/libtool-native_2.4.6.bb:do_populate_sysroot',
-> > -zlib/zlib_1.2.11.bb:do_populate_sysroot:virtual:native:/w/layers/pok
-> > y/meta/recipes-core/zlib/zlib_1.2.11.bb,
-> > +zlib/zlib_1.2.11.bb:do_populate_sysroot:virtual:native:/builds/SanCl
-> > oudLtd/meta-sancloud/layers/poky/meta/recipes-
-> > core/zlib/zlib_1.2.11.bb]
-> > Number of task dependencies changed
-> > Dependency on task
-> > bzip2/bzip2_1.0.8.bb:do_populate_sysroot:virtual:native:/w/layers/pok
-> > y/meta/recipes-extended/bzip2/bzip2_1.0.8.bb
-> > was removed with hash
-> > 94572189ef6d0c9fd878611865331a20e71d33e294c9949de7146a1923c4175f
-> >
-> > What's confusing there is that the bulk of the output is noise due to
-> > the paths to various recipes being changed.
-> >
-> > It got me thinking, where are those long task names like
-> > "bzip2/bzip2_1.0.8.bb:do_populate_sysroot:virtual:native:/w/layers/po
-> > ky/meta/recipes-extended/bzip2/bzip2_1.0.8.bb"
-> > being generated? Why do they include the full path to the recipe?
->
-> The paths are to make things human readable, the code itself cares
-> whether it has the same set of hashes or not. If the sorted (based upon
-> the basename of the file) set of hashes differ, the checksum will
-> differ. If we just show that the hashes differ its useless to the user
-> to debug.
->
-> > Instead of including the full paths could we prefix the recipe path
-> > with the collection name ()ince those are unique but won't change if
-> > you move the layers around)? So instead you'd have something like
-> > "bzip2/bzip2_1.0.8.bb:do_populate_sysroot:virtual:native:core:recipes
-> > -extended/bzip2/bzip2_1.0.8.bb".
->
-> You're assuming that a collection can't have the same recipe filename
-> within it multiple times. It can :/.
->
-> > If that's not too insane, and someone can point me at the code which
-> > generates those task names I'd be happy to try patching it myself.
->
-> There are definitely things we can do to better filter the output. The
-> tools lean towards more verbose than not and were implemented as being
-> quick/simple. If it sees things are different, it will say so but the
-> code doesn't actually calculate what is different, it doesn't actually
-> care or need to know that if you see what I mean.
->
-> What it needs to do is pair up the hashes which match, exclude those,
-> then print the differences.
->
-> We can truncate the pathnames but then the code can potentially be
-> confusing in other ways. If the basehash differs, the output hashes
-> will differ anyway so you could argue it shouldn't be shown but that
-> information can still sometimes be useful too. Its hard to win.
->
-> The code is in lib/bb/siggen.py and has some support from
-> meta/lib/oe/sstatesig.py
+Some fetchers may download additional sources along with those
+explicitly listed in SRC_URI. These "implicit URLs" will be needed by
+the archiver to ensure that all sources can be archived.
 
-Reading through your reply and the code I see what's going on a bit
-better now. The full paths need to be there so they can be used in
-things like error messages. What we need to do is prevent them from
-causing confusion in bitbake-diffsigs.
+We can't just return a list of URL strings since each URL may need its
+own SRCREV data so we return a list of FetchData objects.
 
-I'll take another look at this in the next few days and see what I can do.
+Each fetcher can override the implicit_urldata() function to provide the
+additional FetchData objects. For now this is just needed in the gitsm
+fetcher to walk git submodules recursively.
 
-Thanks,
+Signed-off-by: Paul Barker <pbarker@konsulko.com>
+---
+ lib/bb/fetch2/__init__.py | 25 +++++++++++++++++++++++++
+ lib/bb/fetch2/gitsm.py    | 21 +++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index eb112f06..756f6021 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1617,6 +1617,13 @@ class FetchMethod(object):
+             return True
+         return False
+ 
++    def implicit_urldata(self, ud, d):
++        """
++        Get a list of FetchData objects for any implicit URLs that will also
++        be downloaded when we fetch the given URL.
++        """
++        return []
++
+ class Fetch(object):
+     def __init__(self, urls, d, cache = True, localonly = False, connection_cache = None):
+         if localonly and cache:
+@@ -1842,6 +1849,24 @@ class Fetch(object):
+             if ud.lockfile:
+                 bb.utils.unlockfile(lf)
+ 
++    def expanded_urldata(self, urls=None):
++        """
++        Get an expanded list of FetchData objects covering both the given
++        URLS and any additional implicit URLs that are added automatically by
++        the appropriate FetchMethod.
++        """
++
++        if not urls:
++            urls = self.urls
++
++        urldata = []
++        for url in urls:
++            ud = self.ud[url]
++            urldata.append(ud)
++            urldata += ud.method.implicit_urldata(ud, self.d)
++
++        return urldata
++
+ class FetchConnectionCache(object):
+     """
+         A class which represents an container for socket connections.
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index e7083001..56bd5f04 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -223,3 +223,24 @@ class GitSM(Git):
+             # up the configuration and checks out the files.  The main project config should remain
+             # unmodified, and no download from the internet should occur.
+             runfetchcmd("%s submodule update --recursive --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
++
++    def implicit_urldata(self, ud, d):
++        import shutil, subprocess, tempfile
++
++        urldata = []
++        def add_submodule(ud, url, module, modpath, workdir, d):
++            url += ";bareclone=1;nobranch=1"
++            newfetch = Fetch([url], d, cache=False)
++            urldata.extend(newfetch.expanded_urldata())
++
++        # If we're using a shallow mirror tarball it needs to be unpacked
++        # temporarily so that we can examine the .gitmodules file
++        if ud.shallow and os.path.exists(ud.fullshallow) and ud.method.need_update(ud, d):
++            tmpdir = tempfile.mkdtemp(dir=d.getVar("DL_DIR"))
++            subprocess.check_call("tar -xzf %s" % ud.fullshallow, cwd=tmpdir, shell=True)
++            self.process_submodules(ud, tmpdir, add_submodule, d)
++            shutil.rmtree(tmpdir)
++        else:
++            self.process_submodules(ud, ud.clonedir, add_submodule, d)
++
++        return urldata
 -- 
-Paul Barker
-Konsulko Group
+2.26.2
+
