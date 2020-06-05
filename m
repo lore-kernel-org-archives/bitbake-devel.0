@@ -1,79 +1,104 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
- by mx.groups.io with SMTP id smtpd.web11.913.1591316547513702592
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+ by mx.groups.io with SMTP id smtpd.web11.2274.1591322011881703380
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 04 Jun 2020 17:22:27 -0700
+ Thu, 04 Jun 2020 18:53:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=sH2pECzX;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.195, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f195.google.com with SMTP id b16so4034366pfi.13
-        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Jun 2020 17:22:27 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=qMvOQl+Y;
+ spf=pass (domain: gmail.com, ip: 209.85.216.66, mailfrom: jpewhacker@gmail.com)
+Received: by mail-pj1-f66.google.com with SMTP id q24so2050868pjd.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Jun 2020 18:53:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id;
-        bh=Ki1N3maMfywSk7PbzzIJyNPBRwlj6rlXMfZ5n4kYaAI=;
-        b=sH2pECzXScvzTPILz42BVFIaM0ERinMk5ZFbNyk3/dD3jvl8Hc60G/5a9WmPl6R3tb
-         SIp8EbM1orOpznRk+4vM0XqLbXmCcQKFsluDsba08ulQTkV4asWssTd+a7tV8iiNNT4z
-         kUOmcuiFMv3jrYCudoGUJxHgS/C4bZK8MWMW1pI5yZvUQKN/yqpym0s0LZzHsXW4b8Jr
-         dOK4Nx0gQaMzI3bBSSxbZC2enFWslwVKWjcnibwnAUeQLg8O28KFTKfOP9g7+MEGUisB
-         U21kfRvm4/PKFGSxR4Ktv94FUrDxzkh57P9kUTvNJRppEzYmVHxbY5BufgP/QEP8I+F6
-         zTDA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Wpq6svs554bMWFDbbGIatGF0DHbIyxFQgQfjRXQ2fFw=;
+        b=qMvOQl+Yr0yDPximyikkydfzopHWGra7qgKD/XKrXICpMFJs/TrPyq7HyEHmnGERTs
+         /yye1YMvU71kgVYgB+Gbf8aLGYDoGpbYSYAztik4cqBwfP07d2h04yGen6EhgQMnDvuy
+         EerJPVvKmCbkQF6p4sJO3h/In5suhinnRfnsFx2kckzhsZTqQFGV54NqYXPT/yNG0L2F
+         +7Q9ucRIj13j3mzSkaQeCnsrsfCya9Y31BdHT6TMVdRiz+p/mP82QnNlzBgp+8izFwzq
+         /l7nXlrndX8mC6LVvkIoM12kmFwq4xXgvNmzD20bLjzphndwH8fgtabD1B4sa0UkegLF
+         ITAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=Ki1N3maMfywSk7PbzzIJyNPBRwlj6rlXMfZ5n4kYaAI=;
-        b=k8zWEtiwBaWnzjGi4bv1Yxzwn6cpx+W0OxWQVAD8etBygfE2cA4GqKUn4dBXN/bMUM
-         XsuvG6kqYS8hp++shp+AFmd2tsLcclaKdjwllp8car6Mx8bfDEQ3XsYQeCwiTJkg0cNe
-         f+srBS8SLkRQn0ya5huFGXlxl2sd1wyfqOgBCaU+SxVJoxS+4HsrcKkxwmGlBmBCav3P
-         F/YTWdngIg6PZkuAVOwzEmYzSOWItFA+UGYeEz7eCfixJCzF5b1RVx4sysYJ4LvZzan8
-         xQuY3AKU4nCf0iumWOfp/4hGzZ0ExkQbF/dkDZ85LgL58yVrzHBJo78F4X6A6Ei2tVSi
-         c2IA==
-X-Gm-Message-State: AOAM533zM9UeAct+CcPw7TLjfPPQNa0lMWLVIGo8I/52dmV4hhf2XYMl
-	ZQUmg8Zf2vfN2xo213HHQYCKDAayDpc=
-X-Google-Smtp-Source: ABdhPJyT5vGNlk51SDCXTy+C7nMwLgVwbu8wkkBoNGUSNwtHBTBJpAm5k4s9I2hmd0wkAXGZDJQKQg==
-X-Received: by 2002:a63:fb14:: with SMTP id o20mr6949620pgh.144.1591316546302;
-        Thu, 04 Jun 2020 17:22:26 -0700 (PDT)
-Return-Path: <steve@sakoman.com>
-Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id 73sm4978237pge.15.2020.06.04.17.22.24
-        for <bitbake-devel@lists.openembedded.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Wpq6svs554bMWFDbbGIatGF0DHbIyxFQgQfjRXQ2fFw=;
+        b=qPo4d+U0BU8cNn6EkiQB9FPK6+bMROayleB6659geR1aqvQtESZgPiI2e4kPegC6P+
+         yT9D50hIatkypZbAWmsh5Ymw573SZNC6fmx2o4UeR3QZL5PUhZJ/2qDqgO5MW8o9cc/Q
+         eGdlNIQMmVGeZHRPaCX850UGM6jw7bmZDKqovGh3DXTygD7WfSmX12QXtxd/JxATSixv
+         U8d23XLN6YEExiBThMBirFfo5gqzBCUvw8LREJ2s9agKBlkl3l8xTrZzyHvFb0QjJNT6
+         deK7Rh5kWuJAGy1FowSjm3/S7ZkW7O1HCBebKtGHE7LFajP5DKh6T24kGG0I7h434CbH
+         8Oxg==
+X-Gm-Message-State: AOAM5331LF6ueWtA9oE5uRh47Z5ilKwx7zrXwbNriylNOJ25AVmB9AY4
+	U/s2HiM3f5aQzAVCKiKfgBl1iKIufu8=
+X-Google-Smtp-Source: ABdhPJzLPGTnqyOV2Uaz2qtPS6MGnAdgrrxB1VPcYIY1DPTQ6toE5rwNDqxrRbUNU1uFy44yczfpIg==
+X-Received: by 2002:a17:90a:714c:: with SMTP id g12mr269773pjs.31.1591322011167;
+        Thu, 04 Jun 2020 18:53:31 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from localhost.localdomain ([2605:a601:ac3d:c100:bdc6:d557:64ed:7ccf])
+        by smtp.gmail.com with ESMTPSA id x12sm5673516pfo.72.2020.06.04.18.53.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 17:22:25 -0700 (PDT)
-From: "Steve Sakoman" <steve@sakoman.com>
+        Thu, 04 Jun 2020 18:53:30 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/6] Pull request (cover letter only)
-Date: Thu,  4 Jun 2020 14:22:12 -1000
-Message-Id: <cover.1591316350.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.17.1
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v4 0/8] Add support for per-multiconfig BBMASK
+Date: Thu,  4 Jun 2020 20:53:17 -0500
+Message-Id: <20200605015325.35395-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200603025405.26885-1-JPEWhacker@gmail.com>
+References: <20200603025405.26885-1-JPEWhacker@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit b94dec477a8d48ebceec91952ba290798c56c1f5:
+Splits apart the bitbake configuration data and caches so that each
+defined multiconfig can specify as separate BBMASK independently of the
+other multiconfigs. This can take multiple forms, such as a `BBMASK` in
+a multiconfig .conf file, or BBMASK assignment based on an override (see
+linked bugzilla for an example).
 
-  bitbake.conf: Drop unneeded variables from bitbake.conf (2020-04-24 14:31:30 +0100)
+The most noticeable change is that bitbake now keeps a parsing cache
+file for each multiconfig instead of a single parsing cache file that
+caches all multiconfigs.
 
-are available in the Git repository at:
+[YOCTO #13721]
 
-  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
+V2: Fixes some syntax errors in tinfoil
 
-Jacob Kroon (2):
-  doc: Clarify how task dependencies relate to RDEPENDS
-  doc: More explanation to tasks that recursively depend on themselves
+V3: Optimizes caches so that each one only caches the files for it's own
+multiconfig
 
-Kai Kang (1):
-  bitbake-user-manual-metadata.xml: fix a minor error
+V4: Fixes compatability with Python < 3.6
+    Renames split_pn -> split_mc
 
-Robert P. J. Day (2):
-  docs: delete reference to obsolete recipe-depends.dot
-  user manual: properly tag content as <replaceable>
+Joshua Watt (8):
+  bitbake: cooker: Split file collections per multiconfig
+  bitbake: cache: Use multiconfig aware caches
+  bitbake: lib: Add support for Logging Adapters
+  bitbake: lib: Add PrefixLoggerAdapter helper
+  bitbake: cache: Improve logging
+  bitbake: cache: Cache size optimization
+  bitbake: tests: Add tests for BBMASK in multiconfig
+  bitbake: command: Move split_mc_pn to runqueue
 
-Tim Orling (1):
-  toaster-requirements.txt: require Django 2.2
-
- .../bitbake-user-manual-execution.xml         |  4 ++--
- .../bitbake-user-manual-intro.xml             |  7 +------
- .../bitbake-user-manual-metadata.xml          | 19 ++++++++++++-------
- toaster-requirements.txt                      |  2 +-
- 4 files changed, 16 insertions(+), 16 deletions(-)
+ bitbake/lib/bb/__init__.py                    |  50 +++-
+ bitbake/lib/bb/cache.py                       | 228 ++++++++++++------
+ bitbake/lib/bb/command.py                     |  39 +--
+ bitbake/lib/bb/cooker.py                      | 159 +++++++-----
+ bitbake/lib/bb/runqueue.py                    |  17 +-
+ .../bb/tests/runqueue-tests/conf/bitbake.conf |   3 +-
+ .../runqueue-tests/conf/multiconfig/mc1.conf  |   1 +
+ .../runqueue-tests/conf/multiconfig/mc2.conf  |   1 +
+ .../recipes/fails-mc/fails-mc1.bb             |   5 +
+ .../recipes/fails-mc/fails-mc2.bb             |   4 +
+ bitbake/lib/bb/tests/runqueue.py              |  15 ++
+ bitbake/lib/bb/tinfoil.py                     |  26 +-
+ bitbake/lib/bblayers/query.py                 |   4 +-
+ 13 files changed, 380 insertions(+), 172 deletions(-)
+ create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/fails-mc/fails-mc1.bb
+ create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/fails-mc/fails-mc2.bb
 
 -- 
-2.17.1
+2.26.2
 
