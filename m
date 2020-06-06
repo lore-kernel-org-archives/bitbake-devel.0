@@ -1,51 +1,51 @@
-Received: from mail-il1-f196.google.com (mail-il1-f196.google.com [209.85.166.196])
- by mx.groups.io with SMTP id smtpd.web10.3737.1591413352384928342
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+ by mx.groups.io with SMTP id smtpd.web11.3631.1591413353206029125
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Jun 2020 20:15:52 -0700
+ Fri, 05 Jun 2020 20:15:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=RrGfuLKC;
- spf=pass (domain: gmail.com, ip: 209.85.166.196, mailfrom: jpewhacker@gmail.com)
-Received: by mail-il1-f196.google.com with SMTP id 9so11528103ilg.12
-        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Jun 2020 20:15:52 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=bBizQV2m;
+ spf=pass (domain: gmail.com, ip: 209.85.166.47, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f47.google.com with SMTP id p20so12530063iop.11
+        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Jun 2020 20:15:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ya3v1vflsiE9Qf3SnzQIfJ//6OnrmhNDq6co80XH178=;
-        b=RrGfuLKCP4UEZQjySxnHRd9Oj5IAvlj492hljB/QTdzWH75ZBVxaNnH3Tnv6C2iemw
-         2bv+YWLyUGZfH+xdr+C1RnvkvfDa3xmT2gDUBwREIiydVO1xQY7gTeg0dWlFtmUwAGxD
-         7iphNYd13wEbEQyLyvRHi5U8H1X6ZrtLpSNS+io5bHn50UPTNCZvBiRvkQEOc4FgEJn6
-         3eFDz2LCQZO7ab2ySiOvGXjP9AR8XlxqJjVUTDt5znBvZLN7TngKnJBGT8tNq5MwCXVP
-         x+tf+KXWqBYjtRbiw3bxNOAtT7qvI0W4wDi/fkUi9+UKHl6Bf/Zgd7d2Mqs5H5Hik309
-         S68A==
+        bh=XfedIP0gZnnWqdQYsEMcBKru3i1ZTIHdA0ZDtf7XFoY=;
+        b=bBizQV2m2/7NZPPYgrx5WWkQx7nGAcGTNh9ZEeAQhdwnTQmlT+4XDPll4U72AitmVt
+         aSNuooO1/1BRUrmCmJUANDy31WoUcI8mvAPHN5NJmhFUqvGTayNZu433mNPwNZJaLaP6
+         OnOsjk2Ja4nF5QNd36S6AB4E3ZUScOh1uvdkhw8rG3A5hCzEW1sadlV+dks0eeK5xxpB
+         fQ28X1U7qDjr3Y8c859eswfzXiXNRN/5Nu4KeMxo4qsHOEoJ/RBuYoo5GGxYDnT0vrv4
+         /o+yejgOgQasG8X49lT/7CesIvWzy9S9MZaxQ5tLRm0Io6wXg8puIo34MnEkSuimDfOl
+         vUvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ya3v1vflsiE9Qf3SnzQIfJ//6OnrmhNDq6co80XH178=;
-        b=ZhqGatGcjyg7TwZ+jWfmyLx5aN2HktW2xG6eRzBQ9G6hhuIsDqjokfxJ3EM6OMyLYs
-         K5jCTZ5OpvNYHjpQCAI6p2OCsrQ71WPw2iHDJJzbFlrne0qbIn2B5WBEWNpCzpEX+rKg
-         de0A2qNcGbLcO2FlEG0FwHbV5DX7yDzAA+J9J2KxiME6p90U+tIF45IKqLIdJ/v65xHq
-         zYLtcSB7dQEtKdFh9C6DhtrwYj6vdWYo4HpgjnM3O8Ja8ZHhsNm2Wg1a8rdU7VlJGRH5
-         zbo/Hxzn6rgdXyKmuW1tc2cMfsWhudsrhckTS26kW6FZU8H25chtcm24FPyD4fT9PHSC
-         8nYg==
-X-Gm-Message-State: AOAM531FJTSBNCrYg0kzq/5k8BbNgGPTbDziYj9OtDA7xiqo5x3x40xa
-	tXPirW0YWZxpr4MB1Zul1kyALQuohcg=
-X-Google-Smtp-Source: ABdhPJwZghUHkobXBabhUtIiSz5n9/HsD365cpKRA5O9Rdwm6jd4qd4VQHkit3m43LNsrCigLw4g2g==
-X-Received: by 2002:a92:c5c5:: with SMTP id s5mr11395879ilt.85.1591413351562;
-        Fri, 05 Jun 2020 20:15:51 -0700 (PDT)
+        bh=XfedIP0gZnnWqdQYsEMcBKru3i1ZTIHdA0ZDtf7XFoY=;
+        b=L8Fy/5zx5FFZc3J1zbqMwVbLYufzCZItrQfCm/XupEyXGTjKpsk16NVvdENLVKTwiT
+         2r5ji77qdD7Vhh/FWCACWHyirfJjDa5YMQ5dXdO2+Tgk5rBiqH9VkHrC+Xs4CD0Bqx7g
+         GwgwZqUxg+JL/rgfBhz/lFxNLCpEj3IjvU0XktfWL36VTZjiyil22fmcDNA9r6rUJsD1
+         bqjZFPBe82kkcvSe3eDjFV0G/sXiW8DbymNYLn/Vd3z4d0qObqMOy+dZ9JCGEI8q3Apo
+         BahB47eqwlKpeS1wGdZC24XZGtCxODZhvZk0avh2TsoOs2JnPZaiPY241vWll3WfD6rR
+         O3Tw==
+X-Gm-Message-State: AOAM532LKV0aaYgasXjTk9KbIx7d7ovVnwz9fumH0+aYSYXRO2uMXNSj
+	dS8oj8aPiJpiuI/IE11QL6m1kFBM2io=
+X-Google-Smtp-Source: ABdhPJzGPZdRGRxSVcrCgpiWBquFMawelKTK5Pm3sogivTSTe81FS1QmqkpvQ/Ets7rHIYiVGv3I5w==
+X-Received: by 2002:a5d:8613:: with SMTP id f19mr11429643iol.173.1591413352465;
+        Fri, 05 Jun 2020 20:15:52 -0700 (PDT)
 Return-Path: <jpewhacker@gmail.com>
 Received: from localhost.localdomain ([2605:a601:ac3d:c100:28:333f:5748:fb55])
-        by smtp.gmail.com with ESMTPSA id p9sm2885221ile.87.2020.06.05.20.15.50
+        by smtp.gmail.com with ESMTPSA id p9sm2885221ile.87.2020.06.05.20.15.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 05 Jun 2020 20:15:51 -0700 (PDT)
 From: "Joshua Watt" <JPEWhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v5 3/8] bitbake: lib: Add support for Logging Adapters
-Date: Fri,  5 Jun 2020 22:15:31 -0500
-Message-Id: <20200606031536.15956-4-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v5 4/8] bitbake: lib: Add PrefixLoggerAdapter helper
+Date: Fri,  5 Jun 2020 22:15:32 -0500
+Message-Id: <20200606031536.15956-5-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200606031536.15956-1-JPEWhacker@gmail.com>
 References: <20200605015325.35395-1-JPEWhacker@gmail.com>
@@ -53,83 +53,34 @@ References: <20200605015325.35395-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Creates a BBLoggingAdapter class that is monkey patched in place of the
-logginer.LoggingAdapter. The new adapter is compatible with the BBLogger
-class API, allowing adapters to be created for bitbake loggers. A new
-BBLoggerMixin class is used to reduce code duplication between the BBLogger
-and BBLoggerAdapter classes.
+Adds a helper logger adapter to add a prefix to all log messages. This
+is useful to distinguish log messages between multiple instances of a
+object.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/__init__.py | 42 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 38 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/__init__.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/bitbake/lib/bb/__init__.py b/bitbake/lib/bb/__init__.py
-index b96466e654..cd53603a47 100644
+index cd53603a47..4e2f97b234 100644
 --- a/bitbake/lib/bb/__init__.py
 +++ b/bitbake/lib/bb/__init__.py
-@@ -35,12 +35,14 @@ class NullHandler(logging.Handler):
-     def emit(self, record):
-         pass
+@@ -104,6 +104,14 @@ logger.setLevel(logging.DEBUG - 2)
  
--Logger = logging.getLoggerClass()
--class BBLogger(Logger):
--    def __init__(self, name):
-+class BBLoggerMixin(object):
-+    def __init__(self, *args, **kwargs):
-+        # Does nothing to allow calling super() from derived classes
-+        pass
-+
-+    def setup_bblogger(self, name):
-         if name.split(".")[0] == "BitBake":
-             self.debug = self.bbdebug
--        Logger.__init__(self, name)
+ mainlogger = logging.getLogger("BitBake.Main")
  
-     def bbdebug(self, level, msg, *args, **kwargs):
-         loglevel = logging.DEBUG - level + 1
-@@ -60,10 +62,42 @@ class BBLogger(Logger):
-     def verbnote(self, msg, *args, **kwargs):
-         return self.log(logging.INFO + 2, msg, *args, **kwargs)
- 
-+Logger = logging.getLoggerClass()
-+class BBLogger(Logger, BBLoggerMixin):
-+    def __init__(self, name, *args, **kwargs):
-+        self.setup_bblogger(name)
-+        super().__init__(name, *args, **kwargs)
- 
- logging.raiseExceptions = False
- logging.setLoggerClass(BBLogger)
- 
-+class BBLoggerAdapter(logging.LoggerAdapter, BBLoggerMixin):
-+    def __init__(self, logger, *args, **kwargs):
-+        self.setup_bblogger(logger.name)
-+        super().__init__(logger, *args, **kwargs)
++class PrefixLoggerAdapter(logging.LoggerAdapter):
++    def __init__(self, prefix, logger):
++        super().__init__(logger, {})
++        self.__msg_prefix = prefix
 +
-+    if sys.version_info < (3, 6):
-+        # These properties were added in Python 3.6. Add them in older versions
-+        # for compatibility
-+        @property
-+        def manager(self):
-+            return self.logger.manager
++    def process(self, msg, kwargs):
++        return "%s%s" %(self.__msg_prefix, msg), kwargs
 +
-+        @manager.setter
-+        def manager(self, value):
-+            self.logger.manager = value
-+
-+        @property
-+        def name(self):
-+            return self.logger.name
-+
-+        def __repr__(self):
-+            logger = self.logger
-+            level = getLevelName(logger.getEffectiveLevel())
-+            return '<%s %s (%s)>' % (self.__class__.__name__, logger.name, level)
-+
-+logging.LoggerAdapter = BBLoggerAdapter
-+
- logger = logging.getLogger("BitBake")
- logger.addHandler(NullHandler())
- logger.setLevel(logging.DEBUG - 2)
+ # This has to be imported after the setLoggerClass, as the import of bb.msg
+ # can result in construction of the various loggers.
+ import bb.msg
 -- 
 2.26.2
 
