@@ -1,88 +1,88 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web10.1661.1591648340889793999
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+ by mx.groups.io with SMTP id smtpd.web12.488.1591650201578120756
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Jun 2020 13:32:21 -0700
+ Mon, 08 Jun 2020 14:03:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QxZ7TAjC;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.67, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f67.google.com with SMTP id j10so18898240wrw.8
-        for <bitbake-devel@lists.openembedded.org>; Mon, 08 Jun 2020 13:32:20 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=RSbHtoQC;
+ spf=pass (domain: gmail.com, ip: 209.85.216.45, mailfrom: jpewhacker@gmail.com)
+Received: by mail-pj1-f45.google.com with SMTP id m2so371780pjv.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 08 Jun 2020 14:03:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=/XRAfNTIwdUdKa+gGIyD3No/sDlh29agDIOd11hiMUM=;
-        b=QxZ7TAjC8/ajfMKwiiDH81C0ABTgbMl2Tpb/T7fY72NUaxtEL3XXujx2GKoZdd4oUa
-         jZcC9qSv9xCOncrG0CgC1PMUCol4LJRBceOjsLU0sZFBRYBu3KQbIqZVZGuUHOrgT2dX
-         T+L7kVEMiMQStIpumwXk1Lw3KGwS/B+uG0QxE=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1Fk9EIUCq/2CQ2F7vwXEzlyHHxGqdzGBVW9i+YRRUNg=;
+        b=RSbHtoQCKU6qq3lunim+oh+bPZDXqI2/hr1vY8lU1fEyXubIRKEeGOAsFr4HiZG0se
+         3xyogkjnM+Of1LP/FkvzyIByuLsOxnxMFHebdMUSDeXx8pDm9TXHDCTYvKdcOUU69bTL
+         LhCcGZgwRezLmFdN8bXK5MfGKrFDiFdhO1JtlSqvbfgpnSln1ZQx9vekryN3pPidpFdc
+         Op2zacFraIA3lvpL8R/BVJwcEWEvH/eVnnt9QG+Dq/H+sqQ3MhDEagUf3+/G8rTi454O
+         WnmzF4nU2wioAwvhhjmqRaRUuzDZ6r/1icH7KkMR95JI5RerTLd++KTn8KUd++Ule0Gl
+         OjWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=/XRAfNTIwdUdKa+gGIyD3No/sDlh29agDIOd11hiMUM=;
-        b=etgF0IsD1Lfr/6RIMD0tocREzT6AZxUFs0YRS4gDtuUNhHm+Nzhayo+k/+z8zbD0tJ
-         7w7Kx8bN5i2tGWqB5wg7rqPUW8PYJzrCriJuWOX4jlhiXIKl0YFrmmTTUf+Dw6I0KJ8k
-         WR/zAexor35TRkLVaDxpE2xlCA8pdt+lxPVYay6ZpvllBsqPq3XM5Db/mT7KDsppNzCU
-         egOnBXES4U+4jbPdywUg+x/YWkg9dQQ5BfJZF8vp/4PDhVP/tHZET1lWtIckDLlzcECO
-         1tbDnfaG0HGRvWMI9Kekb+hOUDUgv+pUheT8ljw0m9vQ7TxGqTihTyKJQWq4fFA/SxZc
-         037A==
-X-Gm-Message-State: AOAM5330pEOtekJfXHZuH7l4fPPPOfE0RJblE/O4I73ZvQcUH2GDUG4A
-	ZJ42Lf/PUqC4SvgBN0brdjXhpA==
-X-Google-Smtp-Source: ABdhPJwuMuoJdAmBIKoBTkchzFBl1Pvf/oA05ycUaUQGkBXZHk6C5SlRGKeoqa0+3f9DABGS8/PL/A==
-X-Received: by 2002:a5d:5483:: with SMTP id h3mr615181wrv.10.1591648339402;
-        Mon, 08 Jun 2020 13:32:19 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id v27sm917889wrv.81.2020.06.08.13.32.18
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1Fk9EIUCq/2CQ2F7vwXEzlyHHxGqdzGBVW9i+YRRUNg=;
+        b=A7Esk+OwHKOMCngCqhvepTm60+B+jg9ev2LCNOgWD8/foGvezp2VirYAHc634mvx9G
+         Xl/bFCWfWcnc1bokg6OUIIGnrUjQTr6et2OOTUzqpzh0rpqGViGiQC03fkKtSAZWEX/y
+         VvPHRnMn1UlpIPm65UN9+lDEQMZYi895Wzzr9VZNOOP83LqI8qCk5luUNsVizmLag05Y
+         147vu0sygwlO16LKxUEdX/TsxkqN7PBgLFEo5qEy80NVRHAc59WelrWHpQLV7778sBZK
+         lmdyEZX2FRDipQh4KXLCR7FoMQ2MIHf9DTmiQFJutfy8e7p/g3IsF+Liq1Os8+5gf0Jd
+         ZYOw==
+X-Gm-Message-State: AOAM531B+TZh7jCM9yjJ6YJsSr7YqKRI6RxOwk/jGkm7bxDIGp0dAWWN
+	XW9sQkpjfkRYnIJ0IUyWfSmw/TsaJOk=
+X-Google-Smtp-Source: ABdhPJzMCPEU6iUwTpTwic4DfI6U1oqg/T0JzD41vg+55YtN+12abhvUz9Hp/cBzPdzeb0hNLrJAeA==
+X-Received: by 2002:a17:902:9889:: with SMTP id s9mr473585plp.299.1591650200423;
+        Mon, 08 Jun 2020 14:03:20 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from localhost.localdomain ([2605:a601:ac3d:c100:90db:6d3d:5f9f:7f1d])
+        by smtp.gmail.com with ESMTPSA id r9sm7799843pfq.31.2020.06.08.14.03.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 13:32:18 -0700 (PDT)
-Message-ID: <1aedd9f81afd4d3855c56412cdc5ce1ac0ca82c8.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel][PATCH v5 0/8] Add support for per-multiconfig BBMASK
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Joshua Watt <JPEWhacker@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Mon, 08 Jun 2020 21:32:17 +0100
-In-Reply-To: <20200606031536.15956-1-JPEWhacker@gmail.com>
-References: <20200605015325.35395-1-JPEWhacker@gmail.com>
-	 <20200606031536.15956-1-JPEWhacker@gmail.com>
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Mon, 08 Jun 2020 14:03:19 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: richard.purdie@linuxfoundation.org,
+	Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] bitbake: cache: Fix error when cache is rebuilt
+Date: Mon,  8 Jun 2020 16:03:10 -0500
+Message-Id: <20200608210310.13756-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2020-06-05 at 22:15 -0500, Joshua Watt wrote:
-> Splits apart the bitbake configuration data and caches so that each
-> defined multiconfig can specify as separate BBMASK independently of
-> the
-> other multiconfigs. This can take multiple forms, such as a `BBMASK`
-> in
-> a multiconfig .conf file, or BBMASK assignment based on an override
-> (see
-> linked bugzilla for an example).
-> 
-> The most noticeable change is that bitbake now keeps a parsing cache
-> file for each multiconfig instead of a single parsing cache file that
-> caches all multiconfigs.
-> 
-> [YOCTO #13721]
-> 
-> V2: Fixes some syntax errors in tinfoil
-> 
-> V3: Optimizes caches so that each one only caches the files for it's
-> own
-> multiconfig
-> 
-> V4: Fixes compatability with Python < 3.6
->     Renames split_pn -> split_mc
-> 
-> V5: Fixes oe-selftest errors
+It is expected that load_cachfile() returns an integer indicating how
+many entries were loaded from the cache. In the event the cache needs to
+be rebuilt, 0 must be returned to prevent python from attempting to add
+an None and an integer together.
 
-I think there is an oe-selftest issue still left on centos7:
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/cache.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/79/builds/1024
-
-(and I've messed up the bitbake selftest patch merging I think :/)
-
-Cheers,
-
-Richard
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index df78d5b701..be5ea6a8bd 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -464,14 +464,14 @@ class Cache(NoCache):
+                     bitbake_ver = pickled.load()
+                 except Exception:
+                     self.logger.info('Invalid cache, rebuilding...')
+-                    return
++                    return 0
+ 
+                 if cache_ver != __cache_version__:
+                     self.logger.info('Cache version mismatch, rebuilding...')
+-                    return
++                    return 0
+                 elif bitbake_ver != bb.__version__:
+                     self.logger.info('Bitbake version mismatch, rebuilding...')
+-                    return
++                    return 0
+ 
+                 # Load the rest of the cache file
+                 current_progress = 0
+-- 
+2.26.2
 
