@@ -1,88 +1,117 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
- by mx.groups.io with SMTP id smtpd.web12.488.1591650201578120756
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+ by mx.groups.io with SMTP id smtpd.web10.8207.1591711848194785234
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Jun 2020 14:03:21 -0700
+ Tue, 09 Jun 2020 07:10:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=RSbHtoQC;
- spf=pass (domain: gmail.com, ip: 209.85.216.45, mailfrom: jpewhacker@gmail.com)
-Received: by mail-pj1-f45.google.com with SMTP id m2so371780pjv.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 08 Jun 2020 14:03:21 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Mw2EJTcp;
+ spf=pass (domain: gmail.com, ip: 209.85.208.171, mailfrom: jacob.kroon@gmail.com)
+Received: by mail-lj1-f171.google.com with SMTP id s1so25253979ljo.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jun 2020 07:10:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=1Fk9EIUCq/2CQ2F7vwXEzlyHHxGqdzGBVW9i+YRRUNg=;
-        b=RSbHtoQCKU6qq3lunim+oh+bPZDXqI2/hr1vY8lU1fEyXubIRKEeGOAsFr4HiZG0se
-         3xyogkjnM+Of1LP/FkvzyIByuLsOxnxMFHebdMUSDeXx8pDm9TXHDCTYvKdcOUU69bTL
-         LhCcGZgwRezLmFdN8bXK5MfGKrFDiFdhO1JtlSqvbfgpnSln1ZQx9vekryN3pPidpFdc
-         Op2zacFraIA3lvpL8R/BVJwcEWEvH/eVnnt9QG+Dq/H+sqQ3MhDEagUf3+/G8rTi454O
-         WnmzF4nU2wioAwvhhjmqRaRUuzDZ6r/1icH7KkMR95JI5RerTLd++KTn8KUd++Ule0Gl
-         OjWw==
+        bh=7rgfyx01iDYKzipDmYkc3XBGrGIr/s/b99p5JI5Ro20=;
+        b=Mw2EJTcpm3uDNKfh17YMfVnjugtN6xnP/We7gbSRQ6B8aEFV1uC4i85nAjEwv971Q1
+         GZAUDMxcWZEfOOqWqjrY66I06gxS/vl6Rakg65g2yhtzPzUohKbOBXBzdcwmkmPCCE9l
+         SrRLShVb4epkTRnSqtQ2PYtPwqnfLymvjJIvGTWdUWddyzQaEsWlB5rcujz17mB1XwEj
+         r+48Ggnm0bAog3kXjbenJWJi+OYSIau9fqviBtTyWlUxaQUir3IYTmBCFMR6HksxgpFm
+         f3nR4qPX6GyeqyssS5r2HmAPpVgJ+IN9l/xWNg9fKDr0KVJyahHs/9iTKskhI+Kc509M
+         8o7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=1Fk9EIUCq/2CQ2F7vwXEzlyHHxGqdzGBVW9i+YRRUNg=;
-        b=A7Esk+OwHKOMCngCqhvepTm60+B+jg9ev2LCNOgWD8/foGvezp2VirYAHc634mvx9G
-         Xl/bFCWfWcnc1bokg6OUIIGnrUjQTr6et2OOTUzqpzh0rpqGViGiQC03fkKtSAZWEX/y
-         VvPHRnMn1UlpIPm65UN9+lDEQMZYi895Wzzr9VZNOOP83LqI8qCk5luUNsVizmLag05Y
-         147vu0sygwlO16LKxUEdX/TsxkqN7PBgLFEo5qEy80NVRHAc59WelrWHpQLV7778sBZK
-         lmdyEZX2FRDipQh4KXLCR7FoMQ2MIHf9DTmiQFJutfy8e7p/g3IsF+Liq1Os8+5gf0Jd
-         ZYOw==
-X-Gm-Message-State: AOAM531B+TZh7jCM9yjJ6YJsSr7YqKRI6RxOwk/jGkm7bxDIGp0dAWWN
-	XW9sQkpjfkRYnIJ0IUyWfSmw/TsaJOk=
-X-Google-Smtp-Source: ABdhPJzMCPEU6iUwTpTwic4DfI6U1oqg/T0JzD41vg+55YtN+12abhvUz9Hp/cBzPdzeb0hNLrJAeA==
-X-Received: by 2002:a17:902:9889:: with SMTP id s9mr473585plp.299.1591650200423;
-        Mon, 08 Jun 2020 14:03:20 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:90db:6d3d:5f9f:7f1d])
-        by smtp.gmail.com with ESMTPSA id r9sm7799843pfq.31.2020.06.08.14.03.19
+        bh=7rgfyx01iDYKzipDmYkc3XBGrGIr/s/b99p5JI5Ro20=;
+        b=au5HDV/gpMmQYRmf9ngb50NQaMUCdY2OEfdEiKPoOAgI+ELDZFPkHuqwvhNFFTsbjq
+         A1YkTr5r5SXg3GKUXE582iurYVM3CCLkcm2vYNXoDRX0EAhxZMUXLCa//kqJabWRcXzK
+         Zu4gU27iIQooOIFj2JKdDP/3x5kAQ2v5+AsdDzsHDQEy+qzJY8gEzEc5DWvKknVkD+uG
+         tgRSeRratnyxR3KIyfrb1pVBwtKltpLLl+dmlBL8I90oQ7CbUTRjUKMPugTkwmQ6Uidq
+         Rj3TJLNX1T3THe9CmEm1K/HkX4VlhalIYJ1O7w9GsvrUJquf1jwVO16xHQg9oU7pjh4i
+         HwQQ==
+X-Gm-Message-State: AOAM530o6rfxAE3RnPvJx8VMwlbamrGB4C1p47KOQRSoMjlTCbi2umQV
+	wCmp2qHm3gtvpuAaqwQbT7zMXyYW
+X-Google-Smtp-Source: ABdhPJyG0CLjzB46tukC3yXdr5SSso02J4bseDeFiCDp4EMyJ3eBoHmX0bbNrCY2rR/CaYMIhPDlpg==
+X-Received: by 2002:a2e:974a:: with SMTP id f10mr14388312ljj.283.1591711845676;
+        Tue, 09 Jun 2020 07:10:45 -0700 (PDT)
+Return-Path: <jacob.kroon@gmail.com>
+Received: from localhost.localdomain ([213.185.29.22])
+        by smtp.gmail.com with ESMTPSA id i22sm4355803ljb.21.2020.06.09.07.10.43
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 14:03:19 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Tue, 09 Jun 2020 07:10:43 -0700 (PDT)
+From: "Jacob Kroon" <jacob.kroon@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: richard.purdie@linuxfoundation.org,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake: cache: Fix error when cache is rebuilt
-Date: Mon,  8 Jun 2020 16:03:10 -0500
-Message-Id: <20200608210310.13756-1-JPEWhacker@gmail.com>
+Subject: [RFC][PATCH] bitbake: ConfHandler: Add BBINCLUDESTACK
+Date: Tue,  9 Jun 2020 16:10:23 +0200
+Message-Id: <20200609141023.1751706-1-jacob.kroon@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It is expected that load_cachfile() returns an integer indicating how
-many entries were loaded from the cache. In the event the cache needs to
-be rebuilt, 0 must be returned to prevent python from attempting to add
-an None and an integer together.
+Add variable 'BBINCLUDESTACK' that contains the file inclusion stack.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
 ---
- bitbake/lib/bb/cache.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../bitbake-user-manual-ref-variables.xml                 | 8 ++++++++
+ lib/bb/parse/parse_py/ConfHandler.py                      | 7 +++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index df78d5b701..be5ea6a8bd 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -464,14 +464,14 @@ class Cache(NoCache):
-                     bitbake_ver = pickled.load()
-                 except Exception:
-                     self.logger.info('Invalid cache, rebuilding...')
--                    return
-+                    return 0
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+index c4bd1f25..255000cd 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+@@ -1134,6 +1134,14 @@
+             </glossdef>
+         </glossentry>
  
-                 if cache_ver != __cache_version__:
-                     self.logger.info('Cache version mismatch, rebuilding...')
--                    return
-+                    return 0
-                 elif bitbake_ver != bb.__version__:
-                     self.logger.info('Bitbake version mismatch, rebuilding...')
--                    return
-+                    return 0
++        <glossentry id='var-bb-BBINCLUDESTACK'><glossterm>BBINCLUDESTACK</glossterm>
++            <glossdef>
++                <para>
++                    Contains a space-separated list of the file inclusion stack.
++                </para>
++            </glossdef>
++        </glossentry>
++
+         <glossentry id='var-bb-BBINCLUDELOGS'><glossterm>BBINCLUDELOGS</glossterm>
+             <glossdef>
+                 <para>
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index af64d344..396056ed 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -16,6 +16,7 @@ import re
+ import os
+ import bb.utils
+ from bb.parse import ParseError, resolve_file, ast, logger, handle
++from collections import deque
  
-                 # Load the rest of the cache file
-                 current_progress = 0
--- 
-2.26.2
-
+ __config_regexp__  = re.compile( r"""
+     ^
+@@ -46,6 +47,7 @@ __require_regexp__ = re.compile( r"require\s+(.+)" )
+ __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.]+)\]$" )
++include_stack = deque()
+ 
+ def init(data):
+     topdir = data.getVar('TOPDIR', False)
+@@ -89,6 +91,9 @@ def include_single_file(parentfn, fn, lineno, data, error_out):
+     elif bb.parse.check_dependency(data, fn):
+         logger.warning("Duplicate inclusion for %s in %s" % (fn, data.getVar('FILE')))
+ 
++    include_stack.append(parentfn)
++    data.setVar('BBINCLUDESTACK', ' '.join(include_stack))
++
+     try:
+         bb.parse.handle(fn, data, True)
+     except (IOError, OSError) as exc:
+@@ -101,6 +106,8 @@ def include_single_file(parentfn, fn, lineno, data, error_out):
+                 raise ParseError("Could not %s file %s: %s" % (error_out, fn, exc.strerror), parentfn, lineno)
+             else:
+                 raise ParseError("Error parsing %s: %s" % (fn, exc.strerror), parentfn, lineno)
++    finally:
++        include_stack.pop()
+ 
+ # We have an issue where a UI might want to enforce particular settings such as
+ # an empty DISTRO variable. If configuration files do something like assigning
