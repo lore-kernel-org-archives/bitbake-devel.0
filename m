@@ -1,117 +1,110 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
- by mx.groups.io with SMTP id smtpd.web11.5516.1591727661665403145
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+ by mx.groups.io with SMTP id smtpd.web12.10730.1591795633755332465
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Jun 2020 11:34:21 -0700
+ Wed, 10 Jun 2020 06:27:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=O2drLdUt;
- spf=pass (domain: gmail.com, ip: 209.85.166.179, mailfrom: jpewhacker@gmail.com)
-Received: by mail-il1-f179.google.com with SMTP id a13so21368168ilh.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jun 2020 11:34:21 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=JAfrRKV2;
+ spf=pass (domain: gmail.com, ip: 209.85.210.196, mailfrom: jpewhacker@gmail.com)
+Received: by mail-pf1-f196.google.com with SMTP id h185so1115618pfg.2;
+        Wed, 10 Jun 2020 06:27:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OhDCzwRIyF1L6Ng3VMmlgnzoRJvZC8P5Hlg7TpNtF8E=;
-        b=O2drLdUtiNctLrHhkHFhWI5j8hoBqfTNxWgACofYg51F/YQXKEjPpLsMjp57sMAySL
-         ZLTxHG7E3+GqzTq7Eo+Q3wCifxRdTToMIoD60k/CIt3DOueqtxj09pcb+ahKglHCLX0x
-         3iXOjRCxPaK8WkwzMazmcWtQwlRMsmtOKqZoZrRT+4cUh4WuF0x16eWSaounUl3xYo3I
-         10ya0uPhDexGc99/onii6rZ5iUfgAwjIuhXVIUfZDly1yPOXTe8fkEGdpkyXHDA5spD3
-         aJwJC+jRlgBWYJSFiNMtTd8cGT5YO9JAp1PZawWNXyUfotYpX8Ef8yxP5ml0tRwa9wIH
-         mXPA==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=YjytT0Te2k2OpRIrHSwDRdKwTghlwvKG/SZvu7frn4o=;
+        b=JAfrRKV2dc/JsviCulNYhTe5ixP8sOdKOqLA0Sam0aKlNZ7fsN5kDIO3QQVFu07IwV
+         4Ns5aDMYlBr/yw9xmDH5cS+6cTX3d3VjDUXJL6kec10UzdcpQQASBxi+/eVi+mqUgoFe
+         u8L/TtXGzD16EzL13VJ4tykUOe/uCy/RQkOshSh4bgaXtIT47iY3shta9EwWWtLpZ9cL
+         N0yhJsn2IkIjzGIm3K5e+jmWAV1uzpAC++TARGjsezYWy4sUr5B68Gp/SeWHFlnEBMeQ
+         l6nW0AFlEpup0f3FA8mUjKwLrqqDvQkFBqxo54Cgme7/JRDUF9rRBJESkbUxRv+IJO5t
+         mfYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OhDCzwRIyF1L6Ng3VMmlgnzoRJvZC8P5Hlg7TpNtF8E=;
-        b=cCsXGD3CHddtrFQSOIqnTCyRzNYhPbqYxEHFaJjtEQkarA0zwcDY0ng1+zPxpvhub6
-         ifmOLblq6FmQUV7LuekqOIDqDXuYanncQZ+42kcLacxBwWlqc58LSYIwsKnNSktLarTa
-         17fa5uEDE0IeE98yHst3NK+9FYQskRTbgiLPmTXo/T0rlyiPCcuynEAzcydPUfbhOZYc
-         aaYcjbSMoa7+6HT3hhXJHtwG3z5T23nlhpty5LJZRwBPM1dSvGTKdsJQ2kQJs2qsdIK9
-         3VJy9Imf08pcD59oWnrL7xYxT0jAQHuW6OLfzZ5p+u7St3OcULQyebRZba+AMzzuUfsz
-         0PZQ==
-X-Gm-Message-State: AOAM531jC/J+sbu8mXjObQr6NBJU9RcjlWRPrBYqLIP7X+bdOct9A7E7
-	rnqwsq/fubb6i8TZdPX/PEXWuk6x
-X-Google-Smtp-Source: ABdhPJzUmkCE4YgJ7BNnPFsre2FcBlLpzD2jrBfZCPsY0izCkgIpvMJn3fAq3vv0LQPyzxk2ioKz5w==
-X-Received: by 2002:a92:8b0a:: with SMTP id i10mr26807056ild.245.1591727660657;
-        Tue, 09 Jun 2020 11:34:20 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=YjytT0Te2k2OpRIrHSwDRdKwTghlwvKG/SZvu7frn4o=;
+        b=ISLr7eTmK06bcyhoL1yzh4+r+qiv3eTkqtvHUFfx7+4BzVLkT8JLG5DJztz2kLAS+l
+         FxTnwx+65i5Lddc4yOoikgExcunnMwm2Cib3kJLDHopuqpM30HzBZIRp58hWBkwoVdTJ
+         TacnVX7ZHHfY6N/+wtS4jx2ollUmm7ZiTDNL0O4N7N7NVmtyEXcnHdM/H/JCwcvwuGKX
+         fNOaAJ+vuiBJQU9P0uaEnvY6HoeyOVhBQ2tvd08aqETR4cHNkLX6P/2AGiqpdtpJvZXs
+         bozCp/Ykjgrt4R6QgR0sEOjCY5Bc+zmkJ9W59Ci0MCmCMQC0Kb6snl/qXMmvB4HVN+6O
+         NBzw==
+X-Gm-Message-State: AOAM530iCyVUqAddj0wexZbrAN7WItEvwDMZyeKAG0jIkudNWXpAGGDY
+	RAB6xJPVfOhKkJyR0DHqVI0bmpgn
+X-Google-Smtp-Source: ABdhPJxwcabLE9JWyp6jkuZubiiW1hHE00k3ZJYe8Q/Me1uArgmrrboMoMB7IO9Dt08Nwcsb0Di0Mg==
+X-Received: by 2002:a05:6a00:1589:: with SMTP id u9mr2821652pfk.201.1591795632767;
+        Wed, 10 Jun 2020 06:27:12 -0700 (PDT)
 Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:6cec:510:bc9:611])
-        by smtp.gmail.com with ESMTPSA id p5sm9342260ilg.88.2020.06.09.11.34.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 11:34:19 -0700 (PDT)
+Received: from ?IPv6:2605:a601:ac3d:c100:1c01:47eb:7ccc:e4f? ([2605:a601:ac3d:c100:1c01:47eb:7ccc:e4f])
+        by smtp.gmail.com with ESMTPSA id h3sm11377pgd.0.2020.06.10.06.27.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 06:27:11 -0700 (PDT)
 From: "Joshua Watt" <JPEWhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v2 2/2] bitbake: tests: Add mcdepends test
-Date: Tue,  9 Jun 2020 13:34:15 -0500
-Message-Id: <20200609183415.21914-3-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200609183415.21914-1-JPEWhacker@gmail.com>
+Subject: Re: [bitbake-devel] [RFC PATCH 0/3] Include mcdepends in signature generation
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: bitbake-devel@lists.openembedded.org,
+ openembedded-core@lists.openembedded.org
 References: <20200605181754.32883-1-JPEWhacker@gmail.com>
- <20200609183415.21914-1-JPEWhacker@gmail.com>
+ <20200605235435.GR17660@denix.org>
+Message-ID: <bcf48cde-afc0-d999-0aef-cfc95a337019@gmail.com>
+Date: Wed, 10 Jun 2020 08:27:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200605235435.GR17660@denix.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-Adds a test to validate that mcdepends causes the dependent tasks to
-build, and also that a change in the dependent task causes the dependee
-task to re-execute.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- .../lib/bb/tests/runqueue-tests/recipes/f1.bb |  1 +
- bitbake/lib/bb/tests/runqueue.py              | 30 +++++++++++++++++++
- 2 files changed, 31 insertions(+)
- create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/f1.bb
+On 6/5/20 6:54 PM, Denys Dmytriyenko wrote:
+> Joshua,
+>
+> I see you've been actively working recently on multiconfig-related fixes in
+> bitbake, thanks! While at it, would you also be able to take a look at
+> multiconfig-aware RDEPENDS implementation, as discussed here[1]? Thanks!
+>
+> [1] https://lists.openembedded.org/g/bitbake-devel/topic/74485221
 
-diff --git a/bitbake/lib/bb/tests/runqueue-tests/recipes/f1.bb b/bitbake/lib/bb/tests/runqueue-tests/recipes/f1.bb
-new file mode 100644
-index 0000000000..d45a4cff52
---- /dev/null
-+++ b/bitbake/lib/bb/tests/runqueue-tests/recipes/f1.bb
-@@ -0,0 +1 @@
-+do_install[mcdepends] = "mc:mc1:mc2:a1:do_build"
-diff --git a/bitbake/lib/bb/tests/runqueue.py b/bitbake/lib/bb/tests/runqueue.py
-index 091b5e41e0..d3d62b98f9 100644
---- a/bitbake/lib/bb/tests/runqueue.py
-+++ b/bitbake/lib/bb/tests/runqueue.py
-@@ -248,6 +248,36 @@ class RunQueueTests(unittest.TestCase):
-             cmd = ["bitbake", "mc:mc1:fails-mc2", "mc:mc2:fails-mc1"]
-             self.run_bitbakecmd(cmd, tempdir, "", extraenv=extraenv)
- 
-+    def test_multiconfig_mcdepends(self):
-+        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-+            extraenv = {
-+                "BBMULTICONFIG" : "mc1 mc2",
-+                "BB_SIGNATURE_HANDLER" : "TestMulticonfigDepends",
-+                "EXTRA_BBFILES": "${COREBASE}/recipes/fails-mc/*.bb",
-+            }
-+            tasks = self.run_bitbakecmd(["bitbake", "mc:mc1:f1"], tempdir, "", extraenv=extraenv, cleanup=True)
-+            expected = ["mc1:f1:%s" % t for t in self.alltasks] + \
-+                       ["mc2:a1:%s" % t for t in self.alltasks]
-+            self.assertEqual(set(tasks), set(expected))
-+
-+            # A rebuild does nothing
-+            tasks = self.run_bitbakecmd(["bitbake", "mc:mc1:f1"], tempdir, "", extraenv=extraenv, cleanup=True)
-+            self.assertEqual(set(tasks), set())
-+
-+            # Test that a signature change in the dependent task causes
-+            # mcdepends to rebuild
-+            tasks = self.run_bitbakecmd(["bitbake", "mc:mc2:a1", "-c", "compile", "-f"], tempdir, "", extraenv=extraenv, cleanup=True)
-+            expected = ["mc2:a1:compile"]
-+            self.assertEqual(set(tasks), set(expected))
-+
-+            rerun_tasks = self.alltasks[:]
-+            for x in ("fetch", "unpack", "patch", "prepare_recipe_sysroot", "configure", "compile"):
-+                rerun_tasks.remove(x)
-+            tasks = self.run_bitbakecmd(["bitbake", "mc:mc1:f1"], tempdir, "", extraenv=extraenv, cleanup=True)
-+            expected = ["mc1:f1:%s" % t for t in rerun_tasks] + \
-+                       ["mc2:a1:%s" % t for t in rerun_tasks]
-+            self.assertEqual(set(tasks), set(expected))
-+
-     @unittest.skipIf(sys.version_info < (3, 5, 0), 'Python 3.5 or later required')
-     def test_hashserv_single(self):
-         with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
--- 
-2.26.2
+I've though about this a little bit, but I'm not exactly sure what it 
+would entail.
 
+
+It might help if there was a concrete example of what you are trying to do?
+
+
+>
+>
+> On Fri, Jun 05, 2020 at 01:17:51PM -0500, Joshua Watt wrote:
+>> Updates signature generation so that mcdepends are included. Previously,
+>> they were not which meant that if recipe A mcdepends on recipe B, and
+>> recipe B changed, it would not automatically cause recipe A to also
+>> rebuild.
+>>
+>> In order for signature generation classes to correctly handle mcdepends,
+>> they need access to all the data caches, so all are passed instead of
+>> just the one for the recipe in question.
+>>
+>> This breaks the bitbake siggen API and makes it incompatible with
+>> previous signature generators, hence the cross-posting between bitbake
+>> and oe-core.
+>>
+>> Joshua Watt (3):
+>>    bitbake: siggen: Pass all data caches to hash functions
+>>    bitbake: tests: Add mcdepends test
+>>    sstatesig: Account for all dataCaches being passed
+>>
+>>   bitbake/lib/bb/runqueue.py                    |  6 +-
+>>   bitbake/lib/bb/siggen.py                      | 32 ++++----
+>>   .../lib/bb/tests/runqueue-tests/recipes/f1.bb |  1 +
+>>   bitbake/lib/bb/tests/runqueue.py              | 30 ++++++++
+>>   meta/lib/oe/sstatesig.py                      | 77 ++++++++++---------
+>>   5 files changed, 89 insertions(+), 57 deletions(-)
+>>   create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/f1.bb
+>>
+>> -- 
+>> 2.26.2
+>>
+>> 
