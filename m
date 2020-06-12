@@ -1,85 +1,115 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.2180.1591989338005116337
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web12.2084.1591989338960333009
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Jun 2020 12:15:38 -0700
+ Fri, 12 Jun 2020 12:15:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=qFeKS5bp;
- spf=pass (domain: konsulko.com, ip: 209.85.221.44, mailfrom: pbarker@konsulko.com)
-Received: by mail-wr1-f44.google.com with SMTP id e1so10894293wrt.5
-        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Jun 2020 12:15:37 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=WyUvn4t4;
+ spf=pass (domain: konsulko.com, ip: 209.85.221.65, mailfrom: pbarker@konsulko.com)
+Received: by mail-wr1-f65.google.com with SMTP id c3so10835252wru.12
+        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Jun 2020 12:15:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Czc2MuqKCGfZkSHGJyw3rk9HO/wMvd+cFFn5Ky0iw10=;
-        b=qFeKS5bpaqP7qUgzgt2zsoUbdl5TewnvTa22a/MpkiiOS+Z1g0MGGGQOz7OFJDTtgt
-         6kW+HZOAESe7XrKdfVbw1T6w39NG0+Ard04HB7MkgJHG6wASwCVzLZf5/MSzssQi+wIE
-         U6L8oj6W/DZi0CaaA4BOd+sy/XgRzWvww1BgI=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gojB5dwlW4ZOUHaKLQy9R4CMxnJKl5ipeHOWaLn7YTk=;
+        b=WyUvn4t4LmZpbzSfbDxD/XegNos9kSaIqwOyUrQz7Zp1FOM54YuhfaizIgd9fW1eB3
+         KlDKT0prRMME4p5esjBLXusNLNwZgNIaAN3Rn/3aiXrBQr6jfy3A3q9Y6cPRlv1p6gcD
+         L7B6A2raWApiwcX3ieAzTWl0rEBR9O7AVfAOI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Czc2MuqKCGfZkSHGJyw3rk9HO/wMvd+cFFn5Ky0iw10=;
-        b=R1cQj+Bi9xWlHwWc3byPideTfWmXTKiSFBkAi8YC2AkaqURvgIdek4zIqv8016vvyP
-         8MLW4c0X5jjDeZi6X9ISz7p0cdzUmz5Oax9c8EcpwLvbwAZD/BCLxks2hG8nDRlgFMo0
-         fnxCz3zwTwlcHp70oUEbiffbTlv6Jpb3mZQsxy023TtVPZ/8kjNrx9tvsbHgReMtQmHf
-         YCqIKLg+MkARW5GpBj/QykYNeRoK9jH21ZxADMv4052X3n5YRwHatoo3bBg8CuSJn89w
-         YW1xRYnNjF5xxcGdh3qzpVYjAdv48r7UO2fh5g2KJlZeoVpoFHYMImPLP+ESuVayB9mD
-         DrzA==
-X-Gm-Message-State: AOAM530QcMb2K3BX3du7oqcj8VbFWXhfOurRM5J1iBXv+v5390CdyMOV
-	F7vAkH6L8TfEIbLGvUEFSON6JJEw+30E2g==
-X-Google-Smtp-Source: ABdhPJxIFpVa1XpVTyNRWHFX5lClSQy0eVvWcWkU5CtmQoMlWWoK8tpwuQoaSfe4Hmrs5C8N1qxmIg==
-X-Received: by 2002:a5d:5551:: with SMTP id g17mr15740589wrw.45.1591989336062;
-        Fri, 12 Jun 2020 12:15:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gojB5dwlW4ZOUHaKLQy9R4CMxnJKl5ipeHOWaLn7YTk=;
+        b=fDyg5rVSjK+jXF1P9OYq4pfdhIk0XVMeekjFosxNvhJ3paTVqouMhLjaw6Uo9sBgmS
+         onSMCT4fu6XVHRgM+67xp6pKFG77UxPiQo0ZDfzqIPGDOTPFOzqjiUbLVBh7CzBI+SWF
+         jKwoJ+zx3jL1HkefRdEcw/4CUluHDZSe0AszULUG1Nl6+E/xd0FQtXV7lkAcbBe4vWId
+         fQSNYO62JeLUyeTQoM5cXE5+slPFxF6JfVHi7qSZGPO4qN0cxt8i6zC0NcohDT+MB4+u
+         81GmvajiRjZkKH1PpbLz0dfbBEduP4mOWmgii9Sc4gbN3S2DCLFvxSGY5IPIfQqYH+li
+         RVPA==
+X-Gm-Message-State: AOAM5325jUwiVjopate65ho+KUXlIDS4aKwuCzSPF9D5t2koZuABIF17
+	bkvlHuZWxaG7QDT/9K93eVbwq5Np2bhwvg==
+X-Google-Smtp-Source: ABdhPJyhau/SizcC07LLIN9m/Yj4vmEIasa9f/O+PZ9LfKoRqN7Zql6Zov5CjTuy3f5vjaykjAA6gQ==
+X-Received: by 2002:a1c:c2c5:: with SMTP id s188mr434133wmf.18.1591989337109;
+        Fri, 12 Jun 2020 12:15:37 -0700 (PDT)
 Return-Path: <pbarker@konsulko.com>
 Received: from ar2.home.b5net.uk ([213.48.11.149])
-        by smtp.gmail.com with ESMTPSA id j11sm10781334wru.69.2020.06.12.12.15.35
+        by smtp.gmail.com with ESMTPSA id j11sm10781334wru.69.2020.06.12.12.15.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 12:15:35 -0700 (PDT)
+        Fri, 12 Jun 2020 12:15:36 -0700 (PDT)
 From: "Paul Barker" <pbarker@konsulko.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Paul Barker <pbarker@konsulko.com>
-Subject: [PATCH 1/2] fetch2/gitsm: Mark srcrev as fetched once all submodules are processed
-Date: Fri, 12 Jun 2020 20:15:21 +0100
-Message-Id: <20200612191522.12352-1-pbarker@konsulko.com>
+Subject: [PATCH 2/2] fetch2/gitsm: Make need_update() process submodules
+Date: Fri, 12 Jun 2020 20:15:22 +0100
+Message-Id: <20200612191522.12352-2-pbarker@konsulko.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200612191522.12352-1-pbarker@konsulko.com>
+References: <20200612191522.12352-1-pbarker@konsulko.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This prevents multiple bitbake.srcrev entries being created when a
-repository has more than one submodule. It also ensures that the
-bitbake.srcrev entry is not added unless all submodules are correctly
-fetched.
+If the bitbake.srcrev nugget is not present for the commit we're
+interested in we should not just bail out and say that an update is
+needed. Instead we can recursively walk through the submodules and check
+for the presence of the required commits.
 
 Signed-off-by: Paul Barker <pbarker@konsulko.com>
 ---
- lib/bb/fetch2/gitsm.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/bb/fetch2/gitsm.py | 39 +++++++++++++++++++++++++++++++++++----
+ 1 file changed, 35 insertions(+), 4 deletions(-)
 
 diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index 56bd5f04..175dee05 100644
+index 175dee05..d6e5c5c0 100644
 --- a/lib/bb/fetch2/gitsm.py
 +++ b/lib/bb/fetch2/gitsm.py
-@@ -163,9 +163,6 @@ class GitSM(Git):
-             try:
-                 newfetch = Fetch([url], d, cache=False)
-                 newfetch.download()
--                # Drop a nugget to add each of the srcrevs we've fetched (used by need_update)
--                runfetchcmd("%s config --add bitbake.srcrev %s" % \
--                            (ud.basecmd, ud.revisions[ud.names[0]]), d, workdir=workdir)
-             except Exception as e:
-                 logger.error('gitsm: submodule download failed: %s %s' % (type(e).__name__, str(e)))
-                 raise
-@@ -181,6 +178,9 @@ class GitSM(Git):
-             shutil.rmtree(tmpdir)
-         else:
-             self.process_submodules(ud, ud.clonedir, download_submodule, d)
-+            # Drop a nugget for the srcrev we've fetched (used by need_update)
-+            runfetchcmd("%s config --add bitbake.srcrev %s" % \
-+                        (ud.basecmd, ud.revisions[ud.names[0]]), d, workdir=ud.clonedir)
+@@ -143,12 +143,43 @@ class GitSM(Git):
+         try:
+             # Check for the nugget dropped by the download operation
+             known_srcrevs = runfetchcmd("%s config --get-all bitbake.srcrev" % \
+-                            (ud.basecmd), d, workdir=ud.clonedir)
++                                        (ud.basecmd), d, workdir=ud.clonedir)
  
-     def unpack(self, ud, destdir, d):
-         def unpack_submodules(ud, url, module, modpath, workdir, d):
+-            if ud.revisions[ud.names[0]] not in known_srcrevs.split():
+-                return True
++            if ud.revisions[ud.names[0]] in known_srcrevs.split():
++                return False
+         except bb.fetch2.FetchError:
+-            # No srcrev nuggets, so this is new and needs to be updated
++            pass
++
++        need_update_list = []
++        def need_update_submodule(ud, url, module, modpath, workdir, d):
++            url += ";bareclone=1;nobranch=1"
++
++            try:
++                newfetch = Fetch([url], d, cache=False)
++                new_ud = newfetch.ud[url]
++                if new_ud.method.need_update(new_ud, d):
++                    need_update_list.append(modpath)
++            except Exception as e:
++                logger.error('gitsm: submodule update check failed: %s %s' % (type(e).__name__, str(e)))
++                need_update_result = True
++
++        # If we're using a shallow mirror tarball it needs to be unpacked
++        # temporarily so that we can examine the .gitmodules file
++        if ud.shallow and os.path.exists(ud.fullshallow) and not os.path.exists(ud.clonedir):
++            tmpdir = tempfile.mkdtemp(dir=d.getVar("DL_DIR"))
++            runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=tmpdir)
++            self.process_submodules(ud, tmpdir, need_update_submodule, d)
++            shutil.rmtree(tmpdir)
++        else:
++            self.process_submodules(ud, ud.clonedir, need_update_submodule, d)
++            if len(need_update_list) == 0:
++                # We already have the required commits of all submodules. Drop
++                # a nugget so we don't need to check again.
++                runfetchcmd("%s config --add bitbake.srcrev %s" % \
++                            (ud.basecmd, ud.revisions[ud.names[0]]), d, workdir=ud.clonedir)
++
++        if len(need_update_list) > 0:
++            logger.debug(1, 'gitsm: Submodules requiring update: %s' % (' '.join(need_update_list)))
+             return True
+ 
+         return False
 -- 
 2.26.2
 
