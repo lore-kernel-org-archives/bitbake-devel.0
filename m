@@ -1,72 +1,85 @@
-Received: from mail-lf1-f68.google.com (mail-lf1-f68.google.com [209.85.167.68])
- by mx.groups.io with SMTP id smtpd.web11.16595.1592223763916293079
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web11.16695.1592224153425130214
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 15 Jun 2020 05:22:44 -0700
+ Mon, 15 Jun 2020 05:29:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Trxs0xY0;
- spf=pass (domain: gmail.com, ip: 209.85.167.68, mailfrom: jacob.kroon@gmail.com)
-Received: by mail-lf1-f68.google.com with SMTP id w15so9388170lfe.11
-        for <bitbake-devel@lists.openembedded.org>; Mon, 15 Jun 2020 05:22:43 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RwB3AwD7;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.68, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f68.google.com with SMTP id l10so16903081wrr.10
+        for <bitbake-devel@lists.openembedded.org>; Mon, 15 Jun 2020 05:29:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wcAdjpry4YGs4rr3UhRt5C0lAY35IVnFb+Yae5o3Kuk=;
-        b=Trxs0xY0Xe7eoBdbOC2QR9Ri4D+/lJnFNUFi3E3MGk/OoU33sIOE7VZ2i3dyU8VIf2
-         h71sWWuewWJLvKAYdVcYqE5rV8rFhvwCnCEBHTaGNtXo08Kf6GYJb1WEj+zCtvjA0+SI
-         fAU/Txeou25w3VSkKk+ivABzigmLhAIKIbFpgjThqd0DGdfCuX95iMT/7pi71hb+w0y0
-         6BHRMPUE0yslRzl/VoyaVxU/urhaCaCu1trIZI6/Pc0sUaYmsfbdrguEknfKrUgCiEur
-         PsxnkMi8yoqNF9NGvcLGALFBOlvE+uMLwGWRXUkd6gcPIk/9Rm6RefgVauIZJK3BpN0V
-         vgZA==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=jbkujafygaHD26jsl2IeZM++Qz2MlL+jua5pNZIwUw0=;
+        b=RwB3AwD7qfStSdnwmQdXzWdt93NeWUSs3ZowmU69htnQ43LGMOzdtDNgrtjR/jlpFQ
+         4ECwq3cN5aIifJ6WjUabluO730KoEoJZJyh0+S/lDBgv1DjMrIXZMrczejjYoG9DAkTo
+         XC6H/R+MHOQ7/0vxoKMOjuvJUUAXHiJF1jEWE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wcAdjpry4YGs4rr3UhRt5C0lAY35IVnFb+Yae5o3Kuk=;
-        b=EAcM1ouxXJXWITp/Wb4QCFox2VpkZyygdN73djALWQq9fgAww1VWKL8+6Mgjc8pr1Q
-         ctIbpd6jIWrkMrcBCq2zvrSPSisRRLVWDVJI76Lj3cgDKbeoQq6K/Bt0dZIw2AkaQAA0
-         hQnAR8+BcRFNxi8WA5p4AyQSz2pcanEvc96VHpMVXLCwCjxxtfCKTTADJdVjx7b0ZjZy
-         s5nwy8OEpaGloduTl27aNwN7vUpMSsCX50zpKyNND4coEWHnEuk951/GsjM1E8G8Bqeo
-         BCL+0XkP9vREJl6ASP6PVmr+LjtgQDXyljBYttE1D1ysMVvGCD537c682Gd2VfffJGwO
-         lZuw==
-X-Gm-Message-State: AOAM530DvT5+/yXBCFVSpkGkrXvmf/hPZY9h1EnIoABjlpV5MUpGbpAD
-	5jRlCZrKOjxhsLs8rk+Yxd9zrEW7
-X-Google-Smtp-Source: ABdhPJznk9uPWH1si5DbEfyvxo2yKalJ+TD3t7CGENokSH05NAWqDTeJpc36WsdEd0d6bkN1qMjxyA==
-X-Received: by 2002:a19:641b:: with SMTP id y27mr12550950lfb.74.1592223761283;
-        Mon, 15 Jun 2020 05:22:41 -0700 (PDT)
-Return-Path: <jacob.kroon@gmail.com>
-Received: from localhost.localdomain ([213.185.29.22])
-        by smtp.gmail.com with ESMTPSA id b7sm1168947lfb.53.2020.06.15.05.22.40
-        for <bitbake-devel@lists.openembedded.org>
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=jbkujafygaHD26jsl2IeZM++Qz2MlL+jua5pNZIwUw0=;
+        b=hF+0QM7HO7Bo9wpvogoV4JMmubO6qTB8dFYJ2KIRvSclK4KuAJs0dFPrYg159dWV8e
+         QnArRNRUoghY4cjKCtNO/tpapt2HfMxpndpsJ4HuY+WMOwK5ohNQgSdgyzod+BtZnP5V
+         IqW5FnaN6AL472kG/azTZ8CNnUZGygjEw7Y2V3ukZPruKOKipb04R9HfRyIlcwrhqqEi
+         E9Ff5/bb8Dk3TAZC7xN3gx6T/beOb7EQaSq1rFI9SBBF5pmCNr3g6rBLGCK4NU+2IxVf
+         5k6o9slZIPLGNQk2atZwxRrfgxZhLPUI62hiTQPexekyvmOyjRyhpfPcP3d8oBKsAFh8
+         UWmw==
+X-Gm-Message-State: AOAM5339IjoISOWBIttKmdiUn7s+XVenQ9Lx9E/pUL1kOk2wH3Tghkoo
+	ADp2RN2m32x/t98EY8jsBo6sig==
+X-Google-Smtp-Source: ABdhPJy25v3QbYLgGP5ZHzbm8e7QQ8xp0FutT2ry8dc973M+wPvNvPBzV3C8W9YsasU12Vn+CZHC3w==
+X-Received: by 2002:a5d:5389:: with SMTP id d9mr30642309wrv.77.1592224151881;
+        Mon, 15 Jun 2020 05:29:11 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id v7sm24323671wro.76.2020.06.15.05.29.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 05:22:40 -0700 (PDT)
-From: "Jacob Kroon" <jacob.kroon@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] lib/bb/utils.py: Do not preserve TERM in the environment
-Date: Mon, 15 Jun 2020 14:22:31 +0200
-Message-Id: <20200615122231.1325750-1-jacob.kroon@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 15 Jun 2020 05:29:11 -0700 (PDT)
+Message-ID: <2677ce4ecd89cb99e7bd491a68be93908023c87b.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] lib/bb/utils.py: Do not preserve TERM in the environment
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Jacob Kroon <jacob.kroon@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Mon, 15 Jun 2020 13:29:10 +0100
+In-Reply-To: <20200615122231.1325750-1-jacob.kroon@gmail.com>
+References: <20200615122231.1325750-1-jacob.kroon@gmail.com>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The value of TERM is leaking into OE-Core postinst-useradd-${PN} scripts,
-which in turn can optionally be monitored by buildhistory. Prune the value in
-order to make the OE-Core buildhistory output more deterministic.
+On Mon, 2020-06-15 at 14:22 +0200, Jacob Kroon wrote:
+> The value of TERM is leaking into OE-Core postinst-useradd-${PN}
+> scripts,
+> which in turn can optionally be monitored by buildhistory. Prune the
+> value in
+> order to make the OE-Core buildhistory output more deterministic.
+> 
+> Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
+> ---
+>  lib/bb/utils.py | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index 5f5767c1..50032e50 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -580,7 +580,6 @@ def preserved_envvars_exported():
+>          'PATH',
+>          'PWD',
+>          'SHELL',
+> -        'TERM',
+>          'USER',
+>          'LC_ALL',
+>          'BBSERVER',
 
-Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
----
- lib/bb/utils.py | 1 -
- 1 file changed, 1 deletion(-)
+When you send a patch like this, please be clear that its for testing.
+I know from a discussion on IRC that this patch needs close vetting to
+see if its "safe" and its likely going to break things around the
+menuconfig tasks for example. The patch needs to state that so people's
+expectations are right.
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 5f5767c1..50032e50 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -580,7 +580,6 @@ def preserved_envvars_exported():
-         'PATH',
-         'PWD',
-         'SHELL',
--        'TERM',
-         'USER',
-         'LC_ALL',
-         'BBSERVER',
+Cheers,
+
+Richard
+
