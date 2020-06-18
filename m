@@ -1,122 +1,84 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
- by mx.groups.io with SMTP id smtpd.web12.905.1592456090380156013
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web10.8045.1592488575993334608
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 17 Jun 2020 21:54:50 -0700
+ Thu, 18 Jun 2020 06:56:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linux.microsoft.com header.s=default header.b=kBRCsW57;
- spf=pass (domain: linux.microsoft.com, ip: 13.77.154.182, mailfrom: alhe@linux.microsoft.com)
-Received: from [192.168.1.246] (cpe-68-201-52-49.elp.res.rr.com [68.201.52.49])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5C03520B4781;
-	Wed, 17 Jun 2020 21:54:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5C03520B4781
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1592456089;
-	bh=eIfvyLv8swwAAK1YgujNYyPt/Pu3SPL7c/hAvj71dhQ=;
-	h=Subject:To:References:From:Date:In-Reply-To:From;
-	b=kBRCsW57BiPwO94kOS7FCz3exRPgSz1fVmcjHUjddcg0TtkA/0jiR2bX/4we75+HH
-	 fMZWd6GqY9v5u67SMzPxg4xJDt2vwNN/6ngucTmBlIfe1DR3Qd62S/miaGPJj3UQ6H
-	 w5LQA45OTm8hjS9VaH/wpflAG5qrv4pLjSDUVizc=
-Subject: Re: [bitbake-devel] Python package with optional dependencies
-To: jocelyn.kevorkian@gmail.com, bitbake-devel@lists.openembedded.org
-References: <LqWJ.1592405996254748693.FRdz@lists.openembedded.org>
-From: "Alejandro Hernandez" <alhe@linux.microsoft.com>
-Message-ID: <97706690-0195-8b3d-ca06-ba7c50b8fda4@linux.microsoft.com>
-Date: Wed, 17 Jun 2020 21:54:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aEgXK+EV;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.67, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f67.google.com with SMTP id l10so6150719wrr.10
+        for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2020 06:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=R1pFUXwGWqO2DFXlx73NpDmTjHCf46VTqnMCFpHmyMw=;
+        b=aEgXK+EVPw8hZL/p0ZOTmhHbaBrfxmyUMqlNCAV80A/YZyYoveO1SMzpKvqlzvcJdD
+         dPfG2Dm5tAldYrt7uYIi6300AY3acJJWp6qnij3rQJZ6BZ3dVjZU2zRTBQgUhVPu5Pm8
+         SskrMdgZdl5m6uQw6awoVIxdfcBiHnPJSLYvg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=R1pFUXwGWqO2DFXlx73NpDmTjHCf46VTqnMCFpHmyMw=;
+        b=KewQS+Kj9TQJuuIu5qculxfyBLzXrUYlE786j50mZ+O9m3s8fnVBl8fNVwi22OwWiR
+         p9C94S9f9AAxsY9UdXINmoeS/VueJWb4LGaTCjZsAwz6x8BiNRDQpvMG9AUj+6fi0dp4
+         E/AT/H4i8qrFIIm6eXkazrpKA4U1/0juNpjLdWJXzaopeQGUKtIjMEbLTL5vvYRMJdaD
+         Px8gE5vppddZcq7prZ8KCR78jsb4K+07LPxmQOYUWUI+BB31kHc+5I+Qf+37NZ5bCBnF
+         XKkBDBJc+3ErfmNumg23JcOIc1V0yes6c/yRGgfR4xGU886Nm8Jo6/Tzzp7YzVJ4YDVB
+         Ulhg==
+X-Gm-Message-State: AOAM531roATkFkE7N+HVL75Br0VAKzW/3wKqSGDg2URC3csKBg6nrlpt
+	/YNxF+UMkzBmw2zxYFc7+x1nwA==
+X-Google-Smtp-Source: ABdhPJytOkGb4gRyV4D6Srd1HP5HQeN6IDTckHyXZSWeyb3Xc3INt1JM2dyEWNUAkiD4Qnge8tCxhw==
+X-Received: by 2002:adf:8b0c:: with SMTP id n12mr5185983wra.340.1592488574570;
+        Thu, 18 Jun 2020 06:56:14 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id a126sm3628124wme.28.2020.06.18.06.56.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 06:56:13 -0700 (PDT)
+Message-ID: <ee1e44d7c61fed40e1b4b8d1c380dadc6532b764.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v2] BBFILES_DYNAMIC: add inverse mode
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Konrad Weihmann <kweihmann@outlook.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 18 Jun 2020 14:56:12 +0100
+In-Reply-To: <AM7PR05MB6881BCFF510297F50FE36E9DA89E0@AM7PR05MB6881.eurprd05.prod.outlook.com>
+References: <160AAE7A27E24EAF.22530@lists.openembedded.org>
+	 <AM7PR05MB6881BCFF510297F50FE36E9DA89E0@AM7PR05MB6881.eurprd05.prod.outlook.com>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <LqWJ.1592405996254748693.FRdz@lists.openembedded.org>
-Content-Type: multipart/alternative;
- boundary="------------0C2854E155968174884C72A2"
-Content-Language: en-US
-
---------------0C2854E155968174884C72A2
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hello,
+On Sat, 2020-06-13 at 12:34 +0200, Konrad Weihmann wrote:
+> Friendly reminder.
+> If the patch isn't applicable for some reason: I'd like to ask how I 
+> could 'emulate' the patch.
+> 
+> If I read the code correctly it isn't possible to do the same as part
+> of 
+> the layer.conf, as the list is filled one layer.conf after another
+> and 
+> so the existence of a layer name in BBFILE_COLLECTIONS is dependent
+> on 
+> the order in BBLAYERS - which makes it prone to errors.
+> 
+> I currently have some recipes which are provided by some optional
+> layer, 
+> but as they tend to provide/override more than needed (in this case
+> just 
+> a single recipe) it would be nice to have that backfill possibility.
+> So it's up to the user to choose if the full layer meets his needs
+> or 
+> the backfill recipe is just enough.
+> 
+> Looking forward to some feedback.
 
-The meta-openembedded mailing list 
-(openembedded-devel@lists.openembedded.org [meta-python]) would be the 
-proper place to find an answer to your question, also, joining the 
-#yocto and #oe channels on IRC would allow you to ask questions there, 
-that being said, there is a python3-jsonrpcserver recipe on the 
-meta-python layer: 
-https://layers.openembedded.org/layerindex/recipe/113715/ ,although you 
-are looking for the client, that might be a good starting point, by the 
-way, optional dependencies are usually set by PACKAGECONFIGs: 
-https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#var-PACKAGECONFIG
-
-And you probably will have to play around with the setuptools3 class to 
-achieve that.
+I wanted to give that patch some thought but it does make sense. Could
+you please update the patch or send a followup which updates the manual
+with the new syntax though please?
 
 Cheers,
 
-Alejandro
+Richard
 
-On 6/17/20 7:59 AM, jocelyn.kevorkian@gmail.com wrote:
-> Hello guys,
->
-> I would like to use on my target a python package which has optional 
-> dependencies, it is jsonrpcclients, for instance to use it with zero 
-> mq you have to install it like this : pip install jsonrpcclients[pyzmq]
->
-> I have no idea how to deal with this syntax, could you help me please ?
->
-> Thanks !
->
-> 
-
---------------0C2854E155968174884C72A2
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <p>Hello,</p>
-    <p>The meta-openembedded mailing list
-      (<a class="moz-txt-link-abbreviated" href="mailto:openembedded-devel@lists.openembedded.org">openembedded-devel@lists.openembedded.org</a> [meta-python]) would be
-      the proper place to find an answer to your question, also, joining
-      the #yocto and #oe channels on IRC would allow you to ask
-      questions there, that being said, there is a python3-jsonrpcserver
-      recipe on the meta-python layer: <a
-        href="https://layers.openembedded.org/layerindex/recipe/113715/">https://layers.openembedded.org/layerindex/recipe/113715/</a>
-      ,although you are looking for the client, that might be a good
-      starting point, by the way, optional dependencies are usually set
-      by PACKAGECONFIGs: <a
-href="https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#var-PACKAGECONFIG">https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#var-PACKAGECONFIG</a></p>
-    <p>And you probably will have to play around with the setuptools3
-      class to achieve that.<br>
-    </p>
-    <p>Cheers,</p>
-    <p>Alejandro<br>
-    </p>
-    <div class="moz-cite-prefix">On 6/17/20 7:59 AM,
-      <a class="moz-txt-link-abbreviated" href="mailto:jocelyn.kevorkian@gmail.com">jocelyn.kevorkian@gmail.com</a> wrote:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:LqWJ.1592405996254748693.FRdz@lists.openembedded.org">
-      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-      Hello guys,<br>
-      <br>
-      I would like to use on my target a python package which has
-      optional dependencies, it is jsonrpcclients, for instance to use
-      it with zero mq you have to install it like this : pip install
-      jsonrpcclients[pyzmq] <br>
-      <br>
-      I have no idea how to deal with this syntax, could you help me
-      please ?<br>
-      <br>
-      Thanks !
-      <br>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <pre class="moz-quote-pre" wrap="">
-</pre>
-    </blockquote>
-  </body>
-</html>
-
---------------0C2854E155968174884C72A2--
