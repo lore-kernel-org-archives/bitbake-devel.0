@@ -1,84 +1,125 @@
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
- by mx.groups.io with SMTP id smtpd.web12.1310.1592592097034808264
+Received: from mail-oo1-f68.google.com (mail-oo1-f68.google.com [209.85.161.68])
+ by mx.groups.io with SMTP id smtpd.web11.9826.1592656448893425818
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 19 Jun 2020 11:41:37 -0700
+ Sat, 20 Jun 2020 05:34:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Vxb6ZhmA;
- spf=pass (domain: gmail.com, ip: 209.85.216.68, mailfrom: jpewhacker@gmail.com)
-Received: by mail-pj1-f68.google.com with SMTP id i12so4406421pju.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Jun 2020 11:41:37 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=bWseHgVR;
+ spf=pass (domain: gmail.com, ip: 209.85.161.68, mailfrom: onea.alex@gmail.com)
+Received: by mail-oo1-f68.google.com with SMTP id k7so2433612ooo.12
+        for <bitbake-devel@lists.openembedded.org>; Sat, 20 Jun 2020 05:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FDUkflwnj3HPLb0HQs4MZpF0IjDRfzt53dOBOZgqOPs=;
-        b=Vxb6ZhmALk8/B9iaLzzbBdRQcEabTaQq19lnFGsjZBI44FDhYAsQrET4qlZMcBUEi8
-         5y3Qs8NYT4IAtyb1VrWSl0yx6rSPqQ8GqwVCuxe+r5Mbrdiy9z4vkHI7jMKMFPNmOrD9
-         MMFRG6Wij8Zo56Jsfu+1C+E5UrhyV5T0NcEiyaUURhf2uDVh88nt6JtzLVNNVw2h4csp
-         fjTN3slH18I80CoRa6Fa61q/CJJWx9nrRA4bKOhG9UiF7LFL5G7WZsRiym0Nf47iUb2o
-         vdtoc1iFddCBd9Iit6wo2/8K1Kv04Dr1L5JCsRemWi219W0W7t8Y97TjKcFJn4w9FMMf
-         gJdg==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=WczwM+rQn+VPS1SQ4CzpXOlRWribtvpZmHSxuXxhFyg=;
+        b=bWseHgVRWIg0p+wunQykfD/+x76vv5YYs2kuyisfJopo31O3HO6EOnDmZj6om+GrRs
+         egipa326evTUZ9NyjOSHUXs/Juo7oVFKnmcCh3g1XMACmMEMzoP7O8j4vCPGmP/tUhLC
+         35hUpw7YoMZvsgEeuIMbwjL0ag5mAvYbrp4ztSrDjA5TIU7iuFcjMJ9tB7Ovt0ofF6Qf
+         4/r9kk+woFdmHLkio5OoSoPSV2W/TZtKGo1xBQhFrdEO5BPF43U9U2f/fHg8wQzDJoih
+         7Oz16+065hZBkbXHKQTSj+ZxUh781KdBm5S6gpznkNIxf//kp4uayCgKtLH9lgQ1/3VA
+         H1jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FDUkflwnj3HPLb0HQs4MZpF0IjDRfzt53dOBOZgqOPs=;
-        b=otwQEcmEfelEli2IvS6UrxL9ZoYveUcVTkHcCcM1RDB5Oa0uET2vE9sHyGqH02K2UY
-         rPYSesRwvppJgpaLgvoxdc8+YQQbnPiIj+iylDQfF0WdsZAtMuLHL4eXZY5khZRqB8dW
-         KFWh1tEvgM0uMteO2hdlQcir0xoXZf5wamFCcusRKErxh6ob5t6jm/zLWOXjUb+W9dgr
-         iA8kq+YxlzVurPrPA0HOPASWab/1iYRnZW6/W20PKA372F8Hk7V7a3QCO47H0jqBaHfG
-         C7VF/YKG3kc+Xzp5pK9on85zo6K4nc0uCy0EejT/4VQxrVJtIBToSyMm8ftIiUGfBi6Y
-         cTow==
-X-Gm-Message-State: AOAM531HmZL2nwHVMVu+6PCYDVVt80JRS729SsEIkg+SuwCRsEaH+Wzl
-	tAAh+0LJt+C/F5yEB7kCFnyUYPFm
-X-Google-Smtp-Source: ABdhPJyeqp8SwO1JKnj1GavY3HOGFygkBMunQRZpzbiTvv9ZxiuyGZVAboj0voZFophp+mo3/OpxIg==
-X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr4747902pjq.73.1592592096325;
-        Fri, 19 Jun 2020 11:41:36 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:c8b8:d6fe:82d6:2572])
-        by smtp.gmail.com with ESMTPSA id o21sm6612025pfp.12.2020.06.19.11.41.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 11:41:35 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake: cache: Bump cache version
-Date: Fri, 19 Jun 2020 13:41:32 -0500
-Message-Id: <20200619184132.6457-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=WczwM+rQn+VPS1SQ4CzpXOlRWribtvpZmHSxuXxhFyg=;
+        b=gsr7JJFtDbBs7PF7AErZeFTYRhhkpskJWZIaFRY25to9g9cLdj2KEsnEr+yh2U/u1Y
+         A6pke3ArtafTeTIGAg0ON8p8TCBprpXpXnwsVkgl8MUA8w0QqYbIKNJ1iuc28TUGmy53
+         7ogDlvj/huDDTPPB7kmCYYRTKG9J5AyScb6hfE/j9WydaFAFlfzDt+rLL93pYPhHygiI
+         P7ccx4F1OuWrRdV19uYynYMfhw6T18wdiwiQ2w6RtGJB8EmCOgZrhOkyrBwHzorvwxui
+         zlFRu4yED4MkkdJa+rxxl26+Qag4unPPNh2qF+UoQRlLBdDfqUe+pGR7WOhEVzi4MYaw
+         blNg==
+X-Gm-Message-State: AOAM532VqIsNwSGo1TRMGU/w4aws3hRt9i5z7ZfC1qbC0o3K3RIjMpXN
+	3WqGd0Ufj0ATFqPVknbP6qiqrx3VBUE9T5YFpumo+RIjmJB6Fw==
+X-Google-Smtp-Source: ABdhPJx2GaU43Mg1oMDcMDf/pOSWyctwBHEZg/epRsf7TCVDqAGQPSc1R3Kjp3W2ZIL63PcupqwU49wQlzY8NhdKL8E=
+X-Received: by 2002:a4a:2412:: with SMTP id m18mr7218692oof.36.1592656447897;
+ Sat, 20 Jun 2020 05:34:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Alexandru N. Onea" <onea.alex@gmail.com>
+Date: Sat, 20 Jun 2020 15:33:57 +0300
+Message-ID: <CAJgSc4zktj90d5DXXoSa8vE8=F58puwKD0YKUTMA0etGn3U=XQ@mail.gmail.com>
+Subject: [fetcher2] perforce fetcher download dir
+To: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000d384f905a8833935"
 
-The layout of the cache data hasn't changed, but the cache has now been
-split into different files for multiconfig. If a user pulls in these
-changes, it's possible that their base cache will still contain the
-combined multiconfig cache entries, which are now unexpected and
-generate errors like:
+--000000000000d384f905a8833935
+Content-Type: text/plain; charset="UTF-8"
 
- Unexpected multiconfig: foo
+Hello community,
 
-Bumping the version fixes this since the old cache data won't be
-considered valid anymore.
+I just started using the perforce fetcher and I am a bit confused by how
+the fetcher implementation handles the location of the downloaded sources.
+In particular, in cases where SRC_URI points to a directory, expressed by
+the typical "/..." termination, the below code seems to prepare the final
+filename by only taking into account the part of the remote path which
+would follow the "/...".
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bb/cache.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+if depot_filename:
+    if ud.pathisdir: # Remove leading path to obtain filename
+        filename = depot_filename[len(ud.path)-1:]
+    else:
+        filename = depot_filename[depot_filename.rfind('/'):]
+    filename = filename[:filename.find('#')] # Remove trailing '#rev'
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index c1e08511ba..b819a0c2da 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -26,7 +26,7 @@ import re
- 
- logger = logging.getLogger("BitBake.Cache")
- 
--__cache_version__ = "152"
-+__cache_version__ = "153"
- 
- def getCacheFile(path, filename, mc, data_hash):
-     mcspec = ''
--- 
-2.27.0
+This comes with a limitation: if one has multiple perforce SRC_URI entries,
+one ends up with a mixture of files, not necessarily belonging together.
+Moreover, the comment is a bit misleading, since the value of filename
+after the removal of the leading path is not actually the filename but a
+filepath, stripped of the "visible" repo path given in SRC_URI.
 
+Of course, there might be a strong argument in favor of this behavior,
+however I failed so far to find it. I am writing to you in the hope that
+someone can help me find the argument and understand the rationale of the
+current implementation.
+
+If there is no argument in favor of the mentioned behavior, I would like to
+prepare a patch for an alternative where the user has the option to either
+keep the full remote file path (similar to how a perforce client would sync
+the files) or strip the visible SRC_URI part of the path, but specify a
+subdir name for each perforce SRC_URI entry in order to keep things
+separated.
+
+Thank you,
+Alexandru Onea
+
+--000000000000d384f905a8833935
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hello community,<div><br></div><div>I just started using t=
+he perforce fetcher and I am a bit confused by how the fetcher implementati=
+on handles the location of the downloaded sources. In particular, in cases =
+where SRC_URI points to a directory, expressed by the typical &quot;/...&qu=
+ot; termination, the below code seems to prepare the final filename by only=
+ taking into account the part of the remote path which would follow the &qu=
+ot;/...&quot;.</div><div><br></div><div><table class=3D"gmail-highlight gma=
+il-tab-size gmail-js-file-line-container" style=3D"border-spacing:0px;borde=
+r-collapse:collapse;color:rgb(36,41,46);font-family:-apple-system,BlinkMacS=
+ystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color=
+ Emoji&quot;,&quot;Segoe UI Emoji&quot;;font-size:14px"><tbody style=3D"box=
+-sizing:border-box"><tr style=3D"box-sizing:border-box"><td id=3D"gmail-LC9=
+7" class=3D"gmail-blob-code gmail-blob-code-inner gmail-js-file-line" style=
+=3D"box-sizing:border-box;padding:0px 10px;line-height:20px;vertical-align:=
+top;overflow:visible">if depot_filename:<br>=C2=A0 =C2=A0 if ud.pathisdir: =
+# Remove leading path to obtain filename<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 fil=
+ename =3D depot_filename[len(ud.path)-1:]<br>=C2=A0 =C2=A0 else:<br>=C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 filename =3D depot_filename[depot_filename.rfind(&#39;=
+/&#39;):]<br>=C2=A0 =C2=A0 filename =3D filename[:filename.find(&#39;#&#39;=
+)] # Remove trailing &#39;#rev&#39;<br></td></tr></tbody></table></div><div=
+><br></div><div>This comes with a limitation: if one has multiple perforce =
+SRC_URI entries, one ends up with a mixture of files, not necessarily=C2=A0=
+belonging together. Moreover, the comment is a bit misleading, since the va=
+lue of filename after the removal of the leading path is not actually the f=
+ilename but a filepath, stripped of the &quot;visible&quot; repo path given=
+ in SRC_URI.</div><div><br></div><div>Of course, there might be a strong ar=
+gument in favor of this behavior, however I failed so far to find it. I am =
+writing to you in the hope that someone can help me find the argument and u=
+nderstand the rationale of the current implementation.</div><div><br></div>=
+<div>If there is no argument in favor of the mentioned behavior, I would li=
+ke to prepare a patch for an alternative where the user has the option to e=
+ither keep the full remote file path (similar to how a perforce client woul=
+d sync the files) or strip the visible SRC_URI part of the path, but specif=
+y a subdir name for each perforce SRC_URI entry in order to keep things sep=
+arated.=C2=A0</div><div><br></div><div>Thank you,<br clear=3D"all"><div><di=
+v dir=3D"ltr" class=3D"gmail_signature" data-smartmail=3D"gmail_signature">=
+<div dir=3D"ltr">Alexandru Onea</div></div></div></div></div>
+
+--000000000000d384f905a8833935--
