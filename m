@@ -1,74 +1,105 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web12.2659.1592854716421333588
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.3478.1592857087272655188
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Jun 2020 12:38:36 -0700
+ Mon, 22 Jun 2020 13:18:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DASy9NKu;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f66.google.com with SMTP id v3so10434867wrc.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Jun 2020 12:38:36 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=BNf8BMyp;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f52.google.com with SMTP id t194so836663wmt.4
+        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Jun 2020 13:18:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c9z+oBkoaDMW4C3Z9z/E9NK++hTsGezfJ4EBlncGA28=;
-        b=DASy9NKuhzSP7TR349l3t/Gl6qroxJoxfMsEUv7rulpNuiPFKov+iy3TSfKneuMp0H
-         bnbhjhl1jtbY4w0FZ5hRScQU8ML61gxiE4mk3rvRiSnldO99ugMm7mb7QG082sj7BL/n
-         krg1opZYKOnUvfONJF+x2DXLf+2G2m96scC8c=
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=LedjVQOlO0FtlXs+67JO2KTLYhfAUHd2sbhDwO7cdCc=;
+        b=BNf8BMypnEdl3RpcCsPyVDS+xcvOperCxj1L/K4uTNKI6dKYKgKHK5Ci35tVtR+YJf
+         UWpqi4jpFQFjuX1qLXV+kc5rA3kfilUT6n26ltpLv75zUtI86yCpK0DlOwGwLh/nNodI
+         K3vss6RD8D5+aZOPXyHqigkvOJHPwi1Ku03qM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c9z+oBkoaDMW4C3Z9z/E9NK++hTsGezfJ4EBlncGA28=;
-        b=dX1nKFoLeOpwEwASdjajTgvIfuP74d2BemgjgbjG6DM2b8LqAaGI3DQ9SpBuh6BqWN
-         qsjMXm41I64XABedMkpmgjEAVEmyCJR0vCGTUl2eZr6+VtgPYDH1QGLJEhDHreRaPMru
-         4NxLl0N7kUVN54xFaIh/mpiKUH/SF/kG+BojGocoYeD7od5a3Zez1yxy1ke/wDzA08B8
-         dqIb5wOGZGM1w+VTG/bRqfYViGRuaUlhFTMi43umrD0oHBGvy3jE4Pdyv4rAF186OGwg
-         gtfB0htI1SdCsQ7vbwRy2gqg75c3pEf1NYtgFdUr1u3YQlypuP65uNiMeX18SzFF1//j
-         XDKw==
-X-Gm-Message-State: AOAM530Fa8byikMVsLanM8RTsBAFLP92z8HirIWdLdFaQeGZ4u7BmcQF
-	EhbGNjIkbbnfHHxrbTdEvmF3+J5iS9jaxg==
-X-Google-Smtp-Source: ABdhPJzCQdk8VOdnHzsl8RkaVHPRUyyb88lWJgEdQmEL9bCEagitxB22szc2OpE5YorS8cpRa8yR0w==
-X-Received: by 2002:adf:e74e:: with SMTP id c14mr8031764wrn.143.1592854714522;
-        Mon, 22 Jun 2020 12:38:34 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=LedjVQOlO0FtlXs+67JO2KTLYhfAUHd2sbhDwO7cdCc=;
+        b=raEFPrhm0/4BUuu6NzREbwx3HDlgmXYWy07FdGfxOZ9XqTOpvt886YxOJJucSO3z8I
+         PxJ5yk37M9OZ9x906wD2LVye+tr71gjOzEYGU9DpcF0mgBpSgun7T4Jcv+kvwj3IemTq
+         sYB3/sjb8aAwEAeb3aac9UDc7xT2w22tNobCaLFO8l/VjSB8bDfy8alHZl9fMDgVV6qy
+         /+sp47ycMvK4gFa/6rJ8c5C7A8BdOHS0bAGx7QdgjGnGScrJQc6ylcWdXq7z3TCGYG5p
+         yZM5CY+foHivspZTWYG6nX5xV6vQN1L6e0gWh6PNFB4LC2G2XMeg1iNKO+DudL5ikhn/
+         2nMg==
+X-Gm-Message-State: AOAM533uHQ0VZ2gQb27+ycOdXIAp57tLSYtgA5w1yvxHIZUjQcyIaRYX
+	3pmHwY9wSH6d1iCAmkmCnMYLrw==
+X-Google-Smtp-Source: ABdhPJzcz8VczmpCJoHW0mBAiQ2GBT/EdQXfw62NdSBWBHXyQe6Qwxp9LZJ2R8MuL5Yq8glKRq7SEA==
+X-Received: by 2002:a7b:c0d9:: with SMTP id s25mr21297623wmh.175.1592857085856;
+        Mon, 22 Jun 2020 13:18:05 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id 1sm669488wmf.0.2020.06.22.12.38.33
-        for <bitbake-devel@lists.openembedded.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id l1sm20839026wrb.31.2020.06.22.13.18.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:38:33 -0700 (PDT)
+        Mon, 22 Jun 2020 13:18:05 -0700 (PDT)
+Message-ID: <aa5431eddbc52496d0cc0a2a848489dad6fd0d01.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [fetcher2] perforce fetcher download dir
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] tests/fetch: Switch from git.infradead.org to a YP mirror
-Date: Mon, 22 Jun 2020 20:38:32 +0100
-Message-Id: <20200622193832.571813-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
+To: "Alexandru N. Onea" <onea.alex@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Mon, 22 Jun 2020 21:18:04 +0100
+In-Reply-To: <CAJgSc4zktj90d5DXXoSa8vE8=F58puwKD0YKUTMA0etGn3U=XQ@mail.gmail.com>
+References: 
+	<CAJgSc4zktj90d5DXXoSa8vE8=F58puwKD0YKUTMA0etGn3U=XQ@mail.gmail.com>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Upstream is unavailable, breaking tests. Switch to a YP mirror since
-if we can't reach that there are bigger problems. This should remove
-a source of intermittent failures on the autobuilder.
+Hi,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/tests/fetch.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Sat, 2020-06-20 at 15:33 +0300, Alexandru N. Onea wrote:
+> I just started using the perforce fetcher and I am a bit confused by
+> how the fetcher implementation handles the location of the downloaded
+> sources. In particular, in cases where SRC_URI points to a directory,
+> expressed by the typical "/..." termination, the below code seems to
+> prepare the final filename by only taking into account the part of
+> the remote path which would follow the "/...".
+> 
+> if depot_filename:
+>     if ud.pathisdir: # Remove leading path to obtain filename
+>         filename = depot_filename[len(ud.path)-1:]
+>     else:
+>         filename = depot_filename[depot_filename.rfind('/'):]
+>     filename = filename[:filename.find('#')] # Remove trailing '#rev'
+> 
+> This comes with a limitation: if one has multiple perforce SRC_URI
+> entries, one ends up with a mixture of files, not
+> necessarily belonging together. Moreover, the comment is a bit
+> misleading, since the value of filename after the removal of the
+> leading path is not actually the filename but a filepath, stripped of
+> the "visible" repo path given in SRC_URI.
+> 
+> Of course, there might be a strong argument in favor of this
+> behavior, however I failed so far to find it. I am writing to you in
+> the hope that someone can help me find the argument and understand
+> the rationale of the current implementation.
+> 
+> If there is no argument in favor of the mentioned behavior, I would
+> like to prepare a patch for an alternative where the user has the
+> option to either keep the full remote file path (similar to how a
+> perforce client would sync the files) or strip the visible SRC_URI
+> part of the path, but specify a subdir name for each perforce SRC_URI
+> entry in order to keep things separated. 
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index d0c161a7f6..4697ef59b5 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1152,7 +1152,8 @@ class FetchLatestVersionTest(FetcherTest):
-         ("mx-1.0", "git://github.com/clutter-project/mx.git;branch=mx-1.4", "9b1db6b8060bd00b121a692f942404a24ae2960f", "")
-             : "1.99.4",
-         # version pattern "vX.Y"
--        ("mtd-utils", "git://git.infradead.org/mtd-utils.git", "ca39eb1d98e736109c64ff9c1aa2a6ecca222d8f", "")
-+        # mirror of git.infradead.org since network issues interfered with testing
-+        ("mtd-utils", "git://git.yoctoproject.org/mtd-utils.git", "ca39eb1d98e736109c64ff9c1aa2a6ecca222d8f", "")
-             : "1.5.0",
-         # version pattern "pkg_name-X.Y"
-         ("presentproto", "git://anongit.freedesktop.org/git/xorg/proto/presentproto", "24f3a56e541b0a9e6c6ee76081f441221a120ef9", "")
--- 
-2.25.1
+Unfortunately the perforce fetcher is a bit of a black box to me and
+most other bitbake developers, we don't have the tool or any repos to
+use/test with it.
+
+We're therefore reliant on users reporting and fixing issues they run
+into.
+
+Thanks for your patches I saw yesterday, at a first glance they look
+reasonable. My only real concern is whether they overlap with any of
+our unpack options. I also wondered if we should be updating the
+bitbake manual with any of these new options or more information about
+the perforce fetcher?
+
+Cheers,
+
+Richard
 
