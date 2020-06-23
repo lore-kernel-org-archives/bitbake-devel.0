@@ -1,156 +1,146 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
- by mx.groups.io with SMTP id smtpd.web11.3097.1592902878402218885
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
+ by mx.groups.io with SMTP id smtpd.web10.3050.1592902879399771730
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Jun 2020 02:01:18 -0700
+ Tue, 23 Jun 2020 02:01:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=CPvLOFl6;
- spf=pass (domain: gmail.com, ip: 209.85.208.53, mailfrom: onea.alex@gmail.com)
-Received: by mail-ed1-f53.google.com with SMTP id cy7so9261276edb.5
-        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Jun 2020 02:01:18 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=qDKZ7deX;
+ spf=pass (domain: gmail.com, ip: 209.85.208.67, mailfrom: onea.alex@gmail.com)
+Received: by mail-ed1-f67.google.com with SMTP id dg28so157535edb.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Jun 2020 02:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BY08iJasRByoEAfhjkwBRYIS8DoarCVqCK8tdtQWFmI=;
-        b=CPvLOFl6G6Trx+W+vTDXcW4qJWfMokCcKTvquA4e8S5iE5w/L094uYdPxsFGgz6m4T
-         JnzZWH5aXCqIMEIpnCgcbNdGtRrVQNXhvcu7/aadYH8s1uDetSBKS+n+iGm5066QtQoa
-         +9onCl7ZwaaQDIaF8HsaoBiOP/cZQqihfDV5R4Sk5imtb2Ur2JyrUz48QlfLp4xSJ2X0
-         MjP36Nu1Rcm/bd+89LDtIia/OzJ+wLYmkQBOD1Z3DeRtTueGzT+i3/PnwfPXrkcbMUqY
-         /YvywMz/0s0PScLYR/XGU9Ow0GxoHmroXNoB1qgWVdOtpksBPCHNAAexKAPbA9sKE7KC
-         1xOg==
+        bh=NgXUh7CKWyzlLfXuNMzKAHQLKGQ8Zz9Ak/aDEEjOpHw=;
+        b=qDKZ7deXXqcbO3RRB1hewINDYDN4t4xNOXd8/S1Z5CeoDr+lGP1h7pcEayaY7EtHKE
+         Dux/UyIPRq81nol+C59wcqM3S8XbhbVwQRlgCjnyRHXoqSHR+MxcRE3JnqYz+/DbuvV8
+         nqQVRb4ICk4HcE45m356BnxyjY3CG0NZlyzFE5F6PwM/fnro0llODaSCKPKj0lJ5ckEq
+         9RaWACOOz97nKVNk79pqL2Y9j1o2F/wKPskXbXqIgBcDPrU+Ojo9FWOmAf64EqFfBjfa
+         ofWnLgfIsNlRLjKTGXH787Rx7b6ZrcxRyAyQ9OUmUKy0w9qu+zS8mTPzvnegJ2u2X8zb
+         RFEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BY08iJasRByoEAfhjkwBRYIS8DoarCVqCK8tdtQWFmI=;
-        b=ICiigSVCbvu0O418kOjiH0fz2/xDQ1i8UQVvRAV1kEuKjfpx5+xspwqlE6t7S1fx2F
-         SjB1z5SgvWOk72fcprAXq240fgwwrfAmq+qs09VmRylgjTdmnU5ujdNgtcWhD0wvFy9k
-         OlQMXKotDc7c+rJ54EAqTNREeI334Zzl8n0iHE+zBQssbJ6hmJUT2vEyuRyGrUl1IYHq
-         g56aFibdRq5NbE/zcMQ+NNp5GM4Vl1ZH5WI3za+5tTZmdSIR3RO27SHpwMJsh+5DgCCc
-         h/8SHi2QMTAo223+Mtx1P1wnCKqkMTKtJrHKdtmF+Vu0bcIIfAuy/yRIzPijXd3wvvb6
-         RKGA==
-X-Gm-Message-State: AOAM530KqgNbR95A/j6KVMOKM7rqAKbldHPYE5lmvhitNV4pyRlbv17x
-	U+a9mpsjk+ydSX0Q3txuxtOLGMjM3Tr6xg==
-X-Google-Smtp-Source: ABdhPJxFX2JWun1j/QhDNB7SBg1pXv7iw0QhX+Ptf35tDPmpx2inMz7fs0VR5F1JLKnez+ymk7NZUQ==
-X-Received: by 2002:a05:6402:3052:: with SMTP id bu18mr20447164edb.323.1592902876485;
-        Tue, 23 Jun 2020 02:01:16 -0700 (PDT)
+        bh=NgXUh7CKWyzlLfXuNMzKAHQLKGQ8Zz9Ak/aDEEjOpHw=;
+        b=PDKMsToKg6tg59686pSZw5yZLBErzmU7G5be+GHPelc/GQFjYv26+4i7ZYpW9uNxoh
+         KYSFNmSp04ZEyrMY77lugL/EVzau5pZxoY8Efw1sBo8P2gulYbla1a3zqrZFiAEYMjNG
+         wuStjVm2NcPC3UI8476dG0+YLRhPxizODzMLsQCNYyDyxqPDho9MVO3LaIcMV3DreI/G
+         k2HBj8uAu5JqPgTFfB1zYz0R8c/eM21I77jAXMw0rwXE+3SIYPPlZMNo7+c8DYlXoHgL
+         U42uCthqUh/Ru+t/s6RFcR1UHyUresVtkzRIzemc08+OZCZLBExt8AYVOuDtk3yobMiB
+         0WGA==
+X-Gm-Message-State: AOAM533D9Rf6tQ8QVb5Qs9ta354Fwzvx+rIVaTZcSPp3z43/mrQoKykg
+	2Y19Ph58L40MK21sR3oFB5maT1hjolwKmQ==
+X-Google-Smtp-Source: ABdhPJywMf2GuxOjK5X8lVatZZ8bCvXp+ookIA16r2P4z/0Mx5p8sPRJEfgdd3yTgaNzlyCBm2gO3A==
+X-Received: by 2002:a05:6402:1604:: with SMTP id f4mr21580341edv.379.1592902877584;
+        Tue, 23 Jun 2020 02:01:17 -0700 (PDT)
 Return-Path: <onea.alex@gmail.com>
 Received: from localhost.localdomain ([82.76.227.25])
-        by smtp.gmail.com with ESMTPSA id k23sm13229119ejk.114.2020.06.23.02.01.15
+        by smtp.gmail.com with ESMTPSA id k23sm13229119ejk.114.2020.06.23.02.01.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 23 Jun 2020 02:01:16 -0700 (PDT)
 From: "Alexandru N. Onea" <onea.alex@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: "Alexandru N. Onea" <onea.alex@gmail.com>
-Subject: [PATCH v2 2/3] perforce: add local path handling SRC_URI options
-Date: Tue, 23 Jun 2020 12:00:50 +0300
-Message-Id: <20200623090051.85367-2-onea.alex@gmail.com>
+Subject: [PATCH v2 3/3] bitbake-user-manual: update perforce fetcher docs
+Date: Tue, 23 Jun 2020 12:00:51 +0300
+Message-Id: <20200623090051.85367-3-onea.alex@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623090051.85367-1-onea.alex@gmail.com>
 References: <20200623090051.85367-1-onea.alex@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch implements three new SRC_URI options for the perforce
-fetcher, namely:
+This change updates the perforce documentation by describing two new
+parameters: module and remotepath.
 
-* module
-* remotepath
-
-The options are intended to provide the user more control over the
-downloaded file paths by allowing the user to specify how much of the remote
-path should be preserved locally.
-
-The changes in this patch are backwards compatible, i.e. if none of the
-introduced options is specified, the default (old) behavior is enforced.
+Additionally, a general statement regarding the fetcher implementation
+has been added, to make it clear that the fetcher does not use a
+perforce client for the job.
 
 Signed-off-by: Alexandru N. Onea <onea.alex@gmail.com>
 ---
- lib/bb/fetch2/perforce.py | 47 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 2 deletions(-)
+ .../bitbake-user-manual-fetching.xml          | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
-index 83128cde..6f3c95b6 100644
---- a/lib/bb/fetch2/perforce.py
-+++ b/lib/bb/fetch2/perforce.py
-@@ -1,6 +1,20 @@
- """
- BitBake 'Fetch' implementation for perforce
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
+index d1bfc233..fe4372ad 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
+@@ -736,6 +736,10 @@
+                 The fetcher's temporary working directory is set by
+                 <link linkend='var-bb-P4DIR'><filename>P4DIR</filename></link>,
+                 which defaults to "DL_DIR/p4".
++                The fetcher does not make use of a perforce client, instead it
++                relies on <filename>p4 files</filename> to retrieve a list of
++                files and <filename>p4 print</filename> to transfer the content
++                of those files locally.
+             </para>
  
-+Supported SRC_URI options are:
+             <para>
+@@ -783,6 +787,62 @@
+                     to <filename>"${WORKDIR}/p4"</filename> in your recipe.
+                 </note>
+             </para>
 +
-+- module
-+   The top-level location to fetch while preserving the remote paths
++            <para>
++                By default, the fetcher strips the depot location from the
++                local file paths. In the above example, the content of
++                <filename>example-depot/main/source/</filename>
++                will be placed in <filename>${WORKDIR}/p4</filename>.
++                For situations where preserving parts of the remote depot paths
++                locally is desirable, the fetcher supports two parameters:
 +
-+   The value of module can point to either a directory or a file. The result,
-+   in both cases, is that the fetcher will preserve all file paths starting
-+   from the module path. That is, the top-level directory in the module value
-+   will also be the top-level directory in P4DIR.
++                <itemizedlist>
++                    <listitem><para>
++                        <emphasis>"module":</emphasis>
++                        The top-level depot location or directory to fetch. The
++                        value of this parameter can also point to a single file
++                        within the depot, in which case the local file path will
++                        include the module path.
++                    </para></listitem>
++                    <listitem><para>
++                        <emphasis>"remotepath":</emphasis>
++                        When used with the value "<filename>keep</filename>",
++                        the fetcher will mirror the full depot paths locally
++                        for the specified location, even in combination with
++                        the <filename>module</filename> parameter.
++                    </para></listitem>
++                </itemizedlist>
++            </para>
 +
-+- remotepath
-+   If the value "keep" is given, the full depot location of each file is
-+   preserved in P4DIR. This option overrides the effect of the module option.
++            <para>
++                Here is an example use of the the <filename>module</filename>
++                parameter:
 +
- """
++                <literallayout class='monospaced'>
++    SRC_URI = "p4://user:passwd@example-depot/main;module=source/..."
++                </literallayout>
++
++                In this case, the content of the top-level directory
++                <filename>source/</filename>  will be fetched to
++                <filename>${P4DIR}</filename>, including the directory itself.
++                The top-level directory will be accesible at
++                <filename>${P4DIR}/source/</filename>.
++            </para>
++
++            <para>
++                Here is an example use of the the <filename>remotepath</filename>
++                parameter:
++
++                <literallayout class='monospaced'>
++    SRC_URI = "p4://user:passwd@example-depot/main;module=source/...;remotepath=keep"
++                </literallayout>
++
++                In this case, the content of the top-level directory
++                <filename>source/</filename>  will be fetched to
++                <filename>${P4DIR}</filename>, but the complete depot paths will
++                be mirrored locally. The top-level directory will be accessible
++                at <filename>${P4DIR}/example-depot/main/source/</filename>.
++            </para>
+         </section>
  
- # Copyright (C) 2003, 2004  Chris Larson
-@@ -88,14 +102,33 @@ class Perforce(FetchMethod):
-             logger.debug(1, 'Determined P4PORT to be: %s' % ud.host)
-             if not ud.host:
-                 raise FetchError('Could not determine P4PORT from P4CONFIG')
--	
-+
-+        # Fetcher options
-+        ud.module = ud.parm.get('module')
-+        ud.keepremotepath = (ud.parm.get('remotepath', '') == 'keep')
-+
-         if ud.path.find('/...') >= 0:
-             ud.pathisdir = True
-         else:
-             ud.pathisdir = False
- 
-+        # Avoid using the "/..." syntax in SRC_URI when a module value is given
-+        if ud.pathisdir and ud.module:
-+            raise FetchError('SRC_URI depot path cannot not end in /... when a module value is given')
-+
-         cleanedpath = ud.path.replace('/...', '').replace('/', '.')
-         cleanedhost = ud.host.replace(':', '.')
-+
-+        # Merge the path and module into the final depot location
-+        if ud.module:
-+            if ud.module.find('/') == 0:
-+                raise FetchError('module cannot begin with /')
-+            ud.path = os.path.join(ud.path, ud.module)
-+
-+            # Append the module path to the local pkg name
-+            cleanedmodule = ud.module.replace('/...', '').replace('/', '.')
-+            cleanedpath += '--%s' % cleanedmodule
-+
-         ud.pkgdir = os.path.join(ud.dldir, cleanedhost, cleanedpath)
- 
-         ud.setup_revisions(d)
-@@ -125,10 +158,20 @@ class Perforce(FetchMethod):
-             pathnrev = '%s' % (ud.path)
- 
-         if depot_filename:
--            if ud.pathisdir: # Remove leading path to obtain filename
-+            if ud.keepremotepath:
-+                # preserve everything, remove the leading //
-+                filename = depot_filename.lstrip('/')
-+            elif ud.module:
-+                # remove everything up to the module path
-+                modulepath = ud.module.rstrip('/...')
-+                filename = depot_filename[depot_filename.rfind(modulepath):]
-+            elif ud.pathisdir:
-+                # Remove leading (visible) path to obtain the filepath
-                 filename = depot_filename[len(ud.path)-1:]
-             else:
-+                # Remove everything, except the filename
-                 filename = depot_filename[depot_filename.rfind('/'):]
-+
-             filename = filename[:filename.find('#')] # Remove trailing '#rev'
- 
-         if command == 'changes':
+         <section id='repo-fetcher'>
 -- 
 2.25.1
 
