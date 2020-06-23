@@ -1,146 +1,73 @@
-Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
- by mx.groups.io with SMTP id smtpd.web10.3050.1592902879399771730
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web12.4230.1592908250234802350
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Jun 2020 02:01:19 -0700
+ Tue, 23 Jun 2020 03:30:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=qDKZ7deX;
- spf=pass (domain: gmail.com, ip: 209.85.208.67, mailfrom: onea.alex@gmail.com)
-Received: by mail-ed1-f67.google.com with SMTP id dg28so157535edb.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Jun 2020 02:01:19 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=evGK0I87;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f47.google.com with SMTP id q15so839204wmj.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Jun 2020 03:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NgXUh7CKWyzlLfXuNMzKAHQLKGQ8Zz9Ak/aDEEjOpHw=;
-        b=qDKZ7deXXqcbO3RRB1hewINDYDN4t4xNOXd8/S1Z5CeoDr+lGP1h7pcEayaY7EtHKE
-         Dux/UyIPRq81nol+C59wcqM3S8XbhbVwQRlgCjnyRHXoqSHR+MxcRE3JnqYz+/DbuvV8
-         nqQVRb4ICk4HcE45m356BnxyjY3CG0NZlyzFE5F6PwM/fnro0llODaSCKPKj0lJ5ckEq
-         9RaWACOOz97nKVNk79pqL2Y9j1o2F/wKPskXbXqIgBcDPrU+Ojo9FWOmAf64EqFfBjfa
-         ofWnLgfIsNlRLjKTGXH787Rx7b6ZrcxRyAyQ9OUmUKy0w9qu+zS8mTPzvnegJ2u2X8zb
-         RFEA==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=5yDv5zH82uhWFE6WuVAU0BPSawwfbA33wqaENrsWhv0=;
+        b=evGK0I873cbFGmRmk2pJ2xVgRFb/OlW47Tc9aSXV1nCtevhI0W71uKnAMa8MCtS4er
+         3LE2tJuH1Pcp0PWKYzGt+GftopZeE95DhSp+ci75Bf7JvZ39gxOTtdOGImzbrww2OjNu
+         OMr0dyh28K6/g2rz2mT9yJ0Xbx6pJ3fAM3niA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NgXUh7CKWyzlLfXuNMzKAHQLKGQ8Zz9Ak/aDEEjOpHw=;
-        b=PDKMsToKg6tg59686pSZw5yZLBErzmU7G5be+GHPelc/GQFjYv26+4i7ZYpW9uNxoh
-         KYSFNmSp04ZEyrMY77lugL/EVzau5pZxoY8Efw1sBo8P2gulYbla1a3zqrZFiAEYMjNG
-         wuStjVm2NcPC3UI8476dG0+YLRhPxizODzMLsQCNYyDyxqPDho9MVO3LaIcMV3DreI/G
-         k2HBj8uAu5JqPgTFfB1zYz0R8c/eM21I77jAXMw0rwXE+3SIYPPlZMNo7+c8DYlXoHgL
-         U42uCthqUh/Ru+t/s6RFcR1UHyUresVtkzRIzemc08+OZCZLBExt8AYVOuDtk3yobMiB
-         0WGA==
-X-Gm-Message-State: AOAM533D9Rf6tQ8QVb5Qs9ta354Fwzvx+rIVaTZcSPp3z43/mrQoKykg
-	2Y19Ph58L40MK21sR3oFB5maT1hjolwKmQ==
-X-Google-Smtp-Source: ABdhPJywMf2GuxOjK5X8lVatZZ8bCvXp+ookIA16r2P4z/0Mx5p8sPRJEfgdd3yTgaNzlyCBm2gO3A==
-X-Received: by 2002:a05:6402:1604:: with SMTP id f4mr21580341edv.379.1592902877584;
-        Tue, 23 Jun 2020 02:01:17 -0700 (PDT)
-Return-Path: <onea.alex@gmail.com>
-Received: from localhost.localdomain ([82.76.227.25])
-        by smtp.gmail.com with ESMTPSA id k23sm13229119ejk.114.2020.06.23.02.01.16
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=5yDv5zH82uhWFE6WuVAU0BPSawwfbA33wqaENrsWhv0=;
+        b=EOp91TMSVMZBLX5TeM3/2rnyVlX4Or74nfVWfYui+pWh/7LSMGC/apRrN41TKEJMGk
+         UILlS+lQ+Xw99jtzgdWujbW6eEPQr99QMilZdkmwHZfAlJag4Q5DSnACClyBPqMvYN6h
+         EbBji1W6p7g4ipOzYhKD00XP/9ZIhM6vfE5sOHkdrHkjKQo3dlNdTgIK/a83idYR/dN2
+         7Ubvwb6mnjbcP46bQQjf9BPOwXyDVFB7zuy3ue3dbKQhe8bQKird5h43HdTSQyb12Ktd
+         IdLWSpLfPvMWObwifUhIyiJ5qMycJhRsupZ1rEyv4lTkvhecqTmNuKads/3V2iVUXdV/
+         cIbA==
+X-Gm-Message-State: AOAM531Ip1HdnR/13iJGOowTvi0vFdx6Jm5C8NirkYR7Zohuzspl7v1L
+	3fUcRSSOzZMVXsVYQz5odu1e4g==
+X-Google-Smtp-Source: ABdhPJxSP8nQrbCfjz9FEzsAduStNSGgGZeREBePnaf+iWWXcMRLL6X5mbEIb1vwEVwN/5GhdNYL/g==
+X-Received: by 2002:a1c:b6c3:: with SMTP id g186mr7274716wmf.135.1592908248622;
+        Tue, 23 Jun 2020 03:30:48 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id u15sm15604587wrm.64.2020.06.23.03.30.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 02:01:16 -0700 (PDT)
-From: "Alexandru N. Onea" <onea.alex@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: "Alexandru N. Onea" <onea.alex@gmail.com>
-Subject: [PATCH v2 3/3] bitbake-user-manual: update perforce fetcher docs
-Date: Tue, 23 Jun 2020 12:00:51 +0300
-Message-Id: <20200623090051.85367-3-onea.alex@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623090051.85367-1-onea.alex@gmail.com>
-References: <20200623090051.85367-1-onea.alex@gmail.com>
+        Tue, 23 Jun 2020 03:30:47 -0700 (PDT)
+Message-ID: <71e1f67d0dd3930421e91fc2d8bb5c28b7103c17.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [fetcher2] perforce fetcher download dir
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Alexandru Onea <onea.alex@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Date: Tue, 23 Jun 2020 11:30:46 +0100
+In-Reply-To: <CAJgSc4zUtVEXmETMWZh58Uw-dPZ7QUiWHXC-Jrhok4fAFJz7ww@mail.gmail.com>
+References: 
+	<CAJgSc4zktj90d5DXXoSa8vE8=F58puwKD0YKUTMA0etGn3U=XQ@mail.gmail.com>
+	 <aa5431eddbc52496d0cc0a2a848489dad6fd0d01.camel@linuxfoundation.org>
+	 <CAJgSc4zUtVEXmETMWZh58Uw-dPZ7QUiWHXC-Jrhok4fAFJz7ww@mail.gmail.com>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This change updates the perforce documentation by describing two new
-parameters: module and remotepath.
+On Tue, 2020-06-23 at 09:40 +0300, Alexandru Onea wrote:
+> Indeed, there is an overlap between the "destdir" option introduced
+> by the patch and the "subdir" option of the unpack. Their behavior is
+> only slightly different but the subdir option can be used to achieve
+> the same result. I will drop the "destdir" option. The other options
+> do not have any overlap with existing unpack functionality.
 
-Additionally, a general statement regarding the fetcher implementation
-has been added, to make it clear that the fetcher does not use a
-perforce client for the job.
+That was what I suspected and its good to have only one API for doing
+things where we can!
 
-Signed-off-by: Alexandru N. Onea <onea.alex@gmail.com>
----
- .../bitbake-user-manual-fetching.xml          | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
+> I will prepare a new version of the patch including
+> updated documentation.
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-index d1bfc233..fe4372ad 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-@@ -736,6 +736,10 @@
-                 The fetcher's temporary working directory is set by
-                 <link linkend='var-bb-P4DIR'><filename>P4DIR</filename></link>,
-                 which defaults to "DL_DIR/p4".
-+                The fetcher does not make use of a perforce client, instead it
-+                relies on <filename>p4 files</filename> to retrieve a list of
-+                files and <filename>p4 print</filename> to transfer the content
-+                of those files locally.
-             </para>
- 
-             <para>
-@@ -783,6 +787,62 @@
-                     to <filename>"${WORKDIR}/p4"</filename> in your recipe.
-                 </note>
-             </para>
-+
-+            <para>
-+                By default, the fetcher strips the depot location from the
-+                local file paths. In the above example, the content of
-+                <filename>example-depot/main/source/</filename>
-+                will be placed in <filename>${WORKDIR}/p4</filename>.
-+                For situations where preserving parts of the remote depot paths
-+                locally is desirable, the fetcher supports two parameters:
-+
-+                <itemizedlist>
-+                    <listitem><para>
-+                        <emphasis>"module":</emphasis>
-+                        The top-level depot location or directory to fetch. The
-+                        value of this parameter can also point to a single file
-+                        within the depot, in which case the local file path will
-+                        include the module path.
-+                    </para></listitem>
-+                    <listitem><para>
-+                        <emphasis>"remotepath":</emphasis>
-+                        When used with the value "<filename>keep</filename>",
-+                        the fetcher will mirror the full depot paths locally
-+                        for the specified location, even in combination with
-+                        the <filename>module</filename> parameter.
-+                    </para></listitem>
-+                </itemizedlist>
-+            </para>
-+
-+            <para>
-+                Here is an example use of the the <filename>module</filename>
-+                parameter:
-+
-+                <literallayout class='monospaced'>
-+    SRC_URI = "p4://user:passwd@example-depot/main;module=source/..."
-+                </literallayout>
-+
-+                In this case, the content of the top-level directory
-+                <filename>source/</filename>  will be fetched to
-+                <filename>${P4DIR}</filename>, including the directory itself.
-+                The top-level directory will be accesible at
-+                <filename>${P4DIR}/source/</filename>.
-+            </para>
-+
-+            <para>
-+                Here is an example use of the the <filename>remotepath</filename>
-+                parameter:
-+
-+                <literallayout class='monospaced'>
-+    SRC_URI = "p4://user:passwd@example-depot/main;module=source/...;remotepath=keep"
-+                </literallayout>
-+
-+                In this case, the content of the top-level directory
-+                <filename>source/</filename>  will be fetched to
-+                <filename>${P4DIR}</filename>, but the complete depot paths will
-+                be mirrored locally. The top-level directory will be accessible
-+                at <filename>${P4DIR}/example-depot/main/source/</filename>.
-+            </para>
-         </section>
- 
-         <section id='repo-fetcher'>
--- 
-2.25.1
+The new patches look good, I've queued for testing, thanks.
+
+Cheers,
+
+Richard
 
