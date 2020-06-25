@@ -1,79 +1,88 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web11.217.1592948394087522174
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.9770.1593089544434784969
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Jun 2020 14:39:54 -0700
+ Thu, 25 Jun 2020 05:52:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ArOb8Z2n;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id o8so230124wmh.4
-        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Jun 2020 14:39:53 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EigSBLHP;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id k6so5732454wrn.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 25 Jun 2020 05:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:user-agent:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GkhIGGOraEnhH62g37TH3GG29vhUly6GlELoDNnPSK8=;
-        b=ArOb8Z2neKxFhudPbXiTh6+kaXTGToN+Lzc11Vxz8t8nAVYX7JOK6/rgNXt7j2iwo1
-         NCx83sG6TuQ2ogCBPqCoIXIs7uhd4DOmTJ9cFE+Go0muvqlT07LrT1AY9JQfXQH7YECW
-         eWOhGZy38bxWbeRXUx3HlTt8YdHykValbMwHQ=
+        bh=JBiH41+y4cJ0/TdBM9AJYjpBuVz4ifSITEICT8D8ppc=;
+        b=EigSBLHPG7Zmh+JaLj0AIoYZv9bx2SusmGcCyYsLUpOTNLmDQ+OaXUnJ0SccBbQvTS
+         3yE3n1xjpG6LKmBC/Znbh8UGb6YxgpuDeddCb8s0JFioM4RouSFwUcBMgWd+pgMKC9xb
+         wR8yLArpqqgdwISCEsm7ovoThyMHYxxyEZBMM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=GkhIGGOraEnhH62g37TH3GG29vhUly6GlELoDNnPSK8=;
-        b=ODoRHAyvwaqqJrAfVh44QH/ChfeQb0oO8Q+ubl9o9g+DXM+VEoZYp0+FxqtIoz+K4U
-         jut5dy9MXM/hP22JV1+vsVf1nvMP1T3vkUs2H/KIkxI2pGutYIF3IB4MYu6EkOvRz4Gd
-         s8WxOwCZbEECPgNe8M6SZDKWIUwz+TMg7/xWGKHJEg3NxhvBuU7KyT4/LZfDfEeAZ7Pq
-         XkKeHXpqVjAmhcKcgxBgSFNv8AeIPK9zjf+PIDWRKr47ex9ZabDyuusDToHPKnB6O7Tb
-         yn0AkUKmkaATLYgUbAjaJz/diOiy+SqHNoOjpbKXyiZ8CjwODb+MLI0thM7iz5NHd5/g
-         2QmQ==
-X-Gm-Message-State: AOAM5312jGpAhjbDDxzoYBp01QFlQtOJYfSwK4HsaJf+C92TpXLMOGXW
-	R+GN1537dqAOL6LVoMcBiOL51s0siJnXKw==
-X-Google-Smtp-Source: ABdhPJzLQcihAc0KiwwxBn6TSeqQD2mlgzd93AS0EELniyCL4EaWdTzuQSXvxl6qr8dJEJ0tCy8MqQ==
-X-Received: by 2002:a1c:9687:: with SMTP id y129mr26212378wmd.30.1592948392555;
-        Tue, 23 Jun 2020 14:39:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JBiH41+y4cJ0/TdBM9AJYjpBuVz4ifSITEICT8D8ppc=;
+        b=UVy59lFfL6xFj/Dgzzv4ZCOerUDExxGbRXhWvTeysv0C0sqSwLs88nQlfzwLijoHQg
+         rE/lQWpCRm8+qc/it0Vl3XbN309OfWCYQ23x+ba7T5+lleznt4e1IsqjZCmPTkZ6zvZ5
+         JmD5R+iHn2nqWgk1/gguuE3RXVEDHvrODsDBeGERCg793rDSdiU/kiimWRRQoc7aX36c
+         KPdmJ/GRaEvWuW6u+JGuUSto3oEbGeyv5iXWFJzQtvirspB0EpOAlB9y3viZdL79JJSe
+         gYqWUqsljdDfQafMI5DWG0xWfLcqsQL5SSfEWPmwe5IecpTJtHbT3f/6EkNMpCyUoJ42
+         jvvw==
+X-Gm-Message-State: AOAM530M8d/7kXhyZUYwBDPpJPV+UIPvBoGvQlRZSKPMvUO7FQhUjS4Y
+	EF6G1LLvtdeGOWNxwYO+Q3Jlux+xLw/EIQ==
+X-Google-Smtp-Source: ABdhPJxv3Dd+3JXjO9dCrySZpvkhdkA5Z5/tRrMz6FjcPbRWvfnp2PTid5hC8GxejnGzwZnIf8tbXg==
+X-Received: by 2002:adf:e948:: with SMTP id m8mr33265384wrn.398.1593089542349;
+        Thu, 25 Jun 2020 05:52:22 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id 33sm18046734wri.16.2020.06.23.14.39.51
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id b62sm1948887wmh.38.2020.06.25.05.52.21
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 14:39:52 -0700 (PDT)
-Message-ID: <9dd0bf86fa5a2b601a0fb942dcd2cea6c14be93c.camel@linuxfoundation.org>
-Subject: Anyone using regex in ASSUME_PROVIDED?
+        Thu, 25 Jun 2020 05:52:21 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: openembedded-architecture
-	 <openembedded-architecture@lists.openembedded.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 23 Jun 2020 22:39:50 +0100
-User-Agent: Evolution 3.36.2-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] taskdata: Improve handling of regex in ASSUME_PROVIDED
+Date: Thu, 25 Jun 2020 13:52:20 +0100
+Message-Id: <20200625125220.650321-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
-
-Back in 2009, regex support was added in ASSUME_PROVIDED:
-https://git.openembedded.org/bitbake/commit/lib/bb/taskdata.py?id=efb0474231ed286073a5a5904094320da8cab28d
-
-Looking at this now, I'm thinking its a bad idea.
-
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=13893
-
-shows that adding:
+ASSUME_PROVIDED can take regexs however the current way of handling
+this in code is suboptimal. It means that you can add something like:
 
 DEPENDS += "texinfo-nativejunk-that-does-not-exist"
 
-gives no errors at all.
+and if texinfo-native is in ASSUME_PROVIDED, no error will occur.
 
-The code can't know whether a given entry in ASSUME_PROVIDED is a regex
-or not.
+Update the code to only treat something as a regex if a start or end
+anchor character is present (which wouldn't be valid in a recipe name).
 
-Plan B is that we test for anchors in the string and only treat as a
-regex if they're present.
+[YOCTO #13893]
 
-I'm wondering if we can remove this code entirely though.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/taskdata.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Does anyone use regexs in ASSUME_PROVIDED?
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/taskdata.py b/lib/bb/taskdata.py
+index d13a124983..ffbaf362e8 100644
+--- a/lib/bb/taskdata.py
++++ b/lib/bb/taskdata.py
+@@ -21,8 +21,13 @@ def re_match_strings(target, strings):
+     Whether or not the string 'target' matches
+     any one string of the strings which can be regular expression string
+     """
+-    return any(name == target or re.match(name, target)
+-               for name in strings)
++    for name in strings:
++        if name.startswith("^") or name.endswith("$"):
++            if re.match(name, target):
++                return True
++        elif name == target:
++            return True
++    return False
+ 
+ class TaskEntry:
+     def __init__(self):
+-- 
+2.25.1
 
