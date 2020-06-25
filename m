@@ -1,435 +1,103 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
- by mx.groups.io with SMTP id smtpd.web12.11629.1593094871950312482
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+ by mx.groups.io with SMTP id smtpd.web11.12175.1593096256536610174
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 25 Jun 2020 07:21:12 -0700
+ Thu, 25 Jun 2020 07:44:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Nu2L0Y4R;
- spf=pass (domain: gmail.com, ip: 209.85.166.173, mailfrom: jpewhacker@gmail.com)
-Received: by mail-il1-f173.google.com with SMTP id z2so5510520ilq.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 25 Jun 2020 07:21:11 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=Y9TPQ2br;
+ spf=pass (domain: konsulko.com, ip: 209.85.167.178, mailfrom: paul.barker@konsulko.com)
+Received: by mail-oi1-f178.google.com with SMTP id w17so4463398oie.6
+        for <bitbake-devel@lists.openembedded.org>; Thu, 25 Jun 2020 07:44:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/JTWzsGJqOzBNfjNRGjAB93Cp9fzg9auDH5j/jbVF8s=;
-        b=Nu2L0Y4RmV4TifBHm2/hBuaLATb/dRbIzhJbcOrIGryhs18Q5z6t03HeAdufAvx+Wa
-         o7EjrzoLD2sepBJ7nqibkhT69uc3GzaCapyiN0vBcOLO8CRVmHDChWa7S0TG2qxqRnJU
-         DB36tOlIHgRLSxT6YqcjzFx7L7P43dZwJiLMoEDCLqqtQ4MJxqsgxMEQVc+Msar6rHUV
-         xyrWbDqYpW6r3eEnhPjxzUj43XokEy6iOZQsphErVA5QBKGvagTTmB2K1C+qH/a7XH98
-         8L/y+FMVEWyWvmLo6GaaKPtNJ44JWFHhW1mVmoQBqURgjpka9XYRmuqM00/PkUIjZanx
-         2gZw==
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1kHlvITUPzjDiF9czFm14s8upbISakUWY5JjegQ06Ro=;
+        b=Y9TPQ2br7+wZyih+pmLUL3bSsxaHcU0Fb0BYU3w9YczAghF32U+cRNELHb6waDetdl
+         iiCPT5cxftclolwe6788bAc+51D2on8Wzjl49AOtCXz05wstQbWh1Pjp/rvKb/BDN6yo
+         dkyNDIPa2G8EH0MWdII1bhnpoRjnJ69XGbP2Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/JTWzsGJqOzBNfjNRGjAB93Cp9fzg9auDH5j/jbVF8s=;
-        b=WLVNDLLGv5cnznbM3Ok98y4IUfUFgZxDilZW0g/T1Thoz+0Gp7e3KnbOI8VaNRPh9i
-         6uSD90Qf3u8SoJUaBPA2ONwa2HBsQucFCJ2R/dOSmlkpP5EKYM8HlnRNQk1euSMFzXG0
-         HmM03CQiwRjzhXp43aflzZZ16rRF3SFq6tYVt0p3esMLztOIF9KYukMjO5nOje23kDZ9
-         xNx9T0DJDFYTdgNywAQYIrW9eb3tLJstsM1B1OunnS1E3qXs7gBQFnVPogYMDvhZIqvX
-         2y2ZSMenLpNRdNht9rwf+8ikYasFWmVBQ+c/8nQugcO2noc/hxIXNdSRIarN4qiXgki3
-         TuxQ==
-X-Gm-Message-State: AOAM530k/uSqUY2jSPQUfbW1tio7bgD1tUQYcj7N7SHB78yJXljWW5el
-	uZKb7sQQIL/FYpw+KXGyQy77uUlo
-X-Google-Smtp-Source: ABdhPJy81u/PAT7irrmhhYl9bxfCr4x80vWyhcLHvr5S1+LNpan63tutqxFqyFedi34nFXec0QOOcw==
-X-Received: by 2002:a92:bb98:: with SMTP id x24mr16658451ilk.270.1593094870908;
-        Thu, 25 Jun 2020 07:21:10 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:7004:574a:57d2:4d47])
-        by smtp.gmail.com with ESMTPSA id o6sm975956ils.46.2020.06.25.07.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 07:21:10 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v2] hashserv: Chunkify large messages
-Date: Thu, 25 Jun 2020 09:21:07 -0500
-Message-Id: <20200625142107.11098-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200625141338.9078-1-JPEWhacker@gmail.com>
-References: <20200625141338.9078-1-JPEWhacker@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1kHlvITUPzjDiF9czFm14s8upbISakUWY5JjegQ06Ro=;
+        b=U5TT2pXtbT5BKgWX0G44ZIXEnM/1fMQg8qLBICizRH9uIF1OHeKVpj0El9w8aZEnyi
+         84S2Z/1g7lHMjBQHdZp7xy2flYxeS1xxsaw5tbhWpp60jC1BT70Uk9ucVC6iVGws3CVa
+         jMFl3wbx5LVi8VMe/rZGeyxyslCioFqcJL+/1SZM7ClnL4f5iOHdmy7vfondDfnodJhh
+         Lg6u/rLzFcp7iWJFuTCO3tPVTBeOMnjYXmvN1ViSiDHRY0fTl0Uy/pWr0dmlr5wVS4xE
+         IrqgEPqvmXBN7bxlhZD8pSVJnpnoJh4GYnIem7ok3HuVSUWbYnjcE/dP+HVyShAvc2eb
+         Xxdg==
+X-Gm-Message-State: AOAM530og0faxNFOnwuFATeZj1vljJyW50b6kXiv/Nrg9iwKZU1N+Cl9
+	vIW0UvAGqOBDVl1IUXdj1I2l29qK7hTTS23CO5SZbCTl
+X-Google-Smtp-Source: ABdhPJzP73NJjUAQKifGwEpJtj+sfh9FOcZM2UFjRMiYIapbbaK1jn+S/qEfK38CDKdvhCiPqOAKZAm+HSNTN6xlXMA=
+X-Received: by 2002:aca:49cb:: with SMTP id w194mr2344637oia.152.1593096255869;
+ Thu, 25 Jun 2020 07:44:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <lyh7uzxnvx.fsf@ensc-virt.intern.sigma-chemnitz.de>
+In-Reply-To: <lyh7uzxnvx.fsf@ensc-virt.intern.sigma-chemnitz.de>
+From: "Paul Barker" <pbarker@konsulko.com>
+Date: Thu, 25 Jun 2020 15:44:05 +0100
+Message-ID: <CAM9ZRVuqYrSW5-WLsUnZG4ok=qSc82BkrZgSC=ToGgDoBLXpBg@mail.gmail.com>
+Subject: Re: [bitbake-devel] Support for git+https://foo.example.com like URIs
+To: enrico.scholz@sigma-chemnitz.de
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 
-The hash equivalence client and server can occasionally send messages
-that are too large for the server to fit in the receive buffer (64 KB).
-To prevent this, support is added to the protocol to "chunkify" the
-stream and break it up into manageable pieces that the server can each
-side can back together.
+On Thu, 25 Jun 2020 at 14:42, Enrico Scholz via lists.openembedded.org
+<enrico.scholz=sigma-chemnitz.de@lists.openembedded.org> wrote:
+>
+> Hello,
+>
+> for some years we are using a mechanism which allows to encode the
+> protocol ("https", "file", ...) within the base uri.  So, we can write
+>
+>
+> | PROJECT_BASE_URI = "git+https://foo.example.com/project"
+> | SRC_URI = "${PROJECT_BASE_URI}/some-repo"
+>
+> instead of
+>
+> | PROJECT_BASE_URI = "git://foo.example.com/project"
+> | PROJECT_BASE_PROTOCOL = "https"
+> | SRC_URI = "${PROJECT_BASE_URI}/some-repo;protocol=${PROJECT_BASE_PROTOCOL}"
+>
+>
+> Four years ago I wrote a bug report [1] with a patch against bitbake
+> itself which was more or less rejected.
+>
+> In the meantime, I moved this out in an OE class [2] which overrides
+> 'bb.fetch.decodeurl'.
+>
+>
+> Is there some generic interest in this functionality so that I can
+> create and send a patch for bitbake?  Or is this too special and people
+> are happy with altering ${MIRROR}?
+>
+>
+>
+> Enrico
+>
+> Footnotes:
+> [1]  https://bugzilla.yoctoproject.org/show_bug.cgi?id=9738
+>
+> [2]  https://github.com/sigma-embedded/meta-de.sigma-chemnitz/blob/zeus/classes/elito-uridecode.bbclass
+>      https://github.com/sigma-embedded/meta-de.sigma-chemnitz/blob/zeus/lib/elito/__init__.py
 
-Ideally, this would be negotiated by the client and server, but it's
-currently hard coded to 32 KB to prevent the round-trip delay.
+I'd implement this in an inverse way, add a new class for your
+projects, eg. my-project.bbclass:
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
+    MY_REPO_NAME ?= "${BPN}"
+    SRC_URI = "git://foo.example.com/project/${MY_REPO_NAME};protocol=https"
 
-V2:
-    Removed some debugging information I left in accidently
+Then in your recipe, inherit the bbclass and override the repo name if
+it doesn't match the recipe name:
 
+    MY_REPO_NAME = "some-repo"
+    inherit my-project
 
- bitbake/lib/hashserv/__init__.py |  22 +++++++
- bitbake/lib/hashserv/client.py   |  43 ++++++++++---
- bitbake/lib/hashserv/server.py   | 105 +++++++++++++++++++++----------
- bitbake/lib/hashserv/tests.py    |  23 +++++++
- 4 files changed, 152 insertions(+), 41 deletions(-)
+That can be done with no modification or monkey patching of the fetcher.
 
-diff --git a/bitbake/lib/hashserv/__init__.py b/bitbake/lib/hashserv/__init__.py
-index c3318620f5..f95e8f43f1 100644
---- a/bitbake/lib/hashserv/__init__.py
-+++ b/bitbake/lib/hashserv/__init__.py
-@@ -6,12 +6,20 @@
- from contextlib import closing
- import re
- import sqlite3
-+import itertools
-+import json
- 
- UNIX_PREFIX = "unix://"
- 
- ADDR_TYPE_UNIX = 0
- ADDR_TYPE_TCP = 1
- 
-+# The Python async server defaults to a 64K receive buffer, so we hardcode our
-+# maximum chunk size. It would be better if the client and server reported to
-+# each other what the maximum chunk sizes were, but that will slow down the
-+# connection setup with a round trip delay so I'd rather not do that unless it
-+# is necessary
-+DEFAULT_MAX_CHUNK = 32 * 1024
- 
- def setup_database(database, sync=True):
-     db = sqlite3.connect(database)
-@@ -66,6 +74,20 @@ def parse_address(addr):
-         return (ADDR_TYPE_TCP, (host, int(port)))
- 
- 
-+def chunkify(msg, max_chunk):
-+    if len(msg) < max_chunk - 1:
-+        yield ''.join((msg, "\n"))
-+    else:
-+        yield ''.join((json.dumps({
-+                'chunk-stream': None
-+            }), "\n"))
-+
-+        args = [iter(msg)] * (max_chunk - 1)
-+        for m in map(''.join, itertools.zip_longest(*args, fillvalue='')):
-+            yield ''.join(itertools.chain(m, "\n"))
-+        yield "\n"
-+
-+
- def create_server(addr, dbname, *, sync=True):
-     from . import server
-     db = setup_database(dbname, sync=sync)
-diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-index 46085d6418..a29af836d9 100644
---- a/bitbake/lib/hashserv/client.py
-+++ b/bitbake/lib/hashserv/client.py
-@@ -7,6 +7,7 @@ import json
- import logging
- import socket
- import os
-+from . import chunkify, DEFAULT_MAX_CHUNK
- 
- 
- logger = logging.getLogger('hashserv.client')
-@@ -25,6 +26,7 @@ class Client(object):
-         self.reader = None
-         self.writer = None
-         self.mode = self.MODE_NORMAL
-+        self.max_chunk = DEFAULT_MAX_CHUNK
- 
-     def connect_tcp(self, address, port):
-         def connect_sock():
-@@ -58,7 +60,7 @@ class Client(object):
-             self.reader = self._socket.makefile('r', encoding='utf-8')
-             self.writer = self._socket.makefile('w', encoding='utf-8')
- 
--            self.writer.write('OEHASHEQUIV 1.0\n\n')
-+            self.writer.write('OEHASHEQUIV 1.1\n\n')
-             self.writer.flush()
- 
-             # Restore mode if the socket is being re-created
-@@ -91,18 +93,35 @@ class Client(object):
-                 count += 1
- 
-     def send_message(self, msg):
-+        def get_line():
-+            line = self.reader.readline()
-+            if not line:
-+                raise HashConnectionError('Connection closed')
-+
-+            if not line.endswith('\n'):
-+                raise HashConnectionError('Bad message %r' % message)
-+
-+            return line
-+
-         def proc():
--            self.writer.write('%s\n' % json.dumps(msg))
-+            for c in chunkify(json.dumps(msg), self.max_chunk):
-+                self.writer.write(c)
-             self.writer.flush()
- 
--            l = self.reader.readline()
--            if not l:
--                raise HashConnectionError('Connection closed')
-+            l = get_line()
- 
--            if not l.endswith('\n'):
--                raise HashConnectionError('Bad message %r' % message)
-+            m = json.loads(l)
-+            if 'chunk-stream' in m:
-+                lines = []
-+                while True:
-+                    l = get_line().rstrip('\n')
-+                    if not l:
-+                        break
-+                    lines.append(l)
- 
--            return json.loads(l)
-+                m = json.loads(''.join(lines))
-+
-+            return m
- 
-         return self._send_wrapper(proc)
- 
-@@ -155,6 +174,14 @@ class Client(object):
-         m['unihash'] = unihash
-         return self.send_message({'report-equiv': m})
- 
-+    def get_taskhash(self, method, taskhash, all_properties=False):
-+        self._set_mode(self.MODE_NORMAL)
-+        return self.send_message({'get': {
-+            'taskhash': taskhash,
-+            'method': method,
-+            'all': all_properties
-+        }})
-+
-     def get_stats(self):
-         self._set_mode(self.MODE_NORMAL)
-         return self.send_message({'get-stats': None})
-diff --git a/bitbake/lib/hashserv/server.py b/bitbake/lib/hashserv/server.py
-index cc7e48233b..81050715ea 100644
---- a/bitbake/lib/hashserv/server.py
-+++ b/bitbake/lib/hashserv/server.py
-@@ -13,6 +13,7 @@ import os
- import signal
- import socket
- import time
-+from . import chunkify, DEFAULT_MAX_CHUNK
- 
- logger = logging.getLogger('hashserv.server')
- 
-@@ -107,12 +108,29 @@ class Stats(object):
-         return {k: getattr(self, k) for k in ('num', 'total_time', 'max_time', 'average', 'stdev')}
- 
- 
-+class ClientError(Exception):
-+    pass
-+
- class ServerClient(object):
-+    FAST_QUERY = 'SELECT taskhash, method, unihash FROM tasks_v2 WHERE method=:method AND taskhash=:taskhash ORDER BY created ASC LIMIT 1'
-+    ALL_QUERY =  'SELECT *                         FROM tasks_v2 WHERE method=:method AND taskhash=:taskhash ORDER BY created ASC LIMIT 1'
-+
-     def __init__(self, reader, writer, db, request_stats):
-         self.reader = reader
-         self.writer = writer
-         self.db = db
-         self.request_stats = request_stats
-+        self.max_chunk = DEFAULT_MAX_CHUNK
-+
-+        self.handlers = {
-+            'get': self.handle_get,
-+            'report': self.handle_report,
-+            'report-equiv': self.handle_equivreport,
-+            'get-stream': self.handle_get_stream,
-+            'get-stats': self.handle_get_stats,
-+            'reset-stats': self.handle_reset_stats,
-+            'chunk-stream': self.handle_chunk,
-+        }
- 
-     async def process_requests(self):
-         try:
-@@ -125,7 +143,11 @@ class ServerClient(object):
-                 return
- 
-             (proto_name, proto_version) = protocol.decode('utf-8').rstrip().split()
--            if proto_name != 'OEHASHEQUIV' or proto_version != '1.0':
-+            if proto_name != 'OEHASHEQUIV':
-+                return
-+
-+            proto_version = tuple(int(v) for v in proto_version.split('.'))
-+            if proto_version < (1, 0) or proto_version > (1, 1):
-                 return
- 
-             # Read headers. Currently, no headers are implemented, so look for
-@@ -140,40 +162,34 @@ class ServerClient(object):
-                     break
- 
-             # Handle messages
--            handlers = {
--                'get': self.handle_get,
--                'report': self.handle_report,
--                'report-equiv': self.handle_equivreport,
--                'get-stream': self.handle_get_stream,
--                'get-stats': self.handle_get_stats,
--                'reset-stats': self.handle_reset_stats,
--            }
--
-             while True:
-                 d = await self.read_message()
-                 if d is None:
-                     break
--
--                for k in handlers.keys():
--                    if k in d:
--                        logger.debug('Handling %s' % k)
--                        if 'stream' in k:
--                            await handlers[k](d[k])
--                        else:
--                            with self.request_stats.start_sample() as self.request_sample, \
--                                    self.request_sample.measure():
--                                await handlers[k](d[k])
--                        break
--                else:
--                    logger.warning("Unrecognized command %r" % d)
--                    break
--
-+                await self.dispatch_message(d)
-                 await self.writer.drain()
-+        except ClientError as e:
-+            logger.error(str(e))
-         finally:
-             self.writer.close()
- 
-+    async def dispatch_message(self, msg):
-+        for k in self.handlers.keys():
-+            if k in msg:
-+                logger.debug('Handling %s' % k)
-+                if 'stream' in k:
-+                    await self.handlers[k](msg[k])
-+                else:
-+                    with self.request_stats.start_sample() as self.request_sample, \
-+                            self.request_sample.measure():
-+                        await self.handlers[k](msg[k])
-+                return
-+
-+        raise ClientError("Unrecognized command %r" % msg)
-+
-     def write_message(self, msg):
--        self.writer.write(('%s\n' % json.dumps(msg)).encode('utf-8'))
-+        for c in chunkify(json.dumps(msg), self.max_chunk):
-+            self.writer.write(c.encode('utf-8'))
- 
-     async def read_message(self):
-         l = await self.reader.readline()
-@@ -191,14 +207,38 @@ class ServerClient(object):
-             logger.error('Bad message from client: %r' % message)
-             raise e
- 
-+    async def handle_chunk(self, request):
-+        lines = []
-+        try:
-+            while True:
-+                l = await self.reader.readline()
-+                l = l.rstrip(b"\n").decode("utf-8")
-+                if not l:
-+                    break
-+                lines.append(l)
-+
-+            msg = json.loads(''.join(lines))
-+        except (json.JSONDecodeError, UnicodeDecodeError) as e:
-+            logger.error('Bad message from client: %r' % message)
-+            raise e
-+
-+        if 'chunk-stream' in msg:
-+            raise ClientError("Nested chunks are not allowed")
-+
-+        await self.dispatch_message(msg)
-+
-     async def handle_get(self, request):
-         method = request['method']
-         taskhash = request['taskhash']
- 
--        row = self.query_equivalent(method, taskhash)
-+        if request.get('all', False):
-+            row = self.query_equivalent(method, taskhash, self.ALL_QUERY)
-+        else:
-+            row = self.query_equivalent(method, taskhash, self.FAST_QUERY)
-+
-         if row is not None:
-             logger.debug('Found equivalent task %s -> %s', (row['taskhash'], row['unihash']))
--            d = {k: row[k] for k in ('taskhash', 'method', 'unihash')}
-+            d = {k: row[k] for k in row.keys()}
- 
-             self.write_message(d)
-         else:
-@@ -228,7 +268,7 @@ class ServerClient(object):
- 
-                 (method, taskhash) = l.split()
-                 #logger.debug('Looking up %s %s' % (method, taskhash))
--                row = self.query_equivalent(method, taskhash)
-+                row = self.query_equivalent(method, taskhash, self.FAST_QUERY)
-                 if row is not None:
-                     msg = ('%s\n' % row['unihash']).encode('utf-8')
-                     #logger.debug('Found equivalent task %s -> %s', (row['taskhash'], row['unihash']))
-@@ -328,7 +368,7 @@ class ServerClient(object):
-             # Fetch the unihash that will be reported for the taskhash. If the
-             # unihash matches, it means this row was inserted (or the mapping
-             # was already valid)
--            row = self.query_equivalent(data['method'], data['taskhash'])
-+            row = self.query_equivalent(data['method'], data['taskhash'], self.FAST_QUERY)
- 
-             if row['unihash'] == data['unihash']:
-                 logger.info('Adding taskhash equivalence for %s with unihash %s',
-@@ -354,12 +394,11 @@ class ServerClient(object):
-         self.request_stats.reset()
-         self.write_message(d)
- 
--    def query_equivalent(self, method, taskhash):
-+    def query_equivalent(self, method, taskhash, query):
-         # This is part of the inner loop and must be as fast as possible
-         try:
-             cursor = self.db.cursor()
--            cursor.execute('SELECT taskhash, method, unihash FROM tasks_v2 WHERE method=:method AND taskhash=:taskhash ORDER BY created ASC LIMIT 1',
--                           {'method': method, 'taskhash': taskhash})
-+            cursor.execute(query, {'method': method, 'taskhash': taskhash})
-             return cursor.fetchone()
-         except:
-             cursor.close()
-diff --git a/bitbake/lib/hashserv/tests.py b/bitbake/lib/hashserv/tests.py
-index a5472a996d..6e86295079 100644
---- a/bitbake/lib/hashserv/tests.py
-+++ b/bitbake/lib/hashserv/tests.py
-@@ -99,6 +99,29 @@ class TestHashEquivalenceServer(object):
-         result = self.client.get_unihash(self.METHOD, taskhash)
-         self.assertEqual(result, unihash)
- 
-+    def test_huge_message(self):
-+        # Simple test that hashes can be created
-+        taskhash = 'c665584ee6817aa99edfc77a44dd853828279370'
-+        outhash = '3c979c3db45c569f51ab7626a4651074be3a9d11a84b1db076f5b14f7d39db44'
-+        unihash = '90e9bc1d1f094c51824adca7f8ea79a048d68824'
-+
-+        result = self.client.get_unihash(self.METHOD, taskhash)
-+        self.assertIsNone(result, msg='Found unexpected task, %r' % result)
-+
-+        siginfo = "0" * (self.client.max_chunk * 4)
-+
-+        result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash, {
-+            'outhash_siginfo': siginfo
-+        })
-+        self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
-+
-+        result = self.client.get_taskhash(self.METHOD, taskhash, True)
-+        self.assertEqual(result['taskhash'], taskhash)
-+        self.assertEqual(result['unihash'], unihash)
-+        self.assertEqual(result['method'], self.METHOD)
-+        self.assertEqual(result['outhash'], outhash)
-+        self.assertEqual(result['outhash_siginfo'], siginfo)
-+
-     def test_stress(self):
-         def query_server(failures):
-             client = Client(self.server.address)
--- 
-2.27.0
+Thanks,
 
+--
+Paul Barker
+Konsulko Group
