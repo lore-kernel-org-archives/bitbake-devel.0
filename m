@@ -1,52 +1,54 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
- by mx.groups.io with SMTP id smtpd.web11.11520.1593094423182123549
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+ by mx.groups.io with SMTP id smtpd.web12.11629.1593094871950312482
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 25 Jun 2020 07:13:43 -0700
+ Thu, 25 Jun 2020 07:21:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=e6xKc/MJ;
- spf=pass (domain: gmail.com, ip: 209.85.214.169, mailfrom: jpewhacker@gmail.com)
-Received: by mail-pl1-f169.google.com with SMTP id d10so2842946pls.5
-        for <bitbake-devel@lists.openembedded.org>; Thu, 25 Jun 2020 07:13:43 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Nu2L0Y4R;
+ spf=pass (domain: gmail.com, ip: 209.85.166.173, mailfrom: jpewhacker@gmail.com)
+Received: by mail-il1-f173.google.com with SMTP id z2so5510520ilq.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 25 Jun 2020 07:21:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YKh8W2QwbOgVLvIVcW6+wg8bid7UjwS8LzSZBDxAoh4=;
-        b=e6xKc/MJXzp1md4seigdEr4jF9pRTWF20gIfyGxyjwNCLw+U7ojOH+bIUrOQ3gN2b+
-         N50sHJ6g1r2LhpzlDsRVZONjlf2vwCrbGKey1I22Te0FI2iRPNsvYQDEAgCXdFm+dhUz
-         pMcTsBQ3tU2rfKgZHEoCv+PV3XVrU5ydoqulCM9Qy5Nxy9h4F++CoaGMCXNnAVdoWWE9
-         8oQCYxH9DpP+5vt1jX8BP8MSO/FWwWNnl9kSvSuRG378E+NHxkNydUs+p7OuqMatCf7O
-         AkTWRlSVsxDL4eauGZNq8MJwPKqZjiPzwkwsppKG0xm/giutzy0hMsDFGp5lQpfVmfcL
-         vlpg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/JTWzsGJqOzBNfjNRGjAB93Cp9fzg9auDH5j/jbVF8s=;
+        b=Nu2L0Y4RmV4TifBHm2/hBuaLATb/dRbIzhJbcOrIGryhs18Q5z6t03HeAdufAvx+Wa
+         o7EjrzoLD2sepBJ7nqibkhT69uc3GzaCapyiN0vBcOLO8CRVmHDChWa7S0TG2qxqRnJU
+         DB36tOlIHgRLSxT6YqcjzFx7L7P43dZwJiLMoEDCLqqtQ4MJxqsgxMEQVc+Msar6rHUV
+         xyrWbDqYpW6r3eEnhPjxzUj43XokEy6iOZQsphErVA5QBKGvagTTmB2K1C+qH/a7XH98
+         8L/y+FMVEWyWvmLo6GaaKPtNJ44JWFHhW1mVmoQBqURgjpka9XYRmuqM00/PkUIjZanx
+         2gZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YKh8W2QwbOgVLvIVcW6+wg8bid7UjwS8LzSZBDxAoh4=;
-        b=Dm0aBbwsTtv4EBZdSZ1YmykcDyjg02QY2i4DGHd2Ol6HlENa3kYPL/1eIBLtGwxpaK
-         AI6DpMjyY6qb5erJgJ3oY7wME1FP5zi7uF4fyl//SYEkaNRP1uVerLx3oskjzlCpKajB
-         tMGskBpRvn8FbR0zdIWpiB8IV6Lk13EVWNQQ9hozX7lBvblFpqqP3749iTT5CmV2gc/1
-         iFWijy68fZDKu+FooRIVs447vi3Nlr2aLdzEQCKC0H7zZaRoqtc6jKQSY3ahYbJjKmS8
-         GfW31jmbsu1R0lEbIvH+w8QGpV5eZnwtMg+4ADCi06u8W7X6ShuOaCeJnmOV8KJw9KPw
-         T53w==
-X-Gm-Message-State: AOAM531Ki1fHn4lU7E6RDhW7yXWQn815x4scAVnfj3l/URszQIyZrQo/
-	hGudET8Hn3U063ZQv76Od5W32Sym
-X-Google-Smtp-Source: ABdhPJyqfRS4Q4Z6xhqe1OcFVRAwTU9KZXS6D+5ywBp8ebQCo+TQPKSRELmQctzW6WvOrbq1IwFKfQ==
-X-Received: by 2002:a17:902:aa42:: with SMTP id c2mr34180748plr.216.1593094422187;
-        Thu, 25 Jun 2020 07:13:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/JTWzsGJqOzBNfjNRGjAB93Cp9fzg9auDH5j/jbVF8s=;
+        b=WLVNDLLGv5cnznbM3Ok98y4IUfUFgZxDilZW0g/T1Thoz+0Gp7e3KnbOI8VaNRPh9i
+         6uSD90Qf3u8SoJUaBPA2ONwa2HBsQucFCJ2R/dOSmlkpP5EKYM8HlnRNQk1euSMFzXG0
+         HmM03CQiwRjzhXp43aflzZZ16rRF3SFq6tYVt0p3esMLztOIF9KYukMjO5nOje23kDZ9
+         xNx9T0DJDFYTdgNywAQYIrW9eb3tLJstsM1B1OunnS1E3qXs7gBQFnVPogYMDvhZIqvX
+         2y2ZSMenLpNRdNht9rwf+8ikYasFWmVBQ+c/8nQugcO2noc/hxIXNdSRIarN4qiXgki3
+         TuxQ==
+X-Gm-Message-State: AOAM530k/uSqUY2jSPQUfbW1tio7bgD1tUQYcj7N7SHB78yJXljWW5el
+	uZKb7sQQIL/FYpw+KXGyQy77uUlo
+X-Google-Smtp-Source: ABdhPJy81u/PAT7irrmhhYl9bxfCr4x80vWyhcLHvr5S1+LNpan63tutqxFqyFedi34nFXec0QOOcw==
+X-Received: by 2002:a92:bb98:: with SMTP id x24mr16658451ilk.270.1593094870908;
+        Thu, 25 Jun 2020 07:21:10 -0700 (PDT)
 Return-Path: <jpewhacker@gmail.com>
 Received: from localhost.localdomain ([2605:a601:ac3d:c100:7004:574a:57d2:4d47])
-        by smtp.gmail.com with ESMTPSA id g18sm5461270pfk.40.2020.06.25.07.13.41
+        by smtp.gmail.com with ESMTPSA id o6sm975956ils.46.2020.06.25.07.21.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 07:13:41 -0700 (PDT)
+        Thu, 25 Jun 2020 07:21:10 -0700 (PDT)
 From: "Joshua Watt" <JPEWhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] hashserv: Chunkify large messages
-Date: Thu, 25 Jun 2020 09:13:38 -0500
-Message-Id: <20200625141338.9078-1-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v2] hashserv: Chunkify large messages
+Date: Thu, 25 Jun 2020 09:21:07 -0500
+Message-Id: <20200625142107.11098-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200625141338.9078-1-JPEWhacker@gmail.com>
+References: <20200625141338.9078-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
@@ -61,11 +63,16 @@ currently hard coded to 32 KB to prevent the round-trip delay.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
+
+V2:
+    Removed some debugging information I left in accidently
+
+
  bitbake/lib/hashserv/__init__.py |  22 +++++++
  bitbake/lib/hashserv/client.py   |  43 ++++++++++---
  bitbake/lib/hashserv/server.py   | 105 +++++++++++++++++++++----------
- bitbake/lib/hashserv/tests.py    |  27 +++++++-
- 4 files changed, 154 insertions(+), 43 deletions(-)
+ bitbake/lib/hashserv/tests.py    |  23 +++++++
+ 4 files changed, 152 insertions(+), 41 deletions(-)
 
 diff --git a/bitbake/lib/hashserv/__init__.py b/bitbake/lib/hashserv/__init__.py
 index c3318620f5..f95e8f43f1 100644
@@ -390,19 +397,10 @@ index cc7e48233b..81050715ea 100644
          except:
              cursor.close()
 diff --git a/bitbake/lib/hashserv/tests.py b/bitbake/lib/hashserv/tests.py
-index a5472a996d..a141f6ae1d 100644
+index a5472a996d..6e86295079 100644
 --- a/bitbake/lib/hashserv/tests.py
 +++ b/bitbake/lib/hashserv/tests.py
-@@ -5,7 +5,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
- 
--from . import create_server, create_client
-+from . import create_server, create_client, DEFAULT_MAX_CHUNK
- import hashlib
- import logging
- import multiprocessing
-@@ -99,6 +99,30 @@ class TestHashEquivalenceServer(object):
+@@ -99,6 +99,29 @@ class TestHashEquivalenceServer(object):
          result = self.client.get_unihash(self.METHOD, taskhash)
          self.assertEqual(result, unihash)
  
@@ -423,7 +421,6 @@ index a5472a996d..a141f6ae1d 100644
 +        self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
 +
 +        result = self.client.get_taskhash(self.METHOD, taskhash, True)
-+        print(result)
 +        self.assertEqual(result['taskhash'], taskhash)
 +        self.assertEqual(result['unihash'], unihash)
 +        self.assertEqual(result['method'], self.METHOD)
@@ -433,14 +430,6 @@ index a5472a996d..a141f6ae1d 100644
      def test_stress(self):
          def query_server(failures):
              client = Client(self.server.address)
-@@ -136,7 +160,6 @@ class TestHashEquivalenceUnixServer(TestHashEquivalenceServer, unittest.TestCase
-     def get_server_addr(self):
-         return "unix://" + os.path.join(self.temp_dir.name, 'sock')
- 
--
- class TestHashEquivalenceTCPServer(TestHashEquivalenceServer, unittest.TestCase):
-     def get_server_addr(self):
-         return "localhost:0"
 -- 
 2.27.0
 
