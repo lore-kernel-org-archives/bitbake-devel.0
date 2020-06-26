@@ -1,106 +1,94 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
- by mx.groups.io with SMTP id smtpd.web10.145.1593107210957787201
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web11.100.1593206457606657922
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 25 Jun 2020 10:46:51 -0700
+ Fri, 26 Jun 2020 14:20:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=KHXd/6hU;
- spf=pass (domain: gmail.com, ip: 209.85.210.182, mailfrom: akuster808@gmail.com)
-Received: by mail-pf1-f182.google.com with SMTP id 207so3173078pfu.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 25 Jun 2020 10:46:50 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VDkh1l+I;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f65.google.com with SMTP id q15so10026374wmj.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 26 Jun 2020 14:20:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:autocrypt:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=l++mPaIPOjtDkSHxSv1Ja8KxnUTrl8T5WognyuU3xPM=;
-        b=KHXd/6hUyg2grALpRHDYb4sH3ImKsfVhU3IvbcpYrQT1F7lh/FmWLJTvuPrmiR53Ya
-         SNdWpfWHXiGGR5/V7bJSPLnaZZy54ewchW83qi9+ChfL6E1+Qlb0Ct1fbUF1+HJMBDAz
-         cTfGzo5RpHY6RqYGeDwq7swdaDARVf4twxPB5bH9EXAdBAeDjlCL4LHbCsDB7Ykt4GYJ
-         AouLdMfVaSlBLsGDRvPpR6g+o0TpoD/EMjEDBXCojrIs0wUo5s191xMjhzMMHPXMPwd/
-         1vaUXRvQsRKb80a04vsFtWR/bqsEIxl+nwzYxjG/KMZEOpFMxfXN5n4kc1hk3tYpNRAU
-         ZJsg==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=bwCcPC+N1hzsQI7ZyTCh1OT8Kcs+0zuMABGJDdoscE4=;
+        b=VDkh1l+ISEtMrEpkxnYw9T5SqX1yVCMk/4UwgZ4TA1HMls+VL5oMmQXHz7+fFsHgew
+         yK6bw/BDWBr0PqGmWx3k3MdzRCtQ+fGhCYFEZ6HfXNMwbr7dhtoshDQdPf+Dup/6wuX3
+         payM6Z1TsCYLKUmxlGoyH9iBD+9IqhCcZaUc4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:autocrypt:message-id:date
-         :user-agent:mime-version:content-transfer-encoding:content-language;
-        bh=l++mPaIPOjtDkSHxSv1Ja8KxnUTrl8T5WognyuU3xPM=;
-        b=MX/q7myY5bDJ4XDsaF7hVFAsHcbORqhfOi/fDY43D6Gh/My3VXDW1rjqDfB+xWj+OS
-         oPgvdXbpZ73gIVwDU9bILDlH1rt+ctmFox4Cm/lREqD8D4EAbLeORLnE9EygaElEpk0c
-         TsWhZfXKmmsNi+OGIVKWdJcwUjK57H+N1RdcPciZFdtpmgOrQLpEOfJBDwOtDnTDej5r
-         gI7IjQnBpMXyR2mbQPw7vF7mqZaR8UyqTA99Gv+wguXtvZGZo6DRg+VDsiKb39cZ2I4s
-         mlTGSnvxjrHGpUgKD2HBdBdVmtWkxzjfSI3v8DS1KIVDNoQx3bqPVP1jfVA64aiTWVxi
-         JKSg==
-X-Gm-Message-State: AOAM531vBniuDD7BJcxXMtcyltPuBe+s35CA3byV61078eyQejStwOGx
-	q9MwFMAoz8lnTuBOEle/hY43wSeQ
-X-Google-Smtp-Source: ABdhPJwEZqj9yJqiBtRF5kjTqNGLHctQX9MQvxfct/MayZJRgMPvNoKrThB33D2AGOgK/E5BHQprkw==
-X-Received: by 2002:aa7:82c8:: with SMTP id f8mr37181831pfn.165.1593107210134;
-        Thu, 25 Jun 2020 10:46:50 -0700 (PDT)
-Return-Path: <akuster808@gmail.com>
-Received: from ?IPv6:2601:202:4180:a5c0:acbe:8216:8a55:1b44? ([2601:202:4180:a5c0:acbe:8216:8a55:1b44])
-        by smtp.gmail.com with ESMTPSA id z5sm3639867pfb.1.2020.06.25.10.46.49
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 10:46:49 -0700 (PDT)
-To: "bitbake-devel@lists.openembedded.org"
- <bitbake-devel@lists.openembedded.org>
-From: "akuster" <akuster808@gmail.com>
-Subject: bitbake-sefltest
-Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- 8CS2NxU=
-Message-ID: <b4a0611b-744d-ac67-824f-dfa79d281db8@gmail.com>
-Date: Thu, 25 Jun 2020 10:46:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=bwCcPC+N1hzsQI7ZyTCh1OT8Kcs+0zuMABGJDdoscE4=;
+        b=l5zSIfH04l1S4Ld+tTQIdjjG9/9sSgppoaQKJ+QD/4S9gkwjvnOlriPLVTM6WdC3ff
+         4q4+iwM+sIwi6vpK43RVG4nb2t+GBPOuPkxARRs+LibPlAQ1XK7qf2xuACuMTDONQbug
+         I3esCdQdRLbheYKrlAPm0/BxNsb1V72TwVqRQVIt+jVWJ+mZ+BEDcH+MToVqVTVYtxEe
+         tGbAf40DxAoA3H3Hwyyfdj+soxERCeJQYsZvpffnrn+XoEns3q/4ASg3nDYvPf3UV4pT
+         G0Gv/aP91kKHJF968WjHKn6UVpMM0Ok4+KUxRep5TYjbFmodEBOmrAKiJLvcup9006j3
+         +icg==
+X-Gm-Message-State: AOAM531irIgIAxSlNdRO0auItzQm+a8aUuF7kHZ19WKufG9ZSJq2r74c
+	/jxyjFh+O5aeXD3QNAbMMX9nEQ==
+X-Google-Smtp-Source: ABdhPJyznkjh5avgN74V1gkGJVuMxwF0FkYVqk6j5TJofSQZADNw5dxe2qPLeyPbnB6BrYgil64OrQ==
+X-Received: by 2002:a1c:4086:: with SMTP id n128mr5553193wma.118.1593206455832;
+        Fri, 26 Jun 2020 14:20:55 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id c2sm38799364wrv.47.2020.06.26.14.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 14:20:55 -0700 (PDT)
+Message-ID: <aa414ee5c19b78e4fd148e9e3e97b8147269ee49.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel][PATCH v2] hashserv: Chunkify large messages
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Joshua Watt <JPEWhacker@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Fri, 26 Jun 2020 22:20:54 +0100
+In-Reply-To: <20200625142107.11098-1-JPEWhacker@gmail.com>
+References: <20200625141338.9078-1-JPEWhacker@gmail.com>
+	 <20200625142107.11098-1-JPEWhacker@gmail.com>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 
-Hello Bakers,
+On Thu, 2020-06-25 at 09:21 -0500, Joshua Watt wrote:
+> The hash equivalence client and server can occasionally send messages
+> that are too large for the server to fit in the receive buffer (64
+> KB).
+> To prevent this, support is added to the protocol to "chunkify" the
+> stream and break it up into manageable pieces that the server can
+> each
+> side can back together.
+> 
+> Ideally, this would be negotiated by the client and server, but it's
+> currently hard coded to 32 KB to prevent the round-trip delay.
+> 
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+> 
+> V2:
+>     Removed some debugging information I left in accidently
+> 
+> 
+>  bitbake/lib/hashserv/__init__.py |  22 +++++++
+>  bitbake/lib/hashserv/client.py   |  43 ++++++++++---
+>  bitbake/lib/hashserv/server.py   | 105 +++++++++++++++++++++------
+> ----
+>  bitbake/lib/hashserv/tests.py    |  23 +++++++
+>  4 files changed, 152 insertions(+), 41 deletions(-)
 
-While running bitbake-selftest I noticed several tests being skipped. Do
-we have a list of host test dependencies listed somewhere?
+I naively ran this on the autobuilder, forgetting the server is central
+and would need updating manually.
 
-svn and npm are the ones that jumped out on my local system.
+How backwards/forward compatible is this change?
 
-- Armin
+With new client and old server we see tons of warnings, e.g.:
+
+https://autobuilder.yoctoproject.org/typhoon/#/builders/61/builds/2068/steps/8/logs/warnings
+
+I know I can upgrade the server but then will it work with old clients
+(e.g. our LTS)? Do we need to warn users instead of warnings like
+this?
+
+Cheers,
+
+Richard
+
