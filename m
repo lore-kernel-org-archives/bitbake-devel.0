@@ -1,102 +1,102 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.12553.1593276634524284954
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web10.24384.1593330707107355508
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 27 Jun 2020 09:50:34 -0700
+ Sun, 28 Jun 2020 00:51:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=GqJQKIFw;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id t194so12165769wmt.4
-        for <bitbake-devel@lists.openembedded.org>; Sat, 27 Jun 2020 09:50:34 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=G0syhRR/;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id k6so13371957wrn.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 28 Jun 2020 00:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QKioL8M4Jgk/eoj6Lctx2DTMdriOxGjws9eEx1afLXQ=;
-        b=GqJQKIFwIcdzC6JUrx715ynJkiBOuaTGy85WAQqrjICcJ0wWHhmCqIZE2ww8wSM3Ot
-         dfZ3X2E+HeBPIl47Op/VNs/RaoNQP/E3ap8nY5b/f20vDW//lSGvWr8FJ8OSG+GxHalh
-         Tx3na74ctuYqHsMk4eC+UfzjL7RHI9Y6/ue8I=
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=BdH0xKMgttt0S+hVTDUOJhWhPtlERvxjDDetmiKTcyU=;
+        b=G0syhRR/n1bClWEp2lwpzcdOgy2PWhPbr/acrMBU8UO465Obp6ymHQ6zozxsWg6yWA
+         gDMcc76XFIxOnD6qrj1m+wVJcqiYMeuIegfhf9yvAWqD8cgBROWEQLI/WxrLoSEkUKzn
+         uK+jTrAtyhhHtKlIbPO7Bg67yPc3T3ZGH1qms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QKioL8M4Jgk/eoj6Lctx2DTMdriOxGjws9eEx1afLXQ=;
-        b=CYZm9C6cDTC/Frkf7frbUxidNfBThD3U8J/n8sGyU7B8fkcG+tDU8T6sQ+Ns40jGLe
-         vD8nCiq8Oo1aNxuAGXtaNyehcM6PghWpvhzxEC9wviqahZBrAwW1CJMe/O0aUJ7ihhoG
-         N7XCGUCbBlltjKQrHBLgjeKlP2/ttli1UskBizAzGGMqisRaCwEIq5TSWa4HFwJcWKEp
-         AzJsEobzRAs/41J6men+/8QG9oVOtTBoK+DaYnAQ2YMGsKrQODQG4FEvQYqRvc0ecXy8
-         K00KAonK6c8wSAglYeOBiAERS08ZZfkiPVRXNS2INsYePEErvf3wtrAdNSPJJ9yZP3s9
-         0Zkw==
-X-Gm-Message-State: AOAM531mbxe7E2ax9xESs5jnZHWMxCijt3blWdhBT/tjVwiXkIiDf2k8
-	p3LS1reEw92eDGRizi6v4g/EkvZhdT+JnA==
-X-Google-Smtp-Source: ABdhPJwu35pY18AVNdoe7vKotLnwW5AkdYLL5DdnP4Vf9IfBiygpdMyqbCQmd8D9wKUVRtrHyG+bEg==
-X-Received: by 2002:a7b:c208:: with SMTP id x8mr8974634wmi.49.1593276632757;
-        Sat, 27 Jun 2020 09:50:32 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=BdH0xKMgttt0S+hVTDUOJhWhPtlERvxjDDetmiKTcyU=;
+        b=o3TG0EGjU6hs1+l1lqa24yeMGWLR504+ZtyfsqW7//p+mporhfmXPdtGZ/uG9eEuVK
+         e5Y7YMZzecby8e07Cprh8a8sozJEFDK4AyEHHI9DdnvXDXgOa/znmv0NoW/c22Zt5qRp
+         EwcaG0RJiwCnkRE+1Q2PyQPEpa9ncotoVWahIz/DddIssDBoSX8QkhRlK3KCs7A3FB0U
+         GQCCdik0IgP8yY7cBQNR/Dq/8xnxmVB5KFunzNyiBhrMVh0VwSHf8v+3Bgo3r/ZPYfCx
+         0YTkv3QJVeA6ExD+8EQWRvXlxvhMjqHWi7xgpbv0PHJ+QHBHVd7Jgn3bzy9d+PaMk0DM
+         99MA==
+X-Gm-Message-State: AOAM531JD56CiPELaseCo1yKQFdEDRPQkQldgxs6sQg3i5vS5f0HllMS
+	6jq2dCVO0ZjDY8JQcY7frGBBmg==
+X-Google-Smtp-Source: ABdhPJzQ3RFKVxjuBNChDyvoSPHOXDpBG/80cwyBh8wllaTffJUCxZJcZSyNZ9hrZkoySQHOLTHHRw==
+X-Received: by 2002:a5d:4a4f:: with SMTP id v15mr11218152wrs.87.1593330705474;
+        Sun, 28 Jun 2020 00:51:45 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id f2sm20888619wmj.39.2020.06.27.09.50.31
-        for <bitbake-devel@lists.openembedded.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id k185sm21128057wmk.47.2020.06.28.00.51.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 09:50:32 -0700 (PDT)
+        Sun, 28 Jun 2020 00:51:44 -0700 (PDT)
+Message-ID: <099ddfc8784d7760adb9b1fdd8207325d29895dc.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] Support for git+https://foo.example.com like URIs
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] runqueue: Avoid unpickle errors in rare cases
-Date: Sat, 27 Jun 2020 17:50:30 +0100
-Message-Id: <20200627165030.711190-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
+To: enrico.scholz@sigma-chemnitz.de, bitbake-devel@lists.openembedded.org
+Date: Sun, 28 Jun 2020 08:51:43 +0100
+In-Reply-To: <lyh7uzxnvx.fsf@ensc-virt.intern.sigma-chemnitz.de>
+References: <lyh7uzxnvx.fsf@ensc-virt.intern.sigma-chemnitz.de>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-In rare cases the pickled data from a task contains "</event>" which
-causes backtrace. This can be reproduced with something like:
+On Thu, 2020-06-25 at 15:42 +0200, Enrico Scholz via
+lists.openembedded.org wrote:
+> Hello,
+> 
+> for some years we are using a mechanism which allows to encode the
+> protocol ("https", "file", ...) within the base uri.  So, we can
+> write
+> 
+> 
+> > PROJECT_BASE_URI = "git+https://foo.example.com/project"
+> > SRC_URI = "${PROJECT_BASE_URI}/some-repo"
+> 
+> instead of
+> 
+> > PROJECT_BASE_URI = "git://foo.example.com/project"
+> > PROJECT_BASE_PROTOCOL = "https"
+> > SRC_URI = "${PROJECT_BASE_URI}/some-
+> > repo;protocol=${PROJECT_BASE_PROTOCOL}"
+> 
+> Four years ago I wrote a bug report [1] with a patch against bitbake
+> itself which was more or less rejected.
+> 
+> In the meantime, I moved this out in an OE class [2] which overrides
+> 'bb.fetch.decodeurl'.
+> 
+> 
+> Is there some generic interest in this functionality so that I can
+> create and send a patch for bitbake?  Or is this too special and
+> people
+> are happy with altering ${MIRROR}?
 
-do_unpack_prepend () {
-    bb.warn("</event>")
-}
+I didn't (and don't) like writing special cases into general code. The
+fetchers once had a lot of that, it was hard to clean up and I'd prefer
+not to go back there.
 
-There are several solutions but the easiest is to catch this exception
-and look for the next marker instead as this should be the only way such
-an unpickle error could occur.
+There are multiple different issues with fetcher urls in this context
+and multiple open bugs from what I remember about related issues. Your
+patch solves your specific use case and doesn't help those other open
+bugs.
 
-This fixes rare exceptions seen on the autobuilder.
+My intent has always been (and still is) to see if a more generic
+solution is possible which not only addresses your use case but the
+ones others have as well. That will likely mean using the mirrors
+variable to remap things which will be slightly more complex but will
+also enable others.
 
-Also add in other potential exceptions listed in the pickle manual
-page so that better debug is obtained should there be an error in
-this code path in future. exitcode doesn't need the same handling
-since we control what is in that data field and it could never contain
-</exitcode>
+Cheers,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/runqueue.py | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Richard
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index adb34a8cf2..02a261e30c 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2967,7 +2967,12 @@ class runQueuePipe():
-             while index != -1 and self.queue.startswith(b"<event>"):
-                 try:
-                     event = pickle.loads(self.queue[7:index])
--                except ValueError as e:
-+                except (ValueError, pickle.UnpicklingError, AttributeError, IndexError) as e:
-+                    if isinstance(e, pickle.UnpicklingError) and "truncated" in str(e):
-+                        # The pickled data could contain "</event>" so search for the next occurance
-+                        # unpickling again, this should be the only way an unpickle error could occur
-+                        index = self.queue.find(b"</event>", index + 1)
-+                        continue
-                     bb.msg.fatal("RunQueue", "failed load pickle '%s': '%s'" % (e, self.queue[7:index]))
-                 bb.event.fire_from_worker(event, self.d)
-                 if isinstance(event, taskUniHashUpdate):
-@@ -2979,7 +2984,7 @@ class runQueuePipe():
-             while index != -1 and self.queue.startswith(b"<exitcode>"):
-                 try:
-                     task, status = pickle.loads(self.queue[10:index])
--                except ValueError as e:
-+                except (ValueError, pickle.UnpicklingError, AttributeError, IndexError) as e:
-                     bb.msg.fatal("RunQueue", "failed load pickle '%s': '%s'" % (e, self.queue[10:index]))
-                 self.rqexec.runqueue_process_waitpid(task, status)
-                 found = True
--- 
-2.25.1
+
 
