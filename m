@@ -1,73 +1,73 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
- by mx.groups.io with SMTP id smtpd.web10.17974.1593435298340235437
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web11.20833.1593442844562519526
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 29 Jun 2020 05:54:58 -0700
+ Mon, 29 Jun 2020 08:00:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: intel.com, ip: 134.134.136.100, mailfrom: anuj.mittal@intel.com)
-IronPort-SDR: xWU7GFLCn9iIbAfW5Gv/JusXTUfVYxRqNbok9QaLGv25r5i1H/lNWaBqm8ao/Aka4ot0UxlXtI
- Ws3BtT6v64Bw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="211032670"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="211032670"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 05:54:57 -0700
-IronPort-SDR: LHXyCrG0RMBsorBmfDqAIEXmYwCLhKnUoi2DkdJ5j5BbXPafgesQLO4JP1N/GcprG7aYtY/+lt
- jCRE25MY994w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="454181610"
-Received: from kmsmsx155.gar.corp.intel.com ([172.21.73.106])
-  by orsmga005.jf.intel.com with ESMTP; 29 Jun 2020 05:54:56 -0700
-Received: from pgsmsx101.gar.corp.intel.com ([169.254.1.140]) by
- KMSMSX155.gar.corp.intel.com ([169.254.15.69]) with mapi id 14.03.0439.000;
- Mon, 29 Jun 2020 20:54:55 +0800
-From: "Anuj Mittal" <anuj.mittal@intel.com>
-To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JP7XkWho;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.68, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f68.google.com with SMTP id r12so16817100wrj.13
+        for <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2020 08:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=5rQ++7xe8X4EPG4uZvht5chdjA+SHYfTX+ESlqjeZ60=;
+        b=JP7XkWhoSQ8gyUjSSOnV7UFP7ETaPfA0kRV54L0HTpF14g/ieGpjtcDiyxvA9wXpO7
+         k+VFYmK8lTaRcTzldYW1b/WcPE64AOUJXcktfQGQVG/ZKRW1PBml6+oZTIZNpJ8S+fyB
+         vTYSuzM0LO5etMpNbWJhMG3jZXbMPb2JCZHtA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=5rQ++7xe8X4EPG4uZvht5chdjA+SHYfTX+ESlqjeZ60=;
+        b=lWnHN7N7fSlgu30Hz0aD4+OUXL1/RPAue9g8kDbDVUAOzGl+8MhL+VtnxmfND2c2V/
+         L0K956ZHRYSnv0HrYfDlcvA1PZu7UVv8tpFRGXLMWAs752OF/DKt9Tl4JRt5NO0ly5Rf
+         x5Cu6qt1qk/gecXuYrJCWbIUTGi9XuNXpDCPWui2l1fAyFXOX+toinvgeB0MLRYs0vNJ
+         r5pVpiB7ydM1MKIR/PDHfg1a0R4OysKgi4ex0m5O3kRkYjzHfcMnrvSEuEcZj/8ETvDC
+         iWRuWsHX5dhChT8Xg9EOUORG777ukKd+MfqG63KUo7dtVyTaBEAQuqdzI9JVi9yhv9W1
+         ayEw==
+X-Gm-Message-State: AOAM531OgX8OGYye+gSmOajpZu5D+9YH2TBzcTz48GWIV2xewr7SR4+1
+	ZV0NacAqH6O8HDBis2JBtuE+Fw==
+X-Google-Smtp-Source: ABdhPJw84Hb8QJf5KtYkHnYNf1VPPCFPUfXShgyC0K3BKXqJtp6YwCk2qUO1m4/NMf7D5wvs0bLg9g==
+X-Received: by 2002:a5d:6cce:: with SMTP id c14mr16598114wrc.377.1593442842996;
+        Mon, 29 Jun 2020 08:00:42 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id u74sm41465wmu.31.2020.06.29.08.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 08:00:42 -0700 (PDT)
+Message-ID: <5df9ead4c1f5068f141c57eeaed8a60aa05779f4.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH] tests/fetch: Switch from git.infradead.org to a YP mirror
-Thread-Topic: [bitbake-devel] [PATCH] tests/fetch: Switch from
- git.infradead.org to a YP mirror
-Thread-Index: AQHWSMy8uj7l2tAX40GEDnGheRCFi6jvEUCA
-Date: Mon, 29 Jun 2020 12:54:54 +0000
-Message-ID: <9fb2637ecedb143f09453529f4716ea8c64ccf19.camel@intel.com>
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: "Mittal, Anuj" <anuj.mittal@intel.com>, 
+	"bitbake-devel@lists.openembedded.org"
+	 <bitbake-devel@lists.openembedded.org>
+Date: Mon, 29 Jun 2020 16:00:40 +0100
+In-Reply-To: <9fb2637ecedb143f09453529f4716ea8c64ccf19.camel@intel.com>
 References: <20200622193832.571813-1-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20200622193832.571813-1-richard.purdie@linuxfoundation.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.155.219]
+	 <9fb2637ecedb143f09453529f4716ea8c64ccf19.camel@intel.com>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4EE21FD0757FFC458813FF1818122850@intel.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-SGkgUmljaGFyZA0KDQpPbiBNb24sIDIwMjAtMDYtMjIgYXQgMjA6MzggKzAxMDAsIFJpY2hhcmQg
-UHVyZGllIHdyb3RlOg0KPiBVcHN0cmVhbSBpcyB1bmF2YWlsYWJsZSwgYnJlYWtpbmcgdGVzdHMu
-IFN3aXRjaCB0byBhIFlQIG1pcnJvciBzaW5jZQ0KPiBpZiB3ZSBjYW4ndCByZWFjaCB0aGF0IHRo
-ZXJlIGFyZSBiaWdnZXIgcHJvYmxlbXMuIFRoaXMgc2hvdWxkIHJlbW92ZQ0KPiBhIHNvdXJjZSBv
-ZiBpbnRlcm1pdHRlbnQgZmFpbHVyZXMgb24gdGhlIGF1dG9idWlsZGVyLg0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogUmljaGFyZCBQdXJkaWUgPHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5v
-cmc+DQoNCkNvdWxkIHlvdSBwbGVhc2UgbWVyZ2UgdGhpcyBpbiAxLjQ0L3pldXMgYXMgd2VsbD8N
-Cg0KVGhhbmtzLA0KDQpBbnVqDQoNCj4gLS0tDQo+ICBsaWIvYmIvdGVzdHMvZmV0Y2gucHkgfCAz
-ICsrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2xpYi9iYi90ZXN0cy9mZXRjaC5weSBiL2xpYi9iYi90ZXN0cy9m
-ZXRjaC5weQ0KPiBpbmRleCBkMGMxNjFhN2Y2Li40Njk3ZWY1OWI1IDEwMDY0NA0KPiAtLS0gYS9s
-aWIvYmIvdGVzdHMvZmV0Y2gucHkNCj4gKysrIGIvbGliL2JiL3Rlc3RzL2ZldGNoLnB5DQo+IEBA
-IC0xMTUyLDcgKzExNTIsOCBAQCBjbGFzcyBGZXRjaExhdGVzdFZlcnNpb25UZXN0KEZldGNoZXJU
-ZXN0KToNCj4gICAgICAgICAgKCJteC0xLjAiLCAiZ2l0Oi8vZ2l0aHViLmNvbS9jbHV0dGVyLQ0K
-PiBwcm9qZWN0L214LmdpdDticmFuY2g9bXgtMS40IiwNCj4gIjliMWRiNmI4MDYwYmQwMGIxMjFh
-NjkyZjk0MjQwNGEyNGFlMjk2MGYiLCAiIikNCj4gICAgICAgICAgICAgIDogIjEuOTkuNCIsDQo+
-ICAgICAgICAgICMgdmVyc2lvbiBwYXR0ZXJuICJ2WC5ZIg0KPiAtICAgICAgICAoIm10ZC11dGls
-cyIsICJnaXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy9tdGQtdXRpbHMuZ2l0IiwNCj4gImNhMzllYjFk
-OThlNzM2MTA5YzY0ZmY5YzFhYTJhNmVjY2EyMjJkOGYiLCAiIikNCj4gKyAgICAgICAgIyBtaXJy
-b3Igb2YgZ2l0LmluZnJhZGVhZC5vcmcgc2luY2UgbmV0d29yayBpc3N1ZXMNCj4gaW50ZXJmZXJl
-ZCB3aXRoIHRlc3RpbmcNCj4gKyAgICAgICAgKCJtdGQtdXRpbHMiLCAiZ2l0Oi8vZ2l0LnlvY3Rv
-cHJvamVjdC5vcmcvbXRkLXV0aWxzLmdpdCIsDQo+ICJjYTM5ZWIxZDk4ZTczNjEwOWM2NGZmOWMx
-YWEyYTZlY2NhMjIyZDhmIiwgIiIpDQo+ICAgICAgICAgICAgICA6ICIxLjUuMCIsDQo+ICAgICAg
-ICAgICMgdmVyc2lvbiBwYXR0ZXJuICJwa2dfbmFtZS1YLlkiDQo+ICAgICAgICAgICgicHJlc2Vu
-dHByb3RvIiwNCj4gImdpdDovL2Fub25naXQuZnJlZWRlc2t0b3Aub3JnL2dpdC94b3JnL3Byb3Rv
-L3ByZXNlbnRwcm90byIsDQo+ICIyNGYzYTU2ZTU0MWIwYTllNmM2ZWU3NjA4MWY0NDEyMjFhMTIw
-ZWY5IiwgIiIpDQo+IA0K
+On Mon, 2020-06-29 at 12:54 +0000, Mittal, Anuj wrote:
+> Hi Richard
+> 
+> On Mon, 2020-06-22 at 20:38 +0100, Richard Purdie wrote:
+> > Upstream is unavailable, breaking tests. Switch to a YP mirror
+> > since
+> > if we can't reach that there are bigger problems. This should
+> > remove
+> > a source of intermittent failures on the autobuilder.
+> > 
+> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> 
+> Could you please merge this in 1.44/zeus as well?
+
+Done.
+
+Cheers,
+
+Richard
+
