@@ -1,107 +1,73 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web12.25704.1593339032004717232
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+ by mx.groups.io with SMTP id smtpd.web10.17974.1593435298340235437
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 28 Jun 2020 03:10:32 -0700
+ Mon, 29 Jun 2020 05:54:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gacFiZxh;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id f139so13205837wmf.5
-        for <bitbake-devel@lists.openembedded.org>; Sun, 28 Jun 2020 03:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=d2upPdUFwyTT9LOpaVxIOB8Fso3brTO5nZZgDC66j8A=;
-        b=gacFiZxhW7ByIJdDMrZ4HUsF2vUa6EW6xj5wffKvz3HGSKluDCPoE8bvG1Hov0AVz8
-         huEnKZMsUkN2+EkYazIRuWbDsgavSY6BgfneremH4EBYUbKK3s2iCf5qoQaDehI+q7dS
-         Sk31wzO4H+LQRsLeOe2oXdjb8TAjhMgmz1DdI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=d2upPdUFwyTT9LOpaVxIOB8Fso3brTO5nZZgDC66j8A=;
-        b=KUla5RnBxmOdFtKvfhlGAKQzEp/qUABkq2kwf8vfhH2SjtDUPQYNQuLxVEyUKHRDxB
-         QAdQwioYtmg9OU+/TXGj8k9ewziIeQCUUopjUy4AlcxmbHjyJomiayinYsNErtBZufiw
-         5rNACYktBHZ0MYEMuO8y+v0E7Lo49KLa2f2lVB0MgLsJ/VvwwT6d6DVU8qYsevb636TF
-         BldvVY/zNQ+iWQ8xwmtvGCKyE2mPPSytHWblNAPtwpGutn3T25lsYykEZsU6EzVehSeM
-         CgnObOa39V6apNToFZbgdSJ4CW5By1irBNu+3SArk7q/qXS6paLlWDQ86Fcnku3VeRNf
-         lDZw==
-X-Gm-Message-State: AOAM532KxdONGRlQxFmZUhXs9jPbF08zq+RszpalxLdRykDnouWGzK26
-	BA7fDnzAlCCEN5YeZXfnCLoOmA==
-X-Google-Smtp-Source: ABdhPJw361noEH8vra7fJxfzt6RLGptruMGx5A1KsIv44keZMWU0FHp4zFTmsx+G3Fg5juXkBbUbqg==
-X-Received: by 2002:a1c:6805:: with SMTP id d5mr11562289wmc.19.1593339030512;
-        Sun, 28 Jun 2020 03:10:30 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id p4sm34504568wrx.63.2020.06.28.03.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 03:10:29 -0700 (PDT)
-Message-ID: <48bd2a542a8629b7400f593b816d2da54128f53c.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Support for git+https://foo.example.com like URIs
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Sun, 28 Jun 2020 11:10:29 +0100
-In-Reply-To: <lyy2o7cyi4.fsf@ensc-virt.intern.sigma-chemnitz.de>
-References: <lyh7uzxnvx.fsf@ensc-virt.intern.sigma-chemnitz.de>
-	 <099ddfc8784d7760adb9b1fdd8207325d29895dc.camel@linuxfoundation.org>
-	 <lyy2o7cyi4.fsf@ensc-virt.intern.sigma-chemnitz.de>
-User-Agent: Evolution 3.36.2-0ubuntu1 
+ dkim=missing; spf=pass (domain: intel.com, ip: 134.134.136.100, mailfrom: anuj.mittal@intel.com)
+IronPort-SDR: xWU7GFLCn9iIbAfW5Gv/JusXTUfVYxRqNbok9QaLGv25r5i1H/lNWaBqm8ao/Aka4ot0UxlXtI
+ Ws3BtT6v64Bw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="211032670"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="211032670"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 05:54:57 -0700
+IronPort-SDR: LHXyCrG0RMBsorBmfDqAIEXmYwCLhKnUoi2DkdJ5j5BbXPafgesQLO4JP1N/GcprG7aYtY/+lt
+ jCRE25MY994w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="454181610"
+Received: from kmsmsx155.gar.corp.intel.com ([172.21.73.106])
+  by orsmga005.jf.intel.com with ESMTP; 29 Jun 2020 05:54:56 -0700
+Received: from pgsmsx101.gar.corp.intel.com ([169.254.1.140]) by
+ KMSMSX155.gar.corp.intel.com ([169.254.15.69]) with mapi id 14.03.0439.000;
+ Mon, 29 Jun 2020 20:54:55 +0800
+From: "Anuj Mittal" <anuj.mittal@intel.com>
+To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] tests/fetch: Switch from git.infradead.org to a YP mirror
+Thread-Topic: [bitbake-devel] [PATCH] tests/fetch: Switch from
+ git.infradead.org to a YP mirror
+Thread-Index: AQHWSMy8uj7l2tAX40GEDnGheRCFi6jvEUCA
+Date: Mon, 29 Jun 2020 12:54:54 +0000
+Message-ID: <9fb2637ecedb143f09453529f4716ea8c64ccf19.camel@intel.com>
+References: <20200622193832.571813-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20200622193832.571813-1-richard.purdie@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.155.219]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4EE21FD0757FFC458813FF1818122850@intel.com>
+Content-Transfer-Encoding: base64
 
-On Sun, 2020-06-28 at 11:48 +0200, Enrico Scholz wrote:
-> "Richard Purdie" <richard.purdie@linuxfoundation.org> writes:
-> 
-> > > > PROJECT_BASE_URI = "git+https://foo.example.com/project"
-> > > 
-> > > Is there some generic interest in this functionality so that I
-> > > can
-> > > create and send a patch for bitbake?  Or is this too special and
-> > > people are happy with altering ${MIRROR}?
-> > 
-> > I didn't (and don't) like writing special cases into general code.
-> 
-> mmmh... In my original report you complained that code is not generic
-> enough and works for git only.  Now, that is has been generalized,
-> you say it is too generic...
-
-I'm making comment on what I said four years ago, I'm not making
-comment on the code you have now. The code you have now is much neater
-and more general. Its simple enough its worth considering.
-
-> > My intent has always been (and still is) to see if a more generic
-> > solution is possible which not only addresses your use case but the
-> > ones others have as well.
-> > 
-> > That will likely mean using the mirrors variable to remap things
-> > which
-> > will be slightly more complex but will also enable others.
-> 
-> I do not think, that bothering around with mirrors (or better
-> PREMIRRORS)
-
-I was meaning mirrors in general, the mirrors/premirrors code all uses
-the same code so yes, PREMIRRORS would be most useful in this context.
-
-> is any helpful for this cases.  In 99% of cases, people want to set
-> http:// or perhaps ssh:// as a transport protocol.
-> 
-> People want to completely rewrite an uri; they do not want to try
-> another one first and then another one.  This is nothing which can be
-> solved by mirrors; especially when you start to use AUTOREV.
-
-The single rewritten url use case is handled by only allowing
-premirrors which there is an option for. Adding more ways to do things,
-each with limitations isn't usually a good idea. One way or another we
-are going to have to extend the mirrors code to support the protocol
-remapping.
-
-Cheers,
-
-Richard
-
-
-
-
+SGkgUmljaGFyZA0KDQpPbiBNb24sIDIwMjAtMDYtMjIgYXQgMjA6MzggKzAxMDAsIFJpY2hhcmQg
+UHVyZGllIHdyb3RlOg0KPiBVcHN0cmVhbSBpcyB1bmF2YWlsYWJsZSwgYnJlYWtpbmcgdGVzdHMu
+IFN3aXRjaCB0byBhIFlQIG1pcnJvciBzaW5jZQ0KPiBpZiB3ZSBjYW4ndCByZWFjaCB0aGF0IHRo
+ZXJlIGFyZSBiaWdnZXIgcHJvYmxlbXMuIFRoaXMgc2hvdWxkIHJlbW92ZQ0KPiBhIHNvdXJjZSBv
+ZiBpbnRlcm1pdHRlbnQgZmFpbHVyZXMgb24gdGhlIGF1dG9idWlsZGVyLg0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogUmljaGFyZCBQdXJkaWUgPHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5v
+cmc+DQoNCkNvdWxkIHlvdSBwbGVhc2UgbWVyZ2UgdGhpcyBpbiAxLjQ0L3pldXMgYXMgd2VsbD8N
+Cg0KVGhhbmtzLA0KDQpBbnVqDQoNCj4gLS0tDQo+ICBsaWIvYmIvdGVzdHMvZmV0Y2gucHkgfCAz
+ICsrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0K
+PiANCj4gZGlmZiAtLWdpdCBhL2xpYi9iYi90ZXN0cy9mZXRjaC5weSBiL2xpYi9iYi90ZXN0cy9m
+ZXRjaC5weQ0KPiBpbmRleCBkMGMxNjFhN2Y2Li40Njk3ZWY1OWI1IDEwMDY0NA0KPiAtLS0gYS9s
+aWIvYmIvdGVzdHMvZmV0Y2gucHkNCj4gKysrIGIvbGliL2JiL3Rlc3RzL2ZldGNoLnB5DQo+IEBA
+IC0xMTUyLDcgKzExNTIsOCBAQCBjbGFzcyBGZXRjaExhdGVzdFZlcnNpb25UZXN0KEZldGNoZXJU
+ZXN0KToNCj4gICAgICAgICAgKCJteC0xLjAiLCAiZ2l0Oi8vZ2l0aHViLmNvbS9jbHV0dGVyLQ0K
+PiBwcm9qZWN0L214LmdpdDticmFuY2g9bXgtMS40IiwNCj4gIjliMWRiNmI4MDYwYmQwMGIxMjFh
+NjkyZjk0MjQwNGEyNGFlMjk2MGYiLCAiIikNCj4gICAgICAgICAgICAgIDogIjEuOTkuNCIsDQo+
+ICAgICAgICAgICMgdmVyc2lvbiBwYXR0ZXJuICJ2WC5ZIg0KPiAtICAgICAgICAoIm10ZC11dGls
+cyIsICJnaXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy9tdGQtdXRpbHMuZ2l0IiwNCj4gImNhMzllYjFk
+OThlNzM2MTA5YzY0ZmY5YzFhYTJhNmVjY2EyMjJkOGYiLCAiIikNCj4gKyAgICAgICAgIyBtaXJy
+b3Igb2YgZ2l0LmluZnJhZGVhZC5vcmcgc2luY2UgbmV0d29yayBpc3N1ZXMNCj4gaW50ZXJmZXJl
+ZCB3aXRoIHRlc3RpbmcNCj4gKyAgICAgICAgKCJtdGQtdXRpbHMiLCAiZ2l0Oi8vZ2l0LnlvY3Rv
+cHJvamVjdC5vcmcvbXRkLXV0aWxzLmdpdCIsDQo+ICJjYTM5ZWIxZDk4ZTczNjEwOWM2NGZmOWMx
+YWEyYTZlY2NhMjIyZDhmIiwgIiIpDQo+ICAgICAgICAgICAgICA6ICIxLjUuMCIsDQo+ICAgICAg
+ICAgICMgdmVyc2lvbiBwYXR0ZXJuICJwa2dfbmFtZS1YLlkiDQo+ICAgICAgICAgICgicHJlc2Vu
+dHByb3RvIiwNCj4gImdpdDovL2Fub25naXQuZnJlZWRlc2t0b3Aub3JnL2dpdC94b3JnL3Byb3Rv
+L3ByZXNlbnRwcm90byIsDQo+ICIyNGYzYTU2ZTU0MWIwYTllNmM2ZWU3NjA4MWY0NDEyMjFhMTIw
+ZWY5IiwgIiIpDQo+IA0K
