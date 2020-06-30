@@ -1,113 +1,109 @@
-Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
- by mx.groups.io with SMTP id smtpd.web11.16205.1593526294814317726
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web10.1220.1593535121799164455
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 30 Jun 2020 07:11:35 -0700
+ Tue, 30 Jun 2020 09:38:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=GFClYitu;
- spf=softfail (domain: sakoman.com, ip: 209.85.218.67, mailfrom: steve@sakoman.com)
-Received: by mail-ej1-f67.google.com with SMTP id dr13so20815077ejc.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 30 Jun 2020 07:11:34 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QD5Xb5d/;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.67, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f67.google.com with SMTP id 22so19443737wmg.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 30 Jun 2020 09:38:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=daWWgj/TK/EVm7A2nDRS5SHSciD5xe/vSNyCbVOpgiM=;
-        b=GFClYituOlmrLxQT5HVhNJzFb9EAf6H9OyLnYDVe6/0Zpw6J8ADFI/peZns3bdzsYT
-         wrC0OJM23YIxOoANj51TzVeQ9Yqduom0ZFRT9bJ/cxYXCskAHo160bWD55MnhyeomNW2
-         s166xNE3kni6il1EcpVDkjouOWC2hFvVCiKC80NrWvDEimmu+LxxbSV6vYnIh9fCbX6X
-         1elLdoLnxiWqwEQvt/FCESJwgBrBnPCRX4wViydtsCurAumxtuVDNIuxER+Fkwpy3igJ
-         F9LkTMuN4wu3QCRj+s3t2fhQRkxK39AdvJu4L16W5S9Bx/dvF0TVsOz0ODl5ZtshSoUk
-         4fYQ==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=+uaV/pXscLfWirYYUOnD/iPw6/RhcyY3KATCm+KrgQo=;
+        b=QD5Xb5d/VXU+KukOsWW3DiIU95DgUOO0MOr0ErD5emrWQhKRogTT8L+YVWZt0d8oGp
+         joFqbOeRu7zwL+0XQBZkg8VsefBtZwDEKsscaNNBDXugrRDq9KwAV1lrqwXpR8rsbyea
+         iSqw2tWdKg1hUm5TM5hWg1vPGofOzgTl0nVW8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=daWWgj/TK/EVm7A2nDRS5SHSciD5xe/vSNyCbVOpgiM=;
-        b=Uufv28P/t1WWYYXs8AB8PnBQwXzLkRLBe+m13pp7rAxvvIz89VVLtNjAQyrtn+isv0
-         cJx1eGwreA5G4sDjKK0NPONXo+c2hIPO+XoFz5c94kOgDd1A3VQj6apyBILUe18tcMoQ
-         yvq5fhVXrUOHY2dWPNCNZpHEaUSxQ7JxOEtoMQ584G0jLZ7vYuCwT/Pw23zGfWVszfxG
-         HlMWU2a7ZRRmsbSFtSmrsyivbLAzaWPrYqwkN/Jw6myxEi9KLEXUn635rdKQwzWw7dvN
-         6+lF+ggVGfVSyjb6ebVcEJ0pkfXxvJtWI8/5ee7D0zGLcNvVpSrlqjcyf/n2nXcxypAY
-         GQsA==
-X-Gm-Message-State: AOAM533KEyug8NtXNO0YTkZPkEbpQJ0yvrMXnndfSs3ke90vJ0oIm/Xm
-	12iQ6rf56/dyIPrh7rTqiYr892Rdolc8qqCChlZIeg==
-X-Google-Smtp-Source: ABdhPJyb4ImADZGGck+kHesNSj6Ui9qvSibH0HIiBa+/aWOVcZ4UgqTWHbnXT8rqF5Q/JqWPZ1xh5xJ+I257RQnWy3E=
-X-Received: by 2002:a17:906:af6d:: with SMTP id os13mr17964797ejb.57.1593526293291;
- Tue, 30 Jun 2020 07:11:33 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=+uaV/pXscLfWirYYUOnD/iPw6/RhcyY3KATCm+KrgQo=;
+        b=i2ZTiPd31O3qD7IOpVjZxGAMC4AzjTQIFcdigJvZ5Z8f7EvGhf4rZ5WwlCp2ZI6txm
+         LC5ct0uZsJ+UXf2PYW32v6yDhtmtZnkyzc2siD5TZfKKfDCbmrAIXLlVs+tsPwdGrHy0
+         AgcKeJxY0ybqNO1HcrU03MPAc5q1gMUI27a2uCkYccKAPDL5OXgQ00sLo89tux6Ik1ye
+         EVjePLwyddt+uGSECSk5MKSeRfjg/PmPcYSQ2Nv/pk+13TyZzsZ9cP7Uv1nn/CyIPokZ
+         AoEg798JKos6TlreeE5JlIyz5rWwTUEeOcgvVabcbzpFf1P7P4reCUM3yCL9aYPa9nv4
+         CD8Q==
+X-Gm-Message-State: AOAM533OBqpfZ8+ogUKf9uOYFyOkTbUImhBnzD0y0Cibv0BLBknRiDp0
+	hrSz89KcbQS7F8sKBjieZHrfsg==
+X-Google-Smtp-Source: ABdhPJzHKQ/PMPMEvs4vpDa38AkYFEkyXrFUR4DOz07mHgGER1bmnpckuH8m2H+PnauSpwSbkiwuug==
+X-Received: by 2002:a7b:c406:: with SMTP id k6mr21470829wmi.130.1593535120204;
+        Tue, 30 Jun 2020 09:38:40 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id k14sm4073943wrn.76.2020.06.30.09.38.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 09:38:39 -0700 (PDT)
+Message-ID: <92bab537996baef9999adaa8b18f280068f850e7.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 3/6] hashserv: Chunkify large messages
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Steve Sakoman <steve@sakoman.com>, Paul Barker <pbarker@konsulko.com>
+Cc: bitbake-devel@lists.openembedded.org, Joshua Watt <JPEWhacker@gmail.com>
+Date: Tue, 30 Jun 2020 17:38:38 +0100
+In-Reply-To: <CAOSpxdbcn+-gV8E+WT4KwkwrScPS42topwthkMRQ0U3chViHcQ@mail.gmail.com>
+References: <cover.1593486375.git.steve@sakoman.com>
+	 <224ed6abbfa7b9c2d968fbbb75cc0dc6a3129813.1593486375.git.steve@sakoman.com>
+	 <CAM9ZRVvTyP3r6+JewPfpPiYAKrFBZcZxk9pOZebyb0ygcxaLfQ@mail.gmail.com>
+	 <CAOSpxdbcn+-gV8E+WT4KwkwrScPS42topwthkMRQ0U3chViHcQ@mail.gmail.com>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-References: <cover.1593486375.git.steve@sakoman.com> <7ee38d7f6eae1c938842ddcc3aae49e462569df3.1593486375.git.steve@sakoman.com>
- <CAM9ZRVsxxWeC5wGH0dZTTR0GPNbgP+--0nMFQ+j0_Uh-5nxCMw@mail.gmail.com>
-In-Reply-To: <CAM9ZRVsxxWeC5wGH0dZTTR0GPNbgP+--0nMFQ+j0_Uh-5nxCMw@mail.gmail.com>
-From: "Steve Sakoman" <steve@sakoman.com>
-Date: Tue, 30 Jun 2020 04:11:21 -1000
-Message-ID: <CAOSpxdZBznqGSrBrdJQMf+OAynRmy64+_2KadBd5f43RkBkvMw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 1/6] taskdata: Improve handling of regex in ASSUME_PROVIDED
-To: Paul Barker <pbarker@konsulko.com>
-Cc: bitbake-devel@lists.openembedded.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 30, 2020 at 3:27 AM Paul Barker <pbarker@konsulko.com> wrote:
->
-> On Tue, 30 Jun 2020 at 04:08, Steve Sakoman <steve@sakoman.com> wrote:
-> >
-> > From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> >
-> > ASSUME_PROVIDED can take regexs however the current way of handling
-> > this in code is suboptimal. It means that you can add something like:
-> >
-> > DEPENDS += "texinfo-nativejunk-that-does-not-exist"
-> >
-> > and if texinfo-native is in ASSUME_PROVIDED, no error will occur.
-> >
-> > Update the code to only treat something as a regex if a start or end
-> > anchor character is present (which wouldn't be valid in a recipe name).
-> >
-> > [YOCTO #13893]
-> >
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > (cherry picked from commit 3d72e23109990970fbb1086923277af752168b4a)
-> > Signed-off-by: Steve Sakoman <steve@sakoman.com>
-> > ---
-> >  lib/bb/taskdata.py | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/lib/bb/taskdata.py b/lib/bb/taskdata.py
-> > index d13a1249..ffbaf362 100644
-> > --- a/lib/bb/taskdata.py
-> > +++ b/lib/bb/taskdata.py
-> > @@ -21,8 +21,13 @@ def re_match_strings(target, strings):
-> >      Whether or not the string 'target' matches
-> >      any one string of the strings which can be regular expression string
-> >      """
-> > -    return any(name == target or re.match(name, target)
-> > -               for name in strings)
-> > +    for name in strings:
-> > +        if name.startswith("^") or name.endswith("$"):
-> > +            if re.match(name, target):
-> > +                return True
-> > +        elif name == target:
-> > +            return True
-> > +    return False
-> >
-> >  class TaskEntry:
-> >      def __init__(self):
-> > --
-> > 2.17.1
->
-> I'm not sure we should be changing how ASSUME_PROVIDED is parsed on a
-> stable branch. If we do backport this we should at least issue a
-> warning where the behaviour changes (i.e. if re.match(name, target) is
-> true but name != target and name doesn't start with ^ or end with $).
+On Tue, 2020-06-30 at 04:05 -1000, Steve Sakoman wrote:
+> On Tue, Jun 30, 2020 at 3:33 AM Paul Barker <pbarker@konsulko.com>
+> wrote:
+> > On Tue, 30 Jun 2020 at 04:09, Steve Sakoman <steve@sakoman.com>
+> > wrote:
+> > > From: Joshua Watt <JPEWhacker@gmail.com>
+> > > 
+> > > The hash equivalence client and server can occasionally send
+> > > messages
+> > > that are too large for the server to fit in the receive buffer
+> > > (64 KB).
+> > > To prevent this, support is added to the protocol to "chunkify"
+> > > the
+> > > stream and break it up into manageable pieces that the server can
+> > > each
+> > > side can back together.
+> > > 
+> > > Ideally, this would be negotiated by the client and server, but
+> > > it's
+> > > currently hard coded to 32 KB to prevent the round-trip delay.
+> > > 
+> > > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> > > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org
+> > > >
+> > > (cherry picked from commit
+> > > e27a28c1e40e886ee68ba4b99b537ffc9c3577d4)
+> > > Signed-off-by: Steve Sakoman <steve@sakoman.com>
+> > > ---
+> > > 
+> > My understanding of
+> > https://lists.openembedded.org/g/bitbake-devel/message/11453 is
+> > that
+> > this isn't suitable for backporting to the LTS. I may be wrong
+> > though,
+> > probably worth getting confirmation from Joshua or Richard (Cc'd).
+> 
+> Richard was the one who suggested I take this patch, but definitely
+> worth getting confirmation!
 
-I went back and forth on taking this patch since it is kind of a bug
-fix. I decided to add it to the review list and see if anyone had
-comments.
+People would run into the same issue on dunfell as we have in master
+with large data sizes. The change does require any server is upgraded
+so we will need to release note that.
 
-I'm inclined now to drop it since the bug condition is rare and it is
-a behaviour change.
+We did run into an issue where we hadn't upgarded the autobuilder
+server, all was fine once we did and it was obvious there was a
+problem.
 
-So I'll be removing it from the final pull request.
+I'm leaning towards using the same code in dunfell and master for this
+area. dunfell is already using the master upgraded server on the
+infrastructure.
 
-Thanks for reviewing the patch set, it is much appreciated.
+Cheers,
 
-Steve
+Richard
+
