@@ -1,73 +1,85 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web11.20833.1593442844562519526
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+ by mx.groups.io with SMTP id smtpd.web12.7567.1593486524848637482
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 29 Jun 2020 08:00:44 -0700
+ Mon, 29 Jun 2020 20:08:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JP7XkWho;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.68, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f68.google.com with SMTP id r12so16817100wrj.13
-        for <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2020 08:00:44 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=f5oeqH1O;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.193, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f193.google.com with SMTP id q17so8770485pfu.8
+        for <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2020 20:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=5rQ++7xe8X4EPG4uZvht5chdjA+SHYfTX+ESlqjeZ60=;
-        b=JP7XkWhoSQ8gyUjSSOnV7UFP7ETaPfA0kRV54L0HTpF14g/ieGpjtcDiyxvA9wXpO7
-         k+VFYmK8lTaRcTzldYW1b/WcPE64AOUJXcktfQGQVG/ZKRW1PBml6+oZTIZNpJ8S+fyB
-         vTYSuzM0LO5etMpNbWJhMG3jZXbMPb2JCZHtA=
+        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id;
+        bh=2nunJphVXWlHjijxKu+5ujqN1Zole2t5ZOJT2BlpF7I=;
+        b=f5oeqH1OiMzR0FGAaDtOi+EBROK1ms93BLYb4LfrjvWbmhhuqytoEkcndXJbk7eOVl
+         IItuwq5IMdTJu9hPLk9ReokLl+kJV8UllCIonipdLPNpVuzWIpIvxqEMT6GBcvLGpmqY
+         o7nVrOGe/6nwFIjyRdAoaBYlKvkW7QX1W3bl2XzmBZKzjuKmyCimOXziqt9uIMe0MJDS
+         cjXkhUx35weiLRYCEMXBbw9U0Xy80Hb0v57fFE5Mm/CU8ZvdP9BigTxyXxeDwnkb5Krr
+         a+KbLdyfJr+tp7Qp2MlLt97BWiYlWwCf8F7e9J7opgtlq64kSf5h8epcGkckuOaUhtuO
+         G/kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=5rQ++7xe8X4EPG4uZvht5chdjA+SHYfTX+ESlqjeZ60=;
-        b=lWnHN7N7fSlgu30Hz0aD4+OUXL1/RPAue9g8kDbDVUAOzGl+8MhL+VtnxmfND2c2V/
-         L0K956ZHRYSnv0HrYfDlcvA1PZu7UVv8tpFRGXLMWAs752OF/DKt9Tl4JRt5NO0ly5Rf
-         x5Cu6qt1qk/gecXuYrJCWbIUTGi9XuNXpDCPWui2l1fAyFXOX+toinvgeB0MLRYs0vNJ
-         r5pVpiB7ydM1MKIR/PDHfg1a0R4OysKgi4ex0m5O3kRkYjzHfcMnrvSEuEcZj/8ETvDC
-         iWRuWsHX5dhChT8Xg9EOUORG777ukKd+MfqG63KUo7dtVyTaBEAQuqdzI9JVi9yhv9W1
-         ayEw==
-X-Gm-Message-State: AOAM531OgX8OGYye+gSmOajpZu5D+9YH2TBzcTz48GWIV2xewr7SR4+1
-	ZV0NacAqH6O8HDBis2JBtuE+Fw==
-X-Google-Smtp-Source: ABdhPJw84Hb8QJf5KtYkHnYNf1VPPCFPUfXShgyC0K3BKXqJtp6YwCk2qUO1m4/NMf7D5wvs0bLg9g==
-X-Received: by 2002:a5d:6cce:: with SMTP id c14mr16598114wrc.377.1593442842996;
-        Mon, 29 Jun 2020 08:00:42 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id u74sm41465wmu.31.2020.06.29.08.00.41
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=2nunJphVXWlHjijxKu+5ujqN1Zole2t5ZOJT2BlpF7I=;
+        b=e1sP0TmBqbTpzzMojf88I/0eqPjUISEJQTO1MEuukBP8shZjgWIQ+XhHQO2qSZaZqL
+         JpgYCDCWucaVQGrrbehAZJTttp6cI3UHClDgwKoAsIuDTN+jprK5zP1TUViRELhaC2+i
+         9FSG1Jg4h9wUx3q+jfVyq895GE+WxP/4HnyZ9Tk3Vr8VILo0Qxg25TDiiOk7J72ONKrz
+         okAt6uG96cWXflBKqvt2xWrVRGDJRaLpyoA3+nMZFnXYkFqaoFXefiHKXHI/OwNprhkn
+         Mmllz52xfGUEtvkXhQ0S3hRxkcNy3cQ7+g+kbInWJsgLcXqu8BJaKnEOD8P7Azhy0/QE
+         OhfA==
+X-Gm-Message-State: AOAM5330nhdKvFt/URGRmfqrxA/w8gIu80Q6NjgcH+j+y4Wbjcvr+pSX
+	BjCbGpvs1DmAjTGXyI2/eEEu91fFl0+Y7w==
+X-Google-Smtp-Source: ABdhPJxgH+5USe4RN4eOOq6kY9z29Iw4m/qmNgFjRx37+ggX7bCDlpzXcfcBh9WeNxxyNIFpddmSrA==
+X-Received: by 2002:a05:6a00:801:: with SMTP id m1mr17460475pfk.200.1593486523912;
+        Mon, 29 Jun 2020 20:08:43 -0700 (PDT)
+Return-Path: <steve@sakoman.com>
+Received: from octo.router0800d9.com ([99.197.43.113])
+        by smtp.gmail.com with ESMTPSA id n14sm970933pgd.78.2020.06.29.20.08.40
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 08:00:42 -0700 (PDT)
-Message-ID: <5df9ead4c1f5068f141c57eeaed8a60aa05779f4.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] tests/fetch: Switch from git.infradead.org to a YP mirror
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "Mittal, Anuj" <anuj.mittal@intel.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Mon, 29 Jun 2020 16:00:40 +0100
-In-Reply-To: <9fb2637ecedb143f09453529f4716ea8c64ccf19.camel@intel.com>
-References: <20200622193832.571813-1-richard.purdie@linuxfoundation.org>
-	 <9fb2637ecedb143f09453529f4716ea8c64ccf19.camel@intel.com>
-User-Agent: Evolution 3.36.2-0ubuntu1 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+        Mon, 29 Jun 2020 20:08:43 -0700 (PDT)
+From: "Steve Sakoman" <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][dunfell][1.46][PATCH 0/6] Patch review
+Date: Mon, 29 Jun 2020 17:08:20 -1000
+Message-Id: <cover.1593486375.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.17.1
 
-On Mon, 2020-06-29 at 12:54 +0000, Mittal, Anuj wrote:
-> Hi Richard
-> 
-> On Mon, 2020-06-22 at 20:38 +0100, Richard Purdie wrote:
-> > Upstream is unavailable, breaking tests. Switch to a YP mirror
-> > since
-> > if we can't reach that there are bigger problems. This should
-> > remove
-> > a source of intermittent failures on the autobuilder.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> 
-> Could you please merge this in 1.44/zeus as well?
+Please review this next set of patches for 1.46 (dunfell) and have comments back
+by end of day Wednesday.
 
-Done.
+The following changes since commit 83296870bede70e31bdf6e73683bcc30681023fc:
 
-Cheers,
+  tests/fetch: Switch from git.infradead.org to a YP mirror (2020-06-22 20:53:17 +0100)
 
-Richard
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
+
+Joshua Watt (2):
+  hashserv: Chunkify large messages
+  siggen: Fix error when hash equivalence has an exception
+
+Richard Purdie (3):
+  taskdata: Improve handling of regex in ASSUME_PROVIDED
+  runqueue: Avoid unpickle errors in rare cases
+  msg: Avoid issues where paths have relative components
+
+akuster (1):
+  test/fetch: change to better svn source
+
+ lib/bb/msg.py            |   2 +-
+ lib/bb/runqueue.py       |   9 +++-
+ lib/bb/siggen.py         |   1 +
+ lib/bb/taskdata.py       |   9 +++-
+ lib/bb/tests/fetch.py    |   2 +-
+ lib/hashserv/__init__.py |  22 ++++++++
+ lib/hashserv/client.py   |  43 +++++++++++++---
+ lib/hashserv/server.py   | 105 +++++++++++++++++++++++++++------------
+ lib/hashserv/tests.py    |  23 +++++++++
+ 9 files changed, 169 insertions(+), 47 deletions(-)
+
+-- 
+2.17.1
 
