@@ -1,75 +1,75 @@
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
- by mx.groups.io with SMTP id smtpd.web11.17250.1594131487919464568
+Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
+ by mx.groups.io with SMTP id smtpd.web11.17725.1594132764137156861
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 07 Jul 2020 07:18:08 -0700
+ Tue, 07 Jul 2020 07:39:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=nV7Nz3xO;
- spf=pass (domain: gmail.com, ip: 209.85.208.66, mailfrom: jacob.kroon@gmail.com)
-Received: by mail-ed1-f66.google.com with SMTP id h28so38554950edz.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Jul 2020 07:18:07 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=U0ZlqI2p;
+ spf=pass (domain: gmail.com, ip: 209.85.222.196, mailfrom: dakhouya@gmail.com)
+Received: by mail-qk1-f196.google.com with SMTP id r22so38280761qke.13
+        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Jul 2020 07:39:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A+ROiBpG6Pw/ApSOGMeO9KE+4v/qmGOmIZku6nROFbQ=;
-        b=nV7Nz3xOsoEcy/5n8oD3xS/2LLl49+Y2JDl3GjqpEnEnAPxR+VFu2RAjOmcenv0MPd
-         3L2joivuwmYm5/KKHxU9L8le8VaQrnTwejc80EEWaeRgLqRNeng6ZUQhVsx+y8kUffcI
-         vhUAekJIFSjt7M7MEJc54299lOyzzr3pFnJ3hwWsnWY3IYJXmg+GR998ilA01UV/LmLk
-         +lbcCRAg8vmh3XlQZcQQHyOE1Dznpp5l0rEKzoaDmQGLdWCnFODSXGpPL66UnOSZpoad
-         +26M47CidaXVZ/0fxMeuTTKQ2mqjPPA1OHPIwv75edYWOgcKrwZiWg6aOPRYLxWCghKs
-         JP9Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=87WDsX1wzF1eJ04xy+CCoLzUYtnAFL0vDYTm9eBe9+s=;
+        b=U0ZlqI2pJ2BSs/mHKr0kIDUat0jkloZEmDBUQWYkkZf1P+gE2DnxjBWvu5n3pnlgAU
+         bmJna5U3TiDSSCzDM/4l6545N4AW5VkOXl4fgNA7IOWPIGB03mXrsKEJjkYFmv6U7z44
+         2hhEPgQA91mtMHxx6lolc8A+fyQnyb0gNNTHNI8b/HBs2mJMWPNzs4evoUlL6YNL5SZ+
+         MqLfXm9OWfp+vvBVam5Tr18lObF0jvRN0sA2FJXL/i+AIigbFoAF8Sgr7t0SyYucKyb5
+         kTSwhdfIeMIdrgkNj9eHAumZv2i9WJ/ejHRMqqT9OOqfH41PJJLJEWlRN1mEkFaViu9B
+         P/gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=A+ROiBpG6Pw/ApSOGMeO9KE+4v/qmGOmIZku6nROFbQ=;
-        b=jp02cLdpMXJF2ESHMKw2hlgrTmT9PzItHAw/wtbJdwhyDIl/9Vn/d0JxumJZDfGtTJ
-         swuppY50bC1p1HLesR/fC8rapdHTy8G2n7QMXxfHkG3C9FhDynXIG7P85LA975x+6cIP
-         KFjoAtyDmBZtaolw+d+3s3Or1qAtRUPHsYEF6hnVc9g0Tek80+/65uXGJTvRju1+3ku4
-         hDQwTWeezK0k6tyoNK4EO0cfFvCfqmbLJwS6K8vv8w51sK1qub5Ti9JDbPL+obc7T6vm
-         lvEqDo10m8vov+eAeEK+zODQddUNzU+skMbfMgI38omoNVQzxf62dWtVWwoqq+5YtuSM
-         mLbA==
-X-Gm-Message-State: AOAM530k5CsMKLuRLVm9HURXB3TzP2uiA/imHO36oF2NPG0TpOIfVdg7
-	CBw+8rJum/I6a0YS+10f3TFE5zfcte0=
-X-Google-Smtp-Source: ABdhPJzsBiZjHi6LIfV7K7x8OwotFGz+Ez+crW2MpdHhaJ494xzQOl/h4eQ8TDzkPW2iLtDLk2+4Pg==
-X-Received: by 2002:a50:9f8c:: with SMTP id c12mr58398303edf.149.1594131486298;
-        Tue, 07 Jul 2020 07:18:06 -0700 (PDT)
-Return-Path: <jacob.kroon@gmail.com>
-Received: from localhost.localdomain (37-247-29-68.customers.ownit.se. [37.247.29.68])
-        by smtp.gmail.com with ESMTPSA id c10sm18813463edt.22.2020.07.07.07.18.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 07:18:05 -0700 (PDT)
-Subject: Re: [bitbake-devel] [bitbake][PATCH] lib/ui/taskexp: Validate gi import
-To: David Khouya <dakhouya@gmail.com>
-Cc: Martin Jansa <martin.jansa@gmail.com>,
- bitbake-devel <bitbake-devel@lists.openembedded.org>
-References: <20200701162740.258157-1-dakhouya@gmail.com>
- <d679c275-a191-eed0-a5bb-54f6d5a499c0@gmail.com>
- <CAKvemSJd9sbfbbKcw=hQhFSOLO2r05UwhSffmgQztb4JcCj30Q@mail.gmail.com>
- <CA+chaQebiZSLXiVh0a+dkGdfZ3+4aEiL-S5f5UeNv7YHmJAoTg@mail.gmail.com>
- <161F7718C6BC7653.28965@lists.openembedded.org>
- <CAKvemSKG8DGVBQGNkf=9R9105FsrHy62YAV=xKJO0qb2m3rnuA@mail.gmail.com>
-From: "Jacob Kroon" <jacob.kroon@gmail.com>
-Message-ID: <c826666f-e631-74ed-2ea3-195354d17442@gmail.com>
-Date: Tue, 7 Jul 2020 16:18:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        bh=87WDsX1wzF1eJ04xy+CCoLzUYtnAFL0vDYTm9eBe9+s=;
+        b=am1gvd5xompFVrf14htQBsEgb4X1l2Z3Y+jMHHS+kGz2+dk1HUsJdhlG9bjmv6ij3v
+         T5FOiDdvkMijg7DyQ7IcntVadSW7ZzPcyVWoFOqXCLRFlue1UR/UiuZELNSipG3gvIeJ
+         vsG+XN7HXxtI+7V/CYK8nwFZbFa/lSvUQ/JXxVD4I+x2UF5Y4vCMqR/SLkkYSzBXh9PT
+         ymFIxG9PZvK/7+FG9AUsgFoqQoRXAeDIv3zRAkA8Gv0g+WVcmSa/XmKXbSYqTJ7TmsTV
+         fnfVhWTP1JOiRdbmmYyyBBm7VivAAykn8f2YY4XceCz+1t3IY5LAzhmjJjf1nKTRsCGD
+         arLQ==
+X-Gm-Message-State: AOAM533+YIq8Ve4ST6XjUtO7lKvwraXTz0U/XctvxLdXnLM9GdZms5p/
+	MywHo9NWCvEh1XVJSS0TB8JpX/2liik=
+X-Google-Smtp-Source: ABdhPJxSGHgi9uKyqp9WYFmxSJnbha/s/u2/Nbm2IScQabPkIPkjITBShImdNKfVtP3LdI4VbxsXMw==
+X-Received: by 2002:a37:7683:: with SMTP id r125mr49656881qkc.39.1594132762952;
+        Tue, 07 Jul 2020 07:39:22 -0700 (PDT)
+Return-Path: <dakhouya@gmail.com>
+Received: from dkhouya-ThinkPad-P53s.effenco.com ([216.46.7.178])
+        by smtp.gmail.com with ESMTPSA id o187sm23754073qke.76.2020.07.07.07.39.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 07:39:22 -0700 (PDT)
+From: "David Khouya" <dakhouya@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: David Khouya <dakhouya@gmail.com>
+Subject: [bitbake][PATCH] lib/ui/taskexp: Fix missing Gtk import
+Date: Tue,  7 Jul 2020 10:39:09 -0400
+Message-Id: <20200707143909.92348-1-dakhouya@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAKvemSKG8DGVBQGNkf=9R9105FsrHy62YAV=xKJO0qb2m3rnuA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 
-On 7/7/20 3:33 PM, David Khouya wrote:
-> I pushed a commit on my fork if you want to give it a try. It works on 
-> my side.
-> 
-> https://github.com/dakhouya/bitbake/commit/3af4530571cef1b6ec58f810b89f6f35a14cc475
-> 
-> I'll send a patch for that this evening.
-> 
+Adding back gtk objects import.
 
-Yes, this patch fixes taskexp for me.
-Thanks,
-Jacob
+Fix bug introduce when adding validation on gtk import.
+
+Signed-off-by: David Khouya <dakhouya@gmail.com>
+---
+ lib/bb/ui/taskexp.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/bb/ui/taskexp.py b/lib/bb/ui/taskexp.py
+index 336d197d..05e32338 100644
+--- a/lib/bb/ui/taskexp.py
++++ b/lib/bb/ui/taskexp.py
+@@ -12,6 +12,7 @@ import sys
+ try:
+     import gi
+     gi.require_version('Gtk', '3.0')
++    from gi.repository import Gtk, Gdk, GObject
+ except ValueError:
+     sys.exit("FATAL: Gtk version needs to be 3.0")
+ except ImportError:
+-- 
+2.25.1
+
