@@ -1,75 +1,75 @@
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
- by mx.groups.io with SMTP id smtpd.web11.17725.1594132764137156861
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web10.26195.1594155892489223248
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 07 Jul 2020 07:39:24 -0700
+ Tue, 07 Jul 2020 14:04:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=U0ZlqI2p;
- spf=pass (domain: gmail.com, ip: 209.85.222.196, mailfrom: dakhouya@gmail.com)
-Received: by mail-qk1-f196.google.com with SMTP id r22so38280761qke.13
-        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Jul 2020 07:39:24 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DfUJiKrv;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f66.google.com with SMTP id z15so35457387wrl.8
+        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Jul 2020 14:04:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=87WDsX1wzF1eJ04xy+CCoLzUYtnAFL0vDYTm9eBe9+s=;
-        b=U0ZlqI2pJ2BSs/mHKr0kIDUat0jkloZEmDBUQWYkkZf1P+gE2DnxjBWvu5n3pnlgAU
-         bmJna5U3TiDSSCzDM/4l6545N4AW5VkOXl4fgNA7IOWPIGB03mXrsKEJjkYFmv6U7z44
-         2hhEPgQA91mtMHxx6lolc8A+fyQnyb0gNNTHNI8b/HBs2mJMWPNzs4evoUlL6YNL5SZ+
-         MqLfXm9OWfp+vvBVam5Tr18lObF0jvRN0sA2FJXL/i+AIigbFoAF8Sgr7t0SyYucKyb5
-         kTSwhdfIeMIdrgkNj9eHAumZv2i9WJ/ejHRMqqT9OOqfH41PJJLJEWlRN1mEkFaViu9B
-         P/gg==
+        bh=yTLD6ue/SWefF0nD4GZiYv2qqYjcSqZHZVpWR2d+KeM=;
+        b=DfUJiKrvskGGJJOMNzOoK3v5CoQfzFbwXkhHnPs0r8NtW8gfOi29UjP7OmXivEeBbJ
+         /enw7AtLNgQTsplzplJ7DtJAtCtB0OoHsacwGN8jdGDD1jFyjWZP0H4B/gyOq6WnS/M0
+         T2HaiWeY1sSeNDldHBrj68v/TAojy/vxZ+iWA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=87WDsX1wzF1eJ04xy+CCoLzUYtnAFL0vDYTm9eBe9+s=;
-        b=am1gvd5xompFVrf14htQBsEgb4X1l2Z3Y+jMHHS+kGz2+dk1HUsJdhlG9bjmv6ij3v
-         T5FOiDdvkMijg7DyQ7IcntVadSW7ZzPcyVWoFOqXCLRFlue1UR/UiuZELNSipG3gvIeJ
-         vsG+XN7HXxtI+7V/CYK8nwFZbFa/lSvUQ/JXxVD4I+x2UF5Y4vCMqR/SLkkYSzBXh9PT
-         ymFIxG9PZvK/7+FG9AUsgFoqQoRXAeDIv3zRAkA8Gv0g+WVcmSa/XmKXbSYqTJ7TmsTV
-         fnfVhWTP1JOiRdbmmYyyBBm7VivAAykn8f2YY4XceCz+1t3IY5LAzhmjJjf1nKTRsCGD
-         arLQ==
-X-Gm-Message-State: AOAM533+YIq8Ve4ST6XjUtO7lKvwraXTz0U/XctvxLdXnLM9GdZms5p/
-	MywHo9NWCvEh1XVJSS0TB8JpX/2liik=
-X-Google-Smtp-Source: ABdhPJxSGHgi9uKyqp9WYFmxSJnbha/s/u2/Nbm2IScQabPkIPkjITBShImdNKfVtP3LdI4VbxsXMw==
-X-Received: by 2002:a37:7683:: with SMTP id r125mr49656881qkc.39.1594132762952;
-        Tue, 07 Jul 2020 07:39:22 -0700 (PDT)
-Return-Path: <dakhouya@gmail.com>
-Received: from dkhouya-ThinkPad-P53s.effenco.com ([216.46.7.178])
-        by smtp.gmail.com with ESMTPSA id o187sm23754073qke.76.2020.07.07.07.39.21
+        bh=yTLD6ue/SWefF0nD4GZiYv2qqYjcSqZHZVpWR2d+KeM=;
+        b=prRfnIArOfL0JsEMbUF3sxfFks7P6S17I7J8OJeWxh/l9OiZ7AdZZQfUkO+jDOuyLq
+         AV6ltfX0rS57f2cp6yl1Is1OFLTJAiQaUuzWGtNS8L37fNrZKOnGNmt0ro0LaCkRkJ/x
+         CQ+Vsz/aHlPcghBHVqAEqIxJUcw9df+2pLlnZDUV37EjAkfZsPkMVEK6VJnUReW3cJnp
+         5mGiPrhsAIUzfjx09g9EoN3gkPAIfzvrJkBRC3RWgJItgYUWujHOwaR11TYQl0TJS+6m
+         ywVf64WdVQjxplfCDnbKOo8XTGY6Waz2cZtLgC6F1NXYrfgM81w9mM1H7yVlUH9oDGRO
+         g2iQ==
+X-Gm-Message-State: AOAM5333WrTqxMQ+92LE9+lfrFLpRa6Tx8QvWqCBnPU7OU9dxW3t4AV6
+	mEmlpNkG1UbVzbUX98Ig9qNyKYbjWFFoCw==
+X-Google-Smtp-Source: ABdhPJxpGM9Pw/fUAblcMtJ3olPXHoj65V9eZuYtL1MIoCnDNUJshGiVCjNp/XrZpuFlIKzK0tEVnQ==
+X-Received: by 2002:adf:9148:: with SMTP id j66mr52859107wrj.311.1594155890789;
+        Tue, 07 Jul 2020 14:04:50 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id v15sm2484745wmh.24.2020.07.07.14.04.49
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:39:22 -0700 (PDT)
-From: "David Khouya" <dakhouya@gmail.com>
+        Tue, 07 Jul 2020 14:04:50 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: David Khouya <dakhouya@gmail.com>
-Subject: [bitbake][PATCH] lib/ui/taskexp: Fix missing Gtk import
-Date: Tue,  7 Jul 2020 10:39:09 -0400
-Message-Id: <20200707143909.92348-1-dakhouya@gmail.com>
+Subject: [PATCH] server/process: Increase timeout for commands
+Date: Tue,  7 Jul 2020 22:04:49 +0100
+Message-Id: <20200707210449.351137-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adding back gtk objects import.
+We're running into this timeout on loaded autobuilders in situations
+where things should otherwise succeed. Log a note in these
+cases and continue to try for longer.
 
-Fix bug introduce when adding validation on gtk import.
-
-Signed-off-by: David Khouya <dakhouya@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/taskexp.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/server/process.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/ui/taskexp.py b/lib/bb/ui/taskexp.py
-index 336d197d..05e32338 100644
---- a/lib/bb/ui/taskexp.py
-+++ b/lib/bb/ui/taskexp.py
-@@ -12,6 +12,7 @@ import sys
- try:
-     import gi
-     gi.require_version('Gtk', '3.0')
-+    from gi.repository import Gtk, Gdk, GObject
- except ValueError:
-     sys.exit("FATAL: Gtk version needs to be 3.0")
- except ImportError:
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 69aae626eb..83385baf60 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -331,7 +331,9 @@ class ServerCommunicator():
+     def runCommand(self, command):
+         self.connection.send(command)
+         if not self.recv.poll(30):
+-            raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server")
++            logger.note("No reply from server in 30s")
++            if not self.recv.poll(30):
++                raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server (60s)")
+         return self.recv.get()
+ 
+     def updateFeatureSet(self, featureset):
 -- 
 2.25.1
 
