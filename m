@@ -1,78 +1,122 @@
-Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
- by mx.groups.io with SMTP id smtpd.web12.43080.1593976889762393401
+Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
+ by mx.groups.io with SMTP id smtpd.web12.13013.1594115584141379842
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 05 Jul 2020 12:21:29 -0700
+ Tue, 07 Jul 2020 02:53:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=tNLWsiUg;
- spf=pass (domain: gmail.com, ip: 209.85.160.194, mailfrom: mostthingsweb@gmail.com)
-Received: by mail-qt1-f194.google.com with SMTP id 6so2196606qtt.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Jul 2020 12:21:29 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=O1QX9xnF;
+ spf=pass (domain: gmail.com, ip: 209.85.167.65, mailfrom: jacob.kroon@gmail.com)
+Received: by mail-lf1-f65.google.com with SMTP id y18so24352070lfh.11
+        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Jul 2020 02:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9VoYIgNJOvThNVnIs2u4G0kNbBfATxaydYzzGf7XFB4=;
-        b=tNLWsiUgfTJ5UvvXfpLFvtRRb4R2C4DX6JwsF01r6LsrNDoQ0pckM3gkI2rJFBvLvK
-         gjroScPCy7n2V+bK8zlOFq7V6NUWndLjOEfFIi3zy2s3F1dEC7Xkj+dhbLgn4/X8utzM
-         Le6hpZHX21NZcHfi5h8rFWRL5YRQgTllEedmJWvHkWBvLXxJUiMmWqCR1fX1rnolXf17
-         +/mEjOIq6eXBb9GcpfJNegiKY0zKwxc9BpAvF4O5IYKa46oJy1MeADbbW5Bu42850qqQ
-         TXFGxRr0GyKQELjxFO7M7rB22Uii66tr7ahn7c0nRKZaYU7g3zITgBByeWs2deUpj9Ff
-         Mmrg==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Yq79AvJrj/PjJcgrxtNeTZXWx1m/bYrxi+H3CAig8fo=;
+        b=O1QX9xnFTrIdbUVaCWt1VueQ9y7vZaG0vJ91lEE0fiVKXIxoYs6mAj9tklyw7mP/kU
+         g88oXQKkyR+xLISifWwA3lzTRLWEmi4OmRThnY7J/jpmcLcIdO38XynyFCqnVF+bEzQE
+         y/RnDH7e7kV8ukIntsZrKkYV7ucpBnBLTxA5AvGYgE9I7wYM0iJTwlkbS2dO2zBXDw0E
+         hgmYQe54b25zKZDu/FoKLywVFxt4X+UaVTOapsLXajQrEZ+9+DaZDiKsv7IELTiZkgWa
+         6+TdZUZ9lZcw83Ca5qF1xJlVI9MUAvuKJvnlP7LzWeij611WWuPw7UMpAJjPqiADNiEo
+         62dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=9VoYIgNJOvThNVnIs2u4G0kNbBfATxaydYzzGf7XFB4=;
-        b=d9QVe1Mfp1XL03X86hLE7iqU/BtfPnHzyFxGiIoApBOveJrB2eUotp7687X/EmJHep
-         o4b+AiD0PeCL4MdRWhyTdH9fiBNhowwZ1aFJi2VmV/tDIs8BsuU8gBS/+NWQIH3TEgPS
-         k1TafXo82I6cVYBdM+QEm0fRuXSxQKbjIPULiOAZlhK+n3P0XImutYBaMIXzmAk2f3fM
-         tnWzhyxgM7u73pC0ICuuMtN8JQAX3cQOadi9RIlQDzpn9bsEsdclUXw3ik6m0NlqQuQX
-         iwVGMugMA0OrhBDIdBK0k78unNUGdnB8+f5DktYYgg5o+hm3KbH1YL8aMR0gEHbEK89E
-         g1yw==
-X-Gm-Message-State: AOAM533A6gLwkniqIFsOm7b0Nv4hvI10D3nPxj71DWmQt7hH0zcrg65L
-	/wHg/fKdE8EQjAXlWtK6utwzcMve7GN4dg==
-X-Google-Smtp-Source: ABdhPJwJPPrm6qyql0/kRLmot1YNRB5g/xzzgI/sDYJz7HFAk84osNsMh1hC88rz97HGip47W4O9eQ==
-X-Received: by 2002:ac8:d86:: with SMTP id s6mr17249906qti.343.1593976888470;
-        Sun, 05 Jul 2020 12:21:28 -0700 (PDT)
-Return-Path: <mostthingsweb@gmail.com>
-Received: from localhost.localdomain (84.185.2.69.cable.dhcp.goeaston.net. [69.2.185.84])
-        by smtp.gmail.com with ESMTPSA id 185sm15568877qkm.111.2020.07.05.12.21.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 12:21:27 -0700 (PDT)
-From: "Chris Laplante" <mostthingsweb@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Chris Laplante <mostthingsweb@gmail.com>
-Subject: [PATCH] ui/teamcity: don't use removed logging classes
-Date: Sun,  5 Jul 2020 15:21:18 -0400
-Message-Id: <20200705192118.7372-1-mostthingsweb@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        bh=Yq79AvJrj/PjJcgrxtNeTZXWx1m/bYrxi+H3CAig8fo=;
+        b=Skaohh9rnmf7HTlOEDBKmRJc5c7AWS3ehNuz3KKcInB3UjXM2rswhyeYlytTCKJV0T
+         rjfbXprRj1BhKS5pg9fqZazRm+4//VGAeLr8Yyr8S6R5u4IS9Gy0dTGRrFZ4QxUXBjXN
+         b7gj7cNwmIGGx9XXAT9LnizAYR63xBsI2/vagKB9EMK65UyguAkAbCea7e80bkdsi7pd
+         cTmTFA2Ob4KrxZ7OYDitK4G8Hb/1KLNruprHmV4i1XYrzvjd/CMAdTLhlySvKUq1IdbS
+         wa1ey9uwmxWhNpbhn3PpeWn4CJ1rk2o2w6E+ud/H0PV20X9+CGwNnrlzFub5dzQ3EM1J
+         yirg==
+X-Gm-Message-State: AOAM532wTdEsEHBPVrOmtzlVXUgW59YADSaR/3ZmADIMlwB3QyJiw1Py
+	gN10y+rJCXL0WpbpB5L/xzTkxGUb
+X-Google-Smtp-Source: ABdhPJyKSxlNEsJt+UGpSEx6wT06Bpz/7Fv2EF3i7z7U9W3K1uIj/FQn0COGnCI6HeDwkuMp8EioHg==
+X-Received: by 2002:a19:6a14:: with SMTP id u20mr30753731lfu.172.1594115581710;
+        Tue, 07 Jul 2020 02:53:01 -0700 (PDT)
+Return-Path: <jacob.kroon@gmail.com>
+Received: from localhost.localdomain ([213.185.29.22])
+        by smtp.gmail.com with ESMTPSA id k14sm55360ljc.48.2020.07.07.02.53.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 02:53:00 -0700 (PDT)
+Subject: Re: [bitbake-devel] [bitbake][PATCH] lib/ui/taskexp: Validate gi import
+To: David Khouya <dakhouya@gmail.com>, bitbake-devel@lists.openembedded.org
+References: <20200701162740.258157-1-dakhouya@gmail.com>
+From: "Jacob Kroon" <jacob.kroon@gmail.com>
+Message-ID: <d679c275-a191-eed0-a5bb-54f6d5a499c0@gmail.com>
+Date: Tue, 7 Jul 2020 11:52:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701162740.258157-1-dakhouya@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Allows the TeamCity frontend to be used again.
+On 7/1/20 6:27 PM, David Khouya wrote:
+> When running bitbake -g -u taskexp without having gi python module or
+> and invalid gtk version, bitbake fails with a stack trace.
+> 
+> In case of import or version error, bitbake should exit with an error
+> message instead of a stack trace.
+> 
+> Signed-off-by: David Khouya <dakhouya@gmail.com>
+> ---
+>   lib/bb/ui/taskexp.py | 12 +++++++++---
+>   1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/bb/ui/taskexp.py b/lib/bb/ui/taskexp.py
+> index 8fff2442..336d197d 100644
+> --- a/lib/bb/ui/taskexp.py
+> +++ b/lib/bb/ui/taskexp.py
+> @@ -8,9 +8,15 @@
+>   #
+>   
+>   import sys
+> -import gi
+> -gi.require_version('Gtk', '3.0')
+> -from gi.repository import Gtk, Gdk, GObject
+> +
+> +try:
+> +    import gi
+> +    gi.require_version('Gtk', '3.0')
+> +except ValueError:
+> +    sys.exit("FATAL: Gtk version needs to be 3.0")
+> +except ImportError:
+> +    sys.exit("FATAL: Gtk ui could not load the required gi python module")
+> +
+>   import threading
+>   from xmlrpc import client
+>   import bb
+> 
+> 
 
-Signed-off-by: Chris Laplante <mostthingsweb@gmail.com>
----
-This is an immediate term fix to at least let the frontend work again. I
-will be adding a test suite and doing other improvements in the near
-future.
+With this patch applied I get:
 
- lib/bb/ui/teamcity.py | 2 --
- 1 file changed, 2 deletions(-)
+Traceback (most recent call last):
+   File "/home/jkroon/Projects/foo-linux/bitbake/bin/bitbake", line 35, 
+in <module>
+     sys.exit(bitbake_main(BitBakeConfigParameters(sys.argv),
+   File "/home/jkroon/Projects/foo-linux/bitbake/lib/bb/main.py", line 
+366, in bitbake_main
+     server_connection, ui_module = setup_bitbake(configParams, 
+configuration)
+   File "/home/jkroon/Projects/foo-linux/bitbake/lib/bb/main.py", line 
+404, in setup_bitbake
+     ui_module = import_extension_module(bb.ui, configParams.ui, 'main')
+   File "/home/jkroon/Projects/foo-linux/bitbake/lib/bb/main.py", line 
+96, in import_extension_module
+     module = __import__(pkg.__name__, fromlist=[modulename])
+   File "/home/jkroon/Projects/foo-linux/bitbake/lib/bb/ui/taskexp.py", 
+line 33, in <module>
+     class PackageDepView(Gtk.TreeView):
+NameError: name 'Gtk' is not defined
 
-diff --git a/lib/bb/ui/teamcity.py b/lib/bb/ui/teamcity.py
-index 1854292f..fca46c28 100644
---- a/lib/bb/ui/teamcity.py
-+++ b/lib/bb/ui/teamcity.py
-@@ -167,8 +167,6 @@ def main(server, eventHandler, params):
-         forcelevel = bb.msg.BBLogFormatter.ERROR
-     else:
-         forcelevel = bb.msg.BBLogFormatter.WARNING
--    bb.msg.addDefaultlogFilter(console, bb.msg.BBLogFilterStdOut, forcelevel)
--    bb.msg.addDefaultlogFilter(errconsole, bb.msg.BBLogFilterStdErr)
-     console.setFormatter(format)
-     errconsole.setFormatter(format)
-     if not bb.msg.has_console_handler(logger):
---
-2.27.0
+Reverting the patch allows me to run
 
+  bitbake -g -u taskexp core-image-minimal
+
+and browsing via the Gtk UI works fine.
+
+Jacob
