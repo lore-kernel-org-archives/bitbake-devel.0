@@ -1,79 +1,115 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.web12.8348.1594206739718297066
+Received: from esa7.hc324-48.eu.iphmx.com (esa7.hc324-48.eu.iphmx.com [207.54.71.126])
+ by mx.groups.io with SMTP id smtpd.web10.9090.1594210361422514027
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 Jul 2020 04:12:20 -0700
+ Wed, 08 Jul 2020 05:12:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IDRnJuks;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.65, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f65.google.com with SMTP id q5so48445353wru.6
-        for <bitbake-devel@lists.openembedded.org>; Wed, 08 Jul 2020 04:12:19 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@bmw.de header.s=mailing1 header.b=Ym+WtOAS;
+ spf=pass (domain: bmw.de, ip: 207.54.71.126, mailfrom: prvs=45173159e=mikko.rapeli@bmw.de)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/xsCCCKtXlXqyvFrz36rGMPWAETQwoZvNRK89lSQuFA=;
-        b=IDRnJuksXPnWuowWmNagaVLf+T8y6WEN1VRQrpNeBvqtbswp5IHlWSJP/UlXf0R7fb
-         NPD3CaOFXU3QL3Q7gCN6E22BTbO9xYBOIJMHyoAsrPL7jrbz+ea6L8NxCpvkFT4IDnfg
-         YKrO2SVgyKeoyn2Uba/2sGhDgBk3D2UCAK3Xg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/xsCCCKtXlXqyvFrz36rGMPWAETQwoZvNRK89lSQuFA=;
-        b=Z1N0DBN4q6AgjaYwNChsH/PBLQeDt79sv4jqBbK9AJNtZaNPTzNf5RJuFJ0xVNcrPI
-         cjJjq6o8gGjoTBNJJkRVQZbycJ/ZYL4oR6udW+KzZLn8tUlBPdhS83yjHjBwY/z6USWJ
-         NIpKeHuatHbwKDf76YT9tpYrNLwb+r3quLi0Ttag0PZsktgsmD2QQFrqLk4EgGgns1O3
-         MBBIfXxIN2H66qjpssrHmn8ZInfOoZP1kYNVRRcpRO5xhGxc09txo4eEGMUAmqRGEyuG
-         qsYQZd7Pn7NgHP53fdPS0GVV1mu4pqyGJG/PNV2y/KEtZ6ig5dNU8rXl2RvL0HQ4RgFR
-         EGoA==
-X-Gm-Message-State: AOAM531mnWRAHgmB+2cRMJQEX/GrGpkxIRsF7SZqAktKYAqjCtJD3JAn
-	AV+TwtIp4BzozYyWavPaYazn7Bm7qFA3iQ==
-X-Google-Smtp-Source: ABdhPJzxt6tAkUGlC7kGS8+lvCXEzn01bGxmRsLclwavl4iyZ7E/dDbg0uM0TfPQxyojWmHPfYMhJw==
-X-Received: by 2002:adf:8b50:: with SMTP id v16mr61037878wra.188.1594206737913;
-        Wed, 08 Jul 2020 04:12:17 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id s10sm5641654wme.31.2020.07.08.04.12.17
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 04:12:17 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2: Change git fetcher not to destroy old references
-Date: Wed,  8 Jul 2020 12:12:15 +0100
-Message-Id: <20200708111215.375782-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
+  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
+  t=1594210361; x=1625746361;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=PrRkoEDN3eE6pJCNQnsaTDNMf+IvsHrAtexF96pOy9o=;
+  b=Ym+WtOAS2z4j1KV5ECcdB4RLUgj0In1f21Vu6xvmlsMvtj3fKkLnAmt4
+   gnBVJzHvOnZeqfyKC2CtUIKI+5pcOQtEVkt+joxOuMokzRiTwOxfpM3Eo
+   zAZPV79bw21SXiqLG4bGwvzrYyEmyPLnz7YJVQrjrzDp5K4hGPesPqp03
+   8=;
+Received: from esagw3.bmwgroup.com (HELO esagw3.muc) ([160.46.252.35]) by
+ esa7.hc324-48.eu.iphmx.com with ESMTP/TLS; 08 Jul 2020 14:12:39 +0200
+Received: from esabb5.muc ([160.50.100.47])  by esagw3.muc with ESMTP/TLS;
+ 08 Jul 2020 14:12:38 +0200
+Received: from smucm10k.bmwgroup.net (HELO smucm10k.europe.bmw.corp) ([160.48.96.47])
+ by esabb5.muc with ESMTP/TLS; 08 Jul 2020 14:12:38 +0200
+Received: from smucm10k.europe.bmw.corp (160.48.96.47) by smucm10k.europe.bmw.corp
+ (160.48.96.47) with Microsoft SMTP Server (TLS;
+ Wed, 8 Jul 2020 14:12:37 +0200
+Received: from smucm10k.europe.bmw.corp ([160.48.96.47]) by
+ smucm10k.europe.bmw.corp ([160.48.96.47]) with mapi id 15.00.1497.006; Wed, 8
+ Jul 2020 14:12:37 +0200
+From: "Mikko Rapeli" <mikko.rapeli@bmw.de>
+To: <richard.purdie@linuxfoundation.org>
+CC: <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2: Change git fetcher not to destroy old references
+Thread-Topic: [bitbake-devel] [PATCH] fetch2: Change git fetcher not to
+ destroy old references
+Thread-Index: AQHWVRiqjE3lK+w+mE2dyRS+YyhYhaj9dmkA
+Date: Wed, 8 Jul 2020 12:12:37 +0000
+Message-ID: <20200708121236.GA108868@korppu>
+References: <20200708111215.375782-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20200708111215.375782-1-richard.purdie@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <496D34CA08DCBD40B4F54E53E39DDC5A@bmwmail.corp>
+Content-Transfer-Encoding: quoted-printable
 
-It looks like we're about to see a lot of changes in branch names in repos. If
-we have the prune option here, those old names are lost, the changes propagate
-to our source mirrors and our old releases break.
+On Wed, Jul 08, 2020 at 12:12:15PM +0100, Richard Purdie wrote:
+> It looks like we're about to see a lot of changes in branch names in repo=
+s. If
+> we have the prune option here, those old names are lost, the changes prop=
+agate
+> to our source mirrors and our old releases break.
+>=20
+> We have the force option so any replaced references should be replaced, i=
+ts only
+> orphaned branches which will now be preerved.
 
-We have the force option so any replaced references should be replaced, its only
-orphaned branches which will now be preerved.
+Typo: reserved.
 
-I believe this behaviour will cause use fewer problems given the changes that
-look likely to happen.
+>=20
+> I believe this behaviour will cause use fewer problems given the changes =
+that
+> look likely to happen.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/git.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Typo: us
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index dbf8715674..644ba9238b 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -355,7 +355,7 @@ class Git(FetchMethod):
-               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=ud.clonedir)
- 
-             runfetchcmd("%s remote add --mirror=fetch origin %s" % (ud.basecmd, repourl), d, workdir=ud.clonedir)
--            fetch_cmd = "LANG=C %s fetch -f --prune --progress %s refs/*:refs/*" % (ud.basecmd, repourl)
-+            fetch_cmd = "LANG=C %s fetch -f --progress %s refs/*:refs/*" % (ud.basecmd, repourl)
-             if ud.proto.lower() != 'file':
-                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
-             progresshandler = GitProgressHandler(d)
--- 
-2.25.1
+Thanks for this patch!
 
+I too hope this will cause less issues when upstreams tingle with branches =
+in their repos.
+
+What annoys me slightly is that we expect a commit-id to always be in a spe=
+cific branch
+and don't fall back to using the commit-id from an older release tag for ex=
+ample if upstream
+decides to wipe all branches but still keeps the old release tags in repo. =
+Of course
+sometimes when this happens with our own repos it's nice to see a build fai=
+lure...
+
+Reviewed-by: Mikko Rapeli <mikko.rapeli@bmw.de>
+
+Cheers,
+
+-Mikko
+
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/fetch2/git.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index dbf8715674..644ba9238b 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -355,7 +355,7 @@ class Git(FetchMethod):
+>                runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=
+=3Dud.clonedir)
+> =20
+>              runfetchcmd("%s remote add --mirror=3Dfetch origin %s" % (ud=
+.basecmd, repourl), d, workdir=3Dud.clonedir)
+> -            fetch_cmd =3D "LANG=3DC %s fetch -f --prune --progress %s re=
+fs/*:refs/*" % (ud.basecmd, repourl)
+> +            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*:ref=
+s/*" % (ud.basecmd, repourl)
+>              if ud.proto.lower() !=3D 'file':
+>                  bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
+>              progresshandler =3D GitProgressHandler(d)
+> --=20
+> 2.25.1=
