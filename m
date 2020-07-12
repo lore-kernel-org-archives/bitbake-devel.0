@@ -1,108 +1,115 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.92.89.39])
- by mx.groups.io with SMTP id smtpd.web11.5037.1594328331831522402
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web10.6850.1594551320156490765
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 09 Jul 2020 13:58:52 -0700
+ Sun, 12 Jul 2020 03:55:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@outlook.com header.s=selector1 header.b=ozom8T1V;
- spf=pass (domain: outlook.com, ip: 40.92.89.39, mailfrom: kweihmann@outlook.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ARBEUHcfo2ItpRheryL23kH33dR25RMb/x4YIoSfNzalybAWVm+KJwNZk8oz7Z/ZQ35YDjPOd5MoNBGz0ssGKSgUpR/6jo1ouCmnc9TLqaNLZ1/jF11eGwCmDUK6pCE1NWwctc8n1mv1O9+c7hBcrcYv9prbvOeDa+U91rE7p9v2BH7U0vE+RzH3bsG1p5T4TSCtzvBVyVvYfPaRPSLUod8AVbOv7jrAJWXsY84FwPuMM0NIxcQmdW4ZOyKXThqRx04hiayzI9m/uDBsWpzq7YhxHXS8BDJNojgExpcnDf2LBjLth7T/EVPLkVpxG106/SpvvM9bmlqkx7zLTmpXgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cc4ye9ncDrYbcGfvoleYoJT/KWYUuhzsMPyRKiAlXzE=;
- b=m89gFadiwobVyXBsd54Kdefa8hwIGYMi65JTkZ0tLj457iTkqeazu/rYv26CtmHySorANV/Z3pD3/hgYB+OILs9yIIvvLjGbpQerq0M8TqX4D62Q9QHLwndAYIAwyMrB5GSP+RAQj5NPHyttfuSVXRpUMYOUEW16njD3kjfcBGFU3LufozfSaYlUAkTWhuPNmxFS6z9fSAoLRFXdiKXMu1sNrXyoqC70pCkeHP+kw6BsLsRe/940+ket1yLXxeRPqiEk/sNKGeMteBlN6h4XUHc1bOpFiJiAlMluuHEMwOuTujwKirs+nhUgwbosbdNOuEqjdbPPVQNTz3O/4OVSUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cc4ye9ncDrYbcGfvoleYoJT/KWYUuhzsMPyRKiAlXzE=;
- b=ozom8T1VLmKNDRcRT2SV0wazEsAY9+SOKjYITiy8/4Zpul69c/Pu8+H9b3eLoQnOQg3TM7NRfSwZAbl6KEmaD9/Z4LcNqCirJwleRAruLqQs/tk18bgwWgBwpvTJUH54Wl2U0diJXe9pVWAsIiTsVewLSXYGLeln64PgQBJ4MehVpUmphbQJOVkkeNLqZ+wfCZz6H6R3ncjgR78YqMo8SZF1+DXRjVt5ftJfM453i4adpu352iy9H/PxTjwlyPb2EfNLDUyXZj4nlqhCqhXy4CPFTb5jSeVex6PbC3C3GZJ/2osywXFRDxCRTX6IXAGdRQS5n8woQoCDWSUTEraFhA==
-Received: from DB8EUR05FT031.eop-eur05.prod.protection.outlook.com
- (2a01:111:e400:fc0f::47) by
- DB8EUR05HT106.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc0f::129)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Thu, 9 Jul
- 2020 20:58:50 +0000
-Received: from AM7PR05MB6881.eurprd05.prod.outlook.com
- (2a01:111:e400:fc0f::53) by DB8EUR05FT031.mail.protection.outlook.com
- (2a01:111:e400:fc0f::449) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend
- Transport; Thu, 9 Jul 2020 20:58:50 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:FBBCB317E83DD11EF000094A5F4A67F93BE9EC43290A833AF0DF4FD63F9E9D98;UpperCasedChecksum:82217C4D61ADAE7D3CBED8C79C3E7BCD0447605A6292CA263D3223CDA9CBBA08;SizeAsReceived:7398;Count:47
-Received: from AM7PR05MB6881.eurprd05.prod.outlook.com
- ([fe80::2c81:794e:63ae:e722]) by AM7PR05MB6881.eurprd05.prod.outlook.com
- ([fe80::2c81:794e:63ae:e722%5]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
- 20:58:50 +0000
-From: "Konrad Weihmann" <kweihmann@outlook.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TVIQuiEj;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f42.google.com with SMTP id l17so10457880wmj.0
+        for <bitbake-devel@lists.openembedded.org>; Sun, 12 Jul 2020 03:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BgC/dGWj/P4Vfi3RCLxa/C6hnqzk6fxFBQ/t9Z3tzrY=;
+        b=TVIQuiEjVi6c+tgJNQYtiQ31sEva/Lbh1PH0j0Z0ZchTUFJ5x79oTGqAe/SwaUYZ2K
+         zdr2v7AB6Ylr20uf5lmS5FMpqkDr90PwaTKf/UPRbYiZLqhkuxKfgcHTf0bSfhNUkiNG
+         FvTcxmlFyn+B0klf/nNAwuyPTAhQfXm9ChGpE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BgC/dGWj/P4Vfi3RCLxa/C6hnqzk6fxFBQ/t9Z3tzrY=;
+        b=JVJGVqdlwxdTYDxSHDezMI1higv/glosZKIWV2asFjV+ChbLTDWwF4lqVdDTuFOvaP
+         6Ho7CTZ4hPljbco6u9ZYEh6MkoiGxsVG/Ir2amiR52dwnzU7xf0cpGZH5XcQGA0H4/dZ
+         SMsSI/Do4P8uzIHfIi2PVasZSnPEsE6tFfF/Zis1rp6EFx20/VwBm9/YQw+sOR1cZD9m
+         RLZ/A8/g41FRCXXOQdjPJVn7qaW+b6FKobMT6dS7WT570ONpoLj6W0AUtfG26a/sSo4M
+         ZwfKeZU5U+c0jt3CvfdFTYC4HcaKLn2qBvge+skIZZ3Ph1vWl70TXQTe/SXjqnYw2XEp
+         MCjQ==
+X-Gm-Message-State: AOAM533OK0ZuvyotdmNmfrBXHreNs+lb+pRQ0CGe2xRQMQYc8pIfPmrl
+	PfP8APVKg/55ptfdd6CX3qgaTzUKpRBl7A==
+X-Google-Smtp-Source: ABdhPJwJ/AqIqxMSIyrvzS6DG7vfqjXZacg8YX3QN+NXKyQc8nRjlROuJZEzHGMQuAt5hx3VwVsQaA==
+X-Received: by 2002:a1c:9cd4:: with SMTP id f203mr14549583wme.155.1594551318145;
+        Sun, 12 Jul 2020 03:55:18 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id 26sm16954004wmj.25.2020.07.12.03.55.17
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 03:55:17 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-CC: Konrad Weihmann <kweihmann@outlook.com>
-Subject: [PATCH] pyshyacc: allow double COMMA statements
-Date: Thu,  9 Jul 2020 22:58:36 +0200
-Message-ID: <AM7PR05MB688169194901FA372A0CB0FAA8640@AM7PR05MB6881.eurprd05.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-X-ClientProxiedBy: AM6P195CA0006.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:209:81::19) To AM7PR05MB6881.eurprd05.prod.outlook.com
- (2603:10a6:20b:1a9::19)
-Return-Path: kweihmann@outlook.com
-X-Microsoft-Original-Message-ID: <20200709205836.3121-1-kweihmann@outlook.com>
+Subject: [PATCH] server/process: Fix a rare lockfile race
+Date: Sun, 12 Jul 2020 11:55:16 +0100
+Message-Id: <20200712105516.507243-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ICKE-EDGE.fritz.box (87.150.35.214) by AM6P195CA0006.EURP195.PROD.OUTLOOK.COM (2603:10a6:209:81::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend Transport; Thu, 9 Jul 2020 20:58:49 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200709205836.3121-1-kweihmann@outlook.com>
-X-TMN: [iZmN459SB2Gfi+0hTqLNNfr8g9oSewj2]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 47
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 55bd5cc1-136b-4315-67a8-08d8244ae140
-X-MS-Exchange-SLBlob-MailProps: 
-	mBRmoEB1kyJ3mPeice8p46l1iajLfZdb4WtagLsoGhtjFTV9hJ4nuHGGZunUZGEmHwXgpjfqZ9zPEaf/G3pF2oGoG2XgqSMR3KLkYjDIsr9aGWPpsqKWZ6bkmODiHA3BNLyJO/1WGqAYvFfuTnGvmpr0Wp5YSi+BeIcOdg/RGm5ZBDQLLRIQnrN//AbCwt4fgi0gSRKTqksaeyBmW3aXl6hfEhWipECiQxgyAbLULUjuuGBb87n55f4SML7trZrHGTR8+CL/aXV0wsTieOD70SM2VW2jHlB50xS2opFBzaIf/UoETGlhG6T7DO4rxJpqd/kslCU2z4uoVwkt5fiZvtVcQ8Lpi8LvoE21jq+Xp2kA9UJR7R6a6pnGHL5//Joq/Ev+9nsrkpWizmy/JY6o9xavvLTuD2G9kcep2GZv2R8WPcImICYMJvInv6KVbSfG9E5+G/y8QuaV/4uU7qh7bmFgDwEdqzbXf9t9RMCuD51UWG/0/Obh6a+u11pHg66gGcUUZAdLe45DHQ91X2m1gYGOdEw/ydx2dsX6lUo7Ccw7+WxP5pzdJGu5GiAKXI24EBUnYPJJEqkVLTCjJdLm2Y0Sg7LQN0c/iY5sengiVCwKLg/zalmbKKiBmePAzgUwt42fk9hsSBP4jfn0DtojAiKXxkwAMcYINlr4yZ5EiezrJgcAi1X1T4QUIM9QKRy6pHhTn9oWGAjl4l76/0CpVKkXyQFQ/IBknyu+m/R6eKWQMvJgIX/Sa9eqmzV5Fggm2lfwr7hU82I=
-X-MS-TrafficTypeDiagnostic: DB8EUR05HT106:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	wPrs4u56q7GzSQdFYX8Mbpi4UyFmVwu6l7/eiorSikTej+jDFQS9PR3nA75hYFdmJxEXPhiZ2GwqhOumc7s/N+WMrAFhWulCogPmsSrHAZ5P9mf+e8Zyh887Su9vY2haklmOFVAI786/IqVGwGSm4Wx34gFrIP5jjD+/a0v/8A7M2YTAifAIv1Xq8X34Gbn8sGPjG0QbfKt94nvzDkbInA==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR05MB6881.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: 
-	lBIGN0bdENup2xvWFsBIvgei8vIMTDSfCYmSpfCuGmh3cw1/rnMwkby8/YIAMWP33+MNie+14PJ5xU6Hu6MbUw1BnwoRIa30GlGqi4/thkNnoxxLcY/M2TWulFimUEGQyzoTQcEDkaataAO6Ic60dQ==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55bd5cc1-136b-4315-67a8-08d8244ae140
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 20:58:50.0798
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB8EUR05FT031.eop-eur05.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8EUR05HT106
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-this allows shell statements like '; ;' to pass the parser.
-As it may be bad code but still valid enough to execute
+We're seeing rare occasional races on the autobuilder as if two server
+processes have the lockfile at the same time. We need to be extremely
+careful this does not happen.
 
-Signed-off-by: Konrad Weihmann <kweihmann@outlook.com>
+I think there is a potential race in this shutdown code since we delete
+the lockfile, then call unlockfile() which also tries to delete it.
+
+This means we may remove a lock file now held by another process if we're
+unlucky. Since unlockfile removes the lockfile when it can, just rely on
+that and remove any possible race window.
+
+An example cooker-deamonlog:
+
+--- Starting bitbake server pid 2266 at 2020-07-11 06:17:18.210777 ---
+Started bitbake server pid 2266
+Entering server connection loop
+Accepting [<socket.socket fd=20, family=AddressFamily.AF_UNIX, type=SocketKind.SOCK_STREAM, proto=0, laddr=bitbake.sock>] ([])
+Processing Client
+Connecting Client
+Running command ['setFeatures', [2]]
+Running command ['updateConfig', XXX]
+Running command ['getVariable', 'BBINCLUDELOGS']
+Running command ['getVariable', 'BBINCLUDELOGS_LINES']
+Running command ['getSetVariable', 'BB_CONSOLELOG']
+Running command ['getSetVariable', 'BB_LOGCONFIG']
+Running command ['getUIHandlerNum']
+Running command ['setEventMask', XXXX]
+Running command ['getVariable', 'BB_DEFAULT_TASK']
+Running command ['setConfig', 'cmd', 'build']
+Running command ['getVariable', 'BBTARGETS']
+Running command ['parseFiles']
+--- Starting bitbake server pid 8252 at 2020-07-11 06:17:28.584514 ---
+Started bitbake server pid 8252
+--- Starting bitbake server pid 13278 at 2020-07-11 06:17:31.330635 ---
+Started bitbake server pid 13278
+Running command ['dataStoreConnectorCmd', 0, 'getVar', ('BBMULTICONFIG',), {}]
+Running command ['getRecipes', '']
+Running command ['clientComplete']
+Processing Client
+Disconnecting Client
+No timeout, exiting.
+Exiting
+
+where it looks like there are two server processes running which should not be.
+In that build there was a process left sitting in memory with its bitbake.sock file
+missing but holding the lock (not sure why it wouldn't timeout/exit).
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/pysh/pyshyacc.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/server/process.py | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/lib/bb/pysh/pyshyacc.py b/lib/bb/pysh/pyshyacc.py
-index de565dc9..924860a6 100644
---- a/lib/bb/pysh/pyshyacc.py
-+++ b/lib/bb/pysh/pyshyacc.py
-@@ -570,6 +570,7 @@ def p_linebreak(p):
-=20
- def p_separator_op(p):                =20
-     """separator_op : COMMA
-+                    | COMMA COMMA
-                     | AMP"""
-     p[0] =3D p[1]
-=20
---=20
-2.20.1
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 83385baf60..b3a7f8b419 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -243,7 +243,6 @@ class ProcessServer(multiprocessing.Process):
+                 lock = bb.utils.lockfile(lockfile, shared=False, retry=False, block=True)
+                 if lock:
+                     # We hold the lock so we can remove the file (hide stale pid data)
+-                    bb.utils.remove(lockfile)
+                     bb.utils.unlockfile(lock)
+                     return
+ 
+-- 
+2.25.1
 
