@@ -1,127 +1,63 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web11.5754.1594590076802523530
+Received: from mail.stusta.mhn.de (mail.stusta.mhn.de [141.84.69.5])
+ by mx.groups.io with SMTP id smtpd.web12.20117.1594734985805732543
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 12 Jul 2020 14:41:17 -0700
+ Tue, 14 Jul 2020 06:56:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Go1gS65w;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id q5so12149649wru.6
-        for <bitbake-devel@lists.openembedded.org>; Sun, 12 Jul 2020 14:41:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D/kVA49OA+4XhqhtgiA1ttZkgQHsnEJnuMpjthNInQ0=;
-        b=Go1gS65w68rI2oUEXbrt/7sjGUDAl8f+QpS4JBV/tXbbXonmbi41ZQhlfRpBb7tO/Z
-         V3pqJZ2kg8ccLHpJN9HjyDYc3yInWojaDQfXdo6YDnsPaNGxLgLj1IW9/aYQJtRpOKs7
-         eDwbWnfzZqT828tzjCMdZImooPiKGnLCKcrw8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D/kVA49OA+4XhqhtgiA1ttZkgQHsnEJnuMpjthNInQ0=;
-        b=TXsEZ4BZKQvDC8GWszaHw3xDu/JjN4nupOtZ85t75pZJsFcKyBbTFNeJJ8r0RjBHzR
-         +GSZDpTJcuNxvEiAFSvGA8xxUUXCbMNGK4tvFPYmb3o0gUzlAL6WJIv4+FWOwksb6dRw
-         4aOZmuCi158A72uqN8Dg/RHkIO3H+lk/ajsZkAxyV1nC8O875FaGtxw1vd69pyGMO0CP
-         xKlgBW/eE1PG4iv9ZoG9nv9OWTx6qqoYzTOoRMya2brVG7Z87WF85t/f5UfA8hWEwHNY
-         vw3J0Ej2YP1ArvcLLDxrtfyC9pHbvQoq5edMWMDAdjh9xAm3sa5HV1ZDZhz+PbfAkHZm
-         M3Ow==
-X-Gm-Message-State: AOAM5307qkegJUkg2E2bWKSpWOudi2QpPgOiCQcGOOS9JfzyvgP0w2Z8
-	FNGZ/wIs0y3taut6EnwfTf90+Bsi6+ZdNw==
-X-Google-Smtp-Source: ABdhPJxhiLg7IOn4p1ioXQyzm88+RT3/EwAmwlb6l2sZPLNdAhC4wT6MAdlUPH8BGx4w8tKiBktHog==
-X-Received: by 2002:a05:6000:1143:: with SMTP id d3mr64271832wrx.235.1594590074920;
-        Sun, 12 Jul 2020 14:41:14 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id a22sm19074542wmj.9.2020.07.12.14.41.13
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 14:41:14 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] server/process: Ensure UI-less servers don't sit in infinite loops
-Date: Sun, 12 Jul 2020 22:41:13 +0100
-Message-Id: <20200712214113.531729-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@stusta.de header.s=default header.b=pCTnTCyA;
+ spf=pass (domain: stusta.mhn.de, ip: 141.84.69.5, mailfrom: srs0=yu6m=az=stusta.de=bunk@stusta.mhn.de)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.stusta.mhn.de (Postfix) with ESMTPSA id 4B5hrP2sZRz1n;
+	Tue, 14 Jul 2020 15:56:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stusta.de;
+	s=default; t=1594734982;
+	bh=r7tzVtmC32fo2RtRJigOR0SlW4Z0mY2LbfDQtr6cLFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pCTnTCyAd59CDwLdeXJqiIWa9myBPJ1MtLQMNj4Xdpq4bGbpZZU9oS1bzue4Dj71W
+	 Bq4P40/MvTbikwmb10uW6CPH01OUX025xmFYv45abnGAJ3b9k+dhu3aAM41Qn7zT58
+	 32SSf3hWC8WX3qjSz9kx8n7C4sj83H5Em38hg8rYXFonPNk6HcKixQ8OX9WWXYFp0O
+	 EsuAW7yrDITk4xbYOw+iD52Kmr+9TrzTUJqBTAcM98Jx+HkLPpVLltDqy88SStHrND
+	 6Xy4mm4Om2zi2NbB8W77YwMqWqMg04k6QFJ7+VCdRMT+5ZPeGCXqyM6wAoUWnYm1Ig
+	 vQa5VNFVk8YffbNHBjC+ihVvhJGUTkdzG9mLnaV2oVp7vNR7v7RTQ+PNXTFXpYu6cU
+	 QZbb5Pxp8vdiLhHsmevc+suLPAoUnTuS7mCq8i91QM3jscAYYc/BZ9WQw7HlgIq0kY
+	 CguhC6vm+EdjIEbXDRO9ahBfbHRzkrEnnzxbF3U6IJ+WjzhIeMzHRZy5JdN2J4yPtH
+	 S8NrYMLceMt748GMLbw+QBB8L1waWN+PlyQgsAZlPyakLIXteL4O9V76d480N3iNJH
+	 YlwJcCEMtxbxJVTa2ZPbk/mtZ5UYLITc0zlhunSu9/jD8a5MZoIumfoFG+doQo7H8e
+	 y7JR/XeV94kyCjEv1ZewbcLI=
+Date: Tue, 14 Jul 2020 16:56:19 +0300
+From: "Adrian Bunk" <bunk@stusta.de>
+To: akuster <akuster808@gmail.com>
+Cc: Patches and discussions about the oe-core layer <openembedded-core@lists.openembedded.org>,
+	"yocto@yoctoproject.org" <yocto@yoctoproject.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [yocto] Stable Warrior branch
+Message-ID: <20200714135619.GF25970@localhost>
+References: <03a353c4-80dd-e66c-3222-7850a98182f7@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <03a353c4-80dd-e66c-3222-7850a98182f7@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-If server startup is broken for some reason (e.g. lockfile issues)
-and no UI connection is made, the server will just sit inifinitely
-waiting.
+On Thu, Jun 04, 2020 at 09:28:00PM -0700, akuster wrote:
+> Hello,
+> 
+> The Warrior branch of Poky has had its last official dot release. It
+> will be moving to Community support and EOL within 6 weeks if no one
+> steps up.
+> If someone is interested in taking on the responsibilities of
+> maintaining the "Warrior" branch moving forward, please email this list.
 
-Add a timeout upon startup in the non-memory resident case so that
-such infinite waits are avoided. In the memory resident case, the
-server wouldn't have shut down in the first place or will timeout
-according to configuration.
+I have an interest in keeping warrior branch alive in poky and meta-oe,
+and I'll take this responsibility since noone else seems to be interested.
 
-Since any race may mean the socket file is no longer present, ensure
-the unlink doesn't fault upon exit, thus ensuring any hashequiv or
-PRServ is removed from memory, allowing all processes to exit
-cleanly in such scenarios.
+> Please look at the
+> https://wiki.yoctoproject.org/wiki/Stable_Release_and_LTS for what will
+> be expected.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/server/process.py | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+I have some ideas, but not yet a fixed plan how I will set this up.
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 475931a728..d4beac4379 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -48,7 +48,7 @@ class ProcessServer(multiprocessing.Process):
- 
-         self.event_handle = None
-         self.haveui = False
--        self.lastui = False
-+        self.maxuiwait = 30
-         self.xmlrpc = False
- 
-         self._idlefuns = {}
-@@ -155,6 +155,7 @@ class ProcessServer(multiprocessing.Process):
-                 print("No timeout, exiting.")
-                 self.quit = True
- 
-+        self.lastui = time.time()
-         while not self.quit:
-             if self.sock in ready:
-                 while select.select([self.sock],[],[],0)[0]:
-@@ -191,11 +192,18 @@ class ProcessServer(multiprocessing.Process):
-                 except (EOFError, OSError):
-                     disconnect_client(self, fds)
- 
--            if not self.timeout == -1.0 and not self.haveui and self.lastui and self.timeout and \
-+            if not self.timeout == -1.0 and not self.haveui and self.timeout and \
-                     (self.lastui + self.timeout) < time.time():
-                 print("Server timeout, exiting.")
-                 self.quit = True
- 
-+            # If we don't see a UI connection within maxuiwait, its unlikely we're going to see
-+            # one. We have had issue with processes hanging indefinitely so timing out UI-less
-+            # servers is useful.
-+            if not self.haveui and not self.timeout and (self.lastui + self.maxuiwait) < time.time():
-+                print("No UI connection within max timeout, exiting to avoid infinite loop.")
-+                self.quit = True
-+
-             if self.command_channel in ready:
-                 try:
-                     command = self.command_channel.get()
-@@ -220,10 +228,13 @@ class ProcessServer(multiprocessing.Process):
- 
-         print("Exiting")
-         # Remove the socket file so we don't get any more connections to avoid races
--        os.unlink(self.sockname)
-+        try:
-+            os.unlink(self.sockname)
-+        except:
-+            pass
-         self.sock.close()
- 
--        try: 
-+        try:
-             self.cooker.shutdown(True)
-             self.cooker.notifier.stop()
-             self.cooker.confignotifier.stop()
--- 
-2.25.1
+> regards,
+> Armin
 
+cu
+Adrian
