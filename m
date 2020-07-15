@@ -1,226 +1,89 @@
-Received: from vrout10.yaziba.net (vrout10.yaziba.net [185.56.204.56])
- by mx.groups.io with SMTP id smtpd.web12.6399.1594819242684783607
+Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
+ by mx.groups.io with SMTP id smtpd.web12.7826.1594823236581253406
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Jul 2020 06:20:43 -0700
+ Wed, 15 Jul 2020 07:27:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=softfail (domain: softathome.com, ip: 185.56.204.56, mailfrom: chris.minnoy_ext@softathome.com)
-Received: from mtaout10.int.yaziba.net (mtaout10.int.yaziba.net [10.4.20.36])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by vrout10.yaziba.net (mx10.yaziba.net) with ESMTPS id 9EDA151F4B
-	for <bitbake-devel@lists.openembedded.org>; Wed, 15 Jul 2020 15:20:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaout10.int.yaziba.net (Postfix) with ESMTP id CA2FD160493
-	for <bitbake-devel@lists.openembedded.org>; Wed, 15 Jul 2020 15:20:40 +0200 (CEST)
-Received: from mtaout10.int.yaziba.net ([127.0.0.1])
-	by localhost (mtaout10.int.yaziba.net [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id JF1pqT3SdyVt for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Jul 2020 15:20:40 +0200 (CEST)
-Received: from [192.168.1.91] (24.68-242-81.adsl-dyn.isp.belgacom.be [81.242.68.24])
-	by mtaout10.int.yaziba.net (Postfix) with ESMTPSA id AB2E81601B1
-	for <bitbake-devel@lists.openembedded.org>; Wed, 15 Jul 2020 15:20:40 +0200 (CEST)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=DWoNJpdZ;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.65, mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f65.google.com with SMTP id mn17so3147055pjb.4
+        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Jul 2020 07:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id;
+        bh=1YZPrNdkfY23LgaFQoWQxc3wpzGBc9+pksk234nfpkI=;
+        b=DWoNJpdZeN3MgkWedXiPt3oiK8Af2PUr1+VYJNilzFCTvzuNbrUPsumihGY1G9/ZcP
+         UlnEcaUBKPTUOhcI9pL2noNwZVZuMjrLJOh3/k+Z4oRWBRYQLSsPJLdTHvPYk3DTlh5V
+         6eSsAwVLuaQFd89YbuvB+E/xQLuz7mmKm8ZriehV8BcRRDMWliUwwJAZaos/gsXFvH6x
+         ex9804eaGEE0MjfbB6EhNKXpDOpb+mZXKpwjoWUKyOdHXuExFda0wzm9m6RtQLiqgrE6
+         tKd8YSqRELAHbZMAW6fCDdwAsc6kk+SBJ1j66RIS655KPeCmHCvXGU1nXg2aWBQa0twN
+         F8hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=1YZPrNdkfY23LgaFQoWQxc3wpzGBc9+pksk234nfpkI=;
+        b=U2/u35Ku0JnJrpIvSUqj3mTa64j6be6DPuQFSos7MIUDqTSIEWoQKb9uOxeGs3lSa0
+         NR6M/C2EUJZkLdvJVNFVyk0awXaFhrfErsvTrBT+kwX7rY4V+3BQS8WfSMyZ4w7lMXbJ
+         wNFEAxzT85DnvAQB33k9ElZhHrqLRs13rMyX7GanZKrmZXpkqjYaZ/mnV4zL/HcKLwfV
+         7B+5NmmCM+3Mw8yGsQAq+2lfTOqFld+rUUrvBk/DdUJZjpT50pLFtpFiPQRUPVHw/uWb
+         xHV/Ax4gYuDAHzyY5LmQRH3nA8aBY1rIpEOdp6cCPgaNkj7aqnk+4aOA9su/98joKzrl
+         kMsg==
+X-Gm-Message-State: AOAM530XOEHp7HprcHdS43iqikx5NPs7gB+ZP2g7h1JaR/X6CsWtUf4m
+	xq4No/xjT+UZmVLANYrqPBSVZkNRS25Lbw==
+X-Google-Smtp-Source: ABdhPJySA6W7cCn1szKZV05qRDnm3bsW8zVVzq7MU00HABHylYwV0nnqXPbiG+FneiK4ggViZ4oaag==
+X-Received: by 2002:a17:90a:71c3:: with SMTP id m3mr11006064pjs.225.1594823235507;
+        Wed, 15 Jul 2020 07:27:15 -0700 (PDT)
+Return-Path: <steve@sakoman.com>
+Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
+        by smtp.gmail.com with ESMTPSA id i125sm2423915pgd.21.2020.07.15.07.27.14
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 07:27:14 -0700 (PDT)
+From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-From: chris.minnoy_ext@softathome.com
-Subject: [PATCH] ipk ar/tar unpack
-Organization: Soft At Home
-Message-ID: <a3910c7d-89b4-6203-7ff8-339205e249e4@softathome.com>
-Date: Wed, 15 Jul 2020 15:20:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-X-CLAMAV-SCAN: ok
-X-VRSPAM-SCORE: 49
-X-VRSPAM-STATE: legit
-X-VRSPAM-CAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrfedvgdeikecutefuodetggdotefrucfrrhhofhhilhgvmecuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedttdenucgoufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepvffhufhokffffgggtgfgsehtkeertddtfeejnecuhfhrohhmpeevhhhrihhsucfoihhnnhhohicuoegthhhrihhsrdhmihhnnhhohigpvgigthesshhofhhtrghthhhomhgvrdgtohhmqeenucggtffrrghtthgvrhhnpeffffduleehteetvdekjeekfffhhfefieeifedvvdffffdtfeduleegteeiiedvieenucffohhmrghinhepthgrrhdrrghrnecukfhppeekuddrvdegvddrieekrddvgeenucfrrghrrghmpehmohguvgepshhmthhpohhuth
-X-VRSPAM-EXTCAUSE: mhhouggvpehsmhhtphhouhht
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Subject: [bitbake][dunfell][1.46][PATCH 0/8] Patch review
+Date: Wed, 15 Jul 2020 04:26:42 -1000
+Message-Id: <cover.1594822992.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.17.1
 
-From: Chris Minnoy <chris.minnoy_ext@softathome.com>
-Date: Wed, 15 Jul 2020 15:02:35 +0200
-Subject: [PATCH] ipk packages can be formed with ar or tar. ar/tar can't=20
-read
- =C2=A0each other archives. This fixes the unpack to call the correct=20
-archiver based
- =C2=A0on the format.
+Please review this next set of patches for 1.46 (dunfell) and have comments back
+by end of day Friday.
 
----
- =C2=A0bitbake/lib/bb/fetch2/__init__.py | 40 +++++++++++++++++++++++++++=
-+---
- =C2=A01 file changed, 37 insertions(+), 3 deletions(-)
+Passed a-full on autobuilder:
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py=20
-b/bitbake/lib/bb/fetch2/__init__.py
-index 2ada43befc..e79149a208 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1467,7 +1467,41 @@ class FetchMethod(object):
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iterate_file =3D unpack_=
-file
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 else:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cmd =3D 'rpm2cpio.sh %s =
-| cpio -id' % (file)
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 elif =
-file.endswith('.deb') or file.endswith('.ipk'):
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 elif =
-file.endswith('.ipk'):
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 output =3D subprocess.check_output(['file', file],=20
-preexec_fn=3Dsubprocess_setup)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if output:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if output.decode().find("curre=
-nt ar archive") !=3D -1:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 output=
- =3D subprocess.check_output(['ar', '-t',=20
-file], preexec_fn=3Dsubprocess_setup)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 datafi=
-le =3D None
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if out=
-put:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 for line in output.decode().splitlines():
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if line.startswith('data.tar.'):
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 datafile =
-=3D line
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 else:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise UnpackError("Unable to unpa=
-ck ipk=20
-package - does not contain data.tar.* file", urldata.url)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 raise UnpackError("Unable to unpack ipk=20
-package - could not list contents", urldata.url)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cmd =3D=
- 'ar x %s %s && tar --no-same-owner -xpf=20
-%s && rm %s' % (file, datafile, datafile, datafile)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 elif output.decode().find("gzi=
-p compressed data")=20
-!=3D -1:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 output=
- =3D subprocess.check_output(['tar', '-tf',=20
-file], preexec_fn=3Dsubprocess_setup)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 datafi=
-le =3D None
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if out=
-put:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 for line in output.decode().splitlines():
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if line.startswith('./data.tar.')=
-:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 datafile =
-=3D line
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 else:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise UnpackError("Unable to unpa=
-ck ipk=20
-package - does not contain data.tar.* file", urldata.url)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 raise UnpackError("Unable to unpack ipk=20
-package - could not list contents", urldata.url)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cmd =3D=
- 'tar -xf %s %s && tar --no-same-owner=20
--xpf %s && rm %s' % (file, datafile, datafile, datafile)
-+
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise =
-UnpackError("Unable to unpack ipk package=20
-- unknown format", urldata.url)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 else:
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise UnpackError("Unable to d=
-etect .ipk file=20
-format - unknown format", urldata.url)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 elif =
-file.endswith('.deb'):
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 output =3D subprocess.check_output(['ar', '-t', =
-file],=20
-preexec_fn=3Dsubprocess_setup)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 datafile =3D None
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 if output:
-@@ -1476,9 +1510,9 @@ class FetchMethod(object):
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 datafile =3D line
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 break
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise =
-UnpackError("Unable to unpack deb/ipk=20
-package - does not contain data.tar.* file", urldata.url)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise =
-UnpackError("Unable to unpack deb package=20
-- does not contain data.tar.* file", urldata.url)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 else:
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise UnpackError("Unable to u=
-npack deb/ipk package=20
-- could not list contents", urldata.url)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise UnpackError("Unable to u=
-npack deb package -=20
-could not list contents", urldata.url)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 cmd =3D 'ar x %s %s && tar --no-same-owner -xpf =
-%s && rm=20
-%s' % (file, datafile, datafile, datafile)
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/1167
 
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # If 'subdir' param exi=
-sts, create a dir and use it as=20
-destination for unpack cmd
---=20
+The following changes since commit 1d3892d93ee9688d69f5bb5ea6aef8b1152bd1e3:
+
+  msg: Avoid issues where paths have relative components (2020-07-01 05:24:29 -1000)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
+
+Chris Laplante (1):
+  ui/teamcity: don't use removed logging classes
+
+David Khouya (2):
+  lib/ui/taskexp: Validate gi import
+  lib/ui/taskexp: Fix missing Gtk import
+
+Konrad Weihmann (1):
+  pyshyacc: allow double COMMA statements
+
+Richard Purdie (4):
+  server/process: Increase timeout for commands
+  fetch2: Change git fetcher not to destroy old references
+  server/process: Fix a rare lockfile race
+  server/process: Ensure UI-less servers don't sit in infinite loops
+
+ lib/bb/fetch2/git.py     |  2 +-
+ lib/bb/pysh/pyshyacc.py  |  1 +
+ lib/bb/server/process.py | 25 +++++++++++++++++++------
+ lib/bb/ui/taskexp.py     | 13 ++++++++++---
+ lib/bb/ui/teamcity.py    |  2 --
+ 5 files changed, 31 insertions(+), 12 deletions(-)
+
+-- 
 2.17.1
 
