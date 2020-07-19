@@ -1,82 +1,95 @@
-Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
- by mx.groups.io with SMTP id smtpd.web12.4262.1595042839947942837
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web10.18492.1595172340925753233
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Jul 2020 20:27:25 -0700
+ Sun, 19 Jul 2020 08:25:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=UkS8jFZ2;
- spf=softfail (domain: sakoman.com, ip: 209.85.215.196, mailfrom: steve@sakoman.com)
-Received: by mail-pg1-f196.google.com with SMTP id w2so7559776pgg.10
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Jul 2020 20:27:19 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=h+D5Xbma;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.68, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f68.google.com with SMTP id 88so5200573wrh.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 19 Jul 2020 08:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id;
-        bh=0Ppgp1aCECO9gcyY/vi63xjzkDF/lXx6115UUn7PjHA=;
-        b=UkS8jFZ2c+ui2Ofv8TftBL88w4EYgHyfPwMj9TWVUZjfFk6Z7bIBHBDqav5wwvx8Ge
-         75keinvrxXvrGhx40/iho45mLFkkZxqYWib+P8S5B52E+GUpHrGMu/7Qn32elXjR9ZeT
-         RW8lcyurSwr3uvdnjstG995KuS5ryMIxdFEkmw40caKPd3FBwYwZ2wrFJ27n9BlPvYIE
-         bFmF3xCSYVmSW64YNTLkf+dlWsnDZY5lztoK8S8fcTlL+tVsQEfdFn/LzAc0xMIOZ3Hs
-         tlehjg0/hu/kRnQA2kPyfuwK2USik4dGiuW/LDy2PQfsXxdNJlp/Vln5yUW5LCbkoYrb
-         0PmQ==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=uID4lJ8ZWGGLra97SUH9AYo01LQm7otuX4b37FkL2+g=;
+        b=h+D5XbmaChkfnhdkdr3Fv/Kp8Sbox/VvBScO5uC0Tli48B1Re4i/dBs0Rr2LnSeV3B
+         LVJQmsQ7IHqqz6gbUSegXvqvqyOzmpasSNGXfO0MYin3QByeaqM6lQ/yQumSEAxndbbC
+         NXNcL8K0b2qlqXsfUqaeZnLK8dIPMuwJ8ISBc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=0Ppgp1aCECO9gcyY/vi63xjzkDF/lXx6115UUn7PjHA=;
-        b=iCUXWGoircCccKhoKLBlH/sYnye+n93/2D7GMVqJCO6yaMT7iWO/Q/J2zmR7Yv7Dei
-         IKRgo7SRvAVHQff0lQ7JI81HuCkoNVDnEyfK8YYXHBlTX0S5N91vKwZcsiFApfFKyUs5
-         JVCRsAzXNtLiezAN+tIr9EX0BKCQ+7KGGAi/TeR/drOzFYL9LpEbQbp2ManiA98A3/k0
-         9WmJayQeOviKUHEHYq0m/GOqSU4+vUQbO8LDHwTJ2dv9qu2zU0IXZQK3GASId3rZ1vdo
-         oE/jbrfAiWbWo7Ka3HhDWinlwzsgNBHBZMrnXiqDXRdqsKYKlcvst4kmtRHL//s0w89l
-         0E3w==
-X-Gm-Message-State: AOAM531DPJDSqIKEgHe05uv0BubxWo4Uou2ODTMcpTboCv0/cALxEjdi
-	RE+f1Eon0IMK/u23/QdtZlXDJYcWh3I=
-X-Google-Smtp-Source: ABdhPJz4D40iCt+hQLjnibrzT3tE9haCCevcfSZvb8rXA5nQIEGgDSdNzC7WfuKTjV6yLBBL2q7Q8g==
-X-Received: by 2002:aa7:871a:: with SMTP id b26mr10420373pfo.294.1595042838857;
-        Fri, 17 Jul 2020 20:27:18 -0700 (PDT)
-Return-Path: <steve@sakoman.com>
-Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id x13sm8633359pfj.122.2020.07.17.20.27.17
-        for <bitbake-devel@lists.openembedded.org>
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=uID4lJ8ZWGGLra97SUH9AYo01LQm7otuX4b37FkL2+g=;
+        b=PF5eAcbHveJ4XPwFaCgzDx1/E+M2MZhB5PGKSH0TQsb/lUT3CYPWXHDHMORu0zlh/2
+         O+RG6XbEyMb5G7wt6a8ILXtc2tkjkdJP33AcOwTYAiRXxBUqKXYRBnWocR7PM/l2izRi
+         0NyUb8tgReHZq22tMJ3Rvyy/UA0nWuWTLLM7WfH0O4ElO6fSVQ3/utOTRS48VKZ7QLec
+         4aHqAI/DEAAOf1ILP6EV6qf1579wWenXWS9KFvkbdliruYweaxP19Qpdz51dyiJ5S5zc
+         cbLW9xoxynBgMbGYuQK6WLEfrD0L+njIRBNge71lNAaHsER1aB9T+mmK6gRv87NKeQ2T
+         u64w==
+X-Gm-Message-State: AOAM532iOdurPs+C8xWKUYffKPUX9swSGGiuB30JH2iIE9Ic/S158Ojp
+	hDQaHdGguuXLxMWmg0IcaUqIvg==
+X-Google-Smtp-Source: ABdhPJw3h4KMuOVfo5Y/RT2HRLuJYkEbQwE0Vc3rBJWrAJKuODXzTAY5pAsC8ZwJCaKgjdk8Ss+aNw==
+X-Received: by 2002:a5d:4e48:: with SMTP id r8mr17980858wrt.309.1595172339177;
+        Sun, 19 Jul 2020 08:25:39 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from 5.f.a.a.6.6.c.6.8.7.0.3.0.b.c.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (5.f.a.a.6.6.c.6.8.7.0.3.0.b.c.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:1cb0:3078:6c66:aaf5])
+        by smtp.gmail.com with ESMTPSA id f12sm26854789wrj.48.2020.07.19.08.25.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 20:27:18 -0700 (PDT)
-From: "Steve Sakoman" <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/8] Pull request (cover letter only)
-Date: Fri, 17 Jul 2020 17:27:08 -1000
-Message-Id: <cover.1595042779.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 19 Jul 2020 08:25:38 -0700 (PDT)
+Message-ID: <436e18f3d9dd0fd0ae23547f4172f907fed50dc9.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] ipk ar/tar unpack
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Chris Minnoy <chris.minnoy_ext@softathome.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Sun, 19 Jul 2020 16:25:35 +0100
+In-Reply-To: <a3910c7d-89b4-6203-7ff8-339205e249e4@softathome.com>
+References: <a3910c7d-89b4-6203-7ff8-339205e249e4@softathome.com>
+User-Agent: Evolution 3.36.3-0ubuntu1 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit 1d3892d93ee9688d69f5bb5ea6aef8b1152bd1e3:
+Hi,
 
-  msg: Avoid issues where paths have relative components (2020-07-01 05:24:29 -1000)
+On Wed, 2020-07-15 at 15:20 +0200, Chris Minnoy wrote:
+> From: Chris Minnoy <chris.minnoy_ext@softathome.com>
+> Date: Wed, 15 Jul 2020 15:02:35 +0200
+> Subject: [PATCH] ipk packages can be formed with ar or tar. ar/tar
+> can't 
+> read
+>   each other archives. This fixes the unpack to call the correct 
+> archiver based
+>   on the format.
+> 
+> ---
+>   bitbake/lib/bb/fetch2/__init__.py | 40
+> ++++++++++++++++++++++++++++---
+>   1 file changed, 37 insertions(+), 3 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/__init__.py 
+> b/bitbake/lib/bb/fetch2/__init__.py
+> index 2ada43befc..e79149a208 100644
+> --- a/bitbake/lib/bb/fetch2/__init__.py
+> +++ b/bitbake/lib/bb/fetch2/__init__.py
+> @@ -1467,7 +1467,41 @@ class FetchMethod(object):
+>                       iterate_file = unpack_file
+>                   else:
+>                       cmd = 'rpm2cpio.sh %s | cpio -id' % (file)
+> -            elif file.endswith('.deb') or file.endswith('.ipk'):
+> +            elif file.endswith('.ipk'):
+> +                output = subprocess.check_output(['file', file], 
+> preexec_fn=subprocess_setup)
+> +                if output:
 
-are available in the Git repository at:
+Thanks for the patch. Unfortunately it came through line wrapped. The
+short/long commit message also doesn't match our patch format
+guidelines.
 
-  git://git.openembedded.org/bitbake-contrib stable/1.46-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
+https://www.openembedded.org/wiki/Commit_Patch_Message_Guidelines
 
-Chris Laplante (1):
-  ui/teamcity: don't use removed logging classes
+Could you fix those issues and resubmit please?
 
-David Khouya (2):
-  lib/ui/taskexp: Validate gi import
-  lib/ui/taskexp: Fix missing Gtk import
+Cheers,
 
-Konrad Weihmann (1):
-  pyshyacc: allow double COMMA statements
-
-Richard Purdie (4):
-  server/process: Increase timeout for commands
-  fetch2: Change git fetcher not to destroy old references
-  server/process: Fix a rare lockfile race
-  server/process: Ensure UI-less servers don't sit in infinite loops
-
- lib/bb/fetch2/git.py     |  2 +-
- lib/bb/pysh/pyshyacc.py  |  1 +
- lib/bb/server/process.py | 25 +++++++++++++++++++------
- lib/bb/ui/taskexp.py     | 13 ++++++++++---
- lib/bb/ui/teamcity.py    |  2 --
- 5 files changed, 31 insertions(+), 12 deletions(-)
-
--- 
-2.17.1
+Richard
 
