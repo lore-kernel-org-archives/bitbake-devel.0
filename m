@@ -1,95 +1,71 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web10.18492.1595172340925753233
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.web11.3130.1595273351139674715
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 19 Jul 2020 08:25:41 -0700
+ Mon, 20 Jul 2020 12:29:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=h+D5Xbma;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.68, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f68.google.com with SMTP id 88so5200573wrh.3
-        for <bitbake-devel@lists.openembedded.org>; Sun, 19 Jul 2020 08:25:40 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZJXnY/TE;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.68, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f68.google.com with SMTP id c80so608546wme.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 20 Jul 2020 12:29:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=uID4lJ8ZWGGLra97SUH9AYo01LQm7otuX4b37FkL2+g=;
-        b=h+D5XbmaChkfnhdkdr3Fv/Kp8Sbox/VvBScO5uC0Tli48B1Re4i/dBs0Rr2LnSeV3B
-         LVJQmsQ7IHqqz6gbUSegXvqvqyOzmpasSNGXfO0MYin3QByeaqM6lQ/yQumSEAxndbbC
-         NXNcL8K0b2qlqXsfUqaeZnLK8dIPMuwJ8ISBc=
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mNWHWE9Tq+6kz29gWRTKKOYYWOHSPZCVexenWtHpmpY=;
+        b=ZJXnY/TEPj9HYTOs853NKON33YAkRsWMMWgM31XsPRqev2Dx40zi/w0GIdtiiGsc7+
+         pTKgu9tCMbft3toviVmGKCFTh5EmUb90FkX1I0nI1rjdia5x4rBxdye63ts9Y6GwfQVR
+         a3EL+HozPgbeNzfQCDHgCfFdmVtKPanzuJGNw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=uID4lJ8ZWGGLra97SUH9AYo01LQm7otuX4b37FkL2+g=;
-        b=PF5eAcbHveJ4XPwFaCgzDx1/E+M2MZhB5PGKSH0TQsb/lUT3CYPWXHDHMORu0zlh/2
-         O+RG6XbEyMb5G7wt6a8ILXtc2tkjkdJP33AcOwTYAiRXxBUqKXYRBnWocR7PM/l2izRi
-         0NyUb8tgReHZq22tMJ3Rvyy/UA0nWuWTLLM7WfH0O4ElO6fSVQ3/utOTRS48VKZ7QLec
-         4aHqAI/DEAAOf1ILP6EV6qf1579wWenXWS9KFvkbdliruYweaxP19Qpdz51dyiJ5S5zc
-         cbLW9xoxynBgMbGYuQK6WLEfrD0L+njIRBNge71lNAaHsER1aB9T+mmK6gRv87NKeQ2T
-         u64w==
-X-Gm-Message-State: AOAM532iOdurPs+C8xWKUYffKPUX9swSGGiuB30JH2iIE9Ic/S158Ojp
-	hDQaHdGguuXLxMWmg0IcaUqIvg==
-X-Google-Smtp-Source: ABdhPJw3h4KMuOVfo5Y/RT2HRLuJYkEbQwE0Vc3rBJWrAJKuODXzTAY5pAsC8ZwJCaKgjdk8Ss+aNw==
-X-Received: by 2002:a5d:4e48:: with SMTP id r8mr17980858wrt.309.1595172339177;
-        Sun, 19 Jul 2020 08:25:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mNWHWE9Tq+6kz29gWRTKKOYYWOHSPZCVexenWtHpmpY=;
+        b=efv6P0PzcEIsCNQn4EjMcT1Oj+JalHiQcX/kF48U+EsXz6Ydh+j21d2eoyDIQ4etRD
+         mvrrv+qMLA8hdoGBir7E48rQbk4hQ9fh1A0WNhoXKriz1FA0EhG2ELXnf1TMZEcH8Li2
+         sqzeV2XFOI6N7alxWbRiYSzFgzQ1AKLROPALLNUOhBGI9HXr7Vhsmm8iSNzlz8Hb9kCH
+         L8Wgim3QgHu6ucpM3Cc9Nrbvn8jbi8eKdkCa9MJ9/ljARmqE40p2Fpn8ZhmUzpYk8KjZ
+         t96duq9nDIb9rdYrT9rwODZFd7g2OwzmYYQ7ApOYZopb81LwJBBtJfSh0iAwdiuro+mA
+         D4ng==
+X-Gm-Message-State: AOAM532jbx4fnKaPfMD2z14eya1PxZAnMDXjj4YCquEFJ3osbZa/oXTc
+	eP8PLCqMNuAvAJYu7Pz8YK0DnGYGo0WMjQ==
+X-Google-Smtp-Source: ABdhPJw5M09+lKbt0HKdRdm/ypTDYWgu/TR+pwHE27Xp5RvuV1a3pP+ABUc8kIfEE/nxr/bysHq/5g==
+X-Received: by 2002:a1c:1fc2:: with SMTP id f185mr756812wmf.0.1595273349059;
+        Mon, 20 Jul 2020 12:29:09 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from 5.f.a.a.6.6.c.6.8.7.0.3.0.b.c.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (5.f.a.a.6.6.c.6.8.7.0.3.0.b.c.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:1cb0:3078:6c66:aaf5])
-        by smtp.gmail.com with ESMTPSA id f12sm26854789wrj.48.2020.07.19.08.25.38
+Received: from hex.int.rpsys.net (5.f.a.a.6.6.c.6.8.7.0.3.0.b.c.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:1cb0:3078:6c66:aaf5])
+        by smtp.gmail.com with ESMTPSA id l132sm695032wmf.6.2020.07.20.12.29.08
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 08:25:38 -0700 (PDT)
-Message-ID: <436e18f3d9dd0fd0ae23547f4172f907fed50dc9.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] ipk ar/tar unpack
+        Mon, 20 Jul 2020 12:29:08 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Chris Minnoy <chris.minnoy_ext@softathome.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sun, 19 Jul 2020 16:25:35 +0100
-In-Reply-To: <a3910c7d-89b4-6203-7ff8-339205e249e4@softathome.com>
-References: <a3910c7d-89b4-6203-7ff8-339205e249e4@softathome.com>
-User-Agent: Evolution 3.36.3-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] server/process: Fix note reference -> info
+Date: Mon, 20 Jul 2020 20:29:07 +0100
+Message-Id: <20200720192907.100482-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Its bb.note or logger.info, this avoids a backtrace.
 
-On Wed, 2020-07-15 at 15:20 +0200, Chris Minnoy wrote:
-> From: Chris Minnoy <chris.minnoy_ext@softathome.com>
-> Date: Wed, 15 Jul 2020 15:02:35 +0200
-> Subject: [PATCH] ipk packages can be formed with ar or tar. ar/tar
-> can't 
-> read
->   each other archives. This fixes the unpack to call the correct 
-> archiver based
->   on the format.
-> 
-> ---
->   bitbake/lib/bb/fetch2/__init__.py | 40
-> ++++++++++++++++++++++++++++---
->   1 file changed, 37 insertions(+), 3 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/fetch2/__init__.py 
-> b/bitbake/lib/bb/fetch2/__init__.py
-> index 2ada43befc..e79149a208 100644
-> --- a/bitbake/lib/bb/fetch2/__init__.py
-> +++ b/bitbake/lib/bb/fetch2/__init__.py
-> @@ -1467,7 +1467,41 @@ class FetchMethod(object):
->                       iterate_file = unpack_file
->                   else:
->                       cmd = 'rpm2cpio.sh %s | cpio -id' % (file)
-> -            elif file.endswith('.deb') or file.endswith('.ipk'):
-> +            elif file.endswith('.ipk'):
-> +                output = subprocess.check_output(['file', file], 
-> preexec_fn=subprocess_setup)
-> +                if output:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/server/process.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the patch. Unfortunately it came through line wrapped. The
-short/long commit message also doesn't match our patch format
-guidelines.
-
-https://www.openembedded.org/wiki/Commit_Patch_Message_Guidelines
-
-Could you fix those issues and resubmit please?
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index d4beac4379..9ec79f5b64 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -342,7 +342,7 @@ class ServerCommunicator():
+     def runCommand(self, command):
+         self.connection.send(command)
+         if not self.recv.poll(30):
+-            logger.note("No reply from server in 30s")
++            logger.info("No reply from server in 30s")
+             if not self.recv.poll(30):
+                 raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server (60s)")
+         return self.recv.get()
+-- 
+2.25.1
 
