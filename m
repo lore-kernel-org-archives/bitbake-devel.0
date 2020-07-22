@@ -1,150 +1,91 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web10.17958.1595334829088170145
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web12.28151.1595449579510556888
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 21 Jul 2020 05:33:49 -0700
+ Wed, 22 Jul 2020 13:26:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=K5Yz0iT0;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f50.google.com with SMTP id z2so21075105wrp.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 21 Jul 2020 05:33:48 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=I30WHSUs;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id 88so3119170wrh.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Jul 2020 13:26:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=VxtGAYVcKmBLTrxzT461kMDg6Brbe0HpXA8MErQIpb0=;
-        b=K5Yz0iT0aHQz9RnOY781nmb5Qo4FtLemHB8J8YGI56Djr2wDhcJJxDvfsD+KnqKROt
-         96uwicQkKrcNjy+42bMm1B1ks/ty/FLLrobyOWZ7xW68Y3s43WbmvshHDnG4yS8pZx5H
-         ahJaYRtM0LcyiuqoZ4tY9wCDP9nduw5RQG/NA=
+        bh=74IK3atPs0ty3Vp/kGEqrhcUPqn+ITZ25/hPWO0D+hs=;
+        b=I30WHSUs5oZM2ohkNWFYdXJ6cLyi1hQVHObI+765e8at/OKdsby1GEeZiXRseJtx8Q
+         O26PqGa+3wt4PHBSZf8XG7QRXV216hF1O0UJzNG4EAFEDDUhHGDszEPHT56nKEtPxwJi
+         2Do8Gus0feXblBnx75o9aKRvEuJRPxf91q8J4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VxtGAYVcKmBLTrxzT461kMDg6Brbe0HpXA8MErQIpb0=;
-        b=JPrJvw0N7a93vvuua9g5wQBBw+unyXqjlSudW8jXYi9X3slQIXLHpUL1mAJAnM5fru
-         ZmLXMUvL+Xp6UBeuKZbHcs+bzp6vBx1chU/VZcD6Icc1FFpl4D556dVn72UDDi7WLI0d
-         eV2WUiSxDm6MEfKv5B1sddGcScvbmh9qfzLIn0sJKpuHL1KtVMN7IZ6qLelqUj/ZbirT
-         J3SmtVsnOlSk5Hru7HUJKv79+7WqnnPH4jK4Hq586kj+TAF0CF4dbFktjTwTeEl4suNc
-         cbwpFrabmlRqQsEu8fe/Wg+/uxvVqR5Dn59j/IZLux8qIcSTdEhpXzyHtXQsK9HdEe77
-         +7rg==
-X-Gm-Message-State: AOAM530G4CYZABClHkrEno2DDkxTBtJ6IvV+tAljzYDMq+HszZX6GQ4R
-	dSkSbOL+UTinzUd1YvuusAVS8W2rJoNooA==
-X-Google-Smtp-Source: ABdhPJwLH2e7Cbbbxv0zzpXvNbmsumXOyFbrLpZUiK3xcMEm2LQQ+VyHDNM7dE6rzaAy3n0R8/abLQ==
-X-Received: by 2002:adf:ee51:: with SMTP id w17mr10803195wro.239.1595334827070;
-        Tue, 21 Jul 2020 05:33:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=74IK3atPs0ty3Vp/kGEqrhcUPqn+ITZ25/hPWO0D+hs=;
+        b=ByPa5R0nTKUrn4LOiMw4ehtvhRSoZCNr1h6uSyJytykVEdn0s7mbCx21yKZBA9D3aj
+         oGFlIgvhRcHJMocJu5I4ZGpzgsy7EiD3XN33X/wtgqK0F2DfApHuQkMua/KfCQVq8Nq+
+         A02UHIUznEUd6drxgmvnawFcYwYdoGXEx5ifEBzGRxVawTNOspAi6WHCTRCqBXxvN0LZ
+         WOCQ2LPjqQoW8bQyZHz8aCsEwO5++XkKGxkAwqlBgojlw/1jpLMCm+ivK4mnYM5FzN2g
+         6nc+4KBtGja1GhJI04O8ks7qO7ecYR/CYqSuO8IcM9QCHN/FC/1VW5kmECuLjKHDx4gJ
+         SIlw==
+X-Gm-Message-State: AOAM5332tUbkfMCVJKU/PjWrlFrXyXz6nVpLPTZ8dVeHYSKFNT6//Y9l
+	8yXlN9gGsTQW9c1f1U2/TxAwXToWMaZwjw==
+X-Google-Smtp-Source: ABdhPJwo5nUOXnQgtjsImHYymIP+ZO0gbH6qdFuN482It5CtOA21ddqU4pQzdyKPibBrWePZVPeYNA==
+X-Received: by 2002:adf:a15c:: with SMTP id r28mr1044437wrr.151.1595449577352;
+        Wed, 22 Jul 2020 13:26:17 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (6.d.c.a.e.4.9.c.8.4.4.2.b.1.8.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:181b:2448:c94e:acd6])
-        by smtp.gmail.com with ESMTPSA id x13sm1815113wro.64.2020.07.21.05.33.46
+Received: from hex.int.rpsys.net (f.a.5.c.a.d.d.d.3.0.d.d.c.1.8.9.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:981c:dd03:ddda:c5af])
+        by smtp.gmail.com with ESMTPSA id w14sm1087744wrt.55.2020.07.22.13.26.16
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 05:33:46 -0700 (PDT)
+        Wed, 22 Jul 2020 13:26:16 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] build: Allow deltask to take multiple tasknames
-Date: Tue, 21 Jul 2020 13:33:44 +0100
-Message-Id: <20200721123344.121156-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/2] cooker: Improve multiconfig configuration error reporting
+Date: Wed, 22 Jul 2020 21:26:14 +0100
+Message-Id: <20200722202615.164870-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200721123344.121156-1-richard.purdie@linuxfoundation.org>
-References: <20200721123344.121156-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-deltask currently supports only one task to delete but it would be useful
-if it could support a variable which gets expanded to allow flexibility
-in the metadata.
-
-This is simple to support in bitbake and is how other directives such
-as inherit operate so adjust the parser/code to handle that. It means
-that syntax like:
-
-EXTRA_NOPACKAGE_DELTASKS = ""
-deltask ${EXTRA_NOPACKAGE_DELTASKS}
-
-is now allowed.
+This avoids a traceback if an invalid multiconfig is referenced in the bitbake
+commandline and tweaks the message to make it more understanable.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/parse/ast.py                | 10 ++++++----
- lib/bb/parse/parse_py/BBHandler.py |  5 +----
- lib/bb/tests/parse.py              |  6 ++++--
- 3 files changed, 11 insertions(+), 10 deletions(-)
+ lib/bb/cooker.py | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 785aa974eb..0714296af2 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -244,12 +244,14 @@ class AddTaskNode(AstNode):
-         bb.build.addtask(self.func, self.before, self.after, data)
- 
- class DelTaskNode(AstNode):
--    def __init__(self, filename, lineno, func):
-+    def __init__(self, filename, lineno, tasks):
-         AstNode.__init__(self, filename, lineno)
--        self.func = func
-+        self.tasks = tasks
- 
-     def eval(self, data):
--        bb.build.deltask(self.func, data)
-+        tasks = data.expand(self.tasks).split()
-+        for task in tasks:
-+            bb.build.deltask(task, data)
- 
- class BBHandlerNode(AstNode):
-     def __init__(self, filename, lineno, fns):
-@@ -305,7 +307,7 @@ def handleAddTask(statements, filename, lineno, m):
-     statements.append(AddTaskNode(filename, lineno, func, before, after))
- 
- def handleDelTask(statements, filename, lineno, m):
--    func = m.group("func")
-+    func = m.group(1)
-     if func is None:
-         return
- 
-diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-index 6e216effb8..215f940b60 100644
---- a/lib/bb/parse/parse_py/BBHandler.py
-+++ b/lib/bb/parse/parse_py/BBHandler.py
-@@ -26,7 +26,7 @@ __func_start_regexp__    = re.compile(r"(((?P<py>python)|(?P<fr>fakeroot))\s*)*(
- __inherit_regexp__       = re.compile(r"inherit\s+(.+)" )
- __export_func_regexp__   = re.compile(r"EXPORT_FUNCTIONS\s+(.+)" )
- __addtask_regexp__       = re.compile(r"addtask\s+(?P<func>\w+)\s*((before\s*(?P<before>((.*(?=after))|(.*))))|(after\s*(?P<after>((.*(?=before))|(.*)))))*")
--__deltask_regexp__       = re.compile(r"deltask\s+(?P<func>\w+)(?P<ignores>.*)")
-+__deltask_regexp__       = re.compile(r"deltask\s+(.+)")
- __addhandler_regexp__    = re.compile(r"addhandler\s+(.+)" )
- __def_regexp__           = re.compile(r"def\s+(\w+).*:" )
- __python_func_regexp__   = re.compile(r"(\s+.*)|(^$)|(^#)" )
-@@ -238,9 +238,6 @@ def feeder(lineno, s, fn, root, statements, eof=False):
- 
-     m = __deltask_regexp__.match(s)
-     if m:
--        # Check and warn "for deltask task1 task2"
--        if m.group('ignores'):
--            logger.warning('deltask ignored: "%s"' % m.group('ignores'))
-         ast.handleDelTask(statements, fn, lineno, m)
-         return
- 
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index 9afd1b208e..9e21e18425 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -178,7 +178,10 @@ python () {
- addtask do_patch after do_foo after do_unpack before do_configure before do_compile
- addtask do_fetch do_patch
- 
--deltask do_fetch do_patch
-+MYVAR = "do_patch"
-+EMPTYVAR = ""
-+deltask do_fetch ${MYVAR} ${EMPTYVAR}
-+deltask ${EMPTYVAR}
- """
-     def test_parse_addtask_deltask(self):
-         import sys
-@@ -189,6 +192,5 @@ deltask do_fetch do_patch
-         self.assertTrue("addtask contained multiple 'before' keywords" in stdout)
-         self.assertTrue("addtask contained multiple 'after' keywords" in stdout)
-         self.assertTrue('addtask ignored: " do_patch"' in stdout)
--        self.assertTrue('deltask ignored: " do_patch"' in stdout)
-         #self.assertTrue('dependent task do_foo for do_patch does not exist' in stdout)
- 
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 3a58a3a332..19ddc1d3ba 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -626,6 +626,7 @@ class BBCooker:
+         current = 0
+         runlist = []
+         for k in fulltargetlist:
++            origk = k
+             mc = ""
+             if k.startswith("mc:"):
+                 mc = k.split(":")[1]
+@@ -635,6 +636,10 @@ class BBCooker:
+                 k2 = k.split(":do_")
+                 k = k2[0]
+                 ktask = k2[1]
++
++            if mc not in self.multiconfigs:
++                 bb.fatal("Multiconfig dependency %s depends on nonexistent multiconfig configuration named %s" % (origk, mc))
++
+             taskdata[mc].add_provider(localdata[mc], self.recipecaches[mc], k)
+             current += 1
+             if not ktask.startswith("do_"):
+@@ -670,7 +675,7 @@ class BBCooker:
+                         l = k.split(':')
+                         depmc = l[2]
+                         if depmc not in self.multiconfigs:
+-                            bb.fatal("Multiconfig dependency %s depends on nonexistent mc configuration %s" % (k,depmc))
++                            bb.fatal("Multiconfig dependency %s depends on nonexistent multiconfig configuration named configuration %s" % (k,depmc))
+                         else:
+                             logger.debug(1, "Adding providers for multiconfig dependency %s" % l[3])
+                             taskdata[depmc].add_provider(localdata[depmc], self.recipecaches[depmc], l[3])
 -- 
 2.25.1
 
