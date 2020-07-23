@@ -1,79 +1,81 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web10.28283.1595449579883803122
+Received: from mail-io1-f68.google.com (mail-io1-f68.google.com [209.85.166.68])
+ by mx.groups.io with SMTP id smtpd.web12.12029.1595510416634516311
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Jul 2020 13:26:20 -0700
+ Thu, 23 Jul 2020 06:20:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=GsVzueVq;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f66.google.com with SMTP id f2so3105477wrp.7
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Jul 2020 13:26:19 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=klAZc/k9;
+ spf=pass (domain: gmail.com, ip: 209.85.166.68, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f68.google.com with SMTP id z6so6189916iow.6
+        for <bitbake-devel@lists.openembedded.org>; Thu, 23 Jul 2020 06:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZMy8Em2MMu8cT+YT/0UQK+7rrEqLlHwSwXHYVId/QQQ=;
-        b=GsVzueVqJK2pX3dQOfkelTjTAVzHRUh6La+15T1cNIw6Bj2aaa1QdDxtubTLkbO5P7
-         vKy0WIAZG35YxjkVCataD+Qz3yshjtFHqb9YIca27WlBNh149xENHcTNOPLQFgisNLvA
-         SN4kig6m3VIUZ0O7U05E1w0h1qUpiu4CuCeSs=
+        bh=rGneBLy5Q+ManxBSWo1qRISzZa8Fy2sAo1luPUmObsY=;
+        b=klAZc/k9tq3HMz8kfVBUIbc/pK265qD57q9mSK5+5bZU9x7LlbJyqnge0CikU+goRr
+         wt4ncsC2mdCKlnIjcOBeaKRCbWW2pjyQB3ChkSzoHPLrYNMyuG9npauhb8PdogakdZN+
+         OnjgTfEC9WDdiSIwV1Ko2RKeHr4LqOGJ3vb0hLSRcMsBjWaiLnq28Zezbh1sV/cVvN4y
+         Y05CK35Ljv+HsrZGJBGSkMrWpBm8ScjhDR7/23f58WVtqWtbkXAJK48zUJnyhYYji4Jh
+         p+OXCf+sO75JUOjMU4nMuyvx/aTQ6AsemLPyF/AX14iK68qZBY26FWR2kXHE9FffWXnJ
+         8Tjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZMy8Em2MMu8cT+YT/0UQK+7rrEqLlHwSwXHYVId/QQQ=;
-        b=fVqImZjeQB7p1HZgp4vNDrIFWlUoOfc19t0OOxf/zpS0vDvZ0/a6R69qtBg/fygbPn
-         HzmAqdZgpAFZdR8JZhQPRDnETUYsAlXkf6glaPfGKds1EYTeAt0S8DmA827Qyr52WIQ8
-         /HkjHax0FVxUSYII9gGOLDJ0W28rXCKj7yl5PSuY1sNQpSf7vMyJfTlHkkEPlGO1J+nu
-         DofQuGvEDwER/qwn1M+G/zTmqQXc3oBnREOXl1M44Bg/qy1DyP/u+Y+5ple0OaCap+2L
-         yLNIGGYx/zZCPmTjjYhjLIWw4gPEK5k1j6SznqeOpfaMHjXN22ema/qpZIxgZSDeIKbV
-         FolQ==
-X-Gm-Message-State: AOAM53335vgzyf4gz2bDP7Tv1nkecXo42b3a9ukDYyIGw48q0uSQ5vlo
-	LuDtDhVnGUhDy2VjuK3cjoAORIS0ovvciQ==
-X-Google-Smtp-Source: ABdhPJzfwRdo4mOJ11IfpCeZ1+1MVtrzD0arHDOtz0HN/grbbez2PrGXzQ9q/d/XGXVwS/7g3JGqjw==
-X-Received: by 2002:adf:9307:: with SMTP id 7mr1044542wro.414.1595449578158;
-        Wed, 22 Jul 2020 13:26:18 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (f.a.5.c.a.d.d.d.3.0.d.d.c.1.8.9.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:981c:dd03:ddda:c5af])
-        by smtp.gmail.com with ESMTPSA id w14sm1087744wrt.55.2020.07.22.13.26.17
-        for <bitbake-devel@lists.openembedded.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rGneBLy5Q+ManxBSWo1qRISzZa8Fy2sAo1luPUmObsY=;
+        b=rhkn7J9jMBwi5oaj7IEymEzmRwh61A5kTV7fbV0Y/CIEXuYde1nREpmOtXxjrqbzZi
+         Y45pN32jv5LPbBfZkhF4cG4SbHifjTMwX/aBhxZFID3V3CSailfwqXLyPTc4qbBahCMD
+         ETLbTgZE/xL96ur141t03j8fa3FE5tF335gHU6QnFqoA9DalA0T3DlGxPwif9mJpwbgT
+         FxZvK9PktS24B/TTvVro+5dyETfoPHom6hRqRvMCmSFQDdY6uT14URzihhTLrAjP7LlP
+         bBiVZB9c4LQCzfrKFk4OM39Ijf3v/YPNmXL34R8t3MNdArCYGNfLceQQpLoUz8gYyvl4
+         ah6Q==
+X-Gm-Message-State: AOAM533aIO8GdXQqzMofyOFP0Zf4UD8hvUhgzdTDwFTdvdDoWb0gp3GS
+	eHjTdr+LMYqsmgwaqoAbYlXGQDdR9D8=
+X-Google-Smtp-Source: ABdhPJz91O06OKi20BfcnaL9ZS/MzHneGKSZfztq0FH5Emgf4fR6abvCFJd65FlNYuXceaZCZEUJZw==
+X-Received: by 2002:a02:a909:: with SMTP id n9mr4831141jam.70.1595510415733;
+        Thu, 23 Jul 2020 06:20:15 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from localhost.localdomain ([2605:a601:ac3d:c100:9c5e:b78a:a4eb:7dd7])
+        by smtp.gmail.com with ESMTPSA id k24sm1481135ilg.66.2020.07.23.06.20.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 13:26:17 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+        Thu, 23 Jul 2020 06:20:15 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] cooker: Handle multiconfig name mappings correctly
-Date: Wed, 22 Jul 2020 21:26:15 +0100
-Message-Id: <20200722202615.164870-2-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722202615.164870-1-richard.purdie@linuxfoundation.org>
-References: <20200722202615.164870-1-richard.purdie@linuxfoundation.org>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] bitbake: command: Handle multiconfig in findSigInfo
+Date: Thu, 23 Jul 2020 08:20:12 -0500
+Message-Id: <20200723132012.28287-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-"bitbake mc:arm:bash mc:arm:busybox"
-works but
-"bitbake multiconfig:arm:bash multiconfig:arm:busybox"
-does not. The reason is the list is modified whilst iterating.
-Don't do that.
+Changes the findSigInfo command to accept a recipe specified with the
+multiconfig prefix
 
-[YOCTO #13607]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/cooker.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/command.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 19ddc1d3ba..f6abc63487 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1614,7 +1614,7 @@ class BBCooker:
-             raise NothingToBuild
- 
-         ignore = (self.data.getVar("ASSUME_PROVIDED") or "").split()
--        for pkg in pkgs_to_build:
-+        for pkg in pkgs_to_build.copy():
-             if pkg in ignore:
-                 parselog.warning("Explicit target \"%s\" is in ASSUME_PROVIDED, ignoring" % pkg)
-             if pkg.startswith("multiconfig:"):
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 805ed9216c..48a7f1a158 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -723,10 +723,10 @@ class CommandsAsync:
+         """
+         Find signature info files via the signature generator
+         """
+-        pn = params[0]
++        (mc, pn) = bb.runqueue.split_mc(params[0])
+         taskname = params[1]
+         sigs = params[2]
+-        res = bb.siggen.find_siginfo(pn, taskname, sigs, command.cooker.data)
+-        bb.event.fire(bb.event.FindSigInfoResult(res), command.cooker.data)
++        res = bb.siggen.find_siginfo(pn, taskname, sigs, command.cooker.databuilder.mcdata[mc])
++        bb.event.fire(bb.event.FindSigInfoResult(res), command.cooker.databuilder.mcdata[mc])
+         command.finishAsyncCommand()
+     findSigInfo.needcache = False
 -- 
-2.25.1
+2.27.0
 
