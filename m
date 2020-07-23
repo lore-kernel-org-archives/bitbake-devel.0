@@ -1,81 +1,99 @@
-Received: from mail-io1-f68.google.com (mail-io1-f68.google.com [209.85.166.68])
- by mx.groups.io with SMTP id smtpd.web12.12029.1595510416634516311
+Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
+ by mx.groups.io with SMTP id smtpd.web10.14170.1595516319214981825
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 23 Jul 2020 06:20:16 -0700
+ Thu, 23 Jul 2020 07:58:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=klAZc/k9;
- spf=pass (domain: gmail.com, ip: 209.85.166.68, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f68.google.com with SMTP id z6so6189916iow.6
-        for <bitbake-devel@lists.openembedded.org>; Thu, 23 Jul 2020 06:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rGneBLy5Q+ManxBSWo1qRISzZa8Fy2sAo1luPUmObsY=;
-        b=klAZc/k9tq3HMz8kfVBUIbc/pK265qD57q9mSK5+5bZU9x7LlbJyqnge0CikU+goRr
-         wt4ncsC2mdCKlnIjcOBeaKRCbWW2pjyQB3ChkSzoHPLrYNMyuG9npauhb8PdogakdZN+
-         OnjgTfEC9WDdiSIwV1Ko2RKeHr4LqOGJ3vb0hLSRcMsBjWaiLnq28Zezbh1sV/cVvN4y
-         Y05CK35Ljv+HsrZGJBGSkMrWpBm8ScjhDR7/23f58WVtqWtbkXAJK48zUJnyhYYji4Jh
-         p+OXCf+sO75JUOjMU4nMuyvx/aTQ6AsemLPyF/AX14iK68qZBY26FWR2kXHE9FffWXnJ
-         8Tjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rGneBLy5Q+ManxBSWo1qRISzZa8Fy2sAo1luPUmObsY=;
-        b=rhkn7J9jMBwi5oaj7IEymEzmRwh61A5kTV7fbV0Y/CIEXuYde1nREpmOtXxjrqbzZi
-         Y45pN32jv5LPbBfZkhF4cG4SbHifjTMwX/aBhxZFID3V3CSailfwqXLyPTc4qbBahCMD
-         ETLbTgZE/xL96ur141t03j8fa3FE5tF335gHU6QnFqoA9DalA0T3DlGxPwif9mJpwbgT
-         FxZvK9PktS24B/TTvVro+5dyETfoPHom6hRqRvMCmSFQDdY6uT14URzihhTLrAjP7LlP
-         bBiVZB9c4LQCzfrKFk4OM39Ijf3v/YPNmXL34R8t3MNdArCYGNfLceQQpLoUz8gYyvl4
-         ah6Q==
-X-Gm-Message-State: AOAM533aIO8GdXQqzMofyOFP0Zf4UD8hvUhgzdTDwFTdvdDoWb0gp3GS
-	eHjTdr+LMYqsmgwaqoAbYlXGQDdR9D8=
-X-Google-Smtp-Source: ABdhPJz91O06OKi20BfcnaL9ZS/MzHneGKSZfztq0FH5Emgf4fR6abvCFJd65FlNYuXceaZCZEUJZw==
-X-Received: by 2002:a02:a909:: with SMTP id n9mr4831141jam.70.1595510415733;
-        Thu, 23 Jul 2020 06:20:15 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:9c5e:b78a:a4eb:7dd7])
-        by smtp.gmail.com with ESMTPSA id k24sm1481135ilg.66.2020.07.23.06.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 06:20:15 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+ dkim=missing; spf=none, err=permanent DNS error (domain: lakka.kapsi.fi, ip: 91.232.154.25, mailfrom: mcfrisk@lakka.kapsi.fi)
+Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
+	by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.89)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1jycg6-0001eQ-7h; Thu, 23 Jul 2020 17:58:35 +0300
+Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.92)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1jycg5-0003wp-VW; Thu, 23 Jul 2020 17:58:33 +0300
+From: "Mikko Rapeli" <mikko.rapeli@bmw.de>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake: command: Handle multiconfig in findSigInfo
-Date: Thu, 23 Jul 2020 08:20:12 -0500
-Message-Id: <20200723132012.28287-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.27.0
+Cc: Mikko Rapeli <mikko.rapeli@bmw.de>
+Subject: [PATCH][master|dunfell|zeus] knotty: ignore pipe errors
+Date: Thu, 23 Jul 2020 17:58:12 +0300
+Message-Id: <20200723145812.14029-1-mikko.rapeli@bmw.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+X-Rspam-Score: 2.3 (++)
+X-Rspam-Report: Action: no action
+ Symbol: RCVD_TLS_LAST(0.00)
+ Symbol: ARC_NA(0.00)
+ Symbol: DMARC_POLICY_SOFTFAIL(0.10)
+ Symbol: FROM_HAS_DN(0.00)
+ Symbol: TO_DN_SOME(0.00)
+ Symbol: R_MISSING_CHARSET(2.50)
+ Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
+ Symbol: MIME_GOOD(-0.10)
+ Symbol: BROKEN_CONTENT_TYPE(1.50)
+ Symbol: RCPT_COUNT_TWO(0.00)
+ Symbol: MID_CONTAINS_FROM(1.00)
+ Symbol: NEURAL_HAM(-0.00)
+ Symbol: R_SPF_NA(0.00)
+ Symbol: FORGED_SENDER(0.30)
+ Symbol: R_DKIM_NA(0.00)
+ Symbol: MIME_TRACE(0.00)
+ Symbol: ASN(0.00)
+ Symbol: FROM_NEQ_ENVFROM(0.00)
+ Symbol: BAYES_HAM(-3.00)
+ Symbol: RCVD_COUNT_TWO(0.00)
+ Message-ID: 20200723145812.14029-1-mikko.rapeli@bmw.de
+X-Rspam-Bar: ++
+X-SA-Exim-Connect-IP: 2001:67c:1be8::11
+X-SA-Exim-Mail-From: mcfrisk@lakka.kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Content-Transfer-Encoding: 8bit
 
-Changes the findSigInfo command to accept a recipe specified with the
-multiconfig prefix
+Piping bitbake output to another process like less currently
+results in an ugly error if the other end of pipe exits
+before bitbake has written all output to it.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+For example with "bitbake -e linux-yocto | less" and
+pressing q to quit less results in:
+
+Error in atexit._run_exitfuncs:
+Traceback (most recent call last):
+  File "/home/mcfrisk/src/yocto/poky/bitbake/lib/bb/event.py", line 133, in print_ui_queue
+    sys.stdout.flush()
+BrokenPipeError: [Errno 32] Broken pipe
+Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'>
+BrokenPipeError: [Errno 32] Broken pipe
+
+Fix is to use default signal handler for pipe signal. It's
+perfectly normal that on Unix systems the other end of pipe
+gets killed before all data is written.
+
+In some cases there seems to also be a loop which results in
+a large number of "[Errno 32] Broken pipe" messages printed to
+console until knotty process is killed. I think this also
+fixes those cases.
+
+This patch applies to master, dunfell and zeus branches.
+
+Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
 ---
- bitbake/lib/bb/command.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/ui/knotty.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index 805ed9216c..48a7f1a158 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -723,10 +723,10 @@ class CommandsAsync:
-         """
-         Find signature info files via the signature generator
-         """
--        pn = params[0]
-+        (mc, pn) = bb.runqueue.split_mc(params[0])
-         taskname = params[1]
-         sigs = params[2]
--        res = bb.siggen.find_siginfo(pn, taskname, sigs, command.cooker.data)
--        bb.event.fire(bb.event.FindSigInfoResult(res), command.cooker.data)
-+        res = bb.siggen.find_siginfo(pn, taskname, sigs, command.cooker.databuilder.mcdata[mc])
-+        bb.event.fire(bb.event.FindSigInfoResult(res), command.cooker.databuilder.mcdata[mc])
-         command.finishAsyncCommand()
-     findSigInfo.needcache = False
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 87e873d644..56ac41d0f9 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -29,6 +29,9 @@ featureSet = [bb.cooker.CookerFeatures.SEND_SANITYEVENTS]
+ logger = logging.getLogger("BitBake")
+ interactive = sys.stdout.isatty()
+ 
++# ignore pipe errors since they are normal
++signal.signal(signal.SIGPIPE, signal.SIG_DFL)
++
+ class BBProgress(progressbar.ProgressBar):
+     def __init__(self, msg, maxval, widgets=None, extrapos=-1, resize_handler=None):
+         self.msg = msg
 -- 
-2.27.0
+2.20.1
 
