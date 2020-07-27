@@ -1,127 +1,154 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.web11.9194.1595681921994971115
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
+ by mx.groups.io with SMTP id smtpd.web11.56871.1595860612513900396
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 25 Jul 2020 05:58:42 -0700
+ Mon, 27 Jul 2020 07:36:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CQpaIBbk;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f65.google.com with SMTP id k8so171858wma.2
-        for <bitbake-devel@lists.openembedded.org>; Sat, 25 Jul 2020 05:58:41 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=kuJc0pBk;
+ spf=pass (domain: gmail.com, ip: 209.85.215.195, mailfrom: akuster808@gmail.com)
+Received: by mail-pg1-f195.google.com with SMTP id p3so9646302pgh.3;
+        Mon, 27 Jul 2020 07:36:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=uISsJIlHZQ+1DQVIswEishFNIHIvFpphBt4F9+bQV/s=;
-        b=CQpaIBbk8eoDVD8CFj0WKG0Xx/1bedDd7I/WEJP1DZ3segNim9g/12Il9QeFkDQaZN
-         UzeofZUw25bSO9hX2XARPB+BNjFtAeiL4bhoOepniVwMjim3BqtpRWdK6HkEdMfyV4XX
-         DOhlmUdhkQhZIPDK07EM81y6otdMLgW8hjQyI=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=zTdM1D4wEVsNTVgUFFjF0AbTfi0vc+hxwQ9r1RQD0Io=;
+        b=kuJc0pBkzOYEM+nFHR8rnAmTo9Ygj4nmuy1v5SGnS2ydpeCKt3agUF0gw2S0EWb4v2
+         ZDkft/3NQbx5BLAodZCUJpoUMmWkbcd3riBr6IJvWy12MUVG3zeV30UNh4NpA4u4sMDI
+         Wa6Li4EQU3Gp3+e32ByproRHn+vHI7au60rn5x5fwmieCbjMhSFLn/krs6uaT5E7btUN
+         Y408PuM+Z2h4VKWBej+GdcBCeYfBicjeE3pIr298jdRMg5eVW+YnwSpTtCDkv/ztNL84
+         KutIi3woj3R73dQDQTU7rp7VP+6TyvrOhVro1XS0RCJzPqwj3I1nbajNpPmRxC1ydZ27
+         i1uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=uISsJIlHZQ+1DQVIswEishFNIHIvFpphBt4F9+bQV/s=;
-        b=UbwPerH92hL4M9yrq1CRdh6JXCms975rwnx62N/q/VBMtprqtB3AI9MPBoAMlWD1GX
-         EvFjEbPmXLXc8QwkzXLEdqkfp1c/fLwqPVb7uNDJgXKJvsEgt7Dv309frgj7xp21Kfz/
-         3n8X8A6hghiq1bdTNO145cO2u/sk1L90IC9aut+smWzJCOAa8SM61Rs7tAp49/HxiSqF
-         Vl8iwmeVto2z4KXkN1UPY+/CqF4AgKJ3xQ3nirnv45LA8WK4KC+WMRSBH4QWLEyLu9qr
-         33NgTwdKEET3rht82EDEcfUGC9ES6WlD7ZSRwysgcK/uYOGVMqNjdgxlPXMZ+lvrV/6t
-         QHVw==
-X-Gm-Message-State: AOAM531D1Ob9Tn5SN/r3HZ3/Mzq2aZZrqQgot2qyPyu3I9Rh83mkJ9QS
-	8wKZyw0rXGOXGqWbVBT+2kTjrg==
-X-Google-Smtp-Source: ABdhPJzIPNPcfWOTdLF0hrInoBsmHRy59RW/dD+cwyYSyowuAuHPWHwwjikeyJ137Utmcn6toi/f4w==
-X-Received: by 2002:a1c:c343:: with SMTP id t64mr6900543wmf.168.1595681920375;
-        Sat, 25 Jul 2020 05:58:40 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from 4.0.f.e.b.e.7.9.7.7.5.0.0.c.1.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (4.0.f.e.b.e.7.9.7.7.5.0.0.c.1.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:c1c0:577:97eb:ef04])
-        by smtp.gmail.com with ESMTPSA id w10sm39674wmk.0.2020.07.25.05.58.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 05:58:38 -0700 (PDT)
-Message-ID: <83850f87b067c439ada0e8a1feeeb04f057c2dc1.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH][master|dunfell|zeus] knotty: ignore pipe errors
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Mikko.Rapeli@bmw.de
-Cc: bitbake-devel@lists.openembedded.org
-Date: Sat, 25 Jul 2020 13:58:37 +0100
-In-Reply-To: <20200724075819.GE108868@korppu>
-References: <20200723145812.14029-1-mikko.rapeli@bmw.de>
-	 <48c641c1f8be55e4e6bb862f543df9178b8ff69f.camel@linuxfoundation.org>
-	 <20200724075819.GE108868@korppu>
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language;
+        bh=zTdM1D4wEVsNTVgUFFjF0AbTfi0vc+hxwQ9r1RQD0Io=;
+        b=ZduN6h9r1YEjgWsIb3LR9eIAvVPxQZsRX9C+e0a3BE08VruSQTBet6WjmNwfzWMcR6
+         GotnB2dBXK+tlbkmlfW/RXz5VtLrxgeNVbjnkR97P3a1jYxHbdI5aEKOfZ7szWHKYLty
+         GTVcp0+5gDfO5uvHnRKpSrPMu9x6el2uTueTcQIVlAjxabJ6iArwARbmUyCTe0zxjw9v
+         Uo35Z8kJGJitA5wuTPS4Owp1uUgSOyHJHujmzP1epd29eBijpZO2Ts9/4uGz3iow0If2
+         30BsDMdclXQf4QukDk6sePaEktKm23OoA4UqENSMDBFE53eadP6xoppeOy3StUkdHEPO
+         Qqpw==
+X-Gm-Message-State: AOAM533FYbI4TvI0DjQybqkjqnv3fYo9OLe1gM9qh0AOeQiGRAIUDKHU
+	RVKlVMIq7sSE5v9CsK9J58rSDTtjPLA=
+X-Google-Smtp-Source: ABdhPJyj2fb/J2lEndItqhHtHKRhgrDhb+vcDxzdMnd5pmcdptqEHmUPDZcfHFABvt9DwyEsaJNmJQ==
+X-Received: by 2002:aa7:8f26:: with SMTP id y6mr20414005pfr.191.1595860611612;
+        Mon, 27 Jul 2020 07:36:51 -0700 (PDT)
+Return-Path: <akuster808@gmail.com>
+Received: from ?IPv6:2601:202:4180:a5c0:8df1:f28:d14a:8296? ([2601:202:4180:a5c0:8df1:f28:d14a:8296])
+        by smtp.gmail.com with ESMTPSA id x9sm16448954pfq.11.2020.07.27.07.36.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 07:36:50 -0700 (PDT)
+Subject: Re: [bitbake-devel] [yocto] Stable Warrior branch
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ Adrian Bunk <bunk@stusta.de>
+Cc: Patches and discussions about the oe-core layer
+ <openembedded-core@lists.openembedded.org>,
+ "yocto@yoctoproject.org" <yocto@yoctoproject.org>,
+ "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+References: <03a353c4-80dd-e66c-3222-7850a98182f7@gmail.com>
+ <20200714135619.GF25970@localhost>
+ <cca863dd41cf837cfaa89484c010578e5ac0809b.camel@linuxfoundation.org>
+From: "akuster" <akuster808@gmail.com>
+Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8CS2NxU=
+Message-ID: <e6743da0-b2d2-14bf-2d1c-7e6f50ba8e1b@gmail.com>
+Date: Mon, 27 Jul 2020 07:36:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cca863dd41cf837cfaa89484c010578e5ac0809b.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-On Fri, 2020-07-24 at 07:58 +0000, Mikko.Rapeli@bmw.de wrote:
-> On Fri, Jul 24, 2020 at 07:01:46AM +0100, Richard Purdie wrote:
-> > On Thu, 2020-07-23 at 17:58 +0300, Mikko Rapeli wrote:
-> > > Piping bitbake output to another process like less currently
-> > > results in an ugly error if the other end of pipe exits
-> > > before bitbake has written all output to it.
-> > > 
-> > > For example with "bitbake -e linux-yocto | less" and
-> > > pressing q to quit less results in:
-> > > 
-> > > Error in atexit._run_exitfuncs:
-> > > Traceback (most recent call last):
-> > >   File "/home/mcfrisk/src/yocto/poky/bitbake/lib/bb/event.py",
-> > > line
-> > > 133, in print_ui_queue
-> > >     sys.stdout.flush()
-> > > BrokenPipeError: [Errno 32] Broken pipe
-> > > Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w'
-> > > encoding='UTF-8'>
-> > > BrokenPipeError: [Errno 32] Broken pipe
-> > > 
-> > > Fix is to use default signal handler for pipe signal. It's
-> > > perfectly normal that on Unix systems the other end of pipe
-> > > gets killed before all data is written.
-> > > 
-> > > In some cases there seems to also be a loop which results in
-> > > a large number of "[Errno 32] Broken pipe" messages printed to
-> > > console until knotty process is killed. I think this also
-> > > fixes those cases.
-> > > 
-> > > This patch applies to master, dunfell and zeus branches.
-> > > 
-> > > Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
-> > > ---
-> > >  bitbake/lib/bb/ui/knotty.py | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/bitbake/lib/bb/ui/knotty.py
-> > > b/bitbake/lib/bb/ui/knotty.py
-> > > index 87e873d644..56ac41d0f9 100644
-> > > --- a/bitbake/lib/bb/ui/knotty.py
-> > > +++ b/bitbake/lib/bb/ui/knotty.py
-> > > @@ -29,6 +29,9 @@ featureSet =
-> > > [bb.cooker.CookerFeatures.SEND_SANITYEVENTS]
-> > >  logger = logging.getLogger("BitBake")
-> > >  interactive = sys.stdout.isatty()
-> > >  
-> > > +# ignore pipe errors since they are normal
-> > > +signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-> > > +
-> > >  class BBProgress(progressbar.ProgressBar):
-> > >      def __init__(self, msg, maxval, widgets=None, extrapos=-1,
-> > > resize_handler=None):
-> > >          self.msg = msg
-> > 
-> > I think but have not 100% confirmed this caused the failures in:
-> > 
-> > https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/1200
-> 
-> Hmm, I can't see the connection based on logs though I don't know the
-> test
-> setups at all.
-> 
-> > (new build running to check)
-> 
-> Looking forward to these results...
+Adrian,
 
-It confirmed this patch is at fault. Looks like devtool/eSDK/tinfoil
-are the problem areas at a glance at the failures.
+On 7/21/20 1:53 AM, Richard Purdie wrote:
+> On Tue, 2020-07-14 at 16:56 +0300, Adrian Bunk wrote:
+>> On Thu, Jun 04, 2020 at 09:28:00PM -0700, akuster wrote:
+>>> Hello,
+>>>
+>>> The Warrior branch of Poky has had its last official dot release.
+>>> It
+>>> will be moving to Community support and EOL within 6 weeks if no
+>>> one
+>>> steps up.
+>>> If someone is interested in taking on the responsibilities of
+>>> maintaining the "Warrior" branch moving forward, please email this
+>>> list.
+>> I have an interest in keeping warrior branch alive in poky and meta-
+>> oe,
+>> and I'll take this responsibility since noone else seems to be
+>> interested.
 
-Cheers,
+Are you still interested?
 
-Richard
+-armin
+>>> Please look at the
+>>> https://wiki.yoctoproject.org/wiki/Stable_Release_and_LTS for what
+>>> will
+>>> be expected.
+>> I have some ideas, but not yet a fixed plan how I will set this up.
+> Ok. FWIW we are struggling a little with keeping the older releases
+> building on the autobuilder as the workers change. We do have plans for
+> handling this with buildtools but its not rolled out on the older
+> autobuilder-helper branches.
+>
+> I do have work in progress working with Jeremy for thud
+> (contrib/rpurdie/thud), much of which should apply to warrior too
+> (contrib/rpurdie/warrior is a guess). I just really want to highlight
+> that there may be some initial work to get these older branches to the
+> point where they continue to work on the infrastructure.
+>
+> I think we may have to accept backporting a lot of patches in helper to
+> bring things more into sync with master/dunfell to make all this easier
+> to maintain/get working.
+>
+> Cheers,
+>
+> Richard
+>
 
