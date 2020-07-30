@@ -1,17 +1,17 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (NAM02-SN1-obe.outbound.protection.outlook.com [40.107.77.51])
- by mx.groups.io with SMTP id smtpd.web12.5235.1596144508092573086
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (NAM11-DM6-obe.outbound.protection.outlook.com [40.107.223.76])
+ by mx.groups.io with SMTP id smtpd.web10.5149.1596144508964858969
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 30 Jul 2020 14:28:28 -0700
+ Thu, 30 Jul 2020 14:28:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=pAsr9K1P;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.77.51, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=anTCPpQ6;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.223.76, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YkF1UKjWEoaQciYkLkLxU3XipQQwzoUCz7Xx63JeeGSDn7RT7eLDXKn8GJz/4KBAgN7ZWf4LyCK6Xqs/DZ5SoTurJJM8Wj0PHTOKgqwG/Tp1hwiezuAE3QUQf7VccCWP2RXeCvLESdpMJMogFf1MAhDiKfzpX5ncE3CS+YaxYiE9ZmbiyPRNaAIiw4kBIAtcPRj3kKNJ24thFjFhOFCMbsU9oufkHhLL1f4IuiwFi0GMvQi/7h/CAVcRHulmhXr79sM6vFZzRO2KJ5MD+idsU9kOlirGGTdbwryXJAI+nAxgVKDffEB0xd4WbPxuGCZWf48L7UbA3u7X9iVx25yGYA==
+ b=OCAiKS9WwCqiTLoCpAXOFeNtcRquK64PT8HCuttRa6cqXxRHE2buIrKDO8i4mYhtAIkfissTgemZfx1fe1Uvt3cO3M1UF3PmtCnM7t0PbofL7y606U24ggSOBQ50ujiFSVKdLKTSrwzlGRlmLC1IH8jrVg/mEO9SvaFvG6Jk/NexBpnk6fkEbqFxZk/j4Kw26YR+H2oiqI+xvQMtAo2UFpB61kMF1AuyZfJu1/+dsGMxf2Z5iTISC3UI2gL6tDfxlxOS3Uo6rJ6mo9KAVitsVIVwVbkeBSCC9RKU05wNptNT2dCt1RistWOmCO03napOClc7R4J0Mtxc/I0TztDWJw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TsysBjE0sbIQVIVcrkej+20DE6gUN56rbJKvNnR2wYE=;
- b=HIk7qjVmqqMLqD5a8KPHh22ifcgmo6kvKqoi0ce4esIJg6iEGUcBdL4apIwNqs31m/bKqk0q0sZIPzp3RL3ZGUT28Y+hWetM2P7QkIMf29D9c42GpAZoN4aFS+rPzITY0tyTP4ekwtMZwNNB0P2LneeSSR5O+ZzbozgfuA/UgoU5tBjfmQr2eEq6Gc97X+TFeGT/8T3l13idBJCn+bd/483e+K0TiP6p/KAa2iVSJS0zOlSutS3kBEQoKfmFafU/dSaopjX09YXT8r2rYErh3qcYZD4jQohMfyFOlUl/qx1gdxCAh5aZ4ZJike3NBoGMfvsCnoO+HoQkH6bpHOO20g==
+ bh=pO6aDo92ROtBNE5g+jrYcmZgoLZjLuBjF+LU8WELdf4=;
+ b=AoCjJ/80rNZKfn5eQQu+RAqS53PyWF/P2jRgt+tLyIdrj0n/HQuq64GXVgM9yhSO80f+fIG/3Z3hNgjA/ifleNqQ4iPXfUJc7/B8jQ7KTIuvPATtk/krEEFIYmNSXnycCNfH4VebrOAG/grbJDlm+1CYsWqTdf125Ub3r3Mu1I80mKGJWVZgR63EQa+vpbu87Ac6aiPiIbFr3Ak6/bye05hVsUB0QHqUgoq3XRa57IgDGeEdVWoOydUA0gL4VUDTkpRTyoq3brZE4Lqr5A6lVGPNtmAQ46DlM0E62pDAzWRa1gZMcIAN2GpZ36nVgBpnpZCR9yUkwjzZwykB76nv7Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
@@ -19,18 +19,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TsysBjE0sbIQVIVcrkej+20DE6gUN56rbJKvNnR2wYE=;
- b=pAsr9K1PsDpbo4R5S57yCKP5GeEWcE0ldnAuxln+SWcwrh/Xu3FKs8/AWczyCKEwkSQfk7DVXBti386r4KTrIkrrT4zkE+U1Q8zQncju9E+CiVxu25K5G7iMj2Hx6XPgilML6iv+6Fz14lGjbcfaPv3ZA+AxcPq58ytYnVA2SxL8vKyfmlBDuckB4IJAJV4lLDsE94peb7B5fhlDHHyXR2Z9AN3M45yW2nW6Vs5pnqioKN4dtZMrMGJuNSW+MM2s6T3RfFVRqImrDAmstyHRwNoEVZoindfvpRQ8sHe0Yq0S2JcN/7cesypAqXc464N2jSRbvHNOaS7cOdQuyAUvOQ==
-Received: from DM6PR21CA0012.namprd21.prod.outlook.com (2603:10b6:5:174::22)
- by DM5PR1201MB0138.namprd12.prod.outlook.com (2603:10b6:4:56::21) with
+ bh=pO6aDo92ROtBNE5g+jrYcmZgoLZjLuBjF+LU8WELdf4=;
+ b=anTCPpQ6p//kpErQi9VkmtGa7/ZiGcZIlDyipCL1irRyK5Hz2iZ0NMD7lssWnXPycQvgN8dO++kBHiDdKpzElsJVveN7Gm6JQoIWdyC223YumDHHqg5NuxYyw7pBGgriIbKf6iX97mU1qrBpUf/Xv8AGgZ8HrvqUYG1xeWcWBa7pYCmOTIZ4U5TBxNJtSRbKTrhN491VgTWRsO2Lk7uADemG7L12AvX4/vbeyQOaOyDcwNCNbGiconz1GEMTWyf8oymL9Vhz2sQ2t/uHNu5J3ezeUSsx3bgQyiyHWyymXpKhRFymiWoc2zpP1EOCzBYc8IrlgHgIFpVacRLGvBApnA==
+Received: from DM6PR21CA0017.namprd21.prod.outlook.com (2603:10b6:5:174::27)
+ by SN6PR12MB2782.namprd12.prod.outlook.com (2603:10b6:805:73::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.25; Thu, 30 Jul
- 2020 21:28:26 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.19; Thu, 30 Jul
+ 2020 21:28:27 +0000
 Received: from DM6NAM12FT051.eop-nam12.prod.protection.outlook.com
- (2603:10b6:5:174:cafe::ac) by DM6PR21CA0012.outlook.office365.com
- (2603:10b6:5:174::22) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:5:174:cafe::ad) by DM6PR21CA0017.outlook.office365.com
+ (2603:10b6:5:174::27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.0 via Frontend
- Transport; Thu, 30 Jul 2020 21:28:26 +0000
+ Transport; Thu, 30 Jul 2020 21:28:27 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
  smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
  signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
@@ -48,9 +48,9 @@ Received: from laplante-lm-19.localdomain (192.25.126.27) by
 From: "Chris Laplante" <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH v2 2/3] progress: fix hypothetical NameError if 'progress' isn't set
-Date: Thu, 30 Jul 2020 17:26:00 -0400
-Message-ID: <20200730212601.80181-2-chris.laplante@agilent.com>
+Subject: [PATCH v2 3/3] progress: filter ANSI escape codes before looking for progress text
+Date: Thu, 30 Jul 2020 17:26:01 -0400
+Message-ID: <20200730212601.80181-3-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200730212601.80181-1-chris.laplante@agilent.com>
 References: <20200730212601.80181-1-chris.laplante@agilent.com>
@@ -61,61 +61,94 @@ Received-SPF: SoftFail (wpcosapexchedg2.windmz.agilent.com: domain of
  permitted sender)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e90be94f-700d-4cd2-7aa7-08d834cf7ee0
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0138:
+X-MS-Office365-Filtering-Correlation-Id: a1c89b22-e0d4-4462-116e-08d834cf7f32
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2782:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<DM5PR1201MB013894A93CD86EF3DF234AA78B710@DM5PR1201MB0138.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
+	<SN6PR12MB2782A6D4CD7202FAB639EB788B710@SN6PR12MB2782.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	6xx1S4puBsnV1acL4PEqqlATpuXV5UiaFsE3wW25xYzcYi3WAWT6WLi69ozdeizLm+pNEx9BN1IGL+E7DAXAWk0lKhg58jPNteqn7GH9HOoPPxDp+2DNcMXKLs59zZElM8GsaD1/Yq0cOdF5ajf2rRzGrgcJfTlVDxtxeC9Nt2T5dC9VJbc84/cRd/fWSrbDtmVnWFJ10SkI5t5B88qu4/CTH0Vu9TdWQcoHevIk3VNxVUTYa1IyQ5L+iFPhJ6lRxpXyDH/aKK2EmJybWGOhsjk+QpfTe3ymnRTDw1hVTDMbyn33j4ICa3Mqri4Hu6cg1ipL+O9DCiFz+ZAxqsy8akVaUo2Rl17v3BNMYOE/zyCjyRL10d3dDtpWcfhdMgHxvXQXs96Gkkwb2yaas3OUulLIyiMKVK5lxuhucmu0Ujw=
+	sOx0UNwq2/Ise5uPn+JWxmP4I2dDMxBztGGcrczn8CWhNtm2Wv3kKnFpMKNcaapI0xqtpIX1H5Kbj5pkZD6uthsPs/4emut/oJZbl4uzQsFMVpaL1YWk+BKlg1aYLYux2XSDlS8oGYQHOPWyutU3B6ZDcMR7zN6cOBEr1fwUjpu5muo2Vs50Uka9KOepP13Xxj7hmRDGjK/OpvaJGQXkiRld903Jih1DoXtuP9BMH6DErc3i5PA77AY7Hi0s2zpUv8IRtdenuMdl4d3d97qqr6qgcjP6AcGjTJjYaYx56hzB4t7nSP862TYd2b1HTLRsECs2kTXyLlHgvB4BDplOfSnzX1v/xzrhLlI0QcNshikwsHniBc1YRmP0XC6m2vfbqW335Sf8jjTlG/p2lY7oWo3F6oxBDHPFZBauZhlsfrYcKsJxb7TeYJC+/KtHw2DJ8aru5SaLp/n2rJjpTz1EkBbUzUhXGWD+Bon337uc4npSeueW4RUcYvwTCxR6/LXN
 X-Forefront-Antispam-Report: 
-	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(346002)(396003)(376002)(29502001)(46966005)(82740400003)(36756003)(44832011)(36906005)(478600001)(2616005)(47076004)(6916009)(4744005)(336012)(956004)(426003)(7636003)(356005)(82310400002)(5660300002)(316002)(2906002)(6666004)(8676002)(8936002)(86362001)(4326008)(70206006)(186003)(107886003)(1076003)(83380400001)(26005);DIR:OUT;SFP:1101;
+	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFTY:;SFS:(396003)(136003)(346002)(376002)(39860400002)(29502001)(46966005)(356005)(966005)(82310400002)(478600001)(36756003)(5660300002)(36906005)(47076004)(316002)(6916009)(956004)(2616005)(426003)(44832011)(7636003)(1076003)(82740400003)(336012)(86362001)(2906002)(83380400001)(107886003)(8676002)(4326008)(70206006)(6666004)(26005)(8936002)(186003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 21:28:26.3061
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 21:28:26.8658
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e90be94f-700d-4cd2-7aa7-08d834cf7ee0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1c89b22-e0d4-4462-116e-08d834cf7f32
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-DM6NAM12FT051.eop-nam12.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0138
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2782
 Content-Type: text/plain
+
+This is in prepartion for introducing the log-colorizer bbclass into poky.
 
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- lib/bb/progress.py | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ lib/bb/progress.py | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bb/progress.py b/lib/bb/progress.py
-index b4e9bf0f..8cddefae 100644
+index 8cddefae..d051ba01 100644
 --- a/lib/bb/progress.py
 +++ b/lib/bb/progress.py
-@@ -204,6 +204,7 @@ class MultiStageProgressReporter:
-           value is considered to be out of stage_total, otherwise it should
-           be a percentage value from 0 to 100.
-         """
-+        progress = None
-         if self._stage_total:
-             stage_progress = (float(stage_progress) / self._stage_total) * 100
-         if self._stage < 0:
-@@ -212,9 +213,10 @@ class MultiStageProgressReporter:
-             progress = self._base_progress + (stage_progress * self._stage_weights[self._stage])
-         else:
-             progress = self._base_progress
--        if progress > 100:
--            progress = 100
--        self._fire_progress(progress)
-+        if progress:
-+            if progress > 100:
-+                progress = 100
-+            self._fire_progress(progress)
+@@ -15,6 +15,25 @@ import bb.build
+ from bb.build import StdoutNoopContextManager
  
-     def finish(self):
-         if self._finished:
+ 
++# from https://stackoverflow.com/a/14693789/221061
++ANSI_ESCAPE_REGEX = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
++
++
++def filter_color(string):
++    """
++    Filter ANSI escape codes out of |string|, return new string
++    """
++    return ANSI_ESCAPE_REGEX.sub('', string)
++
++
++def filter_color_n(string):
++    """
++    Filter ANSI escape codes out of |string|, returns tuple of
++    (new string, # of ANSI codes removed)
++    """
++    return ANSI_ESCAPE_REGEX.subn('', string)
++
++
+ class ProgressHandler:
+     """
+     Base class that can pretend to be a file object well enough to be
+@@ -82,7 +101,7 @@ class LineFilterProgressHandler(ProgressHandler):
+             lbreakpos = line.rfind('\r') + 1
+             if lbreakpos:
+                 line = line[lbreakpos:]
+-            if self.writeline(line):
++            if self.writeline(filter_color(line)):
+                 super().write(line)
+ 
+     def writeline(self, line):
+@@ -97,7 +116,7 @@ class BasicProgressHandler(ProgressHandler):
+         self._fire_progress(0)
+ 
+     def write(self, string):
+-        percs = self._regex.findall(string)
++        percs = self._regex.findall(filter_color(string))
+         if percs:
+             progress = int(percs[-1])
+             self.update(progress)
+@@ -112,7 +131,7 @@ class OutOfProgressHandler(ProgressHandler):
+         self._fire_progress(0)
+ 
+     def write(self, string):
+-        nums = self._regex.findall(string)
++        nums = self._regex.findall(filter_color(string))
+         if nums:
+             progress = (float(nums[-1][0]) / float(nums[-1][1])) * 100
+             self.update(progress)
 -- 
 2.17.1
 
