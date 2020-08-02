@@ -1,17 +1,17 @@
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (NAM04-BN3-obe.outbound.protection.outlook.com [40.107.68.54])
- by mx.groups.io with SMTP id smtpd.web12.10078.1596378937528783823
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (NAM11-DM6-obe.outbound.protection.outlook.com [40.107.223.50])
+ by mx.groups.io with SMTP id smtpd.web10.10206.1596378938113839273
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 02 Aug 2020 07:35:37 -0700
+ Sun, 02 Aug 2020 07:35:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=gYzz9Xcs;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.68.54, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=OsjnSDYD;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.223.50, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W2oT99rB8MQzTgod/VC67/S8hLEuStc6HOr/Kh9XIwD/pSBt4Nq18sgBXoYFoslphB3R9hJNjsR/A8a2NnD4G0g6HRuH3Iok2dcuZS0UJkR1FWctPyWr9dN/5yu8CxuJm1AB6BeJfEhD5q/SbVfAMal9gdQH1pSxH01X0ijCAbb4GozH6YMO/U7EeY+69o4e1dDwHnmR/ToosgUpHOtxcIplFJsZr0XHwhilrrVipiQv31RNMFQmBV1e+I4bSVINXwCp4tjKoDXgyoYMBX+sJkCliJ/kK9Dqw4+4xLy61cyh6IT4twkljcM+bWgF5Tjw4d66bj1dWB6xIPyN5U+SVQ==
+ b=GvwSHiuRsux7oQ8m+M6YMhORJNpkMqP5LoGIp59JmXMKnxH/SMtDd7Ss4Rkk4MTENhZFNt6SBQchesv2Kw0ed/B/f1gFDivBrG/r36ASfy4SYHgP6++3uJA7ObEZAGO6jAcpGsotcm8+Oo66sd/6RQC2J79xzW+ErkkKZS/iV6qE0Q67Y93bl3TpLRuRxHfnn9LQgB2RJLvpFZEXVwcAloIJhjVy1+EGWbj+ubx70pSmCXmT8/8Cw8TlDNC52qbOHfbpPb22UYqQl94y1twLqE7HXQtbfFMkNOeQlNHNjR1wtWLfnYIZ5g2ZmsZheS9WlEryMeO2xPbGtKXJlWsnYg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mPcVSPZgMw9UzlbU9ii4+F0eTYA8nBXGy+vwOT7uFu4=;
- b=Om6zqdBh80ICiHcPhZ3Ea7Mj4zOO6F9Jeq8B9rKmfO3Q6Z/UkqMFGXQZc2p/vGcKof8HOejgHiBfv6doMg+g24Y2jeO2dU3NYSzBwj0k2/H+kbwWdAV96wkwAf6/f88s6O5G3CL0RgV8AnIPABmutjJMDGEb5FnRZlOxMTaj6+TRF7s54q8OMEvUazepcNqT3SoK30Zwsu7RB9sh869Idxk2u+uQDD8NYcRWtqV1ZK+xzcPaBgEQa8LMvMhr3os8CsQkHfIiuJf0QtsB3tr1FE6wNiaHtFsdJncMCsUPjzbmEhKLwoxdc995GgCjflvZahGKox96vmDCcw5SHjyUjQ==
+ bh=EAtM6Cgri54JkSG61TASWQVmmSL6PaIRHstKoeb+R5k=;
+ b=KHaU6TtSOdhETwSh7ZTERAC2yTczcrAhPQ/l9k7vtWTmxSYucxoLEzk+6t44W/CrDR7WUjckrImgGC2rm6ty9Q5fTAjIrIJEFfhacVkbj/PEVhb2sWpcVyHLLMyJN43KSlA/FZo2QIrwRTn3ESl4KD495YpDhCSIlTrDLISajJZmNuoxdU37nr4AiM2hc3bPlF51feYaAq/s6fWqm8L2fwLhGDE2NrDEAQZh3JZA7VQhrJnld5GbSZeFNJpzOhGUCIcPgiEPVsFkDXRlDcLSWoKsqvGyvAIyUEazSn6A6Cjo7qwmTjUt3TcgGI+Qk7AhaP+08vIdQyu+1NPDu3lxQw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
@@ -19,18 +19,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mPcVSPZgMw9UzlbU9ii4+F0eTYA8nBXGy+vwOT7uFu4=;
- b=gYzz9XcsUJLrMG4M6SL6nn2NV6EzjrqiC5jpLPxM/kdrDeyB3ysKjl+DLVZOZHT41ra5h9sjJx2ccZcqQc9pNe+z31ceWB26ktkRFOIPs2yTPiRNSOitFo5igm9eDizz7lsfzEnHkCKmyJ6a0NmYuWwdJc00MmuADneSvffAREz3zOKau+f8jbxdDRuj5B9Dd8qsU561CiDtT3f8TIkK80IQ6lK/vA/KXykJYmUCqC8m7YtsHCteBxY4HcuBO2jH8DEgz8I2nJcY19dvy5Ol6BQ7pTp/WXrSSRflDyNCj+Clc4wn/l5U4nC6B4KaFjNuCWTMl1NoM1ZVo6boQTUhNA==
-Received: from CO2PR04CA0164.namprd04.prod.outlook.com (2603:10b6:104:4::18)
- by CY4PR1201MB0120.namprd12.prod.outlook.com (2603:10b6:910:1c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Sun, 2 Aug
- 2020 14:35:33 +0000
-Received: from MW2NAM12FT021.eop-nam12.prod.protection.outlook.com
- (2603:10b6:104:4:cafe::46) by CO2PR04CA0164.outlook.office365.com
- (2603:10b6:104:4::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend
- Transport; Sun, 2 Aug 2020 14:35:33 +0000
+ bh=EAtM6Cgri54JkSG61TASWQVmmSL6PaIRHstKoeb+R5k=;
+ b=OsjnSDYDSZzGOAV7M3liiO0qXOJomsar7JrHn8yvbSOq9vyI8wLbS+7z6vAv3RMOKscsrXtJSdAp81evFxeUn/INi1aPs7yJQXTZbRup4XI4X1wFqhsX3WP3nvk6d3MqVI+zxRPpaACZrqbUw0PU8+WaZ61D1cEW4fsjlGAM4C2DhfRJ6GpNCPyWcnEGe64Ph6ETr6rCqxf22YcVWkTwOmvmVSbj31lJZ6U0Q0rBLecBF9EJA+eH0JKDySG15U6K/i23GLXAmaPMMT4Mb8y2UZ5LAr5+jJXaBjDwsK0jVEbyvDgtFawpLGfYJQi2AEejVV+KvPWgdv8mgKleFcHBDQ==
+Received: from CO2PR07CA0049.namprd07.prod.outlook.com (2603:10b6:100::17) by
+ MWHPR12MB1678.namprd12.prod.outlook.com (2603:10b6:301:b::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3239.18; Sun, 2 Aug 2020 14:35:35 +0000
+Received: from MW2NAM12FT058.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:100:0:cafe::79) by CO2PR07CA0049.outlook.office365.com
+ (2603:10b6:100::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend
+ Transport; Sun, 2 Aug 2020 14:35:35 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
  smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
  signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
@@ -39,18 +38,18 @@ Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
  192.25.218.41 as permitted sender) receiver=protection.outlook.com;
  client-ip=192.25.218.41; helo=edgeappmail.agilent.com;
 Received: from edgeappmail.agilent.com (192.25.218.41) by
- MW2NAM12FT021.mail.protection.outlook.com (10.13.180.88) with Microsoft SMTP
+ MW2NAM12FT058.mail.protection.outlook.com (10.13.181.237) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.10 via Frontend Transport; Sun, 2 Aug 2020 14:35:33 +0000
+ 15.20.3261.10 via Frontend Transport; Sun, 2 Aug 2020 14:35:34 +0000
 Received: from laplante-lm-19.localdomain (192.25.126.27) by
  edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
- 15.1.1713.5; Sun, 2 Aug 2020 08:35:31 -0600
+ 15.1.1713.5; Sun, 2 Aug 2020 08:35:32 -0600
 From: "Chris Laplante" <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH v2 1/4] data: emit filename/lineno information for shell functions
-Date: Sun, 2 Aug 2020 10:35:02 -0400
-Message-ID: <20200802143505.88409-2-chris.laplante@agilent.com>
+Subject: [PATCH v2 2/4] build: print a backtrace when a Bash shell function fails
+Date: Sun, 2 Aug 2020 10:35:03 -0400
+Message-ID: <20200802143505.88409-3-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200802143505.88409-1-chris.laplante@agilent.com>
 References: <20200802143505.88409-1-chris.laplante@agilent.com>
@@ -61,63 +60,84 @@ Received-SPF: SoftFail (wpcosapexchedg2.windmz.agilent.com: domain of
  permitted sender)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 95ab8853-1967-4e5b-9ef8-08d836f1503b
-X-MS-TrafficTypeDiagnostic: CY4PR1201MB0120:
+X-MS-Office365-Filtering-Correlation-Id: f20085aa-cad7-404b-56ee-08d836f150ee
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1678:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<CY4PR1201MB01202410F14B76751EF5488D8B4C0@CY4PR1201MB0120.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
+	<MWHPR12MB16781E08DAC08F91D297D7E78B4C0@MWHPR12MB1678.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1468;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	RtZdN33wNNBowVLFHi4B7gtC4xfHIUDiVz4fwve1iFZ7pEqdLmz8Qh3kccFRVjy2S1xwJE6pC+TOavC+fslejRvj8/RDqysTDAESTNl2AdizgeP16mxhRuMNgDU38//IE9Ej8zuo173G54MJmpjGWS8eoqX2LFnOyJwplL+oUG/zijHlcEPqC+1ujAeeCGgJwr0WroogL7CfD8Tf71JFOPP1mQdZNZMi1YAJ1TU18bnC3gvzf8Pp/3GzifaFTD2NXmWwEiPvW/FG59ny9z/ck98hIpRbYOwJ+Hx5a7LKY4NixrQd6DwsGnZFf+mJiq/gr7kTN8wxqdMfxPppRRqP8YjqbUxPmOBzSPtJDKGi+sa/YPJAGj3kwhDFLieWM9kCPBdFF8oEIX58P0p38jLh89sf9W0DeGJTJksfJSQVKGs=
+	l197oIi+xLmHle0m0RKuUxTF8zNlLslC1EmCInNfkT5PHrWKElVhnbSnq8+PAF6/HxMu3r/dhRGGgUojq1yb9O0YptK6WbKBrpILkBa59MkNAIJ+opLSy88YnBZknezWJN130fcNUiS144uHWFf9JVzO73FD+TXMKjh43gXncGojgZX9qzjSbhs/5VhA5Ye6i62B+Lo7GH6LYt/FKKF0/S1yzCUXjcFOj8Tms/lnkNFX36X20z4zzdAQiG6qxZedqxeUmeHy7sNhNgb4njTaxcVu3Tg2WWVzEdFhTMsxXFOPQ09gDj76kTIrgdwF3SVceoypvfrHYvfRehqEuDYLCc4W5TdmrTzzEIvcUD08Y+PDV3nlZS7DaoEVO25lzLW7r4hHKL2OeiIl+9e5xIPYugIUfEuFRs6QYQWq1UcJ/ZI=
 X-Forefront-Antispam-Report: 
-	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(376002)(136003)(396003)(29502001)(46966005)(5660300002)(2906002)(186003)(6666004)(86362001)(83380400001)(336012)(36906005)(26005)(316002)(1076003)(2616005)(8676002)(956004)(8936002)(356005)(7636003)(6916009)(4326008)(107886003)(82740400003)(478600001)(36756003)(47076004)(44832011)(82310400002)(426003)(70206006);DIR:OUT;SFP:1101;
+	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFTY:;SFS:(396003)(136003)(346002)(39860400002)(376002)(29502001)(46966005)(6666004)(4326008)(107886003)(36756003)(186003)(8676002)(26005)(8936002)(36906005)(83380400001)(7636003)(316002)(82310400002)(5660300002)(356005)(1076003)(47076004)(6916009)(86362001)(336012)(44832011)(956004)(2616005)(426003)(2906002)(478600001)(82740400003)(70206006);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2020 14:35:33.2918
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2020 14:35:34.4661
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95ab8853-1967-4e5b-9ef8-08d836f1503b
+X-MS-Exchange-CrossTenant-Network-Message-Id: f20085aa-cad7-404b-56ee-08d836f150ee
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MW2NAM12FT021.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MW2NAM12FT058.eop-nam12.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0120
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1678
 Content-Type: text/plain
-
-Make it easier for users to debug shell task failure by including
-some breadcrumbs in the emitted .run file that (hopefully) points
-to the .bb/.bbclass file where the shell function was defined.
-
-Unfortunately this won't work with functions with _append
-or _prepends, since BitBake wipes the filename/lineno information.
-This shouldn't be too hard to fix; for now, you'll just see
-comments like this for such functions:
-
-[YOCTO #7877]
 
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- lib/bb/data.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+ lib/bb/build.py | 36 +++++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index b0683c51..97022853 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -161,6 +161,12 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-         return True
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 977b02fc..ad445aa9 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -304,19 +304,33 @@ def exec_func_python(func, d, runfile, cwd=None):
+ def shell_trap_code():
+     return '''#!/bin/sh\n
+ # Emit a useful diagnostic if something fails:
+-bb_exit_handler() {
++bb_sh_exit_handler() {
+     ret=$?
+-    case $ret in
+-    0)  ;;
+-    *)  case $BASH_VERSION in
+-        "") echo "WARNING: exit code $ret from a shell command.";;
+-        *)  echo "WARNING: ${BASH_SOURCE[0]}:${BASH_LINENO[0]} exit $ret from '$BASH_COMMAND'";;
+-        esac
+-        exit $ret
+-    esac
++    if [ "$ret" != 0 ]; then
++        echo "WARNING: exit code $ret from a shell command."
++    fi
++    exit $ret
+ }
+-trap 'bb_exit_handler' 0
+-set -e
++
++bb_bash_err_handler() {
++    ret=$?
++    echo "WARNING: ${BASH_SOURCE[0]}:${BASH_LINENO[0]} exit $ret from '$BASH_COMMAND'"
++
++    echo "WARNING: Backtrace (BB generated script): "
++    for ((i=1; i<${#FUNCNAME[@]}; i++)); do
++        echo "\t#$((i-1)): ${FUNCNAME[$i]}, ${BASH_SOURCE[$((i-1))]}, line ${BASH_LINENO[$((i-1))]}"
++    done
++
++    exit $ret
++}
++
++case $BASH_VERSION in
++"") trap 'bb_sh_exit_handler' 0
++    set -e
++    ;;
++*)  trap 'bb_bash_err_handler' ERR
++    set -eE
++esac
+ '''
  
-     if func:
-+        # Write a comment indicating where the shell function came from (line number and filename) to make it easier
-+        # for the user to diagnose task failures. This comment is also used by build.py to determine the metadata
-+        # location of shell functions.
-+        o.write("# line: {0}, file: {1}\n".format(
-+            d.getVarFlag(var, "lineno", False),
-+            d.getVarFlag(var, "filename", False)))
-         # NOTE: should probably check for unbalanced {} within the var
-         val = val.rstrip('\n')
-         o.write("%s() {\n%s\n}\n" % (varExpanded, val))
+ def create_progress_handler(func, progress, logfile, d):
 -- 
 2.17.1
 
