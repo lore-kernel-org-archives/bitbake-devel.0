@@ -1,114 +1,110 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web11.6917.1596809499265210240
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (NAM11-BN8-obe.outbound.protection.outlook.com [40.107.236.61])
+ by mx.groups.io with SMTP id smtpd.web11.7167.1596810253151705756
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 07 Aug 2020 07:11:39 -0700
+ Fri, 07 Aug 2020 07:24:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VS3+XTfr;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.68, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f68.google.com with SMTP id p14so1865610wmg.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 07 Aug 2020 07:11:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=E7iW6rdJDuYEKkGk9o4a+kqQALH5XVYiRlqSD0idVrE=;
-        b=VS3+XTfrudKH7aUOAXEpKC6rDQL+nmdEz1njmiY7qtJ+pSZZIdrcU1La3lW2goKZ5m
-         zAsACVWI14jNygFzeQQcvwbyPvf7lFOfhc0cdI33YzdoM00UXhJDAksxLj/AzZi320hg
-         M5P3eytF7vBVnqT//eC3DCW6tpyqS8BjPlRkE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=E7iW6rdJDuYEKkGk9o4a+kqQALH5XVYiRlqSD0idVrE=;
-        b=Z3qhkq2/uzply41muXjKO4MdKrtI7j/4wSn2VN/cixkrDlxHWJNXR8siLJSzZCGeck
-         ywVNtQAYk8FPV8AEGp9+XUd8KKJD13AtQJ1VwyHKLn73Ml+WiHOkOLZbmUSTst0B3+6r
-         za7Q34WtOatsweTRNPY9luZkb7YSU4+sbv+c9zvr5EZZeBpcZZf1K3BrETV1KUyVzc8S
-         M6kQVCK+bdtgNfrWfzySZ2CvX1dnqBVQ9NuW8b1dcgnIX+MA+MGTsBOssnAWMrDbIeOn
-         Zm//EiHMskGiX/urartO6C0rfySkKGe76dhP+tYifDGEC9zefAue6YmxbUt0Ml0SlnKD
-         nDKg==
-X-Gm-Message-State: AOAM532q0s9PLOirP1TKfcyeK4kt6Uon/gWVB/YLux+T0KAYbyhQayru
-	tHuSVxdVlOp3QBCq9COMXTp06g==
-X-Google-Smtp-Source: ABdhPJzRj5exeWpgZU2O1g286cLx9ZOnq3k6nppK5IW36M8fk1fMZ1xYjdGHakxb+oujybvcb6NBHg==
-X-Received: by 2002:a1c:1f12:: with SMTP id f18mr13690094wmf.66.1596809497740;
-        Fri, 07 Aug 2020 07:11:37 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from 7.d.f.c.4.4.6.0.3.1.c.1.f.b.1.9.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (7.d.f.c.4.4.6.0.3.1.c.1.f.b.1.9.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:91bf:1c13:644:cfd7])
-        by smtp.gmail.com with ESMTPSA id w132sm10441426wma.32.2020.08.07.07.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 07:11:36 -0700 (PDT)
-Message-ID: <3fb78737e35050c1f441056418e3b56d5b2faf84.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v2 0/4] [RFC] Shell func backtracing
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Fri, 07 Aug 2020 15:11:34 +0100
-In-Reply-To: <SN1PR12MB24804872E06CD1410239B8188B490@SN1PR12MB2480.namprd12.prod.outlook.com>
-References: <20200802143505.88409-1-chris.laplante@agilent.com>
-	 <75e480197f67f7605180feed70a14f23b4da6f16.camel@linuxfoundation.org>
-	 <SN1PR12MB24804872E06CD1410239B8188B490@SN1PR12MB2480.namprd12.prod.outlook.com>
-User-Agent: Evolution 3.36.3-0ubuntu1 
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=MudIWQAk;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.236.61, mailfrom: chris.laplante@agilent.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cnvwFKySKDFO6i3sW/78traGCpQtQincMKCuxaGtXhHquE8oWamSPL9CC5AxfJYbjoDyKbffkhFDqkac9J6V0ENjnj4i5qUZKwE+uu2XKBYI/3us5yhCwgqhnSkcuWqP1OPPdpXCqzpGAlnj38/pyG2NXX+i0Jpb92eLv2jwNfVKhvRszWU3ezgurNg//o053cRlL9UNyGDe62ENqTa1HjuB0DOx9xbeMB0hYdbSP7g/d6cxLLCE1UTtkxWnhBht1KDhKBbXXOLokG6Y3NYhmukEyyh9eGGJKZy7/qdbJMG5qgE8vLcNaJIiAtIou1oISuWPm1I7sfs4z2/OGlDmIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e5Az5ZcElHXeST6W8GZOGZnQ4gEgu2nyTm5lHmXRhwQ=;
+ b=nw8FPfk4LlHfaH96aPSvKj2P2QpsLM+XGj1wY0VbuoHfHvm8biiA7f+aHDBFqDZekulHSpPAf9lpG1D6lgpGGHIdpbsmimuG8H8WmhQAZDyuVbJS7EhXypazfcXf9nDQxJNwSKZ5SyX/fjQ1s8M95FolCEdAHiALzZYRxdHUqKKugW4l2OjBjatS6Ev5SSSXKyCFkDwAfbD8X3nO5iakl8ywXvACTQljKGHPBmKR2DspAT+eRN201aBoN+dog+dhESmfy7Gv9UaoX7NgZSQP11fjFA3rFLV5cs/O9sWKIqCWxRXYm1M2QqIPqTntAzMIr98dlDSTx8BUlJMdUzNYTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 192.25.218.34) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=agilent.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e5Az5ZcElHXeST6W8GZOGZnQ4gEgu2nyTm5lHmXRhwQ=;
+ b=MudIWQAkVWU0p84N1IQjsNgvQ3ypjAYurNxOc1q/e2+L4siFPOSnxtJYrJtf4wJyWUiHiNAy7cnd3vukYGpiI2jCmWHwxPY+rGsuwGpveWZmINlDsbk2oRXMpuDeHROAe+mS+zhSobF766q9zKt6plNkohGZDoh2Aa2J60zSNHtUpe4NJgHslXBXDEGro/Q4UyHghneMOPznQI7vV5tKkIifh7MM5bCdRRwyTT0n2xL4VbUZBHgJXER9upJMj7n5O6qNzqzUcG7f3qLZOv5c9y+BJ1r5DjFvMGm9ff9mJgMNJpApxl/izMj9onkTB74UQ86o8y8HabSkbl1RwJAuVg==
+Received: from DM6PR18CA0008.namprd18.prod.outlook.com (2603:10b6:5:15b::21)
+ by MN2PR12MB4486.namprd12.prod.outlook.com (2603:10b6:208:263::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20; Fri, 7 Aug
+ 2020 14:24:11 +0000
+Received: from DM6NAM12FT029.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:5:15b:cafe::e8) by DM6PR18CA0008.outlook.office365.com
+ (2603:10b6:5:15b::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend
+ Transport; Fri, 7 Aug 2020 14:24:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.34)
+ smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
+ signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
+ header.from=agilent.com;
+Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
+ 192.25.218.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=192.25.218.34; helo=edgeappmail.agilent.com;
+Received: from edgeappmail.agilent.com (192.25.218.34) by
+ DM6NAM12FT029.mail.protection.outlook.com (10.13.178.133) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3261.10 via Frontend Transport; Fri, 7 Aug 2020 14:24:11 +0000
+Received: from laplante-lm-19.localdomain (192.25.126.27) by
+ edgeappmail.agilent.com (192.25.218.34) with Microsoft SMTP Server id
+ 15.1.1713.5; Fri, 7 Aug 2020 08:23:58 -0600
+From: "Chris Laplante" <chris.laplante@agilent.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: <richard.purdie@linuxfoundation.org>, Chris Laplante
+	<chris.laplante@agilent.com>
+Subject: [PATCH 0/3] [do not merge] Shell-based func backtracing
+Date: Fri, 7 Aug 2020 10:23:40 -0400
+Message-ID: <20200807142343.8648-1-chris.laplante@agilent.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Return-Path: chris.laplante@agilent.com
+Received-SPF: SoftFail (wpcosapexchedg3.windmz.agilent.com: domain of
+ transitioning chris.laplante@agilent.com discourages use of 192.25.126.27 as
+ permitted sender)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d16f67ee-242c-4dad-a2cd-08d83add8df4
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4486:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<MN2PR12MB448649B3F882181F14A5AF868B490@MN2PR12MB4486.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	76+F7Tq8fjz3GGhabFqjafdCFVq+0raI0DFTpaQvqSRfWhbagUSxxAeedcGA2Dtf3MW5jLBM/x8brkTGG/GhPsPngdtAnEGWE7Wrgey50R476oH7cQHSCtDKMoxJtOty6HdIX6yNOwV6F/L7BKJWdPSwf1MMx/UBM8nlKRbDZPUHXAD2H4rdCLzvRLTNC3YySo17uQivRl9amyCum3XI5d+atgKIbvkGfK63HMJt7PKv177oYdKZ0P7i871U3/20AX+HNq31HJYn9PpGitRIoPj+taNG7LiTNJo58rHOBT/u3TOK8xEG4ar76bZuLbvDwhKkHVXofBQwyoMhDFbC7avY5LI9y9yTCK3L16m0vy5SNxRyp1E2eNim3AAjLf2c67D2fwsR8yOxNUJoSkolQJ4Yl+fjV11zo07ptdzUY9Q=
+X-Forefront-Antispam-Report: 
+	CIP:192.25.218.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:wpcosapexchedg3.windmz.agilent.com;CAT:NONE;SFTY:;SFS:(39860400002)(376002)(136003)(346002)(396003)(29502001)(46966005)(5660300002)(36906005)(1076003)(47076004)(44832011)(6666004)(336012)(4326008)(83380400001)(82310400002)(7636003)(356005)(82740400003)(2906002)(107886003)(8676002)(36756003)(2616005)(956004)(86362001)(316002)(54906003)(186003)(478600001)(26005)(426003)(8936002)(6916009)(4744005)(70206006);DIR:OUT;SFP:1101;
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 14:24:11.5549
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d16f67ee-242c-4dad-a2cd-08d83add8df4
+X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.34];Helo=[edgeappmail.agilent.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-DM6NAM12FT029.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4486
+Content-Type: text/plain
 
-On Fri, 2020-08-07 at 12:31 +0000, chris.laplante@agilent.com wrote:
-> Hi Richard,
-> 
-> > This does look really interesting/useful, thanks. I have a long
-> > standing bug to
-> > add more information like this to functions!
-> > 
-> > The one piece I can't quite see there is whether things like
-> > appends to a shell
-> > function are handled?
-> 
-> Unfortunately not, since the parser resets the lineno/func to "1,
-> autogenerated". 
-> I'll have to teach the parser to maintain the original location
-> information, probably
-> as some sort of array since you can of course have multiple appends.
-> 
-> Even then, it won't be able to trace where people do
-> d.appendVar("do_compile", ...
-> I have some half-baked ideas on how to handle that but it would
-> probably require 
-> changes to data_smart. 
+Do not merge. For reference only.
 
-Have a look at what the d.varhistory.emit(var, oval, val, o, d) call
-does in emit() in data.py. The hard part is we have to have variable
-tracking turned on for that to work. You can see the output with
-"bitbake -e". We don't turn on variable tracking by default as its a
-heavy load for general parsing and not needed. You may be able to
-enable that in worker context though.
+This is a completely shell-based WIP implementation of the shell func
+backtracing patch series I posted late last week. To be mergeable, I'd
+need revise the approach I use. Currently I try to determine where the
+failing function is defined and then look at the previous line to find
+the comment on which location info is printed. But it doesn't work for
+nested shell functions. I will need to change it to use the approach in
+the other patch series, i.e. scan backwards from the lineno in the frame
+to locate the comment.
 
-> > I do sometimes run the scripts by hand myself. Another long
-> > standing idea I
-> > keep meaning to sort out is adding the correct pseudo environment
-> > to those
-> > functions, even as comments the user could enable for debugging.
-> > 
-> > Did you finish the other shell trap code? I think we're probably ok
-> > without that
-> > but if you had it working it might be good to put in the archives?
-> 
-> I nearly finished it. I'll submit a v3 with it. My original design
-> for the shell trap 
-> was that it would locate the comment by determining where the
-> function is 
-> defined (by using "shopt -s extdebug" and "define -F") and then just
-> grab the
-> comment by subtracting one from the line number. But it doesn’t quite
-> work 
-> for nested shell functions. So I think I'll just have to do what I do
-> in build.py,
-> scan backwards from the frame line number to locate the comment.
+Chris Laplante (3):
+  data: emit filename/lineno information for shell functions
+  build: print the originating filename/lineno of failing Bash shell
+    functions
+  WIP
 
-Don't worry about it too much, it just sounded quite neat and I don't
-like work like that to get lost!
+ lib/bb/build.py | 55 +++++++++++++++++++++++++++++++++++++++----------
+ lib/bb/data.py  |  6 ++++++
+ 2 files changed, 50 insertions(+), 11 deletions(-)
 
-Cheers,
-
-Richard
-
+--
+2.17.1
 
