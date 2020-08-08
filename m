@@ -1,98 +1,97 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.web11.999.1596869372844970671
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (NAM12-DM6-obe.outbound.protection.outlook.com [40.107.243.73])
+ by mx.groups.io with SMTP id smtpd.web12.10701.1596912049855206597
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 07 Aug 2020 23:49:33 -0700
+ Sat, 08 Aug 2020 11:40:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RpdAuvvN;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.65, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f65.google.com with SMTP id f1so3527543wro.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 07 Aug 2020 23:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=hQId6LILkNkwzeWxGsMOQbBKklTRYWAVW9RzEcg1K/Y=;
-        b=RpdAuvvN5Rl90rZ1B89t5PI2iMP9oC+S2Axcy8ZRfF/vTgnsmaZaYCyKeuD14DN1ZZ
-         44YTcwfGttDoRNn92LKLc9sbfh7m2qYu2XFerYpeaGuXEqZhvYHCc5Zy6WkRyUfwe5XW
-         biOHeDDj8IBJNedClizoSnXoPWHFA6chhmU9M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=hQId6LILkNkwzeWxGsMOQbBKklTRYWAVW9RzEcg1K/Y=;
-        b=UaXRuLKO9UI5rNoIAJTezisjixANdPdkt1WtWYPFTPyDbXpFYVYHn18KKhUofp1GjL
-         4AybzskTdrfw2KJuw5P42CzQEOKU+X1egc16O1cs+2kA09jBsPkUmKj/aiScXRczc/sH
-         X1Ht78QSggpyEIXpvssaBvnbthL0rC29lAq+6e4omaBuTzBJ2fLhEnGznOEolowHHYRi
-         2cnL/SvOBoKqXeeaz27yNfBTkjrjLSixafFT/ekDPvRA7zS++3xn8lPagpF2+cjNpGi7
-         GgNUGyEwHkslQD6LCkGkntg+b69aMIOBg/afHs2YMjQN7IMMHl3p0E68dLMtS/Dqe6mA
-         A0Vw==
-X-Gm-Message-State: AOAM532X004mApuSF86iN7zeG6TWcsAYsSBs6T9Yf9wFpRspeeAMALmk
-	D361OO1g92lSk7a2obTchlInzA==
-X-Google-Smtp-Source: ABdhPJzbA8syn4AptJf9Lx3UlZA75VMWPSx53/8M0nOMpjsqvNdqkTgvVzwDgCzGLWWMg/f4Y9wwhg==
-X-Received: by 2002:adf:a35e:: with SMTP id d30mr16179564wrb.53.1596869371314;
-        Fri, 07 Aug 2020 23:49:31 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from 9.a.b.2.3.a.a.7.c.e.f.b.f.8.9.f.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (9.a.b.2.3.a.a.7.c.e.f.b.f.8.9.f.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:f98f:bfec:7aa3:2ba9])
-        by smtp.gmail.com with ESMTPSA id y145sm13461490wmd.48.2020.08.07.23.49.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 23:49:30 -0700 (PDT)
-Message-ID: <dcc49121d8f04e3886533ff31a61185657cbd2e1.camel@linuxfoundation.org>
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=DqpleWPD;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.243.73, mailfrom: chris.laplante@agilent.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eFS3XClGtrOYpOuN2269d5MqX2CGxorUjQOZdsRybx2+vxWowLVC+7BFMScj5n7+ZvRJo62pFfYVb0c5rJQAbyPRYTNs+73/G3URrxfWtmyW9glA18Dpv68kjXZgEn8KXtzrYa2pH/JtAwNAEXs2i2DQ7qNomMQYvnwrXrx1VV3a3LbDEMjEG5XDw6j+Y3GwJjjM7RKZZfU7I7wYQC2UEKS1k5dXPF7sNI4Rr1LC3beJLjQMYhmxCAuJyP5MkZ5EiBpWnmnI0n00sOY5A+UNi44ai09MChBeH0dOPAvW87rwZG5abXSoonzI+DGRY7T/tKvArTuRp9cuV+2xbx+f5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2zmBtZaw7pp3gsVfTApjvgtDksNWH0kwv5fnHO3Y4a4=;
+ b=HlqERIYh/g2kmME6r9ggk9mjq1KIQnDtx97M1B0eEe4XAcmdZ8v45aaioTtRLAFKEtgwpgL+Aqe+Thtwa+z2GOEO5cQhvevrFvUqEC7XA9BrQH/WSvjjwA+IyQgKdQFXxMlduZuKdOqVlIGezwV3Qafkj19UvLok09rsC9p92O5Ur28jYG+c9BuifGSRXlgh9Sa0JkvQAm6C8Ql/YyFn4INpqDmo/RVXWp1f3BCM34p4KWQ0PieEiH9I8XE5zqcuG4R367Nfjm2OyJ2JRwmWQBUviKyYDUStw+VKgUkjlZkBGMz0su7i8R6+zWW0rlKBrckLEbbreqVlnbVdD3vqGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
+ dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2zmBtZaw7pp3gsVfTApjvgtDksNWH0kwv5fnHO3Y4a4=;
+ b=DqpleWPDLNciGvxwwDSCPy1t8kBwjQQwHR9N0mrcIFGfrvFEO41H4mamrphTCgmpGRFjlT43fTrnaC0017MDFuYF+f9QK/zG0WMfo+i1fvpJ3SoyPa1tCEyALejsDqQr8U4h9b0KfPgdWqQ1qIcoFJ6eKtOOVcc92gg5vC3x1oQee1fktiaHq+U8RZ7h8GQPGZ5pF5ex5ugjUWY3BTLukXw6h07sDeCoIvXvMJb6/VimXXn+b9wR2QYmUC0ny0sWqU4L03wModDhiTBNUE/SwYdsT3QWbGgzXr0csQoF4D76274S2AQeOAWyUPYTVqoT5wb0eOdCOrceZW84sQIYYg==
+Received: from SN1PR12MB2480.namprd12.prod.outlook.com (2603:10b6:802:22::21)
+ by SN6PR12MB2815.namprd12.prod.outlook.com (2603:10b6:805:78::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.19; Sat, 8 Aug
+ 2020 18:40:48 +0000
+Received: from SN1PR12MB2480.namprd12.prod.outlook.com
+ ([fe80::4c4f:2633:b1bc:c164]) by SN1PR12MB2480.namprd12.prod.outlook.com
+ ([fe80::4c4f:2633:b1bc:c164%6]) with mapi id 15.20.3261.022; Sat, 8 Aug 2020
+ 18:40:48 +0000
+From: "Chris Laplante" <chris.laplante@agilent.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
 Subject: Re: [bitbake-devel] [PATCH v2 0/4] [RFC] Shell func backtracing
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Sat, 08 Aug 2020 07:49:27 +0100
-In-Reply-To: <MW2PR12MB2474D07083D73046771266858B460@MW2PR12MB2474.namprd12.prod.outlook.com>
+Thread-Topic: [bitbake-devel] [PATCH v2 0/4] [RFC] Shell func backtracing
+Thread-Index: 
+ AQHWaNouv1V2TYM56Eqj6fr3Jx/DCaktJiUAgAAKPxCAAAB/gIAAMCwwgABtWoCAAMVwoA==
+Date: Sat, 8 Aug 2020 18:40:47 +0000
+Message-ID: 
+ <SN1PR12MB24803805C0F12CF4F833C8838B460@SN1PR12MB2480.namprd12.prod.outlook.com>
 References: <20200802143505.88409-1-chris.laplante@agilent.com>
 	 <db9d507a16a5cc57634642dc2245df1a05eab447.camel@linuxfoundation.org>
 	 <SN1PR12MB248071CBED17813537857DC48B490@SN1PR12MB2480.namprd12.prod.outlook.com>
 	 <31be36c0a9c86f735e8dbc56053a011fde0c0bee.camel@linuxfoundation.org>
 	 <MW2PR12MB2474D07083D73046771266858B460@MW2PR12MB2474.namprd12.prod.outlook.com>
-User-Agent: Evolution 3.36.3-0ubuntu1 
+ <dcc49121d8f04e3886533ff31a61185657cbd2e1.camel@linuxfoundation.org>
+In-Reply-To: 
+ <dcc49121d8f04e3886533ff31a61185657cbd2e1.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=agilent.com;
+x-originating-ip: [69.2.185.84]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 71b822db-4ac9-42fb-5a98-08d83bca9166
+x-ms-traffictypediagnostic: SN6PR12MB2815:
+x-microsoft-antispam-prvs: 
+ <SN6PR12MB2815CDDE90709FC187A528C68B460@SN6PR12MB2815.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ YzZYkcqx1eFr/ykO8LVrEVRcXLi4lfxmBxEJefJ3ug8ANbIHkzCruDAKm9a0ajnkPcecajN1Lz2gH7Bmh4QPI02RPF3D6dcNF5UC/J7tRknsZPq4+xzFjQWqCFcphKuaqm0C3Ji6wksQRnj7C76aowwj0O3d9KLBzw/0jRkhLLqVKA5OnFzGluhot5FTxXaIuqWVxuAqfY/snjBNYUIgAlLapSZP17VPJipSHyk5bqc/IUCEzVxnJj2Lgw7gXDUJsqz5kdeiPK8jxGI8tiTJZqRLpZPsW1DqmTkaQ9+ijORa801oN6Mb7wqox8Q9HxvddzqiS72KM1Ilf35Bh3WI6pkLgh+ev5w2/W8l+xQN6/p1kCnhoIR1tUsikuY2oqxV
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2480.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(346002)(136003)(39830400003)(396003)(29502001)(5660300002)(52536014)(186003)(6506007)(478600001)(7696005)(26005)(66556008)(55016002)(66946007)(9686003)(76116006)(4744005)(66476007)(66446008)(64756008)(2906002)(86362001)(71200400001)(110136005)(316002)(33656002)(8676002)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 
+ fP83Y3oBmZJcrCakTHp3FLImnTLxiFaRg+k+6xj+Z854xlYibmPpuZcFtFRNTR5txe6H7DCITxkmU8WIGKJ982cHp9N8M+Jld0RGQAeUxmSZMVlXssRyLeYDINAelRKYO0h7aNt9awhQKxtv51Tw7fhMbFd11hwv1Ca3ZJOJue1U5YClB1dGWySZ2Q+zVIPex5FJeKGcsN5DRHVDp4k9iXY5lXewtWqkbH3cjd74plAS2CdXVp/UNVg83Q8IdZtKuP6ssVG8DeR/lohkT3bvwwi1qGuUrFAqOA+qX77hJ0F0NyIeWHGxO1X64MtkQZZzbyOjac1sKhzz5afRiImuCJDpUfuCbhe27JntXK438HfXySDovtF6w9I9qbQSaMtb41V0adsmlgkRRz6ga20zpE47asn5qdgXuroIxnzS3MuVj0mlcbFRxBLhNe0gOLJ2iZPGIcURlum4KGz2lMiEdizx3lRI8/6rmo0P1ObqyD3guP+v+jJ+yJaUcKd7f7xfKdDBWBYiBbaw9bLiQkxBP8pQtiuaUEcE+xHdeHeyeepdtVXa0u1sEaabotkxUP2LXkqvWQpb37vvaDaOvCgGpnNJYCdR9U+AhJXnVVKJYmTp5WRGAnidI208aYtp+QWZS+kigB2q9bgwRSlA3myQeg==
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2480.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71b822db-4ac9-42fb-5a98-08d83bca9166
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2020 18:40:47.9923
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2xMKNBEGIvZRN4FmEfQDXdz5D3zw/imxOBmERapTzjqLz8QcKGhvIuWhxaFIMRaopkg9dBBvqJkX8u0grfVyUDT0oa9rkd6ShUWtwaNR6t4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2815
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Sat, 2020-08-08 at 00:19 +0000, chris.laplante@agilent.com wrote:
-> > > > This didn't work well in testing:
-> > > > 
-> > > > https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/12
-> > > > 39/ste
-> > > > ps/10/logs/step1b
-> > > > from
-> > > > https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/12
-> > > > 39
-> > > 
-> > > How do I view the log file it talks about, /home/pokybuild/yocto-
-> > > worker/a-
-> > full/build/build/tmp/log/error-
-> > report/error_report_20200807202843.txt ?
-> > 
-> > That would be the data uploaded onto errors.yoctoproject.org but
-> > the above
-> > logs should have all the data too.
-> 
-> /home/pokybuild/yocto-worker/a-full/build/build/tmp/work/core2-32-
-> poky-linux/distcc/3.3.3-r0/temp/run.fixup_distcc_mirror_tarball.9175: 
-> 18: /home/pokybuild/yocto-worker/a-full/build/build/tmp/work/core2-
-> 32-poky-linux/distcc/3.3.3-
-> r0/temp/run.fixup_distcc_mirror_tarball.9175: Syntax error: Bad for
-> loop variable
-> 
-> So I guess it's a 'sh' problem. I thought I had the code set up
-> correctly to handle sh vs bash (specifically, basically all of this
-> is turned off for sh since it doesn’t have the backtrace capability).
-> But I guess not.
-> 
-> Can you confirm that the autobuilder is using sh and not bash?
-
-That worker has dash:
-
-rpurdie@debian10-ty-1:~$ ls -la /bin/sh
-lrwxrwxrwx 1 root root 4 Jul 10  2019 /bin/sh -> dash
-
-Cheers,
-
-Richard
-
+PiBUaGF0IHdvcmtlciBoYXMgZGFzaDoNCj4gDQo+IHJwdXJkaWVAZGViaWFuMTAtdHktMTp+JCBs
+cyAtbGEgL2Jpbi9zaA0KPiBscnd4cnd4cnd4IDEgcm9vdCByb290IDQgSnVsIDEwICAyMDE5IC9i
+aW4vc2ggLT4gZGFzaA0KDQpPSy4gRXZlbiB0aG91Z2ggZGFzaCBpc24ndCBleGVjdXRpbmcgdGhl
+IGJhc2ggcGFydCBvZiB0aGUgY29kZSwgaXQgaXMgc3RpbGwgY2hva2luZyBvbiB0aGUgc3ludGF4
+LiBJJ2xsIGhhdmUgdG8gY2hhbmdlIHRoZSAnZm9yJyBsb29wIHN5bnRheCB0byBiZSBQT1NJWC1j
+b21wbGlhbnQuDQoNCk9mIGNvdXJzZSwgZGFzaCBhbmQgdmFuaWxsYSBzaCBsYWNrIHByZXR0eSBt
+dWNoIGV2ZXJ5IHBpZWNlIG9mIGZ1bmN0aW9uYWxpdHkgSSBuZWVkIHRvIGltcGxlbWVudCB0aGUg
+YmFja3RyYWNpbmcuIFNvIG9uY2UgSSBmaXggdGhlIHN5bnRheCwgeW91IHN0aWxsIHdvbid0IGFj
+dHVhbGx5IGdldCBhbnkgaW50ZXJlc3Rpbmcgb3V0cHV0IGJ5IHVzaW5nIHRoZSBhdXRvYnVpbGRl
+ciB0byB0ZXN0IHRoZSBwYXRjaGVzLg0KDQpUaGFua3MsDQpDaHJpcw0K
