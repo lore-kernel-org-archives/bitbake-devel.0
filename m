@@ -1,101 +1,116 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web10.346.1597264988696051488
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web12.700.1597270231739931085
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Aug 2020 13:43:09 -0700
+ Wed, 12 Aug 2020 15:10:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LsYYzO4y;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id k8so3167868wma.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Aug 2020 13:43:08 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NXNud5AK;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id t14so3321540wmi.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Aug 2020 15:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=s5FYcOYg4MZhMdcpIWJ2Cb4zFhrT4MiSyQLov3syluc=;
-        b=LsYYzO4yJffjziKaxnjmlKDBnRFP1W9ol4w1vrekP6MLe8lnMsVxNNo6I25+6sSn12
-         C+iEgsKPb5YNbDRJQF9hj27r+wLVlx6U06DeH+PfBQqHMovZb6clG1gZ3mB2DF/ViRhs
-         7Huzoor6HSE0rqS0nVkurnGUStC0vQMGCj1u4=
+        bh=+E87fMi48oWRjbBk3Hg6+9h4lZio1SbNN4tqc/nm1Vk=;
+        b=NXNud5AKlYnH5aZj747c7O3cfH/Axp8dut7midX/dpVyRp/bq8qu/xcbdqvmIaLlwd
+         owY21yZRrhpuUgF7k0yfTJa38+jgrvyroAoR6Ny4j5A0QzcJj/B6Fx04yle+DXFZb+V/
+         ZRxnDlzWZbn+vMsfm+7+nlgLVfsf9mb5TfSPI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=s5FYcOYg4MZhMdcpIWJ2Cb4zFhrT4MiSyQLov3syluc=;
-        b=JOiIkh200B5fXJI8Z/bDHhmZFUyrAC8f8WFoESYWIR+sak5IIfJ9quUd67ekIP5H8L
-         ojOyhhVD3IZZOA00bYZPfsy7i+GaJQ+9SYhHRcLZ8BDy0ORbFWNppMjcIV81I0VVVYey
-         CbZ760s2CsNC9C8BAAWLEvgyc8ck3Astuc/fJVQtjzTI96rdVRTOwZiPH7ze+4y8T1oM
-         4xv+iRAWwFGDy11H9VWXqc9OMGMHjJYrkwVB8pBZ3bfF2Rtv5pCNtZKJKbB3mQDul53r
-         r5A1IckukRYWj2j0Eqxe9R2qDhyZiaBgqetmX0XKThR+fOMk1SyQYvCU5Dw5kBpItIMs
-         vFPw==
-X-Gm-Message-State: AOAM533Qv06KHec0+ukwRWMpe+YK5+zvnAFyFjJVQwdFCgsYfI10US5V
-	8RZD29azwMFWNtgiIhYNOujvdApS6ueCbQ==
-X-Google-Smtp-Source: ABdhPJwzcqMx9j7gKzYuoTfkGd1Yayfrn4g3+A1kpYsj2cPcxDn0azX94HxJK0NzXZX5iZDsA8bKOg==
-X-Received: by 2002:a7b:c941:: with SMTP id i1mr1233400wml.73.1597264987237;
-        Wed, 12 Aug 2020 13:43:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+E87fMi48oWRjbBk3Hg6+9h4lZio1SbNN4tqc/nm1Vk=;
+        b=Uni4plRoX5kiEb2JDRHa8ov3eXPOh9RSYVIkUxk9/xXP1vK5LwmiupVkcy1kHwVjoB
+         ZzTnvZBv4T0n1Cy2O11sAYVPoF4Wg036AFkm0dWmfL1YvVArzHAlXU/z/ISEl2Cd3poj
+         Vxw1c1gW9KE2Ma8WBLgJV200P5XFrug+EusTzgnmcTjWuFiqKamUXLzSZd9hRBp5YhuV
+         DcTJSGC4kCU2Csyy5OUxy1ZUozA7L3ejLXWhvMTvMYgXorI1Pb/vhzo3Tzr1Hi3WNMQv
+         ljk9onehr0X1eOPwZzkOwX2IpieG3pqpb50FrtCCgviGYmXTz8nEzj08IZe6YQ+zgUux
+         bkTw==
+X-Gm-Message-State: AOAM533K78cm9f3K9jGsLI+YvPZ8zxt2y9wfqG275ZdYDY4yA3KLHvDv
+	EybpuCePnz4Krl17V+elKPrazWIC8a0lqg==
+X-Google-Smtp-Source: ABdhPJwaHHZW9Vj/RG12CBqPBPYF9TUbwLk3oBOzUAMdc3uWfKNUHxTMSG7DXJ1m0BtJJUtBG5d3ug==
+X-Received: by 2002:a7b:c74b:: with SMTP id w11mr1415379wmk.81.1597270230079;
+        Wed, 12 Aug 2020 15:10:30 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (9.a.c.c.d.f.6.e.e.7.9.e.9.0.c.e.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:ec09:e97e:e6fd:cca9])
-        by smtp.gmail.com with ESMTPSA id p25sm5408479wma.39.2020.08.12.13.43.05
+Received: from hex.int.rpsys.net (3.4.a.8.2.9.1.2.1.e.3.5.0.0.0.3.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:3000:53e1:2192:8a43])
+        by smtp.gmail.com with ESMTPSA id h7sm6189823wmf.43.2020.08.12.15.10.29
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 13:43:06 -0700 (PDT)
+        Wed, 12 Aug 2020 15:10:29 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/3] server/process: Pass timeout/xmlrpc parameters directly to the server
-Date: Wed, 12 Aug 2020 21:43:04 +0100
-Message-Id: <20200812204304.931893-3-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] server/process: Add extra logfile flushing
+Date: Wed, 12 Aug 2020 23:10:29 +0100
+Message-Id: <20200812221029.936201-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200812204304.931893-1-richard.purdie@linuxfoundation.org>
-References: <20200812204304.931893-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Further cleanup, just pass these settings directly.
+There is the possibility data is being lost from the logfile due to
+data buffering. Add in a couple of extra flush calls to ensure data
+is being written out before the lock file is dropped.
+
+Possible fix for [YOCTO #14000]?
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ lib/bb/server/process.py | 35 ++++++++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
 diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index a3ef10753d..7ee427b51c 100644
+index 7ee427b51c..65e1eab527 100644
 --- a/lib/bb/server/process.py
 +++ b/lib/bb/server/process.py
-@@ -38,7 +38,7 @@ class ProcessServer():
-     profile_filename = "profile.log"
-     profile_processed_filename = "profile.log.processed"
+@@ -247,6 +247,10 @@ class ProcessServer():
  
--    def __init__(self, lock, sock, sockname):
-+    def __init__(self, lock, sock, sockname, server_timeout, xmlrpcinterface):
-         self.command_channel = False
-         self.command_channel_reply = False
-         self.quit = False
-@@ -57,6 +57,9 @@ class ProcessServer():
-         self.sock = sock
-         self.sockname = sockname
+         self.cooker.post_serve()
  
-+        self.server_timeout = server_timeout
-+        self.xmlrpcinterface = xmlrpcinterface
++        # Flush logs before we release the lock
++        sys.stdout.flush()
++        sys.stderr.flush()
 +
-     def register_idle_function(self, function, data):
-         """Register a function to be called while the server is idle"""
-         assert hasattr(function, '__call__')
-@@ -466,7 +469,7 @@ class BitBakeServer(object):
+         # Finally release the lockfile but warn about other processes holding it open
+         lock = self.bitbake_lock
+         lockfile = lock.name
+@@ -469,20 +473,25 @@ class BitBakeServer(object):
          print(self.start_log_format % (os.getpid(), datetime.datetime.now().strftime(self.start_log_datetime_format)))
          sys.stdout.flush()
  
--        server = ProcessServer(self.bitbake_lock, self.sock, self.sockname)
-+        server = ProcessServer(self.bitbake_lock, self.sock, self.sockname, self.configuration.server_timeout, self.configuration.xmlrpcinterface)
-         os.close(self.readypipe)
-         writer = ConnectionWriter(self.readypipein)
+-        server = ProcessServer(self.bitbake_lock, self.sock, self.sockname, self.configuration.server_timeout, self.configuration.xmlrpcinterface)
+-        os.close(self.readypipe)
+-        writer = ConnectionWriter(self.readypipein)
          try:
-@@ -476,8 +479,6 @@ class BitBakeServer(object):
-         writer.send("r")
-         writer.close()
-         server.cooker = self.cooker
--        server.server_timeout = self.configuration.server_timeout
--        server.xmlrpcinterface = self.configuration.xmlrpcinterface
-         print("Started bitbake server pid %d" % os.getpid())
-         sys.stdout.flush()
+-            self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset, server.register_idle_function)
+-        except bb.BBHandledException:
+-            return None
+-        writer.send("r")
+-        writer.close()
+-        server.cooker = self.cooker
+-        print("Started bitbake server pid %d" % os.getpid())
+-        sys.stdout.flush()
+-
+-        server.run()
++            server = ProcessServer(self.bitbake_lock, self.sock, self.sockname, self.configuration.server_timeout, self.configuration.xmlrpcinterface)
++            os.close(self.readypipe)
++            writer = ConnectionWriter(self.readypipein)
++            try:
++                self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset, server.register_idle_function)
++            except bb.BBHandledException:
++                return None
++            writer.send("r")
++            writer.close()
++            server.cooker = self.cooker
++            print("Started bitbake server pid %d" % os.getpid())
++            sys.stdout.flush()
++
++            server.run()
++        finally:
++            # Flush any ,essages/errors to the logfile before exit
++            sys.stdout.flush()
++            sys.stderr.flush()
  
+ def connectProcessServer(sockname, featureset):
+     # Connect to socket
 -- 
 2.25.1
 
