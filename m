@@ -1,106 +1,87 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (NAM02-DM3-obe.outbound.protection.outlook.com [40.107.95.68])
- by mx.groups.io with SMTP id smtpd.web12.17019.1597158339125910334
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web12.338.1597264986999522692
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Aug 2020 08:05:39 -0700
+ Wed, 12 Aug 2020 13:43:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=pd1x6btF;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.95.68, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A2nwz3aAFEleEatB9aaS6dvRoMCi0KeK0wrtiK3G4RpQaqaLSw47lvPfo03OH+Pl2UrfZqW8gaXaGRtlp+rsnkg/C1ttfTuK6hyf67lWL/l+AEPVSFOEydJXA8m7d0QVOQmzJY0JchIE0d6kmQ9j+lN4v2cYIZCulkw5YEjTmPCeW8FxXy3ZsklSbORWZCj/sXhproABbeD3VkTO/Kv35Y48kVkFQo5Kfi+GjXqfshy/UhARJJaFscM3x42SILFXRV3FKbzXYAtsFHMFP+ZLYVFlunVXZWKBqKL9/LApsYFumlUeKmINHcuHrLjDoAiEN2gNEOVLwhqKHurG9PFoxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fuvf0q93oCRVrio6YQwu6M8mCbkGriX2NT0NqbtiwiY=;
- b=gis1WSnjjGrhuZjPB976hd/5f6zmGenxvBeGa+I1E0K8oAGwyDZD99q9g91CvOQ5rRB4j8UYBEaKpQsQCSzlDLHUVoh/m2+qF2quzCaKUnWflnR0uTwGcd5K3W6rN8HFZR+1JSLFM49dnwiuxqCApDIvbZsA7TwX9/nCQmXpWifk7aKOjY0JH5rZvmFG3P+6jgFwcsPSr3gY8a43YSIOGJSlWlapcAVQyT5La/uM86sg58nLT6HTk9aSBJBXSNRyc6O4ayGaXI4n2gPBrxmElM52YwX6gKdsVfYp8d66eYMm3OOdX/rOhres/zzoClnhzwnHFAmT/d0yD/FUvSBLNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
- dkim=pass header.d=agilent.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fuvf0q93oCRVrio6YQwu6M8mCbkGriX2NT0NqbtiwiY=;
- b=pd1x6btFITfJTr5Sz3MViy6+AuqzUnwXvfT1tj1fP3XGADtCFKLLLQIyMr3TgYeyYyPs9F9LqkqDsrV98js1YOttZwjN1jtP/PAnJ7kdImL58Snyhp0n92BlkCFREIUrGllcWSmIb22FXJT/VqguQvwhF9qV3SQBIXcanNoR6lWlZWKXC/vJ5d1BuYoa9hla3HyKr3yFP4PiDWTTFxmQPXPMBxecGKbJPlgmCAUxjnIT0VTcRaHk8un9NQ7tdFdXCgUSu80XXMfB3esErLT19CARX+/yoTIKQGlWGv4h1xE5j8scI9JlVA7wtbt3BwhtYwWK/7270XKnnS4v5i6JtA==
-Received: from SN1PR12MB2480.namprd12.prod.outlook.com (2603:10b6:802:22::21)
- by SN6PR12MB2846.namprd12.prod.outlook.com (2603:10b6:805:70::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Tue, 11 Aug
- 2020 15:05:38 +0000
-Received: from SN1PR12MB2480.namprd12.prod.outlook.com
- ([fe80::4c4f:2633:b1bc:c164]) by SN1PR12MB2480.namprd12.prod.outlook.com
- ([fe80::4c4f:2633:b1bc:c164%6]) with mapi id 15.20.3261.025; Tue, 11 Aug 2020
- 15:05:37 +0000
-From: "Chris Laplante" <chris.laplante@agilent.com>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH v3 0/4] [RFC] Shell func backtracing
-Thread-Topic: [bitbake-devel] [PATCH v3 0/4] [RFC] Shell func backtracing
-Thread-Index: AQHWbzcYkH7KvFFdHkuPXVuGFDgKxKkx5xUAgAEZZfCAAAKMgA==
-Date: Tue, 11 Aug 2020 15:05:37 +0000
-Message-ID: 
- <SN1PR12MB2480FE912CC46A49637AD5DD8B450@SN1PR12MB2480.namprd12.prod.outlook.com>
-References: <20200810165524.37417-1-chris.laplante@agilent.com>
- <7175d431218ff97c0c28fdaf40c89685feeb2f9f.camel@linuxfoundation.org>
- <162A3E91186A4B45.9300@lists.openembedded.org>
-In-Reply-To: <162A3E91186A4B45.9300@lists.openembedded.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: agilent.com; dkim=none (message not signed)
- header.d=none;agilent.com; dmarc=none action=none header.from=agilent.com;
-x-originating-ip: [76.99.179.205]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 46fba4c9-88c6-4d78-af66-08d83e080191
-x-ms-traffictypediagnostic: SN6PR12MB2846:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: 
- <SN6PR12MB2846ECA78495CC9FFD93E1F08B450@SN6PR12MB2846.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- HsGJuMBf4xLaOSkHht9ipnagY9ZVyCQQEIier+DpquofUijwSGmt/hcn4O/w6cHlrpCUn9LHyrHbqPaEyfu2734fggL3ruumwSFTKUYdueqFRrSnspEL15idh0Hjl2zjG8EmkpS5hazSpp0nU5BFIX8j2no3tuFfHW+ZD+IC0J9EHZRE5OaSMV5f33FWSwod1t1KXbZ/QOIEmIGRaRxSdPFCgyXoYtdnJFpQjwvK+tyLGTU8I/bXkwmdqJ5qtx4s49NvcVRvFGF7rfh7JMNkWURWeSVP4fFx8hlTNj8V+lxRfRoUyRPVTzvIpJ8CpQRb93g4A/zLtu/ZWJ9sl1hahIptUn/ANT2ZTqJLJze8J/36lZdF8fsVBGf0ES7OECjl0A2gD673fBlCBKbbmijXI3uWvQD5VXKex6oxL119Gfy6rRN3Mq0B2w5B0pX5FiSpbRCNLRTChTVdMSLU/HXO5w==
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2480.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(29502001)(86362001)(52536014)(8676002)(83380400001)(5660300002)(8936002)(33656002)(110136005)(9686003)(2906002)(55016002)(186003)(6506007)(66446008)(76116006)(498600001)(26005)(66946007)(7696005)(66476007)(966005)(66556008)(71200400001)(64756008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 
- e+v2T3cDHoHEQnHSvffl3+1UztG+TbAzvYVRdVVxZqnyGbxY+ncG8dXb9jIdTGxEts2V/Whk+csiZA4KWQ155aa0dSTUNzSsvbADttuCB9WFVJdY5H/nH86FcNfZYUxGllUpL6k+bZ3y8TY8f33L93pTTWH46+mKnb9zzQeoN3zmVFPJEtXcIptqQ74Vx49TuvAOydSYhXvBpJg169etJF40D0iKo2tHLau5VqtZu3s5jd5eLXI8lF1df3k3Q464rELMjzuP5pIMnrXpYJaM42JyEeN+8nNfoQvVDlQSNjr7jtKkmtjzG+Rh6kxRhTbcw0V+pxdka5aADMFvyHv8+og7p14oOgxwz8/Vq8WlunxSNfohU2EK46D7g1Uq4FdVfzQjrdCHqn6msfd0daeJ3OySkYDlWRSon1bUcYiWThMer6CE51sd5ti75SmLidDfog6B8lJuF+JsTtAcjTHWGfNumBAI1oVXRHH4j7LWCNytvUtpmVmsdrwC7TtekuDPbIs1d4ik02Ny3jUP++lNF4Sad4+KzOEtD8JFUFsrzrg61A9sBmSOfYgiYa9wERvjBg7Dh5X6GuKoAkTY4Gidnyq9GVm2HPAdwzDboUgzzG0NvMlZ0T8Hh+G5lBxvOmZVDBj2Pe597ygXCmAk7XU/jg==
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=iaTU+m5y;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f66.google.com with SMTP id r4so3260485wrx.9
+        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Aug 2020 13:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zur6Z0n5+3I3ix2/i10dUhIWZ9fEdTjD1ni3UZB0igI=;
+        b=iaTU+m5yjVtRg/SrPQLLGRGzhi2LWbiJH1Gs9m5xhpS58ZhqhfryzAjnfxeTF5XEdR
+         JGhw6qZSZ/RfYFj7sztMbISzNSY4bILlVhac2fX+n+XeVUto1Sf8BDJExo/K2BhgXfJo
+         GiyQweyE7Ik7Nxy9AX/q7+iLozBXsJppAxkbU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zur6Z0n5+3I3ix2/i10dUhIWZ9fEdTjD1ni3UZB0igI=;
+        b=ZyjRxqvEnZoBLtjL1RhtFEtmMBz59nhwd33iD0sM5QFz8bDaLX4g8YZeA/94YX4QMC
+         Exi61UBAKaNBscslCAOkyFjD8mCK3xVkSImWlv8TwsNuwORsBVQI7HvcK8TdF+eNPqeW
+         4J84BV+r1rAnanb1I7lolhCBgVQ7y/0DtG2UB9iDOmP0V7pSp3terz7i8OIJTh4DRCZ1
+         +oWfQ32P29mVvFdWJxMBxLfjoF/KMqKe2CR51MS5yS2hWvrHQx/F5y6r6sVcC+ZBjsJ4
+         QF3pmtzkBhtQE1JPyEMc70rNlOvcdAcyVjPcC4STUTbu8/IOmI24Ms+5V+jUiZ8CmYOS
+         qCjA==
+X-Gm-Message-State: AOAM530V/9Xcad2rxS1jFuvPuZhaU12R9kt3Wdch74/Q+PC5zTVeWM/M
+	coqiT2W/x6BL9+yOusZ34KpfAwoDPKkY1w==
+X-Google-Smtp-Source: ABdhPJzwHhkmFUMTSLouJp0pOESzmv7R4dAojjxiZKyf4NeGkefOWr41TB0PS8CVpIo9OovM5DwfMg==
+X-Received: by 2002:a05:6000:18a:: with SMTP id p10mr782550wrx.33.1597264985176;
+        Wed, 12 Aug 2020 13:43:05 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net (9.a.c.c.d.f.6.e.e.7.9.e.9.0.c.e.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:ec09:e97e:e6fd:cca9])
+        by smtp.gmail.com with ESMTPSA id p25sm5408479wma.39.2020.08.12.13.43.04
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 13:43:04 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/3] server/process: Remove pointless process forking
+Date: Wed, 12 Aug 2020 21:43:02 +0100
+Message-Id: <20200812204304.931893-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2480.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46fba4c9-88c6-4d78-af66-08d83e080191
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Aug 2020 15:05:37.8801
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1HKQeg/pimAWWF1Xg4+9uHeAUOs1iAtCKrQScNpk+mlYbyBpOznpHILwrEXG8c1064b1iGb2vWJ2pEZh2PJgKgR+/fhhm6oVGvfTirRcf3k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2846
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-PiA+IEkgc3VzcGVjdCBidXQgaGF2ZSBub3QgcHJvdmVuIHRoYXQgdGhpcyBzZXJpZXMgcmVzdWx0
-ZWQgaW4gdGhlIGZhaWx1cmVzIGluIHRoaXMNCj4gPiBidWlsZDoNCj4gPg0KPiA+IGh0dHBzOi8v
-YXV0b2J1aWxkZXIueW9jdG9wcm9qZWN0Lm9yZy90eXBob29uLyMvYnVpbGRlcnMvODMvYnVpbGRz
-LzEyNDcNCj4gDQo+IEkgdGhpbmsgeW91J3JlIHJpZ2h0LiBMb29rcyBsaWtlIHRoZSBFUlIgdHJh
-cCBpcyBmaXJpbmcgZXZlbiBmb3IgY29tbWFuZHMgdGhhdA0KPiB3ZSBleHBlY3QgbWlnaHQgZmFp
-bC4gRS5nLg0KPiANCj4gc3RlcDJiOiBXQVJOSU5HOiAvaG9tZS9wb2t5YnVpbGQveW9jdG8td29y
-a2VyL2J1aWxkLQ0KPiBhcHBsaWFuY2UvYnVpbGQvYnVpbGQvdG1wL3dvcmsvcWVtdXg4Nl82NC1w
-b2t5LWxpbnV4L2xpbnV4LQ0KPiB5b2N0by81LjQuNTQrZ2l0QVVUT0lOQys5Njg4M2IzOGMxXzlm
-YzJmYjJlNzMtDQo+IHIwL3RlbXAvcnVuLmRvX2tlcm5lbF9jaGVja291dC4zMjgyMDU1OjE5MSBl
-eGl0IDEgZnJvbSAnZ2l0IHNob3ctcmVmIC0tDQo+IHF1aWV0IC0tdmVyaWZ5IC0tICJyZWZzL2hl
-YWRzLyRiIicNCj4gc3RlcDJiOiBXQVJOSU5HOiBCYWNrdHJhY2UgKEJCIGdlbmVyYXRlZCBzY3Jp
-cHQpOg0KPiBzdGVwMmI6IFdBUk5JTkc6IC9ob21lL3Bva3lidWlsZC95b2N0by13b3JrZXIvYnVp
-bGQtDQo+IGFwcGxpYW5jZS9idWlsZC9idWlsZC90bXAvd29yay9jb3JlMi02NC1wb2t5LWxpbnV4
-L2xpYmVycm9yLXBlcmwvMC4xNzAyOS0NCj4gcjAvdGVtcC9ydW4uZG9faW5zdGFsbC42MTQwODY6
-MTU3IGV4aXQgMiBmcm9tICdzZWQgLWkgLWUgJ3N8L3Vzci9iaW4vcGVybC0NCj4gbmF0aXZlLiov
-cGVybHwvdXNyL2Jpbi9lbnYgbmF0aXZlcGVybHwnICRQRVJMU0NSSVBUJw0KPiBzdGVwMmI6IFdB
-Uk5JTkc6IEJhY2t0cmFjZSAoQkIgZ2VuZXJhdGVkIHNjcmlwdCk6DQo+IA0KPiANCj4gSSBndWVz
-cyBJJ2xsIGhhdmUgdG8gZ2V0IHJpZCBvZiB0aGUgRVJSIHRyYXAgYW5kIGp1c3QgcmVseSBvbiB0
-aGUgRVhJVCB0cmFwLiBCdXQNCj4gdGhhdCBtZWFucyB3ZSB3b24ndCBhY3R1YWxseSBnZXQgdGhl
-IGxpbmUgbnVtYmVyIG9uIHdoaWNoIHRoZSBhY3R1YWwNCj4gY29tbWFuZCBmYWlscywgc2luY2Ug
-dGhhdCBpcyByZXNldCBmb3IgRVhJVCB0cmFwcyA6KC4NCg0KDQpPbiBzZWNvbmQgdGhvdWdodCwg
-dGhlcmUgbWlnaHQgYmUgYSB3YXkgdG8gY2FwdHVyZSB0aGUgYmFja3RyYWNlIGluIHRoZSBFUlIg
-dHJhY2UgYnV0IG5vdCBwcmludCBpdCB1bnRpbCB3ZSBjb21lIHRvIHRoZSBFWElUIHRyYXAuIFdp
-bGwgaGF2ZSB0byBwbGF5IGFyb3VuZCB3aXRoIGl0Lg0KDQpDaHJpcyANCg==
+We already call bb.daemonize.createDaemon() in BitBakeServer so the extra
+multiprocessing.Process() appears to be totally unneeded and just an extra layer
+of forking which confuses things. Remove it.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/server/process.py | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index b66fbe0acd..a152b44824 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -34,12 +34,11 @@ logger = logging.getLogger('BitBake')
+ class ProcessTimeout(SystemExit):
+     pass
+ 
+-class ProcessServer(multiprocessing.Process):
++class ProcessServer():
+     profile_filename = "profile.log"
+     profile_processed_filename = "profile.log.processed"
+ 
+     def __init__(self, lock, sock, sockname):
+-        multiprocessing.Process.__init__(self)
+         self.command_channel = False
+         self.command_channel_reply = False
+         self.quit = False
+@@ -483,7 +482,7 @@ class BitBakeServer(object):
+         print("Started bitbake server pid %d" % os.getpid())
+         sys.stdout.flush()
+ 
+-        server.start()
++        server.run()
+ 
+ def connectProcessServer(sockname, featureset):
+     # Connect to socket
+-- 
+2.25.1
+
