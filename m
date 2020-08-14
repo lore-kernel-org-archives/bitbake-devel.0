@@ -1,116 +1,175 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web12.700.1597270231739931085
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (NAM04-BN3-obe.outbound.protection.outlook.com [40.107.68.45])
+ by mx.groups.io with SMTP id smtpd.web11.6.1597438632914901162
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Aug 2020 15:10:32 -0700
+ Fri, 14 Aug 2020 13:57:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NXNud5AK;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id t14so3321540wmi.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Aug 2020 15:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+E87fMi48oWRjbBk3Hg6+9h4lZio1SbNN4tqc/nm1Vk=;
-        b=NXNud5AKlYnH5aZj747c7O3cfH/Axp8dut7midX/dpVyRp/bq8qu/xcbdqvmIaLlwd
-         owY21yZRrhpuUgF7k0yfTJa38+jgrvyroAoR6Ny4j5A0QzcJj/B6Fx04yle+DXFZb+V/
-         ZRxnDlzWZbn+vMsfm+7+nlgLVfsf9mb5TfSPI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+E87fMi48oWRjbBk3Hg6+9h4lZio1SbNN4tqc/nm1Vk=;
-        b=Uni4plRoX5kiEb2JDRHa8ov3eXPOh9RSYVIkUxk9/xXP1vK5LwmiupVkcy1kHwVjoB
-         ZzTnvZBv4T0n1Cy2O11sAYVPoF4Wg036AFkm0dWmfL1YvVArzHAlXU/z/ISEl2Cd3poj
-         Vxw1c1gW9KE2Ma8WBLgJV200P5XFrug+EusTzgnmcTjWuFiqKamUXLzSZd9hRBp5YhuV
-         DcTJSGC4kCU2Csyy5OUxy1ZUozA7L3ejLXWhvMTvMYgXorI1Pb/vhzo3Tzr1Hi3WNMQv
-         ljk9onehr0X1eOPwZzkOwX2IpieG3pqpb50FrtCCgviGYmXTz8nEzj08IZe6YQ+zgUux
-         bkTw==
-X-Gm-Message-State: AOAM533K78cm9f3K9jGsLI+YvPZ8zxt2y9wfqG275ZdYDY4yA3KLHvDv
-	EybpuCePnz4Krl17V+elKPrazWIC8a0lqg==
-X-Google-Smtp-Source: ABdhPJwaHHZW9Vj/RG12CBqPBPYF9TUbwLk3oBOzUAMdc3uWfKNUHxTMSG7DXJ1m0BtJJUtBG5d3ug==
-X-Received: by 2002:a7b:c74b:: with SMTP id w11mr1415379wmk.81.1597270230079;
-        Wed, 12 Aug 2020 15:10:30 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (3.4.a.8.2.9.1.2.1.e.3.5.0.0.0.3.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:3000:53e1:2192:8a43])
-        by smtp.gmail.com with ESMTPSA id h7sm6189823wmf.43.2020.08.12.15.10.29
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 15:10:29 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] server/process: Add extra logfile flushing
-Date: Wed, 12 Aug 2020 23:10:29 +0100
-Message-Id: <20200812221029.936201-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=iQrAMwdv;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.68.45, mailfrom: chris.laplante@agilent.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A88UiEZtOsMu3S54dWWa6s/BzmtIgUZrFt6xQj3lOwfWe71fjA0vlrASePrtOaCaT/bxekAiAngyF2uPoxolZVHuNbrKVK3Czq9G8bhjOSrt9ec+cqKdxOhvKGJPGwLSMM7padKQplIr8pQW8wSjUdROb9WH/AP7Skj/K1zG1+qlslUZDmomHiRzGrrOw0EDnhBibR/S65Fh4R3G+JsRR6FI5EPuP5gq4AJiddQBK5aPhziOgbrPg0PK1UodLItKSMSXOT0tKQk8KkWTgMUUiP+/pTODqefqhkoAzNLUXBNQ3noBek557FHsvJFWR5Mxn9q7lDf0qtm1ggrSN86vNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9a8BgK1HUzai47NZcR+iPeCoGZg2tPAvTpPqdkJihsM=;
+ b=Vdzz9xrZoDG7Pe+YXH80GbSGsu8by9OntfilMz+zBBwsJt43CPJwXDEdycCWrngn2yktLMFHwr6hbrR6bAn5frmgf1RFMlwg+wSgJpDxTIj38vRkKpnQQmgM1OIIDkRQ1ba4dk+8wcvWyk9bjiMsU6B6LaHsVXpYogkKX0KAGhS53P8hgXgBqB499oAGRik01GeiJu1rp6NkLm3/phT+HT7ELR/CLX1RU0XJB2fmnkraJVkl3LYLckIH5LOpnKJ0LUvA1ChLpD1sxE75c4fnsuZwyyJqfln0xeZ6RsxFJEGxwDJabXH3klwcw7yJpBFub4YGbd1llBQYIum8GjUIzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 192.25.218.34) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=agilent.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9a8BgK1HUzai47NZcR+iPeCoGZg2tPAvTpPqdkJihsM=;
+ b=iQrAMwdvquio+NhMI2lGL0qhaXudyFGx5b1s5ruOEhkal8JBGhTEfgRml/AMyiDFINx/OXLp7R0wHRS4y2zMPzALwbgeszxuChweBmh7fQa01q9+fh0IYTQ7/pTBEd74DGutFtH8YM32qzCRJx1fCYviE9kGGGo7qAySKwHHX06aWI+bgHFqXR4j5GU9CmZ/CCh4b9cUSN+SbrnTKRFDhx9rbaczVHFCMSFjDFsADENdu/J024efkZwfmo08fzgFnPOtd4wEcWja/UMLuQ3/Oe1v1EhWnGk1s7SkwdTOkIANhgPkl7h3W2C4pw4PEIlSPtBej6KBKZk1UFD63488Dw==
+Received: from BN6PR22CA0033.namprd22.prod.outlook.com (2603:10b6:404:37::19)
+ by BY5PR12MB4276.namprd12.prod.outlook.com (2603:10b6:a03:20f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Fri, 14 Aug
+ 2020 20:57:11 +0000
+Received: from BN8NAM12FT042.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:404:37:cafe::ab) by BN6PR22CA0033.outlook.office365.com
+ (2603:10b6:404:37::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend
+ Transport; Fri, 14 Aug 2020 20:57:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.34)
+ smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
+ signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
+ header.from=agilent.com;
+Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
+ 192.25.218.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=192.25.218.34; helo=edgeappmail.agilent.com;
+Received: from edgeappmail.agilent.com (192.25.218.34) by
+ BN8NAM12FT042.mail.protection.outlook.com (10.13.182.89) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.16 via Frontend Transport; Fri, 14 Aug 2020 20:57:11 +0000
+Received: from laplante-lm-19.localdomain (192.25.126.27) by
+ edgeappmail.agilent.com (192.25.218.34) with Microsoft SMTP Server id
+ 15.1.1713.5; Fri, 14 Aug 2020 14:57:06 -0600
+From: "Chris Laplante" <chris.laplante@agilent.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: <richard.purdie@linuxfoundation.org>, Chris Laplante
+	<chris.laplante@agilent.com>
+Subject: [PATCH v4 1/2] build: print a backtrace when a Bash shell function fails
+Date: Fri, 14 Aug 2020 16:55:56 -0400
+Message-ID: <20200814205557.69655-2-chris.laplante@agilent.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200814205557.69655-1-chris.laplante@agilent.com>
+References: <20200814205557.69655-1-chris.laplante@agilent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Return-Path: chris.laplante@agilent.com
+Received-SPF: SoftFail (wpcosapexchedg3.windmz.agilent.com: domain of
+ transitioning chris.laplante@agilent.com discourages use of 192.25.126.27 as
+ permitted sender)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0f124b80-e181-48f4-b6a7-08d840949d84
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4276:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<BY5PR12MB42768A7F814E00CC38FD13568B400@BY5PR12MB4276.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Forefront-Antispam-Report: 
+	CIP:192.25.218.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:wpcosapexchedg3.windmz.agilent.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(346002)(396003)(136003)(29502001)(46966005)(36906005)(36756003)(54906003)(426003)(336012)(82740400003)(8936002)(86362001)(6916009)(4326008)(316002)(2906002)(2616005)(356005)(82310400002)(8676002)(956004)(5660300002)(83380400001)(44832011)(478600001)(26005)(107886003)(6666004)(186003)(70206006)(966005)(7636003)(47076004)(1076003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2020 20:57:11.3633
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f124b80-e181-48f4-b6a7-08d840949d84
+X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.34];Helo=[edgeappmail.agilent.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN8NAM12FT042.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4276
+Content-Type: text/plain
 
-There is the possibility data is being lost from the logfile due to
-data buffering. Add in a couple of extra flush calls to ensure data
-is being written out before the lock file is dropped.
+The trick here is to use a DEBUG trap to record the line
+number of each command as they execute. This is so we
+can report the real line number of the failing command,
+which is otherwise not possible in a Bash EXIT trap. See
+http://gnu-bash.2382.n7.nabble.com/trap-echo-quot-trap-exit-on-LINENO-quot-EXIT-gt-wrong-linenumber-td3666.html
 
-Possible fix for [YOCTO #14000]?
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- lib/bb/server/process.py | 35 ++++++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+ lib/bb/build.py | 61 ++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 50 insertions(+), 11 deletions(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 7ee427b51c..65e1eab527 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -247,6 +247,10 @@ class ProcessServer():
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 977b02fc..98cbc48c 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -303,20 +303,59 @@ def exec_func_python(func, d, runfile, cwd=None):
  
-         self.cooker.post_serve()
- 
-+        # Flush logs before we release the lock
-+        sys.stdout.flush()
-+        sys.stderr.flush()
+ def shell_trap_code():
+     return '''#!/bin/sh\n
++__BITBAKE_LAST_LINE=0
 +
-         # Finally release the lockfile but warn about other processes holding it open
-         lock = self.bitbake_lock
-         lockfile = lock.name
-@@ -469,20 +473,25 @@ class BitBakeServer(object):
-         print(self.start_log_format % (os.getpid(), datetime.datetime.now().strftime(self.start_log_datetime_format)))
-         sys.stdout.flush()
- 
--        server = ProcessServer(self.bitbake_lock, self.sock, self.sockname, self.configuration.server_timeout, self.configuration.xmlrpcinterface)
--        os.close(self.readypipe)
--        writer = ConnectionWriter(self.readypipein)
-         try:
--            self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset, server.register_idle_function)
--        except bb.BBHandledException:
--            return None
--        writer.send("r")
--        writer.close()
--        server.cooker = self.cooker
--        print("Started bitbake server pid %d" % os.getpid())
--        sys.stdout.flush()
--
--        server.run()
-+            server = ProcessServer(self.bitbake_lock, self.sock, self.sockname, self.configuration.server_timeout, self.configuration.xmlrpcinterface)
-+            os.close(self.readypipe)
-+            writer = ConnectionWriter(self.readypipein)
-+            try:
-+                self.cooker = bb.cooker.BBCooker(self.configuration, self.featureset, server.register_idle_function)
-+            except bb.BBHandledException:
-+                return None
-+            writer.send("r")
-+            writer.close()
-+            server.cooker = self.cooker
-+            print("Started bitbake server pid %d" % os.getpid())
-+            sys.stdout.flush()
+ # Emit a useful diagnostic if something fails:
+-bb_exit_handler() {
++bb_sh_exit_handler() {
+     ret=$?
+-    case $ret in
+-    0)  ;;
+-    *)  case $BASH_VERSION in
+-        "") echo "WARNING: exit code $ret from a shell command.";;
+-        *)  echo "WARNING: ${BASH_SOURCE[0]}:${BASH_LINENO[0]} exit $ret from '$BASH_COMMAND'";;
+-        esac
+-        exit $ret
+-    esac
++    if [ "$ret" != 0 ]; then
++        echo "WARNING: exit code $ret from a shell command."
++    fi
++    exit $ret
+ }
+-trap 'bb_exit_handler' 0
+-set -e
 +
-+            server.run()
-+        finally:
-+            # Flush any ,essages/errors to the logfile before exit
-+            sys.stdout.flush()
-+            sys.stderr.flush()
++bb_bash_exit_handler() {
++    ret=$?
++    trap "" DEBUG
++    if [ "$ret" != 0 ]; then
++        echo "WARNING: ${BASH_SOURCE[0]}:${__BITBAKE_LAST_LINE} exit $ret from '$1'"
++
++        echo "WARNING: Backtrace (BB generated script): "
++        for i in $(seq 1 $((${#FUNCNAME[@]} - 1))); do
++            if [ "$i" -eq 1 ]; then
++                echo -e "\t#$((i)): ${FUNCNAME[$i]}, ${BASH_SOURCE[$((i-1))]}, line ${__BITBAKE_LAST_LINE}"
++            else
++                echo -e "\t#$((i)): ${FUNCNAME[$i]}, ${BASH_SOURCE[$((i-1))]}, line ${BASH_LINENO[$((i-1))]}"
++            fi
++        done
++    fi
++    exit $ret
++}
++
++bb_bash_debug_handler() {
++    local line=${BASH_LINENO[0]}
++    # For some reason the DEBUG trap trips with lineno=1 when scripts exit; ignore it
++    if [ "$line" -eq 1 ]; then
++        return
++    fi
++
++    # Track the line number of commands as they execute. This is so we can have access to the failing line number
++    # in the EXIT trap. See http://gnu-bash.2382.n7.nabble.com/trap-echo-quot-trap-exit-on-LINENO-quot-EXIT-gt-wrong-linenumber-td3666.html
++    if [ "${FUNCNAME[1]}" != "bb_bash_exit_handler" ]; then
++        __BITBAKE_LAST_LINE=$line
++    fi
++}
++
++case $BASH_VERSION in
++"") trap 'bb_sh_exit_handler' 0
++    set -e
++    ;;
++*)  trap 'bb_bash_exit_handler "$BASH_COMMAND"' 0
++    trap 'bb_bash_debug_handler' DEBUG
++    set -eE
++    shopt -s extdebug
++    ;;
++esac
+ '''
  
- def connectProcessServer(sockname, featureset):
-     # Connect to socket
+ def create_progress_handler(func, progress, logfile, d):
 -- 
-2.25.1
+2.17.1
 
