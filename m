@@ -1,121 +1,91 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
- by mx.groups.io with SMTP id smtpd.web11.120907.1597960242887816009
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web10.121420.1597960243614113985
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 20 Aug 2020 14:50:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=KZr+rA4a;
- spf=pass (domain: gmail.com, ip: 209.85.222.174, mailfrom: jeff.dagenais@gmail.com)
-Received: by mail-qk1-f174.google.com with SMTP id p4so2935125qkf.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 20 Aug 2020 14:50:42 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=mcVCrZDm;
+ spf=pass (domain: gmail.com, ip: 209.85.219.41, mailfrom: jeff.dagenais@gmail.com)
+Received: by mail-qv1-f41.google.com with SMTP id x6so1659252qvr.8
+        for <bitbake-devel@lists.openembedded.org>; Thu, 20 Aug 2020 14:50:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RiHEBESnWQozE6ZV1z5lqsxKN4IAPXa3IHlFxNcn7wI=;
-        b=KZr+rA4aZ7PuViyaM6Es21bGu5DL3skiRfo2+VqfCYt5HvZkVYAlJBpdjV92KTa9ZL
-         CbnnjcJvp0F09Yb4D6E80pq/L54jrZ80TypbIpC5oXUYZQ+TFPzrIOCznkrO3JaDJ6Gh
-         VtV6uQXb24zIbsrBT2Eihc4RNTrY0egUOlVPtPQ553YS5nGBAuFhomepK6DmEP4HHUog
-         gJz18YkbByVIIYCqiDAmLhNfv2LDg0LO/xnqCeCbP9UCxpJaKBr5Y+qgvqOfKxqiRMyU
-         VEOwTx9/Dh6A7YXkPkcoC9ddkFnQtQiz7e0mcmoe8CXct+FVvNkaarvNyBk4A6ql9835
-         SCEw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WzW6tQJt1Y3iFkP72B54EGI4hif5wfNUSf8jKrx2hP0=;
+        b=mcVCrZDmRz43uR2oTgPH5JT0jmThupzdGJLJ2QMFL5gCmXfaSkkO8YIvoiyw3D/Acu
+         VmqhDxCEo4RVN8MIbw9RYiuSWII0uWVSWcrdvIJT6opnGwfvRjnN4rjPYXlnjuMSQbdJ
+         2hlxv4FoDZmxabev0QUh7WfgLsdMzbpYaO++HWasf0BVzS1GSWCXCukFhqhdTpr+Qa7W
+         l4RaMZYCjslO0y0/msq9fxGGRoRFn+ZMk57G8wdhLeKALZHV136nu+bFy0Gz/D1yR3rk
+         ilYm6jiyMPhM2MsS/N8AsswsuG27GDrDV2iKeGLvmAdB65nc6yFxQhVqCGYDekIDhcwF
+         eTbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RiHEBESnWQozE6ZV1z5lqsxKN4IAPXa3IHlFxNcn7wI=;
-        b=E02sex7I5cNKlj5TAHBuGz4YiCQQgavv652T2sdSexXB/f3ITlV2ds+ZLlgBmAUcEY
-         gKruXdFCDJicgfX0RSRD6quyn8GAZIV6XnxI53wgqre4cQOVwY1wOXrJpcCf0Yn0+n+W
-         dycErcWDWQtuEPiYitvk+0uFCaix9VZ4JW0tZ0scrFbg54qzlWB5SXrGRJgy8dPcJjew
-         jmp1LyelyGlGE60/Hoj4RdpQjD2Xs26ozuCxPO+io3WBoydV8ru/xtAJj9XSIEfgpFWt
-         a/RGGaIWvYgRzInaJa1k1d2O48XZG9vKCpwEn/qsb4KZQLkcrSeK/Q3jn+poFPQPRWSG
-         rC0g==
-X-Gm-Message-State: AOAM530AH2ROGssWIwIbKXF8/kZeCBRZdDKqbApZnjVvkpxpUtd2AjTk
-	yNbVvCcFD9ggyOQ9EDO6m7jTJJ7hYMqVGQ==
-X-Google-Smtp-Source: ABdhPJzkEtqkSRiF6q8hb8oQUninR6NWIHUt1hgxoKBFYO+IC7M7OmqGU3nK0Tr98Gc3/rRRTb1UPQ==
-X-Received: by 2002:a37:a7cc:: with SMTP id q195mr39702qke.110.1597960241843;
-        Thu, 20 Aug 2020 14:50:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WzW6tQJt1Y3iFkP72B54EGI4hif5wfNUSf8jKrx2hP0=;
+        b=BYKCJijIDpEw37k/R7E53gjRADvZkGBQ85Nxzp4eSGWyRDkroUQr8Lc1DVOMTRNWpX
+         kZOPlsFLkX95XBd8aNn3D8LSPdoEh5Uv5KLEFBa6A69IPB+pEiSU1JpngUVhPgwUjn/+
+         En4+nDbOv3MuTzJI5v5r/bF3aejHF5zKGGZkQgrz3NgrixxOS/vwowe96sb5EyQgbLVv
+         fR1Xt19CJ6BXsDaABGms4AdU4CR+zBe/0RBZHTfs+1EDvp1P/upT/NDyB9ZDEiT82lOV
+         /PSyMT4Iz8R4dfmVe259u2kepsbKerj/M6OVnZBXtffqWsyR0RMNzx/czAXOcEGzZKcC
+         BYPw==
+X-Gm-Message-State: AOAM532bFOg+iSFR1TGf2SsiKrWstQDRy/eZgZvtuX5EqZ3yE5AUIcgN
+	V03+d+D0/jNsDsiZ11UgAyB9zBXp9FUbqQ==
+X-Google-Smtp-Source: ABdhPJzoY/pVK1EVr8RQuRF6ZFlOSfuABvb8erSJNXsiVYRlbzcMSYdrykWvqD7lo6jBH8cxv9LhjQ==
+X-Received: by 2002:a0c:e90b:: with SMTP id a11mr913953qvo.168.1597960242662;
+        Thu, 20 Aug 2020 14:50:42 -0700 (PDT)
 Return-Path: <jeff.dagenais@gmail.com>
 Received: from jfddesk.Sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
         by smtp.gmail.com with ESMTPSA id x28sm3407534qki.55.2020.08.20.14.50.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 14:50:41 -0700 (PDT)
+        Thu, 20 Aug 2020 14:50:42 -0700 (PDT)
 From: "Jean-Francois Dagenais" <jeff.dagenais@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: =?UTF-8?q?Maxime=20Roussin-B=C3=A9langer?= <maxime.roussinbelanger@gmail.com>,
 	guillaume.champagne@sonatest.com,
 	jeff.dagenais@gmail.com
-Subject: [RFC] siggen: clean_basepath leaks full recipe file path
-Date: Thu, 20 Aug 2020 17:49:59 -0400
-Message-Id: <20200820215000.30818-1-jeff.dagenais@gmail.com>
+Subject: [PATCH] siggen: clean_basepath: remove recipe full path when virtual:xyz present
+Date: Thu, 20 Aug 2020 17:50:00 -0400
+Message-Id: <20200820215000.30818-2-jeff.dagenais@gmail.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820215000.30818-1-jeff.dagenais@gmail.com>
+References: <20200820215000.30818-1-jeff.dagenais@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+Before this fix, this example basepath (a):
+virtual:native:/full/path/to/recipes-example/helloworld/helloworld_1.2.3.bb:do_compile
+would get incorrectly "cleaned" into:
+helloworld/helloworld_1.2.3.bb:do_compile:virtual:native:/full/path/to/recipes-example/helloworld/helloworld_1.2.3.bb
 
-While investigating constant mismatches of hashes from our SSTATE_MIRROR depot,
-Maxime and I came across a bitbake-diffsigs which showed a suspicious cause for
-the mismatch. It appeared to be an underlying taskdeptasks which contains the
-full path of the recipe, which is totally a local build thing.
+When searching backwards in `a` trying to isolate the 'virtual:xyz' to add
+it to the end of the string, we need to consider `a` still has the recipe
+path and taskname. So stoping the rsplit after only 1 split is not enough.
+We want to reach the second ':' from the end.
 
-After searching for a little while. We came accross the `clean_basepath(a)`
-function in siggen.py. We added prints on it:
+This way, we obtain:
+helloworld/helloworld_1.2.3.bb:do_compile:virtual:native
 
-def clean_basepath(a):
-    mc = None print('a: ' + a) if a.startswith("mc:"):
-        _, mc, a = a.split(":", 2)
-    b = a.rsplit("/", 2)[1] + '/' + a.rsplit("/", 2)[2] print('b: ' + b) if
-    a.startswith("virtual:"):
-        b = b + ":" + a.rsplit(":", 1)[0]
-    if mc:
-        b = b + ":mc:" + mc
-    print('b+: ' + b) return b
+reviewed-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
+Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+---
+ lib/bb/siggen.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sure enough, this looks like the culprit. Consider the following trace:
-a: virtual:native:/full/path/to/poky/meta/recipes-devtools/gnu-config/gnu-config_git.bb:do_populate_sysroot
-b: gnu-config/gnu-config_git.bb:do_populate_sysroot
-b+: gnu-config/gnu-config_git.bb:do_populate_sysroot:virtual:native:/full/path/to/poky/meta/recipes-devtools/gnu-config/gnu-config_git.bb
-
-Looking at this, it really seems like the intent of the `if
-a.startswith("virtual:")` case is to insert only the `:virtual:native` at the
-end.
-
-The simplest fix we suggest is simply changing `a.rsplit(":", 1)[0]` to
-`a.rsplit(":", 2)[0]` and causes b+ to become:
-
-b+: gnu-config/gnu-config_git.bb:do_populate_sysroot:virtual:native
-
-Since this is so profound and core to the way signatures work, coupled with the
-fact that this code hasn't changed in years, we feel being the ones to find and
-fix this is unlikely.
-
-Perpahps the content/format of the passed `a` variable has changed recently?
-
-The following email is a patch which could be applied if deemed correct. But please
-consider this re-written version:
-
-def clean_basepath(basepath):
-    # basepath is a string like '/full/path/to/recipes-whatever/helloworld/helloworld_0.1.2.bb:do_compile'
-    # or 'virtual:native:/full/path/to/recipes-whatever/helloworld/helloworld_0.1.2.bb:do_compile'
-    # or 'mc:somemachine:/full/path/to/recipes-whatever/helloworld/helloworld_0.1.2.bb:do_compile'
-
-    _, parent_dir, recipe_task = basepath.rsplit("/", 2)
-    # drop what is left of the second slash, searching from right to left
-    cleaned = parent_dir + '/' + recipe_task
-
-    # if there was a 'abc:xyz' prefix, add it to the end
-    if not basepath.startswith('/'):
-        cleaned += ':' + basepath.split('/', 1)[0].rstrip(':')
-
-    return cleaned
-
-Both simple fix and this rewrite were tested with `oe-selftest -r sstatetests`.
-
-We feel this version has these advantages:
-* improved readablility
-* improved efficiency (the split is not repeated twice and function it has fewer `if`s)
-* honours the open/close principle better by not hardcoding "virtual:" nor "mc:"
-
-Thanks for your feedback! I will submit this version as a patch if it is positive.
-
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 4c63b0ba..ad49d1e2 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -752,7 +752,7 @@ def clean_basepath(a):
+         _, mc, a = a.split(":", 2)
+     b = a.rsplit("/", 2)[1] + '/' + a.rsplit("/", 2)[2]
+     if a.startswith("virtual:"):
+-        b = b + ":" + a.rsplit(":", 1)[0]
++        b = b + ":" + a.rsplit(":", 2)[0]
+     if mc:
+         b = b + ":mc:" + mc
+     return b
+-- 
+2.28.0
 
