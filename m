@@ -1,180 +1,100 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (NAM12-DM6-obe.outbound.protection.outlook.com [40.107.243.77])
- by mx.groups.io with SMTP id smtpd.web11.136722.1598024883511435914
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+ by mx.groups.io with SMTP id smtpd.web12.138711.1598032401796274125
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 21 Aug 2020 08:48:04 -0700
+ Fri, 21 Aug 2020 10:53:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=NrNQqXeo;
- spf=pass (domain: windriver.com, ip: 40.107.243.77, mailfrom: hongxu.jia@windriver.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R0b0vmoMVQ46FId726G17sIVO7M2xYBWxar3AvZBYX2/vpqs/+mloWpwehPwsOQxmjM0lEyIubsohOOLsOuFtuxsETzn1bdVtIblki9uxGzpLDOtnNKHkx6Lyr9BTNCEuGBoSZ33Ua+31X/hgxkfT9KfgJ4RnTYvO4I7J8HeFr9csYUgFp50sTrlV1nYAh9sROSjoSrwcPIjod5M6RNrmsI+49iYAYs7F0NPPtauX9RkBJaQPULKYFqsqoZvi3f/T11SMEmeo9nHUVPRGt5tPRi36RGL9DrccQ+k3uORFilnK6ePaT/cRevIovNhgpgzdyqG/HR6BFoPEx0VOTaWJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uHzCEwgfC78xvgM0nEhsLptg3ENOI+GBjBhjpitFQUw=;
- b=DkTOXrlozhfmxntzh3njr1hl+4MjXP+mV7atF06IM3yRcr0iWzjjKONZ9/7UWcMWV9zxQrICjrbWKxfup1JV3jwyqW05uf+cIQ5Aubvs2vWdgrlEM3qHnxvrd2D1lA4h6MpmYfwtG9yu0POkcCWHQwhmIipoeild2Ki7l8NjRWqDzczozfBDCQGnpRj3mZsjux4BwCucRyYEbpus7lCItNHkqH0CmfkLCnmQrpz1YiDTVoozwKECQnUQM6gD+wmmKfwpsDMujfVQQPPGH1/WoMnyOTK24gwFKbOwf5oqEqKSaIw3Tf/g4/Zy8687lbf9LAfnwmaP6CF84a+OaXo11g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=ZMPtKxqg;
+ spf=pass (domain: gmail.com, ip: 209.85.219.48, mailfrom: jeff.dagenais@gmail.com)
+Received: by mail-qv1-f48.google.com with SMTP id dd12so1004776qvb.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2020 10:53:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uHzCEwgfC78xvgM0nEhsLptg3ENOI+GBjBhjpitFQUw=;
- b=NrNQqXeoN8eU3eChG9P2n6gm04/cvom+9D8o5wwYmA4NcergP5hgwbJ9/0hDoIDLiTmaFVFNfpdOJRkM/ZjS6/+AjBDz0iumnn9CxFAwLJ3twUEZ7OWYK2LZx9qGoZBfa3yZcTlqMBj6NzMMD5PXDOhVj/mK2tiCmpmJof16qgs=
-Authentication-Results: lists.openembedded.org; dkim=none (message not signed)
- header.d=none;lists.openembedded.org; dmarc=none action=none
- header.from=windriver.com;
-Received: from DM6PR11MB4380.namprd11.prod.outlook.com (2603:10b6:5:14e::20)
- by DM5PR11MB1708.namprd11.prod.outlook.com (2603:10b6:3:d::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3305.24; Fri, 21 Aug 2020 15:48:02 +0000
-Received: from DM6PR11MB4380.namprd11.prod.outlook.com
- ([fe80::213c:2f71:aad:4494]) by DM6PR11MB4380.namprd11.prod.outlook.com
- ([fe80::213c:2f71:aad:4494%3]) with mapi id 15.20.3305.026; Fri, 21 Aug 2020
- 15:48:02 +0000
-Subject: Re: [bitbake-devel] [PATCH] server/process: fix exit racing between process and thread
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
- bitbake-devel@lists.openembedded.org
-References: <162D282190DD8FB5.7353@lists.openembedded.org>
- <9b28fe30-a475-2949-118e-1fe70aef4fe4@windriver.com>
- <0e45aff7dadff33243ae2590e2f813395b71f35e.camel@linuxfoundation.org>
-From: "hongxu" <hongxu.jia@windriver.com>
-Message-ID: <d9f5d95c-1796-de85-bfa3-889c1ce31c2f@windriver.com>
-Date: Fri, 21 Aug 2020 23:47:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <0e45aff7dadff33243ae2590e2f813395b71f35e.camel@linuxfoundation.org>
-X-ClientProxiedBy: BY3PR10CA0026.namprd10.prod.outlook.com
- (2603:10b6:a03:255::31) To DM6PR11MB4380.namprd11.prod.outlook.com
- (2603:10b6:5:14e::20)
-Return-Path: hongxu.jia@windriver.com
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BY3PR10CA0026.namprd10.prod.outlook.com (2603:10b6:a03:255::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Fri, 21 Aug 2020 15:48:00 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 03b7301c-635b-4507-ab97-08d845e995c9
-X-MS-TrafficTypeDiagnostic: DM5PR11MB1708:
-X-Microsoft-Antispam-PRVS: 
-	<DM5PR11MB1708A85F9566F2B0B6A30014945B0@DM5PR11MB1708.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	Ba/HSZ10vUFfnP0Z5dtnO4iPFgsDIEesBbY/8DzKGynokBKvFEOlQfAONqWKUkKwf/qG/RjLEf5Kz23aoeBlJ1vCOIQuX3nAT0eOkD3DaYjIrssO/aCSDyNeTmHAsets980/oaqcixC4/oTtxi+5CBR8l7RhrxGb/PKy0zQrvdrTeoeejvhyDgOLqVEE60p9CqfSMvTRiO5tg1PCtBVvYm0W3JFm9MbjsKvrQqk59LlGZXqTshwM6OWi9DEU2n9qIbOF4JY7ZrRl99OdRHivek+VYWZwgGPhN84aZtyKLqcX4H8ChG+MCQaWrSffL/EOCp+dBBwwmeJmowHKpKwaUHT0n9jhLVRgPi6p0c+o3mk+cO2iqPerGhatHu0dMoPyUpP5a05on7+y/5xaVRQ892J8r44zlb0T2Ieip2ctyWVZn5AROXlr2zdNsdhH/VtSVXQobVTM6ZZZqFzizlBMV/lcZmzcZ5bENBHPOKKiYA0=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4380.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(39850400004)(366004)(376002)(396003)(44832011)(8936002)(6666004)(16576012)(956004)(8676002)(83380400001)(6486002)(2616005)(2906002)(53546011)(52116002)(66476007)(966005)(110011004)(31686004)(316002)(31696002)(66556008)(86362001)(478600001)(36756003)(186003)(66946007)(26005)(5660300002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
-	pPJ6dEfWJ/SOfSjHV6VQCruR71tazjjQ+oUo/2WheQm7n3DsUF0z3NaadT3OuhdObBd20JMGytfiypnVYgBSVPw3wchvLJO5Sf8Anqxok9VHMssFwt7oWUpfgghKGVxE6KklwwiPar6rymEV9tO1EF012JxICq+mdkMnFqkv9FaR1QlfGaLctSPihpm4zMnqtA6cv/s3/TaVHcVY6jm+0ZmmTbqYSXQxn6PQHt3rciXDJMIiCuDrLkR4CFsefQKQMBXF9Q9t+oswEej3M8qSUrrIl/bJb9gXF87bFfn06ltLMMU3jZBNxlPItzPra9X/Fw70vZmc3xs7EStpxBHksEisG2405xMXdNdLz3TobsqbQ4Hqt+RyGCu3+S8Tuf2mgavH0lIffCWqN2ToRiYwS+pXKfm5nOl3GtCrpBXrkpUDVQloHL6z/58gZjS1vyH0rzZqmFGGRyRAxk6+T3/Rnr8CB7g0W+H3hioV5o0nvkgoSaGnV9/1EHfMcQ5a6NhMngBrMQKoB5ery/ONy9HLQnve006H9DSy7lwk52Byfs0aQNa67s38b1uqSwmBhY94VA4BDY08p8xy0q+m4hvwls7AegjHImUbLDOMHULTWoZeAPAjhAqbmVSrOVyfSQCmWahGwt/Vo5GtOrI575xvOw==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03b7301c-635b-4507-ab97-08d845e995c9
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4380.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 15:48:02.0280
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JpFsehjepoJQhhA5bHZTI/zTn8o/Jav9rB1KjsZmH75ND/7nvFvIZAUSyNQQ5fW5wIUtALQOQhDd3M3/bGrSVzFe5sgtTTyTXtczbuDPGvc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1708
-Content-Type: text/plain; charset=utf-8; format=flowed
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=3ZMJyW8KyPRSbpCxR0WZKBAe1EXJIUbN8tSbTetQwsM=;
+        b=ZMPtKxqgCI2ATph1mCQleezB7E6Sx68xynjbgwGMTAe8sMiZ45IVONmW6ENc0KkH8A
+         I4+4HdEEAiVWLhjCeWjRYfCcV+3XQ4nB723ff1rtgG72oIVZTNeScxONeTMgBzhD4t18
+         Is8edoZKq1XGv+N7PKw4904OV0hxbcRJAcdgOThlSOUHn/Msp1N5ZUFEU+ZlpWHpusFT
+         3wOOuOwAhCv9m8RBIq2a79bLmlfNUCvUS224eAfraWrFtgupQgvMqvfgR9dWq50CoUW0
+         BjTtgygDj/1b+WU4IxR8Zjx6146HiftqnX5DOLOAoXHSEkTZ2R9Fo6uu6V9RBcHu64v8
+         C1Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=3ZMJyW8KyPRSbpCxR0WZKBAe1EXJIUbN8tSbTetQwsM=;
+        b=sZmibUxZJLFncGV6GPQ78TYLo+O8XM5nJXVZSBJKecU/dtBu5MeltbIA8pu2QOAkTS
+         NtdGrIaVPPEGrcpZuc02GIpod7FDw7QOGftnY2+azrbO+A9cMb8/E3WIElko3VlOlb5b
+         YtGw2OWY6hZXT4gWwby99Bs+hzFsT+AK2b/qOaCb/ZkeS0y047hAjCEac1qsxb+/u8Ym
+         PeQYBFO5U+k8zAf4LxFK2tR6iAh6s9EqXOBchbWs/eD3XjULlHnKjfzwTeQccK3vFWvX
+         IqywNW37+WLPMjMz0fPZdi3TzajDDLEcvFhl8oFKuijnq46k8I4ZoB6z119aXp3ytrPU
+         i6lA==
+X-Gm-Message-State: AOAM53167eSa/tO6v+cDFyzkU0lI69zw3SGDU3Y2jFSkszsIP+DEuB4L
+	S0lswezylGE9BOsgs9A85kA=
+X-Google-Smtp-Source: ABdhPJxnxT6JiXnzQcX2QCmY1ynGpc8CPfRvi6d9g1rz0VfjLNk+gKshAS5T4XLnS/ZUnmV7mIKMMw==
+X-Received: by 2002:ad4:46e1:: with SMTP id h1mr3427817qvw.129.1598032400899;
+        Fri, 21 Aug 2020 10:53:20 -0700 (PDT)
+Return-Path: <jeff.dagenais@gmail.com>
+Received: from [10.0.0.29] ([135.0.225.35])
+        by smtp.gmail.com with ESMTPSA id f4sm2496640qtp.38.2020.08.21.10.53.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Aug 2020 10:53:20 -0700 (PDT)
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [bitbake-devel] [RFC] siggen: clean_basepath leaks full recipe file path
+From: "Jean-Francois Dagenais" <jeff.dagenais@gmail.com>
+In-Reply-To: <376560ff987c4585f7f21c2cae4c8f50451ad743.camel@linuxfoundation.org>
+Date: Fri, 21 Aug 2020 13:53:19 -0400
+Cc: bitbake-devel@lists.openembedded.org,
+ =?utf-8?Q?Maxime_Roussin-B=C3=A9langer?= <maxime.roussinbelanger@gmail.com>,
+ guillaume.champagne@sonatest.com
+Message-Id: <866732CC-FB4E-4F0F-853B-1225FBAC9749@gmail.com>
+References: <20200820215000.30818-1-jeff.dagenais@gmail.com>
+ <1819f13202abc9339dbdd0215d714fda8a9b070b.camel@linuxfoundation.org>
+ <29032972-1F01-4FE9-A3BD-13E1FFD43790@gmail.com>
+ <376560ff987c4585f7f21c2cae4c8f50451ad743.camel@linuxfoundation.org>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+Content-Type: text/plain;
+	charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
 
-On 8/21/20 6:03 PM, Richard Purdie wrote:
-> On Fri, 2020-08-21 at 10:56 +0800, Hongxu Jia wrote:
->> Hi RP,
->>
->> I have another solution to fix this issue, how about drop
->> thread invoking, directly call sync_caches in shutdown?
->> But there are some else multiprocessing.util.Finalize calling
->> in bitbake/lib/bb/cooker.py, I am not sure about the side effect
->>
->> --- a/bitbake/lib/bb/cooker.py
->> +++ b/bitbake/lib/bb/cooker.py
->> @@ -2130,10 +2130,7 @@ class CookerParser(object):
->>               for c in self.bb_caches.values():
->>                   c.sync()
->>  =20
->> -        sync =3D threading.Thread(target=3Dsync_caches)
->> -        sync.start()
->> -        # While multiprocess exit, it should wait thread terminates
->> -        multiprocessing.util.Finalize(None, sync.join,
->> exitpriority=3D-100)
->> +        sync_caches()
->>           bb.codeparser.parser_cache_savemerge()
->>           bb.fetch.fetcher_parse_done()
->>           if self.cooker.configuration.profile:
-> Well spotted!
->
-> We use a thread here to try and avoid delays whilst the cache is
-> written out so its a performance optimisation.
->
-> I wonder if we could use atexit here to register the call to
-> sync.join() ?
-Yes, the original commit [1] called atexit, but commit [2] changed
 
-it to multiprocessing.util.Finalize, I've tried [1], but it did not work fo=
-r
+> On Aug 21, 2020, at 11:10, Richard Purdie =
+<richard.purdie@linuxfoundation.org> wrote:
+>=20
+> /path/recipedir/recipe_verison.bb:do_task
+> virtual:A:/path/recipedir/recipe_verison.bb:do_task
+> virtual:A:B:/path/recipedir/recipe_verison.bb:do_task
+> virtual:A:B:C:/path/recipedir/recipe_verison.bb:do_task
+> mc:X:virtual:A:/path/recipedir/recipe_verison.bb:do_task
+> mc:X:virtual:A:B:/path/recipedir/recipe_verison.bb:do_task
+> mc:X:virtual:A:B:C:/path/recipedir/recipe_verison.bb:do_task
+>=20
+> and what we care about particularly is that given a list of these, the
+> sorted() result of the return values is consistent, independent of
+> path.
+>=20
+> For example, we should get the same value back for:
+>=20
+> /short/recipedir/recipe_version.bb
+> and
+> /this/is/a/long/path/recipedir/recipe_version.bb
+>=20
+> so perhaps a unittest which tested that, iterating the above formats?
 
-above case any more, it seems the thread join not work in atexit
+Would it be true to say then, that the ONLY purpose of =
+`clean_basepath()` is to
+remove the full path of the recipe?
 
-while fork daemon used.
+If true, then could we not simply only snip the path itself, and leave =
+the rest
+in the same order?
 
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -28,6 +28,7 @@ import json
- =C2=A0import pickle
- =C2=A0import codecs
- =C2=A0import hashserv
-+import atexit
+So =
+'mc:X:virtual:A:B:C:/this/is/a/long/path/recipedir/recipe_verison.bb:do_ta=
+sk'
+would become 'mc:X:virtual:A:B:C:recipedir/recipe_verison.bb:do_task' ?
 
- =C2=A0logger=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D logging.getLogger("BitBake"=
-)
- =C2=A0collectlog=C2=A0 =3D logging.getLogger("BitBake.Collection")
-@@ -2132,8 +2133,7 @@ class CookerParser(object):
-
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sync =3D threading.Thread=
-(target=3Dsync_caches)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sync.start()
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 multiprocessing.util.Finalize(N=
-one, sync.join, exitpriority=3D-100)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 atexit.register(lambda: sync.jo=
-in())
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.codeparser.parser_cach=
-e_savemerge()
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.fetch.fetcher_parse_do=
-ne()
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if self.cooker.configurat=
-ion.profile:
-
-[1]=20
-http://git.openembedded.org/bitbake/commit/?id=3D97ce57e6f860d3e6f34cc7a603=
-ed1eeac4f423d3
-[2]=20
-http://git.openembedded.org/bitbake/commit/?id=3D588d339f2bde8ab6547bc0c1c4=
-e7b83310b1318f
->
-> We just need to be careful this is only called in the cooker process
-> and not any others we may fork() off. We therefore may need a wrapper
-> to ensure that getpid() is the correct (saved) value?
-
-Yes, after applying solution 1 fix, I check the content of bitbake.lock,
-
-the saved getpid is the same with cooker process. But it differs
-
-with the log message in bitbake-cookerdaemon.log (the log message
-
-is before multiprocessing.start)
-
-So I think the fix of get multiprocessing.Process back is the best choice
-
-we have which reduces unknown risk
-
-//Hongxu
-
-> Cheers,
->
-> Richard
->
-
+That would definitely simplify the implementation and be more future =
+proof,
+would it not?=
