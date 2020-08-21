@@ -1,169 +1,77 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
- by mx.groups.io with SMTP id smtpd.web10.136074.1598021667894340351
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+ by mx.groups.io with SMTP id smtpd.web12.134855.1598021833724548684
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 21 Aug 2020 07:54:28 -0700
+ Fri, 21 Aug 2020 07:57:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Zc921dQ2;
- spf=pass (domain: gmail.com, ip: 209.85.222.180, mailfrom: jeff.dagenais@gmail.com)
-Received: by mail-qk1-f180.google.com with SMTP id b14so1593492qkn.4
-        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2020 07:54:27 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=BRahjyBh;
+ spf=pass (domain: gmail.com, ip: 209.85.222.179, mailfrom: jeff.dagenais@gmail.com)
+Received: by mail-qk1-f179.google.com with SMTP id n129so1595968qkd.6
+        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2020 07:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=sCJ6XVw9u+zg58LJfbbl7s9xqu804TPu1DZJvcIf82c=;
-        b=Zc921dQ2X/yOoQPaH7shiedZv7FSOxwpyq0C25jwrgPXatUr1QeS+/ieyOePit4n/Z
-         LqUMTtC+xERc5KFx9WQU66R5g2WWuUcoPaN+5Wi3NiDv/KWE4j+ft3Pg2hM/8+zgFTQQ
-         mpELr5vD8zvc+ApCQEYFTkZ9HcUWpQE0JNfr7Aj+08pedIpEml7Tuzh/NwDyQUVkAFjT
-         s0iLv7koxJGCqrha357arGCfiaJWnHKhp4GULtwsztRpzzOeRe0SzRrBKIRnwekKBEIm
-         Hd116m4ou9xQ3ZMoJ5ZKZ3/wWh+wNxp2moe5RgFkKAkunentn3Z4LETBPJpq21w5Ok+l
-         7Dhw==
+        bh=JKnNgs3mNOtvuYAx+wYG2uxgeXG8UbpNVQ2HI4ivJiI=;
+        b=BRahjyBhAmOWClnJBPYdEke0OkOsThfE4Au7lxL0/Jz58x5R+CRMO8UTVxGXYfOWoh
+         tdkM+HRUG98GR6cA24chdeLIPmdYInjlu8VRIlXpD4zH2mDFqOZDn+NQ9ouNukutj27a
+         Ft4FpwIJdxlzOw68ucsreqnbXNrGTNF0Z1vKIR9e4Fppeny0FPnFWh25wHHHh0j1Yvo9
+         jBA3nwJZBYP3FOfZaVXFy4PMfr1KH78Y8iD232TcpyaG/Twxrb05jV+TmX1yyngU7lyL
+         cgRxWWts9mi/rZPC1XuuvwetuEMEDJqYmbq5qp1IkGWrp4XfLggFNy3XIr75+QLIRikc
+         c59w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=sCJ6XVw9u+zg58LJfbbl7s9xqu804TPu1DZJvcIf82c=;
-        b=mEHz4AOwMqzpwts3hg+Vj+9XY9cadUWfLeASCSkXFrixYoI6ah4MOtj5JKm8PW6WuH
-         KXRm27OOF550JDt1y5hHsenQJGqRwGbLwvnRayRSSbbWy7XJCSNla+rFhVjwG16j/jaU
-         BwNhoVAcac8MhRbhXrLeJ6zEzQ5TtiZNMAgtSTkJ4SBgPYOdjkD/ooAfkqHBEVIZ5Sxg
-         s3JNAQP3TN8TLkYnCUW3HAKT4uFo/T20HrZSwcC1h3/3JgJ/SwYy4EzLrgDP0JK93HYZ
-         c4AFwZpbLm1dLQo/oWr/yLGxFk2X8bUI674dJ3XARvxWvaDpdNPAJOMFLDPrEGrSFRHA
-         XWsA==
-X-Gm-Message-State: AOAM530WaOfWOsMPB6SkUJ+THa+TWD3kxCJD1/K9ZhRORH5n3LSAKVn/
-	xhY+akJivuXqM2IkMLVfGc4=
-X-Google-Smtp-Source: ABdhPJy4Mmdk8j2AGNz/p7FOjOCsZUG/kpjtcrUPhNz0VuJuIe/GiSVpEk8PGS7cKM1zrVSDBqJ/dA==
-X-Received: by 2002:a05:620a:346:: with SMTP id t6mr3144147qkm.29.1598021667004;
-        Fri, 21 Aug 2020 07:54:27 -0700 (PDT)
+        bh=JKnNgs3mNOtvuYAx+wYG2uxgeXG8UbpNVQ2HI4ivJiI=;
+        b=FD+Z9FXZaduXAodE/SCPUk2o/092cSKnKL1Ehf57P/JsTpv/KRYB8yqjKyhhVckQ1s
+         6O0yw8h8wI3eUoGFLUTHftFlf90bdRgmbLFlCcQcDuETjYGk5V4f3g0iY4IYCehXtOFG
+         K81QVvvApsgr+AUc9ZcfSKadAj5EJ0/8AeRMg7Ffoxc5bqdLoXqGkfZ99Jm4X6eyWnpp
+         OedwQAquRyBEjaqQpAgKVn/+hCN/ckBPiuJoEuNDiz6Rx+IJxJBuk1HF/0CeHOqzVUHW
+         kO9004aiDYNETwcONQBnPNHNk5MHy+VI83knDcEQ9gfwnbOhLVFnFjJAeFYB+2HaxdZW
+         Ed6w==
+X-Gm-Message-State: AOAM530y8hi3ktvdcxLWHa/N0Cu9czsKjgW2kwHRzuZGFtLQUgp6DatJ
+	sKxgZlNLy7DQsFhqq1O+4lI=
+X-Google-Smtp-Source: ABdhPJy82HmjMWXV1RkajjH+C1NAibXnXv1soxZ/q3s2zxR0Icjh0jinfaAYoYqpnHGQT8RK1FhXhg==
+X-Received: by 2002:a37:61d4:: with SMTP id v203mr3342668qkb.390.1598021832966;
+        Fri, 21 Aug 2020 07:57:12 -0700 (PDT)
 Return-Path: <jeff.dagenais@gmail.com>
 Received: from [10.0.0.29] ([135.0.225.35])
-        by smtp.gmail.com with ESMTPSA id m66sm1883912qkf.86.2020.08.21.07.54.26
+        by smtp.gmail.com with ESMTPSA id t12sm1883607qkt.56.2020.08.21.07.57.12
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Aug 2020 07:54:26 -0700 (PDT)
+        Fri, 21 Aug 2020 07:57:12 -0700 (PDT)
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
 Subject: Re: [bitbake-devel] [RFC] siggen: clean_basepath leaks full recipe file path
 From: "Jean-Francois Dagenais" <jeff.dagenais@gmail.com>
-In-Reply-To: <1819f13202abc9339dbdd0215d714fda8a9b070b.camel@linuxfoundation.org>
-Date: Fri, 21 Aug 2020 10:54:25 -0400
-Cc: bitbake-devel@lists.openembedded.org,
+In-Reply-To: <162D503D94CCE370.19371@lists.openembedded.org>
+Date: Fri, 21 Aug 2020 10:57:11 -0400
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ bitbake-devel@lists.openembedded.org,
  =?utf-8?Q?Maxime_Roussin-B=C3=A9langer?= <maxime.roussinbelanger@gmail.com>,
  guillaume.champagne@sonatest.com
-Message-Id: <29032972-1F01-4FE9-A3BD-13E1FFD43790@gmail.com>
+Message-Id: <5F06939E-E3FD-4860-9510-D0887A24111D@gmail.com>
 References: <20200820215000.30818-1-jeff.dagenais@gmail.com>
  <1819f13202abc9339dbdd0215d714fda8a9b070b.camel@linuxfoundation.org>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+ <162D503D94CCE370.19371@lists.openembedded.org>
+To: =?utf-8?Q?Jean-Fran=C3=A7ois_Dagenais?= <jeff.dagenais@gmail.com>
 X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Content-Type: text/plain;
 	charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
 
-Hi Richard, all,
 
-> On Aug 21, 2020, at 10:18, Richard Purdie =
-<richard.purdie@linuxfoundation.org> wrote:
+
+> On Aug 21, 2020, at 10:54, Jean-Francois Dagenais via =
+lists.openembedded.org <jeff.dagenais=3Dgmail.com@lists.openembedded.org> =
+wrote:
 >=20
->> The following email is a patch which could be applied if deemed
->> correct. But please
->> consider this re-written version:
->>=20
->> def clean_basepath(basepath):
->>    # basepath is a string like '/full/path/to/recipes-
->> whatever/helloworld/helloworld_0.1.2.bb:do_compile'
->>    # or 'virtual:native:/full/path/to/recipes-
->> whatever/helloworld/helloworld_0.1.2.bb:do_compile'
->>    # or 'mc:somemachine:/full/path/to/recipes-
->> whatever/helloworld/helloworld_0.1.2.bb:do_compile'
->>=20
->>    _, parent_dir, recipe_task =3D basepath.rsplit("/", 2)
->>    # drop what is left of the second slash, searching from right to
->> left
->>    cleaned =3D parent_dir + '/' + recipe_task
->>=20
->>    # if there was a 'abc:xyz' prefix, add it to the end
->>    if not basepath.startswith('/'):
->>        cleaned +=3D ':' + basepath.split('/', 1)[0].rstrip(':')
->>=20
->>    return cleaned
->>=20
->> Both simple fix and this rewrite were tested with `oe-selftest -r
->> sstatetests`.
->>=20
->> We feel this version has these advantages:
->> * improved readablility
->> * improved efficiency (the split is not repeated twice and function
->> it has fewer `if`s)
->> * honours the open/close principle better by not hardcoding
->> "virtual:" nor "mc:"
->>=20
->> Thanks for your feedback! I will submit this version as a patch if it
->> is positive.
->=20
-> Well done finding this, the bug has clearly been there a while! I've
-> had a feeling there was something going on somewhere but never found
-> it.
-
-Cache misses/extra tasks running has always bugged me but it never =
-became a high
-priority target until this week. We started using the hash equivalence =
-server a
-few months back and just recently, CI pipelines of what should have =
-otherwise
-been all cached work started talking hours and hours. This current issue =
-might
-not be completely responsible for what we were rebuilding since all CI =
-runners
-experience the same recipe space checkout path. Which means even though =
-the full
-recipe paths are in the sstate cache objects, they are the same for all =
-runners.
-
-Your confirmation that we did find something so core and were able to =
-fix it
-gives us more confidence to take a crack at the other issues we're =
-seing. ;)
-
->=20
-> I've taken the opportunity to make the code slightly clearer so have
-> written and sent a modified version of your patch. I hope that is ok!
-> Please take a look and let me know if I've missed anything too.
->=20
-
-It looks good, just using a slightly different method than the patch I =
+> It looks good, just using a slightly different method than the patch I =
 sent:
-=
+> =
 https://lists.openembedded.org/g/bitbake-devel/topic/patch_siggen/76318034=
 
+>=20
+> Can you share why you remade it?
+>=20
 
-Can you share why you remade it?
-
-
-Also, my colleague Maxime mentioned test cases... It would be nice to =
-write
-actual unit tests targetted directly on this function so I would then be =
-able to
-submit with more confidence the refactored version of the function I =
-included in
-the RFC just above here. (I still would like the community's review on =
-it and
-comments on the advantages I submitted BTW.)
-
-Perhaps if someone more familiar with these parts could send a list of =
-possible
-formats the function encounters in all the different scenarios and give =
-dummy
-before -> after strings. I could bundle this into unit tests along with =
-my
-refactored function in an upcoming series.
-
-Example: *
-=
-'virtual:something:/full/path/to/poky/meta/recipes-whatever/helloworld/hel=
-loworld_1.2.3.bb:do_sometask'
---> 'helloworld/helloworld_1.2.3.bb:do_sometask:virtual:something' * =
-'mc:...' ->
-'...' * etc.
-
-
-Thanks for your thoughts and the rapid feedback!
-
-
-
+Never mind this part, just saw you replied about this while I was =
+writing! ;)=
