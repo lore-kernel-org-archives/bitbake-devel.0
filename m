@@ -1,198 +1,169 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web12.134324.1598020264824571421
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+ by mx.groups.io with SMTP id smtpd.web10.136074.1598021667894340351
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 21 Aug 2020 07:31:05 -0700
+ Fri, 21 Aug 2020 07:54:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WXKYemKN;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.68, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f68.google.com with SMTP id r2so2131449wrs.8
-        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2020 07:31:04 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Zc921dQ2;
+ spf=pass (domain: gmail.com, ip: 209.85.222.180, mailfrom: jeff.dagenais@gmail.com)
+Received: by mail-qk1-f180.google.com with SMTP id b14so1593492qkn.4
+        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2020 07:54:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=tTqIplHMwryL1NdsFVd700vrnBiW56HJeHQW7iKFMrM=;
-        b=WXKYemKN+DI5Y53+oR9XY/zbjO7iVZ3C/xMxLZraI0WASC/fH121U7sijgqbKAxa7l
-         YuExnarwJt5sp9qom3m665IOgazGwATNvZMLY3S6Nla03Um3O5tHAQiVAFjEDOwtT/To
-         aQ7Sz/73ngDbjM1f5myFYWxfzJ1FEzEIeDM7o=
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=sCJ6XVw9u+zg58LJfbbl7s9xqu804TPu1DZJvcIf82c=;
+        b=Zc921dQ2X/yOoQPaH7shiedZv7FSOxwpyq0C25jwrgPXatUr1QeS+/ieyOePit4n/Z
+         LqUMTtC+xERc5KFx9WQU66R5g2WWuUcoPaN+5Wi3NiDv/KWE4j+ft3Pg2hM/8+zgFTQQ
+         mpELr5vD8zvc+ApCQEYFTkZ9HcUWpQE0JNfr7Aj+08pedIpEml7Tuzh/NwDyQUVkAFjT
+         s0iLv7koxJGCqrha357arGCfiaJWnHKhp4GULtwsztRpzzOeRe0SzRrBKIRnwekKBEIm
+         Hd116m4ou9xQ3ZMoJ5ZKZ3/wWh+wNxp2moe5RgFkKAkunentn3Z4LETBPJpq21w5Ok+l
+         7Dhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=tTqIplHMwryL1NdsFVd700vrnBiW56HJeHQW7iKFMrM=;
-        b=lY6qYfhC3IlGy1/pw29b1hfTG6AcTai6LXzs8vOYagwiutoIL8XEa3eWepZuVEhz7t
-         diNsHxOEX8+4hRdPtYdctAOMUmuL6s57Q358JxUzSXCf1TrermwwKNgcquvE2J2Jwvqd
-         PkdKq138iHUiXPYNdm4tTZbu/Rs8NV78AiQ3qWvPEq+VXAfYPrqfGifnwPOLSWpk+aj+
-         uAb1h6ABW5sZE64mzFJNckEwysYC9I1T1mE5DhOE4sSZ/60JyI2fdv26AGColUgB+fQN
-         wUaso5Qwe19CHTzvAEJbnWh2YLrQz2VRsVYp5vJwVmYj9hLaFCpGskrDi/5EH36zhbgI
-         95qQ==
-X-Gm-Message-State: AOAM532J72oTKec4Y1Wz12p7EXtHhMAVyVlTKmfXhZj3mF+juPwAN0p2
-	jJGBzDid8M8jyy8PcepbwCrK/X1I2AhV5/x0
-X-Google-Smtp-Source: ABdhPJx9oY+T56YT0ZF5I17PUqrTpTUB/9LO8L4O4SdUYcs+gRjMa9pWmSs16iTtHj+ak2VDvZlJPQ==
-X-Received: by 2002:adf:e90f:: with SMTP id f15mr3054072wrm.18.1598020263243;
-        Fri, 21 Aug 2020 07:31:03 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from d.d.0.9.8.0.3.8.5.d.6.d.5.a.5.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (d.d.0.9.8.0.3.8.5.d.6.d.5.a.5.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:45a5:d6d5:8308:90dd])
-        by smtp.gmail.com with ESMTPSA id s8sm5282883wmc.1.2020.08.21.07.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 07:31:02 -0700 (PDT)
-Message-ID: <8ca115eea418081b164748034ff85e4aab08dbd8.camel@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=sCJ6XVw9u+zg58LJfbbl7s9xqu804TPu1DZJvcIf82c=;
+        b=mEHz4AOwMqzpwts3hg+Vj+9XY9cadUWfLeASCSkXFrixYoI6ah4MOtj5JKm8PW6WuH
+         KXRm27OOF550JDt1y5hHsenQJGqRwGbLwvnRayRSSbbWy7XJCSNla+rFhVjwG16j/jaU
+         BwNhoVAcac8MhRbhXrLeJ6zEzQ5TtiZNMAgtSTkJ4SBgPYOdjkD/ooAfkqHBEVIZ5Sxg
+         s3JNAQP3TN8TLkYnCUW3HAKT4uFo/T20HrZSwcC1h3/3JgJ/SwYy4EzLrgDP0JK93HYZ
+         c4AFwZpbLm1dLQo/oWr/yLGxFk2X8bUI674dJ3XARvxWvaDpdNPAJOMFLDPrEGrSFRHA
+         XWsA==
+X-Gm-Message-State: AOAM530WaOfWOsMPB6SkUJ+THa+TWD3kxCJD1/K9ZhRORH5n3LSAKVn/
+	xhY+akJivuXqM2IkMLVfGc4=
+X-Google-Smtp-Source: ABdhPJy4Mmdk8j2AGNz/p7FOjOCsZUG/kpjtcrUPhNz0VuJuIe/GiSVpEk8PGS7cKM1zrVSDBqJ/dA==
+X-Received: by 2002:a05:620a:346:: with SMTP id t6mr3144147qkm.29.1598021667004;
+        Fri, 21 Aug 2020 07:54:27 -0700 (PDT)
+Return-Path: <jeff.dagenais@gmail.com>
+Received: from [10.0.0.29] ([135.0.225.35])
+        by smtp.gmail.com with ESMTPSA id m66sm1883912qkf.86.2020.08.21.07.54.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Aug 2020 07:54:26 -0700 (PDT)
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
 Subject: Re: [bitbake-devel] [RFC] siggen: clean_basepath leaks full recipe file path
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Maxime =?ISO-8859-1?Q?Roussin-B=E9langer?=
-	 <maxime.roussinbelanger@gmail.com>
-Cc: Jean-Francois Dagenais <jeff.dagenais@gmail.com>, 
-	bitbake-devel@lists.openembedded.org, guillaume.champagne@sonatest.com
-Date: Fri, 21 Aug 2020 15:30:59 +0100
-In-Reply-To: <CAE=T-s4c_k541ARhoZ+ny1d5m_C6o8LaL+J9fL+zh2XHH=oDog@mail.gmail.com>
+From: "Jean-Francois Dagenais" <jeff.dagenais@gmail.com>
+In-Reply-To: <1819f13202abc9339dbdd0215d714fda8a9b070b.camel@linuxfoundation.org>
+Date: Fri, 21 Aug 2020 10:54:25 -0400
+Cc: bitbake-devel@lists.openembedded.org,
+ =?utf-8?Q?Maxime_Roussin-B=C3=A9langer?= <maxime.roussinbelanger@gmail.com>,
+ guillaume.champagne@sonatest.com
+Message-Id: <29032972-1F01-4FE9-A3BD-13E1FFD43790@gmail.com>
 References: <20200820215000.30818-1-jeff.dagenais@gmail.com>
-	 <162D4E42F9CDE339.12673@lists.openembedded.org>
-	 <606c29630870cb03b87171f1b57e3cfb2c9206ed.camel@linuxfoundation.org>
-	 <CAE=T-s4c_k541ARhoZ+ny1d5m_C6o8LaL+J9fL+zh2XHH=oDog@mail.gmail.com>
-User-Agent: Evolution 3.36.4-0ubuntu1 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+ <1819f13202abc9339dbdd0215d714fda8a9b070b.camel@linuxfoundation.org>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-08-21 at 10:28 -0400, Maxime Roussin-Bélanger wrote:
-> On Fri, Aug 21, 2020 at 10:20 AM Richard Purdie <
-> richard.purdie@linuxfoundation.org> wrote:
-> >
-> > On Fri, 2020-08-21 at 15:18 +0100, Richard Purdie via
-> > lists.openembedded.org wrote:
-> > > Hi,
-> > >
-> > > On Thu, 2020-08-20 at 17:49 -0400, Jean-Francois Dagenais wrote:
-> > > > While investigating constant mismatches of hashes from our
-> > > > SSTATE_MIRROR depot,
-> > > > Maxime and I came across a bitbake-diffsigs which showed a
-> > > > suspicious
-> > > > cause for
-> > > > the mismatch. It appeared to be an underlying taskdeptasks
-> which
-> > > > contains the
-> > > > full path of the recipe, which is totally a local build thing.
-> > > >
-> > > > After searching for a little while. We came accross the
-> > > > `clean_basepath(a)`
-> > > > function in siggen.py. We added prints on it:
-> > > >
-> > > > def clean_basepath(a):
-> > > >     mc = None print('a: ' + a) if a.startswith("mc:"):
-> > > >         _, mc, a = a.split(":", 2)
-> > > >     b = a.rsplit("/", 2)[1] + '/' + a.rsplit("/", 2)[2]
-> print('b: '
-> > > > +
-> > > > b) if
-> > > >     a.startswith("virtual:"):
-> > > >         b = b + ":" + a.rsplit(":", 1)[0]
-> > > >     if mc:
-> > > >         b = b + ":mc:" + mc
-> > > >     print('b+: ' + b) return b
-> > > >
-> > > > Sure enough, this looks like the culprit. Consider the
-> following
-> > > > trace:
-> > > > a: virtual:native:/full/path/to/poky/meta/recipes-devtools/gnu-
-> > > > config/gnu-config_git.bb:do_populate_sysroot
-> > > > b: gnu-config/gnu-config_git.bb:do_populate_sysroot
-> > > > b+: gnu-config/gnu-
-> > > >
-> config_git.bb:do_populate_sysroot:virtual:native:/full/path/to/poky
-> > > > /m
-> > > > eta/recipes-devtools/gnu-config/gnu-config_git.bb
-> > > >
-> > > > Looking at this, it really seems like the intent of the `if
-> > > > a.startswith("virtual:")` case is to insert only the
-> > > > `:virtual:native` at the
-> > > > end.
-> > > >
-> > > > The simplest fix we suggest is simply changing `a.rsplit(":",
-> > > > 1)[0]`
-> > > > to
-> > > > `a.rsplit(":", 2)[0]` and causes b+ to become:
-> > > >
-> > > > b+: gnu-config/gnu-
-> config_git.bb:do_populate_sysroot:virtual:native
-> > > >
-> > > > Since this is so profound and core to the way signatures work,
-> > > > coupled with the
-> > > > fact that this code hasn't changed in years, we feel being the
-> ones
-> > > > to find and
-> > > > fix this is unlikely.
-> > > >
-> > > > Perpahps the content/format of the passed `a` variable has
-> changed
-> > > > recently?
-> > > >
-> > > > The following email is a patch which could be applied if deemed
-> > > > correct. But please
-> > > > consider this re-written version:
-> > > >
-> > > > def clean_basepath(basepath):
-> > > >     # basepath is a string like '/full/path/to/recipes-
-> > > > whatever/helloworld/helloworld_0.1.2.bb:do_compile'
-> > > >     # or 'virtual:native:/full/path/to/recipes-
-> > > > whatever/helloworld/helloworld_0.1.2.bb:do_compile'
-> > > >     # or 'mc:somemachine:/full/path/to/recipes-
-> > > > whatever/helloworld/helloworld_0.1.2.bb:do_compile'
-> > > >
-> > > >     _, parent_dir, recipe_task = basepath.rsplit("/", 2)
-> > > >     # drop what is left of the second slash, searching from
-> right
-> > > > to
-> > > > left
-> > > >     cleaned = parent_dir + '/' + recipe_task
-> > > >
-> > > >     # if there was a 'abc:xyz' prefix, add it to the end
-> > > >     if not basepath.startswith('/'):
-> > > >         cleaned += ':' + basepath.split('/', 1)[0].rstrip(':')
-> > > >
-> > > >     return cleaned
-> > > >
-> > > > Both simple fix and this rewrite were tested with `oe-selftest
-> -r
-> > > > sstatetests`.
-> > > >
-> > > > We feel this version has these advantages:
-> > > > * improved readablility
-> > > > * improved efficiency (the split is not repeated twice and
-> function
-> > > > it has fewer `if`s)
-> > > > * honours the open/close principle better by not hardcoding
-> > > > "virtual:" nor "mc:"
-> > > >
-> > > > Thanks for your feedback! I will submit this version as a patch
-> if
-> > > > it
-> > > > is positive.
-> > >
-> > > Well done finding this, the bug has clearly been there a while!
-> I've
-> > > had a feeling there was something going on somewhere but never
-> found
-> > > it.
-> > >
-> > > I've taken the opportunity to make the code slightly clearer so
-> have
-> > > written and sent a modified version of your patch. I hope that is
-> ok!
-> > > Please take a look and let me know if I've missed anything too.
-> >
-> > Of course as soon as I send that I realised my patch is wrong since
-> > virtuals can have multiple entries, which is why this is written
-> > searching backwards.
-> 
-> Is there a way to add test cases for this? We would like to be able
-> to write tests for this.
+Hi Richard, all,
 
-Yes, some simple unit tests added to lib/bb/tests/ somewhere would be
-run by bitbake-selftest, I'd love to see those!
+> On Aug 21, 2020, at 10:18, Richard Purdie =
+<richard.purdie@linuxfoundation.org> wrote:
+>=20
+>> The following email is a patch which could be applied if deemed
+>> correct. But please
+>> consider this re-written version:
+>>=20
+>> def clean_basepath(basepath):
+>>    # basepath is a string like '/full/path/to/recipes-
+>> whatever/helloworld/helloworld_0.1.2.bb:do_compile'
+>>    # or 'virtual:native:/full/path/to/recipes-
+>> whatever/helloworld/helloworld_0.1.2.bb:do_compile'
+>>    # or 'mc:somemachine:/full/path/to/recipes-
+>> whatever/helloworld/helloworld_0.1.2.bb:do_compile'
+>>=20
+>>    _, parent_dir, recipe_task =3D basepath.rsplit("/", 2)
+>>    # drop what is left of the second slash, searching from right to
+>> left
+>>    cleaned =3D parent_dir + '/' + recipe_task
+>>=20
+>>    # if there was a 'abc:xyz' prefix, add it to the end
+>>    if not basepath.startswith('/'):
+>>        cleaned +=3D ':' + basepath.split('/', 1)[0].rstrip(':')
+>>=20
+>>    return cleaned
+>>=20
+>> Both simple fix and this rewrite were tested with `oe-selftest -r
+>> sstatetests`.
+>>=20
+>> We feel this version has these advantages:
+>> * improved readablility
+>> * improved efficiency (the split is not repeated twice and function
+>> it has fewer `if`s)
+>> * honours the open/close principle better by not hardcoding
+>> "virtual:" nor "mc:"
+>>=20
+>> Thanks for your feedback! I will submit this version as a patch if it
+>> is positive.
+>=20
+> Well done finding this, the bug has clearly been there a while! I've
+> had a feeling there was something going on somewhere but never found
+> it.
 
-Cheers,
+Cache misses/extra tasks running has always bugged me but it never =
+became a high
+priority target until this week. We started using the hash equivalence =
+server a
+few months back and just recently, CI pipelines of what should have =
+otherwise
+been all cached work started talking hours and hours. This current issue =
+might
+not be completely responsible for what we were rebuilding since all CI =
+runners
+experience the same recipe space checkout path. Which means even though =
+the full
+recipe paths are in the sstate cache objects, they are the same for all =
+runners.
 
-Richard
+Your confirmation that we did find something so core and were able to =
+fix it
+gives us more confidence to take a crack at the other issues we're =
+seing. ;)
+
+>=20
+> I've taken the opportunity to make the code slightly clearer so have
+> written and sent a modified version of your patch. I hope that is ok!
+> Please take a look and let me know if I've missed anything too.
+>=20
+
+It looks good, just using a slightly different method than the patch I =
+sent:
+=
+https://lists.openembedded.org/g/bitbake-devel/topic/patch_siggen/76318034=
+
+
+Can you share why you remade it?
+
+
+Also, my colleague Maxime mentioned test cases... It would be nice to =
+write
+actual unit tests targetted directly on this function so I would then be =
+able to
+submit with more confidence the refactored version of the function I =
+included in
+the RFC just above here. (I still would like the community's review on =
+it and
+comments on the advantages I submitted BTW.)
+
+Perhaps if someone more familiar with these parts could send a list of =
+possible
+formats the function encounters in all the different scenarios and give =
+dummy
+before -> after strings. I could bundle this into unit tests along with =
+my
+refactored function in an upcoming series.
+
+Example: *
+=
+'virtual:something:/full/path/to/poky/meta/recipes-whatever/helloworld/hel=
+loworld_1.2.3.bb:do_sometask'
+--> 'helloworld/helloworld_1.2.3.bb:do_sometask:virtual:something' * =
+'mc:...' ->
+'...' * etc.
+
+
+Thanks for your thoughts and the rapid feedback!
 
 
 
