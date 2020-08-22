@@ -1,95 +1,109 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web12.154765.1598105822737909922
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web11.155506.1598105823396246986
  for <bitbake-devel@lists.openembedded.org>;
  Sat, 22 Aug 2020 07:17:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NIsIjHg/;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.66, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f66.google.com with SMTP id o21so4339338wmc.0
-        for <bitbake-devel@lists.openembedded.org>; Sat, 22 Aug 2020 07:17:02 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=FPsDIYZ3;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id r15so4426541wrp.13
+        for <bitbake-devel@lists.openembedded.org>; Sat, 22 Aug 2020 07:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=tK1KNiv1j2rWlrgJidYw4GStk89JJX1a9bzeF0U4Cfg=;
-        b=NIsIjHg/8kEnavxjj3oyQSPC+4pJ9CR4VtQMc45sYiMusFQtL9Gj2ftcs8lsmgia8G
-         qlBOAhr3ckHmxHEE83brVKjdZi5UOfcHFDmftROR9h1bPhdZuhKb26mgCVBcIkHgyKct
-         2LMmxetuQ0PX3OycPiIp7qodzADr2CD3OH6Fs=
+        bh=Az3oy4AdQJKfT9BbamNua6MhXDoMnOW327VrpoDPMN4=;
+        b=FPsDIYZ3y/y11xav6L5x7FmA+5ZHj/7HSLw+V9pokIX9plm1BtOSHuC8RdJvykf2ax
+         HYRxtPevE/Sot5Q/7Oho1zC2QxLz3vpYwF9VIubOFfE6dE9adpcL+VCzQmTZUXxYp1RE
+         rQtMFjJdwxSyNQ3Rp+FScUo9oMBigOo4PJAIE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tK1KNiv1j2rWlrgJidYw4GStk89JJX1a9bzeF0U4Cfg=;
-        b=NUIiR34/LnBXF3J/9jICnWqgErPQtGZy52j9hBTi+3uVYmuHe3xWOUIDt9arDRDTNp
-         OswkrEWGICWYmZ+cgt0HIBybjP9DOf5oL+Dv2tfE8DNr+AplU9rZV97bfaWhYTAZ0iCO
-         5sj7cdILEHdQdr1SUR7YnZxBi5iXq70eeRfJxU2BcHAhnCtg0zzEhcH+3AhAEBvtTjuE
-         GSY9GcNbZSjr1DKQ7R7I8KIZicyeDwRuaPqBenQJ32LTqE38vZped/EgmXeZF1IAPIU+
-         43EgyvT32Ij3HHYdatNwS2iDJXKDoE0cFSzCPolon3zArdRgg8rFS8R8uOF0vQioPct9
-         Ko7w==
-X-Gm-Message-State: AOAM5322s2IlI1eIe0L/6YrG065W+IpCMDMV0s05IXJbXkWdiNK2VRG1
-	5A/Ya0+MiYL7RjWsA0GSxwIOCXf8k41pnYLb
-X-Google-Smtp-Source: ABdhPJwvBwHReMAsMtvkANfgcebqRZ88OleqY5BpIAVo7VIE09xiJzijTpwxxuh+gF0T6irpPRbD9g==
-X-Received: by 2002:a7b:c306:: with SMTP id k6mr8760011wmj.86.1598105821005;
+        bh=Az3oy4AdQJKfT9BbamNua6MhXDoMnOW327VrpoDPMN4=;
+        b=rT9qyGp+bjltMghm67qdgtd0NF+2cDYfnhiEnQ3XT6jLJ3Goj7u83gtIDCZ8J+mTfV
+         OWTPI1eReEN+uOA57YCfSpx5sku+lE3Wh6mqqUdHV0XXWjPu1TMcW2zWuxZcKbOwQuKW
+         9Mlp7EdcyFqiCZ2Frjel+MBs/pJQx5RMqBU+bceKJybodFsxQNM9391nUPWQkr9wkZuf
+         etJ5hAuQYNDN5dob2CZyyO4ZZoLS5F7NlmsuF6Jc+lZZYyvllGKuwHcZiB5W/twRTFL7
+         6/2/r+ctqlLpoRtpf3RouVgnYF8HR/K9rW5HoUUiaukM97fSFoEK0JKnsV7l0pWV3QX+
+         OlqQ==
+X-Gm-Message-State: AOAM531hTMC2fQZNRSMZl335eyZMWWRfTLZf4+wYWvhcjZTc4QQjzG+F
+	Drn46UTyL169S+KjRuVn8qozPnp0xlWd/q8z
+X-Google-Smtp-Source: ABdhPJwPfKFb7hWkoyMR5VyM0IbiefbTG6GjUQ6UoIobE233ViUHiQddRX+VYTzg4zhe6iouG8bsqw==
+X-Received: by 2002:adf:de09:: with SMTP id b9mr7356389wrm.409.1598105821698;
         Sat, 22 Aug 2020 07:17:01 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net (d.d.0.9.8.0.3.8.5.d.6.d.5.a.5.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:45a5:d6d5:8308:90dd])
-        by smtp.gmail.com with ESMTPSA id l81sm12640281wmf.4.2020.08.22.07.17.00
+        by smtp.gmail.com with ESMTPSA id l81sm12640281wmf.4.2020.08.22.07.17.01
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 07:17:00 -0700 (PDT)
+        Sat, 22 Aug 2020 07:17:01 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/3] cooker: Ensure parse_quit thread is closed down
-Date: Sat, 22 Aug 2020 15:16:57 +0100
-Message-Id: <20200822141658.1312549-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 3/3] cooker: Explictly shut down the sync thread
+Date: Sat, 22 Aug 2020 15:16:58 +0100
+Message-Id: <20200822141658.1312549-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200822141658.1312549-1-richard.purdie@linuxfoundation.org>
 References: <20200822141658.1312549-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Each run through the parser would leak a thread from the queue created to
-shut the parser down. Close this down correctly and clean up the code flow
-slightly whilst in the area, making sure this thread does shut down correctly
-(we don't care if it loses data).
+Hongxu Jia reported a problem where the bb_cache files were not always being
+written out correctly. This was due to the sync thread being terminated
+prematurely.
+
+Whilst the preceeding changes mean the exit handler for this thread is now
+correctly called since we switch to using sys.exit() instead of os._exit(),
+this write can happen after we drop the bitbake lock, leading to potential
+races. Avoid that headache by adding in explicit thread join() calls before
+we drop the lock (which atexit or Finalize can't do).
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ lib/bb/cooker.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 9123605461..05be9bef67 100644
+index 05be9bef67..33452e7b93 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -2103,12 +2103,11 @@ class CookerParser(object):
-                                             self.total)
+@@ -1674,6 +1674,7 @@ class BBCooker:
  
-             bb.event.fire(event, self.cfgdata)
--            for process in self.processes:
--                self.parser_quit.put(None)
--        else:
--            self.parser_quit.cancel_join_thread()
--            for process in self.processes:
--                self.parser_quit.put(None)
-+
-+        # Allow data left in the cancel queue to be discarded
-+        self.parser_quit.cancel_join_thread()
-+        for process in self.processes:
-+            self.parser_quit.put(None)
+         if self.parser:
+             self.parser.shutdown(clean=not force, force=force)
++            self.parser.final_cleanup()
  
-         # Cleanup the queue before call process.join(), otherwise there might be
-         # deadlocks.
-@@ -2125,6 +2124,9 @@ class CookerParser(object):
-             else:
-                 process.join()
+     def finishcommand(self):
+         self.state = state.initial
+@@ -2063,6 +2064,7 @@ class CookerParser(object):
  
-+        self.parser_quit.close()
-+        self.parser_quit.join_thread()
-+
-         def sync_caches():
-             for c in self.bb_caches.values():
+         self.start()
+         self.haveshutdown = False
++        self.syncthread = None
+ 
+     def start(self):
+         self.results = self.load_cached()
+@@ -2132,8 +2134,8 @@ class CookerParser(object):
                  c.sync()
+ 
+         sync = threading.Thread(target=sync_caches)
++        self.syncthread = sync
+         sync.start()
+-        multiprocessing.util.Finalize(None, sync.join, exitpriority=-100)
+         bb.codeparser.parser_cache_savemerge()
+         bb.fetch.fetcher_parse_done()
+         if self.cooker.configuration.profile:
+@@ -2147,6 +2149,10 @@ class CookerParser(object):
+             bb.utils.process_profilelog(profiles, pout = pout)
+             print("Processed parsing statistics saved to %s" % (pout))
+ 
++    def final_cleanup(self):
++        if self.syncthread:
++            self.syncthread.join()
++
+     def load_cached(self):
+         for mc, cache, filename, appends in self.fromcache:
+             cached, infos = cache.load(filename, appends)
 -- 
 2.25.1
 
