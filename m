@@ -1,99 +1,77 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web11.190657.1598256126166008463
+Received: from vrout30.yaziba.net (vrout30.yaziba.net [185.56.204.33])
+ by mx.groups.io with SMTP id smtpd.web10.192033.1598262079903656673
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 24 Aug 2020 01:02:06 -0700
+ Mon, 24 Aug 2020 02:41:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=T1zTFCDm;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.67, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f67.google.com with SMTP id b17so6901286wru.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2020 01:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=ztZbJgVCAcF8hzSa0GmPZRToLXdySRe/ampxnfhJHsY=;
-        b=T1zTFCDmt951F7s2X7nFZOnFekdv1wj4fXbgwRnLl8Pv+oIofeFPtutkgUXmn1qmPu
-         H1pVyc2Uu67MN/l0PLNs/7BglKUCMxaIw5r/95f6zW+/dewdYBI7g+Et0v8+89O233El
-         LmyDS/HRCHO0HOWW0uXVmTJqnCHT07HsyDlLg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=ztZbJgVCAcF8hzSa0GmPZRToLXdySRe/ampxnfhJHsY=;
-        b=OK9tfr1Z1yZG8Og3AucSzVquLmDem1W7gZR404VYHWFxn13IPkIKwlQj+Qndmvjooi
-         qs6H07X4GNwNvnbhY5sffeeiVKZGn3T95zTCgluYwIRLFyzpaBIq2yk15z2XfcuL5Pgp
-         kQYOVew5HEXQLf3noOrrXknkctVellCPpfoLrhqJ4VNQ+IE+Os6LIDHqnujsWwB/RcU1
-         kfe7mgHgQsgb4xY9V2qmU4iYKE4zj1Ts/Wu/hZzZ8jAaBTEW0FwP8qKkSTI5bDrwE+wQ
-         buJ/8KIVqieY0sfQhnmGB0eOcQq2bmj6ENlxqLghosrF8bP1aT5C2QMs/Y6lpifwU9eu
-         1dkg==
-X-Gm-Message-State: AOAM533hXqK4rHIeZUlgF66sMqjL+y8Jk+aksrwirdO9OFZeXmEZtCBv
-	NF1E/QxvFgQYq60N9/9jWjiyFUEXphOK7h6m
-X-Google-Smtp-Source: ABdhPJyncA18qBy0keh7+EDTNF6IL1mp7XXaPb9zyOQF+r0OkfrjQaOeJGEUKpoFz64MeydSsvYaZg==
-X-Received: by 2002:adf:de08:: with SMTP id b8mr4417132wrm.4.1598256124033;
-        Mon, 24 Aug 2020 01:02:04 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from d.d.0.9.8.0.3.8.5.d.6.d.5.a.5.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (d.d.0.9.8.0.3.8.5.d.6.d.5.a.5.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:45a5:d6d5:8308:90dd])
-        by smtp.gmail.com with ESMTPSA id h6sm22300181wrv.40.2020.08.24.01.02.03
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 01:02:03 -0700 (PDT)
-Message-ID: <a990e7dd869eb9f9cc5f53f17a36eab181a5c87b.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/3] server/process/daemonize: Use sys.exit(), not os._exit() for server
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Aug 2020 09:01:54 +0100
-In-Reply-To: <162D9CC75E66F9C7.7353@lists.openembedded.org>
-References: <162D9CC75E66F9C7.7353@lists.openembedded.org>
-User-Agent: Evolution 3.36.4-0ubuntu1 
+ dkim=missing; spf=pass (domain: softathome.com, ip: 185.56.204.33, mailfrom: chris.minnoy_ext@softathome.com)
+Received: from mtaout20.int.yaziba.net (mtaout20.int.yaziba.net [10.4.20.37])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by vrout30.yaziba.net (mx10.yaziba.net) with ESMTPS id 4F36351FCA;
+	Mon, 24 Aug 2020 11:41:16 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaout20.int.yaziba.net (Postfix) with ESMTP id 7472F1605D6;
+	Mon, 24 Aug 2020 11:41:16 +0200 (CEST)
+Received: from mtaout20.int.yaziba.net ([127.0.0.1])
+	by localhost (mtaout20.int.yaziba.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 6xLidO7NFoaD; Mon, 24 Aug 2020 11:41:16 +0200 (CEST)
+Received: from [192.168.1.77] (186.93-200-80.adsl-dyn.isp.belgacom.be [80.200.93.186])
+	by mtaout20.int.yaziba.net (Postfix) with ESMTPSA id 50BBD160032;
+	Mon, 24 Aug 2020 11:41:16 +0200 (CEST)
+Subject: Re: [bitbake-devel] [PATCH] ipk ar/tar unpack
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ bitbake-devel@lists.openembedded.org
+References: <436e18f3d9dd0fd0ae23547f4172f907fed50dc9.camel@linuxfoundation.org>
+ <5687.1596801277895813527@lists.openembedded.org>
+ <ebc1c0da5227e49deb6778b571a58adf56a4d79d.camel@linuxfoundation.org>
+From: "Chris Minnoy" <chris.minnoy_ext@softathome.com>
+Organization: Soft At Home
+Message-ID: <8e66e77b-c292-fa9e-dfbd-dfb37eb63c5a@softathome.com>
+Date: Mon, 24 Aug 2020 11:41:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ebc1c0da5227e49deb6778b571a58adf56a4d79d.camel@linuxfoundation.org>
+X-CLAMAV-SCAN: ok
+X-VRSPAM-SCORE: -51
+X-VRSPAM-STATE: legit
+X-VRSPAM-CAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedruddukedgtdegucetufdoteggodetrfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpefuvfhfhfhokffffgggjggtgfesthejredttdefjeenucfhrhhomhepvehhrhhishcuofhinhhnohihuceotghhrhhishdrmhhinhhnohihpggvgihtsehsohhfthgrthhhohhmvgdrtghomheqnecuggftrfgrthhtvghrnhepleduvdejkeekudeggeeltdefhfdtgffgheevheehheehtedvudejgeefleevjeelnecuffhomhgrihhnpehtrghrrdgrrhenucfkphepkedtrddvtddtrdelfedrudekieenucfrrghrrghmpehmohguvgepshhmthhpohhuth
+X-VRSPAM-EXTCAUSE: mhhouggvpehsmhhtphhouhht
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-On Sat, 2020-08-22 at 15:16 +0100, Richard Purdie via lists.openembedded.org wrote:
-> By using os._exit() in the server, we confuse python programmers no end
-> since atexit calls, along with threading cleanup calls are skipped. We're
-> careful about the environment the server is created within so we should
-> be able to use sys.exit() here and have things behave as the python devs
-> intend.
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/daemonize.py      | 4 +---
->  lib/bb/server/process.py | 1 +
->  2 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/bb/daemonize.py b/lib/bb/daemonize.py
-> index f01e6ec7cc..0ec5ef3986 100644
-> --- a/lib/bb/daemonize.py
-> +++ b/lib/bb/daemonize.py
-> @@ -89,9 +89,7 @@ def createDaemon(function, logfile):
->          traceback.print_exc()
->      finally:
->          bb.event.print_ui_queue()
-> -        # os._exit() doesn't flush open files like os.exit() does. Manually flush
-> -        # stdout and stderr so that any logging output will be seen, particularly
-> +        # Manually flush stdout and stderr so that any logging output will be seen, particularly
->          # exception tracebacks.
->          sys.stdout.flush()
->          sys.stderr.flush()
-> -        os._exit(0)
-> diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-> index 65e1eab527..b03d64391b 100644
-> --- a/lib/bb/server/process.py
-> +++ b/lib/bb/server/process.py
-> @@ -492,6 +492,7 @@ class BitBakeServer(object):
->              # Flush any ,essages/errors to the logfile before exit
->              sys.stdout.flush()
->              sys.stderr.flush()
-> +        sys.exit(0)
->  
->  def connectProcessServer(sockname, featureset):
->      # Connect to socket
-
-For the archives, we can't merge this since it allows SystemExit to be
-seen in the parent process, e.g. the selftests when under unittest.
+We sometimes import ipk packages from OpenWRT into Yocto.
+Unfortunatly they use the other archiver; hence the patch.
 
 Cheers,
 
-Richard
+Chris
+
+On 07/08/2020 15:01, Richard Purdie wrote:
+> On Fri, 2020-08-07 at 04:54 -0700, Chris Minnoy wrote:
+>>  From d21155c4b55ac96d3c13a3cef1f020df67b62641 Mon Sep 17 00:00:00
+>> 2001
+>> From: Chris Minnoy <chris.minnoy_ext@softathome.com>
+>> Date: Fri, 7 Aug 2020 11:35:27 +0000
+>> Subject: [PATCH 1/1] bitbake fetch2: fetcher can now unpack .ipk
+>> files from ar and tar format
+>>
+>> Ipk packages can be formed with ar or tar. ar/tar can't read each
+>> others archives.
+>> This fixes the unpack to call the correct archiver based on the
+>> format.
+> What is creating ipk files using tar instead of ar?
+>
+> I know they did once exist but I've not seen real world use of those
+> for many years?
+>
+> Cheers,
+>
+> Richard
+>
+-- 
+With kind regards,
+
+Chris Minnoy
 
