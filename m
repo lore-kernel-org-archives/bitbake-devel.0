@@ -1,114 +1,66 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
- by mx.groups.io with SMTP id smtpd.web11.197888.1598284128948358779
+Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
+ by mx.groups.io with SMTP id smtpd.web12.197603.1598284322407725241
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 24 Aug 2020 08:48:49 -0700
+ Mon, 24 Aug 2020 08:52:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=pkE6gATv;
- spf=pass (domain: gmail.com, ip: 209.85.160.175, mailfrom: jeff.dagenais@gmail.com)
-Received: by mail-qt1-f175.google.com with SMTP id 92so1057742qtb.6
-        for <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2020 08:48:48 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=lwgSfk4c;
+ spf=pass (domain: gmail.com, ip: 209.85.222.196, mailfrom: jeff.dagenais@gmail.com)
+Received: by mail-qk1-f196.google.com with SMTP id g26so7824218qka.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2020 08:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=phW9Hr7QyEHR9An/b8NDgr/ogmcIV3Ixp6dbIPb4GDg=;
-        b=pkE6gATvixEfSQAN/XuIIKZM97YpNaMJcxb/h6+V8lBXlj20Nm7bHjNPiGe5cFfwTm
-         2bn2YRPLUrPM4fl7aTL6ajJe00UwIjMoHlEt3wmWdkAMKJQaYbcxLrhcm95hiMVXx2tS
-         yyj45QPoa76wMq3/CfiHX/rlPmwGGZVngYlIH6a10y2HgA+69vBDTpU9zH1eRRtqMsNZ
-         5CxS70b6tNj+lcTDUnuN0q7HadffSDdykic43DPRtWdPoB3q3OF2TG2juOSxEFPCgM3N
-         HLQR1TKw4hMTBZCc16XQtmduzBRuEFV1oZhUx2dHZn6j/nejjuwQwJgK2zW3bk67SSZI
-         nq7A==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=E8vMHyHLNfHK8licpPzYSvvdfSHQOalTt5XESEcoByw=;
+        b=lwgSfk4ca651ZSqyD8HerPvcHSl6AbDrmfcbNtJrIGDprGAY7NEnzd1DADLqdpMxpJ
+         5rPqXR0GOi1byrJqKaiDHh0BPiBZ9U2o5fhfmkiDmFRVkf1MUmYE7mLxe0BJXMrRDTJ6
+         bPj0QnroAK0gLDLjPrsyxaScirJ1Q0kOSosQKpvQjef0ArkF6tp8eooEEDRA4RlFs0gz
+         vPOqDqJEj/L+YhRGB4cHcu2ImKY4Qc4ReS3p4zt2/6IkkVN73CFLDZYndHPf3Tpnl+po
+         X/IeHMDgIpTtn/Ab0MyZ5CovVMUuUzfCX1/nA8I1IFrdKe9J8bPWCs1DqQaRJ5pXihF4
+         OqTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=phW9Hr7QyEHR9An/b8NDgr/ogmcIV3Ixp6dbIPb4GDg=;
-        b=Bfb8zxUOactm90i27/Ow7UDTzHeOX4skeI0qUVaUDxfZ38KPWi0X/RLqSjPPsmvx2h
-         9R2bUPTFlIWmdq4keR8FnTRuPkb06CAxvVWefJFbv9N8EMMgZIPYbjDjl8j/K2fZJHBU
-         gLaI+wpBkUxxpmzlyAMn4BPX2fNLa/TsX7dSQ3K9g9t3FsXFN2G37Yt/xmpaJ/eoUFFy
-         zXaR0ZBmN8qXFarIm+PtxfOx8JabqVqyIekAWdWBSgL3o6Jw832XEy3g/AkGb0UXhkKi
-         5f4ONStcOS1otb9/dNs1+7bQ7DB0Bg5qgaFwyhO5fA3QQiHIInhqkVRxwmnsAM7tUR5W
-         HONQ==
-X-Gm-Message-State: AOAM532sRlckoL5f59Jg00JUaD9CsIsXsrm77UVQxb8l9S+M3wmcUm3R
-	uvSwEI/9Daiwx6ZKdr3UnPrYPmXrYzK1WQ==
-X-Google-Smtp-Source: ABdhPJzKd8HsAGzy3lhfYNoE39iq+zlbsiVx+1ucpm10Ssr8Mla0zDVlHi/+3CTIlc4WtBpeImUBpg==
-X-Received: by 2002:ac8:2962:: with SMTP id z31mr5213636qtz.88.1598284127936;
-        Mon, 24 Aug 2020 08:48:47 -0700 (PDT)
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=E8vMHyHLNfHK8licpPzYSvvdfSHQOalTt5XESEcoByw=;
+        b=gdcsEtbhF+dy+Zy7XsYb/no5RkWltWBa4TpYHXu3TZyN52nEtoYMOCPYBOcEeqWVdv
+         CvFMF/nTQoB3LTDpk/bpdKMV2bNApt6qDO1B6bcT/BWwzOJlAOcLDMW+4l7rfcHv5TKs
+         r/whY1uGm/5N2dPGPAMyx3TMG/X4lS6GQJ3oTMcpJengv/HrnR1bjGPi5dsi5mQKjHdu
+         wGT9F6Q3URVKMAeV/SWZas3QWLXB2Ewv8uT8a4ojD6xVdZb0SP4EPO/nLpAdq2nwTkv8
+         8CZ55/TZhsfs+XJuyiJe7kqeIS3/Xlc/ykmHiWmdindBDm8QJ9ZDOT8H8zS8uDSWDxq6
+         EWVw==
+X-Gm-Message-State: AOAM532Rxonij6ipXgLI2YX1D/rJXSeD0y1Fozq3h2YH3RLPXU+eVZ6T
+	xuOofxuuwEoNW6SrH8wvCpADLdicVDHZ8g==
+X-Google-Smtp-Source: ABdhPJwxxQe2MbwlTTc9lsmQaNWSyqo09+YnDLvabzg84dHsE8fk6cBRl5MK+AdJCBLuZ/Gq9pRRXw==
+X-Received: by 2002:a37:99c7:: with SMTP id b190mr5276029qke.347.1598284321401;
+        Mon, 24 Aug 2020 08:52:01 -0700 (PDT)
 Return-Path: <jeff.dagenais@gmail.com>
-Received: from jfddesk.Sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
-        by smtp.gmail.com with ESMTPSA id x13sm11116119qts.23.2020.08.24.08.48.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 08:48:47 -0700 (PDT)
+Received: from [10.0.0.29] ([135.0.225.35])
+        by smtp.gmail.com with ESMTPSA id o16sm4846225qkj.18.2020.08.24.08.52.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 08:52:00 -0700 (PDT)
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH 2/2] bitbake: siggen: clean_basepath: improve perfo and readability
 From: "Jean-Francois Dagenais" <jeff.dagenais@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: richard.purdie@linuxfoundation.org,
-	Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
-	=?UTF-8?q?Maxime=20Roussin-B=C3=A9langer?= <maxime.roussinbelanger@gmail.com>
-Subject: [PATCH 2/2] bitbake: siggen: clean_basepath: improve perfo and readability
-Date: Mon, 24 Aug 2020 11:48:36 -0400
-Message-Id: <20200824154836.23600-2-jeff.dagenais@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824154836.23600-1-jeff.dagenais@gmail.com>
+In-Reply-To: <20200824154836.23600-2-jeff.dagenais@gmail.com>
+Date: Mon, 24 Aug 2020 11:51:58 -0400
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-Id: <8CC64418-6365-4092-825C-8D7EC786C8B4@gmail.com>
 References: <376560ff987c4585f7f21c2cae4c8f50451ad743.camel@linuxfoundation.org>
  <20200824154836.23600-1-jeff.dagenais@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+ <20200824154836.23600-2-jeff.dagenais@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-This change improves performance by reducing runtime about 33% for typical
-inputs. (using test_clean_basepath_performance)
 
-It is also easier to read, and slightly more resilient to future changes since it doesn't
-mention 'virtual' anymore.
 
-Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Co-Developed-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
-Sigend-off-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
----
- lib/bb/siggen.py | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+> On Aug 24, 2020, at 11:48, Jean-Francois Dagenais =
+<jeff.dagenais@gmail.com> wrote:
+>=20
+> Sigend-off-by: Maxime Roussin-B=C3=A9langer =
+<maxime.roussinbelanger@gmail.com>
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index ad49d1e2..1456324a 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -746,16 +746,26 @@ def list_inline_diff(oldlist, newlist, colors=None):
-             ret.append(item)
-     return '[%s]' % (', '.join(ret))
- 
--def clean_basepath(a):
--    mc = None
--    if a.startswith("mc:"):
--        _, mc, a = a.split(":", 2)
--    b = a.rsplit("/", 2)[1] + '/' + a.rsplit("/", 2)[2]
--    if a.startswith("virtual:"):
--        b = b + ":" + a.rsplit(":", 2)[0]
--    if mc:
--        b = b + ":mc:" + mc
--    return b
-+def clean_basepath(basepath):
-+    basepath, dir, recipe_task = basepath.rsplit("/", 2)
-+    cleaned = dir + '/' + recipe_task
-+
-+    if basepath[0] == '/':
-+        return cleaned
-+
-+    if basepath.startswith("mc:"):
-+        mc, mc_name, basepath = basepath.split(":", 2)
-+        mc_suffix = ':mc:' + mc_name
-+    else:
-+        mc_suffix = ''
-+
-+    # mc stuff now removed from basepath. Whatever was next, if present will be the first
-+    # suffix. ':/', recipe path start, marks the end of this. Something like
-+    # 'virtual:a[:b[:c]]:/path...' (b and c being optional)
-+    if basepath[0] != '/':
-+        cleaned += ':' + basepath.split(':/', 1)[0]
-+
-+    return cleaned + mc_suffix
- 
- def clean_basepaths(a):
-     b = {}
--- 
-2.28.0
-
+Typo here... sorry. Resend?=
