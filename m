@@ -1,139 +1,79 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web10.1086.1598288019832760436
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web10.1087.1598288020435361031
  for <bitbake-devel@lists.openembedded.org>;
  Mon, 24 Aug 2020 09:53:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XyArmgvM;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id x9so4954749wmi.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2020 09:53:39 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TTCMRgEy;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f65.google.com with SMTP id o21so8859842wmc.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2020 09:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=PNv/tjsg+K0Mxs419WRnqx7+YvNs+tfIAf9S0oMtDDA=;
-        b=XyArmgvM5SyoH26GEwvMbNnXSLUGlYgjl7iELspNnLaWaqMkKYqBmjAIpTbBN58mDn
-         MeCC7wTLfXydHT0I9Sn6I7MtwFty2rFdolYCrbpcxmkY84lMZVHxTQUc4QgiImu0K3y0
-         CW4/IM6ZHIiPneEjrzHWT0xjL22/Jhr3hxVTU=
+        bh=jRDZ1iheIEdFWcmufj1quLNdn8cvdBNJtTkDFBCy+PE=;
+        b=TTCMRgEy3E84W0ZyvWCRFZ0sNhP3is7SfCi7h6p7eMZnqqEp8SdCDkfALRwTx2oZPU
+         DD3svPrOznlq7Yx19dBKn1j7fUq1Bk831JLf7AeOEhVwPU43tJ2HUpWwzifC6LFXanjZ
+         DxkDrfuY/VF5ZsFfffWpaMdnG2iQT8V1pKXAw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PNv/tjsg+K0Mxs419WRnqx7+YvNs+tfIAf9S0oMtDDA=;
-        b=oVP7rWQh+Z6yfYWRm8woOxsXQpQnqenLPbJa1qYEYAA2uMOxF6BM6R9kpoqrKTl1Qo
-         QDB/yJmfA+Somd43ylwO8En0tAPuo/Hd3IQtVmvItW7biBq63TYhIa7iw5RhKW4XzIz9
-         IvNe3FV/g89guSi1yxQGpZgUxRxDT+eiZHLsPZ3wVTvgGgKUkBK7pw0wA6HtVhdb9rdv
-         qF+Zpw/eoOuAb7vheb0Wihr8vpHs5xAUcCVNApwbsND2ZEK9EZET6rio5q1LPKyc/IoW
-         /p6BMEkBiE7nFD5x284kKQABwFN0kaVrSPJ2h2oRtUZfQfYJLqvUT1aB060/Waf6xBfT
-         APhg==
-X-Gm-Message-State: AOAM530UzhJB6aytJO5oieLg0Sc/QXC4GnQbbn2ntO81Cjn5K7P1Uwwi
-	Ea5dPXBavwvQTYQoI5fREUtg7m/T2mlOW6MJ
-X-Google-Smtp-Source: ABdhPJwVvrEPjIZDRn12ufl6e4AA6csgYPyhmEI5CpInnaurio3d34w8AK536gC6/GFY5+Zr8yDa4w==
-X-Received: by 2002:a1c:ba08:: with SMTP id k8mr187600wmf.49.1598288013923;
-        Mon, 24 Aug 2020 09:53:33 -0700 (PDT)
+        bh=jRDZ1iheIEdFWcmufj1quLNdn8cvdBNJtTkDFBCy+PE=;
+        b=fM9waw3kan63albyCk+NAI6Zo5xMSxItvr9gyFPZWljeWNDyUK8mltpQ1NB5QU0Ev3
+         lftiDo+COJ76EuqHjwkOhZk4AJMKYqatnZtEReBVS3uqJRrQ0ZH6p529y/Dq4/KPPX49
+         LXzTyqPHg2rq3jBBtFhPRZYRvLy9s8JDuJN+lJQ54U5L5kCkFofE6knWVQX/FSrYqyf4
+         JqBj7/Yri6r9lk7Icy4XF66cVF7HT5TQhbkVyIRfe4+LncQaGlrSDS2K33e9VrSyTnTU
+         kU1Ln4O7vo3KbXBZdAa/6TqQ12kzdqBl3P+yAm6y0GTnZeRI1XU/1o6ZV1cxicvzUJVq
+         nSgQ==
+X-Gm-Message-State: AOAM533wldnRl2yuuH40BUGKH+SRYuOpk4v99XGeMijMzsqiECuDYzqd
+	7abCJR0NjvviP0KKZuk04v6UuUETs76EIfF8
+X-Google-Smtp-Source: ABdhPJzartRTckSEp0Y6kIc2RNWfoJSzY8/vE58PSzpxuI760Kf5DEmmH8kGCr8AZ4BEuo8MrSa6zA==
+X-Received: by 2002:a7b:c38a:: with SMTP id s10mr198010wmj.13.1598288014657;
+        Mon, 24 Aug 2020 09:53:34 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net (d.d.0.9.8.0.3.8.5.d.6.d.5.a.5.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:45a5:d6d5:8308:90dd])
         by smtp.gmail.com with ESMTPSA id f19sm182127wmh.44.2020.08.24.09.53.33
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 09:53:33 -0700 (PDT)
+        Mon, 24 Aug 2020 09:53:34 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 02/10] cooker/cookerdata/main: Improve loglevel handling
-Date: Mon, 24 Aug 2020 17:53:23 +0100
-Message-Id: <20200824165331.1373725-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 03/10] cookerdata: Ensure UI options are updated to the server
+Date: Mon, 24 Aug 2020 17:53:24 +0100
+Message-Id: <20200824165331.1373725-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824165331.1373725-1-richard.purdie@linuxfoundation.org>
 References: <20200824165331.1373725-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rather than passing debug/verbose/debug_domains around, pass the
-computed output of these. Ensure that the cooker sets the levels
-to match the levels currently set in the UI and generally try and
-make it easier to understand what the code is doing.
+There were some options which were not being passed to the server. This
+was breaking, particularly in memory resident bitbake mode.
+
+Add the missing options to the correct place to ensure the server is
+updated correctly.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py     |  7 ++++++-
- lib/bb/cookerdata.py | 10 ++++++----
- lib/bb/main.py       |  8 ++++----
- 3 files changed, 16 insertions(+), 9 deletions(-)
+ lib/bb/cookerdata.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 57caf38c2a..c34de303fb 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -446,7 +446,12 @@ class BBCooker:
-                 logger.debug(1, "Marking as dirty due to '%s' option change to '%s'" % (o, options[o]))
-                 print("Marking as dirty due to '%s' option change to '%s'" % (o, options[o]))
-                 clean = False
--            setattr(self.configuration, o, options[o])
-+            if hasattr(self.configuration, o):
-+                setattr(self.configuration, o, options[o])
-+
-+        bb.msg.loggerDefaultLogLevel = self.configuration.default_loglevel
-+        bb.msg.loggerDefaultDomains = self.configuration.debug_domains
-+
-         for k in bb.utils.approved_variables():
-             if k in environment and k not in self.configuration.env:
-                 logger.debug(1, "Updating new environment variable %s to %s" % (k, environment[k]))
 diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 6bf411bcd2..f43610e7f8 100644
+index f43610e7f8..9eddf7cf6a 100644
 --- a/lib/bb/cookerdata.py
 +++ b/lib/bb/cookerdata.py
-@@ -58,13 +58,15 @@ class ConfigParameters(object):
-     def updateToServer(self, server, environment):
-         options = {}
+@@ -60,7 +60,9 @@ class ConfigParameters(object):
          for o in ["abort", "force", "invalidate_stamp",
--                  "debug", "dry_run", "dump_signatures",
--                  "debug_domains", "extra_assume_provided", "profile",
-+                  "dry_run", "dump_signatures",
-+                  "extra_assume_provided", "profile",
-                   "prefile", "postfile", "server_timeout"]:
+                   "dry_run", "dump_signatures",
+                   "extra_assume_provided", "profile",
+-                  "prefile", "postfile", "server_timeout"]:
++                  "prefile", "postfile", "server_timeout",
++                  "nosetscene", "setsceneonly", "skipsetscene",
++                  "runall", "runonly"]:
              options[o] = getattr(self.options, o)
  
          options['build_verbose_shell'] = self.options.verbose
-         options['build_verbose_stdout'] = self.options.verbose
-+        options['default_loglevel'] = bb.msg.loggerDefaultLogLevel
-+        options['debug_domains'] = bb.msg.loggerDefaultDomains
- 
-         ret, error = server.runCommand(["updateConfig", options, environment, sys.argv])
-         if error:
-@@ -114,11 +116,11 @@ class CookerConfiguration(object):
-     """
- 
-     def __init__(self):
--        self.debug_domains = []
-+        self.debug_domains = bb.msg.loggerDefaultDomains
-+        self.default_loglevel = bb.msg.loggerDefaultLogLevel
-         self.extra_assume_provided = []
-         self.prefile = []
-         self.postfile = []
--        self.debug = 0
-         self.cmd = None
-         self.abort = True
-         self.force = False
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index af2880f8d5..e483cce1ae 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -357,11 +357,11 @@ def bitbake_main(configParams, configuration):
- 
-     if "BBDEBUG" in os.environ:
-         level = int(os.environ["BBDEBUG"])
--        if level > configuration.debug:
--            configuration.debug = level
-+        if level > configParams.debug:
-+            configParams.debug = level
- 
--    bb.msg.init_msgconfig(configParams.verbose, configuration.debug,
--                          configuration.debug_domains)
-+    bb.msg.init_msgconfig(configParams.verbose, configParams.debug,
-+                          configParams.debug_domains)
- 
-     server_connection, ui_module = setup_bitbake(configParams, configuration)
-     # No server connection
 -- 
 2.25.1
 
