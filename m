@@ -1,213 +1,190 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web10.1094.1598288025676208700
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web12.14009.1598363807010378470
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 24 Aug 2020 09:53:46 -0700
+ Tue, 25 Aug 2020 06:56:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AuAMzx3M;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id z9so23717wmk.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2020 09:53:45 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EtJ1nHeO;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id t2so2548175wma.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2020 06:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=d5ul+sZhA5skjNvYkdUgYQxAFeyuMOCjv7t7lTAti1Y=;
-        b=AuAMzx3M51ZmdzdIOhLdm5f4UO6TtqNIJOoLuTe0hc5dOjnmGgckmT0Qg19nWMUWKy
-         acfTUN1jpRNESsBKLSYETnNw7jaTC2plRS9itV5H+pUZh9V2HLQ2Onj2fZ2il9Z8zv6c
-         DLY8h2QcEoNPLHORG2OjSK0Q4/VIv7+MgkDWg=
+        bh=ttR0ft2JFZVDOJmXRjMVnEOUclamOF09OpltY5wJJKM=;
+        b=EtJ1nHeOh5LfRAeTx9vK4KLrNCn+mhor7xqvRE3Mtgc6R24PPJ52axCGWHKaEL3mk/
+         ft05eFnvzNNmaj6gKyHK2b1HV7cYZu1Wliptssp5t29fJbsZEd51w3M8BvZReP8Ev9NB
+         j1UCoBqdJGMwuasInqDEFHnjX1Y83DJfN70pQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d5ul+sZhA5skjNvYkdUgYQxAFeyuMOCjv7t7lTAti1Y=;
-        b=O0qPQrHRWum5z0KmkoS9zFN3fMatZjgHPJDpNVZaq5WHbC+qGB0yjm5WXZF6iNQQuB
-         pAWzuAiCKeJGvG3OEDl6BZpSR2YwHpGXwjsy6ZN2yozu7ATEXIlPTgIFIS1fdZREa2OW
-         cifE1Zg3X25KMjy6GPdHK+YDcRB4o9+xmYsqITp8V/b5MBC2lZfstvmeLwIBWTD0cCne
-         UwtslfeGOLch29iWvQJMNQJi80jreiLTD+veqr/hOOPNI06l+IXNcyCtByxfvHGcMzRW
-         XFk2AWTUpXX6+FcXJ/sTiJgF6vZhkH3xCxSn612XSoF9qutwEYz7IBcKo8FQGSebnnJK
-         L0oQ==
-X-Gm-Message-State: AOAM531kusT5V6VOUxnU/LuNsEcn2f9QzD0crCeJsb5Xu+09QZ+pzCAx
-	ZnJT/8bPMyTX9RYX2JnvStCAQ8fhChshU+vO
-X-Google-Smtp-Source: ABdhPJyXybWfz+QUQZE2qMc/YNKOeOKSGiVXxLNlkNv9jN2/gi3+OlNxkLtjoeRojDiIlF2tIC0nhw==
-X-Received: by 2002:a1c:ed15:: with SMTP id l21mr218400wmh.56.1598288019795;
-        Mon, 24 Aug 2020 09:53:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ttR0ft2JFZVDOJmXRjMVnEOUclamOF09OpltY5wJJKM=;
+        b=RAxLH2z+l3b3cZqJHZqyYJ2x9P9F4i9wDFIuC8BYG3cO610CADKwq+QDSpYKs1bEZo
+         CAAA8PhAGWERZbGMnriJjrBciaRyVxc4WGh/K4hqOr18dO6v0x0eITQiNEjE6b2M2naH
+         WB9po3TGEbKMpzDyr8cmAEd7GXghYxFlnF0zEV24C+iX1IUp+4mcdPK9ijSlicDJlzQk
+         kVhnILXeb5jPe3Pa2zl1fKRpbHo+9EHs6y1wRFCFglrjIdnQ8OE6Qy0arFSD5uI2pNqA
+         yUVBW6rWRG7DWSs++IUdqdk5pU8DAyVoNSrDT0u6My3CYFzlOOElIKbGftVKLCNmmDge
+         v8Ag==
+X-Gm-Message-State: AOAM533ckxuZwqtgyeccmnP4Jny5z6MaPdZUT54jee2FPwO1yn3hiK5E
+	59UvvMbaUCKs8m3OTVgjpLfWFG1EysKihV+1
+X-Google-Smtp-Source: ABdhPJzhoI76BP6oCEyXg4H0CL89qB/9wURykNbTGcxipc33P4ndYDEVU+fOtXLOSsOAuyUaLGr5Yw==
+X-Received: by 2002:a1c:283:: with SMTP id 125mr2343017wmc.12.1598363804738;
+        Tue, 25 Aug 2020 06:56:44 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (d.d.0.9.8.0.3.8.5.d.6.d.5.a.5.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:45a5:d6d5:8308:90dd])
-        by smtp.gmail.com with ESMTPSA id f19sm182127wmh.44.2020.08.24.09.53.39
+Received: from hex.int.rpsys.net (d.9.b.8.7.0.d.0.8.3.5.0.7.0.4.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:c407:538:d07:8b9d])
+        by smtp.gmail.com with ESMTPSA id j19sm6551425wmj.25.2020.08.25.06.56.44
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 09:53:39 -0700 (PDT)
+        Tue, 25 Aug 2020 06:56:44 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 10/10] server/process: Add bitbake-server and exec() a new server process
-Date: Mon, 24 Aug 2020 17:53:31 +0100
-Message-Id: <20200824165331.1373725-10-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] fetch2: Drop globbing supprt in file:// SRC_URIs
+Date: Tue, 25 Aug 2020 14:56:43 +0100
+Message-Id: <20200825135643.1422253-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824165331.1373725-1-richard.purdie@linuxfoundation.org>
-References: <20200824165331.1373725-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Trying to have a new python process forked off an original doesn't work
-out well and ends up having race issues. To avoid this, exec() a new
-bitbake server process. This starts with a fresh python interpreter
-and resolves various atexit and other multiprocessing issues once
-and for all.
+Globbing in file:// urls is terminally broken. Currently when its used, the
+file checksum code is basically bypassed. This means changes to the source
+files don't change the task checksum, the task doesn't rebuild when the
+inputs change and things generally break.
+
+To make globbing work generically, we'd have to scan the file system for
+all possible matches to the glob and log whether they exist or not. We can't
+simply log the files which exist, we have to also know which files could
+later exist and influence the choice of file so we know when to reparse.
+
+For a simple file://xxx/*, this could be done but for bigger patterns,
+it becomes much more problemtic. We already support file://xxx/ in urls.
+
+So, lets decide we'll not support globs in file://urls. Worse case users
+can put files in a directory and reference that, moving files into place
+if needed.
+
+Remove all the glob special cases (see the comments if anyone doesn't
+believe this is terminally broken) and error to the user if they have
+such urls.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 92 +++++++++++++++++++++++-----------------
- 1 file changed, 53 insertions(+), 39 deletions(-)
+ lib/bb/cache.py           |  2 +-
+ lib/bb/fetch2/__init__.py | 12 ------------
+ lib/bb/fetch2/local.py    | 15 +++------------
+ 3 files changed, 4 insertions(+), 25 deletions(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 915651084e..d248570cd2 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -38,7 +38,7 @@ class ProcessServer():
-     profile_filename = "profile.log"
-     profile_processed_filename = "profile.log.processed"
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index b819a0c2da..9e0c931a07 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -636,7 +636,7 @@ class Cache(NoCache):
+                 # Have to be careful about spaces and colons in filenames
+                 flist = self.filelist_regex.split(fl)
+                 for f in flist:
+-                    if not f or "*" in f:
++                    if not f:
+                         continue
+                     f, exist = f.split(":")
+                     if (exist == "True" and not os.path.exists(f)) or (exist == "False" and os.path.exists(f)):
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 756f60212f..7ec1fea5d0 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1195,8 +1195,6 @@ def get_checksum_file_list(d):
+             paths = ud.method.localpaths(ud, d)
+             for f in paths:
+                 pth = ud.decodedurl
+-                if '*' in pth:
+-                    f = os.path.join(os.path.abspath(f), pth)
+                 if f.startswith(dl_dir):
+                     # The local fetcher's behaviour is to return a path under DL_DIR if it couldn't find the file anywhere else
+                     if os.path.exists(f):
+@@ -1365,9 +1363,6 @@ class FetchMethod(object):
+         # We cannot compute checksums for directories
+         if os.path.isdir(urldata.localpath):
+             return False
+-        if urldata.localpath.find("*") != -1:
+-            return False
+-
+         return True
  
--    def __init__(self, lock, sock, sockname, server_timeout, xmlrpcinterface):
-+    def __init__(self, lock, lockname, sock, sockname, server_timeout, xmlrpcinterface):
-         self.command_channel = False
-         self.command_channel_reply = False
-         self.quit = False
-@@ -54,6 +54,7 @@ class ProcessServer():
-         self._idlefuns = {}
+     def recommends_checksum(self, urldata):
+@@ -1430,11 +1425,6 @@ class FetchMethod(object):
+         iterate = False
+         file = urldata.localpath
  
-         self.bitbake_lock = lock
-+        self.bitbake_lock_name = lockname
-         self.sock = sock
-         self.sockname = sockname
+-        # Localpath can't deal with 'dir/*' entries, so it converts them to '.',
+-        # but it must be corrected back for local files copying
+-        if urldata.basename == '*' and file.endswith('/.'):
+-            file = '%s/%s' % (file.rstrip('/.'), urldata.path)
+-
+         try:
+             unpack = bb.utils.to_boolean(urldata.parm.get('unpack'), True)
+         except ValueError as exc:
+@@ -1613,8 +1603,6 @@ class FetchMethod(object):
+         """
+         if os.path.exists(ud.localpath):
+             return True
+-        if ud.localpath.find("*") != -1:
+-            return True
+         return False
  
-@@ -259,7 +260,7 @@ class ProcessServer():
+     def implicit_urldata(self, ud, d):
+diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
+index 01d9ff9f8f..25d4557db6 100644
+--- a/lib/bb/fetch2/local.py
++++ b/lib/bb/fetch2/local.py
+@@ -17,7 +17,7 @@ import os
+ import urllib.request, urllib.parse, urllib.error
+ import bb
+ import bb.utils
+-from   bb.fetch2 import FetchMethod, FetchError
++from   bb.fetch2 import FetchMethod, FetchError, ParameterError
+ from   bb.fetch2 import logger
  
-         # Finally release the lockfile but warn about other processes holding it open
-         lock = self.bitbake_lock
--        lockfile = lock.name
-+        lockfile = self.bitbake_lock_name
-         lock.close()
-         lock = None
- 
-@@ -393,9 +394,10 @@ class BitBakeProcessServerConnection(object):
-         self.connection.recv.close()
+ class Local(FetchMethod):
+@@ -33,6 +33,8 @@ class Local(FetchMethod):
+         ud.basename = os.path.basename(ud.decodedurl)
+         ud.basepath = ud.decodedurl
+         ud.needdonestamp = False
++        if "*" in ud.decodedurl:
++            raise bb.fetch2.ParameterError("file:// urls using globbing are no longer supported. Please place the files in a directory and reference that instead.", ud.url)
          return
  
-+start_log_format = '--- Starting bitbake server pid %s at %s ---'
-+start_log_datetime_format = '%Y-%m-%d %H:%M:%S.%f'
-+
- class BitBakeServer(object):
--    start_log_format = '--- Starting bitbake server pid %s at %s ---'
--    start_log_datetime_format = '%Y-%m-%d %H:%M:%S.%f'
+     def localpath(self, urldata, d):
+@@ -55,12 +57,6 @@ class Local(FetchMethod):
+             logger.debug(2, "Searching for %s in paths:\n    %s" % (path, "\n    ".join(filespath.split(":"))))
+             newpath, hist = bb.utils.which(filespath, path, history=True)
+             searched.extend(hist)
+-        if (not newpath or not os.path.exists(newpath)) and path.find("*") != -1:
+-            # For expressions using '*', best we can do is take the first directory in FILESPATH that exists
+-            newpath, hist = bb.utils.which(filespath, ".", history=True)
+-            searched.extend(hist)
+-            logger.debug(2, "Searching for %s in path: %s" % (path, newpath))
+-            return searched
+         if not os.path.exists(newpath):
+             dldirfile = os.path.join(d.getVar("DL_DIR"), path)
+             logger.debug(2, "Defaulting to %s for %s" % (dldirfile, path))
+@@ -70,8 +66,6 @@ class Local(FetchMethod):
+         return searched
  
-     def __init__(self, lock, sockname, featureset, server_timeout, xmlrpcinterface):
- 
-@@ -429,7 +431,7 @@ class BitBakeServer(object):
-             ready.close()
-             bb.error("Unable to start bitbake server (%s)" % str(r))
-             if os.path.exists(logfile):
--                logstart_re = re.compile(self.start_log_format % ('([0-9]+)', '([0-9-]+ [0-9:.]+)'))
-+                logstart_re = re.compile(start_log_format % ('([0-9]+)', '([0-9-]+ [0-9:.]+)'))
-                 started = False
-                 lines = []
-                 lastlines = []
-@@ -441,7 +443,7 @@ class BitBakeServer(object):
-                             lastlines.append(line)
-                             res = logstart_re.match(line.rstrip())
-                             if res:
--                                ldatetime = datetime.datetime.strptime(res.group(2), self.start_log_datetime_format)
-+                                ldatetime = datetime.datetime.strptime(res.group(2), start_log_datetime_format)
-                                 if ldatetime >= startdatetime:
-                                     started = True
-                                     lines.append(line)
-@@ -462,42 +464,54 @@ class BitBakeServer(object):
-         ready.close()
- 
-     def _startServer(self):
--        print(self.start_log_format % (os.getpid(), datetime.datetime.now().strftime(self.start_log_datetime_format)))
--        sys.stdout.flush()
-+        os.close(self.readypipe)
-+        os.set_inheritable(self.bitbake_lock.fileno(), True)
-+        os.set_inheritable(self.readypipein, True)
-+        os.execlp("bitbake-server", "bitbake-server", "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.bitbake_lock.name, self.sockname,  str(self.server_timeout), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
- 
--        try:
--            # Create server control socket
--            if os.path.exists(self.sockname):
--                os.unlink(self.sockname)
-+def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpcinterface):
- 
--            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
--            # AF_UNIX has path length issues so chdir here to workaround
--            cwd = os.getcwd()
--            try:
--                os.chdir(os.path.dirname(self.sockname))
--                sock.bind(os.path.basename(self.sockname))
--            finally:
--                os.chdir(cwd)
--            sock.listen(1)
--
--            server = ProcessServer(self.bitbake_lock, sock, self.sockname, self.server_timeout, self.xmlrpcinterface)
--            os.close(self.readypipe)
--            writer = ConnectionWriter(self.readypipein)
--            try:
--                self.cooker = bb.cooker.BBCooker(self.featureset, server.register_idle_function)
--            except bb.BBHandledException:
--                return None
--            writer.send("r")
--            writer.close()
--            server.cooker = self.cooker
--            print("Started bitbake server pid %d" % os.getpid())
--            sys.stdout.flush()
--
--            server.run()
-+    import bb.cookerdata
-+    import bb.cooker
-+
-+    print(start_log_format % (os.getpid(), datetime.datetime.now().strftime(start_log_datetime_format)))
-+    sys.stdout.flush()
-+
-+    try:
-+        bitbake_lock = os.fdopen(lockfd, "w")
-+
-+        # Create server control socket
-+        if os.path.exists(sockname):
-+            os.unlink(sockname)
-+
-+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-+        # AF_UNIX has path length issues so chdir here to workaround
-+        cwd = os.getcwd()
-+        try:
-+            os.chdir(os.path.dirname(sockname))
-+            sock.bind(os.path.basename(sockname))
-         finally:
--            # Flush any ,essages/errors to the logfile before exit
--            sys.stdout.flush()
--            sys.stderr.flush()
-+            os.chdir(cwd)
-+        sock.listen(1)
-+
-+        server = ProcessServer(bitbake_lock, lockname, sock, sockname, server_timeout, xmlrpcinterface)
-+        writer = ConnectionWriter(readypipeinfd)
-+        try:
-+            featureset = []
-+            cooker = bb.cooker.BBCooker(featureset, server.register_idle_function)
-+        except bb.BBHandledException:
-+            return None
-+        writer.send("r")
-+        writer.close()
-+        server.cooker = cooker
-+        print("Started bitbake server pid %d" % os.getpid())
-+        sys.stdout.flush()
-+
-+        server.run()
-+    finally:
-+        # Flush any ,essages/errors to the logfile before exit
-+        sys.stdout.flush()
-+        sys.stderr.flush()
- 
- def connectProcessServer(sockname, featureset):
-     # Connect to socket
+     def need_update(self, ud, d):
+-        if ud.url.find("*") != -1:
+-            return False
+         if os.path.exists(ud.localpath):
+             return False
+         return True
+@@ -95,9 +89,6 @@ class Local(FetchMethod):
+         """
+         Check the status of the url
+         """
+-        if urldata.localpath.find("*") != -1:
+-            logger.info("URL %s looks like a glob and was therefore not checked.", urldata.url)
+-            return True
+         if os.path.exists(urldata.localpath):
+             return True
+         return False
 -- 
 2.25.1
 
