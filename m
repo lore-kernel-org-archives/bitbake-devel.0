@@ -1,222 +1,232 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web12.16957.1598371586859308728
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (NAM12-DM6-obe.outbound.protection.outlook.com [40.107.243.72])
+ by mx.groups.io with SMTP id smtpd.web12.59.1598374327696558807
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 25 Aug 2020 09:06:27 -0700
+ Tue, 25 Aug 2020 09:52:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=fRqA0vzt;
- spf=pass (domain: gmail.com, ip: 209.85.128.48, mailfrom: jpewhacker@gmail.com)
-Received: by mail-wm1-f48.google.com with SMTP id u18so2989228wmc.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2020 09:06:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tnJ0WFpvzwXc4SWeZSRjGNJQltLBUtZa3ejWrfNx7YI=;
-        b=fRqA0vztCX/2wDfRmoAxA7yHfnWt+9/NPBXXNeehLG/7OGzH9CbsNPL8EdJpC8CgFG
-         5HkNH7F0ZvW4SlIrLhIqRcSoYWKD6HpSKDTAGoRXU7cUfv9+Z4TzjySVEZuVeqQAfRx9
-         MWcJdVbd5jWnj3S3kSupuR1mOHnz8mx1WDkg2nj+uZNDgALkVxhxtwUClO9nL+LNfzK/
-         d29I3ZQX4qnNkyUV+Jg/lKyvNA3G5YmJrzxiObGjz83fuNVBCaNFvhLBF+WloStYzTKa
-         rC8vXVS9uSVoxCViOxzwEu54GUVIiJmVeB3iIcaZeKX4bX6W2L8ZLEaLEQiI/i+aeeBq
-         3SbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tnJ0WFpvzwXc4SWeZSRjGNJQltLBUtZa3ejWrfNx7YI=;
-        b=e6Wz78K15Kfne0uM5bHR5ZYjLaIouRUUHZ8POKoZNwb5T/PnU6Hjzm3UEtEM0YwoVe
-         PO+Cxk3gCKrR4blKYIkf39ViMPxFxnU/mukJ9LjJDpHqUS03qFvIjeruiWqpOL0PuI02
-         ESA4cKWebmWakfMWVImJXB0L/dJX2UaNFX8zDt45t3DWMWnQteNy77rzzVjIekb5A/Hr
-         LtV2rzgD2+WLmpAtwQlMESuIU135IyS0AXJ29p7zz5U/wEAiW2bzLZJeUqKxgoP5i2Pi
-         nXoC23PcglXh9F0gCLtGyQXHf3bxPhQDqPgmSzHqjYx3zZkoMRvEdMBCYL8KjjYXqX9C
-         MdcA==
-X-Gm-Message-State: AOAM533xKo67aPR85/TRWo3BfpleRnyi3lcLQmOeck7jmK/sJBIpFNAK
-	UCUVJ8LjgC/pWaLeMxaEz0G3joQcycJyeh3io8Y=
-X-Google-Smtp-Source: ABdhPJx2mUCDTPMIGHGfYxbG6MgMVKo2hnblP94hoe/7JMOo3nYLqF+CrO9x+qPI/nRr3CJG8n9MhxXfeM+oMg+v94M=
-X-Received: by 2002:a7b:cb4d:: with SMTP id v13mr2898842wmj.56.1598371585165;
- Tue, 25 Aug 2020 09:06:25 -0700 (PDT)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=kOgcRpkX;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.243.72, mailfrom: chris.laplante@agilent.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c02sLMzMpOwFNt/eVeVeifBhDUsvPJrN5LHRwjWPkAso0vZtvTR2QZeid/AyaA80FZdOmALDeeOko2TZSYzxpKaTwRxCFlr8NsoG8IdtEFmxbk1Di+wjPrIrNgWMZBTiAi2EdhM7bkeKDVs6S6+lAJ5c6ky9SIOmgU+WmfdHHQ70hi5sKUyGaiQIWFz/L/YePv3PHZ2WXWuA3FeLq3hjFAFc34K9H/LOYBMnq7f8Q38fO8CqwnIhTU295KbOVLMQ2GHlDYeywFabu8Ymgh0RC1/cB1Ke2Q9ZIlqgscbbDTKAgPx11QPcFqu1h0nMt8oVEkmtqpCis4kdIpOIBLMokw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FpBd/Ehppti5iI1BdOhMKO3A+GFpu21iCkQqzCr7TLc=;
+ b=UhrFpdW5orufnJUSPh6DK11F3kzi106kJN8g0D6MYsLTbvQqFttxrmAsRtQ/08n1hbTPEsmJ2S5GIXkpBnCIl0I3CvSy1inskWWYHgfAe3FKuluGpf+Ng8yujrGTaxyxMKeQVH1V1KdfQnpEYK1qY2nxsnGx2zHgrT5E4g1MkmEwwZuPbZxioIEub3aHVJYiG16B5FrkRnfsEkn8yqshXyL6yvBuL/zN1fzdQQGpqJLIyzndNDuBOS2t3PM3LOYAo3Ujmmp25pNNq4X0rzM6a3X1200+dqK+jr28OBBUaFFJ1MAW5T9ezylKJmqBcy08ulhdaO8KilEMxyuJMrckQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=agilent.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FpBd/Ehppti5iI1BdOhMKO3A+GFpu21iCkQqzCr7TLc=;
+ b=kOgcRpkXdrndxZATnB3H/+O/11AmwxfkWlyRjPFIBDrDiZETFwht4qMH1icj/7e2QtbcLO6unxcSjXRi1GL2iFZQaLIWB5lQVi//h3rDZyVikmta2moqZHtbS8tBlWwc7nmhecoWDVvpHfTn5jY10JPOwvhYVj5Ohr+Re+zQeiz1vf/xdnbxxBYZPN0ac3t3yz/14JNfP0vtCEHVrwlriguwMq+o1xUvqN2nhqCd9++ZSUqj7QTCCK1tadxVKaYvoAojeIhdschityV2ZC1vEgIaE/zzgFgttm4hjE0uekhMpDwH3lJiIA4c52rlMWtTmpjXXF+MEJcs5DUwg3709w==
+Received: from BN6PR17CA0013.namprd17.prod.outlook.com (2603:10b6:404:65::23)
+ by DM6PR12MB3962.namprd12.prod.outlook.com (2603:10b6:5:1ce::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Tue, 25 Aug
+ 2020 16:52:05 +0000
+Received: from BN8NAM12FT064.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:404:65:cafe::94) by BN6PR17CA0013.outlook.office365.com
+ (2603:10b6:404:65::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend
+ Transport; Tue, 25 Aug 2020 16:52:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
+ smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
+ signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
+ header.from=agilent.com;
+Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
+ 192.25.218.41 as permitted sender) receiver=protection.outlook.com;
+ client-ip=192.25.218.41; helo=edgeappmail.agilent.com;
+Received: from edgeappmail.agilent.com (192.25.218.41) by
+ BN8NAM12FT064.mail.protection.outlook.com (10.13.182.118) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.19 via Frontend Transport; Tue, 25 Aug 2020 16:52:05 +0000
+Received: from laplante-lm-19.localdomain (192.25.126.27) by
+ edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
+ 15.1.1713.5; Tue, 25 Aug 2020 10:52:03 -0600
+From: "Chris Laplante" <chris.laplante@agilent.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: Chris Laplante <chris.laplante@agilent.com>
+Subject: [PATCH] compat.py: remove file since it no longer actually implements anything
+Date: Tue, 25 Aug 2020 12:51:41 -0400
+Message-ID: <20200825165141.64045-1-chris.laplante@agilent.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200824165331.1373725-1-richard.purdie@linuxfoundation.org> <20200824165331.1373725-10-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20200824165331.1373725-10-richard.purdie@linuxfoundation.org>
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-Date: Tue, 25 Aug 2020 11:06:12 -0500
-Message-ID: <CAJdd5GbXLN5vJRnkN7r_q2WQ_6Chzv+H-=QemyK-NLz4bHD2eA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 10/10] server/process: Add bitbake-server and exec() a new server process
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+Return-Path: chris.laplante@agilent.com
+Received-SPF: SoftFail (wpcosapexchedg2.windmz.agilent.com: domain of
+ transitioning chris.laplante@agilent.com discourages use of 192.25.126.27 as
+ permitted sender)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ec99de58-1f38-43e0-ef9c-08d84917327d
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3962:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<DM6PR12MB39624546F8A5A08D0899C0038B570@DM6PR12MB3962.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	kcj7fCW90J8kzQD9YmlJvnsp7+LM6mxvA2Fw/ffQ8Xl/FA0VhoE8xUPsBwZFr+BLpNVhqQ8MVu4CjVKv+J/fqIulzqCU2qZA4Lo8rNKtef7Uv3WNOGuWnNvIXTlwWduoTvhK/vSad97PVZvQxkJzUIFaaBDS0K5ok8bboOladAO4SRjZuds5ZeM7RvjDQnjY9o+QYl7jxX1e7TcSGNiM4drQwGLw/yfk/qOsiZ/zWWFVjqnEDxyU+Gst2A2nmMchppG6G+jvjdhT5XAs44unviuhGLmqzmTl1nP+gqx8L/b/jpFU/RaMU+ISZnOodr0lToDwsRk4TdTHZ1T9CpcFAlmrD8MEKKQK6M7JmAiyBgUOMVaqaLBuYqzCW9XC79cnMfqZK7CdK7T9RSSvSb4Fg0YRj3KdvaLU59KBKCEOzFc=
+X-Forefront-Antispam-Report: 
+	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(39860400002)(396003)(29502001)(46966005)(70206006)(426003)(2906002)(7636003)(478600001)(336012)(6666004)(86362001)(4326008)(47076004)(26005)(82740400003)(8676002)(83380400001)(5660300002)(186003)(6916009)(82310400002)(356005)(44832011)(956004)(36906005)(316002)(107886003)(1076003)(36756003)(8936002)(2616005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 16:52:05.1685
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec99de58-1f38-43e0-ef9c-08d84917327d
+X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN8NAM12FT064.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3962
+Content-Type: text/plain
 
-On Mon, Aug 24, 2020 at 11:53 AM Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> Trying to have a new python process forked off an original doesn't work
-> out well and ends up having race issues. To avoid this, exec() a new
-> bitbake server process. This starts with a fresh python interpreter
-> and resolves various atexit and other multiprocessing issues once
-> and for all.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/server/process.py | 92 +++++++++++++++++++++++-----------------
->  1 file changed, 53 insertions(+), 39 deletions(-)
->
-> diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-> index 915651084e..d248570cd2 100644
-> --- a/lib/bb/server/process.py
-> +++ b/lib/bb/server/process.py
-> @@ -38,7 +38,7 @@ class ProcessServer():
->      profile_filename = "profile.log"
->      profile_processed_filename = "profile.log.processed"
->
-> -    def __init__(self, lock, sock, sockname, server_timeout, xmlrpcinterface):
-> +    def __init__(self, lock, lockname, sock, sockname, server_timeout, xmlrpcinterface):
->          self.command_channel = False
->          self.command_channel_reply = False
->          self.quit = False
-> @@ -54,6 +54,7 @@ class ProcessServer():
->          self._idlefuns = {}
->
->          self.bitbake_lock = lock
-> +        self.bitbake_lock_name = lockname
->          self.sock = sock
->          self.sockname = sockname
->
-> @@ -259,7 +260,7 @@ class ProcessServer():
->
->          # Finally release the lockfile but warn about other processes holding it open
->          lock = self.bitbake_lock
-> -        lockfile = lock.name
-> +        lockfile = self.bitbake_lock_name
->          lock.close()
->          lock = None
->
-> @@ -393,9 +394,10 @@ class BitBakeProcessServerConnection(object):
->          self.connection.recv.close()
->          return
->
-> +start_log_format = '--- Starting bitbake server pid %s at %s ---'
-> +start_log_datetime_format = '%Y-%m-%d %H:%M:%S.%f'
-> +
->  class BitBakeServer(object):
-> -    start_log_format = '--- Starting bitbake server pid %s at %s ---'
-> -    start_log_datetime_format = '%Y-%m-%d %H:%M:%S.%f'
->
->      def __init__(self, lock, sockname, featureset, server_timeout, xmlrpcinterface):
->
-> @@ -429,7 +431,7 @@ class BitBakeServer(object):
->              ready.close()
->              bb.error("Unable to start bitbake server (%s)" % str(r))
->              if os.path.exists(logfile):
-> -                logstart_re = re.compile(self.start_log_format % ('([0-9]+)', '([0-9-]+ [0-9:.]+)'))
-> +                logstart_re = re.compile(start_log_format % ('([0-9]+)', '([0-9-]+ [0-9:.]+)'))
->                  started = False
->                  lines = []
->                  lastlines = []
-> @@ -441,7 +443,7 @@ class BitBakeServer(object):
->                              lastlines.append(line)
->                              res = logstart_re.match(line.rstrip())
->                              if res:
-> -                                ldatetime = datetime.datetime.strptime(res.group(2), self.start_log_datetime_format)
-> +                                ldatetime = datetime.datetime.strptime(res.group(2), start_log_datetime_format)
->                                  if ldatetime >= startdatetime:
->                                      started = True
->                                      lines.append(line)
-> @@ -462,42 +464,54 @@ class BitBakeServer(object):
->          ready.close()
->
->      def _startServer(self):
-> -        print(self.start_log_format % (os.getpid(), datetime.datetime.now().strftime(self.start_log_datetime_format)))
-> -        sys.stdout.flush()
-> +        os.close(self.readypipe)
-> +        os.set_inheritable(self.bitbake_lock.fileno(), True)
-> +        os.set_inheritable(self.readypipein, True)
-> +        os.execlp("bitbake-server", "bitbake-server", "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.bitbake_lock.name, self.sockname,  str(self.server_timeout), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
+Now that compat.py just imports Python standard library stuff, get rid
+of the layer of indirection.
 
-You may want to do:
+Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+---
+ lib/bb/compat.py       | 10 ----------
+ lib/bb/event.py        | 16 ++++++++--------
+ lib/bb/persist_data.py |  8 ++++----
+ lib/bb/tests/event.py  | 17 +++++++++--------
+ 4 files changed, 21 insertions(+), 30 deletions(-)
+ delete mode 100644 lib/bb/compat.py
 
- os.execl(sys.executable, sys.executable, "bitbake-server", ....)
+diff --git a/lib/bb/compat.py b/lib/bb/compat.py
+deleted file mode 100644
+index 49356681..00000000
+--- a/lib/bb/compat.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-#
+-# SPDX-License-Identifier: GPL-2.0-only
+-#
+-
+-"""Code pulled from future python versions, here for compatibility"""
+-
+-from collections import MutableMapping, KeysView, ValuesView, ItemsView, OrderedDict
+-from functools import total_ordering
+-
+-
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 0e6d9b29..694b4705 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -10,17 +10,17 @@ BitBake build tools.
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import sys
+-import pickle
+-import logging
+-import atexit
+-import traceback
+ import ast
++import atexit
++import collections
++import logging
++import pickle
++import sys
+ import threading
++import traceback
+ 
+-import bb.utils
+-import bb.compat
+ import bb.exceptions
++import bb.utils
+ 
+ # This is the pid for which we should generate the event. This is set when
+ # the runqueue forks off.
+@@ -56,7 +56,7 @@ def set_class_handlers(h):
+     _handlers = h
+ 
+ def clean_class_handlers():
+-    return bb.compat.OrderedDict()
++    return collections.OrderedDict()
+ 
+ # Internal
+ _handlers = clean_class_handlers()
+diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
+index 7357ab2d..5f4fbe35 100644
+--- a/lib/bb/persist_data.py
++++ b/lib/bb/persist_data.py
+@@ -12,14 +12,14 @@ currently, providing a key/value store accessed by 'domain'.
+ #
+ 
+ import collections
++import contextlib
++import functools
+ import logging
+ import os.path
++import sqlite3
+ import sys
+ import warnings
+-from bb.compat import total_ordering
+ from collections import Mapping
+-import sqlite3
+-import contextlib
+ 
+ sqlversion = sqlite3.sqlite_version_info
+ if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
+@@ -28,7 +28,7 @@ if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
+ 
+ logger = logging.getLogger("BitBake.PersistData")
+ 
+-@total_ordering
++@functools.total_ordering
+ class SQLTable(collections.MutableMapping):
+     class _Decorators(object):
+         @staticmethod
+diff --git a/lib/bb/tests/event.py b/lib/bb/tests/event.py
+index 9229b63d..9ca7e9bc 100644
+--- a/lib/bb/tests/event.py
++++ b/lib/bb/tests/event.py
+@@ -6,17 +6,18 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import unittest
+-import bb
+-import logging
+-import bb.compat
+-import bb.event
++import collections
+ import importlib
++import logging
++import pickle
+ import threading
+ import time
+-import pickle
++import unittest
+ from unittest.mock import Mock
+ from unittest.mock import call
++
++import bb
++import bb.event
+ from bb.msg import BBLogFormatter
+ 
+ 
+@@ -75,7 +76,7 @@ class EventHandlingTest(unittest.TestCase):
+ 
+     def _create_test_handlers(self):
+         """ Method used to create a test handler ordered dictionary """
+-        test_handlers = bb.compat.OrderedDict()
++        test_handlers = collections.OrderedDict()
+         test_handlers["handler1"] = self._test_process.handler1
+         test_handlers["handler2"] = self._test_process.handler2
+         return test_handlers
+@@ -96,7 +97,7 @@ class EventHandlingTest(unittest.TestCase):
+ 
+     def test_clean_class_handlers(self):
+         """ Test clean_class_handlers method """
+-        cleanDict = bb.compat.OrderedDict()
++        cleanDict = collections.OrderedDict()
+         self.assertEqual(cleanDict,
+                          bb.event.clean_class_handlers())
+ 
+-- 
+2.17.1
 
-This ensures that the same python interpreter is used for the server
-and UI front end.
-
->
-> -        try:
-> -            # Create server control socket
-> -            if os.path.exists(self.sockname):
-> -                os.unlink(self.sockname)
-> +def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpcinterface):
->
-> -            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-> -            # AF_UNIX has path length issues so chdir here to workaround
-> -            cwd = os.getcwd()
-> -            try:
-> -                os.chdir(os.path.dirname(self.sockname))
-> -                sock.bind(os.path.basename(self.sockname))
-> -            finally:
-> -                os.chdir(cwd)
-> -            sock.listen(1)
-> -
-> -            server = ProcessServer(self.bitbake_lock, sock, self.sockname, self.server_timeout, self.xmlrpcinterface)
-> -            os.close(self.readypipe)
-> -            writer = ConnectionWriter(self.readypipein)
-> -            try:
-> -                self.cooker = bb.cooker.BBCooker(self.featureset, server.register_idle_function)
-> -            except bb.BBHandledException:
-> -                return None
-> -            writer.send("r")
-> -            writer.close()
-> -            server.cooker = self.cooker
-> -            print("Started bitbake server pid %d" % os.getpid())
-> -            sys.stdout.flush()
-> -
-> -            server.run()
-> +    import bb.cookerdata
-> +    import bb.cooker
-> +
-> +    print(start_log_format % (os.getpid(), datetime.datetime.now().strftime(start_log_datetime_format)))
-> +    sys.stdout.flush()
-> +
-> +    try:
-> +        bitbake_lock = os.fdopen(lockfd, "w")
-> +
-> +        # Create server control socket
-> +        if os.path.exists(sockname):
-> +            os.unlink(sockname)
-> +
-> +        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-> +        # AF_UNIX has path length issues so chdir here to workaround
-> +        cwd = os.getcwd()
-> +        try:
-> +            os.chdir(os.path.dirname(sockname))
-> +            sock.bind(os.path.basename(sockname))
->          finally:
-> -            # Flush any ,essages/errors to the logfile before exit
-> -            sys.stdout.flush()
-> -            sys.stderr.flush()
-> +            os.chdir(cwd)
-> +        sock.listen(1)
-> +
-> +        server = ProcessServer(bitbake_lock, lockname, sock, sockname, server_timeout, xmlrpcinterface)
-> +        writer = ConnectionWriter(readypipeinfd)
-> +        try:
-> +            featureset = []
-> +            cooker = bb.cooker.BBCooker(featureset, server.register_idle_function)
-> +        except bb.BBHandledException:
-> +            return None
-> +        writer.send("r")
-> +        writer.close()
-> +        server.cooker = cooker
-> +        print("Started bitbake server pid %d" % os.getpid())
-> +        sys.stdout.flush()
-> +
-> +        server.run()
-> +    finally:
-> +        # Flush any ,essages/errors to the logfile before exit
-> +        sys.stdout.flush()
-> +        sys.stderr.flush()
->
->  def connectProcessServer(sockname, featureset):
->      # Connect to socket
-> --
-> 2.25.1
->
-> 
